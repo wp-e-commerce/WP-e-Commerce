@@ -1,0 +1,294 @@
+<?php
+/**
+ * wp- e-Commerce Variations class
+ *
+ * This is the code that handles adding, editing and displaying variations on Products
+ */
+
+
+class wpsc_variations {
+	// variation groups: i.e. colour, size
+	var $variation_groups;
+	var $variation_group_count = 0;
+	var $current_variation_group = -1;
+	var $variation_group;
+	
+	// for getting the product price
+	var $first_variations;
+	
+	//variations inside variation groups: i.e. (red, green, blue) or (S, M, L, XL)
+	var $variations;
+	var $variations_count = 0;
+	var $current_variation = -1;
+	var $variation;
+	
+
+	function wpsc_variations($product_id) {
+		global $wpdb;
+		
+		$product_terms = wp_get_object_terms($product_id, 'wpsc-variation');
+		$this->variation_groups = array();
+		$this->first_variations = array();
+		$this->all_associated_variations = array();
+		
+		foreach($product_terms as $product_term) {
+			if($product_term->parent > 0) {
+				if(empty($this->all_associated_variations[$product_term->parent])){
+					$this->all_associated_variations[$product_term->parent][0] =  new stdClass;
+					$this->all_associated_variations[$product_term->parent][0]->term_id = 0;
+					$this->all_associated_variations[$product_term->parent][0]->name = '-- Please Select --';
+				}
+				$this->all_associated_variations[$product_term->parent][] = $product_term;	
+			} else {
+				$this->variation_groups[] = $product_term;
+			}
+		}
+		
+		foreach((array)$this->variation_groups as $variation_group) {
+			$variation_id = $variation_group->term_id;
+			$this->first_variations[] = $this->all_associated_variations[$variation_id][0]->term_id;
+		}
+		
+		$this->variation_group_count = count($this->variation_groups);
+	}
+	
+
+	/*
+	 * (Variation Group and Variation) Loop Code Starts here
+	*/
+	function get_variation_groups() {
+		global $wpdb;
+		$this->variation_group_count = count($this->variation_groups);
+		$this->get_first_variations();
+	}
+	
+	
+	function next_variation_group() {
+		$this->current_variation_group++;
+		$this->variation_group = $this->variation_groups[$this->current_variation_group];
+		return $this->variation_group;
+	}
+
+	
+	function the_variation_group() {
+		$this->variation_group = $this->next_variation_group();
+		$this->get_variations();
+	}
+
+	function have_variation_groups() {
+		if ($this->current_variation_group + 1 < $this->variation_group_count) {
+			return true;
+		} else if ($this->current_variation_group + 1 == $this->variation_group_count && $this->variation_group_count > 0) {
+			$this->rewind_variation_groups();
+		}
+		return false;
+	}
+
+	function rewind_variation_groups() {
+		$this->current_variation_group = -1;
+		if ($this->variation_group_count > 0) {
+			$this->variation_group = $this->variation_groups[0];
+		}
+	}
+	
+	function get_first_variations() {
+		global $wpdb;
+		return null;
+	}
+
+
+	function get_variations() {
+		global $wpdb;
+		$this->variations = $this->all_associated_variations[$this->variation_group->term_id];
+		$this->variation_count = count($this->variations);
+	}
+	
+	
+	function next_variation() {
+		$this->current_variation++;
+		$this->variation = $this->variations[$this->current_variation];
+		return $this->variation;
+	}
+
+	
+	function the_variation() {
+		$this->variation = $this->next_variation();
+	}
+
+	function have_variations() {
+		if ($this->current_variation + 1 < $this->variation_count) {
+			return true;
+		} else if ($this->current_variation + 1 == $this->variation_count && $this->variation_count > 0) {
+			// Do some cleaning up after the loop,
+			$this->rewind_variations();
+		}
+		return false;
+	}
+
+	function rewind_variations() {
+		$this->current_variation = -1;
+		if ($this->variation_count > 0) {
+			$this->variation = $this->variations[0];
+		}
+	}	
+	
+	
+	
+	
+}
+function wpsc_get_child_object_in_select_terms($parent_id, $terms, $taxonomy){
+	global $wpdb;
+	$sql = "SELECT tr.`object_id` 
+			FROM `".$wpdb->term_relationships."` AS tr
+			LEFT JOIN `".$wpdb->posts."` AS posts
+			ON posts.`ID` = tr.`object_id`				
+			WHERE tr.`term_taxonomy_id` IN (".implode(',',$terms).") and posts.`post_parent`=".$parent_id;
+	$products = $wpdb->get_col($sql);
+	return $products;
+	
+}
+
+/**
+ * wpsc_get_child_objects_in_term function.
+ * gets the 
+ * 
+ * @access public
+ * @param mixed $parent_id
+ * @param mixed $terms
+ * @param mixed $taxonomies
+ * @param array $args. (default: array())
+ * @return void
+ */
+function wpsc_get_child_object_in_terms($parent_id, $terms, $taxonomies, $args = array() ) {
+	global $wpdb, $current_version_number;
+	$wpdb->show_errors = true;
+	$parent_id = absint($parent_id);
+
+	if ( !is_array( $terms) )
+		$terms = array($terms);
+
+	if ( !is_array($taxonomies) )
+		$taxonomies = array($taxonomies);
+
+	foreach ( (array) $taxonomies as $taxonomy ) {
+		if ($current_version_number < 3.8) {
+			if ( ! taxonomy_exists($taxonomy) )
+				return new WP_Error('invalid_taxonomy', __('Invalid Taxonomy', 'wpsc'));
+			} else {
+			if ( !taxonomy_exists($taxonomy) )
+				return new WP_Error('invalid_taxonomy', __('Invalid Taxonomy', 'wpsc'));
+			}
+			
+	}
+
+	$defaults = array('order' => 'ASC');
+	$args = wp_parse_args( $args, $defaults );
+	extract($args, EXTR_SKIP);
+
+	$order = ( 'desc' == strtolower($order) ) ? 'DESC' : 'ASC';
+
+	$terms = array_map('intval', $terms);
+	
+	$taxonomy_count = count($taxonomies);
+	$term_count = count($terms);
+
+	$taxonomies = "'" . implode("', '", $taxonomies) . "'";
+	$terms = "'" . implode("', '", $terms) . "'";
+	
+	// This SQL statement finds the item associated with all variations in the selected combination that is a child of the target product
+	$object_sql = "SELECT tr.object_id, COUNT(tr.object_id) AS `count`
+	FROM {$wpdb->term_relationships} AS tr
+	INNER JOIN {$wpdb->posts} AS posts
+		ON posts.ID = tr.object_id
+	INNER JOIN {$wpdb->term_taxonomy} AS tt
+		ON tr.term_taxonomy_id = tt.term_taxonomy_id
+	WHERE posts.post_parent = {$parent_id}
+		AND tt.taxonomy IN ({$taxonomies})
+		AND tt.term_id IN ({$terms})
+		AND tt.parent > 0
+		AND ( 
+			SELECT COUNT(DISTINCT tt2.parent) FROM 
+			{$wpdb->term_relationships} AS tr2
+			INNER JOIN {$wpdb->term_taxonomy} AS tt2
+				ON tr2.term_taxonomy_id = tt2.term_taxonomy_id
+			WHERE tr2.object_id = tr.object_id
+			AND tt2.taxonomy IN ({$taxonomies})
+			AND tt2.parent > 0
+		) = {$term_count}
+	GROUP BY tr.object_id
+	HAVING `count` = {$term_count}";
+	$object_ids = $wpdb->get_row($object_sql, ARRAY_A);
+	if (count($object_ids) > 0) {
+		return $object_ids['object_id'];
+	} else {
+		
+		return false;
+	}
+}
+
+
+/**
+ * wpsc_get_child_objects_in_term function.
+ * gets the 
+ * 
+ * @access public
+ * @param mixed $parent_id
+ * @param mixed $terms
+ * @param mixed $taxonomies
+ * @param array $args. (default: array())
+ * @return void
+ */
+function wpsc_get_child_object_in_terms_var($parent_id, $terms, $taxonomies, $args = array() ) {
+	global $wpdb, $current_version_number;
+	$wpdb->show_errors = true;
+	$parent_id = absint($parent_id);
+
+	if ( !is_array( $terms) )
+		$terms = array($terms);
+
+	if ( !is_array($taxonomies) )
+		$taxonomies = array($taxonomies);
+
+	foreach ( (array) $taxonomies as $taxonomy ) {
+		if ($current_version_number < 3.8) {
+			if ( ! taxonomy_exists($taxonomy) )
+				return new WP_Error('invalid_taxonomy', __('Invalid Taxonomy', 'wpsc'));
+			} else {
+			if ( !taxonomy_exists($taxonomy) )
+				return new WP_Error('invalid_taxonomy', __('Invalid Taxonomy', 'wpsc'));
+			}
+			
+	}
+
+	$defaults = array('order' => 'ASC');
+	$args = wp_parse_args( $args, $defaults );
+	extract($args, EXTR_SKIP);
+
+	$order = ( 'desc' == strtolower($order) ) ? 'DESC' : 'ASC';
+
+	$terms = array_map('intval', $terms);
+
+	$taxonomies = "'" . implode("', '", $taxonomies) . "'";
+	$terms = "'" . implode("', '", $terms) . "'";
+	
+	// This SQL statement finds the item associated with all variations in the selected combination that is a child of the target product
+	$object_sql = "SELECT tr.object_id
+	FROM {$wpdb->term_relationships} AS tr
+	INNER JOIN {$wpdb->posts} AS posts
+		ON posts.ID = tr.object_id
+	INNER JOIN {$wpdb->term_taxonomy} AS tt
+		ON tr.term_taxonomy_id = tt.term_taxonomy_id
+	WHERE posts.post_parent = {$parent_id}
+		AND tt.taxonomy IN ({$taxonomies})
+		AND tt.term_id IN ({$terms})
+		AND tt.parent > 0
+	GROUP BY tr.object_id";
+	$object_ids = $wpdb->get_results($object_sql, ARRAY_A);
+	if (count($object_ids) > 0) {
+		return $object_ids;
+	} else {
+		return false;
+	}
+}
+
+?>

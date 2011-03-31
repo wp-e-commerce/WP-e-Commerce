@@ -1,0 +1,7350 @@
+# Translation of WP e-Commerce in Norwegian (Nynorsk)
+# This file is distributed under the same license as the WP e-Commerce package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2011-04-01 10:22+1200\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/0.1\n"
+"Project-Id-Version: WP e-Commerce\n"
+"POT-Creation-Date: \n"
+"Last-Translator: instinct\n"
+"Language-Team: \n"
+
+#: wpsc-admin/display-sales-logs.php:384
+msgid "Mobile Sales App"
+msgstr ""
+
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:253
+msgid "<hr>Total Shipping: %s\n"
+msgstr ""
+
+#: wpsc-includes/ajax.functions.php:1049
+msgid "Sorry something has gone wrong with your download!"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:972
+msgid "The name is how it appears on your site. <br><div class=\"error\"><strong>Please read this carefully before starting to work with variations:</strong><br />Variations in WP e-Commerce are divided into sets. For example set <strong>Color</strong> could have variations <strong>Red, Green,</strong> and <strong>Blue</strong>. To create a set simply enter <strong>Name</strong> and push Enter key on your keyboard or click <strong>Add New Variation/Set</strong> button in the bottom of this page. Now you can select the variation set that you've just created from <strong>Variation set</strong> drop-down menu and add some variations to it.</div>"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:241
+msgid "Lots of things have changed in this version. Before updating please backup your database and files in case anything goes wrong."
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:240
+msgid "Please backup your website before updating!"
+msgstr ""
+
+#: wpsc-admin/display-update.page.php:75
+msgid "Note: It looks like you have custom permalinks, you will need to refresh your permalinks <a href=\"%s\">here</a>"
+msgstr ""
+
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:57
+msgid "Sorry your transaction was not accepted.<br /><a href=\"%1$s\">Click here to go back to checkout page</a>."
+msgstr ""
+
+#: wpsc-theme/wpsc-cart_widget.php:77
+msgid "Visit Shop"
+msgstr ""
+
+#: wpsc-admin/admin.php:903
+msgid "Due to a problem in WordPress Permalinks and Custom Post Types, WP e-Commerce encourages you to refresh your permalinks a second time. (for a more geeky explanation visit <a href=\"%s\">trac</a>)"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/general.php:75
+msgid "Select the markets you are selling products to."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/checkout.php:31
+msgid "Misc Checkout Options"
+msgstr ""
+
+#: wpsc-widgets/tagging_functions.php:94
+msgid "%d topic"
+msgid_plural "%d topics"
+msgstr[0] ""
+msgstr[1] ""
+
+#: wpsc-theme/wpsc-user-log.php:162
+msgid "Login &raquo;"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/general.php:61
+msgid "Select: <a href=\"%1$s\"  class=\"wpsc_select_all\" title=\"All\">All</a> <a href=\"%1$s\" class=\"wpsc_select_none\" title=\"None\">None</a>"
+msgstr ""
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:95
+#: wpsc-includes/checkout.class.php:844
+msgid "Please enter a valid <span class=\"wpsc_error_msg_field_name\">%s</span>."
+msgstr ""
+
+#: wpsc-admin/admin-form-functions.php:207
+msgctxt "dashboard widget"
+msgid "Product"
+msgid_plural "Products"
+msgstr[0] ""
+msgstr[1] ""
+
+#: wpsc-admin/includes/display-items-functions.php:943
+msgid "Variation set"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:319
+msgctxt "slug, part of url"
+msgid "tagged"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:353
+msgid "Add New Variation/Set"
+msgstr ""
+
+#: wpsc-admin/admin-form-functions.php:221
+msgctxt "dashboard widget"
+msgid "Category"
+msgid_plural "Categories"
+msgstr[0] ""
+msgstr[1] ""
+
+#: wpsc-admin/admin-form-functions.php:213
+msgctxt "dashboard widget"
+msgid "Sale"
+msgid_plural "Sales"
+msgstr[0] ""
+msgstr[1] ""
+
+#: wpsc-admin/admin-form-functions.php:235
+msgctxt "dashboard widget"
+msgid "Variation"
+msgid_plural "Variations"
+msgstr[0] ""
+msgstr[1] ""
+
+#: wpsc-admin/display-sales-logs.php:346
+msgid "Status: All"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:322
+msgid "Three Months"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:321
+msgctxt "all sales"
+msgid "All"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:418
+msgid "%s Item"
+msgid_plural "%s Items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: wpsc-admin/display-sales-logs.php:52
+msgid "Amount"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:50
+msgid "Date / Time"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:49
+msgid "Order ID"
+msgstr ""
+
+#: wpsc-admin/admin.php:498
+#: wpsc-admin/admin.php:525
+msgctxt "the total value of sales in dashboard widget"
+msgid "Sales"
+msgstr ""
+
+#: wpsc-admin/admin.php:513
+#: wpsc-admin/admin.php:542
+msgid "Avg Order"
+msgstr ""
+
+#: wpsc-admin/admin-form-functions.php:74
+msgid "Logic"
+msgstr ""
+
+#: wpsc-admin/admin-form-functions.php:71
+msgid "Property"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/checkout.php:11
+msgid "Type"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/checkout.php:12
+msgid "Unique Names"
+msgstr ""
+
+#: wpsc-includes/product-template.php:680
+msgid "Read the rest of this entry &raquo;"
+msgstr ""
+
+#: wpsc-admin/includes/purchlogs_upgrade.php:38
+msgid "Billing Address"
+msgstr ""
+
+#: wpsc-shipping/usps_20.php:213
+msgid "Advanced Rates:"
+msgstr ""
+
+#: wpsc-admin/admin-form-functions.php:354
+msgid "Manual Payment"
+msgstr ""
+
+#: wpsc-admin/includes/purchlogs_upgrade.php:36
+msgid "Billing First Name"
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:232
+msgid "Insure shipment against cart total"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/checkout.php:190
+#: wpsc-admin/admin.php:385
+msgid "Select a Unique Name"
+msgstr ""
+
+#: wpsc-admin/includes/purchlogs_upgrade.php:68
+msgid "Sales Upgrade Fix"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/checkout.php:170
+msgid "Click and Drag to Order Checkout Fields"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/general.php:150
+msgid "Preview:"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/shipping.php:162
+msgid "Sales over or equal to: %1$s<input type=\"text\" size=\"6\" name=\"wpsc_options[shipping_discount_value]\" value=\"%2$s\" id=\"shipping_discount_value\" /> will receive free shipping."
+msgstr ""
+
+#: wpsc-admin/display-coupons.php:342
+msgid "Free Shipping"
+msgstr ""
+
+#: wpsc-admin/display-options-settings.page.php:276
+msgid "%s Setting options updated."
+msgid_plural " %s Settings options updated."
+msgstr[0] ""
+msgstr[1] ""
+
+#: wpsc-admin/display-options-settings.page.php:286
+msgid "%s Shipping option updated."
+msgid_plural "%s Shipping option updated."
+msgstr[0] ""
+msgstr[1] ""
+
+#: wpsc-admin/admin-form-functions.php:64
+msgid "Conditions"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:280
+msgid "%s of them is reserved for pending or recently completed orders."
+msgid_plural "%s of them are reserved for pending or recently completed orders."
+msgstr[0] ""
+msgstr[1] ""
+
+#: wpsc-admin/includes/display-items-functions.php:995
+#: wpsc-admin/includes/display-items-functions.php:1118
+msgid "Use as featured image"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:715
+msgid "Merchant Notes:"
+msgstr ""
+
+#: wpsc-admin/admin-form-functions.php:117
+msgid "Add Conditions"
+msgstr ""
+
+#: wpsc-admin/includes/purchlogs_upgrade.php:39
+msgid "Billing City"
+msgstr ""
+
+#: wpsc-shipping/usps_20.php:220
+msgid "This setting will provide rates based on the dimensions from eacy item in your cart"
+msgstr ""
+
+#: wpsc-admin/admin.php:178
+msgid "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/sales/'>About the Sales Page</a>"
+msgstr ""
+
+#: wpsc-shipping/usps_20.php:224
+msgid "Select Services"
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:244
+msgid "Singular Shipping"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:1235
+msgid "All Products"
+msgstr ""
+
+#: wpsc-admin/includes/purchlogs_upgrade.php:37
+msgid "Billing Last Name"
+msgstr ""
+
+#: wpsc-admin/display-upgrades.page.php:88
+msgid "Name:"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:448
+msgid "Send Custom Message"
+msgstr ""
+
+#: wpsc-admin/display-upgrades.page.php:92
+msgid "API Key:"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/checkout.php:9
+msgid "Drag"
+msgstr ""
+
+#: wpsc-shipping/usps_20.php:196
+msgid "Don't have a USPS API account ? "
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:247
+msgid "Rate each quantity of items in a cart as its own package using dimensions on product"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:748
+msgid "Prohibited <a href=\"http://checkout.google.com/support/sell/bin/answer.py?answer=75724\">by Google?</a>"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:855
+msgid "Your preview for this product:"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:524
+msgid "Update Notes"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/checkout.php:185
+msgid "more options"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/checkout.php:13
+msgid "Mandatory"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:1059
+msgid "Custom thumbnail size for this image on the main Product Page"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:1238
+msgid "Per Product"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:966
+#: wpsc-admin/includes/display-items-functions.php:996
+#: wpsc-admin/includes/display-items-functions.php:1119
+msgid "Use as Product Thumbnail"
+msgstr ""
+
+#: wpsc-admin/includes/purchlogs_upgrade.php:35
+msgid "Select an Option"
+msgstr ""
+
+#: wpsc-admin/includes/purchlogs_upgrade.php:41
+msgid "Billing Country"
+msgstr ""
+
+#: wpsc-admin/includes/purchlogs_upgrade.php:42
+msgid "Billing Email"
+msgstr ""
+
+#: wpsc-admin/includes/purchlogs_upgrade.php:43
+msgid "Billing Phone"
+msgstr ""
+
+#: wpsc-admin/includes/purchlogs_upgrade.php:44
+msgid "Billing Post Code"
+msgstr ""
+
+#: wpsc-admin/includes/purchlogs_upgrade.php:45
+msgid "Shipping First Name"
+msgstr ""
+
+#: wpsc-admin/includes/purchlogs_upgrade.php:46
+msgid "Shipping Last Name"
+msgstr ""
+
+#: wpsc-admin/includes/purchlogs_upgrade.php:48
+msgid "Shipping City"
+msgstr ""
+
+#: wpsc-admin/includes/purchlogs_upgrade.php:49
+msgid "Shipping State"
+msgstr ""
+
+#: wpsc-admin/includes/purchlogs_upgrade.php:50
+msgid "Shipping Country"
+msgstr ""
+
+#: wpsc-admin/includes/purchlogs_upgrade.php:51
+msgid "Shipping Post Code"
+msgstr ""
+
+#: wpsc-admin/includes/purchlogs_upgrade.php:69
+msgid "Upgrading to WP e-Commerce 3.7 and later requires you to run this fix once.The following Boxes corresponds to the form fields in your current checkout page.  All you have to do is select from the drop-down menu box what each of the following fields represent. Sorry for any inconvenience caused, but we're sure you'll agree that the new purchase logs are worth this minor hassle."
+msgstr ""
+
+#: wpsc-admin/admin.php:179
+msgid "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/products'>About the Products Page</a>"
+msgstr ""
+
+#: wpsc-admin/admin.php:180
+msgid "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/categories/'>About the Categories Page</a>"
+msgstr ""
+
+#: wpsc-admin/admin.php:181
+msgid "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/variations/'>About the Variations Page</a>"
+msgstr ""
+
+#: wpsc-admin/admin.php:182
+msgid "<a target='_blank' href='http://getshopped.org/resources/docs/store-settings/general/'>General Settings</a><br /> <a target='_blank' href='http://getshopped.org/resources/docs/store-settings/checkout/'>Checkout Options</a> <br />"
+msgstr ""
+
+#: wpsc-admin/admin.php:183
+msgid "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/marketing'>Marketing Options</a><br />"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:86
+msgid "When upgrading the WP e-Commerce Plugin from 3.6.* to 3.7 it is required that you associate your checkout form fields with the new Purchase Logs system. To do so please <a href=\"%s\">Click Here</a>"
+msgstr ""
+
+#: wpsc-shipping/usps_20.php:244
+msgid "Online rates the following services only, when available"
+msgstr ""
+
+#: wpsc-shipping/usps_20.php:256
+msgid "International Package Type"
+msgstr ""
+
+#: wpsc-shipping/usps_20.php:279
+msgid "First Class Mail Type"
+msgstr ""
+
+#: wpsc-shipping/usps_20.php:302
+msgid "Only used for First Class service rates if selected"
+msgstr ""
+
+#: wpsc-shipping/tablerate.php:72
+msgid "Add Layer"
+msgstr ""
+
+#: wpsc-merchants/paypal-express.merchant.php:639
+msgid "Country:"
+msgstr ""
+
+#: wpsc-merchants/paypal-express.merchant.php:256
+msgid "API Username"
+msgstr ""
+
+#: wpsc-merchants/paypal-express.merchant.php:277
+msgid "Server Type"
+msgstr ""
+
+#: wpsc-merchants/paypal-express.merchant.php:423
+#: wpsc-merchants/paypal-express.merchant.php:602
+msgid "Error Number:"
+msgstr ""
+
+#: wpsc-merchants/paypal-express.merchant.php:298
+msgid "Convert to"
+msgstr ""
+
+#: wpsc-merchants/paypal-pro.merchant.php:412
+msgid "Visa"
+msgstr ""
+
+#: wpsc-merchants/paypal-express.merchant.php:263
+msgid "API Password"
+msgstr ""
+
+#: wpsc-merchants/paypal-pro.merchant.php:381
+msgid "Credit Card Expiry *"
+msgstr ""
+
+#: wpsc-merchants/paypal-express.merchant.php:431
+msgid "Long Message:"
+msgstr ""
+
+#: wpsc-merchants/paypal-pro.merchant.php:413
+msgid "MasterCard"
+msgstr ""
+
+#: wpsc-merchants/paypal-pro.merchant.php:414
+msgid "Discover"
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:145
+msgid "[preview] Preview In Here [/preview]"
+msgstr ""
+
+#: wpsc-merchants/paypal-express.merchant.php:12
+msgid "PayPal Express Checkout 2.0"
+msgstr ""
+
+#: wpsc-merchants/paypal-pro.merchant.php:375
+msgid "Credit Card Number *"
+msgstr ""
+
+#: wpsc-theme/wpsc-cart_widget.php:67
+msgid "Empty Your Cart"
+msgstr ""
+
+#: wpsc-merchants/paypal-express.merchant.php:281
+msgid "Production"
+msgstr ""
+
+#: wpsc-merchants/paypal-express.merchant.php:270
+msgid "API Signature"
+msgstr ""
+
+#: wpsc-merchants/paypal-express.merchant.php:622
+msgid "City:"
+msgstr ""
+
+#: wpsc-merchants/paypal-express.merchant.php:628
+msgid "State:"
+msgstr ""
+
+#: wpsc-merchants/paypal-express.merchant.php:633
+msgid "Postal code:"
+msgstr ""
+
+#: wpsc-merchants/paypal-pro.merchant.php:415
+msgid "Amex"
+msgstr ""
+
+#: wpsc-merchants/paypal-pro.merchant.php:404
+msgid "CVV *"
+msgstr ""
+
+#: wpsc-merchants/paypal-pro.merchant.php:409
+msgid "Card Type *"
+msgstr ""
+
+#: wpsc-merchants/paypal-express.merchant.php:18
+msgid "PayPal Express"
+msgstr ""
+
+#: wpsc-merchants/paypal-express.merchant.php:280
+msgid "Sandbox (For testing)"
+msgstr ""
+
+#: wpsc-merchants/paypal-express.merchant.php:378
+msgid "The PayPal API has returned an error!"
+msgstr ""
+
+#: wpsc-merchants/paypal-express.merchant.php:616
+msgid "Street 2:"
+msgstr ""
+
+#: wpsc-merchants/paypal-express.merchant.php:610
+msgid "Street 1:"
+msgstr ""
+
+#: wpsc-merchants/paypal-express.merchant.php:606
+msgid "Shipping Address:"
+msgstr ""
+
+#: wpsc-merchants/paypal-express.merchant.php:427
+msgid "Short Message:"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/import.php:86
+msgid "Stock Quantity Limit"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/import.php:163
+msgid "Success, your <a href='%s'>products</a> have been upload."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/import.php:84
+msgid "Weight Unit"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/import.php:64
+msgid "Column (%s)"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/import.php:85
+msgid "Stock Quantity"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/import.php:105
+msgid "There was an error while uploading your csv file."
+msgstr ""
+
+#: wpsc-includes/ajax.functions.php:85
+msgid "Sorry, but there is only %s of this item in stock."
+msgid_plural "Sorry, but there are only %s of this item in stock."
+msgstr[0] ""
+msgstr[1] ""
+
+#: wpsc-admin/display-options-settings.page.php:116
+msgctxt "Marketing settings tab in Settings->Store page"
+msgid "Marketing"
+msgstr ""
+
+#: wpsc-admin/admin-form-functions.php:227
+msgid "Pending sale"
+msgid_plural "Pending sales"
+msgstr[0] ""
+msgstr[1] ""
+
+#: wpsc-admin/admin-form-functions.php:241
+msgid "Closed sale"
+msgid_plural "Closed sales"
+msgstr[0] ""
+msgstr[1] ""
+
+#: wpsc-admin/display-options-settings.page.php:112
+msgctxt "Taxes settings tab in Settings->Store page"
+msgid "Taxes"
+msgstr ""
+
+#: wpsc-admin/display-options-settings.page.php:110
+msgctxt "Presentation settings tab in Settings->Store page"
+msgid "Presentation"
+msgstr ""
+
+#: wpsc-admin/display-options-settings.page.php:117
+msgctxt "Import settings tab in Settings->Store page"
+msgid "Import"
+msgstr ""
+
+#: wpsc-admin/display-options-settings.page.php:114
+msgctxt "Payments settings tab in Settings->Store page"
+msgid "Payments"
+msgstr ""
+
+#: wpsc-admin/display-options-settings.page.php:113
+msgctxt "Shipping settings tab in Settings->Store page"
+msgid "Shipping"
+msgstr ""
+
+#: wpsc-admin/display-options-settings.page.php:115
+msgctxt "Checkout settings tab in Settings->Store page"
+msgid "Checkout"
+msgstr ""
+
+#: wpsc-admin/admin.php:778
+msgid "Last four months of sales on a per product basis:"
+msgstr ""
+
+#: wpsc-admin/display-options-settings.page.php:109
+msgctxt "General settings tab in Settings->Store page"
+msgid "General"
+msgstr ""
+
+#: wpsc-admin/display-options-settings.page.php:111
+msgctxt "Admin settings tab in Settings->Store page"
+msgid "Admin"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:204
+msgid "SDD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:211
+msgid "TWD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:190
+msgid "STD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:208
+msgid "SEK"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:240
+msgid "YUN"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:241
+msgid "ZMK"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:230
+msgid "UZS"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:181
+msgid "RUR"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:156
+#: wpsc-updates/currency_list.php:175
+#: wpsc-updates/currency_list.php:237
+msgid "XPF"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:158
+msgid "NIC"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:160
+msgid "NGN"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:165
+msgid "OMR"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:166
+msgid "PKR"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:169
+msgid "PGK"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:170
+msgid "PYG"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:171
+msgid "PEN"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:172
+msgid "PHP"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:174
+msgid "PLN"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:178
+msgid "QAR"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:180
+msgid "RON"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:182
+msgid "RWF"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:183
+msgid "SHP"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:188
+msgid "WST"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:189
+msgid "ITL"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:191
+msgid "SAR"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:193
+msgid "SCR"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:194
+msgid "SLL"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:195
+msgid "SGD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:197
+msgid "SIT"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:199
+msgid "SOD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:200
+msgid "ZAR"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:203
+msgid "LKR"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:205
+msgid "SRG"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:207
+msgid "SZL"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:210
+msgid "SYP"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:212
+msgid "TJR"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:213
+msgid "TZS"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:214
+msgid "THB"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:217
+msgid "TOP"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:218
+msgid "TTD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:219
+msgid "TND"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:220
+msgid "TRL"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:221
+msgid "TMM"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:225
+msgid "UGS"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:226
+msgid "UAG"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:227
+msgid "AED"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:228
+msgid "UYP"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:231
+msgid "VUV"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:233
+msgid "VUB"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:234
+msgid "VND"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:239
+msgid "YER"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:242
+msgid "ZWD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:168
+msgid "PAB"
+msgstr ""
+
+#: wpsc-admin/display-update.page.php:68
+msgid "Updating Product Files..."
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:132
+msgid "This Product has variations, to edit the price please use the <a href=\"#variation_control\">Variation Controls</a> below."
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:574
+msgid "Pounds"
+msgstr ""
+
+#: wpsc-taxes/controllers/taxes_controller.class.php:600
+msgid "All Markets"
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:443
+msgid "I agree to The <a class='thickbox' target='_blank' href='%s' class='termsandconds'>Terms and Conditions</a>"
+msgstr ""
+
+#: wpsc-admin/display-items.page.php:143
+msgid " oz."
+msgstr ""
+
+#: wpsc-admin/display-update.page.php:60
+msgid "Updating Categories..."
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:575
+msgid "Ounces"
+msgstr ""
+
+#: wpsc-admin/display-update.page.php:73
+msgid "WP e-Commerce updated successfully!"
+msgstr ""
+
+#: wpsc-admin/display-items.page.php:140
+msgid " lbs."
+msgstr ""
+
+#: wpsc-admin/display-update.page.php:62
+msgid "Updating Variations..."
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:806
+msgctxt "External product link target"
+msgid "Default (set by theme)"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:763
+msgid "Use Default"
+msgstr ""
+
+#: wpsc-admin/display-items.page.php:146
+msgid " g"
+msgstr ""
+
+#: wpsc-admin/display-items.page.php:150
+msgid " kgs."
+msgstr ""
+
+#: wpsc-admin/display-update.page.php:66
+msgid "Updating Child Products..."
+msgstr ""
+
+#: wpsc-admin/display-items.page.php:278
+msgctxt "Show all [category name]"
+msgid "Show All %s"
+msgstr ""
+
+#: wpsc-admin/display-update.page.php:64
+msgid "Updating Products..."
+msgstr ""
+
+#: wpsc-admin/display-update.page.php:70
+msgid "Updating Database..."
+msgstr ""
+
+#: wpsc-admin/admin.php:296
+msgid "Off Site Product link"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:149
+msgid "+ New Currency"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:197
+msgid "+ Add level"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:576
+msgid "Grams"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:577
+msgid "Kilograms"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:589
+#: wpsc-admin/includes/display-items-functions.php:602
+#: wpsc-admin/includes/display-items-functions.php:615
+msgid "inches"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:590
+#: wpsc-admin/includes/display-items-functions.php:603
+#: wpsc-admin/includes/display-items-functions.php:616
+msgid "cm"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:591
+#: wpsc-admin/includes/display-items-functions.php:604
+#: wpsc-admin/includes/display-items-functions.php:617
+msgid "meter"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:807
+msgid "Open link in the same window"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:808
+msgid "Open link in a new window"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:927
+msgid "Show Product Count per Product Category"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:268
+msgctxt "admin menu: add new product"
+msgid "Add New"
+msgstr ""
+
+#: wpsc-includes/processing.functions.php:126
+msgid "Remaining stock of %s is 0. Product was unpublished."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/import.php:48
+msgid "Select if you would like to import your products in as Drafts or Publish them right away."
+msgstr ""
+
+#: wpsc-includes/ajax.functions.php:87
+msgid "Sorry, but the item \"%s\" is out of stock."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/import.php:39
+msgid "For each column, select the field it corresponds to in 'Belongs to'. You can upload as many products as you like."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:877
+msgid "Show Product Category Description"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:873
+msgid "Product Category Settings"
+msgstr ""
+
+#: wpsc-includes/processing.functions.php:126
+msgid "%s is out of stock"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:1044
+msgid "This is the Thumbnail size that will be displayed on the Single Product page. You can change the default sizes under your store settings"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:1041
+msgid "Single Product Page Thumbnail:"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:1057
+msgid "Products Page Thumbnail Size:"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:267
+msgctxt "post type singular name"
+msgid "Product"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:266
+msgctxt "post type name"
+msgid "Products"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/import.php:44
+msgid "Product Status"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/import.php:93
+msgid "Please select a category you would like to place all products from this CSV into"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:901
+msgid "Show Product Category Thumbnails"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:212
+#: wpsc-admin/includes/display-items-functions.php:225
+msgid "and above"
+msgstr ""
+
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:197
+msgid " &nbsp; Shipping: %s\n"
+msgstr ""
+
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:193
+msgid " - Shipping: %s\n"
+msgstr ""
+
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:257
+msgid "Purchase # %s\n"
+msgstr ""
+
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:235
+msgid "Total Shipping: %s\n"
+msgstr ""
+
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:237
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:255
+msgid "Total: %s\n"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:85
+msgid "CUP"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:54
+#: wpsc-updates/currency_list.php:79
+#: wpsc-updates/currency_list.php:128
+#: wpsc-updates/currency_list.php:130
+#: wpsc-updates/currency_list.php:147
+#: wpsc-updates/currency_list.php:184
+#: wpsc-updates/currency_list.php:185
+#: wpsc-updates/currency_list.php:187
+msgid "XCD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:86
+msgid "HRK"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:3
+#: wpsc-updates/currency_list.php:13
+#: wpsc-updates/currency_list.php:34
+#: wpsc-updates/currency_list.php:37
+#: wpsc-updates/currency_list.php:55
+#: wpsc-updates/currency_list.php:57
+#: wpsc-updates/currency_list.php:60
+#: wpsc-updates/currency_list.php:64
+#: wpsc-updates/currency_list.php:65
+#: wpsc-updates/currency_list.php:66
+#: wpsc-updates/currency_list.php:117
+#: wpsc-updates/currency_list.php:124
+#: wpsc-updates/currency_list.php:132
+#: wpsc-updates/currency_list.php:141
+#: wpsc-updates/currency_list.php:145
+#: wpsc-updates/currency_list.php:154
+#: wpsc-updates/currency_list.php:176
+#: wpsc-updates/currency_list.php:179
+#: wpsc-updates/currency_list.php:186
+#: wpsc-updates/currency_list.php:196
+#: wpsc-updates/currency_list.php:202
+#: wpsc-updates/currency_list.php:232
+msgid "&#8364;"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:77
+msgid "TPE"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:80
+msgid "DJF"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:82
+msgid "CDF"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:83
+msgid "CZK"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:84
+msgid "CYP"
+msgstr ""
+
+#: wpsc-shipping/australiapost.php:117
+msgid "5. If no product dimensions are defined, then default package dimensions of 100mm x 100mm x 100mm will be used."
+msgstr ""
+
+#: wpsc-updates/currency_list.php:24
+msgid "KRW"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:23
+msgid "KWD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:75
+msgid "EGP"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:31
+msgid "¥"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:21
+msgid "LAK"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:20
+msgid "LVL"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:58
+msgid "GIP"
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:310
+msgid "Your order will be shipped to the billing address"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:15
+#: wpsc-updates/currency_list.php:209
+msgid "CHF"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:14
+msgid "LTL"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:16
+msgid "LYD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:8
+msgid "MYR"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:18
+msgid "LSL"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:11
+msgid "MOP"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:9
+msgid "MWK"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:12
+msgid "MKD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:63
+#: wpsc-updates/currency_list.php:73
+#: wpsc-updates/currency_list.php:89
+#: wpsc-updates/currency_list.php:96
+#: wpsc-updates/currency_list.php:97
+#: wpsc-updates/currency_list.php:100
+msgid "XAF"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:67
+msgid "FJD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:69
+msgid "FKP"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:70
+msgid "ETB"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:36
+msgid "ILS"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:38
+msgid "IQD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:39
+msgid "IDR"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:25
+msgid "KPW"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:41
+msgid "INR"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:40
+msgid "IRR"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:44
+msgid "HKD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:61
+msgid "GEL"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:56
+#: wpsc-updates/currency_list.php:68
+#: wpsc-updates/currency_list.php:81
+msgid "DKK"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:87
+msgid "CRC"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:59
+msgid "GHC"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:76
+msgid "ECS"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:42
+msgid "ISK"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:26
+#: wpsc-updates/currency_list.php:46
+#: wpsc-updates/currency_list.php:93
+#: wpsc-updates/currency_list.php:138
+#: wpsc-updates/currency_list.php:152
+#: wpsc-updates/currency_list.php:162
+#: wpsc-updates/currency_list.php:223
+msgid "AUD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:27
+msgid "KES"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:28
+msgid "KZT"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:3
+#: wpsc-updates/currency_list.php:13
+#: wpsc-updates/currency_list.php:34
+#: wpsc-updates/currency_list.php:37
+#: wpsc-updates/currency_list.php:55
+#: wpsc-updates/currency_list.php:57
+#: wpsc-updates/currency_list.php:60
+#: wpsc-updates/currency_list.php:64
+#: wpsc-updates/currency_list.php:65
+#: wpsc-updates/currency_list.php:66
+#: wpsc-updates/currency_list.php:117
+#: wpsc-updates/currency_list.php:124
+#: wpsc-updates/currency_list.php:132
+#: wpsc-updates/currency_list.php:141
+#: wpsc-updates/currency_list.php:145
+#: wpsc-updates/currency_list.php:154
+#: wpsc-updates/currency_list.php:176
+#: wpsc-updates/currency_list.php:179
+#: wpsc-updates/currency_list.php:186
+#: wpsc-updates/currency_list.php:196
+#: wpsc-updates/currency_list.php:202
+#: wpsc-updates/currency_list.php:232
+msgid "€"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:4
+msgid "MTL"
+msgstr ""
+
+#: wpsc-theme/wpsc-single_product.php:140
+#: wpsc-theme/wpsc-grid_view.php:89
+#: wpsc-theme/wpsc-products_page.php:172
+msgid "Old Price"
+msgstr ""
+
+#: wpsc-shipping/weightrate.php:49
+msgid "Total weight <br />(<abbr alt=\"You must enter the weight here in pounds, regardless of what you used on your products\" title=\"You must enter the weight here in pounds, regardless of what you used on your products\">in pounds</abbr>)"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/general.php:58
+msgid "The Target Markets feature has been disabled because you have the Suhosin PHP extension installed on this server. If you need to use the Target Markets feature then disable the suhosin extension, if you can not do this, you will need to contact your hosting provider."
+msgstr ""
+
+#: wpsc-updates/currency_list.php:2
+msgid "MRO"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:43
+msgid "HUF"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:74
+msgid "SVC"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:47
+msgid "HTG"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:45
+msgid "HNL"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:52
+msgid "QTQ"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:50
+msgid "GNF"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:49
+msgid "GWP"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:48
+msgid "GYD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:88
+#: wpsc-updates/currency_list.php:157
+#: wpsc-updates/currency_list.php:161
+#: wpsc-updates/currency_list.php:173
+#: wpsc-updates/currency_list.php:216
+msgid "NZD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:90
+msgid "KMF"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:91
+msgid "COP"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:94
+msgid "CLP"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:95
+msgid "CNY"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:98
+msgid "KYD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:99
+msgid "CVE"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:101
+msgid "CAD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:102
+msgid "KHR"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:103
+msgid "BIF"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:105
+msgid "BGL"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:110
+msgid "BWP"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:112
+msgid "BOB"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:113
+msgid "BTN"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:114
+msgid "BMD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:118
+msgid "BYB"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:119
+msgid "BBD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:120
+msgid "BDT"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:121
+msgid "BHD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:122
+msgid "BSD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:123
+msgid "AZM"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:125
+msgid "AWG"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:126
+msgid "AMD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:129
+msgid "ATA"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:131
+msgid "AON"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:134
+msgid "DZD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:135
+msgid "ALL"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:136
+msgid "AFA"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:140
+msgid "MUR"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:142
+msgid "MXN"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:144
+msgid "MDL"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:146
+msgid "MNT"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:148
+#: wpsc-updates/currency_list.php:238
+msgid "MAD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:150
+msgid "MMK"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:151
+msgid "NAD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:155
+msgid "ANG"
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:308
+msgid "Same as billing address:"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:66
+msgid "Error: some files could not be copied. Please make sure that theme folder is writable."
+msgstr ""
+
+#: wpsc-updates/currency_list.php:3
+#: wpsc-updates/currency_list.php:13
+#: wpsc-updates/currency_list.php:34
+#: wpsc-updates/currency_list.php:37
+#: wpsc-updates/currency_list.php:55
+#: wpsc-updates/currency_list.php:57
+#: wpsc-updates/currency_list.php:60
+#: wpsc-updates/currency_list.php:64
+#: wpsc-updates/currency_list.php:65
+#: wpsc-updates/currency_list.php:66
+#: wpsc-updates/currency_list.php:117
+#: wpsc-updates/currency_list.php:124
+#: wpsc-updates/currency_list.php:132
+#: wpsc-updates/currency_list.php:141
+#: wpsc-updates/currency_list.php:145
+#: wpsc-updates/currency_list.php:154
+#: wpsc-updates/currency_list.php:176
+#: wpsc-updates/currency_list.php:179
+#: wpsc-updates/currency_list.php:186
+#: wpsc-updates/currency_list.php:196
+#: wpsc-updates/currency_list.php:202
+#: wpsc-updates/currency_list.php:232
+msgid "EUR"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:5
+#: wpsc-updates/currency_list.php:17
+#: wpsc-updates/currency_list.php:26
+#: wpsc-updates/currency_list.php:32
+#: wpsc-updates/currency_list.php:44
+#: wpsc-updates/currency_list.php:46
+#: wpsc-updates/currency_list.php:48
+#: wpsc-updates/currency_list.php:53
+#: wpsc-updates/currency_list.php:54
+#: wpsc-updates/currency_list.php:67
+#: wpsc-updates/currency_list.php:79
+#: wpsc-updates/currency_list.php:88
+#: wpsc-updates/currency_list.php:92
+#: wpsc-updates/currency_list.php:93
+#: wpsc-updates/currency_list.php:98
+#: wpsc-updates/currency_list.php:101
+#: wpsc-updates/currency_list.php:106
+#: wpsc-updates/currency_list.php:114
+#: wpsc-updates/currency_list.php:116
+#: wpsc-updates/currency_list.php:119
+#: wpsc-updates/currency_list.php:122
+#: wpsc-updates/currency_list.php:128
+#: wpsc-updates/currency_list.php:129
+#: wpsc-updates/currency_list.php:130
+#: wpsc-updates/currency_list.php:133
+#: wpsc-updates/currency_list.php:137
+#: wpsc-updates/currency_list.php:138
+#: wpsc-updates/currency_list.php:143
+#: wpsc-updates/currency_list.php:147
+#: wpsc-updates/currency_list.php:151
+#: wpsc-updates/currency_list.php:152
+#: wpsc-updates/currency_list.php:157
+#: wpsc-updates/currency_list.php:161
+#: wpsc-updates/currency_list.php:162
+#: wpsc-updates/currency_list.php:163
+#: wpsc-updates/currency_list.php:167
+#: wpsc-updates/currency_list.php:173
+#: wpsc-updates/currency_list.php:177
+#: wpsc-updates/currency_list.php:184
+#: wpsc-updates/currency_list.php:185
+#: wpsc-updates/currency_list.php:187
+#: wpsc-updates/currency_list.php:195
+#: wpsc-updates/currency_list.php:198
+#: wpsc-updates/currency_list.php:211
+#: wpsc-updates/currency_list.php:216
+#: wpsc-updates/currency_list.php:218
+#: wpsc-updates/currency_list.php:219
+#: wpsc-updates/currency_list.php:222
+#: wpsc-updates/currency_list.php:223
+#: wpsc-updates/currency_list.php:229
+#: wpsc-updates/currency_list.php:235
+#: wpsc-updates/currency_list.php:236
+#: wpsc-updates/currency_list.php:242
+msgid "$"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:5
+#: wpsc-updates/currency_list.php:17
+#: wpsc-updates/currency_list.php:26
+#: wpsc-updates/currency_list.php:32
+#: wpsc-updates/currency_list.php:44
+#: wpsc-updates/currency_list.php:46
+#: wpsc-updates/currency_list.php:48
+#: wpsc-updates/currency_list.php:53
+#: wpsc-updates/currency_list.php:54
+#: wpsc-updates/currency_list.php:67
+#: wpsc-updates/currency_list.php:79
+#: wpsc-updates/currency_list.php:88
+#: wpsc-updates/currency_list.php:92
+#: wpsc-updates/currency_list.php:93
+#: wpsc-updates/currency_list.php:98
+#: wpsc-updates/currency_list.php:101
+#: wpsc-updates/currency_list.php:106
+#: wpsc-updates/currency_list.php:114
+#: wpsc-updates/currency_list.php:116
+#: wpsc-updates/currency_list.php:119
+#: wpsc-updates/currency_list.php:122
+#: wpsc-updates/currency_list.php:128
+#: wpsc-updates/currency_list.php:129
+#: wpsc-updates/currency_list.php:130
+#: wpsc-updates/currency_list.php:133
+#: wpsc-updates/currency_list.php:137
+#: wpsc-updates/currency_list.php:138
+#: wpsc-updates/currency_list.php:143
+#: wpsc-updates/currency_list.php:147
+#: wpsc-updates/currency_list.php:151
+#: wpsc-updates/currency_list.php:152
+#: wpsc-updates/currency_list.php:157
+#: wpsc-updates/currency_list.php:161
+#: wpsc-updates/currency_list.php:162
+#: wpsc-updates/currency_list.php:163
+#: wpsc-updates/currency_list.php:167
+#: wpsc-updates/currency_list.php:173
+#: wpsc-updates/currency_list.php:177
+#: wpsc-updates/currency_list.php:184
+#: wpsc-updates/currency_list.php:185
+#: wpsc-updates/currency_list.php:187
+#: wpsc-updates/currency_list.php:195
+#: wpsc-updates/currency_list.php:198
+#: wpsc-updates/currency_list.php:211
+#: wpsc-updates/currency_list.php:216
+#: wpsc-updates/currency_list.php:218
+#: wpsc-updates/currency_list.php:219
+#: wpsc-updates/currency_list.php:222
+#: wpsc-updates/currency_list.php:223
+#: wpsc-updates/currency_list.php:229
+#: wpsc-updates/currency_list.php:235
+#: wpsc-updates/currency_list.php:236
+#: wpsc-updates/currency_list.php:242
+msgid "&#036;"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:5
+#: wpsc-updates/currency_list.php:53
+#: wpsc-updates/currency_list.php:133
+#: wpsc-updates/currency_list.php:137
+#: wpsc-updates/currency_list.php:143
+#: wpsc-updates/currency_list.php:163
+#: wpsc-updates/currency_list.php:167
+#: wpsc-updates/currency_list.php:177
+#: wpsc-updates/currency_list.php:222
+#: wpsc-updates/currency_list.php:229
+#: wpsc-updates/currency_list.php:235
+#: wpsc-updates/currency_list.php:236
+msgid "USD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:6
+#: wpsc-updates/currency_list.php:33
+#: wpsc-updates/currency_list.php:104
+#: wpsc-updates/currency_list.php:115
+#: wpsc-updates/currency_list.php:159
+#: wpsc-updates/currency_list.php:192
+#: wpsc-updates/currency_list.php:215
+msgid "XOF"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:7
+msgid "MVR"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:10
+msgid "MGF"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:17
+msgid "LRD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:19
+msgid "LBP"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:22
+msgid "KGS"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:29
+msgid "JOD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:30
+#: wpsc-updates/currency_list.php:35
+#: wpsc-updates/currency_list.php:51
+#: wpsc-updates/currency_list.php:139
+#: wpsc-updates/currency_list.php:201
+#: wpsc-updates/currency_list.php:224
+msgid "£"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:30
+#: wpsc-updates/currency_list.php:35
+#: wpsc-updates/currency_list.php:51
+#: wpsc-updates/currency_list.php:139
+#: wpsc-updates/currency_list.php:201
+#: wpsc-updates/currency_list.php:224
+msgid "&#163;"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:30
+#: wpsc-updates/currency_list.php:35
+#: wpsc-updates/currency_list.php:51
+#: wpsc-updates/currency_list.php:139
+#: wpsc-updates/currency_list.php:201
+#: wpsc-updates/currency_list.php:224
+msgid "GBP"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:31
+msgid "&#165;"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:31
+msgid "JPY"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:32
+msgid "JMD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:62
+msgid "GMD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:71
+msgid "EEK"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:72
+msgid "ERN"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:78
+msgid "DOP"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:106
+msgid "BND"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:108
+msgid "BRL"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:109
+#: wpsc-updates/currency_list.php:164
+#: wpsc-updates/currency_list.php:206
+msgid "NOK"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:111
+msgid "BAM"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:116
+msgid "BZD"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:127
+msgid "ARS"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:149
+msgid "MZM"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:153
+msgid "NPR"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:539
+msgid "Additional Checkout Fields"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:517
+msgid "Order Notes"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:497
+msgid "Cart Items with Custom Messages"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:490
+msgid "Cart Items with Custom Files"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:485
+msgid "Users Custom Fields"
+msgstr ""
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:443
+#: wpsc-core/wpsc-installer.php:754
+#: wpsc-admin/includes/purchlogs_upgrade.php:47
+#: wpsc-admin/display-sales-logs.php:154
+msgid "Shipping Address"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:847
+msgid "Select all downloadable files for %s"
+msgstr ""
+
+#: wpsc-includes/checkout.class.php:750
+msgid "Please enter a valid card number."
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:1254
+msgid "Stock:"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:185
+#: wpsc-admin/includes/display-items-functions.php:1262
+msgid "Price:"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:1270
+msgid "Sale Price:"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:249
+#: wpsc-admin/includes/display-items-functions.php:1238
+msgid "SKU:"
+msgstr ""
+
+#: wpsc-admin/admin.php:849
+msgid "Error: you don't have required permissions to edit this product"
+msgstr ""
+
+#: wpsc-admin/admin.php:269
+#: wpsc-admin/admin.php:355
+msgid "Unsaved changes have been detected. Click OK to lose these changes and continue."
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:1246
+msgid "Weight:"
+msgstr ""
+
+#: wpsc-includes/checkout.class.php:760
+msgid "Please enter a valid expiry date."
+msgstr ""
+
+#: wpsc-includes/checkout.class.php:768
+#: wpsc-includes/checkout.class.php:778
+msgid "Please enter a valid CVV."
+msgstr ""
+
+#: wpsc-core/wpsc-installer.php:159
+msgid ""
+"Thank you for purchasing with %shop_name%, any items to be shipped will be processed as soon as possible, any items that can be downloaded can be downloaded using the links on this page.All prices include tax and postage and packaging where applicable.\n"
+"\tYou ordered these items: \n"
+"\t%product_list%%total_shipping%%total_price%"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:325
+msgctxt "taxonomy general name"
+msgid "Categories"
+msgstr ""
+
+#: wpsc-includes/product-template.php:134
+#: wpsc-includes/product-template.php:189
+msgid "First Page"
+msgstr ""
+
+#: wpsc-includes/product-template.php:140
+#: wpsc-includes/product-template.php:142
+#: wpsc-includes/product-template.php:195
+#: wpsc-includes/product-template.php:197
+msgid "&lt; Previous"
+msgstr ""
+
+#: wpsc-includes/product-template.php:180
+#: wpsc-includes/product-template.php:235
+msgid "Next Page"
+msgstr ""
+
+#: wpsc-includes/product-template.php:184
+#: wpsc-includes/product-template.php:239
+msgid "Last Page"
+msgstr ""
+
+#: wpsc-includes/product-template.php:184
+#: wpsc-includes/product-template.php:239
+msgid "Last &raquo;"
+msgstr ""
+
+#: wpsc-includes/product-template.php:180
+#: wpsc-includes/product-template.php:235
+msgid "Next &gt;"
+msgstr ""
+
+#: wpsc-includes/product-template.php:150
+#: wpsc-includes/product-template.php:152
+#: wpsc-includes/product-template.php:169
+#: wpsc-includes/product-template.php:205
+#: wpsc-includes/product-template.php:207
+#: wpsc-includes/product-template.php:224
+msgid "Page %s"
+msgstr ""
+
+#: wpsc-includes/product-template.php:134
+#: wpsc-includes/product-template.php:189
+msgid "&laquo; First"
+msgstr ""
+
+#: wpsc-includes/product-template.php:140
+#: wpsc-includes/product-template.php:142
+#: wpsc-includes/product-template.php:195
+#: wpsc-includes/product-template.php:197
+msgid "Previous Page"
+msgstr ""
+
+#: wpsc-admin/admin.php:890
+msgid "Error updating product"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:350
+msgid "Taxable Amount"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:338
+msgid "This product is not taxable."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/admin.php:144
+msgid "Note: The Tracking Subject, is the subject for The Tracking Message email. The Tracking Message is the message e-mailed to users when you click 'Email buyer' on the sales log. This option is only available for purchases with the status of 'Job Dispatched'. Tags you can use in the email message section are %trackid% and %shop_name%"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/admin.php:129
+msgid "Note: The Admin Report is the email sent to the e-mail address set above as soon as someone successfully buys a product."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/admin.php:118
+msgid "Note: The purchase receipt is the message e-mailed to users after purchasing products from your shop."
+msgstr ""
+
+#: wpsc-admin/includes/save-data.functions.php:447
+msgid "Template tags are used to display a particular category or group within your theme / template."
+msgstr ""
+
+#: wpsc-admin/includes/save-data.functions.php:470
+msgid "The Target Markets feature has been disabled because you have the Suhosin PHP extension installed on this server. If you need to use the Target Markets feature, then disable the suhosin extension. If you can not do this, you will need to contact your hosting provider."
+msgstr ""
+
+#: wpsc-admin/includes/save-data.functions.php:475
+msgid "Select"
+msgstr ""
+
+#: wpsc-admin/includes/save-data.functions.php:509
+msgid "Category requires additional checkout form fields"
+msgstr ""
+
+#: wpsc-admin/includes/save-data.functions.php:149
+#: wpsc-admin/includes/save-data.functions.php:409
+msgid "Category Image"
+msgstr ""
+
+#: wpsc-admin/includes/save-data.functions.php:414
+msgid "You can set an image for the category here.  If one exists, check the box to delete."
+msgstr ""
+
+#: wpsc-admin/includes/save-data.functions.php:420
+msgid "Thumbnail Size"
+msgstr ""
+
+#: wpsc-admin/includes/save-data.functions.php:434
+msgid "Display Category Shortcode"
+msgstr ""
+
+#: wpsc-admin/includes/save-data.functions.php:438
+msgid "Shortcodes are used to display a particular category or group within any WordPress page or post."
+msgstr ""
+
+#: wpsc-admin/includes/save-data.functions.php:443
+msgid "Display Category Template Tag"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:334
+msgid "New Product Category Name"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:328
+msgid "All Product Categories"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:330
+msgid "Parent Product Category:"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:331
+msgid "Edit Product Category"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:326
+msgctxt "taxonomy singular name"
+msgid "Product Category"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:329
+msgid "Parent Product Category"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:332
+msgid "Update Product Category"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:333
+msgid "Add New Product Category"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:327
+msgid "Search Product Categories"
+msgstr ""
+
+#: wpsc-admin/display-items.page.php:104
+#: wpsc-admin/display-items.page.php:110
+msgid "Drag to a new position"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:791
+msgid "If this product is for sale on another website enter the link here. For instance if your product is an MP3 file for sale on iTunes you could put the link here. This option overrides the buy now and add to cart links and takes you to the site linked here. You can also customise the Buy Now text and choose to open the link in a new window."
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:503
+msgid "You have no Variations added."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/taxes.php:154
+msgid "Note: Tax Bands are special tax rules you can create and apply on a per-product basis. <br /> Please visit the product page to apply your Tax Band."
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:610
+msgid "Length"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:271
+msgid "New Product"
+msgstr ""
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:560
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:250
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:251
+msgid "Total Tax"
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:261
+msgid "Signing up is free and easy! please fill out your details your registration will happen automatically as you checkout. Don't forget to use your details to login with next time!"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:48
+msgid "Advanced Theme Settings"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:539
+msgid "Show list of categories"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:977
+msgid "Note: Anytime you update any of the thumbnail settings, WPeC will automatically resize all of your thumbnails for you.  Depending on how many images you have, this could take awhile."
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:274
+msgid "No products found"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:742
+msgid "Display Featured Product above Product Pages"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:96
+msgid ""
+"WP e-Commerce provides you the ability to move your theme files to a safe place for theming control.\n"
+"\t\t\t\t\t\n"
+"If you want to change the look of your site, select the files you want to edit from the list and click the move button. This will copy the template files to your active WordPress theme. "
+msgstr ""
+
+#: wpsc-widgets/category_widget.php:148
+msgid " Show N/A when No Image Available"
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:221
+msgid "You must sign in or register with us to continue with your purchase"
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:225
+msgid "Sign in"
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:231
+msgid "If you have bought from us before please sign in here to purchase"
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:250
+msgid "Join up now"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:275
+msgid "No products found in Trash"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:56
+msgid "You did not specify any template files to be moved."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:114
+msgid "To change the look of certain aspects of your shop, you can edit the moved files that are found here:"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:124
+msgid "You can create a copy of your WordPress Theme by clicking the backup button bellow. Once copied you can find them here:"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:128
+msgid "<a href=\"%s\" class=\"button\">Backup Your WordPress Theme</a>"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:133
+msgid "If you have moved your files in some other way i.e FTP, you may need to click the Flush Theme Cache. This will refresh the locations WordPress looks for your templates."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:134
+msgid "<a href=\"%s\" class=\"button\">Flush Theme Cache</a>"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:190
+msgid "Dobra"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:191
+msgid "Saudi Arabia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:191
+msgid "Saudi Riyal"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:192
+msgid "Senegal"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:193
+msgid "Seychelles"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:193
+msgid "Seychelles Rupee"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:194
+msgid "Sierra Leone"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:194
+msgid "Sierra Leone Leone"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:195
+msgid "Singapore"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:195
+msgid "Singapore Dollar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:196
+msgid "Slovakia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:197
+msgid "Slovenia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:197
+msgid "Slovenian Tolar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:198
+msgid "Solomon Islands"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:198
+msgid "Solomon Islands Dollar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:199
+msgid "Somalia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:199
+msgid "Somali Shilling"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:200
+msgid "South Africa"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:200
+msgid "South African Rand"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:201
+msgid "South Georgia & South Sandwich Islands"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:202
+msgid "Spain"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:203
+msgid "Sri Lanka"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:203
+msgid "Sri Lanka Rupee"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:204
+msgid "Sudan"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:204
+msgid "Sudanese Dinar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:205
+msgid "Suriname"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:205
+msgid "Surinam Guilder"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:206
+msgid "Svalbard and Jan Mayen Islands"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:207
+msgid "Swaziland"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:207
+msgid "Swaziland Lilangeni"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:208
+msgid "Sweden"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:208
+msgid "Swedish Krona"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:209
+msgid "Switzerland"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:210
+msgid "Syria"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:210
+msgid "Syrian Pound"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:211
+msgid "Taiwan"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:211
+msgid "Taiwan Dollar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:212
+msgid "Tajikistan"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:212
+msgid "Tajik Ruble"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:213
+msgid "Tanzania"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:213
+msgid "Tanzanian Shilling"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:214
+msgid "Thailand"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:214
+msgid "Thai Baht"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:215
+msgid "Togo"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:216
+msgid "Tokelau"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:217
+msgid "Tonga"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:217
+msgid "Tongan Pa&#699;anga"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:218
+msgid "Trinidad and Tobago"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:218
+msgid "Trinidad and Tobago Dollar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:219
+msgid "Tunisia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:219
+msgid "Tunisian Dollar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:220
+msgid "Turkey"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:220
+msgid "Turkish Lira"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:221
+msgid "Turkmenistan"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:221
+msgid "Manat"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:222
+msgid "Turks and Caicos Islands"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:223
+msgid "Tuvalu"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:224
+msgid "U.K."
+msgstr ""
+
+#: wpsc-updates/currency_list.php:225
+msgid "Uganda"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:225
+msgid "Uganda Shilling"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:226
+msgid "Ukraine"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:226
+msgid "Ukraine Hryvnia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:227
+msgid "United Arab Emirates"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:227
+msgid "Arab Emirates Dirham"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:228
+msgid "Uruguay"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:228
+msgid "Uruguayan Peso"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:229
+msgid "USA Minor Outlying Islands"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:230
+msgid "Uzbekistan"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:230
+msgid "Uzbekistan Sum"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:231
+msgid "Vanuatu"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:231
+msgid "Vanuatu Vatu"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:232
+msgid "Vatican"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:233
+msgid "Venezuela"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:233
+msgid "Venezuelan Bolivar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:234
+msgid "Vietnam"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:234
+msgid "Vietnamese Dong"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:235
+msgid "Virgin Islands (British)"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:236
+msgid "Virgin Islands (USA)"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:237
+msgid "Wallis and Futuna Islands"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:238
+msgid "Western Sahara"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:239
+msgid "Yemen"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:239
+msgid "Yemeni Rial"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:240
+msgid "Yugoslavia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:240
+msgid "Yugoslav New Dinar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:241
+msgid "Zambia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:241
+msgid "Zambian Kwacha"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:242
+msgid "Zimbabwe"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:242
+msgid "Zimbabwe Dollar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:2
+msgid "Mauritania"
+msgstr ""
+
+#: wpsc-widgets/category_widget.php:133
+msgid "Show Categories"
+msgstr ""
+
+#: wpsc-shipping/australiapost.php:47
+msgid "Australia Post"
+msgstr ""
+
+#: wp-shopping-cart.php:152
+msgid "Looks like you're running an older version of WordPress, you need to be running at least WordPress 3.0 to use WP e-Commerce 3.8"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:3
+#: wpsc-updates/currency_list.php:13
+#: wpsc-updates/currency_list.php:34
+#: wpsc-updates/currency_list.php:37
+#: wpsc-updates/currency_list.php:55
+#: wpsc-updates/currency_list.php:57
+#: wpsc-updates/currency_list.php:60
+#: wpsc-updates/currency_list.php:64
+#: wpsc-updates/currency_list.php:65
+#: wpsc-updates/currency_list.php:66
+#: wpsc-updates/currency_list.php:117
+#: wpsc-updates/currency_list.php:124
+#: wpsc-updates/currency_list.php:132
+#: wpsc-updates/currency_list.php:141
+#: wpsc-updates/currency_list.php:145
+#: wpsc-updates/currency_list.php:154
+#: wpsc-updates/currency_list.php:176
+#: wpsc-updates/currency_list.php:179
+#: wpsc-updates/currency_list.php:186
+#: wpsc-updates/currency_list.php:196
+#: wpsc-updates/currency_list.php:202
+#: wpsc-updates/currency_list.php:232
+msgid "Euro"
+msgstr ""
+
+#: wp-shopping-cart.php:152
+msgid "WP e-Commerce 3.8 not compatible"
+msgstr ""
+
+#: wpsc-shipping/australiapost.php:115
+msgid "3. To ensure accurate quotes, each product must valid dimensions configured. When editing a product, use the height, width and length fields."
+msgstr ""
+
+#: wpsc-shipping/australiapost.php:116
+msgid "4. The combined dimensions are estimated by calculating the volume of each item, and then calculating the cubed root of the overall order volume which becomes width, length and height."
+msgstr ""
+
+#: wpsc-widgets/category_widget.php:135
+msgid "(leave all unchecked if you want to display all)"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:3
+msgid "Martinique (French)"
+msgstr ""
+
+#: wpsc-shipping/australiapost.php:363
+msgid "%1$s (estimated delivery time: %2$d business day)"
+msgid_plural "%1$s (estimated delivery time: %2$d business days)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: wpsc-shipping/australiapost.php:58
+msgid "Express Post International"
+msgstr ""
+
+#: wpsc-shipping/australiapost.php:54
+msgid "Standard Parcel Post"
+msgstr ""
+
+#: wpsc-shipping/australiapost.php:55
+msgid "Express Post"
+msgstr ""
+
+#: wpsc-shipping/australiapost.php:101
+msgid "You must set your base postcode above before this shipping module will work."
+msgstr ""
+
+#: wpsc-shipping/australiapost.php:104
+msgid "Select the Australia Post services that you want to offer during checkout:"
+msgstr ""
+
+#: wpsc-shipping/australiapost.php:112
+msgid "Notes:"
+msgstr ""
+
+#: wpsc-shipping/australiapost.php:113
+msgid "1. The actual services quoted to the customer during checkout will depend on the destination country. Not all methods are available to all destinations."
+msgstr ""
+
+#: wpsc-admin/admin.php:624
+msgid "Financial Year End"
+msgstr ""
+
+#: wpsc-shipping/australiapost.php:96
+msgid "This shipping module only works if the base country in settings, region is set to Australia."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/shipping.php:190
+msgid "To enable shipping in WP e-Commerce you must select which shipping methods you want to enable on your site.<br /> If you want to use fixed-price shipping options like \"Pickup - $0, Overnight - $10, Same day - $20, etc.\" you can download a WordPress plugin from plugins directory for <a href=\"http://wordpress.org/extend/plugins/wp-e-commerce-fixed-rate-shipping/\">Simple shipping</a>. It will appear in the list as \"Fixed rate\"."
+msgstr ""
+
+#: wpsc-shipping/australiapost.php:57
+msgid "Sea Mail"
+msgstr ""
+
+#: wpsc-shipping/australiapost.php:56
+msgid "Air Mail"
+msgstr ""
+
+#: wpsc-shipping/australiapost.php:114
+msgid "2. Each product must have a valid weight configured. When editing a product, use the weight field.)."
+msgstr ""
+
+#: wpsc-updates/currency_list.php:2
+msgid "Mauritanian Ouguiya"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:4
+msgid "Malta"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:4
+msgid "Maltese Lira"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:5
+msgid "Marshall Islands"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:5
+#: wpsc-updates/currency_list.php:53
+#: wpsc-updates/currency_list.php:107
+#: wpsc-updates/currency_list.php:133
+#: wpsc-updates/currency_list.php:137
+#: wpsc-updates/currency_list.php:143
+#: wpsc-updates/currency_list.php:163
+#: wpsc-updates/currency_list.php:167
+#: wpsc-updates/currency_list.php:177
+#: wpsc-updates/currency_list.php:222
+#: wpsc-updates/currency_list.php:229
+#: wpsc-updates/currency_list.php:235
+#: wpsc-updates/currency_list.php:236
+msgid "US Dollar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:6
+msgid "Mali"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:6
+#: wpsc-updates/currency_list.php:33
+#: wpsc-updates/currency_list.php:104
+#: wpsc-updates/currency_list.php:115
+#: wpsc-updates/currency_list.php:159
+#: wpsc-updates/currency_list.php:192
+#: wpsc-updates/currency_list.php:215
+msgid "CFA Franc BCEAO"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:7
+msgid "Maldives"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:7
+msgid "Maldive Rufiyaa"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:8
+msgid "Malaysia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:8
+msgid "Malaysian Ringgit"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:9
+msgid "Malawi"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:9
+msgid "Malawi Kwacha"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:10
+msgid "Madagascar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:10
+msgid "Malagasy Franc"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:11
+msgid "Macau"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:11
+msgid "Macau Pataca"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:12
+msgid "Macedonia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:12
+msgid "Denar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:13
+msgid "Luxembourg"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:14
+msgid "Lithuania"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:14
+msgid "Lithuanian Litas"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:15
+msgid "Liechtenstein"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:15
+#: wpsc-updates/currency_list.php:209
+msgid "Swiss Franc"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:16
+msgid "Libya"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:16
+msgid "Libyan Dinar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:17
+msgid "Liberia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:17
+msgid "Liberian Dollar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:18
+msgid "Lesotho"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:18
+msgid "Lesotho Loti"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:19
+msgid "Lebanon"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:19
+msgid "Lebanese Pound"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:20
+msgid "Latvia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:20
+msgid "Latvian Lats"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:21
+msgid "Laos"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:21
+msgid "Lao Kip"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:22
+msgid "Kyrgyzstan"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:22
+msgid "Som"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:23
+msgid "Kuwait"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:23
+msgid "Kuwaiti Dinar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:24
+msgid "Korea, South"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:24
+msgid "Korean Won"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:25
+msgid "Korea, North"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:25
+msgid "North Korean Won"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:26
+msgid "Kiribati"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:26
+#: wpsc-updates/currency_list.php:46
+#: wpsc-updates/currency_list.php:92
+#: wpsc-updates/currency_list.php:93
+#: wpsc-updates/currency_list.php:138
+#: wpsc-updates/currency_list.php:152
+#: wpsc-updates/currency_list.php:162
+#: wpsc-updates/currency_list.php:223
+msgid "Australian Dollar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:27
+msgid "Kenya"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:27
+msgid "Kenyan Shilling"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:28
+msgid "Kazakhstan"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:28
+msgid "Kazakhstan Tenge"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:29
+msgid "Jordan"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:29
+msgid "Jordanian Dinar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:30
+msgid "Jersey"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:30
+#: wpsc-updates/currency_list.php:35
+#: wpsc-updates/currency_list.php:51
+#: wpsc-updates/currency_list.php:139
+#: wpsc-updates/currency_list.php:201
+#: wpsc-updates/currency_list.php:224
+msgid "Pound Sterling"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:31
+msgid "Japan"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:31
+msgid "Japanese Yen"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:32
+msgid "Jamaica"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:32
+msgid "Jamaican Dollar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:33
+msgid "Ivory Coast"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:34
+msgid "Italy"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:35
+msgid "Isle of Man"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:36
+msgid "Israel"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:36
+msgid "Israeli New Shekel"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:37
+msgid "Ireland"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:38
+msgid "Iraq"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:38
+msgid "Iraqi Dinar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:39
+msgid "Indonesia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:39
+msgid "Indonesian Rupiah"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:40
+msgid "Iran"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:40
+msgid "Iranian Rial"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:41
+msgid "India"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:41
+msgid "Indian Rupee"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:42
+msgid "Iceland"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:42
+msgid "Iceland Krona"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:43
+msgid "Hungary"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:43
+msgid "Hungarian Forint"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:44
+msgid "Hong Kong"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:44
+msgid "Hong Kong Dollar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:45
+msgid "Honduras"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:45
+msgid "Honduran Lempira"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:46
+msgid "Heard Island and McDonald Islands"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:47
+msgid "Haiti"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:47
+msgid "Haitian Gourde"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:48
+msgid "Guyana"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:48
+msgid "Guyana Dollar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:49
+msgid "Guinea Bissau"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:49
+msgid "Guinea-Bissau Peso"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:50
+msgid "Guinea"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:50
+msgid "Guinea Franc"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:51
+msgid "Guernsey"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:52
+msgid "Guatemala"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:52
+msgid "Guatemalan Quetzal"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:53
+msgid "Guam (USA)"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:54
+msgid "Grenada"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:54
+msgid "East Carribean Dollar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:55
+msgid "Guadeloupe (French)"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:56
+msgid "Greenland"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:56
+#: wpsc-updates/currency_list.php:68
+#: wpsc-updates/currency_list.php:81
+msgid "Danish Krone"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:57
+msgid "Greece"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:58
+msgid "Gibraltar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:58
+msgid "Gibraltar Pound"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:59
+msgid "Ghana"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:59
+msgid "Ghanaian Cedi"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:60
+msgid "Germany"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:61
+msgid "Georgia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:61
+msgid "Georgian Lari"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:62
+msgid "Gambia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:62
+msgid "Gambian Dalasi"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:63
+msgid "Gabon"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:63
+#: wpsc-updates/currency_list.php:73
+#: wpsc-updates/currency_list.php:89
+#: wpsc-updates/currency_list.php:96
+#: wpsc-updates/currency_list.php:97
+#: wpsc-updates/currency_list.php:100
+msgid "CFA Franc BEAC"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:64
+msgid "French Southern Territories"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:65
+msgid "France"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:66
+msgid "Finland"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:67
+msgid "Fiji"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:67
+msgid "Fiji Dollar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:68
+msgid "Faroe Islands"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:69
+msgid "Falkland Islands"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:69
+msgid "Falkland Islands Pound"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:70
+msgid "Ethiopia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:70
+msgid "Ethiopian Birr"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:71
+msgid "Estonia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:71
+msgid "Estonian Kroon"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:72
+msgid "Eritrea"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:72
+msgid "Eritrean Nakfa"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:73
+msgid "Equatorial Guinea"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:74
+msgid "El Salvador"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:74
+msgid "El Salvador Colon"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:75
+msgid "Egypt"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:75
+msgid "Egyptian Pound"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:76
+msgid "Ecuador"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:76
+msgid "Ecuador Sucre"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:77
+msgid "East Timor"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:77
+msgid "Timor Escudo"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:78
+msgid "Dominican Republic"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:78
+msgid "Dominican Peso"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:79
+msgid "Dominica"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:79
+#: wpsc-updates/currency_list.php:128
+#: wpsc-updates/currency_list.php:130
+#: wpsc-updates/currency_list.php:147
+#: wpsc-updates/currency_list.php:184
+#: wpsc-updates/currency_list.php:185
+#: wpsc-updates/currency_list.php:187
+msgid "East Caribbean Dollar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:80
+msgid "Djibouti"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:80
+msgid "Djibouti Franc"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:81
+msgid "Denmark"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:82
+msgid "Democratic Republic of Congo"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:82
+msgid "Francs"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:83
+msgid "Czech Rep."
+msgstr ""
+
+#: wpsc-updates/currency_list.php:83
+msgid "Czech Koruna"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:84
+msgid "Cyprus"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:84
+msgid "Cyprus Pound"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:85
+msgid "Cuba"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:85
+msgid "Cuban Peso"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:86
+msgid "Croatia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:86
+msgid "Croatian Kuna"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:87
+msgid "Costa Rica"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:87
+msgid "Costa Rican Colon"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:88
+msgid "Cook Islands"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:88
+#: wpsc-updates/currency_list.php:157
+#: wpsc-updates/currency_list.php:161
+#: wpsc-updates/currency_list.php:173
+#: wpsc-updates/currency_list.php:216
+msgid "New Zealand Dollar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:89
+msgid "Congo"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:90
+msgid "Comoros"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:90
+msgid "Comoros Franc"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:91
+msgid "Colombia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:91
+msgid "Colombian Peso"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:92
+msgid "Cocos (Keeling) Islands"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:93
+msgid "Christmas Island"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:94
+msgid "Chile"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:94
+msgid "Chilean Peso"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:95
+msgid "China"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:95
+msgid "Yuan Renminbi"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:96
+msgid "Chad"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:97
+msgid "Central African Republic"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:98
+msgid "Cayman Islands"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:98
+msgid "Cayman Islands Dollar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:99
+msgid "Cape Verde"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:99
+msgid "Cape Verde Escudo"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:100
+msgid "Cameroon"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:101
+msgid "Canada"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:101
+msgid "Canadian Dollar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:102
+msgid "Cambodia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:102
+msgid "Kampuchean Riel"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:103
+msgid "Burundi"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:103
+msgid "Burundi Franc"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:104
+msgid "Burkina Faso"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:105
+msgid "Bulgaria"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:105
+msgid "Bulgarian Lev"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:106
+msgid "Brunei Darussalam"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:106
+msgid "Brunei Dollar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:107
+msgid "British Indian Ocean Territory"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:108
+msgid "Brazil"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:108
+msgid "Brazilian Real"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:109
+msgid "Bouvet Island"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:109
+#: wpsc-updates/currency_list.php:164
+#: wpsc-updates/currency_list.php:206
+msgid "Norwegian Krone"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:110
+msgid "Botswana"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:110
+msgid "Botswana Pula"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:111
+msgid "Bosnia-Herzegovina"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:111
+msgid "Marka"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:112
+msgid "Bolivia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:112
+msgid "Boliviano"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:113
+msgid "Bhutan"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:113
+msgid "Bhutan Ngultrum"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:114
+msgid "Bermuda"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:114
+msgid "Bermudian Dollar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:115
+msgid "Benin"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:116
+msgid "Belize"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:116
+msgid "Belize Dollar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:117
+msgid "Belgium"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:118
+msgid "Belarus"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:118
+msgid "Belarussian Ruble"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:119
+msgid "Barbados"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:119
+msgid "Barbados Dollar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:120
+msgid "Bangladesh"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:120
+msgid "Bangladeshi Taka"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:121
+msgid "Bahrain"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:121
+msgid "Bahraini Dinar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:122
+msgid "Bahamas"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:122
+msgid "Bahamian Dollar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:123
+msgid "Azerbaijan"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:123
+msgid "Azerbaijanian Manat"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:124
+msgid "Austria"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:125
+msgid "Aruba"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:125
+msgid "Aruban Guilder"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:126
+msgid "Armenia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:126
+msgid "Armenian Dram"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:127
+msgid "Argentina"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:127
+msgid "Argentine Peso"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:128
+msgid "Antigua and Barbuda"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:129
+msgid "Antarctica"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:129
+msgid "Dollar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:130
+msgid "Anguilla"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:131
+msgid "Angola"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:131
+msgid "Angolan New Kwanza"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:132
+msgid "Andorra"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:133
+msgid "American Samoa"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:134
+msgid "Algeria"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:134
+msgid "Algerian Dinar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:135
+msgid "Albania"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:135
+msgid "Albanian Lek"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:136
+msgid "Afghanistan"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:136
+msgid "Afghanistan Afghani"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:137
+msgid "USA"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:138
+msgid "Australia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:139
+msgid "Great Britain"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:140
+msgid "Mauritius"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:140
+msgid "Mauritius Rupee"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:141
+msgid "Mayotte"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:142
+msgid "Mexico"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:142
+msgid "Mexican Nuevo Peso"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:143
+msgid "Micronesia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:144
+msgid "Moldova"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:144
+msgid "Moldovan Leu"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:145
+msgid "Monaco"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:146
+msgid "Mongolia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:146
+msgid "Mongolian Tugrik"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:147
+msgid "Montserrat"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:148
+msgid "Morocco"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:148
+#: wpsc-updates/currency_list.php:238
+msgid "Moroccan Dirham"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:149
+msgid "Mozambique"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:149
+msgid "Mozambique Metical"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:150
+msgid "Myanmar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:150
+msgid "Myanmar Kyat"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:151
+msgid "Namibia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:151
+msgid "Namibian Dollar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:152
+msgid "Nauru"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:153
+msgid "Nepal"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:153
+msgid "Nepalese Rupee"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:154
+msgid "Netherlands"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:155
+msgid "Netherlands Antilles"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:155
+msgid "Netherlands Antillean Guilder"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:156
+msgid "New Caledonia (French)"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:156
+#: wpsc-updates/currency_list.php:175
+#: wpsc-updates/currency_list.php:237
+msgid "CFP Franc"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:157
+msgid "New Zealand"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:158
+msgid "Nicaragua"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:158
+msgid "Nicaraguan Cordoba Oro"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:159
+msgid "Niger"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:160
+msgid "Nigeria"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:160
+msgid "Nigerian Naira"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:161
+msgid "Niue"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:162
+msgid "Norfolk Island"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:163
+msgid "Northern Mariana Islands"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:164
+msgid "Norway"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:165
+msgid "Oman"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:165
+msgid "Omani Rial"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:166
+msgid "Pakistan"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:166
+msgid "Pakistan Rupee"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:167
+msgid "Palau"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:168
+msgid "Panama"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:168
+msgid "Panamanian Balboa"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:169
+msgid "Papua New Guinea"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:169
+msgid "Papua New Guinea Kina"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:170
+msgid "Paraguay"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:170
+msgid "Paraguay Guarani"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:171
+msgid "Peru"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:171
+msgid "Peruvian Nuevo Sol"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:172
+msgid "Philippines"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:172
+msgid "Philippine Peso"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:173
+msgid "Pitcairn Island"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:174
+msgid "Poland"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:174
+msgid "Polish Zloty"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:175
+msgid "Polynesia (French)"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:176
+msgid "Portugal"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:177
+msgid "Puerto Rico"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:178
+msgid "Qatar"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:178
+msgid "Qatari Rial"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:179
+msgid "Reunion (French)"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:180
+msgid "Romania"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:180
+msgid "Romanian Leu"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:181
+msgid "Russia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:181
+msgid "Russian Ruble"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:182
+msgid "Rwanda"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:182
+msgid "Rwanda Franc"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:183
+msgid "Saint Helena"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:183
+msgid "St. Helena Pound"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:184
+msgid "Saint Kitts & Nevis Anguilla"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:185
+msgid "Saint Lucia"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:186
+msgid "Saint Pierre and Miquelon"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:187
+msgid "Saint Vincent & Grenadines"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:188
+msgid "Samoa"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:188
+msgid "Samoan Tala"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:189
+msgid "San Marino"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:189
+msgid "Italian Lira"
+msgstr ""
+
+#: wpsc-updates/currency_list.php:190
+msgid "Sao Tome and Principe"
+msgstr ""
+
+#: wpsc-includes/product-template.php:1522
+msgid "Save"
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:45
+msgid "Premium Upgrades"
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:64
+#: wpsc-core/js/tinymce3/window.php:118
+msgid "Select the category you would like to display with a Shortcode."
+msgstr ""
+
+#: wpsc-widgets/category_widget.php:151
+#: wpsc-widgets/latest_product_widget.php:103
+msgid "Width:"
+msgstr ""
+
+#: wpsc-widgets/specials_widget.php:104
+msgid "Show Description"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/checkout.php:14
+msgid "Trash"
+msgstr ""
+
+#: wpsc-admin/display-upgrades.page.php:73
+msgid "You don't have any Upgrades yet!"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:295
+msgid "If this Product runs out of stock set status to Unpublished & email site owner"
+msgstr ""
+
+#: wpsc-admin/includes/products.php:177
+msgid "View &#8220;%s&#8221;"
+msgstr ""
+
+#: wpsc-includes/processing.functions.php:353
+msgid " does not support products without a weight set. Please either disable shipping for this product or give it a weight"
+msgstr ""
+
+#: wpsc-admin/includes/save-data.functions.php:429
+msgid "Shortcodes and Template Tags"
+msgstr ""
+
+#: wpsc-admin/admin-form-functions.php:149
+msgid "Update Coupon"
+msgstr ""
+
+#: wpsc-admin/display-coupons.php:141
+#: wpsc-includes/purchaselogs.class.php:21
+msgid "Add New"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:126
+msgid "Incomplete Sale"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:154
+msgid "Payment Declined"
+msgstr ""
+
+#: wpsc-core/wpsc-installer.php:293
+msgid "Product Category"
+msgstr ""
+
+#: wpsc-theme/wpsc-user-log.php:147
+msgid "Username:"
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:112
+msgid "All Categories"
+msgstr ""
+
+#: wpsc-merchants/paypal-express.merchant.php:295
+msgid "Your website is using a currency not accepted by PayPal, select an accepted currency using the drop down menu bellow. Buyers on your site will still pay in your local currency however we will convert the currency and send the order through to PayPal using the currency you choose below."
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:107
+msgid "UPS Express Box"
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:131
+msgid "Dropoff Type"
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:207
+msgid "Use Testing Environment"
+msgstr ""
+
+#: wpsc-shipping/usps_20.php:203
+msgid "Use Test Server:"
+msgstr ""
+
+#: wpsc-theme/wpsc-cart_widget.php:49
+msgid "%d item"
+msgid_plural "%d items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: wpsc-theme/wpsc-cart_widget.php:67
+msgid "Clear cart"
+msgstr ""
+
+#: wpsc-theme/wpsc-grid_view.php:79
+#: wpsc-theme/wpsc-products_page.php:224
+msgid "Sale"
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:44
+msgid "No Image"
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:88
+msgid "Enter coupon code"
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:159
+msgid " - Choose a Shipping Rate"
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:453
+msgid "Review and purchase"
+msgstr ""
+
+#: wpsc-theme/wpsc-single_product.php:89
+msgid "Select a file from your computer to include with this purchase."
+msgstr ""
+
+#: wpsc-widgets/product_tag_widget.php:19
+msgid "Product Tags Widget"
+msgstr ""
+
+#: wpsc-widgets/shopping_cart_widget.php:143
+msgid "Use Sliding Cart:"
+msgstr ""
+
+#: wpsc-admin/admin.php:567
+msgid "Sales by Month"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:273
+msgid "Search Products"
+msgstr ""
+
+#: wpsc-admin/display-items.page.php:214
+#: wpsc-admin/display-items.page.php:347
+msgid "Unmark as Featured"
+msgstr ""
+
+#: wpsc-admin/admin.php:305
+#: wpsc-admin/display-sales-logs.php:222
+msgid "Taxes"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:352
+msgid "There are no purchase logs for your selection, please try again."
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:56
+#: wpsc-admin/display-sales-logs.php:440
+msgid "Tracking ID"
+msgstr ""
+
+#: wpsc-admin/display-update.page.php:40
+msgid "WP e-Commerce is almost ready."
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:201
+msgid "Quantity In Cart"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:396
+msgid "You must first save this Product as a Draft before adding variations"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:729
+msgid "Users can personalize this Product by leaving a message on single product page"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:761
+msgid "Enable Comments"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:799
+msgid "External Link Text"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:847
+msgid "Select from existing files"
+msgstr ""
+
+#: wpsc-admin/includes/products.php:71
+msgid "(no title)"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/admin.php:139
+msgid "Track and Trace settings"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/checkout.php:83
+msgid "Force users to use SSL"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/general.php:85
+msgid "Currency Type"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:170
+msgid "Show list of product categories"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:342
+msgid "Display per item shipping"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:78
+msgid "Thanks, you have made a succesful backup of your theme.  It is located at the URL below.  Please note each backup you create will replace your previous backups."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:548
+msgid "Select what product category you want to display on the products page"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:642
+msgid "Show Subcategory Products in Parent Category"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:1022
+msgid "Crop Thumbnails"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/shipping.php:83
+msgid "Base City:"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/taxes.php:18
+msgid "Turn tax on"
+msgstr ""
+
+#: wpsc-includes/ajax.functions.php:413
+msgid "Sorry, but this variation is out of stock."
+msgstr ""
+
+#: wpsc-includes/form-display.functions.php:72
+msgid "No Parent"
+msgstr ""
+
+#: wpsc-admin/ajax-and-init.php:1628
+#: wpsc-admin/ajax-and-init.php:1643
+msgid "Variation Price"
+msgstr ""
+
+#: wpsc-includes/processing.functions.php:319
+msgid "One or more of this products variations are out of stock."
+msgstr ""
+
+#: wpsc-includes/rss_template.php:7
+msgid "WP e-Commerce"
+msgstr ""
+
+#: wpsc-includes/variations.class.php:176
+#: wpsc-includes/variations.class.php:179
+#: wpsc-includes/variations.class.php:255
+#: wpsc-includes/variations.class.php:258
+msgid "Invalid Taxonomy"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:142
+#: wpsc-admin/includes/products.php:80
+#: wpsc-admin/display-items.page.php:32
+#: wpsc-admin/display-items.page.php:45
+#: wpsc-admin/display-items.page.php:61
+msgid "Sale Price"
+msgstr ""
+
+#: wpsc-admin/admin.php:155
+msgid "Store Sales"
+msgstr ""
+
+#: wpsc-admin/admin.php:158
+msgid "Update Store"
+msgstr ""
+
+#: wpsc-admin/admin.php:158
+msgid "Store Update"
+msgstr ""
+
+#: wpsc-admin/admin.php:160
+msgid "Store Upgrades"
+msgstr ""
+
+#: wpsc-admin/admin.php:168
+#: wpsc-admin/display-options-settings.page.php:16
+msgid "Store Settings"
+msgstr ""
+
+#: wpsc-admin/admin.php:168
+msgid "Store"
+msgstr ""
+
+#: wpsc-admin/admin.php:173
+msgid "Store Debug"
+msgstr ""
+
+#: wpsc-admin/admin.php:176
+msgid "For More Information"
+msgstr ""
+
+#: wpsc-admin/admin.php:213
+msgid "Product Tracking Email"
+msgstr ""
+
+#: wpsc-admin/admin.php:214
+msgid ""
+"Track & Trace means you may track the progress of your parcel with our online parcel tracker, just login to our website and enter the following Tracking ID to view the status of your order.\n"
+"\n"
+"Tracking ID: %trackid%\n"
+msgstr ""
+
+#: wpsc-admin/admin.php:521
+msgid "Total Income"
+msgstr ""
+
+#: wpsc-admin/admin.php:564
+msgid "Getshopped News"
+msgstr ""
+
+#: wpsc-admin/admin.php:565
+msgid "Sales Summary"
+msgstr ""
+
+#: wpsc-admin/admin.php:682
+msgid "Revenue"
+msgstr ""
+
+#: wpsc-admin/ajax-and-init.php:158
+msgid "Sorry, for some reason, we couldn't duplicate this product because it could not be found in the database, check there for this ID: "
+msgstr ""
+
+#: wpsc-admin/ajax-and-init.php:1630
+#: wpsc-admin/ajax-and-init.php:1647
+msgid "You can list a default price here for this variation.  You can list a regular price (18.99), differential price (+1.99 / -2) or even a percentage-based price (+50% / -25%)."
+msgstr ""
+
+#: wpsc-admin/ajax-and-init.php:1667
+msgid "Apply to current variations?"
+msgstr ""
+
+#: wpsc-admin/ajax-and-init.php:1669
+msgid "By checking this box, the price rule you implement above will be applied to all variations that currently exist.  If you leave it unchecked, it will only apply to products that use this variation created or edited from now on.  Take note, this will apply this rule to <strong>every</strong> product using this variation.  If you need to override it for any reason on a specific product, simply go to that product and change the price."
+msgstr ""
+
+#: wpsc-admin/display-coupons.php:172
+#: wpsc-admin/admin-form-functions.php:33
+msgid "Free shipping"
+msgstr ""
+
+#: wpsc-admin/display-coupons.php:192
+msgid "Activate coupon on creation."
+msgstr ""
+
+#: wpsc-admin/display-coupons.php:202
+msgid "Deactivate coupon after it has been used."
+msgstr ""
+
+#: wpsc-admin/display-coupons.php:212
+msgid "This coupon affects each product at checkout."
+msgstr ""
+
+#: wpsc-admin/display-coupons.php:223
+#: wpsc-admin/admin-form-functions.php:122
+msgid "Item name"
+msgstr ""
+
+#: wpsc-admin/display-coupons.php:224
+#: wpsc-admin/admin-form-functions.php:123
+msgid "Item quantity"
+msgstr ""
+
+#: wpsc-admin/display-coupons.php:225
+#: wpsc-admin/admin-form-functions.php:124
+msgid "Total quantity"
+msgstr ""
+
+#: wpsc-admin/display-coupons.php:226
+#: wpsc-admin/admin-form-functions.php:125
+msgid "Subtotal amount"
+msgstr ""
+
+#: wpsc-admin/display-coupons.php:231
+#: wpsc-admin/admin-form-functions.php:129
+msgid "Is equal to"
+msgstr ""
+
+#: wpsc-admin/display-coupons.php:232
+#: wpsc-admin/admin-form-functions.php:130
+msgid "Is greater than"
+msgstr ""
+
+#: wpsc-admin/display-coupons.php:233
+#: wpsc-admin/admin-form-functions.php:131
+msgid "Is less than"
+msgstr ""
+
+#: wpsc-admin/display-coupons.php:234
+#: wpsc-admin/admin-form-functions.php:132
+msgid "Contains"
+msgstr ""
+
+#: wpsc-admin/display-coupons.php:235
+#: wpsc-admin/admin-form-functions.php:133
+msgid "Does not contain"
+msgstr ""
+
+#: wpsc-admin/display-coupons.php:236
+#: wpsc-admin/admin-form-functions.php:134
+msgid "Begins with"
+msgstr ""
+
+#: wpsc-admin/display-coupons.php:237
+#: wpsc-admin/admin-form-functions.php:135
+msgid "Ends with"
+msgstr ""
+
+#: wpsc-admin/display-coupons.php:238
+msgid "In Category"
+msgstr ""
+
+#: wpsc-admin/display-coupons.php:283
+msgid "Add New Condition"
+msgstr ""
+
+#: wpsc-admin/display-coupons.php:398
+msgid "<strong>Note:</strong> Due to a current PayPal limitation, when a purchase is made using a coupon we cannot send a detailed list of items through for processing. Instead we send the total amount of the purchase so the customer will see your shop name and the total within PayPal."
+msgstr ""
+
+#: wpsc-admin/includes/save-data.functions.php:141
+#: wpsc-admin/includes/save-data.functions.php:348
+#: wpsc-admin/admin.php:310
+msgid "Advanced Settings"
+msgstr ""
+
+#: wpsc-admin/includes/save-data.functions.php:233
+#: wpsc-admin/includes/save-data.functions.php:455
+msgid "Target Market Restrictions"
+msgstr ""
+
+#: wpsc-admin/includes/save-data.functions.php:285
+#: wpsc-admin/includes/save-data.functions.php:475
+#: wpsc-admin/includes/save-data.functions.php:513
+msgid "None"
+msgstr ""
+
+#: wpsc-admin/includes/save-data.functions.php:305
+#: wpsc-admin/includes/save-data.functions.php:530
+msgid "Products in this category use the billing address to calculate shipping"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/import.php:82
+#: wpsc-admin/includes/products.php:80
+#: wpsc-admin/display-items.page.php:33
+#: wpsc-admin/display-items.page.php:46
+#: wpsc-admin/display-items.page.php:62
+#: wpsc-admin/display-sales-logs.php:136
+msgid "SKU"
+msgstr ""
+
+#: wpsc-admin/display-items.page.php:35
+msgid "Featured"
+msgstr ""
+
+#: wpsc-admin/includes/save-data.functions.php:475
+msgid "All"
+msgstr ""
+
+#: wpsc-admin/display-items.page.php:216
+#: wpsc-admin/display-items.page.php:349
+msgid "Mark as Featured"
+msgstr ""
+
+#: wpsc-admin/display-options-settings.page.php:209
+#: wpsc-admin/display-options-settings.page.php:262
+msgid "To configure a payment module select one on the left."
+msgstr ""
+
+#: wpsc-admin/display-options-settings.page.php:281
+msgid "%s Setting option deleted."
+msgid_plural "%s Setting option deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: wpsc-admin/display-options-settings.page.php:291
+msgid "%s Checkout field added."
+msgid_plural "%s Checkout fields added."
+msgstr[0] ""
+msgstr[1] ""
+
+#: wpsc-admin/display-options-settings.page.php:296
+msgid "Thumbnails regenerated."
+msgstr ""
+
+#: wpsc-admin/display-options-settings.page.php:303
+msgid "Settings successfully updated."
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:65
+msgid "%s Purchase Log updated."
+msgid_plural "%s Purchase Logs updated."
+msgstr[0] ""
+msgstr[1] ""
+
+#: wpsc-admin/display-sales-logs.php:73
+msgid "%s product not updated, somebody is editing it."
+msgid_plural "%s products not updated, somebody is editing them."
+msgstr[0] ""
+msgstr[1] ""
+
+#: wpsc-admin/display-sales-logs.php:78
+msgid "%s Purchase Log deleted."
+msgid_plural "%s Purchase Logs deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: wpsc-admin/display-sales-logs.php:118
+msgid "Downloads for this log have been released."
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:122
+msgid "Receipt has been resent "
+msgstr ""
+
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:204
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:205
+#: wpsc-admin/display-sales-logs.php:146
+#: wpsc-includes/checkout.class.php:143
+msgid "Tax Included"
+msgstr ""
+
+#: wpsc-admin/display-update.page.php:40
+msgid "You must <a href=\"%1$s\">update your database</a> to import all of your products."
+msgstr ""
+
+#: wpsc-admin/display-update.page.php:55
+msgid "Update WP e-Commerce"
+msgstr ""
+
+#: wpsc-admin/display-update.page.php:83
+msgid "Your WP e-Commerce database needs to be updated for WP e-Commerce 3.8.  To perform this update, press the button below.  It is highly recommended that you back up your database before performing this update."
+msgstr ""
+
+#: wpsc-admin/display-update.page.php:86
+msgid "Note: If the server times out or runs out of memory, just reload this page, the server will pick up where it left off."
+msgstr ""
+
+#: wpsc-admin/display-upgrades.page.php:58
+msgid "Enter your API Username and API Key below."
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:272
+msgid "View Product"
+msgstr ""
+
+#: wpsc-admin/admin.php:303
+msgid "Price Control"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:133
+msgid "Price: %s and above."
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:202
+msgid "Discounted Price"
+msgstr ""
+
+#: wpsc-admin/admin.php:304
+msgid "Stock Control"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:259
+msgid "I have limited stock for this Product"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:269
+msgid "This Product has variations, to edit the quantity please use the Variation Controls below."
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:270
+msgid "%s variant item in stock."
+msgid_plural "%s variant items in stock."
+msgstr[0] ""
+msgstr[1] ""
+
+#: wpsc-admin/includes/display-items-functions.php:272
+msgid "Quantity:"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:287
+msgid "Notify site owner and unpublish this Product if stock runs out"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:289
+msgid "If stock runs out, this Product will not be available on the shop unless you untick this box or add more stock."
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:326
+#: wpsc-taxes/controllers/taxes_controller.class.php:315
+msgid "Custom Tax Band"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:448
+msgid "Update Variations &rarr;"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:479
+msgid "Check or uncheck variation boxes and then click Update Variations to add or remove variations."
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:889
+msgid "Upload Image%s"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:1010
+msgid "Full Size"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:1030
+msgid "(%d&nbsp;&times;&nbsp;%d)"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:1038
+msgid "Alt text for the product image, e.g. &#8220;Rockstar T-Shirt&#8221;"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:1129
+msgid "Product Image Gallery"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:649
+msgid "Disregard Shipping for this Product"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:767
+msgid "Allow users to comment on this Product."
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:803
+msgid "External Link Target"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:824
+msgid "Manage Product Images"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:845
+msgid "Upload New File"
+msgstr ""
+
+#: wpsc-admin/includes/products.php:91
+msgid "Unpublished"
+msgstr ""
+
+#: wpsc-admin/includes/products.php:94
+msgid "Y/m/d g:i:s A"
+msgstr ""
+
+#: wpsc-admin/includes/products.php:101
+msgid "%s ago"
+msgstr ""
+
+#: wpsc-admin/includes/products.php:103
+msgid "Y/m/d"
+msgstr ""
+
+#: wpsc-admin/includes/products.php:113
+msgid "Published"
+msgstr ""
+
+#: wpsc-admin/includes/products.php:116
+msgid "Missed schedule"
+msgstr ""
+
+#: wpsc-admin/includes/products.php:118
+msgid "Scheduled"
+msgstr ""
+
+#: wpsc-admin/includes/products.php:120
+msgid "Last Modified"
+msgstr ""
+
+#: wpsc-admin/includes/products.php:133
+msgid "Edit &#8220;%s&#8221;"
+msgstr ""
+
+#: wpsc-admin/includes/products.php:168
+msgid "Edit this product"
+msgstr ""
+
+#: wpsc-admin/includes/products.php:169
+msgid "Quick Edit"
+msgstr ""
+
+#: wpsc-admin/includes/products.php:174
+msgid "Preview &#8220;%s&#8221;"
+msgstr ""
+
+#: wpsc-admin/includes/products.php:177
+#: wpsc-admin/includes/products.php:371
+msgid "View"
+msgstr ""
+
+#: wpsc-admin/includes/products.php:300
+#: wpsc-admin/display-items.page.php:206
+msgid "Uncategorized"
+msgstr ""
+
+#: wpsc-admin/includes/products.php:318
+msgid "No Tags"
+msgstr ""
+
+#: wpsc-admin/includes/products.php:349
+msgid "%s pending"
+msgstr ""
+
+#: wpsc-admin/includes/products.php:352
+msgctxt "comment count"
+msgid "0"
+msgstr ""
+
+#: wpsc-admin/includes/products.php:352
+msgctxt "comment count"
+msgid "1"
+msgstr ""
+
+#: wpsc-admin/includes/products.php:352
+msgctxt "comment count"
+msgid "%"
+msgstr ""
+
+#: wpsc-admin/includes/purchlogs_upgrade.php:62
+msgid "Check Out Form Fields updated."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/checkout.php:103
+msgid "This can cause warnings for your users if you do not have a properly configured SSL certificate"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/checkout.php:111
+msgid "Form Fields"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/checkout.php:115
+msgid "Select a Form Set"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/checkout.php:129
+msgid "+ Add New Form Set"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/checkout.php:133
+msgid "Add new Form Set"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/general.php:110
+msgid "Currency Sign Location"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/general.php:146
+msgid "Thousands and decimal separators"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/general.php:148
+msgid "Thousands separator"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/general.php:149
+msgid "Decimal separator"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/import.php:12
+msgid "<p>You can import your products from a comma delimited text file.</p><p>An example of a csv import file would look like this: </p><p>Description, Additional Description, Product Name, Price, SKU, weight, weight unit, stock quantity, is limited quantity</p>"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/marketing.php:17
+msgid "Marketing Section"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/marketing.php:19
+msgid "Google Merchant Centre / Google Product Search"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/marketing.php:61
+msgid "Adds the 'Users who bought this also bought' item to the single products page."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/marketing.php:66
+msgid "Adds the 'Share this link' item to the single products page."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/marketing.php:71
+msgid "Adds the 'How did you find out about us' drop-down option at checkout."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/marketing.php:74
+msgid "Display Facebook Like"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/marketing.php:77
+msgid "Adds the Facebook Like button on your single products page."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/marketing.php:91
+msgid "People can use this RSS feed to keep up to date with your product list."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/marketing.php:92
+msgid "RSS Feed Address"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/marketing.php:99
+msgid "To import your products into <a href=\"http://www.google.com/merchants/\" target=\"_blank\">Google Merchant Centre</a> so that they appear within Google Product Search results, sign up for a Google Merchant Centre account and add a scheduled data feed with the following URL:"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:88
+msgid "Some Theme files have been moved to your WordPress Theme Folder."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:90
+msgid "No Theme files have been moved to your WordPress Theme Folder."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:243
+msgid "Buy Now Button only works for Paypal Standard, please activate Paypal Standard to enable this option."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:309
+msgid "Show Stock Availability"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:585
+msgid "Drag &amp; Drop"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:1027
+msgid "Choosing \"Yes\" means that thumbnails are cropped to exact dimensions (normally thumbnails are proportional)"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:1056
+msgid "Use Lightbox Effect for product images"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:1074
+msgid "Using lightbox means that when clicking on a product image, a larger version will be displayed in a \"lightbox\" style window. If you are using a plugin such as Shutter Reloaded, you may want to disable lightbox."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:1078
+msgid "Lightbox script to use"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:1089
+msgid "Colorbox"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:1090
+msgid "Thickbox"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/shipping.php:86
+msgid "Please provide for more accurate rates"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/taxes.php:26
+msgid "Product prices are tax exclusive - add tax to the price during checkout"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/taxes.php:34
+msgid "Product prices are tax inclusive - during checkout the total price doesn't increase but tax is shown as a line item"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/taxes.php:37
+msgid "Product Specific Tax"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/taxes.php:43
+msgid "Add per product tax to tax percentage if product has a specific tax rate"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/taxes.php:51
+msgid "Replace tax percentage with product specific tax rate"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/taxes.php:55
+msgid "Tax Logic"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/taxes.php:61
+msgid "Apply tax when Billing and Shipping Country is the same as Tax Rate"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/taxes.php:69
+msgid "Apply tax to Billing Address"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/taxes.php:77
+msgid "Apply tax to Shipping Address"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/taxes.php:87
+msgid "Apply tax when Billing Country is the same as Tax Rate"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/taxes.php:95
+msgid "Apply tax when Shipping Country is the same as Tax Rate"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/taxes.php:100
+msgid "Tax Rates"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/taxes.php:145
+msgid "Add New Tax Rate"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/taxes.php:150
+msgid "Tax Bands"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/taxes.php:158
+msgid "Note: Tax Bands do not take affect when product prices are tax exclusive."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/taxes.php:171
+msgid "Add New Tax Band"
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:9
+msgid "You don't have permission to be doing that!"
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:55
+msgid "Select Category: "
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:69
+msgid "Number of products per Page: "
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:72
+msgid "Select the number of products you would like to display per page."
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:77
+msgid "Sale Products:"
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:82
+msgid "Add ALL sale products"
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:83
+msgid "This will add all your products you have on sale to the page"
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:89
+msgid "Add sale products by category"
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:90
+msgid "This will add all your products you have on sale from the selected category"
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:123
+msgid "Number of Products"
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:126
+msgid "Number of Products to be displayed in the slider."
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:132
+msgid "You don't have the product slider installed, for a cool way to display your shop check out the <a href=\"http://getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Product Slider</a>"
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:139
+msgid "Members and Capabilities"
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:144
+msgid "<p> To create a preview on your restricted page put this shortcode at the top of your page. you can include html within this short code to display things like images "
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:149
+msgid " You don't have the Members and Capabilities plugin installed, to start managing your users and creating subscription for you site visit: <a href=\"http://getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Premium Upgrades</a>"
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:158
+msgid "Select a Product"
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:167
+msgid "Select the product you would like to create a shortcode for."
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:175
+msgid "Shortcode:"
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:177
+msgid "Add a buy now button"
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:178
+msgid "This adds a paypal buy now button for the product selected, this will take your customer straight to PayPal."
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:185
+msgid "Add an add to cart button"
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:186
+msgid "This adds an add to cart button for the product selected."
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:193
+msgid "Add product"
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:194
+msgid "This will add the selected product to your page."
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:306
+msgctxt "taxonomy general name"
+msgid "Product Tags"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:307
+msgctxt "taxonomy singular name"
+msgid "Product Tag"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:308
+msgid "Product Search Tags"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:309
+msgid "All Product Tags"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:310
+msgid "Edit Tag"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:311
+msgid "Update Tag"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:312
+msgid "Add new Product Tag"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:313
+msgid "New Product Tag Name"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:345
+msgctxt "taxonomy general name"
+msgid "Variations"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:346
+msgctxt "taxonomy singular name"
+msgid "Variation"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:347
+msgid "Search Variations"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:348
+msgid "All Variations"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:349
+msgid "Parent Variation"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:350
+msgid "Parent Variations:"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:351
+msgid "Edit Variation"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:352
+msgid "Update Variation"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:354
+msgid "New Variation Name"
+msgstr ""
+
+#: wpsc-core/wpsc-installer.php:300
+msgid "This is a description"
+msgstr ""
+
+#: wpsc-core/wpsc-installer.php:745
+msgid "Your billing/contact details"
+msgstr ""
+
+#: wpsc-includes/ajax.functions.php:414
+msgid "Variation not in stock"
+msgstr ""
+
+#: wpsc-theme/wpsc-list_view.php:81
+#: wpsc-theme/wpsc-single_product.php:130
+#: wpsc-theme/wpsc-products_page.php:161
+#: wpsc-includes/ajax.functions.php:417
+msgid "Product in stock"
+msgstr ""
+
+#: wpsc-includes/ajax.functions.php:536
+msgid "%s cannot be shipped to %s. To continue with your transaction please remove this product from the list below."
+msgstr ""
+
+#: wpsc-includes/ajax.functions.php:948
+msgid "Invalid Image parameters"
+msgstr ""
+
+#: wpsc-includes/form-display.functions.php:173
+msgid "File(s) attached: "
+msgstr ""
+
+#: wpsc-includes/form-display.functions.php:190
+msgid "There are no files attached to this product.  Upload a new file or select from other product files."
+msgstr ""
+
+#: wpsc-includes/product-template.php:129
+msgid "Pages: "
+msgstr ""
+
+#: wpsc-includes/product-template.php:405
+msgid " from %s"
+msgstr ""
+
+#: wpsc-includes/theme.functions.php:176
+msgid "<strong>WP e-Commerce is ready</strong>. If you plan on editing the look of your site, you should <a href=\"%1s\">update your active theme</a> to include the additional WP e-Commerce files. <a href=\"%2s\">Click here</a> to ignore and remove this box."
+msgstr ""
+
+#: wpsc-includes/theme.functions.php:194
+msgid "<strong>Your WP e-Commerce data needs to be updated</strong>. You've upgraded from a previous version of the WP e-Commerce plugin, and your store needs updating.<br>You should <a href=\"%1s\">update your database</a> for your store to continue working."
+msgstr ""
+
+#: wpsc-includes/theme.functions.php:231
+msgid "<strong>Store Settings</strong>: You have set 'users must register before checkout', for this to work you need to check 'Anyone can register' in your WordPress <a href=\"%1s\">General Settings</a>."
+msgstr ""
+
+#: wpsc-merchants/paypal-express.merchant.php:656
+msgid "Confirm Payment"
+msgstr ""
+
+#: wpsc-merchants/paypal-pro.merchant.php:147
+msgid "There was a problem connecting to the payment gateway."
+msgstr ""
+
+#: wpsc-merchants/paypal-pro.merchant.php:163
+msgid "There is a problem with your PayPal account configuration, please contact PayPal for further information."
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:165
+msgid "Customer Type"
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:220
+msgid "Show UPS negotiated rates"
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:254
+msgid "UPS Preferred Services"
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:275
+msgid "All services used if no services selected"
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:279
+msgid "UPS Account #"
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:285
+msgid "UPS Username"
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:291
+msgid "UPS Password"
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:297
+msgid "UPS XML API Key"
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:301
+msgid "Don't have an API login/ID ?"
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:302
+#: wpsc-shipping/usps_20.php:198
+msgid "Click Here"
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:304
+msgid "* For Negotiated rates, you must enter a UPS account number and select \"Show UPS negotiated rates\" "
+msgstr ""
+
+#: wpsc-taxes/controllers/taxes_controller.class.php:309
+#: wpsc-taxes/controllers/taxes_controller.class.php:320
+msgid "Disabled"
+msgstr ""
+
+#: wpsc-taxes/controllers/taxes_controller.class.php:325
+msgid "No Tax Bands Setup. Set Tax Bands up in <a href=\"options-general.php?page=wpsc-settings&tab=taxes\">Settings &gt; Taxes</a>"
+msgstr ""
+
+#: wpsc-taxes/controllers/taxes_controller.class.php:329
+msgid "Taxes are not enabled. See <a href=\"options-general.php?page=wpsc-settings&tab=taxes\">Settings &gt; Taxes</a>"
+msgstr ""
+
+#: wpsc-taxes/controllers/taxes_controller.class.php:541
+msgid "Apply to Shipping"
+msgstr ""
+
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:326
+#: wpsc-admin/includes/purchlogs_upgrade.php:40
+msgid "Billing State"
+msgstr ""
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:638
+msgid "Purchase #"
+msgstr ""
+
+#: wpsc-theme/wpsc-single_product.php:95
+#: wpsc-theme/wpsc-grid_view.php:109
+#: wpsc-theme/wpsc-products_page.php:128
+msgid "Product Options"
+msgstr ""
+
+#: wpsc-theme/wpsc-grid_view.php:131
+msgid "Sorry, sold out!"
+msgstr ""
+
+#: wpsc-theme/wpsc-list_view.php:83
+#: wpsc-theme/wpsc-single_product.php:132
+#: wpsc-theme/wpsc-products_page.php:163
+msgid "Product not in stock"
+msgstr ""
+
+#: wpsc-theme/wpsc-single_product.php:144
+#: wpsc-theme/wpsc-products_page.php:176
+msgid "You save"
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:97
+msgid "Cost before shipping:"
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:353
+msgid "Enter your email address"
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:391
+msgid "How did you find us"
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:394
+msgid "Word of mouth"
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:395
+msgid "Advertising"
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:396
+msgid "Internet"
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:397
+msgid "Existing Customer"
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:408
+msgid "Payment Type"
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:497
+msgid "Purchase"
+msgstr ""
+
+#: wpsc-theme/wpsc-single_product.php:79
+msgid "Personalize Your Product"
+msgstr ""
+
+#: wpsc-theme/wpsc-user-log.php:16
+msgid "Purchase History"
+msgstr ""
+
+#: wpsc-theme/wpsc-user-log.php:17
+msgid "Your Details"
+msgstr ""
+
+#: wpsc-theme/wpsc-user-log.php:18
+msgid "Your Downloads"
+msgstr ""
+
+#: wpsc-theme/wpsc-user-log.php:151
+msgid "Password:"
+msgstr ""
+
+#: wpsc-theme/wpsc-user-log.php:157
+msgid "Remember me"
+msgstr ""
+
+#: wpsc-widgets/admin_menu_widget.php:18
+msgid "Admin Menu Widget"
+msgstr ""
+
+#: wpsc-widgets/category_widget.php:153
+#: wpsc-widgets/latest_product_widget.php:105
+msgid "Height:"
+msgstr ""
+
+#: wpsc-widgets/donations_widget.php:19
+msgid "Donations Widget"
+msgstr ""
+
+#: wpsc-widgets/latest_product_widget.php:15
+msgid "Latest Products Widget"
+msgstr ""
+
+#: wpsc-widgets/price_range_widget.php:19
+msgid "Price Range Widget"
+msgstr ""
+
+#: wpsc-widgets/shopping_cart_widget.php:19
+msgid "Shopping Cart Widget"
+msgstr ""
+
+#: wpsc-widgets/specials_widget.php:19
+msgid "Product Specials Widget"
+msgstr ""
+
+#: wpsc-widgets/specials_widget.php:195
+msgid "From"
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:43
+msgid "Category"
+msgstr "Kategori"
+
+#: wpsc-core/js/tinymce3/window.php:102
+#: wpsc-admin/display-upgrades.page.php:43
+msgid "Product Slider"
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:108
+msgid "Select Category"
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:58
+#: wpsc-core/js/tinymce3/window.php:111
+msgid "No Category"
+msgstr ""
+
+#: wpsc-merchants/chronopay.php:449
+#: wpsc-merchants/paypal-standard.merchant.php:615
+#: wpsc-admin/includes/settings-pages/presentation.php:1250
+#: wpsc-admin/includes/settings-pages/admin.php:166
+#: wpsc-admin/includes/settings-pages/marketing.php:82
+#: wpsc-admin/includes/settings-pages/general.php:158
+#: wpsc-admin/includes/settings-pages/shipping.php:172
+#: wpsc-admin/includes/settings-pages/shipping.php:245
+#: wpsc-admin/includes/settings-pages/shipping.php:261
+#: wpsc-admin/includes/settings-pages/gateway.php:105
+#: wpsc-admin/includes/settings-pages/gateway.php:139
+msgid "Update &raquo;"
+msgstr ""
+
+#: wpsc-merchants/paypal-standard.merchant.php:170
+msgid "Your Subscription"
+msgstr ""
+
+#: wpsc-merchants/paypal-standard.merchant.php:580
+#: wpsc-merchants/paypal-express.merchant.php:293
+msgid "Currency Converter"
+msgstr ""
+
+#: wpsc-merchants/paypal-standard.merchant.php:583
+msgid "Your website uses <strong>%s</strong>. This currency is not supported by PayPal, please  select a currency using the drop down menu below. Buyers on your site will still pay in your local currency however we will send the order through to Paypal using the currency you choose below."
+msgstr ""
+
+#: wpsc-merchants/paypal-pro.merchant.php:327
+msgid "API Username:"
+msgstr ""
+
+#: wpsc-merchants/paypal-pro.merchant.php:335
+msgid "API Password:"
+msgstr ""
+
+#: wpsc-merchants/paypal-pro.merchant.php:343
+msgid "API Signature:"
+msgstr ""
+
+#: wpsc-merchants/paypal-pro.merchant.php:351
+msgid "Test Mode Enabled:"
+msgstr ""
+
+#: wpsc-merchants/testmode.merchant.php:46
+msgid "Enter the payment instructions that you wish to display to your customers when they make a purchase"
+msgstr ""
+
+#: wpsc-merchants/testmode.merchant.php:48
+msgid "For example, this is where you the Shop Owner might enter your bank account details or address so that your customer can make their manual payment."
+msgstr ""
+
+#: wpsc-shipping/flatrate.php:50
+msgid "If you do not wish to ship to a particular region, leave the field blank. To offer free shipping to a region, enter 0."
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:482
+#: wpsc-shipping/tablerate.php:50
+msgid "Total Price"
+msgstr "Total pris"
+
+#: wpsc-shipping/tablerate.php:50
+#: wpsc-shipping/weightrate.php:49
+msgid "Shipping Price"
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:104
+msgid "Your Packaging"
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:103
+msgid "UPS Letter"
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:108
+msgid "UPS Express Box - Small"
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:109
+msgid "UPS Express Box - Medium"
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:110
+msgid "UPS Express Box - Large"
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:105
+msgid "UPS Tube"
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:106
+msgid "UPS Pak"
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:113
+msgid "Destination Type"
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:124
+msgid "Residential Address"
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:125
+msgid "Commercial Address"
+msgstr ""
+
+#: wpsc-shipping/ups_20.php:187
+msgid "Packaging"
+msgstr ""
+
+#: wpsc-shipping/usps_20.php:190
+msgid "USPS ID"
+msgstr "USPS-ID"
+
+#: wpsc-theme/wpsc-cart_widget.php:12
+#: wpsc-theme/wpsc-shopping_cart_page.php:18
+msgid "Product"
+msgstr "Produkt"
+
+#: wpsc-theme/wpsc-cart_widget.php:13
+msgid "Qty"
+msgstr "Mengd"
+
+#: wpsc-theme/wpsc-cart_widget.php:58
+msgid "Postage &amp; Tax "
+msgstr "Porto &amp; og avgifter "
+
+#: wpsc-includes/display.functions.php:153
+msgid "Go to Checkout"
+msgstr "Gå til kassa"
+
+#: wpsc-theme/wpsc-cart_widget.php:76
+msgid "Your shopping cart is empty"
+msgstr "Handlekorga di er tom"
+
+#: wpsc-theme/wpsc-cart_widget.php:77
+msgid "Visit the shop"
+msgstr "Gå til butikken"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:1171
+msgid "Page Number position"
+msgstr "Plassering for sidenummer"
+
+#: wpsc-theme/wpsc-list_view.php:132
+#: wpsc-theme/wpsc-single_product.php:187
+msgid "This product has sold out."
+msgstr "Dette produktet er utselt."
+
+#: wpsc-theme/wpsc-list_view.php:145
+#: wpsc-theme/wpsc-grid_view.php:158
+#: wpsc-theme/wpsc-products_page.php:230
+msgid "There are no products in this group."
+msgstr ""
+
+#: wpsc-theme/wpsc-list_view.php:122
+#: wpsc-theme/wpsc-single_product.php:177
+#: wpsc-theme/wpsc-products_page.php:203
+#: wpsc-admin/includes/settings-pages/presentation.php:246
+#: wpsc-includes/product-template.php:734
+#: wpsc-includes/display.functions.php:178
+msgid "Buy Now"
+msgstr "Kjøp no (Berre Google-kasse)"
+
+#: wpsc-theme/wpsc-list_view.php:128
+#: wpsc-theme/wpsc-single_product.php:183
+#: wpsc-theme/wpsc-grid_view.php:138
+#: wpsc-theme/wpsc-products_page.php:199
+msgid "Updating cart..."
+msgstr ""
+
+#: wpsc-theme/wpsc-single_product.php:136
+#: wpsc-theme/wpsc-products_page.php:167
+#: wpsc-widgets/donations_widget.php:164
+msgid "Donation"
+msgstr "Gåve"
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:15
+msgid "Please review your order"
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:60
+#: wpsc-theme/wpsc-shopping_cart_page.php:92
+msgid "Update"
+msgstr "Utfør"
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:73
+msgid "Remove"
+msgstr "Flytt"
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:85
+msgid "Coupon is not valid."
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:123
+msgid "Calculate Shipping Price"
+msgstr "Vel land varene skal sendast til"
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:127
+msgid "Please choose a country below to calculate your shipping costs"
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:135
+msgid "Please provide a Zipcode and click Calculate in order to continue."
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:141
+msgid "Sorry, online ordering is unavailable to this destination and/or weight. Please double check your destination details."
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:252
+msgid "Username"
+msgstr ""
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:255
+msgid "Password"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/admin.php:102
+msgid "Terms and Conditions"
+msgstr "Bruks- og kjøpsvilkåra"
+
+#: wpsc-theme/wpsc-single_product.php:80
+msgid "Complete this form to include a personalized message with your purchase."
+msgstr ""
+
+#: wpsc-theme/wpsc-single_product.php:88
+msgid "Upload a File"
+msgstr ""
+
+#: wpsc-updates/updating_tasks.php:4
+msgid ""
+"Your purchase from %shop_name% has just been dispatched. It should arrive soon. To keep track of your products status a tracking id has been attached. \\r\\n"
+" your tracking id is: %trackid%"
+msgstr ""
+
+#: wpsc-updates/updating_tasks.php:7
+msgid "Your Order from %shop_name% has been dispatched"
+msgstr ""
+
+#: wpsc-widgets/admin_menu_widget.php:21
+#: wpsc-widgets/admin_menu_widget.php:41
+msgid "Admin Menu"
+msgstr "Admin-meny"
+
+#: wpsc-admin/display-items.page.php:34
+msgid "Categories"
+msgstr ""
+
+#: wpsc-widgets/category_widget.php:128
+#: wpsc-widgets/donations_widget.php:95
+#: wpsc-widgets/admin_menu_widget.php:85
+#: wpsc-widgets/latest_product_widget.php:87
+#: wpsc-widgets/price_range_widget.php:84
+#: wpsc-widgets/specials_widget.php:95
+#: wpsc-widgets/shopping_cart_widget.php:137
+#: wpsc-widgets/product_tag_widget.php:84
+msgid "Title:"
+msgstr ""
+
+#: wpsc-widgets/category_widget.php:17
+msgid "Product Grouping Widget"
+msgstr ""
+
+#: wpsc-widgets/category_widget.php:19
+#: wpsc-widgets/category_widget.php:34
+msgid "Product Categories"
+msgstr ""
+
+#: wpsc-widgets/latest_product_widget.php:16
+#: wpsc-widgets/latest_product_widget.php:31
+msgid "Latest Products"
+msgstr "Nyaste produkt"
+
+#: wpsc-widgets/latest_product_widget.php:92
+#: wpsc-widgets/specials_widget.php:99
+msgid "Number of products to show:"
+msgstr ""
+
+#: wpsc-widgets/price_range_widget.php:22
+#: wpsc-widgets/price_range_widget.php:41
+msgid "Price Range"
+msgstr "Prisområde"
+
+#: wpsc-widgets/price_range_widget.php:136
+msgid "Show All"
+msgstr "Vis alle"
+
+#: wpsc-widgets/product_tag_widget.php:22
+#: wpsc-widgets/product_tag_widget.php:41
+msgid "Product Tags"
+msgstr "Produktknaggar"
+
+#: wpsc-widgets/shopping_cart_widget.php:78
+#: wpsc-widgets/shopping_cart_widget.php:83
+msgid "Loading..."
+msgstr ""
+
+#: wpsc-widgets/specials_widget.php:22
+#: wpsc-widgets/specials_widget.php:41
+msgid "Product Specials"
+msgstr "Tilbodsprodukt"
+
+#: wpsc-core/js/tinymce3/window.php:44
+#: wpsc-core/wpsc-functions.php:277
+msgid "Products"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:37
+msgid "Sales"
+msgstr ""
+
+#: wpsc-admin/admin.php:295
+msgid "Variations"
+msgstr "Variantar"
+
+#: wpsc-admin/display-upgrades.page.php:56
+msgid "Upgrades"
+msgstr ""
+
+#: wpsc-admin/admin.php:566
+msgid "Sales by Quarter"
+msgstr ""
+
+#: wpsc-admin/ajax-and-init.php:547
+msgid "The administrator has unlocked your file"
+msgstr ""
+
+#: wpsc-admin/ajax-and-init.php:547
+msgid "Dear CustomerWe are pleased to advise you that your order has been updated and your downloads are now active.Please download your purchase using the links provided below.[download_links]Thank you for your custom."
+msgstr ""
+
+#: wpsc-admin/includes/save-data.functions.php:489
+msgid "Select the markets you are selling this category to."
+msgstr ""
+
+#: wpsc-admin/includes/save-data.functions.php:71
+msgid "Image"
+msgstr "Bilete"
+
+#: wpsc-admin/display-sales-logs.php:289
+msgid "Bulk Actions"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/import.php:52
+msgid "Publish"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/import.php:53
+msgid "Draft"
+msgstr ""
+
+#: wpsc-admin/includes/purchlogs_upgrade.php:100
+#: wpsc-admin/display-sales-logs.php:298
+msgid "Apply"
+msgstr ""
+
+#: wpsc-admin/display-options-settings.page.php:195
+msgid "To configure a shipping module select one on the left."
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:162
+msgid "Shipping Options"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:165
+msgid "Shipping Method:"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:166
+msgid "Shipping Option:"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:168
+msgid "Tracking ID:"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:169
+msgid "Shipping Status:"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:170
+msgid "Track History:"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:177
+msgid "Billing Details"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:178
+msgid "Purchase Log Date:"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:179
+msgid "Purchase Number:"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:180
+msgid "Buyers Name:"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:181
+msgid "Address:"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:183
+msgid "Phone:"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:184
+msgid "Email:"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:185
+msgid "Payment Method:"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:187
+msgid "How User Found Us:"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:194
+msgid "Items Ordered"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:241
+msgid "Order Status:"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:261
+msgid "Actions"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:266
+msgid "View Packing Slip"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:268
+msgid "Resend Receipt to Buyer"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:270
+#: wpsc-admin/display-sales-logs.php:432
+msgid "Delete this log"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:270
+#: wpsc-admin/display-sales-logs.php:432
+msgid ""
+"You are about to delete this log '%s'\n"
+" 'Cancel' to stop, 'OK' to delete."
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:270
+msgid "Remove this record"
+msgstr "Fjern denne oppføringa frå kjøpsloggen"
+
+#: wpsc-admin/display-sales-logs.php:272
+msgid "Go Back"
+msgstr "Gå tilbake"
+
+#: wpsc-admin/includes/save-data.functions.php:273
+#: wpsc-admin/includes/save-data.functions.php:496
+msgid "Checkout Settings"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:300
+msgid "View:"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:349
+msgid "Filter"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:369
+msgid "Total:"
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:383
+msgid "Download CSV"
+msgstr "Last ned CSV"
+
+#: wpsc-admin/display-sales-logs.php:393
+msgid ""
+"You are about to delete the selected purchase logs.\n"
+"  'Cancel' to stop, 'OK' to delete."
+msgstr ""
+
+#: wpsc-admin/display-sales-logs.php:460
+msgid "Search Logs"
+msgstr ""
+
+#: wpsc-admin/display-upgrades.page.php:9
+msgid "WP e-Commerce Upgrades"
+msgstr ""
+
+#: wpsc-admin/display-upgrades.page.php:10
+msgid "Add more functionality to your e-Commerce site. Prices may be subject to change."
+msgstr ""
+
+#: wpsc-admin/display-upgrades.page.php:15
+msgid "Pure Gold"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:808
+#: wpsc-admin/includes/settings-pages/presentation.php:813
+#: wpsc-admin/display-upgrades.page.php:22
+msgid "DropShop"
+msgstr "DropShop"
+
+#: wpsc-admin/display-upgrades.page.php:29
+msgid "MP3 Player"
+msgstr ""
+
+#: wpsc-admin/display-upgrades.page.php:36
+msgid "Members Only Module"
+msgstr "Innstillingar for å skru på medlemsmodulen"
+
+#: wpsc-admin/display-upgrades.page.php:50
+msgid "NextGen Gallery Buy Now Buttons"
+msgstr ""
+
+#: wpsc-admin/display-upgrades.page.php:77
+#: wpsc-admin/display-upgrades.page.php:86
+msgid "API Key Reset"
+msgstr ""
+
+#: wpsc-admin/display-upgrades.page.php:80
+msgid "Enter your API name and key to release it from an old site that you no longer use."
+msgstr ""
+
+#: wpsc-admin/display-upgrades.page.php:97
+msgid "Reset API Key"
+msgstr "Nullstill API-nykjelen"
+
+#: wpsc-admin/display-upgrades.page.php:59
+msgid "For more information visit our documentation page."
+msgstr ""
+
+#: wpsc-admin/display-upgrades.page.php:150
+msgid "Your API key has been Reset"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:515
+msgid "Display Variations"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:270
+msgid "Edit Product"
+msgstr "Rediger produkt"
+
+#: wpsc-admin/includes/settings-pages/import.php:78
+msgid "Product Name"
+msgstr "Produktnamn"
+
+#: wpsc-admin/includes/display-items-functions.php:249
+msgid "Stock Keeping Unit"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/import.php:80
+#: wpsc-admin/admin.php:306
+msgid "Additional Description"
+msgstr "Tilleggsinformasjon"
+
+#: wpsc-admin/includes/display-items-functions.php:192
+msgid "This is a donation, checking this box populates the donations widget."
+msgstr "Er produktet ei gåve?"
+
+#: wpsc-admin/includes/display-items-functions.php:195
+msgid "Table Rate Price"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:293
+msgid "Stock Qty"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/import.php:83
+#: wpsc-admin/includes/display-items-functions.php:569
+#: wpsc-admin/includes/products.php:80
+#: wpsc-admin/display-items.page.php:29
+#: wpsc-admin/display-items.page.php:58
+msgid "Weight"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:626
+msgid "Flat Rate Settings"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:631
+msgid "Local Shipping Fee"
+msgstr "Sendingskostnad lokalt"
+
+#: wpsc-admin/includes/display-items-functions.php:640
+msgid "International Shipping Fee"
+msgstr "Sendingskostnad utanlands"
+
+#: wpsc-admin/includes/display-items-functions.php:686
+msgid "Custom Meta"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:687
+msgid "Add Custom Meta"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:697
+#: wpsc-admin/admin-form-functions.php:77
+msgid "Value"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:721
+msgid "These notes are only available here."
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:726
+msgid "Personalisation Options"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:737
+msgid "Users can upload images on single product page to purchase logs."
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:795
+msgid "External Link"
+msgstr "Ekstern lenkje"
+
+#: wpsc-admin/admin.php:308
+msgid "Product Images"
+msgstr ""
+
+#: wpsc-admin/admin.php:307
+msgid "Product Download"
+msgstr "Produktnedlasting"
+
+#: wpsc-admin/includes/display-items-functions.php:846
+msgid "Max Upload Size"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:852
+msgid "Select an MP3 file to upload as a preview"
+msgstr ""
+
+#: wpsc-admin/includes/products.php:174
+msgid "Preview"
+msgstr "Sjå på"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:976
+msgid "Thumbnail Settings"
+msgstr ""
+
+#: wpsc-includes/misc.functions.php:753
+msgid "Please refrain from uploading images larger than <strong>%d x %d</strong> pixels"
+msgstr ""
+
+#: wpsc-admin/includes/display-items-functions.php:1206
+#: wpsc-admin/includes/products.php:284
+#: wpsc-admin/includes/products.php:327
+#: wpsc-admin/includes/product-functions.php:12
+#: wpsc-admin/includes/product-functions.php:56
+#: wpsc-admin/admin.php:883
+#: wpsc-admin/admin.php:885
+#: wpsc-admin/display-items.page.php:117
+#: wpsc-admin/display-items.page.php:161
+#: wpsc-admin/display-items.page.php:193
+#: wpsc-admin/ajax-and-init.php:338
+#: wpsc-includes/category.functions.php:56
+#: wpsc-includes/category.functions.php:332
+#: wpsc-includes/purchaselogs.class.php:325
+#: wpsc-includes/purchaselogs.class.php:864
+msgid "N/A"
+msgstr ""
+
+#: wpsc-admin/includes/product-functions.php:435
+msgid "Could not update product in the database"
+msgstr ""
+
+#: wpsc-admin/includes/product-functions.php:452
+msgid "Could not insert product into the database"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/admin.php:7
+msgid "Admin Settings"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/admin.php:13
+msgid "Max downloads per file"
+msgstr "Maks nedlastingar pr. fil"
+
+#: wpsc-admin/includes/settings-pages/admin.php:35
+msgid "Lock downloads to IP address"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/admin.php:61
+msgid "Check MIME types on file uploads"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/admin.php:68
+msgid "Warning: Disabling this exposes your site to greater possibility of malicious files being uploaded, we reccomend installing the Fileinfo extention for PHP rather than disabling this."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/admin.php:76
+msgid "Purchase Log Email"
+msgstr "Epostadresse for kjøpslogg"
+
+#: wpsc-admin/includes/settings-pages/admin.php:84
+msgid "Purchase Receipt - Reply Address"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/admin.php:93
+msgid "Purchase Receipt - Reply Name"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/admin.php:110
+msgid "Custom Messages"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/admin.php:113
+msgid "Tags can be used"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/admin.php:134
+msgid "Admin Report"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/admin.php:149
+msgid "Tracking Email Subject"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/admin.php:153
+msgid "Tracking Email Message"
+msgstr ""
+
+#: wpsc-admin/display-debug.page.php:42
+msgid "Update Page URLs"
+msgstr "Oppdater sideadresser"
+
+#: wpsc-admin/display-debug.page.php:45
+msgid "Fix Product Group Permalinks"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/checkout.php:35
+msgid "Users must register before checking out"
+msgstr "Krev at kundar melder seg inn"
+
+#: wpsc-admin/includes/settings-pages/checkout.php:55
+msgid "If yes then you must also turn on the wordpress option \"Any one can register\""
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/checkout.php:73
+msgid "Enable Shipping Same as Billing Option: "
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/checkout.php:112
+msgid "Here you can customise the forms to be displayed in your checkout page. The checkout page is where you collect important user information that will show up in your purchase logs i.e. the buyers address, and name..."
+msgstr "Her kan du velja kva skjema som skal visast på kasse-sida di. Kasse-sida er der du samlar inn viktige opplysningar om kunden som vil synast i kjøpsloggane, td. namn og adresse..."
+
+#: wpsc-admin/includes/settings-pages/checkout.php:208
+msgid "This will be the Email address that the Purchase Reciept is sent to."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/checkout.php:226
+msgid "Add New Form Field"
+msgstr "Legg til nytt skjemafelt"
+
+#: wpsc-admin/includes/settings-pages/gateway.php:40
+msgid "Please Select A Payment Gateway"
+msgstr "Vel ein betalingsterminal"
+
+#: wpsc-admin/includes/settings-pages/general.php:8
+#: wpsc-admin/includes/settings-pages/shipping.php:58
+#: wpsc-admin/includes/settings-pages/gateway.php:68
+msgid "General Settings"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/gateway.php:70
+msgid "Activate the payment gateways that you want to make available to your customers by selecting them below."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/gateway.php:110
+msgid "We Recommend"
+msgstr ""
+
+#: wpsc-admin/display-options-settings.page.php:224
+msgid "Display Name"
+msgstr ""
+
+#: wpsc-admin/display-options-settings.page.php:254
+msgid "The text that people see when making a purchase"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/general.php:15
+msgid "Base Country/Region"
+msgstr "Opphavsland/område"
+
+#: wpsc-admin/includes/settings-pages/general.php:43
+msgid "Select your primary business location."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/taxes.php:12
+msgid "Tax Settings"
+msgstr "Moms og avgiftsval"
+
+#: wpsc-admin/includes/settings-pages/general.php:82
+msgid "Currency Settings"
+msgstr "Valutainnstillingar"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:163
+msgid "Show All Products"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:216
+msgid "Button Settings"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:220
+msgid "Button Type"
+msgstr "Type knapp"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:252
+msgid "Hide \"Add to cart\" button"
+msgstr "Gøym \"Legg i vogna\"-knappen"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:274
+msgid "Product Settings"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:318
+msgid "Display Fancy Purchase Notifications"
+msgstr "Vis stilig kjøpsvarsling"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:364
+msgid "Disable link in Title"
+msgstr "Gøym produktnamnlenkjer"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:388
+msgid "Add quantity field to each product description"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:68
+msgid "Thanks, the themes have been copied."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:417
+msgid "Product Page Settings"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:420
+msgid "Product Display"
+msgstr "Produktvising"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:497
+msgid "Purchase unavailable options"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:507
+msgid "Products Per Row"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:511
+msgid "Show images only"
+msgstr "Vis berre bilete"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:519
+msgid "Display Description"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:523
+msgid "Display \"Add To Cart\" Button"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:527
+msgid "Display \"More Details\" Button"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:576
+msgid "Sort Product By"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:587
+msgid "Time Uploaded"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:593
+msgid "Show Breadcrumbs"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:618
+msgid "Product Groups/Products Display"
+msgstr "Vis kategoriar/produkt"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:635
+msgid "Product Groups Only (All products displayed)"
+msgstr "Berre kategoriar (viser alle produkt)"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:636
+msgid "Sliding Product Groups (1 product per page)"
+msgstr "Glidande kategoriar (eitt produkt pr. side)"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:667
+msgid "Show Search"
+msgstr "Vis søk"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:708
+msgid "Show Advanced Search"
+msgstr "Vis avansert søk"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:711
+msgid "Use Live Search"
+msgstr "Bruk sanntidssøk"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:721
+msgid "Replace Page Title With Product/Category Name"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:765
+msgid "Shopping Cart Settings"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:794
+msgid "Page"
+msgstr "Sida"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:798
+#: wpsc-admin/includes/settings-pages/presentation.php:802
+msgid "Widget"
+msgstr "Programboble"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:802
+#: wpsc-admin/includes/settings-pages/presentation.php:812
+msgid "You need to enable the widgets plugin to use this"
+msgstr "Du må slå på boble- (widget-) tillegget for å bruka dette"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:812
+#: wpsc-admin/includes/settings-pages/presentation.php:813
+msgid "You need to install the Gold and DropShop extentions to use this"
+msgstr "Då må installera tillegga for Utvida utgåve og DropShop for å bruka dette"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:818
+msgid "Manual"
+msgstr "Manuelt"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:827
+msgid "Show Dropshop on every page"
+msgstr "Vis Dropshop på kvar side"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:830
+msgid "Show Dropshop only on product page"
+msgstr "Vis Dropshop berre på produktsida"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:835
+msgid "Use light Dropshop style"
+msgstr "Bruk lys Dropshop-stil"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:838
+msgid "Use dark Dropshop style"
+msgstr "Bruk murk Dropshop-stil"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:841
+msgid "Crafty"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:850
+msgid "Display \"+ Postage & Tax\""
+msgstr "Vis \"+mva\""
+
+#: wpsc-widgets/category_widget.php:140
+#: wpsc-admin/includes/settings-pages/presentation.php:952
+msgid "Use Category Grid View"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:981
+#: wpsc-admin/includes/display-items-functions.php:1010
+msgid "Default Product Thumbnail Size"
+msgstr "Standardstorleik for småbilete av produkt"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:990
+msgid "Default Product Group Thumbnail Size"
+msgstr "Standardstorleik for småbilete av kategoriar"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:999
+#: wpsc-admin/includes/display-items-functions.php:1010
+msgid "Single Product Image Size"
+msgstr "Biletstorleik for einskildprodukt"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:1099
+msgid "Show Thumbnail Gallery"
+msgstr "Vis småbilete-galleri"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:1123
+msgid "Gallery Thumbnail Image Size"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:1138
+msgid "Pagination settings"
+msgstr "Val for sidenummerering"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:1142
+msgid "Use Pagination"
+msgstr "Bruk sidenummerering"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:1164
+msgid "number of products to show per page"
+msgstr "kor mange produkt som skal visast på kvar side"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:1176
+msgid "Top"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:1179
+msgid "Bottom"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:1182
+msgid "Both"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:1189
+msgid "Comment Settings"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:1193
+msgid "Use IntenseDebate Comments"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:1217
+msgid "IntenseDebate Account ID"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:1219
+msgid "Help on finding the Account ID"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/presentation.php:1228
+msgid "By Default Display Comments on"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/shipping.php:64
+msgid "Use Shipping"
+msgstr "Use porto"
+
+#: wpsc-admin/includes/settings-pages/shipping.php:78
+msgid "If you are only selling digital downloads, you should select no to disable the shipping on your site."
+msgstr "Viss du berre sel digitale nedlastingar, bør du skru av porto på sida di."
+
+#: wpsc-admin/includes/settings-pages/shipping.php:90
+msgid "Base Zipcode/Postcode:"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/shipping.php:93
+msgid "If you are based in America then you need to set your own Zipcode for UPS and USPS to work. This should be the Zipcode for your Base of Operations."
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/shipping.php:115
+msgid "ShipWire Settings"
+msgstr "ShipWire-innstillingar"
+
+#: wpsc-admin/includes/settings-pages/shipping.php:126
+msgid "ShipWire Email"
+msgstr "ShipWire-epost"
+
+#: wpsc-admin/includes/settings-pages/shipping.php:127
+msgid "ShipWire Password"
+msgstr "ShipWire-passord"
+
+#: wpsc-admin/includes/settings-pages/shipping.php:135
+msgid "Enable Free Shipping Discount"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/shipping.php:186
+msgid "Shipping Modules"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/shipping.php:194
+msgid "Internal Shipping Calculators"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/shipping.php:216
+msgid "External Shipping Calculators"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/shipping.php:219
+msgid "The following shipping modules all need cURL which is not installed on this server, you may need to contact your web hosting provider to get it set up. "
+msgstr ""
+
+#: wpsc-includes/ajax.functions.php:79
+msgid "You just added \"[product_name]\" to your cart."
+msgstr "Du har lagt \"[product_name]\" i korga."
+
+#: wpsc-includes/ajax.functions.php:82
+msgid "Sorry, but you cannot add zero items to your cart"
+msgstr ""
+
+#: wpsc-includes/ajax.functions.php:555
+msgid "You must select a shipping method, otherwise we cannot process your order."
+msgstr ""
+
+#: wpsc-includes/ajax.functions.php:522
+msgid "Please agree to the terms and conditions, otherwise we cannot process your order."
+msgstr "Du må godkjenna bruks- og kjøpsvilkåra. Utan det kan me diverre ikkje godta tinginga di."
+
+#: wpsc-includes/ajax.functions.php:559
+msgid "Please enter a Zipcode and click calculate to proceed"
+msgstr ""
+
+#: wpsc-admin/admin-form-functions.php:376
+#: wpsc-includes/checkout.class.php:145
+msgid "Tax"
+msgstr "Avgift"
+
+#: wpsc-includes/display.functions.php:83
+msgid "People who bought this item also bought"
+msgstr "Folk som kjøpte dette produktet kjøpte òg"
+
+#: wpsc-includes/display.functions.php:134
+msgid "Updating"
+msgstr ""
+
+#: wpsc-includes/display.functions.php:154
+msgid "Continue Shopping"
+msgstr "Handla meir"
+
+#: wpsc-admin/ajax-and-init.php:1091
+msgid "Choose a downloadable file for this product:"
+msgstr "Vel ei nedlastbar fil for dette produktet:"
+
+#: wpsc-includes/form-display.functions.php:209
+msgid "Choose a downloadable file for this variation"
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:161
+#: wpsc-includes/form-display.functions.php:215
+msgid "No Product"
+msgstr "Ingen produkt"
+
+#: wpsc-includes/misc.functions.php:82
+msgid "<strong>ERROR</strong>: This email is already registered, please choose another one."
+msgstr ""
+
+#: wpsc-includes/processing.functions.php:296
+msgid "This product has no available stock"
+msgstr ""
+
+#: wpsc-includes/purchaselogs.class.php:565
+msgid "Release downloads locked to this IP address %s"
+msgstr ""
+
+#: wpsc-includes/purchaselogs.class.php:761
+msgid "Thanks, the purchase log record has been deleted"
+msgstr "Takk, oppføringa i kjøpsloggen er sletta."
+
+#: wpsc-includes/upgrades.php:122
+msgid "Visit upgrade homepage"
+msgstr ""
+
+#: wpsc-includes/upgrades.php:127
+msgid "Visit author homepage"
+msgstr ""
+
+#: wpsc-includes/upgrades.php:131
+msgid "By %s"
+msgstr ""
+
+#: wpsc-admin/includes/products.php:80
+#: wpsc-admin/display-items.page.php:30
+#: wpsc-admin/display-items.page.php:43
+#: wpsc-admin/display-items.page.php:59
+msgid "Stock"
+msgstr "Lager"
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:470
+#: wpsc-admin/includes/settings-pages/presentation.php:581
+#: wpsc-admin/includes/settings-pages/checkout.php:10
+#: wpsc-admin/includes/display-items-functions.php:695
+#: wpsc-admin/includes/display-items-functions.php:706
+#: wpsc-admin/includes/products.php:80
+#: wpsc-admin/display-items.page.php:28
+#: wpsc-admin/display-items.page.php:57
+#: wpsc-admin/admin-form-functions.php:338
+#: wpsc-admin/admin-form-functions.php:370
+#: wpsc-admin/display-sales-logs.php:135
+#: wpsc-taxes/controllers/taxes_controller.class.php:527
+msgid "Name"
+msgstr "Namn"
+
+#: wpsc-admin/includes/settings-pages/import.php:79
+#: wpsc-admin/includes/display-items-functions.php:708
+msgid "Description"
+msgstr "Skildring"
+
+#: wpsc-admin/includes/save-data.functions.php:222
+#: wpsc-admin/includes/save-data.functions.php:424
+#: wpsc-admin/includes/settings-pages/presentation.php:984
+#: wpsc-admin/includes/settings-pages/presentation.php:994
+#: wpsc-admin/includes/settings-pages/presentation.php:1003
+#: wpsc-admin/includes/settings-pages/presentation.php:1127
+#: wpsc-admin/includes/display-items-functions.php:584
+msgid "Height"
+msgstr "Breidd"
+
+#: wpsc-admin/includes/save-data.functions.php:221
+#: wpsc-admin/includes/save-data.functions.php:423
+#: wpsc-admin/includes/settings-pages/presentation.php:983
+#: wpsc-admin/includes/settings-pages/presentation.php:993
+#: wpsc-admin/includes/settings-pages/presentation.php:1002
+#: wpsc-admin/includes/settings-pages/presentation.php:1126
+#: wpsc-admin/includes/display-items-functions.php:597
+msgid "Width"
+msgstr "Høgd"
+
+#: wpsc-admin/includes/save-data.functions.php:413
+msgid "Delete Image"
+msgstr ""
+
+#: wpsc-admin/includes/save-data.functions.php:242
+#: wpsc-admin/includes/save-data.functions.php:464
+#: wpsc-admin/includes/settings-pages/general.php:52
+msgid "Target Markets"
+msgstr ""
+
+#: wpsc-admin/includes/save-data.functions.php:247
+msgid ""
+"The Target Markets feature has been disabled because you have the Suhosin PHP extension installed on this server. If you need to use the Target Markets feature then disable the suhosin extension, if you can not do this, you will need to contact your hosting provider.\n"
+"\t\t\t"
+msgstr ""
+
+#: wpsc-admin/includes/save-data.functions.php:144
+msgid "Presentation Settings"
+msgstr ""
+
+#: wpsc-admin/includes/save-data.functions.php:211
+#: wpsc-admin/includes/save-data.functions.php:404
+msgid "To over-ride the presentation settings for this group you can enter in your prefered settings here"
+msgstr ""
+
+#: wpsc-admin/includes/save-data.functions.php:157
+#: wpsc-admin/includes/save-data.functions.php:354
+msgid "Catalog View"
+msgstr ""
+
+#: wpsc-admin/includes/save-data.functions.php:193
+#: wpsc-admin/includes/save-data.functions.php:390
+#: wpsc-includes/form-display.functions.php:9
+msgid "Please select"
+msgstr ""
+
+#: wpsc-admin/includes/save-data.functions.php:194
+#: wpsc-admin/includes/save-data.functions.php:391
+#: wpsc-admin/includes/settings-pages/presentation.php:472
+msgid "Default View"
+msgstr "Standard"
+
+#: wpsc-admin/includes/save-data.functions.php:197
+#: wpsc-admin/includes/save-data.functions.php:199
+#: wpsc-admin/includes/save-data.functions.php:394
+#: wpsc-admin/includes/save-data.functions.php:396
+#: wpsc-admin/includes/settings-pages/presentation.php:476
+#: wpsc-admin/includes/settings-pages/presentation.php:480
+msgid "List View"
+msgstr "Liste"
+
+#: wpsc-admin/includes/save-data.functions.php:202
+#: wpsc-admin/includes/save-data.functions.php:204
+#: wpsc-admin/includes/save-data.functions.php:399
+#: wpsc-admin/includes/save-data.functions.php:401
+#: wpsc-admin/includes/settings-pages/presentation.php:486
+#: wpsc-admin/includes/settings-pages/presentation.php:490
+msgid "Grid View"
+msgstr "Rutenett"
+
+#: wpsc-admin/includes/save-data.functions.php:218
+msgid "Thumbnail&nbsp;Size"
+msgstr ""
+
+#: wpsc-admin/includes/save-data.functions.php:281
+msgid "This category requires additional checkout form fields"
+msgstr ""
+
+#: wpsc-merchants/chronopay.php:436
+#: wpsc-merchants/paypal-standard.merchant.php:532
+#: wpsc-merchants/paypal-standard.merchant.php:540
+#: wpsc-merchants/paypal-standard.merchant.php:556
+#: wpsc-admin/includes/save-data.functions.php:308
+#: wpsc-admin/includes/save-data.functions.php:533
+#: wpsc-admin/includes/settings-pages/presentation.php:268
+#: wpsc-admin/includes/settings-pages/presentation.php:295
+#: wpsc-admin/includes/settings-pages/presentation.php:312
+#: wpsc-admin/includes/settings-pages/presentation.php:335
+#: wpsc-admin/includes/settings-pages/presentation.php:358
+#: wpsc-admin/includes/settings-pages/presentation.php:381
+#: wpsc-admin/includes/settings-pages/presentation.php:404
+#: wpsc-admin/includes/settings-pages/presentation.php:541
+#: wpsc-admin/includes/settings-pages/presentation.php:609
+#: wpsc-admin/includes/settings-pages/presentation.php:658
+#: wpsc-admin/includes/settings-pages/presentation.php:702
+#: wpsc-admin/includes/settings-pages/presentation.php:737
+#: wpsc-admin/includes/settings-pages/presentation.php:759
+#: wpsc-admin/includes/settings-pages/presentation.php:867
+#: wpsc-admin/includes/settings-pages/presentation.php:894
+#: wpsc-admin/includes/settings-pages/presentation.php:918
+#: wpsc-admin/includes/settings-pages/presentation.php:944
+#: wpsc-admin/includes/settings-pages/presentation.php:969
+#: wpsc-admin/includes/settings-pages/presentation.php:1025
+#: wpsc-admin/includes/settings-pages/presentation.php:1051
+#: wpsc-admin/includes/settings-pages/presentation.php:1072
+#: wpsc-admin/includes/settings-pages/presentation.php:1116
+#: wpsc-admin/includes/settings-pages/presentation.php:1161
+#: wpsc-admin/includes/settings-pages/presentation.php:1214
+#: wpsc-admin/includes/settings-pages/admin.php:38
+#: wpsc-admin/includes/settings-pages/admin.php:64
+#: wpsc-admin/includes/settings-pages/checkout.php:51
+#: wpsc-admin/includes/settings-pages/checkout.php:76
+#: wpsc-admin/includes/settings-pages/checkout.php:99
+#: wpsc-admin/includes/settings-pages/shipping.php:76
+#: wpsc-admin/includes/settings-pages/shipping.php:118
+#: wpsc-admin/includes/settings-pages/shipping.php:149
+#: wpsc-admin/includes/display-items-functions.php:764
+msgid "Yes"
+msgstr "Ja"
+
+#: wpsc-merchants/chronopay.php:437
+#: wpsc-merchants/paypal-standard.merchant.php:533
+#: wpsc-merchants/paypal-standard.merchant.php:541
+#: wpsc-merchants/paypal-standard.merchant.php:557
+#: wpsc-admin/includes/save-data.functions.php:309
+#: wpsc-admin/includes/save-data.functions.php:534
+#: wpsc-admin/includes/settings-pages/presentation.php:269
+#: wpsc-admin/includes/settings-pages/presentation.php:296
+#: wpsc-admin/includes/settings-pages/presentation.php:313
+#: wpsc-admin/includes/settings-pages/presentation.php:336
+#: wpsc-admin/includes/settings-pages/presentation.php:359
+#: wpsc-admin/includes/settings-pages/presentation.php:383
+#: wpsc-admin/includes/settings-pages/presentation.php:407
+#: wpsc-admin/includes/settings-pages/presentation.php:543
+#: wpsc-admin/includes/settings-pages/presentation.php:610
+#: wpsc-admin/includes/settings-pages/presentation.php:659
+#: wpsc-admin/includes/settings-pages/presentation.php:703
+#: wpsc-admin/includes/settings-pages/presentation.php:738
+#: wpsc-admin/includes/settings-pages/presentation.php:760
+#: wpsc-admin/includes/settings-pages/presentation.php:868
+#: wpsc-admin/includes/settings-pages/presentation.php:895
+#: wpsc-admin/includes/settings-pages/presentation.php:919
+#: wpsc-admin/includes/settings-pages/presentation.php:945
+#: wpsc-admin/includes/settings-pages/presentation.php:970
+#: wpsc-admin/includes/settings-pages/presentation.php:1026
+#: wpsc-admin/includes/settings-pages/presentation.php:1052
+#: wpsc-admin/includes/settings-pages/presentation.php:1073
+#: wpsc-admin/includes/settings-pages/presentation.php:1117
+#: wpsc-admin/includes/settings-pages/presentation.php:1162
+#: wpsc-admin/includes/settings-pages/presentation.php:1215
+#: wpsc-admin/includes/settings-pages/admin.php:39
+#: wpsc-admin/includes/settings-pages/admin.php:65
+#: wpsc-admin/includes/settings-pages/checkout.php:52
+#: wpsc-admin/includes/settings-pages/checkout.php:78
+#: wpsc-admin/includes/settings-pages/checkout.php:100
+#: wpsc-admin/includes/settings-pages/shipping.php:77
+#: wpsc-admin/includes/settings-pages/shipping.php:119
+#: wpsc-admin/includes/settings-pages/shipping.php:150
+#: wpsc-admin/includes/display-items-functions.php:765
+msgid "No"
+msgstr "Nei"
+
+#: wpsc-admin/includes/settings-pages/checkout.php:205
+#: wpsc-admin/includes/display-items-functions.php:699
+#: wpsc-admin/includes/products.php:387
+#: wpsc-admin/admin.php:409
+#: wpsc-admin/admin-form-functions.php:68
+#: wpsc-admin/admin-form-functions.php:86
+#: wpsc-admin/display-sales-logs.php:55
+#: wpsc-admin/display-sales-logs.php:295
+#: wpsc-admin/ajax-and-init.php:1242
+#: wpsc-taxes/controllers/taxes_controller.class.php:619
+#: wpsc-shipping/tablerate.php:66
+#: wpsc-shipping/weightrate.php:58
+msgid "Delete"
+msgstr "Slett"
+
+#: wpsc-admin/includes/settings-pages/checkout.php:134
+msgid "Add"
+msgstr "Legg til"
+
+#: wpsc-theme/wpsc-products_page.php:211
+#: wpsc-admin/includes/settings-pages/shipping.php:236
+#: wpsc-admin/includes/settings-pages/gateway.php:94
+#: wpsc-admin/includes/products.php:168
+#: wpsc-admin/includes/products.php:379
+#: wpsc-admin/display-coupons.php:302
+#: wpsc-admin/display-coupons.php:382
+#: wpsc-includes/product-template.php:648
+msgid "Edit"
+msgstr "Rediger"
+
+#: wpsc-admin/display-coupons.php:152
+#: wpsc-admin/display-coupons.php:296
+#: wpsc-admin/admin-form-functions.php:13
+#: wpsc-admin/display-sales-logs.php:212
+msgid "Coupon Code"
+msgstr "Kupongkode"
+
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:240
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:245
+#: wpsc-theme/wpsc-shopping_cart_page.php:470
+#: wpsc-admin/display-coupons.php:153
+#: wpsc-admin/display-coupons.php:297
+#: wpsc-admin/admin-form-functions.php:14
+#: wpsc-admin/display-sales-logs.php:215
+msgid "Discount"
+msgstr ""
+
+#: wpsc-admin/display-coupons.php:154
+#: wpsc-admin/display-coupons.php:298
+#: wpsc-admin/admin-form-functions.php:15
+msgid "Start"
+msgstr "Start"
+
+#: wpsc-admin/display-coupons.php:155
+#: wpsc-admin/display-coupons.php:299
+#: wpsc-admin/admin-form-functions.php:16
+msgid "Expiry"
+msgstr "Slutt"
+
+#: wpsc-admin/display-coupons.php:157
+#: wpsc-admin/display-coupons.php:200
+#: wpsc-admin/admin-form-functions.php:17
+msgid "Use Once"
+msgstr "Bruk ein gong"
+
+#: wpsc-admin/display-coupons.php:158
+#: wpsc-admin/display-coupons.php:190
+#: wpsc-admin/display-coupons.php:300
+#: wpsc-admin/admin-form-functions.php:18
+msgid "Active"
+msgstr "Aktiv"
+
+#: wpsc-admin/display-coupons.php:159
+#: wpsc-admin/display-coupons.php:210
+#: wpsc-admin/display-coupons.php:301
+#: wpsc-admin/admin-form-functions.php:19
+msgid "Apply On All Products"
+msgstr ""
+
+#: wpsc-admin/admin-form-functions.php:166
+msgid "Settings"
+msgstr ""
+
+#: wpsc-admin/admin-form-functions.php:170
+msgid "Shop Settings"
+msgstr ""
+
+#: wpsc-admin/admin-form-functions.php:171
+msgid "Money and Payment"
+msgstr ""
+
+#: wpsc-admin/admin-form-functions.php:172
+msgid "Checkout Page Settings"
+msgstr ""
+
+#: wpsc-admin/admin.php:485
+#: wpsc-admin/admin.php:896
+msgid "Current Month"
+msgstr ""
+
+#: wpsc-admin/admin.php:681
+#: wpsc-admin/admin.php:781
+#: wpsc-admin/admin-form-functions.php:200
+msgid "At a Glance"
+msgstr ""
+
+#: wpsc-core/wpsc-functions.php:269
+msgid "Add New Product"
+msgstr ""
+
+#: wpsc-admin/admin-form-functions.php:251
+#: wpsc-admin/admin-form-functions.php:264
+msgid "Packing Slip"
+msgstr ""
+
+#: wpsc-admin/admin.php:504
+#: wpsc-admin/admin.php:531
+#: wpsc-admin/admin-form-functions.php:265
+msgid "Order"
+msgid_plural "Orders"
+msgstr[0] "Tinging"
+msgstr[1] ""
+
+#: wpsc-core/wpsc-installer.php:750
+#: wpsc-core/wpsc-installer.php:759
+#: wpsc-admin/admin-form-functions.php:288
+#: wpsc-admin/admin-form-functions.php:296
+msgid "State"
+msgstr "Delstat"
+
+#: wpsc-core/wpsc-installer.php:748
+#: wpsc-core/wpsc-installer.php:757
+#: wpsc-admin/admin-form-functions.php:339
+msgid "Address"
+msgstr "Adresse"
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:86
+#: wpsc-core/wpsc-installer.php:764
+#: wpsc-admin/admin-form-functions.php:340
+msgid "Phone"
+msgstr "Telefon"
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:73
+#: wpsc-core/wpsc-installer.php:753
+#: wpsc-admin/admin.php:411
+#: wpsc-admin/admin-form-functions.php:341
+msgid "Email"
+msgstr "Epost"
+
+#: wpsc-theme/wpsc-list_view.php:108
+#: wpsc-theme/wpsc-single_product.php:119
+#: wpsc-theme/functions/wpsc-user_log_functions.php:474
+#: wpsc-theme/wpsc-products_page.php:148
+#: wpsc-theme/wpsc-shopping_cart_page.php:19
+#: wpsc-admin/admin-form-functions.php:368
+#: wpsc-admin/display-sales-logs.php:137
+#: wpsc-includes/display.functions.php:44
+msgid "Quantity"
+msgstr ""
+
+#: wpsc-theme/wpsc-single_product.php:142
+#: wpsc-theme/functions/wpsc-user_log_functions.php:478
+#: wpsc-theme/wpsc-grid_view.php:91
+#: wpsc-theme/wpsc-products_page.php:174
+#: wpsc-theme/wpsc-user-log.php:105
+#: wpsc-theme/wpsc-cart_widget.php:14
+#: wpsc-theme/wpsc-shopping_cart_page.php:20
+#: wpsc-admin/includes/settings-pages/presentation.php:583
+#: wpsc-admin/includes/settings-pages/import.php:81
+#: wpsc-admin/includes/display-items-functions.php:137
+#: wpsc-admin/includes/display-items-functions.php:162
+#: wpsc-admin/includes/products.php:80
+#: wpsc-admin/display-items.page.php:31
+#: wpsc-admin/display-items.page.php:44
+#: wpsc-admin/display-items.page.php:60
+#: wpsc-admin/admin-form-functions.php:373
+#: wpsc-admin/display-sales-logs.php:138
+msgid "Price"
+msgstr "Pris"
+
+#: wpsc-theme/wpsc-single_product.php:151
+#: wpsc-theme/functions/wpsc-user_log_functions.php:486
+#: wpsc-theme/wpsc-grid_view.php:93
+#: wpsc-theme/wpsc-products_page.php:185
+#: wpsc-theme/wpsc-cart_widget.php:38
+#: wpsc-admin/admin.php:309
+#: wpsc-admin/admin-form-functions.php:375
+#: wpsc-admin/display-sales-logs.php:139
+#: wpsc-admin/display-sales-logs.php:229
+msgid "Shipping"
+msgstr ""
+
+#: wpsc-admin/admin-form-functions.php:455
+msgid "This users cart was empty"
+msgstr "Handlevogna til denne kunden var tom"
+
+#: wpsc-admin/display-coupons.php:32
+msgid "Thanks, the coupon has been added."
+msgstr "Takk rabattkupongen er lagt til."
+
+#: wpsc-admin/display-coupons.php:139
+#: wpsc-admin/admin.php:165
+msgid "Coupons"
+msgstr ""
+
+#: wpsc-admin/includes/settings-pages/marketing.php:59
+msgid "Display Cross Sales"
+msgstr "Vis kryssal"
+
+#: wpsc-admin/includes/settings-pages/marketing.php:64
+msgid "Show Share This (Social Bookmarks)"
+msgstr "Vis/del dette (sosialt bokmerke)"
+
+#: wpsc-admin/includes/settings-pages/marketing.php:69
+msgid "Display How Customer Found Us Survey"
+msgstr "Vis \"Korleis fann du oss\"-undersøking"
+
+#: wpsc-admin/includes/settings-pages/marketing.php:18
+msgid "RSS Address"
+msgstr "RSS-adresse"
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:65
+#: wpsc-core/wpsc-installer.php:746
+#: wpsc-core/wpsc-installer.php:755
+msgid "First Name"
+msgstr ""
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:66
+msgid "Please enter a valid name"
+msgstr "Skriv inn eit gyldig namn"
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:69
+#: wpsc-core/wpsc-installer.php:747
+#: wpsc-core/wpsc-installer.php:756
+msgid "Last Name"
+msgstr ""
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:70
+msgid "Please enter a valid surname"
+msgstr "Skriv inn eit gyldig etternamn"
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:74
+msgid "Please enter a valid email address"
+msgstr "Skriv inn ei gyldig epostadresse"
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:77
+msgid "Address 1"
+msgstr "Adresselinje 1"
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:78
+msgid "Address 2"
+msgstr "Adresselinje 2"
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:79
+msgid "Please enter a valid address"
+msgstr "Skriv inn ei gyldig adresse"
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:82
+#: wpsc-core/wpsc-installer.php:749
+#: wpsc-core/wpsc-installer.php:758
+msgid "City"
+msgstr "Poststad"
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:83
+msgid "Please enter your town or city."
+msgstr "Skriv inn poststad."
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:87
+msgid "Please enter a valid phone number"
+msgstr "Skriv inn eit gyldig telefonnummer"
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:90
+#: wpsc-core/wpsc-installer.php:751
+#: wpsc-core/wpsc-installer.php:760
+#: wpsc-admin/admin.php:412
+msgid "Country"
+msgstr "Land"
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:91
+msgid "Please select your country from the list."
+msgstr "Vel land frå lista."
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:109
+msgid "Thanks, your changes have been saved."
+msgstr "Endringane dine er lagra"
+
+#: wpsc-theme/wpsc-user-log.php:38
+msgid "Save Profile"
+msgstr "Lagre profil"
+
+#: wpsc-core/js/tinymce3/window.php:207
+msgid "Insert"
+msgstr ""
+
+#: wpsc-core/js/tinymce3/window.php:203
+#: wpsc-admin/includes/products.php:137
+msgid "Cancel"
+msgstr ""
+
+#: wpsc-merchants/library/google_shipping_country.php:7
+msgid "Google Shipping Country"
+msgstr "Sendingsland for Google-butikk"
+
+#: wpsc-merchants/library/google_shipping_country.php:44
+#: wpsc-admin/includes/settings-pages/checkout.php:225
+#: wpsc-admin/includes/tax_and_shipping.php:66
+msgid "Save Changes"
+msgstr "Lagre endringar"
+
+#: wpsc-widgets/donations_widget.php:22
+#: wpsc-widgets/donations_widget.php:49
+#: wpsc-widgets/donations_widget.php:87
+msgid "Product Donations"
+msgstr "Gåver"
+
+#: wpsc-theme/wpsc-products_page.php:112
+msgid "More Details"
+msgstr "Fleire detaljar"
+
+#: wpsc-theme/wpsc-list_view.php:124
+#: wpsc-theme/wpsc-single_product.php:179
+#: wpsc-theme/wpsc-grid_view.php:129
+#: wpsc-theme/wpsc-products_page.php:205
+#: wpsc-widgets/donations_widget.php:165
+#: wpsc-admin/includes/settings-pages/presentation.php:237
+#: wpsc-includes/display.functions.php:216
+msgid "Add To Cart"
+msgstr "Legg i korga"
+
+#: wpsc-includes/product-template.php:1460
+msgid "Avg. Customer Rating"
+msgstr "Snittkarakter"
+
+#: wpsc-includes/product-template.php:1466
+msgid "Your Rating"
+msgstr "Din karakter"
+
+#: wpsc-includes/product-template.php:1467
+msgid "Saved"
+msgstr "Lagra"
+
+#: wpsc-core/wpsc-functions.php:131
+msgid "Order Received"
+msgstr "Tinginga motteken"
+
+#: wpsc-core/wpsc-functions.php:136
+msgid "Accepted Payment"
+msgstr "Godkjent betalingsmåte"
+
+#: wpsc-core/wpsc-functions.php:142
+msgid "Job Dispatched"
+msgstr "Jobben er send"
+
+#: wpsc-core/wpsc-functions.php:148
+msgid "Closed Order"
+msgstr "Stengd tinging"
+
+#: wpsc-widgets/category_widget.php:142
+#: wpsc-widgets/latest_product_widget.php:98
+#: wpsc-widgets/specials_widget.php:106
+#: wpsc-admin/includes/settings-pages/presentation.php:1035
+msgid "Show Thumbnails"
+msgstr "Vis småbilete"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:768
+msgid "Cart Location"
+msgstr "Plassering for handlekorga"
+
+#: wpsc-admin/includes/display-items-functions.php:153
+#: wpsc-admin/includes/display-items-functions.php:173
+msgid "Currency type"
+msgstr "Valutasort"
+
+#: wpsc-admin/includes/settings-pages/presentation.php:279
+msgid "Show Product Ratings"
+msgstr "Vis produktkarakterar"
+
+#: wpsc-updates/updating_tasks.php:390
+#: wpsc-updates/updating_tasks.php:397
+msgid "Thank you for purchasing with %shop_name%, any items to be shipped will be processed as soon as possible, any items that can be downloaded can be downloaded using the links on this page.All prices include tax and postage and packaging where applicable.You ordered these items:%product_list%%total_shipping%%total_price%"
+msgstr ""
+
+#: wpsc-core/wpsc-installer.php:162
+#: wpsc-updates/updating_tasks.php:391
+#: wpsc-updates/updating_tasks.php:404
+msgid "%product_list%%total_shipping%%total_price%"
+msgstr ""
+
+#: wpsc-core/wpsc-installer.php:204
+msgid "Products Page"
+msgstr "Produktside"
+
+#: wpsc-theme/wpsc-cart_widget.php:64
+#: wpsc-core/wpsc-installer.php:210
+msgid "Checkout"
+msgstr "Stadfest tinginga di"
+
+#: wpsc-core/wpsc-installer.php:216
+msgid "Transaction Results"
+msgstr "Resultat av overføringa"
+
+#: wpsc-core/wpsc-installer.php:222
+msgid "Your Account"
+msgstr "Brukarkontoen din"
+
+#: wpsc-core/wpsc-installer.php:752
+#: wpsc-core/wpsc-installer.php:761
+msgid "Postal Code"
+msgstr "Postnummer"
+
+#: wpsc-theme/wpsc-shopping_cart_page.php:258
+msgid "E-mail"
+msgstr ""
+
+#: wpsc-widgets/shopping_cart_widget.php:22
+#: wpsc-widgets/shopping_cart_widget.php:60
+#: wpsc-widgets/shopping_cart_widget.php:124
+#: wpsc-includes/shopping_cart_functions.php:44
+#: wpsc-includes/shopping_cart_functions.php:52
+#: wpsc-includes/shopping_cart_functions.php:69
+msgid "Shopping Cart"
+msgstr ""
+
+#: wpsc-admin/includes/tax_and_shipping.php:16
+msgid "GST/Tax Rate"
+msgstr "MVA/tollsats"
+
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:299
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:300
+msgid "Thank you, your purchase is pending, you will be sent an email once the order clears."
+msgstr "Tusen takk. Me har registrert tinginga di, og vil senda deg ein epost med ein gong tinginga går gjennom."
+
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:181
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:182
+msgid "Click to download"
+msgstr "Klikk her for å lasta ned"
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:559
+#: wpsc-theme/wpsc-shopping_cart_page.php:459
+msgid "Total Shipping"
+msgstr "Samla porto"
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:490
+#: wpsc-theme/wpsc-cart_widget.php:52
+#: wpsc-theme/wpsc-shopping_cart_page.php:21
+#: wpsc-admin/display-sales-logs.php:141
+#: wpsc-admin/display-sales-logs.php:234
+msgid "Total"
+msgstr "Sum"
+
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:261
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:262
+msgid "Your Transaction ID"
+msgstr "Ordrenummeret ditt"
+
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:263
+msgid "Transaction ID"
+msgstr "Ordrenummer"
+
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:302
+msgid "Order Pending: Payment Required"
+msgstr ""
+
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:304
+#: wpsc-admin/includes/settings-pages/admin.php:123
+msgid "Purchase Receipt"
+msgstr "Kvittering"
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:582
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:311
+msgid "Customer Details"
+msgstr "Kundedetaljar"
+
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:335
+msgid "Delivery State"
+msgstr "Område/delstat (levering)"
+
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:350
+msgid "Purchase Report"
+msgstr "Kjøpsrapport"
+
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:103
+#: wpsc-theme/functions/wpsc-transaction_results_functions.php:104
+msgid "The Transaction was successful"
+msgstr "Overføringa var vellukka"
+
+#: wpsc-theme/wpsc-transaction_results.php:24
+#: wpsc-theme/wpsc-shopping_cart_page.php:10
+msgid "Oops, there is nothing in your cart."
+msgstr ""
+
+#: wpsc-theme/wpsc-transaction_results.php:24
+#: wpsc-theme/wpsc-shopping_cart_page.php:10
+msgid "Please visit our shop"
+msgstr ""
+
+#: wpsc-theme/wpsc-user-log.php:50
+msgid "File Names"
+msgstr ""
+
+#: wpsc-theme/wpsc-user-log.php:51
+msgid "Downloads Left"
+msgstr ""
+
+#: wpsc-theme/wpsc-user-log.php:52
+#: wpsc-theme/wpsc-user-log.php:104
+#: wpsc-admin/display-items.page.php:37
+msgid "Date"
+msgstr "Dato"
+
+#: wpsc-theme/wpsc-user-log.php:88
+msgid "You have not purchased any downloadable products yet."
+msgstr ""
+
+#: wpsc-theme/wpsc-user-log.php:103
+#: wpsc-admin/display-sales-logs.php:54
+msgid "Status"
+msgstr "Status"
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:637
+#: wpsc-theme/wpsc-user-log.php:109
+msgid "Payment Method"
+msgstr "Betalingsmåte"
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:372
+#: wpsc-admin/display-sales-logs.php:53
+msgid "Details"
+msgstr "Detaljar"
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:421
+msgid "Order Status"
+msgstr "Status for tinginga"
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:460
+msgid "Order Details"
+msgstr "Tingingsdetaljar"
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:482
+msgid "GST"
+msgstr "MVA"
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:561
+msgid "Final Total"
+msgstr "Sluttsum"
+
+#: wpsc-theme/functions/wpsc-user_log_functions.php:640
+msgid "Transaction Id"
+msgstr "Overførings-ID"
+
+#: wpsc-theme/wpsc-user-log.php:122
+msgid "No transactions for this month."
+msgstr ""
+
+#: wpsc-theme/wpsc-user-log.php:135
+msgid "There have not been any purchases yet."
+msgstr "Det har ikkje vore nokon kjøp enno."
+
+#: wpsc-theme/wpsc-user-log.php:143
+msgid "You must be logged in to use this page. Please use the form below to login to your account."
+msgstr "Du må vera logga inn for å sjå denne sida. Bruk felta nedanfor for å logga inn på brukarkontoen din."
+
+#: wpsc-admin/admin.php:410
+msgid "Text"
+msgstr "Tekst"
+
+#: wpsc-admin/admin.php:413
+msgid "Textarea"
+msgstr "Tekstområde"
+
+#: wpsc-admin/admin.php:414
+msgid "Heading"
+msgstr "Overskrift"
+
+#: wpsc-admin/admin.php:415
+msgid "Coupon"
+msgstr "Rabattkupong"
+
+#: wpsc-admin/admin.php:420
+msgid "Label"
+msgstr ""
+
+#: wpsc-admin/admin.php:421
+msgid "Label Description"
+msgstr ""
+
+#: wpsc-admin/admin.php:422
+msgid "Item Number"
+msgstr ""
+
+#: wpsc-admin/admin.php:423
+msgid "Life Number"
+msgstr ""
+
+#: wpsc-admin/admin.php:424
+msgid "Product Code"
+msgstr ""
+
+#: wpsc-admin/admin.php:425
+msgid "PDF"
+msgstr ""
+
+#: wpsc-admin/admin.php:427
+#: wpsc-shipping/tablerate.php:61
+#: wpsc-shipping/weightrate.php:58
+msgid " and above"
+msgstr ""
+
+#: wpsc-admin/admin.php:428
+#: wpsc-shipping/tablerate.php:59
+msgid "If price is "
+msgstr ""
+
+#: wpsc-admin/admin.php:429
+#: wpsc-shipping/weightrate.php:58
+msgid "If weight is "
+msgstr ""
+
+#: wpsc-includes/misc.functions.php:67
+msgid "<strong>ERROR</strong>: Please enter a username."
+msgstr ""
+
+#: wpsc-includes/misc.functions.php:77
+msgid "<strong>ERROR</strong>: Please type your e-mail address."
+msgstr ""
+
+#: wpsc-includes/misc.functions.php:79
+msgid "<strong>ERROR</strong>: The email address isn&#8217;t correct."
+msgstr ""
+
+#: wpsc-includes/misc.functions.php:69
+msgid "<strong>ERROR</strong>: This username is invalid.  Please enter a valid username."
+msgstr ""
+
+#: wpsc-includes/misc.functions.php:72
+msgid "<strong>ERROR</strong>: This username is already registered, please choose another one."
+msgstr ""
+
+#: wpsc-includes/misc.functions.php:90
+msgid "<strong>ERROR</strong>: Couldn&#8217;t register you... please contact the <a href=\"mailto:%s\">webmaster</a> !"
+msgstr ""
+
+#: wpsc-includes/ajax.functions.php:976
+#: wpsc-includes/ajax.functions.php:984
+#: wpsc-includes/ajax.functions.php:1052
+msgid "This download is no longer valid, Please contact the site administrator for more information."
+msgstr ""
+
