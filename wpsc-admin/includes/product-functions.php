@@ -222,6 +222,19 @@ add_filter( 'wp_insert_post_data','wpsc_pre_update', 99, 2 );
 add_action( 'save_post', 'wpsc_admin_submit_product', 10, 2 );
 add_action( 'admin_notices', 'wpsc_admin_submit_notices' );
 
+/**
+ * Remove category meta box from variation editor. This would disassociate variations
+ * with the default category. See #431 (http://code.google.com/p/wp-e-commerce/issues/detail?id=431)
+ *
+ */
+function wpsc_variation_remove_metaboxes() {
+	global $post;
+	if ( ! $post->post_parent )
+		return;
+		
+	remove_meta_box( 'wpsc_product_categorydiv', 'wpsc-product', 'side' );
+}
+add_action( 'add_meta_boxes_wpsc-product', 'wpsc_variation_remove_metaboxes', 99 );
 
 function wpsc_admin_submit_notices() {
     global $current_screen, $post;
