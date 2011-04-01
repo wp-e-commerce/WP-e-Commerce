@@ -989,6 +989,8 @@ function wpsc_update_page_urls($auto = false) {
 	$changes_made = false;
 	foreach ( $wpsc_pageurl_option as $option_key => $page_string ) {
 		$post_id = $wpdb->get_var( "SELECT `ID` FROM `{$wpdb->posts}` WHERE `post_type` IN('page','post') AND `post_content` LIKE '%$page_string%' LIMIT 1" );
+		if ( ! $post_id )
+			continue;
 		$the_new_link = _get_page_link( $post_id );
 		if ( stristr( get_option( $option_key ), "https://" ) ) {
 			$the_new_link = str_replace( 'http://', "https://", $the_new_link );

@@ -908,7 +908,7 @@ function wpsc_check_permalink_notice(){
 
 add_action( 'permalink_structure_changed' , 'wpsc_check_permalink_notice' );
 add_action( 'permalink_structure_changed' , 'wpsc_update_permalinks' );
-add_action( 'get_sample_permalink_html' , 'wpsc_update_permalinks' );
+/* add_action( 'get_sample_permalink_html' , 'wpsc_update_permalinks' ); // this just seems unnecessary and produces PHP notices */
 add_action( 'wp_ajax_category_sort_order', 'wpsc_ajax_set_category_order' );
 add_action( 'wp_ajax_wpsc_ie_save', 'wpsc_ajax_ie_save' );
 add_action('in_admin_header', 'wpsc_add_meta_boxes');
