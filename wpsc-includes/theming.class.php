@@ -41,7 +41,7 @@ class wpsc_theming {
 		check_admin_referer( 'wpsc_copy_themes' );
 
 		$this->active_wp_style   = trailingslashit( get_stylesheet_directory() );
-		$this->templates_to_move = $_POST['wpsc_templates_to_port'];
+		$this->templates_to_move = isset( $_POST['wpsc_templates_to_port'] ) ? $_POST['wpsc_templates_to_port'] : array();
 		$this->list_of_templates = wpsc_list_product_templates( $this->active_wp_style );
 		$this->theme_file_prefix = 'wpsc-';
 
