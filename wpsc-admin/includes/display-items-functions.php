@@ -1180,7 +1180,7 @@ function edit_multiple_image_gallery( $post ) {
 
 function wpsc_save_quickedit_box( $post_id ) {
 	global $current_screen;
-	if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || $current_screen->id != 'edit-wpsc-product' )
+	if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || $current_screen->id != 'edit-wpsc-product' || ! defined( 'DOING_AJAX' ) || ! DOING_AJAX )
 		return;
 
 	$is_parent = ( bool )wpsc_product_has_children( $post_id );
