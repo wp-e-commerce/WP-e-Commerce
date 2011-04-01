@@ -1255,16 +1255,11 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
 function wpsc_checkout_settings() {
 	global $wpdb;
 	$wpdb->show_errors = true;
-	if ( isset( $_POST['wpsc_form_set'] ) ) {
-		$filter = $wpdb->escape( $_POST['wpsc_form_set'] );
-	} else {
-		$filter = 0;
-	}
+	$filter = isset( $_POST['wpsc_form_set'] ) ? $_POST['wpsc_form_set'] : 0;
 
 	if ( $_POST['new_form_set'] != null ) {
-		$new_form_set = $wpdb->escape( stripslashes( $_POST['new_form_set'] ) );
 		$checkout_sets = get_option( 'wpsc_checkout_form_sets' );
-		$checkout_sets[] = $new_form_set;
+		$checkout_sets[] = $_POST['new_form_set'];
 		update_option( 'wpsc_checkout_form_sets', $checkout_sets );
 	}
 
@@ -1282,16 +1277,20 @@ function wpsc_checkout_settings() {
 			}
 
 			$options = serialize( $options );
-			$sql = "UPDATE `" . WPSC_TABLE_CHECKOUT_FORMS . "` SET `options`='" . $options . "' WHERE id=" . $form_id;
-			$wpdb->query( $sql );
+			$wpdb->update(
+				WPSC_TABLE_CHECKOUT_FORMS, 
+				array( 'options' => $options ), 
+				array( 'id' => $form_id ), 
+				'%s', 
+				'%d'
+			);
 		}
 	}
 
 
 	if ( $_POST['form_name'] != null ) {
 		foreach ( $_POST['form_name'] as $form_id => $form_name ) {
-			$form_name = $wpdb->escape( $form_name );
-			$form_type = $wpdb->escape( $_POST['form_type'][$form_id] );
+			$form_type = $_POST['form_type'][$form_id];
 			$form_mandatory = 0;
 			if ( isset( $_POST['form_mandatory'][$form_id] ) && ($_POST['form_mandatory'][$form_id] == 1) ) {
 				$form_mandatory = 1;
@@ -1304,7 +1303,19 @@ function wpsc_checkout_settings() {
 			if ( $_POST['unique_names'][$form_id] != '-1' ) {
 				$unique_name = $_POST['unique_names'][$form_id];
 			}
-			$wpdb->query( "UPDATE `" . WPSC_TABLE_CHECKOUT_FORMS . "` SET `name` = '$form_name', `type` = '$form_type', `mandatory` = '$form_mandatory', `display_log` = '$form_display_log',`unique_name`='" . $unique_name . "' WHERE `id` ='" . $form_id . "' LIMIT 1 ;" );
+			$wpdb->update(
+				WPSC_TABLE_CHECKOUT_FORMS,
+				array(
+					'name'        => $form_name,
+					'type'        => $form_type,
+					'mandatory'   => $form_mandatory,
+					'display_log' => $form_display_log,
+					'unique_name' => $unique_name,
+				),
+				array( 'id' => $form_id ),
+				'%s',
+				'%d'
+			);
 		}
 	}
 
@@ -1331,7 +1342,21 @@ function wpsc_checkout_settings() {
 				$max_order_sql = $wpdb->get_results( $max_order_sql, ARRAY_A );
 				$order_number = $max_order_sql[0]['checkout_order'] + 1;
 			}
-			$wpdb->query( "INSERT INTO `" . WPSC_TABLE_CHECKOUT_FORMS . "` ( `name`, `type`, `mandatory`, `display_log`, `default`, `active`, `checkout_order` , `unique_name`, `checkout_set`) VALUES ( '$form_name', '$form_type', '$form_mandatory', '$form_display_log', '', '1','" . $order_number . "','" . $form_unique_name . "','" . $filter . "');" );
+			$wpdb->insert(
+				WPSC_TABLE_CHECKOUT_FORMS,
+				array(
+					'name'           => $form_name,
+					'type'           => $form_type,
+					'mandatory'      => $form_mandatory,
+					'display_log'    => $form_display_log,
+					'default'        => '',
+					'active'         => '1',
+					'checkout_order' => $order_number,
+					'unique_name'    => $form_unique_name,
+					'checkout_set'   => $filter,
+				),
+				array( '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s' )
+			);
 			$added++;
 		}
 	}
