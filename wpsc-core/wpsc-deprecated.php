@@ -439,3 +439,13 @@ function wpsc_is_admin() {
     return false;
     
 }
+
+/**
+ * used in legacy theme templates
+ * see http://plugins.svn.wordpress.org/wp-e-commerce/tags/3.7.8/themes/default/category_widget.php
+ *
+ * @return void
+ */
+function wpsc_print_product_list() {
+	_deprecated_function( __FUNCTION__, '3.8' );
+}
