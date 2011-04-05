@@ -40,7 +40,7 @@ if ( get_option( 'wpsc_version' ) < 3.8 || !get_option( 'wpsc_version' ) ) {
 			echo "<div id='wpsc-warning' class='error fade'><p><strong>" . __( 'WP e-Commerce is almost ready.', 'wpsc' ) . "</strong> " . sprintf( __( 'You must <a href="%1$s">update your database</a> to import all of your products.', 'wpsc' ), "admin.php?page=wpsc-update") . "</p></div>";
 		}
 
-		if ( isset( $_GET['page'] ) && $_GET['page'] != 'wpsc-update' )
+		if ( ! isset( $_GET['page'] ) || $_GET['page'] != 'wpsc-update' )
 			add_action( 'admin_notices', 'wpsc_display_update_notice' );
 
 	// There weren't any products, so mark the update as complete
