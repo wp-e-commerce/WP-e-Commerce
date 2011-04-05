@@ -104,7 +104,7 @@ function wpsc_output_breadcrumbs($options = Array()) {
 		if(wpsc_breadcrumb_url()) {
 			echo '<a class="wpsc-crumb" id="wpsc-crumb-'.wpsc_breadcrumb_slug().'" href="'.wpsc_breadcrumb_url().'">'.wpsc_breadcrumb_name().'</a>';
 		} else {
-			echo wpsc_breadcrumb_name();
+			echo '<span class="wpsc-crumb" id="wpsc-crumb-'.wpsc_breadcrumb_slug().'">' . wpsc_breadcrumb_name() . '<span>';
 		}
 		echo isset($options['after-crumb']) ? $options['after-crumb'] : '';
 	}
