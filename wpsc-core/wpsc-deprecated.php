@@ -449,3 +449,14 @@ function wpsc_is_admin() {
 function wpsc_print_product_list() {
 	_deprecated_function( __FUNCTION__, '3.8' );
 }
+
+/**
+ * count total products on a page
+ * see http://plugins.svn.wordpress.org/wp-e-commerce/tags/3.7.8/themes/iShop/products_page.php
+ *
+ * @return int
+ */
+function wpsc_total_product_count() {
+	_deprecated_function( __FUNCTION__, '3.8' );
+	return wpsc_product_count();
+}
