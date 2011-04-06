@@ -460,3 +460,19 @@ function wpsc_total_product_count() {
 	_deprecated_function( __FUNCTION__, '3.8' );
 	return wpsc_product_count();
 }
+
+/**
+ * WPSC_Query() is deprecated in favor of WP_Query()
+ * Note that although we fall back to WP_Query() when WPSC_Query() is used,
+ * the results might not be what you expect.
+ *
+ */
+class WPSC_Query extends WP_Query
+{
+	function WPSC_Query( $query ) {
+		$query = wp_parse_args( $query );
+		$query['post_type'] = 'wpsc-product';
+		_deprecated_function( __FUNCTION__, '3.8', 'WP_Query class' );
+		parent::WP_Query( $query );
+	}
+}
