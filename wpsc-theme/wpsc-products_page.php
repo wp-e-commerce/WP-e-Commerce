@@ -60,7 +60,7 @@ global $wp_query;
 		<?php endif; ?>		
 		
 	
-	
+		<div class="wpsc_default_product_list">
 		<?php /** start the product loop here */?>
 		<?php while (wpsc_have_products()) :  wpsc_the_product(); ?>
 					
@@ -226,6 +226,7 @@ global $wp_query;
 
 		<?php endwhile; ?>
 		<?php /** end the product loop here */?>
+		</div>
 		<?php if(wpsc_product_count() == 0):?>
 			<h3><?php  _e('There are no products in this group.', 'wpsc'); ?></h3>
 		<?php endif ; ?>
