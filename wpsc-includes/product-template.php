@@ -455,7 +455,7 @@ function wpsc_display_categories() {
 			$category_id = $_GET['products'];
 
 		// if we have no categories, and no search, show the group list
-		if ( is_numeric( get_option( 'wpsc_default_category' ) ) || (isset( $product_id ) && is_numeric( $product_id )) || ( empty( $_REQUEST['product_search'] ) ) )
+		if ( is_numeric( get_option( 'wpsc_default_category' ) ) || (isset( $product_id ) && is_numeric( $product_id )) )
 			$output = true;
 		if ( (get_option( 'wpsc_default_category' ) == 'all+list'))
 			$output = true;
