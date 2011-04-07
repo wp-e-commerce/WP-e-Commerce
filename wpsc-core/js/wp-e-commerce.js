@@ -232,7 +232,7 @@ jQuery(document).ready(function () {
 	});
 
 	// Submit the product form using AJAX
-	jQuery("form.product_form").submit(function() {
+	jQuery("form.product_form").live('submit', function() {
 		// we cannot submit a file through AJAX, so this needs to return true to submit the form normally if a file formfield is present
 		file_upload_elements = jQuery.makeArray(jQuery('input[type=file]', jQuery(this)));
 		if(file_upload_elements.length > 0) {
