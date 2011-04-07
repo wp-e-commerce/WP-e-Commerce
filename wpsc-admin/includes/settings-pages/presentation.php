@@ -698,6 +698,8 @@ function wpsc_options_presentation() {
 							} else {
 								$dis = "";
 							}
+							
+							$embed_live_search_results = get_option( 'embed_live_search_results', '0' ) == '1' ? ' checked="checked"' : '';
 					?>
 						<input type='radio' onclick='jQuery("#wpsc_advanced_search").show()' value='1' name='wpsc_options[show_search]' id='show_search1' <?php echo $show_search1; ?> /> <label for='show_search1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
 						<input type='radio' onclick='jQuery("#wpsc_advanced_search").hide()' value='0' name='wpsc_options[show_search]' id='show_search2' <?php echo $show_search2; ?> /> <label for='show_search2'><?php _e( 'No', 'wpsc' ); ?></label>
@@ -708,7 +710,10 @@ function wpsc_options_presentation() {
 							<?php _e( 'Show Advanced Search', 'wpsc' ); ?><br />
 							<input type='hidden' name='wpsc_options[show_live_search]' value='0' />
 							<input type='checkbox' name='wpsc_options[show_live_search]' id='show_live_search' <?php echo $show_live_search; ?> value='1' />
-							<?php _e( 'Use Live Search', 'wpsc' ); ?>
+							<?php _e( 'Use Live Search', 'wpsc' ); ?><br />
+							<input type='hidden' name='wpsc_options[embed_live_search_results]' value='0' />
+							<input type='checkbox' name='wpsc_options[embed_live_search_results]' id='embed_live_search_results'<?php echo $embed_live_search_results; ?> value='1' />
+							<?php _e( 'Dynamically replace search results into product list' ); ?>
 						</div>
 					</td>
 				</tr>
