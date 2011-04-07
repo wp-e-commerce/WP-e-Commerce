@@ -65,40 +65,6 @@ if($wpdb->get_results("SHOW FULL COLUMNS FROM `".WPSC_TABLE_REGION_TAX."` LIKE '
 }
 
 
-
-// here is the code to update the payment gateway options.
-$selected_gateways = array();
-$current_gateway = get_option('payment_gateway');
-$selected_gateways = get_option('custom_gateway_options');
-if($current_gateway == '') {
-  // set the gateway to Manual Payment if it is not set.
-  $current_gateway = 'testmode'; 
-}
-if(get_option('payment_method') != null) {
-	switch(get_option('payment_method')) {
-		case 2:
-		// mode 2 is credit card and manual payment / test mode
-		if($current_gateway == 'testmode') {
-			$current_gateway = 'paypal_multiple';
-		}
-		$selected_gateways[] = 'testmode';
-		$selected_gateways[] = $current_gateway;
-		break;
-		
-		case 3;
-		// mode 3 is manual payment / test mode
-		$current_gateway = 'testmode';
-		case 1:
-		// mode 1 is whatever gateway is currently selected.
-		default:
-		$selected_gateways[] = $current_gateway;
-		break;
-	}
-	update_option('custom_gateway_options', $selected_gateways);
-	update_option('payment_method', null);
-}
-
-
 // here is the code to update the payment gateway options.
 $selected_gateways = array();
 $current_gateway = get_option('payment_gateway');
