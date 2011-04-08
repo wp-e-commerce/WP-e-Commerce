@@ -542,7 +542,11 @@ function wpsc_add_meta_table_where($where){
 function wpsc_add_meta_table($join){
 	global $wpdb;
 	remove_filter( 'posts_join', 'wpsc_add_meta_table' );
-	return $join . ' JOIN ' . $wpdb->postmeta . ' ON ' . $wpdb->posts. '.ID = ' . $wpdb->postmeta . '.post_id';
+	if(strpos($join, "INNER JOIN ON (".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id)") !== false){
+		return  ' JOIN ' . $wpdb->postmeta . ' ON ' . $wpdb->posts. '.ID = ' . $wpdb->postmeta . '.post_id';
+	}else{
+		return $join;
+	}
 }
 
 /**
