@@ -216,7 +216,7 @@ GROUP BY ".WPSC_TABLE_PRODUCT_LIST.".id", ARRAY_A);
 
 		$post_data['_wpsc_original_id'] = (int)$product['id'];
 		$post_data['_wpsc_price'] = (float)$product['price'];
-		$post_data['_wpsc_special_price'] = (float)$product['special_price'];
+		$post_data['_wpsc_special_price'] = $post_data['_wpsc_price'] - (float)$product['special_price']; // special price get stored in a weird way in 3.7.x
 		$post_data['_wpsc_stock'] = (float)$product['quantity'];
 		$post_data['_wpsc_is_donation'] = $product['donation'];
 		$post_data['_wpsc_sku'] = $sku;
