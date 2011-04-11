@@ -26,7 +26,7 @@ if ( 0 == count( get_option( 'wpsc_product_category_children' ) ) ) {
 $wpsc_version = get_option( 'wpsc_version', '0' );
 
 // If database is already updated, then no need to update
-if ( version_compare( $wpsc_version, '3.8', '>=' ) ) {
+if ( ! get_option( 'wpsc_needs_update', false ) ) {
 	$show_update_page = 0;
 } else {
 
@@ -85,6 +85,7 @@ function wpsc_display_update_page() { ?>
 			}
 			update_option('wpsc_version', 3.8);
 			update_option('wpsc_hide_update', true);
+			update_option( 'wpsc_needs_update', false );
 		else:
 
 
