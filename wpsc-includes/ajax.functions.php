@@ -35,8 +35,15 @@ function wpsc_add_to_cart() {
 	$default_parameters['meta'] = null;
 
 	$provided_parameters = array();
+	
 	/// sanitise submitted values
 	$product_id = (int)$_POST['product_id'];
+	
+	// compatibility with older themes
+	if ( is_array( $_POST['wpsc_quantity_update'] ) ) {
+		$_POST['wpsc_quantity_update'] = $_POST['wpsc_quantity_update'][$product_id];
+	}
+	
 	if(isset($_POST['variation'])){
 		foreach ( (array)$_POST['variation'] as $key => $variation )
 			$provided_parameters['variation_values'][(int)$key] = (int)$variation;
