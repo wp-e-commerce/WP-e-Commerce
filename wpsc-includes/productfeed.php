@@ -116,9 +116,15 @@ function wpsc_generate_product_feed() {
 		}
 
 		$price = wpsc_calculate_price($post->ID);
+		$args = array(
+			'display_currency_symbol' => false,
+			'display_decimal_point'   => true,
+			'display_currency_code'   => false,
+			'display_as_html'         => false
+		);
+		$price = wpsc_currency_display($price, $args);
 		$children = get_children(array('post_parent'=> $post->ID,
 					                   'post_type'=>'wpsc-product'));
-
 		foreach ($children as $child) {
 			$child_price = wpsc_calculate_price($child->ID);
 
