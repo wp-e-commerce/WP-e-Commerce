@@ -538,6 +538,12 @@ class ASH{
      * @param ASHShipment $shipment
      */
     function cache_results($internal_name, $rate_table, $shipment){
+        if (!is_array($_SESSION["wpec_ash"])){
+            $_SESSION["wpec_ash"] = array();
+        }
+        if (!is_array($_SESSION["wpec_ash"][$internal_name])){
+            $_SESSION["wpec_ash"][$internal_name] = array();
+        }
         $_SESSION["wpec_ash"][$internal_name]["rate_table"] = $rate_table;
         $shipment_vals = array("package_count"=>$shipment->package_count,
                                "destination"  =>$shipment->destination,
@@ -559,7 +565,16 @@ class ASH{
         if (!array_key_exists($internal_name,$_SESSION["wpec_ash"])){
             return FALSE;
         }
-        $cached_shipment = $_SESSION["wpec_ash"][$internal_name]["shipment"];
+        if (is_object($_SESSION["wpec_ash"][$internal_name]["shipment"])){
+            $cached_shipment = $_SESSION["wpec_ash"][$internal_name]["shipment"];
+        }else{
+            if (!empty($_SESSION["wpec_ash"][$internal_name]["shipment"])){
+                if (is_array($_SESSION["wpec_ash"][$internal_name]["shipment"])){
+                    $cached_shipment = $_SESSION["wpec_ash"][$internal_name]["shipment"];
+                }
+            }
+        }
+    
         $shipment_vals = array("package_count"=>$shipment->package_count,
                                "destination"  =>$shipment->destination,
                                "total_weight" =>$shipment->total_weight
