@@ -15,17 +15,18 @@ function wpsc_auto_update() {
 	
 	if ( $wpsc_version === false )
 		add_option( 'wpsc_version', WPSC_VERSION, '', 'yes' );
+	else
+		update_option( 'wpsc_version', WPSC_VERSION );
 		
 	if ( $wpsc_minor_version === false )
 		add_option( 'wpsc_minor_version', WPSC_MINOR_VERSION, '', 'yes' );
-	
-	if ( version_compare( $wpsc_version, WPSC_VERSION, '<' ) || version_compare( $wpsc_minor_vesion, WPSC_MINOR_VERSION, '<' ) ) {
-		if ( version_compare( WPSC_VERSION, '3.8', '=' ) )
-			add_option( 'wpsc_needs_update', true, '', 'no' );
-		update_option( 'wpsc_needs_update', true );
-		update_option( 'wpsc_version', WPSC_VERSION );
+	else
 		update_option( 'wpsc_minor_version', WPSC_MINOR_VERSION );
-	}
+	
+	if ( version_compare( $wpsc_version, '3.8', '<' ) )
+		update_option( 'wpsc_needs_update', true );
+	else
+		update_option( 'wpsc_needs_update', false );
 }
 
 function wpsc_install() {
@@ -58,22 +59,23 @@ function wpsc_install() {
 		wp_schedule_event( time(), 'daily', 'wpsc_daily_cron_tasks' );
 
 	// All code to add new database tables and columns must be above here
-	$wpsc_version = get_option( 'wpsc_version' );
-	$wpsc_minor_version = get_option( 'wspc_minor_version' );
+	$wpsc_version = get_option( 'wpsc_version', 0 );
+	$wpsc_minor_version = get_option( 'wspc_minor_version', 0 );
 	
 	if ( $wpsc_version === false )
 		add_option( 'wpsc_version', WPSC_VERSION, '', 'yes' );
+	else
+		update_option( 'wpsc_version', WPSC_VERSION );
 		
 	if ( $wpsc_minor_version === false )
 		add_option( 'wpsc_minor_version', WPSC_MINOR_VERSION, '', 'yes' );
-	
-	if ( version_compare( $wpsc_version, WPSC_VERSION, '<' ) || version_compare( $wpsc_minor_vesion, WPSC_MINOR_VERSION, '<' ) ) {
-		if ( version_compare( WPSC_VERSION, '3.8', '=' ) )
-			add_option( 'wpsc_needs_update', true, '', 'no' );
-		update_option( 'wpsc_needs_update', true );
-		update_option( 'wpsc_version', WPSC_VERSION );
+	else
 		update_option( 'wpsc_minor_version', WPSC_MINOR_VERSION );
-	}
+
+	if ( version_compare( $wpsc_version, '3.8', '<' ) )
+		update_option( 'wpsc_needs_update', true );
+	else
+		update_option( 'wpsc_needs_update', false );
 	
 	if('' == get_option('show_subcatsprods_in_cat'))
 		update_option('show_subcatsprods_in_cat',0);
