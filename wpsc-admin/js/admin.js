@@ -216,11 +216,14 @@ jQuery(document).ready(function(){
 			var product_id = jQuery(this).parent("form.product_upload").find('input#hidden_id').val();
 			post_values = products + '&product_id=' + product_id;
 			jQuery.post('admin.php?wpsc_admin_action=product_files_upload',post_values, function(returned_data){
-				jQuery("#TB_closeWindowButton").click(TB_remove);
-
+				tb_remove();
+				if (returned_data.length > 0) {
+					jQuery('#wpsc_product_download_forms .select_product_file').append(returned_data).
+						find('p.no-item').hide().end().
+						find('p:even').removeClass('alt').end().
+				   		find('p:odd').addClass('alt');
+				}
 			});
-			//		alert(products);
-
 			event.preventDefault();
 		});
 	});
