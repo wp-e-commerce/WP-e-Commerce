@@ -1146,6 +1146,9 @@ function prod_upload() {
 			);
 			$id = wp_insert_post( $attachment );
 		} else {
+			// already attached
+			if ( $file_post_data['post_parent'] == $product_id )
+				continue;
 			$type = $file_post_data["post_mime_type"];
 			$url = $file_post_data["guid"];
 			$title = $file_post_data["post_title"];
