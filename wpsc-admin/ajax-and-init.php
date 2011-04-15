@@ -1262,7 +1262,7 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
 function wpsc_checkout_settings() {
 	global $wpdb;
 	$wpdb->show_errors = true;
-	$filter = isset( $_POST['wpsc_form_set'] ) ? $_POST['wpsc_form_set'] : 0;
+	$filter = isset( $_POST['selected_form_set'] ) ? $_POST['selected_form_set'] : 0;
 
 	if ( $_POST['new_form_set'] != null ) {
 		$checkout_sets = get_option( 'wpsc_checkout_form_sets' );
