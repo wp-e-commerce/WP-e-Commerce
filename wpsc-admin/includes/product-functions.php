@@ -43,7 +43,7 @@ function wpsc_product_has_children($id){
 function wpsc_admin_submit_product( $post_ID, $post ) {
 	global $current_screen, $wpdb;
 
-	if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || $current_screen->id != 'wpsc-product' || $post->post_type != 'wpsc-product' || empty( $_POST['meta'] ) )
+	if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || empty( $current_screen ) || $current_screen->id != 'wpsc-product' || $post->post_type != 'wpsc-product' || empty( $_POST['meta'] ) )
 		return $post_ID;
 
     //Type-casting ( not so much sanitization, which would be good to do )
