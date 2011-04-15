@@ -156,7 +156,7 @@ function wpsc_latest_product( $args = null, $instance ) {
 				if ( $attached_image->ID > 0 )
 						$output .= '<img src="' . wpsc_product_image( $attached_image->ID, $width, $height ) . '" title="' . $latest_product->post_title . '" alt="' . $latest_product->post_title . '" />';
 				else
-					$output .='<img class="no-image" id="product_image_'.wpsc_the_product_id().'" alt="No Image" title="'.wpsc_the_product_title().'" src="'.WPSC_URL.'/wpsc-theme/images/noimage.png" width="' . $width . '" height="' . $height . '" />';
+					$output .='<img class="no-image" id="product_image_'.wpsc_the_product_id().'" alt="No Image" title="'.wpsc_the_product_title().'" src="'.WPSC_URL.'/wpsc-theme/wpsc-images/noimage.png" width="' . $width . '" height="' . $height . '" />';
 				
 				$output .= '</a>';
 				$output .= '</div>';
