@@ -861,9 +861,7 @@ class wpsc_checkout {
 	 */
 	function save_forms_to_db( $purchase_id ) {
 		global $wpdb;
-
-		$count = $this->get_count_checkout_fields() + 1;
-		$i = 0;
+		
 		foreach ( $this->checkout_items as $form_data ) {
 			$value = '';
 			if( isset( $_POST['collected_data'][$form_data->id] ) )
@@ -873,24 +871,21 @@ class wpsc_checkout {
 
 
 			if ( $form_data->type != 'heading' ) {
-				if ( is_array( $value ) && ($form_data->unique_name == 'billingcountry' || $form_data->unique_name == 'shippingcountry') ) {
+				if ( is_array( $value ) ) {
+					if ( in_array( $form_data->unique_name, array( 'billingcountry', 'shippingcountry' ) ) ) {
 						$value = $value[0];
-					
-					$prepared_query = $wpdb->query( $wpdb->prepare( "INSERT INTO `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` ( `log_id` , `form_id` , `value` ) VALUES ( %d, %d, %s)", $purchase_id, $form_data->id, $value ) );
-				} elseif ( is_array( $value ) ) {
-
-					foreach ( (array)$value as $v ) {
-						$prepared_query = $wpdb->query( $wpdb->prepare( "INSERT INTO `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` ( `log_id` , `form_id` , `value` ) VALUES ( %d, %d, %s)", $purchase_id, $form_data->id, $v ) );
+						$prepared_query = $wpdb->prepare( "INSERT INTO `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` ( `log_id` , `form_id` , `value` ) VALUES ( %d, %d, %s)", $purchase_id, $form_data->id, $value );
+					} else {
+						foreach ( (array)$value as $v ) {
+							$prepared_query = $wpdb->prepare( "INSERT INTO `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` ( `log_id` , `form_id` , `value` ) VALUES ( %d, %d, %s)", $purchase_id, $form_data->id, $v );
+						}
 					}
 				} else {
-					$prepared_query = $wpdb->query( $wpdb->prepare( "INSERT INTO `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` ( `log_id` , `form_id` , `value` ) VALUES ( %d, %d, %s)", $purchase_id, $form_data->id, $value ) );
+					$prepared_query = $wpdb->prepare( "INSERT INTO `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` ( `log_id` , `form_id` , `value` ) VALUES ( %d, %d, %s)", $purchase_id, $form_data->id, $value );
 				}
+				
+				$wpdb->query( $prepared_query );
 			}
-			if ( $i > $count ) {
-				break;
-			}
-
-			$i++;
 		}
 	}
 
@@ -901,7 +896,7 @@ class wpsc_checkout {
 		global $wpdb;
 		$sql = "SELECT COUNT(*) FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `type` !='heading' AND `active`='1'";
 		$count = $wpdb->get_var( $sql );
-		return $count;
+		return (int) $count;
 	}
 
 	/**
