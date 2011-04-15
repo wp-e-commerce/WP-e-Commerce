@@ -67,7 +67,7 @@ function wpsc_custom_category_columns( $columns ) {
     unset( $columns["cb"] );
     
     $custom_array = array(
-        'cb' => '<input type="checkbox">',
+        'cb' => '<input type="checkbox" />',
         'image' => __( 'Image', 'wpsc' )
     );
     
