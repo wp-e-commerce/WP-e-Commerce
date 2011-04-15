@@ -21,7 +21,7 @@ class ash_usps{
      * default "usps" Don't change unless you know what you are doing!
      * @var string
      */
-    var $internal_name = "ash_usps";
+    var $internal_name = "usps";
     /**
      *
      * The external name that the USPS class identifies itself.
@@ -426,7 +426,7 @@ class ash_usps{
      * @param ASHPackage $package
      * @return array
      */
-    function _build_intl_shipment(&$request,$data,$package){
+    function _build_intl_shipment(&$request,array $data, $package){
         $shipment = array();
         
         $data["pounds"] = floor($package->weight);
@@ -453,9 +453,8 @@ class ash_usps{
                         "CommercialFlag"=>"Y"
                     );
 
-        $temp = $base;
-        $temp["@attr"]["ID"] = 0;
-        array_push($shipment, $temp);
+        $base["@attr"]["ID"] = 0;
+        array_push($shipment, $base);
         $request[$data["req"]]["Package"] = $shipment;
     }
     
@@ -468,6 +467,9 @@ class ash_usps{
 	 */
 	function _build_request(&$data){
 	    global $wpec_ash_xml;
+	    if (!is_array($data)){
+	        return array();
+	    }
 	    $req = "RateV4Request";
 	    if ($data["dest_country"] != "USA"){
 	        $req = "IntlRateV2Request";
@@ -531,10 +533,10 @@ class ash_usps{
 	 * @param string $package
 	 * @return string
 	 */
-	function _get_service($ServiceTag,$package){
+	function _get_service($ServiceTag, $package){
 	    global $wpec_ash_xml;
 	    $service = "";
-	    $temp_service = $wpec_ash_xml->get($ServiceTag,$package);
+	    $temp_service = $wpec_ash_xml->get($ServiceTag, $package);
 	    
         if ($temp_service){
             $service = $temp_service[0];
@@ -557,6 +559,10 @@ class ash_usps{
 	 */
 	function _merge_arrays(array $arrays){
 	    $final_array = array();
+	    if (!is_array($arrays)){
+	        // How did that happen, I mean really, I am specifying array as the base type
+	        return $final_array;
+	    }
 	    foreach($arrays as $arr){
 	        foreach($arr as $key=>$value){
 	            if (!array_key_exists($key, $final_array)){
@@ -582,8 +588,11 @@ class ash_usps{
         global $wpec_ash_xml;
 	    $package_services = array();
         $this->_clean_response($response);
-
+        
 	    $packages = $wpec_ash_xml->get("Package", $response);
+	    if (!is_array($packages)){
+	        return array();
+	    }
 	    
 	    foreach($packages as $package){
 	        $temp = array();
@@ -618,8 +627,8 @@ class ash_usps{
         $this->_clean_response($response);
         
 	    $services = $wpec_ash_xml->get("Service", $response);
-	    if (!$services){
-	        
+	    if (empty($services)){
+	        return array();
 	    }
 	    foreach($services as $service){
 	        $service_name = $this->_get_service("SvcDescription",$service);
@@ -706,10 +715,16 @@ class ash_usps{
 	    global $wpec_ash_xml;
 	    //*** Build Request **\\
 	    $request = $this->_build_request($data);
+	    if (empty($request)){
+	        return array();
+	    }
 	    $this->_build_domestic_shipment($request, $data, FALSE);
         $request_xml = $wpec_ash_xml->build_message($request);
 	    //*** Make the Request ***\\
 	    $response = $this->_make_request($request_xml,FALSE);
+	    if (empty($response) || $response === FALSE){
+	        return array();
+	    }
 	    //*** Parse the response from USPS ***\
 	    $package_rate_table = $this->_parse_domestic_response($response);
 	    $rate_table = $this->_merge_arrays($package_rate_table);
@@ -729,10 +744,16 @@ class ash_usps{
 	    foreach($this->shipment->packages as $package){
 	        $temp_data = $data;
 	        $request = $this->_build_request($temp_data);
+    	    if (empty($request)){
+    	        continue;
+    	    }
 	        $this->_build_domestic_shipment($request, $temp_data, $package);
 	        $request_xml = $wpec_ash_xml->build_message($request);
     	    //*** Make the Request ***\\
     	    $response = $this->_make_request($request_xml,FALSE);
+    	    if (empty($response)){
+    	        continue;
+    	    }
     	    //*** Parse the Response ***\\
     	    $package_rate_table = $this->_parse_domestic_response($response);
             //*** Reformat the array structure ***\\
@@ -758,10 +779,16 @@ class ash_usps{
 	    foreach($this->shipment->packages as $package){
 	        $temp_data = $data;
 	        $request = $this->_build_request($temp_data);
+    	    if (empty($request)){
+    	        continue;
+    	    }
 	        $this->_build_intl_shipment($request, $temp_data, $package);
 	        $request_xml = $wpec_ash_xml->build_message($request);
     	    //*** Make the Request ***\\
     	    $response = $this->_make_request($request_xml,TRUE);
+    	    if (empty($response) || $response === FALSE){
+    	        continue;
+    	    }
     	    $rate_table = $this->_parse_intl_response($response);
     	    array_push($rate_tables, $rate_table);
 	    }
@@ -880,13 +907,21 @@ class ash_usps{
 	 */
 	function getQuote(){
 	    global $wpdb, $wpec_ash, $wpec_ash_tools;
+	    if (!is_object($wpec_ash)){
+            $wpec_ash = new ASH();
+        }
+	    if (!is_object($wpec_ash_tools)){
+            $wpec_ash = new ASHTools();
+        }
+
 	    $this->shipment = $wpec_ash->get_shipment();
         $this->shipment->set_destination($this->internal_name);
 	    // Check to see if the cached shipment is still accurate, if not we need new rate
 	    $cache = $wpec_ash->check_cache($this->internal_name, $this->shipment);
-		//if ($cache){
-		//    return $cache["rate_table"];
-		//}
+	    
+	    if ($cache){
+	        return $cache["rate_table"];
+	    }
 
         $data = array();
         //*** WPEC Configuration values ***\\
@@ -905,9 +940,7 @@ class ash_usps{
 		//************ GET THE RATE ************\\
         $rate_table = $this->_run_quote($data);
         //************ CACHE the Results ************\\
-
         $wpec_ash->cache_results($this->internal_name, $rate_table, $this->shipment);
-
         return $rate_table;
 	}
 

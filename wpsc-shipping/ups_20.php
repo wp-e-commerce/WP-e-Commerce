@@ -24,6 +24,10 @@ class ash_ups {
         return true;
     }
 
+    function __autoload($name){
+        include("../wpsc-includes/shipping.helper.php");
+    }
+
     function getId() {
 //         return $this->usps_id;
     }
@@ -746,6 +750,9 @@ class ash_ups {
 
     function getQuote(){
         global $wpdb, $wpec_ash;
+        if (!is_object($wpec_ash)){
+            $wpec_ash = new ASH();        
+        }
 
         // Arguments array for various functions to use
         $args = array();
