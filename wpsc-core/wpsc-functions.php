@@ -971,7 +971,7 @@ function wpsc_product_link( $permalink, $post, $leavename ) {
 	$term_url = '';
 	$rewritecode = array(
 		'%wpsc_product_category%',
-		'%postname%'
+		$leavename ? '' : '%postname%',
 	);
 	if ( is_object( $post ) ) {
 		// In wordpress 2.9 we got a post object
