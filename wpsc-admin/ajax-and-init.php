@@ -1126,7 +1126,7 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
 function prod_upload() {
 	global $wpdb;
 	$product_id = absint( $_POST["product_id"] );
-
+	$output = '';
 	foreach ( $_POST["select_product_file"] as $selected_file ) {
 		// if we already use this file, there is no point doing anything more.
 
@@ -1134,11 +1134,6 @@ function prod_upload() {
 		$file_post_data = $wpdb->get_row( $sql, ARRAY_A );
 		$selected_file_path = WPSC_FILE_DIR . basename( $selected_file );
 
-		if ( isset( $attached_files_by_file[$selected_file] ) ) {
-			$file_is_attached = true;
-		}
-
-		//if(is_file($selected_file_path)) {
 		if ( empty( $file_post_data ) ) {
 			$type = wpsc_get_mimetype( $selected_file_path );
 			$attachment = array(
@@ -1168,9 +1163,18 @@ function prod_upload() {
 			// Save the data
 			$id = wp_insert_post( $attachment );
 		}
-		//}
-		echo "$id\n";
+		
+		$deletion_url = wp_nonce_url( "admin.php?wpsc_admin_action=delete_file&amp;file_name={$attachment['post_title']}&amp;product_id={$product_id}", 'delete_file_' . $attachment['post_title'] );
+
+		$output .= "<p id='select_product_file_row_id_" . $id . "'>\n";
+		$output .= "  <a class='file_delete_button' href='{$deletion_url}' >\n";
+		$output .= "    <img src='" . WPSC_CORE_IMAGES_URL . "/cross.png' />\n";
+		$output .= "  </a>\n";
+		$output .= "  <label for='select_product_file_row_id_" . $id . "'>" . $attachment['post_title'] . "</label>\n";
+		$output .= "</p>\n";
 	}
+	
+	echo $output;
 }
 if ( isset( $_GET['wpsc_admin_action'] ) && ($_GET['wpsc_admin_action'] == 'product_files_upload') )
 	add_action( 'admin_init', 'prod_upload' );
