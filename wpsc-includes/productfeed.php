@@ -139,26 +139,39 @@ function wpsc_generate_product_feed() {
 
 			$output .= "      <g:price>".$price."</g:price>\n\r";
 
-			$product_meta = get_post_meta( $post->ID, '_wpsc_product_metadata', true );
-			foreach (array_keys($product_meta) as $meta_key) {
-				if (stripos($meta_key,'g:') === 0)
-					$google_elements[$meta_key] = $product_meta[$meta_key];
+			$google_elements = Array ();
+
+			$product_meta = get_post_custom ( $post->ID );
+
+			foreach ( $product_meta as $meta_key => $meta_value ) {
+				if ( stripos($meta_key,'g:') === 0 )
+					$google_elements[$meta_key] = $meta_value;
 			}
-			$google_elements = apply_filters('wpsc_google_elements', array('product_id'=>$product['id'],'elements'=>$google_elements));
+
+			$google_elements = apply_filters( 'wpsc_google_elements', array ( 'product_id' => $post->ID, 'elements' => $google_elements ) );
 			$google_elements = $google_elements['elements'];
 
             $done_condition = FALSE;
-            if (count($google_elements)) {
-				foreach ($google_elements as $gelement) {
+
+            if ( count ( $google_elements ) ) {
+
+				foreach ( $google_elements as $element_name => $element_values ) {
+
+					foreach ( $element_values as $element_value ) {
+
+						$output .= "      <".$element_name.">";
+						$output .= "<![CDATA[".$element_value."]]>";
+						$output .= "</".$element_name.">\n\r";
+
+					}
  
- 					$output .= "      <".$gelement['meta_key'].">";
- 					$output .= "<![CDATA[".$gelement['meta_value']."]]>";
- 					$output .= "</".$gelement['meta_key'].">\n\r";
- 
-					if ($gelement['meta_key'] == 'g:condition')
+					if ($element_name == 'g:condition')
 						$done_condition = TRUE;
+
 				}
+
 			}
+
             if (!$done_condition)
 				$output .= "      <g:condition>new</g:condition>\n\r";
 
