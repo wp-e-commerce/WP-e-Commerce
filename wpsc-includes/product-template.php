@@ -690,7 +690,7 @@ function wpsc_the_product_title() {
  */
 function wpsc_the_product_description() {
 	$content = get_the_content( __( 'Read the rest of this entry &raquo;', 'wpsc' ) );
-	return wpautop($content,1);
+	return do_shortcode( wpautop( $content,1 ) );
 }
 
 /**
