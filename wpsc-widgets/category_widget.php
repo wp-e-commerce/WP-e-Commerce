@@ -112,7 +112,10 @@ class WP_Widget_Product_Categories extends WP_Widget {
 		$instance = wp_parse_args((array) $instance, array(
 			'title' => '',
 			'width' => 45,
-			'height' => 45
+			'height' => 45,
+			'image' => false,
+			'grid' => false,
+			'show_name' => false,
 		));
 
 		// Values
