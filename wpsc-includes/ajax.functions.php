@@ -40,7 +40,7 @@ function wpsc_add_to_cart() {
 	$product_id = (int)$_POST['product_id'];
 	
 	// compatibility with older themes
-	if ( is_array( $_POST['wpsc_quantity_update'] ) ) {
+	if ( isset( $_POST['wpsc_quantity_update'] ) && is_array( $_POST['wpsc_quantity_update'] ) ) {
 		$_POST['wpsc_quantity_update'] = $_POST['wpsc_quantity_update'][$product_id];
 	}
 	
