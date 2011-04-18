@@ -270,11 +270,7 @@ function wpsc_core_setup_cart() {
 
 	// Cart exists in Session, so attempt to unserialize it
 	if ( isset( $_SESSION['wpsc_cart'] ) ) {
-		if ( is_object( $_SESSION['wpsc_cart'] ) )
-			$wpsc_cart = $_SESSION['wpsc_cart'];
-		else
-			$wpsc_cart = unserialize( $_SESSION['wpsc_cart'] );
-
+		$wpsc_cart = maybe_unserialize( $_SESSION['wpsc_cart'] );
 		if ( !is_object( $wpsc_cart ) || ( 'wpsc_cart' != get_class( $wpsc_cart ) ) )
 			$wpsc_cart = new wpsc_cart;
 
