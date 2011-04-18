@@ -51,18 +51,20 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
     $product_id = $post_ID;
 	$post_data['additional_description'] = isset($post_data['additional_description']) ? $post_data['additional_description'] : '';
     $post_meta['meta'] = (array)$_POST['meta'];
-	$post_data['meta']['_wpsc_price'] = abs((float)str_replace( ',','',$post_data['meta']['_wpsc_price'] ));
-	$post_data['meta']['_wpsc_special_price'] = abs((float)str_replace( ',','',$post_data['meta']['_wpsc_special_price'] ));
+	if ( isset( $post_data['meta']['_wpsc_price'] ) )
+		$post_data['meta']['_wpsc_price'] = abs( (float) str_replace( ',', '', $post_data['meta']['_wpsc_price'] ) );
+	if ( isset( $post_data['meta']['_wpsc_special_price'] ) )
+		$post_data['meta']['_wpsc_special_price'] = abs((float)str_replace( ',','',$post_data['meta']['_wpsc_special_price'] ));
 	if($post_data['meta']['_wpsc_sku'] == __('N/A', 'wpsc'))
 		$post_data['meta']['_wpsc_sku'] = '';
-	if(isset($post_data['meta']['_wpsc_is_donation']))
+	if( isset( $post_data['meta']['_wpsc_is_donation'] ) )
 		$post_data['meta']['_wpsc_is_donation'] = 1;
 	else
 		$post_data['meta']['_wpsc_is_donation'] = 0;
-	if (!isset($post_data['meta']['_wpsc_limited_stock'])){
+	if ( ! isset( $post_data['meta']['_wpsc_limited_stock'] ) || ! isset( $post_data['meta']['_wpsc_stock'] ) ){
 		$post_data['meta']['_wpsc_stock'] = false;
 	}else {
-		$post_data['meta']['_wpsc_stock'] = (int)$post_data['meta']['_wpsc_stock'];
+		$post_data['meta']['_wpsc_stock'] = (int) $post_data['meta']['_wpsc_stock'];
 	}
 	unset($post_data['meta']['_wpsc_limited_stock']);
 	if(!isset($post_data['meta']['_wpsc_product_metadata']['unpublish_when_none_left'])) $post_data['meta']['_wpsc_product_metadata']['unpublish_when_none_left'] = '';
@@ -84,19 +86,21 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
         $post_data['meta']['_wpsc_product_metadata']['display_weight_as'] = $post_data['meta']['_wpsc_product_metadata']['weight_unit'];
 	
 	// table rate price
-	$post_data['meta']['_wpsc_product_metadata']['table_rate_price'] = $post_data['table_rate_price'];
+	$post_data['meta']['_wpsc_product_metadata']['table_rate_price'] = isset( $post_data['table_rate_price'] ) ? $post_data['table_rate_price'] : array();
+	
 	// if table_rate_price is unticked, wipe the table rate prices
-	if(!isset($post_data['table_rate_price']['state'])) $post_data['table_rate_price']['state'] = '';
-	if($post_data['table_rate_price']['state'] != 1) {$post_data['meta']['_wpsc_product_metadata']['table_rate_price']['quantity'] = null;
-		$post_data['meta']['_wpsc_product_metadata']['table_rate_price']['table_price'] = null;
-		$post_data['meta']['_wpsc_product_metadata']['table_rate_price']['quantity'] = null;
-		$post_data['meta']['_wpsc_product_metadata']['table_rate_price']['table_price'] = null;
+	if ( empty( $post_data['table_rate_price']['state'] ) ) {
+		$post_data['meta']['_wpsc_product_metadata']['table_rate_price']['table_price'] = array();
+		$post_data['meta']['_wpsc_product_metadata']['table_rate_price']['quantity'] = array();
 	}
-	foreach((array)$post_data['meta']['_wpsc_product_metadata']['table_rate_price']['table_price'] as $key => $value){
-		if(empty($value)){
-			unset($post_data['meta']['_wpsc_product_metadata']['table_rate_price']['table_price'][$key]); 
-			unset($post_data['meta']['_wpsc_product_metadata']['table_rate_price']['quantity'][$key]); 
-		} 
+	
+	if ( ! empty( $post_data['meta']['_wpsc_product_metadata']['table_rate_price']['table_price'] ) ) {
+		foreach ( (array) $post_data['meta']['_wpsc_product_metadata']['table_rate_price']['table_price'] as $key => $value ){
+			if(empty($value)){
+				unset($post_data['meta']['_wpsc_product_metadata']['table_rate_price']['table_price'][$key]); 
+				unset($post_data['meta']['_wpsc_product_metadata']['table_rate_price']['quantity'][$key]); 
+			} 
+		}
 	}
 
    
@@ -172,8 +176,10 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 	wpsc_edit_product_variations( $product_id, $post_data );
 
 	//and the alt currency
-	foreach((array)$post_data['newCurrency'] as $key =>$value){
-		wpsc_update_alt_product_currency($product_id, $value, $post_data['newCurrPrice'][$key]);
+	if ( ! empty( $post_data['newCurrency'] ) ) {
+		foreach( (array) $post_data['newCurrency'] as $key =>$value ){
+			wpsc_update_alt_product_currency( $product_id, $value, $post_data['newCurrPrice'][$key] );
+		}
 	}
 
 	if($post_data['files']['file']['tmp_name'] != '') {
