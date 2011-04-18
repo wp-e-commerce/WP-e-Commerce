@@ -361,7 +361,7 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
 function wpsc_admin_ajax() {
 	global $wpdb;
 
-	if ( $_POST['action'] == 'product-page-order' ) {
+	if ( isset( $_POST['action'] ) && $_POST['action'] == 'product-page-order' ) {
 		$current_order = get_option( 'wpsc_product_page_order' );
 		$new_order = $_POST['order'];
 
@@ -377,19 +377,19 @@ function wpsc_admin_ajax() {
 	}
 
 
-	if ( ($_POST['save_image_upload_state'] == "true") && is_numeric( $_POST['image_upload_state'] ) ) {
+	if ( isset( $_POST['save_image_upload_state'] ) && $_POST['save_image_upload_state'] == 'true' && is_numeric( $_POST['image_upload_state'] ) ) {
 		$upload_state = (int)(bool)$_POST['image_upload_state'];
 		update_option( 'wpsc_use_flash_uploader', $upload_state );
 		exit( "done" );
 	}
 
-	if ( ($_POST['remove_variation_value'] == "true") && is_numeric( $_POST['variation_value_id'] ) ) {
+	if ( isset( $_POST['remove_variation_value'] ) && $_POST['remove_variation_value'] == "true" && is_numeric( $_POST['variation_value_id'] ) ) {
 		$value_id = absint( $_GET['variation_value_id'] );
 		echo wp_delete_term( $value_id, 'wpsc-variation' );
 		exit();
 	}
 
-	if ( ($_POST['remove_form_field'] == "true") && is_numeric( $_POST['form_id'] ) ) {
+	if ( isset( $_POST['remove_form_field'] ) && $_POST['remove_form_field'] == "true" && is_numeric( $_POST['form_id'] ) ) {
 		if ( current_user_can( 'manage_options' ) ) {
 			$wpdb->query( $wpdb->prepare( "UPDATE `" . WPSC_TABLE_CHECKOUT_FORMS . "` SET `active` = '0' WHERE `id` = %d LIMIT 1 ;", $_POST['form_id'] ) );
 			exit( ' ' );
@@ -397,7 +397,7 @@ function wpsc_admin_ajax() {
 	}
 
 
-	if ( $_POST['hide_ecom_dashboard'] == 'true' ) {
+	if ( isset( $_POST['hide_ecom_dashboard'] ) && $_POST['hide_ecom_dashboard'] == 'true' ) {
 		require_once (ABSPATH . WPINC . '/rss.php');
 		$rss = fetch_rss( 'http://www.instinct.co.nz/feed/' );
 		$rss->items = array_slice( $rss->items, 0, 5 );
@@ -406,7 +406,7 @@ function wpsc_admin_ajax() {
 		exit( 1 );
 	}
 
-	if ( ($_POST['remove_meta'] == 'true') && is_numeric( $_POST['meta_id'] ) ) {
+	if ( isset( $_POST['remove_meta'] ) && $_POST['remove_meta'] == 'true' && is_numeric( $_POST['meta_id'] ) ) {
 		$meta_id = (int)$_POST['meta_id'];
 		if ( delete_meta( $meta_id ) ) {
 			echo $meta_id;
@@ -416,7 +416,7 @@ function wpsc_admin_ajax() {
 		exit();
 	}
 
-	if ( ($_REQUEST['log_state'] == "true") && is_numeric( $_POST['id'] ) && is_numeric( $_POST['value'] ) ) {
+	if ( isset( $_REQUEST['log_state'] ) && $_REQUEST['log_state'] == "true" && is_numeric( $_POST['id'] ) && is_numeric( $_POST['value'] ) ) {
 		$newvalue = $_POST['value'];
 		if ( $_REQUEST['suspend'] == 'true' ) {
 			if ( $_REQUEST['value'] == 1 && function_exists('wpsc_member_dedeactivate_subscriptions'))
