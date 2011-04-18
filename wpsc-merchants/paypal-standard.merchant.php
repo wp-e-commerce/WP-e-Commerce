@@ -158,7 +158,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 					$reprocessed_cart_data['subscription']['unit'] = strtoupper($cart_row['recurring_data']['rebill_interval']['unit']);
 					$reprocessed_cart_data['subscription']['times_to_rebill'] = $cart_row['recurring_data']['times_to_rebill'];
 				} else {
-					$item_cost = ($cart_row['price'] + $cart_row['shipping'] + $cart_row['tax']) + $cart_row['quantity'];
+					$item_cost = ($cart_row['price'] + $cart_row['shipping'] + $cart_row['tax']) * $cart_row['quantity'];
 
 					if ($item_cost > 0) {
 						$reprocessed_cart_data['shopping_cart']['price'] += $item_cost;
