@@ -344,7 +344,7 @@ function wpsc_check_weight($state, $product) {
 	if( array_search( 'usps', $custom_shipping ) !== false )
 		$shipping_modules[] = 'Weight Rate';
 	
-	if( $product_meta['no_shipping'] != 1 && !empty( $shipping_modules ) ) {
+	if( empty( $product_meta['no_shipping'] ) && !empty( $shipping_modules ) ) {
 		if( $product_meta['weight'] == 0 ) // otherwise, use the weight from the products list table
 			$has_no_weight = true;
 		
