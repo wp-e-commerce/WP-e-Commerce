@@ -95,15 +95,7 @@ function wpsc_generate_product_feed() {
 		$output .= "      <pubDate>".$post->post_modified_gmt."</pubDate>\n\r";
 		$output .= "      <guid>$purchase_link</guid>\n\r";
 
-		$image_link = FALSE;
-
-		if ( has_post_thumbnail( $post->ID ) ) {
-
-			$post_thumbnail_id = get_post_thumbnail_id( $post->ID  );
-			$src = wp_get_attachment_image_src( $post_thumbnail_id, 'large' );
-			$image_link = $src[0];
-
-		} 
+		$image_link = wpsc_the_product_thumbnail() ;
 
 		if ($image_link !== FALSE) {
 
