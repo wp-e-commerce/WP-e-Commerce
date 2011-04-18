@@ -341,30 +341,41 @@ function wpsc_show_pnp(){
 */
 function wpsc_product_variation_price_available($product_id){
 	global $wpdb;
-	$price = $wpdb->get_var('
-		SELECT 
-			`pm`.`meta_value`
-		FROM 
-			`' . $wpdb->postmeta . '` `pm` 
-		JOIN 
-			`' . $wpdb->posts . '` `p` 
-			ON 
-			`pm`.`post_id` = `p`.`id` 
-		WHERE 
-			`p`.`post_type`= "wpsc-product"
+	
+	$sql = $wpdb->prepare( "
+		SELECT pm.meta_value
+		FROM {$wpdb->posts} AS p
+		INNER JOIN {$wpdb->postmeta} AS pm ON pm.post_id = p.id AND pm.meta_key = '_wpsc_price'
+		INNER JOIN {$wpdb->postmeta} AS pm2 ON pm2.post_id = p.id AND pm2.meta_key = '_wpsc_stock' AND pm2.meta_value != '0'
+		WHERE
+			p.post_type = 'wpsc-product'
 			AND
-			`p`.`post_parent` = ' . $product_id . '
-			AND 
-			`pm`.`meta_key` = "_wpsc_price"
-			AND 
-			`p`.`ID` IN (
-				SELECT `' . $wpdb->postmeta . '`.`post_id` FROM `' . $wpdb->postmeta . '` WHERE `meta_key` = "_wpsc_stock" AND `meta_value` != "0"
-			)
-		ORDER BY 
-			`meta_value` ASC 
-		LIMIT 1'
-	);
+			p.post_parent = %d
+		ORDER BY CAST(pm.meta_value AS DECIMAL(10, 2)) ASC
+		LIMIT 1
+	", $product_id );
 
+	$price = (float) $wpdb->get_var( $sql );
+	
+	$sql = $wpdb->prepare("
+		SELECT pm.meta_value
+		FROM {$wpdb->posts} AS p
+		INNER JOIN {$wpdb->postmeta} AS pm ON pm.post_id = p.id AND pm.meta_key = '_wpsc_special_price' AND pm.meta_value != '0' AND pm.meta_value != ''
+		INNER JOIN {$wpdb->postmeta} AS pm2 ON pm2.post_id = p.id AND pm2.meta_key = '_wpsc_stock' AND pm2.meta_value != '0'
+		WHERE
+			p.post_type = 'wpsc-product'
+			AND
+			p.post_parent = %d
+		ORDER BY CAST(pm.meta_value AS DECIMAL(10, 2)) ASC
+		LIMIT 1
+	", $product_id);
+	
+	$special_price = (float) $wpdb->get_var( $sql );
+	
+	if ( ! empty( $special_price ) && $special_price < $price ) {
+		$price = $special_price;
+	}
+	
 	$price = wpsc_currency_display($price, array('display_as_html' => false));
 	return $price;
 }
