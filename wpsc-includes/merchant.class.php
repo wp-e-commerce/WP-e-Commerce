@@ -61,6 +61,28 @@ class wpsc_merchant {
 	 * collate_data method, collate purchase data, like addresses, like country
 	 * @access public
 	 */
+	
+	protected $address_keys = array (
+		'billing' => array (
+			'first_name' => 'billingfirstname',
+			'last_name'  => 'billinglastname',
+			'address'    => 'billingaddress',
+			'city'       => 'billingcity',
+			'state'      => 'billingstate',
+			'country'    => 'billingcountry',
+			'post_code'  => 'billingpostcode',
+		),
+		'shipping' => array (
+			'first_name' => 'shippingfirstname',
+			'last_name'  => 'shippinglastname',
+			'address'    => 'shippingaddress',
+			'city'       => 'shippingcity',
+			'state'      => 'shippingstate',
+			'country'    => 'shippingcountry',
+			'post_code'  => 'shippingpostcode',
+		)
+	);
+	
 	function __construct( $purchase_id = null, $is_receiving = false ) {
 		global $wpdb;
 		if ( ($purchase_id == null) && ($is_receiving == true) ) {
@@ -101,27 +123,6 @@ class wpsc_merchant {
 		$currency_code       = $wpdb->get_var( "SELECT `code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id`='" . get_option( 'currency_type' ) . "' LIMIT 1" );
 		$collected_form_data = $wpdb->get_results( "SELECT `data_names`.`id`, `data_names`.`unique_name`, `collected_data`.`value` FROM `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` AS `collected_data` JOIN `" . WPSC_TABLE_CHECKOUT_FORMS . "` AS `data_names` ON `collected_data`.`form_id` = `data_names`.`id` WHERE `log_id` = '" . $purchase_id . "'", ARRAY_A );
 
-		$address_keys = array (
-			'billing' => array (
-				'first_name' => 'billingfirstname',
-				'last_name'  => 'billinglastname',
-				'address'    => 'billingaddress',
-				'city'       => 'billingcity',
-				'state'      => 'billingstate',
-				'country'    => 'billingcountry',
-				'post_code'  => 'billingpostcode',
-			),
-			'shipping' => array (
-				'first_name' => 'shippingfirstname',
-				'last_name'  => 'shippinglastname',
-				'address'    => 'shippingaddress',
-				'city'       => 'shippingcity',
-				'state'      => 'shippingstate',
-				'country'    => 'shippingcountry',
-				'post_code'  => 'shippingpostcode',
-			)
-		);
-
 		$address_data = array(
 			'billing'  => array(),
 			'shipping' => array()
@@ -129,11 +130,11 @@ class wpsc_merchant {
 
 		foreach ( $collected_form_data as $collected_form_row ) {
 			$address_data_set = 'billing';
-			$address_key      = array_search( $collected_form_row['unique_name'], $address_keys['billing'] );
+			$address_key      = array_search( $collected_form_row['unique_name'], $this->address_keys['billing'] );
 
 			if ( $address_key == null ) {
 				$address_data_set = 'shipping';
-				$address_key      = array_search( $collected_form_row['unique_name'], $address_keys['shipping'] );
+				$address_key      = array_search( $collected_form_row['unique_name'], $this->address_keys['shipping'] );
 			}
 
 			if ( $address_key == null )
