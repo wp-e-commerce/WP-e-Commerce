@@ -322,7 +322,7 @@ class wpsc_merchant {
 		if($append === false){
 			return $wpdb->update(WPSC_TABLE_PURCHASE_LOGS,array('authcode'=>$authcode), array('id'=>absint($this->purchase_id)),array('%s'), array('%d'));
 		}else{
-			$current_authcode = $wpdb->get_var( "SELECT authcode FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `sessionid` = " . absint( $this->session_id ) . " LIMIT 1" );
+			$current_authcode = $wpdb->get_var( "SELECT authcode FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `sessionid` = " . absint( $this->session_id ) . " LIMIT 1" );
 			//this is overwrite
 			$new_authcode = isset($current_authcode) ? $current_authcode.'|' :'';
 			$new_authcode .= $authcode;
