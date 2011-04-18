@@ -309,7 +309,7 @@ function wpsc_product_image( $attachment_id = 0, $width = null, $height = null )
 		if ( ! empty( $image_meta ) )
 			$image_url = $uploads['baseurl'].'/'.$image_meta[0];
 	}
-        if( is_ssl() && !strstr(  $image_url, 'https' ) ) str_replace('http', 'https', $image_url);
+        if( is_ssl() ) str_replace('http://', 'https://', $image_url);
 
 	return apply_filters( 'wpsc_product_image', $image_url );
 }
@@ -1087,14 +1087,21 @@ function wpsc_the_product_image( $width='', $height='', $product_id='' ) {
 	$post_thumbnail_id = get_post_thumbnail_id( $product_id );
 
 	$src = wp_get_attachment_image_src( $post_thumbnail_id, 'large' );
-	if ( !empty( $src ) && is_string( $src[0] ) ) {
-		return $src[0];
-	} elseif ( !empty( $attached_images ) ) {
+
+	if ( ! empty( $src ) && is_string( $src[0] ) ) {
+		$src = $src[0];
+	} elseif ( ! empty( $attached_images ) ) {
 		$attached_image = wp_get_attachment_image_src( $attached_images[0]->ID, 'large' );
-		return $attached_image[0];
+		$src = $attached_image[0];
 	} else {
-		return apply_filters( 'wpsc_product_image', false);
+		$src = false;
 	}
+	
+	if ( is_ssl() && ! empty( $src ) )
+		$src = str_replace( 'http://', 'https://', $src );
+	$src = apply_filters( 'wpsc_product_image', $src );
+	
+	return $src;
 }
 
 /**
@@ -1120,11 +1127,13 @@ function wpsc_check_display_type(){
  * @return string - the URL to the thumbnail image
  */
 function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id = 0, $page = 'products-page' ) {
+	$thumbnail = false;
+	
 	$display = wpsc_check_display_type();
 	// Get the product ID if none was passed
 	if ( empty( $product_id ) )
 		$product_id = get_the_ID();
-
+	
 	// Load the product
 	$product = get_post( $product_id );
 
@@ -1177,17 +1186,17 @@ function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id 
 		$src = wp_get_attachment_image_src( $thumbnail_id, $custom_thumbnail );
 
 		if ( !empty( $src ) && is_string( $src[0] ) ) {
-			return $src[0];
+			$thumbnail = $src[0];
 		}
 	}
 	
-	// Return image link...
-	if ( isset($thumbnail_id) &&( $image_link = wpsc_product_image( $thumbnail_id, $width, $height ) ))
-		return $image_link;
+	if ( isset( $thumbnail_id ) )
+		$thumbnail = wpsc_product_image( $thumbnail_id, $width, $height );
 
-	// ... or false as if no image was found.
-	else
-		return false;
+	if ( ! empty( $thumbnail ) && is_ssl() )
+		$thumbnail = str_replace( 'http://', 'https://', $thumbnail );
+
+	return $thumbnail;
 }
 
 /**
