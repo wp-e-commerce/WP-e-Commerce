@@ -417,12 +417,10 @@ function wpsc_is_in_category() {
  * @author John Beales ( johnbeales.com )
  */
 function wpsc_category_id($category_slug = '') {
-	if(empty($category_slug)) {
-		$query_vars = get_query_var('query_vars');
-		$category_slug = $query_vars['wpsc_product_category'];
-	} elseif(array_key_exists('wpsc_product_category', $_GET)) {
+	if(empty($category_slug))
+		$category_slug = get_query_var( 'wpsc_product_category' );
+	elseif(array_key_exists('wpsc_product_category', $_GET))
 		$category_slug = $_GET['wpsc_product_category'];
-	}
 
 	if(!empty($category_slug)) {
 		$category = get_term_by('slug', $category_slug, 'wpsc_product_category');
