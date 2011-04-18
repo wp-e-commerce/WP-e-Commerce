@@ -29,8 +29,9 @@ $wpsc_version = get_option( 'wpsc_version', '0' );
 if ( ! get_option( 'wpsc_needs_update', false ) ) {
 	$show_update_page = 0;
 } else {
-
-	$product_count = $wpdb->get_var( "SELECT COUNT(*) FROM " . WPSC_TABLE_PRODUCT_LIST );
+	
+	$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '" . WPSC_TABLE_PRODUCT_LIST . "'" );
+	$product_count = empty( $table_exists ) ? 0 : $wpdb->get_var( "SELECT COUNT(*) FROM " . WPSC_TABLE_PRODUCT_LIST );
 
 	if ( $product_count > 0 ) {
 
