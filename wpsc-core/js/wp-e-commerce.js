@@ -202,6 +202,8 @@ jQuery(document).ready(function () {
 		jQuery('#wpsc_checkout_gravatar').attr('src', 'https://secure.gravatar.com/avatar/'+MD5(jQuery(this).val().split(' ').join(''))+'?s=60&d=mm');
 	});
 	
+	jQuery('#fancy_notification').appendTo('body');
+	
 	//this bit of code runs on the checkout page. If the checkbox is selected it copies the valus in the billing country and puts it in the shipping country form fields. 23.07.09
 	if(jQuery("#shippingSameBilling").is(":checked"))
 		wpsc_shipping_same_as_billing();
@@ -409,22 +411,11 @@ function wpsc_fancy_notification(parent_form){
 		};
 
 		form_button_id = jQuery(parent_form).attr('id') + "_submit_button";
-		var container_offset = {};
-		new_container_offset = jQuery('#default_products_page_container, #products_page_container, #list_view_products_page_container, #grid_view_products_page_container, #single_product_page_container').offset();
 
-		if(container_offset['left'] == null) {
-			container_offset['left'] = new_container_offset.left;
-			container_offset['top'] = new_container_offset.top;
-		}
+		var button_offset = jQuery('#'+form_button_id).offset()
 
-		var button_offset = {};
-		new_button_offset = jQuery('#'+form_button_id).offset()
-
-		button_offset['left'] = new_button_offset.left;
-		button_offset['top'] = new_button_offset.top;
-
-		jQuery('#fancy_notification').css("left", (button_offset['left'] - container_offset['left'] - 140) + 'px');
-		jQuery('#fancy_notification').css("top", ((button_offset['top']  - container_offset['top']) + 40) + 'px');
+		jQuery('#fancy_notification').css("left", (button_offset.left - 130) + 'px');
+		jQuery('#fancy_notification').css("top", (button_offset.top + 40) + 'px');
 
 
 		jQuery('#fancy_notification').css("display", 'block');
