@@ -469,7 +469,7 @@ function wpsc_total_product_count() {
  */
 class WPSC_Query extends WP_Query
 {
-	function WPSC_Query( $query ) {
+	function WPSC_Query( $query = '' ) {
 		$query = wp_parse_args( $query );
 		$query['post_type'] = 'wpsc-product';
 		_deprecated_function( __FUNCTION__, '3.8', 'WP_Query class' );
