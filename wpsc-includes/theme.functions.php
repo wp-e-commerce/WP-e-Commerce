@@ -364,7 +364,7 @@ function wpsc_get_the_category_id($slug, $type = 'name'){
 		$taxonomy = 'wpsc_product_category';
 
 	$category = get_term_by($type,$slug,$taxonomy);
-	return $category->term_id;
+	return empty( $category ) ? false : $category->term_id;
 }
 
 /**
