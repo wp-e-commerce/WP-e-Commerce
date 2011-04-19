@@ -759,7 +759,7 @@ class ash_ups {
         // Final rate table
         $rate_table = array();
         // Get the ups settings from the ups account info page (Shipping tab)
-        $wpsc_ups_settings = get_option("wpsc_ups_settings");
+        $wpsc_ups_settings = get_option("wpsc_ups_settings", array());
         // Get the wordpress shopping cart options
         $wpsc_options = get_option("wpsc_options");
         
