@@ -1058,10 +1058,8 @@ function wpsc_products_page( $content = '' ) {
 
 		// get the display type for the productspage		
 		$display_type = get_option('product_view');
-		if ( isset( $_SESSION['wpsc_display_type'] ) ) {
+		if ( isset( $_SESSION['wpsc_display_type'] ) )
 			$display_type = $_SESSION['wpsc_display_type'];
-			unset($_SESSION['wpsc_display_type']);
-		}
 		
 		ob_start();
 		wpsc_include_products_page_template($display_type);
