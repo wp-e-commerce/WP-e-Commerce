@@ -1036,7 +1036,7 @@ function wpsc_item_add_preview_file($product_id, $preview_file) {
 
 	// Save the data
 	$id = wp_insert_post($attachment, $file, $product_id);
-	remove_filter('upload_dir', 'wpsc_modify_upload_directory');
+	remove_filter('upload_dir', 'wpsc_modify_preview_directory');
   	return $id;
   
 
