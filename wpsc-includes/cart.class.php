@@ -1601,17 +1601,20 @@ class wpsc_cart_item {
 
       $this->weight = $product_meta[0]["weight"];
       // if we are using table rate price
-      $levels = $product_meta[0]['table_rate_price'];
-      if (isset($levels["quantity"]) && $levels["quantity"] != '') {
-         foreach((array)$levels['quantity'] as $key => $qty) {
-            if ($this->quantity >= $qty) {
-               $unit_price = $levels['table_price'][$key];
-               if ($unit_price != '')
-                  $price = $unit_price;
+	if ( isset( $product_meta[0]['table_rate_price'] ) ) {
+		$levels = $product_meta[0]['table_rate_price'];
+	      if ( ! empty( $levels['quantity'] ) ) {
+	         foreach((array)$levels['quantity'] as $key => $qty) {
+	            if ($this->quantity >= $qty) {
+	               $unit_price = $levels['table_price'][$key];
+	               if ($unit_price != '')
+	                  $price = $unit_price;
 
-            }
-         }
-      }
+	            }
+	         }
+	      }
+	}
+      
    	  $price = apply_filters('wpsc_price', $price, $product_id);
       // create the string containing the product name.
       $product_name = $product->post_title;
