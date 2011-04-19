@@ -301,9 +301,14 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 					$message = __( 'Thank you, your purchase is pending, you will be sent an email once the order clears.', 'wpsc' ) . "\n\r" . $payment_instructions . $message;
 					$message_html = __( 'Thank you, your purchase is pending, you will be sent an email once the order clears.', 'wpsc' ) . "\n\r" . $payment_instructions . $message_html;
 					
-					wp_mail( $email, __( 'Order Pending: Payment Required', 'wpsc' ), $message );
-				} else {
+					// prevent email duplicates
+					if ( ! get_transient( "{$sessionid}_pending_email_sent" ) ) {
+						wp_mail( $email, __( 'Order Pending: Payment Required', 'wpsc' ), $message );
+						set_transient( "{$sessionid}_pending_email_sent", true, 60 * 60 * 12 );
+					}
+				} elseif ( ! get_transient( "{$sessionid}_receipt_email_sent" ) ) {
 					wp_mail( $email, __( 'Purchase Receipt', 'wpsc' ), $message );
+					set_transient( "{$sessionid}_receipt_email_sent", true, 60 * 60 * 12 );
 				}
 			}
 
@@ -348,9 +353,9 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 
 			//echo '======REPORT======<br />'.$report.'<br />';
 			//echo '======EMAIL======<br />'.$message.'<br />';
-			if ( (get_option( 'purch_log_email' ) != null) && ($purchase_log['email_sent'] != 1) ){
+			if ( (get_option( 'purch_log_email' ) != null) && ( $purchase_log['email_sent'] != 1 ) ){
 				wp_mail( get_option( 'purch_log_email' ), __( 'Purchase Report', 'wpsc' ), $report );
-				$wpdb->update(WPSC_TABLE_PURCHASE_LOGS, array('email_sent' => '1'), array('id' => $purchase_log['id']) );
+				$wpdb->update(WPSC_TABLE_PURCHASE_LOGS, array('email_sent' => '1'), array( 'sessionid' => $sessionid ) );
 			}
 
 			/// Adjust stock and empty the cart
