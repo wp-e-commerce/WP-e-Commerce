@@ -452,7 +452,7 @@ function wpsc_update_location() {
 		if ( $_SESSION['wpsc_selected_country'] == null ) {
 			$_SESSION['wpsc_selected_country'] = $_POST['country'];
 		}
-		if ( $_POST['region'] != null ) {
+		if ( ! empty( $_POST['region'] ) ) {
 			$_SESSION['wpsc_delivery_region'] = $_POST['region'];
 			if ( $_SESSION['wpsc_selected_region'] == null ) {
 				$_SESSION['wpsc_selected_region'] = $_POST['region'];
@@ -467,7 +467,7 @@ function wpsc_update_location() {
 		}
 	}
 
-	if ( $_POST['zipcode'] != '' ) {
+	if ( ! empty( $_POST['zipcode'] ) ) {
 		$_SESSION['wpsc_zipcode'] = $_POST['zipcode'];
 	}
 
