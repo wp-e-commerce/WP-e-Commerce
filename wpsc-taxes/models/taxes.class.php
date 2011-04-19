@@ -85,7 +85,11 @@ class wpec_taxes {
 	 * */
 	function wpec_taxes_get_rate( $country_code, $region_code='' ) {
 		//initialize return variable
-		$returnable = false;
+		// use wpsc_tax_rate hook to provide your own tax solution
+		$returnable = apply_filters( 'wpsc_tax_rate', false, $this, $country_code, $region_code );
+		
+		if ( $returnable !== false )
+			return $returnable;
 
 		//first check if the region given is part of the country
 		if ( !empty( $region_code ) ) {
