@@ -459,7 +459,7 @@ function wpsc_calculate_price( $product_id, $variations = null, $special = true 
 function wpsc_display_categories() {
 	global $wp_query;
 	$output = false;
-	if ( !is_numeric( get_option( 'wpsc_default_category' ) ) ) {
+	if ( !is_numeric( get_option( 'wpsc_default_category' ) ) && ! get_query_var( 'product_tag' ) ) {
 
 		if ( isset( $wp_query->query_vars['products'] ) )
 			$category_id = $wp_query->query_vars['products'];
