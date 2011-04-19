@@ -1386,17 +1386,20 @@ class wpsc_cart {
    if($this->shipping_method == null){
       $this->get_shipping_method();
    }
-      if(is_callable(array($wpsc_shipping_modules[$this->shipping_method], "getQuote"  ))) {
+      if( isset( $wpsc_shipping_modules[$this->shipping_method] ) && is_callable( array( $wpsc_shipping_modules[$this->shipping_method], "getQuote" ) ) ) {
          $unprocessed_shipping_quotes = $wpsc_shipping_modules[$this->shipping_method]->getQuote();
 
     }
     $num = 0;
-    foreach((array)$unprocessed_shipping_quotes as $shipping_key => $shipping_value) {
-      $per_item_shipping = $this->calculate_per_item_shipping($this->shipping_method);
-      $this->shipping_quotes[$num]['name'] = $shipping_key;
-      $this->shipping_quotes[$num]['value'] = (float)$shipping_value+(float)$per_item_shipping;
-      $num++;
-    }
+	if ( ! empty( $unprocessed_shipping_quotes ) ) {
+		foreach((array)$unprocessed_shipping_quotes as $shipping_key => $shipping_value) {
+	      $per_item_shipping = $this->calculate_per_item_shipping($this->shipping_method);
+	      $this->shipping_quotes[$num]['name'] = $shipping_key;
+	      $this->shipping_quotes[$num]['value'] = (float)$shipping_value+(float)$per_item_shipping;
+	      $num++;
+	    }
+	}
+    
     $this->shipping_quote_count = count($this->shipping_quotes);
   }
 
