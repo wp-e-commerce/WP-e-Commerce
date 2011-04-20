@@ -1432,8 +1432,9 @@ function wpsc_the_variation_out_of_stock() {
 	// If there is more than one variation group we cannot determine a stock status for individual variations
 	// Also, if the item is not stock limited, there is no need to check variation stock status
 	$product_id = get_the_ID();
-	$stock = get_product_meta( $product_id, 'stock' );
-	if ( ($wpsc_variations->variation_group_count == 1) && (is_numeric( $stock[0] )) ) {
+
+	$stock = get_product_meta( $product_id, 'stock', true );
+	if ( ($wpsc_variations->variation_group_count == 1) && is_numeric( $stock ) && isset( $wpsc_variations->variation->slug ) ) {
 
 		$product_id = get_the_ID();
 		$variation_group_id = $wpsc_variations->variation_group->term_id;
