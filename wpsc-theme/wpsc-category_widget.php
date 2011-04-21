@@ -31,7 +31,7 @@
 						wpsc_parent_category_image( $show_thumbnails, $category_image , $width, $height, false, $show_name ); ?></a>
 					<?php } ?>
 					
-					<a href="<?php echo $link; ?>"><?php echo $curr_cat['name']; ?></a>
+					<a href="<?php echo $link; ?>"><?php echo esc_html( $curr_cat['name'] ); ?></a>
 
 					<ul class="wpsc_categories wpsc_second_level_categories">
 
