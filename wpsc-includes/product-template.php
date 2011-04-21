@@ -1128,7 +1128,7 @@ function wpsc_check_display_type(){
  */
 function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id = 0, $page = 'products-page' ) {
 	$thumbnail = false;
-	
+
 	$display = wpsc_check_display_type();
 	// Get the product ID if none was passed
 	if ( empty( $product_id ) )
@@ -1166,7 +1166,7 @@ function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id 
 		if ( !empty( $attached_images ) )
 			$thumbnail_id = $attached_images[0]->ID;
 	}
-	
+
 	//Overwrite height & width if custom dimensions exist for thumbnail_id
 	if ( 'grid' != $display && 'products-page' == $page && isset($thumbnail_id)) {
 		$custom_width = get_post_meta( $thumbnail_id, '_wpsc_custom_thumb_w', true );
@@ -1182,15 +1182,15 @@ function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id 
 		$custom_thumbnail = get_post_meta( $thumbnail_id, '_wpsc_selected_image_size', true );
 		if(!$custom_thumbnail)
 			$custom_thumbnail = array($width, $height);
-		
+
 		$src = wp_get_attachment_image_src( $thumbnail_id, $custom_thumbnail );
 
 		if ( !empty( $src ) && is_string( $src[0] ) ) {
 			$thumbnail = $src[0];
 		}
 	}
-	
-	if ( isset( $thumbnail_id ) )
+
+	if ( ! $thumbnail && isset( $thumbnail_id ) )
 		$thumbnail = wpsc_product_image( $thumbnail_id, $width, $height );
 
 	if ( ! empty( $thumbnail ) && is_ssl() )
