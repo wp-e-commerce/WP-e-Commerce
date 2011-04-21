@@ -207,42 +207,42 @@ class wpsc_coupons {
 		
 			switch($c['logic']) {
 				case 'equal': //Checks if the product name is exactly the same as the condition value
-				if ($product_data->name == $c['value']) {
+				if ($product_data->post_title == $c['value']) {
 					
 					return true;
 				}
 				break;
 				
 				case 'greater'://Checks if the product name is not the same as the condition value
-				if ($product_data->name > $c['value'])
+				if ($product_data->post_title > $c['value'])
 					return true;
 				break;
 				
 				case 'less'://Checks if the product name is not the same as the condition value
-				if ($product_data->name < $c['value'])
+				if ($product_data->post_title < $c['value'])
 					return true;
 				break;
 				
 				case 'contains'://Checks if the product name contains the condition value
-				preg_match("/(.*)".$c['value']."(.*)/", $product_data->name, $match);
+				preg_match("/(.*)".$c['value']."(.*)/", $product_data->post_title, $match);
 				if (!empty($match))
 					return true;
 				break;
 				
 				case 'not_contain'://Checks if the product name contains the condition value
-				preg_match("/(.*)".$c['value']."(.*)/", $product_data->name, $match);
+				preg_match("/(.*)".$c['value']."(.*)/", $product_data->post_title, $match);
 				if (empty($match))
 					return true;
 				break;
 				
 				case 'begins'://Checks if the product name begins with condition value
-				preg_match("/^".$c['value']."/", $product_data->name, $match);
+				preg_match("/^".$c['value']."/", $product_data->post_title, $match);
 				if (!empty($match))
 					return true;
 				break;
 				
 				case 'ends'://Checks if the product name ends with condition value
-				preg_match("/".$c['value']."$/", $product_data->name, $match);
+				preg_match("/".$c['value']."$/", $product_data->post_title, $match);
 				if (!empty($match))
 					return true;
 				break;
