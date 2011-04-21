@@ -237,14 +237,14 @@ function wpsc_end_category_query() {
 */
 function wpsc_display_category_loop($query, $category_html, &$category_branch = null){
 	static $category_count_data = array(); // the array tree is stored in this
-	
+
 	if( isset($query['parent_category_id']) )		
 		$category_id = absint($query['parent_category_id']);
 	else
 		$category_id = 0;
 	$category_data = get_terms('wpsc_product_category','hide_empty=0&parent='.$category_id, OBJECT, 'display');
 	$output ='';
-	
+
 	// if the category branch is identical to null, make it a reference to $category_count_data
 	if($category_branch === null) {
 		$category_branch =& $category_count_data;
@@ -336,7 +336,7 @@ function wpsc_display_category_loop($query, $category_html, &$category_branch = 
 		
 		}
 		
-		
+
 		// get the list of products associated with this category.
 		$tags_to_replace = array('[wpsc_category_name]',
 		'[wpsc_category_description]',
@@ -346,9 +346,9 @@ function wpsc_display_category_loop($query, $category_html, &$category_branch = 
 		'[wpsc_category_image]',
 		'[wpsc_subcategory]',
 		'[wpsc_category_products_count]');
-		
+
 		$content_to_place = array(
-		htmlentities($category_row->name,ENT_QUOTES, 'UTF-8'),
+		esc_html($category_row->name),
 		$category_description,
 		get_term_link($category_row->slug, 'wpsc_product_category'),
 		$category_row->term_id,
