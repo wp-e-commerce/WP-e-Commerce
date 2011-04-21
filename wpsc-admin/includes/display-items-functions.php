@@ -1011,7 +1011,7 @@ function wpsc_attachment_fields( $form_fields, $post ) {
 
 		$check = get_post_meta( $post->ID, '_wpsc_selected_image_size', true );
 		if ( !$check )
-			$check = 'small-product-thumbnail';
+			$check = 'medium-single-product';
 
 		//This loop attaches the custom thumbnail/single image sizes to this page
 		foreach ( $size_names as $size => $name ) {
