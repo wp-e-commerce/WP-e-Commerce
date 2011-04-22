@@ -252,7 +252,7 @@ function wpsc_display_form_fields() {
 					$selected = isset( $meta_data[$form_field['id']] ) ? $meta_data[$form_field['id']] : null;
 
 					?>
-						<select name='collected_data["<?php echo esc_attr( $meta_data[$form_field['id']] ); ?>"]'>
+						<select name='collected_data["<?php echo esc_attr( $form_field['id'] ); ?>"]'>
 							<?php foreach ( $options as $label => $value ): ?>
 								<option <?php selected( $value, $selected ); ?> value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $label ); ?></option>
 							<?php endforeach ?>
