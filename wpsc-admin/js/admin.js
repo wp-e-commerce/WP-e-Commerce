@@ -388,7 +388,7 @@ jQuery(document).ready(function(){
 			axis: 'y',
 			containment: 'table#wpsc_checkout_list',
 			placeholder: 'checkout-placeholder',
-			handle: '.drag',
+			handle: '.drag'
 
 		});
 		jQuery(this).bind('sortupdate', function(event, ui) {
@@ -894,7 +894,6 @@ function hideOptionElement(id, option) {
 	prevOption = option;
 }
 
-
 function hideelement(id) {
 	state = document.getElementById(id).style.display;
 	//alert(document.getElementById(id).style.display);
@@ -963,25 +962,20 @@ function showaddform() {
 	return false;
 }
 //used to add new form fields in the checkout setting page
-function add_form_field() {
-	time = new Date();
-	new_element_number = time.getTime();
-	new_element_id = "form_id_"+new_element_number;
-
-	new_element_contents = "";
-	//new_element_contents += "<tr class='checkout_form_field' >\n\r";
+function add_form_field(e) {
+	var time = new Date(),
+		new_element_number = time.getTime(),
+		new_element_id = "form_id_"+new_element_number,
+		new_element_contents = '<tr class="checkout_form_field" id="'+new_element_id+'">';
+		
 	new_element_contents += "<td class='drag'></td>";
 	new_element_contents += "<td class='namecol'><input type='text' name='new_form_name["+new_element_number+"]' value='' /></td>\n\r";
 	new_element_contents += "<td class='typecol'><select class='wpsc_checkout_selectboxes' name='new_form_type["+new_element_number+"]'>"+HTML_FORM_FIELD_TYPES+"</select></td>\n\r";
 	new_element_contents += "<td class='typecol'><select name='new_form_unique_name["+new_element_number+"]'>"+HTML_FORM_FIELD_UNIQUE_NAMES+"</select></td>\n\r";
 	new_element_contents += "<td class='mandatorycol' style='text-align: center;'><input type='checkbox' name='new_form_mandatory["+new_element_number+"]' value='1' /></td>\n\r";
 	new_element_contents += "<td><a class='image_link' href='#' onclick='return remove_new_form_field(\""+new_element_id+"\");'><img src='" + WPSC_CORE_IMAGES_URL + "/trash.gif' alt='"+TXT_WPSC_DELETE+"' title='"+TXT_WPSC_DELETE+"' /></a></td>\n\r";
-	// new_element_contents += "</tr>";
-        
-        var new_element = jQuery('<tr id="'+new_element_id+'" />');
-	jQuery(new_element).html(new_element_contents);
-	jQuery("tbody#wpsc_checkout_list_body").append(new_element);
-	jQuery(new_element).addClass('checkout_form_field');
+	new_element_contents += '</tr>';
+	jQuery("#wpsc_checkout_list_body").append(new_element_contents);
 	return false;
 }
 
