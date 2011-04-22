@@ -38,8 +38,7 @@ function validate_form_data() {
 
 		foreach ( (array)$_POST['collected_data'] as $value_id => $value ) {
 			$form_sql = "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `id` = '$value_id' LIMIT 1";
-			$form_data = $wpdb->get_results( $form_sql, ARRAY_A );
-			$form_data = $form_data[0];
+			$form_data = $wpdb->get_row( $form_sql, ARRAY_A );
 			$bad_input = false;
 			if ( $form_data['mandatory'] == 1 ) {
 				switch ( $form_data['type'] ) {
@@ -128,8 +127,11 @@ function validate_form_data() {
 function wpsc_display_form_fields() {
 // Field display and Data saving function
 
-	global $wpdb, $user_ID, $wpsc_purchlog_statuses, $gateway_checkout_form_fields;
-
+	global $wpdb, $user_ID, $wpsc_purchlog_statuses, $gateway_checkout_form_fields, $wpsc_checkout;
+	
+	if ( empty( $wpsc_checkout ) )
+		$wpsc_checkout = new WPSC_Checkout();
+	
 	$meta_data = null;
 	$saved_data_sql = "SELECT * FROM `" . $wpdb->usermeta . "` WHERE `user_id` = '" . $user_ID . "' AND `meta_key` = 'wpshpcrt_usr_profile';";
 	$saved_data = $wpdb->get_row( $saved_data_sql, ARRAY_A );
@@ -202,10 +204,11 @@ function wpsc_display_form_fields() {
 					break;
 					
 				case "text":
+					$value = isset( $meta_data[$form_field['id']] ) ? $meta_data[$form_field['id']] : '';
 					if($continue){
-					echo "<input type='text' value='" . $meta_data[$form_field['id']] . "' name='collected_data[" . $form_field['id'] . "]' />";
+						echo "<input type='text' value='" . $value . "' name='collected_data[" . $form_field['id'] . "]' />";
 					
-					}elseif('shippingstate' == $form_field['unique_name'] && is_numeric( $meta_data[$form_field['id']] )){
+					}elseif('shippingstate' == $form_field['unique_name'] && is_numeric( $value )){
 					
 					}
 					
@@ -244,8 +247,39 @@ function wpsc_display_form_fields() {
 					echo "<input type='text' value='" . $meta_data[$form_field['id']] . "' name='collected_data[" . $form_field['id'] . "]' />";
 					break;
 					
+				case "select":
+					$options = $wpsc_checkout->get_checkout_options( $form_field['id'] );
+					$selected = isset( $meta_data[$form_field['id']] ) ? $meta_data[$form_field['id']] : null;
+
+					?>
+						<select name='collected_data["<?php echo esc_attr( $meta_data[$form_field['id']] ); ?>"]'>
+							<?php foreach ( $options as $label => $value ): ?>
+								<option <?php selected( $value, $selected ); ?> value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $label ); ?></option>
+							<?php endforeach ?>
+						</select>
+					<?php
+					break;
+					
+				case 'checkbox':
+				case 'radio':
+					$checked_values = isset( $meta_data[$form_field['id']] ) ? (array) $meta_data[$form_field['id']] : array();
+					$options = $wpsc_checkout->get_checkout_options( $form_field['id'] );
+					$field_name = "collected_data[{$form_field['id']}]";
+					if ( $form_field['type'] == 'checkbox' )
+						$field_name .= '[]';
+					foreach ( $options as $label => $value ) {
+						?>
+							<label>
+								<input <?php checked( in_array( $value, $checked_values ) ); ?> type="<?php echo $form_field['type']; ?>" id="" name="collected_data[<?php echo esc_attr( $form_field['id'] ); ?>][]" value="<?php echo esc_attr( $value ); ?>"  />
+								<?php echo esc_html( $label ); ?>
+							</label><br />
+						<?php
+					}
+					break;
+					
 				default:
-					echo "<input type='text' value='" . $meta_data[$form_field['id']] . "' name='collected_data[" . $form_field['id'] . "]' />";
+					$value = isset( $meta_data[$form_field['id']] ) ? $meta_data[$form_field['id']] : '';
+					echo "<input type='text' value='" . $value . "' name='collected_data[" . $form_field['id'] . "]' />";
 					break;
 			}
 			echo "
