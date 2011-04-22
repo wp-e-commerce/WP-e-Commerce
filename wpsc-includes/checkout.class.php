@@ -630,20 +630,22 @@ class wpsc_checkout {
 			
 			$delivery_country_id = wpsc_get_country_form_id_by_type('delivery_country');
      		$billing_country_id = wpsc_get_country_form_id_by_type('country');
-			
 		}
-		$saved_form_data = @htmlentities( stripslashes( (string)$_SESSION['wpsc_checkout_saved_values'][$this->checkout_item->id] ), ENT_QUOTES, 'UTF-8' );
+
+		$saved_form_data = isset( $_SESSION['wpsc_checkout_saved_values'][$this->checkout_item->id] ) ? $_SESSION['wpsc_checkout_saved_values'][$this->checkout_item->id] : null;
+
 		$an_array = '';
 		if ( function_exists( 'wpsc_get_ticket_checkout_set' ) ) {
 			if ( $this->checkout_item->checkout_set == wpsc_get_ticket_checkout_set() )
 				$an_array = '[]';
 		}
+		$output = '';
 		switch ( $this->checkout_item->type ) {
 			case "address":
 			case "delivery_address":
 			case "textarea":
 
-				$output = "<textarea title='" . $this->checkout_item->unique_name . "' class='text' id='" . $this->form_element_id() . "' name='collected_data[{$this->checkout_item->id}]" . $an_array . "' rows='3' cols='40' >" . $saved_form_data . "</textarea>";
+				$output .= "<textarea title='" . $this->checkout_item->unique_name . "' class='text' id='" . $this->form_element_id() . "' name='collected_data[{$this->checkout_item->id}]" . $an_array . "' rows='3' cols='40' >" . esc_html( (string) $saved_form_data ) . "</textarea>";
 				break;
 
 			case "checkbox":
@@ -651,8 +653,12 @@ class wpsc_checkout {
 				if ( $options != '' ) {
 					$i = mt_rand();
 					foreach ( $options as $label => $value ) {
-						$output .= "<input type='hidden' title='" . $this->checkout_item->unique_name . "' id='" . $this->form_element_id() . "' value='-1' name='collected_data[{$this->checkout_item->id}][" . $i . "]'/><input type='checkbox' title='" . $this->checkout_item->unique_name . "' id='" . $this->form_element_id() . "' value='" . esc_attr( $value ) . "' name='collected_data[{$this->checkout_item->id}][" . $i . "]'/> ";
-						$output .= "<label for='" . $this->form_element_id() . "'>" . $label . "</label>";
+						?>
+							<label>
+								<input <?php checked( in_array( $value, (array) $saved_form_data ) ); ?> type="checkbox" name="collected_data[<?php echo esc_attr( $this->checkout_item->id ); ?>]<?php echo $an_array; ?>[] ?>" value="<?php echo esc_attr( $value ); ?>"  />
+								<?php echo esc_html( $label ); ?>
+							</label>
+						<?php
 					}
 				}
 				break;
@@ -677,7 +683,7 @@ class wpsc_checkout {
 					$output .= "<option value='-1'>Select an Option</option>";
 					foreach ( (array)$options as $label => $value ) {
 						$value = esc_attr(str_replace( ' ', '', $value ) );
-						$output .="<option value='" . esc_attr( $value ) . "'>" . esc_html( $label ) . "</option>\n\r";
+						$output .="<option " . selected( $value, $saved_form_data, false ) . " value='" . esc_attr( $value ) . "'>" . esc_html( $label ) . "</option>\n\r";
 					}
 					$output .="</select>";
 				}
@@ -685,10 +691,13 @@ class wpsc_checkout {
 			case "radio":
 				$options = $this->get_checkout_options( $this->checkout_item->id );
 				if ( $options != '' ) {
-					$i = mt_rand();
 					foreach ( (array)$options as $label => $value ) {
-						$output .= "<input type='radio' title='" . $this->checkout_item->unique_name . "' id='" . $this->form_element_id() . "'value='" . esc_attr( $value ) . "' name='collected_data[{$this->checkout_item->id}][" . $i . "]'/> ";
-						$output .= "<label for='" . $this->form_element_id() . "'>" . $label . "</label>";
+						?>
+							<label>
+								<input type="radio" <?php checked( $value, $saved_form_data ); ?> name="collected_data[<?php echo esc_attr( $this->checkout_item->id ); ?>]<?php echo $an_array; ?>" value="<?php echo esc_attr( $value ); ?>"  />
+								<?php echo esc_html( $label ); ?>
+							</label>
+						<?php
 					}
 				}
 				break;
@@ -706,7 +715,7 @@ class wpsc_checkout {
 						$disabled = '';
 						if(wpsc_disregard_shipping_state_fields())
 							$disabled = 'disabled = "disabled"';
-						$output = "<input class='shipping_region text' title='" . $this->checkout_item->unique_name . "' type='text' id='" . $this->form_element_id() . "' value='" . $saved_form_data . "' name='collected_data[{$this->checkout_item->id}]" . $an_array . "' ".$disabled." />";
+						$output = "<input class='shipping_region text' title='" . $this->checkout_item->unique_name . "' type='text' id='" . $this->form_element_id() . "' value='" . esc_attr( $saved_form_data ) . "' name='collected_data[{$this->checkout_item->id}]" . $an_array . "' ".$disabled." />";
 					}
 				} elseif ( $this->checkout_item->unique_name == 'billingstate' ) {
 					if ( wpsc_uses_shipping() && wpsc_has_regions($_SESSION['wpsc_selected_country']) ) {
@@ -715,10 +724,10 @@ class wpsc_checkout {
 						$disabled = '';
 						if(wpsc_disregard_billing_state_fields())
 							$disabled = 'disabled = "disabled"';
-						$output = "<input class='billing_region text' title='" . $this->checkout_item->unique_name . "' type='text' id='" . $this->form_element_id() . "' value='" . $saved_form_data . "' name='collected_data[{$this->checkout_item->id}]" . $an_array . "' ".$disabled." />";
+						$output = "<input class='billing_region text' title='" . $this->checkout_item->unique_name . "' type='text' id='" . $this->form_element_id() . "' value='" . esc_attr( $saved_form_data ) . "' name='collected_data[{$this->checkout_item->id}]" . $an_array . "' ".$disabled." />";
 					}
 				} else {
-					$output = "<input title='" . $this->checkout_item->unique_name . "' type='text' id='" . $this->form_element_id() . "' class='text' value='" . $saved_form_data . "' name='collected_data[{$this->checkout_item->id}]" . $an_array . "' />";
+					$output = "<input title='" . $this->checkout_item->unique_name . "' type='text' id='" . $this->form_element_id() . "' class='text' value='" . esc_attr( $saved_form_data ) . "' name='collected_data[{$this->checkout_item->id}]" . $an_array . "' />";
 				}
 
 				break;
