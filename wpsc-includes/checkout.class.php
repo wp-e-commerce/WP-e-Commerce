@@ -680,7 +680,7 @@ class wpsc_checkout {
 				$options = $this->get_checkout_options( $this->checkout_item->id );
 				if ( $options != '' ) {
 					$output = "<select name='collected_data[{$this->checkout_item->id}]" . $an_array . "'>";
-					$output .= "<option value='-1'>Select an Option</option>";
+					$output .= "<option value='-1'>" . __( 'Select an Option', 'wpsc' ) . "</option>";
 					foreach ( (array)$options as $label => $value ) {
 						$value = esc_attr(str_replace( ' ', '', $value ) );
 						$output .="<option " . selected( $value, $saved_form_data, false ) . " value='" . esc_attr( $value ) . "'>" . esc_html( $label ) . "</option>\n\r";
