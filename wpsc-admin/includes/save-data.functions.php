@@ -599,18 +599,23 @@ function wpsc_save_category_set($category_id, $tt_id) {
 		wpsc_update_categorymeta($category_id, 'active', '1');
 		wpsc_update_categorymeta($category_id, 'order', '0');
 		
-		wpsc_update_categorymeta($category_id, 'display_type',$wpdb->escape(stripslashes($_POST['display_type'])));
-		wpsc_update_categorymeta($category_id, 'image_height', $wpdb->escape(stripslashes($_POST['image_height'])));
-		wpsc_update_categorymeta($category_id, 'image_width', $wpdb->escape(stripslashes($_POST['image_width'])));
+		if ( isset( $_POST['display_type'] ) )
+			wpsc_update_categorymeta($category_id, 'display_type',$wpdb->escape(stripslashes($_POST['display_type'])));
+			
+		if ( isset( $_POST['image_height'] ) )
+			wpsc_update_categorymeta($category_id, 'image_height', $wpdb->escape(stripslashes($_POST['image_height'])));
+			
+		if ( isset( $_POST['image_width'] ) )
+			wpsc_update_categorymeta($category_id, 'image_width', $wpdb->escape(stripslashes($_POST['image_width'])));
 		
 		
-		if($_POST['use_additonal_form_set'] != '') {
+		if ( ! empty( $_POST['use_additional_form_set'] ) ) {
 			wpsc_update_categorymeta($category_id, 'use_additonal_form_set', $_POST['use_additonal_form_set']);
 		} else {
 			wpsc_delete_categorymeta($category_id, 'use_additonal_form_set');
 		}
 
-		if((bool)(int)$_POST['uses_billing_address'] == true) {
+		if ( ! empty( $_POST['uses_billing_address'] ) ) {
 			wpsc_update_categorymeta($category_id, 'uses_billing_address', 1);
 			$uses_additional_forms = true;
 		} else {
@@ -618,7 +623,7 @@ function wpsc_save_category_set($category_id, $tt_id) {
 			$uses_additional_forms = false;
 		}	
 		
-	  	if(isset( $_POST['countrylist2'] ) && !empty( $_POST['countrylist2'] ) && ($category_id > 0)){
+	  	if( ! empty( $_POST['countrylist2'] ) && ($category_id > 0)){
 	    	$AllSelected = false;
 			$countryList = $wpdb->get_col("SELECT `id` FROM  `".WPSC_TABLE_CURRENCY_LIST."`");
 	    			
@@ -629,7 +634,7 @@ function wpsc_save_category_set($category_id, $tt_id) {
 				wpsc_update_categorymeta( $category_id,   'target_market', $selectedCountries); 
 			}
 			
-		}elseif(!isset($_POST['countrylist2'])){
+		} elseif ( ! isset($_POST['countrylist2'] ) ){
 			wpsc_update_categorymeta( $category_id,   'target_market',''); 
   			$AllSelected = true;
 		}
