@@ -303,17 +303,9 @@ GROUP BY ".WPSC_TABLE_PRODUCT_LIST.".id", ARRAY_A);
 				);
 				$attachment_id = wp_insert_post($image_post_values);
 			}
-			$image_size_data = @getimagesize($full_image_path);
-			$image_metadata = array(
-				'width' => $image_size_data[0],
-				'height' => $image_size_data[1],
-				'file' => $subdir
-			);
 			
-		
-			update_post_meta( $attachment_id, '_wp_attached_file', $subdir );
-			update_post_meta( $attachment_id, '_wp_attachment_metadata', $image_metadata);
-
+			update_attached_file( $attachment_id, $new_path );
+			wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $new_path ) );
 		}
 
 	}
