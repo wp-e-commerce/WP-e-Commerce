@@ -303,8 +303,7 @@ function wpsc_core_setup_globals() {
 
 	// Include a file named after the current theme, if one exists
 	if ( !empty( $selected_theme ) && file_exists( WPSC_THEMES_PATH . $selected_theme . '/' . $selected_theme . '.php' ) )
-
-	include_once( WPSC_THEMES_PATH . $selected_theme . '/' . $selected_theme . '.php' );    
+		include_once( WPSC_THEMES_PATH . $selected_theme . '/' . $selected_theme . '.php' );    
     require_once( WPSC_FILE_PATH . '/wpsc-includes/shipping.helper.php');
     $wpec_ash = new ASH();
 }
