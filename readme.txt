@@ -37,6 +37,45 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 
 == Changelog == 
+= 3.8.2 =
+* Add: Currency display for Google RSS feed
+* Add: Third-party plugins can now filter 'wpsc-tax_rate' to provide their own tax solution
+* Change: Merchant subclasses now have access to $this->address_keys
+* Change: Grid Settings are now always visible
+* Change: Total Shipping is no longer included in notification email when shipping is disabled
+* Change: Thumbnail size for single product view now defaults to Single Product Page thumbnail size option
+* Change: wpsc_the_product_thumbnail() defaults to 'medium-single-product' size when in single product view
+* Fix: Update notice being displayed when it has already been completed
+* Fix: Broken image in latest products widget
+* Fix: Custom checkout field not always saved
+* Fix: Downloadable file list not updated after existing files are selected
+* Fix: Already attached downloadable files are duplicated each time you select an existing downloadable file
+* Fix: Inconsistent behavior when adding a new field to a checkout form set
+* Fix: Custom product slug not editable
+* Fix: Incompatibility issues with shipping helper and modules
+* Fix: Product meta are not included in Google product feed
+* Fix: Incorrect variation "from" price
+* Fix: Shortcode not working in single product description
+* Fix: Item cost not correctly calculated in paypal-standard-merchant
+* Fix: Invalid SSL URL for some images
+* Fix: Select from wrong table in WPSC_Merchant::get_authcode()
+* Fix: Wrong use of get_query_var() in wpsc_category_id()
+* Fix: Table `wordpress.wp_wpsc_product_list` doesn't exist
+* Fix: ?items_per_page=all is ignored
+* Fix: Duplicate transaction result emails
+* Fix: Wrong filter in wpsc_item_add_preview_file()
+* Fix: Wrong display type when using advanced search view mode and viewing a category
+* Fix: Category list is displayed in tag archive
+* Fix: wpsc_display_products_page() outputs "Fail" when the product shortcode is used 10 times (no kidding)
+* Fix: Single product view's thumbnail size is incorrect
+* Fix: Wrong featured thumbnail is displayed in Single Product View when there are multiple attached product images
+* Fix: Incorrect condition statements in WPSC_Coupons::compare_logic()
+* Fix: Can't add new field to checkout form set in IE
+* Fix: Missing trash icon when adding custom options to dropdowns in checkout form
+* Fix: Custom select, checkbox and radio fields are displayed as textbox on [userlog] page
+* Fix: Custom checkboxes, radios and select fields are not properly populated in Checkout form
+* Fix: Attachment metadata are not properly generated when converting product thumbnails from 3.7.x to 3.8
+
 = 3.8.1 =
 * Fix: Special price mix-up when ugprade to 3.8
 * Fix: Missing database update notice
