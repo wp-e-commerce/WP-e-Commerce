@@ -1185,8 +1185,9 @@ function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id 
 			
 			// regenerate size metadata in case it's missing
 			if ( ! image_get_intermediate_size( $thumbnail_id, $custom_thumbnail ) ) {
+				require_once( ABSPATH . 'wp-admin/includes/image.php' );
 				$metadata = wp_get_attachment_metadata( $thumbnail_id );
-				$file = get_post_meta( $thumbnail_id, '_wp_attached_file', true);
+				$file = get_attached_file( $thumbnail_id );
 				$metadata = array_merge( wp_generate_attachment_metadata( $thumbnail_id, $file ), $metadata );
 				wp_update_attachment_metadata( $thumbnail_id, $metadata );
 			}
