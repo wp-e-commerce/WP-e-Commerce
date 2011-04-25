@@ -1012,7 +1012,15 @@ function wpsc_attachment_fields( $form_fields, $post ) {
 		$check = get_post_meta( $post->ID, '_wpsc_selected_image_size', true );
 		if ( !$check )
 			$check = 'medium-single-product';
-
+		
+		// regenerate size metadata in case it's missing
+		if ( ! image_get_intermediate_size( $post->ID, $check ) ) {
+			$metadata = wp_get_attachment_metadata( $post->ID );
+			$file = get_attached_file( $post->ID );
+			$metadata = array_merge( wp_generate_attachment_metadata( $post->ID, $file ), $metadata );
+			wp_update_attachment_metadata( $post->ID, $metadata );
+		}
+		
 		//This loop attaches the custom thumbnail/single image sizes to this page
 		foreach ( $size_names as $size => $name ) {
 			$downsize = image_downsize( $post->ID, $size );
