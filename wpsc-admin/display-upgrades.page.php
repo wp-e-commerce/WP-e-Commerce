@@ -12,7 +12,7 @@ function wpsc_display_upgrades_page() {
 			<br />
 			<div class='wpsc_gold_module'>
 				<br />
-				<a href="http://getshopped.org/extend/premium-upgrades/premium-upgrades/gold-cart-plugin/" target="_blank"><strong><?php _e( 'Pure Gold', 'wpsc' ); ?></strong></a>
+				<a href="http://getshopped.org/extend/premium-upgrades/premium-upgrades/gold-cart-plugin/" target="_blank"><strong><?php _e( 'Gold Cart', 'wpsc' ); ?></strong></a>
 				<p class='wpsc_gold_text'>Add product search, multiple image upload, gallery view, Grid View and multiple payment gateway options to your shop</p>
 				<span class='wpsc_gold_info'>$40</span>
 			</div>
@@ -21,28 +21,21 @@ function wpsc_display_upgrades_page() {
 				<br />
 				<a href="http://getshopped.org/extend/premium-upgrades/premium-upgrades/dropshop-2010/" target="_blank"><strong><?php _e( 'DropShop', 'wpsc' ); ?></strong></a>
 				<p class='wpsc_gold_text'>Impress your customers with our AJAX powered DropShop that lets your customers drag and drop products into their shopping cart</p>
-				<span class='wpsc_gold_info'>$75</span>
+				<span class='wpsc_gold_info'>$100</span>
 			</div>
 
 			<div class='wpsc_gold_module'>
 				<br />
-				<a href="http://getshopped.org/extend/premium-upgrades/premium-upgrades/mp3-audio-player/" target="_blank"><strong><?php _e( 'MP3 Player', 'wpsc' ); ?></strong></a>
-				<p class='wpsc_gold_text'>Adding this module lets you upload and manage MP3 preview files that can be associated with your digital downloads.</p>
-				<span class='wpsc_gold_info'>$10</span>
-			</div>
-
-			<div class='wpsc_gold_module'>
-				<br />
-				<a href="http://getshopped.org/extend/premium-upgrades/premium-upgrades/members-only-module/" target="_blank"><strong><?php _e( 'Members Only Module', 'wpsc' ); ?></strong></a>
-				<p class='wpsc_gold_text'>The Members modules lets you set private pages and posts that are only available to paying customers. Activating this module also adds a new option under "WordPress Users" menu that shop owners can use to manage their subscribers.</p>
-				<span class='wpsc_gold_info'>$25</span>
+				<a href="http://getshopped.org/extend/premium-upgrades/premium-upgrades/member-access-plugin/" target="_blank"><strong><?php _e( 'Members Access Plugin', 'wpsc' ); ?></strong></a>
+				<p class='wpsc_gold_text'>Create product memberships and sell them in your store. Use these memberships to restrict premium content on your posts and pages creating a "members only" area perfect for: Forums, Images and Movies and Podcasts</p>
+				<span class='wpsc_gold_info'>$49</span>
 			</div>
 
 			<div class='wpsc_gold_module'>
 				<br />
 				<a href="http://getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/" target="_blank"><strong><?php _e( 'Product Slider', 'wpsc' ); ?> </strong></a>
 				<p class='wpsc_gold_text'>Display your products in a new and fancy way using the "Product Slider" module.</p>
-				<span class='wpsc_gold_info'>$25</span>
+				<span class='wpsc_gold_info'>$45</span>
 			</div>
 
 			<div class='wpsc_gold_module'>
@@ -51,6 +44,26 @@ function wpsc_display_upgrades_page() {
 				<p class='wpsc_gold_text'>Make your Online photo gallery into an e-Commerce solution.</p>
 				<span class='wpsc_gold_info'>$10</span>
 			</div>
+			
+			<div class='wpsc_gold_module'>
+				<br />
+				<a href="http://getshopped.org/extend/premium-upgrades/premium-upgrades/jplayer-mp3-player/" target="_blank"><strong><?php _e( 'JPlayer MP3 Plugin', 'wpsc' ); ?> </strong></a>
+				<p class='wpsc_gold_text'>JPlayer is a Plugin that provides a Javascript powered MP3 player to each product. This is very similar to our alternative MP3 Player except that it uses CSS and  Javascript to customize the look and feel of the player making it much easier for you to style Ð it also comes with a range of skins.</p>
+				<span class='wpsc_gold_info'>$40</span>
+			</div>
+			<div class='wpsc_gold_module'>
+				<br />
+				<a href="http://getshopped.org/extend/premium-upgrades/premium-upgrades/fedex-shipping-module/" target="_blank"><strong><?php _e( 'FedEx Plugin', 'wpsc' ); ?> </strong></a>
+				<p class='wpsc_gold_text'>This plugin offers shop owners the ability to provide Fedex Shipping Quotes for products with weights..</p>
+				<span class='wpsc_gold_info'>$40</span>
+			</div>
+			<div class='wpsc_gold_module'>
+				<br />
+				<a href="http://www.bravenewcode.com/store/plugins/piggy/?utm_source=affiliate-6331&utm_medium=affiliates&utm_campaign=wpec" target="_blank"><strong><?php _e( 'Piggy', 'wpsc' ); ?> </strong></a>
+				<p class='wpsc_gold_text'>Piggy is a web-app that provides mobile access to view sales data for your WP E-Commerce powered WordPress website. Works on iOS and Android.</p>
+				<span class='wpsc_gold_info'>$39</span>
+			</div>
+
 		</div>
 
 		<h2><?php _e( 'Upgrades', 'wpsc' ); ?></h2>

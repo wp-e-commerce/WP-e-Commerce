@@ -600,6 +600,7 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 	$product_terms = wp_get_object_terms($product_id, 'wpsc-variation');
 	
 	$variation_sets_and_values = array_merge($variation_sets, $variation_values);
+	$variation_sets_and_values = apply_filters('wpsc_edit_product_variation_sets_and_values', $variation_sets_and_values, $product_id); 
 	wp_set_object_terms($product_id, $variation_sets_and_values, 'wpsc-variation');	
 		
 	$child_product_template = array(
@@ -744,6 +745,7 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 	}
 	if(!empty($childs)){
 		$old_ids_to_delete = array_diff($childs, $product_children);
+		$old_ids_to_delete = apply_filters('wpsc_edit_product_variations_deletion', $old_ids_to_delete); 
 		if(is_array($old_ids_to_delete) && !empty($old_ids_to_delete)) {
 			foreach($old_ids_to_delete as $object_ids) {
 				wp_delete_post($object_ids);
