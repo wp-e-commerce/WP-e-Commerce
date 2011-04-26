@@ -47,8 +47,8 @@ function wpsc_display_upgrades_page() {
 			
 			<div class='wpsc_gold_module'>
 				<br />
-				<a href="http://getshopped.org/extend/premium-upgrades/premium-upgrades/jplayer-mp3-player/" target="_blank"><strong><?php _e( 'JPlayer MP3 Plugin', 'wpsc' ); ?> </strong></a>
-				<p class='wpsc_gold_text'>JPlayer is a Plugin that provides a Javascript powered MP3 player to each product. This is very similar to our alternative MP3 Player except that it uses CSS and  Javascript to customize the look and feel of the player making it much easier for you to style Ð it also comes with a range of skins.</p>
+				<a href="http://getshopped.org/extend/premium-upgrades/premium-upgrades/jplayer-mp3-player/" target="_blank"><strong><?php _e( 'JPlayer - MP3 Plugin', 'wpsc' ); ?> </strong></a>
+				<p class='wpsc_gold_text'>JPlayer is a Plugin that provides a Javascript powered MP3 player to each product. This is very similar to our alternative MP3 Player except that it uses CSS and  Javascript to customize the look and feel of the player making it much easier for you to style it also comes with a range of skins.</p>
 				<span class='wpsc_gold_info'>$40</span>
 			</div>
 			<div class='wpsc_gold_module'>
@@ -60,7 +60,7 @@ function wpsc_display_upgrades_page() {
 			<div class='wpsc_gold_module'>
 				<br />
 				<a href="http://www.bravenewcode.com/store/plugins/piggy/?utm_source=affiliate-6331&utm_medium=affiliates&utm_campaign=wpec" target="_blank"><strong><?php _e( 'Piggy', 'wpsc' ); ?> </strong></a>
-				<p class='wpsc_gold_text'>Piggy is a web-app that provides mobile access to view sales data for your WP E-Commerce powered WordPress website. Works on iOS and Android.</p>
+				<p class='wpsc_gold_text'>Your WP E-Commerce sales, in your pocket. Piggy is a web-app that provides mobile access to view sales data for your WP E-Commerce powered WordPress website. Works on iOS and Android.</p>
 				<span class='wpsc_gold_info'>$39</span>
 			</div>
 
