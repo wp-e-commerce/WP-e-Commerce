@@ -18,7 +18,7 @@ class wpsc_variations {
 	
 	//variations inside variation groups: i.e. (red, green, blue) or (S, M, L, XL)
 	var $variations;
-	var $variations_count = 0;
+	var $variation_count = 0;
 	var $current_variation = -1;
 	var $variation;
 	
