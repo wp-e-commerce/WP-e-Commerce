@@ -413,7 +413,6 @@ function wpsc_update_product_price() {
 	}
 
 	do_action( 'wpsc_update_variation_product', (int)$_POST['product_id'], $variations );
-	$pm = $_POST['pm'];
 
 	$stock = wpsc_check_variation_stock_availability( (int)$_POST['product_id'], $variations );
 	if ( is_numeric( $stock ) && $stock == 0 ) {
