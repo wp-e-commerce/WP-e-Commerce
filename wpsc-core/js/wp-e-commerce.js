@@ -287,7 +287,7 @@ jQuery(document).ready(function () {
 	});
 
 	// update the price when the variations are altered.
-	jQuery(".wpsc_select_variation").change(function() {
+	jQuery(".wpsc_select_variation").live('change', function() {
 		jQuery('option[value="0"]', this).attr('disabled', 'disabled');
 		parent_form = jQuery(this).parents("form.product_form");
 		form_values =jQuery("input[name=product_id], .wpsc_select_variation",parent_form).serialize( );
@@ -310,6 +310,7 @@ jQuery(document).ready(function () {
 				}
 				if( typeof(price) !== 'undefined' && typeof(old_price) !== 'undefined' && typeof(you_save) !== 'undefined' && typeof(numeric_price) !== 'undefined' ) {
 					target_id = "product_price_"+product_id;
+					price_target_selector = "#" + target_id + ".pricedisplay, ." + product_id + " .currentprice";
 					second_target_id = "donation_price_"+product_id;
 					third_target_id = "old_product_price_"+product_id;
 					yousave_target_id = "yousave_"+product_id;
@@ -317,7 +318,7 @@ jQuery(document).ready(function () {
 					if(jQuery("input#"+target_id).attr('type') == 'text') {
 						jQuery("input#"+target_id).val(numeric_price);
 					} else {
-						jQuery("#"+target_id+".pricedisplay").html(price);
+						jQuery(price_target_selector).html(price);
 						jQuery("#"+third_target_id).html(old_price);
 						jQuery("#"+yousave_target_id).html(you_save);
 					}
