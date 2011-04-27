@@ -952,10 +952,29 @@ function wpsc_product_is_donation( $id = null ) {
  * @return boolean - true if the product is on special, otherwise false
  */
 function wpsc_product_on_special() {
-	global $wpsc_query;
-
+	global $wpsc_query, $wpdb;
+	
 	$price =  get_product_meta( get_the_ID(), 'price', true );
-	$special_price = get_product_meta( get_the_ID(), 'special_price', true );
+	
+	// don't rely on product sales price if it has variations
+	if ( wpsc_have_variations() ) {
+		$sql = $wpdb->prepare("
+			SELECT MIN(pm.meta_value)
+			FROM {$wpdb->posts} AS p
+			INNER JOIN {$wpdb->postmeta} AS pm ON pm.post_id = p.id AND pm.meta_key = '_wpsc_special_price' AND pm.meta_value != '0' AND pm.meta_value != ''
+			INNER JOIN {$wpdb->postmeta} AS pm2 ON pm2.post_id = p.id AND pm2.meta_key = '_wpsc_stock' AND pm2.meta_value != '0'
+			WHERE
+				p.post_type = 'wpsc-product'
+				AND
+				p.post_parent = %d
+			ORDER BY CAST(pm.meta_value AS DECIMAL(10, 2)) ASC
+			LIMIT 1
+		", get_the_id() );
+		$special_price = (int) $wpdb->get_var( $sql );
+	} else {
+		$special_price = get_product_meta( get_the_ID(), 'special_price', true );
+	}
+
 	if ( ($special_price > 0) && (($price - $special_price) > 0) )
 		return true;
 	else
