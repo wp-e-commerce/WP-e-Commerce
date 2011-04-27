@@ -827,13 +827,13 @@ global $wpdb;
 
 	if ( wpsc_product_has_stock( $the_selected_product ) ) {
 		$stock = get_product_meta( $the_selected_product, "stock", true );
-		$stock = apply_filters( 'wpsc_product_variation_stock', $stock, $id );
+		$stock = apply_filters( 'wpsc_product_variation_stock', $stock, $product_id );
 		if ( 0 < $stock )
 			return $stock;
 	}else{				  
 
 		$stock = get_product_meta( $the_selected_product, "stock", true );
-		$stock = apply_filters( 'wpsc_product_variation_stock', $stock, $id );
+		$stock = apply_filters( 'wpsc_product_variation_stock', $stock, $product_id );
 				
 		if (  is_numeric($stock) ){
 			$claimed_stock = $wpdb->get_var("SELECT SUM(`stock_claimed`) FROM `".WPSC_TABLE_CLAIMED_STOCK."` WHERE `product_id` IN('$the_selected_product')");
