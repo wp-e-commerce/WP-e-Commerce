@@ -79,6 +79,18 @@ class wpec_taxes_controller {
 						$total_tax += $taxes['tax'];
 					}// if
 				}// foreach
+				
+				///minus coupon tax if we are using coupons
+				if ($wpsc_cart->coupons_amount > 0){
+			
+					if ( $this->wpec_taxes_isincluded() )
+						$coupon_tax = $this->wpec_taxes_calculate_tax($wpsc_cart->coupons_amount, $tax_rate['rate'], false);
+					else
+						$coupon_tax = $this->wpec_taxes_calculate_tax($wpsc_cart->coupons_amount, $tax_rate['rate']);
+					
+					$total_tax -= $coupon_tax;
+				}
+
 
 				//add shipping tax if set
 				if ( $tax_rate['shipping'] ) {
