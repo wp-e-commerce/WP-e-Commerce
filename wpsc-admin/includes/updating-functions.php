@@ -167,6 +167,10 @@ function wpsc_convert_products_to_posts() {
 
 	while (true) {
 		$product_data = $wpdb->get_results( $wpdb->prepare( $sql, $offset, $limit ), ARRAY_A );
+		
+		if ( empty( $product_data ) )
+			break;
+		
 		foreach((array)$product_data as $product) {
 			$post_id = (int)$wpdb->get_var($wpdb->prepare( "SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE meta_key = %s AND `meta_value` = %d LIMIT 1", '_wpsc_original_id', $product['id'] ));
 
@@ -350,161 +354,171 @@ function wpec_update_gateway(&$value,$key) {
 function wpsc_convert_variation_combinations() {
 	global $wpdb, $user_ID, $current_version_number;
 
-	// get the posts
-	// I use a direct SQL query here because the get_posts function sometimes does not function for a reason that is not clear.
-	$posts = $wpdb->get_results("SELECT * FROM `{$wpdb->posts}` WHERE `post_type` IN('wpsc-product')");
+	remove_filter( 'get_terms', 'wpsc_get_terms_category_sort_filter' );
+	$offset = get_transient( 'wpsc_update_variation_comb_offset', 0 );
+	$limit = 5;
+	wp_defer_term_counting( true );
+	$sql = "SELECT * FROM {$wpdb->posts} WHERE post_type = 'wpsc-product' AND post_parent = 0 LIMIT %d, %d";
 	
 	
-	$posts = get_posts( array(
-		'post_type' => 'wpsc-product',
-		'post_status' => 'all',
-		'numberposts' => -1
-	) );
-    
-	foreach((array)$posts as $post) {
-	
-		$base_product_terms = array();
-		//create a post template
-		$child_product_template = array(
-			'post_author' => $user_ID,
-			'post_content' => $post->post_content,
-			'post_excerpt' => $post->post_excerpt,
-			'post_title' => $post->post_title,
-			'post_status' => 'inherit',
-			'post_type' => "wpsc-product",
-			'post_name' => sanitize_title($post->post_title),
-			'post_parent' => $post->ID
-		);
+	while ( true ) {
+		// get the posts
+		// I use a direct SQL query here because the get_posts function sometimes does not function for a reason that is not clear.
+		$posts = $wpdb->get_results( $wpdb->prepare( $sql, $offset, $limit ) );
 		
-		// select the original product ID
-		$original_id = get_post_meta($post->ID, '_wpsc_original_id', true);
-		$parent_stock = get_post_meta($post->ID, '_wpsc_stock', true);
+		if ( empty( $posts ) )
+			break;
 
-		// select the variation set associations
-		$variation_set_associations = $wpdb->get_col("SELECT `variation_id` FROM ".WPSC_TABLE_VARIATION_ASSOC." WHERE `associated_id` = '{$original_id}'");
-		// select the variation associations if the count of variation sets is greater than zero
-		if(($original_id > 0) && (count($variation_set_associations) > 0)) {
-			$variation_associations = $wpdb->get_col("SELECT `value_id` FROM ".WPSC_TABLE_VARIATION_VALUES_ASSOC." WHERE `product_id` = '{$original_id}' AND `variation_id` IN(".implode(", ", $variation_set_associations).") AND `visible` IN ('1')");
-		} else {
-			// otherwise, we have no active variations, skip to the next product
-			continue;
-		}
-	
-		foreach($variation_set_associations as $variation_set_id) {
-			$base_product_terms[] = wpsc_get_meta($variation_set_id, 'variation_set_id', 'wpsc_variation_set');
-		}
-	
-		foreach($variation_associations as $variation_association_id) {
-			$base_product_terms[] = wpsc_get_meta($variation_association_id, 'variation_id', 'wpsc_variation');
-		}
-		
-		// Now that we have the term IDs, we need to retrieve the slugs, as wp_set_object_terms will not use IDs in the way we want
-		// If we pass IDs into wp_set_object_terms, it creates terms using the ID as the name.
-		$parent_product_terms = get_terms('wpsc-variation', array(
-			'hide_empty' => 0,
-			'include' => implode(",", $base_product_terms),
-			'orderby' => 'parent'
-		));
-		$base_product_term_slugs = array();
-		foreach($parent_product_terms as $parent_product_term) {
-			$base_product_term_slugs[] = $parent_product_term->slug;
-		
-		}
-		
-		wp_set_object_terms($post->ID, $base_product_term_slugs, 'wpsc-variation');
-		
-		// select all variation "products"
-		$variation_items = $wpdb->get_results("SELECT * FROM ".WPSC_TABLE_VARIATION_PROPERTIES." WHERE `product_id` = '{$original_id}'");
+		foreach((array)$posts as $post) {
 
-		foreach((array)$variation_items as $variation_item) {
-			// initialize the requisite arrays to empty
-			$variation_ids = array();
-			$term_data = array();
-			// make a temporary copy of the product teplate
-			$product_values = $child_product_template;
-			
-			// select all values this "product" is associated with, then loop through them, getting the term id of the variation using the value ID
-			$variation_associations_combinations = $wpdb->get_results("SELECT * FROM ".WPSC_TABLE_VARIATION_COMBINATIONS." WHERE `priceandstock_id` = '{$variation_item->id}'");
-			foreach((array)$variation_associations_combinations as $association) {
-				$variation_id = (int)wpsc_get_meta($association->value_id, 'variation_id', 'wpsc_variation');
-				// discard any values that are null, as they break the selecting of the terms
-				if($variation_id > 0 && in_array($association->value_id, $variation_associations) ) {
-					$variation_ids[] = $variation_id;
-				}
-			} 
-			
-			// if we have more than zero remaining terms, get the term data, then loop through it to convert it to a more useful set of arrays.
-			if(count($variation_ids) > 0 && ( count($variation_set_associations) == count($variation_ids) ) ) {
-				$combination_terms = get_terms('wpsc-variation', array(
-					'hide_empty' => 0,
-					'include' => implode(",", $variation_ids),
-					'orderby' => 'parent',
-				));
+			$base_product_terms = array();
+			//create a post template
+			$child_product_template = array(
+				'post_author' => $user_ID,
+				'post_content' => $post->post_content,
+				'post_excerpt' => $post->post_excerpt,
+				'post_title' => $post->post_title,
+				'post_status' => 'inherit',
+				'post_type' => "wpsc-product",
+				'post_name' => $post->post_title,
+				'post_parent' => $post->ID
+			);
 
-				foreach($combination_terms as $term) {
-					$term_data['ids'][] = $term->term_id;
-					$term_data['slugs'][] = $term->slug;
-					$term_data['names'][] = $term->name;
-				}
-				
-				$product_values['post_title'] .= " (".implode(", ", $term_data['names']).")";
-				$product_values['post_name'] = sanitize_title($product_values['post_title']);
-				
-				$selected_post = get_posts(array(
-					'name' => $product_values['post_name'],
-					'post_parent' => $post->ID,
-					'post_type' => "wpsc-product",
-					'post_status' => 'all',
-					'suppress_filters' => true
-				));
-				
-				$selected_post = array_shift($selected_post);
-				
-				$child_product_id = wpsc_get_child_object_in_terms($post->ID, $term_data['ids'], 'wpsc-variation');
-				$post_data = array();
-				$post_data['_wpsc_price'] = (float)$variation_item->price;
-				$post_data['_wpsc_stock'] = (float)$variation_item->stock;
-				if( !is_numeric( $parent_stock ) )
-					$post_data['_wpsc_stock'] = false;
-				  
-				$post_data['_wpsc_original_variation_id'] = (float)$variation_item->id;
+			// select the original product ID
+			$original_id = get_post_meta($post->ID, '_wpsc_original_id', true);
+			$parent_stock = get_post_meta($post->ID, '_wpsc_stock', true);
+
+			// select the variation set associations
+			$variation_set_associations = $wpdb->get_col("SELECT `variation_id` FROM ".WPSC_TABLE_VARIATION_ASSOC." WHERE `associated_id` = '{$original_id}'");
+			// select the variation associations if the count of variation sets is greater than zero
+			if(($original_id > 0) && (count($variation_set_associations) > 0)) {
+				$variation_associations = $wpdb->get_col("SELECT `value_id` FROM ".WPSC_TABLE_VARIATION_VALUES_ASSOC." WHERE `product_id` = '{$original_id}' AND `variation_id` IN(".implode(", ", $variation_set_associations).") AND `visible` IN ('1')");
+			} else {
+				// otherwise, we have no active variations, skip to the next product
+				continue;
+			}
 			
-				// Product Weight
-				$post_data['_wpsc_product_metadata']['weight'] = wpsc_convert_weight($variation_item->weight, $variation_item->weight_unit, "pound", true);
-				$post_data['_wpsc_product_metadata']['display_weight_as'] = $variation_item->weight_unit;
-				$post_data['_wpsc_product_metadata']['weight_unit'] = $variation_item->weight_unit;
- 	
-            	//file
-	
-				if($child_product_id == false) {
-					if($selected_post != null) {
-						$child_product_id = $selected_post->ID;
-					} else {
-						$child_product_id = wp_update_post($product_values);
-					}
-				} else {
-					// sometimes there have been problems saving the variations, this gets the correct product ID
-					if(($selected_post != null) && ($selected_post->ID != $child_product_id)) {
-						$child_product_id = $selected_post->ID;
-					}
-				}
-				if($child_product_id > 0) {
-					
-					foreach($post_data as $meta_key => $meta_value) {
-						// prefix all meta keys with _wpsc_
-						update_post_meta($child_product_id, $meta_key, $meta_value);
-					}
-							
-				
-					wp_set_object_terms($child_product_id, $term_data['slugs'], 'wpsc-variation');
-				}
-				
-				unset($term_data);
+			$variation_set_id_sql = "SELECT meta_value FROM " . WPSC_TABLE_META . " WHERE object_type='wpsc_variation_set' AND object_id IN (" . implode( ',', $variation_set_associations ) . ") AND meta_key = 'variation_set_id'";
+			
+			$variation_set_terms = $wpdb->get_col( $variation_set_id_sql );
+			
+			$variation_associations_sql = "SELECT meta_value FROM " . WPSC_TABLE_META . " WHERE object_type='wpsc_variation' AND object_id IN (" . implode( ',', $variation_associations ) . ") AND meta_key = 'variation_id'";
+			
+			$variation_associations_terms = $wpdb->get_col( $variation_associations_sql );
+			
+			$base_product_terms = array_merge( $base_product_terms, $variation_set_terms, $variation_associations_terms );
+
+			// Now that we have the term IDs, we need to retrieve the slugs, as wp_set_object_terms will not use IDs in the way we want
+			// If we pass IDs into wp_set_object_terms, it creates terms using the ID as the name.
+			$parent_product_terms = get_terms('wpsc-variation', array(
+				'hide_empty' => 0,
+				'include' => implode(",", $base_product_terms),
+				'orderby' => 'parent'
+			));
+			$base_product_term_slugs = array();
+			foreach($parent_product_terms as $parent_product_term) {
+				$base_product_term_slugs[] = $parent_product_term->slug;
+
 			}
 
+			wp_set_object_terms($post->ID, $base_product_term_slugs, 'wpsc-variation');
+
+			// select all variation "products"
+			$variation_items = $wpdb->get_results("SELECT * FROM ".WPSC_TABLE_VARIATION_PROPERTIES." WHERE `product_id` = '{$original_id}'");
+
+			foreach((array)$variation_items as $variation_item) {
+				// initialize the requisite arrays to empty
+				$variation_ids = array();
+				$term_data = array();
+				// make a temporary copy of the product teplate
+				$product_values = $child_product_template;
+
+				// select all values this "product" is associated with, then loop through them, getting the term id of the variation using the value ID
+				$variation_associations_combinations = $wpdb->get_results("SELECT * FROM ".WPSC_TABLE_VARIATION_COMBINATIONS." WHERE `priceandstock_id` = '{$variation_item->id}'");
+				foreach((array)$variation_associations_combinations as $association) {
+					$variation_id = (int)wpsc_get_meta($association->value_id, 'variation_id', 'wpsc_variation');
+					// discard any values that are null, as they break the selecting of the terms
+					if($variation_id > 0 && in_array($association->value_id, $variation_associations) ) {
+						$variation_ids[] = $variation_id;
+					}
+				} 
+
+				// if we have more than zero remaining terms, get the term data, then loop through it to convert it to a more useful set of arrays.
+				if(count($variation_ids) > 0 && ( count($variation_set_associations) == count($variation_ids) ) ) {
+					$combination_terms = get_terms('wpsc-variation', array(
+						'hide_empty' => 0,
+						'include' => implode(",", $variation_ids),
+					));
+
+					foreach($combination_terms as $term) {
+						$term_data['ids'][] = $term->term_id;
+						$term_data['slugs'][] = $term->slug;
+						$term_data['names'][] = $term->name;
+					}
+
+					$product_values['post_title'] .= " (".implode(", ", $term_data['names']).")";
+					$product_values['post_name'] = sanitize_title($product_values['post_title']);
+
+					$selected_post = get_posts(array(
+						'name' => $product_values['post_name'],
+						'post_parent' => $post->ID,
+						'post_type' => "wpsc-product",
+						'post_status' => 'all',
+						'suppress_filters' => true
+					));
+
+					$selected_post = array_shift($selected_post);
+
+					$child_product_id = wpsc_get_child_object_in_terms($post->ID, $term_data['ids'], 'wpsc-variation');
+					$post_data = array();
+					$post_data['_wpsc_price'] = (float)$variation_item->price;
+					$post_data['_wpsc_stock'] = (float)$variation_item->stock;
+					if( !is_numeric( $parent_stock ) )
+						$post_data['_wpsc_stock'] = false;
+
+					$post_data['_wpsc_original_variation_id'] = (float)$variation_item->id;
+
+					// Product Weight
+					$post_data['_wpsc_product_metadata']['weight'] = wpsc_convert_weight($variation_item->weight, $variation_item->weight_unit, "pound", true);
+					$post_data['_wpsc_product_metadata']['display_weight_as'] = $variation_item->weight_unit;
+					$post_data['_wpsc_product_metadata']['weight_unit'] = $variation_item->weight_unit;
+
+	            	//file
+
+					if($child_product_id == false) {
+						if($selected_post != null) {
+							$child_product_id = $selected_post->ID;
+						} else {
+							$child_product_id = wp_update_post($product_values);
+						}
+					} else {
+						// sometimes there have been problems saving the variations, this gets the correct product ID
+						if(($selected_post != null) && ($selected_post->ID != $child_product_id)) {
+							$child_product_id = $selected_post->ID;
+						}
+					}
+					if($child_product_id > 0) {
+
+						foreach($post_data as $meta_key => $meta_value) {
+							// prefix all meta keys with _wpsc_
+							update_post_meta($child_product_id, $meta_key, $meta_value);
+						}
+
+
+						wp_set_object_terms($child_product_id, $term_data['slugs'], 'wpsc-variation');
+					}
+
+					unset($term_data);
+				}
+
+			}
 		}
+		
+		$offset += $limit;
+		set_transient( 'wpsc_update_variation_comb_offset', $offset, 86400 );
+		
 	}
-delete_option("wpsc-variation_children");
+	delete_option("wpsc-variation_children");
 _get_term_hierarchy('wpsc-variation');
 delete_option("wpsc_product_category_children");
 _get_term_hierarchy('wpsc_product_category');
