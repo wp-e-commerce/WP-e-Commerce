@@ -155,161 +155,180 @@ function wpsc_convert_variation_sets() {
 function wpsc_convert_products_to_posts() {
   global $wpdb, $user_ID;
   // Select all products
-  
-	$product_data = $wpdb->get_results("SELECT `".WPSC_TABLE_PRODUCT_LIST."`. * , `".WPSC_TABLE_PRODUCT_ORDER."`.order FROM `".WPSC_TABLE_PRODUCT_LIST."` LEFT JOIN `".WPSC_TABLE_PRODUCT_ORDER."` ON `".WPSC_TABLE_PRODUCT_LIST."`.id = `".WPSC_TABLE_PRODUCT_ORDER."`.product_id WHERE `".WPSC_TABLE_PRODUCT_LIST."`.`active` IN ( '1' )
-GROUP BY ".WPSC_TABLE_PRODUCT_LIST.".id", ARRAY_A);
-	foreach((array)$product_data as $product) {
-		$post_id = (int)$wpdb->get_var($wpdb->prepare( "SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE meta_key = %s AND `meta_value` = %d LIMIT 1", '_wpsc_original_id', $product['id'] ));
-		
-		$sku = old_get_product_meta($product['id'], 'sku', true);
 
-		if($post_id == 0) {
-			$post_status = "publish";
-			if($product['publish'] != 1) {
-				$post_status = "draft";
-			}
-			
-			//check the product added time with the current time to make sure its not out - this aviods the future post status
-			$product_added_time = strtotime($product['date_added']);
-			$current_time = time();
-			
-			$post_date = $product['date_added'];
-			if ((int)$current_time < (int)$product_added_time)
-				$post_date = date("Y-m-d H:i:s");
-			
-			$product_post_values = array(
-				'post_author' => $user_ID,
-				'post_date' => $post_date,
-				'post_content' => $product['description'],
-				'post_excerpt' => $product['additional_description'],
-				'post_title' => $product['name'],
-				'post_status' => $post_status,
-				'post_type' => "wpsc-product",
-				'post_name' => sanitize_title($product['name']),
-				'menu_order' => $product['order']
-			);
-			$post_id = wp_insert_post($product_post_values);
-		}
-		
-		$product_meta = $wpdb->get_results("
-			SELECT 	IF( ( `custom` != 1	),
-					CONCAT( '_wpsc_', `meta_key` ) ,
-				`meta_key`
-				) AS `meta_key`,
-				`meta_value`
-			FROM `".WPSC_TABLE_PRODUCTMETA."`
-			WHERE `product_id` = " . $product['id'] . "
-			AND `meta_value` != ''", ARRAY_A);
-					
-		$post_data = array();
-		
-		foreach($product_meta as $k => $pm) :
-			if($pm['meta_value'] == 'om')
-				$pm['meta_value'] = 1;
-			$pm['meta_value'] = maybe_unserialize($pm['meta_value']);
-			if(strpos($pm['meta_key'], '_wpsc_') === 0)
-				$post_data['_wpsc_product_metadata'][$pm['meta_key']] = $pm['meta_value'];
-			else
-				update_post_meta($post_id, $pm['meta_key'], $pm['meta_value']);
-		endforeach;
+	if ( ! $offset = get_transient( 'wpsc_update_product_offset' ) )
+		$offset = 0;
+	$limit = 150;
+	$sql = "
+		SELECT * FROM " . WPSC_TABLE_PRODUCT_LIST . "
+		WHERE active = '1'
+		LIMIT %d, %d
+	";
 
+	while (true) {
+		$product_data = $wpdb->get_results( $wpdb->prepare( $sql, $offset, $limit ), ARRAY_A );
+		foreach((array)$product_data as $product) {
+			$post_id = (int)$wpdb->get_var($wpdb->prepare( "SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE meta_key = %s AND `meta_value` = %d LIMIT 1", '_wpsc_original_id', $product['id'] ));
 
-		$post_data['_wpsc_original_id'] = (int)$product['id'];
-		$post_data['_wpsc_price'] = (float)$product['price'];
-		$post_data['_wpsc_special_price'] = $post_data['_wpsc_price'] - (float)$product['special_price']; // special price get stored in a weird way in 3.7.x
-		$post_data['_wpsc_stock'] = (float)$product['quantity'];
-		$post_data['_wpsc_is_donation'] = $product['donation'];
-		$post_data['_wpsc_sku'] = $sku;
-		if((bool)$product['quantity_limited'] != true) {
-		  $post_data['_wpsc_stock'] = false;
-		}
-		unset($post_data['_wpsc_limited_stock']);
-		
-		$post_data['_wpsc_product_metadata']['is_stock_limited'] = (int)(bool)$product['quantity_limited'];
-		
-		// Product Weight
-		$post_data['_wpsc_product_metadata']['weight'] = wpsc_convert_weight($product['weight'], $product['weight_unit'], "pound", true);
-		$post_data['_wpsc_product_metadata']['weight_unit'] = $product['weight_unit'];
-		$post_data['_wpsc_product_metadata']['display_weight_as'] = $product['weight_unit'];
-		
-		$post_data['_wpsc_product_metadata']['has_no_shipping'] = (int)(bool)$product['no_shipping'];
-		$post_data['_wpsc_product_metadata']['shipping'] = array('local' => $product['pnp'], 'international' => $product['international_pnp']);
-		
-		
-		$post_data['_wpsc_product_metadata']['quantity_limited'] = (int)(bool)$product['quantity_limited'];
-		$post_data['_wpsc_product_metadata']['special'] = (int)(bool)$product['special'];
-		if(isset($post_data['meta'])) {
-			$post_data['_wpsc_product_metadata']['unpublish_when_none_left'] = (int)(bool)$post_data['meta']['_wpsc_product_metadata']['unpublish_when_none_left'];
-		}
-		$post_data['_wpsc_product_metadata']['no_shipping'] = (int)(bool)$product['no_shipping'];
-						
-		foreach($post_data as $meta_key => $meta_value) {
-			// prefix all meta keys with _wpsc_
-			update_post_meta($post_id, $meta_key, $meta_value);
-		}
+			$sku = old_get_product_meta($product['id'], 'sku', true);
 
-		// get the wordpress upload directory data
-		$wp_upload_dir_data = wp_upload_dir();
-		$wp_upload_basedir = $wp_upload_dir_data['basedir'];
-		
-		$category_ids = array();
-		$category_data = $wpdb->get_col("SELECT `category_id` FROM `".WPSC_TABLE_ITEM_CATEGORY_ASSOC."` WHERE `product_id` IN ('{$product['id']}')");
-		foreach($category_data as $old_category_id) {
-			$category_ids[] = wpsc_get_meta($old_category_id, 'category_id', 'wpsc_old_category');
-		
-		}
-		wp_set_product_categories($post_id, $category_ids);
-		
-		$product_data = get_post($post_id);
-		$image_data = $wpdb->get_results("SELECT * FROM `".WPSC_TABLE_PRODUCT_IMAGES."` WHERE `product_id` IN ('{$product['id']}') ORDER BY `image_order` ASC", ARRAY_A);
-		foreach((array)$image_data as $image_row) {
-			// Get the image path info
-			$image_pathinfo = pathinfo($image_row['image']);
-			
-			// use the path info to clip off the file extension
-			$image_name = basename($image_pathinfo['basename'], ".{$image_pathinfo['extension']}");
-			
-			// construct the full image path
-			$full_image_path = WPSC_IMAGE_DIR.$image_row['image'];
-			$attached_file_path = str_replace($wp_upload_basedir."/", '', $full_image_path);
-			$upload_dir = wp_upload_dir();
-			$new_path = $upload_dir['path'].'/'.$image_name.'.'.$image_pathinfo['extension'];
-			if(is_file($full_image_path)){
-				copy($full_image_path, $new_path);
-			}else{
-				continue;
-			}
-			// construct the full image url
-			$subdir = $upload_dir['subdir'].'/'.$image_name.'.'.$image_pathinfo['extension'];
-			$subdir = substr($subdir , 1);
-			$attachment_id = (int)$wpdb->get_var("SELECT `ID` FROM `{$wpdb->posts}` WHERE `post_title` IN('$image_name') AND `post_parent` IN('$post_id') LIMIT 1");
+			if($post_id == 0) {
+				$post_status = "publish";
+				if($product['publish'] != 1) {
+					$post_status = "draft";
+				}
 
-			// get the image MIME type
-			$mime_type_data = wpsc_get_mimetype($full_image_path, true);
-			if((int)$attachment_id == 0 ) {
-				// construct the image data array
-				$image_post_values = array(
+				//check the product added time with the current time to make sure its not out - this aviods the future post status
+				$product_added_time = strtotime($product['date_added']);
+				$current_time = time();
+
+				$post_date = $product['date_added'];
+				if ((int)$current_time < (int)$product_added_time)
+					$post_date = date("Y-m-d H:i:s");
+				
+				$product_post_values = array(
 					'post_author' => $user_ID,
-					'post_parent' => $post_id,
-					'post_date' => $product_data->post_date,
-					'post_content' => $image_name,
-					'post_title' => $image_name,
-					'post_status' => "inherit",
-					'post_type' => "attachment",
-					'post_name' => sanitize_title($image_name),
-					'post_mime_type' => $mime_type_data['mime_type'],
-					'menu_order' => absint($image_row['image_order']),
-					'guid' => $new_path
+					'post_date' => $post_date,
+					'post_content' => $product['description'],
+					'post_excerpt' => $product['additional_description'],
+					'post_title' => $product['name'],
+					'post_status' => $post_status,
+					'post_type' => "wpsc-product",
+					'post_name' => $product['name']
 				);
-				$attachment_id = wp_insert_post($image_post_values);
+				
+				$product['order'] = $wpdb->get_var( $wpdb->prepare( "
+					SELECT order FROM " . WPSC_TABLE_PRODUCT_ORDER . "
+					WHERE product_id = %d
+				" ), $product['id'] );
+				
+				$product_post_values['menu_order'] = $product['order'];
+				
+				$post_id = wp_insert_post($product_post_values);
 			}
-			
-			update_attached_file( $attachment_id, $new_path );
-			wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $new_path ) );
-		}
 
+			$product_meta = $wpdb->get_results("
+				SELECT 	IF( ( `custom` != 1	),
+						CONCAT( '_wpsc_', `meta_key` ) ,
+					`meta_key`
+					) AS `meta_key`,
+					`meta_value`
+				FROM `".WPSC_TABLE_PRODUCTMETA."`
+				WHERE `product_id` = " . $product['id'] . "
+				AND `meta_value` != ''", ARRAY_A);
+
+			$post_data = array();
+
+			foreach($product_meta as $k => $pm) :
+				if($pm['meta_value'] == 'om')
+					$pm['meta_value'] = 1;
+				$pm['meta_value'] = maybe_unserialize($pm['meta_value']);
+				if(strpos($pm['meta_key'], '_wpsc_') === 0)
+					$post_data['_wpsc_product_metadata'][$pm['meta_key']] = $pm['meta_value'];
+				else
+					update_post_meta($post_id, $pm['meta_key'], $pm['meta_value']);
+			endforeach;
+
+
+			$post_data['_wpsc_original_id'] = (int)$product['id'];
+			$post_data['_wpsc_price'] = (float)$product['price'];
+			$post_data['_wpsc_special_price'] = $post_data['_wpsc_price'] - (float)$product['special_price']; // special price get stored in a weird way in 3.7.x
+			$post_data['_wpsc_stock'] = (float)$product['quantity'];
+			$post_data['_wpsc_is_donation'] = $product['donation'];
+			$post_data['_wpsc_sku'] = $sku;
+			if((bool)$product['quantity_limited'] != true) {
+			  $post_data['_wpsc_stock'] = false;
+			}
+			unset($post_data['_wpsc_limited_stock']);
+
+			$post_data['_wpsc_product_metadata']['is_stock_limited'] = (int)(bool)$product['quantity_limited'];
+
+			// Product Weight
+			$post_data['_wpsc_product_metadata']['weight'] = wpsc_convert_weight($product['weight'], $product['weight_unit'], "pound", true);
+			$post_data['_wpsc_product_metadata']['weight_unit'] = $product['weight_unit'];
+			$post_data['_wpsc_product_metadata']['display_weight_as'] = $product['weight_unit'];
+
+			$post_data['_wpsc_product_metadata']['has_no_shipping'] = (int)(bool)$product['no_shipping'];
+			$post_data['_wpsc_product_metadata']['shipping'] = array('local' => $product['pnp'], 'international' => $product['international_pnp']);
+
+
+			$post_data['_wpsc_product_metadata']['quantity_limited'] = (int)(bool)$product['quantity_limited'];
+			$post_data['_wpsc_product_metadata']['special'] = (int)(bool)$product['special'];
+			if(isset($post_data['meta'])) {
+				$post_data['_wpsc_product_metadata']['unpublish_when_none_left'] = (int)(bool)$post_data['meta']['_wpsc_product_metadata']['unpublish_when_none_left'];
+			}
+			$post_data['_wpsc_product_metadata']['no_shipping'] = (int)(bool)$product['no_shipping'];
+
+			foreach($post_data as $meta_key => $meta_value) {
+				// prefix all meta keys with _wpsc_
+				update_post_meta($post_id, $meta_key, $meta_value);
+			}
+
+			// get the wordpress upload directory data
+			$wp_upload_dir_data = wp_upload_dir();
+			$wp_upload_basedir = $wp_upload_dir_data['basedir'];
+
+			$category_ids = array();
+			$category_data = $wpdb->get_col("SELECT `category_id` FROM `".WPSC_TABLE_ITEM_CATEGORY_ASSOC."` WHERE `product_id` IN ('{$product['id']}')");
+			foreach($category_data as $old_category_id) {
+				$category_ids[] = wpsc_get_meta($old_category_id, 'category_id', 'wpsc_old_category');
+
+			}
+			wp_set_product_categories($post_id, $category_ids);
+
+			$product_data = get_post($post_id);
+			$image_data = $wpdb->get_results("SELECT * FROM `".WPSC_TABLE_PRODUCT_IMAGES."` WHERE `product_id` IN ('{$product['id']}') ORDER BY `image_order` ASC", ARRAY_A);
+			foreach((array)$image_data as $image_row) {
+				// Get the image path info
+				$image_pathinfo = pathinfo($image_row['image']);
+
+				// use the path info to clip off the file extension
+				$image_name = basename($image_pathinfo['basename'], ".{$image_pathinfo['extension']}");
+
+				// construct the full image path
+				$full_image_path = WPSC_IMAGE_DIR.$image_row['image'];
+				$attached_file_path = str_replace($wp_upload_basedir."/", '', $full_image_path);
+				$upload_dir = wp_upload_dir();
+				$new_path = $upload_dir['path'].'/'.$image_name.'.'.$image_pathinfo['extension'];
+				if(is_file($full_image_path)){
+					copy($full_image_path, $new_path);
+				}else{
+					continue;
+				}
+				// construct the full image url
+				$subdir = $upload_dir['subdir'].'/'.$image_name.'.'.$image_pathinfo['extension'];
+				$subdir = substr($subdir , 1);
+				$attachment_id = (int)$wpdb->get_var("SELECT `ID` FROM `{$wpdb->posts}` WHERE `post_title` IN('$image_name') AND `post_parent` IN('$post_id') LIMIT 1");
+
+				// get the image MIME type
+				$mime_type_data = wpsc_get_mimetype($full_image_path, true);
+				if((int)$attachment_id == 0 ) {
+					// construct the image data array
+					$image_post_values = array(
+						'post_author' => $user_ID,
+						'post_parent' => $post_id,
+						'post_date' => $product_data->post_date,
+						'post_content' => $image_name,
+						'post_title' => $image_name,
+						'post_status' => "inherit",
+						'post_type' => "attachment",
+						'post_name' => sanitize_title($image_name),
+						'post_mime_type' => $mime_type_data['mime_type'],
+						'menu_order' => absint($image_row['image_order']),
+						'guid' => $new_path
+					);
+					$attachment_id = wp_insert_post($image_post_values);
+				}
+
+				update_attached_file( $attachment_id, $new_path );
+				wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $new_path ) );
+			}
+
+		}
+		
+		$offset += $limit;
+		set_transient( 'wpsc_update_product_offset', $offset, 86400 );
 	}
-	
 	//Just throwing the payment gateway update in here because it doesn't really warrant it's own function :)
 	
 	$custom_gateways = get_option('custom_gateway_options');
