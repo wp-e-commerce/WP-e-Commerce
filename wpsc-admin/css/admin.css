@@ -1765,32 +1765,29 @@ float: left;
 	margin-bottom:27px;
 }
 
-.dashboard_page_wpsc-update .wpsc-progress-bar .block {
+.dashboard_page_wpsc-update .wpsc-progress-bar * {
 	position:absolute;
 	left:0;
 	top:0;
+	background:#f9f9f9;
+	font-size:12px;
+}
+
+.dashboard_page_wpsc-update .wpsc-progress-bar .block {
 	background-color:#527dff;
 	z-index:-1;
 	height:20px;
 }
 
 .dashboard_page_wpsc-update .wpsc-progress-bar span {
-	background:#ffffff;
 	display:block;
-	position:absolute;
 	left:310px;
-	top:0;
-	line-height:18px;
-	font-size:12px;
+	line-height:20px;
 	width:200px;
 }
 
 .dashboard_page_wpsc-update .wpsc-progress-bar .eta {
-	background:#ffffff;
-	position:absolute;
-	left:0;
 	top:22px;
 	line-height:15px;
-	font-size:12px;
 	width:100%;
 }
