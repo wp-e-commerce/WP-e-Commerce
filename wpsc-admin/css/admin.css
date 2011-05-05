@@ -1756,3 +1756,30 @@ float: left;
 .ajax-loading {
 	visibility: hidden;
 }
+
+.dashboard_page_wpsc-update .wpsc-progress-bar {
+	position:relative;
+	height:20px;
+	width:300px;
+	border:1px solid #3a58cf;
+}
+
+.dashboard_page_wpsc-update .wpsc-progress-bar div {
+	position:absolute;
+	left:0;
+	top:0;
+	background-color:#527dff;
+	z-index:-1;
+	height:20px;
+}
+
+.dashboard_page_wpsc-update .wpsc-progress-bar span {
+	background:#ffffff;
+	display:block;
+	position:absolute;
+	left:310px;
+	top:0;
+	line-height:18px;
+	font-size:12px;
+	width:200px;
+}
