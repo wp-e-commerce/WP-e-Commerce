@@ -6,43 +6,153 @@
  * @since 3.8
  */
 
-function wpsc_update_start_timer() {
-	global $_wpsc_time_out, $_wpsc_update_start_time;
-	$_wpsc_time_out = ini_get( 'max_execution_time' );
-	$_wpsc_update_start_time = time();
-}
-
-function wpsc_update_check_timeout( $output = '' ) {
-	global $_wpsc_time_out, $_wpsc_update_start_time;
+class WPSC_Update
+{
+	private static $instance;
+	private $timeout;
+	private $script_start;
+	private $stages;
 	
-	$safety = 2; // refresh page within 2 seconds of PHP max execution time limit
-	$wiggle_room = $_wpsc_time_out - $safety; // pardon my silly English
-
-	$terminate = time() - $_wpsc_update_start_time >= $wiggle_room;
-	
-	if ( $terminate ) {
-		echo $output;
-		$location = remove_query_arg( 'start_over' );
-		$location = add_query_arg( 'run_updates', 1, $location );
-		?>
-			<script type="text/javascript">
-				location.href = "<?php echo $location; ?>";
-			</script>
-		<?php
-		exit;
+	public static function get_instance() {
+		if ( empty( self::$instance ) )
+			self::$instance = new WPSC_Update();
+			
+		return self::$instance;
 	}
-}
-
-function wpsc_update_run( $function, $message = '' ) {
-	global $wpsc_update_progress;
 	
-	if ( empty( $wpsc_update_progress[$function] ) ) {
+	private function __construct() {
+		$this->timeout = ini_get( 'max_execution_time' );
+		$this->script_start = time();
+
+		if ( ! $this->stages = get_transient( 'wpsc_update_progress' ) ) {
+			$this->stages = array();
+		}
+	}
+	
+	public function clean_up() {
+		delete_transient( 'wpsc_update_progress' );
+		delete_transient( 'wpsc_update_product_offset' );
+		delete_transient( 'wpsc_update_variation_comb_offset' );
+		delete_transient( 'wpsc_update_current_product' );
+		delete_transient( 'wpsc_update_current_child_products' );
+	}
+	
+	public function check_timeout() {
+		$safety = 2; // refresh page within 2 seconds of PHP max execution time limit
+		$wiggle_room = $this->timeout - $safety;
+		
+		$terminate = time() - $this->script_start >= $wiggle_room;
+		
+		if ( $terminate ) {
+			do_action( 'wpsc_update_timeout_terminate' );
+			$location = remove_query_arg( array( 'start_over', 'eta', 'current_percent' ) );
+			$location = add_query_arg( 'run_updates', 1, $location );
+			$location = apply_filters( 'wpsc_update_terminate_location', $location );
+			?>
+				<script type="text/javascript">
+					location.href = "<?php echo $location; ?>"
+				</script>
+			<?php
+			exit;
+		}
+	}
+	
+	public function run( $function, $message = '' ) {
 		if ( $message )
 			echo "<p>{$message}</p>";
 			
-		call_user_func( 'wpsc_' . $function );
-		$wpsc_update_progress[$function] = true;
-		set_transient( 'wpsc_update_progress', $wpsc_update_progress, 604800 );
+		if ( empty( $this->stages[$function] ) ) {			
+			call_user_func( 'wpsc_' . $function );
+			$this->stages[$function] = true;
+			set_transient( 'wpsc_update_progress', $this->stages, 604800 );
+		}
+	}
+}
+
+class WPSC_Update_Progress
+{
+	private $milestone;
+	private $start;
+	private $count;
+	private $current_percent = 0;
+	private $total;
+	private $eta;
+	private $i;
+	
+	public function __construct( $total ) {
+		$this->total = $total;
+		$this->milestone = $this->start = time();
+		if ( ! empty( $_REQUEST['current_percent'] ) )
+			$this->current_percent = (int) $_REQUEST['current_percent'];
+			
+		add_filter( 'wpsc_update_terminate_location', array( $this, 'filter_terminate_location' ) );
+		
+		echo '<div class="wpsc-progress-bar">';
+		if ( ! empty( $_REQUEST['start_over'] ) )
+			return;
+			
+		if ( isset( $_REQUEST['current_percent'] ) ) {
+			echo "<div class='block' style='width:{$_REQUEST['current_percent']}%;'>&nbsp;</div>";
+		}
+		
+		if ( isset( $_REQUEST['eta'] ) ) {
+			$this->eta = (int) $_REQUEST['eta'];
+			$this->print_eta();
+		}
+		
+		if ( isset( $_REQUEST['i'] ) )
+			echo "<span>{$_REQUEST['i']}/{$this->total}</span>";
+	}
+	
+	public function filter_terminate_location( $location ) {
+		$location = add_query_arg( array(
+			'current_percent' => $this->current_percent,
+			'i' => $this->i,
+		), $location );
+		if ( $this->eta !== null )
+			$location = add_query_arg( 'eta', $this->eta, $location );
+		else
+			$location = remove_query_arg( 'eta', $location );
+		return $location;
+	}
+	
+	private function print_eta() {
+		echo '<div class="eta">';
+		echo __( 'Estimated time left:', 'wpsc' ) . ' ';
+		if ( $this->eta == 0 )
+			echo __( 'Under a minute', 'wpsc' );
+		else
+			printf( _n( '%d minute', '%d minutes', $this->eta ), $this->eta );
+		echo '</div>';
+	}
+	
+	public function update( $i ) {
+		if ( empty( $this->count ) )
+			$this->count = $i;
+		
+		$this->i = $i;
+		$now = time();
+		$percent = min( floor( $i * 100 / $this->total ), 100 );
+		
+		if ( $percent != $this->current_percent ) {
+			echo "<div class='block' style='width:{$percent}%;'>&nbsp;</div>";
+			$this->current_percent = $percent;
+		}
+		
+		echo "<span>{$i}/{$this->total}</span>";
+		
+		if ( $now - $this->milestone >= 5 ) {
+			$processed = $i - $this->count + 1;
+			$this->eta = floor( ( $this->total - $i ) * ( $now - $this->start ) / ( $processed * 60 ) );
+			$this->print_eta();
+			$this->milestone = $now;
+		}
+		
+		if ( $percent == 100 ) {
+			remove_filter( 'wpsc_update_terminate_location', array( $this, 'filter_terminate_location' ) );
+			echo '<div class="eta">Done!</div>';
+			echo '</div>';
+		}
 	}
 }
 
@@ -68,7 +178,6 @@ function wpsc_update_step( $i, $total ) {
 		$current_percent = floor( $percent );
 	}
 	
-	echo "<span>{$i}/{$total}</span>";
 	if ( $now - $milestone == 5 ) {
 		$processed = $i - $count + 1;
 		$eta = floor( ( $total - $i ) * ( $now - $start ) / ( $processed * 60 ) );
@@ -91,7 +200,8 @@ function wpsc_update_step( $i, $total ) {
  */
 function wpsc_convert_category_groups() {
 	global $wpdb, $user_ID;
-
+	$wpsc_update = WPSC_Update::get_instance();
+	
 	//if they're updating from 3.6, and they've got categories with no group, let's fix that problem, eh?
  	$categorisation_groups = $wpdb->get_results("SELECT * FROM `".WPSC_TABLE_CATEGORISATION_GROUPS."` WHERE `active` IN ('1')");
 	if(count($categorisation_groups) == 0) {
@@ -103,7 +213,7 @@ function wpsc_convert_category_groups() {
 	}
 
 	foreach((array)$categorisation_groups as $cat_group) {
-		wpsc_update_check_timeout();
+		$wpsc_update->check_timeout();
 		
 		$category_id = wpsc_get_meta($cat_group->id, 'category_group_id', 'wpsc_category_group');
 
@@ -144,11 +254,12 @@ function wpsc_convert_categories($new_parent_category, $group_id, $old_parent_ca
 	} else {
 		$categorisation = $wpdb->get_results("SELECT * FROM `".WPSC_TABLE_PRODUCT_CATEGORIES."` WHERE `active` IN ('1') AND `group_id` IN ('{$group_id}') AND `category_parent` IN (0)");
 	}
+	$wpsc_update = WPSC_Update::get_instance();
 	
 	if($categorisation > 0) {
 
 		foreach((array)$categorisation as $category) {
-			wpsc_update_check_timeout();
+			$wpsc_update->check_timeout();
 			$category_id = wpsc_get_meta($category->id, 'category_id', 'wpsc_old_category');
 
 			if(!is_numeric($category_id) || ( $category_id < 1)) {
@@ -191,9 +302,10 @@ function wpsc_convert_categories($new_parent_category, $group_id, $old_parent_ca
 function wpsc_convert_variation_sets() {	
 	global $wpdb, $user_ID;
 	$variation_sets = $wpdb->get_results("SELECT * FROM `".WPSC_TABLE_PRODUCT_VARIATIONS."`");
+	$wpsc_update = WPSC_Update::get_instance();
 
 	foreach((array)$variation_sets as $variation_set) {
-		wpsc_update_check_timeout();
+		$wpsc_update->check_timeout();
 		$variation_set_id = wpsc_get_meta($variation_set->id, 'variation_set_id', 'wpsc_variation_set');
 
 		if(!is_numeric($variation_set_id) || ( $variation_set_id < 1)) {
@@ -234,7 +346,7 @@ function wpsc_convert_variation_sets() {
 function wpsc_convert_products_to_posts() {
   global $wpdb, $user_ID;
   // Select all products
-	
+	$wpsc_update = WPSC_Update::get_instance();
 	if ( ! empty($wpdb->charset) )
 		$charset_collate = "DEFAULT CHARACTER SET $wpdb->charset";
 	if ( ! empty($wpdb->collate) )
@@ -250,7 +362,8 @@ function wpsc_convert_products_to_posts() {
 	";
 	$post_created = get_transient( 'wpsc_update_current_product' );
 	$total = $wpdb->get_var( "SELECT COUNT(*) FROM " . WPSC_TABLE_PRODUCT_LIST . " WHERE active='1'" );
-	echo '<div class="wpsc-progress-bar">';
+	$progress = new WPSC_Update_Progress( $total );
+	
 	while (true) {
 		$product_data = $wpdb->get_results( $wpdb->prepare( $sql, $offset, $limit ), ARRAY_A );
 		$i = $offset;
@@ -259,7 +372,7 @@ function wpsc_convert_products_to_posts() {
 			break;
 		
 		foreach((array)$product_data as $product) {
-			wpsc_update_check_timeout( '</div>' );
+			$wpsc_update->check_timeout( '</div>' );
 
 			$post_id = 0;
 			
@@ -381,7 +494,7 @@ function wpsc_convert_products_to_posts() {
 			$product_data = get_post($post_id);
 			$image_data = $wpdb->get_results("SELECT * FROM `".WPSC_TABLE_PRODUCT_IMAGES."` WHERE `product_id` IN ('{$product['id']}') ORDER BY `image_order` ASC", ARRAY_A);
 			foreach((array)$image_data as $image_row) {
-				wpsc_update_check_timeout( '</div>' );
+				$wpsc_update->check_timeout( '</div>' );
 				// Get the image path info
 				$image_pathinfo = pathinfo($image_row['image']);
 
@@ -427,15 +540,12 @@ function wpsc_convert_products_to_posts() {
 				wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $new_path ) );
 			}
 			$i ++;
-			wpsc_update_step( $i, $total );
+			$progress->update( $i );
 			set_transient( 'wpsc_update_product_offset', $i, 604800 );
 		}
 		
 		$offset += $limit;
 	}
-
-	echo '<div class="eta">Done!</div>';
-	echo '</div>';
 	//Just throwing the payment gateway update in here because it doesn't really warrant it's own function :)
 	$custom_gateways = get_option('custom_gateway_options');
 	array_walk($custom_gateways, "wpec_update_gateway");
@@ -455,7 +565,7 @@ function wpec_update_gateway(&$value,$key) {
 }
 function wpsc_convert_variation_combinations() {
 	global $wpdb, $user_ID, $current_version_number;
-	
+	$wpsc_update = WPSC_Update::get_instance();
 	remove_filter( 'get_terms', 'wpsc_get_terms_category_sort_filter' );
 	if ( ! $offset = get_transient( 'wpsc_update_variation_comb_offset' ) )
 		$offset = 0;
@@ -464,7 +574,8 @@ function wpsc_convert_variation_combinations() {
 	$sql = "SELECT * FROM {$wpdb->posts} WHERE post_type = 'wpsc-product' AND post_parent = 0 LIMIT %d, %d";
 	
 	$total = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_type = 'wpsc-product' AND post_parent = 0" );
-	echo '<div class="wpsc-progress-bar">';
+	$progress = new WPSC_Update_Progress( $total );
+	
 	while ( true ) {
 		// get the posts
 		// I use a direct SQL query here because the get_posts function sometimes does not function for a reason that is not clear.
@@ -477,7 +588,7 @@ function wpsc_convert_variation_combinations() {
 			if ( ! $child_products = get_transient( 'wpsc_update_current_child_products' ) )
 				$child_products = array();
 			
-			wpsc_update_check_timeout();
+			$wpsc_update->check_timeout();
 			$base_product_terms = array();
 			//create a post template
 			$child_product_template = array(
@@ -503,7 +614,7 @@ function wpsc_convert_variation_combinations() {
 			} else {
 				// otherwise, we have no active variations, skip to the next product
 				$i++;
-				wpsc_update_step( $i, $total );
+				$progress->update( $i );
 				set_transient( 'wpsc_update_variation_comb_offset', $i, 604800 );
 				continue;
 			}
@@ -537,7 +648,7 @@ function wpsc_convert_variation_combinations() {
 			$variation_items = $wpdb->get_results("SELECT * FROM ".WPSC_TABLE_VARIATION_PROPERTIES." WHERE `product_id` = '{$original_id}'");
 
 			foreach((array)$variation_items as $variation_item) {
-				wpsc_update_check_timeout();
+				$wpsc_update->check_timeout();
 				// initialize the requisite arrays to empty
 				$variation_ids = array();
 				$term_data = array(
@@ -623,13 +734,6 @@ function wpsc_convert_variation_combinations() {
 						if ( ! $already_exists ) {
 							$child_products[$key] = $child_product_id;
 							set_transient( 'wpsc_update_current_child_products', $child_products, 604800 );
-							/* foreach ( $term_data['ids'] as $term_id ) {
-								$wpdb->insert( "{$wpdb->prefix}update_posts_variations", array(
-									'post_id' => $post->ID,
-									'child_id' => $child_product_id,
-									'term_id' => $term_id,
-								), array( '%d', '%d', '%d' ) );
-							} */
 						}
 					}
 
@@ -638,7 +742,7 @@ function wpsc_convert_variation_combinations() {
 
 			}
 			$i++;
-			wpsc_update_step( $i, $total );
+			$progress->update( $i );
 			set_transient( 'wpsc_update_variation_comb_offset', $i, 604800 );
 			delete_transient( 'wpsc_update_current_child_products' );
 		}
@@ -646,9 +750,6 @@ function wpsc_convert_variation_combinations() {
 		$offset += $limit;
 		
 	}
-
-	echo '<div class="eta">Done!</div>';
-	echo '</div>';
 	delete_option("wpsc-variation_children");
 _get_term_hierarchy('wpsc-variation');
 delete_option("wpsc_product_category_children");
@@ -658,9 +759,10 @@ _get_term_hierarchy('wpsc_product_category');
 function wpsc_update_files() {
 	global $wpdb, $user_ID; 
 	$product_files = $wpdb->get_results("SELECT * FROM ".WPSC_TABLE_PRODUCT_FILES."");
+	$wpsc_update = WPSC_Update::get_instance();
 	
 	foreach($product_files as $product_file) {
-		wpsc_update_check_timeout();
+		$wpsc_update->check_timeout();
 		$variation_post_ids = array();
 		if(!empty($product_file->product_id)){
 			$product_post_id = (int)$wpdb->get_var($wpdb->prepare( "SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE meta_key = %s AND `meta_value` = %d LIMIT 1", '_wpsc_original_id', $product_file->product_id ));
