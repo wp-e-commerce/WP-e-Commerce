@@ -149,10 +149,13 @@ class wpsc_merchant {
 						$address_data['billing']['state'] = wpsc_get_state_by_id( $country[1], 'code' );
 
 					break;
+					
+				case 'shippingcountry' :
+					$country = maybe_unserialize( $collected_form_row['value'] );
+					$address_data[$address_data_set][$address_key] = $country[0];
 
-				case 'shippingstate' :
-					if ( !empty( $collected_form_row['value'] ) && is_numeric( $collected_form_row['value'] ) )
-						$address_data[$address_data_set][$address_key] = wpsc_get_state_by_id( $collected_form_row['value'], 'code' );
+					if ( is_array( $country ) && !empty( $country[1] ) )
+						$address_data['shipping']['state'] = wpsc_get_state_by_id( $country[1], 'code' );
 
 					break;
 
