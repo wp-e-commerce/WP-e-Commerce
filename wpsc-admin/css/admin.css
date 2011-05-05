@@ -1762,7 +1762,7 @@ float: left;
 	height:20px;
 	width:300px;
 	border:1px solid #3a58cf;
-	margin-bottom:27px;
+	margin:-0.75em 0 27px;
 }
 
 .dashboard_page_wpsc-update .wpsc-progress-bar * {
