@@ -61,7 +61,7 @@ function wpsc_display_php_version_notice() {
 function wpsc_display_update_page() {
 	global $wpsc_update_progress;
 	
-	if ( isset( $_REQUEST['start_over'] ) && $_REQUEST['start_over'] )
+	if ( ! empty( $_REQUEST['start_over'] ) )
 		delete_transient( 'wpsc_update_progress' );
 	elseif ( ! $wpsc_update_progress = get_transient( 'wpsc_update_progress' ) )
 		$wpsc_update_progress = array();
@@ -71,20 +71,6 @@ function wpsc_display_update_page() {
 	<div class="wrap">
 		<h2><?php echo esc_html( __('Update WP e-Commerce', 'wpsc') ); ?> </h2>
 		<br />
-		<style type="text/css" media="screen">
-			.wpsc-progress-bar {
-				position:relative;
-				height:20px;
-				width:100%;
-			}
-			
-			.wpsc-progress-bar div {
-				position:absolute;
-				left:0;
-				top:0;
-				background-color:#c00;
-			}
-		</style>
 	<?php
 		if ( isset( $_REQUEST['run_updates'] ) ) :
 			wpsc_update_start_timer();

@@ -22,7 +22,6 @@ function wpsc_update_check_timeout( $output = '' ) {
 	
 	if ( $terminate ) {
 		echo $output;
-		_e( "WordPress e-Commerce has detected that PHP max execution time is reached. As a result, this page is being reloaded and the update process will be resumed.")
 		?>
 			<script type="text/javascript">
 				location.href = "<?php echo add_query_arg( 'run_updates', 1 ); ?>";
@@ -45,6 +44,13 @@ function wpsc_update_run( $function, $message = '' ) {
 	}
 }
 
+function wpsc_update_step( $i, $total ) {
+	$percent = min( round( $i * 100 / $total, 2 ), 100 );
+	
+	echo "<div style='width:{$percent}%;'>&nbsp;</div>";
+	echo "<span>{$i}/{$total}</span>";
+}
+
 /**
  * wpsc_convert_category_groups function.
  * 
@@ -63,7 +69,7 @@ function wpsc_convert_category_groups() {
 		$wpdb->query($sql);
 		$categorisation_groups = $wpdb->get_results("SELECT * FROM `".WPSC_TABLE_CATEGORISATION_GROUPS."` WHERE `active` IN ('1')");
 	}
-		
+
 	foreach((array)$categorisation_groups as $cat_group) {
 		wpsc_update_check_timeout();
 		
@@ -206,15 +212,18 @@ function wpsc_convert_products_to_posts() {
 		WHERE active = '1'
 		LIMIT %d, %d
 	";
-
+	
+	$total = $wpdb->get_var( "SELECT COUNT(*) FROM " . WPSC_TABLE_PRODUCT_LIST . " WHERE active='1'" );
+	echo '<div class="wpsc-progress-bar">';
 	while (true) {
 		$product_data = $wpdb->get_results( $wpdb->prepare( $sql, $offset, $limit ), ARRAY_A );
+		$i = $offset + 1;
 		
 		if ( empty( $product_data ) )
 			break;
 		
 		foreach((array)$product_data as $product) {
-			wpsc_update_check_timeout();
+			wpsc_update_check_timeout( '</div>' );
 			$post_id = (int)$wpdb->get_var($wpdb->prepare( "SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE meta_key = %s AND `meta_value` = %d LIMIT 1", '_wpsc_original_id', $product['id'] ));
 
 			$sku = old_get_product_meta($product['id'], 'sku', true);
@@ -326,7 +335,7 @@ function wpsc_convert_products_to_posts() {
 			$product_data = get_post($post_id);
 			$image_data = $wpdb->get_results("SELECT * FROM `".WPSC_TABLE_PRODUCT_IMAGES."` WHERE `product_id` IN ('{$product['id']}') ORDER BY `image_order` ASC", ARRAY_A);
 			foreach((array)$image_data as $image_row) {
-				wpsc_update_check_timeout();
+				wpsc_update_check_timeout( '</div>' );
 				// Get the image path info
 				$image_pathinfo = pathinfo($image_row['image']);
 
@@ -371,14 +380,15 @@ function wpsc_convert_products_to_posts() {
 				update_attached_file( $attachment_id, $new_path );
 				wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $new_path ) );
 			}
-
+			wpsc_update_step( $i, $total );
+			$i ++;
 		}
 		
 		$offset += $limit;
 		set_transient( 'wpsc_update_product_offset', $offset, 86400 );
 	}
 	//Just throwing the payment gateway update in here because it doesn't really warrant it's own function :)
-	
+	echo '</div>';
 	$custom_gateways = get_option('custom_gateway_options');
 	array_walk($custom_gateways, "wpec_update_gateway");
 	update_option('custom_gateway_options', $custom_gateways);
@@ -404,12 +414,13 @@ function wpsc_convert_variation_combinations() {
 	wp_defer_term_counting( true );
 	$sql = "SELECT * FROM {$wpdb->posts} WHERE post_type = 'wpsc-product' AND post_parent = 0 LIMIT %d, %d";
 	
-	
+	$total = "SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_type = 'wpsc-product' AND post_parent = 0";
+	echo '<div class="wpsc-progress-bar">';
 	while ( true ) {
 		// get the posts
 		// I use a direct SQL query here because the get_posts function sometimes does not function for a reason that is not clear.
 		$posts = $wpdb->get_results( $wpdb->prepare( $sql, $offset, $limit ) );
-		
+		$i = $offset;
 		if ( empty( $posts ) )
 			break;
 
@@ -561,12 +572,15 @@ function wpsc_convert_variation_combinations() {
 				}
 
 			}
+			wpsc_update_step( $i, $total );
+			$i ++;
 		}
 		
 		$offset += $limit;
 		set_transient( 'wpsc_update_variation_comb_offset', $offset, 86400 );
 		
 	}
+	echo '</div>';
 	delete_option("wpsc-variation_children");
 _get_term_hierarchy('wpsc-variation');
 delete_option("wpsc_product_category_children");

@@ -357,7 +357,7 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 				'l10n_print_after' => 'try{convertEntities(wpsc_adminL10n);}catch(e){};'
 			) );
 	}
-	if ( 'dashboard_page_wpsc-upgrades' == $pagehook )
+	if ( 'dashboard_page_wpsc-upgrades' == $pagehook || 'dashboard_page_wpsc-update' == $pagehook )
 		wp_enqueue_style( 'wp-e-commerce-admin', WPSC_URL . '/wpsc-admin/css/admin.css', false, $version_identifier, 'all' );
 	wp_deregister_script( 'prototype' );
 
