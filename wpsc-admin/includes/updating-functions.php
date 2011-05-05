@@ -73,11 +73,11 @@ function wpsc_update_step( $i, $total ) {
 		$processed = $i - $count + 1;
 		$eta = floor( ( $total - $i ) * ( $now - $start ) / ( $processed * 60 ) );
 		echo '<div class="eta">';
-		_e( 'Estimated time left:', 'wpsc' );
+		echo __( 'Estimated time left:', 'wpsc' ) . ' ';
 		if ( $eta == 0 )
-			_e( 'Under a minute', 'wpsc' );
+			echo __( 'Under a minute', 'wpsc' );
 		else
-			printf( ' ' . _n( '%d minute', '%d minutes', $eta ), $eta );
+			printf( _n( '%d minute', '%d minutes', $eta ), $eta );
 		echo '</div>';
 		$milestone = $now;
 	}
@@ -252,7 +252,7 @@ function wpsc_convert_products_to_posts() {
 
 	if ( ! $offset = get_transient( 'wpsc_update_product_offset' ) )
 		$offset = 0;
-	$limit = 25;
+	$limit = 90;
 	$sql = "
 		SELECT * FROM " . WPSC_TABLE_PRODUCT_LIST . "
 		WHERE active = '1'
@@ -462,11 +462,11 @@ function wpsc_convert_variation_combinations() {
 
 	remove_filter( 'get_terms', 'wpsc_get_terms_category_sort_filter' );
 	$offset = get_transient( 'wpsc_update_variation_comb_offset', 0 );
-	$limit = 5;
+	$limit = 150;
 	wp_defer_term_counting( true );
 	$sql = "SELECT * FROM {$wpdb->posts} WHERE post_type = 'wpsc-product' AND post_parent = 0 LIMIT %d, %d";
 	
-	$total = "SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_type = 'wpsc-product' AND post_parent = 0";
+	$total = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_type = 'wpsc-product' AND post_parent = 0" );
 	echo '<div class="wpsc-progress-bar">';
 	while ( true ) {
 		// get the posts
@@ -502,6 +502,9 @@ function wpsc_convert_variation_combinations() {
 				$variation_associations = $wpdb->get_col("SELECT `value_id` FROM ".WPSC_TABLE_VARIATION_VALUES_ASSOC." WHERE `product_id` = '{$original_id}' AND `variation_id` IN(".implode(", ", $variation_set_associations).") AND `visible` IN ('1')");
 			} else {
 				// otherwise, we have no active variations, skip to the next product
+				$i ++;
+				wpsc_update_step( $i, $total );
+				set_transient( 'wpsc_update_variation_comb_offset', $i, 86400 );
 				continue;
 			}
 			
