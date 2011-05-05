@@ -6,6 +6,31 @@
  * @since 3.8
  */
 
+function wpsc_update_start_timer() {
+	global $_wpsc_time_out, $_wpsc_update_start_time;
+	$_wpsc_time_out = ini_get( 'max_execution_time' );
+	$_wpsc_update_start_time = time();
+}
+
+function wpsc_update_check_timeout( $output = '' ) {
+	global $_wpsc_time_out, $_wpsc_update_start_time;
+	
+	$safety = 2; // refresh page within 2 seconds of PHP max execution time limit
+	$wiggle_room = $_wpsc_time_out - $safety; // pardon my silly English
+
+	$terminate = time() - $_wpsc_update_start_time >= $wiggle_room;
+	
+	if ( $terminate ) {
+		echo $output;
+		?>
+			<script type="text/javascript">
+				location.href = "<?php echo add_query_arg( 'run_updates', 1 ); ?>";
+			</script>
+		<?php
+		exit;
+	}
+}
+
 /**
  * wpsc_convert_category_groups function.
  * 
@@ -26,6 +51,8 @@ function wpsc_convert_category_groups() {
 	}
 		
 	foreach((array)$categorisation_groups as $cat_group) {
+		wpsc_update_check_timeout();
+		
 		$category_id = wpsc_get_meta($cat_group->id, 'category_group_id', 'wpsc_category_group');
 
 		if(!is_numeric($category_id) || ( $category_id < 1)) {
@@ -69,6 +96,7 @@ function wpsc_convert_categories($new_parent_category, $group_id, $old_parent_ca
 	if($categorisation > 0) {
 
 		foreach((array)$categorisation as $category) {
+			wpsc_update_check_timeout();
 			$category_id = wpsc_get_meta($category->id, 'category_id', 'wpsc_old_category');
 
 			if(!is_numeric($category_id) || ( $category_id < 1)) {
@@ -113,6 +141,7 @@ function wpsc_convert_variation_sets() {
 	$variation_sets = $wpdb->get_results("SELECT * FROM `".WPSC_TABLE_PRODUCT_VARIATIONS."`");
 	
 	foreach((array)$variation_sets as $variation_set) {
+		wpsc_update_check_timeout();
 		$variation_set_id = wpsc_get_meta($variation_set->id, 'variation_set_id', 'wpsc_variation_set');
 		
 		if(!is_numeric($variation_set_id) || ( $variation_set_id < 1)) {
@@ -172,6 +201,7 @@ function wpsc_convert_products_to_posts() {
 			break;
 		
 		foreach((array)$product_data as $product) {
+			wpsc_update_check_timeout();
 			$post_id = (int)$wpdb->get_var($wpdb->prepare( "SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE meta_key = %s AND `meta_value` = %d LIMIT 1", '_wpsc_original_id', $product['id'] ));
 
 			$sku = old_get_product_meta($product['id'], 'sku', true);
@@ -283,6 +313,7 @@ function wpsc_convert_products_to_posts() {
 			$product_data = get_post($post_id);
 			$image_data = $wpdb->get_results("SELECT * FROM `".WPSC_TABLE_PRODUCT_IMAGES."` WHERE `product_id` IN ('{$product['id']}') ORDER BY `image_order` ASC", ARRAY_A);
 			foreach((array)$image_data as $image_row) {
+				wpsc_update_check_timeout();
 				// Get the image path info
 				$image_pathinfo = pathinfo($image_row['image']);
 
@@ -370,7 +401,7 @@ function wpsc_convert_variation_combinations() {
 			break;
 
 		foreach((array)$posts as $post) {
-
+			wpsc_update_check_timeout();
 			$base_product_terms = array();
 			//create a post template
 			$child_product_template = array(
@@ -427,6 +458,7 @@ function wpsc_convert_variation_combinations() {
 			$variation_items = $wpdb->get_results("SELECT * FROM ".WPSC_TABLE_VARIATION_PROPERTIES." WHERE `product_id` = '{$original_id}'");
 
 			foreach((array)$variation_items as $variation_item) {
+				wpsc_update_check_timeout();
 				// initialize the requisite arrays to empty
 				$variation_ids = array();
 				$term_data = array(
@@ -533,6 +565,7 @@ function wpsc_update_files() {
 	$product_files = $wpdb->get_results("SELECT * FROM ".WPSC_TABLE_PRODUCT_FILES."");
 	
 	foreach($product_files as $product_file) {
+		wpsc_update_check_timeout();
 		$variation_post_ids = array();
 		if(!empty($product_file->product_id)){
 			$product_post_id = (int)$wpdb->get_var($wpdb->prepare( "SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE meta_key = %s AND `meta_value` = %d LIMIT 1", '_wpsc_original_id', $product_file->product_id ));

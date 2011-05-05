@@ -58,14 +58,16 @@ function wpsc_display_php_version_notice() {
 <?php
 }
 
-function wpsc_display_update_page() { ?>
+function wpsc_display_update_page() {?>
 
 	<div class="wrap">
 		<h2><?php echo esc_html( __('Update WP e-Commerce', 'wpsc') ); ?> </h2>
 		<br />
 
 	<?php
-		if ( isset( $_POST['run_updates'] ) ) :
+		if ( isset( $_REQUEST['run_updates'] ) ) :
+			wpsc_update_start_timer();
+			
 			echo __('Updating Categories...', 'wpsc');
 			wpsc_convert_category_groups();
 			echo '<br />' . __('Updating Variations...', 'wpsc');
