@@ -591,7 +591,9 @@ function wpsc_create_or_update_tables( $debug = false ) {
 				foreach ( (array)$missing_or_extra_table_columns as $missing_or_extra_table_column ) {
 					if ( isset( $table_data['columns'][$missing_or_extra_table_column] ) ) {
 						//table column is missing, add it
-						$previous_column = $supplied_table_columns[array_search( $missing_or_extra_table_column, $supplied_table_columns ) - 1];
+						$index = array_search( $missing_or_extra_table_column, $supplied_table_columns ) - 1;
+						
+						$previous_column = isset( $supplied_table_columns[$index] ) ? $supplied_table_columns[$index] : '';
 						if ( $previous_column != '' ) {
 							$previous_column = "AFTER `$previous_column`";
 						}
@@ -601,7 +603,7 @@ function wpsc_create_or_update_tables( $debug = false ) {
 							$failure_reasons[] = $wpdb->last_error;
 						}
 						// run updating functions to do more complex work with default values and the like
-						if ( is_callable( $table_data['actions']['after'][$missing_or_extra_table_column] ) ) {
+						if ( isset( $table_data['actions']['after'][$missing_or_extra_table_column] ) && is_callable( $table_data['actions']['after'][$missing_or_extra_table_column] ) ) {
 							$table_data['actions']['after'][$missing_or_extra_table_column]( $missing_or_extra_table_column );
 						}
 					}
@@ -765,7 +767,7 @@ function wpsc_add_checkout_fields() {
 	global $wpdb;
 	$data_forms = $wpdb->get_results( "SELECT COUNT(*) AS `count` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "`", ARRAY_A );
 
-	if ( $data_forms[0]['count'] == 0 ) {
+	if ( isset( $data_forms[0] ) && $data_forms[0]['count'] == 0 ) {
 
 		$sql = " INSERT INTO `" . WPSC_TABLE_CHECKOUT_FORMS . "` ( `name`, `type`, `mandatory`, `display_log`, `default`, `active`, `checkout_order`, `unique_name`) VALUES ( '" . __( 'Your billing/contact details', 'wpsc' ) . "', 'heading', '0', '0', '', '1', 1,''),
 	( '" . __( 'First Name', 'wpsc' ) . "', 'text', '1', '1', '', '1', 2,'billingfirstname'),
