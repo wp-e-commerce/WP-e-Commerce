@@ -210,7 +210,7 @@ function wpsc_pre_update( $data , $postarr ) {
         $data["post_parent"] = $postarr["parent_post"];
 
 	// Sanitize status for variations (see #324)
-	if ($data['post_parent'] && $data['post_parent'] != $data['ID']) {
+	if ( $data['post_parent'] && ( ! isset( $data['ID'] ) || $data['post_parent'] != $data['ID'] ) ) {
 		$data['post_status'] = 'inherit';
 	}
 
