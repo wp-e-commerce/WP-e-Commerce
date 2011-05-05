@@ -58,29 +58,49 @@ function wpsc_display_php_version_notice() {
 <?php
 }
 
-function wpsc_display_update_page() {?>
-
+function wpsc_display_update_page() {
+	global $wpsc_update_progress;
+	
+	if ( isset( $_REQUEST['start_over'] ) && $_REQUEST['start_over'] )
+		delete_transient( 'wpsc_update_progress' );
+	elseif ( ! $wpsc_update_progress = get_transient( 'wpsc_update_progress' ) )
+		$wpsc_update_progress = array();
+	
+	?>
+	
 	<div class="wrap">
 		<h2><?php echo esc_html( __('Update WP e-Commerce', 'wpsc') ); ?> </h2>
 		<br />
-
+		<style type="text/css" media="screen">
+			.wpsc-progress-bar {
+				position:relative;
+				height:20px;
+				width:100%;
+			}
+			
+			.wpsc-progress-bar div {
+				position:absolute;
+				left:0;
+				top:0;
+				background-color:#c00;
+			}
+		</style>
 	<?php
 		if ( isset( $_REQUEST['run_updates'] ) ) :
 			wpsc_update_start_timer();
+			ob_implicit_flush( true );
 			
-			echo __('Updating Categories...', 'wpsc');
-			wpsc_convert_category_groups();
-			echo '<br />' . __('Updating Variations...', 'wpsc');
-			wpsc_convert_variation_sets();
-			echo '<br />' . __('Updating Products...', 'wpsc');
-			wpsc_convert_products_to_posts();
-			echo '<br />' . __('Updating Child Products...', 'wpsc');
-			wpsc_convert_variation_combinations();
-			echo '<br />' . __('Updating Product Files...', 'wpsc');
-			wpsc_update_files();
-			echo '<br />' . __('Updating Database...', 'wpsc');
-			wpsc_create_or_update_tables();
-			wpsc_update_database();
+			if ( count( $wpsc_update_progress ) > 0 )
+				_e( 'Resuming update progress...', 'wpsc' );
+			
+			wpsc_update_run( 'convert_category_groups'       , __( 'Updating Categories...'    , 'wpsc' ) );
+			wpsc_update_run( 'convert_variation_sets'        , __( 'Updating Variations...'    , 'wpsc' ) );
+			wpsc_update_run( 'convert_products_to_posts'     , __( 'Updating Products ...'     , 'wpsc' ) );
+			wpsc_update_run( 'convert_variation_combinations', __( 'Updating Child Products...', 'wpsc' ) );
+			wpsc_update_run( 'update_files'                  , __( 'Updating Product Files...' , 'wpsc' ) );
+			wpsc_update_run( 'create_or_update_tables'       , __( 'Updating Database...'      , 'wpsc' ) );
+			wpsc_update_run( 'update_database' );
+
 			echo '<br /><br /><strong>' . __('WP e-Commerce updated successfully!', 'wpsc') . '</strong><br />';
 			if( '' != get_option('permalink_structure')){ ?>
 				<em><?php printf(__('Note: It looks like you have custom permalinks, you will need to refresh your permalinks <a href="%s">here</a>','wpsc' ) , admin_url('options-permalink.php') ); ?></em>
@@ -89,6 +109,8 @@ function wpsc_display_update_page() {?>
 			update_option('wpsc_version', 3.8);
 			update_option('wpsc_hide_update', true);
 			update_option( 'wpsc_needs_update', false );
+			
+			ob_implicit_flush( false );
 		else:
 
 

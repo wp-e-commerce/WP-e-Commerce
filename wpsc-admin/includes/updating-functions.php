@@ -22,12 +22,26 @@ function wpsc_update_check_timeout( $output = '' ) {
 	
 	if ( $terminate ) {
 		echo $output;
+		_e( "WordPress e-Commerce has detected that PHP max execution time is reached. As a result, this page is being reloaded and the update process will be resumed.")
 		?>
 			<script type="text/javascript">
 				location.href = "<?php echo add_query_arg( 'run_updates', 1 ); ?>";
 			</script>
 		<?php
 		exit;
+	}
+}
+
+function wpsc_update_run( $function, $message = '' ) {
+	global $wpsc_update_progress;
+	
+	if ( empty( $wpsc_update_progress[$function] ) ) {
+		if ( $message )
+			echo "<p>{$message}</p>";
+			
+		call_user_func( 'wpsc_' . $function );
+		$wpsc_update_progress[$function] = true;
+		set_transient( 'wpsc_update_progress', $wpsc_update_progress, 604800 );
 	}
 }
 
@@ -70,11 +84,11 @@ function wpsc_convert_category_groups() {
 			wpsc_update_categorymeta($category_id, 'uses_billing_address', 0);
 		}	
 		
-		if(!is_wp_error($new_category))
-		wpsc_convert_categories($category_id, $cat_group->id);
+		if(! isset( $new_category ) || !is_wp_error($new_category))
+			wpsc_convert_categories($category_id, $cat_group->id);
 	}
-delete_option("wpsc_product_category_children");
-_get_term_hierarchy('wpsc_product_category');
+	delete_option("wpsc_product_category_children");
+	_get_term_hierarchy('wpsc_product_category');
 }
 
 /**
@@ -136,7 +150,7 @@ function wpsc_convert_categories($new_parent_category, $group_id, $old_parent_ca
 	}	
 }
 
-function wpsc_convert_variation_sets() {
+function wpsc_convert_variation_sets() {	
 	global $wpdb, $user_ID;
 	$variation_sets = $wpdb->get_results("SELECT * FROM `".WPSC_TABLE_PRODUCT_VARIATIONS."`");
 	
@@ -172,7 +186,6 @@ function wpsc_convert_variation_sets() {
 			}			
 		}	
 	}
-
 }
 
 /**
