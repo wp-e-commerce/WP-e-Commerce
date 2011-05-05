@@ -881,8 +881,8 @@ class wpsc_checkout {
 
 			if ( $form_data->type != 'heading' ) {
 				if ( is_array( $value ) ) {
-					if ( in_array( $form_data->unique_name, array( 'billingcountry', 'shippingcountry' ) ) ) {
-						$value = $value[0];
+					if ( in_array( $form_data->unique_name, array( 'billingcountry' , 'shippingcountry') ) ) {
+						$value = serialize($value);
 						$prepared_query = $wpdb->prepare( "INSERT INTO `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` ( `log_id` , `form_id` , `value` ) VALUES ( %d, %d, %s)", $purchase_id, $form_data->id, $value );
 					} else {
 						foreach ( (array)$value as $v ) {
