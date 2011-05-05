@@ -22,9 +22,11 @@ function wpsc_update_check_timeout( $output = '' ) {
 	
 	if ( $terminate ) {
 		echo $output;
+		$location = remove_query_arg( 'start_over' );
+		$location = add_query_arg( 'run_updates', 1, $location );
 		?>
 			<script type="text/javascript">
-				location.href = "<?php echo add_query_arg( 'run_updates', 1 ); ?>";
+				location.href = "<?php echo $location; ?>";
 			</script>
 		<?php
 		exit;
@@ -45,10 +47,40 @@ function wpsc_update_run( $function, $message = '' ) {
 }
 
 function wpsc_update_step( $i, $total ) {
+	static $current;
+	static $milestone;
+	static $start;
+	static $count;
+	static $current_percent;
+	
+	$now = time();
+	
+	if ( $current != $total ) {
+		$current = $total;
+		$milestone = $start = $now;
+		$count = $i;
+	}
+	
 	$percent = min( round( $i * 100 / $total, 2 ), 100 );
 	
-	echo "<div style='width:{$percent}%;'>&nbsp;</div>";
+	if ( floor( $percent ) != $current_percent ) {
+		echo "<div class='block' style='width:{$percent}%;'>&nbsp;</div>";
+		$current_percent = floor( $percent );
+	}
+	
 	echo "<span>{$i}/{$total}</span>";
+	if ( $now - $milestone == 5 ) {
+		$processed = $i - $count + 1;
+		$eta = floor( ( $total - $i ) * ( $now - $start ) / ( $processed * 60 ) );
+		echo '<div class="eta">';
+		_e( 'Estimated time left:', 'wpsc' );
+		if ( $eta == 0 )
+			_e( 'Under a minute', 'wpsc' );
+		else
+			printf( ' ' . _n( '%d minute', '%d minutes', $eta ), $eta );
+		echo '</div>';
+		$milestone = $now;
+	}
 }
 
 /**
@@ -203,10 +235,24 @@ function wpsc_convert_variation_sets() {
 function wpsc_convert_products_to_posts() {
   global $wpdb, $user_ID;
   // Select all products
+	
+	if ( ! empty($wpdb->charset) )
+		$charset_collate = "DEFAULT CHARACTER SET $wpdb->charset";
+	if ( ! empty($wpdb->collate) )
+		$charset_collate .= " COLLATE $wpdb->collate";
+	
+	
+	$wpdb->query( "
+	CREATE TABLE IF NOT EXISTS {$wpdb->prefix}wpsc_update_products_posts (
+		original_id bigint(20) unsigned NOT NULL,
+		post_id bigint(20) unsigned NOT NULL,
+		KEY original_id (original_id)
+		) {$charset_collate}
+	" );
 
 	if ( ! $offset = get_transient( 'wpsc_update_product_offset' ) )
 		$offset = 0;
-	$limit = 150;
+	$limit = 25;
 	$sql = "
 		SELECT * FROM " . WPSC_TABLE_PRODUCT_LIST . "
 		WHERE active = '1'
@@ -217,14 +263,15 @@ function wpsc_convert_products_to_posts() {
 	echo '<div class="wpsc-progress-bar">';
 	while (true) {
 		$product_data = $wpdb->get_results( $wpdb->prepare( $sql, $offset, $limit ), ARRAY_A );
-		$i = $offset + 1;
+		$i = $offset;
 		
 		if ( empty( $product_data ) )
 			break;
 		
 		foreach((array)$product_data as $product) {
 			wpsc_update_check_timeout( '</div>' );
-			$post_id = (int)$wpdb->get_var($wpdb->prepare( "SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE meta_key = %s AND `meta_value` = %d LIMIT 1", '_wpsc_original_id', $product['id'] ));
+			// $post_id = (int)$wpdb->get_var($wpdb->prepare( "SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE meta_key = %s AND `meta_value` = %d LIMIT 1", '_wpsc_original_id', $product['id'] ));
+			$post_id = (int) $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM {$wpdb->prefix}wpsc_update_products_posts WHERE original_id = %d LIMIT 1", $product['id'] ) );
 
 			$sku = old_get_product_meta($product['id'], 'sku', true);
 
@@ -261,6 +308,10 @@ function wpsc_convert_products_to_posts() {
 				$product_post_values['menu_order'] = $product['order'];
 				
 				$post_id = wp_insert_post($product_post_values);
+				$wpdb->insert( $wpdb->prefix . 'wpsc_update_products_posts', array(
+					'original_id' => $product['id'],
+					'post_id' => $post_id,
+				), array( '%d', '%d') );
 			}
 
 			$product_meta = $wpdb->get_results("
@@ -380,15 +431,16 @@ function wpsc_convert_products_to_posts() {
 				update_attached_file( $attachment_id, $new_path );
 				wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $new_path ) );
 			}
-			wpsc_update_step( $i, $total );
 			$i ++;
+			wpsc_update_step( $i, $total );
+			set_transient( 'wpsc_update_product_offset', $i, 86400 );
 		}
 		
 		$offset += $limit;
-		set_transient( 'wpsc_update_product_offset', $offset, 86400 );
 	}
-	//Just throwing the payment gateway update in here because it doesn't really warrant it's own function :)
+	echo '<div class="eta">Done!</div>';
 	echo '</div>';
+	//Just throwing the payment gateway update in here because it doesn't really warrant it's own function :)
 	$custom_gateways = get_option('custom_gateway_options');
 	array_walk($custom_gateways, "wpec_update_gateway");
 	update_option('custom_gateway_options', $custom_gateways);
@@ -572,14 +624,15 @@ function wpsc_convert_variation_combinations() {
 				}
 
 			}
-			wpsc_update_step( $i, $total );
 			$i ++;
+			wpsc_update_step( $i, $total );
+			set_transient( 'wpsc_update_variation_comb_offset', $i, 86400 );
 		}
 		
 		$offset += $limit;
-		set_transient( 'wpsc_update_variation_comb_offset', $offset, 86400 );
 		
 	}
+	echo '<div class="eta">Done!</div>';
 	echo '</div>';
 	delete_option("wpsc-variation_children");
 _get_term_hierarchy('wpsc-variation');
@@ -681,21 +734,20 @@ function wpsc_update_database() {
  */
 
 function old_get_product_meta($product_id, $key, $single = false) {
-  global $wpdb, $post_meta_cache, $blog_id;  
-  $product_id = (int)$product_id;
-  if($product_id > 0) {
-    $meta_id = $wpdb->get_var("SELECT `id` FROM `".WPSC_TABLE_PRODUCTMETA."` WHERE `meta_key` IN('$key') AND `product_id` = '$product_id' LIMIT 1");
-    //exit($meta_id);
-    if(is_numeric($meta_id) && ($meta_id > 0)) {      
-      if($single != false) {
-        $meta_values = maybe_unserialize($wpdb->get_var("SELECT `meta_value` FROM `".WPSC_TABLE_PRODUCTMETA."` WHERE `meta_key` IN('$key') AND `product_id` = '$product_id' LIMIT 1"));
+	global $wpdb, $post_meta_cache, $blog_id;  
+	$product_id = (int)$product_id;
+	$meta_values = false;
+	if($product_id > 0) {
+		$meta_id = $wpdb->get_var("SELECT `id` FROM `".WPSC_TABLE_PRODUCTMETA."` WHERE `meta_key` IN('$key') AND `product_id` = '$product_id' LIMIT 1");
+		//exit($meta_id);
+		if(is_numeric($meta_id) && ($meta_id > 0)) {      
+			if($single != false) {
+				$meta_values = maybe_unserialize($wpdb->get_var("SELECT `meta_value` FROM `".WPSC_TABLE_PRODUCTMETA."` WHERE `meta_key` IN('$key') AND `product_id` = '$product_id' LIMIT 1"));
 			} else {
-        $meta_values = $wpdb->get_col("SELECT `meta_value` FROM `".WPSC_TABLE_PRODUCTMETA."` WHERE `meta_key` IN('$key') AND `product_id` = '$product_id'");
+				$meta_values = $wpdb->get_col("SELECT `meta_value` FROM `".WPSC_TABLE_PRODUCTMETA."` WHERE `meta_key` IN('$key') AND `product_id` = '$product_id'");
 				$meta_values = array_map('maybe_unserialize', $meta_values);
 			}
 		}
-	} else {
-    $meta_values = false;
 	}
 	if (is_array($meta_values) && (count($meta_values) == 1)) {
 		return array_pop($meta_values);

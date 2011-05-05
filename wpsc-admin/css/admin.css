@@ -1762,9 +1762,10 @@ float: left;
 	height:20px;
 	width:300px;
 	border:1px solid #3a58cf;
+	margin-bottom:15px;
 }
 
-.dashboard_page_wpsc-update .wpsc-progress-bar div {
+.dashboard_page_wpsc-update .wpsc-progress-bar .block {
 	position:absolute;
 	left:0;
 	top:0;
@@ -1782,4 +1783,14 @@ float: left;
 	line-height:18px;
 	font-size:12px;
 	width:200px;
+}
+
+.dashboard_page_wpsc-update .wpsc-progress-bar .eta {
+	background:#ffffff;
+	position:absolute;
+	left:0;
+	top:22px;
+	line-height:15px;
+	font-size:12px;
+	width:100%;
 }
