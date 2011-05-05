@@ -59,12 +59,17 @@ function wpsc_display_php_version_notice() {
 }
 
 function wpsc_display_update_page() {
-	global $wpsc_update_progress;
+	global $wpsc_update_progress, $wpdb;
 	
-	if ( ! empty( $_REQUEST['start_over'] ) )
+	if ( ! empty( $_REQUEST['start_over'] ) ) {
 		delete_transient( 'wpsc_update_progress' );
-	elseif ( ! $wpsc_update_progress = get_transient( 'wpsc_update_progress' ) )
+		delete_transient( 'wpsc_update_product_offset' );
+		delete_transient( 'wpsc_update_variation_comb_offset' );
+		$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}wpsc_update_products_posts" );
+	}
+	elseif ( ! $wpsc_update_progress = get_transient( 'wpsc_update_progress' ) ) {
 		$wpsc_update_progress = array();
+	}
 	
 	?>
 	
