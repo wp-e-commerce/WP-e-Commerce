@@ -429,7 +429,11 @@ function wpsc_convert_variation_combinations() {
 			foreach((array)$variation_items as $variation_item) {
 				// initialize the requisite arrays to empty
 				$variation_ids = array();
-				$term_data = array();
+				$term_data = array(
+					'ids' => array(),
+					'slugs' => array(),
+					'names' => array(),
+				);
 				// make a temporary copy of the product teplate
 				$product_values = $child_product_template;
 
@@ -489,7 +493,7 @@ function wpsc_convert_variation_combinations() {
 						if($selected_post != null) {
 							$child_product_id = $selected_post->ID;
 						} else {
-							$child_product_id = wp_update_post($product_values);
+							$child_product_id = wp_insert_post($product_values);
 						}
 					} else {
 						// sometimes there have been problems saving the variations, this gets the correct product ID
