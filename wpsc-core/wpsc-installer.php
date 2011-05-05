@@ -45,8 +45,9 @@ function wpsc_install() {
 		add_option( 'wpsc_purchaselogs_fixed', true );
 	}
 	
-	if ( !$first_install )
-		wpsc_regenerate_thumbnails();
+	// TODO: need a better approach to resize thumbnails
+	/* if ( !$first_install )
+		wpsc_regenerate_thumbnails(); */
 
 	// run the create or update code here.
 	wpsc_create_or_update_tables();
