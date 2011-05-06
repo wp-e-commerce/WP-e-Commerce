@@ -152,11 +152,18 @@ class wpsc_merchant {
 					
 				case 'shippingcountry' :
 					$country = maybe_unserialize( $collected_form_row['value'] );
-					$address_data[$address_data_set][$address_key] = $country[0];
-
-					if ( is_array( $country ) && !empty( $country[1] ) )
+					
+					if ( is_array( $country ) ) {
 						$address_data['shipping']['state'] = wpsc_get_state_by_id( $country[1], 'code' );
-
+						$country = $country[0];
+					}
+					
+					$address_data[$address_data_set][$address_key] = $country;
+					break;
+					
+				case 'shippingstate' :
+					if ( is_numeric( $collected_form_row['value'] ) && empty( $address_data['shipping']['state'] ) )
+						$address_data['shipping']['state'] = wpsc_get_state_by_id( $collected_form_row['value'], 'code' );
 					break;
 
 				default :
@@ -193,6 +200,7 @@ class wpsc_merchant {
 			'billing_address'         => $address_data['billing'],
 			'shipping_address'        => $address_data['shipping'],
 		);
+
 	} 
 
 	/**
@@ -217,9 +225,10 @@ class wpsc_merchant {
 				$this->cart_data['is_subscription'] = true;
 					
 
-			$rebill_interval = get_post_meta( $cart_row['prodid'], '_wpsc_rebill_interval', true );
+			if ( ! $rebill_interval = get_post_meta( $cart_row['prodid'], '_wpsc_rebill_interval', true ) )
+				$rebill_interval = array();
 			
-	
+
 			$new_cart_item = array(
 				"cart_item_id"         => $cart_row['id'],
 				"product_id"           => $cart_row['prodid'],
@@ -234,14 +243,14 @@ class wpsc_merchant {
 				"is_subscription"      => $is_recurring,
 				"recurring_data"       => array(
 					"rebill_interval"  => array(
-						'unit'         => $rebill_interval['unit'],
-						'length'       => $rebill_interval['number']
+						'unit'         => isset( $rebill_interval['unit'] ) ? $rebill_interval['unit'] : null,
+						'length'       => isset( $rebill_interval['number'] ) ? $rebill_interval['number'] : null,
 					),
 					"charge_to_expiry" => (bool)get_post_meta( $cart_row['prodid'], '_wpsc_charge_to_expiry', true ),
 					"times_to_rebill"  => get_post_meta( $cart_row['prodid'], '_wpsc_rebill_number', true )
 				)
 			);
-			
+
 			$this->cart_items[] = $new_cart_item;
 		}
 	}
