@@ -128,14 +128,15 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 	 */
 	function submit() {
 		if ( get_option( 'paypal_pro_testmode' ) == "on" )
-			$paypal_url = "https://api-3t.beta-sandbox.paypal.com/nvp"; // Sandbox testing
+			$paypal_url = "https://api-3t.sandbox.paypal.com/nvp"; // Sandbox testing
 		else
 			$paypal_url = "https://api-3t.paypal.com/nvp"; // Live
 
 		$options = array(
 			'timeout' => 5,
 			'body' => $this->collected_gateway_data,
-			'user-agent' => $this->cart_data['software_name'] . " " . get_bloginfo( 'url' )
+			'user-agent' => $this->cart_data['software_name'] . " " . get_bloginfo( 'url' ),
+			'sslverify' => false,
 		);
 		$response = wp_remote_post( $paypal_url, $options );
 
