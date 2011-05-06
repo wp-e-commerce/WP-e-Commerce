@@ -114,13 +114,14 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 			'city' => $this->cart_data['shipping_address']['city'],
 			'country' => $this->cart_data['shipping_address']['country'],
 			'zip' => $this->cart_data['shipping_address']['post_code'],
+			'state' => $this->cart_data['shipping_address']['state'],
 		);
-		if ($this->cart_data['shipping_address']['state'] != '') {
-			$paypal_vars += array(
-				'state' => $this->cart_data['shipping_address']['state'],
-			);
-		}
-
+		
+		//PayPal doesnt accept the country code of US it must be USA! - this also breaks the send shipping details, 
+		//this will need to be refactored as its messy
+		if ($this->cart_data['shipping_address']['country'] == 'US')
+			$paypal_vars['country'] = 'USA';
+			
 		// Order settings to be sent to paypal
 		$paypal_vars += array(
 			'invoice' => $this->cart_data['session_id']
