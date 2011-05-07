@@ -564,11 +564,11 @@ function wpsc_create_or_update_tables( $debug = false ) {
 
 				$null_match = false;
 				if ( $existing_table_column['Null'] = 'NO' ) {
-					if ( stristr( $table_data['columns'][$column_name], "NOT NULL" ) !== false ) {
+					if ( isset( $table_data['columns'][$column_name] ) && stristr( $table_data['columns'][$column_name], "NOT NULL" ) !== false ) {
 						$null_match = true;
 					}
 				} else {
-					if ( stristr( $table_data['columns'][$column_name], "NOT NULL" ) === false ) {
+					if ( isset( $table_data['columns'][$column_name] ) && stristr( $table_data['columns'][$column_name], "NOT NULL" ) === false ) {
 						$null_match = true;
 					}
 				}
