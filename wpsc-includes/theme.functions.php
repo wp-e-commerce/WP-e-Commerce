@@ -1079,29 +1079,29 @@ function wpsc_products_page( $content = '' ) {
 		return $content;
 	}
 }
+
 function wpsc_all_products_on_page(){
 	global $wp_query,$wpsc_query;
 	do_action('wpsc_swap_the_template');
 	$products_page_id = wpec_get_the_post_id_by_shortcode('[productspage]');
 
-	if($wp_query->query_vars['post_type'] == 'wpsc-product' || isset($wp_query->query_vars['wpsc_product_category']) || ( isset( $wp_query->post ) && $wp_query->post->ID == $products_page_id )){
+	if( get_query_var( 'post_type' ) == 'wpsc-product' || get_query_var( 'wpsc_product_category' ) || ( get_queried_object()->ID == $products_page_id )){
 
-		if (isset($wp_query->post_count) && 1 == $wp_query->post_count && file_exists(STYLESHEETPATH.'/single-wpsc-product.php')){
-			include(STYLESHEETPATH. '/single-wpsc-product.php');
-			exit();
-		}elseif(file_exists(STYLESHEETPATH.'/page.php')){
-			include(STYLESHEETPATH. '/page.php');
-			exit();
-		}elseif(file_exists(STYLESHEETPATH.'/single.php')){
-			include(STYLESHEETPATH. '/single.php');
-			exit();
-		}elseif(file_exists(STYLESHEETPATH.'/index.php')){
-			include(STYLESHEETPATH. '/index.php');
-			exit();		
-		}
+		$templates = array(
+			'page.php',
+			'single.php',
+		);
+		
+		if ( is_single() )
+			array_unshift( $templates, 'single-wpsc-product.php' );
+		
+		// have to pass 'page' as the template type. This is lame, btw, and needs a rewrite in 4.0
+		if ( ! $template = get_query_template( 'page', $templates ) )
+			$template = get_index_template();
+			
+		include( $template );
+		exit;
 	}
-	return;
-
 }
 add_action('template_redirect', 'wpsc_all_products_on_page');
 
