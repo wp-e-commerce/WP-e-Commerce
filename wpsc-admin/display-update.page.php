@@ -76,6 +76,7 @@ function wpsc_display_update_page() {
 				'convert_products_to_posts'      => __( 'Updating Products ...'     , 'wpsc' ),
 				'convert_variation_combinations' => __( 'Updating Child Products...', 'wpsc' ),
 				'update_files'                   => __( 'Updating Product Files...' , 'wpsc' ),
+				'update_purchase_logs'           => __( 'Updating Purchase Logs... ', 'wpsc' ),
 				'create_or_update_tables'        => __( 'Updating Database...'      , 'wpsc' ),
 				'update_database'                => '',
 			);
