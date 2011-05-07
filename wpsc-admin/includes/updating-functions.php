@@ -196,7 +196,7 @@ function wpsc_update_purchase_logs() {
 	global $wpdb;
 	
 	// bump all purchase log status
-	$wpdb->query( "UPDATE " . WPSC_TABLE_PURCHASE_LOGS . " SET processed = processed + 1, plugin_version = '3.8' WHERE plugin_version = '3.7' " );
+	$wpdb->query( "UPDATE " . WPSC_TABLE_PURCHASE_LOGS . " SET processed = processed + 1, plugin_version = '" . WPSC_VERSION . "' WHERE plugin_version IN ('3.6', '3.7') " );
 }
 
 /**
