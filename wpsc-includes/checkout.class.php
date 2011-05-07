@@ -347,59 +347,31 @@ function wpsc_the_checkout_CC_validation() {
 }
 
 function wpsc_the_checkout_CC_validation_class() {
-	$output = '';
-	if ( isset( $_SESSION['wpsc_gateway_error_messages'] ) && $_SESSION['wpsc_gateway_error_messages']['card_number'] != '' ) {
-		$output = 'class="validation-error"';
-	}
-	return $output;
+	return empty( $_SESSION['wspc_gateway_error_messages']['card_number'] ) ? '' : 'class="validation-error"';
 }
 
 function wpsc_the_checkout_CCexpiry_validation_class() {
-	$output = '';
-	if ( $_SESSION['wpsc_gateway_error_messages']['expdate'] != '' ) {
-		$output = 'class="validation-error"';
-	}
-	return $output;
+	return empty( $_SESSION['wpsc_gateway_error_messages']['expdate'] ) ? '' : 'class="validation-error"';
 }
 
 function wpsc_the_checkout_CCexpiry_validation() {
-	$output = '';
-	if ( $_SESSION['wpsc_gateway_error_messages']['expdate'] != '' ) {
-		$output = $_SESSION['wpsc_gateway_error_messages']['expdate'];
-	}
-	return $output;
+	return empty( $_SESSION['wpsc_gateway_error_messages']['expdate'] ) ? '' : $_SESSION['wpsc_gateway_error_messages']['expdate'];
 }
 
 function wpsc_the_checkout_CCcvv_validation_class() {
-	$output = '';
-	if ( $_SESSION['wpsc_gateway_error_messages']['card_code'] != '' ) {
-		$output = 'class="validation-error"';
-	}
-	return $output;
+	return empty( $_SESSION['wpsc_gateway_error_messages']['card_code'] ) ? '' : 'class="validation-error"';
 }
 
 function wpsc_the_checkout_CCcvv_validation() {
-	$output = '';
-	if ( $_SESSION['wpsc_gateway_error_messages']['card_code'] != '' ) {
-		$output = $_SESSION['wpsc_gateway_error_messages']['card_code'];
-	}
-	return $output;
+	return empty( $_SESSION['wpsc_gateway_error_messages']['card_code'] ) ? '' : $_SESSION['wpsc_gateway_error_messages']['card_code'];
 }
 
 function wpsc_the_checkout_CCtype_validation_class() {
-	$output = '';
-	if ( $_SESSION['wpsc_gateway_error_messages']['cctype'] != '' ) {
-		$output = 'class="validation-error"';
-	}
-	return $output;
+	return empty( $_SESSION['wpsc_gateway_error_messages']['cctype'] ) ? '' : 'class="validation-error"';
 }
 
 function wpsc_the_checkout_CCtype_validation() {
-	$output = '';
-	if ( $_SESSION['wpsc_gateway_error_messages']['cctype'] != '' ) {
-		$output = $_SESSION['wpsc_gateway_error_messages']['cctype'];
-	}
-	return $output;
+	return empty( $_SESSION['wpsc_gateway_error_messages']['cctype'] ) ? '' : $_SESSION['wpsc_gateway_error_messages']['cctype'];
 }
 
 function wpsc_checkout_form_is_header() {
@@ -1052,35 +1024,44 @@ function wpsc_gateway_cc_check() {
 function wpsc_gateway_form_fields() {
 	global $wpsc_gateway, $gateway_checkout_form_fields;
 
+	$messages = isset( $_SESSION['wpsc_gateway_error_messages'] ) ? $_SESSION['wpsc_gateway_error_messages'] : array();
+
+	$error = array(
+		'card_number' => empty( $messages['card_number'] ) ? '' : $messages['card_number'],
+		'expdate' => empty( $messages['expdate'] ) ? '' : $messages['expdate'],
+		'card_code' => empty( $messages['card_code'] ) ? '' : $messages['card_code'],
+		'cctype' => empty( $messages['cctype'] ) ? '' : $messages['cctype'],
+	);
+
 	// Match fields to gateway
 	switch ( $wpsc_gateway->gateway['internalname'] ) {
 
 		case 'paypal_pro' : // legacy
 		case 'wpsc_merchant_paypal_pro' :
-			$output = sprintf( $gateway_checkout_form_fields[$wpsc_gateway->gateway['internalname']], wpsc_the_checkout_CC_validation_class(), $_SESSION['wpsc_gateway_error_messages']['card_number'],
-				wpsc_the_checkout_CCexpiry_validation_class(), $_SESSION['wpsc_gateway_error_messages']['expdate'],
-				wpsc_the_checkout_CCcvv_validation_class(), $_SESSION['wpsc_gateway_error_messages']['card_code'],
-				wpsc_the_checkout_CCtype_validation_class(), $_SESSION['wpsc_gateway_error_messages']['cctype']
+			$output = sprintf( $gateway_checkout_form_fields[$wpsc_gateway->gateway['internalname']], wpsc_the_checkout_CC_validation_class(), $error['card_number'],
+				wpsc_the_checkout_CCexpiry_validation_class(), $error['expdate'],
+				wpsc_the_checkout_CCcvv_validation_class(), $error['card_code'],
+				wpsc_the_checkout_CCtype_validation_class(), $error['cctype']
 			);
 			break;
 
 		case 'authorize' :
 		case 'paypal_payflow' :
-			$output = @sprintf( $gateway_checkout_form_fields[$wpsc_gateway->gateway['internalname']], wpsc_the_checkout_CC_validation_class(), $_SESSION['wpsc_gateway_error_messages']['card_number'],
-				wpsc_the_checkout_CCexpiry_validation_class(), $_SESSION['wpsc_gateway_error_messages']['expdate'],
-				wpsc_the_checkout_CCcvv_validation_class(), $_SESSION['wpsc_gateway_error_messages']['card_code']
+			$output = @sprintf( $gateway_checkout_form_fields[$wpsc_gateway->gateway['internalname']], wpsc_the_checkout_CC_validation_class(), $error['card_number'],
+				wpsc_the_checkout_CCexpiry_validation_class(), $error['expdate'],
+				wpsc_the_checkout_CCcvv_validation_class(), $error['card_code']
 			);
 			break;
 
 		case 'eway' :
 		case 'bluepay' :
-			$output = sprintf( $gateway_checkout_form_fields[$wpsc_gateway->gateway['internalname']], wpsc_the_checkout_CC_validation_class(), $_SESSION['wpsc_gateway_error_messages']['card_number'],
-				wpsc_the_checkout_CCexpiry_validation_class(), $_SESSION['wpsc_gateway_error_messages']['expdate']
+			$output = sprintf( $gateway_checkout_form_fields[$wpsc_gateway->gateway['internalname']], wpsc_the_checkout_CC_validation_class(), $error['card_number'],
+				wpsc_the_checkout_CCexpiry_validation_class(), $error['expdate']
 			);
 			break;
 		case 'linkpoint' :
-			$output = sprintf( $gateway_checkout_form_fields[$wpsc_gateway->gateway['internalname']], wpsc_the_checkout_CC_validation_class(), $_SESSION['wpsc_gateway_error_messages']['card_number'],
-				wpsc_the_checkout_CCexpiry_validation_class(), $_SESSION['wpsc_gateway_error_messages']['expdate']
+			$output = sprintf( $gateway_checkout_form_fields[$wpsc_gateway->gateway['internalname']], wpsc_the_checkout_CC_validation_class(), $error['card_number'],
+				wpsc_the_checkout_CCexpiry_validation_class(), $error['expdate']
 			);
 			break;
 
