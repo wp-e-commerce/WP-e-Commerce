@@ -1327,6 +1327,7 @@ function wpsc_checkout_settings() {
 	}
 
 	if ( isset( $_POST['new_form_name'] ) ) {
+		$added = 0;
 		foreach ( $_POST['new_form_name'] as $form_id => $form_name ) {
 			$form_type = $_POST['new_form_type'][$form_id];
 			$form_mandatory = 0;
@@ -1388,7 +1389,7 @@ function wpsc_checkout_settings() {
 	if ( isset( $updated ) ) {
 		$sendback = add_query_arg( 'updated', $updated, $sendback );
 	}
-	if ( isset( $added ) ) {
+	if ( ! empty( $added ) ) {
 		$sendback = add_query_arg( 'added', $added, $sendback );
 	}
 	if ( isset( $_SESSION['wpsc_settings_curr_page'] ) ) {
