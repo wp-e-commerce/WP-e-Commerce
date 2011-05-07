@@ -13,19 +13,47 @@ if(!isset($purchlogs)){
 }
 
 function wpsc_display_sales_logs() {
-   $subpage ='';
-   if(isset($_GET['subpage']))
-      $subpage = $_GET['subpage'];
+	$subpage = empty( $_GET['subpage'] ) ? '' : $_GET['subpage'];
 
-      switch($subpage) {
-         case 'upgrade-purchase-logs':
-            wpsc_upgrade_purchase_logs();
-         break;
+	switch( $subpage ) {
+		case 'upgrade-purchase-logs':
+			wpsc_upgrade_purchase_logs();
+		break;
 
-         default:
-            wpsc_display_sales_log_index();
-         break;
-      }
+		case 'update-purchase-logs-3.8':
+			wpsc_update_purchase_logs_3dot8();
+		break;
+
+		default:
+			wpsc_display_sales_log_index();
+		break;
+	}
+}
+
+function wpsc_update_purchase_logs_3dot8() {
+	if ( _wpsc_purchlogs_need_update() )
+		wpsc_update_purchase_logs();
+	
+	?>
+		<div class="wrap">
+			<h2><?php echo esc_html( __('Sales', 'wpsc') ); ?> </h2>	
+			<p><?php printf( __( 'Your purchase logs have been updated! <a href="%s">Click here</a> to return.'), remove_query_arg( 'subpage' ) ); ?></p>
+		</div>
+	<?php
+}
+
+function _wpsc_purchlogs_need_update() {
+	global $wpdb;
+	
+	if ( get_option( '_wpsc_purchlogs_3.8_updated' ) )
+		return false;
+	
+	$c = $wpdb->get_var( "SELECT COUNT(*) FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE plugin_version IN ('3.6', '3.7')" );
+	if ( $c > 0 )
+		return true;
+	
+	update_option( '_wpsc_purchlogs_3.8_updated', true );
+	return false;
 }
 
  function wpsc_display_sales_log_index() {
@@ -85,6 +113,13 @@ function wpsc_display_sales_logs() {
          if(get_option('wpsc_purchaselogs_fixed')== false || (wpsc_check_uniquenames()) ){ ?>
             <div class='error' style='padding:8px;line-spacing:8px;'><span ><?php printf( __('When upgrading the WP e-Commerce Plugin from 3.6.* to 3.7 it is required that you associate your checkout form fields with the new Purchase Logs system. To do so please <a href="%s">Click Here</a>', 'wpsc'), $fixpage); ?></span></div>
    <?php  }
+
+		if ( _wpsc_purchlogs_need_update() ) {
+			?>
+				<div class='error' style='padding:8px;line-spacing:8px;'><span ><?php printf( __('It has been detected that some of your purchase logs were not updated properly when you upgrade to WP e-Commerce %s. Please <a href="%s">click here</a> to fix this problem.', 'wpsc'), WPSC_VERSION, add_query_arg( 'subpage', 'update-purchase-logs-3.8' ) ); ?></span></div>
+			<?php
+		}
+		
       ///// end of update message section //////?>
       <div id='dashboard-widgets' style='min-width: 825px;'>
          <?php /* end of sidebar start of main column */ ?>
