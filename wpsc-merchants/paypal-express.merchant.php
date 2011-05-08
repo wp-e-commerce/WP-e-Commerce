@@ -331,12 +331,8 @@ function paypal_express_currencyconverter(){
 	$curr=new CURRENCYCONVERTER();
 	if($paypal_currency_code != $local_currency_code) {
 		$paypal_currency_productprice = $curr->convert($_SESSION['paypalAmount'],$paypal_currency_code,$local_currency_code);
-		$paypal_currency_shipping = $curr->convert($local_currency_shipping,$paypal_currency_code,$local_currency_code);
-		$base_shipping = $curr->convert($purchase_log['base_shipping'],$paypal_currency_code, $local_currency_code);
 	} else {
 		$paypal_currency_productprice = $_SESSION['paypalAmount'];
-		$paypal_currency_shipping = $local_currency_shipping;
-		$base_shipping = $purchase_log['base_shipping'];
 	}
 	switch($paypal_currency_code) {
 	    case "JPY":
@@ -352,7 +348,6 @@ function paypal_express_currencyconverter(){
 	    break;
 	}
 	$_SESSION['paypalAmount'] = number_format(sprintf("%01.2f", $paypal_currency_productprice),$decimal_places,'.','');
-	
 }
 
 
@@ -704,9 +699,8 @@ function paypal_hash_call($methodName,$nvpStr)	{
 		'body' => $nvpreq,
 	);
 	
-	$_SESSION['nvpReqArray']=$nvpReqArray;
 	$nvpReqArray=paypal_deformatNVP($nvpreq);
-	
+	$_SESSION['nvpReqArray']=$nvpReqArray;
 	$res = wp_remote_post($API_Endpoint, $options);
 	
 	if ( is_wp_error($res) ) {
@@ -715,7 +709,7 @@ function paypal_hash_call($methodName,$nvpStr)	{
 	} else {
 		$nvpResArray=paypal_deformatNVP($res['body']);
 	}
-
+var_dump($nvpResArray);
 	return $nvpResArray;
 }
 
