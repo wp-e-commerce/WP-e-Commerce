@@ -182,8 +182,10 @@ class wpec_taxes_controller {
             $wpec_base_country = $this->wpec_taxes_retrieve_selected_country();
             $region = $this->wpec_taxes_retrieve_region();
 
+			$taxes_band = isset( $cart_item->meta[0]['wpec_taxes_band'] ) ? $cart_item->meta[0]['wpec_taxes_band'] : null;
+			
             //get the tax percentage rate
-            $tax_rate = $this->wpec_taxes->wpec_taxes_get_included_rate( $cart_item->meta[0]['wpec_taxes_band'], $wpec_base_country, $region );
+            $tax_rate = $this->wpec_taxes->wpec_taxes_get_included_rate( $taxes_band, $wpec_base_country, $region );
 
             //get the taxable price - unit price multiplied by qty
             $taxable_price = $cart_item->unit_price * $cart_item->quantity;
