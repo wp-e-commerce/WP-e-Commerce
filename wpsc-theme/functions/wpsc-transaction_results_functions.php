@@ -24,7 +24,7 @@ function wpsc_transaction_theme() {
 		unset( $_SESSION['wpsc_sessionid'] );
 	}
 
-	if ( 'paypal_certified' == $_SESSION['wpsc_previous_selected_gateway'] )
+	if ( isset( $_SESSION['wpsc_previous_selected_gateway'] ) && 'paypal_certified' == $_SESSION['wpsc_previous_selected_gateway'] )
 		$sessionid = $_SESSION['paypalexpresssessionid'];
 
 	if ( isset( $_REQUEST['eway'] ) && '1' == $_REQUEST['eway'] )
@@ -35,20 +35,26 @@ function wpsc_transaction_theme() {
 		echo $_SESSION['payflow_message'];
 		$_SESSION['payflow_message'] = '';
 	}
-	// Replaces the ugly if else for gateways
-	switch($_SESSION['wpsc_previous_selected_gateway']){
-		case 'paypal_certified':
-		case 'wpsc_merchant_paypal_express':
-			echo $_SESSION['paypalExpressMessage'];
-			if(isset($_SESSION['reshash']['TRANSACTIONTYPE']) && 'expresscheckout' == $_SESSION['reshash']['TRANSACTIONTYPE'])
-				$dont_show_transaction_results = false;
-			else
-				$dont_show_transaction_results = true;		
-		break;
-		case 'dps':
-			$sessionid = decrypt_dps_response();
-		break;
+	
+	$dont_show_transaction_results = false;
+	
+	if ( isset( $_SESSION['wspc_previous_selected_gateway'] ) ) {
+		// Replaces the ugly if else for gateways
+		switch($_SESSION['wpsc_previous_selected_gateway']){
+			case 'paypal_certified':
+			case 'wpsc_merchant_paypal_express':
+				echo $_SESSION['paypalExpressMessage'];
+				if(isset($_SESSION['reshash']['TRANSACTIONTYPE']) && 'expresscheckout' == $_SESSION['reshash']['TRANSACTIONTYPE'])
+					$dont_show_transaction_results = false;
+				else
+					$dont_show_transaction_results = true;		
+			break;
+			case 'dps':
+				$sessionid = decrypt_dps_response();
+			break;
+		}
 	}
+	
 	if(!$dont_show_transaction_results ) {
 		if ( !empty($sessionid) ){
 			$cart_log_id = $wpdb->get_var( "SELECT `id` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `sessionid`= " . $sessionid . " LIMIT 1" );
