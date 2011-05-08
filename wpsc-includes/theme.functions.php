@@ -1080,6 +1080,11 @@ function wpsc_products_page( $content = '' ) {
 	}
 }
 
+function wpsc_thesis_compat( $loop ) {
+	$loop[1] = 'page';
+	return $loop;
+}
+
 function wpsc_all_products_on_page(){
 	global $wp_query,$wpsc_query;
 	do_action('wpsc_swap_the_template');
@@ -1098,7 +1103,9 @@ function wpsc_all_products_on_page(){
 		// have to pass 'page' as the template type. This is lame, btw, and needs a rewrite in 4.0
 		if ( ! $template = get_query_template( 'page', $templates ) )
 			$template = get_index_template();
-			
+		
+		add_filter( 'thesis_custom_loop', 'wpsc_thesis_compat' );
+		
 		include( $template );
 		exit;
 	}
