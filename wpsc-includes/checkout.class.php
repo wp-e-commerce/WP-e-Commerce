@@ -1069,7 +1069,7 @@ function wpsc_gateway_form_fields() {
 
 	if ( isset( $output ) && !empty( $output ) )
 		return $output;
-	else
+	elseif ( isset( $gateway_checkout_form_fields[$wpsc_gateway->gateway['internalname']] ) )
 		return $gateway_checkout_form_fields[$wpsc_gateway->gateway['internalname']];
 }
 
