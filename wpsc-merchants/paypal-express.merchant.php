@@ -709,7 +709,7 @@ function paypal_hash_call($methodName,$nvpStr)	{
 	} else {
 		$nvpResArray=paypal_deformatNVP($res['body']);
 	}
-var_dump($nvpResArray);
+
 	return $nvpResArray;
 }
 
