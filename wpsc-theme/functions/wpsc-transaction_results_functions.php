@@ -38,7 +38,7 @@ function wpsc_transaction_theme() {
 	
 	$dont_show_transaction_results = false;
 	
-	if ( isset( $_SESSION['wspc_previous_selected_gateway'] ) ) {
+	if ( isset( $_SESSION['wpsc_previous_selected_gateway'] ) ) {
 		// Replaces the ugly if else for gateways
 		switch($_SESSION['wpsc_previous_selected_gateway']){
 			case 'paypal_certified':
