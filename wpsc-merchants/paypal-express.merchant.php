@@ -285,9 +285,9 @@ function form_paypal_express() {
 		$store_currency_code = $wpdb->get_var("SELECT `code` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id` IN ('".absint(get_option('currency_type'))."')");
 		$current_currency = get_option('paypal_curcode');
 
-		if(($current_currency == '') && in_array($store_currency_data['code'], $wpsc_gateways['wpsc_merchant_paypal_express']['supported_currencies']['currency_list'])) {
-			update_option('paypal_curcode', $store_currency_data['code']);
-			$current_currency = $store_currency_data['code'];
+		if(($current_currency == '') && in_array($store_currency_code, $wpsc_gateways['wpsc_merchant_paypal_express']['supported_currencies']['currency_list'])) {
+			update_option('paypal_curcode', $store_currency_code);
+			$current_currency = $store_currency_code;
 		}
 		if($current_currency != $store_currency_code) {
 			$output .= "<tr> <td colspan='2'><strong class='form_group'>".__('Currency Converter')."</td> </tr>
