@@ -221,6 +221,7 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 		}
 		$_SESSION["currencyCodeType"] = $currencyCodeType;	  
 		$_SESSION["PaymentType"] = $paymentType;
+
 	    $resArray= paypal_hash_call("SetExpressCheckout", $nvpstr);
 		$ack = strtoupper($resArray["ACK"]);
 		if($ack=="SUCCESS")	{
@@ -473,22 +474,21 @@ function paypal_processingfunctions(){
 				</table>";
 	
 	}else if(isset($_REQUEST['act']) && ($_REQUEST['act']=='do')){
-		session_start();		
-
 		/* Gather the information to make the final call to
 		   finalize the PayPal payment.  The variable nvpstr
 		   holds the name value pairs   */
-		
+
 		$token =urlencode($_REQUEST['token']);
+
 		$paymentAmount =urlencode ($_SESSION['paypalAmount']);
-		$paymentType = urlencode($_SESSION['paymentType']);
+		$paymentType = urlencode($_SESSION['PaymentType']);
 		$currCodeType = urlencode(get_option('paypal_curcode'));
 		$payerID = urlencode($_REQUEST['PayerID']);
 		$serverName = urlencode($_SERVER['SERVER_NAME']);
 		$BN='Instinct_e-commerce_wp-shopping-cart_NZ';	
 		$nvpstr='&TOKEN='.$token.'&PAYERID='.$payerID.'&PAYMENTREQUEST_0_PAYMENTACTION=Sale&PAYMENTREQUEST_0_AMT='.$paymentAmount.'&PAYMENTREQUEST_0_CURRENCYCODE='.$currCodeType.'&IPADDRESS='.$serverName."&BUTTONSOURCE=".$BN ;
 		$resArray=paypal_hash_call("DoExpressCheckoutPayment",$nvpstr);
-		
+
 		/* Display the API response back to the browser.
 		   If the response from PayPal was a success, display the response parameters'
 		   If the response was an error, display the errors received using APIError.php. */
@@ -497,13 +497,12 @@ function paypal_processingfunctions(){
 		if($ack!="SUCCESS"){
 			$location = get_option('transact_url')."&act=error";
 		}else{
-			$transaction_id = $wpdb->escape($resArray['TRANSACTIONID']);
-			switch($resArray['PAYMENTSTATUS']) {
+			$transaction_id = $wpdb->escape($resArray['PAYMENTINFO_0_TRANSACTIONID']);
+			switch($resArray['PAYMENTINFO_0_PAYMENTSTATUS']) {
 				case 'Processed': // I think this is mostly equivalent to Completed
 				case 'Completed':
 				$wpdb->query("UPDATE `".WPSC_TABLE_PURCHASE_LOGS."` SET `processed` = '3' WHERE `sessionid` = ".$sessionid." LIMIT 1");
-	
-				transaction_results($_SESSION['wpsc_sessionid'], false, $transaction_id);
+				transaction_results($sessionid, false, $transaction_id);
 				break;
 		
 				case 'Pending': // need to wait for "Completed" before processing
@@ -606,9 +605,6 @@ function paypal_processingfunctions(){
 				
 				********************************************************/
 				
-				
-				session_start();
-				
 				/* Collect the necessary information to complete the
 				authorization for the PayPal payment
 				*/
@@ -630,6 +626,8 @@ function paypal_processingfunctions(){
 				if(isset($_REQUEST['TOKEN']) && !isset($_REQUEST['PAYERID'])){
 					$_SESSION['paypalExpressMessage']= '<h4>TRANSACTION CANCELED</h4>';
 				}else{
+					if ( ! isset( $resArray['SHIPTOSTREET2'] ) )
+						$resArray['SHIPTOSTREET2'] = '';
 					$output ="
 				       <table width='400' class='paypal_express_form'>
 				        <tr>
