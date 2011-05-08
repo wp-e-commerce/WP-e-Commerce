@@ -1089,14 +1089,20 @@ function wpsc_all_products_on_page(){
 	global $wp_query,$wpsc_query;
 	do_action('wpsc_swap_the_template');
 	$products_page_id = wpec_get_the_post_id_by_shortcode('[productspage]');
-
-	if( get_query_var( 'post_type' ) == 'wpsc-product' || get_query_var( 'wpsc_product_category' ) || ( get_queried_object()->ID == $products_page_id )){
-
-		$templates = array(
-			'page.php',
-			'single.php',
-		);
+	$term = get_query_var( 'wpsc_product_category' );
+	$obj = get_queried_object();
+	$id = isset( $obj->ID ) ? $obj->ID : null;
+	
+	if( get_query_var( 'post_type' ) == 'wpsc-product' || $term || ( $id == $products_page_id )){
 		
+		$templates = array();
+		
+		if ( $term && ! is_single() ) {
+			array_push( $templates, "taxonomy-wpsc_product_category-{$term}", 'taxonomy-wpsc_product_category' );
+		}
+		
+		array_push( $templates, 'page.php', 'single.php' );
+
 		if ( is_single() )
 			array_unshift( $templates, 'single-wpsc-product.php' );
 		
