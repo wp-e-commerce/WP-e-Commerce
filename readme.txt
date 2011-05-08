@@ -4,7 +4,7 @@ Donate link: http://getshopped.org
 Tags: e-commerce, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
 Requires at least: 3.0
 Tested up to: 3.1.1
-Stable tag: 3.8.2
+Stable tag: 3.8.3
 
 WP e-Commerce is a Web 2.0 application designed with usability, aesthetics, and presentation in mind. 
 
@@ -37,6 +37,28 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 
 == Changelog == 
+= 3.8.3 =
+* New: Individual item details are sent to Paypal Express Checkout
+* Change: Automatically reload database update page when PHP maximum execution time is detected
+* Change: Add progress bar and estimated time remaining for database update tasks
+* Change: Themes can now use taxonomy-wpsc_product_category-{$term}.php and taxonomy-wpsc_product_category.php templates, which take precedence over page.php when viewing a product category
+* Change: Paypal Express Checkout API is updated to ver 71.0
+* Fix: Tax is calculated incorrectly when a coupon is used
+* Fix: Update a large database of products and variations take ages
+* Fix: Reloading database update page makes wpec scan the records from the beginning instead of continuing where it left off
+* Fix: Reactivating the plugin causes Fatal Error (PHP Timeout) if there are a lot of attached images (not just post products, but all image attachments)
+* Fix: Purchase logs' statuses are not properly updated when upgrading from 3.7.x
+* Fix: Billing state is not sent to checkout
+* Fix: Country name is truncated when sending to payment gateway
+* Fix: Billing state code is not properly converted before sending to payment gateway
+* Fix: Wrong USA country code is sent to Paypal Standard Payment
+* Fix: Wrong sandbox gateway URL for Paypal Pro
+* Fix: SSLVERIFY error when connecting to Paypal Pro Gateway
+* Fix: Template hierarchy error with child themes
+* Fix: Total amount is not visible when checking out with Paypal Express Checkout
+* Fix: Transaction result page is inaccurate after checking out with Paypal Express Checkout
+* Fix: Incompatibility with Thesis theme's loop when viewing product category, or paginated product listing
+
 = 3.8.2 =
 * Add: Currency display for Google RSS feed
 * Add: Third-party plugins can now filter 'wpsc-tax_rate' to provide their own tax solution
