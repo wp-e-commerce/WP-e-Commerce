@@ -91,7 +91,7 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 			'country' => $this->cart_data['shipping_address']['country'],
 			'zip' => $this->cart_data['shipping_address']['post_code']
 			);
-		if($this->cart_data['shipping_address']['state'] != '') {
+		if( ! empty( $this->cart_data['shipping_address']['state'] ) ) {
 			$paypal_vars += array(
 				'state' => $this->cart_data['shipping_address']['state']
 			);
@@ -187,12 +187,12 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 			'PAYMENTREQUEST_0_SHIPTOZIP'			=> $this->cart_data['shipping_address']['post_code'],
 		);
 
-		if( '' != $this->cart_data['shipping_address']['state']){
+		if( ! empty( $this->cart_data['shipping_address']['state'] ) ){
 			$data += array(
 				'PAYMENTREQUEST_0_SHIPTOSTATE' => $this->cart_data['shipping_address']['state']
 				);
 		}
-		
+
 		$i = 0;
 		$item_total = 0;
 		$tax_total = 0;
