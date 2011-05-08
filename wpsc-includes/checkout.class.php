@@ -433,8 +433,8 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 		$output = "<input type='hidden' name='wpsc_ajax_actions' value='update_location' />";
 		$js = "  onchange='submit_change_country();'";
 	}
-	$selected_country = $_SESSION['wpsc_delivery_country'];
-	$selected_region = $_SESSION['wpsc_delivery_region'];
+	$selected_country = isset( $_SESSION['wpsc_delivery_country'] ) ? $_SESSION['wpsc_delivery_country'] : '';
+	$selected_region = isset( $_SESSION['wpsc_delivery_region'] ) ? $_SESSION['wpsc_delivery_region'] : '';
 
 	if ( empty( $selected_country ) )
 		$selected_country = esc_attr( get_option( 'base_country' ) );
