@@ -24,7 +24,7 @@ function wpsc_transaction_theme() {
 		unset( $_SESSION['wpsc_sessionid'] );
 	}
 
-	if ( isset( $_SESSION['wpsc_previous_selected_gateway'] ) && 'paypal_certified' == $_SESSION['wpsc_previous_selected_gateway'] )
+	if ( isset( $_SESSION['wpsc_previous_selected_gateway'] ) && in_array( $_SESSION['wpsc_previous_selected_gateway'], array( 'paypal_certified', 'wpsc_merchant_paypal_express' ) ) )
 		$sessionid = $_SESSION['paypalexpresssessionid'];
 
 	if ( isset( $_REQUEST['eway'] ) && '1' == $_REQUEST['eway'] )
@@ -44,7 +44,8 @@ function wpsc_transaction_theme() {
 			case 'paypal_certified':
 			case 'wpsc_merchant_paypal_express':
 				echo $_SESSION['paypalExpressMessage'];
-				if(isset($_SESSION['reshash']['TRANSACTIONTYPE']) && 'expresscheckout' == $_SESSION['reshash']['TRANSACTIONTYPE'])
+
+				if(isset($_SESSION['reshash']['PAYMENTINFO_0_TRANSACTIONTYPE']) && 'expresscheckout' == $_SESSION['reshash']['PAYMENTINFO_0_TRANSACTIONTYPE'])
 					$dont_show_transaction_results = false;
 				else
 					$dont_show_transaction_results = true;		
