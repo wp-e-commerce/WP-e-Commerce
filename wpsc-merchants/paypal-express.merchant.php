@@ -72,10 +72,10 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 		
 		if ('sandbox'  == get_option('paypal_certified_server_type')) {
 			$API_Endpoint = "https://api-3t.sandbox.paypal.com/nvp";
-			$PAYPAL_URL = "https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&useraction=commit&token=";
+			$PAYPAL_URL = "https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&token=";
 		}else{
 			$API_Endpoint = "https://api-3t.paypal.com/nvp";
-			$PAYPAL_URL = "https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&useraction=commit&token=";
+			$PAYPAL_URL = "https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=";
 		}
 	
 		//$collected_gateway_data
