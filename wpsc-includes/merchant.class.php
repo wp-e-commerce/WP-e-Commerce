@@ -282,7 +282,23 @@ class wpsc_merchant {
 	 * go to transaction results, if this changes and you extend this, your merchant module may go to the wrong place
 	 */
 	function go_to_transaction_results( $session_id ) {
-		global $wpdb;
+		global $wpdb, $purchase_log;
+		
+		//Now to do actions once the payment has been attempted
+		switch ($purchase_log['processed']) {
+			case 3:
+				// payment worked
+				do_action('wpsc_payment_successful');
+				break;
+			case 1:
+				// payment declined
+				do_action('wpsc_payment_failed');
+				break;
+			case 2:
+				// something happened with the payment
+				do_action('wpsc_payment_incomplete');
+				break;
+		}
 
 		$transaction_url_with_sessionid = add_query_arg( 'sessionid', $session_id, get_option( 'transact_url' ) );
 		wp_redirect( $transaction_url_with_sessionid );
