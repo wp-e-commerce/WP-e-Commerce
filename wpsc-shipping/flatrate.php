@@ -101,12 +101,14 @@ class flatrate {
 
 		global $wpdb, $wpsc_cart;
 
+		$country = '';
+
 		if (isset($_POST['country'])) {
 
 			$country = $_POST['country'];
 			$_SESSION['wpsc_delivery_country'] = $country;
 
-		} else {
+		} elseif ( isset( $_SESSION['wpsc_delivery_country'] ) ) {
 
 			$country = $_SESSION['wpsc_delivery_country'];
 
@@ -128,8 +130,8 @@ class flatrate {
 					}
 
 				}
-
-				if (strlen($flatrates[$results]) > 0) return array("Flat Rate"=>(float)$flatrates[$results]);
+				
+				if ( ! empty( $flatrates[$results] ) ) return array("Flat Rate"=>(float)$flatrates[$results]);
 			}
 
 		} else {
