@@ -72,10 +72,10 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 		
 		if ('sandbox'  == get_option('paypal_certified_server_type')) {
 			$API_Endpoint = "https://api-3t.sandbox.paypal.com/nvp";
-			$PAYPAL_URL = "https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&token=";
+			$PAYPAL_URL = "https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&useraction=commit&token=";
 		}else{
 			$API_Endpoint = "https://api-3t.paypal.com/nvp";
-			$PAYPAL_URL = "https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=";
+			$PAYPAL_URL = "https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&useraction=commit&token=";
 		}
 	
 		//$collected_gateway_data
@@ -146,6 +146,25 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 
 	}
 	
+	function format_price( $price ) {
+		$paypal_currency_code = get_option('paypal_curcode', 'US');
+
+		switch($paypal_currency_code) {
+		    case "JPY":
+		    $decimal_places = 0;
+		    break;
+
+		    case "HUF":
+		    $decimal_places = 0;
+		    break;
+
+		    default:
+		    $decimal_places = 2;
+		    break;
+		}
+		return number_format(sprintf("%01.2f", $price),$decimal_places,'.','');
+	}
+	
 	function CallShortcutExpressCheckout( $paymentAmount, $currencyCodeType, $paymentType, $returnURL, $cancelURL) {
 		global $wpdb;
 	
@@ -167,12 +186,32 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 			'PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE' => $this->cart_data['shipping_address']['country'],
 			'PAYMENTREQUEST_0_SHIPTOZIP'			=> $this->cart_data['shipping_address']['post_code'],
 		);
+
 		if( '' != $this->cart_data['shipping_address']['state']){
 			$data += array(
 				'PAYMENTREQUEST_0_SHIPTOSTATE' => $this->cart_data['shipping_address']['state']
 				);
-		}	
-
+		}
+		
+		$i = 0;
+		$item_total = 0;
+		$tax_total = 0;
+		$shipping_total = 0;
+		foreach ( $this->cart_items as $cart_item ) {
+			$data["L_PAYMENTREQUEST_0_NAME{$i}"] = $cart_item['name'];
+			$data["L_PAYMENTREQUEST_0_AMT{$i}"] = $cart_item['price'];
+			$data["L_PAYMENTREQUEST_0_NUMBER{$i}"] = $i;
+			$data["L_PAYMENTREQUEST_0_QTY{$i}"] = $cart_item['quantity'];
+			$item_total += $cart_item['price'] * $cart_item['quantity'];
+			$shipping_total += $cart_item['shipping'];
+			$i ++;
+		}
+		
+		$data["PAYMENTREQUEST_0_ITEMAMT"] = $this->format_price( $item_total );
+		$data["PAYMENTREQUEST_0_SHIPPINGAMT"] = $this->format_price( $this->cart_data['base_shipping'] + $shipping_total );
+		if ( ! wpsc_tax_isincluded() )
+			$data["PAYMENTREQUEST_0_TAXAMT"] = $this->cart_data['cart_tax'];
+		
 		if(count($data) >= 4) {
 			$temp_data = array();
 			foreach($data as $key => $value)
@@ -594,11 +633,11 @@ function paypal_processingfunctions(){
 					$output ="
 				       <table width='400' class='paypal_express_form'>
 				        <tr>
-				            <td align='left' class='firstcol'><b>" . __('Error Number:', 'wpsc' ) . "Order Total:</b></td>
+				            <td align='left' class='firstcol'><b>Order Total:</b></td>
 				            <td align='left'>" . wpsc_currency_display($_SESSION['paypalAmount']) . "</td>
 				        </tr>
 						<tr>
-						    <td align='left'><b>" . __('Shipping Address:', 'wpsc' ) . " </b></td>
+						    <td align='left' colspan='2'><b>" . __('Shipping Address:', 'wpsc' ) . " </b></td>
 						</tr>
 				        <tr>
 				            <td align='left' class='firstcol'>
@@ -635,7 +674,7 @@ function paypal_processingfunctions(){
 				            <td align='left'>".$resArray['SHIPTOCOUNTRYNAME']."</td>
 				        </tr>
 				        <tr>
-				            <td>";
+				            <td colspan='2'>";
 					
 					$output .= "<form action=".get_option('transact_url')." method='post'>\n";
 					$output .= "	<input type='hidden' name='totalAmount' value='".wpsc_cart_total(false)."' />\n";
@@ -671,10 +710,10 @@ function paypal_hash_call($methodName,$nvpStr)	{
 	$version = 71;			
 	if ( 'sandbox' == get_option('paypal_certified_server_type') ) {
 		$API_Endpoint = "https://api-3t.sandbox.paypal.com/nvp";
-		$paypal_certified_url  = "https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&token=";
+		$paypal_certified_url  = "https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&useraction=commit&token=";
 	} else {
 		$API_Endpoint = "https://api-3t.paypal.com/nvp";
-		$paypal_certified_url  = "https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=";
+		$paypal_certified_url  = "https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&useraction=commit&token=";
 	}
 
 	$USE_PROXY = false;
