@@ -1098,7 +1098,7 @@ function wpsc_all_products_on_page(){
 		$templates = array();
 		
 		if ( $term && ! is_single() ) {
-			array_push( $templates, "taxonomy-wpsc_product_category-{$term}", 'taxonomy-wpsc_product_category' );
+			array_push( $templates, "taxonomy-wpsc_product_category-{$term}.php", 'taxonomy-wpsc_product_category.php' );
 		}
 		
 		array_push( $templates, 'page.php', 'single.php' );
