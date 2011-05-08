@@ -463,18 +463,24 @@ jQuery(document).ready(
 				}
 			}
 			);
+		
+		function selectCustomGateway() {
+			var parent_div = jQuery(this).parents("div.custom_gateway");
 
+			jQuery('table input',parent_div).attr( 'disabled', false);
+			jQuery('table',parent_div).show();
+			jQuery("div.custom_gateway table").not(jQuery('table',parent_div)).hide();
+			jQuery("div.custom_gateway table input").not(jQuery('table input',parent_div)).attr( 'disabled', true);
+		}
+		
 		jQuery("input.custom_gateway").change(
 			function() {
 				if(jQuery(this).attr('checked') == true) {
-					parent_div = jQuery(this).parents("div.custom_gateway");
-					jQuery('table input',parent_div).attr( 'disabled', false);
-					jQuery('table',parent_div).css('display', 'block');
-					jQuery("div.custom_gateway table").not(jQuery('table',parent_div)).css('display', 'none');
-
-					jQuery("div.custom_gateway table input").not(jQuery('table input',parent_div)).attr( 'disabled', true);
+					selectCustomGateway.call(this);
 				}
 			}
 			);
+			
+		selectCustomGateway.call(jQuery('input.custom_gateway:checked'));
 	}
 	);
