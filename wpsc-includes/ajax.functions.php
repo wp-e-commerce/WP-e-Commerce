@@ -530,7 +530,7 @@ function wpsc_submit_checkout() {
 	}
 	$selectedCountry = $wpdb->get_results( "SELECT id, country FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE isocode='" . $wpdb->escape( $_SESSION['wpsc_delivery_country'] ) . "'", ARRAY_A );
 	foreach ( $wpsc_cart->cart_items as $cartitem ) {
-		if($cartitem->meta[0]['no_shipping'] == 1) continue;
+		if( ! empty( $cartitem->meta[0]['no_shipping'] ) ) continue;
 		$categoriesIDs = $cartitem->category_id_list;
 		foreach ( (array)$categoriesIDs as $catid ) {
 			if ( is_array( $catid ) )
