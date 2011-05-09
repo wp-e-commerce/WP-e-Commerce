@@ -155,7 +155,7 @@ function wpsc_options_shipping() {
 								<td>&nbsp;</td>
 								<td colspan="2">
 									<?php
-									$value = esc_attr_e( get_option( 'shipping_discount_value' ) );
+									$value = esc_attr ( get_option( 'shipping_discount_value' ) );
 									?>
 									<div <?php echo $shipping_discount_settings; ?> id='shipping_discount_value'>
 
