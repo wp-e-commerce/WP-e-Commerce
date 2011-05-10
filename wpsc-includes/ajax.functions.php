@@ -639,7 +639,7 @@ function wpsc_submit_checkout() {
 		
 		// submit to gateway
 		$current_gateway_data = &$wpsc_gateways[$submitted_gateway];		
-		if ( $current_gateway_data['api_version'] >= 2.0 ) {
+		if ( isset( $current_gateway_data['api_version'] ) && $current_gateway_data['api_version'] >= 2.0 ) {
 			$merchant_instance = new $current_gateway_data['class_name']( $purchase_log_id );
 			$merchant_instance->construct_value_array();
 			$merchant_instance->submit();
@@ -647,13 +647,13 @@ function wpsc_submit_checkout() {
 			$gateway_used = $current_gateway_data['internalname'];
 			$wpdb->update( WPSC_TABLE_PURCHASE_LOGS, array(
 			'gateway' => $gateway_used
-			), array( 'id' => $log_id ) );
+			), array( 'id' => $purchase_log_id ) );
 			$current_gateway_data['function']( $separator, $sessionid );
 		} elseif ( ($current_gateway_data['internalname'] == 'google') && ($current_gateway_data['internalname'] == $submitted_gateway) ) {
 			$gateway_used = $current_gateway_data['internalname'];
 			$wpdb->update( WPSC_TABLE_PURCHASE_LOGS, array(
 			'gateway' => $gateway_used
-			), array( 'id' => $log_id ) );
+			), array( 'id' => $purchase_log_id ) );
 			$_SESSION['gateway'] = 'google';
 			wp_redirect(get_option( 'shopping_cart_url' ));
 		}
