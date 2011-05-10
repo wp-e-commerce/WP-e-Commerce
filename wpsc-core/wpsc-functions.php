@@ -397,18 +397,29 @@ function wpsc_serialize_shopping_cart() {
 }
 add_action( 'shutdown', 'wpsc_serialize_shopping_cart' );
 
+add_filter( 'query_string', 'wpsc_filter_query_string' );
+
+/**
+ * Filter query string to make sure no 404 error is thrown for products-page's sub pages
+ *
+ * @param string $q Query String
+ */
+function wpsc_filter_query_string( $q ) {
+	global $wpsc_page_titles;
+	parse_str( $q, $args );
+	if ( ! empty( $args['wpsc_product_category'] ) && in_array( $args['wpsc_product_category'], $wpsc_page_titles ) ) {
+		$q = "pagename={$wpsc_page_titles['products']}/{$args['wpsc_product_category']}";
+	}
+	return $q;
+}
+
 /**
  * wpsc_start_the_query
  */
 function wpsc_start_the_query() {
 	global $wpsc_page_titles, $wp_query, $wpsc_query, $wpsc_query_vars;
 	$is_404 = false;
-	if(isset($wp_query->query_vars['term']) && in_array($wp_query->query_vars['term'], $wpsc_page_titles)){
-		$wp_query = new WP_Query( 'pagename='.$wpsc_page_titles['products'].'/'.$wp_query->query_vars['term'] );
-		global $post;
-		$post = $wp_query->post;
-		setup_postdata( $post );
-	}elseif ( null == $wpsc_query ) {
+	if ( null == $wpsc_query ) {
 		if( ( $wp_query->is_404 && !empty($wp_query->query_vars['paged']) ) || (isset( $wp_query->query['pagename']) && strpos( $wp_query->query['pagename'] , $wpsc_page_titles['products'] ) !== false ) && !isset($wp_query->post)){
 			//what was this for?
 			global $post;
