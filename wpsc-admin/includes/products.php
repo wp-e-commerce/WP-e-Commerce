@@ -253,7 +253,7 @@ function wpsc_product_row(&$product, $parent_product = null) {
 		break;
 
 		case 'weight' :
-
+		
 			$product_data['meta'] = array();
 			$product_data['meta'] = get_post_meta($product->ID, '');
 				foreach($product_data['meta'] as $meta_name => $meta_value) {
@@ -262,8 +262,9 @@ function wpsc_product_row(&$product, $parent_product = null) {
 		$product_data['transformed'] = array();
 		if(!isset($product_data['meta']['_wpsc_product_metadata']['weight'])) $product_data['meta']['_wpsc_product_metadata']['weight'] = "";
 		if(!isset($product_data['meta']['_wpsc_product_metadata']['weight_unit'])) $product_data['meta']['_wpsc_product_metadata']['weight_unit'] = "";
-
-		$product_data['transformed']['weight'] = wpsc_convert_weight($product_data['meta']['_wpsc_product_metadata']['weight'], "pound", $product_data['meta']['_wpsc_product_metadata']['weight_unit'], true);
+		
+		$product_data['transformed']['weight'] = wpsc_convert_weight($product_data['meta']['_wpsc_product_metadata']['weight'], "pound", $product_data['meta']['_wpsc_product_metadata']['weight_unit'], false);
+		
 			$weight = $product_data['transformed']['weight'];
 			if($weight == ''){
 				$weight = '0';
