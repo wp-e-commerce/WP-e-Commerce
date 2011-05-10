@@ -44,7 +44,7 @@ if ( ! get_option( 'wpsc_needs_update', false ) ) {
 
 	// There weren't any products, so mark the update as complete
 	} else {	
-		update_option( 'wpsc_version', '3.8' );
+		update_option( 'wpsc_version', WPSC_VERSION );
 	}
 }
 
