@@ -1,11 +1,11 @@
 // This is the wp-e-commerce front end javascript "library"
 
 jQuery(document).ready(function(){
+		jQuery('td.hidden_alerts img').each(function(){
+			var t = jQuery(this);
+			t.appendTo(t.parents('tr').find('td.column-title strong'));
+		});
 
-        jQuery('table.widefat tbody tr').each(function(){
-            id = jQuery(this).attr("id");
-            jQuery('#' + id + ' td.hidden_alerts img').appendTo('#' + id + ' td.column-title strong');
-        });
         jQuery('label[for=wpsc-variationdiv-hide]').css('display', 'none');
 
 	jQuery('a.update_variations_action').click(function(){
@@ -410,7 +410,6 @@ jQuery(document).ready(function(){
 			jQuery(".wpsc-row-actions", this).css("visibility", "hidden");
 		}
 		);
-
 
 	jQuery('tr.wpsc_trackingid_row').hide();
 
