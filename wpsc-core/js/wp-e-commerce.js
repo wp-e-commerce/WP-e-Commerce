@@ -506,7 +506,7 @@ jQuery(document).ready(function(){
 
 //Javascript for variations: bounce the variation box when nothing is selected and return false for add to cart button.
 jQuery(document).ready(function(){
-	jQuery('.productcol, .textcol').each(function(){
+	jQuery('.productcol, .textcol, .product_grid_item').each(function(){
 		jQuery('.wpsc_buy_button', this).click(function(){
 			jQuery(this).parents('form:first').find('select.wpsc_select_variation').each(function(){
 				if(jQuery(this).val() <= 0){
