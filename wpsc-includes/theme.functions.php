@@ -1091,7 +1091,8 @@ function wpsc_all_products_on_page(){
 	$products_page_id = wpec_get_the_post_id_by_shortcode('[productspage]');
 	$term = get_query_var( 'wpsc_product_category' );
 	$tax_term = get_query_var ('product_tag' );
-	$obj = get_queried_object();
+	$obj = $wp_query->get_queried_object();
+
 	$id = isset( $obj->ID ) ? $obj->ID : null;
 	
 	if( get_query_var( 'post_type' ) == 'wpsc-product' || $term || $tax_term || ( $id == $products_page_id )){
