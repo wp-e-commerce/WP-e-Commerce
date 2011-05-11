@@ -280,6 +280,7 @@ function _wpsc_purchlogs_need_update() {
                </select></p>
                </form>
          </div>
+		 <br style="clear: both;">
             <?php wpsc_purchlogs_custom_fields(); ?>
 
 
