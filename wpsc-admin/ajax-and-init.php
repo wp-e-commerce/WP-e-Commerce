@@ -921,6 +921,7 @@ function wpsc_submit_options( $selected='' ) {
 	}
 
 	$sendback = add_query_arg( 'page', 'wpsc-settings', $sendback );
+	$sendback = apply_filters( 'wpsc_settings_redirect_url', $sendback );
 	wp_redirect( $sendback );
 	exit();
 }
