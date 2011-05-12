@@ -117,11 +117,10 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 			'state' => $this->cart_data['shipping_address']['state'],
 		);
 		
-		//PayPal doesnt accept the country code of US it must be USA! - this also breaks the send shipping details, 
-		//this will need to be refactored as its messy
-		if ($this->cart_data['shipping_address']['country'] == 'US')
-			$paypal_vars['country'] = 'USA';
-			
+		if ( $paypal_vars['country'] == 'UK' ) {
+			$paypal_vars['country'] = 'GB';
+		}
+
 		// Order settings to be sent to paypal
 		$paypal_vars += array(
 			'invoice' => $this->cart_data['session_id']
@@ -296,6 +295,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 
 			$redirect = get_option('paypal_multiple_url')."?".$gateway_values;
 		}
+
 		if (defined('WPSC_ADD_DEBUG_PAGE') && WPSC_ADD_DEBUG_PAGE) {
 			echo "<a href='".esc_url($redirect)."'>Test the URL here</a>";
 			echo "<pre>".print_r($this->collected_gateway_data,true)."</pre>";
