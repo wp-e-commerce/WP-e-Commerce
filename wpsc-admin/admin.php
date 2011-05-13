@@ -93,20 +93,9 @@ add_filter('set-screen-option', 'wpsc_set_screen_option', 99, 3);
  */
 function wpsc_drag_and_drop_ordering($per_page, $post_type){
 	global $wpdb; 
-	if('wpsc-product' == $post_type ){
-		if( 'dragndrop' == get_option('wpsc_sort_by')){	
-			$per_page = $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->posts} WHERE `post_type`='wpsc-product' AND `post_parent`=0");
-		}else{
-		$_post_type = str_replace('-', '_', $post_type);
-		$edit_per_page = 'edit_' . $_post_type . '_per_page';
-		$per_page = ((int) get_user_option( $edit_per_page ))?(int) get_user_option( $edit_per_page ):$per_page;
-		}
-		
-		return $per_page;
-	}else{
-		return $per_page;
-	}
-
+	if ( 'wpsc-product' == $post_type && 'dragndrop' == get_option( 'wpsc_sort_by' ) && $count = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->posts} WHERE `post_type`='wpsc-product' AND `post_parent`=0" ) )
+		$per_page = $count;
+	return $per_page;
 }
 add_filter( 'request', 'wpsc_query_vars_product_list' );
 add_filter('edit_posts_per_page' , 'wpsc_drag_and_drop_ordering', 10, 2 );
