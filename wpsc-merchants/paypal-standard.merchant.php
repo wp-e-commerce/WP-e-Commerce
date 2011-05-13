@@ -68,10 +68,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 	function _construct_value_array($aggregate = false) {
 		global $wpdb;
 		$paypal_vars = array();
-		$add_tax = true;
-		if(get_option('wpec_taxes_inprice') == 'inclusive')
-			$add_tax = false;
-			
+		$add_tax = ! wpsc_tax_isincluded();		
 
 		// Store settings to be sent to paypal
 		$paypal_vars += array(
@@ -208,7 +205,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 			);
 			$handling = $this->cart_data['base_shipping'];
 			if($add_tax)
-				$handling += $this->cart_data['cart_tax'];
+				$paypal_vars['tax_cart'] = $this->cart_data['cart_tax'];
 			
 			// Set base shipping
 			$paypal_vars += array(
