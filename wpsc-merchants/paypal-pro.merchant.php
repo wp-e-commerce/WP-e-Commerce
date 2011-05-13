@@ -95,30 +95,28 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 		// Ordered Items
 
 		// Cart Item Data
-		$i = $item_total = $tax_total = 0;
+		$i = $item_total = 0;
+		$tax_total = wpsc_tax_isincluded() ? 0 : $this->cart_data['cart_tax'];
 
 		$shipping_total = $this->cart_data['base_shipping'];
 
 		foreach ( $this->cart_items as $cart_row ) {
-			$cart_items['L_NAME' . $i] = $cart_row['name'];
-			$cart_items['L_AMT' . $i] = $this->format_price( $cart_row['price'] );
-			$cart_items['L_NUMBER' . $i] = $i;
-			$cart_items['L_QTY' . $i] = $cart_row['quantity'];
-			$cart_items['L_TAXAMT' . $i] = $this->format_price( 0 );
-
+			$data['L_NAME' . $i] = $cart_row['name'];
+			$data['L_AMT' . $i] = $this->format_price( $cart_row['price'] );
+			$data['L_NUMBER' . $i] = $i;
+			$data['L_QTY' . $i] = $cart_row['quantity'];
+			
+			$shipping_total += $cart_row['shipping'];
 			$item_total += $this->format_price( $cart_row['price'] * $cart_row['quantity'] );
-			$tax_total += $this->format_price( $cart_row['tax'] );
-			++$i;
+
+			$i++;
 		}
 
-		$data = array_merge( $data, $cart_items );
 		// Cart totals	
 		$data['ITEMAMT'] = number_format( $item_total, 2 );
 		$data['SHIPPINGAMT'] = number_format( $shipping_total, 2 );
 		$data['TAXAMT'] = number_format( $tax_total, 2 );
-
 		$data['AMT'] = number_format( $item_total + $tax_total + $shipping_total, 2 );
-
 		$this->collected_gateway_data = $data;
 	}
 
