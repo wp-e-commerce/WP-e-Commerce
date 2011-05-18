@@ -141,29 +141,22 @@ class wpsc_merchant {
 				continue;
 
 			switch ( $collected_form_row['unique_name'] ) {
-				case 'billingcountry' :
-					$country = maybe_unserialize( $collected_form_row['value'] );
-					$address_data[$address_data_set][$address_key] = $country[0];
-
-					if ( is_array( $country ) && !empty( $country[1] ) )
-						$address_data['billing']['state'] = wpsc_get_state_by_id( $country[1], 'code' );
-
-					break;
-					
-				case 'shippingcountry' :
+				case 'billingcountry':
+				case 'shippingcountry':
 					$country = maybe_unserialize( $collected_form_row['value'] );
 					
 					if ( is_array( $country ) ) {
-						$address_data['shipping']['state'] = wpsc_get_state_by_id( $country[1], 'code' );
+						$address_data[$address_data_set]['state'] = wpsc_get_state_by_id( $country[1], 'code' );
 						$country = $country[0];
 					}
 					
 					$address_data[$address_data_set][$address_key] = $country;
 					break;
-					
-				case 'shippingstate' :
-					if ( is_numeric( $collected_form_row['value'] ) && empty( $address_data['shipping']['state'] ) )
-						$address_data['shipping']['state'] = wpsc_get_state_by_id( $collected_form_row['value'], 'code' );
+				
+				case 'billingstate':
+				case 'shippingstate':
+					if ( is_numeric( $collected_form_row['value'] ) && empty( $address_data[$address_data_set]['state'] ) )
+						$address_data[$address_data_set]['state'] = wpsc_get_state_by_id( $collected_form_row['value'], 'code' );
 					break;
 
 				default :
