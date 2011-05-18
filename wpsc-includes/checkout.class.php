@@ -843,31 +843,52 @@ class wpsc_checkout {
 	function save_forms_to_db( $purchase_id ) {
 		global $wpdb;
 		
+		// needs refactoring badly
+		$shipping_state_id = $wpdb->get_var( "SELECT `" . WPSC_TABLE_CHECKOUT_FORMS . "`.`id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `unique_name` = 'shippingstate' " );
+		$billing_state_id = $wpdb->get_var( "SELECT `" . WPSC_TABLE_CHECKOUT_FORMS . "`.`id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `unique_name` = 'billingstate' " );
+		$shipping_state = $billing_state = '';
+		
 		foreach ( $this->checkout_items as $form_data ) {
+			if ( $form_data->type == 'heading' )
+				continue;
+			
 			$value = '';
 			if( isset( $_POST['collected_data'][$form_data->id] ) )
 				$value = $_POST['collected_data'][$form_data->id];
 			if ( empty( $value ) && isset( $form_data->value ) )
 				$value = $form_data->value;
-
-
-			if ( $form_data->type != 'heading' ) {
-				if ( is_array( $value ) ) {
-					if ( in_array( $form_data->unique_name, array( 'billingcountry' , 'shippingcountry') ) ) {
-						$value = serialize($value);
-						$prepared_query = $wpdb->prepare( "INSERT INTO `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` ( `log_id` , `form_id` , `value` ) VALUES ( %d, %d, %s)", $purchase_id, $form_data->id, $value );
-					} else {
-						foreach ( (array)$value as $v ) {
-							$prepared_query = $wpdb->prepare( "INSERT INTO `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` ( `log_id` , `form_id` , `value` ) VALUES ( %d, %d, %s)", $purchase_id, $form_data->id, $v );
-						}
-					}
-				} else {
+			
+			if ( $form_data->unique_name == 'billingstate' ) {
+				$billing_state = $value;
+				continue;
+			} elseif( $form_data->unique_name == 'shippingstate' ) {
+				$shipping_state = $value;
+				continue;
+			} elseif ( is_array( $value ) ) {
+				if ( in_array( $form_data->unique_name, array( 'billingcountry' , 'shippingcountry' ) ) ) {
+					if ( isset( $value[1] ) )
+						if ( $form_data->unique_name == 'billingcountry' )
+							$billing_state = $value[1];
+						else
+							$shipping_state = $value[1];
+							
+					$value = $value[0];
 					$prepared_query = $wpdb->prepare( "INSERT INTO `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` ( `log_id` , `form_id` , `value` ) VALUES ( %d, %d, %s)", $purchase_id, $form_data->id, $value );
+				} else {
+					foreach ( (array)$value as $v ) {
+						$prepared_query = $wpdb->prepare( "INSERT INTO `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` ( `log_id` , `form_id` , `value` ) VALUES ( %d, %d, %s)", $purchase_id, $form_data->id, $v );
+					}
 				}
-				
-				$wpdb->query( $prepared_query );
+			} else {
+				$prepared_query = $wpdb->prepare( "INSERT INTO `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` ( `log_id` , `form_id` , `value` ) VALUES ( %d, %d, %s)", $purchase_id, $form_data->id, $value );
 			}
+			
+			$wpdb->query( $prepared_query );
 		}
+		
+		// update the states
+		$wpdb->query( $wpdb->prepare( "INSERT INTO `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` ( `log_id` , `form_id` , `value` ) VALUES ( %d, %d, %s)", $purchase_id, $shipping_state_id, $shipping_state ) );
+		$wpdb->query( $wpdb->prepare( "INSERT INTO `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` ( `log_id` , `form_id` , `value` ) VALUES ( %d, %d, %s)", $purchase_id, $billing_state_id, $billing_state ) );
 	}
 
 	/**
