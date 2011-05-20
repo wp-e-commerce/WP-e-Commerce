@@ -305,7 +305,7 @@ function wpsc_options_presentation() {
 					else
 						$list_view_quantity_value2 = 'checked="checked"';                
 					?>
-					<th score="row">
+					<th scope="row">
 						<?php _e('Show Stock Availability','wpsc'); ?>
 					</th>
 					<td>
