@@ -4,6 +4,10 @@ abstract class WPSC_Payment_Gateway
 {
 	protected static $gateways = array();
 	
+	public static function is_registered( $gateway ) {
+		return ! empty( self::$gateways[$gateway] );
+	}
+	
 	/**
 	 * Automatically scan a directory for payment gateways and load the classes
 	 *
@@ -42,7 +46,9 @@ abstract class WPSC_Payment_Gateway
 		
 		if ( ! class_exists( $classname ) )
 			return new WP_Error( 'wpsc_invalid_payment_gateway', __( 'Invalid payment gateway file.' ) );
-
+		
+		self::$gateways[$filename] = $classname;
+		
 		return true;
 	}
 	
