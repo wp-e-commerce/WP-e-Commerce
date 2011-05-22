@@ -52,6 +52,12 @@ abstract class WPSC_Payment_Gateway
 		return true;
 	}
 	
+	public static function get_gateways() {
+		return self::$gateways;
+	}
+	
+	abstract public static function get_title();
+	
 	protected $params;
 	
 	public function __construct( $params = array() ) {
