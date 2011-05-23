@@ -630,22 +630,27 @@ function wpsc_user_details() {
 					}
 						
 					switch ($form_field['unique_name']){
+						case 'shippingcountry':
+						case 'billingcountry':
+						$country = unserialize($form_field['value']);
+							 if(is_array($country))
+							 	$country = $country[0];
+							 else
+							 	$country = $form_field['value'];
+					
+							 echo "  <tr><td>" . $form_field['name'] . ":</td><td>".$country ."</td></tr>";
+							break;
+							
+						case 'billingstate':
 						case 'shippingstate':
-							if(is_numeric($purchase['shipping_region'])) 
- 	            				$state = wpsc_get_region($purchase['shipping_region']); 
+							if(is_numeric($form_field['value']))
+								$state = wpsc_get_state_by_id($form_field['value'],'name');
  	   						else  
  	            				$state = $form_field['value']; 
  	            			 
  	            			 echo "  <tr><td>" . $form_field['name'] . ":</td><td>".$state ."</td></tr>";
 							break;	
-						case 'billingstate':
-							if(is_numeric($purchase['billing_region'])) 
- 	            				$state = wpsc_get_region($purchase['billing_region']); 
- 	   						else  
- 	            				$state = $form_field['value']; 
-						 
-						 echo "  <tr><td>" . $form_field['name'] . ":</td><td>".$state ."</td></tr>";
-							break;
+						
 						default:
 							echo "  <tr><td>" . $form_field['name'] . ":</td><td>" . esc_html( $form_field['value'] ) . "</td></tr>";
 
