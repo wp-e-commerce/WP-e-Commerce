@@ -1,0 +1,12 @@
+/* CSS Document */
+
+li.wpsc_presentation a{
+	padding-left: 40px !important;
+	background: url(../../wpsc-core/images/credit_cards.png) no-repeat;
+	background-position: 12px center;
+}
+
+iframe#wpsc-presentation{
+	height: 2210px;
+	width: 100%;
+}

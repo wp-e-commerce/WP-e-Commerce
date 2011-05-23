@@ -1,0 +1,155 @@
+/* CSS Document */
+
+*{
+	font-family: 'Lucida Grande', Verdana, sans-serif;
+	font-size: 11px;
+	color: #666;
+	list-style: none;
+}
+
+h3{
+	font-size: 14px;
+	color: #333;
+	display: block;
+	border-bottom: solid 1px #e7e7e7;
+	padding-bottom: 7px;
+}
+
+tr{
+	display: block;
+	padding-bottom: 10px;
+}
+
+th[scope=row], th[score=row]{
+	text-align: left;
+}
+
+input[type=text]{
+	border: solid  #CCC #EEE #EEE #CCC;
+	border-width: 1px;
+	background-color: #fafafa;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-border-radius: 3px;
+	padding: 5px;
+	-webkit-bor
+}
+
+input[type=text]:hover{
+	background-color: #FFF;
+}
+
+.allign_top{
+	vertical-align: top;
+}
+
+.button_settings_th{
+	width: 180px;
+}
+
+.button_settings_desc{
+	width: 260px;
+	padding-left: 20px;
+}
+
+.product_settings_th{
+	width: 350px;
+}
+
+.product_page_settings_th, .product_category_settings_th, .thumbnail_settings_th{
+	width: 260px;
+	padding-right: 10px;
+}
+
+.shopping_cart_settings_th{
+	width: 240px;
+	padding-right: 10px;
+}
+
+.pagination_settings_th{
+	width: 200px;
+}
+
+.wpsc_select_wrapper{
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	font-family: "Lucida Grande","Lucida Sans Unicode",Arial,Verdana,sans-serif;
+	font-size: 12px;
+	background: #FAFAFA url(../../functions/images/select.png) no-repeat right center;
+	border-color: #CCC #EEE #EEE #CCC;
+	border-style: solid;
+	border-width: 1px;
+	float: left;
+	height: 26px;
+	width: 280px;
+	margin: 0;
+	margin-bottom: 9px !important;
+	display: block;
+	color: #555;
+}
+
+.wpsc_select{
+	cursor: pointer;
+	height: 28px;
+	margin: 0;
+	opacity: 0;
+	padding: 0;
+	position: relative;
+	width: inherit;
+	z-index: 4;
+
+}
+
+.wpsc_select_span{
+	height: 26px;
+	line-height: 26px;
+	position: absolute;
+	z-index: 2;
+	padding-left: 6px;
+}
+
+.wpsc_select:hover{
+	color: #333;
+	background: white;
+}
+
+input[type=submit][name=updateoption]{
+	border-color: #BBB !important;
+	cursor: pointer;
+	background-color: #FAFAFA;
+	border: 1px solid;
+	padding: 5px;
+	font-family: "Lucida Grande", Verdana, sans-serif;
+	color: #555;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-border-radius: 4px;
+	border-style: solid;
+	border-width: 1px;
+	position: fixed;
+	bottom: 10px;
+}
+
+input[type=submit][name=updateoption]:hover{
+	border-color: #666 !important;
+	color: black;
+}
+
+.comment_settings_th{
+	width: 250px;
+}
+
+#message{
+	position: fixed;
+	bottom: 10px;
+	right: 0px;
+	display: block;
+	width: 400px;
+	text-align: center;
+	background-color: #FFFFE0;
+	border: 1px solid #E6DB55;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-border-radius: 4px;
+}
