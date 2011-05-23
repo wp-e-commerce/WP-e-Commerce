@@ -100,9 +100,6 @@ class WP_eCommerce {
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-installer.php' );
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-includes.php' );
 		
-		//Woothemes integration
-		require_once( WPSC_FILE_PATH . '/woo-integration/woo_integration.php' );
-		
 		// Any additional file includes can hook in here
 		do_action( 'wpsc_includes' );
 	}
