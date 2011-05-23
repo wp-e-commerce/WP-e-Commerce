@@ -43,10 +43,19 @@ function add_my_stylesheet() {
 }
 
 
-add_filter( 'wpsc_settings_tabs' , 'woo_wpsc_remove_presentation_tab');
-add_filter( 'woo_before_option_page' , 'woo_wpsc_filter_option');
-add_filter( 'wpsc_settings_redirect_url' , 'woo_wpsc_filter_redirect_url');
-add_action( 'wp_ajax_print_wpsc_presentation' , 'woo_wpsc_presentation_menu');
-add_action( 'admin_init' , 'add_my_stylesheet');
+function woo_wpsc_integration(){
+	add_filter( 'wpsc_settings_tabs' , 'woo_wpsc_remove_presentation_tab');
+	add_filter( 'woo_before_option_page' , 'woo_wpsc_filter_option');
+	add_filter( 'wpsc_settings_redirect_url' , 'woo_wpsc_filter_redirect_url');
+	add_action( 'wp_ajax_print_wpsc_presentation' , 'woo_wpsc_presentation_menu');
+	add_action( 'admin_init' , 'add_my_stylesheet');
+}
 
+function wpsc_detect_woo(){
+	if (function_exists('woo_version')){
+		 woo_wpsc_integration();
+	}
+}
+
+add_action('after_setup_theme', 'wpsc_detect_woo');
 ?>
