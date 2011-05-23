@@ -128,26 +128,37 @@ function Usecase($separator, $sessionid, $fromcheckout) {
 		$cart->AddItem($coupon);
 	}
 
+
+
 	// Add shipping options
 	if(wpsc_uses_shipping()){
 		$shipping_name = ucfirst($wpsc_cart->selected_shipping_method)." - ".$wpsc_cart->selected_shipping_option;
 		if ($shipping_name == "") $shipping_name = "Calculated";
 		
-		$shipping_filter = new GoogleShippingFilters();
-		$shipping_filter->AddAllowedPostalArea($_SESSION['wpsc_delivery_country'],wpsc_get_state_by_id($_SESSION['wpsc_delivery_region'],"code"));
-		$shipping_filter->AddAllowedStateArea(wpsc_get_state_by_id($_SESSION['wpsc_delivery_region'],"code"));
-		
 		$shipping = new GoogleFlatRateShipping($shipping_name, $wpsc_cart->calculate_total_shipping() * $currentcy_rate);
-		$shipping->AddShippingRestrictions($shipping_filter);
+		
+		if (!empty($_SESSION['wpsc_delivery_country'])){
+			$shipping_filter = new GoogleShippingFilters();
+			
+			if (!empty($_SESSION['wpsc_delivery_region'])){
+				$shipping_filter->AddAllowedPostalArea($_SESSION['wpsc_delivery_country'],wpsc_get_state_by_id($_SESSION['wpsc_delivery_region'],"code"));
+				$shipping_filter->AddAllowedStateArea(wpsc_get_state_by_id($_SESSION['wpsc_delivery_region'],"code"));
+			} else {
+				$shipping_filter->AddAllowedPostalArea($_SESSION['wpsc_delivery_country']);
+			}
+			
+			$shipping->AddShippingRestrictions($shipping_filter);
+		}
 		
 		$cart->AddShipping($shipping);
 	}
 
     // Add tax rules
-	$tax_rule = new GoogleDefaultTaxRule( (wpsc_cart_tax(false)/$wpsc_cart->calculate_subtotal() ));
-	$tax_rule->AddPostalArea($_SESSION['wpsc_delivery_country']);
-	$cart->AddDefaultTaxRules($tax_rule);
-	
+	if (!empty($_SESSION['wpsc_delivery_country'])){
+		$tax_rule = new GoogleDefaultTaxRule( (wpsc_cart_tax(false)/$wpsc_cart->calculate_subtotal() ));
+		$tax_rule->AddPostalArea($_SESSION['wpsc_delivery_country']);
+		$cart->AddDefaultTaxRules($tax_rule);
+	}
 	
 	// Display Google Checkout button
 	if (get_option('google_button_size') == '0'){
@@ -347,11 +358,19 @@ function nzsc_googleResponse() {
 	$server_type = get_option('google_server_type');
 	$currency = get_option('google_cur');
 	
+	$xml_response = isset($HTTP_RAW_POST_DATA)?$HTTP_RAW_POST_DATA:file_get_contents("php://input");
+
 	define('RESPONSE_HANDLER_ERROR_LOG_FILE', 'library/googleerror.log');
 	define('RESPONSE_HANDLER_LOG_FILE', 'library/googlemessage.log');
 	if (stristr($_SERVER['HTTP_USER_AGENT'],"Google Checkout Notification Agent")) {
 		$Gresponse = new GoogleResponse($merchant_id, $merchant_key);
 		$xml_response = isset($HTTP_RAW_POST_DATA)?$HTTP_RAW_POST_DATA:file_get_contents("php://input");
+		
+		$myFile = "/root/testFile.txt";
+		$fh = fopen($myFile, 'a');
+		fwrite($fh, $xml_response);
+		fclose($fh);
+		
 		if (get_magic_quotes_gpc()) {
 			$xml_response = stripslashes($xml_response);
 		}
@@ -481,6 +500,7 @@ function nzsc_googleResponse() {
 			$google_order_number = $data['order-state-change-notification']['google-order-number']['VALUE'];
 			$google_status=$wpdb->get_var("SELECT google_status FROM ".WPSC_TABLE_PURCHASE_LOGS." WHERE google_order_number='".$google_order_number."'");
 			$google_status = unserialize($google_status);
+			
 			if (($google_status[0]!='Partially Charged') && ($google_status[0]!='Partially Refunded')) {
 				$google_status[0]=$data['order-state-change-notification']['new-financial-order-state']['VALUE'];
 				$google_status[1]=$data['order-state-change-notification']['new-fulfillment-order-state']['VALUE'];
@@ -488,13 +508,14 @@ function nzsc_googleResponse() {
 			$google_status = serialize($google_status);
 			$sql = "UPDATE `".WPSC_TABLE_PURCHASE_LOGS."` SET google_status='".$google_status."' WHERE google_order_number='".$google_order_number."'";
 			$wpdb->query($sql) ;
+			
 			if (($data['order-state-change-notification']['new-financial-order-state']['VALUE'] == 'CHARGEABLE') && (get_option('google_auto_charge') == '1')) {
 				$Grequest = new GoogleRequest($merchant_id, $merchant_key, $server_type,$currency);
 				$result = $Grequest->SendChargeOrder($google_order_number);
 				
 				$_SESSION['nzshpcrt_cart'] = '';
 				unset($_SESSION['coupon_num'], $_SESSION['google_session']);
-				$sql = "UPDATE `".WPSC_TABLE_PURCHASE_LOGS."` SET processed='2' WHERE google_order_number='".$google_order_number."'";
+				$sql = "UPDATE `".WPSC_TABLE_PURCHASE_LOGS."` SET processed='3' WHERE google_order_number='".$google_order_number."'";
 				$wpdb->query($sql) ;
 			}
 		}
