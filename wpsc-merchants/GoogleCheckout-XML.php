@@ -128,8 +128,6 @@ function Usecase($separator, $sessionid, $fromcheckout) {
 		$cart->AddItem($coupon);
 	}
 
-
-
 	// Add shipping options
 	if(wpsc_uses_shipping()){
 		$shipping_name = ucfirst($wpsc_cart->selected_shipping_method)." - ".$wpsc_cart->selected_shipping_option;
@@ -365,11 +363,6 @@ function nzsc_googleResponse() {
 	if (stristr($_SERVER['HTTP_USER_AGENT'],"Google Checkout Notification Agent")) {
 		$Gresponse = new GoogleResponse($merchant_id, $merchant_key);
 		$xml_response = isset($HTTP_RAW_POST_DATA)?$HTTP_RAW_POST_DATA:file_get_contents("php://input");
-		
-		$myFile = "/root/testFile.txt";
-		$fh = fopen($myFile, 'a');
-		fwrite($fh, $xml_response);
-		fclose($fh);
 		
 		if (get_magic_quotes_gpc()) {
 			$xml_response = stripslashes($xml_response);
