@@ -155,10 +155,9 @@ class wpsc_merchant {
 				
 				case 'billingstate':
 				case 'shippingstate':
-					if ( empty( $address_data[$address_data_set]['state'] ) ) {
+					if ( empty( $address_data[$address_data_set]['state'] ) )
 						$address_data[$address_data_set]['state'] = is_numeric( $collected_form_row['value'] ) ? wpsc_get_state_by_id( $collected_form_row['value'], 'code' ) : $collected_form_row['value'];
-					}
-
+					break;
 				default :
 					$address_data[$address_data_set][$address_key] = $collected_form_row['value'];
 					break;
