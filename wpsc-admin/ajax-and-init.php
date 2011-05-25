@@ -1264,7 +1264,9 @@ function wpsc_checkout_settings() {
 	global $wpdb;
 	$wpdb->show_errors = true;
 	$filter = isset( $_POST['selected_form_set'] ) ? $_POST['selected_form_set'] : '0';
-
+	if ( ! isset( $_POST['new_form_mandatory'] ) )
+		$_POST['new_form_mandatory'] = array();
+	
 	if ( $_POST['new_form_set'] != null ) {
 		$checkout_sets = get_option( 'wpsc_checkout_form_sets' );
 		$checkout_sets[] = $_POST['new_form_set'];
@@ -1332,7 +1334,7 @@ function wpsc_checkout_settings() {
 		foreach ( $_POST['new_form_name'] as $form_id => $form_name ) {
 			$form_type = $_POST['new_form_type'][$form_id];
 			$form_mandatory = 0;
-			if ( $_POST['new_form_mandatory'][$form_id] == 1 ) {
+			if ( ! empty( $_POST['new_form_mandatory'][$form_id] ) ) {
 				$form_mandatory = 1;
 			}
 			$form_display_log = 0;
