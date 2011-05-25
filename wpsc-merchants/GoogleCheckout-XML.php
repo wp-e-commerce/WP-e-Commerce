@@ -128,6 +128,12 @@ function Usecase($separator, $sessionid, $fromcheckout) {
 		$cart->AddItem($coupon);
 	}
 
+	$shipping_country = $purchase_log[0]['shipping_country'];
+	$shipping_region  = $purchase_log[0]['shipping_region'];
+	
+	if ($shipping_country == "UK")
+		$shipping_country = "GB";
+
 	// Add shipping options
 	if(wpsc_uses_shipping()){
 		$shipping_name = ucfirst($wpsc_cart->selected_shipping_method)." - ".$wpsc_cart->selected_shipping_option;
@@ -135,14 +141,14 @@ function Usecase($separator, $sessionid, $fromcheckout) {
 		
 		$shipping = new GoogleFlatRateShipping($shipping_name, $wpsc_cart->calculate_total_shipping() * $currentcy_rate);
 		
-		if (!empty($_SESSION['wpsc_delivery_country'])){
+		if (!empty($shipping_country)){
 			$shipping_filter = new GoogleShippingFilters();
 			
-			if (!empty($_SESSION['wpsc_delivery_region'])){
-				$shipping_filter->AddAllowedPostalArea($_SESSION['wpsc_delivery_country'],wpsc_get_state_by_id($_SESSION['wpsc_delivery_region'],"code"));
-				$shipping_filter->AddAllowedStateArea(wpsc_get_state_by_id($_SESSION['wpsc_delivery_region'],"code"));
+			if (!empty($shipping_region) && is_numeric($shipping_region)){
+				$shipping_filter->AddAllowedPostalArea($shipping_country,wpsc_get_state_by_id($shipping_region,"code"));
+				$shipping_filter->AddAllowedStateArea(wpsc_get_state_by_id($shipping_region,"code"));
 			} else {
-				$shipping_filter->AddAllowedPostalArea($_SESSION['wpsc_delivery_country']);
+				$shipping_filter->AddAllowedPostalArea($shipping_country);
 			}
 			
 			$shipping->AddShippingRestrictions($shipping_filter);
@@ -152,9 +158,9 @@ function Usecase($separator, $sessionid, $fromcheckout) {
 	}
 
     // Add tax rules
-	if (!empty($_SESSION['wpsc_delivery_country'])){
+	if (!empty($shipping_country)){
 		$tax_rule = new GoogleDefaultTaxRule( (wpsc_cart_tax(false)/$wpsc_cart->calculate_subtotal() ));
-		$tax_rule->AddPostalArea($_SESSION['wpsc_delivery_country']);
+		$tax_rule->AddPostalArea($shipping_country);
 		$cart->AddDefaultTaxRules($tax_rule);
 	}
 	
