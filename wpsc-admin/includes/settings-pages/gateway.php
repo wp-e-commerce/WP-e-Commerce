@@ -19,8 +19,8 @@ function _wpsc_gateway_item( $gateway, $title = '', $checked = false ) {
 function _wpsc_gateway_list() {
 	$selected_gateways = get_option( 'custom_gateway_options', array() );
 	
-	foreach ( WPSC_Payment_Gateway::get_gateways() as $gateway => $class ) {
-		_wpsc_gateway_item( $gateway, call_user_func( array( $class, 'get_title' ) ), in_array( $gateway, $selected_gateways ) );
+	foreach ( WPSC_Payment_Gateway::get_gateways() as $gateway ) {
+		_wpsc_gateway_item( $gateway, WPSC_Payment_Gateway::get( $gateway )->get_title(), in_array( $gateway, $selected_gateways ) );
 	}
 	
 	global $nzshpcrt_gateways;

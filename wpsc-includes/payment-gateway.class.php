@@ -3,6 +3,23 @@
 abstract class WPSC_Payment_Gateway
 {
 	protected static $gateways = array();
+	protected static $instances = array();
+	
+	/**
+	 * Return a particular payment gateway object
+	 *
+	 * @param string $gateway Name of the payment gateway you want to get
+	 * @return object
+	 * @since 3.9
+	 */
+	public static function &get( $gateway ) {
+		if ( empty( self::$instances[$gateway] ) ) {
+			$class_name = self::$gateways[$gateway];
+			self::$instances[$gateway] = new $class_name();
+		}
+		
+		return self::$instances[$gateway];
+	}
 	
 	/**
 	 * Check to see whether a gateway is registered using this new API
@@ -94,16 +111,13 @@ abstract class WPSC_Payment_Gateway
 	}
 	
 	/**
-	 * Return an array containing gateway file names and class names.
-	 * 
-	 * For example: array( 'paypal-pro' => 'WPSC_Payment_Gateway_Paypal_Pro' ) if 'paypal-pro.php' is registered
-	 * as a payment gateway module.
+	 * Return an array containing registered gateway names.
 	 *
 	 * @return array
 	 * @since 3.9
 	 */
 	public static function get_gateways() {
-		return self::$gateways;
+		return array_keys( self::$gateways );
 	}
 	
 	/**
@@ -114,7 +128,7 @@ abstract class WPSC_Payment_Gateway
 	 * @since 3.9
 	 * @see __()
 	 */
-	abstract public static function get_title();
+	abstract public function get_title();
 	
 	/**
 	 * Display the payment gateway settings form as seen in WP e-Commerce Settings area.
@@ -123,7 +137,7 @@ abstract class WPSC_Payment_Gateway
 	 * @return void
 	 * @since 3.9
 	 */
-	abstract public static function setup_form();
+	abstract public function setup_form();
 		
 	public function __construct() {
 	}
