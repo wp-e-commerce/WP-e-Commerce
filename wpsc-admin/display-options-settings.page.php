@@ -201,7 +201,7 @@ function wpsc_get_shipping_form( $shippingname ) {
 /***
  * Get Payment Form for wp-admin 
  */
-function wpsc_get_payment_form( $paymentname ,$selected_gateway_data='') {
+function _wpsc_get_payment_form_legacy( $paymentname, $selected_gateway_data = '' ) {
 	global $nzshpcrt_gateways;
 
 	$payment_gateway_names = get_option('payment_gateway_names');
@@ -261,7 +261,41 @@ function wpsc_get_payment_form( $paymentname ,$selected_gateway_data='') {
 	} else {
 		$output = array( 'name' => '&nbsp;', 'form_fields' => __( 'To configure a payment module select one on the left.', 'wpsc' ), 'has_submit_button' => 0 );
 	}
+	
+	return $output;
+}
 
+function wpsc_get_payment_form( $gateway_name, $selected_gateway_data = '' ) {
+	$gateways = WPSC_Payment_Gateway::get_gateways();
+	if ( ! array_key_exists( $gateway_name, $gateways ) )
+		return _wpsc_get_payment_form_legacy( $gateway_name, $selected_gateway_data );
+	
+	$gateway_class = $gateways[$gateway_name];
+	$payment_gateway_names = get_option('payment_gateway_names');
+	$form                  = array();
+	$output                = array( 'name' => '&nbsp;', 'form_fields' => __( 'To configure a payment module select one on the left.', 'wpsc' ), 'has_submit_button' => 0 );
+	
+	$display_name = empty( $payment_gateway_names[$gateway_name] ) ? call_user_func( array( $gateway_class, 'get_title' ) ) : $payment_gateway_names[$gateway_name];
+	ob_start();
+	
+	?>
+	<tr>
+		<td style='border-top: none;'>
+			<?php _e( 'Display Name', 'wpsc' ); ?>
+		</td>
+		<td style='border-top: none;'>
+			<input type='text' name='user_defined_name[<?php echo esc_attr( $gateway_name ); ?>]' value='<?php echo esc_attr( $display_name ); ?>' /><br />
+			<span class='small description'><?php _e('The text that people see when making a purchase', 'wpsc'); ?></span>
+		</td>
+	</tr>
+	<?php
+	call_user_func( array( $gateway_class, 'setup_form' ) );
+	
+	$output = array(
+		'name'              => $display_name,
+		'form_fields'       => ob_get_clean(),
+		'has_submit_button' => 1,
+	);
 	return $output;
 }
 
