@@ -80,7 +80,8 @@ td.gateway_settings textarea{
 	width:100%;
 }
 td.gateway_settings h4{
-	margin-top:0;
+/*	margin-top:0; */
+	margin-bottom:5px;
 }
 
 .wpsc_shipping_options{
