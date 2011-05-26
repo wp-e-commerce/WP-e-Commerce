@@ -1183,8 +1183,6 @@ function wpsc_gateway_settings() {
 		unset( $_POST['wpsc_options'] );
 	}
 
-
-
 	if ( isset( $_POST['user_defined_name'] ) && is_array( $_POST['user_defined_name'] ) ) {
 		$payment_gateway_names = get_option( 'payment_gateway_names' );
 
@@ -1195,7 +1193,7 @@ function wpsc_gateway_settings() {
 		update_option( 'payment_gateway_names', $payment_gateway_names );
 	}
 	$custom_gateways = get_option( 'custom_gateway_options' );
-
+	
 	$nzshpcrt_gateways = nzshpcrt_get_gateways();
 	foreach ( $nzshpcrt_gateways as $gateway ) {
 		if ( in_array( $gateway['internalname'], $custom_gateways ) ) {
@@ -1208,6 +1206,9 @@ function wpsc_gateway_settings() {
 	if ( (isset( $_POST['payment_gw'] ) && $_POST['payment_gw'] != null ) ) {
 		update_option( 'payment_gateway', $_POST['payment_gw'] );
 	}
+
+	do_action( 'wpsc_update_payment_gateway_settings' );
+	
 	$sendback = wp_get_referer();
 
 	if ( isset( $updated ) ) {
@@ -1220,6 +1221,7 @@ function wpsc_gateway_settings() {
 	wp_redirect( $sendback );
 	exit();
 }
+
 if ( isset( $_REQUEST['wpsc_gateway_settings'] ) && ($_REQUEST['wpsc_gateway_settings'] == 'gateway_settings') )
 	add_action( 'admin_init', 'wpsc_gateway_settings' );
 
