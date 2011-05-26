@@ -192,8 +192,8 @@ function wpsc_right_now() {
 	$monthtotal = wpsc_currency_display( admin_display_total_price( $start_timestamp,$end_timestamp ) );
 	$overaltotal = wpsc_currency_display( admin_display_total_price() );
 	$variation_count = count(get_terms("wpsc-variation", array('parent' => 0)));
-	$pending_sales = $wpdb->get_var("SELECT COUNT(*) FROM `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `processed` IN ('1')");
-	$accept_sales = $wpdb->get_var("SELECT COUNT(*) FROM `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `processed` IN ('2' ,'3', '4')");
+	$pending_sales = $wpdb->get_var("SELECT COUNT(*) FROM `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `processed` IN ('1','2')");
+	$accept_sales = $wpdb->get_var("SELECT COUNT(*) FROM `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `processed` IN ('3' ,'4', '5')");
 	$theme = get_option('wpsc_selected_theme');
 	?>
 	<div class='table'>
