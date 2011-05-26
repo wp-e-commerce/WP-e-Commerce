@@ -31,19 +31,6 @@
 		<?php endwhile; ?>
 		</tbody>
 		<tfoot>
-			<?php if( ( wpsc_cart_has_shipping() && !wpsc_cart_show_plus_postage() ) || ( (wpsc_cart_tax(false) >0) && !wpsc_cart_show_plus_postage() ) ) : ?>
-			<tr class="cart-widget-total cart-widget-shipping">
-				<td class="pricedisplay checkout-shipping" colspan='5'>
-					<?php if(wpsc_cart_has_shipping() && !wpsc_cart_show_plus_postage()) : ?>
-					<?php _e('Shipping', 'wpsc'); ?>: <?php echo wpsc_cart_shipping(); ?>
-					<?php endif; ?>
-					<?php if( (wpsc_cart_tax(false) >0) && !wpsc_cart_show_plus_postage()) : ?>
-					<br />
-					<span class="pricedisplay checkout-tax"><?php echo wpsc_display_tax_label(true); ?>: <?php echo wpsc_cart_tax(); ?></span>
-					<?php endif; ?>
-				</td>
-			</tr>
-			<?php endif; ?>
 			<tr class="cart-widget-total">
 				<td class="cart-widget-count">
 					<?php printf( _n('%d item', '%d items', wpsc_cart_item_count(), 'wpsc'), wpsc_cart_item_count() ); ?>
@@ -52,13 +39,6 @@
 					<?php _e('Total', 'wpsc'); ?>: <?php echo wpsc_cart_total_widget(); ?>
 				</td>
 			</tr>
-			<?php if(wpsc_cart_show_plus_postage()) : ?>
-			<tr>
-				<td class="pluspostagetax" colspan='5'>
-					+ <?php _e('Postage &amp; Tax ', 'wpsc'); ?>
-				</td>
-			</tr>
-			<?php endif; ?>
 			<tr>
 				<td id='cart-widget-links' colspan="5">
 					<a target="_parent" href="<?php echo get_option('shopping_cart_url'); ?>" title="<?php _e('Checkout', 'wpsc'); ?>" class="gocheckout"><?php _e('Checkout', 'wpsc'); ?></a>
