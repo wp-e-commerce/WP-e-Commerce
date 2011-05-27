@@ -52,7 +52,7 @@ function wpsc_marketing_meta_box() {
 			<?php if ( !function_exists( 'wpsc_cross_sales' ) ) { ?>
 			<p>
 				<span class='input_label'>Cross Sales</span>
-				<span class='description'>Now available as the <a href="http://wordpress.org/extend/plugins/wp-e-commerce-cross-sales/" target="_blank">WP e-Commerce Cross Sales</a> plugin | <a href="<?php echo wp_nonce_url(' http://wpecommerce.local/site/wp-admin/update.php?action=install-plugin&plugin=wp-e-commerce-cross-sales', 'install-plugin_wp-e-commerce-cross-sales'); ?>">Install Now</a></span>
+				<span class='description'>Now available as the <a href="http://wordpress.org/extend/plugins/wp-e-commerce-cross-sales/" target="_blank">WP e-Commerce Cross Sales</a> plugin | <a href="<?php echo wp_nonce_url( admin_url( 'update.php?action=install-plugin&plugin=wp-e-commerce-cross-sales' ), 'install-plugin_wp-e-commerce-cross-sales'); ?>">Install Now</a></span>
 			</p>
 			<?php } ?>
 			<p>
