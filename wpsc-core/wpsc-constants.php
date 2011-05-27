@@ -121,6 +121,8 @@ function wpsc_core_constants_table_names() {
 	// These tables may be needed in some situations, but are not vital to
 	// the core functionality of the plugin
 	define( 'WPSC_TABLE_CLAIMED_STOCK',          "{$wp_table_prefix}wpsc_claimed_stock" );
+	
+	// @todo deprecate this at some point
 	define( 'WPSC_TABLE_ALSO_BOUGHT',            "{$wp_table_prefix}wpsc_also_bought" );
 
 	// This could be done using the posts table and the post meta table

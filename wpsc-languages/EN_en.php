@@ -1097,7 +1097,10 @@ define('TXT_WPSC_MEMBERS_SUBSCRIPTION_ENDED', "Your subscription has ended.");
 define('TXT_WPSC_ACTIVATE_SETTINGS_MEMBERS', 'Members Only Module');
 define('TXT_WPSC_GOLD_CART', 'Gold Cart');
 define('TXT_WPSC_SHOW_CATEGORY_DESCRIPTION', 'Show Product Group Description');
+
+// @todo Deprecate this at some point
 define('TXT_WPSC_ALSO_BOUGHT', 'People who bought this item also bought');
+
 define('TXT_WPSC_MARKETING_SETTINGS', 'Marketing Settings');
 define('TXT_WPSC_OPTION_ALSO_BOUGHT', 'Display Cross Sales');
 define('TXT_WPSC_MARKETING', 'Marketing');

@@ -194,8 +194,10 @@
 								echo wpsc_buy_now_button( wpsc_the_product_id() );
 					
 							echo wpsc_product_rater();
-
-							echo wpsc_also_bought( wpsc_the_product_id() );
+							
+							if ( function_exists( 'wpsc_cross_sales' ) ) {
+								echo wpsc_cross_sales( $product_id );
+							}
 						
 						if(wpsc_show_fb_like()): ?>
 	                        <div class="FB_like">

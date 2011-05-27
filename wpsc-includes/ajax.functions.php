@@ -626,8 +626,6 @@ function wpsc_submit_checkout() {
 		$wpsc_checkout->save_forms_to_db( $purchase_log_id );
 		$wpsc_cart->save_to_db( $purchase_log_id );
 		$wpsc_cart->submit_stock_claims( $purchase_log_id );
-		if ( get_option( 'wpsc_also_bought' ) == 1 )
-			wpsc_populate_also_bought_list();
 		if( !isset( $our_user_id ) && isset( $user_ID ))
 			$our_user_id = $user_ID;
 		$wpsc_cart->log_id = $purchase_log_id; 

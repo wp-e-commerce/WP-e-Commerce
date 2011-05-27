@@ -54,10 +54,6 @@ function wpsc_debug_page() {
 				<li>
 					<a href='?page=wpsc-debug&amp;wpsc_debug_action=unicode_permalinks'>Test Unicode Category permalinks</a>
 				</li>
-
-				<li>
-					<a href='?page=wpsc-debug&amp;wpsc_debug_action=create_also_bought_list'>Create also bought list</a>
-				</li>
 			</ul>
 	<?php
 		}

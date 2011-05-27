@@ -220,50 +220,6 @@ function wpsc_set_aioseop_keywords( $data ) {
 
 add_filter( 'aioseop_keywords', 'wpsc_set_aioseop_keywords' );
 
-/**
- * wpsc_populate_also_bought_list function, runs on checking out, populates the also bought list.
- */
-function wpsc_populate_also_bought_list() {
-	global $wpdb, $wpsc_cart, $wpsc_coupons;
-	$new_also_bought_data = array( );
-	foreach ( $wpsc_cart->cart_items as $outer_cart_item ) {
-		$new_also_bought_data[$outer_cart_item->product_id] = array( );
-		foreach ( $wpsc_cart->cart_items as $inner_cart_item ) {
-			if ( $outer_cart_item->product_id != $inner_cart_item->product_id ) {
-				$new_also_bought_data[$outer_cart_item->product_id][$inner_cart_item->product_id] = $inner_cart_item->quantity;
-			} else {
-				continue;
-			}
-		}
-	}
-
-	$insert_statement_parts = array( );
-	foreach ( $new_also_bought_data as $new_also_bought_id => $new_also_bought_row ) {
-		$new_other_ids = array_keys( $new_also_bought_row );
-		$also_bought_data = $wpdb->get_results( "SELECT `id`, `associated_product`, `quantity` FROM `" . WPSC_TABLE_ALSO_BOUGHT . "` WHERE `selected_product` IN('$new_also_bought_id') AND `associated_product` IN('" . implode( "','", $new_other_ids ) . "')", ARRAY_A );
-		$altered_new_also_bought_row = $new_also_bought_row;
-
-		foreach ( (array)$also_bought_data as $also_bought_row ) {
-			$quantity = $new_also_bought_row[$also_bought_row['associated_product']] + $also_bought_row['quantity'];
-
-			unset( $altered_new_also_bought_row[$also_bought_row['associated_product']] );
-			$wpdb->query( "UPDATE `" . WPSC_TABLE_ALSO_BOUGHT . "` SET `quantity` = {$quantity} WHERE `id` = '{$also_bought_row['id']}' LIMIT 1;" );
-		}
-
-
-		if ( count( $altered_new_also_bought_row ) > 0 ) {
-			foreach ( $altered_new_also_bought_row as $associated_product => $quantity ) {
-				$insert_statement_parts[] = "(" . absint( $new_also_bought_id ) . "," . absint( $associated_product ) . "," . absint( $quantity ) . ")";
-			}
-		}
-	}
-
-	if ( count( $insert_statement_parts ) > 0 ) {
-		$insert_statement = "INSERT INTO `" . WPSC_TABLE_ALSO_BOUGHT . "` (`selected_product`, `associated_product`, `quantity`) VALUES " . implode( ",\n ", $insert_statement_parts );
-		$wpdb->query( $insert_statement );
-	}
-}
-
 function wpsc_get_country_form_id_by_type($type){
 	global $wpdb;
 	$sql = 'SELECT `id`	 FROM `'.WPSC_TABLE_CHECKOUT_FORMS.'` WHERE `type`="'.$type.'" LIMIT 1';

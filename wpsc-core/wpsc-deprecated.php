@@ -1,4 +1,30 @@
 <?php
+
+/**
+ * wpsc also bought
+ * Cross Sale product HTML.
+ * Moved to canonical plugin.
+ * @param $product_id (int) Product ID.
+ * @return (string) Cross Sale products HTML.
+ * @todo Fully deprecate this in a future version - maybe 4.0?
+ */
+function wpsc_also_bought( $product_id ) {
+	if ( function_exists( 'wpsc_cross_sales' ) ) {
+		return wpsc_cross_sales( $product_id );
+	}
+	return false;
+}
+
+/**
+ * wpsc populate also bought list
+ * Created association in db when products are purchased.
+ * Moved to canonical plugin.
+ * @todo Fully deprecate this - not used anywhere now I don't think so should be OK to remove.
+ */
+function wpsc_populate_also_bought_list() {
+	return false;
+}
+
 /**
  * wpsc_cart_item_custom_message()
  *
@@ -7,7 +33,6 @@
  * @return false
  * @todo Actually correctly deprecate this
  */
-
 function wpsc_cart_item_custom_message(){
 	return false;
 }

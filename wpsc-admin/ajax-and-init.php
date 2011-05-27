@@ -780,11 +780,6 @@ function wpsc_submit_options( $selected='' ) {
 	//This is to change the Overall target market selection
 	check_admin_referer( 'update-options', 'wpsc-update-options' );
 	if ( isset( $_POST['change-settings'] ) ) {
-		if ( isset( $_POST['wpsc_also_bought'] ) && $_POST['wpsc_also_bought'] == 'on' )
-			update_option( 'wpsc_also_bought', 1 );
-		else
-			update_option( 'wpsc_also_bought', 0 );
-
 		if ( isset( $_POST['display_find_us'] ) && $_POST['display_find_us'] == 'on' )
 			update_option( 'display_find_us', 1 );
 		else

@@ -29,12 +29,6 @@ function wpsc_options_marketing() {
 
 function wpsc_marketing_meta_box() {
 
-	$wpsc_also_bought  = get_option( 'wpsc_also_bought' );
-	$wpsc_also_bought1 = '';
-
-	if ( '1' == $wpsc_also_bought )
-		$wpsc_also_bought1 = "checked ='checked'";
-
 	$wpsc_share_this  = get_option( 'wpsc_share_this' );
 	$wpsc_share_this1 = '';
 
@@ -55,11 +49,12 @@ function wpsc_marketing_meta_box() {
 		
 		<form method='post' action='' id='cart_options' name='cart_options' class='wpsc_form_track'>
 			<input type='hidden' name='change-settings' value='true' />
+			<?php if ( !function_exists( 'wpsc_cross_sales' ) ) { ?>
 			<p>
-				<span class='input_label'><?php _e( 'Display Cross Sales', 'wpsc' ); ?></span>
-				<input <?php echo $wpsc_also_bought1; ?> type='checkbox' name='wpsc_also_bought' />
-				<span class='description'>  <?php _e( 'Adds the \'Users who bought this also bought\' item to the single products page.', 'wpsc' ); ?></span>
-			</p><br />
+				<span class='input_label'>Cross Sales</span>
+				<span class='description'>Now available as the <a href="http://wordpress.org/extend/plugins/wp-e-commerce-cross-sales/" target="_blank">WP e-Commerce Cross Sales</a> plugin | <a href="<?php echo wp_nonce_url(' http://wpecommerce.local/site/wp-admin/update.php?action=install-plugin&plugin=wp-e-commerce-cross-sales', 'install-plugin_wp-e-commerce-cross-sales'); ?>">Install Now</a></span>
+			</p>
+			<?php } ?>
 			<p>
 				<span class='input_label'><?php _e( 'Show Share This (Social Bookmarks)', 'wpsc' ); ?></span>
 				<input <?php echo $wpsc_share_this1; ?> type='checkbox' name='wpsc_share_this' />

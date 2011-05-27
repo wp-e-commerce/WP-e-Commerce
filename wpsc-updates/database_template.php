@@ -7,16 +7,6 @@
  * @subpackage wpsc-updating-code 
  */
  
-// code to create or update the {$wpdb->prefix}wpsc_also_bought table
-$table_name = WPSC_TABLE_ALSO_BOUGHT; /* !wpsc_also_bought */
-$wpsc_database_template[$table_name]['columns']['id'] = "bigint(20) unsigned NOT NULL auto_increment";
-$wpsc_database_template[$table_name]['columns']['selected_product'] = "bigint(20) unsigned NOT NULL DEFAULT '0' ";
-$wpsc_database_template[$table_name]['columns']['associated_product'] = "bigint(20) unsigned NOT NULL DEFAULT '0' ";
-$wpsc_database_template[$table_name]['columns']['quantity'] = "int(10) unsigned NOT NULL DEFAULT '0' ";
-$wpsc_database_template[$table_name]['indexes']['PRIMARY'] = "PRIMARY KEY  ( `id` )";
-$wpsc_database_template[$table_name]['previous_names'] = "{$wpdb->prefix}also_bought_product";
-
-
 // code to create or update the {$wpdb->prefix}wpsc_cart_contents table
 $table_name = WPSC_TABLE_CART_CONTENTS; /* !wpsc_cart_contents */
 $wpsc_database_template[$table_name]['columns']['id'] = "bigint(20) unsigned NOT NULL auto_increment";
