@@ -1,35 +1,38 @@
 <?php
 
-abstract class WPSC_Payment_Gateway
+final class WPSC_Payment_Gateways
 {
 	/**
 	 * Contain a key-value array of gateway names and gateway class names
 	 *
-	 * @access protected
+	 * @access private
 	 * @static
 	 * @var array
 	 * @since 3.9
 	 */
-	protected static $gateways = array();
+	private static $gateways = array();
 	
 	/**
 	 * Contain an array of payment gateway objects
 	 *
-	 * @access protected
+	 * @access private
 	 * @static
 	 * @var array
 	 * @since 3.9
 	 */
-	protected static $instances = array();
+	private static $instances = array();
 	
 	/**
-	 * Object that allows manipulation of payment gateway settings in a consistent
-	 * manner
+	 * Contains the cached metadata of the registered payment gateways, so that the
+	 * plugin doesn't have to load the gateway's files to determine its metadata
 	 *
-	 * @access public
+	 * @access private
+	 * @static
+	 * @since 3.9
+	 *
 	 * @var string
 	 */
-	public $setting;
+	private static $payment_gateway_cache = array();
 	
 	/**
 	 * Return a particular payment gateway object
@@ -39,9 +42,15 @@ abstract class WPSC_Payment_Gateway
 	 * @return object
 	 * @since 3.9
 	 */
-	public static function &get( $gateway ) {
+	public static function &get( $gateway, $meta = false ) {
 		if ( empty( self::$instances[$gateway] ) ) {
-			$class_name = self::$gateways[$gateway];
+			if ( ! $meta )
+				$meta = self::$gateways[$gateway];
+			require_once( $meta['path'] );
+			$class_name = $meta['class'];
+			if ( ! class_exists( $class_name ) )
+				return new WP_Error( 'wpsc_invalid_payment_gateway', sprintf( __( 'Invalid payment gateway: Class %s does not exist.', 'wpsc' ), $class_name ) );
+			
 			self::$instances[$gateway] = new $class_name();
 			self::$instances[$gateway]->setting = new WPSC_Payment_Gateway_Setting( $gateway );
 		}
@@ -83,11 +92,11 @@ abstract class WPSC_Payment_Gateway
 	 *
 	 * The following files will be loaded as payment gateway modules: test-gateway-1.php,
 	 * test-gateway-2.php, test-gateway-3/test-gateway-3.php
-	 * See WPSC_Payment_Gateway::register_file() for file and class naming convention
+	 * See WPSC_Payment_Gateways::register_file() for file and class naming convention
 	 *
 	 * @access public
 	 * @since 3.9
-	 * @uses WPSC_Payment_Gateway::register_file()
+	 * @uses WPSC_Payment_Gateways::register_file()
 	 *
 	 * @param string $dir Path to the directory
 	 * @param string $main_file File name of the class to load
@@ -97,7 +106,6 @@ abstract class WPSC_Payment_Gateway
 	 */
 	public static function register_dir( $dir, $main_file = '' ) {
 		$dir = trailingslashit( $dir );
-
 		$main_file = basename( $dir ) . '.php';
 		if ( file_exists( $dir . $main_file ) )
 			return self::register_file( $dir . $main_file );
@@ -111,15 +119,14 @@ abstract class WPSC_Payment_Gateway
 
 			$path = $dir . $file;
 			$return = is_dir( $path ) ? self::register_dir( $path ) : self::register_file( $path );
-			if ( $return instanceof WP_Error )
+			
+			if ( is_wp_error( $return ) )
 				return $return;
 		}
-		
-		return true;
 	}
 	
 	/**
-	 * Include a file as a payment gateway module.
+	 * Register a file as a payment gateway module.
 	 *
 	 * The payment gateway inside the file must be defined as a subclass of WPSC_Payment_Gateway. 
 	 * 
@@ -133,7 +140,7 @@ abstract class WPSC_Payment_Gateway
 	 *
 	 * @access public
 	 * @since 3.9
-	 * @see WPSC_Payment_Gateway::register_dir()
+	 * @see WPSC_Payment_Gateways::register_dir()
 	 *
 	 * @param string $file Absolute path to the file containing the payment gateway
 	 * class
@@ -141,19 +148,68 @@ abstract class WPSC_Payment_Gateway
 	 * a valid class. Otherwise, a WP_Error object is returned.
 	 */
 	public static function register_file( $file ) {
-		require_once( $file );
+		if ( empty( self::$payment_gateway_cache ) )
+			self::$payment_gateway_cache = get_option( 'wpsc_payment_gateway_cache', array() );
 		$filename = basename( $file, '.php' );
+		
+		// payment gateway already exists in cache
+		if ( isset( self::$payment_gateway_cache[$filename] ) ) {
+			self::$gateways[$filename] = self::$payment_gateway_cache[$filename];
+			return true;
+		}
+		
+		// if payment gateway is not in cache, load metadata
 		$classname = ucwords( str_replace( '-', ' ', $filename ) );
 		$classname = 'WPSC_Payment_Gateway_' . str_replace( ' ', '_', $classname );
 		
-		if ( ! class_exists( $classname ) )
-			return new WP_Error( 'wpsc_invalid_payment_gateway', __( 'Invalid payment gateway file.' ) );
+		$meta = array(
+			'class'        => $classname,
+			'path'         => $file,
+			'internalname' => $filename, // compat with older API
+		);
 		
-		self::$gateways[$filename] = $classname;
+		$gateway = self::get( $filename, $meta );
+		
+		if ( is_wp_error( $gateway ) )
+			return $gateway;
+		
+		$meta['name'] = $gateway->get_title();
+		$meta['image'] = $gateway->get_image_url();
+		self::$gateways[$filename] = $meta;
 		
 		return true;
 	}
-
+	
+	/**
+	 * Updates the payment gateway cache when it's changed. This function is hooked
+	 * into WordPress' wp_loaded action
+	 *
+	 * @access public
+	 * @static
+	 * @since 3.9
+	 *
+	 * @return void
+	 */
+	public static function action_save_payment_gateway_cache() {
+		if ( self::$payment_gateway_cache != self::$gateways )
+			update_option( 'wpsc_payment_gateway_cache', self::$gateways );
+	}
+	
+	/**
+	 * Gets metadata of a certain payment gateway. This is better than calling WPSC_Payment_Gateways->get( $gateway_name )->get_title()
+	 * and the likes of it, since it doesn't require the gateway itself to be loaded.
+	 *
+	 * @access public
+	 * @static
+	 * @since 3.9
+	 *
+	 * @param string $gateway 
+	 * @return void
+	 */
+	public static function get_meta( $gateway ) {
+		return isset( self::$gateways[$gateway] ) ? self::$gateways[$gateway] : false;
+	}
+	
 	/**
 	 *
 	 * Return an array containing registered gateway names.
@@ -166,6 +222,28 @@ abstract class WPSC_Payment_Gateway
 	public static function get_gateways() {
 		return array_keys( self::$gateways );
 	}
+	
+	/**
+	 * No instantiation for this class
+	 *
+	 * @access private
+	 * @since 3.9
+	 *
+	 */
+	private function __construct() {}
+}
+
+abstract class WPSC_Payment_Gateway
+{	
+	
+	/**
+	 * Object that allows manipulation of payment gateway settings in a consistent
+	 * manner
+	 *
+	 * @access public
+	 * @var string
+	 */
+	public $setting;
 	
 	/**
 	 * Return the title of the payment gateway. This method must be overridden by subclasses.
@@ -205,9 +283,9 @@ abstract class WPSC_Payment_Gateway
 	}
 	
 	/**
-	 * Payment gateway constructor. Cannot be called publicly. Must use WPSC_Payment_Gateway::get( $gateway_name ) instead.
+	 * Payment gateway constructor. Should use WPSC_Payment_Gateways::get( $gateway_name ) instead.
 	 *
-	 * @access protected
+	 * @access public
 	 * @return WPSC_Payment_Gateway
 	 */
 	protected function __construct() {
@@ -360,5 +438,7 @@ class WPSC_Payment_Gateway_Setting
 	}
 }
 
-WPSC_Payment_Gateway::register_dir( WPSC_FILE_PATH . '/wpsc-payment-gateways' );
+WPSC_Payment_Gateways::register_dir( WPSC_FILE_PATH . '/wpsc-payment-gateways' );
+
 add_action( 'wpsc_update_payment_gateway_settings', array( 'WPSC_Payment_Gateway_Setting', 'action_update_payment_gateway_settings' ) );
+add_action( 'wp_loaded', array( 'WPSC_Payment_Gateways', 'action_save_payment_gateway_cache' ), 99 );

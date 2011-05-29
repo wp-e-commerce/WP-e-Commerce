@@ -266,14 +266,14 @@ function _wpsc_get_payment_form_legacy( $paymentname, $selected_gateway_data = '
 }
 
 function wpsc_get_payment_form( $gateway_name, $selected_gateway_data = '' ) {
-	if ( ! WPSC_Payment_Gateway::is_registered( $gateway_name ) )
+	if ( ! wpsc_is_payment_gateway_registered( $gateway_name ) )
 		return _wpsc_get_payment_form_legacy( $gateway_name, $selected_gateway_data );
 	
 	$payment_gateway_names = get_option('payment_gateway_names');
 	$form                  = array();
 	$output                = array( 'name' => '&nbsp;', 'form_fields' => __( 'To configure a payment module select one on the left.', 'wpsc' ), 'has_submit_button' => 0 );
-	$gateway               = WPSC_Payment_Gateway::get( $gateway_name );
-	$display_name = empty( $payment_gateway_names[$gateway_name] ) ? $gateway->get_title() : $payment_gateway_names[$gateway_name];
+	$gateway               = wpsc_get_payment_gateway( $gateway_name );
+	$display_name          = empty( $payment_gateway_names[$gateway_name] ) ? $gateway->get_title() : $payment_gateway_names[$gateway_name];
 	ob_start();
 	
 	?>
@@ -290,7 +290,7 @@ function wpsc_get_payment_form( $gateway_name, $selected_gateway_data = '' ) {
 	$gateway->setup_form();
 	
 	$output = array(
-		'name'              => $display_name,
+		'name'              => $gateway->get_title(),
 		'form_fields'       => ob_get_clean(),
 		'has_submit_button' => 1,
 	);
