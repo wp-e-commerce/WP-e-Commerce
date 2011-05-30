@@ -112,7 +112,7 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 		$_SESSION['paypalAmount'] = $this->convert( $paymentAmount );
 		$_SESSION['localPaypalAmount'] = $paymentAmount;
 		$_SESSION['paypalexpresssessionid'] = $this->cart_data['session_id'];
-		$currencyCodeType = get_option('paypal_curcode');
+		$currencyCodeType = $this->get_paypal_currency_code();
 		$paymentType = "Sale";
 		
 		if(get_option('permalink_structure') != '')
@@ -252,19 +252,37 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 
 	function convert( $amt ){
 		if ( empty( $this->rate ) ) {
-			global $wpdb;
-			$currency_code = $wpdb->get_var("SELECT `code` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id`='".get_option('currency_type')."' LIMIT 1");
-			$local_currency_code = $currency_code;
-			$paypal_currency_code = get_option('paypal_curcode', 'USD');
-
 			$this->rate = 1;
-			if($paypal_currency_code != $local_currency_code) {
+			$paypal_currency_code = $this->get_paypal_currency_code();
+			$local_currency_code = $this->get_local_currency_code();
+			if( $local_currency_code != $paypal_currency_code ) {
 				$curr=new CURRENCYCONVERTER();
 				$this->rate = $curr->convert( 1, $paypal_currency_code, $local_currency_code );
 			}
 		}
 
 		return $this->format_price( $amt / $this->rate );
+	}
+	
+	function get_local_currency_code() {
+		if ( empty( $this->local_currency_code ) ) {
+			global $wpdb;
+			$this->local_currency_code = $wpdb->get_var("SELECT `code` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id`='".get_option('currency_type')."' LIMIT 1");
+		}
+		
+		return $this->local_currency_code;
+	}
+	
+	function get_paypal_currency_code() {
+		if ( empty( $this->paypal_currency_code ) ) {
+			global $wpsc_gateways;
+			$this->paypal_currency_code = $this->get_local_currency_code();
+			
+			if ( ! in_array( $this->paypal_currency_code, $wpsc_gateways['wpsc_merchant_paypal_express']['supported_currencies']['currency_list'] ) )
+				$this->paypal_currency_code = get_option( 'paypal_curcode', 'USD' );
+		}
+		
+		return $this->paypal_currency_code;
 	}
 	
 } // end of class
@@ -382,6 +400,14 @@ function form_paypal_express() {
   	return $output;
 }
 
+function wpsc_get_paypal_currency_code() {
+	global $wpdb, $wpsc_gateways;
+	$paypal_currency_code = $wpdb->get_var("SELECT `code` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id`='".get_option('currency_type')."' LIMIT 1");
+	if ( ! in_array( $paypal_currency_code, $wpsc_gateways['wpsc_merchant_paypal_express']['supported_currencies']['currency_list'] ) )
+		$paypal_currency_code = get_option( 'paypal_curcode', 'USD' );
+		
+	return $paypal_currency_code;
+}
 
 /**
  * prcessing functions, this is where the main logic of paypal express lives
@@ -474,7 +500,7 @@ function paypal_processingfunctions(){
 
 		$paymentAmount =urlencode ($_SESSION['paypalAmount']);
 		$paymentType = urlencode($_SESSION['PaymentType']);
-		$currCodeType = urlencode(get_option('paypal_curcode'));
+		$currCodeType = urlencode(wpsc_get_paypal_currency_code());
 		$payerID = urlencode($_REQUEST['PayerID']);
 		$serverName = urlencode($_SERVER['SERVER_NAME']);
 		$BN='Instinct_e-commerce_wp-shopping-cart_NZ';	
@@ -518,7 +544,7 @@ function paypal_processingfunctions(){
 		$token = $_REQUEST['token'];
 		if(!isset($token)) {
 		   $paymentAmount=$_SESSION['paypalAmount'];
-		   $currencyCodeType=get_option('paypal_curcode');
+		   $currencyCodeType=wpsc_get_paypal_currency_code();
 		   $paymentType='Sale';
 			if(get_option('permalink_structure') != '')
 				$separator ="?";
