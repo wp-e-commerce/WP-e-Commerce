@@ -102,21 +102,21 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 
 		foreach ( $this->cart_items as $cart_row ) {
 			$data['L_NAME' . $i] = $cart_row['name'];
-			$data['L_AMT' . $i] = $this->format_price( $cart_row['price'] );
+			$data['L_AMT' . $i] = $this->convert( $cart_row['price'] );
 			$data['L_NUMBER' . $i] = $i;
 			$data['L_QTY' . $i] = $cart_row['quantity'];
 			
 			$shipping_total += $cart_row['shipping'];
-			$item_total += $this->format_price( $cart_row['price'] * $cart_row['quantity'] );
+			$item_total += $this->convert( $cart_row['price'] ) * $cart_row['quantity'];
 
 			$i++;
 		}
 
 		// Cart totals	
-		$data['ITEMAMT'] = number_format( $item_total, 2 );
-		$data['SHIPPINGAMT'] = number_format( $shipping_total, 2 );
-		$data['TAXAMT'] = number_format( $tax_total, 2 );
-		$data['AMT'] = number_format( $item_total + $tax_total + $shipping_total, 2 );
+		$data['ITEMAMT'] = $item_total;
+		$data['SHIPPINGAMT'] = $this->convert( $shipping_total );
+		$data['TAXAMT'] = $this->convert( $tax_total );
+		$data['AMT'] = $data['ITEMAMT'] + $data['SHIPPINGAMT'] + $data['TAXAMT'];
 		$this->collected_gateway_data = $data;
 	}
 
@@ -294,6 +294,25 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 
 		return $price;
 	}
+	
+	function convert( $amt ){
+		if ( empty( $this->rate ) ) {
+			global $wpdb;
+			$local_currency_code = $wpdb->get_var("SELECT `code` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id`='".get_option('currency_type')."' LIMIT 1");;
+			$paypal_currency_code = get_option('paypal_curcode');
+			
+			if( empty( $paypal_currency_code ) && in_array( $local_currency_code, $wpsc_gateways['wpsc_merchant_paypal_pro']['supported_currencies']['currency_list'] ) )
+				$paypal_currency_code = $local_currency_code;
+
+			$this->rate = 1;
+			if($paypal_currency_code != $local_currency_code) {
+				$curr=new CURRENCYCONVERTER();
+				$this->rate = $curr->convert( 1, $paypal_currency_code, $local_currency_code );
+			}
+		}
+
+		return $this->format_price( $amt / $this->rate );
+	}
 
 }
 
@@ -303,6 +322,9 @@ function submit_paypal_pro() {
 
 	if ( isset( $_POST['PayPalPro']['password'] ) )
 		update_option( 'paypal_pro_password', $_POST['PayPalPro']['password'] );
+		
+	if(isset($_POST['paypal_curcode']))
+		update_option('paypal_curcode', $_POST['paypal_curcode']);
 
 	if ( isset( $_POST['PayPalPro']['signature'] ) )
 		update_option( 'paypal_pro_signature', $_POST['PayPalPro']['signature'] );
@@ -314,7 +336,7 @@ function submit_paypal_pro() {
 }
 
 function form_paypal_pro() {
-
+	global $wpsc_gateways, $wpdb;
 	if ( get_option( 'paypal_pro_testmode' ) == "on" )
 		$selected = 'checked="checked"';
 	else
@@ -353,6 +375,40 @@ function form_paypal_pro() {
 			<input type="hidden" name="PayPalPro[testmode]" value="off" /><input type="checkbox" name="PayPalPro[testmode]" id="paypal_pro_testmode" value="on" ' . $selected . ' />
 		</td>
 	</tr>';
+	
+	$store_currency_code = $wpdb->get_var("SELECT `code` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id` IN ('".absint(get_option('currency_type'))."')");
+	$current_currency = get_option('paypal_curcode');
+
+	if(($current_currency == '') && in_array($store_currency_code, $wpsc_gateways['wpsc_merchant_paypal_pro']['supported_currencies']['currency_list'])) {
+		update_option('paypal_curcode', $store_currency_code);
+		$current_currency = $store_currency_code;
+	}
+	if($current_currency != $store_currency_code) {
+		$output .= "<tr> <td colspan='2'><strong class='form_group'>".__('Currency Converter')."</td> </tr>
+		<tr>
+			<td colspan='2'>".__('Your website is using a currency not accepted by PayPal, select an accepted currency using the drop down menu bellow. Buyers on your site will still pay in your local currency however we will convert the currency and send the order through to PayPal using the currency you choose below.', 'wpsc')."</td>
+		</tr>\n";
+
+		$output .= "<tr>\n <td>" . __('Convert to', 'wpsc' ) . " </td>\n ";
+		$output .= "<td>\n <select name='paypal_curcode'>\n";
+
+		if (!isset($wpsc_gateways['wpsc_merchant_paypal_pro']['supported_currencies']['currency_list'])) 
+			$wpsc_gateways['wpsc_merchant_paypal_pro']['supported_currencies']['currency_list'] = array();
+
+		$paypal_currency_list = $wpsc_gateways['wpsc_merchant_paypal_pro']['supported_currencies']['currency_list'];
+
+		$currency_list = $wpdb->get_results("SELECT DISTINCT `code`, `currency` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `code` IN ('".implode("','",$paypal_currency_list)."')", ARRAY_A);
+		foreach($currency_list as $currency_item) {
+			$selected_currency = '';
+			if($current_currency == $currency_item['code']) {
+				$selected_currency = "selected='selected'";
+			}
+			$output .= "<option ".$selected_currency." value='{$currency_item['code']}'>{$currency_item['currency']}</option>";
+		}
+		$output .= "            </select> \n";
+		$output .= "          </td>\n";
+		$output .= "       </tr>\n";
+	}
 
 	return $output;
 }
@@ -416,5 +472,6 @@ if ( in_array( 'wpsc_merchant_paypal_pro', (array)get_option( 'custom_gateway_op
 		</td>
 	</tr>
 ";
+
 }
 ?>
