@@ -38,12 +38,33 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 
 	var $name              = 'PayPal Pro 2.0';
 	var $paypal_ipn_values = array( );
+	
+	function get_local_currency_code() {
+		if ( empty( $this->local_currency_code ) ) {
+			global $wpdb;
+			$this->local_currency_code = $wpdb->get_var("SELECT `code` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id`='".get_option('currency_type')."' LIMIT 1");
+		}
+		
+		return $this->local_currency_code;
+	}
+	
+	function get_paypal_currency_code() {
+		if ( empty( $this->paypal_currency_code ) ) {
+			global $wpsc_gateways;
+			$this->paypal_currency_code = $this->get_local_currency_code();
+			
+			if ( ! in_array( $this->paypal_currency_code, $wpsc_gateways['wpsc_merchant_paypal_pro']['supported_currencies']['currency_list'] ) )
+				$this->paypal_currency_code = get_option( 'paypal_curcode', 'USD' );
+		}
+		
+		return $this->paypal_currency_code;
+	}
 
 	/**
 	 * construct value array method, converts the data gathered by the base class code to something acceptable to the gateway
 	 * @access public
 	 */
-	function construct_value_array() {
+	function construct_value_array() {		
 		//$collected_gateway_data
 		$paypal_vars = array( );
 		// Store settings to be sent to paypal
@@ -57,6 +78,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 		$data['METHOD']           = "DoDirectPayment";
 		$data['PAYMENTACTION']    = "Sale";
 		$data['RETURNFMFDETAILS'] = "1"; // optional - return fraud management filter data
+		$data['CURRENCYCODE'] = $this->get_paypal_currency_code();
 
 		// Basic Cart Data
 		$data['INVNUM']          = $this->cart_data['session_id'];
@@ -297,15 +319,10 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 	
 	function convert( $amt ){
 		if ( empty( $this->rate ) ) {
-			global $wpdb;
-			$local_currency_code = $wpdb->get_var("SELECT `code` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id`='".get_option('currency_type')."' LIMIT 1");;
-			$paypal_currency_code = get_option('paypal_curcode');
-			
-			if( empty( $paypal_currency_code ) && in_array( $local_currency_code, $wpsc_gateways['wpsc_merchant_paypal_pro']['supported_currencies']['currency_list'] ) )
-				$paypal_currency_code = $local_currency_code;
-
 			$this->rate = 1;
-			if($paypal_currency_code != $local_currency_code) {
+			$paypal_currency_code = $this->get_paypal_currency_code();
+			$local_currency_code = $this->get_local_currency_code();
+			if( $local_currency_code != $paypal_currency_code ) {
 				$curr=new CURRENCYCONVERTER();
 				$this->rate = $curr->convert( 1, $paypal_currency_code, $local_currency_code );
 			}
