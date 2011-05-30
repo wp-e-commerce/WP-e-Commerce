@@ -799,7 +799,7 @@ class wpsc_checkout {
 			if ( ($form_data->mandatory == 1) || ($form_data->type == "coupon") ) {
 				// dirty hack
 				if ( $form_data->unique_name == 'billingstate' && empty( $value ) ) {
-					$billing_country_id = $wpdb->get_var( "SELECT `" . WPSC_TABLE_CHECKOUT_FORMS . "`.`id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `unique_name` = 'billingcountry' " );
+					$billing_country_id = $wpdb->get_var( "SELECT `" . WPSC_TABLE_CHECKOUT_FORMS . "`.`id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `unique_name` = 'billingcountry' AND active = '1' " );
 					$value = $_POST['collected_data'][$billing_country_id][1];
 				}
 
