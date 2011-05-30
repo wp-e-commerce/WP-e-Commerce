@@ -1341,6 +1341,7 @@ function wpsc_checkout_settings() {
 			if ( isset( $_POST['new_form_display_log'][$form_id] ) && $_POST['new_form_display_log'][$form_id] == 1 ) {
 				$form_display_log = 1;
 			}
+			$form_unique_name = '';
 			if ( $_POST['new_form_unique_name'][$form_id] != '-1' ) {
 				$form_unique_name = $_POST['new_form_unique_name'][$form_id];
 			}
@@ -1353,6 +1354,7 @@ function wpsc_checkout_settings() {
 				$max_order_sql = $wpdb->get_results( $max_order_sql, ARRAY_A );
 				$order_number = $max_order_sql[0]['checkout_order'] + 1;
 			}
+
 			$wpdb->insert(
 				WPSC_TABLE_CHECKOUT_FORMS,
 				array(
@@ -1368,6 +1370,7 @@ function wpsc_checkout_settings() {
 				),
 				array( '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s' )
 			);
+			
 			$added++;
 		}
 	}
