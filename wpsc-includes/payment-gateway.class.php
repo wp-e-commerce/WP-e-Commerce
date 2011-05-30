@@ -30,9 +30,20 @@ final class WPSC_Payment_Gateways
 	 * @static
 	 * @since 3.9
 	 *
-	 * @var string
+	 * @var array
 	 */
 	private static $payment_gateway_cache = array();
+	
+	/**
+	 * Contains the names of active gateways that use this API
+	 *
+	 * @access private
+	 * @static
+	 * @since 3.9
+	 *
+	 * @var array
+	 */
+	private static $active_gateways = array();
 	
 	/**
 	 * Return a particular payment gateway object
@@ -204,7 +215,8 @@ final class WPSC_Payment_Gateways
 	 * @since 3.9
 	 *
 	 * @param string $gateway 
-	 * @return void
+	 * @return mixed Array containing the metadata. If the gateway is not registered,
+	 *               returns false.
 	 */
 	public static function get_meta( $gateway ) {
 		return isset( self::$gateways[$gateway] ) ? self::$gateways[$gateway] : false;
@@ -221,6 +233,16 @@ final class WPSC_Payment_Gateways
 	 */
 	public static function get_gateways() {
 		return array_keys( self::$gateways );
+	}
+	
+	public static function get_active_gateways() {
+		if ( empty( self::$active_gateways ) ) {
+			$selected_gateways = get_option( 'custom_gateway_options', array() );
+			$registered_gateways = self::get_gateways();
+			self::$active_gateways = array_intersect( $selected_gateways, $registered_gateways );
+		}
+		
+		return self::$active_gateways;
 	}
 	
 	/**

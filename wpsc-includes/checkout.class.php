@@ -1135,6 +1135,10 @@ class wpsc_gateways {
 	function wpsc_gateways() {
 		global $nzshpcrt_gateways;
 
+		foreach ( WPSC_Payment_Gateways::get_active_gateways() as $gateway_name ) {
+			$this->wpsc_gateways[] = WPSC_Payment_Gateways::get_meta( $gateway_name );
+		}
+
 		$gateway_options = get_option( 'custom_gateway_options' );
 		foreach ( $nzshpcrt_gateways as $gateway ) {
 			if ( array_search( $gateway['internalname'], (array)$gateway_options ) !== false ) {

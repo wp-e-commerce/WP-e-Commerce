@@ -24,6 +24,7 @@ function _wpsc_gateway_list() {
 		_wpsc_gateway_item( $gateway, $gateway_meta['name'], in_array( $gateway, $selected_gateways ) );
 	}
 	
+	// compat with older API
 	global $nzshpcrt_gateways;
 	foreach ( $nzshpcrt_gateways as $gateway ) {
 		if ( isset( $gateway['admin_name'] ) )
