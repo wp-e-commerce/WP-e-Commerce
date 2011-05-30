@@ -122,7 +122,21 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 		$paypal_vars += array(
 			'invoice' => $this->cart_data['session_id']
 		);
-
+		$rate = 1;
+		$currency_code = $wpdb->get_var("
+			SELECT `code`
+			FROM `".WPSC_TABLE_CURRENCY_LIST."`
+			WHERE `id`='".get_option('currency_type')."'
+			LIMIT 1
+		");
+		$local_currency_code = $currency_code;
+		$paypal_currency_code = get_option('paypal_curcode', 'USD');
+		
+		if ( $local_currency_code != $paypal_currency_code ) {
+			$curr = new CURRENCYCONVERTER();
+			$rate = $curr->convert( 1, $paypal_currency_code, $local_currency_code );
+		}
+		
 		// Two cases:
 		// - We're dealing with a subscription
 		// - We're dealing with a normal cart
@@ -150,7 +164,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 			foreach ($this->cart_items as $cart_row) {
 				if ($cart_row['is_recurring']) {
 					$reprocessed_cart_data['subscription']['is_used'] = true;
-					$reprocessed_cart_data['subscription']['price'] = $cart_row['price'];
+					$reprocessed_cart_data['subscription']['price'] = $cart_row['price'] / $rate;
 					$reprocessed_cart_data['subscription']['length'] = $cart_row['recurring_data']['rebill_interval']['length'];
 					$reprocessed_cart_data['subscription']['unit'] = strtoupper($cart_row['recurring_data']['rebill_interval']['unit']);
 					$reprocessed_cart_data['subscription']['times_to_rebill'] = $cart_row['recurring_data']['times_to_rebill'];
@@ -173,7 +187,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 				// This can be false, we don't need to have additional items in the cart/
 				if ($reprocessed_cart_data['shopping_cart']['is_used']) {
 					$paypal_vars += array(
-						"a1" => $this->format_price($reprocessed_cart_data['shopping_cart']['price']),
+						"a1" => $this->format_price($reprocessed_cart_data['shopping_cart']['price'] / $rate),
 						"p1" => $reprocessed_cart_data['shopping_cart']['length'],
 						"t1" => $reprocessed_cart_data['shopping_cart']['unit'],
 					);
@@ -183,7 +197,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 				// If this is not true, something is rather wrong.
 				if ($reprocessed_cart_data['subscription']['is_used']) {
 					$paypal_vars += array(
-						"a3" => $this->format_price($reprocessed_cart_data['subscription']['price']),
+						"a3" => $this->format_price($reprocessed_cart_data['subscription']['price'] / $rate),
 						"p3" => $reprocessed_cart_data['subscription']['length'],
 						"t3" => $reprocessed_cart_data['subscription']['unit'],
 					);
@@ -205,11 +219,11 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 			);
 			$handling = $this->cart_data['base_shipping'];
 			if($add_tax)
-				$paypal_vars['tax_cart'] = $this->cart_data['cart_tax'];
+				$paypal_vars['tax_cart'] = $this->format_price( $this->cart_data['cart_tax'] / $rate );
 			
 			// Set base shipping
 			$paypal_vars += array(
-				'handling_cart' => $handling
+				'handling_cart' => $this->format_price( $handling / $rate )
 			);
 			
 			// Stick the cart item values together here
@@ -219,45 +233,24 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 				foreach ($this->cart_items as $cart_row) {
 					$paypal_vars += array(
 						"item_name_$i" => $cart_row['name'],
-						"amount_$i" => $this->format_price($cart_row['price']),
-						"tax_$i" => ($add_tax) ? $this->format_price($cart_row['tax']) : 0,
+						"amount_$i" => $this->format_price($cart_row['price'] / $rate),
+						"tax_$i" => ($add_tax) ? $this->format_price($cart_row['tax'] / $rate) : 0,
 						"quantity_$i" => $cart_row['quantity'],
 						"item_number_$i" => $cart_row['product_id'],
 						// additional shipping for the the (first item / total of the items)
-						"shipping_$i" => $this->format_price($cart_row['shipping']/$cart_row['quantity']),
+						"shipping_$i" => $this->format_price($cart_row['shipping']/( $cart_row['quantity'] * $rate ) ),
 						// additional shipping beyond the first item
-						"shipping2_$i" => $this->format_price($cart_row['shipping']/$cart_row['quantity']),
+						"shipping2_$i" => $this->format_price($cart_row['shipping']/( $cart_row['quantity'] * $rate ) ),
 						"handling_$i" => '',
 					);
 					++$i;
 				}
-			} else {
-				// Work out discounts where applicable
-				$currency_code = $wpdb->get_var("
-					SELECT `code`
-					FROM `".WPSC_TABLE_CURRENCY_LIST."`
-					WHERE `id`='".get_option('currency_type')."'
-					LIMIT 1
-				");
-				$local_currency_code = $currency_code;
-				$paypal_currency_code = get_option('paypal_curcode', 'USD');
-
-				if ($paypal_currency_code != $local_currency_code) {
-					$curr = new CURRENCYCONVERTER();
-					$paypal_currency_productprice = $curr->convert(
-						$this->cart_data['total_price'],
-						$paypal_currency_code,
-						$local_currency_code
-					);
-				} else {
-					$paypal_currency_productprice =  $this->cart_data['total_price'];
-				}
-				
+			} else {			
 				$paypal_vars['item_name_'.$i] = "Your Shopping Cart";
 				$paypal_vars['amount_'.$i] = ($this->format_price(
-					$paypal_currency_productprice,
+					$this->cart_data['total_price'] / $rate,
 					$local_currency_code
-				)-$paypal_vars['handling_cart']);
+				)-$this->cart_data['base_shipping']) / $rate;
 				$paypal_vars['quantity_'.$i] = 1;
 				$paypal_vars['shipping_'.$i] = 0;
 				$paypal_vars['shipping2_'.$i] = 0;
