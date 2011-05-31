@@ -4,7 +4,7 @@ Donate link: http://getshopped.org
 Tags: e-commerce, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
 Requires at least: 3.0
 Tested up to: 3.1.1
-Stable tag: 3.8.3
+Stable tag: 3.8.4
 
 WP e-Commerce is a Web 2.0 application designed with usability, aesthetics, and presentation in mind. 
 
@@ -37,6 +37,34 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 
 == Changelog == 
+= 3.8.4 =
+* Add: User can duplicate a product in admin panel
+* Add: WooThemes integration support
+* Change: Total in Cart widget now excludes shipping and tax
+* Fix: Invalid country code in paypal-standard.merchant.php
+* Fix: Tax is not passed properly to Paypal Pro
+* Fix: Currency code preference not correctly selected in Paypal gateways
+* Fix: Paypal gateways doesn't check whether the currency being sent to Paypal is accepted or not, resulting in wrong currency
+* Fix: Checkout form selecting the wrong field when a previous field with the same uniquename was deleted
+* Fix: Various issues with Google Checkout
+* Fix: State data outside of US is not passed to payment gateways
+* Fix: State is not displaying correctly in the users purchase history
+* Fix: Wrong generated product permalink when a product is assigned multiple cats, and a product category is being viewed
+* Fix: Submitting a checkout form with mandatory billing state only refreshes the form although everything is filled out correctly
+* Fix: Billing Country is trimmed, and Billing State is not properly decoded
+* Fix: Billing and shipping state no longer stored correctly
+* Fix: Checkout form validation skips mandatory custom checkout fields on default form set
+* Fix: Paystation does not properly update purchase logs
+* Fix: When there's no product, and Sort Product By is set to 'dragndrop', viewing the admin product list would produce a Division by zero warning
+* Fix: Store sub-pages return 404 error
+* Fix: Only Purchase History in Your Account show the login option
+* Fix: Weight on Variations contain too many decimals
+* Fix: Add to Cart in grid view bypasses Variations selection
+* Fix: get_queried_object() requires WP 3.1
+* Fix: Invalid version number in display-update.page.php
+* Fix: Correct HTML, to stop Free Shipping Discount getting blanked
+* Fix: Support taxonomy archives for product_tag taxonomy
+
 = 3.8.3 =
 * New: Individual item details are sent to Paypal Express Checkout
 * Change: Automatically reload database update page when PHP maximum execution time is detected
