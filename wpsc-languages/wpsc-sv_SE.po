@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the WP e-Commerce package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2011-04-01 10:22+1200\n"
+"PO-Revision-Date: 2011-05-31 15:00+1200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10,16 +10,16 @@ msgstr ""
 "X-Generator: GlotPress/0.1\n"
 "Project-Id-Version: WP e-Commerce\n"
 "POT-Creation-Date: \n"
-"Last-Translator: instinct\n"
+"Last-Translator: michelle <michelle@instinct.co.nz>\n"
 "Language-Team: \n"
 
 #: wpsc-admin/display-sales-logs.php:384
 msgid "Mobile Sales App"
-msgstr ""
+msgstr "Försäljningsapp för mobilen"
 
 #: wpsc-theme/functions/wpsc-transaction_results_functions.php:253
 msgid "<hr>Total Shipping: %s\n"
-msgstr ""
+msgstr "<hr>Total frakt: %s\n"
 
 #: wpsc-includes/ajax.functions.php:1049
 msgid "Sorry something has gone wrong with your download!"
@@ -137,8 +137,8 @@ msgstr "Alla"
 #: wpsc-admin/display-sales-logs.php:418
 msgid "%s Item"
 msgid_plural "%s Items"
-msgstr[0] "%s atrikel"
-msgstr[1] "%s artiklar"
+msgstr[0] "%s objekt"
+msgstr[1] "%s objekt"
 
 #: wpsc-admin/display-sales-logs.php:52
 msgid "Amount"
@@ -161,7 +161,7 @@ msgstr "Försäljning"
 #: wpsc-admin/admin.php:513
 #: wpsc-admin/admin.php:542
 msgid "Avg Order"
-msgstr "Snitt beställning"
+msgstr "Snittbeställning"
 
 #: wpsc-admin/admin-form-functions.php:74
 msgid "Logic"
@@ -337,7 +337,7 @@ msgstr "Obligatorisk"
 
 #: wpsc-admin/includes/display-items-functions.php:1059
 msgid "Custom thumbnail size for this image on the main Product Page"
-msgstr ""
+msgstr "Anpassad storlek för miniatyren av denna bild på huvud-produktsidan"
 
 #: wpsc-admin/includes/settings-pages/presentation.php:1238
 msgid "Per Product"
@@ -415,11 +415,11 @@ msgstr "<a target='_blank' href='http://getshopped.org/resources/docs/store-sett
 
 #: wpsc-admin/admin.php:183
 msgid "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/marketing'>Marketing Options</a><br />"
-msgstr ""
+msgstr "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/marketing'>Alternativ för marknadsföring</a><br />"
 
 #: wpsc-admin/display-sales-logs.php:86
 msgid "When upgrading the WP e-Commerce Plugin from 3.6.* to 3.7 it is required that you associate your checkout form fields with the new Purchase Logs system. To do so please <a href=\"%s\">Click Here</a>"
-msgstr ""
+msgstr "När du uppgraderar WP e-Commerce tillägget från 3.6.* till 3.7 så krävs det att du associerar dina kassafält med det nya köplog-systemet. Du gör detta <a href=\"%s\">här</a>"
 
 #: wpsc-shipping/usps_20.php:244
 msgid "Online rates the following services only, when available"
@@ -564,7 +564,7 @@ msgstr "Kort meddelande:"
 
 #: wpsc-admin/includes/settings-pages/import.php:86
 msgid "Stock Quantity Limit"
-msgstr ""
+msgstr "Begränsat lagerantal"
 
 #: wpsc-admin/includes/settings-pages/import.php:163
 msgid "Success, your <a href='%s'>products</a> have been upload."
@@ -580,7 +580,7 @@ msgstr "Kolumn (%s)"
 
 #: wpsc-admin/includes/settings-pages/import.php:85
 msgid "Stock Quantity"
-msgstr ""
+msgstr "Lagerantal"
 
 #: wpsc-admin/includes/settings-pages/import.php:105
 msgid "There was an error while uploading your csv file."
@@ -1006,7 +1006,7 @@ msgstr "Återstående lager av %s är 0. Produkten blev opublicerad."
 
 #: wpsc-admin/includes/settings-pages/import.php:48
 msgid "Select if you would like to import your products in as Drafts or Publish them right away."
-msgstr ""
+msgstr "Välj om du vill importera dina produkter som utkast eller publicera dom direkt."
 
 #: wpsc-includes/ajax.functions.php:87
 msgid "Sorry, but the item \"%s\" is out of stock."
@@ -1014,7 +1014,7 @@ msgstr "Tyvärr, men artikeln \"%s\" är slut i lager."
 
 #: wpsc-admin/includes/settings-pages/import.php:39
 msgid "For each column, select the field it corresponds to in 'Belongs to'. You can upload as many products as you like."
-msgstr ""
+msgstr "För varje kolumn, välj det fält som det motsvarar i 'Tillhör'. Du kan ladda upp så många produkter du vill."
 
 #: wpsc-admin/includes/settings-pages/presentation.php:877
 msgid "Show Product Category Description"
@@ -1030,7 +1030,7 @@ msgstr "%s finns inte i lager"
 
 #: wpsc-admin/includes/display-items-functions.php:1044
 msgid "This is the Thumbnail size that will be displayed on the Single Product page. You can change the default sizes under your store settings"
-msgstr ""
+msgstr "Detta är storleken på miniatyrbilden som kommer att visas på den enskilda produktsidan. Du kan ändra den förvalda storleken under din butik inställningarna"
 
 #: wpsc-admin/includes/display-items-functions.php:1041
 msgid "Single Product Page Thumbnail:"
@@ -1983,11 +1983,11 @@ msgstr ""
 
 #: wpsc-admin/includes/settings-pages/admin.php:129
 msgid "Note: The Admin Report is the email sent to the e-mail address set above as soon as someone successfully buys a product."
-msgstr ""
+msgstr "Observera: Administrationsrapporten skickas till e-postadressen som angivits ovan så fort någon fullföljt ett köp."
 
 #: wpsc-admin/includes/settings-pages/admin.php:118
 msgid "Note: The purchase receipt is the message e-mailed to users after purchasing products from your shop."
-msgstr ""
+msgstr "Observera: Inköpskvittot är meddelandet som skickas till köparen efter ett köp."
 
 #: wpsc-admin/includes/save-data.functions.php:447
 msgid "Template tags are used to display a particular category or group within your theme / template."
@@ -1995,7 +1995,7 @@ msgstr ""
 
 #: wpsc-admin/includes/save-data.functions.php:470
 msgid "The Target Markets feature has been disabled because you have the Suhosin PHP extension installed on this server. If you need to use the Target Markets feature, then disable the suhosin extension. If you can not do this, you will need to contact your hosting provider."
-msgstr ""
+msgstr "Funktionen målmarknader har avaktiverats på grund av att du har tillägget Suhosin PHP installerat på din server. Om du behöver använda funktionen målmarknader, avaktivera suhosin-tillägget. Om du inte kan göra det, kontakta ditt webbhotell."
 
 #: wpsc-admin/includes/save-data.functions.php:475
 msgid "Select"
@@ -2040,7 +2040,7 @@ msgstr "Alla produktkategorier"
 
 #: wpsc-core/wpsc-functions.php:330
 msgid "Parent Product Category:"
-msgstr ""
+msgstr "Övre produktkatergori:"
 
 #: wpsc-core/wpsc-functions.php:331
 msgid "Edit Product Category"
@@ -2053,7 +2053,7 @@ msgstr "Produktkategori"
 
 #: wpsc-core/wpsc-functions.php:329
 msgid "Parent Product Category"
-msgstr ""
+msgstr "Övre produktkatergori:"
 
 #: wpsc-core/wpsc-functions.php:332
 msgid "Update Product Category"
@@ -2074,7 +2074,7 @@ msgstr "Dra till ny position"
 
 #: wpsc-admin/includes/display-items-functions.php:791
 msgid "If this product is for sale on another website enter the link here. For instance if your product is an MP3 file for sale on iTunes you could put the link here. This option overrides the buy now and add to cart links and takes you to the site linked here. You can also customise the Buy Now text and choose to open the link in a new window."
-msgstr ""
+msgstr "Om denna produkt är till salu på en annan webbplats kan du ange länken här. Till exempel om din produkt är en MP3-fil till försäljning på iTunes kan du lägga länken här. Det här alternativet ändrar länken för knapparna \"köp nu\" och \"lägg till i kundvagn\" och tar dig till länken du angett. Du kan också anpassa knapptexten och välja att öppna länken i ett nytt fönster."
 
 #: wpsc-admin/includes/display-items-functions.php:503
 msgid "You have no Variations added."
@@ -2634,7 +2634,7 @@ msgstr "Den här fraktmodulen fungerar endast om bas landet i inställningarna, 
 
 #: wpsc-admin/includes/settings-pages/shipping.php:190
 msgid "To enable shipping in WP e-Commerce you must select which shipping methods you want to enable on your site.<br /> If you want to use fixed-price shipping options like \"Pickup - $0, Overnight - $10, Same day - $20, etc.\" you can download a WordPress plugin from plugins directory for <a href=\"http://wordpress.org/extend/plugins/wp-e-commerce-fixed-rate-shipping/\">Simple shipping</a>. It will appear in the list as \"Fixed rate\"."
-msgstr ""
+msgstr "För att aktivera frakt i WP e-Commerce så måste du välja vilka fraktsätt som du vill använda på din webbplats.<br /> om du vill använda fraktsätt med fasta priser som \"avhämtning - 0 SEK, över natten 100 SEK, samma dag 200 SEK o.s.v.\" du kan ladda ner ett WordPress-tillägg från tilläggsbiblioteket för <a href=\"http://wordpress.org/extend/plugins/wp-e-commerce-fixed-rate-shipping/\">enkel frakt</a>. Den kommer att dyka upp i listan som \"Fixed rate\"."
 
 #: wpsc-shipping/australiapost.php:57
 msgid "Sea Mail"
@@ -4085,7 +4085,7 @@ msgstr "Ingen bild"
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:88
 msgid "Enter coupon code"
-msgstr "Skriv in kupongenkod"
+msgstr "Skriv in kupongkod"
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:159
 msgid " - Choose a Shipping Rate"
@@ -4408,7 +4408,7 @@ msgstr "Skapa nytt villkor"
 
 #: wpsc-admin/display-coupons.php:398
 msgid "<strong>Note:</strong> Due to a current PayPal limitation, when a purchase is made using a coupon we cannot send a detailed list of items through for processing. Instead we send the total amount of the purchase so the customer will see your shop name and the total within PayPal."
-msgstr ""
+msgstr "<strong>Observera:</strong> På grund av nuvarande begränsningar i PayPal så kan vi inte skicka en detaljerad lista med artiklar för bearbetning vid köp med kupong. Istället skickar vi summan för köpet så att kunderna ser din butiks namn och summan i PayPal."
 
 #: wpsc-admin/includes/save-data.functions.php:141
 #: wpsc-admin/includes/save-data.functions.php:348
@@ -4726,7 +4726,7 @@ msgstr "Formulärfält"
 
 #: wpsc-admin/includes/settings-pages/checkout.php:115
 msgid "Select a Form Set"
-msgstr ""
+msgstr "Välj ett formulär"
 
 #: wpsc-admin/includes/settings-pages/checkout.php:129
 msgid "+ Add New Form Set"
@@ -4794,7 +4794,7 @@ msgstr "Adress till RSS-flöde"
 
 #: wpsc-admin/includes/settings-pages/marketing.php:99
 msgid "To import your products into <a href=\"http://www.google.com/merchants/\" target=\"_blank\">Google Merchant Centre</a> so that they appear within Google Product Search results, sign up for a Google Merchant Centre account and add a scheduled data feed with the following URL:"
-msgstr ""
+msgstr "För att importera dina produkter till <a href=\"http://www.google.com/merchants/\" target=\"_blank\">Google Merchant Centre</a> så att de syns i Google Produkt Sök-resultaten, registrera ett Google Merchant Centre-konto och lägga till ett schemalagt data-flöde med följande URL:"
 
 #: wpsc-admin/includes/settings-pages/presentation.php:88
 msgid "Some Theme files have been moved to your WordPress Theme Folder."
@@ -4862,7 +4862,7 @@ msgstr ""
 
 #: wpsc-admin/includes/settings-pages/taxes.php:51
 msgid "Replace tax percentage with product specific tax rate"
-msgstr ""
+msgstr "Ersätt momsprocent med produktspecifik moms"
 
 #: wpsc-admin/includes/settings-pages/taxes.php:55
 msgid "Tax Logic"
@@ -4954,7 +4954,7 @@ msgstr ""
 
 #: wpsc-core/js/tinymce3/window.php:132
 msgid "You don't have the product slider installed, for a cool way to display your shop check out the <a href=\"http://getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Product Slider</a>"
-msgstr ""
+msgstr "Du har inte produktglidaren installerad, för att visa upp dina produkter på ett unikt sätt kolla in <a href=\"http://getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Produkt Glidare</a>"
 
 #: wpsc-core/js/tinymce3/window.php:139
 msgid "Members and Capabilities"
@@ -4962,11 +4962,11 @@ msgstr "Medlemmar ochförmågor"
 
 #: wpsc-core/js/tinymce3/window.php:144
 msgid "<p> To create a preview on your restricted page put this shortcode at the top of your page. you can include html within this short code to display things like images "
-msgstr ""
+msgstr "<p> För att skapa en förhandsgranskning på din begränsade sida, skriv in denna kortkod på toppen av din sida. Du kan inkludera html inom denna kod för att visa saker som t.ex. bilder"
 
 #: wpsc-core/js/tinymce3/window.php:149
 msgid " You don't have the Members and Capabilities plugin installed, to start managing your users and creating subscription for you site visit: <a href=\"http://getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Premium Upgrades</a>"
-msgstr ""
+msgstr "Du har inte Medlemmar och Förmågor-tillägget installerat, för att hantera dina användare och för att kunna skapa prenumerationer, besök <a href=\"http://getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">premium uppgraderingar</a>"
 
 #: wpsc-core/js/tinymce3/window.php:158
 msgid "Select a Product"
@@ -6573,6 +6573,8 @@ msgid ""
 "The Target Markets feature has been disabled because you have the Suhosin PHP extension installed on this server. If you need to use the Target Markets feature then disable the suhosin extension, if you can not do this, you will need to contact your hosting provider.\n"
 "\t\t\t"
 msgstr ""
+"Målmarknadsfunktionen har avaktiverats eftersom du har Suhosin PHP-tillägget installerat på denna server. Om du behöver använda funktionen målmarknad, inaktivera suhosin-tillägget, om du inte kan göra det så kontakta ditt webbhotell.\n"
+"&#9;&#9;&#9;"
 
 #: wpsc-admin/includes/save-data.functions.php:144
 msgid "Presentation Settings"
@@ -6808,7 +6810,7 @@ msgstr "Inställningar för kassasida"
 #: wpsc-admin/admin.php:485
 #: wpsc-admin/admin.php:896
 msgid "Current Month"
-msgstr "Nuvarande måad"
+msgstr "Nuvarande månad"
 
 #: wpsc-admin/admin.php:681
 #: wpsc-admin/admin.php:781
@@ -7041,7 +7043,7 @@ msgstr "Lägg i varukorgen"
 
 #: wpsc-includes/product-template.php:1460
 msgid "Avg. Customer Rating"
-msgstr "Snittligt kundbetyg"
+msgstr "Genomsnittligt kundbetyg"
 
 #: wpsc-includes/product-template.php:1466
 msgid "Your Rating"
@@ -7269,7 +7271,7 @@ msgstr "Det har inte blivit några köp, än..."
 
 #: wpsc-theme/wpsc-user-log.php:143
 msgid "You must be logged in to use this page. Please use the form below to login to your account."
-msgstr "Du måste vara inloggadkunna använda denna sida. Använd i formuläret nedan för att logga in på ditt konto."
+msgstr "Du måste vara inloggad för att använda denna sida. Använd formuläret nedan för att logga in på ditt konto. "
 
 #: wpsc-admin/admin.php:410
 msgid "Text"

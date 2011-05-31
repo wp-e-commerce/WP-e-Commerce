@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the WP e-Commerce package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2011-04-01 10:22+1200\n"
+"PO-Revision-Date: 2011-05-31 15:01+1200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10,16 +10,16 @@ msgstr ""
 "X-Generator: GlotPress/0.1\n"
 "Project-Id-Version: WP e-Commerce\n"
 "POT-Creation-Date: \n"
-"Last-Translator: instinct\n"
+"Last-Translator: michelle <michelle@instinct.co.nz>\n"
 "Language-Team: \n"
 
 #: wpsc-admin/display-sales-logs.php:384
 msgid "Mobile Sales App"
-msgstr ""
+msgstr "App de Vendas por Celular"
 
 #: wpsc-theme/functions/wpsc-transaction_results_functions.php:253
 msgid "<hr>Total Shipping: %s\n"
-msgstr ""
+msgstr "<hr>Total de Frete: %s\n"
 
 #: wpsc-includes/ajax.functions.php:1049
 msgid "Sorry something has gone wrong with your download!"
@@ -1797,7 +1797,7 @@ msgstr "BND"
 
 #: wpsc-updates/currency_list.php:108
 msgid "BRL"
-msgstr "BRL"
+msgstr "R$"
 
 #: wpsc-updates/currency_list.php:109
 #: wpsc-updates/currency_list.php:164
@@ -2015,7 +2015,7 @@ msgstr "Imagem da Categoria"
 
 #: wpsc-admin/includes/save-data.functions.php:414
 msgid "You can set an image for the category here.  If one exists, check the box to delete."
-msgstr "Você pode definir aqui uma imagem para a categoria. Se já existe uma, marque a caixa de seleção para deletar."
+msgstr "Você pode definir aqui uma imagem para a categoria. Se já existe uma, marque a caixa de seleção para excluí-la."
 
 #: wpsc-admin/includes/save-data.functions.php:420
 msgid "Thumbnail Size"
@@ -4166,7 +4166,7 @@ msgstr "Texto do Link Externo "
 
 #: wpsc-admin/includes/display-items-functions.php:847
 msgid "Select from existing files"
-msgstr ""
+msgstr "Selecione dos arquivos existentes"
 
 #: wpsc-admin/includes/products.php:71
 msgid "(no title)"
@@ -4194,7 +4194,7 @@ msgstr "Mostrar frete por item"
 
 #: wpsc-admin/includes/settings-pages/presentation.php:78
 msgid "Thanks, you have made a succesful backup of your theme.  It is located at the URL below.  Please note each backup you create will replace your previous backups."
-msgstr ""
+msgstr "Obrigado, você fez um backup bem-sucedido de seu tema. Ele está localizado na URL abaixo. Observe que cada backup que você criar irá substituir os backups anteriores."
 
 #: wpsc-admin/includes/settings-pages/presentation.php:548
 msgid "Select what product category you want to display on the products page"
@@ -4317,12 +4317,12 @@ msgstr "Receita"
 
 #: wpsc-admin/ajax-and-init.php:158
 msgid "Sorry, for some reason, we couldn't duplicate this product because it could not be found in the database, check there for this ID: "
-msgstr ""
+msgstr "Desculpe, por algum motivo, não pudemos duplicar este produto porque ele não foi encontrado no banco de dados, confira este ID:"
 
 #: wpsc-admin/ajax-and-init.php:1630
 #: wpsc-admin/ajax-and-init.php:1647
 msgid "You can list a default price here for this variation.  You can list a regular price (18.99), differential price (+1.99 / -2) or even a percentage-based price (+50% / -25%)."
-msgstr ""
+msgstr "Você pode listar aqui um preço padrão para essa variação. Você pode listar um preço normal (18,99), um preço com ajuste diferencial (+1,99 / -2) ou até mesmo um preço com ajuste percental (+50% / -25%)."
 
 #: wpsc-admin/ajax-and-init.php:1667
 msgid "Apply to current variations?"
@@ -4387,12 +4387,12 @@ msgstr "É menor que"
 #: wpsc-admin/display-coupons.php:234
 #: wpsc-admin/admin-form-functions.php:132
 msgid "Contains"
-msgstr ""
+msgstr "Contém"
 
 #: wpsc-admin/display-coupons.php:235
 #: wpsc-admin/admin-form-functions.php:133
 msgid "Does not contain"
-msgstr ""
+msgstr "Não contém"
 
 #: wpsc-admin/display-coupons.php:236
 #: wpsc-admin/admin-form-functions.php:134
@@ -4406,11 +4406,11 @@ msgstr "Termina com"
 
 #: wpsc-admin/display-coupons.php:238
 msgid "In Category"
-msgstr ""
+msgstr "Na categoria"
 
 #: wpsc-admin/display-coupons.php:283
 msgid "Add New Condition"
-msgstr ""
+msgstr "Adicionar Nova Condição"
 
 #: wpsc-admin/display-coupons.php:398
 msgid "<strong>Note:</strong> Due to a current PayPal limitation, when a purchase is made using a coupon we cannot send a detailed list of items through for processing. Instead we send the total amount of the purchase so the customer will see your shop name and the total within PayPal."
@@ -4425,7 +4425,7 @@ msgstr "Configurações Avançadas"
 #: wpsc-admin/includes/save-data.functions.php:233
 #: wpsc-admin/includes/save-data.functions.php:455
 msgid "Target Market Restrictions"
-msgstr ""
+msgstr "Restrições de Mercado-Alvo"
 
 #: wpsc-admin/includes/save-data.functions.php:285
 #: wpsc-admin/includes/save-data.functions.php:475
@@ -4458,18 +4458,18 @@ msgstr "Todos"
 #: wpsc-admin/display-items.page.php:216
 #: wpsc-admin/display-items.page.php:349
 msgid "Mark as Featured"
-msgstr ""
+msgstr "Marcar como Destaque"
 
 #: wpsc-admin/display-options-settings.page.php:209
 #: wpsc-admin/display-options-settings.page.php:262
 msgid "To configure a payment module select one on the left."
-msgstr ""
+msgstr "Para configurar um módulo de pagamento selecione-o à esquerda."
 
 #: wpsc-admin/display-options-settings.page.php:281
 msgid "%s Setting option deleted."
 msgid_plural "%s Setting option deleted."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s opção de configuração excluída."
+msgstr[1] "%s opções de configuração excluídas."
 
 #: wpsc-admin/display-options-settings.page.php:291
 msgid "%s Checkout field added."
@@ -4479,17 +4479,17 @@ msgstr[1] "%s campos de fechamento do pedido adicionados."
 
 #: wpsc-admin/display-options-settings.page.php:296
 msgid "Thumbnails regenerated."
-msgstr ""
+msgstr "Miniaturas regeneradas."
 
 #: wpsc-admin/display-options-settings.page.php:303
 msgid "Settings successfully updated."
-msgstr ""
+msgstr "Configurações atualizadas com sucesso."
 
 #: wpsc-admin/display-sales-logs.php:65
 msgid "%s Purchase Log updated."
 msgid_plural "%s Purchase Logs updated."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s histórico de compra atualizado."
+msgstr[1] "%s históricos de compra atualizados."
 
 #: wpsc-admin/display-sales-logs.php:73
 msgid "%s product not updated, somebody is editing it."
@@ -4500,8 +4500,8 @@ msgstr[1] "%s produtos dsatualizados, porém sendo editados."
 #: wpsc-admin/display-sales-logs.php:78
 msgid "%s Purchase Log deleted."
 msgid_plural "%s Purchase Logs deleted."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s histórico de compra excluído."
+msgstr[1] "%s histórico de compra excluído."
 
 #: wpsc-admin/display-sales-logs.php:118
 msgid "Downloads for this log have been released."
@@ -4552,25 +4552,25 @@ msgstr "Preço: %s ou superior."
 
 #: wpsc-admin/includes/display-items-functions.php:202
 msgid "Discounted Price"
-msgstr ""
+msgstr "Preço com Desconto"
 
 #: wpsc-admin/admin.php:304
 msgid "Stock Control"
-msgstr ""
+msgstr "Controle de Estoque"
 
 #: wpsc-admin/includes/display-items-functions.php:259
 msgid "I have limited stock for this Product"
-msgstr ""
+msgstr "Eu limitei o estoque deste produto"
 
 #: wpsc-admin/includes/display-items-functions.php:269
 msgid "This Product has variations, to edit the quantity please use the Variation Controls below."
-msgstr ""
+msgstr "Este produto tem variações, para editar a quantidade por favor, use os Controles de Variação abaixo."
 
 #: wpsc-admin/includes/display-items-functions.php:270
 msgid "%s variant item in stock."
 msgid_plural "%s variant items in stock."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s item variável em estoque."
+msgstr[1] "%s itens variáveis em estoque."
 
 #: wpsc-admin/includes/display-items-functions.php:272
 msgid "Quantity:"
@@ -4578,28 +4578,28 @@ msgstr "Quantidade:"
 
 #: wpsc-admin/includes/display-items-functions.php:287
 msgid "Notify site owner and unpublish this Product if stock runs out"
-msgstr ""
+msgstr "Notifique o proprietário do site e coloque este produto como \"Não Disponível\" se acabar o estoque."
 
 #: wpsc-admin/includes/display-items-functions.php:289
 msgid "If stock runs out, this Product will not be available on the shop unless you untick this box or add more stock."
-msgstr ""
+msgstr "Se o estoque se esgotar, este produto não estará disponível na loja a menos que você desmarque esta opção ou aumente o estoque."
 
 #: wpsc-admin/includes/display-items-functions.php:326
 #: wpsc-taxes/controllers/taxes_controller.class.php:315
 msgid "Custom Tax Band"
-msgstr ""
+msgstr "Faixa de Imposto Personalizada"
 
 #: wpsc-admin/includes/display-items-functions.php:448
 msgid "Update Variations &rarr;"
-msgstr ""
+msgstr "Atualizar Variações &rarr;"
 
 #: wpsc-admin/includes/display-items-functions.php:479
 msgid "Check or uncheck variation boxes and then click Update Variations to add or remove variations."
-msgstr ""
+msgstr "Marque ou desmarque as caixas de variação e depois clique em Atualizar Variações para adicionar ou remover variações."
 
 #: wpsc-admin/includes/display-items-functions.php:889
 msgid "Upload Image%s"
-msgstr ""
+msgstr "Enviar Imagem%s"
 
 #: wpsc-admin/includes/display-items-functions.php:1010
 msgid "Full Size"
@@ -4611,7 +4611,7 @@ msgstr "(%d&nbsp;&times;&nbsp;%d)"
 
 #: wpsc-admin/includes/display-items-functions.php:1038
 msgid "Alt text for the product image, e.g. &#8220;Rockstar T-Shirt&#8221;"
-msgstr ""
+msgstr "Texto alternativo para a imagem do produto, por exemplo: &#8220;Rockstar T-Shirt&#8221;"
 
 #: wpsc-admin/includes/display-items-functions.php:1129
 msgid "Product Image Gallery"
@@ -4643,7 +4643,7 @@ msgstr "Não Disponível"
 
 #: wpsc-admin/includes/products.php:94
 msgid "Y/m/d g:i:s A"
-msgstr ""
+msgstr "d/m/Y G:i:s"
 
 #: wpsc-admin/includes/products.php:101
 msgid "%s ago"
@@ -4651,15 +4651,15 @@ msgstr "%s atrás"
 
 #: wpsc-admin/includes/products.php:103
 msgid "Y/m/d"
-msgstr ""
+msgstr "d/m/Y"
 
 #: wpsc-admin/includes/products.php:113
 msgid "Published"
-msgstr ""
+msgstr "Publicado"
 
 #: wpsc-admin/includes/products.php:116
 msgid "Missed schedule"
-msgstr ""
+msgstr "Agendamento perdido"
 
 #: wpsc-admin/includes/products.php:118
 msgid "Scheduled"
@@ -4667,28 +4667,28 @@ msgstr "Agendada"
 
 #: wpsc-admin/includes/products.php:120
 msgid "Last Modified"
-msgstr ""
+msgstr "Últimos Modificados"
 
 #: wpsc-admin/includes/products.php:133
 msgid "Edit &#8220;%s&#8221;"
-msgstr ""
+msgstr "Editar &#8220;%s&#8221;"
 
 #: wpsc-admin/includes/products.php:168
 msgid "Edit this product"
-msgstr ""
+msgstr "Editar este produto"
 
 #: wpsc-admin/includes/products.php:169
 msgid "Quick Edit"
-msgstr ""
+msgstr "Edição Rápida"
 
 #: wpsc-admin/includes/products.php:174
 msgid "Preview &#8220;%s&#8221;"
-msgstr ""
+msgstr "Prévia &#8220;%s&#8221;"
 
 #: wpsc-admin/includes/products.php:177
 #: wpsc-admin/includes/products.php:371
 msgid "View"
-msgstr ""
+msgstr "Visão"
 
 #: wpsc-admin/includes/products.php:300
 #: wpsc-admin/display-items.page.php:206
@@ -4720,7 +4720,7 @@ msgstr "%"
 
 #: wpsc-admin/includes/purchlogs_upgrade.php:62
 msgid "Check Out Form Fields updated."
-msgstr ""
+msgstr "Campos do Formulário de Fechamento do Pedido atualizados."
 
 #: wpsc-admin/includes/settings-pages/checkout.php:103
 msgid "This can cause warnings for your users if you do not have a properly configured SSL certificate"
@@ -4752,11 +4752,11 @@ msgstr "Separadores de milhar e decimais"
 
 #: wpsc-admin/includes/settings-pages/general.php:148
 msgid "Thousands separator"
-msgstr ""
+msgstr "Separador de milhares"
 
 #: wpsc-admin/includes/settings-pages/general.php:149
 msgid "Decimal separator"
-msgstr ""
+msgstr "Separador decimal"
 
 #: wpsc-admin/includes/settings-pages/import.php:12
 msgid "<p>You can import your products from a comma delimited text file.</p><p>An example of a csv import file would look like this: </p><p>Description, Additional Description, Product Name, Price, SKU, weight, weight unit, stock quantity, is limited quantity</p>"
@@ -4764,7 +4764,7 @@ msgstr "<p>Você pode importar seus produtos a partir de um arquivo de texto del
 
 #: wpsc-admin/includes/settings-pages/marketing.php:17
 msgid "Marketing Section"
-msgstr ""
+msgstr "Seção de Publicidade"
 
 #: wpsc-admin/includes/settings-pages/marketing.php:19
 msgid "Google Merchant Centre / Google Product Search"
@@ -4772,11 +4772,11 @@ msgstr "Google Merchant Center / Pesquisa de Produtos do Google"
 
 #: wpsc-admin/includes/settings-pages/marketing.php:61
 msgid "Adds the 'Users who bought this also bought' item to the single products page."
-msgstr ""
+msgstr "Adiciona o item 'Usuários que compraram isto também compraram...' na página de detalhes do produto."
 
 #: wpsc-admin/includes/settings-pages/marketing.php:66
 msgid "Adds the 'Share this link' item to the single products page."
-msgstr ""
+msgstr "Adiciona o item 'Compartilhe este link' na página de detalhes do produto."
 
 #: wpsc-admin/includes/settings-pages/marketing.php:71
 msgid "Adds the 'How did you find out about us' drop-down option at checkout."
@@ -4784,19 +4784,19 @@ msgstr "Adiciona a opção 'Como você ficou sabendo sobre nós' no fechamento d
 
 #: wpsc-admin/includes/settings-pages/marketing.php:74
 msgid "Display Facebook Like"
-msgstr ""
+msgstr "Exibir \"Curtir\" do Facebook"
 
 #: wpsc-admin/includes/settings-pages/marketing.php:77
 msgid "Adds the Facebook Like button on your single products page."
-msgstr ""
+msgstr "Adiciona o botão 'Curtir' do Facebook em sua página de detalhes do produto."
 
 #: wpsc-admin/includes/settings-pages/marketing.php:91
 msgid "People can use this RSS feed to keep up to date with your product list."
-msgstr ""
+msgstr "As pessoas podem usar esse feed RSS para manterem-se atualizadas de sua lista de produtos."
 
 #: wpsc-admin/includes/settings-pages/marketing.php:92
 msgid "RSS Feed Address"
-msgstr ""
+msgstr "Endereço do Feed RSS"
 
 #: wpsc-admin/includes/settings-pages/marketing.php:99
 msgid "To import your products into <a href=\"http://www.google.com/merchants/\" target=\"_blank\">Google Merchant Centre</a> so that they appear within Google Product Search results, sign up for a Google Merchant Centre account and add a scheduled data feed with the following URL:"
@@ -4804,7 +4804,7 @@ msgstr "Para importar seus produtos no <a href=\"http://www.google.com/merchants
 
 #: wpsc-admin/includes/settings-pages/presentation.php:88
 msgid "Some Theme files have been moved to your WordPress Theme Folder."
-msgstr ""
+msgstr "Alguns arquivos de Tema foram movidos para a pasta de seu Tema no WordPress."
 
 #: wpsc-admin/includes/settings-pages/presentation.php:90
 msgid "No Theme files have been moved to your WordPress Theme Folder."
@@ -4860,27 +4860,27 @@ msgstr "Os preços dos produtos já incluem impostos - durante o fechamento do p
 
 #: wpsc-admin/includes/settings-pages/taxes.php:37
 msgid "Product Specific Tax"
-msgstr ""
+msgstr "Imposto Específico do Produto"
 
 #: wpsc-admin/includes/settings-pages/taxes.php:43
 msgid "Add per product tax to tax percentage if product has a specific tax rate"
-msgstr ""
+msgstr "Adicionar imposto por produto à porcentagem de impostos caso o produto tenha uma taxa de tributação específica"
 
 #: wpsc-admin/includes/settings-pages/taxes.php:51
 msgid "Replace tax percentage with product specific tax rate"
-msgstr ""
+msgstr "Substituir imposto percentual pela taxa de impostos específica do produto"
 
 #: wpsc-admin/includes/settings-pages/taxes.php:55
 msgid "Tax Logic"
-msgstr ""
+msgstr "Lógica de Impostos"
 
 #: wpsc-admin/includes/settings-pages/taxes.php:61
 msgid "Apply tax when Billing and Shipping Country is the same as Tax Rate"
-msgstr ""
+msgstr "Aplicar impostos quando o País de Faturamento e Entrega for o mesmo da Taxa de Impostos"
 
 #: wpsc-admin/includes/settings-pages/taxes.php:69
 msgid "Apply tax to Billing Address"
-msgstr ""
+msgstr "Aplicar impostos ao Endereço de Faturamento"
 
 #: wpsc-admin/includes/settings-pages/taxes.php:77
 msgid "Apply tax to Shipping Address"
@@ -4888,19 +4888,19 @@ msgstr "Aplicar impostos ao Endereço de Entrega"
 
 #: wpsc-admin/includes/settings-pages/taxes.php:87
 msgid "Apply tax when Billing Country is the same as Tax Rate"
-msgstr ""
+msgstr "Aplicar impostos quando o País de Faturamento for o mesmo da Taxa de Impostos"
 
 #: wpsc-admin/includes/settings-pages/taxes.php:95
 msgid "Apply tax when Shipping Country is the same as Tax Rate"
-msgstr ""
+msgstr "Aplicar impostos quando o País de Entrega for o mesmo da Taxa de Impostos"
 
 #: wpsc-admin/includes/settings-pages/taxes.php:100
 msgid "Tax Rates"
-msgstr ""
+msgstr "Taxas de Imposto"
 
 #: wpsc-admin/includes/settings-pages/taxes.php:145
 msgid "Add New Tax Rate"
-msgstr ""
+msgstr "Adicionar Nova Taxa de Imposto"
 
 #: wpsc-admin/includes/settings-pages/taxes.php:150
 msgid "Tax Bands"
@@ -4924,11 +4924,11 @@ msgstr "Selecione a Categoria:"
 
 #: wpsc-core/js/tinymce3/window.php:69
 msgid "Number of products per Page: "
-msgstr ""
+msgstr "Número de produtos por Página:"
 
 #: wpsc-core/js/tinymce3/window.php:72
 msgid "Select the number of products you would like to display per page."
-msgstr ""
+msgstr "Selecione o número de produtos que você gostaria de exibir por página."
 
 #: wpsc-core/js/tinymce3/window.php:77
 msgid "Sale Products:"
@@ -4956,11 +4956,11 @@ msgstr "Número de Produtos"
 
 #: wpsc-core/js/tinymce3/window.php:126
 msgid "Number of Products to be displayed in the slider."
-msgstr ""
+msgstr "Número de produtos a serem exibidos na vitrine deslizante."
 
 #: wpsc-core/js/tinymce3/window.php:132
 msgid "You don't have the product slider installed, for a cool way to display your shop check out the <a href=\"http://getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Product Slider</a>"
-msgstr ""
+msgstr "Você não tem o controle de Vitrine Deslizante instalado, que é uma forma legal para exibir sua loja, saiba mais sobre o <a href=\"http://getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Product Slider</a>"
 
 #: wpsc-core/js/tinymce3/window.php:139
 msgid "Members and Capabilities"
@@ -4968,19 +4968,19 @@ msgstr "Membros e Capacidades"
 
 #: wpsc-core/js/tinymce3/window.php:144
 msgid "<p> To create a preview on your restricted page put this shortcode at the top of your page. you can include html within this short code to display things like images "
-msgstr ""
+msgstr "<p> Para criar uma prévia em sua página restrita coloque este shortcode no topo de sua página. Você pode incluir código html dentro deste shortcode para exibir elementos, ex: imagens"
 
 #: wpsc-core/js/tinymce3/window.php:149
 msgid " You don't have the Members and Capabilities plugin installed, to start managing your users and creating subscription for you site visit: <a href=\"http://getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Premium Upgrades</a>"
-msgstr ""
+msgstr "Você não tem o plugin de Membros e Capacidades instalado, para gerenciar os usuários de sua loja e criar inscrições, visite o site:<a href=\"http://getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Premium Upgrades</a>"
 
 #: wpsc-core/js/tinymce3/window.php:158
 msgid "Select a Product"
-msgstr ""
+msgstr "Escolha um Produto"
 
 #: wpsc-core/js/tinymce3/window.php:167
 msgid "Select the product you would like to create a shortcode for."
-msgstr ""
+msgstr "Selecione o produto para o qual você gostaria de criar um shortcode"
 
 #: wpsc-core/js/tinymce3/window.php:175
 msgid "Shortcode:"
@@ -4988,27 +4988,27 @@ msgstr "Shortcode:"
 
 #: wpsc-core/js/tinymce3/window.php:177
 msgid "Add a buy now button"
-msgstr ""
+msgstr "Adicionar botão 'Comprar Agora'"
 
 #: wpsc-core/js/tinymce3/window.php:178
 msgid "This adds a paypal buy now button for the product selected, this will take your customer straight to PayPal."
-msgstr ""
+msgstr "Isso adiciona um botão 'compre agora' do PayPal para o produto selecionado. Este botão levará seu cliente diretamente ao PayPal."
 
 #: wpsc-core/js/tinymce3/window.php:185
 msgid "Add an add to cart button"
-msgstr ""
+msgstr "Adicionar botão 'Adicionar ao Carrinho'"
 
 #: wpsc-core/js/tinymce3/window.php:186
 msgid "This adds an add to cart button for the product selected."
-msgstr ""
+msgstr "Isso adiciona um botão 'adicionar ao carrinho' para o produto selecionado."
 
 #: wpsc-core/js/tinymce3/window.php:193
 msgid "Add product"
-msgstr ""
+msgstr "Adicionar produto"
 
 #: wpsc-core/js/tinymce3/window.php:194
 msgid "This will add the selected product to your page."
-msgstr ""
+msgstr "Isto irá adicionar o produto selecionado à sua página."
 
 #: wpsc-core/wpsc-functions.php:306
 msgctxt "taxonomy general name"
@@ -5064,11 +5064,11 @@ msgstr "Todas as Variações"
 
 #: wpsc-core/wpsc-functions.php:349
 msgid "Parent Variation"
-msgstr ""
+msgstr "Variação do Produto-Pai"
 
 #: wpsc-core/wpsc-functions.php:350
 msgid "Parent Variations:"
-msgstr ""
+msgstr "Variações do Produto-Pai:"
 
 #: wpsc-core/wpsc-functions.php:351
 msgid "Edit Variation"
@@ -5139,15 +5139,15 @@ msgstr "<strong>Configurações da Loja</strong>: Você definiu 'os usuários de
 
 #: wpsc-merchants/paypal-express.merchant.php:656
 msgid "Confirm Payment"
-msgstr ""
+msgstr "Confirmar Pagamento"
 
 #: wpsc-merchants/paypal-pro.merchant.php:147
 msgid "There was a problem connecting to the payment gateway."
-msgstr ""
+msgstr "Houve um problema na conexão com o gateway de pagamento."
 
 #: wpsc-merchants/paypal-pro.merchant.php:163
 msgid "There is a problem with your PayPal account configuration, please contact PayPal for further information."
-msgstr ""
+msgstr "Há um problema com sua configuração de conta no PayPal, por favor entre em contato com PayPal para mais informações."
 
 #: wpsc-shipping/ups_20.php:165
 msgid "Customer Type"
@@ -5192,7 +5192,7 @@ msgstr "Clique Aqui"
 
 #: wpsc-shipping/ups_20.php:304
 msgid "* For Negotiated rates, you must enter a UPS account number and select \"Show UPS negotiated rates\" "
-msgstr ""
+msgstr "* Para tarifas negociadas, você deve informar o número da conta UPS e selecionar \"Mostrar tarifas negociadas UPS\" "
 
 #: wpsc-taxes/controllers/taxes_controller.class.php:309
 #: wpsc-taxes/controllers/taxes_controller.class.php:320
@@ -5201,20 +5201,20 @@ msgstr "Desabilitado"
 
 #: wpsc-taxes/controllers/taxes_controller.class.php:325
 msgid "No Tax Bands Setup. Set Tax Bands up in <a href=\"options-general.php?page=wpsc-settings&tab=taxes\">Settings &gt; Taxes</a>"
-msgstr ""
+msgstr "Não há configuração de Faixas de Impostos. Defina as Faixas de Imposto em <a href=\"options-general.php?page=wpsc-settings&tab=taxes\">Configurações &gt; Impostos</a>"
 
 #: wpsc-taxes/controllers/taxes_controller.class.php:329
 msgid "Taxes are not enabled. See <a href=\"options-general.php?page=wpsc-settings&tab=taxes\">Settings &gt; Taxes</a>"
-msgstr ""
+msgstr "Os impostos não estão habilitados. Veja em <a href=\"options-general.php?page=wpsc-settings&tab=taxes\">Configurações &gt; Impostos</a>"
 
 #: wpsc-taxes/controllers/taxes_controller.class.php:541
 msgid "Apply to Shipping"
-msgstr ""
+msgstr "Aplicar à Expedição"
 
 #: wpsc-theme/functions/wpsc-transaction_results_functions.php:326
 #: wpsc-admin/includes/purchlogs_upgrade.php:40
 msgid "Billing State"
-msgstr ""
+msgstr "Estado do Faturamento"
 
 #: wpsc-theme/functions/wpsc-user_log_functions.php:638
 msgid "Purchase #"
@@ -5228,18 +5228,18 @@ msgstr "Opções de Produto"
 
 #: wpsc-theme/wpsc-grid_view.php:131
 msgid "Sorry, sold out!"
-msgstr ""
+msgstr "Lamentamos, produto esgotado!"
 
 #: wpsc-theme/wpsc-list_view.php:83
 #: wpsc-theme/wpsc-single_product.php:132
 #: wpsc-theme/wpsc-products_page.php:163
 msgid "Product not in stock"
-msgstr ""
+msgstr "Produto não disponível em estoque"
 
 #: wpsc-theme/wpsc-single_product.php:144
 #: wpsc-theme/wpsc-products_page.php:176
 msgid "You save"
-msgstr ""
+msgstr "Você economiza"
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:97
 msgid "Cost before shipping:"
@@ -5247,43 +5247,43 @@ msgstr "Custo antes do envio:"
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:353
 msgid "Enter your email address"
-msgstr ""
+msgstr "Digite seu endereço de e-mail"
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:391
 msgid "How did you find us"
-msgstr ""
+msgstr "Como você nos encontrou"
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:394
 msgid "Word of mouth"
-msgstr ""
+msgstr "Indicação de amigo"
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:395
 msgid "Advertising"
-msgstr ""
+msgstr "Publicidade"
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:396
 msgid "Internet"
-msgstr ""
+msgstr "Internet"
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:397
 msgid "Existing Customer"
-msgstr ""
+msgstr "Já é cliente"
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:408
 msgid "Payment Type"
-msgstr ""
+msgstr "Tipo de Pagamento"
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:497
 msgid "Purchase"
-msgstr ""
+msgstr "Compra"
 
 #: wpsc-theme/wpsc-single_product.php:79
 msgid "Personalize Your Product"
-msgstr ""
+msgstr "Personalize Seu Produto"
 
 #: wpsc-theme/wpsc-user-log.php:16
 msgid "Purchase History"
-msgstr ""
+msgstr "Histórico de Compras"
 
 #: wpsc-theme/wpsc-user-log.php:17
 msgid "Your Details"
@@ -5336,21 +5336,21 @@ msgstr "De"
 
 #: wpsc-core/js/tinymce3/window.php:43
 msgid "Category"
-msgstr ""
+msgstr "Categoria"
 
 #: wpsc-core/js/tinymce3/window.php:102
 #: wpsc-admin/display-upgrades.page.php:43
 msgid "Product Slider"
-msgstr ""
+msgstr "Vitrine Deslizante"
 
 #: wpsc-core/js/tinymce3/window.php:108
 msgid "Select Category"
-msgstr ""
+msgstr "Selecione a Categoria"
 
 #: wpsc-core/js/tinymce3/window.php:58
 #: wpsc-core/js/tinymce3/window.php:111
 msgid "No Category"
-msgstr ""
+msgstr "Sem Categoria"
 
 #: wpsc-merchants/chronopay.php:449
 #: wpsc-merchants/paypal-standard.merchant.php:615
@@ -5368,7 +5368,7 @@ msgstr "Atualizar &raquo;"
 
 #: wpsc-merchants/paypal-standard.merchant.php:170
 msgid "Your Subscription"
-msgstr ""
+msgstr "Sua Inscrição"
 
 #: wpsc-merchants/paypal-standard.merchant.php:580
 #: wpsc-merchants/paypal-express.merchant.php:293
@@ -5484,7 +5484,7 @@ msgstr "Finalizar Compra"
 
 #: wpsc-theme/wpsc-cart_widget.php:76
 msgid "Your shopping cart is empty"
-msgstr ""
+msgstr "Seu carrinho de compras está vazio"
 
 #: wpsc-theme/wpsc-cart_widget.php:77
 msgid "Visit the shop"
@@ -5796,7 +5796,7 @@ msgstr "Reenviar Recibo ao Comprador"
 #: wpsc-admin/display-sales-logs.php:270
 #: wpsc-admin/display-sales-logs.php:432
 msgid "Delete this log"
-msgstr "Remover este registro do histórico"
+msgstr "Excluir este registro do histórico"
 
 #: wpsc-admin/display-sales-logs.php:270
 #: wpsc-admin/display-sales-logs.php:432
@@ -6731,7 +6731,7 @@ msgstr "Não"
 #: wpsc-shipping/tablerate.php:66
 #: wpsc-shipping/weightrate.php:58
 msgid "Delete"
-msgstr "Remover"
+msgstr "Excluir"
 
 #: wpsc-admin/includes/settings-pages/checkout.php:134
 msgid "Add"
