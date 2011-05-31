@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the WP e-Commerce package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2011-04-01 10:22+1200\n"
+"PO-Revision-Date: 2011-05-31 15:00+1200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10,7 +10,7 @@ msgstr ""
 "X-Generator: GlotPress/0.1\n"
 "Project-Id-Version: WP e-Commerce\n"
 "POT-Creation-Date: \n"
-"Last-Translator: instinct\n"
+"Last-Translator: michelle <michelle@instinct.co.nz>\n"
 "Language-Team: \n"
 
 #: wpsc-admin/display-sales-logs.php:384
@@ -19,7 +19,7 @@ msgstr ""
 
 #: wpsc-theme/functions/wpsc-transaction_results_functions.php:253
 msgid "<hr>Total Shipping: %s\n"
-msgstr ""
+msgstr "<hr>Spedizione Totale: %s\n"
 
 #: wpsc-includes/ajax.functions.php:1049
 msgid "Sorry something has gone wrong with your download!"
