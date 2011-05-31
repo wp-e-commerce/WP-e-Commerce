@@ -355,6 +355,23 @@ function wpsc_update_featured_products() {
 	exit();
 }
 
-if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'update_featured_product') ) {
-	add_action( 'admin_init', 'wpsc_update_featured_products' );
+add_filter( 'page_row_actions','my_action_row', 10, 2 );
+
+function my_action_row( $actions, $post ) {
+
+    if ( $post->post_type != "wpsc-product" )
+            return $actions;
+
+    $url = admin_url( 'edit.php' );
+    $url = add_query_arg( array( 'wpsc_admin_action' => 'duplicate_product', 'product' => $post->ID ), $url );
+    
+    $actions['duplicate'] = '<a href="'.esc_url( $url ).'">'._x( 'Duplicate', 'row-actions', 'wpsc' ).'</a>';
+
+    return $actions;
 }
+
+if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( $_REQUEST['wpsc_admin_action'] == 'update_featured_product' ) )
+    add_action( 'admin_init', 'wpsc_update_featured_products' );
+
+if ( isset( $_GET['wpsc_admin_action'] ) && ( $_GET['wpsc_admin_action'] == 'duplicate_product' ) )
+    add_action( 'admin_init', 'wpsc_duplicate_product' );
