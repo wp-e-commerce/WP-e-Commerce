@@ -36,7 +36,8 @@
 					<?php printf( _n('%d item', '%d items', wpsc_cart_item_count(), 'wpsc'), wpsc_cart_item_count() ); ?>
 				</td>
 				<td class="pricedisplay checkout-total" colspan='4'>
-					<?php _e('Total', 'wpsc'); ?>: <?php echo wpsc_cart_total_widget(); ?>
+					<?php _e('Total', 'wpsc'); ?>: <?php echo wpsc_cart_total_widget( false, false ,false ); ?><br />
+					<small><?php _e( 'excluding shipping and tax' ); ?></small>
 				</td>
 			</tr>
 			<tr>
