@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the WP e-Commerce package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2011-04-01 10:22+1200\n"
+"PO-Revision-Date: 2011-05-31 15:01+1200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10,36 +10,36 @@ msgstr ""
 "X-Generator: GlotPress/0.1\n"
 "Project-Id-Version: WP e-Commerce\n"
 "POT-Creation-Date: \n"
-"Last-Translator: instinct\n"
+"Last-Translator: michelle <michelle@instinct.co.nz>\n"
 "Language-Team: \n"
 
 #: wpsc-admin/display-sales-logs.php:384
 msgid "Mobile Sales App"
-msgstr ""
+msgstr "Mobiele applicatie voor verkopen"
 
 #: wpsc-theme/functions/wpsc-transaction_results_functions.php:253
 msgid "<hr>Total Shipping: %s\n"
-msgstr ""
+msgstr "<hr>Totaal Verzendkosten: %s\n"
 
 #: wpsc-includes/ajax.functions.php:1049
 msgid "Sorry something has gone wrong with your download!"
-msgstr ""
+msgstr "Sorry er is iets misgegaan met uw download!"
 
 #: wpsc-admin/includes/display-items-functions.php:972
 msgid "The name is how it appears on your site. <br><div class=\"error\"><strong>Please read this carefully before starting to work with variations:</strong><br />Variations in WP e-Commerce are divided into sets. For example set <strong>Color</strong> could have variations <strong>Red, Green,</strong> and <strong>Blue</strong>. To create a set simply enter <strong>Name</strong> and push Enter key on your keyboard or click <strong>Add New Variation/Set</strong> button in the bottom of this page. Now you can select the variation set that you've just created from <strong>Variation set</strong> drop-down menu and add some variations to it.</div>"
-msgstr ""
+msgstr "De naam is hoe deze op uw site verschijnt. <br><div class=\"error\"><strong>Lees a.u.b. dit zorgvuldig voordat u begint te werken met varianten: </strong><br />Varianten in WP e-Commerce zijn verdeeld in sets. Bijvoorbeeld set <strong>'Kleur </strong> zou de varianten <strong>Rood, Groen,</strong> en <strong> Blauw</strong> kunnen hebben. Voer voor het maken van een set simpelweg <strong>een naam in</strong> en druk op de Enter-toets op uw toetsenbord of klik op de <strong>'Voeg Nieuwe Variant / Set toe </strong>-knop aan de onderzijde van deze pagina. Nu kunt u de variatantenset selecteren die u zojuist hebt gemaakt d.m.v. het <strong>Variantenset</strong> drop-down menu en voegt u er enkele varianten aan toe.</div>"
 
 #: wpsc-core/wpsc-functions.php:241
 msgid "Lots of things have changed in this version. Before updating please backup your database and files in case anything goes wrong."
-msgstr ""
+msgstr "Er zijn in deze versie veel dingen gewijzigd. Voordat u e-Commerce update moet u een backup van uw database en bestanden maken voor het geval dat er iets fout gaat."
 
 #: wpsc-core/wpsc-functions.php:240
 msgid "Please backup your website before updating!"
-msgstr ""
+msgstr "Maak a.u.b. een backup van uw website voordat u update!"
 
 #: wpsc-admin/display-update.page.php:75
 msgid "Note: It looks like you have custom permalinks, you will need to refresh your permalinks <a href=\"%s\">here</a>"
-msgstr ""
+msgstr "Opmerking: Het lijkt erop dat u aangepaste permalinks gebruikt, u zult uw permalinks <a href=\"%s\">hier</a> moeten herladen."
 
 #: wpsc-theme/functions/wpsc-transaction_results_functions.php:57
 msgid "Sorry your transaction was not accepted.<br /><a href=\"%1$s\">Click here to go back to checkout page</a>."
@@ -51,21 +51,21 @@ msgstr "Bezoek de winkel"
 
 #: wpsc-admin/admin.php:903
 msgid "Due to a problem in WordPress Permalinks and Custom Post Types, WP e-Commerce encourages you to refresh your permalinks a second time. (for a more geeky explanation visit <a href=\"%s\">trac</a>)"
-msgstr ""
+msgstr "Als gevolg van een probleem in WordPress Permalinks en Custom Post Types, raadt WP e-Commerce u aan om uw permalinks nogmaals te verversen. (Ga voor een meer techneuten-uitleg naar<a href=\"%s\">trac</a>)"
 
 #: wpsc-admin/includes/settings-pages/general.php:75
 msgid "Select the markets you are selling products to."
-msgstr ""
+msgstr "Selecteer de markten waar u producten aan verkoopt."
 
 #: wpsc-admin/includes/settings-pages/checkout.php:31
 msgid "Misc Checkout Options"
-msgstr ""
+msgstr "Diverse Afreken opties"
 
 #: wpsc-widgets/tagging_functions.php:94
 msgid "%d topic"
 msgid_plural "%d topics"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d onderwerp"
+msgstr[1] "%d onderwerpen"
 
 #: wpsc-theme/wpsc-user-log.php:162
 msgid "Login &raquo;"
@@ -73,12 +73,12 @@ msgstr "Log in &raquo;"
 
 #: wpsc-admin/includes/settings-pages/general.php:61
 msgid "Select: <a href=\"%1$s\"  class=\"wpsc_select_all\" title=\"All\">All</a> <a href=\"%1$s\" class=\"wpsc_select_none\" title=\"None\">None</a>"
-msgstr ""
+msgstr "Selecteer: <a href=\"%1$s\"  class=\"wpsc_select_all\" title=\"Alle\">Alle</a> <a href=\"%1$s\" class=\"wpsc_select_none\" title=\"Geen\">Geen</a>"
 
 #: wpsc-theme/functions/wpsc-user_log_functions.php:95
 #: wpsc-includes/checkout.class.php:844
 msgid "Please enter a valid <span class=\"wpsc_error_msg_field_name\">%s</span>."
-msgstr ""
+msgstr "Geef a.u.b. een geldige <span class=\"wpsc_error_msg_field_name\">%s </span>."
 
 #: wpsc-admin/admin-form-functions.php:207
 msgctxt "dashboard widget"
@@ -395,7 +395,7 @@ msgstr "Postcode verzendadres"
 
 #: wpsc-admin/includes/purchlogs_upgrade.php:69
 msgid "Upgrading to WP e-Commerce 3.7 and later requires you to run this fix once.The following Boxes corresponds to the form fields in your current checkout page.  All you have to do is select from the drop-down menu box what each of the following fields represent. Sorry for any inconvenience caused, but we're sure you'll agree that the new purchase logs are worth this minor hassle."
-msgstr ""
+msgstr "Upgraden naar WP e-Commerce 3.7 en later, vereist dat u eenmalig deze fix uitvoert. De volgende velden komen overeen met de velden in uw huidige Afrekenpagina. Het enige dat u hoeft te doen, is uit het drop-downmenu selecteren waar elk van de items voor staat. Excuus voor enigerlei ongemak die u hiervan ondervindt maar u zult het ongetwijfeld met ons eens zijn dat de nieuwe aankooplogbestanden dit kleine ongemak meer dan waard zijn."
 
 #: wpsc-admin/admin.php:179
 msgid "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/products'>About the Products Page</a>"
@@ -419,11 +419,11 @@ msgstr "<a target='_blank' href='http://getshopped.org/resources/docs/building-y
 
 #: wpsc-admin/display-sales-logs.php:86
 msgid "When upgrading the WP e-Commerce Plugin from 3.6.* to 3.7 it is required that you associate your checkout form fields with the new Purchase Logs system. To do so please <a href=\"%s\">Click Here</a>"
-msgstr ""
+msgstr "Bij het upgraden van de WP e-Commerce Plugin van 3,6 naar 3,7 .* is het noodzakelijk dat u uw kassaformuliervelden met het nieuwe aankooplogssysteem koppelt. Om dit te doen kunt u <a href=\"%s\">hier klikken</a>"
 
 #: wpsc-shipping/usps_20.php:244
 msgid "Online rates the following services only, when available"
-msgstr ""
+msgstr "Indien beschikbaar, de online tarieven van alleen de volgende diensten"
 
 #: wpsc-shipping/usps_20.php:256
 msgid "International Package Type"
@@ -435,7 +435,7 @@ msgstr "Eerste klas post type"
 
 #: wpsc-shipping/usps_20.php:302
 msgid "Only used for First Class service rates if selected"
-msgstr ""
+msgstr "Indien geselecteerd, alleen gebruikt voor First Class service tarieven"
 
 #: wpsc-shipping/tablerate.php:72
 msgid "Add Layer"

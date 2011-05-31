@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the WP e-Commerce package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2011-04-01 10:22+1200\n"
+"PO-Revision-Date: 2011-05-31 15:00+1200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10,7 +10,7 @@ msgstr ""
 "X-Generator: GlotPress/0.1\n"
 "Project-Id-Version: WP e-Commerce\n"
 "POT-Creation-Date: \n"
-"Last-Translator: instinct\n"
+"Last-Translator: michelle <michelle@instinct.co.nz>\n"
 "Language-Team: \n"
 
 #: wpsc-admin/display-sales-logs.php:384
@@ -43,11 +43,11 @@ msgstr ""
 
 #: wpsc-theme/functions/wpsc-transaction_results_functions.php:57
 msgid "Sorry your transaction was not accepted.<br /><a href=\"%1$s\">Click here to go back to checkout page</a>."
-msgstr ""
+msgstr "Üzgünüm işlem kabul edilmedi. <br /><a href=\"%1$s\">Ödeme sayfasına dönmek için tıklayınız</a>."
 
 #: wpsc-theme/wpsc-cart_widget.php:77
 msgid "Visit Shop"
-msgstr ""
+msgstr "Mağazayı Ziyaret Et"
 
 #: wpsc-admin/admin.php:903
 msgid "Due to a problem in WordPress Permalinks and Custom Post Types, WP e-Commerce encourages you to refresh your permalinks a second time. (for a more geeky explanation visit <a href=\"%s\">trac</a>)"
@@ -68,7 +68,7 @@ msgstr[0] ""
 
 #: wpsc-theme/wpsc-user-log.php:162
 msgid "Login &raquo;"
-msgstr ""
+msgstr "Giriş &raquo;"
 
 #: wpsc-admin/includes/settings-pages/general.php:61
 msgid "Select: <a href=\"%1$s\"  class=\"wpsc_select_all\" title=\"All\">All</a> <a href=\"%1$s\" class=\"wpsc_select_none\" title=\"None\">None</a>"
@@ -87,7 +87,7 @@ msgstr[0] "Ürünler"
 
 #: wpsc-admin/includes/display-items-functions.php:943
 msgid "Variation set"
-msgstr ""
+msgstr "Yeni Ürün Çeşidi Seti"
 
 #: wpsc-core/wpsc-functions.php:319
 msgctxt "slug, part of url"
@@ -96,7 +96,7 @@ msgstr ""
 
 #: wpsc-core/wpsc-functions.php:353
 msgid "Add New Variation/Set"
-msgstr ""
+msgstr "Yeni Ürün Çeşidi/Seti Ekle"
 
 #: wpsc-admin/admin-form-functions.php:221
 msgctxt "dashboard widget"
@@ -390,19 +390,19 @@ msgstr ""
 
 #: wpsc-admin/admin.php:179
 msgid "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/products'>About the Products Page</a>"
-msgstr ""
+msgstr "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/products'>Ürün sayfası Hakkında</a>"
 
 #: wpsc-admin/admin.php:180
 msgid "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/categories/'>About the Categories Page</a>"
-msgstr ""
+msgstr "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/categories/'>Kategori Sayfası Hakkında</a>"
 
 #: wpsc-admin/admin.php:181
 msgid "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/variations/'>About the Variations Page</a>"
-msgstr ""
+msgstr "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/variations/'>Ürün Çeşitleri Sayfası Hakkında</a>"
 
 #: wpsc-admin/admin.php:182
 msgid "<a target='_blank' href='http://getshopped.org/resources/docs/store-settings/general/'>General Settings</a><br /> <a target='_blank' href='http://getshopped.org/resources/docs/store-settings/checkout/'>Checkout Options</a> <br />"
-msgstr ""
+msgstr "<a target='_blank' href='http://getshopped.org/resources/docs/store-settings/general/'>Genel Ayarlar</a><br /> <a target='_blank' href='http://getshopped.org/resources/docs/store-settings/checkout/'>Ödeme Seçenekleri</a> <br />"
 
 #: wpsc-admin/admin.php:183
 msgid "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/marketing'>Marketing Options</a><br />"
@@ -422,7 +422,7 @@ msgstr "Uluslararası Paket Türü"
 
 #: wpsc-shipping/usps_20.php:279
 msgid "First Class Mail Type"
-msgstr ""
+msgstr "First Class Mail"
 
 #: wpsc-shipping/usps_20.php:302
 msgid "Only used for First Class service rates if selected"
@@ -491,7 +491,7 @@ msgstr "Kredi Kartı Numarası *"
 
 #: wpsc-theme/wpsc-cart_widget.php:67
 msgid "Empty Your Cart"
-msgstr "Sepetiniz Boşaltın"
+msgstr "Sepeti Boşalt"
 
 #: wpsc-merchants/paypal-express.merchant.php:281
 msgid "Production"
@@ -610,7 +610,7 @@ msgstr "Görünüm"
 #: wpsc-admin/display-options-settings.page.php:117
 msgctxt "Import settings tab in Settings->Store page"
 msgid "Import"
-msgstr ""
+msgstr "İçe Aktar"
 
 #: wpsc-admin/display-options-settings.page.php:114
 msgctxt "Payments settings tab in Settings->Store page"
@@ -629,7 +629,7 @@ msgstr "Ödeme"
 
 #: wpsc-admin/admin.php:778
 msgid "Last four months of sales on a per product basis:"
-msgstr ""
+msgstr "Ürün bazında çeyrek dönem satışları:"
 
 #: wpsc-admin/display-options-settings.page.php:109
 msgctxt "General settings tab in Settings->Store page"
@@ -761,7 +761,7 @@ msgstr "SIT"
 
 #: wpsc-updates/currency_list.php:199
 msgid "SOD"
-msgstr ""
+msgstr "SOD"
 
 #: wpsc-updates/currency_list.php:200
 msgid "ZAR"
@@ -829,7 +829,7 @@ msgstr "AED"
 
 #: wpsc-updates/currency_list.php:228
 msgid "UYP"
-msgstr ""
+msgstr "UYP"
 
 #: wpsc-updates/currency_list.php:231
 msgid "VUV"
@@ -869,7 +869,7 @@ msgstr "Pound"
 
 #: wpsc-taxes/controllers/taxes_controller.class.php:600
 msgid "All Markets"
-msgstr ""
+msgstr "Tüm Piyasalar"
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:443
 msgid "I agree to The <a class='thickbox' target='_blank' href='%s' class='termsandconds'>Terms and Conditions</a>"
@@ -889,7 +889,7 @@ msgstr "Ons"
 
 #: wpsc-admin/display-update.page.php:73
 msgid "WP e-Commerce updated successfully!"
-msgstr ""
+msgstr "WP e-Commerce uygulaması başarıyla güncellendi!"
 
 #: wpsc-admin/display-items.page.php:140
 msgid " lbs."
@@ -897,12 +897,12 @@ msgstr "lbs."
 
 #: wpsc-admin/display-update.page.php:62
 msgid "Updating Variations..."
-msgstr ""
+msgstr "Ürün Çeşitleri Gücenlleniyor ..."
 
 #: wpsc-admin/includes/display-items-functions.php:806
 msgctxt "External product link target"
 msgid "Default (set by theme)"
-msgstr ""
+msgstr "Varsayılan (tema tarafından belirlenen)"
 
 #: wpsc-admin/includes/display-items-functions.php:763
 msgid "Use Default"
@@ -923,11 +923,11 @@ msgstr ""
 #: wpsc-admin/display-items.page.php:278
 msgctxt "Show all [category name]"
 msgid "Show All %s"
-msgstr ""
+msgstr "Tümünü Göster %s"
 
 #: wpsc-admin/display-update.page.php:64
 msgid "Updating Products..."
-msgstr ""
+msgstr "Ürünler Güncelleniyor..."
 
 #: wpsc-admin/display-update.page.php:70
 msgid "Updating Database..."
@@ -935,7 +935,7 @@ msgstr "Veritabanı güncelleniyor ..."
 
 #: wpsc-admin/admin.php:296
 msgid "Off Site Product link"
-msgstr ""
+msgstr "Off Site Ürün linki"
 
 #: wpsc-admin/includes/display-items-functions.php:149
 msgid "+ New Currency"
@@ -973,7 +973,7 @@ msgstr "metre"
 
 #: wpsc-admin/includes/display-items-functions.php:807
 msgid "Open link in the same window"
-msgstr ""
+msgstr "Aynı pencerede aç"
 
 #: wpsc-admin/includes/display-items-functions.php:808
 msgid "Open link in a new window"
@@ -986,7 +986,7 @@ msgstr ""
 #: wpsc-core/wpsc-functions.php:268
 msgctxt "admin menu: add new product"
 msgid "Add New"
-msgstr ""
+msgstr "Yeni Ekle"
 
 #: wpsc-includes/processing.functions.php:126
 msgid "Remaining stock of %s is 0. Product was unpublished."
@@ -1022,11 +1022,11 @@ msgstr ""
 
 #: wpsc-admin/includes/display-items-functions.php:1041
 msgid "Single Product Page Thumbnail:"
-msgstr ""
+msgstr "Tek Ürün Sayfası Küçük Resim:"
 
 #: wpsc-admin/includes/display-items-functions.php:1057
 msgid "Products Page Thumbnail Size:"
-msgstr ""
+msgstr "Ürün Sayfası Küçük Resim Boyutu:"
 
 #: wpsc-core/wpsc-functions.php:267
 msgctxt "post type singular name"
@@ -1057,11 +1057,11 @@ msgstr "ve üzeri"
 
 #: wpsc-theme/functions/wpsc-transaction_results_functions.php:197
 msgid " &nbsp; Shipping: %s\n"
-msgstr ""
+msgstr " &nbsp; Nakliye: %s\n"
 
 #: wpsc-theme/functions/wpsc-transaction_results_functions.php:193
 msgid " - Shipping: %s\n"
-msgstr ""
+msgstr " - Shipping: %s\n"
 
 #: wpsc-theme/functions/wpsc-transaction_results_functions.php:257
 msgid "Purchase # %s\n"
@@ -1207,7 +1207,7 @@ msgstr "MWK"
 
 #: wpsc-updates/currency_list.php:12
 msgid "MKD"
-msgstr ""
+msgstr "MKD"
 
 #: wpsc-updates/currency_list.php:63
 #: wpsc-updates/currency_list.php:73
@@ -1278,7 +1278,7 @@ msgstr "GHC"
 
 #: wpsc-updates/currency_list.php:76
 msgid "ECS"
-msgstr ""
+msgstr "ECS"
 
 #: wpsc-updates/currency_list.php:42
 msgid "ISK"
@@ -1423,7 +1423,7 @@ msgstr "KHR"
 
 #: wpsc-updates/currency_list.php:103
 msgid "BIF"
-msgstr "Bif"
+msgstr "BIF"
 
 #: wpsc-updates/currency_list.php:105
 msgid "BGL"
@@ -1451,7 +1451,7 @@ msgstr "BYB"
 
 #: wpsc-updates/currency_list.php:119
 msgid "BBD"
-msgstr ""
+msgstr "BBD"
 
 #: wpsc-updates/currency_list.php:120
 msgid "BDT"
@@ -1516,7 +1516,7 @@ msgstr "MNT"
 #: wpsc-updates/currency_list.php:148
 #: wpsc-updates/currency_list.php:238
 msgid "MAD"
-msgstr ""
+msgstr "MAD"
 
 #: wpsc-updates/currency_list.php:150
 msgid "MMK"
@@ -1528,7 +1528,7 @@ msgstr "NAD"
 
 #: wpsc-updates/currency_list.php:155
 msgid "ANG"
-msgstr ""
+msgstr "ANG"
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:308
 msgid "Same as billing address:"
@@ -1718,7 +1718,7 @@ msgstr "LBP"
 
 #: wpsc-updates/currency_list.php:22
 msgid "KGS"
-msgstr ""
+msgstr "KGS"
 
 #: wpsc-updates/currency_list.php:29
 msgid "JOD"
@@ -1881,7 +1881,7 @@ msgstr "Ağırlık:"
 
 #: wpsc-includes/checkout.class.php:760
 msgid "Please enter a valid expiry date."
-msgstr ""
+msgstr "Geçerli bir son kullanma tarihini girin."
 
 #: wpsc-includes/checkout.class.php:768
 #: wpsc-includes/checkout.class.php:778
@@ -1898,7 +1898,7 @@ msgstr ""
 #: wpsc-core/wpsc-functions.php:325
 msgctxt "taxonomy general name"
 msgid "Categories"
-msgstr ""
+msgstr "Kategoriler"
 
 #: wpsc-includes/product-template.php:134
 #: wpsc-includes/product-template.php:189
@@ -2041,7 +2041,7 @@ msgstr "Ürün Kategorisi"
 
 #: wpsc-core/wpsc-functions.php:329
 msgid "Parent Product Category"
-msgstr ""
+msgstr "Üst Ürün Kategorisi"
 
 #: wpsc-core/wpsc-functions.php:332
 msgid "Update Product Category"
@@ -2053,7 +2053,7 @@ msgstr "Yeni Ürün Kategorisi Ekle"
 
 #: wpsc-core/wpsc-functions.php:327
 msgid "Search Product Categories"
-msgstr ""
+msgstr "Ürün Kategorilerinde Ara"
 
 #: wpsc-admin/display-items.page.php:104
 #: wpsc-admin/display-items.page.php:110
@@ -2066,7 +2066,7 @@ msgstr ""
 
 #: wpsc-admin/includes/display-items-functions.php:503
 msgid "You have no Variations added."
-msgstr ""
+msgstr "Henüz ürün çeşidi eklenmemiş."
 
 #: wpsc-admin/includes/settings-pages/taxes.php:154
 msgid "Note: Tax Bands are special tax rules you can create and apply on a per-product basis. <br /> Please visit the product page to apply your Tax Band."
@@ -2175,7 +2175,7 @@ msgstr "Suudi Arabistan"
 
 #: wpsc-updates/currency_list.php:191
 msgid "Saudi Riyal"
-msgstr ""
+msgstr "Suudi Arabistan Riyali"
 
 #: wpsc-updates/currency_list.php:192
 msgid "Senegal"
@@ -2215,7 +2215,7 @@ msgstr "Slovenya"
 
 #: wpsc-updates/currency_list.php:197
 msgid "Slovenian Tolar"
-msgstr ""
+msgstr "Slovenya Toları"
 
 #: wpsc-updates/currency_list.php:198
 msgid "Solomon Islands"
@@ -2235,7 +2235,7 @@ msgstr "Somali Şilini"
 
 #: wpsc-updates/currency_list.php:200
 msgid "South Africa"
-msgstr ""
+msgstr "Güney Afrika"
 
 #: wpsc-updates/currency_list.php:200
 msgid "South African Rand"
@@ -2560,7 +2560,7 @@ msgstr "Euro"
 
 #: wp-shopping-cart.php:152
 msgid "WP e-Commerce 3.8 not compatible"
-msgstr ""
+msgstr "WP e-Commerce 3.8 uyumlu değil"
 
 #: wpsc-shipping/australiapost.php:115
 msgid "3. To ensure accurate quotes, each product must valid dimensions configured. When editing a product, use the height, width and length fields."
@@ -3962,7 +3962,7 @@ msgstr "Kaydet"
 
 #: wpsc-core/js/tinymce3/window.php:45
 msgid "Premium Upgrades"
-msgstr ""
+msgstr "Premium Yükseltmeler"
 
 #: wpsc-core/js/tinymce3/window.php:64
 #: wpsc-core/js/tinymce3/window.php:118
@@ -4000,7 +4000,7 @@ msgstr ""
 
 #: wpsc-admin/includes/save-data.functions.php:429
 msgid "Shortcodes and Template Tags"
-msgstr ""
+msgstr "Kısa kodlar ve Tema Etiketleri"
 
 #: wpsc-admin/admin-form-functions.php:149
 msgid "Update Coupon"
@@ -4079,7 +4079,7 @@ msgstr ""
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:453
 msgid "Review and purchase"
-msgstr ""
+msgstr "İncele ve satın al"
 
 #: wpsc-theme/wpsc-single_product.php:89
 msgid "Select a file from your computer to include with this purchase."
@@ -4198,7 +4198,7 @@ msgstr ""
 
 #: wpsc-includes/ajax.functions.php:413
 msgid "Sorry, but this variation is out of stock."
-msgstr ""
+msgstr "Üzgünüm ama bu ürün çeşidi stoklarda tükendi."
 
 #: wpsc-includes/form-display.functions.php:72
 msgid "No Parent"
@@ -4234,11 +4234,11 @@ msgstr "Satış Fiyatı"
 
 #: wpsc-admin/admin.php:155
 msgid "Store Sales"
-msgstr ""
+msgstr "Mağaza Satışları"
 
 #: wpsc-admin/admin.php:158
 msgid "Update Store"
-msgstr ""
+msgstr "Mağazayı Güncelle"
 
 #: wpsc-admin/admin.php:158
 msgid "Store Update"
@@ -4246,7 +4246,7 @@ msgstr "Mağaza Güncellemesi"
 
 #: wpsc-admin/admin.php:160
 msgid "Store Upgrades"
-msgstr ""
+msgstr "Mağaza Yükseltmeleri"
 
 #: wpsc-admin/admin.php:168
 #: wpsc-admin/display-options-settings.page.php:16
@@ -4263,11 +4263,11 @@ msgstr ""
 
 #: wpsc-admin/admin.php:176
 msgid "For More Information"
-msgstr ""
+msgstr "Daha Fazla Bilgi İçin"
 
 #: wpsc-admin/admin.php:213
 msgid "Product Tracking Email"
-msgstr ""
+msgstr "Ürün Takip E-postası"
 
 #: wpsc-admin/admin.php:214
 msgid ""
@@ -4334,12 +4334,12 @@ msgstr ""
 #: wpsc-admin/display-coupons.php:224
 #: wpsc-admin/admin-form-functions.php:123
 msgid "Item quantity"
-msgstr ""
+msgstr "Ürün miktarı"
 
 #: wpsc-admin/display-coupons.php:225
 #: wpsc-admin/admin-form-functions.php:124
 msgid "Total quantity"
-msgstr "Toplam Miktar"
+msgstr "Toplam adet"
 
 #: wpsc-admin/display-coupons.php:226
 #: wpsc-admin/admin-form-functions.php:125
@@ -4458,7 +4458,7 @@ msgstr "Küçük resimler tekrar oluşturuldu."
 
 #: wpsc-admin/display-options-settings.page.php:303
 msgid "Settings successfully updated."
-msgstr ""
+msgstr "Ayarları başarıyla güncellendi."
 
 #: wpsc-admin/display-sales-logs.php:65
 msgid "%s Purchase Log updated."
@@ -4488,7 +4488,7 @@ msgstr ""
 #: wpsc-admin/display-sales-logs.php:146
 #: wpsc-includes/checkout.class.php:143
 msgid "Tax Included"
-msgstr ""
+msgstr "KDV Dahil"
 
 #: wpsc-admin/display-update.page.php:40
 msgid "You must <a href=\"%1$s\">update your database</a> to import all of your products."
@@ -4520,11 +4520,11 @@ msgstr "Fiyat Kontrolü"
 
 #: wpsc-admin/includes/display-items-functions.php:133
 msgid "Price: %s and above."
-msgstr ""
+msgstr "Fiyat :%s ve üzeri."
 
 #: wpsc-admin/includes/display-items-functions.php:202
 msgid "Discounted Price"
-msgstr ""
+msgstr "İndirimli fiyat"
 
 #: wpsc-admin/admin.php:304
 msgid "Stock Control"
@@ -4532,7 +4532,7 @@ msgstr "Stok Kontrolü"
 
 #: wpsc-admin/includes/display-items-functions.php:259
 msgid "I have limited stock for this Product"
-msgstr ""
+msgstr "Bu ürün için sınırlı sayıda stok mevcut"
 
 #: wpsc-admin/includes/display-items-functions.php:269
 msgid "This Product has variations, to edit the quantity please use the Variation Controls below."
@@ -4545,7 +4545,7 @@ msgstr[0] ""
 
 #: wpsc-admin/includes/display-items-functions.php:272
 msgid "Quantity:"
-msgstr "Miktar:"
+msgstr "Adet:"
 
 #: wpsc-admin/includes/display-items-functions.php:287
 msgid "Notify site owner and unpublish this Product if stock runs out"
@@ -4586,7 +4586,7 @@ msgstr ""
 
 #: wpsc-admin/includes/display-items-functions.php:1129
 msgid "Product Image Gallery"
-msgstr ""
+msgstr "Ürün Resim Galerisi"
 
 #: wpsc-admin/includes/display-items-functions.php:649
 msgid "Disregard Shipping for this Product"
@@ -4614,15 +4614,15 @@ msgstr "Yayınlanmamış"
 
 #: wpsc-admin/includes/products.php:94
 msgid "Y/m/d g:i:s A"
-msgstr ""
+msgstr "Y / m / dg: i: A s"
 
 #: wpsc-admin/includes/products.php:101
 msgid "%s ago"
-msgstr ""
+msgstr "%s önce"
 
 #: wpsc-admin/includes/products.php:103
 msgid "Y/m/d"
-msgstr ""
+msgstr "Y / a / g"
 
 #: wpsc-admin/includes/products.php:113
 msgid "Published"
@@ -4664,7 +4664,7 @@ msgstr "Görünüm"
 #: wpsc-admin/includes/products.php:300
 #: wpsc-admin/display-items.page.php:206
 msgid "Uncategorized"
-msgstr ""
+msgstr "Kategorilenmemiş"
 
 #: wpsc-admin/includes/products.php:318
 msgid "No Tags"
@@ -4715,7 +4715,7 @@ msgstr ""
 
 #: wpsc-admin/includes/settings-pages/general.php:110
 msgid "Currency Sign Location"
-msgstr ""
+msgstr "Döviz Simgesi Yeri"
 
 #: wpsc-admin/includes/settings-pages/general.php:146
 msgid "Thousands and decimal separators"
@@ -4739,7 +4739,7 @@ msgstr ""
 
 #: wpsc-admin/includes/settings-pages/marketing.php:19
 msgid "Google Merchant Centre / Google Product Search"
-msgstr ""
+msgstr "Google Merchant Centre / Google Product Search"
 
 #: wpsc-admin/includes/settings-pages/marketing.php:61
 msgid "Adds the 'Users who bought this also bought' item to the single products page."
@@ -4759,7 +4759,7 @@ msgstr "Facebook Like'ı Göster"
 
 #: wpsc-admin/includes/settings-pages/marketing.php:77
 msgid "Adds the Facebook Like button on your single products page."
-msgstr ""
+msgstr "Ürün sayfanıza Facebook Like butonu ekler."
 
 #: wpsc-admin/includes/settings-pages/marketing.php:91
 msgid "People can use this RSS feed to keep up to date with your product list."
@@ -4779,7 +4779,7 @@ msgstr ""
 
 #: wpsc-admin/includes/settings-pages/presentation.php:90
 msgid "No Theme files have been moved to your WordPress Theme Folder."
-msgstr ""
+msgstr "Wordpress tema klasörünüze herhangi bir dosya taşınmamış."
 
 #: wpsc-admin/includes/settings-pages/presentation.php:243
 msgid "Buy Now Button only works for Paypal Standard, please activate Paypal Standard to enable this option."
@@ -4903,7 +4903,7 @@ msgstr ""
 
 #: wpsc-core/js/tinymce3/window.php:77
 msgid "Sale Products:"
-msgstr ""
+msgstr "İndirimdeki Ürünler:"
 
 #: wpsc-core/js/tinymce3/window.php:82
 msgid "Add ALL sale products"
@@ -5018,20 +5018,20 @@ msgstr ""
 #: wpsc-core/wpsc-functions.php:345
 msgctxt "taxonomy general name"
 msgid "Variations"
-msgstr ""
+msgstr "Ürün Çeşitleri"
 
 #: wpsc-core/wpsc-functions.php:346
 msgctxt "taxonomy singular name"
 msgid "Variation"
-msgstr ""
+msgstr "Ürün Çeşidi"
 
 #: wpsc-core/wpsc-functions.php:347
 msgid "Search Variations"
-msgstr ""
+msgstr "Ürün Çeşitlerinde Ara"
 
 #: wpsc-core/wpsc-functions.php:348
 msgid "All Variations"
-msgstr ""
+msgstr "Tüm Ürün Çeşitleri"
 
 #: wpsc-core/wpsc-functions.php:349
 msgid "Parent Variation"
@@ -5043,11 +5043,11 @@ msgstr ""
 
 #: wpsc-core/wpsc-functions.php:351
 msgid "Edit Variation"
-msgstr ""
+msgstr "Ürün Seçeneklerini Düzenle"
 
 #: wpsc-core/wpsc-functions.php:352
 msgid "Update Variation"
-msgstr ""
+msgstr "Ürün Çeşitlerini Güncelle"
 
 #: wpsc-core/wpsc-functions.php:354
 msgid "New Variation Name"
@@ -5055,11 +5055,11 @@ msgstr ""
 
 #: wpsc-core/wpsc-installer.php:300
 msgid "This is a description"
-msgstr ""
+msgstr "Bu bir açıklamadır"
 
 #: wpsc-core/wpsc-installer.php:745
 msgid "Your billing/contact details"
-msgstr ""
+msgstr "Fatura / iletişim bilgileriniz"
 
 #: wpsc-includes/ajax.functions.php:414
 msgid "Variation not in stock"
@@ -5094,7 +5094,7 @@ msgstr "Sayfa:"
 
 #: wpsc-includes/product-template.php:405
 msgid " from %s"
-msgstr ""
+msgstr "%s"
 
 #: wpsc-includes/theme.functions.php:176
 msgid "<strong>WP e-Commerce is ready</strong>. If you plan on editing the look of your site, you should <a href=\"%1s\">update your active theme</a> to include the additional WP e-Commerce files. <a href=\"%2s\">Click here</a> to ignore and remove this box."
@@ -5118,7 +5118,7 @@ msgstr ""
 
 #: wpsc-merchants/paypal-pro.merchant.php:163
 msgid "There is a problem with your PayPal account configuration, please contact PayPal for further information."
-msgstr ""
+msgstr "PayPal hesabı yapılandırma ile ilgili bir sorun var, daha fazla bilgi için PayPal ile iletişime geçiniz."
 
 #: wpsc-shipping/ups_20.php:165
 msgid "Customer Type"
@@ -5199,7 +5199,7 @@ msgstr "Ürün Seçenekleri"
 
 #: wpsc-theme/wpsc-grid_view.php:131
 msgid "Sorry, sold out!"
-msgstr ""
+msgstr "Üzgünüz, satıldı!"
 
 #: wpsc-theme/wpsc-list_view.php:83
 #: wpsc-theme/wpsc-single_product.php:132
@@ -5230,7 +5230,7 @@ msgstr ""
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:395
 msgid "Advertising"
-msgstr ""
+msgstr "Reklam"
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:396
 msgid "Internet"
@@ -5238,7 +5238,7 @@ msgstr "İnternet"
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:397
 msgid "Existing Customer"
-msgstr ""
+msgstr "Mevcut Müşteri"
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:408
 msgid "Payment Type"
@@ -5262,7 +5262,7 @@ msgstr "Bilgileriniz"
 
 #: wpsc-theme/wpsc-user-log.php:18
 msgid "Your Downloads"
-msgstr ""
+msgstr "Yüklemeleriniz"
 
 #: wpsc-theme/wpsc-user-log.php:151
 msgid "Password:"
@@ -5270,7 +5270,7 @@ msgstr "Şifre:"
 
 #: wpsc-theme/wpsc-user-log.php:157
 msgid "Remember me"
-msgstr "Beni hatırlat"
+msgstr "Beni Hatırla"
 
 #: wpsc-widgets/admin_menu_widget.php:18
 msgid "Admin Menu Widget"
@@ -5303,7 +5303,7 @@ msgstr "Ürüne Özel Gereç"
 
 #: wpsc-widgets/specials_widget.php:195
 msgid "From"
-msgstr ""
+msgstr "From"
 
 #: wpsc-core/js/tinymce3/window.php:43
 msgid "Category"
@@ -5381,7 +5381,7 @@ msgstr ""
 #: wpsc-theme/wpsc-shopping_cart_page.php:482
 #: wpsc-shipping/tablerate.php:50
 msgid "Total Price"
-msgstr "Toplam fiyat"
+msgstr "Toplam Fiyat"
 
 #: wpsc-shipping/tablerate.php:50
 #: wpsc-shipping/weightrate.php:49
@@ -5390,7 +5390,7 @@ msgstr "Nakliye Fiyatı"
 
 #: wpsc-shipping/ups_20.php:104
 msgid "Your Packaging"
-msgstr ""
+msgstr "Paketiniz"
 
 #: wpsc-shipping/ups_20.php:103
 msgid "UPS Letter"
@@ -5406,11 +5406,11 @@ msgstr ""
 
 #: wpsc-shipping/ups_20.php:110
 msgid "UPS Express Box - Large"
-msgstr ""
+msgstr "UPS Express Box - Büyük"
 
 #: wpsc-shipping/ups_20.php:105
 msgid "UPS Tube"
-msgstr ""
+msgstr "UPS Tube"
 
 #: wpsc-shipping/ups_20.php:106
 msgid "UPS Pak"
@@ -5451,15 +5451,15 @@ msgstr ""
 
 #: wpsc-includes/display.functions.php:153
 msgid "Go to Checkout"
-msgstr "onaya gidiniz"
+msgstr "Ödeme Yap"
 
 #: wpsc-theme/wpsc-cart_widget.php:76
 msgid "Your shopping cart is empty"
-msgstr "Alisveris sepetini bos"
+msgstr "Alisveriş sepetiniz boş!"
 
 #: wpsc-theme/wpsc-cart_widget.php:77
 msgid "Visit the shop"
-msgstr "dükkani ziyaret edin"
+msgstr "Mağazamızı ziyaret edin."
 
 #: wpsc-admin/includes/settings-pages/presentation.php:1171
 msgid "Page Number position"
@@ -5483,7 +5483,7 @@ msgstr "Bu grupta hiçbir ürün bulunmamaktadır."
 #: wpsc-includes/product-template.php:734
 #: wpsc-includes/display.functions.php:178
 msgid "Buy Now"
-msgstr ""
+msgstr "Şimdi Satın Al"
 
 #: wpsc-theme/wpsc-list_view.php:128
 #: wpsc-theme/wpsc-single_product.php:183
@@ -5500,16 +5500,16 @@ msgstr "Bağış"
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:15
 msgid "Please review your order"
-msgstr ""
+msgstr "Lütfen ödeme yapmadan önce siparişinizi bir defa daha gözden geçirin"
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:60
 #: wpsc-theme/wpsc-shopping_cart_page.php:92
 msgid "Update"
-msgstr "Onay"
+msgstr "Güncelle"
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:73
 msgid "Remove"
-msgstr "Yer degistir"
+msgstr "İptal Et"
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:85
 msgid "Coupon is not valid."
@@ -5631,11 +5631,11 @@ msgstr "Ürünler"
 
 #: wpsc-admin/display-sales-logs.php:37
 msgid "Sales"
-msgstr ""
+msgstr "Satışlar"
 
 #: wpsc-admin/admin.php:295
 msgid "Variations"
-msgstr "Fiyat farki seçenekleri"
+msgstr "Ürün Çeşitleri"
 
 #: wpsc-admin/display-upgrades.page.php:56
 msgid "Upgrades"
@@ -5676,7 +5676,7 @@ msgstr "Taslak"
 #: wpsc-admin/includes/purchlogs_upgrade.php:100
 #: wpsc-admin/display-sales-logs.php:298
 msgid "Apply"
-msgstr ""
+msgstr "Uygula"
 
 #: wpsc-admin/display-options-settings.page.php:195
 msgid "To configure a shipping module select one on the left."
@@ -5716,7 +5716,7 @@ msgstr "Satış Kaydı Tarihi:"
 
 #: wpsc-admin/display-sales-logs.php:179
 msgid "Purchase Number:"
-msgstr ""
+msgstr "Satış Numarası:"
 
 #: wpsc-admin/display-sales-logs.php:180
 msgid "Buyers Name:"
@@ -5776,7 +5776,7 @@ msgstr ""
 
 #: wpsc-admin/display-sales-logs.php:270
 msgid "Remove this record"
-msgstr ""
+msgstr "Bu kaydı sil"
 
 #: wpsc-admin/display-sales-logs.php:272
 msgid "Go Back"
@@ -5833,7 +5833,7 @@ msgstr "DropShop"
 
 #: wpsc-admin/display-upgrades.page.php:29
 msgid "MP3 Player"
-msgstr ""
+msgstr "MP3 Çalar"
 
 #: wpsc-admin/display-upgrades.page.php:36
 msgid "Members Only Module"
@@ -5866,7 +5866,7 @@ msgstr ""
 
 #: wpsc-admin/includes/settings-pages/presentation.php:515
 msgid "Display Variations"
-msgstr ""
+msgstr "Ürün Çeşitlerini Göster"
 
 #: wpsc-core/wpsc-functions.php:270
 msgid "Edit Product"
@@ -5936,7 +5936,7 @@ msgstr "Bu notlar sadece burada geçerlidir."
 
 #: wpsc-admin/includes/display-items-functions.php:726
 msgid "Personalisation Options"
-msgstr ""
+msgstr "Kişiselleştirme Seçenekleri"
 
 #: wpsc-admin/includes/display-items-functions.php:737
 msgid "Users can upload images on single product page to purchase logs."
@@ -5968,7 +5968,7 @@ msgstr "Öngörünüm"
 
 #: wpsc-admin/includes/settings-pages/presentation.php:976
 msgid "Thumbnail Settings"
-msgstr ""
+msgstr "Küçük Resim Ayarları"
 
 #: wpsc-includes/misc.functions.php:753
 msgid "Please refrain from uploading images larger than <strong>%d x %d</strong> pixels"
@@ -6022,7 +6022,7 @@ msgstr ""
 
 #: wpsc-admin/includes/settings-pages/admin.php:76
 msgid "Purchase Log Email"
-msgstr "Alisveris kayir emaili"
+msgstr "Satış Kaydı E-postası"
 
 #: wpsc-admin/includes/settings-pages/admin.php:84
 msgid "Purchase Receipt - Reply Address"
@@ -6168,7 +6168,7 @@ msgstr "Ürün Sayfası Ayarları"
 
 #: wpsc-admin/includes/settings-pages/presentation.php:420
 msgid "Product Display"
-msgstr ""
+msgstr "Ürün Ekranı"
 
 #: wpsc-admin/includes/settings-pages/presentation.php:497
 msgid "Purchase unavailable options"
@@ -6184,7 +6184,7 @@ msgstr "Sadece resimleri göster"
 
 #: wpsc-admin/includes/settings-pages/presentation.php:519
 msgid "Display Description"
-msgstr ""
+msgstr "Açıklamayı Göster"
 
 #: wpsc-admin/includes/settings-pages/presentation.php:523
 msgid "Display \"Add To Cart\" Button"
@@ -6224,7 +6224,7 @@ msgstr "Aramayı Göster"
 
 #: wpsc-admin/includes/settings-pages/presentation.php:708
 msgid "Show Advanced Search"
-msgstr ""
+msgstr "Gelişmiş Aramayı Göster"
 
 #: wpsc-admin/includes/settings-pages/presentation.php:711
 msgid "Use Live Search"
@@ -6306,7 +6306,7 @@ msgstr "Tek Ürün Resim Boyutu"
 
 #: wpsc-admin/includes/settings-pages/presentation.php:1099
 msgid "Show Thumbnail Gallery"
-msgstr ""
+msgstr "Küçük Resim Galerisini Göster"
 
 #: wpsc-admin/includes/settings-pages/presentation.php:1123
 msgid "Gallery Thumbnail Image Size"
@@ -6346,7 +6346,7 @@ msgstr "IntenseDebate Comments'i Kullanın"
 
 #: wpsc-admin/includes/settings-pages/presentation.php:1217
 msgid "IntenseDebate Account ID"
-msgstr ""
+msgstr "IntenseDebate Hesabı"
 
 #: wpsc-admin/includes/settings-pages/presentation.php:1219
 msgid "Help on finding the Account ID"
@@ -6358,7 +6358,7 @@ msgstr ""
 
 #: wpsc-admin/includes/settings-pages/shipping.php:64
 msgid "Use Shipping"
-msgstr ""
+msgstr "Nakliye Kullan"
 
 #: wpsc-admin/includes/settings-pages/shipping.php:78
 msgid "If you are only selling digital downloads, you should select no to disable the shipping on your site."
@@ -6709,7 +6709,7 @@ msgstr "Ekle"
 #: wpsc-admin/display-coupons.php:382
 #: wpsc-includes/product-template.php:648
 msgid "Edit"
-msgstr "Degistir"
+msgstr "Düzenle"
 
 #: wpsc-admin/display-coupons.php:152
 #: wpsc-admin/display-coupons.php:296
@@ -6744,7 +6744,7 @@ msgstr "Sona erme"
 #: wpsc-admin/display-coupons.php:200
 #: wpsc-admin/admin-form-functions.php:17
 msgid "Use Once"
-msgstr ""
+msgstr "Bir kez kullanın"
 
 #: wpsc-admin/display-coupons.php:158
 #: wpsc-admin/display-coupons.php:190
@@ -6899,7 +6899,7 @@ msgstr ""
 
 #: wpsc-admin/includes/settings-pages/marketing.php:18
 msgid "RSS Address"
-msgstr ""
+msgstr "RSS Adresi"
 
 #: wpsc-theme/functions/wpsc-user_log_functions.php:65
 #: wpsc-core/wpsc-installer.php:746
@@ -6977,7 +6977,7 @@ msgstr "Ekle"
 #: wpsc-core/js/tinymce3/window.php:203
 #: wpsc-admin/includes/products.php:137
 msgid "Cancel"
-msgstr "İptal"
+msgstr "İptal Et"
 
 #: wpsc-merchants/library/google_shipping_country.php:7
 msgid "Google Shipping Country"
@@ -7011,11 +7011,11 @@ msgstr "Sepete ekle"
 
 #: wpsc-includes/product-template.php:1460
 msgid "Avg. Customer Rating"
-msgstr "Satis Ilgisi"
+msgstr "Ort. Müşteri Puanlaması"
 
 #: wpsc-includes/product-template.php:1466
 msgid "Your Rating"
-msgstr "Ilginiz"
+msgstr "Puanlamanız"
 
 #: wpsc-includes/product-template.php:1467
 msgid "Saved"
@@ -7055,7 +7055,7 @@ msgstr "geçerli tip"
 
 #: wpsc-admin/includes/settings-pages/presentation.php:279
 msgid "Show Product Ratings"
-msgstr "ürüne olan ilgi"
+msgstr "Ürün Puanlamasını Göster"
 
 #: wpsc-updates/updating_tasks.php:390
 #: wpsc-updates/updating_tasks.php:397
@@ -7075,7 +7075,7 @@ msgstr "Ürünler sayfasi"
 #: wpsc-theme/wpsc-cart_widget.php:64
 #: wpsc-core/wpsc-installer.php:210
 msgid "Checkout"
-msgstr "Onayla"
+msgstr "Ödeme"
 
 #: wpsc-core/wpsc-installer.php:216
 msgid "Transaction Results"
@@ -7227,7 +7227,7 @@ msgstr "Genel toplam"
 
 #: wpsc-theme/functions/wpsc-user_log_functions.php:640
 msgid "Transaction Id"
-msgstr ""
+msgstr "İşlem Numarası"
 
 #: wpsc-theme/wpsc-user-log.php:122
 msgid "No transactions for this month."
