@@ -94,4 +94,8 @@ class WPSC_Payment_Gateway_Manual extends WPSC_Payment_Gateway
 		<?php endforeach ?>
 		<?php
 	}
+	
+	public function process() {
+		
+	}
 }

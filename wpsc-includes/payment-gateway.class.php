@@ -295,6 +295,17 @@ abstract class WPSC_Payment_Gateway
 	abstract public function setup_form();
 	
 	/**
+	 * Process and send payment details to payment gateways
+	 *
+	 * @abstract
+	 * @access public
+	 * @since 3.9
+	 *
+	 * @return void
+	 */
+	abstract public function process();
+	
+	/**
 	 * Returns the URL to the logo of the payment gateway (or any representative image).
 	 *
 	 * @access public
@@ -308,6 +319,8 @@ abstract class WPSC_Payment_Gateway
 	
 	public function set_purchase_log( &$purchase_log ) {
 		$this->purchase_log = &$purchase_log;
+		
+		
 	}
 	
 	/**
