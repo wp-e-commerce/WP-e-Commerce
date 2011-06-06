@@ -218,4 +218,4 @@ Advanced users can edit the CSS (and do just about anything). Not so advanced us
 == Upgrade Notice ==
 
 = 3.8.1 =
-This version addresses several urgent issues when upgrading from 3.7.x to 3.8.
+This version addresses several urgent issues when upgrading from 3.7.x to 3.8. 
