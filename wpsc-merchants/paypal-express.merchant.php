@@ -325,6 +325,54 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 	
 } // end of class
 
+// terrible code duplication just to hot fix the "missing Description in email receipt" bug
+// see paypal_processingfunctions() for more details
+function wpsc_paypal_express_convert( $amt ) {
+	global $wpdb;
+	
+	static $rate;
+	static $paypal_currency_code;
+	static $local_currency_code;
+	
+	if ( empty( $rate ) ) {
+		$rate = 1;
+		if ( empty( $local_currency_code ) ) {
+			$local_currency_code = $wpdb->get_var("SELECT `code` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id`='".get_option('currency_type')."' LIMIT 1");
+		}
+		if ( empty( $paypal_currency_code ) ) {
+			global $wpsc_gateways;
+			$paypal_currency_code = $local_currency_code;
+			if ( ! in_array( $paypal_currency_code, $wpsc_gateways['wpsc_merchant_paypal_express']['supported_currencies']['currency_list'] ) )
+				$paypal_currency_code = get_option( 'paypal_curcode', 'USD' );
+		}
+		
+		if ( $local_currency_code != $paypal_currency_code ) {
+			$curr = new CURRENCYCONVERTER();
+			$rate = $curr->convert( 1, $paypal_currency_code, $local_currency_code );
+		}
+	}
+	
+	return wpsc_paypal_express_format( $amt / $rate );
+}
+
+function wpsc_paypal_express_format( $price ) {
+	$paypal_currency_code = get_option('paypal_curcode', 'US');
+
+	switch($paypal_currency_code) {
+	    case "JPY":
+	    $decimal_places = 0;
+	    break;
+
+	    case "HUF":
+	    $decimal_places = 0;
+	    break;
+
+	    default:
+	    $decimal_places = 2;
+	    break;
+	}
+	return number_format(sprintf("%01.2f", $price),$decimal_places,'.','');
+}
 
 /**
  * Saving of PayPal Express Settings
@@ -557,7 +605,7 @@ function paypal_processingfunctions(){
 		$payerID = urlencode($_REQUEST['PayerID']);
 		$serverName = urlencode($_SERVER['SERVER_NAME']);
 		$BN='Instinct_e-commerce_wp-shopping-cart_NZ';	
-		$nvpstr='&TOKEN='.$token.'&PAYERID='.$payerID.'&PAYMENTREQUEST_0_PAYMENTACTION=Sale&PAYMENTREQUEST_0_AMT='.$paymentAmount.'&PAYMENTREQUEST_0_CURRENCYCODE='.$currCodeType.'&IPADDRESS='.$serverName."&BUTTONSOURCE=".$BN."&PAYMENTREQUEST_0_INVNUM=".urlencode( $sessionid );
+		$nvpstr='&TOKEN='.$token.'&PAYERID='.$payerID.'&PAYMENTREQUEST_0_PAYMENTACTION=Sale&PAYMENTREQUEST_0_CURRENCYCODE='.$currCodeType.'&IPADDRESS='.$serverName."&BUTTONSOURCE=".$BN."&PAYMENTREQUEST_0_INVNUM=".urlencode( $sessionid );
 		// IPN data
 		if (get_option('paypal_ipn') == 1) {
 			$notify_url = add_query_arg( 'wpsc_action', 'gateway_notification', (get_option( 'siteurl' ) . "/index.php" ) );
@@ -565,6 +613,41 @@ function paypal_processingfunctions(){
 			$notify_url = apply_filters('wpsc_paypal_express_notify_url', $notify_url);
 			$nvpstr .= '&PAYMENTREQUEST_0_NOTIFYURL='.urlencode( $notify_url );
 		}
+		
+		// Horrible code that I had to write to hot fix the issue with missing item detail in email receipts. arrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrgh!!!!! @#@$%@#%@##$#$
+		$purchase_log = $wpdb->get_row( "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `sessionid` = {$sessionid}", ARRAY_A );
+		$cart_data = $original_cart_data = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid` = {$purchase_log['id']}", ARRAY_A );
+		$i = 0;
+		$item_total = 0;
+		$shipping_total = 0;
+		foreach ( $cart_data as $cart_item ) {
+			$converted_price = wpsc_paypal_express_convert( $cart_item['price'] );
+			$nvpstr .= "&L_PAYMENTREQUEST_0_NAME{$i}=" . urlencode( $cart_item['name'] );
+			$nvpstr .= "&L_PAYMENTREQUEST_0_AMT{$i}=" . $converted_price;
+			$nvpstr .= "&L_PAYMENTREQUEST_0_NUMBER{$i}=" . $i;
+			$nvpstr .= "&L_PAYMENTREQUEST_0_QTY{$i}=" . $cart_item['quantity'];
+			$item_total += $converted_price * $cart_item['quantity'];
+			$shipping_total += $cart_item['pnp'];
+			$i ++;
+		}
+		$item_total = wpsc_paypal_express_format( $item_total );
+		$shipping_total = wpsc_paypal_express_convert( $purchase_log['base_shipping'] + $shipping_total );
+		$nvpstr .= '&PAYMENTREQUEST_0_ITEMAMT=' . $item_total;
+		$nvpstr .= '&PAYMENTREQUEST_0_SHIPPINGAMT=' . $shipping_total;
+
+		$total = $item_total + $shipping_total;
+		
+		if ( ! wpsc_tax_isincluded() ) {
+			$tax = wpsc_paypal_express_convert( $purchase_log['wpec_taxes_total'] );
+			$nvpstr .= '&PAYMENTREQUEST_0_TAXAMT=' . $tax;
+			$total += $tax;
+		}
+		
+		// adjust total amount in case we had to round up after converting currency
+		if ( $total != $paymentAmount )
+			$paymentAmount = $total;
+			
+		$nvpstr .= "&PAYMENTREQUEST_0_AMT={$paymentAmount}";
 		$resArray=paypal_hash_call("DoExpressCheckoutPayment",$nvpstr);
 
 		/* Display the API response back to the browser.
@@ -572,6 +655,7 @@ function paypal_processingfunctions(){
 		   If the response was an error, display the errors received using APIError.php. */
 		$ack = strtoupper($resArray["ACK"]);
 		$_SESSION['reshash']=$resArray;
+
 		if($ack!="SUCCESS"){
 			$location = get_option('transact_url')."&act=error";
 		}else{
