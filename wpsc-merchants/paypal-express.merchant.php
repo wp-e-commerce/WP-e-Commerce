@@ -79,7 +79,7 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 		}
 	
 		//$collected_gateway_data
-		$paypal_vars = array();		
+		$paypal_vars = array();
 
 		// User settings to be sent to paypal
 		$paypal_vars += array(
@@ -98,6 +98,42 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 		}
 
 		$this->collected_gateway_data = $paypal_vars;
+	}
+	
+	/**
+	* parse_gateway_notification method, receives data from the payment gateway
+	* @access private
+	*/
+	function parse_gateway_notification() {
+		/// PayPal first expects the IPN variables to be returned to it within 30 seconds, so we do this first.
+		if ('sandbox'  == get_option('paypal_certified_server_type')) {
+			$paypal_url = "https://www.sandbox.paypal.com/webscr";
+		}else{
+			$API_Endpoint = "https://api-3t.paypal.com/nvp";
+			$paypal_url = "https://www.paypal.com/cgi-bin/webscr";
+		}
+		$received_values = array();
+		$received_values['cmd'] = '_notify-validate';
+  		$received_values += $_POST;
+		$options = array(
+			'timeout' => 5,
+			'body' => $received_values,
+			'user-agent' => ('WP e-Commerce/'.WPSC_PRESENTABLE_VERSION)
+		);
+
+		$response = wp_remote_post($paypal_url, $options);
+		file_put_contents( '/home/garyc40/wpec.garyc40.com/wp-content/uploads/ipn.txt', print_r( $received_values, true ) );
+		if( 'VERIFIED' == $response['body'] ) {
+			$this->paypal_ipn_values = $received_values;
+			$this->session_id = $received_values['invoice'];
+			if ( strtolower( $received_values['payment_status'] ) == 'completed' )
+				$this->set_purchase_processed_by_sessionid(3);
+			elseif ( strtolower( $received_values['payment_status'] ) == 'denied' )
+				$this->set_purchase_processed_by_sessionid(6);
+
+		} else {
+			exit("IPN Request Failure");
+		}
 	}
 	
 	/**
@@ -178,6 +214,7 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 			$this->cart_data['shipping_address']['last_name'] = $this->cart_data['billing_address']['last_name'];
 			
 		}
+		
 		$data += array(
 			'PAYMENTREQUEST_0_SHIPTONAME'		=> $this->cart_data['shipping_address']['first_name'].' '.$this->cart_data['shipping_address']['last_name'],
 			'PAYMENTREQUEST_0_SHIPTOSTREET' 		=> $this->cart_data['shipping_address']['address'],
@@ -310,6 +347,10 @@ function submit_paypal_express() {
 	if(isset($_POST['paypal_certified_server_type']))
 		update_option('paypal_certified_server_type', $_POST['paypal_certified_server_type']);
 	
+	if(isset($_POST['paypal_ipn'])) {
+		update_option('paypal_ipn', (int)$_POST['paypal_ipn']);
+	}
+	
 	return true;
 }
 
@@ -331,7 +372,7 @@ function form_paypal_express() {
 		$serverType1="checked='checked'";
 	elseif(get_option('paypal_certified_server_type') == 'production')
 		$serverType2 ="checked='checked'";
-	
+	$paypal_ipn = get_option( 'paypal_ipn' );
 	$output = "
 		<tr>
 		  <td>" . __('API Username', 'wpsc' ) . "
@@ -361,8 +402,19 @@ function form_paypal_express() {
 			<input $serverType1 type='radio' name='paypal_certified_server_type' value='sandbox' /> " . __('Sandbox (For testing)', 'wpsc' ) . "
 			<input $serverType2 type='radio' name='paypal_certified_server_type' value='production' /> " . __('Production', 'wpsc' ) . "
 		 </td>
-		</tr>";
+		</tr>
+		<tr>
+			<td>
+				" . __( 'IPN', 'wpsc' ) . "
+			</td>
+			<td>
+				<input type='radio' value='1' name='paypal_ipn' id='paypal_ipn1' " . checked( $paypal_ipn, 1, false ) . " /> <label for='paypal_ipn1'>".__('Yes', 'wpsc')."</label> &nbsp;
+				<input type='radio' value='0' name='paypal_ipn' id='paypal_ipn2' " . checked( $paypal_ipn, 0, false ) . " /> <label for='paypal_ipn2'>".__('No', 'wpsc')."</label>
+			</td>
+		</tr>
+		";
 		
+		$paypal_ipn = get_option( 'paypal_ipn' );		
 		$store_currency_code = $wpdb->get_var("SELECT `code` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id` IN ('".absint(get_option('currency_type'))."')");
 		$current_currency = get_option('paypal_curcode');
 
@@ -504,7 +556,14 @@ function paypal_processingfunctions(){
 		$payerID = urlencode($_REQUEST['PayerID']);
 		$serverName = urlencode($_SERVER['SERVER_NAME']);
 		$BN='Instinct_e-commerce_wp-shopping-cart_NZ';	
-		$nvpstr='&TOKEN='.$token.'&PAYERID='.$payerID.'&PAYMENTREQUEST_0_PAYMENTACTION=Sale&PAYMENTREQUEST_0_AMT='.$paymentAmount.'&PAYMENTREQUEST_0_CURRENCYCODE='.$currCodeType.'&IPADDRESS='.$serverName."&BUTTONSOURCE=".$BN ;
+		$nvpstr='&TOKEN='.$token.'&PAYERID='.$payerID.'&PAYMENTREQUEST_0_PAYMENTACTION=Sale&PAYMENTREQUEST_0_AMT='.$paymentAmount.'&PAYMENTREQUEST_0_CURRENCYCODE='.$currCodeType.'&IPADDRESS='.$serverName."&BUTTONSOURCE=".$BN."&PAYMENTREQUEST_0_INVNUM=".urlencode( $sessionid );
+		// IPN data
+		if (get_option('paypal_ipn') == 1) {
+			$notify_url = add_query_arg( 'wpsc_action', 'gateway_notification', (get_option( 'siteurl' ) . "/index.php" ) );
+			$notify_url = add_query_arg('gateway', 'wpsc_merchant_paypal_express', $notify_url);
+			$notify_url = apply_filters('wpsc_paypal_express_notify_url', $notify_url);
+			$nvpstr .= '&PAYMENTREQUEST_0_NOTIFYURL='.urlencode( $notify_url );
+		}
 		$resArray=paypal_hash_call("DoExpressCheckoutPayment",$nvpstr);
 
 		/* Display the API response back to the browser.
