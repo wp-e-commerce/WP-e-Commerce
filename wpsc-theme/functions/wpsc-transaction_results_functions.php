@@ -45,7 +45,7 @@ function wpsc_transaction_theme() {
 			case 'wpsc_merchant_paypal_express':
 				echo $_SESSION['paypalExpressMessage'];
 
-				if(isset($_SESSION['reshash']['PAYMENTINFO_0_TRANSACTIONTYPE']) && 'expresscheckout' == $_SESSION['reshash']['PAYMENTINFO_0_TRANSACTIONTYPE'])
+				if(isset($_SESSION['reshash']['PAYMENTINFO_0_TRANSACTIONTYPE']) && in_array( $_SESSION['reshash']['PAYMENTINFO_0_TRANSACTIONTYPE'], array( 'expresscheckout', 'cart' ) ) )
 					$dont_show_transaction_results = false;
 				else
 					$dont_show_transaction_results = true;		
