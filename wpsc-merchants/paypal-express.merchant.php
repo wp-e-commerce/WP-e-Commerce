@@ -122,15 +122,16 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 		);
 
 		$response = wp_remote_post($paypal_url, $options);
-		file_put_contents( '/home/garyc40/wpec.garyc40.com/wp-content/uploads/ipn.txt', print_r( $received_values, true ) );
 		if( 'VERIFIED' == $response['body'] ) {
 			$this->paypal_ipn_values = $received_values;
 			$this->session_id = $received_values['invoice'];
-			if ( strtolower( $received_values['payment_status'] ) == 'completed' )
+			if ( strtolower( $received_values['payment_status'] ) == 'completed' ) {
 				$this->set_purchase_processed_by_sessionid(3);
-			elseif ( strtolower( $received_values['payment_status'] ) == 'denied' )
+				transaction_results($this->session_id,false);
+			}
+			elseif ( strtolower( $received_values['payment_status'] ) == 'denied' ) {
 				$this->set_purchase_processed_by_sessionid(6);
-
+			}
 		} else {
 			exit("IPN Request Failure");
 		}
