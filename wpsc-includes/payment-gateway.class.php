@@ -269,6 +269,8 @@ abstract class WPSC_Payment_Gateway
 	
 	public $purchase_log;
 	
+	public $checkout_data;
+	
 	/**
 	 * Return the title of the payment gateway. This method must be overridden by subclasses.
 	 * It is recommended that the payment gateway title be properly localized using __()
@@ -319,8 +321,7 @@ abstract class WPSC_Payment_Gateway
 	
 	public function set_purchase_log( &$purchase_log ) {
 		$this->purchase_log = &$purchase_log;
-		
-		
+		$this->checkout_data = new WPSC_Checkout_Form_Data( $purchase_log->get( 'id ' ) );
 	}
 	
 	/**
