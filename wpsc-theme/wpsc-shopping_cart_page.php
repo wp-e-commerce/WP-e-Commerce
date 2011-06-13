@@ -348,7 +348,7 @@ endif;
             }elseif( $wpsc_checkout->checkout_item->unique_name == 'billingemail'){ ?>
                <?php $email_markup =
                "<div class='wpsc_email_address'>
-                  <p class='<?php echo wpsc_checkout_form_element_id(); ?>'>
+                  <p class='" . wpsc_checkout_form_element_id() . "'>
                      <label class='wpsc_email_address' for='" . wpsc_checkout_form_element_id() . "'>
                      " . __('Enter your email address', 'wpsc') . "
                      </label>
