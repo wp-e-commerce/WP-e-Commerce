@@ -636,9 +636,9 @@ function wpsc_submit_checkout() {
 			$separator = "&";
 		
 		// submit to gateway
-		if ( is_payment_gateway_registered( $submitted_gateway ) ) {
+		if ( wpsc_is_payment_gateway_registered( $submitted_gateway ) ) {
 			$gateway = wpsc_get_payment_gateway( $submitted_gateway );
-			$gateway->set_purchase_log( WPSC_Purchase_Log::get( $purchase_log_id ) );
+			$gateway->set_purchase_log( new WPSC_Purchase_Log( $purchase_log_id ) );
 			$gateway->process();
 		} else {
 			$current_gateway_data = &$wpsc_gateways[$submitted_gateway];
