@@ -96,6 +96,7 @@ class WPSC_Payment_Gateway_Manual extends WPSC_Payment_Gateway
 	}
 	
 	public function process() {
-		
+		$this->purchase_log->set( 'processed', WPSC_PAYMENT_STATUS_RECEIVED )->save();
+		$this->go_to_transaction_results();
 	}
 }
