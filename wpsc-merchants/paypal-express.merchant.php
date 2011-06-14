@@ -120,8 +120,10 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 			'body' => $received_values,
 			'user-agent' => ('WP e-Commerce/'.WPSC_PRESENTABLE_VERSION)
 		);
+		
 
 		$response = wp_remote_post($paypal_url, $options);
+		
 		if( 'VERIFIED' == $response['body'] ) {
 			$this->paypal_ipn_values = $received_values;
 			$this->session_id = $received_values['invoice'];
@@ -143,9 +145,9 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 	*/
 	function submit() {
 		//$_SESSION['paypalExpressMessage']= '<h4>Transaction Canceled</h4>';
-
-		// PayPal Express Checkout Module		
+				// PayPal Express Checkout Module		
 		$paymentAmount = $this->cart_data['total_price'];
+
 		$_SESSION['paypalAmount'] = $this->convert( $paymentAmount );
 		$_SESSION['localPaypalAmount'] = $paymentAmount;
 		$_SESSION['paypalexpresssessionid'] = $this->cart_data['session_id'];
@@ -234,6 +236,18 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 		$item_total = 0;
 		$tax_total = 0;
 		$shipping_total = 0;
+		
+		// each item price must total the cart total so for discounts we work out the total number of 
+		//products and apply the part of the total discount to each item total to ballance this out.
+	/*
+	if ($this->cart_data['cart_discount_value']){
+			foreach ( $this->cart_items as $cart_item ) {
+				$total_quanity += $cart_item['quantity'];
+			}
+			$discount_value = $this->format_price($this->cart_data['cart_discount_value'] / $total_quanity);
+		}
+*/
+		
 		foreach ( $this->cart_items as $cart_item ) {
 			$data["L_PAYMENTREQUEST_0_NAME{$i}"] = $cart_item['name'];
 			$data["L_PAYMENTREQUEST_0_AMT{$i}"] = $this->convert( $cart_item['price'] );
@@ -243,8 +257,29 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 			$shipping_total += $cart_item['shipping'];
 			$i ++;
 		}
+		//if we have a discount then include a negative amount with that discount
+		if ( $this->cart_data['cart_discount_value'] ){
+			$discount_value = $this->convert( $this->cart_data['cart_discount_value']); 
+			$data["L_PAYMENTREQUEST_0_NAME{$i}"] = "Discount / Coupon";
+			$data["L_PAYMENTREQUEST_0_AMT{$i}"] = -$discount_value;
+			$data["L_PAYMENTREQUEST_0_NUMBER{$i}"] = $i;
+			$data["L_PAYMENTREQUEST_0_QTY{$i}"] = 1;
+			$item_total += $this->convert(-$discount_value);
+			$i ++;
+			//if the item total is less than the discount applied we can't send a $0 product 
+			//to paypal so we will create one for 1 cent and take 1 cent off the shipping if there is no shipping
+			//charges then the buyer is meant to pay nothing for the product (coupon covers everything) so we cant send them through the gateway
+			if ( $item_total <= 0 ){
+				$data["L_PAYMENTREQUEST_0_NAME{$i}"] = "Discount / Coupon";
+				$data["L_PAYMENTREQUEST_0_AMT{$i}"] = $this->convert(0.01);
+				$data["L_PAYMENTREQUEST_0_NUMBER{$i}"] = $i;
+				$data["L_PAYMENTREQUEST_0_QTY{$i}"] = 1;
+				$item_total += $this->convert(0.01);
+				$shipping_total -= $this->convert(0.01);
+			}
+		}
 
-		$data["PAYMENTREQUEST_0_ITEMAMT"] = $this->format_price( $item_total );
+		$data["PAYMENTREQUEST_0_ITEMAMT"] = $this->format_price( $item_total ) ;
 		$data["PAYMENTREQUEST_0_SHIPPINGAMT"] = $this->convert( $this->cart_data['base_shipping'] + $shipping_total );
 		$total = $data["PAYMENTREQUEST_0_ITEMAMT"] + $data["PAYMENTREQUEST_0_SHIPPINGAMT"];
 		
