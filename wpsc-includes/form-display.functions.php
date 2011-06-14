@@ -175,20 +175,36 @@ function wpsc_select_product_file( $product_id = null ) {
 	$num = 0;
 
 	foreach ( (array)$attached_files as $file ) {
+	
+	///currently get_attached_file returns this:/Applications/MAMP/htdocs/word5/wp-content/uploads/
+	//so have made an ugly way to get the file size will need to debug this before 3.9 and clean up all code
+	//$file_size1 = get_attached_file( $file->ID , true ) ;
+	//echo('<pre>'.print_r($file_size1,1).'</pre>');
+	
+	$file_dir = WP_CONTENT_DIR . "/uploads/wpsc/downloadables/".$file->post_title;
+	$file_size = filesize( $file_dir ) ;
+	$file_url = content_url() . "/uploads/wpsc/downloadables/".$file->post_title;
+
 		$num++;
 		$deletion_url = wp_nonce_url( "admin.php?wpsc_admin_action=delete_file&amp;file_name={$file->post_title}&amp;product_id={$product_id}&amp;row_number={$num}", 'delete_file_' . $file->post_title );
-
-		$output .= "<p " . ((($num % 2) > 0) ? '' : "class='alt'") . " id='select_product_file_row_$num'>\n";
-		$output .= "  <a class='file_delete_button' href='{$deletion_url}' >\n";
-		$output .= "    <img src='" . WPSC_CORE_IMAGES_URL . "/cross.png' />\n";
-		$output .= "  </a>\n";
-		$output .= "  <label for='select_product_file_$num'>" . $file->post_title . "</label>\n";
-		$output .= "</p>\n";
+		$output .= "<span class = " . ((($num % 2) > 0) ? '' : "class='alt'") . " id='select_product_file_row_$num'>\n";
+		$output .= " <label for='select_product_file_$num'>" . $file->post_title . "</label>";
+		$output .= "<p class = 'downloadables_float'>  <a class='file_delete_button' href='{$deletion_url}' >\n";
+		$output .= "    Delete";
+		$output .= "  </a></p>";
+		$output .= "<p class = 'downloadables_float'>  <a  href='{$file_url}' >";
+		$output .= "    Download\n";
+		$output .= "  </a> </p>";
+		$output .= "<p class = 'downloadables_float'>".get_the_date( $d ) ."</p>";
+		$output .= "<p class = 'downloadables_float'>".byteFormat($file_size) ."</p>";
+		$output .= "<p class='clear'></p>";
+		$output .= "</span>\n";
 	}
 	
-	$no_file_style = empty( $attached_files ) ? '' : ' style="display:none;"';
-	$output .= "<p class='no-item' {$no_file_style}>" . __( 'There are no files attached to this product. Upload a new file or select from other product files.', 'wpsc' ) . "</p>";
-
+	//$no_file_style = empty( $attached_files ) ? '' : ' style="display:none;"';
+	if (empty($attached_files)){
+		$output .= "<p class='no-item' {$no_file_style}>" . __( 'There are no files attached to this product. Upload a new file or select from other product files.', 'wpsc' ) . "</p>";
+	}
 	$output .= "</div>";
 	$output .= "<div class='" . ((is_numeric( $product_id )) ? "edit_" : "") . "select_product_handle'><div></div></div>";
 	$output .= "<script type='text/javascript'>\r\n";

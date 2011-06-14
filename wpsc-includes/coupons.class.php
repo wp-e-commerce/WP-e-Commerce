@@ -43,6 +43,12 @@ class wpsc_coupons {
 	var $end_date;
 	var $use_once;
 	var $is_used;
+	//used x times is the new condition where a 
+	//user can set how many times the coupon can be used 
+	//$free_shipping_details - this is so the user can limit the free shipping to country and regions
+	//since 3.8.5
+	var $use_x_times;
+	var $free_shipping_details;
 	
 	var $discount;
 		//for error message
@@ -69,12 +75,15 @@ class wpsc_coupons {
 				$this->errormsg = false;
 				return false;
 			} else {
+
 				$this->value = $coupon_data['value'];
 				$this->is_percentage = $coupon_data['is-percentage'];
 				$this->conditions = unserialize($coupon_data['condition']);
 				$this->is_used = $coupon_data['is-used'];
 				$this->active = $coupon_data['active'];
 				$this->use_once = $coupon_data['use-once'];
+				$this->use_x_times = $coupon_data['use-x-times'];
+				$this->free_shipping_details = unserialize($coupon_data['free-shipping']);
 				$this->start_date = $coupon_data['start'];
 				$this->end_date = $coupon_data['expiry'];
 				$this->every_product = $coupon_data['every_product'];
@@ -109,13 +118,24 @@ class wpsc_coupons {
 		global $wpdb, $wpsc_cart;
 		
 		$wpsc_cart->clear_cache();
-
+	
+		
 		//Calculates the discount for the whole cart if there is no condition on this coupon.
 		if ($this->conditions == '' || count($this->conditions) == 0) {
-
+			
+		
 			// $this->is_percentage == '2' means "Free Shipping"
 			if ($this->is_percentage == '2'){
-				return $wpsc_cart->calculate_total_shipping();	
+			
+				$discount_country = $this->free_shipping_details['discount_country'];
+				$discount_region = $this->free_shipping_details['discount_region'];
+				$delivery_country = $wpsc_cart->delivery_country;
+				$delivery_region = $wpsc_cart->delivery_region;
+				
+				//if there is no region we just compare the countries otherwise compaire both the regions 
+				//and countries or if there are no country/region limitation then its free shipping for everywhere
+				if (empty($discount_region) && ($discount_country == $delivery_country) || ($discount_country == $delivery_country) && ($delivery_region == $discount_region) || empty($this->free_shipping_details))
+					return $wpsc_cart->calculate_total_shipping();
 			}
 			
 			// $this->is_percentage == '1' means "%" discount
@@ -204,7 +224,7 @@ class wpsc_coupons {
 		if ($c['property'] == 'item_name') {
 			$product_data = $wpdb->get_results("SELECT * FROM " . $wpdb->posts . " WHERE id='{$product_obj->product_id}'");
 			$product_data = $product_data[0];
-		
+			
 			switch($c['logic']) {
 				case 'equal': //Checks if the product name is exactly the same as the condition value
 				if ($product_data->post_title == $c['value']) {
@@ -245,6 +265,14 @@ class wpsc_coupons {
 				preg_match("/".$c['value']."$/", $product_data->post_title, $match);
 				if (!empty($match))
 					return true;
+				break;
+				
+				case 'category'://Checks if the product name is in the set category
+				$product_categories = wp_get_post_terms($product_data->ID, 'wpsc_product_category');
+				foreach ($product_categories as $product_cat){
+					if($product_cat->name == $c['value'])
+						return true;
+				}
 				break;
 				
 				default:

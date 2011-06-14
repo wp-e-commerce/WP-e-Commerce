@@ -224,10 +224,29 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 
 			if ( !empty($purchase_log['discount_data'])) {
 				$coupon_data = $wpdb->get_row( "SELECT * FROM `" . WPSC_TABLE_COUPON_CODES . "` WHERE coupon_code='" . $wpdb->escape( $purchase_log['discount_data'] ) . "' LIMIT 1", ARRAY_A );
-				if ( $coupon_data['use-once'] == 1 ) {
-					$wpdb->update(WPSC_TABLE_COUPON_CODES, array('active' => '0', 'is-used' => '1'), array('id' => $coupon_data['id']) );
+				
+				
+				// check if coupon has a limit to how many times it can be used
+				// if it does decriment to get how many uses left and update
+				// if its the last time it can be used set is-used to 1
+				if ( $coupon_data['use-x-times'] > 0 ) {
+					$x_times_left = ($coupon_data['use-x-times'] - 1);
+					$is_used = 0;
+					$active = 1;
 				}
+				
+				//if coupon is use once it also need to be set as inactive
+				if ( $x_times_left == 0 || $coupon_data['use-once'] == 1) {
+						$x_times_left = 0;
+						$is_used = 1;
+						$active = 0;
+				}
+
+				$wpdb->update(WPSC_TABLE_COUPON_CODES, array('use-x-times' => $x_times_left , 'is-used' => $is_used, 'active' => $active), array('id' => $coupon_data['id']) );
 			}
+				
+						
+			
 
 			$total_shipping += $purchase_log['base_shipping'];
 

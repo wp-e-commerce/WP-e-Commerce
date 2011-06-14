@@ -15,6 +15,7 @@ $conditions = maybe_unserialize($coupon['condition']);
   $output .= "   <th>".__('Start', 'wpsc')."</th>\n\r";
   $output .= "   <th>".__('Expiry', 'wpsc')."</th>\n\r";
   $output .= "   <th>".__('Use Once', 'wpsc')."</th>\n\r";
+  $output .= "   <th>".__('Limited Number', 'wpsc')."</th>\n\r";
   $output .= "   <th>".__('Active', 'wpsc')."</th>\n\r";
 	$output .= "   <th>".__('Apply On All Products', 'wpsc')."</th>\n\r";
   $output .= "   <th></th>\n\r";
@@ -44,6 +45,10 @@ $conditions = maybe_unserialize($coupon['condition']);
   $output .= "  <td>\n\r";
   $output .= "   <input type='hidden' value='0' name='edit_coupon[".$id."][use-once]' />\n\r";
   $output .= "   <input type='checkbox' value='1' ".(($coupon['use-once'] == 1) ? "checked='checked'" : '')." name='edit_coupon[".$id."][use-once]' />\n\r";
+  $output .= "  </td>\n\r";
+  $output .= "  <td>\n\r";
+  $output .= "   <input type='hidden' value='0' name='edit_coupon[".$id."][use-x-times]' />\n\r";
+  $output .= "   <input type='text' size='4' value='".$coupon['use-x-times']."' name='edit_coupon[".$id."][use-x-times]' />\n\r";
   $output .= "  </td>\n\r";
   $output .= "  <td>\n\r";
   $output .= "   <input type='hidden' value='0' name='edit_coupon[".$id."][active]' />\n\r";
@@ -133,6 +138,7 @@ $output ='
 				<option value="not_contain">' . __( 'Does not contain', 'wpsc') . '</option>
 				<option value="begins">' . __( 'Begins with', 'wpsc') . '</option>
 				<option value="ends">' . __( 'Ends with', 'wpsc') . '</option>
+				<option value="category">' . __( 'In Category', 'wpsc') . '</option>
 			</select>
 			<span>
 				<input type="text" name="rules[value][]"/>
