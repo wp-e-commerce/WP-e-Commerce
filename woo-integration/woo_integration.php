@@ -31,9 +31,10 @@ function woo_wpsc_filter_option($return){
 	return $return;
 }
 
-//Ajax respont for wp_ajax_print_wpsc_presentation
+//Ajax respond for wp_ajax_print_wpsc_presentation
 function woo_wpsc_presentation_menu(){
 	require_once( WPSC_FILE_PATH . '/woo-integration/options_presentation.php' );
+	die();
 }
 
 //Add main frame style sheet
@@ -44,7 +45,7 @@ function add_my_stylesheet() {
 
 
 function woo_wpsc_integration(){
-	add_filter( 'wpsc_settings_tabs' , 'woo_wpsc_remove_presentation_tab');
+	//add_filter( 'wpsc_settings_tabs' , 'woo_wpsc_remove_presentation_tab');
 	add_filter( 'woo_before_option_page' , 'woo_wpsc_filter_option');
 	add_filter( 'wpsc_settings_redirect_url' , 'woo_wpsc_filter_redirect_url');
 	add_action( 'wp_ajax_print_wpsc_presentation' , 'woo_wpsc_presentation_menu');

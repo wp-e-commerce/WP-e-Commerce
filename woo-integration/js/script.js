@@ -45,7 +45,4 @@ $(document).ready(function() {
 	
 	//Remove Advanced Theme Setting
 	$('#themes_and_appearance').remove();
-	
-	//Remove redundant 0 after the form
-	$('body').html($('#cart_options'));
 });
