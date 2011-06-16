@@ -247,7 +247,9 @@ if ( is_admin() )
 function wpsc_add_product_price_to_rss() {
 	global $post;
 	$price = get_post_meta( $post->ID, '_wpsc_price', true );
-	echo '<price>' . $price . '</price>';
+	// Only output a price tag if we have a price
+	if ( $price )
+		echo '<price>' . $price . '</price>';
 }
 add_action( 'rss2_item', 'wpsc_add_product_price_to_rss' );
 add_action( 'rss_item', 'wpsc_add_product_price_to_rss' );
