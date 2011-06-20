@@ -71,7 +71,7 @@ function TB_show(caption, url, rel) {
 			}
 		
 			// find the anchors that point to the group
-			var imageGroup = jQuery("a[rel="+rel+"]").get();
+			var imageGroup = jQuery("a[rel='"+rel+"']").get();
 			var foundSelf = false;
 			var imageTitle = 'Gallery'; //default to something sane
 			// loop through the anchors, looking for ourself, saving information about previous and next image
