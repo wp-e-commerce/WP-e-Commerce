@@ -1,6 +1,6 @@
 // This is the wp-e-commerce front end javascript "library"
 
-jQuery(document).ready(function(){
+jQuery(document).ready(function(){	
 		jQuery('td.hidden_alerts img').each(function(){
 			var t = jQuery(this);
 			t.appendTo(t.parents('tr').find('td.column-title strong'));
@@ -234,7 +234,7 @@ jQuery(document).ready(function(){
 		jQuery(this).click(function(event){
 			this_href = jQuery(this).attr('href');
 			parent_element = jQuery(this).parent();
-			extra_parameters = jQuery("input[type=text]", parent_element).serialize();
+			extra_parameters = jQuery("input[type='text']", parent_element).serialize();
 			window.location = this_href+"&"+extra_parameters;
 			return false;
 		});

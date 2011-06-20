@@ -167,7 +167,7 @@
 			) 
 		){
 			jQuery('#current_country option').removeAttr('selected');
-			jQuery('#current_country option[value='+jQuery('select[title="billingcountry"]').val()+']').attr('selected', 'selected');
+			jQuery('#current_country option[value="'+jQuery('select[title="billingcountry"]').val()+'"]').attr('selected', 'selected');
 			jQuery('#region').remove();
 			if(jQuery('select[title="billingstate"]').html()){
 				jQuery('#change_country #current_country').after('<select name="region" id="region" onchange="submit_change_country();">'+jQuery('select[title="billingstate"]').html()+'</select>')
@@ -236,7 +236,7 @@ jQuery(document).ready(function () {
 	// Submit the product form using AJAX
 	jQuery("form.product_form").live('submit', function() {
 		// we cannot submit a file through AJAX, so this needs to return true to submit the form normally if a file formfield is present
-		file_upload_elements = jQuery.makeArray(jQuery('input[type=file]', jQuery(this)));
+		file_upload_elements = jQuery.makeArray(jQuery('input[type="file"]', jQuery(this)));
 		if(file_upload_elements.length > 0) {
 			return true;
 		} else {
@@ -271,7 +271,7 @@ jQuery(document).ready(function () {
 
 	//  this is for storing data with the product image, like the product ID, for things like dropshop and the the ike.
 	jQuery("form.product_form").livequery(function(){
-		product_id = jQuery('input[name=product_id]',this).val();
+		product_id = jQuery('input[name="product_id"]',this).val();
 		image_element_id = 'product_image_'+product_id;
 		jQuery("#"+image_element_id).data("product_id", product_id);
 		parent_container = jQuery(this).parents('div.product_view_'+product_id);
@@ -290,7 +290,7 @@ jQuery(document).ready(function () {
 	jQuery(".wpsc_select_variation").live('change', function() {
 		jQuery('option[value="0"]', this).attr('disabled', 'disabled');
 		parent_form = jQuery(this).parents("form.product_form");
-		form_values =jQuery("input[name=product_id], .wpsc_select_variation",parent_form).serialize( );
+		form_values =jQuery("input[name='product_id'], .wpsc_select_variation",parent_form).serialize( );
 
 		jQuery.post( 'index.php?update_product_price=true', form_values, function(returned_data) {
 			variation_msg = '';
@@ -371,13 +371,13 @@ jQuery(document).ready(function () {
 	});
 
 	//Shipping bug fix by James Collins
-	var radios = jQuery(".productcart input:radio[name=shipping_method]");
+	var radios = jQuery(".productcart input:radio[name='shipping_method']");
 	if (radios.length == 1) {
 		// If there is only 1 shipping quote available during checkout, automatically select it
 		jQuery(radios).click();
 	} else if (radios.length > 1) {
 		// There are multiple shipping quotes, simulate a click on the checked one
-		jQuery(".productcart input:radio[name=shipping_method]:checked").click();
+		jQuery(".productcart input:radio[name='shipping_method']:checked").click();
 	}
 });
 
@@ -446,8 +446,8 @@ function shopping_cart_collapser() {
 
 function set_billing_country(html_form_id, form_id){
 	var billing_region = '';
-	country = jQuery(("div#"+html_form_id+" select[class=current_country]")).val();
-	region = jQuery(("div#"+html_form_id+" select[class=current_region]")).val();
+	country = jQuery(("div#"+html_form_id+" select[class='current_country']")).val();
+	region = jQuery(("div#"+html_form_id+" select[class='current_region']")).val();
 	if(/[\d]{1,}/.test(region)) {
 		billing_region = "&billing_region="+region;
 	}
@@ -463,13 +463,13 @@ function set_billing_country(html_form_id, form_id){
 }
 function set_shipping_country(html_form_id, form_id){
 	var shipping_region = '';
-	country = jQuery(("div#"+html_form_id+" select[class=current_country]")).val();
+	country = jQuery(("div#"+html_form_id+" select[class='current_country']")).val();
 
 	if(country == 'undefined'){
 		country =  jQuery("select[title='billingcountry']").val();
 	}
 
-	region = jQuery(("div#"+html_form_id+" select[class=current_region]")).val();
+	region = jQuery(("div#"+html_form_id+" select[class='current_region']")).val();
 	if(/[\d]{1,}/.test(region)) {
 		shipping_region = "&shipping_region="+region;
 	}
@@ -522,7 +522,7 @@ jQuery(document).ready(function(){
 					});
 				}
 			});
-			if(jQuery(this).parents('form:first').find('select.wpsc_select_variation[value=0]:first').length)
+			if(jQuery(this).parents('form:first').find('select.wpsc_select_variation[value="0"]:first').length)
 				return false;
 		});
 	});
