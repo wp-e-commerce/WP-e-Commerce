@@ -6,7 +6,7 @@ jQuery(document).ready(function(){
 			t.appendTo(t.parents('tr').find('td.column-title strong'));
 		});
 
-        jQuery('label[for=wpsc-variationdiv-hide]').css('display', 'none');
+        jQuery('label[for="wpsc-variationdiv-hide"]').css('display', 'none');
 
 	jQuery('a.update_variations_action').click(function(){
 		jQuery("<img class='loading' src='images/loading.gif' height='15' width='15' />").insertAfter(this);

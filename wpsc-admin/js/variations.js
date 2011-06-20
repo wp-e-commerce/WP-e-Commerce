@@ -17,7 +17,7 @@
 
 */
 //Delete checkout options on settings>checkout page
-
+var jq_version = jQuery.fn.jquery;
 
 jQuery('.variation_checkboxes').livequery(function(){
 
@@ -27,8 +27,8 @@ jQuery('.variation_checkboxes').livequery(function(){
         });
 
 	jQuery("div.variation_set>label input:checkbox", this).click(function(event){
-		is_checked = jQuery(this).attr('checked');
-		
+                is_checked = ( jq_version < 1.6 ) ? jQuery(this).attr('checked') : jQuery(this).prop('checked');
+
 		variation_set = jQuery(this).parents("div.variation_set");
 
 		switch(is_checked) {
@@ -51,7 +51,7 @@ jQuery('.variation_checkboxes').livequery(function(){
 	
 	
 	jQuery("div.variation input:checkbox", this).click(function(event){
-		is_checked = jQuery(this).attr('checked');
+                is_checked = ( jq_version < 1.6 ) ? jQuery(this).attr('checked') : jQuery(this).prop('checked');
 		variation_set = jQuery(this).parents("div.variation_set");
 		variation = jQuery(this).parents("div.variation");
 		switch(is_checked) {
@@ -77,7 +77,7 @@ jQuery('.variation_checkboxes').livequery(function(){
 	});
 	
 	jQuery("div.variation input:checkbox", this).livequery(function(event){
-		is_checked = jQuery(this).attr('checked');
+                is_checked = ( jq_version < 1.6 ) ? jQuery(this).attr('checked') : jQuery(this).prop('checked');
 		variation_set = jQuery(this).parents("div.variation_set");
 		checked_count = jQuery('div.variation input:checked', variation_set).length;
 		if(checked_count < 1) {
