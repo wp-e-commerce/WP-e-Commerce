@@ -475,7 +475,7 @@ jQuery(document).ready(
 		
 		jQuery("input.custom_gateway").change(
 			function() {
-				if(jQuery(this).attr('checked') == true) {
+				if(jQuery(this).is(':checked') == true) {
 					selectCustomGateway.call(this);
 				}
 			}
