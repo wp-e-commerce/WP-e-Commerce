@@ -1005,27 +1005,27 @@ function wpsc_display_products_page( $query ) {
  * @return NULL
  */
 function wpsc_include_products_page_template($display_type = 'default'){
-	if ( isset( $_GET['view_type'] ) ) {
-			switch ( $_GET['view_type'] ) {
-				case 'grid':
-					$display_type = 'grid';
-					$_SESSION['wpsc_display_type'] = $display_type;
-					break;
+	if ( isset( $_GET['view_type'] ) && get_option( 'show_search' ) && get_option( 'show_advanced_search' ) ) {
+		switch ( $_GET['view_type'] ) {
+			case 'grid':
+				$display_type = 'grid';
+				$_SESSION['wpsc_display_type'] = $display_type;
+				break;
 
-				case 'list':
-					$display_type = 'list';
-					$_SESSION['wpsc_display_type'] = $display_type;
-					break;
+			case 'list':
+				$display_type = 'list';
+				$_SESSION['wpsc_display_type'] = $display_type;
+				break;
 
-				case 'default':
-					$display_type = 'default';
-					$_SESSION['wpsc_display_type'] = $display_type;
-					break;
+			case 'default':
+				$display_type = 'default';
+				$_SESSION['wpsc_display_type'] = $display_type;
+				break;
 
-				default:
-					break;
-			}
+			default:
+				break;
 		}
+	}
 		// switch the display type, based on the display type variable...
 		switch ( $display_type ) {
 			case "grid":
