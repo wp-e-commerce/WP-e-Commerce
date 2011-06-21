@@ -18,7 +18,6 @@
 */
 //Delete checkout options on settings>checkout page
 
-
 jQuery('.variation_checkboxes').livequery(function(){
 
         jQuery('label input:checkbox', this).click(function(){
@@ -27,49 +26,34 @@ jQuery('.variation_checkboxes').livequery(function(){
         });
 
 	jQuery("div.variation_set>label input:checkbox", this).click(function(event){
-		is_checked = jQuery(this).attr('checked');
-		
-		variation_set = jQuery(this).parents("div.variation_set");
+		var variation_set = jQuery(this).parents("div.variation_set");
 
-		switch(is_checked) {
-			case true:
-				jQuery('div.variation input:checkbox', variation_set).attr('checked', true);
-				jQuery('div.variation', variation_set).show();
-			break;
-			
-			case false:
-				jQuery('div.variation input:checkbox', variation_set).attr('checked', false);
-				jQuery('div.variation', variation_set).hide();
-			break;
-		
+		if (jQuery(this).is(':checked')) {
+			jQuery('div.variation input:checkbox', variation_set).attr('checked', true);
+			jQuery('div.variation', variation_set).show();
+		} else {
+			jQuery('div.variation input:checkbox', variation_set).attr('checked', false);
+			jQuery('div.variation', variation_set).hide();
 		}
-		
-		//jQuery('input:checkbox' ,variation_set);
 	
 	});
 	
 	
 	
 	jQuery("div.variation input:checkbox", this).click(function(event){
-		is_checked = jQuery(this).attr('checked');
-		variation_set = jQuery(this).parents("div.variation_set");
-		variation = jQuery(this).parents("div.variation");
-		switch(is_checked) {
-			case true:
-				jQuery('label.set_label input:checkbox', variation_set).attr('checked', true);
-				jQuery('div.variation', variation_set).show();
-			break;
-			
-			case false:
-				checked_count = jQuery('div.variation input:checked', variation_set).length;
-				if(checked_count < 1) {
-					jQuery('div.variation', variation_set).hide();
-					jQuery('label.set_label input:checkbox', variation_set).attr('checked', false);
-				}
-			break;
+		var variation_set = jQuery(this).parents("div.variation_set");
+		var variation = jQuery(this).parents("div.variation");
 		
-		}
-		
+		if (jQuery(this).is(':checked')) {
+			jQuery('label.set_label input:checkbox', variation_set).attr('checked', true);
+			jQuery('div.variation', variation_set).show();
+		} else {
+			var checked_count = jQuery('div.variation input:checked', variation_set).length;
+			if(checked_count < 1) {
+				jQuery('div.variation', variation_set).hide();
+				jQuery('label.set_label input:checkbox', variation_set).attr('checked', false);
+			}
+		}		
 	});
 	
 	
@@ -77,9 +61,8 @@ jQuery('.variation_checkboxes').livequery(function(){
 	});
 	
 	jQuery("div.variation input:checkbox", this).livequery(function(event){
-		is_checked = jQuery(this).attr('checked');
-		variation_set = jQuery(this).parents("div.variation_set");
-		checked_count = jQuery('div.variation input:checked', variation_set).length;
+		var variation_set = jQuery(this).parents("div.variation_set");
+		var checked_count = jQuery('div.variation input:checked', variation_set).length;
 		if(checked_count < 1) {
 			jQuery('div.variation', variation_set).hide();
 			jQuery('label.set_label input:checkbox', variation_set).attr('checked', false);

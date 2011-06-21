@@ -281,7 +281,7 @@ var getresults=function(results) {
 		);
 	boxes = ["price_and_stock", "shipping", "variation", "advanced", "product_image", "product_download"];
 	for (i=0;i<boxes.length;i++) {
-		if ( ! jQuery('#'+boxes[i]+'-hide').attr('checked')){
+		if ( ! jQuery('#'+boxes[i]+'-hide').is(':checked')){
 			if (IS_WP27) {
 				jQuery('#'+boxes[i]).hide();
 			}
@@ -993,7 +993,7 @@ function enablebuttons(){
 
 	jQuery("input.limited_stock_checkbox").click( function ()  {
 		parent_form = jQuery(this).parents('form');
-		if(jQuery(this).attr('checked') == true) {
+		if(jQuery(this).is(':checked')) {
 			jQuery("div.edit_stock",parent_form).show();
 			jQuery("th.stock, td.stock", parent_form).show();
 			jQuery(".stock_limit_quantity", parent_form).show();

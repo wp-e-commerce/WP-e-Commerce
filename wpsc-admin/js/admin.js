@@ -593,7 +593,7 @@ jQuery(document).ready(function(){
 	jQuery("input.limited_stock_checkbox").livequery(function(){
 		jQuery(this).click( function ()  {
 			parent_form = jQuery(this).parents('form');
-			if(jQuery(this).attr('checked') == true) {
+			if(jQuery(this).is(':checked')) {
 				jQuery("div.edit_stock",parent_form).show();
 				jQuery("th.stock, td.stock", parent_form).show();
 			} else {
