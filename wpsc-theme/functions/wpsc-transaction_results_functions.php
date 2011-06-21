@@ -262,7 +262,7 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 			$total_price_email.= sprintf(__( 'Total: %s
 ', 'wpsc' ), wpsc_currency_display( $total, array( 'display_as_html' => false ) ));
 			if ( $purchase_log['discount_value'] > 0 ) {
-				$discount_email.= __( 'Discount', 'wpsc' ) . "\n\r: ";
+				$discount_email = __( 'Discount', 'wpsc' ) . "\n\r: ";
 				$discount_email .=$purchase_log['discount_data'] . ' : ' . wpsc_currency_display( $purchase_log['discount_value'], array( 'display_as_html' => false ) ) . "\n\r"; 
 				
 				$report.= $discount_email . "\n\r";
