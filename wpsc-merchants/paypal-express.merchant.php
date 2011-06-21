@@ -240,17 +240,6 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 		$tax_total = 0;
 		$shipping_total = 0;
 		
-		// each item price must total the cart total so for discounts we work out the total number of 
-		//products and apply the part of the total discount to each item total to ballance this out.
-	/*
-	if ($this->cart_data['cart_discount_value']){
-			foreach ( $this->cart_items as $cart_item ) {
-				$total_quanity += $cart_item['quantity'];
-			}
-			$discount_value = $this->format_price($this->cart_data['cart_discount_value'] / $total_quanity);
-		}
-*/
-		
 		foreach ( $this->cart_items as $cart_item ) {
 			$data["L_PAYMENTREQUEST_0_NAME{$i}"] = $cart_item['name'];
 			$data["L_PAYMENTREQUEST_0_AMT{$i}"] = $this->convert( $cart_item['price'] );
@@ -667,6 +656,27 @@ function paypal_processingfunctions(){
 			$item_total += $converted_price * $cart_item['quantity'];
 			$shipping_total += $cart_item['pnp'];
 			$i ++;
+		}
+		//if we have a discount then include a negative amount with that discount
+		if ( $purchase_log['discount_value'] ){
+			$discount_value = wpsc_paypal_express_convert( $purchase_log['discount_value']); 
+			$nvpstr .= "&L_PAYMENTREQUEST_0_NAME{$i}=" . urlencode( "Discount / Coupon" );
+			$nvpstr .= "&L_PAYMENTREQUEST_0_AMT{$i}=-" . urlencode( $discount_value );
+			$nvpstr .= "&L_PAYMENTREQUEST_0_NUMBER{$i}={$i}";
+			$nvpstr .= "&L_PAYMENTREQUEST_0_QTY{$i}=1";
+			$item_total -= wpsc_paypal_express_convert($discount_value);
+			$i ++;
+			//if the item total is less than the discount applied we can't send a $0 product 
+			//to paypal so we will create one for 1 cent and take 1 cent off the shipping if there is no shipping
+			//charges then the buyer is meant to pay nothing for the product (coupon covers everything) so we cant send them through the gateway
+			if ( $item_total <= 0 ){
+				$nvpstr .= "&L_PAYMENTREQUEST_0_NAME{$i}=" . urlencode( "Discount / Coupon" );
+				$nvpstr .= "&L_PAYMENTREQUEST_0_AMT{$i}=" . wpsc_paypal_express_convert(0.01);
+				$nvpstr .= "&L_PAYMENTREQUEST_0_NUMBER{$i}={$i}";
+				$nvpstr .= "&L_PAYMENTREQUEST_0_QTY{$i}=1";
+				$item_total += wpsc_paypal_express_convert(0.01);
+				$shipping_total -= 0.01;
+			}
 		}
 		$item_total = wpsc_paypal_express_format( $item_total );
 		$shipping_total = wpsc_paypal_express_convert( $purchase_log['base_shipping'] + $shipping_total );
