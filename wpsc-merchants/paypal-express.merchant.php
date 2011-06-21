@@ -217,6 +217,9 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 			$this->cart_data['shipping_address']['last_name'] = $this->cart_data['billing_address']['last_name'];
 			
 		}
+				
+		if ( $this->cart_data['shipping_address']['country'] == 'UK' )
+			$this->cart_data['shipping_address']['country'] = 'GB';
 		
 		$data += array(
 			'PAYMENTREQUEST_0_SHIPTONAME'		=> $this->cart_data['shipping_address']['first_name'].' '.$this->cart_data['shipping_address']['last_name'],

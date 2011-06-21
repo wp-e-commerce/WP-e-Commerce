@@ -85,6 +85,9 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 		$data['NOTIFYURL']       = add_query_arg( 'gateway', 'wpsc_merchant_paypal_pro', $this->cart_data['notification_url'] );
 		$data['IPADDRESS']       = $_SERVER["REMOTE_ADDR"];
 
+		if ( $this->cart_data['billing_address']['country'] == 'UK' )
+			$this->cart_data['billing_address']['country'] = 'GB';
+
 		// Billing Data
 		$data['FIRSTNAME']   = $this->cart_data['billing_address']['first_name'];
 		$data['LASTNAME']    = $this->cart_data['billing_address']['last_name'];
@@ -103,6 +106,9 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 		// Check the state for internal numeric ID and trap it
 		if ( is_numeric( $this->cart_data['shipping_address']['state'] ) )
 			$this->cart_data['shipping_address']['state'] = wpsc_get_state_by_id( $this->cart_data['shipping_address']['state'], 'code' );
+
+		if ( $this->cart_data['shipping_address']['country'] == 'UK' )
+			$this->cart_data['shipping_address']['country'] = 'GB';
 
 		$data['SHIPTOSTATE']   = $this->cart_data['shipping_address']['state'];
 		$data['SHIPTOCOUNTRY'] = $this->cart_data['shipping_address']['country'];
