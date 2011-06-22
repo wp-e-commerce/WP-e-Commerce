@@ -526,7 +526,7 @@ class wpsc_checkout {
 		$category_list = wpsc_cart_item_categories( true );
 		$additional_form_list = array( );
 		foreach ( $category_list as $category_id ) {
-			$additional_form_list[] = wpsc_get_categorymeta( $category_id, 'use_additonal_form_set' );
+			$additional_form_list[] = wpsc_get_categorymeta( $category_id, 'use_additional_form_set' );
 		}
 		if ( function_exists( 'wpsc_get_ticket_checkout_set' ) ) {
 			$checkout_form_fields_id = array_search( wpsc_get_ticket_checkout_set(), $additional_form_list );
