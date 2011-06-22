@@ -275,13 +275,13 @@ function wpsc_admin_category_forms_add() {
 		<table class='category_forms'>
 			<?php
 			if (!isset($category['term_id'])) $category['term_id'] = '';
-				$used_additonal_form_set = wpsc_get_categorymeta($category['term_id'], 'use_additonal_form_set'); ?>
+				$used_additonal_form_set = wpsc_get_categorymeta($category['term_id'], 'use_additional_form_set'); ?>
 				<tr>
 					<td>
 						<?php _e("This category requires additional checkout form fields",'wpsc'); ?>
 					</td>
 					<td>
-						<select name='use_additonal_form_set'>
+						<select name='use_additional_form_set'>
 							<option value=''><?php _e("None",'wpsc'); ?></option>
 							<?php
 							$checkout_sets = get_option('wpsc_checkout_form_sets');
@@ -339,6 +339,7 @@ function wpsc_admin_category_forms_edit() {
         $category['display_type'] = wpsc_get_categorymeta($category['term_id'], 'display_type');
         $category['image_height'] = wpsc_get_categorymeta($category['term_id'], 'image_height');
         $category['image_width'] = wpsc_get_categorymeta($category['term_id'], 'image_width');
+        $category['use_additional_form_set'] = wpsc_get_categorymeta($category['term_id'], 'use_additional_form_set');
 	
 
 	?>
@@ -346,6 +347,7 @@ function wpsc_admin_category_forms_edit() {
         <tr>
             <td colspan="2">
                 <h3><?php _e( 'Advanced Settings', 'wpsc' ); ?></h3>
+              
             </td>
         </tr>
 
@@ -499,7 +501,7 @@ function wpsc_admin_category_forms_edit() {
         <?php
             if ( !isset( $category['term_id'] ) )
                 $category['term_id'] = '';
-            $used_additonal_form_set = wpsc_get_categorymeta( $category['term_id'], 'use_additonal_form_set' );
+            $used_additonal_form_set = wpsc_get_categorymeta( $category['term_id'], 'use_additional_form_set' );
             $checkout_sets = get_option('wpsc_checkout_form_sets');
             unset($checkout_sets[0]);
             $uses_billing_address = (bool)wpsc_get_categorymeta( $category['term_id'], 'uses_billing_address' );
@@ -509,7 +511,7 @@ function wpsc_admin_category_forms_edit() {
 		<label for="image"><?php _e( 'Category requires additional checkout form fields', 'wpsc' ); ?></label>
             </th>
             <td>
-                <select name='use_additonal_form_set'>
+                <select name='use_additional_form_set'>
                     <option value=''><?php _e( 'None', 'wpsc' ); ?></option>
                     <?php
                         foreach( (array) $checkout_sets as $key => $value ) {
@@ -610,9 +612,10 @@ function wpsc_save_category_set($category_id, $tt_id) {
 		
 		
 		if ( ! empty( $_POST['use_additional_form_set'] ) ) {
-			wpsc_update_categorymeta($category_id, 'use_additonal_form_set', $_POST['use_additonal_form_set']);
+			wpsc_update_categorymeta($category_id, 'use_additional_form_set', $_POST['use_additional_form_set']);
+			//exit('<pre>'.print_r($_POST,1).'</pre>');
 		} else {
-			wpsc_delete_categorymeta($category_id, 'use_additonal_form_set');
+			wpsc_delete_categorymeta($category_id, 'use_additional_form_set');
 		}
 
 		if ( ! empty( $_POST['uses_billing_address'] ) ) {
