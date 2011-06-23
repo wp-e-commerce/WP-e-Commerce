@@ -126,7 +126,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 		$i = $item_total = 0;
 		$tax_total = wpsc_tax_isincluded() ? 0 : $this->cart_data['cart_tax'];
 
-		$shipping_total = $this->cart_data['base_shipping'];
+		$shipping_total = $this->convert( $this->cart_data['base_shipping'] );
 
 		foreach ( $this->cart_items as $cart_row ) {
 			$data['L_NAME' . $i] = $cart_row['name'];
@@ -134,15 +134,30 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 			$data['L_NUMBER' . $i] = $i;
 			$data['L_QTY' . $i] = $cart_row['quantity'];
 			
-			$shipping_total += $cart_row['shipping'];
+			$shipping_total += $this->convert( $cart_row['shipping'] );
 			$item_total += $this->convert( $cart_row['price'] ) * $cart_row['quantity'];
 
 			$i++;
 		}
-
+		
+		if ( $this->cart_data['has_discounts'] ) {
+			$discount_value = $this->convert( $this->cart_data['cart_discount_value'] );
+			
+			if ( $discount_value >= $item_total ) {
+				$discount_value = $item_total - 0.01;
+				$shipping_total -= 0.01;
+			}
+			
+			$data["L_NAME{$i}"] = 'Coupon / Discount';
+			$data["L_AMT{$i}"] = $discount_value;
+			$data["L_NUMBER{$i}"] = $i;
+			$data["L_QTY{$i}"] = 1;
+			$item_total -= $discount_value;
+		}
+		
 		// Cart totals	
-		$data['ITEMAMT'] = $item_total;
-		$data['SHIPPINGAMT'] = $this->convert( $shipping_total );
+		$data['ITEMAMT'] = $this->format_price( $item_total );
+		$data['SHIPPINGAMT'] = $this->format_price( $shipping_total );
 		$data['TAXAMT'] = $this->convert( $tax_total );
 		$data['AMT'] = $data['ITEMAMT'] + $data['SHIPPINGAMT'] + $data['TAXAMT'];
 		$this->collected_gateway_data = $data;
