@@ -252,25 +252,20 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 		//if we have a discount then include a negative amount with that discount
 		if ( $this->cart_data['cart_discount_value'] ){
 			$discount_value = $this->convert( $this->cart_data['cart_discount_value']); 
+			
+			// if item total < discount amount, leave at least 0.01 unit in item total, then subtract
+			// 0.01 from shipping as well
+			if ( $discount_value >= $item_total ) {
+				$discount_value = $item_total - 0.01;
+				$shipping_total -= 0.01;
+			}
+			
 			$data["L_PAYMENTREQUEST_0_NAME{$i}"] = "Discount / Coupon";
 			$data["L_PAYMENTREQUEST_0_AMT{$i}"] = -$discount_value;
 			$data["L_PAYMENTREQUEST_0_NUMBER{$i}"] = $i;
 			$data["L_PAYMENTREQUEST_0_QTY{$i}"] = 1;
-			$item_total += $this->convert(-$discount_value);
-			$i ++;
-			//if the item total is less than the discount applied we can't send a $0 product 
-			//to paypal so we will create one for 1 cent and take 1 cent off the shipping if there is no shipping
-			//charges then the buyer is meant to pay nothing for the product (coupon covers everything) so we cant send them through the gateway
-			if ( $item_total <= 0 ){
-				$data["L_PAYMENTREQUEST_0_NAME{$i}"] = "Discount / Coupon";
-				$data["L_PAYMENTREQUEST_0_AMT{$i}"] = $this->convert(0.01);
-				$data["L_PAYMENTREQUEST_0_NUMBER{$i}"] = $i;
-				$data["L_PAYMENTREQUEST_0_QTY{$i}"] = 1;
-				$item_total += $this->convert(0.01);
-				$shipping_total -= $this->convert(0.01);
-			}
+			$item_total -= $discount_value;
 		}
-
 		$data["PAYMENTREQUEST_0_ITEMAMT"] = $this->format_price( $item_total ) ;
 		$data["PAYMENTREQUEST_0_SHIPPINGAMT"] = $this->convert( $this->cart_data['base_shipping'] + $shipping_total );
 		$total = $data["PAYMENTREQUEST_0_ITEMAMT"] + $data["PAYMENTREQUEST_0_SHIPPINGAMT"];
@@ -654,32 +649,28 @@ function paypal_processingfunctions(){
 			$nvpstr .= "&L_PAYMENTREQUEST_0_NUMBER{$i}=" . $i;
 			$nvpstr .= "&L_PAYMENTREQUEST_0_QTY{$i}=" . $cart_item['quantity'];
 			$item_total += $converted_price * $cart_item['quantity'];
-			$shipping_total += $cart_item['pnp'];
+			$shipping_total += wpsc_paypal_express_convert( $cart_item['pnp'] );
 			$i ++;
 		}
 		//if we have a discount then include a negative amount with that discount
 		if ( $purchase_log['discount_value'] ){
-			$discount_value = wpsc_paypal_express_convert( $purchase_log['discount_value']); 
+			$discount_value = wpsc_paypal_express_convert( $purchase_log['discount_value']);
+			
+			// if item total < discount amount, leave at least 0.01 unit in item total, then subtract
+			// 0.01 from shipping as well
+			if ( $discount_value >= $item_total ) {
+				$discount_value = $item_total - 0.01;
+				$shipping_total -= 0.01;
+			}
+			
 			$nvpstr .= "&L_PAYMENTREQUEST_0_NAME{$i}=" . urlencode( "Discount / Coupon" );
 			$nvpstr .= "&L_PAYMENTREQUEST_0_AMT{$i}=-" . urlencode( $discount_value );
 			$nvpstr .= "&L_PAYMENTREQUEST_0_NUMBER{$i}={$i}";
 			$nvpstr .= "&L_PAYMENTREQUEST_0_QTY{$i}=1";
-			$item_total -= wpsc_paypal_express_convert($discount_value);
-			$i ++;
-			//if the item total is less than the discount applied we can't send a $0 product 
-			//to paypal so we will create one for 1 cent and take 1 cent off the shipping if there is no shipping
-			//charges then the buyer is meant to pay nothing for the product (coupon covers everything) so we cant send them through the gateway
-			if ( $item_total <= 0 ){
-				$nvpstr .= "&L_PAYMENTREQUEST_0_NAME{$i}=" . urlencode( "Discount / Coupon" );
-				$nvpstr .= "&L_PAYMENTREQUEST_0_AMT{$i}=" . wpsc_paypal_express_convert(0.01);
-				$nvpstr .= "&L_PAYMENTREQUEST_0_NUMBER{$i}={$i}";
-				$nvpstr .= "&L_PAYMENTREQUEST_0_QTY{$i}=1";
-				$item_total += wpsc_paypal_express_convert(0.01);
-				$shipping_total -= 0.01;
-			}
+			$item_total -= $discount_value;
 		}
 		$item_total = wpsc_paypal_express_format( $item_total );
-		$shipping_total = wpsc_paypal_express_convert( $purchase_log['base_shipping'] + $shipping_total );
+		$shipping_total = wpsc_paypal_express_convert( $purchase_log['base_shipping'] ) +  $shipping_total;
 		$nvpstr .= '&PAYMENTREQUEST_0_ITEMAMT=' . $item_total;
 		$nvpstr .= '&PAYMENTREQUEST_0_SHIPPINGAMT=' . $shipping_total;
 
