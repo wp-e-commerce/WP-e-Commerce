@@ -1015,7 +1015,7 @@ function wpsc_attachment_fields( $form_fields, $post ) {
 		
 		// regenerate size metadata in case it's missing
 		if ( ! image_get_intermediate_size( $post->ID, $check ) ) {
-			$metadata = wp_get_attachment_metadata( $post->ID );
+			$metadata = (array)wp_get_attachment_metadata( $post->ID );
 			$file = get_attached_file( $post->ID );
 			$metadata = array_merge( wp_generate_attachment_metadata( $post->ID, $file ), $metadata );
 			wp_update_attachment_metadata( $post->ID, $metadata );
