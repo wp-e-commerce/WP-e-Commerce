@@ -751,10 +751,7 @@ function wpsc_product_advanced_forms() {
 	</tr>
 	<?php
 	}
-	ob_start();
 	do_action( 'wpsc_add_advanced_options', $post->ID );
-	ob_get_contents();
-	ob_end_clean();
 ?>
 	<tr>
 		<td class='itemfirstcol' colspan='2'><br />
