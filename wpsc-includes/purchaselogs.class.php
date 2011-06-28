@@ -513,8 +513,14 @@ function wpsc_display_purchlog_shipping_country() {
 }
 
 function wpsc_display_purchlog_shipping_method() {
-   global $purchlogitem;
-   return $purchlogitem->extrainfo->shipping_method;
+   global $purchlogitem, $wpsc_shipping_modules;
+
+   if ( ! empty ( $wpsc_shipping_modules[$purchlogitem->extrainfo->shipping_method] ) ) {
+      $shipping_class = &$wpsc_shipping_modules[$purchlogitem->extrainfo->shipping_method];
+      return $shipping_class->name;
+   } else {
+      return $purchlogitem->extrainfo->shipping_method;
+   }
 }
 
 function wpsc_display_purchlog_shipping_option() {
