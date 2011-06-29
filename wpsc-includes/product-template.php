@@ -293,7 +293,6 @@ function wpsc_product_image( $attachment_id = 0, $width = null, $height = null )
 		} else {
 			$image_url = "index.php?wpsc_action=scale_image&amp;attachment_id={$attachment_id}&amp;width=$width&amp;height=$height";
 		}
-
 	// Not enough info so attempt to fallback
 	} else {
 
@@ -1192,7 +1191,6 @@ function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id 
 		$custom_height = get_post_meta( $thumbnail_id, '_wpsc_custom_thumb_h', true );
 		
 		if ( !empty( $custom_width ) && !empty( $custom_height ) ) {
-		
 			$width = $custom_width;
 			$height = $custom_height;
 		
@@ -1201,17 +1199,17 @@ function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id 
 		$custom_thumbnail = get_post_meta( $thumbnail_id, '_wpsc_selected_image_size', true );
 		if ( !$custom_thumbnail ) {
 			$custom_thumbnail = 'medium-single-product';
-			
 			// regenerate size metadata in case it's missing
 			if ( ! image_get_intermediate_size( $thumbnail_id, $custom_thumbnail ) ) {
 				require_once( ABSPATH . 'wp-admin/includes/image.php' );
 				$metadata = wp_get_attachment_metadata( $thumbnail_id );
 				$file = get_attached_file( $thumbnail_id );
-				$metadata = array_merge( wp_generate_attachment_metadata( $thumbnail_id, $file ), $metadata );
+				$generated = wp_generate_attachment_metadata( $thumbnail_id, $file );
+				$metadata['sizes'] = array_merge( $generated['sizes'], $metadata['sizes'] );
 				wp_update_attachment_metadata( $thumbnail_id, $metadata );
 			}
 		}
-
+		
 		$src = wp_get_attachment_image_src( $thumbnail_id, $custom_thumbnail );
 
 		if ( !empty( $src ) && is_string( $src[0] ) ) {
