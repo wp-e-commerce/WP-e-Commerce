@@ -1217,6 +1217,22 @@ function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id 
 		}
 	}
 
+	// calculate the height based on the ratio of the original demensions 
+	// blame Cameron if this is buggy :P
+	if ( $height == 0 || $width ==0 ){
+		$attachment_meta = get_post_meta( $thumbnail_id,'_wp_attachment_metadata', false );
+		$original_width = $attachment_meta[0]['width'];
+		$original_height = $attachment_meta[0]['height'];
+
+		if( $width != 0 ){
+			$height = ( $original_height / $original_width ) * $width;
+			$height = round( $height, 0 );
+		} elseif ( $height != 0 ) {
+			$width = ( $original_width / $original_height ) * $height;
+			$width = round( $width, 0 );
+		}
+	}
+
 	if ( ! $thumbnail && isset( $thumbnail_id ) )
 		$thumbnail = wpsc_product_image( $thumbnail_id, $width, $height );
 
