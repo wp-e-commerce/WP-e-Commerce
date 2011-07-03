@@ -96,7 +96,7 @@ function wpsc_currency_display( $price_in, $args = null ) {
 	}
 
 	// Return results
-	return apply_filters( 'wpsc_currency_display', $output );
+	return apply_filters( 'wpsc_currency_display', $output, $query, $format_string, $currency_code, $currency_sign, $price_out );
 }
 
 /**
