@@ -37,7 +37,7 @@ function validate_form_data() {
 	if ( !empty($_POST['collected_data']) ) {
 
 		foreach ( (array)$_POST['collected_data'] as $value_id => $value ) {
-			$form_sql = "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `id` = '$value_id' LIMIT 1";
+			$form_sql = $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `id` = %d LIMIT 1", $value_id );
 			$form_data = $wpdb->get_row( $form_sql, ARRAY_A );
 			$bad_input = false;
 			if ( $form_data['mandatory'] == 1 ) {
