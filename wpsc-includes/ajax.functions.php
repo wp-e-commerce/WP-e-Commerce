@@ -37,7 +37,7 @@ function wpsc_add_to_cart() {
 	$provided_parameters = array();
 	
 	/// sanitise submitted values
-	$product_id = (int)$_POST['product_id'];
+	$product_id = apply_filters( 'wpsc_add_to_cart_product_id', (int)$_POST['product_id'] );
 	
 	// compatibility with older themes
 	if ( isset( $_POST['wpsc_quantity_update'] ) && is_array( $_POST['wpsc_quantity_update'] ) ) {
