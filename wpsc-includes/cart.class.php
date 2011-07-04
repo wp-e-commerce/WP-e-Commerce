@@ -1627,7 +1627,7 @@ class wpsc_cart_item {
       
    	  $price = apply_filters('wpsc_price', $price, $product_id);
       // create the string containing the product name.
-      $product_name = $product->post_title;
+      $product_name = apply_filters( 'wpsc_cart_product_title', $product->post_title, $product_id );
 
       $this->product_name = $product_name;
       $this->priceandstock_id = $priceandstock_id;
