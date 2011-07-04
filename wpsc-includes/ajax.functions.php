@@ -37,14 +37,14 @@ function wpsc_add_to_cart() {
 	$provided_parameters = array();
 	
 	/// sanitise submitted values
-	$product_id = (int)$_POST['product_id'];
+	$product_id = apply_filters( 'wpsc_add_to_cart_product_id', (int)$_POST['product_id'] );
 	
 	// compatibility with older themes
 	if ( isset( $_POST['wpsc_quantity_update'] ) && is_array( $_POST['wpsc_quantity_update'] ) ) {
 		$_POST['wpsc_quantity_update'] = $_POST['wpsc_quantity_update'][$product_id];
 	}
 	
-	if(isset($_POST['variation'])){
+	if( isset( $_POST['variation'] ) ){
 		foreach ( (array)$_POST['variation'] as $key => $variation )
 			$provided_parameters['variation_values'][(int)$key] = (int)$variation;
 	
@@ -56,7 +56,7 @@ function wpsc_add_to_cart() {
 	
 	}
 	
-	if ((isset($_POST['quantity']) && $_POST['quantity'] > 0) && (!isset( $_POST['wpsc_quantity_update'] )) ) {
+	if ( ( isset($_POST['quantity'] ) && $_POST['quantity'] > 0 ) && ( ! isset( $_POST['wpsc_quantity_update'] ) ) ) {
 		$provided_parameters['quantity'] = (int)$_POST['quantity'];
 	} else if ( isset( $_POST['wpsc_quantity_update'] ) ) {
 		$wpsc_cart->remove_item( $_POST['key'] );
@@ -95,8 +95,8 @@ function wpsc_add_to_cart() {
 		}
 	}
 
-	if ( isset($_GET['ajax']) && $_GET['ajax'] == 'true' ) {
-		if ( ($product_id != null) && (get_option( 'fancy_notifications' ) == 1) ) {
+	if ( isset( $_GET['ajax'] ) && $_GET['ajax'] == 'true' ) {
+		if ( ( $product_id != null ) && ( get_option( 'fancy_notifications' ) == 1 ) ) {
 			echo "if(jQuery('#fancy_notification_content')) {\n\r";
 			echo "   jQuery('#fancy_notification_content').html(\"" . str_replace( array( "\n", "\r" ), array( '\n', '\r' ), addslashes( fancy_notification_content( $cart_messages ) ) ) . "\");\n\r";
 			echo "   jQuery('#loading_animation').css('display', 'none');\n\r";
@@ -111,12 +111,12 @@ function wpsc_add_to_cart() {
 
 		$output = ob_get_contents();
 		ob_end_clean();
-		$output = str_replace( Array( "\n", "\r" ), Array( "\\n", "\\r" ), addslashes( $output ) );
+		$output = str_replace( array( "\n", "\r" ), array( "\\n", "\\r" ), addslashes( $output ) );
 		echo "jQuery('div.shopping-cart-wrapper').html('$output');\n";
 
 
 		if ( get_option( 'show_sliding_cart' ) == 1 ) {
-			if ( (wpsc_cart_item_count() > 0) || (count( $cart_messages ) > 0) ) {
+			if ( ( wpsc_cart_item_count() > 0 ) || ( count( $cart_messages ) > 0 ) ) {
 				$_SESSION['slider_state'] = 1;
 				echo "
                jQuery('#sliding_cart').slideDown('fast',function(){
