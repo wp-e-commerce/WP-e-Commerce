@@ -1,5 +1,5 @@
 === WP e-Commerce ===
-Contributors: mufasa, jghazally, valentinas, mychelle
+Contributors: mufasa, jghazally, valentinas, mychelle, garyc40
 Donate link: http://getshopped.org
 Tags: e-commerce, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
 Requires at least: 3.0
@@ -36,7 +36,32 @@ Before updating please make a backup of your existing files and database. Just i
 After upgrading from earlier versions look for link "Update Store". This will update your database structure to work with new version.
 
 
-== Changelog == 
+== Changelog ==
+= 3.8.5 =
+* Change: User can specify 0 in thumbnail width or height to make it scale proportional.
+* Change: Show display name, not internal name for shipping method on purchase log view.
+* Change: Presentation settings page is restored to WPEC Settings page when WooTheme is activated.
+* Fix: Thumbnail sizes are not generated correctly.
+* Fix: Broken output buffering rendering wpsc_add_advanced_options hook useless.
+* Fix: Paypal Pro doesn't properly account for discount and coupon.
+* Fix: IPN doesn't work on Paypal Standard.
+* Fix: IPN doesn't work on Paypal Pro gateway.
+* Fix: Paypal Express doesn't handle discounts.
+* Fix: Paypal Express doesn't handle IPN.
+* Fix: Paypal Express doesn't send purchase receipt after a payment is accepted on Paypal.
+* Fix: Paypal Express doesn't include item description, quantity, tax etc. in email receipts.
+* Fix: Invalid country code in Paypal Pro and Express, should be GB instead of UK
+* Fix: Take Discount into account when DoExpressCheckout in Paypal Express gateway.
+* Fix: Category checkout form sets don't work.
+* Fix: Incorrect Product display mode selected when ['view_type'] is set and 'show_advanced_search' is disabled.
+* Fix: PHP notice in wpsc-transaction_results_functions.php.
+* Fix: attr('checked') == true always evaluates to false. Use is(':checked') instead.
+* Fix: jQuery 1.6 select by attribute incompatibility.
+* Fix: Price tag is added to RSS even when there is no price.
+* Fix: Span tag is not closed in issue 598.
+* Fix: Faulty php tag in template (issue 589).
+* Fix: PHP Notices when checking out with shipping disabled.
+
 = 3.8.4 =
 * Add: User can duplicate a product in admin panel
 * Add: WooThemes integration support
