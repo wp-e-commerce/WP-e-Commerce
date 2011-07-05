@@ -351,7 +351,13 @@ function form_google(){
 	</tr>
 	<tr>
 		<td colspan='2'><strong>".get_option('siteurl')."/index.php</strong></td>
-	</tr>";
+	</tr>
+	<tr>
+		<td colspan='2'>
+		<span  class='wpscsmall description'>
+		For more help configuring Google Checkout, please read our documentation <a href='http://docs.getshopped.org/wiki/documentation/payments/google-checkout'>here </a> </span>
+		</td>
+		</tr>";
   return $output;
   }
 

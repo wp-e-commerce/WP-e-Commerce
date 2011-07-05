@@ -200,6 +200,13 @@ class ash_usps{
     				</tr>
     				<tr>
     					<td>
+    					</td>
+    					<td>
+    					<span style=\"font-size: x-small\">	Make sure your account has been activated with USPS - if you're unsure if this applys to you then please check with USPS </span>
+    					</td>
+    				</tr>
+    				<tr>
+    					<td>
     						".__('Use Test Server:','wpsc')."
     					</td>
     					<td>

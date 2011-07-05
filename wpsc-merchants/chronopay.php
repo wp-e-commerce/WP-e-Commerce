@@ -506,7 +506,10 @@ function form_chronopay()
 				</select>
 			</td>
 		</tr>
-	";
+		   <tr>
+           <td colspan='2'>For more help configuring Chronopay, read our documentation <a href='http://docs.getshopped.org/wiki/documentation/payments/chronopay'>here </a></td>
+       </tr>";
+	
 	return $output;
 }
   
