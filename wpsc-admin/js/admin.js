@@ -974,7 +974,9 @@ function add_form_field(e) {
 	new_element_contents += "<td class='mandatorycol' style='text-align: center;'><input type='checkbox' name='new_form_mandatory["+new_element_number+"]' value='1' /></td>\n\r";
 	new_element_contents += "<td><a class='image_link' href='#' onclick='return remove_new_form_field(\""+new_element_id+"\");'><img src='" + WPSC_CORE_IMAGES_URL + "/trash.gif' alt='"+TXT_WPSC_DELETE+"' title='"+TXT_WPSC_DELETE+"' /></a></td>\n\r";
 	new_element_contents += '</tr>';
+	jQuery('#checkout_message').css('display', 'block');
 	jQuery("#wpsc_checkout_list_body").append(new_element_contents);
+
 	return false;
 }
 
