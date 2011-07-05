@@ -427,7 +427,13 @@ function form_paypal_pro() {
 		<td>
 			<input type="hidden" name="PayPalPro[testmode]" value="off" /><input type="checkbox" name="PayPalPro[testmode]" id="paypal_pro_testmode" value="on" ' . $selected . ' />
 		</td>
-	</tr>';
+	</tr>
+	<tr>
+  	<td colspan="2">
+  	<span  class="wpscsmall description">
+  	Only enable test mode if you have a sandbox account with PayPal you can find out more about this <a href="https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/howto_testing_sandbox"> here </a></span>
+  	</td>
+  </tr>';
 	
 	$store_currency_code = $wpdb->get_var("SELECT `code` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id` IN ('".absint(get_option('currency_type'))."')");
 	$current_currency = get_option('paypal_curcode');
@@ -462,7 +468,12 @@ function form_paypal_pro() {
 		$output .= "          </td>\n";
 		$output .= "       </tr>\n";
 	}
-
+		$output .="<tr>
+			<td colspan='2'>
+			<span  class='wpscsmall description'>
+			For more help configuring Paypal Pro, please read our documentation <a href='http://docs.getshopped.org/wiki/documentation/payments/paypal-payments-pro'>here </a>  	</span>
+			</td>
+		</tr>";
 	return $output;
 }
 

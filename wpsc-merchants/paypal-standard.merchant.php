@@ -496,6 +496,15 @@ function form_paypal_multiple() {
       </td>
   </tr>
   <tr>
+  	<td></td>
+  	<td colspan='1'>
+  	<span  class='wpscsmall description'>
+  	This is your PayPal email address.
+  	</span>
+  	</td>
+  </tr>
+
+  <tr>
       <td>Url:
       </td>
       <td>
@@ -553,6 +562,13 @@ function form_paypal_multiple() {
        <input type='radio' value='1' name='paypal_ipn' id='paypal_ipn1' ".$paypal_ipn1." /> <label for='paypal_ipn1'>".__('Yes', 'wpsc')."</label> &nbsp;
        <input type='radio' value='0' name='paypal_ipn' id='paypal_ipn2' ".$paypal_ipn2." /> <label for='paypal_ipn2'>".__('No', 'wpsc')."</label>
      </td>
+  </tr>
+  <tr>
+  	<td colspan='2'>
+  	<span  class='wpscsmall description'>
+  	IPN (instant payment notification ) will automatically update your sales logs to 'Accepted payment' when a customers payment is successful. For IPN to work you also need to have IPN turned on in your Paypal settings. If it is not turned on, the sales sill remain as 'Order Pending' status until manually changed. It is highly recommend using IPN, especially if you are selling digital products.
+  	</span>
+  	</td>
   </tr>
   <tr>
      <td style='padding-bottom: 0px;'>Send shipping details:
@@ -713,7 +729,15 @@ $output .= "
       ".nzshpcrt_form_field_list(get_option('paypal_form_country'))."
       </select>
       </td>
-  </tr> ";
+  </tr> 
+  <tr>
+  	<td colspan='2'>
+  	<span  class='wpscsmall description'>
+  	  For more help configuring Paypal Standard, please read our documentation <a href='http://docs.getshopped.org/wiki/documentation/payments/paypal-payments-standard'>here </a>  	</span>
+  	</td>
+   </tr>
+
+  ";
 
   return $output;
 }
