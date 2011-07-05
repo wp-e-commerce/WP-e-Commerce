@@ -475,6 +475,13 @@ function form_paypal_express() {
 		 </td>
 		</tr>
 		<tr>
+		  	<td colspan='2'>
+		  	<span  class='wpscsmall description'>
+		  	Only use the sandbox server if you have a sandbox account with PayPal you can find out more about this <a href='https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/howto_testing_sandbox'> here </a></span>
+		  	</td>
+  </tr>
+
+		<tr>
 			<td>
 				" . __( 'IPN', 'wpsc' ) . "
 			</td>
@@ -483,6 +490,14 @@ function form_paypal_express() {
 				<input type='radio' value='0' name='paypal_ipn' id='paypal_ipn2' " . checked( $paypal_ipn, 0, false ) . " /> <label for='paypal_ipn2'>".__('No', 'wpsc')."</label>
 			</td>
 		</tr>
+		<tr>
+		  	<td colspan='2'>
+			  	<span  class='wpscsmall description'>
+				  	IPN (instant payment notification ) will automatically update your sales logs to 'Accepted payment' when a customers payment is successful. For IPN to work you also need to have IPN turned on in your Paypal settings. If it is not turned on, the sales sill remain as 'Order Pending' status until manually changed. It is highly recommend using IPN, especially if you are selling digital products.
+			  	</span>
+		  	</td>
+  </tr>
+
 		";
 		
 		$paypal_ipn = get_option( 'paypal_ipn' );		
@@ -519,7 +534,13 @@ function form_paypal_express() {
 			$output .= "          </td>\n";
 			$output .= "       </tr>\n";
 		}
- 
+ 	$output .="<tr>
+  	<td colspan='2'>
+  	<span  class='wpscsmall description'>
+  	  For more help configuring Paypal Express, please read our documentation <a href='http://docs.getshopped.org/wiki/documentation/payments/paypal-express-checkout'>here </a>  	</span>
+  	</td>
+   </tr>";
+   
   	return $output;
 }
 

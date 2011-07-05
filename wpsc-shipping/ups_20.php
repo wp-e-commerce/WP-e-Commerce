@@ -307,7 +307,10 @@ class ash_ups {
                                         <br />
                                 ".__('* For Negotiated rates, you must enter a UPS account number and select "Show UPS negotiated rates" ', 'wpsc')."
                             </td>
-                        </tr>");
+                        </tr>
+                           <tr>
+           <td colspan='2'>For more help configuring UPS, please read our documentation <a href='http://docs.getshopped.org/wiki/documentation/shipping/ups'>here </a></td>
+       </tr>");
 
 
             // End new Code
