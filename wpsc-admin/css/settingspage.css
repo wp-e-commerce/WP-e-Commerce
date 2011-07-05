@@ -5,7 +5,7 @@ th#trash{
 	width:40px;
 }
 th#drag{
-	width:29px;
+	width:35px;
 }
 tr.wpsc_grey{
 	background-color: #ededed;
@@ -18,8 +18,13 @@ td.drag a:hover{
 	cursor: move;
 }
 th#mandatory{
-	width:65px;
+	width:75px;
 }
+
+#checkout_message{
+	display: none;
+}
+
 #wpsc_checkout_list th#name{
 	width:180px;
 }

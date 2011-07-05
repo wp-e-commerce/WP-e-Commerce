@@ -116,6 +116,8 @@ global $wpdb;
 					<td class='wpsc_td_note' colspan='2'>
 						<span class="wpscsmall description">
 						<?php _e('Note: The purchase receipt is the message e-mailed to users after purchasing products from your shop.' , 'wpsc'); ?>
+						<br />
+						<?php _e('Note: You need to have the %product_list% in your purchase receipt in order for digital download links to be emailed to your buyers.' , 'wpsc'); ?>
 						</span>
 					</td>
 				</tr>

@@ -779,7 +779,7 @@ div.select_product_file, div.edit_select_product_file {
 a.file_delete_button {
 	cursor:pointer;
 	float:right;
-	/* 	margin-top:-17px; */
+	color:red;
 	display: block;
 }
 
@@ -1790,4 +1790,19 @@ float: left;
 	top:22px;
 	line-height:15px;
 	width:100%;
+}
+
+.downloadables_float{
+	 float: right;
+	 width:80px;
+	 vertical-align: middle;
+
+}
+
+.downloadables_headding1{
+	 display: inline;
+	 float:left;
+	 text-align: left;
+	 vertical-align: middle;
+	 width: auto;
 }
