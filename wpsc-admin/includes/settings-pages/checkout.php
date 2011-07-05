@@ -223,8 +223,8 @@ function wpsc_options_checkout(){
         
 				<?php wp_nonce_field('update-options', 'wpsc-update-options'); ?>
         <input class='button-primary' type='submit' name='submit' value='<?php _e('Save Changes', 'wpsc');?>' />
-        <a href='#' onclick='return add_form_field();'><?php _e('Add New Form Field', 'wpsc');?></a>
-  </p>
+        <a href='#' onclick='return add_form_field();'><?php _e('Add New Form Field', 'wpsc');?></a></p>
+        <div id="checkout_message">Note: Any new form fields will appear in your sales logs and on your checkout page but this data will not be sent to the payment gateway.</div>
   </form>
 </div>
 </form>
