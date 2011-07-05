@@ -234,12 +234,8 @@ function _wpsc_purchlogs_need_update() {
                      </tr>
                   </thead>
 
-                  <tfoot>
-                  </tfoot>
-
                   <tbody>
                   <?php wpsc_display_purchlog_details(); ?>
-                  <tr> &nbsp;</tr>
 
                   <tr class="wpsc_purchaselog_start_totals">
                      <td colspan="5">
@@ -273,14 +269,14 @@ function _wpsc_purchlogs_need_update() {
             </table>
             <div id='wpsc_purchlog_order_status'>
                <form action='' method='post'>
-               <p><label for='<?php echo $_GET['purchaselog_id']; ?>'><?php _e('Order Status:','wpsc'); ?></label><select class='selector' name='<?php echo $_GET['purchaselog_id']; ?>' title='<?php echo $_GET['purchaselog_id']; ?>' >
+               <p><label for='purchaselog-<?php echo $_GET['purchaselog_id']; ?>'><?php _e('Order Status:','wpsc'); ?></label><select id='purchaselog-<?php echo $_GET['purchaselog_id']; ?>' class='selector' name='<?php echo $_GET['purchaselog_id']; ?>' title='<?php echo $_GET['purchaselog_id']; ?>' >
             <?php while(wpsc_have_purch_items_statuses()) : wpsc_the_purch_status(); ?>
                <option value='<?php echo wpsc_the_purch_status_id(); ?>' <?php echo wpsc_purchlog_is_checked_status(); ?> ><?php echo wpsc_the_purch_status_name(); ?> </option>
             <?php endwhile; ?>
                </select></p>
                </form>
          </div>
-		 <br style="clear: both;">
+		 <br style="clear: both;" />
             <?php wpsc_purchlogs_custom_fields(); ?>
 
 
@@ -307,7 +303,6 @@ function _wpsc_purchlogs_need_update() {
 
 <br /><br class='small' />&emsp;&ensp;    <a href='<?php echo $page_back ?>'><?php _e('Go Back', 'wpsc'); ?></a>
 <br /><br />
-         </div>
          </div>
          <br />
          <?php }  ?>
