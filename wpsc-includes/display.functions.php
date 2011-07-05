@@ -22,9 +22,10 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 		if ( $product_id > 0 ) {
 			$post_meta = get_post_meta( $product_id, '_wpsc_product_metadata', true );
 			$shipping = $post_meta['shipping']['local'];
-			$org_price = get_post_meta( $product_id, '_wpsc_price', true );
+			$price = get_post_meta( $product_id, '_wpsc_price', true );
 			$special_price = get_post_meta( $product_id, '_wpsc_special_price', true );
-			$price = (int)$org_price - (int)$special_price;
+			if ( $special_price )
+				$price = $special_price;
 			if ( wpsc_uses_shipping ( ) ) {
 				$handling = get_option( 'base_local_shipping' );
 			} else {
