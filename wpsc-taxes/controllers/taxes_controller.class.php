@@ -80,8 +80,14 @@ class wpec_taxes_controller {
 					}// if
 				}// foreach
 				
-				///minus coupon tax if we are using coupons
-				if ($wpsc_cart->coupons_amount > 0){
+				$free_shipping = false;
+				if ( isset( $_SESSION['coupon_numbers'] ) ) {
+					$coupon = new wpsc_coupons( $_SESSION['coupon_numbers'] );
+					$free_shipping = $coupon->is_percentage == '2';
+				}
+
+				// minus coupon tax if we are using coupons, but make sure the coupon is not a free shipping coupon
+				if ($wpsc_cart->coupons_amount > 0 && ! $free_shipping){
 			
 					if ( $this->wpec_taxes_isincluded() )
 						$coupon_tax = $this->wpec_taxes_calculate_tax($wpsc_cart->coupons_amount, $tax_rate['rate'], false);
@@ -93,7 +99,7 @@ class wpec_taxes_controller {
 
 
 				//add shipping tax if set
-				if ( $tax_rate['shipping'] ) {
+				if ( $tax_rate['shipping'] && ! $free_shipping ) {
 					if ( $this->wpec_taxes_isincluded() )
 						$total_tax += $this->wpec_taxes_calculate_tax( $wpsc_cart->calculate_total_shipping(), $tax_rate['rate'], false );
 					else
