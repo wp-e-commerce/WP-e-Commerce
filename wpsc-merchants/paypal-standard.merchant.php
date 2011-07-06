@@ -356,9 +356,10 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 				$status = 6;
 				break;
 		}
-
+		
+		$paypal_email = strtolower( get_option( 'paypal_multiple_business' ) );
 	  // Compare the received store owner email address to the set one
-		if(strtolower($this->paypal_ipn_values['receiver_email']) == strtolower(get_option('paypal_multiple_business'))) {
+		if( strtolower( $this->paypal_ipn_values['receiver_email'] ) == $paypal_email || strtolower( $this->paypal_ipn_values['business'] ) == $paypal_email ) {
 			switch($this->paypal_ipn_values['txn_type']) {
 				case 'cart':
 				case 'express_checkout':
