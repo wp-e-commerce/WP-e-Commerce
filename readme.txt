@@ -38,9 +38,13 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 == Changelog ==
 = 3.8.5 =
+* New: Added hooks to support WPML.
+* New: Links to WP e-Commerce documentation for individual payment gateways.
 * Change: User can specify 0 in thumbnail width or height to make it scale proportional.
 * Change: Show display name, not internal name for shipping method on purchase log view.
 * Change: Presentation settings page is restored to WPEC Settings page when WooTheme is activated.
+* Fix: Free-shipping discount causes tax to be calculated incorrectly.
+* Fix: Paypal Buy Now button passes the wrong price to Paypal if product is on sale.
 * Fix: Thumbnail sizes are not generated correctly.
 * Fix: Broken output buffering rendering wpsc_add_advanced_options hook useless.
 * Fix: Paypal Pro doesn't properly account for discount and coupon.
