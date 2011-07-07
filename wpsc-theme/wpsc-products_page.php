@@ -1,5 +1,6 @@
 <?php
 global $wp_query;	
+$image_width = get_option('product_image_width');
 /*
  * Most functions called in this page can be found in the wpsc_query.php file
  */
@@ -73,7 +74,7 @@ global $wp_query;
 							<?php endif; ?>
 						</h2>   
 				<?php if(wpsc_show_thumbnails()) :?>
-					<div class="imagecol" id="imagecol_<?php echo wpsc_the_product_id(); ?>">
+					<div class="imagecol" style="width:<?php echo $image_width; ?>;" id="imagecol_<?php echo wpsc_the_product_id(); ?>">
 						<?php if(wpsc_the_product_thumbnail()) :
 						?>
 							<a rel="<?php echo wpsc_the_product_title(); ?>" class="<?php echo wpsc_the_product_image_link_classes(); ?>" href="<?php echo wpsc_the_product_image(); ?>">
@@ -92,7 +93,7 @@ global $wp_query;
 						?>	
 					</div><!--close imagecol-->
 				<?php endif; ?>
-					<div class="productcol">
+					<div class="productcol" style="margin-left:<?php echo $image_width + 20; ?>px;" >
 					
 						
 						

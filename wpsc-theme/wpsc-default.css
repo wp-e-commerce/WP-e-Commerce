@@ -93,10 +93,14 @@ Author URI: http://instinct.co.nz
 }
 
 .default_product_display .imagecol {
-	margin:0px 5px 0px 0px;
-	float:left;
 
-	position:relative;
+	text-align: right;
+	display: table-cell;
+	vertical-align: middle;
+	min-height: 50px;
+	height: 100%;
+	overflow: auto;
+
 }
 
 .default_product_display .imagecol img.product_image {
@@ -109,8 +113,9 @@ Author URI: http://instinct.co.nz
 }
 
 .default_product_display .productcol {
-	float:right;
-	position:relative;
+	vertical-align: middle;
+	min-height: 50px;
+	overflow: auto;
 }
 
 .default_product_display h2.prodtitle, #content .default_product_display h2.prodtitle {
@@ -309,11 +314,14 @@ Author URI: http://instinct.co.nz
 	cursor: -moz-zoom-in;
 }
 
-.default_product_display .wpsc_buy_button_container,
-#content .default_product_display .wpsc_buy_button_container,
+
 .single_product_display form.product_form .wpsc_buy_button_container,
 #content .single_product_display form.product_form .wpsc_buy_button_container{
 	text-align: right;
+}
+
+.default_product_display .wpsc_buy_button_container{
+	float:right;
 }
 
 /*-----LIST VIEW PRODUCT DISPLAY-----*/
@@ -446,11 +454,6 @@ table.list_productdisplay p.soldout {
 	display:block;
 }
 
-.productcol {
-	float:left;
-/* 	width:70%; */
-	position:relative;
-}
 
 .single_product_display .product_description, .single_product_display .single_additional_description {
 	font-size:14px;
