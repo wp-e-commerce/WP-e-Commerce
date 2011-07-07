@@ -43,6 +43,7 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * Change: User can specify 0 in thumbnail width or height to make it scale proportional.
 * Change: Show display name, not internal name for shipping method on purchase log view.
 * Change: Presentation settings page is restored to WPEC Settings page when WooTheme is activated.
+* Fix: Add to cart using Donation widget causes the page to reload and the item is added twice.
 * Fix: Free-shipping discount causes tax to be calculated incorrectly.
 * Fix: Paypal Buy Now button passes the wrong price to Paypal if product is on sale.
 * Fix: Thumbnail sizes are not generated correctly.

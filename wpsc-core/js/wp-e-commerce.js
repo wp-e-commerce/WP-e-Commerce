@@ -412,8 +412,7 @@ function wpsc_fancy_notification(parent_form){
 		};
 
 		form_button_id = jQuery(parent_form).attr('id') + "_submit_button";
-
-		var button_offset = jQuery('#'+form_button_id).offset()
+		var button_offset = jQuery('#'+form_button_id).offset();
 
 		jQuery('#fancy_notification').css("left", (button_offset.left - 130) + 'px');
 		jQuery('#fancy_notification').css("top", (button_offset.top + 40) + 'px');
