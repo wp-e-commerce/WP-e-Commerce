@@ -157,12 +157,12 @@ function wpsc_donations( $args = null ) {
 			// Output
 			$output .= "<strong>" . $product['post_title'] . "</strong><br />";
 			$output .= $product['post_content'] . "<br />";
-			$output .= "<form class='product_form' name='donation_widget_" . $product['ID'] . "' method='post' action=''>";
+			$output .= "<form class='product_form'  name='donation_widget_" . $product['ID'] . "' method='post' action='' id='donation_widget_" . $product['ID'] . "'>";
 			$output .= "<input type='hidden' name='product_id' value='" . $product['ID'] . "'/>";
 			$output .= "<input type='hidden' name='item' value='" . $product['ID'] . "' />";
 			$output .= "<input type='hidden' name='wpsc_ajax_action' value='add_to_cart' />";		
 			$output .= "<label for='donation_widget_price_" . $product['ID'] . "'>" . __( 'Donation', 'wpsc' ) . ":</label> $currency_symbol<input type='text' id='donation_widget_price_" . $product['ID'] . "' name='donation_price' value='" . esc_attr( number_format( $price, 2 ) ) . "' size='6' /><br />";
-			$output .= "<input type='submit' name='Buy' class='wpsc_buy_button' value='" . __( 'Add To Cart', 'wpsc' ) . "' />";
+			$output .= "<input type='submit' id='donation_widget_" . $product['ID'] . "_submit_button' name='Buy' class='wpsc_buy_button' value='" . __( 'Add To Cart', 'wpsc' ) . "' />";
 			$output .= "</form>";
 			$output .= "</div>";
 		}
