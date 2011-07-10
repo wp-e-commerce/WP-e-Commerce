@@ -75,14 +75,16 @@ function wpsc_product_row(&$product, $parent_product = null) {
 	<tr id='post-<?php echo $product->ID; ?>' class='<?php echo trim( $rowclass . ' author-' . $post_owner . ' status-' . $product->post_status ); ?> iedit <?php if ( get_option ( 'wpsc_sort_by' ) == 'dragndrop') { echo 'product-edit'; } ?>' valign="top">
 	<?php
 	$posts_columns = get_column_headers( 'wpsc-product_variants' );
+	$hidden_columns = get_hidden_columns( 'wpsc-product_variants' );
 	
 	if(empty($posts_columns))
 		$posts_columns = array('image' => '', 'title' => __('Name', 'wpsc') , 'weight' => __('Weight', 'wpsc'), 'stock' => __('Stock', 'wpsc'), 'price' => __('Price', 'wpsc'), 'sale_price' => __('Sale Price', 'wpsc'), 'SKU' => __('SKU', 'wpsc'), 'hidden_alerts' => '');
 
 	foreach ( $posts_columns as $column_name=>$column_display_name ) {
-		$class = "class=\"$column_name column-$column_name\"";
-
-		$attributes = "$class";
+		$attributes = "class=\"$column_name column-$column_name\"";
+		
+		if ( in_array( $column_name, $hidden_columns ) )
+			$attributes .= ' style="display:none;"';
 
 		switch ($column_name) {
 
