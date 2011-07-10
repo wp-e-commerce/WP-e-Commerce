@@ -251,9 +251,6 @@ function wpsc_admin_include_css_and_js(  ) {
 	wp_enqueue_style( 'wp-e-commerce-admin', WPSC_URL . '/wpsc-admin/css/admin.css', false, $version_identifier, 'all' );
 	wp_enqueue_style( 'wp-e-commerce-admin-dynamic', $siteurl . "/wp-admin/admin.php?wpsc_admin_dynamic_css=true", false, $version_identifier, 'all' );
 
-	// Prototype breaks dragging and dropping, I need it gone
-	wp_deregister_script( 'prototype' );
-
 	// remove the old javascript and CSS, we want it no more, it smells bad
 	remove_action( 'admin_head', 'wpsc_admin_css' );
 
@@ -352,7 +349,6 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 	}
 	if ( 'dashboard_page_wpsc-upgrades' == $pagehook || 'dashboard_page_wpsc-update' == $pagehook )
 		wp_enqueue_style( 'wp-e-commerce-admin', WPSC_URL . '/wpsc-admin/css/admin.css', false, $version_identifier, 'all' );
-	wp_deregister_script( 'prototype' );
 
 	// remove the old javascript and CSS, we want it no more, it smells bad
 	remove_action( 'admin_head', 'wpsc_admin_css' );
