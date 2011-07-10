@@ -132,6 +132,8 @@ function wpsc_donations( $args = null ) {
 			AND `m`.`meta_value` IN( '1' )
 		ORDER BY RAND( )
 		LIMIT 1", ARRAY_A );
+		
+	$output = '';
 	
 	if ( $products != null ) {
 		foreach ( $products as $product ) {
