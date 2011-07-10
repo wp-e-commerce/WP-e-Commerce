@@ -62,7 +62,7 @@ function wpsc_prepareMediaItem(fileObj, serverData) {
 function wpsc_prepareMediaItemInit(fileObj) {
 
 	// Clone the thumbnail as a "pinkynail" -- a tiny image to the left of the filename
-	jQuery('#media-item-' + fileObj.id + ' .thumbnail').clone().attr('className', 'pinkynail toggle').prependTo('#media-item-' + fileObj.id);
+	jQuery('#media-item-' + fileObj.id + ' .thumbnail').clone().attr('class', 'pinkynail toggle').prependTo('#media-item-' + fileObj.id);
 
 	// Replace the original filename with the new (unique) one assigned during upload
 	jQuery('#media-item-' + fileObj.id + ' .filename.original').replaceWith(jQuery('#media-item-' + fileObj.id + ' .filename.new'));
