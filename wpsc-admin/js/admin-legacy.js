@@ -542,13 +542,13 @@ jQuery(window).load( function () {
 });
 var toggleContent = function(e)
 {
-	var targetContent = $('div.itemContent', this.parentNode.parentNode);
+	var targetContent = jQuery('div.itemContent', this.parentNode.parentNode);
 	if (targetContent.css('display') == 'none') {
 		targetContent.slideDown(300);
-		$(this).html('[-]');
+		jQuery(this).html('[-]');
 	} else {
 		targetContent.slideUp(300);
-		$(this).html('[+]');
+		jQuery(this).html('[+]');
 	}
 	return false;
 };

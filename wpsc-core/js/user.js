@@ -225,11 +225,11 @@ function submit_register_form(frm)
 }
 
 var fadeInSuggestion = function(suggestionBox, suggestionIframe) {
-	$(suggestionBox).fadeTo(300,1);
+	jQuery(suggestionBox).fadeTo(300,1);
 };
 
 var fadeOutSuggestion = function(suggestionBox, suggestionIframe) {
-	$(suggestionBox).fadeTo(300,0);
+	jQuery(suggestionBox).fadeTo(300,0);
 };
 
 function change_pics(command){
