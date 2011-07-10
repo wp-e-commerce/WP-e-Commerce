@@ -23,9 +23,8 @@ jQuery.fn.rating = function(){
     return this.each(function(){
         var div = jQuery("<div/>").attr({
             title: this.title,
-            className: this.className
+            'class': this.className
         }).insertAfter( this );
-        
         product_id = jQuery("input.wpsc_rating_product_id", this).val();
 
         var selected_rating = jQuery("select option:selected", this).val();
