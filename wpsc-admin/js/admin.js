@@ -595,10 +595,10 @@ jQuery(document).ready(function(){
 			parent_form = jQuery(this).parents('form');
 			if(jQuery(this).is(':checked')) {
 				jQuery("div.edit_stock",parent_form).show();
-				jQuery("th.stock, td.stock", parent_form).show();
+				jQuery("th.column-stock, td.stock", parent_form).show();
 			} else {
 				jQuery("div.edit_stock", parent_form).hide();
-				jQuery("th.stock, td.stock", parent_form).hide();
+				jQuery("th.column-stock, td.stock", parent_form).hide();
 			}
 		});
 	});
