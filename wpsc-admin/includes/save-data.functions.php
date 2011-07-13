@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file used for adding fields to the products category taxonomy page and saving those values correctly :)
  *
@@ -18,16 +17,20 @@
  */
 
 function wpsc_ajax_set_category_order(){
-  global $wpdb;
-  $sort_order = $_POST['sort_order'];
-  $parent_id  = $_POST['parent_id'];
+	global $wpdb;
+	$sort_order = $_POST['sort_order'];
+	$parent_id  = $_POST['parent_id'];
 
-  $result = true;
-  foreach( $sort_order as $key=>$value ){
-    if( !wpsc_update_meta( $value, 'sort_order', $key, 'wpsc_category' ) )
-      $result = false;
-  }
-  
+	$result = true;
+	foreach( $sort_order as $key=>$value ){
+		if ( empty( $value ) )
+			continue;
+
+		$value = preg_replace( '/[^0-9]/', '', $value );
+
+		if( !wpsc_update_meta( $value, 'sort_order', $key, 'wpsc_category' ) )
+			$result = false;
+	} 
 }
 
 /**
