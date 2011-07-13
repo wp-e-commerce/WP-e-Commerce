@@ -69,6 +69,20 @@ class wpsc_coupons {
 				$this->errormsg = false;
 				return false;
 			} else {
+				$coupon_data = array_merge( array(
+					'value' => '',
+					'is-percentage' => '',
+					'condition' => '',
+					'is-used' => '',
+					'active' => '',
+					'use-once' => '',
+					'use-x-times' => '',
+					'free-shipping' => '',
+					'start' => '',
+					'expiry' => '',
+					'every_product' => '',
+				), $coupon_data );
+
 				$this->value = $coupon_data['value'];
 				$this->is_percentage = $coupon_data['is-percentage'];
 				$this->conditions = unserialize($coupon_data['condition']);
@@ -109,14 +123,25 @@ class wpsc_coupons {
 		global $wpdb, $wpsc_cart;
 		
 		$wpsc_cart->clear_cache();
-
+				
+		$return = 0;
+		
+		// $this->is_percentage == '2' means "Free Shipping"
+		if ($this->is_percentage == '2'){
+		
+			$discount_country = $this->free_shipping_details['discount_country'];
+			$discount_region = $this->free_shipping_details['discount_region'];
+			$delivery_country = $wpsc_cart->delivery_country;
+			$delivery_region = $wpsc_cart->delivery_region;
+			
+			//if there is no region we just compare the countries otherwise compaire both the regions 
+			//and countries or if there are no country/region limitation then its free shipping for everywhere
+			if (empty($discount_region) && ($discount_country == $delivery_country) || ($discount_country == $delivery_country) && ($delivery_region == $discount_region) || empty($this->free_shipping_details))
+				return $wpsc_cart->calculate_total_shipping();
+		}
+		
 		//Calculates the discount for the whole cart if there is no condition on this coupon.
 		if ($this->conditions == '' || count($this->conditions) == 0) {
-
-			// $this->is_percentage == '2' means "Free Shipping"
-			if ($this->is_percentage == '2'){
-				return $wpsc_cart->calculate_total_shipping();	
-			}
 			
 			// $this->is_percentage == '1' means "%" discount
 			if ($this->is_percentage == '1') {
@@ -227,6 +252,18 @@ class wpsc_coupons {
 				preg_match("/(.*)".$c['value']."(.*)/", $product_data->post_title, $match);
 				if (!empty($match))
 					return true;
+				break;
+				
+				case 'category'://Checks if the product category is the condition value
+				if ( $product_data->post_parent ) {
+					$categories = wp_get_post_terms( $product_data->post_parent, 'wpsc_product_category' );
+				} else {
+					$categories = wp_get_post_terms( $product_data->ID, 'wpsc_product_category' );
+				}
+				foreach ( $categories as $cat ) {
+					if ( strtolower( $cat->name ) == strtolower( $c['value'] ) )
+						return true;
+				}
 				break;
 				
 				case 'not_contain'://Checks if the product name contains the condition value
