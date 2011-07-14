@@ -237,7 +237,18 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 				'cmd' => '_ext-enter',
 				'redirect_cmd' => '_cart',
 			);
-			$handling = $this->cart_data['base_shipping'];
+			
+			$free_shipping = false;
+			if ( isset( $_SESSION['coupon_numbers'] ) ) {
+				$coupon = new wpsc_coupons( $_SESSION['coupon_numbers'] );
+				$free_shipping = $coupon->is_percentage == '2';
+			}
+			
+			if ( $this->cart_data['has_discounts'] && $free_shipping )
+				$handling = 0;
+			else
+				$handling = $this->cart_data['base_shipping'];
+			
 			if($add_tax)
 				$paypal_vars['tax_cart'] = $this->convert( $this->cart_data['cart_tax'] );
 			
@@ -249,7 +260,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 			// Stick the cart item values together here
 			$i = 1;
 
-			if (!$this->cart_data['has_discounts'] && !$aggregate) {
+			if (!$aggregate) {
 				foreach ($this->cart_items as $cart_row) {
 					$paypal_vars += array(
 						"item_name_$i" => $cart_row['name'],
@@ -265,6 +276,9 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 					);
 					++$i;
 				}
+				
+				if ( $this->cart_data['has_discounts'] && ! $free_shipping )
+					$paypal_vars['discount_amount_cart'] = $this->convert( $this->cart_data['cart_discount_value'] );
 			} else {			
 				$paypal_vars['item_name_'.$i] = "Your Shopping Cart";
 				$paypal_vars['amount_'.$i] = $this->convert( $this->cart_data['total_price'] ) - $this->convert( $this->cart_data['base_shipping'] );
