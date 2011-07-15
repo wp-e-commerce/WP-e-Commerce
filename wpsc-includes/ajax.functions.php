@@ -654,6 +654,7 @@ function wpsc_submit_checkout() {
 			), array( 'id' => $purchase_log_id ) );
 			$_SESSION['gateway'] = 'google';
 			wp_redirect(get_option( 'shopping_cart_url' ));
+			exit;
 		}
 	}
 }
