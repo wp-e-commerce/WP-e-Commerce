@@ -596,6 +596,7 @@ class wpsc_checkout {
 	 */
 	function form_field() {
 		global $wpdb, $user_ID;
+
 		if ( ($user_ID > 0) ){
 			if(!isset($_SESSION['wpsc_checkout_saved_values']))
 				$_SESSION['wpsc_checkout_saved_values'] = get_user_meta( $user_ID, 'wpshpcrt_usr_profile',1 );
@@ -793,7 +794,8 @@ class wpsc_checkout {
 			$value = '';
 			
 			if( isset( $_POST['collected_data'][$form_data->id] ) )
-				$value = $_POST['collected_data'][$form_data->id];
+				$value = stripslashes_deep( $_POST['collected_data'][$form_data->id] );
+
 			$_SESSION['wpsc_checkout_saved_values'][$form_data->id] = $value;
 			$bad_input = false;
 			if ( ($form_data->mandatory == 1) || ($form_data->type == "coupon") ) {
