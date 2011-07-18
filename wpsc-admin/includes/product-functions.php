@@ -260,9 +260,12 @@ function wpsc_admin_submit_notices() {
   * @param $product_id (int) the Post ID
   * @return null
   */ 
-function wpsc_add_product_category_default($product_id){
+function wpsc_add_product_category_default( $product_id ){
 	$terms = get_terms( 'wpsc_product_category', array( 'orderby' => 'id', 'hide_empty' => 0 ) );
-	wp_set_object_terms( $product_id , array( $terms[0]->slug ) , 'wpsc_product_category' );
+	if ( ! empty( $terms ) ) {
+		$default = array_shift( $terms );
+		wp_set_object_terms( $product_id , array( $default->slug ) , 'wpsc_product_category' );
+	}
 }
 /**
 * wpsc_sanitise_product_forms function 
