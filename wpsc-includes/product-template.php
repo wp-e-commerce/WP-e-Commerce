@@ -1408,7 +1408,7 @@ function wpsc_display_product_multicurrency() {
 				$currency_sign = $currency_data['code'];
 
 			if ( !empty( $currency_sign ) )
-				echo '<span class="wpscsmall pricefloatright pricedisplay">' . $isocode . ' ' . wpsc_currency_display( $curr["meta_value"] ) . '</span><br />';
+				echo '<span class="wpscsmall pricefloatright pricedisplay">' . $isocode . ' ' . wpsc_currency_display( $curr ) . '</span><br />';
 		}
 	}
 
