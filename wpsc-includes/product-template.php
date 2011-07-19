@@ -1400,15 +1400,7 @@ function wpsc_display_product_multicurrency() {
 	$results = get_product_meta(get_the_ID(),'currency',true);
 	if ( count( $results ) > 0 ) {
 		foreach ( (array)$results as $isocode => $curr ) {
-			$currency_data = $wpdb->get_row( "SELECT `symbol`,`symbol_html`,`code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `isocode`='" . $isocode . "' LIMIT 1", ARRAY_A );
-
-			if ( $currency_data['symbol'] != '' )
-				$currency_sign = $currency_data['symbol_html'];
-			else
-				$currency_sign = $currency_data['code'];
-
-			if ( !empty( $currency_sign ) )
-				echo '<span class="wpscsmall pricefloatright pricedisplay">' . $isocode . ' ' . wpsc_currency_display( $curr ) . '</span><br />';
+			echo apply_filters( 'wpsc_display_product_multicurrency', '<span class="wpscsmall pricefloatright pricedisplay">' . $isocode . ': ' . wpsc_currency_display( $curr, array( 'isocode' => $isocode ) ) . '</span><br />', $isocode, $curr );
 		}
 	}
 
