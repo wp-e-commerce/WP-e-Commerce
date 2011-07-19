@@ -431,7 +431,7 @@ function wpsc_product_variation_forms() {
 
 ?>
 
-										<div class="variation">
+										<div class="variation" <?php if ( ! $set_checked_state ) echo 'style="display:none;"'; ?>>
 											<label>
 												<input type="checkbox" <?php echo $checked_state; ?> name="edit_var_val[<?php echo $variation_set->term_id; ?>][<?php echo $variation->term_id; ?>]" value="1">
 												<?php echo $variation->name; ?>
