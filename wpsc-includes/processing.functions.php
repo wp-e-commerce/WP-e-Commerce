@@ -9,14 +9,15 @@
  * @return void
  */
 function wpsc_currency_display( $price_in, $args = null ) {
-	global $wpdb, $wpsc_currency_data;
+	global $wpdb;
 	$currency_code = '';
 	$args = apply_filters( 'wpsc_toggle_display_currency_code', $args );
 	$query = shortcode_atts( array(
 		'display_currency_symbol' => true,
 		'display_decimal_point'   => true,
 		'display_currency_code'   => false,
-		'display_as_html'         => true
+		'display_as_html'         => true,
+		'isocode'                 => false,
 	), $args );
 
 	// No decimal point, no decimals
@@ -39,12 +40,18 @@ function wpsc_currency_display( $price_in, $args = null ) {
 	// Format the price for output
 	$price_out = number_format( (double)$price_in, $decimals, $decimal_separator, $thousands_separator );
 
-	// Get currency settings	
-	$currency_type = get_option( 'currency_type' );
-
-	// Load data if it is not set
-	if ( count( $wpsc_currency_data ) < 3 )
-		$wpsc_currency_data = $wpdb->get_row( "SELECT `symbol`, `symbol_html`, `code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id` = '" . $currency_type . "' LIMIT 1", ARRAY_A );
+	if ( ! $query['isocode'] ) {
+		// Get currency settings
+		$currency_type = get_option( 'currency_type' );
+		
+		if ( ! $wpsc_currency_data = wp_cache_get( $currency_type, 'wpsc_currency_id' ) ) {
+			$wpsc_currency_data = $wpdb->get_row( "SELECT `symbol`, `symbol_html`, `code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id` = '" . $currency_type . "' LIMIT 1", ARRAY_A );
+			wp_cache_set( $currency_type, $wpsc_currency_data, 'wpsc_currency_id' );
+		}
+	} elseif ( ! $wpsc_currency_data = wp_cache_get( $query['isocode'], 'wpsc_currency_isocode' ) ) {
+		$wpsc_currency_data = $wpdb->get_row( "SELECT `symbol`, `symbol_html`, `code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `isocode` = '" . $query['isocode'] . "' LIMIT 1", ARRAY_A );
+		wp_cache_set( $query['isocode'], $wpsc_currency_data, 'wpsc_currency_isocode' );
+	}
 
 	// Figure out the currency code
 	if ( $query['display_currency_code'] )
