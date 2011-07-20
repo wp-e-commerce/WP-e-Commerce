@@ -136,19 +136,9 @@ function wpsc_change_canonical_url( $url = '' ) {
 	global $wpdb, $wp_query, $wpsc_page_titles;
 
 	if ( $wp_query->is_single == true && 'wpsc-product' == $wp_query->query_vars['post_type']) {
-		$categories = wp_get_object_terms( $wp_query->post->ID , 'wpsc_product_category' );
-		if(count($categories) > 1){
-			foreach($categories as $category){
-				if(isset($wp_query->query_vars['wpsc_product_category']) && $category->slug == $wp_query->query_vars['wpsc_product_category'])continue;
-				if(isset($wp_query->query_vars['wpsc_product_category']) && $category->slug != $wp_query->query_vars['wpsc_product_category']){
-					return home_url($wpsc_page_titles['products'].'/'.$category->slug.'/'.$wp_query->query_vars['wpsc-product']);
-				}
-				
-			}
-		}
-	
+		$url = get_permalink( $wp_query->get_queried_object()->ID );	
 	}
-	return $url;
+	return apply_filters( 'wpsc_change_canonical_url', $url );
 }
 
 add_filter( 'aioseop_canonical_url', 'wpsc_change_canonical_url' );
