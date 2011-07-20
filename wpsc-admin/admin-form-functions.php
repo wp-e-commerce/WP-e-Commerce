@@ -247,213 +247,212 @@ function wpsc_right_now() {
 }
 
 
-function wpsc_packing_slip($purchase_id) {
+function wpsc_packing_slip( $purchase_id ) {
 	echo "<!DOCTYPE html><html><head><title>" . __( 'Packing Slip', 'wpsc' ) . "</title></head><body id='wpsc-packing-slip'>";
 	global $wpdb;
-	$purch_sql = "SELECT * FROM `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `id`='".$purchase_id."'";
-		$purch_data = $wpdb->get_row($purch_sql,ARRAY_A) ;
+	$purch_sql = $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `id`=%d", $purchase_id );
+	$purch_data = $wpdb->get_row( $purch_sql, ARRAY_A ) ;
 
-					//echo "<p style='padding-left: 5px;'><strong>".__('Date', 'wpsc')."</strong>:".date("jS M Y", $purch_data['date'])."</p>";
+	$cartsql = $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_CART_CONTENTS."` WHERE `purchaseid`=%d", $purchase_id );
+	$cart_log = $wpdb->get_results($cartsql,ARRAY_A) ; 
+	$j = 0;
 
-		$cartsql = "SELECT * FROM `".WPSC_TABLE_CART_CONTENTS."` WHERE `purchaseid`=".$purchase_id."";
-		$cart_log = $wpdb->get_results($cartsql,ARRAY_A) ; 
-		$j = 0;
-	
-		if($cart_log != null) {
-			echo "<div class='packing_slip'>\n\r";
-			echo apply_filters( 'wpsc_packing_slip_header', '<h2>' . __( 'Packing Slip', 'wpsc' ) . "</h2>\n\r" );
-			echo "<strong>".__('Order', 'wpsc')." #</strong> ".$purchase_id."<br /><br />\n\r";
-			
-			echo "<table>\n\r";
-			
-			$form_sql = "SELECT * FROM `".WPSC_TABLE_SUBMITED_FORM_DATA."` WHERE	`log_id` = '".(int)$purchase_id."'";
-			$input_data = $wpdb->get_results($form_sql,ARRAY_A);
-			
-			foreach($input_data as $input_row) {
-				$rekeyed_input[$input_row['form_id']] = $input_row;
-			}
-			
-			
-			if($input_data != null) {
-				$form_data = $wpdb->get_results("SELECT * FROM `".WPSC_TABLE_CHECKOUT_FORMS."` WHERE `active` = '1'",ARRAY_A);
-				
-				foreach($form_data as $form_field) {
-
-					switch($form_field['type']) {
-						case 'country':
-	
-							$delivery_region_count = $wpdb->get_var("SELECT COUNT(`regions`.`id`) FROM `".WPSC_TABLE_REGION_TAX."` AS `regions` INNER JOIN `".WPSC_TABLE_CURRENCY_LIST."` AS `country` ON `country`.`id` = `regions`.`country_id` WHERE `country`.`isocode` IN('".$wpdb->escape( $purch_data['billing_country'])."')");
-				
-							if(is_numeric($purch_data['billing_region']) && ($delivery_region_count > 0)) 
-								echo "	<tr><td>".__('State', 'wpsc').":</td><td>".wpsc_get_region($purch_data['billing_region'])."</td></tr>\n\r";
-							
-							 echo "	<tr><td>".wp_kses($form_field['name'], array() ).":</td><td>".htmlentities(stripslashes($rekeyed_input[$form_field['id']]['value']), ENT_QUOTES, 'UTF-8')."</td></tr>\n\r";
-						break;
-								
-						case 'delivery_country':
-						
-							if(is_numeric($purch_data['shipping_region']) && ($delivery_region_count > 0)) 
-								echo "	<tr><td>".__('State', 'wpsc').":</td><td>".wpsc_get_region($purch_data['shipping_region'])."</td></tr>\n\r";
-							
-							 echo "	<tr><td>".wp_kses($form_field['name'], array() ).":</td><td>".htmlentities(stripslashes($rekeyed_input[$form_field['id']]['value']), ENT_QUOTES, 'UTF-8')."</td></tr>\n\r";
-						break;
-
-						case 'heading':
-	                        
-	                        if($form_field['name'] == "Hidden Fields")
-	                          continue;
-	                        else
-	                          echo "	<tr class='heading'><td colspan='2'><strong>".wp_kses($form_field['name'], array()).":</strong></td></tr>\n\r";
-						break;
-
-						default:				
-
-                        if( $form_field['name'] == "Cupcakes") {
-                        	parse_str($rekeyed_input[$form_field['id']]['value'], $cupcakes );
-                        
-	                        foreach( $cupcakes as $product_id => $quantity ) {
-	                        
-	                        	$product = get_post($product_id);
-	                        	$string .= "(".$quantity.") ".$product->post_title.", ";
-	                        	
-	                        }
-	                        $string = rtrim($string, ", ");
-	                        echo "	<tr><td>".wp_kses($form_field['name'], array() ).":</td><td>".htmlentities(stripslashes($string), ENT_QUOTES, 'UTF-8')."</td></tr>\n\r";
-
-                        } else {
-                        
-                        	if ($form_field['name']=="State" && !empty($purch_data['billing_region']) || $form_field['name']=="State" && !empty($purch_data['billing_region']))
-                      echo "";
-                     		 else
-                            	echo "	<tr><td>".wp_kses($form_field['name'], array() ).":</td><td>".htmlentities(stripslashes($rekeyed_input[$form_field['id']]['value']), ENT_QUOTES, 'UTF-8')."</td></tr>\n\r";
-                        
-                        }
-
-						break;
-					}
-
-				}
-			} else {
-			
-				echo "	<tr><td>".__('Name', 'wpsc').":</td><td>".$purch_data['firstname']." ".$purch_data['lastname']."</td></tr>\n\r";
-				echo "	<tr><td>".__('Address', 'wpsc').":</td><td>".$purch_data['address']."</td></tr>\n\r";
-				echo "	<tr><td>".__('Phone', 'wpsc').":</td><td>".$purch_data['phone']."</td></tr>\n\r";
-				echo "	<tr><td>".__('Email', 'wpsc').":</td><td>".$purch_data['email']."</td></tr>\n\r";
-			}
-			
-			if ( 2 == get_option( 'payment_method' ) ) {
-				$gateway_name = '';
-				$nzshpcrt_gateways = nzshpcrt_get_gateways();
-
-				foreach( $nzshpcrt_gateways as $gateway ) {
-					if ( $purch_data['gateway'] != 'testmode' ) {
-						if ( $gateway['internalname'] == $purch_data['gateway'] ) {
-							$gateway_name = $gateway['name'];
-						}
-					} else {
-						$gateway_name = __('Manual Payment', 'wpsc');
-					}
-				}
-			}
-
-			echo "</table>\n\r";
-			
-			
-			do_action ('wpsc_packing_slip_extra_info',$purchase_id);
-
-			
-			echo "<table class='packing_slip'>";
-				
-				echo "<tr>";
-				echo " <th>".__('Quantity', 'wpsc')." </th>";
-				
-				echo " <th>".__('Name', 'wpsc')."</th>";
-				
-				
-				echo " <th>".__('Price', 'wpsc')." </th>";
-				
-				echo " <th>".__('Shipping', 'wpsc')." </th>";
-				echo '<th>' . __('Tax', 'wpsc') . '</th>';
-				echo '</tr>';
-			$endtotal = 0;
-			$all_donations = true;
-			$all_no_shipping = true;
-			$file_link_list = array();
-			foreach($cart_log as $cart_row) {
-				$alternate = "";
-				$j++;
-				if(($j % 2) != 0) {
-					$alternate = "class='alt'";
-				}
-				// product ID will be $cart_row['prodid']. need to fetch name and stuff 
-				
-				$variation_list = '';
-				
-				if($cart_row['donation'] != 1) {
-					$all_donations = false;
-				}
-				
-				if($cart_row['no_shipping'] != 1) {
-					$shipping = $cart_row['pnp'] * $cart_row['quantity'];
-					$total_shipping += $shipping;						
-					$all_no_shipping = false;
-				} else {
-					$shipping = 0;
-				}
-			
-				$price = $cart_row['price'] * $cart_row['quantity'];
-				$gst = $price - ($price	/ (1+($cart_row['gst'] / 100)));
-				
-				if($gst > 0) {
-					$tax_per_item = $gst / $cart_row['quantity'];
-				}
-
-
-				echo "<tr $alternate>";
+	if($cart_log != null) {
+		echo "<div class='packing_slip'>\n\r";
+		echo apply_filters( 'wpsc_packing_slip_header', '<h2>' . __( 'Packing Slip', 'wpsc' ) . "</h2>\n\r" );
+		echo "<strong>".__('Order', 'wpsc')." #</strong> ".$purchase_id."<br /><br />\n\r";
 		
+		echo "<table>\n\r";
 		
-				echo " <td>";
-				echo $cart_row['quantity'];
-				echo " </td>";
-				
-				echo " <td>";
-				echo $cart_row['name'];
-				echo stripslashes($variation_list);
-				echo " </td>";
-				
-				
-				echo " <td>";
-				echo wpsc_currency_display( $price );
-				echo " </td>";
-				
-				echo " <td>";
-				echo wpsc_currency_display($shipping );
-				echo " </td>";
-							
-	
-
-				echo '<td>';
-				echo wpsc_currency_display( $cart_row['tax_charged'] );
-				echo '</td>';
-				echo '</tr>';
-				}
-			echo "</table>";
-			
-			echo '<table class="packing-slip-totals">';
-			echo '<tr><th>Base Shipping</th><td>' . wpsc_currency_display( $purch_data['base_shipping'] ) . '</td></tr>';
-			echo '<tr><th>Total Shipping</th><td>' . wpsc_currency_display( $purch_data['base_shipping'] + $total_shipping ) . '</td></tr>';
-         //wpec_taxes
-         if($purch_data['wpec_taxes_total'] != 0.00)
-         {
-            echo '<tr><th>Taxes</th><td>' . wpsc_currency_display( $purch_data['wpec_taxes_total'] ) . '</td></tr>';
-         }
-			echo '<tr><th>Total Price</th><td>' . wpsc_currency_display( $purch_data['totalprice'] ) . '</td></tr>';
-			echo '</table>';
-			
-			echo "</div>\n\r";
-		} else {
-			echo "<br />".__('This users cart was empty', 'wpsc');
+		$form_sql = $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_SUBMITED_FORM_DATA."` WHERE `log_id` = %d", $purchase_id );
+		$input_data = $wpdb->get_results($form_sql,ARRAY_A);
+		
+		foreach($input_data as $input_row) {
+			$rekeyed_input[$input_row['form_id']] = $input_row;
 		}
+		
+		
+		if($input_data != null) {
+			$form_data = $wpdb->get_results("SELECT * FROM `".WPSC_TABLE_CHECKOUT_FORMS."` WHERE `active` = '1'",ARRAY_A);
+			
+			foreach($form_data as $form_field) {
+
+				switch($form_field['type']) {
+					case 'country':
+
+						$delivery_region_count = $wpdb->get_var("SELECT COUNT(`regions`.`id`) FROM `".WPSC_TABLE_REGION_TAX."` AS `regions` INNER JOIN `".WPSC_TABLE_CURRENCY_LIST."` AS `country` ON `country`.`id` = `regions`.`country_id` WHERE `country`.`isocode` IN('".$wpdb->escape( $purch_data['billing_country'])."')");
+			
+						if(is_numeric($purch_data['billing_region']) && ($delivery_region_count > 0)) 
+							echo "	<tr><td>".__('State', 'wpsc').":</td><td>".wpsc_get_region($purch_data['billing_region'])."</td></tr>\n\r";
+						
+						 echo "	<tr><td>".wp_kses($form_field['name'], array() ).":</td><td>".htmlentities(stripslashes($rekeyed_input[$form_field['id']]['value']), ENT_QUOTES, 'UTF-8')."</td></tr>\n\r";
+					break;
+							
+					case 'delivery_country':
+					
+						if(is_numeric($purch_data['shipping_region']) && ($delivery_region_count > 0)) 
+							echo "	<tr><td>".__('State', 'wpsc').":</td><td>".wpsc_get_region($purch_data['shipping_region'])."</td></tr>\n\r";
+						
+						 echo "	<tr><td>".wp_kses($form_field['name'], array() ).":</td><td>".htmlentities(stripslashes($rekeyed_input[$form_field['id']]['value']), ENT_QUOTES, 'UTF-8')."</td></tr>\n\r";
+					break;
+
+					case 'heading':
+                        
+                        if($form_field['name'] == "Hidden Fields")
+                          continue;
+                        else
+                          echo "	<tr class='heading'><td colspan='2'><strong>".wp_kses($form_field['name'], array()).":</strong></td></tr>\n\r";
+					break;
+
+					default:				
+						if( $form_field['name'] == "Cupcakes") {
+							parse_str($rekeyed_input[$form_field['id']]['value'], $cupcakes );
+							
+							foreach( $cupcakes as $product_id => $quantity ) {
+								$product = get_post($product_id);
+								$string .= "(".$quantity.") ".$product->post_title.", ";
+							}
+							
+							$string = rtrim($string, ", ");
+							echo "	<tr><td>".wp_kses($form_field['name'], array() ).":</td><td>".htmlentities(stripslashes($string), ENT_QUOTES, 'UTF-8')."</td></tr>\n\r";
+						} else {
+							if ($form_field['name']=="State" && !empty($purch_data['billing_region']) || $form_field['name']=="State" && !empty($purch_data['billing_region']))
+								echo "";
+							else
+								echo "	<tr><td>".wp_kses($form_field['name'], array() ).":</td><td>".
+									( isset( $rekeyed_input[$form_field['id']] ) ? htmlentities(stripslashes($rekeyed_input[$form_field['id']]['value']), ENT_QUOTES, 'UTF-8') : '' ).
+									"</td></tr>\n\r";
+						}
+					break;
+				}
+
+			}
+		} else {
+			echo "	<tr><td>".__('Name', 'wpsc').":</td><td>".$purch_data['firstname']." ".$purch_data['lastname']."</td></tr>\n\r";
+			echo "	<tr><td>".__('Address', 'wpsc').":</td><td>".$purch_data['address']."</td></tr>\n\r";
+			echo "	<tr><td>".__('Phone', 'wpsc').":</td><td>".$purch_data['phone']."</td></tr>\n\r";
+			echo "	<tr><td>".__('Email', 'wpsc').":</td><td>".$purch_data['email']."</td></tr>\n\r";
+		}
+		
+		if ( 2 == get_option( 'payment_method' ) ) {
+			$gateway_name = '';
+			$nzshpcrt_gateways = nzshpcrt_get_gateways();
+
+			foreach( $nzshpcrt_gateways as $gateway ) {
+				if ( $purch_data['gateway'] != 'testmode' ) {
+					if ( $gateway['internalname'] == $purch_data['gateway'] ) {
+						$gateway_name = $gateway['name'];
+					}
+				} else {
+					$gateway_name = __('Manual Payment', 'wpsc');
+				}
+			}
+		}
+
+		echo "</table>\n\r";
+		
+		
+		do_action ('wpsc_packing_slip_extra_info',$purchase_id);
+
+		
+		echo "<table class='packing_slip'>";
+			
+		echo "<tr>";
+		echo " <th>".__('Quantity', 'wpsc')." </th>";
+		
+		echo " <th>".__('Name', 'wpsc')."</th>";
+		
+		
+		echo " <th>".__('Price', 'wpsc')." </th>";
+		
+		echo " <th>".__('Shipping', 'wpsc')." </th>";
+		echo '<th>' . __('Tax', 'wpsc') . '</th>';
+		echo '</tr>';
+		$endtotal = 0;
+		$all_donations = true;
+		$all_no_shipping = true;
+		$file_link_list = array();
+		$total_shipping = 0;
+		foreach($cart_log as $cart_row) {
+			$alternate = "";
+			$j++;
+			if(($j % 2) != 0) {
+				$alternate = "class='alt'";
+			}
+			// product ID will be $cart_row['prodid']. need to fetch name and stuff 
+			
+			$variation_list = '';
+			
+			if($cart_row['donation'] != 1) {
+				$all_donations = false;
+			}
+			
+			if($cart_row['no_shipping'] != 1) {
+				$shipping = $cart_row['pnp'] * $cart_row['quantity'];
+				$total_shipping += $shipping;						
+				$all_no_shipping = false;
+			} else {
+				$shipping = 0;
+			}
+		
+			$price = $cart_row['price'] * $cart_row['quantity'];
+			$gst = $price - ($price	/ (1+($cart_row['gst'] / 100)));
+			
+			if($gst > 0) {
+				$tax_per_item = $gst / $cart_row['quantity'];
+			}
+
+
+			echo "<tr $alternate>";
+	
+	
+			echo " <td>";
+			echo $cart_row['quantity'];
+			echo " </td>";
+			
+			echo " <td>";
+			echo $cart_row['name'];
+			echo stripslashes($variation_list);
+			echo " </td>";
+			
+			
+			echo " <td>";
+			echo wpsc_currency_display( $price );
+			echo " </td>";
+			
+			echo " <td>";
+			echo wpsc_currency_display($shipping );
+			echo " </td>";
+						
+
+
+			echo '<td>';
+			echo wpsc_currency_display( $cart_row['tax_charged'] );
+			echo '</td>';
+			echo '</tr>';
+		}
+		
+		echo "</table>";
+		
+		echo '<table class="packing-slip-totals">';
+		$purch_data['discount_value'] = '4.59';
+		if ( floatval( $purch_data['discount_value'] ) )
+			echo '<tr><th>Discount</th><td>(' . wpsc_currency_display( $purch_data['discount_value'] ) . ')</td></tr>';
+		
+		echo '<tr><th>Base Shipping</th><td>' . wpsc_currency_display( $purch_data['base_shipping'] ) . '</td></tr>';
+		echo '<tr><th>Total Shipping</th><td>' . wpsc_currency_display( $purch_data['base_shipping'] + $total_shipping ) . '</td></tr>';
+        //wpec_taxes
+        if($purch_data['wpec_taxes_total'] != 0.00)
+        {
+           echo '<tr><th>Taxes</th><td>' . wpsc_currency_display( $purch_data['wpec_taxes_total'] ) . '</td></tr>';
+        }
+		echo '<tr><th>Total Price</th><td>' . wpsc_currency_display( $purch_data['totalprice'] ) . '</td></tr>';
+		echo '</table>';
+		
+		echo "</div>\n\r";
+	} else {
+		echo "<br />".__('This users cart was empty', 'wpsc');
+	}
 
 }
 
