@@ -1025,7 +1025,7 @@ function wpsc_product_link( $permalink, $post, $leavename ) {
 			if ( (isset( $wp_query->query_vars['products'] ) && $wp_query->query_vars['products'] != null) && in_array( $wp_query->query_vars['products'], $product_category_slugs ) ) {
 				$product_category = $wp_query->query_vars['products'];
 			} else {
-				if( $current_cat = get_query_var( 'wpsc_product_category' ) && in_array( $current_cat, $product_category_slugs ) )
+				if ( ( $current_cat = get_query_var( 'wpsc_product_category' ) ) && in_array( $current_cat, $product_category_slugs ) )
 					$link = $current_cat;
 				else
 					$link = $product_categories[0]->slug;
