@@ -433,9 +433,7 @@ function wpsc_packing_slip( $purchase_id ) {
 		}
 		
 		echo "</table>";
-		
 		echo '<table class="packing-slip-totals">';
-		$purch_data['discount_value'] = '4.59';
 		if ( floatval( $purch_data['discount_value'] ) )
 			echo '<tr><th>Discount</th><td>(' . wpsc_currency_display( $purch_data['discount_value'] ) . ')</td></tr>';
 		
