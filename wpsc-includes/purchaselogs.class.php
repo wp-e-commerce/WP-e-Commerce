@@ -362,7 +362,7 @@ function wpsc_purchaselog_details_total() {
    global $purchlogitem;
    $total = 0;
    $total += ( $purchlogitem->purchitem->price * $purchlogitem->purchitem->quantity);
-   $total += ( $purchlogitem->purchitem->pnp * $purchlogitem->purchitem->quantity);
+   $total += ( $purchlogitem->purchitem->pnp );
    $purchlogitem->totalAmount += $total;
    return $total;
 }
@@ -414,7 +414,7 @@ function wpsc_display_purchlog_shipping( $numeric = false ) {
    $per_item_shipping = 0;
    foreach ( (array)$purchlogitem->allcartcontent as $cart_item ) {
       if ( $cart_item->pnp > 0 ) {
-         $per_item_shipping += ( $cart_item->pnp * $cart_item->quantity);
+         $per_item_shipping += ( $cart_item->pnp );
       }
    }
    $total_shipping = $per_item_shipping + $base_shipping;

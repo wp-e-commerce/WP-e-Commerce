@@ -388,7 +388,7 @@ function wpsc_packing_slip( $purchase_id ) {
 			}
 			
 			if($cart_row['no_shipping'] != 1) {
-				$shipping = $cart_row['pnp'] * $cart_row['quantity'];
+				$shipping = $cart_row['pnp'];
 				$total_shipping += $shipping;						
 				$all_no_shipping = false;
 			} else {

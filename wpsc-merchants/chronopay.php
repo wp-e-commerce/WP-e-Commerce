@@ -116,7 +116,7 @@ function gateway_chronopay($separator, $sessionid)
     
     	$local_currency_productprice = $item['price'];
 
-			$local_currency_shipping = $item['pnp'] * $item['quantity'];
+			$local_currency_shipping = $item['pnp'];
     	
 
 			$chronopay_currency_productprice = $local_currency_productprice;
