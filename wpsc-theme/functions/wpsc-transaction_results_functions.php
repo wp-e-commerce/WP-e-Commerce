@@ -180,7 +180,7 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 				do_action( 'wpsc_confirm_checkout', $purchase_log['id'] );
 
 				$total = 0;
-				$shipping = $row['pnp'] * $row['quantity'];
+				$shipping = $row['pnp'];
 				$total_shipping += $shipping;
 
 				$total += ( $row['price'] * $row['quantity']);
