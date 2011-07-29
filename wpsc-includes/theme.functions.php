@@ -1211,7 +1211,7 @@ function wpec_get_the_post_id_by_shortcode($shortcode){
 	global $wpdb;
 	$sql = "SELECT `ID` FROM `{$wpdb->posts}` WHERE `post_type` IN('page','post') AND `post_content` LIKE '%$shortcode%' LIMIT 1";
 	$page_id = $wpdb->get_var($sql);
-	return $page_id;
+	return apply_filters( 'wpec_get_the_post_id_by_shortcode', $page_id );
 }
 
 function wpec_remap_shop_subpages($vars) {

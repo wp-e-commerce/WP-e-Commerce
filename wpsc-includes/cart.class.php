@@ -262,9 +262,10 @@ function wpsc_the_cart_item_key() {
 * cart item name function, no parameters
 * @return string the cart item name
 */
-function wpsc_cart_item_name() {
-   global $wpsc_cart;
-   return htmlentities(stripslashes($wpsc_cart->cart_item->product_name), ENT_QUOTES, "UTF-8");
+function wpsc_cart_item_name( $context = 'display' ) {
+	global $wpsc_cart;
+	$product_name = apply_filters( 'wpsc_cart_item_name', $wpsc_cart->cart_item->product_name, $wpsc_cart->cart_item->product_id );
+	return esc_html( $product_name );
 }
  /**
 * cart item quantity function, no parameters
@@ -332,7 +333,7 @@ function wpsc_cart_item_shipping($forDisplay = true) {
 */
 function wpsc_cart_item_url() {
    global $wpsc_cart;
-   return $wpsc_cart->cart_item->product_url;
+   return apply_filters( 'wpsc_cart_item_url', $wpsc_cart->cart_item->product_url, $wpsc_cart->cart_item->product_id );
 }
 
 /**
