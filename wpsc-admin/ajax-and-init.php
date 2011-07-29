@@ -1255,6 +1255,7 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
 //handles the editing and adding of new checkout fields
 function wpsc_checkout_settings() {
 	global $wpdb;
+	$updated = 0;
 	$wpdb->show_errors = true;
 	$filter = isset( $_POST['selected_form_set'] ) ? $_POST['selected_form_set'] : '0';
 	if ( ! isset( $_POST['new_form_mandatory'] ) )
