@@ -1069,7 +1069,7 @@ function wpsc_product_link( $permalink, $post, $leavename ) {
 		$permalink = user_trailingslashit( $permalink, 'single' );
 		$permalink = home_url( $permalink );
 	}
-	return $permalink;
+	return apply_filters( 'wpsc_product_permalink', $permalink, $post->ID );
 }
 	add_filter( 'post_type_link', 'wpsc_product_link', 10, 3 );
 
