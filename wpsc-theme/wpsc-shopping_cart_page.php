@@ -302,7 +302,7 @@ endif;
                   elseif(isset($_POST['submit']) && !isset($_POST['shippingSameBilling']))
                   	$_SESSION['shippingSameBilling'] = false;
 
-                  	if($_SESSION['shippingSameBilling'] == 'true')
+                  	if( isset( $_SESSION['shippingSameBilling'] ) && $_SESSION['shippingSameBilling'] == 'true' )
                   		$checked = 'checked="checked"';
                    ?>
 					<label for='shippingSameBilling'><?php _e('Same as billing address:','wpsc'); ?></label>
