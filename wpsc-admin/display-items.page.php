@@ -189,7 +189,7 @@ function wpsc_additional_column_data( $column ) {
                 }
                 else
                     echo wpsc_product_variation_price_available( $post->ID ).'+';
-                 echo '<input type="hidden" value="'.$has_var.'" name="inline_' . $post->ID . '_has_var" id="inline_' . $post->ID . '_has_var" />';
+                 echo '<input type="hidden" value="'.$has_var.'" id="inline_' . $post->ID . '_has_var" />';
 
                 break;
             case 'sale_price' :
