@@ -1272,12 +1272,17 @@ add_filter('request', 'wpsc_remove_page_from_query_string');
 
 function add_to_cart_shortcode( $content = '' ) {
 	//exit($content);
+	static $fancy_notification_output = false;
 	if ( preg_match_all( "/\[add_to_cart=([\d]+)\]/", $content, $matches ) ) {
 		foreach ( $matches[1] as $key => $product_id ) {
 			$original_string = $matches[0][$key];
 			$output = wpsc_add_to_cart_button( $product_id, true );
 			$content = str_replace( $original_string, $output, $content );
 		}
+	}
+	if ( ! $fancy_notification_output ) {
+		$content .= fancy_notifications();
+		$fancy_notification_output = true;
 	}
 	return $content;
 }

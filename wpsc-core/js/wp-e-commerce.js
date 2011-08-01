@@ -234,7 +234,7 @@ jQuery(document).ready(function () {
 	});
 
 	// Submit the product form using AJAX
-	jQuery("form.product_form").live('submit', function() {
+	jQuery("form.product_form, .wpsc-add-to-cart-button-form").live('submit', function() {
 		// we cannot submit a file through AJAX, so this needs to return true to submit the form normally if a file formfield is present
 		file_upload_elements = jQuery.makeArray(jQuery('input[type="file"]', jQuery(this)));
 		if(file_upload_elements.length > 0) {
@@ -290,8 +290,9 @@ jQuery(document).ready(function () {
 	jQuery(".wpsc_select_variation").live('change', function() {
 		jQuery('option[value="0"]', this).attr('disabled', 'disabled');
 		parent_form = jQuery(this).parents("form.product_form");
+		if ( parent_form.length == 0 )
+			return;		
 		form_values =jQuery("input[name='product_id'], .wpsc_select_variation",parent_form).serialize( );
-
 		jQuery.post( 'index.php?update_product_price=true', form_values, function(returned_data) {
 			variation_msg = '';
 			eval(returned_data);
@@ -326,7 +327,6 @@ jQuery(document).ready(function () {
 				}
 			}
 		});
-		return false;
 	});
 
 	// Object frame destroying code.
@@ -505,23 +505,27 @@ jQuery(document).ready(function(){
 
 //Javascript for variations: bounce the variation box when nothing is selected and return false for add to cart button.
 jQuery(document).ready(function(){
-	jQuery('.productcol, .textcol, .product_grid_item').each(function(){
+	jQuery('.productcol, .textcol, .product_grid_item, .wpsc-add-to-cart-button').each(function(){
 		jQuery('.wpsc_buy_button', this).click(function(){
-			jQuery(this).parents('form:first').find('select.wpsc_select_variation').each(function(){
-				if(jQuery(this).val() <= 0){
-					jQuery(this).css('position','relative');
-					jQuery(this).animate({'left': '-=5px'}, 50, function(){
-						jQuery(this).animate({'left': '+=10px'}, 100, function(){
-							jQuery(this).animate({'left': '-=10px'}, 100, function(){
-								jQuery(this).animate({'left': '+=10px'}, 100, function(){
-									jQuery(this).animate({'left': '-=5px'}, 50);
+			var dropdowns = jQuery(this).closest('form').find('.wpsc_select_variation');
+			var not_selected = false;
+			dropdowns.each(function(){
+				var t = jQuery(this);
+				if(t.val() <= 0){
+					not_selected = true;
+					t.css('position','relative');
+					t.animate({'left': '-=5px'}, 50, function(){
+						t.animate({'left': '+=10px'}, 100, function(){
+							t.animate({'left': '-=10px'}, 100, function(){
+								t.animate({'left': '+=10px'}, 100, function(){
+									t.animate({'left': '-=5px'}, 50);
 								});
 							});
 						});
 					});
 				}
 			});
-			if(jQuery(this).parents('form:first').find('select.wpsc_select_variation[value="0"]:first').length)
+			if (not_selected)
 				return false;
 		});
 	});

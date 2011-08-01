@@ -436,7 +436,7 @@ function wpsc_update_product_price() {
 }
 
 // execute on POST and GET
-if ( isset( $_REQUEST['update_product_price'] ) && ($_REQUEST['update_product_price'] == 'true') && is_numeric( $_POST['product_id'] ) ) {
+if ( isset( $_REQUEST['update_product_price'] ) && ($_REQUEST['update_product_price'] == 'true') && ! empty( $_POST['product_id'] ) && is_numeric( $_POST['product_id'] ) ) {
 	add_action( 'init', 'wpsc_update_product_price' );
 }
 

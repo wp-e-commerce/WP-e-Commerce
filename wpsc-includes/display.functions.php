@@ -187,11 +187,12 @@ function external_link( $product_id ) {
 
 function wpsc_add_to_cart_button( $product_id, $replaced_shortcode = false ) {
 	global $wpdb,$wpsc_variations;
+	$output = '';
 	if ( $product_id > 0 ) {
 		// grab the variation form fields here
 		$wpsc_variations = new wpsc_variations( $product_id );
-		
-		$output .= "<form onsubmit='submitform(this);return false;'  action='' method='post'>";
+		$output .= "<div class='wpsc-add-to-cart-button'>";
+		$output .= "<form class = 'wpsc-add-to-cart-button-form' id='product_" . $product_id . "' action='' method='post'>";
 		/** the variation group HTML and loop */
 		$output .= "<div class='wpsc_variation_forms'>";
 		while (wpsc_have_variation_groups()) : wpsc_the_variation_group();
@@ -212,12 +213,8 @@ function wpsc_add_to_cart_button( $product_id, $replaced_shortcode = false ) {
 		$output .= "<input type='hidden' name='wpsc_ajax_action' value='add_to_cart' />";
 		$output .= "<input type='hidden' name='product_id' value='" . $product_id . "' />";
 		$output .= "<input type='hidden' name='item' value='" . $product_id . "' />";
-		if ( isset( $wpsc_theme ) && is_array( $wpsc_theme ) && ($wpsc_theme['html'] != '') ) {
-			$output .= $wpsc_theme['html'];
-		} else {
-			$output .= "<input type='submit' id='product_" . $product['id'] . "_submit_button' class='wpsc_buy_button' name='Buy' value='" . __( 'Add To Cart', 'wpsc' ) . "'  />";
-		}
-		$output .= '</form>';
+		$output .= "<input type='submit' id='product_" . $product_id . "_submit_button' class='wpsc_buy_button' name='Buy' value='" . __( 'Add To Cart', 'wpsc' ) . "'  />";
+		$output .= '</form></div>';
 		if ( $replaced_shortcode == true ) {
 			return $output;
 		} else {
