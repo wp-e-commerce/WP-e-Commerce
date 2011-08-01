@@ -807,11 +807,11 @@ function wpsc_change_tax() {
 	$form_selected_region = null;
 	$onchange_function = null;
 
-	if ( ($_POST['billing_country'] != 'undefined') && !isset( $_POST['shipping_country'] ) ) {
+	if ( ! empty( $_POST['billing_country'] ) && $_POST['billing_country'] != 'undefined' && !isset( $_POST['shipping_country'] ) ) {
 		$form_selected_country = $wpsc_selected_country;
 		$form_selected_region = $wpsc_selected_region;
 		$onchange_function = 'set_billing_country';
-	} else if ( ($_POST['shipping_country'] != 'undefined') && !isset( $_POST['billing_country'] ) ) {
+	} else if ( ! empty( $_POST['shipping_country'] ) && $_POST['shipping_country'] != 'undefined' && !isset( $_POST['billing_country'] ) ) {
 		$form_selected_country = $wpsc_delivery_country;
 		$form_selected_region = $wpsc_delivery_region;
 		$onchange_function = 'set_shipping_country';
@@ -872,7 +872,6 @@ function wpsc_change_tax() {
 	}
 	echo "jQuery('#checkout_tax').html(\"<span class='pricedisplay'>" . wpsc_cart_tax() . "</span>\");\n\r";
 	echo "jQuery('#checkout_total').html(\"{$total}<input id='shopping_cart_total_price' type='hidden' value='{$total_input}' />\");\n\r";
-	echo "if(jQuery(\"#shippingSameBilling\").is(\":checked\")) wpsc_shipping_same_as_billing();";
 	exit();
 }
 
