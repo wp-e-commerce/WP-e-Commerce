@@ -509,7 +509,8 @@ function wpsc_get_terms_category_sort_filter($terms){
 
   foreach($terms as $term){
     if(!is_object($term)) return $terms;
-    $term_order = wpsc_get_meta($term->term_id,'sort_order', 'wpsc_category');
+
+    $term_order = $term->taxonomy == 'wpsc_product_category' ? wpsc_get_meta($term->term_id,'sort_order', 'wpsc_category') : 0;
    
     if(isset($term_order) && is_numeric($term_order) && !isset($new_terms[$term_order])){
       $term->sort_order = $term_order;
@@ -530,7 +531,8 @@ function wpsc_get_terms_category_sort_filter($terms){
     }
    
   }
-  ksort($new_terms);
+	if ( $term_order )
+		ksort($new_terms);
   return $new_terms;
 }
 add_filter('get_terms','wpsc_get_terms_category_sort_filter');
