@@ -1389,7 +1389,7 @@ function wpsc_product_has_multicurrency() {
 	global $wpdb, $wpsc_query;
 	
 	$currency = get_product_meta(get_the_ID(),'currency',true);
-	if ( count( $currency ) > 0 )
+	if ( ! empty( $currency ) )
 		return true;
 	else
 		return false;
