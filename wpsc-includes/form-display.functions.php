@@ -201,9 +201,8 @@ function wpsc_select_product_file( $product_id = null ) {
 		$output .= "</span>\n";
 	}
 	
-	//$no_file_style = empty( $attached_files ) ? '' : ' style="display:none;"';
 	if (empty($attached_files)){
-		$output .= "<p class='no-item' {$no_file_style}>" . __( 'There are no files attached to this product. Upload a new file or select from other product files.', 'wpsc' ) . "</p>";
+		$output .= "<p class='no-item'>" . __( 'There are no files attached to this product. Upload a new file or select from other product files.', 'wpsc' ) . "</p>";
 	}
 	$output .= "</div>";
 	$output .= "<div class='" . ((is_numeric( $product_id )) ? "edit_" : "") . "select_product_handle'><div></div></div>";
