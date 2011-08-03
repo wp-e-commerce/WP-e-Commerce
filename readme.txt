@@ -37,6 +37,34 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 
 == Changelog ==
+= 3.8.6 =
+New: Filter for 'wpsc_display_product_multicurrency'.
+New: Additional filters for compatibility with WPML.
+Change: Discount information is now displayed on the Packing Slip.
+Fix: Sometimes wpsc_product_has_multicurrency() returns true when it should return false.
+Fix: Edit product page makes many database queries if you have lots of variations.
+Fix: Variation prices are not calculated correctly.
+Fix: Request-URI Too Large error when searching on the Admin Products page with lots of products.
+Fix: Add to cart shortcode doesn't display fancy notifications, and also doesn't check whether variations are selected.
+Fix: Infinite AJAX loop on checkout page when Same as Billing is checked.
+Fix: Per-item shipping total is calculated incorrectly in various places (Packing Slip, Sales Report etc.).
+Fix: Wrong product link when the product is assigned multiple categories.
+Fix: Canonical tags are not generated correctly for products with multiple categories.
+Fix: Edit variations inline messes up columns when stock limitation is disabled.
+Fix: Product with no category selected is not automatically assigned a default category when sort by drag&drop is enabled.
+Fix: Unnecessary use of livequery in variations.js causes Product edit page to freeze when there are many variation sets.
+Fix: Slashes added to checkout form field that has single quotes in it (e.g: O\'Connor).
+Fix: Multicurrency price is truncated when displayed.
+Fix: Checkout page keeps refreshing without displaying Google Checkout Button.
+Fix: Discount doesn't work with Paypal Standard.
+Fix: wpsc_single_template is not removed from the_content after it's run, causing subsequent the_content() calls to output the single product again.
+Fix: Sorting product categories is broken.
+Fix: Coupon rule "In Category" not taken into consideration.
+Fix: WPEC default stylesheet imposes #content font-size.
+Fix: Incompatibility with Prototype JS library.
+Fix: Checking (or unchecking) Stock checkbox when editing product causes variation table columns to break.
+Fix: jQuery 1.6 incompatibility with attr( 'className' ).
+
 = 3.8.5 =
 * New: Added hooks to support WPML.
 * New: Links to WP e-Commerce documentation for individual payment gateways.
