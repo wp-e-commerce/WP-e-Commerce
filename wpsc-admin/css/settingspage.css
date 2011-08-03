@@ -2,10 +2,10 @@ table#wpsc_checkout_list{
 	width:100%;
 }
 th#trash{
-	width:40px;
+	width:60px;
 }
 th#drag{
-	width:35px;
+	width:50px;
 }
 tr.wpsc_grey{
 	background-color: #ededed;
@@ -18,7 +18,7 @@ td.drag a:hover{
 	cursor: move;
 }
 th#mandatory{
-	width:75px;
+	width:90px;
 }
 
 #checkout_message{
