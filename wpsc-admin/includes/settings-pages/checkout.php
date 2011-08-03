@@ -24,7 +24,6 @@ function wpsc_options_checkout(){
 		/* wpsc_setting_page_update_notification displays the wordpress styled notifications */
 		wpsc_settings_page_update_notification(); ?>
 
-		<form method='post' action='' id='chekcout_options_tbl' class='wpsc_form_track'>
 		<div class='metabox-holder' style='width:95%;'>
 			<div class='postbox'>
 			<input type='hidden' name='checkout_submits' value='true' />
@@ -225,7 +224,6 @@ function wpsc_options_checkout(){
         <input class='button-primary' type='submit' name='submit' value='<?php _e('Save Changes', 'wpsc');?>' />
         <a href='#' onclick='return add_form_field();'><?php _e('Add New Form Field', 'wpsc');?></a></p>
         <div id="checkout_message">Note: Any new form fields will appear in your sales logs and on your checkout page but this data will not be sent to the payment gateway.</div>
-  </form>
 </div>
 </form>
 		   <?php
