@@ -163,20 +163,12 @@ function wpsc_product_row(&$product, $parent_product = null) {
 			</strong>
 			<?php
  			$has_var = '';
- 			if(wpsc_product_has_children($product->ID))
+ 			if(! $parent_product && wpsc_product_has_children($product->ID))
  				$has_var = 'wpsc_has_variation';
 			$actions = array();
 			if ( $current_user_can_edit_this_product && 'trash' != $product->post_status ) {
 				$actions['edit'] = '<a class="edit-product" href="'.$edit_link.'" title="' . esc_attr(__('Edit this product', 'wpsc')) . '">'. __('Edit', 'wpsc') . '</a>';
 				$actions['quick_edit'] = "<a class='wpsc_editinline ".$has_var."' title='".esc_attr(__('Quick Edit', 'wpsc'))."' href='#'>".__('Quick Edit', 'wpsc')."</a>";
-			}
-
-			if ( in_array($product->post_status, array('pending', 'draft')) ) {
-				if ( $current_user_can_edit_this_product ) {
-					$actions['view'] = '<a href="'.get_permalink($product->ID).'" title="'.esc_attr(sprintf(__('Preview &#8220;%s&#8221;', 'wpsc'), $title)) . '" rel="permalink">'.__('Preview', 'wpsc').'</a>';
-				}
-			} else if ( 'trash' != $product->post_status ) {
-				$actions['view'] = '<a href="'.get_permalink($product->ID).'" title="'.esc_attr(sprintf(__('View &#8220;%s&#8221;', 'wpsc'), $title)).'" rel="permalink">'.__('View', 'wpsc').'</a>';
 			}
 
 			$actions = apply_filters('post_row_actions', $actions, $product);
@@ -191,7 +183,6 @@ function wpsc_product_row(&$product, $parent_product = null) {
 			}
 
 			echo '</div>';
-			get_inline_data($product);
 		?>
 		</td>
 		<?php
@@ -203,31 +194,21 @@ function wpsc_product_row(&$product, $parent_product = null) {
 			?>
 			<td class="product-image ">
 			<?php
-		   $attached_images = (array)get_posts(array(
-	          'post_type' => 'attachment',
-	          'numberposts' => 1,
-	          'post_status' => null,
-	          'post_parent' => $product->ID,
-	          'orderby' => 'menu_order',
-	          'order' => 'ASC'
-		    ));
+			$attachment_args = array(
+		          'post_type' => 'attachment',
+		          'numberposts' => 1,
+		          'post_status' => null,
+		          'post_parent' => $product->ID,
+		          'orderby' => 'menu_order',
+		          'order' => 'ASC'
+			    );
+
 
 
 
 		 	 if(isset($product->ID) && has_post_thumbnail($product->ID)){
 				echo get_the_post_thumbnail($product->ID, 'admin-product-thumbnails');
-		     }elseif(!empty($attached_images)){
-			    $attached_image = $attached_images[0];
-
-				$src =wp_get_attachment_url($attached_image->ID);
-		     ?>
-		     	<div style='width:38px;height:38px;overflow:hidden;'>
-					<img title='Drag to a new position' src='<?php echo $src; ?>' alt='<?php echo $title; ?>' width='38' height='38' />
-				</div>
-				<?php
-
-
-		     }else{
+		     } else {
 		      	$image_url = WPSC_CORE_IMAGES_URL . "/no-image-uploaded.gif";
 				?>
 					<img title='Drag to a new position' src='<?php echo $image_url; ?>' alt='<?php echo $title; ?>' width='38' height='38' />
