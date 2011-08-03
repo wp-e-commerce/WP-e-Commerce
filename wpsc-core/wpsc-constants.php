@@ -160,7 +160,8 @@ function wpsc_core_constants_table_names() {
  * Set the Upload related constants
  */
 function wpsc_core_constants_uploads() {
-
+	$upload_path = '';
+	$upload_url = '';
 	$wp_upload_dir_data = wp_upload_dir();
 
 	// Error Message
