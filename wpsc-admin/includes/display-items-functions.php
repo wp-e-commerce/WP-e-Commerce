@@ -365,7 +365,9 @@ function wpsc_product_taxes_forms() {
             <p><?php echo $wpec_taxes_controller->wpec_taxes_build_input( $taxable_checkbox_settings ); ?></p>
 <?php
 }
+
 function wpsc_product_variation_forms() {
+	require_once( 'walker-variation-checklist.php' );
 	global $post, $wpdb, $wp_query, $variations_processor, $wpsc_product_defaults;
 
 	$db_version = get_option( 'db_version' );
@@ -396,55 +398,18 @@ function wpsc_product_variation_forms() {
 					<p><?php _e( 'You must first save this Product as a Draft before adding variations', 'wpsc' ); ?></p>
 				<?php else : ?>
 				<div id="product_variations">
-					<div class="variation_checkboxes">
-						<?php
-		// Get the terms from variations
-		$variation_sets = get_terms( 'wpsc-variation', array (
-				'hide_empty' => 0,
-				'parent'     => 0
-			) );
-	// Loop through each variation set
-	foreach ( (array)$variation_sets as $variation_set ) :
-		$set_checked_state = '';
-
-	// If this Product includes this variation, check it
-	if ( in_array( $variation_set->term_id, $product_terms ) )
-		$set_checked_state = "checked='checked'"; ?>
-								<div class="variation_set">
-
-									<label class='set_label'>
-										<input type="checkbox" <?php echo $set_checked_state; ?> name="variations[<?php echo $variation_set->term_id; ?>]" value="1">
-										<?php echo $variation_set->name; ?>
-									</label>
-
-										<?php
-	$variations = get_terms( 'wpsc-variation', array (
-			'hide_empty' => 0,
-			'parent'     => $variation_set->term_id
-		) );
-	// Loop through the variations
-	foreach ( (array)$variations as $variation ) :
-		$checked_state = '';
-
-	if ( in_array( $variation->term_id, $product_terms ) )
-		$checked_state = "checked='checked'";
-
-?>
-
-										<div class="variation" <?php if ( ! $set_checked_state ) echo 'style="display:none;"'; ?>>
-											<label>
-												<input type="checkbox" <?php echo $checked_state; ?> name="edit_var_val[<?php echo $variation_set->term_id; ?>][<?php echo $variation->term_id; ?>]" value="1">
-												<?php echo $variation->name; ?>
-											</label>
-										</div>
-
-										<?php endforeach; ?>
-
-								</div>
-
-							<?php endforeach; ?>
-
-					</div>
+			<div class="variation_checkboxes">
+				<?php
+				
+				wp_terms_checklist( $post->ID, array(
+					'taxonomy'      => 'wpsc-variation',
+					'selected_cats' => $product_terms,
+					'walker'        => new WPSC_Walker_Variation_Checklist,
+					'checked_ontop' => false
+				) );
+				
+				?>
+			</div>
                                 <a class="preview button update_variations_action" href='#'><?php _e( 'Update Variations &rarr;', 'wpsc' ); ?></a>
 
 				</div>
