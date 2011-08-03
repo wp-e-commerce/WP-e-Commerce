@@ -1615,17 +1615,17 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( 'wpsc-delete-coupon' == $_REQU
 
 
 function flat_price( $price ) {
-	if ( isset( $price ) && !empty( $price ) && strchr( $price, '-' ) === false && strchr( $price, '+' ) === false && strchr( $price, '%' ) === false )
+	if ( ! empty( $price ) && strchr( $price, '-' ) === false && strchr( $price, '+' ) === false && strchr( $price, '%' ) === false )
 		return true;
 }
 
 function percentile_price( $price ) {
-	if ( isset( $price ) && !empty( $price ) && ( strchr( $price, '-' ) || strchr( $price, '+' ) ) && strchr( $price, '%' ) )
+	if ( ! empty( $price ) && ( strchr( $price, '-' ) || strchr( $price, '+' ) ) && strchr( $price, '%' ) )
 		return true;
 }
 
 function differential_price( $price ) {
-	if ( isset( $price ) && !empty( $price ) && ( strchr( $price, '-' ) || strchr( $price, '+' ) ) && strchr( $price, '%' ) === false )
+	if ( ! empty( $price ) && ( strchr( $price, '-' ) || strchr( $price, '+' ) ) && strchr( $price, '%' ) === false )
 		return true;
 }
 
@@ -1773,55 +1773,14 @@ function save_term_prices( $term_id ) {
 		foreach ( (array)$children_ids as $parents => $kids ) {
 
 			$kids = array_values( $kids );
-			$parent_pricing = get_product_meta( $parents, "price", true );
 
 			foreach ( $kids as $kiddos ) {
-
-				$child_pricing = get_product_meta( $kiddos, "price", true );
-
-				if ( $var_price_type == 'flat' ) {
-
-					update_product_meta( $kiddos, "price", floatval( $_POST["variation_price"] ) );
-				} elseif ( $var_price_type == 'percentile' ) {
-
-					//Are we decreasing or increasing the price?
-
-					if ( strchr( $_POST["variation_price"], '-' ) )
-						$positive = false;
-					else
-						$positive = true;
-
-					//Now, let's get the parent product price, +/- by the percentage given
-					$percentage = (absint( $_POST["variation_price"] ) / 100);
-
-					if ( $positive )
-						$price = $parent_pricing + ($parent_pricing * $percentage);
-					else
-						$price = $parent_pricing - ($parent_pricing * $percentage);
-
-					update_product_meta( $kiddos, "price", $price );
-				} elseif ( $var_price_type == 'differential' ) {
-				
-					//Are we decreasing or increasing the price?
-					if ( strchr( $_POST["variation_price"], '-' ) )
-						$positive = false;
-					else
-						$positive = true;
-
-					//Now, let's get the parent product price, +/- by the differential given
-					$differential = (absint( $_POST["variation_price"] ));
-
-					if ( $positive )
-						$price = $parent_pricing + $differential;
-					else
-						$price = $parent_pricing - $differential;
-					update_product_meta( $kiddos, "price", $price );
-				}
+				$price = wpsc_determine_variation_price( $kiddos );
+				update_product_meta( $kiddos, 'price', $price );
 			}
 		}
 	}
 }
 add_action( 'edited_wpsc-variation', 'save_term_prices' );
 add_action( 'created_wpsc-variation', 'save_term_prices' );
-
 ?>
