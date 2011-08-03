@@ -568,6 +568,48 @@ function term_id_price($term_id, $parent_price) {
 }
 
 /**
+ * Determine the price of a variation product based on the variation it's assigned
+ * to. Because each variation term can have its own price (eg. 10, +10, -5%), this
+ * function also takes those into account.
+ *
+ * @since 3.8.6
+ * @param int $variation_id ID of the variation product
+ * @param string $terms Optional. Defaults to false. Variation terms assigned to
+ * the variation product. Pass this argument to save one SQL query.
+ * @return float Calculated price of the variation
+ */
+function wpsc_determine_variation_price( $variation_id, $term_ids = false ) {
+	$flat = array();
+	$diff = 0;
+	
+	$variation = get_post( $variation_id );
+	$price = (float) get_product_meta( $variation->post_parent, 'price', true );
+	
+	if ( ! $term_ids )
+		$term_ids = wp_get_object_terms( $variation_id, 'wpsc-variation', array( 'fields' => 'ids' ) );
+
+	$term_price_arr = get_option( 'term_prices' );
+	foreach ( $term_ids as $term_id ) {
+		if ( isset( $term_price_arr[$term_id] ) )
+			$term_price = trim( $term_price_arr[$term_id]['price'] );
+		else
+			continue;	
+		if ( flat_price( $term_price ) ) {
+			$flat[] = $term_price;
+		} elseif ( differential_price( $term_price ) ) {
+			$diff += (float) $term_price;
+		} elseif ( percentile_price( $term_price ) ) {
+			$diff += (float) $term_price / 100 * $price;
+		}
+	}
+	// Variation price should at least be the maximum of all flat prices
+	if ( ! empty( $flat ) )
+		$price = max( $flat );
+	$price += $diff;
+	return $price;
+}
+
+/**
  * wpsc_edit_product_variations function.
  * this is the function to make child products using variations 
  *
@@ -679,19 +721,8 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 				
 			endforeach;
 			
-			//Adding this to check for a price on variations.  Applying the highest price, seems to make the most sense.		
-			if ( is_array ($term_ids) ) {
-				$price = array();
-				foreach ($term_ids as $term_id_price) {
-					$price[] = term_id_price($term_id_price, $child_product_meta["_wpsc_price"][0]);
-				}
-				rsort($price);
-				$price = $price[0];	
-			
-				if($price > 0) {
-					update_post_meta($child_product_id, "_wpsc_price", $price);
-				}
-			}
+			if ( is_array( $term_ids ) && $price = wpsc_determine_variation_price( $child_product_id, $term_ids ) )
+				update_product_meta( $child_product_id, 'price', $price );
 		}
 	}
 	
@@ -1124,5 +1155,4 @@ function wpsc_variations_stock_remaining($product_id){
 			`pm`.`meta_key` = "_wpsc_stock"
 	');
 }
-
 ?>
