@@ -222,7 +222,7 @@ function wpsc_price_control_forms() {
 	}
 ?>
 						<tr>
-							<td><input type="text" size="5" value="<?php echo $quantity; ?>" name="table_rate_price[quantity][]"/><span class='description'><?php _e( 'and above', 'wpsc' ); ?></span> </td>
+							<td><input type="text" size="5" value="" name="table_rate_price[quantity][]"/><span class='description'><?php _e( 'and above', 'wpsc' ); ?></span> </td>
 							<td><input type='text' size='10' value='' name='table_rate_price[table_price][]'/></td>
 						</tr>
 					</table>
