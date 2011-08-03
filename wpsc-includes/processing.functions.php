@@ -291,7 +291,7 @@ function wpsc_check_stock($state, $product) {
 	$state['state'] = false;
 	$state['messages'] = array();
 	$out_of_stock = false;
-	$is_parent = wpsc_product_has_children( $product->ID );
+	$is_parent = ! $product->post_parent && wpsc_product_has_children( $product->ID );
 	if( !$is_parent ){
 		$stock_count = get_product_meta( $product->ID, 'stock',true );
 		// only do anything if the quantity is limited.
@@ -342,7 +342,7 @@ function wpsc_check_weight($state, $product) {
 	$has_no_weight = false;
 	$shipping_modules = array();
 	$product_meta = get_product_meta( $product->ID, 'product_metadata',true );
-	if(wpsc_product_has_children($product->ID)) return $state;
+	if(! $product->post_parent && wpsc_product_has_children($product->ID)) return $state;
 	// only do anything if UPS is on and shipping is used
 	if( array_search( 'ups', $custom_shipping ) !== false )
 		$shipping_modules[] = 'UPS';
