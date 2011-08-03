@@ -435,16 +435,16 @@ function wpsc_packing_slip( $purchase_id ) {
 		echo "</table>";
 		echo '<table class="packing-slip-totals">';
 		if ( floatval( $purch_data['discount_value'] ) )
-			echo '<tr><th>Discount</th><td>(' . wpsc_currency_display( $purch_data['discount_value'] ) . ')</td></tr>';
+			echo '<tr><th>'.__('Discount', 'wpsc').'</th><td>(' . wpsc_currency_display( $purch_data['discount_value'] ) . ')</td></tr>';
 		
-		echo '<tr><th>Base Shipping</th><td>' . wpsc_currency_display( $purch_data['base_shipping'] ) . '</td></tr>';
-		echo '<tr><th>Total Shipping</th><td>' . wpsc_currency_display( $purch_data['base_shipping'] + $total_shipping ) . '</td></tr>';
+		echo '<tr><th>'.__('Base Shipping','wpsc').'</th><td>' . wpsc_currency_display( $purch_data['base_shipping'] ) . '</td></tr>';
+		echo '<tr><th>'.__('Total Shipping','wpsc').'</th><td>' . wpsc_currency_display( $purch_data['base_shipping'] + $total_shipping ) . '</td></tr>';
         //wpec_taxes
         if($purch_data['wpec_taxes_total'] != 0.00)
         {
-           echo '<tr><th>Taxes</th><td>' . wpsc_currency_display( $purch_data['wpec_taxes_total'] ) . '</td></tr>';
+           echo '<tr><th>'.__('Taxes','wpsc').'</th><td>' . wpsc_currency_display( $purch_data['wpec_taxes_total'] ) . '</td></tr>';
         }
-		echo '<tr><th>Total Price</th><td>' . wpsc_currency_display( $purch_data['totalprice'] ) . '</td></tr>';
+		echo '<tr><th>'.__('Total Price','wpsc').'</th><td>' . wpsc_currency_display( $purch_data['totalprice'] ) . '</td></tr>';
 		echo '</table>';
 		
 		echo "</div>\n\r";
