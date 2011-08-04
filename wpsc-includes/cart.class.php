@@ -1038,6 +1038,7 @@ class wpsc_cart {
       $this->uses_shipping = null;
       $this->shipping_quotes = null;
       $this->get_shipping_option();
+	  do_action ( 'wpsc_after_cart_clear_cache', $this );
    }
 
    /**
