@@ -757,6 +757,7 @@ class ash_ups {
             $wpec_ash = new ASH();        
         }
 
+
         // Arguments array for various functions to use
         $args = array();
         // Final rate table
@@ -812,13 +813,15 @@ class ash_ups {
         }
         
         // If ths zip code is provided via a form post use it!
+		$args['dest_pcode'] = '';
         if(isset($_POST['zipcode']) && ($_POST['zipcode'] != "Your Zipcode" && $_POST['zipcode'] != "YOURZIPCODE")) {
           $args['dest_pcode'] = $_POST['zipcode'];
           $_SESSION['wpsc_zipcode'] = $_POST['zipcode'];
         } else if(isset($_SESSION['wpsc_zipcode']) && ($_POST['zipcode'] != "Your Zipcode" && $_POST['zipcode'] != "YOURZIPCODE")) {
           // Well, we have a zip code in the session and no new one provided
           $args['dest_pcode'] = $_SESSION['wpsc_zipcode'];
-        }else{
+        }
+		if ( empty ( $args['dest_pcode'] ) ) {
             // We cannot get a quote without a zip code so might as well return!
             return array();
         }
