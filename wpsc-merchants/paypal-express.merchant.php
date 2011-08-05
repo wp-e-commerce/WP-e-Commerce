@@ -250,6 +250,10 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 			$i ++;
 		}
 		//if we have a discount then include a negative amount with that discount
+		// in php 0.00 = true so we will change that here
+		if($this->cart_data['cart_discount_value'] == 0.00)
+			$this->cart_data['cart_discount_value'] = 0;
+			
 		if ( $this->cart_data['cart_discount_value'] ){
 			$discount_value = $this->convert( $this->cart_data['cart_discount_value']); 
 			
