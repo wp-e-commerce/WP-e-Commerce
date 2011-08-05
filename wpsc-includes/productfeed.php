@@ -144,6 +144,7 @@ function wpsc_generate_product_feed() {
 			$google_elements = $google_elements['elements'];
 
             $done_condition = FALSE;
+            $done_weight = FALSE;
 
             if ( count ( $google_elements ) ) {
 
@@ -157,6 +158,9 @@ function wpsc_generate_product_feed() {
 
 					}
  
+					if ($element_name == 'g:shipping_weight')
+						$done_weight = TRUE;
+
 					if ($element_name == 'g:condition')
 						$done_condition = TRUE;
 
@@ -166,6 +170,14 @@ function wpsc_generate_product_feed() {
 
             if (!$done_condition)
 				$output .= "      <g:condition>new</g:condition>\n\r";
+
+			if ( ! $done_weight ) {
+				$wpsc_product_meta = get_product_meta( $post->ID, 'product_metadata',true );
+				$weight = apply_filters ( 'wpsc_google_shipping_weight', $wpsc_product_meta['weight'], $post->ID );
+				if ( $weight && is_numeric ( $weight ) && $weight > 0 ) {
+					$output .= "<g:shipping_weight>$weight pounds</g:shipping_weight>";
+				}
+			}
 
 		} else {
 
