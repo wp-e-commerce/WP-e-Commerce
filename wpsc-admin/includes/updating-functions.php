@@ -213,7 +213,7 @@ function wpsc_convert_category_groups() {
  	$categorisation_groups = $wpdb->get_results("SELECT * FROM `".WPSC_TABLE_CATEGORISATION_GROUPS."` WHERE `active` IN ('1')");
 	if(count($categorisation_groups) == 0) {
 		$sql = "insert into `".WPSC_TABLE_CATEGORISATION_GROUPS."` set `id` = 1000, `name` = 'Default Group', `description` = 'This is your default category group', `active` = 1, `default` = 1;";
-	$wpdb->query($sql);
+		$wpdb->query($sql);
 		$sql = "update `".WPSC_TABLE_PRODUCT_CATEGORIES."` set group_id = 1000";
 		$wpdb->query($sql);
 		$categorisation_groups = $wpdb->get_results("SELECT * FROM `".WPSC_TABLE_CATEGORISATION_GROUPS."` WHERE `active` IN ('1')");
@@ -428,16 +428,17 @@ function wpsc_convert_products_to_posts() {
 				);
 				set_transient( 'wpsc_update_current_product', $post_created, 604800 );
 			}
-
-			$product_meta = $wpdb->get_results("
+			$product_meta_sql = $wpdb->prepare( "
 				SELECT 	IF( ( `custom` != 1	),
 						CONCAT( '_wpsc_', `meta_key` ) ,
 					`meta_key`
 					) AS `meta_key`,
 					`meta_value`
 				FROM `".WPSC_TABLE_PRODUCTMETA."`
-				WHERE `product_id` = " . $product['id'] . "
-				AND `meta_value` != ''", ARRAY_A);
+				WHERE `product_id` = %d
+				AND `meta_value` != ''", $product['id'] );
+			
+			$product_meta = $wpdb->get_results( $product_meta_sql, ARRAY_A);
 
 			$post_data = array();
 
@@ -499,7 +500,8 @@ function wpsc_convert_products_to_posts() {
 			wp_set_product_categories($post_id, $category_ids);
 
 			$product_data = get_post($post_id);
-			$image_data = $wpdb->get_results("SELECT * FROM `".WPSC_TABLE_PRODUCT_IMAGES."` WHERE `product_id` IN ('{$product['id']}') ORDER BY `image_order` ASC", ARRAY_A);
+			$image_data_sql = $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_PRODUCT_IMAGES."` WHERE `product_id` = %d ORDER BY `image_order` ASC", $product['id'] );
+			$image_data = $wpdb->get_results( $image_data_sql, ARRAY_A );
 			foreach((array)$image_data as $image_row) {
 				$wpsc_update->check_timeout( '</div>' );
 				// Get the image path info
@@ -521,7 +523,8 @@ function wpsc_convert_products_to_posts() {
 				// construct the full image url
 				$subdir = $upload_dir['subdir'].'/'.$image_name.'.'.$image_pathinfo['extension'];
 				$subdir = substr($subdir , 1);
-				$attachment_id = (int)$wpdb->get_var("SELECT `ID` FROM `{$wpdb->posts}` WHERE `post_title` IN('$image_name') AND `post_parent` IN('$post_id') LIMIT 1");
+				$attachment_id_sql = $wpdb->prepare( "SELECT `ID` FROM `{$wpdb->posts}` WHERE `post_title` = %s AND `post_parent` = %d LIMIT 1", $image_name, $post_id );
+				$attachment_id = (int)$wpdb->get_var( $attachment_id_sql );
 
 				// get the image MIME type
 				$mime_type_data = wpsc_get_mimetype($full_image_path, true);
