@@ -126,7 +126,15 @@ function wpsc_loading_animation_url() {
 	return apply_filters( 'wpsc_loading_animation_url', WPSC_CORE_THEME_URL . 'wpsc-images/indicator.gif' );
 }
 
-function fancy_notifications() {
+function fancy_notifications() {	
+	return wpsc_fancy_notifications( true );
+}
+function wpsc_fancy_notifications( $return = false ) {
+	static $already_output = false;
+	
+	if ( $already_output )
+		return '';
+	
 	$output = "";
 	if ( get_option( 'fancy_notifications' ) == 1 ) {
 		$output = "";
@@ -139,10 +147,12 @@ function fancy_notifications() {
 		$output .= "</div>\n\r";
 	}
 	
-	return $output;
-}
-function wpsc_fancy_notifications(){
-	echo fancy_notifications();
+	$already_output = true;
+	
+	if ( $return )
+		return $output;
+	else
+		echo $output;
 }
 add_action( 'wpsc_theme_footer', 'wpsc_fancy_notifications' );
 

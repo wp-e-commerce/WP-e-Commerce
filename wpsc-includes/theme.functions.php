@@ -1271,7 +1271,6 @@ add_filter('request', 'wpsc_remove_page_from_query_string');
  */
 
 function add_to_cart_shortcode( $content = '' ) {
-	//exit($content);
 	static $fancy_notification_output = false;
 	if ( preg_match_all( "/\[add_to_cart=([\d]+)\]/", $content, $matches ) ) {
 		foreach ( $matches[1] as $key => $product_id ) {
@@ -1281,7 +1280,7 @@ function add_to_cart_shortcode( $content = '' ) {
 		}
 	}
 	if ( ! $fancy_notification_output ) {
-		$content .= fancy_notifications();
+		$content .= wpsc_fancy_notifications( true );
 		$fancy_notification_output = true;
 	}
 	return $content;
