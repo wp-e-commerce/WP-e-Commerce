@@ -94,7 +94,7 @@ function wpsc_currency_display( $price_in, $args = null ) {
 			break;
 	}
 	// Compile the output
-	$output = sprintf( $format_string, $currency_code, $currency_sign, $price_out );
+	$output = trim( sprintf( $format_string, $currency_code, $currency_sign, $price_out ) );
 
 	if ( !$query['display_as_html'] ) {
 		$output = "".$output."";
