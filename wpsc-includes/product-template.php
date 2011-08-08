@@ -291,13 +291,13 @@ function wpsc_product_image( $attachment_id = 0, $width = null, $height = null )
 			$intermediate_image_data = image_get_intermediate_size( $attachment_id, $intermediate_size );
 			$image_url = $intermediate_image_data['url'];
 		} else {
-			$image_url = "index.php?wpsc_action=scale_image&amp;attachment_id={$attachment_id}&amp;width=$width&amp;height=$height";
+			$image_url = home_url( "index.php?wpsc_action=scale_image&amp;attachment_id={$attachment_id}&amp;width=$width&amp;height=$height" );
 		}
 	// Not enough info so attempt to fallback
 	} else {
 
 		if ( !empty( $attachment_id ) ) {
-			$image_url = "index.php?wpsc_action=scale_image&amp;attachment_id={$attachment_id}&amp;width=$width&amp;height=$height";
+			$image_url = home_url( "index.php?wpsc_action=scale_image&amp;attachment_id={$attachment_id}&amp;width=$width&amp;height=$height" );
 		} else {
 			$image_url = false;
 		}
