@@ -324,7 +324,7 @@ function wpsc_register_post_types() {
 
 	// Product categories, is heirarchical and can use permalinks
 	$labels = array(
-		'name' => _x( 'Categories', 'taxonomy general name', 'wpsc' ),
+		'name' => _x( 'Product Categories', 'taxonomy general name', 'wpsc' ),
 		'singular_name' => _x( 'Product Category', 'taxonomy singular name', 'wpsc' ),
 		'search_items' => __( 'Search Product Categories', 'wpsc' ),
 		'all_items' => __( 'All Product Categories', 'wpsc' ),
@@ -333,7 +333,8 @@ function wpsc_register_post_types() {
 		'edit_item' => __( 'Edit Product Category', 'wpsc' ),
 		'update_item' => __( 'Update Product Category', 'wpsc' ),
 		'add_new_item' => __( 'Add New Product Category', 'wpsc' ),
-		'new_item_name' => __( 'New Product Category Name', 'wpsc' )
+		'new_item_name' => __( 'New Product Category Name', 'wpsc' ),
+		'menu_name' => _x( 'Categories', 'taxonomy general name', 'wpsc' )
 	);
 	register_taxonomy( 'wpsc_product_category', 'wpsc-product', array(
 		'hierarchical' => true,
