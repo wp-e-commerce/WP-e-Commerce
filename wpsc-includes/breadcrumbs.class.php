@@ -139,8 +139,8 @@ class wpsc_breadcrumbs {
 		if ( isset($wp_query->query_vars['post_type']) && 'wpsc-product' == $wp_query->query_vars['post_type'] && 1 == $wp_query->query_vars['posts_per_page'] && isset($wp_query->post)) 
 			$query_data['product'] = $wp_query->post->post_title;
 
-		if ( !empty($wp_query->query_vars['term']) ) 
-			$query_data['category'] = $wp_query->query_vars['term']; 
+		if ( !empty($wpsc_query->query_vars['wpsc_product_category']) ) 
+			$query_data['category'] = $wpsc_query->query_vars['wpsc_product_category']; 
 
 		
 		if(!empty($query_data['product']) && !empty($wp_query->post)) {
