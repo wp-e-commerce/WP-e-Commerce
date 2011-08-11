@@ -113,11 +113,21 @@ function wpsc_pagination($totalpages = '', $per_page = '', $current_page = '', $
 
 		$separator = '=';
 	}else{
+		
+		// get the default information
+		$default_page_link = $page_link = trailingslashit(get_option('product_list_url'));
+		$default_slug = (get_option('wpsc_default_category') == 'all') ? 'all' : 'default';
+		$default_page = (isset($wp_query->query_vars['wpsc_product_category']) && $wp_query->query_vars['wpsc_product_category']!= $default_slug) ? false : true;
+		
 		// This will need changing when we get product categories sorted
-		if(isset($wp_query->query_vars['wpsc_product_category']))
-			$page_link = trailingslashit(get_option('product_list_url')).$wp_query->query_vars['wpsc_product_category'].'/';
+		if(isset($wp_query->query_vars['wpsc_product_category']) && !$default_page)
+		{ 
+			$page_link .= $wp_query->query_vars['wpsc_product_category'].'/';
+		}
 		else
-			$page_link = trailingslashit(get_option('product_list_url'));
+		{
+			$page_link .= $default_slug.'/';
+		}
 		
 		$separator = 'page/';
 	}
@@ -131,13 +141,31 @@ function wpsc_pagination($totalpages = '', $per_page = '', $current_page = '', $
 	if(get_option('permalink_structure')){
 		// Should we show the FIRST PAGE link?
 		if($current_page > 1)
+		{
+			if($default_page)
+			{
+				$output .= "<a href=\"". esc_url( $default_page_link . $additional_links ) . "\" title=\"" . __('First Page', 'wpsc') . "\">" . __('&laquo; First', 'wpsc') . "</a>";
+			}
+			else
+			{
 			$output .= "<a href=\"". esc_url( $page_link . $additional_links ) . "\" title=\"" . __('First Page', 'wpsc') . "\">" . __('&laquo; First', 'wpsc') . "</a>";
+			}
+		}
 	
 		// Should we show the PREVIOUS PAGE link?
 		if($current_page > 1) {
 			$previous_page = $current_page - 1;
 			if( $previous_page == 1 )
+			{
+				if($default_page)
+				{
+					$output .= " <a href=\"". esc_url( $default_page_link . $additional_links ) . "\" title=\"" . __('Previous Page', 'wpsc') . "\">" . __('&lt; Previous', 'wpsc') . "</a>";
+				}
+				else
+				{
 				$output .= " <a href=\"". esc_url( $page_link . $additional_links ) . "\" title=\"" . __('Previous Page', 'wpsc') . "\">" . __('&lt; Previous', 'wpsc') . "</a>";
+				}
+			}
 			else
 				$output .= " <a href=\"". esc_url( $page_link .$separator. $previous_page . $additional_links ) . "\" title=\"" . __('Previous Page', 'wpsc') . "\">" . __('&lt; Previous', 'wpsc') . "</a>";
 		}
@@ -147,7 +175,16 @@ function wpsc_pagination($totalpages = '', $per_page = '', $current_page = '', $
 		while($i < $current_page){
 			if($count <= $num_paged_links){
 				if($count == 1)
+				{
+					if($default_page)
+					{
+						$output .= " <a href=\"". esc_url( $default_page_link . $additional_links ) . "\" title=\"" . sprintf( __('Page %s', 'wpsc'), $i ) . " \">".$i."</a>";
+					}
+					else
+					{
 					$output .= " <a href=\"". esc_url( $page_link . $additional_links ) . "\" title=\"" . sprintf( __('Page %s', 'wpsc'), $i ) . " \">".$i."</a>";
+					}
+				}
 				else
 					$output .= " <a href=\"". esc_url( $page_link .$separator. $i . $additional_links ) . "\" title=\"" . sprintf( __('Page %s', 'wpsc'), $i ) . " \">".$i."</a>";
 			}
