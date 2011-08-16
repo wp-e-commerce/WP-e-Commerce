@@ -541,9 +541,9 @@ function wpsc_options_presentation() {
 				<tr>
 					<th scope="row"><?php _e('Show list of categories','wpsc'); ?></th>
 					<td>
-						<input type='radio' value='1' name='wpsc_options[wpsc_display_categories]' id='display_categories2' <?php echo $selected1; ?> />						<label for='display_addtocart'><?php _e( 'Yes', 'wpsc' ); ?></label>
+						<input type='radio' value='1' name='wpsc_options[wpsc_display_categories]' id='display_categories2' <?php echo $selected1; ?> />						<label for='display_categories2'><?php _e( 'Yes', 'wpsc' ); ?></label>
 						<input type='radio' value='0' name='wpsc_options[wpsc_display_categories]' id='display_categories1' <?php echo $selected2; ?> />
-						<label for='display_addtocart'><?php _e( 'No', 'wpsc' ); ?></label><br />
+						<label for='display_categories1'><?php _e( 'No', 'wpsc' ); ?></label><br />
 					</td>
 				</tr>
 				
