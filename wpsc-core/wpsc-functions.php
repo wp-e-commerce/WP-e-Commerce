@@ -238,11 +238,17 @@ function wpsc_core_load_shipping_modules() {
  */
 function wpsc_update_notice() {
 	$info_title = __( 'Please backup your website before updating!', 'wpsc' );
-	$info_text =  __( 'Lots of things have changed in this version. Before updating please backup your database and files in case anything goes wrong.', 'wpsc' );
+	$info_text =  __( 'Before updating please backup your database and files in case anything goes wrong.', 'wpsc' );
 	echo '<div style="border-top:1px solid #CCC; margin-top:3px; padding-top:3px; font-weight:normal;"><strong style="color:#CC0000">' . strip_tags( $info_title ) . '</strong> ' . strip_tags( $info_text, '<br><a><strong><em><span>' ) . '</div>';
 }
-if ( is_admin() )
+
+function wpsc_in_plugin_update_message() {
 	add_action( 'in_plugin_update_message-' . WPSC_DIR_NAME . '/wp-shopping-cart.php', 'wpsc_update_notice' );
+}
+
+if ( is_admin() )
+	add_action( 'init', 'wpsc_in_plugin_update_message' );
+	
 
 function wpsc_add_product_price_to_rss() {
 	global $post;
