@@ -249,8 +249,9 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 			else
 				$handling = $this->cart_data['base_shipping'];
 			
-			if($add_tax)
-				$paypal_vars['tax_cart'] = $this->convert( $this->cart_data['cart_tax'] );
+			$tax_total = 0;
+			if ( $add_tax )
+				$tax_total = $this->cart_data['cart_tax'];
 			
 			// Set base shipping
 			$paypal_vars += array(
@@ -265,7 +266,6 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 					$paypal_vars += array(
 						"item_name_$i" => $cart_row['name'],
 						"amount_$i" => $this->convert($cart_row['price']),
-						"tax_$i" => ($add_tax) ? $this->convert($cart_row['tax']) : 0,
 						"quantity_$i" => $cart_row['quantity'],
 						"item_number_$i" => $cart_row['product_id'],
 						// additional shipping for the the (first item / total of the items)
@@ -274,9 +274,10 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 						"shipping2_$i" => $this->convert($cart_row['shipping']/ $cart_row['quantity'] ),
 						"handling_$i" => '',
 					);
+					if ( $add_tax && ! empty( $cart_row['tax'] ) )
+						$tax_total += $cart_row['tax'];
 					++$i;
 				}
-				
 				if ( $this->cart_data['has_discounts'] && ! $free_shipping )
 					$paypal_vars['discount_amount_cart'] = $this->convert( $this->cart_data['cart_discount_value'] );
 			} else {			
@@ -287,6 +288,8 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 				$paypal_vars['shipping2_'.$i] = 0;
 				$paypal_vars['handling_'.$i] = 0;
 			}
+			
+			$paypal_vars['tax_cart'] = $this->convert( $tax_total );
 		}
 
 		return $paypal_vars;
