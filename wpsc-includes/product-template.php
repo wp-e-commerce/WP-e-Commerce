@@ -535,13 +535,7 @@ function wpsc_this_page_url() {
  * @return boolean - true, or false...
  */
 function wpsc_is_single_product() {
-	global $wp_query;
-	if ( $wp_query->is_single === 1 )
-		$state = true;
-	else
-		$state = false;
-
-	return $state;
+	return is_single() && get_post_type() == 'wpsc-product';
 }
 
 /**
