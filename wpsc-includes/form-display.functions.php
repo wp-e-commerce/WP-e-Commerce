@@ -117,7 +117,7 @@ function wpsc_uploaded_files() {
 
 	if ( count( $wpsc_uploaded_file_cache ) > 0 ) {
 		$dirlist = $wpsc_uploaded_file_cache;
-	} else {
+	} elseif ( $dir ) {
 		while ( ($file = @readdir( $dir )) !== false ) {
 			//filter out the dots, macintosh hidden files and any backup files
 			if ( ($file != "..") && ($file != ".") && ($file != "product_files") && ($file != "preview_clips") && !stristr( $file, "~" ) && !( strpos( $file, "." ) === 0 ) && !strpos( $file, ".old" ) ) {
