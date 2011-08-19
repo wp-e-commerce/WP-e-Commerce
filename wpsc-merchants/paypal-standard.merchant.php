@@ -291,7 +291,6 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 			
 			$paypal_vars['tax_cart'] = $this->convert( $tax_total );
 		}
-
 		return $paypal_vars;
 	}
 
