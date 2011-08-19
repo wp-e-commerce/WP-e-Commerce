@@ -230,39 +230,6 @@ function wpsc_admin_include_coupon_js() {
 }
 
 /**
- * wpsc_admin_css_and_js function, includes the wpsc_admin CSS and JS
- * No parameters, returns nothing
- */
-function wpsc_admin_include_css_and_js(  ) {
-	$siteurl = get_option( 'siteurl' );
-	if ( is_ssl ( ) )
-		$siteurl = str_replace( "http://", "https://", $siteurl );
-
-	wp_admin_css( 'dashboard' );
-	//wp_admin_css( 'media' );
-
-	$version_identifier = WPSC_VERSION . "." . WPSC_MINOR_VERSION;
-	wp_enqueue_script( 'livequery',                      WPSC_URL . '/wpsc-admin/js/jquery.livequery.js',             array( 'jquery' ), '1.0.3' );
-	wp_enqueue_script( 'wp-e-commerce-admin-parameters', $siteurl . '/wp-admin/admin.php?wpsc_admin_dynamic_js=true', false,             $version_identifier );
-	wp_enqueue_script( 'wp-e-commerce-admin',            WPSC_URL . '/wpsc-admin/js/admin.js',                        array( 'jquery', 'jquery-ui-core', 'jquery-ui-sortable' ), $version_identifier, false );
-	wp_enqueue_script( 'wp-e-commerce-legacy-ajax',      WPSC_URL . '/wpsc-admin/js/ajax.js',                         false,             $version_identifier ); // needs removing
-	wp_enqueue_script( 'wp-e-commerce-variations',       WPSC_URL . '/wpsc-admin/js/variations.js',                   array( 'jquery' ), $version_identifier );
-
-	wp_enqueue_style( 'wp-e-commerce-admin', WPSC_URL . '/wpsc-admin/css/admin.css', false, $version_identifier, 'all' );
-	wp_enqueue_style( 'wp-e-commerce-admin-dynamic', $siteurl . "/wp-admin/admin.php?wpsc_admin_dynamic_css=true", false, $version_identifier, 'all' );
-
-	// remove the old javascript and CSS, we want it no more, it smells bad
-	remove_action( 'admin_head', 'wpsc_admin_css' );
-
-	// Localize scripts
-	wp_localize_script( 'wp-e-commerce-admin', 'wpsc_adminL10n', array(
-			'unsaved_changes_detected' => __( 'Unsaved changes have been detected. Click OK to lose these changes and continue.', 'wpsc' ),
-			'dragndrop_set' => ( get_option( 'wpsc_sort_by' ) == 'dragndrop' ? 'true' : 'false' ),
-			'l10n_print_after' => 'try{convertEntities(wpsc_adminL10n);}catch(e){};'
-		) );
-}
-
-/**
  * wpsc_admin_include_optionspage_css_and_js function, includes the wpsc_admin CSS and JS for the specific options page
  * No parameters, returns nothing
  */
@@ -302,12 +269,8 @@ function wpsc_meta_boxes() {
 }
 
 add_action( 'admin_footer', 'wpsc_meta_boxes' );
-
-add_action( 'admin_head', 'wpsc_admin_include_css_and_js' );
-add_action( 'admin_head', 'wpsc_admin_include_css_and_js_refac' );
 add_action( 'admin_enqueue_scripts', 'wpsc_admin_include_css_and_js_refac' );
 function wpsc_admin_include_css_and_js_refac( $pagehook ) {
-
 	global $post_type, $current_screen;
 	$siteurl = get_option( 'siteurl' );
 	if ( is_ssl ( ) )
@@ -338,9 +301,9 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 		wp_enqueue_script( 'wp-e-commerce-legacy-ajax',      WPSC_URL . '/wpsc-admin/js/ajax.js',                         false,             $version_identifier ); // needs removing
 		wp_enqueue_script( 'wp-e-commerce-variations',       WPSC_URL . '/wpsc-admin/js/variations.js',                   array( 'jquery' ), $version_identifier );
 		if ( $current_screen->id == 'edit-wpsc_product_category' ) {
-			wp_deregister_script( 'wp-ajax-response' );
-	        wp_deregister_script( 'admin-tags' );
-	        wp_deregister_script( 'inline-edit-post' );
+			wp_dequeue_script( 'wp-ajax-response' );
+			wp_dequeue_script( 'admin-tags' );
+	        wp_dequeue_script( 'inline-edit-post' );
 		} else {
 			wp_enqueue_script( 'inline-edit-post' );
 		}
@@ -355,9 +318,6 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 	}
 	if ( 'dashboard_page_wpsc-upgrades' == $pagehook || 'dashboard_page_wpsc-update' == $pagehook )
 		wp_enqueue_style( 'wp-e-commerce-admin', WPSC_URL . '/wpsc-admin/css/admin.css', false, $version_identifier, 'all' );
-
-	// remove the old javascript and CSS, we want it no more, it smells bad
-	remove_action( 'admin_head', 'wpsc_admin_css' );
 }
 
 function wpsc_admin_dynamic_js() {
