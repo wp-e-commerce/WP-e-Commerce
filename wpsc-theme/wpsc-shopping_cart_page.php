@@ -223,9 +223,11 @@ endif;
 				
 				<fieldset class='wpsc_registration_form'>
 					<h2><?php _e( 'Sign in', 'wpsc' ); ?></h2>
-					
 					<?php
-					$args = array( 'remember' => false );
+					$args = array(
+						'remember' => false,
+                    	'redirect' => home_url( $_SERVER['REQUEST_URI'] )
+					);
 					wp_login_form( $args );
 					?>
 					<div class="wpsc_signup_text"><?php _e('If you have bought from us before please sign in here to purchase', 'wpsc');?></div>
