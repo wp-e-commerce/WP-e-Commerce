@@ -531,9 +531,9 @@ function wpsc_get_terms_category_sort_filter($terms){
     }
    
   }
-	if ( isset( $term_order ) )
+	if ( ! empty( $new_terms ) )
 		ksort($new_terms);
-  return $new_terms;
+  return array_values( $new_terms );
 }
 add_filter('get_terms','wpsc_get_terms_category_sort_filter');
 ?>
