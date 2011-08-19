@@ -421,7 +421,7 @@ endif;
                   <?php endif; ?>
                </div>
             <?php endwhile; ?>
-            </tr></td>
+            </td></tr>
          <?php else: // otherwise, there is no choice, stick in a hidden form ?>
             <tr><td colspan="2" class='wpsc_gateway_container'>
             <?php while (wpsc_have_gateways()) : wpsc_the_gateway(); ?>
