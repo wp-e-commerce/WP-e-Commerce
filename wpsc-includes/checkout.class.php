@@ -857,6 +857,8 @@ class wpsc_checkout {
 		$billing_state_id = $wpdb->get_var( "SELECT `" . WPSC_TABLE_CHECKOUT_FORMS . "`.`id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `unique_name` = 'billingstate' " );
 		$shipping_state = $billing_state = '';
 		
+		$_POST['collected_data'] = stripslashes_deep( $_POST['collected_data'] );
+		
 		foreach ( $this->checkout_items as $form_data ) {
 			if ( $form_data->type == 'heading' )
 				continue;
@@ -866,7 +868,6 @@ class wpsc_checkout {
 				$value = $_POST['collected_data'][$form_data->id];
 			if ( empty( $value ) && isset( $form_data->value ) )
 				$value = $form_data->value;
-			
 			if ( $form_data->unique_name == 'billingstate' ) {
 				$billing_state = $value;
 				continue;
@@ -891,7 +892,6 @@ class wpsc_checkout {
 			} else {
 				$prepared_query = $wpdb->prepare( "INSERT INTO `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` ( `log_id` , `form_id` , `value` ) VALUES ( %d, %d, %s)", $purchase_id, $form_data->id, $value );
 			}
-			
 			$wpdb->query( $prepared_query );
 		}
 		
