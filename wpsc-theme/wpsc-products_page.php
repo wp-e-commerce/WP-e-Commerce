@@ -124,6 +124,7 @@ $image_width = get_option('product_image_width');
 						<?php $action = htmlentities(wpsc_this_page_url(), ENT_QUOTES, 'UTF-8' ); ?>					
 						<?php endif; ?>					
 						<form class="product_form"  enctype="multipart/form-data" action="<?php echo $action; ?>" method="post" name="product_<?php echo wpsc_the_product_id(); ?>" id="product_<?php echo wpsc_the_product_id(); ?>" >
+						<?php do_action ( 'wpsc_product_form_fields' ); ?>
 						<?php /** the variation group HTML and loop */?>
                         <?php if (wpsc_have_variation_groups()) { ?>
                         <fieldset><legend><?php _e('Product Options', 'wpsc'); ?></legend>
