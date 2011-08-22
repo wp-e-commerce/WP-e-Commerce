@@ -1085,7 +1085,7 @@ class wpsc_cart {
           $wpsc_cart->coupons_amount += $total;
           $total = 0;
        }
-      return $total;
+      return apply_filters( 'wpsc_cart_calculate_total_price', $total );
   }
 
 
