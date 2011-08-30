@@ -57,24 +57,16 @@ function wpsc_coupon_amount($forDisplay=true) {
 * cart total function, no parameters
 * @return string the total price of the cart, with a currency sign
 */
-function wpsc_cart_total($forDisplay=true) {
+function wpsc_cart_total( $forDisplay = true ) {
    global $wpsc_cart;
-   $total = $wpsc_cart->calculate_subtotal();
-   $total += $wpsc_cart->calculate_total_shipping();
-   if(wpsc_tax_isincluded() == false){
-      $total += $wpsc_cart->calculate_total_tax();
-   }
-
-   $total -= $wpsc_cart->coupons_amount;
-   if ( $total < 0 ) {
-       $wpsc_cart->coupons_amount += $total;
-       $total = 0;
-   }
-   if($forDisplay){
-      return wpsc_currency_display($total);
-   }else{
-      return $total;
-   }
+   
+   $total = $wpsc_cart->calculate_total_price();
+   
+    if( $forDisplay )
+        return wpsc_currency_display( $total );
+    else
+        return $total;
+   
 }
 
 /**
@@ -115,14 +107,11 @@ function wpsc_cart_total_widget( $shipping = true, $tax = true, $coupons = true 
 * @return string the total price of the cart, with a currency sign
 */
 function nzshpcrt_overall_total_price() {
+    
    global $wpsc_cart;
-   $total = $wpsc_cart->calculate_subtotal();
-   $total += $wpsc_cart->calculate_total_shipping();
-   if(wpsc_tax_isincluded() == false){
-      $total += $wpsc_cart->calculate_total_tax();
-   }
-   $total -= $wpsc_cart->coupons_amount;
-  return $total;
+   
+   return  $wpsc_cart->calculate_total_price();
+  
 }
 
 /**
@@ -1070,22 +1059,28 @@ class wpsc_cart {
     * @return float returns the price as a floating point value
    */
   function calculate_total_price() {
-    if($this->total_price == null) {
-         $total = $this->calculate_subtotal();
-         $total += $this->calculate_total_shipping();
-         if(wpsc_tax_isincluded() == false){
-            $total += $this->calculate_total_tax();
-         }
-         $total -= $this->coupons_amount;
-         $this->total_price = $total;
-      } else {
-        $total = $this->total_price;
-      }
-       if ( $total < 0 ) {
-          $wpsc_cart->coupons_amount += $total;
-          $total = 0;
-       }
-      return apply_filters( 'wpsc_cart_calculate_total_price', $total );
+         
+      // Calculate individual component that comprise the cart total
+      $subtotal = $this->calculate_subtotal();
+      $shipping = $this->calculate_total_shipping();
+
+      // Get tax only if it is included
+      $tax = ( ! wpsc_tax_isincluded() ) ? $this->calculate_total_tax() : 0.00;
+
+      // Get coupon amount
+      $coupons_amount = $this->coupons_amount;
+
+      // Calculate the total
+      $total = ( ( $subtotal + $shipping + $tax ) > $coupons_amount ) ? ( $subtotal + $shipping + $tax - $coupons_amount ) : 0.00;
+
+      // Filter total
+      $total = apply_filters( 'wpsc_calculate_total_price', $total, $subtotal, $shipping, $tax, $coupons_amount );
+
+      // Set variable and return
+      $this->total_price = $total;
+
+      return $total;
+      
   }
 
 
@@ -1659,7 +1654,6 @@ function refresh_item() {
 		$this->category_id_list[] = $category_row->term_id;
 	}
 
-
 	//wpec_taxes - calculate product tax and add to total price
 	$wpec_taxes_controller = new wpec_taxes_controller();
 	if ( $wpec_taxes_controller->wpec_taxes_isincluded() && $wpec_taxes_controller->wpec_taxes_isenabled() ){
@@ -1908,7 +1902,6 @@ function refresh_item() {
          }
 
       }
-
 
       do_action('wpsc_save_cart_item', $cart_id, $this->product_id);
    }
