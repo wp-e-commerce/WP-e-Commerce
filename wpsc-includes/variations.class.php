@@ -44,6 +44,10 @@ class wpsc_variations {
 			}
 		}
 		
+		// Filters to hook into variations to sort etc.
+		$this->variation_groups = apply_filters( 'wpsc_variation_groups', $this->variation_groups, $product_id );
+		$this->all_associated_variations = apply_filters( 'wpsc_all_associated_variations', $this->all_associated_variations, $this->variation_groups, $product_id );
+		
 		foreach((array)$this->variation_groups as $variation_group) {
 			$variation_id = $variation_group->term_id;
 			$this->first_variations[] = $this->all_associated_variations[$variation_id][0]->term_id;
