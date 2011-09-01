@@ -712,7 +712,8 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 		}
 		//JS - 7.9 - Adding loop to include meta data in child product.
 		if(!$already_a_variation){
-			foreach ($child_product_meta as $meta_key => $meta_value ) :
+			$this_child_product_meta = apply_filters( 'insert_child_product_meta', $child_product_meta, $product_id, $combination_terms );
+			foreach ($this_child_product_meta as $meta_key => $meta_value ) :
 				if ($meta_key == "_wpsc_product_metadata") {
 					update_post_meta($child_product_id, $meta_key, unserialize($meta_value[0]));
 				} else {
