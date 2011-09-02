@@ -246,6 +246,7 @@ function wpsc_meta_boxes() {
 	global $post;
 	$pagename = 'wpsc-product';
 	remove_meta_box( 'wpsc-variationdiv', 'wpsc-product', 'core' );
+	remove_meta_box( 'wpsc-variationdiv', 'wpsc-product', 'side' );
 
 	//if a variation page do not show these metaboxes
 	if ( is_object( $post ) && $post->post_parent == 0 ) {
