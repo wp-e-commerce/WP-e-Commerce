@@ -99,7 +99,7 @@ $image_height = get_option('product_image_height');
 					</div><!--close grid_product_info-->
 					<div class="grid_more_info">
 						<form class="product_form"  enctype="multipart/form-data" action="<?php echo wpsc_this_page_url(); ?>" method="post" name="product_<?php echo wpsc_the_product_id(); ?>" id="product_<?php echo wpsc_the_product_id(); ?>" >
-							<?php do_action ( 'wpsc_product_form_fields' ); ?>
+							<?php do_action ( 'wpsc_product_form_fields_begin' ); ?>
 							<input type="hidden" value="add_to_cart" name="wpsc_ajax_action"/>
 							<input type="hidden" value="<?php echo wpsc_the_product_id(); ?>" name="product_id"/>
 							
@@ -138,6 +138,7 @@ $image_height = get_option('product_image_height');
 											<img title="Loading" alt="Loading" src="<?php echo wpsc_loading_animation_url(); ?>" />
 											<?php _e('Updating cart...', 'wpsc'); ?>
 										</div><!--close wpsc_loading_animation-->
+						<?php do_action ( 'wpsc_product_form_fields_end' ); ?>
                     </form>                    
 					</div><!--close grid_more_info-->
 					
