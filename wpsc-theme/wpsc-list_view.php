@@ -102,7 +102,7 @@ global $wp_query, $wpdb;
 							<?php	$action =  wpsc_this_page_url(); ?>						
 						<?php endif; ?>
 						<form class='product_form' id="product_<?php echo wpsc_the_product_id(); ?>" enctype="multipart/form-data" action="<?php echo $action; ?>" method="post" name="product_<?php echo wpsc_the_product_id(); ?>">
-							<?php do_action ( 'wpsc_product_form_fields' ); ?>
+							<?php do_action ( 'wpsc_product_form_fields_begin' ); ?>
 													
 							<?php if(wpsc_has_multi_adding()): ?>
                             <div class="quantity_container">
@@ -133,7 +133,7 @@ global $wp_query, $wpdb;
 									<p class="soldout"><?php _e('This product has sold out.', 'wpsc'); ?></p>
 								<?php endif ; ?>
 							<?php endif ; ?>
-							
+							<?php do_action ( 'wpsc_product_form_fields_end' ); ?>
 						</form>
 					</td>
 				</tr>
