@@ -1694,9 +1694,6 @@ padding-right:10px;
 body.edit-php form#posts-filter {
     min-width:830px;
 }
-div#wpsc-variationdiv {
-    display:none;
-}
 input.wpsc_cat_image_size {
     width:40px
 }
