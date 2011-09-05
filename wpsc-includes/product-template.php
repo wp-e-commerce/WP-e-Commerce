@@ -1193,14 +1193,20 @@ function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id 
 		$custom_thumbnail = get_post_meta( $thumbnail_id, '_wpsc_selected_image_size', true );
 		if ( !$custom_thumbnail ) {
 			$custom_thumbnail = 'medium-single-product';
+			$current_size = image_get_intermediate_size( $thumbnail_id, $custom_thumbnail );
+			$settings_width = get_option( 'single_view_image_width' );
+			$settings_height = get_option( 'single_view_image_height' );
+			
 			// regenerate size metadata in case it's missing
-			if ( ! image_get_intermediate_size( $thumbnail_id, $custom_thumbnail ) ) {
+			if ( ! $current_size || $current_size['width'] != $settings_width || $current_size['height'] != $settings_height ) {
 				require_once( ABSPATH . 'wp-admin/includes/image.php' );
 				if ( ! $metadata = wp_get_attachment_metadata( $thumbnail_id ) )
 					$metadata = array();
+				if ( empty( $metadata['sizes'] ) )
+					$metadata['sizes'] = array();
 				$file = get_attached_file( $thumbnail_id );
 				$generated = wp_generate_attachment_metadata( $thumbnail_id, $file );
-				$metadata['sizes'] = array_merge( $generated['sizes'], $metadata['sizes'] );
+				$metadata['sizes'] = array_merge( $metadata['sizes'], $generated['sizes'] );
 				wp_update_attachment_metadata( $thumbnail_id, $metadata );
 			}
 		}
