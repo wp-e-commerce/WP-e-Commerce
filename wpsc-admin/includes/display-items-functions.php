@@ -974,9 +974,13 @@ function wpsc_attachment_fields( $form_fields, $post ) {
 		$check = get_post_meta( $post->ID, '_wpsc_selected_image_size', true );
 		if ( !$check )
 			$check = 'medium-single-product';
-
+		
+		$current_size = image_get_intermediate_size( $post->ID, $check );
+		$settings_width = get_option( 'single_view_image_width' );
+		$settings_height = get_option( 'single_view_image_height' );
+		
 		// regenerate size metadata in case it's missing
-		if ( ! image_get_intermediate_size( $post->ID, $check ) ) {
+		if ( ! $check || $current_size['width'] != $settings_width || $current_size['height'] != $settings_height ) {
 			if ( ! $metadata = wp_get_attachment_metadata( $post->ID ) )
 				$metadata = array();
 			if ( empty( $metadata['sizes'] ) )
