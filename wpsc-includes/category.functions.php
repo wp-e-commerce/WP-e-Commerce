@@ -326,7 +326,7 @@ function wpsc_display_category_loop($query, $category_html, &$category_branch = 
 		if(($query['show_thumbnails'] == 1)) {
 			if((!empty($category_image)) && is_file(WPSC_CATEGORY_DIR.$category_image)) {
 				$category_image_html = "<img src='".WPSC_CATEGORY_URL."$category_image' alt='{$category_row->name}' title='{$category_row->name}' style='width: {$width}px; height: {$height}px;' class='wpsc_category_image' />";
-			} elseif(1 == $query['show_name']) {
+			} elseif( isset( $query['show_name'] ) && 1 == $query['show_name']) {
 				$category_image_html .= "<span class='wpsc_category_image item_no_image ' style='width: {$width}px; height: {$height}px;'>\n\r";
 				$category_image_html .= "	<span class='link_substitute' >\n\r";
 				$category_image_html .= "		<span>".__('N/A','wpsc')."</span>\n\r";
