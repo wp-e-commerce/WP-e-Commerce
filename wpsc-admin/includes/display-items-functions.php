@@ -979,11 +979,11 @@ function wpsc_attachment_fields( $form_fields, $post ) {
 		if ( ! image_get_intermediate_size( $post->ID, $check ) ) {
 			if ( ! $metadata = wp_get_attachment_metadata( $post->ID ) )
 				$metadata = array();
-			if ( !is_array( $metadata['sizes'] ) )
+			if ( empty( $metadata['sizes'] ) )
 				$metadata['sizes'] = array();
 			$file = get_attached_file( $post->ID );
 			$generated = wp_generate_attachment_metadata( $post->ID, $file );
-			$metadata['sizes'] = array_merge( ( array ) $generated['sizes'], ( array ) $metadata['sizes'] );
+			$metadata['sizes'] = array_merge( $metadata['sizes'], $generated['sizes'] );
 			wp_update_attachment_metadata( $post->ID, $metadata );
 		}
 		
