@@ -292,7 +292,8 @@ class australiapost {
 			$fullURL = add_query_arg('Service_Type', $code, $url);
 
 			// This cache key should be unique for a cart with these contents and destination
-			$cacheKey = 'wpec_auspost_quote_' . md5($fullURL);
+			// Needs to be less than 45 characters (as per http://core.trac.wordpress.org/ticket/15058)
+			$cacheKey = 'wpec_apq_' . md5($fullURL);
 
 			// See if this Australia Post quote is cached
 			$cachedResult = get_transient($cacheKey);
