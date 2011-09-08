@@ -402,51 +402,50 @@ function wpsc_update_product_price() {
 	$from = '';
 	$change_price = true;
 	$product_id = (int) $_POST['product_id'];
-	foreach ( (array)$_POST['variation'] as $variation ) {
-		if ( is_numeric( $variation ) ) {
-			$variations[] = (int)$variation;
-		}
-		if($variation == 0){
-			$from = ' from ';
-			$from = apply_filters('wpsc_product_variation_text',$from);
-			$change_price = false;
-		}
-	}
-
-	do_action( 'wpsc_update_variation_product', $product_id, $variations );
-
-	$stock = wpsc_check_variation_stock_availability( $product_id, $variations );
+	$variations = array();
 	$response = array(
 		'product_id' => $product_id,
-		'variation_found' => ( $stock === false ) ? false : true,
+		'variation_found' => false,
 	);
-	
-	if ( $stock !== false ) {
-		if ( $stock === 0 ) {
-			$response += array(
-				'product_msg'     =>  __( 'Sorry, but this variation is out of stock.', 'wpsc' ),
-				'variation_msg'   => __( 'Variation not in stock', 'wpsc' ),
-				'stock_available' => false,
-			);
-		} else {
-			$response += array(
-				'variation_msg'   => __( 'Product in stock', 'wpsc' ),
-				'stock_available' => true,
-			);
+	if ( ! empty( $_POST['variation'] ) ) {
+		foreach ( $_POST['variation'] as $variation ) {
+			if ( is_numeric( $variation ) ) {
+				$variations[] = (int)$variation;
+			}
 		}
+		
+		do_action( 'wpsc_update_variation_product', $product_id, $variations );
 
-		if ( $change_price ) {
-			$old_price = wpsc_calculate_price( $product_id, $variations, false );
-			$you_save_amount = wpsc_you_save( array( 'product_id' => $product_id, 'type' => 'amount', 'variations' => $variations ) );
-			$you_save_percentage = wpsc_you_save( array( 'product_id' => $product_id, 'variations' => $variations ) );
-			$price = wpsc_calculate_price( $product_id, $variations, true );
-			$response += array(
-				'old_price'         => wpsc_currency_display( $old_price, array( 'display_as_html' => false ) ),
-				'numeric_old_price' => (float) number_format( $old_price ),
-				'you_save'          => wpsc_currency_display( $you_save_amount, array( 'display_as_html' => false ) ) . "! (" . $you_save_percentage . "%)",
-				'price'             => $from . wpsc_currency_display( $price, array( 'display_as_html' => false ) ),
-				'numeric_price'     => (float) number_format( $price ),
-			);
+		$stock = wpsc_check_variation_stock_availability( $product_id, $variations );
+
+		if ( $stock !== false ) {
+			$response['variation_found'] = true;
+			if ( $stock === 0 ) {
+				$response += array(
+					'product_msg'     =>  __( 'Sorry, but this variation is out of stock.', 'wpsc' ),
+					'variation_msg'   => __( 'Variation not in stock', 'wpsc' ),
+					'stock_available' => false,
+				);
+			} else {
+				$response += array(
+					'variation_msg'   => __( 'Product in stock', 'wpsc' ),
+					'stock_available' => true,
+				);
+			}
+
+			if ( $change_price ) {
+				$old_price = wpsc_calculate_price( $product_id, $variations, false );
+				$you_save_amount = wpsc_you_save( array( 'product_id' => $product_id, 'type' => 'amount', 'variations' => $variations ) );
+				$you_save_percentage = wpsc_you_save( array( 'product_id' => $product_id, 'variations' => $variations ) );
+				$price = wpsc_calculate_price( $product_id, $variations, true );
+				$response += array(
+					'old_price'         => wpsc_currency_display( $old_price, array( 'display_as_html' => false ) ),
+					'numeric_old_price' => (float) number_format( $old_price ),
+					'you_save'          => wpsc_currency_display( $you_save_amount, array( 'display_as_html' => false ) ) . "! (" . $you_save_percentage . "%)",
+					'price'             => $from . wpsc_currency_display( $price, array( 'display_as_html' => false ) ),
+					'numeric_price'     => (float) number_format( $price ),
+				);
+			}
 		}
 	}
 	
