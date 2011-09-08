@@ -400,14 +400,14 @@ function wpsc_product_variation_forms() {
 				<div id="product_variations">
 			<div class="variation_checkboxes">
 				<?php
-				
+
 				wp_terms_checklist( $post->ID, array(
 					'taxonomy'      => 'wpsc-variation',
 					'selected_cats' => $product_terms,
 					'walker'        => new WPSC_Walker_Variation_Checklist,
 					'checked_ontop' => false
 				) );
-				
+
 				?>
 			</div>
                                 <a class="preview button update_variations_action" href='#'><?php _e( 'Update Variations &rarr;', 'wpsc' ); ?></a>
@@ -493,12 +493,12 @@ function wpsc_product_shipping_forms() {
 	$product_data['transformed'] = array();
 	if ( !isset( $product_meta['weight'] ) )
 		$product_meta['weight'] = "";
-	
+
 	if( !isset( $product_meta['weight_unit'] ) )
 		$product_meta['weight_unit'] = '';
-		
+
 	$product_data['transformed']['weight'] = wpsc_convert_weight( $product_meta['weight'], "pound", $product_meta['weight_unit']);
-	
+
 	// Fix wp_debug notices
 	if(!isset($product_meta['dimensions'])){
 		$product_meta['dimensions'] = array(
@@ -525,7 +525,7 @@ function wpsc_product_shipping_forms() {
 	}
 	if( !isset( $product_meta['no_shipping'] ) )
 		$product_meta['no_shipping'] = '';
-?>	
+?>
 		<table>
 
      <!--USPS shipping changes-->
@@ -679,7 +679,7 @@ function wpsc_product_advanced_forms() {
 		<tr>
 			<td class='itemfirstcol' colspan='2'><br /> <strong><?php _e( 'Merchant Notes:', 'wpsc' ); ?></strong><br />
 
-			<textarea cols='40' rows='3' name='meta[_wpsc_product_metadata][merchant_notes]' id='merchant_notes'><?php 
+			<textarea cols='40' rows='3' name='meta[_wpsc_product_metadata][merchant_notes]' id='merchant_notes'><?php
 				if ( isset( $product_meta['merchant_notes'] ) )
 				echo stripslashes( trim( $product_meta['merchant_notes'] ) );
 			?></textarea>
@@ -813,24 +813,24 @@ function wpsc_product_download_forms() {
             <br />
             <h4><?php _e( "Select an MP3 file to upload as a preview", 'wpsc' ) ?></h4>
             <input type='file' name='preview_file' value='' /><br />
-            
+
             <h4><?php _e( "Your preview for this product:", 'wpsc' ) ?></h4>
-         
-	         <?php 
+
+	         <?php
 	         $args = array(
 			'post_type' => 'wpsc-preview-file',
 			'post_parent' => $post->ID,
 			'numberposts' => -1,
 			'post_status' => 'all'
 			);
-		
+
 			$preview_files = (array)get_posts( $args );
-			
+
 			foreach ($preview_files as $preview)
 				echo $preview->post_title . '<br />';
-			
+
 			?>
-	
+
             <br />
         <?php
 	}
@@ -883,10 +883,6 @@ add_filter( 'attachment_fields_to_edit', 'wpsc_attachment_fields', 11, 2 );
 add_filter( 'gettext', 'wpsc_filter_feature_image_text', 12, 3 );
 add_filter( 'gettext_with_context', 'wpsc_filter_gettex_with_context', 12, 4);
 
-if ( isset( $_REQUEST["save"] ) && isset( $_REQUEST["attachments"] ) && is_array( $_REQUEST["attachments"] ) ) {
-	//wpsc_regenerate_thumbnails();
-}
-
 /*
  * This filter overrides string with context translations
  *
@@ -932,8 +928,8 @@ function wpsc_filter_feature_image_text( $translation, $text, $domain ) {
 		return $translations->translate( 'The name is how it appears on your site. <br><div class="error"><strong>Please read this carefully before starting to work with variations:</strong><br />Variations in WP e-Commerce are divided into sets. For example set <strong>Color</strong> could have variations <strong>Red, Green,</strong> and <strong>Blue</strong>. To create a variation set simply enter the <strong>name</strong> and push Enter key on your keyboard or click <strong>Add New Variation/Set</strong> button in the bottom of this page. Then you will be able to select it from <strong>Variation set</strong> drop-down menu and add some variations to it. To add a new variation set just select <strong>None</strong> in <strong>Variation set</strong> drop-down menu.</div>', 'wpsc' );
 		//this will never happen, this is here only for gettex to pick up the translation
 		return __( 'The name is how it appears on your site. <br><div class="error"><strong>Please read this carefully before starting to work with variations:</strong><br />Variations in WP e-Commerce are divided into sets. For example set <strong>Color</strong> could have variations <strong>Red, Green,</strong> and <strong>Blue</strong>. To create a set simply enter <strong>Name</strong> and push Enter key on your keyboard or click <strong>Add New Variation/Set</strong> button in the bottom of this page. Now you can select the variation set that you\'ve just created from <strong>Variation set</strong> drop-down menu and add some variations to it.</div>', 'wpsc' );
-	} 
-	
+	}
+
 	return $translation;
 }
 function wpsc_attachment_fields( $form_fields, $post ) {
@@ -974,11 +970,11 @@ function wpsc_attachment_fields( $form_fields, $post ) {
 		$check = get_post_meta( $post->ID, '_wpsc_selected_image_size', true );
 		if ( !$check )
 			$check = 'medium-single-product';
-		
+
 		$current_size = image_get_intermediate_size( $post->ID, $check );
 		$settings_width = get_option( 'single_view_image_width' );
 		$settings_height = get_option( 'single_view_image_height' );
-		
+
 		// regenerate size metadata in case it's missing
 		if ( ! $check || $current_size['width'] != $settings_width || $current_size['height'] != $settings_height ) {
 			if ( ! $metadata = wp_get_attachment_metadata( $post->ID ) )
@@ -990,7 +986,7 @@ function wpsc_attachment_fields( $form_fields, $post ) {
 			$metadata['sizes'] = array_merge( $metadata['sizes'], $generated['sizes'] );
 			wp_update_attachment_metadata( $post->ID, $metadata );
 		}
-		
+
 		//This loop attaches the custom thumbnail/single image sizes to this page
 		foreach ( $size_names as $size => $name ) {
 			$downsize = image_downsize( $post->ID, $size );
@@ -1165,7 +1161,7 @@ function wpsc_save_quickedit_box( $post_id ) {
 
 	$weight_unit = $product_meta["weight_unit"];
 	$weight = wpsc_convert_weight( $_POST["weight"], $weight_unit, "pound", true );
-	
+
 	if ( isset( $product_meta["weight"] ) )
 		unset( $product_meta["weight"] );
 
@@ -1257,7 +1253,7 @@ case 'sale_price' :
 <?php
 }
 
-/* 
+/*
  * Remove bulk edit as it is broken,
  * ToDo : Fix Bulk Edit for Products
  */

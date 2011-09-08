@@ -826,12 +826,7 @@ function wpsc_submit_options( $selected='' ) {
 	}
 	$previous_currency = get_option( 'currency_type' );
 
-	$regenerate = false;
-
-	$regenerate_options = array('single_view_image_height', 'single_view_image_width','wpsc_gallery_image_width','wpsc_gallery_image_height', 'wpsc_crop_thumbnails','product_image_width','product_image_height');
-
 	//To update options
-
 	if ( isset( $_POST['wpsc_options'] ) ) {
 		// make sure stock keeping time is a number
 		if ( isset( $_POST['wpsc_options']['wpsc_stock_keeping_time'] ) ) {
@@ -844,11 +839,6 @@ function wpsc_submit_options( $selected='' ) {
 		}
 
 		foreach ( $_POST['wpsc_options'] as $key => $value ) {
-
-			if ( in_array( $key, $regenerate_options ) && $value != get_option( $key )  ) {
-				$regenerate = true;
-			}
-
 			if ( $value != get_option( $key ) ) {
 				update_option( $key, $value );
 				$updated++;
@@ -904,9 +894,6 @@ function wpsc_submit_options( $selected='' ) {
 
 	$sendback = wp_get_referer();
 
-	if ( $regenerate ) {
-		$sendback = add_query_arg( array('regenerate' => 'true', 'updated' => $updated), $sendback );
-	}
 	if ( isset( $updated ) ) {
 		$sendback = add_query_arg( 'updated', $updated, $sendback );
 	}
@@ -1793,12 +1780,12 @@ function save_term_prices( $term_id ) {
 add_action( 'edited_wpsc-variation', 'save_term_prices' );
 add_action( 'created_wpsc-variation', 'save_term_prices' );
 
-function wpsc_cron() {	
+function wpsc_cron() {
 	foreach ( wp_get_schedules() as $cron => $schedule ) {
 		if ( ! wp_next_scheduled( "wpsc_{$cron}_cron_task" ) )
 			wp_schedule_event( time(), $cron, "wpsc_{$cron}_cron_task" );
 	}
-	
+
 	add_action( 'wpsc_hourly_cron_task', 'wpsc_clear_stock_claims' );
 }
 
