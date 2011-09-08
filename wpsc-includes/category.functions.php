@@ -504,36 +504,39 @@ function wpsc_list_subcategories($category_id = null) {
  * @return object array $terms
  */
 function wpsc_get_terms_category_sort_filter($terms){
-  $new_terms = array();
-  $i = 0;
-
-  foreach($terms as $term){
-    if(!is_object($term)) return $terms;
-
-    $term_order = $term->taxonomy == 'wpsc_product_category' ? wpsc_get_meta($term->term_id,'sort_order', 'wpsc_category') : 0;
-   
-    if(isset($term_order) && is_numeric($term_order) && !isset($new_terms[$term_order])){
-      $term->sort_order = $term_order;
-      $new_terms[$term_order] = $term;
-    }elseif(isset($new_terms[$term_order])){
-      //this must have been recently moved or something, palce it at the end
-      $newID = count($terms);
-      while(isset($new_terms[$newID])){
-        $newID++;
-      }
-      $term->sort_order = $newID;
-      $new_terms[$newID] = $term;
-    }elseif(is_object($term)){
-      //Term has no order make one up, also helps if it's not one of our terms
-      $term->sort_order = $i;
-      $new_terms[$i] = $term;
-      $i++;     
-    }
-   
-  }
+	$new_terms = array();
+	$unsorted = array();
+	
+	foreach ( $terms as $term ) {
+		if ( ! is_object( $term ) )
+			return $terms;
+		
+		$term_order = ( $term->taxonomy == 'wpsc_product_category' ) ? wpsc_get_meta( $term->term_id, 'sort_order', 'wpsc_category' ) : null;
+		$term_order = (int) $term_order;
+		
+		// unsorted categories should go to the top of the list
+		if ( $term_order == 0 ) {
+			$term->sort_order = $term_order;
+			$unsorted[] = $term;
+			continue;
+		}
+		
+		while ( isset( $new_terms[$term_order] ) ) {
+			$term_order ++;
+		}
+		
+		$term->sort_order = $term_order;
+		$new_terms[$term_order] = $term;
+	}
+	
 	if ( ! empty( $new_terms ) )
-		ksort($new_terms);
-  return array_values( $new_terms );
+		ksort( $new_terms );
+	
+	for ( $i = count( $unsorted ) - 1; $i >= 0; $i-- ) { 
+		array_unshift( $new_terms, $unsorted[$i] );
+	}
+	
+	return array_values( $new_terms );
 }
 add_filter('get_terms','wpsc_get_terms_category_sort_filter');
 ?>
