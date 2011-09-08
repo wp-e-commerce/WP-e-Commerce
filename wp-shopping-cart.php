@@ -158,6 +158,12 @@ class WP_eCommerce {
 		wpsc_install();
 		
 	}
+	
+	public function deactivate() {
+		foreach ( wp_get_schedules() as $cron => $schedule ) {
+			wp_clear_scheduled_hook( "wpsc_{$cron}_cron_task" );
+		}
+	}
 }
 
 // Start WPEC
@@ -165,5 +171,5 @@ $wpec = new WP_eCommerce();
 
 // Activation
 register_activation_hook( __FILE__, array( $wpec, 'install' ) );
-
+register_deactivation_hook( __FILE__, array( $wpec, 'deactivate' ) );
 ?>
