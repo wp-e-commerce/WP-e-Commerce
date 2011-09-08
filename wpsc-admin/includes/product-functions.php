@@ -114,9 +114,6 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 	$post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'] = (int)(bool)$post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'];
 	if(!isset($post_data['meta']['_wpsc_product_metadata']['google_prohibited'])) $post_data['meta']['_wpsc_product_metadata']['google_prohibited'] = '';
 	$post_data['meta']['_wpsc_product_metadata']['google_prohibited'] = (int)(bool)$post_data['meta']['_wpsc_product_metadata']['google_prohibited'];
-	$post_data['meta']['_wpsc_product_metadata']['external_link'] = (string)$post_data['meta']['_wpsc_product_metadata']['external_link'];
-	$post_data['meta']['_wpsc_product_metadata']['external_link_text'] = (string)$post_data['meta']['_wpsc_product_metadata']['external_link_text'];
-	$post_data['meta']['_wpsc_product_metadata']['external_link_target'] = (string)$post_data['meta']['_wpsc_product_metadata']['external_link_target'];
 	
 	$post_data['meta']['_wpsc_product_metadata']['enable_comments'] = $post_data['meta']['_wpsc_product_metadata']['enable_comments'];
 	$post_data['meta']['_wpsc_product_metadata']['merchant_notes'] = $post_data['meta']['_wpsc_product_metadata']['merchant_notes'];
