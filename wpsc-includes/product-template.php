@@ -866,6 +866,8 @@ function wpsc_product_has_stock( $id = null ) {
 		if( $stock - $claimed_stock > 0 )
 			return true;
 	}
+	
+	return false;
 }
 
 /**
