@@ -9,20 +9,20 @@ function wpsc_auto_update() {
 	wpsc_create_upload_directories();
 	wpsc_product_files_htaccess();
 	wpsc_check_and_copy_files();
-	
+
 	$wpsc_version = get_option( 'wpsc_version' );
 	$wpsc_minor_version = get_option( 'wspc_minor_version' );
-	
+
 	if ( $wpsc_version === false )
 		add_option( 'wpsc_version', WPSC_VERSION, '', 'yes' );
 	else
 		update_option( 'wpsc_version', WPSC_VERSION );
-		
+
 	if ( $wpsc_minor_version === false )
 		add_option( 'wpsc_minor_version', WPSC_MINOR_VERSION, '', 'yes' );
 	else
 		update_option( 'wpsc_minor_version', WPSC_MINOR_VERSION );
-	
+
 	if ( version_compare( $wpsc_version, '3.8', '<' ) )
 		update_option( 'wpsc_needs_update', true );
 	else
@@ -44,10 +44,6 @@ function wpsc_install() {
 		$first_install = true;
 		add_option( 'wpsc_purchaselogs_fixed', true );
 	}
-	
-	// TODO: need a better approach to resize thumbnails
-	/* if ( !$first_install )
-		wpsc_regenerate_thumbnails(); */
 
 	// run the create or update code here.
 	wpsc_create_or_update_tables();
@@ -56,12 +52,12 @@ function wpsc_install() {
 	// All code to add new database tables and columns must be above here
 	$wpsc_version = get_option( 'wpsc_version', 0 );
 	$wpsc_minor_version = get_option( 'wspc_minor_version', 0 );
-	
+
 	if ( $wpsc_version === false )
 		add_option( 'wpsc_version', WPSC_VERSION, '', 'yes' );
 	else
 		update_option( 'wpsc_version', WPSC_VERSION );
-		
+
 	if ( $wpsc_minor_version === false )
 		add_option( 'wpsc_minor_version', WPSC_MINOR_VERSION, '', 'yes' );
 	else
@@ -71,7 +67,7 @@ function wpsc_install() {
 		update_option( 'wpsc_needs_update', true );
 	else
 		update_option( 'wpsc_needs_update', false );
-	
+
 	if('' == get_option('show_subcatsprods_in_cat'))
 		update_option('show_subcatsprods_in_cat',0);
 
@@ -105,7 +101,7 @@ function wpsc_install() {
 	if('' == get_option('wpsc_addtocart_or_buynow'))
 		update_option('wpsc_addtocart_or_buynow',0);
 
-	
+
 	add_option( 'show_thumbnails', 1, '', "yes" );
 	add_option( 'show_thumbnails_thickbox', 1, '', "yes" );
 
@@ -114,7 +110,7 @@ function wpsc_install() {
 	add_option( 'checkout_url', '', '', 'yes' );
 	add_option( 'transact_url', '', '', 'yes' );
 	add_option( 'payment_gateway', '','', 'yes' );
-	
+
 	$default_payment_gateways_names = array(
 		'chronopay'						=> '',
 		'google'						=> '',
@@ -177,24 +173,24 @@ function wpsc_install() {
 
 	add_option( 'product_ratings', '0', '', 'yes' );
 	add_option( 'wpsc_email_receipt', __( 'Thank you for purchasing with %shop_name%, any items to be shipped will be processed as soon as possible, any items that can be downloaded can be downloaded using the links on this page.All prices include tax and postage and packaging where applicable.
-	You ordered these items: 
+	You ordered these items:
 	%product_list%%total_shipping%%total_price%', 'wpsc' ), '', 'yes' );
 	add_option( 'wpsc_email_admin', __( '%product_list%%total_shipping%%total_price%', 'wpsc' ), '','yes' );
 
 	add_option( 'wpsc_selected_theme', 'default', '', 'yes' );
-	
+
 	add_option( 'product_image_height', 148);
 	add_option( 'product_image_width', 148);
 
 	add_option( 'category_image_height', 148 );
 	add_option( 'category_image_width', 148 );
-	
+
 	add_option( 'single_view_image_height', 148 );
 	add_option( 'single_view_image_width', 148 );
 
 	add_option( 'wpsc_gallery_image_height', 31 );
 	add_option( 'wpsc_gallery_image_width', 31 );
-	
+
 	add_option( 'wpsc_thousands_separator', ',' );
 	add_option( 'wpsc_decimal_separator', '.' );
 
@@ -204,11 +200,11 @@ function wpsc_install() {
 
 	// add in some default tax settings
 	add_option( 'wpec_taxes_inprice', 'exclusive' );
-	
+
 	add_option( 'wpec_taxes_product', 'replace' );
 
 	add_option( 'wpec_taxes_logic', 'billing' );
-	
+
 	wpsc_product_files_htaccess();
 
 	/*
@@ -243,11 +239,11 @@ function wpsc_install() {
 			'tag' => '[userlog]',
 			'option' => 'user_account_url'
 		)
-	); 
-	
+	);
+
 	//indicator. if we will create any new pages we need to flush.. :)
 	$newpages = false;
-	
+
 	//get products page id. if there's no products page then create one
 	$products_page_id = $wpdb->get_var("SELECT id FROM `" . $wpdb->posts . "` WHERE `post_content` LIKE '%" . $pages['products-page']['tag'] . "%'	AND `post_type` != 'revision'");
 	if( empty($products_page_id) ){
@@ -266,10 +262,10 @@ function wpsc_install() {
 	}
 	update_option( $pages['products-page']['option'], _get_page_link($products_page_id) );
 	//done. products page created. no we can unset products page data and create all other pages.
-	
+
 	//unset products page
 	unset($pages['products-page']);
-	
+
 	//create other pages
 	foreach( (array)$pages as $page ){
 		//check if page exists and get it's ID
@@ -309,7 +305,7 @@ function wpsc_install() {
 	$category_list = get_terms( 'wpsc_product_category', 'hide_empty=0&parent=0' );
 	if ( count( $category_list ) == 0 ) {
 		require_once( WPSC_FILE_PATH . '/wpsc-includes/meta.functions.php' );
-		
+
 		$new_category = wp_insert_term( __( 'Product Category', 'wpsc' ), 'wpsc_product_category', "parent=0" );
 		$category_id = $new_category['term_id'];
 		$term = get_term_by( 'id', $new_category['term_id'], 'wpsc_product_category' );
@@ -323,59 +319,6 @@ function wpsc_install() {
 		wpsc_update_categorymeta( $category_id, 'active', '1' );
 		wpsc_update_categorymeta( $category_id, 'order', '0' );
 	}
-}
-
-/*
-
-Code borrowed with much gratitude from Viper007Bond.  Thanks for writing a great plugin, Alex!
-We've basically just removed the admin interface, we're just going to be hooking into the regeneration functions when new custom sizes are made or when the plugin is updated.  Fancy!
-
-**************************************************************************
-
-Plugin Name:  Regenerate Thumbnails
-Plugin URI:   http://www.viper007bond.com/wordpress-plugins/regenerate-thumbnails/
-Description:  Allows you to regenerate all thumbnails after changing the thumbnail sizes.
-Version:      2.0.3
-Author:       Viper007Bond
-Author URI:   http://www.viper007bond.com/
-
-**************************************************************************
-
-Copyright (C) 2008 Viper007Bond
-
-*************************************************************************
-*/
-
-function wpsc_regenerate_thumbnails() {
-global $wpdb;
-
-if( !ini_get('safe_mode') ) set_time_limit(250);
-
-if ( !function_exists( 'wp_generate_attachment_metadata' ) ) {
-	require_once ( ABSPATH . 'wp-admin/includes/image.php' );
-}
-
-		// Just query for the IDs (specifically those that have products for parents) only to reduce memory usage
-		$images = $wpdb->get_results( "SELECT ID, post_parent FROM $wpdb->posts WHERE post_type = 'attachment' AND post_mime_type LIKE 'image/%'" );
-		
-		foreach ( $images as $image ) {
-			$id = $image->ID;
-			$post_parent_type = get_post_type( $image->post_parent );
-			
-			if ("wpsc-product" == $post_parent_type) {
-				
-				$fullsizepath = get_attached_file( $id );
-				
-				if ( false === $fullsizepath || !file_exists($fullsizepath) )
-					die ("Could not find path specified!");
-	
-				if ( wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $fullsizepath ) ) ) {
-					$success = true;
-					} else {
-					$success = false;
-				}
-			}
-	}	
 }
 
 function wpsc_product_files_htaccess() {
@@ -544,11 +487,11 @@ function wpsc_create_or_update_tables( $debug = false ) {
 					$wpdb->query( "ALTER TABLE `$table_name`	DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci" );
 				}
 			}
-			
+
 			if ( isset( $table_data['actions']['before']['all'] ) && is_callable( $table_data['actions']['before']['all'] ) ) {
 				$table_data['actions']['before']['all']();
 			}
-			
+
 			//get the column list
 			$existing_table_column_data = $wpdb->get_results( "SHOW FULL COLUMNS FROM `$table_name`", ARRAY_A );
 
@@ -587,7 +530,7 @@ function wpsc_create_or_update_tables( $debug = false ) {
 					if ( isset( $table_data['columns'][$missing_or_extra_table_column] ) ) {
 						//table column is missing, add it
 						$index = array_search( $missing_or_extra_table_column, $supplied_table_columns ) - 1;
-						
+
 						$previous_column = isset( $supplied_table_columns[$index] ) ? $supplied_table_columns[$index] : '';
 						if ( $previous_column != '' ) {
 							$previous_column = "AFTER `$previous_column`";
