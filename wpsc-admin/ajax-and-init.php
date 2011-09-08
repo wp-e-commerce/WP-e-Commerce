@@ -18,7 +18,7 @@ function wpsc_ajax_add_tracking() {
 			$sql = "UPDATE `" . WPSC_TABLE_PURCHASE_LOGS . "` SET `track_id`='" . $trackingid . "' WHERE `id`=" . $id;
 			$wpdb->query( $sql );
 		}
-		
+
 	}
 }
 
@@ -140,7 +140,7 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
  * Purposely not duplicating stick post status (logically, products are most often duplicated because they share many attributes, where products are generally 'featured' uniquely.)
  */
 function wpsc_duplicate_product() {
-    
+
 	// Get the original post
 	$id = absint( $_GET['product'] );
 	$post = get_post( $id );
@@ -173,11 +173,11 @@ function wpsc_duplicate_product_process( $post ) {
 	$post_name = str_replace( "'", "''", $post->post_name );
 	$comment_status = str_replace( "'", "''", $post->comment_status );
 	$ping_status = str_replace( "'", "''", $post->ping_status );
-	
+
 	$defaults = array(
-		'post_status' 			=> $post->post_status, 
+		'post_status' 			=> $post->post_status,
 		'post_type' 			=> $new_post_type,
-		'ping_status' 			=> $ping_status, 
+		'ping_status' 			=> $ping_status,
 		'post_parent' 			=> $post->post_parent,
 		'menu_order' 			=> $post->menu_order,
 		'to_ping' 				=>  $post->to_ping,
@@ -295,7 +295,7 @@ function wpsc_purchase_log_csv() {
 		header( 'Content-Type: text/csv' );
 		header( 'Content-Disposition: inline; filename="Purchase Log ' . date( "M-d-Y", $start_timestamp ) . ' to ' . date( "M-d-Y", $end_timestamp ) . '.csv"' );
 		$headers = "\"Purchase ID\",\"Purchase Total\","; //capture the headers
-		
+
 		$headers2  ="\"Payment Gateway\",";
 		$headers2 .="\"Payment Status\",\"Purchase Date\",";
 
@@ -311,12 +311,12 @@ function wpsc_purchase_log_csv() {
 				$collected_data = $collected_data[0];
 				$output .= "\"" . $collected_data['value'] . "\","; // get form fields
 			}
-			
+
 			$output .= "\"" . $wpsc_gateways[$purchase['gateway']]['display_name'] . "\","; //get gateway name
 
-	
+
 			$status_name = wpsc_find_purchlog_status_name( $purchase['processed'] );
-			
+
 			$output .= "\"" . $status_name . "\","; //get purchase status
 			$output .= "\"" . date( "jS M Y", $purchase['date'] ) . "\","; //date
 
@@ -339,7 +339,7 @@ function wpsc_purchase_log_csv() {
 		for($i = 0; $i < $count ;$i++){
 			$headers3 .= "\"Quantity - Product Name \", \" SKU \"";
 			if($i < ($count-1))
-			$headers3 .= ",";			
+			$headers3 .= ",";
 		}
 
 		echo $headers . $form_headers . $headers2 . $headers3 . "\n". $output;
@@ -416,7 +416,7 @@ function wpsc_admin_ajax() {
 					wpsc_member_dedeactivate_subscriptions( $_POST['id'] );
 			elseif( function_exists('wpsc_member_deactivate_subscriptions'))
 				wpsc_member_deactivate_subscriptions( $_POST['id'] );
-			
+
 			exit();
 		} else {
 
@@ -499,11 +499,11 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( 'wpsc_display_invoice' == $_RE
  */
 function wpsc_purchlog_resend_email() {
 	global $wpdb;
-	$log_id = $_GET['email_buyer_id']; 
+	$log_id = $_GET['email_buyer_id'];
 	$wpec_taxes_controller = new wpec_taxes_controller();
 	if ( is_numeric( $log_id ) ) {
 		$selectsql = "SELECT `sessionid` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id`= " . $log_id . " LIMIT 1";
-		$purchase_log = $wpdb->get_var( $selectsql );	
+		$purchase_log = $wpdb->get_var( $selectsql );
 		transaction_results( $purchase_log, false);
 		$sent = true;
 	}
@@ -620,10 +620,10 @@ function wpsc_purchlog_edit_status( $purchlog_id='', $purchlog_status='' ) {
 	do_action('wpsc_edit_order_status', array('purchlog_id'=>$purchlog_id, 'purchlog_data'=>$log_data, 'new_status'=>$purchlog_status));
 
 	$wpdb->query( "UPDATE `" . WPSC_TABLE_PURCHASE_LOGS . "` SET processed='{$purchlog_status}' WHERE id='{$purchlog_id}'" );
-	
+
 	wpsc_clear_stock_claims();
 	wpsc_decrement_claimed_stock($purchlog_id);
-	
+
 	if ( $purchlog_status == 3 )
 		transaction_results($log_data['sessionid'],false,null);
 }
@@ -769,7 +769,7 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
 function wpsc_submit_options( $selected='' ) {
 	global $wpdb, $wpsc_gateways;
 	$updated = 0;
-	
+
 	//This is to change the Overall target market selection
 	check_admin_referer( 'update-options', 'wpsc-update-options' );
 	if ( isset( $_POST['change-settings'] ) ) {
@@ -791,14 +791,14 @@ function wpsc_submit_options( $selected='' ) {
 	}
 	if (empty($_POST['countrylist2']) && !empty($_POST['wpsc_options']['currency_sign_location']))
 		$selected = 'none';
-		
+
 	if ( !isset( $_POST['countrylist2'] ) )
 		$_POST['countrylist2'] = '';
 	if ( !isset( $_POST['country_id'] ) )
 		$_POST['country_id'] = '';
 	if ( !isset( $_POST['country_tax'] ) )
 		$_POST['country_tax'] = '';
-	
+
 	if ( $_POST['countrylist2'] != null || !empty($selected) ) {
 		$AllSelected = false;
 		if ( $selected == 'all' ) {
@@ -823,27 +823,36 @@ function wpsc_submit_options( $selected='' ) {
 				$wpdb->query( "UPDATE `" . WPSC_TABLE_CURRENCY_LIST . "` SET visible = 1  WHERE id = '" . $selected . "' LIMIT 1" );
 			}
 		}
-	} 
+	}
 	$previous_currency = get_option( 'currency_type' );
-	
+
 	$regenerate = false;
-	
+
 	$regenerate_options = array('single_view_image_height', 'single_view_image_width','wpsc_gallery_image_width','wpsc_gallery_image_height', 'wpsc_crop_thumbnails','product_image_width','product_image_height');
-	
+
 	//To update options
-	
+
 	if ( isset( $_POST['wpsc_options'] ) ) {
+		// make sure stock keeping time is a number
+		if ( isset( $_POST['wpsc_options']['wpsc_stock_keeping_time'] ) ) {
+			$skt =& $_POST['wpsc_options']['wpsc_stock_keeping_time']; // I hate repeating myself
+			$skt = (float) $skt;
+			if ( $skt <= 0 || ( $skt < 1 && $_POST['wpsc_options']['wpsc_stock_keeping_interval'] == 'hour' ) ) {
+				unset( $_POST['wpsc_options']['wpsc_stock_keeping_time'] );
+				unset( $_POST['wpsc_options']['wpsc_stock_keeping_interval'] );
+			}
+		}
 
 		foreach ( $_POST['wpsc_options'] as $key => $value ) {
-			
+
 			if ( in_array( $key, $regenerate_options ) && $value != get_option( $key )  ) {
 				$regenerate = true;
 			}
-	
+
 			if ( $value != get_option( $key ) ) {
 				update_option( $key, $value );
 				$updated++;
-			
+
 			}
 		}
 	}
@@ -892,7 +901,7 @@ function wpsc_submit_options( $selected='' ) {
 			}
 		}
 	}
-	
+
 	$sendback = wp_get_referer();
 
 	if ( $regenerate ) {
@@ -992,15 +1001,15 @@ function wpsc_update_page_urls($auto = false) {
 
 		update_option( $option_key, $the_new_link );
 	}
-	
+
 	if(!$auto){
 		$sendback = wp_get_referer();
 		if ( isset( $updated ) )
 			$sendback = add_query_arg( 'updated', $updated, $sendback );
 
-		if ( isset( $_SESSION['wpsc_settings_curr_page'] ) ) 
+		if ( isset( $_SESSION['wpsc_settings_curr_page'] ) )
 			$sendback = add_query_arg( 'tab', $_SESSION['wpsc_settings_curr_page'], $sendback );
-			
+
 		wp_redirect( $sendback );
 		exit();
 	}
@@ -1160,7 +1169,7 @@ function prod_upload() {
 			// Save the data
 			$id = wp_insert_post( $attachment );
 		}
-		
+
 		$deletion_url = wp_nonce_url( "admin.php?wpsc_admin_action=delete_file&amp;file_name={$attachment['post_title']}&amp;product_id={$product_id}", 'delete_file_' . $attachment['post_title'] );
 
 		$output .= "<p id='select_product_file_row_id_" . $id . "'>\n";
@@ -1170,7 +1179,7 @@ function prod_upload() {
 		$output .= "  <label for='select_product_file_row_id_" . $id . "'>" . $attachment['post_title'] . "</label>\n";
 		$output .= "</p>\n";
 	}
-	
+
 	echo $output;
 }
 if ( isset( $_GET['wpsc_admin_action'] ) && ($_GET['wpsc_admin_action'] == 'product_files_upload') )
@@ -1260,7 +1269,7 @@ function wpsc_checkout_settings() {
 	$filter = isset( $_POST['selected_form_set'] ) ? $_POST['selected_form_set'] : '0';
 	if ( ! isset( $_POST['new_form_mandatory'] ) )
 		$_POST['new_form_mandatory'] = array();
-	
+
 	if ( $_POST['new_form_set'] != null ) {
 		$checkout_sets = get_option( 'wpsc_checkout_form_sets' );
 		$checkout_sets[] = $_POST['new_form_set'];
@@ -1282,10 +1291,10 @@ function wpsc_checkout_settings() {
 
 			$options = serialize( $options );
 			$wpdb->update(
-				WPSC_TABLE_CHECKOUT_FORMS, 
-				array( 'options' => $options ), 
-				array( 'id' => $form_id ), 
-				'%s', 
+				WPSC_TABLE_CHECKOUT_FORMS,
+				array( 'options' => $options ),
+				array( 'id' => $form_id ),
+				'%s',
 				'%d'
 			);
 		}
@@ -1364,7 +1373,7 @@ function wpsc_checkout_settings() {
 				),
 				array( '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s' )
 			);
-			
+
 			$added++;
 		}
 	}
@@ -1493,7 +1502,7 @@ function wpsc_update_variations() {
 	$product_type_object = get_post_type_object('wpsc-product');
 	if (!current_user_can($product_type_object->cap->edit_post, $product_id))
 		return;
-	
+
 	//Setup postdata
 	$post_data = array( );
 	$post_data['edit_var_val'] = isset( $_POST['edit_var_val'] ) ? $_POST["edit_var_val"] : '';
@@ -1578,22 +1587,22 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( $_REQUEST['wpsc_admin_action']
 
 function wpsc_delete_coupon(){
 	global $wpdb;
-	
+
 	check_admin_referer( 'delete-coupon' );
 	$coupon_id = (int)$_GET['delete_id'];
-	
+
 	if(isset($coupon_id)) {
 			$wpdb->query("DELETE FROM `".WPSC_TABLE_COUPON_CODES."` WHERE `id` = '$coupon_id' LIMIT 1;");
-			
+
 			$deleted = 1;
-	}	
-	$sendback = wp_get_referer();	
-	if ( isset( $deleted ) ) 
+	}
+	$sendback = wp_get_referer();
+	if ( isset( $deleted ) )
 		$sendback = add_query_arg( 'deleted', $deleted, $sendback );
-	
+
 	$sendback = remove_query_arg( array('deleteid',), $sendback );
 	wp_redirect( $sendback );
-	exit();		
+	exit();
 }
 
 if ( isset( $_GET['action'] ) && ( 'purchase_log' == $_GET['action'] ) )
@@ -1608,8 +1617,8 @@ if ( isset( $_REQUEST['ajax'] ) && isset( $_REQUEST['admin'] ) && ($_REQUEST['aj
 // Variation set deleting init code starts here
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( 'wpsc-delete-variation-set' == $_REQUEST['wpsc_admin_action'] ) )
 	add_action( 'admin_init', 'wpsc_delete_variation_set' );
-	
-//Delete Coupon	
+
+//Delete Coupon
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( 'wpsc-delete-coupon' == $_REQUEST['wpsc_admin_action'] ) )
 	add_action( 'admin_init', 'wpsc_delete_coupon' );
 
@@ -1682,7 +1691,7 @@ function variation_price_field( $variation ) {
 		<span class="description"><?php _e( 'You can list a default price here for this variation.  You can list a regular price (18.99), differential price (+1.99 / -2) or even a percentage-based price (+50% / -25%).', 'wpsc' ); ?></span>
             </td>
 	</tr>
-	<?php 
+	<?php
 	}
 
 }
@@ -1783,4 +1792,15 @@ function save_term_prices( $term_id ) {
 }
 add_action( 'edited_wpsc-variation', 'save_term_prices' );
 add_action( 'created_wpsc-variation', 'save_term_prices' );
+
+function wpsc_cron() {	
+	foreach ( wp_get_schedules() as $cron => $schedule ) {
+		if ( ! wp_next_scheduled( "wpsc_{$cron}_cron_task" ) )
+			wp_schedule_event( time(), $cron, "wpsc_{$cron}_cron_task" );
+	}
+	
+	add_action( 'wpsc_hourly_cron_task', 'wpsc_clear_stock_claims' );
+}
+
+add_action( 'init', 'wpsc_cron' );
 ?>

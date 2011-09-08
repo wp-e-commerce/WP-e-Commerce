@@ -53,12 +53,6 @@ function wpsc_install() {
 	wpsc_create_or_update_tables();
 	wpsc_create_upload_directories();
 
-	if ( !wp_get_schedule( "wpsc_hourly_cron_tasks" ) )
-		wp_schedule_event( time(), 'hourly', 'wpsc_hourly_cron_tasks' );
-
-	if ( !wp_get_schedule( "wpsc_daily_cron_tasks" ) )
-		wp_schedule_event( time(), 'daily', 'wpsc_daily_cron_tasks' );
-
 	// All code to add new database tables and columns must be above here
 	$wpsc_version = get_option( 'wpsc_version', 0 );
 	$wpsc_minor_version = get_option( 'wspc_minor_version', 0 );
