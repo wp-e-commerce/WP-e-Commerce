@@ -293,40 +293,35 @@ jQuery(document).ready(function () {
 		if ( parent_form.length == 0 )
 			return;		
 		form_values =jQuery("input[name='product_id'], .wpsc_select_variation",parent_form).serialize( );
-		jQuery.post( 'index.php?update_product_price=true', form_values, function(returned_data) {
-			variation_msg = '';
-			eval(returned_data);
-			if( product_id != null ) {
-				if( variation_msg != '' ){
-					if(variation_status){
-						jQuery("div#stock_display_"+product_id).removeClass('out_of_stock');	
-						jQuery("div#stock_display_"+product_id).addClass('in_stock');	
-					}else{
-						jQuery("div#stock_display_"+product_id).removeClass('in_stock');	
-						jQuery("div#stock_display_"+product_id).addClass('out_of_stock');	
-					}
-					
-					jQuery("div#stock_display_"+product_id).html(variation_msg);
-				
-				}
-				if( typeof(price) !== 'undefined' && typeof(old_price) !== 'undefined' && typeof(you_save) !== 'undefined' && typeof(numeric_price) !== 'undefined' ) {
-					target_id = "product_price_"+product_id;
-					price_target_selector = "#" + target_id + ".pricedisplay, ." + product_id + " .currentprice";
-					second_target_id = "donation_price_"+product_id;
-					third_target_id = "old_product_price_"+product_id;
-					yousave_target_id = "yousave_"+product_id;
-					buynow_id = "BB_BuyButtonForm"+product_id;
-					if(jQuery("input#"+target_id).attr('type') == 'text') {
-						jQuery("input#"+target_id).val(numeric_price);
-					} else {
-						jQuery(price_target_selector).html(price);
-						jQuery("#"+third_target_id).html(old_price);
-						jQuery("#"+yousave_target_id).html(you_save);
-					}
-					jQuery("input#"+second_target_id).val(numeric_price);
+		jQuery.post( 'index.php?update_product_price=true', form_values, function(response) {
+			var stock_display = jQuery('div#stock_display_' + product_id),
+				price_field = jQuery('input#product_price_' + product_id),
+				price_span = jQuery('#product_price_' + product_id + '.pricedisplay, #product_price_' + product_id + ' .currentprice'),
+				donation_price = jQuery('input#donation_price_' + product_id),
+				old_price = jQuery('#old_product_price_' + product_id),
+				save = jQuery('#yousave_' + product_id),
+				buynow = jQuery('#BB_BuyButtonForm' + product_id);
+			if ( response.variation_found ) {
+				if ( response.stock_available ) {
+					stock_display.removeClass('out_of_stock').addClass('in_stock');
+				} else {
+					stock_display.addClass('out_of_stock').removeClass('in_stock');
 				}
 			}
-		});
+			
+			stock_display.html(response.variation_msg);
+			
+			if ( response.price !== undefined ) {
+				if (price_field.length && price_field.attr('type') == 'text') {
+					price_field.val(response.numeric_price);
+				} else {
+					price_span.html(response.price);
+					old_price.html(response.old_price);
+					save.html(response.you_save);
+				}
+				donation_price.val(response.numeric_price);
+			}
+		}, 'json');
 	});
 
 	// Object frame destroying code.

@@ -798,44 +798,42 @@ function wpsc_product_creation_time( $format = null ) {
  * @return string - the product price
  */
 function wpsc_check_variation_stock_availability( $product_id, $variations ) {
-global $wpdb;
-	$selected_post = (array)get_posts( array(
-				'post_parent' => $product_id,
-				'post_type' => "wpsc-product",
-				'post_status' => 'all',
-				'suppress_filters' => true
+	global $wpdb;
+	$selected_post = get_posts( array(
+				'post_parent'      => $product_id,
+				'post_type'        => "wpsc-product",
+				'post_status'      => 'any',
+				'suppress_filters' => true,
+				'numberposts'      => -1,
 			) );
+	
+	$selected_variation = false;
+	
 	foreach ( $selected_post as $variation ) {
 		$matches = 0;
 		$terms = wp_get_object_terms( $variation->ID, 'wpsc-variation' );
 		foreach ( $terms as $term ) {
 			if ( in_array( $term->term_id, $variations ) )
 				$matches++;
-
-			if ( $matches == count( $variations ) ) {
-				$the_selected_product = $variation->ID;
-			}
+		}
+		
+		if ( $matches == count( $variations ) ) {
+			$selected_variation = $variation->ID;
 		}
 	}
-
-	if ( wpsc_product_has_stock( $the_selected_product ) ) {
-		$stock = get_product_meta( $the_selected_product, "stock", true );
-		$stock = apply_filters( 'wpsc_product_variation_stock', $stock, $product_id );
-		if ( 0 < $stock )
-			return $stock;
-	}else{				  
-
-		$stock = get_product_meta( $the_selected_product, "stock", true );
-		$stock = apply_filters( 'wpsc_product_variation_stock', $stock, $product_id );
-				
-		if (  is_numeric($stock) ){
-			$claimed_stock = $wpdb->get_var("SELECT SUM(`stock_claimed`) FROM `".WPSC_TABLE_CLAIMED_STOCK."` WHERE `product_id` IN('$the_selected_product')");
-       		$stock = ($stock - $claimed_stock);
-            return $stock;
-		}
-					
+	
+	if ( ! $selected_variation )
+		return false;
+	
+	if ( wpsc_product_has_stock( $selected_variation ) ) {
+		$stock = get_product_meta( $selected_variation, 'stock', true );
+		if ( $stock === '' )
+			return true;
+		
+		return (int) $stock;
 	}
-	return '';
+		
+	return 0;
 }
 
 /**
@@ -851,31 +849,22 @@ function wpsc_product_has_stock( $id = null ) {
 		$id = get_the_ID();
 
 	$stock = get_post_meta( $id, '_wpsc_stock', true );
-
-	$stock = apply_filters( 'wpsc_product_stock', $stock, $id );
+	if ( $stock === '' )
+		return true;
 	
 	$variations = get_children( array( "post_type" => "wpsc-product", "post_parent" => $id ) );
-	
-	if ( is_numeric( $stock ) ) {
-		if ( $stock > 0 && empty($variations)) {
-			$claimed_stock = $wpdb->get_var("SELECT SUM(`stock_claimed`) FROM `".WPSC_TABLE_CLAIMED_STOCK."` WHERE `product_id` IN($id)");
-			if($stock - $claimed_stock > 0)
+	$filter_name = empty( $variations ) ? 'wpsc_product_variation_stock' : 'wpsc_product_stock';
+	$stock = apply_filters( $filter_name, (int) $stock, $id );
+
+	if ( ! empty( $variations ) ) {
+		foreach ( $variations as $variation ) {
+			if ( wpsc_product_has_stock( $variation->ID ) )
 				return true;
 		}
-
-
-		
-		if ( count( $variations ) ) {
-			foreach ( $variations as $variation ) {
-				$stock = get_post_meta( $variation->ID, '_wpsc_stock', true );
-				$claimed_stock = $wpdb->get_var("SELECT SUM(`stock_claimed`) FROM `".WPSC_TABLE_CLAIMED_STOCK."` WHERE `product_id` IN($variation->ID)");
-				if ( is_numeric( $stock ) && ($stock - $claimed_stock) > 0 ) {
-					return true;
-				}
-			}
-		}
-	} else {
-		return true;
+	} elseif ( $stock > 0 ) {
+		$claimed_stock = $wpdb->get_var("SELECT SUM(`stock_claimed`) FROM `".WPSC_TABLE_CLAIMED_STOCK."` WHERE `product_id` IN($id)");
+		if( $stock - $claimed_stock > 0 )
+			return true;
 	}
 }
 
