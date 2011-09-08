@@ -136,7 +136,7 @@ function wpsc_change_canonical_url( $url = '' ) {
 	global $wpdb, $wp_query, $wpsc_page_titles;
 
 	if ( $wp_query->is_single == true && 'wpsc-product' == $wp_query->query_vars['post_type']) {
-		$url = get_permalink( $wp_query->get_queried_object()->ID );	
+		$url = get_permalink( $wp_query->get_queried_object()->ID );
 	}
 	return apply_filters( 'wpsc_change_canonical_url', $url );
 }
@@ -447,7 +447,7 @@ function nzshpcrt_display_preview_image() {
 					}
 
 					$image_quality = wpsc_image_quality();
-					
+
 					ImageAlphaBlending( $dst_img, false );
 					switch ( $imagetype[2] ) {
 						case IMAGETYPE_JPEG:
@@ -593,14 +593,22 @@ function wpsc_readfile_chunked( $filename, $retbytes = true ) {
  */
 function wpsc_clear_stock_claims() {
 	global $wpdb;
-	//time
-	$old_claimed_stock_timestamp = mktime( date( 'H' ), date( 'i' ), date( 's' ), date( 'm' ), date( 'd' ) - 7, date( 'Y' ) );
-	$old_claimed_stock_datetime = date( "Y-m-d H:i:s", $old_claimed_stock_timestamp );
-	/// Delete the old claims on stock (only those that weren't sold)
-	$wpdb->query( "DELETE FROM `" . WPSC_TABLE_CLAIMED_STOCK . "` WHERE `last_activity` < '{$old_claimed_stock_datetime}' AND `cart_submitted` = '0'" );
-}
 
-add_action( 'wpsc_daily_cron_tasks', 'wpsc_clear_stock_claims' );
+	$time = (float) get_option( 'wpsc_stock_keeping_time', 1 );
+	$interval = get_option( 'wpsc_stock_keeping_interval', 'day' );
+
+	// we need to convert into seconds because we're allowing decimal intervals like 1.5 days
+	$convert = array(
+		'hour' => 3600,
+		'day'  => 86400,
+		'week' => 604800,
+	);
+
+	$seconds = floor( $time * $convert[$interval] );
+
+	$sql = $wpdb->prepare( "DELETE FROM " . WPSC_TABLE_CLAIMED_STOCK . " WHERE last_activity < NOW() - INTERVAL %d SECOND", $seconds );
+	$wpdb->query( $sql );
+}
 
 /**
  * Retrieve the list of tags for a product.
