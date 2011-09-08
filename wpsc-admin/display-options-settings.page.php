@@ -101,7 +101,7 @@ function wpsc_display_settings_page() { ?>
 }
 
 /*
- * Create settings page tabs 
+ * Create settings page tabs
  */
 
 function wpsc_settings_tabs() {
@@ -182,7 +182,7 @@ function country_list( $selected_country = null ) {
 }
 
 /*
- * Get Shipping Form for wp-admin 
+ * Get Shipping Form for wp-admin
  */
 function wpsc_get_shipping_form( $shippingname ) {
 	global $wpsc_shipping_modules;
@@ -199,7 +199,7 @@ function wpsc_get_shipping_form( $shippingname ) {
 }
 
 /***
- * Get Payment Form for wp-admin 
+ * Get Payment Form for wp-admin
  */
 function wpsc_get_payment_form( $paymentname ,$selected_gateway_data='') {
 	global $nzshpcrt_gateways;
@@ -212,12 +212,12 @@ function wpsc_get_payment_form( $paymentname ,$selected_gateway_data='') {
 		if ( $gateway["internalname"] != $paymentname ) {
 			continue;
 		} else {
-			$selected_gateway_data	= $gateway;		
+			$selected_gateway_data	= $gateway;
 			$form = $gateway;
 		}
 	}
 
-	if ( $form ) { 
+	if ( $form ) {
 		$output ='';
 		$output .="<tr>
 					  <td style='border-top: none;'>
@@ -256,7 +256,7 @@ function wpsc_get_payment_form( $paymentname ,$selected_gateway_data='') {
 					</tr>";
 		$payment_forms = $form["form"]();
 		$payment_module_name = $form["name"];
-		
+
 		$output = array( 'name' => $payment_module_name, 'form_fields' => $output.$payment_forms, 'has_submit_button' => 1 );
 	} else {
 		$output = array( 'name' => '&nbsp;', 'form_fields' => __( 'To configure a payment module select one on the left.', 'wpsc' ), 'has_submit_button' => 0 );
@@ -291,12 +291,6 @@ function wpsc_settings_page_update_notification() {
 			printf( _n( '%s Checkout field added.', '%s Checkout fields added.', $_GET['added'] ), absint( $_GET['added'] ) );
 			unset( $_GET['added'] );
 			$message = true;
-		}
-		if ( isset( $_GET['regenerate'] ) ) {
-			_e('Thumbnails regenerated.', 'wpsc');
-			unset( $_GET['regenerate'] );
-			$message = true;
-			wpsc_regenerate_thumbnails();
 		}
 
 		if ( !isset( $message ) )
