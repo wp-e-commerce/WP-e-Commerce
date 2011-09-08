@@ -135,8 +135,8 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
 }
 
 /**
-  Function and action for duplicating products,
-  Refactored for 3.8
+ * Function and action for duplicating products,
+ * Refactored for 3.8
  * Purposely not duplicating stick post status (logically, products are most often duplicated because they share many attributes, where products are generally 'featured' uniquely.)
  */
 function wpsc_duplicate_product() {
@@ -160,8 +160,7 @@ function wpsc_duplicate_product() {
 	}
 }
 
-function wpsc_duplicate_product_process( $post ) {
-
+function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
 	$new_post_date = $post->post_date;
 	$new_post_date_gmt = get_gmt_from_date( $new_post_date );
 
@@ -178,7 +177,7 @@ function wpsc_duplicate_product_process( $post ) {
 		'post_status' 			=> $post->post_status,
 		'post_type' 			=> $new_post_type,
 		'ping_status' 			=> $ping_status,
-		'post_parent' 			=> $post->post_parent,
+		'post_parent' 			=> $new_parent_id ? $new_parent_id : $post->post_parent,
 		'menu_order' 			=> $post->menu_order,
 		'to_ping' 				=>  $post->to_ping,
 		'pinged' 				=> $post->pinged,
@@ -188,6 +187,7 @@ function wpsc_duplicate_product_process( $post ) {
 		'post_content_filtered' => $post_content_filtered,
 		'import_id' 			=> 0
 		);
+
 	// Insert the new template in the post table
 	$new_post_id = wp_insert_post($defaults);
 
@@ -224,15 +224,20 @@ function wpsc_duplicate_product_meta( $id, $new_id ) {
 	$post_meta_infos = $wpdb->get_results( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id=$id" );
 
 	if ( count( $post_meta_infos ) != 0 ) {
-		$sql_query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) ";
-
+		$sql_query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES ";
+		$values = array();
 		foreach ( $post_meta_infos as $meta_info ) {
 			$meta_key = $meta_info->meta_key;
 			$meta_value = addslashes( $meta_info->meta_value );
 
-			$sql_query_sel[] = "SELECT $new_id, '$meta_key', '$meta_value'";
+			$sql_query_sel[] = "( $new_id, '$meta_key', '$meta_value' )";
+			$values[] = $new_id;
+			$values[] = $meta_key;
+			$values[] = $meta_value;
+			$values += array( $new_id, $meta_key, $meta_value );
 		}
-		$sql_query.= implode( " UNION ALL ", $sql_query_sel );
+		$sql_query.= implode( ",", $sql_query_sel );
+		$sql_query = $wpdb->prepare( $sql_query, $values );
 		$wpdb->query( $sql_query );
 	}
 }
@@ -244,39 +249,15 @@ function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
 	global $wpdb;
 
 	//Get children products and duplicate them
-	$child_posts = $wpdb->get_results( "SELECT * FROM $wpdb->posts WHERE post_parent = $old_parent_id" );
+	$child_posts = get_posts( array(
+		'post_parent' => $old_parent_id,
+		'post_type' => 'any',
+		'post_status' => 'any',
+		'numberposts' => -1,
+	) );
 
 	foreach ( $child_posts as $child_post ) {
-
-		$new_post_date = $child_post->post_date;
-		$new_post_date_gmt = get_gmt_from_date( $new_post_date );
-
-		$new_post_type = $child_post->post_type;
-		$post_content = str_replace( "'", "''", $child_post->post_content );
-		$post_content_filtered = str_replace( "'", "''", $child_post->post_content_filtered );
-		$post_excerpt = str_replace( "'", "''", $child_post->post_excerpt );
-		$post_title = str_replace( "'", "''", $child_post->post_title );
-		$post_name = str_replace( "'", "''", $child_post->post_name );
-		$comment_status = str_replace( "'", "''", $child_post->comment_status );
-		$ping_status = str_replace( "'", "''", $child_post->ping_status );
-
-                //Definitely doing this wrong.
-		$wpdb->query(
-				"INSERT INTO $wpdb->posts
-            (post_author, post_date, post_date_gmt, post_content, post_content_filtered, post_title, post_excerpt,  post_status, post_type, comment_status, ping_status, post_password, to_ping, pinged, post_modified, post_modified_gmt, post_parent, menu_order, post_mime_type)
-            VALUES
-            ('$child_post->post_author', '$new_post_date', '$new_post_date_gmt', '$post_content', '$post_content_filtered', '$post_title', '$post_excerpt', '$child_post->post_status', '$new_post_type', '$comment_status', '$ping_status', '$child_post->post_password', '$child_post->to_ping', '$child_post->pinged', '$new_post_date', '$new_post_date_gmt', '$new_parent_id', '$child_post->menu_order', '$child_post->post_mime_type')" );
-
-		$old_post_id = $child_post->ID;
-		$new_post_id = $wpdb->insert_id;
-		$child_meta = $wpdb->get_results( "SELECT post_id, meta_key, meta_value FROM $wpdb->postmeta WHERE post_id = $old_post_id" );
-
-		foreach ( $child_meta as $child_meta ) {
-			$wpdb->query(
-					"INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value)
-                  VALUES('$new_post_id', '$child_meta->meta_key', '$child_meta->meta_value')"
-			);
-		}
+		wpsc_duplicate_product_process( $child_post, $new_parent_id );
 	}
 }
 
