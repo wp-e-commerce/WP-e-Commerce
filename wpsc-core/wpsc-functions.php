@@ -450,6 +450,32 @@ function wpsc_filter_query_string( $q ) {
 }
 
 /**
+ * Switch $wp_query and $wpsc_query when outputting the navigation menu, but only if we're on a product
+ * category page.
+ *
+ * We need to do this because the function _wp_menu_item_classes_by_context(), which generates classes
+ * for menu items, depends on $wp_query. As a result, without this fix, when viewing a product category
+ * page, the corresponding product category menu item will not be highlighted.
+ *
+ * Because there are no action hooks in wp_nav_menu(), we have to use two filters that are applied at
+ * the beginning and the end of the function.
+ *
+ * @param mixed $stuff 
+ * @return mixed
+ */
+function wpsc_switch_the_query( $stuff ) {
+	global $wp_query, $wpsc_query;
+	$qv = $wpsc_query->query_vars;
+	if ( ! empty( $qv['wpsc_product_category'] ) && ! empty( $qv['taxonomy'] ) && ! empty( $qv['term'] ) && ! is_single() )
+		list( $wp_query, $wpsc_query ) = array( $wpsc_query, $wp_query );
+	return $stuff;
+}
+
+// switch $wp_query and $wpsc_query at the beginning and the end of wp_nav_menu()
+add_filter( 'wp_nav_menu_args', 'wpsc_switch_the_query' );
+add_filter( 'wp_nav_menu', 'wpsc_switch_the_query' );
+
+/**
  * wpsc_start_the_query
  */
 function wpsc_start_the_query() {
@@ -535,6 +561,7 @@ function wpsc_start_the_query() {
 			add_filter( 'pre_get_posts', 'wpsc_generate_product_query', 11 );
 
 			$wpsc_query = new WP_Query( $wpsc_query_vars );
+
 			//for 3.1 :| 
 			if(empty($wpsc_query->posts) && isset($wpsc_query->tax_query) && isset($wp_query->query_vars['wpsc_product_category'])){
 				$wpsc_query_vars = array();
