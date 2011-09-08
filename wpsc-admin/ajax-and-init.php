@@ -1771,4 +1771,21 @@ function wpsc_cron() {
 }
 
 add_action( 'init', 'wpsc_cron' );
+function wpsc_delete_variations( $postid ) {
+	$post = get_post( $postid );
+	if ( $post->post_type != 'wpsc-product' || $post->post_parent != 0 )
+		return;
+	$variations = get_posts( array(
+		'post_type' => 'wpsc-product',
+		'post_parent' => $postid,
+		'post_status' => 'any',
+		'numberposts' => -1,
+	) );
+
+	if ( ! empty( $variations ) )
+		foreach ( $variations as $variation ) {
+			wp_delete_post( $variation->ID, true );
+		}
+}
+add_action( 'delete_post', 'wpsc_delete_variations' );
 ?>
