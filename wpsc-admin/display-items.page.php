@@ -72,12 +72,12 @@ function wpsc_additional_column_name_variations( $columns ){
 
 function wpsc_variation_form_hidden_columns( $return ) {
 	global $post;
-	
-	if ( isset( $post ) && $post->post_parent == 0 && ! is_numeric( get_post_meta( $post->ID, '_wpsc_stock', true ) ) )		
+
+	if ( isset( $post ) && $post->post_parent == 0 && ! is_numeric( get_post_meta( $post->ID, '_wpsc_stock', true ) ) )
 		$return = array(
 			'stock',
 		);
-	
+
 	return $return;
 }
 
@@ -89,7 +89,7 @@ function wpsc_variation_form_hidden_columns( $return ) {
  * @return void
  * @todo Need to check titles / alt tags ( I don't think thumbnails have any in this code )
  * @desc Switch function to generate columns the right way...no more UI hacking!
- * 
+ *
  */
 function wpsc_additional_column_data( $column ) {
     global $post;
@@ -145,7 +145,7 @@ function wpsc_additional_column_data( $column ) {
                     $weight = $product_data['transformed']['weight'];
                     if( $weight == '' )
                         $weight = '0';
-			
+
 			$unit = $product_data['meta']['_wpsc_product_metadata']['weight_unit'];
 
 			switch( $unit ) {
@@ -271,7 +271,7 @@ function wpsc_column_sql_orderby( $orderby, $wp_query ) {
                     break;
            endswitch;
         endif;
-        
+
     return $orderby;
 }
 function wpsc_cats_restrict_manage_posts() {
@@ -280,7 +280,7 @@ function wpsc_cats_restrict_manage_posts() {
     if ( $typenow == 'wpsc-product' ) {
 
         $filters = array( 'wpsc_product_category' );
-        
+
         foreach ( $filters as $tax_slug ) {
             // retrieve the taxonomy object
             $tax_obj = get_taxonomy( $tax_slug );
@@ -297,7 +297,7 @@ function wpsc_cats_restrict_manage_posts() {
 
 function wpsc_cats_restrict_manage_posts_print_terms($taxonomy, $parent = 0, $level = 0){
 	$prefix = str_repeat( '&nbsp;&nbsp;&nbsp;' , $level );
-	$terms = get_terms( $taxonomy, array( 'parent' => $parent ) );
+	$terms = get_terms( $taxonomy, array( 'parent' => $parent, 'hide_empty' => false ) );
 	if( !($terms instanceof WP_Error) && !empty($terms) )
 		foreach ( $terms as $term ){
 			echo '<option value="'. $term->slug . '"', ( isset($_GET[$term->taxonomy]) && $_GET[$term->taxonomy] == $term->slug) ? ' selected="selected"' : '','>' . $prefix . $term->name .' (' . $term->count .')</option>';
@@ -312,12 +312,12 @@ function wpsc_cats_restrict_manage_posts_print_terms($taxonomy, $parent = 0, $le
  */
 function wpsc_no_minors_allowed( $vars ) {
     global $current_screen;
-    
+
     if( $current_screen->post_type != 'wpsc-product' )
         return $vars;
 
     $vars['post_parent'] = 0;
-    
+
     return $vars;
 }
 
@@ -336,7 +336,7 @@ add_filter( 'posts_orderby', 'wpsc_column_sql_orderby', 10, 2 );
  *
  * @access public
  * @todo Should be refactored to e
- * @return void 
+ * @return void
  */
 function wpsc_update_featured_products() {
 	$is_ajax = (int)(bool)$_POST['ajax'];
@@ -377,7 +377,7 @@ function my_action_row( $actions, $post ) {
 
     $url = admin_url( 'edit.php' );
     $url = add_query_arg( array( 'wpsc_admin_action' => 'duplicate_product', 'product' => $post->ID ), $url );
-    
+
     $actions['duplicate'] = '<a href="'.esc_url( $url ).'">'._x( 'Duplicate', 'row-actions', 'wpsc' ).'</a>';
 
     return $actions;
