@@ -251,7 +251,7 @@ function _wpsc_purchlogs_need_update() {
                      <tr>
                         <td colspan='5'></td>
                         <th><?php _e('Taxes','wpsc'); ?> </th>
-                        <td><?php echo wpec_display_purchlog_taxes(); ?></td>
+                        <td><?php echo wpsc_display_purchlog_taxes(); ?></td>
                      </tr>
                   <?php } ?>
 
