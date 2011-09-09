@@ -429,20 +429,19 @@ function wpsc_display_purchlog_shipping( $numeric = false ) {
  * @description: returns taxes as set in purchase log
  * @param: numeric - if set will return unformatted price
  * */
-function wpec_display_purchlog_taxes( $numeric=false ) {
-   global $purchlogitem;
-   return ($numeric) ? $purchlogitem->extrainfo->wpec_taxes_total : wpsc_currency_display( $purchlogitem->extrainfo->wpec_taxes_total,array( 'display_as_html' => false ) );
+function wpec_display_purchlog_taxes( $numeric = false ) {
+	return wpsc_display_purchlog_taxes( $numeric );
 }
 
-// wpec_display_purchlog_taxes
+function wpsc_display_purchlog_taxes( $numeric = false ) {
+	global $purchlogitem;
+	return ($numeric) ? $purchlogitem->extrainfo->wpec_taxes_total : wpsc_currency_display( $purchlogitem->extrainfo->wpec_taxes_total,array( 'display_as_html' => false ) );
+}
 
 function wpsc_display_purchlog_totalprice() {
-   global $purchlogitem;
-
-   $purchlogitem->totalAmount -= wpsc_display_purchlog_discount( true );
-   $purchlogitem->totalAmount += wpsc_display_purchlog_shipping( true );
-   $purchlogitem->totalAmount += wpec_display_purchlog_taxes( true );
-   return wpsc_currency_display( $purchlogitem->totalAmount,array( 'display_as_html' => false ) );
+	global $purchlogitem;
+	$total = $purchlogitem->totalAmount - wpsc_display_purchlog_discount( true ) + wpsc_display_purchlog_shipping( true ) + wpsc_display_purchlog_taxes( true );
+	return wpsc_currency_display( $total, array( 'display_as_html' => false ) );
 }
 
 function wpsc_display_purchlog_buyers_name() {
