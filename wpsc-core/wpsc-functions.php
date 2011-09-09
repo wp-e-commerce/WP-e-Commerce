@@ -436,16 +436,26 @@ add_action( 'shutdown', 'wpsc_serialize_shopping_cart' );
 add_filter( 'query_string', 'wpsc_filter_query_string' );
 
 /**
- * Filter query string to make sure no 404 error is thrown for products-page's sub pages
+ * Fixes for some inconsistencies about $wp_query when viewing WPEC pages
  *
  * @param string $q Query String
  */
 function wpsc_filter_query_string( $q ) {
 	global $wpsc_page_titles;
-	parse_str( $q, $args );
+	parse_str( $q, $args );	
+	
+	// Make sure no 404 error is thrown for products-page's sub pages
 	if ( ! empty( $args['wpsc_product_category'] ) && in_array( $args['wpsc_product_category'], $wpsc_page_titles ) ) {
 		$q = "pagename={$wpsc_page_titles['products']}/{$args['wpsc_product_category']}";
 	}
+	
+	// When product page is set to display all products or a category, and pagination is enabled, $wp_query is messed up
+	// and is_home() is true. This fixes that.
+	if ( $args['post_type'] == 'wpsc-product' && ! empty( $args['paged'] ) && empty( $args['wpsc_product_category'] ) ) {
+		$default_category = get_option( 'wpsc_default_category' );
+		if ( $default_category == 'all' || $default_category != 'list' )
+			$q = "pagename={$wpsc_page_titles['products']}&page={$args['paged']}";
+	}	
 	return $q;
 }
 
