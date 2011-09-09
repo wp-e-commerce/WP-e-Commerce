@@ -342,13 +342,15 @@ function wpsc_register_post_types() {
 		'new_item_name' => __( 'New Product Category Name', 'wpsc' ),
 		'menu_name' => _x( 'Categories', 'taxonomy general name', 'wpsc' )
 	);
+
 	register_taxonomy( 'wpsc_product_category', 'wpsc-product', array(
 		'hierarchical' => true,
 		'rewrite' => array(
 			'slug' => $wpsc_page_titles['products'],
-			'with_front' => false
+			'with_front' => false,
+			'hierarchical' => (bool) get_option( 'product_category_hierarchical_url', 0 ),
 		),
-            'labels' => $labels
+		'labels' => $labels,
 	) );
 	$labels = array(
 		'name' => _x( 'Variations', 'taxonomy general name', 'wpsc' ),
@@ -416,6 +418,33 @@ function wpsc_remove_post_type_thumbnail_support() {
 	remove_post_type_support( 'post', 'thumbnail' );
 	remove_post_type_support( 'page', 'thumbnail' );
 }
+
+function wpsc_filter_request( $q ) {
+	if ( empty( $q['wpsc-product'] ) )
+		return $q;
+
+	$components = explode( '/', $q['wpsc-product'] );
+	$end_node = array_pop( $components );
+	$parent_node = array_pop( $components );
+
+	$posts = get_posts( array(
+		'post_type' => 'wpsc-product',
+		'name' => $end_node,
+	) );
+
+	if ( ! empty( $posts ) ) {
+		$q['wpsc-product'] = $q['name'] = $end_node;
+		$q['wpsc_product_category'] = $parent_node;
+	} else {
+		$q['wpsc_product_category'] = $end_node;
+		unset( $q['name'] );
+		unset( $q['wpsc-product'] );
+	}
+	return $q;
+}
+
+if ( get_option( 'product_category_hierarchical_url' ) )
+	add_filter( 'request', 'wpsc_filter_request' );
 
 /**
  * This serializes the shopping cart variable as a backup in case the
@@ -493,7 +522,6 @@ function wpsc_start_the_query() {
 	$is_404 = false;
 	if ( null == $wpsc_query ) {
 		if( ( $wp_query->is_404 && !empty($wp_query->query_vars['paged']) ) || (isset( $wp_query->query['pagename']) && strpos( $wp_query->query['pagename'] , $wpsc_page_titles['products'] ) !== false ) && !isset($wp_query->post)){
-			//what was this for?
 			global $post;
 			$is_404 = true;
 			if( !isset( $wp_query->query_vars['wpsc_product_category'] ) )
@@ -776,7 +804,6 @@ function wpsc_generate_product_query( $query ) {
 	$query->query_vars['taxonomy'] = null;
 	$query->query_vars['term'] = null;
 
-
 	// default product selection
 	if ( $query->query_vars['pagename'] != '' ) {
 		$query->query_vars['post_type'] = 'wpsc-product';
@@ -800,7 +827,6 @@ function wpsc_generate_product_query( $query ) {
 		}
 	}
 
-
 	if ( isset( $query->query_vars['products'] ) && ($query->query_vars['products'] != null) && ($query->query_vars['name'] != null) ) {
 		unset( $query->query_vars['taxonomy'] );
 		unset( $query->query_vars['term'] );
@@ -809,7 +835,6 @@ function wpsc_generate_product_query( $query ) {
 		$query->is_archive  = true;
 		$query->is_singular = false;
 		$query->is_single   = false;
-
 	}
 	if( isset($wp_query->query_vars['wpsc_product_category']) && !isset($wp_query->query_vars['wpsc-product'])){
 		$query->query_vars['wpsc_product_category'] = $wp_query->query_vars['wpsc_product_category'];
@@ -862,7 +887,6 @@ function wpsc_generate_product_query( $query ) {
 	}
 	if ( $query->is_tax == true )
 		new wpsc_products_by_category( $query );
-
 	return $query;
 }
 
@@ -1124,10 +1148,18 @@ function wpsc_product_link( $permalink, $post, $leavename ) {
 		}
 
 		$post_name = $post->post_name;
-	/*
-	if ( in_array( $post_name, $product_category_slugs ) )
-			$post_name = "product/{$post_name}";
-	*/
+
+		if ( get_option( 'product_category_hierarchical_url', 0 ) ) {
+			$selected_term = get_term_by( 'slug', $category_slug, 'wpsc_product_category' );
+			if ( is_object( $selected_term ) ) {
+				$term_chain = array( $selected_term->slug );
+				while ( $selected_term->parent ) {
+					$selected_term = get_term( $selected_term->parent, 'wpsc_product_category' );
+					array_unshift( $term_chain, $selected_term->slug );
+				}
+				$category_slug = implode( '/', $term_chain );
+			}
+		}
 
 		if(isset($category_slug) && empty($category_slug)) $category_slug = 'product';
 

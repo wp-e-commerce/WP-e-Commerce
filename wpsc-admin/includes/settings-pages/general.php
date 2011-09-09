@@ -95,6 +95,17 @@ function wpsc_options_general() {
 						<?php _e( "Set the amount of time items in a customer's cart are reserved. You can also specify decimal amounts such as '0.5 days' or '1.25 weeks'. Note that the minimum interval you can enter is 1 hour, i.e. you can't schedule it to run every 0.5 hour.") ?>
 					</td>
 				</tr>
+				<?php $hierarchical_category = get_option( 'product_category_hierarchical_url', 0 ); ?>
+				<tr>
+					<th scope="row">
+						<?php _e( 'Use Hierarchical Product Category URL:' ); ?>
+					</th>
+					<td>
+						<label><input type="radio" <?php checked( $hierarchical_category, 1 ); ?> name="wpsc_options[product_category_hierarchical_url]" value="1" /> <?php _e( 'Yes', 'wpsc' ); ?></label>&nbsp;&nbsp;
+						<label><input type="radio" <?php checked( $hierarchical_category, 0 ); ?>name="wpsc_options[product_category_hierarchical_url]" value="0" /> <?php _e( 'No', 'wpsc' ); ?></label><br />
+						<?php _e( 'When Hierarchical Product Category URL is enabled, parent product categories are also included in the product URL.<br />For example: example.com/products-page/parent-cat/sub-cat/product-name', 'wpsc' ); ?>
+					</td>	
+				</tr>
 			</table>
 
 			<h3 class="form_group"><?php _e( 'Currency Settings', 'wpsc' ); ?>:</h3>
