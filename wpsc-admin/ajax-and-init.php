@@ -889,7 +889,7 @@ function wpsc_submit_options( $selected='' ) {
 	if ( isset( $_SESSION['wpsc_settings_curr_page'] ) ) {
 		$sendback = add_query_arg( 'tab', $_SESSION['wpsc_settings_curr_page'], $sendback );
 	}
-
+	
 	$sendback = add_query_arg( 'page', 'wpsc-settings', $sendback );
 	$sendback = apply_filters( 'wpsc_settings_redirect_url', $sendback );
 	wp_redirect( $sendback );
@@ -897,6 +897,12 @@ function wpsc_submit_options( $selected='' ) {
 }
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'submit_options') )
 	add_action( 'admin_init', 'wpsc_submit_options' );
+
+add_action( 'update_option_product_category_hierarchical_url', 'wpsc_update_option_product_category_hierarchical_url' );
+
+function wpsc_update_option_product_category_hierarchical_url() {
+	flush_rewrite_rules( false );
+}
 
 function wpsc_change_currency() {
 	if ( is_numeric( $_POST['currencyid'] ) ) {
