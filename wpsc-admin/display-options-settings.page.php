@@ -12,8 +12,7 @@ if ( isset( $_GET['tab'] ) )
 function wpsc_display_settings_page() { ?>
 
 	<div id="wpsc_options" class="wrap">
-		<div id="icon_card"><br /></div>
-		<h2><?php _e( 'Store Settings', 'wpsc' ); ?></h2>
+		<div id="icon_card" class="icon32"></div>
 		<?php
 
 		wpsc_the_settings_tabs();
@@ -130,8 +129,7 @@ function wpsc_the_settings_tabs() {
 	$tabs = wpsc_settings_tabs();
 
 	if ( !empty( $tabs ) ) {
-		echo '<div id="wpsc_settings_nav_bar" style="width:100%;">';
-		echo "<ul id='sidemenu' >\n";
+		echo '<h2 class="nav-tab-wrapper">';
 
 		if ( isset( $redir_tab ) && array_key_exists( $redir_tab, $tabs ) ) {
 			$current = $redir_tab;
@@ -143,22 +141,19 @@ function wpsc_the_settings_tabs() {
 		}
 
 		foreach ( $tabs as $callback => $text ) {
-			$class = '';
+			$class = ' class="nav-tab"';
 
 			if ( $current == $callback )
-				$class = " class='current'";
+				$class = ' class="nav-tab nav-tab-active"';
 
 			$href = add_query_arg( array( 'tab' => $callback, 's' => false, 'paged' => false, 'post_mime_type' => false, 'm' => false ) );
 			$href = remove_query_arg( 'isocode', $href );
 			$href = wp_nonce_url( $href, "tab-$callback" );
 			$link = "<a href='" . esc_url( $href ) . "'$class>$text</a>";
 
-			echo "\t<li id='" . esc_attr( "tab-$callback" ) . "'>$link</li>\n";
+			echo $link;
 		}
-
-		echo "</ul>\n";
-		echo '</div>';
-		echo "<div style='clear:both;'></div>";
+		echo '</h2>';
 	}
 }
 
