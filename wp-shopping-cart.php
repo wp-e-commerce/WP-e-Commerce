@@ -3,7 +3,7 @@
   * Plugin Name: WP e-Commerce
   * Plugin URI: http://getshopped.org/
   * Description: A plugin that provides a WordPress Shopping Cart. See also: <a href="http://getshopped.org" target="_blank">GetShopped.org</a> | <a href="http://getshopped.org/forums/" target="_blank">Support Forum</a> | <a href="http://docs.getshopped.org/" target="_blank">Documentation</a>
-  * Version: 3.8.6
+  * Version: 3.8.7-beta
   * Author: Instinct Entertainment
   * Author URI: http://getshopped.org/
   **/
@@ -12,7 +12,7 @@
  * WP_eCommerce
  *
  * Main WPEC Plugin Class
- * 
+ *
  * @package wp-e-commerce
  */
 class WP_eCommerce {
@@ -54,7 +54,7 @@ class WP_eCommerce {
 		// Define the URL to the plugin folder
 		define( 'WPSC_FOLDER',    dirname( plugin_basename( __FILE__ ) ) );
 		define( 'WPSC_URL',       plugins_url( '', __FILE__ ) );
-		
+
 		//load text domain
 		if( !load_plugin_textdomain( 'wpsc', false, '../languages/' ) )
 			load_plugin_textdomain( 'wpsc', false, dirname( plugin_basename( __FILE__ ) ) . '/wpsc-languages/' );
@@ -99,7 +99,7 @@ class WP_eCommerce {
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-functions.php' );
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-installer.php' );
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-includes.php' );
-		
+
 		// Any additional file includes can hook in here
 		do_action( 'wpsc_includes' );
 	}
@@ -125,10 +125,10 @@ class WP_eCommerce {
 
 		// Load the purchase log statuses
 		wpsc_core_load_purchase_log_statuses();
-		
+
 		// Load unique names and checout form types
 		wpsc_core_load_checkout_data();
-		
+
 		// Load the gateways
 		wpsc_core_load_gateways();
 
@@ -156,9 +156,9 @@ class WP_eCommerce {
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-installer.php' );
 		$this->constants();
 		wpsc_install();
-		
+
 	}
-	
+
 	public function deactivate() {
 		foreach ( wp_get_schedules() as $cron => $schedule ) {
 			wp_clear_scheduled_hook( "wpsc_{$cron}_cron_task" );
