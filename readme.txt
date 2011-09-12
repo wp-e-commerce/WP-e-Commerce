@@ -64,7 +64,7 @@ Features:
 * Integrates with Google Base
 * Integrates with Campaign Monitor for advanced email marketing
 * Integrates with Intense Debate for shared comments
-* Mail Chimp integration coming soon 
+* Mail Chimp integration coming soon
 
 = Search Engine Optimization =
 * 100% Search Engine Friendly
@@ -156,6 +156,49 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 
 == Changelog ==
+= 3.8.7 =
+* New: 'insert_child_product_meta' filter to allow customising of meta data when a variation product (child product) is created.
+* New: 'wpsc_variation_groups' and 'wpsc_all_associated_variations' filters. Allows customising order of variation menu items etc.
+* New: Add hook "wpsc_product_form_fields_end" and rename "wpsc_product_form_fields" to "wpsc_product_form_fields_begin" to offer more flexibility when adding new fields to the product form.
+* New: Add hooks "wpsc_add_to_cart_button_form_begin" and "wpsc_add_to_cart_button_form_end" when outputting [add_to_cart] shortcode. wpsc_add_to_cart_button() is also refactored to get rid of ugly repetitive "$output .= ".
+* New: Additional hooks for adding extra FORM fields to the add to cart form.
+* New: Allow hierarchical product category URL.
+* New: Hooks 'wpsc_product_form_fields_begin' and 'wpsc_product_form_fields_end' for list and grid views.
+* New: Option to set claimed stock clearance interval (Store Settings -> General).
+* New: filterable g:shipping_weight to google product feed. Thanks to Rudy Hassall.
+* Change: Proper post updated messages - now says "Product updated" instead or "Post updated".
+* Change: Settings tabs are restyled to conform with WordPress UI. Props Pippin.
+* Fix: A product is displayed as "sold out" when its variations' stock control options are turned off.
+* Fix: Additional Checkout Form Fields Not Showing with Variation. Props jRayx.
+* Fix: Australia Post shipping quote caching by reducing the transient key length from 51 to 41 characters.
+* Fix: Breadcrumbs not showing for empty product categories.
+* Fix: Discounts / coupons not passing to Paypal Standard.
+* Fix: Error with merging image metadata in Media popup. Props Ben Huson.
+* Fix: Fancy notifications are sometimes output twice.
+* Fix: Fatal memory allocation error in Add Product page when WPEC downloadable folder is not created yet.
+* Fix: Incompatibility with WP 3.3-dev (dashboard.css is merged into wp-admin.css).
+* Fix: JavaScript globals not properly escaped, causing fatal JS errors due to internationalized strings that have single quotes in them.
+* Fix: PHP Notice when activating wpec, resulting in 'unexpected output' error message.
+* Fix: PHP Notice when editing product category.
+* Fix: PHP notice in wpsc-functions.php.
+* Fix: Product categories sometimes disappear in admin (but still show on front end).
+* Fix: Product variations not deleted when deleting a product from the trash.
+* Fix: Products with variations display 'from' even if all prices are the same. Change: Product that have variations will display "from" price regardless of whether the variations are in stock or not (to avoid inconsistency).
+* Fix: Removing additional description of a product doesn't have any effect. Props groques.
+* Fix: SQL error when updating from 3.7.
+* Fix: Saving thumbnail settings caused PHP timeout.
+* Fix: Single product image is not re-generated properly sometimes.
+* Fix: User submitted data is double-escaped, causing slashes to be stored in database table and sent to payment gateways.
+* Fix: Variations are not cloned properly when duplicating a product, causing error / hang in wp-admin.
+* Fix: WP Menus items don't apply current-menu-item (and ancestor) for product categories.
+* Fix: When on the edit products page, the filter by category menu does not show subcategories if the parent has no products. Props benjaminhuson.
+* Fix: for paypal express, coupons being included when there are none
+* Fix: is_home() is true when viewing default category on products page.
+* Fix: login redirect on checkout page if WordPress files are in a subfolder.
+* Fix: wpsc_display_purchlog_totalprice() returns wrong value. Props dlingren for initial patch.
+* Fix: wpsc_is_single_product() returns false even when viewing a single product. Props Ben Huson for initial patch.
+* Fix: wpsc_the_product_thumbnail() sometimes returns relative URL instead of absolute URL, which causes image failure in Google Product Feed.
+
 = 3.8.6 =
 * New: Filter for 'wpsc_display_product_multicurrency'.
 * New: Additional filters for compatibility with WPML.
