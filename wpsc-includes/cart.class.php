@@ -59,14 +59,14 @@ function wpsc_coupon_amount($forDisplay=true) {
 */
 function wpsc_cart_total( $forDisplay = true ) {
    global $wpsc_cart;
-   
+
    $total = $wpsc_cart->calculate_total_price();
-   
+
     if( $forDisplay )
         return wpsc_currency_display( $total );
     else
         return $total;
-   
+
 }
 
 /**
@@ -107,11 +107,11 @@ function wpsc_cart_total_widget( $shipping = true, $tax = true, $coupons = true 
 * @return string the total price of the cart, with a currency sign
 */
 function nzshpcrt_overall_total_price() {
-    
+
    global $wpsc_cart;
-   
+
    return  $wpsc_cart->calculate_total_price();
-  
+
 }
 
 /**
@@ -169,11 +169,11 @@ function wpsc_cart_show_plus_postage() {
 function wpsc_uses_shipping() {
 //This currently requires
    global $wpsc_cart;
-   $shippingoptions = get_option('custom_shipping_options');
+   $shippingoptions = get_option( 'custom_shipping_options' );
    if(get_option('do_not_use_shipping')){
       return false;
    }
-   if( (!((get_option('shipping_discount')== 1) && (get_option('shipping_discount_value') <= $wpsc_cart->calculate_subtotal()))) || ( count($shippingoptions) >= 1 && $shippingoptions[0] != '') ) {
+   if( ( ! ( ( get_option( 'shipping_discount' )== 1 ) && (get_option('shipping_discount_value') <= $wpsc_cart->calculate_subtotal()))) || ( count($shippingoptions) >= 1 && $shippingoptions[0] != '') ) {
       $status = (bool) $wpsc_cart->uses_shipping();
    } else {
      $status = false;
@@ -336,7 +336,7 @@ function wpsc_cart_item_image( $width = 31, $height = 31 ) {
    global $wpsc_cart;
 
    $cart_image = wpsc_the_product_thumbnail( $width, $height, $wpsc_cart->cart_item->product_id, "shopping_cart");
-    
+
     if( is_ssl() )
 		$cart_image = str_replace( 'http://', 'https://', $cart_image );
 
@@ -490,7 +490,7 @@ function wpsc_have_morethanone_shipping_quote(){
 		$quotes = $wpsc_shipping_modules['flatrate']->getQuote();
 		if ( empty( $quotes ) )
 			return false;
-		
+
         foreach ((array)$quotes as $name => $quote) {
             if (!$first_quote_name) $first_quote_name = $name;
             if ($last_price !== false && $quote != $last_price) return true;
@@ -612,11 +612,11 @@ class wpsc_cart {
    * @access public
    */
    function update_location() {
-	
+
       if(!isset($_SESSION['wpsc_selected_country']) && !isset($_SESSION['wpsc_delivery_country'])) {
       	$_SESSION['wpsc_delivery_country'] = get_option('base_country');
 	    $_SESSION['wpsc_selected_country'] = get_option('base_country');
-        
+
       } else {
          if(!isset($_SESSION['wpsc_selected_country'])) {
             $_SESSION['wpsc_selected_country'] = $_SESSION['wpsc_delivery_country'];
@@ -629,7 +629,7 @@ class wpsc_cart {
          $_SESSION['wpsc_selected_region'] = get_option('base_region');
          $_SESSION['wpsc_delivery_region'] = get_option('base_region');
       }
-	  
+
       $this->delivery_country =& $_SESSION['wpsc_delivery_country'];
       $this->selected_country =& $_SESSION['wpsc_selected_country'];
       $this->delivery_region =& $_SESSION['wpsc_delivery_region'];
@@ -1059,7 +1059,7 @@ class wpsc_cart {
     * @return float returns the price as a floating point value
    */
   function calculate_total_price() {
-         
+
       // Calculate individual component that comprise the cart total
       $subtotal = $this->calculate_subtotal();
       $shipping = $this->calculate_total_shipping();
@@ -1080,7 +1080,7 @@ class wpsc_cart {
       $this->total_price = $total;
 
       return $total;
-      
+
   }
 
 
@@ -1225,6 +1225,7 @@ class wpsc_cart {
    */
   function calculate_base_shipping() {
     global $wpdb, $wpsc_shipping_modules;
+
     if($this->uses_shipping()) {
          if ( isset( $this->shipping_quotes ) && empty( $this->shipping_quotes ) && isset( $wpsc_shipping_modules[$this->selected_shipping_method] ) && is_callable( array( $wpsc_shipping_modules[$this->selected_shipping_method], "getQuote" ) ) ) {
             $this->shipping_quotes = $wpsc_shipping_modules[$this->selected_shipping_method]->getQuote();
@@ -1263,27 +1264,30 @@ class wpsc_cart {
   }
 
 
-  /**
-    * uses shipping method, to determine if shipping is used.
-    * @access public
-    *  (!(get_option('shipping_discount')== 1) && (get_option('shipping_discount_value') <= $wpsc_cart->calculate_subtotal()))
-    * @return float returns the price as a floating point value
-   */
-  function uses_shipping() {
-    global $wpdb;
-    $uses_shipping = 0;
-    if(($this->uses_shipping == null)) {
-         foreach($this->cart_items as $key => $cart_item) {
-            $uses_shipping += (int)$cart_item->uses_shipping;
-         }
-      } else {
-        $uses_shipping = $this->uses_shipping;
-      }
+	/**
+	* uses shipping method, to determine if shipping is used.
+	* @access public
+	*  (!(get_option('shipping_discount')== 1) && (get_option('shipping_discount_value') <= $wpsc_cart->calculate_subtotal()))
+	* @return float returns the price as a floating point value
+	*/
+	function uses_shipping() {
+		global $wpdb;
+		if(get_option('do_not_use_shipping')){
+			return false;
+		}
+		$uses_shipping = 0;
+		if( ( $this->uses_shipping == null ) ) {
+			foreach($this->cart_items as $key => $cart_item) {
+				$uses_shipping += (int)$cart_item->uses_shipping;
+			}
+		} else {
+			$uses_shipping = $this->uses_shipping;
+		}
 
-      $this->uses_shipping = $uses_shipping;
+		$this->uses_shipping = $uses_shipping;
 
-      return $uses_shipping;
-  }
+		return $uses_shipping;
+	}
 
    /**
     * process_as_currency method
@@ -1403,7 +1407,7 @@ class wpsc_cart {
 	      $num++;
 	    }
 	}
-    
+
     $this->shipping_quote_count = count($this->shipping_quotes);
   }
 
@@ -1617,11 +1621,11 @@ function refresh_item() {
 			}
 		}
 	}
-	
+
 	$price = apply_filters('wpsc_price', $price, $product_id);
 	// create the string containing the product name.
 	$product_name = apply_filters( 'wpsc_cart_product_title', $product->post_title, $product_id );
-	
+
 	$this->product_name = $product_name;
 	$this->priceandstock_id = $priceandstock_id;
 	$this->meta = $product_meta;
@@ -1720,13 +1724,13 @@ function refresh_item() {
       $shipping = '';
       if($method === null)
         $method = $this->cart->selected_shipping_method;
-      
+
       if(method_exists( $wpsc_shipping_modules[$method], "get_item_shipping"  ))
          $shipping = $wpsc_shipping_modules[$method]->get_item_shipping($this);
-      
+
       if($method == $this->cart->selected_shipping_method && !empty( $shipping ) )
          $this->shipping = $shipping;
-      
+
       return $shipping;
    }
 
