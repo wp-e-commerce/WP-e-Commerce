@@ -7,7 +7,7 @@ $nzshpcrt_gateways[$num] = array(
 	'has_recurring_billing'  => true,
 	'wp_admin_cannot_cancel' => true,
 	'display_name'			 => 'PayPal Pro',
-	'image' => WPSC_URL . '/images/cc.gif',	
+	'image' => WPSC_URL . '/images/cc.gif',
 	'requirements'           => array(
 		'php_version'        => 4.3,    // so that you can restrict merchant modules to PHP 5, if you use PHP 5 features
 		'extra_modules'      => array() // for modules that may not be present, like curl
@@ -38,25 +38,25 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 
 	var $name              = 'PayPal Pro 2.0';
 	var $paypal_ipn_values = array( );
-	
+
 	function get_local_currency_code() {
 		if ( empty( $this->local_currency_code ) ) {
 			global $wpdb;
 			$this->local_currency_code = $wpdb->get_var("SELECT `code` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id`='".get_option('currency_type')."' LIMIT 1");
 		}
-		
+
 		return $this->local_currency_code;
 	}
-	
+
 	function get_paypal_currency_code() {
 		if ( empty( $this->paypal_currency_code ) ) {
 			global $wpsc_gateways;
 			$this->paypal_currency_code = $this->get_local_currency_code();
-			
+
 			if ( ! in_array( $this->paypal_currency_code, $wpsc_gateways['wpsc_merchant_paypal_pro']['supported_currencies']['currency_list'] ) )
 				$this->paypal_currency_code = get_option( 'paypal_curcode', 'USD' );
 		}
-		
+
 		return $this->paypal_currency_code;
 	}
 
@@ -64,7 +64,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 	 * construct value array method, converts the data gathered by the base class code to something acceptable to the gateway
 	 * @access public
 	 */
-	function construct_value_array() {		
+	function construct_value_array() {
 		//$collected_gateway_data
 		$paypal_vars = array( );
 		// Store settings to be sent to paypal
@@ -133,29 +133,29 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 			$data['L_AMT' . $i] = $this->convert( $cart_row['price'] );
 			$data['L_NUMBER' . $i] = $i;
 			$data['L_QTY' . $i] = $cart_row['quantity'];
-			
+
 			$shipping_total += $this->convert( $cart_row['shipping'] );
 			$item_total += $this->convert( $cart_row['price'] ) * $cart_row['quantity'];
 
 			$i++;
 		}
-		
+
 		if ( $this->cart_data['has_discounts'] ) {
 			$discount_value = $this->convert( $this->cart_data['cart_discount_value'] );
-			
+
 			if ( $discount_value >= $item_total ) {
 				$discount_value = $item_total - 0.01;
 				$shipping_total -= 0.01;
 			}
-			
+
 			$data["L_NAME{$i}"] = 'Coupon / Discount';
-			$data["L_AMT{$i}"] = $discount_value;
+			$data["L_AMT{$i}"] = - $discount_value;
 			$data["L_NUMBER{$i}"] = $i;
 			$data["L_QTY{$i}"] = 1;
 			$item_total -= $discount_value;
 		}
-		
-		// Cart totals	
+
+		// Cart totals
 		$data['ITEMAMT'] = $this->format_price( $item_total );
 		$data['SHIPPINGAMT'] = $this->format_price( $shipping_total );
 		$data['TAXAMT'] = $this->convert( $tax_total );
@@ -174,7 +174,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 			$paypal_url = "https://api-3t.paypal.com/nvp"; // Live
 
 		$options = array(
-			'timeout' => 5,
+			'timeout' => 15,
 			'body' => $this->collected_gateway_data,
 			'user-agent' => $this->cart_data['software_name'] . " " . get_bloginfo( 'url' ),
 			'sslverify' => false,
@@ -279,7 +279,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 				$status = 6;
 				break;
 		}
-		
+
 		// Compare the received store owner email address to the set one
 		if ( strtolower( $this->paypal_ipn_values['receiver_email'] ) == strtolower( get_option( 'paypal_multiple_business' ) ) ) {
 			switch ( $this->paypal_ipn_values['txn_type'] ) {
@@ -352,7 +352,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 
 		return $price;
 	}
-	
+
 	function convert( $amt ){
 		if ( empty( $this->rate ) ) {
 			$this->rate = 1;
@@ -375,7 +375,7 @@ function submit_paypal_pro() {
 
 	if ( isset( $_POST['PayPalPro']['password'] ) )
 		update_option( 'paypal_pro_password', $_POST['PayPalPro']['password'] );
-		
+
 	if(isset($_POST['paypal_curcode']))
 		update_option('paypal_curcode', $_POST['paypal_curcode']);
 
@@ -434,7 +434,7 @@ function form_paypal_pro() {
   	Only enable test mode if you have a sandbox account with PayPal you can find out more about this <a href="https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/howto_testing_sandbox"> here </a></span>
   	</td>
   </tr>';
-	
+
 	$store_currency_code = $wpdb->get_var("SELECT `code` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id` IN ('".absint(get_option('currency_type'))."')");
 	$current_currency = get_option('paypal_curcode');
 
@@ -451,7 +451,7 @@ function form_paypal_pro() {
 		$output .= "<tr>\n <td>" . __('Convert to', 'wpsc' ) . " </td>\n ";
 		$output .= "<td>\n <select name='paypal_curcode'>\n";
 
-		if (!isset($wpsc_gateways['wpsc_merchant_paypal_pro']['supported_currencies']['currency_list'])) 
+		if (!isset($wpsc_gateways['wpsc_merchant_paypal_pro']['supported_currencies']['currency_list']))
 			$wpsc_gateways['wpsc_merchant_paypal_pro']['supported_currencies']['currency_list'] = array();
 
 		$paypal_currency_list = $wpsc_gateways['wpsc_merchant_paypal_pro']['supported_currencies']['currency_list'];
@@ -505,14 +505,14 @@ if ( in_array( 'wpsc_merchant_paypal_pro', (array)get_option( 'custom_gateway_op
 			<option value='02'>02</option>
 			<option value='03'>03</option>
 			<option value='04'>04</option>
-			<option value='05'>05</option>						
-			<option value='06'>06</option>						
-			<option value='07'>07</option>					
-			<option value='08'>08</option>						
-			<option value='09'>09</option>						
-			<option value='10'>10</option>						
-			<option value='11'>11</option>																			
-			<option value='12'>12</option>																			
+			<option value='05'>05</option>
+			<option value='06'>06</option>
+			<option value='07'>07</option>
+			<option value='08'>08</option>
+			<option value='09'>09</option>
+			<option value='10'>10</option>
+			<option value='11'>11</option>
+			<option value='12'>12</option>
 			</select>
 			<select class='wpsc_ccBox' name='expiry[year]'>
 			" . $years . "
