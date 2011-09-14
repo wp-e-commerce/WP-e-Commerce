@@ -162,6 +162,7 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * New: Add hook "wpsc_product_form_fields_end" and rename "wpsc_product_form_fields" to "wpsc_product_form_fields_begin" to offer more flexibility when adding new fields to the product form.
 * New: Add hooks "wpsc_add_to_cart_button_form_begin" and "wpsc_add_to_cart_button_form_end" when outputting [add_to_cart] shortcode. wpsc_add_to_cart_button() is also refactored to get rid of ugly repetitive "$output .= ".
 * New: Additional hooks for adding extra FORM fields to the add to cart form.
+* New: Additional filter hooks for product price and transaction result messages.
 * New: Allow hierarchical product category URL.
 * New: Hooks 'wpsc_product_form_fields_begin' and 'wpsc_product_form_fields_end' for list and grid views.
 * New: Option to set claimed stock clearance interval (Store Settings -> General).
@@ -178,6 +179,8 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * Fix: Fatal memory allocation error in Add Product page when WPEC downloadable folder is not created yet.
 * Fix: Incompatibility with WP 3.3-dev (dashboard.css is merged into wp-admin.css).
 * Fix: JavaScript globals not properly escaped, causing fatal JS errors due to internationalized strings that have single quotes in them.
+* Fix: Paypal Express Checkout fails if product names contain unicode special characters.
+* Fix: Paypal Standard passes wrong discount amount.
 * Fix: PHP Notice when activating wpec, resulting in 'unexpected output' error message.
 * Fix: PHP Notice when editing product category.
 * Fix: PHP notice in wpsc-functions.php.
@@ -195,6 +198,7 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * Fix: for paypal express, coupons being included when there are none
 * Fix: is_home() is true when viewing default category on products page.
 * Fix: login redirect on checkout page if WordPress files are in a subfolder.
+* Fix: $wpsc_cart->use_shipping() returns true even when shipping is disabled.
 * Fix: wpsc_display_purchlog_totalprice() returns wrong value. Props dlingren for initial patch.
 * Fix: wpsc_is_single_product() returns false even when viewing a single product. Props Ben Huson for initial patch.
 * Fix: wpsc_the_product_thumbnail() sometimes returns relative URL instead of absolute URL, which causes image failure in Google Product Feed.
