@@ -480,7 +480,7 @@ function wpsc_filter_query_string( $q ) {
 
 	// When product page is set to display all products or a category, and pagination is enabled, $wp_query is messed up
 	// and is_home() is true. This fixes that.
-	if ( isset( $args['post_type'] ) && $args['post_type'] == 'wpsc-product' && ! empty( $args['paged'] ) && empty( $args['wpsc_product_category'] ) ) {
+	if ( ! is_admin() && isset( $args['post_type'] ) && $args['post_type'] == 'wpsc-product' && ! empty( $args['paged'] ) && empty( $args['wpsc_product_category'] ) ) {
 		$default_category = get_option( 'wpsc_default_category' );
 		if ( $default_category == 'all' || $default_category != 'list' )
 			$q = "pagename={$wpsc_page_titles['products']}&page={$args['paged']}";
