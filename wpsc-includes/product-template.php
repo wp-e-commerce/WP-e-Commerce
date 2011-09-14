@@ -380,6 +380,7 @@ function wpsc_product_variation_price_available( $product_id, $from_text = false
 	}
 
 	sort( $prices );
+	$price = apply_filters( 'wpsc_do_convert_price', $prices[0] );
 	$price = wpsc_currency_display( $prices[0], array( 'display_as_html' => false ) );
 
 	if ( $prices[0] == $prices[count( $prices ) - 1] )
@@ -423,6 +424,7 @@ function wpsc_the_product_price( $no_decimals = false, $only_normal_price = fals
 		if ( $no_decimals == true )
 			$price = array_shift( explode( ".", $price ) );
 
+		$price = apply_filters( 'wpsc_do_convert_price', $price );
 		$args = array(
 			'display_as_html' => false,
 			'display_decimal_point' => ! $no_decimals
@@ -432,16 +434,15 @@ function wpsc_the_product_price( $no_decimals = false, $only_normal_price = fals
 	return $output;
 }
 
-function wpsc_calculate_price( $product_id, $variations = null, $special = true ) {
+function wpsc_calculate_price( $product_id, $variations = false, $special = true ) {
 	global $wpdb;
 	$p_id = $product_id;
-	if ( count( $variations ) > 0 ){
-		if(!isset($variations) || is_array($variations) && in_array(0,$variations,true)) return;
+	if ( ! empty( $variations ) )
 		$product_id = wpsc_get_child_object_in_terms( $product_id, $variations, 'wpsc-variation' );
-	}else if ( !$product_id )
+	elseif ( !$product_id )
 		$product_id = get_the_ID();
 
-	if( !$product_id && count( $variations ) > 0){
+	if( ! $product_id && ! empty( $variations ) ){
 		$product_ids = wpsc_get_child_object_in_select_terms( $p_id, $variations, 'wpsc_variation' );
 		$sql = "SELECT `post_id` FROM ".$wpdb->postmeta." WHERE `meta_key` = '_wpsc_stock' AND `meta_value` != '0' AND `post_id` IN (".implode(',' , $product_ids).")";
 		$stock_available = $wpdb->get_col($sql);
@@ -460,6 +461,7 @@ function wpsc_calculate_price( $product_id, $variations = null, $special = true 
 	} else {
 		$price = get_post_meta( $product_id, '_wpsc_price', true );
 	}
+	$price = apply_filters( 'wpsc_price', $price, $product_id );
 
 	return $price;
 }
@@ -1761,7 +1763,7 @@ function wpsc_you_save($args = null){
 
 	global $wpdb;
 
-	if(!$product_id)
+	if ( ! $product_id )
 		if(function_exists('wpsc_the_product_id')){
 			//select the variation ID with lowest price
 			$product_id = $wpdb->get_var('SELECT `posts`.`id` FROM ' . $wpdb->posts . ' `posts` JOIN ' . $wpdb->postmeta . ' `postmeta` ON `posts`.`id` = `postmeta`.`post_id` WHERE `posts`.`post_parent` = ' . wpsc_the_product_id() . ' AND `posts`.`post_type` = "wpsc-product" AND `posts`.`post_status` = "inherit" AND `postmeta`.`meta_key`="_wpsc_price" ORDER BY (`postmeta`.`meta_value`)+0 ASC LIMIT 1');
@@ -1769,36 +1771,22 @@ function wpsc_you_save($args = null){
 				$product_id=wpsc_the_product_id();
 		}
 
-	if(!$product_id)
-		return 0;
-	if($variations)
-		$sale_price = wpsc_calculate_price( (int)$_POST['product_id'], $variations, true );
-	else
-		$sale_price = get_product_meta($product_id, 'special_price', true);
-	//if sale price is zero, false, or anything similar - return false
-	if(!$sale_price)
+	if ( ! $product_id )
 		return 0;
 
-	if($variations)
-		$regular_price = wpsc_calculate_price( (int)$_POST['product_id'], $variations, false );
-	else
-		$regular_price = get_product_meta($product_id, 'price', true);
-	//if actual price is zero, false, or something similar, or is less than sale price - return false
+	$regular_price = wpsc_calculate_price( $product_id, $variations, false );
+	$sale_price = wpsc_calculate_price( $product_id, $variations, true );
 
-
-	if( !$regular_price || !( $sale_price < $regular_price) )
-		return 0;
-
-	switch($type){
+	switch( $type ){
 		case "amount":
 			return $regular_price - $sale_price;
 			break;
 
 		default:
-			if(number_format ( ($regular_price - $sale_price) / $regular_price * 100 , 2 ) == 100)
+			if(number_format ( ( $regular_price - $sale_price ) / $regular_price * 100 , 2 ) == 100)
 				return (99.99);
 			else
-				return number_format ( ($regular_price - $sale_price) / $regular_price * 100 , 2 );
+				return number_format ( ( $regular_price - $sale_price ) / $regular_price * 100 , 2 );
 	}
 }
 

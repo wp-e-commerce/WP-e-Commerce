@@ -319,6 +319,7 @@ function wpsc_has_downloads() {
 			$perchidstr .= ")";
 			$sql = "SELECT * FROM `" . WPSC_TABLE_DOWNLOAD_STATUS . "` WHERE `purchid` IN " . $perchidstr . " AND `active` IN ('1') ORDER BY `datetime` DESC";
 			$products = $wpdb->get_results( $sql, ARRAY_A );
+			$products = apply_filters( 'wpsc_has_downloads_products', $products );
 		}
 	}
 
