@@ -1767,16 +1767,6 @@ function save_term_prices( $term_id ) {
 add_action( 'edited_wpsc-variation', 'save_term_prices' );
 add_action( 'created_wpsc-variation', 'save_term_prices' );
 
-function wpsc_cron() {
-	foreach ( wp_get_schedules() as $cron => $schedule ) {
-		if ( ! wp_next_scheduled( "wpsc_{$cron}_cron_task" ) )
-			wp_schedule_event( time(), $cron, "wpsc_{$cron}_cron_task" );
-	}
-}
-
-add_action( 'init', 'wpsc_cron' );
-add_action( 'wpsc_hourly_cron_task', 'wpsc_clear_stock_claims' );
-
 function wpsc_delete_variations( $postid ) {
 	$post = get_post( $postid );
 	if ( $post->post_type != 'wpsc-product' || $post->post_parent != 0 )
