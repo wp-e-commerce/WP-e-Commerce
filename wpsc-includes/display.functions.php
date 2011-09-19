@@ -70,14 +70,14 @@ function wpsc_also_bought( $product_id ) {
 		//returns nothing if this is off
 		return '';
 	}
-	
+
 
 	// to be made customiseable in a future release
 	$also_bought_limit = 3;
 	$element_widths = 96;
 	$image_display_height = 96;
 	$image_display_width = 96;
-	
+
 	$output = '';
 	$also_bought = $wpdb->get_results( "SELECT `" . $wpdb->posts . "`.* FROM `" . WPSC_TABLE_ALSO_BOUGHT . "`, `" . $wpdb->posts . "` WHERE `selected_product`='" . $product_id . "' AND `" . WPSC_TABLE_ALSO_BOUGHT . "`.`associated_product` = `" . $wpdb->posts . "`.`id` AND `" . $wpdb->posts . "`.`post_status` IN('publish','protected') ORDER BY `" . WPSC_TABLE_ALSO_BOUGHT . "`.`quantity` DESC LIMIT $also_bought_limit", ARRAY_A );
 	if ( count( $also_bought ) > 0 ) {
@@ -281,12 +281,12 @@ function wpsc_obtain_the_title() {
 	$category_id = null;
 	if( !isset( $wp_query->query_vars['wpsc_product_category']) &&  !isset( $wp_query->query_vars['wpsc-product']))
 		return;
-		
+
 	if ( !isset( $wp_query->query_vars['wpsc_product_category'] ) && isset($wp_query->query_vars['wpsc-product']) )
 		$wp_query->query_vars['wpsc_product_category'] = 0;
 
 
-	if ( isset( $wp_query->query_vars['taxonomy'] ) && 'wpsc_product_category' ==  $wp_query->query_vars['taxonomy'] || isset($wp_query->query_vars['wpsc_product_category'])) 
+	if ( isset( $wp_query->query_vars['taxonomy'] ) && 'wpsc_product_category' ==  $wp_query->query_vars['taxonomy'] || isset($wp_query->query_vars['wpsc_product_category']))
 		$category_id = wpsc_get_the_category_id($wp_query->query_vars['wpsc_product_category'],'slug');
 
 	if ( $category_id > 0 ) {
@@ -325,7 +325,7 @@ function wpsc_obtain_the_title() {
 				//This has to exist, otherwise we would have bailed earlier.
 				$category = $wp_query->query_vars['wpsc_product_category'];
 				$cat_term = get_term_by('slug',$wp_query->query_vars['wpsc_product_category'], 'wpsc_product_category');
-				$full_product_name = $cat_term->name;		
+				$full_product_name = $cat_term->name;
 			}
 		}
 		$output = $full_product_name;
