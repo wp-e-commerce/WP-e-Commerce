@@ -67,15 +67,15 @@ function wpsc_loading_animation_url() {
 	return apply_filters( 'wpsc_loading_animation_url', WPSC_CORE_THEME_URL . 'wpsc-images/indicator.gif' );
 }
 
-function fancy_notifications() {	
+function fancy_notifications() {
 	return wpsc_fancy_notifications( true );
 }
 function wpsc_fancy_notifications( $return = false ) {
 	static $already_output = false;
-	
+
 	if ( $already_output )
 		return '';
-	
+
 	$output = "";
 	if ( get_option( 'fancy_notifications' ) == 1 ) {
 		$output = "";
@@ -87,9 +87,9 @@ function wpsc_fancy_notifications( $return = false ) {
 		$output .= "  </div>\n\r";
 		$output .= "</div>\n\r";
 	}
-	
+
 	$already_output = true;
-	
+
 	if ( $return )
 		return $output;
 	else
@@ -167,7 +167,7 @@ function wpsc_add_to_cart_button( $product_id, $return = false ) {
 				</form>
 			</div>
 		<?php
-		
+
 		if ( $return )
 			return ob_get_clean();
 	}
@@ -222,12 +222,12 @@ function wpsc_obtain_the_title() {
 	$category_id = null;
 	if( !isset( $wp_query->query_vars['wpsc_product_category']) &&  !isset( $wp_query->query_vars['wpsc-product']))
 		return;
-		
+
 	if ( !isset( $wp_query->query_vars['wpsc_product_category'] ) && isset($wp_query->query_vars['wpsc-product']) )
 		$wp_query->query_vars['wpsc_product_category'] = 0;
 
 
-	if ( isset( $wp_query->query_vars['taxonomy'] ) && 'wpsc_product_category' ==  $wp_query->query_vars['taxonomy'] || isset($wp_query->query_vars['wpsc_product_category'])) 
+	if ( isset( $wp_query->query_vars['taxonomy'] ) && 'wpsc_product_category' ==  $wp_query->query_vars['taxonomy'] || isset($wp_query->query_vars['wpsc_product_category']))
 		$category_id = wpsc_get_the_category_id($wp_query->query_vars['wpsc_product_category'],'slug');
 
 	if ( $category_id > 0 ) {
@@ -266,7 +266,7 @@ function wpsc_obtain_the_title() {
 				//This has to exist, otherwise we would have bailed earlier.
 				$category = $wp_query->query_vars['wpsc_product_category'];
 				$cat_term = get_term_by('slug',$wp_query->query_vars['wpsc_product_category'], 'wpsc_product_category');
-				$full_product_name = $cat_term->name;		
+				$full_product_name = $cat_term->name;
 			}
 		}
 		$output = $full_product_name;
