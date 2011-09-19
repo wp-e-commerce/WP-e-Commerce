@@ -983,7 +983,7 @@ function wpsc_attachment_fields( $form_fields, $post ) {
 				$metadata['sizes'] = array();
 			$file = get_attached_file( $post->ID );
 			$generated = wp_generate_attachment_metadata( $post->ID, $file );
-			$metadata['sizes'] = array_merge( $metadata['sizes'], $generated['sizes'] );
+			$metadata['sizes'] = array_merge((array) $metadata['sizes'],((array) $generated['sizes'] );
 			wp_update_attachment_metadata( $post->ID, $metadata );
 		}
 
