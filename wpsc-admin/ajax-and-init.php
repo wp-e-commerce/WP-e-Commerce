@@ -889,7 +889,7 @@ function wpsc_submit_options( $selected='' ) {
 	if ( isset( $_SESSION['wpsc_settings_curr_page'] ) ) {
 		$sendback = add_query_arg( 'tab', $_SESSION['wpsc_settings_curr_page'], $sendback );
 	}
-	
+
 	$sendback = add_query_arg( 'page', 'wpsc-settings', $sendback );
 	$sendback = apply_filters( 'wpsc_settings_redirect_url', $sendback );
 	wp_redirect( $sendback );
@@ -1772,11 +1772,11 @@ function wpsc_cron() {
 		if ( ! wp_next_scheduled( "wpsc_{$cron}_cron_task" ) )
 			wp_schedule_event( time(), $cron, "wpsc_{$cron}_cron_task" );
 	}
-
-	add_action( 'wpsc_hourly_cron_task', 'wpsc_clear_stock_claims' );
 }
 
 add_action( 'init', 'wpsc_cron' );
+add_action( 'wpsc_hourly_cron_task', 'wpsc_clear_stock_claims' );
+
 function wpsc_delete_variations( $postid ) {
 	$post = get_post( $postid );
 	if ( $post->post_type != 'wpsc-product' || $post->post_parent != 0 )
