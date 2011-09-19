@@ -164,10 +164,27 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 						foreach ( $download_data as $single_download ) {
 							$file_data = get_post( $single_download['product_id'] );
 							// if the uniqueid is not equal to null, its "valid", regardless of what it is
+							$argsdl = array(
+									'post_type' => 'wpsc-product-file',
+									'post_parent' => $single_download['product_id'],
+									'numberposts' => -1,
+									'post_status' => 'all',
+								);
+
+							$download_file_posts = (array)get_posts( $argsdl );
+	
+							foreach((array)$download_file_posts as $single_file_post){
+								if($single_file_post->ID == $single_download['fileid']){
+									$current_Dl_product_file_post = $single_file_post;
+									break;
+								}
+							}
+							$file_name = $current_Dl_product_file_post->post_title;
+							
 							if ( $single_download['uniqueid'] == null )
-								$link[] = array( "url" => site_url( "?downloadid=" . $single_download['id'] ), "name" => $file_data->post_title );
+								$link[] = array( "url" => site_url( "?downloadid=" . $single_download['id'] ), "name" => $file_name );
 							else
-								$link[] = array( "url" => site_url( "?downloadid=" . $single_download['uniqueid'] ), "name" => $file_data->post_title );
+								$link[] = array( "url" => site_url( "?downloadid=" . $single_download['uniqueid'] ), "name" => $file_name );
 							
 						}
 					} else {
@@ -288,7 +305,6 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 				$message_html.= "\n\r" . __( 'Your Transaction ID', 'wpsc' ) . ": " . $_GET['ti'];
 				$report.= "\n\r" . __( 'Transaction ID', 'wpsc' ) . ": " . $_GET['ti'];
 			} 
-			$message = apply_filters( 'wpsc_transaction_result_message', $message );
 			$message = str_replace( '%purchase_id%', $report_id, $message );
 			$message = str_replace( '%product_list%', $product_list, $message );
 			$message = str_replace( '%total_tax%', $total_tax, $message );
@@ -297,7 +313,6 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 			$message = str_replace( '%shop_name%', get_option( 'blogname' ), $message );
 			$message = str_replace( '%find_us%', $purchase_log['find_us'], $message );
 
-			$report = apply_filters( 'wpsc_transaction_result_report', $report );
 			$report = str_replace( '%purchase_id%', $report_id, $report );
 			$report = str_replace( '%product_list%', $report_product_list, $report );
 			$report = str_replace( '%total_tax%', $total_tax, $report );
@@ -306,7 +321,6 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 			$report = str_replace( '%shop_name%', get_option( 'blogname' ), $report );
 			$report = str_replace( '%find_us%', $purchase_log['find_us'], $report );
 
-			$message_html = apply_filters( 'wpsc_transaction_result_message_html', $message_html );
 			$message_html = str_replace( '%purchase_id%', $report_id, $message_html );
 			$message_html = str_replace( '%product_list%', $product_list_html, $message_html );
 			$message_html = str_replace( '%total_tax%', $total_tax_html, $message_html );
