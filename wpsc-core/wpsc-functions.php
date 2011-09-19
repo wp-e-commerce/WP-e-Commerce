@@ -1310,4 +1310,13 @@ if ( is_ssl() ) {
 	add_filter( 'option_transact_url',      'wpsc_add_https_to_page_url_options' );
 	add_filter( 'option_user_account_url',  'wpsc_add_https_to_page_url_options' );
 }
+
+function wpsc_cron() {
+	foreach ( wp_get_schedules() as $cron => $schedule ) {
+		if ( ! wp_next_scheduled( "wpsc_{$cron}_cron_task" ) )
+			wp_schedule_event( time(), $cron, "wpsc_{$cron}_cron_task" );
+	}
+}
+
+add_action( 'init', 'wpsc_cron' );
 ?>
