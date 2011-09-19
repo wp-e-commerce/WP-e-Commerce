@@ -305,6 +305,7 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 				$message_html.= "\n\r" . __( 'Your Transaction ID', 'wpsc' ) . ": " . $_GET['ti'];
 				$report.= "\n\r" . __( 'Transaction ID', 'wpsc' ) . ": " . $_GET['ti'];
 			} 
+			$message = apply_filters( 'wpsc_transaction_result_message', $message );
 			$message = str_replace( '%purchase_id%', $report_id, $message );
 			$message = str_replace( '%product_list%', $product_list, $message );
 			$message = str_replace( '%total_tax%', $total_tax, $message );
@@ -312,7 +313,8 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 			$message = str_replace( '%total_price%', $total_price_email, $message );
 			$message = str_replace( '%shop_name%', get_option( 'blogname' ), $message );
 			$message = str_replace( '%find_us%', $purchase_log['find_us'], $message );
-
+			
+			$report = apply_filters( 'wpsc_transaction_result_report', $report );
 			$report = str_replace( '%purchase_id%', $report_id, $report );
 			$report = str_replace( '%product_list%', $report_product_list, $report );
 			$report = str_replace( '%total_tax%', $total_tax, $report );
@@ -320,7 +322,8 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 			$report = str_replace( '%total_price%', $total_price_email, $report );
 			$report = str_replace( '%shop_name%', get_option( 'blogname' ), $report );
 			$report = str_replace( '%find_us%', $purchase_log['find_us'], $report );
-
+			
+			$message_html = apply_filters( 'wpsc_transaction_result_message_html', $message_html );
 			$message_html = str_replace( '%purchase_id%', $report_id, $message_html );
 			$message_html = str_replace( '%product_list%', $product_list_html, $message_html );
 			$message_html = str_replace( '%total_tax%', $total_tax_html, $message_html );
