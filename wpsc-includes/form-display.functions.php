@@ -181,9 +181,9 @@ function wpsc_select_product_file( $product_id = null ) {
 	//$file_size1 = get_attached_file( $file->ID , true ) ;
 	//echo('<pre>'.print_r($file_size1,1).'</pre>');
 	
-	$file_dir = WP_CONTENT_DIR . "/uploads/wpsc/downloadables/".$file->post_title;
+	$file_dir = WPSC_FILE_DIR.$file->post_title;
 	$file_size = filesize( $file_dir ) ;
-	$file_url = content_url() . "/uploads/wpsc/downloadables/".$file->post_title;
+	$file_url = WPSC_FILE_URL.$file->post_title;
 
 		$num++;
 		$deletion_url = wp_nonce_url( "admin.php?wpsc_admin_action=delete_file&amp;file_name={$file->post_title}&amp;product_id={$product_id}&amp;row_number={$num}", 'delete_file_' . $file->post_title );
@@ -195,7 +195,7 @@ function wpsc_select_product_file( $product_id = null ) {
 		$output .= "<p class = 'downloadables_float'>  <a  href='{$file_url}' >";
 		$output .= "    Download\n";
 		$output .= "  </a> </p>";
-		$output .= "<p class = 'downloadables_float'>".get_the_date( $d ) ."</p>";
+		$output .= "<p class = 'downloadables_float'>". get_the_date() ."</p>";
 		$output .= "<p class = 'downloadables_float'>".byteFormat($file_size) ."</p>";
 		$output .= "<p class='clear'></p>";
 		$output .= "</span>\n";
