@@ -359,18 +359,18 @@ function wpsc_update_shipping_price() {
 	global $wpdb, $wpsc_cart;
 	$quote_shipping_method = $_POST['key1'];
 	$quote_shipping_option = $_POST['key'];
-	$wpsc_cart->update_shipping( $quote_shipping_method, $quote_shipping_option );
-	echo "
-	if(jQuery('.pricedisplay.checkout-shipping .pricedisplay')){
-		jQuery('.pricedisplay.checkout-shipping > .pricedisplay:first').html(\"" . wpsc_cart_shipping() . "\");
-		jQuery('.shoppingcart .pricedisplay.checkout-shipping > .pricedisplay:first').html(\"" . wpsc_cart_shipping() . "\");
-	} else
-		jQuery('.pricedisplay.checkout-shipping').html(\"" . wpsc_cart_shipping() . "\");
-	";
-	echo "jQuery('.pricedisplay.checkout-total').html(\"" . wpsc_cart_total() . "\");\n\r";
+	if(!empty($quote_shipping_option) && !empty($quote_shipping_method)){
+		$wpsc_cart->update_shipping( $quote_shipping_method, $quote_shipping_option );
+		echo "
+		if(jQuery('.pricedisplay.checkout-shipping .pricedisplay')){
+			jQuery('.pricedisplay.checkout-shipping > .pricedisplay:first').html(\"" . wpsc_cart_shipping() . "\");
+			jQuery('.shoppingcart .pricedisplay.checkout-shipping > .pricedisplay:first').html(\"" . wpsc_cart_shipping() . "\");
+		} else {
+			jQuery('.pricedisplay.checkout-shipping').html(\"" . wpsc_cart_shipping() . "\");}";
+		echo "jQuery('.pricedisplay.checkout-total').html(\"" . wpsc_cart_total() . "\");\n\r";
+	}
 	exit();
 }
-
 // execute on POST and GET
 if ( isset( $_REQUEST['wpsc_ajax_action'] ) && ($_REQUEST['wpsc_ajax_action'] == 'update_shipping_price') ) {
 	add_action( 'init', 'wpsc_update_shipping_price' );
