@@ -381,7 +381,7 @@ function wpsc_product_variation_price_available( $product_id, $from_text = false
 
 	sort( $prices );
 	$price = apply_filters( 'wpsc_do_convert_price', $prices[0] );
-	$price = wpsc_currency_display( $prices[0], array( 'display_as_html' => false ) );
+	$price = wpsc_currency_display( $price, array( 'display_as_html' => false ) );
 
 	if ( $prices[0] == $prices[count( $prices ) - 1] )
 		$from_text = false;
