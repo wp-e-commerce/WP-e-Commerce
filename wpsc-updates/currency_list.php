@@ -204,7 +204,7 @@ INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (202, '" . __('Sri Lanka') ."'
 INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (203, '" . __('Sudan') ."', 'SD', '" . __('Sudanese Dinar', 'wpsc') . "', '', '', '" . __('SDD', 'wpsc') . "', '0', '0','asiapacific','1');
 INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (204, '" . __('Suriname') ."', 'SR', '" . __('Surinam Guilder', 'wpsc') . "', '', '', '" . __('SRG', 'wpsc') . "', '0', '0','southamerica','1');
 INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (205, '" . __('Svalbard and Jan Mayen Islands') ."', 'SJ', '" . __('Norwegian Krone', 'wpsc') . "', '', '', '" . __('NOK', 'wpsc') . "', '0', '0','','1');
-INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (206, '" . __('Swaziland') ."', 'SZ', '" . __('Swaziland Lilangeni', 'wpsc') . "', '', '', '" . __('SZL', 'wpsc') . "', '0', '0','europe','1');
+INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (206, '" . __('Swaziland') ."', 'SZ', '" . __('Swaziland Lilangeni', 'wpsc') . "', '', '', '" . __('SZL', 'wpsc') . "', '0', '0','africa','1');
 INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (207, '" . __('Sweden') ."', 'SE', '" . __('Swedish Krona', 'wpsc') . "', '', '', '" . __('SEK', 'wpsc') . "', '0', '0','europe','1');
 INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (208, '" . __('Switzerland') ."', 'CH', '" . __('Swiss Franc', 'wpsc') . "', '', '', '" . __('CHF', 'wpsc') . "', '0', '0','europe','1');
 INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (209, '" . __('Syria') ."', 'SY', '" . __('Syrian Pound', 'wpsc') . "', '', '', '" . __('SYP', 'wpsc') . "', '0', '0','europe','1');
