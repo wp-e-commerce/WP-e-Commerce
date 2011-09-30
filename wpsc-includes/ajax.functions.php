@@ -660,6 +660,7 @@ function wpsc_submit_checkout() {
 		if ( isset( $current_gateway_data['api_version'] ) && $current_gateway_data['api_version'] >= 2.0 ) {
 			$merchant_instance = new $current_gateway_data['class_name']( $purchase_log_id );
 			$merchant_instance->construct_value_array();
+                                                        do_action_ref_array( 'wpsc_pre_submit_gateway', array( &$merchant_instance ) );
 			$merchant_instance->submit();
 		} elseif ( ($current_gateway_data['internalname'] == $submitted_gateway) && ($current_gateway_data['internalname'] != 'google') ) {
 			$gateway_used = $current_gateway_data['internalname'];
