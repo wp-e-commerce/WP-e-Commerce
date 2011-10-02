@@ -37,7 +37,7 @@
 				</td>
 				<td class="pricedisplay checkout-total" colspan='4'>
 					<?php _e('Total', 'wpsc'); ?>: <?php echo wpsc_cart_total_widget( false, false ,false ); ?><br />
-					<small><?php _e( 'excluding shipping and tax' ); ?></small>
+					<small><?php _e( 'excluding shipping and tax', 'wpsc' ); ?></small>
 				</td>
 			</tr>
 			<tr>
