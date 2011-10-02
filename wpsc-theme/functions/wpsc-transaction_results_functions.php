@@ -293,7 +293,7 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 				$total_tax .= __('Total Tax', 'wpsc').': '. wpsc_currency_display( $purchase_log['wpec_taxes_total'] , array( 'display_as_html' => false ) )."\n\r"; 		
 			}
 			if ( wpsc_uses_shipping() )
-				$total_shipping_html.= sprintf(__( '<hr>Total Shipping: %s
+				$total_shipping_html.= '<hr>' . sprintf(__( 'Total Shipping: %s
 	', 'wpsc' ), wpsc_currency_display( $total_shipping ));
 			$total_price_html.= sprintf(__( 'Total: %s
 ', 'wpsc' ), wpsc_currency_display( $total ) );
