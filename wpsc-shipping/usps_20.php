@@ -224,7 +224,7 @@ class ash_usps{
     						
     						Yes
     						<br />
-    						<span style=\"font-size: x-small\">".__("This setting will provide rates based on the dimensions from eacy item in your cart","wpec")."</span>
+    						<span style=\"font-size: x-small\">" . __( 'This setting will provide rates based on the dimensions from each item in your cart', 'wpsc' )."</span>
     					</td>
     				</tr>
     				<tr>

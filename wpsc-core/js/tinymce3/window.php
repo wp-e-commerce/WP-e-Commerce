@@ -120,7 +120,7 @@ global $wpdb;
 				</tr>
 				
 				<tr valign="top">
-					<td><strong><label for="wpsc_perpage"><?php _e("Number of Products", 'wpsc_category'); ?>:</label></strong></td>
+					<td><strong><label for="wpsc_perpage"><?php _e( 'Number of Products', 'wpsc' ); ?>:</label></strong></td>
 					<td>
 						<input type='text' id='wpsc_slider_visibles' name='wpsc_slider_visibles'> <br />
 						<span class="description"><?php _e('Number of Products to be displayed in the slider.', 'wpsc') ?></span>
