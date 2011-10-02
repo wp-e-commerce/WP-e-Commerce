@@ -95,7 +95,7 @@ function wpsc_output_breadcrumbs( $options = null ) {
 	}
 	$filtered_products_page = array(
 		'url'  => get_option( 'product_list_url' ),
-		'name' => $products_page->post_title
+		'name' => apply_filters ( 'the_title', $products_page->post_title )
 	);
 	$filtered_products_page = apply_filters( 'wpsc_change_pp_breadcrumb', $filtered_products_page );
 	
