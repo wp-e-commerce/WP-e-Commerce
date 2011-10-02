@@ -354,6 +354,7 @@ function _wpsc_purchlogs_need_update() {
          <?php  echo wpsc_purchlogs_getfirstdates(); ?>
       </select>
       <select id='view_purchlogs_by_status' name='view_purchlogs_by_status'>
+         <option value='-1'><?php _e('Status: All', 'wpsc'); ?></option>
 
          <?php while(wpsc_have_purch_items_statuses()) : wpsc_the_purch_status(); ?>
 
@@ -369,12 +370,6 @@ function _wpsc_purchlogs_need_update() {
                <?php echo wpsc_the_purch_status_name(); ?>
             </option>
          <?php endwhile; ?>
-         <?php if(empty($is_selected)){
-               $is_selected = 'selected="selected"';
-         }else{
-               $is_selected = '';
-          } ?>
-         <option <?php echo $is_selected; ?> value='-1'><?php _e('Status: All', 'wpsc'); ?></option>
       </select>
       <input type='hidden' value='purchlog_filter_by' name='wpsc_admin_action' />
       <input type="submit" value="<?php _e('Filter', 'wpsc'); ?>" name="doaction2" id="doaction2" class="button-secondary action" />
