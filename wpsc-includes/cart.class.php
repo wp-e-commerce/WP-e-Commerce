@@ -1708,6 +1708,8 @@ function refresh_item() {
 
 	 // update the claimed stock here
 	$this->update_claimed_stock();
+        
+    do_action_ref_array( 'wpsc_refresh_item', array( &$this ) );
 }
 
    /**
