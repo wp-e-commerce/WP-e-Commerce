@@ -780,7 +780,7 @@ function wpsc_change_tax() {
 	$tax = $wpsc_cart->calculate_total_tax();
 	$total = wpsc_cart_total();
 	$total_input = wpsc_cart_total(false);
-	if($wpsc_cart->coupons_amount >= wpsc_cart_total() && !empty($wpsc_cart->coupons_amount)){
+	if($wpsc_cart->coupons_amount >= wpsc_cart_total(false) && !empty($wpsc_cart->coupons_amount)){
 		$total = 0;
 	}
 	if ( $wpsc_cart->total_price < 0 ) { 
