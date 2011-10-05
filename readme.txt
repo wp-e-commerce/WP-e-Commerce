@@ -172,6 +172,7 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * Fix: A product is displayed as "sold out" when its variations' stock control options are turned off.
 * Fix: Additional Checkout Form Fields Not Showing with Variation. Props jRayx.
 * Fix: Australia Post shipping quote caching by reducing the transient key length from 51 to 41 characters.
+* Fix: AJAX error when changing country with a coupon applied.
 * Fix: Breadcrumbs not showing for empty product categories.
 * Fix: Discounts / coupons not passing to Paypal Standard.
 * Fix: Error with merging image metadata in Media popup. Props Ben Huson.
