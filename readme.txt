@@ -4,7 +4,7 @@ Donate link: http://getshopped.org
 Tags: e-commerce, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
 Requires at least: 3.0
 Tested up to: 3.2
-Stable tag: 3.8.6
+Stable tag: 3.8.6.1
 
 WP e-Commerce is a free WordPress Shopping Cart Plugin that lets customers buy your products, services and digital downloads online.
 
@@ -203,6 +203,10 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * Fix: wpsc_is_single_product() returns false even when viewing a single product. Props Ben Huson for initial patch.
 * Fix: wpsc_the_product_thumbnail() sometimes returns relative URL instead of absolute URL, which causes image failure in Google Product Feed.
 
+
+= 3.8.6.1 =
+* Fix: Security vulnerability in chronopay.
+
 = 3.8.6 =
 * New: Filter for 'wpsc_display_product_multicurrency'.
 * New: Additional filters for compatibility with WPML.
@@ -230,6 +234,7 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * Fix: Incompatibility with Prototype JS library.
 * Fix: Checking (or unchecking) Stock checkbox when editing product causes variation table columns to break.
 * Fix: jQuery 1.6 incompatibility with attr( 'className' ).
+
 
 = 3.8.5 =
 * New: Added hooks to support WPML.

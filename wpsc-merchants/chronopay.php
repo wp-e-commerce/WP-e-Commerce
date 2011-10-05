@@ -113,37 +113,37 @@ function gateway_chronopay($separator, $sessionid)
         {
         	$variation_list = '';
         }
-
+    
     	$local_currency_productprice = $item['price'];
 
 			$local_currency_shipping = $item['pnp'];
-
+    	
 
 			$chronopay_currency_productprice = $local_currency_productprice;
 			$chronopay_currency_shipping = $local_currency_shipping;
-
+			
     	$data['item_name_'.$i] = $product_data['name'].$variation_list;
     	$data['amount_'.$i] = number_format(sprintf("%01.2f", $chronopay_currency_productprice),$decimal_places,'.','');
     	$data['quantity_'.$i] = $item['quantity'];
     	$data['item_number_'.$i] = $product_data['id'];
-
+    	
 		if($item['donation'] !=1)
       	{
       		$all_donations = false;
       		$data['shipping_'.$i] = number_format($chronopay_currency_shipping,$decimal_places,'.','');
-      		$data['shipping2_'.$i] = number_format($chronopay_currency_shipping,$decimal_places,'.','');
+      		$data['shipping2_'.$i] = number_format($chronopay_currency_shipping,$decimal_places,'.','');      
       	}
       	else
       	{
       		$data['shipping_'.$i] = number_format(0,$decimal_places,'.','');
       		$data['shipping2_'.$i] = number_format(0,$decimal_places,'.','');
       	}
-
+        
     	if($product_data['no_shipping'] != 1) {
       		$all_no_shipping = false;
       	}
-
-
+    
+		
 		$total_price = $total_price + ($data['amount_'.$i] * $data['quantity_'.$i]);
 
 		if( $all_no_shipping != false )
@@ -510,12 +510,12 @@ function form_chronopay()
 		   <tr>
            <td colspan='2'>For more help configuring Chronopay, read our documentation <a href='http://docs.getshopped.org/wiki/documentation/payments/chronopay'>here </a></td>
        </tr>";
-
+	
 	return $output;
 }
-
-
+  
+  
 add_action('init', 'nzshpcrt_chronopay_callback');
 add_action('init', 'nzshpcrt_chronopay_results');
-
+	
 ?>
