@@ -1,7 +1,7 @@
 <?php
 
 function wpsc_display_upgrades_page() {
-
+	
 	do_action( 'wpsc_gold_module_activation' ); ?>
 
 	<div class='wrap'>
@@ -113,6 +113,7 @@ function wpsc_display_upgrades_page() {
 
 					<?php } ?>
 				</form>
+			<?php do_meta_boxes('wpsc_upgrade_page', 'top', true); ?>
 			</div>
 		</div>
 	</div>
