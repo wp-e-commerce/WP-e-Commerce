@@ -248,7 +248,7 @@ class ash_ups {
                             <td><label for=\"ups_singular_shipping\" >".__('Singular Shipping', 'wpsc')." *</label></td>
                             <td>
                                 <input type=\"checkbox\" id=\"ups_singular_shipping\" name=\"wpsc_ups_settings[singular_shipping]\" value=\"1\" ".$singular_shipping." /><br />
-                                ".__('Rate each quantity of items in a cart as its own package using dimensions on product')."
+                                " . __( 'Rate each quantity of items in a cart as its own package using dimensions on product', 'wpsc' ) . "
                             </td>
                         </tr>
                         ");

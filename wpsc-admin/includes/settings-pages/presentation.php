@@ -716,7 +716,7 @@ function wpsc_options_presentation() {
 							<?php _e( 'Use Live Search', 'wpsc' ); ?><br />
 							<input type='hidden' name='wpsc_options[embed_live_search_results]' value='0' />
 							<input type='checkbox' name='wpsc_options[embed_live_search_results]' id='embed_live_search_results'<?php echo $embed_live_search_results; ?> value='1' />
-							<?php _e( 'Dynamically replace search results into product list' ); ?>
+							<?php _e( 'Dynamically replace search results into product list', 'wpsc' ); ?>
 						</div>
 					</td>
 				</tr>

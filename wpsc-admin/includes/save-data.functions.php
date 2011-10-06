@@ -216,7 +216,7 @@ function wpsc_admin_category_forms_add() {
 
 <!-- START OF TARGET MARKET SELECTION -->
 <div id="poststuff" class="postbox">
-	<h3 class="hndle"><?php _e('Target Market Restrictions'); ?></h3>
+	<h3 class="hndle"><?php _e( 'Target Market Restrictions', 'wpsc' ); ?></h3>
 	<div class="inside"><?php
 		$category_id = '';
 		if (isset($_GET["tag_ID"])) $category_id = $_GET["tag_ID"];
