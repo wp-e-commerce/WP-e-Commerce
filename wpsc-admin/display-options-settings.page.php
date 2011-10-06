@@ -268,22 +268,22 @@ function wpsc_settings_page_update_notification() {
 		<?php
 
 		if ( isset( $_GET['updated'] ) && (int)$_GET['updated'] ) {
-			printf( _n( '%s Setting options updated.', ' %s Settings options updated.', $_GET['updated'] ), absint( $_GET['updated'] ) );
+			printf( _n( '%s Setting options updated.', ' %s Settings options updated.', $_GET['updated'], 'wpsc' ), absint( $_GET['updated'] ) );
 			unset( $_GET['updated'] );
 			$message = true;
 		}
 		if ( isset( $_GET['deleted'] ) && (int)$_GET['deleted'] ) {
-			printf( _n( '%s Setting option deleted.', '%s Setting option deleted.', $_GET['deleted'] ), absint( $_GET['deleted'] ) );
+			printf( _n( '%s Setting option deleted.', '%s Setting option deleted.', $_GET['deleted'], 'wpsc' ), absint( $_GET['deleted'] ) );
 			unset( $_GET['deleted'] );
 			$message = true;
 		}
 		if ( isset( $_GET['shipadd'] ) && (int)$_GET['shipadd'] ) {
-			printf( _n( '%s Shipping option updated.', '%s Shipping option updated.', $_GET['shipadd'] ), absint( $_GET['shipadd'] ) );
+			printf( _n( '%s Shipping option updated.', '%s Shipping option updated.', $_GET['shipadd'], 'wpsc' ), absint( $_GET['shipadd'] ) );
 			unset( $_GET['shipadd'] );
 			$message = true;
 		}
 		if ( isset( $_GET['added'] ) && (int)$_GET['added'] ) {
-			printf( _n( '%s Checkout field added.', '%s Checkout fields added.', $_GET['added'] ), absint( $_GET['added'] ) );
+			printf( _n( '%s Checkout field added.', '%s Checkout fields added.', $_GET['added'], 'wpsc' ), absint( $_GET['added'] ) );
 			unset( $_GET['added'] );
 			$message = true;
 		}

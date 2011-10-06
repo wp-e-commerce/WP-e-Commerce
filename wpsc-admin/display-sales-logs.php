@@ -37,7 +37,7 @@ function wpsc_update_purchase_logs_3dot8() {
 	?>
 		<div class="wrap">
 			<h2><?php echo esc_html( __('Sales', 'wpsc') ); ?> </h2>	
-			<p><?php printf( __( 'Your purchase logs have been updated! <a href="%s">Click here</a> to return.'), remove_query_arg( 'subpage' ) ); ?></p>
+			<p><?php printf( __( 'Your purchase logs have been updated! <a href="%s">Click here</a> to return.' , 'wpsc' ), remove_query_arg( 'subpage' ) ); ?></p>
 		</div>
 	<?php
 }
@@ -328,7 +328,7 @@ function _wpsc_purchlogs_need_update() {
       <input type='hidden' value='purchlog_bulk_modify' name='wpsc_admin_action2' />
       <input type="submit" value="<?php _e('Apply', 'wpsc'); ?>" name="doaction" id="doaction" class="button-secondary action" />
       <?php /* View functions for purchlogs */?>
-      <label for='view_purchlogs_by'><?php _e('View:'); ?></label>
+      <label for='view_purchlogs_by'><?php _e( 'View:', 'wpsc' ); ?></label>
 
       <select id='view_purchlogs_by' name='view_purchlogs_by'>
 <?php
