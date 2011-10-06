@@ -6,7 +6,7 @@ $allProducts = get_posts('post_type=wpsc-product&nopaging=true');
 
 //Check capabilities
 if ( !current_user_can('edit_pages') && !current_user_can('edit_posts') ) 
-	wp_die(__("You don't have permission to be doing that!"));
+	wp_die( __( 'You don\'t have permission to be doing that!', 'wpsc' ) );
 
 global $wpdb; 
 ?>

@@ -631,7 +631,7 @@ function form_paypal_multiple() {
 	if($current_currency != $store_currency_data['code']) {
 		$output .= "
   <tr>
-      <td colspan='2'><strong class='form_group'>".__('Currency Converter')."</td>
+      <td colspan='2'><strong class='form_group'>" . __( 'Currency Converter', 'wpsc' ) . "</td>
   </tr>
   <tr>
 		<td colspan='2'>".sprintf(__('Your website uses <strong>%s</strong>. This currency is not supported by PayPal, please  select a currency using the drop down menu below. Buyers on your site will still pay in your local currency however we will send the order through to Paypal using the currency you choose below.', 'wpsc'), $store_currency_data['currency'])."</td>
