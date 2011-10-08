@@ -31,11 +31,14 @@ endif;
        ?>
       <?php  //this displays the confirm your order html ?>
 
+	  <?php do_action ( "wpsc_before_checkout_cart_row" ); ?>
       <tr class="product_row product_row_<?php echo wpsc_the_cart_item_key(); ?> <?php echo $alt_class;?>">
 
          <td class="firstcol wpsc_product_image wpsc_product_image_<?php echo wpsc_the_cart_item_key(); ?>">
          <?php if('' != wpsc_cart_item_image()): ?>
+			<?php do_action ( "wpsc_before_checkout_cart_item_image" ); ?>
             <img src="<?php echo wpsc_cart_item_image(); ?>" alt="<?php echo wpsc_cart_item_name(); ?>" title="<?php echo wpsc_cart_item_name(); ?>" class="product_image" />
+			<?php do_action ( "wpsc_after_checkout_cart_item_image" ); ?>
          <?php else:
          /* I dont think this gets used anymore,, but left in for backwards compatibility */
          ?>
@@ -49,7 +52,9 @@ endif;
          </td>
 
          <td class="wpsc_product_name wpsc_product_name_<?php echo wpsc_the_cart_item_key(); ?>">
+			<?php do_action ( "wpsc_before_checkout_cart_item_name" ); ?>
             <a href="<?php echo wpsc_cart_item_url();?>"><?php echo wpsc_cart_item_name(); ?></a>
+			<?php do_action ( "wpsc_after_checkout_cart_item_name" ); ?>
          </td>
 
          <td class="wpsc_product_quantity wpsc_product_quantity_<?php echo wpsc_the_cart_item_key(); ?>">
@@ -74,6 +79,7 @@ endif;
             </form>
          </td>
       </tr>
+	  <?php do_action ( "wpsc_after_checkout_cart_row" ); ?>
    <?php endwhile; ?>
    <?php //this HTML displays coupons if there are any active coupons to use ?>
 
