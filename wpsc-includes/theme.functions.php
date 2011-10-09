@@ -198,7 +198,7 @@ function wpsc_database_update_notice() { ?>
 }
 
 
-function wpsc_theme_admin_notices() { 
+function wpsc_theme_admin_notices() {
 	// Database update notice is most important
 	if ( get_option ( 'wpsc_version' ) < 3.8 ) {
 
@@ -1233,10 +1233,11 @@ function add_to_cart_shortcode( $content = '' ) {
 			$output = wpsc_add_to_cart_button( $product_id, true );
 			$content = str_replace( $original_string, $output, $content );
 		}
-	}
-	if ( ! $fancy_notification_output ) {
-		$content .= wpsc_fancy_notifications( true );
-		$fancy_notification_output = true;
+
+		if ( ! $fancy_notification_output ) {
+			$content .= wpsc_fancy_notifications( true );
+			$fancy_notification_output = true;
+		}
 	}
 	return $content;
 }
