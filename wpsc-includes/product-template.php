@@ -414,7 +414,7 @@ function wpsc_the_product_price( $no_decimals = false, $only_normal_price = fals
 	} else {
 		$price = $full_price = get_post_meta( $product_id, '_wpsc_price', true );
 
-		if ( $only_normal_price ) {
+		if ( ! $only_normal_price ) {
 			$special_price = get_post_meta( $product_id, '_wpsc_special_price', true );
 
 			if ( ( $full_price > $special_price ) && ( $special_price > 0 ) )
