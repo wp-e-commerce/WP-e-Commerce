@@ -156,6 +156,10 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 
 == Changelog ==
+= 3.8.7.1 =
+* Fix: Fancy notifications not being displayed on single product page.
+* Fix: Sale and normal prices are switched around.
+
 = 3.8.7 =
 * New: 'insert_child_product_meta' filter to allow customising of meta data when a variation product (child product) is created.
 * New: 'wpsc_variation_groups' and 'wpsc_all_associated_variations' filters. Allows customising order of variation menu items etc.
