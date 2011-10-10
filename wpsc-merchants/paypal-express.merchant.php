@@ -114,7 +114,7 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 		}
 		$received_values = array();
 		$received_values['cmd'] = '_notify-validate';
-  		$received_values += $_POST;
+  		$received_values += stripslashes_deep ( $_POST );
 		$options = array(
 			'timeout' => 5,
 			'body' => $received_values,
