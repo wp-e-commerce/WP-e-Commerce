@@ -21,7 +21,7 @@ define('TXT_WPSC_DELETE_CURRENCY','Delete Currency');
 define('TXT_WPSC_NO_ZIPCODE','Please provide a Zipcode and click Calculate in order to continue.');
 
 define('TXT_WPSC_DROPSHOP_CRAFTYC','Crafty');
-define('TXT_WPSC_CHECK_MIME_TYPES_WARNING', 'Warning: Disabling this exposes your site to greater possibility of malicious files being uploaded, we reccomend installing the Fileinfo extention for PHP rather than disabling this.');
+define('TXT_WPSC_CHECK_MIME_TYPES_WARNING', 'Warning: Disabling this exposes your site to greater possibility of malicious files being uploaded, we recommend installing the Fileinfo extention for PHP rather than disabling this.');
 define('TXT_WPSC_CHECK_MIME_TYPES', 'Check MIME types on file uploads');
 define('TXT_WPSC_SHIPPING_SAME_AS_BILLING', 'Enable Shipping Same as Billing Option: ');
 define('TXT_WPSC_UDPATING_CART', 'Updating...');
