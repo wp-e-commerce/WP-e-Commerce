@@ -1,7 +1,7 @@
 <?php
 	add_action( 'wpsc_hourly_cron_task', 'wpsc_clear_stock_claims' );
 	/**
-	 * wpsc_clear_stock_claims, clears the stock claims, runs using wp-cron
+	 * wpsc_clear_stock_claims, clears the stock claims, runs using wp-cron and when editing purchase log statuses via the dashboard
 	 */
 	function wpsc_clear_stock_claims() {
 		global $wpdb;
