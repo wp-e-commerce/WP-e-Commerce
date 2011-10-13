@@ -21,8 +21,8 @@ class WPSC_Settings_Tab_Gateway
 	private function gateway_list() {
 		$selected_gateways = get_option( 'custom_gateway_options', array() );
 
-		foreach ( WPSC_Payment_Gateway::get_gateways() as $gateway ) {
-			$this->gateway_item( $gateway, WPSC_Payment_Gateway::get( $gateway )->get_title(), in_array( $gateway, $selected_gateways ) );
+		foreach ( WPSC_Payment_Gateways::get_gateways() as $gateway ) {
+			$this->gateway_item( $gateway, WPSC_Payment_Gateways::get( $gateway )->get_title(), in_array( $gateway, $selected_gateways ) );
 		}
 
 		global $nzshpcrt_gateways;

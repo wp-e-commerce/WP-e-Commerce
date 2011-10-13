@@ -5,10 +5,10 @@ class WPSC_Payment_Gateway_Manual extends WPSC_Payment_Gateway
 	/**
 	 * Constructor of Manual Payment Gateway
 	 *
-	 * @access protected
+	 * @access public
 	 * @since 3.9
 	 */
-	protected function __construct() {
+	public function __construct() {
 		parent::__construct();
 	}
 	
