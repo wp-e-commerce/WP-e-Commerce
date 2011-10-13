@@ -273,6 +273,7 @@ abstract class WPSC_Payment_Gateway
 	public $setting;
 	public $purchase_log;
 	public $checkout_data;
+	public $currency_code;
 
 	/**
 	 * Return the title of the payment gateway. This method must be overridden by subclasses.
@@ -327,13 +328,38 @@ abstract class WPSC_Payment_Gateway
 		$this->checkout_data = new WPSC_Checkout_Form_Data( $purchase_log->get( 'id ' ) );
 	}
 
+	public function get_currency_code() {
+		if ( ! $this->currency_code ) {
+			$country = new WPSC_Country( get_option( 'currency_type' ) );
+			$currency = $country->get( 'code' );
+		}
+
+		return $currency;
+	}
+
+	public function get_notification_url() {
+		return add_query_arg( 'wpsc_action', 'gateway_notification', (get_option( 'siteurl' ) . "/index.php" ) );
+	}
+
+	public function get_transaction_results_url() {
+		return get_option( 'transact_url' );
+	}
+
+	public function get_shopping_cart_url() {
+		return get_option( 'shopping_cart_url' );
+	}
+
+	public function get_products_page_url() {
+		return get_option( 'product_list_url' );
+	}
+
 	/**
 	 * Payment gateway constructor. Should use WPSC_Payment_Gateways::get( $gateway_name ) instead.
 	 *
 	 * @access public
 	 * @return WPSC_Payment_Gateway
 	 */
-	protected function __construct() {
+	public function __construct() {
 	}
 }
 
