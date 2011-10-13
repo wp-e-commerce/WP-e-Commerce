@@ -64,12 +64,48 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 		return apply_filters( 'wpsc_paypal_express_checkout_return_url', $location );
 	}
 
-	private function set_purchase_log_for_callbacks() {
-		$purchase_log = new WPSC_Purchase_Log( $_REQUEST['sessionid'], 'sessionid' );
+	private function get_notify_url() {
+		$location = add_query_arg( array(
+			'payment_gateway'          => 'paypal-express-checkout',
+			'payment_gateway_callback' => 'ipn',
+		), home_url( 'index.php' ) );
+
+		return apply_filters( 'wpsc_paypal_express_checkout_notify_url', $location );
+	}
+
+	private function set_purchase_log_for_callbacks( $sessionid = false ) {
+		if ( $sessionid === false )
+			$sessionid = $_REQUEST['sessionid'];
+		$purchase_log = new WPSC_Purchase_Log( $sessionid, 'sessionid' );
+
 		if ( ! $purchase_log->exists() )
 			return;
 
 		$this->set_purchase_log( $purchase_log );
+	}
+
+	public function callback_ipn() {
+		$ipn = new PHP_Merchant_Paypal_IPN();
+
+		if ( $ipn->is_verified() ) {
+			$sessionid = $ipn->get( 'invoice' );
+			$this->set_purchase_log_for_callbacks( $sessionid );
+
+			if ( $ipn->is_payment_denied() ) {
+				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::PAYMENT_DECLINED );
+			} elseif ( $ipn->is_payment_refunded() ) {
+				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::REFUNDED );
+			} elseif ( $ipn->is_payment_completed() ) {
+				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT );
+				transaction_results( $sessionid, false );
+			} elseif ( $ipn->is_payment_pending() ) {
+				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::ORDER_RECEIVED );
+			}
+
+			$this->purchase_log->save();
+		}
+
+		exit;
 	}
 
 	public function callback_confirm_transaction() {
@@ -100,9 +136,13 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 		$options = array(
 			'token'    => $token,
 			'payer_id' => $PayerID,
+			'invoice'  => $this->purchase_log->get( 'sessionid' ),
 		);
 		$options += $this->checkout_data->get_gateway_data();
 		$options += $this->purchase_log->get_gateway_data( parent::get_currency_code(), $this->get_currency_code() );
+
+		if ( $this->setting->get( 'ipn', false ) )
+			$options['notify_url'] = $this->get_notify_url();
 
 		$response = $this->gateway->purchase( $options );
 		$location = remove_query_arg( 'payment_gateway_callback' );
@@ -248,8 +288,17 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 				<label><?php _e( 'Sandbox Mode', 'wpsc' ); ?></label>
 			</td>
 			<td>
-				<label><input <?php checked( $this->setting->get( 'sandbox_mode' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'sandbox_mode' ) ); ?>" value="1" /> <?php _e( 'Enabled', 'wpsc' ); ?></label>&nbsp;&nbsp;&nbsp;
-				<label><input <?php checked( $this->setting->get( 'sandbox_mode' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'sandbox_mode' ) ); ?>" value="0" /> <?php _e( 'Disabled', 'wpsc' ); ?></label>
+				<label><input <?php checked( $this->setting->get( 'sandbox_mode' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'sandbox_mode' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wpsc' ); ?></label>&nbsp;&nbsp;&nbsp;
+				<label><input <?php checked( $this->setting->get( 'sandbox_mode' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'sandbox_mode' ) ); ?>" value="0" /> <?php _e( 'No', 'wpsc' ); ?></label>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label><?php _e( 'IPN', 'wpsc' ); ?></label>
+			</td>
+			<td>
+				<label><input <?php checked( $this->setting->get( 'ipn' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'ipn' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wpsc' ); ?></label>&nbsp;&nbsp;&nbsp;
+				<label><input <?php checked( $this->setting->get( 'ipn' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'ipn' ) ); ?>" value="0" /> <?php _e( 'No', 'wpsc' ); ?></label>
 			</td>
 		</tr>
 		<?php if ( ! $this->is_currency_supported() ): ?>
@@ -303,9 +352,13 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 		$total = $this->convert( $this->purchase_log->get( 'totalprice' ) );
 		$options = array(
 			'return_url' => $this->get_return_url(),
+			'invoice'    => $this->purchase_log->get( 'sessionid' ),
 		);
 		$options += $this->checkout_data->get_gateway_data();
 		$options += $this->purchase_log->get_gateway_data( parent::get_currency_code(), $this->get_currency_code() );
+
+		if ( $this->setting->get( 'ipn', false ) )
+			$options['notify_url'] = $this->get_notify_url();
 
 		$response = $this->gateway->setup_purchase( $options );
 		if ( $response->is_successful() ) {
