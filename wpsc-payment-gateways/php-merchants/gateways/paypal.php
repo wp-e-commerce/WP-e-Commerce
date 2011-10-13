@@ -51,6 +51,7 @@ abstract class PHP_Merchant_Paypal extends PHP_Merchant
 	protected function build_request( $request = array() ) {
 		$this->request += $this->add_credentials();
 		$this->request = array_merge( $this->request, $request );
+		return $this->request;
 	}
 	
 	public static function get_supported_currencies() {

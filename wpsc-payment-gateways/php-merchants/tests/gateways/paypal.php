@@ -56,19 +56,57 @@ class PHP_Merchant_Paypal_Test extends UnitTestCase
 			'USD',
 		);
 		
+		$this->assertEqual( $supported, PHP_Merchant_Paypal_Bogus::get_supported_currencies() );
+		
 		foreach ( $supported as $currency ) {
 			$this->assertTrue( PHP_Merchant_Paypal_Bogus::is_currency_supported( $currency ) );
 		}
 		
 		$this->assertFalse( PHP_Merchant_Paypal_Bogus::is_currency_supported( 'ZAR' ) );
 	}
+	
+	public function test_build_request_function_correctly_handles_custom_request_array() {
+		$additional_params = array(
+			'PAYMENTREQUEST_0_SHIPTONAME'        => 'Gary Cao',
+			'PAYMENTREQUEST_0_SHIPTOSTREET'      => '1 Infinite Loop',
+			'PAYMENTREQUEST_0_SHIPTOSTREET2'     => 'Apple Headquarter',
+			'PAYMENTREQUEST_0_SHIPTOCITY'        => 'Cupertino',
+			'PAYMENTREQUEST_0_SHIPTOSTATE'       => 'CA',
+			'PAYMENTREQUEST_0_SHIPTOZIP'         => '95014',
+			'PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE' => 'USA',
+			'PAYMENTREQUEST_0_SHIPTOPHONENUM'    => '(877) 412-7753',
+		);
+		
+		$full_param_list = array(
+			'USER'      => 'sdk-three_api1.sdk.com',
+			'PWD'       => 'QFZCWN5HZM8VBG7Q',
+			'VERSION'   => '74.0',
+			'SIGNATURE' => 'A-IzJhZZjhg29XQ2qnhapuwxIDzyAZQ92FRP5dqBzVesOkzbdUONzmOU',
+			
+			'PAYMENTREQUEST_0_SHIPTONAME'        => 'Gary Cao',
+			'PAYMENTREQUEST_0_SHIPTOSTREET'      => '1 Infinite Loop',
+			'PAYMENTREQUEST_0_SHIPTOSTREET2'     => 'Apple Headquarter',
+			'PAYMENTREQUEST_0_SHIPTOCITY'        => 'Cupertino',
+			'PAYMENTREQUEST_0_SHIPTOSTATE'       => 'CA',
+			'PAYMENTREQUEST_0_SHIPTOZIP'         => '95014',
+			'PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE' => 'USA',
+			'PAYMENTREQUEST_0_SHIPTOPHONENUM'    => '(877) 412-7753',
+		);
+		
+		$request = $this->bogus->build_request( $additional_params );
+		$this->assertEqual( $request, $full_param_list );
+	}
 }
 
 class PHP_Merchant_Paypal_Bogus extends PHP_Merchant_Paypal
 {
-	public $request;
+	public $request = array();
 	
 	public function add_credentials() {
 		return parent::add_credentials();
+	}
+	
+	public function build_request( $request = array() ) {
+		return parent::build_request( $request );
 	}
 }
