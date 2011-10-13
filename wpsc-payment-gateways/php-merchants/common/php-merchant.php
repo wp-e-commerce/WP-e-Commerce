@@ -3,7 +3,7 @@ require_once( 'exception.php' );
 
 abstract class PHP_Merchant
 {
-	protected $this->currencies_without_fractions = array( 'JPY', 'HUF' );
+	protected $currencies_without_fractions = array( 'JPY', 'HUF' );
 	
 	protected $options = array(
 		'currency' => 'USD',
