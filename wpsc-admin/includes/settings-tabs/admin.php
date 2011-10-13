@@ -1,34 +1,32 @@
 <?php
-function wpsc_options_admin(){
-global $wpdb;
-?>
-<form name='cart_options' id='cart_options' method='post' action='' class='wpsc_form_track'>
-	<div id="options_admin">
-	  <h3><?php _e('Admin Settings', 'wpsc'); ?></h3>
-  		<?php 
-		/* wpsc_setting_page_update_notification displays the wordpress styled notifications */
-		wpsc_settings_page_update_notification(); ?>
-			<table class='wpsc_options form-table'>            
+
+class WPSC_Settings_Tab_Admin
+{
+	public function display() {
+		global $wpdb;
+		?>
+			<h3><?php _e('Admin Settings', 'wpsc'); ?></h3>
+			<table class='wpsc_options form-table'>
 				<tr>
 					<th scope="row"><?php _e('Max downloads per file', 'wpsc');?>:	</th>
 					<td>
 						<input type='text' size='10' value='<?php esc_attr_e( get_option('max_downloads') ); ?>' name='wpsc_options[max_downloads]' />
 					</td>
-				</tr>				
+				</tr>
 				<?php
 				$wpsc_ip_lock_downloads1 = "";
 				$wpsc_ip_lock_downloads2 = "";
-				switch( esc_attr( get_option('wpsc_ip_lock_downloads') ) ) {    
+				switch( esc_attr( get_option('wpsc_ip_lock_downloads') ) ) {
 					case 1:
 					$wpsc_ip_lock_downloads1 = "checked ='checked'";
 					break;
-							
+
 					case 0:
 					default:
 					$wpsc_ip_lock_downloads2 = "checked ='checked'";
 					break;
 				}
-	
+
 				?>
 				<tr>
 					<th scope="row">
@@ -40,7 +38,7 @@ global $wpdb;
 					</td>
 				</tr>
 
-				
+
 				<?php
 				$wpsc_check_mime_types1 = "";
 				$wpsc_check_mime_types2 = "";
@@ -48,13 +46,13 @@ global $wpdb;
 					case 1:
 					$wpsc_check_mime_types2 = "checked ='checked'";
 					break;
-							
+
 					case 0:
 					default:
 					$wpsc_check_mime_types1 = "checked ='checked'";
 					break;
 				}
-	
+
 				?>
 				<tr>
 					<th scope="row">
@@ -68,9 +66,9 @@ global $wpdb;
 							<?php _e('Warning: Disabling this exposes your site to greater possibility of malicious files being uploaded, we recommend installing the Fileinfo extention for PHP rather than disabling this.', 'wpsc'); ?>
 						</span>
 					</td>
-				</tr> 
-				
-				
+				</tr>
+
+
 				<tr>
 					<th scope="row">
 					<?php _e('Purchase Log Email', 'wpsc');?>:
@@ -96,7 +94,7 @@ global $wpdb;
 					<input class='text' name='wpsc_options[return_name]' type='text' size='40' value='<?php esc_attr_e( get_option('return_name') ); ?>'  />
 					</td>
 				</tr>
-				
+
 				<tr>
 					<th scope="row">
 					<?php _e('Terms and Conditions', 'wpsc');?>:
@@ -105,8 +103,8 @@ global $wpdb;
 					<textarea name='wpsc_options[terms_and_conditions]' cols='' rows='' style='width: 300px; height: 200px;'><?php esc_attr_e(stripslashes(get_option('terms_and_conditions') ) ); ?></textarea>
 					</td>
 				</tr>
-	
-			</table> 
+
+			</table>
 			<h3 class="form_group"><?php _e('Custom Messages', 'wpsc');?>:</h3>
 			<table class='wpsc_options form-table'>
 				<tr>
@@ -137,7 +135,7 @@ global $wpdb;
 					<td><textarea name="wpsc_options[wpsc_email_admin]" cols='' rows='' style='width: 300px; height: 200px;'><?php esc_attr_e( stripslashes(get_option('wpsc_email_admin') ) );?></textarea></td>
 				</tr>
 			</table>
-			
+
 			<h3 class="form_group"><?php _e("Track and Trace settings", 'wpsc');?>:</h3>
 			<table class='wpsc_options form-table'>
 				<tr>
@@ -156,21 +154,6 @@ global $wpdb;
 					<td><textarea name="wpsc_options[wpsc_trackingid_message]" cols='' rows=''   style='width: 300px; height: 200px;'><?php esc_attr_e( stripslashes(get_option('wpsc_trackingid_message') ) );?></textarea></td>
 				</tr>
 			</table>
-						  
 		<?php
-		/* here end the admin options */						  
-	  ?>
-		<?php do_action('wpsc_admin_settings_page'); ?>
-		<div class="submit">
-			<input type='hidden' name='wpsc_admin_action' value='submit_options' />
-			
-			<?php wp_nonce_field('update-options', 'wpsc-update-options'); ?>
-			<input type="submit" value="<?php _e('Update &raquo;', 'wpsc');?>" name="updateoption"/>
-       </div>
-   </div>
-</form>
-						
-<?php						
-}					
-	
-?>
+	}
+}
