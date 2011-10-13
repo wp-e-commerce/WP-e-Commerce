@@ -35,6 +35,10 @@ abstract class PHP_Merchant
 		throw new PHP_Merchant_Exception( 1, 'recurring' );
 	}
 	
+	public function get_options( $options ) {
+		return $this->options;
+	}
+	
 	public function set_options( $options ) {
 		$this->options = array_merge( $this->options, $options );
 		return $this;
