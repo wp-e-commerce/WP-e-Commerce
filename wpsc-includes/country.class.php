@@ -30,15 +30,20 @@ class WPSC_Country
 		if ( ! in_array( $col, array( 'id', 'isocode' ) ) )
 			return false;
 		
-		$cache_group = $col == 'id' ? 'wpsc_countries' : 'wpsc_country_isocodes';
+		if ( $col == 'isocode' ) {
+			if ( ! $id = wp_cache_get( $value, 'wpsc_country_isocodes' ) )
+				return false;
+			
+			$value = $id;
+		}
 		
-		return wp_cache_get( $value, $cache_group );
+		return wp_cache_get( $value, 'id' );
 	}
 	
 	public static function update_cache( $country ) {
 		$id = $country->id;
 		wp_cache_set( $id, $country->data, 'wpsc_countries' );
-		wp_cache_set( $country->isocode, $country->data, 'wpsc_country_isocodes' );
+		wp_cache_set( $country->isocode, $id, 'wpsc_country_isocodes' );
 	}
 	
 	public static delete_cache( $value = null, $col = 'id' ) {
@@ -49,7 +54,7 @@ class WPSC_Country
 			
 		$country = new WPSC_Country( $value, $col );
 		wp_cache_delete( $country->id, 'wpsc_countries' );
-		wp_cache_delete( $country->isocode, $country->data, 'wpsc_country_isocodes' );
+		wp_cache_delete( $country->isocode, 'wpsc_country_isocodes' );
 	}
 	
 	public function __construct( $value = null, $col = 'id' ) {
