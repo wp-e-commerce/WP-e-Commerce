@@ -7,7 +7,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 	public function __construct() {
 		parent::__construct();
 		$this->title = __( 'Paypal Express Checkout 3.0', 'wpsc' );
-		require_once( 'php-merchants/paypal-express-checkout.php' );
+		require_once( 'php-merchants/gateways/paypal-express-checkout.php' );
 		$this->gateway = new PHP_Merchant_Paypal_Express_Checkout();
 		$this->gateway->set_options( array( 
 			'currency' => $this->get_currency_code(),
