@@ -1,5 +1,6 @@
 <?php
-require_once( 'common/php-merchant.php' );
+require_once( dirname( __FILE__ ) . '/../common/php-merchant.php' );
+
 abstract class PHP_Merchant_Paypal extends PHP_Merchant
 {
 	private static $supported_currencies = array(

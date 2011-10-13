@@ -9,9 +9,9 @@ class PHP_Merchant_Test_Suite extends TestSuite
 	function __construct() {
 		parent::__construct( 'PHP Merchant Test Suite' );
 		$tests = array(
-			'php-merchant',
-			'paypal',
-			'paypal-express-checkout',
+			'common/php-merchant',
+			'gateways/paypal',
+			'gateways/paypal-express-checkout',
 		);
 		
 		$dir = dirname( __FILE__ );

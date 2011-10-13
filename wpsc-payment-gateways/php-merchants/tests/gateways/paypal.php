@@ -1,6 +1,6 @@
 <?php
 
-require_once( PHP_MERCHANT_PATH . '/paypal.php' );
+require_once( PHP_MERCHANT_PATH . '/gateways/paypal.php' );
 
 class PHP_Merchant_Paypal_Test extends UnitTestCase
 {

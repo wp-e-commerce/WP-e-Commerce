@@ -1,6 +1,6 @@
 <?php
 
-require_once( PHP_MERCHANT_PATH . '/paypal-express-checkout.php' );
+require_once( PHP_MERCHANT_PATH . '/gateways/paypal-express-checkout.php' );
 
 class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 {
