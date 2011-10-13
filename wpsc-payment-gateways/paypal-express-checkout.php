@@ -13,7 +13,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 		$this->gateway = new PHP_Merchant_Paypal_Express_Checkout();
 		$this->gateway->set_options( array(
 			'api_username'     => $this->setting->get( 'api_username' ),
-			'api_password'    => $this->setting->get( 'api_password' ),
+			'api_password'     => $this->setting->get( 'api_password' ),
 			'api_signature'    => $this->setting->get( 'api_signature' ),
 			'cancel_url'       => get_option('shopping_cart_url'),
 			'currency'         => $this->get_currency_code(),
@@ -54,10 +54,14 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 	}
 
 	private function get_return_url() {
-		$sep = '?';
-		if ( get_option('permalink_structure') == '' )
-			$sep = '&';
-		return get_option( 'transact_url' ) . $sep . 'sessionid=' . $this->purchase_log->get( 'sessionid' ) . '&payment_gateway=paypal-express-checkout&payment_gateway_callback=confirm_transaction';
+		$location = add_query_arg( array(
+				'sessionid'                => $this->purchase_log->get( 'sessionid' ),
+				'payment_gateway'          => 'paypal-express-checkout',
+				'payment_gateway_callback' => 'confirm_transaction',
+			),
+			get_option( 'transact_url' )
+		);
+		return apply_filters( 'wpsc_paypal_express_checkout_return_url', $location );
 	}
 
 	private function set_purchase_log_for_callbacks() {
