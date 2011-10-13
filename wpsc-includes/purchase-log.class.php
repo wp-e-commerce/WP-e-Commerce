@@ -56,6 +56,8 @@ class WPSC_Purchase_Log
 	 */
 	private $fetched = false;
 	
+	private $cart_contents = array();
+	
 	/**
 	 * Contains the constructor arguments. This array is necessary because we will
 	 * lazy load the DB row into $this->data whenever necessary. Lazy loading is,
@@ -121,7 +123,7 @@ class WPSC_Purchase_Log
 		$log = new WPSC_Purchase_Log( $value, $col );
 		wp_cache_delete( $log->get( 'id' ), 'wpsc_purchase_logs' );
 		wp_cache_delete( $log->get( 'sessionid' ), 'wpsc_purchase_logs_sessionid' );
-		
+		wp_cache_delete( $log->get( 'id' ), 'wpsc_purchase_log_cart_contents' );
 		do_action( 'wpsc_purchase_log_delete_cache', $log, $value, $col );
 	}
 	
@@ -263,6 +265,19 @@ class WPSC_Purchase_Log
 			
 		$value = isset( $this->data[$key] ) ? $this->data[$key] : null;
 		return apply_filters( 'wpsc_purchase_log_get_property', $value, $key, $this );
+	}
+	
+	public function get_cart_contents() {
+		global $wpdb;
+		
+		$id = $this->get( 'id' );
+		if ( $this->cart_contents = wp_cache_get( $id, 'wpsc_purchase_log_cart_contents' ) )
+			return $this->cart_contents;
+			
+		$sql = $wpdb->prepare( "SELECT FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid = %d", $id );
+		$this->cart_contents = $wpdb->get_results( $sql );
+		
+		return $this->cart_contents;
 	}
 	
 	/**
