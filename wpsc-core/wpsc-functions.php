@@ -159,6 +159,11 @@ function wpsc_core_load_purchase_log_statuses() {
 			'label'          => __( 'Refunded', 'wpsc' ),
 			'order'          => 7,
 		),
+		array(
+			'internalname'   => 'refund_pending',
+			'label'          => __( 'Refund Pending', 'wpsc' ),
+			'order'          => 8,
+		),
 	);
 	$wpsc_purchlog_statuses = apply_filters('wpsc_set_purchlog_statuses',$wpsc_purchlog_statuses);
 }
