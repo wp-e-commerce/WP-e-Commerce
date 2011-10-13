@@ -38,6 +38,7 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/upgrades.php' );
 require_once( WPSC_CORE_JS_PATH . '/tinymce3/tinymce.php' );
 
 require_once( WPSC_FILE_PATH . '/wpsc-includes/currency_converter.inc.php' );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/currency.helpers.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/shopping_cart_functions.php' );
 
 // Themes
