@@ -64,6 +64,6 @@ abstract class WPSC_Payment_Gateway
 		if ( ! empty( $params ) )
 			$this->set_params( $params );
 	}
-	
-	abstract protected function set_params( $params = array() );
 }
+
+WPSC_Payment_Gateway::register_dir( WPSC_FILE_PATH . '/wpsc-payment-gateways' );
