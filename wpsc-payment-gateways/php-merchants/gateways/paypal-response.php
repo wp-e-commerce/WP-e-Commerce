@@ -20,6 +20,7 @@ class PHP_Merchant_Paypal_Response extends PHP_Merchant_Response
 			
 			case 'Failure':
 			case 'FailureWithWarning':
+			case 'Warning':
 				$this->is_successful = false;
 				break;
 		}

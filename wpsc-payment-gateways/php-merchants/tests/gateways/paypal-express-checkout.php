@@ -159,6 +159,36 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 		$this->assertEqual( $response->get( 'build'          ), '1.0006'               );
 	}
 	
+	public function test_correct_response_is_returned_when_set_express_checkout_fails() {
+		$mock_response = 'ACK=Failure&CORRELATIONID=224f0e4a32d14&TIMESTAMP=2011%2d07%2d05T13%253A23%253A52Z&VERSION=2%2e30000&BUILD=1%2e0006&L_ERRORCODE0=10412&L_SHORTMESSAGE0=Duplicate%20invoice&L_LONGMESSAGE0=Payment%20has%20already%20been%20made%20for%20this%20InvoiceID.&L_SEVERITYCODE0=3&L_ERRORCODE1=10010&L_SHORTMESSAGE1=Invalid%20Invoice&L_LONGMESSAGE1=Non-ASCII%20invoice%20id%20is%20not%20supported.&L_SEVERITYCODE1=3';
+		$this->bogus->http->returnsByValue( 'post', $mock_response );
+		$response = $this->bogus->setup_purchase( $amount, $this->setup_purchase_options );
+		
+		$this->assertFalse( $response->is_successful() );
+		$this->assertTrue( $response->has_errors() );
+		$this->assertEqual( $response->get( 'timestamp'      ), 1309872232             );
+		$this->assertEqual( $response->get( 'datetime'       ), '2011-07-05T13:23:52Z' );
+		$this->assertEqual( $response->get( 'correlation_id' ), '224f0e4a32d14'        );
+		$this->assertEqual( $response->get( 'version'        ), '2.30000'              );
+		$this->assertEqual( $response->get( 'build'          ), '1.0006'               );
+		
+		$expected_errors = array(
+			array(
+				'code'    => 10412,
+				'message' => 'Duplicate invoice',
+				'details' => 'Payment has already been made for this InvoiceID.',
+			),
+			
+			array(
+				'code'    => 10010,
+				'message' => 'Invalid Invoice',
+				'details' => 'Non-ASCII invoice id is not supported.',
+			),
+		);
+		$actual_errors = $response->get_errors();
+		$this->assertEqual( $actual_errors, $expected_errors );
+	}
+	
 	public function test_correct_response_is_returned_when_set_express_checkout_is_successful_with_warning() {
 		$mock_response = 'ACK=SuccessWithWarning&CORRELATIONID=224f0e4a32d14&TIMESTAMP=2011%2d07%2d05T13%253A23%253A52Z&VERSION=2%2e30000&BUILD=1%2e0006&TOKEN=EC%2d1OIN4UJGFOK54YFV&L_ERRORCODE0=10412&L_SHORTMESSAGE0=Duplicate%20invoice&L_LONGMESSAGE0=Payment%20has%20already%20been%20made%20for%20this%20InvoiceID.&L_SEVERITYCODE0=3&L_ERRORCODE1=10010&L_SHORTMESSAGE1=Invalid%20Invoice&L_LONGMESSAGE1=Non-ASCII%20invoice%20id%20is%20not%20supported.&L_SEVERITYCODE1=3';
 		

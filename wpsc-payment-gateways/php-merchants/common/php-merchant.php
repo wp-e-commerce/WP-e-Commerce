@@ -1,4 +1,12 @@
 <?php
+
+/**
+ * 
+ *
+ * @author Instinct Entertainment
+ * @package PHP_Merchant
+ **/
+
 require_once( 'exception.php' );
 require_once( 'http.php' );
 require_once( 'response.php' );
