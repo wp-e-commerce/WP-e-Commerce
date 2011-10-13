@@ -65,7 +65,6 @@ final class WPSC_Payment_Gateways
 			}
 
 			self::$instances[$gateway] = new $class_name();
-			self::$instances[$gateway]->setting = new WPSC_Payment_Gateway_Setting( $gateway );
 		}
 
 		return self::$instances[$gateway];
@@ -91,20 +90,19 @@ final class WPSC_Payment_Gateways
 	 * structure.
 	 *
 	 * All of the files inside the directory will be assumed as payment gateway modules.
-	 * If the directory has sub-folders, these sub-folders will be scanned as well, and
-	 * files with the same
-	 * name as those sub-folders will be included as payment gateway modules.
+	 * Files with the same name as those sub-folders will be included as payment
+	 * gateway modules.
 	 *
 	 * For example, if we have the following directory structure:
 	 * payment-gateways/
 	 * |-- test-gateway-1.php
 	 * |-- test-gateway-2.php
-	 * |-- test-gateway-3/
-	 *     |-- test-gateway-3.php
+	 * |-- some-folder/
+	 *     |-- class.php
 	 *     |-- functions.php
 	 *
 	 * The following files will be loaded as payment gateway modules: test-gateway-1.php,
-	 * test-gateway-2.php, test-gateway-3/test-gateway-3.php
+	 * test-gateway-2.php
 	 * See WPSC_Payment_Gateways::register_file() for file and class naming convention
 	 *
 	 * @access public
@@ -120,18 +118,21 @@ final class WPSC_Payment_Gateways
 	public static function register_dir( $dir, $main_file = '' ) {
 		$dir = trailingslashit( $dir );
 		$main_file = basename( $dir ) . '.php';
-		if ( file_exists( $dir . $main_file ) )
-			return self::register_file( $dir . $main_file );
 
 		// scan files in dir
 		$files = scandir( $dir );
 
+		if ( in_array( $main_file, $files ) )
+			return self::register_file( $dir . $main_file );
+
 		foreach ( $files as $file ) {
-			if ( $file[0] == '.' )
+			$path = $dir . $file;
+
+			if ( in_array( $file, array( '.', '..' ) ) || is_dir( $path ) )
 				continue;
 
-			$path = $dir . $file;
-			$return = is_dir( $path ) ? self::register_dir( $path ) : self::register_file( $path );
+			$return = self::register_file( $path );
+
 
 			if ( is_wp_error( $return ) )
 				return $return;
@@ -431,6 +432,7 @@ abstract class WPSC_Payment_Gateway
 	 * @return WPSC_Payment_Gateway
 	 */
 	public function __construct() {
+		$this->setting = new WPSC_Payment_Gateway_Setting( get_class( $this ) );
 	}
 }
 
@@ -494,8 +496,10 @@ class WPSC_Payment_Gateway_Setting
 	 * @param string $gateway_name Name of the gateway
 	 * @return WPSC_Payment_Gateway
 	 */
-	public function __construct( $gateway_name ) {
-		$this->gateway_name = str_replace( array( ' ', '-' ), '_', $gateway_name );
+	public function __construct( $gateway_name_or_class ) {
+		$name = str_replace( 'wpsc_payment_gateway_', '', strtolower( $gateway_name_or_class ) );
+		$name = str_replace( array( ' ', '-' ), '_', $name );
+		$this->gateway_name = $name;
 		$this->option_name = 'wpsc_payment_gateway_' . $this->gateway_name;
 	}
 
