@@ -46,7 +46,7 @@ class WPSC_Country
 		wp_cache_set( $country->isocode, $id, 'wpsc_country_isocodes' );
 	}
 	
-	public static delete_cache( $value = null, $col = 'id' ) {
+	public static function delete_cache( $value = null, $col = 'id' ) {
 		if ( is_null( $value ) && $col == 'id' )
 			$value = get_option( 'currency_type' );
 		if ( ! in_array( $col, array( 'id', 'isocode' ) ) )
