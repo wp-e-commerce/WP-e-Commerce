@@ -375,7 +375,7 @@ abstract class WPSC_Payment_Gateway
 
 	public function set_purchase_log( &$purchase_log ) {
 		$this->purchase_log = &$purchase_log;
-		$this->checkout_data = new WPSC_Checkout_Form_Data( $purchase_log->get( 'id ' ) );
+		$this->checkout_data = new WPSC_Checkout_Form_Data( $purchase_log->get( 'id' ) );
 	}
 
 	public function get_currency_code() {

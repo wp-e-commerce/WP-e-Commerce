@@ -1,7 +1,9 @@
 <?php
 
 class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
-{	
+{
+	const SANDBOX_URL = 'https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&token=';
+	const LIVE_URL = 'https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=';
 	private $gateway;
 	
 	public function __construct() {
@@ -9,10 +11,22 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 		$this->title = __( 'Paypal Express Checkout 3.0', 'wpsc' );
 		require_once( 'php-merchant/gateways/paypal-express-checkout.php' );
 		$this->gateway = new PHP_Merchant_Paypal_Express_Checkout();
-		$this->gateway->set_options( array( 
-			'currency' => $this->get_currency_code(),
-			'test'     => (bool) $this->setting->get( 'sandbox_mode' ),
+		$this->gateway->set_options( array(
+			'api_username'     => $this->setting->get( 'api_username' ),
+			'api_password'    => $this->setting->get( 'api_password' ),
+			'api_signature'    => $this->setting->get( 'api_signature' ),
+			'cancel_url'       => get_option('shopping_cart_url'),
+			'currency'         => $this->get_currency_code(),
+			'test'             => (bool) $this->setting->get( 'sandbox_mode' ),
+			'address_override' => true,
 		) );
+	}
+	
+	private function get_return_url() {
+		$sep = '?';
+		if ( get_option('permalink_structure') != '' )
+			$sep = '&';
+		return get_option( 'transact_url' ) . $sep . 'session_id=' . $this->purchase_log->get( 'sessionid' ) . '&gateway=paypal-express-checkout';
 	}
 	
 	public function setup_form() {
@@ -100,6 +114,23 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 	
 	public function process() {
 		$total = $this->convert( $this->purchase_log->get( 'totalprice' ) );
-		$result = $this->gateway->setup_purchase( $total );
+		$options = array(
+			'return_url' => '',
+		);
+		$options += $this->checkout_data->get_gateway_data();
+		$options += $this->purchase_log->get_gateway_data();
+		
+		$response = $this->gateway->setup_purchase( $options );
+		if ( $response->is_successful() ) {
+			$url = ( $this->setting->get( 'sandbox_mode' ) ? self::SANDBOX_URL : self::LIVE_URL ) . $response->get( 'token' );
+			wp_redirect( $url );
+		} else {
+			echo "SetExpressCheckout API call failed. ";
+			$errors = $response->get_errors();
+			for ( $i=0; $i < count( $errors ); $i++ ) { 
+				echo "<p>Error #" . ( $i + 1 ) . ": {$errors[$i]['details']} ({$errors[$i]['code']})</p>";
+			}
+		}
+		exit;
 	}
 }

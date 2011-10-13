@@ -46,6 +46,8 @@ class WPSC_Purchase_Log
 	 */
 	private $data = array();
 	
+	private $gateway_data = array();
+	
 	/**
 	 * True if the DB row is fetched into $this->data. 
 	 *
@@ -274,7 +276,7 @@ class WPSC_Purchase_Log
 		if ( $this->cart_contents = wp_cache_get( $id, 'wpsc_purchase_log_cart_contents' ) )
 			return $this->cart_contents;
 			
-		$sql = $wpdb->prepare( "SELECT FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid = %d", $id );
+		$sql = $wpdb->prepare( "SELECT * FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid = %d", $id );
 		$this->cart_contents = $wpdb->get_results( $sql );
 		
 		return $this->cart_contents;
@@ -293,6 +295,48 @@ class WPSC_Purchase_Log
 			$this->fetch();
 			
 		return apply_filters( 'wpsc_purchase_log_get_data', $this->data, $this );
+	}
+	
+	public function get_gateway_data() {
+		if ( empty( $this->data ) )
+			$this->fetch();
+			
+		$subtotal = 0;
+		$shipping = 0;
+		$tax = 0;
+		$items = array();
+		$this->get_cart_contents();
+		
+		$map = array(
+			'amount' => 'totalprice',
+			'invoice' => 'sessionid',
+		);
+		$this->gateway_data = array(
+			'amount' => $this->data['totalprice'],
+			'invoice' => $this->data['sessionid'],
+			'tax' => $this->data['wpec_taxes_total'],
+		);
+		
+		foreach ( $this->cart_contents as $item ) {
+			$items[] = array(
+				'name'     => $item->name,
+				'amount'   => $item->price,
+				'tax'      => $item->tax_charged,
+				'quantity' => $item->quantity,
+			);
+			$subtotal += $item->price;
+			$shipping += $item->pnp;
+		}
+		
+		$this->gateway_data['items'] = $items;
+		$this->gateway_data['shipping'] = $shipping;
+		$this->gateway_data['subtotal'] = $subtotal;
+		
+		$discount = (float) $this->data['discount_value'];
+		if ( ! empty( $discount ) )
+			$this->gateway_data['discount'] = $discount;
+		
+		return $this->gateway_data;
 	}
 	
 	/**

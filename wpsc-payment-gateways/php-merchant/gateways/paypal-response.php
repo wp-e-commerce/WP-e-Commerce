@@ -32,7 +32,9 @@ class PHP_Merchant_Paypal_Response extends PHP_Merchant_Response
 				break;
 		}
 		
-		$this->options['token']          = $params['TOKEN'];
+		if ( isset( $params['TOKEN'] ) )
+			$this->options['token']          = $params['TOKEN'];
+		
 		$this->options['correlation_id'] = $params['CORRELATIONID'];
 		$this->options['version']        = $params['VERSION'];
 		$this->options['build']          = $params['BUILD'];
