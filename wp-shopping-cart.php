@@ -87,6 +87,9 @@ class WP_eCommerce {
 
 		// Uploads directory info
 		wpsc_core_constants_uploads();
+		
+		// Purchase log statuses
+		wpsc_core_constants_purchase_logs();
 
 		// Any additional constants can hook in here
 		do_action( 'wpsc_constants' );
