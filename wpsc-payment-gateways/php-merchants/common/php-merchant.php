@@ -26,26 +26,26 @@ abstract class PHP_Merchant
 	}
 	
 	public function authorize() {
-		throw new PHP_Merchant_Exception( PHPME_C_FEATURE_NOT_SUPPORTED, 'authorize' );
+		throw new PHP_Merchant_Exception( PHPME_FEATURE_NOT_SUPPORTED, 'authorize' );
 	}
 	
 	public function capture() {
-		throw new PHP_Merchant_Exception( PHPME_C_FEATURE_NOT_SUPPORTED, 'capture' );
+		throw new PHP_Merchant_Exception( PHPME_FEATURE_NOT_SUPPORTED, 'capture' );
 	}
 	
 	public function void() {
-		throw new PHP_Merchant_Exception( PHPME_C_FEATURE_NOT_SUPPORTED, 'void' );
+		throw new PHP_Merchant_Exception( PHPME_FEATURE_NOT_SUPPORTED, 'void' );
 	}
 	
 	public function credit() {
-		throw new PHP_Merchant_Exception( PHPME_C_FEATURE_NOT_SUPPORTED, 'credit' );
+		throw new PHP_Merchant_Exception( PHPME_FEATURE_NOT_SUPPORTED, 'credit' );
 	}
 	
 	public function recurring() {
-		throw new PHP_Merchant_Exception( PHPME_C_FEATURE_NOT_SUPPORTED, 'recurring' );
+		throw new PHP_Merchant_Exception( PHPME_FEATURE_NOT_SUPPORTED, 'recurring' );
 	}
 	
-	public function get_options( $options ) {
+	public function get_options() {
 		return $this->options;
 	}
 	
