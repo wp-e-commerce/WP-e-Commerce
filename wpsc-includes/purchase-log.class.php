@@ -8,6 +8,7 @@ class WPSC_Purchase_Log
 	const JOB_DISPATCHED   = 4;
 	const CLOSED_ORDER     = 5;
 	const PAYMENT_DECLINED = 6;
+	const REFUNDED         = 7;
 
 	/**
 	 * Names of column that requires escaping values as strings before being inserted
