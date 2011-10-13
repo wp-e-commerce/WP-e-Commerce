@@ -5,7 +5,7 @@ require_once( PHP_MERCHANT_PATH . '/common/php-merchant.php' );
 class PHP_Merchant_Test extends UnitTestCase
 {
 	public function __construct() {
-		parent::__construct();
+		parent::__construct( 'PHP_Merchant test cases' );
 	}
 	
 	public function test_options_are_initialized_correctly() {
