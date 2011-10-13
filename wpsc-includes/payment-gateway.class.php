@@ -212,7 +212,7 @@ class WPSC_Payment_Gateway_Setting
 	 * @access private
 	 * @var array
 	 */
-	private $settings = array();
+	private $settings;
 
 	/**
 	 * Contain unsaved settings of the payment gateway. This is useful when the saving of the settings
@@ -287,9 +287,9 @@ class WPSC_Payment_Gateway_Setting
 	 * @return mixed
 	 * @since 3.9
 	 */
-	public function get( $setting ) {
+	public function get( $setting, $default = false ) {
 		$this->lazy_load();
-		return isset( $this->settings[$setting] ) ? $this->settings[$setting] : false;
+		return isset( $this->settings[$setting] ) ? $this->settings[$setting] : $default;
 	}
 
 	/**
