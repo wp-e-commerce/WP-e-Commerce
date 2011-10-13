@@ -154,6 +154,11 @@ function wpsc_core_load_purchase_log_statuses() {
 			'label'          => __( 'Payment Declined', 'wpsc' ),
 			'order'          => 6,
 		),
+		array(
+			'internalname'   => 'refunded',
+			'label'          => __( 'Refunded', 'wpsc' ),
+			'order'          => 7,
+		),
 	);
 	$wpsc_purchlog_statuses = apply_filters('wpsc_set_purchlog_statuses',$wpsc_purchlog_statuses);
 }
