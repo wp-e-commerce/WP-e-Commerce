@@ -145,12 +145,17 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 	}
 	
 	public function test_correct_response_is_returned_when_set_express_checkout_is_successful() {
-		$mock_response = 'ACK=Success&CORRELATIONID=224f0e4a32d14&TIMESTAMP=2011-07-05T13%253A23%253A52Z&VERSION=74.0&BUILD=1.0006&TOKEN=EC-1OIN4UJGFOK54YFV';
+		$mock_response = 'ACK=Success&CORRELATIONID=224f0e4a32d14&TIMESTAMP=2011%2d07%2d05T13%253A23%253A52Z&VERSION=2%2e30000&BUILD=1%2e0006&TOKEN=EC%2d1OIN4UJGFOK54YFV';
 		$this->bogus->http->returnsByValue( 'post', $mock_response );
 		$response = $this->bogus->setup_purchase( $amount, $this->setup_purchase_options );
 		
 		$this->assertTrue( $response->is_successful() );
-		$this->assertEqual( $response->get( 'token' ), 'EC-1OIN4UJGFOK54YFV' );
+		$this->assertEqual( $response->get( 'token'          ), 'EC-1OIN4UJGFOK54YFV'  );
+		$this->assertEqual( $response->get( 'timestamp'      ), 1309872232             );
+		$this->assertEqual( $response->get( 'datetime'       ), '2011-07-05T13:23:52Z' );
+		$this->assertEqual( $response->get( 'correlation_id' ), '224f0e4a32d14'        );
+		$this->assertEqual( $response->get( 'version'        ), '2.30000'              );
+		$this->assertEqual( $response->get( 'build'          ), '1.0006'               );
 	}
 }
 
