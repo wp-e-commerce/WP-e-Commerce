@@ -19,6 +19,7 @@ class PHP_Merchant_Test_Suite extends TestSuite
 			'common/http-curl',
 			'gateways/paypal',
 			'gateways/paypal-express-checkout',
+			'gateways/paypal-ipn',
 		);
 
 		if ( ! empty( $_GET['remote'] ) ) {
@@ -29,7 +30,7 @@ class PHP_Merchant_Test_Suite extends TestSuite
 		}
 
 		$dir = dirname( __FILE__ );
-		
+
 		foreach ( $tests as $test ) {
 			$this->addFile( $dir . '/' . $test . '.php' );
 		}
