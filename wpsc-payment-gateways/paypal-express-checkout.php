@@ -91,18 +91,17 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 			$sessionid = $ipn->get( 'invoice' );
 			$this->set_purchase_log_for_callbacks( $sessionid );
 
-			if ( $ipn->is_payment_denied() ) {
+			if ( $ipn->is_payment_denied() )
 				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::PAYMENT_DECLINED );
-			} elseif ( $ipn->is_payment_refunded() ) {
+			elseif ( $ipn->is_payment_refunded() )
 				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::REFUNDED );
-			} elseif ( $ipn->is_payment_completed() ) {
+			elseif ( $ipn->is_payment_completed() )
 				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT );
-				transaction_results( $sessionid, false );
-			} elseif ( $ipn->is_payment_pending() ) {
+			elseif ( $ipn->is_payment_pending() )
 				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::ORDER_RECEIVED );
-			}
 
 			$this->purchase_log->save();
+			transaction_results( $sessionid, false );
 		}
 
 		exit;
