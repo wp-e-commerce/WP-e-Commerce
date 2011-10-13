@@ -20,6 +20,10 @@ abstract class PHP_Merchant_Response
 		return $this->errors;
 	}
 	
+	public function has_errors() {
+		return ! empty( $this->errors );
+	}
+	
 	public function get_error() {
 		return empty( $this->errors ) ? false : $this->errors[0];
 	}

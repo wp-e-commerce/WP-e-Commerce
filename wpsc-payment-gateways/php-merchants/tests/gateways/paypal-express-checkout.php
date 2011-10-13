@@ -150,6 +150,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 		$response = $this->bogus->setup_purchase( $amount, $this->setup_purchase_options );
 		
 		$this->assertTrue( $response->is_successful() );
+		$this->assertFalse( $response->has_errors() );
 		$this->assertEqual( $response->get( 'token'          ), 'EC-1OIN4UJGFOK54YFV'  );
 		$this->assertEqual( $response->get( 'timestamp'      ), 1309872232             );
 		$this->assertEqual( $response->get( 'datetime'       ), '2011-07-05T13:23:52Z' );
@@ -165,6 +166,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 		$response = $this->bogus->setup_purchase( $amount, $this->setup_purchase_options );
 		
 		$this->assertTrue( $response->is_successful() );
+		$this->assertTrue( $response->has_errors() );
 		$this->assertEqual( $response->get( 'token'          ), 'EC-1OIN4UJGFOK54YFV'  );
 		$this->assertEqual( $response->get( 'timestamp'      ), 1309872232             );
 		$this->assertEqual( $response->get( 'datetime'       ), '2011-07-05T13:23:52Z' );
