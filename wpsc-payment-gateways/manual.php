@@ -10,18 +10,7 @@ class WPSC_Payment_Gateway_Manual extends WPSC_Payment_Gateway
 	 */
 	public function __construct() {
 		parent::__construct();
-	}
-	
-	/**
-	 * Returns the translated title of this payment gateway
-	 *
-	 * @access public
-	 * @since 3.9
-	 *
-	 * @return string
-	 */
-	public function get_title() {
-		return __( 'Manual Payment Gateway 3.0', 'wpsc' );
+		$this->title = __( 'Manual Payment Gateway 3.0', 'wpsc' );
 	}
 	
 	/**
@@ -37,21 +26,6 @@ class WPSC_Payment_Gateway_Manual extends WPSC_Payment_Gateway
 	 * @return void
 	 */
 	public function setup_form() {
-		$checkout_field_types = array(
-			'billing' => __( 'Billing Fields', 'wpsc' ),
-			'shipping' => __( 'Shipping Fields', 'wpsc' ),
-		);
-		
-		$fields = array(
-			'firstname' => __( 'First Name', 'wpsc' ),
-			'lastname'  => __( 'Last Name', 'wpsc' ),
-			'address'   => __( 'Address', 'wpsc' ),
-			'city'      => __( 'City', 'wpsc' ),
-			'state'     => __( 'State', 'wpsc' ),
-			'country'   => __( 'Country', 'wpsc' ),
-			'postcode'  => __( 'Postal Code', 'wpsc' ),
-		);
-		$checkout_form = WPSC_Checkout_Form::get();
 		?>
 		<tr>
 			<td colspan="2">
@@ -70,29 +44,8 @@ class WPSC_Payment_Gateway_Manual extends WPSC_Payment_Gateway
 				</div>
 			</td>
 		</tr>
-		<?php foreach ( $checkout_field_types as $field_type => $title ): ?>
-			<tr>
-				<td colspan="2">
-					<h4><?php echo esc_html( $title ); ?></h4>
-				</td>
-			</tr>
-			<?php foreach ( $fields as $field_name => $field_title ):
-				$unique_name = $field_type . $field_name;
-				$selected_id = $this->setting->get( "checkout_field_{$unique_name}", $checkout_form->get_field_id_by_unique_name( $unique_name ) );
-			?>
-				<tr>
-					<td>
-						<label for="manual-form-<?php echo esc_attr( $unique_name ); ?>"><?php echo esc_html( $field_title ); ?></label>
-					</td>
-					<td>
-						<select name="<?php echo $this->setting->get_field_name( "checkout_field_{$unique_name}" ); ?>" id="manual-form-<?php echo esc_attr( $unique_name ); ?>">
-							<?php $checkout_form->field_drop_down_options( $selected_id ); ?>
-						</select>
-					</td>
-				</tr>
-			<?php endforeach ?>
-		<?php endforeach ?>
 		<?php
+		parent::setup_form();
 	}
 	
 	public function process() {
