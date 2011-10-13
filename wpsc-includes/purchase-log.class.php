@@ -1,7 +1,7 @@
 <?php
 
 class WPSC_Purchase_Log
-{	
+{
 	/**
 	 * Names of column that requires escaping values as strings before being inserted
 	 * into the database
@@ -35,7 +35,7 @@ class WPSC_Purchase_Log
 		'plugin_version',
 		'notes',
 	);
-	
+
 	/**
 	 * Contains the values fetched from the DB
 	 *
@@ -45,11 +45,11 @@ class WPSC_Purchase_Log
 	 * @var array
 	 */
 	private $data = array();
-	
+
 	private $gateway_data = array();
-	
+
 	/**
-	 * True if the DB row is fetched into $this->data. 
+	 * True if the DB row is fetched into $this->data.
 	 *
 	 * @access private
 	 * @since 3.9
@@ -57,9 +57,9 @@ class WPSC_Purchase_Log
 	 * @var string
 	 */
 	private $fetched = false;
-	
+
 	private $cart_contents = array();
-	
+
 	/**
 	 * Contains the constructor arguments. This array is necessary because we will
 	 * lazy load the DB row into $this->data whenever necessary. Lazy loading is,
@@ -75,7 +75,7 @@ class WPSC_Purchase_Log
 		'col'   => '',
 		'value' => '',
 	);
-	
+
 	/**
 	 * True if the row exists in DB
 	 *
@@ -85,7 +85,7 @@ class WPSC_Purchase_Log
 	 * @var string
 	 */
 	private $exists = false;
-	
+
 	/**
 	 * Update cache of the passed log object
 	 *
@@ -99,15 +99,15 @@ class WPSC_Purchase_Log
 	public static function update_cache( &$log ) {
 		// wpsc_purchase_logs stores the data array, while wpsc_purchase_logs_sessionid stores the
 		// log id that's associated with the sessionid
-		
+
 		$id = $log->get( 'id' );
 		wp_cache_set( $id, $log->data, 'wpsc_purchase_logs' );
 		if ( $sessionid = $log->get( 'sessionid' ) )
 			wp_cache_set( $sessionid, $id, 'wpsc_purchase_logs_sessionid' );
-		
+
 		do_action( 'wpsc_purchase_log_update_cache', $log );
 	}
-	
+
 	/**
 	 * Deletes cache of a log (either by using the log ID or sessionid)
 	 *
@@ -128,7 +128,7 @@ class WPSC_Purchase_Log
 		wp_cache_delete( $log->get( 'id' ), 'wpsc_purchase_log_cart_contents' );
 		do_action( 'wpsc_purchase_log_delete_cache', $log, $value, $col );
 	}
-	
+
 	/**
 	 * Deletes a log from the database
 	 *
@@ -139,7 +139,7 @@ class WPSC_Purchase_Log
 	 * @param string $log_id ID of the log
 	 * @return void
 	 */
-	public static function delete( $log_id ) {			
+	public static function delete( $log_id ) {
 		global $wpdb;
 		do_action( 'wpsc_purchase_log_before_delete', $log_id );
 		self::delete_cache( $log_id );
@@ -147,51 +147,51 @@ class WPSC_Purchase_Log
 		$wpdb->query( $sql );
 		do_action( 'wpsc_purchase_log_delete', $log_id );
 	}
-	
+
 	/**
 	 * Constructor of the purchase log object. If no argument is passed, this simply
 	 * create a new empty object. Otherwise, this will get the purchase log from the
 	 * DB either by using purchase log id or sessionid (specified by the 2nd argument).
-	 * 
+	 *
 	 * Eg:
-	 * 
+	 *
 	 * // get purchase log with ID number 23
 	 * $log = new WPSC_Purchase_Log( 23 );
-	 * 
+	 *
 	 * // get purchase log with sessionid "asdf"
 	 * $log = new WPSC_Purchase_Log( 'asdf', 'sessionid' )
 	 *
 	 * @access public
 	 * @since 3.9
 	 *
-	 * @param string $value Optional. Defaults to false. 
-	 * @param string $col Optional. Defaults to 'id'. 
+	 * @param string $value Optional. Defaults to false.
+	 * @param string $col Optional. Defaults to 'id'.
 	 */
 	public function __construct( $value = false, $col = 'id' ) {
 		if ( $value === false )
 			return;
-		
+
 		global $wpdb;
-		
+
 		if ( ! in_array( $col, array( 'id', 'sessionid' ) ) )
 			return;
-			
+
 		// store the constructor args into an array so that later we can lazy load the data
 		$this->args = array(
 			'col'   => $col,
 			'value' => $value,
 		);
-		
+
 		// if the sessionid is in cache, pull out the id
 		if ( $col == 'sessionid'  && $id = wp_cache_get( $value, 'wpsc_purchase_logs_sessionid' ) ) {
 				$col = 'id';
 				$value = $id;
 		}
-		
+
 		// if the id is specified, try to get from cache
 		if ( $col == 'id' )
 			$this->data = wp_cache_get( $value, 'wpsc_purchase_logs' );
-		
+
 		// cache exists
 		if ( $this->data ) {
 			$this->fetched = true;
@@ -200,7 +200,7 @@ class WPSC_Purchase_Log
 		}
 
 	}
-	
+
 	/**
 	 * Fetches the actual record from the database
 	 *
@@ -211,33 +211,33 @@ class WPSC_Purchase_Log
 	 */
 	private function fetch() {
 		global $wpdb;
-		
+
 		if ( $this->fetched )
 			return;
-		
+
 		// If $this->args is not set yet, it means the object contains a new unsaved
 		// row so we don't need to fetch from DB
 		if ( ! $this->args['col'] )
 			return;
-			
+
 		extract( $this->args );
-		
+
 		$format = in_array( $col, self::$string_cols ) ? '%s' : '%d';
 		$sql = $wpdb->prepare( "SELECT * FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE {$col} = {$format}", $value );
-		
+
 		$this->exists = false;
-		
+
 		if ( $data = $wpdb->get_row( $sql, ARRAY_A ) ) {
 			$this->exists = true;
 			$this->data = apply_filters( 'wpsc_purchase_log_data', $data );
 			self::update_cache( $this );
 		}
-		
+
 		do_action( 'wpsc_purchase_log_fetched', $this );
-		
+
 		$this->fetched = true;
 	}
-	
+
 	/**
 	 * Whether the DB row for this purchase log exists
 	 *
@@ -250,7 +250,7 @@ class WPSC_Purchase_Log
 		$this->fetch();
 		return $this->exists;
 	}
-	
+
 	/**
 	 * Returns the value of the specified property of the purchase log
 	 *
@@ -264,24 +264,24 @@ class WPSC_Purchase_Log
 		// lazy load the purchase log row if it's not fetched from the database yet
 		if ( empty( $this->data ) || ! array_key_exists( $key, $this->data ) )
 			$this->fetch();
-			
+
 		$value = isset( $this->data[$key] ) ? $this->data[$key] : null;
 		return apply_filters( 'wpsc_purchase_log_get_property', $value, $key, $this );
 	}
-	
+
 	public function get_cart_contents() {
 		global $wpdb;
-		
+
 		$id = $this->get( 'id' );
 		if ( $this->cart_contents = wp_cache_get( $id, 'wpsc_purchase_log_cart_contents' ) )
 			return $this->cart_contents;
-			
+
 		$sql = $wpdb->prepare( "SELECT * FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid = %d", $id );
 		$this->cart_contents = $wpdb->get_results( $sql );
-		
+
 		return $this->cart_contents;
 	}
-	
+
 	/**
 	 * Returns the whole database row in the form of an associative array
 	 *
@@ -293,52 +293,54 @@ class WPSC_Purchase_Log
 	public function get_data() {
 		if ( empty( $this->data ) )
 			$this->fetch();
-			
+
 		return apply_filters( 'wpsc_purchase_log_get_data', $this->data, $this );
 	}
-	
-	public function get_gateway_data() {
+
+	public function get_gateway_data( $from_currency = false, $to_currency = false ) {
 		if ( empty( $this->data ) )
 			$this->fetch();
-			
 		$subtotal = 0;
-		$shipping = 0;
+		$shipping = wpsc_format_convert_price( (float) $this->data['base_shipping'], $from_currency, $to_currency );
 		$tax = 0;
 		$items = array();
 		$this->get_cart_contents();
-		
-		$map = array(
-			'amount' => 'totalprice',
-			'invoice' => 'sessionid',
-		);
+
 		$this->gateway_data = array(
-			'amount' => $this->data['totalprice'],
+			'amount'  => wpsc_format_convert_price( $this->data['totalprice'], $from_currency, $to_currency ),
 			'invoice' => $this->data['sessionid'],
-			'tax' => $this->data['wpec_taxes_total'],
+			'tax'     => wpsc_format_convert_price( $this->data['wpec_taxes_total'], $from_currency, $to_currency ),
 		);
-		
+
 		foreach ( $this->cart_contents as $item ) {
+			$item_price = wpsc_format_convert_price( $item->price, $from_currency, $to_currency );
 			$items[] = array(
 				'name'     => $item->name,
-				'amount'   => $item->price,
-				'tax'      => $item->tax_charged,
+				'amount'   => $item_price,
+				'tax'      => wpsc_format_convert_price( $item->tax_charged, $from_currency, $to_currency ),
 				'quantity' => $item->quantity,
 			);
-			$subtotal += $item->price;
-			$shipping += $item->pnp;
+			$subtotal += $item_price;
+			$shipping += wpsc_format_convert_price( $item->pnp, $from_currency, $to_currency );
 		}
-		
+
+		$this->gateway_data['discount'] = wpsc_format_convert_price( (float) $this->data['discount_value'], $from_currency, $to_currency );
+
 		$this->gateway_data['items'] = $items;
 		$this->gateway_data['shipping'] = $shipping;
 		$this->gateway_data['subtotal'] = $subtotal;
-		
-		$discount = (float) $this->data['discount_value'];
-		if ( ! empty( $discount ) )
-			$this->gateway_data['discount'] = $discount;
-		
+
+		if ( $from_currency ) {
+			// adjust total amount in case there's slight decimal error
+			$total = $subtotal + $shipping + $this->gateway_data['tax'] - $this->gateway_data['discount'];
+			if ( $this->gateway_data['amount'] != $total )
+				$this->gateway_data['amount'] = $total;
+		}
+
+		$this->gateway_data = apply_filters( 'wpsc_purchase_log_gateway_data', $this->gateway_data, $this->data );
 		return $this->gateway_data;
 	}
-	
+
 	/**
 	 * Sets a property to a certain value. This function accepts a key and a value
 	 * as arguments, or an associative array containing key value pairs.
@@ -352,22 +354,22 @@ class WPSC_Purchase_Log
 	 *                          this should be specified.
 	 * @return WPSC_Purchase_Log The current object (for method chaining)
 	 */
-	public function set( $key, $value = null ) {		
+	public function set( $key, $value = null ) {
 		if ( is_array( $key ) ) {
 			$properties = $key;
 		} else {
 			if ( is_null( $value ) )
 				return $this;
-			
+
 			$properties = array( $key => $value );
 		}
-		
+
 		$properties = apply_filters( 'wpsc_purchase_log_set_properties', $properties, $this );
 
 		$this->data = array_merge( $this->data, $properties );
 		return $this;
 	}
-	
+
 	/**
 	 * Returns an array containing the parameter format so that this can be used in
 	 * $wpdb methods (update, insert etc.)
@@ -375,19 +377,19 @@ class WPSC_Purchase_Log
 	 * @access private
 	 * @since 3.9
 	 *
-	 * @param array $data 
+	 * @param array $data
 	 * @return array
 	 */
 	private function get_data_format( $data ) {
 		$format = array();
-		
+
 		foreach ( $data as $key => $value ) {
 			$format[] = in_array( $key, self::$string_cols ) ? '%s' : '%d';
 		}
-		
+
 		return $format;
 	}
-	
+
 	/**
 	 * Saves the purchase log back to the database
 	 *
@@ -398,9 +400,9 @@ class WPSC_Purchase_Log
 	 */
 	public function save() {
 		global $wpdb;
-		
+
 		do_action( 'wpsc_purchase_log_pre_save', $this );
-		
+
 		// $this->args['col'] is empty when the record is new and needs to
 		// be inserted. Otherwise, it means we're performing an update
 		$where_col = $this->args['col'];
@@ -419,7 +421,7 @@ class WPSC_Purchase_Log
 			$data = apply_filters( 'wpsc_purchase_log_insert_data', $this->data );
 			$format = $this->get_data_format( $data );
 			$result = $wpdb->insert( WPSC_TABLE_PURCHASE_LOGS, $data, $format );
-			
+
 			if ( $result ) {
 				$this->set( 'id', $wpdb->insert_id );
 
@@ -430,10 +432,10 @@ class WPSC_Purchase_Log
 					'value' => $this->get( 'id' ),
 				);
 			}
-			
+
 			do_action( 'wpsc_purchase_log_insert', $this );
 		}
-		
+
 		do_action( 'wpsc_purchase_log_save', $this );
 		return $this;
 	}
