@@ -57,6 +57,7 @@ abstract class WPSC_Payment_Gateway
 	}
 	
 	abstract public static function get_title();
+	abstract public static function setup_form();
 	
 	protected $params;
 	
