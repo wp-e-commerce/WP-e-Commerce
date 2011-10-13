@@ -28,7 +28,7 @@ final class WPSC_Payment_Gateways
 	 *
 	 * @access private
 	 * @static
-	 * 
+	 *
 	 * @since 3.9
 	 *
 	 * @var array
@@ -129,7 +129,7 @@ final class WPSC_Payment_Gateways
 		foreach ( $files as $file ) {
 			$path = $dir . $file;
 
-			if ( in_array( $file, array( '.', '..' ) ) || is_dir( $path ) )
+			if ( pathinfo( $path, PATHINFO_EXTENSION ) != 'php' || in_array( $file, array( '.', '..' ) ) || is_dir( $path ) )
 				continue;
 
 			$return = self::register_file( $path );
