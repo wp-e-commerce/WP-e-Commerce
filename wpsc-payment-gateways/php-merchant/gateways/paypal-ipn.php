@@ -6,11 +6,13 @@ class PHP_Merchant_Paypal_IPN
 	const LIVE_URL = 'https://www.paypal.com/cgi-bin/webscr';
 
 	private $verified = false;
+	private $params = array();
 	private $data = array();
 
 	public function __construct( $data = false, $test = false ) {
 		if ( $data === false )
 			$data = $_POST;
+		$this->params = $data;
 
 		$verifying_data = array( 'cmd' => '_notify-validate' );
 		$verifying_data += $data;
@@ -103,18 +105,22 @@ class PHP_Merchant_Paypal_IPN
 	}
 
 	public function is_payment_completed() {
-		return $this->data['payment_status'] == 'Completed' || $this->data['payment_status'] == 'Processed';
+		return in_array( $this->get( 'payment_status' ), array( 'Completed', 'Processed' ) );
 	}
 
 	public function is_payment_pending() {
-		return $this->data['payment_status'] == 'Pending';
+		return $this->get( 'payment_status' ) == 'Pending';
 	}
 
 	public function is_payment_refunded() {
-		return $this->data['payment_status'] == 'Refunded';
+		return in_array( $this->get( 'payment_status' ), array( 'Refunded', 'Reversed' ) );
+	}
+
+	public function is_payment_refund_pending() {
+		return $this->is_payment_pending() && isset( $this->params['reason_code'] ) && $this->params['reason_code'] == 'refund';
 	}
 
 	public function is_payment_denied() {
-		return $this->data['payment_status'] == 'Denied';
+		return $this->get( 'payment_status' ) == 'Denied';
 	}
 }
