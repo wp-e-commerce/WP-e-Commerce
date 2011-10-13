@@ -195,6 +195,18 @@ abstract class WPSC_Payment_Gateway
 	abstract public function setup_form();
 
 	/**
+	 * Returns the URL to the logo of the payment gateway (or any representative image).
+	 *
+	 * @access public
+	 * @since 3.9
+	 *
+	 * @return mixed False if there's no image defined.
+	 */
+	public function get_image_url() {
+		return false;
+	}
+	
+	/**
 	 * Payment gateway constructor. Cannot be called publicly. Must use WPSC_Payment_Gateway::get( $gateway_name ) instead.
 	 *
 	 * @access protected
