@@ -12,13 +12,16 @@ abstract class PHP_Merchant
 	
 	protected $http;
 	
-	public function __construct( $options = array() ) {
-		$this->set_options( $options );
-		
-		if ( ! array_key_exists( 'http_client', $this->options ) ) {
+	public function __construct( $options = array() ) {		
+		if ( ! array_key_exists( 'http_client', $options ) ) {
 			require_once( 'http-curl.php' );
 			$this->http = new PHP_Merchant_HTTP_CURL();
+		} else {
+			$this->http =& $options['http_client'];
+			unset( $options['http_client'] );
 		}
+		
+		$this->set_options( $options );
 	}
 	
 	public function format( $amt, $currency = false ) {
