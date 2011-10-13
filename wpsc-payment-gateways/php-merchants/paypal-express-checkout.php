@@ -14,7 +14,8 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 			'handling'         => 'PAYMENTREQUEST_0_HANDLINGAMT',
 			'tax'              => 'PAYMENTREQUEST_0_TAXAMT',
 			'description'      => 'PAYMENTREQUEST_0_DESC',
-			'invoice_id'       => 'PAYMENTREQUEST_0_INVNUM',
+			'invoice'          => 'PAYMENTREQUEST_0_INVNUM',
+			'notify_url'       => 'PAYMENTREQUEST_0_NOTIFYURL',
 		);
 		
 		$request = array(
@@ -22,6 +23,16 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 			'PAYMENTREQUEST_0_CURRENCYCODE' => $this->options['currency'],
 			'PAYMENTREQUEST_0_PAYMENTACTION' => $action,
 		);
+		
+		foreach ( $optionals as $key => $param ) {
+			if ( ! empty( $this->options[$key] ) )
+				if ( in_array( $key, array( 'subtotal', 'shipping', 'handling', 'tax' ) ) )
+					$request[$param] = $this->format( $this->options[$key] );
+				else
+					$request[$param] = $this->options[$key];
+		}
+		
+		$subtotal = 0;
 		
 		$i = 0;
 		foreach ( $this->options['items'] as $item ) {
@@ -32,35 +43,43 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 			);
 			
 			$request["L_PAYMENTREQUEST_0_NAME{$i}"] = $item['name'];
-			$request["L_PAYMENTREQUEST_0_AMT{$i}"] = $item['amount'];
+			$request["L_PAYMENTREQUEST_0_AMT{$i}"] = $this->format( $item['amount'] );
 			$request["L_PAYMENTREQUEST_0_QTY{$i}"] = $item['quantity'];
 			
 			foreach ( $item_optionals as $key => $param ) {
-				if ( ! empty( $this->options[$key] ) )
-					$request[$param] = $this->options[$key];
+				if ( ! empty( $this->options['items'][$i][$key] ) )
+					if ( $key == 'tax' )
+						$request[$param] = $this->format( $this->options['items'][$i][$key] );
+					else
+						$request[$param] = $this->options['items'][$i][$key];
 			}
+			
+			$i ++;
 		}
+		
+		return $request;
 	}
 	
-	protected function add_address( $type = 'both' ) {
+	protected function add_address() {
 		$map = array(
-			'shipping' => array(
-				'name'     => 'PAYMENTREQUEST_0_SHIPTONAME',
-				'address1' => 'PAYMENTREQUEST_0_SHIPTOSTREET',
-				'address2' => 'PAYMENTREQUEST_0_SHIPTOSTREET2',
-				'city'     => 'PAYMENTREQUEST_0_SHIPTOCITY',
-				'state'    => 'PAYMENTREQUEST_0_SHIPTOSTATE',
-				'zip'      => 'PAYMENTREQUEST_0_SHIPTOZIP',
-				'country'  => 'PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE',
-				'phone'    => 'PAYMENTREQUEST_0_SHIPTOPHONENUM',
-			),
+			'name'     => 'PAYMENTREQUEST_0_SHIPTONAME',
+			'street'   => 'PAYMENTREQUEST_0_SHIPTOSTREET',
+			'street2'  => 'PAYMENTREQUEST_0_SHIPTOSTREET2',
+			'city'     => 'PAYMENTREQUEST_0_SHIPTOCITY',
+			'state'    => 'PAYMENTREQUEST_0_SHIPTOSTATE',
+			'zip'      => 'PAYMENTREQUEST_0_SHIPTOZIP',
+			'country'  => 'PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE',
+			'phone'    => 'PAYMENTREQUEST_0_SHIPTOPHONENUM',
 		);
+		
 		$request = array();
 		
-		if ( $type != 'billing' ) {
-			foreach ( $map[$type] as $key => $param ) {
-			}
+		foreach ( $map as $key => $param ) {
+			if ( ! empty( $this->options['shipping_address'][$key] ) )
+				$request[$param] = $this->options['shipping_address'][$key];
 		}
+		
+		return $request;
 	}
 	
 	protected function build_setup_request( $action, $amt, $options = array() ) {
@@ -76,25 +95,31 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 		$request = array(
 			'METHOD' => 'SetExpressCheckout',
 			'RETURNURL' => $this->options['return_url'],
-			'CANCEL_URL' => $this->options['cancel_url'],
+			'CANCELURL' => $this->options['cancel_url'],
 		);
 		
 		foreach ( $optionals as $key => $param ) {
 			if ( ! empty( $this->options[$key] ) )
-				$request[$param] = $this->options[$key];
+				if ( is_bool( $this->options[$key] ) )
+					$request[$param] = (int) $this->options[$key];
+				else
+					$request[$param] = $this->options[$key];
 		}
 		
-		$this->add_payment( $action, $amt );
-		
 		if ( ! empty( $this->options['shipping'] ) && ! empty( $this->options['address_override'] ) )
-			$this->add_address( 'shipping' );
+			$request += $this->add_address();
 		
-		$this->request = array_merge( $this->request, $request );
+		$request += $this->add_payment( $action, $amt );
+		
+		return $request;
 	}
 	
 	public function setup_purchase( $amt, $options = array() ) {
+		$this->options = array_merge( $this->options, $options );
 		$this->requires( 'return_url', 'cancel_url' );
-		$this->commit( 'SetExpressCheckout', $this->build_setup_request( 'Sale', $amt, $options ) );
+		$request = $this->build_setup_request( 'Sale', $amt, $options );
+
+		$this->commit( 'SetExpressCheckout', $request );
 	}
 	
 	public function purchase() {

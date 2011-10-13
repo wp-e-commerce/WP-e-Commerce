@@ -2,8 +2,6 @@
 require_once( 'common/php-merchant.php' );
 abstract class PHP_Merchant_Paypal extends PHP_Merchant
 {
-	const VERSION = '72.0';
-	
 	private static $supported_currencies = array(
 		'AUD',
 		'BRL',
@@ -34,7 +32,8 @@ abstract class PHP_Merchant_Paypal extends PHP_Merchant
 	const SANDBOX_URL = 'https://api-3t.sandbox.paypal.com/nvp';
 	const LIVE_URL = 'https://api-3t.paypal.com/nvp';
 	
-	protected $request;
+	protected $request = array();
+	protected $url;
 	
 	protected function add_credentials() {
 		$credentials = array(
@@ -43,9 +42,8 @@ abstract class PHP_Merchant_Paypal extends PHP_Merchant
 			'VERSION' => self::API_VERSION,
 			'SIGNATURE' => $this->options['api_signature'],
 		);
-	}
-	
-	protected function add_address() {
+		
+		$this->request = array_merge( $this->request, $credentials );
 	}
 	
 	protected function build_request( $request ) {
@@ -61,6 +59,15 @@ abstract class PHP_Merchant_Paypal extends PHP_Merchant
 		parent::__construct( $options );
 	}
 	
+	public function set_options( $options ) {
+		parent::set_options( $options );
+		
+		if ( ! empty( $this->options['test'] ) )
+			$this->url = self::SANDBOX_URL;
+		else
+			$this->url = self::LIVE_URL;
+	}
+	
 	public function is_currency_supported( $currency ) {
 		return in_array( $currency, self::$supported_currencies );
 	}
@@ -68,5 +75,6 @@ abstract class PHP_Merchant_Paypal extends PHP_Merchant
 	protected function commit( $action, $request ) {
 		$request['METHOD'] = $action;
 		$this->build_request( $request );
+		$this->http->post( $this->url, $this->request );
 	}
 }
