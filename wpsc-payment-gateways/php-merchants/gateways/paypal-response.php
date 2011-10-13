@@ -28,6 +28,18 @@ class PHP_Merchant_Paypal_Response extends PHP_Merchant_Response
 		$this->options['correlation_id'] = $params['CORRELATIONID'];
 		$this->options['version']        = $params['VERSION'];
 		$this->options['build']          = $params['BUILD'];
+		
+		$i = 0;
+		while ( array_key_exists( "L_ERRORCODE{$i}", $params ) ) {
+			$error = array(
+				'code'    => $params["L_ERRORCODE{$i}"],
+				'message' => $params["L_SHORTMESSAGE{$i}"],
+				'details' => $params["L_LONGMESSAGE{$i}"],
+			);
+			
+			$this->errors[] = $error;
+			$i++;
+		}
 			
 		if ( is_array( $time ) ) {
 			extract( $time, EXTR_SKIP );
