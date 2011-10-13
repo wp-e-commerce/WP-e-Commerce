@@ -868,27 +868,8 @@ function wpsc_submit_options( $selected='' ) {
 		}
 	}
 
-	$sendback = wp_get_referer();
-
-	if ( isset( $updated ) ) {
-		$sendback = add_query_arg( 'updated', $updated, $sendback );
-	}
-	if ( isset( $shipadd ) ) {
-		$sendback = add_query_arg( 'shipadd', $shipadd, $sendback );
-	}
-
-	if ( !isset( $_SESSION['wpsc_settings_curr_page'] ) )
-		$_SESSION['wpsc_settings_curr_page'] = '';
 	if ( !isset( $_POST['page_title'] ) )
 		$_POST['page_title'] = '';
-	if ( isset( $_SESSION['wpsc_settings_curr_page'] ) ) {
-		$sendback = add_query_arg( 'tab', $_SESSION['wpsc_settings_curr_page'], $sendback );
-	}
-
-	$sendback = add_query_arg( 'page', 'wpsc-settings', $sendback );
-	$sendback = apply_filters( 'wpsc_settings_redirect_url', $sendback );
-	wp_redirect( $sendback );
-	exit();
 }
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'submit_options') )
 	add_action( 'admin_init', 'wpsc_submit_options' );
@@ -1017,6 +998,7 @@ function wpsc_clean_categories() {
 	if ( isset( $_SESSION['wpsc_settings_curr_page'] ) ) {
 		$sendback = add_query_arg( 'tab', $_SESSION['wpsc_settings_curr_page'], $sendback );
 	}
+
 	wp_redirect( $sendback );
 
 	exit();
@@ -1191,17 +1173,6 @@ function wpsc_gateway_settings() {
 	if ( (isset( $_POST['payment_gw'] ) && $_POST['payment_gw'] != null ) ) {
 		update_option( 'payment_gateway', $_POST['payment_gw'] );
 	}
-	$sendback = wp_get_referer();
-
-	if ( isset( $updated ) ) {
-		$sendback = add_query_arg( 'updated', $updated, $sendback );
-	}
-	if ( isset( $_SESSION['wpsc_settings_curr_page'] ) ) {
-		$sendback = add_query_arg( 'page', 'wpsc-settings', $sendback );
-		$sendback = add_query_arg( 'tab', $_SESSION['wpsc_settings_curr_page'], $sendback );
-	}
-	wp_redirect( $sendback );
-	exit();
 }
 if ( isset( $_REQUEST['wpsc_gateway_settings'] ) && ($_REQUEST['wpsc_gateway_settings'] == 'gateway_settings') )
 	add_action( 'admin_init', 'wpsc_gateway_settings' );
@@ -1374,6 +1345,7 @@ function wpsc_checkout_settings() {
 		$sendback = add_query_arg( 'tab', $_SESSION['wpsc_settings_curr_page'], $sendback );
 	}
 	$sendback = add_query_arg( 'page', 'wpsc-settings', $sendback );
+
 	wp_redirect( $sendback );
 	exit();
 }

@@ -1,54 +1,47 @@
 <?php
 
-function wpsc_options_gateway() {
-	global $wpdb, $nzshpcrt_gateways;
+class WPSC_Settings_Tab_Gateway
+{
+	public function display() {
+		global $wpdb, $nzshpcrt_gateways;
+		$curgateway = get_option( 'payment_gateway' );
 
-	$curgateway = get_option( 'payment_gateway' );
+		$payment_gateway_names = get_option( 'payment_gateway_names' );
 
-	$payment_gateway_names = get_option( 'payment_gateway_names' );
-	
-	if ( empty( $nzshpcrt_gateways ) )
-		$nzshpcrt_gateways     = nzshpcrt_get_gateways();
+		if ( empty( $nzshpcrt_gateways ) )
+			$nzshpcrt_gateways     = nzshpcrt_get_gateways();
 
-	if ( is_array( $nzshpcrt_gateways ) ) {
-		$selected_gateways = get_option( 'custom_gateway_options' );
-		foreach ( $nzshpcrt_gateways as $gateway ) {
-			if ( $gateway['internalname'] == $curgateway ) {
-				$selected = "selected='selected'";
-				$form = $gateway['form']();
-				$selected_gateway_data = $gateway;
-			} else {
-				$selected = '';
+		if ( is_array( $nzshpcrt_gateways ) ) {
+			$selected_gateways = get_option( 'custom_gateway_options' );
+			foreach ( $nzshpcrt_gateways as $gateway ) {
+				if ( $gateway['internalname'] == $curgateway ) {
+					$selected = "selected='selected'";
+					$form = $gateway['form']();
+					$selected_gateway_data = $gateway;
+				} else {
+					$selected = '';
+				}
+
+				if ( isset( $gateway['admin_name'] ) )
+					$gateway['name'] = $gateway['admin_name'];
+
+				$disabled = '';
+
+				if ( !in_array( $gateway['internalname'], (array)$selected_gateways ) )
+					$disabled = "disabled='disabled'";
+
+				if ( !isset( $gateway['internalname'] ) )
+					$gateway['internalname'] = '';
+
+				$gatewaylist = '';
+				$gatewaylist .= "<option $disabled value='" . esc_attr( $gateway['internalname'] ) . "' " . $selected . " >" . esc_attr( $gateway['name'] )  . "</option>";
 			}
-
-			if ( isset( $gateway['admin_name'] ) )
-				$gateway['name'] = $gateway['admin_name'];
-
-			$disabled = '';
-
-			if ( !in_array( $gateway['internalname'], (array)$selected_gateways ) )
-				$disabled = "disabled='disabled'";
-
-			if ( !isset( $gateway['internalname'] ) )
-				$gateway['internalname'] = '';
-
-			$gatewaylist = '';
-			$gatewaylist .= "<option $disabled value='" . esc_attr( $gateway['internalname'] ) . "' " . $selected . " >" . esc_attr( $gateway['name'] )  . "</option>";
 		}
-	}
-	$nogw = '';
-	$gatewaylist = "<option value='" . $nogw . "'>" . __( 'Please Select A Payment Gateway', 'wpsc' ) . "</option>" . $gatewaylist;
-?>
+		$nogw = '';
+		$gatewaylist = "<option value='" . $nogw . "'>" . __( 'Please Select A Payment Gateway', 'wpsc' ) . "</option>" . $gatewaylist;
+	?>
 
-	<script language='javascript' type='text/javascript'>
-		function selectgateway() {
-			document.forms.gateway_opt.submit();
-		}
-	</script>
-
-	<div class="wrap">
-	<div class='metabox-holder'>
-		<form name='gatewayopt' method='post' id='gateway_opt' action='' class='wpsc_form_track'>
+		<div class='metabox-holder'>
 			<input type='hidden' name='gateway_submits' value='true' />
 			<input type='hidden' name='wpsc_gateway_settings' value='gateway_settings' />
 			<?php
@@ -59,8 +52,7 @@ function wpsc_options_gateway() {
 				$custom_gateway_hide = "style='display:none;'";
 				$custom_gateway2 = 'checked="checked"';
 			}
-			/* wpsc_setting_page_update_notification displays the wordpress styled notifications */
-			wpsc_settings_page_update_notification(); ?>
+			 ?>
 			<table id='gateway_options' >
 				<tr>
 					<td class='select_gateway'>
@@ -116,7 +108,7 @@ function wpsc_options_gateway() {
 							<td class='gateway_settings' rowspan='2'>
 								<div class='postbox'>
 							<?php
-							
+
 								if ( !isset( $_SESSION['previous_payment_name'] ) )
 									$_SESSION['previous_payment_name'] = "";
 								if ( !isset( $selected_gateway_data ) )
@@ -129,7 +121,7 @@ function wpsc_options_gateway() {
 									<?php echo $payment_data['form_fields']; ?>
 								</table>
 								<?php
-								if ( $payment_data['has_submit_button'] == 0 ) 
+								if ( $payment_data['has_submit_button'] == 0 )
 									$update_button_css = 'style= "display: none;"';
 								else
 									$update_button_css = '';
@@ -142,10 +134,8 @@ function wpsc_options_gateway() {
 					</td>
 				</tr>
 			</table>
-		</form>
-	</div>
-</div>
+		</div>
 
-<?php
-							}
-?>
+	<?php
+	}
+}
