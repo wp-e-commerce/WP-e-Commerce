@@ -85,7 +85,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 	}
 
 	public function callback_ipn() {
-		$ipn = new PHP_Merchant_Paypal_IPN();
+		$ipn = new PHP_Merchant_Paypal_IPN( false, (bool) $this->setting->get( 'sandbox_mode', false ) );
 
 		if ( $ipn->is_verified() ) {
 			$sessionid = $ipn->get( 'invoice' );
