@@ -2,6 +2,13 @@
 
 class WPSC_Purchase_Log
 {
+	const INCOMPLETE_SALE  = 1;
+	const ORDER_RECEIVED   = 2;
+	const ACCEPTED_PAYMENT = 3;
+	const JOB_DISPATCHED   = 4;
+	const CLOSED_ORDER     = 5;
+	const PAYMENT_DECLINED = 6;
+
 	/**
 	 * Names of column that requires escaping values as strings before being inserted
 	 * into the database
@@ -320,7 +327,7 @@ class WPSC_Purchase_Log
 				'tax'      => wpsc_format_convert_price( $item->tax_charged, $from_currency, $to_currency ),
 				'quantity' => $item->quantity,
 			);
-			$subtotal += $item_price;
+			$subtotal += $item_price * $item->quantity;
 			$shipping += wpsc_format_convert_price( $item->pnp, $from_currency, $to_currency );
 		}
 
