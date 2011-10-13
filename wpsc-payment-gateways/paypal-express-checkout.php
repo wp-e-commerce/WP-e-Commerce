@@ -1,36 +1,18 @@
 <?php
 
 class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
-{
-	private $supported_currencies = array(
-		'AUD',
-		'BRL',
-		'CAD',
-		'CHF',
-		'CZK',
-		'DKK',
-		'EUR',
-		'GBP',
-		'HKD',
-		'HUF',
-		'ILS',
-		'JPY',
-		'MXN',
-		'MYR',
-		'NOK',
-		'NZD',
-		'PHP',
-		'PLN',
-		'SEK',
-		'SGD',
-		'THB',
-		'TWD',
-		'USD',
-	);
+{	
+	private $gateway;
 	
 	public function __construct() {
 		parent::__construct();
 		$this->title = __( 'Paypal Express Checkout 3.0', 'wpsc' );
+		require_once( 'php-merchants/paypal-express-checkout.php' );
+		$this->gateway = new PHP_Merchant_Paypal_Express_Checkout();
+		$this->gateway->set_options( array( 
+			'currency' => $this->get_currency_code(),
+			'test'     => (bool) $this->setting->get( 'sandbox_mode' ),
+		) );
 	}
 	
 	public function setup_form() {
@@ -69,7 +51,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 				<label><input <?php checked( $this->setting->get( 'sandbox_mode' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'sandbox_mode' ) ); ?>" value="0" /> <?php _e( 'Disabled', 'wpsc' ); ?></label>
 			</td>
 		</tr>
-		<?php if ( ! $this->currency_is_supported() ): ?>
+		<?php if ( ! $this->is_currency_supported() ): ?>
 			<tr>
 				<td colspan="2">
 					<h4><?php _e( 'Currency Conversion', 'wpsc' ); ?></h4>
@@ -86,7 +68,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 				</td>
 				<td>
 					<select name="<?php echo esc_attr( $this->setting->get_field_name( 'currency' ) ); ?>" id="wpsc-paypal-express-currency">
-						<?php foreach ($this->supported_currencies as $currency): ?>
+						<?php foreach ($this->gateway->get_supported_currencies() as $currency): ?>
 							<option <?php selected( $currency, $paypal_currency ); ?> value="<?php echo esc_attr( $currency ); ?>"><?php echo esc_html( $currency ); ?></option>
 						<?php endforeach ?>
 					</select>
@@ -97,19 +79,27 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 		<?php
 	}
 	
-	private function currency_is_supported() {
+	private function is_currency_supported() {
 		$code = parent::get_currency_code();
-		return in_array( $code, $this->supported_currencies );
+		return in_array( $code, $this->gateway->get_supported_currencies() );
 	}
 	
 	public function get_currency_code() {
 		$code = parent::get_currency_code();
-		if ( ! in_array( $code, $this->supported_currencies ) )
+		if ( ! in_array( $code, $this->gateway->get_supported_currencies() ) )
 			$code = $this->setting->get( 'currency', 'USD' );
 		return $code;
 	}
 	
-	public function process() {
+	private function convert( $amt ) {
+		if ( $this->is_currency_supported() )
+			return $amt;
 		
+		return wpsc_convert_currency( $amt, parent::get_currency_code(), $this->get_currency_code() );
+	}
+	
+	public function process() {
+		$total = $this->convert( $this->purchase_log->get( 'totalprice' ) );
+		$result = $this->gateway->setup_purchase( $total );
 	}
 }
