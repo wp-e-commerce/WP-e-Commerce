@@ -35,27 +35,27 @@ function wpsc_add_to_cart() {
 	$default_parameters['meta'] = null;
 
 	$provided_parameters = array();
-	
+
 	/// sanitise submitted values
 	$product_id = apply_filters( 'wpsc_add_to_cart_product_id', (int)$_POST['product_id'] );
-	
+
 	// compatibility with older themes
 	if ( isset( $_POST['wpsc_quantity_update'] ) && is_array( $_POST['wpsc_quantity_update'] ) ) {
 		$_POST['wpsc_quantity_update'] = $_POST['wpsc_quantity_update'][$product_id];
 	}
-	
+
 	if( isset( $_POST['variation'] ) ){
 		foreach ( (array)$_POST['variation'] as $key => $variation )
 			$provided_parameters['variation_values'][(int)$key] = (int)$variation;
-	
+
 		if ( count( $provided_parameters['variation_values'] ) > 0 ) {
 			$variation_product_id = wpsc_get_child_object_in_terms( $product_id, $provided_parameters['variation_values'], 'wpsc-variation' );
 			if ( $variation_product_id > 0 )
 				$product_id = $variation_product_id;
 		}
-	
+
 	}
-	
+
 	if ( ( isset($_POST['quantity'] ) && $_POST['quantity'] > 0 ) && ( ! isset( $_POST['wpsc_quantity_update'] ) ) ) {
 		$provided_parameters['quantity'] = (int)$_POST['quantity'];
 	} else if ( isset( $_POST['wpsc_quantity_update'] ) ) {
@@ -132,7 +132,7 @@ function wpsc_add_to_cart() {
          ";
 			}
 		}
-		
+
 		echo "jQuery('.cart_message').delay(3000).slideUp(500);";
 
 		do_action( 'wpsc_alternate_cart_html', $cart_messages );
@@ -413,7 +413,7 @@ function wpsc_update_product_price() {
 				$variations[] = (int)$variation;
 			}
 		}
-		
+
 		do_action( 'wpsc_update_variation_product', $product_id, $variations );
 
 		$stock = wpsc_check_variation_stock_availability( $product_id, $variations );
@@ -448,7 +448,7 @@ function wpsc_update_product_price() {
 			}
 		}
 	}
-	
+
 	echo json_encode( $response );
 	exit();
 }
@@ -555,7 +555,7 @@ function wpsc_submit_checkout() {
 				$countries = wpsc_get_meta( $catid[0], 'target_market', 'wpsc_category' );
 			else
 				$countries = wpsc_get_meta( $catid, 'target_market', 'wpsc_category' );
-			
+
 			if ( !empty($countries) && !in_array( $selectedCountry[0]['id'], (array)$countries ) ) {
 				$errormessage = sprintf( __( '%s cannot be shipped to %s. To continue with your transaction please remove this product from the list below.', 'wpsc' ), $cartitem->product_name, $selectedCountry[0]['country'] );
 				$_SESSION['categoryAndShippingCountryConflict'] = $errormessage;
@@ -568,13 +568,13 @@ function wpsc_submit_checkout() {
 			$disregard_shipping++;
 		else
 			$use_shipping++;
-	
+
 	}
 	if ( array_search( $submitted_gateway, $selected_gateways ) !== false )
 		$_SESSION['wpsc_previous_selected_gateway'] = $submitted_gateway;
 	else
 		$is_valid = false;
-	
+
 	if ( get_option( 'do_not_use_shipping' ) == 0 && ($wpsc_cart->selected_shipping_method == null || $wpsc_cart->selected_shipping_option == null) && ( $num_items != $disregard_shipping ) ) {
 		$_SESSION['wpsc_checkout_misc_error_messages'][] = __( 'You must select a shipping method, otherwise we cannot process your order.', 'wpsc' );
 		$is_valid = false;
@@ -593,10 +593,10 @@ function wpsc_submit_checkout() {
 			$base_shipping = $wpsc_cart->calculate_base_shipping();
 		else
 			$base_shipping = 0;
-			
+
 		$delivery_country = $wpsc_cart->delivery_country;
 		$delivery_region = $wpsc_cart->delivery_region;
-		
+
 		if ( wpsc_uses_shipping ( ) ) {
 			$shipping_method = $wpsc_cart->selected_shipping_method;
 			$shipping_option = $wpsc_cart->selected_shipping_option;
@@ -608,7 +608,7 @@ function wpsc_submit_checkout() {
 			$find_us = $_POST['how_find_us'];
 		else
 			$find_us = '';
-		
+
 		//keep track of tax if taxes are exclusive
 		$wpec_taxes_controller = new wpec_taxes_controller();
 		if ( !$wpec_taxes_controller->wpec_taxes_isincluded() ) {
@@ -646,41 +646,40 @@ function wpsc_submit_checkout() {
 		$wpsc_cart->submit_stock_claims( $purchase_log_id );
 		if( !isset( $our_user_id ) && isset( $user_ID ))
 			$our_user_id = $user_ID;
-		$wpsc_cart->log_id = $purchase_log_id; 
+		$wpsc_cart->log_id = $purchase_log_id;
 		do_action( 'wpsc_submit_checkout', array( "purchase_log_id" => $purchase_log_id, "our_user_id" => $our_user_id ) );
 		if ( get_option( 'permalink_structure' ) != '' )
 			$separator = "?";
 		else
 			$separator = "&";
-		
+
+		// submit to gateway
 		if ( is_payment_gateway_registered( $submitted_gateway ) ) {
 			$gateway = wpsc_get_payment_gateway( $submitted_gateway );
 			$gateway->set_purchase_log( WPSC_Purchase_Log::get( $purchase_log_id ) );
-			$gateway->submit();
-		}
-		
-		// submit to gateway
-		$current_gateway_data = &$wpsc_gateways[$submitted_gateway];
-		
-		if ( isset( $current_gateway_data['api_version'] ) && $current_gateway_data['api_version'] >= 2.0 ) {
-			$merchant_instance = new $current_gateway_data['class_name']( $purchase_log_id );
-			$merchant_instance->construct_value_array();
-                                                        do_action_ref_array( 'wpsc_pre_submit_gateway', array( &$merchant_instance ) );
-			$merchant_instance->submit();
-		} elseif ( ($current_gateway_data['internalname'] == $submitted_gateway) && ($current_gateway_data['internalname'] != 'google') ) {
-			$gateway_used = $current_gateway_data['internalname'];
-			$wpdb->update( WPSC_TABLE_PURCHASE_LOGS, array(
-			'gateway' => $gateway_used
-			), array( 'id' => $purchase_log_id ) );
-			$current_gateway_data['function']( $separator, $sessionid );
-		} elseif ( ($current_gateway_data['internalname'] == 'google') && ($current_gateway_data['internalname'] == $submitted_gateway) ) {
-			$gateway_used = $current_gateway_data['internalname'];
-			$wpdb->update( WPSC_TABLE_PURCHASE_LOGS, array(
-			'gateway' => $gateway_used
-			), array( 'id' => $purchase_log_id ) );
-			$_SESSION['gateway'] = 'google';
-			wp_redirect(get_option( 'shopping_cart_url' ));
-			exit;
+
+			$gateway->process();
+		} else {
+			$current_gateway_data = &$wpsc_gateways[$submitted_gateway];
+
+			if ( isset( $current_gateway_data['api_version'] ) && $current_gateway_data['api_version'] >= 2.0 ) {
+				$merchant_instance = new $current_gateway_data['class_name']( $purchase_log_id );
+				$merchant_instance->construct_value_array();
+				$merchant_instance->submit();
+			} elseif ( ($current_gateway_data['internalname'] == $submitted_gateway) && ($current_gateway_data['internalname'] != 'google') ) {
+				$gateway_used = $current_gateway_data['internalname'];
+				$wpdb->update( WPSC_TABLE_PURCHASE_LOGS, array(
+				'gateway' => $gateway_used
+				), array( 'id' => $purchase_log_id ) );
+				$current_gateway_data['function']( $separator, $sessionid );
+			} elseif ( ($current_gateway_data['internalname'] == 'google') && ($current_gateway_data['internalname'] == $submitted_gateway) ) {
+				$gateway_used = $current_gateway_data['internalname'];
+				$wpdb->update( WPSC_TABLE_PURCHASE_LOGS, array(
+				'gateway' => $gateway_used
+				), array( 'id' => $purchase_log_id ) );
+				$_SESSION['gateway'] = 'google';
+				wp_redirect(get_option( 'shopping_cart_url' ));
+			}
 		}
 	}
 }
@@ -788,11 +787,11 @@ function wpsc_change_tax() {
 	if($wpsc_cart->coupons_amount >= wpsc_cart_total(false) && !empty($wpsc_cart->coupons_amount)){
 		$total = 0;
 	}
-	if ( $wpsc_cart->total_price < 0 ) { 
-		$wpsc_cart->coupons_amount += $wpsc_cart->total_price; 
-		$wpsc_cart->total_price = null; 
-		$wpsc_cart->calculate_total_price(); 
-	} 
+	if ( $wpsc_cart->total_price < 0 ) {
+		$wpsc_cart->coupons_amount += $wpsc_cart->total_price;
+		$wpsc_cart->total_price = null;
+		$wpsc_cart->calculate_total_price();
+	}
 	ob_start();
 
 	include_once( wpsc_get_template_file_path( 'wpsc-cart_widget.php' ) );
@@ -1008,8 +1007,8 @@ function wpsc_download_file() {
 		}
 
 		$file_id = $download_data['fileid'];
-		$file_data = wpsc_get_downloadable_file($file_id);		
-			
+		$file_data = wpsc_get_downloadable_file($file_id);
+
 		if ( $file_data == null ) {
 			exit( _e( 'This download is no longer valid, Please contact the site administrator for more information.', 'wpsc' ) );
 		}
@@ -1047,9 +1046,9 @@ function wpsc_download_file() {
 
 			$file_path = WPSC_FILE_DIR . basename( $file_data->post_title );
 			$file_name = basename( $file_data->post_title );
-		
+
 			if ( is_file( $file_path ) ) {
-				if( !ini_get('safe_mode') ) set_time_limit(0);		
+				if( !ini_get('safe_mode') ) set_time_limit(0);
 				header( 'Content-Type: ' . $file_data->post_mime_type );
 				header( 'Content-Length: ' . filesize( $file_path ) );
 				header( 'Content-Transfer-Encoding: binary' );
