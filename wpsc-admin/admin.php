@@ -25,7 +25,7 @@ require_once( WPSC_FILE_PATH . '/wpsc-admin/display-sales-logs.php' );
 if ( ( isset( $_SESSION['wpsc_activate_debug_page'] ) && ( $_SESSION['wpsc_activate_debug_page'] == true ) ) || ( defined( 'WPSC_ADD_DEBUG_PAGE' ) && ( constant( 'WPSC_ADD_DEBUG_PAGE' ) == true ) ) )
 	require_once( WPSC_FILE_PATH . '/wpsc-admin/display-debug.page.php' );
 
-		
+
 //Woothemes integration
 require_once( WPSC_FILE_PATH . '/woo-integration/woo_integration.php' );
 
@@ -38,7 +38,7 @@ if ( !get_option( 'wpsc_checkout_form_sets' ) ) {
 }
 /**
  * wpsc_query_vars_product_list sets the ordering for the edit-products page list
- * @access public 
+ * @access public
  *
  * @since 3.8
  * @param $vars (array) - default query arguments
@@ -47,7 +47,7 @@ if ( !get_option( 'wpsc_checkout_form_sets' ) ) {
 function wpsc_query_vars_product_list($vars){
 	global $current_screen;
 	if('wpsc-product' != $current_screen->post_type) return $vars;
-	
+
 	$vars['posts_per_archive_page'] = 0;
 	if(is_admin() && isset($vars['orderby'])){
 		$vars['orderby'] = 'date';
@@ -77,13 +77,13 @@ function wpsc_query_vars_product_list($vars){
  */
 function wpsc_set_screen_option($status, $option, $value){
 	if( in_array($option, array ("edit_wpsc_variation_per_page","edit_wpsc_product_per_page" )) ){
-		if ( "edit_wpsc_variation_per_page" == $option ){	
+		if ( "edit_wpsc_variation_per_page" == $option ){
 			global $user_ID;
 			update_user_option($user_ID,'edit_wpsc-variation_per_page',$value);
-		}	
+		}
 		return $value;
 	}
-} 
+}
 add_filter('set-screen-option', 'wpsc_set_screen_option', 99, 3);
 
 /**
@@ -96,7 +96,7 @@ add_filter('set-screen-option', 'wpsc_set_screen_option', 99, 3);
  * @return $per_page after changes...
  */
 function wpsc_drag_and_drop_ordering($per_page, $post_type){
-	global $wpdb; 
+	global $wpdb;
 	if ( 'wpsc-product' == $post_type && 'dragndrop' == get_option( 'wpsc_sort_by' ) && $count = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->posts} WHERE `post_type`='wpsc-product' AND `post_parent`=0" ) )
 		$per_page = $count;
 	return $per_page;
@@ -168,6 +168,7 @@ function wpsc_admin_pages() {
 
 	$header = '<p><strong>' . __( 'For More Information', 'wpsc' ) . '</strong></p>';
 
+	add_contextual_help( $edit_options_page,          $header . __( "<a target='_blank' href='http://getshopped.org/resources/docs/store-settings/general/'>General Settings</a><br /> <a target='_blank' href='http://getshopped.org/resources/docs/store-settings/checkout/'>Checkout Options</a> <br />", 'wpsc' ) );
 	add_contextual_help( 'toplevel_page_wpsc-sales-logs',        $header . __( "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/sales/'>About the Sales Page</a>", 'wpsc' ) );
 	add_contextual_help( 'toplevel_page_wpsc-edit-products',     $header . __( "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/products'>About the Products Page</a>", 'wpsc' ) );
 	add_contextual_help( 'products_page_wpsc-edit-groups',       $header . __( "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/categories/'>About the Categories Page</a>", 'wpsc' ) );
@@ -207,8 +208,14 @@ function wpsc_admin_pages() {
 		update_option( 'wpsc_trackingid_message', __( "Track & Trace means you may track the progress of your parcel with our online parcel tracker, just login to our website and enter the following Tracking ID to view the status of your order.\n\nTracking ID: %trackid%\n", 'wpsc' ) );
 	}
 
-	return;
+	add_action( 'load-' . $edit_options_page, 'wpsc_load_settings_page' );
 }
+
+function wpsc_load_settings_page() {
+	require_once('settings-page.php');
+	WPSC_Settings_Page::get_instance();
+}
+
 function wpsc_product_log_rss_feed() {
 	echo "<link type='application/rss+xml' href='" . get_option( 'siteurl' ) . "/wp-admin/index.php?rss=true&amp;rss_key=key&amp;action=purchase_log&amp;type=rss' title='WP e-Commerce Purchase Log RSS' rel='alternate'/>";
 }
@@ -278,14 +285,14 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 
 	if ( version_compare( '3.3', get_bloginfo( 'version' ), '<' ) )
 		wp_admin_css( 'dashboard' );
-	
+
 	if($current_screen->id == 'dashboard_page_wpsc-sales-logs'){
 		// jQuery
 		wp_enqueue_script( 'jquery' );
 		wp_enqueue_script( 'jquery-ui-draggable' );
 		wp_enqueue_script( 'jquery-ui-droppable' );
 		wp_enqueue_script( 'jquery-ui-sortable' );
-		
+
 		// Metaboxes
 		wp_enqueue_script( 'common' );
 		wp_enqueue_script( 'wp-lists' );
@@ -746,7 +753,7 @@ function wpsc_dashboard_4months_widget() {
 				<td align="center" style="border-bottom:solid 1px #000;"><?php echo wpsc_currency_display($amount); ?></td>
 			<?php endforeach; ?>
 		</tr>
-		<?php 
+		<?php
 		$tablerow++;
 		endforeach; ?>
 	</table>
@@ -810,7 +817,7 @@ function wpsc_ajax_ie_save() {
 		'post_title' => $_POST['title']
 	);
 
-	$id = wp_update_post( $product ); 
+	$id = wp_update_post( $product );
 	if ( $id > 0 ) {
 		//need parent meta to know which weight unit we are using
 		$post = get_post( $id );

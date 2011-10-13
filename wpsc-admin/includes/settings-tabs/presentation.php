@@ -1,220 +1,186 @@
 <?php
-/**
- * WP e Commerce Presentation page for WP-Admin : Settings > Presentation
- *
- * @package wp-e-commerce
- * @since 3.7
- */
 
-/**
- * Metabox for theme moving
- * Location: Settings > Presentation page in WP-Admin
- * @access public
- *
- * @since 3.8
- * @param null
- * @return null
- */
-function wpsc_theme_presentation_page_metabox(){
-
-	$wpsc_templates    = wpsc_list_product_templates();
-	$themes_location   = wpsc_check_theme_location();
-	$themes_copied     = false; //Check to see whether themes have been copied to selected Theme Folder
-	$themes_backedup   = false; //Check to see whether themes have recently been backedup
-	$themes_in_uploads = false; //Check to see whether themes live in the uploads directory
-
-	if ( isset( $_SESSION['wpsc_themes_copied'] ) && ( true == $_SESSION['wpsc_themes_copied'] ) )
-		$themes_copied = true;
-
-	if ( isset( $_SESSION['wpsc_themes_backup'] ) && ( true == $_SESSION['wpsc_themes_backup'] ) )
-		$themes_backedup = true;
-
-	if ( wpsc_count_themes_in_uploads_directory() > 0 ) {
-		$themes_in_uploads = true;
-
-		foreach( (array)$themes_location as $location )
-			$new_location[] = str_ireplace( 'wpsc-','', $location );
-
-		$themes_location = $new_location;
+class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab
+{
+	public function __construct() {
+		$this->page_title = __( 'General Settings', 'wpsc' );
 	}
 
-	// Used to flush transients - @since 3.8-development
-	if ( true === $themes_copied )
-		do_action( 'wpsc_move_theme' );
+	public function category_list() {
+		global $wpdb;
 
-?>
-	<div id="poststuff" class="metabox-holder">
-		<div id="themes_and_appearance" class='postbox'>
-			<h3 class="hndle"><span><?php _e( "Advanced Theme Settings", 'wpsc' ); ?></span></h3>
-				<div class="inside">
-				<?php
-				
-				if( isset( $_SESSION['wpsc_theme_empty'] ) && ($_SESSION['wpsc_theme_empty'] == true)  ) {
-					?>
-						
-						<div class="updated fade below-h2" id="message" style="background-color: rgb(255, 251, 204);">
-							<p><?php _e('You did not specify any template files to be moved.','wpsc'); ?></p>
-						</div>
-					<?php
-					$_SESSION['wpsc_theme_empty'] = false;
-					$themes_copied = false;
-				}
-				if ( isset( $_SESSION['wpsc_themes_copied'] ) && ($_SESSION['wpsc_themes_copied'] == true) ) {
-					?>
-						<div class="updated fade below-h2" id="message" style="background-color: rgb(255, 251, 204);">
-							<?php if(in_array(false, $_SESSION['wpsc_themes_copied_results'], true)): ?>
-								<p style="color:red;"><?php _e( "Error: some files could not be copied. Please make sure that theme folder is writable.", 'wpsc' ); ?></p>
-							<?php else: ?>
-								<p><?php _e( "Thanks, the themes have been copied.", 'wpsc' ); ?></p>
-							<?php endif; ?>
-						</div>
-					<?php
-						unset($_SESSION['wpsc_themes_copied']);
-						unset($_SESSION['wpsc_themes_copied_results']);
-					}
-					if ( isset( $_SESSION['wpsc_themes_backup'] ) && ($_SESSION['wpsc_themes_backup'] == true) ) {
-					?>
-						<div class="updated fade below-h2" id="message" style="background-color: rgb(255, 251, 204);">
-							<p><?php _e( "Thanks, you have made a succesful backup of your theme.  It is located at the URL below.  Please note each backup you create will replace your previous backups.", 'wpsc' ); ?></p>
-							<p>URL: <?php echo "/" . str_replace( ABSPATH, "", WPSC_THEME_BACKUP_DIR ); ?></p>
-						</div>
-					<?php
-						$_SESSION['wpsc_themes_backup'] = false;
-					}
-				?>
-				<p>
-				<?php if(false !== $themes_location)
-						//Some themes have been moved to the themes folder
-					_e('Some Theme files have been moved to your WordPress Theme Folder.','wpsc');
-				else
-				    _e('No Theme files have been moved to your WordPress Theme Folder.','wpsc');
-			
-				 ?>
-				
-				</p>
-				<p>
-					<?php _e('WP e-Commerce provides you the ability to move your theme files to a safe place for theming control.
-					
-If you want to change the look of your site, select the files you want to edit from the list and click the move button. This will copy the template files to your active WordPress theme. ','wpsc'); ?>
-				</p>
-				<ul>
-				<?php
-					foreach($wpsc_templates as $file){
-						$id = str_ireplace('.', '_', $file);
-						$selected = '';
-						if(false !== array_search($file, (array)$themes_location))
-							$selected = 'checked="checked"';
-						?>
-						<li><input type='checkbox' id='<?php echo $id; ?>' <?php echo $selected; ?> value='<?php esc_attr_e( $file ); ?>' name='wpsc_templates_to_port[]' />
-						<label for='<?php echo $id; ?>'><?php esc_attr_e( $file ); ?></label></li>
-				<?php }	 ?>
-				 </ul>
-				 <p>
-				 <?php if(false !== $themes_location){
-				 _e('To change the look of certain aspects of your shop, you can edit the moved files that are found here:','wpsc');
-				 ?>
-				 </p>
-				 <p class="howto">	<?php echo  get_stylesheet_directory(); ?></p>
-				<?php } ?>
-				<p><?php
-					wp_nonce_field('wpsc_copy_themes');
-					?>
-					<input type='submit' value='Move Template Files &rarr;' class="button" name='wpsc_move_themes' />
-				</p>
-				 <p><?php _e('You can create a copy of your WordPress Theme by clicking the backup button bellow. Once copied you can find them here:' ,'wpsc'); ?></p>				
-				<p class="howto"> /wp-content/uploads/wpsc/theme_backup/ </p>
-				<p>
-					<?php 
-					printf( __( '<a href="%s" class="button">Backup Your WordPress Theme</a>', 'wpsc' ), wp_nonce_url( 'admin.php?wpsc_admin_action=backup_themes', 'backup_themes' ) ); ?>				
-					<br style="clear:both" />
-				</p>
+		$current_default = esc_attr( get_option( 'wpsc_default_category' ) );
+		$group_data      = get_terms( 'wpsc_product_category', 'hide_empty=0&parent=0' );
+		$categorylist    = "<select name='wpsc_options[wpsc_default_category]'>";
 
-				<br style="clear:both" />
-				 <p><?php _e('If you have moved your files in some other way i.e FTP, you may need to click the Flush Theme Cache. This will refresh the locations WordPress looks for your templates.' ,'wpsc'); ?></p>
-				<p><?php printf( __( '<a href="%s" class="button">Flush Theme Cache</a>', 'wpsc' ), wp_nonce_url( 'admin.php?wpsc_flush_theme_transients=true', 'wpsc_flush_theme_transients' ) ); ?></p>
-				<br style="clear:both" />
-				<br style="clear:both" />
-				</div>
-		</div>
-	</div>
-<?php
-}
-
-/**
- * options categorylist provides a drop down of different options for displaying the products page
- * @access public
- *
- * @since 3.7
- * @param null
- * @return $categorylist XHTML markup
- */
-function options_categorylist() {
-	global $wpdb;
-
-	$current_default = esc_attr( get_option( 'wpsc_default_category' ) );
-	$group_data      = get_terms( 'wpsc_product_category', 'hide_empty=0&parent=0' );
-	$categorylist    = "<select name='wpsc_options[wpsc_default_category]'>";
-
-	if ( $current_default == 'all' )
-		$selected = "selected='selected'";
-	else
-		$selected = '';
-
-	$categorylist .= "<option value='all' " . $selected . " >" . __( 'Show All Products', 'wpsc' ) . "</option>";
-
-	if ( $current_default == 'list' )
-		$selected = "selected='selected'";
-	else
-		$selected = '';
-
-	$categorylist .= "<option value='list' " . $selected . " >" . __( 'Show list of product categories', 'wpsc' ) . "</option>";
-
-	$categorylist .= "<optgroup label='Product Categories'>";
-	foreach ( $group_data as $group ) {
-		$selected = "";
-		if ( $current_default == $group->term_id )
+		if ( $current_default == 'all' )
 			$selected = "selected='selected'";
 		else
+			$selected = '';
+
+		$categorylist .= "<option value='all' " . $selected . " >" . __( 'Show All Products', 'wpsc' ) . "</option>";
+
+		if ( $current_default == 'list' )
+			$selected = "selected='selected'";
+		else
+			$selected = '';
+
+		$categorylist .= "<option value='list' " . $selected . " >" . __( 'Show list of product categories', 'wpsc' ) . "</option>";
+
+		$categorylist .= "<optgroup label='Product Categories'>";
+		foreach ( $group_data as $group ) {
 			$selected = "";
-		
-		$categorylist .= "<option value='" . $group->term_id . "' " . $selected . " >" . $group->name . "</option>";
-		$category_data = get_terms( 'wpsc_product_category', 'hide_empty=0&parent=' . $group->term_id );
-		if ( $category_data != null ) {
-			foreach ( $category_data as $category ) {
-				if ( $current_default == $category->term_id )
-					$selected = "selected='selected'";
-				else
-					$selected = "";
-				$categorylist .= "<option value='" . $category->term_id . "' " . $selected . " >" . $category->name . "</option>";
+			if ( $current_default == $group->term_id )
+				$selected = "selected='selected'";
+			else
+				$selected = "";
+
+			$categorylist .= "<option value='" . $group->term_id . "' " . $selected . " >" . $group->name . "</option>";
+			$category_data = get_terms( 'wpsc_product_category', 'hide_empty=0&parent=' . $group->term_id );
+			if ( $category_data != null ) {
+				foreach ( $category_data as $category ) {
+					if ( $current_default == $category->term_id )
+						$selected = "selected='selected'";
+					else
+						$selected = "";
+					$categorylist .= "<option value='" . $category->term_id . "' " . $selected . " >" . $category->name . "</option>";
+				}
 			}
 		}
+		$categorylist .= "</optgroup>";
+		$categorylist .= "</select>";
+		return $categorylist;
 	}
-	$categorylist .= "</optgroup>";
-	$categorylist .= "</select>";
-	return $categorylist;
-}
 
-/**
- * options presentation is the main function for displaying the WP-Admin : Settings > Presentation page
- * @access public
- *
- * @since 3.7
- * @param null
- * @return null
- */
-function wpsc_options_presentation() {
-	global $wpdb; 
-	
-?>
+	private function theme_metabox(){
 
-	<form name='cart_options' id='cart_options' method='post' action='' class='wpsc_form_track'>
-		<div id="options_presentation">
+		$wpsc_templates    = wpsc_list_product_templates();
+		$themes_location   = wpsc_check_theme_location();
+		$themes_copied     = false; //Check to see whether themes have been copied to selected Theme Folder
+		$themes_backedup   = false; //Check to see whether themes have recently been backedup
+		$themes_in_uploads = false; //Check to see whether themes live in the uploads directory
 
-		<?php wpsc_settings_page_update_notification();	?>
+		if ( isset( $_SESSION['wpsc_themes_copied'] ) && ( true == $_SESSION['wpsc_themes_copied'] ) )
+			$themes_copied = true;
 
-		<div class='product_and_button_settings'>
+		if ( isset( $_SESSION['wpsc_themes_backup'] ) && ( true == $_SESSION['wpsc_themes_backup'] ) )
+			$themes_backedup = true;
+
+		if ( wpsc_count_themes_in_uploads_directory() > 0 ) {
+			$themes_in_uploads = true;
+
+			foreach( (array)$themes_location as $location )
+				$new_location[] = str_ireplace( 'wpsc-','', $location );
+
+			$themes_location = $new_location;
+		}
+
+		// Used to flush transients - @since 3.8-development
+		if ( true === $themes_copied )
+			do_action( 'wpsc_move_theme' );
+
+	?>
+		<div id="poststuff" class="metabox-holder">
+			<div id="themes_and_appearance" class='postbox'>
+				<h3 class="hndle"><span><?php _e( "Advanced Theme Settings", 'wpsc' ); ?></span></h3>
+					<div class="inside">
+					<?php
+
+					if( isset( $_SESSION['wpsc_theme_empty'] ) && ($_SESSION['wpsc_theme_empty'] == true)  ) {
+						?>
+
+							<div class="updated fade below-h2" id="message" style="background-color: rgb(255, 251, 204);">
+								<p><?php _e('You did not specify any template files to be moved.','wpsc'); ?></p>
+							</div>
+						<?php
+						$_SESSION['wpsc_theme_empty'] = false;
+						$themes_copied = false;
+					}
+					if ( isset( $_SESSION['wpsc_themes_copied'] ) && ($_SESSION['wpsc_themes_copied'] == true) ) {
+						?>
+							<div class="updated fade below-h2" id="message" style="background-color: rgb(255, 251, 204);">
+								<?php if(in_array(false, $_SESSION['wpsc_themes_copied_results'], true)): ?>
+									<p style="color:red;"><?php _e( "Error: some files could not be copied. Please make sure that theme folder is writable.", 'wpsc' ); ?></p>
+								<?php else: ?>
+									<p><?php _e( "Thanks, the themes have been copied.", 'wpsc' ); ?></p>
+								<?php endif; ?>
+							</div>
+						<?php
+							unset($_SESSION['wpsc_themes_copied']);
+							unset($_SESSION['wpsc_themes_copied_results']);
+						}
+						if ( isset( $_SESSION['wpsc_themes_backup'] ) && ($_SESSION['wpsc_themes_backup'] == true) ) {
+						?>
+							<div class="updated fade below-h2" id="message" style="background-color: rgb(255, 251, 204);">
+								<p><?php _e( "Thanks, you have made a succesful backup of your theme.  It is located at the URL below.  Please note each backup you create will replace your previous backups.", 'wpsc' ); ?></p>
+								<p>URL: <?php echo "/" . str_replace( ABSPATH, "", WPSC_THEME_BACKUP_DIR ); ?></p>
+							</div>
+						<?php
+							$_SESSION['wpsc_themes_backup'] = false;
+						}
+					?>
+					<p>
+					<?php if(false !== $themes_location)
+							//Some themes have been moved to the themes folder
+						_e('Some Theme files have been moved to your WordPress Theme Folder.','wpsc');
+					else
+					    _e('No Theme files have been moved to your WordPress Theme Folder.','wpsc');
+
+					 ?>
+
+					</p>
+					<p>
+						<?php _e('WP e-Commerce provides you the ability to move your theme files to a safe place for theming control.
+
+	If you want to change the look of your site, select the files you want to edit from the list and click the move button. This will copy the template files to your active WordPress theme. ','wpsc'); ?>
+					</p>
+					<ul>
+					<?php
+						foreach($wpsc_templates as $file){
+							$id = str_ireplace('.', '_', $file);
+							$selected = '';
+							if(false !== array_search($file, (array)$themes_location))
+								$selected = 'checked="checked"';
+							?>
+							<li><input type='checkbox' id='<?php echo $id; ?>' <?php echo $selected; ?> value='<?php esc_attr_e( $file ); ?>' name='wpsc_templates_to_port[]' />
+							<label for='<?php echo $id; ?>'><?php esc_attr_e( $file ); ?></label></li>
+					<?php }	 ?>
+					 </ul>
+					 <p>
+					 <?php if(false !== $themes_location){
+					 _e('To change the look of certain aspects of your shop, you can edit the moved files that are found here:','wpsc');
+					 ?>
+					 </p>
+					 <p class="howto">	<?php echo  get_stylesheet_directory(); ?></p>
+					<?php } ?>
+					<p><?php
+						wp_nonce_field('wpsc_copy_themes');
+						?>
+						<input type='submit' value='Move Template Files &rarr;' class="button" name='wpsc_move_themes' />
+					</p>
+					 <p><?php _e('You can create a copy of your WordPress Theme by clicking the backup button bellow. Once copied you can find them here:' ,'wpsc'); ?></p>
+					<p class="howto"> /wp-content/uploads/wpsc/theme_backup/ </p>
+					<p>
+						<?php
+						printf( __( '<a href="%s" class="button">Backup Your WordPress Theme</a>', 'wpsc' ), wp_nonce_url( 'admin.php?wpsc_admin_action=backup_themes', 'backup_themes' ) ); ?>
+						<br style="clear:both" />
+					</p>
+
+					<br style="clear:both" />
+					 <p><?php _e('If you have moved your files in some other way i.e FTP, you may need to click the Flush Theme Cache. This will refresh the locations WordPress looks for your templates.' ,'wpsc'); ?></p>
+					<p><?php printf( __( '<a href="%s" class="button">Flush Theme Cache</a>', 'wpsc' ), wp_nonce_url( 'admin.php?wpsc_flush_theme_transients=true', 'wpsc_flush_theme_transients' ) ); ?></p>
+					<br style="clear:both" />
+					<br style="clear:both" />
+					</div>
+			</div>
+		</div>
+	<?php
+	}
+
+	public function display() {
+		?>
+			<div class='product_and_button_settings'>
 			<h3 class="form_group"><?php _e( 'Button Settings', 'wpsc' ); ?></h3>
-
 			<table class='wpsc_options form-table'>
 				<tr>
 					<th scope="row"><?php _e( 'Button Type', 'wpsc' ); ?>:</th>
@@ -234,13 +200,13 @@ function wpsc_options_presentation() {
 						}
 						?>
 						<input type='radio' value='0' name='wpsc_options[addtocart_or_buynow]' id='addtocart_or_buynow1' <?php echo $addtocart_or_buynow1; ?> />
-						<label for='addtocart_or_buynow1'><?php _e( 'Add To Cart', 'wpsc' ); ?></label> &nbsp;<br />			
+						<label for='addtocart_or_buynow1'><?php _e( 'Add To Cart', 'wpsc' ); ?></label> &nbsp;<br />
 				<?php $selected_gateways = get_option( 'custom_gateway_options' );
 					$disable_buy_now = '';
 					$message = '';
-					if (!in_array( 'wpsc_merchant_paypal_standard', (array)$selected_gateways )){ 
+					if (!in_array( 'wpsc_merchant_paypal_standard', (array)$selected_gateways )){
 							$disable_buy_now = 'disabled="disabled"';
-							$message = __('Buy Now Button only works for Paypal Standard, please activate Paypal Standard to enable this option.','wpsc');				
+							$message = __('Buy Now Button only works for Paypal Standard, please activate Paypal Standard to enable this option.','wpsc');
 					} ?>
 						<input <?php echo $disable_buy_now; ?> type='radio' value='1' name='wpsc_options[addtocart_or_buynow]' id='addtocart_or_buynow2' <?php echo $addtocart_or_buynow2; ?> />
 						<label for='addtocart_or_buynow2'><?php _e( 'Buy Now', 'wpsc' ); ?></label><br />
@@ -303,7 +269,7 @@ function wpsc_options_presentation() {
 					if ( get_option( 'list_view_quantity' ) == 1 )
 						$list_view_quantity_value1 = 'checked="checked"';
 					else
-						$list_view_quantity_value2 = 'checked="checked"';                
+						$list_view_quantity_value2 = 'checked="checked"';
 					?>
 					<th scope="row">
 						<?php _e('Show Stock Availability','wpsc'); ?>
@@ -410,7 +376,7 @@ function wpsc_options_presentation() {
 			</table>
 		</div>
 
-		<?php wpsc_theme_presentation_page_metabox(); ?>
+		<?php $this->theme_metabox(); ?>
 
 			<div style='clear:both;'></div>
 
@@ -499,8 +465,8 @@ function wpsc_options_presentation() {
 					?>
 					</td>
 				</tr>
-						
-						
+
+
 				<tr id="wpsc-grid-settings">
 					<th scope="row"><?php _e( 'Grid view settings:', 'wpsc' ) ?></th>
 					<td>
@@ -528,16 +494,16 @@ function wpsc_options_presentation() {
 						<label for='display_moredetails'><?php _e( 'Display "More Details" Button', 'wpsc' ); ?></label>
 					</td>
 				</tr>
-				
-				
+
+
 					<?php
 						$selected1 = $selected2 = '';
 						if(get_option('wpsc_display_categories'))
 							$selected1 = 'checked="checked"';
 						else
-							$selected2 = 'checked="checked"';						
+							$selected2 = 'checked="checked"';
 					?>
-		
+
 				<tr>
 					<th scope="row"><?php _e('Show list of categories','wpsc'); ?></th>
 					<td>
@@ -546,11 +512,11 @@ function wpsc_options_presentation() {
 						<label for='display_categories1'><?php _e( 'No', 'wpsc' ); ?></label><br />
 					</td>
 				</tr>
-				
+
 				<tr>
 					<th scope="row"><?php _e( 'Select what product category you want to display on the products page', 'wpsc' ); ?>:</th>
 					<td>
-						<?php echo options_categorylist(); ?>
+						<?php echo $this->category_list(); ?>
 					</td>
 				</tr>
 			<?php
@@ -639,7 +605,7 @@ function wpsc_options_presentation() {
 								<input type='radio' value='1' name='wpsc_options[catsprods_display_type]' id='catsprods_display_type2' <?php echo $catsprods_display_type2; ?> /> <label for='catsprods_display_type2'><?php _e( 'Sliding Product Groups (1 product per page)', 'wpsc' ); ?></label>
 							</td>
 						</tr>
-						
+
 						<tr>
 							<th scope="row">
 								<?php echo __( 'Show Subcategory Products in Parent Category', 'wpsc' ); ?>:
@@ -701,7 +667,7 @@ function wpsc_options_presentation() {
 							} else {
 								$dis = "";
 							}
-							
+
 							$embed_live_search_results = get_option( 'embed_live_search_results', '0' ) == '1' ? ' checked="checked"' : '';
 					?>
 						<input type='radio' onclick='jQuery("#wpsc_advanced_search").show()' value='1' name='wpsc_options[show_search]' id='show_search1' <?php echo $show_search1; ?> /> <label for='show_search1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
@@ -1008,7 +974,7 @@ function wpsc_options_presentation() {
 						</th>
 						<td>
 						<?php _e( 'Width', 'wpsc' ); ?>:<input type='text' size='6' name='wpsc_options[single_view_image_width]' value='<?php esc_attr_e( get_option( 'single_view_image_width' ) ); ?>' />
-						<?php _e( 'Height', 'wpsc' ); ?>:<input type='text' size='6' name='wpsc_options[single_view_image_height]' value='<?php esc_attr_e( get_option( 'single_view_image_height' ) ); ?>' /> 
+						<?php _e( 'Height', 'wpsc' ); ?>:<input type='text' size='6' name='wpsc_options[single_view_image_height]' value='<?php esc_attr_e( get_option( 'single_view_image_height' ) ); ?>' />
 						</td>
 					</tr>
 					<tr>
@@ -1098,7 +1064,7 @@ function wpsc_options_presentation() {
 						<input type='radio' value='thickbox' name='wpsc_options[wpsc_lightbox]' id='wpsc_lightbox_thickbox2' <?php echo $wpsc_lightbox_thickbox2; ?> /> <label for='show_thumbnails_thickbox2'><?php _e( 'Thickbox', 'wpsc' ); ?></label><br />
 					</td>
 				</tr>
-				
+
 					<?php
 						if ( function_exists( 'gold_shpcrt_display_gallery' ) ) {
 					?>
@@ -1131,12 +1097,12 @@ function wpsc_options_presentation() {
 									<?php _e( "Gallery Thumbnail Image Size", 'wpsc' ); ?>:
 								</th>
 								<td>
-									<?php _e( 'Width', 'wpsc' ); ?>:<input type='text' size='6' name='wpsc_options[wpsc_gallery_image_width]' value='<?php esc_attr_e( get_option( 'wpsc_gallery_image_width' ) ); ?>' /> 
+									<?php _e( 'Width', 'wpsc' ); ?>:<input type='text' size='6' name='wpsc_options[wpsc_gallery_image_width]' value='<?php esc_attr_e( get_option( 'wpsc_gallery_image_width' ) ); ?>' />
 									<?php _e( 'Height', 'wpsc' ); ?>:<input type='text' size='6' name='wpsc_options[wpsc_gallery_image_height]' value='<?php esc_attr_e( get_option( 'wpsc_gallery_image_height' ) ); ?>' /><br />
 
 								</td>
 							</tr>
-					
+
 					<?php
 						}
 					?>
@@ -1250,16 +1216,6 @@ function wpsc_options_presentation() {
 
 			</tr>
 		</table>
-
-		<?php do_action('wpsc_presentation_settings_page'); ?>
-		<div class="submit">
-			<input type='hidden' name='wpsc_admin_action' value='submit_options' />
-			<?php wp_nonce_field( 'update-options', 'wpsc-update-options' ); ?>
-			<input type="submit" value="<?php _e( 'Update &raquo;', 'wpsc' ); ?>" name="updateoption" />
-		</div>
-	</div>
-</form>
-<?php
+		<?php
+	}
 }
-
-?>

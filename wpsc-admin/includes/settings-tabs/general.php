@@ -1,15 +1,14 @@
 <?php
+class WPSC_Settings_Tab_General extends WPSC_Settings_Tab
+{
+	public function __construct() {
+		$this->page_title = __( 'General Settings', 'wpsc' );
+	}
 
-function wpsc_options_general() {
-	global $wpdb;
-?>
-	<form method='post' action='' id='cart_options' name='cart_options' class='wpsc_form_track'>
-		<div id="options_general">
-			<h3><?php _e( 'General Settings', 'wpsc' ); ?></h3>
-		<?php
-		/* wpsc_setting_page_update_notification displays the wordpress styled notifications */
-		wpsc_settings_page_update_notification();
+	public function display() {
+		global $wpdb;
 		?>
+		<h3><?php echo _e( 'General Settings', 'wpsc' ); ?></h3>
 		<table class='wpsc_options form-table'>
 			<tr>
 				<th scope="row"><?php _e( 'Base Country/Region', 'wpsc' ); ?>: </th>
@@ -72,12 +71,12 @@ function wpsc_options_general() {
 <?php }
 							} ?>
 							</div><br />
-							<?php _e( 'Select the markets you are selling products to.' , 'wpsc'); 
+							<?php _e( 'Select the markets you are selling products to.' , 'wpsc');
 						}
 ?>
 					</td>
 				</tr>
-				<?php 
+				<?php
 					$stock_keeping_time = get_option( 'wpsc_stock_keeping_time', 1 );
 					$stock_keeping_interval = get_option( 'wpsc_stock_keeping_interval', 'day' );
 				?>
@@ -104,7 +103,7 @@ function wpsc_options_general() {
 						<label><input type="radio" <?php checked( $hierarchical_category, 1 ); ?> name="wpsc_options[product_category_hierarchical_url]" value="1" /> <?php _e( 'Yes', 'wpsc' ); ?></label>&nbsp;&nbsp;
 						<label><input type="radio" <?php checked( $hierarchical_category, 0 ); ?>name="wpsc_options[product_category_hierarchical_url]" value="0" /> <?php _e( 'No', 'wpsc' ); ?></label><br />
 						<?php _e( 'When Hierarchical Product Category URL is enabled, parent product categories are also included in the product URL.<br />For example: example.com/products-page/parent-cat/sub-cat/product-name', 'wpsc' ); ?>
-					</td>	
+					</td>
 				</tr>
 			</table>
 
@@ -180,14 +179,6 @@ function wpsc_options_general() {
 					</td>
 				</tr>
 			</table>
-		<?php do_action('wpsc_general_settings_page'); ?>
-			<div class="submit">
-				<input type='hidden' name='wpsc_admin_action' value='submit_options' />
-				<?php wp_nonce_field( 'update-options', 'wpsc-update-options' ); ?>
-				<input type="submit" value="<?php _e( 'Update &raquo;', 'wpsc' ); ?>" name="updateoption" />
-			</div>
-		</div>
-	</form>
-<?php
-					}
-?>
+		<?php
+	}
+}
