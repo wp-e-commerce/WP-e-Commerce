@@ -1,5 +1,6 @@
 <?php
 require_once( 'exception.php' );
+require_once( 'http.php' );
 
 abstract class PHP_Merchant
 {
@@ -9,8 +10,15 @@ abstract class PHP_Merchant
 		'currency' => 'USD',
 	);
 	
+	protected $http;
+	
 	public function __construct( $options = array() ) {
-		$this->options = array_merge( $this->options, $options );
+		$this->set_options( $options );
+		
+		if ( ! array_key_exists( 'http_client', $this->options ) ) {
+			require_once( 'http-curl.php' );
+			$this->http = new PHP_Merchant_HTTP_CURL();
+		}
 	}
 	
 	public function format( $amt, $currency = false ) {
