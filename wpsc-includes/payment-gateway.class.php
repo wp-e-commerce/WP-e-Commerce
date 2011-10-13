@@ -353,6 +353,29 @@ abstract class WPSC_Payment_Gateway
 		return get_option( 'product_list_url' );
 	}
 
+	public function go_to_transaction_results() {
+		//Now to do actions once the payment has been attempted
+		switch ( $this->purchase_log->get( 'processed' ) ) {
+			case 3:
+				// payment worked
+				do_action('wpsc_payment_successful');
+				break;
+			case 1:
+				// payment declined
+				do_action('wpsc_payment_failed');
+				break;
+			case 2:
+				// something happened with the payment
+				do_action('wpsc_payment_incomplete');
+				break;
+		}
+
+		$transaction_url_with_sessionid = add_query_arg( 'sessionid', $this->purchase_log->get( 'sessionid' ), get_option( 'transact_url' ) );
+		wp_redirect( $transaction_url_with_sessionid );
+
+		exit();
+	}
+
 	/**
 	 * Payment gateway constructor. Should use WPSC_Payment_Gateways::get( $gateway_name ) instead.
 	 *
