@@ -119,7 +119,8 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 		$this->requires( 'return_url', 'cancel_url' );
 		$request = $this->build_setup_request( 'Sale', $amt, $options );
 
-		$this->commit( 'SetExpressCheckout', $request );
+		$response_str = $this->commit( 'SetExpressCheckout', $request );
+		return new PHP_Merchant_Paypal_Response( $response_str );
 	}
 	
 	public function purchase() {

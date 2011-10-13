@@ -96,6 +96,18 @@ class PHP_Merchant_Paypal_Test extends UnitTestCase
 		$request = $this->bogus->build_request( $additional_params );
 		$this->assertEqual( $request, $full_param_list );
 	}
+	
+	public function test_get_url_returns_sandbox_url_when_in_test_mode() {
+		$this->bogus->set_option( 'test', true );
+		$this->assertEqual( $this->bogus->get_url(), 'https://api-3t.sandbox.paypal.com/nvp' );
+	}
+	
+	public function test_get_url_returns_live_url_when_in_live_mode() {
+		$this->assertEqual( $this->bogus->get_url(), 'https://api-3t.paypal.com/nvp' );
+		
+		$this->bogus->set_option( 'test', false );
+		$this->assertEqual( $this->bogus->get_url(), 'https://api-3t.paypal.com/nvp' );
+	}
 }
 
 class PHP_Merchant_Paypal_Bogus extends PHP_Merchant_Paypal

@@ -1,5 +1,6 @@
 <?php
 require_once( dirname( __FILE__ ) . '/../common/php-merchant.php' );
+require_once( 'paypal-response.php' );
 
 abstract class PHP_Merchant_Paypal extends PHP_Merchant
 {
@@ -73,6 +74,6 @@ abstract class PHP_Merchant_Paypal extends PHP_Merchant
 	protected function commit( $action, $request = array() ) {
 		$request['METHOD'] = $action;
 		$this->build_request( $request );
-		$this->http->post( $this->get_url(), $this->request );
+		return $this->http->post( $this->get_url(), $this->request );
 	}
 }

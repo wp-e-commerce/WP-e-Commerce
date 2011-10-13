@@ -5,9 +5,69 @@ require_once( PHP_MERCHANT_PATH . '/gateways/paypal-express-checkout.php' );
 class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 {
 	private $bogus;
+	private $options;
 	
 	public function __construct() {
 		parent::__construct( 'PHP_Merchant_Paypal_Express_Checkout test cases' );
+		// options to pass to the merchant class
+		$this->setup_purchase_options = array(
+			// API info
+			'api_username'      => 'sdk-three_api1.sdk.com',
+			'api_password'      => 'QFZCWN5HZM8VBG7Q',
+			'api_signature'     => 'A-IzJhZZjhg29XQ2qnhapuwxIDzyAZQ92FRP5dqBzVesOkzbdUONzmOU',
+			'return_url'        => 'http://example.com/return',
+			'cancel_url'        => 'http://example.com/cancel',
+			'address_override'  => true,
+			
+			// Shipping details
+			'shipping_address' => array(
+				'name'    => 'Gary Cao',
+				'street'  => '1 Infinite Loop',
+				'street2' => 'Apple Headquarter',
+				'city'    => 'Cupertino',
+				'state'   => 'CA',
+				'country' => 'USA',
+				'zip'     => '95014',
+				'phone'   => '(877) 412-7753',
+			),
+			
+			// Payment info
+			'currency'    => 'JPY',
+			'subtotal'    => 13837,
+			'shipping'    => 1500,
+			'tax'         => 500,
+			'description' => 'Order for example.com',
+			'invoice'     => 'E84A90G94',
+			'notify_url'  => 'http://example.com/ipn',
+			
+			// Items
+			'items' => array(
+				array(
+					'name'        => 'Gold Cart Plugin',
+					'description' => 'Gold Cart extends your WP e-Commerce store by enabling additional features and functionality, including views, galleries, store search and payment gateways.',
+					'amount'      => 4000,
+					'quantity'    => 1,
+					'tax'         => 40,
+					'url'         => 'http://getshopped.org/extend/premium-upgrades/premium-upgrades/gold-cart-plugin/',
+				),
+				array(
+					'name'        => 'Member Access Plugin',
+					'description' => 'Create pay to view subscription sites',
+					'amount'      => 5000,
+					'quantity'    => 1,
+					'tax'         => 50,
+					'url'         => 'http://getshopped.org/extend/premium-upgrades/premium-upgrades/member-access-plugin/',
+				),
+				array(
+					'name'        => 'Amazon S3',
+					'description' => 'This Plugin allows downloadable products that you have for sale on your WP e-Commerce site to be hosted within Amazon S3.',
+					'amount'      => 4700,
+					'quantity'    => 1,
+					'tax'         => 47,
+					'url'         => 'http://getshopped.org/extend/premium-upgrades/premium-upgrades/amazon-s3-plugin/',
+				),
+			),
+		);
 	}
 	
 	public function setUp() {
@@ -18,7 +78,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 		
 	}
 	
-	public function test_set_express_checkout_is_successful() {
+	public function test_correct_parameters_are_sent_to_paypal_when_set_express_checkout() {
 		$amount = 15837;
 		
 		// set up expectations for mock objects
@@ -80,69 +140,17 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 			'L_PAYMENTREQUEST_0_ITEMURL2' => 'http://getshopped.org/extend/premium-upgrades/premium-upgrades/amazon-s3-plugin/',
 		);
 		
-		$this->bogus->http->returnsByValue( 'post', 'TOKEN=EC-1OIN4UJGFOK54YFV' );
 		$this->bogus->http->expectOnce( 'post', array( $url, $args ) );
+		$this->bogus->setup_purchase( $amount, $this->setup_purchase_options );
+	}
+	
+	public function test_correct_response_is_returned_when_set_express_checkout_is_successful() {
+		$mock_response = 'ACK=Success&CORRELATIONID=224f0e4a32d14&TIMESTAMP=2011-07-05T13%253A23%253A52Z&VERSION=74.0&BUILD=1.0006&TOKEN=EC-1OIN4UJGFOK54YFV';
+		$this->bogus->http->returnsByValue( 'post', $mock_response );
+		$response = $this->bogus->setup_purchase( $amount, $this->setup_purchase_options );
 		
-		// options to pass to the merchant class
-		$options = array(
-			// API info
-			'api_username'      => 'sdk-three_api1.sdk.com',
-			'api_password'      => 'QFZCWN5HZM8VBG7Q',
-			'api_signature'     => 'A-IzJhZZjhg29XQ2qnhapuwxIDzyAZQ92FRP5dqBzVesOkzbdUONzmOU',
-			'return_url'        => 'http://example.com/return',
-			'cancel_url'        => 'http://example.com/cancel',
-			'address_override'  => true,
-			
-			// Shipping details
-			'shipping_address' => array(
-				'name'    => 'Gary Cao',
-				'street'  => '1 Infinite Loop',
-				'street2' => 'Apple Headquarter',
-				'city'    => 'Cupertino',
-				'state'   => 'CA',
-				'country' => 'USA',
-				'zip'     => '95014',
-				'phone'   => '(877) 412-7753',
-			),
-			
-			// Payment info
-			'currency'    => 'JPY',
-			'subtotal'    => 13837,
-			'shipping'    => 1500,
-			'tax'         => 500,
-			'description' => 'Order for example.com',
-			'invoice'     => 'E84A90G94',
-			'notify_url'  => 'http://example.com/ipn',
-			
-			// Items
-			'items' => array(
-				array(
-					'name'        => 'Gold Cart Plugin',
-					'description' => 'Gold Cart extends your WP e-Commerce store by enabling additional features and functionality, including views, galleries, store search and payment gateways.',
-					'amount'      => 4000,
-					'quantity'    => 1,
-					'tax'         => 40,
-					'url'         => 'http://getshopped.org/extend/premium-upgrades/premium-upgrades/gold-cart-plugin/',
-				),
-				array(
-					'name'        => 'Member Access Plugin',
-					'description' => 'Create pay to view subscription sites',
-					'amount'      => 5000,
-					'quantity'    => 1,
-					'tax'         => 50,
-					'url'         => 'http://getshopped.org/extend/premium-upgrades/premium-upgrades/member-access-plugin/',
-				),
-				array(
-					'name'        => 'Amazon S3',
-					'description' => 'This Plugin allows downloadable products that you have for sale on your WP e-Commerce site to be hosted within Amazon S3.',
-					'amount'      => 4700,
-					'quantity'    => 1,
-					'tax'         => 47,
-					'url'         => 'http://getshopped.org/extend/premium-upgrades/premium-upgrades/amazon-s3-plugin/',
-				),
-			),
-		);
-		$this->bogus->setup_purchase( $amount, $options );
+		$this->assertTrue( $response->is_successful() );
+		$this->assertEqual( $response->get( 'token' ), 'EC-1OIN4UJGFOK54YFV' );
 	}
 }
 

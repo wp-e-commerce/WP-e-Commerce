@@ -1,6 +1,7 @@
 <?php
 require_once( 'exception.php' );
 require_once( 'http.php' );
+require_once( 'response.php' );
 
 abstract class PHP_Merchant
 {
