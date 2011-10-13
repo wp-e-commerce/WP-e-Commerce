@@ -71,6 +71,29 @@ final class WPSC_Payment_Gateways
 		return self::$instances[$gateway];
 	}
 
+	public static function init() {
+		add_action( 'wpsc_update_payment_gateway_settings', array( 'WPSC_Payment_Gateway_Setting', 'action_update_payment_gateway_settings' ) );
+
+		if ( ! defined( 'WPSC_PAYMENT_GATEWAY_DEBUG' ) || WPSC_PAYMENT_GATEWAY_DEBUG == false )
+			add_action( 'wp_loaded', array( 'WPSC_Payment_Gateways', 'action_save_payment_gateway_cache' ), 99 );
+		else
+			WPSC_Payment_Gateways::flush_cache();
+
+		WPSC_Payment_Gateways::register_dir( WPSC_FILE_PATH . '/wpsc-payment-gateways' );
+
+		if ( isset( $_REQUEST['payment_gateway'] ) && isset( $_REQUEST['payment_gateway_callback'] ) && self::is_registered( $_REQUEST['payment_gateway'] ) )
+			add_action( 'init', array( 'WPSC_Payment_Gateways', 'action_process_callbacks' ) );
+	}
+
+	public static function action_process_callbacks() {
+		$gateway = self::get( $_REQUEST['payment_gateway'] );
+		$function_name = "callback_{$_REQUEST['payment_gateway_callback']}";
+		$callback = array( $gateway, $function_name );
+
+		if ( is_callable( $callback ) )
+			$gateway->$function_name();
+	}
+
 	/**
 	 * Check to see whether a gateway is registered using this new API
 	 *
@@ -134,7 +157,6 @@ final class WPSC_Payment_Gateways
 
 			$return = self::register_file( $path );
 
-
 			if ( is_wp_error( $return ) )
 				return $return;
 		}
@@ -176,11 +198,6 @@ final class WPSC_Payment_Gateways
 		// if payment gateway is not in cache, load metadata
 		$classname = ucwords( str_replace( '-', ' ', $filename ) );
 		$classname = 'WPSC_Payment_Gateway_' . str_replace( ' ', '_', $classname );
-
-		if ( ! class_exists( $classname ) )
-			return new WP_Error( 'wpsc_invalid_payment_gateway', __( 'Invalid payment gateway file.' ) );
-
-		self::$gateways[$filename] = $classname;
 
 		$meta = array(
 			'class'        => $classname,
@@ -279,8 +296,11 @@ abstract class WPSC_Payment_Gateway
 	 * @var string
 	 */
 	public $setting;
+
 	public $purchase_log;
+
 	public $checkout_data;
+
 	public $currency_code;
 
 	/**
@@ -564,7 +584,7 @@ class WPSC_Payment_Gateway_Setting
 	 * Returns the field name of the setting on payment gateway setup form
 	 *
 	 * @access public
-	 * @param string $setting Setting name
+	 * @param string $setting Setting names
 	 * @return string
 	 * @since 3.9
 	 */
@@ -585,10 +605,4 @@ class WPSC_Payment_Gateway_Setting
 	}
 }
 
-add_action( 'wpsc_update_payment_gateway_settings', array( 'WPSC_Payment_Gateway_Setting', 'action_update_payment_gateway_settings' ) );
-if ( ! defined( 'WPSC_PAYMENT_GATEWAY_DEBUG' ) || WPSC_PAYMENT_GATEWAY_DEBUG == false )
-	add_action( 'wp_loaded', array( 'WPSC_Payment_Gateways', 'action_save_payment_gateway_cache' ), 99 );
-else
-	WPSC_Payment_Gateways::flush_cache();
-
-WPSC_Payment_Gateways::register_dir( WPSC_FILE_PATH . '/wpsc-payment-gateways' );
+WPSC_Payment_Gateways::init();

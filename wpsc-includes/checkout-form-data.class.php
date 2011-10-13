@@ -46,7 +46,7 @@ class WPSC_Checkout_Form_Data
 			$map = array(
 				'firstname' => 'first_name',
 				'lastname'  => 'last_name',
-				'address'    => 'street',
+				'address'   => 'street',
 				'city'      => 'city',
 				'state'     => 'state',
 				'country'   => 'country',
