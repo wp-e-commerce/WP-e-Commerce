@@ -17,9 +17,7 @@ class PHP_Merchant_Paypal_IPN
 		$http = new PHP_Merchant_HTTP_CURL();
 		$url = $test ? self::SANDBOX_URL : self::LIVE_URL;
 		$verifying_response = $http->post( $url, $verifying_data );
-		var_dump( $verifying_data );
-var_dump( $verifying_response );
-$verifying_response = true;
+
 		if ( $verifying_response == 'VERIFIED' ) {
 			$this->verified = true;
 
