@@ -12,29 +12,38 @@ abstract class WPSC_Payment_Gateway
 	 * @return mixed Return true if successfully loaded all the payment gateway in the directory. Otherwise return a WP_Error object.
 	 */
 	public static function register_dir( $dir, $main_file = '' ) {
+		$dir = trailingslashit( $dir );
+
+		$main_file = basename( $dir ) . '.php';
+		if ( file_exists( $dir . $main_file ) )
+			return self::register_file( $dir . $main_file );
+		
 		// scan files in dir
 		$files = scandir( $dir );
 		
 		foreach ( $files as $file ) {
 			if ( in_array( $file, array( '.', '..' ) ) )
 				continue;
-				
-			if ( ! $main_file )
-				$main_file = $dir . '.php';
-			
-			$dir = trailingslashit( $dir );
-			var_dump( $dir ); exit;
-			if ( is_dir( $file ) )
-				$return = self::register_dir( $dir . $file, $main_file );
-			else
-				$return = self::register_file( $dir . $main_file );
-				
-			return $return;
+
+			$path = $dir . $file;
+			$return = is_dir( $path ) ? self::register_dir( $path ) : self::register_file( $path );
+			if ( $return instanceof WP_Error )
+				return $return;
 		}
+		
+		return true;
 	}
 	
 	public static function register_file( $file ) {
-		echo '<pre>'; var_dump( $file ); echo '</pre>';
+		require_once( $file );
+		$filename = basename( $file, '.php' );
+		$classname = ucwords( str_replace( '-', ' ', $filename ) );
+		$classname = 'WPSC_Payment_Gateway_' . str_replace( ' ', '_', $classname );
+		
+		if ( ! class_exists( $classname ) )
+			return new WP_Error( 'wpsc_invalid_payment_gateway', __( 'Invalid payment gateway file.' ) );
+
+		return true;
 	}
 	
 	protected $params;
