@@ -21,6 +21,18 @@ class WPSC_Country
 	
 	private $data = array();
 	
+	public static function &query( $args ) {
+		// when this is a custom post type, we'll have a separate WP_Query instance that handles this
+		$args = wp_parse_args( $args );
+		if ( array_key_exists( 'id', $args ) ) {
+			$country = new WPSC_Country( $args['id'] );
+			return array( $country );
+		} elseif ( array_key_exists( 'isocode', $args ) ) {
+			$country = new WPSC_Country( $args['isocode'], 'isocode' );
+			return array( $country );
+		}
+	}
+	
 	public static function get_cache( $value = null, $col = 'id' ) {
 		if ( is_null( $value ) && $col == 'id' )
 			$value = get_option( 'currency_type' );
@@ -41,9 +53,9 @@ class WPSC_Country
 	}
 	
 	public static function update_cache( $country ) {
-		$id = $country->id;
+		$id = $country->get( 'id' );
 		wp_cache_set( $id, $country->data, 'wpsc_countries' );
-		wp_cache_set( $country->isocode, $id, 'wpsc_country_isocodes' );
+		wp_cache_set( $country->get( 'isocode' ), $id, 'wpsc_country_isocodes' );
 	}
 	
 	public static function delete_cache( $value = null, $col = 'id' ) {
@@ -83,7 +95,7 @@ class WPSC_Country
 	}
 	
 	public function get( $key ) {
-		if ( array_key_exists( $this->data[$key] ) )
+		if ( array_key_exists( $key, $this->data ) )
 			return $this->data[$key];
 		
 		return null;
@@ -99,7 +111,7 @@ class WPSC_Country
 		foreach ( $this->data as $key => $value ) {
 			$format[] = in_array( $key, self::$string_cols ) ? '%s' : '%d';
 		}
-		$where_format = in_array( $this->args['col'], self::$string_cols ) ? '%s', '%d';
+		$where_format = in_array( $this->args['col'], self::$string_cols ) ? '%s' : '%d';
 		$wpdb->update( WPSC_TABLE_CURRENCY_LIST, $this->data, array( $this->args['col'] => $this->args['value'] ), $format, $where_format );
 		self::delete_cache( $this->args['value'], $this->args['col'] );
 	}
