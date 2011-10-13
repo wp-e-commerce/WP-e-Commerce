@@ -25,9 +25,6 @@ require_once( WPSC_FILE_PATH . '/wpsc-admin/display-sales-logs.php' );
 if ( ( isset( $_SESSION['wpsc_activate_debug_page'] ) && ( $_SESSION['wpsc_activate_debug_page'] == true ) ) || ( defined( 'WPSC_ADD_DEBUG_PAGE' ) && ( constant( 'WPSC_ADD_DEBUG_PAGE' ) == true ) ) )
 	require_once( WPSC_FILE_PATH . '/wpsc-admin/display-debug.page.php' );
 
-//settings pages include
-require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/settings-pages/general.php' );
-
 if ( !get_option( 'wpsc_checkout_form_sets' ) ) {
 	$form_sets = array( 'Default Checkout Forms' );
 	update_option( 'wpsc_checkout_form_sets', $form_sets );
