@@ -4,6 +4,7 @@ abstract class WPSC_Payment_Gateway
 {
 	protected static $gateways = array();
 	protected static $instances = array();
+	public $setting;
 
 	/**
 	 * Return a particular payment gateway object
@@ -16,6 +17,7 @@ abstract class WPSC_Payment_Gateway
 		if ( empty( self::$instances[$gateway] ) ) {
 			$class_name = self::$gateways[$gateway];
 			self::$instances[$gateway] = new $class_name();
+			self::$instances[$gateway]->setting = new WPSC_Payment_Gateway_Setting( $gateway );
 		}
 
 		return self::$instances[$gateway];
@@ -139,8 +141,56 @@ abstract class WPSC_Payment_Gateway
 	 * @since 3.9
 	 */
 	abstract public function setup_form();
+	protected function __construct() {
+	}
+}
 
-	public function __construct() {
+class WPSC_Payment_Gateway_Setting
+{
+	private $settings;
+	private $name;
+
+	public function __construct( $name ) {
+		$this->name = 'wpsc_payment_gateway_' . str_replace( array( ' ', '-' ), '_', $name );
+	}
+
+	/**
+	 * Get the value of a setting
+	 *
+	 * @param string $setting
+	 * @return mixed
+	 * @since 3.9
+	 */
+	public function get( $setting ) {
+		if ( is_null( $this->settings ) )
+			$this->settings = get_option( $this->name, array() );
+
+		return $this->settings[$setting];
+	}
+
+	/**
+	 * Set the value of a setting
+	 *
+	 * @param string $setting
+	 * @param mixed $value
+	 * @param bool $defer True if you want to defer saving the settings array to the database
+	 * @return void
+	 * @since 3.9
+	 */
+	public function set( $setting, $value, $defer = false ) {
+		$this->settings[$setting] = $value;
+		if ( ! $defer )
+			$this->save();
+	}
+
+	/**
+	 * Save the settings into the database
+	 *
+	 * @return void
+	 * @since 3.9
+	 */
+	public function save() {
+		update_option( $this->name, $this->settings );
 	}
 }
 WPSC_Payment_Gateway::register_dir( WPSC_FILE_PATH . '/wpsc-payment-gateways' );
