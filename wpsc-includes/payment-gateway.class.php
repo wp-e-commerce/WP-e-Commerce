@@ -28,6 +28,7 @@ final class WPSC_Payment_Gateways
 	 *
 	 * @access private
 	 * @static
+	 * 
 	 * @since 3.9
 	 *
 	 * @var array
@@ -585,7 +586,7 @@ class WPSC_Payment_Gateway_Setting
 }
 
 add_action( 'wpsc_update_payment_gateway_settings', array( 'WPSC_Payment_Gateway_Setting', 'action_update_payment_gateway_settings' ) );
-if ( ! defined( 'WP_DEBUG' ) || WP_DEBUG == false )
+if ( ! defined( 'WPSC_PAYMENT_GATEWAY_DEBUG' ) || WPSC_PAYMENT_GATEWAY_DEBUG == false )
 	add_action( 'wp_loaded', array( 'WPSC_Payment_Gateways', 'action_save_payment_gateway_cache' ), 99 );
 else
 	WPSC_Payment_Gateways::flush_cache();
