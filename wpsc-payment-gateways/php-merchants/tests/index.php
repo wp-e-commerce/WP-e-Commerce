@@ -2,6 +2,8 @@
 
 require_once( 'simpletest/autorun.php' );
 
+define( 'PHP_MERCHANT_PATH', realpath( '../' ) );
+
 class PHP_Merchant_Test_Suite extends TestSuite
 {
 	function __construct() {
