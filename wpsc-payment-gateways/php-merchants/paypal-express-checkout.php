@@ -59,7 +59,6 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 		
 		if ( $type != 'billing' ) {
 			foreach ( $map[$type] as $key => $param ) {
-				if ( )
 			}
 		}
 	}
