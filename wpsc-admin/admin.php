@@ -29,9 +29,6 @@ if ( ( isset( $_SESSION['wpsc_activate_debug_page'] ) && ( $_SESSION['wpsc_activ
 //Woothemes integration
 require_once( WPSC_FILE_PATH . '/woo-integration/woo_integration.php' );
 
-//settings pages include
-require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/settings-pages/general.php' );
-
 if ( !get_option( 'wpsc_checkout_form_sets' ) ) {
 	$form_sets = array( 'Default Checkout Forms' );
 	update_option( 'wpsc_checkout_form_sets', $form_sets );
