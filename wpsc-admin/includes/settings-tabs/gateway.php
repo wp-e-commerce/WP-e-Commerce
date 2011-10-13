@@ -22,9 +22,11 @@ class WPSC_Settings_Tab_Gateway
 		$selected_gateways = get_option( 'custom_gateway_options', array() );
 
 		foreach ( WPSC_Payment_Gateways::get_gateways() as $gateway ) {
-			$this->gateway_item( $gateway, WPSC_Payment_Gateways::get( $gateway )->get_title(), in_array( $gateway, $selected_gateways ) );
+			$gateway_meta = WPSC_Payment_Gateways::get_meta( $gateway );
+			$this->gateway_item( $gateway, $gateway_meta['name'], in_array( $gateway, $selected_gateways ) );
 		}
 
+		// compat with older API
 		global $nzshpcrt_gateways;
 		foreach ( $nzshpcrt_gateways as $gateway ) {
 			if ( isset( $gateway['admin_name'] ) )
