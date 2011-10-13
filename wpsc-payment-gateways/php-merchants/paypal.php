@@ -36,6 +36,7 @@ abstract class PHP_Merchant_Paypal extends PHP_Merchant
 	protected $url;
 	
 	protected function add_credentials() {
+		$this->requires( array( 'api_username', 'api_password', 'api_signature' ) );
 		$credentials = array(
 			'USER' => $this->options['api_username'],
 			'PWD'  => $this->options['api_password'],
@@ -43,11 +44,11 @@ abstract class PHP_Merchant_Paypal extends PHP_Merchant
 			'SIGNATURE' => $this->options['api_signature'],
 		);
 		
-		$this->request = array_merge( $this->request, $credentials );
+		return $credentials;
 	}
 	
-	protected function build_request( $request ) {
-		$this->add_credentials();
+	protected function build_request( $request = array() ) {
+		$this->request += $this->add_credentials();
 		$this->request = array_merge( $this->request, $request );
 	}
 	
@@ -55,26 +56,21 @@ abstract class PHP_Merchant_Paypal extends PHP_Merchant
 		return self::$supported_currencies;
 	}
 	
-	public function __construct( $options ) {
+	public function __construct( $options = array() ) {
 		parent::__construct( $options );
 	}
 	
-	public function set_options( $options ) {
-		parent::set_options( $options );
-		
-		if ( ! empty( $this->options['test'] ) )
-			$this->url = self::SANDBOX_URL;
-		else
-			$this->url = self::LIVE_URL;
+	public function get_url() {
+		return empty( $this->options['test'] ) ? self::LIVE_URL : self::SANDBOX_URL;
 	}
 	
 	public function is_currency_supported( $currency ) {
 		return in_array( $currency, self::$supported_currencies );
 	}
 	
-	protected function commit( $action, $request ) {
+	protected function commit( $action, $request = array() ) {
 		$request['METHOD'] = $action;
 		$this->build_request( $request );
-		$this->http->post( $this->url, $this->request );
+		$this->http->post( $this->get_url(), $this->request );
 	}
 }
