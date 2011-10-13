@@ -1,33 +1,40 @@
 <?php
 class PHP_Merchant_Paypal_Express_Checkout_Response extends PHP_Merchant_Paypal_Response
-{	
+{
 	public function __construct( $response_str ) {
 		parent::__construct( $response_str );
 		$p =& $this->params;
-		
+
 		// more readable checkout status
-		switch ( $p['CHECKOUTSTATUS'] ) {
-			case 'PaymentActionNotInitiated':
-				$this->options['checkout_status'] = 'NotInitiated';
-				break;
-				
-			case 'PaymentActionFailed':
-				$this->options['checkout_status'] = 'Failed';
-				break;
-				
-			case 'PaymentActionInProgress':
-				$this->options['checkout_status'] = 'InProgress';
-				break;
-				
-			case 'PaymentCompleted':
-				$this->options['checkout_status'] = 'Completed';
-				break;
-			
-			default:
-				$this->options['checkout_status'] = $p['CHECKOUT_STATUS'];
-				break;
-		}
-		
+		if ( isset( $p['CHECKOUTSTATUS'] ) )
+			switch ( $p['CHECKOUTSTATUS'] ) {
+				case 'PaymentActionNotInitiated':
+					$this->options['checkout_status'] = 'Not-Initiated';
+					break;
+
+				case 'PaymentActionFailed':
+					$this->options['checkout_status'] = 'Failed';
+					break;
+
+				case 'PaymentActionInProgress':
+					$this->options['checkout_status'] = 'In-Progress';
+					break;
+
+				case 'PaymentCompleted':
+					$this->options['checkout_status'] = 'Completed';
+					break;
+
+				default:
+					$this->options['checkout_status'] = $p['CHECKOUT_STATUS'];
+					break;
+			}
+
+		if ( isset( $p['PAYMENTINFO_0_PAYMENTSTATUS'] ) )
+			$this->options['payment_status'] = $p['PAYMENTINFO_0_PAYMENTSTATUS'];
+
+		if ( isset( $p['PAYMENTINFO_0_TRANSACTIONID'] ) )
+			$this->options['transaction_id'] = $p['PAYMENTINFO_0_TRANSACTIONID'];
+
 		$this->options += phpme_map( $p, array(
 			'currency'          => 'PAYMENTREQUEST_0_CURRENCYCODE',
 			'total'             => 'PAYMENTREQUEST_0_AMT', // alias for "amount"
@@ -41,7 +48,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Response extends PHP_Merchant_Paypal_
 			'notify_url'        => 'PAYMENTREQUEST_0_NOTIFYURL',
 			'shipping_discount' => 'PAYMENTREQUEST_0_SHIPDISCAMT',
 		) );
-		
+
 		$items = array();
 		$i = 0;
 		while ( isset( $p["L_PAYMENTREQUEST_0_NAME{$i}"] ) ) {
@@ -52,12 +59,12 @@ class PHP_Merchant_Paypal_Express_Checkout_Response extends PHP_Merchant_Paypal_
 				'quantity'    => "L_PAYMENTREQUEST_0_QTY{$i}",
 				'tax'         => "L_PAYMENTREQUEST_0_TAXAMT{$i}",
 			), 'Object' );
-			
+
 			$i ++;
 		}
-		
+
 		$this->options['items'] = $items;
-		
+
 		if ( isset( $p['PAYERID'] ) )
 			$this->options['payer'] = phpme_map( $p, array(
 				'email'      => 'EMAIL',
@@ -67,7 +74,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Response extends PHP_Merchant_Paypal_
 				'last_name'  => 'LASTNAME',
 				'country'    => 'COUNTRYCODE',
 			), 'Object' );
-		
+
 		if ( isset( $p['SHIPTONAME'] ) )
 			$this->options['shipping_address'] = phpme_map( $p, array(
 				'name'         => 'SHIPTONAME',
@@ -81,20 +88,28 @@ class PHP_Merchant_Paypal_Express_Checkout_Response extends PHP_Merchant_Paypal_
 				'phone'        => 'SHIPTOPHONENUM',
 			) );
 	}
-	
+
 	public function is_checkout_not_initiated() {
-		return $this->options['checkout_status'] == 'NotInitiated';
+		return $this->options['checkout_status'] == 'Not-Initiated';
 	}
-	
+
 	public function is_checkout_failed() {
 		return $this->options['checkout_status'] == 'Failed';
 	}
-	
+
 	public function is_checkout_in_progress() {
-		return $this->options['checkout_status'] == 'InProgress';
+		return $this->options['checkout_status'] == 'In-Progress';
 	}
-	
+
 	public function is_checkout_completed() {
 		return $this->options['checkout_status'] == 'Completed';
+	}
+
+	public function is_payment_completed() {
+		return $this->options['payment_status'] == 'Completed' || $this->options['payment_status'] == 'Processed';
+	}
+
+	public function is_payment_pending() {
+		return $this->options['payment_status'] == 'Pending';
 	}
 }
