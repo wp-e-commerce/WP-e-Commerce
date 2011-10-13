@@ -90,26 +90,34 @@ class PHP_Merchant_Paypal_Express_Checkout_Response extends PHP_Merchant_Paypal_
 	}
 
 	public function is_checkout_not_initiated() {
-		return $this->options['checkout_status'] == 'Not-Initiated';
+		return $this->get( 'checkout_status' ) == 'Not-Initiated';
 	}
 
 	public function is_checkout_failed() {
-		return $this->options['checkout_status'] == 'Failed';
+		return $this->get( 'checkout_status' ) == 'Failed';
 	}
 
 	public function is_checkout_in_progress() {
-		return $this->options['checkout_status'] == 'In-Progress';
+		return $this->get( 'checkout_status' ) == 'In-Progress';
 	}
 
 	public function is_checkout_completed() {
-		return $this->options['checkout_status'] == 'Completed';
+		return $this->get( 'checkout_status' ) == 'Completed';
 	}
 
 	public function is_payment_completed() {
-		return $this->options['payment_status'] == 'Completed' || $this->options['payment_status'] == 'Processed';
+		return in_array( $this->get( 'payment_status' ), array( 'Completed', 'Processed' ) );
 	}
 
 	public function is_payment_pending() {
-		return $this->options['payment_status'] == 'Pending';
+		return $this->get( 'payment_status' ) == 'Pending';
+	}
+
+	public function is_payment_refunded() {
+		return $this->get( 'payment_status' ) == 'Refunded';
+	}
+
+	public function is_payment_denied() {
+		return $this->get( 'payment_status' ) == 'Denied';
 	}
 }
