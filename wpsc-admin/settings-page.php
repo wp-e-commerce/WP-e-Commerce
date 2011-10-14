@@ -10,24 +10,25 @@ final class WPSC_Settings_Page
 	private static $instance;
 	private static $default_tabs;
 
-	public static function get_instance() {
-		if ( ! self::$default_tabs ) {
-			self::$default_tabs = array(
-				'general'      => _x( 'General', 'General settings tab in Settings->Store page', 'wpsc' ),
-				'presentation' => _x( 'Presentation', 'Presentation settings tab in Settings->Store page', 'wpsc' ),
-				'admin'        => _x( 'Admin', 'Admin settings tab in Settings->Store page', 'wpsc' ),
-				'taxes'        => _x( 'Taxes', 'Taxes settings tab in Settings->Store page', 'wpsc' ),
-				'shipping'     => _x( 'Shipping', 'Shipping settings tab in Settings->Store page', 'wpsc' ),
-				'gateway'      => _x( 'Payments', 'Payments settings tab in Settings->Store page', 'wpsc' ),
-				'checkout'     => _x( 'Checkout', 'Checkout settings tab in Settings->Store page', 'wpsc' ),
-				'marketing'    => _x( 'Marketing', 'Marketing settings tab in Settings->Store page', 'wpsc' ),
-				'import'       => _x( 'Import', 'Import settings tab in Settings->Store page', 'wpsc' )
-			);
-		}
+	public static function init() {
+		self::$default_tabs = array(
+			'general'      => _x( 'General', 'General settings tab in Settings->Store page', 'wpsc' ),
+			'presentation' => _x( 'Presentation', 'Presentation settings tab in Settings->Store page', 'wpsc' ),
+			'admin'        => _x( 'Admin', 'Admin settings tab in Settings->Store page', 'wpsc' ),
+			'taxes'        => _x( 'Taxes', 'Taxes settings tab in Settings->Store page', 'wpsc' ),
+			'shipping'     => _x( 'Shipping', 'Shipping settings tab in Settings->Store page', 'wpsc' ),
+			'gateway'      => _x( 'Payments', 'Payments settings tab in Settings->Store page', 'wpsc' ),
+			'checkout'     => _x( 'Checkout', 'Checkout settings tab in Settings->Store page', 'wpsc' ),
+			'marketing'    => _x( 'Marketing', 'Marketing settings tab in Settings->Store page', 'wpsc' ),
+			'import'       => _x( 'Import', 'Import settings tab in Settings->Store page', 'wpsc' )
+		);
 
+		add_action( 'wpsc_register_settings_tabs' , array( 'WPSC_Settings_Page', 'register_default_tabs' ), 1 );
+		add_action( 'wpsc_load_settings_tab_class', array( 'WPSC_Settings_Page', 'load_default_tab_class' ), 1 );
+	}
+
+	public static function get_instance() {
 		if ( ! self::$instance ) {
-			add_action( 'wpsc_register_settings_tabs' , array( 'WPSC_Settings_Page', 'register_default_tabs' ), 1 );
-			add_action( 'wpsc_load_settings_tab_class', array( 'WPSC_Settings_Page', 'load_default_tab_class' ), 1 );
 			self::$instance = new WPSC_Settings_Page();
 		}
 
@@ -51,10 +52,10 @@ final class WPSC_Settings_Page
 	private $current_tab;
 	private $tabs;
 
-	private function __construct() {
+	public function __construct( $tab_id = false ) {
 		do_action( 'wpsc_register_settings_tabs', $this );
 		$this->tabs = apply_filters( 'wpsc_settings_tabs', $this->tabs );
-		$this->set_current_tab();
+		$this->set_current_tab( $tab_id );
 	}
 
 	public function get_current_tab() {
@@ -76,11 +77,15 @@ final class WPSC_Settings_Page
 		return $this->current_tab_id;
 	}
 
-	public function set_current_tab() {
-		if ( isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $this->tabs ) )
-			$this->current_tab_id = $_GET['tab'];
-		else
-			$this->current_tab_id = array_shift( array_keys( $this->tabs ) );
+	public function set_current_tab( $tab_id = false ) {
+		if ( ! $tab_id ) {
+			if ( isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $this->tabs ) )
+				$this->current_tab_id = $_GET['tab'];
+			else
+				$this->current_tab_id = array_shift( array_keys( $this->tabs ) );
+		} else {
+			$this->current_tab_id = $tab_id;
+		}
 
 		$this->current_tab = $this->get_current_tab();
 	}
@@ -103,13 +108,11 @@ final class WPSC_Settings_Page
 	private function tab_href( $id ) {
 		$href = add_query_arg( array( 'tab' => $id ) );
 		$href = remove_query_arg( 'isocode', $href );
-		$href = wp_nonce_url( $href, 'tab-' . $id );
 		return $href;
 	}
 
 	private function submit_url() {
 		$location = add_query_arg( 'tab', $this->current_tab_id );
-		$location = wp_nonce_url( $location, 'tab-' . $this->current_tab_id );
 		return $location;
 	}
 
@@ -117,9 +120,23 @@ final class WPSC_Settings_Page
 		?>
 			<h2 class="nav-tab-wrapper">
 				<?php foreach ( $this->tabs as $id => $title ): ?>
-					<a class="<?php echo $this->tab_class( $id ); ?>" href="<?php echo esc_attr( $this->tab_href( $id ) ); ?>"><?php echo esc_html( $this->tabs[$id] ); ?></a>
+					<a data-tab-id="<?php echo esc_attr( $id ); ?>" class="<?php echo $this->tab_class( $id ); ?>" href="<?php echo esc_attr( $this->tab_href( $id ) ); ?>"><?php echo esc_html( $this->tabs[$id] ); ?></a>
 				<?php endforeach ?>
 			</h2>
+		<?php
+	}
+
+	public function display_current_tab() {
+		?>
+			<div id="options_<?php echo esc_attr( $this->current_tab_id ); ?>">
+				<?php
+					if ( is_callable( array( $this->current_tab, 'display' ) ) ) {
+						$this->current_tab->display();
+					}
+				?>
+
+				<?php do_action('wpsc_' . $this->current_tab_id . '_settings_page'); ?>
+			</div>
 		<?php
 	}
 
@@ -130,19 +147,11 @@ final class WPSC_Settings_Page
 				<?php $this->output_tabs(); ?>
 				<div id='wpsc_options_page'>
 					<form method='post' action='<?php echo esc_attr( $this->submit_url() ); ?>' id='cart_options' name='cart_options' class='wpsc_form_track'>
-						<div id="options_<?php echo esc_attr( $this->current_tab_id ); ?>">
-							<?php
-								if ( is_callable( array( $this->current_tab, 'display' ) ) ) {
-									$this->current_tab->display();
-								}
-							?>
-
-							<?php do_action('wpsc_' . $this->current_tab_id . '_settings_page'); ?>
-							<div class="submit">
-								<input type='hidden' name='wpsc_admin_action' value='submit_options' />
-								<?php wp_nonce_field( 'update-options', 'wpsc-update-options' ); ?>
-								<input type="submit" value="<?php _e( 'Update &raquo;', 'wpsc' ); ?>" name="updateoption" />
-							</div>
+						<?php $this->display_current_tab(); ?>
+						<div class="submit">
+							<input type='hidden' name='wpsc_admin_action' value='submit_options' />
+							<?php wp_nonce_field( 'update-options', 'wpsc-update-options' ); ?>
+							<input type="submit" value="<?php _e( 'Update &raquo;', 'wpsc' ); ?>" name="updateoption" />
 						</div>
 					</form>
 				</div>
@@ -150,3 +159,5 @@ final class WPSC_Settings_Page
 		<?php
 	}
 }
+
+WPSC_Settings_Page::init();

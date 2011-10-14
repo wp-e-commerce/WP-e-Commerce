@@ -1,6 +1,6 @@
 // This is the wp-e-commerce front end javascript "library"
 
-jQuery(document).ready(function(){	
+jQuery(document).ready(function(){
 	jQuery('td.hidden_alerts img').each(function(){
 		var t = jQuery(this);
 		t.appendTo(t.parents('tr').find('td.column-title strong'));
@@ -436,7 +436,7 @@ jQuery(document).ready(function(){
 		jQuery.post( ajaxurl, post_values, function(returned_data) {
 			ajax_loading.css('visibility', 'hidden');
 		});
-		
+
 		if(purchlog_status == 4){
 			jQuery('tr.log'+purchlog_id).show();
 
@@ -471,7 +471,7 @@ jQuery(document).ready(function(){
 	});
 	jQuery('.editinline').live('click', function(){
 		setTimeout('editinline_get_id()',200);
-			
+
 	});
 
 	jQuery('a.add_variation_item_form').livequery(function(){
@@ -966,7 +966,7 @@ function add_form_field(e) {
 		new_element_number = time.getTime(),
 		new_element_id = "form_id_"+new_element_number,
 		new_element_contents = '<tr class="checkout_form_field" id="'+new_element_id+'">';
-		
+
 	new_element_contents += "<td class='drag'></td>";
 	new_element_contents += "<td class='namecol'><input type='text' name='new_form_name["+new_element_number+"]' value='' /></td>\n\r";
 	new_element_contents += "<td class='typecol'><select class='wpsc_checkout_selectboxes' name='new_form_type["+new_element_number+"]'>"+HTML_FORM_FIELD_TYPES+"</select></td>\n\r";
@@ -1066,6 +1066,6 @@ function editinline_get_id(){
 	}else{
   		jQuery(".wpsc-cols").css('display', 'block');
 	}
-		
+
 
 }
