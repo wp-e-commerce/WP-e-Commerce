@@ -66,7 +66,7 @@
 			$data = explode(' ', $data['3']);
 			$var = $data['0'];
 			$var = round($var,2);
-			return $var
+			return $var;
 			
 		}
 	}
