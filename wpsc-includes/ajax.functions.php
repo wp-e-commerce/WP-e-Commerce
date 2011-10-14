@@ -357,9 +357,11 @@ if ( isset( $_REQUEST['wpsc_ajax_action'] ) && ($_REQUEST['wpsc_ajax_action'] ==
  */
 function wpsc_update_shipping_price() {
 	global $wpdb, $wpsc_cart;
+        
 	$quote_shipping_method = $_POST['key1'];
 	$quote_shipping_option = $_POST['key'];
 	$wpsc_cart->update_shipping( $quote_shipping_method, $quote_shipping_option );
+                
 	echo "
 	if(jQuery('.pricedisplay.checkout-shipping .pricedisplay')){
 		jQuery('.pricedisplay.checkout-shipping > .pricedisplay:first').html(\"" . wpsc_cart_shipping() . "\");
@@ -368,6 +370,10 @@ function wpsc_update_shipping_price() {
 		jQuery('.pricedisplay.checkout-shipping').html(\"" . wpsc_cart_shipping() . "\");
 	";
 	echo "jQuery('.pricedisplay.checkout-total').html(\"" . wpsc_cart_total() . "\");\n\r";
+        
+                if( $wpec_taxes_controller->wpec_taxes_isenabled() )
+                    echo "jQuery('.pricedisplay.checkout-tax').html(\"" . wpsc_cart_tax() . "\");\n\r";
+                
 	exit();
 }
 
