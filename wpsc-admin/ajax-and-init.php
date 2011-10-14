@@ -8,6 +8,20 @@
  * @package wp-e-commerce
  * @since 3.7
  */
+
+function wpsc_navigate_settings_tab() {
+	require_once( 'settings-page.php' );
+
+	if ( ! wp_verify_nonce( $_POST['nonce'], 'wpsc_navigate_settings_tab' ) )
+		die( 'Session expired. Try refreshing your settings page.' );
+
+	$settings_page = new WPSC_Settings_Page( $_POST['tab_id'] );
+	$settings_page->display_current_tab();
+	exit;
+}
+
+add_action( 'wp_ajax_wpsc_navigate_settings_tab', 'wpsc_navigate_settings_tab' );
+
 function wpsc_ajax_add_tracking() {
 	global $wpdb;
 	foreach ( $_POST as $key => $value ) {

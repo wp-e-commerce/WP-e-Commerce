@@ -205,7 +205,7 @@ function wpsc_admin_pages() {
 		update_option( 'wpsc_trackingid_message', __( "Track & Trace means you may track the progress of your parcel with our online parcel tracker, just login to our website and enter the following Tracking ID to view the status of your order.\n\nTracking ID: %trackid%\n", 'wpsc' ) );
 	}
 
-	add_action( 'load-' . $edit_options_page, 'wpsc_load_settings_page' );
+	add_action( 'load-' . $edit_options_page, 'wpsc_load_settings_page', 1 );
 }
 
 function wpsc_load_settings_page() {
@@ -242,6 +242,13 @@ function wpsc_admin_include_optionspage_css_and_js() {
 	wp_enqueue_script( 'wp-e-commerce-js-ajax', WPSC_URL . '/wpsc-core/js/ajax.js', false, $version_identifier );
 	wp_enqueue_script( 'wp-e-commerce-js-ui-tabs', WPSC_URL . '/wpsc-admin/js/jquery-ui.js', false, $version_identifier );
 	wp_enqueue_script( 'wp-e-commerce-js-dimensions', WPSC_URL . '/wpsc-admin/js/dimensions.js', false, $version_identifier );
+	wp_enqueue_script( 'wp-e-commerce-admin-settings-page', WPSC_URL . '/wpsc-admin/js/settings-page.js', array( 'jquery-query' ), $version_identifier );
+
+	wp_localize_script( 'wp-e-commerce-admin-settings-page', 'WPSC_Settings_Page', array(
+		'nonce'       => wp_create_nonce( 'wpsc_navigate_settings_tab' ),
+		'current_tab' => WPSC_Settings_Page::get_instance()->get_current_tab_id(),
+	) );
+
 	wp_enqueue_style( 'wp-e-commerce-admin_2.7', WPSC_URL . '/wpsc-admin/css/settingspage.css', false, false, 'all' );
 	wp_enqueue_style( 'wp-e-commerce-ui-tabs', WPSC_URL . '/wpsc-admin/css/jquery.ui.tabs.css', false, $version_identifier, 'all' );
 }
