@@ -29,7 +29,7 @@
 			// set the history state of the current page
 			if (history.replaceState) {
 				(function(){
-					history.replaceState({tab_id : t.current_tab});
+					history.replaceState({tab_id : t.current_tab}, '', location.search);
 				})();
 			}
 
