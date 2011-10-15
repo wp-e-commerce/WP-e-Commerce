@@ -36,14 +36,45 @@
 			// load the correct settings tab when back/forward browser button is used
 			$(window).bind('popstate', t.event_pop_state);
 
-			// load the settings tab when clicking on navigation links
-			$('#wpsc_options a.nav-tab').live('click', function(){
-				var tab_id = $(this).data('tab-id');
-				if (tab_id != t.current_tab) {
-					t.load_tab(tab_id);
+			$('#wpsc_options a.nav-tab').live('click', t.event_tab_button_clicked);
+
+			$('#wpsc-base-country-drop-down').live('change', t.event_base_country_changed);
+		},
+
+		/**
+		 * Load the list of regions / states when base country is changed
+		 * @since 3.8.8
+		 */
+		event_base_country_changed : function() {
+			var span = $('#wpsc-base-region-drop-down');
+			span.find('select').remove();
+			span.find('img').toggleClass('ajax-feedback');
+
+			var postdata = {
+				action  : 'wpsc_display_region_list',
+				country : $('#wpsc-base-country-drop-down').val(),
+				nonce   : t.nonce
+			};
+
+			var ajax_callback = function(response) {
+				span.find('img').toggleClass('ajax-feedback');
+				if (response !== '') {
+					span.prepend(response);
 				}
-				return false;
-			});
+			};
+			$.post(ajaxurl, postdata, ajax_callback, 'html');
+		},
+
+		/**
+		 * Load the settings tab when tab buttons are clicked
+		 * @since 3.8.8
+		 */
+		event_tab_button_clicked : function() {
+			var tab_id = $(this).data('tab-id');
+			if (tab_id != t.current_tab) {
+				t.load_tab(tab_id);
+			}
+			return false;
 		},
 
 		/**

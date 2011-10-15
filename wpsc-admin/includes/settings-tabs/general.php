@@ -1,8 +1,39 @@
 <?php
 class WPSC_Settings_Tab_General extends WPSC_Settings_Tab
 {
+	private $regions = array();
+
 	public function __construct() {
-		$this->page_title = __( 'General Settings', 'wpsc' );
+		$this->get_regions();
+	}
+
+	private function get_regions() {
+		global $wpdb;
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX && isset( $_POST['country'] ) )
+			$base_country = $_POST['country'];
+		else
+			$base_country = get_option( 'base_country' );
+		$from = WPSC_TABLE_REGION_TAX . ' AS r';
+		$join = WPSC_TABLE_CURRENCY_LIST . ' AS c';
+		$sql = $wpdb->prepare( "
+			SELECT r.id, r.name
+			FROM {$from}
+			INNER JOIN {$join} ON r.country_id = c.id AND c.isocode = %s
+		", $base_country );
+		$this->regions = $wpdb->get_results( $sql );
+	}
+
+	public function display_region_drop_down() {
+		$base_region = get_option( 'base_region' );
+		if ( ! empty( $this->regions ) ):
+			?>
+				<select name='wpsc_options[base_region]'>
+					<?php foreach ( $this->regions as $region ): ?>
+						<option value='<?php echo esc_attr( $region->id ); ?>' <?php selected( $region->id, $base_region ); ?>><?php echo esc_html( $region->name ); ?></option>
+					<?php endforeach ?>
+				</select>
+			<?php
+		endif;
 	}
 
 	public function display() {
@@ -13,31 +44,12 @@ class WPSC_Settings_Tab_General extends WPSC_Settings_Tab
 			<tr>
 				<th scope="row"><?php _e( 'Base Country/Region', 'wpsc' ); ?>: </th>
 				<td>
-					<select name='wpsc_options[base_country]' onchange='submit_change_country();'>
-
+					<select id="wpsc-base-country-drop-down" name='wpsc_options[base_country]'>
 						<?php echo country_list( esc_attr( get_option( 'base_country' ) ) ); ?>
-
 					</select>
-					<span id='options_country'>
-					<?php
-						$region_list = $wpdb->get_results( "SELECT `" . WPSC_TABLE_REGION_TAX . "`.* FROM `" . WPSC_TABLE_REGION_TAX . "`, `" . WPSC_TABLE_CURRENCY_LIST . "`  WHERE `" . WPSC_TABLE_CURRENCY_LIST . "`.`isocode` IN('" . esc_attr( get_option( 'base_country' ) ) . "') AND `" . WPSC_TABLE_CURRENCY_LIST . "`.`id` = `" . WPSC_TABLE_REGION_TAX . "`.`country_id`", ARRAY_A );
-						if ( !empty( $region_list ) ) { ?>
-
-						<select name='wpsc_options[base_region]'>
-							<?php
-							foreach ( $region_list as $region ) {
-								if ( esc_attr( get_option( 'base_region' ) ) == $region['id'] ) {
-									$selected = "selected='selected'";
-								} else {
-									$selected = "";
-								}
-							?>
-								<option value='<?php echo $region['id']; ?>' <?php echo $selected; ?> ><?php echo esc_attr( $region['name'] ); ?></option> <?php
-						}
-					?>
-						</select>
-
-<?php } ?>
+					<span id='wpsc-base-region-drop-down'>
+						<?php $this->display_region_drop_down(); ?>
+						<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
 					</span>
 					<br /><?php _e( 'Select your primary business location.', 'wpsc' ); ?>
 				</td>

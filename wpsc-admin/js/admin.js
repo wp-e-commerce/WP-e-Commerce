@@ -991,12 +991,6 @@ function remove_new_form_field(id) {
 	return false;
 }
 
-
-function submit_change_country() {
-	document.cart_options.submit();
-//document.cart_options.submit();
-}
-
 function getcurrency(id) {
 //ajax.post("index.php",gercurrency,"wpsc_admin_action=change_currency&currencyid="+id);
 }
