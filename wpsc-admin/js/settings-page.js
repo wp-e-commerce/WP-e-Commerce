@@ -12,7 +12,7 @@
  * @requires jQuery
  * @requires jQuery.query
  */
-var WPSC_Settings_Tab_General;
+var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation;
 
 (function($){
 	// abbreviate WPSC_Settings_Page to 't'
@@ -127,12 +127,22 @@ var WPSC_Settings_Tab_General;
 	/**
 	 * General tab
 	 * @namespace
+	 * @since 3.8.8
 	 */
 	var tg = WPSC_Settings_Tab_General = {
+		/**
+		 * Event binding for base country drop down
+		 * @return {[type]}
+		 * @since 3.8.8
+		 */
 		init : function() {
 			$('#options_general').delegate('#wpsc-base-country-drop-down', 'change', tg.event_base_country_changed);
 		},
 
+		/**
+		 * When country is changed, load the region / state drop down using AJAX
+		 * @since 3.8.8
+		 */
 		event_base_country_changed : function() {
 			var span = $('#wpsc-base-region-drop-down');
 			span.find('select').remove();
@@ -154,6 +164,52 @@ var WPSC_Settings_Tab_General;
 		}
 	};
 	$(t).bind('wpsc_settings_tab_loaded_general', tg.init);
+
+	/**
+	 * Presentation tab
+	 * @namespace
+	 * @since 3.8.8
+	 */
+	var tpr = WPSC_Settings_Tab_Presentation = {
+		/**
+		 * IDs of checkboxes for Grid View (excluding the Show Images Only checkbox)
+		 * @type {Array}
+		 * @since 3.8.8
+		 */
+		grid_view_boxes : ['wpsc-display-variations', 'wpsc-display-description', 'wpsc-display-add-to-cart', 'wpsc-display-more-details'],
+
+		/**
+		 * Event binding for Grid View checkboxes
+		 * @since 3.8.8
+		 */
+		init : function() {
+			var wrapper = $('#options_presentation'), i;
+			wrapper.delegate('#wpsc-show-images-only', 'click', tpr.event_show_images_only_clicked);
+			wrapper.delegate('#' + tpr.grid_view_boxes.join(',#'), 'click', tpr.event_grid_view_boxes_clicked);
+		},
+
+		/**
+		 * Deselect "Show Images Only" checkbox when any other Grid View checkboxes are selected
+		 * @since 3.8.8
+		 */
+		event_grid_view_boxes_clicked : function() {
+			document.getElementById('wpsc-show-images-only').checked = false;
+		},
+
+		/**
+		 * Deselect all other Grid View checkboxes when "Show Images Only" is selected
+		 * @since 3.8.8
+		 */
+		event_show_images_only_clicked : function() {
+			var i;
+			if ($(this).is(':checked')) {
+				for (i in tpr.grid_view_boxes) {
+					document.getElementById(tpr.grid_view_boxes[i]).checked = false;
+				}
+			}
+		}
+	};
+	$(t).bind('wpsc_settings_tab_loaded_presentation', tpr.init);
 })(jQuery);
 
 WPSC_Settings_Page.init();

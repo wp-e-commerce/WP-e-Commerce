@@ -137,29 +137,6 @@ jQuery(document).ready(function(){
 
 	});
 
-	//grid view checkbox ajax to deselect show images only when other checkboxes are selected
-	jQuery('#show_images_only').livequery(function(){
-		jQuery(this).click(function(){
-			imagesonly = jQuery(this).is(':checked');
-			if(imagesonly){
-				jQuery('#display_variations').attr('checked', false);
-				jQuery('#display_description').attr('checked', false);
-				jQuery('#display_addtocart').attr('checked', false);
-				jQuery('#display_moredetails').attr('checked', false);
-
-			}
-		});
-	});
-	jQuery('#display_variations, #display_description, #display_addtocart, #display_moredetails').livequery(function(){
-		jQuery(this).click(function(){
-			imagesonly = jQuery(this).is(':checked');
-
-			if(imagesonly){
-				jQuery('#show_images_only').attr('checked', false);
-
-			}
-		});
-	});
 	//new currency JS in admin product page
 	jQuery('div.new_layer').livequery(function(){
 		jQuery(this).hide();
