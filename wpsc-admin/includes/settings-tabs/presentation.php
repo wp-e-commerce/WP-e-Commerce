@@ -474,24 +474,24 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab
 						<label for='grid_number_per_row'><?php _e( 'Products Per Row', 'wpsc' ); ?></label><br />
 
 						<input type='hidden' value='0' name='wpsc_options[show_images_only]' />
-						<input type='checkbox' value='1' name='wpsc_options[show_images_only]' id='show_images_only' <?php echo $show_images_only_value; ?> />
-						<label for='show_images_only'><?php _e( 'Show images only', 'wpsc' ); ?></label><br />
+						<input type='checkbox' value='1' name='wpsc_options[show_images_only]' id='wpsc-show-images-only' <?php echo $show_images_only_value; ?> />
+						<label for='wpsc-show-images-only'><?php _e( 'Show images only', 'wpsc' ); ?></label><br />
 
 						<input type='hidden' value='0' name='wpsc_options[display_variations]' />
-						<input type='checkbox' value='1' name='wpsc_options[display_variations]' id='display_variations' <?php echo $display_variations; ?> />
-						<label for='display_variations'><?php _e( 'Display Variations', 'wpsc' ); ?></label><br />
+						<input type='checkbox' value='1' name='wpsc_options[display_variations]' id='wpsc-display-variations' <?php echo $display_variations; ?> />
+						<label for='wpsc-display-variations'><?php _e( 'Display Variations', 'wpsc' ); ?></label><br />
 
 						<input type='hidden' value='0' name='wpsc_options[display_description]' />
-						<input type='checkbox' value='1' name='wpsc_options[display_description]' id='display_description' <?php echo $display_description; ?> />
-						<label for='display_description'><?php _e( 'Display Description', 'wpsc' ); ?></label><br />
+						<input type='checkbox' value='1' name='wpsc_options[display_description]' id='wpsc-display-description' <?php echo $display_description; ?> />
+						<label for='wpsc-display-description'><?php _e( 'Display Description', 'wpsc' ); ?></label><br />
 
 						<input type='hidden' value='0' name='wpsc_options[display_addtocart]' />
-						<input type='checkbox' value='1' name='wpsc_options[display_addtocart]' id='display_addtocart' <?php echo $display_addtocart; ?> />
-						<label for='display_addtocart'><?php _e( 'Display "Add To Cart" Button', 'wpsc' ); ?></label><br />
+						<input type='checkbox' value='1' name='wpsc_options[display_addtocart]' id='wpsc-display-add-to-cart' <?php echo $display_addtocart; ?> />
+						<label for='wpsc-display-add-to-cart'><?php _e( 'Display "Add To Cart" Button', 'wpsc' ); ?></label><br />
 
 						<input type='hidden' value='0' name='wpsc_options[display_moredetails]' />
-						<input type='checkbox' value='1' name='wpsc_options[display_moredetails]' id='display_moredetails' <?php echo $display_moredetails; ?> />
-						<label for='display_moredetails'><?php _e( 'Display "More Details" Button', 'wpsc' ); ?></label>
+						<input type='checkbox' value='1' name='wpsc_options[display_moredetails]' id='wpsc-display-more-details' <?php echo $display_moredetails; ?> />
+						<label for='wpsc-display-more-details'><?php _e( 'Display "More Details" Button', 'wpsc' ); ?></label>
 					</td>
 				</tr>
 
