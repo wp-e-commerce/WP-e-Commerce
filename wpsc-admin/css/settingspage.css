@@ -194,3 +194,9 @@ div#themes_and_appearance ol {
 div#themes_and_appearance ol li {
 	font-size: 11px;
 }
+
+.nav-tab-loading {
+	background-image:url(loading-small.gif);
+	background-repeat:no-repeat;
+	background-position:98% 5px;
+}

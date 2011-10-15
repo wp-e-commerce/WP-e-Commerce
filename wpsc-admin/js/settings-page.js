@@ -39,7 +39,9 @@
 			// load the settings tab when clicking on navigation links
 			$('#wpsc_options a.nav-tab').live('click', function(){
 				var tab_id = $(this).data('tab-id');
-				t.load_tab(tab_id);
+				if (tab_id != t.current_tab) {
+					t.load_tab(tab_id);
+				}
 				return false;
 			});
 		},
@@ -53,6 +55,16 @@
 			if (e.state) {
 				t.load_tab(e.state.tab_id, false);
 			}
+		},
+
+		/**
+		 * Display a small spinning wheel when loading a tab via AJAX
+		 * @param  {String} tab_id Tab ID
+		 * @since 3.8.8
+		 */
+		toggle_ajax_state : function(tab_id) {
+			var tab_button = $('a[data-tab-id="' + tab_id + '"]');
+			tab_button.toggleClass('nav-tab-loading');
 		},
 
 		/**
@@ -74,6 +86,8 @@
 				'nonce'  : t.nonce,
 			};
 
+			t.toggle_ajax_state(tab_id);
+
 			// pushState to save this page load into history, and alter the address field of the browser
 			if (push_state && history.pushState) {
 				history.pushState({'tab_id' : tab_id}, '', new_url);
@@ -86,6 +100,7 @@
 			 * @since 3.8.8
 			 */
 			var ajax_callback = function(response) {
+				t.toggle_ajax_state(tab_id);
 				$('#options_' + t.current_tab).replaceWith(response);
 				t.current_tab = tab_id;
 				$('.nav-tab-active').removeClass('nav-tab-active');
