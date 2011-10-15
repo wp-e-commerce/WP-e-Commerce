@@ -1410,67 +1410,6 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
 	add_action( 'admin_init', 'wpsc_google_shipping_settings' );
 }
 
-//for ajax call of settings page tabs
-function wpsc_settings_page_ajax() {
-	$html                = '';
-	$modified_page_title = $_POST['page_title'];
-	$page_title          = str_replace( "tab-", "", $modified_page_title );
-
-	check_admin_referer( $modified_page_title );
-	switch ( $page_title ) {
-		case 'checkout' :
-			require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/settings-pages/checkout.php' );
-			wpsc_options_checkout();
-			break;
-
-		case 'gateway' :
-			require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/settings-pages/gateway.php' );
-			wpsc_options_gateway();
-			break;
-
-		case 'shipping' :
-			require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/settings-pages/shipping.php' );
-			wpsc_options_shipping();
-			break;
-
-		case 'admin' :
-			require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/settings-pages/admin.php' );
-			wpsc_options_admin();
-			break;
-
-		case 'presentation' :
-			require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/settings-pages/presentation.php' );
-			wpsc_options_presentation();
-			break;
-
-		case 'taxes' :
-			wpec_taxes_settings_page(); //see wpec-taxes view
-			break;
-
-		case 'marketing' :
-			require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/settings-pages/marketing.php' );
-			wpsc_options_marketing();
-			break;
-
-		case 'import' :
-			require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/settings-pages/import.php' );
-			wpsc_options_import();
-			break;
-
-		case 'general' :
-		default;
-			require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/settings-pages/general.php' );
-			wpsc_options_general();
-			break;
-	}
-
-	$_SESSION['wpsc_settings_curr_page'] = $page_title;
-
-	exit( $html );
-}
-if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'settings_page_ajax') )
-	add_action( 'admin_init', 'wpsc_settings_page_ajax' );
-
 function wpsc_update_variations() {
 	$product_id = absint( $_POST["product_id"] );
 	$product_type_object = get_post_type_object('wpsc-product');
