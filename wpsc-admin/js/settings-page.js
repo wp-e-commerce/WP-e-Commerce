@@ -34,7 +34,7 @@
 			}
 
 			// load the correct settings tab when back/forward browser button is used
-			$(window).bind('popstate', t.pop_state_handler);
+			$(window).bind('popstate', t.event_pop_state);
 
 			// load the settings tab when clicking on navigation links
 			$('#wpsc_options a.nav-tab').live('click', function(){
@@ -51,7 +51,7 @@
 		 * @param {Object} e Event object
 		 * @since 3.8.8
 		 */
-		pop_state_handler : function(e) {
+		event_pop_state : function(e) {
 			if (e.state) {
 				t.load_tab(e.state.tab_id, false);
 			}
