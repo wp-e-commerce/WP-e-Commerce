@@ -12,6 +12,7 @@
  * @requires jQuery
  * @requires jQuery.query
  */
+var WPSC_Settings_Tab_General;
 
 (function($){
 	// abbreviate WPSC_Settings_Page to 't'
@@ -20,7 +21,7 @@
 	$.extend(t, /** @lends WPSC_Settings_Page */ {
 		/**
 		 * Event binding for WPSC_Settings_Page
-		 * @since [3.8.8]
+		 * @since 3.8.8
 		 */
 		init : function() {
 			// make sure the event object contains the 'state' property
@@ -36,33 +37,11 @@
 			// load the correct settings tab when back/forward browser button is used
 			$(window).bind('popstate', t.event_pop_state);
 
-			$('#wpsc_options a.nav-tab').live('click', t.event_tab_button_clicked);
-
-			$('#wpsc-base-country-drop-down').live('change', t.event_base_country_changed);
-		},
-
-		/**
-		 * Load the list of regions / states when base country is changed
-		 * @since 3.8.8
-		 */
-		event_base_country_changed : function() {
-			var span = $('#wpsc-base-region-drop-down');
-			span.find('select').remove();
-			span.find('img').toggleClass('ajax-feedback');
-
-			var postdata = {
-				action  : 'wpsc_display_region_list',
-				country : $('#wpsc-base-country-drop-down').val(),
-				nonce   : t.nonce
-			};
-
-			var ajax_callback = function(response) {
-				span.find('img').toggleClass('ajax-feedback');
-				if (response !== '') {
-					span.prepend(response);
-				}
-			};
-			$.post(ajaxurl, postdata, ajax_callback, 'html');
+			$(function(){
+				$('#wpsc_options').delegate('a.nav-tab', 'click', t.event_tab_button_clicked);
+				$(t).trigger('wpsc_settings_tab_loaded');
+				$(t).trigger('wpsc_settings_tab_loaded_' + t.current_tab);
+			});
 		},
 
 		/**
@@ -137,11 +116,44 @@
 				$('.nav-tab-active').removeClass('nav-tab-active');
 				$('[data-tab-id="' + tab_id + '"]').addClass('nav-tab-active');
 				$('#wpsc_options_page form').attr('action', new_url);
+				$(t).trigger('wpsc_settings_tab_loaded');
+				$(t).trigger('wpsc_settings_tab_loaded_' + tab_id);
 			}
 
 			$.post(ajaxurl, post_data, ajax_callback, 'html');
 		}
 	});
 
-	t.init();
+	/**
+	 * General tab
+	 * @namespace
+	 */
+	var tg = WPSC_Settings_Tab_General = {
+		init : function() {
+			$('#options_general').delegate('#wpsc-base-country-drop-down', 'change', tg.event_base_country_changed);
+		},
+
+		event_base_country_changed : function() {
+			var span = $('#wpsc-base-region-drop-down');
+			span.find('select').remove();
+			span.find('img').toggleClass('ajax-feedback');
+
+			var postdata = {
+				action  : 'wpsc_display_region_list',
+				country : $('#wpsc-base-country-drop-down').val(),
+				nonce   : t.nonce
+			};
+
+			var ajax_callback = function(response) {
+				span.find('img').toggleClass('ajax-feedback');
+				if (response !== '') {
+					span.prepend(response);
+				}
+			};
+			$.post(ajaxurl, postdata, ajax_callback, 'html');
+		}
+	};
+	$(t).bind('wpsc_settings_tab_loaded_general', tg.init);
 })(jQuery);
+
+WPSC_Settings_Page.init();
