@@ -245,7 +245,7 @@ function wpsc_admin_include_optionspage_css_and_js() {
 	wp_enqueue_script( 'wp-e-commerce-admin-settings-page', WPSC_URL . '/wpsc-admin/js/settings-page.js', array( 'jquery-query' ), $version_identifier );
 
 	wp_localize_script( 'wp-e-commerce-admin-settings-page', 'WPSC_Settings_Page', array(
-		'nonce'       => wp_create_nonce( 'wpsc_navigate_settings_tab' ),
+		'nonce'       => wp_create_nonce( 'wpsc_settings_page_nonce' ),
 		'current_tab' => WPSC_Settings_Page::get_instance()->get_current_tab_id(),
 	) );
 

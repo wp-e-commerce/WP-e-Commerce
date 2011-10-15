@@ -200,3 +200,7 @@ div#themes_and_appearance ol li {
 	background-repeat:no-repeat;
 	background-position:98% 5px;
 }
+
+#wpsc-base-region-drop-down img {
+	vertical-align:middle;
+}

@@ -10,10 +10,10 @@
  */
 
 function wpsc_navigate_settings_tab() {
-	require_once( 'settings-page.php' );
-
-	if ( ! wp_verify_nonce( $_POST['nonce'], 'wpsc_navigate_settings_tab' ) )
+	if ( ! wp_verify_nonce( $_POST['nonce'], 'wpsc_settings_page_nonce' ) )
 		die( 'Session expired. Try refreshing your settings page.' );
+
+	require_once( 'settings-page.php' );
 
 	$settings_page = new WPSC_Settings_Page( $_POST['tab_id'] );
 	$settings_page->display_current_tab();
@@ -21,6 +21,20 @@ function wpsc_navigate_settings_tab() {
 }
 
 add_action( 'wp_ajax_wpsc_navigate_settings_tab', 'wpsc_navigate_settings_tab' );
+
+function wpsc_display_region_list() {
+	if ( ! wp_verify_nonce( $_POST['nonce'], 'wpsc_settings_page_nonce' ) )
+		die( 'Session expired. Try refreshing your settings page.' );
+
+	require_once( 'settings-page.php' );
+	require_once( 'includes/settings-tabs/general.php' );
+
+	$tab = new WPSC_Settings_Tab_General();
+	$tab->display_region_drop_down();
+	exit;
+}
+
+add_action( 'wp_ajax_wpsc_display_region_list', 'wpsc_display_region_list' );
 
 function wpsc_ajax_add_tracking() {
 	global $wpdb;
