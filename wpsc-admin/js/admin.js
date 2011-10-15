@@ -88,19 +88,6 @@ jQuery(document).ready(function(){
 
 	});
 
-	jQuery('.wpsc_prod_thumb_option').livequery(function(){
-		jQuery(this).focus(function(){
-			jQuery('.wpsc_mass_resize').css('visibility', 'visible');
-		});
-	});
-
-	jQuery('.wpsc_prod_thumb_option').livequery(function(){
-		jQuery(this).blur(function(){
-			jQuery('.wpsc_mass_resize').css('visibility', 'hidden');
-		});
-	});
-
-
 	//Delete checkout options on settings>checkout page
 	jQuery('.wpsc_delete_option').livequery(function(){
 		jQuery(this).click(function(event){
@@ -109,15 +96,8 @@ jQuery(document).ready(function(){
 		});
 
 	});
-	//Changing the checkout fields page
-	jQuery('#wpsc_checkout_sets').livequery(function(){
-		jQuery(this).change(function(){
 
-			});
-
-	});
 	//checkboxes on checkout page
-
 	jQuery('.wpsc_add_new_checkout_option').livequery(function(){
 		jQuery(this).click(function(event){
 			form_id = jQuery(this).attr('title');
