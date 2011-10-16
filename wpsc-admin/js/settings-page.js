@@ -316,7 +316,7 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 		 */
 		add_field : function(type) {
 			var button_wrapper = $('#wpsc-add-tax-' + type);
-			    count = $('.wpec-tax-' + type).size(),
+			    count = $('.wpsc-tax-' + type + '-row').size(),
 			    post_data = {
 			    	action            : 'wpec_taxes_ajax',
 			    	wpec_taxes_action : 'wpec_taxes_build_' + type + '_form',
