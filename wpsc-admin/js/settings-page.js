@@ -273,7 +273,36 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 			wrapper.delegate('#wpsc-add-tax-rates a', 'click', tt.event_add_tax_rate).
 			        delegate('.wpsc-taxes-rates-delete', 'click', tt.event_delete_tax_rate).
 			        delegate('#wpsc-add-tax-bands a', 'click', tt.event_add_tax_band).
-			        delegate('.wpsc-taxes-bands-delete', 'click', tt.event_delete_tax_band);
+			        delegate('.wpsc-taxes-bands-delete', 'click', tt.event_delete_tax_band).
+			        delegate('.wpsc-taxes-country-drop-down', 'change', tt.event_country_drop_down_changed);
+		},
+
+		/**
+		 * Load the region drop down via AJAX if the country has regions
+		 * @since 3.8.8
+		 */
+		event_country_drop_down_changed : function() {
+			var c = $(this),
+			    post_data = {
+					action            : 'wpec_taxes_ajax',
+					wpec_taxes_action : 'wpec_taxes_get_regions',
+					current_key       : c.data('key'),
+					taxes_type        : c.data('type'),
+					country_code      : c.val(),
+					nonce             : t.nonce
+				},
+				spinner = c.siblings('.ajax-feedback'),
+				ajax_callback = function(response) {
+					spinner.toggleClass('ajax-feedback-active');
+					console.log(response);
+					if (response != '') {
+						c.after(response);
+					}
+				};
+			spinner.toggleClass('ajax-feedback-active');
+			c.siblings('.wpsc-taxes-region-drop-down').remove();
+
+			$.post(ajaxurl, post_data, ajax_callback, 'html');
 		},
 
 		/**
