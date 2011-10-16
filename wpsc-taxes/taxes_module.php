@@ -48,11 +48,15 @@ function wpec_taxes_ajax_controller() {
 			);
 			$returnable = $wpec_taxes_controller->wpec_taxes_build_select_options( $regions, 'region_code', 'name', $default_option, $select_settings );
 			break;
-		case 'wpec_taxes_build_rate_form':
+		case 'wpec_taxes_build_rates_form':
+			if ( ! wp_verify_nonce( $_POST['nonce'], 'wpsc_settings_page_nonce' ) )
+				die( 'Session expired. Try refreshing your settings page.' );
 			$key = $_REQUEST['current_key'];
 			$returnable = $wpec_taxes_controller->wpec_taxes_build_form( $key );
 			break;
-		case 'wpec_taxes_build_band_form':
+		case 'wpec_taxes_build_bands_form':
+			if ( ! wp_verify_nonce( $_POST['nonce'], 'wpsc_settings_page_nonce' ) )
+					die( 'Session expired. Try refreshing your settings page.' );
 			$key = $_REQUEST['current_key'];
 			//get a new key if a band is already defined for this key
 			while($wpec_taxes_controller->wpec_taxes->wpec_taxes_get_band_from_index($key))

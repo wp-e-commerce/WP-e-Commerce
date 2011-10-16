@@ -129,6 +129,7 @@ class WPSC_Settings_Tab_Taxes
 	               **/
 
 						//get current tax rates
+						// TODO: Refactor to get rid of the need for wpec_taxes_build_form(). It's a horribly written function.
 						$tax_rates = $wpec_taxes_controller->wpec_taxes->wpec_taxes_get_rates();
 						$tax_rate_count = 0;
 						if ( !empty( $tax_rates ) ) {
@@ -139,8 +140,9 @@ class WPSC_Settings_Tab_Taxes
 						}// if
 	?>
 						<!--End Taxes Output-->
-						<p>
-							<a id="add_taxes_rate" href="#"><?php _e( 'Add New Tax Rate', 'wpsc' ); ?></a>
+						<p id="wpsc-add-tax-rates">
+							<a href="#"><?php _e( 'Add New Tax Rate', 'wpsc' ); ?></a>
+							<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
 						</p>
 					</div>
 				</div>
@@ -165,8 +167,9 @@ class WPSC_Settings_Tab_Taxes
 							}// foreach
 						}// if
 	?>
-						<p>
-							<a id="add_taxes_band" href="#"><?php _e( 'Add New Tax Band', 'wpsc' ); ?></a>
+						<p id="wpsc-add-tax-bands">
+							<a href="#"><?php _e( 'Add New Tax Band', 'wpsc' ); ?></a>
+							<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
 									</p>
 								</div>
 							</div><!--wpec-taxes-bands-container-->

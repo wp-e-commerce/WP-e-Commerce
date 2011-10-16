@@ -53,13 +53,13 @@ class wpec_taxes_controller {
 			if ( $this->wpec_taxes_run_logic() ) {
 				//get selected country code
 				$wpec_selected_country = $this->wpec_taxes_retrieve_selected_country();
-				
+
 				//set tax region
 				$region = $this->wpec_taxes_retrieve_region();
-				
+
 				//get the rate for the country and region if set
 				$tax_rate = $this->wpec_taxes->wpec_taxes_get_rate( $wpec_selected_country, $region );
-			
+
 				//start the total_tax off at 0
 				$total_tax = 0;
 
@@ -79,7 +79,7 @@ class wpec_taxes_controller {
 						$total_tax += $taxes['tax'];
 					}// if
 				}// foreach
-				
+
 				$free_shipping = false;
 				if ( isset( $_SESSION['coupon_numbers'] ) ) {
 					$coupon = new wpsc_coupons( $_SESSION['coupon_numbers'] );
@@ -88,12 +88,12 @@ class wpec_taxes_controller {
 
 				// minus coupon tax if we are using coupons, but make sure the coupon is not a free shipping coupon
 				if ($wpsc_cart->coupons_amount > 0 && ! $free_shipping){
-			
+
 					if ( $this->wpec_taxes_isincluded() )
 						$coupon_tax = $this->wpec_taxes_calculate_tax($wpsc_cart->coupons_amount, $tax_rate['rate'], false);
 					else
 						$coupon_tax = $this->wpec_taxes_calculate_tax($wpsc_cart->coupons_amount, $tax_rate['rate']);
-					
+
 					$total_tax -= $coupon_tax;
 				}
 
@@ -105,7 +105,7 @@ class wpec_taxes_controller {
 					else
 						$total_tax += $this->wpec_taxes_calculate_tax( $wpsc_cart->calculate_total_shipping(), $tax_rate['rate'] );
 				}// if
-				
+
 				$returnable = array( 'total' => $total_tax );
 
 				if ( !$this->wpec_taxes_isincluded() ) {
@@ -116,7 +116,7 @@ class wpec_taxes_controller {
 
 		return $returnable;
 	} // wpec_taxes_calculate_total
-	
+
 	/**
     * @description: wpec_taxes_calculate_tax - a simple function to calculate tax based on a given
     *               price and tax percentage.
@@ -134,20 +134,20 @@ class wpec_taxes_controller {
 		else{
 			$returnable = ($price / (100 + $tax_percentage) ) * $tax_percentage;
 		}
-			
+
       }// if
 
       return $returnable;
    } // wpec_taxes_calculate_tax
-	
+
 	function wpec_taxes_calculate_excluded_tax( $cart_item, $tax_rate )
 	{
 		$returnable = false;
-		
+
 		//do not calculate tax for this item if it is not taxable
       if(!isset($cart_item->meta[0]['wpec_taxes_taxable']))
       {
-         if ( $this->wpec_taxes_run_logic() ) {	
+         if ( $this->wpec_taxes_run_logic() ) {
 				//get the taxable amount
 				if(isset($cart_item->meta[0]['wpec_taxes_taxable_amount']) && !empty($cart_item->meta[0]['wpec_taxes_taxable_amount']))
 				{
@@ -161,12 +161,12 @@ class wpec_taxes_controller {
 				}// if
 				//get the taxable price - unit price multiplied by qty
             $taxable_price = $taxable_amount * $cart_item->quantity;
-				
+
 				//calculate tax
 				$returnable = array( 'tax' => $this->wpec_taxes_calculate_tax( $taxable_price, $tax_rate['rate'] ), 'rate' => $tax_rate['rate'] );
 			}// if
 		}// if
-		
+
 		return $returnable;
 	}// wpec_taxes_calculate_excluded_tax
 
@@ -189,7 +189,7 @@ class wpec_taxes_controller {
             $region = $this->wpec_taxes_retrieve_region();
 
 			$taxes_band = isset( $cart_item->meta[0]['wpec_taxes_band'] ) ? $cart_item->meta[0]['wpec_taxes_band'] : null;
-			
+
             //get the tax percentage rate
             $tax_rate = $this->wpec_taxes->wpec_taxes_get_included_rate( $taxes_band, $wpec_base_country, $region );
 
@@ -247,7 +247,7 @@ class wpec_taxes_controller {
          default:
             $returnable = true;
       }// switch
-      
+
       return $returnable;
 
    } // wpec_taxes_run_logic
@@ -608,7 +608,7 @@ class wpec_taxes_controller {
             'isocode' => $country_code,
             'country' => $this->wpec_taxes->wpec_taxes_get_country_information( 'country', array( 'isocode' => $country_code ) )
          );
-			
+
 			if(isset($tax_rate['index']))
 			{
 				$bands_hidden_index['value'] = $tax_rate['index'];
@@ -636,9 +636,9 @@ class wpec_taxes_controller {
       if ( $type == 'rates' ) {
          $returnable[] = $this->wpec_taxes_build_input( $shipping_input_settings );
       }// if
-      $returnable[] = "<a class='taxes-{$type}-delete' id='delete-{$key}' href='#'>" . __( 'Delete', 'wpsc' ) . "</a>";
+      $returnable[] = "<a class='wpsc-taxes-{$type}-delete' id='wpsc-taxes-{$type}-delete-{$key}' href='#'>" . __( 'Delete', 'wpsc' ) . "</a>";
 
-      $returnable = "<p id='{$type}-row-{$key}' class='wpec-tax-{$type}'>" . implode( "\n", $returnable ) . '</p>';
+      $returnable = "<p id='wpsc-taxes-{$type}-row-{$key}' class='wpsc-tax-{$type}-row'>" . implode( "\n", $returnable ) . '</p>';
 
       return $returnable;
    } // wpec_taxes_build_form

@@ -12,10 +12,10 @@
  * @requires jQuery
  * @requires jQuery.query
  */
-var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab_Checkout;
+var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab_Checkout, WPSC_Settings_Tab_Taxes;
 
 (function($){
-	// abbreviate WPSC_Settings_Page to 't'
+
 	var t = WPSC_Settings_Page;
 
 	$.extend(t, /** @lends WPSC_Settings_Page */ {
@@ -167,7 +167,7 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 		event_base_country_changed : function() {
 			var span = $('#wpsc-base-region-drop-down');
 			span.find('select').remove();
-			span.find('img').toggleClass('ajax-feedback');
+			span.find('img').toggleClass('ajax-feedback-active');
 
 			var postdata = {
 				action  : 'wpsc_display_region_list',
@@ -176,7 +176,7 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 			};
 
 			var ajax_callback = function(response) {
-				span.find('img').toggleClass('ajax-feedback');
+				span.find('img').toggleClass('ajax-feedback-active');
 				if (response !== '') {
 					span.prepend(response);
 				}
@@ -257,6 +257,81 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 		}
 	};
 	$(t).bind('wpsc_settings_tab_loaded_checkout', tco.init);
+
+	/**
+	 * Taxes tab
+	 * @namespace
+	 * @since 3.8.8
+	 */
+	var tt = WPSC_Settings_Tab_Taxes = {
+		/**
+		 * Event binding for Taxes tab
+		 * @since 3.8.8
+		 */
+		init : function() {
+			var wrapper = $('#options_taxes');
+			wrapper.delegate('#wpsc-add-tax-rates a', 'click', tt.event_add_tax_rate).
+			        delegate('.wpsc-taxes-rates-delete', 'click', tt.event_delete_tax_rate).
+			        delegate('#wpsc-add-tax-bands a', 'click', tt.event_add_tax_band).
+			        delegate('.wpsc-taxes-bands-delete', 'click', tt.event_delete_tax_band);
+		},
+
+		/**
+		 * Add new tax rate field when "Add Tax Rate" is clicked
+		 * @since 3.8.8
+		 * TODO: rewrote the horrible code in class wpec_taxes_controller. There's really no need for AJAX here.
+		 */
+		event_add_tax_rate : function() {
+			tt.add_field('rates');
+			return false;
+		},
+
+		/**
+		 * Remove a tax rate row when "Delete" on that row is clicked.
+		 * @since 3.8.8
+		 */
+		event_delete_tax_rate : function() {
+			$(this).parents('.wpsc-tax-rates-row').remove();
+			return false;
+		},
+
+		/**
+		 * Add new tax band field when "Add Tax Band" is clicked
+		 * @since 3.8.8
+		 */
+		event_add_tax_band : function() {
+			tt.add_field('bands');
+			return false;
+		},
+
+		event_delete_tax_band : function() {
+			$(this).parents('.wpsc-tax-bands-row').remove();
+			return false;
+		},
+
+		/**
+		 * Add a field to the Tax Rate / Tax Band form, depending on the supplied type
+		 * @param {String} Either "bands" or "rates" to specify the type of field
+		 * @since 3.8.8
+		 */
+		add_field : function(type) {
+			var button_wrapper = $('#wpsc-add-tax-' + type);
+			    count = $('.wpec-tax-' + type).size(),
+			    post_data = {
+			    	action            : 'wpec_taxes_ajax',
+			    	wpec_taxes_action : 'wpec_taxes_build_' + type + '_form',
+			    	current_key       : count,
+			    	nonce             : t.nonce,
+			    },
+			    ajax_callback = function(response) {
+			    	button_wrapper.before(response).find('img').toggleClass('ajax-feedback-active');
+			    };
+
+			button_wrapper.find('img').toggleClass('ajax-feedback-active');
+			$.post(ajaxurl, post_data, ajax_callback, 'html');
+		}
+	}
+	$(t).bind('wpsc_settings_tab_loaded_taxes', tt.init);
 })(jQuery);
 
 WPSC_Settings_Page.init();

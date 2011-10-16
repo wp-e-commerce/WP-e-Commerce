@@ -201,6 +201,7 @@ div#themes_and_appearance ol li {
 	background-position:98% 5px;
 }
 
-#wpsc-base-region-drop-down img {
+img.ajax-feedback-active {
+	visibility:visible;
 	vertical-align:middle;
 }
