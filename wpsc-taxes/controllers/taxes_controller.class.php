@@ -575,7 +575,9 @@ class wpec_taxes_controller {
             $country_code = $tax_rate['country_code'];
          }// if
 
-         if ( isset( $tax_rate['region_code'] ) ) {
+         $regions = $this->wpec_taxes->wpec_taxes_get_regions( $country_code );
+
+         if ( isset( $tax_rate['region_code'] ) && ! empty( $regions ) ) {
             //set the region up
             $region_select_settings = array(
                'id' => "{$type}-region-{$key}",
@@ -594,7 +596,6 @@ class wpec_taxes_controller {
                'name' => $this->wpec_taxes->wpec_taxes_get_region_information( $tax_rate['region_code'], 'name' )
             );
 
-            $regions = $this->wpec_taxes->wpec_taxes_get_regions( $country_code );
             $region_select = $this->wpec_taxes_build_select_options( $regions, 'region_code', 'name', $selected_region, $region_select_settings );
          }// if
 
