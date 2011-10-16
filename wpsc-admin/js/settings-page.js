@@ -12,7 +12,7 @@
  * @requires jQuery
  * @requires jQuery.query
  */
-var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation;
+var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab_Checkout;
 
 (function($){
 	// abbreviate WPSC_Settings_Page to 't'
@@ -210,6 +210,32 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation;
 		}
 	};
 	$(t).bind('wpsc_settings_tab_loaded_presentation', tpr.init);
+
+	/**
+	 * Checkout Tab
+	 * @namespace
+	 * @since 3.8.8
+	 */
+	var tco = WPSC_Settings_Tab_Checkout = {
+		/**
+		 * Event binding for Checkout tab
+		 * @since 3.8.8
+		 */
+		init : function() {
+			var wrapper = $('#options_checkout');
+			wrapper.delegate('.add_new_form_set', 'click', tco.event_add_new_form_set);
+		},
+
+		/**
+		 * Toggle "Add New Form Set" field
+		 * @since 3.8.8
+		 */
+		event_add_new_form_set : function() {
+			jQuery(".add_new_form_set_forms").toggle();
+				return false;
+		}
+	};
+	$(t).bind('wpsc_settings_tab_loaded_checkout', tco.init);
 })(jQuery);
 
 WPSC_Settings_Page.init();
