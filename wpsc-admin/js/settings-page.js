@@ -136,7 +136,28 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 		 * @since 3.8.8
 		 */
 		init : function() {
-			$('#options_general').delegate('#wpsc-base-country-drop-down', 'change', tg.event_base_country_changed);
+			var wrapper = $('#options_general');
+			wrapper.delegate('#wpsc-base-country-drop-down', 'change', tg.event_base_country_changed).
+			        delegate('.wpsc-select-all', 'click', tg.event_select_all).
+			        delegate('.wpsc-select-none', 'click', tg.event_select_none);
+		},
+
+		/**
+		 * Select all countries for Target Markets
+		 * @since 3.8.8
+		 */
+		event_select_all : function() {
+			$('#wpsc-target-markets input:checkbox').each(function(){ this.checked = true; });
+			return false;
+		},
+
+		/**
+		 * Deselect all countries for Target Markets
+		 * @since 3.8.8
+		 */
+		event_select_none : function() {
+			$('#wpsc-target-markets input:checkbox').each(function(){ this.checked = false; });
+			return false;
 		},
 
 		/**

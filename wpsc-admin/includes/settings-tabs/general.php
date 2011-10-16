@@ -69,8 +69,10 @@ class WPSC_Settings_Tab_General extends WPSC_Settings_Tab
 							echo "<em>" . __( "The Target Markets feature has been disabled because you have the Suhosin PHP extension installed on this server. If you need to use the Target Markets feature then disable the suhosin extension, if you can not do this, you will need to contact your hosting provider.", 'wpsc' ) . "</em>";
 						} else {
 					?>
-							<span><?php printf(__('Select: <a href="%1$s"  class="wpsc_select_all" title="All">All</a> <a href="%1$s" class="wpsc_select_none" title="None">None</a>' , 'wpsc') , add_query_arg( array( 'selected_all' => 'all' ) ), add_query_arg( array( 'selected_all' => 'none' ) )  ); ?></span><br />
-							<div id='resizeable' class='ui-widget-content multiple-select'>
+							<span>
+							<?php printf(__('Select: <a href="%1$s"  class="wpsc-select-all" title="All">All</a> <a href="%2$s" class="wpsc-select-none" title="None">None</a>' , 'wpsc') , add_query_arg( array( 'selected_all' => 'all' ) ), add_query_arg( array( 'selected_all' => 'none' ) )  ); ?>
+							</span><br />
+							<div id='wpsc-target-markets' class='ui-widget-content multiple-select'>
 						<?php
 							foreach ( (array)$countrylist as $country ) {
 								$country['country'] = htmlspecialchars( $country['country'] );
