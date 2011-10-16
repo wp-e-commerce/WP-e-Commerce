@@ -467,13 +467,6 @@ jQuery(document).ready(function(){
 		});
 	});
 
-	jQuery('a.add_new_form_set').livequery(function(){
-		jQuery(this).click( function() {
-			jQuery(".add_new_form_set_forms").toggle();
-			return false;
-		});
-	});
-
 
 	jQuery("#add-product-image").click(function(){
 		swfu.selectFiles();
