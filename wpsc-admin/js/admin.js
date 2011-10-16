@@ -195,24 +195,6 @@ jQuery(document).ready(function(){
 		});
 	});
 
-	//select all target markets in general settings page
-	jQuery('a.wpsc_select_all').livequery(function(){
-		jQuery(this).click(function(event){
-			jQuery('div#resizeable input:checkbox').attr('checked', true);
-			event.preventDefault();
-
-		});
-
-	});
-	//select all target markets in general settings page
-	jQuery('a.wpsc_select_none').livequery(function(){
-		jQuery(this).click(function(event){
-			jQuery('div#resizeable input:checkbox').attr('checked', false);
-			event.preventDefault();
-
-		});
-
-	});
          if( pagenow == 'edit-wpsc_product_category' ) {
           jQuery('table.tags').sortable({
             axis: 'y',
