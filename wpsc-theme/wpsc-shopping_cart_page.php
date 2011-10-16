@@ -43,10 +43,12 @@ endif;
          /* I dont think this gets used anymore,, but left in for backwards compatibility */
          ?>
             <div class="item_no_image">
+				<?php do_action ( "wpsc_before_checkout_cart_item_image" ); ?>
                <a href="<?php echo wpsc_the_product_permalink(); ?>">
                <span><?php _e('No Image','wpsc'); ?></span>
 
                </a>
+				<?php do_action ( "wpsc_after_checkout_cart_item_image" ); ?>
             </div>
          <?php endif; ?>
          </td>
