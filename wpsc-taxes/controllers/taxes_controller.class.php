@@ -526,8 +526,9 @@ class wpec_taxes_controller {
       $country_select_settings = array(
          'id' => "{$type}-country-{$key}",
          'name' => "wpsc_options[wpec_taxes_{$type}][{$key}][country_code]",
-         'class' => 'country',
-         'onchange' => "wpec_taxes_get_regions({$key}, \"{$type}\")"
+         'class' => 'wpsc-taxes-country-drop-down',
+         'data-key' => $key,
+         'data-type' => $type,
       );
       $rate_input_settings = array(
          'id' => "{$type}-rate-{$key}",
@@ -582,7 +583,7 @@ class wpec_taxes_controller {
             $region_select_settings = array(
                'id' => "{$type}-region-{$key}",
                'name' => "wpsc_options[wpec_taxes_{$type}][{$key}][region_code]",
-               'class' => 'region'
+               'class' => 'wpsc-taxes-region-drop-down'
             );
 
             //country code should be set - but just in case it's not
@@ -638,7 +639,7 @@ class wpec_taxes_controller {
          $returnable[] = $this->wpec_taxes_build_input( $shipping_input_settings );
       }// if
       $returnable[] = "<a class='wpsc-taxes-{$type}-delete' id='wpsc-taxes-{$type}-delete-{$key}' href='#'>" . __( 'Delete', 'wpsc' ) . "</a>";
-
+      $returnable[] = '<img src="' . esc_url( admin_url( 'images/wpspin_light.gif' ) ) . '" class="ajax-feedback" title="" alt="" />';
       $returnable = "<p id='wpsc-taxes-{$type}-row-{$key}' class='wpsc-tax-{$type}-row'>" . implode( "\n", $returnable ) . '</p>';
 
       return $returnable;
