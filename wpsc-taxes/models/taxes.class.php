@@ -87,7 +87,7 @@ class wpec_taxes {
 		//initialize return variable
 		// use wpsc_tax_rate hook to provide your own tax solution
 		$returnable = apply_filters( 'wpsc_tax_rate', false, $this, $country_code, $region_code );
-		
+
 		if ( $returnable !== false )
 			return $returnable;
 
@@ -152,7 +152,7 @@ class wpec_taxes {
 
 		return $returnable;
 	} // wpec_taxes_get_band_from_name
-	
+
 	/**
 	 * @author: Jeremy Smith
 	 * @description: wpec_taxes_get_band_from_index - retrieves the tax band for the given name
@@ -191,7 +191,7 @@ class wpec_taxes {
 		//get the tax band and tax rate
 		$tax_band = $this->wpec_taxes_get_band_from_index( $taxes_band_index );
 		$rate_array = $this->wpec_taxes_get_rate( $country_code, $region_code );
-		
+
 		//set the tax rate depending on product rate settings
 		if(isset($tax_band['rate']))
 			switch ( $this->wpec_taxes_get_product() ) {
@@ -306,7 +306,7 @@ class wpec_taxes {
 	 *                            Default action is to retrieve the id column.
 	 * @return: int, string, or false
 	 * */
-	function wpec_taxes_get_region_information( $region_code, $column='id' ) {   
+	function wpec_taxes_get_region_information( $region_code, $column='id' ) {
 		//check for all markets ifset return the string 'All Markets'
 		if('all-markets' == $region_code)
 		{
@@ -342,7 +342,8 @@ class wpec_taxes {
 		$result = $wpdb->get_results( $query, ARRAY_A );
 
 		//add the all markets option to the list
-		array_unshift($result, array('region_code'=>'all-markets', 'name'=>'All Markets'));
+		if ( ! empty( $result ) )
+			array_unshift($result, array('region_code'=>'all-markets', 'name'=>'All Markets'));
 
 		return $result;
 	} // wpec_taxes_get_regions
