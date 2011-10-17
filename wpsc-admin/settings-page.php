@@ -148,6 +148,7 @@ final class WPSC_Settings_Page
 		?>
 			<div id="wpsc_options" class="wrap">
 				<div id="icon_card" class="icon32"></div>
+				<h2>Store Settings</h2>
 				<?php $this->output_tabs(); ?>
 				<div id='wpsc_options_page'>
 					<form method='post' action='<?php echo esc_attr( $this->submit_url() ); ?>' id='cart_options' name='cart_options' class='wpsc_form_track'>

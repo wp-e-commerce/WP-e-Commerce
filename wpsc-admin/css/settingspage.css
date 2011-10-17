@@ -208,6 +208,10 @@ div#themes_and_appearance ol li {
 	margin-right:0;
 }
 
+#wpsc_options h2.nav-tab-wrapper {
+	padding-left:7px;
+}
+
 img.ajax-feedback-active {
 	visibility:visible;
 	vertical-align:middle;
