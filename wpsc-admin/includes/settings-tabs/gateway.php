@@ -1,6 +1,6 @@
 <?php
 
-class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Gateway
+class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab
 {
 	public function display() {
 		global $wpdb, $nzshpcrt_gateways;
