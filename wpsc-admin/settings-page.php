@@ -3,6 +3,7 @@
 abstract class WPSC_Settings_Tab
 {
 	abstract public function display();
+	public function __construct() {}
 }
 
 final class WPSC_Settings_Page
