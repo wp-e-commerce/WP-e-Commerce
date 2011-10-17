@@ -211,7 +211,7 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab
 													<div class='wpsc_shipping_options'>
 														<div class='wpsc-shipping-actions'>
 													| <span class="edit">
-																<a class='edit-shipping-module' rel="<?php echo $shipping->internal_name; ?>" title="Edit this Shipping Module" href='<?php echo esc_attr( $this->get_shipping_module_url( $shipping ) ); ?>' style="cursor:pointer;">Edit</a>
+																<a class='edit-shipping-module' rel="<?php echo $shipping->internal_name; ?>" title="Edit this Shipping Module" href='<?php echo esc_attr( $this->get_shipping_module_url( $shipping ) ); ?>' style="cursor:pointer;"><?php _e( 'Edit', 'wpsc' ); ?></a>
 													</span> |
 												</div>
 
