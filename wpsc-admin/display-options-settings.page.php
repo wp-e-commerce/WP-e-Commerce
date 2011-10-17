@@ -42,23 +42,6 @@ function country_list( $selected_country = null ) {
 	return $output;
 }
 
-/*
- * Get Shipping Form for wp-admin
- */
-function wpsc_get_shipping_form( $shippingname ) {
-	global $wpsc_shipping_modules;
-
-	if ( array_key_exists( $shippingname, $wpsc_shipping_modules ) ) {
-		$shipping_forms       = $wpsc_shipping_modules[$shippingname]->getForm();
-		$shipping_module_name = $wpsc_shipping_modules[$shippingname]->name;
-		$output = array( 'name' => $shipping_module_name, 'form_fields' => $shipping_forms, 'has_submit_button' => 1 );
-	} else {
-		$output = array( 'name' => '&nbsp;', 'form_fields' => __( 'To configure a shipping module select one on the left.', 'wpsc' ), 'has_submit_button' => 0 );
-	}
-
-	return $output;
-}
-
 /***
  * Get Payment Form for wp-admin
  */

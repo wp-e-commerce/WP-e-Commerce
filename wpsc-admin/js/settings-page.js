@@ -12,7 +12,8 @@
  * @requires jQuery
  * @requires jQuery.query
  */
-var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab_Checkout, WPSC_Settings_Tab_Taxes;
+var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab_Checkout, WPSC_Settings_Tab_Taxes,
+    WPSC_Settings_Tab_Shipping;
 
 (function($){
 
@@ -396,6 +397,33 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 		}
 	}
 	$(t).bind('wpsc_settings_tab_loaded_taxes', tt.init);
+
+	var ts = WPSC_Settings_Tab_Shipping = {
+		init : function() {
+			var wrapper = $('#options_shipping');
+			wrapper.delegate('.edit-shipping-module', 'click', ts.event_edit_shipping_module);
+		},
+
+		event_edit_shipping_module : function() {
+			var element = $(this),
+			    spinner = element.siblings('.ajax-feedback'),
+			    post_data = {
+			    	action : 'wpsc_shipping_module_settings_form',
+			    	shipping_module_id : element.data('module-id'),
+			    	nonce  : t.nonce
+			    },
+			    ajax_callback = function(response) {
+			    	console.log(response);
+			    	spinner.toggleClass('ajax-feedback-active');
+			    	$('#wpsc-shipping-module-settings').replaceWith(response);
+			    };
+
+			spinner.toggleClass('ajax-feedback-active');
+			$.post(ajaxurl, post_data, ajax_callback, 'html');
+			return false;
+		}
+	};
+	$(t).bind('wpsc_settings_tab_loaded_shipping', ts.init);
 })(jQuery);
 
 WPSC_Settings_Page.init();
