@@ -8,6 +8,39 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab
 			update_user_option( get_current_user_id(), 'wpsc_settings_selected_shipping_module', $_REQUEST['shipping_module_id'] );
 	}
 
+	public function display_shipping_module_settings_form() {
+		global $wpsc_shipping_modules;
+
+		$selected_module_id = (string) get_user_option( 'wpsc_settings_selected_shipping_module', get_current_user_id() );
+		$found_selected_module = array_key_exists( $selected_module_id, $wpsc_shipping_modules );
+		if ( $found_selected_module ) {
+			$selected_module = $wpsc_shipping_modules[$selected_module_id];
+			$title = $selected_module->name;
+			$content = $selected_module->getForm();
+		} else {
+			$title = __( 'Edit Shipping Module Settings', 'wpsc' );
+			$content = __( 'To configure a shipping module select one on the left.', 'wpsc' );
+		}
+
+		?>
+			<td id="wpsc-shipping-module-settings" class='gateway_settings' rowspan='2'>
+				<div class='postbox'>
+					<h3 class='hndle'><?php echo esc_html( $title ); ?></h3>
+					<div class='inside'>
+						<table class='form-table'>
+							<?php echo $content; ?>
+						</table>
+						<?php if ( $found_selected_module ): ?>
+							<p class="submit">
+								<input type="submit" value="<?php _e( 'Update &raquo;', 'wpsc' ); ?>" />
+							</p>
+						<?php endif; ?>
+					</div>
+				</div>
+			</td>
+		<?php
+	}
+
 	private function get_shipping_module_url( $shipping ) {
 		$location = ( isset( $_REQUEST['current_url'] ) ? $_REQUEST['current_url'] : $_SERVER['REQUEST_URI'] );
 		$location = add_query_arg( array(
@@ -46,8 +79,6 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab
 
 	<?php
 
-		$shipping_data = wpsc_get_shipping_form( (string) get_user_option( 'wpsc_settings_selected_shipping_module', get_current_user_id() ) );
-
 		if ( get_option( 'custom_gateway' ) == 1 ) {
 			$custom_gateway_hide = "style='display:block;'";
 			$custom_gateway1 = 'checked="checked"';
@@ -55,10 +86,6 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab
 			$custom_gateway_hide = "style='display:none;'";
 			$custom_gateway2 = 'checked="checked"';
 		}
-		if ( $shipping_data['has_submit_button'] == 0 )
-			$update_button_css = 'style= "display: none;"';
-		else
-			$update_button_css = '';
 					/* wpsc_setting_page_update_notification displays the wordpress styled notifications */
 					wpsc_settings_page_update_notification(); ?>
 						<div class='postbox'>
@@ -173,15 +200,6 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab
 									</td>
 
 								</tr>
-								<tr>
-									<td>
-									<div class='submit' <?php echo $update_button_css; ?>>
-										<input type='submit' value='<?php _e( 'Update &raquo;', 'wpsc' ); ?>' name='updateoption' />
-									</div>
-									</td>
-								</tr>
-								<?php do_action('wpsc_shipping_settings_page'); ?>
-
 							</table>
 									</div>
 										</div>
@@ -210,9 +228,10 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab
 
 													<div class='wpsc_shipping_options'>
 														<div class='wpsc-shipping-actions'>
-													| <span class="edit">
-																<a class='edit-shipping-module' rel="<?php echo $shipping->internal_name; ?>" title="Edit this Shipping Module" href='<?php echo esc_attr( $this->get_shipping_module_url( $shipping ) ); ?>' style="cursor:pointer;"><?php _e( 'Edit', 'wpsc' ); ?></a>
-													</span> |
+													<span class="edit">
+																<a class='edit-shipping-module' data-module-id="<?php echo $shipping->internal_name; ?>" title="Edit this Shipping Module" href='<?php echo esc_attr( $this->get_shipping_module_url( $shipping ) ); ?>' style="cursor:pointer;"><?php _e( 'Edit', 'wpsc' ); ?></a>
+																<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
+													</span>
 												</div>
 
 												<p><input name='custom_shipping_options[]' <?php echo $shipping->checked; ?> type='checkbox' value='<?php echo $shipping->internal_name; ?>' id='<?php echo $shipping->internal_name; ?>_id' /><label for='<?php echo $shipping->internal_name; ?>_id'><?php echo $shipping->name; ?></label></p>
@@ -239,37 +258,22 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab
 										?>
 											<div class='wpsc_shipping_options'>
 												<div class="wpsc-shipping-actions">
-											| <span class="edit">
-														<a class='edit-shippping-module' rel="<?php echo $shipping->internal_name; ?>"  title="Edit this Shipping Module" href='<?php echo esc_attr( $this->get_shipping_module_url( $shipping ) ); ?>' style="cursor:pointer;"><?php _e( 'Edit' , 'wpsc' ); ?></a>
-															</span> |
+											<span class="edit">
+														<a class='edit-shippping-module' data-module-id="<?php echo $shipping->internal_name; ?>"  title="Edit this Shipping Module" href='<?php echo esc_attr( $this->get_shipping_module_url( $shipping ) ); ?>' style="cursor:pointer;"><?php _e( 'Edit' , 'wpsc' ); ?></a>
+														<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
+															</span>
 														</div>
 														<p><input <?php echo $disabled; ?> name='custom_shipping_options[]' <?php echo $shipping->checked; ?> type='checkbox' value='<?php echo $shipping->internal_name; ?>' id='<?php echo $shipping->internal_name; ?>_id' /><label for='<?php echo $shipping->internal_name; ?>_id'><?php esc_attr_e( $shipping->name ); ?></label></p>
 													</div>
 											<?php } ?>
-
-											<div class='submit gateway_settings'>
-												<input type='hidden' value='true' name='update_gateways'/>
-												<input type='submit' value='<?php _e( 'Update &raquo;', 'wpsc' ); ?>' name='updateoption'/>
-											</div>
-
+													<p class="submit">
+														<input type="submit" value="<?php _e( 'Update &raquo;', 'wpsc' ); ?>" />
+													</p>
 													</div>
 												</div>
 										</td>
 
-										<td class='gateway_settings' rowspan='2'>
-											<div class='postbox'>
-												<h3 class='hndle'><?php esc_html( $shipping_data['name'] ); ?></h3>
-												<div class='inside'>
-													<table class='form-table'>
-														<?php echo $shipping_data['form_fields']; ?>
-													</table>
-
-												<div class='submit' <?php echo $update_button_css; ?>>
-													<input type='submit' value='<?php _e( 'Update &raquo;', 'wpsc' ); ?>' name='updateoption' />
-												</div>
-												</div>
-											</div>
-										</td>
+										<?php $this->display_shipping_module_settings_form(); ?>
 									</tr>
 								</table>
 						</div>

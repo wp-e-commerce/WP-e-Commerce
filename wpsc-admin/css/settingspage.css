@@ -217,3 +217,8 @@ img.ajax-feedback-active {
 	visibility:visible;
 	vertical-align:middle;
 }
+
+#wpsc_options .postbox .inside p.submit {
+	margin-top:5px;
+	padding:0;
+}
