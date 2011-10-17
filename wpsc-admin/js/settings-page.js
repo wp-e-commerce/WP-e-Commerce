@@ -128,6 +128,7 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 				'action' : 'wpsc_navigate_settings_tab',
 				'tab_id' : tab_id,
 				'nonce'  : t.nonce,
+				'current_url' : location.href
 			};
 
 			t.toggle_ajax_state(tab_id);
