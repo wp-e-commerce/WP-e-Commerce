@@ -47,11 +47,20 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 
 			$(function(){
 				$('#wpsc_options').delegate('a.nav-tab', 'click', t.event_tab_button_clicked).
-				                   delegate('input, textarea, select', 'change', t.event_settings_changed);
+				                   delegate('input, textarea, select', 'change', t.event_settings_changed).
+				                   delegate('#wpsc-settings-form', 'submit', t.event_settings_form_submitted);
 				$(window).bind('beforeunload', t.event_before_unload);
 				$(t).trigger('wpsc_settings_tab_loaded');
 				$(t).trigger('wpsc_settings_tab_loaded_' + t.current_tab);
 			});
+		},
+
+		/**
+		 * This prevents the confirm dialog triggered by event_before_unload from being displayed.
+		 * @since 3.8.8
+		 */
+		event_settings_form_submitted : function() {
+			t.unsaved_settings = false;
 		},
 
 		/**
