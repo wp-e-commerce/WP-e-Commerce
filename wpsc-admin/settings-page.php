@@ -155,7 +155,7 @@ final class WPSC_Settings_Page
 						<div class="submit">
 							<input type='hidden' name='wpsc_admin_action' value='submit_options' />
 							<?php wp_nonce_field( 'update-options', 'wpsc-update-options' ); ?>
-							<input type="submit" value="<?php _e( 'Update &raquo;', 'wpsc' ); ?>" name="updateoption" />
+							<input type="submit" class="button-primary" value="<?php _e( 'Save Changes', 'wpsc' ); ?>" name="updateoption" />
 						</div>
 					</form>
 				</div>
