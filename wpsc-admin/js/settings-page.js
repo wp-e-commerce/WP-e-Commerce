@@ -37,7 +37,7 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 			// set the history state of the current page
 			if (history.replaceState) {
 				(function(){
-					history.replaceState({tab_id : t.current_tab}, '', location.search);
+					history.replaceState({tab_id : t.current_tab}, '', location.search + location.hash);
 				})();
 			}
 
@@ -123,7 +123,7 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 				push_state = true;
 			}
 
-			var new_url = $.query.set('tab', tab_id).toString();
+			var new_url = '?page=wpsc-settings&tab=' + tab_id;
 			var post_data = {
 				'action' : 'wpsc_navigate_settings_tab',
 				'tab_id' : tab_id,

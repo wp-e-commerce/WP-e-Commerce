@@ -15,7 +15,7 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab
 			'page'               => 'wpsc-settings',
 			'shipping_module_id' => $shipping->internal_name,
 		), $location );
-		$location .= '#wpsc-gateway-module-options';
+		$location .= '#wpsc-shipping-module-options';
 		return $location;
 	}
 
