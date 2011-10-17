@@ -2,6 +2,79 @@
 
 class WPSC_Settings_Tab_Taxes
 {
+	public function __construct() {
+	}
+
+	public function callback_submit_options() {
+		//define the name of the checkbox options
+		$taxes_check_options = array( 'wpec_taxes_enabled' );
+
+		//check if checkbox options are checked and modify post output
+		foreach ( $taxes_check_options as $option ) {
+			$_POST['wpsc_options'][$option] = (isset( $_POST['wpsc_options'][$option] )) ? 1 : 0;
+		}// foreach
+		//currently there are two types - bands and rates
+		$taxes_rates_types = array( 'rates', 'bands' );
+
+		foreach ( $taxes_rates_types as $taxes_type ) {
+			$saved_rates = array( ); //keep track of saved rates
+			$exists = array( ); //keep track of what rates or names have been saved
+			//check the rates
+			if ( isset( $_POST['wpsc_options']['wpec_taxes_' . $taxes_type] ) ) {
+				foreach ( $_POST['wpsc_options']['wpec_taxes_' . $taxes_type] as $tax_rate ) {
+					if( !isset( $tax_rate['region_code'] ) )
+						$tax_rate['region_code'] = '';
+
+					//if there is no country then skip
+					if ( empty( $tax_rate['country_code'] ) ) {
+						continue;
+					}
+
+					//bands - if the name already exists then skip - if not save it
+					if ( $taxes_type == 'bands' ) {
+						if ( empty( $tax_rate['name'] ) || in_array( $tax_rate['name'], $exists ) || $tax_rate['name'] == 'Disabled' ) {
+							continue;
+						} else {
+							$exists[] = $tax_rate['name'];
+							$saved_rates[] = $tax_rate;
+						}// if
+					}// if
+					//rates - check the shipping checkbox
+					if ( $taxes_type == 'rates' ) {
+						//if there is no rate then skip
+						if ( empty( $tax_rate['rate'] ) ) {
+							continue;
+						}
+
+						$tax_rate['shipping'] = (isset( $tax_rate['shipping'] )) ? 1 : 0;
+
+						//check if country exists
+						if ( array_key_exists( $tax_rate['country_code'], $exists ) ) {
+							//if region already exists skip
+							if ( array_search( $tax_rate['region_code'], $exists[$tax_rate['country_code']] ) == $tax_rate['country_code'] ) {
+								continue;
+							} else {
+								//it's not in the array add it
+								$exists[$tax_rate['country_code']][] = $tax_rate['region_code'];
+
+								//save it
+								$saved_rates[] = $tax_rate;
+							}// if
+						} else {
+							//add codes to exists array
+							$exists[$tax_rate['country_code']][] = $tax_rate['region_code'];
+
+							//save it
+							$saved_rates[] = $tax_rate;
+						}// if
+					}// if
+				}// foreach
+			}// if
+			//replace post tax rates with filtered rates
+			update_option( 'wpec_taxes_' . $taxes_type, $saved_rates );
+		}
+	}
+
 	public function display() {
 		$wpec_taxes_controller = new wpec_taxes_controller;
 		$wpec_taxes_options = $wpec_taxes_controller->wpec_taxes->wpec_taxes_get_options();
@@ -174,12 +247,6 @@ class WPSC_Settings_Tab_Taxes
 								</div>
 							</div><!--wpec-taxes-bands-container-->
 						</div><!--metabox-holder-->
-						<?php do_action('wpsc_taxes_settings_page'); ?>
-						<div class="submit">
-							<input type='hidden' name='wpec_admin_action' value='submit_taxes_options' />
-							<?php wp_nonce_field( 'update-options', 'wpsc-update-options' ); ?>
-							<input type="submit" class='button-primary' value="Save Changes" name="submit_taxes" />
-						</div>
 		<?php
 	}
 }
