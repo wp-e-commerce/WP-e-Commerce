@@ -1,6 +1,6 @@
 <?php
 
-class WPSC_Settings_Tab_Checkout
+class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 {
 	public function display() {
 		global $wpdb;

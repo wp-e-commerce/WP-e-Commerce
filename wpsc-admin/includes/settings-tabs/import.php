@@ -1,6 +1,6 @@
 <?php
 
-class WPSC_Settings_Tab_Import
+class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab
 {
 	public function display() {
 		global $wpdb;

@@ -1,6 +1,6 @@
 <?php
 
-class WPSC_Settings_Tab_Gateway
+class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Gateway
 {
 	private function gateway_item( $gateway, $title = '', $checked = false ) {
 		?>
