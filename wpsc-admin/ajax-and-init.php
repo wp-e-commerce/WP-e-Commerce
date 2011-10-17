@@ -735,22 +735,6 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
 	add_action( 'admin_init', 'wpsc_delete_purchlog' );
 }
 
-/*
- * Get Shipping Form ajax call
- */
-
-function wpsc_ajax_get_shipping_form() {
-	$shippingname = $_REQUEST['shippingname'];
-	$_SESSION['previous_shipping_name'] = $shippingname;
-	$shipping_data = wpsc_get_shipping_form( $shippingname );
-	$html_shipping_name = str_replace( Array( "\n", "\r" ), Array( "\\n", "\\r" ), addslashes( $shipping_data['name'] ) );
-	$shipping_form = str_replace( Array( "\n", "\r" ), Array( "\\n", "\\r" ), addslashes( $shipping_data['form_fields'] ) );
-	echo "shipping_name_html = '$html_shipping_name'; \n\r";
-	echo "shipping_form_html = '$shipping_form'; \n\r";
-	echo "has_submit_button = '{$shipping_data['has_submit_button']}'; \n\r";
-	exit();
-}
-
 function wpsc_ajax_get_payment_form() {
 	$paymentname = $_REQUEST['paymentname'];
 	$_SESSION['previous_payment_name'] = $paymentname;
@@ -762,8 +746,6 @@ function wpsc_ajax_get_payment_form() {
 	echo "has_submit_button = '{$payment_data['has_submit_button']}'; \n\r";
 	exit();
 }
-if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'get_shipping_form') )
-	add_action( 'admin_init', 'wpsc_ajax_get_shipping_form' );
 
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'get_payment_form') )
 	add_action( 'admin_init', 'wpsc_ajax_get_payment_form' );
