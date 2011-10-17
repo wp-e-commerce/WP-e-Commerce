@@ -151,7 +151,7 @@ final class WPSC_Settings_Page
 				<h2>Store Settings</h2>
 				<?php $this->output_tabs(); ?>
 				<div id='wpsc_options_page'>
-					<form method='post' action='<?php echo esc_attr( $this->submit_url() ); ?>' id='cart_options' name='cart_options' class='wpsc_form_track'>
+					<form method='post' action='<?php echo esc_attr( $this->submit_url() ); ?>' id='cart_options' name='cart_options'>
 						<?php $this->display_current_tab(); ?>
 						<div class="submit">
 							<input type='hidden' name='wpsc_admin_action' value='submit_options' />

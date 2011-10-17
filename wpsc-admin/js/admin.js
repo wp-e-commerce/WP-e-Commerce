@@ -710,28 +710,6 @@ jQuery(document).ready(function(){
 		jQuery(this).find('.wpsc_ie_sale_price').val(sale_price);
 		jQuery(this).find('.wpsc_ie_sku').val(sku);
 	});
-
-	// Form change tracking code.
-	jQuery('form.wpsc_form_track input, form.wpsc_form_track textarea').live('change', function() {
-		jQuery(this).parents('form.wpsc_form_track:first').addClass('wpsc_form_changed');
-	});
-
-	jQuery('form.wpsc_form_track').live('submit', function() {
-		jQuery(this).removeClass('wpsc_form_changed');
-
-	});
-
-	// We'd ideally want to be using window.onbeforeonload to toss in a prompt, but that event is too
-	// unreliable from a browser to the next. Hooking onto anchors is the next best thing.
-	jQuery('form.wpsc_form_track a').live('click', function() {
-		if (jQuery(this).attr('href') && jQuery(this).attr('href') != '#' && !jQuery(this).hasClass('wpsc_select_all') && !jQuery(this).hasClass('wpsc_select_none')) {
-			if (jQuery('form.wpsc_form_changed').size()) {
-				if (!confirm(wpsc_adminL10n.unsaved_changes_detected)) {
-					return false;
-				}
-			}
-		}
-	});
 });
 
 // function for adding more custom meta
