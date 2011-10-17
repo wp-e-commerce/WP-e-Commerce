@@ -20,6 +20,13 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 
 	$.extend(t, /** @lends WPSC_Settings_Page */ {
 		/**
+		 * Set to true if there are modified settings.
+		 * @type {Boolean}
+		 * @since 3.8.8
+		 */
+		unsaved_settings : false,
+
+		/**
 		 * Event binding for WPSC_Settings_Page
 		 * @since 3.8.8
 		 */
@@ -38,10 +45,31 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 			$(window).bind('popstate', t.event_pop_state);
 
 			$(function(){
-				$('#wpsc_options').delegate('a.nav-tab', 'click', t.event_tab_button_clicked);
+				$('#wpsc_options').delegate('a.nav-tab', 'click', t.event_tab_button_clicked).
+				                   delegate('input, textarea, select', 'change', t.event_settings_changed);
+				$(window).bind('beforeunload', t.event_before_unload);
 				$(t).trigger('wpsc_settings_tab_loaded');
 				$(t).trigger('wpsc_settings_tab_loaded_' + t.current_tab);
 			});
+		},
+
+		/**
+		 * Mark the page as "unsaved" when a field is modified
+		 * @since 3.8.8
+		 */
+		event_settings_changed : function() {
+			t.unsaved_settings = true;
+		},
+
+		/**
+		 * Display a confirm dialog when the user is trying to navigate
+		 * away with unsaved settings
+		 * @since 3.8.8
+		 */
+		event_before_unload : function() {
+			if (t.unsaved_settings) {
+				return t.before_unload_dialog;
+			}
 		},
 
 		/**
@@ -78,13 +106,19 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 		},
 
 		/**
-		 * Use AJAX to load a tab to the settings page
-		 * @param  {String} tab_id The ID string of the tab
+		 * Use AJAX to load a tab to the settings page. If there are unsaved settings in the
+		 * current tab, a confirm dialog will be displayed.
+		 *
+		 * @param  {String}  tab_id The ID string of the tab
 		 * @param  {Boolean} push_state True (Default) if we need to history.pushState.
-		 *                           False if this is a result of back/forward browser button being pushed.
+		 *                              False if this is a result of back/forward browser button being pushed.
 		 * @since 3.8.8
 		 */
 		load_tab : function(tab_id, push_state) {
+			if (t.unsaved_settings && ! confirm(t.ajax_navigate_confirm_dialog)) {
+				return;
+			}
+
 			if (typeof push_state == 'undefined') {
 				push_state = true;
 			}
@@ -110,6 +144,7 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 			 * @since 3.8.8
 			 */
 			var ajax_callback = function(response) {
+				t.unsaved_settings = false;
 				t.toggle_ajax_state(tab_id);
 				$('#options_' + t.current_tab).replaceWith(response);
 				t.current_tab = tab_id;
@@ -294,7 +329,6 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 				spinner = c.siblings('.ajax-feedback'),
 				ajax_callback = function(response) {
 					spinner.toggleClass('ajax-feedback-active');
-					console.log(response);
 					if (response != '') {
 						c.after(response);
 					}

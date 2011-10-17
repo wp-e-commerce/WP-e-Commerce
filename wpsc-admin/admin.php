@@ -245,8 +245,10 @@ function wpsc_admin_include_optionspage_css_and_js() {
 	wp_enqueue_script( 'wp-e-commerce-admin-settings-page', WPSC_URL . '/wpsc-admin/js/settings-page.js', array( 'jquery-query' ), $version_identifier );
 
 	wp_localize_script( 'wp-e-commerce-admin-settings-page', 'WPSC_Settings_Page', array(
-		'nonce'       => wp_create_nonce( 'wpsc_settings_page_nonce' ),
-		'current_tab' => WPSC_Settings_Page::get_instance()->get_current_tab_id(),
+		'nonce'                        => wp_create_nonce( 'wpsc_settings_page_nonce' ),
+		'current_tab'                  => WPSC_Settings_Page::get_instance()->get_current_tab_id(),
+		'before_unload_dialog'         => __( 'The changes you made will be lost if you navigate away from this page.', 'wpsc' ),
+		'ajax_navigate_confirm_dialog' => __( 'The changes you made will be lost if you navigate away from this page.', 'wpsc' ) . "\n\n" . __( 'Click OK to discard your changes, or Cancel to remain on this page.' ),
 	) );
 
 	wp_enqueue_style( 'wp-e-commerce-admin_2.7', WPSC_URL . '/wpsc-admin/css/settingspage.css', false, false, 'all' );
@@ -323,7 +325,6 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 		wp_enqueue_style( 'wp-e-commerce-admin-dynamic', $siteurl . "/wp-admin/admin.php?wpsc_admin_dynamic_css=true", false, $version_identifier, 'all' );
 		// Localize scripts
 		wp_localize_script( 'wp-e-commerce-admin', 'wpsc_adminL10n', array(
-				'unsaved_changes_detected' => __( 'Unsaved changes have been detected. Click OK to lose these changes and continue.', 'wpsc' ),
 				'dragndrop_set' => ( get_option( 'wpsc_sort_by' ) == 'dragndrop' ? 'true' : 'false' ),
 				'l10n_print_after' => 'try{convertEntities(wpsc_adminL10n);}catch(e){};'
 			) );
