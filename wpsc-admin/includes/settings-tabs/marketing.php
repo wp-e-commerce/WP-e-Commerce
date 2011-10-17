@@ -1,6 +1,6 @@
 <?php
 
-class WPSC_Settings_Tab_Marketing
+class WPSC_Settings_Tab_Marketing extends WPSC_Settings_Tab
 {
 	public function display() {
 		?>

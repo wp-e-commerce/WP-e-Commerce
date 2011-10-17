@@ -1,6 +1,6 @@
 <?php
 
-class WPSC_Settings_Tab_Admin
+class WPSC_Settings_Tab_Admin extends WPSC_Settings_Tab
 {
 	public function display() {
 		global $wpdb;
