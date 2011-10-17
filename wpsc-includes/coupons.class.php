@@ -389,12 +389,8 @@ class wpsc_coupons {
 	*/
 	function uses_coupons() {
 		global $wpdb;
-		$coupon_info = $wpdb->get_results("SELECT * FROM `".WPSC_TABLE_COUPON_CODES."` WHERE active='1' ",ARRAY_A);
-		if($coupon_info != NULL){
-			return true;
-		}else{
-			return false;
-		}
+		$num_active_coupons = $wpdb->get_var("SELECT COUNT(id) as c FROM `".WPSC_TABLE_COUPON_CODES."` WHERE active='1'");
+		return ( $num_active_coupons > 0 );
 	}
 	
 		
