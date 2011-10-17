@@ -3,12 +3,6 @@
  * Display Settings page
  */
 
-// Clear the previously selected shipping form session variable if you are not on the shipping page
-if ( isset( $_GET['tab'] ) )
-	if( $_GET['tab'] == 'shipping' )
-		if( isset( $_GET['shipping_module'] ) )
-			$_SESSION['previous_shipping_name'] = $_GET['shipping_module'];
-
 function wpsc_display_settings_page() {
 	WPSC_Settings_Page::get_instance()->display();
 }

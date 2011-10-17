@@ -1,7 +1,24 @@
 <?php
-
-class WPSC_Settings_Tab_Shipping
+class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab
 {
+	public function __construct() {
+		parent::__construct();
+
+		if ( isset( $_REQUEST['shipping_module_id'] ) )
+			update_user_option( get_current_user_id(), 'wpsc_settings_selected_shipping_module', $_REQUEST['shipping_module_id'] );
+	}
+
+	private function get_shipping_module_url( $shipping ) {
+		$location = ( isset( $_REQUEST['current_url'] ) ? $_REQUEST['current_url'] : $_SERVER['REQUEST_URI'] );
+		$location = add_query_arg( array(
+			'tab'                => 'shipping',
+			'page'               => 'wpsc-settings',
+			'shipping_module_id' => $shipping->internal_name,
+		), $location );
+		$location .= '#wpsc-gateway-module-options';
+		return $location;
+	}
+
 	public function display() {
 		global $wpdb, $wpsc_shipping_modules, $external_shipping_modules, $internal_shipping_modules;
 		// sort into external and internal arrays.
@@ -29,10 +46,7 @@ class WPSC_Settings_Tab_Shipping
 
 	<?php
 
-		if ( !isset( $_SESSION['previous_shipping_name'] ) )
-			$_SESSION['previous_shipping_name'] = "";
-
-		$shipping_data = wpsc_get_shipping_form( $_SESSION['previous_shipping_name'] );
+		$shipping_data = wpsc_get_shipping_form( (string) get_user_option( 'wpsc_settings_selected_shipping_module', get_current_user_id() ) );
 
 		if ( get_option( 'custom_gateway' ) == 1 ) {
 			$custom_gateway_hide = "style='display:block;'";
@@ -171,7 +185,7 @@ class WPSC_Settings_Tab_Shipping
 							</table>
 									</div>
 										</div>
-											<table id='gateway_options' >
+											<table id='wpsc-shipping-module-options' class='wpsc-edit-module-options'>
 												<tr>
 													<td class='select_gateway'>
 													<a name="gateway_options"></a>
@@ -197,7 +211,7 @@ class WPSC_Settings_Tab_Shipping
 													<div class='wpsc_shipping_options'>
 														<div class='wpsc-shipping-actions'>
 													| <span class="edit">
-																<a class='edit-shipping-module' rel="<?php echo $shipping->internal_name; ?>" title="Edit this Shipping Module" href='<?php echo htmlspecialchars( add_query_arg('tab', 'shipping' , add_query_arg('page', 'wpsc-settings'  , add_query_arg( 'shipping_module', $shipping->internal_name ) ) ) ); ?>#gateway_options' style="cursor:pointer;">Edit</a>
+																<a class='edit-shipping-module' rel="<?php echo $shipping->internal_name; ?>" title="Edit this Shipping Module" href='<?php echo esc_attr( $this->get_shipping_module_url( $shipping ) ); ?>' style="cursor:pointer;">Edit</a>
 													</span> |
 												</div>
 
@@ -226,7 +240,7 @@ class WPSC_Settings_Tab_Shipping
 											<div class='wpsc_shipping_options'>
 												<div class="wpsc-shipping-actions">
 											| <span class="edit">
-														<a class='edit-shippping-module' rel="<?php echo $shipping->internal_name; ?>"  title="Edit this Shipping Module" href='<?php echo htmlspecialchars( add_query_arg('tab', 'shipping' , add_query_arg('page', 'wpsc-settings'  , add_query_arg( 'shipping_module', $shipping->internal_name ) ) ) ); ?>#gateway_options' style="cursor:pointer;"><?php _e( 'Edit' , 'wpsc' ); ?></a>
+														<a class='edit-shippping-module' rel="<?php echo $shipping->internal_name; ?>"  title="Edit this Shipping Module" href='<?php echo esc_attr( $this->get_shipping_module_url( $shipping ) ); ?>' style="cursor:pointer;"><?php _e( 'Edit' , 'wpsc' ); ?></a>
 															</span> |
 														</div>
 														<p><input <?php echo $disabled; ?> name='custom_shipping_options[]' <?php echo $shipping->checked; ?> type='checkbox' value='<?php echo $shipping->internal_name; ?>' id='<?php echo $shipping->internal_name; ?>_id' /><label for='<?php echo $shipping->internal_name; ?>_id'><?php esc_attr_e( $shipping->name ); ?></label></p>

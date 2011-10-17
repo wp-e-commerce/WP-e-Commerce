@@ -64,11 +64,11 @@ tr.checkout-placeholder {
 	min-width:850px;
 }
 
-table#gateway_options tr td {
+table.wpsc-edit-module-options tr td {
 	padding: 0;
 	vertical-align: top;
 }
-table#gateway_options tr td.gateway_settings {
+table.wpsc-edit-module-options tr td.gateway_settings {
 	padding: 0 0 8px 8px;
 	width:394px;
 }
@@ -100,7 +100,7 @@ div#wpsc_shipwire_setting, div#shipping_discount_value {
 	display: none;
 }
 
-table#gateway_options {
+table.wpsc-edit-module-options {
 	margin:0;
 	width:100%;
 }
