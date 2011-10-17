@@ -900,12 +900,9 @@ function wpsc_submit_options( $selected='' ) {
 			}
 		}
 	}
-
-	if ( !isset( $_POST['page_title'] ) )
-		$_POST['page_title'] = '';
 }
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'submit_options') )
-	add_action( 'admin_init', 'wpsc_submit_options' );
+	add_action( 'admin_init', 'wpsc_submit_options', 1 );
 
 add_action( 'update_option_product_category_hierarchical_url', 'wpsc_update_option_product_category_hierarchical_url' );
 
