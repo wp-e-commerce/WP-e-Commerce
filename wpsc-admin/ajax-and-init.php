@@ -9,6 +9,20 @@
  * @since 3.7
  */
 
+function wpsc_shipping_module_settings_form() {
+	if ( ! wp_verify_nonce( $_POST['nonce'], 'wpsc_settings_page_nonce' ) )
+		die( 'Session expired. Try refreshing your settings page.' );
+
+	require_once( 'settings-page.php' );
+	require_once( 'includes/settings-tabs/shipping.php' );
+
+	$tab = new WPSC_Settings_Tab_Shipping();
+	$tab->display_shipping_module_settings_form();
+	exit;
+}
+
+add_action( 'wp_ajax_wpsc_shipping_module_settings_form', 'wpsc_shipping_module_settings_form' );
+
 function wpsc_navigate_settings_tab() {
 	if ( ! wp_verify_nonce( $_POST['nonce'], 'wpsc_settings_page_nonce' ) )
 		die( 'Session expired. Try refreshing your settings page.' );
