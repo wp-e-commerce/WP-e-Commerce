@@ -36,7 +36,7 @@ class wpsc_variations {
 				if(empty($this->all_associated_variations[$product_term->parent])){
 					$this->all_associated_variations[$product_term->parent][0] =  new stdClass;
 					$this->all_associated_variations[$product_term->parent][0]->term_id = 0;
-					$this->all_associated_variations[$product_term->parent][0]->name = '-- Please Select --';
+					$this->all_associated_variations[$product_term->parent][0]->name = __('-- Please Select --', 'wpsc');
 				}
 				$this->all_associated_variations[$product_term->parent][] = $product_term;	
 			} else {
