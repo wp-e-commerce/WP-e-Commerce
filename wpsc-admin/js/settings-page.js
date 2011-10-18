@@ -407,12 +407,24 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 	}
 	$(t).bind('wpsc_settings_tab_loaded_taxes', tt.init);
 
+	/**
+	 * Shipping Tab
+	 * @since 3.8.8
+	 */
 	var ts = WPSC_Settings_Tab_Shipping = {
+		/**
+		 * Event binding for Shipping tab.
+		 * @since 3.8.8
+		 */
 		init : function() {
 			var wrapper = $('#options_shipping');
 			wrapper.delegate('.edit-shipping-module', 'click', ts.event_edit_shipping_module);
 		},
 
+		/**
+		 * Load Shipping Module settings form via AJAX when "Edit" is clicked.
+		 * @since 3.8.8
+		 */
 		event_edit_shipping_module : function() {
 			var element = $(this),
 			    spinner = element.siblings('.ajax-feedback'),
