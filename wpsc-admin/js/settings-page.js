@@ -417,8 +417,77 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 		 * @since 3.8.8
 		 */
 		init : function() {
-			var wrapper = $('#options_shipping');
-			wrapper.delegate('.edit-shipping-module', 'click', ts.event_edit_shipping_module);
+			ts.wrapper = $('#options_shipping');
+			ts.table_rate = ts.wrapper.find('.table-rate');
+			ts.wrapper.delegate('.edit-shipping-module', 'click', ts.event_edit_shipping_module).
+			           delegate('.table-rate .add', 'click', ts.event_add_table_rate_layer).
+			           delegate('.table-rate .delete', 'click', ts.event_delete_table_rate_layer).
+			           delegate('.table-rate input[type="text"]', 'keypress', ts.event_enter_key_pressed);
+		},
+
+		/**
+		 * When Enter key is pressed inside the table rate fields, it should either move
+		 * focus to the next input field (just like tab), or create a new row and do that.
+		 *
+		 * This is to prevent accidental form submission.
+		 *
+		 * @param  {Object} e Event object
+		 * @since 3.8.8
+		 */
+		event_enter_key_pressed : function(e) {
+			var code = e.keyCode ? e.keyCode : e.which;
+			if (code == 13) {
+				var add_button = $(this).siblings('.actions').find('.add');
+				if (add_button.size() > 0) {
+					add_button.trigger('click', [true]);
+				} else {
+					$(this).closest('td').siblings('td').find('input').focus();
+				}
+				e.preventDefault();
+			}
+		},
+
+		/**
+		 * Add a layer row to the table rate form
+		 * @param  {Object} e Event object
+		 * @param  {Boolean} focus_on_new_row Defaults to false. Whether to automatically put focus on the first input of the new row.
+		 * @since 3.8.8
+		 */
+		event_add_table_rate_layer : function(e, focus_on_new_row) {
+			if (typeof focus_on_new_row === 'undefined') {
+				focus_on_new_row = false;
+			}
+
+			var this_row = $(this).closest('tr'),
+			    clone = this_row.clone();
+
+			clone.find('input').val('');
+			clone.find('.cell-wrapper').hide();
+			clone.insertAfter(this_row).find('.cell-wrapper').slideDown(150, function() {
+				if (focus_on_new_row) {
+					clone.find('input').eq(0).focus();
+				}
+			});
+			ts.refresh_alt_row();
+			return false;
+		},
+
+		/**
+		 * Delete a table rate layer row.
+		 * @since 3.8.8
+		 */
+		event_delete_table_rate_layer : function() {
+			var this_row = $(this).closest('tr');
+			if (ts.wrapper.find('.table-rate tr:not(.js-warning)').size() == 1) {
+				this_row.find('input').val('');
+				this_row.fadeOut(150, function(){ $(this).fadeIn(150); } );
+			} else {
+				this_row.find('.cell-wrapper').slideUp(150, function(){
+					this_row.remove();
+					ts.refresh_alt_row();
+				});
+			}
+			return false;
 		},
 
 		/**
@@ -434,7 +503,6 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 			    	nonce  : t.nonce
 			    },
 			    ajax_callback = function(response) {
-			    	console.log(response);
 			    	spinner.toggleClass('ajax-feedback-active');
 			    	$('#wpsc-shipping-module-settings').replaceWith(response);
 			    };
@@ -442,6 +510,15 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 			spinner.toggleClass('ajax-feedback-active');
 			$.post(ajaxurl, post_data, ajax_callback, 'html');
 			return false;
+		},
+
+		/**
+		 * Refresh the zebra rows of the table
+		 * @since 3.8.8
+		 */
+		refresh_alt_row : function() {
+			ts.wrapper.find('.alternate').removeClass('alternate');
+			ts.wrapper.find('tr:odd').addClass('alternate');
 		}
 	};
 	$(t).bind('wpsc_settings_tab_loaded_shipping', ts.init);
