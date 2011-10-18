@@ -10,20 +10,21 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab
 
 	public function display_shipping_module_settings_form() {
 		global $wpsc_shipping_modules;
-
+		$classes = array( 'wpsc-module-settings' );
 		$selected_module_id = (string) get_user_option( 'wpsc_settings_selected_shipping_module', get_current_user_id() );
 		$found_selected_module = array_key_exists( $selected_module_id, $wpsc_shipping_modules );
 		if ( $found_selected_module ) {
 			$selected_module = $wpsc_shipping_modules[$selected_module_id];
 			$title = $selected_module->name;
 			$content = $selected_module->getForm();
+			$classes[] = 'wpsc-shipping-module-settings-' . $selected_module_id;
 		} else {
 			$title = __( 'Edit Shipping Module Settings', 'wpsc' );
 			$content = __( 'To configure a shipping module select one on the left.', 'wpsc' );
 		}
-
+		$classes = implode( ' ', $classes );
 		?>
-			<td id="wpsc-shipping-module-settings" class='gateway_settings' rowspan='2'>
+			<td id="wpsc-shipping-module-settings" class="<?php echo esc_attr( $classes ); ?>" rowspan='2'>
 				<div class='postbox'>
 					<h3 class='hndle'><?php echo esc_html( $title ); ?></h3>
 					<div class='inside'>
