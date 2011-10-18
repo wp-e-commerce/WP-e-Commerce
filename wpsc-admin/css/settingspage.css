@@ -68,7 +68,7 @@ table.wpsc-edit-module-options tr td {
 	padding: 0;
 	vertical-align: top;
 }
-table.wpsc-edit-module-options tr td.gateway_settings {
+.wpsc-module-settings {
 	padding: 0 0 8px 8px;
 	width:394px;
 }
@@ -220,4 +220,92 @@ img.ajax-feedback-active {
 #wpsc_options .postbox .inside p.submit {
 	margin-top:5px;
 	padding:0;
+}
+
+#wpsc-shipping-module-settings td small {
+	color:#666;
+	font-style:italic;
+}
+
+.wpsc-shipping-module-settings-tablerate .postbox .inside {
+	padding: 0;
+}
+
+.wpsc-shipping-module-settings-tablerate .form-table th {
+	border-bottom:1px solid #dfdfdf;
+	font-weight:bold;
+	padding:7px 10px 7px 20px;
+}
+
+.wpsc-shipping-module-settings-tablerate .form-table {
+	margin-top:0;
+}
+
+.wpsc-shipping-module-settings-tablerate .total {
+	width:120px;
+}
+
+.wpsc-shipping-module-settings-tablerate .form-table td {
+	border-bottom:1px solid #dfdfdf;
+	padding:0 10px;
+}
+
+.wpsc-shipping-module-settings-tablerate .form-table td .cell-wrapper {
+	padding:7px 0;
+	width:100%;
+}
+
+#wpsc_options .wpsc-shipping-module-settings-tablerate .postbox .inside .submit {
+	padding:0 10px 0 20px;
+}
+
+.wpsc-shipping-module-settings-tablerate td .actions {
+	float:right;
+	margin-right:10px;
+}
+
+.wpsc-shipping-module-settings-tablerate td .add {
+	display:none;
+}
+
+.action {
+	display:none;
+}
+
+.js .js-warning {
+	display:none;
+}
+
+.js .wpsc-shipping-module-settings-tablerate td .action {
+	background-repeat:no-repeat;
+	display:inline-block;
+	height:20px;
+	margin-left:3px;
+	text-indent:-9999em;
+	width:20px;
+}
+
+.js .wpsc-shipping-module-settings-tablerate td .add {
+	background:url(plus-minus.png);
+}
+
+.js .wpsc-shipping-module-settings-tablerate td .add:hover {
+	background-position:-20px 0;
+}
+
+.js .wpsc-shipping-module-settings-tablerate td .add:active {
+	background-position:-40px 0;
+}
+
+.js .wpsc-shipping-module-settings-tablerate td .delete:hover {
+	background-position:-20px -20px;
+}
+
+.js .wpsc-shipping-module-settings-tablerate td .delete:active {
+	background-position:-40px -20px;
+}
+
+.js .wpsc-shipping-module-settings-tablerate td .delete {
+	background:url(plus-minus.png);
+	background-position:0 -20px;
 }

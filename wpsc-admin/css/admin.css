@@ -1,5 +1,5 @@
 /*
-* This is the new WPSC Admin CSS file 
+* This is the new WPSC Admin CSS file
 
 */
 .wpsc_trackingid_row{
@@ -174,7 +174,7 @@ th#status{
 textarea#additional_description{
 	border: 1px solid #dfdfdf;
 	/* width:465px !important; */
-}	
+}
 .wpsc-separator {
 	background:transparent url(../../images/menu-arrows.gif) no-repeat scroll left 5px;
 	cursor:w-resize;
@@ -571,22 +571,22 @@ div.image_resize_extra_forms {
 
 /* variations CSS starts */
 
-table.product_variation_listing{ 
+table.product_variation_listing{
 	margin-bottom: 12px;
 }
 
-table.product_variation_listing th.variation_name{ 
+table.product_variation_listing th.variation_name{
 	color: #71A4C8;
 	font-style: italic;
 	text-align: left;
 	padding-bottom: 1px;
 }
 
-table.product_variation_grid{ 
+table.product_variation_grid{
 	margin-top: 12px;
 }
 
-table.product_variation_grid th.variation_name{ 
+table.product_variation_grid th.variation_name{
 	color: #71A4C8;
 	font-style: italic;
 	text-align: left;
@@ -811,7 +811,8 @@ div.wpsc_shipping_options{
 .wpsc-shipping-actions{
 	visibility:hidden;
 	font-size: 10px;
-	margin:2px 9em 0 0;
+	line-height: 16px;
+	margin:0px 9em 0 0;
 	float:right;
 }
 div.wpsc_shipping_options:hover .wpsc-shipping-actions{
@@ -819,10 +820,10 @@ div.wpsc_shipping_options:hover .wpsc-shipping-actions{
 	visibility:visible;
 }
 
-/* 
+/*
 * Product Groups styles start here
 */
-td.firstcol div.postbox div.inside{  
+td.firstcol div.postbox div.inside{
 	margin: 0px;
 	padding: 0px;
 }
@@ -1208,7 +1209,7 @@ a.admin_download span{
 	text-decoration: underline;
 }
 
-/* 
+/*
 * Product Groups styles end here
 */
 .wpsc_td_note{
@@ -1263,11 +1264,11 @@ a.variation_handle {
 {
 	margin-right:300px
 }
-#media-buttons #add_audio, 
-#media-buttons #add_video, 
+#media-buttons #add_audio,
+#media-buttons #add_video,
 #media-buttons #add_media {
 	display:none;
-} 
+}
 .meta-box-sortables-wpec .postbox:hover .handlediv {
 	background: transparent url(../../wpsc-core/images/menu-bits.gif) no-repeat scroll 0% -111px;
 }
@@ -1494,10 +1495,10 @@ div.modify_coupon{ border: 1px solid #eeeeee; display: none; width: 100%; }
 table.coupon_data{
 	width: 100%;
 }
-table.add-coupon{width:100%;} 
+table.add-coupon{width:100%;}
 table.add-coupon tr th{ text-align: left; padding: 2px 5px 0px 5px; border: none;}
 table.add-coupon tr td{ text-align: left; padding: 2px 5px 2px 5px; border: none;}
-table.add-coupon tr td p{padding:0;margin:5px;}  
+table.add-coupon tr td p{padding:0;margin:5px;}
 #table_header{
 	font-size:16px;
 	margin-top:20px;
@@ -1667,7 +1668,7 @@ ul#category_list_li li span.handle {
 	float:left;
 
  	padding: 5px;
-	
+
 }
 
 .category_admin_list_img a.row-title{

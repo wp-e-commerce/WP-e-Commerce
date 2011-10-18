@@ -40,12 +40,67 @@ class tablerate {
 		return $this->internal_name;
 	}
 
+	private function output_row( $key = '', $shipping = '' ) {
+		$currency = wpsc_get_currency_symbol();
+		$class = ( $this->alt ) ? ' class="alternate"' : '';
+		$this->alt = ! $this->alt;
+		?>
+			<tr>
+				<td<?php echo $class; ?>>
+					<div class="cell-wrapper">
+						<small><?php echo esc_html( $currency ); ?></small>
+						<input type="text" name="wpsc_shipping_tablerate_layer[]" value="<?php echo esc_attr( $key ); ?>" size="4" />
+						<small><?php _e( ' and above', 'wpsc' ); ?></small>
+					</div>
+				</td>
+				<td<?php echo $class; ?>>
+					<div class="cell-wrapper">
+						<small><?php echo esc_html( $currency ); ?></small>
+						<input type="text" name="wpsc_shipping_tablerate_shipping[]" value="<?php echo esc_attr( $shipping ); ?>" size="4" />
+						<div class="actions">
+							<a tabindex="-1" title="<?php _e( 'Add Layer', 'wpsc' ); ?>" class="action add" href="#">Add</a>
+							<a tabindex="-1" title="<?php _e( 'Delete Layer', 'wpsc' ); ?>" class="action delete" href="#">Delete</a>
+						</div>
+					</div>
+				</td>
+			</tr>
+		<?php
+	}
+
 	/**
 	 *
 	 *
 	 * @return unknown
 	 */
 	function getForm() {
+		$layers = get_option( 'table_rate_layers', array() );
+		$this->alt = false;
+		ob_start();
+		?>
+			<thead>
+				<tr>
+					<th class="total"><?php _e('Total Price', 'wpsc' ); ?></th>
+					<th class="shipping"><?php _e( 'Shipping Price', 'wpsc' ); ?></th>
+				</tr>
+			</thead>
+			<tbody class="table-rate">
+				<tr class="js-warning">
+					<td colspan="2">
+						<small><?php echo sprintf( __( 'To remove a rate layer, simply leave the values on that row blank. By the way, <a href="%s">enable JavaScript</a> for a better user experience.'), 'http://www.google.com/support/bin/answer.py?answer=23852' ); ?></small>
+					</td>
+				</tr>
+				<?php if ( ! empty( $layers ) ): ?>
+					<?php
+						foreach( $layers as $key => $shipping ){
+							$this->output_row( $key, $shipping );
+						}
+					?>
+				<?php else: ?>
+					<?php $this->output_row(); ?>
+				<?php endif ?>
+			</tbody>
+		<?php
+		return ob_get_clean();
 		$output = "";
 		$output.="<tr><th>".__('Total Price', 'wpsc')."</th><th>".__('Shipping Price', 'wpsc')."</th></tr>";
 		$layers = get_option("table_rate_layers");
@@ -79,29 +134,24 @@ class tablerate {
 	 * @return unknown
 	 */
 	function submit_form() {
-		if (!isset($_POST['layer'])) $_POST['layer'] = '';
-		$layers = (array)$_POST['layer'];
-		$shippings = (array)$_POST['shipping'];
+		if ( ! isset( $_POST['wpsc_shipping_tablerate_layer'] ) || ! isset( $_POST['wpsc_shipping_tablerate_shipping'] ) )
+			return false;
+
+		$layers = (array) $_POST['wpsc_shipping_tablerate_layer'];
+		$shippings = (array) $_POST['wpsc_shipping_tablerate_shipping'];
 		$new_layer = array();
 		if ($shippings != '') {
 			foreach ($shippings as $key => $price) {
-				if ( empty( $price ) ) {
-					unset($shippings[$key]);
-					unset($layers[$key]);
-				} elseif(isset($layers[$key])) {
-					$new_layer[$layers[$key]] = $price;
+				if ( empty( $price ) || empty( $layers[$key] ) ) {
+					continue;
 				}
+
+				$new_layer[$layers[$key]] = $price;
 			}
 		}
 		// Sort the data before it goes into the database. Makes the UI make more sense
-		if (isset($new_layer)) {
-			krsort($new_layer);
-		}
-
-		if (!isset($_POST['checkpage'])) $_POST['checkpage'] = '';
-		if ($_POST['checkpage'] == 'table') {
-			update_option('table_rate_layers', $new_layer);
-		}
+		krsort($new_layer);
+		update_option('table_rate_layers', $new_layer);
 		return true;
 	}
 
