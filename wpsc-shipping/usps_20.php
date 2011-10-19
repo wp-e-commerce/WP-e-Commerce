@@ -55,7 +55,7 @@ class ash_usps{
      * @var ASHShipment|Null
      */
     var $shipment=NULL;
-    
+
     /**
      * Constructor for USPS class
      * Automatically loads services that are available into the class instance
@@ -65,7 +65,7 @@ class ash_usps{
         $this->_load_services();
         return TRUE;
     }
-    
+
     /**
      * retrieves the USPS ID, not used
      * This function only exists due to legacy code
@@ -76,7 +76,7 @@ class ash_usps{
     function getID(){
        return $this->$usps_id;
     }
-    
+
     /**
      * Sets the USPS ID, not used
      * This function only exists due to legacy code, unused
@@ -87,7 +87,7 @@ class ash_usps{
     function setId($id){
         $this->$usps_id = $id;
     }
-    
+
     /**
      * Retrieves the external display name for the module
      * @since 1.0
@@ -96,7 +96,7 @@ class ash_usps{
     function getName() {
         return $this->name;
     }
-    
+
     /**
      * Retrieves internal name of the module
      * @since 1.0
@@ -105,7 +105,7 @@ class ash_usps{
     function getInternalName(){
         return $this->internal_name;
     }
-    
+
     /**
      * Houses the list of services available to USPS API.
      * The majority is commented out until a proper
@@ -133,9 +133,9 @@ class ash_usps{
 //            "Express Hold for Pickup Commercial"=>"EXPRESS HFP COMMERCIAL"
         );
         $this->services = $services;
-        
+
     }
-    
+
     /**
      * Provides the appropriate endpoint for the API to use to
      * retrieve rates from USPS
@@ -158,32 +158,28 @@ class ash_usps{
         if ($intl){
             $api = "IntlRateV2";
         }
-        
+
         $env = "prod";
         if((boolean)$this->use_test_env === TRUE){
             $env = "test";
         }
-        
+
         return "http://".$end_points[$env]["server"]."/".$end_points[$env]["dll"]."?".$api;
     }
-    
+
     /**
      * Returns the settings form that controls the USPS API information
      * @since 1.0
      */
     function getForm() {
-		$settings = get_option("wpec_usps", array("ID"=>"",""));
-
-		$checked = '';
-		if($settings["test_server"] == '1'){
-			$checked = 'checked = "checked"';
-		}
-		
-		$checked_adv = '';
-        if($settings["adv_rate"] == '1'){
-			$checked_adv = 'checked = "checked"';
-		}
-		
+        $defaults = array(
+            'test_server' => 0,
+            'adv_rate'    => 0,
+            'id'          => '',
+            'services'    => array( 'ONLINE' ),
+        );
+		$settings = get_option( "wpec_usps", array() );
+        $settings = array_merge_recursive( $defaults, $settings );
 		$output=("
     				<tr>
     					<td>
@@ -194,7 +190,7 @@ class ash_usps{
 
     					<br />
 						".__("Don't have a USPS API account ? ",'wpsc')."
-						
+
 						<a href=\"https://secure.shippingapis.com/registration/\" target=\"_blank\" >".__('Click Here','wpsc')."</a>
 						</td>
     				</tr>
@@ -210,8 +206,8 @@ class ash_usps{
     						".__('Use Test Server:','wpsc')."
     					</td>
     					<td>
-    						<input type='checkbox' ".$checked." name='wpec_usps[test_server]' value='1' />
-    						
+    						<input type='checkbox' ". checked( $settings['test_server'], 1, false ) ." name='wpec_usps[test_server]' value='1' />
+
     						Yes
     					</td>
     				</tr>
@@ -220,8 +216,8 @@ class ash_usps{
     						".__('Advanced Rates:','wpsc')."
     					</td>
     					<td>
-    						<input type='checkbox' ".$checked_adv." name='wpec_usps[adv_rate]' value='1' />
-    						
+    						<input type='checkbox' ". checked( $settings['adv_rate'], 1, false ) . " name='wpec_usps[adv_rate]' value='1' />
+
     						Yes
     						<br />
     						<span style=\"font-size: x-small\">" . __( 'This setting will provide rates based on the dimensions from each item in your cart', 'wpsc' )."</span>
@@ -231,12 +227,8 @@ class ash_usps{
     					<td>".__('Select Services','wpsc')."</td>
     					<td>
 					    	<div id=\"resizeable\" class=\"ui-widget-content multiple-select\">");
-            $wpec_usps_services = (array)$settings["services"];
-            if (count($wpec_usps_services) < 1){
-                // If no selections have been made, default selection to ONLINE, that is what the old USPS essentially rated
-                array_push($wpec_usps_services, "ONLINE");
-            }
-            
+            $wpec_usps_services = $settings["services"];
+
             foreach($this->services as $label=>$service){
                 $checked = "";
                 if ((array_search($service, $wpec_usps_services) !== false)){
@@ -287,12 +279,12 @@ class ash_usps{
 						</td>
 						<td>
     						");
-            
+
             // If First Class, Online or All is selected then we need to know what Kind of First class
             // will be used.
             $fcl_types = array("Parcel"=>"PARCEL", "Letter"=>"LETTER", "Flat"=>"FLAT", "Postcard"=>"POSTCARD");
             $type_selected = (array_key_exists("fcl_type",$settings)) ? $settings["fcl_type"] : $fcl_types["Parcel"];
-            
+
             $output .=("
         					<select id =\"\first_cls_type\" name=\"wpec_usps[fcl_type]\">
         					");
@@ -387,7 +379,7 @@ class ash_usps{
         $ounce = ($data["weight"]-$pound) * 16;
         $data["pound"] = $pound;
         $data["ounce"] = $ounce;
-        
+
         if (!array_key_exists("services",(array)$data)){
             $data["services"] = array("ONLINE");
         }
@@ -401,7 +393,7 @@ class ash_usps{
             $temp = array();
             $temp["Service"] = $service;
             $temp["@attr"] = array("ID"=>count($shipment));
-            
+
             if ($ounce > 13 || $pound > 1 ){
                 if(strpos($service,"FIRST") === FALSE || $service == "ONLINE"){
                     $temp["FirstClassMailType"] = $data["fcl_type"];
@@ -435,14 +427,14 @@ class ash_usps{
      */
     function _build_intl_shipment(&$request,array $data, $package){
         $shipment = array();
-        
+
         $data["pounds"] = floor($package->weight);
         $data["ounces"] = ($data["weight"]-$data["pounds"]) * 16;
-        
+
         if (!array_key_exists("mail_type",(array)$data)){
             $data["mail_type"] = array("Package");
         }
-        
+
         $base = array(  "Pounds"=>$data["pounds"],
                         "Ounces"=>$data["ounces"],
                         "Machinable"=>"True",
@@ -464,7 +456,7 @@ class ash_usps{
         array_push($shipment, $base);
         $request[$data["req"]]["Package"] = $shipment;
     }
-    
+
 	/**
 	 * Used to build request to send to USPS API
 	 * @author Greg Gullett (greg@ecsquest.com)
@@ -516,7 +508,7 @@ class ash_usps{
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		$body = curl_exec($ch);
 		curl_close($ch);
-		
+
 		return $body;
 	}
 
@@ -544,7 +536,7 @@ class ash_usps{
 	    global $wpec_ash_xml;
 	    $service = "";
 	    $temp_service = $wpec_ash_xml->get($ServiceTag, $package);
-	    
+
         if ($temp_service){
             $service = $temp_service[0];
         }
@@ -553,10 +545,10 @@ class ash_usps{
         if (!empty($temp)){
             $service = $temp[1];
         }
-        
+
         return $service;
 	}
-	
+
 	/**
 	 * Merges N-Many arrays together by key, without replacement
 	 * @author Greg Gullett (greg@ecsquest.com)
@@ -583,7 +575,7 @@ class ash_usps{
 	    }
 	    return $final_array;
 	}
-	
+
 	/**
 	 * This function parses the provided XML response from USPS to retrieve the final rates.
 	 * @author Greg Gullett (greg@ecsquest.com)
@@ -595,12 +587,12 @@ class ash_usps{
         global $wpec_ash_xml;
 	    $package_services = array();
         $this->_clean_response($response);
-        
+
 	    $packages = $wpec_ash_xml->get("Package", $response);
 	    if (!is_array($packages)){
 	        return array();
 	    }
-	    
+
 	    foreach($packages as $package){
 	        $temp = array();
 	        $postage_services = $wpec_ash_xml->get("Postage", $package);
@@ -632,7 +624,7 @@ class ash_usps{
         global $wpec_ash_xml;
 	    $services_table = array();
         $this->_clean_response($response);
-        
+
 	    $services = $wpec_ash_xml->get("Service", $response);
 	    if (empty($services)){
 	        return array();
@@ -647,7 +639,7 @@ class ash_usps{
 	    }
 	    return $service_table;
 	}
-	
+
 	/**
 	 * Returns an array using the common keys from all arrasy and the sum of those common keys values;
 	 * @author Greg Gullett (greg@ecsquest.com)
@@ -678,7 +670,7 @@ class ash_usps{
 	    }
 	    return $final_table;
 	}
-	
+
     /**
 	 * Merges arrays and adds the values of common keys.
 	 * @author Greg Gullett (greg@ecsquest.com)
@@ -697,7 +689,7 @@ class ash_usps{
 	    }else{
 	        $intersect_keys = array_keys($arrays[0]);
 	    }
-	    
+
 	    foreach($arrays as $arr){
 	        foreach($arr as $key=>$value){
 	            if (in_array($key,(array)$intersect_keys)){
@@ -710,7 +702,7 @@ class ash_usps{
 	    }
 	    return $temp;
 	}
-	
+
 	/**
 	 * Runs the quote process for a simple quote and returns the final quote table
 	 * @author Greg Gullett (greg@ecsquest.com)
@@ -737,7 +729,7 @@ class ash_usps{
 	    $rate_table = $this->_merge_arrays($package_rate_table);
 	    return $rate_table;
 	}
-	
+
 	/**
 	 * Runs the quote process for an advanced quote and returns the final quote table
 	 * @author Greg Gullett (greg@ecsquest.com)
@@ -765,14 +757,14 @@ class ash_usps{
     	    $package_rate_table = $this->_parse_domestic_response($response);
             //*** Reformat the array structure ***\\
 	        $temp = $this->_merge_arrays($package_rate_table);
-	        
+
     	    array_push($rate_tables, $temp);
 	    }
 
 	    $rates = $this->merge_sum_arrays($rate_tables);
 	    return $rates;
 	}
-	
+
 	/**
 	 * Runs the quote process for an international quote and returns the final quote table
 	 * @author Greg Gullett (greg@ecsquest.com)
@@ -802,7 +794,7 @@ class ash_usps{
 	    $rates = $this->_combine_rates($rate_tables);
 	    return $rates;
 	}
-	
+
 	/**
 	 * Returns an updated country based on several rules that USPS has
 	 * @author Greg Gullett (greg@ecsquest.com)
@@ -827,7 +819,7 @@ class ash_usps{
         }
         return $full_name;
     }
-	
+
     /**
      * Takes a rate table and returns a new table with only services selected in the back end
      * @author Greg Gullett (greg@ecsquest.com)
@@ -851,7 +843,7 @@ class ash_usps{
         $valid_services = array_intersect_key((array)$rate_table, $services);
         return $valid_services;
     }
-    
+
 	/**
 	 * This function handles the process of getting a quote.
 	 * It is kept abstracted from the entry points so you can
@@ -876,11 +868,11 @@ class ash_usps{
 	    if (empty($data["weight"])){
 	        return array();
 	    }
-	    
+
 	    if (empty($data["dest_zipcode"])){
 	        return array();
 	    }
-	    
+
 	    if ($wpec_ash_tools->is_military_zip($data["dest_zipcode"])){
 	        $data["dest_country"] = "USA";
 	    }
@@ -897,7 +889,7 @@ class ash_usps{
 	    $rate_table = $this->_validate_services($quotes, $data);
 	    return $quotes;
 	}
-	
+
     /**
      * This function is used to provide rates for single items
      * Due to the nature of external calculators it is too costly to use this
@@ -925,7 +917,7 @@ class ash_usps{
         $this->shipment->set_destination($this->internal_name);
 	    // Check to see if the cached shipment is still accurate, if not we need new rate
 	    $cache = $wpec_ash->check_cache($this->internal_name, $this->shipment);
-	    
+
 	    if ($cache){
 	        return $cache["rate_table"];
 	    }
