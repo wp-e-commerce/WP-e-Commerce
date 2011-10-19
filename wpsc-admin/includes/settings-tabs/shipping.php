@@ -260,7 +260,7 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab
 											<div class='wpsc_shipping_options'>
 												<div class="wpsc-shipping-actions">
 											<span class="edit">
-														<a class='edit-shippping-module' data-module-id="<?php echo $shipping->internal_name; ?>"  title="Edit this Shipping Module" href='<?php echo esc_attr( $this->get_shipping_module_url( $shipping ) ); ?>' style="cursor:pointer;"><?php _e( 'Edit' , 'wpsc' ); ?></a>
+														<a class='edit-shipping-module' data-module-id="<?php echo $shipping->internal_name; ?>"  title="Edit this Shipping Module" href='<?php echo esc_attr( $this->get_shipping_module_url( $shipping ) ); ?>' style="cursor:pointer;"><?php _e( 'Edit' , 'wpsc' ); ?></a>
 														<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
 															</span>
 														</div>
