@@ -12,14 +12,10 @@
  * @requires jQuery
  * @requires jQuery.query
  */
-var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab_Checkout, WPSC_Settings_Tab_Taxes,
-    WPSC_Settings_Tab_Shipping;
 
 (function($){
 
-	var t = WPSC_Settings_Page;
-
-	$.extend(t, /** @lends WPSC_Settings_Page */ {
+	$.extend(WPSC_Settings_Page, /** @lends WPSC_Settings_Page */ {
 		/**
 		 * Set to true if there are modified settings.
 		 * @type {Boolean}
@@ -38,20 +34,20 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 			// set the history state of the current page
 			if (history.replaceState) {
 				(function(){
-					history.replaceState({tab_id : t.current_tab}, '', location.search + location.hash);
+					history.replaceState({tab_id : WPSC_Settings_Page.current_tab}, '', location.search + location.hash);
 				})();
 			}
 
 			// load the correct settings tab when back/forward browser button is used
-			$(window).bind('popstate', t.event_pop_state);
+			$(window).bind('popstate', WPSC_Settings_Page.event_pop_state);
 
 			$(function(){
-				$('#wpsc_options').delegate('a.nav-tab', 'click', t.event_tab_button_clicked).
-				                   delegate('input, textarea, select', 'change', t.event_settings_changed).
-				                   delegate('#wpsc-settings-form', 'submit', t.event_settings_form_submitted);
-				$(window).bind('beforeunload', t.event_before_unload);
-				$(t).trigger('wpsc_settings_tab_loaded');
-				$(t).trigger('wpsc_settings_tab_loaded_' + t.current_tab);
+				$('#wpsc_options').delegate('a.nav-tab'              , 'click' , WPSC_Settings_Page.event_tab_button_clicked).
+				                   delegate('input, textarea, select', 'change', WPSC_Settings_Page.event_settings_changed).
+				                   delegate('#wpsc-settings-form'    , 'submit', WPSC_Settings_Page.event_settings_form_submitted);
+				$(window).bind('beforeunload', WPSC_Settings_Page.event_before_unload);
+				$(WPSC_Settings_Page).trigger('wpsc_settings_tab_loaded');
+				$(WPSC_Settings_Page).trigger('wpsc_settings_tab_loaded_' + WPSC_Settings_Page.current_tab);
 			});
 		},
 
@@ -60,7 +56,7 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 		 * @since 3.8.8
 		 */
 		event_settings_form_submitted : function() {
-			t.unsaved_settings = false;
+			WPSC_Settings_Page.unsaved_settings = false;
 		},
 
 		/**
@@ -68,7 +64,7 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 		 * @since 3.8.8
 		 */
 		event_settings_changed : function() {
-			t.unsaved_settings = true;
+			WPSC_Settings_Page.unsaved_settings = true;
 		},
 
 		/**
@@ -77,8 +73,8 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 		 * @since 3.8.8
 		 */
 		event_before_unload : function() {
-			if (t.unsaved_settings) {
-				return t.before_unload_dialog;
+			if (WPSC_Settings_Page.unsaved_settings) {
+				return WPSC_Settings_Page.before_unload_dialog;
 			}
 		},
 
@@ -88,8 +84,8 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 		 */
 		event_tab_button_clicked : function() {
 			var tab_id = $(this).data('tab-id');
-			if (tab_id != t.current_tab) {
-				t.load_tab(tab_id);
+			if (tab_id != WPSC_Settings_Page.current_tab) {
+				WPSC_Settings_Page.load_tab(tab_id);
 			}
 			return false;
 		},
@@ -101,7 +97,7 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 		 */
 		event_pop_state : function(e) {
 			if (e.state) {
-				t.load_tab(e.state.tab_id, false);
+				WPSC_Settings_Page.load_tab(e.state.tab_id, false);
 			}
 		},
 
@@ -125,7 +121,7 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 		 * @since 3.8.8
 		 */
 		load_tab : function(tab_id, push_state) {
-			if (t.unsaved_settings && ! confirm(t.ajax_navigate_confirm_dialog)) {
+			if (WPSC_Settings_Page.unsaved_settings && ! confirm(WPSC_Settings_Page.ajax_navigate_confirm_dialog)) {
 				return;
 			}
 
@@ -137,11 +133,11 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 			var post_data = {
 				'action' : 'wpsc_navigate_settings_tab',
 				'tab_id' : tab_id,
-				'nonce'  : t.nonce,
+				'nonce'  : WPSC_Settings_Page.nonce,
 				'current_url' : location.href
 			};
 
-			t.toggle_ajax_state(tab_id);
+			WPSC_Settings_Page.toggle_ajax_state(tab_id);
 
 			// pushState to save this page load into history, and alter the address field of the browser
 			if (push_state && history.pushState) {
@@ -155,10 +151,11 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 			 * @since 3.8.8
 			 */
 			var ajax_callback = function(response) {
+				var t = WPSC_Settings_Page;
 				t.unsaved_settings = false;
 				t.toggle_ajax_state(tab_id);
-				$('#options_' + t.current_tab).replaceWith(response);
-				t.current_tab = tab_id;
+				$('#options_' + WPSC_Settings_Page.current_tab).replaceWith(response);
+				WPSC_Settings_Page.current_tab = tab_id;
 				$('.nav-tab-active').removeClass('nav-tab-active');
 				$('[data-tab-id="' + tab_id + '"]').addClass('nav-tab-active');
 				$('#wpsc_options_page form').attr('action', new_url);
@@ -175,17 +172,16 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 	 * @namespace
 	 * @since 3.8.8
 	 */
-	var tg = WPSC_Settings_Tab_General = {
+	WPSC_Settings_Page.General = {
 		/**
 		 * Event binding for base country drop down
-		 * @return {[type]}
 		 * @since 3.8.8
 		 */
-		init : function() {
+		event_init : function() {
 			var wrapper = $('#options_general');
-			wrapper.delegate('#wpsc-base-country-drop-down', 'change', tg.event_base_country_changed).
-			        delegate('.wpsc-select-all', 'click', tg.event_select_all).
-			        delegate('.wpsc-select-none', 'click', tg.event_select_none);
+			wrapper.delegate('#wpsc-base-country-drop-down', 'change', WPSC_Settings_Page.General.event_base_country_changed).
+			        delegate('.wpsc-select-all', 'click', WPSC_Settings_Page.General.event_select_all).
+			        delegate('.wpsc-select-none', 'click', WPSC_Settings_Page.General.event_select_none);
 		},
 
 		/**
@@ -218,7 +214,7 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 			var postdata = {
 				action  : 'wpsc_display_region_list',
 				country : $('#wpsc-base-country-drop-down').val(),
-				nonce   : t.nonce
+				nonce   : WPSC_Settings_Page.nonce
 			};
 
 			var ajax_callback = function(response) {
@@ -230,14 +226,14 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 			$.post(ajaxurl, postdata, ajax_callback, 'html');
 		}
 	};
-	$(t).bind('wpsc_settings_tab_loaded_general', tg.init);
+	$(WPSC_Settings_Page).bind('wpsc_settings_tab_loaded_general', WPSC_Settings_Page.General.event_init);
 
 	/**
 	 * Presentation tab
 	 * @namespace
 	 * @since 3.8.8
 	 */
-	var tpr = WPSC_Settings_Tab_Presentation = {
+	WPSC_Settings_Page.Presentation = {
 		/**
 		 * IDs of checkboxes for Grid View (excluding the Show Images Only checkbox)
 		 * @type {Array}
@@ -249,10 +245,11 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 		 * Event binding for Grid View checkboxes
 		 * @since 3.8.8
 		 */
-		init : function() {
-			var wrapper = $('#options_presentation'), i;
-			wrapper.delegate('#wpsc-show-images-only', 'click', tpr.event_show_images_only_clicked);
-			wrapper.delegate('#' + tpr.grid_view_boxes.join(',#'), 'click', tpr.event_grid_view_boxes_clicked);
+		event_init : function() {
+			var wrapper = $('#options_presentation'),
+			    checkbox_selector = '#' + WPSC_Settings_Page.Presentation.grid_view_boxes.join(',#');
+			wrapper.delegate('#wpsc-show-images-only', 'click', WPSC_Settings_Page.Presentation.event_show_images_only_clicked);
+			wrapper.delegate(checkbox_selector       , 'click', WPSC_Settings_Page.Presentation.event_grid_view_boxes_clicked);
 		},
 
 		/**
@@ -270,27 +267,27 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 		event_show_images_only_clicked : function() {
 			var i;
 			if ($(this).is(':checked')) {
-				for (i in tpr.grid_view_boxes) {
-					document.getElementById(tpr.grid_view_boxes[i]).checked = false;
+				for (i in WPSC_Settings_Page.Presentation.grid_view_boxes) {
+					document.getElementById(WPSC_Settings_Page.Presentation.grid_view_boxes[i]).checked = false;
 				}
 			}
 		}
 	};
-	$(t).bind('wpsc_settings_tab_loaded_presentation', tpr.init);
+	$(WPSC_Settings_Page).bind('wpsc_settings_tab_loaded_presentation', WPSC_Settings_Page.Presentation.event_init);
 
 	/**
 	 * Checkout Tab
 	 * @namespace
 	 * @since 3.8.8
 	 */
-	var tco = WPSC_Settings_Tab_Checkout = {
+	WPSC_Settings_Page.Checkout = {
 		/**
 		 * Event binding for Checkout tab
 		 * @since 3.8.8
 		 */
-		init : function() {
+		event_init : function() {
 			var wrapper = $('#options_checkout');
-			wrapper.delegate('.add_new_form_set', 'click', tco.event_add_new_form_set);
+			wrapper.delegate('.add_new_form_set', 'click', WPSC_Settings_Page.Checkout.event_add_new_form_set);
 		},
 
 		/**
@@ -302,25 +299,25 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 				return false;
 		}
 	};
-	$(t).bind('wpsc_settings_tab_loaded_checkout', tco.init);
+	$(WPSC_Settings_Page).bind('wpsc_settings_tab_loaded_checkout', WPSC_Settings_Page.Checkout.event_init);
 
 	/**
 	 * Taxes tab
 	 * @namespace
 	 * @since 3.8.8
 	 */
-	var tt = WPSC_Settings_Tab_Taxes = {
+	WPSC_Settings_Page.Taxes = {
 		/**
 		 * Event binding for Taxes tab
 		 * @since 3.8.8
 		 */
-		init : function() {
+		event_init : function() {
 			var wrapper = $('#options_taxes');
-			wrapper.delegate('#wpsc-add-tax-rates a', 'click', tt.event_add_tax_rate).
-			        delegate('.wpsc-taxes-rates-delete', 'click', tt.event_delete_tax_rate).
-			        delegate('#wpsc-add-tax-bands a', 'click', tt.event_add_tax_band).
-			        delegate('.wpsc-taxes-bands-delete', 'click', tt.event_delete_tax_band).
-			        delegate('.wpsc-taxes-country-drop-down', 'change', tt.event_country_drop_down_changed);
+			wrapper.delegate('#wpsc-add-tax-rates a'        , 'click' , WPSC_Settings_Page.Taxes.event_add_tax_rate).
+			        delegate('.wpsc-taxes-rates-delete'     , 'click' , WPSC_Settings_Page.Taxes.event_delete_tax_rate).
+			        delegate('#wpsc-add-tax-bands a'        , 'click' , WPSC_Settings_Page.Taxes.event_add_tax_band).
+			        delegate('.wpsc-taxes-bands-delete'     , 'click' , WPSC_Settings_Page.Taxes.event_delete_tax_band).
+			        delegate('.wpsc-taxes-country-drop-down', 'change', WPSC_Settings_Page.Taxes.event_country_drop_down_changed);
 		},
 
 		/**
@@ -335,7 +332,7 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 					current_key       : c.data('key'),
 					taxes_type        : c.data('type'),
 					country_code      : c.val(),
-					nonce             : t.nonce
+					nonce             : WPSC_Settings_Page.nonce
 				},
 				spinner = c.siblings('.ajax-feedback'),
 				ajax_callback = function(response) {
@@ -356,7 +353,7 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 		 * TODO: rewrote the horrible code in class wpec_taxes_controller. There's really no need for AJAX here.
 		 */
 		event_add_tax_rate : function() {
-			tt.add_field('rates');
+			WPSC_Settings_Page.Taxes.add_field('rates');
 			return false;
 		},
 
@@ -370,14 +367,18 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 		},
 
 		/**
-		 * Add new tax band field when "Add Tax Band" is clicked
+		 * Add new tax band field when "Add Tax Band" is clicked.
 		 * @since 3.8.8
 		 */
 		event_add_tax_band : function() {
-			tt.add_field('bands');
+			WPSC_Settings_Page.Taxes.add_field('bands');
 			return false;
 		},
 
+		/**
+		 * Delete a tax band field when "Delete" is clicked.
+		 * @return {[type]}
+		 */
 		event_delete_tax_band : function() {
 			$(this).parents('.wpsc-tax-bands-row').remove();
 			return false;
@@ -395,7 +396,7 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 			    	action            : 'wpec_taxes_ajax',
 			    	wpec_taxes_action : 'wpec_taxes_build_' + type + '_form',
 			    	current_key       : count,
-			    	nonce             : t.nonce,
+			    	nonce             : WPSC_Settings_Page.nonce,
 			    },
 			    ajax_callback = function(response) {
 			    	button_wrapper.before(response).find('img').toggleClass('ajax-feedback-active');
@@ -405,24 +406,25 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 			$.post(ajaxurl, post_data, ajax_callback, 'html');
 		}
 	}
-	$(t).bind('wpsc_settings_tab_loaded_taxes', tt.init);
+	$(WPSC_Settings_Page).bind('wpsc_settings_tab_loaded_taxes', WPSC_Settings_Page.Taxes.event_init);
 
 	/**
 	 * Shipping Tab
 	 * @since 3.8.8
 	 */
-	var ts = WPSC_Settings_Tab_Shipping = {
+	WPSC_Settings_Page.Shipping = {
 		/**
 		 * Event binding for Shipping tab.
 		 * @since 3.8.8
 		 */
-		init : function() {
-			ts.wrapper = $('#options_shipping');
-			ts.table_rate = ts.wrapper.find('.table-rate');
-			ts.wrapper.delegate('.edit-shipping-module', 'click', ts.event_edit_shipping_module).
-			           delegate('.table-rate .add', 'click', ts.event_add_table_rate_layer).
-			           delegate('.table-rate .delete', 'click', ts.event_delete_table_rate_layer).
-			           delegate('.table-rate input[type="text"]', 'keypress', ts.event_enter_key_pressed);
+		event_init : function() {
+			WPSC_Settings_Page.Shipping.wrapper = $('#options_shipping');
+			WPSC_Settings_Page.Shipping.table_rate = WPSC_Settings_Page.Shipping.wrapper.find('.table-rate');
+			WPSC_Settings_Page.Shipping.wrapper.
+				delegate('.edit-shipping-module'         , 'click'   , WPSC_Settings_Page.Shipping.event_edit_shipping_module).
+				delegate('.table-rate .add'              , 'click'   , WPSC_Settings_Page.Shipping.event_add_table_rate_layer).
+				delegate('.table-rate .delete'           , 'click'   , WPSC_Settings_Page.Shipping.event_delete_table_rate_layer).
+				delegate('.table-rate input[type="text"]', 'keypress', WPSC_Settings_Page.Shipping.event_enter_key_pressed);
 		},
 
 		/**
@@ -468,7 +470,7 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 					clone.find('input').eq(0).focus();
 				}
 			});
-			ts.refresh_alt_row();
+			WPSC_Settings_Page.Shipping.refresh_alt_row();
 			return false;
 		},
 
@@ -478,13 +480,13 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 		 */
 		event_delete_table_rate_layer : function() {
 			var this_row = $(this).closest('tr');
-			if (ts.wrapper.find('.table-rate tr:not(.js-warning)').size() == 1) {
+			if (WPSC_Settings_Page.Shipping.wrapper.find('.table-rate tr:not(.js-warning)').size() == 1) {
 				this_row.find('input').val('');
 				this_row.fadeOut(150, function(){ $(this).fadeIn(150); } );
 			} else {
 				this_row.find('.cell-wrapper').slideUp(150, function(){
 					this_row.remove();
-					ts.refresh_alt_row();
+					WPSC_Settings_Page.Shipping.refresh_alt_row();
 				});
 			}
 			return false;
@@ -500,7 +502,7 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 			    post_data = {
 			    	action : 'wpsc_shipping_module_settings_form',
 			    	shipping_module_id : element.data('module-id'),
-			    	nonce  : t.nonce
+			    	nonce  : WPSC_Settings_Page.nonce
 			    },
 			    ajax_callback = function(response) {
 			    	spinner.toggleClass('ajax-feedback-active');
@@ -517,11 +519,11 @@ var WPSC_Settings_Tab_General, WPSC_Settings_Tab_Presentation, WPSC_Settings_Tab
 		 * @since 3.8.8
 		 */
 		refresh_alt_row : function() {
-			ts.wrapper.find('.alternate').removeClass('alternate');
-			ts.wrapper.find('tr:odd').addClass('alternate');
+			WPSC_Settings_Page.Shipping.wrapper.find('.alternate').removeClass('alternate');
+			WPSC_Settings_Page.Shipping.wrapper.find('tr:odd').addClass('alternate');
 		}
 	};
-	$(t).bind('wpsc_settings_tab_loaded_shipping', ts.init);
+	$(WPSC_Settings_Page).bind('wpsc_settings_tab_loaded_shipping', WPSC_Settings_Page.Shipping.event_init);
 })(jQuery);
 
 WPSC_Settings_Page.init();
