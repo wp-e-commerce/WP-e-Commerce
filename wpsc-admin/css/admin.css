@@ -803,23 +803,6 @@ span.small_italic{
 	* Display Products CSS ends here
 */
 
-/* shipping options start here */
-div.wpsc_shipping_options{
-	width:100%;
-	padding:3px 0;
-}
-.wpsc-shipping-actions{
-	visibility:hidden;
-	font-size: 10px;
-	line-height: 16px;
-	margin:0px 9em 0 0;
-	float:right;
-}
-div.wpsc_shipping_options:hover .wpsc-shipping-actions{
-	font-size:10px;
-	visibility:visible;
-}
-
 /*
 * Product Groups styles start here
 */

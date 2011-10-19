@@ -88,14 +88,6 @@ td.gateway_settings h4{
 	margin-top:0;
 }
 
-.wpsc_shipping_options{
-	border-top: 1px solid #e9e9e9;
-
-}
-td.select_gateway p {
-	margin: 0px 15px 4px 5px;
-}
-
 div#wpsc_shipwire_setting, div#shipping_discount_value {
 	display: none;
 }
@@ -314,4 +306,28 @@ img.ajax-feedback-active {
 .js .wpsc-shipping-module-settings-tablerate td .delete, .js .wpsc-shipping-module-settings-weightrate td .delete {
 	background:url(plus-minus.png);
 	background-position:0 -20px;
+}
+
+/* shipping options start here */
+div.wpsc_shipping_options, div.wpsc-select-gateway {
+	border-top: 1px solid #e9e9e9;
+	width:100%;
+	padding:3px 0;
+}
+.wpsc-shipping-actions, .wpsc-gateway-actions {
+	visibility:hidden;
+	font-size: 10px;
+	line-height: 16px;
+	margin:0px 9em 0 0;
+	float:right;
+}
+div.wpsc_shipping_options:hover .wpsc-shipping-actions, div.wpsc-select-gateway:hover .wpsc-gateway-actions {
+	font-size:10px;
+	visibility:visible;
+}
+div.wpsc-select-gateway p {
+	margin: 0px 15px 4px 5px;
+}
+#wpsc-payment-gateway-settings-panel input[type=text], #wpsc-payment-gateway-settings-panel textarea {
+	width:265px;
 }

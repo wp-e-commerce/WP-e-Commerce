@@ -2,43 +2,109 @@
 
 class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab
 {
-	public function display() {
-		global $wpdb, $nzshpcrt_gateways;
-		$curgateway = get_option( 'payment_gateway' );
+	private $active_gateways;
+	private $gateway_names;
 
-		$payment_gateway_names = get_option( 'payment_gateway_names' );
+	public function __construct() {
+		if ( isset( $_REQUEST['payment_gateway_id'] ) )
+			update_user_option( get_current_user_id(), 'wpsc_settings_selected_payment_gateway', $_REQUEST['payment_gateway_id'] );
 
-		if ( empty( $nzshpcrt_gateways ) )
-			$nzshpcrt_gateways     = nzshpcrt_get_gateways();
+		$this->active_gateways = get_option( 'custom_gateway_options' );
+		$this->gateway_names = get_option( 'payment_gateway_names' );
+	}
 
-		if ( is_array( $nzshpcrt_gateways ) ) {
-			$selected_gateways = get_option( 'custom_gateway_options' );
-			foreach ( $nzshpcrt_gateways as $gateway ) {
-				if ( $gateway['internalname'] == $curgateway ) {
-					$selected = "selected='selected'";
-					$form = $gateway['form']();
-					$selected_gateway_data = $gateway;
-				} else {
-					$selected = '';
-				}
+	private function get_gateway_form( $selected_gateway ) {
+		global $nzshpcrt_gateways;
 
-				if ( isset( $gateway['admin_name'] ) )
-					$gateway['name'] = $gateway['admin_name'];
-
-				$disabled = '';
-
-				if ( !in_array( $gateway['internalname'], (array)$selected_gateways ) )
-					$disabled = "disabled='disabled'";
-
-				if ( !isset( $gateway['internalname'] ) )
-					$gateway['internalname'] = '';
-
-				$gatewaylist = '';
-				$gatewaylist .= "<option $disabled value='" . esc_attr( $gateway['internalname'] ) . "' " . $selected . " >" . esc_attr( $gateway['name'] )  . "</option>";
+		$payment_gateway_names = get_option('payment_gateway_names');
+		$return                = false;
+		$selected_gateway_data = false;
+		foreach ( $nzshpcrt_gateways as $gateway ) {
+			if ( $gateway['internalname'] == $selected_gateway ) {
+				$selected_gateway_data = $gateway;
+				break;
 			}
 		}
-		$nogw = '';
-		$gatewaylist = "<option value='" . $nogw . "'>" . __( 'Please Select A Payment Gateway', 'wpsc' ) . "</option>" . $gatewaylist;
+
+		if ( $selected_gateway_data ) {
+			if ( array_key_exists( $selected_gateway, $payment_gateway_names ) ) {
+				$display_name = $payment_gateway_names[$selected_gateway];
+			} elseif ( ! empty( $selected_gateway_data['display_name'] ) ) {
+				$display_name = $selected_gateway_data['display_name'];
+			} else {
+				switch($selected_gateway_data['payment_type']) {
+					case "paypal";
+						$display_name = "PayPal";
+						break;
+
+					case "manual_payment":
+						$display_name = "Manual Payment";
+						break;
+
+					case "google_checkout":
+						$display_name = "Google Checkout";
+						break;
+
+					case "credit_card":
+					default:
+						$display_name = "Credit Card";
+						break;
+				}
+			}
+
+			ob_start();
+			?>
+				<tr>
+					<td><?php esc_html_e( 'Display Name', 'wpsc' ); ?></td>
+					<td>
+						<input type="text" name="user_defined_name[<?php echo esc_attr( $selected_gateway ); ?>]" value="<?php echo esc_html( $display_name ); ?>" /><br />
+						<small><?php esc_html_e( 'The text that people see when making a purchase.', 'wpsc' ); ?></small>
+					</td>
+				</tr>
+			<?php
+			$output = ob_get_clean();
+			$return = array(
+				'name' => $selected_gateway_data['name'],
+				'form_fields' => $output . $selected_gateway_data['form'](),
+			);
+		}
+
+		return $return;
+	}
+
+	public function display_payment_gateway_settings_form() {
+		$selected_gateway = (string) get_user_option( 'wpsc_settings_selected_payment_gateway', get_current_user_id() );
+		if ( empty( $selected_gateway ) && ! empty( $this->active_gateways ) )
+			$selected_gateway = $this->active_gateways[0];
+
+		$payment_data = $this->get_gateway_form( $selected_gateway );
+		if ( ! $payment_data ) {
+			$payment_data = array(
+				'name'        => __( 'Edit Gateway Settings', 'wpsc' ),
+				'form_fields' => __( 'Modify a payment gateway settings by clicking "Edit" link on the left.', 'wpsc' ),
+			);
+		}
+		?>
+		<td id='wpsc-payment-gateway-settings-panel' class='wpsc-module-settings' rowspan='2'>
+			<div class='postbox'>
+			<h3 class='hndle'><?php echo $payment_data['name']; ?></h3>
+			<div class='inside'>
+			<table class='form-table'>
+				<?php echo $payment_data['form_fields']; ?>
+			</table>
+			<div class='submit'>
+				<input type='submit' value='<?php _e( 'Update &raquo;', 'wpsc' ) ?>' />
+			</div>
+		</div>
+</td>
+		<?php
+	}
+
+	public function display() {
+		global $wpdb, $nzshpcrt_gateways;
+		$payment_gateway_names = get_option( 'payment_gateway_names' );
+		if ( empty( $nzshpcrt_gateways ) )
+			$nzshpcrt_gateways     = nzshpcrt_get_gateways();
 	?>
 
 		<div class='metabox-holder'>
@@ -53,11 +119,11 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab
 				$custom_gateway2 = 'checked="checked"';
 			}
 			 ?>
-			<table id='gateway_options' >
+			<table id='wpsc-payment-gateway-settings' class='wpsc-edit-module-options'>
 				<tr>
-					<td class='select_gateway'>
+					<td>
 						<div class='postbox'>
-							<h3 class='hndle'><?php _e( 'General Settings', 'wpsc' ); ?></h3>
+							<h3 class='hndle'><?php _e( 'Select Payment Gateways', 'wpsc' ); ?></h3>
 							<div class='inside'>
 								<p><?php _e( 'Activate the payment gateways that you want to make available to your customers by selecting them below.', 'wpsc' ); ?></p>
 								<br />
@@ -70,24 +136,29 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab
 									if ( in_array( $gateway['internalname'], (array)$selected_gateways ) ) {
 								?>
 
-										<div class="wpsc_shipping_options">
-											<div class='wpsc-shipping-actions wpsc-payment-actions'>
-											| <span class="edit">
-													<a class='edit-payment-module' rel="<?php echo $gateway['internalname']; ?>" onclick="event.preventDefault();" title="Edit this Payment Module" href='<?php echo htmlspecialchars( add_query_arg( 'payment_module', $gateway['internalname'] ) ); ?>' style="cursor:pointer;">Edit</a>
-										</span> |
+									<div class="wpsc-select-gateway">
+										<div class='wpsc-gateway-actions'>
+											<span class="edit">
+													<a class='edit-payment-module' data-gateway-id="<?php echo esc_attr( $gateway['internalname'] ); ?>" title="<?php _e( "Edit this Payment Gateway's Settings", 'wpsc' ) ?>" href='<?php echo esc_attr( add_query_arg( 'payment_gateway_id', $gateway['internalname'] ) ); ?>'><?php esc_html_e( 'Edit', 'wpsc' ); ?></a>
+											</span>
 									</div>
-									<p><input name='wpsc_options[custom_gateway_options][]' checked='checked' type='checkbox' value='<?php esc_attr_e( $gateway['internalname'] ); ?>' id='<?php esc_attr_e( $gateway['internalname'] ); ?>_id' />
-										<label for='<?php esc_attr_e( $gateway['internalname'] ); ?>_id'><?php esc_attr_e( $gateway['name'] ); ?></label></p>
+									<p>
+										<input name='wpsc_options[custom_gateway_options][]' checked='checked' type='checkbox' value='<?php esc_attr_e( $gateway['internalname'] ); ?>' id='<?php esc_attr_e( $gateway['internalname'] ); ?>_id' />
+										<label for='<?php echo esc_attr( $gateway['internalname'] ); ?>_id'><?php echo esc_attr( $gateway['name'] ); ?></label>
+									</p>
 								</div>
 <?php } else { ?>
-										<div class="wpsc_shipping_options">
-											<div class='wpsc-shipping-actions wpsc-payment-actions'>
-											| <span class="edit">
-													<a class='edit-payment-module' rel="<?php echo $gateway['internalname']; ?>" onclick="event.preventDefault();" title="Edit this Payment Module" href='<?php echo htmlspecialchars( add_query_arg( 'payment_module', $gateway['internalname'] ) ); ?>' style="cursor:pointer;"><?php _e( 'Edit' , 'wpsc' ); ?></a>
-										</span> |
+								<div class="wpsc-select-gateway">
+									<div class='wpsc-gateway-actions'>
+										<span class="edit">
+											<a class='edit-payment-module' data-gateway-id="<?php echo esc_attr( $gateway['internalname'] ); ?>" title="<?php _e( "Edit this Payment Gateway's Settings", 'wpsc' ) ?>" href='<?php echo esc_attr( add_query_arg( 'payment_gateway_id', $gateway['internalname'] ) ); ?>'><?php esc_html_e( 'Edit', 'wpsc' ); ?></a>
+										</span>
 									</div>
-									<p><input name='wpsc_options[custom_gateway_options][]' type='checkbox' value='<?php echo $gateway['internalname']; ?>' id='<?php echo $gateway['internalname']; ?>_id' />
-										<label for='<?php echo $gateway['internalname']; ?>_id'><?php echo $gateway['name']; ?></label></p></div>
+									<p>
+										<input name='wpsc_options[custom_gateway_options][]' type='checkbox' value='<?php echo $gateway['internalname']; ?>' id='<?php echo $gateway['internalname']; ?>_id' />
+										<label for='<?php echo $gateway['internalname']; ?>_id'><?php echo $gateway['name']; ?></label>
+									</p>
+								</div>
 								<?php
 									}
 								}
@@ -105,33 +176,7 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab
 
 							</td>
 
-							<td class='gateway_settings' rowspan='2'>
-								<div class='postbox'>
-							<?php
-
-								if ( !isset( $_SESSION['previous_payment_name'] ) )
-									$_SESSION['previous_payment_name'] = "";
-								if ( !isset( $selected_gateway_data ) )
-									$selected_gateway_data = "";
-								$payment_data = wpsc_get_payment_form( $_SESSION['previous_payment_name'], $selected_gateway_data );
-							?>
-								<h3 class='hndle'><?php echo $payment_data['name']; ?></h3>
-								<div class='inside'>
-								<table class='form-table'>
-									<?php echo $payment_data['form_fields']; ?>
-								</table>
-								<?php
-								if ( $payment_data['has_submit_button'] == 0 )
-									$update_button_css = 'style= "display: none;"';
-								else
-									$update_button_css = '';
-								?>
-								<div class='submit' <?php echo $update_button_css; ?>>
-<?php wp_nonce_field( 'update-options', 'wpsc-update-options' ); ?>
-									<input type='submit' value='<?php _e( 'Update &raquo;', 'wpsc' ) ?>' name='updateoption' />
-								</div>
-							</div>
-					</td>
+							<?php $this->display_payment_gateway_settings_form(); ?>
 				</tr>
 			</table>
 		</div>
