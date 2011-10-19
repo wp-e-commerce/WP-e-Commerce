@@ -101,31 +101,6 @@ class tablerate {
 			</tbody>
 		<?php
 		return ob_get_clean();
-		$output = "";
-		$output.="<tr><th>".__('Total Price', 'wpsc')."</th><th>".__('Shipping Price', 'wpsc')."</th></tr>";
-		$layers = get_option("table_rate_layers");
-
-		if ($layers != '') {
-
-			foreach ($layers as $key => $shipping) {
-
-				$output.="<tr class='rate_row'>
-							<td>
-								<i style='color: grey;'>".__('If price is ', 'wpsc')."</i>
-								<input type='text' name='layer[]' value='$key' size='4' />
-								<i style='color: grey;'> ".__(' and above', 'wpsc')."</i>
-							</td>
-							<td>
-								".wpsc_get_currency_symbol()."
-								<input type='text' value='{$shipping}' name='shipping[]'	size='4'>
-								&nbsp;&nbsp;<a href='#' class='delete_button' >".__('Delete', 'wpsc')."</a>
-							</td>
-						</tr>";
-			}
-		}
-		$output.="<input type='hidden' name='checkpage' value='table'>";
-		$output.="<tr class='addlayer'><td colspan='2'>Layers: <a href='' style='cursor:pointer;' id='addlayer' >" . __('Add Layer', 'wpsc') . "</a></td></tr>";
-		return $output;
 	}
 
 	/**
@@ -142,15 +117,14 @@ class tablerate {
 		$new_layer = array();
 		if ($shippings != '') {
 			foreach ($shippings as $key => $price) {
-				if ( empty( $price ) || empty( $layers[$key] ) ) {
+				if ( empty( $price ) || empty( $layers[$key] ) )
 					continue;
-				}
 
 				$new_layer[$layers[$key]] = $price;
 			}
 		}
 		// Sort the data before it goes into the database. Makes the UI make more sense
-		krsort($new_layer);
+		krsort( $new_layer );
 		update_option('table_rate_layers', $new_layer);
 		return true;
 	}
