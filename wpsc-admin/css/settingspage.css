@@ -227,18 +227,18 @@ img.ajax-feedback-active {
 	font-style:italic;
 }
 
-.wpsc-shipping-module-settings-tablerate .postbox .inside {
+.wpsc-shipping-module-settings-tablerate .postbox .inside, .wpsc-shipping-module-settings-weightrate .postbox .inside {
 	padding: 0;
 }
 
-.wpsc-shipping-module-settings-tablerate .form-table th {
+.wpsc-shipping-module-settings-tablerate .form-table th, .wpsc-shipping-module-settings-weightrate .form-table th {
 	border-bottom:1px solid #dfdfdf;
 	font-size:12px;
 	font-weight:bold;
 	padding:7px 10px 7px 20px;
 }
 
-.wpsc-shipping-module-settings-tablerate .form-table {
+.wpsc-shipping-module-settings-tablerate .form-table, .wpsc-shipping-module-settings-weightrate .form-table {
 	margin-top:0;
 }
 
@@ -246,38 +246,43 @@ img.ajax-feedback-active {
 	width:120px;
 }
 
-.wpsc-shipping-module-settings-tablerate .form-table td {
+.wpsc-shipping-module-settings-weightrate .form-table th.total-weight {
+	padding-left:10px;
+	width:140px;
+}
+
+.wpsc-shipping-module-settings-tablerate .form-table td, .wpsc-shipping-module-settings-weightrate .form-table td {
 	border-bottom:1px solid #dfdfdf;
 	padding:0 10px;
 }
 
-.wpsc-shipping-module-settings-tablerate .form-table td .cell-wrapper {
+.wpsc-shipping-module-settings-tablerate .form-table td .cell-wrapper, .wpsc-shipping-module-settings-weightrate .form-table td .cell-wrapper {
 	padding:7px 0;
 	width:100%;
 }
 
-#wpsc_options .wpsc-shipping-module-settings-tablerate .postbox .inside .submit {
+#wpsc_options .wpsc-shipping-module-settings-tablerate .postbox .inside .submit, #wpsc_options .wpsc-shipping-module-settings-weightrate .postbox .inside .submit {
 	padding:0 10px 0 20px;
 }
 
-.wpsc-shipping-module-settings-tablerate td .actions {
+.wpsc-shipping-module-settings-tablerate td .actions, .wpsc-shipping-module-settings-weightrate td .actions {
 	float:right;
 	margin-right:10px;
 }
 
-.wpsc-shipping-module-settings-tablerate td .add {
+.wpsc-shipping-module-settings-tablerate td .add, .wpsc-shipping-module-settings-weightrate td .add {
 	display:none;
 }
 
-.action {
+#wpsc_options .action {
 	display:none;
 }
 
-.js .js-warning {
+.js #wpsc_options .js-warning {
 	display:none;
 }
 
-.js .wpsc-shipping-module-settings-tablerate td .action {
+.js #wpsc_options .wpsc-shipping-module-settings-tablerate td .action, .js #wpsc_options .wpsc-shipping-module-settings-weightrate td .action {
 	background-repeat:no-repeat;
 	display:inline-block;
 	height:20px;
@@ -286,27 +291,27 @@ img.ajax-feedback-active {
 	width:20px;
 }
 
-.js .wpsc-shipping-module-settings-tablerate td .add {
+.js .wpsc-shipping-module-settings-tablerate td .add, .js .wpsc-shipping-module-settings-weightrate td .add {
 	background:url(plus-minus.png);
 }
 
-.js .wpsc-shipping-module-settings-tablerate td .add:hover {
+.js .wpsc-shipping-module-settings-tablerate td .add:hover, .js .wpsc-shipping-module-settings-weightrate td .add:hover {
 	background-position:-20px 0;
 }
 
-.js .wpsc-shipping-module-settings-tablerate td .add:active {
+.js .wpsc-shipping-module-settings-tablerate td .add:active, .js .wpsc-shipping-module-settings-weightrate td .add:active {
 	background-position:-40px 0;
 }
 
-.js .wpsc-shipping-module-settings-tablerate td .delete:hover {
+.js .wpsc-shipping-module-settings-tablerate td .delete:hover, .js .wpsc-shipping-module-settings-weightrate td .delete:hover {
 	background-position:-20px -20px;
 }
 
-.js .wpsc-shipping-module-settings-tablerate td .delete:active {
+.js .wpsc-shipping-module-settings-tablerate td .delete:active, .js .wpsc-shipping-module-settings-weightrate td .delete:active {
 	background-position:-40px -20px;
 }
 
-.js .wpsc-shipping-module-settings-tablerate td .delete {
+.js .wpsc-shipping-module-settings-tablerate td .delete, .js .wpsc-shipping-module-settings-weightrate td .delete {
 	background:url(plus-minus.png);
 	background-position:0 -20px;
 }
