@@ -751,7 +751,6 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
 
 function wpsc_ajax_get_payment_form() {
 	$paymentname = $_REQUEST['paymentname'];
-	$_SESSION['previous_payment_name'] = $paymentname;
 	$payment_data = wpsc_get_payment_form( $paymentname );
 	$html_payment_name = str_replace( Array( "\n", "\r" ), Array( "\\n", "\\r" ), addslashes( $payment_data['name'] ) );
 	$payment_form = str_replace( Array( "\n", "\r" ), Array( "\\n", "\\r" ), addslashes( $payment_data['form_fields'] ) );
