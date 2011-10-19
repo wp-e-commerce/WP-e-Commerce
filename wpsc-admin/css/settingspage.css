@@ -233,6 +233,7 @@ img.ajax-feedback-active {
 
 .wpsc-shipping-module-settings-tablerate .form-table th {
 	border-bottom:1px solid #dfdfdf;
+	font-size:12px;
 	font-weight:bold;
 	padding:7px 10px 7px 20px;
 }
