@@ -498,13 +498,18 @@
 		 */
 		event_edit_shipping_module : function() {
 			var element = $(this),
+			    shipping_module_id = element.data('module-id'),
 			    spinner = element.siblings('.ajax-feedback'),
 			    post_data = {
 			    	action : 'wpsc_shipping_module_settings_form',
-			    	shipping_module_id : element.data('module-id'),
+			    	'shipping_module_id' : shipping_module_id,
 			    	nonce  : WPSC_Settings_Page.nonce
 			    },
 			    ajax_callback = function(response) {
+			    	if (history.pushState) {
+			    		var new_url = '?page=wpsc-settings&tab=' + WPSC_Settings_Page.current_tab + '&shipping_module_id=' + shipping_module_id;
+			    		history.pushState({'tab_id' : WPSC_Settings_Page.current_tab}, '', new_url);
+			    	}
 			    	spinner.toggleClass('ajax-feedback-active');
 			    	$('#wpsc-shipping-module-settings').replaceWith(response);
 			    };
