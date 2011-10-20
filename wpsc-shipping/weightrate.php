@@ -1,4 +1,3 @@
-
 <?php
 /**
  * shipping/weightrate.php
