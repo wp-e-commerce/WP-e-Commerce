@@ -325,7 +325,7 @@ div.wpsc_shipping_options:hover .wpsc-shipping-actions, div.wpsc-select-gateway:
 	font-size:10px;
 	visibility:visible;
 }
-div.wpsc-select-gateway p {
+div.wpsc-select-gateway p, div.wpsc_shipping_options p {
 	margin: 0px 15px 4px 5px;
 }
 #wpsc-payment-gateway-settings-panel input[type=text], #wpsc-payment-gateway-settings-panel textarea {
