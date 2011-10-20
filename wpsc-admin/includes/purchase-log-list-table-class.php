@@ -26,7 +26,7 @@ if(!class_exists('WPSC_Purchase_Log_Table')){
 	 function column_date($item, $column_name){
 	    //Build row actions
 	    $actions = array(
-	        'delete'    => sprintf('<a href="?page=%s&wpsc_admin_action=%s&purchlog_id=%s">Delete</a>',$_REQUEST['page'],'delete',$item['id']),
+	        'delete'    => sprintf('<a href="?page=%s&action=%s&post=%s">Delete</a>',$_REQUEST['page'],'delete',$item['id']),
 	        'view'    => sprintf('<a href="?page=%s&p=view&purchlog_id=%s">View</a>',/* $_REQUEST['page'] */ 'wpsc-sales-logs',$item['id']),
 	        'tracking'    => sprintf('<a href="?page=%s&wpsc_admin_action=%s&movie=%s">Add Tracking #</a>',$_REQUEST['page'],'tracking',$item['ID']),
 	
@@ -163,6 +163,23 @@ if(!class_exists('WPSC_Purchase_Log_Table')){
 			}
 
 		}
+		
+		/*
+		need to figure out how you proess the search
+		this just seems to generate the box??
+		*/
+		function search_box( $text, $input_id ) {
+			$text = 'Search Purchase Logs';
+			$input_id = $input_id . '-search-input';
+			?>
+			<p class="search-box">
+				<label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
+				<input type="text" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" />
+				<?php submit_button( $text, 'button', false, false, array('id' => 'search-submit') ); ?>
+			</p>
+			<?php
+		}
+
 	
 	
 		function prepare_items() {	
@@ -181,7 +198,7 @@ if(!class_exists('WPSC_Purchase_Log_Table')){
 			$this->_column_headers = array($columns, $hidden, $sortable);
 			
 			$this->process_bulk_action();
-			
+		
 			
 			/* Get out our data for the table */
 			global $wpdb;
@@ -189,7 +206,7 @@ if(!class_exists('WPSC_Purchase_Log_Table')){
 			
 			
 			/*  Pagination options and settings */
-			$per_page = 5;
+			$per_page = 2;
 			$current_page = $this->get_pagenum();
 			$total_items = count($data);
 			/**
@@ -247,7 +264,9 @@ function ttt_render_list_page(){
             <!-- For plugins, we also need to ensure that the form posts back to our current page -->
             <input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>" />
             <!-- Now we can render the completed list table -->
+            <?php $test->search_box($text, $input_id); ?>
             <?php $test->display() ?>
+            
         </form>
         
     </div>
