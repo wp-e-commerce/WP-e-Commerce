@@ -45,7 +45,7 @@ function wpsc_navigate_settings_tab() {
 
 	require_once( 'settings-page.php' );
 
-	$settings_page = new WPSC_Settings_Page( $_POST['tab_id'] );
+	$settings_page = new WPSC_Settings_Page( $_POST['tab'] );
 	$settings_page->display_current_tab();
 	exit;
 }

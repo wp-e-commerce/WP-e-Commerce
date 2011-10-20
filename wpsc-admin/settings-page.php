@@ -110,12 +110,6 @@ final class WPSC_Settings_Page
 		return $class;
 	}
 
-	private function tab_href( $id ) {
-		$href = add_query_arg( array( 'tab' => $id ) );
-		$href = remove_query_arg( 'isocode', $href );
-		return $href;
-	}
-
 	private function submit_url() {
 		$location = add_query_arg( 'tab', $this->current_tab_id );
 		return $location;
@@ -125,7 +119,7 @@ final class WPSC_Settings_Page
 		?>
 			<h2 class="nav-tab-wrapper">
 				<?php foreach ( $this->tabs as $id => $title ): ?>
-					<a data-tab-id="<?php echo esc_attr( $id ); ?>" class="<?php echo $this->tab_class( $id ); ?>" href="<?php echo esc_attr( $this->tab_href( $id ) ); ?>"><?php echo esc_html( $this->tabs[$id] ); ?></a>
+					<a data-tab-id="<?php echo esc_attr( $id ); ?>" class="<?php echo $this->tab_class( $id ); ?>" href="<?php echo esc_attr( '?page=wpsc-settings&tab=' . $id ); ?>"><?php echo esc_html( $this->tabs[$id] ); ?></a>
 				<?php endforeach ?>
 			</h2>
 		<?php

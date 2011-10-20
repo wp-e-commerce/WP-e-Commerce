@@ -34,7 +34,7 @@
 			// set the history state of the current page
 			if (history.replaceState) {
 				(function(){
-					history.replaceState({tab_id : WPSC_Settings_Page.current_tab}, '', location.search + location.hash);
+					history.replaceState({url : location.search + location.hash}, '', location.search + location.hash);
 				})();
 			}
 
@@ -83,10 +83,8 @@
 		 * @since 3.8.8
 		 */
 		event_tab_button_clicked : function() {
-			var tab_id = $(this).data('tab-id');
-			if (tab_id != WPSC_Settings_Page.current_tab) {
-				WPSC_Settings_Page.load_tab(tab_id);
-			}
+			var href = $(this).attr('href');
+			WPSC_Settings_Page.load_tab(href);
 			return false;
 		},
 
@@ -97,7 +95,7 @@
 		 */
 		event_pop_state : function(e) {
 			if (e.state) {
-				WPSC_Settings_Page.load_tab(e.state.tab_id, false);
+				WPSC_Settings_Page.load_tab(e.state.url, false);
 			}
 		},
 
@@ -120,7 +118,7 @@
 		 *                              False if this is a result of back/forward browser button being pushed.
 		 * @since 3.8.8
 		 */
-		load_tab : function(tab_id, push_state) {
+		load_tab : function(url, push_state) {
 			if (WPSC_Settings_Page.unsaved_settings && ! confirm(WPSC_Settings_Page.ajax_navigate_confirm_dialog)) {
 				return;
 			}
@@ -128,20 +126,21 @@
 			if (typeof push_state == 'undefined') {
 				push_state = true;
 			}
-
-			var new_url = '?page=wpsc-settings&tab=' + tab_id;
-			var post_data = {
-				'action' : 'wpsc_navigate_settings_tab',
-				'tab_id' : tab_id,
-				'nonce'  : WPSC_Settings_Page.nonce,
-				'current_url' : location.href
-			};
+console.log(url);
+			var query = $.query.load(url);
+			var tab_id = query.get('tab');
+			var post_data = $.extend({}, query.get(), {
+				'action'      : 'wpsc_navigate_settings_tab',
+				'nonce'       : WPSC_Settings_Page.nonce,
+				'current_url' : location.href,
+				'tab'         : tab_id
+			});
 
 			WPSC_Settings_Page.toggle_ajax_state(tab_id);
 
 			// pushState to save this page load into history, and alter the address field of the browser
 			if (push_state && history.pushState) {
-				history.pushState({'tab_id' : tab_id}, '', new_url);
+				history.pushState({'url' : url}, '', url);
 			}
 
 			/**
@@ -158,7 +157,7 @@
 				WPSC_Settings_Page.current_tab = tab_id;
 				$('.nav-tab-active').removeClass('nav-tab-active');
 				$('[data-tab-id="' + tab_id + '"]').addClass('nav-tab-active');
-				$('#wpsc_options_page form').attr('action', new_url);
+				$('#wpsc_options_page form').attr('action', url);
 				$(t).trigger('wpsc_settings_tab_loaded');
 				$(t).trigger('wpsc_settings_tab_loaded_' + tab_id);
 			}
@@ -508,7 +507,7 @@
 			    ajax_callback = function(response) {
 			    	if (history.pushState) {
 			    		var new_url = '?page=wpsc-settings&tab=' + WPSC_Settings_Page.current_tab + '&shipping_module_id=' + shipping_module_id;
-			    		history.pushState({'tab_id' : WPSC_Settings_Page.current_tab}, '', new_url);
+			    		history.pushState({url : new_url}, '', new_url);
 			    	}
 			    	spinner.toggleClass('ajax-feedback-active');
 			    	$('#wpsc-shipping-module-settings').replaceWith(response);
@@ -547,8 +546,8 @@
 			    },
 			    ajax_callback = function(response) {
 			    	if (history.pushState) {
-			    		var new_url = '?page=wpsc-settings&tab=' + WPSC_Settings_Page.current_tab + '&shipping_module_id=' + payment_gateway_id;
-			    		history.pushState({'tab_id' : WPSC_Settings_Page.current_tab}, '', new_url);
+			    		var new_url = '?page=wpsc-settings&tab=' + WPSC_Settings_Page.current_tab + '&payment_gateway_id=' + payment_gateway_id;
+			    		history.pushState({url : new_url}, '', new_url);
 			    	}
 			    	spinner.toggleClass('ajax-feedback-active');
 			    	$('#wpsc-payment-gateway-settings-panel').replaceWith(response);
