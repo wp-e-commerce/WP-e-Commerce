@@ -199,16 +199,15 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab
 									<input type='hidden' value='true' name='update_gateways' />
 									<input type='submit' value='<?php _e( 'Update &raquo;', 'wpsc' ) ?>' name='updateoption' />
 								</div>
-
-								<h4><?php _e( 'We Recommend', 'wpsc' ); ?></h4>
-								<a style="border-bottom:none;" href="https://www.paypal.com/nz/mrb/pal=LENKCHY6CU2VY" target="_blank"><img src="<?php echo WPSC_CORE_IMAGES_URL; ?>/paypal-referal.gif" border="0" alt="Sign up for PayPal and start accepting credit card payments instantly." /></a> <br /><br />
-								<a style="border-bottom:none;" href="http://checkout.google.com/sell/?promo=seinstinct" target="_blank"><img src="https://checkout.google.com/buyer/images/google_checkout.gif" border="0" alt="Sign up for Google Checkout" /></a>
 							</div>
 						</div>
 					</td>
 					<?php $this->display_payment_gateway_settings_form(); ?>
 				</tr>
 			</table>
+			<h4><?php _e( 'We Recommend', 'wpsc' ); ?></h4>
+				<a style="border-bottom:none;" href="https://www.paypal.com/nz/mrb/pal=LENKCHY6CU2VY" target="_blank"><img src="<?php echo WPSC_CORE_IMAGES_URL; ?>/paypal-referal.gif" border="0" alt="Sign up for PayPal and start accepting credit card payments instantly." /></a> <br /><br />
+				<a style="border-bottom:none;" href="http://checkout.google.com/sell/?promo=seinstinct" target="_blank"><img src="https://checkout.google.com/buyer/images/google_checkout.gif" border="0" alt="Sign up for Google Checkout" /></a>
 		</div>
 
 	<?php
