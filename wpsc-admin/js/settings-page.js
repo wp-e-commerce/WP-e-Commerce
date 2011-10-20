@@ -529,6 +529,37 @@
 		}
 	};
 	$(WPSC_Settings_Page).bind('wpsc_settings_tab_loaded_shipping', WPSC_Settings_Page.Shipping.event_init);
+
+	WPSC_Settings_Page.Gateway = {
+		event_init : function() {
+			var wrapper = $('#options_gateway');
+			wrapper.delegate('.edit-payment-module', 'click', WPSC_Settings_Page.Gateway.event_edit_payment_gateway);
+		},
+
+		event_edit_payment_gateway : function() {
+			var element = $(this),
+			    payment_gateway_id = element.data('gateway-id'),
+			    spinner = element.siblings('.ajax-feedback'),
+			    post_data = {
+			    	action : 'wpsc_payment_gateway_settings_form',
+			    	'payment_gateway_id' : payment_gateway_id,
+			    	nonce  : WPSC_Settings_Page.nonce
+			    },
+			    ajax_callback = function(response) {
+			    	if (history.pushState) {
+			    		var new_url = '?page=wpsc-settings&tab=' + WPSC_Settings_Page.current_tab + '&shipping_module_id=' + payment_gateway_id;
+			    		history.pushState({'tab_id' : WPSC_Settings_Page.current_tab}, '', new_url);
+			    	}
+			    	spinner.toggleClass('ajax-feedback-active');
+			    	$('#wpsc-payment-gateway-settings-panel').replaceWith(response);
+			    };
+
+			spinner.toggleClass('ajax-feedback-active');
+			$.post(ajaxurl, post_data, ajax_callback, 'html');
+			return false;
+		}
+	};
+	$(WPSC_Settings_Page).bind('wpsc_settings_tab_loaded_gateway', WPSC_Settings_Page.Gateway.event_init);
 })(jQuery);
 
 WPSC_Settings_Page.init();
