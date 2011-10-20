@@ -72,6 +72,16 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab
 		return $return;
 	}
 
+	private function get_gateway_settings_url( $gateway ) {
+		$location = isset( $_REQUEST['current_url'] ) ? $_REQUEST['current_url'] : $_SERVER['REQUEST_URI'];
+		$location = add_query_arg( array(
+			'tab'                => 'gateway',
+			'page'               => 'wpsc-settings',
+			'payment_gateway_id' => $gateway,
+		), $location );
+		return $location;
+	}
+
 	public function display_payment_gateway_settings_form() {
 		$selected_gateway = (string) get_user_option( 'wpsc_settings_selected_payment_gateway', get_current_user_id() );
 		if ( empty( $selected_gateway ) && ! empty( $this->active_gateways ) )
@@ -139,7 +149,7 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab
 									<div class="wpsc-select-gateway">
 										<div class='wpsc-gateway-actions'>
 											<span class="edit">
-													<a class='edit-payment-module' data-gateway-id="<?php echo esc_attr( $gateway['internalname'] ); ?>" title="<?php _e( "Edit this Payment Gateway's Settings", 'wpsc' ) ?>" href='<?php echo esc_attr( add_query_arg( 'payment_gateway_id', $gateway['internalname'] ) ); ?>'><?php esc_html_e( 'Edit', 'wpsc' ); ?></a>
+													<a class='edit-payment-module' data-gateway-id="<?php echo esc_attr( $gateway['internalname'] ); ?>" title="<?php _e( "Edit this Payment Gateway's Settings", 'wpsc' ) ?>" href='<?php echo esc_attr( $this->get_gateway_settings_url( $gateway['internalname'] ) ); ?>'><?php esc_html_e( 'Edit', 'wpsc' ); ?></a>
 											</span>
 									</div>
 									<p>
