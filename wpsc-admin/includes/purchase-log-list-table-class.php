@@ -43,7 +43,7 @@ if(!class_exists('WPSC_Purchase_Log_Table')){
 	function column_cb($item){
 	    return sprintf(
 	        '<input type="checkbox" name="%1$s[]" value="%2$s" />',
-	        /*$1%s*/ $this->_args['singular'], 
+	        /*$1%s*/ 'post', 
 	        /*$2%s*/ $item['id']               
 	    );
 	}
@@ -143,6 +143,7 @@ if(!class_exists('WPSC_Purchase_Log_Table')){
 		
 		
 		function process_bulk_action() {
+			global $wpdb;
 			//Detect when a bulk action is being triggered...
 			if( 'delete'===$this->current_action() ) {
 			    wp_die('Items deleted (or they would be if we had items to delete)!');
@@ -153,8 +154,11 @@ if(!class_exists('WPSC_Purchase_Log_Table')){
 			current_action will be the status number to update
 			*/
 			if( is_numeric($this->current_action())  ) {
-			exit('<pre>'.print_r($this->current_action(),1).'</pre>');
-			    wp_die('This will open up the single purcahse log view');
+				$post_ids = array_map( 'intval', $_POST['post'] ); // pull out the items that need updating
+				$wpdb->query($wpdb->prepare('UPDATE ' . WPSC_TABLE_PURCHASE_LOGS . ' SET `processed` = ' . $this->current_action() . ' WHERE `id` IN(' . implode(',' , $post_ids ).')'));
+				
+				//$wpdb->query($sql);	
+
 			}
 
 		}
@@ -238,7 +242,7 @@ function ttt_render_list_page(){
 
         
         <!-- Forms are NOT created automatically, so you need to wrap the table in one to use features like bulk actions -->
-        <form id="movies-filter" method="get">
+        <form id="movies-filter" method="post">
             <!-- For plugins, we also need to ensure that the form posts back to our current page -->
             <input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>" />
             <!-- Now we can render the completed list table -->
