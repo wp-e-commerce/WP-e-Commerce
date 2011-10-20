@@ -524,7 +524,7 @@ console.log(url);
 		 */
 		refresh_alt_row : function() {
 			WPSC_Settings_Page.Shipping.wrapper.find('.alternate').removeClass('alternate');
-			WPSC_Settings_Page.Shipping.wrapper.find('tr:odd').addClass('alternate');
+			WPSC_Settings_Page.Shipping.wrapper.find('#wpsc-shipping-module-settings tr:odd').addClass('alternate');
 		}
 	};
 	$(WPSC_Settings_Page).bind('wpsc_settings_tab_loaded_shipping', WPSC_Settings_Page.Shipping.event_init);
