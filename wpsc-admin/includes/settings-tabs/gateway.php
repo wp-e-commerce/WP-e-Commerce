@@ -142,36 +142,21 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab
 								foreach ( $nzshpcrt_gateways as $gateway ) {
 									if ( isset( $gateway['admin_name'] ) )
 										$gateway['name'] = $gateway['admin_name'];
-
-									if ( in_array( $gateway['internalname'], (array)$selected_gateways ) ) {
 								?>
 
 									<div class="wpsc-select-gateway">
 										<div class='wpsc-gateway-actions'>
 											<span class="edit">
 													<a class='edit-payment-module' data-gateway-id="<?php echo esc_attr( $gateway['internalname'] ); ?>" title="<?php _e( "Edit this Payment Gateway's Settings", 'wpsc' ) ?>" href='<?php echo esc_attr( $this->get_gateway_settings_url( $gateway['internalname'] ) ); ?>'><?php esc_html_e( 'Edit', 'wpsc' ); ?></a>
+													<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
 											</span>
 									</div>
 									<p>
-										<input name='wpsc_options[custom_gateway_options][]' checked='checked' type='checkbox' value='<?php esc_attr_e( $gateway['internalname'] ); ?>' id='<?php esc_attr_e( $gateway['internalname'] ); ?>_id' />
+										<input name='wpsc_options[custom_gateway_options][]' <?php checked( in_array( $gateway['internalname'], (array) $selected_gateways ) ); ?> type='checkbox' value='<?php esc_attr_e( $gateway['internalname'] ); ?>' id='<?php esc_attr_e( $gateway['internalname'] ); ?>_id' />
 										<label for='<?php echo esc_attr( $gateway['internalname'] ); ?>_id'><?php echo esc_attr( $gateway['name'] ); ?></label>
 									</p>
 								</div>
-<?php } else { ?>
-								<div class="wpsc-select-gateway">
-									<div class='wpsc-gateway-actions'>
-										<span class="edit">
-											<a class='edit-payment-module' data-gateway-id="<?php echo esc_attr( $gateway['internalname'] ); ?>" title="<?php _e( "Edit this Payment Gateway's Settings", 'wpsc' ) ?>" href='<?php echo esc_attr( add_query_arg( 'payment_gateway_id', $gateway['internalname'] ) ); ?>'><?php esc_html_e( 'Edit', 'wpsc' ); ?></a>
-										</span>
-									</div>
-									<p>
-										<input name='wpsc_options[custom_gateway_options][]' type='checkbox' value='<?php echo $gateway['internalname']; ?>' id='<?php echo $gateway['internalname']; ?>_id' />
-										<label for='<?php echo $gateway['internalname']; ?>_id'><?php echo $gateway['name']; ?></label>
-									</p>
-								</div>
-								<?php
-									}
-								}
+					<?php }
 								?>
 								<div class='submit gateway_settings'>
 									<input type='hidden' value='true' name='update_gateways' />
