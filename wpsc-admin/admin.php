@@ -242,7 +242,7 @@ function wpsc_admin_include_optionspage_css_and_js() {
 	wp_enqueue_script( 'wp-e-commerce-js-ajax', WPSC_URL . '/wpsc-core/js/ajax.js', false, $version_identifier );
 	wp_enqueue_script( 'wp-e-commerce-js-ui-tabs', WPSC_URL . '/wpsc-admin/js/jquery-ui.js', false, $version_identifier );
 	wp_enqueue_script( 'wp-e-commerce-js-dimensions', WPSC_URL . '/wpsc-admin/js/dimensions.js', false, $version_identifier );
-	wp_enqueue_script( 'wp-e-commerce-admin-settings-page', WPSC_URL . '/wpsc-admin/js/settings-page.js', false, $version_identifier );
+	wp_enqueue_script( 'wp-e-commerce-admin-settings-page', WPSC_URL . '/wpsc-admin/js/settings-page.js', array( 'jquery-query' ), $version_identifier );
 
 	wp_localize_script( 'wp-e-commerce-admin-settings-page', 'WPSC_Settings_Page', array(
 		'nonce'                        => wp_create_nonce( 'wpsc_settings_page_nonce' ),
