@@ -144,9 +144,12 @@ if(!class_exists('WPSC_Purchase_Log_Table')){
 		
 		function process_bulk_action() {
 			global $wpdb;
+			
 			//Detect when a bulk action is being triggered...
 			if( 'delete'===$this->current_action() ) {
-			    wp_die('Items deleted (or they would be if we had items to delete)!');
+				/* this needs some js "are you sure you want to delete this" */
+				$post_ids = array_map( 'intval', $_POST['post'] ); // pull out the items that need updating
+				$wpdb->query($wpdb->prepare('DELETE FROM ' . WPSC_TABLE_PURCHASE_LOGS . ' WHERE `id` IN(' . implode(',' , $post_ids ).')'));	
 			}
 		
 			/*
@@ -155,9 +158,7 @@ if(!class_exists('WPSC_Purchase_Log_Table')){
 			*/
 			if( is_numeric($this->current_action())  ) {
 				$post_ids = array_map( 'intval', $_POST['post'] ); // pull out the items that need updating
-				$wpdb->query($wpdb->prepare('UPDATE ' . WPSC_TABLE_PURCHASE_LOGS . ' SET `processed` = ' . $this->current_action() . ' WHERE `id` IN(' . implode(',' , $post_ids ).')'));
-				
-				//$wpdb->query($sql);	
+				$wpdb->query($wpdb->prepare('UPDATE ' . WPSC_TABLE_PURCHASE_LOGS . ' SET `processed` = ' . $this->current_action() . ' WHERE `id` IN(' . implode(',' , $post_ids ).')'));	
 
 			}
 
