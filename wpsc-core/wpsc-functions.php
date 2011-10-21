@@ -424,6 +424,8 @@ function wpsc_filter_request( $q ) {
 		return $q;
 
 	$components = explode( '/', $q['wpsc-product'] );
+	if ( count( $components ) == 1 )
+		return $q;
 	$end_node = array_pop( $components );
 	$parent_node = array_pop( $components );
 
