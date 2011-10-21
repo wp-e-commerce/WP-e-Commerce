@@ -680,14 +680,14 @@ function wpsc_add_region_list() {
 		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'AB' WHERE `name` IN('Alberta') LIMIT 1 ;" );
 		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'BC' WHERE `name` IN('British Columbia') LIMIT 1 ;" );
 		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'MB' WHERE `name` IN('Manitoba') LIMIT 1 ;" );
-		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'NK' WHERE `name` IN('New Brunswick') LIMIT 1 ;" );
-		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'NF' WHERE `name` IN('Newfoundland') LIMIT 1 ;" );
+		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'NB' WHERE `name` IN('New Brunswick') LIMIT 1 ;" );
+		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'NL' WHERE `name` IN('Newfoundland') LIMIT 1 ;" );
 		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'NT' WHERE `name` IN('Northwest Territories') LIMIT 1 ;" );
 		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'NS' WHERE `name` IN('Nova Scotia') LIMIT 1 ;" );
 		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'ON' WHERE `name` IN('Ontario') LIMIT 1 ;" );
 		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'PE' WHERE `name` IN('Prince Edward Island') LIMIT 1 ;" );
-		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'PQ' WHERE `name` IN('Quebec') LIMIT 1 ;" );
-		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'SN' WHERE `name` IN('Saskatchewan') LIMIT 1 ;" );
+		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'QC' WHERE `name` IN('Quebec') LIMIT 1 ;" );
+		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'SK' WHERE `name` IN('Saskatchewan') LIMIT 1 ;" );
 		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'YT' WHERE `name` IN('Yukon') LIMIT 1 ;" );
 		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'NU' WHERE `name` IN('Nunavut') LIMIT 1 ;" );
 	}
