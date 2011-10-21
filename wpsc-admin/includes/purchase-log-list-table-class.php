@@ -64,6 +64,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 	public function get_columns() {
 		return array(
 			'cb'       => '<input type="checkbox" />',
+			'id'       => __( 'Order ID', 'wpsc' ),
 			'customer' => __( 'Customer', 'wpsc' ),
 			'amount'   => __( 'Amount', 'wpsc' ),
 			'status'   => _x( 'Status', 'sales log list table column', 'wpsc' ),
