@@ -97,9 +97,6 @@ th#purchid{
 th#details{
 	width:100px;
 }
-th#amount{
-	width:75px;
-}
 th#name{
 /* 	width:220px; */
 }
@@ -1790,4 +1787,8 @@ float: left;
 
 .dashboard_page_wpsc-purchase-logs .column-id {
 	width:75px;
+}
+
+.dashboard_page_wpsc-purchase-logs .column-amount {
+	width:100px;
 }
