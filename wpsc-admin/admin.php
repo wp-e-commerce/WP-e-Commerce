@@ -22,7 +22,7 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/theming.class.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/ajax-and-init.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/display-options-settings.page.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/display-sales-logs.php' );
-require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/purchase-log-list-table-class.php' );
+
 if ( ( isset( $_SESSION['wpsc_activate_debug_page'] ) && ( $_SESSION['wpsc_activate_debug_page'] == true ) ) || ( defined( 'WPSC_ADD_DEBUG_PAGE' ) && ( constant( 'WPSC_ADD_DEBUG_PAGE' ) == true ) ) )
 	require_once( WPSC_FILE_PATH . '/wpsc-admin/display-debug.page.php' );
 
@@ -150,6 +150,8 @@ function wpsc_admin_pages() {
 
 	$page_hooks[] = add_submenu_page( 'index.php', __( 'Store Upgrades', 'wpsc' ), __( 'Store Upgrades', 'wpsc' ), 'administrator', 'wpsc-upgrades', 'wpsc_display_upgrades_page' );
 
+	$page_hooks[] = $purchase_logs_page = add_submenu_page( 'index.php', __( 'Purchase Logs', 'wpsc' ), __( 'Purchase Logs', 'wpsc' ), 'administrator', 'wpsc-purchase-logs', 'wpsc_display_purchase_logs_page' );
+
 	// Set the base page for Products
 	$products_page = 'edit.php?post_type=wpsc-product';
 
@@ -191,6 +193,7 @@ function wpsc_admin_pages() {
 			break;
 
 		case $purchase_log_page :
+		case $purchase_logs_page :
 			add_action( 'admin_head', 'wpsc_product_log_rss_feed' );
 			break;
 
@@ -207,11 +210,25 @@ function wpsc_admin_pages() {
 	}
 
 	add_action( 'load-' . $edit_options_page, 'wpsc_load_settings_page', 1 );
+
+	// only load the purchase log list table and page classes when it's necessary
+	// also, the WPSC_Purchase_Logs_List_Table needs to be initializied before admin_header.php
+	// is loaded, therefore wpsc_load_purchase_logs_page needs to do this as well
+	add_action( 'load-' . $purchase_logs_page, 'wpsc_load_purchase_logs_page', 1 );
 }
 
 function wpsc_load_settings_page() {
 	require_once('settings-page.php');
 	WPSC_Settings_Page::get_instance();
+}
+
+function wpsc_load_purchase_logs_page() {
+	require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/purchase-log-list-table-class.php' );
+	$page = new WPSC_Purchase_Log_Page();
+}
+
+function wpsc_display_purchase_logs_page() {
+	do_action( 'wpsc_display_purchase_logs_page' );
 }
 
 function wpsc_product_log_rss_feed() {
