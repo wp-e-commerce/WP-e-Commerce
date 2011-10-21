@@ -516,14 +516,14 @@ function wpsc_purchlogs_custom_fields(){
       <h4><?php _e( 'Cart Items with Custom Files' , 'wpsc' ); ?>:</h4>
       <?php
          foreach($files as $file){
-            echo $file;
+            echo "<p>".esc_html($file)."</p>";
          }
       }?>
       <?php if(count($messages) > 0){ ?>
       <h4><?php _e( 'Cart Items with Custom Messages' , 'wpsc' ); ?>:</h4>
       <?php
          foreach($messages as $message){
-            echo $message;
+            echo "<p>".esc_html($message)."</p>";
          }
       } ?>
       </div>
