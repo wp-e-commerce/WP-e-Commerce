@@ -26,6 +26,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 		$checkout_fields = $wpdb->get_results( $checkout_fields_sql );
 
 		$joins = array();
+		$where = array( '1 = 1' );
 		$i = 1;
 		$selects = array( 'p.id', 'p.totalprice AS amount', 'p.processed AS status', 'p.track_id', 'p.date' );
 		$selects[] = '
@@ -33,27 +34,56 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 				SELECT COUNT(*) FROM ' . WPSC_TABLE_CART_CONTENTS . ' AS c
 				WHERE c.purchaseid = p.id
 			) AS item_count';
+
+		$search_terms = isset( $_REQUEST['s'] ) ? explode( ' ', $_REQUEST['s'] ) : array();
+		$search_sql = array();
 		foreach ( $checkout_fields as $field ) {
-			$as = 's' . $i;
-			$selects[] = $as . '.value AS ' . str_replace('billing', '', $field->unique_name );
-			$joins[] = $wpdb->prepare( "INNER JOIN " . WPSC_TABLE_SUBMITED_FORM_DATA . " AS {$as} ON {$as}.log_id = p.id AND {$as}.form_id = %d", $field->id );
+			$table_as = 's' . $i;
+			$select_as = str_replace('billing', '', $field->unique_name );
+			$selects[] = $table_as . '.value AS ' . $select_as;
+			$joins[] = $wpdb->prepare( "INNER JOIN " . WPSC_TABLE_SUBMITED_FORM_DATA . " AS {$table_as} ON {$table_as}.log_id = p.id AND {$table_as}.form_id = %d", $field->id );
+
+			// build search term queries for first name, last name, email
+			foreach ( $search_terms as $term ) {
+				$escaped_term = esc_sql( like_escape( $term ) );
+				if ( ! array_key_exists( $term, $search_sql ) )
+					$search_sql[$term] = array();
+
+				$search_sql[$term][] = $table_as . ".value LIKE '%" . $escaped_term . "%'";
+			}
+
 			$i++;
+		}
+
+		// combine query phrases into a single query string
+		foreach ( $search_terms as $term ) {
+			$search_sql[$term][] = "p.track_id = '" . esc_sql( $term ) . "'";
+			if ( is_numeric( $term ) )
+				$search_sql[$term][] = 'p.id = ' . esc_sql( $term );
+			$search_sql[$term] = '(' . implode( ' OR ', $search_sql[$term] ) . ')';
+		}
+		$search_sql = implode( ' AND ', array_values( $search_sql ) );
+
+		if ( $search_sql ) {
+			$where[] = $search_sql;
 		}
 
 		$selects = implode( ', ', $selects );
 		$joins = implode( ' ', $joins );
+		$where = implode( ' AND ', $where );
 
 		$submitted_data_log = WPSC_TABLE_SUBMITED_FORM_DATA;
 		$purchase_log_sql = "
-			SELECT {$selects}
+			SELECT SQL_CALC_FOUND_ROWS {$selects}
 			FROM " . WPSC_TABLE_PURCHASE_LOGS . " AS p
 			{$joins}
+			WHERE {$where}
 			ORDER BY p.id DESC
 			LIMIT {$offset}, {$per_page}
 		";
 		$this->items = $wpdb->get_results( $purchase_log_sql );
 
-		$total_items = $wpdb->get_var( "SELECT COUNT(*) FROM " . WPSC_TABLE_PURCHASE_LOGS );
+		$total_items = $wpdb->get_var( "SELECT FOUND_ROWS()" );
 
 		$this->set_pagination_args( array(
 			'total_items' => $total_items,
@@ -198,7 +228,13 @@ class WPSC_Purchase_Log_Page
 	    <div class="wrap">
 
 	        <div id="icon-users" class="icon32"><br/></div>
-	        <h2><?php esc_html_e( 'Sales Log' ); ?></h2>
+	        <h2>
+	        	<?php esc_html_e( 'Sales Log' ); ?>
+
+	        	<?php
+	        		if ( isset($_REQUEST['s']) && $_REQUEST['s'] )
+	        			printf( '<span class="subtitle">' . __('Search results for &#8220;%s&#8221;') . '</span>', esc_html( stripslashes( $_REQUEST['s'] ) ) ); ?>
+	        </h2>
 
 	        <!-- Forms are NOT created automatically, so you need to wrap the table in one to use features like bulk actions -->
 	        <form id="purchase-logs-filter" method="post" action="">
