@@ -28,6 +28,11 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 		$joins = array();
 		$i = 1;
 		$selects = array( 'p.id', 'p.totalprice AS amount', 'p.processed AS status', 'p.track_id', 'p.date' );
+		$selects[] = '
+			(
+				SELECT COUNT(*) FROM ' . WPSC_TABLE_CART_CONTENTS . ' AS c
+				WHERE c.purchaseid = p.id
+			) AS item_count';
 		foreach ( $checkout_fields as $field ) {
 			$as = 's' . $i;
 			$selects[] = $as . '.value AS ' . str_replace('billing', '', $field->unique_name );
@@ -37,6 +42,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 
 		$selects = implode( ', ', $selects );
 		$joins = implode( ' ', $joins );
+
 		$submitted_data_log = WPSC_TABLE_SUBMITED_FORM_DATA;
 		$purchase_log_sql = "
 			SELECT {$selects}
@@ -81,7 +87,12 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 	}
 
 	public function column_customer( $item ) {
-		return $item->firstname . ' ' . $item->lastname;
+		?>
+		<strong>
+			<a class="row-title" href="#" title="<?php esc_attr_e( 'View order details', 'wpsc' ) ?>"><?php echo esc_html( $item->firstname . ' ' . $item->lastname ); ?></a>
+		</strong><br />
+		<small><?php echo make_clickable( $item->email ); ?></small>
+		<?php
 	}
 
 	public function column_date( $item ) {
@@ -98,7 +109,10 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 	}
 
 	public function column_amount( $item ) {
-		return wpsc_currency_display( $item->amount );
+		echo '<a href="#" title="' . esc_attr__( 'View order details', 'wpsc' ) . '">';
+		echo wpsc_currency_display( $item->amount ) . "<br />";
+		echo '<small>' . sprintf( _n( '1 item', '%s items', $item->item_count, 'wpsc' ), number_format_i18n( $item->item_count ) ) . '</small>';
+		echo '</a>';
 	}
 
 	public function column_default( $item, $column_name ) {
