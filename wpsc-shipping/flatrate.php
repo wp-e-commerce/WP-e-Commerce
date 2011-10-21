@@ -131,7 +131,7 @@ class flatrate {
 
 				}
 				
-				if ( ! empty( $flatrates[$results] ) ) return array("Flat Rate"=>(float)$flatrates[$results]);
+				if ( isset ( $flatrates[$results] ) ) return array("Flat Rate"=>(float)$flatrates[$results]);
 			}
 
 		} else {
