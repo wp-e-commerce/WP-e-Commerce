@@ -311,24 +311,12 @@ function wpsc_packing_slip( $purchase_id ) {
 					break;
 
 					default:				
-						if( $form_field['name'] == "Cupcakes") {
-							parse_str($rekeyed_input[$form_field['id']]['value'], $cupcakes );
-							
-							foreach( $cupcakes as $product_id => $quantity ) {
-								$product = get_post($product_id);
-								$string .= "(".$quantity.") ".$product->post_title.", ";
-							}
-							
-							$string = rtrim($string, ", ");
-							echo "	<tr><td>".wp_kses($form_field['name'], array() ).":</td><td>".htmlentities(stripslashes($string), ENT_QUOTES, 'UTF-8')."</td></tr>\n\r";
-						} else {
-							if ($form_field['name']=="State" && !empty($purch_data['billing_region']) || $form_field['name']=="State" && !empty($purch_data['billing_region']))
-								echo "";
-							else
-								echo "	<tr><td>".wp_kses($form_field['name'], array() ).":</td><td>".
-									( isset( $rekeyed_input[$form_field['id']] ) ? htmlentities(stripslashes($rekeyed_input[$form_field['id']]['value']), ENT_QUOTES, 'UTF-8') : '' ).
-									"</td></tr>\n\r";
-						}
+                                                                                                if ($form_field['name']=="State" && !empty($purch_data['billing_region']) || $form_field['name']=="State" && !empty($purch_data['billing_region']))
+                                                                                                        echo "";
+                                                                                                else
+                                                                                                        echo "	<tr><td>".wp_kses($form_field['name'], array() ).":</td><td>".
+                                                                                                                ( isset( $rekeyed_input[$form_field['id']] ) ? htmlentities(stripslashes($rekeyed_input[$form_field['id']]['value']), ENT_QUOTES, 'UTF-8') : '' ).
+                                                                                                                "</td></tr>\n\r";
 					break;
 				}
 

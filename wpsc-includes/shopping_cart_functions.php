@@ -120,21 +120,7 @@ function wpsc_country_region_list( $form_id = null, $ajax = false, $selected_cou
 
 	$country_data = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_CURRENCY_LIST . "` ORDER BY `country` ASC", ARRAY_A );
 	$output .= "<div id='$html_form_id'>\n\r";
-	$output .= "<select $supplied_form_id title='$title' name='collected_data[" . $form_id . "][0]' class='current_country' $js >\n\r";
-
-	foreach ( $country_data as $country ) {
-		$selected = '';
-		if ( $country['visible'] == '1' ) {
-			if ( $selected_country == $country['isocode'] ) {
-				$selected = "selected='selected'";
-			}
-			$output .= "<option value='" . $country['isocode'] . "' $selected>" . htmlentities( $country['country'], ENT_QUOTES, 'UTF-8' ) . "</option>\n\r";
-		}
-	}
-
-	$output .= "</select>\n\r";
-
-
+	
 	$region_list    = $wpdb->get_results( "SELECT `" . WPSC_TABLE_REGION_TAX . "`.* FROM `" . WPSC_TABLE_REGION_TAX . "`, `" . WPSC_TABLE_CURRENCY_LIST . "`  WHERE `" . WPSC_TABLE_CURRENCY_LIST . "`.`isocode` IN('" . $selected_country . "') AND `" . WPSC_TABLE_CURRENCY_LIST . "`.`id` = `" . WPSC_TABLE_REGION_TAX . "`.`country_id`", ARRAY_A );
 	$sql            = "SELECT `" . WPSC_TABLE_CHECKOUT_FORMS . "`.`id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `unique_name` = 'shippingstate' ";
 	$region_form_id = $wpdb->get_var( $sql );
@@ -164,6 +150,19 @@ function wpsc_country_region_list( $form_id = null, $ajax = false, $selected_cou
 	}
 
 	$output .= "</div>";
+                    $output .= "<select $supplied_form_id title='$title' name='collected_data[" . $form_id . "][0]' class='current_country' $js >\n\r";
+
+	foreach ( $country_data as $country ) {
+		$selected = '';
+		if ( $country['visible'] == '1' ) {
+			if ( $selected_country == $country['isocode'] ) {
+				$selected = "selected='selected'";
+			}
+			$output .= "<option value='" . $country['isocode'] . "' $selected>" . htmlentities( $country['country'], ENT_QUOTES, 'UTF-8' ) . "</option>\n\r";
+		}
+	}
+
+	$output .= "</select>\n\r";
 	$output .= "</div>\n\r";
 
 	return $output;
