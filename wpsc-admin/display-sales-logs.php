@@ -33,10 +33,10 @@ function wpsc_display_sales_logs() {
 function wpsc_update_purchase_logs_3dot8() {
 	if ( _wpsc_purchlogs_need_update() )
 		wpsc_update_purchase_logs();
-	
+
 	?>
 		<div class="wrap">
-			<h2><?php echo esc_html( __('Sales', 'wpsc') ); ?> </h2>	
+			<h2><?php echo esc_html( __('Sales', 'wpsc') ); ?> </h2>
 			<p><?php printf( __( 'Your purchase logs have been updated! <a href="%s">Click here</a> to return.' , 'wpsc' ), remove_query_arg( 'subpage' ) ); ?></p>
 		</div>
 	<?php
@@ -44,14 +44,14 @@ function wpsc_update_purchase_logs_3dot8() {
 
 function _wpsc_purchlogs_need_update() {
 	global $wpdb;
-	
+
 	if ( get_option( '_wpsc_purchlogs_3.8_updated' ) )
 		return false;
-	
+
 	$c = $wpdb->get_var( "SELECT COUNT(*) FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE plugin_version IN ('3.6', '3.7')" );
 	if ( $c > 0 )
 		return true;
-	
+
 	update_option( '_wpsc_purchlogs_3.8_updated', true );
 	return false;
 }
@@ -119,7 +119,7 @@ function _wpsc_purchlogs_need_update() {
 				<div class='error' style='padding:8px;line-spacing:8px;'><span ><?php printf( __('It has been detected that some of your purchase logs were not updated properly when you upgrade to WP e-Commerce %s. Please <a href="%s">click here</a> to fix this problem.', 'wpsc'), WPSC_VERSION, add_query_arg( 'subpage', 'update-purchase-logs-3.8' ) ); ?></span></div>
 			<?php
 		}
-		
+
       ///// end of update message section //////?>
       <div id='dashboard-widgets' style='min-width: 825px;'>
          <?php /* end of sidebar start of main column */ ?>
@@ -310,7 +310,7 @@ function _wpsc_purchlogs_need_update() {
    <?php
 
  }
-    
+
  function wpsc_purchaselogs_displaylist(){
    global $purchlogs;
   ?>
@@ -335,12 +335,12 @@ function _wpsc_purchlogs_need_update() {
        $date_is_selected['3mnths'] = '';
        $date_is_selected['all'] = '';
 		if( !isset($_GET['view_purchlogs_by']) )
-			 $_GET['view_purchlogs_by'] = '';           
+			 $_GET['view_purchlogs_by'] = '';
         switch($_GET['view_purchlogs_by']) {
                case 'all':
                   $date_is_selected['all'] = 'selected="selected"';
                break;
-              
+
                default:
                case '3mnths':
                case '':
@@ -402,7 +402,7 @@ function _wpsc_purchlogs_need_update() {
                         'rss_key'         => 'key',
                          'start_timestamp'   => $purchlogs->current_start_timestamp,
                          'end_timestamp'  => $purchlogs->current_end_timestamp);
-                         
+
          $piggy_url = 'http://www.bravenewcode.com/store/plugins/piggy/?utm_source=affiliate-6331&utm_medium=affiliates&utm_campaign=wpec#1';
       ?>
       <br />
@@ -496,9 +496,11 @@ function _wpsc_purchlogs_need_update() {
       <td><?php echo wpsc_purchaselog_details_quantity(); ?></td> <!-- QUANTITY! -->
       <td><?php echo wpsc_currency_display( wpsc_purchaselog_details_price() ); ?></td> <!-- PRICE! -->
       <td><?php echo wpsc_currency_display( wpsc_purchaselog_details_shipping() ); ?></td> <!-- SHIPPING! -->
-      <td><?php if(wpec_display_product_tax()) { echo wpsc_currency_display(wpsc_purchaselog_details_tax()); } ?></td> <!-- TAX! -->
+      <?php if( wpec_display_product_tax() ): ?>
+         <td><?php echo wpsc_currency_display( wpsc_purchaselog_details_tax() ); ?></td> <!-- TAX! -->
+      <?php endif; ?>
       <!-- <td><?php echo wpsc_currency_display( wpsc_purchaselog_details_discount() ); ?></td> --> <!-- DISCOUNT! -->
-      <td><?php echo wpsc_currency_display( wpsc_purchaselog_details_total() ); ?></td> <!-- TOTAL! -->
+      <td class="amount"><?php echo wpsc_currency_display( wpsc_purchaselog_details_total() ); ?></td> <!-- TOTAL! -->
    </tr>
 <?php
    endwhile;
