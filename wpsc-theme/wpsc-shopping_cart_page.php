@@ -90,7 +90,7 @@ endif;
    if(wpsc_uses_coupons()): ?>
 
       <?php if(wpsc_coupons_error()): ?>
-         <tr class="wpsc_coupon_row wpsc_coupon_error_row"><td><?php _e('Coupon is not valid.', 'wpsc'); ?></td></tr>
+         <tr class="wpsc_coupon_row wpsc_coupon_error_row"><td colspan="6"><?php _e('Coupon is not valid.', 'wpsc'); ?></td></tr>
       <?php endif; ?>
       <tr class="wpsc_coupon_row">
          <td colspan="2"><?php _e('Enter coupon code', 'wpsc'); ?> :</td>
@@ -450,7 +450,7 @@ endif;
       <?php if(wpsc_has_tnc()) : ?>
          <tr>
             <td colspan='2'>
-                <label for="agree"><input id="agree" type='checkbox' value='yes' name='agree' /> <?php printf(__("I agree to The <a class='thickbox' target='_blank' href='%s' class='termsandconds'>Terms and Conditions</a>", "wpsc"), site_url("?termsandconds=true&amp;width=360&amp;height=400'")); ?></label>
+                <label for="agree"><input id="agree" type='checkbox' value='yes' name='agree' /> <?php printf(__("I agree to The <a class='thickbox' target='_blank' href='%s' class='termsandconds'>Terms and Conditions</a>", "wpsc"), site_url("?termsandconds=true&amp;width=360&amp;height=400")); ?></label>
                </td>
          </tr>
       <?php endif; ?>
