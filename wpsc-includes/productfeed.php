@@ -164,12 +164,26 @@ function wpsc_generate_product_feed() {
 					if ($element_name == 'g:condition')
 						$done_condition = TRUE;
 
+                    if ($element_name == 'g:availability')
+                        $done_availability = true;
 				}
 
 			}
 
             if (!$done_condition)
 				$output .= "      <g:condition>new</g:condition>\n\r";
+
+            if (!$done_availability) {
+
+                if(wpsc_product_has_stock()) :
+                    $product_availability = "in stock";
+                else :
+                    $product_availability = "out of stock";
+                endif ;
+
+                $output .= " <g:availability>$product_availability</g:availability>";
+
+            }
 
 			if ( ! $done_weight ) {
 				$wpsc_product_meta = get_product_meta( $post->ID, 'product_metadata',true );
