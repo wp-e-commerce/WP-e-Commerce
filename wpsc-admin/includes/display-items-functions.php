@@ -355,7 +355,7 @@ function wpsc_product_taxes_forms() {
 		}
 	}// if
 
-?>
+?>			<a name="wpsc_tax"></a>
             <p><?php echo $wpec_taxes_controller->wpec_taxes_display_tax_bands( $band_select_settings, $wpec_taxes_band ); ?></p>
 				<p>
 					<?php if ( !$wpec_taxes_controller->wpec_taxes_isincluded() ): ?>
@@ -395,9 +395,12 @@ function wpsc_product_variation_forms() {
 	}
 ?>
 				<?php if ( empty( $post->post_title ) ) : ?>
-					<p><?php _e( 'You must first save this Product as a Draft before adding variations', 'wpsc' ); ?></p>
+					<p><?php _e( 'You must first save this Product as a Draft before adding variations.', 'wpsc' ); ?></p>
+					<h4><a href="<?php echo get_admin_url(); ?>/edit-tags.php?taxonomy=wpsc-variation&post_type=wpsc-product" target="_blank">+ Add New Variation Set</a></h4>
 				<?php else : ?>
 				<div id="product_variations">
+				<p><a name='variation_control'>&nbsp;</a><?php _e( 'Select the Variation sets and then the corresponding Variants you want to add to this product.', 'wpsc' ) ?></p>
+				
 			<div class="variation_checkboxes">
 				<?php
 
@@ -410,8 +413,9 @@ function wpsc_product_variation_forms() {
 
 				?>
 			</div>
-                                <a class="preview button update_variations_action" href='#'><?php _e( 'Update Variations &rarr;', 'wpsc' ); ?></a>
+			<a class="preview button update_variations_action" href='#'><?php _e( 'Add Variations &rarr;', 'wpsc' ); ?></a><div class="clear"></div>
 
+			<h4><a href="http://localhost:8888/word16/wp-admin/edit-tags.php?taxonomy=wpsc-variation&post_type=wpsc-product" target="_blank">+ Add New Variation Set</a></h4>            
 				</div>
 	<?php
 	$parent_product = $post->ID;
@@ -441,7 +445,7 @@ function wpsc_product_variation_forms() {
 		$parent_product_data = null;
 ?>
 
-			<p><a name='variation_control'>&nbsp;</a><?php _e( 'Check or uncheck variation boxes and then click Update Variations to add or remove variations.', 'wpsc' ) ?></p>
+			
 
                         <table class="widefat page" id='wpsc_product_list' cellspacing="0">
 				<thead>
@@ -525,7 +529,7 @@ function wpsc_product_shipping_forms() {
 	}
 	if( !isset( $product_meta['no_shipping'] ) )
 		$product_meta['no_shipping'] = '';
-?>
+?>		<a name="wpsc_shipping"></a>
 		<table>
 
      <!--USPS shipping changes-->
@@ -804,6 +808,7 @@ function wpsc_product_download_forms() {
 	$upload_max = wpsc_get_max_upload_size();
 ?>
 	<?php echo wpsc_select_product_file( $post->ID ); ?>
+	<a name="wpsc_downloads"></a>
 	<h4><?php _e( 'Upload New File', 'wpsc' ); ?>:</h4>
 	<input type='file' name='file' value='' /><br /><?php _e( 'Max Upload Size', 'wpsc' ); ?>:<span><?php echo $upload_max; ?></span><br /><br />
 	<h4><a href="admin.php?wpsc_admin_action=product_files_existing&product_id=<?php echo $post->ID; ?>" class="thickbox" title="<?php printf( __( 'Select all downloadable files for %s', 'wpsc' ), $post->post_title ); ?>"><?php _e( 'Select from existing files', 'wpsc' ); ?></a></h4>
