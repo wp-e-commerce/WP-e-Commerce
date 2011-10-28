@@ -770,3 +770,26 @@ function editinline_get_id(){
 
 
 }
+
+/* add new variations via the product page */
+/* Hide the divs on start up */
+
+jQuery(document).ready(function(){
+	jQuery("div.add_new_variation").hide();
+	jQuery("div.add_variant").hide();
+});
+
+/* open them when the link is pushed */
+jQuery(".add_variation_set_action").livequery(function(){
+	jQuery(this).click(function() {
+	jQuery("div.add_new_variation").slideDown();
+	});
+});
+
+jQuery(".add_variation_set").livequery(function(){
+	jQuery(this).click(function() {
+	jQuery("div.add_variant").show();
+	});
+});
+
+
