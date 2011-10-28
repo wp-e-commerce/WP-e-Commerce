@@ -1573,6 +1573,10 @@ function wpsc_add_variation_set(){
 	/* This is the parent term / vartiation set we will save this first */
 	$variation_set_term = $_POST['variation_set'];
 	$variants = $_POST['variant'];
+	$variants = explode( ',' , $variants[0] );
+
+	
+	
 	wp_insert_term( $variation_set_term, 'wpsc-variation', $args = array() );
 	
 	/* now get the parent id so we can save all the kids*/
