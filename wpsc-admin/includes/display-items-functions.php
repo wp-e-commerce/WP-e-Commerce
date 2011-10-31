@@ -414,28 +414,35 @@ function wpsc_product_variation_forms() {
 
 				?>
 			</div>
-			<a class="preview button update_variations_action" href='#'><?php _e( 'Apply Variations &rarr;', 'wpsc' ); ?></a><div class="clear"></div>
-		
+			
+			<a class="preview button update_variations_action" href='#'><?php _e( 'Apply Variations &rarr;', 'wpsc' ); ?></a>
+			<div class="clear"></div>
 			<h4><a href="#wpsc_variation_metabox" class="add_variation_set_action">+ Add New Variation Set</a></h4>
 			<!-- will be hidden by default until the link is clicked -->
-			<div class="add_new_variation">
-					<h4>Add Variation Set</h4>
+			<div id="add_new_variation">
+				<h4>Add Variation Set</h4>
 				<form method="post"  action="">
 				<p><input id="variation_set" class="text wpsc_variantion" size="28" type="text" name="variation_set" /></p>
 				<span class="variation_set_name_error"></span>
 				<p><input type='hidden' name='wpsc_admin_action' value='add_variation_set' /></p>
 				<p><button type="button"class='button add_variation_set'>Add Variation Set</button></p>
 				<p><input type='submit' class='button-primary wpsc-save-variation-set' value='Save Variation Set' /></p>
-			</div> 
-			<div class="wpsc_add_variation_desc">
-				<p class="description">Add the name of your variation set eg:Size. If you would like to add variants to a set you ahve already created then enter in the name of that variation set.</p>
 			</div>
-			<div class="add_variant">
-			<h4>Add <span class="variation_set_name"></span> Variants</h4>
-			<p><input class="text wpsc_variant" size="28" type="text" name="variant[]" /> <button class="wpsc_add_variant" type="button"class='button'>Add</button></p>
-			<div id="product_variant_list" class="tagchecklist"></div>
-			</div><!--  close add variant -->		
-			<div id="wpsc_add_variant_desc"><p class="description">Variants can be comma separated eg: Red, Green, Blue.</p> <p class="howto"> You can also use the add button to add them one at a time.</p></div>			
+			
+			<div id="wpsc_add_variation_desc">
+				<p class="description">Add the name of your variation set eg:Size. If you would like to add variants to a set you ahve already created then enter in the name of that variation set.</p>
+			</div> 
+			
+			<div id="wpsc_add_variant">
+				<h4>Add <span id="variation_set_name"></span> Variants</h4>
+				<p><input class="text wpsc_variant" size="28" type="text" name="variant" /> 
+				<button id="wpsc_add_variant_button" type="button"class='button'>Add</button></p>
+				</form>
+				<!-- the variant list will go in this empty div as they get added -->
+				<div id="product_variant_list" class="tagchecklist"></div>
+			</div>
+				
+			<div id="wpsc_add_variant_desc"><p class="description">Variants can be comma separated eg: Red, Green, Blue.</p></div>			
 		
 			</div>
 	<?php
@@ -465,10 +472,7 @@ function wpsc_product_variation_forms() {
 	if ( !isset( $parent_product_data ) )
 		$parent_product_data = null;
 ?>
-
-			
-
-                        <table class="widefat page" id='wpsc_product_list' cellspacing="0">
+			<table class="widefat page" id='wpsc_product_list' cellspacing="0">
 				<thead>
 					<tr>
 						<?php print_column_headers( 'wpsc-product_variants' ); ?>
