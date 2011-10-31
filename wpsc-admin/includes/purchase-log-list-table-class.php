@@ -239,6 +239,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 			'deleted',
 			'updated',
 			'paged',
+			's',
 		) );
 		$all_class = ( ( empty( $_REQUEST['status'] ) || $_REQUEST['status'] == 'all' ) && empty( $_REQUEST['m'] ) && empty( $_REQUEST['s'] ) ) ? 'class="current"' : '';
 		$views = array(
@@ -263,6 +264,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 				'action2',
 				'm',
 				'paged',
+				's',
 			), $href );
 			$class = ( ! empty( $_REQUEST['status'] ) && $_REQUEST['status'] == $status ) ? 'class="current"' : '';
 			$views[$status] = sprintf(
