@@ -123,7 +123,7 @@
 			</thead>
 
 			<tbody>
-				<?php wpsc_display_purchlog_details(); ?>
+				<?php $this->purchase_log_cart_items(); ?>
 
 				<tr class="wpsc_purchaselog_start_totals">
 					<td colspan="<?php echo $cols; ?>">

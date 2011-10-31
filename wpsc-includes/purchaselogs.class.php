@@ -433,6 +433,17 @@ function wpec_display_purchlog_taxes( $numeric = false ) {
 	return wpsc_display_purchlog_taxes( $numeric );
 }
 
+/**
+ * @description: determines whether or not to display the product tax or not
+ * @return: boolean
+**/
+function wpec_display_product_tax()
+{
+   global $purchlogitem;
+   return ($purchlogitem->extrainfo->wpec_taxes_total == 0.00) ? true : false;
+}// wpec_display_product_tax
+
+
 function wpsc_display_purchlog_taxes( $numeric = false ) {
 	global $purchlogitem;
 	return ($numeric) ? $purchlogitem->extrainfo->wpec_taxes_total : wpsc_currency_display( $purchlogitem->extrainfo->wpec_taxes_total,array( 'display_as_html' => false ) );
