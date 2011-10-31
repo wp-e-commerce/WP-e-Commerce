@@ -557,11 +557,16 @@ class WPSC_Purchase_Log_Page
 		include( 'purchase-logs-page/item-details.php' );
 	}
 
+	public function download_csv() {
+		$_GET['rss_key'] = 'key';
+		wpsc_purchase_log_csv();
+	}
+
 	public function process_bulk_action() {
 		global $wpdb;
 		$current_action = $this->list_table->current_action();
 
-		if ( ! $current_action || empty( $_REQUEST['post'] ) ) {
+		if ( ! $current_action || ( $current_action != 'download_csv' && empty( $_REQUEST['post'] ) ) ) {
 			if ( ! empty( $_REQUEST['_wp_http_referer'] ) ) {
 				wp_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'action', 'action2' ), stripslashes($_SERVER['REQUEST_URI']) ) );
 	 			exit;
@@ -569,6 +574,11 @@ class WPSC_Purchase_Log_Page
 
 			unset( $_REQUEST['post'] );
 			return;
+		}
+
+		if ( $current_action == 'download_csv' ) {
+			$this->download_csv();
+			exit;
 		}
 
 		$sendback = remove_query_arg( array(
