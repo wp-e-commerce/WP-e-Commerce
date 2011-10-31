@@ -802,20 +802,52 @@ jQuery("button.wpsc_add_variant").livequery(function(){
 	
 	jQuery.post(ajaxurl, data, function(data) {
 			var variant_id = jQuery(data).find('variant_id').text();
-			alert(variant_id);
-			jQuery("div.tagchecklist").append('<span><a id="wpsc_variant_'+variant_id+'" class="ntdelbutton">X</a>'+variant+'</span>');
-		/* 	} */
+			var has_multi_add = variant_id.search(',');
+			/* search found no commas in the string so we know these variants have not been coma seperated */
+			if (has_multi_add == -1){
+/* 			finally create the tag box we append the newly created variant id as we will need to call this out again if the delete link gets pushed */
+			jQuery("div.tagchecklist").append('<span id="wpsc_remove_variant_'+variant_id+'"><a id="wpsc_variant_'+variant_id+'" class="wpsc_variant_delete">X</a>&nbsp;'+variant+' </span>');
+			}else{
+				var variant_id_array = new Array();
+				var variant_name_array = new Array();
+				
+				variant_name_array = variant.split(",");
+				variant_id_array = variant_id.split(",");
+				
+				jQuery.each(variant_id_array, function(k, v) {
+					jQuery("div.tagchecklist").append('<span id="wpsc_remove_variant_'+v+'"><a id="wpsc_variant_'+v+'" class="wpsc_variant_delete">X</a>&nbsp;'+variant_name_array[k]+' </span>');
+				});
+				
+			//alert(variant_id_array);
+			}
 		});
 		
 		//we can now show the save button because we have aleast one variant added
 		jQuery("input.wpsc-save-variation-set").show();
 		//reset the value back in the variation box to nothing
 		jQuery("input.wpsc_variant").val('');
-		jQuery("span.variant_value").text(variant);
-		//Create the tag look for each variants
-		
-		
+		jQuery("span.variant_value").text(variant);		
 	});
 });
+
+jQuery("a.wpsc_variant_delete").livequery(function(){
+	jQuery(this).click(function() {
+	var variant_id = jQuery(this).attr('id').split("wpsc_variant_");
+ 	variant_id = variant_id[variant_id.length - 1];
+	var data = {
+			action: 	'wpsc_delete_variant_from_products_page',
+			variant_id: variant_id
+		};
+		
+	jQuery.post(ajaxurl, data, function(data) {
+		//once sent off and deleted we want to remove the span displaying the variant 
+		jQuery("span#wpsc_remove_variant_"+variant_id).remove();
+
+	});
+
+
+	});
+});
+
 	
 
