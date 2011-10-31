@@ -806,7 +806,7 @@ jQuery("button.wpsc_add_variant").livequery(function(){
 			/* search found no commas in the string so we know these variants have not been coma seperated */
 			if (has_multi_add == -1){
 /* 			finally create the tag box we append the newly created variant id as we will need to call this out again if the delete link gets pushed */
-			jQuery("div.tagchecklist").append('<span id="wpsc_remove_variant_'+variant_id+'"><a id="wpsc_variant_'+variant_id+'" class="wpsc_variant_delete">X</a>&nbsp;'+variant+' </span>');
+			jQuery("div#product_variant_list").append('<span id="wpsc_remove_variant_'+variant_id+'"><a id="wpsc_variant_'+variant_id+'" class="wpsc_variant_delete">X</a>&nbsp;'+variant+' </span>');
 			}else{
 				var variant_id_array = new Array();
 				var variant_name_array = new Array();
@@ -815,7 +815,7 @@ jQuery("button.wpsc_add_variant").livequery(function(){
 				variant_id_array = variant_id.split(",");
 				
 				jQuery.each(variant_id_array, function(k, v) {
-					jQuery("div.tagchecklist").append('<span id="wpsc_remove_variant_'+v+'"><a id="wpsc_variant_'+v+'" class="wpsc_variant_delete">X</a>&nbsp;'+variant_name_array[k]+' </span>');
+					jQuery("div#product_variant_list").append('<span id="wpsc_remove_variant_'+v+'"><a id="wpsc_variant_'+v+'" class="wpsc_variant_delete">X</a>&nbsp;'+variant_name_array[k]+' </span>');
 				});
 				
 			//alert(variant_id_array);
