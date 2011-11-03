@@ -492,7 +492,9 @@ jQuery(document).ready(function(){
 		if(null != value){
 			value = value.replace(/<span class="?asterix"?>\*<\/span>/i,'');
 		}
-		jQuery(this).inlineFieldLabel({label:jQuery.trim(value)});
+		
+		if( jQuery.fn.inlineFieldLabel )
+		    jQuery(this).inlineFieldLabel({label:jQuery.trim(value)});
 		if(real_value != '')
 			jQuery(this).val(real_value).removeClass('intra-field-label');
 	});
