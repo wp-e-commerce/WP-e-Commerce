@@ -97,13 +97,19 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 		$where = implode( ' AND ', $where );
 		$limit = ( $this->per_page !== 0 ) ? "LIMIT {$offset}, {$this->per_page}" : '';
 
+		$orderby = empty( $_REQUEST['orderby'] ) ? 'p.id' : 'p.' . $_REQUEST['orderby'];
+		$order = empty( $_REQUEST['order'] ) ? 'DESC' : $_REQUEST['order'];
+
+		$orderby = esc_sql( $orderby );
+		$order = esc_sql( $order );
+
 		$submitted_data_log = WPSC_TABLE_SUBMITED_FORM_DATA;
 		$purchase_log_sql = "
 			SELECT SQL_CALC_FOUND_ROWS {$selects}
 			FROM " . WPSC_TABLE_PURCHASE_LOGS . " AS p
 			{$joins}
 			WHERE {$where}
-			ORDER BY p.id DESC
+			ORDER BY {$orderby} {$order}
 			{$limit}
 		";
 		$this->items = $wpdb->get_results( $purchase_log_sql );
@@ -135,7 +141,8 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 
 		return array(
 			'date'   => 'id',
-			'status' => 'status',
+			'status' => 'processed',
+			'amount' => 'totalprice',
 		);
 	}
 
@@ -235,8 +242,10 @@ class WPSC_Purchase_Log_Page
 		global $wpdb;
 		$current_action = $this->list_table->current_action();
 
-		if ( $current_action == -1 )
+		if ( ! $current_action ) {
+			unset( $_REQUEST['post'] );
 			return;
+		}
 
 		if ( $current_action == 'delete' ) {
 
