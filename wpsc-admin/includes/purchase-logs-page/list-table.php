@@ -8,7 +8,7 @@
 				printf( '<span class="subtitle">' . __('Search results for &#8220;%s&#8221;') . '</span>', esc_html( stripslashes( $_REQUEST['s'] ) ) ); ?>
 	</h2>
 
-	<form id="purchase-logs-search" method-"get" action="">
+	<form id="purchase-logs-search" method="get" action="">
 		<input type="hidden" name="page" value="<?php echo esc_attr( $_REQUEST['page'] ); ?>" />
 		<?php $this->list_table->search_box( 'Search Sales Logs', 'post' ); ?>
 	</form>
