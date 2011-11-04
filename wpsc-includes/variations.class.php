@@ -50,17 +50,17 @@ class wpsc_variations {
 				$this->variation_groups[] = $product_term;
 			}
 		}
-				// Filters to hook into variations to sort etc.
+		// Filters to hook into variations to sort etc.
 		$this->variation_groups = apply_filters( 'wpsc_variation_groups', $this->variation_groups, $product_id );
 		$this->all_associated_variations = apply_filters( 'wpsc_all_associated_variations', $this->all_associated_variations, $this->variation_groups, $product_id );
 		
 		//the parent_id is the variation group id we need to use this to alter the object (variants)
 		// inside each of these arrays
 		$parent_ids = array_keys($this->all_associated_variations);
-			foreach((array)$parent_ids as $parent_id){
-				//sort the variants by their sort order
+			foreach( (array)$parent_ids as $parent_id ){
+				//sort the variants by their term_order which is the array key
 				ksort($this->all_associated_variations[$parent_id]);
-				//once sorted renmumber the array keys back from 0
+				//once sorted renumber the array keys back from 0
 				$this->all_associated_variations[$parent_id] = array_values($this->all_associated_variations[$parent_id]);
 		}
 		
