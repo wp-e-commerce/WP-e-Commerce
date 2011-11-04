@@ -324,7 +324,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 										if ( in_array( $form_field->type, array( 'select', 'radio', 'checkbox' ) ) )
 											echo 'style="display:inline;"';
 									?>
-								><?php esc_html_e( 'Edit Options' ); ?></a>
+								><?php esc_html_e( 'Edit Options', 'wpsc' ); ?></a>
 							<?php endif ?>
 							</div>
 						</td>
@@ -366,7 +366,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 							<input type="text" name="new_field_name[0]" value="" />
 						</div>
 					</td>
-					<td class="typecol" colspan="2">
+					<td class="typecol">
 						<div class="cell-wrapper">
 							<select name="new_field_type[0]">
 								<?php foreach ( $this->field_types as $name => $type ): ?>
@@ -374,6 +374,9 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 								<?php endforeach ?>
 							</select>
 						</div>
+					</td>
+					<td class="uniquenamecol">
+						<a class="edit-options" href="#"><?php esc_html_e( 'Edit Options', 'wpsc' ); ?></a>
 					</td>
 					<td class="displaycol">
 						<div class="cell-wrapper">
@@ -387,8 +390,8 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 					</td>
 					<td class="actionscol">
 						<div class="cell-wrapper">
-							<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="action add" href="#">Add</a>
 							<a tabindex="-1" title="<?php _e( 'Delete Field', 'wpsc' ); ?>" class="action delete" href="#">Delete</a>
+							<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="action add" href="#">Add</a>
 						</div>
 					</td>
 			</tr>

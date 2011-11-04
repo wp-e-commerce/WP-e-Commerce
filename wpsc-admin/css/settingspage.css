@@ -35,6 +35,10 @@ th.column-unique_name {
 	vertical-align:middle;
 }
 
+#wpsc_checkout_list .uniquenamecol small {
+	color:#999;
+}
+
 td.drag a img {
 	vertical-align:middle;
 }
