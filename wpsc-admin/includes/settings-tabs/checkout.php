@@ -86,6 +86,18 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 				$data_format[] = '%d';
 			}
 
+			if ( isset( $_POST['form_options'][$field_id]['label'] ) )  {
+				$options = array();
+				foreach( $_POST['form_options'][$field_id]['label'] as $key => $label ) {
+					$value = $_POST['form_options'][$field_id]['value'][$key];
+					if ( $label === '' && $value === '')
+						continue;
+					$options[$label] = $value;
+				}
+				$data['options'] = serialize( $options );
+				$data_format[] = '%s';
+			}
+
 			$index = array_search( $field_id, $ids );
 			if ( $index !== false ) {
 				unset( $ids[$index] );
@@ -121,6 +133,19 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 			if ( isset( $new_field_orders[$key] ) ) {
 				$data['checkout_order'] = $new_field_orders[$key];
 				$data_format[] = '%d';
+			}
+
+			if ( isset( $_POST['new_field_options'][$key]['label'] ) )  {
+				$options = array();
+				foreach( $_POST['new_field_options'][$key]['label'] as $index => $label ) {
+					$value = $_POST['new_field_options'][$key]['value'][$index];
+					if ( $label === '' && $value === '')
+						continue;
+					$options[$label] = $value;
+				}
+
+				$data['options'] = serialize( $options );
+				$data_format[] = '%s';
 			}
 
 			$wpdb->insert( WPSC_TABLE_CHECKOUT_FORMS, $data, $data_format );
