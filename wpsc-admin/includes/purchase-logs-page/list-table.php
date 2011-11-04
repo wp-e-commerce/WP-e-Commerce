@@ -14,12 +14,13 @@
 	</form>
 
 	<!-- Forms are NOT created automatically, so you need to wrap the table in one to use features like bulk actions -->
-	<form id="purchase-logs-filter" method="post" action="">
+	<form id="purchase-logs-filter" method="get" action="">
 		<?php do_action( 'wpsc_purchase_logs_list_table_before' ); ?>
 		<!-- For plugins, we also need to ensure that the form posts back to our current page -->
 		<!-- Now we can render the completed list table -->
 
 		<?php $this->list_table->display() ?>
+		<input type="hidden" name="page" value="wpsc-purchase-logs" />
 		<?php do_action( 'wpsc_purchase_logs_list_table_after' ); ?>
 	</form>
 

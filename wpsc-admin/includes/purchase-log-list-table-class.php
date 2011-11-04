@@ -10,6 +10,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 	private $search_box = true;
 	private $bulk_actions = true;
 	private $sortable = true;
+	private $month_filter = true;
 	private $per_page = 20;
 
 	public function __construct() {
@@ -28,6 +29,10 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 
 	public function disable_bulk_actions() {
 		$this->bulk_actions = false;
+	}
+
+	public function disable_month_filter() {
+		$this->month_filter = false;
 	}
 
 	public function set_per_page( $per_page ) {
@@ -92,6 +97,14 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 			$where[] = $search_sql;
 		}
 
+		// filter by month
+		if ( ! empty( $_REQUEST['m'] ) ) {
+			$year = (int) substr( $_REQUEST['m'], 0, 4);
+			$month = (int) substr( $_REQUEST['m'], -2 );
+			$where[] = "YEAR(FROM_UNIXTIME(date)) = " . esc_sql( $year );
+			$where[] = "MONTH(FROM_UNIXTIME(date)) = " . esc_sql( $month );
+		}
+
 		$selects = implode( ', ', $selects );
 		$joins = implode( ' ', $joins );
 		$where = implode( ' AND ', $where );
@@ -145,6 +158,66 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 			'status' => 'processed',
 			'amount' => 'totalprice',
 		);
+	}
+
+	private function get_months() {
+		global $wpdb;
+
+		// "date" column is not indexed. Might be better to use transient just in case
+		// there are lots of logs
+		$today = getdate();
+		$transient_key = 'wpsc_purchase_logs_months_' . $today['year'] . $today['month'];
+		if ( $months = get_transient( $transient_key ) )
+			return $months;
+
+		$sql = "
+			SELECT DISTINCT YEAR(FROM_UNIXTIME(date)) AS year, MONTH(FROM_UNIXTIME(date)) AS month
+			FROM " . WPSC_TABLE_PURCHASE_LOGS . "
+			ORDER BY date DESC
+		";
+
+		$months = $wpdb->get_results( $sql );
+		set_transient( $transient_key, $months, 60 * 24 * 7 );
+		return $months;
+	}
+
+	public function months_dropdown() {
+		global $wp_locale;
+
+		if ( ! $this->month_filter )
+			return false;
+
+		$m = isset( $_REQUEST['m'] ) ? $_REQUEST['m'] : 0;
+
+		$months = $this->get_months();
+		if ( ! empty( $months ) ) {
+			?>
+			<select name="m">
+				<option <?php selected( 0, $m ); ?> value="0"><?php _e( 'Show all dates' ); ?></option>
+				<?php
+				foreach ( $months as $arc_row ) {
+					$month = zeroise( $arc_row->month, 2 );
+					$year = $arc_row->year;
+
+					printf( "<option %s value='%s'>%s</option>\n",
+						selected( $arc_row->year . $month, $m, false ),
+						esc_attr( $arc_row->year . $month ),
+						$wp_locale->get_month( $month ) . ' ' . $year
+					);
+				}
+				?>
+			</select>
+			<?php
+			submit_button( __( 'Filter' ), 'secondary', false, false, array( 'id' => 'post-query-submit' ) );
+		}
+	}
+
+	public function extra_tablenav( $which ) {
+		if ( $which == 'top' ) {
+			echo '<div class="alignleft actions">';
+			$this->months_dropdown();
+			echo '</div>';
+		}
 	}
 
 	public function column_cb( $item ){
@@ -361,6 +434,11 @@ class WPSC_Purchase_Log_Page
 		$current_action = $this->list_table->current_action();
 
 		if ( ! $current_action ) {
+			if ( ! empty( $_REQUEST['_wp_http_referer'] ) ) {
+				wp_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'action', 'action2' ), stripslashes($_SERVER['REQUEST_URI']) ) );
+	 			exit;
+			}
+
 			unset( $_REQUEST['post'] );
 			return;
 		}
@@ -372,6 +450,7 @@ class WPSC_Purchase_Log_Page
 				$this->list_table->disable_search_box();
 				$this->list_table->disable_bulk_actions();
 				$this->list_table->disable_sortable();
+				$this->list_table->disable_month_filter();
 				$this->list_table->set_per_page(0);
 				add_action( 'wpsc_purchase_logs_list_table_before', array( $this, 'action_list_table_before' ) );
 				return;
