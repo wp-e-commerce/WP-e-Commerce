@@ -131,7 +131,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 	}
 
 	/**
-	 * Determine whether this field can be deleted.
+	 * Determine whether this field is default or not.
 	 *
 	 * We do not let default fields to be deleted from 3.8.8. However, if the user upgrades from
 	 * 3.7.x, the "default" column of the checkout form table does not correctly specify
@@ -140,17 +140,20 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 	 * Also, if in any case the user has deleted a default field in versions older than 3.8.8,
 	 * the field's "active" column will be set to 0. We should let users delete those fields as well.
 	 *
-	 * As a result, to determine whether a field is delete-able or not, we have to rely on the field's
+	 * As a result, to determine whether a field is default or not, we have to rely on the field's
 	 * unique name and "active" status.
 	 *
-	 * @param  {[type]} $unique_name [description]
-	 * @return {Boolean}
+	 * @param  {Object} $field Field object
+	 * @return {Boolean} True if the field is default.
 	 */
-	private function is_field_deleteable( $field ) {
+	private function is_field_default( $field ) {
 		global $wpdb;
 
-		if ( empty( $field->unique_name) || $this->current_checkout_set !== 0 || empty( $field->active ) )
+		if ( $field->default == 1 )
 			return true;
+
+		if ( empty( $field->unique_name) || $this->current_checkout_set !== 0 || empty( $field->active ) )
+			return false;
 
 		$default_fields = array(
 				'billingfirstname',
@@ -173,9 +176,9 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 			);
 
 		if ( in_array( $field->unique_name, $default_fields ) )
-			return false;
+			return true;
 
-		return true;
+		return false;
 	}
 
 	public function display() {
@@ -270,7 +273,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 
 			<tbody id='wpsc_checkout_list_body'>
 				<?php foreach ( $this->form_fields as $form_field ): ?>
-					<tr id="checkout_<?php echo esc_attr( $form_field->id ); ?>" class="checkout_form_field">
+					<tr data-field-id="<?php echo esc_attr( $form_field->id ); ?>" id="checkout_<?php echo esc_attr( $form_field->id ); ?>" class="checkout_form_field">
 						<td class="drag">
 							<div class="cell-wrapper">
 								<a title="<?php esc_attr_e( 'Click and Drag to Order Checkout Fields', 'wpsc' ); ?>">
@@ -284,23 +287,47 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 								<input type="text" name="form_name[<?php echo esc_attr( $form_field->id ); ?>]" value="<?php echo esc_attr( $form_field->name ); ?>" />
 							</div>
 						</td>
-						<td class="typecol"
-							<?php
-								if ( empty( $form_field->unique_name ) || $form_field->type == 'heading' )
-									echo 'colspan="2"';
-							 ?>
-						>
+						<td class="typecol">
 							<div class="cell-wrapper">
-								<strong><?php echo esc_html( $form_field->type ); ?></strong>
+								<?php if ( $this->is_field_default( $form_field ) ): ?>
+									<strong><?php echo esc_html( $form_field->type ); ?></strong>
+								<?php else: ?>
+									<select name="form_type[<?php echo esc_attr( $form_field->id ); ?>]">
+										<?php foreach ($this->field_types as $label => $name): ?>
+											<option <?php selected( $form_field->type, $name ); ?> value="<?php echo esc_attr( $name ); ?>"><?php echo esc_html( $label ); ?></option>
+										<?php endforeach ?>
+									</select>
+									<?php
+									$field_options = unserialize( $form_field->options );
+									if ( empty( $field_options ) )
+										$field_options = array();
+
+									$i = 0;
+									foreach ( $field_options as $label => $value ):
+										$i ++;
+										?>
+										<input type="hidden" name="form_options[<?php echo esc_attr( $form_field->id ); ?>][label][]" value="<?php echo esc_attr( $label ); ?>" />
+										<input type="hidden" name="form_options[<?php echo esc_attr( $form_field->id ); ?>][value][]" value="<?php echo esc_attr( $value ); ?>" />
+									<?php endforeach; ?>
+								<?php endif; ?>
 							</div>
 						</td>
-						<?php if ( $form_field->type != 'heading' && ! empty( $form_field->unique_name ) ): ?>
-							<td class="uniquenamecol">
-								<div class="cell-wrapper">
-									<small><?php echo esc_html( $form_field->unique_name ); ?></small>
-								</div>
-							</td>
-						<?php endif ?>
+
+						<td class="uniquenamecol">
+							<div class="cell-wrapper">
+							<?php if ( $form_field->type != 'heading' && ! empty( $form_field->unique_name ) ): ?>
+								<small><?php echo esc_html( $form_field->unique_name ); ?></small>
+							<?php else: ?>
+								<a
+									class="edit-options" href="#"
+									<?php
+										if ( in_array( $form_field->type, array( 'select', 'radio', 'checkbox' ) ) )
+											echo 'style="display:inline;"';
+									?>
+								><?php esc_html_e( 'Edit Options' ); ?></a>
+							<?php endif ?>
+							</div>
+						</td>
 						<td class="displaycol">
 							<div class="cell-wrapper">
 								<input <?php checked( $form_field->active, 1 ); ?> type="checkbox" name="form_display[<?php echo esc_attr( $form_field->id ); ?>]" value="1" />
@@ -315,12 +342,12 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 						</td>
 						<td class="actionscol">
 							<div class="cell-wrapper">
-								<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="action add" href="#">Add</a>
-								<?php if ( $this->is_field_deleteable( $form_field ) ): ?>
+								<?php if ( ! $this->is_field_default( $form_field ) ): ?>
 									<a tabindex="-1" title="<?php _e( 'Delete Field', 'wpsc' ); ?>" class="action delete" href="#">Delete</a>
 								<?php else: ?>
 									<span title="<?php _e( 'Cannot Delete Default Fields', 'wpsc' ); ?>" class="action delete">Delete</span>
 								<?php endif; ?>
+								<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="action add" href="#">Add</a>
 							</div>
 						</td>
 					</tr>
@@ -364,26 +391,46 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 							<a tabindex="-1" title="<?php _e( 'Delete Field', 'wpsc' ); ?>" class="action delete" href="#">Delete</a>
 						</div>
 					</td>
+			</tr>
+			<tr id="field-options-prototype" class="form-field-options">
+					<td colspan="2"></td>
+					<td colspan="2">
+						<div class="cell-wrapper">
+							<h4></h4>
+							<table class="wpsc-field-options-table">
+								<thead>
+									<th class="column-labels"><?php echo esc_html( _x( 'Label', "checkout field's options", 'wpsc' ) ); ?></th>
+									<th class="column-values"><?php echo esc_html( _x( 'Value', "checkout field's options", 'wpsc' ) ) ?></th>
+									<th class="column-actions">&nbsp;</th>
+								</thead>
+								<tbody>
+									<tr class="new-option">
+										<td class="column-labels">
+											<div class="field-option-cell-wrapper">
+												<input type="text" name="form_options[0][labels][]" value="" />
+											</div>
+										</td>
+										<td class="column-values">
+											<div class="field-option-cell-wrapper">
+												<input type="text" name="form_options[0][values][]" value="" />
+											</div>
+										</td>
+										<td class="column-actions">
+											<div class="field-option-cell-wrapper">
+												<a tabindex="-1" title="<?php _e( 'Delete Field', 'wpsc' ); ?>" class="action delete" href="#">Delete</a>
+												<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="action add" href="#">Add</a>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</td>
+					<td colspan="3"></td>
 				</tr>
 			</tbody>
 		</table>
 		<p><a href='#' onclick='return add_form_field();'><?php _e('Add New Form Field', 'wpsc');?></a></p>
-				<?php
-/*					echo "<select class='wpsc_checkout_selectboxes' name='form_type[".$form_field['id']."]'>";
-					foreach($form_types as $form_type_name => $form_type) {
-						$selected = '';
-						if($form_type === $form_field['type']) {
-							$selected = "selected='selected'";
-						}
-						echo "<option value='".$form_type."' ".$selected.">" . $form_type_name . "</option>";
-					}
-
-					echo "</select>";
-					if(in_array($form_field['type'], array('select','radio','checkbox'))){
-						echo "<a class='wpsc_edit_checkout_options' rel='form_options[".$form_field['id']."]' href=''>" . __('more options', 'wpsc') . "</a>";
-					}
-				} */
-		  ?>
 	<?php
 	}
 }
