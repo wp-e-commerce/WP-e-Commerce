@@ -27,7 +27,7 @@ if(!class_exists('WPSC_Purchase_Log_Table')){
 	    //Build row actions
 	    $actions = array(
 	        'delete'    => sprintf('<a href="?page=%s&action=%s&post=%s">Delete</a>',$_REQUEST['page'],'delete',$item['id']),
-	        'view'    => sprintf('<a href="?page=%s&p=view&purchlog_id=%s">View</a>',/* $_REQUEST['page'] */ 'wpsc-sales-logs',$item['id']),
+	        'view'    => sprintf('<a href="?page=%s&action=%s&post=%s">View</a>',$_REQUEST['page'],'view',$item['id']),
 	        'tracking'    => sprintf('<a href="?page=%s&wpsc_admin_action=%s&movie=%s">Add Tracking #</a>',$_REQUEST['page'],'tracking',$item['ID']),
 	
 	    );
@@ -87,7 +87,7 @@ if(!class_exists('WPSC_Purchase_Log_Table')){
 	 	       
 	     
 	/* processed column - this is the order status column */
-	function column_processed($item, $column_name){
+	function column_processed($item){
 		   if(!wpsc_purchlogs_is_google_checkout()){ ?>
 		 <img src="<?php echo admin_url('images/wpspin_light.gif'); ?>" class="ajax-loading" alt="" style="position:relative; top:3px;" />
 	     <select class='selector' name='<?php echo $item['id']; ?>' title='<?php echo $item['id']; ?>' >
@@ -141,14 +141,30 @@ if(!class_exists('WPSC_Purchase_Log_Table')){
 		    return $actions;
 		}	
 		
-		
+		/* 
+		This also includes the hover actions 
+		would of thought they would be called something else
+		*/
 		function process_bulk_action() {
 			global $wpdb;
 			
+			if( 'view'===$this->current_action() ) {
+				exit('This will be the single view page that i need to think about creating...');
+			}
+
 			//Detect when a bulk action is being triggered...
 			if( 'delete'===$this->current_action() ) {
 				/* this needs some js "are you sure you want to delete this" */
-				$post_ids = array_map( 'intval', $_POST['post'] ); // pull out the items that need updating
+				
+				if ( isset($_POST['post']) )
+					$post_ids = array_map( 'intval', $_POST['post'] ); // pull out the items that need updating
+				
+				//if there are no post ids then the id will 
+				//be in the url from the hover link
+				//if( empty($post_ids) )
+				if ( isset( $_GET['post'] ) && $_GET['action'] === 'delete' )
+				$post_ids = array(1 => $_GET['post']);
+				
 				$wpdb->query($wpdb->prepare('DELETE FROM ' . WPSC_TABLE_PURCHASE_LOGS . ' WHERE `id` IN(' . implode(',' , $post_ids ).')'));	
 			}
 		
@@ -232,7 +248,7 @@ if(!class_exists('WPSC_Purchase_Log_Table')){
 }
 
  function ttt_add_menu_items(){
-    add_menu_page('Example Plugin List Table2', 'New Purchase Logs', 'activate_plugins', 'tt_list_test', 'ttt_render_list_page');
+    add_menu_page('Example Plugin List Table2', 'New Purchase Logs', 'activate_plugins', 'tt_list_testtt', 'ttt_render_list_page');
 } add_action('admin_menu', 'ttt_add_menu_items');
 
 
