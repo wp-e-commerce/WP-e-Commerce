@@ -1787,3 +1787,7 @@ float: left;
 	 vertical-align: middle;
 	 width: auto;
 }
+
+.dashboard_page_wpsc-purchase-logs .column-id {
+	width:75px;
+}
