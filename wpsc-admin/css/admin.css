@@ -24,21 +24,29 @@ div#wpsc_product_variation_forms table#wpsc_product_list tbody tr td.post-title{
 	width: 115px;
 }
 
+div#wpsc_add_variant_desc,
+div.wpsc_add_variation_desc{
+	float:left;
+	margin-top: 10px;
+	margin-left:20px;
+	width: 200px;
+}
+
 div.add_variant{
-float:left;
+	float:left;
 }
 
 div .add_new_variation{
-float:left;
-width:215px;
+	float:left;
+	width:215px;
 }
 
 input.wpsc_ie_field {
-margin-bottom:10px;
+	margin-bottom:10px;
 }
 
 .wpsc_ie_save{
-margin-bottom:5px;
+	margin-bottom:5px;
 }
 
 .wpsc_trackingid_row{
@@ -46,10 +54,9 @@ margin-bottom:5px;
 }
 
 ul.children{
-padding-left:5px;
+	padding-left:5px;
 }
 .category_indenter{
-
 	float:left;
 	width:auto;
 

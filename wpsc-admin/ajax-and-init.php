@@ -1564,30 +1564,53 @@ function wpsc_delete_variations( $postid ) {
 }
 add_action( 'delete_post', 'wpsc_delete_variations' );
 
-if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'add_variation_set') )
-	add_action( 'admin_init', 'wpsc_add_variation_set', 1 );
+/*
+Save the variations that have been 
+created on the products page
+*/
+function wpsc_add_variant_from_products_page() {
+/* This is the parent term / vartiation set we will save this first */
+	$variation_set_term = $_POST['variation'];
+	$variants[0] = $_POST['variant'];
 	
-/* surely more error checking etc has to go in there it can't be this easy??? */
-function wpsc_add_variation_set(){
-
-	/* This is the parent term / vartiation set we will save this first */
-	$variation_set_term = $_POST['variation_set'];
-	$variants = $_POST['variant'];
-	$variants = explode( ',' , $variants[0] );
-
-	
-	
+	/*
+	variants can be coma separated so we check for 
+	these and put them into their own seperate array
+	taking out coma sperated for now as its breaking things
+	*/
+	//$variants = explode( ',' , $variants[0] );
 	wp_insert_term( $variation_set_term, 'wpsc-variation', $args = array() );
 	
 	/* now get the parent id so we can save all the kids*/
 	$parent_term = term_exists( $variation_set_term, 'wpsc-variation' ); // array is returned if taxonomy is given
 	$parent_term_id = $parent_term['term_id']; // get numeric term id
-	
 	/* if we have a parent and some kids then we will add kids now */
 	if( !empty($parent_term_id) && !empty($variants) ){
-		foreach( $variants as $variant )
+		foreach( $variants as $variant ){
+			//$variant_term_id = array();
 			wp_insert_term( $variant, 'wpsc-variation', $args = array('parent' => $parent_term_id) );
+			/* want to get out the id so we can return it with the response */
+			$varient_term = term_exists( $variant, 'wpsc-variation' ); // array is returned if taxonomy is given
+			$variant_term_id = $varient_term['term_id']; // get numeric term id
+			
+		}
 	}
+	
+	$response = new WP_Ajax_Response;
+	$response -> add( array(
+		'data' 	=> 'success',
+		'supplemental' => array(
+			'variant_id' 	=> $variant_term_id,
+			/* 'variation_id' => $parent_term_id */
+		),
+	)
+	);
+	
+	$response -> send();
+	exit();
 }
+
+add_action( 'wp_ajax_wpsc_add_variant_from_products_page', 'wpsc_add_variant_from_products_page' );
+
 
 ?>
