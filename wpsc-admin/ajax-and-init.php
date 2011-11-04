@@ -1459,10 +1459,40 @@ function variation_price_field( $variation ) {
 	</tr>
 	<?php
 	}
-
 }
 add_action( 'wpsc-variation_edit_form_fields', 'variation_price_field' );
 add_action( 'wpsc-variation_add_form_fields', 'variation_price_field' );
+
+/*
+WordPress doesnt let you change the custom post type taxonomy form very easily
+Use Jquery to move the set variation (parent) field to the top and add a description
+*/
+function variation_set_field(){
+?>
+	<script>
+		/* change the text on the variation set from (none) to new variation set*/
+		jQuery("#parent option[value='-1']").text("New Variation Set");
+		/* Move to the top of the form and add a description */
+		jQuery("#tag-name").parent().before( jQuery("#parent").parent().append('<p>Choose the Variation Set you want to add variants to. If your\'e creating a new variation set then select "New Variation Set"</p>') );
+		/*
+		create a small description about variations below the add variation / set title 
+		we can then get rid of the big red danger warning
+		*/
+		( jQuery("#parent").parent().before('<p>Variations allow you to create options for your products, for example if you\'re selling T-Shirts they will have a size option you can create this as a variation. Size will be the Variation Set name, and it will be a "New Variant Set". You will then create variants (small, medium, large) which will have the "Variation Set" of Size. Once you have made your set you can use the table on the right to manage them (edit, delete). You will be able to order your variants by draging and droping them within their Variation Set.</p>') );
+	</script>
+<?php
+}
+add_action( 'wpsc-variation_edit_form_fields', 'variation_set_field' );
+add_action( 'wpsc-variation_add_form_fields', 'variation_set_field' );
+
+
+function category_edit_form(){
+?>
+	<script type="text/javascript">
+		
+	</script>
+<?php
+}
 
 function variation_price_field_check( $variation ) {
 
@@ -1482,6 +1512,8 @@ function variation_price_field_check( $variation ) {
 <?php
 }
 add_action( 'wpsc-variation_edit_form_fields', 'variation_price_field_check' );
+
+
 
 /**
  * @todo - Should probably refactor this at some point - very procedural,
