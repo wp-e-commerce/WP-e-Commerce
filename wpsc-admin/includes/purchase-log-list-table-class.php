@@ -11,6 +11,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 	private $bulk_actions = true;
 	private $sortable = true;
 	private $month_filter = true;
+	private $views = true;
 	private $per_page = 20;
 
 	public function __construct() {
@@ -33,6 +34,10 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 
 	public function disable_month_filter() {
 		$this->month_filter = false;
+	}
+
+	public function disable_views() {
+		$this->views = false;
 	}
 
 	public function set_per_page( $per_page ) {
@@ -151,6 +156,10 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 		return $this->sortable;
 	}
 
+	public function is_views_enabled() {
+		return $this->views;
+	}
+
 	public function is_search_box_enabled() {
 		return $this->search_box;
 	}
@@ -212,7 +221,6 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 
 		$sql = "SELECT DISTINCT processed, COUNT(*) AS count FROM " . WPSC_TABLE_PURCHASE_LOGS . " GROUP BY processed ORDER BY processed";
 		$results = $wpdb->get_results( $sql );
-		$statuses = array();
 		foreach ( $results as $status ) {
 			$statuses[$status->processed] = $status->count;
 		}
@@ -222,8 +230,17 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 			_nx( 'All <span class="count">(%s)</span>', 'All <span class="count">(%s)</span>', $total_count, 'purchase logs', 'wpsc' ),
 			number_format_i18n( $total_count )
 		);
-		$all_href = remove_query_arg( 'status' );
-		$all_class = ( empty( $_REQUEST['status'] ) || $_REQUEST['status'] == 'all' ) ? 'class="current"' : '';
+		$all_href = remove_query_arg( array(
+			'status',
+			'paged',
+			'action',
+			'action2',
+			'm',
+			'deleted',
+			'updated',
+			'paged',
+		) );
+		$all_class = ( ( empty( $_REQUEST['status'] ) || $_REQUEST['status'] == 'all' ) && empty( $_REQUEST['m'] ) && empty( $_REQUEST['s'] ) ) ? 'class="current"' : '';
 		$views = array(
 			'all' => sprintf(
 				'<a href="%s" %s>%s</a>',
@@ -239,6 +256,14 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 				number_format_i18n( $count )
 			);
 			$href = add_query_arg( 'status', $status );
+			$href = remove_query_arg( array(
+				'deleted',
+				'updated',
+				'action',
+				'action2',
+				'm',
+				'paged',
+			), $href );
 			$class = ( ! empty( $_REQUEST['status'] ) && $_REQUEST['status'] == $status ) ? 'class="current"' : '';
 			$views[$status] = sprintf(
 				'<a href="%s" %s>%s</a>',
@@ -562,6 +587,7 @@ class WPSC_Purchase_Log_Page
 				$this->list_table->disable_bulk_actions();
 				$this->list_table->disable_sortable();
 				$this->list_table->disable_month_filter();
+				$this->list_table->disable_views();
 				$this->list_table->set_per_page(0);
 				add_action( 'wpsc_purchase_logs_list_table_before', array( $this, 'action_list_table_before' ) );
 				return;
