@@ -104,12 +104,15 @@ if(!class_exists('WPSC_Purchase_Log_Table')){
 /* 	default colum display - this is for all the columns that don't require special formating */
 	function column_default($item, $column_name){
 		switch($column_name){
-		    case 'totalprice':
 		    case 'id':
 		        return $item[$column_name];
 		    default:
 		        return print_r($item,true); //Show the whole array for troubleshooting purposes
 		}
+	}
+	
+	function column_totalprice($item){
+		 return wpsc_currency_display( $item['totalprice'], array( 'display_as_html' => false ) );
 	}
 	
 	function get_columns(){
@@ -124,37 +127,37 @@ if(!class_exists('WPSC_Purchase_Log_Table')){
 	    return $columns;
 	}
 	
-	/*  @TODO set the bulk actions for the purcahse logs
-	@TODO
 	
-	*/
 		function get_bulk_actions() {
-	    $actions = array(
-	        'delete'    => 'Delete',
-	        'view'    => 'View',
-	        'tracking'    => 'Add Tracking #'
-	    );
-	    return $actions;
-	}
-	
-	 function process_bulk_action() {
-	    
-	    //Detect when a bulk action is being triggered...
-	    if( 'delete'===$this->current_action() ) {
-	        wp_die('Items deleted (or they would be if we had items to delete)!');
-	    }
-	    
-	    if( 'view'===$this->current_action() ) {
-	        wp_die('This will open up the single purcahse log view');
-	    }
-	
-	
-		if( 'tracking'===$this->current_action() ) {
-	        wp_die('This will open up the tracking stuff');
-	    }
-	
-	    
-	}
+		    $actions = array(
+		        'delete'    => 'Delete',
+		        '1'    => 'Incomplete Sale',
+		        '2'    => 'Order Recieved',
+		        '3'    => 'Accepted Payment',
+		        '4'    => 'Job dispatched',
+		        '5'    => 'Closed Order',
+		        '6'    => 'Payment Declined',
+		    );
+		    return $actions;
+		}	
+		
+		
+		function process_bulk_action() {
+			//Detect when a bulk action is being triggered...
+			if( 'delete'===$this->current_action() ) {
+			    wp_die('Items deleted (or they would be if we had items to delete)!');
+			}
+		
+			/*
+			if numeric then we know we are updating the order status the 
+			current_action will be the status number to update
+			*/
+			if( is_numeric($this->current_action())  ) {
+			exit('<pre>'.print_r($this->current_action(),1).'</pre>');
+			    wp_die('This will open up the single purcahse log view');
+			}
+
+		}
 	
 	
 		function prepare_items() {	
@@ -172,12 +175,7 @@ if(!class_exists('WPSC_Purchase_Log_Table')){
 			 */
 			$this->_column_headers = array($columns, $hidden, $sortable);
 			
-			
-			/** @TODO??
-			 * Optional. You can handle your bulk actions however you see fit. In this
-			 * case, we'll handle them within our package just to keep things clean.
-			 */
-			/* $this->process_bulk_action(); */
+			$this->process_bulk_action();
 			
 			
 			/* Get out our data for the table */
