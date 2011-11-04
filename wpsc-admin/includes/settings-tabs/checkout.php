@@ -126,8 +126,9 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 					<tr id="checkout_<?php echo esc_attr( $form_field->id ); ?>" class="checkout_form_field">
 						<td class="drag">
 							<a title="<?php esc_attr_e( 'Click and Drag to Order Checkout Fields', 'wpsc' ); ?>">
-								<img src="<?php echo esc_url( WPSC_CORE_IMAGES_URL . '/roll-over-drag.jpg' ); ?>" />
+								<img src="<?php echo esc_url( WPSC_CORE_IMAGES_URL . '/drag.png' ); ?>" />
 							</a>
+							<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
 						</td>
 						<td class="namecol">
 							<input type="text" name="form_name[<?php echo esc_attr( $form_field->id ); ?>]" value="<?php echo esc_attr( $form_field->name ); ?>" />
