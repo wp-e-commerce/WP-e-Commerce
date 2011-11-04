@@ -239,6 +239,8 @@ class WPSC_Purchase_Log_Page
 			return;
 
 		if ( $current_action == 'delete' ) {
+
+			// delete action
 			if ( empty( $_REQUEST['confirm'] ) ) {
 				$this->list_table->disable_search_box();
 				$this->list_table->disable_bulk_actions();
@@ -251,11 +253,23 @@ class WPSC_Purchase_Log_Page
 					return;
 
 				$ids = array_map( 'intval', $_REQUEST['post'] );
-				$sql = "DELETE FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE id IN (" . implode( ', ', $ids ) . ")";
-				$wpdb->query( $sql );
+				$in = 'IN (' . implode( ', ', $ids ) . ")";
+				$wpdb->query( "DELETE FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE id {$in}" );
+				$wpdb->query( "DELETE FROM " . WPSC_TABLE_CLAIMED_STOCK . " WHERE cart_id {$in}" );
+				$wpdb->query( "DELETE FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid {$in}" );
+				$wpdb->query( "DELETE FROM " . WPSC_TABLE_SUBMITED_FORM_DATA . " WHERE log_id {$in}" );
 				unset( $_REQUEST['post'] );
 				return;
 			}
+		}
+
+		// change status actions
+		if ( is_numeric( $current_action ) && $current_action < 7 && ! empty( $_REQUEST['post'] ) ) {
+			foreach ( $_REQUEST['post'] as $id ) {
+				wpsc_purchlog_edit_status( $id, $current_action );
+			}
+
+			unset( $_REQUEST['post'] );
 		}
 	}
 
