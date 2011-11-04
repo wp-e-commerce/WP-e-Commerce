@@ -713,23 +713,6 @@ function wpsc_update_checkout_fields_order() {
 
 add_action( 'wp_ajax_wpsc_update_checkout_fields_order', 'wpsc_update_checkout_fields_order' );
 
-function wpsc_save_checkout_order() {
-	global $wpdb;
-	$checkoutfields = $_POST['checkout'];
-	$order = 1;
-	foreach ( $checkoutfields as $checkoutfield ) {
-		$checkoutfield = absint( $checkoutfield );
-		$wpdb->query( "UPDATE `" . WPSC_TABLE_CHECKOUT_FORMS . "` SET `checkout_order` = '" . $order . "' WHERE `id`=" . $checkoutfield );
-
-		$order++;
-	}
-	$success = true;
-
-	exit( (string)$success );
-}
-if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'save_checkout_order') )
-	add_action( 'admin_init', 'wpsc_save_checkout_order' );
-
 /* Start Order Notes (by Ben) */
 function wpsc_purchlogs_update_notes( $purchlog_id = '', $purchlog_notes = '' ) {
 	global $wpdb;
