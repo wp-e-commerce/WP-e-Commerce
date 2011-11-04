@@ -423,7 +423,7 @@ function wpsc_admin_ajax() {
 
 	if ( isset( $_POST['remove_form_field'] ) && $_POST['remove_form_field'] == "true" && is_numeric( $_POST['form_id'] ) ) {
 		if ( current_user_can( 'manage_options' ) ) {
-			$wpdb->query( $wpdb->prepare( "UPDATE `" . WPSC_TABLE_CHECKOUT_FORMS . "` SET `active` = '0' WHERE `id` = %d LIMIT 1 ;", $_POST['form_id'] ) );
+			$wpdb->query( $wpdb->prepare( "DELETE FROM`" . WPSC_TABLE_CHECKOUT_FORMS . "`WHERE `id` = %d LIMIT 1 ;", $_POST['form_id'] ) );			
 			exit( ' ' );
 		}
 	}
@@ -1241,6 +1241,11 @@ function wpsc_check_form_options() {
 }
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'check_form_options') )
 	add_action( 'admin_init', 'wpsc_check_form_options' );
+	
+	//triggers the save code from the checkout form.
+if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'checkout_settings') )
+	add_action( 'admin_init', 'wpsc_checkout_settings' );
+
 
 //handles the editing and adding of new checkout fields
 function wpsc_checkout_settings() {
@@ -1284,27 +1289,46 @@ function wpsc_checkout_settings() {
 
 	if ( $_POST['form_name'] != null ) {
 		foreach ( $_POST['form_name'] as $form_id => $form_name ) {
-			$form_type = $_POST['form_type'][$form_id];
+			/*
+			we only want to update the type if it has been changed othwerise the default types 
+			for the default forms will get over ridden probbly want to do this a better way.
+			*/
+			if($_POST['form_type'][$form_id]){
+				$form_type = $_POST['form_type'][$form_id];
+				$wpdb->update(
+				WPSC_TABLE_CHECKOUT_FORMS,
+				array(
+					'type'=>	 $form_type,
+					), 
+					array( 'id' => $form_id )
+				);
+	
+			}
+
 			$form_mandatory = 0;
 			if ( isset( $_POST['form_mandatory'][$form_id] ) && ($_POST['form_mandatory'][$form_id] == 1) ) {
 				$form_mandatory = 1;
 			}
+			/*
 			$form_display_log = 0;
 			if ( isset( $_POST['form_display_log'][$form_id] ) && ($_POST['form_display_log'][$form_id] == 1) ) {
 				$form_display_log = 1;
 			}
+			now not saving the unique names we really dont give ppl the 
+			option to fuck with these any more as it creates user problems
+
 			$unique_name = '';
 			if ( $_POST['unique_names'][$form_id] != '-1' ) {
 				$unique_name = $_POST['unique_names'][$form_id];
 			}
+			*/
 			$wpdb->update(
 				WPSC_TABLE_CHECKOUT_FORMS,
 				array(
 					'name'        => $form_name,
 					'type'        => $form_type,
 					'mandatory'   => $form_mandatory,
-					'display_log' => $form_display_log,
-					'unique_name' => $unique_name,
+					'active' 	  => $form_display,
 				),
 				array( 'id' => $form_id ),
 				'%s',
@@ -1321,13 +1345,9 @@ function wpsc_checkout_settings() {
 			if ( ! empty( $_POST['new_form_mandatory'][$form_id] ) ) {
 				$form_mandatory = 1;
 			}
-			$form_display_log = 0;
-			if ( isset( $_POST['new_form_display_log'][$form_id] ) && $_POST['new_form_display_log'][$form_id] == 1 ) {
-				$form_display_log = 1;
-			}
-			$form_unique_name = '';
-			if ( $_POST['new_form_unique_name'][$form_id] != '-1' ) {
-				$form_unique_name = $_POST['new_form_unique_name'][$form_id];
+			$form_display = 0;
+			if ( isset( $_POST['new_form_display'][$form_id] ) && ($_POST['new_form_display'][$form_id] == 1) ) {
+				$form_display = 1;
 			}
 
 			$max_order_sql = "SELECT MAX(`checkout_order`) AS `checkout_order` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `active` = '1';";
@@ -1345,14 +1365,12 @@ function wpsc_checkout_settings() {
 					'name'           => $form_name,
 					'type'           => $form_type,
 					'mandatory'      => $form_mandatory,
-					'display_log'    => $form_display_log,
 					'default'        => '',
-					'active'         => '1',
+					'active'         => $form_display,
 					'checkout_order' => $order_number,
-					'unique_name'    => $form_unique_name,
 					'checkout_set'   => $filter,
 				),
-				array( '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s' )
+				array( '%s', '%s', '%s', '%s', '%d', '%s', '%s' )
 			);
 
 			$added++;
