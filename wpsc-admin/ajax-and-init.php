@@ -694,9 +694,16 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
 
 function wpsc_update_checkout_fields_order() {
 	global $wpdb;
+
+	if ( ! wp_verify_nonce( $_POST['nonce'], 'wpsc_settings_page_nonce' ) )
+		die( 'Session expired. Try refreshing your settings page.' );
+
 	$checkout_fields = $_REQUEST['sort_order'];
 	$order = 1;
 	foreach ( $checkout_fields as $checkout_field ) {
+		// ignore new fields
+		if ( strpos( $checkout_field, 'new-field' ) === 0 )
+			continue;
 		$checkout_field = absint( preg_replace('/[^0-9]+/', '', $checkout_field ) );
 		$sql = $wpdb->prepare( "
 			UPDATE " . WPSC_TABLE_CHECKOUT_FORMS . "
