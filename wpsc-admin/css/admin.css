@@ -1792,3 +1792,17 @@ float: left;
 .dashboard_page_wpsc-purchase-logs .column-amount {
 	width:100px;
 }
+
+.js table.purchase-logs td.column-status span, table.purchase-logs .column-status select {
+	display:none;
+}
+
+.js table.purchase-logs .column-status select {
+	display:inline-block;
+	margin-right:5px;
+}
+
+img.ajax-feedback-active {
+	visibility:visible;
+	vertical-align:middle;
+}

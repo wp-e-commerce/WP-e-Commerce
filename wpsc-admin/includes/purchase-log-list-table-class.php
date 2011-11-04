@@ -204,12 +204,22 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 
 	public function column_status( $item ) {
 		global $wpsc_purchlog_statuses;
+		$dropdown_options = array();
+		$current_status = false;
 		foreach ( $wpsc_purchlog_statuses as $status ) {
-			if ( $status['order'] == $item->status )
-				return esc_html( $status['label'] );
+			$selected = '';
+			if ( $status['order'] == $item->status ) {
+				$current_status = esc_html( $status['label'] );
+				$selected = 'selected="selected"';
+			}
+			$dropdown_options .= '<option value="' . esc_attr( $status['order'] ) . '" ' . $selected . '>' . esc_html( $status['label'] ) . '</option>';
 		}
 
-		return $item->status;
+		echo '<span>' . $current_status . '</span>';
+		echo '<select class="wpsc-purchase-log-status" data-log-id="' . $item->id . '">';
+		echo $dropdown_options;
+		echo '</select>';
+		echo '<img src="' . esc_url( admin_url( 'images/wpspin_light.gif' ) ) . '" class="ajax-feedback" title="" alt="" />';
 	}
 
 	public function get_bulk_actions() {

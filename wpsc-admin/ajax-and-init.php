@@ -636,8 +636,8 @@ if ( isset( $_REQUEST['wpsc_admin_action2'] ) && ($_REQUEST['wpsc_admin_action2'
 function wpsc_purchlog_edit_status( $purchlog_id='', $purchlog_status='' ) {
 	global $wpdb;
 	if ( empty($purchlog_id) && empty($purchlog_status) ) {
-		$purchlog_id = absint( $_POST['purchlog_id'] );
-		$purchlog_status = absint( $_POST['purchlog_status'] );
+		$purchlog_id = absint( $_POST['id'] );
+		$purchlog_status = absint( $_POST['new_status'] );
 	}
 
 	$log_data = $wpdb->get_row( "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id` = '{$purchlog_id}' LIMIT 1", ARRAY_A );
@@ -657,9 +657,13 @@ function wpsc_purchlog_edit_status( $purchlog_id='', $purchlog_status='' ) {
 
 	if ( $purchlog_status == 3 )
 		transaction_results($log_data['sessionid'],false,null);
+
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		die('success');
+	}
 }
 
-add_action( 'wp_ajax_purchlog_edit_status', 'wpsc_purchlog_edit_status' );
+add_action( 'wp_ajax_wpsc_change_purchase_log_status', 'wpsc_purchlog_edit_status' );
 
 function wpsc_save_product_order() {
 	global $wpdb;

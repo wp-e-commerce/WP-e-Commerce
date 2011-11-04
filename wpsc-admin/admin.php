@@ -195,6 +195,7 @@ function wpsc_admin_pages() {
 		case $purchase_log_page :
 		case $purchase_logs_page :
 			add_action( 'admin_head', 'wpsc_product_log_rss_feed' );
+			add_action( 'load-' . $page_hook, 'wpsc_admin_include_purchase_logs_css_and_js' );
 			break;
 
 		case $edit_coupons_page :
@@ -215,6 +216,14 @@ function wpsc_admin_pages() {
 	// also, the WPSC_Purchase_Logs_List_Table needs to be initializied before admin_header.php
 	// is loaded, therefore wpsc_load_purchase_logs_page needs to do this as well
 	add_action( 'load-' . $purchase_logs_page, 'wpsc_load_purchase_logs_page', 1 );
+}
+
+function wpsc_admin_include_purchase_logs_css_and_js() {
+	wp_enqueue_script( 'wp-e-commerce-purchase-logs', WPSC_URL . '/wpsc-admin/js/purchase-logs.js', array( 'jquery' ), WPSC_VERSION . '.' . WPSC_MINOR_VERSION );
+	wp_localize_script( 'wp-e-commerce-purchase-logs', 'WPSC_Purchase_Logs_Admin', array(
+		'nonce' => wp_create_nonce( 'wpsc_purchase_logs' ),
+		'status_error_dialog' => __( "An unknown error occurred. The order's status might not have been changed properly.\n\nPlease refresh this page and try again.", 'wpsc' ),
+	) );
 }
 
 function wpsc_load_settings_page() {
