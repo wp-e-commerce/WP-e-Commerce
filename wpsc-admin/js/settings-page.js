@@ -314,10 +314,20 @@
 
 		event_add_field_option : function() {
 			var target_row = $(this).closest('tr'),
-				prototype = target_row.siblings('.new-option').clone();
+				prototype = target_row.siblings('.new-option').clone(),
+				options_row = $(this).closest('.form-field-options'),
+				id = options_row.data('field-id'),
+				options_field_name;
+			if (options_row.hasClass('new-field-options')) {
+				options_field_name = 'new_field_options[' + id + ']';
+			} else {
+				options_field_name = 'form_options[' + id + ']';
+			}
 
 			prototype.removeClass('new-option');
 			prototype.find('.field-option-cell-wrapper').hide();
+			prototype.find('.column-labels input').attr('name', options_field_name + '[label][]');
+			prototype.find('.column-values input').attr('name', options_field_name + '[value][]');
 			prototype.insertAfter(target_row).show().find('.field-option-cell-wrapper').slideDown(150);
 			prototype.find('input[type="text"]').eq(0).focus();
 
@@ -363,7 +373,8 @@
 
 		event_edit_field_options : function() {
 			var t = $(this), target = t.closest('tr'),
-				id, options_row, label_inputs, options_field_name;
+				id, options_row, label_inputs, options_field_name,
+				prototype_option;
 
 			if (t.hasClass('expanded')) {
 				target.next().find('.cell-wrapper').slideUp(150, function(){
@@ -376,13 +387,12 @@
 			}
 
 			id = target.data('field-id');
-			options_row = $('#field-options-prototype').clone();
-			options_row.
-				attr('id', 'wpsc-field-edit-options-' + id).
-				data('field-id', id);
 
 			t.addClass('expanded');
 			t.text(WPSC_Settings_Page.hide_edit_field_options);
+
+			options_row = $('#field-options-prototype').clone();
+			prototype_option = options_row.find('.new-option');
 
 			if (id) {
 				options_field_name = 'form_options[' + id + ']';
@@ -390,6 +400,18 @@
 				id = target.data('new-field-id');
 				options_field_name = 'new_field_options[' + id + ']';
 			}
+
+			options_row.
+				attr('id', 'wpsc-field-edit-options-' + id).
+				data('field-id', id);
+
+			if (target.hasClass('new-field')) {
+				options_row.addClass('new-field-options');
+			}
+
+
+			prototype_option.find('.column-labels input').attr('name', options_field_name + '[label][]');
+			prototype_option.find('.column-values input').attr('name', options_field_name + '[value][]');
 
 			label_inputs = target.find('input[name^="' + options_field_name + '[label]"]');
 
@@ -407,9 +429,9 @@
 				options_row.find('tbody').append(appended_row);
 			});
 
-			options_row.find('.new-option').hide();
+			prototype_option.hide();
 			if (label_inputs.size() == 0) {
-				options_row.find('.new-option').clone().removeClass('new-option').show().appendTo(options_row.find('tbody'));
+				prototype_option.clone().removeClass('new-option').show().appendTo(options_row.find('tbody'));
 			}
 
 			target.addClass('editing-options');
