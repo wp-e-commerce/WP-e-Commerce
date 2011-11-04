@@ -34,7 +34,13 @@
 			<p><strong><?php esc_html_e( 'Purchase Log Date:' ,'wpsc'); ?> </strong><?php echo wpsc_purchaselog_details_date(); ?> </p>
 			<p><strong><?php esc_html_e('Purchase Number:','wpsc'); ?> </strong><?php echo wpsc_purchaselog_details_purchnumber(); ?> </p>
 			<p><strong><?php esc_html_e('Buyers Name:','wpsc'); ?> </strong><?php echo wpsc_display_purchlog_buyers_name(); ?></p>
-			<p><strong><?php esc_html_e('Address:','wpsc'); ?> </strong><?php echo wpsc_display_purchlog_buyers_address(); ?></p>
+			<p>
+				<strong><?php esc_html_e('Address:','wpsc'); ?> </strong><br />
+				<?php echo wpsc_display_purchlog_buyers_address(); ?><br />
+				<?php echo wpsc_display_purchlog_buyers_city(); ?><br />
+				<?php echo wpsc_display_purchlog_buyers_state_and_postcode(); ?><br />
+				<?php echo wpsc_display_purchlog_buyers_country(); ?><br />
+			</p>
 
 			<p><strong><?php esc_html_e('Phone:','wpsc'); ?> </strong><?php echo wpsc_display_purchlog_buyers_phone(); ?></p>
 			<p><strong><?php esc_html_e('Email:','wpsc'); ?> </strong><a href="mailto:<?php echo wpsc_display_purchlog_buyers_email(); ?>?subject=Message From '<?php echo get_option('siteurl'); ?>'"><?php echo wpsc_display_purchlog_buyers_email(); ?></a></p>
@@ -58,7 +64,7 @@
 					<?php wpsc_display_purchlog_details(); ?>
 
 					<tr class="wpsc_purchaselog_start_totals">
-						<td colspan="5">
+						<td colspan="<?php echo $cols; ?>">
 							<?php if ( wpsc_purchlog_has_discount_data() ): ?>
 								<?php esc_html_e( 'Coupon Code', 'wpsc' ); ?>: <?php echo wpsc_display_purchlog_discount_data(); ?>
 							<?php endif; ?>
@@ -69,19 +75,19 @@
 
 					<?php if( ! wpec_display_product_tax() ): ?>
 						<tr>
-							<td colspan='5'></td>
+							<td colspan='<?php echo $cols; ?>'></td>
 							<th><?php esc_html_e( 'Taxes', 'wpsc' ); ?> </th>
 							<td><?php echo wpsc_display_purchlog_taxes(); ?></td>
 						</tr>
 					<?php endif; ?>
 
 					<tr>
-						<td colspan='5'></td>
+						<td colspan='<?php echo $cols; ?>'></td>
 						<th><?php esc_html_e( 'Shipping', 'wpsc' ); ?> </th>
 						<td><?php echo wpsc_display_purchlog_shipping(); ?></td>
 					</tr>
 					<tr>
-						<td colspan='5'></td>
+						<td colspan='<?php echo $cols; ?>'></td>
 						<th><?php esc_html_e( 'Total', 'wpsc' ); ?> </th>
 						<td><?php echo wpsc_display_purchlog_totalprice(); ?></td>
 					</tr>
@@ -141,7 +147,7 @@
 		<?php if ( wpsc_purchlogs_have_downloads_locked() != false ): ?>
 			<img src='<?php echo WPSC_CORE_IMAGES_URL; ?>/lock_open.png' alt='clear lock icon' />&ensp;<a href='<?php echo $_SERVER['REQUEST_URI'].'&amp;wpsc_admin_action=clear_locks'; ?>'><?php echo wpsc_purchlogs_have_downloads_locked(); ?></a><br /><br class='small' />
 		<?php endif; ?>
-		<img src='<?php echo WPSC_CORE_IMAGES_URL; ?>/printer.png' alt='printer icon' />&ensp;<a href='<?php echo add_query_arg( 'wpsc_admin_action', 'wpsc_display_invoice' ); ?>'><?php esc_html_e( 'View Packing Slip', 'wpsc' ); ?></a>
+		<img src='<?php echo WPSC_CORE_IMAGES_URL; ?>/printer.png' alt='printer icon' />&ensp;<a target="_blank" href='<?php echo add_query_arg( 'c', 'packing_slip' ); ?>'><?php esc_html_e( 'View Packing Slip', 'wpsc' ); ?></a>
 		<br /><br class='small' />
 		<img src='<?php echo WPSC_CORE_IMAGES_URL; ?>/email_go.png' alt='email icon' />&ensp;<a href='<?php echo add_query_arg( 'email_buyer_id', $this->log_id ); ?>'><?php esc_html_e('Resend Receipt to Buyer', 'wpsc'); ?></a>
 

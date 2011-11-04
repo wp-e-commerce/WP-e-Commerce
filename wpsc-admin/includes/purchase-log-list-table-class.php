@@ -264,17 +264,55 @@ class WPSC_Purchase_Log_Page
 		// TODO: seriously get rid of all these badly coded purchaselogs.class.php functions in 4.0
 		$purchlogitem = new wpsc_purchaselogs_items( $this->log_id );
 
-		register_column_headers( 'wpsc_purchase_log_item_details', array(
+		$columns = array(
 			'title'    => __( 'Name','wpsc' ),
 			'sku'      => __( 'SKU','wpsc' ),
 			'quantity' => __( 'Quantity','wpsc' ),
 			'price'    => __( 'Price','wpsc' ),
 			'shipping' => __( 'Item Shipping','wpsc'),
-			'tax'      => __( 'Item Tax', 'wpsc' ),
-			'total'    => __( 'Item Total','wpsc' ),
-		) );
+		);
+
+		if ( wpec_display_product_tax() ) {
+			$columns['tax'] = __( 'Item Tax', 'wpsc' );
+		}
+
+		$columns['total'] = __( 'Item Total','wpsc' );
+
+		register_column_headers( 'wpsc_purchase_log_item_details', $columns );
 
 		add_action( 'wpsc_display_purchase_logs_page', array( $this, 'display_purchase_log' ) );
+	}
+
+	public function controller_packing_slip() {
+		if ( ! isset( $_REQUEST['id'] ) )
+			die( 'Invalid sales log ID' );
+
+		global $purchlogitem;
+
+		$this->log_id = (int) $_REQUEST['id'];
+
+		$purchlogitem = new wpsc_purchaselogs_items( $this->log_id );
+
+		$columns = array(
+			'title'    => __( 'Item Name','wpsc' ),
+			'sku'      => __( 'SKU','wpsc' ),
+			'quantity' => __( 'Quantity','wpsc' ),
+			'price'    => __( 'Price','wpsc' ),
+			'shipping' => __( 'Item Shipping','wpsc'),
+		);
+
+		if ( wpec_display_product_tax() ) {
+			$columns['tax'] = __( 'Item Tax', 'wpsc' );
+		}
+
+		$columns['total'] = __( 'Item Total','wpsc' );
+
+		$cols = count( $columns ) - 2;
+
+		register_column_headers( 'wpsc_purchase_log_item_details', $columns );
+
+		include( 'purchase-logs-page/packing-slip.php' );
+		exit;
 	}
 
 	public function controller_default() {
@@ -286,6 +324,10 @@ class WPSC_Purchase_Log_Page
 	}
 
 	public function display_purchase_log() {
+		if ( wpec_display_product_tax() )
+			$cols = 5;
+		else
+			$cols = 4;
 		include( 'purchase-logs-page/item-details.php' );
 	}
 
