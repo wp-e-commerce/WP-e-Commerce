@@ -26,6 +26,9 @@
 	<form id="purchase-logs-search" method-"get" action="">
 		<input type="hidden" name="page" value="<?php echo esc_attr( $_REQUEST['page'] ); ?>" />
 		<?php $this->list_table->search_box( 'Search Sales Logs', 'post' ); ?>
+		<?php if ( ! empty( $_REQUEST['status'] ) ): ?>
+			<input type="hidden" name="status" value="<?php echo esc_attr( $_REQUEST['status'] ); ?>" />
+		<?php endif ?>
 	</form>
 
 
@@ -53,11 +56,11 @@
 			<input type="hidden" name="order" value="<?php echo esc_attr( $_REQUEST['order'] ); ?>" />
 		<?php endif; ?>
 
-		<?php if ( ! $this->list_table->is_search_box_enabled() && isset( $_REQUEST['s'] ) ): ?>
+		<?php if ( isset( $_REQUEST['s'] ) ): ?>
 			<input type="hidden" name="s" value="<?php echo esc_attr( $_REQUEST['s'] ); ?>" />
 		<?php endif; ?>
 
-		<?php if ( $this->list_table->is_views_enabled() && ! empty( $_REQUEST['status'] ) ): ?>
+		<?php if ( ! empty( $_REQUEST['status'] ) ): ?>
 			<input type="hidden" name="status" value="<?php echo esc_attr( $_REQUEST['status'] ); ?>" />
 		<?php endif ?>
 		<?php do_action( 'wpsc_purchase_logs_list_table_after' ); ?>
