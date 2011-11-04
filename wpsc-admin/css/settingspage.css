@@ -6,8 +6,8 @@ table#wpsc_checkout_list tbody {
 	position:relative;
 }
 
-th#trash{
-	width:60px;
+th#actions{
+	width:37px;
 }
 th#drag{
 	width:30px;
@@ -53,6 +53,10 @@ th.column-mandatory, th.column-display, th.column-trash {
 
 #wpsc_checkout_list .ui-sortable-helper {
 	margin-left:0;
+}
+
+#wpsc_checkout_list .actionscol .cell-wrapper {
+	float:right !important!;
 }
 
 tr.checkout-placeholder td {
@@ -294,7 +298,10 @@ img.ajax-feedback-active {
 	display:none;
 }
 
-.js #wpsc_options .wpsc-shipping-module-settings-tablerate td .action, .js #wpsc_options .wpsc-shipping-module-settings-weightrate td .action {
+.js #wpsc_options .wpsc-shipping-module-settings-tablerate td .action,
+.js #wpsc_options .wpsc-shipping-module-settings-weightrate td .action,
+.js #wpsc_checkout_list .action {
+	background-image:url(plus-minus.png);
 	background-repeat:no-repeat;
 	display:inline-block;
 	height:20px;
@@ -303,29 +310,44 @@ img.ajax-feedback-active {
 	width:20px;
 }
 
-.js .wpsc-shipping-module-settings-tablerate td .add, .js .wpsc-shipping-module-settings-weightrate td .add {
-	background:url(plus-minus.png);
+.js #wpsc_options .wpsc-shipping-module-settings-tablerate td span.action,
+.js #wpsc_options .wpsc-shipping-module-settings-weightrate td span.action,
+.js #wpsc_checkout_list span.action {
+	opacity:0.3;
 }
 
-.js .wpsc-shipping-module-settings-tablerate td .add:hover, .js .wpsc-shipping-module-settings-weightrate td .add:hover {
+.js .wpsc-shipping-module-settings-tablerate td a.add:hover,
+.js .wpsc-shipping-module-settings-weightrate td a.add:hover,
+.js #wpsc_checkout_list .actionscol a.add:hover {
 	background-position:-20px 0;
 }
 
-.js .wpsc-shipping-module-settings-tablerate td .add:active, .js .wpsc-shipping-module-settings-weightrate td .add:active {
+.js .wpsc-shipping-module-settings-tablerate td a.add:active,
+.js .wpsc-shipping-module-settings-weightrate td a.add:active,
+.js #wpsc_checkout_list .actionscol a.add:active {
 	background-position:-40px 0;
 }
 
-.js .wpsc-shipping-module-settings-tablerate td .delete:hover, .js .wpsc-shipping-module-settings-weightrate td .delete:hover {
+.js .wpsc-shipping-module-settings-tablerate td a.delete:hover,
+.js .wpsc-shipping-module-settings-weightrate td a.delete:hover,
+.js #wpsc_checkout_list .actionscol a.delete:hover {
 	background-position:-20px -20px;
 }
 
-.js .wpsc-shipping-module-settings-tablerate td .delete:active, .js .wpsc-shipping-module-settings-weightrate td .delete:active {
+.js .wpsc-shipping-module-settings-tablerate td a.delete:active,
+.js .wpsc-shipping-module-settings-weightrate td a.delete:active,
+.js #wpsc_checkout_list .actionscol a.delete:active {
 	background-position:-40px -20px;
 }
 
-.js .wpsc-shipping-module-settings-tablerate td .delete, .js .wpsc-shipping-module-settings-weightrate td .delete {
-	background:url(plus-minus.png);
+.js .wpsc-shipping-module-settings-tablerate td .delete,
+.js .wpsc-shipping-module-settings-weightrate td .delete,
+.js #wpsc_checkout_list .actionscol .delete {
 	background-position:0 -20px;
+}
+
+.js #wpsc_checkout_list .new-field {
+	display:none;
 }
 
 /* shipping options start here */
