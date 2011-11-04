@@ -30,7 +30,7 @@ class wpsc_variations {
 		$this->variation_groups = array();
 		$this->first_variations = array();
 		$this->all_associated_variations = array();
-		
+	
 		foreach($product_terms as $product_term) {
 			if($product_term->parent > 0) {
 				if(empty($this->all_associated_variations[$product_term->parent])){
@@ -38,15 +38,31 @@ class wpsc_variations {
 					$this->all_associated_variations[$product_term->parent][0]->term_id = 0;
 					$this->all_associated_variations[$product_term->parent][0]->name = __('-- Please Select --', 'wpsc');
 				}
-				$this->all_associated_variations[$product_term->parent][] = $product_term;	
+				//pull out the term order and save this as the array key for 
+				//each variant we will then sort and renumber the array once out of these loops
+				
+				$term_order = ( $product_term->taxonomy == 'wpsc-variation' ) ? wpsc_get_meta( $product_term->term_id, 'sort_order', 'wpsc_variation' ) : null;
+				$term_order = (int) $term_order;
+				
+				$this->all_associated_variations[$product_term->parent][$term_order] = $product_term;
+					
 			} else {
 				$this->variation_groups[] = $product_term;
 			}
 		}
-		
 		// Filters to hook into variations to sort etc.
 		$this->variation_groups = apply_filters( 'wpsc_variation_groups', $this->variation_groups, $product_id );
 		$this->all_associated_variations = apply_filters( 'wpsc_all_associated_variations', $this->all_associated_variations, $this->variation_groups, $product_id );
+		
+		//the parent_id is the variation group id we need to use this to alter the object (variants)
+		// inside each of these arrays
+		$parent_ids = array_keys($this->all_associated_variations);
+			foreach( (array)$parent_ids as $parent_id ){
+				//sort the variants by their term_order which is the array key
+				ksort($this->all_associated_variations[$parent_id]);
+				//once sorted renumber the array keys back from 0
+				$this->all_associated_variations[$parent_id] = array_values($this->all_associated_variations[$parent_id]);
+		}
 		
 		foreach((array)$this->variation_groups as $variation_group) {
 			$variation_id = $variation_group->term_id;
@@ -56,6 +72,7 @@ class wpsc_variations {
 		$this->variation_group_count = count($this->variation_groups);
 	}
 	
+
 
 	/*
 	 * (Variation Group and Variation) Loop Code Starts here

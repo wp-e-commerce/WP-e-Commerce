@@ -66,36 +66,34 @@ function wpsc_display_region_list() {
 
 add_action( 'wp_ajax_wpsc_display_region_list', 'wpsc_display_region_list' );
 
-function wpsc_ajax_add_tracking() {
+function wpsc_purchase_log_save_tracking_id() {
 	global $wpdb;
-	foreach ( $_POST as $key => $value ) {
-		$parts = preg_split( '/^wpsc_trackingid/', $key );
-		if ( count( $parts ) > '1' ) {
-			$id = $parts[1];
-			$trackingid = $value;
-			$sql = "UPDATE `" . WPSC_TABLE_PURCHASE_LOGS . "` SET `track_id`='" . $trackingid . "' WHERE `id`=" . $id;
-			$wpdb->query( $sql );
-		}
+	if ( ! wp_verify_nonce( $_POST['nonce'], 'wpsc_purchase_logs' ) )
+		die( 'Session expired. Try refreshing your Sales Log page.' );
 
-	}
+	$sql = $wpdb->prepare( "UPDATE " . WPSC_TABLE_PURCHASE_LOGS . " SET track_id = %s WHERE id = %d", $_POST['value'], $_POST['log_id'] );
+	$wpdb->query($sql);
+
+	die('success');
 }
 
-if ( isset( $_REQUEST['submit'] ) && ($_REQUEST['submit'] == 'Add Tracking ID') ) {
-	add_action( 'admin_init', 'wpsc_ajax_add_tracking' );
-}
+add_action( 'wp_ajax_wpsc_purchase_log_save_tracking_id', 'wpsc_purchase_log_save_tracking_id' );
 
-function wpsc_purchlog_email_trackid() {
+function wpsc_purchase_log_send_tracking_email() {
 	global $wpdb;
-	$id = absint( $_POST['purchlog_id'] );
-	$trackingid = $wpdb->get_var( "SELECT `track_id` FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE `id`={$id} LIMIT 1" );
+	if ( ! wp_verify_nonce( $_POST['nonce'], 'wpsc_purchase_logs' ) )
+		die( 'Session expired. Try refreshing your Sales Log page.' );
+
+	$id = absint( $_POST['log_id'] );
+	$sql = $wpdb->prepare( "SELECT `track_id` FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE `id`=%d LIMIT 1", $id );
+	$trackingid = $wpdb->get_var( $sql );
 
 	$message = get_option( 'wpsc_trackingid_message' );
 	$message = str_replace( '%trackid%', $trackingid, $message );
 	$message = str_replace( '%shop_name%', get_option( 'blogname' ), $message );
 
 	$email_form_field = $wpdb->get_var( "SELECT `id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `type` IN ('email') AND `active` = '1' ORDER BY `checkout_order` ASC LIMIT 1" );
-	$email = $wpdb->get_var( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` WHERE `log_id`=" . $id . " AND `form_id` = '$email_form_field' LIMIT 1" );
-
+	$email = $wpdb->get_var( $wpdb->prepare( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` WHERE `log_id`=%d AND `form_id` = '$email_form_field' LIMIT 1", $id ) );
 
 	$subject = get_option( 'wpsc_trackingid_subject' );
 	$subject = str_replace( '%shop_name%', get_option( 'blogname' ), $subject );
@@ -104,16 +102,10 @@ function wpsc_purchlog_email_trackid() {
 	add_filter( 'wp_mail_from_name', 'wpsc_replace_reply_name', 0 );
 
 	wp_mail( $email, $subject, $message);
-
-	remove_filter( 'wp_mail_from_name', 'wpsc_replace_reply_name' );
-	remove_filter( 'wp_mail_from', 'wpsc_replace_reply_address' );
-
-	exit( true );
+	die( 'success' );
 }
 
-if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'purchlog_email_trackid') ) {
-	add_action( 'admin_init', 'wpsc_purchlog_email_trackid' );
-}
+add_action( 'wp_ajax_wpsc_purchase_log_send_tracking_email', 'wpsc_purchase_log_send_tracking_email' );
 
 function wpsc_ajax_sales_quarterly() {
 	$lastdate = $_POST['add_start'];
@@ -323,21 +315,39 @@ function wpsc_purchase_log_csv() {
 	global $wpdb, $wpsc_gateways;
 	get_currentuserinfo();
 	$count = 0;
-	if ( ($_GET['rss_key'] == 'key') && is_numeric( $_GET['start_timestamp'] ) && is_numeric( $_GET['end_timestamp'] ) && current_user_can( 'manage_options' ) ) {
+	if ( ($_GET['rss_key'] == 'key') && current_user_can( 'manage_options' ) ) {
+		if ( isset( $_GET['start_timestamp'] ) && isset( $_GET['end_timestamp'] ) ) {
+			$start_timestamp = (int) $_GET['start_timestamp'];
+			$end_timestamp = (int) $_GET['end_timestamp'];
+			$data = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `date` BETWEEN '$start_timestamp' AND '$end_timestamp' ORDER BY `date` DESC", ARRAY_A );
+			$csv_name = 'Purchase Log ' . date( "M-d-Y", $start_timestamp ) . ' to ' . date( "M-d-Y", $end_timestamp ) . '.csv';
+		} elseif ( isset( $_REQUEST['m'] ) ) {
+			$year = (int) substr( $_REQUEST['m'], 0, 4);
+			$month = (int) substr( $_REQUEST['m'], -2 );
+			$sql = "
+				SELECT *
+				FROM " . WPSC_TABLE_PURCHASE_LOGS . "
+				WHERE YEAR(FROM_UNIXTIME(date)) = %d AND MONTH(FROM_UNIXTIME(date)) = %d
+			";
+			$data = $wpdb->get_results( $wpdb->prepare( $sql, $year, $month ), ARRAY_A );
+			$csv_name = 'Purchase Log ' . $month . '/' . $year . '.csv';
+		} else {
+			$data = $wpdb->get_results( "SELECT * FROM " . WPSC_TABLE_PURCHASE_LOGS, ARRAY_A );
+			$csv_name = "All Purchase Logs.csv";
+		}
+
 		$form_sql = "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `active` = '1' AND `type` != 'heading' ORDER BY `checkout_order` DESC;";
 		$form_data = $wpdb->get_results( $form_sql, ARRAY_A );
-
-		$start_timestamp = $_GET['start_timestamp'];
-		$end_timestamp = $_GET['end_timestamp'];
-		$data = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `date` BETWEEN '$start_timestamp' AND '$end_timestamp' ORDER BY `date` DESC", ARRAY_A );
 		$csv = 'Purchase ID, Price, Firstname, Lastname, Email, Order Status, Data, ';
+
 		header( 'Content-Type: text/csv' );
-		header( 'Content-Disposition: inline; filename="Purchase Log ' . date( "M-d-Y", $start_timestamp ) . ' to ' . date( "M-d-Y", $end_timestamp ) . '.csv"' );
+		header( 'Content-Disposition: inline; filename="' . $csv_name . '"' );
 		$headers = "\"Purchase ID\",\"Purchase Total\","; //capture the headers
 
 		$headers2  ="\"Payment Gateway\",";
 		$headers2 .="\"Payment Status\",\"Purchase Date\",";
 
+		$output = '';
 
 		foreach ( (array)$data as $purchase ) {
 			$form_headers = '';
@@ -351,7 +361,10 @@ function wpsc_purchase_log_csv() {
 				$output .= "\"" . $collected_data['value'] . "\","; // get form fields
 			}
 
-			$output .= "\"" . $wpsc_gateways[$purchase['gateway']]['display_name'] . "\","; //get gateway name
+			if ( isset( $wpsc_gateways[$purchase['gateway']] ) && isset( $wpsc_gateways[$purchase['gateway']]['display_name'] ) )
+				$output .= "\"" . $wpsc_gateways[$purchase['gateway']]['display_name'] . "\","; //get gateway name
+			else
+				$output .= "\"\",";
 
 
 			$status_name = wpsc_find_purchlog_status_name( $purchase['processed'] );
@@ -636,8 +649,8 @@ if ( isset( $_REQUEST['wpsc_admin_action2'] ) && ($_REQUEST['wpsc_admin_action2'
 function wpsc_purchlog_edit_status( $purchlog_id='', $purchlog_status='' ) {
 	global $wpdb;
 	if ( empty($purchlog_id) && empty($purchlog_status) ) {
-		$purchlog_id = absint( $_POST['purchlog_id'] );
-		$purchlog_status = absint( $_POST['purchlog_status'] );
+		$purchlog_id = absint( $_POST['id'] );
+		$purchlog_status = absint( $_POST['new_status'] );
 	}
 
 	$log_data = $wpdb->get_row( "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id` = '{$purchlog_id}' LIMIT 1", ARRAY_A );
@@ -657,9 +670,13 @@ function wpsc_purchlog_edit_status( $purchlog_id='', $purchlog_status='' ) {
 
 	if ( $purchlog_status == 3 )
 		transaction_results($log_data['sessionid'],false,null);
+
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		die('success');
+	}
 }
 
-add_action( 'wp_ajax_purchlog_edit_status', 'wpsc_purchlog_edit_status' );
+add_action( 'wp_ajax_wpsc_change_purchase_log_status', 'wpsc_purchlog_edit_status' );
 
 function wpsc_save_product_order() {
 	global $wpdb;
@@ -755,7 +772,7 @@ function wpsc_delete_purchlog( $purchlog_id='' ) {
 
 	if ( is_numeric( $_GET['purchlog_id'] ) ) {
 		$sendback = wp_get_referer();
-		$sendback = remove_query_arg( 'purchaselog_id', $sendback );
+		$sendback = remove_query_arg( array( 'c', 'id' ), $sendback );
 		if ( isset( $deleted ) ) {
 			$sendback = add_query_arg( 'deleted', $deleted, $sendback );
 		}
@@ -1442,10 +1459,40 @@ function variation_price_field( $variation ) {
 	</tr>
 	<?php
 	}
-
 }
 add_action( 'wpsc-variation_edit_form_fields', 'variation_price_field' );
 add_action( 'wpsc-variation_add_form_fields', 'variation_price_field' );
+
+/*
+WordPress doesnt let you change the custom post type taxonomy form very easily
+Use Jquery to move the set variation (parent) field to the top and add a description
+*/
+function variation_set_field(){
+?>
+	<script>
+		/* change the text on the variation set from (none) to new variation set*/
+		jQuery("#parent option[value='-1']").text("New Variation Set");
+		/* Move to the top of the form and add a description */
+		jQuery("#tag-name").parent().before( jQuery("#parent").parent().append('<p>Choose the Variation Set you want to add variants to. If your\'e creating a new variation set then select "New Variation Set"</p>') );
+		/*
+		create a small description about variations below the add variation / set title 
+		we can then get rid of the big red danger warning
+		*/
+		( jQuery("div#ajax-response").after('<p>Variations allow you to create options for your products, for example if you\'re selling T-Shirts they will have a size option you can create this as a variation. Size will be the Variation Set name, and it will be a "New Variant Set". You will then create variants (small, medium, large) which will have the "Variation Set" of Size. Once you have made your set you can use the table on the right to manage them (edit, delete). You will be able to order your variants by draging and droping them within their Variation Set.</p>') );
+	</script>
+<?php
+}
+add_action( 'wpsc-variation_edit_form_fields', 'variation_set_field' );
+add_action( 'wpsc-variation_add_form_fields', 'variation_set_field' );
+
+
+function category_edit_form(){
+?>
+	<script type="text/javascript">
+		
+	</script>
+<?php
+}
 
 function variation_price_field_check( $variation ) {
 
@@ -1465,6 +1512,8 @@ function variation_price_field_check( $variation ) {
 <?php
 }
 add_action( 'wpsc-variation_edit_form_fields', 'variation_price_field_check' );
+
+
 
 /**
  * @todo - Should probably refactor this at some point - very procedural,
@@ -1559,4 +1608,55 @@ function wpsc_delete_variations( $postid ) {
 		}
 }
 add_action( 'delete_post', 'wpsc_delete_variations' );
+
+/*
+Save the variations that have been 
+created on the products page
+*/
+function wpsc_add_variant_from_products_page() {
+/* This is the parent term / vartiation set we will save this first */
+	$variation_set_term = $_POST['variation'];
+	$variants[0] = $_POST['variant'];
+	
+	/*
+	variants can be coma separated so we check for 
+	these and put them into an array
+	*/
+	$variants = explode( ',', $variants[0] );
+	wp_insert_term( $variation_set_term, 'wpsc-variation', $args = array() );
+	
+	/* now get the parent id so we can save all the kids*/
+	$parent_term = term_exists( $variation_set_term, 'wpsc-variation' ); // array is returned if taxonomy is given
+	$parent_term_id = $parent_term['term_id']; // get numeric term id
+	/* if we have a parent and some kids then we will add kids now */
+	if( !empty($parent_term_id) && !empty($variants) ){
+		foreach( $variants as $variant ){
+			wp_insert_term( $variant, 'wpsc-variation', $args = array('parent' => $parent_term_id) );
+			/* want to get out the id so we can return it with the response */
+			$varient_term = term_exists( $variant, 'wpsc-variation', $parent_term_id );
+			$variant_term_id[] = $varient_term['term_id']; // get numeric term id
+		}
+	}
+	$response = new WP_Ajax_Response;
+	$response -> add( array(
+		'data' 			=> 'success',
+		'supplemental' 	=> array(
+		'variant_id' 	=> implode(",",$variant_term_id),
+		),
+	)
+	);
+	$response -> send();
+	exit();
+}
+
+add_action( 'wp_ajax_wpsc_add_variant_from_products_page', 'wpsc_add_variant_from_products_page' );
+
+function wpsc_delete_variant_from_products_page(){
+	$variant_id = $_POST['variant_id'];
+	/* should never be empty but best to check first*/
+	if (!empty($variant_id))
+		wp_delete_term( $variant_id, 'wpsc-variation');
+	exit();
+}
+add_action( 'wp_ajax_wpsc_delete_variant_from_products_page', 'wpsc_delete_variant_from_products_page' );
 ?>

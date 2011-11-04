@@ -21,7 +21,7 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/purchaselogs.class.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/theming.class.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/ajax-and-init.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/display-options-settings.page.php' );
-require_once( WPSC_FILE_PATH . '/wpsc-admin/display-sales-logs.php' );
+
 if ( ( isset( $_SESSION['wpsc_activate_debug_page'] ) && ( $_SESSION['wpsc_activate_debug_page'] == true ) ) || ( defined( 'WPSC_ADD_DEBUG_PAGE' ) && ( constant( 'WPSC_ADD_DEBUG_PAGE' ) == true ) ) )
 	require_once( WPSC_FILE_PATH . '/wpsc-admin/display-debug.page.php' );
 
@@ -142,12 +142,14 @@ function wpsc_admin_pages() {
 	}
 
 	// Add to Dashboard
-	$page_hooks[] = $purchase_log_page = add_submenu_page( 'index.php', __( 'Store Sales', 'wpsc' ), __( 'Store Sales', 'wpsc' ), 'administrator', 'wpsc-sales-logs', 'wpsc_display_sales_logs' );
+	// $page_hooks[] = $purchase_log_page = add_submenu_page( 'index.php', __( 'Store Sales', 'wpsc' ), __( 'Store Sales', 'wpsc' ), 'administrator', 'wpsc-sales-logs', 'wpsc_display_sales_logs' );
 
 	if ( wpsc_show_update_link() )
 		$page_hooks[] = add_submenu_page( 'index.php', __( 'Update Store', 'wpsc' ), __( 'Store Update', 'wpsc' ), 'administrator', 'wpsc-update', 'wpsc_display_update_page' );
 
 	$page_hooks[] = add_submenu_page( 'index.php', __( 'Store Upgrades', 'wpsc' ), __( 'Store Upgrades', 'wpsc' ), 'administrator', 'wpsc-upgrades', 'wpsc_display_upgrades_page' );
+
+	$page_hooks[] = $purchase_logs_page = add_submenu_page( 'index.php', __( 'Store Sales', 'wpsc' ), __( 'Store Sales', 'wpsc' ), 'administrator', 'wpsc-purchase-logs', 'wpsc_display_purchase_logs_page' );
 
 	// Set the base page for Products
 	$products_page = 'edit.php?post_type=wpsc-product';
@@ -189,8 +191,9 @@ function wpsc_admin_pages() {
 			add_action( 'load-' . $page_hook, 'wpsc_admin_include_optionspage_css_and_js' );
 			break;
 
-		case $purchase_log_page :
+		case $purchase_logs_page :
 			add_action( 'admin_head', 'wpsc_product_log_rss_feed' );
+			add_action( 'load-' . $page_hook, 'wpsc_admin_include_purchase_logs_css_and_js' );
 			break;
 
 		case $edit_coupons_page :
@@ -206,11 +209,38 @@ function wpsc_admin_pages() {
 	}
 
 	add_action( 'load-' . $edit_options_page, 'wpsc_load_settings_page', 1 );
+
+	// only load the purchase log list table and page classes when it's necessary
+	// also, the WPSC_Purchase_Logs_List_Table needs to be initializied before admin_header.php
+	// is loaded, therefore wpsc_load_purchase_logs_page needs to do this as well
+	add_action( 'load-' . $purchase_logs_page, 'wpsc_load_purchase_logs_page', 1 );
+}
+
+function wpsc_admin_include_purchase_logs_css_and_js() {
+	wp_enqueue_script( 'wp-e-commerce-purchase-logs', WPSC_URL . '/wpsc-admin/js/purchase-logs.js', array( 'jquery' ), WPSC_VERSION . '.' . WPSC_MINOR_VERSION );
+	wp_localize_script( 'wp-e-commerce-purchase-logs', 'WPSC_Purchase_Logs_Admin', array(
+		'nonce' => wp_create_nonce( 'wpsc_purchase_logs' ),
+		'status_error_dialog' => __( "An unknown error occurred. The order's status might not have been updated properly.\n\nPlease refresh this page and try again.", 'wpsc' ),
+		'tracking_error_dialog' => __( "An unknown error occurred. The order's tracking ID might not have been updated properly.\n\nPlease refresh this page and try again.", 'wpsc' ),
+		'send_tracking_email_error_dialog' => __( "An unknown error occurred. The tracking email might not have been sent.\n\nPlease refresh this page and try again.", 'wpsc' ),
+		'sending_message' => _x( 'sending...', 'sending tracking email for purchase log', 'wpsc' ),
+		'sent_message'    => _x( 'Email Sent!', 'sending tracking email for purchase log', 'wpsc' ),
+	) );
 }
 
 function wpsc_load_settings_page() {
 	require_once('settings-page.php');
 	WPSC_Settings_Page::get_instance();
+}
+
+function wpsc_load_purchase_logs_page() {
+	require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/purchase-log-list-table-class.php' );
+	require_once( WPSC_FILE_PATH . '/wpsc-admin/display-sales-logs.php' );
+	$page = new WPSC_Purchase_Log_Page();
+}
+
+function wpsc_display_purchase_logs_page() {
+	do_action( 'wpsc_display_purchase_logs_page' );
 }
 
 function wpsc_product_log_rss_feed() {
@@ -310,7 +340,7 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 	$version_identifier = WPSC_VERSION . "." . WPSC_MINOR_VERSION;
 	$pages = array( 'index.php', 'options-general.php', 'edit.php', 'post.php', 'post-new.php' );
 
-	if ( ( in_array( $pagehook, $pages ) && $post_type == 'wpsc-product' )  || $current_screen->id == 'edit-wpsc_product_category' || $current_screen->id == 'dashboard_page_wpsc-sales-logs' || $current_screen->id == 'settings_page_wpsc-settings' || $current_screen->id == 'wpsc-product_page_wpsc-edit-coupons' ) {
+	if ( ( in_array( $pagehook, $pages ) && $post_type == 'wpsc-product' )  || $current_screen->id == 'edit-wpsc_product_category' || $current_screen->id == 'dashboard_page_wpsc-sales-logs' || $current_screen->id == 'dashboard_page_wpsc-purchase-logs' || $current_screen->id == 'settings_page_wpsc-settings' || $current_screen->id == 'wpsc-product_page_wpsc-edit-coupons' || $current_screen->id == 'edit-wpsc-variation' ) {
 		wp_enqueue_script( 'livequery',                      WPSC_URL . '/wpsc-admin/js/jquery.livequery.js',             array( 'jquery' ), '1.0.3' );
 		wp_enqueue_script( 'wp-e-commerce-admin-parameters', $siteurl . '/wp-admin/admin.php?wpsc_admin_dynamic_js=true', false,             $version_identifier );
 		wp_enqueue_script( 'wp-e-commerce-admin',            WPSC_URL . '/wpsc-admin/js/admin.js',                        array( 'jquery', 'jquery-ui-core', 'jquery-ui-sortable' ), $version_identifier, false );
@@ -879,6 +909,7 @@ add_action( 'permalink_structure_changed' , 'wpsc_check_permalink_notice' );
 add_action( 'permalink_structure_changed' , 'wpsc_update_permalinks' );
 /* add_action( 'get_sample_permalink_html' , 'wpsc_update_permalinks' ); // this just seems unnecessary and produces PHP notices */
 add_action( 'wp_ajax_category_sort_order', 'wpsc_ajax_set_category_order' );
+add_action( 'wp_ajax_variation_sort_order', 'wpsc_ajax_set_variation_order' );
 add_action( 'wp_ajax_wpsc_ie_save', 'wpsc_ajax_ie_save' );
 add_action('in_admin_header', 'wpsc_add_meta_boxes');
 ?>

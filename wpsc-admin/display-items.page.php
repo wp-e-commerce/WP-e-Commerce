@@ -64,21 +64,7 @@ function wpsc_additional_column_name_variations( $columns ){
 
     //For BC for 3.0 (hoping to remove for WPEC 3.9)
     register_column_headers( 'wpsc-product_variants', $columns );
-
-	add_filter( 'get_user_option_managewpsc-product_variantscolumnshidden', 'wpsc_variation_form_hidden_columns' );
-
     return apply_filters( 'wpsc_variation_column_headers', $columns);
-}
-
-function wpsc_variation_form_hidden_columns( $return ) {
-	global $post;
-
-	if ( isset( $post ) && $post->post_parent == 0 && ! is_numeric( get_post_meta( $post->ID, '_wpsc_stock', true ) ) )
-		$return = array(
-			'stock',
-		);
-
-	return $return;
 }
 
 /**
@@ -196,7 +182,7 @@ function wpsc_additional_column_data( $column ) {
                 $price = get_post_meta( $post->ID, '_wpsc_special_price', true );
                 if( !$is_parent ) {
                     echo wpsc_currency_display( $price );
-                    echo '<div id="inline_' . $post->ID . '_sale_price" class="hidden">' . $price . '</div>';
+                    echo '<div id="inline_' . $post->ID . '_sale_price" class="hidden">' . $price  . '</div>';
                 } else
                     echo wpsc_product_variation_price_available( $post->ID ).'+';
                 break;

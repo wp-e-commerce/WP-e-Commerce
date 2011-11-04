@@ -107,7 +107,7 @@ function wpsc_purchlogs_has_customfields( $id = '' ) {
 
 function wpsc_trackingid_value() {
    global $purchlogs;
-   return esc_attr( $purchlogs->purchitem->track_id );
+   return $purchlogs->purchitem->track_id;
 }
 
 function wpsc_purchlogs_custommessages() {
@@ -433,6 +433,17 @@ function wpec_display_purchlog_taxes( $numeric = false ) {
 	return wpsc_display_purchlog_taxes( $numeric );
 }
 
+/**
+ * @description: determines whether or not to display the product tax or not
+ * @return: boolean
+**/
+function wpec_display_product_tax()
+{
+   global $purchlogitem;
+   return ($purchlogitem->extrainfo->wpec_taxes_total == 0.00) ? true : false;
+}// wpec_display_product_tax
+
+
 function wpsc_display_purchlog_taxes( $numeric = false ) {
 	global $purchlogitem;
 	return ($numeric) ? $purchlogitem->extrainfo->wpec_taxes_total : wpsc_currency_display( $purchlogitem->extrainfo->wpec_taxes_total,array( 'display_as_html' => false ) );
@@ -446,12 +457,17 @@ function wpsc_display_purchlog_totalprice() {
 
 function wpsc_display_purchlog_buyers_name() {
    global $purchlogitem;
-   return esc_attr( htmlentities( stripslashes( $purchlogitem->userinfo['billingfirstname']['value'] ), ENT_QUOTES, 'UTF-8') ) . ' ' . esc_attr( htmlentities( stripslashes( $purchlogitem->userinfo['billinglastname']['value'] ), ENT_QUOTES, 'UTF-8') );
+   return esc_html( $purchlogitem->userinfo['billingfirstname']['value'] ) . ' ' . esc_html( $purchlogitem->userinfo['billinglastname']['value'] );
+}
+
+function wpsc_display_purchlog_buyers_city() {
+   global $purchlogitem;
+   return esc_html( $purchlogitem->userinfo['billingcity']['value'] );
 }
 
 function wpsc_display_purchlog_buyers_email() {
    global $purchlogitem;
-   return esc_attr( htmlentities( stripslashes( $purchlogitem->userinfo['billingemail']['value'] ), ENT_QUOTES, 'UTF-8') );
+   return esc_html( $purchlogitem->userinfo['billingemail']['value'] );
 }
 
 function wpsc_display_purchlog_buyers_address() {
@@ -459,32 +475,45 @@ function wpsc_display_purchlog_buyers_address() {
 
    if(is_numeric($purchlogitem->extrainfo->billing_region))
    		$state = wpsc_get_region($purchlogitem->extrainfo->billing_region);
-   else 
+   else
    		$state = $purchlogitem->userinfo['billingstate']['value'];
 
-   return nl2br( esc_html( trim(htmlentities( stripslashes( $purchlogitem->userinfo['billingaddress']['value'] ), ENT_QUOTES, 'UTF-8'), "\n\r"))).'<br />'.
-   esc_html( htmlentities( stripslashes( $state ), ENT_QUOTES, 'UTF-8') ).', '.
-   esc_html( htmlentities( stripslashes( $purchlogitem->userinfo['billingpostcode']['value'] ), ENT_QUOTES, 'UTF-8') ).'<br />'.esc_html( htmlentities( stripslashes( $purchlogitem->extrainfo->billing_country ), ENT_QUOTES, 'UTF-8') ) ;
+   return nl2br( esc_html( $purchlogitem->userinfo['billingaddress']['value'] ) );
+}
+
+function wpsc_display_purchlog_buyers_state_and_postcode() {
+   global $purchlogitem;
+   if( is_numeric($purchlogitem->extrainfo->billing_region ) )
+         $state = wpsc_get_region($purchlogitem->extrainfo->billing_region);
+   else
+         $state = $purchlogitem->userinfo['billingstate']['value'];
+
+   return esc_html( $state ) . ', ' . esc_html( $purchlogitem->userinfo['billingpostcode']['value'] );
+}
+
+function wpsc_display_purchlog_buyers_country() {
+   global $purchlogitem;
+   return esc_html( $purchlogitem->extrainfo->billing_country );
 }
 
 function wpsc_display_purchlog_buyers_phone() {
    global $purchlogitem;
-   return esc_attr( htmlentities( stripslashes( $purchlogitem->userinfo['billingphone']['value'] ), ENT_QUOTES, 'UTF-8') );
+   return esc_html( $purchlogitem->userinfo['billingphone']['value'] );
 }
 
 function wpsc_display_purchlog_shipping_name() {
    global $purchlogitem;
-   return esc_html( htmlentities( stripslashes( $purchlogitem->shippinginfo['shippingfirstname']['value'] ), ENT_QUOTES, 'UTF-8') . ' ' . htmlentities( stripslashes( $purchlogitem->shippinginfo['shippinglastname']['value'] ), ENT_QUOTES, 'UTF-8') );
+   return esc_html( $purchlogitem->shippinginfo['shippingfirstname']['value'] ) . ' ' . esc_html( $purchlogitem->shippinginfo['shippinglastname']['value'] );
 }
 
 function wpsc_display_purchlog_shipping_address() {
    global $purchlogitem;
-   return nl2br( esc_html( trim(htmlentities( stripslashes( $purchlogitem->shippinginfo['shippingaddress']['value'] ), ENT_QUOTES, 'UTF-8'), "\n\r")) );
+   return nl2br( esc_html( $purchlogitem->shippinginfo['shippingaddress']['value'] ) );
 }
 
 function wpsc_display_purchlog_shipping_city() {
    global $purchlogitem;
-   return esc_attr( htmlentities( stripslashes( $purchlogitem->shippinginfo['shippingcity']['value'] ), ENT_QUOTES, 'UTF-8' ) );
+   return esc_html( $purchlogitem->shippinginfo['shippingcity']['value'] );
 }
 
 function wpsc_display_purchlog_shipping_state_and_postcode() {
@@ -494,21 +523,20 @@ function wpsc_display_purchlog_shipping_state_and_postcode() {
    		$state = esc_html( wpsc_get_region($purchlogitem->extrainfo->shipping_region) );
    else
    		$state = esc_html( $purchlogitem->shippinginfo['shippingstate']['value'] );
-   		
+
    if ( !empty( $purchlogitem->shippinginfo['shippingpostcode']['value'] ) ){
    		if( empty( $state ) )
    			$state = esc_html( $purchlogitem->shippinginfo['shippingpostcode']['value'] );
    		else
    			$state .= ', ' . esc_html( $purchlogitem->shippinginfo['shippingpostcode']['value'] );
    }
-   
 
-   return $state; 
+   return $state;
 }
 
 function wpsc_display_purchlog_shipping_country() {
    global $purchlogitem;
-   return esc_attr( htmlentities( stripslashes( $purchlogitem->shippinginfo['shippingcountry']['value'] ), ENT_QUOTES, 'UTF-8' ) );
+   return esc_html( $purchlogitem->shippinginfo['shippingcountry']['value'] );
 }
 
 function wpsc_display_purchlog_shipping_method() {
@@ -516,15 +544,15 @@ function wpsc_display_purchlog_shipping_method() {
 
    if ( ! empty ( $wpsc_shipping_modules[$purchlogitem->extrainfo->shipping_method] ) ) {
       $shipping_class = &$wpsc_shipping_modules[$purchlogitem->extrainfo->shipping_method];
-      return $shipping_class->name;
+      return esc_html( $shipping_class->name );
    } else {
-      return $purchlogitem->extrainfo->shipping_method;
+      return esc_html( $purchlogitem->extrainfo->shipping_method );
    }
 }
 
 function wpsc_display_purchlog_shipping_option() {
    global $purchlogitem;
-   return $purchlogitem->extrainfo->shipping_option;
+   return esc_html( $purchlogitem->extrainfo->shipping_option );
 }
 
 function wpsc_display_purchlog_paymentmethod() {
@@ -538,9 +566,9 @@ function wpsc_display_purchlog_paymentmethod() {
          $gateway_name = $gateway['name'];
    }
    if( !empty($gateway_name) )
-      return $gateway_name;
+      return esc_html( $gateway_name );
    else
-      return $purchlogitem->extrainfo->gateway;
+      return esc_html( $purchlogitem->extrainfo->gateway );
 
 }
 

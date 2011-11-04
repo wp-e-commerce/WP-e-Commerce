@@ -539,4 +539,43 @@ function wpsc_get_terms_category_sort_filter($terms){
 	return array_values( $new_terms );
 }
 add_filter('get_terms','wpsc_get_terms_category_sort_filter');
+
+
+function wpsc_get_terms_variation_sort_filter($terms){
+	$new_terms = array();
+	$unsorted = array();
+	
+	foreach ( $terms as $term ) {
+		if ( ! is_object( $term ) )
+			return $terms;
+		
+		$term_order = ( $term->taxonomy == 'wpsc-variation' ) ? wpsc_get_meta( $term->term_id, 'sort_order', 'wpsc_variation' ) : null;
+		$term_order = (int) $term_order;
+		
+		// unsorted categories should go to the top of the list
+		if ( $term_order == 0 ) {
+			$term->sort_order = $term_order;
+			$unsorted[] = $term;
+			continue;
+		}
+		
+		while ( isset( $new_terms[$term_order] ) ) {
+			$term_order ++;
+		}
+		
+		$term->sort_order = $term_order;
+		$new_terms[$term_order] = $term;
+	}
+	
+	if ( ! empty( $new_terms ) )
+		ksort( $new_terms );
+	
+	for ( $i = count( $unsorted ) - 1; $i >= 0; $i-- ) { 
+		array_unshift( $new_terms, $unsorted[$i] );
+	}
+	
+	return array_values( $new_terms );
+}
+add_filter('get_terms','wpsc_get_terms_variation_sort_filter');
+
 ?>
