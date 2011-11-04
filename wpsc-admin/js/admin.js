@@ -321,27 +321,6 @@ jQuery(document).ready(function(){
             });
 	}
 
-	/*jQuery('table#wpsc_checkout_list').livequery(function(event){
-		//this makes the checkout form fields sortable
-		jQuery(this).sortable({
-
-			items: 'tr.checkout_form_field',
-			axis: 'y',
-			containment: 'table#wpsc_checkout_list',
-			placeholder: 'checkout-placeholder',
-			handle: '.drag'
-
-		});
-		jQuery(this).bind('sortupdate', function(event, ui) {
-
-			//post_values = jQuery(this).sortable();
-			//post_values = "category_id="+category_id+"&"+checkout_order;
-			post_values = jQuery( 'table#wpsc_checkout_list').sortable( 'serialize');
-			jQuery.post( 'index.php?wpsc_admin_action=save_checkout_order', post_values, function(returned_data) { });
-		});
-
-	}); */
-
 	// this helps show the links in the product list table, it is partially done using CSS, but that breaks in IE6
 	jQuery("tr.product-edit").hover(
 		function() {

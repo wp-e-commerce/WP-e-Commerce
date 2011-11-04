@@ -423,7 +423,7 @@ function wpsc_admin_ajax() {
 
 	if ( isset( $_POST['remove_form_field'] ) && $_POST['remove_form_field'] == "true" && is_numeric( $_POST['form_id'] ) ) {
 		if ( current_user_can( 'manage_options' ) ) {
-			$wpdb->query( $wpdb->prepare( "DELETE FROM`" . WPSC_TABLE_CHECKOUT_FORMS . "`WHERE `id` = %d LIMIT 1 ;", $_POST['form_id'] ) );			
+			$wpdb->query( $wpdb->prepare( "DELETE FROM`" . WPSC_TABLE_CHECKOUT_FORMS . "`WHERE `id` = %d LIMIT 1 ;", $_POST['form_id'] ) );
 			exit( ' ' );
 		}
 	}
@@ -691,6 +691,27 @@ function wpsc_save_product_order() {
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'save_product_order') ) {
 	add_action( 'admin_init', 'wpsc_save_product_order' );
 }
+
+function wpsc_update_checkout_fields_order() {
+	global $wpdb;
+	$checkout_fields = $_REQUEST['sort_order'];
+	$order = 1;
+	foreach ( $checkout_fields as $checkout_field ) {
+		$checkout_field = absint( preg_replace('/[^0-9]+/', '', $checkout_field ) );
+		$sql = $wpdb->prepare( "
+			UPDATE " . WPSC_TABLE_CHECKOUT_FORMS . "
+			SET checkout_order = %d
+			WHERE id = %d
+		", $order, $checkout_field );
+		$wpdb->query( $sql );
+
+		$order ++;
+	}
+
+	die( 'success' );
+}
+
+add_action( 'wp_ajax_wpsc_update_checkout_fields_order', 'wpsc_update_checkout_fields_order' );
 
 function wpsc_save_checkout_order() {
 	global $wpdb;
@@ -1241,7 +1262,7 @@ function wpsc_check_form_options() {
 }
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'check_form_options') )
 	add_action( 'admin_init', 'wpsc_check_form_options' );
-	
+
 	//triggers the save code from the checkout form.
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'checkout_settings') )
 	add_action( 'admin_init', 'wpsc_checkout_settings' );
@@ -1290,7 +1311,7 @@ function wpsc_checkout_settings() {
 	if ( $_POST['form_name'] != null ) {
 		foreach ( $_POST['form_name'] as $form_id => $form_name ) {
 			/*
-			we only want to update the type if it has been changed othwerise the default types 
+			we only want to update the type if it has been changed othwerise the default types
 			for the default forms will get over ridden probbly want to do this a better way.
 			*/
 			if($_POST['form_type'][$form_id]){
@@ -1299,10 +1320,10 @@ function wpsc_checkout_settings() {
 				WPSC_TABLE_CHECKOUT_FORMS,
 				array(
 					'type'=>	 $form_type,
-					), 
+					),
 					array( 'id' => $form_id )
 				);
-	
+
 			}
 
 			$form_mandatory = 0;
@@ -1314,7 +1335,7 @@ function wpsc_checkout_settings() {
 			if ( isset( $_POST['form_display_log'][$form_id] ) && ($_POST['form_display_log'][$form_id] == 1) ) {
 				$form_display_log = 1;
 			}
-			now not saving the unique names we really dont give ppl the 
+			now not saving the unique names we really dont give ppl the
 			option to fuck with these any more as it creates user problems
 
 			$unique_name = '';
