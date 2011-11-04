@@ -292,7 +292,9 @@
 			        delegate('.actionscol a.add', 'click', WPSC_Settings_Page.Checkout.event_add_new_field).
 			        delegate('.actionscol a.delete', 'click', WPSC_Settings_Page.Checkout.event_delete_field).
 			        delegate('a.edit-options', 'click', WPSC_Settings_Page.Checkout.event_edit_field_options).
-			        delegate('select[name^="form_type"]', 'change', WPSC_Settings_Page.Checkout.event_form_type_changed);
+			        delegate('select[name^="form_type"]', 'change', WPSC_Settings_Page.Checkout.event_form_type_changed).
+			        delegate('.field-option-cell-wrapper .add', 'click', WPSC_Settings_Page.Checkout.event_add_field_option).
+			        delegate('.field-option-cell-wrapper .delete', 'click', WPSC_Settings_Page.Checkout.event_delete_field_option);
 			$('#wpsc-settings-form').bind('submit', WPSC_Settings_Page.Checkout.event_form_submit);
 
 			wrapper.find('#wpsc_checkout_list').
@@ -308,6 +310,27 @@
 					stop        : WPSC_Settings_Page.Checkout.event_sort_stop,
 					update      : WPSC_Settings_Page.Checkout.event_sort_update,
 				});
+		},
+
+		event_add_field_option : function() {
+			var target_row = $(this).closest('tr'),
+				prototype = target_row.siblings('.new-option').clone();
+
+			prototype.removeClass('new-option');
+			prototype.find('.field-option-cell-wrapper').hide();
+			prototype.insertAfter(target_row).show().find('.field-option-cell-wrapper').slideDown(150);
+			prototype.find('input[type="text"]').eq(0).focus();
+			return false;
+		},
+
+		event_delete_field_option : function() {
+			var target_row = $(this).closest('tr');
+
+			target_row.find('.field-option-cell-wrapper').slideUp(150, function(){
+				target_row.remove();
+			});
+
+			return false;
 		},
 
 		event_form_type_changed : function() {
