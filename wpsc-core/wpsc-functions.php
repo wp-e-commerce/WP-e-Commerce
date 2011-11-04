@@ -361,7 +361,7 @@ function wpsc_register_post_types() {
 		'parent_item_colon' => __( 'Parent Variations:', 'wpsc' ),
 		'edit_item' => __( 'Edit Variation', 'wpsc' ),
 		'update_item' => __( 'Update Variation', 'wpsc' ),
-		'add_new_item' => __( 'Add New Variation/Set', 'wpsc' ),
+		'add_new_item' => __( 'Add New Variation', 'wpsc' ),
 		'new_item_name' => __( 'New Variation Name', 'wpsc' ),
 	);
 
