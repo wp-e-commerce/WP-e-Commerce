@@ -292,7 +292,7 @@
 			        delegate('.actionscol a.add', 'click', WPSC_Settings_Page.Checkout.event_add_new_field).
 			        delegate('.actionscol a.delete', 'click', WPSC_Settings_Page.Checkout.event_delete_field).
 			        delegate('a.edit-options', 'click', WPSC_Settings_Page.Checkout.event_edit_field_options).
-			        delegate('select[name^="form_type"]', 'change', WPSC_Settings_Page.Checkout.event_form_type_changed).
+			        delegate('select[name^="form_type"], select[name^="new_field_type"]', 'change', WPSC_Settings_Page.Checkout.event_form_type_changed).
 			        delegate('.field-option-cell-wrapper .add', 'click', WPSC_Settings_Page.Checkout.event_add_field_option).
 			        delegate('.field-option-cell-wrapper .delete', 'click', WPSC_Settings_Page.Checkout.event_delete_field_option);
 			$('#wpsc-settings-form').bind('submit', WPSC_Settings_Page.Checkout.event_form_submit);
@@ -320,25 +320,44 @@
 			prototype.find('.field-option-cell-wrapper').hide();
 			prototype.insertAfter(target_row).show().find('.field-option-cell-wrapper').slideDown(150);
 			prototype.find('input[type="text"]').eq(0).focus();
+
+			WPSC_Settings_Page.unsaved_settings = true;
 			return false;
 		},
 
 		event_delete_field_option : function() {
-			var target_row = $(this).closest('tr');
+			var target_row = $(this).closest('tr'),
+				prototype = target_row.siblings('.new-option');
 
 			target_row.find('.field-option-cell-wrapper').slideUp(150, function(){
+				var clone;
+				if (prototype.siblings().size() == 1) {
+					clone = prototype.clone().removeClass('new-option');
+					clone.find('.field-option-cell-wrapper').hide();
+					clone.show().insertAfter(target_row);
+					clone.find('.field-option-cell-wrapper').slideDown(150);
+				}
 				target_row.remove();
 			});
+
+			WPSC_Settings_Page.unsaved_settings = true;
 
 			return false;
 		},
 
 		event_form_type_changed : function() {
-			var t = $(this);
+			var t = $(this),
+				target_row = t.closest('tr'),
+				id = target_row.data('field-id'),
+				link = target_row.find('.edit-options');
 			if ($.inArray(t.val(), ['select', 'radio', 'checkbox']) !== -1) {
-				t.closest('tr').find('.edit-options').show();
+				link.show();
 			} else {
-				t.closest('tr').find('.edit-options').hide();
+				link.hide().text(WPSC_Settings_Page.edit_field_options).removeClass('expanded');
+				$('#wpsc-field-edit-options-' + id).find('.cell-wrapper').slideUp(150, function(){
+					$(this).closest('tr').remove();
+					target_row.removeClass('editing-options');
+				});
 			}
 		},
 
@@ -388,8 +407,9 @@
 				options_row.find('tbody').append(appended_row);
 			});
 
-			if (label_inputs.size() > 0) {
-				options_row.find('.new-option').hide();
+			options_row.find('.new-option').hide();
+			if (label_inputs.size() == 0) {
+				options_row.find('.new-option').clone().removeClass('new-option').show().appendTo(options_row.find('tbody'));
 			}
 
 			target.addClass('editing-options');
@@ -426,6 +446,8 @@
 				t.attr('name', new_name);
 			});
 			new_row.insertAfter(target_row).show().find('.cell-wrapper').slideDown(150);
+
+			WPSC_Settings_Page.unsaved_settings = true;
 			return false;
 		},
 
@@ -435,6 +457,8 @@
 				$('#wpsc-field-edit-options-' + target_row.data('field-id')).remove();
 				target_row.remove();
 			});
+
+			WPSC_Settings_Page.unsaved_settings = true;
 			return false;
 		},
 
@@ -468,7 +492,7 @@
 				options_row = $('#wpsc-field-edit-options-' + id),
 				t = $(this);
 
-			$('.form-field-options').find('.cell-wrapper').hide(function(){
+			$('.form-field-options').find('.cell-wrapper').slideUp(150, function(){
 				var options_row = $(this).closest('tr'),
 					id = options_row.data('field-id');
 				options_row.hide();
