@@ -364,21 +364,39 @@ function wpsc_purchase_log_csv() {
 	global $wpdb, $wpsc_gateways;
 	get_currentuserinfo();
 	$count = 0;
-	if ( ($_GET['rss_key'] == 'key') && is_numeric( $_GET['start_timestamp'] ) && is_numeric( $_GET['end_timestamp'] ) && current_user_can( 'manage_options' ) ) {
+	if ( ($_GET['rss_key'] == 'key') && current_user_can( 'manage_options' ) ) {
+		if ( isset( $_GET['start_timestamp'] ) && isset( $_GET['end_timestamp'] ) ) {
+			$start_timestamp = (int) $_GET['start_timestamp'];
+			$end_timestamp = (int) $_GET['end_timestamp'];
+			$data = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `date` BETWEEN '$start_timestamp' AND '$end_timestamp' ORDER BY `date` DESC", ARRAY_A );
+			$csv_name = 'Purchase Log ' . date( "M-d-Y", $start_timestamp ) . ' to ' . date( "M-d-Y", $end_timestamp ) . '.csv';
+		} elseif ( isset( $_REQUEST['m'] ) ) {
+			$year = (int) substr( $_REQUEST['m'], 0, 4);
+			$month = (int) substr( $_REQUEST['m'], -2 );
+			$sql = "
+				SELECT *
+				FROM " . WPSC_TABLE_PURCHASE_LOGS . "
+				WHERE YEAR(FROM_UNIXTIME(date)) = %d AND MONTH(FROM_UNIXTIME(date)) = %d
+			";
+			$data = $wpdb->get_results( $wpdb->prepare( $sql, $year, $month ), ARRAY_A );
+			$csv_name = 'Purchase Log ' . $month . '/' . $year . '.csv';
+		} else {
+			$data = $wpdb->get_results( "SELECT * FROM " . WPSC_TABLE_PURCHASE_LOGS, ARRAY_A );
+			$csv_name = "All Purchase Logs.csv";
+		}
+
 		$form_sql = "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `active` = '1' AND `type` != 'heading' ORDER BY `checkout_order` DESC;";
 		$form_data = $wpdb->get_results( $form_sql, ARRAY_A );
-
-		$start_timestamp = $_GET['start_timestamp'];
-		$end_timestamp = $_GET['end_timestamp'];
-		$data = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `date` BETWEEN '$start_timestamp' AND '$end_timestamp' ORDER BY `date` DESC", ARRAY_A );
 		$csv = 'Purchase ID, Price, Firstname, Lastname, Email, Order Status, Data, ';
+
 		header( 'Content-Type: text/csv' );
-		header( 'Content-Disposition: inline; filename="Purchase Log ' . date( "M-d-Y", $start_timestamp ) . ' to ' . date( "M-d-Y", $end_timestamp ) . '.csv"' );
+		header( 'Content-Disposition: inline; filename="' . $csv_name . '"' );
 		$headers = "\"Purchase ID\",\"Purchase Total\","; //capture the headers
 
 		$headers2  ="\"Payment Gateway\",";
 		$headers2 .="\"Payment Status\",\"Purchase Date\",";
 
+		$output = '';
 
 		foreach ( (array)$data as $purchase ) {
 			$form_headers = '';
@@ -392,7 +410,10 @@ function wpsc_purchase_log_csv() {
 				$output .= "\"" . $collected_data['value'] . "\","; // get form fields
 			}
 
-			$output .= "\"" . $wpsc_gateways[$purchase['gateway']]['display_name'] . "\","; //get gateway name
+			if ( isset( $wpsc_gateways[$purchase['gateway']] ) && isset( $wpsc_gateways[$purchase['gateway']]['display_name'] ) )
+				$output .= "\"" . $wpsc_gateways[$purchase['gateway']]['display_name'] . "\","; //get gateway name
+			else
+				$output .= "\"\",";
 
 
 			$status_name = wpsc_find_purchlog_status_name( $purchase['processed'] );
