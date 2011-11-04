@@ -177,6 +177,39 @@ jQuery(document).ready(function(){
           jQuery('.edit-tags-php form').attr('enctype', 'multipart/form-data').attr('encoding', 'multipart/form-data');
 
       }
+      
+       if( pagenow == 'edit-wpsc-variation' ) {
+          jQuery('table.tags').sortable({
+            axis: 'y',
+            items : 'tr',
+            containment: 'table.tags tbody',
+            placeholder: 'product-placeholder',
+            cursor: 'move',
+            tolerance: 'pointer',
+            update: function(event, ui){
+              variationSort(jQuery('table.tags').sortable('toArray'), 0);
+            }
+          });
+
+          function variationSort(order, parent){
+            var data = {
+                    action: 'variation_sort_order',
+                    sort_order: order,
+                    parent_id: parent
+            };
+
+            var id = '#debugData_';
+
+            jQuery.post(ajaxurl, data, function(response) {
+                    jQuery(id).append(response);
+            });
+            return false;
+       }
+
+          jQuery('.edit-tags-php form').attr('enctype', 'multipart/form-data').attr('encoding', 'multipart/form-data');
+
+      }
+
 	//Added for inline editing capabilities
 	jQuery('#wpsc_product_list a.wpsc_editinline').live('click', function() {
 		var t = jQuery(this),
