@@ -148,17 +148,24 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 
 	public function column_cb( $item ){
 		$checked = isset( $_REQUEST['post'] ) ? checked( in_array( $item->id, $_REQUEST['post'] ), true, false ) : '';
-	    return sprintf(
-	        '<input type="checkbox" ' . $checked . ' name="%1$s[]" value="%2$s" />',
-	        /*$1%s*/ 'post',
-	        /*$2%s*/ $item->id
-	    );
+		return sprintf(
+			'<input type="checkbox" ' . $checked . ' name="%1$s[]" value="%2$s" />',
+			/*$1%s*/ 'post',
+			/*$2%s*/ $item->id
+		);
+	}
+
+	private function item_url( $item ) {
+		return add_query_arg( array(
+			'c'  => 'item_details',
+			'id' => $item->id,
+		) );
 	}
 
 	public function column_customer( $item ) {
 		?>
 		<strong>
-			<a class="row-title" href="#" title="<?php esc_attr_e( 'View order details', 'wpsc' ) ?>"><?php echo esc_html( $item->firstname . ' ' . $item->lastname ); ?></a>
+			<a class="row-title" href="<?php echo esc_attr( $this->item_url( $item ) ); ?>" title="<?php esc_attr_e( 'View order details', 'wpsc' ) ?>"><?php echo esc_html( $item->firstname . ' ' . $item->lastname ); ?></a>
 		</strong><br />
 		<small><?php echo make_clickable( $item->email ); ?></small>
 		<?php
@@ -178,7 +185,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 	}
 
 	public function column_amount( $item ) {
-		echo '<a href="#" title="' . esc_attr__( 'View order details', 'wpsc' ) . '">';
+		echo '<a href="' . esc_attr( $this->item_url( $item ) ) . '" title="' . esc_attr__( 'View order details', 'wpsc' ) . '">';
 		echo wpsc_currency_display( $item->amount ) . "<br />";
 		echo '<small>' . sprintf( _n( '1 item', '%s items', $item->item_count, 'wpsc' ), number_format_i18n( $item->item_count ) ) . '</small>';
 		echo '</a>';
@@ -202,7 +209,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 		if ( ! $this->bulk_actions )
 			return array();
 
-	    $actions = array(
+		$actions = array(
 			'delete' => _x( 'Delete', 'bulk action', 'wpsc' ),
 			'1'      => __( 'Incomplete Sale', 'wpsc' ),
 			'2'      => __( 'Order Recieved', 'wpsc' ),
@@ -210,8 +217,8 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 			'4'      => __( 'Job dispatched', 'wpsc' ),
 			'5'      => __( 'Closed Order', 'wpsc' ),
 			'6'      => __( 'Payment Declined', 'wpsc' ),
-	    );
-	    return $actions;
+		);
+		return $actions;
 	}
 
 	public function search_box( $text, $input_id ) {
@@ -228,14 +235,51 @@ class WPSC_Purchase_Log_Page
 	private $output;
 
 	public function __construct() {
-		add_action( 'wpsc_display_purchase_logs_page', array( $this, 'display' ) );
+		$controller = 'default';
+		$controller_method = 'controller_default';
 
+		if ( isset( $_REQUEST['c'] ) && method_exists( $this, 'controller_' . $_REQUEST['c'] ) ) {
+			$controller = $_REQUEST['c'];
+			$controller_method = 'controller_' . $controller;
+		}
+
+		$this->$controller_method();
+	}
+
+	public function controller_item_details() {
+		if ( ! isset( $_REQUEST['id'] ) )
+			die( 'Invalid sales log ID' );
+
+		global $purchlogitem;
+
+		$this->log_id = (int) $_REQUEST['id'];
+
+		// TODO: seriously get rid of all these badly coded purchaselogs.class.php functions in 4.0
+		$purchlogitem = new wpsc_purchaselogs_items( $this->log_id );
+
+		register_column_headers( 'wpsc_purchase_log_item_details', array(
+			'title'    => __( 'Name','wpsc' ),
+			'sku'      => __( 'SKU','wpsc' ),
+			'quantity' => __( 'Quantity','wpsc' ),
+			'price'    => __( 'Price','wpsc' ),
+			'shipping' => __( 'Item Shipping','wpsc'),
+			'tax'      => __( 'Item Tax', 'wpsc' ),
+			'total'    => __( 'Item Total','wpsc' ),
+		) );
+
+		add_action( 'wpsc_display_purchase_logs_page', array( $this, 'display_purchase_log' ) );
+	}
+
+	public function controller_default() {
 		//Create an instance of our package class...
-	    $this->list_table = new WPSC_Purchase_Log_List_Table();
+		$this->list_table = new WPSC_Purchase_Log_List_Table();
+		$this->process_bulk_action();
+		$this->list_table->prepare_items();
+		add_action( 'wpsc_display_purchase_logs_page', array( $this, 'display_list_table' ) );
+	}
 
-    	$this->process_bulk_action();
-
-    	$this->list_table->prepare_items();
+	public function display_purchase_log() {
+		include( 'purchase-logs-page/item-details.php' );
 	}
 
 	public function process_bulk_action() {
@@ -296,40 +340,40 @@ class WPSC_Purchase_Log_Page
 		<?php
 	}
 
-	public function display() {
+	public function display_list_table() {
 		if ( ! empty( $this->output ) ) {
 			echo $this->output;
 			return;
 		}
 
 		?>
-	    <div class="wrap">
+		<div class="wrap">
 
-	        <div id="icon-users" class="icon32"><br/></div>
-	        <h2>
-	        	<?php esc_html_e( 'Sales Log' ); ?>
+			<div id="icon-users" class="icon32"><br/></div>
+			<h2>
+				<?php esc_html_e( 'Sales Log' ); ?>
 
-	        	<?php
-	        		if ( isset($_REQUEST['s']) && $_REQUEST['s'] )
-	        			printf( '<span class="subtitle">' . __('Search results for &#8220;%s&#8221;') . '</span>', esc_html( stripslashes( $_REQUEST['s'] ) ) ); ?>
-	        </h2>
+				<?php
+					if ( isset($_REQUEST['s']) && $_REQUEST['s'] )
+						printf( '<span class="subtitle">' . __('Search results for &#8220;%s&#8221;') . '</span>', esc_html( stripslashes( $_REQUEST['s'] ) ) ); ?>
+			</h2>
 
-	        <form id="purchase-logs-search" method-"get" action="">
-	        	<input type="hidden" name="page" value="<?php echo esc_attr( $_REQUEST['page'] ); ?>" />
-	        	<?php $this->list_table->search_box( 'Search Sales Logs', 'post' ); ?>
-	        </form>
+			<form id="purchase-logs-search" method-"get" action="">
+				<input type="hidden" name="page" value="<?php echo esc_attr( $_REQUEST['page'] ); ?>" />
+				<?php $this->list_table->search_box( 'Search Sales Logs', 'post' ); ?>
+			</form>
 
-	        <!-- Forms are NOT created automatically, so you need to wrap the table in one to use features like bulk actions -->
-	        <form id="purchase-logs-filter" method="post" action="">
-	        	<?php do_action( 'wpsc_purchase_logs_list_table_before' ); ?>
-	            <!-- For plugins, we also need to ensure that the form posts back to our current page -->
-	            <!-- Now we can render the completed list table -->
+			<!-- Forms are NOT created automatically, so you need to wrap the table in one to use features like bulk actions -->
+			<form id="purchase-logs-filter" method="post" action="">
+				<?php do_action( 'wpsc_purchase_logs_list_table_before' ); ?>
+				<!-- For plugins, we also need to ensure that the form posts back to our current page -->
+				<!-- Now we can render the completed list table -->
 
-	            <?php $this->list_table->display() ?>
-	            <?php do_action( 'wpsc_purchase_logs_list_table_after' ); ?>
-	        </form>
+				<?php $this->list_table->display() ?>
+				<?php do_action( 'wpsc_purchase_logs_list_table_after' ); ?>
+			</form>
 
-	    </div>
-	    <?php
+		</div>
+		<?php
 	}
 }
