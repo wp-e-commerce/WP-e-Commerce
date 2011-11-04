@@ -777,24 +777,67 @@ function editinline_get_id(){
 
 jQuery(document).ready(function(){
 	jQuery("div.add_new_variation").hide();
-	jQuery("div.add_variant").hide();	
+	jQuery("div.add_variant").hide();
+	jQuery("div.wpsc_add_variation_desc").hide();
+	jQuery("input.wpsc-save-variation-set").hide();
+	jQuery("div#wpsc_add_variant_desc").hide();	
 });
 
 /* open them when the link is pushed */
 jQuery(".add_variation_set_action").livequery(function(){
 	jQuery(this).click(function() {
 		jQuery("div.add_new_variation").slideDown();
+		jQuery("div.wpsc_add_variation_desc").slideDown();	
 	});
 });
 
 jQuery(".add_variation_set").livequery(function(){
 	jQuery(this).click(function() {
+		var variation_set_name = jQuery("#variation_set").val();
+		if (variation_set_name == ''){
+			jQuery("span.variation_set_name_error").text("You must enter in a name for your Variation");
+			return;
+		}
 		/* grab the variation set name so we can write it to the add [set name] Variants part */
-		variation_set_name = jQuery("#variation_set").val();
+		jQuery("div.wpsc_add_variation_desc").hide();
 		jQuery("span.variation_set_name").text(variation_set_name);
 		/* and now we show the add variant div */
 		jQuery("div.add_variant").show();
+		jQuery("div#wpsc_add_variant_desc").show();
+		jQuery(this).hide();
 	});
 });
 
+jQuery("button.wpsc_add_variant").livequery(function(){
+	jQuery(this).click(function() {
+		
+		//find the variant value
+		var variant = jQuery("input.wpsc_variant").val();
+		var variation = jQuery("input.wpsc_variantion").val();
+		//prepare the ajax data action and variant name
+		var data = {
+			action: 	'wpsc_add_variant_from_products_page',
+			variant: 	variant,
+			variation: 	variation
+		};
+		//send off the request
+	
+	jQuery.post(ajaxurl, data, function(data) {
+			var variant_id = jQuery(data).find('variant_id').text();
+			alert(variant_id);
+			jQuery("div.tagchecklist").append('<span><a id="wpsc_variant_'+variant_id+'" class="ntdelbutton">X</a>'+variant+'</span>');
+		/* 	} */
+		});
+		
+		//we can now show the save button because we have aleast one variant added
+		jQuery("input.wpsc-save-variation-set").show();
+		//reset the value back in the variation box to nothing
+		jQuery("input.wpsc_variant").val('');
+		jQuery("span.variant_value").text(variant);
+		//Create the tag look for each variants
+		
+		
+	});
+});
+	
 
