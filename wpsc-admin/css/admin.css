@@ -3,6 +3,7 @@
 
 */
 
+<<<<<<< HEAD
 /* This is the variation meta box stuff need to put it in the correct place - mychelle */
 div#wpsc_product_variation_forms table#wpsc_product_list tbody tr td span{
 display:none;
@@ -54,6 +55,8 @@ input.wpsc_ie_field {
 	margin-left:20px;
 }
 
+=======
+>>>>>>> 36ca9a7f756e24998ddd8002401d16e0ce6e51aa
 ul.children{
 	padding-left:5px;
 }
