@@ -3,9 +3,6 @@
 	<h2>
 		<?php esc_html_e( 'Sales Log Details', 'wpsc' ); ?>
 		<span class="subtitle">#<?php echo $this->log_id; ?></span>
-		<?php
-			if ( isset($_REQUEST['s']) && $_REQUEST['s'] )
-				printf( '<span class="subtitle">' . __('Search results for &#8220;%s&#8221;') . '</span>', esc_html( stripslashes( $_REQUEST['s'] ) ) ); ?>
 	</h2>
 	<div id='post-body'>
 		<?php if ( wpsc_has_purchlog_shipping() ): ?>

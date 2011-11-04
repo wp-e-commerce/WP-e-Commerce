@@ -327,17 +327,7 @@ class WPSC_Purchase_Log_Page
 	}
 
 	public function action_list_table_before() {
-		?>
-		<h3>
-			<?php esc_html_e( 'Are you sure you want to delete these purchase logs?', 'wpsc'); ?><br />
-		</h3>
-		<div>
-			<a href="" class="button">Go Back</a>
-			<input class="button-primary" type="submit" value="Delete" />
-			<input type="hidden" name="confirm" value="1" />
-			<input type="hidden" name="action" value="delete" />
-		</div>
-		<?php
+		include( 'purchase-logs-page/bulk-delete-confirm.php' );
 	}
 
 	public function display_list_table() {
@@ -346,34 +336,6 @@ class WPSC_Purchase_Log_Page
 			return;
 		}
 
-		?>
-		<div class="wrap">
-
-			<div id="icon-users" class="icon32"><br/></div>
-			<h2>
-				<?php esc_html_e( 'Sales Log' ); ?>
-
-				<?php
-					if ( isset($_REQUEST['s']) && $_REQUEST['s'] )
-						printf( '<span class="subtitle">' . __('Search results for &#8220;%s&#8221;') . '</span>', esc_html( stripslashes( $_REQUEST['s'] ) ) ); ?>
-			</h2>
-
-			<form id="purchase-logs-search" method-"get" action="">
-				<input type="hidden" name="page" value="<?php echo esc_attr( $_REQUEST['page'] ); ?>" />
-				<?php $this->list_table->search_box( 'Search Sales Logs', 'post' ); ?>
-			</form>
-
-			<!-- Forms are NOT created automatically, so you need to wrap the table in one to use features like bulk actions -->
-			<form id="purchase-logs-filter" method="post" action="">
-				<?php do_action( 'wpsc_purchase_logs_list_table_before' ); ?>
-				<!-- For plugins, we also need to ensure that the form posts back to our current page -->
-				<!-- Now we can render the completed list table -->
-
-				<?php $this->list_table->display() ?>
-				<?php do_action( 'wpsc_purchase_logs_list_table_after' ); ?>
-			</form>
-
-		</div>
-		<?php
+		include( 'purchase-logs-page/list-table.php' );
 	}
 }
