@@ -286,37 +286,66 @@ console.log(url);
 		 */
 		event_init : function() {
 			var wrapper = $('#options_checkout');
-
-			/**
-			 * This hack is to make sure the dragged row has 100% width
-			 * @param  {Object} e Event object
-			 * @param  {Object} tr The row being dragged
-			 * @return {Object} helper The helper object (which is a clone of the row)
-			 */
-			var fix_sortable_helper = function(e, tr) {
-				var row = tr.clone().width(tr.width());
-				row.find('td').each(function(index){
-					var td_class = $(this).attr('class'), original = tr.find('.' + td_class), old_html = $(this).html();
-					$(this).html('<div>' + old_html + '</div>');
-					$(this).find('div').width(original.width());
+			wrapper.delegate('.add_new_form_set', 'click', WPSC_Settings_Page.Checkout.event_add_new_form_set)
+			wrapper.find('#wpsc_checkout_list').
+				sortable({
+					items       : 'tr.checkout_form_field',
+					axis        : 'y',
+					containment : 'parent',
+					placeholder : 'checkout-placeholder',
+					handle      : '.drag',
+					helper      : WPSC_Settings_Page.Checkout.fix_sortable_helper,
+					start       : WPSC_Settings_Page.Checkout.event_sort_start,
+					update      : WPSC_Settings_Page.Checkout.event_sort_update,
 				});
-				return row;
-			};
+		},
 
-			wrapper.delegate('.add_new_form_set', 'click', WPSC_Settings_Page.Checkout.event_add_new_form_set);
-			wrapper.sortable({
-				items       : 'tr.checkout_form_field',
-				axis        : 'y',
-				containment : 'table#wpsc_checkout_list',
-				placeholder : 'checkout-placeholder',
-				handle      : '.drag',
-				helper : fix_sortable_helper
+		/**
+		 * This hack is to make sure the dragged row has 100% width
+		 * @param  {Object} e Event object
+		 * @param  {Object} tr The row being dragged
+		 * @return {Object} helper The helper object (which is a clone of the row)
+		 */
+		fix_sortable_helper : function(e, tr) {
+			var row = tr.clone().width(tr.width());
+			row.find('td').each(function(index){
+				var td_class = $(this).attr('class'), original = tr.find('.' + td_class), old_html = $(this).html();
+				$(this).html('<div>' + old_html + '</div>');
+				$(this).find('div').width(original.width());
 			});
+			return row;
+		},
 
-/*			jQuery(this).bind('sortupdate', function(event, ui) {
-				post_values = jQuery( 'table#wpsc_checkout_list').sortable( 'serialize');
-				jQuery.post( 'index.php?wpsc_admin_action=save_checkout_order', post_values, function(returned_data) { });
-			}); */
+		/**
+		 * The placeholder in this case will be an empty <tr> element. Need to add
+		 * a <td> inside for styling purpose.
+		 * @param  {Object} e Event Object
+		 * @param  {Object} ui UI Object
+		 */
+		event_sort_start : function(e, ui) {
+			ui.placeholder.html('<td colspan="7">&nbsp;</td>');
+		},
+
+		/**
+		 * Update sort order via AJAX.
+		 * @param  {Object} e Event Object
+		 * @param  {Object} ui UI Object
+		 */
+		event_sort_update : function(e, ui) {
+			var spinner = $(ui.item).find('.ajax-feedback');
+			var post_data = {
+				action     : 'wpsc_update_checkout_fields_order',
+				nonce      : WPSC_Settings_Page.nonce,
+				sort_order : $('table#wpsc_checkout_list').sortable('toArray')
+			};
+			var ajax_callback = function(response) {
+				spinner.toggleClass('ajax-feedback-active');
+				if (response != 'success') {
+					alert(WPSC_Settings_Page.checkout_field_sort_error_dialog);
+				}
+			};
+			spinner.toggleClass('ajax-feedback-active');
+			$.post(ajaxurl, post_data, ajax_callback);
 		},
 
 		/**
@@ -324,8 +353,8 @@ console.log(url);
 		 * @since 3.8.8
 		 */
 		event_add_new_form_set : function() {
-			jQuery(".add_new_form_set_forms").toggle();
-				return false;
+			$(".add_new_form_set_forms").toggle();
+			return false;
 		}
 	};
 	$(WPSC_Settings_Page).bind('wpsc_settings_tab_loaded_checkout', WPSC_Settings_Page.Checkout.event_init);
