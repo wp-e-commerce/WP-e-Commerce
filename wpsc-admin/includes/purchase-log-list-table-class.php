@@ -1,5 +1,4 @@
 <?php
-
  /* The WP_List_Table class isn't automatically available to plugins, so we need
  * to check if it's available and load it if necessary.
  */
@@ -98,6 +97,12 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 			$where[] = $search_sql;
 		}
 
+		// filter by status
+		if ( ! empty( $_REQUEST['status'] ) ) {
+			$status = absint( $_REQUEST['status'] );
+			$where[] = 'processed = ' . $status;
+		}
+
 		// filter by month
 		if ( ! empty( $_REQUEST['m'] ) ) {
 			$year = (int) substr( $_REQUEST['m'], 0, 4);
@@ -192,6 +197,58 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 		$months = $wpdb->get_results( $sql );
 		set_transient( $transient_key, $months, 60 * 24 * 7 );
 		return $months;
+	}
+
+	public function get_views() {
+		global $wpdb;
+		$view_labels = array(
+			1 => _nx_noop( 'Incomplete <span class="count">(%s)</span>', 'Incomplete <span class="count">(%s)</span>', 'purchase logs' ),
+			2 => _nx_noop( 'Received <span class="count">(%s)</span>', 'Received <span class="count">(%s)</span>', 'purchase logs' ),
+			3 => _nx_noop( 'Accepted <span class="count">(%s)</span>', 'Accepted <span class="count">(%s)</span>', 'purchase logs' ),
+			4 => _nx_noop( 'Dispatched <span class="count">(%s)</span>', 'Dispatched <span class="count">(%s)</span>', 'purchase logs' ),
+			5 => _nx_noop( 'Closed <span class="count">(%s)</span>', 'Closed <span class="count">(%s)</span>', 'purchase logs' ),
+			6 => _nx_noop( 'Declined <span class="count">(%s)</span>', 'Declined <span class="count">(%s)</span>', 'purchase logs' ),
+		);
+
+		$sql = "SELECT DISTINCT processed, COUNT(*) AS count FROM " . WPSC_TABLE_PURCHASE_LOGS . " GROUP BY processed ORDER BY processed";
+		$results = $wpdb->get_results( $sql );
+		$statuses = array();
+		foreach ( $results as $status ) {
+			$statuses[$status->processed] = $status->count;
+		}
+
+		$total_count = array_sum( $statuses );
+		$all_text = sprintf(
+			_nx( 'All <span class="count">(%s)</span>', 'All <span class="count">(%s)</span>', $total_count, 'purchase logs', 'wpsc' ),
+			number_format_i18n( $total_count )
+		);
+		$all_href = remove_query_arg( 'status' );
+		$all_class = ( empty( $_REQUEST['status'] ) || $_REQUEST['status'] == 'all' ) ? 'class="current"' : '';
+		$views = array(
+			'all' => sprintf(
+				'<a href="%s" %s>%s</a>',
+				$all_href,
+				$all_class,
+				$all_text
+			),
+		);
+
+		foreach ( $statuses as $status => $count ) {
+			$text = sprintf(
+				translate_nooped_plural( $view_labels[$status], $count, 'wpsc' ),
+				number_format_i18n( $count )
+			);
+			$href = add_query_arg( 'status', $status );
+			$class = ( ! empty( $_REQUEST['status'] ) && $_REQUEST['status'] == $status ) ? 'class="current"' : '';
+			$views[$status] = sprintf(
+				'<a href="%s" %s>%s</a>',
+				$href,
+				$class,
+				$text
+			);
+		}
+
+		return $views;
 	}
 
 	public function months_dropdown() {
@@ -355,7 +412,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 		$actions = array(
 			'delete' => _x( 'Delete', 'bulk action', 'wpsc' ),
 			'1'      => __( 'Incomplete Sale', 'wpsc' ),
-			'2'      => __( 'Order Recieved', 'wpsc' ),
+			'2'      => __( 'Order Received', 'wpsc' ),
 			'3'      => __( 'Accepted Payment', 'wpsc' ),
 			'4'      => __( 'Job dispatched', 'wpsc' ),
 			'5'      => __( 'Closed Order', 'wpsc' ),
@@ -481,6 +538,16 @@ class WPSC_Purchase_Log_Page
 			return;
 		}
 
+		$sendback = remove_query_arg( array(
+			'_wpnonce',
+			'_wp_http_referer',
+			'action',
+			'action2',
+			'confirm',
+			'post',
+			'last_paged'
+		) );
+
 		if ( $current_action == 'delete' ) {
 
 			// delete action
@@ -503,19 +570,7 @@ class WPSC_Purchase_Log_Page
 				$wpdb->query( "DELETE FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid {$in}" );
 				$wpdb->query( "DELETE FROM " . WPSC_TABLE_SUBMITED_FORM_DATA . " WHERE log_id {$in}" );
 
-				$sendback = add_query_arg( 'paged', $_REQUEST['last_paged'] );
-				$sendback = remove_query_arg( array(
-					'_wpnonce',
-					'_wp_http_referer',
-					'action',
-					'action2',
-					'confirm',
-					'post',
-					'last_paged'
-				), $sendback );
-				wp_redirect( $sendback );
-				exit;
-				return;
+				$sendback = add_query_arg( 'paged', $_REQUEST['last_paged'], $sendback );
 			}
 		}
 
@@ -524,9 +579,10 @@ class WPSC_Purchase_Log_Page
 			foreach ( $_REQUEST['post'] as $id ) {
 				wpsc_purchlog_edit_status( $id, $current_action );
 			}
-
-			unset( $_REQUEST['post'] );
 		}
+
+		wp_redirect( $sendback );
+		exit;
 	}
 
 	public function action_list_table_before() {

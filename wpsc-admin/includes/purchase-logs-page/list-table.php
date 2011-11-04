@@ -13,6 +13,8 @@
 		<?php $this->list_table->search_box( 'Search Sales Logs', 'post' ); ?>
 	</form>
 
+	<?php $this->list_table->views(); ?>
+
 	<!-- Forms are NOT created automatically, so you need to wrap the table in one to use features like bulk actions -->
 	<form id="purchase-logs-filter" method="get" action="">
 		<?php do_action( 'wpsc_purchase_logs_list_table_before' ); ?>
