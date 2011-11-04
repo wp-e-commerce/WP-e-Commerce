@@ -61,7 +61,7 @@
 				</thead>
 
 				<tbody>
-					<?php wpsc_display_purchlog_details(); ?>
+					<?php $this->purchase_log_cart_items(); ?>
 
 					<tr class="wpsc_purchaselog_start_totals">
 						<td colspan="<?php echo $cols; ?>">
@@ -94,21 +94,7 @@
 				</tbody>
 			</table>
 
-			<div id='wpsc_purchlog_order_status'>
-				<form action='' method='post'>
-					<p>
-						<label for='purchaselog-<?php echo esc_attr( $this->log_id ); ?>'>
-							<?php esc_html_e( 'Order Status:', 'wpsc' ); ?>
-						</label>
-						<select id='purchaselog-<?php echo esc_attr( $this->log_id ); ?>' class='selector' name='<?php echo esc_attr( $this->log_id ); ?>'>
-						<?php while( wpsc_have_purch_items_statuses() ) : wpsc_the_purch_status(); ?>
-							<option value='<?php echo wpsc_the_purch_status_id(); ?>' <?php echo wpsc_purchlog_is_checked_status(); ?> ><?php echo wpsc_the_purch_status_name(); ?> </option>
-						<?php endwhile; ?>
-					</select></p>
-				</form>
-			</div>
-
-			<?php wpsc_purchlogs_custom_fields(); ?>
+			<?php $this->purchase_log_custom_fields(); ?>
 
 			<div class="metabox-holder">
 				<div id="purchlogs_notes" class="postbox">
@@ -136,7 +122,7 @@
 			</div>
 			<!-- End Order Notes (by Ben) -->
 
-			<?php wpsc_custom_checkout_fields(); ?>
+			<?php $this->purchase_logs_checkout_fields(); ?>
 
 		</div>
 	</div>

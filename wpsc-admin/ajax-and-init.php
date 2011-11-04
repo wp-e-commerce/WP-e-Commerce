@@ -107,55 +107,6 @@ function wpsc_purchase_log_send_tracking_email() {
 
 add_action( 'wp_ajax_wpsc_purchase_log_send_tracking_email', 'wpsc_purchase_log_send_tracking_email' );
 
-function wpsc_ajax_add_tracking() {
-	global $wpdb;
-	foreach ( $_POST as $key => $value ) {
-		$parts = preg_split( '/^wpsc_trackingid/', $key );
-		if ( count( $parts ) > '1' ) {
-			$id = $parts[1];
-			$trackingid = $value;
-			$sql = "UPDATE `" . WPSC_TABLE_PURCHASE_LOGS . "` SET `track_id`='" . $trackingid . "' WHERE `id`=" . $id;
-			$wpdb->query( $sql );
-		}
-
-	}
-}
-
-if ( isset( $_REQUEST['submit'] ) && ($_REQUEST['submit'] == 'Add Tracking ID') ) {
-	add_action( 'admin_init', 'wpsc_ajax_add_tracking' );
-}
-
-function wpsc_purchlog_email_trackid() {
-	global $wpdb;
-	$id = absint( $_POST['purchlog_id'] );
-	$trackingid = $wpdb->get_var( "SELECT `track_id` FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE `id`={$id} LIMIT 1" );
-
-	$message = get_option( 'wpsc_trackingid_message' );
-	$message = str_replace( '%trackid%', $trackingid, $message );
-	$message = str_replace( '%shop_name%', get_option( 'blogname' ), $message );
-
-	$email_form_field = $wpdb->get_var( "SELECT `id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `type` IN ('email') AND `active` = '1' ORDER BY `checkout_order` ASC LIMIT 1" );
-	$email = $wpdb->get_var( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` WHERE `log_id`=" . $id . " AND `form_id` = '$email_form_field' LIMIT 1" );
-
-
-	$subject = get_option( 'wpsc_trackingid_subject' );
-	$subject = str_replace( '%shop_name%', get_option( 'blogname' ), $subject );
-
-	add_filter( 'wp_mail_from', 'wpsc_replace_reply_address', 0 );
-	add_filter( 'wp_mail_from_name', 'wpsc_replace_reply_name', 0 );
-
-	wp_mail( $email, $subject, $message);
-
-	remove_filter( 'wp_mail_from_name', 'wpsc_replace_reply_name' );
-	remove_filter( 'wp_mail_from', 'wpsc_replace_reply_address' );
-
-	exit( true );
-}
-
-if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'purchlog_email_trackid') ) {
-	add_action( 'admin_init', 'wpsc_purchlog_email_trackid' );
-}
-
 function wpsc_ajax_sales_quarterly() {
 	$lastdate = $_POST['add_start'];
 	$date = preg_split( '/-/', $lastdate );

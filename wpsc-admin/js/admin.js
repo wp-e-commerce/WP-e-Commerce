@@ -314,28 +314,6 @@ jQuery('#wpsc_product_list a.wpsc_editinline').live('click', function() {
 		}
 		);
 
-	jQuery('tr.wpsc_trackingid_row').hide();
-
-	jQuery('.wpsc_show_trackingid').click(function(event){
-		purchlog_id = jQuery(this).attr('title');
-		if(jQuery('tr.log'+purchlog_id).hasClass('wpsc_hastracking')){
-			jQuery('tr.log'+purchlog_id).removeClass('wpsc_hastracking');
-			jQuery('tr.log'+purchlog_id).hide();
-		}else{
-			jQuery('tr.log'+purchlog_id).addClass('wpsc_hastracking');
-			jQuery('tr.log'+purchlog_id).show();
-		}
-		event.preventDefault();
-	});
-
-	jQuery('.sendTrackingEmail').click(function(event){
-		purchlog_id = jQuery(this).attr('title');
-		post_values = "purchlog_id="+purchlog_id;
-		var ajax_loader = jQuery(this).prev('.ajax-loading');
-		ajax_loader.css('visibility', 'visible');
-		jQuery.post( 'index.php?wpsc_admin_action=purchlog_email_trackid', post_values, function(returned_data) { ajax_loader.css('visibility', 'hidden'); });
-		event.preventDefault();
-	});
 
 	jQuery("a.thickbox").livequery(function(){
 		tb_init(this);
