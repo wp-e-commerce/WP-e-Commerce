@@ -318,32 +318,86 @@ img.ajax-feedback-active {
 
 .js .wpsc-shipping-module-settings-tablerate td a.add:hover,
 .js .wpsc-shipping-module-settings-weightrate td a.add:hover,
-.js #wpsc_checkout_list .actionscol a.add:hover {
+.js #wpsc_checkout_list .actionscol a.add:hover,
+.js .wpsc-field-options-table .column-actions a.add:hover {
 	background-position:-20px 0;
 }
 
 .js .wpsc-shipping-module-settings-tablerate td a.add:active,
 .js .wpsc-shipping-module-settings-weightrate td a.add:active,
-.js #wpsc_checkout_list .actionscol a.add:active {
+.js #wpsc_checkout_list .actionscol a.add:active,
+.js .wpsc-field-options-table .column-actions a.add:active {
 	background-position:-40px 0;
 }
 
 .js .wpsc-shipping-module-settings-tablerate td a.delete:hover,
 .js .wpsc-shipping-module-settings-weightrate td a.delete:hover,
-.js #wpsc_checkout_list .actionscol a.delete:hover {
+.js #wpsc_checkout_list .actionscol a.delete:hover,
+.js .wpsc-field-options-table .column-actions a.delete:hover {
 	background-position:-20px -20px;
 }
 
 .js .wpsc-shipping-module-settings-tablerate td a.delete:active,
 .js .wpsc-shipping-module-settings-weightrate td a.delete:active,
-.js #wpsc_checkout_list .actionscol a.delete:active {
+.js #wpsc_checkout_list .actionscol a.delete:active,
+.js .wpsc-field-options-table .column-actions a.delete:active {
 	background-position:-40px -20px;
 }
 
 .js .wpsc-shipping-module-settings-tablerate td .delete,
 .js .wpsc-shipping-module-settings-weightrate td .delete,
-.js #wpsc_checkout_list .actionscol .delete {
+.js #wpsc_checkout_list .actionscol .delete,
+.js .wpsc-field-options-table .column-actions .delete {
 	background-position:0 -20px;
+}
+
+#wpsc_checkout_list .wpsc-field-options-table {
+	border-collapse:collapse;
+	margin-bottom:1em;
+	width:100%;
+}
+
+#wpsc_checkout_list .wpsc-field-options-table th {
+	background:none;
+	border-top:none;
+	color:#000;
+	font-family:sans-serif;
+	font-size:12px;
+	font-weight:bold;
+	padding:0 5px;
+}
+
+#wpsc_checkout_list .wpsc-field-options-table input {
+	width:85px;
+}
+
+#wpsc_checkout_list .wpsc-field-options-table td {
+	border:none;
+	padding:0 5px;
+}
+
+.js #wpsc_checkout_list .edit-options {
+	display:none;
+}
+
+.js .form-field-options {
+	display:none;
+}
+
+#wpsc_checkout_list .form-field-options td {
+	border-top:none;
+}
+
+#wpsc_checkout_list tr.editing-options td {
+	border-bottom:none;
+}
+
+#wpsc_checkout_list .wpsc-field-options-table td .field-option-cell-wrapper {
+	padding:7px 0;
+}
+
+#wpsc_checkout_list .wpsc-field-options-table .column-actions .field-option-cell-wrapper {
+	float:right;
 }
 
 .js #wpsc_checkout_list .new-field {
