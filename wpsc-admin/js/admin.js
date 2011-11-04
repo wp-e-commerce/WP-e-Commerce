@@ -295,22 +295,6 @@ jQuery(document).ready(function(){
 		}
 		event.preventDefault();
 	});
-	// this changes the purchase log item status
-	jQuery('.selector').change(function(){
-		purchlog_id = jQuery(this).attr('title');
-		purchlog_status = jQuery(this).val();
-		post_values = "action=purchlog_edit_status&purchlog_id="+purchlog_id+"&purchlog_status="+purchlog_status;
-		var ajax_loading = jQuery(this).prev('.ajax-loading');
-		ajax_loading.css('visibility', 'visible');
-		jQuery.post( ajaxurl, post_values, function(returned_data) {
-			ajax_loading.css('visibility', 'hidden');
-		});
-
-		if(purchlog_status == 4){
-			jQuery('tr.log'+purchlog_id).show();
-
-		}
-	});
 
 	jQuery('.sendTrackingEmail').click(function(event){
 		purchlog_id = jQuery(this).attr('title');
