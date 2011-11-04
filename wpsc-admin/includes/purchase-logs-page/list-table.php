@@ -21,6 +21,19 @@
 
 		<?php $this->list_table->display() ?>
 		<input type="hidden" name="page" value="wpsc-purchase-logs" />
+
+		<?php if ( ! $this->list_table->is_pagination_enabled() && $this->list_table->get_pagenum() ):?>
+			<input type="hidden" name="last_paged" value="<?php echo esc_attr( $this->list_table->get_pagenum() ); ?>" />
+		<?php endif ?>
+
+		<?php if ( ! $this->list_table->is_sortable() && isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ): ?>
+			<input type="hidden" name="orderby" value="<?php echo esc_attr( $_REQUEST['orderby'] ); ?>" />
+			<input type="hidden" name="order" value="<?php echo esc_attr( $_REQUEST['order'] ); ?>" />
+		<?php endif; ?>
+
+		<?php if ( ! $this->list_table->is_search_box_enabled() && isset( $_REQUEST['s'] ) ): ?>
+			<input type="hidden" name="s" value="<?php echo esc_attr( $_REQUEST['s'] ); ?>" />
+		<?php endif; ?>
 		<?php do_action( 'wpsc_purchase_logs_list_table_after' ); ?>
 	</form>
 

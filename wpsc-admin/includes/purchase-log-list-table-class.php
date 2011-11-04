@@ -1,4 +1,5 @@
 <?php
+
  /* The WP_List_Table class isn't automatically available to plugins, so we need
  * to check if it's available and load it if necessary.
  */
@@ -137,6 +138,18 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 		}
 	}
 
+	public function is_pagination_enabled() {
+		return $this->per_page !== 0;
+	}
+
+	public function is_sortable() {
+		return $this->sortable;
+	}
+
+	public function is_search_box_enabled() {
+		return $this->search_box;
+	}
+
 	public function get_columns() {
 		return array(
 			'cb'       => '<input type="checkbox" />',
@@ -184,10 +197,14 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 	public function months_dropdown() {
 		global $wp_locale;
 
-		if ( ! $this->month_filter )
-			return false;
-
 		$m = isset( $_REQUEST['m'] ) ? $_REQUEST['m'] : 0;
+
+		if ( ! $this->month_filter ) {
+			if ( $m !== 0 )
+				echo '<input type="hidden" name="m" value="' . $m . '" />';
+
+			return false;
+		}
 
 		$months = $this->get_months();
 		if ( ! empty( $months ) ) {
@@ -249,6 +266,27 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 			<a class="row-title" href="<?php echo esc_attr( $this->item_url( $item ) ); ?>" title="<?php esc_attr_e( 'View order details', 'wpsc' ) ?>"><?php echo esc_html( $item->firstname . ' ' . $item->lastname ); ?></a>
 		</strong><br />
 		<small><?php echo make_clickable( $item->email ); ?></small>
+		<?php
+	}
+
+	private function delete_url( $item ) {
+		$nonce = wp_create_nonce( 'bulk-' . $this->_args['plural'] );
+		$location = add_query_arg( array(
+			'_wpnonce' => $nonce,
+			'_wp_http_referer' => urlencode( $_SERVER['REQUEST_URI'] ),
+			'action' => 'delete',
+			urlencode( 'post[]' ) => $item->id,
+		) );
+		return $location;
+	}
+
+	public function column_id( $item ) {
+		?>
+		<a href="<?php echo esc_attr( $this->item_url( $item ) ); ?>" title="<?php esc_attr_e( 'View order details', 'wpsc' ) ?>"><?php echo esc_html( $item->id ); ?></a>
+		<?php if ( ! $this->current_action() == 'delete' ): ?>
+			<br />
+			<small><a class="delete" href="<?php echo esc_url( $this->delete_url( $item ) ); ?>"><?php echo esc_html( _x( 'Delete', 'Sales log page', 'wpsc' ) ); ?></a></small>
+		<?php endif ?>
 		<?php
 	}
 
@@ -464,7 +502,19 @@ class WPSC_Purchase_Log_Page
 				$wpdb->query( "DELETE FROM " . WPSC_TABLE_CLAIMED_STOCK . " WHERE cart_id {$in}" );
 				$wpdb->query( "DELETE FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid {$in}" );
 				$wpdb->query( "DELETE FROM " . WPSC_TABLE_SUBMITED_FORM_DATA . " WHERE log_id {$in}" );
-				unset( $_REQUEST['post'] );
+
+				$sendback = add_query_arg( 'paged', $_REQUEST['last_paged'] );
+				$sendback = remove_query_arg( array(
+					'_wpnonce',
+					'_wp_http_referer',
+					'action',
+					'action2',
+					'confirm',
+					'post',
+					'last_paged'
+				), $sendback );
+				wp_redirect( $sendback );
+				exit;
 				return;
 			}
 		}

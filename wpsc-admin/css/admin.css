@@ -1901,3 +1901,12 @@ table.purchase-logs .column-tracking .ajax-feedback-active {
 table.purchase-logs .column-tracking em.sent {
 	color:green;
 }
+
+table.purchase-logs .column-id .delete {
+	color:red;
+	visibility:hidden;
+}
+
+table.purchase-logs tr:hover .column-id .delete {
+	visibility:visible;
+}
