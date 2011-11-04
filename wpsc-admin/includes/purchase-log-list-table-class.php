@@ -309,6 +309,8 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 			'order',
 			'orderby',
 			's',
+			'updated',
+			'deleted',
 		) );
 		$location = add_query_arg( array(
 			'c'  => 'item_details',
@@ -334,6 +336,10 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 			'action' => 'delete',
 			urlencode( 'post[]' ) => $item->id,
 		) );
+		$location = remove_query_arg( array(
+			'updated',
+			'deleted',
+		), $location );
 		return $location;
 	}
 
@@ -528,7 +534,7 @@ class WPSC_Purchase_Log_Page
 		global $wpdb;
 		$current_action = $this->list_table->current_action();
 
-		if ( ! $current_action ) {
+		if ( ! $current_action || empty( $_REQUEST['post'] ) ) {
 			if ( ! empty( $_REQUEST['_wp_http_referer'] ) ) {
 				wp_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'action', 'action2' ), stripslashes($_SERVER['REQUEST_URI']) ) );
 	 			exit;
@@ -570,7 +576,10 @@ class WPSC_Purchase_Log_Page
 				$wpdb->query( "DELETE FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid {$in}" );
 				$wpdb->query( "DELETE FROM " . WPSC_TABLE_SUBMITED_FORM_DATA . " WHERE log_id {$in}" );
 
-				$sendback = add_query_arg( 'paged', $_REQUEST['last_paged'], $sendback );
+				$sendback = add_query_arg( array(
+					'paged'   => $_REQUEST['last_paged'],
+					'deleted' => count( $_REQUEST['post'] ),
+				), $sendback );
 			}
 		}
 
@@ -579,8 +588,11 @@ class WPSC_Purchase_Log_Page
 			foreach ( $_REQUEST['post'] as $id ) {
 				wpsc_purchlog_edit_status( $id, $current_action );
 			}
-		}
 
+			$sendback = add_query_arg( array(
+				'updated' => count( $_REQUEST['post'] ),
+			), $sendback );
+		}
 		wp_redirect( $sendback );
 		exit;
 	}

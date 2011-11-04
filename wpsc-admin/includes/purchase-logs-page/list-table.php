@@ -8,12 +8,28 @@
 				printf( '<span class="subtitle">' . __('Search results for &#8220;%s&#8221;') . '</span>', esc_html( stripslashes( $_REQUEST['s'] ) ) ); ?>
 	</h2>
 
-	<form id="purchase-logs-search" method="get" action="">
+	<?php if ( ! empty( $_REQUEST['updated'] ) || ! empty( $_REQUEST['deleted'] ) ): ?>
+		<div id="message" class="updated">
+			<p>
+				<?php
+					if ( ! empty( $_REQUEST['updated'] ) )
+						printf( _n( '%s item updated.', '%s items updated.', $_REQUEST['updated'] ), number_format_i18n( $_REQUEST['updated'] ) );
+				?>
+				<?php
+					if ( ! empty( $_REQUEST['deleted'] ) )
+						printf( _n( '%s item deleted.', '%s items deleted.', $_REQUEST['deleted'] ), number_format_i18n( $_REQUEST['deleted'] ) );
+				?>
+			</p>
+		</div>
+	<?php endif ?>
+
+	<form id="purchase-logs-search" method-"get" action="">
 		<input type="hidden" name="page" value="<?php echo esc_attr( $_REQUEST['page'] ); ?>" />
 		<?php $this->list_table->search_box( 'Search Sales Logs', 'post' ); ?>
 	</form>
 
 	<?php $this->list_table->views(); ?>
+	<br class="clear" />
 
 	<!-- Forms are NOT created automatically, so you need to wrap the table in one to use features like bulk actions -->
 	<form id="purchase-logs-filter" method="get" action="">
