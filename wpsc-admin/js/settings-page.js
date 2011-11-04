@@ -126,7 +126,7 @@
 			if (typeof push_state == 'undefined') {
 				push_state = true;
 			}
-console.log(url);
+
 			var query = $.query.load(url);
 			var tab_id = query.get('tab');
 			var post_data = $.extend({}, query.get(), {
@@ -280,13 +280,18 @@ console.log(url);
 	 * @since 3.8.8
 	 */
 	WPSC_Settings_Page.Checkout = {
+		new_field_count : 0,
+
 		/**
 		 * Event binding for Checkout tab
 		 * @since 3.8.8
 		 */
 		event_init : function() {
 			var wrapper = $('#options_checkout');
-			wrapper.delegate('.add_new_form_set', 'click', WPSC_Settings_Page.Checkout.event_add_new_form_set)
+			wrapper.delegate('.add_new_form_set', 'click', WPSC_Settings_Page.Checkout.event_add_new_form_set).
+			        delegate('.actionscol a.add', 'click', WPSC_Settings_Page.Checkout.event_add_new_field).
+			        delegate('.actionscol a.delete', 'click', WPSC_Settings_Page.Checkout.event_delete_field);
+
 			wrapper.find('#wpsc_checkout_list').
 				sortable({
 					items       : 'tr.checkout_form_field',
@@ -300,8 +305,27 @@ console.log(url);
 				});
 		},
 
+		event_add_new_field : function() {
+			var target_row = $(this).closest('tr'),
+				new_row = $('#field-prototype').clone();
+			WPSC_Settings_Page.Checkout.new_field_count ++;
+			new_row.attr('id', 'new-field-' + WPSC_Settings_Page.Checkout.new_field_count).addClass('checkout_form_field');
+			new_row.find('.cell-wrapper').hide();
+			new_row.insertAfter(target_row).show().find('.cell-wrapper').slideDown(150);
+			return false;
+		},
+
+		event_delete_field : function() {
+			var target_row = $(this).closest('tr');
+			target_row.find('.cell-wrapper').slideUp(150, function(){
+				target_row.remove();
+			});
+			return false;
+		},
+
 		/**
 		 * This hack is to make sure the dragged row has 100% width
+		 *
 		 * @param  {Object} e Event object
 		 * @param  {Object} tr The row being dragged
 		 * @return {Object} helper The helper object (which is a clone of the row)
@@ -310,8 +334,10 @@ console.log(url);
 			var row = tr.clone().width(tr.width());
 			row.find('td').each(function(index){
 				var td_class = $(this).attr('class'), original = tr.find('.' + td_class), old_html = $(this).html();
-				$(this).html('<div>' + old_html + '</div>');
-				$(this).find('div').width(original.width());
+				if (td_class == 'actionscol') {
+					old_html = '';
+				}
+				$(this).find('.cell-wrapper').width(original.width());
 			});
 			return row;
 		},
@@ -332,6 +358,10 @@ console.log(url);
 		 * @param  {Object} ui UI Object
 		 */
 		event_sort_update : function(e, ui) {
+			if ($(ui.item).hasClass('new-field')) {
+				return;
+			}
+
 			var spinner = $(ui.item).find('.ajax-feedback');
 			var post_data = {
 				action     : 'wpsc_update_checkout_fields_order',
@@ -468,6 +498,7 @@ console.log(url);
 
 	/**
 	 * Shipping Tab
+	 * @namespace
 	 * @since 3.8.8
 	 */
 	WPSC_Settings_Page.Shipping = {
@@ -588,6 +619,11 @@ console.log(url);
 	};
 	$(WPSC_Settings_Page).bind('wpsc_settings_tab_loaded_shipping', WPSC_Settings_Page.Shipping.event_init);
 
+	/**
+	 * Payments Tab
+	 * @namespace
+	 * @since 3.8.8
+	 */
 	WPSC_Settings_Page.Gateway = {
 		event_init : function() {
 			var wrapper = $('#options_gateway');
