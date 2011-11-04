@@ -88,55 +88,6 @@ jQuery(document).ready(function(){
 
 	});
 
-	//Delete checkout options on settings>checkout page
-	jQuery('.wpsc_delete_option').livequery(function(){
-		jQuery(this).click(function(event){
-			jQuery(this).parent().parent('tr').remove();
-			event.preventDefault();
-		});
-
-	});
-
-	//checkboxes on checkout page
-	jQuery('.wpsc_add_new_checkout_option').livequery(function(){
-		jQuery(this).click(function(event){
-			form_id = jQuery(this).attr('title');
-			id = form_id.replace('form_options', '');
-			output = "<tr class='wpsc_grey'><td></td><td><input type='text' value='' name='wpsc_checkout_option_label"+id+"[]' /></td><td colspan='4'><input type='text' value='' name='wpsc_checkout_option_value"+id+"[]' />&nbsp;<a class='wpsc_delete_option' href='' ><img src='" + WPSC_CORE_IMAGES_URL + "/trash.gif' alt='"+TXT_WPSC_DELETE+"' title='"+TXT_WPSC_DELETE+"' /></a></td></tr>";
-			jQuery(this).parent().parent('tr').after(output);
-			event.preventDefault();
-		});
-
-	});
-
-
-	jQuery('.wpsc_edit_checkout_options').livequery(function(){
-		jQuery(this).click(function(event){
-			if(!jQuery(this).hasClass('triggered')){
-				jQuery(this).addClass('triggered');
-				id = jQuery(this).attr('rel');
-				id = id.replace('form_options[', '');
-				id = id.replace(']', '');
-				post_values = "form_id="+id;
-				jQuery.post('index.php?wpsc_admin_action=check_form_options',post_values, function(returned_data){
-					if(returned_data != ''){
-						jQuery('#checkout_'+id).after(returned_data);
-					}else{
-						output =  "<tr class='wpsc_grey'><td></td><td colspan='5'>Please Save your changes before trying to Order your Checkout Forms again.</td></tr>\r\n<tr  class='wpsc_grey'><td></td><th>Label</th><th >Value</th><td colspan='3'><a href=''  class='wpsc_add_new_checkout_option'  title='form_options["+id+"]'>+ New Option</a></td></tr>";
-						output += "<tr class='wpsc_grey'><td></td><td><input type='text' value='' name='wpsc_checkout_option_label["+id+"][]' /></td><td colspan='4'><input type='text' value='' name='wpsc_checkout_option_value["+id+"][]' /><a class='wpsc_delete_option' href='' ><img src='" + WPSC_CORE_IMAGES_URL + "/trash.gif' alt='Delete' title='delete' /></a></td></tr>";
-						jQuery('#checkout_'+id).after(output);
-
-					}
-
-				});
-				jQuery('table#wpsc_checkout_list').sortable('disable');
-			}
-			event.preventDefault();
-		});
-
-
-	});
-
 	//new currency JS in admin product page
 	jQuery('div.new_layer').livequery(function(){
 		jQuery(this).hide();
@@ -741,57 +692,9 @@ function fillcategoryform(catid) {
 function submit_status_form(id) {
 	document.getElementById(id).submit();
 }
-function showaddform() {
-	jQuery('#blank_item').css('display', 'none');
-	jQuery('#productform').css('display', 'none');
-	jQuery('#additem').css('display', 'block');
-	return false;
-}
-//used to add new form fields in the checkout setting page
-function add_form_field(e) {
-	var time = new Date(),
-		new_element_number = time.getTime(),
-		new_element_id = "form_id_"+new_element_number,
-		new_element_contents = '<tr class="checkout_form_field" id="'+new_element_id+'">';
-
-	new_element_contents += "<td class='drag'></td>";
-	new_element_contents += "<td class='namecol'><input type='text' name='new_form_name["+new_element_number+"]' value='' /></td>\n\r";
-	new_element_contents += "<td class='typecol'><select class='wpsc_checkout_selectboxes' name='new_form_type["+new_element_number+"]'>"+HTML_FORM_FIELD_TYPES+"</select></td>\n\r";
-	/* new_element_contents += "<td class='typecol'><select name='new_form_unique_name["+new_element_number+"]'>"+HTML_FORM_FIELD_UNIQUE_NAMES+"</select></td>\n\r"; */
-	new_element_contents += "<td class='mandatorycol' style='text-align: center;'><input type='checkbox' name='new_form_display["+new_element_number+"]' value='1' /></td>\n\r";
-	new_element_contents += "<td class='mandatorycol' style='text-align: center;'><input type='checkbox' name='new_form_mandatory["+new_element_number+"]' value='1' /></td>\n\r";
-	new_element_contents += "<td><a class='image_link' href='#' onclick='return remove_new_form_field(\""+new_element_id+"\");'><img src='" + WPSC_CORE_IMAGES_URL + "/trash.gif' alt='"+TXT_WPSC_DELETE+"' title='"+TXT_WPSC_DELETE+"' /></a></td>\n\r";
-	new_element_contents += '</tr>';
-	jQuery('#checkout_message').css('display', 'block');
-	jQuery("#wpsc_checkout_list_body").append(new_element_contents);
-
-	return false;
-}
-
-
-
-function remove_new_form_field(id) {
-	element_count = document.getElementById("wpsc_checkout_list_body").childNodes.length;
-	if(element_count > 1) {
-		target_element = document.getElementById(id);
-		document.getElementById("wpsc_checkout_list_body").removeChild(target_element);
-	}
-	return false;
-}
 
 function getcurrency(id) {
 //ajax.post("index.php",gercurrency,"wpsc_admin_action=change_currency&currencyid="+id);
-}
-//delete checkout fields from checkout settings page
-function remove_form_field(id,form_id) {
-	var delete_variation_value=function(results) { }
-	element_count = document.getElementById("wpsc_checkout_list_body").childNodes.length;
-	if(element_count > 1) {
-		ajax.post("index.php",delete_variation_value,"admin=true&ajax=true&remove_form_field=true&form_id="+form_id);
-		target_element = document.getElementById(id);
-		document.getElementById("wpsc_checkout_list_body").removeChild(target_element);
-	}
-	return false;
 }
 
 function showadd_categorisation_form() {
