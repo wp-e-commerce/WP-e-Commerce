@@ -75,17 +75,13 @@ function wpsc_product_row(&$product, $parent_product = null) {
 	<tr id='post-<?php echo $product->ID; ?>' class='<?php echo trim( $rowclass . ' author-' . $post_owner . ' status-' . $product->post_status ); ?> iedit <?php if ( get_option ( 'wpsc_sort_by' ) == 'dragndrop') { echo 'product-edit'; } ?>' valign="top">
 	<?php
 	$posts_columns = get_column_headers( 'wpsc-product_variants' );
-	$hidden_columns = get_hidden_columns( 'wpsc-product_variants' );
-	
+
 	if(empty($posts_columns))
 		$posts_columns = array('image' => '', 'title' => __('Name', 'wpsc') , 'weight' => __('Weight', 'wpsc'), 'stock' => __('Stock', 'wpsc'), 'price' => __('Price', 'wpsc'), 'sale_price' => __('Sale Price', 'wpsc'), 'SKU' => __('SKU', 'wpsc'), 'hidden_alerts' => '');
 
 	foreach ( $posts_columns as $column_name=>$column_display_name ) {
 		$attributes = "class=\"$column_name column-$column_name\"";
 		
-		if ( in_array( $column_name, $hidden_columns ) )
-			$attributes .= ' style="display:none;"';
-
 		switch ($column_name) {
 
                     case 'date': /* !date case */
@@ -132,11 +128,10 @@ function wpsc_product_row(&$product, $parent_product = null) {
 		<td <?php echo $attributes ?>>
 			<strong>
 			<?php if ( $current_user_can_edit_this_product && $product->post_status != 'trash' ) { ?>
-				<a class="row-title" href="<?php echo $edit_link; ?>" title="<?php echo esc_attr(sprintf(__('Edit &#8220;%s&#8221;', 'wpsc'), $title)); ?>"><?php echo $title ?></a>
+				<span><a class="row-title" href="<?php echo $edit_link; ?>" title="<?php echo esc_attr(sprintf(__('Edit &#8220;%s&#8221;', 'wpsc'), $title)); ?>"><?php echo $title ?></a></span>
 				<?php if($parent_product): ?>
-					<input type="hidden" class="wpsc_ie_id wpsc_ie_field" value="<?php echo $product->ID ?>">
-					<input type="text" class="wpsc_ie_title wpsc_ie_field" value="<?php echo $title ?>">
-					<div class="wpsc_inline_actions"><input type="button" class="button-primary wpsc_ie_save" value="Save"><img src="<?php bloginfo('url') ?>/wp-admin/images/wpspin_light.gif" class="loading_indicator"><br/><input type="button" class="button-secondary cancel wpsc_ie_cancel" value="<?php _e('Cancel', 'wpsc'); ?>"></div>
+					<a href="<?php echo $edit_link; ?>" title="<?php echo esc_attr(sprintf(__('Edit &#8220;%s&#8221;', 'wpsc'), $title)); ?>"><?php echo $title ?></a>
+
 				<?php endif; ?>
 			<?php } else {
 				echo $title;
@@ -168,7 +163,8 @@ function wpsc_product_row(&$product, $parent_product = null) {
 			$actions = array();
 			if ( $current_user_can_edit_this_product && 'trash' != $product->post_status ) {
 				$actions['edit'] = '<a class="edit-product" href="'.$edit_link.'" title="' . esc_attr(__('Edit this product', 'wpsc')) . '">'. __('Edit', 'wpsc') . '</a>';
-				$actions['quick_edit'] = "<a class='wpsc_editinline ".$has_var."' title='".esc_attr(__('Quick Edit', 'wpsc'))."' href='#'>".__('Quick Edit', 'wpsc')."</a>";
+				//commenting this out for now as we are trying new variation ui quick edit boxes are open by default so we dont need this link.
+				//$actions['quick_edit'] = "<a class='wpsc_editinline ".$has_var."' title='".esc_attr(__('Quick Edit', 'wpsc'))."' href='#'>".__('Quick Edit', 'wpsc')."</a>";
 			}
 
 			$actions = apply_filters('post_row_actions', $actions, $product);
@@ -231,6 +227,7 @@ function wpsc_product_row(&$product, $parent_product = null) {
 				<td  <?php echo $attributes ?>>
 					<?php echo wpsc_currency_display( $price ); ?>
 					<input type="text" class="wpsc_ie_field wpsc_ie_price" value="<?php echo $price; ?>">
+					<a href="<?php echo $edit_link?>/#wpsc_downloads">Variant Download Files</a>
 				</td>
 			<?php
 		break;
@@ -255,6 +252,7 @@ function wpsc_product_row(&$product, $parent_product = null) {
 				<td  <?php echo $attributes ?>>
 					<span><?php echo $weight; ?></span>
 					<input type="text" class="wpsc_ie_field wpsc_ie_weight" value="<?php echo $weight; ?>">
+					<a href="<?php echo $edit_link?>/#wpsc_tax">Set Variant Tax</a>
 				</td>
 			<?php
 
@@ -266,6 +264,7 @@ function wpsc_product_row(&$product, $parent_product = null) {
 				<td  <?php echo $attributes ?>>
 					<span><?php echo $stock ? $stock : __('N/A', 'wpsc') ; ?></span>
 					<input type="text" class="wpsc_ie_field wpsc_ie_stock" value="<?php echo $stock; ?>">
+					<a href="<?php echo $edit_link?>/#wpsc_shipping">Set Variant Shipping</a>
 				</td>
 	<?php
 		break;
@@ -309,16 +308,18 @@ function wpsc_product_row(&$product, $parent_product = null) {
 				<td  <?php echo $attributes ?>>
 					<span><?php echo $sku ? $sku : __('N/A', 'wpsc'); ?></span>
 					<input type="text" class="wpsc_ie_field wpsc_ie_sku" value="<?php echo $sku; ?>">
+										<input type="hidden" class="wpsc_ie_id wpsc_ie_field" value="<?php echo $product->ID ?>">
+					<div class="wpsc_inline_actions"><input type="button" class="button-primary wpsc_ie_save" value="Save"><img src="<?php bloginfo('url') ?>/wp-admin/images/wpspin_light.gif" class="loading_indicator"><br/></div>
 				</td>
 			<?php
 		break;
 		case 'sale_price':
 
-			$price = get_post_meta($product->ID, '_wpsc_special_price', true);
+			$sale_price = get_post_meta($product->ID, '_wpsc_special_price', true);
 			?>
 				<td  <?php echo $attributes ?>>
-					<span><?php echo wpsc_currency_display( $price ); ?></span>
-					<input type="text" class="wpsc_ie_field wpsc_ie_special_price" value="<?php echo $price; ?>">
+					<span><?php echo wpsc_currency_display( $sale_price ); ?></span>
+					<input type="text" class="wpsc_ie_field wpsc_ie_special_price" value="<?php echo $sale_price; ?>">
 				</td>
 			<?php
 

@@ -2,6 +2,37 @@
 * This is the new WPSC Admin CSS file
 
 */
+
+/* div#product_variations table#wpsc_product_list tbody td span{ */
+div#wpsc_product_variation_forms table#wpsc_product_list tbody tr td span{
+display:none;
+}
+
+div#wpsc_product_variation_forms table#wpsc_product_list tbody tr td.weight{
+	width: 81px;
+}
+
+div#wpsc_product_variation_forms table#wpsc_product_list tbody tr td.stock{
+	width: 110px;
+}
+
+div#wpsc_product_variation_forms table#wpsc_product_list tbody tr td.price{
+	width: 125px;
+}
+
+div#wpsc_product_variation_forms table#wpsc_product_list tbody tr td.post-title{
+	width: 115px;
+}
+
+
+input.wpsc_ie_field {
+margin-bottom:10px;
+}
+
+.wpsc_ie_save{
+margin-bottom:5px;
+}
+
 .wpsc_trackingid_row{
 	margin-left:20px;
 }
@@ -1682,9 +1713,7 @@ input.wpsc_cat_box {
     width:auto;
     margin:6px;
 }
-.wpsc_ie_field, .wpsc_inline_actions {
-	display:none;
-}
+
 .wpsc_ie_field{
 	width:100%;
 }

@@ -211,7 +211,9 @@ jQuery(document).ready(function(){
       }
 
 	//Added for inline editing capabilities
-	jQuery('#wpsc_product_list a.wpsc_editinline').live('click', function() {
+	//this was origionally used for variation quick edits ont eh edit product page - its commented out because we are going to show the quick edit options by default now so this fancy hiding is not required
+	/*
+jQuery('#wpsc_product_list a.wpsc_editinline').live('click', function() {
 		var t = jQuery(this),
 			tr = t.parents('tr');
 		tr.find('td input[type="text"].wpsc_ie_field').each(function(){
@@ -223,12 +225,9 @@ jQuery(document).ready(function(){
 		tr.find('td .wpsc_inline_actions').show().end().find('a.row-title, td > span').hide();
 		return false;
 	});
+*/
 
-	jQuery('#wpsc_product_list .wpsc_ie_cancel').live('click', function(){
-		jQuery(this).parents('tr:first').find('a.row-title, td > span').show();
-		jQuery(this).parents('tr:first').find('td input.wpsc_ie_field, td .wpsc_inline_actions').hide();
-		jQuery(this).parents('tr:first').find('.loading_indicator').css('visibility', 'hidden');
-	});
+
 	jQuery('#wpsc_product_list .wpsc_ie_save').live('click', function(){
 		jQuery(this).parents('tr:first').find('.loading_indicator').css('visibility', 'visible');
 		var id =jQuery(this).parents('tr:first').find('.wpsc_ie_id').val();
@@ -255,7 +254,7 @@ jQuery(document).ready(function(){
 			if(response.error){
 				alert(response.error);
 				jQuery('#post-' + response.id + ' a.row-title, #post-' + response.id + ' td > span').show();
-				jQuery('#post-' + response.id + ' td input.wpsc_ie_field, #post-' + response.id + ' td .wpsc_inline_actions').hide();
+				jQuery('#post-' + response.id + ' td input.wpsc_ie_field, #post-' + response.id + ' td .wpsc_inline_actions').show();
 				jQuery('#post-' + response.id + ' .loading_indicator').css('visibility', 'hidden');
 			}
 			else{
@@ -267,8 +266,8 @@ jQuery(document).ready(function(){
 				jQuery('#post-' + response.id + ' .column-price .pricedisplay').html(jQuery(response.price).text());
 				jQuery('#post-' + response.id + ' .column-sale_price .pricedisplay').html(jQuery(response.special_price).text());
 
-				jQuery('#post-' + response.id + ' a.row-title, #post-' + response.id + ' td > span').show();
-				jQuery('#post-' + response.id + ' td input.wpsc_ie_field, #post-' + response.id + ' td .wpsc_inline_actions').hide();
+				jQuery('#post-' + response.id + ' a.row-title, #post-' + response.id + ' td > span').hide();
+				jQuery('#post-' + response.id + ' td input.wpsc_ie_field, #post-' + response.id + ' td .wpsc_inline_actions').show();
 				jQuery('#post-' + response.id + ' .loading_indicator').css('visibility', 'hidden');
 			}
 		});
