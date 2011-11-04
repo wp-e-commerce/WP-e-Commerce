@@ -128,8 +128,7 @@ if(!class_exists('WPSC_Purchase_Log_Table')){
 	@TODO
 	
 	*/
-	/*
-	function get_bulk_actions() {
+		function get_bulk_actions() {
 	    $actions = array(
 	        'delete'    => 'Delete',
 	        'view'    => 'View',
@@ -156,7 +155,7 @@ if(!class_exists('WPSC_Purchase_Log_Table')){
 	
 	    
 	}
-	*/
+	
 	
 		function prepare_items() {	
 			//Get the columns, hidden and sortable @TODO make some columns sortable
