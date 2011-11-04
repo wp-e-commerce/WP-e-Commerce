@@ -216,10 +216,9 @@ if(!class_exists('WPSC_Purchase_Log_Table')){
 			$this->process_bulk_action();
 		
 			
-			/* Get out our data for the table */
+			/* Get out our data for the table order by DESc so we always have the most recent at the top*/
 			global $wpdb;
-			$data = $wpdb->get_results($wpdb->prepare("SELECT `id`,`date`,`totalprice`, `processed` FROM `" . WPSC_TABLE_PURCHASE_LOGS  ."`"), ARRAY_A);
-			
+			$data = $wpdb->get_results($wpdb->prepare("SELECT `id`,`date`,`totalprice`, `processed` FROM `" . WPSC_TABLE_PURCHASE_LOGS  ."` ORDER BY `id` DESC"), ARRAY_A);
 			
 			/*  Pagination options and settings */
 			$per_page = 2;
