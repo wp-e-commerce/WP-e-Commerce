@@ -3,8 +3,6 @@
 
 */
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 /* This is the variation meta box stuff need to put it in the correct place - mychelle */
 div#wpsc_product_variation_forms table#wpsc_product_list tbody tr td span{
 display:none;
@@ -27,19 +25,25 @@ div#wpsc_product_variation_forms table#wpsc_product_list tbody tr td.post-title{
 }
 
 div#wpsc_add_variant_desc,
-div.wpsc_add_variation_desc{
-	float:left;
-	margin-top: 10px;
-	margin-left:20px;
-	width: 200px;
+div#wpsc_add_variation_desc{
+	float: left;
+    margin:33px 0px 30px 20px;
 }
 
-div.add_variant{
+div#wpsc_add_variation_desc{
+	width:300px;
+}
+
+div#wpsc_add_variant_desc{
+	width:200px;
+}
+
+div#wpsc_add_variant{
 	float: left;
     max-width: 245px;
 }
 
-div .add_new_variation{
+div #add_new_variation{
 	float:left;
 	width:215px;
 }
@@ -56,10 +60,6 @@ input.wpsc_ie_field {
 	margin-left:20px;
 }
 
-=======
->>>>>>> 36ca9a7f756e24998ddd8002401d16e0ce6e51aa
-=======
->>>>>>> 36ca9a7f756e24998ddd8002401d16e0ce6e51aa
 ul.children{
 	padding-left:5px;
 }

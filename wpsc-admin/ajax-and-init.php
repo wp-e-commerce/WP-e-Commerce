@@ -1588,7 +1588,7 @@ function wpsc_add_variant_from_products_page() {
 	
 	/*
 	variants can be coma separated so we check for 
-	these and put them into their own seperate array
+	these and put them into an array
 	*/
 	$variants = explode( ',', $variants[0] );
 	wp_insert_term( $variation_set_term, 'wpsc-variation', $args = array() );
@@ -1599,7 +1599,6 @@ function wpsc_add_variant_from_products_page() {
 	/* if we have a parent and some kids then we will add kids now */
 	if( !empty($parent_term_id) && !empty($variants) ){
 		foreach( $variants as $variant ){
-			//$variant_term_id = array();
 			wp_insert_term( $variant, 'wpsc-variation', $args = array('parent' => $parent_term_id) );
 			/* want to get out the id so we can return it with the response */
 			$varient_term = term_exists( $variant, 'wpsc-variation', $parent_term_id );
@@ -1614,7 +1613,6 @@ function wpsc_add_variant_from_products_page() {
 		),
 	)
 	);
-	
 	$response -> send();
 	exit();
 }
@@ -1623,7 +1621,9 @@ add_action( 'wp_ajax_wpsc_add_variant_from_products_page', 'wpsc_add_variant_fro
 
 function wpsc_delete_variant_from_products_page(){
 	$variant_id = $_POST['variant_id'];
-	wp_delete_term( $variant_id, 'wpsc-variation');
+	/* should never be empty but best to check first*/
+	if (!empty($variant_id))
+		wp_delete_term( $variant_id, 'wpsc-variation');
 	exit();
 }
 add_action( 'wp_ajax_wpsc_delete_variant_from_products_page', 'wpsc_delete_variant_from_products_page' );
