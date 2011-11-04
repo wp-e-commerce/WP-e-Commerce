@@ -286,7 +286,37 @@ console.log(url);
 		 */
 		event_init : function() {
 			var wrapper = $('#options_checkout');
+
+			/**
+			 * This hack is to make sure the dragged row has 100% width
+			 * @param  {Object} e Event object
+			 * @param  {Object} tr The row being dragged
+			 * @return {Object} helper The helper object (which is a clone of the row)
+			 */
+			var fix_sortable_helper = function(e, tr) {
+				var row = tr.clone().width(tr.width());
+				row.find('td').each(function(index){
+					var td_class = $(this).attr('class'), original = tr.find('.' + td_class), old_html = $(this).html();
+					$(this).html('<div>' + old_html + '</div>');
+					$(this).find('div').width(original.width());
+				});
+				return row;
+			};
+
 			wrapper.delegate('.add_new_form_set', 'click', WPSC_Settings_Page.Checkout.event_add_new_form_set);
+			wrapper.sortable({
+				items       : 'tr.checkout_form_field',
+				axis        : 'y',
+				containment : 'table#wpsc_checkout_list',
+				placeholder : 'checkout-placeholder',
+				handle      : '.drag',
+				helper : fix_sortable_helper
+			});
+
+/*			jQuery(this).bind('sortupdate', function(event, ui) {
+				post_values = jQuery( 'table#wpsc_checkout_list').sortable( 'serialize');
+				jQuery.post( 'index.php?wpsc_admin_action=save_checkout_order', post_values, function(returned_data) { });
+			}); */
 		},
 
 		/**
