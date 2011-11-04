@@ -156,10 +156,17 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 	}
 
 	private function item_url( $item ) {
-		return add_query_arg( array(
+		$location = remove_query_arg( array(
+			'paged',
+			'order',
+			'orderby',
+			's',
+		) );
+		$location = add_query_arg( array(
 			'c'  => 'item_details',
 			'id' => $item->id,
-		) );
+		), $location );
+		return $location;
 	}
 
 	public function column_customer( $item ) {
