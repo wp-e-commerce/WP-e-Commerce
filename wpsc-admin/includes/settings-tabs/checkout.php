@@ -39,6 +39,97 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 		register_column_headers('display-checkout-list', $columns);
 	}
 
+	public function callback_submit_options() {
+		global $wpdb;
+
+		if ( ! isset( $_POST['form_name'] ) )
+			return;
+
+		$existing_orders = array();
+		$new_field_orders = array();
+		if ( ! empty( $_POST['sort_order'] ) ) {
+			foreach ( $_POST['sort_order'] as $order => $field_id ) {
+				$id = absint( preg_replace('/[^0-9]+/', '', $field_id) );
+
+				if ( strpos( $field_id, 'new-field' ) === 0 )
+					$new_field_orders[$id] = $order;
+				else
+					$existing_orders[$id] = $order;
+			}
+		}
+
+		$sql = "SELECT id FROM " . WPSC_TABLE_CHECKOUT_FORMS;
+		$ids = $wpdb->get_col( $sql );
+
+		foreach ( $_POST['form_name'] as $field_id => $name ) {
+			$data = array(
+				'name'      => $name,
+				'active'    => empty( $_POST['form_display'][$field_id] ) ? 0 : 1,
+				'mandatory' => empty( $_POST['form_mandatory'][$field_id] ) ? 0 : 1,
+			);
+
+			$data_format = array(
+				'%s', // name
+				'%s', // active
+				'%s', // mandatory
+			);
+
+			$where = array( 'id' => $field_id );
+
+			if ( isset( $_POST['form_type'][$field_id] ) ) {
+				$data['type'] = $_POST['form_type'][$field_id];
+				$data_format[] = '%s';
+			}
+
+			if ( isset( $existing_orders[$field_id] ) ) {
+				$data['checkout_order'] = $existing_orders[$field_id];
+				$data_format[] = '%d';
+			}
+
+			$index = array_search( $field_id, $ids );
+			if ( $index !== false ) {
+				unset( $ids[$index] );
+			}
+
+			$wpdb->update( WPSC_TABLE_CHECKOUT_FORMS, $data, $where, $data_format, '%d' );
+		}
+
+		// delete all other fields that are not present in the submitted form
+		if ( ! empty( $ids ) ) {
+			$sql = "DELETE FROM " . WPSC_TABLE_CHECKOUT_FORMS . " WHERE id IN (" . implode( ', ', $ids ) . ")";
+			$wpdb->query( $sql );
+		}
+
+		foreach ( $_POST['new_field_name'] as $key => $name ) {
+			if ( $key === 0 && empty( $name ) )
+				continue;
+
+			$data = array(
+				'name'      => $name,
+				'type'      => $_POST['new_field_type'][$key],
+				'active'    => empty( $_POST['new_field_display'][$key] ) ? 0 : 1,
+				'mandatory' => empty( $_POST['new_field_mandatory'][$key] ) ? 0 : 1,
+			);
+
+			$data_format = array(
+				'%s', // name
+				'%s', // type
+				'%s', // active
+				'%s', // mandatory
+			);
+
+			if ( isset( $new_field_orders[$key] ) ) {
+				$data['checkout_order'] = $new_field_orders[$key];
+				$data_format[] = '%d';
+			}
+
+			$wpdb->insert( WPSC_TABLE_CHECKOUT_FORMS, $data, $data_format );
+		}
+
+		wp_redirect( $_SERVER['REQUEST_URI'] );
+		exit;
+	}
+
 	/**
 	 * Determine whether this field can be deleted.
 	 *
@@ -245,12 +336,12 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 					</td>
 					<td class="namecol">
 						<div class="cell-wrapper">
-							<input type="text" name="new_field_name[]" value="" />
+							<input type="text" name="new_field_name[0]" value="" />
 						</div>
 					</td>
 					<td class="typecol" colspan="2">
 						<div class="cell-wrapper">
-							<select name="new_field_type">
+							<select name="new_field_type[0]">
 								<?php foreach ( $this->field_types as $name => $type ): ?>
 									<option value="<?php echo esc_attr( $type ); ?>"><?php echo esc_html( $name ); ?></option>
 								<?php endforeach ?>
@@ -259,12 +350,12 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 					</td>
 					<td class="displaycol">
 						<div class="cell-wrapper">
-							<input checked="checked" type="checkbox" name="new_field_display[]" value="1" />
+							<input checked="checked" type="checkbox" name="new_field_display[0]" value="1" />
 						</div>
 					</td>
 					<td class="mandatorycol">
 						<div class="cell-wrapper">
-							<input type="checkbox" name="new_field_mandatory[]" value="1" />
+							<input type="checkbox" name="new_field_mandatory[0]" value="1" />
 						</div>
 					</td>
 					<td class="actionscol">

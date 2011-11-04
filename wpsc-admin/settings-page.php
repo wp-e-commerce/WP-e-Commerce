@@ -91,6 +91,7 @@ final class WPSC_Settings_Page
 		$this->current_tab = $this->get_current_tab();
 
 		if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( $_REQUEST['wpsc_admin_action'] == 'submit_options' )  && is_callable( array( $this->current_tab, 'callback_submit_options' ) ) ) {
+			check_admin_referer( 'update-options', 'wpsc-update-options' );
 			$this->current_tab->callback_submit_options();
 		}
 	}
