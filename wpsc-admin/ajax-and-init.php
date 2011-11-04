@@ -755,7 +755,7 @@ function wpsc_delete_purchlog( $purchlog_id='' ) {
 
 	if ( is_numeric( $_GET['purchlog_id'] ) ) {
 		$sendback = wp_get_referer();
-		$sendback = remove_query_arg( 'purchaselog_id', $sendback );
+		$sendback = remove_query_arg( array( 'c', 'id' ), $sendback );
 		if ( isset( $deleted ) ) {
 			$sendback = add_query_arg( 'deleted', $deleted, $sendback );
 		}
