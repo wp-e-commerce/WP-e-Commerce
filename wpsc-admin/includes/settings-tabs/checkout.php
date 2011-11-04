@@ -433,7 +433,6 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 				</tr>
 			</tbody>
 		</table>
-		<p><a href='#' onclick='return add_form_field();'><?php _e('Add New Form Field', 'wpsc');?></a></p>
 	<?php
 	}
 }
