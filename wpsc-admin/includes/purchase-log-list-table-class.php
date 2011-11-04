@@ -7,18 +7,38 @@ require_once( ABSPATH . 'wp-admin/includes/class-wp-posts-list-table.php' );
 
 class WPSC_Purchase_Log_List_Table extends WP_List_Table
 {
+	private $search_box = true;
+	private $bulk_actions = true;
+	private $sortable = true;
+	private $per_page = 20;
+
 	public function __construct() {
 		WP_List_Table::__construct( array(
 			'plural' => 'purchase-logs',
 		) );
 	}
 
+	public function disable_sortable() {
+		$this->sortable = false;
+	}
+
+	public function disable_search_box() {
+		$this->search_box = false;
+	}
+
+	public function disable_bulk_actions() {
+		$this->bulk_actions = false;
+	}
+
+	public function set_per_page( $per_page ) {
+		$this->per_page = (int) $per_page;
+	}
+
 	public function prepare_items() {
 		global $wpdb;
 
-		$per_page = 20; // it's currently hardcoded
 		$page = $this->get_pagenum();
-		$offset = ( $page - 1 ) * $per_page;
+		$offset = ( $page - 1 ) * $this->per_page;
 
 		$checkout_fields_sql = "
 			SELECT id, unique_name FROM " . WPSC_TABLE_CHECKOUT_FORMS . " WHERE unique_name IN ('billingfirstname', 'billinglastname', 'billingemail')
@@ -27,6 +47,10 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 
 		$joins = array();
 		$where = array( '1 = 1' );
+
+		if ( isset( $_REQUEST['post'] ) )
+			$where[] = 'p.id IN (' . implode( ', ', $_REQUEST['post'] ) . ')';
+
 		$i = 1;
 		$selects = array( 'p.id', 'p.totalprice AS amount', 'p.processed AS status', 'p.track_id', 'p.date' );
 		$selects[] = '
@@ -35,7 +59,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 				WHERE c.purchaseid = p.id
 			) AS item_count';
 
-		$search_terms = isset( $_REQUEST['s'] ) ? explode( ' ', $_REQUEST['s'] ) : array();
+		$search_terms = empty( $_REQUEST['s'] ) ? array() : explode( ' ', $_REQUEST['s'] );
 		$search_sql = array();
 		foreach ( $checkout_fields as $field ) {
 			$table_as = 's' . $i;
@@ -71,6 +95,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 		$selects = implode( ', ', $selects );
 		$joins = implode( ' ', $joins );
 		$where = implode( ' AND ', $where );
+		$limit = ( $this->per_page !== 0 ) ? "LIMIT {$offset}, {$this->per_page}" : '';
 
 		$submitted_data_log = WPSC_TABLE_SUBMITED_FORM_DATA;
 		$purchase_log_sql = "
@@ -79,16 +104,18 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 			{$joins}
 			WHERE {$where}
 			ORDER BY p.id DESC
-			LIMIT {$offset}, {$per_page}
+			{$limit}
 		";
 		$this->items = $wpdb->get_results( $purchase_log_sql );
 
-		$total_items = $wpdb->get_var( "SELECT FOUND_ROWS()" );
+		if ( $this->per_page ) {
+			$total_items = $wpdb->get_var( "SELECT FOUND_ROWS()" );
 
-		$this->set_pagination_args( array(
-			'total_items' => $total_items,
-			'per_page'    => $per_page,
-		) );
+			$this->set_pagination_args( array(
+				'total_items' => $total_items,
+				'per_page'    => $this->per_page,
+			) );
+		}
 	}
 
 	public function get_columns() {
@@ -103,6 +130,9 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 	}
 
 	public function get_sortable_columns() {
+		if ( ! $this->sortable )
+			return array();
+
 		return array(
 			'date'   => 'id',
 			'status' => 'status',
@@ -110,8 +140,9 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 	}
 
 	public function column_cb( $item ){
+		$checked = isset( $_REQUEST['post'] ) ? checked( in_array( $item->id, $_REQUEST['post'] ), true, false ) : '';
 	    return sprintf(
-	        '<input type="checkbox" name="%1$s[]" value="%2$s" />',
+	        '<input type="checkbox" ' . $checked . ' name="%1$s[]" value="%2$s" />',
 	        /*$1%s*/ 'post',
 	        /*$2%s*/ $item->id
 	    );
@@ -161,6 +192,9 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 	}
 
 	public function get_bulk_actions() {
+		if ( ! $this->bulk_actions )
+			return array();
+
 	    $actions = array(
 			'delete' => _x( 'Delete', 'bulk action', 'wpsc' ),
 			'1'      => __( 'Incomplete Sale', 'wpsc' ),
@@ -173,45 +207,18 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 	    return $actions;
 	}
 
-	public function process_bulk_action() {
-		global $wpdb;
+	public function search_box( $text, $input_id ) {
+		if ( ! $this->search_box )
+			return '';
 
-		if( 'view'===$this->current_action() ) {
-			exit('This will be the single view page that i need to think about creating...');
-		}
-
-		//Detect when a bulk action is being triggered...
-		if( 'delete'===$this->current_action() ) {
-			/* this needs some js "are you sure you want to delete this" */
-
-			if ( isset($_POST['post']) )
-				$post_ids = array_map( 'intval', $_POST['post'] ); // pull out the items that need updating
-
-			//if there are no post ids then the id will
-			//be in the url from the hover link
-			//if( empty($post_ids) )
-			if ( isset( $_GET['post'] ) && $_GET['action'] === 'delete' )
-			$post_ids = array(1 => $_GET['post']);
-
-			$wpdb->query($wpdb->prepare('DELETE FROM ' . WPSC_TABLE_PURCHASE_LOGS . ' WHERE `id` IN(' . implode(',' , $post_ids ).')'));
-		}
-
-		/*
-		if numeric then we know we are updating the order status the
-		current_action will be the status number to update
-		*/
-		if( is_numeric($this->current_action())  ) {
-			$post_ids = array_map( 'intval', $_POST['post'] ); // pull out the items that need updating
-			$wpdb->query($wpdb->prepare('UPDATE ' . WPSC_TABLE_PURCHASE_LOGS . ' SET `processed` = ' . $this->current_action() . ' WHERE `id` IN(' . implode(',' , $post_ids ).')'));
-
-		}
-
+		parent::search_box( $text, $input_id );
 	}
 }
 
 class WPSC_Purchase_Log_Page
 {
 	private $list_table;
+	private $output;
 
 	public function __construct() {
 		add_action( 'wpsc_display_purchase_logs_page', array( $this, 'display' ) );
@@ -219,12 +226,60 @@ class WPSC_Purchase_Log_Page
 		//Create an instance of our package class...
 	    $this->list_table = new WPSC_Purchase_Log_List_Table();
 
-	    //Fetch, prepare, sort, and filter our data...
-	    $this->list_table->prepare_items();
+    	$this->process_bulk_action();
+
+    	$this->list_table->prepare_items();
+	}
+
+	public function process_bulk_action() {
+		global $wpdb;
+		$current_action = $this->list_table->current_action();
+
+		if ( $current_action == -1 )
+			return;
+
+		if ( $current_action == 'delete' ) {
+			if ( empty( $_REQUEST['confirm'] ) ) {
+				$this->list_table->disable_search_box();
+				$this->list_table->disable_bulk_actions();
+				$this->list_table->disable_sortable();
+				$this->list_table->set_per_page(0);
+				add_action( 'wpsc_purchase_logs_list_table_before', array( $this, 'action_list_table_before' ) );
+				return;
+			} else {
+				if ( empty( $_REQUEST['post'] ) )
+					return;
+
+				$ids = array_map( 'intval', $_REQUEST['post'] );
+				$sql = "DELETE FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE id IN (" . implode( ', ', $ids ) . ")";
+				$wpdb->query( $sql );
+				unset( $_REQUEST['post'] );
+				return;
+			}
+		}
+	}
+
+	public function action_list_table_before() {
+		?>
+		<h3>
+			<?php esc_html_e( 'Are you sure you want to delete these purchase logs?', 'wpsc'); ?><br />
+		</h3>
+		<div>
+			<a href="" class="button">Go Back</a>
+			<input class="button-primary" type="submit" value="Delete" />
+			<input type="hidden" name="confirm" value="1" />
+			<input type="hidden" name="action" value="delete" />
+		</div>
+		<?php
 	}
 
 	public function display() {
-	    ?>
+		if ( ! empty( $this->output ) ) {
+			echo $this->output;
+			return;
+		}
+
+		?>
 	    <div class="wrap">
 
 	        <div id="icon-users" class="icon32"><br/></div>
@@ -238,12 +293,13 @@ class WPSC_Purchase_Log_Page
 
 	        <!-- Forms are NOT created automatically, so you need to wrap the table in one to use features like bulk actions -->
 	        <form id="purchase-logs-filter" method="post" action="">
+	        	<?php do_action( 'wpsc_purchase_logs_list_table_before' ); ?>
 	        	<?php $this->list_table->search_box( 'Search Sales Logs', 'post' ); ?>
 	            <!-- For plugins, we also need to ensure that the form posts back to our current page -->
 	            <!-- Now we can render the completed list table -->
 
 	            <?php $this->list_table->display() ?>
-
+	            <?php do_action( 'wpsc_purchase_logs_list_table_after' ); ?>
 	        </form>
 
 	    </div>
