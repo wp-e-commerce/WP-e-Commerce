@@ -16,8 +16,9 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 	public function prepare_items() {
 		global $wpdb;
 
-		$per_page = 20;
-		$offset = 0;
+		$per_page = 20; // it's currently hardcoded
+		$page = $this->get_pagenum();
+		$offset = ( $page - 1 ) * $per_page;
 
 		$checkout_fields_sql = "
 			SELECT id, unique_name FROM " . WPSC_TABLE_CHECKOUT_FORMS . " WHERE unique_name IN ('billingfirstname', 'billinglastname', 'billingemail')
@@ -42,7 +43,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 			FROM " . WPSC_TABLE_PURCHASE_LOGS . " AS p
 			{$joins}
 			ORDER BY p.id DESC
-			LIMIT 0, {$per_page}
+			LIMIT {$offset}, {$per_page}
 		";
 		$this->items = $wpdb->get_results( $purchase_log_sql );
 
