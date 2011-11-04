@@ -1829,6 +1829,11 @@ float: left;
 	 width: auto;
 }
 
+img.ajax-feedback-active {
+	vertical-align:middle;
+	visibility:visible;
+}
+
 .dashboard_page_wpsc-purchase-logs .column-id {
 	width:75px;
 }
@@ -1846,7 +1851,53 @@ float: left;
 	margin-right:5px;
 }
 
-img.ajax-feedback-active {
-	visibility:visible;
-	vertical-align:middle;
+table.purchase-logs .column-tracking {
+	position:relative;
+}
+
+table.purchase-logs .column-tracking .empty .send-email {
+	display:none;
+}
+
+table.purchase-logs .column-tracking .add {
+	position:absolute;
+	left:14px;
+	top:7px;
+}
+
+table.purchase-logs .column-tracking {
+	width:200px;
+}
+
+table.purchase-logs .column-tracking input[type="text"] {
+	width:180px;
+}
+
+table.purchase-logs .column-tracking a.save {
+	display:none;
+	float:right;
+}
+
+table.purchase-logs .column-tracking a.add {
+	display:none;
+	color:#ccc;
+	cursor:text;
+}
+
+table.purchase-logs .column-tracking .empty a.add {
+	display:inline;
+}
+
+table.purchase-logs .column-tracking .ajax-feedback {
+	display:none;
+	float:right;
+	margin-top:5px;
+}
+
+table.purchase-logs .column-tracking .ajax-feedback-active {
+	display:inline-block;
+}
+
+table.purchase-logs .column-tracking em.sent {
+	color:green;
 }

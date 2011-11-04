@@ -66,6 +66,47 @@ function wpsc_display_region_list() {
 
 add_action( 'wp_ajax_wpsc_display_region_list', 'wpsc_display_region_list' );
 
+function wpsc_purchase_log_save_tracking_id() {
+	global $wpdb;
+	if ( ! wp_verify_nonce( $_POST['nonce'], 'wpsc_purchase_logs' ) )
+		die( 'Session expired. Try refreshing your Sales Log page.' );
+
+	$sql = $wpdb->prepare( "UPDATE " . WPSC_TABLE_PURCHASE_LOGS . " SET track_id = %s WHERE id = %d", $_POST['value'], $_POST['log_id'] );
+	$wpdb->query($sql);
+
+	die('success');
+}
+
+add_action( 'wp_ajax_wpsc_purchase_log_save_tracking_id', 'wpsc_purchase_log_save_tracking_id' );
+
+function wpsc_purchase_log_send_tracking_email() {
+	global $wpdb;
+	if ( ! wp_verify_nonce( $_POST['nonce'], 'wpsc_purchase_logs' ) )
+		die( 'Session expired. Try refreshing your Sales Log page.' );
+
+	$id = absint( $_POST['log_id'] );
+	$sql = $wpdb->prepare( "SELECT `track_id` FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE `id`=%d LIMIT 1", $id );
+	$trackingid = $wpdb->get_var( $sql );
+
+	$message = get_option( 'wpsc_trackingid_message' );
+	$message = str_replace( '%trackid%', $trackingid, $message );
+	$message = str_replace( '%shop_name%', get_option( 'blogname' ), $message );
+
+	$email_form_field = $wpdb->get_var( "SELECT `id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `type` IN ('email') AND `active` = '1' ORDER BY `checkout_order` ASC LIMIT 1" );
+	$email = $wpdb->get_var( $wpdb->prepare( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` WHERE `log_id`=%d AND `form_id` = '$email_form_field' LIMIT 1", $id ) );
+
+	$subject = get_option( 'wpsc_trackingid_subject' );
+	$subject = str_replace( '%shop_name%', get_option( 'blogname' ), $subject );
+
+	add_filter( 'wp_mail_from', 'wpsc_replace_reply_address', 0 );
+	add_filter( 'wp_mail_from_name', 'wpsc_replace_reply_name', 0 );
+
+	wp_mail( $email, $subject, $message);
+	die( 'success' );
+}
+
+add_action( 'wp_ajax_wpsc_purchase_log_send_tracking_email', 'wpsc_purchase_log_send_tracking_email' );
+
 function wpsc_ajax_add_tracking() {
 	global $wpdb;
 	foreach ( $_POST as $key => $value ) {

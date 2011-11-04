@@ -129,6 +129,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 			'cb'       => '<input type="checkbox" />',
 			'id'       => __( 'Order ID', 'wpsc' ),
 			'customer' => __( 'Customer', 'wpsc' ),
+			'tracking' => __( 'Tracking ID', 'wpsc' ),
 			'amount'   => __( 'Amount', 'wpsc' ),
 			'status'   => _x( 'Status', 'sales log list table column', 'wpsc' ),
 			'date'     => __( 'Date', 'wpsc' ),
@@ -220,6 +221,20 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 		echo $dropdown_options;
 		echo '</select>';
 		echo '<img src="' . esc_url( admin_url( 'images/wpspin_light.gif' ) ) . '" class="ajax-feedback" title="" alt="" />';
+	}
+
+	public function column_tracking( $item ) {
+		$classes = array( 'wpsc-purchase-log-tracking-id' );
+		$empty = empty( $item->track_id );
+		?>
+			<div data-log-id="<?php echo esc_attr( $item->id ); ?>" <?php echo $empty ? ' class="empty"' : ''; ?>>
+				<a class="add" href="#"><?php echo esc_html( _x( 'Add Tracking ID', 'add purchase log tracking id', 'wpsc' ) ); ?></a>
+				<input type="text" class="wpsc-purchase-log-tracking-id" value="<?php echo esc_attr( $item->track_id ); ?>" />
+				<a class="button save" href="#"><?php echo esc_html( _x( 'Save', 'save sales log tracking id', 'wpsc' ) ); ?></a>
+				<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" /><br class="clear" />
+				<small class="send-email"><a href="#"><?php echo esc_html( _x( 'Send Email', 'sales log', 'wpsc' ) ); ?></a></small>
+			</div>
+		<?php
 	}
 
 	public function get_bulk_actions() {

@@ -107,7 +107,7 @@ function wpsc_purchlogs_has_customfields( $id = '' ) {
 
 function wpsc_trackingid_value() {
    global $purchlogs;
-   return esc_attr( $purchlogs->purchitem->track_id );
+   return $purchlogs->purchitem->track_id;
 }
 
 function wpsc_purchlogs_custommessages() {
