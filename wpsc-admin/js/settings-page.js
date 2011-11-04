@@ -291,7 +291,8 @@
 			wrapper.delegate('.add_new_form_set', 'click', WPSC_Settings_Page.Checkout.event_add_new_form_set).
 			        delegate('.actionscol a.add', 'click', WPSC_Settings_Page.Checkout.event_add_new_field).
 			        delegate('.actionscol a.delete', 'click', WPSC_Settings_Page.Checkout.event_delete_field).
-			        delegate('a.edit-options', 'click', WPSC_Settings_Page.Checkout.event_edit_field_options);
+			        delegate('a.edit-options', 'click', WPSC_Settings_Page.Checkout.event_edit_field_options).
+			        delegate('select[name^="form_type"]', 'change', WPSC_Settings_Page.Checkout.event_form_type_changed);
 			$('#wpsc-settings-form').bind('submit', WPSC_Settings_Page.Checkout.event_form_submit);
 
 			wrapper.find('#wpsc_checkout_list').
@@ -301,18 +302,45 @@
 					containment : 'parent',
 					placeholder : 'checkout-placeholder',
 					handle      : '.drag',
+					sort        : WPSC_Settings_Page.Checkout.event_sort,
 					helper      : WPSC_Settings_Page.Checkout.fix_sortable_helper,
 					start       : WPSC_Settings_Page.Checkout.event_sort_start,
+					stop        : WPSC_Settings_Page.Checkout.event_sort_stop,
 					update      : WPSC_Settings_Page.Checkout.event_sort_update,
 				});
 		},
 
+		event_form_type_changed : function() {
+			var t = $(this);
+			if ($.inArray(t.val(), ['select', 'radio', 'checkbox']) !== -1) {
+				t.closest('tr').find('.edit-options').show();
+			} else {
+				t.closest('tr').find('.edit-options').hide();
+			}
+		},
+
 		event_edit_field_options : function() {
-			var t = $(this),
-				target = t.closest('tr'),
-				id = target.data('field-id'),
-				options_row = $('#field-options-prototype').clone().attr('id', ''),
-				options_field_name;
+			var t = $(this), target = t.closest('tr'),
+				id, options_row, label_inputs, options_field_name;
+
+			if (t.hasClass('expanded')) {
+				target.next().find('.cell-wrapper').slideUp(150, function(){
+					$(this).closest('tr').remove();
+					target.removeClass('editing-options');
+				});
+				t.removeClass('expanded');
+				t.text(WPSC_Settings_Page.edit_field_options);
+				return false;
+			}
+
+			id = target.data('field-id');
+			options_row = $('#field-options-prototype').clone();
+			options_row.
+				attr('id', 'wpsc-field-edit-options-' + id).
+				data('field-id', id);
+
+			t.addClass('expanded');
+			t.text(WPSC_Settings_Page.hide_edit_field_options);
 
 			if (id) {
 				options_field_name = 'form_options[' + id + ']';
@@ -321,7 +349,9 @@
 				options_field_name = 'new_field_options[' + id + ']';
 			}
 
-			target.find('input[name^="' + options_field_name + '[label]"]').each(function(){
+			label_inputs = target.find('input[name^="' + options_field_name + '[label]"]');
+
+			label_inputs.each(function(){
 				var prototype = options_row.find('.new-option'),
 					appended_row = prototype.clone().removeClass('new-option'),
 					input_label = $(this),
@@ -334,6 +364,10 @@
 
 				options_row.find('tbody').append(appended_row);
 			});
+
+			if (label_inputs.size() > 0) {
+				options_row.find('.new-option').hide();
+			}
 
 			target.addClass('editing-options');
 			options_row.find('.cell-wrapper').hide();
@@ -375,6 +409,7 @@
 		event_delete_field : function() {
 			var target_row = $(this).closest('tr');
 			target_row.find('.cell-wrapper').slideUp(150, function(){
+				$('#wpsc-field-edit-options-' + target_row.data('field-id')).remove();
 				target_row.remove();
 			});
 			return false;
@@ -406,7 +441,31 @@
 		 * @param  {Object} ui UI Object
 		 */
 		event_sort_start : function(e, ui) {
+			var	id = ui.item.data('field-id'),
+				options_row = $('#wpsc-field-edit-options-' + id),
+				t = $(this);
+
+			$('.form-field-options').find('.cell-wrapper').hide(function(){
+				var options_row = $(this).closest('tr'),
+					id = options_row.data('field-id');
+				options_row.hide();
+				t.sortable('refreshPositions');
+				$('#checkout_' + id).removeClass('editing-options');
+			});
+
 			ui.placeholder.html('<td colspan="7">&nbsp;</td>');
+		},
+
+		event_sort_stop : function(e,ui) {
+			$('.form-field-options').each(function(){
+				var options_row = $(this),
+					id = $(this).data('field-id'),
+					target_row = $('#checkout_' + id);
+
+				options_row.insertAfter(target_row).show().find('.cell-wrapper').slideDown(150, function(){
+					target_row.addClass('editing-options');
+				});
+			});
 		},
 
 		/**
@@ -415,7 +474,7 @@
 		 * @param  {Object} ui UI Object
 		 */
 		event_sort_update : function(e, ui) {
-			if ($(ui.item).hasClass('new-field')) {
+			if (ui.item.hasClass('new-field')) {
 				return;
 			}
 
