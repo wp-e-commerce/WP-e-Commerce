@@ -91,7 +91,7 @@ function wpsc_generate_product_feed() {
 		}
 		$output .= "      <title><![CDATA[".get_the_title()."]]></title>\n\r";
 		$output .= "      <link>$purchase_link</link>\n\r";
-		$output .= "      <description><![CDATA[".get_the_content()."]]></description>\n\r";
+		$output .= "      <description><![CDATA[".apply_filters ('the_content', get_the_content())."]]></description>\n\r";
 		$output .= "      <pubDate>".$post->post_modified_gmt."</pubDate>\n\r";
 		$output .= "      <guid>$purchase_link</guid>\n\r";
 
