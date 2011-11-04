@@ -1563,4 +1563,27 @@ function wpsc_delete_variations( $postid ) {
 		}
 }
 add_action( 'delete_post', 'wpsc_delete_variations' );
+
+if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'add_variation_set') )
+	add_action( 'admin_init', 'wpsc_add_variation_set', 1 );
+	
+/* surely more error checking etc has to go in there it can't be this easy??? */
+function wpsc_add_variation_set(){
+
+	/* This is the parent term / vartiation set we will save this first */
+	$variation_set_term = $_POST['variation_set'];
+	$variants = $_POST['variant'];
+	wp_insert_term( $variation_set_term, 'wpsc-variation', $args = array() );
+	
+	/* now get the parent id so we can save all the kids*/
+	$parent_term = term_exists( $variation_set_term, 'wpsc-variation' ); // array is returned if taxonomy is given
+	$parent_term_id = $parent_term['term_id']; // get numeric term id
+	
+	/* if we have a parent and some kids then we will add kids now */
+	if( !empty($parent_term_id) && !empty($variants) ){
+		foreach( $variants as $variant )
+			wp_insert_term( $variant, 'wpsc-variation', $args = array('parent' => $parent_term_id) );
+	}
+}
+
 ?>

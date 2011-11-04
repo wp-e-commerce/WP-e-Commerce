@@ -3,7 +3,7 @@
 
 */
 
-/* div#product_variations table#wpsc_product_list tbody td span{ */
+/* This is the variation meta box stuff need to put it in the correct place - mychelle */
 div#wpsc_product_variation_forms table#wpsc_product_list tbody tr td span{
 display:none;
 }
@@ -24,6 +24,14 @@ div#wpsc_product_variation_forms table#wpsc_product_list tbody tr td.post-title{
 	width: 115px;
 }
 
+div.add_variant{
+float:left;
+}
+
+div .add_new_variation{
+float:left;
+width:215px;
+}
 
 input.wpsc_ie_field {
 margin-bottom:10px;
