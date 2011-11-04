@@ -1589,9 +1589,8 @@ function wpsc_add_variant_from_products_page() {
 	/*
 	variants can be coma separated so we check for 
 	these and put them into their own seperate array
-	taking out coma sperated for now as its breaking things
 	*/
-	//$variants = explode( ',' , $variants[0] );
+	$variants = explode( ',', $variants[0] );
 	wp_insert_term( $variation_set_term, 'wpsc-variation', $args = array() );
 	
 	/* now get the parent id so we can save all the kids*/
@@ -1603,18 +1602,15 @@ function wpsc_add_variant_from_products_page() {
 			//$variant_term_id = array();
 			wp_insert_term( $variant, 'wpsc-variation', $args = array('parent' => $parent_term_id) );
 			/* want to get out the id so we can return it with the response */
-			$varient_term = term_exists( $variant, 'wpsc-variation' ); // array is returned if taxonomy is given
-			$variant_term_id = $varient_term['term_id']; // get numeric term id
-			
+			$varient_term = term_exists( $variant, 'wpsc-variation', $parent_term_id );
+			$variant_term_id[] = $varient_term['term_id']; // get numeric term id
 		}
 	}
-	
 	$response = new WP_Ajax_Response;
 	$response -> add( array(
-		'data' 	=> 'success',
-		'supplemental' => array(
-			'variant_id' 	=> $variant_term_id,
-			/* 'variation_id' => $parent_term_id */
+		'data' 			=> 'success',
+		'supplemental' 	=> array(
+		'variant_id' 	=> implode(",",$variant_term_id),
 		),
 	)
 	);
@@ -1625,5 +1621,10 @@ function wpsc_add_variant_from_products_page() {
 
 add_action( 'wp_ajax_wpsc_add_variant_from_products_page', 'wpsc_add_variant_from_products_page' );
 
-
+function wpsc_delete_variant_from_products_page(){
+	$variant_id = $_POST['variant_id'];
+	wp_delete_term( $variant_id, 'wpsc-variation');
+	exit();
+}
+add_action( 'wp_ajax_wpsc_delete_variant_from_products_page', 'wpsc_delete_variant_from_products_page' );
 ?>
