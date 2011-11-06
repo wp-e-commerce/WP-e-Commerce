@@ -160,7 +160,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 		$data['SHIPPINGAMT'] = $this->format_price( $shipping_total );
 		$data['TAXAMT'] = $this->convert( $tax_total );
 		$data['AMT'] = $data['ITEMAMT'] + $data['SHIPPINGAMT'] + $data['TAXAMT'];
-		$this->collected_gateway_data = $data;
+		$this->collected_gateway_data = apply_filters( 'wpsc_paypal_pro_gateway_data_array', $data, $this->cart_items );
 	}
 
 	/**
