@@ -388,7 +388,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 		if ( $time_diff > 0 && $time_diff < 24 * 60 * 60 )
 			$h_time = $h_time = sprintf( __( '%s ago' ), human_time_diff( $timestamp ) );
 		else
-			$h_time = date( __( 'Y/m/d' ), $timestamp );
+			$h_time = date( __( get_option( 'date_format', 'Y/m/d' ) ), $timestamp );
 
 		echo '<abbr title="' . $full_time . '">' . $h_time . '</abbr>';
 	}
