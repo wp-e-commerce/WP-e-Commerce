@@ -345,7 +345,11 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 		wp_enqueue_script( 'wp-e-commerce-admin-parameters', $siteurl . '/wp-admin/admin.php?wpsc_admin_dynamic_js=true', false,             $version_identifier );
 		wp_enqueue_script( 'wp-e-commerce-admin',            WPSC_URL . '/wpsc-admin/js/admin.js',                        array( 'jquery', 'jquery-ui-core', 'jquery-ui-sortable' ), $version_identifier, false );
 		wp_enqueue_script( 'wp-e-commerce-legacy-ajax',      WPSC_URL . '/wpsc-admin/js/ajax.js',                         false,             $version_identifier ); // needs removing
-		wp_enqueue_script( 'wp-e-commerce-variations',       WPSC_URL . '/wpsc-admin/js/variations.js',                   array( 'jquery' ), $version_identifier );
+
+		if ( in_array( $current_screen->id, array( 'edit-wpsc-variation', 'wpsc-product' ) ) ) {
+			wp_enqueue_script( 'wpsc-sortable-table', WPSC_URL . '/wpsc-admin/js/sortable-table.js', array( 'jquery' ) );
+			wp_enqueue_script( 'wp-e-commerce-variations', WPSC_URL . '/wpsc-admin/js/variations.js', array( 'jquery', 'wpsc-sortable-table' ), $version_identifier );
+		}
 		if ( $current_screen->id == 'edit-wpsc_product_category' ) {
 			wp_dequeue_script( 'wp-ajax-response' );
 			wp_dequeue_script( 'admin-tags' );

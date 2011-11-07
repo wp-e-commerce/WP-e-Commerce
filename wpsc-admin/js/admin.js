@@ -177,38 +177,6 @@ jQuery(document).ready(function(){
           jQuery('.edit-tags-php form').attr('enctype', 'multipart/form-data').attr('encoding', 'multipart/form-data');
 
       }
-      
-       if( pagenow == 'edit-wpsc-variation' ) {
-          jQuery('table.tags').sortable({
-            axis: 'y',
-            items : 'tr',
-            containment: 'table.tags tbody',
-            placeholder: 'product-placeholder',
-            cursor: 'move',
-            tolerance: 'pointer',
-            update: function(event, ui){
-              variationSort(jQuery('table.tags').sortable('toArray'), 0);
-            }
-          });
-
-          function variationSort(order, parent){
-            var data = {
-                    action: 'variation_sort_order',
-                    sort_order: order,
-                    parent_id: parent
-            };
-
-            var id = '#debugData_';
-
-            jQuery.post(ajaxurl, data, function(response) {
-                    jQuery(id).append(response);
-            });
-            return false;
-       }
-
-          jQuery('.edit-tags-php form').attr('enctype', 'multipart/form-data').attr('encoding', 'multipart/form-data');
-
-      }
 
 	//Added for inline editing capabilities
 	//this was origionally used for variation quick edits ont eh edit product page - its commented out because we are going to show the quick edit options by default now so this fancy hiding is not required
@@ -758,7 +726,7 @@ jQuery(document).ready(function(){
 	jQuery("div#wpsc_add_variant").hide();
 	jQuery("div#wpsc_add_variation_desc").hide();
 	jQuery("input.wpsc-save-variation-set").hide();
-	jQuery("div#wpsc_add_variant_desc").hide();	
+	jQuery("div#wpsc_add_variant_desc").hide();
 });
 
 /* open them when the link is pushed */
@@ -798,7 +766,7 @@ jQuery("button#wpsc_add_variant_button").livequery(function(){
 			variant: 	variant,
 			variation: 	variation
 		};
-		
+
 		jQuery.post(ajaxurl, data, function(data) {
 			var variant_id = jQuery(data).find('variant_id').text();
 			var has_multi_add = variant_id.search(',');
@@ -823,7 +791,7 @@ jQuery("button#wpsc_add_variant_button").livequery(function(){
 		jQuery("input.wpsc-save-variation-set").fadeIn("100");
 		//reset the value back in the variation box to nothing
 		jQuery("input.wpsc_variant").val('');
-		jQuery("span.variant_value").text(variant);		
+		jQuery("span.variant_value").text(variant);
 	});
 });
 
@@ -837,13 +805,13 @@ jQuery("a.wpsc_variant_delete").livequery(function(){
 			action: 	'wpsc_delete_variant_from_products_page',
 			variant_id: variant_id
 		};
-		
+
 		jQuery.post(ajaxurl, data, function(data) {
-			//once sent off and deleted we want to remove the span displaying the variant 
+			//once sent off and deleted we want to remove the span displaying the variant
 			jQuery("span#wpsc_remove_variant_"+variant_id).remove();
 		});
 	});
 });
 
-	
+
 

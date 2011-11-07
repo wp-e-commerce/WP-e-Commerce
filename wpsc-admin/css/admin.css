@@ -317,14 +317,13 @@ table.widefat .ui-sortable-helper td, table.widefat .ui-sortable-helper th{
 	border-top: 1px solid #DFDFDF;
 	opacity: .4;
 }
-.product-placeholder {
+.wpsc-sortable-table-placeholder td, .product-placeholder {
 	border-width: 1px;
 	border-style: dashed;
 	z-index: 900;
 	border-color: #bbb;
 	background-color: #eaeaea !important;
-	margin: -2px 0 0 -2px;
-	height: 50px;
+	height: 38px;
 }
 
 div#poststuff table tr td {
