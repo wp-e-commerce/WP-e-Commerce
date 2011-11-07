@@ -309,7 +309,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 				?>
 			</select>
 			<?php
-			submit_button( __( 'Filter' ), 'secondary', false, false, array( 'id' => 'post-query-submit' ) );
+			submit_button( _x( 'Filter', 'extra navigation in purchase log page', 'wpsc' ), 'secondary', false, false, array( 'id' => 'post-query-submit' ) );
 		}
 	}
 
