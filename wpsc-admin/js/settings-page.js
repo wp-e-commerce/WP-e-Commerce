@@ -523,9 +523,6 @@
 			var row = tr.clone().width(tr.width());
 			row.find('td').each(function(index){
 				var td_class = $(this).attr('class'), original = tr.find('.' + td_class), old_html = $(this).html();
-				if (td_class == 'actionscol') {
-					old_html = '';
-				}
 				$(this).find('.cell-wrapper').width(original.width());
 			});
 			return row;
