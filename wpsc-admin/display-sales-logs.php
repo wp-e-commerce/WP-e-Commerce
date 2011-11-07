@@ -283,9 +283,9 @@ class WPSC_Purchase_Log_Page
       global $wpdb;
       $current_action = $this->list_table->current_action();
 
-      if ( ! $current_action || ( $current_action != 'download_csv' && empty( $_REQUEST['post'] ) ) ) {
+      if ( ! $current_action || ( 'download_csv' != $current_action && empty( $_REQUEST['post'] ) ) ) {
          if ( ! empty( $_REQUEST['_wp_http_referer'] ) ) {
-            wp_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'action', 'action2' ), stripslashes($_SERVER['REQUEST_URI']) ) );
+            wp_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'action', 'action2' ), stripslashes( $_SERVER['REQUEST_URI'] ) ) );
             exit;
          }
 
@@ -293,7 +293,7 @@ class WPSC_Purchase_Log_Page
          return;
       }
 
-      if ( $current_action == 'download_csv' ) {
+      if ( 'download_csv' == $current_action ) {
          $this->download_csv();
          exit;
       }
@@ -308,7 +308,7 @@ class WPSC_Purchase_Log_Page
          'last_paged'
       ) );
 
-      if ( $current_action == 'delete' ) {
+      if ( 'delete' == $current_action ) {
 
          // delete action
          if ( empty( $_REQUEST['confirm'] ) ) {
@@ -341,16 +341,16 @@ class WPSC_Purchase_Log_Page
 
       // change status actions
       if ( is_numeric( $current_action ) && $current_action < 7 && ! empty( $_REQUEST['post'] ) ) {
-         foreach ( $_REQUEST['post'] as $id ) {
+	  
+         foreach ( $_REQUEST['post'] as $id )
             wpsc_purchlog_edit_status( $id, $current_action );
-         }
-
+         
          $sendback = add_query_arg( array(
             'updated' => count( $_REQUEST['post'] ),
          ), $sendback );
       }
       
-      do_action( 'wpsc_sales_log_process_bulk_action' );
+      do_action( 'wpsc_sales_log_process_bulk_action', $current_action, $sendback );
       wp_redirect( $sendback );
       exit;
    }
