@@ -315,24 +315,28 @@ function wpsc_purchase_log_csv() {
 	global $wpdb, $wpsc_gateways;
 	get_currentuserinfo();
 	$count = 0;
-	if ( ($_GET['rss_key'] == 'key') && current_user_can( 'manage_options' ) ) {
-		if ( isset( $_GET['start_timestamp'] ) && isset( $_GET['end_timestamp'] ) ) {
-			$start_timestamp = (int) $_GET['start_timestamp'];
-			$end_timestamp = (int) $_GET['end_timestamp'];
-			$data = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `date` BETWEEN '$start_timestamp' AND '$end_timestamp' ORDER BY `date` DESC", ARRAY_A );
+	if ( 'key' == $_REQUEST['rss_key'] && current_user_can( 'manage_options' ) ) {
+		if ( isset( $_REQUEST['start_timestamp'] ) && isset( $_REQUEST['end_timestamp'] ) ) {
+			$start_timestamp = (int) $_REQUEST['start_timestamp'];
+			$end_timestamp = (int) $_REQUEST['end_timestamp'];
+			$start_end_sql = "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `date` BETWEEN '$start_timestamp' AND '$end_timestamp' ORDER BY `date` DESC";
+			$start_end_sql = apply_filters( 'wpsc_purchase_log_start_end_csv', $start_end_sql );
+			$data = $wpdb->get_results( $start_end_sql, ARRAY_A );
 			$csv_name = 'Purchase Log ' . date( "M-d-Y", $start_timestamp ) . ' to ' . date( "M-d-Y", $end_timestamp ) . '.csv';
 		} elseif ( isset( $_REQUEST['m'] ) ) {
 			$year = (int) substr( $_REQUEST['m'], 0, 4);
 			$month = (int) substr( $_REQUEST['m'], -2 );
-			$sql = "
+			$month_year_sql = "
 				SELECT *
 				FROM " . WPSC_TABLE_PURCHASE_LOGS . "
 				WHERE YEAR(FROM_UNIXTIME(date)) = %d AND MONTH(FROM_UNIXTIME(date)) = %d
 			";
-			$data = $wpdb->get_results( $wpdb->prepare( $sql, $year, $month ), ARRAY_A );
+			$month_year_sql = apply_filters( 'wpsc_purchase_log_month_year_csv', $month_year_sql );
+			$data = $wpdb->get_results( $wpdb->prepare( $month_year_sql, $year, $month ), ARRAY_A );
 			$csv_name = 'Purchase Log ' . $month . '/' . $year . '.csv';
 		} else {
-			$data = $wpdb->get_results( "SELECT * FROM " . WPSC_TABLE_PURCHASE_LOGS, ARRAY_A );
+			$sql = apply_filters( 'wpsc_purchase_log_month_year_csv', "SELECT * FROM " . WPSC_TABLE_PURCHASE_LOGS );
+			$data = $wpdb->get_results( $sql, ARRAY_A );
 			$csv_name = "All Purchase Logs.csv";
 		}
 
@@ -340,10 +344,7 @@ function wpsc_purchase_log_csv() {
 		$form_data = $wpdb->get_results( $form_sql, ARRAY_A );
 		$csv = 'Purchase ID, Price, Firstname, Lastname, Email, Order Status, Data, ';
 
-		header( 'Content-Type: text/csv' );
-		header( 'Content-Disposition: inline; filename="' . $csv_name . '"' );
 		$headers = "\"Purchase ID\",\"Purchase Total\","; //capture the headers
-
 		$headers2  ="\"Payment Gateway\",";
 		$headers2 .="\"Payment Status\",\"Purchase Date\",";
 
@@ -375,12 +376,13 @@ function wpsc_purchase_log_csv() {
 			$cartsql = "SELECT `prodid`, `quantity`, `name` FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid`=" . $purchase['id'] . "";
 			$cart = $wpdb->get_results( $cartsql, ARRAY_A );
 
-			if($count < count($cart))
-				$count = count($cart);
+			if( $count < count( $cart ) )
+			    $count = count( $cart );
 			// Go through all products in cart and display quantity and sku
 			foreach ( (array)$cart as $item ) {
-				$skuvalue = get_product_meta($item['prodid'], 'sku', true);
-				if(empty($skuvalue)) $skuvalue = __('N/A', 'wpsc');
+				$skuvalue = get_product_meta( $item['prodid'], 'sku', true );
+				if( empty( $skuvalue ) ) 
+				    $skuvalue = __( 'N/A', 'wpsc' );
 				$output .= "\"" . $item['quantity'] . " x " . str_replace( '"', '\"', $item['name'] ) . "\"";
 				$output .= "," . $skuvalue."," ;
 			}
@@ -388,14 +390,19 @@ function wpsc_purchase_log_csv() {
 		}
 		// Get the most number of products and create a header for them
 		$headers3 = "";
-		for($i = 0; $i < $count ;$i++){
+		for( $i = 0; $i < $count; $i++ ){
 			$headers3 .= "\"Quantity - Product Name \", \" SKU \"";
-			if($i < ($count-1))
-			$headers3 .= ",";
+			if( $i < ( $count - 1 ) )
+			    $headers3 .= ",";
 		}
-
-		echo $headers . $form_headers . $headers2 . $headers3 . "\n". $output;
-		exit();
+		
+		$headers = apply_filters( 'wpsc_purchase_log_csv_headers', $headers . $form_headers . $headers2 . $headers3, $data, $form_data );
+		$output = apply_filters( 'wpsc_purchas_log_csv_output', $output, $data, $form_data );
+		
+		header( 'Content-Type: text/csv' );
+		header( 'Content-Disposition: inline; filename="' . $csv_name . '"' );
+		echo $headers . "\n". $output;
+		exit;
 	}
 }
 

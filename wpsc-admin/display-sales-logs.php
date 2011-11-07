@@ -275,7 +275,7 @@ class WPSC_Purchase_Log_Page
    }
 
    public function download_csv() {
-      $_GET['rss_key'] = 'key';
+      $_REQUEST['rss_key'] = 'key';
       wpsc_purchase_log_csv();
    }
 
@@ -349,6 +349,8 @@ class WPSC_Purchase_Log_Page
             'updated' => count( $_REQUEST['post'] ),
          ), $sendback );
       }
+      
+      do_action( 'wpsc_sales_log_process_bulk_action' );
       wp_redirect( $sendback );
       exit;
    }
