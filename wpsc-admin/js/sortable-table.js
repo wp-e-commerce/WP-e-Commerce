@@ -51,10 +51,9 @@
 	};
 
 	var event_sort_start = function(e, ui) {
-		var colspan = ui.item.find('th:visible, td:visible').size();
-
+		var colspan = $(this).find('thead th:visible').size();
+		ui.placeholder.html('<td colspan="' + colspan + '"></td>').find('td').height(ui.item.height());
 		restrict_sortable_within_same_level(ui.item, $(this));
-		ui.placeholder.html('<td colspan="' + colspan + '"></td>');
 	};
 
 	var event_sort_update = function(e, ui) {
@@ -67,6 +66,15 @@
 		});
 		t.find('.alternate').removeClass('alternate');
 		t.find('tbody tr:even').addClass('alternate');
+	};
+
+	var fix_helper_width = function(e, tr) {
+		var row = tr.clone().width(tr.width());
+		row.children().each(function(index){
+			var original = tr.children().eq(index), old_html = $(this).html();
+			$(this).wrapInner('<div class="cell-wrapper"></div>').find('.cell-wrapper').width(original.width());
+		});
+		return row;
 	};
 
 	$.fn.wpsc_sortable_table = function(user_options) {
@@ -83,6 +91,7 @@
 				items : 'tr.sortable',
 				containment : t,
 				placeholder : 'wpsc-sortable-table-placeholder',
+				helper : fix_helper_width,
 				cursor : 'move',
 				stop : options.stop,
 				start : event_sort_start,
