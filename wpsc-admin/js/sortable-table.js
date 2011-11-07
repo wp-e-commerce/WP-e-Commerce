@@ -57,7 +57,7 @@
 		ui.placeholder.html('<td colspan="' + colspan + '"></td>');
 	};
 
-	var event_sort_stop = function(e, ui) {
+	var event_sort_update = function(e, ui) {
 		var t = $(this);
 		t.find('tbody tr').addClass('sortable');
 		t.find('tr.collapsed').each(function(){
@@ -84,9 +84,9 @@
 				containment : t,
 				placeholder : 'wpsc-sortable-table-placeholder',
 				cursor : 'move',
-				update : options.update,
+				stop : options.stop,
 				start : event_sort_start,
-				stop : event_sort_stop
+				update : event_sort_update
 			});
 		});
 	};

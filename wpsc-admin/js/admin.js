@@ -1,4 +1,32 @@
-// This is the wp-e-commerce front end javascript "library"
+(function($){
+	if( pagenow == 'edit-wpsc_product_category' ) {
+		function variation_sort(e, ui){
+			var order = $(this).sortable('toArray'),
+				data = {
+				action: 'category_sort_order',
+				sort_order: order,
+				parent_id: 0
+			};
+
+			jQuery.post(ajaxurl, data);
+		}
+
+		$(function(){
+			var table = $('body.edit-tags-php .wp-list-table');
+			table.find('tbody tr').each(function(){
+				var t = $(this),
+					id = t.attr('id').replace(/[^0-9]+/g, '');
+				t.data('level', WPSC_Term_List_Levels[id]);
+				t.data('id', id);
+			});
+			table.wpsc_sortable_table({
+				stop : variation_sort
+			});
+
+			$('.edit-tags-php form').attr('enctype', 'multipart/form-data').attr('encoding', 'multipart/form-data');
+		});
+	}
+})(jQuery);
 
 jQuery(document).ready(function(){
 	jQuery('td.hidden_alerts img').each(function(){
@@ -145,38 +173,6 @@ jQuery(document).ready(function(){
 			return false;
 		});
 	});
-
-         if( pagenow == 'edit-wpsc_product_category' ) {
-          jQuery('table.tags').sortable({
-            axis: 'y',
-            items : 'tr',
-            containment: 'table.tags tbody',
-            placeholder: 'product-placeholder',
-            cursor: 'move',
-            tolerance: 'pointer',
-            update: function(event, ui){
-              categorySort(jQuery('table.tags').sortable('toArray'), 0);
-            }
-          });
-
-          function categorySort(order, parent){
-            var data = {
-                    action: 'category_sort_order',
-                    sort_order: order,
-                    parent_id: parent
-            };
-
-            var id = '#debugData_';
-
-            jQuery.post(ajaxurl, data, function(response) {
-                    jQuery(id).append(response);
-            });
-            return false;
-       }
-
-          jQuery('.edit-tags-php form').attr('enctype', 'multipart/form-data').attr('encoding', 'multipart/form-data');
-
-      }
 
 	//Added for inline editing capabilities
 	//this was origionally used for variation quick edits ont eh edit product page - its commented out because we are going to show the quick edit options by default now so this fancy hiding is not required
