@@ -18,7 +18,7 @@
 			t.data('id', id);
 		});
 		table.wpsc_sortable_table({
-			update : variation_sort
+			stop : variation_sort
 		});
 	});
 })(jQuery);
