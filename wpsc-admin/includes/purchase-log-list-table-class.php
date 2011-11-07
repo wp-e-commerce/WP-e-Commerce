@@ -314,9 +314,10 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 	}
 
 	public function extra_tablenav( $which ) {
-		if ( $which == 'top' ) {
+		if ( 'top' == $which ) {
 			echo '<div class="alignleft actions">';
 			$this->months_dropdown();
+			do_action( 'wpsc_sales_log_extra_tablenav' );
 			echo '</div>';
 		}
 	}
