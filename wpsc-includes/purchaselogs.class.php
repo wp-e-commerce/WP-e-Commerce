@@ -755,7 +755,6 @@ class wpsc_purchaselogs {
    }
 
    function deletelog( $deleteid ) {
-      //change $_GET[deleteid] to $deleteid
       global $wpdb;
       if ( is_numeric( $deleteid ) ) {
 

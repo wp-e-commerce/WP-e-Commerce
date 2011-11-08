@@ -628,7 +628,7 @@ class wpsc_checkout {
 					foreach ( $options as $label => $value ) {
 						?>
 							<label>
-								<input <?php checked( in_array( $value, (array) $saved_form_data ) ); ?> type="checkbox" name="collected_data[<?php echo esc_attr( $this->checkout_item->id ); ?>]<?php echo $an_array; ?>[] ?>" value="<?php echo esc_attr( $value ); ?>"  />
+								<input <?php checked( in_array( $value, (array) $saved_form_data ) ); ?> type="checkbox" name="collected_data[<?php echo esc_attr( $this->checkout_item->id ); ?>]<?php echo $an_array; ?>[]" value="<?php echo esc_attr( $value ); ?>"  />
 								<?php echo esc_html( $label ); ?>
 							</label>
 						<?php
