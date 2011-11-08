@@ -397,7 +397,7 @@ function wpsc_purchase_log_csv() {
 		}
 		
 		$headers = apply_filters( 'wpsc_purchase_log_csv_headers', $headers . $form_headers . $headers2 . $headers3, $data, $form_data );
-		$output = apply_filters( 'wpsc_purchas_log_csv_output', $output, $data, $form_data );
+		$output = apply_filters( 'wpsc_purchase_log_csv_output', $output, $data, $form_data );
 		
 		header( 'Content-Type: text/csv' );
 		header( 'Content-Disposition: inline; filename="' . $csv_name . '"' );
