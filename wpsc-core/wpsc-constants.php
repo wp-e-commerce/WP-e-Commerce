@@ -112,10 +112,11 @@ function wpsc_core_constants_table_names() {
 	define( 'WPSC_META_PREFIX', '_wpsc_' );
 
 	// These tables are required, either for speed, or because there are no
-	// existing wordpress tables suitable for the data stored in them.
+	// existing WordPress tables suitable for the data stored in them.
 	define( 'WPSC_TABLE_PURCHASE_LOGS',          "{$wp_table_prefix}wpsc_purchase_logs" );
 	define( 'WPSC_TABLE_CART_CONTENTS',          "{$wp_table_prefix}wpsc_cart_contents" );
 	define( 'WPSC_TABLE_SUBMITED_FORM_DATA',     "{$wp_table_prefix}wpsc_submited_form_data" );
+	define( 'WPSC_TABLE_SUBMITTED_FORM_DATA',     "{$wp_table_prefix}wpsc_submited_form_data" );
 	define( 'WPSC_TABLE_CURRENCY_LIST',          "{$wp_table_prefix}wpsc_currency_list" );
 
 	// These tables may be needed in some situations, but are not vital to
