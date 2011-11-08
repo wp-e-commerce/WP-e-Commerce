@@ -782,8 +782,7 @@ class wpsc_purchaselogs {
    }
 
    function deletelog( $deleteid ) {
-      //change $_GET[deleteid] to $deleteid
-      global $wpdb;
+    global $wpdb;
       if ( is_numeric( $deleteid ) ) {
 
          $delete_log_form_sql = "SELECT * FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid`='$deleteid'";
