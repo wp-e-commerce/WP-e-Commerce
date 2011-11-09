@@ -28,6 +28,9 @@ function wpsc_admin_product_listing($parent_product = null) {
 
 /**
  * Adds the -trash status in the product row of manage products page
+ *
+ * Gary asks: Why do we need this?
+ *
  * @access public
  *
  * @since 3.8
@@ -41,7 +44,9 @@ function wpsc_trashed_post_status($post_status){
 
 	return $post_status;
 }
-add_filter('display_post_states','wpsc_trashed_post_status');
+
+// commenting this out because it seems unnecessary and producing PHP notices
+// add_filter('display_post_states','wpsc_trashed_post_status');
 
 /**
  * Spits out the current products details in a table row for manage products page and variations on edit product page.
@@ -52,10 +57,10 @@ add_filter('display_post_states','wpsc_trashed_post_status');
  */
 function wpsc_product_row(&$product, $parent_product = null) {
 	global $mode, $current_user;
-	
+
 	//is this good practice? <v.bakaitis@gmail.com>
 	static $rowclass;
-	
+
 	$global_product = $product;
 	setup_postdata($product);
 	$product_post_type_object = get_post_type_object('wpsc-product');
@@ -81,7 +86,7 @@ function wpsc_product_row(&$product, $parent_product = null) {
 
 	foreach ( $posts_columns as $column_name=>$column_display_name ) {
 		$attributes = "class=\"$column_name column-$column_name\"";
-		
+
 		switch ($column_name) {
 
                     case 'date': /* !date case */
@@ -122,7 +127,7 @@ function wpsc_product_row(&$product, $parent_product = null) {
 
 		case 'title': /* !title case */
 			$attributes = 'class="post-title column-title"';
-			
+
 			$edit_link = wp_nonce_url( $edit_link, 'edit-product_'.$product->ID );
 		?>
 		<td <?php echo $attributes ?>>

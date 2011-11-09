@@ -1,4 +1,25 @@
 (function($){
+	$(function(){
+		var table = $('body.edit-tags-php .wp-list-table');
+		table.find('tbody tr').each(function(){
+			var t = $(this),
+				id = t.attr('id').replace(/[^0-9]+/g, '');
+			t.data('level', WPSC_Term_List_Levels[id]);
+			t.data('id', id);
+		});
+
+		table.wpsc_sortable_table({
+			stop : variation_sort
+		});
+
+		$('.variation_checkboxes').delegate('.variation-set', 'click', event_toggle_checkboxes).
+		                           delegate('a.expand', 'click', event_toggle_children).
+		                           delegate('.selectit input:checkbox', 'click', event_display_apply_variations).
+		                           delegate('.children input:checkbox', 'click', event_toggle_parent);
+
+		$('a.update_variations_action').bind('click', event_apply_variations);
+	});
+
 	function variation_sort(e, ui){
 		var order = $(this).sortable('toArray'),
 			data = {
@@ -9,61 +30,74 @@
 		jQuery.post(ajaxurl, data);
 	}
 
-	$(function(){
-		var table = $('body.edit-tags-php .wp-list-table');
-		table.find('tbody tr').each(function(){
-			var t = $(this),
-				id = t.attr('id').replace(/[^0-9]+/g, '');
-			t.data('level', WPSC_Term_List_Levels[id]);
-			t.data('id', id);
+	var event_apply_variations = function() {
+		var t = $(this),
+			spinner = t.siblings('.ajax-feedback'),
+			boxes = $('.variation_checkboxes input:checked'),
+			values = [],
+			post_data = {
+				action : 'wpsc_update_variations',
+				description : $('#content_ifr').contents().find('body').html(),
+				additional_description : $('textareaa#additional_description').text(),
+				name : $('input#title').val(),
+				product_id : $('input#product_id').val()
+			},
+			ajax_callback = function(response){
+				$('div#wpsc_product_variation_forms table.widefat tbody').html(response);
+				spinner.toggleClass('ajax-feedback-active');
+			};
+
+		boxes.each(function(){
+			var t = $(this);
+			post_data[t.attr('name')] = t.val();
 		});
-		table.wpsc_sortable_table({
-			stop : variation_sort
+
+		post_data.edit_var_val = values;
+		spinner.toggleClass('ajax-feedback-active');
+
+		$.post(ajaxurl, post_data, ajax_callback);
+
+		return false;
+	};
+
+	var event_toggle_checkboxes = function() {
+		var t = $(this), checked;
+
+		if (t.is(':checked')) {
+			checked = true;
+		} else {
+			checked = false;
+		}
+
+		t.closest('li').find('.children input:checkbox').each(function(){
+			this.checked = checked;
 		});
-	});
+
+		t.parent().siblings('.expand').trigger('click');
+	};
+
+	var event_toggle_children = function() {
+		var t = $(this);
+		t.siblings('ul').slideToggle(150);
+		t.closest('li').toggleClass('expanded');
+		return false;
+	};
+
+	var event_display_apply_variations = function() {
+		$('.update-variations').fadeIn(150);
+	};
+
+	var event_toggle_parent = function() {
+		var t = $(this),
+			parent = t.closest('.children').parent();
+			parent_checkbox = parent.find('.variation-set'),
+			checked = this.checked;
+
+		if (this.checked) {
+			parent_checkbox[0].checked = true;
+		} else if (parent.find('.children input:checked').size() == 0) {
+			parent_checkbox[0].checked = false;
+			parent.find('.expand').trigger('click');
+		}
+	};
 })(jQuery);
-
-//Delete checkout options on settings>checkout page
-
-jQuery('.variation_checkboxes').livequery(function(){
-
-        jQuery('label input:checkbox', this).click(function(){
-
-                jQuery('a.update_variations_action').show();
-        });
-
-	jQuery("div.variation_set>label input:checkbox", this).click(function(event){
-		var variation_set = jQuery(this).parents("div.variation_set");
-
-		if (jQuery(this).is(':checked')) {
-			jQuery('div.variation input:checkbox', variation_set).attr('checked', true);
-			jQuery('div.variation', variation_set).show();
-		} else {
-			jQuery('div.variation input:checkbox', variation_set).attr('checked', false);
-			jQuery('div.variation', variation_set).hide();
-		}
-
-	});
-
-
-
-	jQuery("div.variation input:checkbox", this).click(function(event){
-		var variation_set = jQuery(this).parents("div.variation_set");
-		var variation = jQuery(this).parents("div.variation");
-
-		if (jQuery(this).is(':checked')) {
-			jQuery('label.set_label input:checkbox', variation_set).attr('checked', true);
-			jQuery('div.variation', variation_set).show();
-		} else {
-			var checked_count = jQuery('div.variation input:checked', variation_set).length;
-			if(checked_count < 1) {
-				jQuery('div.variation', variation_set).hide();
-				jQuery('label.set_label input:checkbox', variation_set).attr('checked', false);
-			}
-		}
-	});
-
-});
-
-
-
