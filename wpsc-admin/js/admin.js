@@ -1,6 +1,6 @@
 (function($){
 	if( pagenow == 'edit-wpsc_product_category' ) {
-		function variation_sort(e, ui){
+		function category_sort(e, ui){
 			var order = $(this).sortable('toArray'),
 				data = {
 				action: 'category_sort_order',
@@ -20,7 +20,7 @@
 				t.data('id', id);
 			});
 			table.wpsc_sortable_table({
-				stop : variation_sort
+				stop : category_sort
 			});
 
 			$('.edit-tags-php form').attr('enctype', 'multipart/form-data').attr('encoding', 'multipart/form-data');
@@ -156,24 +156,6 @@ jQuery(document).ready(function(){
 			return false;
 		});
 	});
-
-	//Added for inline editing capabilities
-	//this was origionally used for variation quick edits ont eh edit product page - its commented out because we are going to show the quick edit options by default now so this fancy hiding is not required
-	/*
-jQuery('#wpsc_product_list a.wpsc_editinline').live('click', function() {
-		var t = jQuery(this),
-			tr = t.parents('tr');
-		tr.find('td input[type="text"].wpsc_ie_field').each(function(){
-			var ti = jQuery(this), p = ti.parents('td');
-			if (! p.hasClass('column-stock') || p.css('display') != 'none') {
-				ti.innerWidth(p.width());
-			}
-		}).show();
-		tr.find('td .wpsc_inline_actions').show().end().find('a.row-title, td > span').hide();
-		return false;
-	});
-*/
-
 
 	jQuery('#wpsc_product_list .wpsc_ie_save').live('click', function(){
 		jQuery(this).parents('tr:first').find('.loading_indicator').css('visibility', 'visible');
@@ -695,102 +677,3 @@ function editinline_get_id(){
 
 
 }
-
-/* add new variations via the product page */
-/* Hide the divs on start up */
-
-
-jQuery(document).ready(function(){
-	jQuery("div#add_new_variation").hide();
-	jQuery("div#wpsc_add_variant").hide();
-	jQuery("div#wpsc_add_variation_desc").hide();
-	jQuery("input.wpsc-save-variation-set").hide();
-	jQuery("div#wpsc_add_variant_desc").hide();
-});
-
-/* open them when the link is pushed */
-jQuery(".add_variation_set_action").livequery(function(){
-	jQuery(this).click(function() {
-		jQuery("div#add_new_variation").slideDown();
-		jQuery("div#wpsc_add_variation_desc").slideDown();
-		jQuery("a.add_variation_set_action").fadeOut(100);
-	});
-});
-
-jQuery(".add_variation_set").livequery(function(){
-	jQuery(this).click(function() {
-		var variation_set_name = jQuery("#variation_set").val();
-		if (variation_set_name == ''){
-			jQuery("span.variation_set_name_error").text("You must enter in a name for your Variation");
-			return;
-		}
-		/* grab the variation set name so we can write it to the add [set name] Variants part */
-		jQuery("div#wpsc_add_variation_desc").hide();
-		jQuery("span#variation_set_name").text(variation_set_name);
-		/* and now we show the add variant div */
-		jQuery("div#wpsc_add_variant").show();
-		jQuery("div#wpsc_add_variant_desc").show();
-		jQuery(this).hide();
-	});
-});
-
-jQuery("button#wpsc_add_variant_button").livequery(function(){
-	jQuery(this).click(function() {
-		//find the variant value
-		var variant = jQuery("input.wpsc_variant").val();
-		var variation = jQuery("input.wpsc_variantion").val();
-		//prepare the ajax data action, send the variation and variant name
-		var data = {
-			action: 	'wpsc_add_variant_from_products_page',
-			variant: 	variant,
-			variation: 	variation
-		};
-
-		jQuery.post(ajaxurl, data, function(data) {
-			var variant_id = jQuery(data).find('variant_id').text();
-			var has_multi_add = variant_id.search(',');
-			/* search found no commas (returns -1) in the string so we know these variants have not been coma seperated */
-			if (has_multi_add == -1){
-			/* finally create the tag box we append the newly created variant id as we will need to call this out again if the delete link gets pushed */
-				jQuery("div#product_variant_list").append('<span id="wpsc_remove_variant_'+variant_id+'"><a id="wpsc_variant_'+variant_id+'" class="wpsc_variant_delete">X</a>&nbsp;'+variant+' </span>');
-			}else{
-				/* we have more than one variant in our string so create and array to loop through */
-				var variant_id_array = new Array();
-				var variant_name_array = new Array();
-				/*split the strings returned from the response into an array*/
-				variant_name_array = variant.split(",");
-				variant_id_array = variant_id.split(",");
-				/* the name and ids are in matching places so we do a loop and appended the tag display span */
-				jQuery.each(variant_id_array, function(k, v) {
-					jQuery("div#product_variant_list").append('<span id="wpsc_remove_variant_'+v+'"><a id="wpsc_variant_'+v+'" class="wpsc_variant_delete">X</a>&nbsp;'+variant_name_array[k]+' </span>');
-				});
-			}
-		});
-		//we can now show the save button because we have aleast one variant added
-		jQuery("input.wpsc-save-variation-set").fadeIn("100");
-		//reset the value back in the variation box to nothing
-		jQuery("input.wpsc_variant").val('');
-		jQuery("span.variant_value").text(variant);
-	});
-});
-
-jQuery("a.wpsc_variant_delete").livequery(function(){
-	jQuery(this).click(function() {
-	/* get the variant id this is appended on the id of the link*/
-	var variant_id = jQuery(this).attr('id').split("wpsc_variant_");
- 	variant_id = variant_id[variant_id.length - 1];
-	/* send of the delete request and delete the variant */
-	var data = {
-			action: 	'wpsc_delete_variant_from_products_page',
-			variant_id: variant_id
-		};
-
-		jQuery.post(ajaxurl, data, function(data) {
-			//once sent off and deleted we want to remove the span displaying the variant
-			jQuery("span#wpsc_remove_variant_"+variant_id).remove();
-		});
-	});
-});
-
-
-
