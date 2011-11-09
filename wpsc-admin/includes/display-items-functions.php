@@ -384,69 +384,51 @@ function wpsc_product_variation_forms() {
 
 	$siteurl = get_option( 'siteurl' );
 	$output  = '';
-
-	// Get variation data from WP Terms
-	$product_term_data = wp_get_object_terms( $post->ID, 'wpsc-variation' );
-	if ( !empty( $product_term_data ) ) {
-		foreach ( $product_term_data as $product_term )
-			$product_terms[] = $product_term->term_id;
-	} else {
-		$product_terms = array();
-	}
 ?>
 	<a name="#wpsc_variation_metabox"></a>
-				<?php if ( empty( $post->post_title ) ) : ?>
-					<p><?php _e( 'You must first save this Product as a Draft before adding variations.', 'wpsc' ); ?></p>
-					<h4><a href="<?php echo get_admin_url(); ?>/edit-tags.php?taxonomy=wpsc-variation&post_type=wpsc-product" target="_blank">+ Add New Variation Set</a></h4>
-				<?php else : ?>
-				<div id="product_variations">
+		<?php if ( empty( $post->post_title ) ) : ?>
+			<p><?php _e( 'You must first save this Product as a Draft before adding variations.', 'wpsc' ); ?></p>
+			<h4><a href="<?php echo get_admin_url(); ?>/edit-tags.php?taxonomy=wpsc-variation&post_type=wpsc-product" target="_blank">+ Add New Variation Set</a></h4>
+		<?php else : ?>
+			<div id="product_variations">
 				<p><a name='variation_control'>&nbsp;</a><?php _e( 'Select the Variation sets and then the corresponding Variants you want to add to this product.', 'wpsc' ) ?></p>
 
-			<ul class="variation_checkboxes">
-				<?php
+				<ul class="variation_checkboxes">
+					<?php
 
-				wp_terms_checklist( $post->ID, array(
-					'taxonomy'      => 'wpsc-variation',
-					'selected_cats' => $product_terms,
-					'walker'        => new WPSC_Walker_Variation_Checklist,
-					'checked_ontop' => false,
-				) );
+					wp_terms_checklist( $post->ID, array(
+						'taxonomy'      => 'wpsc-variation',
+						'walker'        => new WPSC_Walker_Variation_Checklist(),
+						'checked_ontop' => false,
+					) );
 
-				?>
-			</ul>
+					?>
+				</ul>
 
-			<p class="update-variations">
-				<a class="button update_variations_action" href='#'><?php _e( 'Apply Variations &rarr;', 'wpsc' ); ?></a>
-				<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" /><br class="clear" />
-			</p>
-			<div class="clear"></div>
-			<h4><a href="#wpsc_variation_metabox" class="add_variation_set_action">+ Add New Variation Set</a></h4>
-			<!-- will be hidden by default until the link is clicked -->
-			<div id="add_new_variation">
-				<h4>Add Variation Set</h4>
-				<form method="post"  action="">
-				<p><input id="variation_set" class="text wpsc_variantion" size="28" type="text" name="variation_set" /></p>
-				<span class="variation_set_name_error"></span>
-				<p><input type='hidden' name='wpsc_admin_action' value='add_variation_set' /></p>
-				<p><button type="button"class='button add_variation_set'>Add Variation Set</button></p>
-				<p><input type='submit' class='button-primary wpsc-save-variation-set' value='Save Variation Set' /></p>
-			</div>
+				<p class="update-variations">
+					<a class="button update_variations_action" href='#'><?php _e( 'Apply Variations &rarr;', 'wpsc' ); ?></a>
+					<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" /><br class="clear" />
+				</p>
 
-			<div id="wpsc_add_variation_desc">
-				<p class="description">Add the name of your variation set eg:Size. If you would like to add variants to a set you ahve already created then enter in the name of that variation set.</p>
-			</div>
+				<div class="clear"></div>
+				<h4><a href="#wpsc_variation_metabox" class="add_variation_set_action"><?php esc_html_e( '+ Add New Variants', 'wpsc' ) ?></a></h4>
 
-			<div id="wpsc_add_variant">
-				<h4>Add <span id="variation_set_name"></span> Variants</h4>
-				<p><input class="text wpsc_variant" size="28" type="text" name="variant" />
-				<button id="wpsc_add_variant_button" type="button"class='button'>Add</button></p>
-				</form>
-				<!-- the variant list will go in this empty div as they get added -->
-				<div id="product_variant_list" class="tagchecklist"></div>
-			</div>
-
-			<div id="wpsc_add_variant_desc"><p class="description">Variants can be comma separated eg: Red, Green, Blue.</p></div>
-
+				<div id="add-new-variation-set">
+					<p>
+						<label for="new-variation-set-name"><?php esc_html_e( "Enter variation set's name", 'wpsc' ); ?></label>
+						<input type="text" class="text-field" id="new-variation-set-name" /><br />
+					</p>
+					<p class="howto"><?php esc_html_e( "Example: Color. If you want to add variants to an existing set, you can enter the name of that set here.", 'wpsc' ); ?></p>
+					<p>
+						<label for="new-variants"><?php esc_html_e( "Enter new variants", 'wpsc' ); ?></label>
+						<input type="text" class="text-field" id="new-variants" /><br />
+					</p>
+					<p class="howto"><?php esc_html_e( "Example: Red, Green, Blue. Separate variants with commas.", 'wpsc' ); ?></p>
+					<p>
+						<a class="button" href="#"><?php esc_html_e( 'Add New Variants', 'wpsc' ); ?></a>
+						<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" /><br class="clear" />
+					</p>
+				</div>
 			</div>
 	<?php
 	$parent_product = $post->ID;

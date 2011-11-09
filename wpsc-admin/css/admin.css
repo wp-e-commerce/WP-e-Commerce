@@ -66,8 +66,8 @@ ul.children{
 .category_indenter{
 	float:left;
 	width:auto;
-
 }
+
 /**
  *Dashboard Widget CSS
  *
@@ -816,6 +816,43 @@ div.select_variation_file p input {
 
 .variation_checkboxes .expanded a.expand {
 	background-position:left top;
+}
+
+#add-new-variation-set {
+	margin-bottom:20px;
+	display:none;
+}
+
+#add-new-variation-set p {
+	position:relative;
+}
+
+#add-new-variation-set p.howto {
+	margin-bottom:16px;
+}
+
+#add-new-variation-set p label.focus {
+	color:#666;
+}
+
+#add-new-variation-set p.error label {
+	color:red;
+}
+
+#add-new-variation-set p label {
+	color:#000;
+	cursor:text;
+	left:6px;
+	position:absolute;
+	top:4px;
+}
+
+#add-new-variation-set .text-field {
+	width:195px;
+}
+
+.variation-set-prototype {
+	display:none;
 }
 /* variations CSS ends */
 
