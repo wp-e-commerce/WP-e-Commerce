@@ -34,23 +34,6 @@ jQuery(document).ready(function(){
 		t.appendTo(t.parents('tr').find('td.column-title strong'));
 	});
 
-	jQuery('a.update_variations_action').click(function(){
-		jQuery("<img class='loading' src='images/loading.gif' height='15' width='15' />").insertAfter(this);
-		var edit_var_val = jQuery('div.variation_checkboxes input:checked').serialize();
-		var description = jQuery('#content_ifr').contents().find('body').html();
-		var additional_description = jQuery('textarea#additional_description').text();
-		var name = jQuery('input#title').val();
-		var product_id = jQuery('input#product_id').val();
-		var post_values = edit_var_val + '&description=' + description + '&additional_description=' + additional_description + '&name=' + name + '&product_id=' + product_id;
-		jQuery('div#wpsc_product_variation_forms table.widefat tbody').fadeTo(200, 0, function(){
-			jQuery.post(ajaxurl + '?action=wpsc_update_variations',post_values, function(returned_data){
-				jQuery('div#wpsc_product_variation_forms table.widefat tbody').html(returned_data).fadeTo(200, 1);
-				jQuery('img.loading').hide();
-			});
-		});
-		return false;
-
-	});
 	/* 	Coupon edit functionality */
 	jQuery('.modify_coupon').hide();
 	jQuery('.wpsc_edit_coupon').click(function(){

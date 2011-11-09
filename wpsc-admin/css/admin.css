@@ -761,17 +761,6 @@ div.variation_checkboxes {
 	margin-bottom: 4px;
 }
 
-div.variation_checkboxes label {
-	display: block;
-	margin-bottom: 2px;
-}
-
-div.variation_checkboxes label input {
-	position: relative;
-	top: 2px;
-	margin-right: 3px;
-}
-
 a.variation_edit_button {
 	display: block;
 	height: 16px;
@@ -800,18 +789,35 @@ div.select_variation_file p input {
 	top: 2px;
 }
 
-
-label.variation_checkbox {
-	display: block;
+.variation_checkboxes li {
+	margin:0;
 }
 
-div.variation_set{
+.variation_checkboxes ul {
+	margin-left:30px;
 }
-div.variation{
-	padding-left: 10px;
+
+.js .variation_checkboxes .children {
+	display:none;
+}
+
+.js .variation_checkboxes .expanded .children {
+	display:block;
+}
+
+.variation_checkboxes a.expand {
+	background:url(arrows.png) no-repeat left -108px;
+	display:inline-block;
+	height:15px;
+	width:15px;
+	text-indent:-999em;
+	vertical-align:middle;
+}
+
+.variation_checkboxes .expanded a.expand {
+	background-position:left top;
 }
 /* variations CSS ends */
-
 
 div#side-sortables input[type="file"] {
 	width:250px;
@@ -1646,13 +1652,13 @@ ul.wpsc_categories {
 	clear: both;
 }
 
-a.update_variations, a.update_variations_action
+a.update_variations_action
 {
-	float:left;
-	margin:10px;
+	vertical-align:middle;
 }
-a.update_variations_action {
+#poststuff .inside p.update-variations {
 	display:none;
+	margin-top:1em;
 }
 #search-products{
 width:auto;
