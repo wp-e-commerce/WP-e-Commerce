@@ -2,7 +2,9 @@
 * This is the new WPSC Admin CSS file
 
 */
-
+ul.variation_checkboxes li {
+margin: 1px 0 3px;
+}
 /* This is the variation meta box stuff need to put it in the correct place - mychelle */
 div#wpsc_product_variation_forms table#wpsc_product_list tbody tr td span{
 display:none;
@@ -18,6 +20,7 @@ div#wpsc_product_variation_forms table#wpsc_product_list tbody tr td.stock{
 
 div#wpsc_product_variation_forms table#wpsc_product_list tbody tr td.price{
 	width: 125px;
+	padding-top:10px;
 }
 
 div#wpsc_product_variation_forms table#wpsc_product_list tbody tr td.post-title{

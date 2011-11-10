@@ -8,6 +8,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 	private $checkout_sets;
 	private $current_checkout_set;
 	private $field_types;
+	private $user_field_types;
 
 	public function __construct() {
 		global $wpdb;
@@ -18,6 +19,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 		$this->checkout_sets = get_option( 'wpsc_checkout_form_sets' );
 		$this->current_checkout_set = empty( $_GET['checkout-set'] ) ? 0 : $_GET['checkout-set'];
 		$this->field_types = get_option( 'wpsc_checkout_form_fields' );
+		$this->user_field_types = array('text','textarea','heading','select','radio','checkbox');
 
 		$form_sql = $wpdb->prepare( "
 			SELECT *
@@ -395,7 +397,9 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 						<div class="cell-wrapper">
 							<select name="new_field_type[0]">
 								<?php foreach ( $this->field_types as $name => $type ): ?>
-									<option value="<?php echo esc_attr( $type ); ?>"><?php echo esc_html( $name ); ?></option>
+									<?php if( in_array($type, $this->user_field_types) ): ?>
+												<option value="<?php echo esc_attr( $type ); ?>"><?php echo esc_html( $name ); ?></option>
+									<?php endif ?>
 								<?php endforeach ?>
 							</select>
 						</div>
