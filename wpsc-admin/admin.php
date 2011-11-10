@@ -347,13 +347,6 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 		if ( in_array( $current_screen->id, array( 'edit-wpsc-variation', 'wpsc-product' ) ) ) {
 			wp_enqueue_script( 'wp-e-commerce-variations', WPSC_URL . '/wpsc-admin/js/variations.js', array( 'jquery', 'wpsc-sortable-table' ), $version_identifier );
 		}
-		if ( $current_screen->id == 'edit-wpsc_product_category' || $current_screen->id == 'edit-wpsc-variation' ) {
-			wp_dequeue_script( 'wp-ajax-response' );
-			wp_dequeue_script( 'admin-tags' );
-	        wp_dequeue_script( 'inline-edit-post' );
-		} else {
-			wp_enqueue_script( 'inline-edit-post' );
-		}
 		wp_enqueue_style( 'wp-e-commerce-admin', WPSC_URL . '/wpsc-admin/css/admin.css', false, $version_identifier, 'all' );
 		wp_enqueue_style( 'wp-e-commerce-admin-dynamic', $siteurl . "/wp-admin/admin.php?wpsc_admin_dynamic_css=true", false, $version_identifier, 'all' );
 		// Localize scripts
