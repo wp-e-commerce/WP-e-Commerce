@@ -135,7 +135,9 @@
 				'current_url' : location.href,
 				'tab'         : tab_id
 			});
+			var spinner = $('#wpsc-settings-page-title .ajax-feedback');
 
+			spinner.addClass('ajax-feedback-active');
 			WPSC_Settings_Page.toggle_ajax_state(tab_id);
 
 			// pushState to save this page load into history, and alter the address field of the browser
@@ -160,6 +162,7 @@
 				$('#wpsc_options_page form').attr('action', url);
 				$(t).trigger('wpsc_settings_tab_loaded');
 				$(t).trigger('wpsc_settings_tab_loaded_' + tab_id);
+				spinner.removeClass('ajax-feedback-active');
 			}
 
 			$.post(ajaxurl, post_data, ajax_callback, 'html');
