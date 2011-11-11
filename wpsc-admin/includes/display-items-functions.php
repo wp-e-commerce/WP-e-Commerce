@@ -433,7 +433,7 @@ function wpsc_product_variation_forms() {
 			<div class="add_variant">
 			<h4>Add <span class="variation_set_name"></span> Variants</h4>
 			<p><input class="text wpsc_variant" size="28" type="text" name="variant[]" /> <button class="wpsc_add_variant" type="button"class='button'>Add</button></p>
-			<div class="tagchecklist"></div>
+			<div id="product_variant_list" class="tagchecklist"></div>
 			</div><!--  close add variant -->		
 			<div id="wpsc_add_variant_desc"><p class="description">Variants can be comma separated eg: Red, Green, Blue.</p> <p class="howto"> You can also use the add button to add them one at a time.</p></div>			
 		
