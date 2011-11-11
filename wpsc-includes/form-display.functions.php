@@ -169,8 +169,8 @@ function wpsc_select_product_file( $product_id = null ) {
 	);
 
 	$attached_files = (array)get_posts( $args );
-
-	$output = "<span class='admin_product_notes select_product_note '>" . __( 'File(s) attached: ', 'wpsc' ) . "</span><br>";
+	$output = "<a name='wpsc_downloads'></a>";
+	$output .= "<span class='admin_product_notes select_product_note '>" . __( 'File(s) attached: ', 'wpsc' ) . "</span><br>";
 	$output .= "<div class='ui-widget-content multiple-select select_product_file'>";
 	$num = 0;
 
