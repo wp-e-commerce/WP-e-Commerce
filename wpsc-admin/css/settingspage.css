@@ -12,6 +12,9 @@ th#actions{
 th#drag{
 	width:50px;
 }
+th#name {
+	width:205px;
+}
 tr.wpsc_grey{
 	background-color: #ededed;
 }
@@ -370,7 +373,7 @@ a.nav-tab-loading {
 }
 
 #wpsc_checkout_list .wpsc-field-options-table input {
-	width:85px;
+	width:100%;
 }
 
 #wpsc_checkout_list .wpsc-field-options-table td {
@@ -396,6 +399,10 @@ a.nav-tab-loading {
 
 #wpsc_checkout_list .wpsc-field-options-table td .field-option-cell-wrapper {
 	padding:7px 0;
+}
+
+#wpsc_checkout_list .wpsc-field-options-table .column-actions {
+	width:65px;
 }
 
 #wpsc_checkout_list .wpsc-field-options-table .column-actions .field-option-cell-wrapper {
