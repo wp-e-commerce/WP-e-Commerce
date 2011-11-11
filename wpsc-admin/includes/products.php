@@ -14,14 +14,12 @@
  *
  */
 function wpsc_admin_product_listing($parent_product = null) {
-	global $wp_query, $wpsc_products;
+	global $wp_query;
 	add_filter('the_title','esc_html');
 	$args = array_merge( $wp_query->query, array( 'posts_per_page' => '-1' ) );
-	$wpsc_temp_query = query_posts( $args );
-	if ( empty($wpsc_products) )
-		$wpsc_products = &$wpsc_temp_query;
+	$GLOBALS['wpsc_products'] = query_posts( $args );
 
-	foreach ( (array)$wpsc_products as $product ) {
+	foreach ( (array)$GLOBALS['wpsc_products'] as $product ) {
 		wpsc_product_row($product, $parent_product);
 	}
 }
@@ -56,10 +54,22 @@ function wpsc_trashed_post_status($post_status){
  * @param $product (Object), $parent_product (Int) Note: I believe parent_product is unused
  */
 function wpsc_product_row(&$product, $parent_product = null) {
-	global $mode, $current_user;
+	global $mode, $current_user, $wpsc_products;
 
 	//is this good practice? <v.bakaitis@gmail.com>
-	static $rowclass;
+	static $rowclass, $object_terms_cache = array();
+
+	// store terms associated with variants inside a cache array. This only requires 1 DB query.
+	if ( empty( $object_terms_cache ) ) {
+		$ids = wp_list_pluck( $wpsc_products, 'ID' );
+		$object_terms = wp_get_object_terms( $ids, 'wpsc-variation', array( 'fields' => 'all_with_object_id' ) );
+		foreach ( $object_terms as $term ) {
+			if ( ! array_key_exists( $term->object_id, $object_terms_cache ) )
+				$object_terms_cache[$term->object_id] = array();
+
+			$object_terms_cache[$term->object_id][$term->parent] = $term->name;
+		}
+	}
 
 	$global_product = $product;
 	setup_postdata($product);
@@ -70,7 +80,12 @@ function wpsc_product_row(&$product, $parent_product = null) {
 	$post_owner = ( $current_user->ID == $product->post_author ? 'self' : 'other' );
 	$edit_link = get_edit_post_link( $product->ID );
 
-        $title = get_the_title( $product->ID );
+	if ( isset( $object_terms_cache[$product->ID] ) ) {
+		ksort( $object_terms_cache[$product->ID] );
+		$title = implode( ', ', $object_terms_cache[$product->ID] );
+	} else {
+		$title = get_the_title( $product->ID );
+	}
 
 	if ( empty( $title ) )
 		$title = __('(no title)', 'wpsc');
