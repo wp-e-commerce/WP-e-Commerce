@@ -366,8 +366,10 @@ function wpsc_purchase_log_csv() {
 				$count = count($cart);
 			// Go through all products in cart and display quantity and sku
 			foreach ( (array)$cart as $item ) {
-				$skuvalue = get_product_meta($item['prodid'], 'sku', true);
-				if(empty($skuvalue)) $skuvalue = __('N/A', 'wpsc');
+				$skuvalue = get_product_meta( $item['prodid'], 'sku', true );
+				if( empty( $skuvalue ) )
+				    $skuvalue = __( 'N/A', 'wpsc' );
+
 				$output .= "\"" . $item['quantity'] . " x " . str_replace( '"', '\"', $item['name'] ) . "\"";
 				$output .= "," . $skuvalue."," ;
 			}
@@ -381,8 +383,12 @@ function wpsc_purchase_log_csv() {
 			$headers3 .= ",";
 		}
 
-		echo $headers . $form_headers . $headers2 . $headers3 . "\n". $output;
-		exit();
+		$headers = apply_filters( 'wpsc_purchase_log_csv_headers', $headers . $form_headers . $headers2 . $headers3, $data, $form_data );
+		$output = apply_filters( 'wpsc_purchase_log_csv_output', $output, $data, $form_data );
+		header( 'Content-Type: text/csv' );
+		header( 'Content-Disposition: inline; filename="' . $csv_name . '"' );
+		echo $headers . "\n". $output;
+		exit;
 	}
 }
 
@@ -1454,7 +1460,7 @@ function variation_set_field(){
 		/* Move to the top of the form and add a description */
 		jQuery("#tag-name").parent().before( jQuery("#parent").parent().append('<p>Choose the Variation Set you want to add variants to. If your\'e creating a new variation set then select "New Variation Set"</p>') );
 		/*
-		create a small description about variations below the add variation / set title 
+		create a small description about variations below the add variation / set title
 		we can then get rid of the big red danger warning
 		*/
 		( jQuery("div#ajax-response").after('<p>Variations allow you to create options for your products, for example if you\'re selling T-Shirts they will have a size option you can create this as a variation. Size will be the Variation Set name, and it will be a "New Variant Set". You will then create variants (small, medium, large) which will have the "Variation Set" of Size. Once you have made your set you can use the table on the right to manage them (edit, delete). You will be able to order your variants by draging and droping them within their Variation Set.</p>') );
@@ -1468,7 +1474,7 @@ add_action( 'wpsc-variation_add_form_fields', 'variation_set_field' );
 function category_edit_form(){
 ?>
 	<script type="text/javascript">
-		
+
 	</script>
 <?php
 }
@@ -1589,21 +1595,21 @@ function wpsc_delete_variations( $postid ) {
 add_action( 'delete_post', 'wpsc_delete_variations' );
 
 /*
-Save the variations that have been 
+Save the variations that have been
 created on the products page
 */
 function wpsc_add_variant_from_products_page() {
 /* This is the parent term / vartiation set we will save this first */
 	$variation_set_term = $_POST['variation'];
 	$variants[0] = $_POST['variant'];
-	
+
 	/*
-	variants can be coma separated so we check for 
+	variants can be coma separated so we check for
 	these and put them into an array
 	*/
 	$variants = explode( ',', $variants[0] );
 	wp_insert_term( $variation_set_term, 'wpsc-variation', $args = array() );
-	
+
 	/* now get the parent id so we can save all the kids*/
 	$parent_term = term_exists( $variation_set_term, 'wpsc-variation' ); // array is returned if taxonomy is given
 	$parent_term_id = $parent_term['term_id']; // get numeric term id
