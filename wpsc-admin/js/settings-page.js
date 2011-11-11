@@ -593,10 +593,12 @@
 			};
 			var ajax_callback = function(response) {
 				spinner.toggleClass('ajax-feedback-active');
+				ui.item.find('.drag a').show();
 				if (response != 'success') {
 					alert(WPSC_Settings_Page.checkout_field_sort_error_dialog);
 				}
 			};
+			ui.item.find('.drag a').hide();
 			spinner.toggleClass('ajax-feedback-active');
 			$.post(ajaxurl, post_data, ajax_callback);
 		},

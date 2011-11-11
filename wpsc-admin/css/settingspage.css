@@ -7,10 +7,10 @@ table#wpsc_checkout_list tbody {
 }
 
 th#actions{
-	width:37px;
+	width:65px;
 }
 th#drag{
-	width:30px;
+	width:50px;
 }
 tr.wpsc_grey{
 	background-color: #ededed;
@@ -20,11 +20,11 @@ td.drag a:hover{
 }
 
 th.column-type{
-	width:70px;
+	width:150px;
 }
 
 th.column-unique_name {
-	width:70px;
+	width:150px;
 }
 
 #checkout_message{
@@ -43,12 +43,17 @@ td.drag a img {
 	vertical-align:middle;
 }
 
-#wpsc_checkout_list th#name{
-	width:220px;
+#wpsc_checkout_list_body .ajax-feedback {
+	display:none;
 }
 
-th.column-mandatory, th.column-display, th.column-trash {
-	width: 60px;
+#wpsc_checkout_list_body .ajax-feedback-active {
+	display:inline-block;
+	margin-left:4px;
+}
+
+th.column-mandatory, th.column-display {
+	width: 101px;
 }
 
 .widefat th.column-mandatory, td.mandatorycol, .widefat th.column-display, td.displaycol, .widefat th.column-trash, td.trashcol {
@@ -60,7 +65,7 @@ th.column-mandatory, th.column-display, th.column-trash {
 }
 
 #wpsc_checkout_list .actionscol .cell-wrapper {
-	float:right !important!;
+	float:right !important;
 }
 
 tr.checkout-placeholder td {
