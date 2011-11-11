@@ -312,6 +312,13 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 						<td class="namecol">
 							<div class="cell-wrapper">
 								<input type="text" name="form_name[<?php echo esc_attr( $form_field->id ); ?>]" value="<?php echo esc_attr( $form_field->name ); ?>" />
+								<a
+									class="edit-options" href="#"
+									<?php
+										if ( in_array( $form_field->type, array( 'select', 'radio', 'checkbox' ) ) )
+											echo 'style="display:inline;"';
+									?>
+								><?php esc_html_e( 'Edit Options', 'wpsc' ); ?></a>
 							</div>
 						</td>
 						<td class="typecol">
@@ -344,14 +351,6 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 							<div class="cell-wrapper">
 							<?php if ( $form_field->type != 'heading' && ! empty( $form_field->unique_name ) ): ?>
 								<small><?php echo esc_html( $form_field->unique_name ); ?></small>
-							<?php else: ?>
-								<a
-									class="edit-options" href="#"
-									<?php
-										if ( in_array( $form_field->type, array( 'select', 'radio', 'checkbox' ) ) )
-											echo 'style="display:inline;"';
-									?>
-								><?php esc_html_e( 'Edit Options', 'wpsc' ); ?></a>
 							<?php endif ?>
 							</div>
 						</td>
@@ -391,6 +390,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 					<td class="namecol">
 						<div class="cell-wrapper">
 							<input type="text" name="new_field_name[0]" value="" />
+							<a class="edit-options" href="#"><?php esc_html_e( 'Edit Options', 'wpsc' ); ?></a>
 						</div>
 					</td>
 					<td class="typecol">
@@ -405,7 +405,6 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 						</div>
 					</td>
 					<td class="uniquenamecol">
-						<a class="edit-options" href="#"><?php esc_html_e( 'Edit Options', 'wpsc' ); ?></a>
 					</td>
 					<td class="displaycol">
 						<div class="cell-wrapper">
@@ -425,8 +424,8 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 					</td>
 			</tr>
 			<tr id="field-options-prototype" class="form-field-options">
-					<td colspan="2"></td>
-					<td colspan="2">
+					<td></td>
+					<td>
 						<div class="cell-wrapper">
 							<h4></h4>
 							<table class="wpsc-field-options-table">
@@ -458,7 +457,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 							</table>
 						</div>
 					</td>
-					<td colspan="3"></td>
+					<td colspan="5"></td>
 				</tr>
 			</tbody>
 		</table>
