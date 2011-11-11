@@ -87,6 +87,7 @@
 							removeClass('ajax');
 					}
 					form.hide().find('input:text').val('');
+					form.find('.error').removeClass('error');
 					form.find('label').show().css('opacity', '1');
 					spinner.toggleClass('ajax-feedback-active');
 				};
