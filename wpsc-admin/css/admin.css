@@ -33,7 +33,8 @@ div.wpsc_add_variation_desc{
 }
 
 div.add_variant{
-	float:left;
+	float: left;
+    max-width: 245px;
 }
 
 div .add_new_variation{

@@ -415,7 +415,7 @@ function wpsc_product_variation_forms() {
 				?>
 			</div>
 			<a class="preview button update_variations_action" href='#'><?php _e( 'Apply Variations &rarr;', 'wpsc' ); ?></a><div class="clear"></div>
-
+		
 			<h4><a href="#wpsc_variation_metabox" class="add_variation_set_action">+ Add New Variation Set</a></h4>
 			<!-- will be hidden by default until the link is clicked -->
 			<div class="add_new_variation">
@@ -425,7 +425,7 @@ function wpsc_product_variation_forms() {
 				<span class="variation_set_name_error"></span>
 				<p><input type='hidden' name='wpsc_admin_action' value='add_variation_set' /></p>
 				<p><button type="button"class='button add_variation_set'>Add Variation Set</button></p>
-				<input type='submit' class='button-primary wpsc-save-variation-set' value='Save Variation Set' />
+				<p><input type='submit' class='button-primary wpsc-save-variation-set' value='Save Variation Set' /></p>
 			</div> 
 			<div class="wpsc_add_variation_desc">
 				<p class="description">Add the name of your variation set eg:Size. If you would like to add variants to a set you ahve already created then enter in the name of that variation set.</p>
@@ -435,8 +435,8 @@ function wpsc_product_variation_forms() {
 			<p><input class="text wpsc_variant" size="28" type="text" name="variant[]" /> <button class="wpsc_add_variant" type="button"class='button'>Add</button></p>
 			<div class="tagchecklist"></div>
 			</div><!--  close add variant -->		
-			<div id="wpsc_add_variant_desc"><p class="howto">Variants can be comma separated eg: Red, Green, Blue.</p> <p class="howto"> You can also use the add button to add them one at a time.</p></div>			
-			
+			<div id="wpsc_add_variant_desc"><p class="description">Variants can be comma separated eg: Red, Green, Blue.</p> <p class="howto"> You can also use the add button to add them one at a time.</p></div>			
+		
 			</div>
 	<?php
 	$parent_product = $post->ID;
