@@ -1834,6 +1834,11 @@ float: left;
 	visibility: hidden;
 }
 
+img.ajax-feedback-active {
+	vertical-align:middle;
+	visibility:visible;
+}
+
 .dashboard_page_wpsc-update .wpsc-progress-bar {
 	position:relative;
 	height:20px;
