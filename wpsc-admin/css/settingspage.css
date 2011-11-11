@@ -215,10 +215,8 @@ div#themes_and_appearance ol li {
 	font-size: 11px;
 }
 
-.nav-tab-loading {
-	background-image:url(loading-small.gif);
-	background-repeat:no-repeat;
-	background-position:99.2% 1px;
+a.nav-tab-loading {
+	color:#D54E21;
 }
 
 #wpsc_options h2 .nav-tab {
