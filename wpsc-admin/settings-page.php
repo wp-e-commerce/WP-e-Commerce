@@ -144,7 +144,10 @@ final class WPSC_Settings_Page
 		?>
 			<div id="wpsc_options" class="wrap">
 				<div id="icon_card" class="icon32"></div>
-				<h2>Store Settings</h2>
+				<h2 id="wpsc-settings-page-title">
+					<?php esc_html_e( 'Store Settings', 'wpsc' ); ?>
+					<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
+				</h2>
 				<?php $this->output_tabs(); ?>
 				<div id='wpsc_options_page'>
 					<form method='post' action='<?php echo esc_attr( $this->submit_url() ); ?>' id='wpsc-settings-form'>
