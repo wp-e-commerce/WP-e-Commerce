@@ -50,6 +50,8 @@
 	var event_variation_set_add = function() {
 		var form = $('#add-new-variation-set');
 
+		form.find('.error').removeClass('error');
+
 		form.find('input[type="text"]').each(function(){
 			var t = $(this);
 			if (t.val() == '') {
@@ -87,7 +89,6 @@
 							removeClass('ajax');
 					}
 					form.hide().find('input:text').val('');
-					form.find('.error').removeClass('error');
 					form.find('label').show().css('opacity', '1');
 					spinner.toggleClass('ajax-feedback-active');
 				};
@@ -123,8 +124,14 @@
 	 * Remove class "error" when something is typed into the new variation set textboxes
 	 * @since 3.8.8
 	 */
-	var event_variation_set_inputs_keypress = function() {
-		$(this).siblings('label').hide().removeClass('error');
+	var event_variation_set_inputs_keypress = function(e) {
+		var code = e.keyCode ? e.keyCode : e.which;
+		if (code == 13) {
+			$('#add-new-variation-set .button').trigger('click');
+			e.preventDefault();
+		} else {
+			$(this).siblings('label').hide().removeClass('error');
+		}
 	};
 
 	/**
