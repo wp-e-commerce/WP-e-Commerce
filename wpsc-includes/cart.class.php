@@ -201,7 +201,7 @@ function wpsc_cart_has_shipping() {
 */
 function wpsc_cart_shipping() {
    global $wpsc_cart;
-   return wpsc_currency_display($wpsc_cart->calculate_total_shipping());
+   return apply_filters( 'wpsc_cart_shipping', wpsc_currency_display( $wpsc_cart->calculate_total_shipping() ) );
 }
 
 
