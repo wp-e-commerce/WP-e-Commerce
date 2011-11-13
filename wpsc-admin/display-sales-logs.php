@@ -438,7 +438,12 @@ function _wpsc_purchlogs_need_update() {
       <td><?php echo wpsc_the_purch_item_id(); ?></td><!-- purchase ID -->
       <td><?php echo wpsc_the_purch_item_date(); ?></td> <!--Date -->
       <td><?php echo wpsc_the_purch_item_name(); ?></td> <!--Name/email -->
-      <td><?php echo wpsc_currency_display( wpsc_the_purch_item_price() ); ?></td><!-- Amount -->
+      <td>
+	<?php 
+	    echo wpsc_currency_display( wpsc_the_purch_item_price() ); 
+	    do_action( 'wpsc_additional_sales_amount_info', wpsc_purchaselog_details_id() );
+	?>
+      </td><!-- Amount -->
       <td><a href='<?php echo htmlentities(add_query_arg('purchaselog_id', wpsc_the_purch_item_id()), ENT_QUOTES, 'UTF-8') ; ?>'><?php
       $number_of_items = wpsc_the_purch_item_details();
       printf( _n( '%s Item', '%s Items', $number_of_items, 'wpsc' ), $number_of_items );
