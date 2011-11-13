@@ -531,9 +531,13 @@ if ( isset( $_REQUEST['wpsc_action'] ) && ($_REQUEST['wpsc_action'] == 'cart_htm
  */
 function wpsc_submit_checkout() {
 	global $wpdb, $wpsc_cart, $user_ID, $nzshpcrt_gateways, $wpsc_shipping_modules, $wpsc_gateways;
+	
 	$num_items = 0;
 	$use_shipping = 0;
 	$disregard_shipping = 0;
+	
+	do_action( 'wpsc_before_submit_checkout' );
+	
 	$_SESSION['wpsc_checkout_misc_error_messages'] = array( );
 	$wpsc_checkout = new wpsc_checkout();
 	$selected_gateways = get_option( 'custom_gateway_options' );
