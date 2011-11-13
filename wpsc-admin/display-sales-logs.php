@@ -184,7 +184,12 @@ class WPSC_Purchase_Log_Page
          <td><?php echo wpsc_purchaselog_details_name(); ?></td> <!-- NAME! -->
          <td><?php echo wpsc_purchaselog_details_SKU(); ?></td> <!-- SKU! -->
          <td><?php echo wpsc_purchaselog_details_quantity(); ?></td> <!-- QUANTITY! -->
-         <td><?php echo wpsc_currency_display( wpsc_purchaselog_details_price() ); ?></td> <!-- PRICE! -->
+         <td>
+	    <?php 
+		echo wpsc_currency_display( wpsc_purchaselog_details_price() );
+		do_action( 'wpsc_additional_sales_amount_info', wpsc_purchaselog_details_id() );
+	    ?>
+	 </td> <!-- PRICE! -->
          <td><?php echo wpsc_currency_display( wpsc_purchaselog_details_shipping() ); ?></td> <!-- SHIPPING! -->
          <?php if( wpec_display_product_tax() ): ?>
             <td><?php echo wpsc_currency_display( wpsc_purchaselog_details_tax() ); ?></td> <!-- TAX! -->
