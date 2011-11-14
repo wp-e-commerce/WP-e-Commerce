@@ -1624,7 +1624,7 @@ function refresh_item() {
 		}
 	}
 
-	$price = apply_filters('wpsc_price', $price, $product_id);
+	$price = apply_filters( 'wpsc_price', $price, $product_id );
 	// create the string containing the product name.
 	$product_name = apply_filters( 'wpsc_cart_product_title', $product->post_title, $product_id );
 
