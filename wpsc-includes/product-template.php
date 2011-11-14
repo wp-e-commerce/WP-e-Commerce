@@ -1049,10 +1049,11 @@ function wpsc_product_postage_and_packaging() {
 
 	$product_meta = get_post_meta( $id, '_wpsc_product_metadata', true );
 	if ( isset(  $product_meta['shipping'] ) && is_array( $product_meta['shipping'] ) &&  1 != $product_meta['no_shipping'])
-		return wpsc_currency_display( $product_meta['shipping']['local'] );
+		return wpsc_currency_display( apply_filters( 'wpsc_product_postage_and_packaging', $product_meta['shipping']['local'] ) );
 	else
 		return wpsc_currency_display( 0 );
-
+	
+ 
 }
 
 /**
