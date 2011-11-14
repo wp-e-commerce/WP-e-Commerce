@@ -380,7 +380,7 @@ function wpsc_product_variation_price_available( $product_id, $from_text = false
 	}
 
 	sort( $prices );
-	$price = apply_filters( 'wpsc_do_convert_price', $prices[0] );
+	$price = apply_filters( 'wpsc_do_convert_price', $prices[0], $product_id );
 	$price = wpsc_currency_display( $price, array( 'display_as_html' => false ) );
 
 	if ( $prices[0] == $prices[count( $prices ) - 1] )
@@ -424,7 +424,7 @@ function wpsc_the_product_price( $no_decimals = false, $only_normal_price = fals
 		if ( $no_decimals == true )
 			$price = array_shift( explode( ".", $price ) );
 
-		$price = apply_filters( 'wpsc_do_convert_price', $price );
+		$price = apply_filters( 'wpsc_do_convert_price', $price, $product_id );
 		$args = array(
 			'display_as_html' => false,
 			'display_decimal_point' => ! $no_decimals
