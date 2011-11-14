@@ -135,7 +135,7 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 
 		$cart = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid` = '{$purchase_log['id']}'" , ARRAY_A );
 		if ( ($cart != null) && ($errorcode == 0) ) {
-			$total_shipping = '';
+		    
 			foreach ( $cart as $row ) {
 				$link = array( );
 				$wpdb->update(WPSC_TABLE_DOWNLOAD_STATUS, array('active' => '1'), array('cartid' => $row['id'], 'purchid'=>$purchase_log['id']) );
@@ -250,13 +250,9 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 
 				$wpdb->update(WPSC_TABLE_COUPON_CODES, array('use-x-times' => $x_times_left , 'is-used' => $is_used, 'active' => $active), array('id' => $coupon_data['id']) );
 			}
-
-
-
-
-			$total_shipping += $purchase_log['base_shipping'];
-
-			$total = $purchase_log['totalprice'];
+			
+			$total_shipping = $wpsc_cart->calculate_total_shipping();
+			$total = $wpsc_cart->calculate_total_price();
 
 			$total_price_email = '';
 			$total_price_html = '';
