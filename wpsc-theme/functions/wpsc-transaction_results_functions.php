@@ -263,9 +263,8 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 				}
 			}
 
-			$total_shipping += $purchase_log['base_shipping'];
-
-			$total = $purchase_log['totalprice'];
+			$total_shipping = $wpsc_cart->calculate_total_shipping();
+			$total = $wpsc_cart->calculate_total_price();
 			
 			$total_price_email = '';
 			$total_price_html = '';
