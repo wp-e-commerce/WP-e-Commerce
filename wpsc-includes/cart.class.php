@@ -201,7 +201,7 @@ function wpsc_cart_has_shipping() {
 */
 function wpsc_cart_shipping() {
    global $wpsc_cart;
-   return apply_filters( 'wpsc_cart_shipping', wpsc_currency_display( $wpsc_cart->calculate_total_shipping() ) );
+   return wpsc_currency_display( $wpsc_cart->calculate_total_shipping() );
 }
 
 
@@ -1201,7 +1201,7 @@ class wpsc_cart {
     }else{
          $total = 0;
     }
-    return $total;
+    return apply_filters( 'wpsc_convert_total_shipping', $total );
   }
 
    /**
