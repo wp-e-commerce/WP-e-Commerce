@@ -1201,8 +1201,10 @@ class wpsc_cart {
     }else{
          $total = 0;
     }
-    return $total;
-  }
+    
+    return apply_filters( 'wpsc_convert_total_shipping', $total );  
+
+}
 
    /**
    * has_total_shipping_discount method, checks whether the carts subtotal is larger or equal to the shipping discount     * value
