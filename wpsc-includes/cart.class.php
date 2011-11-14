@@ -1833,14 +1833,17 @@ function refresh_item() {
    function save_to_db($purchase_log_id) {
       global $wpdb, $wpsc_shipping_modules;
 
-      $method = $this->cart->selected_shipping_method;
-	  $shipping = 0;
-      if( !empty($method) && method_exists( $wpsc_shipping_modules[$method], "get_item_shipping"  )) {
-         $shipping = $wpsc_shipping_modules[$this->cart->selected_shipping_method]->get_item_shipping($this);
-      }
-      if($this->cart->has_total_shipping_discount()) {
-            $shipping = 0;
-      }
+
+	$method = $this->cart->selected_shipping_method;
+	$shipping = 0;
+
+	if( ! empty( $method ) && method_exists( $wpsc_shipping_modules[$method], "get_item_shipping" ) )
+	    $shipping = $wpsc_shipping_modules[$this->cart->selected_shipping_method]->get_item_shipping( $this );
+
+	if( $this->cart->has_total_shipping_discount() )
+	    $shipping = 0;
+	
+	$shipping = apply_filters( 'wpsc_item_shipping_amount_db', $shipping, $this );
 
       //initialize tax variables
       $tax = 0;
