@@ -268,7 +268,8 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab
 													</div>
 											<?php } ?>
 													<p class="submit">
-														<input type="submit" value="<?php _e( 'Update &raquo;', 'wpsc' ); ?>" />
+													    <input type='hidden' value='true' name='update_gateways' />
+													    <input type="submit" value="<?php _e( 'Update &raquo;', 'wpsc' ); ?>" />
 													</p>
 													</div>
 												</div>
