@@ -564,17 +564,16 @@ function wpsc_enqueue_user_script_and_css() {
 			}
 		}
 
-		$siteurl = get_option( 'siteurl' );
-
-		if ( is_ssl() )
-			$siteurl = str_replace( "http://", "https://", $siteurl );
+		$remote_protocol = is_ssl() ? 'https://' : 'http://';
+		
 		if( get_option( 'wpsc_share_this' ) == 1 )
-			wp_enqueue_script( 'sharethis', 'http://w.sharethis.com/button/buttons.js', array(), false, true );
+		    wp_enqueue_script( 'sharethis', $remote_protocol . 'w.sharethis.com/button/buttons.js', array(), false, true );
+		
 		wp_enqueue_script( 'jQuery' );
 		wp_enqueue_script( 'wp-e-commerce',               WPSC_CORE_JS_URL	. '/wp-e-commerce.js',                 array( 'jquery' ), $version_identifier );
 		wp_enqueue_script( 'infieldlabel',               WPSC_CORE_JS_URL	. '/jquery.infieldlabel.min.js',                 array( 'jquery' ), $version_identifier );
 		wp_enqueue_script( 'wp-e-commerce-ajax-legacy',   WPSC_CORE_JS_URL	. '/ajax.js',                          false,             $version_identifier );
-		wp_enqueue_script( 'wp-e-commerce-dynamic',       $siteurl			. "/index.php?wpsc_user_dynamic_js=true", false,             $version_identifier );
+		wp_enqueue_script( 'wp-e-commerce-dynamic', site_url( '/index.php?wpsc_user_dynamic_js=true' ), false,             $version_identifier );
 		wp_localize_script( 'wp-e-commerce-dynamic', 'wpsc_ajax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
 		wp_enqueue_script( 'livequery',                   WPSC_URL 			. '/wpsc-admin/js/jquery.livequery.js',   array( 'jquery' ), '1.0.3' );
 		if( get_option( 'product_ratings' ) == 1 )
@@ -595,7 +594,7 @@ function wpsc_enqueue_user_script_and_css() {
 		wp_enqueue_style( 'wpsc-theme-css-compatibility', WPSC_CORE_THEME_URL . 'compatibility.css',                                    false, $version_identifier, 'all' );
 		if( get_option( 'product_ratings' ) == 1 )
 			wp_enqueue_style( 'wpsc-product-rater',           WPSC_CORE_JS_URL 	. '/product_rater.css',                                       false, $version_identifier, 'all' );
-		wp_enqueue_style( 'wp-e-commerce-dynamic',        $siteurl 			. "/index.php?wpsc_user_dynamic_css=true&category=$category_id", false, $version_identifier, 'all' );
+		wp_enqueue_style( 'wp-e-commerce-dynamic', site_url( "/index.php?wpsc_user_dynamic_css=true&category=$category_id" ), false, $version_identifier, 'all' );
 
 	}
 
