@@ -9,7 +9,7 @@
  */
 
 
-require_once(WPSC_FILE_PATH . '/wpsc-admin/includes/products.php');
+require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/products.php' );
 
 
 /**
@@ -40,10 +40,10 @@ function wpsc_additional_column_names( $columns ){
 }
 function wpsc_additional_sortable_column_names( $columns ){
 
-    $columns['stock'] = __('Stock', 'wpsc');
-    $columns['price'] = __('Price', 'wpsc');
-    $columns['sale_price'] = __('Sale Price', 'wpsc');
-    $columns['SKU'] = __('SKU', 'wpsc');
+    $columns['stock'] = 'stock';
+    $columns['price'] = 'price';
+    $columns['sale_price'] = 'sale_price';
+    $columns['SKU'] = 'SKU';
 
     return $columns;
 }
@@ -236,29 +236,52 @@ function wpsc_additional_column_data( $column ) {
         endswitch;
 
 }
-function wpsc_column_sql_orderby( $orderby, $wp_query ) {
-	global $wpdb;
-
-	$wp_query->query = wp_parse_args( $wp_query->query );
-
-        if( isset( $wp_query->query['orderby'] ) ) :
-            switch ( $wp_query->query['orderby'] ) :
+function wpsc_column_sql_orderby( $vars ) {
+    
+	if ( ! isset( $vars['post_type'] ) || 'wpsc-product' != $vars['post_type'] || ! isset( $vars['orderby'] ) )
+	    return $vars;
+	
+            switch ( $vars['orderby'] ) :
                 case 'stock' :
-                    $orderby = "(SELECT meta_value FROM $wpdb->postmeta WHERE post_id = $wpdb->posts.ID AND meta_key = '_wpsc_stock') " . $wp_query->get('order');
-                    break;
-                case 'price' :
-                    $orderby = "(SELECT meta_value FROM $wpdb->postmeta WHERE post_id = $wpdb->posts.ID AND meta_key = '_wpsc_price') " . $wp_query->get('order');
-                    break;
+		    $vars = array_merge(
+				$vars,
+				array(
+					'meta_key' => '_wpsc_stock',
+					'orderby' => 'meta_value_num'
+				)
+			);
+		    break;
+		case 'price' :
+		    $vars = array_merge(
+				$vars,
+				array(
+					'meta_key' => '_wpsc_price',
+					'orderby' => 'meta_value_num'
+				)
+			);
+		    break;
                 case 'sale_price' :
-                    $orderby = "(SELECT meta_value FROM $wpdb->postmeta WHERE post_id = $wpdb->posts.ID AND meta_key = '_wpsc_special_price') " . $wp_query->get('order');
-                    break;
-                case 'SKU' :
-                    $orderby = "(SELECT meta_value FROM $wpdb->postmeta WHERE post_id = $wpdb->posts.ID AND meta_key = '_wpsc_sku') " . $wp_query->get('order');
-                    break;
-           endswitch;
-        endif;
-
-    return $orderby;
+		    $vars = array_merge(
+				$vars,
+				array(
+					'meta_key' => '_wpsc_special_price',
+					'orderby' => 'meta_value_num'
+				)
+			);
+		    
+		    break;
+		case 'SKU' :
+		    $vars = array_merge(
+				$vars,
+				array(
+					'meta_key' => '_wpsc_sku',
+					'orderby' => 'meta_value'
+				)
+			);
+		    break;
+		endswitch;
+	    
+	return $vars;
 }
 function wpsc_cats_restrict_manage_posts() {
     global $typenow;
@@ -307,21 +330,32 @@ function wpsc_no_minors_allowed( $vars ) {
     return $vars;
 }
 
-add_filter( 'request', 'wpsc_no_minors_allowed' );
+/**
+ * wpsc_sortable_column_load
+ * 
+ * Only sorts columns on edit.php page.
+ * @since 3.8.8
+ */
+
+function wpsc_sortable_column_load() {
+    add_filter( 'request', 'wpsc_no_minors_allowed' );
+    add_filter( 'request', 'wpsc_column_sql_orderby', 8 );
+}
+
+add_action( 'load-edit.php', 'wpsc_sortable_column_load' );
 add_action( 'admin_head', 'wpsc_additional_column_name_variations' );
 add_action( 'restrict_manage_posts', 'wpsc_cats_restrict_manage_posts' );
 add_action( 'manage_pages_custom_column', 'wpsc_additional_column_data', 10, 2 );
 add_filter( 'manage_edit-wpsc-product_sortable_columns', 'wpsc_additional_sortable_column_names' );
 add_filter( 'manage_edit-wpsc-product_columns', 'wpsc_additional_column_names' );
 add_filter( 'manage_wpsc-product_posts_columns', 'wpsc_additional_column_names' );
-add_filter( 'posts_orderby', 'wpsc_column_sql_orderby', 10, 2 );
 
 
 /**
  * wpsc_update_featured_products function.
  *
  * @access public
- * @todo Should be refactored to e
+ * @todo Should be refactored
  * @return void
  */
 function wpsc_update_featured_products() {
