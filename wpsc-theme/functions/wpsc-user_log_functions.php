@@ -253,7 +253,7 @@ function wpsc_display_form_fields() {
 
 					?>
 						<select name='collected_data["<?php echo esc_attr( $form_field['id'] ); ?>"]'>
-							<option value="-1"><?php _e( 'Select an Option', 'wpsc' ); ?></option>
+							<option value="-1"><?php _ex( 'Select an Option', 'Dropdown default on user log page', 'wpsc' ); ?></option>
 							<?php foreach ( $options as $label => $value ): ?>
 								<option <?php selected( $value, $selected ); ?> value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $label ); ?></option>
 							<?php endforeach ?>

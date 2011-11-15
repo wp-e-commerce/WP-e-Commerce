@@ -48,7 +48,7 @@ class WPSC_Purchase_Log_Page
    private function purchase_logs_fix_options( $id ) {
       ?>
       <select name='<?php echo $id; ?>'>
-         <option value='-1'><?php _e( 'Select an Option', 'wpsc' ); ?>'</option>
+         <option value='-1'><?php _ex( 'Select an Option', 'Dropdown default when called in uniquename dropdown', 'wpsc' ); ?>'</option>
          <option value='billingfirstname'><?php _e( 'Billing First Name', 'wpsc' ); ?></option>
          <option value='billinglastname'><?php _e( 'Billing Last Name', 'wpsc' ); ?></option>
          <option value='billingaddress'><?php _e( 'Billing Address', 'wpsc' ); ?></option>
