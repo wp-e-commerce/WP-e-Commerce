@@ -37,25 +37,28 @@ if ( ! get_option( 'wpsc_checkout_form_sets' ) ) {
  * @param $vars (array) - default query arguments
  * @return  $vars (array) - modified query arguments
  */
-function wpsc_query_vars_product_list($vars){
-	global $current_screen;
-	if('wpsc-product' != $current_screen->post_type) return $vars;
+function wpsc_query_vars_product_list( $vars ){
+
+	if( 'wpsc-product' != $vars['post_type'] || in_array( $vars['orderby'], array( 'meta_value_num', 'meta_value' ) ) ) 
+	    return $vars;
 
 	$vars['posts_per_archive_page'] = 0;
-	if(is_admin() && isset($vars['orderby'])){
+	
+	if( is_admin() && isset( $vars['orderby'] ) ) {
 		$vars['orderby'] = 'date';
 		$vars['order'] = 'desc';
 		$vars['nopaging'] = false;
 		$posts_per_page = (int)get_user_option( 'edit_wpsc_product_per_page' );
-		$vars['posts_per_page'] = ( $posts_per_page )?$posts_per_page:20;
+		$vars['posts_per_page'] = ( $posts_per_page ) ? $posts_per_page : 20;
 	}
-	if( 'dragndrop' == get_option('wpsc_sort_by') ){
+	
+	if( 'dragndrop' == get_option( 'wpsc_sort_by' ) ){
 		$vars['orderby'] = 'menu_order title';
 		$vars['order'] = 'desc';
 		$vars['nopaging'] = true;
 	}
 
-	return $vars;
+    return $vars;
 }
 
 /**
