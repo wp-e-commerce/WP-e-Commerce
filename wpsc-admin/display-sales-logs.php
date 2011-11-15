@@ -288,6 +288,8 @@ class WPSC_Purchase_Log_Page
       global $wpdb;
       $current_action = $this->list_table->current_action();
 
+      do_action( 'wpsc_sales_log_process_bulk_action', $current_action );
+      
       if ( ! $current_action || ( 'download_csv' != $current_action && empty( $_REQUEST['post'] ) ) ) {
          if ( ! empty( $_REQUEST['_wp_http_referer'] ) ) {
             wp_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'action', 'action2' ), stripslashes( $_SERVER['REQUEST_URI'] ) ) );
@@ -355,7 +357,6 @@ class WPSC_Purchase_Log_Page
          ), $sendback );
       }
       
-      do_action( 'wpsc_sales_log_process_bulk_action', $current_action, $sendback );
       wp_redirect( $sendback );
       exit;
    }
