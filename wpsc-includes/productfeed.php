@@ -144,6 +144,7 @@ function wpsc_generate_product_feed() {
 			$google_elements = $google_elements['elements'];
 
             $done_condition = FALSE;
+            $done_availability = FALSE;
             $done_weight = FALSE;
 
             if ( count ( $google_elements ) ) {
