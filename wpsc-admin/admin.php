@@ -25,7 +25,7 @@ require_once( WPSC_FILE_PATH . '/wpsc-admin/display-sales-logs.php' );
 if ( ( isset( $_SESSION['wpsc_activate_debug_page'] ) && ( $_SESSION['wpsc_activate_debug_page'] == true ) ) || ( defined( 'WPSC_ADD_DEBUG_PAGE' ) && ( constant( 'WPSC_ADD_DEBUG_PAGE' ) == true ) ) )
 	require_once( WPSC_FILE_PATH . '/wpsc-admin/display-debug.page.php' );
 
-		
+
 //Woothemes integration
 require_once( WPSC_FILE_PATH . '/woo-integration/woo_integration.php' );
 
@@ -38,31 +38,34 @@ if ( !get_option( 'wpsc_checkout_form_sets' ) ) {
 }
 /**
  * wpsc_query_vars_product_list sets the ordering for the edit-products page list
- * @access public 
+ * @access public
  *
  * @since 3.8
  * @param $vars (array) - default query arguments
  * @return  $vars (array) - modified query arguments
  */
-function wpsc_query_vars_product_list($vars){
-	global $current_screen;
-	if('wpsc-product' != $current_screen->post_type) return $vars;
-	
+function wpsc_query_vars_product_list( $vars ){
+
+	if( 'wpsc-product' != $vars['post_type'] || in_array( $vars['orderby'], array( 'meta_value_num', 'meta_value' ) ) )
+	    return $vars;
+
 	$vars['posts_per_archive_page'] = 0;
-	if(is_admin() && isset($vars['orderby'])){
+
+	if( is_admin() && isset( $vars['orderby'] ) ) {
 		$vars['orderby'] = 'date';
 		$vars['order'] = 'desc';
 		$vars['nopaging'] = false;
 		$posts_per_page = (int)get_user_option( 'edit_wpsc_product_per_page' );
-		$vars['posts_per_page'] = ( $posts_per_page )?$posts_per_page:20;
+		$vars['posts_per_page'] = ( $posts_per_page ) ? $posts_per_page : 20;
 	}
-	if( 'dragndrop' == get_option('wpsc_sort_by') ){
+
+	if( 'dragndrop' == get_option( 'wpsc_sort_by' ) ){
 		$vars['orderby'] = 'menu_order title';
 		$vars['order'] = 'desc';
 		$vars['nopaging'] = true;
 	}
 
-	return $vars;
+    return $vars;
 }
 
 /**
@@ -77,13 +80,13 @@ function wpsc_query_vars_product_list($vars){
  */
 function wpsc_set_screen_option($status, $option, $value){
 	if( in_array($option, array ("edit_wpsc_variation_per_page","edit_wpsc_product_per_page" )) ){
-		if ( "edit_wpsc_variation_per_page" == $option ){	
+		if ( "edit_wpsc_variation_per_page" == $option ){
 			global $user_ID;
 			update_user_option($user_ID,'edit_wpsc-variation_per_page',$value);
-		}	
+		}
 		return $value;
 	}
-} 
+}
 add_filter('set-screen-option', 'wpsc_set_screen_option', 99, 3);
 
 /**
@@ -96,7 +99,7 @@ add_filter('set-screen-option', 'wpsc_set_screen_option', 99, 3);
  * @return $per_page after changes...
  */
 function wpsc_drag_and_drop_ordering($per_page, $post_type){
-	global $wpdb; 
+	global $wpdb;
 	if ( 'wpsc-product' == $post_type && 'dragndrop' == get_option( 'wpsc_sort_by' ) && $count = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->posts} WHERE `post_type`='wpsc-product' AND `post_parent`=0" ) )
 		$per_page = $count;
 	return $per_page;
@@ -278,14 +281,14 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 
 	if ( version_compare( '3.3', get_bloginfo( 'version' ), '<' ) )
 		wp_admin_css( 'dashboard' );
-	
+
 	if($current_screen->id == 'dashboard_page_wpsc-sales-logs'){
 		// jQuery
 		wp_enqueue_script( 'jquery' );
 		wp_enqueue_script( 'jquery-ui-draggable' );
 		wp_enqueue_script( 'jquery-ui-droppable' );
 		wp_enqueue_script( 'jquery-ui-sortable' );
-		
+
 		// Metaboxes
 		wp_enqueue_script( 'common' );
 		wp_enqueue_script( 'wp-lists' );
@@ -746,7 +749,7 @@ function wpsc_dashboard_4months_widget() {
 				<td align="center" style="border-bottom:solid 1px #000;"><?php echo wpsc_currency_display($amount); ?></td>
 			<?php endforeach; ?>
 		</tr>
-		<?php 
+		<?php
 		$tablerow++;
 		endforeach; ?>
 	</table>
@@ -810,7 +813,7 @@ function wpsc_ajax_ie_save() {
 		'post_title' => $_POST['title']
 	);
 
-	$id = wp_update_post( $product ); 
+	$id = wp_update_post( $product );
 	if ( $id > 0 ) {
 		//need parent meta to know which weight unit we are using
 		$post = get_post( $id );
