@@ -9,7 +9,6 @@
  * @since 3.7
  */
 function wpsc_special_widget() {
-	global $wpdb;
 	wpsc_add_to_cart();
 }
 
@@ -22,7 +21,7 @@ if ( isset( $_REQUEST['wpsc_ajax_action'] ) && ($_REQUEST['wpsc_ajax_action'] ==
  * No parameters, returns nothing
  */
 function wpsc_add_to_cart() {
-	global $wpdb, $wpsc_cart;
+	global $wpsc_cart;
 	/// default values
 	$default_parameters['variation_values'] = null;
 	$default_parameters['quantity'] = 1;
