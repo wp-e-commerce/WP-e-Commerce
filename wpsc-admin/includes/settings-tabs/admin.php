@@ -3,7 +3,6 @@
 class WPSC_Settings_Tab_Admin extends WPSC_Settings_Tab
 {
 	public function display() {
-		global $wpdb;
 		?>
 			<h3><?php _e('Admin Settings', 'wpsc'); ?></h3>
 			<table class='wpsc_options form-table'>
