@@ -105,7 +105,7 @@ class flatrate {
 
 		if (isset($_POST['country'])) {
 
-			$country = esc_attr( $_POST['country'] );
+			$country = $_POST['country'];
 			$_SESSION['wpsc_delivery_country'] = $country;
 
 		} elseif ( isset( $_SESSION['wpsc_delivery_country'] ) ) {
