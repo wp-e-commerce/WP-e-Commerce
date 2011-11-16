@@ -823,8 +823,8 @@ class ash_ups {
 
         // If the region code is provided via a form post use it!
         if(isset($_POST['region']) && !empty($_POST['region'])) {
-            $query ="SELECT `".WPSC_TABLE_REGION_TAX."`.* FROM `".WPSC_TABLE_REGION_TAX."`
-                                WHERE `".WPSC_TABLE_REGION_TAX."`.`id` = '".esc_attr( $_POST['region'] )."'";
+            $query = $wpdb->prepare( "SELECT `".WPSC_TABLE_REGION_TAX."`.* FROM `".WPSC_TABLE_REGION_TAX."`
+                                WHERE `".WPSC_TABLE_REGION_TAX."`.`id` = %d", $_POST['region'] );
             $dest_region_data = $wpdb->get_results($query, ARRAY_A);
             $args['dest_state'] = (is_array($dest_region_data)) ? $dest_region_data[0]['code'] : "";
             $_SESSION['wpsc_state'] = $args['dest_state'];
