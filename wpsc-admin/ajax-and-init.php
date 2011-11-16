@@ -885,14 +885,14 @@ function wpsc_delete_purchlog( $purchlog_id='' ) {
 		$cart_content = $wpdb->get_results( $delete_log_form_sql, ARRAY_A );
 	}
 
-	$purchlog_status = $wpdb->get_var( "SELECT `processed` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id`=" . $purchlog_id );
+	$purchlog_status = $wpdb->get_var( $wpdb->prepare( "SELECT `processed` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id`= %d", $purchlog_id ) );
 	if ( $purchlog_status == 5 || $purchlog_status == 1 ) {
-		$wpdb->query( "DELETE FROM `" . WPSC_TABLE_CLAIMED_STOCK . "` WHERE `cart_id` = '{$purchlog_id}' AND `cart_submitted` = '1'" );
+		$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_CLAIMED_STOCK . "` WHERE `cart_id` = %d AND `cart_submitted` = '1'", $purchlog_id ) );
 	}
 
-	$wpdb->query( "DELETE FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid`='$purchlog_id'" );
-	$wpdb->query( "DELETE FROM `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` WHERE `log_id` IN ('$purchlog_id')" );
-	$wpdb->query( "DELETE FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id`='$purchlog_id' LIMIT 1" );
+	$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid` = %d", $purchlog_id ) );
+	$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` WHERE `log_id` IN (%d)", $purchlog_id ) );
+	$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id` = %d LIMIT 1", $purchlog_id ) );
 
 	$deleted = 1;
 
@@ -980,13 +980,33 @@ function wpsc_submit_options( $selected='' ) {
 			//find the countries not selected
 			$unselectedCountries = array_diff( $countrylist, $_POST['countrylist2'] );
 			foreach ( $unselectedCountries as $unselected ) {
-				$wpdb->query( "UPDATE `" . WPSC_TABLE_CURRENCY_LIST . "` SET visible = 0 WHERE id = '" . $unselected . "' LIMIT 1" );
+				$wpdb->update( 
+					WPSC_TABLE_CURRENCY_LIST,
+					array(
+					    'visible' => 0
+					),
+					array(
+					    'id' => $unselected
+					),
+					'%d',
+					'%d' 
+				    );
 			}
 
 			//find the countries that are selected
 			$selectedCountries = array_intersect( $countrylist, $_POST['countrylist2'] );
 			foreach ( $selectedCountries as $selected ) {
-				$wpdb->query( "UPDATE `" . WPSC_TABLE_CURRENCY_LIST . "` SET visible = 1  WHERE id = '" . $selected . "' LIMIT 1" );
+				$wpdb->update( 
+					WPSC_TABLE_CURRENCY_LIST,
+					array(
+					    'visible' => 1
+					),
+					array(
+					    'id' => $selected
+					),
+					'%d',
+					'%d' 
+				    );
 			}
 		}
 	}
@@ -1093,7 +1113,17 @@ function wpsc_rearrange_images() {
 	$i = 0;
 	foreach ( $images as $image ) {
 		if ( $image > 0 ) {
-			$wpdb->query( $wpdb->prepare( "UPDATE `{$wpdb->posts}` SET `menu_order`='%d' WHERE `ID`='%d' LIMIT 1", $i, $image ) );
+			$wpdb->update(
+				    $wpdb->posts,
+				    array(
+					'menu_order' => $i
+				    ),
+				    array(
+					'ID' => $image
+				    ),
+				    '%d',
+				    '%d'
+				);
 			$i++;
 		}
 	}
@@ -1160,19 +1190,42 @@ function wpsc_clean_categories() {
 	$sql_data = $wpdb->get_results( $sql_query, ARRAY_A );
 	foreach ( (array)$sql_data as $datarow ) {
 		if ( $datarow['active'] == 1 ) {
-			$tidied_name = trim( $datarow['name'] );
-			$tidied_name = strtolower( $tidied_name );
+			$tidied_name = strtolower( trim( $datarow['name'] ) );
 			$url_name = sanitize_title( $tidied_name );
-			$similar_names = $wpdb->get_row( "SELECT COUNT(*) AS `count`, MAX(REPLACE(`nice-name`, '$url_name', '')) AS `max_number` FROM `" . WPSC_TABLE_PRODUCT_CATEGORIES . "` WHERE `nice-name` REGEXP '^($url_name){1}(\d)*$' AND `id` NOT IN ('{$datarow['id']}') ", ARRAY_A );
+			$similar_names = $wpdb->get_row( $wpdb->prepare( "SELECT COUNT(*) AS `count`, MAX(REPLACE(`nice-name`, '%s', '')) AS `max_number` FROM `" . WPSC_TABLE_PRODUCT_CATEGORIES . "` WHERE `nice-name` REGEXP '^(%s){1}(\d)*$' AND `id` NOT IN (%d) ", $url_name, $url_name, $datarow['id'] ), ARRAY_A );
 			$extension_number = '';
-			if ( $similar_names['count'] > 0 ) {
-				$extension_number = (int)$similar_names['max_number'] + 2;
-			}
+			
+			if ( $similar_names['count'] > 0 )
+			    $extension_number = (int)$similar_names['max_number'] + 2;
+			
 			$url_name .= $extension_number;
-			$wpdb->query( "UPDATE `" . WPSC_TABLE_PRODUCT_CATEGORIES . "` SET `nice-name` = '$url_name' WHERE `id` = '{$datarow['id']}' LIMIT 1 ;" );
+			
+			$wpdb->update( 
+				WPSC_TABLE_PRODUCT_CATEGORIES,
+				array(
+				    'nice-name' => $url_name
+				),
+				array(
+				    'id' => $datarow['id']
+				),
+				'%s',
+				'%d'
+			    );
+			
 			$updated;
+			
 		} else if ( $datarow['active'] == 0 ) {
-			$wpdb->query( "UPDATE `" . WPSC_TABLE_PRODUCT_CATEGORIES . "` SET `nice-name` = '' WHERE `id` = '{$datarow['id']}' LIMIT 1 ;" );
+			$wpdb->update( 
+				WPSC_TABLE_PRODUCT_CATEGORIES,
+				array(
+				    'nice-name' => ''
+				),
+				array(
+				    'id' => $datarow['id']
+				),
+				'%s',
+				'%d'
+			    );
 			$updated;
 		}
 	}
@@ -1199,9 +1252,19 @@ function wpsc_change_region_tax() {
 	if ( is_array( $_POST['region_tax'] ) ) {
 		foreach ( $_POST['region_tax'] as $region_id => $tax ) {
 			if ( is_numeric( $region_id ) && is_numeric( $tax ) ) {
-				$previous_tax = $wpdb->get_var( "SELECT `tax` FROM `" . WPSC_TABLE_REGION_TAX . "` WHERE `id` = '$region_id' LIMIT 1" );
+				$previous_tax = $wpdb->get_var( $wpdb->prepare( "SELECT `tax` FROM `" . WPSC_TABLE_REGION_TAX . "` WHERE `id` = %d LIMIT 1", $region_id ) );
 				if ( $tax != $previous_tax ) {
-					$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `tax` = '$tax' WHERE `id` = '$region_id' LIMIT 1" );
+					$wpdb->update( 
+						WPSC_TABLE_REGION_TAX,
+						array(
+						    'tax' => $tax
+						),
+						array(
+						    'id' => $region_id
+						),
+						'%s',
+						'%d' 
+					    );
 					$changes_made = true;
 				}
 			}
@@ -1484,8 +1547,7 @@ function wpsc_delete_coupon(){
 	$coupon_id = (int)$_GET['delete_id'];
 
 	if(isset($coupon_id)) {
-			$wpdb->query("DELETE FROM `".WPSC_TABLE_COUPON_CODES."` WHERE `id` = '$coupon_id' LIMIT 1;");
-
+			$wpdb->query( $wpdb->prepare( "DELETE FROM `".WPSC_TABLE_COUPON_CODES."` WHERE `id` = %d LIMIT 1", $coupon_id ) );
 			$deleted = 1;
 	}
 	$sendback = wp_get_referer();
