@@ -145,12 +145,8 @@ function wpsc_ajax_add_tracking() {
 				array(
 				 'id' => $id   
 				),
-				array(
-				    '%s'
-				),
-				array(
-				    '%d'
-				)
+				'%s',
+				'%d'
 			    );
 		}
 
@@ -403,8 +399,8 @@ function wpsc_purchase_log_csv() {
 	$count = 0;
 	if ( 'key' == $_REQUEST['rss_key'] && current_user_can( 'manage_options' ) ) {
 		if ( isset( $_REQUEST['start_timestamp'] ) && isset( $_REQUEST['end_timestamp'] ) ) {
-			$start_timestamp = (int) $_REQUEST['start_timestamp'];
-			$end_timestamp = (int) $_REQUEST['end_timestamp'];
+			$start_timestamp = $_REQUEST['start_timestamp'];
+			$end_timestamp = $_REQUEST['end_timestamp'];
 			$start_end_sql = "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `date` BETWEEN '%d' AND '%d' ORDER BY `date` DESC";
 			$start_end_sql = apply_filters( 'wpsc_purchase_log_start_end_csv', $start_end_sql );
 			$data = $wpdb->get_results( $wpdb->prepare( $start_end_sql, $start_timestamp, $end_timestamp ), ARRAY_A );
@@ -569,12 +565,8 @@ function wpsc_admin_ajax() {
 				    array(
 					'id' => $_POST['id']
 				    ),
-				    array(
-					'%d'
-				    ),
-				    array(
-					'%d'
-				    )
+				    '%d',
+				    '%d'
 				);
 			if ( ($newvalue > $log_data['processed']) && ($log_data['processed'] < 2) ) {
 				transaction_results( $log_data['sessionid'], false );
@@ -582,7 +574,6 @@ function wpsc_admin_ajax() {
 
 			$status_name = wpsc_find_purchlog_status_name( $purchase['processed'] );
 			echo "document.getElementById(\"form_group_" . $_POST['id'] . "_text\").innerHTML = '" . $status_name . "';\n";
-
 
 			$year = date( "Y" );
 			$month = date( "m" );
@@ -776,12 +767,8 @@ function wpsc_purchlog_edit_status( $purchlog_id='', $purchlog_status='' ) {
 		    array(
 			'id' => $purchlog_id
 		    ),
-		    array(
-			'&d'
-		    ),
-		    array(
-			'&d'
-		    )
+		    '%d',
+		    '%d'
 		);
 	wpsc_clear_stock_claims();
 	wpsc_decrement_claimed_stock($purchlog_id);
@@ -811,12 +798,8 @@ function wpsc_save_product_order() {
 			array(
 			    'ID' => $product_id
 			),
-			array(
-			    '%d'
-			),
-			array(
-			    '%d'
-			)
+			'%d',
+			'%d'
 		    );
 		}
 	$success = true;
@@ -850,12 +833,8 @@ function wpsc_update_checkout_fields_order() {
 			array(
 			    'id' => $checkout_field
 			),
-			array(
-			    '%d'
-			),
-			array(
-			    '%d'
-			)
+			'%d',
+			'%d'
 		    );
 
 		$order ++;
@@ -882,12 +861,8 @@ function wpsc_purchlogs_update_notes( $purchlog_id = '', $purchlog_notes = '' ) 
 			    array(
 				'id' => $purchlog_id
 			    ),
-			    array(
-				'%s'
-			    ),
-			    array(
-				'%d'
-			    )
+			    '%s',
+			    '%d'
 			);
 	}
 }
