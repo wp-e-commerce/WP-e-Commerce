@@ -397,7 +397,7 @@ if ( isset( $_REQUEST['get_rating_count'] ) && ($_REQUEST['get_rating_count'] ==
  * No parameters, returns nothing
  */
 function wpsc_update_product_price() {
-	global $wpdb, $wpsc_cart;
+    
 	$from = '';
 	$change_price = true;
 	$product_id = (int) $_POST['product_id'];
