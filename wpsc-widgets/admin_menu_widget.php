@@ -32,8 +32,6 @@ class WP_Widget_Admin_Menu extends WP_Widget {
 	 */
 	function widget( $args, $instance ) {
 		
-		global $wpdb, $table_prefix;
-		
 		extract( $args );
 	
 		if ( current_user_can( 'manage_options' ) ) {
@@ -71,8 +69,6 @@ class WP_Widget_Admin_Menu extends WP_Widget {
 	 * @param $instance (array) Widget values.
 	 */
 	function form( $instance ) {
-		
-		global $wpdb;
 		
 		// Defaults
 		$instance = wp_parse_args( (array)$instance, array( 'title' => '' ) );
