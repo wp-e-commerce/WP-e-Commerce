@@ -339,7 +339,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 		$paypal_url = get_option('paypal_multiple_url');
 		$received_values = array();
 		$received_values['cmd'] = '_notify-validate';
-  		$received_values += $_POST;
+  		$received_values += stripslashes_deep ($_POST);
 		$options = array(
 			'timeout' => 5,
 			'body' => $received_values,
