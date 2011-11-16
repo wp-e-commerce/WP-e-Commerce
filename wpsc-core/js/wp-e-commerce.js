@@ -289,18 +289,19 @@ jQuery(document).ready(function () {
 	// update the price when the variations are altered.
 	jQuery(".wpsc_select_variation").live('change', function() {
 		jQuery('option[value="0"]', this).attr('disabled', 'disabled');
-		parent_form = jQuery(this).parents("form.product_form");
+		var parent_form = jQuery(this).closest("form.product_form");
 		if ( parent_form.length == 0 )
 			return;		
-		form_values =jQuery("input[name='product_id'], .wpsc_select_variation",parent_form).serialize( );
+		var prod_id = jQuery("input[name='product_id']",parent_form).val();
+		var form_values =jQuery("input[name='product_id'], .wpsc_select_variation",parent_form).serialize( );
 		jQuery.post( 'index.php?update_product_price=true', form_values, function(response) {
-			var stock_display = jQuery('div#stock_display_' + product_id),
-				price_field = jQuery('input#product_price_' + product_id),
-				price_span = jQuery('#product_price_' + product_id + '.pricedisplay, #product_price_' + product_id + ' .currentprice'),
-				donation_price = jQuery('input#donation_price_' + product_id),
-				old_price = jQuery('#old_product_price_' + product_id),
-				save = jQuery('#yousave_' + product_id),
-				buynow = jQuery('#BB_BuyButtonForm' + product_id);
+			var stock_display = jQuery('div#stock_display_' + prod_id),
+				price_field = jQuery('input#product_price_' + prod_id),
+				price_span = jQuery('#product_price_' + prod_id + '.pricedisplay, #product_price_' + prod_id + ' .currentprice'),
+				donation_price = jQuery('input#donation_price_' + prod_id),
+				old_price = jQuery('#old_product_price_' + prod_id),
+				save = jQuery('#yousave_' + prod_id),
+				buynow = jQuery('#BB_BuyButtonForm' + prod_id);
 			if ( response.variation_found ) {
 				if ( response.stock_available ) {
 					stock_display.removeClass('out_of_stock').addClass('in_stock');
