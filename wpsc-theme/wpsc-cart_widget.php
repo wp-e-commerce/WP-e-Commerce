@@ -1,6 +1,6 @@
 <?php if(isset($cart_messages) && count($cart_messages) > 0) { ?>
 	<?php foreach((array)$cart_messages as $cart_message) { ?>
-	  <span class="cart_message"><?php echo $cart_message; ?></span>
+	  <span class="cart_message"><?php echo esc_html( $cart_message ); ?></span>
 	<?php } ?>
 <?php } ?>
 
