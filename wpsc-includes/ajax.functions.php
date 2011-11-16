@@ -145,7 +145,7 @@ if ( isset( $_REQUEST['wpsc_ajax_action'] ) && ($_REQUEST['wpsc_ajax_action'] ==
 }
 
 function wpsc_get_cart() {
-	global $wpdb, $wpsc_cart;
+	global $wpsc_cart;
 
 	ob_start();
 
@@ -190,7 +190,7 @@ if ( isset( $_REQUEST['wpsc_ajax_action'] ) && ($_REQUEST['wpsc_ajax_action'] ==
  * No parameters, returns nothing
  */
 function wpsc_empty_cart() {
-	global $wpdb, $wpsc_cart;
+	global $wpsc_cart;
 	$wpsc_cart->empty_cart( false );
 
 	if ( $_REQUEST['ajax'] == 'true' ) {
@@ -232,9 +232,9 @@ if ( isset( $_REQUEST['wpsc_ajax_action'] ) && (($_REQUEST['wpsc_ajax_action'] =
  * No parameters, returns nothing
  */
 function wpsc_coupon_price( $currCoupon = '' ) {
-	global $wpdb, $wpsc_cart, $wpsc_coupons;
+	global $wpsc_cart, $wpsc_coupons;
 	if ( isset( $_POST['coupon_num'] ) && $_POST['coupon_num'] != '' ) {
-		$coupon = $wpdb->escape( $_POST['coupon_num'] );
+		$coupon = esc_sql( $_POST['coupon_num'] );
 		$_SESSION['coupon_numbers'] = $coupon;
 		$wpsc_coupons = new wpsc_coupons( $coupon );
 
@@ -251,7 +251,7 @@ function wpsc_coupon_price( $currCoupon = '' ) {
 		$wpsc_cart->coupons_amount = 0;
 		$wpsc_cart->coupons_name = '';
 	} else if ( $currCoupon != '' ) {
-		$coupon = $wpdb->escape( $currCoupon );
+		$coupon = esc_sql( $currCoupon );
 		$_SESSION['coupon_numbers'] = $coupon;
 		$wpsc_coupons = new wpsc_coupons( $coupon );
 
@@ -274,7 +274,7 @@ if ( isset( $_POST['coupon_num'] ) ) {
  * No parameters, returns nothing
  */
 function wpsc_update_item_quantity() {
-	global $wpdb, $wpsc_cart;
+	global $wpsc_cart;
 
 	if ( is_numeric( $_POST['key'] ) ) {
 		$key = (int)$_POST['key'];
@@ -318,7 +318,7 @@ function wpsc_update_product_rating() {
 	global $wpdb;
 	$nowtime = time();
 	$product_id = absint( $_POST['product_id'] );
-	$ip_number = $wpdb->escape( $_SERVER['REMOTE_ADDR'] );
+	$ip_number = $_SERVER['REMOTE_ADDR'];
 	$rating = absint( $_POST['product_rating'] );
 
 	$cookie_data = explode( ",", $_COOKIE['voting_cookie'][$product_id] );
@@ -355,7 +355,7 @@ if ( isset( $_REQUEST['wpsc_ajax_action'] ) && ($_REQUEST['wpsc_ajax_action'] ==
  * No parameters, returns nothing
  */
 function wpsc_update_shipping_price() {
-	global $wpdb, $wpsc_cart;
+	global $wpsc_cart;
 	$quote_shipping_method = $_POST['key1'];
 	$quote_shipping_option = $_POST['key'];
 	if(!empty($quote_shipping_option) && !empty($quote_shipping_method)){
@@ -382,8 +382,8 @@ if ( isset( $_REQUEST['wpsc_ajax_action'] ) && ($_REQUEST['wpsc_ajax_action'] ==
 function wpsc_get_rating_count() {
 	global $wpdb, $wpsc_cart;
 	$prodid = $_POST['product_id'];
-	$data = $wpdb->get_results( "SELECT COUNT(*) AS `count` FROM `" . WPSC_TABLE_PRODUCT_RATING . "` WHERE `productid` = '" . $prodid . "'", ARRAY_A );
-	echo $data[0]['count'] . "," . $prodid;
+	$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) AS `count` FROM `" . WPSC_TABLE_PRODUCT_RATING . "` WHERE `productid` = %d", $prodid ) );
+	echo $count . "," . $prodid;
 	exit();
 }
 
