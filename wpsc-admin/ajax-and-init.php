@@ -136,20 +136,16 @@ function wpsc_purchase_log_save_tracking_id() {
 		die( 'Session expired. Try refreshing your Sales Log page.' );
 
 		$wpdb->update( 
-			WPSC_TABLE_PURCHASE_LOGS, 
-			array( 
-			    'track_id' => $trackingid 
+			    WPSC_TABLE_PURCHASE_LOGS, 
+			    array( 
+				'track_id' => $trackingid 
+				),
+			    array(
+			     'id' => $id   
 			    ),
-			array(
-			 'id' => $id   
-			),
-			array(
-			    '%s'
-			),
-			array(
+			    '%s',
 			    '%d'
-			)
-		    );
+			);
 
 	die('success');
 }
@@ -395,9 +391,9 @@ function wpsc_purchase_log_csv() {
 	$count = 0;
 	if ( 'key' == $_REQUEST['rss_key'] && current_user_can( 'manage_options' ) ) {
 		if ( isset( $_REQUEST['start_timestamp'] ) && isset( $_REQUEST['end_timestamp'] ) ) {
-			$start_timestamp = (int) $_REQUEST['start_timestamp'];
-			$end_timestamp = (int) $_REQUEST['end_timestamp'];
-			$start_end_sql = "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `date` BETWEEN '$start_timestamp' AND '$end_timestamp' ORDER BY `date` DESC";
+			$start_timestamp = $_REQUEST['start_timestamp'];
+			$end_timestamp = $_REQUEST['end_timestamp'];
+			$start_end_sql = "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `date` BETWEEN '%d' AND '%d' ORDER BY `date` DESC";
 			$start_end_sql = apply_filters( 'wpsc_purchase_log_start_end_csv', $start_end_sql );
 			$data = $wpdb->get_results( $wpdb->prepare( $start_end_sql, $start_timestamp, $end_timestamp ), ARRAY_A );
 			$csv_name = 'Purchase Log ' . date( "M-d-Y", $start_timestamp ) . ' to ' . date( "M-d-Y", $end_timestamp ) . '.csv';
@@ -561,12 +557,8 @@ function wpsc_admin_ajax() {
 				    array(
 					'id' => $_POST['id']
 				    ),
-				    array(
-					'%d'
-				    ),
-				    array(
-					'%d'
-				    )
+				    '%d',
+				    '%d'
 				);
 			if ( ($newvalue > $log_data['processed']) && ($log_data['processed'] < 2) ) {
 				transaction_results( $log_data['sessionid'], false );
@@ -768,12 +760,8 @@ function wpsc_purchlog_edit_status( $purchlog_id='', $purchlog_status='' ) {
 		    array(
 			'id' => $purchlog_id
 		    ),
-		    array(
-			'&d'
-		    ),
-		    array(
-			'&d'
-		    )
+		    '%d',
+		    '%d'
 		);
 	wpsc_clear_stock_claims();
 	wpsc_decrement_claimed_stock($purchlog_id);
@@ -807,12 +795,8 @@ function wpsc_save_product_order() {
 			array(
 			    'ID' => $product_id
 			),
-			array(
-			    '%d'
-			),
-			array(
-			    '%d'
-			)
+			'%d',
+			'%d'
 		    );
 		}
 	$success = true;
@@ -838,20 +822,16 @@ function wpsc_update_checkout_fields_order() {
 			continue;
 		$checkout_field = absint( preg_replace('/[^0-9]+/', '', $checkout_field ) );
 		$wpdb->update(
-			WPSC_TABLE_CHECKOUT_FORMS,
-			array(
-			    'checkout_order' => $order
-			),
-			array(
-			    'id' => $checkout_field
-			),
-			array(
+			    WPSC_TABLE_PURCHASE_LOGS,
+			    array(
+				'notes' => $purchlog_notes
+			    ),
+			    array(
+				'id' => $purchlog_id
+			    ),
+			    '%s',
 			    '%d'
-			),
-			array(
-			    '%d'
-			)
-		    );
+			);
 
 		$order ++;
 	}
