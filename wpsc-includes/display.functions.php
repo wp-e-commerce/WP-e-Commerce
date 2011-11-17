@@ -79,7 +79,7 @@ function wpsc_also_bought( $product_id ) {
 	$image_display_width = 96;
 
 	$output = '';
-	$also_bought = $wpdb->get_results( "SELECT `" . $wpdb->posts . "`.* FROM `" . WPSC_TABLE_ALSO_BOUGHT . "`, `" . $wpdb->posts . "` WHERE `selected_product`='" . $product_id . "' AND `" . WPSC_TABLE_ALSO_BOUGHT . "`.`associated_product` = `" . $wpdb->posts . "`.`id` AND `" . $wpdb->posts . "`.`post_status` IN('publish','protected') ORDER BY `" . WPSC_TABLE_ALSO_BOUGHT . "`.`quantity` DESC LIMIT $also_bought_limit", ARRAY_A );
+	$also_bought = $wpdb->get_results( $wpdb->prepare( "SELECT `" . $wpdb->posts . "`.* FROM `" . WPSC_TABLE_ALSO_BOUGHT . "`, `" . $wpdb->posts . "` WHERE `selected_product`= %d AND `" . WPSC_TABLE_ALSO_BOUGHT . "`.`associated_product` = `" . $wpdb->posts . "`.`id` AND `" . $wpdb->posts . "`.`post_status` IN('publish','protected') ORDER BY `" . WPSC_TABLE_ALSO_BOUGHT . "`.`quantity` DESC LIMIT $also_bought_limit", $product_id ), ARRAY_A );
 	if ( count( $also_bought ) > 0 ) {
 		$output .= "<h2 class='prodtitles wpsc_also_bought' >" . __( 'People who bought this item also bought', 'wpsc' ) . "</h2>";
 		$output .= "<div class='wpsc_also_bought'>";
@@ -313,13 +313,13 @@ function wpsc_obtain_the_title() {
 			$full_product_name = $wpsc_title_data['product'][$product_name];
 		} else if ( $product_name != '' ) {
 			$product_id = $wp_query->post->ID;
-			$full_product_name = $wpdb->get_var( "SELECT `post_title` FROM `$wpdb->posts` WHERE `ID`='{$product_id}' LIMIT 1" );
+			$full_product_name = $wpdb->get_var( $wpdb->prepare( "SELECT `post_title` FROM `$wpdb->posts` WHERE `ID`= %d LIMIT 1", $product_id ) );
 			$wpsc_title_data['product'][$product_name] = $full_product_name;
 		} else {
 			if(isset($_REQUEST['product_id'])){
 				$product_id = absint( $_REQUEST['product_id'] );
-				$product_name = $wpdb->get_var( "SELECT `post_title` FROM `$wpdb->posts` WHERE `ID`='{$product_id}' LIMIT 1" );
-				$full_product_name = $wpdb->get_var( "SELECT `post_title` FROM `$wpdb->posts` WHERE `ID`='{$product_id}' LIMIT 1" );
+				$product_name = $wpdb->get_var( $wpdb->prepare( "SELECT `post_title` FROM `$wpdb->posts` WHERE `ID`= %d LIMIT 1", $product_id ) );
+				$full_product_name = $wpdb->get_var( $wpdb->prepare( "SELECT `post_title` FROM `$wpdb->posts` WHERE `ID`= %d LIMIT 1", $product_id ) );
 				$wpsc_title_data['product'][$product_name] = $full_product_name;
 			}else{
 				//This has to exist, otherwise we would have bailed earlier.
@@ -355,7 +355,7 @@ function wpsc_obtain_the_description() {
 
 	if ( is_numeric( $_GET['product_id'] ) ) {
 		$product_id = absint( $_GET['product_id'] );
-		$output = $wpdb->get_var( "SELECT `post_content` FROM `" . $wpdb->posts . "` WHERE `id`='{$product_id}' LIMIT 1" );
+		$output = $wpdb->get_var( $wpdb->prepare( "SELECT `post_content` FROM `" . $wpdb->posts . "` WHERE `id` = %d LIMIT 1", $product_id ) );
 	}
 	return $output;
 }
