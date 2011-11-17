@@ -137,7 +137,7 @@ function external_link( $product_id ) {
  */
 
 function wpsc_add_to_cart_button( $product_id, $return = false ) {
-	global $wpdb,$wpsc_variations;
+	global $wpdb, $wpsc_variations;
 	$output = '';
 	if ( $product_id > 0 ) {
 		// grab the variation form fields here
@@ -254,13 +254,13 @@ function wpsc_obtain_the_title() {
 			$full_product_name = $wpsc_title_data['product'][$product_name];
 		} else if ( $product_name != '' ) {
 			$product_id = $wp_query->post->ID;
-			$full_product_name = $wpdb->get_var( "SELECT `post_title` FROM `$wpdb->posts` WHERE `ID`='{$product_id}' LIMIT 1" );
+			$full_product_name = $wpdb->get_var( $wpdb->prepare( "SELECT `post_title` FROM `$wpdb->posts` WHERE `ID`= %d LIMIT 1", $product_id ) );
 			$wpsc_title_data['product'][$product_name] = $full_product_name;
 		} else {
 			if(isset($_REQUEST['product_id'])){
 				$product_id = absint( $_REQUEST['product_id'] );
-				$product_name = $wpdb->get_var( "SELECT `post_title` FROM `$wpdb->posts` WHERE `ID`='{$product_id}' LIMIT 1" );
-				$full_product_name = $wpdb->get_var( "SELECT `post_title` FROM `$wpdb->posts` WHERE `ID`='{$product_id}' LIMIT 1" );
+				$product_name = $wpdb->get_var( $wpdb->prepare( "SELECT `post_title` FROM `$wpdb->posts` WHERE `ID`= %d LIMIT 1", $product_id ) );
+				$full_product_name = $wpdb->get_var( $wpdb->prepare( "SELECT `post_title` FROM `$wpdb->posts` WHERE `ID`= %d LIMIT 1", $product_id ) );
 				$wpsc_title_data['product'][$product_name] = $full_product_name;
 			}else{
 				//This has to exist, otherwise we would have bailed earlier.
@@ -296,7 +296,7 @@ function wpsc_obtain_the_description() {
 
 	if ( is_numeric( $_GET['product_id'] ) ) {
 		$product_id = absint( $_GET['product_id'] );
-		$output = $wpdb->get_var( "SELECT `post_content` FROM `" . $wpdb->posts . "` WHERE `id`='{$product_id}' LIMIT 1" );
+		$output = $wpdb->get_var( $wpdb->prepare( "SELECT `post_content` FROM `" . $wpdb->posts . "` WHERE `id`= %d LIMIT 1", $product_id ) );
 	}
 	return $output;
 }
