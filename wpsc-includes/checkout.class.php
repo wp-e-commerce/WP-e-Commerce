@@ -20,7 +20,7 @@
  */
 function wpsc_has_regions($country){
 	global $wpdb;
-	$country_data = $wpdb->get_row( "SELECT * FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `isocode` IN('" . $country . "') LIMIT 1", ARRAY_A );
+	$country_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `isocode` IN(%s) LIMIT 1", $country ), ARRAY_A );
 	if ($country_data['has_regions'] == 1)
 		return true;
 	else
@@ -57,7 +57,7 @@ function wpsc_check_purchase_processed($processed){
 function wpsc_get_buyers_email($purchase_id){
 	global $wpdb;
 	$email_form_field = $wpdb->get_results( "SELECT `id`,`type` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `type` IN ('email') AND `active` = '1' ORDER BY `checkout_order` ASC LIMIT 1", ARRAY_A );
-	$email = $wpdb->get_var( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` WHERE `log_id`=" . $purchase_id . " AND `form_id` = '" . $email_form_field[0]['id'] . "' LIMIT 1" );
+	$email = $wpdb->get_var( $wpdb->prepare( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` WHERE `log_id` = %d AND `form_id` = '" . $email_form_field[0]['id'] . "' LIMIT 1", $purchase_id ) );
 	return $email;
 
 }
@@ -71,7 +71,7 @@ function wpsc_get_buyers_email($purchase_id){
 function wpsc_google_checkout_submit() {
 	global $wpdb, $wpsc_cart, $current_user;
 	$wpsc_checkout = new wpsc_checkout();
-	$purchase_log_id = $wpdb->get_var( "SELECT `id` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `sessionid` IN('" . $_SESSION['wpsc_sessionid'] . "') LIMIT 1" );
+	$purchase_log_id = $wpdb->get_var( "SELECT `id` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `sessionid` IN(%s) LIMIT 1", $_SESSION['wpsc_sessionid'] );
 	get_currentuserinfo();
 	if ( $current_user->display_name != '' ) {
 		foreach ( $wpsc_checkout->checkout_items as $checkoutfield ) {
