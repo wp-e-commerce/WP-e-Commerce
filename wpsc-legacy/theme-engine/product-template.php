@@ -1794,5 +1794,3 @@ function wpsc_you_save( $args = null ){
 function wpsc_get_downloadable_file($file_id){
 	return get_post( $file_id );
 }
-
-?>
