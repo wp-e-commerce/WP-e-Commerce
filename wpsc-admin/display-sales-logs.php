@@ -86,8 +86,17 @@ class WPSC_Purchase_Log_Page
       if(isset($_POST)){
          foreach($_POST as $key=>$value){
             if($value != '-1'){
-               $sql = "UPDATE  `".WPSC_TABLE_CHECKOUT_FORMS."` SET `unique_name`='".$value."' WHERE id=".$key;
-               $complete = $wpdb->query($sql);
+               $complete = $wpdb->update(   
+			    WPSC_TABLE_CHECKOUT_FORMS,
+			    array(
+				'unique_name' => $value
+			    ),
+			    array(
+				'id' => $key
+			     ),
+			    '%s',
+			    '%d'   
+		       );
             }
             $numChanged++;
             $numQueries ++;
@@ -332,11 +341,11 @@ class WPSC_Purchase_Log_Page
                return;
 
             $ids = array_map( 'intval', $_REQUEST['post'] );
-            $in = 'IN (' . implode( ', ', $ids ) . ")";
-            $wpdb->query( "DELETE FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE id {$in}" );
-            $wpdb->query( "DELETE FROM " . WPSC_TABLE_CLAIMED_STOCK . " WHERE cart_id {$in}" );
-            $wpdb->query( "DELETE FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid {$in}" );
-            $wpdb->query( "DELETE FROM " . WPSC_TABLE_SUBMITED_FORM_DATA . " WHERE log_id {$in}" );
+            $in = implode( ', ', $ids );
+            $wpdb->query( $wpdb->prepare( "DELETE FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE id IN (%s)", $in ) );
+            $wpdb->query( $wpdb->prepare( "DELETE FROM " . WPSC_TABLE_CLAIMED_STOCK . " WHERE cart_id IN (%s)", $in ) );
+            $wpdb->query( $wpdb->prepare( "DELETE FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid IN (%s)", $in ) );
+            $wpdb->query( $wpdb->prepare( "DELETE FROM " . WPSC_TABLE_SUBMITED_FORM_DATA . " WHERE log_id IN (%s)", $in ) );
 
             $sendback = add_query_arg( array(
                'paged'   => $_REQUEST['last_paged'],
