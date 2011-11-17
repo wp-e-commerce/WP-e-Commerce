@@ -1192,7 +1192,7 @@ function wpsc_clean_categories() {
 		if ( $datarow['active'] == 1 ) {
 			$tidied_name = strtolower( trim( $datarow['name'] ) );
 			$url_name = sanitize_title( $tidied_name );
-			$similar_names = $wpdb->get_row( $wpdb->prepare( "SELECT COUNT(*) AS `count`, MAX(REPLACE(`nice-name`, '%s', '')) AS `max_number` FROM `" . WPSC_TABLE_PRODUCT_CATEGORIES . "` WHERE `nice-name` REGEXP '^(%s){1}(\d)*$' AND `id` NOT IN (%d) ", $url_name, $url_name, $datarow['id'] ), ARRAY_A );
+			$similar_names = $wpdb->get_row( $wpdb->prepare( "SELECT COUNT(*) AS `count`, MAX(REPLACE(`nice-name`, '%s', '')) AS `max_number` FROM `" . WPSC_TABLE_PRODUCT_CATEGORIES . "` WHERE `nice-name` REGEXP '^( " . esc_sql( $url_name ) . " ){1}(\d)*$' AND `id` NOT IN (%d) ", $url_name, $datarow['id'] ), ARRAY_A );
 			$extension_number = '';
 			
 			if ( $similar_names['count'] > 0 )

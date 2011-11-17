@@ -375,9 +375,9 @@ function wpsc_google_checkout(){
 }
 function wpsc_empty_google_logs(){
    global $wpdb;
-   $sql="DELETE FROM  `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `sessionid`=".$_SESSION['wpsc_sessionid'];
-   $wpdb->query($sql);
-   unset($_SESSION['wpsc_sessionid']);
+   $sql = $wpdb->prepare( "DELETE FROM  `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `sessionid` = '%s'", $_SESSION['wpsc_sessionid'] );
+   $wpdb->query( $sql );
+   unset( $_SESSION['wpsc_sessionid'] );
 
 }
 /**
@@ -800,7 +800,7 @@ class wpsc_cart {
 
       if($add_tax == true) {
          if(($country_data['has_regions'] == 1)) {
-            $region_data = $wpdb->get_row("SELECT `".WPSC_TABLE_REGION_TAX."`.* FROM `".WPSC_TABLE_REGION_TAX."` WHERE `".WPSC_TABLE_REGION_TAX."`.`country_id` IN('".$country_data['id']."') AND `".WPSC_TABLE_REGION_TAX."`.`id` IN('".$tax_region."') ",ARRAY_A) ;
+            $region_data = $wpdb->get_row( $wpdb->prepare( "SELECT `".WPSC_TABLE_REGION_TAX."`.* FROM `".WPSC_TABLE_REGION_TAX."` WHERE `".WPSC_TABLE_REGION_TAX."`.`country_id` IN('%s') AND `".WPSC_TABLE_REGION_TAX."`.`id` IN('%s') ", $country_data['id'], $tax_region ), ARRAY_A) ;
             $tax_percentage =  $region_data['tax'];
          } else {
             $tax_percentage =  $country_data['tax'];
@@ -813,9 +813,7 @@ class wpsc_cart {
          $this->clear_cache();
          $this->tax_percentage = $tax_percentage;
 
-         foreach($this->cart_items as $key => $cart_item) {
-            $this->cart_items[$key]->refresh_item();
-         }
+         $this->wpsc_refresh_cart_items();
       }
   }
 
@@ -918,7 +916,7 @@ class wpsc_cart {
          $priceandstock_id = 0;
 
          if($stock > 0) {
-            $claimed_stock = $wpdb->get_var("SELECT SUM(`stock_claimed`) FROM `".WPSC_TABLE_CLAIMED_STOCK."` WHERE `product_id` IN('$product_id') AND `variation_stock_id` IN('$priceandstock_id')");
+            $claimed_stock = $wpdb->get_var( $wpdb->prepare( "SELECT SUM(`stock_claimed`) FROM `".WPSC_TABLE_CLAIMED_STOCK."` WHERE `product_id` IN(%d) AND `variation_stock_id` IN('%d')", $product_id, $priceandstock_id  ) );
             if(($claimed_stock + $quantity) <= $stock) {
                $output = true;
             } else {
@@ -1860,29 +1858,43 @@ function refresh_item() {
          $tax = $taxes['tax'];
       }
 
-      $wpdb->query($wpdb->prepare(
-      "INSERT INTO `".WPSC_TABLE_CART_CONTENTS."` (
-         `prodid`, `name`, `purchaseid`,  `price`, `pnp`,
-         `tax_charged`, `gst`, `quantity`, `donation`,
-         `no_shipping`, `custom_message`, `files`, `meta`
-      ) VALUES ('%d', '%s', '%d', '%s', '%s', '%s', '%s', '%s', '%d', '0', '%s', '%s', NULL)",
-      $this->product_id,
-      $this->product_name,
-      $purchase_log_id,
-      $this->unit_price,
-      (float)$shipping,
-      (float)$tax,
-      (float)$tax_rate,
-      $this->quantity,
-      $this->is_donation,
-      $this->custom_message,
-      serialize($this->custom_file)
-      ));
-      $cart_id = $wpdb->get_var("SELECT LAST_INSERT_ID() AS `id` FROM `".WPSC_TABLE_CART_CONTENTS."` LIMIT 1");
+$wpdb->insert(
+		WPSC_TABLE_CART_CONTENTS,
+		array( 
+		    'prodid' => $this->product_id,
+		    'name' => $this->product_name, 
+		    'purchaseid' => $purchase_log_id,  
+		    'price' => $this->unit_price, 
+		    'pnp' => $shipping,
+		    'tax_charged' => $tax, 
+		    'gst' => $tax_rate, 
+		    'quantity' => $this->quantity, 
+		    'donation' => $this->is_donation,
+		    'no_shipping' => 0, 
+		    'custom_message' => $this->custom_message, 
+		    'files' => serialize($this->custom_file), 
+		    'meta' => NULL
+		),
+		array(
+		    '%d',
+		    '%s',
+		    '%d',
+		    '%d',
+		    '%f',
+		    '%f',
+		    '%f',
+		    '%s',
+		    '%d',
+		    '%d',
+		    '%s',
+		    '%s',
+		    '%s'
+		)
+	      );
+
+      $cart_id = $wpdb->get_var( "SELECT " . $wpdb->insert_id . " AS `id` FROM `".WPSC_TABLE_CART_CONTENTS."` LIMIT 1");
 
       wpsc_update_cartmeta($cart_id, 'sku', $this->sku);
-
-
 
        $downloads = get_option('max_downloads');
       if($this->is_downloadable == true) {
@@ -1896,19 +1908,32 @@ function refresh_item() {
          foreach($product_files as $file){
             // if the file is downloadable, check that the file is real
             $unique_id = sha1(uniqid(mt_rand(), true));
-            $wpdb->query("INSERT INTO `".WPSC_TABLE_DOWNLOAD_STATUS."` (
-               `product_id` , `fileid` ,
-               `purchid` , `cartid`,
-               `uniqueid`, `downloads`,
-               `active` , `datetime`
-            ) VALUES (
-               '{$this->product_id}', '{$file->ID}',
-               '{$purchase_log_id}', '{$cart_id}',
-               '{$unique_id}', '$downloads',
-               '0', NOW()
-            );");
+            
+	    $wpdb->insert(
+			WPSC_TABLE_DOWNLOAD_STATUS,
+			array(
+			    'product_id' => $this->product_id,
+			    'fileid' => $file->ID,
+			    'purchid' => $purchase_log_id,
+			    'cartid' => $cart_id,
+			    'uniqueid' => $unique_id,
+			    'downloads' => $downloads,
+			    'active' => 0,
+			    'datetime' => date( 'Y-m-d H:i:s' )
+			),
+			array(
+			   '%d',
+			   '%d',
+			   '%d',
+			   '%d',
+			   '%s',
+			   '%s',
+			   '%d',
+			   '%s',
+		       )
+		   );
 
-            $download_id = $wpdb->get_var("SELECT LAST_INSERT_ID() AS `id` FROM `".WPSC_TABLE_DOWNLOAD_STATUS."` LIMIT 1");
+            $download_id = $wpdb->get_var( "SELECT " . $wpdb->insert_id . " AS `id` FROM `".WPSC_TABLE_DOWNLOAD_STATUS."` LIMIT 1");
             wpsc_update_meta($download_id, '_is_legacy', 'false', 'wpsc_downloads');
          }
 
