@@ -619,6 +619,8 @@ add_action( 'init', 'wpsc_cron' );
 
 function wpsc_load_legacy_theme_engine() {
 	require_once( WPSC_FILE_PATH . '/wpsc-legacy/theme-engine/functions.php' );
+	require_once( WPSC_FILE_PATH . '/wpsc-legacy/theme-engine/product-template.php' );
+	require_once( WPSC_FILE_PATH . '/wpsc-legacy/theme-engine/breadcrumbs.class.php' );
 	// Set page title array for important WPSC pages
 	wpsc_core_load_page_titles();
 }
