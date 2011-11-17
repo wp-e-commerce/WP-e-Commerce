@@ -1,4 +1,8 @@
 <?php
+/**
+ * This file contains functions used in 3.8 theme engine. These functions previously
+ * resided in wpsc-functions.php.
+ */
 
 /**
  * wpsc_core_load_page_titles()

@@ -141,9 +141,6 @@ class WP_eCommerce {
 		// Load the shipping modules
 		wpsc_core_load_shipping_modules();
 
-		// Set page title array for important WPSC pages
-		wpsc_core_load_page_titles();
-
 		// WPEC is fully loaded
 		do_action( 'wpsc_loaded' );
 	}
