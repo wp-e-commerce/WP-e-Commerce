@@ -13,7 +13,7 @@ function wpsc_debug_page() {
 	if ( !current_user_can('manage_options') )
 		wp_die("You don't look like an administrator.");
 	global $wpdb;
-	$fixpage = get_option( 'siteurl' ) . '/wp-admin/admin.php?page=wpsc-sales-logs&amp;subpage=upgrade-purchase-logs';
+	$fixpage = admin_url( 'admin.php?page=wpsc-sales-logs&amp;subpage=upgrade-purchase-logs' );
 ?>
 	<div class="wrap">
 		<h2>Debugging Page</h2>
