@@ -117,6 +117,9 @@ class WP_eCommerce {
 		// Legacy action
 		do_action( 'wpsc_before_init' );
 
+		// Determine and load legacy theme engine if necessary
+		wpsc_load_legacy_theme_engine();
+
 		// Setup the core WPEC globals
 		wpsc_core_setup_globals();
 
