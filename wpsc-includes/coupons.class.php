@@ -6,12 +6,13 @@
 */
 function wpsc_uses_coupons() {
 	global $wpsc_coupons;
-	if(empty($wpsc_coupons)){
-		$wpsc_coupons = new wpsc_coupons();
-	}
-	if(is_object($wpsc_coupons)) {
-		return $wpsc_coupons->uses_coupons();
-	}
+	
+	if( empty( $wpsc_coupons ) )
+	    $wpsc_coupons = new wpsc_coupons();
+
+	if( is_object( $wpsc_coupons ) )
+	    return $wpsc_coupons->uses_coupons();
+
 	return false;
 }
 function wpsc_coupons_error(){
@@ -56,47 +57,47 @@ class wpsc_coupons {
 	 * @return bool True if coupon code exists, False otherwise.
 	 */
 	function wpsc_coupons($code = ''){
-		global $wpdb;
+	    global $wpdb;
 	
-		if ($code == '') {
-			return false;
-		} else {
-			$this->code = $wpdb->escape($code);
-			
-			$coupon_data = $wpdb->get_row("SELECT * FROM `".WPSC_TABLE_COUPON_CODES."` WHERE coupon_code='$code' LIMIT 1", ARRAY_A);
-			
-			if (($coupon_data == '') || ($coupon_data == null) || (strtotime($coupon_data['expiry']) < time()) ) {
-				$this->errormsg = false;
-				return false;
-			} else {
-				$coupon_data = array_merge( array(
-					'value' => '',
-					'is-percentage' => '',
-					'condition' => '',
-					'is-used' => '',
-					'active' => '',
-					'use-once' => '',
-					'use-x-times' => '',
-					'free-shipping' => '',
-					'start' => '',
-					'expiry' => '',
-					'every_product' => '',
-				), $coupon_data );
+	    if ( empty( $code ) )
+		return false;
+		
+	    $this->code = $code;
 
-				$this->value = $coupon_data['value'];
-				$this->is_percentage = $coupon_data['is-percentage'];
-				$this->conditions = unserialize($coupon_data['condition']);
-				$this->is_used = $coupon_data['is-used'];
-				$this->active = $coupon_data['active'];
-				$this->use_once = $coupon_data['use-once'];
-				$this->start_date = $coupon_data['start'];
-				$this->end_date = $coupon_data['expiry'];
-				$this->every_product = $coupon_data['every_product'];
-				$this->errormsg = true;
-				$valid = $this->validate_coupon();
-				return $valid;
-			}
-		}
+	    $coupon_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_COUPON_CODES."` WHERE coupon_code = %s LIMIT 1", $code ) , ARRAY_A );
+
+	    if (($coupon_data == '') || ($coupon_data == null) || (strtotime($coupon_data['expiry']) < time()) ) {
+		    $this->errormsg = false;
+		    return false;
+	    } else {
+		    $coupon_data = array_merge( array(
+			    'value' => '',
+			    'is-percentage' => '',
+			    'condition' => '',
+			    'is-used' => '',
+			    'active' => '',
+			    'use-once' => '',
+			    'use-x-times' => '',
+			    'free-shipping' => '',
+			    'start' => '',
+			    'expiry' => '',
+			    'every_product' => '',
+		    ), $coupon_data );
+
+		    $this->value = $coupon_data['value'];
+		    $this->is_percentage = $coupon_data['is-percentage'];
+		    $this->conditions = unserialize($coupon_data['condition']);
+		    $this->is_used = $coupon_data['is-used'];
+		    $this->active = $coupon_data['active'];
+		    $this->use_once = $coupon_data['use-once'];
+		    $this->start_date = $coupon_data['start'];
+		    $this->end_date = $coupon_data['expiry'];
+		    $this->every_product = $coupon_data['every_product'];
+		    $this->errormsg = true;
+		    $valid = $this->validate_coupon();
+		    return $valid;
+	    }
+		
 	}
 	
 	/**
