@@ -11,7 +11,7 @@ $nzshpcrt_gateways[$num]['image'] = WPSC_URL . '/images/cc.gif';
 function gateway_chronopay($separator, $sessionid)
 {
 	global $wpdb;
-	$purchase_log_sql = "SELECT * FROM `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `sessionid`= ".$sessionid." LIMIT 1";
+	$purchase_log_sql = $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `sessionid`= %s LIMIT 1", $sessionid );
 	$purchase_log = $wpdb->get_results($purchase_log_sql,ARRAY_A) ;
 
 	$cart_sql = "SELECT * FROM `".WPSC_TABLE_CART_CONTENTS."` WHERE `purchaseid`='".$purchase_log[0]['id']."'";
@@ -84,18 +84,20 @@ function gateway_chronopay($separator, $sessionid)
 
 	foreach($cart as $item)
 	{
-		$product_data = $wpdb->get_results("SELECT * FROM `" . $wpdb->posts . "` WHERE `id`='".$item['prodid']."' LIMIT 1",ARRAY_A);
+		$product_data = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `" . $wpdb->posts . "` WHERE `id`= %d LIMIT 1", $item['prodid'] ), ARRAY_A );
 		$product_data = $product_data[0];
 		$variation_count = count($product_variations);
-
-		$variation_sql = "SELECT * FROM `".WPSC_TABLE_CART_ITEM_VARIATIONS."` WHERE `cart_id`='".$item['id']."'";
-		$variation_data = $wpdb->get_results($variation_sql,ARRAY_A);
+	
+		//Does this even still work in 3.8? We're not using this table.
+		$variation_sql = $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_CART_ITEM_VARIATIONS."` WHERE `cart_id` = %d", $item['id'] );
+		$variation_data = $wpdb->get_results( $variation_sql, ARRAY_A );
 		$variation_count = count($variation_data);
 
 		if($variation_count >= 1)
       	{
       		$variation_list = " (";
       		$j = 0;
+		
       		foreach($variation_data as $variation)
         	{
         		if($j > 0)
@@ -103,7 +105,7 @@ function gateway_chronopay($separator, $sessionid)
           			$variation_list .= ", ";
           		}
         		$value_id = $variation['venue_id'];
-        		$value_data = $wpdb->get_results("SELECT * FROM `".WPSC_TABLE_VARIATION_VALUES."` WHERE `id`='".$value_id."' LIMIT 1",ARRAY_A);
+        		$value_data = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_VARIATION_VALUES."` WHERE `id`= %d LIMIT 1", $value_id ), ARRAY_A);
         		$variation_list .= $value_data[0]['name'];
         		$j++;
         	}
