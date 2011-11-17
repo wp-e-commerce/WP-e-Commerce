@@ -29,9 +29,39 @@ function wpsc_display_coupons_page() {
 					unset( $new_rule[$key] );
 				}
 			}
-
-			if ( $wpdb->query( "INSERT INTO `" . WPSC_TABLE_COUPON_CODES . "` ( `coupon_code` , `value` , `is-percentage` , `use-once` , `use-x-times`,`free-shipping`,`is-used` , `active` , `every_product` , `start` , `expiry`, `condition` ) VALUES ( '$coupon_code', '$discount', '$discount_type', '$use_once', '$use_x_times','$free_shipping_details', '0', '$is_active', '$every_product', '$start_date' , '$end_date' , '" . serialize( $new_rule ) . "' );" ) )
-				echo "<div class='updated'><p align='center'>" . __( 'Thanks, the coupon has been added.', 'wpsc' ) . "</p></div>";
+			$insert = $wpdb->insert(
+				    WPSC_TABLE_COUPON_CODES,
+				    array(
+					'coupon_code' => $coupon_code,
+					'value' => $discount,
+					'is-percentage' => $discount_type, 
+					'use-once' => $use_once,
+					'use-x-times' => $use_x_times,
+					'free-shipping' => $free_shipping_details,
+					'is-used' => 0,
+					'active' => $is_active,
+					'every_product' => $every_product,
+					'start' => $start_date,
+					'expiry' => $end_date,
+					'condition' => serialize( $new_rule )
+				    ),
+				    array(
+					'%s',
+					'%f',
+					'%d',
+					'%d',
+					'%d',
+					'%s',
+					'%d',
+					'%d',
+					'%d',
+					'%s',
+					'%s',
+					'%s',
+				    )
+				);
+			if ( $insert )
+			    echo "<div class='updated'><p align='center'>" . __( 'Thanks, the coupon has been added.', 'wpsc' ) . "</p></div>";
 
 		}
 
@@ -42,7 +72,7 @@ function wpsc_display_coupons_page() {
 				$coupon_id             = (int)$coupon_id;
 				$coupon_data['start']  = $coupon_data['start'] . " 00:00:00";
 				$coupon_data['expiry'] = $coupon_data['expiry'] . " 00:00:00";
-				$check_values          = $wpdb->get_row( "SELECT `id`, `coupon_code`, `value`, `is-percentage`, `use-once`, `use-x-times`, `active`, `start`, `expiry`,`every_product` FROM `" . WPSC_TABLE_COUPON_CODES . "` WHERE `id` = '$coupon_id'", ARRAY_A );
+				$check_values          = $wpdb->get_row( $wpdb->prepare( "SELECT `id`, `coupon_code`, `value`, `is-percentage`, `use-once`, `active`, `start`, `expiry`,`every_product` FROM `" . WPSC_TABLE_COUPON_CODES . "` WHERE `id` = %d", $coupon_id ), ARRAY_A );
 
 				// Sort both arrays to make sure that if they contain the same stuff,
 				// that they will compare to be the same, may not need to do this, but what the heck
@@ -68,7 +98,7 @@ function wpsc_display_coupons_page() {
 						$insert_array[] = "`every_product` = '$coupon_data[add_every_product]'";
 
 					if ( count( $insert_array ) > 0 )
-						$wpdb->query( "UPDATE `" . WPSC_TABLE_COUPON_CODES . "` SET " . implode( ", ", $insert_array ) . " WHERE `id` = '$coupon_id' LIMIT 1;" );
+					    $wpdb->query( $wpdb->prepare( "UPDATE `" . WPSC_TABLE_COUPON_CODES . "` SET " . implode( ", ", $insert_array ) . " WHERE `id` = %d LIMIT 1;", $coupon_id ) );
 
 					unset( $insert_array );
 					$rules = $_POST['rules'];
@@ -85,7 +115,7 @@ function wpsc_display_coupons_page() {
 						}
 					}
 
-					$conditions = $wpdb->get_var( "SELECT `condition` FROM `" . WPSC_TABLE_COUPON_CODES . "` WHERE `id` = '" . (int)$_POST['coupon_id'] . "' LIMIT 1" );
+					$conditions = $wpdb->get_var( $wpdb->prepare( "SELECT `condition` FROM `" . WPSC_TABLE_COUPON_CODES . "` WHERE `id` = %d LIMIT 1", $_POST['coupon_id'] ) );
 					$conditions = unserialize( $conditions );
 					$new_cond = array();
 
@@ -96,21 +126,41 @@ function wpsc_display_coupons_page() {
 						$conditions [] = $new_cond;
 					}
 
-					$sql = "UPDATE `" . WPSC_TABLE_COUPON_CODES . "` SET `condition`='" . serialize( $conditions ) . "' WHERE `id` = '" . (int)$_POST['coupon_id'] . "' LIMIT 1";
-					$wpdb->query( $sql );
+					$wpdb->update(
+						    WPSC_TABLE_COUPON_CODES,
+						    array(
+							'condition' => serialize( $conditions ),
+							
+						    ),
+						    array(
+							'id' => $_POST['coupon_id']
+						    ),
+						    '%s',
+						    '%d'
+						);
 				}
 			}
 		}
 
 		if ( isset( $_POST['delete_condition'] ) ) {
 
-			$conditions = $wpdb->get_var( "SELECT `condition` FROM `" . WPSC_TABLE_COUPON_CODES . "` WHERE `id` = '" . (int)$_POST['coupon_id'] . "' LIMIT 1" );
+			$conditions = $wpdb->get_var( $wpdb->prepare( "SELECT `condition` FROM `" . WPSC_TABLE_COUPON_CODES . "` WHERE `id` = %d LIMIT 1", $_POST['coupon_id'] ) );
 			$conditions = unserialize( $conditions );
 
 			unset( $conditions[(int)$_POST['delete_condition']] );
 
-			$sql = "UPDATE `" . WPSC_TABLE_COUPON_CODES . "` SET `condition`='" . serialize( $conditions ) . "' WHERE `id` = '" . (int)$_POST['coupon_id'] . "' LIMIT 1";
-			$wpdb->query( $sql );
+			$wpdb->update(
+				WPSC_TABLE_COUPON_CODES,
+				array(
+				    'condition' => serialize( $conditions ),
+
+				),
+				array(
+				    'id' => $_POST['coupon_id']
+				),
+				'%s',
+				'%d'
+			    );
 		}
 
 		if ( isset( $_POST['submit_condition'] ) ) {
@@ -123,8 +173,17 @@ function wpsc_display_coupons_page() {
 			$new_cond['value']    = $_POST['rules']['value'][0];
 			$conditions[]         = $new_cond;
 
-			$sql = "UPDATE `" . WPSC_TABLE_COUPON_CODES . "` SET `condition`='" . serialize( $conditions ) . "' WHERE `id` = '" . (int)$_POST['coupon_id'] . "' LIMIT 1";
-			$wpdb->query( $sql );
+			$wpdb->update(
+				    WPSC_TABLE_COUPON_CODES,
+				    array(
+					'condition' => serialize( $conditions )
+				    ),
+				    array(
+					'id' => $_POST['coupon_id']
+				    ),
+				    '%s',
+				    '%d'
+				);
 		}
 	} ?>
 
@@ -180,7 +239,7 @@ function wpsc_display_coupons_page() {
 										<?php
 										//i dont think we need this cu we need to do an ajax request to generate this list 
 										//based on the country chosen probably need the span place holder tho
-										$region_list = $wpdb->get_results( "SELECT `" . WPSC_TABLE_REGION_TAX . "`.* FROM `" . WPSC_TABLE_REGION_TAX . "`, `" . WPSC_TABLE_CURRENCY_LIST . "`  WHERE `" . WPSC_TABLE_CURRENCY_LIST . "`.`isocode` IN('" . esc_attr( get_option( $free_shipping_country ) ) . "') AND `" . WPSC_TABLE_CURRENCY_LIST . "`.`id` = `" . WPSC_TABLE_REGION_TAX . "`.`country_id`", ARRAY_A );
+										$region_list = $wpdb->get_results( $wpdb->prepare( "SELECT `" . WPSC_TABLE_REGION_TAX . "`.* FROM `" . WPSC_TABLE_REGION_TAX . "`, `" . WPSC_TABLE_CURRENCY_LIST . "`  WHERE `" . WPSC_TABLE_CURRENCY_LIST . "`.`isocode` IN(%s) AND `" . WPSC_TABLE_CURRENCY_LIST . "`.`id` = `" . WPSC_TABLE_REGION_TAX . "`.`country_id`", get_option( $free_shipping_country ) ), ARRAY_A );
 										if ( !empty( $region_list ) ) { ?>
 
 											<select name='free_shipping_options[discount_region]'>
