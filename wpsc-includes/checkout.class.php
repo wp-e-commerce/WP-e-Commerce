@@ -366,7 +366,7 @@ function wpsc_checkout_form_field() {
 function wpsc_shipping_region_list( $selected_country, $selected_region, $shippingdetails = false ) {
 	global $wpdb;
 	$output = '';
-	$region_data = $wpdb->get_results( "SELECT `regions`.* FROM `" . WPSC_TABLE_REGION_TAX . "` AS `regions` INNER JOIN `" . WPSC_TABLE_CURRENCY_LIST . "` AS `country` ON `country`.`id` = `regions`.`country_id` WHERE `country`.`isocode` IN('" . $wpdb->escape( $selected_country ) . "')", ARRAY_A );
+	$region_data = $wpdb->get_results( $wpdb->prepare( "SELECT `regions`.* FROM `" . WPSC_TABLE_REGION_TAX . "` AS `regions` INNER JOIN `" . WPSC_TABLE_CURRENCY_LIST . "` AS `country` ON `country`.`id` = `regions`.`country_id` WHERE `country`.`isocode` IN(%s)", $selected_country ), ARRAY_A );
 	$js = '';
 	if ( !$shippingdetails ) {
 		$js = "onchange='submit_change_country();'";
@@ -485,7 +485,7 @@ class wpsc_checkout {
 	 */
 	function wpsc_checkout( $checkout_set = 0 ) {
 		global $wpdb;
-		$this->checkout_items = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `active` = '1'  AND `checkout_set`='" . $checkout_set . "' ORDER BY `checkout_order`;" );
+		$this->checkout_items = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `active` = '1'  AND `checkout_set`= %d ORDER BY `checkout_order`;", $checkout_set ) );
 
 		$category_list = wpsc_cart_item_categories( true );
 		$additional_form_list = array( );
@@ -548,7 +548,7 @@ class wpsc_checkout {
 	 */
 	function get_checkout_options( $id ) {
 		global $wpdb;
-		$sql = 'SELECT `options` FROM `' . WPSC_TABLE_CHECKOUT_FORMS . '` WHERE `id`=' . $id;
+		$sql = $wpdb->prepare( 'SELECT `options` FROM `' . WPSC_TABLE_CHECKOUT_FORMS . '` WHERE `id` = %d', $id );
 		$options = $wpdb->get_var( $sql );
 		$options = unserialize( $options );
 		return $options;
@@ -606,7 +606,7 @@ class wpsc_checkout {
 
 			case "delivery_country":
 				if ( wpsc_uses_shipping ( ) ) {
-					$country_name = $wpdb->get_var( "SELECT `country` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `isocode`='" . $_SESSION['wpsc_delivery_country'] . "' LIMIT 1" );
+					$country_name = $wpdb->get_var( $wpdb->prepare( "SELECT `country` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `isocode`= %s LIMIT 1", $_SESSION['wpsc_delivery_country'] ) );
 					$output = "<input title='" . $this->checkout_item->unique_name . "' type='hidden' id='" . $this->form_element_id() . "' class='shipping_country' name='collected_data[{$this->checkout_item->id}]' value='" . esc_attr( $_SESSION['wpsc_delivery_country'] ) . "' size='4' /><span class='shipping_country_name'>" . $country_name . "</span> ";
 				} else {
 					$checkoutfields = true;
@@ -646,7 +646,7 @@ class wpsc_checkout {
 			default:
 				if ( $this->checkout_item->unique_name == 'shippingstate' ) {
 					if ( wpsc_uses_shipping() && wpsc_has_regions($_SESSION['wpsc_delivery_country']) ) {
-						$region_name = $wpdb->get_var( "SELECT `name` FROM `" . WPSC_TABLE_REGION_TAX . "` WHERE `id`='" . $_SESSION['wpsc_delivery_region'] . "' LIMIT 1" );
+						$region_name = $wpdb->get_var( $wpdb->prepare( "SELECT `name` FROM `" . WPSC_TABLE_REGION_TAX . "` WHERE `id`= %d LIMIT 1", $_SESSION['wpsc_delivery_region'] ) );
 						$output = "<input title='" . $this->checkout_item->unique_name . "' type='hidden' id='" . $this->form_element_id() . "' class='shipping_region' name='collected_data[{$this->checkout_item->id}]' value='" . $_SESSION['wpsc_delivery_region'] . "' size='4' /><span class='shipping_region_name'>" . $region_name . "</span> ";
 					} else {
 						$disabled = '';
@@ -847,22 +847,82 @@ class wpsc_checkout {
 							$shipping_state = $value[1];
 							
 					$value = $value[0];
-					$prepared_query = $wpdb->prepare( "INSERT INTO `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` ( `log_id` , `form_id` , `value` ) VALUES ( %d, %d, %s)", $purchase_id, $form_data->id, $value );
+					$prepared_query = $wpdb->insert(
+								    WPSC_TABLE_SUBMITED_FORM_DATA,
+								    array(
+									'log_id' => $purchase_id,
+									'form_id' => $form_data->id,
+									'value' => $value
+								    ),
+								    array(
+									'%d',
+									'%d',
+									'%s'
+								    )
+								);
 				} else {
 					foreach ( (array)$value as $v ) {
-						$prepared_query = $wpdb->prepare( "INSERT INTO `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` ( `log_id` , `form_id` , `value` ) VALUES ( %d, %d, %s)", $purchase_id, $form_data->id, $v );
+					    $prepared_query = $wpdb->insert(
+								    WPSC_TABLE_SUBMITED_FORM_DATA,
+								    array(
+									'log_id' => $purchase_id,
+									'form_id' => $form_data->id,
+									'value' => $v
+								    ),
+								    array(
+									'%d',
+									'%d',
+									'%s'
+								    )
+								);
 					}
 				}
 			} else {
-				$prepared_query = $wpdb->prepare( "INSERT INTO `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` ( `log_id` , `form_id` , `value` ) VALUES ( %d, %d, %s)", $purchase_id, $form_data->id, $value );
+			    $prepared_query = $wpdb->insert(
+							WPSC_TABLE_SUBMITED_FORM_DATA,
+							array(
+							    'log_id' => $purchase_id,
+							    'form_id' => $form_data->id,
+							    'value' => $value
+							),
+							array(
+							    '%d',
+							    '%d',
+							    '%s'
+							)
+						    );
 			}
-			$wpdb->query( $prepared_query );
 		}
 		
 		// update the states
-		$wpdb->query( $wpdb->prepare( "INSERT INTO `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` ( `log_id` , `form_id` , `value` ) VALUES ( %d, %d, %s)", $purchase_id, $shipping_state_id, $shipping_state ) );
-		$wpdb->query( $wpdb->prepare( "INSERT INTO `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` ( `log_id` , `form_id` , `value` ) VALUES ( %d, %d, %s)", $purchase_id, $billing_state_id, $billing_state ) );
-	}
+		$wpdb->insert(
+			    WPSC_TABLE_SUBMITED_FORM_DATA,
+			    array(
+				'log_id' => $purchase_id,
+				'form_id' => $shipping_state_id,
+				'value' => $shipping_state
+			    ),
+			    array(
+				'%d',
+				'%d',
+				'%s'
+			    )
+			);
+		$wpdb->insert(
+			    WPSC_TABLE_SUBMITED_FORM_DATA,
+			    array(
+				'log_id' => $purchase_id,
+				'form_id' => $billing_state_id,
+				'value' => $billing_state
+			    ),
+			    array(
+				'%d',
+				'%d',
+				'%s'
+			    )
+			);
+		
+	    }
 
 	/**
 	 * Function that checks how many checkout fields are stored in checkout form fields table
