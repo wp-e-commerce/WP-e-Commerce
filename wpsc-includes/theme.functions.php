@@ -1065,6 +1065,11 @@ function wpsc_all_products_on_page(){
 			array_push( $templates, "taxonomy-product_tag-{$tax_term}.php", 'taxonomy-product_tag.php' );
 		}
 
+
+		// Attempt to use the [productspage]'s custom page template as a higher priority than the normal page.php template
+		if ( false !== $productspage_page_template = get_post_meta($products_page_id, '_wp_page_template', true) )
+			array_push( $templates, $productspage_page_template );
+
 		array_push( $templates, 'page.php', 'single.php' );
 
 		if ( is_single() )
