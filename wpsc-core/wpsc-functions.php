@@ -618,9 +618,12 @@ function wpsc_cron() {
 add_action( 'init', 'wpsc_cron' );
 
 function wpsc_load_legacy_theme_engine() {
+	$GLOBALS['wpsc_query_vars'] = array();
+
 	require_once( WPSC_FILE_PATH . '/wpsc-legacy/theme-engine/functions.php' );
 	require_once( WPSC_FILE_PATH . '/wpsc-legacy/theme-engine/product-template.php' );
 	require_once( WPSC_FILE_PATH . '/wpsc-legacy/theme-engine/breadcrumbs.class.php' );
+	require_once( WPSC_FILE_PATH . '/wpsc-legacy/theme-engine/engine.php' );
 	require_once( WPSC_CORE_THEME_PATH . 'functions/wpsc-transaction_results_functions.php' );
 	require_once( WPSC_CORE_THEME_PATH . 'functions/wpsc-user_log_functions.php' );
 	// Set page title array for important WPSC pages

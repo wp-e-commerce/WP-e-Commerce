@@ -233,7 +233,7 @@ if ( isset( $_REQUEST['wpsc_ajax_action'] ) && (($_REQUEST['wpsc_ajax_action'] =
  */
 function wpsc_coupon_price( $currCoupon = '' ) {
 	global $wpsc_cart, $wpsc_coupons;
-	
+
 	if ( isset( $_POST['coupon_num'] ) && $_POST['coupon_num'] != '' ) {
 		$coupon = esc_sql( $_POST['coupon_num'] );
 		$_SESSION['coupon_numbers'] = $coupon;
@@ -357,11 +357,11 @@ if ( isset( $_REQUEST['wpsc_ajax_action'] ) && ($_REQUEST['wpsc_ajax_action'] ==
  */
 function wpsc_update_shipping_price() {
 	global $wpsc_cart;
-        
+
 	$quote_shipping_method = $_POST['key1'];
 	$quote_shipping_option = $_POST['key'];
 	$wpsc_cart->update_shipping( $quote_shipping_method, $quote_shipping_option );
-                
+
 	echo "
 	if(jQuery('.pricedisplay.checkout-shipping .pricedisplay')){
 		jQuery('.pricedisplay.checkout-shipping > .pricedisplay:first').html(\"" . wpsc_cart_shipping() . "\");
@@ -370,10 +370,10 @@ function wpsc_update_shipping_price() {
 		jQuery('.pricedisplay.checkout-shipping').html(\"" . wpsc_cart_shipping() . "\");
 	";
 	echo "jQuery('.pricedisplay.checkout-total').html(\"" . wpsc_cart_total() . "\");\n\r";
-        
+
                 if( $wpec_taxes_controller->wpec_taxes_isenabled() )
                     echo "jQuery('.pricedisplay.checkout-tax').html(\"" . wpsc_cart_tax() . "\");\n\r";
-                
+
 	exit();
 }
 
@@ -404,7 +404,7 @@ if ( isset( $_REQUEST['get_rating_count'] ) && ($_REQUEST['get_rating_count'] ==
  * No parameters, returns nothing
  */
 function wpsc_update_product_price() {
-    
+
 	$from = '';
 	$change_price = true;
 	$product_id = (int) $_POST['product_id'];
@@ -537,13 +537,13 @@ if ( isset( $_REQUEST['wpsc_action'] ) && ($_REQUEST['wpsc_action'] == 'cart_htm
  */
 function wpsc_submit_checkout() {
 	global $wpdb, $wpsc_cart, $user_ID, $nzshpcrt_gateways, $wpsc_shipping_modules, $wpsc_gateways;
-	
+
 	$num_items = 0;
 	$use_shipping = 0;
 	$disregard_shipping = 0;
-	
+
 	do_action( 'wpsc_before_submit_checkout' );
-	
+
 	$_SESSION['wpsc_checkout_misc_error_messages'] = array( );
 	$wpsc_checkout = new wpsc_checkout();
 	$selected_gateways = get_option( 'custom_gateway_options' );
@@ -697,20 +697,6 @@ function wpsc_submit_checkout() {
 // execute on POST and GET
 if ( isset( $_REQUEST['wpsc_action'] ) && ($_REQUEST['wpsc_action'] == 'submit_checkout') ) {
 	add_action( 'init', 'wpsc_submit_checkout' );
-}
-
-function wpsc_product_rss() {
-	global $wp_query, $wpsc_query;
-	list($wp_query, $wpsc_query) = array( $wpsc_query, $wp_query ); // swap the wpsc_query object
-	header( "Content-Type: application/xml; charset=UTF-8" );
-	header( 'Content-Disposition: inline; filename="E-Commerce_Product_List.rss"' );
-	require_once(WPSC_FILE_PATH . '/wpsc-includes/rss_template.php');
-	list($wp_query, $wpsc_query) = array( $wpsc_query, $wp_query ); // swap the wpsc_query object
-	exit();
-}
-
-if ( isset( $_REQUEST['wpsc_action'] ) && ($_REQUEST['wpsc_action'] == "rss") ) {
-	add_action( 'template_redirect', 'wpsc_product_rss', 80 );
 }
 
 function wpsc_gateway_notification() {
@@ -999,8 +985,8 @@ function wpsc_download_file() {
 		$download_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_DOWNLOAD_STATUS . "` WHERE `uniqueid` = '%s' AND `downloads` > '0' AND `active`='1' LIMIT 1", $downloadid ), ARRAY_A );
 
 		if ( is_null( $download_data ) && is_numeric( $downloadid ) )
-		    $download_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_DOWNLOAD_STATUS . "` WHERE `id` = '%d' AND `downloads` > '0' AND `active`='1' AND `uniqueid` IS NULL LIMIT 1", $downloadid ), ARRAY_A );
-		
+		    $download_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_DOWNLOAD_STATUS . "` WHERE `id` = '%s' AND `downloads` > '0' AND `active`='1' AND `uniqueid` IS NULL LIMIT 1", $downloadid ), ARRAY_A );
+
 		if ( (get_option( 'wpsc_ip_lock_downloads' ) == 1) && ($_SERVER['REMOTE_ADDR'] != null) ) {
 			$ip_number = $_SERVER['REMOTE_ADDR'];
 			if ( $download_data['ip_number'] == '' ) {
@@ -1033,7 +1019,7 @@ function wpsc_download_file() {
 			$wpdb->update( WPSC_TABLE_DOWNLOAD_STATUS, array(
 			'downloads' => $download_count
 			), array( 'id' => $download_data['id'] ) );
-			
+
 			$cart_contents = $wpdb->get_results( $wpdb->prepare( "SELECT `" . WPSC_TABLE_CART_CONTENTS . "`.*, $wpdb->posts.`guid` FROM `" . WPSC_TABLE_CART_CONTENTS . "` LEFT JOIN $wpdb->posts ON `" . WPSC_TABLE_CART_CONTENTS . "`.`prodid`= $wpdb->posts.`post_parent` WHERE $wpdb->posts.`post_type` = 'wpsc-product-file' AND `purchaseid` = %d", $download_data['purchid'] ), ARRAY_A );
 			$dl = 0;
 

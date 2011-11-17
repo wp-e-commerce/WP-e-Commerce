@@ -302,10 +302,9 @@ function wpsc_core_setup_cart() {
  * Starting it in wp_query results in intractable infinite loops in 3.0
  */
 function wpsc_core_setup_globals() {
-	global $wpsc_query_vars, $wpsc_cart, $wpec_ash;
+	global $wpsc_cart, $wpec_ash;
 
 	// Setup some globals
-	$wpsc_query_vars = array();
 	$selected_theme  = get_option( 'wpsc_selected_theme' );
 
 	// Pick selected theme or fallback to default
