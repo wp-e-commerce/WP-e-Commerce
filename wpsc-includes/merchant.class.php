@@ -112,9 +112,9 @@ class wpsc_merchant {
 		// Get purchase data, regardless of being fed the ID or the sessionid
 		if ( $this->purchase_id > 0 ) {
 			$purchase_id = & $this->purchase_id;
-			$purchase_logs = $wpdb->get_row( "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id` = {$purchase_id} LIMIT 1", ARRAY_A );
+			$purchase_logs = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id` = %d LIMIT 1", $purchase_id ), ARRAY_A );
 		} else if ( $this->session_id != null ) {
-			$purchase_logs = $wpdb->get_row( "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `sessionid` = {$this->session_id} LIMIT 1", ARRAY_A );
+			$purchase_logs = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `sessionid` = %s LIMIT 1", $this->session_id ), ARRAY_A );
 			$this->purchase_id = $purchase_logs['id'];
 			$purchase_id = & $this->purchase_id;
 		}
@@ -304,9 +304,19 @@ class wpsc_merchant {
 	 */
 	function set_purchase_processed_by_purchid( $status=1 ) {
 		global $wpdb;
-
-		$wpdb->query( "UPDATE `" . WPSC_TABLE_PURCHASE_LOGS . "` SET `processed` = '" . absint( $status ) . "' WHERE `id` = " . absint( $this->purchase_id ) . " LIMIT 1" );
-	}
+		
+		$wpdb->update(
+			    WPSC_TABLE_PURCHASE_LOGS,
+			    array(
+				'processed' => $status
+			    ),
+			    array(
+				'id' => $this->purchase_id
+			    ),
+			    '%d',
+			    '%d'
+			);
+		}
 
 	/**
 	 * set_purchase_processed_by_sessionid, this helps change the purchase log status
@@ -315,7 +325,17 @@ class wpsc_merchant {
 	function set_purchase_processed_by_sessionid( $status=1 ) {
 		global $wpdb;
 
-		$wpdb->query( "UPDATE `" . WPSC_TABLE_PURCHASE_LOGS . "` SET `processed` = '" . absint( $status ) . "' WHERE `sessionid` = " . absint( $this->session_id ) . " LIMIT 1" );
+		$wpdb->update(
+			    WPSC_TABLE_PURCHASE_LOGS,
+			    array(
+				'processed' => $status
+			    ),
+			    array(
+				'sessionid' => $this->session_id
+			    ),
+			    '%d',
+			    '%d'
+			);
 	}
 
 	/**
@@ -324,8 +344,21 @@ class wpsc_merchant {
 	function set_transaction_details( $transaction_id, $status = 1 ) {
 		global $wpdb;
 
-		$transaction_id = $wpdb->escape( $transaction_id );
-		$wpdb->query( "UPDATE `" . WPSC_TABLE_PURCHASE_LOGS . "` SET `processed` = '" . absint( $status ) . "', `transactid` ='{$transaction_id}'  WHERE `id` = " . absint( $this->purchase_id ) . " LIMIT 1" );
+		$wpdb->update(
+			    WPSC_TABLE_PURCHASE_LOGS,
+			    array(
+				'processed' => $status,
+				'transactid' => $transaction_id
+			    ),
+			    array(
+				'id' => $this->purchase_id
+			    ),
+			    array(
+				'%d',
+				'%s'
+			    ),
+			    '%d'
+			);
 	}
 
 	/**
