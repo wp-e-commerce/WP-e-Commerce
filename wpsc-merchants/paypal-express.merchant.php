@@ -331,7 +331,7 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 	function get_local_currency_code() {
 		if ( empty( $this->local_currency_code ) ) {
 			global $wpdb;
-			$this->local_currency_code = $wpdb->get_var("SELECT `code` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id`='".get_option('currency_type')."' LIMIT 1");
+			$this->local_currency_code = $wpdb->get_var( $wpdb->prepare( "SELECT `code` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id`= %d LIMIT 1", get_option('currency_type') ) );
 		}
 
 		return $this->local_currency_code;
@@ -524,7 +524,7 @@ function form_paypal_express() {
 			if (!isset($wpsc_gateways['wpsc_merchant_paypal_express']['supported_currencies']['currency_list']))
 				$wpsc_gateways['wpsc_merchant_paypal_express']['supported_currencies']['currency_list'] = array();
 
-			$paypal_currency_list = $wpsc_gateways['wpsc_merchant_paypal_express']['supported_currencies']['currency_list'];
+			$paypal_currency_list = array_map( 'esc_sql', $wpsc_gateways['wpsc_merchant_paypal_express']['supported_currencies']['currency_list'] );
 
 			$currency_list = $wpdb->get_results("SELECT DISTINCT `code`, `currency` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `code` IN ('".implode("','",$paypal_currency_list)."')", ARRAY_A);
 			foreach($currency_list as $currency_item) {
@@ -550,7 +550,7 @@ function form_paypal_express() {
 
 function wpsc_get_paypal_currency_code() {
 	global $wpdb, $wpsc_gateways;
-	$paypal_currency_code = $wpdb->get_var("SELECT `code` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id`='".get_option('currency_type')."' LIMIT 1");
+	$paypal_currency_code = $wpdb->get_var( $wpdb->prepare( "SELECT `code` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id`= %d LIMIT 1", get_option( 'currency_type' ) ) );
 	if ( ! in_array( $paypal_currency_code, $wpsc_gateways['wpsc_merchant_paypal_express']['supported_currencies']['currency_list'] ) )
 		$paypal_currency_code = get_option( 'paypal_curcode', 'USD' );
 
@@ -662,7 +662,7 @@ function paypal_processingfunctions(){
 		}
 
 		// Horrible code that I had to write to hot fix the issue with missing item detail in email receipts. arrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrgh!!!!! @#@$%@#%@##$#$
-		$purchase_log = $wpdb->get_row( "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `sessionid` = {$sessionid}", ARRAY_A );
+		$purchase_log = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `sessionid` = %s", $sessionid ), ARRAY_A );
 		$cart_data = $original_cart_data = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid` = {$purchase_log['id']}", ARRAY_A );
 		$i = 0;
 		$item_total = 0;
@@ -723,17 +723,42 @@ function paypal_processingfunctions(){
 		if($ack!="SUCCESS"){
 			$location = get_option('transact_url')."&act=error";
 		}else{
-			$transaction_id = $wpdb->escape($resArray['PAYMENTINFO_0_TRANSACTIONID']);
+			$transaction_id = $resArray['PAYMENTINFO_0_TRANSACTIONID'];
 			switch($resArray['PAYMENTINFO_0_PAYMENTSTATUS']) {
 				case 'Processed': // I think this is mostly equivalent to Completed
 				case 'Completed':
-				$wpdb->query("UPDATE `".WPSC_TABLE_PURCHASE_LOGS."` SET `processed` = '3' WHERE `sessionid` = ".$sessionid." LIMIT 1");
-				transaction_results($sessionid, false, $transaction_id);
+				$wpdb->update(
+					    WPSC_TABLE_PURCHASE_LOGS,
+					    array(
+						'processed' => 3,
+					    ),
+					    array(
+						'sessionid' => $sessionid
+					    ),
+					    '%d',
+					    '%s'
+					);
+				transaction_results( $sessionid, false );
 				break;
 
 				case 'Pending': // need to wait for "Completed" before processing
-				$wpdb->query("UPDATE `".WPSC_TABLE_PURCHASE_LOGS."` SET `transactid` = '".$transaction_id."',`processed` = '2', `date` = '".time()."'  WHERE `sessionid` = ".$sessionid." LIMIT 1");
-				break;
+				$wpdb->update(
+					    WPSC_TABLE_PURCHASE_LOGS,
+					    array(
+						'processed' => 2,
+						'date' => time(),
+						'transactid' => $transaction_id
+					    ),
+					    array(
+						'sessionid' => $sessionid
+					    ),
+					    array(
+						'%d',
+						'%d',
+						'%s',
+					    ),
+					    '%s'
+					);				break;
 			}
 			$location = add_query_arg('sessionid', $sessionid, get_option('transact_url'));
 
