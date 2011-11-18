@@ -1,6 +1,6 @@
 <?php
 function image_processing($image_input, $image_output, $width = null, $height = null,$imagefield='') {
-global $wpdb;
+
 	/*
 	* this handles all resizing of images that results in a file being saved, if no width and height is supplied, then it just copies the image
 	*/
@@ -24,7 +24,7 @@ global $wpdb;
 	
 			default:
 			move_uploaded_file($image_input, ($imagedir.basename($_FILES[$imagefield]['name'])));
-			$image = $wpdb->escape(basename($_FILES[$imagefield]['name']));
+			$image = esc_attr(basename($_FILES[$imagefield]['name']));
 			return true;
 			exit();
 			break;
@@ -128,7 +128,7 @@ global $wpdb;
 		}
 	} else {
 		copy($image_input, $image_output);
-		$image = $wpdb->escape(basename($_FILES[$imagefield]['name']));
+		$image = esc_attr(basename($_FILES[$imagefield]['name']));
 		return $image;
 	}
 	return false;
