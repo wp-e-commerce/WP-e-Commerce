@@ -3,7 +3,6 @@
 class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab
 {
 	public function display() {
-		global $wpdb;
 		?>
 		<?php _e( '<p>You can import your products from a comma delimited text file.</p><p>An example of a csv import file would look like this: </p><p>Description, Additional Description, Product Name, Price, SKU, weight, weight unit, stock quantity, is limited quantity</p>', 'wpsc' ); ?>
 
@@ -102,7 +101,6 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab
 				}
 			}
 			if ( isset( $_POST['csv_action'] ) && ('import' == $_POST['csv_action']) ) {
-				global $wpdb;
 				$cvs_data = $_SESSION['cvs_data'];
 				$column_data = $_POST['column'];
 				$value_data = $_POST['value_name'];
