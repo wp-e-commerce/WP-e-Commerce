@@ -75,7 +75,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 	function get_local_currency_code() {
 		if ( empty( $this->local_currency_code ) ) {
 			global $wpdb;
-			$this->local_currency_code = $wpdb->get_var("SELECT `code` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id`='".get_option('currency_type')."' LIMIT 1");
+			$this->local_currency_code = $wpdb->get_var( $wpdb->prepare( "SELECT `code` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id` = %d  LIMIT 1", get_option( 'currency_type' ) ) );
 		}
 		
 		return $this->local_currency_code;
@@ -621,7 +621,7 @@ function form_paypal_multiple() {
 
 
 
-	$store_currency_data = $wpdb->get_row("SELECT `code`, `currency` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id` IN ('".absint(get_option('currency_type'))."')", ARRAY_A);
+	$store_currency_data = $wpdb->get_row( $wpdb->prepare( "SELECT `code`, `currency` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id` IN (%d)", get_option( 'currency_type' ) ), ARRAY_A);
 	$current_currency = get_option('paypal_curcode');
 	if(($current_currency == '') && in_array($store_currency_data['code'], $wpsc_gateways['wpsc_merchant_paypal_standard']['supported_currencies']['currency_list'])) {
 		update_option('paypal_curcode', $store_currency_data['code']);
@@ -645,7 +645,7 @@ function form_paypal_multiple() {
 		$output .= "          <td>\n";
 		$output .= "            <select name='paypal_curcode'>\n";
 
-		$paypal_currency_list = $wpsc_gateways['wpsc_merchant_paypal_standard']['supported_currencies']['currency_list'];
+		$paypal_currency_list = array_map( 'esc_sql', $wpsc_gateways['wpsc_merchant_paypal_standard']['supported_currencies']['currency_list'] );
 
 		$currency_list = $wpdb->get_results("SELECT DISTINCT `code`, `currency` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `code` IN ('".implode("','",$paypal_currency_list)."')", ARRAY_A);
 
