@@ -45,11 +45,11 @@ function wpsc_currency_display( $price_in, $args = null ) {
 		$currency_type = get_option( 'currency_type' );
 		
 		if ( ! $wpsc_currency_data = wp_cache_get( $currency_type, 'wpsc_currency_id' ) ) {
-			$wpsc_currency_data = $wpdb->get_row( "SELECT `symbol`, `symbol_html`, `code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id` = '" . $currency_type . "' LIMIT 1", ARRAY_A );
+			$wpsc_currency_data = $wpdb->get_row( $wpdb->prepare( "SELECT `symbol`, `symbol_html`, `code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id` = %d LIMIT 1", $currency_type ), ARRAY_A );
 			wp_cache_set( $currency_type, $wpsc_currency_data, 'wpsc_currency_id' );
 		}
 	} elseif ( ! $wpsc_currency_data = wp_cache_get( $query['isocode'], 'wpsc_currency_isocode' ) ) {
-		$wpsc_currency_data = $wpdb->get_row( "SELECT `symbol`, `symbol_html`, `code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `isocode` = '" . $query['isocode'] . "' LIMIT 1", ARRAY_A );
+		$wpsc_currency_data = $wpdb->get_row( $wpdb->prepare( "SELECT `symbol`, `symbol_html`, `code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `isocode` = %s LIMIT 1", $query['isocode'] ), ARRAY_A );
 		wp_cache_set( $query['isocode'], $wpsc_currency_data, 'wpsc_currency_isocode' );
 	}
 
@@ -116,7 +116,7 @@ function wpsc_decrement_claimed_stock($purchase_log_id) {
 	global $wpdb;
 
 	//processed
-	$all_claimed_stock = $wpdb->get_results($wpdb->prepare("SELECT `cs`.`product_id`, `cs`.`stock_claimed`, `pl`.`id`, `pl`.`processed` FROM `" . WPSC_TABLE_CLAIMED_STOCK . "` `cs` JOIN `" . WPSC_TABLE_PURCHASE_LOGS . "` `pl` ON `cs`.`cart_id` = `pl`.`id` WHERE `cs`.`cart_id` = '%s'", $purchase_log_id));
+	$all_claimed_stock = $wpdb->get_results( $wpdb->prepare( "SELECT `cs`.`product_id`, `cs`.`stock_claimed`, `pl`.`id`, `pl`.`processed` FROM `" . WPSC_TABLE_CLAIMED_STOCK . "` `cs` JOIN `" . WPSC_TABLE_PURCHASE_LOGS . "` `pl` ON `cs`.`cart_id` = `pl`.`id` WHERE `cs`.`cart_id` = '%s'", $purchase_log_id ) );
 	
 	if( !empty( $all_claimed_stock ) ){
 		switch($all_claimed_stock[0]->processed){
@@ -131,11 +131,11 @@ function wpsc_decrement_claimed_stock($purchase_log_id) {
 					$product_meta = get_product_meta($product->ID,'product_metadata',true);
 					if( $remaining_stock < 1 &&  $product_meta["unpublish_when_none_left"] == 1){
 						wp_mail(get_option('admin_email'), sprintf(__('%s is out of stock', 'wpsc'), $product->post_title), sprintf(__('Remaining stock of %s is 0. Product was unpublished.', 'wpsc'), $product->post_title) );
-						$wpdb->query("UPDATE `".$wpdb->posts."` SET `post_status` = 'draft' WHERE `ID` = '{$product->ID}'");
+						$wpdb->update( $wpdb->posts, array( 'post_status' => 'draft' ), array( 'ID' => $product->ID ), '%s', '%d' );
 					}
 				}
 			case 6:
-				$wpdb->query($wpdb->prepare("DELETE FROM `".WPSC_TABLE_CLAIMED_STOCK."` WHERE `cart_id` IN ('%s')", $purchase_log_id));
+				$wpdb->query( $wpdb->prepare( "DELETE FROM `".WPSC_TABLE_CLAIMED_STOCK."` WHERE `cart_id` IN (%s)", $purchase_log_id ) );
 				break;
 		}
 	}
@@ -149,8 +149,8 @@ function wpsc_decrement_claimed_stock($purchase_log_id) {
 function wpsc_get_currency_symbol(){
 	global $wpdb;
 	$currency_type = get_option('currency_type');
-	$wpsc_currency_data = $wpdb->get_var("SELECT `symbol` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id`='".$currency_type."' LIMIT 1") ;
-	return  $wpsc_currency_data;
+	$wpsc_currency_data = $wpdb->get_var( $wpdb->prepare( "SELECT `symbol` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id` = %d LIMIT 1", $currency_type ) );
+	return $wpsc_currency_data;
 }  
   
 /**
@@ -160,12 +160,13 @@ function wpsc_get_currency_symbol(){
   
 function admin_display_total_price($start_timestamp = '', $end_timestamp = '') {
   global $wpdb;
-  if(($start_timestamp != '') && ($end_timestamp != '')) {
-    $sql = "SELECT SUM(`totalprice`) FROM `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `processed` IN (2,3,4) AND `date` BETWEEN '$start_timestamp' AND '$end_timestamp'";
-	} else {
-		$sql = "SELECT SUM(`totalprice`) FROM `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `processed` IN (2,3,4) AND `date` != ''";
-	}
-  $total = $wpdb->get_var($sql);
+  
+   if( ( $start_timestamp != '' ) && ( $end_timestamp != '' ) )
+	$sql = $wpdb->prepare( "SELECT SUM(`totalprice`) FROM `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `processed` IN (2,3,4) AND `date` BETWEEN %s AND %s", $start_timestamp, $end_timestamp );
+    else
+	$sql = "SELECT SUM(`totalprice`) FROM `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `processed` IN (2,3,4) AND `date` != ''";
+  
+    $total = $wpdb->get_var($sql);
   return $total;
 }
 
