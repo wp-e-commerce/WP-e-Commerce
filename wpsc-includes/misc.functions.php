@@ -35,7 +35,7 @@ function wpsc_find_purchlog_status_name( $purchlog_status ) {
  */
 function wpsc_get_state_by_id( $id, $return_value ) {
 	global $wpdb;
-	$sql = $wpdb->prepare( "SELECT %s FROM `" . WPSC_TABLE_REGION_TAX . "` WHERE `id`= %d", $return_value, $id );
+	$sql = $wpdb->prepare( "SELECT " . esc_sql( $return_value ) . " FROM `" . WPSC_TABLE_REGION_TAX . "` WHERE `id`= %d", $id );
 	$value = $wpdb->get_var( $sql );
 	return $value;
 }
@@ -231,7 +231,7 @@ function wpsc_populate_also_bought_list() {
 	$insert_statement_parts = array( );
 	foreach ( $new_also_bought_data as $new_also_bought_id => $new_also_bought_row ) {
 		$new_other_ids = array_keys( $new_also_bought_row );
-		$also_bought_data = $wpdb->get_results( $wpdb->prepare( "SELECT `id`, `associated_product`, `quantity` FROM `" . WPSC_TABLE_ALSO_BOUGHT . "` WHERE `selected_product` IN(%d) AND `associated_product` IN('" . implode( "','", absint( $new_other_ids ) ) . "')", $new_also_bought_id ), ARRAY_A );
+		$also_bought_data = $wpdb->get_results( $wpdb->prepare( "SELECT `id`, `associated_product`, `quantity` FROM `" . WPSC_TABLE_ALSO_BOUGHT . "` WHERE `selected_product` IN(%d) AND `associated_product` IN(" . implode( "','", absint( $new_other_ids ) ) . ")", $new_also_bought_id ), ARRAY_A );
 		$altered_new_also_bought_row = $new_also_bought_row;
 
 		foreach ( (array)$also_bought_data as $also_bought_row ) {
