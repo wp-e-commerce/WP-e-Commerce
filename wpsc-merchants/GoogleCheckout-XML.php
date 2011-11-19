@@ -46,7 +46,7 @@ function gateway_google($fromcheckout = false){
 		$update = $wpdb->update(
 			    WPSC_TABLE_PURCHASE_LOGS,
 			    array(
-				'total' => $total,
+				'totalprice' => $total,
 				'statusno' => 0,
 				'user_ID' => $user_ID,
 				'date' => time(),
@@ -64,18 +64,18 @@ function gateway_google($fromcheckout = false){
 				'sessionid' => $_SESSION['wpsc_sessionid']
 			    ),
 			    array(
-				'%s',
+				'%f',
 				'%d',
 				'%d',
 				'%s',
 				'%s',
 				'%s',
 				'%s',
+				'%f',
 				'%s',
 				'%s',
 				'%s',
-				'%s',
-				'%s',
+				'%f',
 				'%s',
 			    ),
 			    '%s'
@@ -90,7 +90,7 @@ function gateway_google($fromcheckout = false){
 			$wpdb->insert(
 			    WPSC_TABLE_PURCHASE_LOGS,
 			    array(
-				'total' => $total,
+				'totalprice' => $total,
 				'statusno' => 0,
 				'sessionind' => $_SESSION['wpsc_sessionid'],
 				'user_ID' => $user_ID,
@@ -106,19 +106,19 @@ function gateway_google($fromcheckout = false){
 				'discount_data' => $wpsc_cart->coupons_name
 			    ),
 			    array(
-				'%s',
+				'%f',
 				'%d',
 				'%s',
 				'%d',
 				'%s',
 				'%s',
 				'%s',
+				'%f',
 				'%s',
 				'%s',
 				'%s',
 				'%s',
-				'%s',
-				'%s',
+				'%f',
 				'%s',
 			    ),
 			    '%s'
@@ -512,15 +512,15 @@ function nzsc_googleResponse() {
 					'affiliate_id' => $affiliate_id
 				    ),
 				    array(
+					'%f',
 					'%s',
 					'%s',
 					'%s',
 					'%s',
-					'%s',
-					'%s',
+					'%f',
 					'%s',
 					'%d',
-					'%s',
+					'%f',
 					'%s',
 					'%s',
 					'%s',
