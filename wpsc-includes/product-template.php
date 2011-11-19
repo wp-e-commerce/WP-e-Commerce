@@ -1517,7 +1517,7 @@ function wpsc_product_rater() {
 
 function wpsc_product_existing_rating( $product_id ) {
 	global $wpdb;
-	$get_average = $wpdb->get_results( "SELECT AVG(`rated`) AS `average`, COUNT(*) AS `count` FROM `" . WPSC_TABLE_PRODUCT_RATING . "` WHERE `productid`='" . $product_id . "'", ARRAY_A );
+	$get_average = $wpdb->get_results( $wpdb->prepare( "SELECT AVG(`rated`) AS `average`, COUNT(*) AS `count` FROM `" . WPSC_TABLE_PRODUCT_RATING . "` WHERE `productid`= %d ", $product_id ), ARRAY_A );
 	$average = floor( $get_average[0]['average'] );
 	$count = $get_average[0]['count'];
 	$output  = "  <span class='votetext'>";
@@ -1573,7 +1573,7 @@ function wpsc_currency_sign() {
 	_deprecated_function( __FUNCTION__, '3.8', 'the updated ' . __FUNCTION__ . '' );
 	global $wpdb;
 	$currency_sign_location = get_option( 'currency_sign_location' );
-	$currency_type = get_option( 'currency_type' );
+	$currency_type = esc_sql( get_option( 'currency_type' ) );
 	$currency_symbol = $wpdb->get_var( "SELECT `symbol_html` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id`='" . $currency_type . "' LIMIT 1" );
 	return $currency_symbol;
 }
@@ -1750,7 +1750,7 @@ function gold_cart_display_gallery(){
 	return function_exists('gold_shpcrt_display_gallery');
 }
 
-function wpsc_you_save($args = null){
+function wpsc_you_save( $args = null ){
 
 	$defaults = array(
 		'product_id' => false,
@@ -1764,11 +1764,11 @@ function wpsc_you_save($args = null){
 	global $wpdb;
 
 	if ( ! $product_id )
-		if(function_exists('wpsc_the_product_id')){
+		if( function_exists( 'wpsc_the_product_id' ) ){
 			//select the variation ID with lowest price
 			$product_id = $wpdb->get_var('SELECT `posts`.`id` FROM ' . $wpdb->posts . ' `posts` JOIN ' . $wpdb->postmeta . ' `postmeta` ON `posts`.`id` = `postmeta`.`post_id` WHERE `posts`.`post_parent` = ' . wpsc_the_product_id() . ' AND `posts`.`post_type` = "wpsc-product" AND `posts`.`post_status` = "inherit" AND `postmeta`.`meta_key`="_wpsc_price" ORDER BY (`postmeta`.`meta_value`)+0 ASC LIMIT 1');
-			if(!$product_id)
-				$product_id=wpsc_the_product_id();
+			if( ! $product_id )
+				$product_id = wpsc_the_product_id();
 		}
 
 	if ( ! $product_id )
