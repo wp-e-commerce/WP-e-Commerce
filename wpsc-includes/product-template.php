@@ -1518,7 +1518,7 @@ function wpsc_product_rater() {
 
 function wpsc_product_existing_rating( $product_id ) {
 	global $wpdb;
-	$get_average = $wpdb->get_results( "SELECT AVG(`rated`) AS `average`, COUNT(*) AS `count` FROM `" . WPSC_TABLE_PRODUCT_RATING . "` WHERE `productid`='" . $product_id . "'", ARRAY_A );
+	$get_average = $wpdb->get_results( $wpdb->prepare( "SELECT AVG(`rated`) AS `average`, COUNT(*) AS `count` FROM `" . WPSC_TABLE_PRODUCT_RATING . "` WHERE `productid`= %d ", $product_id ), ARRAY_A );
 	$average = floor( $get_average[0]['average'] );
 	$count = $get_average[0]['count'];
 	$output  = "  <span class='votetext'>";
@@ -1574,7 +1574,7 @@ function wpsc_currency_sign() {
 	_deprecated_function( __FUNCTION__, '3.8', 'the updated ' . __FUNCTION__ . '' );
 	global $wpdb;
 	$currency_sign_location = get_option( 'currency_sign_location' );
-	$currency_type = get_option( 'currency_type' );
+	$currency_type = esc_sql( get_option( 'currency_type' ) );
 	$currency_symbol = $wpdb->get_var( "SELECT `symbol_html` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id`='" . $currency_type . "' LIMIT 1" );
 	return $currency_symbol;
 }
