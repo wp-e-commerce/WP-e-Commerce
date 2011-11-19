@@ -342,10 +342,10 @@ class WPSC_Purchase_Log_Page
 
             $ids = array_map( 'intval', $_REQUEST['post'] );
             $in = implode( ', ', $ids );
-            $wpdb->query( $wpdb->prepare( "DELETE FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE id IN (%s)", $in ) );
-            $wpdb->query( $wpdb->prepare( "DELETE FROM " . WPSC_TABLE_CLAIMED_STOCK . " WHERE cart_id IN (%s)", $in ) );
-            $wpdb->query( $wpdb->prepare( "DELETE FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid IN (%s)", $in ) );
-            $wpdb->query( $wpdb->prepare( "DELETE FROM " . WPSC_TABLE_SUBMITED_FORM_DATA . " WHERE log_id IN (%s)", $in ) );
+            $wpdb->query( "DELETE FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE id IN ($in)" );
+            $wpdb->query( "DELETE FROM " . WPSC_TABLE_CLAIMED_STOCK . " WHERE cart_id IN ($in)" );
+            $wpdb->query( "DELETE FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid IN ($in)" );
+            $wpdb->query( "DELETE FROM " . WPSC_TABLE_SUBMITED_FORM_DATA . " WHERE log_id IN ($in)" );
 
             $sendback = add_query_arg( array(
                'paged'   => $_REQUEST['last_paged'],
