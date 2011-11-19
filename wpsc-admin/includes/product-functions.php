@@ -616,10 +616,13 @@ function wpsc_determine_variation_price( $variation_id, $term_ids = false ) {
  * @return void
  */
 function wpsc_edit_product_variations($product_id, $post_data) {
-	global $wpdb, $user_ID;
-	$parent = $wpdb->get_var('SELECT post_parent FROM ' . $wpdb->posts . ' WHERE ID = '.$product_id);
-	if(!empty($parent))
+	global $user_ID;
+	
+	$parent = get_post_field( 'post_parent', $product_id );
+	
+	if( ! empty( $parent ) )
 		return;
+	
 	$variations = array();
 	$product_children = array();
 	if (!isset($post_data['edit_var_val']))
@@ -788,9 +791,9 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 
 function wpsc_update_alt_product_currency($product_id, $newCurrency, $newPrice){
 	global $wpdb;
-//	exit($newCurrency.' '.$newPrice);
+	
 	$old_curr = get_product_meta($product_id, 'currency',true);
-	$sql = "SELECT `isocode` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id`=".$newCurrency;
+	$sql = $wpdb->prepare( "SELECT `isocode` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id`= %s", $newCurrency );
 	$isocode = $wpdb->get_var($sql);
 
 	$newCurrency = 'currency';
@@ -1136,7 +1139,7 @@ function wpsc_variation_combinator($variation_sets) {
 
 function wpsc_variations_stock_remaining($product_id){
 	global $wpdb;
-	return $wpdb->get_var('
+	return $wpdb->get_var( $wpdb->prepare( '
 		SELECT
 			sum(`pm`.`meta_value`)
 		FROM
@@ -1148,9 +1151,9 @@ function wpsc_variations_stock_remaining($product_id){
 		WHERE
 			`p`.`post_type`= "wpsc-product"
 			AND
-			`p`.`post_parent` = ' . $product_id . '
+			`p`.`post_parent` = %d
 			AND
 			`pm`.`meta_key` = "_wpsc_stock"
-	');
+	', $product_id ) );
 }
 ?>
