@@ -31,28 +31,28 @@ function wpsc_display_coupons_page() {
 			$insert = $wpdb->insert(
 				    WPSC_TABLE_COUPON_CODES,
 				    array(
-					'coupon_code' => $coupon_code,
-					'value' => $discount,
-					'is-percentage' => $discount_type, 
-					'use-once' => $use_once,
-					'is-used' => 0,
-					'active' => $is_active,
-					'every_product' => $every_product,
-					'start' => $start_date,
-					'expiry' => $end_date,
-					'condition' => serialize( $new_rule )
+						'coupon_code' => $coupon_code,
+						'value' => $discount,
+						'is-percentage' => $discount_type, 
+						'use-once' => $use_once,
+						'is-used' => 0,
+						'active' => $is_active,
+						'every_product' => $every_product,
+						'start' => $start_date,
+						'expiry' => $end_date,
+						'condition' => serialize( $new_rule )
 				    ),
 				    array(
-					'%s',
-					'%f',
-					'%d',
-					'%d',
-					'%d',
-					'%d',
-					'%d',
-					'%s',
-					'%s',
-					'%s',
+						'%s',
+						'%f',
+						'%d',
+						'%s',
+						'%s',
+						'%s',
+						'%s',
+						'%s',
+						'%s',
+						'%s'
 				    )
 				);
 			if ( $insert )
