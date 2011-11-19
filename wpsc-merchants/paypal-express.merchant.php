@@ -754,7 +754,7 @@ function paypal_processingfunctions(){
 					    ),
 					    array(
 						'%d',
-						'%d',
+						'%s',
 						'%s',
 					    ),
 					    '%s'
