@@ -35,7 +35,7 @@ function wpsc_find_purchlog_status_name( $purchlog_status ) {
  */
 function wpsc_get_state_by_id( $id, $return_value ) {
 	global $wpdb;
-	$sql = $wpdb->prepare( "SELECT %s FROM `" . WPSC_TABLE_REGION_TAX . "` WHERE `id`= %d", $return_value, $id );
+	$sql = $wpdb->prepare( "SELECT " . esc_sql( $return_value ) . " FROM `" . WPSC_TABLE_REGION_TAX . "` WHERE `id`= %d", $id );
 	$value = $wpdb->get_var( $sql );
 	return $value;
 }
