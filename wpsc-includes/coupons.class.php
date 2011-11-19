@@ -8,10 +8,10 @@ function wpsc_uses_coupons() {
 	global $wpsc_coupons;
 	
 	if( empty( $wpsc_coupons ) )
-	    $wpsc_coupons = new wpsc_coupons();
+		$wpsc_coupons = new wpsc_coupons();
 
 	if( is_object( $wpsc_coupons ) )
-	    return $wpsc_coupons->uses_coupons();
+		return $wpsc_coupons->uses_coupons();
 
 	return false;
 }
