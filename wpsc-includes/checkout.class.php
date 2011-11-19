@@ -485,7 +485,7 @@ class wpsc_checkout {
 	 */
 	function wpsc_checkout( $checkout_set = 0 ) {
 		global $wpdb;
-		$this->checkout_items = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `active` = '1'  AND `checkout_set`= %d ORDER BY `checkout_order`;", $checkout_set ) );
+		$this->checkout_items = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `active` = '1'  AND `checkout_set`= %s ORDER BY `checkout_order`;", $checkout_set ) );
 
 		$category_list = wpsc_cart_item_categories( true );
 		$additional_form_list = array( );
