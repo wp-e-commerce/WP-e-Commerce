@@ -35,7 +35,7 @@ function shipwire_build_xml($log_id) {
 		}
 	}
 	
-	$user_infos = $wpdb->get_results("SELECT * FROM ".WPSC_TABLE_SUBMITED_FORM_DATA." WHERE log_id='".$log_id."'", ARRAY_A);
+	$user_infos = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM ".WPSC_TABLE_SUBMITED_FORM_DATA." WHERE log_id = %d", $log_id ), ARRAY_A);
 	foreach ($user_infos as $user_info) {
 		if ($user_info['form_id'] == $address_key) {
 			$address = $user_info['value'];
@@ -57,12 +57,12 @@ function shipwire_build_xml($log_id) {
 		}
 	}
 	if (($first_name_key == '') || ($last_name_key == '')) {
-		$log_info = $wpdb->get_results("SELECT * FROM ".WPSC_TABLE_PURCHASE_LOGS." WHERE id='".$log_id."'");
+		$log_info = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM ".WPSC_TABLE_PURCHASE_LOGS." WHERE id= %d", $log_id ) );
 		$first_name = $log_info[0]['firstname'];
 		$last_name = $log_info[0]['lastname'];
 	}
 	$full_name = $first_name." ".$last_name;
-	$products = $wpdb->get_results("SELECT * FROM ".WPSC_TABLE_CART_CONTENTS." WHERE purchaseid='".$log_id."'",ARRAY_A);
+	$products = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM ".WPSC_TABLE_CART_CONTENTS." WHERE purchaseid = %d", $log_id ),ARRAY_A);
 	$xml = "<?xml version='1.0' encoding='utf-8'?>";
 	$xml .= "<OrderList>";
 	$xml .= "<EmailAddress>$email</EmailAddress>";
