@@ -177,7 +177,7 @@ class WPSC_Purchase_Log
 	 * @param string $col Optional. Defaults to 'id'.
 	 */
 	public function __construct( $value = false, $col = 'id' ) {
-		if ( $value === false )
+		if ( false === $value )
 			return;
 
 		global $wpdb;

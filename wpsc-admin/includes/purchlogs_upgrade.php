@@ -17,8 +17,18 @@
 if(isset($_POST)){
 	foreach($_POST as $key=>$value){
 		if($value != '-1'){
-			$sql = "UPDATE  `".WPSC_TABLE_CHECKOUT_FORMS."` SET `unique_name`='".$value."' WHERE id=".$key;
-			$complete = $wpdb->query($sql);
+			$complete = $wpdb->prepare(
+					WPSC_TABLE_CHECKOUT_FORMS,
+					array(
+						'unique_name' => $value
+					,
+					array(
+						'id' => $key
+					),
+					'%s',
+					'%d'
+				)
+			);
 		}
 		$numChaged++;
 		$numQueries ++;
