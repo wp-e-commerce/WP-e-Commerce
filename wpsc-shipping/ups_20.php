@@ -776,18 +776,18 @@ class ash_ups {
         $args['DropoffType'] = $wpsc_ups_settings['DropoffType'];
         $args['packaging'] = $wpsc_ups_settings['48_container'];
         // Preferred Currency to display
-        $currency_data = $wpdb->get_row("SELECT `code`
+        $currency_data = $wpdb->get_row( $wpdb->prepare( "SELECT `code`
                                          FROM `".WPSC_TABLE_CURRENCY_LIST."`
-                                         WHERE `isocode`='".get_option("currency_type")."'
-                                         LIMIT 1", ARRAY_A) ;
+                                         WHERE `isocode`= %s
+                                         LIMIT 1", get_option( 'currency_type' ) ), ARRAY_A ) ;
         if ($currency_data){
             $args['currency'] = $currency_data['code'];
         }else{
             $args['currency'] = "USD";
         }
         // Shipping billing / account address
-        $origin_region_data = $wpdb->get_results("SELECT `".WPSC_TABLE_REGION_TAX."`.* FROM `".WPSC_TABLE_REGION_TAX."`
-                                WHERE `".WPSC_TABLE_REGION_TAX."`.`id` = '".get_option('base_region')."' ",ARRAY_A);
+        $origin_region_data = $wpdb->get_results( $wpdb->prepare( "SELECT `".WPSC_TABLE_REGION_TAX."`.* FROM `".WPSC_TABLE_REGION_TAX."`
+                                WHERE `".WPSC_TABLE_REGION_TAX."`.`id` = %d ", get_option( 'base_region' ) ),ARRAY_A);
         $args['shipr_state']= (is_array($origin_region_data)) ? $origin_region_data[0]['code'] : "";
         $args['shipr_city'] = get_option('base_city');
         $args['shipr_ccode'] = get_option('base_country');
