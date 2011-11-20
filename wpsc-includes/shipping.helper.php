@@ -180,9 +180,9 @@ class ASHTools{
         if (!isset($wpdb)){
             return $short_country;
         }
-        $full_name = $wpdb->get_var("SELECT country
+		$full_name = $wpdb->get_var( $wpdb->prepare( "SELECT country
         							 FROM ".WPSC_TABLE_CURRENCY_LIST."
-    							 	 WHERE isocode='".$short_country."'");
+    							 	 WHERE isocode = %s", $short_country ) );
         return $full_name;
     }
     
@@ -193,15 +193,18 @@ class ASHTools{
      * @param int $state_code
      * @return string|int will be int if wordpress database & wpec are not available
      */
-    function get_state($state_code){
+    function get_state( $state_code ){
         global $wpdb;
-        if (!defined("WPSC_TABLE_REGION_TAX")){
-            return $state_code;
-        }
-        $query ="SELECT `".WPSC_TABLE_REGION_TAX."`.* FROM `".WPSC_TABLE_REGION_TAX."`
-                                WHERE `".WPSC_TABLE_REGION_TAX."`.`id` = '".$_POST['region']."'";
-        $dest_region_data = $wpdb->get_results($query, ARRAY_A);
-        return (is_array($dest_region_data)) ? $dest_region_data[0]['code'] : "";
+        
+		if ( ! defined ( "WPSC_TABLE_REGION_TAX") )
+			return $state_code;
+        
+        $sql = $wpdb->prepare( "SELECT `".WPSC_TABLE_REGION_TAX."`.* FROM `".WPSC_TABLE_REGION_TAX."`
+                                WHERE `".WPSC_TABLE_REGION_TAX."`.`id` = %d", $_POST['region'] );
+        
+		$dest_region_data = $wpdb->get_results( $sql, ARRAY_A );
+        
+		return ( is_array( $dest_region_data ) ) ? $dest_region_data[0]['code'] : "";
     }
     
     /**
