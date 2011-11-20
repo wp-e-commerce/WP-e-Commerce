@@ -561,14 +561,14 @@ function wpsc_save_category_set($category_id, $tt_id) {
 				} else {
 					image_processing( $_FILES['image']['tmp_name'], ( WPSC_CATEGORY_DIR.$_FILES['image']['name'] ) );
 				}	
-				$image = $wpdb->escape( $_FILES['image']['name'] );
+				$image = esc_sql( $_FILES['image']['name'] );
 			} else {
 				$new_image_path = ( WPSC_CATEGORY_DIR.basename($_FILES['image']['name'] ) );
 				move_uploaded_file( $_FILES['image']['tmp_name'], $new_image_path );
 				$stat = stat( dirname( $new_image_path ) );
 				$perms = $stat['mode'] & 0000666;
 				@ chmod( $new_image_path, $perms );	
-				$image = $wpdb->escape( $_FILES['image']['name'] );
+				$image = esc_sql( $_FILES['image']['name'] );
 			}
 		} else {
 			$image = '';
@@ -604,13 +604,13 @@ function wpsc_save_category_set($category_id, $tt_id) {
 		wpsc_update_categorymeta($category_id, 'order', '0');
 		
 		if ( isset( $_POST['display_type'] ) )
-			wpsc_update_categorymeta($category_id, 'display_type',$wpdb->escape(stripslashes($_POST['display_type'])));
+			wpsc_update_categorymeta($category_id, 'display_type',esc_sql(stripslashes($_POST['display_type'])));
 			
 		if ( isset( $_POST['image_height'] ) )
-			wpsc_update_categorymeta($category_id, 'image_height', $wpdb->escape(stripslashes($_POST['image_height'])));
+			wpsc_update_categorymeta($category_id, 'image_height', esc_sql(stripslashes($_POST['image_height'])));
 			
 		if ( isset( $_POST['image_width'] ) )
-			wpsc_update_categorymeta($category_id, 'image_width', $wpdb->escape(stripslashes($_POST['image_width'])));
+			wpsc_update_categorymeta($category_id, 'image_width', esc_sql(stripslashes($_POST['image_width'])));
 		
 		
 		if ( ! empty( $_POST['use_additional_form_set'] ) ) {
