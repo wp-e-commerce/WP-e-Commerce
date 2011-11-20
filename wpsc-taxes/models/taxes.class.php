@@ -278,16 +278,16 @@ class wpec_taxes {
 				}// foreach
 			}// if
 			//formulate query
-			$query = 'SELECT ' . implode( ',', $columns ) . ' FROM ' . WPSC_TABLE_CURRENCY_LIST;
+			$query = 'SELECT ' . implode( ',', esc_sql( $columns ) ) . ' FROM ' . WPSC_TABLE_CURRENCY_LIST;
 			if ( isset( $where_query ) ) {
-				$query .= ' WHERE ' . implode( ' AND ', $where_query );
+				$query .= ' WHERE ' . implode( ' AND ', esc_sql( $where_query ) );
 			}// if
 			//if order_by is set, add to query
 			if ( $order_by ) {
 				if ( !is_array( $order_by ) ) {
 					$order_by = array( $order_by );
 				}
-				$query .= ' ORDER BY ' . implode( ',', $order_by );
+				$query .= ' ORDER BY ' . implode( ',', esc_sql( $order_by ) );
 			}// if
 
 			$returnable = (count( $columns ) > 1) ? $wpdb->get_results( $query, ARRAY_A ) : $wpdb->get_var( $query );
@@ -315,7 +315,7 @@ class wpec_taxes {
 		else
 		{
 			global $wpdb;
-			$query = "SELECT {$column} FROM " . WPSC_TABLE_REGION_TAX . " WHERE code='{$region_code}'";
+			$query = $wpdb->prepare( "SELECT " . esc_sql( $column ) . " FROM " . WPSC_TABLE_REGION_TAX . " WHERE code = %s", $region_code );
 			$returnable = $wpdb->get_var( $query );
 		}// if
 
@@ -358,9 +358,9 @@ class wpec_taxes {
 	function wpec_taxes_get_region_code_by_id( $id ) {
 		//database connection
 		global $wpdb;
-		if(!empty($id)){
+		if( ! empty( $id ) ){
 			//get the region code
-			$query = 'SELECT code AS region_code FROM ' . WPSC_TABLE_REGION_TAX . " WHERE id=$id";
+			$query = $wpdb->prepare( 'SELECT code AS region_code FROM ' . WPSC_TABLE_REGION_TAX . " WHERE id = %d", $id );
 			return $wpdb->get_var( $query );
 		}
 		return false;
