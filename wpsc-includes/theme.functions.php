@@ -604,7 +604,7 @@ function wpsc_enqueue_user_script_and_css() {
 		function wpsc_legacy_add_mp3_preview( $product_id, &$product_data ) {
 			global $wpdb;
 			if ( function_exists( 'listen_button' ) ) {
-				$file_data = $wpdb->get_row( "SELECT * FROM `" . WPSC_TABLE_PRODUCT_FILES . "` WHERE `id`='" . $product_data['file'] . "' LIMIT 1", ARRAY_A );
+				$file_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_PRODUCT_FILES . "` WHERE `id` = %d LIMIT 1", $product_data['file'] ), ARRAY_A );
 				if ( $file_data != null ) {
 					echo listen_button( $file_data['idhash'], $file_data['id'] );
 				}
@@ -1168,7 +1168,7 @@ function wpsc_show_categories( $content ) {
 add_shortcode('showcategories', 'wpsc_show_categories');
 function wpec_get_the_post_id_by_shortcode($shortcode){
 	global $wpdb;
-	$sql = "SELECT `ID` FROM `{$wpdb->posts}` WHERE `post_type` IN('page','post') AND `post_content` LIKE '%$shortcode%' LIMIT 1";
+	$sql = "SELECT `ID` FROM `{$wpdb->posts}` WHERE `post_type` IN('page','post') AND `post_content` LIKE '%" . like_escape( $shortcode ) . "%' LIMIT 1";
 	$page_id = $wpdb->get_var($sql);
 	return apply_filters( 'wpec_get_the_post_id_by_shortcode', $page_id );
 }
