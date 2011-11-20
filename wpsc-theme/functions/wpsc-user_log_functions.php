@@ -329,7 +329,7 @@ function wpsc_has_downloads() {
 		} else {
 			$links[] = site_url() . "/?downloadid=" . $product['uniqueid'];
  		}
-		$sql = "SELECT * FROM $wpdb->posts WHERE id = " . (int)$product['fileid'] . "";
+		$sql = $wpdb->prepare( "SELECT * FROM $wpdb->posts WHERE id = %d", $product['fileid'] );
 		$file = $wpdb->get_results( $sql, ARRAY_A );
 		$files[] = $file[0];
 	}
@@ -419,7 +419,7 @@ function wpsc_user_details() {
 			$billing_country = $purchase['billing_country'];
 			$shipping_country = $purchase['shipping_country'];
 		} elseif ( !empty($country)) {
-			$country_sql = "SELECT * FROM `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` WHERE `log_id` = '" . $purchase['id'] . "' AND `form_id` = '" . get_option( 'country_form_field' ) . "' LIMIT 1";
+			$country_sql = $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` WHERE `log_id` = %d AND `form_id` = %d LIMIT 1", $purchase['id'] ,get_option( 'country_form_field' ) );
 			$country_data = $wpdb->get_results( $country_sql, ARRAY_A );
 			$billing_country = $country_data[0]['value'];
 			$shipping_country = $country_data[0]['value'];
@@ -494,7 +494,7 @@ function wpsc_user_details() {
 		//end of written by allen
 		//cart contents display starts here;
 		echo "  <strong class='form_group'>" . __( 'Order Details', 'wpsc' ) . ":</strong>\n\r";
-		$cartsql = "SELECT * FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid`=" . $purchase['id'] . "";
+		$cartsql = $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid`= %d", $purchase['id'] );
 		$cart_log = $wpdb->get_results( $cartsql, ARRAY_A );
 		$j = 0;
 		// /*
@@ -619,7 +619,7 @@ function wpsc_user_details() {
 			echo "<table class='customer_details'>";
 				
 				
-			$usersql = "SELECT `".WPSC_TABLE_SUBMITED_FORM_DATA."`.value, `".WPSC_TABLE_CHECKOUT_FORMS."`.* FROM `".WPSC_TABLE_CHECKOUT_FORMS."` LEFT JOIN `".WPSC_TABLE_SUBMITED_FORM_DATA."` ON `".WPSC_TABLE_CHECKOUT_FORMS."`.id = `".WPSC_TABLE_SUBMITED_FORM_DATA."`.`form_id` WHERE `".WPSC_TABLE_SUBMITED_FORM_DATA."`.log_id=".$purchase['id']." OR `".WPSC_TABLE_CHECKOUT_FORMS."`.type = 'heading' ORDER BY `".WPSC_TABLE_CHECKOUT_FORMS."`.`checkout_order`" ;
+			$usersql = $wpdb->prepare( "SELECT `".WPSC_TABLE_SUBMITED_FORM_DATA."`.value, `".WPSC_TABLE_CHECKOUT_FORMS."`.* FROM `".WPSC_TABLE_CHECKOUT_FORMS."` LEFT JOIN `".WPSC_TABLE_SUBMITED_FORM_DATA."` ON `".WPSC_TABLE_CHECKOUT_FORMS."`.id = `".WPSC_TABLE_SUBMITED_FORM_DATA."`.`form_id` WHERE `".WPSC_TABLE_SUBMITED_FORM_DATA."`.log_id = %d OR `".WPSC_TABLE_CHECKOUT_FORMS."`.type = 'heading' ORDER BY `".WPSC_TABLE_CHECKOUT_FORMS."`.`checkout_order`", $purchase['id'] );
 			$formfields = $wpdb->get_results($usersql, ARRAY_A);
 			if ( !empty($formfields) ) {
 				
