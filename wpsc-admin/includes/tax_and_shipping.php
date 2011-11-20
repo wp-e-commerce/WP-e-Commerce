@@ -1,15 +1,7 @@
 <?php
 global $wpdb;
 $changes_made = false;
-  
-if(preg_match("/[a-zA-Z]{2,4}/",$_GET['isocode']))
-  {
-  $country_isocode = $_GET['isocode'];
-  }
-  else
-    {
-    $country_isocode = get_option('base_country');
-    }
+$country_isocode = preg_match( "/[a-zA-Z]{2,4}/", $_GET['isocode'] ) ? $_GET['isocode'] : get_option( 'base_country' );
 $base_region = get_option('base_region');
 ?>
 <div class="wrap">
@@ -22,7 +14,7 @@ $base_region = get_option('base_region');
   ?>
   <form action='' method='post' name='regional_tax' class='wpsc_form_track'>
   <?php
-  $country_data = $wpdb->get_row("SELECT * FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `isocode` IN('".$country_isocode."') LIMIT 1",ARRAY_A);
+  $country_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `isocode` IN(%s) LIMIT 1", $country_isocode ), ARRAY_A );
   if(($country_data['has_regions'] == 1))
     {
     $region_data = $wpdb->get_results("SELECT `".WPSC_TABLE_REGION_TAX."`.* FROM `".WPSC_TABLE_REGION_TAX."` WHERE `".WPSC_TABLE_REGION_TAX."`.`country_id` IN('".$country_data['id']."') ",ARRAY_A) ;
