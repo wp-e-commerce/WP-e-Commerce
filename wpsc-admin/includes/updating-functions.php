@@ -257,9 +257,9 @@ function wpsc_convert_categories($new_parent_category, $group_id, $old_parent_ca
 	global $wpdb, $user_ID;
 	
 	if($old_parent_category > 0) {
-		$categorisation = $wpdb->get_results("SELECT * FROM `".WPSC_TABLE_PRODUCT_CATEGORIES."` WHERE `active` IN ('1') AND `group_id` IN ('{$group_id}') AND `category_parent` IN ('{$old_parent_category}')");
+		$categorisation = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_PRODUCT_CATEGORIES."` WHERE `active` IN ('1') AND `group_id` IN (%d) AND `category_parent` IN (%d)", $group_id, $old_parent_category ) );
 	} else {
-		$categorisation = $wpdb->get_results("SELECT * FROM `".WPSC_TABLE_PRODUCT_CATEGORIES."` WHERE `active` IN ('1') AND `group_id` IN ('{$group_id}') AND `category_parent` IN (0)");
+		$categorisation = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_PRODUCT_CATEGORIES."` WHERE `active` IN ('1') AND `group_id` IN (%d) AND `category_parent` IN (0)", $group_id ) );
 	}
 	$wpsc_update = WPSC_Update::get_instance();
 	
@@ -865,13 +865,13 @@ function old_get_product_meta($product_id, $key, $single = false) {
 	$product_id = (int)$product_id;
 	$meta_values = false;
 	if($product_id > 0) {
-		$meta_id = $wpdb->get_var("SELECT `id` FROM `".WPSC_TABLE_PRODUCTMETA."` WHERE `meta_key` IN('$key') AND `product_id` = '$product_id' LIMIT 1");
+		$meta_id = $wpdb->get_var( $wpdb->prepare( "SELECT `id` FROM `".WPSC_TABLE_PRODUCTMETA."` WHERE `meta_key` IN(%s) AND `product_id` = %d LIMIT 1", $key, $product_id ) );
 		//exit($meta_id);
 		if(is_numeric($meta_id) && ($meta_id > 0)) {      
 			if($single != false) {
 				$meta_values = maybe_unserialize($wpdb->get_var("SELECT `meta_value` FROM `".WPSC_TABLE_PRODUCTMETA."` WHERE `meta_key` IN('$key') AND `product_id` = '$product_id' LIMIT 1"));
 			} else {
-				$meta_values = $wpdb->get_col("SELECT `meta_value` FROM `".WPSC_TABLE_PRODUCTMETA."` WHERE `meta_key` IN('$key') AND `product_id` = '$product_id'");
+				$meta_values = $wpdb->get_col( $wpdb->prepare( "SELECT `meta_value` FROM `".WPSC_TABLE_PRODUCTMETA."` WHERE `meta_key` IN(%s) AND `product_id` = %d", $key, $product_id ) );
 				$meta_values = array_map('maybe_unserialize', $meta_values);
 			}
 		}
