@@ -159,11 +159,11 @@ class wpsc_variations {
 }
 function wpsc_get_child_object_in_select_terms($parent_id, $terms, $taxonomy){
 	global $wpdb;
-	$sql = "SELECT tr.`object_id` 
+	$sql = $wpdb->prepare( "SELECT tr.`object_id` 
 			FROM `".$wpdb->term_relationships."` AS tr
 			LEFT JOIN `".$wpdb->posts."` AS posts
 			ON posts.`ID` = tr.`object_id`				
-			WHERE tr.`term_taxonomy_id` IN (".implode(',',$terms).") and posts.`post_parent`=".$parent_id;
+			WHERE tr.`term_taxonomy_id` IN (".implode(',', esc_sql( $terms ) ).") and posts.`post_parent` = %d", $parent_id );
 	$products = $wpdb->get_col($sql);
 	return $products;
 	
