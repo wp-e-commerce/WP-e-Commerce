@@ -156,6 +156,22 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 
 == Changelog ==
+= 3.8.7.2 =
+* New: Support for g:availability to Google Merchant Centre feed. Props bbaskets & longercat
+* Fix: Admin product page sorting by column was not working.
+* Fix: Call to undefined function wpsc_clear_stock_claims().
+* Fix: Checkbox and Radio buttons have unexpected issues in checkout.
+* Fix: Checkout field options' values are mutilated before getting inserted into the database.
+* Fix: PayPal standard IPN fails if data used to validate the IPN POST contains ' or ".
+* Fix: Price incorrectly updated when multiple products with variations exist on the same page.
+* Fix: Security vulnerability.
+* Fix: ShareThis integration does not properl respect HTTPS connections.
+* Fix: The Terms and conditions checkbox on the checkout page should have a required field asterisk, just like all other required checkout fields do.
+* Fix: Wrong login URL for [userlog] page.
+* Fix: Zero shipping price doesn't work in flatrate.php.
+* Fix: invalid HTML on checkout page for default theme.
+* Fix: wpsc_coupons::uses_coupons() needs optimization.
+
 = 3.8.7.1 =
 * Fix: Fancy notifications not being displayed on single product page.
 * Fix: Sale and normal prices are switched around.
