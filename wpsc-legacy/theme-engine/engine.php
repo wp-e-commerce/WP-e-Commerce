@@ -215,25 +215,8 @@ function wpsc_theme_admin_notices() {
 		}
 
 	}
-
-	// Flag config inconsistencies
-	if ( 1 == get_option( 'require_register' ) && 1 != get_option( 'users_can_register' )) {
-		add_action( 'admin_notices', 'wpsc_turn_on_wp_register' );
-	}
-
 }
 add_action('admin_init','wpsc_theme_admin_notices');
-
-function wpsc_turn_on_wp_register() {?>
-
-	<div id="message" class="updated fade">
-		<p><?php printf( __( '<strong>Store Settings</strong>: You have set \'users must register before checkout\', for this to work you need to check \'Anyone can register\' in your WordPress <a href="%1s">General Settings</a>.', 'wpsc' ), admin_url( 'options-general.php' ) ) ?></p>
-	</div>
-
-<?php
-
-
-}
 
 if ( isset( $_REQUEST['wpsc_notices'] ) && $_REQUEST['wpsc_notices'] == 'theme_ignore' ) {
 	update_option( 'wpsc_ignore_theme', true );
@@ -564,10 +547,10 @@ function wpsc_enqueue_user_script_and_css() {
 		$siteurl = get_option( 'siteurl' );
 
 		$remote_protocol = is_ssl() ? 'https://' : 'http://';
-		
+
 		if( get_option( 'wpsc_share_this' ) == 1 )
 		    wp_enqueue_script( 'sharethis', $remote_protocol . 'w.sharethis.com/button/buttons.js', array(), false, true );
-		
+
 		wp_enqueue_script( 'jQuery' );
 		wp_enqueue_script( 'wp-e-commerce',               WPSC_CORE_JS_URL	. '/wp-e-commerce.js',                 array( 'jquery' ), $version_identifier );
 		wp_enqueue_script( 'infieldlabel',               WPSC_CORE_JS_URL	. '/jquery.infieldlabel.min.js',                 array( 'jquery' ), $version_identifier );
