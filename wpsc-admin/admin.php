@@ -22,6 +22,10 @@ require_once( WPSC_FILE_PATH . '/wpsc-admin/ajax-and-init.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/display-options-settings.page.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/display-sales-logs.php' );
 
+function wpsc_print_admin_scripts() {
+	wp_enqueue_script( 'wp-e-commerce-dynamic',       get_bloginfo( 'url' )   . "/index.php?wpsc_user_dynamic_js=true" );
+}
+
 function wpsc_turn_on_wp_register() {?>
 
 	<div id="message" class="updated fade">
@@ -892,10 +896,6 @@ function wpsc_fav_action( $actions ) {
 	return $actions;
 }
 add_filter( 'favorite_actions', 'wpsc_fav_action' );
-
-function wpsc_print_admin_scripts() {
-	wp_enqueue_script( 'wp-e-commerce-dynamic',       get_bloginfo( 'url' )   . "/index.php?wpsc_user_dynamic_js=true" );
-}
 
 /**
  * wpsc_update_permalinks update the product pages permalinks when WordPress permalinks are changed

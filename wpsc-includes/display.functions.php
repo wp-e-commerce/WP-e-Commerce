@@ -211,74 +211,6 @@ function wpsc_refresh_page_urls( $content ) {
 
 add_filter( 'mod_rewrite_rules', 'wpsc_refresh_page_urls' );
 
-
-/**
- * wpsc_obtain_the_title function, for replaacing the page title with the category or product
- * @return string - the new page title
- */
-function wpsc_obtain_the_title() {
-	global $wpdb, $wp_query, $wpsc_title_data;
-	$output = null;
-	$category_id = null;
-	if( !isset( $wp_query->query_vars['wpsc_product_category']) &&  !isset( $wp_query->query_vars['wpsc-product']))
-		return;
-
-	if ( !isset( $wp_query->query_vars['wpsc_product_category'] ) && isset($wp_query->query_vars['wpsc-product']) )
-		$wp_query->query_vars['wpsc_product_category'] = 0;
-
-
-	if ( isset( $wp_query->query_vars['taxonomy'] ) && 'wpsc_product_category' ==  $wp_query->query_vars['taxonomy'] || isset($wp_query->query_vars['wpsc_product_category']))
-		$category_id = wpsc_get_the_category_id($wp_query->query_vars['wpsc_product_category'],'slug');
-
-	if ( $category_id > 0 ) {
-
-		if ( isset( $wpsc_title_data['category'][$category_id] ) ) {
-			$output = $wpsc_title_data['category'][$category_id];
-		} else {
-			$term = get_term($category_id, 'wpsc_product_category');
-			$output = $term->name;
-			$wpsc_title_data['category'][$category_id] = $output;
-		}
-	}
-
-	if ( !isset( $_GET['wpsc-product'] ) )
-		$_GET['wpsc-product'] = 0;
-
-	if ( !isset( $wp_query->query_vars['wpsc-product'] ) )
-		$wp_query->query_vars['wpsc-product'] = '';
-
-	if ( isset( $wp_query->query_vars['wpsc-product'] ) || is_string( $_GET['wpsc-product'] ) ) {
-		$product_name = $wp_query->query_vars['wpsc-product'];
-		if ( isset( $wpsc_title_data['product'][$product_name] ) ) {
-			$product_list = array( );
-			$full_product_name = $wpsc_title_data['product'][$product_name];
-		} else if ( $product_name != '' ) {
-			$product_id = $wp_query->post->ID;
-			$full_product_name = $wpdb->get_var( $wpdb->prepare( "SELECT `post_title` FROM `$wpdb->posts` WHERE `ID`= %d LIMIT 1", $product_id ) );
-			$wpsc_title_data['product'][$product_name] = $full_product_name;
-		} else {
-			if(isset($_REQUEST['product_id'])){
-				$product_id = absint( $_REQUEST['product_id'] );
-				$product_name = $wpdb->get_var( $wpdb->prepare( "SELECT `post_title` FROM `$wpdb->posts` WHERE `ID`= %d LIMIT 1", $product_id ) );
-				$full_product_name = $wpdb->get_var( $wpdb->prepare( "SELECT `post_title` FROM `$wpdb->posts` WHERE `ID`= %d LIMIT 1", $product_id ) );
-				$wpsc_title_data['product'][$product_name] = $full_product_name;
-			}else{
-				//This has to exist, otherwise we would have bailed earlier.
-				$category = $wp_query->query_vars['wpsc_product_category'];
-				$cat_term = get_term_by('slug',$wp_query->query_vars['wpsc_product_category'], 'wpsc_product_category');
-				$full_product_name = $cat_term->name;
-			}
-		}
-		$output = $full_product_name;
-	}
-
-	if ( isset( $full_product_name ) && ($full_product_name != null) )
-		$output = htmlentities( stripslashes( $full_product_name ), ENT_QUOTES, 'UTF-8' );
-	$seperator = ' | ';
-	$seperator = apply_filters('wpsc_the_wp_title_seperator' , $seperator);
-	return $output.$seperator;
-}
-
 function wpsc_obtain_the_description() {
 	global $wpdb, $wp_query, $wpsc_title_data;
 	$output = null;
@@ -300,28 +232,3 @@ function wpsc_obtain_the_description() {
 	}
 	return $output;
 }
-
-function wpsc_replace_wp_title( $input ) {
-	global $wpdb, $wp_query;
-	$output = wpsc_obtain_the_title();
-	if ( $output != null ) {
-		return $output;
-	}
-	return $input;
-}
-
-function wpsc_replace_bloginfo_title( $input, $show ) {
-	global $wpdb, $wp_query;
-	if ( $show == 'description' ) {
-		$output = wpsc_obtain_the_title();
-		if ( $output != null ) {
-			return $output;
-		}
-	}
-	return $input;
-}
-
-if ( get_option( 'wpsc_replace_page_title' ) == 1 ) {
-	add_filter( 'wp_title', 'wpsc_replace_wp_title', 10, 2 );
-}
-?>

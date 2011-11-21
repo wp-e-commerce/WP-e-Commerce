@@ -76,21 +76,6 @@ function wpsc_shopping_cart( $input = null, $override_state = null ) {
 	return $input;
 }
 
-function wpsc_shopping_basket_internals( $cart, $quantity_limit = false, $no_title=false ) {
-	global $wpdb;
-
-	$display_state = '';
-
-	if ( ( ( ( isset( $_SESSION['slider_state'] ) && $_SESSION['slider_state'] == 0) ) || ( wpsc_cart_item_count() < 1 ) ) && ( get_option( 'show_sliding_cart' ) == 1 ) )
-		$display_state = "style='display: none;'";
-
-	echo "    <div id='sliding_cart' class='shopping-cart-wrapper' $display_state>";
-
-	include_once( wpsc_get_template_file_path( 'wpsc-cart_widget.php' ) );
-
-	echo "    </div>";
-}
-
 function wpsc_country_region_list( $form_id = null, $ajax = false, $selected_country = null, $selected_region = null, $supplied_form_id = null, $checkoutfields = false ) {
 	global $wpdb;
 
@@ -120,8 +105,8 @@ function wpsc_country_region_list( $form_id = null, $ajax = false, $selected_cou
 
 	$country_data = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_CURRENCY_LIST . "` ORDER BY `country` ASC", ARRAY_A );
 	$output .= "<div id='$html_form_id'>\n\r";
-	
-	$region_list    = $wpdb->get_results( $wpdb->prepare( "SELECT `" . WPSC_TABLE_REGION_TAX . "`.* FROM `" . WPSC_TABLE_REGION_TAX . "`, `" . WPSC_TABLE_CURRENCY_LIST . "`  WHERE `" . WPSC_TABLE_CURRENCY_LIST . "`.`isocode` IN(%s) AND `" . WPSC_TABLE_CURRENCY_LIST . "`.`id` = `" . WPSC_TABLE_REGION_TAX . "`.`country_id`", $selected_country ), ARRAY_A );
+
+	$region_list    = $wpdb->get_results( "SELECT `" . WPSC_TABLE_REGION_TAX . "`.* FROM `" . WPSC_TABLE_REGION_TAX . "`, `" . WPSC_TABLE_CURRENCY_LIST . "`  WHERE `" . WPSC_TABLE_CURRENCY_LIST . "`.`isocode` IN('" . $selected_country . "') AND `" . WPSC_TABLE_CURRENCY_LIST . "`.`id` = `" . WPSC_TABLE_REGION_TAX . "`.`country_id`", ARRAY_A );
 	$sql            = "SELECT `" . WPSC_TABLE_CHECKOUT_FORMS . "`.`id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `unique_name` = 'shippingstate' ";
 	$region_form_id = $wpdb->get_var( $sql );
 

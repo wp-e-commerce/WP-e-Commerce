@@ -40,7 +40,6 @@ require_once( WPSC_CORE_JS_PATH . '/tinymce3/tinymce.php' );
 
 require_once( WPSC_FILE_PATH . '/wpsc-includes/currency_converter.inc.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/currency.helpers.php' );
-require_once( WPSC_FILE_PATH . '/wpsc-includes/shopping_cart_functions.php' );
 
 // Themes
 require_once( WPSC_CORE_THEME_PATH . 'functions/wpsc-transaction_results_functions.php' );
@@ -51,13 +50,11 @@ require_once( WPSC_FILE_PATH . '/wpsc-shipping/library/shipwire_functions.php' )
 
 // Widgets
 include_once( WPSC_FILE_PATH . '/wpsc-widgets/product_tag_widget.php' );
-include_once( WPSC_FILE_PATH . '/wpsc-widgets/shopping_cart_widget.php' );
 include_once( WPSC_FILE_PATH . '/wpsc-widgets/donations_widget.php' );
 include_once( WPSC_FILE_PATH . '/wpsc-widgets/specials_widget.php' );
 include_once( WPSC_FILE_PATH . '/wpsc-widgets/latest_product_widget.php' );
 include_once( WPSC_FILE_PATH . '/wpsc-widgets/price_range_widget.php' );
 include_once( WPSC_FILE_PATH . '/wpsc-widgets/admin_menu_widget.php' );
-include_once( WPSC_FILE_PATH . '/wpsc-widgets/category_widget.php' );
 
 // Gregs ASH Shipping
 require_once( WPSC_FILE_PATH . '/wpsc-includes/shipping.helper.php' );
