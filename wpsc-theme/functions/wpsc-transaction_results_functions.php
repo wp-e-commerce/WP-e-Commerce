@@ -70,6 +70,20 @@ function wpsc_transaction_theme() {
 					$wpdb->update( WPSC_TABLE_PURCHASE_LOGS, array('processed' => $processed_id),array('sessionid'=>$sessionid), array('%f') );
 				}		
 			break;
+			case 'wpsc_merchant_paymentexpress' : 
+               // Payment Express sends back there own session id, which is temporarily stored in the Auth field
+               // so just swapping that over here
+               $query = "SELECT `sessionid` FROM  `" .WPSC_TABLE_PURCHASE_LOGS. "` WHERE  `authcode` ='" . $sessionid . "'";
+               $result = $wpdb->get_var($query);
+               if($result != null){
+                   // just in case they are using an older version old gold cart (pre 2.9.5)
+                   $sessionid = $result;
+                   $dont_show_transaction_results = true;
+               }  
+           break;
+           case 'eway_hosted':
+               $sessionid = decrypt_eway_uk_response();
+           break;
 		}
 	}
 	
