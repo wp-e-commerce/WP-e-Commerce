@@ -932,3 +932,66 @@ function wpsc_user_dynamic_js() {
 }
 if ( isset( $_GET['wpsc_user_dynamic_js'] ) && ($_GET['wpsc_user_dynamic_js'] == 'true') )
 	add_action( "init", 'wpsc_user_dynamic_js' );
+
+/**
+ * If there are published pages using legacy shortcodes to display shop content,
+ * that means the site is still using legacy theme engine.
+ *
+ * This function checks whether legacy theme engine is still being used or not.
+ *
+ * The number of pages using legacy shortcodes will be cached inside an option
+ * called 'wpsc_legacy_theme_engine_page_count'. When any page is updated / trashed / created,
+ * the option will be wiped.
+ *
+ * @return boolean
+ * @since 4.0
+ */
+function wpsc_is_legacy_theme_engine_active() {
+	global $wpdb;
+
+	$count = get_option( 'wpsc_legacy_theme_engine_page_count' );
+
+	if ( $count === false ) {
+		$sql = "
+			SELECT COUNT(*)
+			FROM {$wpdb->posts}
+			WHERE
+				post_type = 'page'
+				AND post_status = 'publish'
+				AND (
+					post_content LIKE '[productspage]'
+					OR post_content LIKE '[shoppingcart]'
+					OR post_content LIKE '[transactionresults]'
+					OR post_content LIKE '[userlog]'
+				)
+			";
+
+		$count = $wpdb->get_var( $sql );
+		update_option( 'wpsc_legacy_theme_engine_page_count', $count );
+	}
+
+	return ( $count > 0 );
+}
+
+/**
+ * Delete the cached option for detecting legacy theme.
+ *
+ * This will be triggered when a page is trashed / updated / created
+ *
+ * There is no need to trigger this function when a page is
+ * permanently deleted though, because it has to be trashed
+ * first anyways.
+ *
+ * @param int    $id   ID of the post
+ * @param object $post post object
+ * @since 4.0
+ */
+function wpsc_update_legacy_theme_status( $id, $post ) {
+	if ( $post->post_type == 'page' )
+		delete_option( 'wpsc_legacy_theme_engine_page_count' );
+}
+add_action( 'save_post', 'wpsc_update_legacy_theme_status', 10, 2 );
+
+function wpsc_load_theme_engine() {
+	var_dump( 'yo!' );
+}
