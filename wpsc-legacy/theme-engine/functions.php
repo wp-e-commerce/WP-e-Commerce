@@ -789,3 +789,11 @@ function wpsc_product_rss() {
 if ( isset( $_REQUEST['wpsc_action'] ) && ($_REQUEST['wpsc_action'] == "rss") ) {
 	add_action( 'template_redirect', 'wpsc_product_rss', 80 );
 }
+
+function wpsc_legacy_theme_load_css() {
+	$version_identifier = WPSC_VERSION . "." . WPSC_MINOR_VERSION;
+	wp_enqueue_style( 'wpsc-theme-css', wpsc_get_template_file_url( 'wpsc-' . get_option( 'wpsc_selected_theme' ) . '.css' ), false, $version_identifier, 'all' );
+	wp_enqueue_style( 'wpsc-theme-css-compatibility', WPSC_CORE_THEME_URL . 'compatibility.css',                                    false, $version_identifier, 'all' );
+}
+
+add_action( 'init', 'wpsc_legacy_theme_load_css' );
