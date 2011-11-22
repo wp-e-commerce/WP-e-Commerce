@@ -50,8 +50,6 @@ require_once( WPSC_FILE_PATH . '/wpsc-shipping/library/shipwire_functions.php' )
 
 // Widgets
 include_once( WPSC_FILE_PATH . '/wpsc-widgets/product_tag_widget.php' );
-include_once( WPSC_FILE_PATH . '/wpsc-widgets/specials_widget.php' );
-include_once( WPSC_FILE_PATH . '/wpsc-widgets/latest_product_widget.php' );
 include_once( WPSC_FILE_PATH . '/wpsc-widgets/price_range_widget.php' );
 include_once( WPSC_FILE_PATH . '/wpsc-widgets/admin_menu_widget.php' );
 

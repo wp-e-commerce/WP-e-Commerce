@@ -630,6 +630,8 @@ function wpsc_load_legacy_theme_engine() {
 	include_once( WPSC_FILE_PATH . '/wpsc-legacy/theme-engine/widgets/category_widget.php' );
 	include_once( WPSC_FILE_PATH . '/wpsc-legacy/theme-engine/widgets/shopping_cart_widget.php' );
 	include_once( WPSC_FILE_PATH . '/wpsc-legacy/theme-engine/widgets/donations_widget.php' );
+	include_once( WPSC_FILE_PATH . '/wpsc-legacy/theme-engine/widgets/specials_widget.php' );
+	include_once( WPSC_FILE_PATH . '/wpsc-legacy/theme-engine/widgets/latest_product_widget.php' );
 	require_once( WPSC_FILE_PATH . '/wpsc-legacy/theme-engine/shopping_cart_functions.php' );
 
 	if ( is_admin() ) {

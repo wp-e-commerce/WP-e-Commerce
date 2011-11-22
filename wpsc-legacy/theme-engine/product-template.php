@@ -1794,3 +1794,13 @@ function wpsc_you_save( $args = null ){
 function wpsc_get_downloadable_file($file_id){
 	return get_post( $file_id );
 }
+
+function external_link( $product_id ) {
+	$link = get_product_meta( $product_id, 'external_link', true );
+	if ( !stristr( $link, 'http://' ) ) {
+		$link = 'http://' . $link;
+	}
+	$target = wpsc_product_external_link_target( $product_id );
+	$output .= "<input class='wpsc_buy_button' type='button' value='" . wpsc_product_external_link_text( $product_id, __( 'Buy Now', 'wpsc' ) ) . "' onclick='return gotoexternallink(\"$link\", \"$target\")'>";
+	return $output;
+}

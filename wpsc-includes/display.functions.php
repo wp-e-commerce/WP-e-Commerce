@@ -122,16 +122,6 @@ function wpsc_product_url( $product_id, $category_id = null, $escape = true ) {
 	}
 }
 
-function external_link( $product_id ) {
-	$link = get_product_meta( $product_id, 'external_link', true );
-	if ( !stristr( $link, 'http://' ) ) {
-		$link = 'http://' . $link;
-	}
-	$target = wpsc_product_external_link_target( $product_id );
-	$output .= "<input class='wpsc_buy_button' type='button' value='" . wpsc_product_external_link_text( $product_id, __( 'Buy Now', 'wpsc' ) ) . "' onclick='return gotoexternallink(\"$link\", \"$target\")'>";
-	return $output;
-}
-
 /* 19-02-09
  * add cart button function used for php template tags and shortcodes
  */
