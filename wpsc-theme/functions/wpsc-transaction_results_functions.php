@@ -118,11 +118,6 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 	$purchase_log = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `sessionid`= %s LIMIT 1", $sessionid ), ARRAY_A );
 	$order_status = $purchase_log['processed'];
 	$curgateway = $purchase_log['gateway'];
-	//new variable to check whether function is being called from resen_email
-	if(isset($_GET['email_buyer_id']))
-		$resend_email = true;
-	else
-		$resend_email = false;
 		
 	if( !is_bool( $display_to_screen )  )
 		$display_to_screen = true;
@@ -358,8 +353,11 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 					$message = __( 'Thank you, your purchase is pending, you will be sent an email once the order clears.', 'wpsc' ) . "\n\r" . $payment_instructions . $message;
 					$message_html = __( 'Thank you, your purchase is pending, you will be sent an email once the order clears.', 'wpsc' ) . "\n\r" . $payment_instructions . $message_html;
 					
+					//new variable to check whether function is being called from wpsc_purchlog_resend_email()
+					$resend_email = isset( $_REQUEST['email_buyer_id'] ) ? true : false;
+	
 					// prevent email duplicates
-					if ( ! get_transient( "{$sessionid}_pending_email_sent" ) ) {
+					if ( ! get_transient( "{$sessionid}_pending_email_sent" ) || $resend_email ) {
 						wp_mail( $email, __( 'Order Pending: Payment Required', 'wpsc' ), $message );
 						set_transient( "{$sessionid}_pending_email_sent", true, 60 * 60 * 12 );
 					}
