@@ -332,10 +332,10 @@ class ash_usps{
         $size = "REGULAR";
         switch($service){
             case "PRIORITY":
-                $container = "FLAT RATE ENVELOPE";
+                $container = "VARIABLE";
                 break;
             case "EXPRESS":
-                $container = "FLAT RATE ENVELOPE";
+                $container = "VARIABLE";
                 break;
             case "PARCEL":
                 $container = "VARIABLE";
