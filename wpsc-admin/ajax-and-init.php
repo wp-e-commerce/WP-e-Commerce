@@ -636,8 +636,8 @@ function wpsc_purchlog_resend_email() {
 	$wpec_taxes_controller = new wpec_taxes_controller();
 	if ( is_numeric( $log_id ) ) {
 		$selectsql = "SELECT `sessionid` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id`= %d LIMIT 1";
-		$purchase_log = $wpdb->get_var( $wpdv->prepare( $selectsql, $log_id ) );
-		transaction_results( $purchase_log, false);
+		$purchase_log = $wpdb->get_var( $wpdb->prepare( $selectsql, $log_id ) );
+		transaction_results( $purchase_log, false );
 		$sent = true;
 	}
 	$sendback = wp_get_referer();
