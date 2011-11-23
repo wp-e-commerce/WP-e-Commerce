@@ -280,15 +280,12 @@ function wpsc_get_template_file_url( $file = '' ) {
 			}
 		}
 
+		if( is_ssl() && !strstr( $file_url, 'https' ) ) $file_url =  str_replace('http', 'https', $file_url);
+
 		// Save the transient and update it every 12 hours
 		if ( !empty( $file_url ) )
 			set_transient( WPEC_TRANSIENT_THEME_URL_PREFIX . $file, $file_url, 60 * 60 * 12 );
-	}else{
-		delete_transient(WPEC_TRANSIENT_THEME_URL_PREFIX . $file);
-		wpsc_get_template_file_url($file);
 	}
-
-        if( is_ssl() && !strstr( $file_url, 'https' ) ) $file_url =  str_replace('http', 'https', $file_url);
 
 	// Return filtered result
 	return apply_filters( WPEC_TRANSIENT_THEME_URL_PREFIX . $file, $file_url );
