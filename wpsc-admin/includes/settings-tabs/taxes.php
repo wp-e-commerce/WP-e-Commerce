@@ -2,9 +2,6 @@
 
 class WPSC_Settings_Tab_Taxes extends WPSC_Settings_Tab
 {
-	public function __construct() {
-	}
-
 	public function callback_submit_options() {
 		$taxes_enabled = ( isset( $_POST['wpsc_options']['wpec_taxes_enabled'] ) ) ? 1 : 0;
 		update_option( 'wpec_taxes_enabled', $taxes_enabled );

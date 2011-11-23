@@ -5,7 +5,8 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab
 	private $active_gateways;
 	private $gateway_names;
 
-	public function __construct() {
+	public function __construct( $id ) {
+		parent::__construct( $id );
 		if ( isset( $_REQUEST['payment_gateway_id'] ) )
 			update_user_option( get_current_user_id(), 'wpsc_settings_selected_payment_gateway', $_REQUEST['payment_gateway_id'] );
 

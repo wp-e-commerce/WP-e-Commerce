@@ -72,6 +72,8 @@
  */
 abstract class WPSC_Settings_Tab
 {
+	private $id;
+
 	/**
 	 * Display the content of the tab. This function has to be overridden.
 	 *
@@ -87,7 +89,9 @@ abstract class WPSC_Settings_Tab
 	 * @since 3.8.8
 	 * @access public
 	 */
-	public function __construct() {}
+	public function __construct( $id ) {
+		$this->id = $id;
+	}
 }
 
 /**
@@ -261,7 +265,7 @@ final class WPSC_Settings_Page
 			$class_name = 'WPSC_Settings_Tab_' . $class_name;
 			if ( class_exists( $class_name ) ) {
 				$reflection = new ReflectionClass( $class_name );
-				$this->current_tab = $reflection->newInstance();
+				$this->current_tab = $reflection->newInstance( $this->current_tab_id );
 			}
 		}
 

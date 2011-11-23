@@ -3,7 +3,8 @@ class WPSC_Settings_Tab_General extends WPSC_Settings_Tab
 {
 	private $regions = array();
 
-	public function __construct() {
+	public function __construct( $id ) {
+		parent::__construct( $id );
 		$this->get_regions();
 	}
 

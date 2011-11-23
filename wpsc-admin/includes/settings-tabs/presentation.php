@@ -2,7 +2,8 @@
 
 class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab
 {
-	public function __construct() {
+	public function __construct( $id ) {
+		parent::__construct( $id );
 		$this->page_title = __( 'General Settings', 'wpsc' );
 	}
 
