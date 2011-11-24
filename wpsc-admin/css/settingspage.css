@@ -446,3 +446,11 @@ div.wpsc-select-gateway p, div.wpsc_shipping_options p {
 .wpsc-radio-label {
 	margin-right:10px;
 }
+
+#wpsc_options .updated, #wpsc_options .error {
+	margin-top:15px;
+}
+
+.js .updated, .js .error {
+	display:none;
+}

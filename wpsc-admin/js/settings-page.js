@@ -48,6 +48,8 @@
 				$(window).bind('beforeunload', WPSC_Settings_Page.event_before_unload);
 				$(WPSC_Settings_Page).trigger('wpsc_settings_tab_loaded');
 				$(WPSC_Settings_Page).trigger('wpsc_settings_tab_loaded_' + WPSC_Settings_Page.current_tab);
+
+				$('div.updated, div.error').not('.inline').insertAfter('h2.nav-tab-wrapper').fadeIn(500);
 			});
 		},
 
