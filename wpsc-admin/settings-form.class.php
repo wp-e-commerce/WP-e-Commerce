@@ -35,7 +35,7 @@ class WPSC_Settings_Form
 
 	private function output_textfield( $field_array ) {
 		extract( $field_array );
-		$description_html = apply_filters( 'wpsc_settings_' . $name . '_description', esc_html( $description ), $field_array );
+		$description_html = apply_filters( $name . '_setting_description', esc_html( $description ), $field_array );
 		if ( ! isset( $class ) )
 			$class = 'regular-text wpsc-textfield';
 		?>

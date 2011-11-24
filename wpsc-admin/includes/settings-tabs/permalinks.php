@@ -6,12 +6,12 @@ class WPSC_Settings_Tab_Permalinks extends WPSC_Settings_Tab
 		$this->populate_form_array();
 		parent::__construct( $id );
 
-		add_filter( 'wpsc_settings_catalog_slug_description', array( $this, 'filter_make_clickable_description' ), 10, 2 );
-		add_filter( 'wpsc_settings_cart_page_slug_description', array( $this, 'filter_make_clickable_description' ), 10, 2 );
-		add_filter( 'wpsc_settings_transaction_result_page_slug_description', array( $this, 'filter_make_clickable_description' ), 10, 2 );
-		add_filter( 'wpsc_settings_customer_account_page_slug_description', array( $this, 'filter_make_clickable_description' ), 10, 2 );
-		add_filter( 'wpsc_settings_category_base_slug_description', array( $this, 'filter_category_base_slug_description' ), 10, 2 );
-		add_filter( 'wpsc_settings_product_base_slug_description', array( $this, 'filter_product_base_slug_description' ), 10 );
+		add_filter( 'wpsc_catalog_slug_setting_description'                , array( $this, 'filter_make_clickable_description'     ), 10, 2 );
+		add_filter( 'wpsc_cart_page_slug_setting_description'              , array( $this, 'filter_make_clickable_description'     ), 10, 2 );
+		add_filter( 'wpsc_transaction_result_page_slug_setting_description', array( $this, 'filter_make_clickable_description'     ), 10, 2 );
+		add_filter( 'wpsc_customer_account_page_slug_setting_description'  , array( $this, 'filter_make_clickable_description'     ), 10, 2 );
+		add_filter( 'wpsc_category_base_slug_setting_description'          , array( $this, 'filter_category_base_slug_description' ), 10, 2 );
+		add_filter( 'wpsc_product_base_slug_setting_description'           , array( $this, 'filter_product_base_slug_description'  ), 10    );
 	}
 
 	public function filter_category_base_slug_description( $description, $field_array ) {
@@ -71,22 +71,22 @@ class WPSC_Settings_Tab_Permalinks extends WPSC_Settings_Tab
 				'description' => __( 'You can customize slugs for shop related pages here.', 'wpsc' ),
 				'fields' => array(
 					'cart_page_slug' => array(
-						'type' => 'textfield',
-						'title' => _x( 'Cart page slug', 'permalinks setting', 'wpsc' ),
+						'type'        => 'textfield',
+						'title'       => _x( 'Cart page slug', 'permalinks setting', 'wpsc' ),
 						'description' => __( 'Your cart URL will be: %s .', 'wpsc' ),
-						'sanitize' => 'trim',
+						'sanitize'    => 'trim',
 					),
 					'transaction_result_page_slug' => array(
-						'type' => 'textfield',
-						'title' => _x( 'Transaction result page slug', 'permalinks setting', 'wpsc' ),
+						'type'        => 'textfield',
+						'title'       => _x( 'Transaction result page slug', 'permalinks setting', 'wpsc' ),
 						'description' => __( 'When a transaction is completed, the customer will be redirected to %s, where transaction status will be displayed.'),
-						'sanitize' => 'trim',
+						'sanitize'    => 'trim',
 					),
 					'customer_account_page_slug' => array(
-						'type' => 'textfield',
-						'title' => _x( 'Customer account page slug', 'permalinks setting', 'wpsc' ),
+						'type'        => 'textfield',
+						'title'       => _x( 'Customer account page slug', 'permalinks setting', 'wpsc' ),
 						'description' => __( 'This is where your customer can review previous purchases. The URL to this page will be: %s.'),
-						'sanitize' => 'trim',
+						'sanitize'    => 'trim',
 					),
 				), // end form fields
 			), // end product-slugs section
