@@ -132,10 +132,10 @@
 			var query = $.query.load(url);
 			var tab_id = query.get('tab');
 			var post_data = $.extend({}, query.get(), {
-				'action'      : 'wpsc_navigate_settings_tab',
-				'nonce'       : WPSC_Settings_Page.nonce,
-				'current_url' : location.href,
-				'tab'         : tab_id
+				'action'           : 'wpsc_navigate_settings_tab',
+				'nonce'            : WPSC_Settings_Page.nonce,
+				'current_url'      : location.href,
+				'tab'              : tab_id
 			});
 			var spinner = $('#wpsc-settings-page-title .ajax-feedback');
 
@@ -157,11 +157,10 @@
 				var t = WPSC_Settings_Page;
 				t.unsaved_settings = false;
 				t.toggle_ajax_state(tab_id);
-				$('#options_' + WPSC_Settings_Page.current_tab).replaceWith(response);
+				$('#wpsc_options_page form').replaceWith(response);
 				WPSC_Settings_Page.current_tab = tab_id;
 				$('.nav-tab-active').removeClass('nav-tab-active');
 				$('[data-tab-id="' + tab_id + '"]').addClass('nav-tab-active');
-				$('#wpsc_options_page form').attr('action', url);
 				$(t).trigger('wpsc_settings_tab_loaded');
 				$(t).trigger('wpsc_settings_tab_loaded_' + tab_id);
 				spinner.removeClass('ajax-feedback-active');

@@ -39,19 +39,16 @@ class WPSC_Settings_Tab_Permalinks extends WPSC_Settings_Tab
 						'type'        => 'textfield',
 						'title'       => _x( 'Catalog base slug', 'permalinks setting', 'wpsc' ),
 						'description' => __( 'Your main catalog URL will be %s .', 'wpsc' ),
-						'sanitize'    => 'trim',
 					),
 					'category_base_slug' => array(
 						'type'        => 'textfield',
 						'title'       => _x( 'Category base slug', 'permalinks setting', 'wpsc' ),
 						'description' => __( "Your product categories' URLs will look like this: %s .", 'wpsc' ),
-						'sanitize'    => 'trim',
 					),
 					'product_base_slug' => array(
 						'type'        => 'textfield',
 						'title'       => _x( 'Product base slug', 'permalinks setting', 'wpsc' ),
 						'description' => __( 'Individual product permalinks will be prepended with this product base slug. Use tag %s to include product category in the permalink.', 'wpsc' ),
-						'sanitize'    => 'trim',
 					),
 					'hierarchical_product_category_url' => array(
 						'type'    => 'radios',
@@ -74,19 +71,16 @@ class WPSC_Settings_Tab_Permalinks extends WPSC_Settings_Tab
 						'type'        => 'textfield',
 						'title'       => _x( 'Cart page slug', 'permalinks setting', 'wpsc' ),
 						'description' => __( 'Your cart URL will be: %s .', 'wpsc' ),
-						'sanitize'    => 'trim',
 					),
 					'transaction_result_page_slug' => array(
 						'type'        => 'textfield',
 						'title'       => _x( 'Transaction result page slug', 'permalinks setting', 'wpsc' ),
 						'description' => __( 'When a transaction is completed, the customer will be redirected to %s, where transaction status will be displayed.'),
-						'sanitize'    => 'trim',
 					),
 					'customer_account_page_slug' => array(
 						'type'        => 'textfield',
 						'title'       => _x( 'Customer account page slug', 'permalinks setting', 'wpsc' ),
 						'description' => __( 'This is where your customer can review previous purchases. The URL to this page will be: %s.'),
-						'sanitize'    => 'trim',
 					),
 				), // end form fields
 			), // end product-slugs section

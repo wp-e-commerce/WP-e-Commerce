@@ -389,16 +389,30 @@ final class WPSC_Settings_Page
 	 * @access public
 	 */
 	public function display_current_tab() {
+		$action = ( $this->current_tab->uses_settings_api() ) ? 'options.php?tab=' . $this->current_tab_id : $this->submit_url();
 		?>
-			<div id="options_<?php echo esc_attr( $this->current_tab_id ); ?>">
-				<?php
-					if ( is_callable( array( $this->current_tab, 'display' ) ) ) {
-						$this->current_tab->display();
-					}
-				?>
+			<form action="<?php echo esc_url( $action ); ?>" method="post" id="wpsc-settings-form">
+				<div id="options_<?php echo esc_attr( $this->current_tab_id ); ?>">
+					<?php
+						if ( is_callable( array( $this->current_tab, 'display' ) ) ) {
+							$this->current_tab->display();
+						}
+					?>
 
-				<?php do_action('wpsc_' . $this->current_tab_id . '_settings_page'); ?>
-			</div>
+					<?php do_action('wpsc_' . $this->current_tab_id . '_settings_page'); ?>
+				</div>
+				<?php if ( $this->current_tab->uses_settings_api() ): ?>
+					<div class="submit">
+						<input type="submit" name="submit" class="button-primary" value="<?php _e( 'Save Changes', 'wpsc' ); ?>" />
+					</div>
+				<?php else: ?>
+					<div class="submit">
+						<input type='hidden' name='wpsc_admin_action' value='submit_options' />
+						<?php wp_nonce_field( 'update-options', 'wpsc-update-options' ); ?>
+						<input type="submit" class="button-primary" value="<?php _e( 'Save Changes', 'wpsc' ); ?>" name="updateoption" />
+					</div>
+				<?php endif ?>
+			</form>
 		<?php
 	}
 
@@ -422,23 +436,7 @@ final class WPSC_Settings_Page
 				</h2>
 				<?php $this->output_tabs(); ?>
 				<div id='wpsc_options_page'>
-					<?php if ( $this->current_tab->uses_settings_api() ): ?>
-						<form action="options.php?tab=<?php echo esc_attr( $this->current_tab_id ); ?>" method="post">
-							<?php $this->display_current_tab(); ?>
-							<div class="submit">
-								<input type="submit" name="submit" class="button-primary" value="<?php _e( 'Save Changes', 'wpsc' ); ?>" />
-							</div>
-						</form>
-					<?php else: ?>
-						<form method='post' action='<?php echo esc_attr( $this->submit_url() ); ?>' id='wpsc-settings-form'>
-							<?php $this->display_current_tab(); ?>
-							<div class="submit">
-								<input type='hidden' name='wpsc_admin_action' value='submit_options' />
-								<?php wp_nonce_field( 'update-options', 'wpsc-update-options' ); ?>
-								<input type="submit" class="button-primary" value="<?php _e( 'Save Changes', 'wpsc' ); ?>" name="updateoption" />
-							</div>
-						</form>
-					<?php endif; ?>
+					<?php $this->display_current_tab(); ?>
 				</div>
 			</div>
 		<?php

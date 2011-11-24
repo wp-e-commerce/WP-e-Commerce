@@ -107,6 +107,8 @@ function wpsc_navigate_settings_tab() {
 	if ( ! wp_verify_nonce( $_POST['nonce'], 'wpsc_settings_page_nonce' ) )
 		die( 'Session expired. Try refreshing your settings page.' );
 
+	$_SERVER['REQUEST_URI'] = 'options-general.php?page=wpsc-settings&tab=' . $_POST['tab'];
+
 	require_once( 'settings-page.php' );
 
 	$settings_page = new WPSC_Settings_Page( $_POST['tab'] );

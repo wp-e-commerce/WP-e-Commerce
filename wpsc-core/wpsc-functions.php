@@ -993,5 +993,6 @@ function wpsc_update_legacy_theme_status( $id, $post ) {
 add_action( 'save_post', 'wpsc_update_legacy_theme_status', 10, 2 );
 
 function wpsc_load_theme_engine() {
-	var_dump( 'yo!' );
+	require_once( WPSC_FILE_PATH . '/wpsc-theme-engine/theme-engine.class.php' );
+	$GLOBALS['wpsc_theme_engine'] = new WPSC_Theme_Engine();
 }
