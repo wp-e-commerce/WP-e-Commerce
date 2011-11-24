@@ -134,6 +134,7 @@ final class WPSC_Settings_Page
 	public static function init() {
 		self::$default_tabs = array(
 			'general'      => _x( 'General'     , 'General settings tab in Settings->Store page'     , 'wpsc' ),
+			'permalinks'   => _x( 'Permalinks'  , 'Permalinks settings tab in Settings->Store page'  , 'wpsc' ),
 			'presentation' => _x( 'Presentation', 'Presentation settings tab in Settings->Store page', 'wpsc' ),
 			'admin'        => _x( 'Admin'       , 'Admin settings tab in Settings->Store page'       , 'wpsc' ),
 			'taxes'        => _x( 'Taxes'       , 'Taxes settings tab in Settings->Store page'       , 'wpsc' ),
