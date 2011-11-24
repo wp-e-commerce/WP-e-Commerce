@@ -212,6 +212,7 @@ function wpsc_admin_pages() {
 	}
 
 	add_action( 'load-' . $edit_options_page, 'wpsc_load_settings_page', 1 );
+	add_action( 'load-options.php', 'wpsc_load_settings_for_update' );
 
 	// Help tabs
 	add_action( 'load-' . $edit_options_page , 'wpsc_add_help_tabs' );
@@ -319,6 +320,13 @@ function wpsc_add_help_tabs() {
 				'content' => $content,
 			) );
 		}
+	}
+}
+
+function wpsc_load_settings_for_update() {
+	if ( isset( $_REQUEST['tab'] ) ) {
+		require_once('settings-page.php');
+		WPSC_Settings_Page::get_instance();
 	}
 }
 

@@ -99,6 +99,7 @@ class WP_eCommerce {
 	 * Include the rest of WPEC's files
 	 */
 	function includes() {
+		require_once( WPSC_FILE_PATH . '/wpsc-core/settings.class.php' );
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-functions.php' );
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-installer.php' );
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-includes.php' );
@@ -159,10 +160,11 @@ class WP_eCommerce {
 			return;
 		}
 		define( 'WPSC_FILE_PATH', dirname( __FILE__ ) );
+		require_once( WPSC_FILE_PATH . '/wpsc-core/settings.class.php' );
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-installer.php' );
 		$this->constants();
 		wpsc_install();
-
+		do_action( 'wpsc_activate' );
 	}
 
 	public function deactivate() {

@@ -442,3 +442,7 @@ div.wpsc-select-gateway p, div.wpsc_shipping_options p {
 #wpsc-payment-gateway-settings-panel input[type=text], #wpsc-payment-gateway-settings-panel textarea {
 	width:265px;
 }
+
+.wpsc-radio-label {
+	margin-right:10px;
+}
