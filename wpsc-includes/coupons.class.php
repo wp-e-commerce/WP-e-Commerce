@@ -348,7 +348,7 @@ class wpsc_coupons {
 				return false;
 			}
 		} else if ($c['property'] == 'total_quantity'){
-			$total_quantity = $product_obj->quantity;
+			$total_quantity = wpsc_cart_item_count();
 			switch($c['logic']) {
 				case 'equal'://Checks if the quantity of products in the cart equals condition value
 				if ($total_quantity == $c['value'])
