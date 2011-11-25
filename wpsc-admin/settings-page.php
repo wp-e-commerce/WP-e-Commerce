@@ -89,7 +89,7 @@ abstract class WPSC_Settings_Tab
 		$this->id = $id;
 		if ( $this->uses_settings_api() ) {
 			require_once( 'settings-form.class.php' );
-			$this->form = new WPSC_Settings_Form( $this->form_array );
+			$this->form = new WPSC_Settings_Form( $this->sections, $this->form_array );
 		}
 	}
 }
