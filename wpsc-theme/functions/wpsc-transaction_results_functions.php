@@ -345,23 +345,23 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 				add_filter( 'wp_mail_from_name', 'wpsc_replace_reply_name', 0 );
 				$message = apply_filters('wpsc_email_message', $message, $report_id, $product_list, $total_tax, $total_shipping_email, $total_price_email);
 
-				if ( !$is_transaction ) {
-	
+				//new variable to check whether function is being called from wpsc_purchlog_resend_email()
+				$resend_email = isset( $_REQUEST['email_buyer_id'] ) ? true : false;
+				
+				if ( ! $is_transaction ) {
+
 					$payment_instructions = strip_tags( stripslashes( get_option( 'payment_instructions' ) ) );
 					if(!empty($payment_instructions))
-						$payment_instructions .= "\n\r";					
+						$payment_instructions .= "\n\r";
 					$message = __( 'Thank you, your purchase is pending, you will be sent an email once the order clears.', 'wpsc' ) . "\n\r" . $payment_instructions . $message;
 					$message_html = __( 'Thank you, your purchase is pending, you will be sent an email once the order clears.', 'wpsc' ) . "\n\r" . $payment_instructions . $message_html;
 					
-					//new variable to check whether function is being called from wpsc_purchlog_resend_email()
-					$resend_email = isset( $_REQUEST['email_buyer_id'] ) ? true : false;
-	
 					// prevent email duplicates
-					if ( ! get_transient( "{$sessionid}_pending_email_sent" ) || $resend_email ) {
+				if ( ! get_transient( "{$sessionid}_pending_email_sent" ) || $resend_email ) {
 						wp_mail( $email, __( 'Order Pending: Payment Required', 'wpsc' ), $message );
 						set_transient( "{$sessionid}_pending_email_sent", true, 60 * 60 * 12 );
 					}
-				} elseif ( ! get_transient( "{$sessionid}_receipt_email_sent" ) ) {
+				} elseif ( ! get_transient( "{$sessionid}_receipt_email_sent" ) || $resend_email ) {
 					wp_mail( $email, __( 'Purchase Receipt', 'wpsc' ), $message );
 					set_transient( "{$sessionid}_receipt_email_sent", true, 60 * 60 * 12 );
 				}
