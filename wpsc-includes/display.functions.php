@@ -163,44 +163,6 @@ function wpsc_add_to_cart_button( $product_id, $return = false ) {
 	}
 }
 
-/**
- * wpsc_refresh_page_urls( $content )
- *
- * Refresh page urls when permalinks are turned on or altered
- *
- * @global object $wpdb
- * @param string $content
- * @return string
- */
-function wpsc_refresh_page_urls( $content ) {
-	global $wpdb;
-
-	$wpsc_pageurl_option['product_list_url'] = '[productspage]';
-	$wpsc_pageurl_option['shopping_cart_url'] = '[shoppingcart]';
-	$check_chekout = $wpdb->get_var( "SELECT `guid` FROM `{$wpdb->posts}` WHERE `post_content` LIKE '%[checkout]%' AND `post_type` NOT IN('revision') LIMIT 1" );
-
-	if ( $check_chekout != null )
-		$wpsc_pageurl_option['checkout_url'] = '[checkout]';
-	else
-		$wpsc_pageurl_option['checkout_url'] = '[checkout]';
-
-	$wpsc_pageurl_option['transact_url'] = '[transactionresults]';
-	$wpsc_pageurl_option['user_account_url'] = '[userlog]';
-	$changes_made = false;
-	foreach ( $wpsc_pageurl_option as $option_key => $page_string ) {
-		$post_id = $wpdb->get_var( "SELECT `ID` FROM `{$wpdb->posts}` WHERE `post_type` IN('page','post') AND `post_content` LIKE '%$page_string%' AND `post_type` NOT IN('revision') LIMIT 1" );
-		$the_new_link = _get_page_link( $post_id );
-
-		if ( stristr( get_option( $option_key ), "https://" ) )
-			$the_new_link = str_replace( 'http://', "https://", $the_new_link );
-
-		update_option( $option_key, $the_new_link );
-	}
-	return $content;
-}
-
-add_filter( 'mod_rewrite_rules', 'wpsc_refresh_page_urls' );
-
 function wpsc_obtain_the_description() {
 	global $wpdb, $wp_query, $wpsc_title_data;
 	$output = null;

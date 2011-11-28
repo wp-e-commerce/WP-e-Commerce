@@ -7,8 +7,8 @@ class WPSC_Settings
 	public function __construct() {
 		$this->default_settings = array(
 			'catalog_slug'                      => 'shop',
-			'category_base_slug'                => 'shop',
-			'product_base_slug'                 => 'shop/%wpsc_product_category%',
+			'product_base_slug'                 => 'product',
+			'category_base_slug'                => 'category',
 			'hierarchical_product_category_url' => 0,
 			'cart_page_slug'                    => 'cart',
 			'transaction_result_page_slug'      => 'transaction-result',

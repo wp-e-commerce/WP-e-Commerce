@@ -2,33 +2,29 @@
 
 class WPSC_Settings_Tab_Permalinks extends WPSC_Settings_Tab
 {
+	private $slug_settings = array(
+		'catalog_slug',
+		'cart_page_slug',
+		'transaction_result_page_slug',
+		'customer_account_page_slug',
+		'product_base_slug',
+	);
+
 	public function __construct( $id ) {
+		flush_rewrite_rules();
 		$this->populate_form_array();
 		parent::__construct( $id );
-
-		add_filter( 'wpsc_catalog_slug_setting_description'                , array( $this, 'filter_make_clickable_description'     ), 10, 2 );
-		add_filter( 'wpsc_cart_page_slug_setting_description'              , array( $this, 'filter_make_clickable_description'     ), 10, 2 );
-		add_filter( 'wpsc_transaction_result_page_slug_setting_description', array( $this, 'filter_make_clickable_description'     ), 10, 2 );
-		add_filter( 'wpsc_customer_account_page_slug_setting_description'  , array( $this, 'filter_make_clickable_description'     ), 10, 2 );
-		add_filter( 'wpsc_category_base_slug_setting_description'          , array( $this, 'filter_category_base_slug_description' ), 10, 2 );
-		add_filter( 'wpsc_product_base_slug_setting_description'           , array( $this, 'filter_product_base_slug_description'  ), 10    );
-		add_filter( 'wpsc_settings_validation_rule_slug_not_conflicted'    , array( $this, 'callback_validation_rule_slug_not_conflicted' ), 10, 4 );
+		add_filter( 'wpsc_settings_validation_rule_slug_not_conflicted'    , array( $this, 'callback_validation_rule_slug_not_conflicted' ), 10, 5 );
 	}
 
-	public function callback_validation_rule_slug_not_conflicted( $valid, $value, $field_name, $field_title ) {
+	public function callback_validation_rule_slug_not_conflicted( $valid, $value, $field_name, $field_title, $field_id ) {
+		global $wp_rewrite;
+
 		static $existing_slugs = array();
 		$internal_name = substr( $field_name, 5 );
-		if ( empty( $existing_slugs ) ) {
-			$wpsc_slug_settings = array(
-				'catalog_slug',
-				'cart_page_slug',
-				'transaction_result_page_slug',
-				'customer_account_page_slug',
-				'category_base_slug',
-				'product_base_slug',
-			);
 
-			foreach ( $wpsc_slug_settings as $setting ) {
+		if ( empty( $existing_slugs ) ) {
+			foreach ( $this->slug_settings as $setting ) {
 				$existing_slugs[$setting] = array(
 					'value' => wpsc_get_option( $setting ),
 					'title' => esc_html( $this->form_array[$setting]['title'] ),
@@ -48,13 +44,19 @@ class WPSC_Settings_Tab_Permalinks extends WPSC_Settings_Tab
 			);
 
 			// get root slugs from published pages
-			$pages = get_pages();
+			$pages = array_merge( get_pages(), get_pages( array( 'post_status' => 'trash' ) ) );
+
 			foreach ( $pages as $page ) {
+				if ( $page->post_status == 'trash' )
+					$link = admin_url( 'edit.php?post_status=trash&post_type=page' );
+				else
+					$link = admin_url( 'post.php?post=' . $page->ID . '&action=edit' );
+
 				$existing_slugs[] = array(
 					'value' => $page->post_name,
 					'title' => sprintf(
 						esc_html_x( "the slug of %s page", 'permalink slug conflict check', 'wpsc' ),
-						'<a target="_blank" href="' . esc_url( admin_url( 'post.php?post=' . $page->ID . '&action=edit' ) )  . '">' . apply_filters( 'the_title', $page->post_title, $page->ID ) . '</a>'
+						'<a target="_blank" href="' . esc_url( $link )  . '">' . apply_filters( 'the_title', $page->post_title, $page->ID ) . '</a>'
 					), // title sprintf
 				);
 			}
@@ -63,14 +65,15 @@ class WPSC_Settings_Tab_Permalinks extends WPSC_Settings_Tab
 		}
 
 		foreach ( $existing_slugs as $id => $slug ) {
-			if ( $this->are_slugs_conflicted( $id, $slug['value'], $internal_name, $value ) ) {
+			if ( $slug['value'] == $value && $id != $internal_name ) {
+				$field_anchor = '<a href="#' . esc_attr( $field_id ) . '">' . esc_html( $field_title ) . '</a>';
 				add_settings_error(
 					$field_name,
-					'field-slug-conflict',
+					'field-slug-conflict-' . $field_name,
 					sprintf(
 						__( '%1$s cannot be used as %2$s because it is conflicted with %3$s.', 'wpsc' ),
 						'<code>' . $value . '</code>',
-						esc_html( $field_title ),
+						$field_anchor,
 						$slug['title']
 					) // sprintf
 				); // add_settings_error
@@ -82,59 +85,119 @@ class WPSC_Settings_Tab_Permalinks extends WPSC_Settings_Tab
 		return $value;
 	}
 
-	private function are_slugs_conflicted( $name1, $slug1, $name2, $slug2 ) {
-		if ( $name1 == $name2 )
-			return false;
+	private function check_slug_conflicts() {
+		foreach ( $this->slug_settings as $setting ) {
+			settings_errors( 'wpsc_' . $setting, true, true );
+		}
+	}
 
-		$slugs = array(
-			$name1 => &$slug1,
-			$name2 => &$slug2,
-		);
+	public function display() {
+		$this->check_slug_conflicts();
 
-		foreach( $slugs as $name => &$slug ) {
-			if ( $name == 'category_base_slug' )
-				$slug .= '/%wpsc_product_category%';
-			elseif ( $name == 'product_base_slug' )
-				$slug .= '/%wpsc-product%';
+		// Display current slugs
+		$base_shop_url      = home_url( wpsc_get_option( 'catalog_slug' ) );
+		$category_base_slug = wpsc_get_option( 'category_base_slug' );
+		$hierarchical_category_url = (bool) wpsc_get_option( 'hierarchical_product_category_url' );
+		$product_base_slug  = wpsc_get_option( 'product_base_slug' );
+		$product_prefix     = (bool) wpsc_get_option( 'prefix_product_slug' );
+		$sample_category    = get_terms( 'wpsc_product_category', array( 'number' => 1 ) );
+		$sample_product     = get_posts( array(	'post_type' => 'wpsc-product', 'numberposts' => 1 ) );
+
+		if (! empty( $sample_product ) ) {
+			$prefix = '';
+
+			if ( $product_prefix )
+				$prefix = $hierarchical_category_url ? 'parent-product-category/child-product-category' : 'my-product-category';
+
+			$sample_product_link = '<code>' . esc_url( $base_shop_url . '/' . $product_base_slug . '/' . $prefix ) . '/my-product</code>';
+		} else {
+			$sample_product_link = make_clickable( get_permalink( $sample_product[0] ) );
 		}
 
-		if ( $slug1 == $slug2 )
-			return true;
-
-		return false;
-	}
-
-	public function filter_category_base_slug_description( $description, $field_array ) {
-		$example_url = '<code>' . home_url( $field_array['value'] ) . '/product-category' . '</code>';
-		return sprintf( $description, $example_url );
-	}
-
-	public function filter_product_base_slug_description( $description ) {
-		return sprintf( $description, '<code>%wpsc_product_category%</code>' );
-	}
-
-	public function filter_make_clickable_description( $description, $field_array ) {
-		$link = make_clickable( home_url( $field_array['value'] ) );
-		return sprintf( $description, $link );
+		if ( empty( $sample_category ) ) {
+			$category_slug = $hierarchical_category_url ? 'parent-product-category/child-product-category' : 'my-product-category';
+			$sample_category_link = '<code>' . esc_url( $base_shop_url . '/' . $category_base_slug . '/' . $category_slug ) . '</code>';
+		}
+		else {
+			$sample_category_link = make_clickable( get_term_link( $sample_category[0] ) );
+		}
+		?>
+		<h3><?php esc_html_e( 'Current settings', 'wpsc' ); ?></h3>
+		<p><?php esc_html_e( "This is how your shop pages' URLs look like on the front-end:", 'wpsc' ); ?></p>
+		<table class="form-table">
+			<tbody>
+				<tr valign="top">
+					<th scope="row">
+						<?php esc_html_e( 'Main shop catalog', 'wpsc' ); ?>
+					</th>
+					<td>
+						<?php echo make_clickable( $base_shop_url ); ?>
+					</td>
+				</tr>
+				<tr valign="top">
+					<th scope="row">
+						<?php esc_html_e( 'Sample product category archive', 'wpsc' ); ?>
+					</th>
+					<td>
+						<?php echo $sample_category_link; ?>
+					</td>
+				</tr>
+				<tr valign="top">
+					<th scope="row">
+						<?php esc_html_e( 'Sample single product URL', 'wpsc' ); ?>
+					</th>
+					<td>
+						<?php echo $sample_product_link; ?>
+					</td>
+				</tr>
+				<tr valign="top">
+					<th scope="row">
+						<?php echo esc_html_x( 'Cart page', 'permalinks setting', 'wpsc' ); ?>
+					</th>
+					<td>
+						<?php echo make_clickable( home_url( wpsc_get_option( 'cart_page_slug' ) ) ); ?>
+					</td>
+				</tr>
+				<tr valign="top">
+					<th scope="row">
+						<?php echo esc_html_x( 'Transaction result page', 'permalinks setting', 'wpsc' ); ?>
+					</th>
+					<td>
+						<?php echo make_clickable( home_url( wpsc_get_option( 'transaction_result_page_slug' ) ) ); ?>
+					</td>
+				</tr>
+				<tr valign="top">
+					<th scope="row">
+						<?php echo esc_html_x( 'Customer account page', 'permalinks setting', 'wpsc' ); ?>
+					</th>
+					<td>
+						<?php echo make_clickable( home_url( wpsc_get_option( 'customer_account_page_slug' ) ) ); ?>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<?php
+		parent::display();
 	}
 
 	private function populate_form_array() {
 		$this->sections = array(
-			'product-slugs' => array(
-				'title'       => _x( 'Product slugs', 'permalinks/product-slugs section title', 'wpsc' ),
-				'description' => __( 'You can customize slugs for your product pages here.', 'wpsc' ),
+			'archive-slugs' => array(
+				'title'       => _x( 'Archive slugs', 'permalinks/archive-slugs section title', 'wpsc' ),
+				'description' => __( 'You can customize slugs for your product archive pages here.', 'wpsc' ),
 				'fields'      => array(
 					'catalog_slug',
 					'category_base_slug',
-					'product_base_slug',
 					'hierarchical_product_category_url',
 				),
 			),
 
-			'page-slugs' => array(
-				'title'       => _x( 'Page slugs', 'permalinks/page-slugs section title', 'wpsc' ),
-				'description' => __( 'You can customize slugs for shop related pages here.', 'wpsc' ),
+			'single-slugs' => array(
+				'title'       => _x( 'Single slugs', 'permalinks/page-slugs section title', 'wpsc' ),
+				'description' => __( 'You can customize slugs for single pages / products here.', 'wpsc' ),
 				'fields'      => array(
+					'product_base_slug',
+					'prefix_product_slug',
 					'cart_page_slug',
 					'transaction_result_page_slug',
 					'customer_account_page_slug',
@@ -146,20 +209,14 @@ class WPSC_Settings_Tab_Permalinks extends WPSC_Settings_Tab
 			'catalog_slug' => array(
 				'type'        => 'textfield',
 				'title'       => _x( 'Catalog base slug', 'permalinks setting', 'wpsc' ),
-				'description' => __( 'Your main catalog URL will be %s .', 'wpsc' ),
+				'description' => __( 'This slug will prefix your product category archive and single product permalinks.', 'wpsc' ),
 				'validation'  => 'required|slug_not_conflicted',
 			),
 			'category_base_slug' => array(
-				'type'        => 'textfield',
-				'title'       => _x( 'Category base slug', 'permalinks setting', 'wpsc' ),
-				'description' => __( "Your product categories' URLs will look like this: %s .", 'wpsc' ),
-				'validation'  => 'required|slug_not_conflicted',
-			),
-			'product_base_slug' => array(
-				'type'        => 'textfield',
-				'title'       => _x( 'Product base slug', 'permalinks setting', 'wpsc' ),
-				'description' => __( 'Individual product permalinks will be prepended with this product base slug. Use tag %s to include product category in the permalink.', 'wpsc' ),
-				'validation'  => 'required|slug_not_conflicted',
+				'type' => 'textfield',
+				'title' => _x( 'Category base slug', 'permalinks setting', 'wpsc' ),
+				'description' => __( "It's recommended to have a category base slug." ),
+				'validation' => 'slug_not_conflicted'
 			),
 			'hierarchical_product_category_url' => array(
 				'type'    => 'radios',
@@ -170,22 +227,35 @@ class WPSC_Settings_Tab_Permalinks extends WPSC_Settings_Tab
 				),
 				'description' => __( 'When hierarchical product category URL is enabled, parent product categories are also included in the product URL.', 'wpsc' ),
 			),
+			'product_base_slug' => array(
+				'type'        => 'textfield',
+				'title'       => _x( 'Product base slug', 'permalinks setting', 'wpsc' ),
+				'description' => __( "It's recommended to have a product base slug.", 'wpsc' ),
+				'validation'  => 'required|slug_not_conflicted',
+			),
+			'prefix_product_slug' => array(
+				'type' => 'checkboxes',
+				'title' => _x( 'Product prefix', 'permalinks setting', 'wpsc' ),
+				'options' => array(
+					1 => __( "Prefix your products with category slug." )
+				),
+			),
 			'cart_page_slug' => array(
 				'type'        => 'textfield',
 				'title'       => _x( 'Cart page slug', 'permalinks setting', 'wpsc' ),
-				'description' => __( 'Your cart URL will be: %s .', 'wpsc' ),
+				'description' => __( "This page contains your customer's cart content and checkout form.", 'wpsc' ),
 				'validation'  => 'required|slug_not_conflicted',
 			),
 			'transaction_result_page_slug' => array(
 				'type'        => 'textfield',
 				'title'       => _x( 'Transaction result page slug', 'permalinks setting', 'wpsc' ),
-				'description' => __( 'When a transaction is completed, the customer will be redirected to %s, where transaction status will be displayed.'),
+				'description' => __( 'When a transaction is completed, the customer will be redirected to this page, where transaction status will be displayed.'),
 				'validation'  => 'required|slug_not_conflicted',
 			),
 			'customer_account_page_slug' => array(
 				'type'        => 'textfield',
 				'title'       => _x( 'Customer account page slug', 'permalinks setting', 'wpsc' ),
-				'description' => __( 'This is where your customer can review previous purchases. The URL to this page will be: %s.'),
+				'description' => __( 'This is where your customer can review previous purchases.'),
 				'validation'  => 'required|slug_not_conflicted',
 			),
 		);

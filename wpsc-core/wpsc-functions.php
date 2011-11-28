@@ -324,34 +324,40 @@ add_action( 'rdf_item', 'wpsc_add_product_price_to_rss' );
  */
 function wpsc_register_post_types() {
 	global $wpsc_page_titles;
-        $labels = array(
-            'name' => _x( 'Products', 'post type name', 'wpsc' ),
-            'singular_name' => _x( 'Product', 'post type singular name', 'wpsc' ),
-            'add_new' => _x( 'Add New', 'admin menu: add new product', 'wpsc' ),
-            'add_new_item' => __('Add New Product', 'wpsc' ),
-            'edit_item' => __('Edit Product', 'wpsc' ),
-            'new_item' => __('New Product', 'wpsc' ),
-            'view_item' => __('View Product', 'wpsc' ),
-            'search_items' => __('Search Products', 'wpsc' ),
-            'not_found' =>  __('No products found', 'wpsc' ),
-            'not_found_in_trash' => __( 'No products found in Trash', 'wpsc' ),
-            'parent_item_colon' => '',
-            'menu_name' => __( 'Products', 'wpsc' )
-          );
+
+	$catalog_slug = wpsc_get_option( 'catalog_slug' );
+	$category_base_slug = wpsc_get_option( 'category_base_slug' );
+	$hierarchical_product_category = wpsc_get_option( 'hierarchical_product_category_url' );
+
+	$labels = array(
+		'name' => _x( 'Products', 'post type name', 'wpsc' ),
+		'singular_name' => _x( 'Product', 'post type singular name', 'wpsc' ),
+		'add_new' => _x( 'Add New', 'admin menu: add new product', 'wpsc' ),
+		'add_new_item' => __('Add New Product', 'wpsc' ),
+		'edit_item' => __('Edit Product', 'wpsc' ),
+		'new_item' => __('New Product', 'wpsc' ),
+		'view_item' => __('View Product', 'wpsc' ),
+		'search_items' => __('Search Products', 'wpsc' ),
+		'not_found' =>  __('No products found', 'wpsc' ),
+		'not_found_in_trash' => __( 'No products found in Trash', 'wpsc' ),
+		'parent_item_colon' => '',
+		'menu_name' => __( 'Products', 'wpsc' )
+	  );
 	// Products
 	register_post_type( 'wpsc-product', array(
 		'capability_type' => 'post',
+		'has_archive' => $catalog_slug,
 		'hierarchical' => true,
 		'exclude_from_search' => false,
 		'public' => true,
 		'show_ui' => true,
 		'show_in_nav_menus' => true,
-                'menu_icon' => WPSC_CORE_IMAGES_URL . "/credit_cards.png",
+		'menu_icon' => WPSC_CORE_IMAGES_URL . "/credit_cards.png",
 		'labels' => $labels,
 		'query_var' => true,
 		'register_meta_box_cb' => 'wpsc_meta_boxes',
 		'rewrite' => array(
-			'slug' => $wpsc_page_titles['products'] . '/%wpsc_product_category%',
+			'slug' => $catalog_slug . '/' . wpsc_get_option( 'product_base_slug' ),
 			'with_front' => false
 		)
 	) );
@@ -400,9 +406,9 @@ function wpsc_register_post_types() {
 	register_taxonomy( 'wpsc_product_category', 'wpsc-product', array(
 		'hierarchical' => true,
 		'rewrite' => array(
-			'slug' => $wpsc_page_titles['products'],
+			'slug' => $catalog_slug . '/' . $category_base_slug,
 			'with_front' => false,
-			'hierarchical' => (bool) get_option( 'product_category_hierarchical_url', 0 ),
+			'hierarchical' => (bool) $hierarchical_product_category,
 		),
 		'labels' => $labels,
 	) );
@@ -432,6 +438,18 @@ function wpsc_register_post_types() {
 	$role->add_cap( 'read_wpsc-product-file' );
 }
 add_action( 'init', 'wpsc_register_post_types', 8 );
+
+function wpsc_register_custom_page_rewrites() {
+	$cart_slug               = wpsc_get_option( 'cart_page_slug' );
+	$transaction_result_slug = wpsc_get_option( 'transaction_result_page_slug' );
+	$customer_account_slug   = wpsc_get_option( 'customer_account_page_slug' );
+
+	$regexp = "({$cart_slug}|{$transaction_result_slug}|{$customer_account_slug})(/.+?)?/?$";
+	$rewrite = 'index.php?wpsc_page=$matches[1]&callback=$matches[2]';
+
+	add_rewrite_rule( $regexp, $rewrite, 'top' );
+}
+add_action( 'init', 'wpsc_register_custom_page_rewrites', 1 );
 
 /**
  * Post Updated Messages

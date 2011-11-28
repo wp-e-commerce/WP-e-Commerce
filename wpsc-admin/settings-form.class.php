@@ -14,7 +14,7 @@ class WPSC_Settings_Form
 			add_settings_section( $section_id, $section_array['title'], array( $this, 'callback_section_description' ),  'wpsc-settings' );
 
 			foreach ( $section_array['fields'] as $field_name ) {
-				$field_array = $this->form_array[$field_name];
+				$field_array =& $this->form_array[$field_name];
 				if ( empty( $field_array['id'] ) )
 					$field_array['id'] = str_replace( '_', '-', $field_name );
 
@@ -27,20 +27,25 @@ class WPSC_Settings_Form
 				if ( ! array_key_exists( 'value', $field_array ) )
 					$field_array['value'] = wpsc_get_option( $field_name );
 
-				if ( array_key_exists( 'validation', $field_array ) )
+				if ( ! array_key_exists( 'description', $field_array ) )
+					$field_array['description'] = '';
+
+				if ( array_key_exists( 'validation', $field_array ) ) {
 					add_filter( 'sanitize_option_' . $field_array['name'], array( $this, 'validate_field' ), 10, 2 );
+				}
 
 				add_settings_field( $field_array['id'], $field_array['title'], array( $this, 'output_field' ), 'wpsc-settings', $section_id, $field_array );
 				register_setting( 'wpsc-settings', $field_array['name'] );
 			}
 		}
 
-		add_filter( 'wpsc_settings_validation_rule_required', array( $this, 'validate_field_required' ), 10, 4 );
+		add_filter( 'wpsc_settings_validation_rule_required', array( $this, 'validate_field_required' ), 10, 5 );
 	}
 
-	public function validate_field_required( $valid, $value, $field_name, $field_title ) {
+	public function validate_field_required( $valid, $value, $field_name, $field_title, $field_id ) {
 		if ( $value == '' ) {
-			add_settings_error( $field_name, 'field-required', sprintf( __( 'The field %s cannot be blank.', 'wpsc' ), $field_title ) );
+			$field_anchor = '<a href="#' . esc_attr( $field_id ) . '">' . esc_html( $field_title ) . '</a>';
+			add_settings_error( $field_name, 'field-required' . $field_name, sprintf( __( 'The field %s cannot be blank.', 'wpsc' ), $field_anchor ) );
 			$valid = false;
 		}
 		return $valid;
@@ -50,9 +55,10 @@ class WPSC_Settings_Form
 		$internal_name = substr( $field_name, 5 ); // remove the wpsc_ part, WP core passes the whole option name
 		$rules = explode( '|', $this->form_array[$internal_name]['validation'] );
 		$field_title = $this->form_array[$internal_name]['title'];
+		$field_id = $this->form_array[$internal_name]['id'];
 		$valid = true;
 		foreach ( $rules as $rule ) {
-			$valid = apply_filters( 'wpsc_settings_validation_rule_' . $rule, $valid, $value, $field_name, $field_title );
+			$valid = apply_filters( 'wpsc_settings_validation_rule_' . $rule, $valid, $value, $field_name, $field_title, $field_id );
 		}
 
 		if ( ! $valid )
@@ -96,14 +102,40 @@ class WPSC_Settings_Form
 			?>
 			<label class="wpsc-radio-label">
 				<input
-					class="<?php echo esc_attr( $class    ); ?>"
-					id   ="<?php echo esc_attr( $radio_id ); ?>"
-					name ="<?php echo esc_attr( $name     ); ?>"
-					<?php checked( $value, $radio_value ); ?>
+				<?php checked( $value, $radio_value ); ?>
+					class="<?php echo esc_attr( $class       ); ?>"
+					id   ="<?php echo esc_attr( $radio_id    ); ?>"
+					name ="<?php echo esc_attr( $name        ); ?>"
+					value="<?php echo esc_attr( $radio_value ); ?>"
 					type ="radio"
-					value="<?php echo esc_attr( $radio_value    ); ?>"
 				/>
 				<?php echo esc_html( $radio_label ); ?>
+			</label>
+			<?php
+		}
+		echo '<br />';
+		echo '<p class="howto">' . $description_html . '</p>';
+	}
+
+	private function output_checkboxes( $field_array ) {
+		extract( $field_array );
+		$description_html = apply_filters( 'wpsc_settings_' . $name . '_description', esc_html( $description ), $field_array );
+		if ( ! isset( $class ) )
+			$class = 'wspc-checkbox';
+
+		foreach ( $options as $checkbox_value => $checkbox_label ) {
+			$checkbox_id = $id . '-' . sanitize_title_with_dashes( $value );
+			?>
+			<label class="wpsc-checkbox-label">
+				<input
+					<?php checked( $value, $checkbox_value ); ?>
+					class="<?php echo esc_attr( $class          ); ?>"
+					id   ="<?php echo esc_attr( $checkbox_id    ); ?>"
+					name ="<?php echo esc_attr( $name           ); ?>"
+					value="<?php echo esc_attr( $checkbox_value ); ?>"
+					type ="checkbox"
+				/>
+				<?php echo esc_html( $checkbox_label ); ?>
 			</label>
 			<?php
 		}

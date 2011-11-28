@@ -77,7 +77,9 @@ abstract class WPSC_Settings_Tab
 	protected $form;
 	public function display() {
 		if ( $this->uses_settings_api() ) {
+			do_action( 'wpsc_before_settings_tab_' . $this->id );
 			$this->form->display();
+			do_action( 'wpsc_after_settings_tab_' . $this->id );
 		}
 	}
 
@@ -392,6 +394,7 @@ final class WPSC_Settings_Page
 		$action = ( $this->current_tab->uses_settings_api() ) ? 'options.php?tab=' . $this->current_tab_id : $this->submit_url();
 		?>
 			<form action="<?php echo esc_url( $action ); ?>" method="post" id="wpsc-settings-form">
+
 				<div id="options_<?php echo esc_attr( $this->current_tab_id ); ?>">
 					<?php
 						if ( is_callable( array( $this->current_tab, 'display' ) ) ) {

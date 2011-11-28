@@ -49,7 +49,7 @@
 				$(WPSC_Settings_Page).trigger('wpsc_settings_tab_loaded');
 				$(WPSC_Settings_Page).trigger('wpsc_settings_tab_loaded_' + WPSC_Settings_Page.current_tab);
 
-				$('div.updated, div.error').not('.inline').insertAfter('h2.nav-tab-wrapper').fadeIn(500);
+				$('div.updated, div.error').not('.inline').addClass('below-h2').prependTo('#wpsc-settings-form').fadeIn(500);
 			});
 		},
 
@@ -881,6 +881,13 @@
 		}
 	};
 	$(WPSC_Settings_Page).bind('wpsc_settings_tab_loaded_gateway', WPSC_Settings_Page.Gateway.event_init);
+
+	WPSC_Settings_Page.Permalinks = {
+		event_init : function() {
+			$('#options_permalinks').find('div.updated, div.error').not(':visible').fadeIn(500);
+		}
+	};
+	$(WPSC_Settings_Page).bind('wpsc_settings_tab_loaded_permalinks', WPSC_Settings_Page.Permalinks.event_init);
 })(jQuery);
 
 WPSC_Settings_Page.init();

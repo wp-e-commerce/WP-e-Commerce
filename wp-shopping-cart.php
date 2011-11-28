@@ -165,9 +165,11 @@ class WP_eCommerce {
 		$this->constants();
 		wpsc_install();
 		do_action( 'wpsc_activate' );
+		flush_rewrite_rules();
 	}
 
 	public function deactivate() {
+		flush_rewrite_rules();
 		foreach ( wp_get_schedules() as $cron => $schedule ) {
 			wp_clear_scheduled_hook( "wpsc_{$cron}_cron_task" );
 		}
