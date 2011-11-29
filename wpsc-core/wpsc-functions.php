@@ -1218,8 +1218,11 @@ function wpsc_product_link( $permalink, $post, $leavename ) {
 			}
 		}
 
-		if(isset($category_slug) && empty($category_slug)) $category_slug = 'product';
-
+		if( isset( $category_slug ) && empty( $category_slug ) ) 
+			$category_slug = 'product';
+		
+		$category_slug = apply_filters( 'wpsc_product_permalink_cat_slug', $category_slug, $post_id );
+		
 		$rewritereplace = array(
 			$category_slug,
 			$post_name
