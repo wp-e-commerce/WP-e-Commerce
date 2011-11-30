@@ -269,7 +269,7 @@ function _wpsc_purchlogs_need_update() {
             </table>
             <div id='wpsc_purchlog_order_status'>
                <form action='' method='post'>
-               <p><label for='purchaselog-<?php echo $_GET['purchaselog_id']; ?>'><?php _e('Order Status:','wpsc'); ?></label><select id='purchaselog-<?php echo $_GET['purchaselog_id']; ?>' class='selector' name='<?php echo $_GET['purchaselog_id']; ?>' title='<?php echo $_GET['purchaselog_id']; ?>' >
+               <p><label for='purchaselog-<?php echo absint( $_GET['purchaselog_id'] ); ?>'><?php _e('Order Status:','wpsc'); ?></label><select id='purchaselog-<?php echo absint( $_GET['purchaselog_id'] ); ?>' class='selector' name='<?php echo absint( $_GET['purchaselog_id'] ); ?>' title='<?php echo absint( $_GET['purchaselog_id'] ); ?>' >
             <?php while(wpsc_have_purch_items_statuses()) : wpsc_the_purch_status(); ?>
                <option value='<?php echo wpsc_the_purch_status_id(); ?>' <?php echo wpsc_purchlog_is_checked_status(); ?> ><?php echo wpsc_the_purch_status_name(); ?> </option>
             <?php endwhile; ?>
