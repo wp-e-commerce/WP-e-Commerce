@@ -297,9 +297,9 @@ function _wpsc_purchlogs_need_update() {
             <?php endif; ?>
 <img src='<?php echo WPSC_CORE_IMAGES_URL; ?>/printer.png' alt='printer icon' />&ensp;<a href='<?php echo add_query_arg('wpsc_admin_action','wpsc_display_invoice'); ?>'><?php _e('View Packing Slip', 'wpsc'); ?></a>
 
-<br /><br class='small' /><img src='<?php echo WPSC_CORE_IMAGES_URL; ?>/email_go.png' alt='email icon' />&ensp;<a href='<?php echo add_query_arg('email_buyer_id',$_GET['purchaselog_id']); ?>'><?php _e('Resend Receipt to Buyer', 'wpsc'); ?></a>
+<br /><br class='small' /><img src='<?php echo WPSC_CORE_IMAGES_URL; ?>/email_go.png' alt='email icon' />&ensp;<a href='<?php echo add_query_arg( 'email_buyer_id', absint( $_GET['purchaselog_id'] ) ); ?>'><?php _e('Resend Receipt to Buyer', 'wpsc'); ?></a>
 
-<br /><br class='small' /><a class='submitdelete' title='<?php echo esc_attr(__( 'Delete this log', 'wpsc' )); ?>' href='<?php echo wp_nonce_url("admin.php?wpsc_admin_action=delete_purchlog&amp;purchlog_id=".$_GET['purchaselog_id'], 'delete_purchlog_' .$_GET['purchaselog_id']); ?>' onclick="if ( confirm(' <?php echo esc_js(sprintf( __("You are about to delete this log '%s'\n 'Cancel' to stop, 'OK' to delete.",'wpsc'),  wpsc_purchaselog_details_date() )) ?>') ) { return true;}return false;"><img src='<?php echo WPSC_CORE_IMAGES_URL . "/cross.png"; ?>' alt='delete icon' />               &nbsp;<?php _e('Remove this record', 'wpsc') ?></a>
+<br /><br class='small' /><a class='submitdelete' title='<?php echo esc_attr(__( 'Delete this log', 'wpsc' )); ?>' href='<?php echo wp_nonce_url("admin.php?wpsc_admin_action=delete_purchlog&amp;purchlog_id=" . absint ( $_GET['purchaselog_id'] ), 'delete_purchlog_' . absint( $_GET['purchaselog_id'] ) ); ?>' onclick="if ( confirm(' <?php echo esc_js(sprintf( __("You are about to delete this log '%s'\n 'Cancel' to stop, 'OK' to delete.",'wpsc'),  wpsc_purchaselog_details_date() )) ?>') ) { return true;}return false;"><img src='<?php echo WPSC_CORE_IMAGES_URL . "/cross.png"; ?>' alt='delete icon' />               &nbsp;<?php _e('Remove this record', 'wpsc') ?></a>
 
 <br /><br class='small' />&emsp;&ensp;    <a href='<?php echo $page_back ?>'><?php _e('Go Back', 'wpsc'); ?></a>
 <br /><br />
@@ -487,7 +487,7 @@ function _wpsc_purchlogs_need_update() {
    ?>
    <form  action='' method='post'>
       <input type='hidden' name='wpsc_admin_action' value='purchlogs_search' />
-      <input type='text' value='<?php if(isset($_POST['purchlogs_searchbox'])) echo $_POST['purchlogs_searchbox']; ?>' name='purchlogs_searchbox' id='purchlogs_searchbox' />
+      <input type='text' value='<?php if(isset($_POST['purchlogs_searchbox'])) echo esc_attr( $_POST['purchlogs_searchbox'] ); ?>' name='purchlogs_searchbox' id='purchlogs_searchbox' />
       <input type="submit" value="<?php _e('Search Logs', 'wpsc'); ?>"  class="button-secondary action" />
    </form>
    <?php
@@ -550,8 +550,8 @@ function wpsc_purchlogs_notes() {
          <form method="post" action="">
             <input type='hidden' name='wpsc_admin_action' value='purchlogs_update_notes' />
             <input type="hidden" name="wpsc_purchlogs_update_notes_nonce" id="wpsc_purchlogs_update_notes_nonce" value="<?php echo wp_create_nonce( 'wpsc_purchlogs_update_notes' ); ?>" />
-            <input type='hidden' name='purchlog_id' value='<?php echo $_GET['purchaselog_id']; ?>' />
-            <p><textarea name="purchlog_notes" rows="3" wrap="virtual" id="purchlog_notes" style="width:100%;"><?php if ( isset($_POST['purchlog_notes']) ) { echo stripslashes($_POST['purchlog_notes']); } else { echo wpsc_display_purchlog_notes(); } ?></textarea></p>
+            <input type='hidden' name='purchlog_id' value='<?php echo absint( $_GET['purchaselog_id'] ); ?>' />
+            <p><textarea name="purchlog_notes" rows="3" wrap="virtual" id="purchlog_notes" style="width:100%;"><?php if ( isset($_POST['purchlog_notes']) ) { echo stripslashes( esc_textarea( $_POST['purchlog_notes'] ) ); } else { echo wpsc_display_purchlog_notes(); } ?></textarea></p>
             <p><input class="button" type="submit" name="button" id="button" value="<?php _e( 'Update Notes', 'wpsc' ); ?>" /></p>
          </form>
       </div>
