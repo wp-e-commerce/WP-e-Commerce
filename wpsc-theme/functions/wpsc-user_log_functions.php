@@ -34,7 +34,10 @@ function validate_form_data() {
 	$bad_input_message = '';
 	$_SESSION['collected_data'] = null;
 
-	if ( !empty($_POST['collected_data']) ) {
+	if( ! wp_verify_nonce( $_POST['_wpsc_user_profile'], 'wpsc_user_profile') )
+		die( __( 'It would appear either you are trying to hack into this account, or your session has expired.  Hoping for the latter.', 'wpsc' ) );
+
+	if ( ! empty($_POST['collected_data']) ) {
 
 		foreach ( (array)$_POST['collected_data'] as $value_id => $value ) {
 			$form_sql = $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `id` = %d LIMIT 1", $value_id );
@@ -283,6 +286,7 @@ function wpsc_display_form_fields() {
 					echo "<input type='text' value='" . $value . "' name='collected_data[" . $form_field['id'] . "]' />";
 					break;
 			}
+			echo wp_nonce_field( 'wpsc_user_profile', '_wpsc_user_profile' );
 			echo "
         </td>
       </tr>\n\r";
