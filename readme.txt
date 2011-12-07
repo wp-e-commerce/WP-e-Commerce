@@ -156,6 +156,9 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 
 == Changelog ==
+= 3.8.7.3 =
+* Security fixes.
+
 = 3.8.7.2 =
 * New: Support for g:availability to Google Merchant Centre feed. Props bbaskets & longercat
 * Fix: Admin product page sorting by column was not working.
