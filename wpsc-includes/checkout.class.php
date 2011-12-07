@@ -42,7 +42,7 @@ function wpsc_check_purchase_processed($processed){
 	foreach($wpsc_purchlog_statuses as $status)
 		if($status['order'] == $processed && isset($status['is_transaction']) && 1 == $status['is_transaction'] )
 			$is_transaction = true;
-	
+
 	return $is_transaction;
 }
 
@@ -115,7 +115,7 @@ function wpsc_display_tax_label( $checkout = false ) {
  * @access public
  *
  * @since 3.7
- * @return (boolean) 
+ * @return (boolean)
  */
 function wpsc_have_checkout_items() {
 	global $wpsc_checkout;
@@ -135,11 +135,11 @@ function wpsc_the_checkout_item() {
 }
 
 /**
- * Checks shipping details 
+ * Checks shipping details
  * @access public
- *	
+ *
  * @since 3.7
- * @return (boolean) 
+ * @return (boolean)
  */
 function wpsc_is_shipping_details() {
 	global $wpsc_checkout;
@@ -155,15 +155,15 @@ function wpsc_is_shipping_details() {
  * @access public
  *
  * @since 3.8
- * @param $additional_classes (string) additional classes to be 
- * @return 
+ * @param $additional_classes (string) additional classes to be
+ * @return
  */
 function wpsc_the_checkout_details_class($additional_classes = ''){
  if(wpsc_is_shipping_details())
  	echo "class='wpsc_shipping_forms ".$additional_classes."'";
  else
  	echo "class='wpsc_billing_forms ".$additional_classes."'";
- 
+
 }
 
 /**
@@ -239,7 +239,7 @@ function wpsc_show_find_us(){
 }
 
 /**
- * disregard state fields - checks to see whether selected country has regions or not, 
+ * disregard state fields - checks to see whether selected country has regions or not,
  * depending on the scenario will return wither a true or false
  * @access public
  *
@@ -249,7 +249,7 @@ function wpsc_show_find_us(){
 function wpsc_disregard_shipping_state_fields(){
 	global $wpsc_checkout;
 	if(!wpsc_uses_shipping()):
-	 	if( 'shippingstate' == $wpsc_checkout->checkout_item->unique_name && wpsc_has_regions($_SESSION['wpsc_delivery_country'])) 
+	 	if( 'shippingstate' == $wpsc_checkout->checkout_item->unique_name && wpsc_has_regions($_SESSION['wpsc_delivery_country']))
 	 		return true;
 	 	else
 	 		return false;
@@ -405,7 +405,7 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 
 	if ( empty( $selected_region ) )
 		$selected_region = esc_attr( get_option( 'base_region' ) );
-		
+
 	$country_data = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `visible`= '1' ORDER BY `country` ASC", ARRAY_A );
 
 	$output .= "<select name='country' id='current_country' " . $js . " >";
@@ -459,7 +459,7 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 	}
 
 	if ( $uses_zipcode == true ) {
-		$output .= " <input type='text' style='color:" . $color . ";' onclick='if (this.value==\"Your Zipcode\") {this.value=\"\";this.style.color=\"#000\";}' onblur='if (this.value==\"\") {this.style.color=\"#999\"; this.value=\"Your Zipcode\"; }' value='" . $zipvalue . "' size='10' name='zipcode' id='zipcode'>";
+		$output .= " <input type='text' style='color:" . $color . ";' onclick='if (this.value==\"Your Zipcode\") {this.value=\"\";this.style.color=\"#000\";}' onblur='if (this.value==\"\") {this.style.color=\"#999\"; this.value=\"Your Zipcode\"; }' value='" . esc_attr( $zipvalue ) . "' size='10' name='zipcode' id='zipcode'>";
 	}
 	return $output;
 }
@@ -564,7 +564,7 @@ class wpsc_checkout {
 		if ( ($user_ID > 0) ){
 			if(!isset($_SESSION['wpsc_checkout_saved_values']))
 				$_SESSION['wpsc_checkout_saved_values'] = get_user_meta( $user_ID, 'wpshpcrt_usr_profile',1 );
-			
+
 			$delivery_country_id = wpsc_get_country_form_id_by_type('delivery_country');
      		$billing_country_id = wpsc_get_country_form_id_by_type('country');
 		}
@@ -647,7 +647,7 @@ class wpsc_checkout {
 				if ( $this->checkout_item->unique_name == 'shippingstate' ) {
 					if ( wpsc_uses_shipping() && wpsc_has_regions($_SESSION['wpsc_delivery_country']) ) {
 						$region_name = $wpdb->get_var( $wpdb->prepare( "SELECT `name` FROM `" . WPSC_TABLE_REGION_TAX . "` WHERE `id`= %d LIMIT 1", $_SESSION['wpsc_delivery_region'] ) );
-						$output = "<input title='" . $this->checkout_item->unique_name . "' type='hidden' id='" . $this->form_element_id() . "' class='shipping_region' name='collected_data[{$this->checkout_item->id}]' value='" . $_SESSION['wpsc_delivery_region'] . "' size='4' /><span class='shipping_region_name'>" . $region_name . "</span> ";
+						$output = "<input title='" . $this->checkout_item->unique_name . "' type='hidden' id='" . $this->form_element_id() . "' class='shipping_region' name='collected_data[{$this->checkout_item->id}]' value='" . esc_attr( $_SESSION['wpsc_delivery_region'] ) . "' size='4' /><span class='shipping_region_name'>" . esc_html( $region_name ) . "</span> ";
 					} else {
 						$disabled = '';
 						if(wpsc_disregard_shipping_state_fields())
@@ -756,7 +756,7 @@ class wpsc_checkout {
 		//Basic Form field validation for billing and shipping details
 		foreach ( $this->checkout_items as $form_data ) {
 			$value = '';
-			
+
 			if( isset( $_POST['collected_data'][$form_data->id] ) )
 				$value = stripslashes_deep( $_POST['collected_data'][$form_data->id] );
 
@@ -815,18 +815,18 @@ class wpsc_checkout {
 	 */
 	function save_forms_to_db( $purchase_id ) {
 		global $wpdb;
-		
+
 		// needs refactoring badly
 		$shipping_state_id = $wpdb->get_var( "SELECT `" . WPSC_TABLE_CHECKOUT_FORMS . "`.`id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `unique_name` = 'shippingstate' " );
 		$billing_state_id = $wpdb->get_var( "SELECT `" . WPSC_TABLE_CHECKOUT_FORMS . "`.`id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `unique_name` = 'billingstate' " );
 		$shipping_state = $billing_state = '';
-		
+
 		$_POST['collected_data'] = stripslashes_deep( $_POST['collected_data'] );
-		
+
 		foreach ( $this->checkout_items as $form_data ) {
 			if ( $form_data->type == 'heading' )
 				continue;
-			
+
 			$value = '';
 			if( isset( $_POST['collected_data'][$form_data->id] ) )
 				$value = $_POST['collected_data'][$form_data->id];
@@ -845,7 +845,7 @@ class wpsc_checkout {
 							$billing_state = $value[1];
 						else
 							$shipping_state = $value[1];
-							
+
 					$value = $value[0];
 					$prepared_query = $wpdb->insert(
 								    WPSC_TABLE_SUBMITED_FORM_DATA,
@@ -893,7 +893,7 @@ class wpsc_checkout {
 						    );
 			}
 		}
-		
+
 		// update the states
 		$wpdb->insert(
 			    WPSC_TABLE_SUBMITED_FORM_DATA,
@@ -921,7 +921,7 @@ class wpsc_checkout {
 				'%s'
 			    )
 			);
-		
+
 	    }
 
 	/**
