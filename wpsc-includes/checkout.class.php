@@ -894,7 +894,7 @@ class wpsc_checkout {
 		}
 
 		// update the states
-				$wpdb->insert(
+		$wpdb->insert(
 			    WPSC_TABLE_SUBMITED_FORM_DATA,
 			    array(
 				'log_id' => $purchase_id,
@@ -920,12 +920,7 @@ class wpsc_checkout {
 				'%s'
 			    )
 			);
-<<<<<<< HEAD
-		}
-=======
-
 	    }
->>>>>>> a24846c... Properly address security issue 1 of 5.
 
 	/**
 	 * Function that checks how many checkout fields are stored in checkout form fields table
