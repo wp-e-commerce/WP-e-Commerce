@@ -129,7 +129,7 @@ class WPSC_Settings_Tab_General extends WPSC_Settings_Tab
 					<select name='wpsc_options[currency_type]' onchange='getcurrency(this.options[this.selectedIndex].value);'>
 						<?php
 						$currency_data = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_CURRENCY_LIST . "` ORDER BY `country` ASC", ARRAY_A );
-						$currency_type = esc_attr( get_option( 'currency_type' );
+						$currency_type = esc_attr( get_option( 'currency_type' ) );
 						foreach ( $currency_data as $currency ) {
 						?>
 							<option value='<?php echo $currency['id']; ?>' <?php selected( $currency['id'], $currency_type ); ?>><?php echo htmlspecialchars( $currency['country'] ); ?> (<?php echo $currency['currency']; ?>)</option>
