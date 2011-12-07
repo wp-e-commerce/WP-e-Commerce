@@ -908,6 +908,19 @@ class wpsc_checkout {
 				'%s'
 			    )
 			);
+		$wpdb->insert(
+			    WPSC_TABLE_SUBMITED_FORM_DATA,
+			    array(
+				'log_id' => $purchase_id,
+				'form_id' => $billing_state_id,
+				'value' => $billing_state
+			    ),
+			    array(
+				'%d',
+				'%d',
+				'%s'
+			    )
+			);
 
 	    }
 
