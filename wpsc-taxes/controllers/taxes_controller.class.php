@@ -345,9 +345,7 @@ class wpec_taxes_controller {
             $returnable = '<p>' . __( 'No Tax Bands Setup. Set Tax Bands up in <a href="options-general.php?page=wpsc-settings&tab=taxes">Settings &gt; Taxes</a>', 'wpsc' ) . '</p>';
          }// if
       } elseif(!$this->wpec_taxes->wpec_taxes_get_enabled()) {
-         $returnable = '<p>';
-         $returnable .= __( 'Taxes are not enabled. See <a href="options-general.php?page=wpsc-settings&tab=taxes">Settings &gt; Taxes</a>', 'wpsc' );
-         $returnable .= '</p>';
+         $returnable = __( 'Taxes are not enabled. See <a href="options-general.php?page=wpsc-settings&tab=taxes">Settings &gt; Taxes</a>', 'wpsc' );
       }// if
 
       return $returnable;
