@@ -135,13 +135,14 @@ function wpsc_purchase_log_save_tracking_id() {
 	if ( ! wp_verify_nonce( $_POST['nonce'], 'wpsc_purchase_logs' ) )
 		die( 'Session expired. Try refreshing your Sales Log page.' );
 
+
 		$wpdb->update( 
 			    WPSC_TABLE_PURCHASE_LOGS, 
 			    array( 
-				'track_id' => $trackingid 
+				'track_id' => $_POST['value'] 
 				),
 			    array(
-			     'id' => $id   
+			     'id' => $_POST['log_id']  
 			    ),
 			    '%s',
 			    '%d'
