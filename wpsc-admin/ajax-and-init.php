@@ -136,13 +136,13 @@ function wpsc_purchase_log_save_tracking_id() {
 		die( 'Session expired. Try refreshing your Sales Log page.' );
 
 
-		$wpdb->update( 
-			    WPSC_TABLE_PURCHASE_LOGS, 
-			    array( 
-				'track_id' => $_POST['value'] 
+		$wpdb->update(
+			    WPSC_TABLE_PURCHASE_LOGS,
+			    array(
+				'track_id' => $_POST['value']
 				),
 			    array(
-			     'id' => $_POST['log_id']  
+			     'id' => $_POST['log_id']
 			    ),
 			    '%s',
 			    '%d'
@@ -346,7 +346,7 @@ function wpsc_duplicate_taxonomies( $id, $new_id, $post_type ) {
  */
 function wpsc_duplicate_product_meta( $id, $new_id ) {
 	global $wpdb;
-	
+
 	$post_meta_infos = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id = %d", $id ) );
 
 	if ( count( $post_meta_infos ) ) {
@@ -372,7 +372,7 @@ function wpsc_duplicate_product_meta( $id, $new_id ) {
  * Duplicates children product and children meta
  */
 function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
-	
+
 	//Get children products and duplicate them
 	$child_posts = get_posts( array(
 		'post_parent' => $old_parent_id,
@@ -383,7 +383,7 @@ function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
 
 	foreach ( $child_posts as $child_post )
 	    wpsc_duplicate_product_process( $child_post, $new_parent_id );
-	
+
 }
 
 function wpsc_purchase_log_csv() {
@@ -644,7 +644,7 @@ function wpsc_purchlog_resend_email() {
 	$sendback = wp_get_referer();
 	if ( isset( $sent ) )
 	    $sendback = add_query_arg( 'sent', $sent, $sendback );
-	
+
 	wp_redirect( $sendback );
 	exit();
 }
@@ -787,7 +787,7 @@ function wpsc_save_product_order() {
 
 	print_r( $products );
 
-	foreach ( $products as $order => $product_id ) { 
+	foreach ( $products as $order => $product_id ) {
 	    $wpdb->update(
 			$wpdb->posts,
 			array(
@@ -926,162 +926,6 @@ function wpsc_ajax_get_payment_form() {
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'get_payment_form') )
 	add_action( 'admin_init', 'wpsc_ajax_get_payment_form' );
 
-
-/*
- * Submit Options from Settings Pages,
- * takes an array of options checks to see whether it is empty or the same as the exisiting values
- * and if its not it updates them.
- */
-
-function wpsc_submit_options( $selected='' ) {
-	global $wpdb, $wpsc_gateways;
-	$updated = 0;
-
-	//This is to change the Overall target market selection
-	check_admin_referer( 'update-options', 'wpsc-update-options' );
-	if ( isset( $_POST['change-settings'] ) ) {
-		if ( isset( $_POST['wpsc_also_bought'] ) && $_POST['wpsc_also_bought'] == 'on' )
-			update_option( 'wpsc_also_bought', 1 );
-		else
-			update_option( 'wpsc_also_bought', 0 );
-
-		if ( isset( $_POST['display_find_us'] ) && $_POST['display_find_us'] == 'on' )
-			update_option( 'display_find_us', 1 );
-		else
-			update_option( 'display_find_us', 0 );
-
-		if ( isset( $_POST['wpsc_share_this'] ) && $_POST['wpsc_share_this'] == 'on' )
-			update_option( 'wpsc_share_this', 1 );
-		else
-			update_option( 'wpsc_share_this', 0 );
-
-	}
-	if (empty($_POST['countrylist2']) && !empty($_POST['wpsc_options']['currency_sign_location']))
-		$selected = 'none';
-
-	if ( !isset( $_POST['countrylist2'] ) )
-		$_POST['countrylist2'] = '';
-	if ( !isset( $_POST['country_id'] ) )
-		$_POST['country_id'] = '';
-	if ( !isset( $_POST['country_tax'] ) )
-		$_POST['country_tax'] = '';
-
-	if ( $_POST['countrylist2'] != null || !empty($selected) ) {
-		$AllSelected = false;
-		if ( $selected == 'all' ) {
-			$wpdb->query( "UPDATE `" . WPSC_TABLE_CURRENCY_LIST . "` SET visible = '1'" );
-			$AllSelected = true;
-		}
-		if ( $selected == 'none' ) {
-			$wpdb->query( "UPDATE `" . WPSC_TABLE_CURRENCY_LIST . "` SET visible = '0'" );
-			$AllSelected = true;
-		}
-		if ( $AllSelected != true ) {
-			$countrylist = $wpdb->get_col( "SELECT id FROM `" . WPSC_TABLE_CURRENCY_LIST . "` ORDER BY country ASC " );
-			//find the countries not selected
-			$unselectedCountries = array_diff( $countrylist, $_POST['countrylist2'] );
-			foreach ( $unselectedCountries as $unselected ) {
-				$wpdb->update( 
-					WPSC_TABLE_CURRENCY_LIST,
-					array(
-					    'visible' => 0
-					),
-					array(
-					    'id' => $unselected
-					),
-					'%d',
-					'%d' 
-				    );
-			}
-
-			//find the countries that are selected
-			$selectedCountries = array_intersect( $countrylist, $_POST['countrylist2'] );
-			foreach ( $selectedCountries as $selected ) {
-				$wpdb->update( 
-					WPSC_TABLE_CURRENCY_LIST,
-					array(
-					    'visible' => 1
-					),
-					array(
-					    'id' => $selected
-					),
-					'%d',
-					'%d' 
-				    );
-			}
-		}
-	}
-	$previous_currency = get_option( 'currency_type' );
-
-	//To update options
-	if ( isset( $_POST['wpsc_options'] ) ) {
-		// make sure stock keeping time is a number
-		if ( isset( $_POST['wpsc_options']['wpsc_stock_keeping_time'] ) ) {
-			$skt =& $_POST['wpsc_options']['wpsc_stock_keeping_time']; // I hate repeating myself
-			$skt = (float) $skt;
-			if ( $skt <= 0 || ( $skt < 1 && $_POST['wpsc_options']['wpsc_stock_keeping_interval'] == 'hour' ) ) {
-				unset( $_POST['wpsc_options']['wpsc_stock_keeping_time'] );
-				unset( $_POST['wpsc_options']['wpsc_stock_keeping_interval'] );
-			}
-		}
-
-		foreach ( $_POST['wpsc_options'] as $key => $value ) {
-			if ( $value != get_option( $key ) ) {
-				update_option( $key, $value );
-				$updated++;
-
-			}
-		}
-	}
-
-	if ( $previous_currency != get_option( 'currency_type' ) ) {
-		$currency_code = $wpdb->get_var( "SELECT `code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id` IN ('" . absint( get_option( 'currency_type' ) ) . "')" );
-
-		$selected_gateways = get_option( 'custom_gateway_options' );
-		$already_changed = array( );
-		foreach ( $selected_gateways as $selected_gateway ) {
-			if ( isset( $wpsc_gateways[$selected_gateway]['supported_currencies'] ) ) {
-				if ( in_array( $currency_code, $wpsc_gateways[$selected_gateway]['supported_currencies']['currency_list'] ) ) {
-
-					$option_name = $wpsc_gateways[$selected_gateway]['supported_currencies']['option_name'];
-
-					if ( !in_array( $option_name, $already_changed ) ) {
-						update_option( $option_name, $currency_code );
-						$already_changed[] = $option_name;
-					}
-				}
-			}
-		}
-	}
-
-	foreach ( $GLOBALS['wpsc_shipping_modules'] as $shipping ) {
-		if ( is_object( $shipping ) )
-			$shipping->submit_form();
-	}
-
-
-	//This is for submitting shipping details to the shipping module
-	if ( !isset( $_POST['update_gateways'] ) )
-		$_POST['update_gateways'] = '';
-	if ( !isset( $_POST['custom_shipping_options'] ) )
-		$_POST['custom_shipping_options'] = null;
-	if ( $_POST['update_gateways'] == 'true' ) {
-
-		update_option( 'custom_shipping_options', $_POST['custom_shipping_options'] );
-
-		$shipadd = 0;
-		foreach ( $GLOBALS['wpsc_shipping_modules'] as $shipping ) {
-			foreach ( (array)$_POST['custom_shipping_options'] as $shippingoption ) {
-				if ( $shipping->internal_name == $shippingoption ) {
-					$shipadd++;
-				}
-			}
-		}
-	}
-}
-if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'submit_options') )
-	add_action( 'admin_init', 'wpsc_submit_options', 1 );
-
 add_action( 'update_option_product_category_hierarchical_url', 'wpsc_update_option_product_category_hierarchical_url' );
 
 function wpsc_update_option_product_category_hierarchical_url() {
@@ -1195,13 +1039,13 @@ function wpsc_clean_categories() {
 			$url_name = sanitize_title( $tidied_name );
 			$similar_names = $wpdb->get_row( $wpdb->prepare( "SELECT COUNT(*) AS `count`, MAX(REPLACE(`nice-name`, '%s', '')) AS `max_number` FROM `" . WPSC_TABLE_PRODUCT_CATEGORIES . "` WHERE `nice-name` REGEXP '^( " . esc_sql( $url_name ) . " ){1}(\d)*$' AND `id` NOT IN (%d) ", $url_name, $datarow['id'] ), ARRAY_A );
 			$extension_number = '';
-			
+
 			if ( $similar_names['count'] > 0 )
 			    $extension_number = (int)$similar_names['max_number'] + 2;
-			
+
 			$url_name .= $extension_number;
-			
-			$wpdb->update( 
+
+			$wpdb->update(
 				WPSC_TABLE_PRODUCT_CATEGORIES,
 				array(
 				    'nice-name' => $url_name
@@ -1212,11 +1056,11 @@ function wpsc_clean_categories() {
 				'%s',
 				'%d'
 			    );
-			
+
 			$updated;
-			
+
 		} else if ( $datarow['active'] == 0 ) {
-			$wpdb->update( 
+			$wpdb->update(
 				WPSC_TABLE_PRODUCT_CATEGORIES,
 				array(
 				    'nice-name' => ''
@@ -1255,7 +1099,7 @@ function wpsc_change_region_tax() {
 			if ( is_numeric( $region_id ) && is_numeric( $tax ) ) {
 				$previous_tax = $wpdb->get_var( $wpdb->prepare( "SELECT `tax` FROM `" . WPSC_TABLE_REGION_TAX . "` WHERE `id` = %d LIMIT 1", $region_id ) );
 				if ( $tax != $previous_tax ) {
-					$wpdb->update( 
+					$wpdb->update(
 						WPSC_TABLE_REGION_TAX,
 						array(
 						    'tax' => $tax
@@ -1264,7 +1108,7 @@ function wpsc_change_region_tax() {
 						    'id' => $region_id
 						),
 						'%s',
-						'%d' 
+						'%d'
 					    );
 					$changes_made = true;
 				}

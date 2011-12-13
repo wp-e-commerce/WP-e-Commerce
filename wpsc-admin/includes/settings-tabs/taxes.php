@@ -6,13 +6,9 @@ class WPSC_Settings_Tab_Taxes extends WPSC_Settings_Tab
 	}
 
 	public function callback_submit_options() {
-		//define the name of the checkbox options
-		$taxes_check_options = array( 'wpec_taxes_enabled' );
+		$taxes_enabled = ( isset( $_POST['wpsc_options']['wpec_taxes_enabled'] ) ) ? 1 : 0;
+		update_option( 'wpec_taxes_enabled', $taxes_enabled );
 
-		//check if checkbox options are checked and modify post output
-		foreach ( $taxes_check_options as $option ) {
-			$_POST['wpsc_options'][$option] = (isset( $_POST['wpsc_options'][$option] )) ? 1 : 0;
-		}// foreach
 		//currently there are two types - bands and rates
 		$taxes_rates_types = array( 'rates', 'bands' );
 
