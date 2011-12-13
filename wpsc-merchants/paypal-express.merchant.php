@@ -280,7 +280,8 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 		}
 
 		// adjust total amount in case we had to round up after converting currency
-		if ( $this->rate !== 1 && $total != $paymentAmount )
+		// or discount calculation
+		if ( $total != $paymentAmount )
 			$paymentAmount = $total;
 
 		$data["PAYMENTREQUEST_0_AMT"] = $paymentAmount;

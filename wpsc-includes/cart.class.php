@@ -1065,8 +1065,10 @@ class wpsc_cart {
       // Get tax only if it is included
       $tax = ( ! wpsc_tax_isincluded() ) ? $this->calculate_total_tax() : 0.00;
 
-      // Get coupon amount
-      $coupons_amount = $this->coupons_amount;
+      // Get coupon amount, note that no matter what float precision this
+      // coupon amount is, it's always saved to the database with rounded
+      // value anyways
+      $coupons_amount = round( $this->coupons_amount, 2 );
 
       // Calculate the total
       $total = ( ( $subtotal + $shipping + $tax ) > $coupons_amount ) ? ( $subtotal + $shipping + $tax - $coupons_amount ) : 0.00;
@@ -1199,8 +1201,8 @@ class wpsc_cart {
     }else{
          $total = 0;
     }
-    
-    return apply_filters( 'wpsc_convert_total_shipping', $total );  
+
+    return apply_filters( 'wpsc_convert_total_shipping', $total );
 
 }
 
@@ -1603,7 +1605,6 @@ function refresh_item() {
 	$this->stock = get_post_meta( $product_id, '_wpsc_stock', true );
 	$this->is_donation = get_post_meta( $product_id, '_wpsc_is_donation', true );
 
-
 	if ( isset( $special_price ) && $special_price > 0 && $special_price < $price )
 		$price = $special_price;
 	$priceandstock_id = 0;
@@ -1708,7 +1709,7 @@ function refresh_item() {
 
 	 // update the claimed stock here
 	$this->update_claimed_stock();
-        
+
     do_action_ref_array( 'wpsc_refresh_item', array( &$this ) );
 }
 
@@ -1842,7 +1843,7 @@ function refresh_item() {
 
 	if( $this->cart->has_total_shipping_discount() )
 	    $shipping = 0;
-	
+
 	$shipping = apply_filters( 'wpsc_item_shipping_amount_db', $shipping, $this );
 
       //initialize tax variables
@@ -1860,26 +1861,26 @@ function refresh_item() {
 
 $wpdb->insert(
 		WPSC_TABLE_CART_CONTENTS,
-		array( 
+		array(
 		    'prodid' => $this->product_id,
-		    'name' => $this->product_name, 
-		    'purchaseid' => $purchase_log_id,  
-		    'price' => $this->unit_price, 
+		    'name' => $this->product_name,
+		    'purchaseid' => $purchase_log_id,
+		    'price' => $this->unit_price,
 		    'pnp' => $shipping,
-		    'tax_charged' => $tax, 
-		    'gst' => $tax_rate, 
-		    'quantity' => $this->quantity, 
+		    'tax_charged' => $tax,
+		    'gst' => $tax_rate,
+		    'quantity' => $this->quantity,
 		    'donation' => $this->is_donation,
-		    'no_shipping' => 0, 
-		    'custom_message' => $this->custom_message, 
-		    'files' => serialize($this->custom_file), 
+		    'no_shipping' => 0,
+		    'custom_message' => $this->custom_message,
+		    'files' => serialize($this->custom_file),
 		    'meta' => NULL
 		),
 		array(
 		    '%d',
 		    '%s',
 		    '%d',
-		    '%d',
+		    '%f',
 		    '%f',
 		    '%f',
 		    '%f',
@@ -1908,7 +1909,7 @@ $wpdb->insert(
          foreach($product_files as $file){
             // if the file is downloadable, check that the file is real
             $unique_id = sha1(uniqid(mt_rand(), true));
-            
+
 	    $wpdb->insert(
 			WPSC_TABLE_DOWNLOAD_STATUS,
 			array(
