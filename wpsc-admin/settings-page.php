@@ -90,9 +90,11 @@ final class WPSC_Settings_Page
 
 		$this->current_tab = $this->get_current_tab();
 
-		if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( $_REQUEST['wpsc_admin_action'] == 'submit_options' )  && is_callable( array( $this->current_tab, 'callback_submit_options' ) ) ) {
+		if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( $_REQUEST['wpsc_admin_action'] == 'submit_options' ) ) {
 			check_admin_referer( 'update-options', 'wpsc-update-options' );
-			$this->current_tab->callback_submit_options();
+			$this->save_options();
+			if ( is_callable( array( $this->current_tab, 'callback_submit_options' ) ) )
+				$this->current_tab->callback_submit_options();
 		}
 	}
 
@@ -161,6 +163,153 @@ final class WPSC_Settings_Page
 				</div>
 			</div>
 		<?php
+	}
+
+	private function save_options( $selected='' ) {
+		global $wpdb, $wpsc_gateways;
+		$updated = 0;
+
+		//This is to change the Overall target market selection
+		check_admin_referer( 'update-options', 'wpsc-update-options' );
+		if ( isset( $_POST['change-settings'] ) ) {
+			if ( isset( $_POST['wpsc_also_bought'] ) && $_POST['wpsc_also_bought'] == 'on' )
+				update_option( 'wpsc_also_bought', 1 );
+			else
+				update_option( 'wpsc_also_bought', 0 );
+
+			if ( isset( $_POST['display_find_us'] ) && $_POST['display_find_us'] == 'on' )
+				update_option( 'display_find_us', 1 );
+			else
+				update_option( 'display_find_us', 0 );
+
+			if ( isset( $_POST['wpsc_share_this'] ) && $_POST['wpsc_share_this'] == 'on' )
+				update_option( 'wpsc_share_this', 1 );
+			else
+				update_option( 'wpsc_share_this', 0 );
+
+		}
+		if (empty($_POST['countrylist2']) && !empty($_POST['wpsc_options']['currency_sign_location']))
+			$selected = 'none';
+
+		if ( !isset( $_POST['countrylist2'] ) )
+			$_POST['countrylist2'] = '';
+		if ( !isset( $_POST['country_id'] ) )
+			$_POST['country_id'] = '';
+		if ( !isset( $_POST['country_tax'] ) )
+			$_POST['country_tax'] = '';
+
+		if ( $_POST['countrylist2'] != null || !empty($selected) ) {
+			$AllSelected = false;
+			if ( $selected == 'all' ) {
+				$wpdb->query( "UPDATE `" . WPSC_TABLE_CURRENCY_LIST . "` SET visible = '1'" );
+				$AllSelected = true;
+			}
+			if ( $selected == 'none' ) {
+				$wpdb->query( "UPDATE `" . WPSC_TABLE_CURRENCY_LIST . "` SET visible = '0'" );
+				$AllSelected = true;
+			}
+			if ( $AllSelected != true ) {
+				$countrylist = $wpdb->get_col( "SELECT id FROM `" . WPSC_TABLE_CURRENCY_LIST . "` ORDER BY country ASC " );
+				//find the countries not selected
+				$unselectedCountries = array_diff( $countrylist, $_POST['countrylist2'] );
+				foreach ( $unselectedCountries as $unselected ) {
+					$wpdb->update(
+						WPSC_TABLE_CURRENCY_LIST,
+						array(
+						    'visible' => 0
+						),
+						array(
+						    'id' => $unselected
+						),
+						'%d',
+						'%d'
+					    );
+				}
+
+				//find the countries that are selected
+				$selectedCountries = array_intersect( $countrylist, $_POST['countrylist2'] );
+				foreach ( $selectedCountries as $selected ) {
+					$wpdb->update(
+						WPSC_TABLE_CURRENCY_LIST,
+						array(
+						    'visible' => 1
+						),
+						array(
+						    'id' => $selected
+						),
+						'%d',
+						'%d'
+					    );
+				}
+			}
+		}
+		$previous_currency = get_option( 'currency_type' );
+
+		//To update options
+		if ( isset( $_POST['wpsc_options'] ) ) {
+			// make sure stock keeping time is a number
+			if ( isset( $_POST['wpsc_options']['wpsc_stock_keeping_time'] ) ) {
+				$skt =& $_POST['wpsc_options']['wpsc_stock_keeping_time']; // I hate repeating myself
+				$skt = (float) $skt;
+				if ( $skt <= 0 || ( $skt < 1 && $_POST['wpsc_options']['wpsc_stock_keeping_interval'] == 'hour' ) ) {
+					unset( $_POST['wpsc_options']['wpsc_stock_keeping_time'] );
+					unset( $_POST['wpsc_options']['wpsc_stock_keeping_interval'] );
+				}
+			}
+
+			foreach ( $_POST['wpsc_options'] as $key => $value ) {
+				if ( $value != get_option( $key ) ) {
+					update_option( $key, $value );
+					$updated++;
+
+				}
+			}
+		}
+
+		if ( $previous_currency != get_option( 'currency_type' ) ) {
+			$currency_code = $wpdb->get_var( "SELECT `code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id` IN ('" . absint( get_option( 'currency_type' ) ) . "')" );
+
+			$selected_gateways = get_option( 'custom_gateway_options' );
+			$already_changed = array( );
+			foreach ( $selected_gateways as $selected_gateway ) {
+				if ( isset( $wpsc_gateways[$selected_gateway]['supported_currencies'] ) ) {
+					if ( in_array( $currency_code, $wpsc_gateways[$selected_gateway]['supported_currencies']['currency_list'] ) ) {
+
+						$option_name = $wpsc_gateways[$selected_gateway]['supported_currencies']['option_name'];
+
+						if ( !in_array( $option_name, $already_changed ) ) {
+							update_option( $option_name, $currency_code );
+							$already_changed[] = $option_name;
+						}
+					}
+				}
+			}
+		}
+
+		foreach ( $GLOBALS['wpsc_shipping_modules'] as $shipping ) {
+			if ( is_object( $shipping ) )
+				$shipping->submit_form();
+		}
+
+
+		//This is for submitting shipping details to the shipping module
+		if ( !isset( $_POST['update_gateways'] ) )
+			$_POST['update_gateways'] = '';
+		if ( !isset( $_POST['custom_shipping_options'] ) )
+			$_POST['custom_shipping_options'] = null;
+		if ( $_POST['update_gateways'] == 'true' ) {
+
+			update_option( 'custom_shipping_options', $_POST['custom_shipping_options'] );
+
+			$shipadd = 0;
+			foreach ( $GLOBALS['wpsc_shipping_modules'] as $shipping ) {
+				foreach ( (array)$_POST['custom_shipping_options'] as $shippingoption ) {
+					if ( $shipping->internal_name == $shippingoption ) {
+						$shipadd++;
+					}
+				}
+			}
+		}
 	}
 }
 
