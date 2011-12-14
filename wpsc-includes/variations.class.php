@@ -12,48 +12,46 @@ class wpsc_variations {
 	var $variation_group_count = 0;
 	var $current_variation_group = -1;
 	var $variation_group;
-	
+
 	// for getting the product price
 	var $first_variations;
-	
+
 	//variations inside variation groups: i.e. (red, green, blue) or (S, M, L, XL)
 	var $variations;
 	var $variation_count = 0;
 	var $current_variation = -1;
 	var $variation;
-	
+
 
 	function wpsc_variations($product_id) {
 		global $wpdb;
-		
+
 		$product_terms = wp_get_object_terms($product_id, 'wpsc-variation');
 		$this->variation_groups = array();
 		$this->first_variations = array();
 		$this->all_associated_variations = array();
-	
+
 		foreach($product_terms as $product_term) {
-			if($product_term->parent > 0) {
-				if(empty($this->all_associated_variations[$product_term->parent])){
-					$this->all_associated_variations[$product_term->parent][0] =  new stdClass;
-					$this->all_associated_variations[$product_term->parent][0]->term_id = 0;
-					$this->all_associated_variations[$product_term->parent][0]->name = __('-- Please Select --', 'wpsc');
-				}
-				//pull out the term order and save this as the array key for 
-				//each variant we will then sort and renumber the array once out of these loops
-				
-				$term_order = ( $product_term->taxonomy == 'wpsc-variation' ) ? wpsc_get_meta( $product_term->term_id, 'sort_order', 'wpsc_variation' ) : null;
-				$term_order = (int) $term_order;
-				
-				$this->all_associated_variations[$product_term->parent][$term_order] = $product_term;
-					
-			} else {
+			if ($product_term->parent > 0)
+				$this->all_associated_variations[$product_term->parent][] = $product_term;
+			else
 				$this->variation_groups[] = $product_term;
-			}
 		}
+
+		// Sort variation orders
+		foreach ( $this->all_associated_variations as $variation_set => &$terms ) {
+			$terms = wpsc_get_terms_variation_sort_filter( $terms );
+
+			array_unshift( $this->all_associated_variations[$variation_set], (object) array(
+				'term_id' => 0,
+				'name'    => __('-- Please Select --', 'wpsc'),
+			) );
+		}
+
 		// Filters to hook into variations to sort etc.
 		$this->variation_groups = apply_filters( 'wpsc_variation_groups', $this->variation_groups, $product_id );
 		$this->all_associated_variations = apply_filters( 'wpsc_all_associated_variations', $this->all_associated_variations, $this->variation_groups, $product_id );
-		
+
 		//the parent_id is the variation group id we need to use this to alter the object (variants)
 		// inside each of these arrays
 		$parent_ids = array_keys($this->all_associated_variations);
@@ -63,15 +61,15 @@ class wpsc_variations {
 				//once sorted renumber the array keys back from 0
 				$this->all_associated_variations[$parent_id] = array_values($this->all_associated_variations[$parent_id]);
 		}
-		
+
 		foreach((array)$this->variation_groups as $variation_group) {
 			$variation_id = $variation_group->term_id;
 			$this->first_variations[] = $this->all_associated_variations[$variation_id][0]->term_id;
 		}
-		
+
 		$this->variation_group_count = count($this->variation_groups);
 	}
-	
+
 
 
 	/*
@@ -82,15 +80,15 @@ class wpsc_variations {
 		$this->variation_group_count = count($this->variation_groups);
 		$this->get_first_variations();
 	}
-	
-	
+
+
 	function next_variation_group() {
 		$this->current_variation_group++;
 		$this->variation_group = $this->variation_groups[$this->current_variation_group];
 		return $this->variation_group;
 	}
 
-	
+
 	function the_variation_group() {
 		$this->variation_group = $this->next_variation_group();
 		$this->get_variations();
@@ -111,7 +109,7 @@ class wpsc_variations {
 			$this->variation_group = $this->variation_groups[0];
 		}
 	}
-	
+
 	function get_first_variations() {
 		global $wpdb;
 		return null;
@@ -123,15 +121,15 @@ class wpsc_variations {
 		$this->variations = $this->all_associated_variations[$this->variation_group->term_id];
 		$this->variation_count = count($this->variations);
 	}
-	
-	
+
+
 	function next_variation() {
 		$this->current_variation++;
 		$this->variation = $this->variations[$this->current_variation];
 		return $this->variation;
 	}
 
-	
+
 	function the_variation() {
 		$this->variation = $this->next_variation();
 	}
@@ -151,28 +149,28 @@ class wpsc_variations {
 		if ($this->variation_count > 0) {
 			$this->variation = $this->variations[0];
 		}
-	}	
-	
-	
-	
-	
+	}
+
+
+
+
 }
 function wpsc_get_child_object_in_select_terms($parent_id, $terms, $taxonomy){
 	global $wpdb;
-	$sql = $wpdb->prepare( "SELECT tr.`object_id` 
+	$sql = $wpdb->prepare( "SELECT tr.`object_id`
 			FROM `".$wpdb->term_relationships."` AS tr
 			LEFT JOIN `".$wpdb->posts."` AS posts
-			ON posts.`ID` = tr.`object_id`				
+			ON posts.`ID` = tr.`object_id`
 			WHERE tr.`term_taxonomy_id` IN (".implode(',', esc_sql( $terms ) ).") and posts.`post_parent` = %d", $parent_id );
 	$products = $wpdb->get_col($sql);
 	return $products;
-	
+
 }
 
 /**
  * wpsc_get_child_objects_in_term function.
- * gets the 
- * 
+ * gets the
+ *
  * @access public
  * @param mixed $parent_id
  * @param mixed $terms
@@ -199,7 +197,7 @@ function wpsc_get_child_object_in_terms($parent_id, $terms, $taxonomies, $args =
 			if ( !taxonomy_exists($taxonomy) )
 				return new WP_Error('invalid_taxonomy', __('Invalid Taxonomy', 'wpsc'));
 			}
-			
+
 	}
 
 	$defaults = array('order' => 'ASC');
@@ -209,13 +207,13 @@ function wpsc_get_child_object_in_terms($parent_id, $terms, $taxonomies, $args =
 	$order = ( 'desc' == strtolower($order) ) ? 'DESC' : 'ASC';
 
 	$terms = array_map('intval', $terms);
-	
+
 	$taxonomy_count = count($taxonomies);
 	$term_count = count($terms);
 
 	$taxonomies = "'" . implode("', '", $taxonomies) . "'";
 	$terms = "'" . implode("', '", $terms) . "'";
-	
+
 	// This SQL statement finds the item associated with all variations in the selected combination that is a child of the target product
 	$object_sql = "SELECT tr.object_id, COUNT(tr.object_id) AS `count`
 	FROM {$wpdb->term_relationships} AS tr
@@ -227,8 +225,8 @@ function wpsc_get_child_object_in_terms($parent_id, $terms, $taxonomies, $args =
 		AND tt.taxonomy IN ({$taxonomies})
 		AND tt.term_id IN ({$terms})
 		AND tt.parent > 0
-		AND ( 
-			SELECT COUNT(DISTINCT tt2.parent) FROM 
+		AND (
+			SELECT COUNT(DISTINCT tt2.parent) FROM
 			{$wpdb->term_relationships} AS tr2
 			INNER JOIN {$wpdb->term_taxonomy} AS tt2
 				ON tr2.term_taxonomy_id = tt2.term_taxonomy_id
@@ -242,7 +240,7 @@ function wpsc_get_child_object_in_terms($parent_id, $terms, $taxonomies, $args =
 	if (count($object_ids) > 0) {
 		return $object_ids['object_id'];
 	} else {
-		
+
 		return false;
 	}
 }
@@ -250,8 +248,8 @@ function wpsc_get_child_object_in_terms($parent_id, $terms, $taxonomies, $args =
 
 /**
  * wpsc_get_child_objects_in_term function.
- * gets the 
- * 
+ * gets the
+ *
  * @access public
  * @param mixed $parent_id
  * @param mixed $terms
@@ -278,7 +276,7 @@ function wpsc_get_child_object_in_terms_var($parent_id, $terms, $taxonomies, $ar
 			if ( !taxonomy_exists($taxonomy) )
 				return new WP_Error('invalid_taxonomy', __('Invalid Taxonomy', 'wpsc'));
 			}
-			
+
 	}
 
 	$defaults = array('order' => 'ASC');
@@ -291,7 +289,7 @@ function wpsc_get_child_object_in_terms_var($parent_id, $terms, $taxonomies, $ar
 
 	$taxonomies = "'" . implode("', '", $taxonomies) . "'";
 	$terms = "'" . implode("', '", $terms) . "'";
-	
+
 	// This SQL statement finds the item associated with all variations in the selected combination that is a child of the target product
 	$object_sql = "SELECT tr.object_id
 	FROM {$wpdb->term_relationships} AS tr
