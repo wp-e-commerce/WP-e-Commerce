@@ -1120,19 +1120,17 @@ class wpsc_cart {
     * @access public
     * @return float returns the price as a floating point value
    */
-   function calculate_total_tax()
-   {
-      //uses new wpec_taxes functionality
-         $wpec_taxes_controller = new wpec_taxes_controller();
-         $taxes_total = $wpec_taxes_controller->wpec_taxes_calculate_total();
-         $this->total_tax = $taxes_total['total'];
-         if(isset($taxes_total['rate']))
-         {
-            $this->tax_percentage = $taxes_total['rate'];
-         }// if
+   function calculate_total_tax() {
 
-      return $this->total_tax;
-   }// calculate_total_tax
+      $wpec_taxes_controller = new wpec_taxes_controller();
+      $taxes_total = $wpec_taxes_controller->wpec_taxes_calculate_total();
+      $this->total_tax = $taxes_total['total'];
+      
+      if( isset( $taxes_total['rate'] ) )
+         $this->tax_percentage = $taxes_total['rate'];
+
+      return apply_filters( 'wpsc_calculate_total_tax', $this->total_tax );
+   }
 
 
 
@@ -1475,10 +1473,10 @@ class wpsc_cart {
    /**
     * Applying Coupons
     */
-   function apply_coupons($couponAmount='', $coupons=''){
+   function apply_coupons( $coupons_amount = '', $coupon_name = '' ){
       $this->clear_cache();
-      $this->coupons_name = $coupons;
-      $this->coupons_amount = $couponAmount;
+      $this->coupons_name = $coupon_name;
+      $this->coupons_amount = apply_filters( 'wpsc_coupons_amount', $coupons_amount, $coupon_name );
       $this->calculate_total_price();
          if ( $this->total_price < 0 ) {
             $this->coupons_amount += $this->total_price;
