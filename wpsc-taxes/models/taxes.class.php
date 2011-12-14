@@ -252,9 +252,9 @@ class wpec_taxes {
 	 *                              Default action is to not include an order by statement.
 	 * @return: array, int, string or false
 	 * */
-	function wpec_taxes_get_country_information( $columns=false, $where=false, $order_by=false ) {
+	function wpec_taxes_get_country_information( $columns = false, $where = false, $order_by = false ) {
 		//check for all-markets
-		if('country' == $columns && 1 == count($where) && 'all-markets' == $where['isocode'])
+		if( 'country' == $columns && 1 == count( $where ) && 'all-markets' == $where['isocode'] )
 		{
 			$returnable = 'All Markets';
 		}
@@ -267,30 +267,35 @@ class wpec_taxes {
 			$columns = ($columns) ? $columns : array( '*' );
 
 			//change columns to array if not an array
-			if ( !is_array( $columns ) ) {
+			if ( ! is_array( $columns ) )
 				$columns = array( $columns );
-			}
+			
+			$columns = array_map( 'esc_sql', $columns );
 
 			//if where is set then formulate conditions
 			if ( $where ) {
 				foreach ( $where as $column => $condition ) {
-					$where_query[] = (is_numeric( $condition )) ? "{$column}={$condition}" : "{$column}='{$condition}'";
+					$condition = esc_sql( $condition );
+					$where_query[] = ( is_numeric( $condition ) ) ? "{$column}={$condition}" : "{$column}='{$condition}'";
 				}// foreach
 			}// if
+
 			//formulate query
-			$query = 'SELECT ' . implode( ',', esc_sql( $columns ) ) . ' FROM ' . WPSC_TABLE_CURRENCY_LIST;
-			if ( isset( $where_query ) ) {
-				$query .= ' WHERE ' . implode( ' AND ', esc_sql( $where_query ) );
-			}// if
+			$query = 'SELECT ' . implode( ',', $columns ) . ' FROM ' . WPSC_TABLE_CURRENCY_LIST;
+
+			if ( isset( $where_query ) )
+				$query .= ' WHERE ' . implode( ' AND ', $where_query );
+
 			//if order_by is set, add to query
 			if ( $order_by ) {
-				if ( !is_array( $order_by ) ) {
+				if ( ! is_array( $order_by ) )
 					$order_by = array( $order_by );
-				}
-				$query .= ' ORDER BY ' . implode( ',', esc_sql( $order_by ) );
+
+				$order_by = array_map( 'esc_sql', $order_by );
+				$query .= ' ORDER BY ' . implode( ',', $order_by );
 			}// if
 
-			$returnable = (count( $columns ) > 1) ? $wpdb->get_results( $query, ARRAY_A ) : $wpdb->get_var( $query );
+			$returnable = ( count( $columns ) > 1 ) ? $wpdb->get_results( $query, ARRAY_A ) : $wpdb->get_var( $query );
 		}// if
 
 		//return the result
@@ -338,7 +343,7 @@ class wpec_taxes {
 		$country_id = $this->wpec_taxes_get_country_information( 'id', array( 'isocode' => $country ) );
 
 		//get a list of regions for the country id
-		$query = 'SELECT name, code AS region_code FROM ' . WPSC_TABLE_REGION_TAX . " WHERE country_id = $country_id";
+		$query = 'SELECT name, code AS region_code FROM ' . WPSC_TABLE_REGION_TAX . " WHERE country_id=$country_id";
 		$result = $wpdb->get_results( $query, ARRAY_A );
 
 		//add the all markets option to the list
