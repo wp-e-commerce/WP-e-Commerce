@@ -64,7 +64,7 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab
 				$internal_shipping_modules[$key] = $module;
 			}
 		}
-		$currency_data = $wpdb->get_row( "SELECT `symbol`,`symbol_html`,`code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id`='" . esc_sql( get_option( 'currency_type' ) ) . "' LIMIT 1", ARRAY_A );
+		$currency_data = $wpdb->get_row( $wpdb->prepare( "SELECT `symbol`,`symbol_html`,`code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id` = %d LIMIT 1", get_option( 'currency_type' ) ), ARRAY_A );
 		if ( $currency_data['symbol'] != '' ) {
 			$currency_sign = $currency_data['symbol_html'];
 		} else {
