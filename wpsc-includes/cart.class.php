@@ -449,11 +449,11 @@ function wpsc_shipping_quote_name() {
 */
 function wpsc_shipping_quote_value($numeric = false) {
    global $wpsc_cart;
-   if($numeric == true) {
-      return $wpsc_cart->shipping_quote['value'];
-   } else {
-      return wpsc_currency_display($wpsc_cart->shipping_quote['value']);
-   }
+
+   $value = apply_filters( 'wpsc_shipping_quote_value', $wpsc_cart->shipping_quote['value'] );
+   
+   return ( $numeric ) ? $value : wpsc_currency_display( $value );
+
 }
 
 /**
