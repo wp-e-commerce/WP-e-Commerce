@@ -1573,8 +1573,9 @@ function wpsc_currency_sign() {
 	_deprecated_function( __FUNCTION__, '3.8', 'the updated ' . __FUNCTION__ . '' );
 	global $wpdb;
 	$currency_sign_location = get_option( 'currency_sign_location' );
-	$currency_type = esc_sql( get_option( 'currency_type' ) );
-	$currency_symbol = $wpdb->get_var( "SELECT `symbol_html` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id`='" . $currency_type . "' LIMIT 1" );
+	$currency_type = get_option( 'currency_type' );
+	$currency_symbol = $wpdb->get_var( $wpdb->prepare( "SELECT `symbol_html` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id` = %d LIMIT 1", $currency_type ) );
+	
 	return $currency_symbol;
 }
 
