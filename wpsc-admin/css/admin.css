@@ -27,6 +27,10 @@ div#wpsc_product_variation_forms table#wpsc_product_list tbody tr td.post-title{
 	width: 115px;
 }
 
+div#wpsc_product_variation_forms table#wpsc_product_list td.stock {
+	display: none;
+}
+
 div#wpsc_add_variant_desc,
 div#wpsc_add_variation_desc{
 	float: left;
