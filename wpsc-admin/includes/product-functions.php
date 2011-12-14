@@ -793,7 +793,7 @@ function wpsc_update_alt_product_currency($product_id, $newCurrency, $newPrice){
 	global $wpdb;
 	
 	$old_curr = get_product_meta($product_id, 'currency',true);
-	$sql = $wpdb->prepare( "SELECT `isocode` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id`= %s", $newCurrency );
+	$sql = $wpdb->prepare( "SELECT `isocode` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id`= %d", $newCurrency );
 	$isocode = $wpdb->get_var($sql);
 
 	$newCurrency = 'currency';
