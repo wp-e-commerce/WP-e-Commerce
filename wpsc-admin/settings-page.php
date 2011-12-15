@@ -16,7 +16,7 @@
  *
  * Note that you need to hook into 'wpsc_load_settings_tab_class' to do this.
  *
- * The next step is to create a class for your tab which inherits from the base <code>WPSC_Settings_Tab</code>.
+ * The next step is to create a class for your tab which inherits from the base 'WPSC_Settings_Tab'.
  * The name of the class needs to follow this convention: all the words have to be capitalized and
  * separated with an underscore, and prefixed with 'WPSC_Settings_Tab_'.
  *
