@@ -3,7 +3,7 @@ Contributors: mufasa, jghazally, valentinas, mychelle, garyc40
 Donate link: http://getshopped.org
 Tags: e-commerce, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
 Requires at least: 3.1
-Tested up to: 3.2.1
+Tested up to: 3.3
 Stable tag: 3.8.7.2
 
 WP e-Commerce is a free WordPress Shopping Cart Plugin that lets customers buy your products, services and digital downloads online.
@@ -156,6 +156,42 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 
 == Changelog ==
+= 3.8.8 =
+* New: Actions for bulk actions on sales page: wpsc_sales_log_process_bulk_action, wpsc_sales_log_extra_tablenav
+* New: Allow variation checkboxes to be collapsed & expanded without having to tick the variation set checkbox itself.
+* New: Extra hooks during checkout cart display: wpsc_before_checkout_cart_row, wpsc_before_checkout_cart_item_image, wpsc_after_checkout_cart_item_image, wpsc_before_checkout_cart_item_name, wpsc_after_checkout_cart_item_name, wpsc_after_checkout_cart_row
+* New: Filter for ordering the sales logs: wpsc_purchase_logs_orderby.
+* New: Filter wpsc_cart_shipping.
+* New: Filter wpsc_default_shipping_quote.
+* New: Filter wpsc_item_shipping_amount_db.
+* New: Filter wpsc_paypal_standard_post_data.
+* New: Filter wpsc_product_permalink_cat_slug.
+* New: Filter wpsc_product_postage_and_packaging.
+* New: Filter wpsc_shipping_quote_value.
+* New: Filters wpsc_calculate_total_tax, wpsc_coupons_amount.
+* New: Settings Page API.
+* New: Some helpful filters to download_csv function: wpsc_purchase_log_start_end_csv, wpsc_purchase_log_month_year_csv, wpsc_purchase_log_month_year_csv, wpsc_purchase_log_csv_headers, wpsc_purchas_log_csv_output
+* New: Variation Drag & Drop sorting.
+* Change: Display file names instead of the product name on the downloads page.
+* Change: Improved variation UI in Product Edit page.
+* Change: In General Settings page, when changing country, load region / state list using AJAX instead of page reload.
+* Change: Only display variants' associated terms in Product Edit page rather than including the parent product name, which is redundant and cluttered.
+* Change: Subtle UX tweaks for Store Settings page.
+* Fix: $wpsc_query->query_vars['wpsc_product_category'] not always set on product page with hierarchical category permalinks.
+* Fix: Cannot add new Checkout field.
+* Fix: Cannot re-re-send buyer receipt.
+* Fix: Double <p> tag with wpec_taxes_display_tax_bands() on product edit page.
+* Fix: Fatal error when trying to include a non-existent admin file.
+* Fix: Hide Google Feed information from display
+* Fix: Make the WP e-Commerce 3.8.x activation/installation routine much more efficient.
+* Fix: Total Quantity check fails for coupon codes.
+* Fix: USPS: "FLATE RATE ENVELOPE" should be changed to "VARIABLE" to allow for shipping quotes to be based on weight.
+* Fix: Use ->add_help_tab() to support WP 3.3 admin screen API.
+* Fix: Using discount causes Paypal Express to calculate wrong total amount.
+* Fix: get_the_content() is not enough in product feed.
+* Fix: settings page JS compatibility issue with Firefox.
+* Fix: wpsc_get_template_file_url() function is inefficient and causes 10 extra SQL queries per page load.
+
 = 3.8.7.2 =
 * New: Support for g:availability to Google Merchant Centre feed. Props bbaskets & longercat
 * Fix: Admin product page sorting by column was not working.
