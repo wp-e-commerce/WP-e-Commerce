@@ -46,7 +46,7 @@ function wpsc_generate_product_feed() {
 	}
 
 	$args['post_type'] = 'wpsc-product';
-	$args['posts_per_page'] = 9999;
+	$args['posts_per_page'] = 19999;
 
 	$products = query_posts ($args); 
 
