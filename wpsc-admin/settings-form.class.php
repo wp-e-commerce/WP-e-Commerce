@@ -39,10 +39,16 @@ class WPSC_Settings_Form
 			}
 		}
 
-		add_filter( 'wpsc_settings_validation_rule_required', array( $this, 'validate_field_required' ), 10, 5 );
+		// validation rules
+		add_filter( 'wpsc_settings_validation_rule_required', array( $this, 'filter_validation_rule_required' ), 10, 5 );
+
+		// output field types
+		add_filter( 'wpsc_settings_form_output_textfield' , array( $this, 'filter_output_textfield'  ), 10, 2 );
+		add_filter( 'wpsc_settings_form_output_radios'    , array( $this, 'filter_output_radios'     ), 10, 2 );
+		add_filter( 'wpsc_settings_form_output_checkboxes', array( $this, 'filter_output_checkboxes' ), 10, 2 );
 	}
 
-	public function validate_field_required( $valid, $value, $field_name, $field_title, $field_id ) {
+	public function filter_validation_rule_required( $valid, $value, $field_name, $field_title, $field_id ) {
 		if ( $value == '' ) {
 			$field_anchor = '<a href="#' . esc_attr( $field_id ) . '">' . esc_html( $field_title ) . '</a>';
 			add_settings_error( $field_name, 'field-required' . $field_name, sprintf( __( 'The field %s cannot be blank.', 'wpsc' ), $field_anchor ) );
@@ -58,7 +64,10 @@ class WPSC_Settings_Form
 		$field_id = $this->form_array[$internal_name]['id'];
 		$valid = true;
 		foreach ( $rules as $rule ) {
-			$valid = apply_filters( 'wpsc_settings_validation_rule_' . $rule, $valid, $value, $field_name, $field_title, $field_id );
+			if ( is_callable( $rule ) )
+				$valid = $valid && call_user_func( $rule, $value );
+			else
+				$valid = apply_filters( 'wpsc_settings_validation_rule_' . $rule, $valid, $value, $field_name, $field_title, $field_id );
 		}
 
 		if ( ! $valid )
@@ -74,11 +83,12 @@ class WPSC_Settings_Form
 		echo '<p>' . $description . '</p>';
 	}
 
-	private function output_textfield( $field_array ) {
+	public function filter_output_textfield( $output, $field_array ) {
 		extract( $field_array );
 		$description_html = apply_filters( $name . '_setting_description', esc_html( $description ), $field_array );
 		if ( ! isset( $class ) )
 			$class = 'regular-text wpsc-textfield';
+		ob_start();
 		?>
 		<input
 			class="<?php echo esc_attr( $class ); ?>"
@@ -89,14 +99,18 @@ class WPSC_Settings_Form
 		/>
 		<p class="howto"><?php echo $description_html; ?></p>
 		<?php
+		$output .= ob_get_clean();
+
+		return $output;
 	}
 
-	private function output_radios( $field_array ) {
+	public function filter_output_radios( $output, $field_array ) {
 		extract( $field_array );
 		$description_html = apply_filters( 'wpsc_settings_' . $name . '_description', esc_html( $description ), $field_array );
 		if ( ! isset( $class ) )
 			$class = 'wpsc-radio';
 
+		ob_start();
 		foreach ( $options as $radio_value => $radio_label ) {
 			$radio_id = $id . '-' . sanitize_title_with_dashes( $value );
 			?>
@@ -113,16 +127,20 @@ class WPSC_Settings_Form
 			</label>
 			<?php
 		}
-		echo '<br />';
-		echo '<p class="howto">' . $description_html . '</p>';
+		$output .= ob_get_clean();
+		$output .= '<br />';
+		$output .= '<p class="howto">' . $description_html . '</p>';
+
+		return $output;
 	}
 
-	private function output_checkboxes( $field_array ) {
+	public function filter_output_checkboxes( $output, $field_array ) {
 		extract( $field_array );
 		$description_html = apply_filters( 'wpsc_settings_' . $name . '_description', esc_html( $description ), $field_array );
 		if ( ! isset( $class ) )
 			$class = 'wspc-checkbox';
 
+		ob_start();
 		foreach ( $options as $checkbox_value => $checkbox_label ) {
 			$checkbox_id = $id . '-' . sanitize_title_with_dashes( $value );
 			?>
@@ -139,15 +157,16 @@ class WPSC_Settings_Form
 			</label>
 			<?php
 		}
-		echo '<br />';
-		echo '<p class="howto">' . $description_html . '</p>';
+		$output .= ob_get_clean();
+		$output .= '<br />';
+		$output .= '<p class="howto">' . $description_html . '</p>';
+
+		return $output;
 	}
 
 	public function output_field( $field_array ) {
-		$output_function = 'output_' . $field_array['type'];
-		$this->$output_function( $field_array );
-		?>
-		<?php
+		$output = apply_filters( 'wpsc_settings_form_output_' . $field_array['type'], '', $field_array );
+		echo $output;
 	}
 
 	public function display() {

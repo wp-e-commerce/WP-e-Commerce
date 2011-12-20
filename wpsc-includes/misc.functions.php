@@ -115,37 +115,7 @@ function wpsc_product_has_variations( $product_id ) {
 	return false;
 }
 
-/**
- * WPSC canonical URL function
- * Needs a recent version
- * @since 3.7
- * @param int product id
- * @return bool true or false
- */
-function wpsc_change_canonical_url( $url = '' ) {
-	global $wpdb, $wp_query, $wpsc_page_titles;
-
-	if ( $wp_query->is_single == true && 'wpsc-product' == $wp_query->query_vars['post_type']) {
-		$url = get_permalink( $wp_query->get_queried_object()->ID );
-	}
-	return apply_filters( 'wpsc_change_canonical_url', $url );
-}
-
-add_filter( 'aioseop_canonical_url', 'wpsc_change_canonical_url' );
-
-function wpsc_insert_canonical_url() {
-	$wpsc_url = wpsc_change_canonical_url( null );
-	echo "<link rel='canonical' href='$wpsc_url' />\n";
-}
-
-function wpsc_canonical_url() {
-	$wpsc_url = wpsc_change_canonical_url( null );
-	if ( $wpsc_url != null ) {
-		remove_action( 'wp_head', 'rel_canonical' );
-		add_action( 'wp_head', 'wpsc_insert_canonical_url' );
-	}
-}
-add_action( 'template_redirect', 'wpsc_canonical_url' );
+add_filter( 'aioseop_canonical_url', 'wpsc_action_rel_canonical' );
 
 function wpsc_set_aioseop_description( $data ) {
 	$replacement_data = wpsc_obtain_the_description();

@@ -7,6 +7,7 @@ if ( defined( 'WPEC_LOAD_DEPRECATED' ) )
 // require_once( WPSC_FILE_PATH . '/wpsc-includes/product-template.php' );
 // require_once( WPSC_FILE_PATH . '/wpsc-includes/breadcrumbs.class.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/variations.class.php' );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/product-variations.class.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/ajax.functions.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/misc.functions.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/mimetype.php' );

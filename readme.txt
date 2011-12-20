@@ -2,7 +2,7 @@
 Contributors: mufasa, jghazally, valentinas, mychelle, garyc40
 Donate link: http://getshopped.org
 Tags: e-commerce, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
-Requires at least: 3.1
+Requires at least: 3.3
 Tested up to: 3.3
 Stable tag: 3.8.7.4
 

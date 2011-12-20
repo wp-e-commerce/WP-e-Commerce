@@ -998,4 +998,59 @@ add_action( 'wp_ajax_category_sort_order', 'wpsc_ajax_set_category_order' );
 add_action( 'wp_ajax_variation_sort_order', 'wpsc_ajax_set_variation_order' );
 add_action( 'wp_ajax_wpsc_ie_save', 'wpsc_ajax_ie_save' );
 add_action('in_admin_header', 'wpsc_add_meta_boxes');
-?>
+
+add_filter( 'term_name', 'wpsc_term_list_levels', 10, 2 );
+
+/**
+ * When doing variation and product category drag&drop sort, we want to restrict
+ * drag & drop to the same level (children of a category cannot be dropped under
+ * another parent category). To do this, we need to be able to specify depth level
+ * of the term items being output to the term list table.
+ *
+ * Unfortunately, there's no way we can do that with WP hooks. So this is a work around.
+ * This function is added to "term_name" filter. Its job is to record the depth level of
+ * each terms into a global variable. This global variable will later be output to JS in
+ * wpsc_print_term_list_levels_script().
+ *
+ * Not an elegant solution, but it works.
+ *
+ * @param  string $term_name
+ * @param  object $term
+ * @return string
+ */
+function wpsc_term_list_levels( $term_name, $term ) {
+	global $wp_list_table, $wpsc_term_list_levels;
+
+	$screen = get_current_screen();
+	if ( ! in_array( $screen->id, array( 'edit-wpsc-variation', 'edit-wpsc_product_category' ) ) )
+		return $term_name;
+
+	if ( ! isset( $wpsc_term_list_levels ) )
+		$wpsc_term_list_levels = array();
+
+	$wpsc_term_list_levels[$term->term_id] = $wp_list_table->level;
+
+	return $term_name;
+}
+
+add_filter( 'admin_footer', 'wpsc_print_term_list_levels_script' );
+
+/**
+ * Print $wpsc_term_list_levels as JS.
+ * @see wpsc_term_list_levels()
+ * @return void
+ */
+function wpsc_print_term_list_levels_script() {
+	global $wpsc_term_list_levels;
+	$screen = get_current_screen();
+	if ( ! in_array( $screen->id, array( 'edit-wpsc-variation', 'edit-wpsc_product_category' ) ) )
+		return;
+
+	?>
+	<script type="text/javascript">
+	//<![CDATA[
+	var WPSC_Term_List_Levels = <?php echo json_encode( $wpsc_term_list_levels ); ?>;
+	//]]>
+	</script>
+	<?php
+}

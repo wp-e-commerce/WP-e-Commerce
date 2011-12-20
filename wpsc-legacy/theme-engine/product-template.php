@@ -1174,7 +1174,7 @@ function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id 
 		}
 	} elseif( $page == 'single' && isset($thumbnail_id)) {
 		$custom_thumbnail = get_post_meta( $thumbnail_id, '_wpsc_selected_image_size', true );
-		if ( !$custom_thumbnail ) {
+		if ( ! $custom_thumbnail ) {
 			$custom_thumbnail = 'medium-single-product';
 			$current_size = image_get_intermediate_size( $thumbnail_id, $custom_thumbnail );
 			$settings_width = get_option( 'single_view_image_width' );

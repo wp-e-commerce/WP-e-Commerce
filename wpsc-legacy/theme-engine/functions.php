@@ -66,35 +66,6 @@ function wpsc_select_theme_functions() {
 }
 add_action( 'wp', 'wpsc_select_theme_functions', 10, 1 );
 
-function wpsc_filter_request( $q ) {
-	if ( empty( $q['wpsc-product'] ) )
-		return $q;
-
-	$components = explode( '/', $q['wpsc-product'] );
-	if ( count( $components ) == 1 )
-		return $q;
-	$end_node = array_pop( $components );
-	$parent_node = array_pop( $components );
-
-	$posts = get_posts( array(
-		'post_type' => 'wpsc-product',
-		'name' => $end_node,
-	) );
-
-	if ( ! empty( $posts ) ) {
-		$q['wpsc-product'] = $q['name'] = $end_node;
-		$q['wpsc_product_category'] = $parent_node;
-	} else {
-		$q['wpsc_product_category'] = $end_node;
-		unset( $q['name'] );
-		unset( $q['wpsc-product'] );
-	}
-	return $q;
-}
-
-if ( get_option( 'product_category_hierarchical_url' ) )
-	add_filter( 'request', 'wpsc_filter_request' );
-
 add_filter( 'query_string', 'wpsc_filter_query_string' );
 
 /**

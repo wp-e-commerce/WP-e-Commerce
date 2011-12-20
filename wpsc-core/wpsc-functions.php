@@ -10,65 +10,10 @@
  * @since 3.8
  */
 
-add_filter( 'term_name', 'wpsc_term_list_levels', 10, 2 );
-
-/**
- * When doing variation and product category drag&drop sort, we want to restrict
- * drag & drop to the same level (children of a category cannot be dropped under
- * another parent category). To do this, we need to be able to specify depth level
- * of the term items being output to the term list table.
- *
- * Unfortunately, there's no way we can do that with WP hooks. So this is a work around.
- * This function is added to "term_name" filter. Its job is to record the depth level of
- * each terms into a global variable. This global variable will later be output to JS in
- * wpsc_print_term_list_levels_script().
- *
- * Not an elegant solution, but it works.
- *
- * @param  string $term_name
- * @param  object $term
- * @return string
- */
-function wpsc_term_list_levels( $term_name, $term ) {
-	global $wp_list_table, $wpsc_term_list_levels;
-
-	$screen = get_current_screen();
-	if ( ! in_array( $screen->id, array( 'edit-wpsc-variation', 'edit-wpsc_product_category' ) ) )
-		return $term_name;
-
-	if ( ! isset( $wpsc_term_list_levels ) )
-		$wpsc_term_list_levels = array();
-
-	$wpsc_term_list_levels[$term->term_id] = $wp_list_table->level;
-
-	return $term_name;
-}
-
-add_filter( 'admin_footer', 'wpsc_print_term_list_levels_script' );
-
-/**
- * Print $wpsc_term_list_levels as JS.
- * @see wpsc_term_list_levels()
- * @return void
- */
-function wpsc_print_term_list_levels_script() {
-	global $wpsc_term_list_levels;
-	$screen = get_current_screen();
-	if ( ! in_array( $screen->id, array( 'edit-wpsc-variation', 'edit-wpsc_product_category' ) ) )
-		return;
-
-	?>
-	<script type="text/javascript">
-	//<![CDATA[
-	var WPSC_Term_List_Levels = <?php echo json_encode( $wpsc_term_list_levels ); ?>;
-	//]]>
-	</script>
-	<?php
-}
-
 add_filter( 'intermediate_image_sizes_advanced', 'wpsc_intermediate_image_sizes_advanced', 10, 1 );
 
 function wpsc_intermediate_image_sizes_advanced($sizes){
+	/* Legacy thumbnail sizes begin */
 	$sizes['small-product-thumbnail']=array(
 		"width" => get_option( 'product_image_width' ),
 		"height" => get_option( 'product_image_height' ),
@@ -99,6 +44,7 @@ function wpsc_intermediate_image_sizes_advanced($sizes){
 		"height" => get_option( 'wpsc_gallery_image_height' ),
 		"crop" => get_option( 'wpsc_crop_thumbnails', false )
 	);
+	/* Legacy thumbnail sizes end */
 	return $sizes;
 }
 
@@ -325,8 +271,8 @@ add_action( 'rdf_item', 'wpsc_add_product_price_to_rss' );
 function wpsc_register_post_types() {
 	global $wpsc_page_titles;
 
-	$catalog_slug = wpsc_get_option( 'catalog_slug' );
-	$category_base_slug = wpsc_get_option( 'category_base_slug' );
+	$catalog_slug                  = wpsc_get_option( 'catalog_slug' );
+	$category_base_slug            = wpsc_get_option( 'category_base_slug' );
 	$hierarchical_product_category = wpsc_get_option( 'hierarchical_product_category_url' );
 
 	$labels = array(
@@ -343,7 +289,11 @@ function wpsc_register_post_types() {
 		'parent_item_colon' => '',
 		'menu_name' => __( 'Products', 'wpsc' )
 	  );
+
 	// Products
+	$product_slug = $catalog_slug . '/' . wpsc_get_option( 'product_base_slug' );
+	if ( wpsc_get_option( 'prefix_product_slug' ) )
+		$product_slug .= '/%wpsc_product_category%';
 	register_post_type( 'wpsc-product', array(
 		'capability_type' => 'post',
 		'has_archive' => $catalog_slug,
@@ -357,7 +307,7 @@ function wpsc_register_post_types() {
 		'query_var' => true,
 		'register_meta_box_cb' => 'wpsc_meta_boxes',
 		'rewrite' => array(
-			'slug' => $catalog_slug . '/' . wpsc_get_option( 'product_base_slug' ),
+			'slug' => $product_slug,
 			'with_front' => false
 		)
 	) );
@@ -479,10 +429,15 @@ function wpsc_post_updated_messages( $messages ) {
 add_filter( 'post_updated_messages', 'wpsc_post_updated_messages' );
 
 function wpsc_check_thumbnail_support() {
-	if ( !current_theme_supports( 'post-thumbnails' ) ) {
+	if ( ! current_theme_supports( 'post-thumbnails' ) ) {
 		add_theme_support( 'post-thumbnails' );
 		add_action( 'init', 'wpsc_remove_post_type_thumbnail_support' );
 	}
+
+	$crop = wpsc_get_option( 'crop_thumbnails' );
+	add_image_size( 'wpsc_product_single_thumbnail', get_option( 'single_view_image_width' ), get_option( 'single_view_image_height' ), $crop );
+	add_image_size( 'wpsc_product_archive_thumbnail', get_option( 'product_image_width' ), get_option( 'product_image_height' ), $crop );
+	add_image_size( 'wpsc_product_taxonomy_thumbnail', get_option( 'category_image_width' ), get_option( 'product_image_height' ), $crop );
 }
 add_action( 'after_setup_theme', 'wpsc_check_thumbnail_support', 99 );
 
@@ -1011,6 +966,8 @@ function wpsc_update_legacy_theme_status( $id, $post ) {
 add_action( 'save_post', 'wpsc_update_legacy_theme_status', 10, 2 );
 
 function wpsc_load_theme_engine() {
-	require_once( WPSC_FILE_PATH . '/wpsc-theme-engine/theme-engine.class.php' );
-	$GLOBALS['wpsc_theme_engine'] = new WPSC_Theme_Engine();
+	require_once( WPSC_FILE_PATH . '/wpsc-includes/theme.functions.php'            );
+	require_once( WPSC_FILE_PATH . '/wpsc-includes/template-tags.functions.php'    );
+	require_once( WPSC_FILE_PATH . '/wpsc-includes/conditional-tags.functions.php' );
+	require_once( WPSC_FILE_PATH . '/wpsc-includes/theme-action.functions.php'     );
 }

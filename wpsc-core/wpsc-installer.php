@@ -70,9 +70,6 @@ function wpsc_install() {
 	if('' == get_option('wpsc_share_this'))
 		update_option('wpsc_share_this',0);
 
-	if('' == get_option('wpsc_crop_thumbnails'))
-		update_option('wpsc_crop_thumbnails',0);
-
 	if('' == get_option('wpsc_products_per_page'))
 		update_option('wpsc_products_per_page',0);
 
@@ -186,9 +183,6 @@ function wpsc_install() {
 
 	add_option( 'wpsc_gallery_image_height', 31 );
 	add_option( 'wpsc_gallery_image_width', 31 );
-
-	add_option( 'wpsc_thousands_separator', ',' );
-	add_option( 'wpsc_decimal_separator', '.' );
 
 	add_option( 'custom_gateway_options', array('wpsc_merchant_testmode'), '', 'yes' );
 
@@ -700,7 +694,7 @@ function wpsc_add_region_list() {
 function wpsc_add_checkout_fields() {
 	global $wpdb;
 	$data_forms = $wpdb->get_results( "SELECT COUNT(*) AS `count` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "`", ARRAY_A );
-	
+
 	if ( isset( $data_forms[0] ) && $data_forms[0]['count'] == 0 ) {
 
 		$sql = " INSERT INTO `" . WPSC_TABLE_CHECKOUT_FORMS . "` ( `name`, `type`, `mandatory`, `display_log`, `default`, `active`, `checkout_order`, `unique_name`) VALUES ( '" . __( 'Your billing/contact details', 'wpsc' ) . "', 'heading', '0', '0', '1', '1', 1,''),

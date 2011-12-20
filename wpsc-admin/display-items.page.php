@@ -173,8 +173,8 @@ function wpsc_additional_column_data( $column ) {
                     echo '<div id="inline_' . $post->ID . '_price" class="hidden">' . trim($price) . '</div>';
 	                 $has_var = '0';
                 }
-                else
-                    echo wpsc_product_variation_price_available( $post->ID ).'+';
+/*                else
+                    echo wpsc_product_variation_price_available( $post->ID ).'+'; */
                  echo '<input type="hidden" value="'.$has_var.'" id="inline_' . $post->ID . '_has_var" />';
 
                 break;
@@ -183,8 +183,8 @@ function wpsc_additional_column_data( $column ) {
                 if( !$is_parent ) {
                     echo wpsc_currency_display( $price );
                     echo '<div id="inline_' . $post->ID . '_sale_price" class="hidden">' . $price  . '</div>';
-                } else
-                    echo wpsc_product_variation_price_available( $post->ID ).'+';
+                } /* else
+                    echo wpsc_product_variation_price_available( $post->ID ).'+'; */
                 break;
             case 'SKU' :
                 $sku = get_post_meta( $post->ID, '_wpsc_sku', true );
@@ -237,10 +237,10 @@ function wpsc_additional_column_data( $column ) {
 
 }
 function wpsc_column_sql_orderby( $vars ) {
-    
+
 	if ( ! isset( $vars['post_type'] ) || 'wpsc-product' != $vars['post_type'] || ! isset( $vars['orderby'] ) )
 	    return $vars;
-	
+
             switch ( $vars['orderby'] ) :
                 case 'stock' :
 		    $vars = array_merge(
@@ -268,7 +268,7 @@ function wpsc_column_sql_orderby( $vars ) {
 					'orderby' => 'meta_value_num'
 				)
 			);
-		    
+
 		    break;
 		case 'SKU' :
 		    $vars = array_merge(
@@ -280,7 +280,7 @@ function wpsc_column_sql_orderby( $vars ) {
 			);
 		    break;
 		endswitch;
-	    
+
 	return $vars;
 }
 function wpsc_cats_restrict_manage_posts() {
@@ -332,7 +332,7 @@ function wpsc_no_minors_allowed( $vars ) {
 
 /**
  * wpsc_sortable_column_load
- * 
+ *
  * Only sorts columns on edit.php page.
  * @since 3.8.8
  */

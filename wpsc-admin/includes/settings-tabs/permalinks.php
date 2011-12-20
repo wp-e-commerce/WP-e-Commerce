@@ -20,6 +20,9 @@ class WPSC_Settings_Tab_Permalinks extends WPSC_Settings_Tab
 	public function callback_validation_rule_slug_not_conflicted( $valid, $value, $field_name, $field_title, $field_id ) {
 		global $wp_rewrite;
 
+		if ( ! $valid )
+			return $valid;
+
 		static $existing_slugs = array();
 		$internal_name = substr( $field_name, 5 );
 
@@ -95,7 +98,7 @@ class WPSC_Settings_Tab_Permalinks extends WPSC_Settings_Tab
 		$this->check_slug_conflicts();
 
 		// Display current slugs
-		$base_shop_url      = home_url( wpsc_get_option( 'catalog_slug' ) );
+		$base_shop_url      = wpsc_get_catalog_url();
 		$category_base_slug = wpsc_get_option( 'category_base_slug' );
 		$hierarchical_category_url = (bool) wpsc_get_option( 'hierarchical_product_category_url' );
 		$product_base_slug  = wpsc_get_option( 'product_base_slug' );
@@ -213,10 +216,10 @@ class WPSC_Settings_Tab_Permalinks extends WPSC_Settings_Tab
 				'validation'  => 'required|slug_not_conflicted',
 			),
 			'category_base_slug' => array(
-				'type' => 'textfield',
-				'title' => _x( 'Category base slug', 'permalinks setting', 'wpsc' ),
+				'type'        => 'textfield',
+				'title'       => _x( 'Category base slug', 'permalinks setting', 'wpsc' ),
 				'description' => __( "It's recommended to have a category base slug." ),
-				'validation' => 'slug_not_conflicted'
+				'validation'  => 'slug_not_conflicted'
 			),
 			'hierarchical_product_category_url' => array(
 				'type'    => 'radios',
@@ -234,8 +237,8 @@ class WPSC_Settings_Tab_Permalinks extends WPSC_Settings_Tab
 				'validation'  => 'required|slug_not_conflicted',
 			),
 			'prefix_product_slug' => array(
-				'type' => 'checkboxes',
-				'title' => _x( 'Product prefix', 'permalinks setting', 'wpsc' ),
+				'type'    => 'checkboxes',
+				'title'   => _x( 'Product prefix', 'permalinks setting', 'wpsc' ),
 				'options' => array(
 					1 => __( "Prefix your products with category slug." )
 				),

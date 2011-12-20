@@ -1,4 +1,8 @@
 <?php
+define( 'WPSC_PAGE_NUMBER_POSITION_TOP'   , 1 );
+define( 'WPSC_PAGE_NUMBER_POSITION_BOTTOM', 2 );
+define( 'WPSC_PAGE_NUMBER_POSITION_BOTH'  , 3 );
+
 class WPSC_Settings
 {
 	private $settings = array();
@@ -7,12 +11,17 @@ class WPSC_Settings
 	public function __construct() {
 		$this->default_settings = array(
 			'catalog_slug'                      => 'shop',
+			'crop_thumbnails'                   => 0,
 			'product_base_slug'                 => 'product',
 			'category_base_slug'                => 'category',
 			'hierarchical_product_category_url' => 0,
+			'page_number_position'              => WPSC_PAGE_NUMBER_POSITION_BOTTOM,
+			'products_per_page'                 => 0,
 			'cart_page_slug'                    => 'cart',
 			'transaction_result_page_slug'      => 'transaction-result',
 			'customer_account_page_slug'        => 'account',
+			'decimal_separator'                 => '.',
+			'thousands_separator'               => ',',
 		);
 	}
 
