@@ -706,9 +706,92 @@ function wpsc_display_category_as_catalog( $query ) {
 			$q['tax_query'] = array();
 
 		$q['tax_query'][] = array(
-			'taxonomy' => 'wpsc_product_category',
-			'field'    => 'id',
-			'terms'    => wpsc_get_option( 'default_category' ),
+			'taxonomy'         => 'wpsc_product_category',
+			'field'            => 'id',
+			'terms'            => wpsc_get_option( 'default_category' ),
+			'include_children' => get_option( 'show_subcatsprods_in_cat' ) ? true : false,
 		);
+	}
+}
+
+/**
+ * When "Show Subcategory Products in Parent Category" option is disabled, this function is hooked
+ * up with 'pre_get_posts'.
+ *
+ * This function will try to generate 'tax_query' and temporarily unset the 'wpsc_product_category'
+ * query var, so that "include_children" parameter of the generated tax_query remains false.
+ *
+ * Later in wpsc_restore_product_category_query_var(), the 'wpsc_product_category' query var will
+ * be restored to the original value.
+ *
+ * @since 4.0
+ * @uses  WP_Query::is_main_query()
+ * @uses  WP_Query::is_tax()
+ * @uses  wp_basename()
+ *
+ * @param  object $query
+ */
+function wpsc_hide_child_cat_products( $query ) {
+	if ( $query->is_main_query() && ( $query->is_tax( 'wpsc_product_category' ) ) ) {
+		$q =& $query->query_vars;
+		$tax_query_defaults = array(
+			'taxonomy'         => 'wpsc_product_category',
+			'field'            => 'slug',
+			'include_children' => false,
+		);
+
+		$tax_query = array_key_exists( 'tax_query', $q ) ? $q['tax_query'] : array();
+		$term_var  = $q['wpsc_product_category_temp'] = wp_basename( $q['wpsc_product_category'] );
+		unset( $q['wpsc_product_category'] );
+
+		if ( strpos($term_var, '+') !== false ) {
+			$terms = preg_split( '/[+]+/', $term_var );
+			foreach ( $terms as $term ) {
+				$tax_query[] = array_merge( $tax_query_defaults, array(
+					'terms' => array( $term )
+				) );
+			}
+		} else {
+			$tax_query[] = array_merge( $tax_query_defaults, array(
+				'terms' => preg_split( '/[,]+/', $term_var )
+			) );
+		}
+
+		$q['tax_query'] = $tax_query;
+	}
+}
+
+/**
+ * Restore the 'wpsc_product_category' to the original value, because in wpsc_hide_child_cat_products()
+ * it is unset.
+ *
+ * If "Show Subcategory Products in Parent Category" is disabled, this function is hooked into the
+ * 'wp' action hook.
+ *
+ * @since 4.0
+ * @uses  $wp_query The global WP_Query object.
+ */
+function wpsc_restore_product_category_query_var() {
+	global $wp_query;
+	if ( is_tax( 'wpsc_product_category' ) ) {
+		$q =& $wp_query->query_vars;
+		$q['wpsc_product_category'] = $q['wpsc_product_category_temp'];
+		unset( $q['wpsc_product_category_temp'] );
+	}
+}
+
+/**
+ * Prepare the main query object's 'tax_query' to exclude products of children category when
+ * "Show Subcategory Products in Parent Category" option is disabled.
+ *
+ * @since 4.0
+ * @uses  add_action() Attaches wpsc_hide_child_cat_products() to 'pre_get_posts' action.
+ * @uses  add_action() Attaches wpsc_restore_product_category_query_var() to 'wp' action.
+ * @uses  get_option() Gets 'show_subcatsprods_in_cat' option.
+ */
+function wpsc_determine_product_category_display_mode() {
+	if ( ! get_option( 'show_subcatsprods_in_cat' ) ) {
+		add_action( 'pre_get_posts', 'wpsc_hide_child_cat_products' );
+		add_action( 'wp', 'wpsc_restore_product_category_query_var', 1 );
 	}
 }

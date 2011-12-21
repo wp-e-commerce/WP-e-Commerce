@@ -972,4 +972,5 @@ function wpsc_load_theme_engine() {
 	require_once( WPSC_FILE_PATH . '/wpsc-includes/theme-action.functions.php'     );
 
 	wpsc_determine_main_catalog_display_mode();
+	wpsc_determine_product_category_display_mode();
 }
