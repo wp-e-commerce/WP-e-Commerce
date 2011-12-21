@@ -187,8 +187,6 @@ function wpsc_admin_pages() {
 	// This is so important that I can't even express it in one line
 
 	foreach ( $page_hooks as $page_hook ) {
-		add_action( 'load-' . $page_hook, 'wpsc_admin_include_css_and_js_refac' );
-
 		switch ( $page_hook ) {
 
 		case $edit_options_page :
