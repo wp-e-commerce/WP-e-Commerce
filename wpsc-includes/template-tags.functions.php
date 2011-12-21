@@ -149,6 +149,7 @@ function wpsc_get_product_title( $id = 0 ) {
  * Output the title of the current product in the loop.
  *
  * @since 4.0
+ * @uses  apply_filters()          Applies 'wpsc_product_title' filter.
  * @uses  wpsc_get_product_title()
  *
  * @param  string      $before Optional. Specify HTML before the title. Defaults to ''.
@@ -416,7 +417,7 @@ function wpsc_product_no_thumbnail_image( $size = 'single', $attr = '' ) {
 	$dimensions = $_wp_additional_image_sizes[$wp_size];
 	$title      = wpsc_the_product_title_attribute( array( 'echo' => false ) );
 	$src        = apply_filters( 'wpsc_product_no_thumbnail_url', WPSC_THEME_ENGINE_COMPAT_URL . '/default/images/no-thumbnails.png', $size, $attr );
-	$html       = '<img src="' . $src . '" title="' . $title . '" width="' . $dimensions['width'] . '" height="' . $dimensions['height'] . '" />';
+	$html       = '<img alt="' . $title . '" src="' . $src . '" title="' . $title . '" width="' . $dimensions['width'] . '" height="' . $dimensions['height'] . '" />';
 	$html       = apply_filters( 'wpsc_product_no_thumbnail_html', $html, $size, $attr );
 
 	echo $html;
@@ -1284,4 +1285,63 @@ function wpsc_get_breadcrumb( $args = '' ) {
 	$html        = $before . implode( $separator, $breadcrumbs ) . $after;
 
 	return apply_filters( 'wpsc_get_breadcrumb', $html, $breadcrumbs, $r );
+}
+
+/**
+ * Output a list of product categories.
+ *
+ * The options you can use to customize the output is similar to that of {@link wp_list_categories()}.
+ * However, there are many new options available to make it much more flexible to customize:
+ *     'show_description'   - Whether to show category description. Defaults to false.
+ *     'show_thumbnail'     - Whether to show category thumbnail. Defaults to false.
+ *     'before'             - The HTML before the list. Defaults to <ul class="%s">.
+ *     'after'              - The HTML after the list. Defaults to </ul>.
+ *     'before_description' - The HTML before the category description. Defaults to '<div class="%s">'.
+ *     'after_description'  - The HTML after the category description. Defaults to '</div>'.
+ *     'before_item'        - The HTML before each individual category. Defaults to '<li class="%s">'.
+ *     'after_item'         - The HTML after each individual category. Defaults to '</li>'.
+ *     'before_thumbnail'   - The HTML before the category thumbnail. Defaults to '<div class="%s">'.
+ *     'after_thumbnail'    - The HTML after the category thumbnail. Defaults to '</div>'.
+ *     'before_nested_list' - The HTML before the list of children categories. Defaults to '<ul class="%s">'.
+ *     'after_nested_list'  - The HTML after the list of children categories. Defaults to '</ul>'.
+ *
+ * The placeholder %s will be replaced with the class attribute of the corresonding element.
+ *
+ * @since 4.0
+ * @uses  apply_filters() Applies 'wpsc_product_category_list_class' filter.
+ * @uses  wp_list_categories()
+ * @uses  wp_parse_args()
+ * @param  string $args [description]
+ * @return [type]
+ */
+function wpsc_list_product_categories( $args = '' ) {
+	require_once( WPSC_FILE_PATH . '/wpsc-includes/walker-product-category.class.php' );
+	$defaults = array(
+		'before'             => '<ul class="%s">',
+		'before_description' => '<div class="%s">',
+		'before_item'        => '<li class="%s">',
+		'before_nested_list' => '<ul class="%s">',
+		'before_thumbnail'   => '<div class="%s">',
+		'after'              => '</ul>',
+		'after_description'  =>  '</div>',
+		'after_item'         => '</li>',
+		'after_nested_list'  => '</ul>',
+		'after_thumbnail'    => '</div>',
+		'walker'             => new WPSC_Walker_Product_Category(),
+		'show_description'   => false,
+		'show_option_none'   => __( 'No product categories', 'wpsc' ),
+		'show_thumbnail'     => false,
+		'echo'               => 1,
+	);
+	$r = wp_parse_args( $args, $defaults );
+	$r['taxonomy'] = 'wpsc_product_category';
+	extract( $r, EXTR_SKIP );
+
+	$r['echo'] = false;
+	$class = apply_filters( 'wpsc_product_category_list_class', 'wpsc-product-category-list' );
+	$output = sprintf( $before, $class ) . "\n" . wp_list_categories( $r ) . "\n" . $after;
+	if ( $echo )
+		echo $output;
+	else
+		return $output;
 }

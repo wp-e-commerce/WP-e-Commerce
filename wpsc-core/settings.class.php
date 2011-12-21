@@ -12,6 +12,7 @@ class WPSC_Settings
 		$this->default_settings = array(
 			'catalog_slug'                      => 'shop',
 			'crop_thumbnails'                   => 0,
+			'default_category'                  => 'all',
 			'product_base_slug'                 => 'product',
 			'category_base_slug'                => 'category',
 			'hierarchical_product_category_url' => 0,

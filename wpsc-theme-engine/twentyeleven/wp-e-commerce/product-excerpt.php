@@ -52,7 +52,7 @@
 		</footer><!-- #entry-meta -->
 	</div>
 
-	<div class="wpsc-thumbnail">
+	<div class="wpsc-thumbnail wpsc-product-thumbnail">
 		<?php if ( wpsc_has_product_thumbnail() ): ?>
 			<?php wpsc_product_thumbnail( 'archive' ); ?>
 		<?php else: ?>

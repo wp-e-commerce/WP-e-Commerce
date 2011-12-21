@@ -145,9 +145,10 @@ function wpsc_locate_template( $template_names, $load = false, $require_once = t
  * @since 4.0
  * @see   get_template()
  * @see   wpsc_locate_theme_file()
- * @uses  do_action() Calls 'wpsc_get_template_part_{$slug}' action.
- * @uses  do_action() Calls 'wpsc_template_before_{$slug}-{$name}' action.
- * @uses  do_action() Calls 'wpsc_template_after_{$slug}-{$name}' action.
+ * @uses  apply_filters() Applies 'wpsc_get_template_part_paths_for_{$slug}' filter.
+ * @uses  do_action()     Calls   'wpsc_get_template_part_{$slug}'           action.
+ * @uses  do_action()     Calls   'wpsc_template_before_{$slug}-{$name}'     action.
+ * @uses  do_action()     Calls   'wpsc_template_after_{$slug}-{$name}'      action.
  * @uses  wpsc_locate_template()
  *
  * @param  string $slug The slug name for the generic template.
@@ -162,6 +163,8 @@ function wpsc_get_template_part( $slug, $name = null ) {
 	}
 
 	$templates[] = "wp-e-commerce/{$slug}.php";
+
+	$templates = apply_filters( "wpsc_get_template_part_paths_for_{$slug}", $templates, $slug, $name );
 
 	do_action( "wpsc_template_before_{$slug}-{$name}" );
 	wpsc_locate_template( $templates, true, false );
@@ -183,7 +186,10 @@ function wpsc_get_template_part( $slug, $name = null ) {
  * @return string           The template file located by WP e-Commerce
  */
 function wpsc_filter_get_archive_template( $template ) {
-	if ( get_post_type() == 'wpsc-product' ) {
+	if ( is_post_type_archive( 'wpsc-product' ) ) {
+		if ( $located = apply_filters( 'wpsc_get_archive_template', false ) )
+			return $located;
+
 		$templates = array(
 			"archive-wpsc-product.php",
 			'archive.php',
@@ -216,6 +222,9 @@ function wpsc_filter_get_taxonomy_template( $template ) {
 	$taxonomy = $term->taxonomy;
 
 	if ( in_array( $taxonomy, array( 'wpsc_product_category', 'product_tag' ) ) ) {
+		if ( $located = apply_filters( 'wpsc_get_taxonomy_template', false ) )
+			return $located;
+
 		$templates = array(
 			"taxonomy-$taxonomy-{$term->slug}.php",
 			"taxonomy-$taxonomy.php",
@@ -628,3 +637,78 @@ function wpsc_canonical_url() {
 	}
 }
 add_action( 'wp', 'wpsc_canonical_url' );
+
+/**
+ * This function makes preparation in case the main catalog page is going to be displayed.
+ *
+ * Because the catalog page can display all products, product category list, or products of a certain
+ * category, this functions takes care of that.
+ *
+ * @since 4.0
+ * @uses  add_filter()      Attaches wpsc_get_category_list_template_paths() to 'wpsc_get_template_part_paths_for_archive'.
+ * @uses  add_action()      Attaches wpsc_display_category_as_catalog()      to 'pre_get_posts'.
+ * @uses  wpsc_get_option() Gets 'default_category' option.
+ *
+ */
+function wpsc_determine_main_catalog_display_mode() {
+	$mode = wpsc_get_option( 'default_category' );
+
+	if ( $mode == 'all' )
+		return;
+
+	if ( $mode == 'list' ) {
+		add_filter( 'wpsc_get_template_part_paths_for_archive', 'wpsc_get_category_list_template_paths', 10, 3 );
+		return;
+	}
+
+	if ( ! is_numeric( $mode ) )
+		return;
+
+	add_action( 'pre_get_posts', 'wpsc_display_category_as_catalog' );
+}
+
+/**
+ * In case the display mode is set to "Show list of product categories", this function is hooked into
+ * the filter inside wpsc_get_template_part() and returns paths to category list template instead of
+ * the usual one.
+ *
+ * @since 4.0
+ *
+ * @param  array  $templates
+ * @param  string $slug
+ * @param  string $name
+ * @return array
+ */
+function wpsc_get_category_list_template_paths( $templates, $slug, $name ) {
+	$templates = array(
+		'wp-e-commerce/archive-category-list.php',
+		'wp-e-commerce/archive.php',
+	);
+	return $templates;
+}
+
+/**
+ * In case a particular category is selected to be displayed on the main catalog page, this function
+ * is hooked into 'pre_get_posts' and append a taxonomy query to make sure only products of that
+ * category is fetched from the database and displayed.
+ *
+ * @since 4.0
+ * @uses  WP_Query::is_main_query()
+ * @uses  WP_Query::is_post_type_archive()
+ * @uses  wpsc_get_option() Gets 'default_category' option.
+ *
+ * @param  object $query
+ */
+function wpsc_display_category_as_catalog( $query ) {
+	if ( $query->is_main_query() && $query->is_post_type_archive( 'wpsc-product' ) ) {
+		$q =& $query->query_vars;
+		if ( empty( $q['tax_query'] ) )
+			$q['tax_query'] = array();
+
+		$q['tax_query'][] = array(
+			'taxonomy' => 'wpsc_product_category',
+			'field'    => 'id',
+			'terms'    => wpsc_get_option( 'default_category' ),
+		);
+	}
+}
