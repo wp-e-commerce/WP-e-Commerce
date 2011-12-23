@@ -304,7 +304,7 @@ function wpsc_purchaselog_details_name() {
 
 function wpsc_purchaselog_details_id() {
    global $purchlogitem;
-   return $purchlogitem->purchitem->id;
+   return $purchlogitem->purchlogid;
 }
 
 function wpsc_the_purchaselog_item() {
@@ -459,7 +459,7 @@ function wpsc_display_purchlog_buyers_address() {
 
    if(is_numeric($purchlogitem->extrainfo->billing_region))
    		$state = wpsc_get_region($purchlogitem->extrainfo->billing_region);
-   else 
+   else
    		$state = $purchlogitem->userinfo['billingstate']['value'];
 
    return nl2br( esc_html( trim(htmlentities( stripslashes( $purchlogitem->userinfo['billingaddress']['value'] ), ENT_QUOTES, 'UTF-8'), "\n\r"))).'<br />'.
@@ -494,16 +494,16 @@ function wpsc_display_purchlog_shipping_state_and_postcode() {
    		$state = esc_html( wpsc_get_region($purchlogitem->extrainfo->shipping_region) );
    else
    		$state = esc_html( $purchlogitem->shippinginfo['shippingstate']['value'] );
-   		
+
    if ( !empty( $purchlogitem->shippinginfo['shippingpostcode']['value'] ) ){
    		if( empty( $state ) )
    			$state = esc_html( $purchlogitem->shippinginfo['shippingpostcode']['value'] );
    		else
    			$state .= ', ' . esc_html( $purchlogitem->shippinginfo['shippingpostcode']['value'] );
    }
-   
 
-   return $state; 
+
+   return $state;
 }
 
 function wpsc_display_purchlog_shipping_country() {
