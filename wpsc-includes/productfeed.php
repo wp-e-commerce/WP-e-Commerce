@@ -28,7 +28,10 @@ function wpsc_generate_product_feed() {
 	define('DONOTCACHEPAGE',TRUE);
 
     // Don't build up a huge posts cache for the whole store - http://code.google.com/p/wp-e-commerce/issues/detail?id=885
-    wp_suspend_cache_addition(true);
+    // WP 3.3+ only
+    if ( function_exists ( 'wp_suspend_cache_addition' ) ) {
+        wp_suspend_cache_addition(true);
+    }
 
 	$siteurl = get_option('siteurl');
 
