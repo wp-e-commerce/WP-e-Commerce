@@ -30,7 +30,7 @@ global $wpdb;
 			} else {
 				echo "    <td><label for='google_shipping_".$country['id']."'>".$country['country']."</label></td>\n\r";
 			}
-			
+
 			echo "  </tr>\n\r";
 		}
 		echo "</table>\n\r";
@@ -41,6 +41,6 @@ global $wpdb;
 ?>
 	<a style="cursor:pointer;" onclick="jQuery('input[type=\'checkbox\']').each(function() {this.checked = true; });">Select All</a>&emsp; <a style="cursor:pointer;" onclick="jQuery('input[type=\'checkbox\']').each(function() {this.checked = false; });">Unselect All</a><br /><br />
 	<input type='hidden' name='wpsc_admin_action' value='google_shipping_settings' />
-		<input class='button-secondary' type='submit' name='submit' value='<?php _e('Save Changes', 'wpsc');?>' /> <a href='?page=<?=$_GET['page']?>'>Go Back</a>
+		<input class='button-secondary' type='submit' name='submit' value='<?php _e('Save Changes', 'wpsc');?>' /> <a href='?page=<?php echo esc_attr( $_GET['page'] )?>'>Go Back</a>
 	</form>
 </div>
