@@ -156,6 +156,9 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 
 == Changelog ==
+= 3.8.7.5 =
+* Fix XSS vulnerability.
+
 = 3.8.7.4 =
 * Fix: "Session expired" error when viewing Customer Account page.
 
