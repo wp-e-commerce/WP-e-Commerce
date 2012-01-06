@@ -939,7 +939,7 @@ function wpsc_ajax_ie_save() {
 	$product_post_type = get_post_type_object( 'wpsc-product' );
 
 	if ( !current_user_can( $product_post_type->cap->edit_posts ) ) {
-		echo '({"error":"' . __( 'Error: you don\'t have required permissions to edit this product', 'wpsc' ) . '", "id": "'. $_POST['id'] .'"})';
+		echo '({"error":"' . __( 'Error: you don\'t have required permissions to edit this product', 'wpsc' ) . '", "id": "'. esc_js( $_POST['id'] ) .'"})';
 		die();
 	}
 
@@ -980,7 +980,7 @@ function wpsc_ajax_ie_save() {
 		echo '(' . json_encode( $results ) . ')';
 		die();
 	} else {
-		echo '({"error":"' . __( 'Error updating product', 'wpsc' ) . '", "id": "'. $_POST['id'] .'"})';
+		echo '({"error":"' . __( 'Error updating product', 'wpsc' ) . '", "id": "'. esc_js( $_POST['id'] ) .'"})';
 	}
 	die();
 }

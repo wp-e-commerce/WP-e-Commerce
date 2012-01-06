@@ -566,7 +566,7 @@ function wpsc_admin_ajax() {
 			}
 
 			$status_name = wpsc_find_purchlog_status_name( $purchase['processed'] );
-			echo "document.getElementById(\"form_group_" . $_POST['id'] . "_text\").innerHTML = '" . $status_name . "';\n";
+			echo "document.getElementById(\"form_group_" . absint( $_POST['id'] ) . "_text\").innerHTML = '" . $status_name . "';\n";
 
 
 			$year = date( "Y" );

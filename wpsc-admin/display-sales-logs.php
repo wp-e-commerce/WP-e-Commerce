@@ -86,7 +86,7 @@ class WPSC_Purchase_Log_Page
       if(isset($_POST)){
          foreach($_POST as $key=>$value){
             if($value != '-1'){
-               $complete = $wpdb->update(   
+               $complete = $wpdb->update(
 			    WPSC_TABLE_CHECKOUT_FORMS,
 			    array(
 				'unique_name' => $value
@@ -95,7 +95,7 @@ class WPSC_Purchase_Log_Page
 				'id' => $key
 			     ),
 			    '%s',
-			    '%d'   
+			    '%d'
 		       );
             }
             $numChanged++;
@@ -194,7 +194,7 @@ class WPSC_Purchase_Log_Page
          <td><?php echo wpsc_purchaselog_details_SKU(); ?></td> <!-- SKU! -->
          <td><?php echo wpsc_purchaselog_details_quantity(); ?></td> <!-- QUANTITY! -->
          <td>
-	    <?php 
+	    <?php
 		echo wpsc_currency_display( wpsc_purchaselog_details_price() );
 		do_action( 'wpsc_additional_sales_amount_info', wpsc_purchaselog_details_id() );
 	    ?>
@@ -298,7 +298,7 @@ class WPSC_Purchase_Log_Page
       $current_action = $this->list_table->current_action();
 
       do_action( 'wpsc_sales_log_process_bulk_action', $current_action );
-      
+
       if ( ! $current_action || ( 'download_csv' != $current_action && empty( $_REQUEST['post'] ) ) ) {
          if ( ! empty( $_REQUEST['_wp_http_referer'] ) ) {
             wp_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'action', 'action2' ), stripslashes( $_SERVER['REQUEST_URI'] ) ) );
@@ -357,15 +357,15 @@ class WPSC_Purchase_Log_Page
 
       // change status actions
       if ( is_numeric( $current_action ) && $current_action < 7 && ! empty( $_REQUEST['post'] ) ) {
-	  
+
          foreach ( $_REQUEST['post'] as $id )
             wpsc_purchlog_edit_status( $id, $current_action );
-         
+
          $sendback = add_query_arg( array(
             'updated' => count( $_REQUEST['post'] ),
          ), $sendback );
       }
-      
+
       wp_redirect( $sendback );
       exit;
    }
