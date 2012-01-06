@@ -771,7 +771,11 @@ function wpsc_purchlog_edit_status( $purchlog_id='', $purchlog_status='' ) {
 	    transaction_results($log_data['sessionid'],false,null);
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		die('success');
+		set_current_screen( 'dashboard_page_wpsc-sales-logs' );
+		require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/purchase-log-list-table-class.php' );
+		$purchaselog_table = new WPSC_Purchase_Log_List_Table();
+		$purchaselog_table->views();
+		exit;
 	}
 }
 
