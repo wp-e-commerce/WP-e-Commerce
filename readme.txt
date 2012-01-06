@@ -192,6 +192,15 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * Fix: settings page JS compatibility issue with Firefox.
 * Fix: wpsc_get_template_file_url() function is inefficient and causes 10 extra SQL queries per page load.
 
+= 3.8.7.5 =
+* Fix XSS vulnerability.
+
+= 3.8.7.4 =
+* Fix: "Session expired" error when viewing Customer Account page.
+
+= 3.8.7.3 =
+* Security fixes.
+
 = 3.8.7.2 =
 * New: Support for g:availability to Google Merchant Centre feed. Props bbaskets & longercat
 * Fix: Admin product page sorting by column was not working.
