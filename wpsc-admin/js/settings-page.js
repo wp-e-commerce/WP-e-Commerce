@@ -163,7 +163,7 @@
 				$(t).trigger('wpsc_settings_tab_loaded');
 				$(t).trigger('wpsc_settings_tab_loaded_' + tab_id);
 				spinner.removeClass('ajax-feedback-active');
-			}
+			};
 
 			$.post(ajaxurl, post_data, ajax_callback, 'html');
 		}
@@ -311,7 +311,7 @@
 					helper      : WPSC_Settings_Page.Checkout.fix_sortable_helper,
 					start       : WPSC_Settings_Page.Checkout.event_sort_start,
 					stop        : WPSC_Settings_Page.Checkout.event_sort_stop,
-					update      : WPSC_Settings_Page.Checkout.event_sort_update,
+					update      : WPSC_Settings_Page.Checkout.event_sort_update
 				});
 		},
 
@@ -455,7 +455,7 @@
 			});
 
 			prototype_option.hide();
-			if (label_inputs.size() == 0) {
+			if (label_inputs.size() === 0) {
 				prototype_option.clone().removeClass('new-option').show().appendTo(options_row.find('tbody'));
 			}
 
@@ -475,7 +475,8 @@
 		event_add_new_field : function() {
 			var target_row = $(this).closest('tr'),
 				new_row = $('#field-prototype').clone(),
-				id;
+				id,
+				next_row = target_row.next();
 
 			WPSC_Settings_Page.Checkout.new_field_count ++;
 			id = WPSC_Settings_Page.Checkout.new_field_count;
@@ -491,6 +492,10 @@
 
 				t.attr('name', new_name);
 			});
+
+			if (next_row && next_row.hasClass('form-field-options'))
+				target_row = next_row;
+
 			new_row.insertAfter(target_row).show().find('.cell-wrapper').slideDown(150);
 
 			WPSC_Settings_Page.unsaved_settings = true;
@@ -650,7 +655,7 @@
 				spinner = c.siblings('.ajax-feedback'),
 				ajax_callback = function(response) {
 					spinner.toggleClass('ajax-feedback-active');
-					if (response != '') {
+					if (response !== '') {
 						c.after(response);
 					}
 				};
@@ -703,13 +708,13 @@
 		 * @since 3.8.8
 		 */
 		add_field : function(type) {
-			var button_wrapper = $('#wpsc-add-tax-' + type);
+			var button_wrapper = $('#wpsc-add-tax-' + type),
 			    count = $('.wpsc-tax-' + type + '-row').size(),
 			    post_data = {
 			    	action            : 'wpec_taxes_ajax',
 			    	wpec_taxes_action : 'wpec_taxes_build_' + type + '_form',
 			    	current_key       : count,
-			    	nonce             : WPSC_Settings_Page.nonce,
+			    	nonce             : WPSC_Settings_Page.nonce
 			    },
 			    ajax_callback = function(response) {
 			    	button_wrapper.before(response).find('img').toggleClass('ajax-feedback-active');
@@ -718,7 +723,7 @@
 			button_wrapper.find('img').toggleClass('ajax-feedback-active');
 			$.post(ajaxurl, post_data, ajax_callback, 'html');
 		}
-	}
+	};
 	$(WPSC_Settings_Page).bind('wpsc_settings_tab_loaded_taxes', WPSC_Settings_Page.Taxes.event_init);
 
 	/**
