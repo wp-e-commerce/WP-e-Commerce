@@ -330,7 +330,7 @@ function wpsc_product_row(&$product, $parent_product = null) {
 					<span><?php echo $sku ? $sku : __('N/A', 'wpsc'); ?></span>
 					<input type="text" class="wpsc_ie_field wpsc_ie_sku" value="<?php echo $sku; ?>">
 										<input type="hidden" class="wpsc_ie_id wpsc_ie_field" value="<?php echo $product->ID ?>">
-					<div class="wpsc_inline_actions"><input type="button" class="button-primary wpsc_ie_save" value="Save"><img src="<?php bloginfo('url') ?>/wp-admin/images/wpspin_light.gif" class="loading_indicator"><br/></div>
+					<div class="wpsc_inline_actions"><input type="button" class="button-primary wpsc_ie_save" value="Save"><img src="<?php echo admin_url( 'images/wpspin_light.gif' ) ?>" class="loading_indicator"><br/></div>
 				</td>
 			<?php
 		break;
