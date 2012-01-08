@@ -390,19 +390,21 @@ jQuery(document).ready(function(){
 		});
 	});
 
+	var limited_stock_checkbox = jQuery('input.limited_stock_checkbox');
+	var toggle_stock_fields = function(checked) {
+		jQuery('div.edit_stock').toggle(checked);
+		jQuery('th.column-stock input, td.stock input').each(function(){
+			this.disabled = ! checked;
+		});
+	}
 
-
+	if (limited_stock_checkbox.size() > 0) {
+		toggle_stock_fields(limited_stock_checkbox.is(':checked'));
+	}
 
 	// show or hide the stock input forms
-	jQuery('input.limited_stock_checkbox').live('click', function ()  {
-		parent_form = jQuery(this).parents('form');
-		if(jQuery(this).is(':checked')) {
-			jQuery("div.edit_stock",parent_form).show();
-			jQuery("th.column-stock, td.stock", parent_form).show();
-		} else {
-			jQuery("div.edit_stock", parent_form).hide();
-			jQuery("th.column-stock, td.stock", parent_form).hide();
-		}
+	limited_stock_checkbox.bind('click', function ()  {
+		toggle_stock_fields(limited_stock_checkbox.is(':checked'));
 	});
 
 
