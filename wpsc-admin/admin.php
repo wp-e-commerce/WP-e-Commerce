@@ -944,15 +944,19 @@ function wpsc_ajax_ie_save() {
 		die();
 	}
 
+	$id = absint( $_POST['id'] );
+	$post = get_post( $_POST['id'] );
+	$parent = get_post( $post->post_parent );
+	$terms = wp_get_object_terms( $id, 'wpsc-variation', array( 'fields' => 'names' ) );
+
 	$product = array(
 		'ID' => $_POST['id'],
-		'post_title' => $_POST['title']
+		'post_title' => $parent->post_title . ' (' . implode( ', ', $terms ) . ')',
 	);
 
 	$id = wp_update_post( $product );
 	if ( $id > 0 ) {
 		//need parent meta to know which weight unit we are using
-		$post = get_post( $id );
 		$parent_meta = get_product_meta($post->post_parent, 'product_metadata', true );
 		$product_meta = get_product_meta( $product['ID'], 'product_metadata', true );
 		if ( is_numeric( $_POST['weight'] ) || empty( $_POST['weight'] ) ){
@@ -969,7 +973,6 @@ function wpsc_ajax_ie_save() {
 		else
 			update_product_meta( $product['ID'], 'stock', absint( $_POST['stock'] ) );
 
-		$post = get_post( $id );
 		$meta = get_product_meta( $id, 'product_metadata', true );
 		$price = get_product_meta( $id, 'price', true );
 		$special_price = get_product_meta( $id, 'special_price', true );
