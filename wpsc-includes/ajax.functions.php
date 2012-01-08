@@ -634,7 +634,7 @@ function wpsc_submit_checkout() {
 			'statusno' => '0',
 			'sessionid' => $sessionid,
 			'user_ID' => (int)$user_ID,
-			'date' => strtotime( current_time( 'mysql' ) ),
+			'date' => time(),
 			'gateway' => $submitted_gateway,
 			'billing_country' => $wpsc_cart->selected_country,
 			'shipping_country' => $delivery_country,
