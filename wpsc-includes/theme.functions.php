@@ -278,9 +278,15 @@ add_filter( 'single_template', 'wpsc_filter_get_single_template' );
  */
 function wpsc_set_query_object() {
 	global $wp_query;
-	$GLOBALS['wpsc_query'] = $wp_query;
+	if ( ! isset( $wp_query->wpsc_is_page ) )
+		$wp_query->wpsc_is_page = false;
+
+	if ( ! isset( $wp_query->wpsc_is_cart ) )
+		$wp_query->wpsc_is_cart = false;
+
+	$GLOBALS['wpsc_query'] =& $wp_query;
 }
-add_action( 'wp', 'wpsc_set_query_object' );
+add_action( 'wp', 'wpsc_set_query_object', 1 );
 
 /**
  * WPEC provides a way to separate all WPEC-related theme functions into a file called 'wpsc-functions.php'.
@@ -422,18 +428,6 @@ function wpsc_filter_product_class( $classes, $class, $post_id ) {
 	return $classes;
 }
 add_filter( 'post_class', 'wpsc_filter_product_class', 10, 3 );
-
-/**
- * Return the main catalog URL based on the settings in Settings->Store->Pemalinks
- *
- * @since 4.0
- * @uses  home_url()
- * @uses  wpsc_get_option() Gets WPEC 'catalog_slug' option.
- * @return [type]
- */
-function wpsc_get_catalog_url() {
-	return home_url( wpsc_get_option( 'catalog_slug' ) );
-}
 
 /**
  * Properly replace permalink tags with product's name and product category.
@@ -795,3 +789,55 @@ function wpsc_determine_product_category_display_mode() {
 		add_action( 'wp', 'wpsc_restore_product_category_query_var', 1 );
 	}
 }
+
+function wpsc_register_custom_page_rewrites() {
+	$cart_slug               = wpsc_get_option( 'cart_page_slug' );
+	$transaction_result_slug = wpsc_get_option( 'transaction_result_page_slug' );
+	$customer_account_slug   = wpsc_get_option( 'customer_account_page_slug' );
+
+	$regexp = "({$cart_slug}|{$transaction_result_slug}|{$customer_account_slug})(/.+?)?/?$";
+	$rewrite = 'index.php?wpsc_page=$matches[1]&wpsc_callback=$matches[2]';
+
+	add_rewrite_rule( $regexp, $rewrite, 'top' );
+}
+add_action( 'init', 'wpsc_register_custom_page_rewrites', 1 );
+
+function wpsc_register_query_vars( $qv ) {
+	$qv[] = 'wpsc_page';
+	$qv[] = 'wpsc_callback';
+	return $qv;
+}
+add_filter( 'query_vars', 'wpsc_register_query_vars' );
+
+function wpsc_prepare_pages( $query ) {
+	if ( ! $query->is_main_query() )
+		return;
+
+	if ( $page = $query->get( 'wpsc_page' ) ) {
+		$callback = $query->get( 'wpsc_callback' );
+		$GLOBALS['wpsc_page'] = wpsc_get_front_end_page( $page, $callback );
+	}
+}
+add_action( 'pre_get_posts', 'wpsc_prepare_pages', 10 );
+
+function wpsc_body_class( $classes ) {
+	if ( wpsc_is_cart() )
+		$classes[] = 'wpsc-cart';
+	return $classes;
+}
+add_filter( 'body_class', 'wpsc_body_class' );
+
+function wpsc_title( $title, $sep, $sep_location ) {
+	if ( wpsc_is_cart() ) {
+		$prefix = " {$sep} ";
+		$title = apply_filters( 'wpsc_cart_title', __( 'Shopping Cart', 'wpsc' ), $sep, $sep_location );
+
+		if ( $sep_location == 'right' )
+			$title .= $prefix;
+		else
+			$title = $prefix . $title;
+	}
+
+	return $title;
+}
+add_filter( 'wp_title', 'wpsc_title', 10, 3 );

@@ -49,7 +49,7 @@ class WPSC_Country
 			$value = $id;
 		}
 
-		return wp_cache_get( $value, 'id' );
+		return wp_cache_get( $value, 'wpsc_countries' );
 	}
 
 	public static function update_cache( $country ) {

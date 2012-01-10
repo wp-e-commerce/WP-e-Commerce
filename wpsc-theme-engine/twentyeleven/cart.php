@@ -1,20 +1,20 @@
 <?php
 /**
- * The template for displaying main product catalog.
+ * The template for displaying cart page.
  *
  * @package wp-e-commerce
  * @subpackage Twenty_Eleven
  * @since 4.0
  */
+
 get_header(); ?>
 
 		<section id="primary">
 			<div id="content" role="main">
 
-			<?php wpsc_get_template_part( 'archive', 'product-catalog' ); ?>
+			<?php wpsc_get_template_part( 'cart', 'main' ); ?>
 
 			</div><!-- #content -->
 		</section><!-- #primary -->
 
-<?php get_sidebar(); ?>
 <?php get_footer(); ?>

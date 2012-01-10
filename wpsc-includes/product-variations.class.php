@@ -51,7 +51,7 @@ class WPSC_Product_Variations
 		$product_id = esc_attr( $this->product_id );
 		$classes = apply_filters( 'wpsc_get_product_variation_set_dropdown_classes', array( 'wpsc-product-variation-dropdown' ), $variation_set_id, $this->product_id );
 		$classes = implode( ' ', $classes );
-		$output = "<select name='wpsc_product_variation' id='wpsc-product-{$product_id}-{$variation_set_id}' class='{$classes}'>";
+		$output = "<select name='wpsc_product_variations[{$variation_set_id}]' id='wpsc-product-{$product_id}-{$variation_set_id}' class='{$classes}'>";
 		foreach ( $this->variation_terms[$variation_set_id] as $variation_term_id => $variation_term_title ) {
 			$label = esc_attr( $variation_term_title );
 			$output .= "<option value='{$variation_term_id}'>{$label}</option>";

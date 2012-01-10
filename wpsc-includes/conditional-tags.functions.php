@@ -64,6 +64,11 @@
  	return is_tax( 'product_tag', $tag );
  }
 
+ function wpsc_is_cart() {
+ 	global $wpsc_query;
+ 	return $wpsc_query->wpsc_is_cart;
+ }
+
 /**
  * Determine whether a product has an associated featured thumbnail or not.
  *
@@ -175,4 +180,8 @@ function wpsc_is_product_out_of_stock( $id = null ) {
 		return true;
 
 	return false;
+}
+
+function wpsc_cart_has_items() {
+	return wpsc_cart_item_count() >= 1;
 }

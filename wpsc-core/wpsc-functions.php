@@ -389,18 +389,6 @@ function wpsc_register_post_types() {
 }
 add_action( 'init', 'wpsc_register_post_types', 8 );
 
-function wpsc_register_custom_page_rewrites() {
-	$cart_slug               = wpsc_get_option( 'cart_page_slug' );
-	$transaction_result_slug = wpsc_get_option( 'transaction_result_page_slug' );
-	$customer_account_slug   = wpsc_get_option( 'customer_account_page_slug' );
-
-	$regexp = "({$cart_slug}|{$transaction_result_slug}|{$customer_account_slug})(/.+?)?/?$";
-	$rewrite = 'index.php?wpsc_page=$matches[1]&callback=$matches[2]';
-
-	add_rewrite_rule( $regexp, $rewrite, 'top' );
-}
-add_action( 'init', 'wpsc_register_custom_page_rewrites', 1 );
-
 /**
  * Post Updated Messages
  */
@@ -438,6 +426,7 @@ function wpsc_check_thumbnail_support() {
 	add_image_size( 'wpsc_product_single_thumbnail', get_option( 'single_view_image_width' ), get_option( 'single_view_image_height' ), $crop );
 	add_image_size( 'wpsc_product_archive_thumbnail', get_option( 'product_image_width' ), get_option( 'product_image_height' ), $crop );
 	add_image_size( 'wpsc_product_taxonomy_thumbnail', get_option( 'category_image_width' ), get_option( 'product_image_height' ), $crop );
+	add_image_size( 'wpsc_product_cart_thumbnail', 64, 64, $crop );
 }
 add_action( 'after_setup_theme', 'wpsc_check_thumbnail_support', 99 );
 
@@ -970,6 +959,8 @@ function wpsc_load_theme_engine() {
 	require_once( WPSC_FILE_PATH . '/wpsc-includes/template-tags.functions.php'    );
 	require_once( WPSC_FILE_PATH . '/wpsc-includes/conditional-tags.functions.php' );
 	require_once( WPSC_FILE_PATH . '/wpsc-includes/theme-action.functions.php'     );
+	require_once( WPSC_FILE_PATH . '/wpsc-includes/front-end-page.class.php'       );
+	require_once( WPSC_FILE_PATH . '/wpsc-includes/cart-item-table.class.php'      );
 
 	wpsc_determine_main_catalog_display_mode();
 	wpsc_determine_product_category_display_mode();

@@ -202,6 +202,7 @@ class WPSC_Settings_Tab_Permalinks extends WPSC_Settings_Tab
 					'product_base_slug',
 					'prefix_product_slug',
 					'cart_page_slug',
+					'checkout_page_slug',
 					'transaction_result_page_slug',
 					'customer_account_page_slug',
 				),
@@ -247,6 +248,12 @@ class WPSC_Settings_Tab_Permalinks extends WPSC_Settings_Tab
 				'type'        => 'textfield',
 				'title'       => _x( 'Cart page slug', 'permalinks setting', 'wpsc' ),
 				'description' => __( "This page contains your customer's cart content and checkout form.", 'wpsc' ),
+				'validation'  => 'required|slug_not_conflicted',
+			),
+			'checkout_page_slug' => array(
+				'type'        => 'textfield',
+				'title'       => _x( 'Checkout page slug', 'permalinks setting', 'wpsc' ),
+				'description' => __( 'The checkout process happens on this page.', 'wpsc' ),
 				'validation'  => 'required|slug_not_conflicted',
 			),
 			'transaction_result_page_slug' => array(

@@ -81,7 +81,10 @@ function wpsc_product_class() {
  * @return string
  */
 function wpsc_get_product_permalink( $id = 0, $leavename = false ) {
-	return apply_filters( 'wpsc_get_product_permalink', get_permalink() );
+	if ( ! $id )
+		$id = wpsc_get_product_id();
+
+	return apply_filters( 'wpsc_get_product_permalink', get_permalink( $id ) );
 }
 
 /**
@@ -344,7 +347,7 @@ function wpsc_get_product_thumbnail( $id = null, $size = 'single', $attr = '' ) 
 	global $_wp_additional_image_sizes;
 	$wp_size = 'wpsc_product_' . $size . '_thumbnail';
 
-	if ( wpsc_has_product_thumbnail() ) {
+	if ( wpsc_has_product_thumbnail( $id ) ) {
 		$thumb_id = wpsc_get_product_thumbnail_id( $id );
 
 		// Get the size metadata registered in wpsc_check_thumbnail_support()
@@ -415,7 +418,7 @@ function wpsc_product_no_thumbnail_image( $size = 'single', $attr = '' ) {
 
 	$wp_size    = 'wpsc_product_' . $size . '_thumbnail';
 	$dimensions = $_wp_additional_image_sizes[$wp_size];
-	$title      = wpsc_the_product_title_attribute( array( 'echo' => false ) );
+	$title      = wpsc_product_title_attribute( array( 'echo' => false ) );
 	$src        = apply_filters( 'wpsc_product_no_thumbnail_url', WPSC_THEME_ENGINE_COMPAT_URL . '/default/images/no-thumbnails.png', $size, $attr );
 	$html       = '<img alt="' . $title . '" src="' . $src . '" title="' . $title . '" width="' . $dimensions['width'] . '" height="' . $dimensions['height'] . '" />';
 	$html       = apply_filters( 'wpsc_product_no_thumbnail_html', $html, $size, $attr );
@@ -783,7 +786,7 @@ function wpsc_format_price( $amt, $args = '' ) {
  * @param  bool        $echo  Optional. Whether to echo the HTML or to return it. Defaults to true.
  * @return null|string
  */
-function wpsc_the_product_add_to_cart_button( $title = null, $id = null, $echo = true ) {
+function wpsc_product_add_to_cart_button( $title = null, $id = null, $echo = true ) {
 	if ( ! $id )
 		$id = wpsc_get_product_id();
 
@@ -809,13 +812,15 @@ function wpsc_the_product_add_to_cart_button( $title = null, $id = null, $echo =
  *
  * @param  null|int $id Optional. The product ID. Defaults to the current product in the loop.
  */
-function wpsc_product_id_hidden_field( $id = null ) {
+function wpsc_product_add_to_cart_hidden_fields( $id = null ) {
 	if ( ! $id )
 		$id = wpsc_get_product_id();
 
-	echo '<input type="hidden" name="wpsc_product_id" value="' . esc_attr( $id ) . '" />';
+	echo '<input type="hidden" name="product_id" value="' . esc_attr( $id ) . '" />';
+	echo '<input type="hidden" name="prev"       value="' . esc_attr( home_url( $_SERVER['REQUEST_URI'] ) ) . '" />';
+	echo '<input type="hidden" name="action"     value="add_to_cart" />';
 }
-add_action( 'wpsc_theme_product_add_to_cart_actions_after', 'wpsc_product_id_hidden_field', 10, 1 );
+add_action( 'wpsc_theme_product_add_to_cart_actions_after', 'wpsc_product_add_to_cart_hidden_fields', 10, 1 );
 
 /**
  * Wraps the read more link with a custom class.
@@ -1344,4 +1349,132 @@ function wpsc_list_product_categories( $args = '' ) {
 		echo $output;
 	else
 		return $output;
+}
+
+function wpsc_add_to_cart_form_open() {
+	?>
+	<form action="<?php echo wpsc_get_cart_url(); ?>" method="post">
+	<?php
+}
+
+function wpsc_add_to_cart_form_close() {
+	?>
+	</form>
+	<?php
+}
+
+function wpsc_add_to_cart_form_fields( $id = null ) {
+	if ( ! $id )
+		$id = wpsc_get_product_id();
+
+	do_action( 'wpsc_theme_add_to_cart_form_fields_before', $id );
+	do_action( 'wpsc_theme_add_to_cart_form_fields'       , $id );
+	do_action( 'wpsc_theme_add_to_cart_form_fields_after' , $id );
+}
+
+function wpsc_product_variation_dropdowns() {
+	wpsc_get_template_part( 'variations', 'product-catalog' );
+}
+add_action( 'wpsc_theme_add_to_cart_form_fields', 'wpsc_product_variation_dropdowns' );
+
+function wpsc_product_quantity_field() {
+	?>
+		<p>
+			<label for="wpsc-product-add-to-cart-quantity-<?php wpsc_product_id(); ?>">
+				<?php echo esc_html_x( 'Quantity', 'theme add to cart form', 'wpsc' ); ?>:
+			</label>
+			<input type="text" name="quantity" class="wpsc-product-add-to-cart-quantity wpsc-textfield" id="wpsc-product-add-to-cart-quantity-<?php wpsc_product_id(); ?>" value="1" />
+		</p>
+	<?php
+}
+add_action( 'wpsc_theme_add_to_cart_form_fields', 'wpsc_product_quantity_field' );
+
+function wpsc_catalog_url() {
+	echo wpsc_get_catalog_url();
+}
+
+/**
+ * Return the main catalog URL based on the settings in Settings->Store->Pemalinks
+ *
+ * @since 4.0
+ * @uses  home_url()
+ * @uses  wpsc_get_option() Gets WPEC 'catalog_slug' option.
+ * @return [type]
+ */
+function wpsc_get_catalog_url( $slug = '' ) {
+	$uri = wpsc_get_option( 'catalog_slug' );
+	if ( $slug )
+		$uri = trailingslashit( $uri ) . $slug;
+	return user_trailingslashit( home_url( $uri ) );
+}
+
+function wpsc_cart_url( $slug = '' ) {
+	echo wpsc_get_cart_url( $slug );
+}
+
+function wpsc_get_cart_url( $slug = '' ) {
+	$uri = wpsc_get_option( 'cart_page_slug' );
+	if ( $slug )
+		$uri = trailingslashit( $uri ) . $slug;
+	return user_trailingslashit( home_url( $uri ) );
+}
+
+function wpsc_checkout_url( $slug = '' ) {
+	echo wpsc_get_checkout_url( $slug );
+}
+
+function wpsc_get_checkout_url( $slug = '' ) {
+	$uri = wpsc_get_option( 'checkout_page_slug' );
+	if ( $slug )
+		$uri = trailingslashit( $uri ) . $slug;
+	return user_trailingslashit( $home_url( $uri ) );
+}
+
+function wpsc_cart_item_table() {
+	$cart_item_table = WPSC_Cart_Item_Table::get_instance();
+	$cart_item_table->display();
+}
+
+function wpsc_keep_shopping_button() {
+	$url = isset( $_REQUEST['prev'] ) ? esc_attr( $_REQUEST['prev'] ) : wpsc_get_catalog_url();
+	?>
+	<a class="wpsc-back-to-shopping" href="<?php echo $url; ?>"><?php esc_html_e( 'Keep Shopping' ); ?></a>
+	<?php
+}
+
+function wpsc_begin_checkout_button() {
+	?>
+	<a class="wpsc-proceed-to-checkout" href="<?php wpsc_cart_url( 'checkout' ); ?>"><?php esc_html_e( 'Begin Checkout' ); ?></a>
+	<?php
+}
+
+function wpsc_user_messages( $args = '' ) {
+	echo wpsc_get_user_messages( $args );
+}
+
+function wpsc_get_user_messages( $args = '' ) {
+	$defaults = array(
+		'before_message_list' => '<div class="%s">',
+		'after_message_list'  => '</div>',
+		'before_message_item' => '<p>',
+		'after_message_item'  => '</p>',
+	);
+
+	$r = wp_parse_args( $args, $defaults );
+	extract( $r );
+
+	$page = wpsc_get_front_end_page( 'cart' );
+	$messages = $page->get_messages();
+
+	foreach ( array( 'error', 'success' ) as $message_type ) {
+		if ( ! empty( $messages[$message_type] ) ) {
+			echo sprintf( $before_message_list, "wpsc-messages {$message_type}" );
+			foreach ( $messages[$message_type] as $message ) {
+				echo $before_message_item;
+				echo esc_html( $message );
+				echo $after_message_item;
+			}
+			echo $after_message_list;
+		}
+	}
 }

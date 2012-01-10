@@ -451,7 +451,7 @@ function wpsc_shipping_quote_value($numeric = false) {
    global $wpsc_cart;
 
    $value = apply_filters( 'wpsc_shipping_quote_value', $wpsc_cart->shipping_quote['value'] );
-   
+
    return ( $numeric ) ? $value : wpsc_currency_display( $value );
 
 }
@@ -947,6 +947,17 @@ class wpsc_cart {
 
 		$stock = get_post_meta($product_id, '_wpsc_stock', true);
 		$stock = apply_filters('wpsc_product_stock', $stock, $product_id);
+      if ( ! is_numeric( $stock ) )
+         return true;
+
+      $product = get_post( $product_id );
+      if ( $product->post_parent ) {
+         $limited_stock = get_post_meta( $product->post_parent, '_wpsc_limited_stock_', true );
+
+         if ( ! $limited_stock )
+            return true;
+      }
+
 		$output = 0;
 
 		// check to see if the product uses stock
@@ -961,6 +972,13 @@ class wpsc_cart {
 
 		return $output;
 	}
+
+   function clear() {
+      $this->cart_items = array();
+      $this->cart_item_count = 0;
+      $this->current_cart_item = -1;
+      $this->clear_cache();
+   }
 
 
    /**
@@ -1125,7 +1143,7 @@ class wpsc_cart {
       $wpec_taxes_controller = new wpec_taxes_controller();
       $taxes_total = $wpec_taxes_controller->wpec_taxes_calculate_total();
       $this->total_tax = $taxes_total['total'];
-      
+
       if( isset( $taxes_total['rate'] ) )
          $this->tax_percentage = $taxes_total['rate'];
 
@@ -1621,8 +1639,12 @@ function refresh_item() {
 
 	$price = apply_filters('wpsc_price', $price, $product_id);
 	// create the string containing the product name.
-	$product_name = apply_filters( 'wpsc_cart_product_title', $product->post_title, $product_id );
+   if ( $product->post_parent )
+      $product_name = get_the_title( $product->post_parent );
+   else
+      $product_name = get_the_title( $product_id );
 
+	$product_name = apply_filters( 'wpsc_cart_product_title', $product_name );
 	$this->product_name = $product_name;
 	$this->priceandstock_id = $priceandstock_id;
 	$this->meta = $product_meta;

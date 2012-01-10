@@ -19,6 +19,7 @@ class WPSC_Settings
 			'page_number_position'              => WPSC_PAGE_NUMBER_POSITION_BOTTOM,
 			'products_per_page'                 => 0,
 			'cart_page_slug'                    => 'cart',
+			'checkout_page_slug'                => 'checkout',
 			'transaction_result_page_slug'      => 'transaction-result',
 			'customer_account_page_slug'        => 'account',
 			'decimal_separator'                 => '.',
