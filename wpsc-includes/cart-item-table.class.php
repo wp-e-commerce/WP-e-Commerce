@@ -96,7 +96,7 @@ class WPSC_Cart_Item_Table
 					<tr class="wpsc-cart-item-actions">
 						<td colspan="<?php echo count( $this->columns ) - 1; ?>">
 							<a class="wpsc-clear-cart" href="<?php echo $clear_cart_url; ?>"><?php esc_html_e( 'Clear Cart', 'wpsc' ); ?></a>
-							<input type="submit" class="wpsc-cart-update" value="<?php esc_html_e( 'Update Quantity', 'wpsc' ); ?>" />
+							<input type="submit" class="wpsc-cart-update" name="update_quantity" value="<?php esc_html_e( 'Update Quantity', 'wpsc' ); ?>" />
 							<input type="hidden" name="action" value="update_quantity" />
 							<input type="hidden" name="prev" value="<?php echo $prev; ?> ">
 						</td>

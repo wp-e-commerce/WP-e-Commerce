@@ -1454,7 +1454,7 @@ function wpsc_keep_shopping_button() {
 
 function wpsc_begin_checkout_button() {
 	?>
-	<a class="wpsc-proceed-to-checkout" href="<?php wpsc_cart_url( 'checkout' ); ?>"><?php esc_html_e( 'Begin Checkout' ); ?></a>
+	<input type="submit" class="wpsc-begin-checkout" name="begin_checkout" value="<?php esc_attr_e( 'Begin Checkout', 'wpsc' ); ?>" />
 	<?php
 }
 

@@ -10,9 +10,7 @@ class WPSC_Front_End_Page_Cart extends WPSC_Front_End_Page
 
 	public function __construct( $callback ) {
 		global $wp_query;
-
 		parent::__construct( $callback );
-
 		$wp_query->wpsc_is_cart = true;
 	}
 
@@ -94,6 +92,7 @@ class WPSC_Front_End_Page_Cart extends WPSC_Front_End_Page
 	public function process_update_quantity() {
 		global $wpsc_cart;
 		$changed = 0;
+		$has_errors = false;
 		extract( $_REQUEST, EXTR_SKIP );
 
 		foreach ( $wpsc_cart->cart_items as $key => &$item ) {
@@ -107,10 +106,12 @@ class WPSC_Front_End_Page_Cart extends WPSC_Front_End_Page
 						if ( $remaining_quantity <= 0 ) {
 							$message = __( "Sorry, all the remaining stocks of %s have been claimed. Now you can only checkout with the current number of that item in your cart.", 'wpsc' );
 							$this->set_message( sprintf( $message, $product->post_title ), 'error' );
+							$has_errors = true;
 							continue;
 						} elseif ( $remaining_quantity < $item->quantity ) {
 							$message = __( 'Sorry, but the quantity you just specified is larger than the available stock of %s. Besides the current number of that product in your cart, you can only add %d more.', 'wpsc' );
 							$this->set_message( sprintf( $message, $product->post_title, $remaining_quantity ), 'error' );
+							$has_errors = true;
 							continue;
 						}
 					}
@@ -120,6 +121,11 @@ class WPSC_Front_End_Page_Cart extends WPSC_Front_End_Page
 				$item->refresh_item();
 				$changed ++;
 			}
+		}
+
+		if ( isset( $begin_checkout ) && ! $has_errors ) {
+			wp_redirect( wpsc_get_checkout_url() );
+			exit;
 		}
 
 		if ( $changed ) {
