@@ -507,23 +507,6 @@ function wpsc_is_product() {
 }
 
 /**
- * wpsc_is_product function.
- *
- * @since 3.8
- * @access public
- * @return boolean
- */
-function wpsc_is_checkout() {
-	global $wp_query, $rewrite_rules;
-	$tmp = false;
-
-	if ( isset( $wp_query->is_checkout ) )
-		$tmp = $wp_query->is_checkout;
-
-	return $tmp;
-}
-
-/**
  * if the user is on a checkout page, force SSL if that option is so set
  */
 function wpsc_force_ssl() {

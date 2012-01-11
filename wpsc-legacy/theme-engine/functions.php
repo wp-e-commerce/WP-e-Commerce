@@ -806,3 +806,20 @@ function wpsc_refresh_page_urls( $content ) {
 }
 
 add_filter( 'mod_rewrite_rules', 'wpsc_refresh_page_urls' );
+
+/**
+ * wpsc_is_product function.
+ *
+ * @since 3.8
+ * @access public
+ * @return boolean
+ */
+function wpsc_is_checkout() {
+	global $wp_query, $rewrite_rules;
+	$tmp = false;
+
+	if ( isset( $wp_query->is_checkout ) )
+		$tmp = $wp_query->is_checkout;
+
+	return $tmp;
+}
