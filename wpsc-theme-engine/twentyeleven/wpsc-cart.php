@@ -7,7 +7,7 @@
  * @since 4.0
  */
 
-get_header(); ?>
+get_header( 'wpsc-cart' ); ?>
 
 		<section id="primary">
 			<div id="content" role="main">
