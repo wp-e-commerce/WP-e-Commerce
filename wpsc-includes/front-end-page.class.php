@@ -27,6 +27,10 @@ class WPSC_Front_End_Page
 	}
 
 	protected $template_name = 'wpsc-page';
+	protected $messages = array(
+		'success' => array(),
+		'error'   => array(),
+	);
 
 	public function __construct( $callback = 'main' ) {
 		global $wp_query;
@@ -74,6 +78,14 @@ class WPSC_Front_End_Page
 			$template = $located;
 
 		return $template;
+	}
+
+	public function set_message( $message, $type = 'message' ) {
+		$this->messages[$type][] = $message;
+	}
+
+	public function get_messages() {
+		return $this->messages;
 	}
 
 	public function main() {

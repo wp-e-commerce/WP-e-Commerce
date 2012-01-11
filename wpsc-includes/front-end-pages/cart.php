@@ -16,14 +16,6 @@ class WPSC_Front_End_Page_Cart extends WPSC_Front_End_Page
 		$wp_query->wpsc_is_cart = true;
 	}
 
-	public function set_message( $message, $type = 'message' ) {
-		$this->messages[$type][] = $message;
-	}
-
-	public function get_messages() {
-		return $this->messages;
-	}
-
 	public function process_add_to_cart() {
 		global $wpsc_cart;
 
