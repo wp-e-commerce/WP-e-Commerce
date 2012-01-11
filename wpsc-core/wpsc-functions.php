@@ -343,6 +343,7 @@ function wpsc_register_post_types() {
 	// Products
 	register_post_type( 'wpsc-product', array(
 		'capability_type' => 'post',
+		'supports' => array( 'title', 'editor', 'thumbnail' ),
 		'hierarchical' => true,
 		'exclude_from_search' => false,
 		'public' => true,
