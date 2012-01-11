@@ -791,11 +791,12 @@ function wpsc_determine_product_category_display_mode() {
 }
 
 function wpsc_register_custom_page_rewrites() {
-	$cart_slug               = wpsc_get_option( 'cart_page_slug' );
+	$cart_slug               = wpsc_get_option( 'cart_page_slug'               );
+	$checkout_slug           = wpsc_get_option( 'checkout_page_slug'           );
 	$transaction_result_slug = wpsc_get_option( 'transaction_result_page_slug' );
-	$customer_account_slug   = wpsc_get_option( 'customer_account_page_slug' );
+	$customer_account_slug   = wpsc_get_option( 'customer_account_page_slug'   );
 
-	$regexp = "({$cart_slug}|{$transaction_result_slug}|{$customer_account_slug})(/.+?)?/?$";
+	$regexp = "({$cart_slug}|{$transaction_result_slug}|{$customer_account_slug}|{$checkout_slug})(/.+?)?/?$";
 	$rewrite = 'index.php?wpsc_page=$matches[1]&wpsc_callback=$matches[2]';
 
 	add_rewrite_rule( $regexp, $rewrite, 'top' );
@@ -823,14 +824,20 @@ add_action( 'pre_get_posts', 'wpsc_prepare_pages', 10 );
 function wpsc_body_class( $classes ) {
 	if ( wpsc_is_cart() )
 		$classes[] = 'wpsc-cart';
+	elseif ( wpsc_is_checkout() )
+		$classes[] = 'wpsc-checkout';
 	return $classes;
 }
 add_filter( 'body_class', 'wpsc_body_class' );
 
 function wpsc_title( $title, $sep, $sep_location ) {
-	if ( wpsc_is_cart() ) {
+	if ( wpsc_is_page() ) {
 		$prefix = " {$sep} ";
-		$title = apply_filters( 'wpsc_cart_title', __( 'Shopping Cart', 'wpsc' ), $sep, $sep_location );
+
+		if ( wpsc_is_cart() )
+			$title = apply_filters( 'wpsc_cart_title', __( 'Shopping Cart', 'wpsc' ), $sep, $sep_location );
+		elseif ( wpsc_is_checkout() )
+			$title = apply_filters( 'wpsc_checkout_title', __( 'Checkout', 'wpsc' ), $sep, $sep_location );
 
 		if ( $sep_location == 'right' )
 			$title .= $prefix;
