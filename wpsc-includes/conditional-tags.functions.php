@@ -64,9 +64,19 @@
  	return is_tax( 'product_tag', $tag );
  }
 
+ function wpsc_is_page() {
+ 	global $wpsc_query;
+ 	return $wpsc_query->wpsc_is_page;
+ }
+
  function wpsc_is_cart() {
  	global $wpsc_query;
  	return $wpsc_query->wpsc_is_cart;
+ }
+
+ function wpsc_is_checkout() {
+ 	global $wpsc_query;
+ 	return $wpsc_query->wpsc_is_checkout;
  }
 
 /**
