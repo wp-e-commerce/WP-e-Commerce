@@ -77,7 +77,6 @@ class WPSC_Cart_Item_Table
 		$prev = isset( $_REQUEST['prev'] ) ? esc_attr( $_REQUEST['prev'] ) : '';
 		$clear_cart_url = esc_attr( add_query_arg( 'prev', $prev, wpsc_get_cart_url( 'clear' ) ) );
 		?>
-		<form action="<?php echo wpsc_get_cart_url(); ?>" method="post">
 			<table class="<?php echo implode( ' ', $this->get_table_classes() ); ?>" cellspacing="0">
 				<thead>
 					<tr>
@@ -109,7 +108,6 @@ class WPSC_Cart_Item_Table
 					<?php $this->display_rows(); ?>
 				</tbody>
 			</table>
-		</form>
 		<?php
 	}
 }

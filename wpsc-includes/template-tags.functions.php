@@ -1428,6 +1428,16 @@ function wpsc_get_checkout_url( $slug = '' ) {
 	if ( $slug )
 		$uri = trailingslashit( $uri ) . $slug;
 	return user_trailingslashit( $home_url( $uri ) );
+function wpsc_cart_form_open() {
+	?>
+	<form action="<?php echo wpsc_get_cart_url(); ?>" method="post">
+	<?php
+}
+
+function wpsc_cart_form_close() {
+	?>
+	</form>
+	<?php
 }
 
 function wpsc_cart_item_table() {
