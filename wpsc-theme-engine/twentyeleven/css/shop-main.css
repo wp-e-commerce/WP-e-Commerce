@@ -277,16 +277,16 @@ nav.wpsc-pagination-links span.current {
 }
 
 .wpsc-cart-update {
-	background:#eee;
+	background:#888;
 	border:none;
-	color:#666;
+	color:#fff;
 	cursor:pointer;
 	display:inline-block;
 	font-size:12px;
 	font-weight:300;
 	line-height:1.5em;
-	margin:0;
-	padding:5px 8px;
+	margin:5px 0;
+	padding:3px 8px;
 	text-decoration:none;
 
 	border-radius:3px;
@@ -295,8 +295,9 @@ nav.wpsc-pagination-links span.current {
 }
 
 .wpsc-cart-update:hover {
-	background:#888;
 	color:#fff;
+	background:#eee;
+	color:#666;
 }
 
 .wpsc-clear-cart, .wpsc-cart-primary-buttons .wpsc-back-to-shopping {
