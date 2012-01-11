@@ -815,7 +815,7 @@ function wpsc_prepare_pages( $query ) {
 
 	if ( $page = $query->get( 'wpsc_page' ) ) {
 		$callback = $query->get( 'wpsc_callback' );
-		$GLOBALS['wpsc_page'] = wpsc_get_front_end_page( $page, $callback );
+		$GLOBALS['wpsc_page_instance'] = wpsc_get_front_end_page( $page, $callback );
 	}
 }
 add_action( 'pre_get_posts', 'wpsc_prepare_pages', 10 );

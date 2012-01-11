@@ -1453,6 +1453,8 @@ function wpsc_user_messages( $args = '' ) {
 }
 
 function wpsc_get_user_messages( $args = '' ) {
+	global $wpsc_page_instance;
+
 	$defaults = array(
 		'before_message_list' => '<div class="%s">',
 		'after_message_list'  => '</div>',
@@ -1463,8 +1465,7 @@ function wpsc_get_user_messages( $args = '' ) {
 	$r = wp_parse_args( $args, $defaults );
 	extract( $r );
 
-	$page = wpsc_get_front_end_page( 'cart' );
-	$messages = $page->get_messages();
+	$messages = $wpsc_page_instance->get_messages();
 
 	foreach ( array( 'error', 'success' ) as $message_type ) {
 		if ( ! empty( $messages[$message_type] ) ) {
