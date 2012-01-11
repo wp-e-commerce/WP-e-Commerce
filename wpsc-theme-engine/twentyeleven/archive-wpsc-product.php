@@ -6,7 +6,7 @@
  * @subpackage Twenty_Eleven
  * @since 4.0
  */
-get_header(); ?>
+get_header( 'archive-wpsc-product' ); ?>
 
 		<section id="primary">
 			<div id="content" role="main">
@@ -16,5 +16,5 @@ get_header(); ?>
 			</div><!-- #content -->
 		</section><!-- #primary -->
 
-<?php get_sidebar(); ?>
-<?php get_footer(); ?>
+<?php get_sidebar( 'archive-wpsc-product' ); ?>
+<?php get_footer( 'archive-wpsc-product' ); ?>
