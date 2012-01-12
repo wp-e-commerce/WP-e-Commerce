@@ -453,7 +453,8 @@ function wpsc_product_variation_forms() {
 	$image_data                   = (array)get_posts( $args );
 	$parent_product_data['image'] = array_shift( $image_data );
 
-	$wp_query = new WP_Query( $query );
+	query_posts( $query );
+
 	if ( !isset( $parent_product_data ) )
 		$parent_product_data = null;
 ?>
@@ -475,7 +476,7 @@ function wpsc_product_variation_forms() {
 	wpsc_admin_product_listing( $parent_product_data );
 ?>
 <?php
-	if ( count( $wp_query->posts ) < 1 ) :
+	if ( ! have_posts() ) :
 ?>
 					<tr>
 						<td colspan="8">
@@ -490,6 +491,11 @@ function wpsc_product_variation_forms() {
 
         <?php
 	endif;
+	wp_reset_query();
+
+	// reset the global $id variable. This is to prevent incompatibility with Genesis framework,
+	// which (wrongly) relies on this global.
+	$GLOBALS['id'] = null;
 }
 function wpsc_product_shipping_forms() {
 	global $post, $wpdb, $variations_processor, $wpsc_product_defaults;
