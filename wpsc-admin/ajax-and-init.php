@@ -1223,7 +1223,7 @@ function prod_upload() {
 
 		$output .= '<tr class="wpsc_product_download_row ' . $class . '"  id="elect_product_file_row_id_' . $id . '">';
 		$output .= '<td style="padding-right: 30px;">' . $attachment['post_title'] . '</td>';
-		$output .= '<td>' . byteFormat( $file_size ) . '</td>';
+		$output .= '<td>' . wpsc_convert_byte( $file_size ) . '</td>';
 		$output .= '<td>.' . wpsc_get_extension( $attachment['post_title'] ) . '</td>';
 		$output .= "<td><a class='file_delete_button' href='{$deletion_url}' >" . _x( 'Delete', 'Digital Downliad UI row', 'wpsc' ) . "</a></td>";
 		$output .= '<td><a href=' .$file_url .'>' . _x( 'Download', 'Digital Downliad UI row', 'wpsc' ) . '</a></td>';				

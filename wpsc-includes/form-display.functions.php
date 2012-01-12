@@ -193,7 +193,7 @@ function wpsc_select_product_file( $product_id = null ) {
 	foreach ( (array)$attached_files as $file ) {
 	
 		$file_dir = WPSC_FILE_DIR . $file->post_title;
-		$file_size = ( 'http://s3file' == $file->guid ) ? __( 'Remote file sizes cannot be calculated', 'wpsc' ) : byteFormat( filesize( $file_dir ) );
+		$file_size = ( 'http://s3file' == $file->guid ) ? __( 'Remote file sizes cannot be calculated', 'wpsc' ) : wpsc_convert_byte( filesize( $file_dir ) );
 
 		$file_url = WPSC_FILE_URL.$file->post_title;
 		$deletion_url = wp_nonce_url( "admin.php?wpsc_admin_action=delete_file&amp;file_name={$file->post_title}&amp;product_id={$product_id}&amp;row_number={$num}", 'delete_file_' . $file->post_title );
