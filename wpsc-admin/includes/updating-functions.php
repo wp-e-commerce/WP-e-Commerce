@@ -316,12 +316,18 @@ function wpsc_convert_variation_sets() {
 		$variation_set_id = wpsc_get_meta($variation_set->id, 'variation_set_id', 'wpsc_variation_set');
 
 		if(!is_numeric($variation_set_id) || ( $variation_set_id < 1)) {
-			$new_variation_set = wp_insert_term( $variation_set->name, 'wpsc-variation',array('parent' => 0));
-			if(!is_wp_error($new_variation_set))
+			$slug = sanitize_title( $variation_set->name );
+			$dummy_term = (object) array(
+				'taxonomy' => 'wpsc-variation',
+				'parent'   => 0,
+			);
+			$slug = wp_unique_term_slug( $slug, $dummy_term );
+			$new_variation_set = wp_insert_term( $variation_set->name, 'wpsc-variation',array('parent' => 0, 'slug' => $slug ) );
+			if( ! is_wp_error( $new_variation_set ) )
 				$variation_set_id = $new_variation_set['term_id'];
 		}
 
-		if(is_numeric($variation_set_id)) {
+		if( ! empty( $variation_set_id ) && is_numeric($variation_set_id)) {
 			wpsc_update_meta($variation_set->id, 'variation_set_id', $variation_set_id, 'wpsc_variation_set');
 
 
