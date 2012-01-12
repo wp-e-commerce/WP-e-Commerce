@@ -135,7 +135,7 @@ jQuery(document).ready(function(){
 			jQuery.post('admin.php?wpsc_admin_action=product_files_upload',post_values, function(returned_data){
 				tb_remove();
 				if (returned_data.length > 0) {
-					jQuery('#wpsc_product_download_forms .select_product_file').append(returned_data).
+					jQuery('#wpsc_product_download_forms .select_product_file tbody').append(returned_data).
 						find('p.no-item').hide().end().
 						find('p:even').removeClass('alt').end().
 				   		find('p:odd').addClass('alt');
@@ -483,6 +483,7 @@ jQuery(document).ready(function(){
 			jQuery.post( url, post_values, function(returned_data) {
 				eval(returned_data);
 			});
+			jQuery(this).closest('tr').remove();
 			return false;
 		});
 	});

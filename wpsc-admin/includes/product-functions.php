@@ -7,10 +7,8 @@
  */
 
 function wpsc_get_max_upload_size(){
-// Get PHP Max Upload Size
-	if( ini_get( 'upload_max_filesize' ) ) $upload_max = ini_get( 'upload_max_filesize' );
-	else $upload_max = __( 'N/A', 'wpsc' );
-	return $upload_max;
+
+	return wp_convert_bytes_to_hr( wp_max_upload_size() );
 }
 
 

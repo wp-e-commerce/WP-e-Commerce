@@ -868,18 +868,36 @@ div.select_variation_file p input {
 div#side-sortables input[type="file"] {
 	width:250px;
 }
-div.select_product_file, div.edit_select_product_file {
-	margin-bottom:0;
-	margin-top:3px;
-	overflow-x:hidden;
-	overflow-y:auto;
-	padding:2px 2px 6px;
-	position:relative;
+.wpsc_product_downloads_header { 
+	margin: 0 0 5px; 
+}
+.select_product_file, 
+.edit_select_product_file {
+ 	margin-bottom:0;
+ 	margin-top:3px;
+ 	overflow-x:hidden;
+ 	overflow-y:auto;
+ 	position:relative;
+ }
+ 
+span.select_product_note { 
+	margin: 0 0 5px;
 }
 
+img.wpsc_add_download { 
+	display: inline; 
+	position: relative; 
+	top: 2px; 
+}
+
+div#poststuff table tr.wpsc_product_download_row td {
+	padding: 6px 7px;
+	vertical-align: middle;
+	line-height: 16px;
+}
+ 
 a.file_delete_button {
 	cursor:pointer;
-	float:right;
 	color:red;
 	display: block;
 }

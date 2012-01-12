@@ -717,6 +717,26 @@ function byteFormat($bytes, $unit = "", $decimals = 2) {
 	// Format output
 	return sprintf('%.' . $decimals . 'f '.$unit, $value);
   }
+  
+/**
+ * Check whether an integer is odd
+ * @return bool - true if is odd, false otherwise
+ */
+function wpsc_is_odd( $int ) {
 
+	$int = absint( $int );
+	return( $int & 1 );
+} 
+ 
+/**
+ * Retrieves extension of file.
+ * @return string - extension of the passed filename
+ */
+function wpsc_get_extension( $str ) {
+
+	$parts = explode( '.', $str );
+	return end( $parts );
+
+}
 
 ?>

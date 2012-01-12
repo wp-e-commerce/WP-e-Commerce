@@ -4,7 +4,7 @@
  * WP eCommerce Admin AJAX functions
  *
  * These are the WPSC Admin AJAX functions
- *wpsc_purchlog_resend_email
+ * 
  * @package wp-e-commerce
  * @since 3.7
  */
@@ -1219,12 +1219,13 @@ function prod_upload() {
 
 		$deletion_url = wp_nonce_url( "admin.php?wpsc_admin_action=delete_file&amp;file_name={$attachment['post_title']}&amp;product_id={$product_id}", 'delete_file_' . $attachment['post_title'] );
 
-		$output .= "<p id='select_product_file_row_id_" . $id . "'>\n";
-		$output .= "  <a class='file_delete_button' href='{$deletion_url}' >\n";
-		$output .= "    <img src='" . WPSC_CORE_IMAGES_URL . "/cross.png' />\n";
-		$output .= "  </a>\n";
-		$output .= "  <label for='select_product_file_row_id_" . $id . "'>" . $attachment['post_title'] . "</label>\n";
-		$output .= "</p>\n";
+		$output .= '<tr class="wpsc_product_download_row ' . $class . '"  id="elect_product_file_row_id_' . $id . '">';
+		$output .= '<td style="padding-right: 30px;">' . $attachment['post_title'] . '</td>';
+		$output .= '<td>' . byteFormat( $file_size ) . '</td>';
+		$output .= '<td>.' . wpsc_get_extension( $attachment['post_title'] ) . '</td>';
+		$output .= "<td><a class='file_delete_button' href='{$deletion_url}' >" . _x( 'Delete', 'Digital Downliad UI row', 'wpsc' ) . "</a></td>";
+		$output .= '<td><a href=' .$file_url .'>' . _x( 'Download', 'Digital Downliad UI row', 'wpsc' ) . '</a></td>';				
+		$output .= '</tr>';
 	}
 
 	echo $output;

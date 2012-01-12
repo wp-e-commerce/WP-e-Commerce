@@ -155,7 +155,12 @@ function wpsc_uploaded_files() {
 	return $dirlist;
 }
 
-// JS - For 3.8, function re-worked to only show files attached to product, separate thickbox with all products, to be associated with product.
+/**
+ * Returns HTML for Digital Download UI
+ * 
+ * @param int $product_id 
+ * @return HTML
+ */
 function wpsc_select_product_file( $product_id = null ) {
 	global $wpdb;
 	$product_id = absint( $product_id );
@@ -169,46 +174,53 @@ function wpsc_select_product_file( $product_id = null ) {
 	);
 
 	$attached_files = (array)get_posts( $args );
-	$output = "<a name='wpsc_downloads'></a>";
-	$output .= "<span class='admin_product_notes select_product_note '>" . __( 'File(s) attached: ', 'wpsc' ) . "</span><br>";
-	$output .= "<div class='ui-widget-content multiple-select select_product_file'>";
+
+	$output = '<table class="wp-list-table widefat fixed posts select_product_file">';
+		$output .= '<thead>';
+			$output .= '<tr>';
+				$output .= '<th>' . _x( 'Title', 'Digital download UI', 'wpsc' ) . '</th>';
+				$output .= '<th>' . _x( 'Size', 'Digital download UI', 'wpsc' ) . '</th>';
+				$output .= '<th>' . _x( 'File Type', 'Digital download UI', 'wpsc' ) . '</th>';
+				$output .= '<th>' . _x( 'Trash', 'Digital download UI', 'wpsc' ) . '</th>';
+				$output .= '<th>' . _x( 'Preview', 'Digital download UI', 'wpsc' ) . '</th>';
+			$output .= '</tr>';
+		$output .= '</thead>';	
+
 	$num = 0;
+
+	$output .= '<tbody>';
 
 	foreach ( (array)$attached_files as $file ) {
 	
-	///currently get_attached_file returns this:/Applications/MAMP/htdocs/word5/wp-content/uploads/
-	//so have made an ugly way to get the file size will need to debug this before 3.9 and clean up all code
-	//$file_size1 = get_attached_file( $file->ID , true ) ;
-	//echo('<pre>'.print_r($file_size1,1).'</pre>');
-	
-	$file_dir = WPSC_FILE_DIR.$file->post_title;
-	$file_size = filesize( $file_dir ) ;
-	$file_url = WPSC_FILE_URL.$file->post_title;
+		$file_dir = WPSC_FILE_DIR . $file->post_title;
+		$file_size = ( 'http://s3file' == $file->guid ) ? __( 'Remote file sizes cannot be calculated', 'wpsc' ) : byteFormat( filesize( $file_dir ) );
+
+		$file_url = WPSC_FILE_URL.$file->post_title;
+		$deletion_url = wp_nonce_url( "admin.php?wpsc_admin_action=delete_file&amp;file_name={$file->post_title}&amp;product_id={$product_id}&amp;row_number={$num}", 'delete_file_' . $file->post_title );
+		
+		$class = ( ! wpsc_is_odd( $num ) ) ? 'alternate' : '';
+
+		$output .= '<tr class="wpsc_product_download_row ' . $class . '">';
+		$output .= '<td style="padding-right: 30px;">' . $file->post_title . '</td>';
+		$output .= '<td>' . $file_size .'</td>';
+		$output .= '<td>.' . wpsc_get_extension( $file->post_title ) . '</td>';
+		$output .= "<td><a class='file_delete_button' href='{$deletion_url}' >" . _x( 'Delete', 'Digital download row UI', 'wpsc' ) . "</a></td>";
+		$output .= '<td><a href=' .$file_url .'>' . _x( 'Download', 'Digital download row UI', 'wpsc' ) . '</a></td>';
+
+		$output .= '</tr>';	
 
 		$num++;
-		$deletion_url = wp_nonce_url( "admin.php?wpsc_admin_action=delete_file&amp;file_name={$file->post_title}&amp;product_id={$product_id}&amp;row_number={$num}", 'delete_file_' . $file->post_title );
-		$output .= "<span class = " . ((($num % 2) > 0) ? '' : "class='alt'") . " id='select_product_file_row_$num'>\n";
-		$output .= " <label for='select_product_file_$num'>" . $file->post_title . "</label>";
-		$output .= "<p class = 'downloadables_float'>  <a class='file_delete_button' href='{$deletion_url}' >\n";
-		$output .= "    Delete";
-		$output .= "  </a></p>";
-		$output .= "<p class = 'downloadables_float'>  <a  href='{$file_url}' >";
-		$output .= "    Download\n";
-		$output .= "  </a> </p>";
-		$output .= "<p class = 'downloadables_float'>". get_the_date() ."</p>";
-		$output .= "<p class = 'downloadables_float'>".byteFormat($file_size) ."</p>";
-		$output .= "<p class='clear'></p>";
-		$output .= "</span>\n";
 	}
+
+	$output .= '</tbody>';
+	$output .= '</table>';
 	
-	if (empty($attached_files)){
+	if( empty( $attached_files ) )
 		$output .= "<p class='no-item'>" . __( 'There are no files attached to this product. Upload a new file or select from other product files.', 'wpsc' ) . "</p>";
-	}
-	$output .= "</div>";
-	$output .= "<div class='" . ((is_numeric( $product_id )) ? "edit_" : "") . "select_product_handle'><div></div></div>";
+	$output .= "<div class='" . ( ( is_numeric( $product_id ) ) ? 'edit_' : '') . "select_product_handle'></div>";
 	$output .= "<script type='text/javascript'>\r\n";
-	$output .= "var select_min_height = " . (25 * 3) . ";\r\n";
-	$output .= "var select_max_height = " . (25 * ($num + 1)) . ";\r\n";
+	$output .= "var select_min_height = " . ( 25 * 3 ) . ";\r\n";
+	$output .= "var select_max_height = " . ( 25 * ( $num + 1 ) ) . ";\r\n";
 	$output .= "</script>";
 
 	return $output;
