@@ -19,7 +19,7 @@ add_action('init', 'wpsc_feed_publisher');
 function wpsc_generate_product_feed() {
 
 	global $wpdb, $wp_query, $post;
-	
+
     set_time_limit(0);
 
     $chunk_size = apply_filters ( 'wpsc_productfeed_chunk_size', 50 );
@@ -31,12 +31,12 @@ function wpsc_generate_product_feed() {
 	$selected_product = '';
 
 	$args = array(
-			'post_type' => 'wpsc-product',
-			'numberposts' = $chunk_size,
-			'offset' => 0,
-			'cache_results' = false
+			'post_type'     => 'wpsc-product',
+			'numberposts'   => $chunk_size,
+			'offset'        => 0,
+			'cache_results' => false,
 		);
-	
+
 	$args = apply_filters( 'wpsc_productfeed_query_args', $args );
 
 	$self = site_url( "/index.php?rss=true&amp;action=product_list$selected_category$selected_product" );
@@ -68,10 +68,10 @@ function wpsc_generate_product_feed() {
 	echo "    <generator>WP e-Commerce Plugin</generator>\n\r";
 	echo "    <atom:link href='$self' rel='self' type='application/rss+xml' />\n\r";
 
-	$products = get_posts( $args ); 
+	$products = get_posts( $args );
 
 	while ( count ( $products ) ) {
-		
+
 		foreach ($products as $post) {
 
 			setup_postdata($post);
@@ -155,7 +155,7 @@ function wpsc_generate_product_feed() {
 							echo "</".$element_name.">\n\r";
 
 						}
-	 
+
 						if ($element_name == 'g:shipping_weight')
 							$done_weight = TRUE;
 
