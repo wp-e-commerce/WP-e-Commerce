@@ -895,9 +895,10 @@ function wpsc_display_products_page( $query ) {
 		if(!empty($query['category_url_name'])){
 			$args['wpsc_product_category'] = $query['category_url_name'];
 		}
-		if(!empty($query['sort_order'])){
-			$args['orderby'] = $query['sort_order'];
-		}
+		$orderby = ( !empty($query['sort_order']) ) ? $query['sort_order'] : null;
+
+		$args = array_merge( $args, wpsc_product_sort_order_query_vars($orderby) );
+
 		if(!empty($query['order'])){
 			$args['order'] = $query['order'];
 		}
