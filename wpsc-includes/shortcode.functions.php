@@ -26,7 +26,7 @@ function wpsc_products_shorttag($atts) {
 		'tag' => null,
 		'price' => 0, //if price = 'sale' it shows all sale products
 		'limit_of_items' => 0,
-		'sort_order' => null, // author,date,title,modified,parent,ID,rand,comment_count
+		'sort_order' => null, // name,dragndrop,price,ID,author,date,title,modified,parent,rand,comment_count
 		'order' => 'ASC', // ASC or DESC
 		'number_per_page' => 0,
 		'page' => 0,

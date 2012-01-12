@@ -627,32 +627,9 @@ function wpsc_start_the_query() {
 				}
 
 			}
-			$orderby = get_option( 'wpsc_sort_by' );
-			if( isset( $_GET['product_order'] ) )
-				$orderby = 'title';
 
-			switch ( $orderby ) {
-
-				case "dragndrop":
-					$wpsc_query_vars["orderby"] = 'menu_order';
-					break;
-
-				case "name":
-					$wpsc_query_vars["orderby"] = 'title';
-					break;
-
-				//This only works in WP 3.0.
-				case "price":
-					add_filter( 'posts_join', 'wpsc_add_meta_table' );
-					add_filter( 'posts_where', 'wpsc_add_meta_table_where' );
-					$wpsc_query_vars["meta_key"] = '_wpsc_price';
-					$wpsc_query_vars["orderby"] = 'meta_value_num';
-					break;
-
-				case "id":
-					$wpsc_query_vars["orderby"] = 'ID';
-					break;
-			}
+			$orderby = ( isset( $_GET['product_order'] ) ) ? 'title' : null;
+			$wpsc_query_vars = array_merge( $wpsc_query_vars, wpsc_product_sort_order_query_vars($orderby) );
 
 			add_filter( 'pre_get_posts', 'wpsc_generate_product_query', 11 );
 
@@ -694,6 +671,50 @@ function wpsc_start_the_query() {
 		$_SESSION['wpsc_has_been_to_checkout'] = true;
 }
 add_action( 'template_redirect', 'wpsc_start_the_query', 8 );
+
+
+/**
+ * Obtain the necessary product sort order query variables based on the specified product sort order.
+ * If no sort order is specified, the sort order configured in Dashboard -> Settings -> Store -> Presentation -> 'Sort Product By' is used.
+ *
+ * @param string $orderby optional product sort order
+ * @return array Array of query variables
+ */
+function wpsc_product_sort_order_query_vars( $orderby = null ) {
+	if ( is_null($orderby) )
+		$orderby = get_option( 'wpsc_sort_by' );
+
+	$query_vars = array();
+
+	switch ( $orderby ) {
+
+		case "dragndrop":
+			$query_vars["orderby"] = 'menu_order';
+			break;
+
+		case "name":
+			$query_vars["orderby"] = 'title';
+			break;
+
+		//This only works in WP 3.0.
+		case "price":
+			add_filter( 'posts_join', 'wpsc_add_meta_table' );
+			add_filter( 'posts_where', 'wpsc_add_meta_table_where' );
+			$query_vars["meta_key"] = '_wpsc_price';
+			$query_vars["orderby"] = 'meta_value_num';
+			break;
+
+		case "id":
+			$query_vars["orderby"] = 'ID';
+			break;
+		default:
+			// Allow other WordPress 'ordery' values as defined in http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters
+			$query_vars["orderby"] = $orderby;
+			break;
+	}
+	return $query_vars;
+}
+
 
 /**
  * add meta table where section for ordering by price
