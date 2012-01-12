@@ -155,7 +155,12 @@ function wpsc_uploaded_files() {
 	return $dirlist;
 }
 
-// JS - For 3.8, function re-worked to only show files attached to product, separate thickbox with all products, to be associated with product.
+/**
+ * Returns HTML for Digital Download UI
+ * 
+ * @param int $product_id 
+ * @return HTML
+ */
 function wpsc_select_product_file( $product_id = null ) {
 	global $wpdb;
 	$product_id = absint( $product_id );
@@ -169,31 +174,53 @@ function wpsc_select_product_file( $product_id = null ) {
 	);
 
 	$attached_files = (array)get_posts( $args );
-	$output = "<a name='wpsc_downloads'></a>";
-	$output .= "<span class='admin_product_notes select_product_note '>" . __( 'File(s) attached: ', 'wpsc' ) . "</span><br>";
-	$output .= "<div class='ui-widget-content multiple-select select_product_file'>";
+
+	$output = '<table class="wp-list-table widefat fixed posts select_product_file">';
+		$output .= '<thead>';
+			$output .= '<tr>';
+				$output .= '<th>' . _x( 'Title', 'Digital download UI', 'wpsc' ) . '</th>';
+				$output .= '<th>' . _x( 'Size', 'Digital download UI', 'wpsc' ) . '</th>';
+				$output .= '<th>' . _x( 'File Type', 'Digital download UI', 'wpsc' ) . '</th>';
+				$output .= '<th>' . _x( 'Trash', 'Digital download UI', 'wpsc' ) . '</th>';
+				$output .= '<th>' . _x( 'Preview', 'Digital download UI', 'wpsc' ) . '</th>';
+			$output .= '</tr>';
+		$output .= '</thead>';	
+
 	$num = 0;
 
+	$output .= '<tbody>';
+
 	foreach ( (array)$attached_files as $file ) {
-		$num++;
-		$deletion_url = wp_nonce_url( "admin.php?wpsc_admin_action=delete_file&amp;file_name={$file->post_title}&amp;product_id={$product_id}&amp;row_number={$num}", 'delete_file_' . $file->post_title );
-
-		$output .= "<p " . ((($num % 2) > 0) ? '' : "class='alt'") . " id='select_product_file_row_$num'>\n";
-		$output .= "  <a class='file_delete_button' href='{$deletion_url}' >\n";
-		$output .= "    <img src='" . WPSC_CORE_IMAGES_URL . "/cross.png' />\n";
-		$output .= "  </a>\n";
-		$output .= "  <label for='select_product_file_$num'>" . $file->post_title . "</label>\n";
-		$output .= "</p>\n";
-	}
 	
-	$no_file_style = empty( $attached_files ) ? '' : ' style="display:none;"';
-	$output .= "<p class='no-item' {$no_file_style}>" . __( 'There are no files attached to this product. Upload a new file or select from other product files.', 'wpsc' ) . "</p>";
+		$file_dir = WPSC_FILE_DIR . $file->post_title;
+		$file_size = ( 'http://s3file' == $file->guid ) ? __( 'Remote file sizes cannot be calculated', 'wpsc' ) : byteFormat( filesize( $file_dir ) );
 
-	$output .= "</div>";
-	$output .= "<div class='" . ((is_numeric( $product_id )) ? "edit_" : "") . "select_product_handle'><div></div></div>";
+		$file_url = WPSC_FILE_URL.$file->post_title;
+		$deletion_url = wp_nonce_url( "admin.php?wpsc_admin_action=delete_file&amp;file_name={$file->post_title}&amp;product_id={$product_id}&amp;row_number={$num}", 'delete_file_' . $file->post_title );
+		
+		$class = ( ! wpsc_is_odd( $num ) ) ? 'alternate' : '';
+
+		$output .= '<tr class="wpsc_product_download_row ' . $class . '">';
+		$output .= '<td style="padding-right: 30px;">' . $file->post_title . '</td>';
+		$output .= '<td>' . $file_size .'</td>';
+		$output .= '<td>.' . wpsc_get_extension( $file->post_title ) . '</td>';
+		$output .= "<td><a class='file_delete_button' href='{$deletion_url}' >" . _x( 'Delete', 'Digital download row UI', 'wpsc' ) . "</a></td>";
+		$output .= '<td><a href=' .$file_url .'>' . _x( 'Download', 'Digital download row UI', 'wpsc' ) . '</a></td>';
+
+		$output .= '</tr>';	
+
+		$num++;
+	}
+
+	$output .= '</tbody>';
+	$output .= '</table>';
+	
+	if( empty( $attached_files ) )
+		$output .= "<p class='no-item'>" . __( 'There are no files attached to this product. Upload a new file or select from other product files.', 'wpsc' ) . "</p>";
+	$output .= "<div class='" . ( ( is_numeric( $product_id ) ) ? 'edit_' : '') . "select_product_handle'></div>";
 	$output .= "<script type='text/javascript'>\r\n";
-	$output .= "var select_min_height = " . (25 * 3) . ";\r\n";
-	$output .= "var select_max_height = " . (25 * ($num + 1)) . ";\r\n";
+	$output .= "var select_min_height = " . ( 25 * 3 ) . ";\r\n";
+	$output .= "var select_max_height = " . ( 25 * ( $num + 1 ) ) . ";\r\n";
 	$output .= "</script>";
 
 	return $output;
