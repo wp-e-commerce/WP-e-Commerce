@@ -418,7 +418,7 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 	if ( is_ssl ( ) )
 		$siteurl = str_replace( "http://", "https://", $siteurl );
 
-	if ( version_compare( '3.3', get_bloginfo( 'version' ), '<' ) )
+	if ( version_compare( get_bloginfo( 'version' ), '3.3', '<' ) )
 		wp_admin_css( 'dashboard' );
 
 	if($current_screen->id == 'dashboard_page_wpsc-sales-logs'){
