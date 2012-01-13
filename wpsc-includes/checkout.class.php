@@ -561,12 +561,15 @@ class wpsc_checkout {
 	function form_field() {
 		global $wpdb, $user_ID;
 
-		if ( ($user_ID > 0) ){
-			if(!isset($_SESSION['wpsc_checkout_saved_values']))
-				$_SESSION['wpsc_checkout_saved_values'] = get_user_meta( $user_ID, 'wpshpcrt_usr_profile',1 );
+		if ( ( $user_ID > 0 ) ) {
+			if( ! isset( $_SESSION['wpsc_checkout_saved_values'] ) ) {
+				$meta_data = get_user_meta( $user_ID, 'wpshpcrt_usr_profile', 1 );
+				$meta_data = apply_filters( 'wpsc_checkout_user_profile_get', $user_ID, $meta_data );
+				$_SESSION['wpsc_checkout_saved_values'] = $meta_data;
+			}
 
-			$delivery_country_id = wpsc_get_country_form_id_by_type('delivery_country');
-     		$billing_country_id = wpsc_get_country_form_id_by_type('country');
+			$delivery_country_id = wpsc_get_country_form_id_by_type( 'delivery_country' );
+     		$billing_country_id = wpsc_get_country_form_id_by_type( 'country' );
 		}
 
 		$saved_form_data = isset( $_SESSION['wpsc_checkout_saved_values'][$this->checkout_item->id] ) ? $_SESSION['wpsc_checkout_saved_values'][$this->checkout_item->id] : null;
@@ -801,8 +804,12 @@ class wpsc_checkout {
 			}
 		}
 
-		if ( ($any_bad_inputs == false) && ($user_ID > 0) )
-			update_user_meta($user_ID, 'wpshpcrt_usr_profile', $_POST['collected_data']);
+		if ( ( $any_bad_inputs == false ) && ( $user_ID > 0 ) ) {
+			$meta_data = $_POST['collected_data'];
+			$meta_data = apply_filters( 'wpsc_checkout_user_profile_update', $user_ID, $meta_data );
+			update_user_meta( $user_ID, 'wpshpcrt_usr_profile', $meta_data );
+		}
+
 
 		$states = array( 'is_valid' => !$any_bad_inputs, 'error_messages' => $bad_input_message );
 		$states = apply_filters('wpsc_checkout_form_validation', $states);
