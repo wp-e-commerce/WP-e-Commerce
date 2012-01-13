@@ -114,6 +114,9 @@ class flatrate {
 
 		}
 
+		if (is_object($wpsc_cart)) {
+			$cart_total = $wpsc_cart->calculate_subtotal(true);
+		}
 
 		if (get_option('base_country') != $country) {
 
@@ -131,7 +134,18 @@ class flatrate {
 
 				}
 				
-				if ( isset ( $flatrates[$results] ) ) return array("Flat Rate"=>(float)$flatrates[$results]);
+				if ( isset ( $flatrates[$results] ) ) {
+
+				    if (stristr($flatrates[$results],'%')) {
+
+					    $shipping_percent = str_replace('%', '', $flatrates[$results]);
+					    $shipping_amount = $cart_total * ( $shipping_percent / 100 );
+					    $flatrates[$results] = (float)$shipping_amount;
+
+				    } 
+
+                    return array("Flat Rate"=>(float)$flatrates[$results]);
+                }
 			}
 
 		} else {
@@ -163,10 +177,6 @@ class flatrate {
 					$shipping_quotes["Local Shipping"] = esc_attr($flatrates['local']);
 				}
 				break;
-			}
-
-			if (is_object($wpsc_cart)) {
-				$cart_total = $wpsc_cart->calculate_subtotal(true);
 			}
 
 			// Deal with % shipping rates
