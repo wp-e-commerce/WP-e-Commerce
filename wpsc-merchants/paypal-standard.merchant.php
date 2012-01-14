@@ -546,7 +546,7 @@ function form_paypal_multiple() {
 	 </td>
 	 <td>
 		<span  class='wpscsmall description'>
-  			" . __( 'If you have a PayPal developers Sandbox account please use SandBox mode, if you just have a standard PayPal account then you will want to use Live mode.', 'wpsc' ) . "
+  			" . __( 'If you have a PayPal developers Sandbox account please use Sandbox mode, if you just have a standard PayPal account then you will want to use Live mode.', 'wpsc' ) . "
   		</span>
   	  </td>
   </tr>";
