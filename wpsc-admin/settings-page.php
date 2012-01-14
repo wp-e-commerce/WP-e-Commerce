@@ -417,7 +417,7 @@ final class WPSC_Settings_Page
 				</h2>
 				<?php $this->output_tabs(); ?>
 				<div id='wpsc_options_page'>
-					<form method='post' action='<?php echo esc_attr( $this->submit_url() ); ?>' id='wpsc-settings-form'>
+					<form method='post' action='<?php echo esc_attr( $this->submit_url() ); ?>' enctype='multipart/form-data' id='wpsc-settings-form'>
 						<?php $this->display_current_tab(); ?>
 						<div class="submit">
 							<input type='hidden' name='wpsc_admin_action' value='submit_options' />
