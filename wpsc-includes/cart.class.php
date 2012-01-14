@@ -451,7 +451,7 @@ function wpsc_shipping_quote_value($numeric = false) {
    global $wpsc_cart;
 
    $value = apply_filters( 'wpsc_shipping_quote_value', $wpsc_cart->shipping_quote['value'] );
-   
+
    return ( $numeric ) ? $value : wpsc_currency_display( $value );
 
 }
@@ -828,6 +828,9 @@ class wpsc_cart {
   function set_item($product_id, $parameters, $updater = false) {
     // default action is adding
 
+    $add_item = false;
+    $edit_item = false;
+
     if(($parameters['quantity'] > 0) && ($this->check_remaining_quantity($product_id, $parameters['variation_values'], $parameters['quantity']) == true)) {
          $new_cart_item = new wpsc_cart_item($product_id,$parameters, $this);
          do_action_ref_array( 'wpsc_set_cart_item' , array( $product_id , $parameters , &$this ) );
@@ -1125,7 +1128,7 @@ class wpsc_cart {
       $wpec_taxes_controller = new wpec_taxes_controller();
       $taxes_total = $wpec_taxes_controller->wpec_taxes_calculate_total();
       $this->total_tax = $taxes_total['total'];
-      
+
       if( isset( $taxes_total['rate'] ) )
          $this->tax_percentage = $taxes_total['rate'];
 
