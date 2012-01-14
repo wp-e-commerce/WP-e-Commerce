@@ -58,7 +58,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 	function construct_value_array() {
 		$this->collected_gateway_data = $this->_construct_value_array();
 	}
-	
+
 	function convert( $amt ){
 		if ( empty( $this->rate ) ) {
 			$this->rate = 1;
@@ -71,25 +71,25 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 		}
 		return $this->format_price( $amt / $this->rate );
 	}
-	
+
 	function get_local_currency_code() {
 		if ( empty( $this->local_currency_code ) ) {
 			global $wpdb;
 			$this->local_currency_code = $wpdb->get_var( $wpdb->prepare( "SELECT `code` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id` = %d  LIMIT 1", get_option( 'currency_type' ) ) );
 		}
-		
+
 		return $this->local_currency_code;
 	}
-	
+
 	function get_paypal_currency_code() {
 		if ( empty( $this->paypal_currency_code ) ) {
 			global $wpsc_gateways;
 			$this->paypal_currency_code = $this->get_local_currency_code();
-			
+
 			if ( ! in_array( $this->paypal_currency_code, $wpsc_gateways['wpsc_merchant_paypal_standard']['supported_currencies']['currency_list'] ) )
 				$this->paypal_currency_code = get_option( 'paypal_curcode', 'USD' );
 		}
-		
+
 		return $this->paypal_currency_code;
 	}
 
@@ -102,7 +102,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 	function _construct_value_array($aggregate = false) {
 		global $wpdb;
 		$paypal_vars = array();
-		$add_tax = ! wpsc_tax_isincluded();		
+		$add_tax = ! wpsc_tax_isincluded();
 
 		// Store settings to be sent to paypal
 		$paypal_vars += array(
@@ -147,7 +147,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 			'zip' => $this->cart_data['shipping_address']['post_code'],
 			'state' => $this->cart_data['shipping_address']['state'],
 		);
-		
+
 		if ( $paypal_vars['country'] == 'UK' ) {
 			$paypal_vars['country'] = 'GB';
 		}
@@ -156,7 +156,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 		$paypal_vars += array(
 			'invoice' => $this->cart_data['session_id']
 		);
-		
+
 		// Two cases:
 		// - We're dealing with a subscription
 		// - We're dealing with a normal cart
@@ -237,27 +237,27 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 				'cmd' => '_ext-enter',
 				'redirect_cmd' => '_cart',
 			);
-			
+
 			$free_shipping = false;
 			if ( isset( $_SESSION['coupon_numbers'] ) ) {
 				$coupon = new wpsc_coupons( $_SESSION['coupon_numbers'] );
 				$free_shipping = $coupon->is_percentage == '2';
 			}
-			
+
 			if ( $this->cart_data['has_discounts'] && $free_shipping )
 				$handling = 0;
 			else
 				$handling = $this->cart_data['base_shipping'];
-			
+
 			$tax_total = 0;
 			if ( $add_tax )
 				$tax_total = $this->cart_data['cart_tax'];
-			
+
 			// Set base shipping
 			$paypal_vars += array(
 				'handling_cart' => $this->convert( $handling )
 			);
-			
+
 			// Stick the cart item values together here
 			$i = 1;
 
@@ -280,7 +280,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 				}
 				if ( $this->cart_data['has_discounts'] && ! $free_shipping )
 					$paypal_vars['discount_amount_cart'] = $this->convert( $this->cart_data['cart_discount_value'] );
-			} else {			
+			} else {
 				$paypal_vars['item_name_'.$i] = "Your Shopping Cart";
 				$paypal_vars['amount_'.$i] = $this->convert( $this->cart_data['total_price'] ) - $this->convert( $this->cart_data['base_shipping'] );
 				$paypal_vars['quantity_'.$i] = 1;
@@ -288,7 +288,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 				$paypal_vars['shipping2_'.$i] = 0;
 				$paypal_vars['handling_'.$i] = 0;
 			}
-			
+
 			$paypal_vars['tax_cart'] = $this->convert( $tax_total );
 		}
 		return apply_filters( 'wpsc_paypal_standard_post_data', $paypal_vars );
@@ -372,7 +372,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 				$status = 6;
 				break;
 		}
-		
+
 		$paypal_email = strtolower( get_option( 'paypal_multiple_business' ) );
 	  // Compare the received store owner email address to the set one
 		if( strtolower( $this->paypal_ipn_values['receiver_email'] ) == $paypal_email || strtolower( $this->paypal_ipn_values['business'] ) == $paypal_email ) {
@@ -504,9 +504,16 @@ function submit_paypal_multiple(){
  */
 function form_paypal_multiple() {
   global $wpdb, $wpsc_gateways;
+
+  $account_type = get_option( 'paypal_multiple_url' );
+  $account_types = array(
+  	'https://www.paypal.com/cgi-bin/webscr' => __( 'Live Account', 'wpsc' ),
+  	'https://www.sandbox.paypal.com/cgi-bin/webscr' => __( 'Sandbox Account', 'wpsc' ),
+  );
+
   $output = "
   <tr>
-      <td>Username:
+      <td>" . __( 'Username:', 'wpsc' ) . "
       </td>
       <td>
       <input type='text' size='40' value='".get_option('paypal_multiple_business')."' name='paypal_multiple_business' />
@@ -516,20 +523,33 @@ function form_paypal_multiple() {
   	<td></td>
   	<td colspan='1'>
   	<span  class='wpscsmall description'>
-  	This is your PayPal email address.
+  	" . __( 'This is your PayPal email address.', 'wpsc' ) . "
   	</span>
   	</td>
   </tr>
 
   <tr>
-      <td>Url:
+      <td>" . __( 'Account Type:', 'wpsc' ) . "
       </td>
       <td>
-      <input type='text' size='40' value='".get_option('paypal_multiple_url')."' name='paypal_multiple_url' /> <br />
+		<select name='paypal_multiple_url'>";
 
-      </td>
+  foreach ( $account_types as $url => $label ) {
+  	$output .= "<option value='{$url}' ". selected( $url, $account_type, false ) .">" . esc_html( $label ) . "</option>";
+  }
+
+  $output .= "</select>
+	   </td>
   </tr>
-  ";
+  <tr>
+	 <td colspan='1'>
+	 </td>
+	 <td>
+		<span  class='wpscsmall description'>
+  			" . __( 'If you have a PayPal developers Sandbox account please use SandBox mode, if you just have a standard PayPal account then you will want to use Live mode.', 'wpsc' ) . "
+  		</span>
+  	  </td>
+  </tr>";
 
 
 	$paypal_ipn = get_option('paypal_ipn');
@@ -746,7 +766,7 @@ $output .= "
       ".nzshpcrt_form_field_list(get_option('paypal_form_country'))."
       </select>
       </td>
-  </tr> 
+  </tr>
   <tr>
   	<td colspan='2'>
   	<span  class='wpscsmall description'>
