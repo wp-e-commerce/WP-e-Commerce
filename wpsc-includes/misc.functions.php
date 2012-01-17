@@ -795,4 +795,14 @@ function wpsc_get_extension( $str ) {
 
 }
 
+/**
+ * Destroys checkout field values on logout.
+ */
+ 
+function wpsc_kill_user_session() {
+	unset( $_SESSION['wpsc_checkout_saved_values'] );
+}
+
+add_action( 'wp_logout', 'wpsc_kill_user_session' );
+
 ?>
