@@ -41,8 +41,8 @@ class WPSC_Front_End_Page
 		$callback = array_shift( $args );
 		$this->slug = $callback;
 
-		if ( ! is_callable( array( $this, $callback ) ) )
-			$callback = 'main';
+		$callback = str_replace( array( ' ', '-' ), '_', $callback );
+
 		if ( ! is_callable( array( $this, $callback ) ) ) {
 			$callback = $this->slug = 'main';
 		}
@@ -92,6 +92,8 @@ class WPSC_Front_End_Page
 	public function get_messages() {
 		return $this->messages;
 	public function get_callback() {
+		return $this->callback;
+	}
 
 	public function get_slug() {
 		return $this->slug;
