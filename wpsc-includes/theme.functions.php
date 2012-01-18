@@ -278,11 +278,19 @@ add_filter( 'single_template', 'wpsc_filter_get_single_template' );
  */
 function wpsc_set_query_object() {
 	global $wp_query;
-	if ( ! isset( $wp_query->wpsc_is_page ) )
-		$wp_query->wpsc_is_page = false;
+	$props = array(
+		'page',
+		'cart',
+		'checkout',
+		'login',
+		'lost_password',
+	);
 
-	if ( ! isset( $wp_query->wpsc_is_cart ) )
-		$wp_query->wpsc_is_cart = false;
+	foreach ( $props as $prop ) {
+		$prop = 'wpsc_is_' . $prop;
+		if ( ! isset( $wp_query->$prop ) )
+			$wp_query->$prop = false;
+	}
 
 	$GLOBALS['wpsc_query'] =& $wp_query;
 }
@@ -793,18 +801,32 @@ function wpsc_determine_product_category_display_mode() {
 	}
 }
 
-function wpsc_register_custom_page_rewrites() {
-	$cart_slug               = wpsc_get_option( 'cart_page_slug'               );
-	$checkout_slug           = wpsc_get_option( 'checkout_page_slug'           );
-	$transaction_result_slug = wpsc_get_option( 'transaction_result_page_slug' );
-	$customer_account_slug   = wpsc_get_option( 'customer_account_page_slug'   );
+function wpsc_register_custom_page_rewrites( $rules ) {
+	$slugs = array(
+		'cart_page_slug',
+		'checkout_page_slug',
+		'transaction_result_page_slug',
+		'customer_account_page_slug',
+	);
 
-	$regexp = "({$cart_slug}|{$transaction_result_slug}|{$customer_account_slug}|{$checkout_slug})(/.+?)?/?$";
-	$rewrite = 'index.php?wpsc_page=$matches[1]&wpsc_callback=$matches[2]';
+	$slugs = array_map( 'wpsc_get_option', $slugs );
 
-	add_rewrite_rule( $regexp, $rewrite, 'top' );
+	if ( get_option( 'users_can_register' ) ) {
+		foreach ( array( 'login', 'lost_password', 'register' ) as $option ) {
+			$option .= '_page_slug';
+			$slug = wpsc_get_option( $option );
+			if ( $slug != '' )
+				$slugs[] = $slug;
+		}
+	}
+
+	$slugs = implode( '|', $slugs );
+	$new_rule = array( "($slugs)(/.+?)?/?$" => 'index.php?wpsc_page=$matches[1]&wpsc_callback=$matches[2]' );
+	$rules = array_merge( $new_rule, $rules );
+
+	return $rules;
 }
-add_action( 'init', 'wpsc_register_custom_page_rewrites', 1 );
+add_action( 'rewrite_rules_array', 'wpsc_register_custom_page_rewrites', 99 );
 
 function wpsc_register_query_vars( $qv ) {
 	$qv[] = 'wpsc_page';
@@ -850,4 +872,7 @@ function wpsc_title( $title, $sep, $sep_location ) {
 
 	return $title;
 }
-add_filter( 'wp_title', 'wpsc_title', 10, 3 );
+add_filter( 'wp_title', 'wpsc_title', 10, 3 );function wpsc_flush_rewrite_rules() {
+	flush_rewrite_rules( false );
+}
+add_action( 'update_option_users_can_register', 'wpsc_flush_rewrite_rules' );
