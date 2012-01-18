@@ -217,3 +217,11 @@ function wpsc_is_product_out_of_stock( $id = null ) {
 function wpsc_cart_has_items() {
 	return wpsc_cart_item_count() >= 1;
 }
+
+function wpsc_has_user_messages( $type = 'all', $context = 'main' ) {
+	global $wpsc_page_instance;
+	if ( empty( $wpsc_page_instance ) )
+		return false;
+
+	return $wpsc_page_instance->has_messages( $type, $context );
+}
