@@ -21,6 +21,7 @@ class WPSC_Front_End_Page
 			$reflection = new ReflectionClass( $class_name );
 
 			self::$instances[$page] = $reflection->newInstance( $callback );
+			self::$instances[$page]->set_uri( $page . '/' . $callback );
 		}
 
 		return self::$instances[$page];
@@ -60,6 +61,14 @@ class WPSC_Front_End_Page
 		}
 
 		call_user_func_array( array( $this, $this->callback ), $this->args );
+	}
+
+	private function set_uri( $uri ) {
+		$this->uri = $uri;
+	}
+
+	public function get_uri() {
+		return $this->uri;
 	}
 
 	public function action_set_200_header() {
