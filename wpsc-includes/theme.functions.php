@@ -463,8 +463,11 @@ function _wpsc_filter_product_permalink( $permalink, $post, $leavename, $sample,
 		$leavename ? '' : '%wpsc-product%',
 	);
 
+	$category_slug = '';
+
 	// only need to do this if a permalink structure is used
 	$permalink_structure = get_option( 'permalink_structure' );
+
 	if ( empty( $permalink_structure ) || $post->post_type != 'wpsc-product' || in_array( $post->post_status, array( 'draft', 'pending' ) ) )
 		return $permalink;
 
