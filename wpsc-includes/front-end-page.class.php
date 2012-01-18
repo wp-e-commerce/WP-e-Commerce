@@ -44,9 +44,13 @@ class WPSC_Front_End_Page
 
 		$args = explode( '/', ltrim( $callback, '/' ) );
 		$callback = array_shift( $args );
+		$this->slug = $callback;
 
 		if ( ! is_callable( array( $this, $callback ) ) )
 			$callback = 'main';
+		if ( ! is_callable( array( $this, $callback ) ) ) {
+			$callback = $this->slug = 'main';
+		}
 
 		$this->callback = $callback;
 		$this->args = $args;
@@ -92,6 +96,10 @@ class WPSC_Front_End_Page
 
 	public function get_messages() {
 		return $this->messages;
+	public function get_callback() {
+
+	public function get_slug() {
+		return $this->slug;
 	}
 
 	public function main() {
