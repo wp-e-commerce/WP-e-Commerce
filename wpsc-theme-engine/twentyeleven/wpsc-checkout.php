@@ -17,4 +17,4 @@ get_header( 'wpsc-checkout' ); ?>
 			</div><!-- #content -->
 		</section><!-- #primary -->
 
-<?php get_footer(); ?>
+<?php get_footer( 'wpsc-checkout' ); ?>
