@@ -103,6 +103,21 @@ class WPSC_Front_End_Page
 	}
 }
 
+class WPSC_Front_End_Page_SSL extends WPSC_Front_End_Page
+{
+	protected $template_name;
+
+	public function __construct( $callback = 'main', $redirect_to ) {
+		// see if SSL is forced for login
+		if ( force_ssl_login() && ! is_ssl() ) {
+			wp_safe_redirect( $redirect_to );
+			exit;
+		}
+
+		parent::__construct( $callback );
+	}
+}
+
 function wpsc_get_front_end_page( $page, $callback = 'main' ) {
 	return WPSC_Front_End_Page::get_page( $page, $callback );
 }
