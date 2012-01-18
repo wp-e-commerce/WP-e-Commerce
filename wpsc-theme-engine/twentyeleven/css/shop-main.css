@@ -356,4 +356,31 @@ nav.wpsc-pagination-links span.current {
 	background-color:#ffe0e0;
 	border-color:#b30000;
 }
+
+#wpsc-login-form {
+	border-right:1px dotted #ccc;
+	float:left;
+	width:45%;
+	padding-right:5%;
+}
+
+#wpsc-login-form input[type="text"], #wpsc-login-form input[type="password"] {
+	width:100%;
+
+	-moz-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	box-sizing:border-box;
+}
+
+#wpsc-lost-password-form input[type="text"], #wpsc-lost-password-reset-form input[type="password"] {
+	width: 50%;
+}
+
+.wpsc-create-account-offer {
+	float:right;
+	width:45%;
+}
+
+.wpsc-lost-password-link {
+	font-size:11px;
 }
