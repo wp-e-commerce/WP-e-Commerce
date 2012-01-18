@@ -847,10 +847,17 @@ function wpsc_prepare_pages( $query ) {
 add_action( 'pre_get_posts', 'wpsc_prepare_pages', 10 );
 
 function wpsc_body_class( $classes ) {
+	if ( wpsc_is_page() )
+		$classes[] = 'wpsc-page';
+
 	if ( wpsc_is_cart() )
 		$classes[] = 'wpsc-cart';
 	elseif ( wpsc_is_checkout() )
 		$classes[] = 'wpsc-checkout';
+	elseif ( wpsc_is_login() )
+		$classes[] = 'wpsc-login';
+	elseif ( wpsc_is_lost_password() )
+		$classes[] = 'wpsc-lost-password';
 	return $classes;
 }
 add_filter( 'body_class', 'wpsc_body_class' );
@@ -863,6 +870,10 @@ function wpsc_title( $title, $sep, $sep_location ) {
 			$title = apply_filters( 'wpsc_cart_title', __( 'Shopping Cart', 'wpsc' ), $sep, $sep_location );
 		elseif ( wpsc_is_checkout() )
 			$title = apply_filters( 'wpsc_checkout_title', __( 'Checkout', 'wpsc' ), $sep, $sep_location );
+		elseif ( wpsc_is_lost_password() )
+			$title = apply_filters( 'wpsc_lost_password_title', __( 'Password Reminder', 'wpsc' ), $sep, $sep_location );
+		elseif ( wpsc_is_login() )
+			$title = apply_filters( 'wpsc_login_title', __( 'Log In', 'wpsc' ), $sep, $sep_location );
 
 		if ( $sep_location == 'right' )
 			$title .= $prefix;
@@ -872,7 +883,9 @@ function wpsc_title( $title, $sep, $sep_location ) {
 
 	return $title;
 }
-add_filter( 'wp_title', 'wpsc_title', 10, 3 );function wpsc_flush_rewrite_rules() {
+add_filter( 'wp_title', 'wpsc_title', 10, 3 );
+
+function wpsc_flush_rewrite_rules() {
 	flush_rewrite_rules( false );
 }
 add_action( 'update_option_users_can_register', 'wpsc_flush_rewrite_rules' );
