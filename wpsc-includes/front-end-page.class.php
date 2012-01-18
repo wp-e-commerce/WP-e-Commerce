@@ -56,8 +56,10 @@ class WPSC_Front_End_Page
 
 		if ( array_key_exists( 'action', $_REQUEST ) ) {
 			$process_callback = 'process_' . $_REQUEST['action'];
-			if ( is_callable( array( $this, $process_callback ) ) )
-				$this->$process_callback();
+			if ( is_callable( array( $this, $process_callback ) ) ) {
+				call_user_func_array( array( $this, $process_callback ), $this->args );
+				return;
+			}
 		}
 
 		call_user_func_array( array( $this, $this->callback ), $this->args );
