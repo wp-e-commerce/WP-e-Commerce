@@ -1,10 +1,20 @@
 .wpsc-cart #content, .wpsc-checkout #content {
+.wpsc-page #content {
 	margin: 0 7.6%;
 	position:relative;
 	width:auto;
 }
 
 .wpsc-cart article, .wpsc-checkout article {
+.wpsc-page label {
+	cursor:pointer;
+}
+
+.wpsc-login article {
+	overflow:hidden;
+}
+
+.wpsc-page article {
 	margin:0 auto 1.625em;
 	width:68.9%;
 }
@@ -345,6 +355,8 @@ nav.wpsc-pagination-links span.current {
 }
 
 .error p {
+.error p, .validation p {
 	background-color:#ffe0e0;
 	border-color:#b30000;
+}
 }
