@@ -60,24 +60,20 @@
  * @param  mixed $tag Optional. Tag ID, name, slug or an array of such.
  * @return bool
  */
- function wpsc_is_product_tag( $tag = '' ) {
- 	return is_tax( 'product_tag', $tag );
- }
+function wpsc_is_product_tag( $tag = '' ) {
+	return is_tax( 'product_tag', $tag );
+}
 
- function wpsc_is_page() {
- 	global $wpsc_query;
- 	return $wpsc_query->wpsc_is_page;
- }
+function wpsc_is_page() {
+	global $wpsc_query;
+	return $wpsc_query->wpsc_is_page;
+}
 
- function wpsc_is_cart() {
- 	global $wpsc_query;
- 	return $wpsc_query->wpsc_is_cart;
- }
+function wpsc_is_cart() {
+	global $wpsc_query;
+	return $wpsc_query->wpsc_is_cart;
+}
 
- function wpsc_is_checkout() {
- 	global $wpsc_query;
- 	return $wpsc_query->wpsc_is_checkout;
- }
 
 /**
  * Determine whether a product has an associated featured thumbnail or not.
