@@ -26,7 +26,6 @@ class WPSC_Front_End_Page
 		return self::$instances[$page];
 	}
 
-		'error'   => array(),
 	protected $template_name     = 'wpsc-page';
 	protected $messages          = array();
 	protected $validation_errors = array();
