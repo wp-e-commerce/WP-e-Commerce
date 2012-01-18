@@ -21,11 +21,17 @@ function wpsc_generate_product_feed() {
 	global $wpdb, $wp_query, $post;
 
     set_time_limit(0);
-
+	
+	// Don't build up a huge posts cache for the whole store - http://code.google.com/p/wp-e-commerce/issues/detail?id=885
+	// WP 3.3+ only
+	if ( function_exists ( 'wp_suspend_cache_addition' ) ) {
+		wp_suspend_cache_addition(true);
+	}
+	
     $chunk_size = apply_filters ( 'wpsc_productfeed_chunk_size', 50 );
 
-	// Don't cache feed under WP Super-Cache
-	define( 'DONOTCACHEPAGE',TRUE );
+    // Don't cache feed under WP Super-Cache
+    define( 'DONOTCACHEPAGE',TRUE );
 
 	$selected_category = '';
 	$selected_product = '';
