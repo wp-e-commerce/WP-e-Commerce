@@ -134,7 +134,7 @@
 	width:50%;
 }
 
-.wpsc-product-add-to-cart-button, .wpsc-begin-checkout {
+.wpsc-primary-button {
 	background-color:#1982d1;
 	background-repeat:no-repeat;
 	border:3px double #fff;
@@ -171,7 +171,7 @@
 	padding-left:40px;
 }
 
-.wpsc-product-add-to-cart-button:hover, .wpsc-begin-checkout:hover {
+.wpsc-primary-button:hover {
 	background-color:#006aba;
 	text-decoration:none;
 }

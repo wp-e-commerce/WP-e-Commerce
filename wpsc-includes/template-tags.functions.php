@@ -794,7 +794,7 @@ function wpsc_product_add_to_cart_button( $title = null, $id = null, $echo = tru
 		$title = _x( 'Add to Cart', 'product add to cart button', 'wpsc' );
 
 	$title  = apply_filters( 'wpsc_product_add_to_cart_button_title', $title, $id );
-	$output = '<input class="wpsc-product-add-to-cart-button" id="wpsc-product-add-to-cart-button-' . $id . '" type="submit" value="' . esc_attr( $title ) . '" />';
+	$output = '<input class="wpsc-product-add-to-cart-button wpsc-primary-button" id="wpsc-product-add-to-cart-button-' . $id . '" type="submit" value="' . esc_attr( $title ) . '" />';
 	$output = apply_filters( 'wpsc_product_add_to_cart_button', $output, $title, $id );
 	if ( $echo )
 		echo $output;
@@ -1456,7 +1456,7 @@ function wpsc_keep_shopping_button() {
 
 function wpsc_begin_checkout_button() {
 	?>
-	<input type="submit" class="wpsc-begin-checkout" name="begin_checkout" value="<?php esc_attr_e( 'Begin Checkout', 'wpsc' ); ?>" />
+	<input type="submit" class="wpsc-begin-checkout wpsc-primary-button" name="begin_checkout" value="<?php esc_attr_e( 'Begin Checkout', 'wpsc' ); ?>" />
 	<?php
 }
 
