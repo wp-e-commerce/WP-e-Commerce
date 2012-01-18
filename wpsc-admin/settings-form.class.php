@@ -78,56 +78,36 @@ class WPSC_Settings_Form
 
 	public function callback_section_description( $section ) {
 		$section_id = $section['id'];
-		$description = esc_html( $this->sections[$section_id]['description'] );
+		$description = $this->sections[$section_id]['description'];
 		$description = apply_filters( 'wpsc_' . $section_id . '_description', $description );
 		echo '<p>' . $description . '</p>';
 	}
 
 	public function filter_output_textfield( $output, $field_array ) {
 		extract( $field_array );
-		$description_html = apply_filters( $name . '_setting_description', esc_html( $description ), $field_array );
+		$description_html = apply_filters( $name . '_setting_description', $description, $field_array );
 		if ( ! isset( $class ) )
 			$class = 'regular-text wpsc-textfield';
-		ob_start();
-		?>
-		<input
-			class="<?php echo esc_attr( $class ); ?>"
-			id   ="<?php echo esc_attr( $id    ); ?>"
-			name ="<?php echo esc_attr( $name  ); ?>"
-			type ="text"
-			value="<?php echo esc_attr( $value ); ?>"
-		/>
-		<p class="howto"><?php echo $description_html; ?></p>
-		<?php
-		$output .= ob_get_clean();
+
+		$output = wpsc_form_input( $name, $value, array( 'id' => $id, 'class' => $class ), false );
+		$output .= '<p class="howto">' . $description_html . '</p>';
 
 		return $output;
 	}
 
 	public function filter_output_radios( $output, $field_array ) {
 		extract( $field_array );
-		$description_html = apply_filters( 'wpsc_settings_' . $name . '_description', esc_html( $description ), $field_array );
+		$description_html = apply_filters( 'wpsc_settings_' . $name . '_description', $description, $field_array );
 		if ( ! isset( $class ) )
 			$class = 'wpsc-radio';
 
-		ob_start();
 		foreach ( $options as $radio_value => $radio_label ) {
-			$radio_id = $id . '-' . sanitize_title_with_dashes( $value );
-			?>
-			<label class="wpsc-radio-label">
-				<input
-				<?php checked( $value, $radio_value ); ?>
-					class="<?php echo esc_attr( $class       ); ?>"
-					id   ="<?php echo esc_attr( $radio_id    ); ?>"
-					name ="<?php echo esc_attr( $name        ); ?>"
-					value="<?php echo esc_attr( $radio_value ); ?>"
-					type ="radio"
-				/>
-				<?php echo esc_html( $radio_label ); ?>
-			</label>
-			<?php
+			$radio_id  = $id . '-' . sanitize_title_with_dashes( $radio_value );
+			$checked   = $value == $radio_value;
+			$output   .= wpsc_form_radio( $name, $radio_value, $checked, array( 'id' => $radio_id, 'class' => $class ), false );
+			$output   .= wpsc_form_label( $radio_label, $radio_id, array( 'class' => 'wpsc-form-radio-label' ), false );
 		}
-		$output .= ob_get_clean();
+
 		$output .= '<br />';
 		$output .= '<p class="howto">' . $description_html . '</p>';
 
@@ -136,28 +116,18 @@ class WPSC_Settings_Form
 
 	public function filter_output_checkboxes( $output, $field_array ) {
 		extract( $field_array );
-		$description_html = apply_filters( 'wpsc_settings_' . $name . '_description', esc_html( $description ), $field_array );
+		$description_html = apply_filters( 'wpsc_settings_' . $name . '_description', $description, $field_array );
 		if ( ! isset( $class ) )
-			$class = 'wspc-checkbox';
+			$class = 'wpsc-checkbox';
 
-		ob_start();
+		$output = '';
 		foreach ( $options as $checkbox_value => $checkbox_label ) {
-			$checkbox_id = $id . '-' . sanitize_title_with_dashes( $value );
-			?>
-			<label class="wpsc-checkbox-label">
-				<input
-					<?php checked( $value, $checkbox_value ); ?>
-					class="<?php echo esc_attr( $class          ); ?>"
-					id   ="<?php echo esc_attr( $checkbox_id    ); ?>"
-					name ="<?php echo esc_attr( $name           ); ?>"
-					value="<?php echo esc_attr( $checkbox_value ); ?>"
-					type ="checkbox"
-				/>
-				<?php echo esc_html( $checkbox_label ); ?>
-			</label>
-			<?php
+			$checkbox_id  = $id . '-' . sanitize_title_with_dashes( $checkbox_value );
+			$checked      = $value == $checkbox_value;
+			$output      .= wpsc_form_checkbox( $name, $checkbox_value, $checked, array( 'id' => $checkbox_id, 'class' => $class ), false );
+			$output      .= wpsc_form_label( $checkbox_label, $checkbox_id, array( 'class' => 'wpsc-form-checkbox-label' ), false );
 		}
-		$output .= ob_get_clean();
+
 		$output .= '<br />';
 		$output .= '<p class="howto">' . $description_html . '</p>';
 
