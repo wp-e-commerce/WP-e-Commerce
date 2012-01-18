@@ -1352,15 +1352,19 @@ function wpsc_list_product_categories( $args = '' ) {
 }
 
 function wpsc_add_to_cart_form_open() {
+	do_action( 'wpsc_add_to_cart_form_open_before' );
 	?>
 	<form action="<?php echo wpsc_get_cart_url(); ?>" method="post">
 	<?php
+	do_action( 'wpsc_add_to_cart_form_open_after' );
 }
 
 function wpsc_add_to_cart_form_close() {
+	do_action( 'wpsc_add_to_cart_form_close_before' );
 	?>
 	</form>
 	<?php
+	do_action( 'wpsc_add_to_cart_form_close_after' );
 }
 
 function wpsc_add_to_cart_form_fields( $id = null ) {
@@ -1431,9 +1435,11 @@ function wpsc_get_checkout_url( $slug = '' ) {
 }
 
 function wpsc_cart_form_open() {
+	do_action( 'wpsc_cart_form_open_before' );
 	?>
 	<form action="<?php echo wpsc_get_cart_url(); ?>" method="post">
 	<?php
+	do_action( 'wpsc_cart_form_open_after' );
 }
 
 function wpsc_cart_form_close() {
