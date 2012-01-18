@@ -11,7 +11,7 @@ class WPSC_Settings_Tab_Permalinks extends WPSC_Settings_Tab
 	);
 
 	public function __construct( $id ) {
-		flush_rewrite_rules();
+		flush_rewrite_rules( false );
 		$this->populate_form_array();
 		parent::__construct( $id );
 		add_filter( 'wpsc_settings_validation_rule_slug_not_conflicted'    , array( $this, 'callback_validation_rule_slug_not_conflicted' ), 10, 5 );
@@ -203,6 +203,9 @@ class WPSC_Settings_Tab_Permalinks extends WPSC_Settings_Tab
 					'prefix_product_slug',
 					'cart_page_slug',
 					'checkout_page_slug',
+					'login_page_slug',
+					'register_page_slug',
+					'lost_password_page_slug',
 					'transaction_result_page_slug',
 					'customer_account_page_slug',
 				),
@@ -219,7 +222,7 @@ class WPSC_Settings_Tab_Permalinks extends WPSC_Settings_Tab
 			'category_base_slug' => array(
 				'type'        => 'textfield',
 				'title'       => _x( 'Category base slug', 'permalinks setting', 'wpsc' ),
-				'description' => __( "It's recommended to have a category base slug." ),
+				'description' => __( "It's recommended to have a category base slug.", 'wpsc' ),
 				'validation'  => 'slug_not_conflicted'
 			),
 			'hierarchical_product_category_url' => array(
@@ -241,7 +244,7 @@ class WPSC_Settings_Tab_Permalinks extends WPSC_Settings_Tab
 				'type'    => 'checkboxes',
 				'title'   => _x( 'Product prefix', 'permalinks setting', 'wpsc' ),
 				'options' => array(
-					1 => __( "Prefix your products with category slug." )
+					1 => __( "Prefix your products with category slug.", 'wpsc' )
 				),
 			),
 			'cart_page_slug' => array(
@@ -259,15 +262,41 @@ class WPSC_Settings_Tab_Permalinks extends WPSC_Settings_Tab
 			'transaction_result_page_slug' => array(
 				'type'        => 'textfield',
 				'title'       => _x( 'Transaction result page slug', 'permalinks setting', 'wpsc' ),
-				'description' => __( 'When a transaction is completed, the customer will be redirected to this page, where transaction status will be displayed.'),
+				'description' => __( 'When a transaction is completed, the customer will be redirected to this page, where transaction status will be displayed.', 'wpsc' ),
 				'validation'  => 'required|slug_not_conflicted',
 			),
 			'customer_account_page_slug' => array(
 				'type'        => 'textfield',
 				'title'       => _x( 'Customer account page slug', 'permalinks setting', 'wpsc' ),
-				'description' => __( 'This is where your customer can review previous purchases.'),
+				'description' => __( 'This is where your customer can review previous purchases.', 'wpsc'),
 				'validation'  => 'required|slug_not_conflicted',
 			),
+			'login_page_slug' => array(
+				'type'        => 'textfield',
+				'title'       => _x( 'Login page slug', 'permalinks setting', 'wpsc' ),
+				'description' => __( "Leaving this field blank will disable the page.", 'wpsc' ),
+				'validation'  => 'slug_not_conflicted',
+			),
+			'lost_password_page_slug' => array(
+				'type'        => 'textfield',
+				'title'       => _x( 'Password reminder page slug', 'permalinks setting', 'wpsc' ),
+				'description' => __( "Leaving this field blank will disable the page.", 'wpsc' ),
+				'validation'  => 'slug_not_conflicted',
+			),
+			'register_page_slug' => array(
+				'type'        => 'textfield',
+				'title'       => _x( 'Register page slug', 'permalinks setting', 'wpsc' ),
+				'description' => __( "Leaving this field blank will disable the page.", 'wpsc' ),
+				'validation'  => 'slug_not_conflicted',
+			),
 		);
+
+		if ( ! get_option( 'users_can_register' ) ) {
+			$additional_description = '<br /> ' . __( '<strong>Note:</strong> Enable "Anyone can register" in <a href="%s">Settings -> General</a> first if you want to use this page.', 'wpsc' );
+			$additional_description = sprintf( $additional_description, admin_url( 'options-general.php' ) );
+			$this->form_array['login_page_slug']['description']         .= $additional_description;
+			$this->form_array['lost_password_page_slug']['description'] .= $additional_description;
+			$this->form_array['register_page_slug']['description']      .= $additional_description;
+		}
 	}
 }
