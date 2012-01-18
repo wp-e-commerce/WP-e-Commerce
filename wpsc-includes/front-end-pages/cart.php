@@ -3,10 +3,6 @@
 class WPSC_Front_End_Page_Cart extends WPSC_Front_End_Page
 {
 	protected $template_name = 'wpsc-cart';
-	protected $messages = array(
-		'success' => array(),
-		'error'   => array(),
-	);
 
 	public function __construct( $callback ) {
 		global $wp_query;

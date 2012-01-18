@@ -31,6 +31,12 @@ class WPSC_Front_End_Page
 		'success' => array(),
 		'error'   => array(),
 	);
+	protected $template_name     = 'wpsc-page';
+	protected $messages          = array();
+	protected $validation_errors = array();
+	protected $slug              = '';
+	protected $callback          = '';
+	protected $uri               = '';
 
 	public function __construct( $callback = 'main' ) {
 		global $wp_query;
