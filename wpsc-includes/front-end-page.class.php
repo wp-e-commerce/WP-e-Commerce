@@ -73,6 +73,21 @@ class WPSC_Front_End_Page
 		return $this->uri;
 	}
 
+	public function set_validation_errors( $errors, $context = 'main' ) {
+		$this->validation_errors[$context] = $errors;
+		foreach ( $errors->get_error_codes() as $code ) {
+			$this->set_message( $errors->get_error_message( $code ), 'validation', $context );
+		}
+	}
+
+	public function get_validation_errors( $context = 'main' ) {
+		return $this->validation_errors[$context];
+	}
+
+	public function has_validation_errors( $context = 'main' ) {
+		return ! empty( $this->validation_errors[$context] );
+	}
+
 	public function action_set_200_header() {
 		global $wp_query;
 		$wp_query->is_home      = false;
