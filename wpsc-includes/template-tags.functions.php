@@ -805,7 +805,7 @@ function wpsc_product_add_to_cart_button( $title = null, $id = null, $echo = tru
 /**
  * Output the hidden field for a product id.
  *
- * This function is attached to 'wpsc_theme_product_add_to_cart_actions_after'.
+ * This function is attached to 'wpsc_product_add_to_cart_actions_after'.
  *
  * @since 4.0
  * @uses wpsc_get_product_id()
@@ -820,7 +820,7 @@ function wpsc_product_add_to_cart_hidden_fields( $id = null ) {
 	echo '<input type="hidden" name="prev"       value="' . esc_attr( home_url( $_SERVER['REQUEST_URI'] ) ) . '" />';
 	echo '<input type="hidden" name="action"     value="add_to_cart" />';
 }
-add_action( 'wpsc_theme_product_add_to_cart_actions_after', 'wpsc_product_add_to_cart_hidden_fields', 10, 1 );
+add_action( 'wpsc_product_add_to_cart_actions_after', 'wpsc_product_add_to_cart_hidden_fields', 10, 1 );
 
 /**
  * Wraps the read more link with a custom class.
@@ -1128,15 +1128,15 @@ function wpsc_get_product_tag_name( $term = '' ) {
  *
  * @since 4.0
  * @uses  wpsc_get_breadcrumb()
- * @uses  wpsc_theme_product_breaccrumb_after()
- * @uses  wpsc_theme_product_breadcrumb_before()
+ * @uses  wpsc_product_breadcrumb_after()
+ * @uses  wpsc_product_breadcrumb_before()
  *
  * @param  string $args Optional. Options to customize the output. Defaults to ''.
  */
 function wpsc_breadcrumb( $args = '' ) {
-	wpsc_theme_product_breadcrumb_before();
+	wpsc_product_breadcrumb_before();
 	echo wpsc_get_breadcrumb( $args );
-	wpsc_theme_product_breadcrumb_after();
+	wpsc_product_breadcrumb_after();
 }
 
 /**
@@ -1367,15 +1367,15 @@ function wpsc_add_to_cart_form_fields( $id = null ) {
 	if ( ! $id )
 		$id = wpsc_get_product_id();
 
-	do_action( 'wpsc_theme_add_to_cart_form_fields_before', $id );
-	do_action( 'wpsc_theme_add_to_cart_form_fields'       , $id );
-	do_action( 'wpsc_theme_add_to_cart_form_fields_after' , $id );
+	do_action( 'wpsc_add_to_cart_form_fields_before', $id );
+	do_action( 'wpsc_add_to_cart_form_fields'       , $id );
+	do_action( 'wpsc_add_to_cart_form_fields_after' , $id );
 }
 
 function wpsc_product_variation_dropdowns() {
 	wpsc_get_template_part( 'variations', 'product-catalog' );
 }
-add_action( 'wpsc_theme_add_to_cart_form_fields', 'wpsc_product_variation_dropdowns' );
+add_action( 'wpsc_add_to_cart_form_fields', 'wpsc_product_variation_dropdowns' );
 
 function wpsc_product_quantity_field() {
 	?>
@@ -1387,7 +1387,7 @@ function wpsc_product_quantity_field() {
 		</p>
 	<?php
 }
-add_action( 'wpsc_theme_add_to_cart_form_fields', 'wpsc_product_quantity_field' );
+add_action( 'wpsc_add_to_cart_form_fields', 'wpsc_product_quantity_field' );
 
 function wpsc_catalog_url() {
 	echo wpsc_get_catalog_url();

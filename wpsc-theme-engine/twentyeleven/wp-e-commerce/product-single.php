@@ -17,7 +17,7 @@
 	<div class="wpsc-product-summary">
 		<header class="entry-header wpsc-product-header">
 			<hgroup>
-				<?php wpsc_theme_product_header_before(); ?>
+				<?php wpsc_product_header_before(); ?>
 				<h1 class="entry-title wpsc-product-title">
 					<a
 						href="<?php wpsc_product_permalink(); ?>"
@@ -37,7 +37,7 @@
 						<?php wpsc_product_original_price(); ?>
 					<?php endif; ?>
 				</h2>
-				<?php wpsc_theme_product_header_after(); ?>
+				<?php wpsc_product_header_after(); ?>
 			</hgroup>
 		</header><!-- .entry-header -->
 
