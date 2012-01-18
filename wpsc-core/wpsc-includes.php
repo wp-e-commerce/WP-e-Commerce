@@ -6,6 +6,8 @@ if ( defined( 'WPEC_LOAD_DEPRECATED' ) )
 // Start including the rest of the plugin here
 // require_once( WPSC_FILE_PATH . '/wpsc-includes/product-template.php' );
 // require_once( WPSC_FILE_PATH . '/wpsc-includes/breadcrumbs.class.php' );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/form.functions.php' );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/form-validation.functions.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/variations.class.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/product-variations.class.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/ajax.functions.php' );
