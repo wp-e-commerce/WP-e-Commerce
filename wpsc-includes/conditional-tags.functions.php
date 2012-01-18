@@ -74,6 +74,32 @@ function wpsc_is_cart() {
 	return $wpsc_query->wpsc_is_cart;
 }
 
+function wpsc_is_checkout( $slug = '' ) {
+	global $wpsc_query, $wpsc_page_instance;
+	$test = $wpsc_query->wpsc_is_checkout;
+	if ( $slug !== '' )
+		$test = $test && $slug == $wpsc_page_instance->get_slug();
+
+	return $test;
+}
+
+function wpsc_is_login( $slug = '' ) {
+	global $wpsc_query, $wpsc_page_instance;
+	$test = $wpsc_query->wpsc_is_login;
+	if ( $slug !== '' )
+		$test = $test && $slug == $wpsc_page_instance->get_slug();
+
+	return $test;
+}
+
+function wpsc_is_lost_password( $slug = '' ) {
+	global $wpsc_query, $wpsc_page_instance;
+	$test = $wpsc_query->wpsc_is_lost_password;
+	if ( $slug !== '' )
+		$test = $test && $slug == $wpsc_page_instance->get_slug();
+
+	return $test;
+}
 
 /**
  * Determine whether a product has an associated featured thumbnail or not.
