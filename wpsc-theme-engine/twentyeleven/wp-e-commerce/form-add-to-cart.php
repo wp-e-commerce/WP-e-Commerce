@@ -6,7 +6,7 @@
 			<div class="wpsc-product-add-to-cart-form-fields">
 				<?php wpsc_add_to_cart_form_fields(); ?>
 			</div>
-			<?php wpsc_get_template_part( 'form', 'add-to-cart-actions' ); ?>
+			<?php wpsc_get_template_part( 'form-add-to-cart-actions' ); ?>
 		</form>
 		<?php wpsc_add_to_cart_form_close(); ?>
 	<?php endif; ?>

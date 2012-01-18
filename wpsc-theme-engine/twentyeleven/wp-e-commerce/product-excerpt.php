@@ -40,7 +40,7 @@
 			<div class="wpsc-product-description">
 				<?php wpsc_product_description(); ?>
 			</div>
-			<?php wpsc_get_template_part( 'form', 'add-to-cart' ); ?>
+			<?php wpsc_get_template_part( 'form-add-to-cart' ); ?>
 		</div>
 
 		<footer class="entry-meta">
