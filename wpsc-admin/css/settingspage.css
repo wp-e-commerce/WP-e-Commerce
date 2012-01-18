@@ -454,3 +454,12 @@ div.wpsc-select-gateway p, div.wpsc_shipping_options p {
 .js .updated, .js .error {
 	display:none;
 }
+
+.wpsc-form-radio-label, .wpsc-form-radio-checkbox {
+	vertical-align:baseline;
+	margin-right:10px;
+}
+
+.wpsc-radio, .wpsc-checkbox {
+	margin-right:3px;
+}
