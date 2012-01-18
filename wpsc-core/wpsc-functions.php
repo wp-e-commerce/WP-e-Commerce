@@ -976,13 +976,16 @@ function wpsc_generate_product_query( $query ) {
 	if(1 == get_option('use_pagination')){
 		$query->query_vars['posts_per_page'] = get_option('wpsc_products_per_page');
 		if( isset( $_GET['items_per_page'] ) ) {
-			if ( is_numeric( $_GET['items_per_page'] ) )
+			if ( is_numeric( $_GET['items_per_page'] ) ) {
 				$query->query_vars['posts_per_page'] = (int) $_GET['items_per_page'];
-			elseif ( $_GET['items_per_page'] == 'all' )
+			} elseif ( $_GET['items_per_page'] == 'all' ) {
 				$query->query_vars['posts_per_page'] = -1;
+				$query->query_vars['nopaging'] = 1;
+			}
 		}
 	} else {
-		$query->query_vars['posts_per_page'] = '-1';
+		$query->query_vars['posts_per_page'] = -1;
+		$query->query_vars['nopaging'] = 1;
 	}
 	if ( $query->is_tax == true )
 		new wpsc_products_by_category( $query );
