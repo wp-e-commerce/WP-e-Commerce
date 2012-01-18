@@ -73,8 +73,8 @@ class WPSC_Front_End_Page
 
 	public function filter_template_include( $template ) {
 		$templates = array(
+			"{$this->template_name}-{$this->slug}.php",
 			"{$this->template_name}.php",
-			"{$this->template_name}-{$this->callback}.php",
 		);
 
 		$located = wpsc_locate_template( $templates );
