@@ -96,12 +96,45 @@ class WPSC_Front_End_Page
 		return $template;
 	}
 
-	public function set_message( $message, $type = 'message' ) {
-		$this->messages[$type][] = $message;
+	public function set_message( $message, $type = 'success', $context = 'main' ) {
+		if ( ! isset( $this->messages[$type] ) )
+			$this->messages[$type] = array();
+		if ( ! isset( $this->messages[$type][$context] ) )
+			$this->messages[$type][$context] = array();
+		$this->messages[$type][$context][] = $message;
 	}
 
-	public function get_messages() {
-		return $this->messages;
+	public function get_messages( $types = 'all', $context = 'main' ) {
+		if ( $types == 'all' )
+			$types = array_keys( $this->messages );
+
+		if ( ! is_array( $types ) )
+			$types = explode( ',', $types );
+
+		$messages = array();
+		foreach ( $types as $type ) {
+			if ( isset( $this->messages[$type] ) && isset( $this->messages[$type][$context] ) )
+				$messages = array_merge( $messages, array( $type => $this->messages[$type][$context] ) );
+		}
+
+		return $messages;
+	}
+
+	public function has_messages( $types = 'all', $context = 'main' ) {
+		if ( $types == 'all' )
+			$types = array_keys( $this->messages );
+
+		if ( ! is_array( $types ) )
+			$types = explode( ',', $types );
+
+		foreach ( $types as $type ) {
+			if ( ! empty( $this->messages[$type] ) && ! empty( $this->messages[$type][$context] ) )
+				return true;
+		}
+
+		return false;
+	}
+
 	public function get_callback() {
 		return $this->callback;
 	}
