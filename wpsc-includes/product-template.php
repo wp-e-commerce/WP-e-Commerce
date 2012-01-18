@@ -113,12 +113,12 @@ function wpsc_pagination($totalpages = '', $per_page = '', $current_page = '', $
 
 		$separator = '=';
 	}else{
-		// This will need changing when we get product categories sorted
-		if(isset($wp_query->query_vars['wpsc_product_category']))
-			$page_link = trailingslashit(get_option('product_list_url')).$wp_query->query_vars['wpsc_product_category'].'/';
-		else
-			$page_link = trailingslashit(get_option('product_list_url'));
-
+		if ( isset( $wp_query->query_vars['wpsc_product_category'] ) ) {
+			$category_id = get_term_by( 'slug', $wp_query->query_vars['wpsc_product_category'], 'wpsc_product_category' );
+			$page_link = trailingslashit( get_term_link( $category_id, 'wpsc_product_category' ) );
+		} else {
+			$page_link = trailingslashit( get_option( 'product_list_url' ) );
+		}
 		$separator = 'page/';
 	}
 
