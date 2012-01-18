@@ -1408,7 +1408,7 @@ function wpsc_catalog_url() {
 function wpsc_get_catalog_url( $slug = '' ) {
 	$uri = wpsc_get_option( 'catalog_slug' );
 	if ( $slug )
-		$uri = trailingslashit( $uri ) . $slug;
+		$uri = trailingslashit( $uri ) . ltrim( $slug, '/' );
 	return user_trailingslashit( home_url( $uri ) );
 }
 
@@ -1419,7 +1419,7 @@ function wpsc_cart_url( $slug = '' ) {
 function wpsc_get_cart_url( $slug = '' ) {
 	$uri = wpsc_get_option( 'cart_page_slug' );
 	if ( $slug )
-		$uri = trailingslashit( $uri ) . $slug;
+		$uri = trailingslashit( $uri ) . ltrim( $slug, '/' );
 	return user_trailingslashit( home_url( $uri ) );
 }
 
@@ -1430,7 +1430,7 @@ function wpsc_checkout_url( $slug = '' ) {
 function wpsc_get_checkout_url( $slug = '' ) {
 	$uri = wpsc_get_option( 'checkout_page_slug' );
 	if ( $slug )
-		$uri = trailingslashit( $uri ) . $slug;
+		$uri = trailingslashit( $uri ) . ltrim( $slug, '/' );
 	return user_trailingslashit( home_url( $uri ) );
 }
 
