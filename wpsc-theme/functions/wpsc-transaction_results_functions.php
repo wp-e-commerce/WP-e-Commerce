@@ -84,6 +84,10 @@ function wpsc_transaction_theme() {
            case 'eway_hosted':
                $sessionid = decrypt_eway_uk_response();
            break;
+           //default filter for other payment gateways to use 
+		   default:
+           		$sessionid = apply_filters('wpsc_previous_selected_gateway');
+           break;
 		}
 	}
 	
