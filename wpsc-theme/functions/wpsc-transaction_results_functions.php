@@ -53,6 +53,10 @@ function wpsc_transaction_theme() {
 			case 'dps':
 				$sessionid = decrypt_dps_response();
 			break;
+			 //default filter for other payment gateways to use 
+		   default:
+           		$sessionid = apply_filters('wpsc_previous_selected_gateway_' . $_SESSION['wpsc_previous_selected_gateway']);
+           break;
 		}
 	}
 
