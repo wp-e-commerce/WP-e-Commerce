@@ -36,7 +36,7 @@ function wpsc_validate_form( $form, $validated_array = null ) {
 
 function wpsc_validation_rule_required( $error, $value, $field, $props ) {
 	if ( $value === '' ) {
-		$error_message = apply_filters( 'wpsc_validation_rule_required_message', __( 'The %s field is empty.', 'wpsc' ) );
+		$error_message = apply_filters( 'wpsc_validation_rule_required_message', __( 'The %s field is empty.', 'wpsc' ), $value, $field, $props );
 		$title = isset( $prop['title'] ) ? $prop['title'] : $field;
 		$error->add( $field, sprintf( $error_message, $props['title'] ), array( 'value' => $value, 'props' => $props ) );
 	}
@@ -48,12 +48,16 @@ add_filter( 'wpsc_validation_rule_required', 'wpsc_validation_rule_required', 10
 function wpsc_validation_rule_valid_username_or_email( $error, $value, $field, $props ) {
 	if ( strpos( $value, '@' ) ) {
 		$user = get_user_by( 'email', $value );
-		if ( empty( $user ) )
-			$error->add( $field, __( 'There is no user registered with that email address.', 'wpsc' ), array( 'value' => $value, 'props' => $props) );
+		if ( empty( $user ) ) {
+			$message = apply_filters( 'wpsc_validation_rule_invalid_email_message', __( 'There is no user registered with that email address.', 'wpsc' ), $value, $field, $props );
+			$error->add( $field, $message, array( 'value' => $value, 'props' => $props) );
+		}
 	} else {
 		$user = get_user_by( 'login', $value );
-		if ( empty( $user ) )
-			$error->add( $field, __( 'There is no user registered with that username.', 'wpsc' ), array( 'value' => $value, 'props' => $props ) );
+		if ( empty( $user ) ) {
+			$message = apply_filters( 'wpsc_validation_rule_invalid_username_message', __( 'There is no user registered with that username.', 'wpsc' ), $value, $field, $props );
+			$error->add( $field, $message, array( 'value' => $value, 'props' => $props ) );
+		}
 	}
 
 	return $error;
@@ -70,4 +74,4 @@ function wpsc_validation_rule_matches( $error, $value, $field, $props, $matched_
 
 	return $error;
 }
-add_filter( 'wpsc_validation_rule_matches', 'wpsc_validation_rule_matches', 10, 6 );add_filter( 'wpsc_validation_rule_matches', 'wpsc_validation_rule_matches', 10, 7 );
+add_filter( 'wpsc_validation_rule_matches', 'wpsc_validation_rule_matches', 10, 7 );
