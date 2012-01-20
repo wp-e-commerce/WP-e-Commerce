@@ -38,6 +38,15 @@ class WPSC_Front_End_Page_Login extends WPSC_Front_End_Page_SSL
 	}
 
 	public function __construct( $callback ) {
+		if ( is_user_logged_in() ) {
+			$redirect_to = wp_get_referer();
+			if ( ! $redirect_to )
+				$redirect_to = wpsc_get_catalog_url();
+
+			wp_redirect( $redirect_to );
+			exit;
+		}
+
 		parent::__construct( $callback, wpsc_get_login_url() );
 
 		//Set a cookie now to see if they are supported by the browser.
