@@ -801,25 +801,37 @@ function wpsc_determine_product_category_display_mode() {
 	}
 }
 
-function wpsc_register_custom_page_rewrites( $rules ) {
-	$slugs = array(
-		'cart_page_slug',
-		'checkout_page_slug',
-		'transaction_result_page_slug',
-		'customer_account_page_slug',
+function wpsc_get_page_slugs() {
+	$pages = array(
+		'cart',
+		'checkout',
+		'transaction',
+		'customer_account',
 	);
 
-	$slugs = array_map( 'wpsc_get_option', $slugs );
-
 	if ( get_option( 'users_can_register' ) ) {
-		foreach ( array( 'login', 'lost_password', 'register' ) as $option ) {
-			$option .= '_page_slug';
-			$slug = wpsc_get_option( $option );
-			if ( $slug != '' )
-				$slugs[] = $slug;
-		}
+		$pages = array_merge( $pages, array(
+			'login',
+			'password_reminder',
+			'register',
+		) );
 	}
 
+	$slugs = array();
+
+	foreach ( $pages as $key => $page ) {
+		$slug = wpsc_get_option( "{$page}_page_slug" );
+		if ( ! empty( $slug ) )
+			$slugs[] = $slug;
+		else
+			unset( $pages[$key] );
+	}
+
+	return array_combine( $pages, $slugs );
+}
+
+function wpsc_register_custom_page_rewrites( $rules ) {
+	$slugs = array_values( wpsc_get_page_slugs() );
 	$slugs = implode( '|', $slugs );
 	$new_rule = array( "($slugs)(/.+?)?/?$" => 'index.php?wpsc_page=$matches[1]&wpsc_callback=$matches[2]' );
 	$rules = array_merge( $new_rule, $rules );
