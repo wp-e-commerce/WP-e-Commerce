@@ -42,12 +42,6 @@ class WPSC_Front_End_Page
 		return self::$instances[$page];
 	}
 
-	protected $template_name     = 'wpsc-page';
-	protected $messages          = array();
-	protected $validation_errors = array();
-	protected $slug              = '';
-	protected $callback          = '';
-	protected $uri               = '';
 	public static function action_update_transient_messages( $stuff = '' ) {
 		if ( self::$transient_messages_changed )
 			set_transient( 'wpsc_transient_messages', self::$transient_messages, 30 );
