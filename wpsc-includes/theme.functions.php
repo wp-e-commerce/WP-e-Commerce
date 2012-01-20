@@ -283,7 +283,7 @@ function wpsc_set_query_object() {
 		'cart',
 		'checkout',
 		'login',
-		'lost_password',
+		'password_reminder',
 	);
 
 	foreach ( $props as $prop ) {
@@ -856,8 +856,8 @@ function wpsc_body_class( $classes ) {
 		$classes[] = 'wpsc-checkout';
 	elseif ( wpsc_is_login() )
 		$classes[] = 'wpsc-login';
-	elseif ( wpsc_is_lost_password() )
-		$classes[] = 'wpsc-lost-password';
+	elseif ( wpsc_is_password_reminder() )
+		$classes[] = 'wpsc-password-reminder';
 	return $classes;
 }
 add_filter( 'body_class', 'wpsc_body_class' );
@@ -870,8 +870,8 @@ function wpsc_title( $title, $sep, $sep_location ) {
 			$title = apply_filters( 'wpsc_cart_title', __( 'Shopping Cart', 'wpsc' ), $sep, $sep_location );
 		elseif ( wpsc_is_checkout() )
 			$title = apply_filters( 'wpsc_checkout_title', __( 'Checkout', 'wpsc' ), $sep, $sep_location );
-		elseif ( wpsc_is_lost_password() )
-			$title = apply_filters( 'wpsc_lost_password_title', __( 'Password Reminder', 'wpsc' ), $sep, $sep_location );
+		elseif ( wpsc_is_password_reminder() )
+			$title = apply_filters( 'wpsc_password_reminder_title', __( 'Password Reminder', 'wpsc' ), $sep, $sep_location );
 		elseif ( wpsc_is_login() )
 			$title = apply_filters( 'wpsc_login_title', __( 'Log In', 'wpsc' ), $sep, $sep_location );
 

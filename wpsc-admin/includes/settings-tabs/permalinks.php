@@ -205,7 +205,7 @@ class WPSC_Settings_Tab_Permalinks extends WPSC_Settings_Tab
 					'checkout_page_slug',
 					'login_page_slug',
 					'register_page_slug',
-					'lost_password_page_slug',
+					'password_reminder_page_slug',
 					'transaction_result_page_slug',
 					'customer_account_page_slug',
 				),
@@ -277,7 +277,7 @@ class WPSC_Settings_Tab_Permalinks extends WPSC_Settings_Tab
 				'description' => __( "Leaving this field blank will disable the page.", 'wpsc' ),
 				'validation'  => 'slug_not_conflicted',
 			),
-			'lost_password_page_slug' => array(
+			'password_reminder_page_slug' => array(
 				'type'        => 'textfield',
 				'title'       => _x( 'Password reminder page slug', 'permalinks setting', 'wpsc' ),
 				'description' => __( "Leaving this field blank will disable the page.", 'wpsc' ),
@@ -295,7 +295,7 @@ class WPSC_Settings_Tab_Permalinks extends WPSC_Settings_Tab
 			$additional_description = '<br /> ' . __( '<strong>Note:</strong> Enable "Anyone can register" in <a href="%s">Settings -> General</a> first if you want to use this page.', 'wpsc' );
 			$additional_description = sprintf( $additional_description, admin_url( 'options-general.php' ) );
 			$this->form_array['login_page_slug']['description']         .= $additional_description;
-			$this->form_array['lost_password_page_slug']['description'] .= $additional_description;
+			$this->form_array['password_reminder_page_slug']['description'] .= $additional_description;
 			$this->form_array['register_page_slug']['description']      .= $additional_description;
 		}
 	}

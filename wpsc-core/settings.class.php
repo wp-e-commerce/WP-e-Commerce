@@ -22,7 +22,7 @@ class WPSC_Settings
 			'checkout_page_slug'                => 'checkout',
 			'login_page_slug'                   => 'login',
 			'register_page_slug'                => 'register',
-			'lost_password_page_slug'           => 'lost-password',
+			'password_reminder_page_slug'           => 'password-reminder',
 			'transaction_result_page_slug'      => 'transaction-result',
 			'customer_account_page_slug'        => 'account',
 			'decimal_separator'                 => '.',

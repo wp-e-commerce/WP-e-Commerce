@@ -5,5 +5,5 @@
 		</h1>
 	</header>
 	<?php wpsc_user_messages(); ?>
-	<?php wpsc_get_template_part( 'form-lost-password' ); ?>
+	<?php wpsc_get_template_part( 'form-password-reminder' ); ?>
 </article>

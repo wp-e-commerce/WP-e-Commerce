@@ -92,9 +92,9 @@ function wpsc_is_login( $slug = '' ) {
 	return $test;
 }
 
-function wpsc_is_lost_password( $slug = '' ) {
+function wpsc_is_password_reminder( $slug = '' ) {
 	global $wpsc_query, $wpsc_page_instance;
-	$test = $wpsc_query->wpsc_is_lost_password;
+	$test = $wpsc_query->wpsc_is_password_reminder;
 	if ( $slug !== '' )
 		$test = $test && $slug == $wpsc_page_instance->get_slug();
 

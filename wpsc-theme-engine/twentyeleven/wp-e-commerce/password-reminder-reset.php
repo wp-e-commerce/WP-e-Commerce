@@ -14,6 +14,6 @@
 		?>
 	<?php else: ?>
 		<?php wpsc_user_messages(); ?>
-		<?php wpsc_get_template_part( 'form-lost-password-reset' ); ?>
+		<?php wpsc_get_template_part( 'form-password-reminder-reset' ); ?>
 	<?php endif; ?>
 </article>

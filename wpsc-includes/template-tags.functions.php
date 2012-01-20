@@ -1495,9 +1495,9 @@ function wpsc_login_button() {
 	<?php
 }
 
-function wpsc_lost_password_button() {
+function wpsc_password_reminder_button() {
 	?>
-	<input type="submit" class="wpsc-lost-password-button wpsc-primary-button" name="submit" value="<?php esc_attr_e( 'Get New Password', 'wpsc' ); ?>" />
+	<input type="submit" class="wpsc-password-reminder-button wpsc-primary-button" name="submit" value="<?php esc_attr_e( 'Get New Password', 'wpsc' ); ?>" />
 	<?php
 }
 
@@ -1582,37 +1582,37 @@ function wpsc_login_form_fields_main() {
 }
 add_action( 'wpsc_login_form_fields', 'wpsc_login_form_fields_main' );
 
-function wpsc_lost_password_form_fields() {
-	do_action( 'wpsc_lost_password_form_fields_before' );
-	do_action( 'wpsc_lost_password_form_fields'        );
-	do_action( 'wpsc_lost_password_form_fields_after'  );
+function wpsc_password_reminder_form_fields() {
+	do_action( 'wpsc_password_reminder_form_fields_before' );
+	do_action( 'wpsc_password_reminder_form_fields'        );
+	do_action( 'wpsc_password_reminder_form_fields_after'  );
 }
 
-function wpsc_lost_password_form_fields_main() {
-	wpsc_get_template_part( 'form-lost-password-fields' );
+function wpsc_password_reminder_form_fields_main() {
+	wpsc_get_template_part( 'form-password-reminder-fields' );
 }
-add_action( 'wpsc_lost_password_form_fields', 'wpsc_lost_password_form_fields_main' );
+add_action( 'wpsc_password_reminder_form_fields', 'wpsc_password_reminder_form_fields_main' );
 
-function wpsc_lost_password_form_open() {
-	do_action( 'wpsc_lost_password_form_open_before' );
+function wpsc_password_reminder_form_open() {
+	do_action( 'wpsc_password_reminder_form_open_before' );
 	?>
-	<form method="post" action="<?php wpsc_lost_password_url(); ?>">
+	<form method="post" action="<?php wpsc_password_reminder_url(); ?>">
 	<?php
-	do_action( 'wpsc_lost_password_form_open_after' );
+	do_action( 'wpsc_password_reminder_form_open_after' );
 }
 
-function wpsc_lost_password_form_close() {
-	do_action( 'wpsc_lost_password_form_close_before' );
+function wpsc_password_reminder_form_close() {
+	do_action( 'wpsc_password_reminder_form_close_before' );
 	echo '</form>';
-	do_action( 'wpsc_lost_password_form_close_after' );
+	do_action( 'wpsc_password_reminder_form_close_after' );
 }
 
-function wpsc_lost_password_url( $slug = '' ) {
-	echo wpsc_get_lost_password_url( $slug );
+function wpsc_password_reminder_url( $slug = '' ) {
+	echo wpsc_get_password_reminder_url( $slug );
 }
 
-function wpsc_get_lost_password_url( $slug = '' ) {
-	$uri = wpsc_get_option( 'lost_password_page_slug' );
+function wpsc_get_password_reminder_url( $slug = '' ) {
+	$uri = wpsc_get_option( 'password_reminder_page_slug' );
 	if ( $slug )
 		$uri = trailingslashit( $uri ) . ltrim( $slug, '/' );
 	$scheme = force_ssl_login() ? 'https' : null;
@@ -1627,44 +1627,44 @@ function wpsc_page_get_current_slug() {
 	return $wpsc_page_instance->get_slug();
 }
 
-function wpsc_lost_password_reset_form_open() {
+function wpsc_password_reminder_reset_form_open() {
 	$uri = '';
-	if ( wpsc_is_lost_password( 'reset' ) )
-		$uri = wpsc_get_lost_password_url( get_query_var( 'wpsc_callback' ) );
+	if ( wpsc_is_password_reminder( 'reset' ) )
+		$uri = wpsc_get_password_reminder_url( get_query_var( 'wpsc_callback' ) );
 
-	do_action( 'wpsc_lost_password_reset_form_open_before' );
+	do_action( 'wpsc_password_reminder_reset_form_open_before' );
 	?>
 	<form method="post" action="<?php echo esc_url( $uri ); ?>">
 	<?php
-	do_action( 'wpsc_lost_password_reset_form_open_after' );
+	do_action( 'wpsc_password_reminder_reset_form_open_after' );
 }
 
-function wpsc_lost_password_reset_form_close() {
-	do_action( 'wpsc_lost_password_reset_form_close_before' );
+function wpsc_password_reminder_reset_form_close() {
+	do_action( 'wpsc_password_reminder_reset_form_close_before' );
 	echo '</form>';
-	do_action( 'wpsc_lost_password_reset_form_close_after' );
+	do_action( 'wpsc_password_reminder_reset_form_close_after' );
 }
 
-function wpsc_lost_password_reset_form_fields() {
-	do_action( 'wpsc_lost_password_reset_form_fields_before' );
-	do_action( 'wpsc_lost_password_reset_form_fields'        );
-	do_action( 'wpsc_lost_password_reset_form_fields_after'  );
+function wpsc_password_reminder_reset_form_fields() {
+	do_action( 'wpsc_password_reminder_reset_form_fields_before' );
+	do_action( 'wpsc_password_reminder_reset_form_fields'        );
+	do_action( 'wpsc_password_reminder_reset_form_fields_after'  );
 }
 
-function wpsc_lost_password_reset_form_hidden_fields() {
+function wpsc_password_reminder_reset_form_hidden_fields() {
 	?>
 	<input type="hidden" name="action" value="reset_password" />
 	<?php
 }
-add_action( 'wpsc_lost_password_reset_form_fields_after', 'wpsc_lost_password_reset_form_hidden_fields' );
+add_action( 'wpsc_password_reminder_reset_form_fields_after', 'wpsc_password_reminder_reset_form_hidden_fields' );
 
-function wpsc_lost_password_reset_form_fields_main() {
-	wpsc_get_template_part( 'form-lost-password-reset-fields' );
+function wpsc_password_reminder_reset_form_fields_main() {
+	wpsc_get_template_part( 'form-password-reminder-reset-fields' );
 }
-add_action( 'wpsc_lost_password_reset_form_fields', 'wpsc_lost_password_reset_form_fields_main' );
+add_action( 'wpsc_password_reminder_reset_form_fields', 'wpsc_password_reminder_reset_form_fields_main' );
 
 function wpsc_reset_password_button() {
 	?>
-	<input type="submit" class="wpsc-lost-password-reset-button wpsc-primary-button" name="submit" value="<?php esc_attr_e( 'Reset Password', 'wpsc' ); ?>" />
+	<input type="submit" class="wpsc-password-reminder-reset-button wpsc-primary-button" name="submit" value="<?php esc_attr_e( 'Reset Password', 'wpsc' ); ?>" />
 	<?php
 }

@@ -5,7 +5,7 @@
 <p>
 	<label for="wpsc-login-password"><?php _e( 'Password', 'wpsc' ); ?></label><br />
 	<input type="password" id="wpsc-login-password" name="password" /><br />
-	<small><a class="wpsc-lost-password-link" href="<?php wpsc_login_url( 'lost' ); ?>"><?php esc_html_e( 'Lost your password?', 'wpsc' ); ?></a></small>
+	<small><a class="wpsc-password-reminder-link" href="<?php wpsc_password_reminder_url(); ?>"><?php esc_html_e( 'Lost your password?', 'wpsc' ); ?></a></small>
 </p>
 <p>
 	<label for="wpsc-login-remember"><input type="checkbox" name="remember" id="wpsc-login-remember" value="1" <?php wpsc_checked( 'remember' ); ?> /><?php esc_html_e( 'Remember Me', 'wpsc' ); ?></label>

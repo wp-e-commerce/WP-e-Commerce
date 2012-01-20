@@ -142,6 +142,7 @@
 	font-size:11px;
 	font-weight:bold;
 	line-height:30px;
+	margin:0;
 	padding:0 10px;
 	text-decoration:none;
 	text-shadow: 1px 1px 1px rgba(0, 0, 0, .6);
@@ -372,7 +373,7 @@ nav.wpsc-pagination-links span.current {
 	box-sizing:border-box;
 }
 
-#wpsc-lost-password-form input[type="text"], #wpsc-lost-password-reset-form input[type="password"] {
+#wpsc-password-reminder-form input[type="text"], #wpsc-password-reminder-reset-form input[type="password"] {
 	width: 50%;
 }
 
@@ -381,6 +382,6 @@ nav.wpsc-pagination-links span.current {
 	width:45%;
 }
 
-.wpsc-lost-password-link {
+.wpsc-password-reminder-link {
 	font-size:11px;
 }
