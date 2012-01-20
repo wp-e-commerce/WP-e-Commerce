@@ -3,8 +3,22 @@
 class WPSC_Front_End_Page
 {
 	private static $instances = array();
+	protected static $transient_messages = null;
+	protected static $transient_messages_changed = false;
 
 	public static function get_page( $page, $callback = 'main' ) {
+		if ( is_null( self::$transient_messages ) ) {
+			$messages = get_transient( 'wpsc_transient_messages' );
+
+			if ( ! is_array( $messages ) ) {
+				$messages = array();
+				self::$transient_messages_changed = true;
+			}
+			self::$transient_messages = $messages;
+
+			add_action( 'shutdown', array( 'WPSC_Front_End_Page', 'action_update_transient_messages' ) );
+			add_filter( 'wp_redirect', array( 'WPSC_Front_End_Page', 'action_update_transient_messages' ) );
+		}
 		if ( ! array_key_exists( $page, self::$instances ) ) {
 			$file_name = WPSC_FILE_PATH . '/wpsc-includes/front-end-pages/' . $page . '.php';
 
@@ -21,6 +35,7 @@ class WPSC_Front_End_Page
 			$reflection = new ReflectionClass( $class_name );
 
 			self::$instances[$page] = $reflection->newInstance( $callback );
+			self::$instances[$page]->set_page( $page );
 			self::$instances[$page]->set_uri( $page . '/' . $callback );
 		}
 
@@ -33,6 +48,22 @@ class WPSC_Front_End_Page
 	protected $slug              = '';
 	protected $callback          = '';
 	protected $uri               = '';
+	public static function action_update_transient_messages( $stuff = '' ) {
+		if ( self::$transient_messages_changed )
+			set_transient( 'wpsc_transient_messages', self::$transient_messages, 30 );
+
+		return $stuff;
+	}
+
+	protected $page                       = '';
+	protected $template_name              = 'wpsc-page';
+	protected $messages                   = array();
+	protected $validation_errors          = array();
+	protected $slug                       = '';
+	protected $callback                   = '';
+	protected $uri                        = '';
+	protected $transient_messages_fetched = false;
+
 
 	public function __construct( $callback = 'main' ) {
 		global $wp_query;
@@ -65,8 +96,21 @@ class WPSC_Front_End_Page
 		call_user_func_array( array( $this, $this->callback ), $this->args );
 	}
 
+	protected function fetch_transient_messages() {
+		if ( isset( self::$transient_messages[$this->page] ) ) {
+			$this->messages = array_merge_recursive( $this->messages, self::$transient_messages[$this->page] );
+			unset( self::$transient_messages[$this->page] );
+			$this->transient_messages_fetched = true;
+			self::$transient_messages_changed = true;
+		}
+	}
+
 	private function set_uri( $uri ) {
 		$this->uri = $uri;
+	}
+
+	private function set_page( $page ) {
+		$this->page = $page;
 	}
 
 	public function get_uri() {
@@ -120,6 +164,9 @@ class WPSC_Front_End_Page
 	}
 
 	public function get_messages( $types = 'all', $context = 'main' ) {
+		if ( ! $this->transient_messages_fetched )
+			$this->fetch_transient_messages();
+
 		if ( $types == 'all' )
 			$types = array_keys( $this->messages );
 
@@ -148,6 +195,23 @@ class WPSC_Front_End_Page
 		}
 
 		return false;
+	}
+
+	public function set_transient_message( $message, $page = '', $type = 'success', $context = 'main' ) {
+		if ( $page == '' )
+			$page = $this->page;
+
+		if ( ! isset( self::$transient_messages[$page] ) )
+			self::$transient_messages[$page] = array();
+		$p =& self::$transient_messages[$page];
+
+		if ( ! isset( $p[$type] ) )
+			$p[$type] = array();
+		if ( ! isset( $p[$type][$context] ) )
+			$p[$type][$context] = array();
+		$p[$type][$context][] = $message;
+
+		self::$transient_messages_changed = true;
 	}
 
 	public function get_callback() {
