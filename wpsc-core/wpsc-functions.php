@@ -566,6 +566,35 @@ function wpsc_filter_query_request( $args ) {
 	return $args;
 }
 
+function _wpsc_menu_exists( $args ) {
+	$args = (object) $args;
+	// Get the nav menu based on the requested menu
+	$menu = wp_get_nav_menu_object( $args->menu );
+
+	// Get the nav menu based on the theme_location
+	if ( ! $menu && $args->theme_location && ( $locations = get_nav_menu_locations() ) && isset( $locations[ $args->theme_location ] ) )
+		$menu = wp_get_nav_menu_object( $locations[ $args->theme_location ] );
+
+	// get the first menu that has items if we still can't find a menu
+	if ( ! $menu && !$args->theme_location ) {
+		$menus = wp_get_nav_menus();
+		foreach ( $menus as $menu_maybe ) {
+			if ( $menu_items = wp_get_nav_menu_items($menu_maybe->term_id) ) {
+				$menu = $menu_maybe;
+				break;
+			}
+		}
+	}
+
+	return (bool) $menu;
+}
+
+function _wpsc_switch_the_query( $stuff = '' ) {
+	global $wp_query, $wpsc_query;
+	list( $wp_query, $wpsc_query ) = array( $wpsc_query, $wp_query );
+	return $stuff;
+}
+
 /**
  * Switch $wp_query and $wpsc_query when outputting the navigation menu, but only if we're on a product
  * category page.
@@ -580,17 +609,18 @@ function wpsc_filter_query_request( $args ) {
  * @param mixed $stuff
  * @return mixed
  */
-function wpsc_switch_the_query( $stuff ) {
+function wpsc_switch_the_query( $args ) {
 	global $wp_query, $wpsc_query;
 	$qv = $wpsc_query->query_vars;
-	if ( ! empty( $qv['wpsc_product_category'] ) && ! empty( $qv['taxonomy'] ) && ! empty( $qv['term'] ) && ! is_single() )
-		list( $wp_query, $wpsc_query ) = array( $wpsc_query, $wp_query );
-	return $stuff;
+	if ( ! empty( $qv['wpsc_product_category'] ) && ! empty( $qv['taxonomy'] ) && ! empty( $qv['term'] ) && ! is_single() && _wpsc_menu_exists( $args ) ) {
+		_wpsc_switch_the_query();
+		add_filter( 'wp_nav_menu', '_wpsc_switch_the_query', 99 );
+	}
+	return $args;
 }
 
 // switch $wp_query and $wpsc_query at the beginning and the end of wp_nav_menu()
-add_filter( 'wp_nav_menu_args', 'wpsc_switch_the_query' );
-add_filter( 'wp_nav_menu', 'wpsc_switch_the_query' );
+add_filter( 'wp_nav_menu_args', 'wpsc_switch_the_query', 99 );
 
 /**
  * wpsc_start_the_query
@@ -640,6 +670,7 @@ function wpsc_start_the_query() {
 				$wpsc_query_vars['nopaging'] = false;
 
 				$wpsc_query_vars['posts_per_page'] = get_option('wpsc_products_per_page');
+
 				$wpsc_query_vars['paged'] = get_query_var('paged');
 				if(isset($wpsc_query_vars['paged']) && empty($wpsc_query_vars['paged'])){
 					$wpsc_query_vars['paged'] = get_query_var('page');
@@ -666,7 +697,6 @@ function wpsc_start_the_query() {
 						$wpsc_query_vars['paged'] = get_query_var('page');
 				}
 				$wpsc_query = new WP_Query( $wpsc_query_vars );
-
 
 			}
 		}
