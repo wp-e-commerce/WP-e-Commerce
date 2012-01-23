@@ -101,6 +101,16 @@ function wpsc_is_password_reminder( $slug = '' ) {
 	return $test;
 }
 
+function wpsc_is_register( $slug = '' ) {
+	global $wpsc_query, $wpsc_page_instance;
+	$test = $wpsc_query->wpsc_is_register;
+
+	if ( $slug !== '' )
+		$test = $test && $slug == $wpsc_page_instance->get_slug();
+
+	return $test;
+}
+
 /**
  * Determine whether a product has an associated featured thumbnail or not.
  *

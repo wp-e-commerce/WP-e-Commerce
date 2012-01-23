@@ -49,13 +49,13 @@ function wpsc_validation_rule_valid_username_or_email( $error, $value, $field, $
 	if ( strpos( $value, '@' ) ) {
 		$user = get_user_by( 'email', $value );
 		if ( empty( $user ) ) {
-			$message = apply_filters( 'wpsc_validation_rule_invalid_email_message', __( 'There is no user registered with that email address.', 'wpsc' ), $value, $field, $props );
+			$message = apply_filters( 'wpsc_validation_rule_account_email_not_found_message', __( 'There is no user registered with that email address.', 'wpsc' ), $value, $field, $props );
 			$error->add( $field, $message, array( 'value' => $value, 'props' => $props) );
 		}
 	} else {
 		$user = get_user_by( 'login', $value );
 		if ( empty( $user ) ) {
-			$message = apply_filters( 'wpsc_validation_rule_invalid_username_message', __( 'There is no user registered with that username.', 'wpsc' ), $value, $field, $props );
+			$message = apply_filters( 'wpsc_validation_rule_username_not_found_message', __( 'There is no user registered with that username.', 'wpsc' ), $value, $field, $props );
 			$error->add( $field, $message, array( 'value' => $value, 'props' => $props ) );
 		}
 	}
@@ -75,3 +75,33 @@ function wpsc_validation_rule_matches( $error, $value, $field, $props, $matched_
 	return $error;
 }
 add_filter( 'wpsc_validation_rule_matches', 'wpsc_validation_rule_matches', 10, 7 );
+
+function wpsc_validation_rule_username( $error, $value, $field, $props ) {
+	$field_title = isset( $props['title'] ) ? $props['title'] : $field;
+
+	if ( ! validate_username( $value ) ) {
+		$message = apply_filters( 'wpsc_validation_rule_invalid_username_message', __( 'This %s contains invalid characters. Username may contain letters (a-z), numbers (0-9), dashes (-), underscores (_) and periods (.).', 'wpsc' ) );
+		$error->add( $field, sprintf( $message, $field_title ), array( 'value' => $value, 'props' => $props ) );
+	} elseif ( username_exists( $value ) ) {
+		$message = apply_filters( 'wpsc_validation_rule_username_not_available_message', _x( 'This %s is already used by another account. Please choose another one.', 'username not available', 'wpsc' ) );
+		$error->add( $field, sprintf( $message, $field_title ), array( 'value' => $value, 'props' => $props ) );
+	}
+
+	return $error;
+}
+add_filter( 'wpsc_validation_rule_username', 'wpsc_validation_rule_username', 10, 4 );
+
+function wpsc_validation_rule_account_email( $error, $value, $field, $props ) {
+	$field_title = isset( $props['title'] ) ? $props['title'] : $field;
+
+	if ( ! is_email( $value ) ) {
+		$message = apply_filters( 'wpsc_validation_rule_invalid_account_email_message', __( 'The %s is not valid.', 'wpsc' ) );
+		$error->add( $field, sprintf( $message, $field_title ), array( 'value' => $value, 'props' => $props ) );
+	} elseif ( email_exists( $value ) ) {
+		$message = apply_filters( 'wpsc_validation_rule_account_email_not_available_message', _x( 'This %s is already used by another account. Please choose another one.', 'email not available', 'wpsc' ) );
+		$error->add( $field, sprintf( $message, $field_title ), array( 'value' => $value, 'props' => $props ) );
+	}
+
+	return $error;
+}
+add_filter( 'wpsc_validation_rule_account_email', 'wpsc_validation_rule_account_email', 10, 4 );

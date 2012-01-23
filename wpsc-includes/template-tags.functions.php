@@ -1454,7 +1454,8 @@ function wpsc_get_register_url( $slug = '' ) {
 	$uri = wpsc_get_option( 'register_page_slug' );
 	if ( $slug )
 		$uri = trailingslashit( $uri ) . ltrim( $slug, '/' );
-	return user_trailingslashit( home_url( $uri ) );
+	$scheme = force_ssl_login() ? 'https' : null;
+	return user_trailingslashit( home_url( $uri, $scheme ) );
 }
 
 function wpsc_cart_form_open() {
@@ -1667,4 +1668,48 @@ function wpsc_reset_password_button() {
 	?>
 	<input type="submit" class="wpsc-password-reminder-reset-button wpsc-primary-button" name="submit" value="<?php esc_attr_e( 'Reset Password', 'wpsc' ); ?>" />
 	<?php
+}
+
+function wpsc_register_form_open() {
+	do_action( 'wpsc_register_form_open_before' );
+	?>
+	<form method="post" action="<?php wpsc_register_url(); ?>">
+	<?php
+	do_action( 'wpsc_register_form_open_after' );
+}
+
+function wpsc_register_form_close() {
+	do_action( 'wpsc_register_form_close_before' );
+	?>
+	</form>
+	<?php
+	do_action( 'wpsc_register_form_close_after' );
+}
+
+function wpsc_register_form_fields() {
+	do_action( 'wpsc_register_form_fields_before' );
+	do_action( 'wpsc_register_form_fields'        );
+	do_action( 'wpsc_register_form_fields_after'  );
+}
+
+function wpsc_register_form_fields_main() {
+	wpsc_get_template_part( 'form-register-fields' );
+}
+add_action( 'wpsc_register_form_fields', 'wpsc_register_form_fields_main' );
+
+function wpsc_register_button() {
+	?>
+	<input type="submit" class="wpsc-register-button wpsc-primary-button" name="submit" value="<?php esc_attr_e( 'Register', 'wpsc' ); ?>" />
+	<?php
+}
+
+function wpsc_customer_account_url( $slug = '' ) {
+	echo wpsc_get_customer_account_url( $slug );
+}
+
+function wpsc_get_customer_account_url( $slug = '' ) {
+	$uri = wpsc_get_option( 'customer_account_page_slug' );
+	if ( $slug )
+		$uri = trailingslashit( $uri ) . ltrim( $slug, '/' );
+	return user_trailingslashit( home_url( $uri ) );
 }

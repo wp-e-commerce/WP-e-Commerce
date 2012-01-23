@@ -373,7 +373,7 @@ nav.wpsc-pagination-links span.current {
 	box-sizing:border-box;
 }
 
-#wpsc-password-reminder-form input[type="text"], #wpsc-password-reminder-reset-form input[type="password"] {
+#wpsc-password-reminder-form input[type="text"], #wpsc-password-reminder-reset-form input[type="password"], #wpsc-register-form input[type="text"], #wpsc-register-form input[type="password"] {
 	width: 50%;
 }
 
@@ -382,6 +382,6 @@ nav.wpsc-pagination-links span.current {
 	width:45%;
 }
 
-.wpsc-password-reminder-link {
+.wpsc-password-reminder-link, #wpsc-register-form small {
 	font-size:11px;
 }

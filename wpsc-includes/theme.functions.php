@@ -284,6 +284,7 @@ function wpsc_set_query_object() {
 		'checkout',
 		'login',
 		'password_reminder',
+		'register',
 	);
 
 	foreach ( $props as $prop ) {
@@ -886,6 +887,8 @@ function wpsc_title( $title, $sep, $sep_location ) {
 			$title = apply_filters( 'wpsc_password_reminder_title', __( 'Password Reminder', 'wpsc' ), $sep, $sep_location );
 		elseif ( wpsc_is_login() )
 			$title = apply_filters( 'wpsc_login_title', __( 'Log In', 'wpsc' ), $sep, $sep_location );
+		elseif ( wpsc_is_register() )
+			$title = apply_filters( 'wpsc_register_title', __( 'Register', 'wpsc' ), $sep, $sep_location );
 
 		if ( $sep_location == 'right' )
 			$title .= $prefix;
