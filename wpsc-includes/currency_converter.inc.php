@@ -9,6 +9,10 @@
 		ABOUT
 		This PHP script will use for conversion of currency.
 		you can find it is tricky but it is usefull.
+		
+		Modified by Brian Barnes to change from one service that was
+		not meant to be used from automated purposes to another that
+		had no such restriction
 	*/
 
 	Class CURRENCYCONVERTER
@@ -40,33 +44,30 @@
 		 * @param $from string
 		 *   The currency you are converting from.
 		 */
-		function convert($amt = NULL, $to = "", $from = "")
-		{
-			if ($amt == 0) {
-				return 0;
-			}
-			if($amt>1)
-				$this->_amt=$amt;
-			if(!empty($to))
-				$this->_to=$to;
-			if(!empty($from))
-				$this->_from=$from;
-				
-			$count = 0;
-
-			$dom = new DOMDocument();
-			do {
-				@$dom->loadHTML(file_get_contents('http://www.exchange-rates.org/converter/' . $this->_to . '/' . $this->_from . '/' . $this->_amt));
-				$result = $dom->getElementById('ctl00_M_lblToAmount');
-				if ($result) {
-					return round($result->nodeValue, 2);
-				}
-				sleep(1);
-				$count++;
-			} while ($count < 10);
+		function convert($amt = NULL, $to = "", $from = ""){
 			
-			trigger_error('Unable to connect to currency conversion service', E_USER_ERROR);
-			return FALSE;
+			$amount = urlencode(round($amt,2));
+			$from_Currency = urlencode($from);
+			$to_Currency = urlencode($to);
+		
+			$url = "http://www.google.com/ig/calculator?hl=en&q=$amount$from_Currency=?$to_Currency";
+			$ch = curl_init();
+			$timeout = 0;
+			curl_setopt ($ch, CURLOPT_URL, $url);
+			curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+			$rawdata = curl_exec($ch);
+			curl_close($ch);
+			if(empty($rawdata)){
+				throw new Exception('unable to connect to currency conversion service ');
+			}
+			
+			$data = explode('"', $rawdata);
+			$data = explode(' ', $data['3']);
+			$var = $data['0'];
+			$var = round($var,2);
+			return $var;
+			
 		}
 	}
 ?>
