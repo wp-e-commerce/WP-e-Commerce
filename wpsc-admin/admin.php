@@ -205,7 +205,7 @@ function wpsc_admin_pages() {
 
 	// Help tabs
 	add_action( 'load-' . $edit_options_page , 'wpsc_add_help_tabs' );
-	add_action( 'load-' . $purchase_log_page , 'wpsc_add_help_tabs' );
+	add_action( 'load-' . $purchase_logs_page , 'wpsc_add_help_tabs' );
 	add_action( 'load-' . $edit_coupons_page , 'wpsc_add_help_tabs' );
 	add_action( 'load-edit.php'              , 'wpsc_add_help_tabs' );
 	add_action( 'load-post.php'              , 'wpsc_add_help_tabs' );
