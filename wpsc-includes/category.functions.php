@@ -511,7 +511,7 @@ function wpsc_get_terms_category_sort_filter($terms){
 		if ( ! is_object( $term ) )
 			return $terms;
 		
-		$term_order = ( $term->taxonomy == 'wpsc_product_category' ) ? wpsc_get_meta( $term->term_id, 'sort_order', 'wpsc_category' ) : null;
+		$term_order = ( $term->taxonomy == 'wpsc_product_category' ) ? wpsc_get_meta( $term->term_id, 'order', 'wpsc_category' ) : null;
 		$term_order = (int) $term_order;
 		
 		// unsorted categories should go to the top of the list
