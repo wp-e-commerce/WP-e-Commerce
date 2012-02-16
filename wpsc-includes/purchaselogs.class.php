@@ -170,7 +170,7 @@ function wpsc_the_purch_item() {
 
 function wpsc_the_purch_item_price() {
    global $purchlogs;
-   if ( $purchlogs->purchitem->processed > 1 && $purchlogs->purchitem->processed != 5 ) {
+   if ( $purchlogs->purchitem->processed > 1 && $purchlogs->purchitem->processed != 6 ) {
       $purchlogs->totalAmount += $purchlogs->purchitem->totalprice;
    }
    return $purchlogs->purchitem->totalprice;
