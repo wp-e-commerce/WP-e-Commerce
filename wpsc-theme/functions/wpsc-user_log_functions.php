@@ -333,7 +333,7 @@ function wpsc_has_downloads() {
 	}
 
 	foreach ( (array)$products as $key => $product ) {
-	if( !empty( $product['uniqueid'] ) ) { // if the uniqueid is not equal to null, its "valid", regardless of what it is
+	if( empty( $product['uniqueid'] ) ) { // if the uniqueid is not equal to null, its "valid", regardless of what it is
 			$links[] = site_url() . "/?downloadid=" . $product['id'];
 		} else {
 			$links[] = site_url() . "/?downloadid=" . $product['uniqueid'];
