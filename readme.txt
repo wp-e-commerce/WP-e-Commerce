@@ -159,6 +159,7 @@ After upgrading from earlier versions look for link "Update Store". This will up
 = 3.8.8 =
 * New: Actions for bulk actions on sales page: wpsc_sales_log_process_bulk_action, wpsc_sales_log_extra_tablenav
 * New: Allow variation checkboxes to be collapsed & expanded without having to tick the variation set checkbox itself.
+* New: Digital Download UI improvement.
 * New: Extra hooks during checkout cart display: wpsc_before_checkout_cart_row, wpsc_before_checkout_cart_item_image, wpsc_after_checkout_cart_item_image, wpsc_before_checkout_cart_item_name, wpsc_after_checkout_cart_item_name, wpsc_after_checkout_cart_row
 * New: Filter for ordering the sales logs: wpsc_purchase_logs_orderby.
 * New: Filter wpsc_cart_shipping.
@@ -169,6 +170,7 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * New: Filter wpsc_product_postage_and_packaging.
 * New: Filter wpsc_shipping_quote_value.
 * New: Filters wpsc_calculate_total_tax, wpsc_coupons_amount.
+* New: 4 new filters for user meta in profile page and during checkout.class.php - wpsc_checkout_user_profile_get - wpsc_checkout_user_profile_update - wpsc_user_log_get - wpsc_user_log_update.
 * New: Settings Page API.
 * New: Some helpful filters to download_csv function: wpsc_purchase_log_start_end_csv, wpsc_purchase_log_month_year_csv, wpsc_purchase_log_month_year_csv, wpsc_purchase_log_csv_headers, wpsc_purchas_log_csv_output
 * New: Variation Drag & Drop sorting.
@@ -176,14 +178,22 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * Change: Improved variation UI in Product Edit page.
 * Change: In General Settings page, when changing country, load region / state list using AJAX instead of page reload.
 * Change: Only display variants' associated terms in Product Edit page rather than including the parent product name, which is redundant and cluttered.
+* Change: PayPal Standard settings now just offer dropdown of "live" / "sandbox" rather than URL entry.
 * Change: Subtle UX tweaks for Store Settings page.
+* Fix: %-based shipping cost is not working internationally.
 * Fix: $wpsc_query->query_vars['wpsc_product_category'] not always set on product page with hierarchical category permalinks.
 * Fix: Cannot add new Checkout field.
 * Fix: Cannot re-re-send buyer receipt.
+* Fix: 3.7 -> 3.8 Database Upgrade Routine causes some products with variations to display a $0.00 price.
 * Fix: Double <p> tag with wpec_taxes_display_tax_bands() on product edit page.
 * Fix: Fatal error when trying to include a non-existent admin file.
 * Fix: Hide Google Feed information from display
+* Fix: Incompatibility with Genesis framework in Product Edit page.
 * Fix: Make the WP e-Commerce 3.8.x activation/installation routine much more efficient.
+* Fix: Mandatory fields in user_log_functions.php are not properly validated.
+* Fix: Memory improvement for productfeed.
+* Fix: Purchase logs have incorrect time if a timezone is specified in Settings->General.
+* Fix: Summary line does not get updated when sales log status is changed.
 * Fix: Total Quantity check fails for coupon codes.
 * Fix: USPS: "FLATE RATE ENVELOPE" should be changed to "VARIABLE" to allow for shipping quotes to be based on weight.
 * Fix: Use ->add_help_tab() to support WP 3.3 admin screen API.
@@ -191,6 +201,28 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * Fix: get_the_content() is not enough in product feed.
 * Fix: settings page JS compatibility issue with Firefox.
 * Fix: wpsc_get_template_file_url() function is inefficient and causes 10 extra SQL queries per page load.
+
+= 3.8.7.6.1 =
+* Fix: PHP Warning for 'wpsc_load_settings_page' callback.
+* Fix: PHP Warning in wpsc-transaction_results_functions.php.
+* Fix: get_current_screen() is not available in WP 3.0.
+
+= 3.8.7.6 =
+* New: Default hook to filter sessionid for previously selected payment gateways.
+* Change: Stock notification emails are now sent to "purchase log email address" rather than admin address.
+* Fix: SQL injection vulnerability.
+* Fix: 3.7 -> 3.8 Database Upgrade Routine fails when importing variations sets with the same name.
+* Fix: Category link structure is not correct in pagination links with hierarchical category permalink.
+* Fix: Fix SQL error when using "?items_per_page=all" query.
+* Fix: Missing "Use as product thumbnail" on WordPress 3.3.
+* Fix: Products Page does not support custom page template - uses page.php instead.
+* Fix: Products page, category items per page is broken, relies on 'posts per page' setting in Settings -> reading.
+* Fix: Sticky post view broken due to deprecated query_string filter.
+* Fix: Sub-pages of Products Page aren't supported.
+* Fix: Total Quantity check for coupons.
+* Fix: Use ->add_help_tab() to support WP 3.3 admin screen API.
+* Fix: [wpsc_products] shortcode does not use 'Sort Product By' setting - it defaults to date-based ordering.
+* Fix: dashboard.css is loaded for WordPress > 3.3 (404 error).
 
 = 3.8.7.5 =
 * Fix XSS vulnerability.
