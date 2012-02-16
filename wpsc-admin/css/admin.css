@@ -865,10 +865,10 @@ div.select_variation_file p input {
 div#side-sortables input[type="file"] {
 	width:250px;
 }
-.wpsc_product_downloads_header { 
-	margin: 0 0 5px; 
+.wpsc_product_downloads_header {
+	margin: 0 0 5px;
 }
-.select_product_file, 
+.select_product_file,
 .edit_select_product_file {
  	margin-bottom:0;
  	margin-top:3px;
@@ -876,15 +876,15 @@ div#side-sortables input[type="file"] {
  	overflow-y:auto;
  	position:relative;
  }
- 
-span.select_product_note { 
+
+span.select_product_note {
 	margin: 0 0 5px;
 }
 
-img.wpsc_add_download { 
-	display: inline; 
-	position: relative; 
-	top: 2px; 
+img.wpsc_add_download {
+	display: inline;
+	position: relative;
+	top: 2px;
 }
 
 div#poststuff table tr.wpsc_product_download_row td {
@@ -892,7 +892,7 @@ div#poststuff table tr.wpsc_product_download_row td {
 	vertical-align: middle;
 	line-height: 16px;
 }
- 
+
 a.file_delete_button {
 	cursor:pointer;
 	color:red;
@@ -1924,7 +1924,7 @@ img.ajax-feedback-active {
 	margin-right:5px;
 }
 
-table.purchase-logs .column-tracking {
+table.purchase-logs .column-tracking .empty {
 	position:relative;
 }
 
@@ -1934,8 +1934,8 @@ table.purchase-logs .column-tracking .empty .send-email {
 
 table.purchase-logs .column-tracking .add {
 	position:absolute;
-	left:14px;
-	top:9px;
+	left:6px;
+	top:4px;
 }
 
 table.purchase-logs .column-tracking {
