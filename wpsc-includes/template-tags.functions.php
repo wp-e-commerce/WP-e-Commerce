@@ -1713,3 +1713,66 @@ function wpsc_get_customer_account_url( $slug = '' ) {
 		$uri = trailingslashit( $uri ) . ltrim( $slug, '/' );
 	return user_trailingslashit( home_url( $uri ) );
 }
+
+function wpsc_checkout_details_form_open() {
+	do_action( 'wpsc_checkout_details_form_open_before' );
+	?>
+	<form method="post" action="<?php wpsc_checkout_url(); ?>">
+	<?php
+	do_action( 'wpsc_checkout_details_form_open_after' );
+}
+
+function wpsc_checkout_details_form_close() {
+	do_action( 'wpsc_checkout_details_form_close_before' );
+	?>
+	</form>
+	<?php
+	do_action( 'wpsc_checkout_details_form_close_after' );
+}
+
+function wpsc_checkout_details_form_fields() {
+	do_action( 'wpsc_checkout_details_form_fields_before' );
+	do_action( 'wpsc_checkout_details_form_fields'        );
+	do_action( 'wpsc_checkout_details_form_fields_after'  );
+}
+
+function wpsc_checkout_details_form_hidden_fields() {
+	?>
+	<input type="hidden" name="action" value="validate_details" />
+	<?php
+}
+add_action( 'wpsc_checkout_details_form_fields_after', 'wpsc_checkout_details_form_hidden_fields' );
+
+function wpsc_checkout_details_form_fields_main() {
+	$form = WPSC_Checkout_Form::get();
+	$form->output_fields();
+}
+add_action( 'wpsc_checkout_details_form_fields', 'wpsc_checkout_details_form_fields_main' );
+
+function wpsc_checkout_submit_button() {
+	?>
+	<input type="submit" class="wpsc-checkout-submit-button wpsc-primary-button" name="submit" value="<?php esc_attr_e( 'Continue', 'wpsc' ); ?>" />
+	<?php
+}
+
+function wpsc_checkout_payment_delivery_form_open() {
+	do_action( 'wpsc_checkout_payment_delivery_form_open_before' );
+	?>
+	<form method="post" action="<?php wpsc_checkout_url(); ?>">
+	<?php
+	do_action( 'wpsc_checkout_payment_delivery_form_open_after' );
+}
+
+function wpsc_checkout_payment_delivery_form_close() {
+	do_action( 'wpsc_checkout_payment_delivery_form_close_before' );
+	?>
+	</form>
+	<?php
+	do_action( 'wpsc_checkout_payment_delivery_form_close_after' );
+}
+
+function wpsc_checkout_payment_delivery_form_fields() {
+	do_action( 'wpsc_checkout_payment_delivery_form_fields_before' );
+	do_action( 'wpsc_checkout_payment_delivery_form_fields'        );
+	do_action( 'wpsc_checkout_payment_delivery_form_fields_after'  );
+}
