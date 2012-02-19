@@ -48,6 +48,21 @@ function wpsc_validation_rule_required( $error, $value, $field, $props ) {
 }
 add_filter( 'wpsc_validation_rule_required', 'wpsc_validation_rule_required', 10, 4 );
 
+function wpsc_validation_rule_email( $error, $value, $field, $props ) {
+	$field_title = isset( $props['title'] ) ? $props['title'] : $field;
+
+	if ( empty( $value ) )
+		return $error;
+
+	if ( ! is_email( $value ) ) {
+		$message = apply_filters( 'wpsc_validation_rule_invalid_email_message', __( 'The %s is not valid.', 'wpsc' ) );
+		$error->add( $field, sprintf( $message, $field_title ), array( 'value' => $value, 'props' => $props ) );
+	}
+
+	return $error;
+}
+add_filter( 'wpsc_validation_rule_email', 'wpsc_validation_rule_email', 10, 4 );
+
 function wpsc_validation_rule_valid_username_or_email( $error, $value, $field, $props ) {
 	if ( strpos( $value, '@' ) ) {
 		$user = get_user_by( 'email', $value );
