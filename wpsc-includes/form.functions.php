@@ -42,7 +42,7 @@ function wpsc_form_label( $label, $for = '', $atts = array(), $echo = true ) {
 	if ( ! empty( $for ) )
 		$atts['for'] = $for;
 
-	$output = '<label ' . _wpsc_form_attributes( $atts ) . '">' . esc_attr( $label ) . '</label>';
+	$output = '<label ' . _wpsc_form_attributes( $atts ) . '">' . esc_html( $label ) . '</label>';
 	if ( $echo )
 		echo $output;
 	return $output;
