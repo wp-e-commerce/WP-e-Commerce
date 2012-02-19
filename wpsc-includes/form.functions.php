@@ -105,6 +105,7 @@ function wpsc_form_checkboxes( $name, $selected_value = '', $options = array(), 
 
 	echo $output;
 }
+
 function wpsc_form_radio( $name, $value, $label = false, $checked = false, $atts = array(), $echo = true ) {
 	if ( ! is_array( $atts ) )
 		$atts = array();
