@@ -140,13 +140,19 @@ class WPSC_Checkout_Form
 	public function get_fields( $exclude_heading = false) {
 		if ( is_null( $this->fields ) ) {
 			global $wpdb;
-	 		$sql = "SELECT * FROM " . WPSC_TABLE_CHECKOUT_FORMS . " WHERE checkout_set = %d AND active = 1 " . ( $exclude_heading ? "AND type != 'heading' " : '' ) . "ORDER BY checkout_order ASC";
+	 		$sql = "SELECT * FROM " . WPSC_TABLE_CHECKOUT_FORMS . " WHERE checkout_set = %d AND active = 1 ORDER BY checkout_order ASC";
 			$this->fields = $wpdb->get_results( $wpdb->prepare( $sql, $this->id ) );
 			$this->field_unique_name_id = null;
 		}
-		return $this->fields;
+
+		$fields = $this->fields;
+
+		if ( $exclude_heading )
+			$fields = wp_list_filter( $fields, array( 'type' => 'heading' ), 'NOT' );
+
+		return $fields;
 	}
-	
+
 	/**
 	 * Returns the title of the form
 	 *
