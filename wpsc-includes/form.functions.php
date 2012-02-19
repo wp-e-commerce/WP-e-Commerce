@@ -67,26 +67,45 @@ function wpsc_form_password( $name, $atts = array(), $echo = true ) {
 	return _wpsc_input_type_field( $atts, $echo );
 }
 
-function wpsc_form_checkbox( $name, $value, $checked = false, $atts = array(), $echo = true ) {
+function wpsc_form_checkbox( $name, $value, $label = false, $checked = false, $atts = array(), $echo = true ) {
 	if ( ! is_array( $atts ) )
 		$atts = array();
 
 	$atts['name'] = $name;
 	$atts['type'] = 'checkbox';
 	$atts['value'] = $value;
+
 	if ( $checked )
 		$atts['checked'] = 'checked';
-	return _wpsc_input_type_field( $atts, $echo );
+
+	if ( $label ) {
+		$output = '<label class="wpsc-form-checkbox-wrapper">' . _wpsc_input_type_field( $atts, false ) . esc_html ( $label ) . '</label>';
+		if ( ! $echo )
+			return $output;
+		echo $output;
+	} else {
+		return _wpsc_input_type_field( $atts, $echo );
+	}
 }
 
-function wpsc_form_radio( $name, $value, $checked = false, $atts = array(), $echo = true ) {
+function wpsc_form_radio( $name, $value, $label = false, $checked = false, $atts = array(), $echo = true ) {
 	if ( ! is_array( $atts ) )
 		$atts = array();
 
 	$atts['name'] = $name;
 	$atts['type'] = 'radio';
 	$atts['value'] = $value;
+
 	if ( $checked )
 		$atts['checked'] = 'checked';
-	return _wpsc_input_type_field( $atts, $echo );
+
+	if ( $label ) {
+		$output = '<label class="wpsc-form-radio-wrapper">' . _wpsc_input_type_field( $atts, false ) . esc_html( $label ) . '</label>';
+		if ( ! $echo )
+			return $output;
+		echo $output;
+	} else {
+		return _wpsc_input_type_field( $atts, $echo );
+	}
+}
 }
