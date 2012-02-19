@@ -12,7 +12,7 @@ get_header( 'wpsc-checkout' ); ?>
 		<section id="primary">
 			<div id="content" role="main">
 
-			<?php wpsc_get_template_part( 'checkout', 'main' ); ?>
+			<?php wpsc_get_template_part( 'checkout', wpsc_get_current_checkout_step() ); ?>
 
 			</div><!-- #content -->
 		</section><!-- #primary -->
