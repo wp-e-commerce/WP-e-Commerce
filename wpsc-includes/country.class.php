@@ -21,6 +21,14 @@ class WPSC_Country
 
 	private $data = array();
 
+	public static function get_all() {
+		global $wpdb;
+
+		// TODO: Implement cache mechanism
+		$country_data = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `visible`= '1' ORDER BY `country` ASC" );
+		return $country_data;
+	}
+
 	public static function &query( $args ) {
 		// when this is a custom post type, we'll have a separate WP_Query instance that handles this
 		$args = wp_parse_args( $args );
