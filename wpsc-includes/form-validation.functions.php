@@ -7,7 +7,10 @@ function wpsc_validate_form( $form, $validated_array = null ) {
 	$error = new WP_Error();
 	$a =& $error;
 	foreach ( $form as $field => $props ) {
-		$rules = explode( '|', $props['rules'] );
+		$rules = $props['rules'];
+		if ( is_string( $rules ) )
+			$rules = explode( '|', $rules );
+
 		$value =& $validated_array[$field];
 
 		foreach ( $rules as $rule ) {
