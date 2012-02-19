@@ -88,6 +88,23 @@ function wpsc_form_checkbox( $name, $value, $label = false, $checked = false, $a
 	}
 }
 
+function wpsc_form_checkboxes( $name, $selected_value = '', $options = array(), $atts = array(), $echo = true ) {
+	if ( ! is_array( $atts ) )
+		$atts = array();
+
+	$output = '';
+	foreach ( $options as $value => $title ) {
+		$option_atts = $atts;
+		$option_atts['id'] = $atts['id'] . '-' . sanitize_title( $value );
+		$checked = ( $value == $selected_value );
+		$output .= wpsc_form_checkbox( $name, $value, $title, $checked, $option_atts, false );
+	}
+
+	if ( ! $echo )
+		return $output;
+
+	echo $output;
+}
 function wpsc_form_radio( $name, $value, $label = false, $checked = false, $atts = array(), $echo = true ) {
 	if ( ! is_array( $atts ) )
 		$atts = array();
@@ -108,4 +125,55 @@ function wpsc_form_radio( $name, $value, $label = false, $checked = false, $atts
 		return _wpsc_input_type_field( $atts, $echo );
 	}
 }
+
+function wpsc_form_radios( $name, $selected_value = '', $options = array(), $atts = array(), $echo = true ) {
+	if ( ! is_array( $atts ) )
+		$atts = array();
+
+	$output = '';
+	foreach ( $options as $value => $title ) {
+		$option_atts = $atts;
+		$option_atts['id'] = $atts['id'] . '-' . sanitize_title( $value );
+		$checked = ( $value == $selected_value );
+		$output .= wpsc_form_radio( $name, $value, $title, $checked, $option_atts, false );
+	}
+
+	if ( ! $echo )
+		return $output;
+
+	echo $output;
+}
+
+function wpsc_form_select( $name, $selected_value = '', $options = array(), $atts = array(), $echo = true ) {
+	if ( ! is_array( $atts ) )
+		$atts = array();
+
+	$atts['name'] = $name;
+
+	$output = '<select ' . _wpsc_form_attributes( $atts ) . '>';
+	foreach ( $options as $value => $option_title ) {
+		$output .= '<option value="' . esc_attr( $value ) . '" ' . checked( $value, $selected_value ) . '>' . esc_html( $option_title ) . '</option>';
+	}
+	$output .= '</select>';
+
+	if ( ! $echo )
+		return $output;
+
+	echo $output;
+}
+
+function wpsc_form_textarea( $name, $value = '', $atts = array(), $echo = true ) {
+	if ( ! is_array( $atts ) )
+		$atts = array();
+
+	$atts['name'] = $name;
+
+	$output = '<textarea ' . _wpsc_form_attributes( $atts ) . '>';
+	$output .= esc_html( $value );
+	$output .= '</textarea>';
+
+	if ( ! $echo )
+		return $output;
+
+	echo $output;
 }
