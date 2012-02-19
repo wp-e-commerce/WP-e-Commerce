@@ -385,3 +385,95 @@ nav.wpsc-pagination-links span.current {
 .wpsc-password-reminder-link, #wpsc-register-form small {
 	font-size:11px;
 }
+
+.wpsc-checkout-step {
+	border:1px solid #108c00;
+	margin-bottom:10px;
+}
+
+.wpsc-checkout-steps h1 {
+	background-color:#e6ffe3;
+	color:#666;
+}
+
+.wpsc-checkout-steps .disabled {
+	border-color:#ccc;
+}
+
+.wpsc-checkout-steps .disabled h1 {
+	background-color:#ccc;
+	color:#fff;
+}
+
+.wpsc-checkout-steps .active {
+	border-color:#373737;
+}
+
+.wpsc-checkout-steps .active h1 {
+	background:#fff;
+	border-bottom:1px solid #373737;
+	color:#373737;
+}
+
+.wpsc-checkout-step h1 {
+	font-size:21px;
+	text-transform:uppercase;
+}
+
+.wpsc-checkout-step .actions {
+	background-color:#f1f1f1;
+	border-top:1px solid #e5e5e5;
+	text-align:right;
+}
+
+.wpsc-checkout-step .form, .wpsc-checkout-step h1, .wpsc-checkout-step .actions, .wpsc-checkout-step .wpsc-messages {
+	padding:20px 20px 15px 20px;
+}
+
+.wpsc-checkout-step .wpsc-messages {
+	padding-bottom:0;
+}
+
+.wpsc-checkout-label {
+	display:inline-block;
+	padding-top:5px;
+	vertical-align:top;
+	width:20%;
+}
+
+.wpsc-checkout-field-wrapper-heading {
+	font-weight:bold;
+}
+
+#wpsc-checkout-field-billingfirstname-wrapper, #wpsc-checkout-field-billinglastname-wrapper, #wpsc-checkout-field-shippingfirstname-wrapper, #wpsc-checkout-field-shippinglastname-wrapper {
+	width:45%;
+}
+
+#wpsc-checkout-field-billingfirstname-wrapper, #wpsc-checkout-field-shippingfirstname-wrapper {
+	float:left;
+}
+
+#wpsc-checkout-field-billinglastname-wrapper, #wpsc-checkout-field-shippinglastname-wrapper {
+	float:right;
+}
+
+#wpsc-checkout-field-billingfirstname-label, #wpsc-checkout-field-billinglastname-label, #wpsc-checkout-field-shippingfirstname-label, #wpsc-checkout-field-shippinglastname-label {
+	width:45%;
+}
+
+#wpsc-checkout-field-billingfirstname, #wpsc-checkout-field-billinglastname, #wpsc-checkout-field-shippingfirstname, #wpsc-checkout-field-shippinglastname {
+	width:55%;
+}
+
+.wpsc-checkout-textfield, .wpsc-checkout-textarea {
+	width:80%;
+
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	-ms-box-sizing:border-box;
+}
+
+.wpsc-form-radio-wrapper, .wpsc-form-checkbox-wrapper {
+	margin-right:10px;
+}
