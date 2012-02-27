@@ -45,6 +45,8 @@ function wpsc_core_constants() {
 	// Require loading of deprecated functions for now. We will ween WPEC off
 	// of this in future versions.
 	define( 'WPEC_LOAD_DEPRECATED', true );
+
+	define( 'WPSC_TEMPORARY_USER_COOKIE', 'wpsc_temporary_user_' . COOKIEHASH );
 }
 
 /**

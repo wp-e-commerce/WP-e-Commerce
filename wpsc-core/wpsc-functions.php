@@ -948,3 +948,77 @@ function wpsc_load_theme_engine() {
 	wpsc_determine_main_catalog_display_mode();
 	wpsc_determine_product_category_display_mode();
 }
+
+function wpsc_create_temporary_user_id() {
+	$expire = time() + 172800; // valid for 48 hours
+	$secure = is_ssl();
+	$id = wp_generate_password();
+	$data = $id . $expire;
+	$hash = hash_hmac( 'md5', $data, wp_hash( $data ) );
+	$cookie = $id . '|' . $expire . '|' . $hash;
+	setcookie( WPSC_TEMPORARY_USER_COOKIE, $cookie, $expire, COOKIEPATH, COOKIE_DOMAIN, $secure, true );
+	return $id;
+}
+
+function wpsc_validate_temporary_user_cookie() {
+	$cookie = $_COOKIE[WPSC_TEMPORARY_USER_COOKIE];
+	list( $id, $expire, $hash ) = explode( '|', $cookie );
+	$data = $id . $expire;
+	$hmac = hash_hmac( 'md5', $data, wp_hash( $data ) );
+
+	if ( $hmac != $hash )
+		return false;
+
+	return $id;
+}
+
+function wpsc_get_current_temporary_user_id( $mode = '' ) {
+	if ( is_user_logged_in() )
+		return get_current_user_id();
+	elseif ( isset( $_COOKIE[WPSC_TEMPORARY_USER_COOKIE] ) )
+		return wpsc_validate_temporary_user_cookie();
+	elseif ( $mode == 'create' )
+		return wpsc_create_temporary_user_id();
+
+	return false;
+}
+
+function wpsc_get_user_profile( $id = false, $key = '' ) {
+	if ( ! $id )
+		$id = wpsc_get_current_temporary_user_id();
+
+	if ( ! $id )
+		return array();
+
+	if ( is_int( $id ) )
+		$profile = get_user_meta( $id, 'wpsc_user_profile', true );
+
+	$profile = get_transient( "wpsc_user_profile_{$id}" );
+	if ( ! is_array( $profile ) )
+		$profile = array();
+
+	if ( $key === '' )
+		return $profile;
+
+	if ( ! array_key_exists( $key, $profile ) )
+		return false;
+
+	return $profile[$key];
+}
+
+function wpsc_update_user_profile( $key, $value, $id = false ) {
+	if ( ! $id )
+		$id = wpsc_get_current_temporary_user_id( 'create' );
+
+	$profile = wpsc_get_user_profile( $id );
+	if ( ! $profile )
+		$profile = array();
+
+	$profile[$key] = $value;
+
+	if ( is_int( $id ) ) {
+		return update_user_meta( $id, "wpsc_user_profile", $profile );
+	}
+
+	return set_transient( "wpsc_user_profile_{$id}", $profile, 172800 ); // valid for 48 hours
+}
