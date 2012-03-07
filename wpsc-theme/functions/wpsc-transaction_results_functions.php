@@ -53,9 +53,9 @@ function wpsc_transaction_theme() {
 			case 'dps':
 				$sessionid = decrypt_dps_response();
 			break;
-			 //default filter for other payment gateways to use 
+			 //default filter for other payment gateways to use
 		   default:
-           		$sessionid = apply_filters('wpsc_previous_selected_gateway_' . $_SESSION['wpsc_previous_selected_gateway'], '');
+           		$sessionid = apply_filters('wpsc_previous_selected_gateway_' . $_SESSION['wpsc_previous_selected_gateway'], $sessionid);
            break;
 		}
 	}
@@ -97,7 +97,7 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 	$purchase_log = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `sessionid`= %s LIMIT 1", $sessionid ), ARRAY_A );
 	$order_status = $purchase_log['processed'];
 	$curgateway = $purchase_log['gateway'];
-	
+
 	if( !is_bool( $display_to_screen )  )
 		$display_to_screen = true;
 
@@ -134,7 +134,7 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 
 		$cart = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid` = %d", $purchase_log['id'] ), ARRAY_A );
 		if ( ($cart != null) && ($errorcode == 0) ) {
-		    
+
 			foreach ( $cart as $row ) {
 				$link = array( );
 				$wpdb->update(WPSC_TABLE_DOWNLOAD_STATUS, array('active' => '1'), array('cartid' => $row['id'], 'purchid'=>$purchase_log['id']) );
@@ -249,7 +249,7 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 
 				$wpdb->update(WPSC_TABLE_COUPON_CODES, array('use-x-times' => $x_times_left , 'is-used' => $is_used, 'active' => $active), array('id' => $coupon_data['id']) );
 			}
-			
+
 			$total_shipping = $wpsc_cart->calculate_total_shipping();
 			$total = $wpsc_cart->calculate_total_price();
 
@@ -326,7 +326,7 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 
 				//new variable to check whether function is being called from wpsc_purchlog_resend_email()
 				$resend_email = isset( $_REQUEST['email_buyer_id'] ) ? true : false;
-				
+
 				if ( ! $is_transaction ) {
 
 					$payment_instructions = strip_tags( stripslashes( get_option( 'payment_instructions' ) ) );
@@ -334,7 +334,7 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 						$payment_instructions .= "\n\r";
 					$message = __( 'Thank you, your purchase is pending, you will be sent an email once the order clears.', 'wpsc' ) . "\n\r" . $payment_instructions . $message;
 					$message_html = __( 'Thank you, your purchase is pending, you will be sent an email once the order clears.', 'wpsc' ) . "\n\r" . $payment_instructions . $message_html;
-					
+
 					// prevent email duplicates
 				if ( ! get_transient( "{$sessionid}_pending_email_sent" ) || $resend_email ) {
 						wp_mail( $email, __( 'Order Pending: Payment Required', 'wpsc' ), $message );
