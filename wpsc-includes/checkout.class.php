@@ -564,7 +564,7 @@ class wpsc_checkout {
 		if ( ( $user_ID > 0 ) ) {
 			if( ! isset( $_SESSION['wpsc_checkout_saved_values'] ) ) {
 				$meta_data = get_user_meta( $user_ID, 'wpshpcrt_usr_profile', 1 );
-				$meta_data = apply_filters( 'wpsc_checkout_user_profile_get', $user_ID, $meta_data );
+				$meta_data = apply_filters( 'wpsc_checkout_user_profile_get', $meta_data, $user_ID );
 				$_SESSION['wpsc_checkout_saved_values'] = $meta_data;
 			}
 
@@ -806,7 +806,7 @@ class wpsc_checkout {
 
 		if ( ( $any_bad_inputs == false ) && ( $user_ID > 0 ) ) {
 			$meta_data = $_POST['collected_data'];
-			$meta_data = apply_filters( 'wpsc_checkout_user_profile_update', $user_ID, $meta_data );
+			$meta_data = apply_filters( 'wpsc_checkout_user_profile_update', $meta_data, $user_ID );
 			update_user_meta( $user_ID, 'wpshpcrt_usr_profile', $meta_data );
 		}
 
