@@ -524,9 +524,10 @@ jQuery(document).ready(function(){
 
 // function for adding more custom meta
 function add_more_meta(e) {
-	current_meta_forms = jQuery(e).parent().children("div.product_custom_meta:last");  // grab the form container
-	new_meta_forms = current_meta_forms.clone(true); // clone the form container
-	jQuery("label input", new_meta_forms).val(''); // reset all contained forms to empty
+	var current_meta_forms = jQuery(e).parent().children("div.product_custom_meta:last"), // grab the form container
+	    new_meta_forms = current_meta_forms.clone(); // clone the form container
+
+	new_meta_forms.find('input, textarea').val('');
 	current_meta_forms.after(new_meta_forms);  // append it after the container of the clicked element
 	return false;
 }
