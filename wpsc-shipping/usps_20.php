@@ -179,7 +179,9 @@ class ash_usps{
             'services'    => array( 'ONLINE' ),
         );
 		$settings = get_option( "wpec_usps", array() );
-        $settings = array_merge_recursive( $defaults, $settings );
+        $settings = array_merge( $defaults, $settings );
+        $settings['services'] = array_merge( $defaults['services'], $settings['services'] );
+
 		$output=("
     				<tr>
     					<td>
