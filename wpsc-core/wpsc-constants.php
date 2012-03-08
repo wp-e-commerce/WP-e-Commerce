@@ -26,9 +26,9 @@ function wpsc_core_constants() {
 	if(!defined('WPSC_URL'))
 		define( 'WPSC_URL',       plugins_url( '', __FILE__ ) );
 	// Define Plugin version
-	define( 'WPSC_VERSION', '3.8.8-beta2' );
-	define( 'WPSC_MINOR_VERSION', '498978' );
-	define( 'WPSC_PRESENTABLE_VERSION', '3.8.8-beta2' );
+	define( 'WPSC_VERSION', '3.8.8-rc1' );
+	define( 'WPSC_MINOR_VERSION', '516111' );
+	define( 'WPSC_PRESENTABLE_VERSION', '3.8.8-rc1' );
 
 	// Define Debug Variables for developers
 	define( 'WPSC_DEBUG', false );

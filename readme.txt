@@ -157,6 +157,7 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 == Changelog ==
 = 3.8.8 =
+* New: 3 action hooks to process PayPal IPN responses: wpsc_paypal_pro_ipn, wpsc_paypal_standard_ipn and wpsc_paypal_express_ipn.
 * New: Actions for bulk actions on sales page: wpsc_sales_log_process_bulk_action, wpsc_sales_log_extra_tablenav
 * New: Allow variation checkboxes to be collapsed & expanded without having to tick the variation set checkbox itself.
 * New: Digital Download UI improvement.
@@ -184,6 +185,7 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * Fix: $wpsc_query->query_vars['wpsc_product_category'] not always set on product page with hierarchical category permalinks.
 * Fix: Cannot add new Checkout field.
 * Fix: Cannot re-re-send buyer receipt.
+* Fix: Custom Meta copies values when adding new.
 * Fix: 3.7 -> 3.8 Database Upgrade Routine causes some products with variations to display a $0.00 price.
 * Fix: Double <p> tag with wpec_taxes_display_tax_bands() on product edit page.
 * Fix: Fatal error when trying to include a non-existent admin file.
@@ -196,6 +198,7 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * Fix: Summary line does not get updated when sales log status is changed.
 * Fix: Total Quantity check fails for coupon codes.
 * Fix: USPS: "FLATE RATE ENVELOPE" should be changed to "VARIABLE" to allow for shipping quotes to be based on weight.
+* Fix: USPS settings not saving correctly.
 * Fix: Use ->add_help_tab() to support WP 3.3 admin screen API.
 * Fix: Using discount causes Paypal Express to calculate wrong total amount.
 * Fix: get_the_content() is not enough in product feed.
