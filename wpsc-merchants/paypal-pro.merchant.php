@@ -280,6 +280,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 				break;
 		}
 
+		do_action( 'wpsc_paypal_pro_ipn', $this->paypal_ipn_values, $this );
 		// Compare the received store owner email address to the set one
 		if ( strtolower( $this->paypal_ipn_values['receiver_email'] ) == strtolower( get_option( 'paypal_multiple_business' ) ) ) {
 			switch ( $this->paypal_ipn_values['txn_type'] ) {
