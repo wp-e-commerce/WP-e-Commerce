@@ -122,7 +122,9 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 		);
 
 
-		$response = wp_remote_post($paypal_url, $options);
+		$response = wp_remote_post( $paypal_url, $options );
+
+		do_action( 'wpsc_paypal_express_ipn', $received_values, $this );
 
 		if( 'VERIFIED' == $response['body'] ) {
 			$this->paypal_ipn_values = $received_values;
