@@ -510,3 +510,90 @@ class WPSC_Query extends WP_Query
 		parent::WP_Query( $query );
 	}
 }
+
+function wpsc_create_default_shortcode_pages() {
+	$pages = array(
+		'products-page' => array(
+			'name' => 'products-page',
+			'title' => __( 'Products Page', 'wpsc' ),
+			'tag' => '[productspage]',
+			'option' => 'product_list_url'
+		),
+		'checkout' => array(
+			'name' => 'checkout',
+			'title' => __( 'Checkout', 'wpsc' ),
+			'tag' => '[shoppingcart]',
+			'option' => 'shopping_cart_url'
+		),
+		'transaction-results' => array(
+			'name' => 'transaction-results',
+			'title' => __( 'Transaction Results', 'wpsc' ),
+			'tag' => '[transactionresults]',
+			'option' => 'transact_url'
+		),
+		'your-account' => array(
+			'name' => 'your-account',
+			'title' => __( 'Your Account', 'wpsc' ),
+			'tag' => '[userlog]',
+			'option' => 'user_account_url'
+		)
+	);
+
+	//indicator. if we will create any new pages we need to flush.. :)
+	$newpages = false;
+
+	//get products page id. if there's no products page then create one
+	$products_page_id = $wpdb->get_var("SELECT id FROM `" . $wpdb->posts . "` WHERE `post_content` LIKE '%" . $pages['products-page']['tag'] . "%'	AND `post_type` != 'revision'");
+	if( empty($products_page_id) ){
+		$products_page_id = wp_insert_post( array(
+			'post_title' 	=>	$pages['products-page']['title'],
+			'post_type' 	=>	'page',
+			'post_name'		=>	$pages['products-page']['name'],
+			'comment_status'=>	'closed',
+			'ping_status' 	=>	'closed',
+			'post_content' 	=>	$pages['products-page']['tag'],
+			'post_status' 	=>	'publish',
+			'post_author' 	=>	1,
+			'menu_order'	=>	0
+		));
+		$newpages = true;
+	}
+	update_option( $pages['products-page']['option'], _get_page_link($products_page_id) );
+	//done. products page created. no we can unset products page data and create all other pages.
+
+	//unset products page
+	unset($pages['products-page']);
+
+	//create other pages
+	foreach( (array)$pages as $page ){
+		//check if page exists and get it's ID
+		$page_id = $wpdb->get_var("SELECT id FROM `" . $wpdb->posts . "` WHERE `post_content` LIKE '%" . $page['tag'] . "%'	AND `post_type` != 'revision'");
+		//if there's no page - create
+		if( empty($page_id) ){
+			$page_id = wp_insert_post( array(
+				'post_title' 	=>	$page['title'],
+				'post_type' 	=>	'page',
+				'post_name'		=>	$page['name'],
+				'comment_status'=>	'closed',
+				'ping_status' 	=>	'closed',
+				'post_content' 	=>	$page['tag'],
+				'post_status' 	=>	'publish',
+				'post_author' 	=>	1,
+				'menu_order'	=>	0,
+				'post_parent'	=>	$products_page_id
+			));
+			$newpages = true;
+		}
+		//update option
+		update_option( $page['option'], get_permalink( $page_id ) );
+		//also if this is shopping_cart, then update checkout url option
+		if ( $page['option'] == 'shopping_cart_url' )
+			update_option( 'checkout_url', get_permalink( $page_id ) );
+	}
+
+	//if we have created any new pages, then flush... do we need to do this? probably should be removed
+	if ( $newpages ) {
+		wp_cache_delete( 'all_page_ids', 'pages' );
+		$wp_rewrite->flush_rules();
+	}
+}
