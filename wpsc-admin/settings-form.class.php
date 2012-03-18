@@ -104,7 +104,7 @@ class WPSC_Settings_Form
 		foreach ( $options as $radio_value => $radio_label ) {
 			$radio_id  = $id . '-' . sanitize_title_with_dashes( $radio_value );
 			$checked   = $value == $radio_value;
-			$output   .= wpsc_form_radio( $name, $radio_value, $label, $checked, array( 'id' => $radio_id, 'class' => $class ), false );
+			$output   .= wpsc_form_radio( $name, $radio_value, $radio_label, $checked, array( 'id' => $radio_id, 'class' => $class ), false );
 		}
 
 		$output .= '<br />';
