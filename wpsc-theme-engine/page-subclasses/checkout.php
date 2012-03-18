@@ -1,6 +1,6 @@
 <?php
 
-class WPSC_Front_End_Page_Checkout extends WPSC_Front_End_Page
+class WPSC_Page_Checkout extends WPSC_Page
 {
 	protected $template_name = 'wpsc-checkout';
 	protected $current_step = '';

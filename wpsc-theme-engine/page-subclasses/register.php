@@ -1,6 +1,6 @@
 <?php
 
-class WPSC_Front_End_Page_Register extends WPSC_Front_End_Page_SSL
+class WPSC_Page_Register extends WPSC_Page_SSL
 {
 	protected $template_name = 'wpsc-register';
 
@@ -60,13 +60,13 @@ class WPSC_Front_End_Page_Register extends WPSC_Front_End_Page_SSL
 		$user_id = wp_create_user( $username, $password, $email );
 		if ( ! $user_id ) {
 			$message = apply_filters( 'wpsc_register_unknown_error_message', __( 'Sorry, but we could not process your registration information. Please <a href="mailto:%s">contact us</a>, or try again later.', 'wpsc' ) );
-			$this->set_message( sprintf( $message, get_option( 'admin_email' ), 'error' ) );
+			$this->message_collection->add( sprintf( $message, get_option( 'admin_email' ), 'error' ) );
 			return;
 		}
 
 		update_user_option( $user_id, 'default_password_nag', true, true ); //Set up the Password change nag.
 		$this->send_registration_notification( $user_id, $username, $email, $password );
-		$this->set_message( __( 'We just sent you an e-mail containing your generated password. Just follow the directions in that e-mail to complete your registration.', 'wpsc' ), 'success' );
+		$this->message_collection->add( __( 'We just sent you an e-mail containing your generated password. Just follow the directions in that e-mail to complete your registration.', 'wpsc' ), 'success' );
 	}
 
 	private function send_registration_notification( $user_id, $username, $email, $password ) {

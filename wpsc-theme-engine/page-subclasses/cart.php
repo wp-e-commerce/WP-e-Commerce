@@ -1,6 +1,6 @@
 <?php
 
-class WPSC_Front_End_Page_Cart extends WPSC_Front_End_Page
+class WPSC_Page_Cart extends WPSC_Page
 {
 	protected $template_name = 'wpsc-cart';
 
@@ -10,7 +10,7 @@ class WPSC_Front_End_Page_Cart extends WPSC_Front_End_Page
 		$wp_query->wpsc_is_cart = true;
 	}
 
-	public function process_add_to_cart() {
+	public function _callback_add_to_cart() {
 		global $wpsc_cart;
 
 		extract( $_REQUEST, EXTR_SKIP );
@@ -58,7 +58,7 @@ class WPSC_Front_End_Page_Cart extends WPSC_Front_End_Page
 		$parameters = array_merge( $defaults, $provided_parameters );
 
 		if ( $parameters['quantity'] <= 0 ) {
-			$this->set_message( __( 'Sorry, but the quantity you just entered is not valid. Please try again.', 'wpsc' ), 'error' );
+			$this->message_collection->add( __( 'Sorry, but the quantity you just entered is not valid. Please try again.', 'wpsc' ), 'error' );
 			return;
 		}
 
@@ -68,24 +68,24 @@ class WPSC_Front_End_Page_Cart extends WPSC_Front_End_Page
 		if ( $remaining_quantity !== true ) {
 			if ( $remaining_quantity <= 0 ) {
 				$message = __( 'Sorry, the product "%s" is out of stock.', 'wpsc' );
-				$this->set_message( sprintf( $message, $product->post_title ), 'error' );
+				$this->message_collection->add( sprintf( $message, $product->post_title ), 'error' );
 				return;
 			} elseif ( $remaining_quantity < $parameters['quantity'] ) {
 				$message = __( 'Sorry, but the quantity you just specified is larger than the available stock. There are only %d of the item in stock.', 'wpsc' );
-				$this->set_message( sprintf( $message, $remaining_quantity ), 'error' );
+				$this->message_collection->add( sprintf( $message, $remaining_quantity ), 'error' );
 				return;
 			}
 		}
 
 		if ( $wpsc_cart->set_item( $product_id, $parameters ) ) {
 			$message = sprintf( __( 'You just added %s to your cart.', 'wpsc' ), $product->post_title );
-			$this->set_message( $message, 'success' );
+			$this->message_collection->add( $message, 'success' );
 		} else {
-			$this->set_message( __( 'An unknown error just occured. Please contact the shop administrator.', 'wpsc' ), 'error' );
+			$this->message_collection->add( __( 'An unknown error just occured. Please contact the shop administrator.', 'wpsc' ), 'error' );
 		}
 	}
 
-	public function process_update_quantity() {
+	public function _callback_update_quantity() {
 		global $wpsc_cart;
 		$changed = 0;
 		$has_errors = false;
@@ -101,12 +101,12 @@ class WPSC_Front_End_Page_Cart extends WPSC_Front_End_Page
 					if ( $remaining_quantity !== true ) {
 						if ( $remaining_quantity <= 0 ) {
 							$message = __( "Sorry, all the remaining stocks of %s have been claimed. Now you can only checkout with the current number of that item in your cart.", 'wpsc' );
-							$this->set_message( sprintf( $message, $product->post_title ), 'error' );
+							$this->message_collection->add( sprintf( $message, $product->post_title ), 'error' );
 							$has_errors = true;
 							continue;
 						} elseif ( $remaining_quantity < $item->quantity ) {
 							$message = __( 'Sorry, but the quantity you just specified is larger than the available stock of %s. Besides the current number of that product in your cart, you can only add %d more.', 'wpsc' );
-							$this->set_message( sprintf( $message, $product->post_title, $remaining_quantity ), 'error' );
+							$this->message_collection->add( sprintf( $message, $product->post_title, $remaining_quantity ), 'error' );
 							$has_errors = true;
 							continue;
 						}
@@ -126,7 +126,7 @@ class WPSC_Front_End_Page_Cart extends WPSC_Front_End_Page
 
 		if ( $changed ) {
 			$message = __( 'You just successfully updated the quantity for %d items.', 'wpsc' );
-			$this->set_message( sprintf( $message, $changed ), 'success' );
+			$this->message_collection->add( sprintf( $message, $changed ), 'success' );
 		}
 	}
 

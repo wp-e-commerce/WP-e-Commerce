@@ -1,7 +1,16 @@
 <?php
 
-define( 'WPSC_THEME_ENGINE_COMPAT_PATH', WPSC_FILE_PATH . '/wpsc-theme-engine' );
-define( 'WPSC_THEME_ENGINE_COMPAT_URL' , WPSC_URL . '/wpsc-theme-engine');
+define( 'WPSC_THEME_ENGINE_COMPAT_PATH', WPSC_FILE_PATH . '/wpsc-theme-compat' );
+define( 'WPSC_THEME_ENGINE_COMPAT_URL' , WPSC_URL . '/wpsc-theme-compat');
+
+if ( ! defined( 'WPSC_THEME_ENGINE_TEMPLATE_PART_FOLDER' ) )
+	define( 'WPSC_THEME_ENGINE_TEMPLATE_PART_FOLDER', 'wp-e-commerce' );
+
+if ( ! defined( 'WPSC_THEME_ENGINE_USER_PATH' ) )
+	define( 'WPSC_THEME_ENGINE_USER_PATH', WP_CONTENT_DIR . '/wpsc-theme-engine' );
+
+if ( ! defined( 'WPSC_THEME_ENGINE_USER_URL' ) )
+	define( 'WPSC_THEME_ENGINE_USER_URL', WP_CONTENT_URL . '/wpsc-theme-engine' );
 
 /**
  * Locate the path to a certain WPEC theme file.
@@ -52,17 +61,17 @@ function wpsc_locate_theme_file( $files ) {
 
 	if ( $current_theme == $parent_theme ) {
 		$paths = array(
-			"{$theme_root}/wpsc-theme-engine/{$current_theme}",
-			"{$theme_root}/wpsc-theme-engine/default",
+			WPSC_THEME_ENGINE_USER_PATH . "/{$current_theme}",
+			WPSC_THEME_ENGINE_USER_PATH . "/default",
 			STYLESHEETPATH,
 			WPSC_THEME_ENGINE_COMPAT_PATH . "/{$current_theme}",
 			WPSC_THEME_ENGINE_COMPAT_PATH . "/default"
 		);
 	} else {
 		$paths = array(
-			"{$theme_root}/wpsc-theme-engine/{$current_theme}",
-			"{$theme_root}/wpsc-theme-engine/{$parent_theme}",
-			"{$theme_root}/wpsc-theme-engine/default",
+			WPSC_THEME_ENGINE_USER_PATH . "/{$current_theme}",
+			WPSC_THEME_ENGINE_USER_PATH . "/{$parent_theme}",
+			WPSC_THEME_ENGINE_USER_PATH . "/default",
 			STYLESHEETPATH,
 			TEMPLATEPATH,
 			WPSC_THEME_ENGINE_COMPAT_PATH . "/{$current_theme}",
@@ -159,10 +168,10 @@ function wpsc_get_template_part( $slug, $name = null ) {
 
 	$templates = array();
 	if ( isset( $name ) ) {
-		$templates[] = "wp-e-commerce/{$slug}-{$name}.php";
+		$templates[] = WPSC_THEME_ENGINE_TEMPLATE_PART_FOLDER . "/{$slug}-{$name}.php";
 	}
 
-	$templates[] = "wp-e-commerce/{$slug}.php";
+	$templates[] = WPSC_THEME_ENGINE_TEMPLATE_PART_FOLDER . "/{$slug}.php";
 
 	$templates = apply_filters( "wpsc_get_template_part_paths_for_{$slug}", $templates, $slug, $name );
 
@@ -171,131 +180,6 @@ function wpsc_get_template_part( $slug, $name = null ) {
 	do_action( "wpsc_template_after_{$slug}-{$name}" );
 }
 
-/**
- * This function is hooked into 'archive_template' filter.
- *
- * It searches for archive-wpsc-product.php and archive.php using {@link wpsc_locate_template()}
- * instead of {@link locate_template()}, which means it looks for those templates in two additional
- * paths that WP e-Commerce defines in {@link wpsc_locate_template()}.
- *
- * @since 4.0
- * @uses  get_post_type()
- * @uses  wpsc_locate_template()
- *
- * @param  string $template The template file that get_query_template() found
- * @return string           The template file located by WP e-Commerce
- */
-function wpsc_filter_get_archive_template( $template ) {
-	if ( is_post_type_archive( 'wpsc-product' ) ) {
-		if ( $located = apply_filters( 'wpsc_get_archive_template', false ) )
-			return $located;
-
-		$templates = array(
-			"archive-wpsc-product.php",
-			'archive.php',
-		);
-
-		if ( $located = wpsc_locate_template( $templates ) )
-			$template = $located;
-	}
-
-	return $template;
-}
-add_filter( 'archive_template', 'wpsc_filter_get_archive_template' );
-
-/**
- * This function is hooked into 'taxonomy_template' filter.
- *
- * It searches for WPEC related taxonomy templates using {@link wpsc_locate_template()}
- * instead of {@link locate_template()}, which means it looks for those templates in two additional
- * paths that WP e-Commerce defines in {@link wpsc_locate_template()}.
- *
- * @since 4.0
- * @uses  get_post_type()
- * @uses  wpsc_locate_template()
- *
- * @param  string $template The template file that get_query_template() found
- * @return string           The template file located by WP e-Commerce
- */
-function wpsc_filter_get_taxonomy_template( $template ) {
-	$term = get_queried_object();
-	$taxonomy = $term->taxonomy;
-
-	if ( in_array( $taxonomy, array( 'wpsc_product_category', 'product_tag' ) ) ) {
-		if ( $located = apply_filters( 'wpsc_get_taxonomy_template', false ) )
-			return $located;
-
-		$templates = array(
-			"taxonomy-$taxonomy-{$term->slug}.php",
-			"taxonomy-$taxonomy.php",
-			'taxonomy.php',
-		);
-
-		if ( $located = wpsc_locate_template( $templates ) )
-			$template = $located;
-	}
-
-	return $template;
-}
-add_filter( 'taxonomy_template', 'wpsc_filter_get_taxonomy_template' );
-
-/**
- * This function is hooked into 'single_template' filter.
- *
- * It searches for single-wpsc-product.php and single.php using {@link wpsc_locate_template()}
- * instead of {@link locate_template()}, which means it looks for those templates in two additional
- * paths that WP e-Commerce defines in {@link wpsc_locate_template()}.
- *
- * @since 4.0
- * @uses  get_post_type()
- * @uses  wpsc_locate_template()
- *
- * @param  string $template
- * @return string
- */
-function wpsc_filter_get_single_template( $template ) {
-	if ( get_post_type() == 'wpsc-product' ) {
-		$templates = array(
-			'single-wpsc-product.php',
-			'single.php',
-		);
-
-		if ( $located = wpsc_locate_template( $templates ) )
-			$template = $located;
-	}
-
-	return $template;
-}
-add_filter( 'single_template', 'wpsc_filter_get_single_template' );
-
-/**
- * Create a separate $wpsc_query global object for convenience and consistency
- *
- * This function hooks into 'wp' action hook.
- *
- * @since 4.0
- * @uses  $wp_query
- */
-function wpsc_set_query_object() {
-	global $wp_query;
-	$props = array(
-		'page',
-		'cart',
-		'checkout',
-		'login',
-		'password_reminder',
-		'register',
-	);
-
-	foreach ( $props as $prop ) {
-		$prop = 'wpsc_is_' . $prop;
-		if ( ! isset( $wp_query->$prop ) )
-			$wp_query->$prop = false;
-	}
-
-	$GLOBALS['wpsc_query'] =& $wp_query;
-}
-add_action( 'wp', 'wpsc_set_query_object', 1 );
 
 /**
  * WPEC provides a way to separate all WPEC-related theme functions into a file called 'wpsc-functions.php'.
@@ -854,7 +738,7 @@ function wpsc_prepare_pages( $query ) {
 
 	if ( $page = $query->get( 'wpsc_page' ) ) {
 		$callback = $query->get( 'wpsc_callback' );
-		$GLOBALS['wpsc_page_instance'] = wpsc_get_front_end_page( $page, $callback );
+		$GLOBALS['wpsc_page_instance'] = _wpsc_get_page_instance( $page, $callback );
 	}
 }
 add_action( 'pre_get_posts', 'wpsc_prepare_pages', 10 );
@@ -904,3 +788,8 @@ function wpsc_flush_rewrite_rules() {
 	flush_rewrite_rules( false );
 }
 add_action( 'update_option_users_can_register', 'wpsc_flush_rewrite_rules' );
+
+function _wpsc_get_page_instance( $page, $callback = 'main' ) {
+	require_once( 'class-page.php' );
+	return WPSC_Page::get_page( $page, $callback );
+}

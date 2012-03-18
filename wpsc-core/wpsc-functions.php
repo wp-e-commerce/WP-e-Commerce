@@ -938,12 +938,7 @@ function wpsc_update_legacy_theme_status( $id, $post ) {
 add_action( 'save_post', 'wpsc_update_legacy_theme_status', 10, 2 );
 
 function wpsc_load_theme_engine() {
-	require_once( WPSC_FILE_PATH . '/wpsc-includes/theme.functions.php'            );
-	require_once( WPSC_FILE_PATH . '/wpsc-includes/template-tags.functions.php'    );
-	require_once( WPSC_FILE_PATH . '/wpsc-includes/conditional-tags.functions.php' );
-	require_once( WPSC_FILE_PATH . '/wpsc-includes/theme-action.functions.php'     );
-	require_once( WPSC_FILE_PATH . '/wpsc-includes/front-end-page.class.php'       );
-	require_once( WPSC_FILE_PATH . '/wpsc-includes/cart-item-table.class.php'      );
+	require_once( WPSC_FILE_PATH . '/wpsc-theme-engine/class-theme-engine.php'     );
 
 	wpsc_determine_main_catalog_display_mode();
 	wpsc_determine_product_category_display_mode();

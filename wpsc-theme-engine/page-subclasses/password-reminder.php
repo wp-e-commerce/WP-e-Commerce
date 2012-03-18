@@ -1,6 +1,6 @@
 <?php
 
-class WPSC_Front_End_Page_Password_Reminder extends WPSC_Front_End_Page_SSL
+class WPSC_Page_Password_Reminder extends WPSC_Page_SSL
 {
 	protected $template_name = 'wpsc-password-reminder';
 
@@ -80,9 +80,9 @@ class WPSC_Front_End_Page_Password_Reminder extends WPSC_Front_End_Page_SSL
 		$message = apply_filters( 'wpsc_retrieve_password_message', $message, $key );
 
 		if ( $message && ! wp_mail( $user_email, $title, $message ) )
-			$this->set_message( __( "Sorry, but due to an unexpected technical issue, we couldn't send you the e-mail containing password reset directions. Most likely the web host we're using have disabled e-mail features. Please contact us and we'll help you fix this. Or you can simply try again later.", 'wpsc' ), 'error' ); // by "us", we mean the site owner.
+			$this->message_collection->add( __( "Sorry, but due to an unexpected technical issue, we couldn't send you the e-mail containing password reset directions. Most likely the web host we're using have disabled e-mail features. Please contact us and we'll help you fix this. Or you can simply try again later.", 'wpsc' ), 'error' ); // by "us", we mean the site owner.
 
-		$this->set_message( __( "We just sent you an e-mail containing directions to reset your password. If you don't receive it in a few minutes, check your Spam folder or simply try again.", 'wpsc' ), 'success' );
+		$this->message_collection->add( __( "We just sent you an e-mail containing directions to reset your password. If you don't receive it in a few minutes, check your Spam folder or simply try again.", 'wpsc' ), 'success' );
 	}
 
 	private function invalid_key_error() {
@@ -143,7 +143,7 @@ class WPSC_Front_End_Page_Password_Reminder extends WPSC_Front_End_Page_SSL
 
 		$this->reset_password( $user, $_POST['pass1'] );
 		$message = apply_filters( 'wpsc_reset_password_success_message', __( 'Your password has been reset successfully. Please log in with the new password.', 'wpsc' ), $user );
-		$this->set_transient_message( sprintf( $message, wpsc_get_login_url() ), 'login' );
+		$this->message_collection->add( sprintf( $message, wpsc_get_login_url() ), 'success', 'login', 'flash' );
 
 		wp_redirect( wpsc_get_login_url() );
 		exit;
