@@ -147,6 +147,9 @@ final class WPSC_Settings_Page
 			'import'       => _x( 'Import'      , 'Import settings tab in Settings->Store page'      , 'wpsc' )
 		);
 
+		if ( wpsc_is_legacy_theme_engine_active() )
+			unset( self::$default_tabs['permalinks'] );
+
 		add_action( 'wpsc_register_settings_tabs' , array( 'WPSC_Settings_Page', 'register_default_tabs'  ), 1 );
 		add_action( 'wpsc_load_settings_tab_class', array( 'WPSC_Settings_Page', 'load_default_tab_class' ), 1 );
 	}
@@ -300,10 +303,12 @@ final class WPSC_Settings_Page
 	 */
 	public function set_current_tab( $tab_id = null ) {
 		if ( ! $tab_id ) {
-			if ( isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $this->tabs ) )
+			if ( isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $this->tabs ) ) {
 				$this->current_tab_id = $_GET['tab'];
-			else
-				$this->current_tab_id = array_shift( array_keys( $this->tabs ) );
+			} else {
+				$tab_ids = array_keys( $this->tabs );
+				$this->current_tab_id = $tab_ids[0];
+			}
 		} else {
 			$this->current_tab_id = $tab_id;
 		}
