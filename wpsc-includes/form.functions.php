@@ -82,6 +82,7 @@ function wpsc_form_checkbox( $name, $value, $label = false, $checked = false, $a
 		$output = '<label class="wpsc-form-checkbox-wrapper">' . _wpsc_input_type_field( $atts, false ) . esc_html ( $label ) . '</label>';
 		if ( ! $echo )
 			return $output;
+
 		echo $output;
 	} else {
 		return _wpsc_input_type_field( $atts, $echo );
@@ -177,4 +178,50 @@ function wpsc_form_textarea( $name, $value = '', $atts = array(), $echo = true )
 		return $output;
 
 	echo $output;
+}
+
+function wpsc_form_submit( $name, $title = '', $atts = array(), $echo = true ) {
+	if ( ! is_array( $atts ) )
+		$atts = array();
+
+	$atts['name']  = $name;
+	$atts['value'] = empty( $title ) ? _x( 'Submit', 'generic submit button title', 'wpsc' ) : $title;
+	$atts['type']  = 'submit';
+
+	return _wpsc_input_type_field( $atts, $echo );
+}
+
+function wpsc_form_hidden( $name, $value, $atts = array(), $echo = true ) {
+	if ( ! is_array( $atts ) )
+		$atts = array();
+
+	$atts['name'] = $name;
+	$atts['value'] = $value;
+	$atts['type'] = 'hidden';
+
+	return _wpsc_input_type_field( $atts, $echo );
+}
+
+function wpsc_form_button( $name, $title, $args = array(), $echo = true ) {
+	if ( ! is_array( $args ) )
+		$args = array();
+
+	$icon = '';
+	if ( ! empty( $args['icon'] ) ) {
+		foreach ( $args['icon'] as &$icon_class ) {
+			$icon_class = 'wpsc-icon-' . $icon_class;
+		}
+		$class = implode( ' ', $args['icon'] );
+		$icon = "<i class='{$class}'></i> ";
+	}
+	unset( $args['icon'] );
+
+	$output = '<button ' . _wpsc_form_attributes( $args ) . '>';
+	$output .= $icon . esc_html( $title );
+	$output .= '</button>';
+
+	if ( $echo )
+		echo $output;
+
+	return $output;
 }
