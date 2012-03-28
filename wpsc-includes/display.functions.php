@@ -122,47 +122,6 @@ function wpsc_product_url( $product_id, $category_id = null, $escape = true ) {
 	}
 }
 
-/* 19-02-09
- * add cart button function used for php template tags and shortcodes
- */
-
-function wpsc_add_to_cart_button( $product_id, $return = false ) {
-	global $wpdb, $wpsc_variations;
-	$output = '';
-	if ( $product_id > 0 ) {
-		// grab the variation form fields here
-		$wpsc_variations = new wpsc_variations( $product_id );
-		if ( $return )
-			ob_start();
-		?>
-			<div class='wpsc-add-to-cart-button'>
-				<form class='wpsc-add-to-cart-button-form' id='product_<?php echo esc_attr( $product_id ) ?>' action='' method='post'>
-					<?php do_action( 'wpsc_add_to_cart_button_form_begin' ); ?>
-					<div class='wpsc_variation_forms'>
-						<?php while ( wpsc_have_variation_groups() ) : wpsc_the_variation_group(); ?>
-							<p>
-								<label for='<?php echo wpsc_vargrp_form_id(); ?>'><?php echo esc_html( wpsc_the_vargrp_name() ) ?>:</label>
-								<select class='wpsc_select_variation' name='variation[<?php echo wpsc_vargrp_id(); ?>]' id='<?php echo wpsc_vargrp_form_id(); ?>'>
-									<?php while ( wpsc_have_variations() ): wpsc_the_variation(); ?>
-										<option value='<?php echo wpsc_the_variation_id(); ?>' <?php echo wpsc_the_variation_out_of_stock(); ?>><?php echo esc_html( wpsc_the_variation_name() ); ?></option>
-									<?php endwhile; ?>
-								</select>
-							</p>
-						<?php endwhile; ?>
-					</div>
-					<input type='hidden' name='wpsc_ajax_action' value='add_to_cart' />
-					<input type='hidden' name='product_id' value='<?php echo $product_id; ?>' />
-					<input type='submit' id='product_<?php echo $product_id; ?>_submit_button' class='wpsc_buy_button' name='Buy' value='<?php echo __( 'Add To Cart', 'wpsc' ); ?>'  />
-					<?php do_action( 'wpsc_add_to_cart_button_form_end' ); ?>
-				</form>
-			</div>
-		<?php
-
-		if ( $return )
-			return ob_get_clean();
-	}
-}
-
 function wpsc_obtain_the_description() {
 	global $wpdb, $wp_query, $wpsc_title_data;
 	$output = null;
