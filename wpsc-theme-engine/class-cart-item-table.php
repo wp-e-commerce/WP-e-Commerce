@@ -42,7 +42,6 @@ class WPSC_Cart_Item_Table
 			'unit_price'  => __( 'Unit Price', 'wpsc' ),
 			'quantity'    => __( 'Quantity'  , 'wpsc' ),
 			'item_total'  => __( 'Item Total', 'wpsc' ),
-			'delete'      => '',
 		);
 
 		return apply_filters( 'wpsc_cart_item_table_columns', $columns );
@@ -85,22 +84,21 @@ class WPSC_Cart_Item_Table
 				</thead>
 				<tfoot>
 					<tr class="wpsc-cart-subtotal-row">
-						<th scope="row" colspan="<?php echo count( $this->columns ) - 2; ?>">
+						<th scope="row" colspan="<?php echo count( $this->columns ) - 1; ?>">
 							<?php esc_html_e( 'Subtotal:' ,'wpsc' ); ?><br />
 						</th>
 						<td>
 							<?php echo wpsc_format_price( $wpsc_cart->calculate_subtotal() ); ?>
 						</td>
-						<td></td>
 					</tr>
 					<tr class="wpsc-cart-item-actions">
+						<td></td>
 						<td colspan="<?php echo count( $this->columns ) - 1; ?>">
-							<a class="wpsc-clear-cart" href="<?php echo $clear_cart_url; ?>"><?php esc_html_e( 'Clear Cart', 'wpsc' ); ?></a>
-							<input type="submit" class="wpsc-cart-update" name="update_quantity" value="<?php esc_html_e( 'Update Quantity', 'wpsc' ); ?>" />
+							<a class="wpsc-button wpsc-button-small wpsc-clear-cart" href="<?php echo $clear_cart_url; ?>"><?php esc_html_e( 'Clear Cart', 'wpsc' ); ?></a>
+							<input type="submit" class="wpsc-button wpsc-button-small wpsc-cart-update" name="update_quantity" value="<?php esc_html_e( 'Update Quantity', 'wpsc' ); ?>" />
 							<input type="hidden" name="action" value="update_quantity" />
 							<input type="hidden" name="prev" value="<?php echo $prev; ?> ">
 						</td>
-						<td></td>
 					</tr>
 				</tfoot>
 
@@ -112,7 +110,7 @@ class WPSC_Cart_Item_Table
 	}
 }
 
-function wpsc_cart_item_table_column_items( $item ) {
+function wpsc_cart_item_table_column_items( $item, $key ) {
 	$product = get_post( $item->product_id );
 
 	if ( $product->post_parent )
@@ -134,6 +132,7 @@ function wpsc_cart_item_table_column_items( $item ) {
 	if ( ! empty( $variations ) && ! empty( $item->sku ) )
 		$separator = ' | ';
 
+	$remove_url = add_query_arg( '_wp_nonce', wp_create_nonce( "wpsc-remove-cart-item-{$key}" ), wpsc_get_cart_url( 'remove/' . absint( $key ) ) );
 	?>
 		<div class="wpsc-thumbnail wpsc-product-thumbnail">
 			<?php if ( wpsc_has_product_thumbnail( $item->product_id ) ): ?>
@@ -157,6 +156,9 @@ function wpsc_cart_item_table_column_items( $item ) {
 					<span class="wpsc-cart-item-variations"><?php echo $variations; ?></span>
 				<?php endif ?>
 			</p>
+			<p>
+				<a alt="<?php esc_attr_e( 'Remove from cart', 'wpsc' ); ?>" title="<?php esc_attr_e( 'Remove from cart', 'wpsc' ); ?>" class="wpsc-button wpsc-button-mini" href="<?php echo esc_url( $remove_url ); ?>"><i class="wpsc-icon-trash"></i> <?php esc_html_e( 'Remove', 'wpsc' ); ?></a>
+			</p>
 		</div>
 	<?php
 }
@@ -175,15 +177,7 @@ function wpsc_cart_item_table_column_item_total( $item ) {
 	echo wpsc_format_price( $item->unit_price * $item->quantity );
 }
 
-function wpsc_cart_item_table_column_delete( $item, $key ) {
-	$text = esc_html_x( 'Delete', 'cart item table', 'wpsc' );
-	?>
-	<a href="<?php wpsc_cart_url( 'delete/' . absint( $key ) ); ?>"><img src="<?php echo wpsc_locate_theme_file_uri( 'images/delete-cart-item.gif' ); ?>" alt="<?php echo $text; ?>" title="<?php echo $text; ?>" /></a>
-	<?php
-}
-
-add_action( 'wpsc_cart_item_table_column_items'       , 'wpsc_cart_item_table_column_items'             );
+add_action( 'wpsc_cart_item_table_column_items'       , 'wpsc_cart_item_table_column_items'     , 10, 2 );
 add_action( 'wpsc_cart_item_table_column_quantity'    , 'wpsc_cart_item_table_column_quantity'  , 10, 2 );
 add_action( 'wpsc_cart_item_table_column_unit_price'  , 'wpsc_cart_item_table_column_unit_price'        );
 add_action( 'wpsc_cart_item_table_column_item_total'  , 'wpsc_cart_item_table_column_item_total'        );
-add_action( 'wpsc_cart_item_table_column_delete'      , 'wpsc_cart_item_table_column_delete'    , 10, 2 );
