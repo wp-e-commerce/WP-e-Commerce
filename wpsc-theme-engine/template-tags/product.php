@@ -554,6 +554,46 @@ function wpsc_product_variation_set_dropdown( $variation_set_id, $product_id = n
 	echo wpsc_get_product_variation_set_dropdown( $variation_set_id, $product_id );
 }
 
+function wpsc_get_product_variation_dropdown( $args = '' ) {
+	$defaults = array(
+		'id'               => false,
+		'before'           => '',
+		'after'            => '',
+		'before_variation' => '',
+		'after_variation'  => '<br />',
+		'before_label'     => '',
+		'after_label'      => '',
+		'before_dropdown'  => '',
+		'after_dropdown'   => '',
+	);
+
+	$defaults = apply_filters( 'wpsc_product_variation_dropdown_default_args', $defaults );
+
+	$r = wp_parse_args( $args, $defaults );
+	extract( $r, EXTR_SKIP );
+
+	if ( ! empty( $id ) )
+		$id = wpsc_get_product_id();
+
+	$variation_sets = wpsc_get_product_variation_sets();
+	$output = $before;
+	foreach ( $variation_sets as $variation_set_id => $title ) {
+		$output .= $before_variation . $before_label;
+		$output .= '<label for="wpsc-product-' . $id . '-variation-' . esc_attr( $variation_set_id ) . '">';
+		$output .= esc_html( $title );
+		$output .= '</label>' . $after_label;
+		$output .= $before_dropdown . wpsc_get_product_variation_set_dropdown( $variation_set_id ) . $after_dropdown;
+		$output .= $after_variation;
+	}
+	$output .= $after;
+
+	return $output;
+}
+
+function wpsc_product_variation_dropdown( $args = '' ) {
+	echo wpsc_get_product_variation_dropdown( $args );
+}
+
 /**
  * Return the HTML for variation set dropdown of a certain product.
  *
