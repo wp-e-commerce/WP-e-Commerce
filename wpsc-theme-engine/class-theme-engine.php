@@ -1,5 +1,6 @@
 <?php
 require_once( 'theme-engine.php'           );
+require_once( 'form.php'                   );
 require_once( 'template-tags/general.php'  );
 require_once( 'template-tags/product.php'  );
 require_once( 'template-tags/taxonomy.php' );
@@ -14,7 +15,7 @@ class WPSC_Theme_Engine
 	private static $instance = null;
 
 	public static function get_instance() {
-		if ( is_null( self::$instance ) )
+		if ( empty( self::$instance ) )
 			self::$instance = new WPSC_Theme_Engine();
 
 		return self::$instance;
@@ -28,17 +29,35 @@ class WPSC_Theme_Engine
 		add_filter( 'taxonomy_template' , array( $this, '_filter_get_taxonomy_template' ) );
 
 		add_action( 'wp', array( $this, '_action_wp_clone_query_object' ), 1 );
+
+		add_action( 'wp_enqueue_scripts', array( $this, '_action_enqueue_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, '_action_enqueue_styles' ) );
 	}
 
-	private function locate_compat_template( $type ) {
+	public function locate_compat_template( $type ) {
 		require_once( 'class-theme-compat.php' );
 
 		$this->compat_mode = true;
 		$this->compat = new WPSC_Theme_Engine_Compat();
 		$this->compat->activate( $type );
-		$this->compat->reset_globals();
 
 		return $this->compat->locate_template();
+	}
+
+	private function register_styles() {
+		wp_register_style( 'wpsc-common', wpsc_locate_theme_file_uri( 'wp-e-commerce/css/common.css' ), array(), WPSC_VERSION );
+	}
+
+	private function register_scripts() {
+	}
+
+	public function _action_enqueue_scripts() {
+		$this->register_scripts();
+	}
+
+	public function _action_enqueue_styles() {
+		$this->register_styles();
+		wp_enqueue_style( 'wpsc-common' );
 	}
 
 	public function _action_wp_clone_query_object() {
