@@ -38,7 +38,7 @@ function wpsc_twentyeleven_product_category_and_tag_list() {
 }
 
 function wpsc_twentyeleven_enqueue_styles() {
-	wp_register_style( 'wpsc-twentyeleven-main', wpsc_locate_theme_file_uri( 'css/shop-main.css' ) );
+	wp_register_style( 'wpsc-twentyeleven-main', wpsc_locate_theme_file_uri( 'wp-e-commerce/css/main.css' ) );
 	wp_enqueue_style( 'wpsc-twentyeleven-main' );
 }
 add_action( 'wp_print_styles', 'wpsc_twentyeleven_enqueue_styles' );

@@ -33,7 +33,7 @@ class WPSC_Cart_Item_Table
 	}
 
 	private function get_table_classes() {
-		return apply_filters( 'wpsc_cart_item_table_classes', array( 'wpsc-cart-item-table' ) );
+		return apply_filters( 'wpsc_cart_item_table_classes', array( 'wpsc-cart-item-table', 'wpsc-table' ) );
 	}
 
 	private function get_columns() {
@@ -74,8 +74,14 @@ class WPSC_Cart_Item_Table
 	public function display() {
 		global $wpsc_cart;
 		$prev = isset( $_REQUEST['prev'] ) ? esc_attr( $_REQUEST['prev'] ) : '';
-		$clear_cart_url = esc_attr( add_query_arg( 'prev', $prev, wpsc_get_cart_url( 'clear' ) ) );
+		$clear_cart_url = add_query_arg( array(
+				'prev'      => $prev,
+				'_wp_nonce' => wp_create_nonce( 'wpsc-clear-cart' ),
+			),
+		 	wpsc_get_cart_url( 'clear' )
+		);
 		?>
+		<form class="wpsc-form wpsc-cart-form" action="<?php echo esc_url( wpsc_get_cart_url() ); ?>" method="post">
 			<table class="<?php echo implode( ' ', $this->get_table_classes() ); ?>" cellspacing="0">
 				<thead>
 					<tr>
@@ -106,6 +112,12 @@ class WPSC_Cart_Item_Table
 					<?php $this->display_rows(); ?>
 				</tbody>
 			</table>
+			<div class="wpsc-form-actions">
+				<?php wpsc_keep_shopping_button(); ?>
+				<?php wpsc_form_button( '', __( 'Begin Checkout', 'wpsc' ), array( 'class' => 'wpsc-button wpsc-button-success', 'icon' => array( 'white', 'ok-sign' ) ) ); ?>
+				<?php wpsc_form_hidden( '_wp_nonce', wp_create_nonce( 'wpsc-cart-update' ) ); ?>
+			</div>
+		</form>
 		<?php
 	}
 }
@@ -164,9 +176,7 @@ function wpsc_cart_item_table_column_items( $item, $key ) {
 }
 
 function wpsc_cart_item_table_column_quantity( $item, $key ) {
-	?>
-	<input size="3" type="text" name="quantity[<?php echo absint( $key ); ?>]" value="<?php echo absint( $item->quantity ); ?>" />
-	<?php
+	wpsc_form_input( "quantity[{$key}]", $item->quantity, array( 'class' => 'wpsc-cart-quantity-input', 'id' => "wpsc-cart-quantity-input-{$key}" ) );
 }
 
 function wpsc_cart_item_table_column_unit_price( $item ) {

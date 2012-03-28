@@ -100,9 +100,10 @@ class WPSC_Page
 		$located = wpsc_locate_template( $templates );
 
 		if ( ! empty( $located ) )
-			$template = $located;
+			return $located;
 
-		return $template;
+		$theme_engine = WPSC_Theme_Engine::get_instance();
+		return $theme_engine->locate_compat_template('cart');
 	}
 
 	public function _action_set_200_header() {

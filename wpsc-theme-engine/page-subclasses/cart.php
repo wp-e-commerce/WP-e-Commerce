@@ -8,10 +8,14 @@ class WPSC_Page_Cart extends WPSC_Page
 		global $wp_query;
 		parent::__construct( $callback );
 		$wp_query->wpsc_is_cart = true;
+		$this->message_collection->add( __( 'Your subtotal amount does not yet include shipping and handling, tax or discount offers, which will be reflected at Checkout.', 'wpsc' ), 'info' );
 	}
 
 	public function _callback_add_to_cart() {
 		global $wpsc_cart;
+
+		if ( ! wp_verify_nonce( $_REQUEST['_wp_nonce'], "wpsc-add-to-cart-{$_REQUEST['product_id']}" ) )
+			wp_die( __( 'Request expired. Please try adding the item to your cart again.', 'wpsc' ) );
 
 		extract( $_REQUEST, EXTR_SKIP );
 
@@ -87,6 +91,10 @@ class WPSC_Page_Cart extends WPSC_Page
 
 	public function _callback_update_quantity() {
 		global $wpsc_cart;
+
+		if ( ! wp_verify_nonce( $_REQUEST['_wp_nonce'], 'wpsc-cart-update' ) )
+			wp_die( __( 'Request expired. Please try updating the items in your cart again.', 'wpsc' ) );
+
 		$changed = 0;
 		$has_errors = false;
 		extract( $_REQUEST, EXTR_SKIP );
@@ -94,6 +102,12 @@ class WPSC_Page_Cart extends WPSC_Page
 		foreach ( $wpsc_cart->cart_items as $key => &$item ) {
 			if ( isset( $quantity[$key] ) && $quantity[$key] != $item->quantity ) {
 				$product = get_post( $item->product_id );
+
+				if ( ! is_numeric( $quantity[$key] ) ) {
+					$message = sprintf( __( 'Invalid quantity for %s.', 'wpsc' ), $product->post_title );
+					$this->message_collection->add( $message, 'error' );
+					continue;
+				}
 
 				if ( $quantity[$key] > $item->quantity ) {
 					$remaining_quantity = $wpsc_cart->get_remaining_quantity( $item->product_id, $item->variation_values );
@@ -119,13 +133,13 @@ class WPSC_Page_Cart extends WPSC_Page
 			}
 		}
 
-		if ( isset( $begin_checkout ) && ! $has_errors ) {
+		if ( ! isset( $_POST['update_quantity'] ) && ! $has_errors ) {
 			wp_redirect( wpsc_get_checkout_url() );
 			exit;
 		}
 
 		if ( $changed ) {
-			$message = __( 'You just successfully updated the quantity for %d items.', 'wpsc' );
+			$message = _n( 'You just successfully updated the quantity for %d item.', 'You just successfully updated the quantity for %d items.', $changed, 'wpsc' );
 			$this->message_collection->add( sprintf( $message, $changed ), 'success' );
 		}
 	}
@@ -139,11 +153,21 @@ class WPSC_Page_Cart extends WPSC_Page
 
 	public function clear() {
 		global $wpsc_cart;
+
+		if ( ! wp_verify_nonce( $_REQUEST['_wp_nonce'], 'wpsc-clear-cart' ) )
+			wp_die( __( 'Request expired. Please go back and try clearing the cart again.', 'wpsc' ) );
+
 		$wpsc_cart->clear();
+		$this->message_collection->add( __( 'Shopping cart emptied.', 'wpsc' ) );
 	}
 
-	public function delete( $key ) {
+	public function remove( $key ) {
 		global $wpsc_cart;
+
+		if ( ! wp_verify_nonce( $_REQUEST['_wp_nonce'], "wpsc-remove-cart-item-{$key}" ) )
+			wp_die( __( 'Request expired. Please go back and try removing the cart item again.', 'wpsc' ) );
+
 		$wpsc_cart->remove_item( $key );
+		$this->message_collection->add( __( 'Item removed.', 'wpsc' ) );
 	}
 }
