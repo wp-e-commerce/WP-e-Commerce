@@ -937,7 +937,7 @@ function wpsc_get_current_page_number() {
 }
 
 /**
- * Output the pagination links for the current loop.
+ * Return the pagination links for the current loop.
  *
  * See {@link paginate_links()} for the available options that you can use with this function.
  *
@@ -955,7 +955,7 @@ function wpsc_get_current_page_number() {
  *
  * @param  string|array $args Query string or an array of options.
  */
-function wpsc_product_pagination_links( $args = '' ) {
+function wpsc_get_product_pagination_links( $args = '' ) {
 	global $wp_rewrite, $wpsc_query;
 
 	$base = '';
@@ -981,8 +981,12 @@ function wpsc_product_pagination_links( $args = '' ) {
 		'next_text' => is_rtl() ? __( '&larr;', 'wpsc' ) : __( '&rarr;', 'wpsc' ),
 	);
 
+	$defaults = apply_filters( 'wpsc_get_product_pagination_links', $defaults );
 	$r = wp_parse_args( $args, $defaults );
-	$r = apply_filters( 'wpsc_product_pagination_links_args', $r );
-	$links = apply_filters( 'wpsc_product_pagination_links', paginate_links( $r ) );
-	echo $links;
+
+	return apply_filters( 'wpsc_get_product_pagination_links', paginate_links( $r ) );
+}
+
+function wpsc_product_pagination_links( $args = '' ) {
+	echo wpsc_get_product_pagination_links( $args );
 }
