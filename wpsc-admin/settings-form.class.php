@@ -123,8 +123,7 @@ class WPSC_Settings_Form
 		foreach ( $options as $checkbox_value => $checkbox_label ) {
 			$checkbox_id  = $id . '-' . sanitize_title_with_dashes( $checkbox_value );
 			$checked      = $value == $checkbox_value;
-			$output      .= wpsc_form_checkbox( $name, $checkbox_value, $checked, array( 'id' => $checkbox_id, 'class' => $class ), false );
-			$output      .= wpsc_form_label( $checkbox_label, $checkbox_id, array( 'class' => 'wpsc-form-checkbox-label' ), false );
+			$output      .= wpsc_form_checkbox( $name, $checkbox_value, $checkbox_label, $checked, array( 'id' => $checkbox_id, 'class' => $class ), false );
 		}
 
 		$output .= '<br />';
