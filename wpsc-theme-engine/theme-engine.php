@@ -64,7 +64,7 @@ function wpsc_locate_theme_file( $files ) {
 			WPSC_THEME_ENGINE_USER_PATH . "/{$current_theme}",
 			WPSC_THEME_ENGINE_USER_PATH . "/default",
 			STYLESHEETPATH,
-			WPSC_THEME_ENGINE_COMPAT_PATH . "/{$current_theme}",
+//			WPSC_THEME_ENGINE_COMPAT_PATH . "/{$current_theme}",
 			WPSC_THEME_ENGINE_COMPAT_PATH . "/default"
 		);
 	} else {
@@ -74,8 +74,8 @@ function wpsc_locate_theme_file( $files ) {
 			WPSC_THEME_ENGINE_USER_PATH . "/default",
 			STYLESHEETPATH,
 			TEMPLATEPATH,
-			WPSC_THEME_ENGINE_COMPAT_PATH . "/{$current_theme}",
-			WPSC_THEME_ENGINE_COMPAT_PATH . "/{$parent_theme}",
+//			WPSC_THEME_ENGINE_COMPAT_PATH . "/{$current_theme}",
+//			WPSC_THEME_ENGINE_COMPAT_PATH . "/{$parent_theme}",
 			WPSC_THEME_ENGINE_COMPAT_PATH . "/default"
 		);
 	}
@@ -198,12 +198,12 @@ function wpsc_action_before_setup_theme() {
 
 	$paths = array(
 		WPSC_THEME_ENGINE_COMPAT_PATH . "/default",
-		WPSC_THEME_ENGINE_COMPAT_PATH . "/{$parent_theme}",
-		WPSC_THEME_ENGINE_COMPAT_PATH . "/{$current_theme}",
+//		WPSC_THEME_ENGINE_COMPAT_PATH . "/{$parent_theme}",
+//		WPSC_THEME_ENGINE_COMPAT_PATH . "/{$current_theme}",
 	);
 
 	foreach ( $paths as $path ) {
-		$filename = $path . '/wpsc-functions.php';
+		$filename = $path . '/wp-e-commerce.php';
 		if ( file_exists( $filename ) ) {
 			require_once( $filename );
 		}
@@ -234,7 +234,7 @@ function wpsc_action_after_setup_theme() {
 	);
 
 	foreach ( $paths as $path ) {
-		$filename = $path . '/wpsc-functions.php';
+		$filename = $path . '/wp-e-commerce.php';
 		if ( file_exists( $filename ) ) {
 			require_once( $filename );
 		}
