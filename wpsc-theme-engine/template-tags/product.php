@@ -293,10 +293,12 @@ function wpsc_get_product_tag_count( $id = 0 ) {
 function wpsc_edit_product_link( $args = '' ) {
 	$defaults = array(
 		'id'     => 0,
-		'before' => '',
-		'after'  => '',
+		'before' => '<span class="edit-link">',
+		'after'  => '</span>',
 		'title'  => _x( 'Edit This Product', 'product edit link template tag', 'wpsc' ),
 	);
+
+	$defaults = apply_filters( 'wpsc_edit_product_link_default_args', $defaults );
 
 	$r = wp_parse_args( $args, $defaults );
 	extract( $r );
