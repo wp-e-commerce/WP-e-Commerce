@@ -505,6 +505,9 @@ function wpsc_get_product_description( $more_link_text = null, $mode = 'with-tea
 	if ( $mode == 'only-teaser' )
 		add_filter( 'the_content_more_link', 'wpsc_filter_remove_the_content_more_link', 99 );
 
+	if ( ! $more_link_text )
+		$more_link_text = __( 'More details &raquo;', 'wpsc' );
+
 	$content = get_the_content( $more_link_text, $stripteaser );
 
 	if ( $mode == 'only-teaser' ) {
