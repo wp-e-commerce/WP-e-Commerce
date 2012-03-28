@@ -61,8 +61,15 @@ function wpsc_product_id() {
  * @since 4.0
  * @uses  post_class()
  */
-function wpsc_product_class() {
-	post_class();
+function wpsc_product_class( $class = '', $post_id = null ) {
+	echo 'class="' . join( ' ', wpsc_get_product_class( $class, $post_id ) ) . '"';
+}
+
+function wpsc_get_product_class( $class, $post_id = null ) {
+	if ( ! $post_id )
+		$post_id = wpsc_get_product_id();
+
+	return get_post_class( $class, $post_id );
 }
 
 /**
