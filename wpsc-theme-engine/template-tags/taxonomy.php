@@ -70,20 +70,6 @@ function wpsc_get_product_tag_permalink( $tag = '' ) {
 }
 
 /**
- * Return the title of the product catalog page.
- *
- * @since 4.0
- * @uses  apply_filters() Applies 'wpsc_get_product_catalog_title' filter.
- * @uses  get_post_type_object()
- *
- * @return string
- */
-function wpsc_get_product_catalog_title() {
-	$post_type_object = get_post_type_object( 'wpsc-product' );
-	return apply_filters( 'wpsc_get_product_catalog_title', $post_type_object->labels->name );
-}
-
-/**
  * Return the name of a product category.
  *
  * @since 4.0

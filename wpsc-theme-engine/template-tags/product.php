@@ -1,4 +1,11 @@
 <?php
+function wpsc_get_product_catalog_title() {
+	return apply_filters( 'wpsc_get_product_catalog_title', __( 'Catalog', 'wpsc' ) );
+}
+
+function wpsc_product_catalog_title() {
+	echo wpsc_get_product_catalog_title();
+}
 
 /**
  * Whether current product loop has results to loop over.
