@@ -245,3 +245,7 @@ function wpsc_inline_validation_error( $field, $args = '' ) {
 		echo $after;
 	}
 }
+
+function wpsc_get_cart_title() {
+	return apply_filters( 'wpsc_get_cart_title', __( 'Cart', 'wpsc' ) );
+}
