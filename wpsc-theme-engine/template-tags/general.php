@@ -214,7 +214,7 @@ function wpsc_get_user_messages( $args = '' ) {
 	$output = '';
 
 	foreach ( $messages as $type => $type_messages ) {
-		$output .= sprintf( $before_message_list, "wpsc-messages {$type}" );
+		$output .= sprintf( $before_message_list, "wpsc-alert wpsc-alert-block wpsc-alert-{$type}" );
 		foreach ( $type_messages as $message ) {
 			$output .= $before_message_item;
 			$output .= apply_filters( 'wpsc_inline_validation_error_message', $message );
