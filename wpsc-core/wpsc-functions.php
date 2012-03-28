@@ -1017,3 +1017,14 @@ function wpsc_update_user_profile( $key, $value, $id = false ) {
 
 	return set_transient( "wpsc_user_profile_{$id}", $profile, 172800 ); // valid for 48 hours
 }
+
+function _wpsc_doing_it_wrong( $function, $message, $wpsc_version ) {
+	do_action( 'wpsc_doing_it_wrong_run', $function, $message, $wpsc_version );
+
+	// Allow plugin to filter the output error trigger
+	if ( WP_DEBUG && apply_filters( 'wpsc_doing_it_wrong_trigger_error', true ) ) {
+		$version = is_null( $wpsc_version ) ? '' : sprintf( __( '(This message was added in WP e-Commerce version %s.)', 'wpsc' ), $wpsc_version );
+		$message .= ' ' . __( 'Please see <a href="http://codex.wordpress.org/Debugging_in_WordPress">Debugging in WordPress</a> for more information.' );
+		trigger_error( sprintf( __( '%1$s was called <strong>incorrectly</strong>. %2$s %3$s' ), $function, $message, $version ) );
+	}
+}
