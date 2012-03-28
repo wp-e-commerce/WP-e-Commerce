@@ -112,9 +112,13 @@ function wpsc_get_breadcrumb( $args = '' ) {
 
 	$defaults = array(
 		// HTML
-		'before'          => '<p class="%s">',
-		'after'           => '</p>',
-		'separator'       => is_rtl() ? __( '&lsaquo;', 'wpsc' ) : __( '&rsaquo;', 'wpsc' ),
+		'before'          => '<ul class="%s">',
+		'after'           => '</ul>',
+		'before_item'     => '<li class="%s">',
+		'after_item'      => '</li>',
+		'before_divider'  => '<span class="%s">',
+		'after_divider'   => '</span>',
+		'divider'         => '/',
 		'padding'         => 1,
 
 		// Home
@@ -130,21 +134,28 @@ function wpsc_get_breadcrumb( $args = '' ) {
 		'current_text'    => $pre_current_text,
 	);
 
+	$defaults = apply_filters( 'wpsc_get_breadcrumb_default_args', $defaults );
+
 	$r = array_merge( $defaults, $args );
 	extract( $r );
 
-	$class = apply_filters( 'wpsc_breadcrumb_class', 'wpsc-breadcrumb' );
-	$before = sprintf( $before, $class );
+	$before         = sprintf( $before        , 'wpsc-breadcrumb'         );
+	$before_item    = sprintf( $before_item   , 'wpsc-breadcrumb-item'    );
+	$before_divider = sprintf( $before_divider, 'wpsc-breadcrumb-divider' );
 
-	// Pad the separator
-	if ( !empty( $padding ) )
-		$separator = str_pad( $separator, strlen( $separator ) + ( (int) $padding * 2 ), ' ', STR_PAD_BOTH );
+	if ( $padding ) {
+		$length = strlen( $divider ) + $padding * 2;
+		$padding = str_repeat( "&nbsp;", $padding );
+		$divider = $padding . $divider . $padding;
+	}
+	$divider        = $before_divider . $divider . $after_divider;
 
-	$separator   = apply_filters( 'wpsc_breadcrumb_separator', $separator, $padding );
 	$breadcrumbs = array();
 
-	if ( $include_current && ! empty( $current_text ) )
-		$breadcrumbs[] = '<span class="wpsc-breadcrumb-item wpsc-breadcrumb-current">' . $current_text . '</span>';
+	if ( $include_current && ! empty( $current_text ) ) {
+		$before_current_item = sprintf( $before_item, 'wpsc-breadcrumb-item wpsc-breadcrumb-current' );
+		$breadcrumbs[] = $before_current_item . $current_text . $after_item;
+	}
 
 	$ancestors = array();
 	if ( $parent ) {
@@ -153,19 +164,27 @@ function wpsc_get_breadcrumb( $args = '' ) {
 				break;
 
 			$ancestors[] = $parent->parent;
-			$breadcrumbs[] = '<a class="wpsc-breadcrumb-item wpsc-breadcrumb-ancestors" href="' . wpsc_get_product_category_permalink( $parent ) . '">' . esc_html( $parent->name ) . '</a>';
+			$before_this_item = sprintf( $before_item, 'wpsc-breadcrumb-item wpsc-breadcrumb-ancestor' );
+			$link = '<a href="' . wpsc_get_product_category_permalink( $parent ) . '">' . esc_html( $parent->name ) . '</a>';
+			$breadcrumbs[] = $before_this_item . $link . $divider . $after_item;
 			$parent = get_term( $parent->parent, 'wpsc_product_category' );
 		}
 	}
 
-	if ( $include_catalog && ! empty( $catalog_text ) )
-		$breadcrumbs[] = '<a class="wpsc-breadcrumb-item wpsc-breadcrumb-catalog" href="' . wpsc_get_catalog_url() . '">' . $catalog_text . '</a>';
+	if ( $include_catalog && ! empty( $catalog_text ) && ! wpsc_is_product_catalog() ) {
+		$before_this_item = sprintf( $before_item, 'wpsc-breadcrumb-item wpsc-breadcrumb-catalog' );
+		$link = '<a href="' . wpsc_get_catalog_url() . '">' . $catalog_text . '</a>';
+		$breadcrumbs[] = $before_this_item . $link . $divider . $after_item;
+	}
 
-	if ( $include_home && ! empty( $home_text ) )
-		$breadcrumbs[] = '<a class="wpsc-breadcrumb-item wpsc-breadcrumb-home" href="' . trailingslashit( home_url() ) . '">' . $home_text . '</a>';
+	if ( $include_home && ! empty( $home_text ) && ! is_home() ) {
+		$before_this_item = sprintf( $before_item, 'wpsc-breadcrumb-item wpsc-breadcrumb-home' );
+		$link = '<a href="' . trailingslashit( home_url() ) . '">' . $home_text . '</a>';
+		$breadcrumbs[] = $before_this_item . $link . $divider . $after_item;
+	}
 
 	$breadcrumbs = apply_filters( 'wpsc_breadcrumb_array', array_reverse( $breadcrumbs ), $r );
-	$html        = $before . implode( $separator, $breadcrumbs ) . $after;
+	$html        = $before . implode( '', $breadcrumbs ) . $after;
 
 	return apply_filters( 'wpsc_get_breadcrumb', $html, $breadcrumbs, $r );
 }
