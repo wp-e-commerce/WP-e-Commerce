@@ -97,7 +97,7 @@ class WPSC_Page
 			"{$this->template_name}.php",
 		);
 
-		$located = WPSC_locate_template( $templates );
+		$located = wpsc_locate_template( $templates );
 
 		if ( ! empty( $located ) )
 			$template = $located;
@@ -109,7 +109,7 @@ class WPSC_Page
 		global $wp_query;
 		$wp_query->is_home      = false;
 		$wp_query->is_404       = false;
-		$wp_query->WPSC_is_page = true;
+		$wp_query->wpsc_is_page = true;
 
 		status_header( 200 );
 	}
