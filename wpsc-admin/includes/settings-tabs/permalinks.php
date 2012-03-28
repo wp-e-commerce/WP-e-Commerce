@@ -47,7 +47,7 @@ class WPSC_Settings_Tab_Permalinks extends WPSC_Settings_Tab
 			);
 
 			// get root slugs from published pages
-			$pages = array_merge( get_pages(), get_pages( array( 'post_status' => 'trash' ) ) );
+			$pages = get_pages();
 
 			foreach ( $pages as $page ) {
 				if ( $page->post_status == 'trash' )
