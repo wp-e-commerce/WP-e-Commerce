@@ -414,7 +414,7 @@ function wpsc_get_product_thumbnail( $id = null, $size = false, $attr = '' ) {
  * @param  string $size Optional. Defaults to 'single'. See {@link wpsc_get_product_thumbnail()} for a list of available sizes you can use.
  * @param  string $attr Optional. Query string or array of attributes. Defaults to ''.
  */
-function wpsc_product_thumbnail( $size = 'single', $attr = '' ) {
+function wpsc_product_thumbnail( $size = false, $attr = '' ) {
 	echo wpsc_get_product_thumbnail( null, $size, $attr );
 }
 
