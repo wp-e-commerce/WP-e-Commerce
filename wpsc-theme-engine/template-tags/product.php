@@ -990,3 +990,12 @@ function wpsc_get_product_pagination_links( $args = '' ) {
 function wpsc_product_pagination_links( $args = '' ) {
 	echo wpsc_get_product_pagination_links( $args );
 }
+
+function wpsc_get_category_archive_title() {
+	$title = sprintf( __( 'Product Category: %s', 'wpsc' ), '<span>' . single_term_title( '', false ) . '</span>' );
+	return apply_filters( 'wpsc_get_category_archive_title', $title );
+}
+
+function wpsc_category_archive_title() {
+	echo wpsc_get_category_archive_title();
+}
