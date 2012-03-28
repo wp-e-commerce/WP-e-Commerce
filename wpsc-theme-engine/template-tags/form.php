@@ -1,127 +1,84 @@
 <?php
 
-function wpsc_add_to_cart_form_open() {
-	do_action( 'wpsc_add_to_cart_form_open_before' );
-	?>
-	<form action="<?php echo wpsc_get_cart_url(); ?>" method="post">
-	<?php
-	do_action( 'wpsc_add_to_cart_form_open_after' );
-}
-
-function wpsc_add_to_cart_form_close() {
-	do_action( 'wpsc_add_to_cart_form_close_before' );
-	?>
-	</form>
-	<?php
-	do_action( 'wpsc_add_to_cart_form_close_after' );
-}
-
-function wpsc_add_to_cart_form_fields( $id = null ) {
+function wpsc_get_add_to_cart_form( $id = null ) {
 	if ( ! $id )
 		$id = wpsc_get_product_id();
 
-	do_action( 'wpsc_add_to_cart_form_fields_before', $id );
-	do_action( 'wpsc_add_to_cart_form_fields'       , $id );
-	do_action( 'wpsc_add_to_cart_form_fields_after' , $id );
+	$args = array(
+		'class'  => 'wpsc-form wpsc-form-horizontal wpsc-add-to-cart-form',
+		'action' => wpsc_get_cart_url(),
+		'id'     => "wpsc-add-to-cart-form-{$id}",
+		'fields' => array(
+			array(
+				'name'  => 'quantity',
+				'type'  => 'textfield',
+				'title' => __( 'Quantity', 'wpsc' ),
+				'value' => 1,
+			),
+		),
+	);
+
+	$variations = WPSC_Product_Variations::get_instance( $id );
+	foreach ( wpsc_get_product_variation_sets() as $variation_set_id => $title ) {
+		$variation_terms = $variations->get_variation_terms( $variation_set_id );
+		$args['fields'][] = array(
+			'name'    => "wpsc_product_variations[{$variation_set_id}]",
+			'type'    => 'select',
+			'options' => $variation_terms,
+			'title'   => $title,
+		);
+	}
+
+	$output = '<input type="hidden" name="product_id" value="' . esc_attr( $id ) . '" />';
+	$output .= '<input type="hidden" name="prev"       value="' . esc_attr( home_url( $_SERVER['REQUEST_URI'] ) ) . '" />';
+	$output .=  '<input type="hidden" name="action"     value="add_to_cart" />';
+
+	$args['form_actions'] = array(
+		/* array(
+			'type'    => 'submit',
+			'primary' => true,
+			'title'   => apply_filters( 'wpsc_add_to_cart_button_title', __( 'Add to Cart', 'wpsc' ) ),
+		), */
+		array(
+			'type' => 'button',
+			'primary' => true,
+			'icon'    => array( 'shopping-cart', 'white' ),
+			'title'   => apply_filters( 'wpsc_add_to_cart_button_title', __( 'Add to Cart', 'wpsc' ) ),
+		),
+		array(
+			'type'    => 'hidden',
+			'name'    => 'product_id',
+			'value'   => $id,
+		),
+		array(
+			'type'    => 'hidden',
+			'name'    => '_wp_http_referer',
+			'value'   => home_url( $_SERVER['REQUEST_URI'] ),
+		),
+		array(
+			'type'    => 'hidden',
+			'name'    => 'action',
+			'value'   => 'add_to_cart',
+		),
+		array(
+			'type'    => 'hidden',
+			'name'    => '_wp_nonce',
+			'value'   => wp_create_nonce( "wpsc-add-to-cart-{$id}" ),
+		),
+	);
+
+	$args = apply_filters( 'wpsc_get_add_to_cart_form_args', $args );
+	return apply_filters( 'wpsc_get_add_to_cart_form', wpsc_get_form_output( $args ) );
 }
 
-/**
- * Output or return the HTML of the "Add to Cart" button of a product.
- *
- * @since 4.0
- * @uses  apply_filters() Applies 'wpsc_product_add_to_cart_button_title' filter.
- * @uses  apply_filters() Applies 'wpsc_product_add_to_cart_button'       filter.
- * @uses  wpsc_get_product_id()
- *
- * @param  null|string $title Optional. Title of the button. Defaults to "Add to Cart'."
- * @param  null|int    $id    Optional. The product ID. Defaults to current product in the loop.
- * @param  bool        $echo  Optional. Whether to echo the HTML or to return it. Defaults to true.
- * @return null|string
- */
-function wpsc_product_add_to_cart_button( $title = null, $id = null, $echo = true ) {
-	if ( ! $id )
-		$id = wpsc_get_product_id();
-
-	if ( ! $title )
-		$title = _x( 'Add to Cart', 'product add to cart button', 'wpsc' );
-
-	$title  = apply_filters( 'wpsc_product_add_to_cart_button_title', $title, $id );
-	$output = '<input class="wpsc-product-add-to-cart-button wpsc-primary-button" id="wpsc-product-add-to-cart-button-' . $id . '" type="submit" value="' . esc_attr( $title ) . '" />';
-	$output = apply_filters( 'wpsc_product_add_to_cart_button', $output, $title, $id );
-	if ( $echo )
-		echo $output;
-	else
-		return $output;
-}
-
-/**
- * Output the hidden field for a product id.
- *
- * This function is attached to 'wpsc_product_add_to_cart_actions_after'.
- *
- * @since 4.0
- * @uses wpsc_get_product_id()
- *
- * @param  null|int $id Optional. The product ID. Defaults to the current product in the loop.
- */
-function wpsc_product_add_to_cart_hidden_fields( $id = null ) {
-	if ( ! $id )
-		$id = wpsc_get_product_id();
-
-	echo '<input type="hidden" name="product_id" value="' . esc_attr( $id ) . '" />';
-	echo '<input type="hidden" name="prev"       value="' . esc_attr( home_url( $_SERVER['REQUEST_URI'] ) ) . '" />';
-	echo '<input type="hidden" name="action"     value="add_to_cart" />';
-}
-add_action( 'wpsc_product_add_to_cart_actions_after', 'wpsc_product_add_to_cart_hidden_fields', 10, 1 );
-
-function wpsc_product_variation_dropdowns() {
-	wpsc_get_template_part( 'variations', 'product-catalog' );
-}
-add_action( 'wpsc_add_to_cart_form_fields', 'wpsc_product_variation_dropdowns' );
-
-function wpsc_product_quantity_field() {
-	?>
-		<p>
-			<label for="wpsc-product-add-to-cart-quantity-<?php wpsc_product_id(); ?>">
-				<?php echo esc_html_x( 'Quantity', 'theme add to cart form', 'wpsc' ); ?>:
-			</label>
-			<input type="text" name="quantity" class="wpsc-product-add-to-cart-quantity wpsc-textfield" id="wpsc-product-add-to-cart-quantity-<?php wpsc_product_id(); ?>" value="1" />
-		</p>
-	<?php
-}
-add_action( 'wpsc_add_to_cart_form_fields', 'wpsc_product_quantity_field' );
-
-function wpsc_cart_form_open() {
-	do_action( 'wpsc_cart_form_open_before' );
-	?>
-	<form action="<?php echo wpsc_get_cart_url(); ?>" method="post">
-	<?php
-	do_action( 'wpsc_cart_form_open_after' );
-}
-
-function wpsc_cart_form_close() {
-	?>
-	</form>
-	<?php
+function wpsc_add_to_cart_form( $id = null ) {
+	echo wpsc_get_add_to_cart_form( $id );
 }
 
 function wpsc_cart_item_table() {
 	require_once( WPSC_FILE_PATH . '/wpsc-theme-engine/class-cart-item-table.php' );
 	$cart_item_table = WPSC_Cart_Item_Table::get_instance();
 	$cart_item_table->display();
-}
-
-function wpsc_keep_shopping_button() {
-	$url = isset( $_REQUEST['prev'] ) ? esc_attr( $_REQUEST['prev'] ) : wpsc_get_catalog_url();
-	?>
-	<a class="wpsc-back-to-shopping" href="<?php echo $url; ?>"><?php esc_html_e( 'Keep Shopping' ); ?></a>
-	<?php
-}
-
-function wpsc_begin_checkout_button() {
-	?>
-	<input type="submit" class="wpsc-begin-checkout wpsc-primary-button" name="begin_checkout" value="<?php esc_attr_e( 'Begin Checkout', 'wpsc' ); ?>" />
-	<?php
 }
 
 function wpsc_login_button() {
@@ -154,6 +111,19 @@ function wpsc_login_form_fields() {
 	do_action( 'wpsc_login_form_fields_before' );
 	do_action( 'wpsc_login_form_fields'        );
 	do_action( 'wpsc_login_form_fields_after'  );
+function wpsc_keep_shopping_button() {
+	$url = isset( $_REQUEST['prev'] ) ? esc_attr( $_REQUEST['prev'] ) : wpsc_get_catalog_url();
+	?>
+	<a class="wpsc-back-to-shopping" href="<?php echo $url; ?>"><?php esc_html_e( 'Keep Shopping' ); ?></a>
+	<?php
+}
+
+function wpsc_begin_checkout_button() {
+	?>
+	<input type="submit" class="wpsc-begin-checkout wpsc-primary-button" name="begin_checkout" value="<?php esc_attr_e( 'Begin Checkout', 'wpsc' ); ?>" />
+	<?php
+}
+
 }
 
 function wpsc_login_form_fields_main() {
