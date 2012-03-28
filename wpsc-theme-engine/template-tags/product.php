@@ -348,8 +348,20 @@ function wpsc_get_product_thumbnail_id( $product_id = null ) {
  * @param  string   $attr Optional. Query string or array of attributes. Defaults to ''.
  * @return string
  */
-function wpsc_get_product_thumbnail( $id = null, $size = 'single', $attr = '' ) {
+function wpsc_get_product_thumbnail( $id = null, $size = false, $attr = '' ) {
 	global $_wp_additional_image_sizes;
+
+	if ( ! $size || ! in_array( $size, array( 'archive', 'taxonomy', 'single', 'cart' ) ) ) {
+		if ( is_archive() )
+			$size = 'archive';
+		elseif ( is_tax() )
+			$size = 'taxonomy';
+		elseif ( wpsc_is_cart() )
+			$size = 'cart';
+		else
+			$size = 'single';
+	}
+
 	$wp_size = 'wpsc_product_' . $size . '_thumbnail';
 
 	if ( wpsc_has_product_thumbnail( $id ) ) {
