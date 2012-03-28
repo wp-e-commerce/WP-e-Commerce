@@ -249,3 +249,10 @@ function wpsc_inline_validation_error( $field, $args = '' ) {
 function wpsc_get_cart_title() {
 	return apply_filters( 'wpsc_get_cart_title', __( 'Cart', 'wpsc' ) );
 }
+
+function wpsc_keep_shopping_button() {
+	$keep_shopping_url = isset( $_REQUEST['_wp_http_referer'] ) ? esc_attr( $_REQUEST['_wp_http_referer'] ) : wpsc_get_catalog_url();
+	?>
+	<a class="wpsc-button wpsc-back-to-shopping" href="<?php echo esc_url( $keep_shopping_url ); ?>"><?php esc_html_e( 'Keep Shopping', 'wpsc' ); ?></a>
+	<?php
+}

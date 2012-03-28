@@ -111,19 +111,6 @@ function wpsc_login_form_fields() {
 	do_action( 'wpsc_login_form_fields_before' );
 	do_action( 'wpsc_login_form_fields'        );
 	do_action( 'wpsc_login_form_fields_after'  );
-function wpsc_keep_shopping_button() {
-	$url = isset( $_REQUEST['prev'] ) ? esc_attr( $_REQUEST['prev'] ) : wpsc_get_catalog_url();
-	?>
-	<a class="wpsc-back-to-shopping" href="<?php echo $url; ?>"><?php esc_html_e( 'Keep Shopping' ); ?></a>
-	<?php
-}
-
-function wpsc_begin_checkout_button() {
-	?>
-	<input type="submit" class="wpsc-begin-checkout wpsc-primary-button" name="begin_checkout" value="<?php esc_attr_e( 'Begin Checkout', 'wpsc' ); ?>" />
-	<?php
-}
-
 }
 
 function wpsc_login_form_fields_main() {
