@@ -863,7 +863,7 @@ function wpsc_product_pagination( $position = 'bottom' ) {
 		return;
 
 	echo '<div class="wpsc-pagination wpsc-pagination-' . esc_attr( $position ) . '">';
-	wpsc_get_template_part( 'pagination-product-archive', $position );
+	wpsc_get_template_part( 'product-pagination', $position );
 	echo '</div>';
 }
 
