@@ -48,6 +48,7 @@
 				$(window).bind('beforeunload', WPSC_Settings_Page.event_before_unload);
 				$(WPSC_Settings_Page).trigger('wpsc_settings_tab_loaded');
 				$(WPSC_Settings_Page).trigger('wpsc_settings_tab_loaded_' + WPSC_Settings_Page.current_tab);
+				$('.settings-error').insertAfter('.nav-tab-wrapper');
 			});
 		},
 
@@ -313,6 +314,8 @@
 					stop        : WPSC_Settings_Page.Checkout.event_sort_stop,
 					update      : WPSC_Settings_Page.Checkout.event_sort_update,
 				});
+
+			WPSC_Settings_Page.Checkout.new_field_count = $('.new-field').length;
 		},
 
 		event_add_field_option : function() {
@@ -498,7 +501,25 @@
 		},
 
 		event_delete_field : function() {
-			var target_row = $(this).closest('tr');
+			var target_row = $(this).closest('tr'), next_row;
+
+			if ( $('.checkout_form_field').length == 1 ) {
+				next_row = target_row.next();
+				next_row.hide();
+				target_row.removeClass('editing-options');
+				target_row.find('input[type="text"]').val('');
+				target_row.find('select').val('');
+				target_row.find('.edit-options').removeClass('expanded').text(WPSC_Settings_Page.edit_field_options).hide();
+
+				next_row.find('input[type="text"]').val('');
+				next_row.find('.wpsc-field-options-table tbody tr:gt(1)').remove();
+
+				target_row.find('.cell-wrapper').slideUp(150, function(){
+					$(this).slideDown(150);
+				});
+				return false;
+			}
+
 			target_row.find('.cell-wrapper').slideUp(150, function(){
 				var id = target_row.data('field-id');
 
