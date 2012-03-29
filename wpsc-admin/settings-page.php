@@ -308,6 +308,13 @@ final class WPSC_Settings_Page
 			$this->save_options();
 			if ( is_callable( array( $this->current_tab, 'callback_submit_options' ) ) )
 				$this->current_tab->callback_submit_options();
+
+			$errors = get_settings_errors();
+			add_settings_error( 'wpsc-settings', 'settings_updated', __( 'Settings saved.' ), 'updated' );
+			set_transient( 'settings_errors', get_settings_errors(), 30 );
+
+			wp_redirect( add_query_arg( 'settings-updated', true ) );
+			exit;
 		}
 	}
 

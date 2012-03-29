@@ -17,7 +17,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 		$this->shipping_same_as_billing = get_option( 'shippingsameasbilling', 0 );
 		$this->force_ssl = get_option( 'wpsc_force_ssl', 0 );
 		$this->checkout_sets = get_option( 'wpsc_checkout_form_sets' );
-		$this->current_checkout_set = empty( $_GET['checkout-set'] ) ? 0 : $_GET['checkout-set'];
+		$this->current_checkout_set = empty( $_GET['checkout_set'] ) ? 0 : $_GET['checkout_set'];
 		$this->field_types = get_option( 'wpsc_checkout_form_fields' );
 		$this->user_field_types = array('text','textarea','heading','select','radio','checkbox');
 
@@ -44,7 +44,18 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 	public function callback_submit_options() {
 		global $wpdb;
 
-		if ( ! isset( $_POST['form_name'] ) )
+		if ( ! empty( $_POST['new_form_set'] ) ) {
+			$checkout_sets = get_option( 'wpsc_checkout_form_sets' );
+			$checkout_sets[] = $_POST['new_form_set'];
+			update_option( 'wpsc_checkout_form_sets', $checkout_sets );
+			add_settings_error( 'wpsc-settings', 'wpsc_form_set_added', __( 'New form set successfully created.', 'wpsc' ), 'updated' );
+		}
+
+		if ( isset( $_POST['checkout_set'] ) ) {
+			$_SERVER['REQUEST_URI'] = add_query_arg( 'checkout_set', $_POST['checkout_set'] );
+		}
+
+		if ( ! isset( $_POST['form_name'] ) && ! isset( $_POST['new_field_name'] ) )
 			return;
 
 		$existing_orders = array();
@@ -60,52 +71,54 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 			}
 		}
 
-		$sql = "SELECT id FROM " . WPSC_TABLE_CHECKOUT_FORMS;
+		$sql = $wpdb->prepare( "SELECT id FROM " . WPSC_TABLE_CHECKOUT_FORMS . " WHERE checkout_set = %s", $this->current_checkout_set );
 		$ids = $wpdb->get_col( $sql );
 
-		foreach ( $_POST['form_name'] as $field_id => $name ) {
-			$data = array(
-				'name'      => $name,
-				'active'    => empty( $_POST['form_display'][$field_id] ) ? 0 : 1,
-				'mandatory' => empty( $_POST['form_mandatory'][$field_id] ) ? 0 : 1,
-			);
+		if ( ! empty( $_POST['form_name'] ) ) {
+			foreach ( $_POST['form_name'] as $field_id => $name ) {
+				$data = array(
+					'name'      => $name,
+					'active'    => empty( $_POST['form_display'][$field_id] ) ? 0 : 1,
+					'mandatory' => empty( $_POST['form_mandatory'][$field_id] ) ? 0 : 1,
+				);
 
-			$data_format = array(
-				'%s', // name
-				'%s', // active
-				'%s', // mandatory
-			);
+				$data_format = array(
+					'%s', // name
+					'%s', // active
+					'%s', // mandatory
+				);
 
-			$where = array( 'id' => $field_id );
+				$where = array( 'id' => $field_id );
 
-			if ( isset( $_POST['form_type'][$field_id] ) ) {
-				$data['type'] = $_POST['form_type'][$field_id];
-				$data_format[] = '%s';
-			}
-
-			if ( isset( $existing_orders[$field_id] ) ) {
-				$data['checkout_order'] = $existing_orders[$field_id];
-				$data_format[] = '%d';
-			}
-
-			if ( isset( $_POST['form_options'][$field_id]['label'] ) )  {
-				$options = array();
-				foreach( $_POST['form_options'][$field_id]['label'] as $key => $label ) {
-					$value = $_POST['form_options'][$field_id]['value'][$key];
-					if ( $label === '' && $value === '')
-						continue;
-					$options[$label] = $value;
+				if ( isset( $_POST['form_type'][$field_id] ) ) {
+					$data['type'] = $_POST['form_type'][$field_id];
+					$data_format[] = '%s';
 				}
-				$data['options'] = serialize( $options );
-				$data_format[] = '%s';
-			}
 
-			$index = array_search( $field_id, $ids );
-			if ( $index !== false ) {
-				unset( $ids[$index] );
-			}
+				if ( isset( $existing_orders[$field_id] ) ) {
+					$data['checkout_order'] = $existing_orders[$field_id];
+					$data_format[] = '%d';
+				}
 
-			$wpdb->update( WPSC_TABLE_CHECKOUT_FORMS, $data, $where, $data_format, '%d' );
+				if ( isset( $_POST['form_options'][$field_id]['label'] ) )  {
+					$options = array();
+					foreach( $_POST['form_options'][$field_id]['label'] as $key => $label ) {
+						$value = $_POST['form_options'][$field_id]['value'][$key];
+						if ( $label === '' && $value === '')
+							continue;
+						$options[$label] = $value;
+					}
+					$data['options'] = serialize( $options );
+					$data_format[] = '%s';
+				}
+
+				$index = array_search( $field_id, $ids );
+				if ( $index !== false ) {
+					unset( $ids[$index] );
+				}
+
+				$wpdb->update( WPSC_TABLE_CHECKOUT_FORMS, $data, $where, $data_format, '%d' );
+			}
 		}
 
 		// delete all other fields that are not present in the submitted form
@@ -115,14 +128,15 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 		}
 
 		foreach ( $_POST['new_field_name'] as $key => $name ) {
-			if ( $key === 0 && empty( $name ) )
+			if ( $key === 0 || empty( $name ) )
 				continue;
 
 			$data = array(
-				'name'      => $name,
-				'type'      => $_POST['new_field_type'][$key],
-				'active'    => empty( $_POST['new_field_display'][$key] ) ? 0 : 1,
-				'mandatory' => empty( $_POST['new_field_mandatory'][$key] ) ? 0 : 1,
+				'name'         => $name,
+				'type'         => $_POST['new_field_type'][$key],
+				'active'       => empty( $_POST['new_field_display'][$key] ) ? 0 : 1,
+				'mandatory'    => empty( $_POST['new_field_mandatory'][$key] ) ? 0 : 1,
+				'checkout_set' => $this->current_checkout_set,
 			);
 
 			$data_format = array(
@@ -152,9 +166,6 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 
 			$wpdb->insert( WPSC_TABLE_CHECKOUT_FORMS, $data, $data_format );
 		}
-
-		wp_redirect( $_SERVER['REQUEST_URI'] );
-		exit;
 	}
 
 	/**
@@ -206,6 +217,105 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 			return true;
 
 		return false;
+	}
+
+	private function prototype_field( $mode = 'hidden' ) {
+		$row_id = 'field-prototype';
+		$row_class = 'new-field';
+		$data = '';
+		$new_field_id = 0;
+		$style = '';
+
+		if ( $mode == 'new' ) {
+			$new_field_id = 1;
+			$row_id = 'new-field-1';
+			$row_class .= ' checkout_form_field';
+			$data = 'data-new-field-id="1"';
+			$style = 'style="display:table-row;"';
+		}
+		?>
+		<tr id="<?php echo $row_id; ?>" class="<?php echo $row_class; ?>" <?php echo $data; ?> <?php echo $style; ?>>
+			<td class="drag">
+				<div class="cell-wrapper">
+					<a title="<?php esc_attr_e( 'Click and Drag to Order Checkout Fields', 'wpsc' ); ?>">
+						<img src="<?php echo esc_url( WPSC_CORE_IMAGES_URL . '/drag.png' ); ?>" />
+					</a>
+					<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
+				</div>
+			</td>
+			<td class="namecol">
+				<div class="cell-wrapper">
+					<input type="text" name="new_field_name[<?php echo $new_field_id; ?>]" value="" />
+					<a class="edit-options" href="#"><?php esc_html_e( 'Edit Options', 'wpsc' ); ?></a>
+				</div>
+			</td>
+			<td class="typecol">
+				<div class="cell-wrapper">
+					<select name="new_field_type[<?php echo $new_field_id; ?>]">
+						<?php foreach ( $this->field_types as $name => $type ): ?>
+							<?php if( in_array($type, $this->user_field_types) ): ?>
+										<option value="<?php echo esc_attr( $type ); ?>"><?php echo esc_html( $name ); ?></option>
+							<?php endif ?>
+						<?php endforeach ?>
+					</select>
+				</div>
+			</td>
+			<td class="uniquenamecol">
+			</td>
+			<td class="displaycol">
+				<div class="cell-wrapper">
+					<input checked="checked" type="checkbox" name="new_field_display[<?php echo $new_field_id; ?>]" value="1" />
+				</div>
+			</td>
+			<td class="mandatorycol">
+				<div class="cell-wrapper">
+					<input type="checkbox" name="new_field_mandatory[<?php echo $new_field_id; ?>]" value="1" />
+				</div>
+			</td>
+			<td class="actionscol">
+				<div class="cell-wrapper">
+					<a tabindex="-1" title="<?php _e( 'Delete Field', 'wpsc' ); ?>" class="action delete" href="#">Delete</a>
+					<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="action add" href="#">Add</a>
+				</div>
+			</td>
+		</tr>
+		<tr id="field-options-prototype" class="form-field-options">
+			<td></td>
+			<td>
+				<div class="cell-wrapper">
+					<h4></h4>
+					<table class="wpsc-field-options-table">
+						<thead>
+							<th class="column-labels"><?php echo esc_html_x( 'Label', "checkout field's options", 'wpsc' ); ?></th>
+							<th class="column-values"><?php echo esc_html_x( 'Value', "checkout field's options", 'wpsc' ); ?></th>
+							<th class="column-actions">&nbsp;</th>
+						</thead>
+						<tbody>
+							<tr class="new-option">
+								<td class="column-labels">
+									<div class="field-option-cell-wrapper">
+										<input type="text" name="form_options[<?php echo $new_field_id; ?>][labels][]" value="" />
+									</div>
+								</td>
+								<td class="column-values">
+									<div class="field-option-cell-wrapper">
+										<input type="text" name="form_options[<?php echo $new_field_id; ?>][values][]" value="" />
+									</div>
+								</td>
+								<td class="column-actions">
+									<div class="field-option-cell-wrapper">
+										<a tabindex="-1" title="<?php _e( 'Delete Field', 'wpsc' ); ?>" class="action delete" href="#">Delete</a>
+										<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="action add" href="#">Add</a>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</td>
+			<td colspan="5"></td>
+		</tr>
+		<?php
 	}
 
 	public function display() {
@@ -268,7 +378,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 
 		<p>
 			<label for='wpsc_form_set'><?php _e('Select a Form Set' , 'wpsc'); ?>:</label>
-			<select id='wpsc_form_set' name='wpsc_form_set'>
+			<select id='wpsc_form_set' name='checkout_set'>
 				<?php foreach ( $this->checkout_sets as $key => $value ): ?>
 					<option <?php selected( $this->current_checkout_set, $key ); ?> value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $value ); ?></option>
 				<?php endforeach; ?>
@@ -299,166 +409,90 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 			</tfoot>
 
 			<tbody id='wpsc_checkout_list_body'>
-				<?php foreach ( $this->form_fields as $form_field ): ?>
-					<tr data-field-id="<?php echo esc_attr( $form_field->id ); ?>" id="checkout_<?php echo esc_attr( $form_field->id ); ?>" class="checkout_form_field">
-						<td class="drag">
-							<div class="cell-wrapper">
-								<a title="<?php esc_attr_e( 'Click and Drag to Order Checkout Fields', 'wpsc' ); ?>">
-									<img src="<?php echo esc_url( WPSC_CORE_IMAGES_URL . '/drag.png' ); ?>" />
-								</a>
-								<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
-							</div>
-						</td>
-						<td class="namecol">
-							<div class="cell-wrapper">
-								<input type="text" name="form_name[<?php echo esc_attr( $form_field->id ); ?>]" value="<?php echo esc_attr( $form_field->name ); ?>" />
-								<a
-									class="edit-options" href="#"
-									<?php
-										if ( in_array( $form_field->type, array( 'select', 'radio', 'checkbox' ) ) )
-											echo 'style="display:inline;"';
-									?>
-								><?php esc_html_e( 'Edit Options', 'wpsc' ); ?></a>
-							</div>
-						</td>
-						<td class="typecol">
-							<div class="cell-wrapper">
-								<?php if ( $this->is_field_default( $form_field ) ): ?>
-									<strong><?php echo esc_html( $form_field->type ); ?></strong>
-								<?php else: ?>
-									<select name="form_type[<?php echo esc_attr( $form_field->id ); ?>]">
-										<?php foreach ($this->field_types as $label => $name): ?>
-											<option <?php selected( $form_field->type, $name ); ?> value="<?php echo esc_attr( $name ); ?>"><?php echo esc_html( $label ); ?></option>
-										<?php endforeach ?>
-									</select>
-									<?php
-									$field_options = unserialize( $form_field->options );
-									if ( empty( $field_options ) )
-										$field_options = array();
-
-									$i = 0;
-									foreach ( $field_options as $label => $value ):
-										$i ++;
+				<?php if ( empty( $this->form_fields ) ): ?>
+					<?php $this->prototype_field( 'new' ); ?>
+				<?php else: ?>
+					<?php foreach ( $this->form_fields as $form_field ): ?>
+						<tr data-field-id="<?php echo esc_attr( $form_field->id ); ?>" id="checkout_<?php echo esc_attr( $form_field->id ); ?>" class="checkout_form_field">
+							<td class="drag">
+								<div class="cell-wrapper">
+									<a title="<?php esc_attr_e( 'Click and Drag to Order Checkout Fields', 'wpsc' ); ?>">
+										<img src="<?php echo esc_url( WPSC_CORE_IMAGES_URL . '/drag.png' ); ?>" />
+									</a>
+									<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
+								</div>
+							</td>
+							<td class="namecol">
+								<div class="cell-wrapper">
+									<input type="text" name="form_name[<?php echo esc_attr( $form_field->id ); ?>]" value="<?php echo esc_attr( $form_field->name ); ?>" />
+									<a
+										class="edit-options" href="#"
+										<?php
+											if ( in_array( $form_field->type, array( 'select', 'radio', 'checkbox' ) ) )
+												echo 'style="display:inline;"';
 										?>
-										<input type="hidden" name="form_options[<?php echo esc_attr( $form_field->id ); ?>][label][]" value="<?php echo esc_attr( $label ); ?>" />
-										<input type="hidden" name="form_options[<?php echo esc_attr( $form_field->id ); ?>][value][]" value="<?php echo esc_attr( $value ); ?>" />
-									<?php endforeach; ?>
-								<?php endif; ?>
-							</div>
-						</td>
+									><?php esc_html_e( 'Edit Options', 'wpsc' ); ?></a>
+								</div>
+							</td>
+							<td class="typecol">
+								<div class="cell-wrapper">
+									<?php if ( $this->is_field_default( $form_field ) ): ?>
+										<strong><?php echo esc_html( $form_field->type ); ?></strong>
+									<?php else: ?>
+										<select name="form_type[<?php echo esc_attr( $form_field->id ); ?>]">
+											<?php foreach ($this->field_types as $label => $name): ?>
+												<option <?php selected( $form_field->type, $name ); ?> value="<?php echo esc_attr( $name ); ?>"><?php echo esc_html( $label ); ?></option>
+											<?php endforeach ?>
+										</select>
+										<?php
+										$field_options = unserialize( $form_field->options );
+										if ( empty( $field_options ) )
+											$field_options = array();
 
-						<td class="uniquenamecol">
-							<div class="cell-wrapper">
-							<?php if ( $form_field->type != 'heading' && ! empty( $form_field->unique_name ) ): ?>
-								<small><?php echo esc_html( $form_field->unique_name ); ?></small>
-							<?php endif ?>
-							</div>
-						</td>
-						<td class="displaycol">
-							<div class="cell-wrapper">
-								<input <?php checked( $form_field->active, 1 ); ?> type="checkbox" name="form_display[<?php echo esc_attr( $form_field->id ); ?>]" value="1" />
-							</div>
-						</td>
-						<td class="mandatorycol">
-							<div class="cell-wrapper">
-								<?php if ( $form_field->type != 'heading' ): ?>
-									<input <?php checked( $form_field->mandatory, 1 ); ?> type="checkbox" name="form_mandatory[<?php echo esc_attr( $form_field->id ); ?>]" value="1" />
+										$i = 0;
+										foreach ( $field_options as $label => $value ):
+											$i ++;
+											?>
+											<input type="hidden" name="form_options[<?php echo esc_attr( $form_field->id ); ?>][label][]" value="<?php echo esc_attr( $label ); ?>" />
+											<input type="hidden" name="form_options[<?php echo esc_attr( $form_field->id ); ?>][value][]" value="<?php echo esc_attr( $value ); ?>" />
+										<?php endforeach; ?>
+									<?php endif; ?>
+								</div>
+							</td>
+
+							<td class="uniquenamecol">
+								<div class="cell-wrapper">
+								<?php if ( $form_field->type != 'heading' && ! empty( $form_field->unique_name ) ): ?>
+									<small><?php echo esc_html( $form_field->unique_name ); ?></small>
 								<?php endif ?>
-							</div>
-						</td>
-						<td class="actionscol">
-							<div class="cell-wrapper">
-								<?php if ( ! $this->is_field_default( $form_field ) ): ?>
-									<a tabindex="-1" title="<?php _e( 'Delete Field', 'wpsc' ); ?>" class="action delete" href="#">Delete</a>
-								<?php else: ?>
-									<span title="<?php _e( 'Cannot Delete Default Fields', 'wpsc' ); ?>" class="action delete">Delete</span>
-								<?php endif; ?>
-								<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="action add" href="#">Add</a>
-							</div>
-						</td>
-					</tr>
-				<?php endforeach; ?>
-				<tr id="field-prototype" class="new-field">
-					<td class="drag">
-						<div class="cell-wrapper">
-							<a title="<?php esc_attr_e( 'Click and Drag to Order Checkout Fields', 'wpsc' ); ?>">
-								<img src="<?php echo esc_url( WPSC_CORE_IMAGES_URL . '/drag.png' ); ?>" />
-							</a>
-							<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
-						</div>
-					</td>
-					<td class="namecol">
-						<div class="cell-wrapper">
-							<input type="text" name="new_field_name[0]" value="" />
-							<a class="edit-options" href="#"><?php esc_html_e( 'Edit Options', 'wpsc' ); ?></a>
-						</div>
-					</td>
-					<td class="typecol">
-						<div class="cell-wrapper">
-							<select name="new_field_type[0]">
-								<?php foreach ( $this->field_types as $name => $type ): ?>
-									<?php if( in_array($type, $this->user_field_types) ): ?>
-												<option value="<?php echo esc_attr( $type ); ?>"><?php echo esc_html( $name ); ?></option>
+								</div>
+							</td>
+							<td class="displaycol">
+								<div class="cell-wrapper">
+									<input <?php checked( $form_field->active, 1 ); ?> type="checkbox" name="form_display[<?php echo esc_attr( $form_field->id ); ?>]" value="1" />
+								</div>
+							</td>
+							<td class="mandatorycol">
+								<div class="cell-wrapper">
+									<?php if ( $form_field->type != 'heading' ): ?>
+										<input <?php checked( $form_field->mandatory, 1 ); ?> type="checkbox" name="form_mandatory[<?php echo esc_attr( $form_field->id ); ?>]" value="1" />
 									<?php endif ?>
-								<?php endforeach ?>
-							</select>
-						</div>
-					</td>
-					<td class="uniquenamecol">
-					</td>
-					<td class="displaycol">
-						<div class="cell-wrapper">
-							<input checked="checked" type="checkbox" name="new_field_display[0]" value="1" />
-						</div>
-					</td>
-					<td class="mandatorycol">
-						<div class="cell-wrapper">
-							<input type="checkbox" name="new_field_mandatory[0]" value="1" />
-						</div>
-					</td>
-					<td class="actionscol">
-						<div class="cell-wrapper">
-							<a tabindex="-1" title="<?php _e( 'Delete Field', 'wpsc' ); ?>" class="action delete" href="#">Delete</a>
-							<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="action add" href="#">Add</a>
-						</div>
-					</td>
-			</tr>
-			<tr id="field-options-prototype" class="form-field-options">
-					<td></td>
-					<td>
-						<div class="cell-wrapper">
-							<h4></h4>
-							<table class="wpsc-field-options-table">
-								<thead>
-									<th class="column-labels"><?php echo esc_html( _x( 'Label', "checkout field's options", 'wpsc' ) ); ?></th>
-									<th class="column-values"><?php echo esc_html( _x( 'Value', "checkout field's options", 'wpsc' ) ) ?></th>
-									<th class="column-actions">&nbsp;</th>
-								</thead>
-								<tbody>
-									<tr class="new-option">
-										<td class="column-labels">
-											<div class="field-option-cell-wrapper">
-												<input type="text" name="form_options[0][labels][]" value="" />
-											</div>
-										</td>
-										<td class="column-values">
-											<div class="field-option-cell-wrapper">
-												<input type="text" name="form_options[0][values][]" value="" />
-											</div>
-										</td>
-										<td class="column-actions">
-											<div class="field-option-cell-wrapper">
-												<a tabindex="-1" title="<?php _e( 'Delete Field', 'wpsc' ); ?>" class="action delete" href="#">Delete</a>
-												<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="action add" href="#">Add</a>
-											</div>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</td>
-					<td colspan="5"></td>
-				</tr>
+								</div>
+							</td>
+							<td class="actionscol">
+								<div class="cell-wrapper">
+									<?php if ( ! $this->is_field_default( $form_field ) ): ?>
+										<a tabindex="-1" title="<?php _e( 'Delete Field', 'wpsc' ); ?>" class="action delete" href="#">Delete</a>
+									<?php else: ?>
+										<span title="<?php _e( 'Cannot Delete Default Fields', 'wpsc' ); ?>" class="action delete">Delete</span>
+									<?php endif; ?>
+									<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="action add" href="#">Add</a>
+								</div>
+							</td>
+						</tr>
+					<?php endforeach; ?>
+				<?php endif; ?>
+				<?php $this->prototype_field(); ?>
 			</tbody>
 		</table>
 	<?php
