@@ -352,7 +352,8 @@ function wpsc_register_post_types() {
           );
 	// Products
 	register_post_type( 'wpsc-product', array(
-		'capability_type' => 'post',
+		'capability_type' => 'wpsc-product',
+		'map_meta_cap' => true,
 		'supports' => array( 'title', 'editor', 'thumbnail' ),
 		'hierarchical' => true,
 		'exclude_from_search' => false,
@@ -440,9 +441,41 @@ function wpsc_register_post_types() {
 		'public' => true,
 		'labels' => $labels
 	) );
+
 	$role = get_role( 'administrator' );
-	$role->add_cap( 'read_wpsc-product' );
 	$role->add_cap( 'read_wpsc-product-file' );
+	$role->add_cap( 'read_private_wpsc-products' );
+	$role->add_cap( 'delete_wpsc-products' );
+	$role->add_cap( 'delete_others_wpsc-products' );
+	$role->add_cap( 'delete_private_wpsc-products' );
+	$role->add_cap( 'delete_published_wpsc-products' );
+	$role->add_cap( 'edit_wpsc-products' );
+	$role->add_cap( 'edit_others_wpsc-products' );
+	$role->add_cap( 'edit_private_wpsc-products' );
+	$role->add_cap( 'edit_published_wpsc-products' );
+	$role->add_cap( 'publish_wpsc-products' );
+
+	$role =& get_role('editor');
+	$role->add_cap( 'read_private_wpsc-products' );
+	$role->add_cap( 'delete_wpsc-products' );
+	$role->add_cap( 'delete_others_wpsc-products' );
+	$role->add_cap( 'delete_private_wpsc-products' );
+	$role->add_cap( 'delete_published_wpsc-products' );
+	$role->add_cap( 'edit_wpsc-products' );
+	$role->add_cap( 'edit_others_wpsc-products' );
+	$role->add_cap( 'edit_private_wpsc-products' );
+	$role->add_cap( 'edit_published_wpsc-products' );
+	$role->add_cap( 'publish_wpsc-products' );
+
+	$role = get_role('author');
+	$role->add_cap( 'edit_wpsc-products' );
+	$role->add_cap( 'edit_published_wpsc-products' );
+	$role->add_cap( 'delete_wpsc-products' );
+	$role->add_cap( 'delete_published_wpsc-products' );
+
+	$role =& get_role('contributor');
+	$role->add_cap( 'edit_wpsc-products' );
+	$role->add_cap( 'read_wpsc-products' );
 }
 add_action( 'init', 'wpsc_register_post_types', 8 );
 

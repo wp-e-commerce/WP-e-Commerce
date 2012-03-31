@@ -463,7 +463,7 @@ endif;
 	            <h4><?php _e('Review and purchase','wpsc'); ?></h4>
 	         </td>
 	      </tr>
-	
+
 	      <tr class="total_price total_shipping">
 	         <td class='wpsc_totals'>
 	            <?php _e('Total Shipping', 'wpsc'); ?>:
@@ -504,7 +504,7 @@ endif;
                <input type='hidden' value='yes' name='agree' />
             <?php endif; ?>
                <input type='hidden' value='submit_checkout' name='wpsc_action' />
-               <input type='submit' value='<?php _e('Purchase', 'wpsc');?>' name='submit' class='make_purchase wpsc_buy_button' />
+               <input id="submit-purchase" type='submit' value='<?php _e('Purchase', 'wpsc');?>' name='submit' class='make_purchase wpsc_buy_button' />
          </span>
       </div>
 

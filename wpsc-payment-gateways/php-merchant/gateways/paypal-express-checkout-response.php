@@ -25,7 +25,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Response extends PHP_Merchant_Paypal_
 					break;
 
 				default:
-					$this->options['checkout_status'] = $p['CHECKOUT_STATUS'];
+					$this->options['checkout_status'] = $p['CHECKOUTSTATUS'];
 					break;
 			}
 
