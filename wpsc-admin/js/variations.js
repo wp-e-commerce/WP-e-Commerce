@@ -155,7 +155,7 @@
 			post_data = {
 				action : 'wpsc_update_variations',
 				description : $('#content_ifr').contents().find('body').html(),
-				additional_description : $('textareaa#additional_description').text(),
+				additional_description : $('textarea#additional_description').text(),
 				name : $('input#title').val(),
 				product_id : $('input#product_id').val()
 			},
