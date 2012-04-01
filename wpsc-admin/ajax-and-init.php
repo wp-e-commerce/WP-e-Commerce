@@ -779,7 +779,14 @@ function wpsc_purchlog_edit_status( $purchlog_id='', $purchlog_status='' ) {
 	}
 }
 
-add_action( 'wp_ajax_wpsc_change_purchase_log_status', 'wpsc_purchlog_edit_status' );
+function _wpsc_ajax_purchlog_edit_status() {
+	if ( ! wp_verify_nonce( $_POST['nonce'], 'wpsc_purchase_logs' ) )
+		die( '-1' );
+
+	wpsc_purchlog_edit_status( $_POST['id'], $_POST['new_status'] );
+}
+
+add_action( 'wp_ajax_wpsc_change_purchase_log_status', '_wpsc_ajax_purchlog_edit_status' );
 
 function wpsc_save_product_order() {
 	global $wpdb;
@@ -1226,7 +1233,7 @@ function prod_upload() {
 		$output .= '<td>' . wpsc_convert_byte( $file_size ) . '</td>';
 		$output .= '<td>.' . wpsc_get_extension( $attachment['post_title'] ) . '</td>';
 		$output .= "<td><a class='file_delete_button' href='{$deletion_url}' >" . _x( 'Delete', 'Digital Downliad UI row', 'wpsc' ) . "</a></td>";
-		$output .= '<td><a href=' .$file_url .'>' . _x( 'Download', 'Digital Downliad UI row', 'wpsc' ) . '</a></td>';				
+		$output .= '<td><a href=' .$file_url .'>' . _x( 'Download', 'Digital Downliad UI row', 'wpsc' ) . '</a></td>';
 		$output .= '</tr>';
 	}
 
@@ -1696,4 +1703,3 @@ function wpsc_delete_variant_from_products_page(){
 	exit();
 }
 add_action( 'wp_ajax_wpsc_delete_variant_from_products_page', 'wpsc_delete_variant_from_products_page' );
-?>
