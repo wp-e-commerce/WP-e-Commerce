@@ -1,7 +1,7 @@
 <?php
 
 function wpsc_display_upgrades_page() {
-	
+
 	do_action( 'wpsc_gold_module_activation' ); ?>
 
 	<div class='wrap'>
@@ -44,7 +44,7 @@ function wpsc_display_upgrades_page() {
 				<p class='wpsc_gold_text'>Make your Online photo gallery into an e-Commerce solution.</p>
 				<span class='wpsc_gold_info'>$10</span>
 			</div>
-			
+
 			<div class='wpsc_gold_module'>
 				<br />
 				<a href="http://getshopped.org/extend/premium-upgrades/premium-upgrades/jplayer-mp3-player/" target="_blank"><strong><?php _e( 'JPlayer - MP3 Plugin', 'wpsc' ); ?> </strong></a>
@@ -69,7 +69,7 @@ function wpsc_display_upgrades_page() {
 		<h2><?php _e( 'Upgrades', 'wpsc' ); ?></h2>
 		<div class='wpsc_gold_float'>
 			<p><?php _e( 'Enter your API Username and API Key below.', 'wpsc' ); ?></p>
-			<p><a href="http://getshopped.org/resources/docs/installation/gold-files/"><?php _e( 'For more information visit our documentation page.', 'wpsc' ); ?></a></p>
+			<p><a href="http://docs.getshopped.org/category/extending-your-store/premium-plugins/gold-cart/"><?php _e( 'For more information visit our documentation page.', 'wpsc' ); ?></a></p>
 
 			<div class='metabox-holder'>
 				<form method='post' id='gold_cart_form' action=''>
