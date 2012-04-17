@@ -49,10 +49,14 @@ class WPSC_Theme_Engine
 	}
 
 	private function register_scripts() {
+		wp_register_script( 'wpsc-less-js', wpsc_locate_theme_file_uri( 'wp-e-commerce/js/less.js' ), array(), WPSC_VERSION );
 	}
 
 	public function _action_enqueue_scripts() {
 		$this->register_scripts();
+
+		if ( WPSC_THEME_ENGINE_LESS_JS )
+			wp_enqueue_script( 'wpsc-less-js' );
 	}
 
 	public function _action_enqueue_styles() {

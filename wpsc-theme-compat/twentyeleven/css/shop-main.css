@@ -264,7 +264,7 @@ nav.wpsc-pagination-links span.current {
 	text-align:right;
 }
 
-.wpsc-cart-item-actions td, .wpsc-cart-subtotal-row td, .wpsc-cart-subtotal-row th {
+.wpsc-cart-item-table-actions td, .wpsc-cart-subtotal-row td, .wpsc-cart-subtotal-row th {
 	text-align:right;
 }
 
@@ -276,7 +276,7 @@ nav.wpsc-pagination-links span.current {
 	border-top:1px solid #ccc;
 }
 
-.wpsc-cart-item-actions td {
+.wpsc-cart-item-table-actions td {
 	border-top:1px solid #eee;
 }
 

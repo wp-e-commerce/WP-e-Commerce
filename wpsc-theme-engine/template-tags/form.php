@@ -29,10 +29,6 @@ function wpsc_get_add_to_cart_form( $id = null ) {
 		);
 	}
 
-	$output = '<input type="hidden" name="product_id" value="' . esc_attr( $id ) . '" />';
-	$output .= '<input type="hidden" name="prev"       value="' . esc_attr( home_url( $_SERVER['REQUEST_URI'] ) ) . '" />';
-	$output .=  '<input type="hidden" name="action"     value="add_to_cart" />';
-
 	$args['form_actions'] = array(
 		/* array(
 			'type'    => 'submit',

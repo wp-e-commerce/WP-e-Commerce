@@ -9,7 +9,7 @@
 				><?php wpsc_product_title(); ?></a>
 
 				<?php if ( wpsc_is_product_on_sale() ): ?>
-					<span class="wpsc-sale-label"><?php echo esc_html_x( 'Sale', 'sale label', 'wpsc' ); ?></span>
+					<span class="wpsc-label wpsc-label-important"><?php echo esc_html_x( 'Sale', 'sale label', 'wpsc' ); ?></span>
 				<?php endif ?>
 			</h2>
 			<div class="wpsc-product-price">

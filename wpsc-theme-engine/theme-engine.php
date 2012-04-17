@@ -12,6 +12,9 @@ if ( ! defined( 'WPSC_THEME_ENGINE_USER_PATH' ) )
 if ( ! defined( 'WPSC_THEME_ENGINE_USER_URL' ) )
 	define( 'WPSC_THEME_ENGINE_USER_URL', WP_CONTENT_URL . '/wpsc-theme-engine' );
 
+if ( ! defined( 'WPSC_THEME_ENGINE_LESS_JS' ) )
+	define( 'WPSC_THEME_ENGINE_LESS_JS', false );
+
 /**
  * Locate the path to a certain WPEC theme file.
  *

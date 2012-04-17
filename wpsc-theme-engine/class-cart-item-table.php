@@ -82,6 +82,11 @@ class WPSC_Cart_Item_Table
 		);
 		?>
 		<form class="wpsc-form wpsc-cart-form" action="<?php echo esc_url( wpsc_get_cart_url() ); ?>" method="post">
+			<div class="wpsc-form-actions top">
+				<?php wpsc_keep_shopping_button(); ?>
+				<?php wpsc_form_button( '', __( 'Begin Checkout', 'wpsc' ), array( 'class' => 'wpsc-button wpsc-button-primary', 'icon' => array( 'white', 'ok-sign' ) ) ); ?>
+				<?php wpsc_form_hidden( '_wp_nonce', wp_create_nonce( 'wpsc-cart-update' ) ); ?>
+			</div>
 			<table class="<?php echo implode( ' ', $this->get_table_classes() ); ?>" cellspacing="0">
 				<thead>
 					<tr>
@@ -97,7 +102,7 @@ class WPSC_Cart_Item_Table
 							<?php echo wpsc_format_price( $wpsc_cart->calculate_subtotal() ); ?>
 						</td>
 					</tr>
-					<tr class="wpsc-cart-item-actions">
+					<tr class="wpsc-cart-item-table-actions">
 						<td></td>
 						<td colspan="<?php echo count( $this->columns ) - 1; ?>">
 							<a class="wpsc-button wpsc-button-small wpsc-clear-cart" href="<?php echo $clear_cart_url; ?>"><?php esc_html_e( 'Clear Cart', 'wpsc' ); ?></a>
@@ -112,9 +117,9 @@ class WPSC_Cart_Item_Table
 					<?php $this->display_rows(); ?>
 				</tbody>
 			</table>
-			<div class="wpsc-form-actions">
+			<div class="wpsc-form-actions bottom">
 				<?php wpsc_keep_shopping_button(); ?>
-				<?php wpsc_form_button( '', __( 'Begin Checkout', 'wpsc' ), array( 'class' => 'wpsc-button wpsc-button-success', 'icon' => array( 'white', 'ok-sign' ) ) ); ?>
+				<?php wpsc_form_button( '', __( 'Begin Checkout', 'wpsc' ), array( 'class' => 'wpsc-button wpsc-button-primary', 'icon' => array( 'white', 'ok-sign' ) ) ); ?>
 				<?php wpsc_form_hidden( '_wp_nonce', wp_create_nonce( 'wpsc-cart-update' ) ); ?>
 			</div>
 		</form>
@@ -154,8 +159,10 @@ function wpsc_cart_item_table_column_items( $item, $key ) {
 			<?php endif; ?>
 		</div>
 		<div class="wpsc-cart-item-description">
-			<p><strong><a href="<?php echo $permalink; ?>"><?php echo esc_html( $item->product_name ); ?></a></strong></p>
-			<p class="wpsc-cart-item-details">
+			<div class="wpsc-cart-item-title">
+				<strong><a href="<?php echo $permalink; ?>"><?php echo esc_html( $item->product_name ); ?></a></strong>
+			</div>
+			<div class="wpsc-cart-item-details">
 				<?php if ( ! empty( $item->sku ) ): ?>
 					<span class="wpsc-cart-item-sku"><span><?php esc_html_e( 'SKU', 'wpsc' ); ?>:</span> <?php echo esc_html( $item->sku ); ?></span>
 				<?php endif ?>
@@ -167,10 +174,10 @@ function wpsc_cart_item_table_column_items( $item, $key ) {
 				<?php if ( ! empty( $variations ) ): ?>
 					<span class="wpsc-cart-item-variations"><?php echo $variations; ?></span>
 				<?php endif ?>
-			</p>
-			<p>
+			</div>
+			<div class="wpsc-cart-item-row-actions">
 				<a alt="<?php esc_attr_e( 'Remove from cart', 'wpsc' ); ?>" title="<?php esc_attr_e( 'Remove from cart', 'wpsc' ); ?>" class="wpsc-button wpsc-button-mini" href="<?php echo esc_url( $remove_url ); ?>"><i class="wpsc-icon-trash"></i> <?php esc_html_e( 'Remove', 'wpsc' ); ?></a>
-			</p>
+			</div>
 		</div>
 	<?php
 }
