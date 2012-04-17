@@ -1,0 +1,153 @@
+/* Form */
+.wpsc-form {
+	.reset-margin-padding;
+
+	fieldset,
+	legend {
+		.reset-margin-padding;
+	}
+	legend,
+	label,
+	input[type="text"],
+	input[type="url"],
+	input[type="number"],
+	input[type="email"],
+	input[type="search"],
+	input[type="tel"],
+	textarea,
+	select {
+		margin:0;
+		font-family: @font-family;
+		font-weight: normal;
+	}
+	legend,
+	label,
+	select {
+		color: @font-color;
+	}
+	label {
+		margin-bottom: 5px;
+		margin-top: 7px;
+	}
+	input,
+	select,
+	textarea {
+		margin: 0;
+	}
+	input[type="text"],
+	input[type="url"],
+	input[type="number"],
+	input[type="email"],
+	input[type="search"],
+	input[type="tel"],
+	textarea,
+	select[multiple="multiple"] {
+		color: @font-color-subtle;
+		vertical-align: middle;
+	}
+	legend {
+		border-bottom: 1px solid @border-color;
+		font-size: @font-size-l;
+		line-height: @line-height-l;
+		margin-bottom: 18px;
+		width: 100%;
+		+ * {
+			/* Fix webkit bug where margin bottom does not apply to legend */
+			-webkit-margin-top-collapse: separate;
+			margin-top: 18px;
+		}
+	}
+	.wpsc-field {
+		margin-bottom: 18px;
+	}
+	label,
+	input[type="text"],
+	input[type="url"],
+	input[type="number"],
+	input[type="email"],
+	input[type="search"],
+	input[type="tel"],
+	input[type="file"],
+	textarea,
+	select {
+		font-family: @font-family;
+		font-size: @font-size-m;
+		line-height: @line-height-m;
+	}
+	input[type="text"],
+	input[type="url"],
+	input[type="number"],
+	input[type="email"],
+	input[type="search"],
+	input[type="tel"],
+	textarea,
+	select[multiple="multiple"] {
+		.border-radius;
+		.box-shadow(~"inset 0 1px 3px rgba(0, 0, 0, 0.15)");
+		.transition(~"border linear 0.1s, box-shadow linear 0.1s");
+
+		background-color: #fff;
+		border: 1px solid @border-color;
+		padding: 6px 6px 4px;
+		width: 240px;
+
+		&[disabled="disabled"],
+		&.disabled {
+			background-color: @background-color-disabled;
+			color: @font-color-disabled;
+		}
+		&:focus {
+			@shadow: inset 0 1px 3px rgba(0, 0, 0, 0.15), 0 0 5px @border-color-focus;
+			.box-shadow(@shadow);
+			border-color: @border-color-focus;
+		}
+	}
+	input[type="radio"]:focus,
+	input[type="checkbox"]:focus,
+	input[type="file"]:focus,
+	select:not([multiple="multiple"]):focus {
+		outline: 1px dotted @border-color-focus;
+		outline: 3px auto -webkit-focus-ring-color;
+		outline-offset: -1px;
+	}
+}
+.wpsc-form-horizontal {
+	.wpsc-field {
+		clear: both;
+
+		> label {
+			display: block;
+			float: left;
+			text-align: right;
+			width: 90px;
+		}
+		.wpsc-controls {
+			margin-left: 108px;
+		}
+	}
+	.wpsc-form-actions {
+		padding-left: 108px;
+	}
+}
+.wpsc-help {
+	font-family: @font-family;
+	font-size: @font-size-s;
+	font-style: italic;
+	font-weight: normal;
+	color: @font-color-subtle;
+	line-height: @line-height-s;
+	margin-bottom: 0;
+}
+.wpsc-checkbox-label,
+.wpsc-radio-label {
+	display: block;
+}
+.wpsc-checkbox-label.disabled,
+.wpsc-radio-label.disabled {
+	color: @font-color-disabled;
+}
+.wpsc-form-actions {
+	border-top: 1px solid @border-color;
+	padding-top: 18px;
+	margin-bottom: 18px;
+}

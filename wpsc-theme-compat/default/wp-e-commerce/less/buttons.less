@@ -1,0 +1,87 @@
+.wpsc-button {
+	.border-radius;
+	.box-shadow(~"inset 0 1px 0 rgba(255, 255, 255, 0.3)");
+	.transition(box-shadow linear 0.1s);
+
+	border: 1px solid @border-color-normal;
+	background-color: @color-normal;
+	.gradient(@gradient-normal-1, @gradient-normal-2);
+	color: @font-color;
+	cursor: pointer;
+	display: inline-block;
+	font-size: @font-size-m;
+	font-family: @font-family;
+	font-weight: normal;
+	line-height: @line-height-m;
+	margin: 0;
+	padding:5px 13px;
+	text-decoration: none;
+	text-shadow: rgba(255, 255, 255, 0.6) 0 1px 0;
+
+	&:hover,
+	&:active,
+	&:focus {
+		text-decoration: none;
+	}
+	&:hover {
+		.box-shadow(~"inset 0 1px 0 rgba(255, 255, 255, 0.15)");
+		.gradient(@gradient-normal-1-hover, @gradient-normal-2-hover);
+	}
+	&:active {
+		.box-shadow(~"inset 0 1px 5px rgba(0, 0, 0, 0.20)");
+		.gradient(@gradient-normal-1-active, @gradient-normal-2-active);
+	}
+	&:focus {
+		@box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 0 5px 1px @border-color-focus;
+		.box-shadow(@box-shadow);
+	}
+}
+.wpsc-button-type (@type) {
+	@border-color-var: "border-color-@{type}";
+	@gradient-color-1-var: "gradient-@{type}-1";
+	@gradient-color-2-var: "gradient-@{type}-2";
+	@gradient-color-1-hover-var: "gradient-@{type}-1-hover";
+	@gradient-color-2-hover-var: "gradient-@{type}-2-hover";
+	@gradient-color-1-active-var: "gradient-@{type}-1-active";
+	@gradient-color-2-active-var: "gradient-@{type}-2-active";
+
+	border-color: @@border-color-var;
+	color: @font-color-inverse;
+	text-shadow: rgba(0, 0, 0, 0.19) 0 -1px 0;
+	.gradient(@@gradient-color-1-var, @@gradient-color-2-var);
+
+	&:hover {
+		.gradient(@@gradient-color-1-hover-var, @@gradient-color-2-hover-var);
+	}
+	&:active {
+		.gradient(@@gradient-color-1-active-var, @@gradient-color-2-active-var);
+	}
+}
+.wpsc-button-success {
+	.wpsc-button-type(success);
+}
+.wpsc-button-warning {
+	.wpsc-button-type(warning);
+}
+.wpsc-button-important {
+	.wpsc-button-type(important);
+}
+.wpsc-button-info {
+	.wpsc-button-type(info);
+}
+.wpsc-button-inverse {
+	.wpsc-button-type(inverse);
+}
+.wpsc-button-primary {
+	.wpsc-button-type(primary);
+}
+.wpsc-button-small {
+	padding: 3px 7px;
+}
+.wpsc-button-mini {
+	font-size: @font-size-s;
+	line-height: @line-height-s;
+	padding: 0px 5px;
+
+	.border-radius(2px);
+}

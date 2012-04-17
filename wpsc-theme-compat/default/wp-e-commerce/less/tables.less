@@ -1,0 +1,33 @@
+table.wpsc-table {
+	border: none;
+	border-collapse: collapse;
+	border-spacing: 0;
+	margin-bottom: 18px;
+	width: 100%;
+
+	th, td {
+		border-top: 1px solid @table-row-border-color;
+		color: @font-color;
+		font-family: @font-family;
+		font-size: @font-size-m;
+		font-weight: normal;
+		line-height: @line-height-m;
+		padding: 6px 10px;
+		text-transform: none;
+	}
+	thead {
+		th {
+			font-weight: bold;
+		}
+		&:first-child tr:first-child {
+			th, td {
+				border-top: none;
+			}
+		}
+	}
+	tbody tr:hover {
+		td, th {
+			background-color: @table-row-color-hover;
+		}
+	}
+}
