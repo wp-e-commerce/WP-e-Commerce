@@ -279,7 +279,8 @@ function wpsc_packing_slip( $purchase_id ) {
 		
 		
 		if($input_data != null) {
-			$form_data = $wpdb->get_results("SELECT * FROM `".WPSC_TABLE_CHECKOUT_FORMS."` WHERE `active` = '1'",ARRAY_A);
+			// 20120112, add  ORDER BY `checkout_order` to next line, make the order same like the order of checkout page
+			$form_data = $wpdb->get_results("SELECT * FROM `".WPSC_TABLE_CHECKOUT_FORMS."` WHERE `active` = '1' ORDER BY `checkout_order`",ARRAY_A);
 			
 			foreach($form_data as $form_field) {
 
