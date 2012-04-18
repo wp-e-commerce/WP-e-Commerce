@@ -1,0 +1,23 @@
+		<div class="navbar navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container">
+					<a href="index.html" class="brand">WPEC Team</a>
+					<div class="nav-collapse">
+						<ul class="nav">
+							<li class="dropdown{% if page.id == 'dev'      %} active{% endif %}">
+								<a data-toggle="dropdown" class="dropdown-toggle" href="dev.html">Develop <b class="caret"></b></a>
+							</li>
+							<li class="dropdown{% if page.id == 'support'  %} active{% endif %}">
+								<a data-toggle="dropdown" class="dropdown-toggle" href="support.html">Support <b class="caret"></b></a>
+							</li>
+							<li class="dropdown{% if page.id == 'designer' %} active{% endif %}">
+								<a data-toggle="dropdown" class="dropdown-toggle" href="designer.html">Design <b class="caret"></b></a>
+							</li>
+							<li class="dropdown{% if page.id == 'doc'      %} active{% endif %}">
+								<a data-toggle="dropdown" class="dropdown-toggle" href="doc.html">Write docs <b class="caret"></b></a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
