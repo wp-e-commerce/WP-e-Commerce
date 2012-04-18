@@ -1,0 +1,14 @@
+exclude : [
+	docs,
+	tests,
+	benchmark,
+	LICENSE,
+	Makefile,
+	README.md,
+	bin,
+	build,
+	lib,
+	test,
+	CHANGELOG,
+	package.json
+]
