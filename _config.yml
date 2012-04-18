@@ -1,5 +1,4 @@
 exclude : [
-	docs,
 	tests,
 	benchmark,
 	LICENSE,
