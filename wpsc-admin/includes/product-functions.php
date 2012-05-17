@@ -271,30 +271,17 @@ function wpsc_sanitise_product_forms($post_data = null) {
 		$post_data = &$_POST;
 	}
 
-	$product = get_post(absint($post_data['post_ID']));
-
 	$post_data['name'] = isset($post_data['post_title']) ? $post_data['post_title'] : '';
 	$post_data['title'] = $post_data['name'];
 	$post_data['description'] = isset($post_data['content']) ? $post_data['content'] : '';
 	$post_data['additional_description'] = isset($post_data['additional_description']) ? $post_data['additional_description'] : '';
+	$post_data['post_status'] = 'draft';
 
-	if($product != null) {
-		$post_data['post_status'] = $product->post_status;
-	} else {
-		$post_data['post_status'] = 'draft';
-	}
-
-	if(isset($post_data['save']) && $product->post_status == 'inherit' && ( $product->post_parent == 0 || $product->post_parent == $product->ID ) ) {
-		$post_data['post_status'] = 'draft';
-	} else if(isset($post_data['publish'])) {
+	if(isset($post_data['publish'])) {
 		$post_data['post_status'] = 'publish';
 	} else if(isset($post_data['unpublish'])) {
 		$post_data['post_status'] = 'draft';
 	}
-
-
-
-	$post_meta['meta'] = (array)$_POST['meta'];
 
 	$post_data['meta']['_wpsc_price'] = (float)str_replace( ',','',$post_data['meta']['_wpsc_price'] );
 	$post_data['meta']['_wpsc_special_price'] = (float)str_replace( ',','',$post_data['meta']['_wpsc_special_price'] );
@@ -326,38 +313,6 @@ function wpsc_sanitise_product_forms($post_data = null) {
 	$post_data['meta']['_wpsc_product_metadata']['weight'] = (float)$weight;
 	$post_data['meta']['_wpsc_product_metadata']['display_weight_as'] = $post_data['meta']['_wpsc_product_metadata']['weight_unit'];
 
-	// table rate price
-	$post_data['meta']['_wpsc_product_metadata']['table_rate_price'] = $post_data['table_rate_price'];
-	// if table_rate_price is unticked, wipe the table rate prices
-	if(!isset($post_data['table_rate_price']['state'])) $post_data['table_rate_price']['state'] = '';
-	if($post_data['table_rate_price']['state'] != 1) {
-		$post_data['meta']['_wpsc_product_metadata']['table_rate_price']['quantity'] = null;
-		$post_data['meta']['_wpsc_product_metadata']['table_rate_price']['table_price'] = null;
-	}
-	foreach((array)$post_data['meta']['_wpsc_product_metadata']['table_rate_price']['table_price'] as $key => $value){
-		if(empty($value)){
-			unset($post_data['meta']['_wpsc_product_metadata']['table_rate_price']['table_price'][$key]);
-			unset($post_data['meta']['_wpsc_product_metadata']['table_rate_price']['quantity'][$key]);
-		}
-	}
-
-
-	$post_data['meta']['_wpsc_product_metadata']['shipping']['local'] = (float)$post_data['meta']['_wpsc_product_metadata']['shipping']['local'];
-	$post_data['meta']['_wpsc_product_metadata']['shipping']['international'] = (float)$post_data['meta']['_wpsc_product_metadata']['shipping']['international'];
-
-
-	// Advanced Options
-	$post_data['meta']['_wpsc_product_metadata']['engraved'] = (int)(bool)$post_data['meta']['_wpsc_product_metadata']['engraved'];
-	$post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'] = (int)(bool)$post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'];
-	if(!isset($post_data['meta']['_wpsc_product_metadata']['google_prohibited'])) $post_data['meta']['_wpsc_product_metadata']['google_prohibited'] = '';
-	$post_data['meta']['_wpsc_product_metadata']['google_prohibited'] = (int)(bool)$post_data['meta']['_wpsc_product_metadata']['google_prohibited'];
-	$post_data['meta']['_wpsc_product_metadata']['external_link'] = (string)$post_data['meta']['_wpsc_product_metadata']['external_link'];
-	$post_data['meta']['_wpsc_product_metadata']['external_link_text'] = (string)$post_data['meta']['_wpsc_product_metadata']['external_link_text'];
-	$post_data['meta']['_wpsc_product_metadata']['external_link_target'] = (string)$post_data['meta']['_wpsc_product_metadata']['external_link_target'];
-
-	$post_data['meta']['_wpsc_product_metadata']['enable_comments'] = $post_data['meta']['_wpsc_product_metadata']['enable_comments'];
-	$post_data['meta']['_wpsc_product_metadata']['merchant_notes'] = $post_data['meta']['_wpsc_product_metadata']['merchant_notes'];
-
 	$post_data['files'] = $_FILES;
 	return $post_data;
 }
@@ -372,13 +327,6 @@ function wpsc_insert_product($post_data, $wpsc_error = false) {
 	global $wpdb, $user_ID;
 	$adding = false;
 	$update = false;
-	if((int)$post_data['post_ID'] > 0) {
-		$product_id	= absint($post_data['post_ID']);
-		$update = true;
-	} else if((int)$post_data['product_id'] > 0) {
-		$product_id	= absint($post_data['product_id']);
-		$update = true;
-	}
 
 	$product_columns = array(
 		'name' => '',
@@ -418,7 +366,6 @@ function wpsc_insert_product($post_data, $wpsc_error = false) {
 	}
 
 	$product_post_values = array(
-		'ID' => $product_id,
 		'post_author' => $user_ID,
 		'post_content' => $post_data['description'],
 		'post_excerpt' => $post_data['additional_description'],
@@ -427,11 +374,7 @@ function wpsc_insert_product($post_data, $wpsc_error = false) {
 		'post_type' => "wpsc-product",
 		'post_name' => sanitize_title($post_data['name'])
 	);
-	if ($post_data['meta']['_wpsc_product_metadata']['enable_comments'] == 0) {
-		$product_post_values["comment_status"] = "closed";
-	}else {
-		$product_post_values["comment_status"] = "open";
-	}
+	$product_post_values["comment_status"] = "open";
 
 	if(isset($sku) && ($sku != '')) {
 		$product_post_array['guid'] = $sku;
@@ -439,66 +382,26 @@ function wpsc_insert_product($post_data, $wpsc_error = false) {
 
 
 
-   if($update === true) {
-		$where = array( 'id' => $product_id );
-		$product_id = wp_update_post($product_post_values);
-		 if ( isset ( $post_data["sticky"] ) ) {
-			stick_post($product_id);
-		 }else {
-			unstick_post($product_id);
-		 }
-		if ($product_id == 0) {
-			if ( $wpsc_error ) {
-				return new WP_Error('db_update_error', __( 'Could not update product in the database', 'wpsc' ), $wpdb->last_error);
-			} else {
-				return false;
-			}
+	$product_id = wp_insert_post($product_post_values);
+	if ( isset ( $post_data["sticky"] ) ) {
+		stick_post($product_id);
+	}else {
+		unstick_post($product_id);
+	}
+	if ($product_id == 0 ) {
+		if ( $wp_error ) {
+			return new WP_Error('db_insert_error', __( 'Could not insert product into the database', 'wpsc' ), $wpdb->last_error);
+		} else {
+			return 0;
 		}
-  } else {
-		$product_post_values += array(
-			'post_date' => $product['date_added']
-		);
-  		 $product_id = wp_insert_post($product_post_values);
-		 if ( isset ( $post_data["sticky"] ) ) {
-			stick_post($product_id);
-		 }else {
-			unstick_post($product_id);
-		 }
-		if ($product_id == 0 ) {
-			if ( $wp_error ) {
-				return new WP_Error('db_insert_error', __( 'Could not insert product into the database', 'wpsc' ), $wpdb->last_error);
-			} else {
-				return 0;
-			}
-		}
-		$adding = true;
-  }
+	}
+	$adding = true;
 
 	// if we succeed, we can do further editing
 
 	// and the meta
 	wpsc_update_product_meta($product_id, $post_data['meta']);
-
-	// and the custom meta
-	wpsc_update_custom_meta($product_id, $post_data);
-
-	//and the alt currency
-	foreach((array)$post_data['newCurrency'] as $key =>$value){
-		wpsc_update_alt_product_currency($product_id, $value, $post_data['newCurrPrice'][$key]);
-	}
-
-	if($post_data['files']['file']['tmp_name'] != '') {
-		wpsc_item_process_file($product_id, $post_data['files']['file']);
-	} else {
-		if (!isset($post_data['select_product_file'])) $post_data['select_product_file'] = null;
-	  	wpsc_item_reassign_file($product_id, $post_data['select_product_file']);
-	}
-
-	if(isset($post_data['files']['preview_file']['tmp_name']) && ($post_data['files']['preview_file']['tmp_name'] != '')) {
- 		wpsc_item_add_preview_file($product_id, $post_data['files']['preview_file']);
-	}
 	do_action('wpsc_edit_product', $product_id);
-	wpsc_ping();
 	return $product_id;
 }
 
@@ -614,12 +517,12 @@ function wpsc_determine_variation_price( $variation_id, $term_ids = false ) {
  */
 function wpsc_edit_product_variations($product_id, $post_data) {
 	global $user_ID;
-	
+
 	$parent = get_post_field( 'post_parent', $product_id );
-	
+
 	if( ! empty( $parent ) )
 		return;
-	
+
 	$variations = array();
 	$product_children = array();
 	if (!isset($post_data['edit_var_val']))
@@ -788,7 +691,7 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 
 function wpsc_update_alt_product_currency($product_id, $newCurrency, $newPrice){
 	global $wpdb;
-	
+
 	$old_curr = get_product_meta($product_id, 'currency',true);
 	$sql = $wpdb->prepare( "SELECT `isocode` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id`= %d", $newCurrency );
 	$isocode = $wpdb->get_var($sql);

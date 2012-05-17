@@ -82,12 +82,88 @@ abstract class WPSC_Settings_Tab
 	abstract public function display();
 
 	/**
+	 * Whether to display the update message when the options are submitted.
+	 *
+	 * @since 3.8.8.1
+	 * @access private
+	 */
+	private $is_update_message_displayed = true;
+
+	/**
+	 * Whether to display the "Save Changes" button.
+	 *
+	 * @since 3.8.8.1
+	 * @access private
+	 */
+	private $is_submit_button_displayed= true;
+
+	/**
 	 * Constructor
 	 *
 	 * @since 3.8.8
 	 * @access public
 	 */
 	public function __construct() {}
+
+	/**
+	 * Make sure the update message will be displayed
+	 *
+	 * @since 3.8.8.1
+	 * @access protected
+	 */
+	protected function display_update_message() {
+		$this->is_update_message_displayed = true;
+	}
+
+	/**
+	 * Make sure the update message will not be displayed
+	 *
+	 * @since 3.8.8.1
+	 * @access protected
+	 */
+	protected function hide_update_message() {
+		$this->is_update_message_displayed = false;
+	}
+
+	/**
+	 * Query whether the update message is to be displayed or not.
+	 *
+	 * @since 3.8.8.1
+	 * @access public
+	 */
+	public function is_update_message_displayed() {
+		return $this->is_update_message_displayed;
+	}
+
+	/**
+	 * Hide the default "Save Changes" button
+	 *
+	 * @since  3.8.8.1
+	 * @access protected
+	 */
+	protected function hide_submit_button() {
+		$this->is_submit_button_displayed = false;
+	}
+
+	/**
+	 * Show the default "Save Changes" button
+	 *
+	 * @since 3.8.8.1
+	 * @access protected
+	 */
+	protected function display_submit_button() {
+		$this->is_submit_button_displayed = true;
+	}
+
+	/**
+	 * Return whether the default "Save Changes" button is to be displayed.
+	 *
+	 * @since 3.8.8.1
+	 * @access public
+	 */
+	public function is_submit_button_displayed() {
+		return $this->is_submit_button_displayed;
+	}
 }
 
 /**
@@ -306,14 +382,19 @@ final class WPSC_Settings_Page
 		if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( $_REQUEST['wpsc_admin_action'] == 'submit_options' ) ) {
 			check_admin_referer( 'update-options', 'wpsc-update-options' );
 			$this->save_options();
-			if ( is_callable( array( $this->current_tab, 'callback_submit_options' ) ) )
-				$this->current_tab->callback_submit_options();
-
-			$errors = get_settings_errors();
-			add_settings_error( 'wpsc-settings', 'settings_updated', __( 'Settings saved.' ), 'updated' );
-			set_transient( 'settings_errors', get_settings_errors(), 30 );
-
-			wp_redirect( add_query_arg( 'settings-updated', true ) );
+			$query_args = array();
+			if ( is_callable( array( $this->current_tab, 'callback_submit_options' ) ) ) {
+				$additional_query_args = $this->current_tab->callback_submit_options();
+				if ( ! empty( $additional_query_args ) )
+					$query_args += $additional_query_args;
+			}
+			if ( $this->current_tab->is_update_message_displayed() ) {
+				if ( ! count( get_settings_errors() ) )
+					add_settings_error( 'wpsc-settings', 'settings_updated', __( 'Settings saved.' ), 'updated' );
+				set_transient( 'settings_errors', get_settings_errors(), 30 );
+				$query_args['settings-updated'] = true;
+			}
+			wp_redirect( add_query_arg( $query_args ) );
 			exit;
 		}
 	}
@@ -392,7 +473,7 @@ final class WPSC_Settings_Page
 	 */
 	public function display_current_tab() {
 		?>
-			<div id="options_<?php echo esc_attr( $this->current_tab_id ); ?>">
+			<div id="options_<?php echo esc_attr( $this->current_tab_id ); ?>" class="tab-content">
 				<?php
 					if ( is_callable( array( $this->current_tab, 'display' ) ) ) {
 						$this->current_tab->display();
@@ -400,6 +481,13 @@ final class WPSC_Settings_Page
 				?>
 
 				<?php do_action('wpsc_' . $this->current_tab_id . '_settings_page'); ?>
+				<div class="submit">
+					<input type='hidden' name='wpsc_admin_action' value='submit_options' />
+					<?php wp_nonce_field( 'update-options', 'wpsc-update-options' ); ?>
+					<?php if ( $this->current_tab->is_submit_button_displayed() ): ?>
+						<input type="submit" class="button-primary" value="<?php _e( 'Save Changes', 'wpsc' ); ?>" name="updateoption" />
+					<?php endif ?>
+				</div>
 			</div>
 		<?php
 	}
@@ -426,11 +514,6 @@ final class WPSC_Settings_Page
 				<div id='wpsc_options_page'>
 					<form method='post' action='<?php echo esc_attr( $this->submit_url() ); ?>' enctype='multipart/form-data' id='wpsc-settings-form'>
 						<?php $this->display_current_tab(); ?>
-						<div class="submit">
-							<input type='hidden' name='wpsc_admin_action' value='submit_options' />
-							<?php wp_nonce_field( 'update-options', 'wpsc-update-options' ); ?>
-							<input type="submit" class="button-primary" value="<?php _e( 'Save Changes', 'wpsc' ); ?>" name="updateoption" />
-						</div>
 					</form>
 				</div>
 			</div>
