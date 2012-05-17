@@ -69,7 +69,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 				$this->rate = $curr->convert( 1, $paypal_currency_code, $local_currency_code );
 			}
 		}
-		return $this->format_price( $amt / $this->rate );
+		return $this->format_price( $amt * $this->rate );
 	}
 
 	function get_local_currency_code() {
