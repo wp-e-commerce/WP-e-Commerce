@@ -51,7 +51,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 		$offset = ( $page - 1 ) * $this->per_page;
 
 		$checkout_fields_sql = "
-			SELECT id, unique_name FROM " . WPSC_TABLE_CHECKOUT_FORMS . " WHERE unique_name IN ('billingfirstname', 'billinglastname', 'billingemail') AND active='1'
+			SELECT id, unique_name FROM " . WPSC_TABLE_CHECKOUT_FORMS . " WHERE unique_name IN ('billingfirstname', 'billinglastname', 'billingemail') AND active='1' AND checkout_set='0'
 		";
 		$checkout_fields = $wpdb->get_results( $checkout_fields_sql );
 
