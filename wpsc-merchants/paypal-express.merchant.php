@@ -328,7 +328,7 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 			}
 		}
 
-		return $this->format_price( $amt / $this->rate );
+		return $this->format_price( $amt * $this->rate );
 	}
 
 	function get_local_currency_code() {
@@ -381,7 +381,7 @@ function wpsc_paypal_express_convert( $amt ) {
 		}
 	}
 
-	return wpsc_paypal_express_format( $amt / $rate );
+	return wpsc_paypal_express_format( $amt * $rate );
 }
 
 function wpsc_paypal_express_format( $price ) {

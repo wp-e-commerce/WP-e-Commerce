@@ -365,7 +365,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 			}
 		}
 
-		return $this->format_price( $amt / $this->rate );
+		return $this->format_price( $amt * $this->rate );
 	}
 
 }
