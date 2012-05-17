@@ -3,14 +3,14 @@ Contributors: mufasa, jghazally, valentinas, mychelle, garyc40, justinsainton
 Donate link: http://getshopped.org
 Tags: e-commerce, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
 Requires at least: 3.1
-Tested up to: 3.3.1
+Tested up to: 3.3.2
 Stable tag: 3.8.8
 
 WP e-Commerce is a free WordPress Shopping Cart Plugin that lets customers buy your products, services and digital downloads online.
 
 == Description ==
 
-We make setting up an ecommerce shop easy, and with over 1.7 Million downloads, we have unparalleled experience.
+We make setting up an ecommerce shop easy, and with over 1.8 Million downloads, we have unparalleled experience.
 
 Features:
 
@@ -156,6 +156,18 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 
 == Changelog ==
+= 3.8.8.1 =
+* Fix: CSV import not working in 3.8.8.
+* Fix: Category page display setting does not override default Presentation settings.
+* Fix: Clicking All/None in Category target market settings doesn't work.
+* Fix: Non-SSL stylesheet is loaded even when force SSL for checkout page is on.
+* Fix: PHP Warning and Notice in sales log page.
+* Fix: PayPal currency converter is wrong.
+* Fix: Sales logs are not displayed for some installations.
+* Fix: Sales logs page sometimes display empty customers' names.
+* Fix: Saving payment gateway settings erase Shipping settings.
+* Fix: Sometimes clicking Save doesn't save tracking ID on sales log page.
+
 = 3.8.8 =
 * New: Actions for bulk actions on sales page: wpsc_sales_log_process_bulk_action, wpsc_sales_log_extra_tablenav
 * New: Allow variation checkboxes to be collapsed & expanded without having to tick the variation set checkbox itself.
