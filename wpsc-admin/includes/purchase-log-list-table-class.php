@@ -51,7 +51,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 		$offset = ( $page - 1 ) * $this->per_page;
 
 		$checkout_fields_sql = "
-			SELECT id, unique_name FROM " . WPSC_TABLE_CHECKOUT_FORMS . " WHERE unique_name IN ('billingfirstname', 'billinglastname', 'billingemail')
+			SELECT id, unique_name FROM " . WPSC_TABLE_CHECKOUT_FORMS . " WHERE unique_name IN ('billingfirstname', 'billinglastname', 'billingemail') AND active='1'
 		";
 		$checkout_fields = $wpdb->get_results( $checkout_fields_sql );
 
@@ -75,7 +75,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 			$table_as = 's' . $i;
 			$select_as = str_replace('billing', '', $field->unique_name );
 			$selects[] = $table_as . '.value AS ' . $select_as;
-			$joins[] = $wpdb->prepare( "INNER JOIN " . WPSC_TABLE_SUBMITED_FORM_DATA . " AS {$table_as} ON {$table_as}.log_id = p.id AND {$table_as}.form_id = %d", $field->id );
+			$joins[] = $wpdb->prepare( "LEFT OUTER JOIN " . WPSC_TABLE_SUBMITED_FORM_DATA . " AS {$table_as} ON {$table_as}.log_id = p.id AND {$table_as}.form_id = %d", $field->id );
 
 			// build search term queries for first name, last name, email
 			foreach ( $search_terms as $term ) {
@@ -137,7 +137,6 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 			{$limit}
 		";
 		$this->items = $wpdb->get_results( $purchase_log_sql );
-
 		if ( $this->per_page ) {
 			$total_items = $wpdb->get_var( "SELECT FOUND_ROWS()" );
 
