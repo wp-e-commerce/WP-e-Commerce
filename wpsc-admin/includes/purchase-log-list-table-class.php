@@ -220,11 +220,17 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 
 		$sql = "SELECT DISTINCT processed, COUNT(*) AS count FROM " . WPSC_TABLE_PURCHASE_LOGS . " GROUP BY processed ORDER BY processed";
 		$results = $wpdb->get_results( $sql );
-		foreach ( $results as $status ) {
-			$statuses[$status->processed] = $status->count;
+		$statuses = array();
+		$total_count = 0;
+
+		if ( ! empty( $results ) ) {
+			foreach ( $results as $status ) {
+				$statuses[$status->processed] = $status->count;
+			}
+
+			$total_count = array_sum( $statuses );
 		}
 
-		$total_count = array_sum( $statuses );
 		$all_text = sprintf(
 			_nx( 'All <span class="count">(%s)</span>', 'All <span class="count">(%s)</span>', $total_count, 'purchase logs', 'wpsc' ),
 			number_format_i18n( $total_count )
