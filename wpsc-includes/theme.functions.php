@@ -280,10 +280,11 @@ function wpsc_get_template_file_url( $file = '' ) {
 			}
 		}
 
-		if( is_ssl() && !strstr( $file_url, 'https' ) ) $file_url =  str_replace('http', 'https', $file_url);
+		if ( wpsc_is_ssl() || ( is_ssl() && ! strstr( $file_url, 'https://' ) ) ) 
+			$file_url = str_replace('http://', 'https://', $file_url);
 
 		// Save the transient and update it every 12 hours
-		if ( !empty( $file_url ) )
+		if ( ! empty( $file_url ) )
 			set_transient( WPEC_TRANSIENT_THEME_URL_PREFIX . $file, $file_url, 60 * 60 * 12 );
 	}
 
