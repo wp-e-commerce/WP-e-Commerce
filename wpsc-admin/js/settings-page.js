@@ -158,6 +158,7 @@
 				t.toggle_ajax_state(tab_id);
 				$('#options_' + WPSC_Settings_Page.current_tab).replaceWith(response);
 				WPSC_Settings_Page.current_tab = tab_id;
+				$('.settings-error').remove();
 				$('.nav-tab-active').removeClass('nav-tab-active');
 				$('[data-tab-id="' + tab_id + '"]').addClass('nav-tab-active');
 				$('#wpsc_options_page form').attr('action', url);
