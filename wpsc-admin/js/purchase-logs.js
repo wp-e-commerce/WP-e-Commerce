@@ -11,7 +11,9 @@
 				                         delegate('.wpsc-purchase-log-tracking-id', 'blur', WPSC_Purchase_Logs_Admin.event_tracking_id_blurred).
 				                         delegate('.column-tracking a.save', 'click', WPSC_Purchase_Logs_Admin.event_button_save_clicked).
 				                         delegate('.column-tracking .send-email a', 'click', WPSC_Purchase_Logs_Admin.event_button_send_email_clicked).
-				                         delegate('.wpsc-purchase-log-tracking-id', 'keypress', WPSC_Purchase_Logs_Admin.event_enter_key_pressed);
+				                         delegate('.wpsc-purchase-log-tracking-id', 'keypress', WPSC_Purchase_Logs_Admin.event_enter_key_pressed).
+				                         delegate('.column-tracking a.save', 'mousedown', WPSC_Purchase_Logs_Admin.event_disable_textbox_resize).
+				                         delegate('.column-tracking a.save', 'focus', WPSC_Purchase_Logs_Admin.event_disable_textbox_resize);
 
 			});
 		},
@@ -50,8 +52,6 @@
 		},
 
 		event_button_save_clicked : function() {
-			WPSC_Purchase_Logs_Admin.reset_textbox_width = false;
-
 			var t = $(this), textbox = t.siblings('.wpsc-purchase-log-tracking-id'), spinner = t.siblings('.ajax-feedback');
 
 			var post_data = {
@@ -66,6 +66,7 @@
 				textbox.blur();
 				if (response == 'success') {
 					t.parent().removeClass('empty');
+					WPSC_Purchase_Logs_Admin.reset_tracking_id_width(t.siblings('.wpsc-purchase-log-tracking-id'));
 				} else {
 					alert(WPSC_Purchase_Logs_Admin.tracking_error_dialog);
 				}
@@ -80,13 +81,16 @@
 			return false;
 		},
 
+		event_disable_textbox_resize : function() {
+			WPSC_Purchase_Logs_Admin.reset_textbox_width = false;
+		},
+
 		event_button_add_clicked : function() {
 			$(this).siblings('.wpsc-purchase-log-tracking-id').trigger('focus');
 			return false;
 		},
 
-		event_tracking_id_blurred : function() {
-			var t = $(this);
+		reset_tracking_id_width : function(t) {
 			var reset_width = function() {
 				if (WPSC_Purchase_Logs_Admin.reset_textbox_width) {
 					t.siblings('a.save').hide();
@@ -100,6 +104,12 @@
 			};
 
 			WPSC_Purchase_Logs_Admin.blur_timeout = setTimeout(reset_width, 100);
+		},
+
+		event_tracking_id_blurred : function() {
+			var t = $(this);
+
+			WPSC_Purchase_Logs_Admin.reset_tracking_id_width(t);
 		},
 
 		event_tracking_id_focused : function() {
