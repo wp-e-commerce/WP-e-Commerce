@@ -159,7 +159,6 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab
 					<?php }
 								?>
 								<div class='submit gateway_settings'>
-									<input type='hidden' value='true' name='update_gateways' />
 									<input type='submit' value='<?php _e( 'Update &raquo;', 'wpsc' ) ?>' name='updateoption' />
 								</div>
 								</div>

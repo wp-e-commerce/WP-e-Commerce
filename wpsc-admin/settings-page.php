@@ -659,8 +659,10 @@ final class WPSC_Settings_Page
 		//This is for submitting shipping details to the shipping module
 		if ( !isset( $_POST['update_gateways'] ) )
 			$_POST['update_gateways'] = '';
+
 		if ( !isset( $_POST['custom_shipping_options'] ) )
 			$_POST['custom_shipping_options'] = null;
+		
 		if ( $_POST['update_gateways'] == 'true' ) {
 
 			update_option( 'custom_shipping_options', $_POST['custom_shipping_options'] );

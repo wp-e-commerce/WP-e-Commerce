@@ -133,13 +133,11 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab
 										$shipwire2 = "";
 										switch ( get_option( 'shipwire' ) ) {
 											case 1:
-												$shipwire1 = "checked ='checked'";
 												$shipwire_settings = 'style=\'display: block;\'';
 												break;
 
 											case 0:
 											default:
-												$shipwire2 = "checked ='checked'";
 												$shipwire_settings = '';
 												break;
 										}
@@ -150,17 +148,13 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab
 										<?php _e( 'ShipWire Settings', 'wpsc' ); ?><span style='color: red;'></span> :
 									</th>
 									<td>
-										<input type='radio' onclick='jQuery("#wpsc_shipwire_setting").show()' value='1' name='wpsc_options[shipwire]' id='shipwire1' <?php echo $shipwire1; ?> /> <label for='shipwire1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
-										<input type='radio' onclick='jQuery("#wpsc_shipwire_setting").hide()' value='0' name='wpsc_options[shipwire]' id='shipwire2' <?php echo $shipwire2; ?> /> <label for='shipwire2'><?php _e( 'No', 'wpsc' ); ?></label>
-										<?php
-										$shipwireemail = esc_attr_e( get_option( "shipwireemail" ) );
-										$shipwirepassword = esc_attr_e( get_option( "shipwirepassword" ) );
-										?>
+										<input type='radio' onclick='jQuery("#wpsc_shipwire_setting").show()' value='1' name='wpsc_options[shipwire]' id='shipwire1' <?php checked( '1',  get_option( 'shipwire' ) ); ?> /> <label for='shipwire1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
+										<input type='radio' onclick='jQuery("#wpsc_shipwire_setting").hide()' value='0' name='wpsc_options[shipwire]' id='shipwire2' <?php checked( '0',  get_option( 'shipwire' ) ); ?> /> <label for='shipwire2'><?php _e( 'No', 'wpsc' ); ?></label>
 										<div id='wpsc_shipwire_setting' <?php echo $shipwire_settings; ?>>
 											<table>
-												<tr><td><?php _e( 'ShipWire Email', 'wpsc' ); ?> :</td><td> <input type="text" name='wpsc_options[shipwireemail]' value="<?php echo $shipwireemail; ?>" /></td></tr>
-												<tr><td><?php _e( 'ShipWire Password', 'wpsc' ); ?> :</td><td><input type="text" name='wpsc_options[shipwirepassword]' value="<?php echo $shipwirepassword; ?>" /></td></tr>
-												<tr><td><a onclick='shipwire_sync()' style="cursor:pointer;">Sync product</a></td></tr>
+												<tr><td><?php _e( 'ShipWire Email', 'wpsc' ); ?> :</td><td> <input type="text" name='wpsc_options[shipwireemail]' value="<?php esc_attr_e( get_option( 'shipwireemail' ) ); ?>" /></td></tr>
+												<tr><td><?php _e( 'ShipWire Password', 'wpsc' ); ?> :</td><td><input type="text" name='wpsc_options[shipwirepassword]' value="<?php esc_attr_e( get_option( 'shipwirepassword' ) ); ?>" /></td></tr>
+												<tr><td><a class="shipwire_sync">Sync product</a></td></tr>
 											</table>
 										</div>
 									</td>
@@ -235,7 +229,7 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab
 													</span>
 												</div>
 
-												<p><input name='custom_shipping_options[]' <?php echo $shipping->checked; ?> type='checkbox' value='<?php echo $shipping->internal_name; ?>' id='<?php echo $shipping->internal_name; ?>_id' /><label for='<?php echo $shipping->internal_name; ?>_id'><?php echo $shipping->name; ?></label></p>
+												<p><input name='custom_shipping_options[]' <?php echo $shipping->checked; ?> type='checkbox' value='<?php echo $shipping->internal_name; ?>' id='<?php echo $shipping->internal_name; ?>_id' /><label for='<?php echo $shipping->internal_name; ?>_id'> <?php echo $shipping->name; ?></label></p>
 													</div>
 											<?php }	?>
 										<br />
@@ -264,7 +258,7 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab
 														<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
 															</span>
 														</div>
-														<p><input <?php echo $disabled; ?> name='custom_shipping_options[]' <?php echo $shipping->checked; ?> type='checkbox' value='<?php echo $shipping->internal_name; ?>' id='<?php echo $shipping->internal_name; ?>_id' /><label for='<?php echo $shipping->internal_name; ?>_id'><?php esc_attr_e( $shipping->name ); ?></label></p>
+														<p><input <?php echo $disabled; ?> name='custom_shipping_options[]' <?php echo $shipping->checked; ?> type='checkbox' value='<?php echo $shipping->internal_name; ?>' id='<?php echo $shipping->internal_name; ?>_id' /><label for='<?php echo $shipping->internal_name; ?>_id'> <?php esc_attr_e( $shipping->name ); ?></label></p>
 													</div>
 											<?php } ?>
 													<p class="submit">
