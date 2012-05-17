@@ -25,6 +25,17 @@
 
 			$('.edit-tags-php form').attr('enctype', 'multipart/form-data').attr('encoding', 'multipart/form-data');
 		});
+
+		$(function() {
+			$('.wpsc_select_all').click(function(){
+				$('input:checkbox', $(this).parent().siblings('.multiple-select') ).each(function(){ this.checked = true; });
+				return false;
+			});
+			$('.wpsc_select_none').click(function(){
+				$('input:checkbox', $(this).parent().siblings('.multiple-select') ).each(function(){ this.checked = false; });
+				return false;
+			});
+		});
 	}
 })(jQuery);
 
