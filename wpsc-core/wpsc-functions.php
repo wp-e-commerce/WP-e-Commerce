@@ -1414,13 +1414,13 @@ add_action( 'wp', 'wpsc_select_theme_functions', 10, 1 );
  */
 function wpsc_force_ssl() {
 	global $wp_query;
-	if ( get_option( 'wpsc_force_ssl' ) && !is_ssl() && strpos( $wp_query->post->post_content, '[shoppingcart]' ) !== FALSE ) {
+	if ( wpsc_is_ssl() ) {
 		$sslurl = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 		header( 'Location: ' . $sslurl );
 		echo 'Redirecting';
 	}
 }
-add_action( 'get_header', 'wpsc_force_ssl' );
+add_action( 'wp', 'wpsc_force_ssl' );
 
 
 /**
@@ -1464,4 +1464,18 @@ function wpsc_cron() {
 }
 
 add_action( 'init', 'wpsc_cron' );
+
+/**
+ * Checks if current page is shopping cart, and it should be SSL, but is not.
+ * Used primarily for str_replacing links or content for https
+ * 
+ * @return boolean true if we're on the shopping cart page and should be ssl, false if not
+ */
+function wpsc_is_ssl() {
+	global $wp_query;
+
+	return '1' == get_option( 'wpsc_force_ssl' ) && ! is_ssl() && false !== strpos( $wp_query->post->post_content, '[shoppingcart]' );
+}
+
+
 ?>
