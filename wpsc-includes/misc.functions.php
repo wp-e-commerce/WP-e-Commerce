@@ -92,6 +92,7 @@ function wpsc_add_new_user( $user_login, $user_pass, $user_email ) {
 	}
 	$credentials = array( 'user_login' => $user_login, 'user_password' => $user_pass, 'remember' => true );
 	$user = wp_signon( $credentials );
+	wp_set_current_user($user->ID);
 	return $user;
 
 	//wp_new_user_notification($user_id, $user_pass);
