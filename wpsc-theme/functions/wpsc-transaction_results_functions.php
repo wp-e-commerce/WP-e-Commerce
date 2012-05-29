@@ -128,6 +128,9 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 
 	$echo_to_screen = $display_to_screen;
 
+	//new variable to check whether function is being called from wpsc_purchlog_resend_email()
+	$resend_email = isset( $_REQUEST['email_buyer_id'] ) ? true : false;
+
 	if ( is_numeric( $sessionid ) ) {
 		if ( $echo_to_screen )
 			echo apply_filters( 'wpsc_pre_transaction_results', '' );
@@ -253,7 +256,7 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 				}
 
 				//add tax if included
-				if($wpec_taxes_controller->wpec_taxes_isenabled() && $wpec_taxes_controller->wpec_taxes_isincluded())
+				if( $wpec_taxes_controller->wpec_taxes_isenabled() && $wpec_taxes_controller->wpec_taxes_isincluded() )
 				{
 					$taxes_text = ' - - '.__('Tax Included', 'wpsc').': '.wpsc_currency_display( $row['tax_charged'], array( 'display_as_html' => false ) )."\n\r";
 					$taxes_text_html = ' - - '.__('Tax Included', 'wpsc').': '.wpsc_currency_display( $row['tax_charged'] );
@@ -276,8 +279,8 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 				}
 			}
 
-			$total_shipping = $wpsc_cart->calculate_total_shipping();
-			$total = $wpsc_cart->calculate_total_price();
+			$total_shipping = wpsc_get_total_shipping( $purchase_log['id'] );
+			$total          = $purchase_log['totalprice'];
 
 			$total_price_email = '';
 			$total_price_html = '';
@@ -285,7 +288,7 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 			$total_tax = '';
 			$total_shipping_html = '';
 			$total_shipping_email = '';
-			if ( wpsc_uses_shipping() )
+			if ( wpsc_uses_shipping() || ! empty( $purchase_log['base_shipping'] ) )
 				$total_shipping_email.= sprintf(__( 'Total Shipping: %s
 	', 'wpsc' ), wpsc_currency_display( $total_shipping, array( 'display_as_html' => false ) ) );
 			$total_price_email.= sprintf(__( 'Total: %s
@@ -300,11 +303,11 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 			}
 
 			//only show total tax if tax is not included
-			if($wpec_taxes_controller->wpec_taxes_isenabled() && !$wpec_taxes_controller->wpec_taxes_isincluded()){
+			if ( ( $wpec_taxes_controller->wpec_taxes_isenabled() && ! $wpec_taxes_controller->wpec_taxes_isincluded() ) ) {
 				$total_tax_html .= __('Total Tax', 'wpsc').': '. wpsc_currency_display( $purchase_log['wpec_taxes_total'] )."\n\r";
 				$total_tax .= __('Total Tax', 'wpsc').': '. wpsc_currency_display( $purchase_log['wpec_taxes_total'] , array( 'display_as_html' => false ) )."\n\r";
 			}
-			if ( wpsc_uses_shipping() )
+			if ( wpsc_uses_shipping() || ! empty( $purchase_log['base_shipping'] ) )
 				$total_shipping_html.= '<hr>' . sprintf(__( 'Total Shipping: %s
 	', 'wpsc' ), wpsc_currency_display( $total_shipping ));
 			$total_price_html.= sprintf(__( 'Total: %s
@@ -348,9 +351,6 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 				add_filter( 'wp_mail_from', 'wpsc_replace_reply_address', 0 );
 				add_filter( 'wp_mail_from_name', 'wpsc_replace_reply_name', 0 );
 				$message = apply_filters('wpsc_email_message', $message, $report_id, $product_list, $total_tax, $total_shipping_email, $total_price_email);
-
-				//new variable to check whether function is being called from wpsc_purchlog_resend_email()
-				$resend_email = isset( $_REQUEST['email_buyer_id'] ) ? true : false;
 
 				if ( ! $is_transaction ) {
 
@@ -422,6 +422,26 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 			$wpsc_cart->empty_cart();
 		}
 	}
+}
+
+/**
+ * New helper function for grabbing the total shipping of a purchase log
+ * @param int $purchase_id
+ * @return float shipping price
+ */
+function wpsc_get_total_shipping( $purchase_id ) {
+	global $wpdb;
+
+	$per_item_shipping = $wpdb->get_col( $wpdb->prepare( 'SELECT pnp FROM ' . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid = %d", $purchase_id ) );
+	$base_shipping     = $wpdb->get_var( $wpdb->prepare( 'SELECT base_shipping FROM ' . WPSC_TABLE_PURCHASE_LOGS . " WHERE id = %d", $purchase_id ) );
+
+	$total_shipping    = 0.00;
+
+	$per_item_shipping = array_sum( $per_item_shipping );
+
+	$total_shipping    = $base_shipping + $per_item_shipping;
+
+	return $total_shipping;
 }
 
 ?>
