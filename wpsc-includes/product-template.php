@@ -1577,7 +1577,7 @@ function wpsc_currency_sign() {
 	$currency_sign_location = get_option( 'currency_sign_location' );
 	$currency_type = get_option( 'currency_type' );
 	$currency_symbol = $wpdb->get_var( $wpdb->prepare( "SELECT `symbol_html` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id` = %d LIMIT 1", $currency_type ) );
-	
+
 	return $currency_symbol;
 }
 
@@ -1753,8 +1753,6 @@ function gold_cart_display_gallery(){
 	return function_exists('gold_shpcrt_display_gallery');
 }
 
-<<<<<<< HEAD
-=======
 function wpsc_remove_currency_code( $args ) {
 
 	$args['display_currency_symbol'] = false;
@@ -1773,14 +1771,13 @@ function wpsc_get_up_to_text( $product_id ) {
 
 		if ( '0.00' != $maybe_variation_price )
 			$savings_text = apply_filters( 'wpsc_you_save_variation_text', __( 'up to', 'wpsc' ) );
-	
+
 		remove_filter( 'wpsc_toggle_display_currency_code', 'wpsc_remove_currency_code' );
 
 		return $savings_text;
 
 }
 
->>>>>>> 522ff21... Fix: Variation sales prices are inaccurate in Product Specials Widget
 function wpsc_you_save( $args = null ){
 
 	$defaults = array(
@@ -1795,11 +1792,7 @@ function wpsc_you_save( $args = null ){
 	global $wpdb;
 
 	if ( ! $product_id )
-<<<<<<< HEAD
-		if( function_exists( 'wpsc_the_product_id' ) ){
-=======
 		if ( function_exists( 'wpsc_the_product_id' ) ) {
->>>>>>> 522ff21... Fix: Variation sales prices are inaccurate in Product Specials Widget
 			//select the variation ID with lowest price
 			$product_id = $wpdb->get_var('SELECT `posts`.`id` FROM ' . $wpdb->posts . ' `posts` JOIN ' . $wpdb->postmeta . ' `postmeta` ON `posts`.`id` = `postmeta`.`post_id` WHERE `posts`.`post_parent` = ' . wpsc_the_product_id() . ' AND `posts`.`post_type` = "wpsc-product" AND `posts`.`post_status` = "inherit" AND `postmeta`.`meta_key`="_wpsc_price" ORDER BY (`postmeta`.`meta_value`)+0 ASC LIMIT 1');
 			if( ! $product_id )
@@ -1808,7 +1801,7 @@ function wpsc_you_save( $args = null ){
 
 	if ( ! $product_id )
 		return 0;
-	
+
 	add_filter( 'wpsc_toggle_display_currency_code', 'wpsc_remove_currency_code' );
 	add_filter( 'wpsc_product_variation_text', '__return_false' );
 
@@ -1848,7 +1841,7 @@ function wpsc_product_has_children( $id ){
 			'post_status' => 'inherit publish'
 			);
 	$children = get_children( $args );
-	
+
 	return ! empty( $children );
 }
 
