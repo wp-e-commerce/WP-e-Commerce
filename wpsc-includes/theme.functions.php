@@ -256,37 +256,30 @@ function wpsc_get_template_file_url( $file = '' ) {
 	if ( empty( $file ) )
 		return;
 
-	// No cache, so find one and set it
-	if ( false === ( $file_url = get_transient( WPEC_TRANSIENT_THEME_URL_PREFIX . $file ) ) ) {
-		// Look for file in stylesheet
-		if ( file_exists( get_stylesheet_directory() . '/' . $file ) ) {
-			$file_url = get_stylesheet_directory_uri() . '/' . $file;
+	// Look for file in stylesheet
+	if ( file_exists( get_stylesheet_directory() . '/' . $file ) ) {
+		$file_url = get_stylesheet_directory_uri() . '/' . $file;
 
-		// Look for file in template
-		} elseif ( file_exists( get_template_directory() . '/' . $file ) ) {
-			$file_url = get_template_directory_uri() . '/' . $file;
+	// Look for file in template
+	} elseif ( file_exists( get_template_directory() . '/' . $file ) ) {
+		$file_url = get_template_directory_uri() . '/' . $file;
 
-		// Backwards compatibility
+	// Backwards compatibility
+	} else {
+		// Look in old theme url
+		$selected_theme_check = WPSC_OLD_THEMES_PATH . get_option( 'wpsc_selected_theme' ) . '/' . str_ireplace( 'wpsc-', '', $file );
+		// Check the selected theme
+		if ( file_exists( $selected_theme_check ) ) {
+
+			$file_url = WPSC_OLD_THEMES_URL . get_option( 'wpsc_selected_theme' ) . '/' . str_ireplace( 'wpsc-', '', $file );
+		// Use the bundled theme CSS
 		} else {
-			// Look in old theme url
-			$selected_theme_check = WPSC_OLD_THEMES_PATH . get_option( 'wpsc_selected_theme' ) . '/' . str_ireplace( 'wpsc-', '', $file );
-			// Check the selected theme
-			if ( file_exists( $selected_theme_check ) ) {
-
-				$file_url = WPSC_OLD_THEMES_URL . get_option( 'wpsc_selected_theme' ) . '/' . str_ireplace( 'wpsc-', '', $file );
-			// Use the bundled theme CSS
-			} else {
-				$file_url = WPSC_CORE_THEME_URL . $file;
-			}
+			$file_url = WPSC_CORE_THEME_URL . $file;
 		}
-
-		if ( wpsc_is_ssl() || ( is_ssl() && ! strstr( $file_url, 'https://' ) ) ) 
-			$file_url = str_replace('http://', 'https://', $file_url);
-
-		// Save the transient and update it every 12 hours
-		if ( ! empty( $file_url ) )
-			set_transient( WPEC_TRANSIENT_THEME_URL_PREFIX . $file, $file_url, 60 * 60 * 12 );
 	}
+
+	if ( is_ssl() )
+		$file_url = str_replace('http://', 'https://', $file_url);
 
 	// Return filtered result
 	return apply_filters( WPEC_TRANSIENT_THEME_URL_PREFIX . $file, $file_url );
@@ -551,6 +544,7 @@ function wpsc_enqueue_user_script_and_css() {
 		/**
 		 * end of added by xiligroup.dev to be compatible with touchshop
 		 */
+		$scheme = is_ssl() ? 'https' : 'http';
 		$version_identifier = WPSC_VERSION . "." . WPSC_MINOR_VERSION;
 		$category_id = '';
 		if (isset( $wp_query ) && isset( $wp_query->query_vars['taxonomy'] ) && ('wpsc_product_category' ==  $wp_query->query_vars['taxonomy'] ) || is_numeric( get_option( 'wpsc_default_category' ) )
@@ -563,15 +557,15 @@ function wpsc_enqueue_user_script_and_css() {
 		}
 
 		$remote_protocol = is_ssl() ? 'https://' : 'http://';
-		
+
 		if( get_option( 'wpsc_share_this' ) == 1 )
 		    wp_enqueue_script( 'sharethis', $remote_protocol . 'w.sharethis.com/button/buttons.js', array(), false, true );
-		
+
 		wp_enqueue_script( 'jQuery' );
 		wp_enqueue_script( 'wp-e-commerce',               WPSC_CORE_JS_URL	. '/wp-e-commerce.js',                 array( 'jquery' ), $version_identifier );
 		wp_enqueue_script( 'infieldlabel',               WPSC_CORE_JS_URL	. '/jquery.infieldlabel.min.js',                 array( 'jquery' ), $version_identifier );
 		wp_enqueue_script( 'wp-e-commerce-ajax-legacy',   WPSC_CORE_JS_URL	. '/ajax.js',                          false,             $version_identifier );
-		wp_enqueue_script( 'wp-e-commerce-dynamic', site_url( '/index.php?wpsc_user_dynamic_js=true' ), false,             $version_identifier );
+		wp_enqueue_script( 'wp-e-commerce-dynamic', home_url( '/index.php?wpsc_user_dynamic_js=true', $scheme ), false,             $version_identifier );
 		wp_localize_script( 'wp-e-commerce-dynamic', 'wpsc_ajax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
 		wp_enqueue_script( 'livequery',                   WPSC_URL 			. '/wpsc-admin/js/jquery.livequery.js',   array( 'jquery' ), '1.0.3' );
 		if( get_option( 'product_ratings' ) == 1 )
@@ -592,7 +586,7 @@ function wpsc_enqueue_user_script_and_css() {
 		wp_enqueue_style( 'wpsc-theme-css-compatibility', WPSC_CORE_THEME_URL . 'compatibility.css',                                    false, $version_identifier, 'all' );
 		if( get_option( 'product_ratings' ) == 1 )
 			wp_enqueue_style( 'wpsc-product-rater',           WPSC_CORE_JS_URL 	. '/product_rater.css',                                       false, $version_identifier, 'all' );
-		wp_enqueue_style( 'wp-e-commerce-dynamic', site_url( "/index.php?wpsc_user_dynamic_css=true&category=$category_id" ), false, $version_identifier, 'all' );
+		wp_enqueue_style( 'wp-e-commerce-dynamic', home_url( "/index.php?wpsc_user_dynamic_css=true&category=$category_id", $scheme ), false, $version_identifier, 'all' );
 
 	}
 

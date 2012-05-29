@@ -540,7 +540,7 @@ function wpsc_filter_query_request( $args ) {
 	global $wpsc_page_titles;
 	if ( is_admin() )
 		return $args;
-    
+
 	// Make sure no 404 error is thrown for any sub pages of products-page
 	if ( ! empty( $args['wpsc_product_category'] ) && 'page' != $args['wpsc_product_category'] && ! term_exists($args['wpsc_product_category'], 'wpsc_product_category') ) {
 		// Probably requesting a page that is a sub page of products page
@@ -1293,11 +1293,11 @@ function wpsc_product_link( $permalink, $post, $leavename ) {
 			}
 		}
 
-		if( isset( $category_slug ) && empty( $category_slug ) ) 
+		if( isset( $category_slug ) && empty( $category_slug ) )
 			$category_slug = 'product';
-		
+
 		$category_slug = apply_filters( 'wpsc_product_permalink_cat_slug', $category_slug, $post_id );
-		
+
 		$rewritereplace = array(
 			$category_slug,
 			$post_name
@@ -1404,10 +1404,10 @@ add_action( 'wp', 'wpsc_select_theme_functions', 10, 1 );
  */
 function wpsc_force_ssl() {
 	global $wp_query;
-	if ( wpsc_is_ssl() ) {
+	if ( '1' == get_option( 'wpsc_force_ssl' ) && ! is_ssl() && false !== strpos( $wp_query->post->post_content, '[shoppingcart]' ) ) {
 		$sslurl = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-		header( 'Location: ' . $sslurl );
-		echo 'Redirecting';
+		wp_redirect( $sslurl );
+		exit;
 	}
 }
 add_action( 'wp', 'wpsc_force_ssl' );
@@ -1458,7 +1458,9 @@ add_action( 'init', 'wpsc_cron' );
 /**
  * Checks if current page is shopping cart, and it should be SSL, but is not.
  * Used primarily for str_replacing links or content for https
- * 
+ *
+ * @since 3.8.8.1
+ * @deprecated 3.8.8.2
  * @return boolean true if we're on the shopping cart page and should be ssl, false if not
  */
 function wpsc_is_ssl() {
