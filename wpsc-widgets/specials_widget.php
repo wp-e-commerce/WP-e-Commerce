@@ -176,26 +176,7 @@ function wpsc_specials( $args = null, $instance ) {
 				<br />
 				<span id="special_product_price_<?php echo wpsc_the_product_id(); ?>">
 				<!-- price display -->
-				<?php if(wpsc_have_variation_groups()):
-					while (wpsc_have_variation_groups()) : wpsc_the_variation_group(); ?>
-								<?php /** the variation HTML and loop */?>
-								<?php $variation_outputs = Array(); ?>
-								<?php while (wpsc_have_variations()) : wpsc_the_variation(); ?>
-										<?php
-										$variation_outputs[] = '';	
-										$variation_prices[] = wpsc_the_variation_price(true);
-									endwhile;
-									// Sort the variations into price order before outputting
-									$data[] = $variation_outputs;
-									$data[] = $variation_prices;
-									array_multisort($data[1],SORT_ASC,SORT_NUMERIC,
-											        $data[0],SORT_ASC,SORT_STRING);?>
-						<?php endwhile; 
-
-					 echo __('From', 'wpsc').' : '.wpsc_currency_display(  $data[1][0] ); ?>
-				<?php else: ?>
-				<?php echo wpsc_currency_display( wpsc_calculate_price( wpsc_the_product_id(),null,true ) ); ?>				
-				<?php endif; ?>
+				<?php echo wpsc_the_product_price(); ?>
 				</span><br />			
 				<strong><a class="wpsc_product_title" href="<?php echo wpsc_product_url( wpsc_the_product_id(), false ); ?>"><?php echo wpsc_the_product_title(); ?></a></strong><br /> 
 				
