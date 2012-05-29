@@ -156,6 +156,15 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 
 == Changelog ==
+= 3.8.8.2 =
+* Change: CSV sales export now puts the item quanity in a separate column from the product title.
+* Fix: Core checkout fields cannot be restored if they were deleted before upgrading to 3.8.8.
+* Fix: Insecure SSL resources when WordPress is using SSL, or "Force SSL Checkout" is enabled.
+* Fix: Issue with WPML and Variations.
+* Fix: Terms and Conditions - Checkout page breaks if you read the terms and conditions.
+* Fix: Total shipping value and total price incorrect in transaction results.
+* Fix: Variation sales prices are inaccurate in Product Specials Widget
+
 = 3.8.8.1 =
 * Fix: CSV import not working in 3.8.8.
 * Fix: Category page display setting does not override default Presentation settings.
