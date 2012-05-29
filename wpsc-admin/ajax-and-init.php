@@ -458,7 +458,8 @@ function wpsc_purchase_log_csv() {
 				$skuvalue = get_product_meta( $item['prodid'], 'sku', true );
 				if( empty( $skuvalue ) )
 				    $skuvalue = __( 'N/A', 'wpsc' );
-				$output .= "\"" . $item['quantity'] . " x " . str_replace( '"', '\"', $item['name'] ) . "\"";
+				$output .= "\"" . $item['quantity'] . "\",";
+				$output .= "\"" . str_replace( '"', '\"', $item['name'] ) . "\"";
 				$output .= "," . $skuvalue."," ;
 			}
 			$output .= "\n"; // terminates the row/line in the CSV file
@@ -466,7 +467,7 @@ function wpsc_purchase_log_csv() {
 		// Get the most number of products and create a header for them
 		$headers3 = "";
 		for( $i = 0; $i < $count; $i++ ){
-			$headers3 .= "\"Quantity - Product Name \", \" SKU \"";
+			$headers3 .= "\"Quantity\",\"Product Name\",\"SKU\"";
 			if( $i < ( $count - 1 ) )
 			    $headers3 .= ",";
 		}
