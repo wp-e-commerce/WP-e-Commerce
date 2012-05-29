@@ -42,7 +42,7 @@ class WP_Widget_Product_Specials extends WP_Widget {
 		if ( $title )
 			echo $before_title . $title . $after_title;
 
-		wpsc_specials($args, $instance);
+		wpsc_specials( $args, $instance );
 		echo $after_widget;
 	
 	}
@@ -58,10 +58,12 @@ class WP_Widget_Product_Specials extends WP_Widget {
 	function update( $new_instance, $old_instance ) {
 	
 		$instance = $old_instance;
-		$instance['title']  = strip_tags( $new_instance['title'] );
-		$instance['number'] = (int)$new_instance['number'];
-		$instance['show_thumbnails'] = (bool)$new_instance['show_thumbnails'];
-		$instance['show_description']  = (bool)$new_instance['show_description'];
+		$instance['title']             = strip_tags( $new_instance['title'] );
+		$instance['number']            = (int) $new_instance['number'];
+		$instance['show_thumbnails']   = (bool) $new_instance['show_thumbnails'];
+		$instance['show_description']  = (bool) $new_instance['show_description'];
+		$instance['show_old_price']    = (bool) $new_instance['show_old_price'];
+		$instance['show_discount']     = (bool) $new_instance['show_discount'];
 
 		return $instance;
 		
@@ -77,49 +79,58 @@ class WP_Widget_Product_Specials extends WP_Widget {
 		global $wpdb;
 		
 		// Defaults
-		$instance = wp_parse_args( (array)$instance, array(
-			'title' => '',
+		$instance = wp_parse_args( (array) $instance, array(
+			'title'            => '',
 			'show_description' => false,
-			'show_thumbnails' => false,
-			'number' => 5
+			'show_thumbnails'  => false,
+			'number'           => 5,
+			'show_old_price'   => false,
+			'show_discount'    => false
 		) );
 		
 		// Values
-		$title = esc_attr( $instance['title'] );
-		$number = (int)$instance['number'];
-		$show_thumbnails = (bool)$instance['show_thumbnails'];
-		$show_description = (bool)$instance['show_description'];
+		$title            = $instance['title'];
+		$number           = (int) $instance['number'];
+		$show_thumbnails  = (bool) $instance['show_thumbnails'];
+		$show_description = (bool) $instance['show_description'];
+		$show_old_price   = (bool) $instance['show_old_price'];
+		$show_discount    = (bool) $instance['show_discount'];
 		
 		?>
 		<p>
-			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:', 'wpsc' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>" />
+			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'wpsc' ); ?></label>
+			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
 		</p>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'number' ); ?>"><?php _e( 'Number of products to show:', 'wpsc' ); ?></label>
 			<input type="text" id="<?php echo $this->get_field_id( 'number' ); ?>" name="<?php echo $this->get_field_name( 'number' ); ?>" value="<?php echo $number; ?>" size="3" />
 		</p>
 		<p>
-			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'show_description' ); ?>" name="<?php echo $this->get_field_name( 'show_description' ); ?>" <?php echo $show_description ? 'checked="checked"' : ""; ?>>
+			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'show_description' ); ?>" name="<?php echo $this->get_field_name( 'show_description' ); ?>" <?php checked( $show_description, '1' ); ?>>
 			<label for="<?php echo $this->get_field_id( 'show_description' ); ?>"><?php _e( 'Show Description', 'wpsc' ); ?></label><br />
-			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'show_thumbnails' ); ?>" name="<?php echo $this->get_field_name( 'show_thumbnails' ); ?>" <?php echo $show_thumbnails ? 'checked="checked"' : ""; ?>>
-			<label for="<?php echo $this->get_field_id( 'show_thumbnails' ); ?>"><?php _e( 'Show Thumbnails', 'wpsc' ); ?></label>
+			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'show_thumbnails' ); ?>" name="<?php echo $this->get_field_name( 'show_thumbnails' ); ?>" <?php checked( $show_thumbnails, '1' ); ?>>
+			<label for="<?php echo $this->get_field_id( 'show_thumbnails' ); ?>"><?php _e( 'Show Thumbnails', 'wpsc' ); ?></label><br />
+			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'show_old_price' ); ?>" name="<?php echo $this->get_field_name( 'show_old_price' ); ?>" <?php checked( $show_old_price, '1' ); ?>>
+			<label for="<?php echo $this->get_field_id( 'show_old_price' ); ?>"><?php _e( 'Show Old Price', 'wpsc' ); ?></label><br />
+			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'show_discount' ); ?>" name="<?php echo $this->get_field_name( 'show_discount' ); ?>" <?php checked( $show_discount, '1' ); ?>>
+			<label for="<?php echo $this->get_field_id( 'show_discount' ); ?>"><?php _e( 'Show Discount', 'wpsc' ); ?></label>
 		</p>			
 <?php
 	}
 
 }
 
-add_action( 'widgets_init', create_function( '', 'return register_widget("WP_Widget_Product_Specials");' ) );
+add_action( 'widgets_init', 'wpsc_register_specials_widget' );
 
+function wpsc_register_specials_widget() {
+	register_widget( 'WP_Widget_Product_Specials' );
+}
 
 
 /**
  * Product Specials Widget content function
  *
  * Displays the latest products.
- *
- * @todo Remove marketplace theme specific code and maybe replce with a filter for the image output? (not required if themeable as above)
  *
  * Changes made in 3.8 that may affect users:
  *
@@ -131,93 +142,80 @@ add_action( 'widgets_init', create_function( '', 'return register_widget("WP_Wid
  */
  
 function wpsc_specials( $args = null, $instance ) {
-	
+
 	global $wpdb;
 	
-	$args = wp_parse_args( (array)$args, array( 'number' => 5 ) );
+	$args = wp_parse_args( (array) $args, array( 'number' => 5 ) );
 	
-	$siteurl = get_option( 'siteurl' );
+	$siteurl = site_url();
 	
-	if ( !$number = (int) $instance['number'] )
+	if ( ! $number = (int) $instance['number'] )
 		$number = 5;
 		
-	$show_thumbnails  = isset($instance['show_thumbnails']) ? (bool)$instance['show_thumbnails'] : FALSE;
-	$show_description  = isset($instance['show_description']) ? (bool)$instance['show_description'] : FALSE;
-	
-	$excludes = wpsc_specials_excludes();
+	$show_thumbnails   = isset( $instance['show_thumbnails'] )  ? (bool) $instance['show_thumbnails']  : false;
+	$show_description  = isset( $instance['show_description'] ) ? (bool) $instance['show_description'] : false;
+	$show_discount     = isset( $instance['show_discount'] )    ? (bool) $instance['show_discount']    : false;
+	$show_old_price    = isset( $instance['show_old_price'] )   ? (bool) $instance['show_old_price']   : false;
+
 	$args = array(
-		'post_type'   		=> 'wpsc-product',
-		'caller_get_posts' 	=> 1,
-		'post_status' 		=> 'publish',
-		'post_parent'		=> 0,
-		'post__not_in' 		=> $excludes,
-		'posts_per_page' 	=> $number
-	) ;	
-	$special_products = query_posts( $args );
+		'post_type'   		  => 'wpsc-product',
+		'ignore_sticky_posts' => 1,
+		'post_parent'		  => 0,
+		'post_status' 		  => 'publish',
+		'posts_per_page' 	  => $number,
+		'meta_query'          => array( array( 'key' => '_wpsc_special_price', 'value' => '0', 'compare' => '>', 'type' => 'NUMERIC' ) ),
+		'no_found_rows'       => true
+	);
+		
+	$special_products = new WP_Query( $args );
+
+	if ( ! $special_products->post_count ) {
+		echo apply_filters( 'wpsc_specials_widget_no_items_message', __( 'We currently have no items on special.', 'wpsc' ) );
+		return;
+	}
+
 	$output = '';
 	$product_ids[] = array();
-	if ( count( $special_products ) > 0 ) {
-		list( $wp_query, $special_products ) = array( $special_products, $wp_query ); // swap the wpsc_query object
-		while ( wpsc_have_products() ) : wpsc_the_product(); 
-				
-				if(!in_array(wpsc_the_product_id(),$product_ids)):
-				$product_ids[] = wpsc_the_product_id();
-				if( $show_thumbnails ):
-				 if ( wpsc_the_product_thumbnail() ) : ?>
-						<a rel="<?php echo str_replace(array(" ", '"',"'", '&quot;','&#039;'), array("_", "", "", "",''), wpsc_the_product_title()); ?>" href="<?php echo wpsc_the_product_permalink(); ?>">
-							<img class="product_image" id="product_image_<?php echo wpsc_the_product_id(); ?>" alt="<?php echo wpsc_the_product_title(); ?>" title="<?php echo wpsc_the_product_title(); ?>" src="<?php echo wpsc_the_product_thumbnail(); ?>"/>
-						</a>
-				<?php else: ?>
-							<a href="<?php echo wpsc_the_product_permalink(); ?>">
-							<img class="no-image" id="product_image_<?php echo wpsc_the_product_id(); ?>" alt="No Image" title="<?php echo wpsc_the_product_title(); ?>" src="<?php echo WPSC_URL; ?>/wpsc-theme/wpsc-images/noimage.png" width="<?php esc_attr_e( get_option('product_image_width') ); ?>" height="<?php esc_attr_e( get_option('product_image_height') ); ?>" />
-							</a>
-				<?php endif; ?>
-				<?php endif; // close show thumbnails ?> 
-				<br />
-				<span id="special_product_price_<?php echo wpsc_the_product_id(); ?>">
-				<!-- price display -->
-				<?php if(wpsc_have_variation_groups()):
-					while (wpsc_have_variation_groups()) : wpsc_the_variation_group(); ?>
-								<?php /** the variation HTML and loop */?>
-								<?php $variation_outputs = Array(); ?>
-								<?php while (wpsc_have_variations()) : wpsc_the_variation(); ?>
-										<?php
-										$variation_outputs[] = '';	
-										$variation_prices[] = wpsc_the_variation_price(true);
-									endwhile;
-									// Sort the variations into price order before outputting
-									$data[] = $variation_outputs;
-									$data[] = $variation_prices;
-									array_multisort($data[1],SORT_ASC,SORT_NUMERIC,
-											        $data[0],SORT_ASC,SORT_STRING);?>
-						<?php endwhile; 
 
-					 echo __('From', 'wpsc').' : '.wpsc_currency_display(  $data[1][0] ); ?>
-				<?php else: ?>
-				<?php echo wpsc_currency_display( wpsc_calculate_price( wpsc_the_product_id(),null,true ) ); ?>				
-				<?php endif; ?>
-				</span><br />			
-				<strong><a class="wpsc_product_title" href="<?php echo wpsc_product_url( wpsc_the_product_id(), false ); ?>"><?php echo wpsc_the_product_title(); ?></a></strong><br /> 
+		while ( $special_products->have_posts() ) : $special_products->the_post(); ?> 
+				<h4><strong><a class="wpsc_product_title" href="<?php echo wpsc_product_url( wpsc_the_product_id(), false ); ?>"><?php echo wpsc_the_product_title(); ?></a></h4></strong>
 				
-				<?php if( $show_description ): ?>
+				<?php if ( $show_description ): ?>
 					<div class="wpsc-special-description">
 						<?php echo wpsc_the_product_description(); ?>
 					</div>									
-				<?php endif; // close show description ?> 
-			
-				<?php
-				
-				
-				endif; 
-		endwhile;
-		list( $wp_query, $special_products ) = array( $special_products, $wp_query ); // swap the wpsc_query object
-		wp_reset_query();
-	}
-}
-function wpsc_specials_excludes(){
-	global $wpdb;
-	$exclude_products = $wpdb->get_col("SELECT ID FROM ".$wpdb->posts." JOIN ".$wpdb->postmeta." ON (".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id) WHERE ".$wpdb->posts.".post_type = 'wpsc-product' AND ".$wpdb->posts.".post_status = 'publish' AND ".$wpdb->postmeta.".meta_key = '_wpsc_special_price' AND ".$wpdb->postmeta.".meta_value = 0 GROUP BY ".$wpdb->posts.".ID ORDER BY ".$wpdb->posts.".post_date DESC");
+				<?php endif; // close show description 				
 
-	return $exclude_products;
+				if ( ! in_array( wpsc_the_product_id(), $product_ids ) ) :
+					$product_ids[] = wpsc_the_product_id();
+						if( $show_thumbnails ):
+							if ( wpsc_the_product_thumbnail() ) : ?>
+									<a rel="<?php echo str_replace(array(" ", '"',"'", '&quot;','&#039;'), array("_", "", "", "",''), wpsc_the_product_title()); ?>" href="<?php echo wpsc_the_product_permalink(); ?>">
+										<img class="product_image" id="product_image_<?php echo wpsc_the_product_id(); ?>" alt="<?php echo wpsc_the_product_title(); ?>" title="<?php echo wpsc_the_product_title(); ?>" src="<?php echo wpsc_the_product_thumbnail(); ?>"/>
+									</a>
+							<?php else : ?>
+										<a href="<?php echo wpsc_the_product_permalink(); ?>">
+										<img class="no-image" id="product_image_<?php echo wpsc_the_product_id(); ?>" alt="No Image" title="<?php echo wpsc_the_product_title(); ?>" src="<?php echo WPSC_URL; ?>/wpsc-theme/wpsc-images/noimage.png" width="<?php esc_attr_e( get_option('product_image_width') ); ?>" height="<?php esc_attr_e( get_option('product_image_height') ); ?>" />
+										</a>
+							<?php endif; ?>
+				<br />
+				<?php endif; // close show thumbnails ?> 
+					<div id="special_product_price_<?php echo wpsc_the_product_id(); ?>">
+					<!-- price display -->
+					<?php if ( $show_old_price ) : ?>
+						<span class="pricedisplay <?php echo wpsc_the_product_id(); ?>"><?php _e( 'Old Price', 'wpsc' ); ?>: <span class="oldprice" id="old_product_price_<?php echo wpsc_the_product_id(); ?>"><?php echo wpsc_product_normal_price(); ?></span></span><br />
+					<?php endif; ?>
+						<span><?php _e( 'Price', 'wpsc' ); ?>: <span id='product_price_<?php echo wpsc_the_product_id(); ?>'><?php echo wpsc_the_product_price(); ?></span></span><br />
+					<?php if ( $show_discount ) : ?>
+						<span class="pricedisplay product_<?php echo wpsc_the_product_id(); ?>"><?php _e( 'You save', 'wpsc' ); ?>: <?php echo wpsc_get_up_to_text( wpsc_the_product_id() ); ?> <span class="yousave" id="yousave_<?php echo wpsc_the_product_id(); ?>"><?php echo wpsc_currency_display( wpsc_you_save( 'type=amount' ), array( 'html' => false ) ); ?>! (<?php echo wpsc_you_save(); ?>%)</span></span>
+					<?php endif; ?>
+					</div><br />
+				<?php
+				endif;			
+		endwhile;
+
+		wp_reset_postdata();
+
 }
+
 ?>
