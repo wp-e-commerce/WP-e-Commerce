@@ -157,7 +157,7 @@
 				description : $('#content_ifr').contents().find('body').html(),
 				additional_description : $('textarea#additional_description').text(),
 				name : $('input#title').val(),
-				product_id : $('input#product_id').val()
+				product_id : $('input#post_ID').val()
 			},
 			ajax_callback = function(response){
 				$('div#wpsc_product_variation_forms table.widefat tbody').html(response);

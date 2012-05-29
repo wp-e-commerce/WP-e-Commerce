@@ -17,7 +17,7 @@ function wpsc_admin_product_listing($parent_product = null) {
 	global $wp_query;
 	add_filter('the_title','esc_html');
 	$args = array_merge( $wp_query->query, array( 'posts_per_page' => '-1' ) );
-	$GLOBALS['wpsc_products'] = query_posts( $args );
+	$GLOBALS['wpsc_products'] = get_posts( $args );
 
 	foreach ( (array)$GLOBALS['wpsc_products'] as $product ) {
 		wpsc_product_row($product, $parent_product);
