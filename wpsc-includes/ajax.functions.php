@@ -719,10 +719,16 @@ if ( isset( $_REQUEST['wpsc_action'] ) && ($_REQUEST['wpsc_action'] == 'gateway_
 	add_action( 'init', 'wpsc_gateway_notification' );
 }
 
-if ( isset( $_GET['termsandconds'] ) && ($_GET['termsandconds'] === 'true') ) {
-	echo wpautop( stripslashes( get_option( 'terms_and_conditions' ) ) );
-	exit();
+if ( isset( $_GET['termsandconds'] ) && 'true' == $_GET['termsandconds'] ) {
+	add_action( 'init', 'wpsc_show_terms_and_conditions' );
 }
+
+function wpsc_show_terms_and_conditions() {
+
+	echo wpautop( stripslashes( wp_kses_post( get_option( 'terms_and_conditions' ) ) ) );
+	die();
+}
+
 
 /**
  * wpsc_change_tax function, used through ajax and in normal page loading.
