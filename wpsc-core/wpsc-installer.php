@@ -735,4 +735,74 @@ function wpsc_rename_checkout_column(){
 	}
 
 }
-?>
+
+/**
+ * In 3.8.8, we removed the ability for the user to delete or add core checkout fields (things like billingfirstname, billinglastname etc.) in order to reduce user error. 
+ * Mistakenly deleting or duplicating those fields could cause unexpected bugs with checkout form validation.
+ * 
+ * Some users have encountered an issue where, if they had previously deleted a core checkout field, now they can't add it back again.
+ * With this function, we should check to see whether any core fields are missing (by checking the uniquenames)
+ * If there are some missing, we automatically generate those with the intended uniquename.
+ * 
+ * We set the 'active' field to 0, so as to mitigate any unintended consequences of adding additional fields.
+ * 
+ * @since 3.8.8.2
+ * @return none
+ */
+function wpsc_3882_database_updates() {
+	global $wpdb;
+
+	// Check if we have done this before
+	if ( version_compare( get_option( 'wpsc_version' ), '3.8.8.2', '>=' ) )
+		return;
+
+	$unique_names = array( 
+						'billingfirstname'  => __( 'First Name', 'wpsc' ), 
+						'billinglastname'   => __( 'Last Name', 'wpsc' ), 
+						'billingaddress'    => __( 'Address', 'wpsc' ),  
+						'billingcity'       => __( 'City', 'wpsc' ), 
+						'billingstate'      => __( 'State', 'wpsc' ), 
+						'billingcountry'    => __( 'Country', 'wpsc' ), 
+						'billingemail'      => __( 'Email', 'wpsc' ), 
+						'billingphone'      => __( 'Phone', 'wpsc' ),  
+						'billingpostcode'   => __( 'Postal Code', 'wpsc' ), 
+						'delivertoafriend'  => __( 'Shipping Address', 'wpsc' ), 
+						'shippingfirstname' => __( 'First Name', 'wpsc' ), 
+						'shippinglastname'  => __( 'Last Name', 'wpsc' ), 
+						'shippingaddress'   => __( 'Address', 'wpsc' ), 
+						'shippingcity'      => __( 'City', 'wpsc' ), 
+						'shippingstate'     => __( 'State', 'wpsc' ), 
+						'shippingcountry'   => __( 'Country', 'wpsc' ), 
+						'shippingpostcode'  => __( 'Postal Code', 'wpsc' ), 
+					);
+
+	// Check if any uniquenames are missing
+	$current_columns = array_filter( $wpdb->get_col( $wpdb->prepare( 'SELECT unique_name FROM ' . WPSC_TABLE_CHECKOUT_FORMS ) ) );
+
+	$columns_to_add = array_diff_key( $unique_names, array_flip( $current_columns ) );
+
+	if ( empty( $columns_to_add ) )
+		return update_option( 'wpsc_version', '3.8.8.2' );
+
+	foreach ( $columns_to_add as $unique_name => $name ) {
+
+			// We need to add the row.  A few cases to check for type.  Quick and procedural felt like less overkill than a switch statement
+			$type = 'text';
+			$type = stristr( $unique_name, 'address' ) ? 'address'         : $type;
+			$type = stristr( $unique_name, 'city' )    ? 'city'            : $type;
+			$type = 'billingcountry'  == $unique_name  ? 'country'         : $type;
+			$type = 'billingemail'    == $unique_name  ? 'email'           : $type;
+			$type = 'shippingcountry' == $unique_name  ? 'deliverycountry' : $type;
+
+			$wpdb->insert( WPSC_TABLE_CHECKOUT_FORMS, 
+				array( 'unique_name' => $unique_name, 'active' => '0', 'type' => $type, 'name' => $name, 'checkout_set' => '0' ),
+				array( '%s', '%d', '%s', '%s', '%d' )
+			);
+	}
+
+	// Update option to database to indicate that we have patched this. 
+	update_option( 'wpsc_version', '3.8.8.2' );
+
+}
+
+add_action( 'plugins_loaded', 'wpsc_3882_database_updates' );
