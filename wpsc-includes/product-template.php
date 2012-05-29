@@ -1751,34 +1751,6 @@ function gold_cart_display_gallery(){
 	return function_exists('gold_shpcrt_display_gallery');
 }
 
-<<<<<<< HEAD
-function wpsc_remove_currency_code( $args ) {
-
-	$args['display_currency_symbol'] = false;
-	$args['display_currency_code']  = false;
-
-	return $args;
-}
-
-function wpsc_get_up_to_text( $product_id ) {
-
-		add_filter( 'wpsc_toggle_display_currency_code', 'wpsc_remove_currency_code' );
-
-		$savings_text  = '';
-
-		$maybe_variation_price = wpsc_product_variation_price_available( $product_id );
-
-		if ( '0.00' != $maybe_variation_price )
-			$savings_text = apply_filters( 'wpsc_you_save_variation_text', __( 'up to', 'wpsc' ) );
-
-		remove_filter( 'wpsc_toggle_display_currency_code', 'wpsc_remove_currency_code' );
-
-		return $savings_text;
-
-}
-
-=======
->>>>>>> parent of 12d563a... Fix: Variation sales prices are inaccurate in Product Specials Widget
 function wpsc_you_save( $args = null ){
 
 	$defaults = array(
@@ -1793,11 +1765,7 @@ function wpsc_you_save( $args = null ){
 	global $wpdb;
 
 	if ( ! $product_id )
-<<<<<<< HEAD
-		if ( function_exists( 'wpsc_the_product_id' ) ) {
-=======
 		if( function_exists( 'wpsc_the_product_id' ) ){
->>>>>>> parent of 12d563a... Fix: Variation sales prices are inaccurate in Product Specials Widget
 			//select the variation ID with lowest price
 			$product_id = $wpdb->get_var('SELECT `posts`.`id` FROM ' . $wpdb->posts . ' `posts` JOIN ' . $wpdb->postmeta . ' `postmeta` ON `posts`.`id` = `postmeta`.`post_id` WHERE `posts`.`post_parent` = ' . wpsc_the_product_id() . ' AND `posts`.`post_type` = "wpsc-product" AND `posts`.`post_status` = "inherit" AND `postmeta`.`meta_key`="_wpsc_price" ORDER BY (`postmeta`.`meta_value`)+0 ASC LIMIT 1');
 			if( ! $product_id )
@@ -1806,12 +1774,6 @@ function wpsc_you_save( $args = null ){
 
 	if ( ! $product_id )
 		return 0;
-<<<<<<< HEAD
-
-	add_filter( 'wpsc_toggle_display_currency_code', 'wpsc_remove_currency_code' );
-	add_filter( 'wpsc_product_variation_text', '__return_false' );
-=======
->>>>>>> parent of 12d563a... Fix: Variation sales prices are inaccurate in Product Specials Widget
 
 	$regular_price = wpsc_calculate_price( $product_id, $variations, false );
 	$sale_price = wpsc_calculate_price( $product_id, $variations, true );
@@ -1833,25 +1795,4 @@ function wpsc_get_downloadable_file($file_id){
 	return get_post( $file_id );
 }
 
-<<<<<<< HEAD
-/**
-* wpsc_product_has_children function
-* Checks whether a product has variations or not
-*
-* @return boolean true if product does have variations, false otherwise
-*/
-function wpsc_product_has_children( $id ){
-	$args = array(
-			'post_parent' => $id,
-			'post_type' => 'wpsc-product',
-			'post_status' => 'inherit publish'
-			);
-	$children = get_children( $args );
-
-	return ! empty( $children );
-}
-
-
-=======
->>>>>>> parent of 12d563a... Fix: Variation sales prices are inaccurate in Product Specials Widget
 ?>
