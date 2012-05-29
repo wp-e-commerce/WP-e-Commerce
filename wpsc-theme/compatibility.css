@@ -44,3 +44,7 @@ table.wpsc_checkout_table label{
 	display:inline;
 	padding-right:10px;
 }
+aside.widget_wpsc_product_specials span.oldprice {
+	text-decoration: line-through;
+	color: #666; 
+}
