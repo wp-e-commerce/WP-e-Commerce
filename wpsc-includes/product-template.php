@@ -1,4 +1,5 @@
 <?php
+
 /**
  * WP eCommerce product functions and product utility function.
  *
@@ -383,7 +384,7 @@ function wpsc_product_variation_price_available( $product_id, $from_text = false
 	$price = apply_filters( 'wpsc_do_convert_price', $prices[0], $product_id );
 	$price = wpsc_currency_display( $price, array( 'display_as_html' => false ) );
 
-	if ( $prices[0] == $prices[count( $prices ) - 1] )
+	if ( isset( $prices[0] ) && $prices[0] == $prices[count( $prices ) - 1] )
 		$from_text = false;
 
 	if ( $from_text )
@@ -407,13 +408,14 @@ function wpsc_product_normal_price() {
  */
 function wpsc_the_product_price( $no_decimals = false, $only_normal_price = false ) {
 	global $wpsc_query, $wpsc_variations, $wpdb;
+
 	$product_id = get_the_ID();
-	if ( ! empty( $wpsc_variations->first_variations ) ) {
+
+	if ( wpsc_product_has_children( $product_id ) ) {
 		$from_text = apply_filters( 'wpsc_product_variation_text', ' from ' );
 		$output = wpsc_product_variation_price_available( $product_id, __( " {$from_text} %s", 'wpsc' ), $only_normal_price );
 	} else {
 		$price = $full_price = get_post_meta( $product_id, '_wpsc_price', true );
-
 		if ( ! $only_normal_price ) {
 			$special_price = get_post_meta( $product_id, '_wpsc_special_price', true );
 
@@ -1752,11 +1754,36 @@ function gold_cart_display_gallery(){
 	return function_exists('gold_shpcrt_display_gallery');
 }
 
-function wpsc_you_save($args = null){
+function wpsc_remove_currency_code( $args ) {
+
+	$args['display_currency_symbol'] = false;
+	$args['display_currency_code']  = false;
+
+	return $args;
+}
+
+function wpsc_get_up_to_text( $product_id ) {
+
+		add_filter( 'wpsc_toggle_display_currency_code', 'wpsc_remove_currency_code' );
+
+		$savings_text  = '';
+
+		$maybe_variation_price = wpsc_product_variation_price_available( $product_id );
+
+		if ( '0.00' != $maybe_variation_price )
+			$savings_text = apply_filters( 'wpsc_you_save_variation_text', __( 'up to', 'wpsc' ) );
+	
+		remove_filter( 'wpsc_toggle_display_currency_code', 'wpsc_remove_currency_code' );
+
+		return $savings_text;
+
+}
+
+function wpsc_you_save( $args = null ){
 
 	$defaults = array(
 		'product_id' => false,
-		'type' => "percentage",
+		'type'       => 'percentage',
 		'variations' => false
 	);
 
@@ -1766,27 +1793,33 @@ function wpsc_you_save($args = null){
 	global $wpdb;
 
 	if ( ! $product_id )
-		if(function_exists('wpsc_the_product_id')){
+		if ( function_exists( 'wpsc_the_product_id' ) ) {
 			//select the variation ID with lowest price
 			$product_id = $wpdb->get_var('SELECT `posts`.`id` FROM ' . $wpdb->posts . ' `posts` JOIN ' . $wpdb->postmeta . ' `postmeta` ON `posts`.`id` = `postmeta`.`post_id` WHERE `posts`.`post_parent` = ' . wpsc_the_product_id() . ' AND `posts`.`post_type` = "wpsc-product" AND `posts`.`post_status` = "inherit" AND `postmeta`.`meta_key`="_wpsc_price" ORDER BY (`postmeta`.`meta_value`)+0 ASC LIMIT 1');
-			if(!$product_id)
-				$product_id=wpsc_the_product_id();
+			if( ! $product_id )
+				$product_id = wpsc_the_product_id();
 		}
 
 	if ( ! $product_id )
 		return 0;
+	
+	add_filter( 'wpsc_toggle_display_currency_code', 'wpsc_remove_currency_code' );
+	add_filter( 'wpsc_product_variation_text', '__return_false' );
 
-	$regular_price = wpsc_calculate_price( $product_id, $variations, false );
-	$sale_price = wpsc_calculate_price( $product_id, $variations, true );
+	$regular_price = wpsc_the_product_price( false, true );
+	$sale_price    = wpsc_the_product_price();
 
-	switch( $type ){
-		case "amount":
+	remove_filter( 'wpsc_toggle_display_currency_code', 'wpsc_remove_currency_code' );
+	remove_filter( 'wpsc_product_variation_text', '__return_false' );
+
+		switch( $type ){
+		case 'amount' :
 			return $regular_price - $sale_price;
 			break;
 
 		default:
-			if(number_format ( ( $regular_price - $sale_price ) / $regular_price * 100 , 2 ) == 100)
-				return (99.99);
+			if ( number_format ( ( $regular_price - $sale_price ) / $regular_price * 100 , 2 ) == 100 )
+				return 99.99;
 			else
 				return number_format ( ( $regular_price - $sale_price ) / $regular_price * 100 , 2 );
 	}
@@ -1795,5 +1828,23 @@ function wpsc_you_save($args = null){
 function wpsc_get_downloadable_file($file_id){
 	return get_post( $file_id );
 }
+
+/**
+* wpsc_product_has_children function
+* Checks whether a product has variations or not
+*
+* @return boolean true if product does have variations, false otherwise
+*/
+function wpsc_product_has_children( $id ){
+	$args = array(
+			'post_parent' => $id,
+			'post_type' => 'wpsc-product',
+			'post_status' => 'inherit publish'
+			);
+	$children = get_children( $args );
+	
+	return ! empty( $children );
+}
+
 
 ?>

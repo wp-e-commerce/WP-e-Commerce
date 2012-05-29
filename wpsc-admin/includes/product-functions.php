@@ -10,26 +10,6 @@ function wpsc_get_max_upload_size(){
 	return wp_convert_bytes_to_hr( wp_max_upload_size() );
 }
 
-
-/**
-* wpsc_product_has_children function
-* Checks whether a product has variations or not
-*
-* @return boolean true if product does have variations, false otherwise
-*/
-function wpsc_product_has_children($id){
-	$args = array(
-			'post_parent' => $id,
-			'post_type' => 'wpsc-product',
-			'post_status' => 'inherit publish'
-			);
-	$children = get_children($args);
-	if( empty($children) )
-		return false;
-	else
-		return true;
-}
-
 /**
 * wpsc_admin_submit_product function
 * @internal Was going to completely refactor sanitise forms and wpsc_insert_product, but they are also used by the import system
