@@ -329,28 +329,28 @@ function wpsc_purchaselog_details_SKU() {
 
 function wpsc_purchaselog_details_quantity() {
    global $purchlogitem;
-   return (int)$purchlogitem->purchitem->quantity;
+   return (float) $purchlogitem->purchitem->quantity;
 }
 
 function wpsc_purchaselog_details_price() {
    global $purchlogitem;
-   return (float)$purchlogitem->purchitem->price;
+   return (float) $purchlogitem->purchitem->price;
 }
 
 function wpsc_purchaselog_details_shipping() {
    global $purchlogitem;
-   return (int)$purchlogitem->purchitem->pnp;
+   return (float) $purchlogitem->purchitem->pnp;
 }
 
 function wpsc_purchaselog_details_tax() {
    global $purchlogitem, $wpsc_cart;
 
-   return (int)$purchlogitem->purchitem->tax_charged;
+   return (float) $purchlogitem->purchitem->tax_charged;
 }
 
 function wpsc_purchaselog_details_discount() {
    global $purchlogitem;
-   return (float)$purchlogitem->extrainfo->discount_value;
+   return (float) $purchlogitem->extrainfo->discount_value;
 }
 
 function wpsc_purchaselog_details_date() {
@@ -408,16 +408,21 @@ function wpsc_display_purchlog_discount( $numeric = false ) {
  * Returns base shipping should make a function to calculate items shipping as well
  */
 
-function wpsc_display_purchlog_shipping( $numeric = false ) {
+function wpsc_display_purchlog_shipping( $numeric = false, $include_item = false ) {
    global $purchlogitem;
    $base_shipping = $purchlogitem->extrainfo->base_shipping;
    $per_item_shipping = 0;
-   foreach ( (array)$purchlogitem->allcartcontent as $cart_item ) {
-      if ( $cart_item->pnp > 0 ) {
-         $per_item_shipping += ( $cart_item->pnp );
+
+   if ( $include_item ) {
+      foreach ( (array)$purchlogitem->allcartcontent as $cart_item ) {
+         if ( $cart_item->pnp > 0 ) {
+            $per_item_shipping += ( $cart_item->pnp );
+         }
       }
    }
+
    $total_shipping = $per_item_shipping + $base_shipping;
+
    if ( $numeric == true ) {
       return $total_shipping;
    } else {
