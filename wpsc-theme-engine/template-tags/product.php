@@ -436,7 +436,7 @@ function wpsc_product_no_thumbnail_image( $size = 'single', $attr = '' ) {
 	$wp_size    = 'wpsc_product_' . $size . '_thumbnail';
 	$dimensions = $_wp_additional_image_sizes[$wp_size];
 	$title      = wpsc_product_title_attribute( array( 'echo' => false ) );
-	$src        = apply_filters( 'wpsc_product_no_thumbnail_url', WPSC_THEME_ENGINE_COMPAT_URL . '/default/images/no-thumbnails.png', $size, $attr );
+	$src        = apply_filters( 'wpsc_product_no_thumbnail_url', wpsc_locate_theme_file_uri( 'wp-e-commerce/images/noimage.png' ), $size, $attr );
 	$html       = '<img alt="' . $title . '" src="' . $src . '" title="' . $title . '" width="' . $dimensions['width'] . '" height="' . $dimensions['height'] . '" />';
 	$html       = apply_filters( 'wpsc_product_no_thumbnail_html', $html, $size, $attr );
 
