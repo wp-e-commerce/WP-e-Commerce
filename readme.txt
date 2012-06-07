@@ -1,5 +1,5 @@
 === WP e-Commerce ===
-Contributors: mufasa, jghazally, valentinas, mychelle, garyc40, justinsainton
+Contributors: mufasa, mychelle, garyc40, justinsainton
 Donate link: http://getshopped.org
 Tags: e-commerce, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
 Requires at least: 3.1
