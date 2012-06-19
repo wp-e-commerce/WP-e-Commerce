@@ -825,7 +825,6 @@ function wpsc_taxonomy_rewrite_rules( $rewrite_rules ) {
 	$new_rewrite_rules[$products_page . '/(.+?)/([^/]+)/comment-page-([0-9]{1,})/?$'] = 'index.php?post_type=wpsc-product&products=$matches[1]&wpsc_item=$matches[2]&cpage=$matches[3]';
 	$new_rewrite_rules[$products_page . '/(.+?)/([^/]+)?$'] = 'index.php?post_type=wpsc-product&products=$matches[1]&wpsc_item=$matches[2]';
 
-
 	$last_target_rule = array_pop( $target_rule_set );
 
 	$rebuilt_rewrite_rules = array( );
@@ -834,6 +833,14 @@ function wpsc_taxonomy_rewrite_rules( $rewrite_rules ) {
 			$rebuilt_rewrite_rules = array_merge( $rebuilt_rewrite_rules, $new_rewrite_rules );
 		}
 		$rebuilt_rewrite_rules[$rewrite_key] = $rewrite_query;
+	}
+
+	// fix pagination in WordPress 3.4
+	if ( version_compare( get_bloginfo( 'version' ), '3.4', '>=' ) ) {
+		$rebuilt_rewrite_rules = array_merge(
+			array( '(' . $products_page . ')/([0-9]+)/?' => 'index.php?pagename=$matches[1]&page=$matches[2]' ),
+			$rebuilt_rewrite_rules
+		);
 	}
 
 	return $rebuilt_rewrite_rules;
