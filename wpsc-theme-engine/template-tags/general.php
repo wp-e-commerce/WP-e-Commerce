@@ -248,6 +248,9 @@ function wpsc_get_cart_title() {
 	return apply_filters( 'wpsc_get_cart_title', __( 'Cart', 'wpsc' ) );
 }
 
+function wpsc_get_login_title() {
+	return apply_filters( 'wpsc_get_login_title', __( 'Login', 'wpsc' ) );
+}
 function wpsc_keep_shopping_button() {
 	$keep_shopping_url = isset( $_REQUEST['_wp_http_referer'] ) ? esc_attr( $_REQUEST['_wp_http_referer'] ) : wpsc_get_catalog_url();
 	?>

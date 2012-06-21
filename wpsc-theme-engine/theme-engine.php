@@ -794,7 +794,7 @@ function wpsc_title( $title, $sep, $sep_location ) {
 		elseif ( wpsc_is_password_reminder() )
 			$title = apply_filters( 'wpsc_password_reminder_title', __( 'Password Reminder', 'wpsc' ), $sep, $sep_location );
 		elseif ( wpsc_is_login() )
-			$title = apply_filters( 'wpsc_login_title', __( 'Log In', 'wpsc' ), $sep, $sep_location );
+			$title = wpsc_get_login_title();
 		elseif ( wpsc_is_register() )
 			$title = apply_filters( 'wpsc_register_title', __( 'Register', 'wpsc' ), $sep, $sep_location );
 
