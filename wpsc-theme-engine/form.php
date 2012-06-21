@@ -76,6 +76,8 @@ function wpsc_get_form_output( $args ) {
 		'class'               => 'wpsc-form wpsc-form-horizontal',
 		'before_field'        => '<div id="%1$s" class="%2$s">',
 		'after_field'         => '</div>',
+		'before_field_description' => '<div id="%1$s" class="%2$s">',
+		'after_field_description'  => '</div>',
 		'before_label'        => '',
 		'after_label'         => '',
 		'before_controls'     => '<div class="wpsc-controls">',
@@ -83,6 +85,8 @@ function wpsc_get_form_output( $args ) {
 		'before_form_actions' => '<div class="wpsc-form-actions">',
 		'after_form_actions'  => '</div>',
 	);
+
+	$defaults = apply_filters( 'wpsc_get_form_output_default_args', $defaults );
 
 	$r = wp_parse_args( $args, $defaults );
 
@@ -113,6 +117,7 @@ function wpsc_display_form( $args ) {
 }
 
 add_filter( 'wpsc_control_before'   , '_wpsc_filter_control_before'   , 10, 3 );
+add_filter( 'wpsc_control_after'    , '_wpsc_filter_control_after'    , 15, 3 );
 add_filter( 'wpsc_control_textfield', '_wpsc_filter_control_textfield', 10, 3 );
 add_filter( 'wpsc_control_select'   , '_wpsc_filter_control_select'   , 10, 3 );
 add_filter( 'wpsc_control_submit'   , '_wpsc_filter_control_submit'   , 10, 3 );
@@ -135,6 +140,17 @@ function _wpsc_filter_control_before( $output, $field, $args ) {
 	}
 
 	$output = $label_output . $output;
+
+	return $output;
+}
+
+function _wpsc_filter_control_after( $output, $field, $args ) {
+	if ( empty( $field['description'] ) )
+		return $output;
+
+	$output .= sprintf( $args['before_field_description'], $field['id'] . '-description', 'wpsc-field-description' );
+	$output .= apply_filters( 'wpsc_field_description', esc_html( $field['description'] ) );
+	$output .= $args['after_field_description'];
 
 	return $output;
 }
