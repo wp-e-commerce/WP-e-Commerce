@@ -694,13 +694,13 @@ function wpsc_get_page_slugs() {
 		'cart',
 		'checkout',
 		'transaction',
-		'customer_account',
+		'customer-account',
 	);
 
 	if ( get_option( 'users_can_register' ) ) {
 		$pages = array_merge( $pages, array(
 			'login',
-			'password_reminder',
+			'password-reminder',
 			'register',
 		) );
 	}

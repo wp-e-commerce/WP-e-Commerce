@@ -92,9 +92,10 @@ class WPSC_Page
 	}
 
 	public function _filter_template_include( $template ) {
+		$template_name = 'wpsc-' . get_query_var( 'wpsc_page' );
 		$templates = array(
-			"{$this->template_name}-{$this->slug}.php",
-			"{$this->template_name}.php",
+			"{$template_name}-{$this->slug}.php",
+			"{$template_name}.php",
 		);
 
 		$located = wpsc_locate_template( $templates );
