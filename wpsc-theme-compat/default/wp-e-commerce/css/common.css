@@ -11,6 +11,7 @@
 .wpsc-form legend,
 .wpsc-form label,
 .wpsc-form input[type="text"],
+.wpsc-form input[type="password"],
 .wpsc-form input[type="url"],
 .wpsc-form input[type="number"],
 .wpsc-form input[type="email"],
@@ -37,6 +38,7 @@
   margin: 0;
 }
 .wpsc-form input[type="text"],
+.wpsc-form input[type="password"],
 .wpsc-form input[type="url"],
 .wpsc-form input[type="number"],
 .wpsc-form input[type="email"],
@@ -65,6 +67,7 @@
 }
 .wpsc-form label,
 .wpsc-form input[type="text"],
+.wpsc-form input[type="password"],
 .wpsc-form input[type="url"],
 .wpsc-form input[type="number"],
 .wpsc-form input[type="email"],
@@ -78,6 +81,7 @@
   line-height: 18px;
 }
 .wpsc-form input[type="text"],
+.wpsc-form input[type="password"],
 .wpsc-form input[type="url"],
 .wpsc-form input[type="number"],
 .wpsc-form input[type="email"],
@@ -100,6 +104,7 @@
   width: 240px;
 }
 .wpsc-form input[type="text"][disabled="disabled"],
+.wpsc-form input[type="password"][disabled="disabled"],
 .wpsc-form input[type="url"][disabled="disabled"],
 .wpsc-form input[type="number"][disabled="disabled"],
 .wpsc-form input[type="email"][disabled="disabled"],
@@ -108,6 +113,7 @@
 .wpsc-form textarea[disabled="disabled"],
 .wpsc-form select[multiple="multiple"][disabled="disabled"],
 .wpsc-form input[type="text"].disabled,
+.wpsc-form input[type="password"].disabled,
 .wpsc-form input[type="url"].disabled,
 .wpsc-form input[type="number"].disabled,
 .wpsc-form input[type="email"].disabled,
@@ -119,6 +125,7 @@
   color: #999999;
 }
 .wpsc-form input[type="text"]:focus,
+.wpsc-form input[type="password"]:focus,
 .wpsc-form input[type="url"]:focus,
 .wpsc-form input[type="number"]:focus,
 .wpsc-form input[type="email"]:focus,
@@ -175,6 +182,11 @@
   border-top: 1px solid #cccccc;
   padding-top: 18px;
   margin-bottom: 18px;
+}
+.wpsc-field-description {
+  color: #666666;
+  font-size: 11px;
+  line-height: 18px;
 }
 .wpsc-label {
   -webkit-border-radius: 3px;
@@ -651,6 +663,7 @@ table.wpsc-table tbody tr:hover th {
   color: #0778b1;
   background-color: #b6e7ff;
 }
+/* Products */
 .wpsc-product-title {
   color: #333333;
   font-size: 24px;
@@ -729,7 +742,6 @@ table.wpsc-table tbody tr:hover th {
 .wpsc-add-to-cart-form .wpsc-form-actions {
   background-color: transparent;
   border-top: none;
-  padding-left: 90px;
   padding-top: 0;
 }
 .wpsc-add-to-cart-form input[type="text"],
@@ -791,4 +803,29 @@ table.wpsc-cart-item-table .wpsc-thumbnail {
 }
 .wpsc-shopping-cart .wpsc-form-actionstop {
   margin-bottom: 48px;
+}
+/* Login form */
+.wpsc-login-form,
+.wpsc-create-account-offer {
+  width: 45%;
+}
+.wpsc-login-form {
+  float: left;
+}
+.wpsc-login-form input[type="text"],
+.wpsc-login-form input[type="password"] {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  *width: 94%;
+  /* IE 7 and below doesn't support box-sizing */
+
+}
+.wpsc-login-form .wpsc-form-actions {
+  border-top: none;
+  padding-top: 0;
+}
+.wpsc-create-account-offer {
+  float: right;
 }
