@@ -9,11 +9,14 @@ class WPSC_Theme_Engine_Compat
 		add_filter( 'wpsc_theme_compat_reset_globals_cart'    , array( $this, '_filter_reset_globals_cart'      ) );
 		add_filter( 'wpsc_theme_compat_reset_globals_taxonomy', array( $this, '_filter_reset_globals_taxonomy'  ) );
 		add_filter( 'wpsc_theme_compat_reset_globals_login'   , array( $this, '_filter_reset_globals_login'     ) );
+		add_filter( 'wpsc_theme_compat_reset_globals_register', array( $this, '_filter_reset_globals_register'  ) );
+
 		add_filter( 'wpsc_replace_the_content_archive' , array( $this, '_filter_replace_the_content_archive'  ) );
 		add_filter( 'wpsc_replace_the_content_cart'    , array( $this, '_filter_replace_the_content_cart'     ) );
 		add_filter( 'wpsc_replace_the_content_single'  , array( $this, '_filter_replace_the_content_single'   ) );
 		add_filter( 'wpsc_replace_the_content_taxonomy', array( $this, '_filter_replace_the_content_taxonomy' ) );
 		add_filter( 'wpsc_replace_the_content_login'   , array( $this, '_filter_replace_the_content_login'    ) );
+		add_filter( 'wpsc_replace_the_content_register', array( $this, '_filter_replace_the_content_register' ) );
 	}
 
 	public function _filter_reset_globals_taxonomy() {
@@ -50,6 +53,12 @@ class WPSC_Theme_Engine_Compat
 		);
 	}
 
+	public function _filter_reset_globals_register() {
+		return array(
+			'post' => array(
+				'post_title' => wpsc_get_register_title(),
+			),
+		);
 	}
 
 	public function _filter_replace_the_content_archive( $content ) {
