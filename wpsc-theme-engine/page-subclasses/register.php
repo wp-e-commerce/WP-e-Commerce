@@ -2,8 +2,6 @@
 
 class WPSC_Page_Register extends WPSC_Page_SSL
 {
-	protected $template_name = 'wpsc-register';
-
 	public function __construct( $callback ) {
 		if ( is_user_logged_in() ) {
 			$redirect_to = wp_get_referer();
@@ -15,16 +13,13 @@ class WPSC_Page_Register extends WPSC_Page_SSL
 		}
 
 		parent::__construct( $callback, wpsc_get_register_url() );
-
-		global $wp_query;
-		$wp_query->wpsc_is_register = true;
 	}
 
 	public function filter_fields_dont_match_message() {
 		return __( 'The password fields do not match.', 'wpsc' );
 	}
 
-	public function process_register() {
+	public function _callback_register() {
 		$validation_rules = array(
 			'username' => array(
 				'title' => __( 'username', 'wpsc' ),

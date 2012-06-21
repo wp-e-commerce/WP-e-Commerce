@@ -2,12 +2,10 @@
 
 class WPSC_Page_Checkout extends WPSC_Page
 {
-	protected $current_step = '';
+	protected $current_step  = '';
 
 	public function __construct( $callback ) {
-		global $wp_query;
 		parent::__construct( $callback );
-		$wp_query->wpsc_is_checkout = true;
 	}
 
 	public function get_current_step() {

@@ -3,9 +3,7 @@
 class WPSC_Page_Cart extends WPSC_Page
 {
 	public function __construct( $callback ) {
-		global $wp_query;
 		parent::__construct( $callback );
-		$wp_query->wpsc_is_cart = true;
 		$this->message_collection->add( __( 'Your subtotal amount does not yet include shipping and handling, tax or discount offers, which will be reflected at Checkout.', 'wpsc' ), 'info' );
 	}
 

@@ -2,7 +2,7 @@
 
 class WPSC_Page_Login extends WPSC_Page_SSL
 {
-	public function process_login() {
+	public function _callback_login() {
 		if ( empty( $_COOKIE[TEST_COOKIE] ) )
 			$this->message_collection->add( __( "Cookies are blocked or not supported by your browser. You must <a href='http://www.google.com/cookies.html'>enable cookies</a> to log in to your account.", 'wpsc' ), 'error' );
 
@@ -18,7 +18,6 @@ class WPSC_Page_Login extends WPSC_Page_SSL
 		);
 
 		$validation = wpsc_validate_form( $validation_rules );
-
 		if ( is_wp_error( $validation ) ) {
 			$this->set_validation_errors( $validation );
 			return;
@@ -51,8 +50,5 @@ class WPSC_Page_Login extends WPSC_Page_SSL
 		setcookie(TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN);
 		if ( SITECOOKIEPATH != COOKIEPATH )
 			setcookie(TEST_COOKIE, 'WP Cookie check', 0, SITECOOKIEPATH, COOKIE_DOMAIN);
-
-		global $wp_query;
-		$wp_query->wpsc_is_login = true;
 	}
 }

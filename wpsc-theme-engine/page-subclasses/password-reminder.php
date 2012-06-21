@@ -2,8 +2,6 @@
 
 class WPSC_Page_Password_Reminder extends WPSC_Page_SSL
 {
-	protected $template_name = 'wpsc-password-reminder';
-
 	public function __construct( $callback ) {
 		if ( is_user_logged_in() ) {
 			$redirect_to = wp_get_referer();
@@ -14,9 +12,7 @@ class WPSC_Page_Password_Reminder extends WPSC_Page_SSL
 			exit;
 		}
 
-		global $wp_query;
 		parent::__construct( $callback, wpsc_get_password_reminder_url() );
-		$wp_query->wpsc_is_password_reminder = true;
 	}
 
 	public function process_new_password() {
