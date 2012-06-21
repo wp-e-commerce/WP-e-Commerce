@@ -788,7 +788,7 @@ function wpsc_title( $title, $sep, $sep_location ) {
 		$prefix = " {$sep} ";
 
 		if ( wpsc_is_cart() )
-			$title = apply_filters( 'wpsc_cart_title', __( 'Shopping Cart', 'wpsc' ), $sep, $sep_location );
+			$title = wpsc_get_cart_title();
 		elseif ( wpsc_is_checkout() )
 			$title = apply_filters( 'wpsc_checkout_title', __( 'Checkout', 'wpsc' ), $sep, $sep_location );
 		elseif ( wpsc_is_password_reminder() )
