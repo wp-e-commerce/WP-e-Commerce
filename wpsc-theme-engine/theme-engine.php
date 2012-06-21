@@ -790,7 +790,7 @@ function wpsc_title( $title, $sep, $sep_location ) {
 		if ( wpsc_is_cart() )
 			$title = wpsc_get_cart_title();
 		elseif ( wpsc_is_checkout() )
-			$title = apply_filters( 'wpsc_checkout_title', __( 'Checkout', 'wpsc' ), $sep, $sep_location );
+			$title = wpsc_get_checkout_title();
 		elseif ( wpsc_is_password_reminder() )
 			$title = apply_filters( 'wpsc_password_reminder_title', __( 'Password Reminder', 'wpsc' ), $sep, $sep_location );
 		elseif ( wpsc_is_login() )
