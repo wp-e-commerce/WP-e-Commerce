@@ -229,9 +229,8 @@ function wpsc_cart_has_items() {
 }
 
 function wpsc_has_user_messages( $type = 'all', $context = 'main' ) {
-	global $wpsc_page_instance;
-	if ( empty( $wpsc_page_instance ) )
-		return false;
+	$message_collection = WPSC_Message_Collection::get_instance();
+	$messages = $message_collection->query( $type, $context );
 
-	return $wpsc_page_instance->has_messages( $type, $context );
+	return ! empty( $messages );
 }
