@@ -740,11 +740,25 @@ function wpsc_prepare_pages( $query ) {
 		return;
 
 	if ( $page = $query->get( 'wpsc_page' ) ) {
+		add_filter( 'posts_where', '_wpsc_filter_suppress_sql_query', 10, 2 );
 		$callback = $query->get( 'wpsc_callback' );
 		$GLOBALS['wpsc_page_instance'] = _wpsc_get_page_instance( $page, $callback );
 	}
 }
 add_action( 'pre_get_posts', 'wpsc_prepare_pages', 10 );
+
+/**
+ * When we're using a custom page by WPEC, we need to suppress the main SQL query from
+ * returning any results, for the sake of performance.
+ *
+ * Without this, the main query will simply look for all blog posts.
+ * @param WP_Query $query Query
+function _wpsc_filter_suppress_sql_query( $where, $query ) {
+		return;
+
+	$where = ' AND 1 != 1 ' . $where;
+	return $where;
+}
 
 function wpsc_body_class( $classes ) {
 	if ( wpsc_is_page() )
