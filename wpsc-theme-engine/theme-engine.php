@@ -719,10 +719,12 @@ function wpsc_get_page_slugs() {
 }
 
 function wpsc_register_custom_page_rewrites( $rules ) {
-	$slugs = array_values( wpsc_get_page_slugs() );
-	$slugs = implode( '|', $slugs );
-	$new_rule = array( "($slugs)(/.+?)?/?$" => 'index.php?wpsc_page=$matches[1]&wpsc_callback=$matches[2]' );
-	$rules = array_merge( $new_rule, $rules );
+	$slugs = wpsc_get_page_slugs();
+	$new_rules = array();
+	foreach ( $slugs as $page_name => $slug ) {
+		$new_rules["($slug)(/.+?)?/?$"] = 'index.php?wpsc_page=' . $page_name . '&wpsc_callback=$matches[2]';
+	}
+	$rules = array_merge( $new_rules, $rules );
 
 	return $rules;
 }
