@@ -749,4 +749,143 @@ function wpsc_kill_user_session() {
 
 add_action( 'wp_logout', 'wpsc_kill_user_session' );
 
+/**
+ * Get whether a given product has been purchased by the user
+ *
+ * @param int $id Product ID. If not a positive integer, uses current product ID
+ * @return boolean
+ */
+function wpsc_has_purchased($id = null) {
+	if (!is_int($id) || $id < 1) {
+		global $post;
+		$id = $post->ID;
+	}
+	return in_array($id, wpsc_get_purchased_products());
+}
+
+/**
+ * Get the free products (priced at $0)
+ *
+ * @return array Products (as post objects)
+ */
+function wpsc_get_free_products() {
+	$products = get_posts(array(
+		'post_type' => 'wpsc-product',
+		'meta_key' => '_wpsc_price',
+		'meta_value' => 0
+	));
+
+	return $products;
+}
+
+/**
+ * Get the IDs for products the user has purchased
+ *
+ * @param int|null $user_id User ID. Defaults to current user
+ * @return array Product IDs
+ */
+function wpsc_get_purchased_products($user_id = null) {
+	global $wpdb;
+	$user_id = (int) $user_id;
+	if ($user_id < 1) {
+		$user = wp_get_current_user();
+		$user_id = $user->ID;
+	}
+
+	$query = $wpdb->prepare('SELECT `contents`.`prodid` FROM `'. WPSC_TABLE_PURCHASE_LOGS .'`
+		JOIN `' . WPSC_TABLE_CART_CONTENTS .'` AS `contents` ON `' . WPSC_TABLE_PURCHASE_LOGS .'`.`id` = `contents`.`purchaseid`
+		WHERE `' . WPSC_TABLE_PURCHASE_LOGS . '`.`user_ID` = %d AND `' . WPSC_TABLE_PURCHASE_LOGS . '`.`processed` IN (3,4,5)', $user_id);
+
+	$posts = $wpdb->get_col($query);
+
+	return $posts;
+}
+
+/**
+ * Get products available to the user
+ *
+ * Includes purchased products and free products
+ *
+ * @param int|null $user_id User ID. Defaults to current user
+ * @return array Product IDs
+ */
+function wpsc_get_available_products($user_id = null) {
+	global $wpdb;
+	$user_id = (int) $user_id;
+	if ($user_id < 1) {
+		$user = wp_get_current_user();
+		$user_id = $user->ID;
+	}
+
+	$query = $wpdb->prepare(
+'SELECT `temp`.`id` FROM (
+(
+	SELECT `contents`.`prodid` AS `id` FROM `'. WPSC_TABLE_PURCHASE_LOGS .'`
+	JOIN `' . WPSC_TABLE_CART_CONTENTS .'` AS `contents` ON `'. WPSC_TABLE_PURCHASE_LOGS .'`.`id` = `contents`.`purchaseid`
+	WHERE `'. WPSC_TABLE_PURCHASE_LOGS .'`.`user_ID` = %1$d AND `'. WPSC_TABLE_PURCHASE_LOGS .'`.`processed` IN (3,4,5)
+)
+UNION ALL (
+	SELECT `ID` AS `id` FROM `' . $wpdb->prefix . 'posts`
+	JOIN `' . $wpdb->prefix . 'postmeta` AS `meta` ON `' . $wpdb->prefix . 'posts`.`ID` = `meta`.`post_id`
+	WHERE (
+		(
+			(`meta`.`meta_key` = "_wpsc_price" AND `meta`.`meta_value` = 0)
+			OR `' . $wpdb->prefix . 'posts`.`post_author` = %1$d
+		)
+		AND `' . $wpdb->prefix . 'posts`.`post_type` = "wpsc-product"
+	)
+)
+) AS `temp` GROUP BY `temp`.`id`'
+	, $user_id);
+
+	$posts = $wpdb->get_col($query);
+
+	return $posts;
+}
+
+/**
+ * Get the most purchased (i.e. most popular) products
+ *
+ * @param int $offset Skip this many rows
+ * @param int $count Return at most this many rows
+ * @return array Post IDs
+ */
+function wpsc_get_top_purchased($offset = 0, $count = 10) {
+	global $wpdb;
+
+	$query = $wpdb->prepare('SELECT `prodid`, COUNT(*) AS `count` FROM `' . WPSC_TABLE_CART_CONTENTS .'`
+		JOIN `'. WPSC_TABLE_PURCHASE_LOGS .'` AS `logs` ON `purchaseid` = `logs`.`id`
+		WHERE `logs`.`processed` IN (3,4,5)
+		GROUP BY `prodid`
+		ORDER BY `count` DESC
+		LIMIT %d,%d', $offset, $count);
+
+	$posts = $wpdb->get_results($query, OBJECT);
+	return $posts;
+}
+
+/**
+ * Get purchase count for a product
+ *
+ * @param int $product_id Product ID. If null, current product is used
+ * @return int Number of purchases
+ */
+function wpsc_get_purchase_count($product_id = null) {
+	global $wpdb;
+	$product_id = (int) $product_id;
+	if ($product_id < 1) {
+		$product_id = $GLOBALS['post']->ID;
+	}
+
+	$query = $wpdb->prepare('SELECT COUNT(*) AS `count` FROM `' . WPSC_TABLE_CART_CONTENTS .'`
+		JOIN `'. WPSC_TABLE_PURCHASE_LOGS .'` AS `logs` ON `purchaseid` = `logs`.`id`
+		WHERE `logs`.`processed` IN (3,4,5) AND `prodid` = %d
+		GROUP BY `prodid`', $product_id);
+
+	$count = $wpdb->get_var($query);
+	if ($count === null) {
+		$count = 0;
+	}
+	return $count;
+}
 ?>
