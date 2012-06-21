@@ -2,8 +2,6 @@
 
 class WPSC_Page_Login extends WPSC_Page_SSL
 {
-	protected $template_name = 'wpsc-login';
-
 	public function process_login() {
 		if ( empty( $_COOKIE[TEST_COOKIE] ) )
 			$this->message_collection->add( __( "Cookies are blocked or not supported by your browser. You must <a href='http://www.google.com/cookies.html'>enable cookies</a> to log in to your account.", 'wpsc' ), 'error' );

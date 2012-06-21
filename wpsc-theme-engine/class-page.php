@@ -54,7 +54,6 @@ class WPSC_Page
 		$this->callback = $callback;
 		$this->args = $args;
 
-		add_action( 'wp', array( $this, '_action_set_200_header' ), 1 );
 		add_filter( 'template_include', array( $this, '_filter_template_include' ) );
 
 		if ( array_key_exists( 'action', $_REQUEST ) ) {
@@ -104,16 +103,8 @@ class WPSC_Page
 			return $located;
 
 		$theme_engine = WPSC_Theme_Engine::get_instance();
-		return $theme_engine->locate_compat_template('cart');
-	}
 
-	public function _action_set_200_header() {
-		global $wp_query;
-		$wp_query->is_home      = false;
-		$wp_query->is_404       = false;
-		$wp_query->wpsc_is_page = true;
-
-		status_header( 200 );
+		return $theme_engine->locate_compat_template( get_query_var( 'wpsc_page' ) );
 	}
 }
 

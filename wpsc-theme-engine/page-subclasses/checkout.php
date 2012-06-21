@@ -2,7 +2,6 @@
 
 class WPSC_Page_Checkout extends WPSC_Page
 {
-	protected $template_name = 'wpsc-checkout';
 	protected $current_step = '';
 
 	public function __construct( $callback ) {

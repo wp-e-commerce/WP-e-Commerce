@@ -2,8 +2,6 @@
 
 class WPSC_Page_Cart extends WPSC_Page
 {
-	protected $template_name = 'wpsc-cart';
-
 	public function __construct( $callback ) {
 		global $wp_query;
 		parent::__construct( $callback );

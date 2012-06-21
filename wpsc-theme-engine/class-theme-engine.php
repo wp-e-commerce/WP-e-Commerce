@@ -28,7 +28,7 @@ class WPSC_Theme_Engine
 		add_filter( 'single_template'   , array( $this, '_filter_get_single_template'   ) );
 		add_filter( 'taxonomy_template' , array( $this, '_filter_get_taxonomy_template' ) );
 
-		add_action( 'wp', array( $this, '_action_wp_clone_query_object' ), 1 );
+		add_action( 'wp', array( $this, '_action_wp_setup_main_query' ), 1 );
 
 		add_action( 'wp_enqueue_scripts', array( $this, '_action_enqueue_scripts' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, '_action_enqueue_styles' ) );
@@ -64,16 +64,24 @@ class WPSC_Theme_Engine
 		wp_enqueue_style( 'wpsc-common' );
 	}
 
-	public function _action_wp_clone_query_object() {
+	public function _action_wp_setup_main_query() {
 		global $wp_query;
+
+		$this->maybe_set_200_header();
+
 		$this->init_query_flags();
+	}
 
-		$GLOBALS['wpsc_query_levels'] = array();
+	/**
+	 * When a custom WPSC_Page is being displayed, we need to override the 404 headers made by
+	 * WordPress.
+	 */
+	private function maybe_set_200_header() {
+		global $wp_query;
 
-		// Deep clone the $wp_query object
-		// We need to do this because later it might be heavily modified by other plugins or
-		// by compat theme engine.
-		$GLOBALS['wpsc_query_levels'][] = $GLOBALS['wpsc_query'] = unserialize( serialize( $wp_query ) );
+		if ( ! get_query_var( 'wpsc_page' ) )
+			return;
+
 	}
 
 	private function init_query_flags() {
