@@ -194,8 +194,6 @@ function wpsc_user_messages( $args = '' ) {
 }
 
 function wpsc_get_user_messages( $args = '' ) {
-	global $wpsc_page_instance;
-
 	$defaults = array(
 		'context'             => 'main',
 		'types'               => 'all',
