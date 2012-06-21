@@ -82,6 +82,7 @@ class WPSC_Theme_Engine
 		if ( ! get_query_var( 'wpsc_page' ) )
 			return;
 
+		status_header( 200 );
 	}
 
 	private function init_query_flags() {
@@ -101,6 +102,16 @@ class WPSC_Theme_Engine
 			if ( ! isset( $wp_query->$prop ) )
 				$wp_query->$prop = false;
 		}
+
+		if ( ! get_query_var( 'wpsc_page' ) )
+			return;
+
+		$wp_query->is_home      = false;
+		$wp_query->is_404       = false;
+		$wp_query->wpsc_is_page = true;
+
+		$conditional_prop = "wpsc_is_" . get_query_var( 'wpsc_page' );
+		$wp_query->$conditional_prop = true;
 	}
 
 	/**
