@@ -37,9 +37,6 @@ class WPSC_Theme_Engine_Compat
 			'post' => array(
 				'post_title' => wpsc_get_cart_title(),
 			),
-			'wp_query' => array(
-				'wpsc_is_cart' => true,
-			),
 		);
 	}
 
