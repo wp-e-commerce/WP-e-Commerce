@@ -79,7 +79,7 @@ function wpsc_form_checkbox( $name, $value, $label = false, $checked = false, $a
 		$atts['checked'] = 'checked';
 
 	if ( $label ) {
-		$output = '<label class="wpsc-form-checkbox-wrapper">' . _wpsc_input_type_field( $atts, false ) . esc_html ( $label ) . '</label>';
+		$output = '<label class="wpsc-form-checkbox-wrapper">' . _wpsc_input_type_field( $atts, false ) . ' ' . esc_html ( $label ) . '</label>';
 		if ( ! $echo )
 			return $output;
 
@@ -119,7 +119,7 @@ function wpsc_form_radio( $name, $value, $label = false, $checked = false, $atts
 		$atts['checked'] = 'checked';
 
 	if ( $label ) {
-		$output = '<label class="wpsc-form-radio-wrapper">' . _wpsc_input_type_field( $atts, false ) . esc_html( $label ) . '</label>';
+		$output = '<label class="wpsc-form-radio-wrapper">' . _wpsc_input_type_field( $atts, false ) . ' ' . esc_html( $label ) . '</label>';
 		if ( ! $echo )
 			return $output;
 		echo $output;
