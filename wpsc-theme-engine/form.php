@@ -119,10 +119,12 @@ function wpsc_display_form( $args ) {
 add_filter( 'wpsc_control_before'   , '_wpsc_filter_control_before'   , 10, 3 );
 add_filter( 'wpsc_control_after'    , '_wpsc_filter_control_after'    , 15, 3 );
 add_filter( 'wpsc_control_textfield', '_wpsc_filter_control_textfield', 10, 3 );
+add_filter( 'wpsc_control_password' , '_wpsc_filter_control_password' , 10, 3 );
 add_filter( 'wpsc_control_select'   , '_wpsc_filter_control_select'   , 10, 3 );
 add_filter( 'wpsc_control_submit'   , '_wpsc_filter_control_submit'   , 10, 3 );
 add_filter( 'wpsc_control_hidden'   , '_wpsc_filter_control_hidden'   , 10, 3 );
 add_filter( 'wpsc_control_button'   , '_wpsc_filter_control_button'   , 10, 3 );
+add_filter( 'wpsc_control_checkbox' , '_wpsc_filter_control_checkbox'   , 10, 3 );
 
 add_filter( 'wpsc_action_field_submit', '_wpsc_filter_control_submit', 10, 3 );
 add_filter( 'wpsc_action_field_hidden', '_wpsc_filter_control_hidden', 10, 3 );
@@ -159,6 +161,13 @@ function _wpsc_filter_control_textfield( $output, $field, $args ) {
 	extract( $field );
 
 	$output .= wpsc_form_input( $name, $value, array( 'id' => $id . '-control' ), false );
+	return $output;
+}
+
+function _wpsc_filter_control_password( $output, $field, $args ) {
+	extract( $field );
+
+	$output .= wpsc_form_password( $name, array( 'id' => $id . '-control' ), false );
 	return $output;
 }
 
@@ -202,5 +211,13 @@ function _wpsc_filter_control_button( $output, $field, $args ) {
 
 	$output .= wpsc_form_button( $name, $title, array( 'class' => $class, 'icon' => $field['icon'] ), false );
 
+	return $output;
+}
+
+function _wpsc_filter_control_checkbox( $output, $field, $args ) {
+	extract( $field );
+	if ( ! isset( $checked ) )
+		$checked = false;
+	$output .= wpsc_form_checkbox( $name, $value, $label, $checked, array( 'id' => $id . '-control' ), false );
 	return $output;
 }
