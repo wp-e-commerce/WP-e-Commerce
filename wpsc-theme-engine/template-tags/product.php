@@ -12,13 +12,11 @@ function wpsc_product_catalog_title() {
  *
  * @see   WP_Query::have_posts()
  * @since 4.0
- * @uses  $wpsc_query Global WPEC query object
  *
  * @return bool
  */
 function wpsc_have_products() {
-	global $wpsc_query;
-	return $wpsc_query->have_posts();
+	return have_posts();
 }
 
 /**
@@ -26,11 +24,9 @@ function wpsc_have_products() {
  *
  * @see   WP_Query::the_post()
  * @since 4.0
- * @uses  $wpsc_query Global WPEC query object
  */
 function wpsc_the_product() {
-	global $wpsc_query;
-	$wpsc_query->the_post();
+	the_post();
 }
 
 /**
@@ -871,13 +867,12 @@ function wpsc_product_pagination( $position = 'bottom' ) {
  * Return the number of pages for the current loop.
  *
  * @since 4.0
- * @uses $wpsc_query The global product query object.
  *
  * @return int
  */
 function wpsc_product_pagination_page_count() {
-	global $wpsc_query;
-	return $wpsc_query->max_num_pages;
+	global $wp_query;
+	return $wp_query->max_num_pages;
 }
 
 /**
@@ -885,22 +880,19 @@ function wpsc_product_pagination_page_count() {
  *
  * @since 4.0
  * @uses apply_filters() Applies 'wpsc_product_pagination_count' filter.
- * @uses $wpsc_query     The global product query object.
  * @uses get_query_var()
  * @uses wpsc_get_current_page_number()
- *
- * @return [type]
  */
 function wpsc_product_pagination_count() {
-	global $wpsc_query;
+	global $wp_query;
 
-	$total        = empty( $wpsc_query->found_posts ) ? $wpsc_query->post_count : $wpsc_query->found_posts;
-	$total_pages  = $wpsc_query->max_num_pages;
+	$total        = empty( $wp_query->found_posts ) ? $wp_query->post_count : $wp_query->found_posts;
+	$total_pages  = $wp_query->max_num_pages;
 	$per_page     = get_query_var( 'posts_per_page' );
 	$current_page = wpsc_get_current_page_number();
 	$from         = ( $current_page - 1 ) * $per_page + 1;
 	$to           = $from + $per_page - 1;
-	$post_count   = $wpsc_query->post_count;
+	$post_count   = $wp_query->post_count;
 
 	if ( $to > $total )
 		$to = $total;
@@ -943,7 +935,6 @@ function wpsc_get_current_page_number() {
  *
  * @since 4.0
  * @uses  $wp_rewrite
- * @uses  $wpsc_query
  * @uses  apply_filters() Applies 'wpsc_product_pagination_links'      filter.
  * @uses  apply_filters() Applies 'wpsc_product_pagination_links_args' filter.
  * @uses  home_url()
@@ -956,7 +947,7 @@ function wpsc_get_current_page_number() {
  * @param  string|array $args Query string or an array of options.
  */
 function wpsc_get_product_pagination_links( $args = '' ) {
-	global $wp_rewrite, $wpsc_query;
+	global $wp_rewrite, $wp_query;
 
 	$base = '';
 
@@ -975,7 +966,7 @@ function wpsc_get_product_pagination_links( $args = '' ) {
 	$defaults = array(
 		'base'      => trailingslashit( $base ) . '%_%',
 		'format'    => $format,
-		'total'     => $wpsc_query->max_num_pages,
+		'total'     => $wp_query->max_num_pages,
 		'current'   => wpsc_get_current_page_number(),
 		'prev_text' => is_rtl() ? __( '&rarr;', 'wpsc' ) : __( '&larr;', 'wpsc' ),
 		'next_text' => is_rtl() ? __( '&larr;', 'wpsc' ) : __( '&rarr;', 'wpsc' ),

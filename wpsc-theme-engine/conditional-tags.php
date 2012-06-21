@@ -65,18 +65,18 @@ function wpsc_is_product_tag( $tag = '' ) {
 }
 
 function wpsc_is_page() {
-	global $wpsc_query;
-	return $wpsc_query->wpsc_is_page;
+	global $wp_query;
+	return $wp_query->wpsc_is_page;
 }
 
 function wpsc_is_cart() {
-	global $wpsc_query;
-	return $wpsc_query->wpsc_is_cart;
+	global $wp_query;
+	return $wp_query->wpsc_is_cart;
 }
 
 function wpsc_is_checkout( $slug = '' ) {
-	global $wpsc_query, $wpsc_page_instance;
-	$test = $wpsc_query->wpsc_is_checkout;
+	global $wp_query, $wpsc_page_instance;
+	$test = $wp_query->wpsc_is_checkout;
 	if ( $slug !== '' )
 		$test = $test && $slug == $wpsc_page_instance->get_slug();
 
@@ -84,8 +84,8 @@ function wpsc_is_checkout( $slug = '' ) {
 }
 
 function wpsc_is_login( $slug = '' ) {
-	global $wpsc_query, $wpsc_page_instance;
-	$test = $wpsc_query->wpsc_is_login;
+	global $wp_query, $wpsc_page_instance;
+	$test = $wp_query->wpsc_is_login;
 	if ( $slug !== '' )
 		$test = $test && $slug == $wpsc_page_instance->get_slug();
 
@@ -93,8 +93,8 @@ function wpsc_is_login( $slug = '' ) {
 }
 
 function wpsc_is_password_reminder( $slug = '' ) {
-	global $wpsc_query, $wpsc_page_instance;
-	$test = $wpsc_query->wpsc_is_password_reminder;
+	global $wp_query, $wpsc_page_instance;
+	$test = $wp_query->wpsc_is_password_reminder;
 	if ( $slug !== '' )
 		$test = $test && $slug == $wpsc_page_instance->get_slug();
 
@@ -102,8 +102,8 @@ function wpsc_is_password_reminder( $slug = '' ) {
 }
 
 function wpsc_is_register( $slug = '' ) {
-	global $wpsc_query, $wpsc_page_instance;
-	$test = $wpsc_query->wpsc_is_register;
+	global $wp_query, $wpsc_page_instance;
+	$test = $wp_query->wpsc_is_register;
 
 	if ( $slug !== '' )
 		$test = $test && $slug == $wpsc_page_instance->get_slug();

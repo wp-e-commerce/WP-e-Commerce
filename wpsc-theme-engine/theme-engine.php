@@ -309,11 +309,11 @@ add_action( 'pre_get_posts', 'wpsc_action_set_product_per_page_query_var', 10, 1
  * @return array  The filtered class array
  */
 function wpsc_filter_product_class( $classes, $class, $post_id ) {
-	global $wpsc_query;
+	global $wp_query;
 
 	$post = get_post( $post_id );
 	if ( $post->post_type == 'wpsc-product' ) {
-		$count     = isset( $wpsc_query->current_post ) ? (int) $wpsc_query->current_post : 1;
+		$count     = isset( $wp_query->current_post ) ? (int) $wp_query->current_post : 1;
 		$classes[] = $count % 2 ? 'even' : 'odd';
 		if ( wpsc_is_product_on_sale( $post_id ) )
 			$classes[] = 'wpsc-product-on-sale';
