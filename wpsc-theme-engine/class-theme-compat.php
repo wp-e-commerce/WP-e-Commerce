@@ -8,10 +8,12 @@ class WPSC_Theme_Engine_Compat
 		add_filter( 'wpsc_theme_compat_reset_globals_archive' , array( $this, '_filter_reset_globals_archive'   ) );
 		add_filter( 'wpsc_theme_compat_reset_globals_cart'    , array( $this, '_filter_reset_globals_cart'      ) );
 		add_filter( 'wpsc_theme_compat_reset_globals_taxonomy', array( $this, '_filter_reset_globals_taxonomy'  ) );
+		add_filter( 'wpsc_theme_compat_reset_globals_login'   , array( $this, '_filter_reset_globals_login'     ) );
 		add_filter( 'wpsc_replace_the_content_archive' , array( $this, '_filter_replace_the_content_archive'  ) );
 		add_filter( 'wpsc_replace_the_content_cart'    , array( $this, '_filter_replace_the_content_cart'     ) );
 		add_filter( 'wpsc_replace_the_content_single'  , array( $this, '_filter_replace_the_content_single'   ) );
 		add_filter( 'wpsc_replace_the_content_taxonomy', array( $this, '_filter_replace_the_content_taxonomy' ) );
+		add_filter( 'wpsc_replace_the_content_login'   , array( $this, '_filter_replace_the_content_login'    ) );
 	}
 
 	public function _filter_reset_globals_taxonomy() {
@@ -76,6 +78,18 @@ class WPSC_Theme_Engine_Compat
 
 		ob_start();
 		wpsc_get_template_part( 'taxonomy', $current_term->taxonomy );
+		return ob_get_clean();
+	}
+
+	public function _filter_replace_the_content_login( $content ) {
+		ob_start();
+		wpsc_get_template_part( 'login' );
+		return ob_get_clean();
+	}
+
+	public function _filter_replace_the_content_register( $content ) {
+		ob_start();
+		wpsc_get_template_part( 'register' );
 		return ob_get_clean();
 	}
 
