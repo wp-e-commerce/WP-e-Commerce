@@ -752,8 +752,13 @@ add_action( 'pre_get_posts', 'wpsc_prepare_pages', 10 );
  * returning any results, for the sake of performance.
  *
  * Without this, the main query will simply look for all blog posts.
+ *
+ * @param string $where Where clause
  * @param WP_Query $query Query
+ * @return string $where clause of the SQL query
+ */
 function _wpsc_filter_suppress_sql_query( $where, $query ) {
+	if ( ! $query->is_main_query() )
 		return;
 
 	$where = ' AND 1 != 1 ' . $where;
