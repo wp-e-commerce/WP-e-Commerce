@@ -30,11 +30,6 @@ function wpsc_get_add_to_cart_form( $id = null ) {
 	}
 
 	$args['form_actions'] = array(
-		/* array(
-			'type'    => 'submit',
-			'primary' => true,
-			'title'   => apply_filters( 'wpsc_add_to_cart_button_title', __( 'Add to Cart', 'wpsc' ) ),
-		), */
 		array(
 			'type' => 'button',
 			'primary' => true,
@@ -75,6 +70,60 @@ function wpsc_cart_item_table() {
 	require_once( WPSC_FILE_PATH . '/wpsc-theme-engine/class-cart-item-table.php' );
 	$cart_item_table = WPSC_Cart_Item_Table::get_instance();
 	$cart_item_table->display();
+}
+
+function wpsc_get_login_form() {
+	$args = array(
+		'class'  => 'wpsc-form wpsc-form-vertical wpsc-login-form',
+		'action' => wpsc_get_login_url(),
+		'id'     => "wpsc-login-form",
+		'fields' => array(
+			array(
+				'id'    => 'wpsc-login-username',
+				'name'  => 'username',
+				'type'  => 'textfield',
+				'title' => __( 'Username', 'wpsc' ),
+				'value' => wpsc_submitted_value( 'username' ),
+			),
+			array(
+				'id'    => 'wpsc-login-password',
+				'name'  => 'password',
+				'type'  => 'password',
+				'title' => __( 'Password', 'wpsc' ),
+				'value' => '',
+			),
+			array(
+				'id' => 'wpsc-login-remember',
+				'name' => 'remember',
+				'type' => 'checkbox',
+				'label' => __( 'Remember Me', 'wpsc' ),
+			),
+		),
+		'form_actions' => array(
+			array(
+				'type' => 'submit',
+				'primary' => true,
+				'title'   => apply_filters( 'wpsc_login_button_title', __( 'Log in', 'wpsc' ) ),
+			),
+			array(
+				'type'    => 'hidden',
+				'name'    => 'action',
+				'value'   => 'login',
+			),
+			array(
+				'type'    => 'hidden',
+				'name'    => '_wp_nonce',
+				'value'   => wp_create_nonce( "wpsc-log-in" ),
+			),
+		),
+	);
+
+	$args = apply_filters( 'wpsc_get_login_form_args', $args );
+	return apply_filters( 'wpsc_get_login_form', wpsc_get_form_output( $args ) );
+}
+
+function wpsc_login_form() {
+	echo wpsc_get_login_form();
 }
 
 function wpsc_login_button() {
