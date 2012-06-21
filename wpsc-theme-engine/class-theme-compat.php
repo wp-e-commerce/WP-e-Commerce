@@ -7,26 +7,17 @@ class WPSC_Theme_Engine_Compat
 	public function __construct() {
 		add_filter( 'wpsc_theme_compat_reset_globals_archive' , array( $this, '_filter_reset_globals_archive'   ) );
 		add_filter( 'wpsc_theme_compat_reset_globals_cart'    , array( $this, '_filter_reset_globals_cart'      ) );
-		add_filter( 'wpsc_theme_compat_reset_globals_single'  , array( $this, '_filter_reset_globals_single'    ) );
-		add_filter( 'wpsc_theme_compat_reset_globals_taxonomy', array( $this, '_filter_reset_globals_taxonomy' ) );
+		add_filter( 'wpsc_theme_compat_reset_globals_taxonomy', array( $this, '_filter_reset_globals_taxonomy'  ) );
+		add_filter( 'wpsc_replace_the_content_archive' , array( $this, '_filter_replace_the_content_archive'  ) );
+		add_filter( 'wpsc_replace_the_content_cart'    , array( $this, '_filter_replace_the_content_cart'     ) );
+		add_filter( 'wpsc_replace_the_content_single'  , array( $this, '_filter_replace_the_content_single'   ) );
+		add_filter( 'wpsc_replace_the_content_taxonomy', array( $this, '_filter_replace_the_content_taxonomy' ) );
 	}
 
 	public function _filter_reset_globals_taxonomy() {
 		return array(
 			'post' => array(
 				'post_title' => wpsc_get_category_archive_title(),
-			),
-			'wp_query' => array(
-				'is_tax' => true,
-			),
-		);
-	}
-
-	public function _filter_reset_globals_single() {
-		$id = wpsc_get_product_id();
-		return array(
-			'wp_query' => array(
-				'is_single' => true,
 			),
 		);
 	}
@@ -37,9 +28,6 @@ class WPSC_Theme_Engine_Compat
 				'post_title'   => wpsc_get_product_catalog_title(),
 				'post_type'    => 'wpsc-product',
 				'post_status'  => 'publish',
-			),
-			'wp_query' => array(
-				'is_archive'   => true,
 			),
 		);
 	}
@@ -55,19 +43,14 @@ class WPSC_Theme_Engine_Compat
 		);
 	}
 
-	public function activate( $type ) {
-		global $wpsc_query;
+	public function _filter_reset_globals_login() {
+		return array(
+			'post' => array(
+				'post_title' => wpsc_get_login_title(),
+			),
+		);
+	}
 
-		$this->type = $type;
-		$this->reset_globals();
-
-		// replace the content, making sure this is the last filter that runs in 'the_content',
-		// thereby escape all the sanitization that WordPress did
-		add_filter( 'the_content', array( $this, '_filter_replace_the_content' ), 9999 );
-		add_filter( 'wpsc_replace_the_content_archive' , array( $this, '_filter_replace_the_content_archive'  ) );
-		add_filter( 'wpsc_replace_the_content_cart'    , array( $this, '_filter_replace_the_content_cart'     ) );
-		add_filter( 'wpsc_replace_the_content_single'  , array( $this, '_filter_replace_the_content_single'   ) );
-		add_filter( 'wpsc_replace_the_content_taxonomy', array( $this, '_filter_replace_the_content_taxonomy' ) );
 	}
 
 	public function _filter_replace_the_content_archive( $content ) {
@@ -109,7 +92,16 @@ class WPSC_Theme_Engine_Compat
 
 		$content = apply_filters( "wpsc_replace_the_content_{$this->type}", $content );
 
-		return $content;
+		return $before . $content . $after;
+	}
+
+	public function activate( $type ) {
+		$this->type = $type;
+		$this->reset_globals();
+
+		// replace the content, making sure this is the last filter that runs in 'the_content',
+		// thereby escape all the sanitization that WordPress did
+		add_filter( 'the_content', array( $this, '_filter_replace_the_content' ), 9999 );
 	}
 
 	public function reset_globals() {
