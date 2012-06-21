@@ -158,7 +158,7 @@ class WPSC_Settings_Tab_Permalinks extends WPSC_Settings_Tab
 						<?php echo esc_html_x( 'Cart page', 'permalinks setting', 'wpsc' ); ?>
 					</th>
 					<td>
-						<?php echo make_clickable( home_url( wpsc_get_option( 'cart_page_slug' ) ) ); ?>
+						<?php echo make_clickable( wpsc_get_cart_url() ); ?>
 					</td>
 				</tr>
 				<tr valign="top">
