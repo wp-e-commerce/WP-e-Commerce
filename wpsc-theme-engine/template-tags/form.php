@@ -126,6 +126,55 @@ function wpsc_login_form() {
 	echo wpsc_get_login_form();
 }
 
+function wpsc_get_register_form() {
+	$args = array(
+		'class'  => 'wpsc-form wpsc-form-vertical wpsc-login-form',
+		'action' => wpsc_get_login_url(),
+		'id'     => "wpsc-login-form",
+		'fields' => array(
+			array(
+				'id'    => 'wpsc-register-username',
+				'name'  => 'username',
+				'type'  => 'textfield',
+				'title' => __( 'Username', 'wpsc' ),
+				'value' => wpsc_submitted_value( 'username' ),
+			),
+			array(
+				'id'    => 'wpsc-register-email',
+				'name'  => 'textfield',
+				'description' => __( 'A password will be e-mailed to you', 'wpsc' ),
+				'type'  => 'textfield',
+				'title' => __( 'E-mail', 'wpsc' ),
+				'value' => '',
+			),
+		),
+		'form_actions' => array(
+			array(
+				'type' => 'submit',
+				'primary' => true,
+				'title'   => apply_filters( 'wpsc_register_button_title', __( 'Register', 'wpsc' ) ),
+			),
+			array(
+				'type'    => 'hidden',
+				'name'    => 'action',
+				'value'   => 'register',
+			),
+			array(
+				'type'    => 'hidden',
+				'name'    => '_wp_nonce',
+				'value'   => wp_create_nonce( "wpsc-register" ),
+			),
+		),
+	);
+
+	$args = apply_filters( 'wpsc_get_register_form_args', $args );
+	return apply_filters( 'wpsc_get_register_form', wpsc_get_form_output( $args ) );
+}
+
+function wpsc_register_form() {
+	echo wpsc_get_register_form();
+}
+
 function wpsc_login_button() {
 	?>
 	<input type="submit" class="wpsc-login-button wpsc-primary-button" name="submit" value="<?php esc_attr_e( 'Log in', 'wpsc' ); ?>" />
