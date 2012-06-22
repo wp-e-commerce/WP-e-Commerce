@@ -28,6 +28,9 @@ function wpsc_validate_form( $form, $validated_array = null ) {
 			} else {
 				$error = apply_filters( "wpsc_validation_rule_{$rule}", $error, $value, $field, $props );
 			}
+
+			if ( count( $error->get_error_codes() ) )
+				break;
 		}
 	}
 
