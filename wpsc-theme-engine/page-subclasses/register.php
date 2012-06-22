@@ -53,6 +53,14 @@ class WPSC_Page_Register extends WPSC_Page_SSL
 
 		$password = wp_generate_password( 12, false );
 		$user_id = wp_create_user( $username, $password, $email );
+
+		if ( is_wp_error( $user_id ) ) {
+			foreach ( $user_id->get_error_messages() as $message ) {
+				$this->message_collection->add( $message, 'error' );
+			}
+			return;
+		}
+
 		if ( ! $user_id ) {
 			$message = apply_filters( 'wpsc_register_unknown_error_message', __( 'Sorry, but we could not process your registration information. Please <a href="mailto:%s">contact us</a>, or try again later.', 'wpsc' ) );
 			$this->message_collection->add( sprintf( $message, get_option( 'admin_email' ), 'error' ) );
