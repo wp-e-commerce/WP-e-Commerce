@@ -20,20 +20,9 @@ class WPSC_Page_Register extends WPSC_Page_SSL
 	}
 
 	public function _callback_register() {
-		$validation_rules = array(
-			'username' => array(
-				'title' => __( 'username', 'wpsc' ),
-				'rules' => 'trim|required|username|sanitize_username',
-			),
-			'email' => array(
-				'title' => __( 'e-mail address', 'wpsc' ),
-				'rules' => 'trim|required|account_email',
-			),
-		);
+		$form_args = wpsc_get_register_form_args();
 
-		add_filter( 'wpsc_validation_rule_fields_dont_match_message', array( $this, 'filter_fields_dont_match_message' ) );
-		$validation = wpsc_validate_form( $validation_rules );
-		remove_filter( 'wpsc_validation_rule_fields_dont_match_message', array( $this, 'filter_fields_dont_match_message' ) );
+		$validation = wpsc_validate_form( $form_args );
 
 		if ( is_wp_error( $validation ) ) {
 			$this->set_validation_errors( $validation );
@@ -89,7 +78,7 @@ class WPSC_Page_Register extends WPSC_Page_SSL
 		$message .= sprintf( __( 'Username: %s', 'wpsc' ), $username ) . "\r\n\r\n";
 		$message .= sprintf( __( 'Password: %s', 'wpsc' ), $password ) . "\r\n\r\n";
 		$message .= __( "Here's a list of things you can do to get started:", 'wpsc' ) . "\r\n\r\n";
-		$message .= sprintf( __( '1. Log in with your new account details<%s>', 'wpsc' ), wpsc_get_login_url() ) . "\r\n\r\n";
+		$message .= sprintf( __( '1. Log in with your new account details <%s>', 'wpsc' ), wpsc_get_login_url() ) . "\r\n\r\n";
 		$message .= sprintf( __( '2. Build your customer profile, and probably change your password to something easier to remember <%s>', 'wpsc' ), wpsc_get_customer_account_url() ) . "\r\n\r\n";
 		$message .= sprintf( __( '3. Explore our shop! <%s>', 'wpsc' ), wpsc_get_catalog_url() ) . "\r\n\r\n";
 		$message = apply_filters( 'wpsc_registration_notification_body', $message );

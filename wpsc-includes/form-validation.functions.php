@@ -1,12 +1,21 @@
 <?php
 
-function wpsc_validate_form( $form, $validated_array = null ) {
+function wpsc_validate_form( $form_args, $validated_array = null ) {
 	if ( ! is_array( $validated_array ) )
 		$validated_array = $_POST;
 
 	$error = new WP_Error();
 	$a =& $error;
-	foreach ( $form as $field => $props ) {
+	if ( ! isset( $form_args['fields'] ) )
+		return;
+
+	$form = $form_args['fields'];
+	foreach ( $form as $props ) {
+		if ( empty( $props['rules'] ) )
+			continue;
+
+		$props = _wpsc_populate_field_default_args( $props );
+		$field = $props['name'];
 		$rules = $props['rules'];
 		if ( is_string( $rules ) )
 			$rules = explode( '|', $rules );
@@ -43,8 +52,8 @@ function wpsc_validate_form( $form, $validated_array = null ) {
 function wpsc_validation_rule_required( $error, $value, $field, $props ) {
 	if ( $value === '' ) {
 		$error_message = apply_filters( 'wpsc_validation_rule_required_message', __( 'The %s field is empty.', 'wpsc' ), $value, $field, $props );
-		$title = isset( $prop['title'] ) ? $prop['title'] : $field;
-		$error->add( $field, sprintf( $error_message, $props['title'] ), array( 'value' => $value, 'props' => $props ) );
+		$title = isset( $prop['title_validation'] ) ? $prop['title_validation'] : $field;
+		$error->add( $field, sprintf( $error_message, $props['title_validation'] ), array( 'value' => $value, 'props' => $props ) );
 	}
 
 	return $error;
@@ -52,7 +61,7 @@ function wpsc_validation_rule_required( $error, $value, $field, $props ) {
 add_filter( 'wpsc_validation_rule_required', 'wpsc_validation_rule_required', 10, 4 );
 
 function wpsc_validation_rule_email( $error, $value, $field, $props ) {
-	$field_title = isset( $props['title'] ) ? $props['title'] : $field;
+	$field_title = isset( $props['title_validation'] ) ? $props['title_validation'] : $field;
 
 	if ( empty( $value ) )
 		return $error;
@@ -88,8 +97,8 @@ add_filter( 'wpsc_validation_rule_valid_username_or_email', 'wpsc_validation_rul
 function wpsc_validation_rule_matches( $error, $value, $field, $props, $matched_field, $matched_value, $matched_props ) {
 	if ( is_null( $matched_value ) || $value != $matched_value ) {
 		$message = apply_filters( 'wpsc_validation_rule_fields_dont_match_message', __( 'The %s and %s fields do not match.', 'wpsc' ), $value, $field, $props, $matched_field, $matched_value, $matched_props );
-		$title = isset( $props['title'] ) ? $props['title'] : $field;
-		$matched_title = isset( $matched_props['title'] ) ? $matched_props['title'] : $field;
+		$title = isset( $props['title_validation'] ) ? $props['title_validation'] : $field;
+		$matched_title = isset( $matched_props['title_validation'] ) ? $matched_props['title_validation'] : $field;
 		$error->add( $field, sprintf( $message, $title, $matched_title ), array( 'value' => $value, 'props' => $props ) );
 	}
 
@@ -98,7 +107,7 @@ function wpsc_validation_rule_matches( $error, $value, $field, $props, $matched_
 add_filter( 'wpsc_validation_rule_matches', 'wpsc_validation_rule_matches', 10, 7 );
 
 function wpsc_validation_rule_username( $error, $value, $field, $props ) {
-	$field_title = isset( $props['title'] ) ? $props['title'] : $field;
+	$field_title = isset( $props['title_validation'] ) ? $props['title_validation'] : $field;
 
 	if ( ! validate_username( $value ) ) {
 		$message = apply_filters( 'wpsc_validation_rule_invalid_username_message', __( 'This %s contains invalid characters. Username may contain letters (a-z), numbers (0-9), dashes (-), underscores (_) and periods (.).', 'wpsc' ) );
@@ -113,7 +122,7 @@ function wpsc_validation_rule_username( $error, $value, $field, $props ) {
 add_filter( 'wpsc_validation_rule_username', 'wpsc_validation_rule_username', 10, 4 );
 
 function wpsc_validation_rule_account_email( $error, $value, $field, $props ) {
-	$field_title = isset( $props['title'] ) ? $props['title'] : $field;
+	$field_title = isset( $props['title_validation'] ) ? $props['title_validation'] : $field;
 
 	if ( ! is_email( $value ) ) {
 		$message = apply_filters( 'wpsc_validation_rule_invalid_account_email_message', __( 'The %s is not valid.', 'wpsc' ) );

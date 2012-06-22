@@ -17,7 +17,9 @@ class WPSC_Page_Login extends WPSC_Page_SSL
 			),
 		);
 
-		$validation = wpsc_validate_form( $validation_rules );
+		$form_args = wpsc_get_login_form_args();
+
+		$validation = wpsc_validate_form( $form_args );
 		if ( is_wp_error( $validation ) ) {
 			$this->set_validation_errors( $validation );
 			return;

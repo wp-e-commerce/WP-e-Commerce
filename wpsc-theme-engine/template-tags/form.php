@@ -1,6 +1,6 @@
 <?php
 
-function wpsc_get_add_to_cart_form( $id = null ) {
+function wpsc_get_add_to_cart_form_args( $id = null ) {
 	if ( ! $id )
 		$id = wpsc_get_product_id();
 
@@ -59,6 +59,13 @@ function wpsc_get_add_to_cart_form( $id = null ) {
 	);
 
 	$args = apply_filters( 'wpsc_get_add_to_cart_form_args', $args );
+}
+
+function wpsc_get_add_to_cart_form( $id = null ) {
+	if ( ! $id )
+		$id = wpsc_get_product_id();
+
+	$args = wpsc_get_add_to_cart_form_args( $id );
 	return apply_filters( 'wpsc_get_add_to_cart_form', wpsc_get_form_output( $args ) );
 }
 
@@ -72,7 +79,7 @@ function wpsc_cart_item_table() {
 	$cart_item_table->display();
 }
 
-function wpsc_get_login_form() {
+function wpsc_get_login_form_args() {
 	$args = array(
 		'class'  => 'wpsc-form wpsc-form-vertical wpsc-login-form',
 		'action' => wpsc_get_login_url(),
@@ -84,6 +91,7 @@ function wpsc_get_login_form() {
 				'type'  => 'textfield',
 				'title' => __( 'Username', 'wpsc' ),
 				'value' => wpsc_submitted_value( 'username' ),
+				'rules' => 'required',
 			),
 			array(
 				'id'    => 'wpsc-login-password',
@@ -91,12 +99,13 @@ function wpsc_get_login_form() {
 				'type'  => 'password',
 				'title' => __( 'Password', 'wpsc' ),
 				'value' => '',
+				'rules' => 'required',
 			),
 			array(
 				'id' => 'wpsc-login-remember',
 				'name' => 'remember',
 				'type' => 'checkbox',
-				'label' => __( 'Remember Me', 'wpsc' ),
+				'title' => __( 'Remember Me', 'wpsc' ),
 			),
 		),
 		'form_actions' => array(
@@ -119,6 +128,12 @@ function wpsc_get_login_form() {
 	);
 
 	$args = apply_filters( 'wpsc_get_login_form_args', $args );
+
+	return $args;
+}
+
+function wpsc_get_login_form() {
+	$args = wpsc_get_login_form_args();
 	return apply_filters( 'wpsc_get_login_form', wpsc_get_form_output( $args ) );
 }
 
@@ -126,10 +141,10 @@ function wpsc_login_form() {
 	echo wpsc_get_login_form();
 }
 
-function wpsc_get_register_form() {
+function wpsc_get_register_form_args() {
 	$args = array(
 		'class'  => 'wpsc-form wpsc-form-vertical wpsc-login-form',
-		'action' => wpsc_get_login_url(),
+		'action' => wpsc_get_register_url(),
 		'id'     => "wpsc-login-form",
 		'fields' => array(
 			array(
@@ -138,19 +153,21 @@ function wpsc_get_register_form() {
 				'type'  => 'textfield',
 				'title' => __( 'Username', 'wpsc' ),
 				'value' => wpsc_submitted_value( 'username' ),
+				'rules' => 'trim|required|username|sanitize_username',
 			),
 			array(
 				'id'    => 'wpsc-register-email',
-				'name'  => 'textfield',
+				'name'  => 'email',
 				'description' => __( 'A password will be e-mailed to you', 'wpsc' ),
 				'type'  => 'textfield',
 				'title' => __( 'E-mail', 'wpsc' ),
-				'value' => '',
+				'value' => wpsc_submitted_value( 'email' ),
+				'rules' => 'trim|required|account_email',
 			),
 		),
 		'form_actions' => array(
 			array(
-				'type' => 'submit',
+				'type'    => 'submit',
 				'primary' => true,
 				'title'   => apply_filters( 'wpsc_register_button_title', __( 'Register', 'wpsc' ) ),
 			),
@@ -168,17 +185,17 @@ function wpsc_get_register_form() {
 	);
 
 	$args = apply_filters( 'wpsc_get_register_form_args', $args );
+
+	return $args;
+}
+
+function wpsc_get_register_form() {
+	$args = wpsc_get_register_form_args();
 	return apply_filters( 'wpsc_get_register_form', wpsc_get_form_output( $args ) );
 }
 
 function wpsc_register_form() {
 	echo wpsc_get_register_form();
-}
-
-function wpsc_login_button() {
-	?>
-	<input type="submit" class="wpsc-login-button wpsc-primary-button" name="submit" value="<?php esc_attr_e( 'Log in', 'wpsc' ); ?>" />
-	<?php
 }
 
 function wpsc_password_reminder_button() {

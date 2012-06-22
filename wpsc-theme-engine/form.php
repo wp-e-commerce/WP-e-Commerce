@@ -1,30 +1,34 @@
 <?php
 
-function _wpsc_get_field_output( $field, $r ) {
+function _wpsc_populate_field_default_args( $field ) {
 	static $field_id = 0;
 	$field_id ++;
 
-	$output = '';
 	$field_defaults = array(
-		'title' => '',
-		'id'    => "wpsc-field-{$field_id}",
-		'value' => '',
-		'class' => '',
-		'name'  => '',
+		'title'   => '',
+		'type'    => 'textfield',
+		'id'      => "wpsc-field-{$field_id}",
+		'value'   => '',
+		'primary' => false,
+		'name'    => $field_id,
+		'class'   => "wpsc-field",
 	);
 
-	if ( $field['type'] == 'submit' )
-		$field_defaults['primary'] = false;
+	$field_defaults['class'] .= ' ' . "wpsc-field-{$field['name']}";
+	$field_defaults['title_validation'] = isset( $field['title'] ) ? strtolower( $field['title'] ) : $field['title'];
 
 	$field = wp_parse_args( $field, $field_defaults );
 
-	$field_class = 'wpsc-field';
-	if ( ! empty( $field['name'] ) )
-		$field_class .= " wpsc-field-{$field['name']}";
-	$field['class'] .= ' ' . $field_class;
+	return $field;
+}
+
+function _wpsc_get_field_output( $field, $r ) {
+	$output = '';
+
+	$field = _wpsc_populate_field_default_args( $field );
 
 	$before_field = apply_filters( 'wpsc_field_before', $r['before_field'], $field, $r );
-	$before_field = sprintf( $before_field, $field['id'], $field_class );
+	$before_field = sprintf( $before_field, $field['id'], $field['class']);
 
 	$output .= $before_field;
 	$output .= apply_filters( 'wpsc_control_before'          , $r['before_controls'], $field, $r );
