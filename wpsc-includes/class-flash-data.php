@@ -21,7 +21,6 @@ final class WPSC_Flash_Data
 	private function __construct() {
 		if ( ! $this->get_cookie() )
 			$this->set_cookie();
-
 		$this->sweep();
 		$this->mark();
 	}
@@ -52,19 +51,18 @@ final class WPSC_Flash_Data
 	}
 
 	private function get_cookie() {
-		$this->data = isset( $_COOKIE[WPSC_FLASH_DATA_COOKIE_NAME] ) ? unserialize( $_COOKIE[WPSC_FLASH_DATA_COOKIE_NAME] ) : array();
-
+		$this->data = isset( $_COOKIE[WPSC_FLASH_DATA_COOKIE_NAME] ) ? unserialize( stripslashes( $_COOKIE[WPSC_FLASH_DATA_COOKIE_NAME] ) ) : array();
 		return $this->data;
 	}
 
 	public function set( $key, $value ) {
-		$this->data["new:{$key}"] = maybe_serialize( $value );
+		$this->data["new:{$key}"] = $value	;
 		$this->set_cookie();
 	}
 
 	public function get( $key ) {
-		if ( array_key_exists( "new:{$key}", $this->data ) )
-			return $this->data["new:{$key}"];
+		if ( array_key_exists( "old:{$key}", $this->data ) )
+			return $this->data["old:{$key}"];
 
 		return false;
 	}
