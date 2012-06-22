@@ -61,7 +61,10 @@ class WPSC_Page_Register extends WPSC_Page_SSL
 
 		update_user_option( $user_id, 'default_password_nag', true, true ); //Set up the Password change nag.
 		$this->send_registration_notification( $user_id, $username, $email, $password );
-		$this->message_collection->add( __( 'We just sent you an e-mail containing your generated password. Just follow the directions in that e-mail to complete your registration.', 'wpsc' ), 'success' );
+		$this->message_collection->add( __( 'We just sent you an e-mail containing your generated password. Just follow the directions in that e-mail to complete your registration.', 'wpsc' ), 'success', 'main', 'flash' );
+
+		wp_redirect( wpsc_get_login_url() );
+		exit;
 	}
 
 	private function send_registration_notification( $user_id, $username, $email, $password ) {
