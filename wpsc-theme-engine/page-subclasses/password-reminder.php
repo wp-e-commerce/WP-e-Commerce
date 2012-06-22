@@ -15,7 +15,7 @@ class WPSC_Page_Password_Reminder extends WPSC_Page_SSL
 		parent::__construct( $callback, wpsc_get_password_reminder_url() );
 	}
 
-	public function process_new_password() {
+	public function _callback_new_password() {
 		global $wpdb;
 
 		$validation_rules = array(
@@ -111,7 +111,7 @@ class WPSC_Page_Password_Reminder extends WPSC_Page_SSL
 		wp_password_change_notification( $user );
 	}
 
-	public function process_reset_password( $username = null, $key = null ) {
+	public function _callback_reset_password( $username = null, $key = null ) {
 		$user = $this->reset( $username, $key );
 
 		if ( is_wp_error( $user ) )

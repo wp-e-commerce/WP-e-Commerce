@@ -107,13 +107,13 @@ class WPSC_Page
 		return $theme_engine->locate_compat_template( get_query_var( 'wpsc_page' ) );
 	}
 
-	protected function set_validation_errors( $validation ) {
+	protected function set_validation_errors( $validation, $context = 'main' ) {
 		if ( ! is_wp_error( $validation ) )
 			return;
 
 		$messages = $validation->get_error_messages();
 		foreach ( $messages as $message ) {
-			$this->message_collection->add( $message, 'error', 'main' );
+			$this->message_collection->add( $message, 'validation', $context );
 		}
 	}
 }

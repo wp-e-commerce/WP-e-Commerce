@@ -31,9 +31,15 @@ class WPSC_Page_Login extends WPSC_Page_SSL
 			'rememberme'    => ! empty( $_POST['rememberme'] ),
 		) );
 
-		if ( is_wp_error( $user ) ) {
+		if ( is_wp_error( $user ) )
 			$this->message_collection->add( __( 'We do not recognize the login information you entered. Please try again.', 'wpsc' ), 'error' );
-		}
+
+		$redirect_to = wp_get_referer();
+		if ( ! $redirect_to )
+			$redirect_to = wpsc_get_catalog_url();
+
+		wp_redirect( $redirect_to );
+		exit;
 	}
 
 	public function __construct( $callback ) {

@@ -212,7 +212,11 @@ function wpsc_get_user_messages( $args = '' ) {
 	$output = '';
 
 	foreach ( $messages as $type => $type_messages ) {
-		$output .= sprintf( $before_message_list, "wpsc-alert wpsc-alert-block wpsc-alert-{$type}" );
+		$classes = "wpsc-alert wpsc-alert-block wpsc-alert-{$type}";
+		if ( $type == 'validation' )
+			$classes .= ' wpsc-alert-error';
+
+		$output .= sprintf( $before_message_list, $classes );
 		foreach ( $type_messages as $message ) {
 			$output .= $before_message_item;
 			$output .= apply_filters( 'wpsc_inline_validation_error_message', $message );
