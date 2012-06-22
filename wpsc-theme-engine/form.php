@@ -218,6 +218,6 @@ function _wpsc_filter_control_checkbox( $output, $field, $args ) {
 	extract( $field );
 	if ( ! isset( $checked ) )
 		$checked = false;
-	$output .= wpsc_form_checkbox( $name, $value, $label, $checked, array( 'id' => $id . '-control' ), false );
+	$output .= wpsc_form_checkbox( $name, $value, $title, $checked, array( 'id' => $id . '-control' ), false );
 	return $output;
 }
