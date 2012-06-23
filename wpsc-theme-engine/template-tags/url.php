@@ -4,6 +4,24 @@ function wpsc_catalog_url() {
 	echo wpsc_get_catalog_url();
 }
 
+function _wpsc_get_page_url( $page, $slug = '' ) {
+	$slugs = wpsc_get_page_slugs();
+
+	if ( ! get_option( 'permalink_structure' ) ) {
+		$uri = add_query_arg( 'wpsc_page', $page, home_url( '/' ) );
+		if ( $slug )
+			$uri = add_query_arg( 'wpsc_callback', $slug, $uri );
+		return $uri;
+	}
+
+	$prefix = ( ! got_mod_rewrite() && ! iis7_supports_permalinks() ) ? 'index.php/' : '';
+
+	$uri = $prefix . $slugs[$page];
+	if ( $slug )
+		$uri = trailingslashit( $uri ) . ltrim( $slug, '/' );
+	return user_trailingslashit( home_url( $uri ) );
+}
+
 /**
  * Return the main catalog URL based on the settings in Settings->Store->Pemalinks
  *
@@ -22,15 +40,7 @@ function wpsc_cart_url( $slug = '' ) {
 }
 
 function wpsc_get_cart_url( $slug = '' ) {
-	if ( ! get_option( 'permalink_structure' ) )
-		return add_query_arg( 'wpsc_page', 'cart', home_url( '/' ) );
-
-	$prefix = ( ! got_mod_rewrite() && ! iis7_supports_permalinks() ) ? 'index.php/' : '';
-
-	$uri = $prefix . wpsc_get_option( 'cart_page_slug' );
-	if ( $slug )
-		$uri = trailingslashit( $uri ) . ltrim( $slug, '/' );
-	return user_trailingslashit( home_url( $uri ) );
+	return _wpsc_get_page_url( 'cart', $slug );
 }
 
 function wpsc_checkout_url( $slug = '' ) {
@@ -38,15 +48,7 @@ function wpsc_checkout_url( $slug = '' ) {
 }
 
 function wpsc_get_checkout_url( $slug = '' ) {
-	if ( ! get_option( 'permalink_structure' ) )
-		return add_query_arg( 'wpsc_page', 'checkout', home_url( '/' ) );
-
-	$prefix = ( ! got_mod_rewrite() && ! iis7_supports_permalinks() ) ? 'index.php/' : '';
-
-	$uri = $prefix . wpsc_get_option( 'checkout_page_slug' );
-	if ( $slug )
-		$uri = trailingslashit( $uri ) . ltrim( $slug, '/' );
-	return user_trailingslashit( home_url( $uri ) );
+	return _wpsc_get_page_url( 'checkout', $slug );
 }
 
 function wpsc_login_url( $slug = '' ) {
@@ -54,16 +56,7 @@ function wpsc_login_url( $slug = '' ) {
 }
 
 function wpsc_get_login_url( $slug = '' ) {
-	if ( ! get_option( 'permalink_structure' ) )
-		return add_query_arg( 'wpsc_page', 'login', home_url( '/' ) );
-
-	$prefix = ( ! got_mod_rewrite() && ! iis7_supports_permalinks() ) ? 'index.php/' : '';
-
-	$uri = $prefix . wpsc_get_option( 'login_page_slug' );
-	if ( $slug )
-		$uri = trailingslashit( $uri ) . ltrim( $slug, '/' );
-	$scheme = force_ssl_login() ? 'https' : null;
-	return user_trailingslashit( home_url( $uri, $scheme ) );
+	return _wpsc_get_page_url( 'login', $slug );
 }
 
 function wpsc_register_url( $slug = '' ) {
@@ -71,17 +64,7 @@ function wpsc_register_url( $slug = '' ) {
 }
 
 function wpsc_get_register_url( $slug = '' ) {
-	if ( ! get_option( 'permalink_structure' ) )
-		return add_query_arg( 'wpsc_page', 'register', home_url( '/' ) );
-
-	$prefix = ( ! got_mod_rewrite() && ! iis7_supports_permalinks() ) ? 'index.php/' : '';
-
-	$uri = $prefix . wpsc_get_option( 'register_page_slug' );
-
-	if ( $slug )
-		$uri = trailingslashit( $uri ) . ltrim( $slug, '/' );
-	$scheme = force_ssl_login() ? 'https' : null;
-	return user_trailingslashit( home_url( $uri, $scheme ) );
+	return _wpsc_get_page_url( 'register', $slug );
 }
 
 function wpsc_password_reminder_url( $slug = '' ) {
@@ -89,16 +72,15 @@ function wpsc_password_reminder_url( $slug = '' ) {
 }
 
 function wpsc_get_password_reminder_url( $slug = '' ) {
-	if ( ! get_option( 'permalink_structure' ) )
-		return add_query_arg( 'wpsc_page', 'password-reminder', home_url( '/' ) );
+	return _wpsc_get_page_url( 'password-reminder', $slug );
+}
 
-	$prefix = ( ! got_mod_rewrite() && ! iis7_supports_permalinks() ) ? 'index.php/' : '';
+function wpsc_password_reset_url( $username, $key) {
+	echo wpsc_get_password_reset_url( $username, $key );
+}
 
-	$uri = $prefix . wpsc_get_option( 'password_reminder_page_slug' );
-	if ( $slug )
-		$uri = trailingslashit( $uri ) . ltrim( $slug, '/' );
-	$scheme = force_ssl_login() ? 'https' : null;
-	return user_trailingslashit( home_url( $uri, $scheme ) );
+function wpsc_get_password_reset_url( $username, $key ) {
+	return wpsc_get_password_reminder_url( "reset/{$username}/{$key}" );
 }
 
 function wpsc_page_get_current_slug() {
