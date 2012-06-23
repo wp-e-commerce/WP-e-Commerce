@@ -1,6 +1,9 @@
 <?php wpsc_user_messages(); ?>
 <div class="wpsc-login-form-wrapper">
 	<?php wpsc_login_form(); ?>
+	<p class="wpsc-lost-your-password">
+		<a href="<?php wpsc_password_reminder_url(); ?>"><?php esc_html_e( 'Lost your password?', 'wpsc' ) ?></a>
+	</p>
 </div>
 <div class="wpsc-create-account-offer">
 	<p><?php esc_html_e( 'Register with us to enjoy personalized services, such as:', 'wpsc' ); ?></p>
