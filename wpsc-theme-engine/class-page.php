@@ -44,7 +44,6 @@ class WPSC_Page
 		$args = explode( '/', ltrim( $callback, '/' ) );
 		$callback = array_shift( $args );
 		$this->slug = $callback;
-
 		$callback = str_replace( array( ' ', '-' ), '_', $callback );
 
 		if ( ! is_callable( array( $this, $callback ) ) ) {
@@ -55,7 +54,9 @@ class WPSC_Page
 		$this->args = $args;
 
 		add_filter( 'template_include', array( $this, '_filter_template_include' ) );
+	}
 
+	public function execute_callback() {
 		if ( array_key_exists( 'action', $_REQUEST ) ) {
 			$process_callback = '_callback_' . $_REQUEST['action'];
 			if ( is_callable( array( $this, $process_callback ) ) ) {
@@ -65,6 +66,14 @@ class WPSC_Page
 		}
 
 		call_user_func_array( array( $this, $this->callback ), $this->args );
+	}
+
+	public function get_arg( $key ) {
+		return isset( $this->args[$key] ) ? $this->args[$key] : '';
+	}
+
+	public function get_args() {
+		return $this->args;
 	}
 
 	public function get_uri() {
