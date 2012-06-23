@@ -104,7 +104,7 @@ class WPSC_Page
 
 		$theme_engine = WPSC_Theme_Engine::get_instance();
 
-		return $theme_engine->locate_compat_template( get_query_var( 'wpsc_page' ) );
+		return $theme_engine->locate_compat_template( str_replace( '-', '_', get_query_var( 'wpsc_page' ) ) );
 	}
 
 	protected function set_validation_errors( $validation, $context = 'main' ) {

@@ -110,7 +110,7 @@ class WPSC_Theme_Engine
 		$wp_query->is_404       = false;
 		$wp_query->wpsc_is_page = true;
 
-		$conditional_prop = "wpsc_is_" . get_query_var( 'wpsc_page' );
+		$conditional_prop = "wpsc_is_" . str_replace( '-', '_', get_query_var( 'wpsc_page' ) );
 		$wp_query->$conditional_prop = true;
 	}
 
