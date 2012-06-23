@@ -186,6 +186,7 @@
 .wpsc-field-description {
   color: #666666;
   font-size: 11px;
+  font-weight: normal;
   line-height: 18px;
 }
 .wpsc-label {
@@ -663,6 +664,10 @@ table.wpsc-table tbody tr:hover th {
   color: #0778b1;
   background-color: #b6e7ff;
 }
+br.clear {
+  clear: both;
+  height: 0;
+}
 /* Products */
 .wpsc-product-title {
   color: #333333;
@@ -805,12 +810,15 @@ table.wpsc-cart-item-table .wpsc-thumbnail {
   margin-bottom: 48px;
 }
 /* Login form */
-.wpsc-login-form,
+.wpsc-login-form-wrapper,
 .wpsc-create-account-offer {
   width: 45%;
 }
-.wpsc-login-form {
+.wpsc-login-form-wrapper {
   float: left;
+}
+.wpsc-create-account-offer {
+  float: right;
 }
 .wpsc-login-form input[type="text"],
 .wpsc-login-form input[type="password"] {
@@ -822,10 +830,12 @@ table.wpsc-cart-item-table .wpsc-thumbnail {
   /* IE 7 and below doesn't support box-sizing */
 
 }
-.wpsc-login-form .wpsc-form-actions {
+.wpsc-lost-your-password {
+  font-size: 13px;
+  line-height: 18px;
+}
+.wpsc-login-form .wpsc-form-actions,
+.wpsc-password-reminder-form .wpsc-form-actions {
   border-top: none;
   padding-top: 0;
-}
-.wpsc-create-account-offer {
-  float: right;
 }

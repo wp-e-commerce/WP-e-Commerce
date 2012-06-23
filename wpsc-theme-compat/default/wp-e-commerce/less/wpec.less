@@ -8,6 +8,11 @@
 @import "tables";
 @import "alerts";
 
+br.clear {
+	clear: both;
+	height: 0;
+}
+
 /* Products */
 .wpsc-product-title-typography () {
 	color: @font-color;
@@ -155,13 +160,17 @@ table.wpsc-cart-item-table {
 }
 
 /* Login form */
-.wpsc-login-form,
+.wpsc-login-form-wrapper,
 .wpsc-create-account-offer {
 	width: 45%;
 }
-.wpsc-login-form {
+.wpsc-login-form-wrapper {
 	float: left;
-
+}
+.wpsc-create-account-offer {
+	float: right;
+}
+.wpsc-login-form {
 	input[type="text"],
 	input[type="password"] {
 		-webkit-box-sizing: border-box;
@@ -170,12 +179,15 @@ table.wpsc-cart-item-table {
 		width: 100%;
 		*width: 94%; /* IE 7 and below doesn't support box-sizing */
 	}
-
+}
+.wpsc-lost-your-password {
+	font-size: @font-size-m;
+	line-height: @line-height-m;
+}
+.wpsc-login-form,
+.wpsc-password-reminder-form {
 	.wpsc-form-actions {
 		border-top: none;
 		padding-top: 0;
 	}
-}
-.wpsc-create-account-offer {
-	float: right;
 }

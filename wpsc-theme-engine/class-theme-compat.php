@@ -10,6 +10,7 @@ class WPSC_Theme_Engine_Compat
 		add_filter( 'wpsc_theme_compat_reset_globals_taxonomy', array( $this, '_filter_reset_globals_taxonomy'  ) );
 		add_filter( 'wpsc_theme_compat_reset_globals_login'   , array( $this, '_filter_reset_globals_login'     ) );
 		add_filter( 'wpsc_theme_compat_reset_globals_register', array( $this, '_filter_reset_globals_register'  ) );
+		add_filter( 'wpsc_theme_compat_reset_globals_password_reminder', array( $this, '_filter_reset_globals_password_reminder' ) );
 
 		add_filter( 'wpsc_replace_the_content_archive' , array( $this, '_filter_replace_the_content_archive'  ) );
 		add_filter( 'wpsc_replace_the_content_cart'    , array( $this, '_filter_replace_the_content_cart'     ) );
@@ -17,6 +18,7 @@ class WPSC_Theme_Engine_Compat
 		add_filter( 'wpsc_replace_the_content_taxonomy', array( $this, '_filter_replace_the_content_taxonomy' ) );
 		add_filter( 'wpsc_replace_the_content_login'   , array( $this, '_filter_replace_the_content_login'    ) );
 		add_filter( 'wpsc_replace_the_content_register', array( $this, '_filter_replace_the_content_register' ) );
+		add_filter( 'wpsc_replace_the_content_password_reminder', array( $this, '_filter_replace_the_content_password_reminder' ) );
 	}
 
 	public function _filter_reset_globals_taxonomy() {
@@ -61,6 +63,14 @@ class WPSC_Theme_Engine_Compat
 		);
 	}
 
+	public function _filter_reset_globals_password_reminder() {
+		return array(
+			'post' => array(
+				'post_title' => wpsc_get_password_reminder_title(),
+			),
+		);
+	}
+
 	public function _filter_replace_the_content_archive( $content ) {
 		$post_type_object = get_queried_object();
 		$post_type = str_replace( array( 'wpsc_', 'wpsc-' ), '', $post_type_object->name );
@@ -99,6 +109,12 @@ class WPSC_Theme_Engine_Compat
 	public function _filter_replace_the_content_register( $content ) {
 		ob_start();
 		wpsc_get_template_part( 'register' );
+		return ob_get_clean();
+	}
+
+	public function _filter_replace_the_content_password_reminder( $content ) {
+		ob_start();
+		wpsc_get_template_part( 'password-reminder' );
 		return ob_get_clean();
 	}
 

@@ -21,6 +21,7 @@ class WPSC_Message_Collection
 
 	private function get_flash_messages() {
 		$flash_messages = $this->flash_data->get( 'messages' );
+
 		if ( ! is_array( $flash_messages ) )
 			return array();
 
