@@ -113,8 +113,12 @@ class WPSC_Theme_Engine_Compat
 	}
 
 	public function _filter_replace_the_content_password_reminder( $content ) {
+		global $wpsc_page_instance;
+		$template_part = 'password-reminder';
+		$callback = $wpsc_page_instance->get_callback();
+
 		ob_start();
-		wpsc_get_template_part( 'password-reminder' );
+		wpsc_get_template_part( $template_part, $callback );
 		return ob_get_clean();
 	}
 
