@@ -244,6 +244,62 @@ function wpsc_password_reminder_form() {
 	echo wpsc_get_password_reminder_form();
 }
 
+function wpsc_get_password_reset_form_args() {
+	global $wpsc_page_instance;
+	$username = $wpsc_page_instance->get_arg(0);
+	$key = $wpsc_page_instance->get_arg(1);
+
+	$args = array(
+		'class'  => 'wpsc-form wpsc-form-vertical wpsc-password-reminder-form',
+		'action' => wpsc_get_password_reset_url( $username, $key ),
+		'id'     => "wpsc-password-reminder-form",
+		'fields' => array(
+			array(
+				'name'  => 'pass1',
+				'type'  => 'password',
+				'title' => __( 'New password', 'wpsc' ),
+				'value' => wpsc_submitted_value( 'pass1' ),
+				'rules' => 'trim|required',
+			),
+			array(
+				'name'  => 'pass2',
+				'type'  => 'password',
+				'title' => __( 'Confirm new password', 'wpsc' ),
+				'value' => wpsc_submitted_value( 'pass2' ),
+				'rules' => 'trim|required|matches[pass1]',
+			),
+		),
+		'form_actions' => array(
+			array(
+				'type'    => 'submit',
+				'primary' => true,
+				'title'   => apply_filters( 'wpsc_password_reset_button_title', __( 'Reset Password', 'wpsc' ) ),
+			),
+			array(
+				'type'    => 'hidden',
+				'name'    => 'action',
+				'value'   => 'reset_password',
+			),
+			array(
+				'type'    => 'hidden',
+				'name'    => '_wp_nonce',
+				'value'   => wp_create_nonce( "wpsc-password-reset" ),
+			),
+		),
+	);
+
+	return $args;
+}
+
+function wpsc_get_password_reset_form() {
+	$args = wpsc_get_password_reset_form_args();
+	return apply_filters( 'wpsc_get_password_reset_form', wpsc_get_form_output( $args ) );
+}
+
+function wpsc_password_reset_form() {
+	echo wpsc_get_password_reset_form();
+}
+
 function wpsc_checkout_details_form_open() {
 	do_action( 'wpsc_checkout_details_form_open_before' );
 	?>
