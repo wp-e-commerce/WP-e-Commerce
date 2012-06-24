@@ -18,14 +18,9 @@ class WPSC_Page_Password_Reminder extends WPSC_Page_SSL
 	public function _callback_new_password() {
 		global $wpdb;
 
-		$validation_rules = array(
-			'username' => array(
-				'title' => __( 'username', 'wpsc' ),
-				'rules' => 'trim|required|valid_username_or_email|allow_password_reset',
-			),
-		);
+		$form = wpsc_get_password_reminder_form_args();
 
-		$validation = wpsc_validate_form( $validation_rules );
+		$validation = wpsc_validate_form( $form );
 
 		do_action('lostpassword_post');
 
@@ -117,19 +112,10 @@ class WPSC_Page_Password_Reminder extends WPSC_Page_SSL
 		if ( is_wp_error( $user ) )
 			return;
 
-		$validation_rules = array(
-			'pass1' => array(
-				'title' => __( 'new password', 'wpsc' ),
-				'rules' => 'trim|required',
-			),
-			'pass2' => array(
-				'title' => __( 'confirm new password', 'wpsc' ),
-				'rules' => 'trim|required|matches[pass1]',
-			),
-		);
+		$form = wpsc_get_password_reset_form_args();
 
 		add_filter( 'wpsc_validation_rule_fields_dont_match_message', array( $this, 'filter_fields_dont_match_message' ) );
-		$validation = wpsc_validate_form( $validation_rules );
+		$validation = wpsc_validate_form( $form );
 		remove_filter( 'wpsc_validation_rule_fields_dont_match_message', array( $this, 'filter_fields_dont_match_message' ) );
 
 		if ( is_wp_error( $validation ) ) {
@@ -139,7 +125,7 @@ class WPSC_Page_Password_Reminder extends WPSC_Page_SSL
 
 		$this->reset_password( $user, $_POST['pass1'] );
 		$message = apply_filters( 'wpsc_reset_password_success_message', __( 'Your password has been reset successfully. Please log in with the new password.', 'wpsc' ), $user );
-		$this->message_collection->add( sprintf( $message, wpsc_get_login_url() ), 'success', 'login', 'flash' );
+		$this->message_collection->add( $message, 'success', 'main', 'flash' );
 
 		wp_redirect( wpsc_get_login_url() );
 		exit;
