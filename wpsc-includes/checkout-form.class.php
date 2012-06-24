@@ -165,11 +165,11 @@ class WPSC_Checkout_Form
 		return isset( self::$form_titles[$this->id] ) ? self::$form_titles[$this->id] : '';
 	}
 
-	public function output_fields() {
+	public function get_field_args() {
 		if ( is_null( $this->fields ) )
 			$this->get_fields();
 
-		$output = '';
+		$fields = array();
 
 		if ( empty( $_POST['wpsc_checkout_details'] ) )
 			$_POST['wpsc_checkout_details'] = array();
@@ -178,8 +178,8 @@ class WPSC_Checkout_Form
 			$id = empty( $field->unique_name ) ? $field->id : $field->unique_name;
 
 			$field_arr = array(
-				'type' => $field->type,
-				'id'   => "wpsc-checkout-field-{$id}",
+				'type'  => $field->type,
+				'id'    => "wpsc-checkout-field-{$id}",
 				'title' => $field->name,
 				'name'  => 'wpsc_checkout_details[' . $field->id . ']',
 				'value' => wpsc_submitted_value( $field->id, '', $_POST['wpsc_checkout_details'] ),
@@ -189,7 +189,7 @@ class WPSC_Checkout_Form
 				$field_arr['type'] = 'state_dropdown';
 				$field_arr['country'] = 'US';
 			} elseif ( in_array( $field->unique_name, array( 'billingcountry', 'shippingcountry' ) ) || $field->type == 'delivery_country' ) {
-				$field_arr['type'] = 'country_dropdown';
+				$field_arr['type'] = 'select_country';
 			} elseif ( $field->type == 'text' ) {
 				$field_arr['type'] = 'textfield';
 			} elseif ( $field->type == 'select' ) {
@@ -200,131 +200,13 @@ class WPSC_Checkout_Form
 			} elseif ( $field->type == 'checkbox' ) {
 				$field_arr['type'] = 'checkboxes';
 				$field_arr['options'] = array_flip( unserialize( $field->options ) );
+			} elseif ( in_array( $field->type, array( 'address', 'city', 'email' ) ) ) {
+				$field_arr['type'] = 'textfield';
 			}
 
-			$output .= sprintf( apply_filters( 'wpsc_checkout_field_before', '<p class="%s" id="%s">', $field_arr ), "wpsc-checkout-field-wrapper wpsc-checkout-field-wrapper-{$field_arr['type']}", "wpsc-checkout-field-{$id}-wrapper" );
-			$output .= apply_filters( "wpsc_checkout_field_{$field_arr['type']}", '', $field_arr );
-			$output .= apply_filters( 'wpsc_checkout_field_after', '</p>', $field_arr );
+			$fields[] = $field_arr;
 		}
 
-		echo $output;
+		return $fields;
 	}
 }
-
-function wpsc_checkout_field_label( $output, $field ) {
-	extract( $field );
-
-	if ( $type != 'heading' )
-		$output .= wpsc_form_label( $title, $id, array( 'class' => 'wpsc-checkout-label', 'id' => $id . '-label' ), false );
-
-	return $output;
-}
-add_filter( 'wpsc_checkout_field_before', 'wpsc_checkout_field_label', 20, 2 );
-
-function wpsc_checkout_field_heading( $output, $field ) {
-	extract( $field );
-	if ( ! isset( $class ) )
-		$class = 'wpsc-checkout-heading';
-
-	return esc_html( $title );
-}
-add_filter( 'wpsc_checkout_field_heading', 'wpsc_checkout_field_heading', 10, 2 );
-
-function wpsc_checkout_field_textfield( $output, $field_array ) {
-	extract( $field_array );
-	if ( ! isset( $class ) )
-		$class = 'wpsc-checkout-textfield';
-
-	if ( $type !== 'textfield' )
-		$class .= ' wpsc-checkout-' . $type;
-
-	$output .= wpsc_form_input( $name, $value, array( 'id' => $id, 'class' => $class ), false );
-
-	return $output;
-}
-add_filter( 'wpsc_checkout_field_address', 'wpsc_checkout_field_textfield', 10, 2 );
-add_filter( 'wpsc_checkout_field_city', 'wpsc_checkout_field_textfield', 10, 2 );
-add_filter( 'wpsc_checkout_field_email', 'wpsc_checkout_field_textfield', 10, 2 );
-add_filter( 'wpsc_checkout_field_textfield', 'wpsc_checkout_field_textfield', 10, 2 );
-
-function wpsc_checkout_field_country_dropdown( $output, $field_array ) {
-	extract( $field_array );
-	if ( ! isset( $class ) )
-		$class = 'wpsc-checkout-country-dropdown';
-
-	$country_data = WPSC_Country::get_all();
-	$options = array();
-	foreach ( $country_data as $country ) {
-		$options[$country->isocode] = $country->country;
-	}
-
-	$output .= wpsc_form_select( $name, $value, $options, array( 'id' => $id, 'class' => $class ), false );
-
-	return $output;
-}
-add_filter( 'wpsc_checkout_field_country_dropdown', 'wpsc_checkout_field_country_dropdown', 10, 2 );
-
-function wpsc_checkout_field_state_dropdown( $output, $field_array ) {
-	global $wpdb;
-
-	extract( $field_array );
-	if ( ! isset( $class ) )
-		$class = 'wpsc-checkout-state-dropdown';
-
-	$state_data = $wpdb->get_results( $wpdb->prepare( "SELECT `regions`.* FROM `" . WPSC_TABLE_REGION_TAX . "` AS `regions` INNER JOIN `" . WPSC_TABLE_CURRENCY_LIST . "` AS `country` ON `country`.`id` = `regions`.`country_id` WHERE `country`.`isocode` IN(%s)", $country ) );
-	$options = array();
-	foreach ( $state_data as $state ) {
-		$options[$state->id] = $state->name;
-	}
-
-	$output .= wpsc_form_select( $name, $value, $options, array( 'id' => $id, 'class' => $class ), false );
-
-	return $output;
-}
-add_filter( 'wpsc_checkout_field_state_dropdown', 'wpsc_checkout_field_state_dropdown', 10, 2 );
-
-function wpsc_checkout_field_textarea( $output, $field_array ) {
-	extract( $field_array );
-	if ( ! isset( $class ) )
-		$class = 'wpsc-checkout-textarea';
-
-	$output .= wpsc_form_textarea( $name, $value, array( 'id' => $id, 'class' => $class ), false );
-
-	return $output;
-}
-add_filter( 'wpsc_checkout_field_textarea', 'wpsc_checkout_field_textarea', 10, 2 );
-
-function wpsc_checkout_field_select( $output, $field_array ) {
-	extract( $field_array );
-	if ( ! isset( $class ) )
-		$class = 'wpsc-checkout-select';
-
-	$output .= wpsc_form_select( $name, $value, $options, array( 'id' => $id, 'class' => $class ), false );
-
-	return $output;
-}
-add_filter( 'wpsc_checkout_field_select', 'wpsc_checkout_field_select', 10, 2 );
-
-function wpsc_checkout_field_radios( $output, $field_array ) {
-	extract( $field_array );
-
-	if ( ! isset( $class ) )
-		$class = 'wpsc-checkout-radios wpsc-checkout-radio';
-
-	$output .= wpsc_form_radios( $name, $value, $options, array( 'id' => $id, 'class' => $class ), false );
-
-	return $output;
-}
-add_filter( 'wpsc_checkout_field_radios', 'wpsc_checkout_field_radios', 10, 2 );
-
-function wpsc_checkout_field_checkboxes( $output, $field_array ) {
-	extract( $field_array );
-
-	if ( ! isset( $class ) )
-		$class = 'wpsc-checkout-checkboxes wpsc-checkout-checkbox';
-
-	$output .= wpsc_form_checkboxes( $name, $value, $options, array( 'id' => $id, 'class' => $class ), false );
-
-	return $output;
-}
-add_filter( 'wpsc_checkout_field_checkboxes', 'wpsc_checkout_field_checkboxes', 10, 2 );

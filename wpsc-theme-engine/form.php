@@ -120,15 +120,20 @@ function wpsc_display_form( $args ) {
 	echo wpsc_get_form_output( $args );
 }
 
-add_filter( 'wpsc_control_before'   , '_wpsc_filter_control_before'   , 10, 3 );
-add_filter( 'wpsc_control_after'    , '_wpsc_filter_control_after'    , 15, 3 );
-add_filter( 'wpsc_control_textfield', '_wpsc_filter_control_textfield', 10, 3 );
-add_filter( 'wpsc_control_password' , '_wpsc_filter_control_password' , 10, 3 );
-add_filter( 'wpsc_control_select'   , '_wpsc_filter_control_select'   , 10, 3 );
-add_filter( 'wpsc_control_submit'   , '_wpsc_filter_control_submit'   , 10, 3 );
-add_filter( 'wpsc_control_hidden'   , '_wpsc_filter_control_hidden'   , 10, 3 );
-add_filter( 'wpsc_control_button'   , '_wpsc_filter_control_button'   , 10, 3 );
-add_filter( 'wpsc_control_checkbox' , '_wpsc_filter_control_checkbox'   , 10, 3 );
+add_filter( 'wpsc_control_before'         , '_wpsc_filter_control_before'   , 10, 3 );
+add_filter( 'wpsc_control_after'          , '_wpsc_filter_control_after'    , 15, 3 );
+add_filter( 'wpsc_control_textfield'      , '_wpsc_filter_control_textfield', 10, 3 );
+add_filter( 'wpsc_control_password'       , '_wpsc_filter_control_password' , 10, 3 );
+add_filter( 'wpsc_control_select'         , '_wpsc_filter_control_select'   , 10, 3 );
+add_filter( 'wpsc_control_select_country' , '_wpsc_filter_control_select_country' , 10, 3 );
+add_filter( 'wpsc_control_select_region'  , '_wpsc_filter_control_select_region'  , 10, 3 );
+add_filter( 'wpsc_control_submit'         , '_wpsc_filter_control_submit'   , 10, 3 );
+add_filter( 'wpsc_control_hidden'         , '_wpsc_filter_control_hidden'   , 10, 3 );
+add_filter( 'wpsc_control_button'         , '_wpsc_filter_control_button'   , 10, 3 );
+add_filter( 'wpsc_control_checkbox'       , '_wpsc_filter_control_checkbox' , 10, 3 );
+add_filter( 'wpsc_control_radio'          , '_wpsc_filter_control_radio'    , 10, 3 );
+add_filter( 'wpsc_control_checkboxes'     , '_wpsc_filter_control_checkboxes', 10, 3 );
+add_filter( 'wpsc_control_radios'         , '_wpsc_filter_control_radios'    , 10, 3 );
 
 add_filter( 'wpsc_action_field_submit', '_wpsc_filter_control_submit', 10, 3 );
 add_filter( 'wpsc_action_field_hidden', '_wpsc_filter_control_hidden', 10, 3 );
@@ -182,6 +187,34 @@ function _wpsc_filter_control_select( $output, $field, $args ) {
 	return $output;
 }
 
+function wpsc_checkout_field_country_dropdown( $output, $field, $args ) {
+	extract( $field );
+
+	$country_data = WPSC_Country::get_all();
+	$options = array();
+	foreach ( $country_data as $country ) {
+		$options[$country->isocode] = $country->country;
+	}
+
+	$output .= wpsc_form_select( $name, $value, $options, array( 'id' => $id . '-control' ), false );
+	return $output;
+}
+
+function wpsc_checkout_field_select_region( $output, $field, $args ) {
+	global $wpdb;
+
+	extract( $field );
+
+	$state_data = $wpdb->get_results( $wpdb->prepare( "SELECT `regions`.* FROM `" . WPSC_TABLE_REGION_TAX . "` AS `regions` INNER JOIN `" . WPSC_TABLE_CURRENCY_LIST . "` AS `country` ON `country`.`id` = `regions`.`country_id` WHERE `country`.`isocode` IN(%s)", $country ) );
+	$options = array();
+	foreach ( $state_data as $state ) {
+		$options[$state->id] = $state->name;
+	}
+
+	$output .= wpsc_form_select( $name, $value, $options, array( 'id' => $id . '-control' ), false );
+	return $output;
+}
+
 function _wpsc_filter_control_submit( $output, $field, $args ) {
 	extract( $field );
 
@@ -224,4 +257,27 @@ function _wpsc_filter_control_checkbox( $output, $field, $args ) {
 		$checked = false;
 	$output .= wpsc_form_checkbox( $name, $value, $title, $checked, array( 'id' => $id . '-control' ), false );
 	return $output;
+}
+
+function _wpsc_filter_control_radio( $output, $field, $args ) {
+	extract( $field );
+	if ( ! isset( $checked ) )
+		$checked = false;
+	$output .= wpsc_form_radio( $name, $value, $title, $checked, array( 'id' => $id . '-control' ), false );
+	return $output;
+}
+
+function _wpsc_filter_control_checkboxes( $output, $field, $args ) {
+	extract( $field );
+	if ( ! isset( $value ) )
+		$value = '';
+	$output .= wpsc_form_checkboxes( $name, $value, $options, array( 'id' => $id . '-control' ), false );
+	return $output;
+}
+
+function _wpsc_filter_control_radios( $output, $field, $args ) {
+	extract( $field );
+	if ( ! isset( $value ) )
+		$value = '';
+	$output .= wpsc_form_radios( $name, $value, $options, array( 'id' => $id . '-control' ), false );
 }
