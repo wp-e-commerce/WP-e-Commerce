@@ -233,7 +233,9 @@ function wpsc_core_load_purchase_log_statuses() {
  */
 function wpsc_core_load_page_titles() {
 	global $wpsc_page_titles;
-	$wpsc_page_titles = wpsc_get_page_post_names();
+	if (empty($wpsc_page_titles)) {
+		$wpsc_page_titles = wpsc_get_page_post_names();
+	}
 }
 
 /***
