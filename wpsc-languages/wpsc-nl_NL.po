@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the WP e-Commerce package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2011-05-31 15:01+1200\n"
+"PO-Revision-Date: 2012-06-12 10:49+1200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -272,8 +272,8 @@ msgid "This setting will provide rates based on the dimensions from eacy item in
 msgstr "Deze instelling zal de tarieven geven gebaseerd op de afmetingen van elk item in uw winkelwagentje"
 
 #: wpsc-admin/admin.php:178
-msgid "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/sales/'>About the Sales Page</a>"
-msgstr "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/sales/'>Over de Verkopenpagina</a>"
+msgid "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/sales/'>About the Sales Page</a>"
+msgstr "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/sales/'>Over de Verkopenpagina</a>"
 
 #: wpsc-shipping/usps_20.php:224
 msgid "Select Services"
@@ -398,24 +398,24 @@ msgid "Upgrading to WP e-Commerce 3.7 and later requires you to run this fix onc
 msgstr "Upgraden naar WP e-Commerce 3.7 en later, vereist dat u eenmalig deze fix uitvoert. De volgende velden komen overeen met de velden in uw huidige Afrekenpagina. Het enige dat u hoeft te doen, is uit het drop-downmenu selecteren waar elk van de items voor staat. Excuus voor enigerlei ongemak die u hiervan ondervindt maar u zult het ongetwijfeld met ons eens zijn dat de nieuwe aankooplogbestanden dit kleine ongemak meer dan waard zijn."
 
 #: wpsc-admin/admin.php:179
-msgid "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/products'>About the Products Page</a>"
-msgstr "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/products'>Over de Productpagina</a>"
+msgid "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/products'>About the Products Page</a>"
+msgstr "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/products'>Over de Productpagina</a>"
 
 #: wpsc-admin/admin.php:180
-msgid "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/categories/'>About the Categories Page</a>"
-msgstr "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/categories/'>Over de categorieën pagina</a>"
+msgid "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/categories/'>About the Categories Page</a>"
+msgstr "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/categories/'>Over de categorieën pagina</a>"
 
 #: wpsc-admin/admin.php:181
-msgid "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/variations/'>About the Variations Page</a>"
-msgstr "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/variations/'>Over de varianten pagina</a>"
+msgid "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/variations/'>About the Variations Page</a>"
+msgstr "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/variations/'>Over de varianten pagina</a>"
 
 #: wpsc-admin/admin.php:182
-msgid "<a target='_blank' href='http://getshopped.org/resources/docs/store-settings/general/'>General Settings</a><br /> <a target='_blank' href='http://getshopped.org/resources/docs/store-settings/checkout/'>Checkout Options</a> <br />"
-msgstr "<a target='_blank' href='http://getshopped.org/resources/docs/store-settings/general/'>Algemene instellingen</a><br /> <a target='_blank' href='http://getshopped.org/resources/docs/store-settings/checkout/'>Afreken opties</a> <br />"
+msgid "<a target='_blank' href='http://staging.getshopped.org/resources/docs/store-settings/general/'>General Settings</a><br /> <a target='_blank' href='http://staging.getshopped.org/resources/docs/store-settings/checkout/'>Checkout Options</a> <br />"
+msgstr "<a target='_blank' href='http://staging.getshopped.org/resources/docs/store-settings/general/'>Algemene instellingen</a><br /> <a target='_blank' href='http://staging.getshopped.org/resources/docs/store-settings/checkout/'>Afreken opties</a> <br />"
 
 #: wpsc-admin/admin.php:183
-msgid "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/marketing'>Marketing Options</a><br />"
-msgstr "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/marketing'>Marketing opties</a><br />"
+msgid "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/marketing'>Marketing Options</a><br />"
+msgstr "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/marketing'>Marketing opties</a><br />"
 
 #: wpsc-admin/display-sales-logs.php:86
 msgid "When upgrading the WP e-Commerce Plugin from 3.6.* to 3.7 it is required that you associate your checkout form fields with the new Purchase Logs system. To do so please <a href=\"%s\">Click Here</a>"
@@ -1079,7 +1079,7 @@ msgstr ""
 
 #: wpsc-theme/functions/wpsc-transaction_results_functions.php:257
 msgid "Purchase # %s\n"
-msgstr "Aankoop # %s\n"
+msgstr "Kopen # %s\n"
 
 #: wpsc-theme/functions/wpsc-transaction_results_functions.php:235
 msgid "Total Shipping: %s\n"
@@ -4966,8 +4966,8 @@ msgid "Number of Products to be displayed in the slider."
 msgstr "Aantal producten om weer te geven in de slider."
 
 #: wpsc-core/js/tinymce3/window.php:132
-msgid "You don't have the product slider installed, for a cool way to display your shop check out the <a href=\"http://getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Product Slider</a>"
-msgstr "U hebt de product slider niet geïnstalleerd, voor een coole manier om uw winkel weer te geven, check <a href=\"http://getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Product Slider</a>"
+msgid "You don't have the product slider installed, for a cool way to display your shop check out the <a href=\"http://staging.getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Product Slider</a>"
+msgstr "U hebt de product slider niet geïnstalleerd, voor een coole manier om uw winkel weer te geven, check <a href=\"http://staging.getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Product Slider</a>"
 
 #: wpsc-core/js/tinymce3/window.php:139
 msgid "Members and Capabilities"
@@ -4978,8 +4978,8 @@ msgid "<p> To create a preview on your restricted page put this shortcode at the
 msgstr "<p>Plaats deze shortcode aan de bovenkant van uw pagina om een voorbeeld te maken op uw beveiligde pagina. U kunt ook HTML gebruiken binnen deze shortcode om zaken weer te geven, zoals afbeeldingen"
 
 #: wpsc-core/js/tinymce3/window.php:149
-msgid " You don't have the Members and Capabilities plugin installed, to start managing your users and creating subscription for you site visit: <a href=\"http://getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Premium Upgrades</a>"
-msgstr "U hebt de Leden en Rechtenplugin niet geïnstalleerd, om te starten met het beheren van uw gebruikers en het creëren van een abonnement voor uw site, bezoek:<a href=\"http://getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Premium Upgrades</a>"
+msgid " You don't have the Members and Capabilities plugin installed, to start managing your users and creating subscription for you site visit: <a href=\"http://staging.getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Premium Upgrades</a>"
+msgstr "U hebt de Leden en Rechtenplugin niet geïnstalleerd, om te starten met het beheren van uw gebruikers en het creëren van een abonnement voor uw site, bezoek:<a href=\"http://staging.getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Premium Upgrades</a>"
 
 #: wpsc-core/js/tinymce3/window.php:158
 msgid "Select a Product"
@@ -5282,7 +5282,7 @@ msgstr "Betaalwijze"
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:497
 msgid "Purchase"
-msgstr "Aankoop"
+msgstr "Kopen"
 
 #: wpsc-theme/wpsc-single_product.php:79
 msgid "Personalize Your Product"
