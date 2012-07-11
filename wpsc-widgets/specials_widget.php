@@ -8,7 +8,7 @@
  * @todo Add option to set how many products show?
  */
 class WP_Widget_Product_Specials extends WP_Widget {
-	
+
 	/**
 	 * Widget Constuctor
 	 */
@@ -18,9 +18,9 @@ class WP_Widget_Product_Specials extends WP_Widget {
 			'classname'   => 'widget_wpsc_product_specials',
 			'description' => __( 'Product Specials Widget', 'wpsc' )
 		);
-		
+
 		$this->WP_Widget( 'wpsc_product_specials', __( 'Product Specials', 'wpsc' ), $widget_ops );
-	
+
 	}
 
 	/**
@@ -32,11 +32,11 @@ class WP_Widget_Product_Specials extends WP_Widget {
 	 * @todo Add individual capability checks for each menu item rather than just manage_options.
 	 */
 	function widget( $args, $instance ) {
-		
+
 		global $wpdb, $table_prefix;
-		
+
 		extract( $args );
-		
+
 		echo $before_widget;
 		$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Product Specials', 'wpsc' ) : $instance['title'] );
 		if ( $title )
@@ -44,7 +44,7 @@ class WP_Widget_Product_Specials extends WP_Widget {
 
 		wpsc_specials($args, $instance);
 		echo $after_widget;
-	
+
 	}
 
 	/**
@@ -56,7 +56,7 @@ class WP_Widget_Product_Specials extends WP_Widget {
 	 * @return (array) New values.
 	 */
 	function update( $new_instance, $old_instance ) {
-	
+
 		$instance = $old_instance;
 		$instance['title']  = strip_tags( $new_instance['title'] );
 		$instance['number'] = (int)$new_instance['number'];
@@ -64,7 +64,7 @@ class WP_Widget_Product_Specials extends WP_Widget {
 		$instance['show_description']  = (bool)$new_instance['show_description'];
 
 		return $instance;
-		
+
 	}
 
 	/**
@@ -73,9 +73,9 @@ class WP_Widget_Product_Specials extends WP_Widget {
 	 * @param $instance (array) Widget values.
 	 */
 	function form( $instance ) {
-		
+
 		global $wpdb;
-		
+
 		// Defaults
 		$instance = wp_parse_args( (array)$instance, array(
 			'title' => '',
@@ -83,13 +83,13 @@ class WP_Widget_Product_Specials extends WP_Widget {
 			'show_thumbnails' => false,
 			'number' => 5
 		) );
-		
+
 		// Values
 		$title = esc_attr( $instance['title'] );
 		$number = (int)$instance['number'];
 		$show_thumbnails = (bool)$instance['show_thumbnails'];
 		$show_description = (bool)$instance['show_description'];
-		
+
 		?>
 		<p>
 			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:', 'wpsc' ); ?></label>
@@ -104,7 +104,7 @@ class WP_Widget_Product_Specials extends WP_Widget {
 			<label for="<?php echo $this->get_field_id( 'show_description' ); ?>"><?php _e( 'Show Description', 'wpsc' ); ?></label><br />
 			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'show_thumbnails' ); ?>" name="<?php echo $this->get_field_name( 'show_thumbnails' ); ?>" <?php echo $show_thumbnails ? 'checked="checked"' : ""; ?>>
 			<label for="<?php echo $this->get_field_id( 'show_thumbnails' ); ?>"><?php _e( 'Show Thumbnails', 'wpsc' ); ?></label>
-		</p>			
+		</p>
 <?php
 	}
 
@@ -129,21 +129,21 @@ add_action( 'widgets_init', create_function( '', 'return register_widget("WP_Wid
  * 4. The product list is enclosed in a <div> with a 'wpec-special-products' class.
  * 5. Function now expect a single paramter with an array of options (used to be a string which prepended the output).
  */
- 
+
 function wpsc_specials( $args = null, $instance ) {
-	
+
 	global $wpdb;
-	
+
 	$args = wp_parse_args( (array)$args, array( 'number' => 5 ) );
-	
+
 	$siteurl = get_option( 'siteurl' );
-	
+
 	if ( !$number = (int) $instance['number'] )
 		$number = 5;
-		
+
 	$show_thumbnails  = isset($instance['show_thumbnails']) ? (bool)$instance['show_thumbnails'] : FALSE;
 	$show_description  = isset($instance['show_description']) ? (bool)$instance['show_description'] : FALSE;
-	
+
 	$excludes = wpsc_specials_excludes();
 	$args = array(
 		'post_type'   		=> 'wpsc-product',
@@ -152,14 +152,14 @@ function wpsc_specials( $args = null, $instance ) {
 		'post_parent'		=> 0,
 		'post__not_in' 		=> $excludes,
 		'posts_per_page' 	=> $number
-	) ;	
+	) ;
 	$special_products = query_posts( $args );
 	$output = '';
 	$product_ids[] = array();
 	if ( count( $special_products ) > 0 ) {
 		list( $wp_query, $special_products ) = array( $special_products, $wp_query ); // swap the wpsc_query object
-		while ( wpsc_have_products() ) : wpsc_the_product(); 
-				
+		while ( wpsc_have_products() ) : wpsc_the_product();
+
 				if(!in_array(wpsc_the_product_id(),$product_ids)):
 				$product_ids[] = wpsc_the_product_id();
 				if( $show_thumbnails ):
@@ -172,28 +172,28 @@ function wpsc_specials( $args = null, $instance ) {
 							<img class="no-image" id="product_image_<?php echo wpsc_the_product_id(); ?>" alt="No Image" title="<?php echo wpsc_the_product_title(); ?>" src="<?php echo WPSC_URL; ?>/wpsc-theme/wpsc-images/noimage.png" width="<?php esc_attr_e( get_option('product_image_width') ); ?>" height="<?php esc_attr_e( get_option('product_image_height') ); ?>" />
 							</a>
 				<?php endif; ?>
-				<?php endif; // close show thumbnails ?> 
+				<?php endif; // close show thumbnails ?>
 				<br />
 				<span id="special_product_price_<?php echo wpsc_the_product_id(); ?>">
 				<!-- price display -->
 				<?php echo wpsc_the_product_price(); ?>
-				</span><br />			
-				<strong><a class="wpsc_product_title" href="<?php echo wpsc_product_url( wpsc_the_product_id(), false ); ?>"><?php echo wpsc_the_product_title(); ?></a></strong><br /> 
-				
+				</span><br />
+				<strong><a class="wpsc_product_title" href="<?php echo wpsc_product_url( wpsc_the_product_id(), false ); ?>"><?php echo wpsc_the_product_title(); ?></a></strong><br />
+
 				<?php if( $show_description ): ?>
 					<div class="wpsc-special-description">
 						<?php echo wpsc_the_product_description(); ?>
-					</div>									
-				<?php endif; // close show description ?> 
-			
+					</div>
+				<?php endif; // close show description ?>
+
 				<?php
-				
-				
-				endif; 
+
+
+				endif;
 		endwhile;
 		list( $wp_query, $special_products ) = array( $special_products, $wp_query ); // swap the wpsc_query object
-		wp_reset_query();
 	}
+	wp_reset_query();
 }
 function wpsc_specials_excludes(){
 	global $wpdb;
