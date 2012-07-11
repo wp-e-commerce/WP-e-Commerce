@@ -27,7 +27,7 @@ function wpsc_core_constants() {
 		define( 'WPSC_URL',       plugins_url( '', __FILE__ ) );
 	// Define Plugin version
 	define( 'WPSC_VERSION', '3.8.8-dev' );
-	define( 'WPSC_MINOR_VERSION', '560253' );
+	define( 'WPSC_MINOR_VERSION', '570698' );
 	define( 'WPSC_PRESENTABLE_VERSION', '3.8.8-dev' );
 
 	// Define Debug Variables for developers
