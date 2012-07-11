@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the WP e-Commerce package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2011-05-31 15:01+1200\n"
+"PO-Revision-Date: 2012-06-12 10:51+1200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -272,8 +272,8 @@ msgid "This setting will provide rates based on the dimensions from eacy item in
 msgstr "Esta configuração irá fornecer tarifas com base nas dimensões de cada item em seu carrinho"
 
 #: wpsc-admin/admin.php:178
-msgid "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/sales/'>About the Sales Page</a>"
-msgstr "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/sales/'>Sobre a Página de Vendas</a>"
+msgid "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/sales/'>About the Sales Page</a>"
+msgstr "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/sales/'>Sobre a Página de Vendas</a>"
 
 #: wpsc-shipping/usps_20.php:224
 msgid "Select Services"
@@ -398,24 +398,24 @@ msgid "Upgrading to WP e-Commerce 3.7 and later requires you to run this fix onc
 msgstr "Atualizar para o WP e-Commerce 3.7 ou superior exige que você execute este procedimento apenas uma vez. As seguintes correções correspondem aos campos de formulário em sua página de Fechamento de Pedido atual. Tudo que você precisa fazer é selecionar os campos correspondentes na caixa de menu drop-down ao lado. Pedimos desculpas por qualquer inconveniente causado, mas temos certeza que você irá concordar que o novo histórico de compras valem este pequeno aborrecimento."
 
 #: wpsc-admin/admin.php:179
-msgid "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/products'>About the Products Page</a>"
-msgstr "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/products'>Sobre a Página de Produtos</a>"
+msgid "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/products'>About the Products Page</a>"
+msgstr "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/products'>Sobre a Página de Produtos</a>"
 
 #: wpsc-admin/admin.php:180
-msgid "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/categories/'>About the Categories Page</a>"
-msgstr "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/categories/'>Sobre a Página de Categorias</a>"
+msgid "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/categories/'>About the Categories Page</a>"
+msgstr "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/categories/'>Sobre a Página de Categorias</a>"
 
 #: wpsc-admin/admin.php:181
-msgid "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/variations/'>About the Variations Page</a>"
-msgstr "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/variations/'>Sobre a Página de Variações</a>"
+msgid "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/variations/'>About the Variations Page</a>"
+msgstr "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/variations/'>Sobre a Página de Variações</a>"
 
 #: wpsc-admin/admin.php:182
-msgid "<a target='_blank' href='http://getshopped.org/resources/docs/store-settings/general/'>General Settings</a><br /> <a target='_blank' href='http://getshopped.org/resources/docs/store-settings/checkout/'>Checkout Options</a> <br />"
-msgstr "<a target='_blank' href='http://getshopped.org/resources/docs/store-settings/general/'>Configurações Gerais</a><br /> <a target='_blank' href='http://getshopped.org/resources/docs/store-settings/checkout/'>Opções de Fechamento de Pedido</a> <br />"
+msgid "<a target='_blank' href='http://staging.getshopped.org/resources/docs/store-settings/general/'>General Settings</a><br /> <a target='_blank' href='http://staging.getshopped.org/resources/docs/store-settings/checkout/'>Checkout Options</a> <br />"
+msgstr "<a target='_blank' href='http://staging.getshopped.org/resources/docs/store-settings/general/'>Configurações Gerais</a><br /> <a target='_blank' href='http://staging.getshopped.org/resources/docs/store-settings/checkout/'>Opções de Fechamento de Pedido</a> <br />"
 
 #: wpsc-admin/admin.php:183
-msgid "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/marketing'>Marketing Options</a><br />"
-msgstr "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/marketing'> Opções de Marketing</a><br />"
+msgid "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/marketing'>Marketing Options</a><br />"
+msgstr "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/marketing'> Opções de Marketing</a><br />"
 
 #: wpsc-admin/display-sales-logs.php:86
 msgid "When upgrading the WP e-Commerce Plugin from 3.6.* to 3.7 it is required that you associate your checkout form fields with the new Purchase Logs system. To do so please <a href=\"%s\">Click Here</a>"
@@ -4959,8 +4959,8 @@ msgid "Number of Products to be displayed in the slider."
 msgstr "Número de produtos a serem exibidos na vitrine deslizante."
 
 #: wpsc-core/js/tinymce3/window.php:132
-msgid "You don't have the product slider installed, for a cool way to display your shop check out the <a href=\"http://getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Product Slider</a>"
-msgstr "Você não tem o controle de Vitrine Deslizante instalado, que é uma forma legal para exibir sua loja, saiba mais sobre o <a href=\"http://getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Product Slider</a>"
+msgid "You don't have the product slider installed, for a cool way to display your shop check out the <a href=\"http://staging.getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Product Slider</a>"
+msgstr "Você não tem o controle de Vitrine Deslizante instalado, que é uma forma legal para exibir sua loja, saiba mais sobre o <a href=\"http://staging.getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Product Slider</a>"
 
 #: wpsc-core/js/tinymce3/window.php:139
 msgid "Members and Capabilities"
@@ -4971,8 +4971,8 @@ msgid "<p> To create a preview on your restricted page put this shortcode at the
 msgstr "<p> Para criar uma prévia em sua página restrita coloque este shortcode no topo de sua página. Você pode incluir código html dentro deste shortcode para exibir elementos, ex: imagens"
 
 #: wpsc-core/js/tinymce3/window.php:149
-msgid " You don't have the Members and Capabilities plugin installed, to start managing your users and creating subscription for you site visit: <a href=\"http://getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Premium Upgrades</a>"
-msgstr "Você não tem o plugin de Membros e Capacidades instalado, para gerenciar os usuários de sua loja e criar inscrições, visite o site:<a href=\"http://getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Premium Upgrades</a>"
+msgid " You don't have the Members and Capabilities plugin installed, to start managing your users and creating subscription for you site visit: <a href=\"http://staging.getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Premium Upgrades</a>"
+msgstr "Você não tem o plugin de Membros e Capacidades instalado, para gerenciar os usuários de sua loja e criar inscrições, visite o site:<a href=\"http://staging.getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Premium Upgrades</a>"
 
 #: wpsc-core/js/tinymce3/window.php:158
 msgid "Select a Product"

@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the WP e-Commerce package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2011-05-31 15:01+1200\n"
+"PO-Revision-Date: 2012-06-12 10:51+1200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,7 +19,7 @@ msgstr "Mobile Verkaufs-App"
 
 #: wpsc-theme/functions/wpsc-transaction_results_functions.php:253
 msgid "<hr>Total Shipping: %s\n"
-msgstr "<hr>Total Versand: %s\n"
+msgstr "<hr>Summe Versand: %s\n"
 
 #: wpsc-includes/ajax.functions.php:1049
 msgid "Sorry something has gone wrong with your download!"
@@ -272,8 +272,8 @@ msgid "This setting will provide rates based on the dimensions from eacy item in
 msgstr "Diese Einstellung ergibt Tarife, die auf den Abmessungen von jedem Artikel im Einkaufskorb basieren"
 
 #: wpsc-admin/admin.php:178
-msgid "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/sales/'>About the Sales Page</a>"
-msgstr "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/sales/'>Über die Verkaufsseite</a>"
+msgid "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/sales/'>About the Sales Page</a>"
+msgstr "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/sales/'>Über die Verkaufsseite</a>"
 
 #: wpsc-shipping/usps_20.php:224
 msgid "Select Services"
@@ -398,24 +398,24 @@ msgid "Upgrading to WP e-Commerce 3.7 and later requires you to run this fix onc
 msgstr "Der Upgrade auf WP e-Commerce 3.7 und später erfordert eine einmalige Anwendung dieses Fixes. Die folgenden Boxen entsprechen den Formularfeldern ihrer aktuellen Kassa-Seite. Sie brauchen nur aus dem Auswahlfeld auszuwählen, was jedes der folgenden Felder repräsentiert. Sorry für die Unannehmlichkeiten, aber wir sind sicher, Sie werden mir zustimmen, dass die neuen Protokolle diesen geringfügigen Aufwand wert sind."
 
 #: wpsc-admin/admin.php:179
-msgid "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/products'>About the Products Page</a>"
-msgstr "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/products'>Über die Produkteseite</a>"
+msgid "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/products'>About the Products Page</a>"
+msgstr "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/products'>Über die Produkteseite</a>"
 
 #: wpsc-admin/admin.php:180
-msgid "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/categories/'>About the Categories Page</a>"
-msgstr "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/categories/'>Über die Kategorienseite</a>"
+msgid "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/categories/'>About the Categories Page</a>"
+msgstr "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/categories/'>Über die Kategorienseite</a>"
 
 #: wpsc-admin/admin.php:181
-msgid "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/variations/'>About the Variations Page</a>"
-msgstr "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/variations/'>Über die Variantenseite</a>"
+msgid "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/variations/'>About the Variations Page</a>"
+msgstr "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/variations/'>Über die Variantenseite</a>"
 
 #: wpsc-admin/admin.php:182
-msgid "<a target='_blank' href='http://getshopped.org/resources/docs/store-settings/general/'>General Settings</a><br /> <a target='_blank' href='http://getshopped.org/resources/docs/store-settings/checkout/'>Checkout Options</a> <br />"
-msgstr "<a target='_blank' href='http://getshopped.org/resources/docs/store-settings/general/'>Allgemeine Einstellungen</a> <br /> <a target='_blank' href=' http://getshopped.org/resources/docs/store-settings/checkout/'>Kassa-Optionen</a> <br />"
+msgid "<a target='_blank' href='http://staging.getshopped.org/resources/docs/store-settings/general/'>General Settings</a><br /> <a target='_blank' href='http://staging.getshopped.org/resources/docs/store-settings/checkout/'>Checkout Options</a> <br />"
+msgstr "<a target='_blank' href='http://staging.getshopped.org/resources/docs/store-settings/general/'>Allgemeine Einstellungen</a> <br /> <a target='_blank' href=' http://staging.getshopped.org/resources/docs/store-settings/checkout/'>Kassa-Optionen</a> <br />"
 
 #: wpsc-admin/admin.php:183
-msgid "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/marketing'>Marketing Options</a><br />"
-msgstr "<a target='_blank' href='http://getshopped.org/resources/docs/building-your-store/marketing'>Marketing Optionen</a> <br />"
+msgid "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/marketing'>Marketing Options</a><br />"
+msgstr "<a target='_blank' href='http://staging.getshopped.org/resources/docs/building-your-store/marketing'>Marketing Optionen</a> <br />"
 
 #: wpsc-admin/display-sales-logs.php:86
 msgid "When upgrading the WP e-Commerce Plugin from 3.6.* to 3.7 it is required that you associate your checkout form fields with the new Purchase Logs system. To do so please <a href=\"%s\">Click Here</a>"
@@ -500,7 +500,7 @@ msgstr "Kreditkartennummer *"
 
 #: wpsc-theme/wpsc-cart_widget.php:67
 msgid "Empty Your Cart"
-msgstr "Ihren Warenkorb leeren"
+msgstr "Warenkorb leeren"
 
 #: wpsc-merchants/paypal-express.merchant.php:281
 msgid "Production"
@@ -1081,12 +1081,12 @@ msgstr "Einkauf # %s\n"
 
 #: wpsc-theme/functions/wpsc-transaction_results_functions.php:235
 msgid "Total Shipping: %s\n"
-msgstr "Total Versand: %s\n"
+msgstr "Summe Versand: %s\n"
 
 #: wpsc-theme/functions/wpsc-transaction_results_functions.php:237
 #: wpsc-theme/functions/wpsc-transaction_results_functions.php:255
 msgid "Total: %s\n"
-msgstr "Total: %s\n"
+msgstr "Summe: %s\n"
 
 #: wpsc-updates/currency_list.php:85
 msgid "CUP"
@@ -2099,7 +2099,7 @@ msgstr "Neues Produkt"
 #: wpsc-theme/functions/wpsc-transaction_results_functions.php:250
 #: wpsc-theme/functions/wpsc-transaction_results_functions.php:251
 msgid "Total Tax"
-msgstr "Total MWST"
+msgstr "Summe MwSt"
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:261
 msgid "Signing up is free and easy! please fill out your details your registration will happen automatically as you checkout. Don't forget to use your details to login with next time!"
@@ -4303,7 +4303,7 @@ msgstr ""
 
 #: wpsc-admin/admin.php:521
 msgid "Total Income"
-msgstr "Total Umsatz"
+msgstr "Gesamtumsatz"
 
 #: wpsc-admin/admin.php:564
 msgid "Getshopped News"
@@ -4364,12 +4364,12 @@ msgstr "Artikelmenge"
 #: wpsc-admin/display-coupons.php:225
 #: wpsc-admin/admin-form-functions.php:124
 msgid "Total quantity"
-msgstr "Totale Menge"
+msgstr "Gesamtmenge"
 
 #: wpsc-admin/display-coupons.php:226
 #: wpsc-admin/admin-form-functions.php:125
 msgid "Subtotal amount"
-msgstr "Subtotal"
+msgstr "Gesamtanzahl"
 
 #: wpsc-admin/display-coupons.php:231
 #: wpsc-admin/admin-form-functions.php:129
@@ -4961,8 +4961,8 @@ msgid "Number of Products to be displayed in the slider."
 msgstr "Anzahl Produkte, die im Produkte-Schuber angezeigt werden."
 
 #: wpsc-core/js/tinymce3/window.php:132
-msgid "You don't have the product slider installed, for a cool way to display your shop check out the <a href=\"http://getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Product Slider</a>"
-msgstr "Sie haben den Produkte-Schuber nicht installiert. Für eine coole Art, um Ihren Shop anzuzeigen, schauen Sie sich den <a href=\"http://getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Produkte-Schuber</a> an"
+msgid "You don't have the product slider installed, for a cool way to display your shop check out the <a href=\"http://staging.getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Product Slider</a>"
+msgstr "Sie haben den Produkte-Schuber nicht installiert. Für eine coole Art, um Ihren Shop anzuzeigen, schauen Sie sich den <a href=\"http://staging.getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Produkte-Schuber</a> an"
 
 #: wpsc-core/js/tinymce3/window.php:139
 msgid "Members and Capabilities"
@@ -4973,8 +4973,8 @@ msgid "<p> To create a preview on your restricted page put this shortcode at the
 msgstr "<p>Um eine Vorschau auf Ihre eingeschränkte Seite zu erstellen, setzen diesen Kurzcode an den Anfang Ihrer Seite. Sie können HTML in diesen Shortcode einschliessen, um Dinge wie Bilder anzuzeigen"
 
 #: wpsc-core/js/tinymce3/window.php:149
-msgid " You don't have the Members and Capabilities plugin installed, to start managing your users and creating subscription for you site visit: <a href=\"http://getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Premium Upgrades</a>"
-msgstr "Sie haben das \"Members und Möglichkeiten\"-Plugin nicht installiert. Um Benutzer zu Verwalten und Abonnemente für Ihre Site zu erstellen, besuchen Sie <a href=\"http://getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Premium Upgrades</a>"
+msgid " You don't have the Members and Capabilities plugin installed, to start managing your users and creating subscription for you site visit: <a href=\"http://staging.getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Premium Upgrades</a>"
+msgstr "Sie haben das \"Members und Möglichkeiten\"-Plugin nicht installiert. Um Benutzer zu Verwalten und Abonnemente für Ihre Site zu erstellen, besuchen Sie <a href=\"http://staging.getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/\" target=\"_blank\">Premium Upgrades</a>"
 
 #: wpsc-core/js/tinymce3/window.php:158
 msgid "Select a Product"
@@ -6439,7 +6439,7 @@ msgstr "Die folgenden Versandmodule benötigen alle cURL, welches auf Ihrem Serv
 
 #: wpsc-includes/ajax.functions.php:79
 msgid "You just added \"[product_name]\" to your cart."
-msgstr "Sie haben grade \"[product_name]\" in den Warenkorb gelegt."
+msgstr "Sie haben gerade \"[product_name]\" in den Warenkorb gelegt."
 
 #: wpsc-includes/ajax.functions.php:82
 msgid "Sorry, but you cannot add zero items to your cart"
@@ -7146,7 +7146,7 @@ msgstr "MWST/Steuersatz"
 #: wpsc-theme/functions/wpsc-transaction_results_functions.php:299
 #: wpsc-theme/functions/wpsc-transaction_results_functions.php:300
 msgid "Thank you, your purchase is pending, you will be sent an email once the order clears."
-msgstr "Vielen Dank, Ihre Bestellung wird bearbeitet, eine Email wird versandt, sobald die Bestellung verarbeitet ist."
+msgstr "Vielen Dank, Ihre Bestellung ist bei uns eingegangen und wird geprüft. Sie erhalten eine E-Mail sobald die Bestellung bearbeitet wurde."
 
 #: wpsc-theme/functions/wpsc-transaction_results_functions.php:181
 #: wpsc-theme/functions/wpsc-transaction_results_functions.php:182
@@ -7164,7 +7164,7 @@ msgstr "Lieferkosten"
 #: wpsc-admin/display-sales-logs.php:141
 #: wpsc-admin/display-sales-logs.php:234
 msgid "Total"
-msgstr "Total"
+msgstr "Summe"
 
 #: wpsc-theme/functions/wpsc-transaction_results_functions.php:261
 #: wpsc-theme/functions/wpsc-transaction_results_functions.php:262
