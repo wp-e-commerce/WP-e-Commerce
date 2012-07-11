@@ -1,9 +1,9 @@
 === WP e-Commerce ===
-Contributors: mufasa, mychelle, garyc40, justinsainton
+Contributors: mufasa, mychelle, garyc40, JustinSainton
 Donate link: http://getshopped.org
 Tags: e-commerce, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
 Requires at least: 3.1
-Tested up to: 3.4
+Tested up to: 3.4.1
 Stable tag: 3.8.8.3
 
 WP e-Commerce is a free WordPress Shopping Cart Plugin that lets customers buy your products, services and digital downloads online.
@@ -156,6 +156,13 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 
 == Changelog ==
+= 3.8.8.4 =
+* Fix: Also bought product image doesn't display correctly.
+* Fix: Pagination fails when hierarchical category URL is enabled.
+* Fix: Product Specials Widget causes 404 errors. Props Chris Jean.
+* Fix: Product category slug beginning with a digit doesn't work.
+* Updated localization.
+
 = 3.8.8.3 =
 * Fix: Incompatibility between WPEC products page pagination and WordPress 3.4.
 
