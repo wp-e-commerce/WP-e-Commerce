@@ -86,7 +86,8 @@ function wpsc_also_bought( $product_id ) {
 		foreach ( (array)$also_bought as $also_bought_data ) {
 			$output .= "<div class='wpsc_also_bought_item' style='width: " . $element_widths . "px;'>";
 			if ( get_option( 'show_thumbnails' ) == 1 ) {
-				if ( $also_bought_data['image'] != null ) {
+				$image_path = wpsc_the_product_thumbnail( $image_display_width, $image_display_height, $also_bought_data['ID']);
+				if($image_path){
 					$output .= "<a href='" . get_permalink($also_bought_data['ID']) . "' class='preview_link'  rel='" . str_replace( " ", "_", get_the_title($also_bought_data['ID']) ) . "'>";
 					$image_path = "index.php?productid=" . $also_bought_data['ID'] . "&amp;width=" . $image_display_width . "&amp;height=" . $image_display_height . "";
 
