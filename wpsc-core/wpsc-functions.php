@@ -835,14 +835,28 @@ function wpsc_taxonomy_rewrite_rules( $rewrite_rules ) {
 		$rebuilt_rewrite_rules[$rewrite_key] = $rewrite_query;
 	}
 
-	// fix pagination in WordPress 3.4
-	if ( version_compare( get_bloginfo( 'version' ), '3.4', '>=' ) ) {
+	// fix pagination issue with product category hirarchical URL
+	if ( get_option( 'product_category_hierarchical_url', false ) ) {
+		$rule = $rebuilt_rewrite_rules[$products_page . '/(.+?)/page/?([0-9]{1,})/?$'];
+		unset( $rebuilt_rewrite_rules[$products_page . '/(.+?)/page/?([0-9]{1,})/?$'] );
 		$rebuilt_rewrite_rules = array_merge(
-			array( '(' . $products_page . ')/([0-9]+)/?' => 'index.php?pagename=$matches[1]&page=$matches[2]' ),
+			array(
+				'(' . $products_page . ')/page/([0-9]+)/?' => 'index.php?pagename=$matches[1]&page=$matches[2]',
+				$products_page . '/(.+?)(/.+?)?/page/?([0-9]{1,})/?$' => 'index.php?wpsc_product_category=$matches[1]&wpsc-product=$matches[2]&page=$matches[3]',
+			),
 			$rebuilt_rewrite_rules
 		);
 	}
 
+	// fix pagination in WordPress 3.4
+	if ( version_compare( get_bloginfo( 'version' ), '3.4', '>=' ) ) {
+		$rebuilt_rewrite_rules = array_merge(
+			array(
+				'(' . $products_page . ')/([0-9]+)/?' => 'index.php?pagename=$matches[1]&page=$matches[2]',
+			),
+			$rebuilt_rewrite_rules
+		);
+	}
 	return $rebuilt_rewrite_rules;
 }
 
