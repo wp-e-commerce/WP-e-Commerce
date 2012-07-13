@@ -10,7 +10,7 @@ WP e-Commerce is a free WordPress Shopping Cart Plugin that lets customers buy y
 
 == Description ==
 
-We make setting up an ecommerce shop easy, and with over 1.8 Million downloads, we have unparalleled experience.
+We make setting up an ecommerce shop easy, and with over 1.9 Million downloads, we have unparalleled experience.
 
 Features:
 
@@ -156,6 +156,10 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 
 == Changelog ==
+= 3.8.8.5 =
+* Fix: Order Closed status does not count in the sales log totals on dashboard widget.
+* Fix: PHP preg_replace warning.
+
 = 3.8.8.4 =
 * Fix: Also bought product image doesn't display correctly.
 * Fix: Pagination fails when hierarchical category URL is enabled.
