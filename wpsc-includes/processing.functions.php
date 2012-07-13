@@ -162,9 +162,9 @@ function admin_display_total_price($start_timestamp = '', $end_timestamp = '') {
   global $wpdb;
   
    if( ( $start_timestamp != '' ) && ( $end_timestamp != '' ) )
-	$sql = $wpdb->prepare( "SELECT SUM(`totalprice`) FROM `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `processed` IN (2,3,4) AND `date` BETWEEN %s AND %s", $start_timestamp, $end_timestamp );
+	$sql = $wpdb->prepare( "SELECT SUM(`totalprice`) FROM `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `processed` IN (2,3,4,5) AND `date` BETWEEN %s AND %s", $start_timestamp, $end_timestamp );
     else
-	$sql = "SELECT SUM(`totalprice`) FROM `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `processed` IN (2,3,4) AND `date` != ''";
+	$sql = "SELECT SUM(`totalprice`) FROM `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `processed` IN (2,3,4,5) AND `date` != ''";
   
     $total = $wpdb->get_var($sql);
   return $total;
