@@ -205,31 +205,6 @@ function wpsc_clean_categories() {
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'clean_categories') )
 	add_action( 'admin_init', 'wpsc_clean_categories' );
 
-function wpsc_google_shipping_settings() {
-	if ( isset( $_POST['submit'] ) ) {
-		foreach ( (array)$_POST['google_shipping'] as $key => $country ) {
-			if ( $country == 'on' ) {
-				$google_shipping_country[] = $key;
-				$updated++;
-			}
-		}
-		update_option( 'google_shipping_country', $google_shipping_country );
-		$sendback = wp_get_referer();
-		$sendback = remove_query_arg( 'googlecheckoutshipping', $sendback );
-
-		if ( isset( $updated ) ) {
-			$sendback = add_query_arg( 'updated', $updated, $sendback );
-		}
-
-		wp_redirect( $sendback );
-		exit();
-	}
-}
-
-if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'google_shipping_settings') ) {
-	add_action( 'admin_init', 'wpsc_google_shipping_settings' );
-}
-
 function wpsc_update_variations() {
 	$product_id = absint( $_POST["product_id"] );
 	$product_type_object = get_post_type_object('wpsc-product');
