@@ -452,6 +452,7 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 				'WPSC_Variations',           // variable name
 				array(                       // args
 					'add_variation_set_nonce' => _wpsc_create_ajax_nonce( 'add_variation_set' ),
+					'update_variations_nonce' => _wpsc_create_ajax_nonce( 'update_variations' ),
 				)
 			);
 		}

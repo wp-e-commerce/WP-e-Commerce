@@ -156,15 +156,22 @@
 			boxes = $('.variation_checkboxes input:checked'),
 			values = [],
 			post_data = {
-				action : 'wpsc_update_variations',
-				description : $('#content_ifr').contents().find('body').html(),
+				action                 : 'update_variations',
+				description            : $('#content_ifr').contents().find('body').html(),
 				additional_description : $('textarea#additional_description').text(),
-				name : $('input#title').val(),
-				product_id : $('input#post_ID').val()
+				name                   : $('input#title').val(),
+				product_id             : $('input#post_ID').val(),
+				nonce                  : WPSC_Variations.update_variations_nonce
 			},
 			ajax_callback = function(response){
-				$('div#wpsc_product_variation_forms table.widefat tbody').html(response);
 				spinner.toggleClass('ajax-feedback-active');
+
+				if (! response.is_successful) {
+					alert(response.error.messages.join("\n"));
+					return;
+				}
+
+				$('div#wpsc_product_variation_forms table.widefat tbody').html(response.obj.content);
 			};
 
 		boxes.each(function(){
@@ -175,7 +182,7 @@
 		post_data.edit_var_val = values;
 		spinner.toggleClass('ajax-feedback-active');
 
-		$.post(ajaxurl, post_data, ajax_callback);
+		$.wpsc_post(post_data, ajax_callback);
 
 		return false;
 	};
