@@ -371,7 +371,7 @@ function wpsc_admin_include_optionspage_css_and_js() {
 	wp_enqueue_script( 'wp-e-commerce-admin-settings-page', WPSC_URL . '/wpsc-admin/js/settings-page.js', array( 'jquery-query' ), $version_identifier );
 
 	wp_localize_script( 'wp-e-commerce-admin-settings-page', 'WPSC_Settings_Page', array(
-		'nonce'                               => wp_create_nonce( 'wpsc_settings_page_nonce' ),
+		'navigate_settings_tab_nonce'         => _wpsc_create_ajax_nonce( 'navigate_settings_tab' ),
 		'payment_gateway_settings_form_nonce' => _wpsc_create_ajax_nonce( 'payment_gateway_settings_form' ),
 		'shipping_module_settings_form_nonce' => _wpsc_create_ajax_nonce( 'shipping_module_settings_form' ),
 		'current_tab'                         => WPSC_Settings_Page::get_instance()->get_current_tab_id(),

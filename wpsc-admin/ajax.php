@@ -190,6 +190,13 @@ function _wpsc_ajax_payment_gateway_settings_form() {
 	return $return;
 }
 
+/**
+ * Display shipping module settings form via AJAX
+ *
+ * @since  3.8.9
+ * @access private
+ * @return array Response args
+ */
 function _wpsc_ajax_shipping_module_settings_form() {
 	require_once( 'settings-page.php' );
 	require_once( 'includes/settings-tabs/shipping.php' );
@@ -198,6 +205,25 @@ function _wpsc_ajax_shipping_module_settings_form() {
 	ob_start();
 	$tab = new WPSC_Settings_Tab_Shipping();
 	$tab->display_shipping_module_settings_form();
+	$return['content'] = ob_get_clean();
+
+	return $return;
+}
+
+/**
+ * Display settings tab via AJAX
+ *
+ * @since 3.8.9
+ * @access private
+ * @return array Response args
+ */
+function _wpsc_ajax_navigate_settings_tab() {
+	require_once( 'settings-page.php' );
+
+	$return = array();
+	ob_start();
+	$settings_page = new WPSC_Settings_Page( $_POST['tab'] );
+	$settings_page->display_current_tab();
 	$return['content'] = ob_get_clean();
 
 	return $return;
