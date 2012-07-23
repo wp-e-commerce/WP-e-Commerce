@@ -228,3 +228,22 @@ function _wpsc_ajax_navigate_settings_tab() {
 
 	return $return;
 }
+/**
+ * Display base region list in Store Settings -> General
+ *
+ * @since 3.8.9
+ * @access private
+ * @return array Response args
+ */
+function _wpsc_ajax_display_region_list() {
+	require_once( 'settings-page.php' );
+	require_once( 'includes/settings-tabs/general.php' );
+
+	$return = array();
+	ob_start();
+	$tab = new WPSC_Settings_Tab_General();
+	$tab->display_region_drop_down();
+	$return['content'] = ob_get_clean();
+
+	return $return;
+}
