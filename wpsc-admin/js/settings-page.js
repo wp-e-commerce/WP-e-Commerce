@@ -131,8 +131,8 @@
 			var query = $.query.load(url);
 			var tab_id = query.get('tab');
 			var post_data = $.extend({}, query.get(), {
-				'action'      : 'wpsc_navigate_settings_tab',
-				'nonce'       : WPSC_Settings_Page.nonce,
+				'action'      : 'navigate_settings_tab',
+				'nonce'       : WPSC_Settings_Page.navigate_settings_tab_nonce,
 				'current_url' : location.href,
 				'tab'         : tab_id
 			});
@@ -153,10 +153,14 @@
 			 * @since 3.8.8
 			 */
 			var ajax_callback = function(response) {
+				if (! response.is_successful) {
+					alert(response.error.messages.join("\n"));
+					return;
+				}
 				var t = WPSC_Settings_Page;
 				t.unsaved_settings = false;
 				t.toggle_ajax_state(tab_id);
-				$('#options_' + WPSC_Settings_Page.current_tab).replaceWith(response);
+				$('#options_' + WPSC_Settings_Page.current_tab).replaceWith(response.obj.content);
 				WPSC_Settings_Page.current_tab = tab_id;
 				$('.settings-error').remove();
 				$('.nav-tab-active').removeClass('nav-tab-active');
@@ -167,7 +171,7 @@
 				spinner.removeClass('ajax-feedback-active');
 			};
 
-			$.post(ajaxurl, post_data, ajax_callback, 'html');
+			$.wpsc_post(post_data, ajax_callback);
 		}
 	});
 

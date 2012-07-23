@@ -9,20 +9,6 @@
  * @since 3.7
  */
 
-
-function wpsc_navigate_settings_tab() {
-	if ( ! wp_verify_nonce( $_POST['nonce'], 'wpsc_settings_page_nonce' ) )
-		die( 'Session expired. Try refreshing your settings page.' );
-
-	require_once( 'settings-page.php' );
-
-	$settings_page = new WPSC_Settings_Page( $_POST['tab'] );
-	$settings_page->display_current_tab();
-	exit;
-}
-
-add_action( 'wp_ajax_wpsc_navigate_settings_tab', 'wpsc_navigate_settings_tab' );
-
 function wpsc_display_region_list() {
 	if ( ! wp_verify_nonce( $_POST['nonce'], 'wpsc_settings_page_nonce' ) )
 		die( 'Session expired. Try refreshing your settings page.' );
