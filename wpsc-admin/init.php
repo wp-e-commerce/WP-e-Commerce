@@ -296,3 +296,12 @@ function wpsc_purchlog_clear_download_items() {
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'clear_locks') ) {
 	add_action( 'admin_init', 'wpsc_purchlog_clear_download_items' );
 }
+
+//call to change view for purchase log
+function wpsc_purchlog_filter_by() {
+	wpsc_change_purchlog_view( $_POST['view_purchlogs_by'], $_POST['view_purchlogs_by_status'] );
+}
+
+if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'purchlog_filter_by') ) {
+	add_action( 'admin_init', 'wpsc_purchlog_filter_by' );
+}
