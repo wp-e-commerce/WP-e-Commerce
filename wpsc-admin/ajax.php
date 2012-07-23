@@ -27,25 +27,28 @@ function _wpsc_ajax_handler() {
 
 	// if callback exists, call it and output JSON response
 	$callback = "_wpsc_ajax_{$ajax_action}";
-	if ( is_callable( $callback ) ) {
+	$output = array(
+		'is_successful' => false,
+	);
+
+	if ( is_callable( $callback ) )
 		$result = call_user_func( $callback );
-		$output = array();
-		if ( is_wp_error( $result ) ) {
-			$output['is_successful'] = false;
-			$output['error'] = array(
-				'code'     => $result->get_error_code(),
-				'messages' => $result->get_error_messages(),
-				'data'     => $result->get_error_data(),
-			);
-		} else {
-			$output['is_successful'] = true;
-			$output['obj'] = $result;
-		}
-		echo json_encode( $output );
-		exit;
+	else
+		$result = new WP_Error( 'wpsc_invalid_ajax_callback', __( 'Invalid AJAX callback.', 'wpsc' ) );
+
+	if ( is_wp_error( $result ) ) {
+		$output['error'] = array(
+			'code'     => $result->get_error_code(),
+			'messages' => $result->get_error_messages(),
+			'data'     => $result->get_error_data(),
+		);
+	} else {
+		$output['is_successful'] = true;
+		$output['obj'] = $result;
 	}
 
-	die ( '0' );
+	echo json_encode( $output );
+	exit;
 }
 add_action( 'wp_ajax_wpsc_ajax', '_wpsc_ajax_handler' );
 
@@ -67,7 +70,10 @@ function _wpsc_create_ajax_nonce( $ajax_action ) {
  *
  * If the variation set name is the same as an existing variation set,
  * the children variant terms will be added inside that existing set.
+ *
  * @since 3.8.8
+ * @access private
+ * @return array Response args
  */
 function _wpsc_ajax_add_variation_set() {
 	$new_variation_set = $_POST['variation_set'];
