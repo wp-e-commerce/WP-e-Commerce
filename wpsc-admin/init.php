@@ -412,3 +412,9 @@ function wpsc_delete_purchlog( $purchlog_id='' ) {
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'delete_purchlog') ) {
 	add_action( 'admin_init', 'wpsc_delete_purchlog' );
 }
+
+function wpsc_update_option_product_category_hierarchical_url() {
+	flush_rewrite_rules( false );
+}
+
+add_action( 'update_option_product_category_hierarchical_url', 'wpsc_update_option_product_category_hierarchical_url' );

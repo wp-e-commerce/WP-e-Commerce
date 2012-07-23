@@ -95,12 +95,6 @@ function wpsc_admin_ajax() {
 	}
 }
 
-add_action( 'update_option_product_category_hierarchical_url', 'wpsc_update_option_product_category_hierarchical_url' );
-
-function wpsc_update_option_product_category_hierarchical_url() {
-	flush_rewrite_rules( false );
-}
-
 function wpsc_change_currency() {
 	if ( is_numeric( $_POST['currencyid'] ) ) {
 		$currency_data = $wpdb->get_results( "SELECT `symbol`,`symbol_html`,`code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id`='" . $_POST['currencyid'] . "' LIMIT 1", ARRAY_A );
