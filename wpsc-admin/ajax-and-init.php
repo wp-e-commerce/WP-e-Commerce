@@ -95,20 +95,6 @@ function wpsc_admin_ajax() {
 	}
 }
 
-function wpsc_ajax_get_payment_form() {
-	$paymentname = $_REQUEST['paymentname'];
-	$payment_data = wpsc_get_payment_form( $paymentname );
-	$html_payment_name = str_replace( Array( "\n", "\r" ), Array( "\\n", "\\r" ), addslashes( $payment_data['name'] ) );
-	$payment_form = str_replace( Array( "\n", "\r" ), Array( "\\n", "\\r" ), addslashes( $payment_data['form_fields'] ) );
-	echo "payment_name_html = '$html_payment_name'; \n\r";
-	echo "payment_form_html = '$payment_form'; \n\r";
-	echo "has_submit_button = '{$payment_data['has_submit_button']}'; \n\r";
-	exit();
-}
-
-if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'get_payment_form') )
-	add_action( 'admin_init', 'wpsc_ajax_get_payment_form' );
-
 add_action( 'update_option_product_category_hierarchical_url', 'wpsc_update_option_product_category_hierarchical_url' );
 
 function wpsc_update_option_product_category_hierarchical_url() {
