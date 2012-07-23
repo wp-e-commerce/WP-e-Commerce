@@ -65,6 +65,33 @@
 			});
 		});
 	}
+
+	// delete upload
+	$(document).delegate('.file_delete_button', 'click', function(){
+		var t = $(this),
+			post_values = {
+				action     : 'delete_file',
+				file_name  : t.data('file-name'),
+				product_id : t.data('product-id'),
+				nonce      : t.data('nonce')
+			},
+			response_handler = function(response) {
+				if (! response.is_successful) {
+					alert(response.error.messages.join("\n"));
+					return;
+				}
+
+				t.closest('.wpsc_product_download_row').fadeOut('fast', function() {
+					$('div.select_product_file p:even').removeClass('alt');
+					$('div.select_product_file p:odd').addClass('alt');
+					$(this).remove();
+				});
+			};
+
+		$.wpsc_post( post_values, response_handler);
+
+		return false;
+	});
 })(jQuery);
 
 jQuery(document).ready(function(){
@@ -473,20 +500,6 @@ jQuery(document).ready(function(){
 	jQuery("a.closeimagesettings").livequery(function(){
 		jQuery(this).click(function (e) {
 			jQuery("div#image_settings_box").hide();
-		});
-	});
-
-	// delete upload
-	jQuery(".file_delete_button").livequery(function(){
-		jQuery(this).click(function() {
-			url = jQuery(this).attr('href');
-			post_values = "ajax=true";
-			jQuery.post( url, post_values, function(returned_data) {
-				eval(returned_data);
-			});
-			jQuery(this).closest('tr').remove();
-
-			return false;
 		});
 	});
 

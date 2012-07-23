@@ -1019,4 +1019,11 @@ add_action( 'wp_ajax_category_sort_order', 'wpsc_ajax_set_category_order' );
 add_action( 'wp_ajax_variation_sort_order', 'wpsc_ajax_set_variation_order' );
 add_action( 'wp_ajax_wpsc_ie_save', 'wpsc_ajax_ie_save' );
 add_action('in_admin_header', 'wpsc_add_meta_boxes');
-?>
+
+function _wpsc_delete_file( $product_id, $file_name ) {
+	global $wpdb;
+
+	$sql = $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_title = %s AND post_parent = %d AND post_type ='wpsc-product-file'", $file_name, $product_id );
+	$product_id_to_delete = $wpdb->get_var( $sql );
+	return wp_delete_post( $product_id_to_delete, true );
+}

@@ -24,7 +24,22 @@ function wpsc_ajax_sales_quarterly() {
 	}
 }
 
-if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'wpsc_quarterly') ) {
+if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'wpsc_quarterly') )
 	add_action( 'admin_init', 'wpsc_ajax_sales_quarterly' );
+
+function wpsc_delete_file() {
+	$product_id = absint( $_REQUEST['product_id'] );
+	$file_name = basename( $_REQUEST['file_name'] );
+	check_admin_referer( 'delete_file_' . $file_name );
+
+	_wpsc_delete_file( $product_id, $file_name );
+
+	$sendback = wp_get_referer();
+	wp_redirect( $sendback );
+	exit;
 }
+
+
+if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'delete_file') )
+	add_action( 'admin_init', 'wpsc_delete_file' );
 
