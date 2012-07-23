@@ -461,6 +461,7 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 		// Localize scripts
 		wp_localize_script( 'wp-e-commerce-admin', 'wpsc_adminL10n', array(
 				'dragndrop_set' => ( get_option( 'wpsc_sort_by' ) == 'dragndrop' ? 'true' : 'false' ),
+				'save_product_order_nonce' => _wpsc_create_ajax_nonce( 'save_product_order' ),
 				'l10n_print_after' => 'try{convertEntities(wpsc_adminL10n);}catch(e){};'
 			) );
 	}

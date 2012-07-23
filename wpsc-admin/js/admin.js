@@ -285,10 +285,18 @@ jQuery(document).ready(function(){
             // this makes the product list table sortable
             jQuery('table.widefat:not(.tags)').sortable({
 		update: function(event, ui) {
-			category_id = jQuery('select#wpsc_product_category option:selected').val();
-			product_order = jQuery('table.widefat').sortable( 'serialize' );
-			post_values = "category_id="+category_id+"&"+product_order;
-			jQuery.post( 'index.php?wpsc_admin_action=save_product_order', post_values, function(returned_data) { });
+			var category_id = jQuery('select#wpsc_product_category option:selected').val(),
+				product_order = jQuery('table.widefat').sortable( 'toArray' ),
+				post_data = {
+					action : 'save_product_order',
+					'category_id' : category_id,
+					'post[]' : product_order,
+					nonce : wpsc_adminL10n.save_product_order_nonce
+				};
+			jQuery.wpsc_post(post_data, function(response) {
+				if (! response.is_successful)
+					alert(response.error.messages.join("\n"));
+			});
 		},
 		items: 'tbody tr',
 		axis: 'y',
