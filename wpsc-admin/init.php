@@ -632,3 +632,43 @@ function wpsc_update_variations() {
 
 if ( isset($_POST["edit_var_val"]) )
 	add_action( 'admin_init', 'wpsc_update_variations', 50 );
+
+function wpsc_delete_variation_set() {
+	check_admin_referer( 'delete-variation' );
+
+	if ( is_numeric( $_GET['deleteid'] ) ) {
+		$variation_id = absint( $_GET['deleteid'] );
+
+		$variation_set = get_term( $variation_id, 'wpsc-variation', ARRAY_A );
+
+
+		$variations = get_terms( 'wpsc-variation', array(
+					'hide_empty' => 0,
+					'parent' => $variation_id
+				) );
+
+		foreach ( (array)$variations as $variation ) {
+			$return_value = wp_delete_term( $variation->term_id, 'wpsc-variation' );
+		}
+
+		if ( !empty( $variation_set ) ) {
+			$return_value = wp_delete_term( $variation_set['term_id'], 'wpsc-variation' );
+		}
+		$deleted = 1;
+	}
+
+	$sendback = wp_get_referer();
+	if ( isset( $deleted ) ) {
+		$sendback = add_query_arg( 'deleted', $deleted, $sendback );
+	}
+	$sendback = remove_query_arg( array(
+				'deleteid',
+				'variation_id'
+					), $sendback );
+
+	wp_redirect( $sendback );
+	exit();
+}
+
+if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( 'wpsc-delete-variation-set' == $_REQUEST['wpsc_admin_action'] ) )
+	add_action( 'admin_init', 'wpsc_delete_variation_set' );
