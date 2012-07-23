@@ -205,35 +205,11 @@ function wpsc_clean_categories() {
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'clean_categories') )
 	add_action( 'admin_init', 'wpsc_clean_categories' );
 
-function wpsc_delete_coupon(){
-	global $wpdb;
-
-	check_admin_referer( 'delete-coupon' );
-	$coupon_id = (int)$_GET['delete_id'];
-
-	if(isset($coupon_id)) {
-			$wpdb->query( $wpdb->prepare( "DELETE FROM `".WPSC_TABLE_COUPON_CODES."` WHERE `id` = %d LIMIT 1", $coupon_id ) );
-			$deleted = 1;
-	}
-	$sendback = wp_get_referer();
-	if ( isset( $deleted ) )
-		$sendback = add_query_arg( 'deleted', $deleted, $sendback );
-
-	$sendback = remove_query_arg( array('deleteid',), $sendback );
-	wp_redirect( $sendback );
-	exit();
-}
-
 if ( isset( $_GET['purchase_log_csv'] ) && ( 'true' == $_GET['purchase_log_csv'] ) )
 	add_action( 'admin_init', 'wpsc_purchase_log_csv' );
 
 if ( isset( $_REQUEST['ajax'] ) && isset( $_REQUEST['admin'] ) && ($_REQUEST['ajax'] == "true") && ($_REQUEST['admin'] == "true") )
 	add_action( 'admin_init', 'wpsc_admin_ajax' );
-
-//Delete Coupon
-if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( 'wpsc-delete-coupon' == $_REQUEST['wpsc_admin_action'] ) )
-	add_action( 'admin_init', 'wpsc_delete_coupon' );
-
 
 function flat_price( $price ) {
 	if ( ! empty( $price ) && strchr( $price, '-' ) === false && strchr( $price, '+' ) === false && strchr( $price, '%' ) === false )
