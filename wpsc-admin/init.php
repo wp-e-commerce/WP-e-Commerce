@@ -187,6 +187,9 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
 	add_action( 'admin_init', 'wpsc_purchase_log_csv' );
 }
 
+if ( isset( $_GET['purchase_log_csv'] ) && ( 'true' == $_GET['purchase_log_csv'] ) )
+	add_action( 'admin_init', 'wpsc_purchase_log_csv' );
+
 function wpsc_admin_sale_rss() {
 	global $wpdb;
 	if ( ($_GET['rss'] == "true") && ($_GET['rss_key'] == 'key') && ($_GET['action'] == "purchase_log") ) {

@@ -95,6 +95,9 @@ function wpsc_admin_ajax() {
 	}
 }
 
+if ( isset( $_REQUEST['ajax'] ) && isset( $_REQUEST['admin'] ) && ($_REQUEST['ajax'] == "true") && ($_REQUEST['admin'] == "true") )
+	add_action( 'admin_init', 'wpsc_admin_ajax' );
+
 function wpsc_change_currency() {
 	if ( is_numeric( $_POST['currencyid'] ) ) {
 		$currency_data = $wpdb->get_results( "SELECT `symbol`,`symbol_html`,`code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id`='" . $_POST['currencyid'] . "' LIMIT 1", ARRAY_A );
@@ -205,8 +208,4 @@ function wpsc_clean_categories() {
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'clean_categories') )
 	add_action( 'admin_init', 'wpsc_clean_categories' );
 
-if ( isset( $_GET['purchase_log_csv'] ) && ( 'true' == $_GET['purchase_log_csv'] ) )
-	add_action( 'admin_init', 'wpsc_purchase_log_csv' );
 
-if ( isset( $_REQUEST['ajax'] ) && isset( $_REQUEST['admin'] ) && ($_REQUEST['ajax'] == "true") && ($_REQUEST['admin'] == "true") )
-	add_action( 'admin_init', 'wpsc_admin_ajax' );
