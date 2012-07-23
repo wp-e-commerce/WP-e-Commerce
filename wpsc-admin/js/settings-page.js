@@ -842,21 +842,26 @@
 			    shipping_module_id = element.data('module-id'),
 			    spinner = element.siblings('.ajax-feedback'),
 			    post_data = {
-			    	action : 'wpsc_shipping_module_settings_form',
+			    	action : 'shipping_module_settings_form',
 			    	'shipping_module_id' : shipping_module_id,
-			    	nonce  : WPSC_Settings_Page.nonce
+			    	nonce  : WPSC_Settings_Page.shipping_module_settings_form_nonce
 			    },
 			    ajax_callback = function(response) {
+			    	if (! response.is_successful) {
+			    		alert(response.error.messages.join("\n"));
+			    		return;
+			    	}
+
 			    	if (history.pushState) {
 			    		var new_url = '?page=wpsc-settings&tab=' + WPSC_Settings_Page.current_tab + '&shipping_module_id=' + shipping_module_id;
 			    		history.pushState({url : new_url}, '', new_url);
 			    	}
 			    	spinner.toggleClass('ajax-feedback-active');
-			    	$('#wpsc-shipping-module-settings').replaceWith(response);
+			    	$('#wpsc-shipping-module-settings').replaceWith(response.obj.content);
 			    };
 
 			spinner.toggleClass('ajax-feedback-active');
-			$.post(ajaxurl, post_data, ajax_callback, 'html');
+			$.wpsc_post(post_data, ajax_callback);
 			return false;
 		},
 
@@ -906,7 +911,7 @@
 			    };
 
 			spinner.toggleClass('ajax-feedback-active');
-			$.wpsc_post(post_data, ajax_callback, 'html');
+			$.wpsc_post(post_data, ajax_callback);
 			return false;
 		}
 	};
