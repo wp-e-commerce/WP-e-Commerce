@@ -220,18 +220,20 @@
 			span.find('img').toggleClass('ajax-feedback-active');
 
 			var postdata = {
-				action  : 'wpsc_display_region_list',
+				action  : 'display_region_list',
 				country : $('#wpsc-base-country-drop-down').val(),
-				nonce   : WPSC_Settings_Page.nonce
+				nonce   : WPSC_Settings_Page.display_region_list_nonce
 			};
 
 			var ajax_callback = function(response) {
-				span.find('img').toggleClass('ajax-feedback-active');
-				if (response !== '') {
-					span.prepend(response);
+				if (! response.is_successful) {
+					alert(response.error.messages.join("\n"));
+					return;
 				}
+				span.find('img').toggleClass('ajax-feedback-active');
+				span.prepend(response.obj.content);
 			};
-			$.post(ajaxurl, postdata, ajax_callback, 'html');
+			$.wpsc_post(postdata, ajax_callback);
 		}
 	};
 	$(WPSC_Settings_Page).bind('wpsc_settings_tab_loaded_general', WPSC_Settings_Page.General.event_init);

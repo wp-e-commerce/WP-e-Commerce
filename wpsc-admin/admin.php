@@ -374,6 +374,7 @@ function wpsc_admin_include_optionspage_css_and_js() {
 		'navigate_settings_tab_nonce'         => _wpsc_create_ajax_nonce( 'navigate_settings_tab' ),
 		'payment_gateway_settings_form_nonce' => _wpsc_create_ajax_nonce( 'payment_gateway_settings_form' ),
 		'shipping_module_settings_form_nonce' => _wpsc_create_ajax_nonce( 'shipping_module_settings_form' ),
+		'display_region_list_nonce'           => _wpsc_create_ajax_nonce( 'display_region_list' ),
 		'current_tab'                         => WPSC_Settings_Page::get_instance()->get_current_tab_id(),
 		'before_unload_dialog'                => __( 'The changes you made will be lost if you navigate away from this page.', 'wpsc' ),
 		'ajax_navigate_confirm_dialog'        => __( 'The changes you made will be lost if you navigate away from this page.', 'wpsc' ) . "\n\n" . __( 'Click OK to discard your changes, or Cancel to remain on this page.' ),

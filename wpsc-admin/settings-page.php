@@ -662,7 +662,7 @@ final class WPSC_Settings_Page
 
 		if ( !isset( $_POST['custom_shipping_options'] ) )
 			$_POST['custom_shipping_options'] = null;
-		
+
 		if ( $_POST['update_gateways'] == 'true' ) {
 
 			update_option( 'custom_shipping_options', $_POST['custom_shipping_options'] );
