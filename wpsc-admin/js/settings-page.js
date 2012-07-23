@@ -620,20 +620,21 @@
 
 			var spinner = $(ui.item).find('.ajax-feedback');
 			var post_data = {
-				action     : 'wpsc_update_checkout_fields_order',
-				nonce      : WPSC_Settings_Page.nonce,
+				action     : 'update_checkout_fields_order',
+				nonce      : WPSC_Settings_Page.update_checkout_fields_order_nonce,
 				sort_order : $('table#wpsc_checkout_list').sortable('toArray')
 			};
 			var ajax_callback = function(response) {
 				spinner.toggleClass('ajax-feedback-active');
 				ui.item.find('.drag a').show();
-				if (response != 'success') {
-					alert(WPSC_Settings_Page.checkout_field_sort_error_dialog);
+				if (! response.is_successful) {
+					alert(response.error.messages.join("\n"));
+					return;
 				}
 			};
 			ui.item.find('.drag a').hide();
 			spinner.toggleClass('ajax-feedback-active');
-			$.post(ajaxurl, post_data, ajax_callback);
+			$.wpsc_post(post_data, ajax_callback);
 		},
 
 		/**

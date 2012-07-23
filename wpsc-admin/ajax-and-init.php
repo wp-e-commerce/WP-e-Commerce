@@ -95,39 +95,6 @@ function wpsc_admin_ajax() {
 	}
 }
 
-function wpsc_update_checkout_fields_order() {
-	global $wpdb;
-
-	if ( ! wp_verify_nonce( $_POST['nonce'], 'wpsc_settings_page_nonce' ) )
-		die( 'Session expired. Try refreshing your settings page.' );
-
-	$checkout_fields = $_REQUEST['sort_order'];
-	$order = 1;
-	foreach ( $checkout_fields as $checkout_field ) {
-		// ignore new fields
-		if ( strpos( $checkout_field, 'new-field' ) === 0 )
-			continue;
-		$checkout_field = absint( preg_replace('/[^0-9]+/', '', $checkout_field ) );
-		$wpdb->update(
-			WPSC_TABLE_CHECKOUT_FORMS,
-			array(
-				'checkout_order' => $order
-			),
-			array(
-				'id' => $checkout_field
-			),
-			'%d',
-			'%d'
-		);
-
-		$order ++;
-	}
-
-	die( 'success' );
-}
-
-add_action( 'wp_ajax_wpsc_update_checkout_fields_order', 'wpsc_update_checkout_fields_order' );
-
 /* Start Order Notes (by Ben) */
 function wpsc_purchlogs_update_notes( $purchlog_id = '', $purchlog_notes = '' ) {
 	global $wpdb;

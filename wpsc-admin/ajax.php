@@ -431,3 +431,48 @@ function _wpsc_ajax_save_product_order() {
 		'ids' => $products,
 	);
 }
+
+/**
+ * Update Checkout fields order
+ *
+ * @since 3.8.9
+ * @access private
+ * @return array|WP_Error Response args or WP_Error
+ */
+function _wpsc_ajax_update_checkout_fields_order() {
+	global $wpdb;
+
+	$checkout_fields = $_REQUEST['sort_order'];
+	$order = 1;
+	$failed = array();
+	$modified = array();
+	foreach ( $checkout_fields as &$checkout_field ) {
+		// ignore new fields
+		if ( strpos( $checkout_field, 'new-field' ) === 0 )
+			continue;
+		$checkout_field = absint( preg_replace('/[^0-9]+/', '', $checkout_field ) );
+		$result = $wpdb->update(
+			WPSC_TABLE_CHECKOUT_FORMS,
+			array(
+				'checkout_order' => $order
+			),
+			array(
+				'id' => $checkout_field
+			),
+			'%d',
+			'%d'
+		);
+		$order ++;
+		if ( $result === false )
+			$failed[] = $checkout_field;
+		elseif ( $result > 0 )
+			$modified[] = $checkout_field;
+	}
+
+	if ( ! empty( $failed ) )
+		return new WP_Error( 'wpsc_cannot_save_checkout_field_sort_order', __( "Couldn't save checkout field sort order. Please try again.", 'wpsc' ), array( 'failed_ids' => $failed ) );
+
+	return array(
+		'modified' => $modified,
+	);
+}
