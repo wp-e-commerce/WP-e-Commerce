@@ -613,3 +613,22 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
 	add_action( 'admin_init', 'wpsc_google_shipping_settings' );
 }
 
+function wpsc_update_variations() {
+	$product_id = absint( $_POST["product_id"] );
+	$product_type_object = get_post_type_object('wpsc-product');
+	if (!current_user_can($product_type_object->cap->edit_post, $product_id))
+		return;
+
+	//Setup postdata
+	$post_data = array( );
+	$post_data['edit_var_val'] = isset( $_POST['edit_var_val'] ) ? $_POST["edit_var_val"] : '';
+	$post_data['description'] = isset( $_POST['description'] ) ? $_POST["description"] : '';
+	$post_data['additional_description'] = isset( $_POST['additional_description'] ) ? $_POST['additional_description'] : '';
+	$post_data['name'] = (!empty($_POST['name']))?$_POST['name']:$_POST["post_title"];
+
+	//Add or delete variations
+	wpsc_edit_product_variations( $product_id, $post_data );
+}
+
+if ( isset($_POST["edit_var_val"]) )
+	add_action( 'admin_init', 'wpsc_update_variations', 50 );

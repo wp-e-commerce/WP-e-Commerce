@@ -545,3 +545,21 @@ function _wpsc_ajax_upload_product_file() {
 		'content' => $output,
 	);
 }
+
+/**
+ * Generate variations
+ *
+ * @since 3.8.9
+ * @access private
+ * @return array|WP_Error Response args if successful, WP_Error if otherwise
+ */
+function _wpsc_ajax_update_variations() {
+	$product_id = absint( $_POST["product_id"] );
+	wpsc_update_variations();
+
+	ob_start();
+	wpsc_admin_product_listing( $product_id );
+	$content = ob_get_clean();
+
+	return array( 'content' => $content );
+}
