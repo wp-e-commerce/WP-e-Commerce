@@ -342,3 +342,33 @@ function wpsc_purchlog_bulk_modify() {
 if ( isset( $_REQUEST['wpsc_admin_action2'] ) && ($_REQUEST['wpsc_admin_action2'] == 'purchlog_bulk_modify') ) {
 	add_action( 'admin_init', 'wpsc_purchlog_bulk_modify' );
 }
+
+/* Start Order Notes (by Ben) */
+function wpsc_purchlogs_update_notes( $purchlog_id = '', $purchlog_notes = '' ) {
+	global $wpdb;
+	if ( wp_verify_nonce( $_POST['wpsc_purchlogs_update_notes_nonce'], 'wpsc_purchlogs_update_notes' ) ) {
+		if ( ($purchlog_id == '') && ($purchlog_notes == '') ) {
+			$purchlog_id = absint( $_POST['purchlog_id'] );
+			$purchlog_notes = $wpdb->escape( $_POST['purchlog_notes'] );
+		}
+		$wpdb->update(
+			    WPSC_TABLE_PURCHASE_LOGS,
+			    array(
+				'notes' => $purchlog_notes
+			    ),
+			    array(
+				'id' => $purchlog_id
+			    ),
+			    array(
+				'%s'
+			    ),
+			    array(
+				'%d'
+			    )
+			);
+	}
+}
+if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'purchlogs_update_notes' ) )
+	add_action( 'admin_init', 'wpsc_purchlogs_update_notes' );
+
+/* End Order Notes (by Ben) */
