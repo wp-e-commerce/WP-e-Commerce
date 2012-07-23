@@ -305,3 +305,40 @@ function wpsc_purchlog_filter_by() {
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'purchlog_filter_by') ) {
 	add_action( 'admin_init', 'wpsc_purchlog_filter_by' );
 }
+
+//bulk actions for purchase log
+function wpsc_purchlog_bulk_modify() {
+	if ( $_POST['purchlog_multiple_status_change'] != -1 ) {
+		if ( is_numeric( $_POST['purchlog_multiple_status_change'] ) && $_POST['purchlog_multiple_status_change'] != 'delete' ) {
+			foreach ( (array)$_POST['purchlogids'] as $purchlogid ) {
+				wpsc_purchlog_edit_status( $purchlogid, $_POST['purchlog_multiple_status_change'] );
+				$updated++;
+			}
+		} elseif ( $_POST['purchlog_multiple_status_change'] == 'delete' ) {
+			foreach ( (array)$_POST['purchlogids'] as $purchlogid ) {
+
+				wpsc_delete_purchlog( $purchlogid );
+				$deleted++;
+			}
+		}
+	}
+	$sendback = wp_get_referer();
+	if ( isset( $updated ) ) {
+		$sendback = add_query_arg( 'updated', $updated, $sendback );
+	}
+	if ( isset( $deleted ) ) {
+		$sendback = add_query_arg( 'deleted', $deleted, $sendback );
+	}
+	if ( isset( $_POST['view_purchlogs_by'] ) ) {
+		$sendback = add_query_arg( 'view_purchlogs_by', $_POST['view_purchlogs_by'], $sendback );
+	}
+	if ( isset( $_POST['view_purchlogs_by_status'] ) ) {
+		$sendback = add_query_arg( 'view_purchlogs_by_status', $_POST['view_purchlogs_by_status'], $sendback );
+	}
+	wp_redirect( $sendback );
+	exit();
+}
+
+if ( isset( $_REQUEST['wpsc_admin_action2'] ) && ($_REQUEST['wpsc_admin_action2'] == 'purchlog_bulk_modify') ) {
+	add_action( 'admin_init', 'wpsc_purchlog_bulk_modify' );
+}
