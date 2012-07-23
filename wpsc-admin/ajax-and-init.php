@@ -205,57 +205,6 @@ function wpsc_clean_categories() {
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'clean_categories') )
 	add_action( 'admin_init', 'wpsc_clean_categories' );
 
-function wpsc_product_files_existing() {
-	//List all product_files, with checkboxes
-
-	$product_id = absint( $_GET["product_id"] );
-	$file_list = wpsc_uploaded_files();
-
-	$args = array(
-		'post_type' => 'wpsc-product-file',
-		'post_parent' => $product_id,
-		'numberposts' => -1,
-		'post_status' => 'all'
-	);
-	$attached_files = (array)get_posts( $args );
-
-	foreach ( $attached_files as $key => $attached_file ) {
-		$attached_files_by_file[$attached_file->post_title] = & $attached_files[$key];
-	}
-
-	$output = "<span class='admin_product_notes select_product_note '>" . __( 'Choose a downloadable file for this product:', 'wpsc' ) . "</span><br>";
-	$output .= "<form method='post' class='product_upload'>";
-	$output .= "<div class='ui-widget-content multiple-select select_product_file'>";
-	$num = 0;
-	foreach ( (array)$file_list as $file ) {
-		$num++;
-		$checked_curr_file = "";
-		if ( isset( $attached_files_by_file[$file['display_filename']] ) ) {
-			$checked_curr_file = "checked='checked'";
-		}
-
-		$output .= "<p " . ((($num % 2) > 0) ? '' : "class='alt'") . " id='select_product_file_row_$num'>\n";
-		$output .= "  <input type='checkbox' name='select_product_file[]' value='" . $file['real_filename'] . "' id='select_product_file_$num' " . $checked_curr_file . " />\n";
-		$output .= "  <label for='select_product_file_$num'>" . $file['display_filename'] . "</label>\n";
-		$output .= "</p>\n";
-	}
-
-	$output .= "</div>";
-	$output .= "<input type='hidden' id='hidden_id' value='$product_id' />";
-	$output .= "<input type='submit' name='save' name='product_files_submit' class='button-primary prdfil' value='Save Product Files' />";
-	$output .= "</form>";
-	$output .= "<div class='" . ((is_numeric( $product_id )) ? "edit_" : "") . "select_product_handle'><div></div></div>";
-	$output .= "<script type='text/javascript'>\n\r";
-	$output .= "var select_min_height = " . (25 * 3) . ";\n\r";
-	$output .= "var select_max_height = " . (25 * ($num + 1)) . ";\n\r";
-	$output .= "</script>";
-
-
-	echo $output;
-}
-if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'product_files_existing') )
-	add_action( 'admin_init', 'wpsc_product_files_existing' );
-
 function prod_upload() {
 	global $wpdb;
 	$product_id = absint( $_POST["product_id"] );
