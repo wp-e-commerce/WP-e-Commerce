@@ -95,39 +95,6 @@ function wpsc_admin_ajax() {
 	}
 }
 
-function wpsc_admin_sale_rss() {
-	global $wpdb;
-	if ( ($_GET['rss'] == "true") && ($_GET['rss_key'] == 'key') && ($_GET['action'] == "purchase_log") ) {
-		$sql = "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `date`!='' ORDER BY `date` DESC";
-		$purchase_log = $wpdb->get_results( $sql, ARRAY_A );
-		header( "Content-Type: application/xml; charset=UTF-8" );
-		header( 'Content-Disposition: inline; filename="WP_E-Commerce_Purchase_Log.rss"' );
-		$output = '';
-		$output .= "<?xml version='1.0'?>\n\r";
-		$output .= "<rss version='2.0'>\n\r";
-		$output .= "  <channel>\n\r";
-		$output .= "    <title>WP e-Commerce Product Log</title>\n\r";
-		$output .= "    <link>" . get_option( 'siteurl' ) . "/wp-admin/admin.php?page=" . WPSC_DIR_NAME . "/display-log.php</link>\n\r";
-		$output .= "    <description>This is the WP e-Commerce Product Log RSS feed</description>\n\r";
-		$output .= "    <generator>WP e-Commerce Plugin</generator>\n\r";
-
-		foreach ( (array)$purchase_log as $purchase ) {
-			$purchase_link = get_option( 'siteurl' ) . "/wp-admin/admin.php?page=" . WPSC_DIR_NAME . "/display-log.php&amp;purchaseid=" . $purchase['id'];
-			$output .= "    <item>\n\r";
-			$output .= "      <title>Purchase # " . $purchase['id'] . "</title>\n\r";
-			$output .= "      <link>$purchase_link</link>\n\r";
-			$output .= "      <description>This is an entry in the purchase log.</description>\n\r";
-			$output .= "      <pubDate>" . date( "r", $purchase['date'] ) . "</pubDate>\n\r";
-			$output .= "      <guid>$purchase_link</guid>\n\r";
-			$output .= "    </item>\n\r";
-		}
-		$output .= "  </channel>\n\r";
-		$output .= "</rss>";
-		echo $output;
-		exit();
-	}
-}
-
 function wpsc_display_invoice() {
 	$purchase_id = (int)$_REQUEST['purchaselog_id'];
 	add_action('wpsc_packing_slip', 'wpsc_packing_slip');
@@ -928,9 +895,6 @@ function wpsc_delete_coupon(){
 	wp_redirect( $sendback );
 	exit();
 }
-
-if ( isset( $_GET['action'] ) && ( 'purchase_log' == $_GET['action'] ) )
-	add_action( 'admin_init', 'wpsc_admin_sale_rss' );
 
 if ( isset( $_GET['purchase_log_csv'] ) && ( 'true' == $_GET['purchase_log_csv'] ) )
 	add_action( 'admin_init', 'wpsc_purchase_log_csv' );
