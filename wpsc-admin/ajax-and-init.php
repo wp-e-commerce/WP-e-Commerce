@@ -205,36 +205,6 @@ function wpsc_clean_categories() {
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'clean_categories') )
 	add_action( 'admin_init', 'wpsc_clean_categories' );
 
-//change the regions tax settings
-function wpsc_change_region_tax() {
-	global $wpdb;
-	if ( is_array( $_POST['region_tax'] ) ) {
-		foreach ( $_POST['region_tax'] as $region_id => $tax ) {
-			if ( is_numeric( $region_id ) && is_numeric( $tax ) ) {
-				$previous_tax = $wpdb->get_var( $wpdb->prepare( "SELECT `tax` FROM `" . WPSC_TABLE_REGION_TAX . "` WHERE `id` = %d LIMIT 1", $region_id ) );
-				if ( $tax != $previous_tax ) {
-					$wpdb->update(
-						WPSC_TABLE_REGION_TAX,
-						array(
-						    'tax' => $tax
-						),
-						array(
-						    'id' => $region_id
-						),
-						'%s',
-						'%d'
-					    );
-					$changes_made = true;
-				}
-			}
-		}
-		$sendback = wp_get_referer();
-		wp_redirect( $sendback );
-	}
-}
-if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'change_region_tax') )
-	add_action( 'admin_init', 'wpsc_change_region_tax' );
-
 function wpsc_product_files_existing() {
 	//List all product_files, with checkboxes
 
