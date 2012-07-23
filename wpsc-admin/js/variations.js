@@ -62,22 +62,23 @@
 		if (form.find('.error').size() === 0) {
 			var spinner = $(this).siblings('.ajax-feedback'),
 				post_data = {
-					action : 'wpsc_add_variation_set',
+					action        : 'add_variation_set',
 					variation_set : $('#new-variation-set-name').val(),
-					variants : $('#new-variants').val(),
-					post_id : $('input[name="post_ID"]').val()
+					variants      : $('#new-variants').val(),
+					post_id       : $('input[name="post_ID"]').val(),
+					nonce         : WPSC_Variations.add_variation_set_nonce
 				},
 				ajax_callback = function(response) {
-					var checklist, color, set_id, existing_set;
-					if (response != '-1') {
+					var checklist, color, set_id, existing_set, content;
+					if (response.is_successful) {
 						checklist = $('.variation_checkboxes');
-						response = $(response);
-						set_id = response.attr('id');
+						content = $(response.obj.content);
+						set_id = content.attr('id');
 						existing_set = checklist.find('#' + set_id);
 						if (existing_set.size() > 0) {
-							existing_set.find('.children').append(response.find('.children .ajax'));
+							existing_set.find('.children').append(content.find('.children .ajax'));
 						} else {
-							checklist.append(response);
+							checklist.append(content);
 						}
 
 						color = checklist.find('li').css('backgroundColor') || '#FFFFFF';
@@ -87,6 +88,8 @@
 								$(this).css('backgroundColor', 'transparent');
 							}).
 							removeClass('ajax');
+					} else {
+						alert(response.error.messages.join("\n"));
 					}
 					form.hide().find('input:text').val('');
 					form.find('label').show().css('opacity', '1');
@@ -94,7 +97,7 @@
 				};
 
 			spinner.toggleClass('ajax-feedback-active');
-			$.post(ajaxurl, post_data, ajax_callback);
+			$.wpsc_post(ajaxurl, post_data, ajax_callback);
 
 		}
 
