@@ -189,3 +189,16 @@ function _wpsc_ajax_payment_gateway_settings_form() {
 
 	return $return;
 }
+
+function _wpsc_ajax_shipping_module_settings_form() {
+	require_once( 'settings-page.php' );
+	require_once( 'includes/settings-tabs/shipping.php' );
+
+	$return = array();
+	ob_start();
+	$tab = new WPSC_Settings_Tab_Shipping();
+	$tab->display_shipping_module_settings_form();
+	$return['content'] = ob_get_clean();
+
+	return $return;
+}
