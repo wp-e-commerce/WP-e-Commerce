@@ -247,3 +247,37 @@ function _wpsc_ajax_display_region_list() {
 
 	return $return;
 }
+
+/**
+ * Save tracking ID of a sales log.
+ *
+ * @since 3.8.9
+ * @access private
+ * @return array|WP_Error Response args if successful, WP_Error if otherwise.
+ */
+function _wpsc_ajax_purchase_log_save_tracking_id() {
+	global $wpdb;
+
+	$result = $wpdb->update(
+		WPSC_TABLE_PURCHASE_LOGS,
+		array(
+			'track_id' => $_POST['value']
+		),
+		array(
+			'id' => $_POST['log_id']
+		),
+		'%s',
+		'%d'
+	);
+
+	if ( ! $result )
+		return new WP_Error( 'wpsc_cannot_save_tracking_id', __( "Couldn't save tracking ID of the transaction. Please try again.", 'wpsc' ) );
+
+	$return = array(
+		'rows_affected' => $result,
+		'id'            => $_POST['log_id'],
+		'track_id'      => $_POST['value'],
+	);
+
+	return $return;
+}
