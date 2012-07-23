@@ -645,6 +645,8 @@ function wpsc_product_advanced_forms() {
 	if ( !empty( $product_data['_wpsc_product_metadata'] ) )
 		$product_data['meta'] = $product_meta = maybe_unserialize( $product_data['_wpsc_product_metadata'][0] );
 
+	$delete_nonce = _wpsc_create_ajax_nonce( 'remove_product_meta' );
+
 	$custom_fields = $wpdb->get_results( "
 		SELECT
 			`meta_id`, `meta_key`, `meta_value`
@@ -681,7 +683,7 @@ function wpsc_product_advanced_forms() {
                                     <input type='text' class='text'  value='<?php echo $custom_field['meta_key']; ?>' name='custom_meta[<?php echo $i; ?>][name]' id='custom_meta_name_<?php echo $i; ?>'>
                                     <?php _e( 'Value', 'wpsc' ); ?>
                                     <textarea class='text' name='custom_meta[<?php echo $i; ?>][value]' id='custom_meta_value_<?php echo $i; ?>'><?php echo $custom_field['meta_value']; ?></textarea>
-                                    <a href='#' class='remove_meta' onclick='return remove_meta(this, <?php echo $i; ?>)'><?php _e( 'Delete', 'wpsc' ); ?></a>
+                                    <a href='#' data-nonce="<?php echo esc_attr( $delete_nonce ); ?>" class='remove_meta' onclick='return remove_meta(this, <?php echo $i; ?>)'><?php _e( 'Delete', 'wpsc' ); ?></a>
                                     <br />
                             </div>
                     <?php
