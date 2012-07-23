@@ -392,3 +392,42 @@ function _wpsc_ajax_change_purchase_log_status() {
 
 	return $return;
 }
+
+/**
+ * Save product ordering after drag-and-drop sorting
+ *
+ * @since 3.8.9
+ * @access private
+ * @return array|WP_Error Response args if successful, WP_Error if otherwise
+ */
+function _wpsc_ajax_save_product_order() {
+	global $wpdb;
+
+	$products = array( );
+	foreach ( $_POST['post'] as $product ) {
+		$products[] = (int) str_replace( 'post-', '', $product );
+	}
+
+	$failed = array();
+	foreach ( $products as $order => $product_id ) {
+		$result = wp_update_post( array(
+			'ID' => $product_id,
+			'menu_order' => $order,
+		) );
+
+		if ( ! $result )
+			$failed[] = $product_id;
+	}
+
+	if ( ! empty( $failed ) ) {
+		$error_data = array(
+			'failed_ids' => $failed,
+		);
+
+		return new WP_Error( 'wpsc_cannot_save_product_sort_order', __( "Couldn't save the products' sort order. Please try again.", 'wpsc' ), $error_data );
+	}
+
+	return array(
+		'ids' => $products,
+	);
+}

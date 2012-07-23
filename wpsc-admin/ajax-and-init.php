@@ -95,38 +95,6 @@ function wpsc_admin_ajax() {
 	}
 }
 
-function wpsc_save_product_order() {
-	global $wpdb;
-
-	$products = array( );
-	foreach ( $_POST['post'] as $product ) {
-		$products[] = absint( $product );
-	}
-
-	print_r( $products );
-
-	foreach ( $products as $order => $product_id ) {
-	    $wpdb->update(
-			$wpdb->posts,
-			array(
-			    'menu_order' => $order
-			),
-			array(
-			    'ID' => $product_id
-			),
-			'%d',
-			'%d'
-		    );
-		}
-	$success = true;
-
-	exit( (string)$success );
-}
-
-if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'save_product_order') ) {
-	add_action( 'admin_init', 'wpsc_save_product_order' );
-}
-
 function wpsc_update_checkout_fields_order() {
 	global $wpdb;
 
