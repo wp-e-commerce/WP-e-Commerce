@@ -109,16 +109,16 @@ function wpsc_update_checkout_fields_order() {
 			continue;
 		$checkout_field = absint( preg_replace('/[^0-9]+/', '', $checkout_field ) );
 		$wpdb->update(
-			    WPSC_TABLE_PURCHASE_LOGS,
-			    array(
-				'notes' => $purchlog_notes
-			    ),
-			    array(
-				'id' => $purchlog_id
-			    ),
-			    '%s',
-			    '%d'
-			);
+			WPSC_TABLE_CHECKOUT_FORMS,
+			array(
+				'checkout_order' => $order
+			),
+			array(
+				'id' => $checkout_field
+			),
+			'%d',
+			'%d'
+		);
 
 		$order ++;
 	}
