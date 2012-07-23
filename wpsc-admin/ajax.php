@@ -281,3 +281,46 @@ function _wpsc_ajax_purchase_log_save_tracking_id() {
 
 	return $return;
 }
+
+/**
+ * Send sales log tracking email via AJAX
+ *
+ * @since 3.8.9
+ * @access private
+ * @return array|WP_Error Response args if successful, WP_Error if otherwise
+ */
+function _wpsc_ajax_purchase_log_send_tracking_email() {
+	global $wpdb;
+
+	$id = absint( $_POST['log_id'] );
+	$sql = $wpdb->prepare( "SELECT `track_id` FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE `id`=%d LIMIT 1", $id );
+	$trackingid = $wpdb->get_var( $sql );
+
+	$message = get_option( 'wpsc_trackingid_message' );
+	$message = str_replace( '%trackid%', $trackingid, $message );
+	$message = str_replace( '%shop_name%', get_option( 'blogname' ), $message );
+
+	$email_form_field = $wpdb->get_var( "SELECT `id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `type` IN ('email') AND `active` = '1' ORDER BY `checkout_order` ASC LIMIT 1" );
+	$email = $wpdb->get_var( $wpdb->prepare( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` WHERE `log_id`=%d AND `form_id` = '$email_form_field' LIMIT 1", $id ) );
+
+	$subject = get_option( 'wpsc_trackingid_subject' );
+	$subject = str_replace( '%shop_name%', get_option( 'blogname' ), $subject );
+
+	add_filter( 'wp_mail_from', 'wpsc_replace_reply_address', 0 );
+	add_filter( 'wp_mail_from_name', 'wpsc_replace_reply_name', 0 );
+
+	$result = wp_mail( $email, $subject, $message);
+
+	if ( ! $result )
+		return new WP_Error( 'wpsc_cannot_send_tracking_email', __( "Couldn't send tracking email. Please try again.", 'wpsc' ) );
+
+	$return = array(
+		'id'          => $id,
+		'tracking_id' => $trackingid,
+		'subject'     => $subject,
+		'message'     => $message,
+		'email'       => $email
+	);
+
+	return $return;
+}

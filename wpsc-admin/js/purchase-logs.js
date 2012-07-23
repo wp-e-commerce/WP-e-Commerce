@@ -30,23 +30,23 @@
 			var t = $(this);
 
 			var post_data = {
-				'action' : 'wpsc_purchase_log_send_tracking_email',
+				'action' : 'purchase_log_send_tracking_email',
 				'log_id' : t.closest('div').data('log-id'),
-				'nonce'  : WPSC_Purchase_Logs_Admin.nonce
+				'nonce'  : WPSC_Purchase_Logs_Admin.purchase_log_send_tracking_email_nonce
 			};
 
 			var ajax_callback = function(response) {
-				if (response != 'success') {
-					alert(WPSC_Purchase_Logs_Admin.send_tracking_email_error_dialog);
+				if (! response.is_successful) {
+					alert(response.error.messages.join("\n"));
 					t.show().siblings('em').remove();
-				} else {
-					t.siblings('em').addClass('sent').text(WPSC_Purchase_Logs_Admin.sent_message);
-					t.remove();
+					return;
 				}
+				t.siblings('em').addClass('sent').text(WPSC_Purchase_Logs_Admin.sent_message);
+				t.remove();
 			};
 
 			t.hide().after('<em>' + WPSC_Purchase_Logs_Admin.sending_message + '</em>');
-			$.post(ajaxurl, post_data, ajax_callback);
+			$.wpsc_post(post_data, ajax_callback);
 
 			return false;
 		},
