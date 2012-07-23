@@ -1019,4 +1019,40 @@ class wpsc_purchaselogs_items {
 
 }
 
-?>
+//edit purchase log status function
+function wpsc_purchlog_edit_status( $purchlog_id='', $purchlog_status='' ) {
+   global $wpdb;
+   if ( empty($purchlog_id) && empty($purchlog_status) ) {
+      $purchlog_id = absint( $_POST['id'] );
+      $purchlog_status = absint( $_POST['new_status'] );
+   }
+
+   $log_data = $wpdb->get_row( "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id` = '{$purchlog_id}' LIMIT 1", ARRAY_A );
+   $is_transaction = wpsc_check_purchase_processed($log_data['processed']);
+   if ( $is_transaction && function_exists('wpsc_member_activate_subscriptions')) {
+      wpsc_member_activate_subscriptions( $_POST['id'] );
+   }
+
+   //in the future when everyone is using the 2.0 merchant api, we should use the merchant class to update the staus,
+   // then you can get rid of this hook and have each person overwrite the method that updates the status.
+   do_action('wpsc_edit_order_status', array('purchlog_id'=>$purchlog_id, 'purchlog_data'=>$log_data, 'new_status'=>$purchlog_status));
+
+   $result = $wpdb->update(
+          WPSC_TABLE_PURCHASE_LOGS,
+          array(
+         'processed' => $purchlog_status
+          ),
+          array(
+         'id' => $purchlog_id
+          ),
+          '%d',
+          '%d'
+      );
+   wpsc_clear_stock_claims();
+   wpsc_decrement_claimed_stock($purchlog_id);
+
+   if ( $purchlog_status == 3 )
+       transaction_results($log_data['sessionid'],false,null);
+
+   return $result;
+}

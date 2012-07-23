@@ -121,25 +121,26 @@
 
 		event_log_status_change : function() {
 			var post_data = {
-					nonce      : WPSC_Purchase_Logs_Admin.nonce,
-					action     : 'wpsc_change_purchase_log_status',
+					nonce      : WPSC_Purchase_Logs_Admin.change_purchase_log_status_nonce,
+					action     : 'change_purchase_log_status',
 					id         : $(this).data('log-id'),
 					new_status : $(this).val(),
-					status     : WPSC_Purchase_Logs_Admin.current_view
+					status     : WPSC_Purchase_Logs_Admin.current_view,
+					_wp_http_referer : window.location.href
 				},
 				spinner = $(this).siblings('.ajax-feedback'),
 				t = $(this);
 			spinner.addClass('ajax-feedback-active');
 			var ajax_callback = function(response) {
-				spinner.removeClass('ajax-feedback-active');
-				if (response == -1) {
-					alert(WPSC_Purchase_Logs_Admin.status_error_dialog);
-				} else {
-					$('ul.subsubsub').replaceWith(response);
+				if (! response.is_successful) {
+					alert(response.error.messages.join("\n"));
+					return;
 				}
+				spinner.removeClass('ajax-feedback-active');
+				$('ul.subsubsub').replaceWith(response.obj.content);
 			};
 
-			$.post(ajaxurl, post_data, ajax_callback);
+			$.wpsc_post(post_data, ajax_callback);
 		}
 	});
 
