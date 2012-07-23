@@ -372,3 +372,43 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
 	add_action( 'admin_init', 'wpsc_purchlogs_update_notes' );
 
 /* End Order Notes (by Ben) */
+
+//delete a purchase log
+function wpsc_delete_purchlog( $purchlog_id='' ) {
+	global $wpdb;
+	$deleted = 0;
+	if ( $purchlog_id == '' ) {
+		$purchlog_id = absint( $_GET['purchlog_id'] );
+		check_admin_referer( 'delete_purchlog_' . $purchlog_id );
+	}
+
+	if ( is_numeric( $purchlog_id ) ) {
+		$delete_log_form_sql = "SELECT * FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid`='$purchlog_id'";
+		$cart_content = $wpdb->get_results( $delete_log_form_sql, ARRAY_A );
+	}
+
+	$purchlog_status = $wpdb->get_var( $wpdb->prepare( "SELECT `processed` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id`= %d", $purchlog_id ) );
+	if ( $purchlog_status == 5 || $purchlog_status == 1 ) {
+		$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_CLAIMED_STOCK . "` WHERE `cart_id` = %d AND `cart_submitted` = '1'", $purchlog_id ) );
+	}
+
+	$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid` = %d", $purchlog_id ) );
+	$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` WHERE `log_id` IN (%d)", $purchlog_id ) );
+	$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id` = %d LIMIT 1", $purchlog_id ) );
+
+	$deleted = 1;
+
+	if ( is_numeric( $_GET['purchlog_id'] ) ) {
+		$sendback = wp_get_referer();
+		$sendback = remove_query_arg( array( 'c', 'id' ), $sendback );
+		if ( isset( $deleted ) ) {
+			$sendback = add_query_arg( 'deleted', $deleted, $sendback );
+		}
+		wp_redirect( $sendback );
+		exit();
+	}
+}
+
+if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'delete_purchlog') ) {
+	add_action( 'admin_init', 'wpsc_delete_purchlog' );
+}
