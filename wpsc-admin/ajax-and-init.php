@@ -9,29 +9,6 @@
  * @since 3.7
  */
 
-function wpsc_purchase_log_save_tracking_id() {
-	global $wpdb;
-	if ( ! wp_verify_nonce( $_POST['nonce'], 'wpsc_purchase_logs' ) )
-		die( 'Session expired. Try refreshing your Sales Log page.' );
-
-
-		$wpdb->update(
-			    WPSC_TABLE_PURCHASE_LOGS,
-			    array(
-				'track_id' => $_POST['value']
-				),
-			    array(
-			     'id' => $_POST['log_id']
-			    ),
-			    '%s',
-			    '%d'
-			);
-
-	die('success');
-}
-
-add_action( 'wp_ajax_wpsc_purchase_log_save_tracking_id', 'wpsc_purchase_log_save_tracking_id' );
-
 function wpsc_purchase_log_send_tracking_email() {
 	global $wpdb;
 	if ( ! wp_verify_nonce( $_POST['nonce'], 'wpsc_purchase_logs' ) )

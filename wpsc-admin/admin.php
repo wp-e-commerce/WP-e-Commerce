@@ -316,13 +316,13 @@ function wpsc_add_help_tabs() {
 function wpsc_admin_include_purchase_logs_css_and_js() {
 	wp_enqueue_script( 'wp-e-commerce-purchase-logs', WPSC_URL . '/wpsc-admin/js/purchase-logs.js', array( 'jquery' ), WPSC_VERSION . '.' . WPSC_MINOR_VERSION );
 	wp_localize_script( 'wp-e-commerce-purchase-logs', 'WPSC_Purchase_Logs_Admin', array(
-		'nonce'                            => wp_create_nonce( 'wpsc_purchase_logs' ),
-		'status_error_dialog'              => __( "An unknown error occurred. The order's status might not have been updated properly.\n\nPlease refresh this page and try again.", 'wpsc' ),
-		'tracking_error_dialog'            => __( "An unknown error occurred. The order's tracking ID might not have been updated properly.\n\nPlease refresh this page and try again.", 'wpsc' ),
-		'send_tracking_email_error_dialog' => __( "An unknown error occurred. The tracking email might not have been sent.\n\nPlease refresh this page and try again.", 'wpsc' ),
-		'sending_message'                  => _x( 'sending...', 'sending tracking email for purchase log', 'wpsc' ),
-		'sent_message'                     => _x( 'Email Sent!', 'sending tracking email for purchase log', 'wpsc' ),
-		'current_view'                     => empty( $_REQUEST['status'] ) ? 'all' : $_REQUEST['status'],
+		'nonce'                               => wp_create_nonce( 'wpsc_purchase_logs' ),
+		'purchase_log_save_tracking_id_nonce' => _wpsc_create_ajax_nonce( 'purchase_log_save_tracking_id' ),
+		'status_error_dialog'                 => __( "An unknown error occurred. The order's status might not have been updated properly.\n\nPlease refresh this page and try again.", 'wpsc' ),
+		'send_tracking_email_error_dialog'    => __( "An unknown error occurred. The tracking email might not have been sent.\n\nPlease refresh this page and try again.", 'wpsc' ),
+		'sending_message'                     => _x( 'sending...', 'sending tracking email for purchase log', 'wpsc' ),
+		'sent_message'                        => _x( 'Email Sent!', 'sending tracking email for purchase log', 'wpsc' ),
+		'current_view'                        => empty( $_REQUEST['status'] ) ? 'all' : $_REQUEST['status'],
 	) );
 }
 
