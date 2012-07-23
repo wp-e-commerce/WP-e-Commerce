@@ -211,21 +211,6 @@ if ( isset( $_GET['purchase_log_csv'] ) && ( 'true' == $_GET['purchase_log_csv']
 if ( isset( $_REQUEST['ajax'] ) && isset( $_REQUEST['admin'] ) && ($_REQUEST['ajax'] == "true") && ($_REQUEST['admin'] == "true") )
 	add_action( 'admin_init', 'wpsc_admin_ajax' );
 
-function flat_price( $price ) {
-	if ( ! empty( $price ) && strchr( $price, '-' ) === false && strchr( $price, '+' ) === false && strchr( $price, '%' ) === false )
-		return true;
-}
-
-function percentile_price( $price ) {
-	if ( ! empty( $price ) && ( strchr( $price, '-' ) || strchr( $price, '+' ) ) && strchr( $price, '%' ) )
-		return true;
-}
-
-function differential_price( $price ) {
-	if ( ! empty( $price ) && ( strchr( $price, '-' ) || strchr( $price, '+' ) ) && strchr( $price, '%' ) === false )
-		return true;
-}
-
 /**
  * If it doesn't exist, let's create a multi-dimensional associative array
  * that will contain all of the term/price associations
