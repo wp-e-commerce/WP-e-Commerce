@@ -141,3 +141,23 @@ function _wpsc_ajax_add_variation_set() {
 
 	return $return;
 }
+
+/**
+ * Display gateway settings form via AJAX
+ *
+ * @since  3.8.9
+ * @access private
+ * @return array Response args
+ */
+function _wpsc_ajax_payment_gateway_settings_form() {
+	require_once( 'settings-page.php' );
+	require_once( 'includes/settings-tabs/gateway.php' );
+
+	$return = array();
+	ob_start();
+	$tab = new WPSC_Settings_Tab_Gateway();
+	$tab->display_payment_gateway_settings_form();
+	$return['content'] = ob_get_clean();
+
+	return $return;
+}

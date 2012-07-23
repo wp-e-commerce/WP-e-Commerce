@@ -371,13 +371,14 @@ function wpsc_admin_include_optionspage_css_and_js() {
 	wp_enqueue_script( 'wp-e-commerce-admin-settings-page', WPSC_URL . '/wpsc-admin/js/settings-page.js', array( 'jquery-query' ), $version_identifier );
 
 	wp_localize_script( 'wp-e-commerce-admin-settings-page', 'WPSC_Settings_Page', array(
-		'nonce'                        => wp_create_nonce( 'wpsc_settings_page_nonce' ),
-		'current_tab'                  => WPSC_Settings_Page::get_instance()->get_current_tab_id(),
-		'before_unload_dialog'         => __( 'The changes you made will be lost if you navigate away from this page.', 'wpsc' ),
-		'ajax_navigate_confirm_dialog' => __( 'The changes you made will be lost if you navigate away from this page.', 'wpsc' ) . "\n\n" . __( 'Click OK to discard your changes, or Cancel to remain on this page.' ),
-		'checkout_field_sort_error_dialog' => __( "An error occurred when saving your field order preference.\n\nPlease refresh the page and try again.", 'wpsc' ),
-		'edit_field_options'           => __( 'Edit Options', 'wpsc' ),
-		'hide_edit_field_options'      => __( 'Hide Options', 'wpsc' ),
+		'nonce'                               => wp_create_nonce( 'wpsc_settings_page_nonce' ),
+		'payment_gateway_settings_form_nonce' => _wpsc_create_ajax_nonce( 'payment_gateway_settings_form' ),
+		'current_tab'                         => WPSC_Settings_Page::get_instance()->get_current_tab_id(),
+		'before_unload_dialog'                => __( 'The changes you made will be lost if you navigate away from this page.', 'wpsc' ),
+		'ajax_navigate_confirm_dialog'        => __( 'The changes you made will be lost if you navigate away from this page.', 'wpsc' ) . "\n\n" . __( 'Click OK to discard your changes, or Cancel to remain on this page.' ),
+		'checkout_field_sort_error_dialog'    => __( "An error occurred when saving your field order preference.\n\nPlease refresh the page and try again.", 'wpsc' ),
+		'edit_field_options'                  => __( 'Edit Options', 'wpsc' ),
+		'hide_edit_field_options'             => __( 'Hide Options', 'wpsc' ),
 	) );
 
 	wp_enqueue_style( 'wp-e-commerce-admin_2.7', WPSC_URL . '/wpsc-admin/css/settingspage.css', false, false, 'all' );
