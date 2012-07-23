@@ -9,38 +9,6 @@
  * @since 3.7
  */
 
-function wpsc_delete_file() {
-	global $wpdb;
-	$output = 0;
-	$row_number = absint( $_REQUEST['row_number'] );
-	$product_id = absint( $_REQUEST['product_id'] );
-	$file_name = basename( $_REQUEST['file_name'] );
-	check_admin_referer( 'delete_file_' . $file_name );
-
-	$sql = $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_title = %s AND post_parent = %d AND post_type ='wpsc-product-file'", $file_name, $product_id );
-	$product_id_to_delete = $wpdb->get_var( $sql );
-
-	wp_delete_post( $product_id_to_delete, true );
-
-	if ( $_POST['ajax'] !== 'true' ) {
-		$sendback = wp_get_referer();
-		wp_redirect( $sendback );
-		exit;
-	}
-
-	echo "jQuery('#select_product_file_row_$row_number').fadeOut('fast',function() {\n";
-	echo "   jQuery(this).remove();\n";
-	echo "   jQuery('div.select_product_file p:even').removeClass('alt');\n";
-	echo "   jQuery('div.select_product_file p:odd').addClass('alt');\n";
-	echo "});\n";
-
-	exit( "" );
-}
-
-if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'delete_file') ) {
-	add_action( 'admin_init', 'wpsc_delete_file' );
-}
-
 /**
   Function and action for publishing or unpublishing single products
  */

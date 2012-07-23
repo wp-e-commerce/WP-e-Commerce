@@ -324,3 +324,27 @@ function _wpsc_ajax_purchase_log_send_tracking_email() {
 
 	return $return;
 }
+
+/**
+ * Delete an attached downloadable file via AJAX.
+ *
+ * @since 3.8.9
+ * @access private
+ * @return array|WP_Error Response args if successful, WP_Error if otherwise
+ */
+function _wpsc_ajax_delete_file() {
+	$product_id = absint( $_REQUEST['product_id'] );
+	$file_name = basename( $_REQUEST['file_name'] );
+
+	$result = _wpsc_delete_file( $product_id, $file_name );
+
+	if ( ! $result )
+		return new WP_Error( 'wpsc_cannot_delete_file', __( "Couldn't delete the file. Please try again.", 'wpsc' ) );
+
+	$return = array(
+		'product_id' => $product_id,
+		'file_name'  => $file_name,
+	);
+
+	return $return;
+}
