@@ -97,7 +97,7 @@
 				};
 
 			spinner.toggleClass('ajax-feedback-active');
-			$.wpsc_post(ajaxurl, post_data, ajax_callback);
+			$.wpsc_post(post_data, ajax_callback);
 
 		}
 
