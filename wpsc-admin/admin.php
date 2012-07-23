@@ -1027,3 +1027,104 @@ function _wpsc_delete_file( $product_id, $file_name ) {
 	$product_id_to_delete = $wpdb->get_var( $sql );
 	return wp_delete_post( $product_id_to_delete, true );
 }
+
+function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
+	$new_post_date = $post->post_date;
+	$new_post_date_gmt = get_gmt_from_date( $new_post_date );
+
+	$new_post_type = $post->post_type;
+	$post_content = str_replace( "'", "''", $post->post_content );
+	$post_content_filtered = str_replace( "'", "''", $post->post_content_filtered );
+	$post_excerpt = str_replace( "'", "''", $post->post_excerpt );
+	$post_title = str_replace( "'", "''", $post->post_title ) . " (Duplicate)";
+	$post_name = str_replace( "'", "''", $post->post_name );
+	$comment_status = str_replace( "'", "''", $post->comment_status );
+	$ping_status = str_replace( "'", "''", $post->ping_status );
+
+	$defaults = array(
+		'post_status' 			=> $post->post_status,
+		'post_type' 			=> $new_post_type,
+		'ping_status' 			=> $ping_status,
+		'post_parent' 			=> $new_parent_id ? $new_parent_id : $post->post_parent,
+		'menu_order' 			=> $post->menu_order,
+		'to_ping' 				=>  $post->to_ping,
+		'pinged' 				=> $post->pinged,
+		'post_excerpt' 			=> $post_excerpt,
+		'post_title' 			=> $post_title,
+		'post_content' 			=> $post_content,
+		'post_content_filtered' => $post_content_filtered,
+		'import_id' 			=> 0
+		);
+
+	// Insert the new template in the post table
+	$new_post_id = wp_insert_post($defaults);
+
+	// Copy the taxonomies
+	wpsc_duplicate_taxonomies( $post->ID, $new_post_id, $post->post_type );
+
+	// Copy the meta information
+	wpsc_duplicate_product_meta( $post->ID, $new_post_id );
+
+	// Finds children (Which includes product files AND product images), their meta values, and duplicates them.
+	wpsc_duplicate_children( $post->ID, $new_post_id );
+
+	return $new_post_id;
+}
+
+/**
+ * Copy the taxonomies of a post to another post
+ */
+function wpsc_duplicate_taxonomies( $id, $new_id, $post_type ) {
+	$taxonomies = get_object_taxonomies( $post_type ); //array("category", "post_tag");
+	foreach ( $taxonomies as $taxonomy ) {
+		$post_terms = wp_get_object_terms( $id, $taxonomy );
+		for ( $i = 0; $i < count( $post_terms ); $i++ ) {
+			wp_set_object_terms( $new_id, $post_terms[$i]->slug, $taxonomy, true );
+		}
+	}
+}
+
+/**
+ * Copy the meta information of a post to another post
+ */
+function wpsc_duplicate_product_meta( $id, $new_id ) {
+	global $wpdb;
+
+	$post_meta_infos = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id = %d", $id ) );
+
+	if ( count( $post_meta_infos ) ) {
+		$sql_query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES ";
+		$values = array();
+		foreach ( $post_meta_infos as $meta_info ) {
+			$meta_key = $meta_info->meta_key;
+			$meta_value = addslashes( $meta_info->meta_value );
+
+			$sql_query_sel[] = "( $new_id, '$meta_key', '$meta_value' )";
+			$values[] = $new_id;
+			$values[] = $meta_key;
+			$values[] = $meta_value;
+			$values += array( $new_id, $meta_key, $meta_value );
+		}
+		$sql_query.= implode( ",", $sql_query_sel );
+		$sql_query = $wpdb->prepare( $sql_query, $values );
+		$wpdb->query( $sql_query );
+	}
+}
+
+/**
+ * Duplicates children product and children meta
+ */
+function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
+
+	//Get children products and duplicate them
+	$child_posts = get_posts( array(
+		'post_parent' => $old_parent_id,
+		'post_type' => 'any',
+		'post_status' => 'any',
+		'numberposts' => -1,
+	) );
+
+	foreach ( $child_posts as $child_post )
+	    wpsc_duplicate_product_process( $child_post, $new_parent_id );
+
+}
