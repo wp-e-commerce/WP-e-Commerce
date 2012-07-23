@@ -363,3 +363,32 @@ function _wpsc_ajax_remove_product_meta() {
 
 	return array( 'meta_id' => $meta_id );
 }
+
+/**
+ * Modify a purchase log's status.
+ *
+ * @since 3.8.9
+ * @access private
+ * @return array|WP_Error Response args if successful, WP_Error if otherwise.
+ */
+function _wpsc_ajax_change_purchase_log_status() {
+	$result = wpsc_purchlog_edit_status( $_POST['id'], $_POST['new_status'] );
+	if ( ! $result )
+		return new WP_Error( 'wpsc_cannot_edit_purchase_log_status', __( "Couldn't modify purchase log's status. Please try again.", 'wpsc' ) );
+
+	set_current_screen( 'dashboard_page_wpsc-sales-logs' );
+
+	require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/purchase-log-list-table-class.php' );
+	ob_start();
+	$purchaselog_table = new WPSC_Purchase_Log_List_Table();
+	$purchaselog_table->views();
+	$content = ob_get_clean();
+
+	$return = array(
+		'id'         => $_POST['id'],
+		'new_status' => $_POST['new_status'],
+		'content'    => $content,
+	);
+
+	return $return;
+}

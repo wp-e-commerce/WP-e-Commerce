@@ -257,11 +257,12 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 		);
 
 		foreach ( $statuses as $status => $count ) {
+			$url = ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ? wp_get_referer() : false;
 			$text = sprintf(
 				translate_nooped_plural( $view_labels[$status], $count, 'wpsc' ),
 				number_format_i18n( $count )
 			);
-			$href = add_query_arg( 'status', $status );
+			$href = add_query_arg( 'status', $status, $url );
 			$href = remove_query_arg( array(
 				'deleted',
 				'updated',
