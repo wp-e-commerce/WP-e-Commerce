@@ -1056,4 +1056,18 @@ function wpsc_variations_stock_remaining($product_id){
 			`pm`.`meta_key` = "_wpsc_stock"
 	', $product_id ) );
 }
-?>
+
+function flat_price( $price ) {
+	if ( ! empty( $price ) && strchr( $price, '-' ) === false && strchr( $price, '+' ) === false && strchr( $price, '%' ) === false )
+		return true;
+}
+
+function percentile_price( $price ) {
+	if ( ! empty( $price ) && ( strchr( $price, '-' ) || strchr( $price, '+' ) ) && strchr( $price, '%' ) )
+		return true;
+}
+
+function differential_price( $price ) {
+	if ( ! empty( $price ) && ( strchr( $price, '-' ) || strchr( $price, '+' ) ) && strchr( $price, '%' ) === false )
+		return true;
+}
