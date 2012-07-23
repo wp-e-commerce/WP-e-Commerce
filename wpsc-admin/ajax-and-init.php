@@ -48,16 +48,6 @@ function wpsc_admin_ajax() {
 		exit( 1 );
 	}
 
-	if ( isset( $_POST['remove_meta'] ) && $_POST['remove_meta'] == 'true' && is_numeric( $_POST['meta_id'] ) ) {
-		$meta_id = (int)$_POST['meta_id'];
-		if ( delete_meta( $meta_id ) ) {
-			echo $meta_id;
-			exit();
-		}
-		echo 0;
-		exit();
-	}
-
 	if ( isset( $_REQUEST['log_state'] ) && $_REQUEST['log_state'] == "true" && is_numeric( $_POST['id'] ) && is_numeric( $_POST['value'] ) ) {
 		$newvalue = $_POST['value'];
 		if ( $_REQUEST['suspend'] == 'true' ) {

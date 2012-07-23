@@ -348,3 +348,18 @@ function _wpsc_ajax_delete_file() {
 
 	return $return;
 }
+
+/**
+ * Delete a product meta via AJAX
+ *
+ * @since 3.8.9
+ * @access private
+ * @return  array|WP_Error Response args if successful, WP_Error if otherwise
+ */
+function _wpsc_ajax_remove_product_meta() {
+	$meta_id = (int) $_POST['meta_id'];
+	if ( ! delete_meta( $meta_id ) )
+		return new WP_Error( 'wpsc_cannot_delete_product_meta', __( "Couldn't delete product meta. Please try again.", 'wpsc' ) );
+
+	return array( 'meta_id' => $meta_id );
+}

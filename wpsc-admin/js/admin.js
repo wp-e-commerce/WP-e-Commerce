@@ -549,19 +549,22 @@ function add_more_meta(e) {
 
 // function for removing custom meta
 function remove_meta(e, meta_id) {
-	current_meta_form = jQuery(e).parent("div.product_custom_meta");  // grab the form container
-	//meta_name = jQuery("input#custom_meta_name_"+meta_id, current_meta_form).val();
-	//meta_value = jQuery("input#custom_meta_value_"+meta_id, current_meta_form).val();
-	returned_value = jQuery.ajax({
-		type: "POST",
-		url: "admin.php?ajax=true",
-		data: "admin=true&remove_meta=true&meta_id="+meta_id+"",
-		success: function(results) {
-			if(results > 0) {
-				jQuery("div#custom_meta_"+meta_id).remove();
+	var t = jQuery(e),
+		current_meta_form = t.parent("div.product_custom_meta"),  // grab the form container
+		post_data = {
+			action    : 'remove_product_meta',
+			'meta_id' : meta_id,
+			nonce     : t.data('nonce')
+		},
+		response_handler = function(response) {
+			if (! response.is_successful) {
+				alert(response.error.messages.join("\n"));
+				return;
 			}
-		}
-	});
+			jQuery("div#custom_meta_"+meta_id).remove();
+		};
+
+	jQuery.wpsc_post(post_data, response_handler);
 	return false;
 }
 
