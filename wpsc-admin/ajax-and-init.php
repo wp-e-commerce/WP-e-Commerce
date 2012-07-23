@@ -205,47 +205,6 @@ function wpsc_clean_categories() {
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'clean_categories') )
 	add_action( 'admin_init', 'wpsc_clean_categories' );
 
-//change the gateway settings
-function wpsc_gateway_settings() {
-	//To update options
-	if ( isset( $_POST['wpsc_options'] ) ) {
-		foreach ( $_POST['wpsc_options'] as $key => $value ) {
-			if ( $value != get_option( $key ) ) {
-				update_option( $key, $value );
-			}
-		}
-		unset( $_POST['wpsc_options'] );
-	}
-
-
-
-	if ( isset( $_POST['user_defined_name'] ) && is_array( $_POST['user_defined_name'] ) ) {
-		$payment_gateway_names = get_option( 'payment_gateway_names' );
-
-		if ( !is_array( $payment_gateway_names ) ) {
-			$payment_gateway_names = array( );
-		}
-		$payment_gateway_names = array_merge( $payment_gateway_names, (array)$_POST['user_defined_name'] );
-		update_option( 'payment_gateway_names', $payment_gateway_names );
-	}
-	$custom_gateways = get_option( 'custom_gateway_options' );
-
-	$nzshpcrt_gateways = nzshpcrt_get_gateways();
-	foreach ( $nzshpcrt_gateways as $gateway ) {
-		if ( in_array( $gateway['internalname'], $custom_gateways ) ) {
-			if ( isset( $gateway['submit_function'] ) ) {
-				call_user_func_array( $gateway['submit_function'], array( ) );
-				$changes_made = true;
-			}
-		}
-	}
-	if ( (isset( $_POST['payment_gw'] ) && $_POST['payment_gw'] != null ) ) {
-		update_option( 'payment_gateway', $_POST['payment_gw'] );
-	}
-}
-if ( isset( $_REQUEST['wpsc_gateway_settings'] ) && ($_REQUEST['wpsc_gateway_settings'] == 'gateway_settings') )
-	add_action( 'admin_init', 'wpsc_gateway_settings' );
-
 function wpsc_google_shipping_settings() {
 	if ( isset( $_POST['submit'] ) ) {
 		foreach ( (array)$_POST['google_shipping'] as $key => $country ) {
