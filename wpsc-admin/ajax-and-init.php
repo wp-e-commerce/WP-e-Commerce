@@ -95,32 +95,6 @@ function wpsc_admin_ajax() {
 	}
 }
 
-
-/**
- * Purchase log ajax code starts here
- */
-function wpsc_purchlog_resend_email() {
-	global $wpdb;
-	$log_id = $_REQUEST['email_buyer_id'];
-	$wpec_taxes_controller = new wpec_taxes_controller();
-	if ( is_numeric( $log_id ) ) {
-		$selectsql = "SELECT `sessionid` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id`= %d LIMIT 1";
-		$purchase_log = $wpdb->get_var( $wpdb->prepare( $selectsql, $log_id ) );
-		transaction_results( $purchase_log, false );
-		$sent = true;
-	}
-	$sendback = wp_get_referer();
-	if ( isset( $sent ) )
-	    $sendback = add_query_arg( 'sent', $sent, $sendback );
-
-	wp_redirect( $sendback );
-	exit();
-}
-
-if ( isset( $_REQUEST['email_buyer_id'] ) && is_numeric( $_REQUEST['email_buyer_id'] ) ) {
-	add_action( 'admin_init', 'wpsc_purchlog_resend_email' );
-}
-
 function wpsc_purchlog_clear_download_items() {
 	global $wpdb;
 	if ( is_numeric( $_GET['purchaselog_id'] ) ) {
