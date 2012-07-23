@@ -1,6 +1,51 @@
 <?php
 
 /**
+ * Verify nonce of an AJAX request
+ *
+ * @since  3.8.9
+ * @access private
+ * @param string $ajax_action Name of AJAX action
+ * @return WP_Error|boolean True if nonce is valid. WP_Error if otherwise.
+ */
+function _wpsc_ajax_verify_nonce( $ajax_action ) {
+	// nonce can be passed with name wpsc_nonce or _wpnonce
+	$nonce = '';
+	if ( isset( $_REQUEST['nonce'] ) )
+		$nonce = $_REQUEST['nonce'];
+	elseif ( isset( $_REQUEST['_wpnonce'] ) )
+		$nonce = $_REQUEST['_wpnonce'];
+	else
+		return new WP_Error( 'wpsc_ajax_invalid_nonce', __( 'Your session has expired. Please refresh the page and try again.', 'wpsc' ) );
+
+	// validate nonce
+	if ( ! wp_verify_nonce( $nonce, 'wpsc_ajax_' . $ajax_action ) )
+		return new WP_Error( 'wpsc_ajax_invalid_nonce', __( 'Your session has expired. Please refresh the page and try again.', 'wpsc' ) );
+
+	return true;
+}
+
+/**
+ * Verify AJAX callback and call it if it exists.
+ *
+ * @since  3.8.9
+ * @access private
+ * @param  string $ajax_action Name of AJAX action
+ * @return WP_Error|array Array of response args if callback is valid. WP_Error if otherwise.
+ */
+function _wpsc_ajax_fire_callback( $ajax_action ) {
+	// if callback exists, call it and output JSON response
+	$callback = "_wpsc_ajax_{$ajax_action}";
+
+	if ( is_callable( $callback ) )
+		$result = call_user_func( $callback );
+	else
+		$result = new WP_Error( 'wpsc_invalid_ajax_callback', __( 'Invalid AJAX callback.', 'wpsc' ) );
+
+	return $result;
+}
+
+/**
  * AJAX handler for all WPEC ajax requests.
  *
  * This function automates nonce checking and outputs JSON response.
@@ -9,32 +54,15 @@
  * @access private
  */
 function _wpsc_ajax_handler() {
-	// sanitize ajax action
 	$ajax_action = str_replace( '-', '_', $_REQUEST['wpsc_action'] );
+	$result = _wpsc_ajax_verify_nonce( $ajax_action );
 
-	// nonce can be passed with name wpsc_nonce or _wpnonce
-	$nonce = '';
-	if ( isset( $_REQUEST['nonce'] ) )
-		$nonce = $_REQUEST['nonce'];
-	elseif ( isset( $_REQUEST['_wpnonce'] ) )
-		$nonce = $_REQUEST['_wpnonce'];
-	else
-		die( '-1' );
+	if ( ! is_wp_error( $result ) )
+		$result = _wpsc_ajax_fire_callback( $ajax_action );
 
-	// validate nonce
-	if ( ! wp_verify_nonce( $nonce, 'wpsc_ajax_' . $ajax_action ) )
-		die( '-1' );
-
-	// if callback exists, call it and output JSON response
-	$callback = "_wpsc_ajax_{$ajax_action}";
 	$output = array(
 		'is_successful' => false,
 	);
-
-	if ( is_callable( $callback ) )
-		$result = call_user_func( $callback );
-	else
-		$result = new WP_Error( 'wpsc_invalid_ajax_callback', __( 'Invalid AJAX callback.', 'wpsc' ) );
 
 	if ( is_wp_error( $result ) ) {
 		$output['error'] = array(
