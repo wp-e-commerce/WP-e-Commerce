@@ -1,4 +1,34 @@
 (function($){
+	/**
+	 * Wrapper for $.post. Takes care of the 'wpsc_action' and 'action' data arguments.
+	 *
+	 * @since  3.8.9
+	 * @param  {string} url       Destination of the AJAX request
+	 * @param  {object} data      Data to pass to the AJAX destination
+	 * @param  {function} handler Response handler
+	 */
+	$.wpsc_post = function(url, data, handler) {
+		data['wpsc_action'] = data['action'];
+		data['action'] = 'wpsc_ajax';
+
+		$.post(url, data, handler, 'json');
+	};
+
+	/**
+	 * Wrapper for $.get. Takes care of the 'wpsc_action' and 'action' data arguments.
+	 *
+	 * @since  3.8.9
+	 * @param  {string} url       Destination of the AJAX request
+	 * @param  {object} data      Data to pass to the AJAX destination
+	 * @param  {function} handler Response handler
+	 */
+	$.wpsc_get = function(url, data, handler) {
+		data['wpsc_action'] = data['action'];
+		data['action'] = 'wpsc_ajax';
+
+		$.get(url, data, handler, 'json');
+	}
+
 	if( pagenow == 'edit-wpsc_product_category' ) {
 		function category_sort(e, ui){
 			var order = $(this).sortable('toArray'),
