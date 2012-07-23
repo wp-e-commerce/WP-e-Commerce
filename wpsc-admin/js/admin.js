@@ -66,6 +66,34 @@
 		});
 	}
 
+	$(document).delegate('form input.prdfil', 'click', function(){
+		var t = $(this);
+		var post_data = {
+			'select_product_file[]' : [],
+			product_id : t.parent('form.product_upload').find('input#hidden_id').val(),
+			nonce : t.data('nonce'),
+			action : 'upload_product_file'
+		};
+		var products = jQuery(this).parent("form.product_upload").find('input').serializeArray();
+
+		for (var index in products) {
+			post_data['select_product_file[]'].push(products[index].value);
+		}
+
+		jQuery.wpsc_post(post_data, function(response){
+			tb_remove();
+			if (! response.is_successful) {
+				alert(response.error.messages.join("\n"));
+				return;
+			}
+			jQuery('#wpsc_product_download_forms .select_product_file tbody').append(response.obj.content).
+				find('p.no-item').hide().end().
+				find('p:even').removeClass('alt').end().
+				find('p:odd').addClass('alt');
+		});
+		event.preventDefault();
+	});
+
 	// delete upload
 	$(document).delegate('.file_delete_button', 'click', function(){
 		var t = $(this),
@@ -192,25 +220,6 @@ jQuery(document).ready(function(){
 			event.preventDefault();
 		});
 	});
-
-	jQuery('form input.prdfil').livequery(function(){
-		jQuery(this).click(function(event){
-			var products = jQuery(this).parent("form.product_upload").find('input').serialize();
-			var product_id = jQuery(this).parent("form.product_upload").find('input#hidden_id').val();
-			post_values = products + '&product_id=' + product_id;
-			jQuery.post('admin.php?wpsc_admin_action=product_files_upload',post_values, function(returned_data){
-				tb_remove();
-				if (returned_data.length > 0) {
-					jQuery('#wpsc_product_download_forms .select_product_file tbody').append(returned_data).
-						find('p.no-item').hide().end().
-						find('p:even').removeClass('alt').end().
-				   		find('p:odd').addClass('alt');
-				}
-			});
-			event.preventDefault();
-		});
-	});
-
 
 	//delete currency layer in admin product page
 	jQuery('a.wpsc_mass_resize').livequery(function(){
