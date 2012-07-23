@@ -261,3 +261,38 @@ function wpsc_purchlog_resend_email() {
 if ( isset( $_REQUEST['email_buyer_id'] ) && is_numeric( $_REQUEST['email_buyer_id'] ) ) {
 	add_action( 'admin_init', 'wpsc_purchlog_resend_email' );
 }
+
+function wpsc_purchlog_clear_download_items() {
+	global $wpdb;
+	if ( is_numeric( $_GET['purchaselog_id'] ) ) {
+		$purchase_id = (int)$_GET['purchaselog_id'];
+		$downloadable_items = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_DOWNLOAD_STATUS . "` WHERE `purchid` IN ('$purchase_id')", ARRAY_A );
+
+		$clear_locks_sql = "UPDATE`" . WPSC_TABLE_DOWNLOAD_STATUS . "` SET `ip_number` = '' WHERE `purchid` IN ('$purchase_id')";
+		$wpdb->query( $clear_locks_sql );
+		$cleared = true;
+
+		$email_form_field = $wpdb->get_var( "SELECT `id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `type` IN ('email') AND `active` = '1' ORDER BY `checkout_order` ASC LIMIT 1" );
+		$email_address = $wpdb->get_var( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` WHERE `log_id`='{$purchase_id}' AND `form_id` = '{$email_form_field}' LIMIT 1" );
+
+		foreach ( (array)$downloadable_items as $downloadable_item ) {
+			$download_links .= $siteurl . "?downloadid=" . $downloadable_item['uniqueid'] . "\n";
+		}
+
+
+		wp_mail( $email_address, __( 'The administrator has unlocked your file', 'wpsc' ), str_replace( "[download_links]", $download_links, __( 'Dear CustomerWe are pleased to advise you that your order has been updated and your downloads are now active.Please download your purchase using the links provided below.[download_links]Thank you for your custom.', 'wpsc' ) ), "From: " . get_option( 'return_email' ) . "" );
+
+
+		$sendback = wp_get_referer();
+
+		if ( isset( $cleared ) ) {
+			$sendback = add_query_arg( 'cleared', $cleared, $sendback );
+		}
+		wp_redirect( $sendback );
+		exit();
+	}
+}
+
+if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'clear_locks') ) {
+	add_action( 'admin_init', 'wpsc_purchlog_clear_download_items' );
+}
