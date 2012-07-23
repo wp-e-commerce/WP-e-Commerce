@@ -205,65 +205,6 @@ function wpsc_clean_categories() {
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'clean_categories') )
 	add_action( 'admin_init', 'wpsc_clean_categories' );
 
-function prod_upload() {
-	global $wpdb;
-	$product_id = absint( $_POST["product_id"] );
-	$output = '';
-	foreach ( $_POST["select_product_file"] as $selected_file ) {
-		// if we already use this file, there is no point doing anything more.
-
-		$sql = $wpdb->prepare( "SELECT * FROM $wpdb->posts WHERE post_type = 'wpsc-product-file' AND post_title = %s", $selected_file ); // TODO it's safer to select by post ID, in that case we will use get_posts()
-		$file_post_data = $wpdb->get_row( $sql, ARRAY_A );
-		$selected_file_path = WPSC_FILE_DIR . basename( $selected_file );
-
-		if ( empty( $file_post_data ) ) {
-			$type = wpsc_get_mimetype( $selected_file_path );
-			$attachment = array(
-				'post_mime_type' => $type,
-				'post_parent' => $product_id,
-				'post_title' => $selected_file,
-				'post_content' => '',
-				'post_type' => "wpsc-product-file",
-				'post_status' => 'inherit'
-			);
-			$id = wp_insert_post( $attachment );
-		} else {
-			// already attached
-			if ( $file_post_data['post_parent'] == $product_id )
-				continue;
-			$type = $file_post_data["post_mime_type"];
-			$url = $file_post_data["guid"];
-			$title = $file_post_data["post_title"];
-			$content = $file_post_data["post_content"];
-			// Construct the attachment
-			$attachment = array(
-				'post_mime_type' => $type,
-				'guid' => $url,
-				'post_parent' => absint( $product_id ),
-				'post_title' => $title,
-				'post_content' => $content,
-				'post_type' => "wpsc-product-file",
-				'post_status' => 'inherit'
-			);
-			// Save the data
-			$id = wp_insert_post( $attachment );
-		}
-		$deletion_url = wp_nonce_url( "admin.php?wpsc_admin_action=delete_file&amp;file_name={$attachment['post_title']}&amp;product_id={$product_id}", 'delete_file_' . $attachment['post_title'] );
-
-		$output .= '<tr class="wpsc_product_download_row ' . $class . '"  id="elect_product_file_row_id_' . $id . '">';
-		$output .= '<td style="padding-right: 30px;">' . $attachment['post_title'] . '</td>';
-		$output .= '<td>' . wpsc_convert_byte( $file_size ) . '</td>';
-		$output .= '<td>.' . wpsc_get_extension( $attachment['post_title'] ) . '</td>';
-		$output .= "<td><a class='file_delete_button' href='{$deletion_url}' >" . _x( 'Delete', 'Digital Downliad UI row', 'wpsc' ) . "</a></td>";
-		$output .= '<td><a href=' .$file_url .'>' . _x( 'Download', 'Digital Downliad UI row', 'wpsc' ) . '</a></td>';
-		$output .= '</tr>';
-	}
-
-	echo $output;
-}
-if ( isset( $_GET['wpsc_admin_action'] ) && ($_GET['wpsc_admin_action'] == 'product_files_upload') )
-	add_action( 'admin_init', 'prod_upload' );
-
 //change the gateway settings
 function wpsc_gateway_settings() {
 	//To update options

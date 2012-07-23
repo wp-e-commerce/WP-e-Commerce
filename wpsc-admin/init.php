@@ -535,7 +535,7 @@ function wpsc_product_files_existing() {
 
 	$output .= "</div>";
 	$output .= "<input type='hidden' id='hidden_id' value='$product_id' />";
-	$output .= "<input type='submit' name='save' name='product_files_submit' class='button-primary prdfil' value='Save Product Files' />";
+	$output .= "<input data-nonce='" . _wpsc_create_ajax_nonce( 'upload_product_file' ) . "' type='submit' name='save' name='product_files_submit' class='button-primary prdfil' value='Save Product Files' />";
 	$output .= "</form>";
 	$output .= "<div class='" . ((is_numeric( $product_id )) ? "edit_" : "") . "select_product_handle'><div></div></div>";
 	$output .= "<script type='text/javascript'>\n\r";
