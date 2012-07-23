@@ -672,3 +672,16 @@ function wpsc_delete_variation_set() {
 
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( 'wpsc-delete-variation-set' == $_REQUEST['wpsc_admin_action'] ) )
 	add_action( 'admin_init', 'wpsc_delete_variation_set' );
+
+function wpsc_force_flush_theme_transients() {
+	// Flush transients
+	wpsc_flush_theme_transients( true );
+
+	// Bounce back
+	$sendback = wp_get_referer();
+	wp_redirect( $sendback );
+
+	exit();
+}
+if ( isset( $_REQUEST['wpsc_flush_theme_transients'] ) && ( $_REQUEST['wpsc_flush_theme_transients'] == 'true' ) )
+	add_action( 'admin_init', 'wpsc_force_flush_theme_transients' );
