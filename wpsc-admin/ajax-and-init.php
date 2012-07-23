@@ -9,69 +9,7 @@
  * @since 3.7
  */
 
-/**
- * Add new variation set via AJAX.
- *
- * If the variation set name is the same as an existing variation set,
- * the children variant terms will be added inside that existing set.
- * @since 3.8.8
- */
-function wpsc_add_variation_set() {
-	$new_variation_set = $_POST['variation_set'];
-	$variants = preg_split( '/\s*,\s*/', $_POST['variants'] );
 
-	$parent_term_exists = term_exists( $new_variation_set, 'wpsc-variation' );
-
-	// only use an existing parent ID if the term is not a child term
-	if ( $parent_term_exists ) {
-		$parent_term = get_term( $parent_term_exists['term_id'], 'wpsc-variation' );
-		if ( $parent_term->parent == '0' )
-			$variation_set_id = $parent_term_exists['term_id'];
-	}
-
-	if ( empty( $variation_set_id ) ) {
-		$results = wp_insert_term( $new_variation_set, 'wpsc-variation' );
-		if ( is_wp_error( $results ) )
-			die('-1');
-		$variation_set_id = $results['term_id'];
-	}
-
-	$inserted_variants = array();
-
-	if ( ! empty( $variation_set_id ) ) {
-		foreach ( $variants as $variant ) {
-			$results = wp_insert_term( $variant, 'wpsc-variation', array( 'parent' => $variation_set_id ) );
-
-			if ( is_wp_error( $results ) )
-				die('-1');
-
-			$inserted_variants[] = $results['term_id'];
-		}
-
-		require_once( 'includes/walker-variation-checklist.php' );
-
-		/* --- DIRTY HACK START --- */
-		/*
-		There's a bug with term cache in WordPress core. See http://core.trac.wordpress.org/ticket/14485.
-		The next 3 lines will delete children term cache for wpsc-variation.
-		Without this hack, the new child variations won't be displayed on "Variations" page and
-		also won't be displayed in wp_terms_checklist() call below.
-		*/
-		clean_term_cache( $variation_set_id, 'wpsc-variation' );
-		delete_option('wpsc-variation_children');
-		wp_cache_set( 'last_changed', 1, 'terms' );
-		_get_term_hierarchy('wpsc-variation');
-		/* --- DIRTY HACK END --- */
-
-		wp_terms_checklist( (int) $_POST['post_id'], array(
-			'taxonomy'      => 'wpsc-variation',
-			'descendants_and_self' => $variation_set_id,
-			'walker'        => new WPSC_Walker_Variation_Checklist( $inserted_variants ),
-			'checked_ontop' => false,
-		) );
-	}
-	exit();
-}
 
 add_action( 'wp_ajax_wpsc_add_variation_set', 'wpsc_add_variation_set' );
 
