@@ -237,10 +237,10 @@ function wpsc_additional_column_data( $column ) {
 
 }
 function wpsc_column_sql_orderby( $vars ) {
-    
+
 	if ( ! isset( $vars['post_type'] ) || 'wpsc-product' != $vars['post_type'] || ! isset( $vars['orderby'] ) )
 	    return $vars;
-	
+
             switch ( $vars['orderby'] ) :
                 case 'stock' :
 		    $vars = array_merge(
@@ -268,7 +268,7 @@ function wpsc_column_sql_orderby( $vars ) {
 					'orderby' => 'meta_value_num'
 				)
 			);
-		    
+
 		    break;
 		case 'SKU' :
 		    $vars = array_merge(
@@ -280,7 +280,7 @@ function wpsc_column_sql_orderby( $vars ) {
 			);
 		    break;
 		endswitch;
-	    
+
 	return $vars;
 }
 function wpsc_cats_restrict_manage_posts() {
@@ -333,7 +333,7 @@ function wpsc_no_minors_allowed( $vars ) {
 
 /**
  * wpsc_sortable_column_load
- * 
+ *
  * Only sorts columns on edit.php page.
  * @since 3.8.8
  */
@@ -408,5 +408,3 @@ function my_action_row( $actions, $post ) {
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( $_REQUEST['wpsc_admin_action'] == 'update_featured_product' ) )
     add_action( 'admin_init', 'wpsc_update_featured_products' );
 
-if ( isset( $_GET['wpsc_admin_action'] ) && ( $_GET['wpsc_admin_action'] == 'duplicate_product' ) )
-    add_action( 'admin_init', 'wpsc_duplicate_product' );

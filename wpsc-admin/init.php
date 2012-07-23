@@ -43,3 +43,47 @@ function wpsc_delete_file() {
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'delete_file') )
 	add_action( 'admin_init', 'wpsc_delete_file' );
 
+/**
+ *  Function and action for publishing or unpublishing single products
+ */
+function wpsc_ajax_toggle_published() {
+	$product_id = absint( $_GET['product'] );
+	check_admin_referer( 'toggle_publish_' . $product_id );
+
+	$status = (wpsc_toggle_publish_status( $product_id )) ? ('true') : ('false');
+	$sendback = add_query_arg( 'flipped', "1", wp_get_referer() );
+	wp_redirect( $sendback );
+	exit();
+}
+
+if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'toggle_publish') )
+	add_action( 'admin_init', 'wpsc_ajax_toggle_published' );
+
+/**
+ * Function and action for duplicating products,
+ * Refactored for 3.8
+ * Purposely not duplicating stick post status (logically, products are most often duplicated because they share many attributes, where products are generally 'featured' uniquely.)
+ */
+function wpsc_duplicate_product() {
+
+	// Get the original post
+	$id = absint( $_GET['product'] );
+	$post = get_post( $id );
+
+	// Copy the post and insert it
+	if ( isset( $post ) && $post != null ) {
+		$new_id = wpsc_duplicate_product_process( $post );
+
+		$duplicated = true;
+		$sendback = wp_get_referer();
+		$sendback = add_query_arg( 'duplicated', (int)$duplicated, $sendback );
+
+		wp_redirect( $sendback );
+		exit();
+	} else {
+		wp_die( __( 'Sorry, for some reason, we couldn\'t duplicate this product because it could not be found in the database, check there for this ID: ', 'wpsc' ) . $id );
+	}
+}
+
+if ( isset( $_GET['wpsc_admin_action'] ) && ( $_GET['wpsc_admin_action'] == 'duplicate_product' ) )
+    add_action( 'admin_init', 'wpsc_duplicate_product' );
