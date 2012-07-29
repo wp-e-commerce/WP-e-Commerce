@@ -1115,6 +1115,36 @@ function wpsc_check_display_type(){
 		$display_type = get_option('product_view');
 	return $display_type;
 }
+
+/**
+ * Get the product thumbnail id.
+ * If no post thumbnail is set, this will return the ID of the first image
+ * associated with a product.
+ */
+function wpsc_the_product_thumbnail_id( $product_id ) {
+
+	$thumbnail_id = null;
+
+	// Use product thumbnail
+	if ( has_post_thumbnail( $product_id ) ) {
+		$thumbnail_id = get_post_thumbnail_id( $product_id  );
+	// Use first product image
+	} else {
+		// Get all attached images to this product
+		$attached_images = (array) get_posts( array(
+			'post_type'   => 'attachment',
+			'numberposts' => 1,
+			'post_status' => null,
+			'post_parent' => $product_id,
+			'orderby'     => 'menu_order',
+			'order'       => 'ASC'
+		) );
+		if ( ! empty( $attached_images ) )
+			$thumbnail_id = $attached_images[0]->ID;
+	}
+	return $thumbnail_id;
+}
+
 /**
  * wpsc product thumbnail function
  *
@@ -1123,6 +1153,7 @@ function wpsc_check_display_type(){
  * @return string - the URL to the thumbnail image
  */
 function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id = 0, $page = 'products-page' ) {
+	
 	$thumbnail = false;
 
 	$display = wpsc_check_display_type();
@@ -1133,34 +1164,17 @@ function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id 
 	// Load the product
 	$product = get_post( $product_id );
 
-	// Get ID of parent product if one exists
-	if ( !empty( $product->post_parent ) )
-		$product_id = $product->post_parent;
-
 	// Load image proportions if none were passed
 	if ( ( $width < 10 ) || ( $height < 10 ) ) {
 		$width  = get_option( 'product_image_width' );
 		$height = get_option( 'product_image_height' );
 	}
+	
+	$thumbnail_id = wpsc_the_product_thumbnail_id( $product_id );
 
-	// Use product thumbnail
-	if ( has_post_thumbnail( $product_id ) ) {
-		$thumbnail_id = get_post_thumbnail_id( $product_id  );
-	// Use first product image
-	} else {
-
-		// Get all attached images to this product
-		$attached_images = (array)get_posts( array(
-			'post_type'   => 'attachment',
-			'numberposts' => 1,
-			'post_status' => null,
-			'post_parent' => $product_id ,
-			'orderby'     => 'menu_order',
-			'order'       => 'ASC'
-		) );
-
-		if ( !empty( $attached_images ) )
-			$thumbnail_id = $attached_images[0]->ID;
+	// If no thumbnail found for item, get it's parent image (props. TJM)
+	if ( ! $thumbnail_id ) {
+		$thumbnail_id = wpsc_the_product_thumbnail_id( $product->post_parent );
 	}
 
 	//Overwrite height & width if custom dimensions exist for thumbnail_id
