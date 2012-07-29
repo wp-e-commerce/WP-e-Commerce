@@ -112,6 +112,7 @@ function wpsc_trackingid_value() {
 
 function wpsc_purchlogs_custommessages() {
    global $purchlogitem;
+   $messages = array();
    foreach ( $purchlogitem->allcartcontent as $cartitem ) {
       if ( $cartitem->custom_message != '' ) {
          $messages[] = $cartitem->name . ' :<br />' . $cartitem->custom_message;
