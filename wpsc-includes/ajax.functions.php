@@ -34,9 +34,16 @@ function wpsc_add_to_cart() {
 	$default_parameters['meta'] = null;
 
 	$provided_parameters = array();
+	$post_type_object = get_post_type_object( 'wpsc-product' );
+	$permitted_post_statuses = current_user_can( $post_type_object->cap->edit_posts ) ? array( 'private', 'draft', 'pending', 'publish' ) : array( 'publish' );
 
 	/// sanitise submitted values
 	$product_id = apply_filters( 'wpsc_add_to_cart_product_id', (int)$_POST['product_id'] );
+
+	$product = get_post( $product_id );
+
+	if ( ! in_array( $product->post_status, $permitted_post_statuses ) || 'wpsc-product' != $product->post_type )
+		return false;
 
 	// compatibility with older themes
 	if ( isset( $_POST['wpsc_quantity_update'] ) && is_array( $_POST['wpsc_quantity_update'] ) ) {
@@ -78,8 +85,6 @@ function wpsc_add_to_cart() {
 	$parameters = array_merge( $default_parameters, (array)$provided_parameters );
 
 	$state = $wpsc_cart->set_item( $product_id, $parameters );
-
-	$product = get_post( $product_id );
 
 	if ( $state == true ) {
 		$cart_messages[] = str_replace( "[product_name]", stripslashes( $product->post_title ), __( 'You just added "[product_name]" to your cart.', 'wpsc' ) );
