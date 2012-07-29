@@ -566,7 +566,14 @@ function wpsc_enqueue_user_script_and_css() {
 		wp_enqueue_script( 'infieldlabel',               WPSC_CORE_JS_URL	. '/jquery.infieldlabel.min.js',                 array( 'jquery' ), $version_identifier );
 		wp_enqueue_script( 'wp-e-commerce-ajax-legacy',   WPSC_CORE_JS_URL	. '/ajax.js',                          false,             $version_identifier );
 		wp_enqueue_script( 'wp-e-commerce-dynamic', home_url( '/index.php?wpsc_user_dynamic_js=true', $scheme ), false,             $version_identifier );
-		wp_localize_script( 'wp-e-commerce-dynamic', 'wpsc_ajax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
+		
+		wp_localize_script( 'wp-e-commerce-dynamic', 'wpsc_ajax', array( 
+			'ajaxurl'   => admin_url( 'admin-ajax.php' ),
+			'spinner'   => esc_url( admin_url( 'images/wpspin_light.gif' ) ),
+			'no_quotes' => __( 'It appears that there are no shipping quotes for the shipping information provided.  Please check the information and try again.', 'wpsc' )  
+			) 
+		);
+		
 		wp_enqueue_script( 'livequery',                   WPSC_URL 			. '/wpsc-admin/js/jquery.livequery.js',   array( 'jquery' ), '1.0.3' );
 		if( get_option( 'product_ratings' ) == 1 )
 			wp_enqueue_script( 'jquery-rating',               WPSC_CORE_JS_URL 	. '/jquery.rating.js',                 array( 'jquery' ), $version_identifier );
