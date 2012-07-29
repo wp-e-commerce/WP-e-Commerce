@@ -545,7 +545,7 @@ function wpsc_submit_checkout() {
 	$form_validity = $wpsc_checkout->validate_forms();
 	extract( $form_validity ); // extracts $is_valid and $error_messages
 
-	if ( $_POST['agree'] != 'yes' ) {
+	if ( isset( $_POST['agree'] ) && $_POST['agree'] != 'yes' ) {
 		$_SESSION['wpsc_checkout_misc_error_messages'][] = __( 'Please agree to the terms and conditions, otherwise we cannot process your order.', 'wpsc' );
 		$is_valid = false;
 	}
