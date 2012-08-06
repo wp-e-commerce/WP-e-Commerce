@@ -491,10 +491,6 @@ function wpsc_list_dir( $dirname ) {
 			$num++;
 		}
 	}
-	if ( $dirlist == null ) {
-		$dirlist[0] = "paypal.php";
-		$dirlist[1] = "testmode.php";
-	}
 	return $dirlist;
 }
 
