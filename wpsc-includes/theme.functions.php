@@ -895,12 +895,15 @@ function wpsc_get_the_new_id($prod_id){
  * @return string - html displaying one or more products
  */
 function wpsc_display_products_page( $query ) {
-	global $wpdb, $wpsc_query,$wp_query;
+	global $wpdb, $wpsc_query,$wp_query, $wp_the_query;
+
 	remove_filter('the_title','wpsc_the_category_title');
 
 	// If the data is coming from a shortcode parse the values into the args variable,
 	// I did it this was to preserve backwards compatibility
 	if(!empty($query)){
+		$args = array();
+
 		$args['post_type'] = 'wpsc-product';
 		if(!empty($query['product_id']) && is_array($query['product_id'])){
 			$args['post__in'] = $query['product_id'];
@@ -958,11 +961,10 @@ function wpsc_display_products_page( $query ) {
 		if(!empty($query['tag'])){
 			$args['product_tag'] = $query['tag'];
 		}
-
-		$temp_wpsc_query = new WP_Query($args);
+		query_posts( $args );
 	}
 	// swap the wpsc_query objects
-	list( $wp_query, $temp_wpsc_query ) = array( $temp_wpsc_query, $wp_query );
+
 	$GLOBALS['nzshpcrt_activateshpcrt'] = true;
 
 	// Pretty sure this single_product code is legacy...but fixing it up just in case.
@@ -982,14 +984,14 @@ function wpsc_display_products_page( $query ) {
 		include( wpsc_get_template_file_path( 'wpsc-single_product.php' ) );
 	else
 		wpsc_include_products_page_template($display_type);
-	$is_single = false;
 
 	$output = ob_get_contents();
 	ob_end_clean();
 	$output = str_replace('\$','$', $output);
-	list($temp_wpsc_query, $wp_query) = array( $wp_query, $temp_wpsc_query ); // swap the wpsc_query objects back
-	if ( $is_single == false ) {
-		$GLOBALS['post'] = $wp_query->post;
+
+	if ( ! empty( $query ) ) {
+		wp_reset_query();
+		wp_reset_postdata();
 	}
 	return $output;
 }

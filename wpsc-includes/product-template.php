@@ -65,7 +65,8 @@ function wpsc_a_page_url($page=null) {
  * @return
  */
 function wpsc_pagination($totalpages = '', $per_page = '', $current_page = '', $page_link = '') {
-	global $wp_query;
+	global $wp_query, $wpsc_query, $wp_the_query;
+
 	$num_paged_links = 4; //amount of links to show on either side of current page
 
 	$additional_links = '';
@@ -106,7 +107,6 @@ function wpsc_pagination($totalpages = '', $per_page = '', $current_page = '', $
 		if(isset($wp_query->query_vars['wpsc_product_category']))
 			$category = '?wpsc_product_category='.$wp_query->query_vars['wpsc_product_category'];
 		if(isset($wp_query->query_vars['wpsc_product_category']) && is_string($wp_query->query_vars['wpsc_product_category'])){
-
 			$page_link = get_option('blogurl').$category.'&amp;paged';
 		}else{
 			$page_link = get_option('product_list_url').$category.'&amp;paged';
@@ -117,6 +117,13 @@ function wpsc_pagination($totalpages = '', $per_page = '', $current_page = '', $
 		if ( isset( $wp_query->query_vars['wpsc_product_category'] ) ) {
 			$category_id = get_term_by( 'slug', $wp_query->query_vars['wpsc_product_category'], 'wpsc_product_category' );
 			$page_link = trailingslashit( get_term_link( $category_id, 'wpsc_product_category' ) );
+
+			// in case we're displaying a category using shortcode, need to use the page's URL instead of the taxonomy URL
+			if ( $wp_the_query->is_page() ) {
+				$page = $wp_the_query->get_queried_object();
+				if ( preg_match( '/\[wpsc\_products[^\]]*category_id=/', $page->post_content ) )
+					$page_link = get_permalink( $page->ID );
+			}
 		} elseif ( is_tax( 'product_tag' ) ) {
 			$tag = get_queried_object();
 			$page_link = trailingslashit( get_term_link( (int) $tag->term_id, 'product_tag' ) );
@@ -131,7 +138,6 @@ function wpsc_pagination($totalpages = '', $per_page = '', $current_page = '', $
 		return;
 	// Pagination Prefix
 	$output = __('Pages: ','wpsc');
-
 	if(get_option('permalink_structure')){
 		// Should we show the FIRST PAGE link?
 		if($current_page > 1)

@@ -40,7 +40,10 @@ function wpsc_products_shorttag($atts) {
 		$query['category_id'] = $cat_id_array;
 
 	if ( get_option( 'use_pagination', false ) ) {
-		$query['page'] = get_query_var( 'page' );
+		$page_number = get_query_var( 'paged' );
+		if ( ! $page_number )
+			$page_number = get_query_var( 'page' );
+		$query['page'] = $page_number;
 		$query['number_per_page'] = get_option( 'wpsc_products_per_page' );
 	}
 
