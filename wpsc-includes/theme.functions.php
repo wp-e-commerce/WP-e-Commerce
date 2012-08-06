@@ -923,7 +923,6 @@ function wpsc_display_products_page( $query ) {
 			$args['pagename'] = $query['product_name'];
 		}
 		if(!empty($query['category_id'])){
-
 			$term = get_term($query['category_id'],'wpsc_product_category');
 			$id = wpsc_get_meta($query['category_id'], 'category_id','wpsc_old_category');
 			if( !empty($id)){
@@ -950,6 +949,7 @@ function wpsc_display_products_page( $query ) {
 		}
 		if(!empty($query['number_per_page']) && '1' == get_option('use_pagination')){
 			$args['posts_per_page'] = $query['number_per_page'];
+			$args['paged'] = $query['page'];
 		}
 		if( '0' == get_option('use_pagination') ){
 			$args['nopaging'] = true;
