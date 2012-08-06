@@ -305,7 +305,9 @@
 			        delegate('a.edit-options', 'click', WPSC_Settings_Page.Checkout.event_edit_field_options).
 			        delegate('select[name^="form_type"], select[name^="new_field_type"]', 'change', WPSC_Settings_Page.Checkout.event_form_type_changed).
 			        delegate('.field-option-cell-wrapper .add', 'click', WPSC_Settings_Page.Checkout.event_add_field_option).
-			        delegate('.field-option-cell-wrapper .delete', 'click', WPSC_Settings_Page.Checkout.event_delete_field_option);
+			        delegate('.field-option-cell-wrapper .delete', 'click', WPSC_Settings_Page.Checkout.event_delete_field_option).
+			        delegate('#wpsc-delete-checkout-set', 'click', WPSC_Settings_Page.Checkout.event_delete_checkout_set).
+			        delegate('#wpsc_form_set', 'change', WPSC_Settings_Page.Checkout.event_select_form_set);
 			$('#wpsc-settings-form').bind('submit', WPSC_Settings_Page.Checkout.event_form_submit);
 
 			wrapper.find('#wpsc_checkout_list').
@@ -644,6 +646,36 @@
 		event_add_new_form_set : function() {
 			$(".add_new_form_set_forms").toggle();
 			return false;
+		},
+
+		/**
+		 * Display confirm dialog before deleting a form set
+		 * @since 3.8.9
+		 */
+		event_delete_checkout_set : function() {
+			var dropdown = $('#wpsc_form_set'),
+				form_id = dropdown.val(),
+				form_name = dropdown.find('option[value="' + form_id + '"]').text(),
+				message = WPSC_Settings_Page.delete_form_set_confirm.replace('%s', form_name);
+
+			if (! confirm(message)) {
+				return false;
+			}
+
+			return true;
+		},
+
+		/**
+		 * Hide delete button if default form set is being selected
+		 * @since 3.8.9
+		 */
+		event_select_form_set : function() {
+			var t = $(this), form_id = t.val() * 1;
+
+			if (form_id === 0)
+				$('#wpsc-delete-checkout-set').hide();
+			else
+				$('#wpsc-delete-checkout-set').show();
 		}
 	};
 	$(WPSC_Settings_Page).bind('wpsc_settings_tab_loaded_checkout', WPSC_Settings_Page.Checkout.event_init);

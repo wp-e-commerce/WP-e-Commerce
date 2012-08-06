@@ -1321,15 +1321,6 @@ a.admin_download span{
 }
 
 
-.add_new_form_set {
-	/*  display: block;
-	  float: left;*/
-	text-decoration: underline;
-	font-weight:	bold;
-	font-size:0.9em;
-}
-
-
 p.add_new_form_set_forms {
 	display: none;
 }
@@ -1855,6 +1846,14 @@ float: left;
 
 .ajax-loading {
 	visibility: hidden;
+}
+
+#cart_options .delete {
+	color:#c00;
+	float:right;
+}
+#cart_options .delete:hover {
+	color:#D54E21;
 }
 
 .dashboard_page_wpsc-update .wpsc-progress-bar {
