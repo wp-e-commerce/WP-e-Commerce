@@ -1722,11 +1722,12 @@ margin: 6px 0px 4px;
 vertical-align: middle;
 }
 
-.wpsc_stock_control_forms .edit_stock {
+#wpsc_stock_control_forms .edit_stock {
 	margin-top:0.5em;
 	line-height:16px;
 }
-.wpsc_stock_control_forms .unpublish_when_none_left {
+#wpsc_stock_control_forms .unpublish_when_none_left,
+#wpsc_stock_control_forms .notify_when_none_left {
 	margin:0.5em 0;
 }
 #media-upload form p.help {

@@ -243,8 +243,21 @@ function wpsc_stock_control_forms() {
 	if ( !empty( $product_data["_wpsc_product_metadata"] ) )
 		$product_meta = maybe_unserialize( $product_data["_wpsc_product_metadata"][0] );
 
+	// this is to make sure after upgrading to 3.8.9, products will have
+	// "notify_when_none_left" enabled by default if "unpublish_when_none_left"
+	// is enabled.
+	if ( !isset( $product_meta['notify_when_none_left'] ) ) {
+		$product_meta['notify_when_none_left'] = 0;
+		if ( ! empty( $product_meta['unpublish_when_none_left'] ) )
+			$product_meta['notify_when_none_left'] = 1;
+	}
+
 	if ( !isset( $product_meta['unpublish_when_none_left'] ) )
-		$product_meta['unpublish_when_none_left'] = ''; ?>
+		$product_meta['unpublish_when_none_left'] = '';
+
+	if ( ! empty( $product_meta['unpublish_when_none_left'] ) && ! isset( $product_meta['notify_when_none_left'] ) )
+
+?>
 
         <label for="wpsc_sku"><abbr title="<?php _e( 'Stock Keeping Unit', 'wpsc' ); ?>"><?php _e( 'SKU:', 'wpsc' ); ?></abbr></label>
 <?php
@@ -282,17 +295,22 @@ function wpsc_stock_control_forms() {
 						</em></p>
 						<?php endif; ?>
 					<?php endif; ?>
-						<div class='unpublish_when_none_left'>
-							<input type='checkbox' id="inform_when_oos" name='meta[_wpsc_product_metadata][unpublish_when_none_left]' class='inform_when_oos'<?php if ( $product_meta['unpublish_when_none_left'] == 1 ) echo ' checked="checked"'; ?> />
-							<label for="inform_when_oos"><?php _e( 'Notify site owner and unpublish this Product if stock runs out', 'wpsc' ); ?></label>
+						<div class='notify_when_none_left'>
+							<input type='checkbox' id="notify_when_oos" name='meta[_wpsc_product_metadata][notify_when_none_left]' class='notify_when_oos'<?php checked( $product_meta['notify_when_none_left'] ); ?> />
+							<label for="notify_when_oos"><?php _e( 'Notify site owner if stock runs out', 'wpsc' ); ?></label>
 						</div>
-						<p><em><?php _e( 'If stock runs out, this Product will not be available on the shop unless you untick this box or add more stock.', 'wpsc' ); ?></em></p>
+						<div class='unpublish_when_none_left'>
+							<input type='checkbox' id="unpublish_when_oos" name='meta[_wpsc_product_metadata][unpublish_when_none_left]' class='unpublish_when_oos'<?php checked( $product_meta['unpublish_when_none_left'] ); ?> />
+							<label for="unpublish_when_oos"><?php _e( 'Unpublish this Product if stock runs out', 'wpsc' ); ?></label>
+							<p><em><?php _e( 'If stock runs out, this Product will not be available on the shop unless you untick this box or add more stock.', 'wpsc' ); ?></em></p>
+						</div>
 				</div> <?php
 	} else { ?>
 				<div style='display: none;' class='edit_stock'>
 					 <?php _e( 'Stock Qty', 'wpsc' ); ?><input type='text' name='meta[_wpsc_stock]' value='0' size='10' />
 					<div style='font-size:9px; padding:5px;'>
-						<input type='checkbox' class='inform_when_oos' name='meta[_wpsc_product_metadata][unpublish_when_none_left]' /> <?php _e( 'If this Product runs out of stock set status to Unpublished & email site owner', 'wpsc' ); ?>
+						<input type='checkbox' class='notify_when_oos' name='meta[_wpsc_product_metadata][notify_when_none_left]' /> <?php _e( 'Email site owner if this Product runs out of stock', 'wpsc' ); ?>
+						<input type='checkbox' class='unpublish_when_oos' name='meta[_wpsc_product_metadata][unpublish_when_none_left]' /> <?php _e( 'Set status to Unpublished if this Product runs out of stock', 'wpsc' ); ?>
 					</div>
 				</div><?php
 	}

@@ -484,6 +484,7 @@ function wpsc_convert_products_to_posts() {
 			$post_data['_wpsc_product_metadata']['quantity_limited'] = (int)(bool)$product['quantity_limited'];
 			$post_data['_wpsc_product_metadata']['special'] = (int)(bool)$product['special'];
 			if(isset($post_data['meta'])) {
+				$post_data['_wpsc_product_metadata']['notify_when_none_left'] = (int)(bool)$post_data['meta']['_wpsc_product_metadata']['notify_when_none_left'];
 				$post_data['_wpsc_product_metadata']['unpublish_when_none_left'] = (int)(bool)$post_data['meta']['_wpsc_product_metadata']['unpublish_when_none_left'];
 			}
 			$post_data['_wpsc_product_metadata']['no_shipping'] = (int)(bool)$product['no_shipping'];
