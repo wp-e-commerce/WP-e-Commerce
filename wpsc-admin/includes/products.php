@@ -13,14 +13,32 @@
  * wpsc_product_rows function, copies the functionality of the wordpress code for displaying posts and pages, but is for products
  *
  */
-function wpsc_admin_product_listing($parent_product = null) {
+function wpsc_admin_product_listing( $parent_product = null, $args = array() ) {
 	global $wp_query;
-	add_filter('the_title','esc_html');
-	$args = array_merge( $wp_query->query, array( 'posts_per_page' => '-1' ) );
+
+	if ( empty( $args ) )
+		$args = $wp_query->query;
+
+	add_filter( 'the_title','esc_html' );
+
+	$args = array_merge( $args, array( 'posts_per_page' => '-1' ) );
+
 	$GLOBALS['wpsc_products'] = get_posts( $args );
 
+	if ( ! $GLOBALS['wpsc_products'] ) :
+
+	?>
+	<tr>
+		<td colspan="8">
+			<?php _e( 'You have no Variations added.', 'wpsc' ); ?>
+		</td>
+	</tr>
+	<?php
+
+	endif;
+
 	foreach ( (array)$GLOBALS['wpsc_products'] as $product ) {
-		wpsc_product_row($product, $parent_product);
+		wpsc_product_row( $product, $parent_product );
 	}
 }
 

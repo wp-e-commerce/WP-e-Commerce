@@ -652,10 +652,11 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 			}
 		}
 	}
-	$current_children = query_posts(array(
+	$current_children = get_posts(array(
 		'post_parent'	=> $post_id,
-		'post_type'		=> "wpsc-product",
-		'post_status'	=> 'all'
+		'post_type'		=> 'wpsc-product',
+		'post_status'	=> 'all',
+		'numberposts'   => -1
 		));
 
 	foreach((array)$current_children as $child_prod){
