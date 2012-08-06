@@ -1179,34 +1179,74 @@ function edit_multiple_image_gallery( $post ) {
  */
 
 function wpsc_save_quickedit_box( $post_id ) {
-	global $current_screen;
-	if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || empty( $current_screen ) || $current_screen->id != 'edit-wpsc-product' || ! defined( 'DOING_AJAX' ) || ! DOING_AJAX )
+	global $current_screen, $doaction;
+	if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || empty( $current_screen ) || $current_screen->id != 'edit-wpsc-product' )
 		return;
 
-	$is_parent = ( bool )wpsc_product_has_children( $post_id );
-	$product_meta = get_post_meta( $post_id, '_wpsc_product_metadata', true );
+	$bulk = isset( $doaction ) && $doaction =='edit';
 
-	$weight_unit = $product_meta["weight_unit"];
-	$weight = wpsc_convert_weight( $_POST["weight"], $weight_unit, "pound", true );
+	$custom_fields = array(
+		'weight' => 'product_metadata',
+		'stock' => 'stock',
+		'price' => 'price',
+		'sale_price' => 'special_price',
+		'sku' => 'sku',
+	);
 
-	if ( isset( $product_meta["weight"] ) )
-		unset( $product_meta["weight"] );
+        $args = array(
+                        'post_parent' => $post_id,
+                        'post_type' => 'wpsc-product',
+                        'post_status' => 'inherit'
+                        );
+        $children = get_children($args);
+	$is_parent = (bool)$children;
+	foreach ( $custom_fields as $post_key => $meta_key ) {
+		$overideVariant = isset($_REQUEST[$post_key.'_variant']) && $_REQUEST[$post_key.'_variant'] == 'on';
+		// don't update if we're bulk updating and the field is left blank, or if the product has children and the field is one of those fields defined below (unles overridden)
+		if ( ! isset( $_REQUEST[$post_key] ) || ( $bulk && empty( $_REQUEST[$post_key] ) ) ||
+		( $is_parent && in_array( $post_key, array( 'weight', 'stock', 'price', 'special_price' )) && !$overideVariant ) ){
+			continue;
+		}
 
-	$product_meta["weight"] = $weight;
+		if($is_parent && count($children) >0){
+			$products = $children;
+		}else{
+			$products = array($post_id);
+		}
 
-	if ( !$is_parent ) {
-		update_post_meta( $post_id, '_wpsc_product_metadata', $product_meta );
-		if(is_numeric($_POST['stock']))
-			update_post_meta( $post_id, '_wpsc_stock', $_POST['stock'] );
-		else
-			update_post_meta( $post_id, '_wpsc_stock', '' );
-		update_post_meta( $post_id, '_wpsc_price', $_POST['price'] );
-		update_post_meta( $post_id, '_wpsc_special_price', $_POST['sale_price'] );
+		foreach($products as $product){
+			$value = $_REQUEST[$post_key];
+			if($is_parent) $post_id = $product->ID;
+			else $post_id = $product;
+			switch ( $post_key ) {
+				case 'weight':
+					$product_meta = get_post_meta( $post_id, '_wpsc_product_metadata', true );
+					// draft products don't have product metadata set yet
+					$weight_unit = isset( $product_meta["weight_unit"] ) ? $product_meta["weight_unit"] : 'pound';
+					$weight = wpsc_convert_weight( $value, $weight_unit, "pound", true );
+
+					if ( isset( $product_meta["weight"] ) )
+						unset( $product_meta["weight"] );
+
+					$product_meta["weight"] = $weight;
+
+					$value = $product_meta;
+					break;
+
+				case 'stock':
+					if ( ! is_numeric( $value ) )
+						$value = '';
+					break;
+
+				case 'sku':
+					if ( $value == __( 'N/A', 'wpsc' ) )
+						$value = '';
+					break;
+			}
+
+			update_post_meta( $post_id, "_wpsc_{$meta_key}", $value );
+		}
 	}
-	if($_POST['sku'] == __('N/A', 'wpsc'))
-		update_post_meta( $post_id, '_wpsc_sku', '' );
-	else
-		update_post_meta( $post_id, '_wpsc_sku', $_POST['sku'] );
 
 	return $post_id;
 }
@@ -1234,41 +1274,47 @@ function wpsc_quick_edit_boxes( $col_name, $_screen_post_type = null ) {
 	switch ( $col_name ) :
 	case 'SKU' :
 ?>
-            <label class="alignleft">
+            <label style="max-width: 85%" class="alignleft">
                 <span class="checkbox-title wpsc-quick-edit"><?php _e( 'SKU:', 'wpsc' ); ?> </span>
                 <input type="text" name="sku" class="wpsc_ie_sku" />
+				<input type="checkbox" name="sku_variant"> <span><?php _e( 'Update Variants', 'wpsc');?></span>
+
             </label>
             <?php
 	break;
 case 'weight' :
 ?>
-            <label class="alignleft">
+            <label style="max-width: 85%" class="alignleft">
                 <span class="checkbox-title wpsc-quick-edit"><?php _e( 'Weight:', 'wpsc' ); ?> </span>
                 <input type="text" name="weight" class="wpsc_ie_weight" />
+				<input type="checkbox" name="weight_variant"> <span><?php _e( 'Update Variants', 'wpsc');?></span>
             </label>
             <?php
 	break;
 case 'stock' :
 ?>
-            <label class="alignleft">
+            <label style="max-width: 85%" class="alignleft">
                 <span class="checkbox-title wpsc-quick-edit"><?php _e( 'Stock:', 'wpsc' ); ?> </span>
                 <input type="text" name="stock" class="wpsc_ie_stock" />
+				<input type="checkbox" name="stock_variant"> <span><?php _e( 'Update Variants', 'wpsc');?></span>
             </label>
             <?php
 	break;
 case 'price' :
 ?>
-            <label class="alignleft">
+            <label style="max-width: 85%" class="alignleft">
                 <span class="checkbox-title wpsc-quick-edit"><?php _e( 'Price:', 'wpsc' ); ?> </span>
                 <input type="text" name="price" class="wpsc_ie_price" />
+				<input type="checkbox" name="price_variant"> <span><?php _e( 'Update Variants', 'wpsc');?></span>
             </label>
             <?php
 	break;
 case 'sale_price' :
 ?>
-            <label class="alignleft">
+            <label style="max-width: 85%" class="alignleft">
                 <span class="checkbox-title wpsc-quick-edit"><?php _e( 'Sale Price:', 'wpsc' ); ?> </span>
                 <input type="text" name="sale_price" class="wpsc_ie_sale_price" />
+				<input type="checkbox" name="sale_price_variant"> <span><?php _e( 'Update Variants', 'wpsc');?></span>
             </label>
             <?php
 	break;
@@ -1280,17 +1326,9 @@ case 'sale_price' :
 <?php
 }
 
-/*
- * Remove bulk edit as it is broken,
- * ToDo : Fix Bulk Edit for Products
- */
-function wpsc_remove_bulk_edit($options){
-	unset($options['edit']);
-	return $options;
-}
 add_action( 'quick_edit_custom_box', 'wpsc_quick_edit_boxes', 10, 2 );
+add_action( 'bulk_edit_custom_box', 'wpsc_quick_edit_boxes', 10, 2 );
 add_action( 'save_post', 'wpsc_save_quickedit_box' );
-add_action( 'bulk_actions-edit-wpsc-product', 'wpsc_remove_bulk_edit');
 
 /**
  * If it doesn't exist, let's create a multi-dimensional associative array

@@ -279,16 +279,16 @@ jQuery(document).ready(function(){
 
     //As far as I can tell, WP provides no good way of unsetting elements in the bulk edit area...tricky jQuery action will do for now....not ideal whatsoever, nor eternally stable.
      if( pagenow == 'edit-wpsc-product' ) {
-        //jQuery('fieldset.inline-edit-col-left .inline-edit-date').css('display','none');
-        //jQuery('fieldset.inline-edit-col-center span.title:eq(1), ul.cat-checklist:eq(1)').css('display','none');
-        jQuery("label:contains('Date')").css('display', 'none');
-        jQuery(".inline-edit-group:contains('Password')").css('display', 'none');
-        jQuery('fieldset.inline-edit-col-left.wpsc-cols').css({'float': 'right', 'clear' : 'right'});
-        jQuery("label:contains('Parent')").css('display', 'none');
-        jQuery("label:contains('Status')").css('display', 'none');
-        jQuery("span:contains('Variations')").css('display', 'none');
-        jQuery("ul.wpsc-variation-checklist").css('display', 'none');
-        jQuery("div.inline-edit-date").css('display', 'none');
+		jQuery('.inline-edit-password-input').closest('.inline-edit-group').css('display', 'none');
+		var vcl = jQuery('.inline-edit-col input[name="tax_input[wpsc-variation][]"]').css('display', 'none');
+		vcl.each(function(){
+			jQuery(this).prev().css('display', 'none');
+			jQuery(this).next().css('display', 'none');
+			jQuery(this).css('display', 'none');
+		});
+		jQuery('#bulk-edit select[name=post_parent]').closest('fieldset').css('display', 'none');
+		jQuery('.inline-edit-col select[name=post_parent]').parent().css('display', 'none');
+		jQuery('.inline-edit-status').parent().css('display', 'none');
     }
         if( wpsc_adminL10n.dragndrop_set == "true" && typenow == "wpsc-product" && adminpage == "edit-php" ) {
             // this makes the product list table sortable
@@ -396,6 +396,8 @@ jQuery(document).ready(function(){
 			jQuery('.image_settings_box').hide();
 		});
 	});
+
+	setTimeout(bulkedit_edit_tags_hack, 1000);
 
 
 	jQuery("#gallery_list").livequery(function(){
@@ -753,4 +755,9 @@ function editinline_get_id(){
 	}
 
 
+}
+
+// inline-edit-post.dev.js prepend tag edit textarea into the last fieldset. We need to undo that
+function bulkedit_edit_tags_hack() {
+	jQuery('<fieldset class="inline-edit-col-right"><div class="inline-edit-col"></div></fieldset>').insertBefore('#bulk-edit .wpsc-cols:first').find('.inline-edit-col').append(jQuery('#bulk-edit .inline-edit-tags'));
 }
