@@ -361,8 +361,8 @@ if ( isset( $_REQUEST['wpsc_ajax_action'] ) && ($_REQUEST['wpsc_ajax_action'] ==
  */
 function wpsc_update_shipping_price() {
 	global $wpsc_cart;
-	$quote_shipping_method = $_POST['key1'];
-	$quote_shipping_option = $_POST['key'];
+	$quote_shipping_method = $_POST['method'];
+	$quote_shipping_option = $_POST['option'];
 	if(!empty($quote_shipping_option) && !empty($quote_shipping_method)){
 		$wpsc_cart->update_shipping( $quote_shipping_method, $quote_shipping_option );
 		echo "
