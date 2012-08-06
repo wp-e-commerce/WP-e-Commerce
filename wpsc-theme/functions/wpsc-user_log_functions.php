@@ -145,7 +145,7 @@ function wpsc_display_form_fields() {
 	$meta_data = get_user_meta( $user_ID, 'wpshpcrt_usr_profile', 1 );
 	$meta_data = apply_filters( 'wpsc_user_log_get', $meta_data, $user_ID );
 
-	$form_sql = "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `active` = '1' ORDER BY `checkout_order`;";
+	$form_sql = "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `active` = '1' ORDER BY `checkout_set`, `checkout_order`;";
 	$form_data = $wpdb->get_results( $form_sql, ARRAY_A );
 	foreach ( $form_data as $form_field ) {
 		if ( !empty( $form_field['unique_name'] ) ) {
@@ -628,7 +628,7 @@ function wpsc_user_details() {
 			echo "<table class='customer_details'>";
 
 
-			$usersql = $wpdb->prepare( "SELECT `".WPSC_TABLE_SUBMITED_FORM_DATA."`.value, `".WPSC_TABLE_CHECKOUT_FORMS."`.* FROM `".WPSC_TABLE_CHECKOUT_FORMS."` LEFT JOIN `".WPSC_TABLE_SUBMITED_FORM_DATA."` ON `".WPSC_TABLE_CHECKOUT_FORMS."`.id = `".WPSC_TABLE_SUBMITED_FORM_DATA."`.`form_id` WHERE `".WPSC_TABLE_SUBMITED_FORM_DATA."`.log_id = %d OR `".WPSC_TABLE_CHECKOUT_FORMS."`.type = 'heading' ORDER BY `".WPSC_TABLE_CHECKOUT_FORMS."`.`checkout_order`", $purchase['id'] );
+			$usersql = $wpdb->prepare( "SELECT `".WPSC_TABLE_SUBMITED_FORM_DATA."`.value, `".WPSC_TABLE_CHECKOUT_FORMS."`.* FROM `".WPSC_TABLE_CHECKOUT_FORMS."` LEFT JOIN `".WPSC_TABLE_SUBMITED_FORM_DATA."` ON `".WPSC_TABLE_CHECKOUT_FORMS."`.id = `".WPSC_TABLE_SUBMITED_FORM_DATA."`.`form_id` WHERE `".WPSC_TABLE_SUBMITED_FORM_DATA."`.log_id = %d OR `".WPSC_TABLE_CHECKOUT_FORMS."`.type = 'heading' ORDER BY `".WPSC_TABLE_CHECKOUT_FORMS."`.`checkout_set`, `".WPSC_TABLE_CHECKOUT_FORMS."`.`checkout_order`", $purchase['id'] );
 			$formfields = $wpdb->get_results($usersql, ARRAY_A);
 			if ( !empty($formfields) ) {
 
