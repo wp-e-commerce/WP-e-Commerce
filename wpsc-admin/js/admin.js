@@ -25,7 +25,7 @@
 		data['action'] = 'wpsc_ajax';
 
 		$.get(ajaxurl, data, handler, 'json');
-	}
+	};
 
 	if( pagenow == 'edit-wpsc_product_category' ) {
 		function category_sort(e, ui){
@@ -38,6 +38,31 @@
 
 			jQuery.post(ajaxurl, data);
 		}
+
+		var submit_handlers = [];
+
+		var disable_ajax_submit = function() {
+			var t = $('#submit');
+			console.log(t);
+			console.log(t.data('events'));
+			console.log(t.data('events').click);
+			if (t.data('events'))
+				submit_handlers = t.data('events').click;
+			t.unbind('click');
+			t.bind('click', function() {
+				var form = $(this).parents('form');
+				if (! validateForm( form ) )
+					return false;
+			});
+		};
+
+		var restore_ajax_submit = function() {
+			var t = $('#submit');
+			t.unbind('click');
+			$.each(submit_handlers, function(index, obj) {
+				t.bind('click', obj.handler);
+			});
+		};
 
 		$(function(){
 			var table = $('body.edit-tags-php .wp-list-table');
@@ -52,6 +77,15 @@
 			});
 
 			$('.edit-tags-php form').attr('enctype', 'multipart/form-data').attr('encoding', 'multipart/form-data');
+
+			$('[name="image"]').bind('change', function() {
+				var t = $(this);
+
+				if (t.val())
+					disable_ajax_submit();
+				else
+					restore_ajax_submit();
+			});
 		});
 
 		$(function() {
