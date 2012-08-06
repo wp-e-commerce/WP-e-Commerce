@@ -471,7 +471,6 @@ function wpsc_shipping_quote_html_id() {
 */
 function wpsc_shipping_quote_selected_state() {
    global $wpsc_cart;
-
    if(($wpsc_cart->selected_shipping_method == $wpsc_cart->shipping_method) && ($wpsc_cart->selected_shipping_option == $wpsc_cart->shipping_quote['name']) ) {
 	  $wpsc_cart->selected_shipping_amount = $wpsc_cart->base_shipping;
       return "checked='checked'";
@@ -685,18 +684,29 @@ class wpsc_cart {
                $this->shipping_quotes = $wpsc_shipping_modules[$this->selected_shipping_method]->getQuote();
             }
          } else {
-            // otherwise select the first one with any quotes
-            foreach((array)$custom_shipping as $shipping_module) {
-               // if the shipping module does not require a weight, or requires one and the weight is larger than zero
-               $this->selected_shipping_method = $shipping_module;
-               if(is_callable(array(& $wpsc_shipping_modules[$this->selected_shipping_method], "getQuote"  ))) {
-                  $this->shipping_quotes = $wpsc_shipping_modules[$this->selected_shipping_method]->getQuote();
-               }
-               if(isset($shipping_quote_count) && count($this->shipping_quotes) >  $shipping_quote_count) { // if we have any shipping quotes, break the loop.
-                  break;
+            // select the shipping quote with lowest value
+            $min_value = false;
+            $min_quote = '';
+            $min_method = '';
+            foreach ( (array) $custom_shipping as $shipping_module ) {
+               if ( ! is_callable( array( $wpsc_shipping_modules[$shipping_module], 'getQuote' ) ) )
+                  continue;
+
+               $raw_quotes = $wpsc_shipping_modules[$shipping_module]->getQuote();
+               foreach ( $raw_quotes as $name => $value ) {
+                  if ( $min_value === false || $value < $min_value ) {
+                     $min_value = $value;
+                     $min_quote = $name;
+                     $min_method = $shipping_module;
+                  }
                }
             }
 
+            if ( $min_value !== false ) {
+               $this->selected_shipping_method = $min_method;
+               $this->shipping_quotes = $wpsc_shipping_modules[$this->selected_shipping_method]->getQuote();
+               $this->selected_shipping_option = $min_quote;
+            }
          }
       }
   }
