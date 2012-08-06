@@ -143,7 +143,13 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 		if ( $this->cart_data['has_discounts'] ) {
 			$discount_value = $this->convert( $this->cart_data['cart_discount_value'] );
 
-			if ( $discount_value >= $item_total ) {
+			$coupon = new wpsc_coupons( $this->cart_data['cart_discount_data'] );
+
+			// free shipping
+			if ( $coupon->is_percentage == 2 ) {
+				$shipping_total = 0;
+				$discount_value = 0;
+			} elseif ( $discount_value >= $item_total ) {
 				$discount_value = $item_total - 0.01;
 				$shipping_total -= 0.01;
 			}
