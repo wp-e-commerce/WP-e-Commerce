@@ -6,7 +6,7 @@
 */
 function wpsc_uses_coupons() {
 	global $wpsc_coupons;
-	
+
 	if( empty( $wpsc_coupons ) )
 		$wpsc_coupons = new wpsc_coupons();
 
@@ -44,7 +44,7 @@ class wpsc_coupons {
 	var $end_date;
 	var $use_once;
 	var $is_used;
-	
+
 	var $discount;
 		//for error message
 	var $errormsg;
@@ -58,7 +58,7 @@ class wpsc_coupons {
 	 */
 	function wpsc_coupons($code = ''){
 	    global $wpdb;
-	
+
 		if ( empty( $code ) )
 			return false;
 
@@ -95,12 +95,12 @@ class wpsc_coupons {
 			$this->every_product = $coupon_data['every_product'];
 			$this->errormsg = true;
 			$valid = $this->validate_coupon();
-			
-			return $valid;	    
+
+			return $valid;
 		}
-		
+
 	}
-	
+
 	/**
 	 * Coupons validator
 	 *
@@ -111,7 +111,7 @@ class wpsc_coupons {
 	function validate_coupon() {
 		$now = date("Y-m-d H:i:s");
 		$now = strtotime($now);
-		
+
 		if ( ($this->active=='1') && !(($this->use_once == '1') && ($this->is_used=='1'))){
 			if ((strtotime($this->start_date) < $now)&&(strtotime($this->end_date) > $now)){
 				return true;
@@ -119,35 +119,35 @@ class wpsc_coupons {
 		}
 		return false;
 	}
-	
-	
+
+
 	function calculate_discount() {
 		global $wpdb, $wpsc_cart;
-		
+
 		$wpsc_cart->clear_cache();
-				
+
 		$return = 0;
-		
+
 		// $this->is_percentage == '2' means "Free Shipping"
 		if ($this->is_percentage == '2'){
-		
+
 			$discount_country = $this->free_shipping_details['discount_country'];
 			$discount_region = $this->free_shipping_details['discount_region'];
 			$delivery_country = $wpsc_cart->delivery_country;
 			$delivery_region = $wpsc_cart->delivery_region;
-			
-			//if there is no region we just compare the countries otherwise compaire both the regions 
+
+			//if there is no region we just compare the countries otherwise compaire both the regions
 			//and countries or if there are no country/region limitation then its free shipping for everywhere
 			if (empty($discount_region) && ($discount_country == $delivery_country) || ($discount_country == $delivery_country) && ($delivery_region == $discount_region) || empty($this->free_shipping_details))
 				return $wpsc_cart->calculate_total_shipping();
 		}
-		
+
 		//Calculates the discount for the whole cart if there is no condition on this coupon.
 		if ($this->conditions == '' || count($this->conditions) == 0) {
-			
+
 			// $this->is_percentage == '1' means "%" discount
 			if ($this->is_percentage == '1') {
-			  
+
 				$total_price = $wpsc_cart->calculate_subtotal();
 				$this->discount = $total_price*$this->value/100;
 				return $this->discount;
@@ -165,19 +165,19 @@ class wpsc_coupons {
 
 		// The coupon has conditions so may not apply to all items
 		} else {
-		
-			//Loop throught all products in the shopping cart, apply coupons on the ones match the conditions. 
+
+			//Loop throught all products in the shopping cart, apply coupons on the ones match the conditions.
 			$cart  =& $wpsc_cart->have_cart_items();
 				foreach ($wpsc_cart->cart_items as $key => $item) {
-					
+
 					$product_data = $wpdb->get_results("SELECT * FROM ". $wpdb->posts ." WHERE id='{$item->product_id}'");
 					$product_data = $product_data[0];
-				
+
 					$match = true;
 					foreach ($this->conditions as $c) {
-						
+
 						//Check if all the condictions are returning true, so it's an ALL logic, if anyone want to implement a ANY logic please do.
-					
+
 						if (!$this->compare_logic($c, $item)) {
 							$match = false;
 							break;
@@ -186,10 +186,10 @@ class wpsc_coupons {
 
 					// This product is eligible for discount
 					if ($match) {
-					
+
 					    if ($this->is_percentage == '1') {
 							$this->discount = $item->unit_price*$item->quantity*$this->value/100;
-						
+
 							$item->discount = $this->discount;
 							if($this->every_product == 1){
 								$return += $this->discount;
@@ -199,7 +199,7 @@ class wpsc_coupons {
 						} else {
 							$item->discount = $this->value;
 							if($this->every_product == 1){
-								$return += $item->discount;
+								$return += $item->discount * $item->quantity;
 							}else{
 								return $item->discount;
 							}
@@ -212,12 +212,12 @@ class wpsc_coupons {
 					}
 				}
 		}
-		
+
 		return $return;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Comparing logic with the product information
 	 *
@@ -227,35 +227,35 @@ class wpsc_coupons {
 	 */
 	function compare_logic($c, $product_obj) {
 		global $wpdb;
-		
+
 		if ($c['property'] == 'item_name') {
 			$product_data = $wpdb->get_results("SELECT * FROM " . $wpdb->posts . " WHERE id='{$product_obj->product_id}'");
 			$product_data = $product_data[0];
-		
+
 			switch($c['logic']) {
 				case 'equal': //Checks if the product name is exactly the same as the condition value
 				if ($product_data->post_title == $c['value']) {
-					
+
 					return true;
 				}
 				break;
-				
+
 				case 'greater'://Checks if the product name is not the same as the condition value
 				if ($product_data->post_title > $c['value'])
 					return true;
 				break;
-				
+
 				case 'less'://Checks if the product name is not the same as the condition value
 				if ($product_data->post_title < $c['value'])
 					return true;
 				break;
-				
+
 				case 'contains'://Checks if the product name contains the condition value
 				preg_match("/(.*)".$c['value']."(.*)/", $product_data->post_title, $match);
 				if (!empty($match))
 					return true;
 				break;
-				
+
 				case 'category'://Checks if the product category is the condition value
 				if ( $product_data->post_parent ) {
 					$categories = wp_get_post_terms( $product_data->post_parent, 'wpsc_product_category' );
@@ -267,25 +267,25 @@ class wpsc_coupons {
 						return true;
 				}
 				break;
-				
+
 				case 'not_contain'://Checks if the product name contains the condition value
 				preg_match("/(.*)".$c['value']."(.*)/", $product_data->post_title, $match);
 				if (empty($match))
 					return true;
 				break;
-				
+
 				case 'begins'://Checks if the product name begins with condition value
 				preg_match("/^".$c['value']."/", $product_data->post_title, $match);
 				if (!empty($match))
 					return true;
 				break;
-				
+
 				case 'ends'://Checks if the product name ends with condition value
 				preg_match("/".$c['value']."$/", $product_data->post_title, $match);
 				if (!empty($match))
 					return true;
 				break;
-				
+
 				default:
 				return false;
 			}
@@ -296,35 +296,35 @@ class wpsc_coupons {
 				if ($product_obj->quantity == (int)$c['value'])
 					return true;
 				break;
-				
+
 				case 'greater'://Checks if the quantity of a product is greater than the condition value
 				if ($product_obj->quantity > $c['value'])
 					return true;
 				break;
-				
+
 				case 'less'://Checks if the quantity of a product is less than the condition value
 				if ($product_obj->quantity < $c['value'])
 					return true;
 				break;
-						
+
 				case 'contains'://Checks if the product name contains the condition value
 				preg_match("/(.*)".$c['value']."(.*)/", $product_obj->quantity, $match);
 				if (!empty($match))
 					return true;
 				break;
-				
+
 				case 'not_contain'://Checks if the product name contains the condition value
 				preg_match("/(.*)".$c['value']."(.*)/",$product_obj->quantity, $match);
 				if (empty($match))
 					return true;
 				break;
-				
+
 				case 'begins'://Checks if the product name begins with condition value
 				preg_match("/^".$c['value']."/", $product_obj->quantity, $match);
 				if (!empty($match))
 					return true;
 				break;
-				
+
 				case 'ends'://Checks if the product name ends with condition value
 				preg_match("/".$c['value']."$/",$product_obj->quantity, $match);
 				if (!empty($match))
@@ -340,21 +340,21 @@ class wpsc_coupons {
 				if ($total_quantity == $c['value'])
 					return true;
 				break;
-				
+
 				case 'greater'://Checks if the quantity in the cart is greater than the condition value
 				if ($total_quantity > $c['value'])
 					return true;
 				break;
-				
+
 				case 'less'://Checks if the quantity in the cart is less than the condition value
 				if ($total_quantity < $c['value'])
 					return true;
 				break;
-				
+
 				default:
 				return false;
 			}
-		
+
 		} else if ($c['property'] == 'subtotal_amount'){
 			$subtotal = wpsc_cart_total(false);
 			switch($c['logic']) {
@@ -362,12 +362,12 @@ class wpsc_coupons {
 				if ($subtotal == $c['value'])
 					return true;
 				break;
-				
+
 				case 'greater'://Checks if the subtotal of the cart is greater than the condition value
 				if ($subtotal > $c['value'])
 					return true;
 				break;
-				
+
 				case 'less'://Checks if the subtotal of the cart is less than the condition value
 				if ($subtotal < $c['value']){
 					return true;
@@ -376,7 +376,7 @@ class wpsc_coupons {
 				}
 
 				break;
-				
+
 				default:
 				return false;
 			}
@@ -384,7 +384,7 @@ class wpsc_coupons {
 			return apply_filters( 'wpsc_coupon_compare_logic', false, $c, $product_obj );
 		}
 	}
-	
+
 	/**
 	* uses coupons function, no parameters
 	* @return boolean if true, items in the cart do use coupons
@@ -394,7 +394,7 @@ class wpsc_coupons {
 		$num_active_coupons = $wpdb->get_var("SELECT COUNT(id) as c FROM `".WPSC_TABLE_COUPON_CODES."` WHERE active='1'");
 		return ( $num_active_coupons > 0 );
 	}
-	
-		
+
+
 }
 ?>
