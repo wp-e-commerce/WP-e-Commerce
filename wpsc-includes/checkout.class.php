@@ -413,13 +413,19 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 	$country_data = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `visible`= '1' ORDER BY `country` ASC", ARRAY_A );
 
 	$output .= "<select name='country' id='current_country' " . $js . " >";
+	
 	foreach ( $country_data as $country ) {
-			$selected = '';
-			if ( $selected_country == $country['isocode'] ) {
-				$selected = "selected='selected'";
-			}
-			$output .= "<option value='" . $country['isocode'] . "' $selected>" . esc_attr(htmlspecialchars( $country['country'] ) ) . "</option>";
+		$selected = '';
 
+		if ( $selected_country == $country['isocode'] )
+			$selected = "selected='selected'";
+
+		// As of 3.8.9, we deprecated Great Britain as a country in favor of the UK.
+		// See http://code.google.com/p/wp-e-commerce/issues/detail?id=1079
+		if ( 'GB' == $country['isocode'] && 'GB' != get_option( 'base_country' ) )
+			continue;
+
+		$output .= "<option value='" . $country['isocode'] . "' $selected>" . esc_attr(htmlspecialchars( $country['country'] ) ) . "</option>";
 	}
 
 	$output .= "</select>";

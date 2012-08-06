@@ -124,6 +124,12 @@ function wpsc_country_region_list( $form_id = null, $ajax = false, $selected_cou
 
 	foreach ( $country_data as $country ) {
 		$selected = '';
+
+		// As of 3.8.9, we deprecated Great Britain as a country in favor of the UK.
+		// See http://code.google.com/p/wp-e-commerce/issues/detail?id=1079
+		if ( 'GB' == $country['isocode'] && 'GB' != get_option( 'base_country' ) )
+			continue;
+
 		if ( $country['visible'] == '1' ) {
 			if ( $selected_country == $country['isocode'] ) {
 				$selected = "selected='selected'";

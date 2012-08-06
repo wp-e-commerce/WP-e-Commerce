@@ -33,6 +33,11 @@ function country_list( $selected_country = null ) {
 	foreach ( (array)$country_data as $country ) {
 		$selected = '';
 
+		// As of 3.8.9, we deprecated Great Britain as a country in favor of the UK.
+		// See http://code.google.com/p/wp-e-commerce/issues/detail?id=1079
+		if ( 'GB' == $country['isocode'] && 'GB' != get_option( 'base_country' ) )
+			continue;
+
 		if ( $selected_country == $country['isocode'] )
 			$selected = "selected='selected'";
 
