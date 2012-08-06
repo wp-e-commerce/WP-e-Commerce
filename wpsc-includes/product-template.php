@@ -102,6 +102,7 @@ function wpsc_pagination($totalpages = '', $per_page = '', $current_page = '', $
 	//if there is no pagination
 	if(!get_option('permalink_structure')) {
 		$category = '?';
+
 		if(isset($wp_query->query_vars['wpsc_product_category']))
 			$category = '?wpsc_product_category='.$wp_query->query_vars['wpsc_product_category'];
 		if(isset($wp_query->query_vars['wpsc_product_category']) && is_string($wp_query->query_vars['wpsc_product_category'])){
@@ -116,6 +117,9 @@ function wpsc_pagination($totalpages = '', $per_page = '', $current_page = '', $
 		if ( isset( $wp_query->query_vars['wpsc_product_category'] ) ) {
 			$category_id = get_term_by( 'slug', $wp_query->query_vars['wpsc_product_category'], 'wpsc_product_category' );
 			$page_link = trailingslashit( get_term_link( $category_id, 'wpsc_product_category' ) );
+		} elseif ( is_tax( 'product_tag' ) ) {
+			$tag = get_queried_object();
+			$page_link = trailingslashit( get_term_link( (int) $tag->term_id, 'product_tag' ) );
 		} else {
 			$page_link = trailingslashit( get_option( 'product_list_url' ) );
 		}
