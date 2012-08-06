@@ -535,7 +535,10 @@ final class WPSC_Settings_Page
 
 		//This is to change the Overall target market selection
 		check_admin_referer( 'update-options', 'wpsc-update-options' );
+
+		//Should be refactored along with the Marketing tab
 		if ( isset( $_POST['change-settings'] ) ) {
+
 			if ( isset( $_POST['wpsc_also_bought'] ) && $_POST['wpsc_also_bought'] == 'on' )
 				update_option( 'wpsc_also_bought', 1 );
 			else
@@ -551,7 +554,30 @@ final class WPSC_Settings_Page
 			else
 				update_option( 'wpsc_share_this', 0 );
 
+			if ( isset( $_POST['wpsc_ga_disable_tracking'] ) && $_POST['wpsc_ga_disable_tracking'] == '1' )
+				update_option( 'wpsc_ga_disable_tracking', 1 );
+			else
+				update_option( 'wpsc_ga_disable_tracking', 0 );
+
+			if ( isset( $_POST['wpsc_ga_currently_tracking'] ) && $_POST['wpsc_ga_currently_tracking'] == '1' )
+				update_option( 'wpsc_ga_currently_tracking', 1 );
+			else
+				update_option( 'wpsc_ga_currently_tracking', 0 );
+
+			if ( isset( $_POST['wpsc_ga_advanced'] ) && $_POST['wpsc_ga_advanced'] == '1' ) {
+				update_option( 'wpsc_ga_advanced', 1 );
+				update_option( 'wpsc_ga_currently_tracking', 1 );
+			} else  {
+				update_option( 'wpsc_ga_advanced', 0 );
+			}
+
+			if ( isset( $_POST['wpsc_ga_tracking_id'] ) && ! empty( $_POST['wpsc_ga_tracking_id'] ) )
+				update_option( 'wpsc_ga_tracking_id', esc_attr( $_POST['wpsc_ga_tracking_id'] ) );
+			else
+				update_option( 'wpsc_ga_tracking_id', '' );
+
 		}
+
 		if (empty($_POST['countrylist2']) && !empty($_POST['wpsc_options']['currency_sign_location']))
 			$selected = 'none';
 

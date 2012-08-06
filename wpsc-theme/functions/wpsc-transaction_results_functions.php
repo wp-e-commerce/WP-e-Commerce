@@ -420,6 +420,9 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 			/// Adjust stock and empty the cart
 			$wpsc_cart->submit_stock_claims( $purchase_log['id'] );
 			$wpsc_cart->empty_cart();
+
+			do_action( 'wpsc_transaction_results_shutdown', null, $sessionid, $display_to_screen );
+
 		}
 	}
 }

@@ -955,6 +955,40 @@
 		}
 	};
 	$(WPSC_Settings_Page).bind('wpsc_settings_tab_loaded_gateway', WPSC_Settings_Page.Gateway.event_init);
+
+	/**
+	 * Marketing Tab
+	 * @namespace
+	 * @since 3.8.9
+	 */
+	WPSC_Settings_Page.Marketing = {
+		event_init : function() {
+
+			var wrapper = $('div#wpsc_google_analytics_integration');
+
+			wrapper.delegate('input[type="checkbox"]', 'click', WPSC_Settings_Page.Marketing.event_show_hide_dependencies);
+
+			var checkbox = $( 'div#wpsc_google_analytics_integration input[type="checkbox"]' );
+
+			$.each( checkbox, function( i, e ) {
+				if ( $(this).is( ':checked' ) )
+					$(this).parent('p').nextAll('p').hide();
+			})
+		},
+
+		event_show_hide_dependencies : function () {
+			var e = $(this);
+			
+			if ( e.is( ':checked' ) )
+				e.parent('p').nextAll('p').hide();
+			else
+				e.parent('p').nextAll('p').show();
+		}
+
+	};
+
+	$(WPSC_Settings_Page).bind('wpsc_settings_tab_loaded_marketing', WPSC_Settings_Page.Marketing.event_init);
+
 })(jQuery);
 
 WPSC_Settings_Page.init();
