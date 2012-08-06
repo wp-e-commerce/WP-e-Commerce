@@ -804,7 +804,8 @@
 				delegate('.edit-shipping-module'         , 'click'   , WPSC_Settings_Page.Shipping.event_edit_shipping_module).
 				delegate('.table-rate .add'              , 'click'   , WPSC_Settings_Page.Shipping.event_add_table_rate_layer).
 				delegate('.table-rate .delete'           , 'click'   , WPSC_Settings_Page.Shipping.event_delete_table_rate_layer).
-				delegate('.table-rate input[type="text"]', 'keypress', WPSC_Settings_Page.Shipping.event_enter_key_pressed);
+				delegate('.table-rate input[type="text"]', 'keypress', WPSC_Settings_Page.Shipping.event_enter_key_pressed).
+				delegate('a.shipwire_sync'               , 'click'   , WPSC_Settings_Page.Shipping.event_sync_shipwire);
 		},
 
 		/**
@@ -901,6 +902,31 @@
 
 			spinner.toggleClass('ajax-feedback-active');
 			$.wpsc_post(post_data, ajax_callback);
+			return false;
+		},
+
+		/**
+		 * Syncs with Shipwire's Inventory and Tracking APIs
+		 * @since 3.8.9
+		 */
+		event_sync_shipwire : function() {
+			var element = $(this),
+			    spinner = element.siblings('.ajax-feedback'),
+			    post_data = {
+			    	action : 'sync_shipwire_products',
+			    	nonce  : WPSC_Settings_Page.nonce
+			    },
+			    ajax_callback = function(response) {
+			    	$('<div class="updated shipwire-update"><p><strong>' + response.tracking + '<br />' + response.inventory + '</strong></p></div>').
+			    	insertBefore(element).
+			    	fadeIn('slow').
+			    	delay(5500).
+			    	fadeOut('slow');
+			    	spinner.toggleClass('ajax-feedback-active');
+			    };
+
+			spinner.toggleClass('ajax-feedback-active');
+			$.post(ajaxurl, post_data, ajax_callback, 'json');
 			return false;
 		},
 
