@@ -563,3 +563,15 @@ function _wpsc_ajax_update_variations() {
 
 	return array( 'content' => $content );
 }
+
+/**
+ * Display the shortcode generator.
+ *
+ * @since  3.8.9
+ * @access private
+ */
+function _wpsc_action_tinymce_window() {
+	require_once( WPSC_CORE_JS_PATH . '/tinymce3/window.php' );
+	exit;
+}
+add_action( 'wp_ajax_wpsc_tinymce_window', '_wpsc_action_tinymce_window' );
