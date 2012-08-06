@@ -381,6 +381,7 @@ function wpsc_admin_include_optionspage_css_and_js() {
 		'ajax_navigate_confirm_dialog'        => __( 'The changes you made will be lost if you navigate away from this page.', 'wpsc' ) . "\n\n" . __( 'Click OK to discard your changes, or Cancel to remain on this page.' ),
 		'edit_field_options'                  => __( 'Edit Options', 'wpsc' ),
 		'hide_edit_field_options'             => __( 'Hide Options', 'wpsc' ),
+		'delete_form_set_confirm'             => __( 'Are you sure you want to delete %s? Submitted data of this form set will also be removed from sales logs.', 'wpsc' ),
 	) );
 
 	wp_enqueue_style( 'wp-e-commerce-admin_2.7', WPSC_URL . '/wpsc-admin/css/settingspage.css', false, false, 'all' );

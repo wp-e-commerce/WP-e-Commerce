@@ -17,9 +17,14 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 		$this->shipping_same_as_billing = get_option( 'shippingsameasbilling', 0 );
 		$this->force_ssl = get_option( 'wpsc_force_ssl', 0 );
 		$this->checkout_sets = get_option( 'wpsc_checkout_form_sets' );
-		$this->current_checkout_set = empty( $_GET['checkout_set'] ) ? 0 : $_GET['checkout_set'];
+		$this->current_checkout_set = empty( $_GET['checkout_set'] ) ? 0 : (int) $_GET['checkout_set'];
 		$this->field_types = get_option( 'wpsc_checkout_form_fields' );
 		$this->user_field_types = array('text','textarea','heading','select','radio','checkbox');
+
+		if ( ! isset( $this->checkout_sets[$this->current_checkout_set] ) ) {
+			wp_redirect( remove_query_arg( 'checkout_set' ) );
+			exit;
+		}
 
 		$form_sql = $wpdb->prepare( "
 			SELECT *
@@ -41,8 +46,29 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 		register_column_headers('display-checkout-list', $columns);
 	}
 
+	private function delete_form_set() {
+		global $wpdb;
+
+		$selected_checkout_set = $_REQUEST['checkout_set'];
+
+		if ( empty( $selected_checkout_set ) )
+			return;
+
+		$form_sets = get_option( 'wpsc_checkout_form_sets' );
+		unset( $form_sets[$selected_checkout_set] );
+		update_option( 'wpsc_checkout_form_sets', $form_sets );
+
+		$sql = $wpdb->prepare( 'DELETE FROM ' . WPSC_TABLE_CHECKOUT_FORMS . ' WHERE checkout_set = %s', $selected_checkout_set );
+		$wpdb->query( $sql );
+	}
+
 	public function callback_submit_options() {
 		global $wpdb;
+
+		if ( ! empty( $_POST['wpsc_checkout_set_delete'] ) ) {
+			$this->delete_form_set();
+			return;
+		}
 
 		if ( ! empty( $_POST['new_form_set'] ) ) {
 			$checkout_sets = get_option( 'wpsc_checkout_form_sets' );
@@ -383,14 +409,17 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 					<option <?php selected( $this->current_checkout_set, $key ); ?> value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $value ); ?></option>
 				<?php endforeach; ?>
 			</select>
+
 			<input type='submit' value='<?php esc_attr_e( 'Filter', 'wpsc' ); ?>' name='wpsc_checkout_set_filter' class='button-secondary' />
-			<a href='#' class='add_new_form_set'><?php esc_html_e("+ Add New Form Set", 'wpsc'); ?></a>
+			<input <?php if (! $this->current_checkout_set) echo 'style="display:none;"'; ?> id="wpsc-delete-checkout-set" type='submit' value='<?php esc_attr_e( 'Delete', 'wpsc' ); ?>' name='wpsc_checkout_set_delete' class='button-secondary' />
 		</p>
+
+		<p><a class="add_new_form_set button-secondary" href='#'><?php esc_html_e("Add New Form Set", 'wpsc'); ?></a></p>
 
 		<p class='add_new_form_set_forms'>
 			<label><?php esc_html_e( "Add new Form Set", 'wpsc' ); ?>:
 			<input type="text" value="" name="new_form_set" /></label>
-			<input type="submit" value="<?php _e('Add', 'wpsc'); ?>" class="button-secondary" id="formset-add-sumbit"/>
+			<input type="submit" value="<?php _e('Add', 'wpsc'); ?>" class="button-primary" id="formset-add-sumbit"/>
 		</p>
 
 		<input type="hidden" name="selected_form_set" value="<?php echo esc_attr( $this->current_checkout_set ); ?>" />
