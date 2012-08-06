@@ -1807,10 +1807,10 @@ function wpsc_you_save($args = null){
 			break;
 
 		default:
-			if(number_format ( ( $regular_price - $sale_price ) / $regular_price * 100 , 2 ) == 100)
-				return (99.99);
+			if ( $regular_price == 0 )
+				return 0;
 			else
-				return number_format ( ( $regular_price - $sale_price ) / $regular_price * 100 , 2 );
+				return number_format( ( $regular_price - $sale_price ) / $regular_price * 100, 2 );
 	}
 }
 
