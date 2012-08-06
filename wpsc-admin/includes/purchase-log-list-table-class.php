@@ -408,7 +408,9 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 	}
 
 	public function column_default( $item, $column_name ) {
-		return esc_html( $item->$column_name );
+		$default = isset( $item->$column_name ) ? $item->$column_name : '';
+		$output = apply_filters( 'wpsc_manage_purchase_logs_custom_column',  $default, $column_name, $item );
+		return $output;
 	}
 
 	public function column_status( $item ) {
