@@ -3,7 +3,7 @@
 (function() {
 	// Load plugin specific language pack
 	tinymce.PluginManager.requireLangPack('WPSC');
-	 
+
 	tinymce.create('tinymce.plugins.WPSC', {
 		/**
 		 * Initializes the plugin, this will be executed after the plugin has been created.
@@ -18,7 +18,7 @@
 
 			ed.addCommand('WPSC', function() {
 				ed.windowManager.open({
-					file : url + '/window.php',
+					file : ajaxurl + '?action=wpsc_tinymce_window',
 					width : 360 + ed.getLang('WPSC.delta_width', 0),
 					height : 210 + ed.getLang('WPSC.delta_height', 0),
 					inline : 1
@@ -73,20 +73,20 @@
 
 	// Register plugin
 	tinymce.PluginManager.add('WPSC', tinymce.plugins.WPSC);
-	
-	
-	
-	
-	
-	
- // add image for products page short tag	
- 
+
+
+
+
+
+
+ // add image for products page short tag
+
  	tinymce.create('tinymce.plugins.productspage_image', {
 		init : function(ed, url) {
 			var pb = '<img style="border:1px dashed #888;padding:5% 25%;background-color:#F2F8FF;" src="' + url + '/productspage.jpg" class="productspage_image mceItemNoResize" title="Do not remove this image unless you know what you are doing." />', cls = 'productspage_image', sep = ed.getParam('productspage_image', '[productspage]'), pbRE;
 
 			pbRE = new RegExp(sep.replace(/[\?\.\*\[\]\(\)\{\}\+\^\$\:]/g, function(a) {return '\\' + a;}), 'g');
-			
+
 			// Register commands
 			ed.addCommand('productspage_image', function() {
 				ed.execCommand('mceInsertContent', 0, pb);
@@ -138,13 +138,13 @@
 			};
 		}
 	});
-	
+
 	tinymce.create('tinymce.plugins.transactionresultpage_image', {
 		init : function(ed, url) {
 			var pb = '<img src="' + url + '/productspage.jpg" class="transactionresultpage_image mceItemNoResize" />', cls = 'transactionresultpage_image', sep = ed.getParam('transactionresultpage_image', '[transactionresults]'), pbRE;
 
 			pbRE = new RegExp(sep.replace(/[\?\.\*\[\]\(\)\{\}\+\^\$\:]/g, function(a) {return '\\' + a;}), 'g');
-			
+
 			// Register commands
 			ed.addCommand('transactionresultpage_image', function() {
 				ed.execCommand('mceInsertContent', 0, pb);
@@ -197,13 +197,13 @@
 			};
 		}
 	});
-	
+
 	tinymce.create('tinymce.plugins.checkoutpage_image', {
 		init : function(ed, url) {
 			var pb = '<img src="' + url + '/productspage.jpg" class="checkoutpage_image mceItemNoResize" />', cls = 'checkoutpage_image', sep = ed.getParam('checkoutpage_image', '[shoppingcart]'), pbRE;
 
 			pbRE = new RegExp(sep.replace(/[\?\.\*\[\]\(\)\{\}\+\^\$\:]/g, function(a) {return '\\' + a;}), 'g');
-			
+
 			// Register commands
 			ed.addCommand('checkoutpage_image', function() {
 				ed.execCommand('mceInsertContent', 0, pb);
@@ -255,13 +255,13 @@
 			};
 		}
 	});
-	
+
 	tinymce.create('tinymce.plugins.userlogpage_image', {
 		init : function(ed, url) {
 			var pb = '<img src="' + url + '/productspage.jpg" class="userlogpage_image mceItemNoResize" />', cls = 'userlogpage_image', sep = ed.getParam('userlogpage_image', '[userlog]'), pbRE;
 
 			pbRE = new RegExp(sep.replace(/[\?\.\*\[\]\(\)\{\}\+\^\$\:]/g, function(a) {return '\\' + a;}), 'g');
-			
+
 			// Register commands
 			ed.addCommand('userlogpage_image', function() {
 				ed.execCommand('mceInsertContent', 0, pb);
@@ -313,8 +313,8 @@
 			};
 		}
 	});
-	
-	
+
+
 	tinymce.PluginManager.add('productspage_image', tinymce.plugins.productspage_image);
 	tinymce.PluginManager.add('transactionresultpage_image', tinymce.plugins.transactionresultpage_image);
 	tinymce.PluginManager.add('checkoutpage_image', tinymce.plugins.checkoutpage_image);
