@@ -170,7 +170,6 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
  		wpsc_item_add_preview_file($product_id, $post_data['files']['preview_file']);
 	}
 	do_action('wpsc_edit_product', $product_id);
-	wpsc_ping();
 	}
 	return $product_id;
 }
