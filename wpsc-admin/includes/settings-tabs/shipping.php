@@ -8,6 +8,33 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab
 			update_user_option( get_current_user_id(), 'wpsc_settings_selected_shipping_module', $_REQUEST['shipping_module_id'] );
 	}
 
+	public function callback_submit_options() {
+		global $wpsc_shipping_modules;
+		
+		foreach ( $wpsc_shipping_modules as $shipping ) {
+			if ( is_object( $shipping ) )
+				$shipping->submit_form();
+		}
+
+		//This is for submitting shipping details to the shipping module
+		if ( ! isset( $_POST['update_gateways'] ) )
+			$_POST['update_gateways'] = '';
+
+		if ( ! isset( $_POST['custom_shipping_options'] ) )
+			$_POST['custom_shipping_options'] = null;
+
+		update_option( 'custom_shipping_options', $_POST['custom_shipping_options'] );
+
+		$shipadd = 0;
+		foreach ( $wpsc_shipping_modules as $shipping ) {
+			foreach ( (array)$_POST['custom_shipping_options'] as $shippingoption ) {
+				if ( $shipping->internal_name == $shippingoption ) {
+					$shipadd++;
+				}
+			}
+		}
+	}
+
 	public function display_shipping_module_settings_form() {
 		global $wpsc_shipping_modules;
 		$classes = array( 'wpsc-module-settings' );
@@ -128,9 +155,11 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab
 										<br /><?php _e( 'If you are based in America then you need to set your own Zipcode for UPS and USPS to work. This should be the Zipcode for your Base of Operations.', 'wpsc' ); ?>
 									</td>
 								</tr>
-								<?php
-										$shipwire1 = "";
-										$shipwire2 = "";
+										<tr>
+											<th scope="row">
+										<?php _e( 'Shipwire Settings', 'wpsc' ); ?><span style='color: red;'></span> :
+									</th>
+									<?php
 										switch ( get_option( 'shipwire' ) ) {
 											case 1:
 												$shipwire_settings = 'style=\'display: block;\'';
@@ -141,20 +170,18 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab
 												$shipwire_settings = '';
 												break;
 										}
-								?>
-
-										<tr>
-											<th scope="row">
-										<?php _e( 'ShipWire Settings', 'wpsc' ); ?><span style='color: red;'></span> :
-									</th>
+									?>
 									<td>
 										<input type='radio' onclick='jQuery("#wpsc_shipwire_setting").show()' value='1' name='wpsc_options[shipwire]' id='shipwire1' <?php checked( '1',  get_option( 'shipwire' ) ); ?> /> <label for='shipwire1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
 										<input type='radio' onclick='jQuery("#wpsc_shipwire_setting").hide()' value='0' name='wpsc_options[shipwire]' id='shipwire2' <?php checked( '0',  get_option( 'shipwire' ) ); ?> /> <label for='shipwire2'><?php _e( 'No', 'wpsc' ); ?></label>
 										<div id='wpsc_shipwire_setting' <?php echo $shipwire_settings; ?>>
 											<table>
-												<tr><td><?php _e( 'ShipWire Email', 'wpsc' ); ?> :</td><td> <input type="text" name='wpsc_options[shipwireemail]' value="<?php esc_attr_e( get_option( 'shipwireemail' ) ); ?>" /></td></tr>
-												<tr><td><?php _e( 'ShipWire Password', 'wpsc' ); ?> :</td><td><input type="text" name='wpsc_options[shipwirepassword]' value="<?php esc_attr_e( get_option( 'shipwirepassword' ) ); ?>" /></td></tr>
-												<tr><td><a class="shipwire_sync">Sync product</a></td></tr>
+												<tr><td><?php _e( 'Shipwire Email', 'wpsc' ); ?> :</td><td> <input type="text" name='wpsc_options[shipwireemail]' value="<?php esc_attr_e( get_option( 'shipwireemail' ) ); ?>" /></td></tr>
+												<tr><td><?php _e( 'Shipwire Password', 'wpsc' ); ?> :</td><td><input type="text" name='wpsc_options[shipwirepassword]' value="<?php esc_attr_e( get_option( 'shipwirepassword' ) ); ?>" /></td></tr>
+												<tr><td>
+													<a class="shipwire_sync button"><?php _e( 'Update Tracking and Inventory', 'wpsc' ); ?></a>
+													<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
+												</td></tr>
 											</table>
 										</div>
 									</td>
