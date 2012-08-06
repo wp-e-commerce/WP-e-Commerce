@@ -89,7 +89,6 @@ function wpsc_additional_column_data( $column ) {
                       'post_type' => 'attachment',
                       'numberposts' => 1,
                       'post_parent' => $post->ID,
-                      'orderby' => 'menu_order',
                       'order' => 'ASC'
 		    ) );
 
