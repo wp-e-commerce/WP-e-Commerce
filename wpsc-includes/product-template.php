@@ -1052,8 +1052,8 @@ function wpsc_product_postage_and_packaging() {
 		return wpsc_currency_display( apply_filters( 'wpsc_product_postage_and_packaging', $product_meta['shipping']['local'] ) );
 	else
 		return wpsc_currency_display( 0 );
-	
- 
+
+
 }
 
 /**
@@ -1136,7 +1136,6 @@ function wpsc_the_product_thumbnail_id( $product_id ) {
 			'numberposts' => 1,
 			'post_status' => null,
 			'post_parent' => $product_id,
-			'orderby'     => 'menu_order',
 			'order'       => 'ASC'
 		) );
 		if ( ! empty( $attached_images ) )
@@ -1153,7 +1152,7 @@ function wpsc_the_product_thumbnail_id( $product_id ) {
  * @return string - the URL to the thumbnail image
  */
 function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id = 0, $page = 'products-page' ) {
-	
+
 	$thumbnail = false;
 
 	$display = wpsc_check_display_type();
@@ -1169,7 +1168,7 @@ function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id 
 		$width  = get_option( 'product_image_width' );
 		$height = get_option( 'product_image_height' );
 	}
-	
+
 	$thumbnail_id = wpsc_the_product_thumbnail_id( $product_id );
 
 	// If no thumbnail found for item, get it's parent image (props. TJM)

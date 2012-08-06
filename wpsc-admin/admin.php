@@ -1044,19 +1044,23 @@ function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
 	$ping_status = str_replace( "'", "''", $post->ping_status );
 
 	$defaults = array(
-		'post_status' 			=> $post->post_status,
-		'post_type' 			=> $new_post_type,
-		'ping_status' 			=> $ping_status,
-		'post_parent' 			=> $new_parent_id ? $new_parent_id : $post->post_parent,
-		'menu_order' 			=> $post->menu_order,
-		'to_ping' 				=>  $post->to_ping,
-		'pinged' 				=> $post->pinged,
-		'post_excerpt' 			=> $post_excerpt,
-		'post_title' 			=> $post_title,
-		'post_content' 			=> $post_content,
+		'post_status'           => $post->post_status,
+		'post_type'             => $new_post_type,
+		'ping_status'           => $ping_status,
+		'post_parent'           => $new_parent_id ? $new_parent_id : $post->post_parent,
+		'menu_order'            => $post->menu_order,
+		'to_ping'               =>  $post->to_ping,
+		'pinged'                => $post->pinged,
+		'post_excerpt'          => $post_excerpt,
+		'post_title'            => $post_title,
+		'post_content'          => $post_content,
 		'post_content_filtered' => $post_content_filtered,
-		'import_id' 			=> 0
+		'post_mime_type'        => $post->post_mime_type,
+		'import_id'             => 0
 		);
+
+	if ( 'attachment' == $post->post_type )
+		$defaults['guid'] = $post->guid;
 
 	// Insert the new template in the post table
 	$new_post_id = wp_insert_post($defaults);
@@ -1121,9 +1125,10 @@ function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
 	//Get children products and duplicate them
 	$child_posts = get_posts( array(
 		'post_parent' => $old_parent_id,
-		'post_type' => 'any',
+		'post_type'   => 'any',
 		'post_status' => 'any',
 		'numberposts' => -1,
+		'order'       => 'ASC',
 	) );
 
 	foreach ( $child_posts as $child_post )
