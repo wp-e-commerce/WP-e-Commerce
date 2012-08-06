@@ -1006,6 +1006,20 @@ function wpsc_check_permalink_notice(){
 
 }
 
+/**
+ * Displays notice if user has Great Britain selected as their base country
+ * Since 3.8.9, we have deprecated Great Britain in favor of the UK
+ *
+ * @link http://code.google.com/p/wp-e-commerce/issues/detail?id=1079
+ * @since 3.8.9
+ * @return html
+ */
+function wpsc_gb_deprecated_notice() {
+	if ( 'GB' == get_option( 'base_country' ) )
+		echo '<div id="wpsc-warning" class="error"><p>' . sprintf( __( '<strong>We have deprecated Great Britain as a store option</strong>. <br /> We highly recommend changing your <em>Base Country</em> to the United Kingdom on the <a href="%1$s">General Settings</a> page.', 'wpsc' ), admin_url( 'options-general.php?page=wpsc-settings&tab=general' ) ) . '</p></div>';
+}
+
+add_action( 'admin_notices', 'wpsc_gb_deprecated_notice' );
 add_action( 'permalink_structure_changed' , 'wpsc_check_permalink_notice' );
 add_action( 'permalink_structure_changed' , 'wpsc_update_permalinks' );
 /* add_action( 'get_sample_permalink_html' , 'wpsc_update_permalinks' ); // this just seems unnecessary and produces PHP notices */

@@ -460,8 +460,15 @@ class wpec_taxes_controller {
    function wpec_taxes_build_select_options( $input_array, $option_value, $option_text, $option_selected=false, $select_settings='' ) {
       $returnable = '';
       $options = '';
-	if( empty($input_array)) return;
+      if( empty($input_array)) return;
+
       foreach ( $input_array as $value ) {
+
+        // As of 3.8.9, we deprecated Great Britain as a country in favor of the UK.
+        // See http://code.google.com/p/wp-e-commerce/issues/detail?id=1079
+        if ( 'GB' != get_option( 'base_country' ) && ( 'GB' == $input_array[$value] || ( is_array( $value ) && in_array( 'GB', $value ) ) ) )
+          continue;
+
          //if the selected value exists in the input array skip it and continue processing
          if ( is_array( $value ) ) {
 
