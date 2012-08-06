@@ -1,8 +1,8 @@
-<?php	
+<?php
 
 /**
  * wpsc_currency_display function.
- * 
+ *
  * @access public
  * @param mixed $price_in
  * @param mixed $args
@@ -25,7 +25,7 @@ function wpsc_currency_display( $price_in, $args = null ) {
 		$decimals = 0;
 	else
 		$decimals = 2; // default is 2
-	
+
 	$decimals = apply_filters('wpsc_modify_decimals' , $decimals);
 	if('' == get_option('wpsc_decimal_separator'))
 		$decimal_separator = '.';
@@ -43,7 +43,7 @@ function wpsc_currency_display( $price_in, $args = null ) {
 	if ( ! $query['isocode'] ) {
 		// Get currency settings
 		$currency_type = get_option( 'currency_type' );
-		
+
 		if ( ! $wpsc_currency_data = wp_cache_get( $currency_type, 'wpsc_currency_id' ) ) {
 			$wpsc_currency_data = $wpdb->get_row( $wpdb->prepare( "SELECT `symbol`, `symbol_html`, `code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id` = %d LIMIT 1", $currency_type ), ARRAY_A );
 			wp_cache_set( $currency_type, $wpsc_currency_data, 'wpsc_currency_id' );
@@ -79,15 +79,15 @@ function wpsc_currency_display( $price_in, $args = null ) {
 		case 1:
 			$format_string = '%3$s%1$s%2$s';
 			break;
-		
+
 		case 2:
 			$format_string = '%3$s %1$s%2$s';
 			break;
-		
+
 		case 4:
 			$format_string = '%1$s%2$s  %3$s';
 			break;
-		
+
 		case 3:
 		default:
 			$format_string = '%1$s %2$s%3$s';
@@ -107,7 +107,7 @@ function wpsc_currency_display( $price_in, $args = null ) {
 }
 
 /**
-	* wpsc_decrement_claimed_stock method 
+	* wpsc_decrement_claimed_stock method
 	*
 	* @param float a price
 	* @return string a price with a currency sign
@@ -117,7 +117,7 @@ function wpsc_decrement_claimed_stock($purchase_log_id) {
 
 	//processed
 	$all_claimed_stock = $wpdb->get_results( $wpdb->prepare( "SELECT `cs`.`product_id`, `cs`.`stock_claimed`, `pl`.`id`, `pl`.`processed` FROM `" . WPSC_TABLE_CLAIMED_STOCK . "` `cs` JOIN `" . WPSC_TABLE_PURCHASE_LOGS . "` `pl` ON `cs`.`cart_id` = `pl`.`id` WHERE `cs`.`cart_id` = '%s'", $purchase_log_id ) );
-	
+
 	if( !empty( $all_claimed_stock ) ){
 		switch($all_claimed_stock[0]->processed){
 			case 3:
@@ -129,9 +129,32 @@ function wpsc_decrement_claimed_stock($purchase_log_id) {
 					$remaining_stock = $current_stock - $claimed_stock->stock_claimed;
 					update_product_meta($product->ID, 'stock', $remaining_stock);
 					$product_meta = get_product_meta($product->ID,'product_metadata',true);
-					if( $remaining_stock < 1 &&  $product_meta["unpublish_when_none_left"] == 1){
-						wp_mail(get_option('purch_log_email'), sprintf(__('%s is out of stock', 'wpsc'), $product->post_title), sprintf(__('Remaining stock of %s is 0. Product was unpublished.', 'wpsc'), $product->post_title) );
-						$wpdb->update( $wpdb->posts, array( 'post_status' => 'draft' ), array( 'ID' => $product->ID ), '%s', '%d' );
+					if( $remaining_stock < 1 ) {
+						// this is to make sure after upgrading to 3.8.9, products will have
+						// "notify_when_none_left" enabled by default if "unpublish_when_none_left"
+						// is enabled.
+						if ( ! isset( $product_meta['notify_when_none_left'] ) ) {
+							$product_meta['unpublish_when_none_left'] = 0;
+							if ( ! empty( $product_meta['unpublish_when_none_left'] ) ) {
+								$product_meta['unpublish_when_none_left'] = 1;
+								update_product_meta( $product->ID, 'product_metadata', $product_meta );
+							}
+						}
+
+						$email_message = sprintf( __( 'The product "%s" is out of stock.', 'wpsc' ), $product->post_title );
+
+						if ( ! empty( $product_meta["unpublish_when_none_left"] ) ) {
+							$result = wp_update_post( array(
+								'ID'          => $product->ID,
+								'post_status' => $draft,
+							) );
+
+							if ( $result )
+								$email_message = __( 'The product "%s" is out of stock and has been unpublished.', 'wpsc' );
+						}
+
+						if ( $product_meta["notify_when_none_left"] == 1 )
+							wp_mail(get_option('purch_log_email'), sprintf(__('%s is out of stock', 'wpsc'), $product->post_title), $email_message );
 					}
 				}
 			case 6:
@@ -140,32 +163,32 @@ function wpsc_decrement_claimed_stock($purchase_log_id) {
 		}
 	}
 }
-  
+
 /**
  *	wpsc_get_currency_symbol
  *	@param does not receive anything
  *  @return returns the currency symbol used for the shop
-*/  
+*/
 function wpsc_get_currency_symbol(){
 	global $wpdb;
 	$currency_type = get_option('currency_type');
 	$wpsc_currency_data = $wpdb->get_var( $wpdb->prepare( "SELECT `symbol` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id` = %d LIMIT 1", $currency_type ) );
 	return $wpsc_currency_data;
-}  
-  
+}
+
 /**
 * All the code below here needs commenting and looking at to see if it needs to be altered or disposed of.
 * Correspondingly, all the code above here has been commented, uses the wpsc prefix, and has been made for or modified to work with the object oriented cart code.
 */
-  
+
 function admin_display_total_price($start_timestamp = '', $end_timestamp = '') {
   global $wpdb;
-  
+
    if( ( $start_timestamp != '' ) && ( $end_timestamp != '' ) )
 	$sql = $wpdb->prepare( "SELECT SUM(`totalprice`) FROM `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `processed` IN (2,3,4,5) AND `date` BETWEEN %s AND %s", $start_timestamp, $end_timestamp );
     else
 	$sql = "SELECT SUM(`totalprice`) FROM `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `processed` IN (2,3,4,5) AND `date` != ''";
-  
+
     $total = $wpdb->get_var($sql);
   return $total;
 }
@@ -203,36 +226,36 @@ function wpsc_convert_weight($in_weight, $in_unit, $out_unit = 'pound', $raw = f
 		case "kilogram":
 		$intermediate_weight = $in_weight * 1000;
 		break;
-		
+
 		case "gram":
 		$intermediate_weight = $in_weight;
 		break;
-	
+
 		case "once":
 		case "ounce":
 		$intermediate_weight = ($in_weight / 16) * 453.59237;
 		break;
-		
+
 		case "pound":
 		default:
 		$intermediate_weight = $in_weight * 453.59237;
 		break;
 	}
-	
+
 	switch($out_unit) {
 		case "kilogram":
 		$weight = $intermediate_weight / 1000;
 		break;
-		
+
 		case "gram":
 		$weight = $intermediate_weight;
 		break;
-	
+
 		case "once":
 		case "ounce":
 		$weight = ($intermediate_weight / 453.59237) * 16;
 		break;
-		
+
 		case "pound":
 		default:
 		$weight = $intermediate_weight / 453.59237;
@@ -298,22 +321,22 @@ function wpsc_check_stock($state, $product) {
 		// only do anything if the quantity is limited.
 		if( $stock_count === '0' ) // otherwise, use the stock from the products list table
 			$out_of_stock = true;
-	
+
 		if( $out_of_stock === true ) {
 			$state['state'] = true;
 			$state['messages'][] = __( 'This product has no available stock', 'wpsc' );
 		}
 	}else{
 		$no_stock = $wpdb->get_col('
-		SELECT 
-			`pm`.`post_id` 
-		FROM 
-			`' . $wpdb->postmeta . '` `pm` 
-		JOIN 
-			`' . $wpdb->posts . '` `p` 
-			ON 
-			`pm`.`post_id` = `p`.`id` 
-		WHERE 
+		SELECT
+			`pm`.`post_id`
+		FROM
+			`' . $wpdb->postmeta . '` `pm`
+		JOIN
+			`' . $wpdb->posts . '` `p`
+			ON
+			`pm`.`post_id` = `p`.`id`
+		WHERE
 			`p`.`post_type`= "wpsc-product"
 			AND
 			`p`.`post_parent` = ' . $product->ID . '
@@ -326,7 +349,7 @@ function wpsc_check_stock($state, $product) {
 			$state['state'] = true;
 			$state['messages'][] = __('One or more of this products variations are out of stock.', 'wpsc');
 		}
-			
+
 
 	}
 	return array( 'state' => $state['state'], 'messages' => $state['messages'] );
@@ -351,11 +374,11 @@ function wpsc_check_weight($state, $product) {
 		$shipping_modules[] = 'Weight Rate';
 	if( array_search( 'usps', $custom_shipping ) !== false )
 		$shipping_modules[] = 'Weight Rate';
-	
+
 	if( empty( $product_meta['no_shipping'] ) && !empty( $shipping_modules ) ) {
 		if( $product_meta['weight'] == 0 ) // otherwise, use the weight from the products list table
 			$has_no_weight = true;
-		
+
 		if( $has_no_weight === true ) {
 			$state['state'] = true;
 			$state['messages'][] = implode( ',',$shipping_modules ). __(' does not support products without a weight set. Please either disable shipping for this product or give it a weight', 'wpsc' );
