@@ -266,6 +266,9 @@ function wpsc_convert_weight($in_weight, $in_unit, $out_unit = 'pound', $raw = f
 	return round($weight, 2);
 }
 
+function wpsc_ping_services( $post_id ) {
+	wp_schedule_single_event( time(), 'do_wpsc_pings' );
+}
 
 function wpsc_ping() {
 	$services = get_option('ping_sites');
@@ -303,6 +306,8 @@ function wpsc_sanitise_keys($value) {
   return (int)$value;
 }
 
+add_action( 'publish_wpsc-product', 'wpsc_ping_services' );
+add_action( 'do_wpsc_pings', 'wpsc_ping' )
 
 
 /*
