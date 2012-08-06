@@ -46,14 +46,6 @@ function wpsc_query_vars_product_list( $vars ){
 
 	$vars['posts_per_archive_page'] = 0;
 
-	if( is_admin() && isset( $vars['orderby'] ) ) {
-		$vars['orderby'] = 'date';
-		$vars['order'] = 'desc';
-		$vars['nopaging'] = false;
-		$posts_per_page = (int)get_user_option( 'edit_wpsc_product_per_page' );
-		$vars['posts_per_page'] = ( $posts_per_page ) ? $posts_per_page : 20;
-	}
-
 	if( 'dragndrop' == get_option( 'wpsc_sort_by' ) ){
 		$vars['orderby'] = 'menu_order title';
 		$vars['order'] = 'desc';
