@@ -1814,14 +1814,19 @@ input.wpsc_cat_box {
 table.tags th#image {
     width:60px;
 }
-/* quick edit product */
-fieldset.wpsc-cols {
-width:30% !important;
-float:left !important;
+/* quick and bulk edit product */
+#wpbody-content .bulk-edit-row-post fieldset.wpsc-cols {
+	width:49%;
+	margin-top:0;
 }
 
-.inline-edit-col-left {
-width:35% !important;
+#wpbody-content .quick-edit-row-post .inline-edit-col-left {
+	width:35%;
+}
+
+.bulk-edit-row-post fieldset.inline-edit-col-right label span.title {
+	padding-right:0.5em;
+	width:auto;
 }
 
 .wpsc-quick-edit {
@@ -1839,7 +1844,7 @@ height: 280px;
 }
 
 span.wpsc-quick-edit{
-width:75px;
+width:77px;
 display: block;
 float: left;
 }
