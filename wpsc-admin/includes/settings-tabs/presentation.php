@@ -555,6 +555,11 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab
 							<option <?php if ( isset( $wpsc_sort_by3 ) )
 							echo $wpsc_sort_by3; ?> value='id'><?php _e( 'Time Uploaded', 'wpsc' ); ?></option>
 						</select>
+
+						 <select name="wpsc_options[wpsc_product_order]">
+						 	<option value="ASC" <?php selected( get_option( 'wpsc_product_order' ), 'ASC' ); ?>><?php _ex( 'Ascending', 'product order setting', 'wpsc' ); ?></option>
+						 	<option value="DESC"  <?php selected( get_option( 'wpsc_product_order' ), 'DESC' ); ?>><?php _ex( 'Descending', 'product order setting', 'wpsc' ); ?></option>
+						 </select>
 					</td>
 				</tr>
 

@@ -644,7 +644,7 @@ function wpsc_start_the_query() {
 			$wpsc_query_vars = array(
 				'post_status' => 'publish, locked, private',
 				'post_parent' => 0,
-				'order'       => apply_filters('wpsc_product_order','ASC')
+				'order'       => apply_filters( 'wpsc_product_order', get_option( 'wpsc_product_order', 'ASC' ) )
 			);
 			if($wp_query->query_vars['preview'])
 				$wpsc_query_vars['post_status'] = 'any';
