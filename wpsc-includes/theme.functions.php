@@ -546,16 +546,9 @@ function wpsc_enqueue_user_script_and_css() {
 		 */
 		$scheme = is_ssl() ? 'https' : 'http';
 		$version_identifier = WPSC_VERSION . "." . WPSC_MINOR_VERSION;
-		$category_id = '';
-		if (isset( $wp_query ) && isset( $wp_query->query_vars['taxonomy'] ) && ('wpsc_product_category' ==  $wp_query->query_vars['taxonomy'] ) || is_numeric( get_option( 'wpsc_default_category' ) )
-		) {
-			if ( isset($wp_query->query_vars['term']) && is_string( $wp_query->query_vars['term'] ) ) {
-				$category_id = wpsc_get_category_id($wp_query->query_vars['term'], 'slug');
-			} else {
-				$category_id = get_option( 'wpsc_default_category' );
-			}
-		}
 
+		$category_id = wpsc_get_current_category_id();
+		
 		$remote_protocol = is_ssl() ? 'https://' : 'http://';
 
 		if( get_option( 'wpsc_share_this' ) == 1 )
@@ -590,10 +583,15 @@ function wpsc_enqueue_user_script_and_css() {
 			}
 		}
 		wp_enqueue_style( 'wpsc-theme-css',               wpsc_get_template_file_url( 'wpsc-' . get_option( 'wpsc_selected_theme' ) . '.css' ), false, $version_identifier, 'all' );
-		wp_enqueue_style( 'wpsc-theme-css-compatibility', WPSC_CORE_THEME_URL . 'compatibility.css',                                    false, $version_identifier, 'all' );
+		wp_enqueue_style( 'wpsc-theme-css-compatibility', WPSC_CORE_THEME_URL . 'compatibility.css',                                    array( 'wpsc-theme-css' ), $version_identifier, 'all' );
+
+		if ( function_exists( 'wp_add_inline_style' ) )
+			wp_add_inline_style( 'wpsc-theme-css', wpsc_get_user_dynamic_css() );
+		else
+			wp_enqueue_style( 'wp-e-commerce-dynamic', wpsc_get_dynamic_user_css_url(), array( 'wpsc-theme-css' ), $version_identifier );
+
 		if( get_option( 'product_ratings' ) == 1 )
 			wp_enqueue_style( 'wpsc-product-rater',           WPSC_CORE_JS_URL 	. '/product_rater.css',                                       false, $version_identifier, 'all' );
-		wp_enqueue_style( 'wp-e-commerce-dynamic', home_url( "/index.php?wpsc_user_dynamic_css=true&category=$category_id", $scheme ), false, $version_identifier, 'all' );
 
 	}
 
@@ -613,8 +611,24 @@ function wpsc_enqueue_user_script_and_css() {
 		add_action( 'wpsc_product_before_description', 'wpsc_legacy_add_mp3_preview', 10, 2 );
 	}
 }
-if ( !is_admin() )
+if ( ! is_admin() )
 	add_action( 'init', 'wpsc_enqueue_user_script_and_css' );
+
+/**
+ * Returns current product category ID or default category ID if one is set.  If one is not set and there is no current category, returns empty string
+ * @return mixed
+ */
+function wpsc_get_current_category_id() {
+	global $wp_query;
+
+	$category_id = '';
+
+	if ( isset( $wp_query ) && isset( $wp_query->query_vars['taxonomy'] ) && ('wpsc_product_category' ==  $wp_query->query_vars['taxonomy'] ) || is_numeric( get_option( 'wpsc_default_category' ) ) ) 
+		$category_id = isset( $wp_query->query_vars['term'] ) && is_string( $wp_query->query_vars['term'] ) ? wpsc_get_category_id( $wp_query->query_vars['term'], 'slug' ) : get_option( 'wpsc_default_category' );
+		
+	return $category_id;
+}
+
 
 function wpsc_product_list_rss_feed() {
 	$rss_url = get_option('siteurl');
@@ -654,32 +668,108 @@ function wpsc_user_dynamic_js() {
 if ( isset( $_GET['wpsc_user_dynamic_js'] ) && ($_GET['wpsc_user_dynamic_js'] == 'true') )
 	add_action( "init", 'wpsc_user_dynamic_js' );
 
+
+/**
+ * Returns Dynamic User CSS URL
+ * 
+ * This produces the cached CSS file if it exists and the uploads folder is writeable.    
+ * If the folder is not writeable, we return the dynamic URL
+ * If the folder is writeable, but for some reason a cached copy of the CSS doesn't exist, we attempt to create it and return that URL.
+ * 
+ * @since 3.8.9
+ * @return string
+ */
+
+function wpsc_get_dynamic_user_css_url() {
+
+	$uploads_dir     = wp_upload_dir();
+	$upload_folder   = $uploads_dir['path'];
+
+	if ( is_writable( $upload_folder ) && file_exists( $upload_folder . '/wpsc_cached_styles.css' ) )
+		return add_query_arg( 'timestamp', get_option( 'wpsc_dynamic_css_hash', time() ), $uploads_dir['url'] . '/wpsc_cached_styles.css' );
+
+	if ( ! is_writable( $upload_folder ) )
+		return add_query_arg( 'wpsc_user_dynamic_css', 'true', home_url( 'index.php' ) );
+
+	if ( is_writable( $upload_folder ) && ! file_exists( $upload_folder . '/wpsc_cached_styles.css' ) )
+		return wpsc_cache_to_upload();
+}
+
+/**
+ * Moves dynamically generated input into a file in the uploads folder.  
+ * Also updates CSS hash timestamp.  Timestamp is appended to URL
+ * 
+ * @since 3.8.9
+ * @return mixed File URL on successful move, false on failure
+ */
+function wpsc_cache_to_upload() {
+	
+	$uploads_dir     = wp_upload_dir();
+	$upload_folder   = $uploads_dir['path'];
+	$path            = $upload_folder . '/wpsc_cached_styles.css';
+
+	if ( ! is_writable( $upload_folder ) )
+		return false;
+
+	if ( false === file_put_contents( $path, wpsc_get_user_dynamic_css() ) )
+		return false;
+
+	$timestamp = time();
+
+	update_option( 'wpsc_dynamic_css_hash', $timestamp );
+
+	return add_query_arg( 'timestamp', $timestamp, $uploads_dir['url'] . '/wpsc_cached_styles.css' );
+
+}
+
+/**
+ * Prints dynamic CSS.  This function is run either when the dynamic URL is hit, or when we need to grab new CSS to cache.
+ * 
+ * @since 3.8.9 
+ * @return CSS
+ */
 function wpsc_user_dynamic_css() {
-	global $wpdb;
+
 	header( 'Content-Type: text/css' );
-	header( 'Expires: ' . gmdate( 'r', mktime( 0, 0, 0, date( 'm' ), (date( 'd' ) + 12 ), date( 'Y' ) ) ) . '' );
+	header( 'Expires: ' . gmdate( 'r', mktime( 0, 0, 0, date( 'm' ), ( date( 'd' ) + 12 ), date( 'Y' ) ) ) );
 	header( 'Cache-Control: public, must-revalidate, max-age=86400' );
 	header( 'Pragma: public' );
 
-	$category_id = absint( $_GET['category'] );
+	echo wpsc_get_user_dynamic_css();
+	exit;
+}
 
-	if ( !defined( 'WPSC_DISABLE_IMAGE_SIZE_FIXES' ) || (constant( 'WPSC_DISABLE_IMAGE_SIZE_FIXES' ) != true) ) {
+/**
+ * Returns dynamic CSS as string.  This function is run either when the dynamic URL is hit, or when we need to grab new CSS to cache.
+ * 
+ * @since 3.8.9 
+ * @return string
+ */
+function wpsc_get_user_dynamic_css() {
+	global $wpdb;
+	
+	ob_start();
+
+	if ( ! defined( 'WPSC_DISABLE_IMAGE_SIZE_FIXES' ) || (constant( 'WPSC_DISABLE_IMAGE_SIZE_FIXES' ) != true ) ) {
+
 		$thumbnail_width = get_option( 'product_image_width' );
-		if ( $thumbnail_width <= 0 ) {
-			$thumbnail_width = 96;
-		}
-		$thumbnail_height = get_option( 'product_image_height' );
-		if ( $thumbnail_height <= 0 ) {
-			$thumbnail_height = 96;
-		}
 
-		$single_thumbnail_width = get_option( 'single_view_image_width' );
+		if ( $thumbnail_width <= 0 )
+			$thumbnail_width = 96;
+
+		$thumbnail_height = get_option( 'product_image_height' );
+		
+		if ( $thumbnail_height <= 0 )
+			$thumbnail_height = 96;
+
+		$single_thumbnail_width  = get_option( 'single_view_image_width' );
 		$single_thumbnail_height = get_option( 'single_view_image_height' );
-		if ( $single_thumbnail_width <= 0 ) {
+		
+		if ( $single_thumbnail_width <= 0 )
 			$single_thumbnail_width = 128;
-		}
-		$category_height = get_option('category_image_height');
-		$category_width = get_option('category_image_width');
+		
+		$category_height = get_option( 'category_image_height' );
+		$category_width  = get_option( 'category_image_width' );
 ?>
 
 		/*
@@ -722,34 +812,7 @@ function wpsc_user_dynamic_css() {
 			height: <?php echo $thumbnail_height; ?>px;
         }
 
-		/*
-		* Grid View Styling
-		*/
-		div.product_grid_display div.item_no_image  {
-			width: <?php echo $thumbnail_width - 2; ?>px;
-			height: <?php echo $thumbnail_height - 2; ?>px;
-		}
-		div.product_grid_display div.item_no_image a  {
-			width: <?php echo $thumbnail_width - 2; ?>px;
-		}
-
-			.product_grid_display .product_grid_item  {
-			width: <?php echo $thumbnail_width; ?>px;
-		}
-		.product_grid_display .product_grid_item img.no-image, #content .product_grid_display .product_grid_item img.no-image {
-			width: <?php echo $thumbnail_width; ?>px;
-			height: <?php echo $thumbnail_height; ?>px;
-        }
-        <?php if(get_option('show_images_only') == 1): ?>
-        .product_grid_display .product_grid_item  {
-        	min-height:0 !important;
-			width: <?php echo $thumbnail_width; ?>px;
-			height: <?php echo $thumbnail_height; ?>px;
-
-		}
-		<?php endif; ?>
-
-
+		<?php do_action( 'wpsc_dynamic_css' ); ?>
 
 		/*
 		* Single View Styling
@@ -782,40 +845,6 @@ function wpsc_user_dynamic_css() {
 		}
 
 <?php
-if (isset($product_image_size_list)) {
-		foreach ( (array)$product_image_size_list as $product_image_sizes ) {
-			$individual_thumbnail_height = $product_image_sizes['height'];
-			$individual_thumbnail_width = $product_image_sizes['width'];
-			$product_id = $product_image_sizes['id'];
-			if ( $individual_thumbnail_height > $thumbnail_height ) {
-				echo "		div.default_product_display.product_view_$product_id div.textcol{\n\r";
-				echo "			min-height: " . ($individual_thumbnail_height + 10) . "px !important;\n\r";
-				echo "			_height: " . ($individual_thumbnail_height + 10) . "px !important;\n\r";
-				echo "		}\n\r";
-			}
-
-			if ( $individual_thumbnail_width > $thumbnail_width ) {
-				echo "		div.default_product_display.product_view_$product_id div.textcol{\n\r";
-				echo "			margin-left: " . ($individual_thumbnail_width + 10) . "px !important;\n\r";
-				echo "		}\n\r";
-
-				echo "		div.default_product_display.product_view_$product_id  div.textcol div.imagecol{\n\r";
-				echo "			position:absolute;\n\r";
-				echo "			top:0px;\n\r";
-				echo "			left: 0px;\n\r";
-				echo "			margin-left: -" . ($individual_thumbnail_width + 10) . "px !important;\n\r";
-				echo "		}\n\r";
-			}
-
-			if ( ($individual_thumbnail_width > $thumbnail_width) || ($individual_thumbnail_height > $thumbnail_height) ) {
-				echo "		div.default_product_display.product_view_$product_id  div.textcol div.imagecol a img{\n\r";
-				echo "			width: " . $individual_thumbnail_width . "px;\n\r";
-				echo "			height: " . $individual_thumbnail_height . "px;\n\r";
-				echo "		}\n\r";
-			}
-		}
-	}
-	exit();
 }
 	if ( (isset($_GET['brand']) && is_numeric( $_GET['brand'] )) || (get_option( 'show_categorybrands' ) == 3) ) {
 		$brandstate = 'block';
@@ -833,12 +862,26 @@ if (isset($product_image_size_list)) {
 		display: <?php echo $brandstate; ?>;
 	}
 <?php
-	exit();
+
+	$css = ob_get_contents();
+
+	ob_end_clean();
+
+	return $css;
 }
-if ( isset( $_GET['wpsc_user_dynamic_css'] ) && ($_GET['wpsc_user_dynamic_css'] == 'true') )
-	add_action( "init", 'wpsc_user_dynamic_css' );
 
+add_action( 'update_option_product_image_width'     , 'wpsc_cache_to_upload' );
+add_action( 'update_option_product_image_height'    , 'wpsc_cache_to_upload' );
+add_action( 'update_option_single_view_image_width' , 'wpsc_cache_to_upload' );
+add_action( 'update_option_single_view_image_height', 'wpsc_cache_to_upload' );
+add_action( 'update_option_category_image_width'    , 'wpsc_cache_to_upload' );
+add_action( 'update_option_category_image_height'   , 'wpsc_cache_to_upload' );
 
+//Potentially unnecessary, as I believe this option is deprecated
+add_action( 'update_option_show_categorybrands'     , 'wpsc_cache_to_upload' );
+
+if ( isset( $_GET['wpsc_user_dynamic_css'] ) && 'true' == $_GET['wpsc_user_dynamic_css'] )
+	add_action( 'plugins_loaded', 'wpsc_user_dynamic_css', 1 );
 
 function wpsc_get_the_new_id($prod_id){
 	global $wpdb;
