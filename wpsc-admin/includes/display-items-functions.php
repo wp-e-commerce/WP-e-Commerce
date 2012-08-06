@@ -456,7 +456,7 @@ function wpsc_product_variation_forms() {
 		'orderby'     => 'menu_order post_title',
 		'post_parent' => $parent_product,
 		'post_status' => 'publish, inherit',
-		'order'       => "ASC"
+		'order'       => 'ASC'
 	);
 
 	$args = array(
@@ -470,8 +470,6 @@ function wpsc_product_variation_forms() {
 
 	$image_data                   = (array)get_posts( $args );
 	$parent_product_data['image'] = array_shift( $image_data );
-
-	query_posts( $query );
 
 	if ( !isset( $parent_product_data ) )
 		$parent_product_data = null;
@@ -490,26 +488,15 @@ function wpsc_product_variation_forms() {
 				</tfoot>
 
 				<tbody>
-            <?php
-	wpsc_admin_product_listing( $parent_product_data );
-?>
-<?php
-	if ( ! have_posts() ) :
-?>
-					<tr>
-						<td colspan="8">
-							<?php _e( 'You have no Variations added.', 'wpsc' ); ?>
-						</td>
-					</tr>
-
-	<?php endif; ?>
+				<?php
+					wpsc_admin_product_listing( $parent_product_data, $query );
+				?>
 				</tbody>
 
 			</table>
 
         <?php
 	endif;
-	wp_reset_query();
 
 	// reset the global $id variable. This is to prevent incompatibility with Genesis framework,
 	// which (wrongly) relies on this global.
