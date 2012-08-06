@@ -307,7 +307,7 @@ function wpsc_sanitise_keys($value) {
 }
 
 add_action( 'publish_wpsc-product', 'wpsc_ping_services' );
-add_action( 'do_wpsc_pings', 'wpsc_ping' )
+add_action( 'do_wpsc_pings', 'wpsc_ping' );
 
 
 /*
