@@ -339,34 +339,29 @@ function wpsc_show_pnp(){
 * @return $price (string) number formatted price
 */
 function wpsc_product_variation_price_available( $product_id, $from_text = false, $only_normal_price = false ){
+	static $price_data = array();
 	global $wpdb;
-	$joins = array(
-		"INNER JOIN {$wpdb->postmeta} AS pm ON pm.post_id = p.id AND pm.meta_key = '_wpsc_price'",
-	);
 
-	$selects = array(
-		'pm.meta_value AS price',
-	);
+	if ( isset( $price_data[$product_id] ) ) {
+		$results = $price_data[$product_id];
+	} else {
+		$sql = $wpdb->prepare( "
+			SELECT pm.meta_value AS price, pm2.meta_value AS special_price
+			FROM {$wpdb->posts} AS p
+			INNER JOIN {$wpdb->postmeta} AS pm ON pm.post_id = p.id AND pm.meta_key = '_wpsc_price'
+			INNER JOIN {$wpdb->postmeta} AS pm2 ON pm2.post_id = p.id AND pm2.meta_key = '_wpsc_special_price'
+			INNER JOIN {$wpdb->postmeta} AS pm3 ON pm3.post_id = p.id AND pm3.meta_key = '_wpsc_stock' AND pm3.meta_value != '0'
 
-	if ( ! $only_normal_price ) {
-		$joins[] = "INNER JOIN {$wpdb->postmeta} AS pm2 ON pm2.post_id = p.id AND pm2.meta_key = '_wpsc_special_price'";
-		$selects[] = 'pm2.meta_value AS special_price';
+			WHERE
+				p.post_type = 'wpsc-product'
+				AND
+				p.post_parent = %d
+		", $product_id );
+
+		$results = $wpdb->get_results( $sql );
+		$price_data[$product_id] = $results;
 	}
 
-	$joins = implode( ' ', $joins );
-	$selects = implode( ', ', $selects );
-
-	$sql = $wpdb->prepare( "
-		SELECT {$selects}
-		FROM {$wpdb->posts} AS p
-		{$joins}
-		WHERE
-			p.post_type = 'wpsc-product'
-			AND
-			p.post_parent = %d
-	", $product_id );
-
-	$results = $wpdb->get_results( $sql );
 	$prices = array();
 
 	foreach ( $results as $row ) {
@@ -405,12 +400,16 @@ function wpsc_product_normal_price() {
  * wpsc product price function
  * @return string - the product price
  */
-function wpsc_the_product_price( $no_decimals = false, $only_normal_price = false ) {
+function wpsc_the_product_price( $no_decimals = false, $only_normal_price = false, $product_id = 0 ) {
 	global $wpsc_query, $wpsc_variations, $wpdb;
-	$product_id = get_the_ID();
-	if ( ! empty( $wpsc_variations->first_variations ) ) {
-		$from_text = apply_filters( 'wpsc_product_variation_text', ' from ' );
-		$output = wpsc_product_variation_price_available( $product_id, __( " {$from_text} %s", 'wpsc' ), $only_normal_price );
+
+	if ( ! $product_id )
+		$product_id = get_the_ID();
+
+	if ( wpsc_product_has_variations( $product_id ) ) {
+		$from_text = __( ' from %s', 'wpsc' );
+		$from_text = apply_filters( 'wpsc_product_variation_text', $from_text );
+		$output = wpsc_product_variation_price_available( $product_id, $from_text, $only_normal_price );
 	} else {
 		$price = $full_price = get_post_meta( $product_id, '_wpsc_price', true );
 
@@ -951,35 +950,41 @@ function wpsc_product_is_donation( $id = null ) {
  * wpsc product on special function
  * @return boolean - true if the product is on special, otherwise false
  */
-function wpsc_product_on_special() {
+function wpsc_product_on_special( $id = 0 ) {
+	static $on_special = array();
+
 	global $wpsc_query, $wpdb;
 
-	$price =  get_product_meta( get_the_ID(), 'price', true );
+	if ( ! $id )
+		$id = get_the_ID();
 
-	// don't rely on product sales price if it has variations
-	if ( wpsc_have_variations() ) {
-		$sql = $wpdb->prepare("
-			SELECT MIN(pm.meta_value)
-			FROM {$wpdb->posts} AS p
-			INNER JOIN {$wpdb->postmeta} AS pm ON pm.post_id = p.id AND pm.meta_key = '_wpsc_special_price' AND pm.meta_value != '0' AND pm.meta_value != ''
-			INNER JOIN {$wpdb->postmeta} AS pm2 ON pm2.post_id = p.id AND pm2.meta_key = '_wpsc_stock' AND pm2.meta_value != '0'
-			WHERE
-				p.post_type = 'wpsc-product'
-				AND
-				p.post_parent = %d
-			ORDER BY CAST(pm.meta_value AS DECIMAL(10, 2)) ASC
-			LIMIT 1
-		", get_the_id() );
-		$special_price = (int) $wpdb->get_var( $sql );
-	} else {
-		$special_price = get_product_meta( get_the_ID(), 'special_price', true );
+	if ( ! isset( $on_special[$id] ) ) {
+		// don't rely on product sales price if it has variations
+		if ( wpsc_product_has_variations( $id ) ) {
+			$sql = $wpdb->prepare("
+				SELECT p.id, CAST(pm.meta_value AS DECIMAL(10, 2)) AS sale_price
+				FROM {$wpdb->posts} AS p
+				INNER JOIN {$wpdb->postmeta} AS pm ON pm.post_id = p.id AND pm.meta_key = '_wpsc_special_price' AND pm.meta_value != '0' AND pm.meta_value != ''
+				INNER JOIN {$wpdb->postmeta} AS pm2 ON pm2.post_id = p.id AND pm2.meta_key = '_wpsc_stock' AND pm2.meta_value != '0'
+				INNER JOIN {$wpdb->postmeta} AS pm3 ON pm3.post_id = p.id AND pm3.meta_key = '_wpsc_price' AND CAST(pm3.meta_value AS DECIMAL(10,2)) > CAST(pm.meta_value AS DECIMAL(10,2))
+				WHERE
+					p.post_type = 'wpsc-product'
+					AND
+					p.post_parent = %d
+				ORDER BY sale_price ASC
+			", $id );
+
+			$results = $wpdb->get_results( $sql );
+
+			$on_special[$id] = ! empty( $results );
+		} else {
+			$price =  get_product_meta( $id, 'price', true );
+			$special_price = get_product_meta( $id, 'special_price', true );
+			$on_special[$id] = $special_price > 0 && $price > $special_price;
+		}
 	}
 
-	if ( ($special_price > 0) && (($price - $special_price) > 0) )
-		return true;
-	else
-		return false;
-
+	return $on_special[$id];
 }
 
 /**
@@ -1809,4 +1814,148 @@ function wpsc_get_downloadable_file($file_id){
 	return get_post( $file_id );
 }
 
-?>
+/**
+* wpsc_product_has_children function
+* Checks whether a product has variations or not
+*
+* @return boolean true if product does have variations, false otherwise
+*/
+function wpsc_product_has_children( $id ){
+	return wpsc_product_has_variations( $id );
+}
+
+/**
+ * Check whether a product has variations or not.
+ *
+ * @since  3.8.9
+ * @access public
+ * @param  int  $id Product ID. Defaults to 0 for current post in the loop.
+ * @return bool     true if product has variations.
+ */
+function wpsc_product_has_variations( $id = 0 ) {
+	static $has_variations = array();
+
+	if ( ! $id )
+		$id = get_the_ID();
+
+	if ( ! isset( $has_variations[$id] ) ) {
+		$args = array(
+			'post_parent' => $id,
+			'post_type'   => 'wpsc-product',
+			'post_status' => 'inherit publish'
+		);
+		$children = get_children( $args );
+
+		$has_variations[$id] = ! empty( $children );
+	}
+
+	return $has_variations[$id];
+}
+
+function wpsc_the_product_price_display( $args = array() ) {
+	if ( empty( $args['id'] ) )
+		$id = get_the_ID();
+	else
+		$id = (int) $args['id'];
+
+	$defaults = array(
+		'id' => $id,
+		'old_price_text'   => __( 'Old Price: %s', 'wpsc' ),
+		'price_text'       => __( 'Price: %s', 'wpsc' ),
+		/* translators     : %1$s is the saved amount text, %2$s is the saved percentage text, %% is the percentage sign */
+		'you_save_text'    => __( 'You save: %s', 'wpsc' ),
+		'old_price_class'  => 'pricedisplay wpsc-product-old-price ' . $id,
+		'old_price_before' => '<p %s>',
+		'old_price_after'  => '</p>',
+		'old_price_amount_id'     => 'old_product_price_' . $id,
+		'old_price_amount_class' => 'oldprice',
+		'old_price_amount_before' => '<span class="%1$s" id="%2$s">',
+		'old_price_amount_after' => '</span>',
+		'price_amount_id'     => 'product_price_' . $id,
+		'price_class'  => 'pricedisplay wpsc-product-price ' . $id,
+		'price_before' => '<p %s>',
+		'price_after' => '</p>',
+		'price_amount_class' => 'currentprice pricedisplay ' . $id,
+		'price_amount_before' => '<span class="%1$s" id="%2$s">',
+		'price_amount_after' => '</span>',
+		'you_save_class' => 'pricedisplay wpsc-product-you-save product_' . $id,
+		'you_save_before' => '<p %s>',
+		'you_save_after' => '</p>',
+		'you_save_amount_id'     => 'yousave_' . $id,
+		'you_save_amount_class' => 'yousave',
+		'you_save_amount_before' => '<span class="%1$s" id="%2$s">',
+		'you_save_amount_after'  => '</span>',
+		'output_price'     => true,
+		'output_old_price' => true,
+		'output_you_save'  => true,
+	);
+
+	$r = wp_parse_args( $args, $defaults );
+	extract( $r );
+
+	// if the product has no variations, these amounts are straight forward...
+	$old_price           = wpsc_product_normal_price( $id );
+	$current_price       = wpsc_the_product_price( false, false, $id );
+	$you_save            = wpsc_you_save( 'type=amount' ) . '! (' . wpsc_you_save() . '%)';
+	$you_save_percentage = wpsc_you_save();
+
+	$show_old_price = $show_you_save = wpsc_product_on_special( $id );
+
+	// but if the product has variations and at least one of the variations is on special, we have
+	// a few edge cases...
+	if ( wpsc_product_has_variations( $id ) && wpsc_product_on_special( $id ) ) {
+		// generally it doesn't make sense to display "you save" amount unless the user has selected
+		// a specific variation
+		$show_you_save = false;
+
+		$old_price_number = wpsc_product_variation_price_available( $id, false, true );
+		$current_price_number = wpsc_product_variation_price_available( $id, false, false );
+
+		// if coincidentally, one of the variations are not on special, but its price is equal to
+		// or lower than the lowest variation sale price, old price should be hidden, and current
+		// price should reflect the "normal" price, not the sales price, to avoid confusion
+		if ( $old_price_number == $current_price_number ) {
+			$show_old_price = false;
+			$current_price = wpsc_product_normal_price( $id );
+		}
+	}
+
+	// replace placeholders in arguments with correct values
+	$old_price_class = apply_filters( 'wpsc_the_product_price_display_old_price_class', $old_price_class, $id );
+	$old_price_amount_class = apply_filters( 'wpsc_the_product_price_display_old_price_amount_class', $old_price_amount_class, $id );
+	$attributes = 'class="' . esc_attr( $old_price_class ) . '"';
+	if ( ! $show_old_price )
+		$attributes .= ' style="display:none;"';
+	$old_price_before = sprintf( $old_price_before, $attributes );
+	$old_price_amount_before = sprintf( $old_price_amount_before, esc_attr( $old_price_amount_class ), esc_attr( $old_price_amount_id ) );
+
+	$price_class = apply_filters( 'wpsc_the_product_price_display_price_class', esc_attr( $price_class ), $id );
+	$price_amount_class = apply_filters( 'wpsc_the_product_price_display_price_amount_class', esc_attr( $price_amount_class ), $id );
+	$price_before = sprintf( $price_before, esc_attr( $price_class ) );
+	$price_amount_before = sprintf( $price_amount_before, esc_attr( $price_amount_class ), esc_attr( $price_amount_id ) );
+
+	$you_save_class = apply_filters( 'wpsc_the_product_price_display_you_save_class', $you_save_class, $id );
+	$you_save_amount_class = apply_filters( 'wpsc_the_product_price_display_you_save_amount_class', $you_save_amount_class, $id );
+	$attributes = 'class="' . esc_attr( $you_save_class ) . '"';
+	if ( ! $show_you_save )
+		$attributes .= ' style="display:none;"';
+	$you_save_before = sprintf( $you_save_before, $attributes );
+	$you_save_amount_before = sprintf( $you_save_amount_before, esc_attr( $you_save_amount_class ), esc_attr( $you_save_amount_id ) );
+
+	$old_price     = $old_price_amount_before . $old_price . $old_price_amount_after;
+	$current_price = $price_amount_before . $current_price . $price_amount_after;
+	$you_save      = $you_save_amount_before . $you_save . $you_save_amount_after;
+
+	$old_price_text = sprintf( $old_price_text, $old_price );
+	$price_text     = sprintf( $price_text, $current_price );
+	$you_save_text  = sprintf( $you_save_text, $you_save );
+
+	if ( $output_old_price )
+		echo $old_price_before . $old_price_text . $old_price_after . "\n";
+
+	if ( $output_price )
+		echo $price_before . $price_text . $price_after . "\n";
+
+	if ( $output_you_save )
+		echo $you_save_before . $you_save_text . $you_save_after . "\n";
+}
