@@ -1,7 +1,24 @@
 <?php
 
-class WPSC_Settings_Tab_Marketing extends WPSC_Settings_Tab
-{
+class WPSC_Settings_Tab_Marketing extends WPSC_Settings_Tab {
+
+	public function __construct() {
+		add_action( 'admin_notices', array( $this, 'yoast_check' ) );
+	}
+
+	public function yoast_check() {
+		$yoast_options = get_option( 'Yoast_Google_Analytics' );
+		$wpec_tracking = isset( $yoast_options['wpec_tracking'] ) && $yoast_options['wpec_tracking'] ? true : false;
+
+		if ( $wpec_tracking ) {
+			?>
+			<div class="error">
+				<p><?php _e( '<strong>You appear to have Google Analytics for WordPress installed.</strong>. <br /> This is not a problem, however, you also appear to have the WPeC tracking enabled.  We highly recommend disabling that setting and using the settings on this page.', 'wpsc' ); ?></p>
+			</div>
+		<?php
+		}
+	}
+
 	public function display() {
 		?>
 			<div class='metabox-holder'>
@@ -9,12 +26,39 @@ class WPSC_Settings_Tab_Marketing extends WPSC_Settings_Tab
 					add_meta_box( 'wpsc_marketing_settings', __( 'Marketing Section', 'wpsc' ), array( $this, 'marketing_meta_box' ), 'wpsc' );
 					add_meta_box( 'wpsc_rss_address', __( 'RSS Address', 'wpsc' ), array( $this, 'rss_address_meta_box' ), 'wpsc' );
 					add_meta_box( 'wpsc_google_merch_center', __( 'Google Merchant Centre / Google Product Search', 'wpsc' ), array( $this, 'google_merch_center_meta_box' ), 'wpsc' );
+					add_meta_box( 'wpsc_google_analytics_integration', __( 'Google Analytics', 'wpsc' ), array( $this, 'google_analytics_integration' ), 'wpsc' );
 
 					do_meta_boxes( 'wpsc', 'advanced', null );
 				?>
 
 			</div>
 		<?php
+	}
+
+	public function google_analytics_integration() {
+		?>
+			<input type='hidden' name='change-settings' value='true' />
+			<p>
+				<span class='input_label'><?php _e( 'Disable Google Analytics tracking', 'wpsc' ); ?></span>
+				<input value='1' <?php checked( '1', get_option( 'wpsc_ga_disable_tracking' ) ); ?> type='checkbox' name='wpsc_ga_disable_tracking' />
+				<span class='description'><?php _e( 'If, for whatever reason, you decide you do not want any tracking, disable it.', 'wpsc' ); ?></span>
+			</p><br />
+			<p class="wpsc_ga_currently_tracking">
+				<span class='input_label'><?php _e( 'Currently tracking Google Analytics', 'wpsc' ); ?></span>
+				<input value='1' <?php checked( '1', get_option( 'wpsc_ga_currently_tracking' ) ); ?> type='checkbox' name='wpsc_ga_currently_tracking' />
+				<span class='description'><?php _e( 'If you have already manually placed your Google Analytics tracking code in your theme, or have another plugin handling it, check this box.', 'wpsc' ); ?></span>
+			</p><br />
+			<p class="wpsc_ga_advanced">
+				<span class='input_label'><?php _e( 'Advanced', 'wpsc' ); ?></span>
+				<input value='1' <?php checked( '1', get_option( 'wpsc_ga_advanced' ) ); ?> type='checkbox' name='wpsc_ga_advanced' /><br />
+				<span class='description'><?php _e( 'By default, we insert the multiple-domain asynchronous tracking code.  This should be fine for 99% of users.  If you need to fine-tune it, select the Advanced option.  Then, instead of simply entering your tracking ID, you will enter the enter tracking code from Google Analytics into the header.php file of your theme.', 'wpsc' ); ?></span>
+			</p><br />
+			<p class='wpsc_ga_tracking_id'>
+				<span class='input_label'><?php _e( 'Tracking ID', 'wpsc' ); ?></span>
+				<input value="<?php echo esc_attr( get_option( 'wpsc_ga_tracking_id' ) ); ?>" type='text' name='wpsc_ga_tracking_id' />
+				<span class='description'><?php _e( 'Enter your tracking ID here.', 'wpsc' ); ?></span>
+			</p><br />
+	<?php
 	}
 
 	public function marketing_meta_box() {
@@ -63,7 +107,6 @@ class WPSC_Settings_Tab_Marketing extends WPSC_Settings_Tab
 				<input <?php echo $facebook_like1; ?> type='checkbox' name='wpsc_options[wpsc_facebook_like]' />
 				<span class='description'>  <?php _e( 'Adds the Facebook Like button on your single products page.', 'wpsc' ) ?></span>
 			</p><br />
-
 	<?php
 	}
 
