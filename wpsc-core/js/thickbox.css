@@ -40,7 +40,7 @@
 #TB_window {
 	position: absolute;
 	background: #ffffff;
-	z-index: 102;
+	z-index: 99999;
 	color:#000000;
 	display:none;
 	border: 4px solid #525252;
