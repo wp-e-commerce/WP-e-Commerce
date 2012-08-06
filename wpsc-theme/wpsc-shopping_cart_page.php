@@ -132,7 +132,7 @@ endif;
       <table class="productcart">
          <tr class="wpsc_shipping_info">
             <td colspan="5">
-               <?php _e('Please choose a country below to calculate your shipping costs', 'wpsc'); ?>
+               <?php _e('Please specify shipping location below to calculate your shipping costs', 'wpsc'); ?>
             </td>
          </tr>
 

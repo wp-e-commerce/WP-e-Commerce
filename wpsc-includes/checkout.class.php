@@ -198,13 +198,16 @@ function wpsc_has_category_and_country_conflict(){
 
 /**
  * Have valid shipping zipcode
+ * Logic was modified in 3.8.9 to check if the Calculate button was ever actually hit
+ * @see http://code.google.com/p/wp-e-commerce/issues/detail?id=1014
+ * 
  * @access public
  *
  * @since 3.8
  * @return (boolean) true or false
  */
-function wpsc_have_valid_shipping_zipcode(){
-	if(empty($_SESSION['wpsc_zipcode']) || ('Your Zipcode' == $_SESSION['wpsc_zipcode']) && ($_SESSION['wpsc_update_location']))
+function wpsc_have_valid_shipping_zipcode() {
+	if ( empty( $_SESSION['wpsc_zipcode'] ) || ( ( 'Your Zipcode' == $_SESSION['wpsc_zipcode'] ) && ( $_SESSION['wpsc_update_location'] ) ) || ! isset( $_POST['wpsc_submit_zipcode'] ) )
 		return true;
 	else
 		return false;
