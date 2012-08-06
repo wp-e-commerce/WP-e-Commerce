@@ -1,14 +1,14 @@
 	//The following is all for Share this.
 	function wpsc_akst_share(id, url, title) {
-		if ((jQuery('#wpsc_akst_form').css("display") == 'block') && (jQuery('#wpsc_akst_post_id').attr("value") == id)) {  
+		if ((jQuery('#wpsc_akst_form').css("display") == 'block') && (jQuery('#wpsc_akst_post_id').attr("value") == id)) {
 			jQuery('#wpsc_akst_form').css("display", "none");
 			return;
 		}
-	  
-	  
+
+
 		var offset = {};
 		new_container_offset = jQuery('#wpsc_akst_link_' + id).offset();
-	  
+
 		if(offset['left'] == null) {
 			offset['left'] = new_container_offset.left;
 			offset['top'] = new_container_offset.top;
@@ -45,7 +45,7 @@
 		var tab2 = document.getElementById('wpsc_akst_tab2');
 		var body1 = document.getElementById('wpsc_akst_social');
 		var body2 = document.getElementById('wpsc_akst_email');
-		
+
 		switch (tab) {
 			case '1':
 				tab2.className = '';
@@ -62,13 +62,13 @@
 		}
 	}
 	//End Share this JS
-	
+
 	function wpsc_shipping_same_as_billing(){
 		jQuery('#shippingsameasbillingmessage').slideDown('slow');
 		jQuery("input[title='billingfirstname'], input[title='billinglastname'], textarea[title='billingaddress'], input[title='billingcity'], input[title='billingpostcode'], input[title='billingphone'], input[title='billingfirstname'], input[title='billingstate']").unbind('change', wpsc_shipping_same_as_billing).unbind('keyup', wpsc_shipping_same_as_billing).keyup(wpsc_shipping_same_as_billing).change(wpsc_shipping_same_as_billing);
-		
+
 		jQuery("select[title='billingregion'], select[title='billingstate'], select[title='billingcountry'], input[title='billingstate']").die( 'change', wpsc_shipping_same_as_billing ).live( 'change', wpsc_shipping_same_as_billing );
-		
+
 		var fields = new Array(
 			Array(
 				"input[title='billingfirstname']",
@@ -77,29 +77,29 @@
 			Array(
 				"input[title='billinglastname']",
 				"input[title='shippinglastname']"
-			), 
+			),
 			Array(
 				"textarea[title='billingaddress']",
 				"textarea[title='shippingaddress']"
-			), 
+			),
 			Array(
 				"input[title='billingcity']",
 				"input[title='shippingcity']"
-			), 
+			),
 			Array(
 				"input[title='billingpostcode']",
 				"input[title='shippingpostcode']"
-			), 
+			),
 			Array(
 				"input[title='billingphone']",
 				"input[title='shippingphone']"
-			), 
+			),
 			Array(
 				"input[title='billingemail']",
 				"input[title='shippingemail']"
 			)
 		);
-		
+
 		for(var i in fields) {
 			jQuery(fields[i][1]).val(jQuery(fields[i][0]).val());
 			jQuery(fields[i][1]).parents('tr:first').hide();
@@ -108,7 +108,7 @@
 			else
 				jQuery(fields[i][1]).addClass('intra-field-label');
 		}
-		
+
 		if( jQuery("input[title='billingstate']").length ){
 			jQuery("input[title='shippingstate']").val(jQuery("input[title='billingstate']").val());
 			jQuery("input[title='shippingstate']").parents('tr:first').hide();
@@ -121,29 +121,29 @@
 			jQuery(".shipping_region_name").text(jQuery("select[title='billingstate'] option[selected='selected']").text());
 			jQuery("input[title='shippingstate']").parents('tr:first').hide();
 		}
-		
-		
+
+
 		jQuery("input.shipping_country").val(
 			jQuery("select[title='billingcountry']").val()
 		).removeClass('intra-field-label').parents('tr:first').hide();
-		
+
 		jQuery("span.shipping_country_name").html(
 			jQuery("select[title='billingcountry'] :selected").text()
 		).hide();
-		
+
 		jQuery('select[title="shippingcountry"] option').removeAttr('selected').parents('tr:first').hide();
 		jQuery('select[title="shippingcountry"] option[value="' + jQuery('select[title="billingcountry"] option:selected').val() + '"]').attr('selected', 'selected');
-				
+
 		jQuery('select[title="shippingstate"] option').removeAttr('selected').parents('tr:first').hide();
 		jQuery('select[title="shippingstate"] option[value="' + jQuery('select[title="billingstate"] option:selected').val() + '"]').attr('selected', 'selected');
 
 		jQuery('select[title="shippingcountry"]').change();
 		jQuery('select[title="shippingstate"]').change();
-		
+
 		//evil. If shipping is enabled checks if shipping country is the same and billing and if shipping state is the same as billing. If not - changes shipping country and (or) state to billing.
-		if( 
+		if(
 			//if shipping is enabled this element will be present, so if it's not, then it will skip everything
-			jQuery('#change_country #current_country').val() 
+			jQuery('#change_country #current_country').val()
 			&&
 			//also we only need to do this when shipping country is different than billing country. following code does the check
 			(
@@ -154,7 +154,7 @@
 					&&
 					//and if the value is different from shipping
 					jQuery('#change_country #current_country').val() != jQuery('select[title="billingcountry"]').val()
-				) 
+				)
 				||
 				//ceck if billing region is different
 				(
@@ -164,7 +164,7 @@
 					//if its different from shipping
 					jQuery('select[title="billingstate"]').val() != jQuery('#change_country #region').val()
 				)
-			) 
+			)
 		){
 			jQuery('#current_country option').removeAttr('selected');
 			jQuery('#current_country option[value="'+jQuery('select[title="billingcountry"]').val()+'"]').attr('selected', 'selected');
@@ -179,7 +179,7 @@
 				request_vars.region = jQuery('#region').val();
 			if(typeof(updated_shipping_quote_after)=='undefined')
 				updated_shipping_quote_after = false;
-			jQuery.post( 
+			jQuery.post(
 				location.href,
 				request_vars,
 				function(){
@@ -346,7 +346,7 @@ jQuery(document).ready(function ($) {
 		jQuery('option[value="0"]', this).attr('disabled', 'disabled');
 		var parent_form = jQuery(this).closest("form.product_form");
 		if ( parent_form.length == 0 )
-			return;		
+			return;
 		var prod_id = jQuery("input[name='product_id']",parent_form).val();
 		var form_values =jQuery("input[name='product_id'], .wpsc_select_variation",parent_form).serialize( );
 		jQuery.post( 'index.php?update_product_price=true', form_values, function(response) {
@@ -364,16 +364,24 @@ jQuery(document).ready(function ($) {
 					stock_display.addClass('out_of_stock').removeClass('in_stock');
 				}
 			}
-			
+
 			stock_display.html(response.variation_msg);
-			
 			if ( response.price !== undefined ) {
 				if (price_field.length && price_field.attr('type') == 'text') {
 					price_field.val(response.numeric_price);
+					old_price.parent().hide();
+					save.parent().hide();
 				} else {
 					price_span.html(response.price);
 					old_price.html(response.old_price);
 					save.html(response.you_save);
+					if (response.numeric_old_price > response.numeric_price) {
+						old_price.parent().show();
+						save.parent().show();
+					} else {
+						old_price.parent().hide();
+						save.parent().hide();
+					}
 				}
 				donation_price.val(response.numeric_price);
 			}
@@ -531,7 +539,7 @@ function set_shipping_country(html_form_id, form_id){
 		shipping_country: country,
 		shipping_region: region
 	}
-	
+
 	jQuery.post( 'index.php', form_values, function(returned_data) {
 		eval(returned_data);
 		if(jQuery("#shippingSameBilling").is(':checked')){
@@ -539,7 +547,7 @@ function set_shipping_country(html_form_id, form_id){
 			jQuery('.shipping_country_name').parent().parent().hide();
 		}
 	});
-	
+
 }
 
 jQuery(document).ready(function(){
@@ -549,7 +557,7 @@ jQuery(document).ready(function(){
 		if(null != value){
 			value = value.replace(/<span class="?asterix"?>\*<\/span>/i,'');
 		}
-		
+
 		if( jQuery.fn.inlineFieldLabel )
 		    jQuery(this).inlineFieldLabel({label:jQuery.trim(value)});
 		if(real_value != '')
