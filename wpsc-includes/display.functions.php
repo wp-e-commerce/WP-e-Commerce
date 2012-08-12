@@ -47,8 +47,8 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 			} else {
 				$output .="<input type='hidden' name='undefined_quantity' value='0' />";
 			}
-			$output .="<input type='image' name='submit' border='0' src='" .  . "' alt='" . esc_attr__( 'PayPal - The safer, easier way to pay online', 'wpsc' ) . "' />
-				<img alt='' border='0' width='1' height='1' src='" . esc_url( _x( 'https://www.paypal.com/en_US/i/scr/pixel.gif', 'PayPal Pixel. URL can change based on locale', 'wpsc' ) . "' />
+			$output .= "<input type='image' name='submit' border='0' src='" . esc_url( _x( 'https://www.paypal.com/en_US/i/btn/btn_buynow_LG.gif', 'PayPal Buy Now Button', 'wpsc' ) ) . "' alt='" . esc_attr__( 'PayPal - The safer, easier way to pay online', 'wpsc' ) . "' />
+				<img alt='' border='0' width='1' height='1' src='" . esc_url( _x( 'https://www.paypal.com/en_US/i/scr/pixel.gif', 'PayPal Pixel', 'wpsc' ) ) . "' />
 			</form>\n\r";
 		}
 	}
@@ -127,15 +127,15 @@ function wpsc_loading_animation_url() {
 	return apply_filters( 'wpsc_loading_animation_url', WPSC_CORE_THEME_URL . 'wpsc-images/indicator.gif' );
 }
 
-function fancy_notifications() {	
+function fancy_notifications() {
 	return wpsc_fancy_notifications( true );
 }
 function wpsc_fancy_notifications( $return = false ) {
 	static $already_output = false;
-	
+
 	if ( $already_output )
 		return '';
-	
+
 	$output = "";
 	if ( get_option( 'fancy_notifications' ) == 1 ) {
 		$output = "";
@@ -147,9 +147,9 @@ function wpsc_fancy_notifications( $return = false ) {
 		$output .= "  </div>\n\r";
 		$output .= "</div>\n\r";
 	}
-	
+
 	$already_output = true;
-	
+
 	if ( $return )
 		return $output;
 	else
@@ -227,7 +227,7 @@ function wpsc_add_to_cart_button( $product_id, $return = false ) {
 				</form>
 			</div>
 		<?php
-		
+
 		if ( $return )
 			return ob_get_clean();
 	}
