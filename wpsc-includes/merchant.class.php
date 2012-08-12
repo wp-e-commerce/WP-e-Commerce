@@ -48,7 +48,7 @@ class wpsc_merchant {
 	var $cart_data = array( );
 	/**
 	 * This is where the cart items are stored
-	  @var array
+	 * @var array
 	 */
 	var $cart_items = array( );
 	/**

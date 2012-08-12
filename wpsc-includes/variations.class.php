@@ -44,7 +44,7 @@ class wpsc_variations {
 
 			array_unshift( $this->all_associated_variations[$variation_set], (object) array(
 				'term_id' => 0,
-				'name'    => __('-- Please Select --', 'wpsc'),
+				'name'    => __( '-- Please Select --', 'wpsc' ),
 			) );
 		}
 

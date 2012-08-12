@@ -68,10 +68,10 @@ function wpsc_generate_product_feed() {
 
 	echo ">\n\r";
 	echo "  <channel>\n\r";
-	echo "    <title><![CDATA[".get_option('blogname')." Products]]></title>\n\r";
+	echo "    <title><![CDATA[" . sprintf( _x( '%s Products', 'XML Feed Title', 'wpsc' ), get_option( 'blogname' ) ) . "]]></title>\n\r";
 	echo "    <link>".get_option('siteurl')."/wp-admin/admin.php?page=".WPSC_DIR_NAME."/display-log.php</link>\n\r";
-	echo "    <description>This is the WP e-Commerce Product List RSS feed</description>\n\r";
-	echo "    <generator>WP e-Commerce Plugin</generator>\n\r";
+	echo "    <description>" . _x( 'This is the WP e-Commerce Product List RSS feed', 'XML Feed Description', 'wpsc' ) . "</description>\n\r";
+	echo "    <generator>" . _x( 'WP e-Commerce Plugin', 'XML Feed Generator', 'wpsc' ) . "</generator>\n\r";
 	echo "    <atom:link href='$self' rel='self' type='application/rss+xml' />\n\r";
 
 	$products = get_posts( $args );
@@ -86,7 +86,7 @@ function wpsc_generate_product_feed() {
 
 			echo "    <item>\n\r";
 			if ($google_checkout_note) {
-				echo "      <g:payment_notes>Google Checkout</g:payment_notes>\n\r";
+				echo "      <g:payment_notes>" . _x( 'Google Wallet', 'Google Checkout Payment Notes in XML Feed', 'wpsc' ) . "</g:payment_notes>\n\r";
 			}
 			echo "      <title><![CDATA[".get_the_title()."]]></title>\n\r";
 			echo "      <link>$purchase_link</link>\n\r";

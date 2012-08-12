@@ -497,7 +497,6 @@ function wpsc_list_dir( $dirname ) {
 /**
  * wpsc_recursive_copy function, copied from here and renamed: http://nz.php.net/copy
  * Why doesn't PHP have one of these built in?
-
  */
 function wpsc_recursive_copy( $src, $dst ) {
 	$dir = opendir( $src );
@@ -540,10 +539,8 @@ function wpsc_replace_reply_name( $input ) {
 
 /**
  * wpsc_object_to_array, recusively converts an object to an array, for usage with SOAP code
-
  * Copied from here, then modified:
  * http://www.phpro.org/examples/Convert-Object-To-Array-With-PHP.html
-
  */
 function wpsc_object_to_array( $object ) {
 	if ( !is_object( $object ) && !is_array( $object ) ) {

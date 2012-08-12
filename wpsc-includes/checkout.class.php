@@ -200,14 +200,14 @@ function wpsc_has_category_and_country_conflict(){
  * Have valid shipping zipcode
  * Logic was modified in 3.8.9 to check if the Calculate button was ever actually hit
  * @see http://code.google.com/p/wp-e-commerce/issues/detail?id=1014
- * 
+ *
  * @access public
  *
  * @since 3.8
  * @return (boolean) true or false
  */
 function wpsc_have_valid_shipping_zipcode() {
-	if ( empty( $_SESSION['wpsc_zipcode'] ) || ( ( 'Your Zipcode' == $_SESSION['wpsc_zipcode'] ) && ( $_SESSION['wpsc_update_location'] ) ) || ! isset( $_POST['wpsc_submit_zipcode'] ) )
+	if ( empty( $_SESSION['wpsc_zipcode'] ) || ( ( __( 'Your Zipcode', 'wpsc' ) == $_SESSION['wpsc_zipcode'] ) && ( $_SESSION['wpsc_update_location'] ) ) || ! isset( $_POST['wpsc_submit_zipcode'] ) )
 		return true;
 	else
 		return false;
@@ -413,7 +413,7 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 	$country_data = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `visible`= '1' ORDER BY `country` ASC", ARRAY_A );
 
 	$output .= "<select name='country' id='current_country' " . $js . " >";
-	
+
 	foreach ( $country_data as $country ) {
 		$selected = '';
 
@@ -453,10 +453,12 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 		$_SESSION['wpsc_zipcode'] = '';
 	}
 
-	if ( ($zipvalue != '') && ($zipvalue != 'Your Zipcode') ) {
+	$zip_code_text = __( 'Your Zipcode', 'wpsc' );
+
+	if ( ($zipvalue != '') && ($zipvalue != $zip_code_text ) ) {
 		$color = '#000';
 	} else {
-		$zipvalue = 'Your Zipcode';
+		$zipvalue = $zip_code_text;
 		$color = '#999';
 	}
 
@@ -468,8 +470,8 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 		}
 	}
 
-	if ( $uses_zipcode == true ) {
-		$output .= " <input type='text' style='color:" . $color . ";' onclick='if (this.value==\"Your Zipcode\") {this.value=\"\";this.style.color=\"#000\";}' onblur='if (this.value==\"\") {this.style.color=\"#999\"; this.value=\"Your Zipcode\"; }' value='" . esc_attr( $zipvalue ) . "' size='10' name='zipcode' id='zipcode'>";
+	if ( $uses_zipcode ) {
+		$output .= " <input type='text' style='color:" . $color . ";' onclick='if (this.value==\"" . esc_js( $zip_code_text ) . "\") {this.value=\"\";this.style.color=\"#000\";}' onblur='if (this.value==\"\") {this.style.color=\"#999\"; this.value=\"" . esc_js( $zip_code_text ) . "\"; }' value='" . esc_attr( $zipvalue ) . "' size='10' name='zipcode' id='zipcode'>";
 	}
 	return $output;
 }
@@ -1039,25 +1041,25 @@ function wpsc_gateway_name() {
 			case "paypal":
 			case "paypal_pro":
 			case "wpsc_merchant_paypal_pro";
-				$display_name = "PayPal";
+				$display_name = __( 'PayPal', 'wpsc' );
 				break;
 
 			case "manual_payment":
-				$display_name = "Manual Payment";
+				$display_name =  __( 'Manual Payment', 'wpsc' );
 				break;
 
 			case "google_checkout":
-				$display_name = "Google Checkout";
+				$display_name = __( 'Google Wallet', 'wpsc' );
 				break;
 
 			case "credit_card":
 			default:
-				$display_name = "Credit Card";
+				$display_name = __( 'Credit Card', 'wpsc' );
 				break;
 		}
 	}
 	if ( $display_name == '' && !wpsc_show_gateway_image() ) {
-		$display_name = 'Credit Card';
+		$display_name = __( 'Credit Card', 'wpsc' );
 	}
 	return $display_name;
 }

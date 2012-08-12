@@ -31,7 +31,7 @@ function nzshpcrt_region_list( $selected_country = null, $selected_region = null
 	$region_list = $wpdb->get_results( $wpdb->prepare( "SELECT `" . WPSC_TABLE_REGION_TAX . "`.* FROM `" . WPSC_TABLE_REGION_TAX . "`, `" . WPSC_TABLE_CURRENCY_LIST . "`  WHERE `" . WPSC_TABLE_CURRENCY_LIST . "`.`isocode` IN(%s) AND `" . WPSC_TABLE_CURRENCY_LIST . "`.`id` = `" . WPSC_TABLE_REGION_TAX . "`.`country_id`", $selected_country ), ARRAY_A );
 
 	if ( $region_list != null ) {
-		$output .= "<option value=''>None</option>";
+		$output .= "<option value=''>" . esc_html__( 'None', 'wpsc' ) . "</option>";
 		foreach ( $region_list as $region ) {
 			if ( $selected_region == $region['id'] ) {
 				$selected = "selected='selected'";
@@ -42,7 +42,7 @@ function nzshpcrt_region_list( $selected_country = null, $selected_region = null
 			$output .= "<option value='" . $region['id'] . "' $selected>" . $region['name'] . "</option>\r\n";
 		}
 	} else {
-		$output .= "<option value=''>None</option>\r\n";
+		$output .= "<option value=''>" . esc_html__( 'None', 'wpsc' ) . "</option>\r\n";
 	}
 
 	return $output;
@@ -50,7 +50,7 @@ function nzshpcrt_region_list( $selected_country = null, $selected_region = null
 
 function nzshpcrt_form_field_list( $selected_field = null ) {
 	global $wpdb;
-	$output = "<option value=''>Please choose</option>";
+	$output = "<option value=''>" . esc_html__( 'Please choose', 'wpsc' ) . "</option>";
 	$form_sql = "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `active` = '1';";
 	$form_data = $wpdb->get_results( $form_sql, ARRAY_A );
 

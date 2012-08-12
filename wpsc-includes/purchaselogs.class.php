@@ -190,7 +190,7 @@ function wpsc_the_purch_item_date() {
 function wpsc_the_purch_item_name() {
    global $purchlogs;
    if ( wpsc_purchlogs_has_customfields( wpsc_the_purch_item_id() ) ) {
-      return $purchlogs->the_purch_item_name() . '<img src="' . WPSC_CORE_IMAGES_URL . '/info_icon.jpg" title="This Purchase has custom user content" alt="exclamation icon" />';
+      return $purchlogs->the_purch_item_name() . '<img src="' . WPSC_CORE_IMAGES_URL . '/info_icon.jpg" title="' . esc_attr__( 'This Purchase has custom user content', 'wpsc' ) . '" alt="' . esc_attr__( 'exclamation icon', 'wpsc' ) . '" />';
    } else {
       return $purchlogs->the_purch_item_name();
    }
@@ -565,7 +565,7 @@ function wpsc_display_purchlog_paymentmethod() {
    global $purchlogitem, $nzshpcrt_gateways;
    $gateway_name = '';
    if('wpsc_merchant_testmode' == $purchlogitem->extrainfo->gateway)
-      return 'Manual Payment';
+      return __( 'Manual Payment', 'wpsc' );
 
    foreach ( (array)$nzshpcrt_gateways as $gateway ) {
       if ( $gateway['internalname'] == $purchlogitem->extrainfo->gateway )
@@ -897,7 +897,7 @@ class wpsc_purchaselogs {
       $fname = $wpdb->get_var( $sql );
       $sql = "SELECT value FROM " . WPSC_TABLE_SUBMITED_FORM_DATA . " WHERE log_id=" . $this->purchitem->id . " AND form_id=" . $lNameformid;
       $lname = $wpdb->get_var( $sql );
-      $namestring = esc_html( $fname ) . ' ' . esc_html( $lname ) . ' (<a href="mailto:' . esc_attr( $email ) . '?subject=Message From ' . get_option( 'siteurl' ) . '">' . esc_html( $email ) . '</a>) ';
+      $namestring = esc_html( $fname ) . ' ' . esc_html( $lname ) . ' (<a href="mailto:' . esc_attr( $email ) . '?subject=' . sprintf( __( 'Message From %s', 'wpsc' ), get_option( 'siteurl' ) ) . '">' . esc_html( $email ) . '</a>) ';
       if ( $fname == '' && $lname == '' && $email == '' ) {
          $namestring = __('N/A', 'wpsc');
       }
