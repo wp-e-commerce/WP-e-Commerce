@@ -100,9 +100,9 @@ function admin_menu( $args = null ) {
 		
 	if ( current_user_can( 'manage_options' ) ) {
 		echo '<ul>';
-		echo '<li><a title="People come here to write new pages" href="' . admin_url( 'post-new.php?post_type=page' ) . '">Add Pages</a></li>';
-		echo '<li><a title="People come here to add products" href="' . admin_url( 'admin.php?page=wpsc-edit-products&amp;action=wpsc_add_edit' ) . '">Add Products</a></li>';
-		echo '<li><a title="People come here to change themes and widgets settings" href="' . admin_url( 'themes.php' ) . '">Presentation</a></li>';
+		echo '<li><a title="' . esc_attr__( 'People come here to write new pages', 'wpsc' ) . '" href="' . admin_url( 'post-new.php?post_type=page' ) . '">' . esc_html__( 'Add Pages', 'wpsc' ) . '</a></li>';
+		echo '<li><a title="' . esc_attr__( 'People come here to add products', 'wpsc' ) . '" href="' . admin_url( 'admin.php?page=wpsc-edit-products&amp;action=wpsc_add_edit' ) . '">' . esc_html__( 'Add Products', 'wpsc' ) . '</a></li>';
+		echo '<li><a title="' . esc_attr__( 'People come here to change themes and widgets settings', 'wpsc' ) . '" href="' . admin_url( 'themes.php' ) . '">' . esc_html__( 'Presentation', 'wpsc' ) . '</a></li>';
 		echo '</ul>';
 	}
 	

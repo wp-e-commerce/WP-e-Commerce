@@ -126,14 +126,14 @@ function wpsc_price_range( $args = null ) {
 		for ( $i = 0; $i < $final_count; $i++ ) {
 			$j = $i;
 			if ( $i == $final_count - 1 ) {
-				echo "<li><a href='" . esc_url(add_query_arg( 'range', $ranges[$i] . '-', $product_page )) . "'>Over " . wpsc_currency_display( $ranges[$i] ). "</a></li>";
+				echo "<li><a href='" . esc_url(add_query_arg( 'range', $ranges[$i] . '-', $product_page )) . "'>" . esc_html_x( 'Over ', 'price range widget', 'wpsc' ) . wpsc_currency_display( $ranges[$i] ). "</a></li>";
 			} else if ( $ranges[$i] == 0 ) {
-				echo "<li><a href='" . esc_url(add_query_arg( 'range', '-' . ($ranges[$i+1]-1), $product_page )) . "'>Under " . wpsc_currency_display( $ranges[$i + 1] ). "</a></li>";
+				echo "<li><a href='" . esc_url(add_query_arg( 'range', '-' . ($ranges[$i+1]-1), $product_page )) . "'>" . esc_html_x( 'Under ', 'price range widget', 'wpsc' ) . wpsc_currency_display( $ranges[$i + 1] ). "</a></li>";
 			} else {
 				echo "<li><a href='" . esc_url(add_query_arg( 'range', $ranges[$i] . "-" . ($ranges[$i + 1]-1), $product_page )) . "'>" . wpsc_currency_display( $ranges[$i] ) . " - " . wpsc_currency_display(  ($ranges[$i + 1]-1) ) . "</a></li>";
 			}
 		}
-		echo "<li><a href='" . esc_url(add_query_arg( 'range', 'all', get_option( 'product_list_url' )) ) . "'>" . __( 'Show All', 'wpsc' ) . "</a></li>";
+		echo "<li><a href='" . esc_url(add_query_arg( 'range', 'all', get_option( 'product_list_url' )) ) . "'>" . _x( 'Show All', 'price range widget', 'wpsc' ) . "</a></li>";
 		echo '</ul>';
 	}
 	
