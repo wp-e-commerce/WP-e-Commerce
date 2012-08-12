@@ -35,15 +35,15 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 		$this->form_fields = $wpdb->get_results( $form_sql );
 
 		$columns = array(
-			'drag'        => __('Drag', 'wpsc'),
-			'name'        => __('Title', 'wpsc'),
-			'type'        => __('Type', 'wpsc'),
+			'drag'        => __( 'Drag', 'wpsc' ),
+			'name'        => __( 'Title', 'wpsc' ),
+			'type'        => __( 'Type', 'wpsc' ),
 			'unique_name' => '&nbsp;',
-			'display'     => __('Display', 'wpsc'),
-			'mandatory'   => __('Mandatory', 'wpsc'),
+			'display'     => __( 'Display', 'wpsc' ),
+			'mandatory'   => __( 'Mandatory', 'wpsc' ),
 			'actions'     => '&nbsp;',
 		);
-		register_column_headers('display-checkout-list', $columns);
+		register_column_headers( 'display-checkout-list', $columns );
 	}
 
 	private function delete_form_set() {
@@ -72,7 +72,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 
 		if ( ! empty( $_POST['new_form_set'] ) ) {
 			$checkout_sets = get_option( 'wpsc_checkout_form_sets' );
-			$checkout_sets[] = $_POST['new_form_set'];
+			$checkout_sets[] = sanitize_text_field( $_POST['new_form_set'] );
 			update_option( 'wpsc_checkout_form_sets', $checkout_sets );
 			add_settings_error( 'wpsc-settings', 'wpsc_form_set_added', __( 'New form set successfully created.', 'wpsc' ), 'updated' );
 		}
@@ -300,8 +300,8 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 			</td>
 			<td class="actionscol">
 				<div class="cell-wrapper">
-					<a tabindex="-1" title="<?php _e( 'Delete Field', 'wpsc' ); ?>" class="action delete" href="#">Delete</a>
-					<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="action add" href="#">Add</a>
+					<a tabindex="-1" title="<?php _e( 'Delete Field', 'wpsc' ); ?>" class="action delete" href="#"><?php esc_html_e( 'Delete', 'wpsc' ); ?></a>
+					<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="action add" href="#"><?php esc_html_e( 'Add', 'wpsc' ); ?></a>
 				</div>
 			</td>
 		</tr>
@@ -330,8 +330,8 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 								</td>
 								<td class="column-actions">
 									<div class="field-option-cell-wrapper">
-										<a tabindex="-1" title="<?php _e( 'Delete Field', 'wpsc' ); ?>" class="action delete" href="#">Delete</a>
-										<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="action add" href="#">Add</a>
+										<a tabindex="-1" title="<?php _e( 'Delete Field', 'wpsc' ); ?>" class="action delete" href="#"><?php esc_html_e( 'Delete', 'wpsc' ); ?></a>
+										<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="action add" href="#"><?php esc_html_e( 'Add', 'wpsc' ); ?></a>
 									</div>
 								</td>
 							</tr>
@@ -348,50 +348,50 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 		global $wpdb;
 
 		//not to sure if we still need these any more - $form_types, $unique_names
-		$form_types = get_option('wpsc_checkout_form_fields');
-		$unique_names = get_option('wpsc_checkout_unique_names');
+		$form_types = get_option( 'wpsc_checkout_form_fields' );
+		$unique_names = get_option( 'wpsc_checkout_unique_names' );
 
-		do_action('wpsc_checkout_form_fields_page');
+		do_action( 'wpsc_checkout_form_fields_page' );
 		?>
 
 		<div class='metabox-holder' style='width:95%;'>
 			<div class='postbox'>
 				<input type='hidden' name='checkout_submits' value='true' />
-				<h3 class='hndle'><?php _e( 'Misc Checkout Options' , 'wpsc' ); ?></h3>
+				<h3 class='hndle'><?php esc_html_e( 'Misc Checkout Options' , 'wpsc' ); ?></h3>
 				<div class='inside'>
 					<table>
 						<tr>
-							<td><?php _e('Users must register before checking out', 'wpsc'); ?>:</td>
+							<td><?php esc_html_e('Users must register before checking out', 'wpsc'); ?>:</td>
 							<td>
 							<input type='radio' value='1' name='wpsc_options[require_register]' id='require_register1' <?php checked( $this->require_register, 1 ); ?> />
-							<label for='require_register1'><?php _e('Yes', 'wpsc');?></label> &nbsp;
+							<label for='require_register1'><?php _e( 'Yes', 'wpsc' );?></label> &nbsp;
 							<input type='radio' value='0' name='wpsc_options[require_register]' id='require_register2' <?php checked( $this->require_register, 0 ); ?> />
-							<label for='require_register2'><?php _e('No', 'wpsc');?></label>
+							<label for='require_register2'><?php _e( 'No', 'wpsc' );?></label>
 							</td>
 							<td>
-							<a title='<?php _e('If yes then you must also turn on the wordpress option "Any one can register"', 'wpsc');?>' class='flag_email' href='#' ><img src='<?php echo WPSC_CORE_IMAGES_URL; ?>/help.png' alt='' /> </a>
+							<a title='<?php esc_attr_e( 'If yes then you must also turn on the wordpress option "Any one can register"', 'wpsc' ); ?>' class='flag_email' href='#' ><img src='<?php echo WPSC_CORE_IMAGES_URL; ?>/help.png' alt='' /> </a>
 							</td>
 						</tr>
 
 						<tr>
-							<td scope="row"><?php _e('Enable Shipping Same as Billing Option', 'wpsc'); ?>:</td>
+							<td scope="row"><?php esc_html_e('Enable Shipping Same as Billing Option', 'wpsc' ); ?>:</td>
 							<td>
 								<input type='radio' value='1' name='wpsc_options[shippingsameasbilling]' id='shippingsameasbilling1' <?php checked( $this->shipping_same_as_billing, 1 ); ?> />
-								<label for='shippingsameasbilling1'><?php _e('Yes', 'wpsc');?></label> &nbsp;
+								<label for='shippingsameasbilling1'><?php _e( 'Yes', 'wpsc' );?></label> &nbsp;
 								<input type='radio' value='0' name='wpsc_options[shippingsameasbilling]' id='shippingsameasbilling2' <?php checked( $this->shipping_same_as_billing, 0 ); ?> />
-								<label for='shippingsameasbilling2'><?php _e('No', 'wpsc');?></label>
+								<label for='shippingsameasbilling2'><?php _e( 'No', 'wpsc' );?></label>
 							</td>
 						</tr>
 						<tr>
 							<td><?php _e('Force users to use SSL', 'wpsc'); ?>:</td>
 							<td>
 								<input type='radio' value='1' name='wpsc_options[wpsc_force_ssl]' id='wpsc_force_ssl1' <?php checked( $this->force_ssl, 1 ); ?> />
-								<label for='wpsc_force_ssl1'><?php _e('Yes', 'wpsc');?></label> &nbsp;
+								<label for='wpsc_force_ssl1'><?php _e( 'Yes', 'wpsc' );?></label> &nbsp;
 								<input type='radio' value='0' name='wpsc_options[wpsc_force_ssl]' id='wpsc_force_ssl2' <?php checked( $this->force_ssl, 0 ); ?> />
-								<label for='wpsc_force_ssl2'><?php _e('No', 'wpsc');?></label>
+								<label for='wpsc_force_ssl2'><?php _e( 'No', 'wpsc' );?></label>
 							</td>
 							<td>
-								<a title='<?php _e('This can cause warnings for your users if you do not have a properly configured SSL certificate', 'wpsc');?>' class='flag_email' href='#' ><img src='<?php echo WPSC_CORE_IMAGES_URL; ?>/help.png' alt='' /> </a>
+								<a title='<?php esc_html_e( 'This can cause warnings for your users if you do not have a properly configured SSL certificate', 'wpsc' );?>' class='flag_email' href='#' ><img src='<?php echo WPSC_CORE_IMAGES_URL; ?>/help.png' alt='' /> </a>
 							</td>
 						</tr>
 					</table>
@@ -399,11 +399,11 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 			</div>
 		</div>
 
-		<h3><?php _e('Form Fields', 'wpsc'); ?></h3>
-		<p><?php _e('Here you can customise the forms to be displayed in your checkout page. The checkout page is where you collect important user information that will show up in your purchase logs i.e. the buyers address, and name...', 'wpsc');?></p>
+		<h3><?php esc_html_e( 'Form Fields', 'wpsc' ); ?></h3>
+		<p><?php esc_html_e( 'Here you can customise the forms to be displayed in your checkout page. The checkout page is where you collect important user information that will show up in your purchase logs i.e. the buyers address, and name...', 'wpsc' );?></p>
 
 		<p>
-			<label for='wpsc_form_set'><?php _e('Select a Form Set' , 'wpsc'); ?>:</label>
+			<label for='wpsc_form_set'><?php esc_html_e( 'Select a Form Set' , 'wpsc' ); ?>:</label>
 			<select id='wpsc_form_set' name='checkout_set'>
 				<?php foreach ( $this->checkout_sets as $key => $value ): ?>
 					<option <?php selected( $this->current_checkout_set, $key ); ?> value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $value ); ?></option>
@@ -419,7 +419,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 		<p class='add_new_form_set_forms'>
 			<label><?php esc_html_e( "Add new Form Set", 'wpsc' ); ?>:
 			<input type="text" value="" name="new_form_set" /></label>
-			<input type="submit" value="<?php _e('Add', 'wpsc'); ?>" class="button-primary" id="formset-add-sumbit"/>
+			<input type="submit" value="<?php esc_attr_e( 'Add', 'wpsc' ); ?>" class="button-primary" id="formset-add-sumbit"/>
 		</p>
 
 		<input type="hidden" name="selected_form_set" value="<?php echo esc_attr( $this->current_checkout_set ); ?>" />
@@ -511,11 +511,11 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
 							<td class="actionscol">
 								<div class="cell-wrapper">
 									<?php if ( ! $this->is_field_default( $form_field ) ): ?>
-										<a tabindex="-1" title="<?php _e( 'Delete Field', 'wpsc' ); ?>" class="action delete" href="#">Delete</a>
+										<a tabindex="-1" title="<?php esc_attr_e( 'Delete Field', 'wpsc' ); ?>" class="action delete" href="#"><?php esc_html_e( 'Delete', 'wpsc' ); ?></a>
 									<?php else: ?>
-										<span title="<?php _e( 'Cannot Delete Default Fields', 'wpsc' ); ?>" class="action delete">Delete</span>
+										<span title="<?php _e( 'Cannot Delete Default Fields', 'wpsc' ); ?>" class="action delete"><?php esc_html_e( 'Delete', 'wpsc' ); ?></span>
 									<?php endif; ?>
-									<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="action add" href="#">Add</a>
+									<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="action add" href="#"><?php esc_html_e( 'Add', 'wpsc' ); ?></a>
 								</div>
 							</td>
 						</tr>

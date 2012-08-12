@@ -138,21 +138,21 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab
 	private function display_imported_columns() {
 		extract( $this->display_data );
 		?>
-			<p><?php _e( 'For each column, select the field it corresponds to in \'Belongs to\'. You can upload as many products as you like.', 'wpsc' ); ?></p>
+			<p><?php esc_html_e( 'For each column, select the field it corresponds to in \'Belongs to\'. You can upload as many products as you like.', 'wpsc' ); ?></p>
 			<div class='metabox-holder' style='width:90%'>
 				<div style='width:100%;' class='postbox'>
-					<h3 class='hndle'><?php _e('Product Status' , 'wpsc' ); ?></h3>
+					<h3 class='hndle'><?php esc_html_e( 'Product Status' , 'wpsc' ); ?></h3>
 					<div class='inside'>
 						<table>
 							<tr>
 								<td style='width:80%;'>
-									<?php _e( 'Select if you would like to import your products in as Drafts or Publish them right away.' , 'wpsc' ); ?>
+									<?php esc_html_e( 'Select if you would like to import your products in as Drafts or Publish them right away.' , 'wpsc' ); ?>
 									<br />
 								</td>
 								<td>
 									<select name='post_status'>
-										<option value='publish'><?php _e( 'Publish', 'wpsc'); ?></option>
-										<option value='draft'  ><?php _e( 'Draft'  , 'wpsc'); ?></option>
+										<option value='publish'><?php esc_html_e( 'Publish', 'wpsc' ); ?></option>
+										<option value='draft'  ><?php esc_html_e( 'Draft'  , 'wpsc' ); ?></option>
 									</select>
 								</td>
 							</tr>
@@ -161,7 +161,7 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab
 				</div>
 				<?php foreach ( $columns as $key => $datum ): ?>
 					<div style='width:100%;' class='postbox'>
-						<h3 class='hndle'><?php printf(__('Column (%s)', 'wpsc'), ($key + 1)); ?></h3>
+						<h3 class='hndle'><?php printf( __('Column (%s)', 'wpsc' ), ( $key + 1 ) ); ?></h3>
 						<div class='inside'>
 							<table>
 								<tr>
@@ -171,15 +171,15 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab
 									</td>
 									<td>
 										<select  name='value_name[<?php echo $key; ?>]'>
-											<option <?php selected( $key, 0 ); ?> value='column_name'                  ><?php _e('Product Name'          , 'wpsc'); ?></option>
-											<option <?php selected( $key, 1 ); ?> value='column_description'           ><?php _e('Description'           , 'wpsc'); ?></option>
-											<option <?php selected( $key, 2 ); ?> value='column_additional_description'><?php _e('Additional Description', 'wpsc'); ?></option>
-											<option <?php selected( $key, 3 ); ?> value='column_price'                 ><?php _e('Price'                 , 'wpsc'); ?></option>
-											<option <?php selected( $key, 4 ); ?> value='column_sku'                   ><?php _e('SKU'                   , 'wpsc'); ?></option>
-											<option <?php selected( $key, 5 ); ?> value='column_weight'                ><?php _e('Weight'                , 'wpsc'); ?></option>
-											<option <?php selected( $key, 6 ); ?> value='column_weight_unit'           ><?php _e('Weight Unit'           , 'wpsc'); ?></option>
-											<option <?php selected( $key, 7 ); ?> value='column_quantity'              ><?php _e('Stock Quantity'        , 'wpsc'); ?></option>
-											<option <?php selected( $key, 8 ); ?> value='column_quantity_limited'      ><?php _e('Stock Quantity Limit'  , 'wpsc'); ?></option>
+											<option <?php selected( $key, 0 ); ?> value='column_name'                  ><?php esc_html_e( 'Product Name'          , 'wpsc' ); ?></option>
+											<option <?php selected( $key, 1 ); ?> value='column_description'           ><?php esc_html_e( 'Description'           , 'wpsc' ); ?></option>
+											<option <?php selected( $key, 2 ); ?> value='column_additional_description'><?php esc_html_e( 'Additional Description', 'wpsc' ); ?></option>
+											<option <?php selected( $key, 3 ); ?> value='column_price'                 ><?php esc_html_e( 'Price'                 , 'wpsc' ); ?></option>
+											<option <?php selected( $key, 4 ); ?> value='column_sku'                   ><?php esc_html_e( 'SKU'                   , 'wpsc' ); ?></option>
+											<option <?php selected( $key, 5 ); ?> value='column_weight'                ><?php esc_html_e( 'Weight'                , 'wpsc' ); ?></option>
+											<option <?php selected( $key, 6 ); ?> value='column_weight_unit'           ><?php esc_html_e( 'Weight Unit'           , 'wpsc' ); ?></option>
+											<option <?php selected( $key, 7 ); ?> value='column_quantity'              ><?php esc_html_e( 'Stock Quantity'        , 'wpsc' ); ?></option>
+											<option <?php selected( $key, 8 ); ?> value='column_quantity_limited'      ><?php esc_html_e( 'Stock Quantity Limit'  , 'wpsc' ); ?></option>
 										</select>
 									</td>
 								</tr>
@@ -187,7 +187,7 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab
 						</div>
 					</div>
 				<?php endforeach; ?>
-				<label for='category'><?php _e('Please select a category you would like to place all products from this CSV into' , 'wpsc' ); ?>:</label>
+				<label for='category'><?php esc_html_e( 'Please select a category you would like to place all products from this CSV into' , 'wpsc' ); ?>:</label>
 				<select id='category' name='category'>
 					<?php foreach ( $categories as $category ): ?>
 						<option value="<?php echo $category->term_id; ?>"><?php echo esc_html( $category->name ); ?></option>

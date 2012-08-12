@@ -64,7 +64,7 @@ function wpsc_display_update_page() {
 	?>
 	
 	<div class="wrap">
-		<h2><?php echo esc_html( __('Update WP e-Commerce', 'wpsc') ); ?> </h2>
+		<h2><?php esc_html_e( 'Update WP e-Commerce', 'wpsc' ); ?> </h2>
 		<br />
 	<?php
 		if ( isset( $_REQUEST['run_updates'] ) ) :
@@ -85,9 +85,9 @@ function wpsc_display_update_page() {
 				$wpsc_update->run( $function, $message );
 			}
 
-			echo '<br /><br /><strong>' . __('WP e-Commerce updated successfully!', 'wpsc') . '</strong><br />';
+			echo '<br /><br /><strong>' . esc_html__( 'WP e-Commerce updated successfully!', 'wpsc' ) . '</strong><br />';
 			if( '' != get_option('permalink_structure')){ ?>
-				<em><?php printf(__('Note: It looks like you have custom permalinks, you will need to refresh your permalinks <a href="%s">here</a>','wpsc' ) , admin_url('options-permalink.php') ); ?></em>
+				<em><?php echo esc_html( sprintf( __( 'Note: It looks like you have custom permalinks, you will need to refresh your permalinks <a href="%s">here</a>', 'wpsc' ) , admin_url( 'options-permalink.php' ) ) ); ?></em>
 			<?php	
 			}
 			update_option('wpsc_version', 3.8);
@@ -98,15 +98,15 @@ function wpsc_display_update_page() {
 		else:
 
 
-		_e('Your WP e-Commerce database needs to be updated for WP e-Commerce 3.8.  To perform this update, press the button below.  It is highly recommended that you back up your database before performing this update.','wpsc'); 
+		esc_html_e( 'Your WP e-Commerce database needs to be updated for WP e-Commerce 3.8.  To perform this update, press the button below.  It is highly recommended that you back up your database before performing this update.', 'wpsc' ); 
 ?>		<br />
 		<br />
-		<em><?php _e('Note: If the server times out or runs out of memory, just reload this page, the server will pick up where it left off.','wpsc'); ?></em>
+		<em><?php esc_html_e( 'Note: If the server times out or runs out of memory, just reload this page, the server will pick up where it left off.', 'wpsc' ); ?></em>
 		<br />
 		
 		<form action="" method="post" id="setup">
 			<input type="hidden" name="run_updates" value="true" id="run_updates">
-			<p class="step"><input type="submit" class="button" value="Update WP e-Commerce" name="Submit"></p>
+			<p class="step"><input type="submit" class="button" value="<?php esc_attr_e( 'Update WP e-Commerce', 'wpsc' ); ?>" name="Submit"></p>
 		</form>
 	<?php
 		endif;

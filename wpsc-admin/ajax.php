@@ -536,8 +536,8 @@ function _wpsc_ajax_upload_product_file() {
 		$output .= '<td style="padding-right: 30px;">' . $attachment['post_title'] . '</td>';
 		$output .= '<td>' . wpsc_convert_byte( $file_size ) . '</td>';
 		$output .= '<td>.' . wpsc_get_extension( $attachment['post_title'] ) . '</td>';
-		$output .= "<td><a data-file-name='" . esc_attr( $attachment['post_title'] ) . "' data-product-id='" . esc_attr( $product_id ) . "' data-nonce='" . esc_attr( $delete_nonce ) . "' class='file_delete_button' href='{$deletion_url}' >" . _x( 'Delete', 'Digital Downliad UI row', 'wpsc' ) . "</a></td>";
-		$output .= '<td><a href=' .$file_url .'>' . _x( 'Download', 'Digital Downliad UI row', 'wpsc' ) . '</a></td>';
+		$output .= "<td><a data-file-name='" . esc_attr( $attachment['post_title'] ) . "' data-product-id='" . esc_attr( $product_id ) . "' data-nonce='" . esc_attr( $delete_nonce ) . "' class='file_delete_button' href='{$deletion_url}' >" . _x( 'Delete', 'Digital Download UI row', 'wpsc' ) . "</a></td>";
+		$output .= '<td><a href=' .$file_url .'>' . _x( 'Download', 'Digital Download UI row', 'wpsc' ) . '</a></td>';
 		$output .= '</tr>';
 	}
 

@@ -125,26 +125,26 @@ function wpsc_core_load_thumbnail_sizes() {
  */
 
 function wpsc_core_load_checkout_data() {
-	$form_types = Array(
-		"Text" => "text",
-		"Email Address" => "email",
-		"Street Address" => "address",
-		"City" => "city",
-		"Country" => "country",
-		"Delivery Address" => "delivery_address",
-		"Delivery City" => "delivery_city",
-		"Delivery Country" => "delivery_country",
-		"Text Area" => "textarea",
-		"Heading" => "heading",
-		"Select" => "select",
-		"Radio Button" => "radio",
-		"Checkbox" => "checkbox"
+	$form_types = array(
+		__( 'Text', 'wpsc' )             => 'text',
+		__( 'Email Address', 'wpsc' )    => 'email',
+		__( 'Street Address', 'wpsc' )   => 'address',
+		__( 'City', 'wpsc' )             => 'city',
+		__( 'Country', 'wpsc' )          => 'country',
+		__( 'Delivery Address', 'wpsc' ) => 'delivery_address',
+		__( 'Delivery City', 'wpsc' )    => 'delivery_city',
+		__( 'Delivery Country', 'wpsc' ) => 'delivery_country',
+		__( 'Text Area', 'wpsc' )        => 'textarea',
+		__( 'Heading', 'wpsc' )          => 'heading',
+		__( 'Select', 'wpsc' )           => 'select',
+		__( 'Radio Button', 'wpsc' )     => 'radio',
+		__( 'Checkbox', 'wpsc' )         => 'checkbox'
 	);
 
-	$form_types = apply_filters('wpsc_add_form_types' , $form_types);
-	update_option('wpsc_checkout_form_fields', $form_types);
+	$form_types = apply_filters( 'wpsc_add_form_types', $form_types );
+	update_option( 'wpsc_checkout_form_fields', $form_types );
 
-	$unique_names = Array(
+	$unique_names = array(
 		'billingfirstname',
 		'billinglastname',
 		'billingaddress',
@@ -164,8 +164,8 @@ function wpsc_core_load_checkout_data() {
 		'shippingpostcode'
 	);
 
-	$unique_names = apply_filters('wpsc_add_unique_names' , $unique_names);
-	update_option('wpsc_checkout_unique_names', $unique_names);
+	$unique_names = apply_filters( 'wpsc_add_unique_names' , $unique_names );
+	update_option( 'wpsc_checkout_unique_names', $unique_names );
 
 }
 /**

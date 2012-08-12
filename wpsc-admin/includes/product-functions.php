@@ -842,8 +842,6 @@ function wpsc_item_reassign_file($product_id, $selected_files) {
 		return null;
 	}
 
-
-
 	foreach($selected_files as $selected_file) {
 		// if we already use this file, there is no point doing anything more.
 		$file_is_attached = false;
@@ -884,7 +882,7 @@ function wpsc_item_reassign_file($product_id, $selected_files) {
 		}
 	}
 
-	return $fileid;
+	return true;
 }
 
  /**

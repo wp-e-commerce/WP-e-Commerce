@@ -729,7 +729,7 @@
 		/**
 		 * Add new tax rate field when "Add Tax Rate" is clicked
 		 * @since 3.8.8
-		 * TODO: rewrote the horrible code in class wpec_taxes_controller. There's really no need for AJAX here.
+		 * TODO: rewrite the horrible code in class wpec_taxes_controller. There's really no need for AJAX here.
 		 */
 		event_add_tax_rate : function() {
 			WPSC_Settings_Page.Taxes.add_field('rates');

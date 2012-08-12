@@ -28,7 +28,7 @@ if ( ( isset( $_SESSION['wpsc_activate_debug_page'] ) && ( $_SESSION['wpsc_activ
 	require_once( WPSC_FILE_PATH . '/wpsc-admin/display-debug.page.php' );
 
 if ( ! get_option( 'wpsc_checkout_form_sets' ) ) {
-	$form_sets = array( 'Default Checkout Forms' );
+	$form_sets = array( __( 'Default Checkout Forms', 'wpsc' ) );
 	update_option( 'wpsc_checkout_form_sets', $form_sets );
 }
 /**
@@ -78,7 +78,7 @@ add_filter('set-screen-option', 'wpsc_set_screen_option', 99, 3);
 
 /**
  * When rearranging the products for drag and drop it is easiest to arrange them when they are all on the same page...
- * @access public (wp-admin)
+ * @access public
  *
  * @since 3.8
  * @param $per_page (int) number of products per page
@@ -245,7 +245,7 @@ function wpsc_add_help_tabs() {
 		'wpsc-product' => array(
 			'title' => _x( 'Add and Edit Product', 'contextual help tab', 'wpsc' ),
 			'links' => array(
-				'category/managing-your-store/' => _x( 'Managing Your Store', 'contextual help link', 'wpsc' ),
+				'category/managing-your-store/'   => _x( 'Managing Your Store'   , 'contextual help link', 'wpsc' ),
 				'resource/video-adding-products/' => _x( 'Video: Adding Products', 'contextual help link', 'wpsc' ),
 			),
 		),
@@ -286,7 +286,7 @@ function wpsc_add_help_tabs() {
 	$screen = get_current_screen();
 	if ( array_key_exists( $screen->id, $tabs ) ) {
 		$tab = $tabs[$screen->id];
-		$content = '<p><strong>' . __( 'Fore More Information', 'wpsc' ) . '</strong></p>';
+		$content = '<p><strong>' . __( 'For More Information', 'wpsc' ) . '</strong></p>';
 		$links = array();
 		foreach( $tab['links'] as $link => $link_title ) {
 			$link = 'http://docs.getshopped.org/' . $link;
@@ -335,7 +335,7 @@ function wpsc_display_purchase_logs_page() {
 }
 
 function wpsc_product_log_rss_feed() {
-	echo "<link type='application/rss+xml' href='" . get_option( 'siteurl' ) . "/wp-admin/index.php?rss=true&amp;rss_key=key&amp;action=purchase_log&amp;type=rss' title='WP e-Commerce Purchase Log RSS' rel='alternate'/>";
+	echo "<link type='application/rss+xml' href='" . add_query_arg( array( 'rss' => 'true', 'rss_key' => 'key', 'action' => 'purchase_log', 'type' => 'rss' ), admin_url( 'index.php' ) ) . "' title='" . esc_attr( 'WP e-Commerce Purchase Log RSS', 'wpsc' ) . "' rel='alternate' />";
 }
 function wpsc_admin_include_coupon_js() {
 
@@ -387,22 +387,22 @@ function wpsc_meta_boxes() {
 
 	//if a variation page do not show these metaboxes
 	if ( is_object( $post ) && $post->post_parent == 0 ) {
-		add_meta_box( 'wpsc_product_variation_forms', __('Variations', 'wpsc'), 'wpsc_product_variation_forms', $pagename, 'normal', 'high' );
-		add_meta_box( 'wpsc_product_external_link_forms', __('Off Site Product link', 'wpsc'), 'wpsc_product_external_link_forms', $pagename, 'normal', 'high' );
+		add_meta_box( 'wpsc_product_variation_forms'    , __( 'Variations', 'wpsc' )           , 'wpsc_product_variation_forms'    , $pagename, 'normal', 'high' );
+		add_meta_box( 'wpsc_product_external_link_forms', __( 'Off Site Product link', 'wpsc' ), 'wpsc_product_external_link_forms', $pagename, 'normal', 'high' );
 	} else if( is_object( $post ) && $post->post_status == "inherit" ) {
-		remove_meta_box( 'tagsdiv-product_tag', 'wpsc-product', 'core' );
+		remove_meta_box( 'tagsdiv-product_tag'             , 'wpsc-product', 'core' );
 		remove_meta_box( 'wpsc_product_external_link_forms', 'wpsc-product', 'core' );
-		remove_meta_box( 'wpsc_product_categorydiv', 'wpsc-product', 'core' );
+		remove_meta_box( 'wpsc_product_categorydiv'        , 'wpsc-product', 'core' );
 	}
 
-	add_meta_box( 'wpsc_price_control_forms', __('Price Control', 'wpsc'), 'wpsc_price_control_forms', $pagename, 'side', 'low' );
-	add_meta_box( 'wpsc_stock_control_forms', __('Stock Control', 'wpsc'), 'wpsc_stock_control_forms', $pagename, 'side', 'low' );
-	add_meta_box( 'wpsc_product_taxes_forms', __('Taxes', 'wpsc'), 'wpsc_product_taxes_forms', $pagename, 'side', 'low' );
-	add_meta_box( 'wpsc_additional_desc', __('Additional Description', 'wpsc'), 'wpsc_additional_desc', $pagename, 'normal', 'high' );
-	add_meta_box( 'wpsc_product_download_forms', __('Product Download', 'wpsc'), 'wpsc_product_download_forms', $pagename, 'normal', 'high' );
-	add_meta_box( 'wpsc_product_image_forms', __('Product Images', 'wpsc'), 'wpsc_product_image_forms', $pagename, 'normal', 'high' );
-	add_meta_box( 'wpsc_product_shipping_forms', __('Shipping', 'wpsc'), 'wpsc_product_shipping_forms', $pagename, 'normal', 'high' );
-	add_meta_box( 'wpsc_product_advanced_forms', __('Advanced Settings', 'wpsc'), 'wpsc_product_advanced_forms', $pagename, 'normal', 'high' );
+	add_meta_box( 'wpsc_price_control_forms'   , __( 'Price Control', 'wpsc' )         , 'wpsc_price_control_forms'   , $pagename, 'side', 'low' );
+	add_meta_box( 'wpsc_stock_control_forms'   , __( 'Stock Control', 'wpsc' )         , 'wpsc_stock_control_forms'   , $pagename, 'side', 'low' );
+	add_meta_box( 'wpsc_product_taxes_forms'   , __( 'Taxes', 'wpsc' )                 , 'wpsc_product_taxes_forms'   , $pagename, 'side', 'low' );
+	add_meta_box( 'wpsc_additional_desc'       , __( 'Additional Description', 'wpsc' ), 'wpsc_additional_desc'       , $pagename, 'normal', 'high' );
+	add_meta_box( 'wpsc_product_download_forms', __( 'Product Download', 'wpsc' )      , 'wpsc_product_download_forms', $pagename, 'normal', 'high' );
+	add_meta_box( 'wpsc_product_image_forms'   , __( 'Product Images', 'wpsc' )        , 'wpsc_product_image_forms'   , $pagename, 'normal', 'high' );
+	add_meta_box( 'wpsc_product_shipping_forms', __( 'Shipping', 'wpsc' )              , 'wpsc_product_shipping_forms', $pagename, 'normal', 'high' );
+	add_meta_box( 'wpsc_product_advanced_forms', __( 'Advanced Settings', 'wpsc' )     , 'wpsc_product_advanced_forms', $pagename, 'normal', 'high' );
 
 }
 
@@ -414,7 +414,7 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 	if ( version_compare( get_bloginfo( 'version' ), '3.3', '<' ) )
 		wp_admin_css( 'dashboard' );
 
-	if($current_screen->id == 'dashboard_page_wpsc-sales-logs'){
+	if ( 'dashboard_page_wpsc-sales-logs' == $current_screen->id ) {
 		// jQuery
 		wp_enqueue_script( 'jquery' );
 		wp_enqueue_script( 'jquery-ui-draggable' );
@@ -453,10 +453,17 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 		wp_enqueue_style( 'wp-e-commerce-admin-dynamic', admin_url( "admin.php?wpsc_admin_dynamic_css=true" ), false, $version_identifier, 'all' );
 		// Localize scripts
 		wp_localize_script( 'wp-e-commerce-admin', 'wpsc_adminL10n', array(
-				'dragndrop_set' => ( get_option( 'wpsc_sort_by' ) == 'dragndrop' ? 'true' : 'false' ),
-				'save_product_order_nonce' => _wpsc_create_ajax_nonce( 'save_product_order' ),
-				'l10n_print_after' => 'try{convertEntities(wpsc_adminL10n);}catch(e){};'
-			) );
+			'dragndrop_set'            => ( get_option( 'wpsc_sort_by' ) == 'dragndrop' ? 'true' : 'false' ),
+			'save_product_order_nonce' => _wpsc_create_ajax_nonce( 'save_product_order' ),
+			'l10n_print_after'         => 'try{convertEntities(wpsc_adminL10n);}catch(e){};',
+			'empty_coupon'             => esc_html__( 'Please enter a coupon code.', 'wpsc' ),
+			'bulk_edit_no_vars'        => esc_html__( 'Quick Edit options are limited when editing products that have variations. You will need to edit the variations themselves.', 'wpsc' ),
+			'wpsc_core_images_url'     => WPSC_CORE_IMAGES_URL,
+			'variation_parent_swap'    => esc_html_x( 'New Variation Set', 'Variation taxonomy parent', 'wpsc' ),
+			/* translators             : This string is prepended to the 'New Variation Set' string */
+			'variation_helper_text'    => esc_html_x( 'Choose the Variation Set you want to add variants to. If you\'re creating a new variation set then select', 'Variation helper text', 'wpsc' ),
+			'variations_tutorial'      => esc_html__( 'Variations allow you to create options for your products. For example, if you\'re selling T-Shirts, they will generally have a "Size" option. Size will be the Variation Set name, and it will be a "New Variant Set". You will then create variants (small, medium, large) which will have the "Variation Set" of Size. Once you have made your set you can use the table on the right to manage them (edit, delete). You will be able to order your variants by dragging and dropping them within their Variation Set.', 'wpsc' )
+		) );
 	}
 	if ( 'dashboard_page_wpsc-upgrades' == $pagehook || 'dashboard_page_wpsc-update' == $pagehook )
 		wp_enqueue_style( 'wp-e-commerce-admin', WPSC_URL . '/wpsc-admin/css/admin.css', false, $version_identifier, 'all' );
@@ -578,7 +585,7 @@ function wpsc_admin_latest_activity() {
 	 * This is the right hand side for the past 30 days revenue on the wp dashboard
 	 */
 	echo "<div id='leftDashboard'>";
-	echo "<strong class='dashboardHeading'>" . __( 'Current Month', 'wpsc' ) . "</strong><br />";
+	echo "<strong class='dashboardHeading'>" . esc_html__( 'Current Month', 'wpsc' ) . "</strong><br />";
 	echo "<p class='dashboardWidgetSpecial'>";
 	// calculates total amount of orders for the month
 	$year = date( "Y" );
@@ -591,7 +598,7 @@ function wpsc_admin_latest_activity() {
 	//calculates amount of money made for the month
 	$currentMonthsSales = wpsc_currency_display( admin_display_total_price( $start_timestamp, $end_timestamp ) );
 	echo $currentMonthsSales;
-	echo "<span class='dashboardWidget'>" . _x( 'Sales', 'the total value of sales in dashboard widget', 'wpsc' ) . "</span>";
+	echo "<span class='dashboardWidget'>" . esc_html_x( 'Sales', 'the total value of sales in dashboard widget', 'wpsc' ) . "</span>";
 	echo "</p>";
 	echo "<p class='dashboardWidgetSpecial'>";
 	echo "<span class='pricedisplay'>";
@@ -606,7 +613,7 @@ function wpsc_admin_latest_activity() {
 		echo wpsc_currency_display( $monthsAverage );
 	}
 	//echo "</span>";
-	echo "<span class='dashboardWidget'>" . __( 'Avg Order', 'wpsc' ) . "</span>";
+	echo "<span class='dashboardWidget'>" . esc_html__( 'Avg Order', 'wpsc' ) . "</span>";
 	echo "</p>";
 	echo "</div>";
 	/*
@@ -614,11 +621,11 @@ function wpsc_admin_latest_activity() {
 	 */
 
 	echo "<div id='rightDashboard' >";
-	echo "<strong class='dashboardHeading'>" . __( 'Total Income', 'wpsc' ) . "</strong><br />";
+	echo "<strong class='dashboardHeading'>" . esc_html__( 'Total Income', 'wpsc' ) . "</strong><br />";
 
 	echo "<p class='dashboardWidgetSpecial'>";
 	echo wpsc_currency_display( admin_display_total_price() );
-	echo "<span class='dashboardWidget'>" . _x( 'Sales', 'the total value of sales in dashboard widget', 'wpsc' ) . "</span>";
+	echo "<span class='dashboardWidget'>" . esc_html_x( 'Sales', 'the total value of sales in dashboard widget', 'wpsc' ) . "</span>";
 	echo "</p>";
 	echo "<p class='dashboardWidgetSpecial'>";
 	echo "<span class='pricedisplay'>";
@@ -635,7 +642,7 @@ function wpsc_admin_latest_activity() {
 	}
 	echo wpsc_currency_display( $totalAverage );
 	//echo "</span>";
-	echo "<span class='dashboardWidget'>" . __( 'Avg Order', 'wpsc' ) . "</span>";
+	echo "<span class='dashboardWidget'>" . esc_html__( 'Avg Order', 'wpsc' ) . "</span>";
 	echo "</p>";
 	echo "</div>";
 	echo "<div style='clear:both'></div>";
@@ -717,7 +724,7 @@ function wpsc_quarterly_dashboard_widget() {
 	if ( get_option( 'wpsc_business_year_start' ) == false ) {
 ?>
 		<form action='' method='post'>
-			<label for='date_start'><?php _e( 'Financial Year End' , 'wpsc' ); ?>: </label>
+			<label for='date_start'><?php esc_html_e( 'Financial Year End' , 'wpsc' ); ?>: </label>
 			<input id='date_start' type='text' class='pickdate' size='11' value='<?php echo get_option( 'wpsc_last_date' ); ?>' name='add_start' />
 			   <!--<select name='add_start[day]'>
 <?php
@@ -774,8 +781,8 @@ function wpsc_quarterly_dashboard_widget() {
 ?>
 			<div id='box'>
 				<p class='atglance'>
-					<span class='wpsc_quart_left'><?php _e( 'At a Glance' , 'wpsc' ); ?></span>
-					<span class='wpsc_quart_right'><?php _e( 'Revenue' , 'wpsc' ); ?></span>
+					<span class='wpsc_quart_left'><?php esc_html_e( 'At a Glance' , 'wpsc' ); ?></span>
+					<span class='wpsc_quart_right'><?php esc_html_e( 'Revenue' , 'wpsc' ); ?></span>
 				</p>
 				<div style='clear:both'></div>
 				<p class='quarterly'>
@@ -871,10 +878,10 @@ function wpsc_dashboard_4months_widget() {
 	$tablerow = 1;
 	ob_start();
 	?>
-	<div style="padding-bottom:15px; "><?php _e('Last four months of sales on a per product basis:', 'wpsc'); ?></div>
+	<div style="padding-bottom:15px; "><?php esc_html_e( 'Last four months of sales on a per product basis:', 'wpsc' ); ?></div>
     <table style="width:100%" border="0" cellspacing="0">
     	<tr style="font-style:italic; color:#666;" height="20">
-    		<td colspan="2" style=" font-family:\'Times New Roman\', Times, serif; font-size:15px; border-bottom:solid 1px #000;"><?php _e('At a Glance', 'wpsc'); ?></td>
+    		<td colspan="2" style=" font-family:\'Times New Roman\', Times, serif; font-size:15px; border-bottom:solid 1px #000;"><?php esc_html_e( 'At a Glance', 'wpsc' ); ?></td>
 			<?php foreach ( $months as $mnth ): ?>
 			<td align="center" style=" font-family:\'Times New Roman\'; font-size:15px; border-bottom:solid 1px #000;"><?php echo date( "M", $mnth ); ?></td>
 			<?php endforeach; ?>
@@ -993,7 +1000,7 @@ function wpsc_ajax_ie_save() {
 }
 
 function wpsc_add_meta_boxes(){
-	add_meta_box( 'dashboard_right_now', __('Current Month', 'wpsc'), 'wpsc_right_now', 'dashboard_page_wpsc-sales-logs', 'top' );
+	add_meta_box( 'dashboard_right_now', __( 'Current Month', 'wpsc' ), 'wpsc_right_now', 'dashboard_page_wpsc-sales-logs', 'top' );
 }
 
 function wpsc_check_permalink_notice(){

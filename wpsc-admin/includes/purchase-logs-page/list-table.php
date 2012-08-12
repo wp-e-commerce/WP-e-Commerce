@@ -1,11 +1,11 @@
 <div class="wrap">
 	<div id="icon-users" class="icon32"><br/></div>
 	<h2>
-		<?php esc_html_e( 'Sales Log' ); ?>
+		<?php esc_html_e( 'Sales Log', 'wpsc' ); ?>
 
 		<?php
 			if ( isset($_REQUEST['s']) && $_REQUEST['s'] )
-				printf( '<span class="subtitle">' . __('Search results for &#8220;%s&#8221;') . '</span>', esc_html( stripslashes( $_REQUEST['s'] ) ) ); ?>
+				printf( '<span class="subtitle">' . __( 'Search results for &#8220;%s&#8221;' ) . '</span>', esc_html( stripslashes( $_REQUEST['s'] ) ) ); ?>
 	</h2>
 
 	<?php if ( ! empty( $_REQUEST['updated'] ) || ! empty( $_REQUEST['deleted'] ) ): ?>
@@ -24,16 +24,16 @@
 	<?php endif ?>
 
 	<?php if( get_option( 'wpsc_purchaselogs_fixed' ) == false || ( wpsc_check_uniquenames() ) ): ?>
-        <div class='error' style='padding:8px;line-spacing:8px;'><span ><?php printf( __('When upgrading the WP e-Commerce Plugin from 3.6.* to 3.7 it is required that you associate your checkout form fields with the new Purchase Logs system. To do so please <a href="%s">Click Here</a>', 'wpsc'), add_query_arg( 'c', 'upgrade_purchase_logs_3_7' ) ); ?></span></div>
+        <div class='error' style='padding:8px;line-spacing:8px;'><span ><?php printf( __( 'When upgrading the WP e-Commerce Plugin from 3.6.* to 3.7 it is required that you associate your checkout form fields with the new Purchase Logs system. To do so please <a href="%s">Click Here</a>', 'wpsc' ), add_query_arg( 'c', 'upgrade_purchase_logs_3_7' ) ); ?></span></div>
    <?php  endif; ?>
 
 	<?php if ( $this->needs_update() ): ?>
-		<div class='error' style='padding:8px;line-spacing:8px;'><span ><?php printf( __('It has been detected that some of your purchase logs were not updated properly when you upgrade to WP e-Commerce %s. Please <a href="%s">click here</a> to fix this problem.', 'wpsc'), WPSC_VERSION, add_query_arg( 'c', 'upgrade_purchase_logs_3_8' ) ); ?></span></div>
+		<div class='error' style='padding:8px;line-spacing:8px;'><span ><?php printf( __( 'It has been detected that some of your purchase logs were not updated properly when you upgrade to WP e-Commerce %s. Please <a href="%s">click here</a> to fix this problem.', 'wpsc' ), WPSC_VERSION, add_query_arg( 'c', 'upgrade_purchase_logs_3_8' ) ); ?></span></div>
 	<?php endif; ?>
 
 	<form id="purchase-logs-search" method-"get" action="">
 		<input type="hidden" name="page" value="<?php echo esc_attr( $_REQUEST['page'] ); ?>" />
-		<?php $this->list_table->search_box( 'Search Sales Logs', 'post' ); ?>
+		<?php $this->list_table->search_box( __( 'Search Sales Logs', 'wpsc' ), 'post' ); ?>
 		<?php if ( ! empty( $_REQUEST['status'] ) ): ?>
 			<input type="hidden" name="status" value="<?php echo esc_attr( $_REQUEST['status'] ); ?>" />
 		<?php endif ?>

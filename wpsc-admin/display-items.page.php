@@ -23,18 +23,18 @@ require_once(WPSC_FILE_PATH . '/wpsc-admin/includes/products.php');
 function wpsc_additional_column_names( $columns ){
     $columns = array();
 
-    $columns['cb'] = '<input type="checkbox" />';
-    $columns['image'] = '';
-    $columns['title'] = __('Name', 'wpsc');
-    $columns['weight'] = __('Weight', 'wpsc');
-    $columns['stock'] = __('Stock', 'wpsc');
-    $columns['price'] = __('Price', 'wpsc');
-    $columns['sale_price'] = __('Sale Price', 'wpsc');
-    $columns['SKU'] = __('SKU', 'wpsc');
-    $columns['cats'] = __('Categories', 'wpsc');
-    $columns['featured'] = __('Featured', 'wpsc');
+    $columns['cb']            = '<input type="checkbox" />';
+    $columns['image']         = '';
+    $columns['title']         = __( 'Name', 'wpsc' );
+    $columns['weight']        = __( 'Weight', 'wpsc' );
+    $columns['stock']         = __( 'Stock', 'wpsc' );
+    $columns['price']         = __( 'Price', 'wpsc' );
+    $columns['sale_price']    = __( 'Sale Price', 'wpsc' );
+    $columns['SKU']           = __( 'SKU', 'wpsc' );
+    $columns['cats']          = __( 'Categories', 'wpsc' );
+    $columns['featured']      = __( 'Featured', 'wpsc' );
     $columns['hidden_alerts'] = '';
-    $columns['date'] = __('Date', 'wpsc');
+    $columns['date']          = __( 'Date', 'wpsc' );
 
     return $columns;
 }
@@ -53,14 +53,14 @@ function wpsc_additional_column_name_variations( $columns ){
     if(isset($post) && $post->post_parent != '0' )
        remove_meta_box( 'wpsc_product_variation_forms', 'wpsc-product', 'normal' );
 
-    $columns['image'] = '';
-    $columns['title'] = __('Name', 'wpsc');
-    $columns['weight'] = __('Weight', 'wpsc');
-    $columns['stock'] = __('Stock', 'wpsc');
-    $columns['price'] = __('Price', 'wpsc');
-    $columns['sale_price'] = __('Sale Price', 'wpsc');
-    $columns['SKU'] = __('SKU', 'wpsc');
+    $columns['image']         = '';
     $columns['hidden_alerts'] = '';
+    $columns['title']         = __( 'Name', 'wpsc' );
+    $columns['weight']        = __( 'Weight', 'wpsc' );
+    $columns['stock']         = __( 'Stock', 'wpsc' );
+    $columns['price']         = __( 'Price', 'wpsc' );
+    $columns['sale_price']    = __( 'Sale Price', 'wpsc' );
+    $columns['SKU']           = __( 'SKU', 'wpsc' );
 
     //For BC for 3.0 (hoping to remove for WPEC 3.9)
     register_column_headers( 'wpsc-product_variants', $columns );
@@ -99,13 +99,13 @@ function wpsc_additional_column_data( $column ) {
                     $src = wp_get_attachment_url( $attached_image->ID );
                  ?>
                     <div style='width:38px; height:38px; overflow:hidden;'>
-                        <img src='<?php echo $src; ?>' alt='<?php _e( 'Drag to a new position', 'wpsc' ); ?>' width='38' height='38' />
+                        <img src='<?php echo $src; ?>' alt='<?php esc_attr_e( 'Drag to a new position', 'wpsc' ); ?>' width='38' height='38' />
                     </div>
                 <?php
 		     } else {
 		      	$image_url = WPSC_CORE_IMAGES_URL . "/no-image-uploaded.gif";
                 ?>
-                      <img src='<?php echo $image_url; ?>' alt='<?php _e( 'Drag to a new position', 'wpsc' ); ?>' width='38' height='38' />
+                      <img src='<?php echo $image_url; ?>' alt='<?php esc_attr_e( 'Drag to a new position', 'wpsc' ); ?>' width='38' height='38' />
                 <?php
                      }
                 break;
@@ -135,17 +135,17 @@ function wpsc_additional_column_data( $column ) {
 
 			switch( $unit ) {
 				case "pound":
-					$unit = __(" lbs.", "wpsc");
+					$unit = __( " lbs.", "wpsc" );
 					break;
 				case "ounce":
-					$unit = __(" oz.", "wpsc");
+					$unit = __( " oz.", "wpsc" );
 					break;
 				case "gram":
-					$unit = __(" g", "wpsc");
+					$unit = __( " g", "wpsc" );
 					break;
 				case "kilograms":
 				case "kilogram":
-					$unit = __(" kgs.", "wpsc");
+					$unit = __( " kgs.", "wpsc" );
 					break;
 			}
                         echo $weight.$unit;
@@ -156,7 +156,7 @@ function wpsc_additional_column_data( $column ) {
             case 'stock' :
                 $stock = get_post_meta( $post->ID, '_wpsc_stock', true );
                     if( $stock == '' )
-                        $stock = __('N/A', 'wpsc');
+                        $stock = __( 'N/A', 'wpsc' );
                     if( !$is_parent ) {
                         echo $stock;
                         echo '<div id="inline_' . $post->ID . '_stock" class="hidden">' . $stock . '</div>';
@@ -199,9 +199,9 @@ function wpsc_additional_column_data( $column ) {
                         $out = array();
                         foreach ( $categories as $c )
                             $out[] = "<a href='?post_type=wpsc-product&amp;wpsc_product_category={$c->slug}'> " . esc_html( sanitize_term_field( 'name', $c->name, $c->term_id, 'category', 'display' ) ) . "</a>";
-                            echo join( ', ', $out );
+                            echo implode( ', ', $out );
 			} else {
-                            _e('Uncategorized', 'wpsc');
+                            _e( 'Uncategorized', 'wpsc' );
 			}
                 break;
             case 'featured' :
@@ -209,9 +209,9 @@ function wpsc_additional_column_data( $column ) {
 ?>
 	<a class="wpsc_featured_product_toggle featured_toggle_<?php echo $post->ID; ?>" href='<?php echo $featured_product_url; ?>' >
             <?php if ( in_array( $post->ID, (array)get_option( 'sticky_products' ) ) ) : ?>
-                <img class='gold-star' src='<?php echo WPSC_CORE_IMAGES_URL; ?>/gold-star.gif' alt='<?php _e( 'Unmark as Featured', 'wpsc' ); ?>' title='<?php _e( 'Unmark as Featured', 'wpsc' ); ?>' />
+                <img class='gold-star' src='<?php echo WPSC_CORE_IMAGES_URL; ?>/gold-star.gif' alt='<?php esc_attr_e( 'Unmark as Featured', 'wpsc' ); ?>' title='<?php esc_attr_e( 'Unmark as Featured', 'wpsc' ); ?>' />
             <?php else: ?>
-                <img class='grey-star' src='<?php echo WPSC_CORE_IMAGES_URL; ?>/grey-star.gif' alt='<?php _e( 'Mark as Featured', 'wpsc' ); ?>' title='<?php _e( 'Mark as Featured', 'wpsc' ); ?>' />
+                <img class='grey-star' src='<?php echo WPSC_CORE_IMAGES_URL; ?>/grey-star.gif' alt='<?php esc_attr_e( 'Mark as Featured', 'wpsc' ); ?>' title='<?php esc_attr_e( 'Mark as Featured', 'wpsc' ); ?>' />
             <?php endif; ?>
 	</a>
         <?php
@@ -296,7 +296,7 @@ function wpsc_cats_restrict_manage_posts() {
             // retrieve array of term objects per taxonomy
             // output html for taxonomy dropdown filter
             echo "<select name='$tax_slug' id='$tax_slug' class='postform'>";
-            echo "<option value=''>" . sprintf(_x('Show All %s', 'Show all [category name]', 'wpsc'), $tax_name) . "</option>";
+            echo "<option value=''>" . esc_html( sprintf( _x( 'Show All %s', 'Show all [category name]', 'wpsc' ), $tax_name ) ) . "</option>";
             wpsc_cats_restrict_manage_posts_print_terms($tax_slug);
             echo "</select>";
         }
@@ -378,9 +378,9 @@ function wpsc_update_featured_products() {
 
 	if ( $is_ajax == true ) {
 		if ( $new_status == true ) : ?>
-                    jQuery('.featured_toggle_<?php echo $product_id; ?>').html("<img class='gold-star' src='<?php echo WPSC_CORE_IMAGES_URL; ?>/gold-star.gif' alt='<?php _e( 'Unmark as Featured', 'wpsc' ); ?>' title='<?php _e( 'Unmark as Featured', 'wpsc' ); ?>' />");
+                    jQuery('.featured_toggle_<?php echo $product_id; ?>').html("<img class='gold-star' src='<?php echo WPSC_CORE_IMAGES_URL; ?>/gold-star.gif' alt='<?php esc_attr_e( 'Unmark as Featured', 'wpsc' ); ?>' title='<?php esc_attr_e( 'Unmark as Featured', 'wpsc' ); ?>' />");
             <?php else: ?>
-                    jQuery('.featured_toggle_<?php echo $product_id; ?>').html("<img class='grey-star' src='<?php echo WPSC_CORE_IMAGES_URL; ?>/grey-star.gif' alt='<?php _e( 'Mark as Featured', 'wpsc' ); ?>' title='<?php _e( 'Mark as Featured', 'wpsc' ); ?>' />");
+                    jQuery('.featured_toggle_<?php echo $product_id; ?>').html("<img class='grey-star' src='<?php echo WPSC_CORE_IMAGES_URL; ?>/grey-star.gif' alt='<?php esc_attr_e( 'Mark as Featured', 'wpsc' ); ?>' title='<?php esc_attr_e( 'Mark as Featured', 'wpsc' ); ?>' />");
 <?php
 		endif;
 		exit();
@@ -399,7 +399,7 @@ function my_action_row( $actions, $post ) {
     $url = admin_url( 'edit.php' );
     $url = add_query_arg( array( 'wpsc_admin_action' => 'duplicate_product', 'product' => $post->ID ), $url );
 
-    $actions['duplicate'] = '<a href="'.esc_url( $url ).'">'._x( 'Duplicate', 'row-actions', 'wpsc' ).'</a>';
+    $actions['duplicate'] = '<a href="'.esc_url( $url ).'">' . esc_html_x( 'Duplicate', 'row-actions', 'wpsc' ) . '</a>';
 
     return $actions;
 }

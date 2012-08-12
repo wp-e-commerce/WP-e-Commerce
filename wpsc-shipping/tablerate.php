@@ -86,7 +86,7 @@ class tablerate {
 			<tbody class="table-rate">
 				<tr class="js-warning">
 					<td colspan="2">
-						<small><?php echo sprintf( __( 'To remove a rate layer, simply leave the values on that row blank. By the way, <a href="%s">enable JavaScript</a> for a better user experience.'), 'http://www.google.com/support/bin/answer.py?answer=23852' ); ?></small>
+						<small><?php echo sprintf( __( 'To remove a rate layer, simply leave the values on that row blank. By the way, <a href="%s">enable JavaScript</a> for a better user experience.', 'wpsc'), 'http://www.google.com/support/bin/answer.py?answer=23852' ); ?></small>
 					</td>
 				</tr>
 				<?php if ( ! empty( $layers ) ): ?>

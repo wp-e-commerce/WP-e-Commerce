@@ -211,11 +211,11 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 		global $wpdb;
 		$view_labels = array(
 			1 => _nx_noop( 'Incomplete <span class="count">(%s)</span>', 'Incomplete <span class="count">(%s)</span>', 'purchase logs' ),
-			2 => _nx_noop( 'Received <span class="count">(%s)</span>', 'Received <span class="count">(%s)</span>', 'purchase logs' ),
-			3 => _nx_noop( 'Accepted <span class="count">(%s)</span>', 'Accepted <span class="count">(%s)</span>', 'purchase logs' ),
+			2 => _nx_noop( 'Received <span class="count">(%s)</span>'  , 'Received <span class="count">(%s)</span>'  , 'purchase logs' ),
+			3 => _nx_noop( 'Accepted <span class="count">(%s)</span>'  , 'Accepted <span class="count">(%s)</span>'  , 'purchase logs' ),
 			4 => _nx_noop( 'Dispatched <span class="count">(%s)</span>', 'Dispatched <span class="count">(%s)</span>', 'purchase logs' ),
-			5 => _nx_noop( 'Closed <span class="count">(%s)</span>', 'Closed <span class="count">(%s)</span>', 'purchase logs' ),
-			6 => _nx_noop( 'Declined <span class="count">(%s)</span>', 'Declined <span class="count">(%s)</span>', 'purchase logs' ),
+			5 => _nx_noop( 'Closed <span class="count">(%s)</span>'    , 'Closed <span class="count">(%s)</span>'    , 'purchase logs' ),
+			6 => _nx_noop( 'Declined <span class="count">(%s)</span>'  , 'Declined <span class="count">(%s)</span>'  , 'purchase logs' ),
 		);
 
 		$sql = "SELECT DISTINCT processed, COUNT(*) AS count FROM " . WPSC_TABLE_PURCHASE_LOGS . " GROUP BY processed ORDER BY processed";
@@ -356,7 +356,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 	public function column_customer( $item ) {
 		?>
 		<strong>
-			<a class="row-title" href="<?php echo esc_attr( $this->item_url( $item ) ); ?>" title="<?php esc_attr_e( 'View order details', 'wpsc' ) ?>"><?php echo esc_html( $item->firstname . ' ' . $item->lastname ); ?></a>
+			<a class="row-title" href="<?php echo esc_url( $this->item_url( $item ) ); ?>" title="<?php esc_attr_e( 'View order details', 'wpsc' ) ?>"><?php echo esc_html( $item->firstname . ' ' . $item->lastname ); ?></a>
 		</strong><br />
 		<small><?php echo make_clickable( $item->email ); ?></small>
 		<?php
@@ -379,10 +379,10 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 
 	public function column_id( $item ) {
 		?>
-		<a href="<?php echo esc_attr( $this->item_url( $item ) ); ?>" title="<?php esc_attr_e( 'View order details', 'wpsc' ) ?>"><?php echo esc_html( $item->id ); ?></a>
+		<a href="<?php echo esc_url( $this->item_url( $item ) ); ?>" title="<?php esc_attr_e( 'View order details', 'wpsc' ) ?>"><?php echo esc_html( $item->id ); ?></a>
 		<?php if ( ! $this->current_action() == 'delete' ): ?>
 			<br />
-			<small><a class="delete" href="<?php echo esc_url( $this->delete_url( $item ) ); ?>"><?php echo esc_html( _x( 'Delete', 'Sales log page', 'wpsc' ) ); ?></a></small>
+			<small><a class="delete" href="<?php echo esc_url( $this->delete_url( $item ) ); ?>"><?php echo esc_html_x( 'Delete', 'Sales log page', 'wpsc' ); ?></a></small>
 		<?php endif ?>
 		<?php
 	}
@@ -438,11 +438,11 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 		$empty = empty( $item->track_id );
 		?>
 			<div data-log-id="<?php echo esc_attr( $item->id ); ?>" <?php echo $empty ? ' class="empty"' : ''; ?>>
-				<a class="add" href="#"><?php echo esc_html( _x( 'Add Tracking ID', 'add purchase log tracking id', 'wpsc' ) ); ?></a>
+				<a class="add" href="#"><?php echo esc_html_x( 'Add Tracking ID', 'add purchase log tracking id', 'wpsc' ); ?></a>
 				<input type="text" class="wpsc-purchase-log-tracking-id" value="<?php echo esc_attr( $item->track_id ); ?>" />
-				<a class="button save" href="#"><?php echo esc_html( _x( 'Save', 'save sales log tracking id', 'wpsc' ) ); ?></a>
+				<a class="button save" href="#"><?php echo esc_html_x( 'Save', 'save sales log tracking id', 'wpsc' ); ?></a>
 				<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" /><br class="clear" />
-				<small class="send-email"><a href="#"><?php echo esc_html( _x( 'Send Email', 'sales log', 'wpsc' ) ); ?></a></small>
+				<small class="send-email"><a href="#"><?php echo esc_html_x( 'Send Email', 'sales log', 'wpsc' ); ?></a></small>
 			</div>
 		<?php
 	}

@@ -26,7 +26,7 @@ function wpec_taxes_settings_page() {
  * */
 function wpec_taxes_ajax_controller() {
 	if ( ! wp_verify_nonce( $_POST['nonce'], 'wpsc_settings_page_nonce' ) )
-		die( 'Session expired. Try refreshing your settings page.' );
+		die( __( 'Session expired. Try refreshing your settings page.', 'wpsc' ) );
 
 	//include taxes controller
 	$wpec_taxes_controller = new wpec_taxes_controller;

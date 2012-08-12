@@ -87,43 +87,43 @@ class WPSC_Settings_Tab_Marketing extends WPSC_Settings_Tab {
 			$display_find_us1 = "checked ='checked'"; ?>
 			<input type='hidden' name='change-settings' value='true' />
 			<p>
-				<span class='input_label'><?php _e( 'Display Cross Sales', 'wpsc' ); ?></span>
+				<span class='input_label'><?php esc_html_e( 'Display Cross Sales', 'wpsc' ); ?></span>
 				<input <?php echo $wpsc_also_bought1; ?> type='checkbox' name='wpsc_also_bought' />
-				<span class='description'>  <?php _e( 'Adds the \'Users who bought this also bought\' item to the single products page.', 'wpsc' ); ?></span>
+				<span class='description'><?php esc_html_e( 'Adds the \'Users who bought this also bought\' item to the single products page.', 'wpsc' ); ?></span>
 			</p><br />
 			<p>
-				<span class='input_label'><?php _e( 'Show Share This (Social Bookmarks)', 'wpsc' ); ?></span>
+				<span class='input_label'><?php esc_html_e( 'Show Share This (Social Bookmarks)', 'wpsc' ); ?></span>
 				<input <?php echo $wpsc_share_this1; ?> type='checkbox' name='wpsc_share_this' />
-				<span class='description'>  <?php _e( 'Adds the \'Share this link\' item to the single products page.', 'wpsc' ); ?></span>
+				<span class='description'>  <?php esc_html_e( 'Adds the \'Share this link\' item to the single products page.', 'wpsc' ); ?></span>
 			</p><br />
 			<p>
-				<span class='input_label'> <?php _e( 'Display How Customer Found Us Survey', 'wpsc' ) ?></span>
+				<span class='input_label'> <?php esc_html_e( 'Display How Customer Found Us Survey', 'wpsc' ) ?></span>
 				<input <?php echo $display_find_us1; ?> type='checkbox' name='display_find_us' />
-				<span class='description'>  <?php _e( 'Adds the \'How did you find out about us\' drop-down option at checkout.', 'wpsc' ) ?></span>
+				<span class='description'>  <?php esc_html_e( 'Adds the \'How did you find out about us\' drop-down option at checkout.', 'wpsc' ) ?></span>
 			</p><br />
 			<p>
-				<span class='input_label'> <?php _e( 'Display Facebook Like', 'wpsc' ) ?></span>
+				<span class='input_label'> <?php esc_html_e( 'Display Facebook Like', 'wpsc' ) ?></span>
 				<input type='hidden' value='0' name='wpsc_options[wpsc_facebook_like]' />
 				<input <?php echo $facebook_like1; ?> type='checkbox' name='wpsc_options[wpsc_facebook_like]' />
-				<span class='description'>  <?php _e( 'Adds the Facebook Like button on your single products page.', 'wpsc' ) ?></span>
+				<span class='description'>  <?php esc_html_e( 'Adds the Facebook Like button on your single products page.', 'wpsc' ) ?></span>
 			</p><br />
 	<?php
 	}
 
 	public function rss_address_meta_box() {
 		?>
-			<p><?php _e( 'People can use this RSS feed to keep up to date with your product list.', 'wpsc' ); ?></p>
-			<p><?php _e( 'RSS Feed Address', 'wpsc' ) ?> :	<?php echo get_bloginfo( 'url' ) . "/index.php?rss=true&amp;action=product_list"; ?></p>
+			<p><?php esc_html_e( 'People can use this RSS feed to keep up to date with your product list.', 'wpsc' ); ?></p>
+			<p><?php esc_html_e( 'RSS Feed Address', 'wpsc' ) ?> :	<?php echo get_bloginfo( 'url' ) . "/index.php?rss=true&amp;action=product_list"; ?></p>
 		<?php
 	}
 
 	function google_merch_center_meta_box() {
 		?>
-			<p><?php _e( 'To import your products into <a href="http://www.google.com/merchants/" target="_blank">Google Merchant Centre</a> so that they appear within Google Product Search results, sign up for a Google Merchant Centre account and add a scheduled data feed with the following URL:', 'wpsc' ); ?></p>
+			<p><?php esc_html_e( 'To import your products into <a href="http://www.google.com/merchants/" target="_blank">Google Merchant Centre</a> so that they appear within Google Product Search results, sign up for a Google Merchant Centre account and add a scheduled data feed with the following URL:', 'wpsc' ); ?></p>
 
 			<?php $google_feed_url = get_bloginfo( 'url' ) . "/index.php?rss=true&action=product_list&xmlformat=google"; ?>
 
-			<a href="<?php esc_attr_e( htmlentities( $google_feed_url, ENT_QUOTES, 'UTF-8' ) ); ?>"><?php esc_attr_e(  htmlentities( $google_feed_url, ENT_QUOTES, 'UTF-8' ) ); ?></a>
+			<?php echo make_clickable( esc_url( $google_feed_url ) ); ?>
 
 		<?php
 	}

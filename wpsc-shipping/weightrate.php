@@ -79,7 +79,7 @@ class weightrate {
 			<thead>
 				<tr>
 					<th class="total-weight" title="<?php _e( 'You must enter the weight here in pounds, regardless of what you used on your products', 'wpsc' ); ?>">
-						<?php _e( 'Total Weight', 'wpsc' ); ?><br /><small><?php _e( 'in pounds' ); ?></small>
+						<?php _e( 'Total Weight', 'wpsc' ); ?><br /><small><?php _e( 'in pounds', 'wpsc' ); ?></small>
 					</th>
 					<th class="shipping"><?php _e( 'Shipping Price', 'wpsc' ); ?></th>
 				</tr>
@@ -87,7 +87,7 @@ class weightrate {
 			<tbody class="table-rate">
 				<tr class="js-warning">
 					<td colspan="2">
-						<small><?php echo sprintf( __( 'To remove a rate layer, simply leave the values on that row blank. By the way, <a href="%s">enable JavaScript</a> for a better user experience.'), 'http://www.google.com/support/bin/answer.py?answer=23852' ); ?></small>
+						<small><?php echo sprintf( __( 'To remove a rate layer, simply leave the values on that row blank. By the way, <a href="%s">enable JavaScript</a> for a better user experience.', 'wpsc'), 'http://www.google.com/support/bin/answer.py?answer=23852' ); ?></small>
 					</td>
 				</tr>
 				<?php if ( ! empty( $layers ) ): ?>

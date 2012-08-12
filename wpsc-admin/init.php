@@ -99,7 +99,9 @@ function wpsc_purchase_log_csv() {
 			$start_end_sql = "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `date` BETWEEN '%d' AND '%d' ORDER BY `date` DESC";
 			$start_end_sql = apply_filters( 'wpsc_purchase_log_start_end_csv', $start_end_sql );
 			$data = $wpdb->get_results( $wpdb->prepare( $start_end_sql, $start_timestamp, $end_timestamp ), ARRAY_A );
-			$csv_name = 'Purchase Log ' . date( "M-d-Y", $start_timestamp ) . ' to ' . date( "M-d-Y", $end_timestamp ) . '.csv';
+			/* translators: %1$s is "start" date, %2$s is "to" date */
+			$csv_name = _x( 'Purchase Log %1$s to %2$s.csv', 'exported purchase log csv file name', 'wpsc' );
+			$csv_name = sprintf( $csv_name, date( "M-d-Y", $start_timestamp ), date( "M-d-Y", $end_timestamp ) );
 		} elseif ( isset( $_REQUEST['m'] ) ) {
 			$year = (int) substr( $_REQUEST['m'], 0, 4);
 			$month = (int) substr( $_REQUEST['m'], -2 );
@@ -110,20 +112,30 @@ function wpsc_purchase_log_csv() {
 			";
 			$month_year_sql = apply_filters( 'wpsc_purchase_log_month_year_csv', $month_year_sql );
 			$data = $wpdb->get_results( $wpdb->prepare( $month_year_sql, $year, $month ), ARRAY_A );
-			$csv_name = 'Purchase Log ' . $month . '/' . $year . '.csv';
+			/* translators: %1$s is month, %2$s is year */
+			$csv_name = _x( 'Purchase Log %1$s/%2$s.csv', 'exported purchase log csv file name', 'wpsc' );
+			$csv_name = sprintf( $csv_name, $month, $year );
 		} else {
 			$sql = apply_filters( 'wpsc_purchase_log_month_year_csv', "SELECT * FROM " . WPSC_TABLE_PURCHASE_LOGS );
 			$data = $wpdb->get_results( $sql, ARRAY_A );
-			$csv_name = "All Purchase Logs.csv";
+			$csv_name = _x( "All Purchase Logs.csv", 'exported purchase log csv file name', 'wpsc' );
 		}
 
 		$form_sql = "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `active` = '1' AND `type` != 'heading' ORDER BY `checkout_order` DESC;";
 		$form_data = $wpdb->get_results( $form_sql, ARRAY_A );
 		$csv = 'Purchase ID, Price, Firstname, Lastname, Email, Order Status, Data, ';
 
-		$headers = "\"Purchase ID\",\"Purchase Total\","; //capture the headers
-		$headers2  ="\"Payment Gateway\",";
-		$headers2 .="\"Payment Status\",\"Purchase Date\",";
+		$headers_array = array(
+			_x( 'Purchase ID', 'purchase log csv headers', 'wpsc' ),
+			_x( 'Purchase Total', 'purchase log csv headers', 'wpsc' ),
+		);
+		$headers2_array = array(
+			_x( 'Payment Gateway', 'purchase log csv headers', 'wpsc' ),
+			_x( 'Payment Status', 'purchase log csv headers', 'wpsc' ),
+			_x( 'Purchase Date', 'purchase log csv headers', 'wpsc' ),
+		);
+		$form_headers_array = array();
+		$headers3_array = array();
 
 		$output = '';
 
@@ -132,7 +144,7 @@ function wpsc_purchase_log_csv() {
 			$output .= "\"" . $purchase['id'] . "\","; //Purchase ID
 			$output .= "\"" . $purchase['totalprice'] . "\","; //Purchase Total
 			foreach ( (array)$form_data as $form_field ) {
-				$form_headers .="\"".$form_field['unique_name']."\",";
+				$form_headers_array[] = $form_field['unique_name'];
 				$collected_data_sql = "SELECT * FROM `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` WHERE `log_id` = '" . $purchase['id'] . "' AND `form_id` = '" . $form_field['id'] . "' LIMIT 1";
 				$collected_data = $wpdb->get_results( $collected_data_sql, ARRAY_A );
 				$collected_data = $collected_data[0];
@@ -169,13 +181,18 @@ function wpsc_purchase_log_csv() {
 		// Get the most number of products and create a header for them
 		$headers3 = "";
 		for( $i = 0; $i < $count; $i++ ){
-			$headers3 .= "\"Quantity\",\"Product Name\",\"SKU\"";
-			if( $i < ( $count - 1 ) )
-			    $headers3 .= ",";
+			$headers3[] = _x( 'Quantity', 'purchase log csv headers', 'wpsc' );
+			$headers3[] = _x( 'Product Name', 'purchase log csv headers', 'wpsc' );
+			$headers3[] = _x( 'SKU', 'purchase log csv headers', 'wpsc' );
 		}
 
-		$headers = apply_filters( 'wpsc_purchase_log_csv_headers', $headers . $form_headers . $headers2 . $headers3, $data, $form_data );
-		$output = apply_filters( 'wpsc_purchase_log_csv_output', $output, $data, $form_data );
+		$headers      = '"' . implode( '","', $headers_array ) . '"';
+		$form_headers = '"' . implode( '","', $form_headers_array ) . '"';
+		$headers2     = '"' . implode( '","', $headers2_array ) . '"';
+		$headers3     = '"' . implode( '","', $headers3_array ) . '"';
+
+		$headers      = apply_filters( 'wpsc_purchase_log_csv_headers', $headers . $form_headers . $headers2 . $headers3, $data, $form_data );
+		$output       = apply_filters( 'wpsc_purchase_log_csv_output', $output, $data, $form_data );
 		header( 'Content-Type: text/csv' );
 		header( 'Content-Disposition: inline; filename="' . $csv_name . '"' );
 		echo $headers . "\n". $output;
@@ -201,17 +218,19 @@ function wpsc_admin_sale_rss() {
 		$output .= "<?xml version='1.0'?>\n\r";
 		$output .= "<rss version='2.0'>\n\r";
 		$output .= "  <channel>\n\r";
-		$output .= "    <title>WP e-Commerce Product Log</title>\n\r";
+		$output .= "    <title>" . _x( 'WP e-Commerce Product Log', 'admin rss product feed', 'wpsc' ) . "</title>\n\r";
 		$output .= "    <link>" . get_option( 'siteurl' ) . "/wp-admin/admin.php?page=" . WPSC_DIR_NAME . "/display-log.php</link>\n\r";
-		$output .= "    <description>This is the WP e-Commerce Product Log RSS feed</description>\n\r";
-		$output .= "    <generator>WP e-Commerce Plugin</generator>\n\r";
+		$output .= "    <description>" . _x( 'This is the WP e-Commerce Product Log RSS feed', 'admin rss product feed', 'wpsc' ) . "</description>\n\r";
+		$output .= "    <generator>" . _x( 'WP e-Commerce Plugin', 'admin rss product feed', 'wpsc' ) . "</generator>\n\r";
 
 		foreach ( (array)$purchase_log as $purchase ) {
 			$purchase_link = get_option( 'siteurl' ) . "/wp-admin/admin.php?page=" . WPSC_DIR_NAME . "/display-log.php&amp;purchaseid=" . $purchase['id'];
+			$purchase_title = _x( 'Purchase # %d', 'admin rss product feed', 'wpsc' );
+			$purchase_title = sprintf( $purchase_title, $purchase['id'] );
 			$output .= "    <item>\n\r";
-			$output .= "      <title>Purchase # " . $purchase['id'] . "</title>\n\r";
+			$output .= "      <title>{$purchase_title}</title>\n\r";
 			$output .= "      <link>$purchase_link</link>\n\r";
-			$output .= "      <description>This is an entry in the purchase log.</description>\n\r";
+			$output .= "      <description>" . _x( 'This is an entry in the purchase log', 'admin rss product feed', 'wpsc' ) . ".</description>\n\r";
 			$output .= "      <pubDate>" . date( "r", $purchase['date'] ) . "</pubDate>\n\r";
 			$output .= "      <guid>$purchase_link</guid>\n\r";
 			$output .= "    </item>\n\r";
@@ -519,7 +538,7 @@ function wpsc_product_files_existing() {
 		$attached_files_by_file[$attached_file->post_title] = & $attached_files[$key];
 	}
 
-	$output = "<span class='admin_product_notes select_product_note '>" . __( 'Choose a downloadable file for this product:', 'wpsc' ) . "</span><br>";
+	$output = "<span class='admin_product_notes select_product_note '>" . esc_html__( 'Choose a downloadable file for this product:', 'wpsc' ) . "</span><br>";
 	$output .= "<form method='post' class='product_upload'>";
 	$output .= "<div class='ui-widget-content multiple-select select_product_file'>";
 	$num = 0;
@@ -538,7 +557,7 @@ function wpsc_product_files_existing() {
 
 	$output .= "</div>";
 	$output .= "<input type='hidden' id='hidden_id' value='$product_id' />";
-	$output .= "<input data-nonce='" . _wpsc_create_ajax_nonce( 'upload_product_file' ) . "' type='submit' name='save' name='product_files_submit' class='button-primary prdfil' value='Save Product Files' />";
+	$output .= "<input data-nonce='" . _wpsc_create_ajax_nonce( 'upload_product_file' ) . "' type='submit' name='save' name='product_files_submit' class='button-primary prdfil' value='" . esc_html__( 'Save Product Files', 'wpsc' ) . "' />";
 	$output .= "</form>";
 	$output .= "<div class='" . ((is_numeric( $product_id )) ? "edit_" : "") . "select_product_handle'><div></div></div>";
 	$output .= "<script type='text/javascript'>\n\r";
