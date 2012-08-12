@@ -68,7 +68,7 @@ class WP_Widget_Shopping_Cart extends WP_Widget {
 		if ( ( ( isset( $_SESSION['slider_state'] ) && ( $_SESSION['slider_state'] == 0 ) ) || ( wpsc_cart_item_count() < 1 ) ) && ( get_option( 'show_sliding_cart' ) == 1 ) )
 			$display_state = 'style="display: none;"';
 
-		// Output ctart
+		// Output start
 		$use_object_frame = false;
 		if ( ( $cache_enabled == true ) && ( !defined( 'DONOTCACHEPAGE' ) || ( constant( 'DONOTCACHEPAGE' ) !== true ) ) ) {
 			echo '<div id="sliding_cart" class="shopping-cart-wrapper">';
