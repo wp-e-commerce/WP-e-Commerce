@@ -56,7 +56,7 @@ function wpsc_display_coupons_page() {
 				    )
 				);
 			if ( $insert )
-			    echo "<div class='updated'><p align='center'>" . __( 'Thanks, the coupon has been added.', 'wpsc' ) . "</p></div>";
+			    echo "<div class='updated'><p align='center'>" . esc_html__( 'Thanks, the coupon has been added.', 'wpsc' ) . "</p></div>";
 
 		}
 
@@ -181,7 +181,12 @@ function wpsc_display_coupons_page() {
 				);
 			
 		}
-	} ?>
+	} 
+
+	$currency_data = $wpdb->get_row( "SELECT `symbol`,`symbol_html`,`code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id`='" . esc_attr( get_option( 'currency_type' ) ) . "' LIMIT 1", ARRAY_A );
+	$currency_sign = ! empty( $currency_data['symbol'] ) ? $currency_data['symbol_html'] : $currency_data['code'];
+
+	?>
 
 	<script type='text/javascript'>
 		jQuery(".pickdate").datepicker();
@@ -193,9 +198,9 @@ function wpsc_display_coupons_page() {
 
 	<div class="wrap">
 		<h2>
-			<?php _e( 'Coupons', 'wpsc' ); ?>
+			<?php esc_html_e( 'Coupons', 'wpsc' ); ?>
 			<a href="#" id="add_coupon_box_link" class="add_item_link button add-new-h2" onClick="return show_status_box( 'add_coupon_box', 'add_coupon_box_link' );">
-				<?php _e( 'Add New', 'wpsc' ); ?>
+				<?php esc_html_e( 'Add New', 'wpsc' ); ?>
 			</a>
 		</h2>
 		
@@ -206,16 +211,10 @@ function wpsc_display_coupons_page() {
 						<form name='add_coupon' method='post' action=''>
 							<table class='add-coupon' >
 								<tr>
-									<th><?php _e( 'Coupon Code', 'wpsc' ); ?></th>
-									<th><?php _e( 'Discount', 'wpsc' ); ?></th>
-									<th><?php _e( 'Start', 'wpsc' ); ?></th>
-									<th><?php _e( 'Expiry', 'wpsc' ); ?></th>
-								<!--
-									<th><?php _e( 'Use Once', 'wpsc' ); ?></th>
-									<th><?php _e( 'Active', 'wpsc' ); ?></th>
-									<th><?php _e( 'Apply On All Products', 'wpsc' ); ?></th>
-								-->
-
+									<th><?php esc_html_e( 'Coupon Code', 'wpsc' ); ?></th>
+									<th><?php esc_html_e( 'Discount', 'wpsc' ); ?></th>
+									<th><?php esc_html_e( 'Start', 'wpsc' ); ?></th>
+									<th><?php esc_html_e( 'Expiry', 'wpsc' ); ?></th>
 								</tr>
 								<tr>
 									<td>
@@ -224,9 +223,9 @@ function wpsc_display_coupons_page() {
 									<td>
 										<input type='text' value='' size='3' name='add_discount' />
 										<select name='add_discount_type'>
-											<option value='0' >$</option>
-											<option value='1' >%</option>
-											<option value='2' ><?php _e( 'Free shipping', 'wpsc' ); ?></option>
+											<option value='0' ><?php echo esc_html( $currency_sign ) ?></option>
+											<option value='1' ><?php _ex( '%', 'Percentage sign as discount type in coupons page', 'wpsc' ); ?></option>
+											<option value='2' ><?php esc_html_e( 'Free shipping', 'wpsc' ); ?></option>
 										</select>
 									</td>
 									<td>
@@ -237,16 +236,16 @@ function wpsc_display_coupons_page() {
 									</td>
 									<td>
 										<input type='hidden' value='true' name='add_coupon' />
-										<input type='submit' value='Add Coupon' name='submit_coupon' class='button-primary' />
+										<input type='submit' value='<?php esc_attr_e( 'Add Coupon', 'wpsc' ); ?>' name='submit_coupon' class='button-primary' />
 									</td>
 								</tr>
 
 								<tr>
 									<td colspan='3' scope="row">
 										<p>
-											<span class='input_label'><?php _e( 'Active', 'wpsc' ); ?></span><input type='hidden' value='0' name='add_active' />
+											<span class='input_label'><?php esc_html_e( 'Active', 'wpsc' ); ?></span><input type='hidden' value='0' name='add_active' />
 											<input type='checkbox' value='1' checked='checked' name='add_active' />
-											<span class='description'><?php _e( 'Activate coupon on creation.', 'wpsc' ) ?></span>
+											<span class='description'><?php esc_html_e( 'Activate coupon on creation.', 'wpsc' ) ?></span>
 										</p>
 									</td>
 								</tr>
@@ -254,9 +253,9 @@ function wpsc_display_coupons_page() {
 								<tr>
 									<td colspan='3' scope="row">
 										<p>
-											<span class='input_label'><?php _e( 'Use Once', 'wpsc' ); ?></span><input type='hidden' value='0' name='add_use-once' />
+											<span class='input_label'><?php esc_html_e( 'Use Once', 'wpsc' ); ?></span><input type='hidden' value='0' name='add_use-once' />
 											<input type='checkbox' value='1' name='add_use-once' />
-											<span class='description'><?php _e( 'Deactivate coupon after it has been used.', 'wpsc' ) ?></span>
+											<span class='description'><?php esc_html_e( 'Deactivate coupon after it has been used.', 'wpsc' ) ?></span>
 										</p>
 									</td>
 								</tr>
@@ -264,35 +263,35 @@ function wpsc_display_coupons_page() {
 								<tr>
 									<td colspan='3' scope="row">
 										<p>
-											<span class='input_label'><?php _e( 'Apply On All Products', 'wpsc' ); ?></span><input type='hidden' value='0' name='add_every_product' />
+											<span class='input_label'><?php esc_html_e( 'Apply On All Products', 'wpsc' ); ?></span><input type='hidden' value='0' name='add_every_product' />
 											<input type="checkbox" value="1" name='add_every_product'/>
-											<span class='description'><?php _e( 'This coupon affects each product at checkout.', 'wpsc' ) ?></span>
+											<span class='description'><?php esc_html_e( 'This coupon affects each product at checkout.', 'wpsc' ) ?></span>
 										</p>
 									</td>
 								</tr>
 
-								<tr><td colspan='3'><span id='table_header'>Conditions</span></td></tr>
+								<tr><td colspan='3'><span id='table_header'><?php esc_html_e( 'Conditions', 'wpsc' ); ?></span></td></tr>
 								<tr>
 									<td colspan="8">
 									<div class='coupon_condition' >
 										<div class='first_condition'>
 											<select class="ruleprops" name="rules[property][]">
-												<option value="item_name" rel="order"><?php _e( 'Item name', 'wpsc' ); ?></option>
-												<option value="item_quantity" rel="order"><?php _e( 'Item quantity', 'wpsc' ); ?></option>
-												<option value="total_quantity" rel="order"><?php _e( 'Total quantity', 'wpsc' ); ?></option>
-												<option value="subtotal_amount" rel="order"><?php _e( 'Subtotal amount', 'wpsc' ); ?></option>
+												<option value="item_name" rel="order"><?php esc_html_e( 'Item name', 'wpsc' ); ?></option>
+												<option value="item_quantity" rel="order"><?php esc_html_e( 'Item quantity', 'wpsc' ); ?></option>
+												<option value="total_quantity" rel="order"><?php esc_html_e( 'Total quantity', 'wpsc' ); ?></option>
+												<option value="subtotal_amount" rel="order"><?php esc_html_e( 'Subtotal amount', 'wpsc' ); ?></option>
 												<?php echo apply_filters( 'wpsc_coupon_rule_property_options', '' ); ?>
 											</select>
 
 											<select name="rules[logic][]">
-												<option value="equal"><?php _e( 'Is equal to', 'wpsc' ); ?></option>
-												<option value="greater"><?php _e( 'Is greater than', 'wpsc' ); ?></option>
-												<option value="less"><?php _e( 'Is less than', 'wpsc' ); ?></option>
-												<option value="contains"><?php _e( 'Contains', 'wpsc' ); ?></option>
-												<option value="not_contain"><?php _e( 'Does not contain', 'wpsc' ); ?></option>
-												<option value="begins"><?php _e( 'Begins with', 'wpsc' ); ?></option>
-												<option value="ends"><?php _e( 'Ends with', 'wpsc' ); ?></option>
-												<option value="category"><?php _e( 'In Category', 'wpsc' ); ?></option>
+												<option value="equal"><?php esc_html_e( 'Is equal to', 'wpsc' ); ?></option>
+												<option value="greater"><?php esc_html_e( 'Is greater than', 'wpsc' ); ?></option>
+												<option value="less"><?php esc_html_e( 'Is less than', 'wpsc' ); ?></option>
+												<option value="contains"><?php esc_html_e( 'Contains', 'wpsc' ); ?></option>
+												<option value="not_contain"><?php esc_html_e( 'Does not contain', 'wpsc' ); ?></option>
+												<option value="begins"><?php esc_html_e( 'Begins with', 'wpsc' ); ?></option>
+												<option value="ends"><?php esc_html_e( 'Ends with', 'wpsc' ); ?></option>
+												<option value="category"><?php esc_html_e( 'In Category', 'wpsc' ); ?></option>
 											</select>
 
 											<span><input type="text" name="rules[value][]"/></span>
@@ -302,27 +301,27 @@ function wpsc_display_coupons_page() {
 													var coupon_number=1;
 													function add_another_property(this_button){
 														var new_property='<div class="coupon_condition">\n'+
-															'<div><img height="16" width="16" class="delete" alt="Delete" src="<?php echo WPSC_CORE_IMAGES_URL; ?>/cross.png" onclick="jQuery(this).parent().remove();"/> \n'+
+															'<div> \n'+
 															'<select class="ruleprops" name="rules[property][]"> \n'+
-															'<option value="item_name" rel="order">Item name</option> \n'+
-															'<option value="item_quantity" rel="order">Item quantity</option>\n'+
-															'<option value="total_quantity" rel="order">Total quantity</option>\n'+
-															'<option value="subtotal_amount" rel="order">Subtotal amount</option>\n'+
+															'<option value="item_name" rel="order"><?php echo esc_js( __( 'Item name', 'wpsc' ) ); ?></option> \n'+
+															'<option value="item_quantity" rel="order"><?php echo esc_js( __( 'Item quantity', 'wpsc' ) ); ?></option>\n'+
+															'<option value="total_quantity" rel="order"><?php echo esc_js( __( 'Total quantity', 'wpsc' ) ); ?></option>\n'+
+															'<option value="subtotal_amount" rel="order"><?php echo esc_js( __( 'Subtotal amount', 'wpsc' ) ); ?></option>\n'+
 															'<?php echo apply_filters( 'wpsc_coupon_rule_property_options', '' ); ?>'+
 															'</select> \n'+
 															'<select name="rules[logic][]"> \n'+
-															'<option value="equal">Is equal to</option> \n'+
-															'<option value="greater">Is greater than</option> \n'+
-															'<option value="less">Is less than</option> \n'+
-															'<option value="contains">Contains</option> \n'+
-															'<option value="not_contain">Does not contain</option> \n'+
-															'<option value="begins">Begins with</option> \n'+
-															'<option value="ends">Ends with</option> \n'+
+															'<option value="equal"><?php echo esc_js( __( 'Is equal to', 'wpsc' ) ); ?></option> \n'+
+															'<option value="greater"><?php echo esc_js( __( 'Is greater than', 'wpsc' ) ); ?></option> \n'+
+															'<option value="less"><?php echo esc_js( __( 'Is less than', 'wpsc' ) ); ?></option> \n'+
+															'<option value="contains"><?php echo esc_js( __( 'Contains', 'wpsc' ) ); ?></option> \n'+
+															'<option value="not_contain"><?php echo esc_js( __( 'Does not contain', 'wpsc' ) ); ?></option> \n'+
+															'<option value="begins"><?php echo esc_js( __( 'Begins with', 'wpsc' ) ); ?></option> \n'+
+															'<option value="ends"><?php echo esc_js( __( 'Ends with', 'wpsc' ) ); ?></option> \n'+
 															'</select> \n'+
 															'<span> \n'+
 															'<input type="text" name="rules[value][]"/> \n'+
 															'</span>  \n'+
-															'</div> \n'+
+															'<img height="16" width="16" class="delete" alt="<?php esc_attr_e( 'Delete', 'wpsc' ); ?>" src="<?php echo WPSC_CORE_IMAGES_URL; ?>/cross.png" onclick="jQuery(this).parent().remove();"/></div> \n'+
 															'</div> ';
 		
 														jQuery('.coupon_condition :first').after(new_property);
@@ -337,7 +336,7 @@ function wpsc_display_coupons_page() {
 								<tr>
 									<td>
 										<a class="wpsc_coupons_condition_add" onclick="add_another_property(jQuery(this));">
-											<?php _e( 'Add New Condition', 'wpsc' ); ?>
+											<?php esc_html_e( 'Add New Condition', 'wpsc' ); ?>
 										</a>
 									</td>
 								</tr>
@@ -350,13 +349,13 @@ function wpsc_display_coupons_page() {
 
 		<?php
 			$columns = array(
-				'coupon_code' => __( 'Coupon Code', 'wpsc' ),
-				'discount' => __( 'Discount', 'wpsc' ),
-				'start' => __( 'Start', 'wpsc' ),
-				'expiry' => __( 'Expiry', 'wpsc' ),
-				'active' => __( 'Active', 'wpsc' ),
+				'coupon_code'    => __( 'Coupon Code', 'wpsc' ),
+				'discount'       => __( 'Discount', 'wpsc' ),
+				'start'          => __( 'Start', 'wpsc' ),
+				'expiry'         => __( 'Expiry', 'wpsc' ),
+				'active'         => __( 'Active', 'wpsc' ),
 				'apply_on_prods' => __( 'Apply On All Products', 'wpsc' ),
-				'edit' => __( 'Edit', 'wpsc' )
+				'edit'           => __( 'Edit', 'wpsc' )
 			);
 			register_column_headers( 'display-coupon-details', $columns );
 		?>
@@ -388,7 +387,7 @@ function wpsc_display_coupons_page() {
 						echo "<tr $alternate>\n\r";
 
 						echo "    <td>\n\r";
-						esc_attr_e( $coupon['coupon_code'] );
+						echo esc_attr( $coupon['coupon_code'] );
 						echo "    </td>\n\r";
 
 						echo "    <td>\n\r";
@@ -396,7 +395,7 @@ function wpsc_display_coupons_page() {
 							echo esc_attr( $coupon['value'] ) . "%";
 
 						else if ( $coupon['is-percentage'] == 2 )
-							echo __("Free Shipping", 'wpsc');
+							_e( 'Free Shipping', 'wpsc' );
 
 						else
 							echo wpsc_currency_display( esc_attr( $coupon['value'] ) );
@@ -436,7 +435,7 @@ function wpsc_display_coupons_page() {
 
 						echo "    </td>\n\r";
 						echo "    <td>\n\r";
-						echo "<a title='" . esc_attr( $coupon['coupon_code'] ). "' href='#' rel='" . $coupon['id'] . "' class='wpsc_edit_coupon'  >" . __( 'Edit', 'wpsc' ) . "</a>";
+						echo "<a title='" . esc_attr( $coupon['coupon_code'] ). "' href='#' rel='" . $coupon['id'] . "' class='wpsc_edit_coupon'  >" . esc_html__( 'Edit', 'wpsc' ) . "</a>";
 						echo "    </td>\n\r";
 						echo "  </tr>\n\r";
 						echo "  <tr class='coupon_edit'>\n\r";
@@ -452,7 +451,7 @@ function wpsc_display_coupons_page() {
 		</table>
 
 		<p style='margin: 10px 0px 5px 0px;'>
-			<?php _e( '<strong>Note:</strong> Due to a current PayPal limitation, when a purchase is made using a coupon we cannot send a detailed list of items through for processing. Instead we send the total amount of the purchase so the customer will see your shop name and the total within PayPal.', 'wpsc' ); ?>
+			<?php esc_html_e( '<strong>Note:</strong> Due to a current PayPal limitation, when a purchase is made using a coupon we cannot send a detailed list of items through for processing. Instead we send the total amount of the purchase so the customer will see your shop name and the total within PayPal.', 'wpsc' ); ?>
 		</p>
 
 	</div>

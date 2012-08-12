@@ -10,13 +10,13 @@ $conditions = maybe_unserialize($coupon['condition']);
   $output .= "<form name='edit_coupon' id='".$coupon['coupon_code']."' method='post' action=''>\n\r";
   $output .= "<table class='add-coupon'>\n\r";
   $output .= " <tr>\n\r";
-  $output .= "   <th>".__('Coupon Code', 'wpsc')."</th>\n\r";
-  $output .= "   <th>".__('Discount', 'wpsc')."</th>\n\r";
-  $output .= "   <th>".__('Start', 'wpsc')."</th>\n\r";
-  $output .= "   <th>".__('Expiry', 'wpsc')."</th>\n\r";
-  $output .= "   <th>".__('Use Once', 'wpsc')."</th>\n\r";
-  $output .= "   <th>".__('Active', 'wpsc')."</th>\n\r";
-	$output .= "   <th>".__('Apply On All Products', 'wpsc')."</th>\n\r";
+  $output .= "   <th>".esc_html__('Coupon Code', 'wpsc')."</th>\n\r";
+  $output .= "   <th>".esc_html__('Discount', 'wpsc')."</th>\n\r";
+  $output .= "   <th>".esc_html__('Start', 'wpsc')."</th>\n\r";
+  $output .= "   <th>".esc_html__('Expiry', 'wpsc')."</th>\n\r";
+  $output .= "   <th>".esc_html__('Use Once', 'wpsc')."</th>\n\r";
+  $output .= "   <th>".esc_html__('Active', 'wpsc')."</th>\n\r";
+	$output .= "   <th>".esc_html__('Apply On All Products', 'wpsc')."</th>\n\r";
   $output .= "   <th></th>\n\r";
   $output .= " </tr>\n\r";
   $output .= " <tr>\n\r";
@@ -30,7 +30,7 @@ $conditions = maybe_unserialize($coupon['condition']);
   $output .= "   <select name='edit_coupon[".$id."][is-percentage]'>";
   $output .= "     <option value='0' ".(($coupon['is-percentage'] == 0) ? "selected='true'" : '')." >$</option>\n\r";//
   $output .= "     <option value='1' ".(($coupon['is-percentage'] == 1) ? "selected='true'" : '')." >%</option>\n\r";
-  $output .= "     <option value='2' ".(($coupon['is-percentage'] == 2) ? "selected='true'" : '')." >" . __( 'Free shipping', 'wpsc' ) . "'</option>\n\r";
+  $output .= "     <option value='2' ".(($coupon['is-percentage'] == 2) ? "selected='true'" : '')." >" . esc_html__( 'Free shipping', 'wpsc' ) . "'</option>\n\r";
   $output .= "   </select>\n\r";
   $output .= "  </td>\n\r";
   $output .= "  <td>\n\r";
@@ -61,20 +61,20 @@ $conditions = maybe_unserialize($coupon['condition']);
   if($conditions != null){
 	  $output .= "<tr>";
 	  $output .= "<th>";
-	  $output .= __("Conditions", 'wpsc');
+	  $output .= esc_html__("Conditions", 'wpsc');
 	  $output .= "</th>";
 	  $output .= "</tr>";
 	  $output .= "<th>";
-	  $output .= __("Delete", 'wpsc');
+	  $output .= esc_html__("Delete", 'wpsc');
 	  $output .= "</th>";
 	  $output .= "<th>";
-	  $output .= __("Property", 'wpsc');
+	  $output .= esc_html__("Property", 'wpsc');
 	  $output .= "</th>";
 	  $output .= "<th>";
-	  $output .= __("Logic", 'wpsc');
+	  $output .= esc_html__("Logic", 'wpsc');
 	  $output .= "</th>";
 	  $output .= "<th>";
-	  $output .= __("Value", 'wpsc');
+	  $output .= esc_html__("Value", 'wpsc');
 	  $output .= "</th>";
 	  $output .= " </tr>\n\r";
 	  $i=0;
@@ -83,7 +83,7 @@ $conditions = maybe_unserialize($coupon['condition']);
 		  $output .= "<td>";
 		  $output .= "<input type='hidden' name='coupon_id' value='".$id."' />";
 		  $output .= "<input type='submit' id='delete_condition".$i."' style='display:none;' value='".$i."' name='delete_condition' />";
-		  $output .= "<span style='cursor:pointer;' class='delete_button' onclick='jQuery(\"#delete_condition".$i."\").click()'>" . __('Delete', 'wpsc' ) . "</span>";
+		  $output .= "<span style='cursor:pointer;' class='delete_button' onclick='jQuery(\"#delete_condition".$i."\").click()'>" . esc_html__('Delete', 'wpsc' ) . "</span>";
 		  $output .= "</td>";
 		  $output .= "<td>";
 		  $output .= $condition['property'];
@@ -114,25 +114,25 @@ function wpsc_coupons_conditions($id){
 
 $output ='
 <input type="hidden" name="coupon_id" value="'.$id.'" />
-<tr><td colspan="3"><b>' . __( 'Add Conditions', 'wpsc') . '</b></td></tr>
+<tr><td colspan="3"><b>' . esc_html__( 'Add Conditions', 'wpsc') . '</b></td></tr>
 <tr><td colspan="6">
 	<div class="coupon_condition">
 		<div>
 			<select class="ruleprops" name="rules[property][]">
-				<option value="item_name" rel="order">' . __( 'Item name', 'wpsc') . '</option>
-				<option value="item_quantity" rel="order">' . __( 'Item quantity', 'wpsc') . '</option>
-				<option value="total_quantity" rel="order">' . __( 'Total quantity', 'wpsc') . '</option>
-				<option value="subtotal_amount" rel="order">' . __( 'Subtotal amount', 'wpsc') . '</option>
+				<option value="item_name" rel="order">' . esc_html__( 'Item name', 'wpsc') . '</option>
+				<option value="item_quantity" rel="order">' . esc_html__( 'Item quantity', 'wpsc') . '</option>
+				<option value="total_quantity" rel="order">' . esc_html__( 'Total quantity', 'wpsc') . '</option>
+				<option value="subtotal_amount" rel="order">' . esc_html__( 'Subtotal amount', 'wpsc') . '</option>
 				' . apply_filters( 'wpsc_coupon_rule_property_options', '' ) . '
 			</select>
 			<select name="rules[logic][]">
-				<option value="equal">' . __( 'Is equal to', 'wpsc') . '</option>
-				<option value="greater">' . __( 'Is greater than', 'wpsc') . '</option>
-				<option value="less">' . __( 'Is less than', 'wpsc') . '</option>
-				<option value="contains">' . __( 'Contains', 'wpsc') . '</option>
-				<option value="not_contain">' . __( 'Does not contain', 'wpsc') . '</option>
-				<option value="begins">' . __( 'Begins with', 'wpsc') . '</option>
-				<option value="ends">' . __( 'Ends with', 'wpsc') . '</option>
+				<option value="equal">' . esc_html__( 'Is equal to', 'wpsc') . '</option>
+				<option value="greater">' . esc_html__( 'Is greater than', 'wpsc') . '</option>
+				<option value="less">' . esc_html__( 'Is less than', 'wpsc') . '</option>
+				<option value="contains">' . esc_html__( 'Contains', 'wpsc') . '</option>
+				<option value="not_contain">' . esc_html__( 'Does not contain', 'wpsc') . '</option>
+				<option value="begins">' . esc_html__( 'Begins with', 'wpsc') . '</option>
+				<option value="ends">' . esc_html__( 'Ends with', 'wpsc') . '</option>
 			</select>
 			<span>
 				<input type="text" name="rules[value][]"/>
@@ -146,11 +146,11 @@ $output ='
 	</td>
 	<td colspan="3">
 	
-		<input type="submit" value="'.__("Update Coupon", "wpsc").'" class="button-primary" name="edit_coupon['.$id.'][submit_coupon]" />';
+		<input type="submit" value="'.esc_attr__("Update Coupon", "wpsc").'" class="button-primary" name="edit_coupon['.$id.'][submit_coupon]" />';
  		
  		$nonced_url = wp_nonce_url("admin.php?wpsc_admin_action=wpsc-delete-coupon&amp;delete_id=$id", 'delete-coupon');
 		
-		$output.= "<a class='delete_button' style='text-decoration:none;' href=" .$nonced_url."> Delete</a>";	
+		$output.= "<a class='delete_button' style='text-decoration:none;' href=" .$nonced_url.">" . esc_html__( 'Delete', 'wpsc' ) . "</a>";	
 
  	$output.='	
  	</td>
@@ -163,7 +163,7 @@ function setting_button(){
 	$next_url	= 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']."?page=wpsc-edit-products";
 	
 // 	$output.="<div><img src='".get_option('siteurl')."/wp-content/plugins/".WPSC_DIR_NAME."/images/settings_button.jpg' onclick='display_settings_button()'>";
-	$output.="<div style='float: right; margin-top: 0px; position: relative;'> | <a href='#' onclick='display_settings_button(); return false;' style='text-decoration: underline;'>".__('Settings', 'wpsc')." &raquo;</a>";
+	$output.="<div style='float: right; margin-top: 0px; position: relative;'> | <a href='#' onclick='display_settings_button(); return false;' style='text-decoration: underline;'>".esc_html__('Settings', 'wpsc')." &raquo;</a>";
 	$output.="<span id='settings_button' style='width:180px;background-color:#f1f1f1;position:absolute; right: 10px; border:1px solid black; display:none;'>";
 	$output.="<ul class='settings_button'>";
 	
@@ -197,7 +197,7 @@ function wpsc_right_now() {
 	$theme = get_option('wpsc_selected_theme');
 	?>
 	<div class='table'>
-		<p class='sub'><?php _e('At a Glance', 'wpsc'); ?></p>
+		<p class='sub'><?php esc_html_e( 'At a Glance', 'wpsc' ); ?></p>
 		<table style='border-top:1px solid #ececec;'>
 			<tr class='first'>
 				<td class='first b'>
@@ -210,7 +210,7 @@ function wpsc_right_now() {
 					<?php echo $sales_count; ?>
 				</td>
 				<td class='last'>
-					<?php echo _nx('Sale', 'Sales', $sales_count, 'dashboard widget', 'wpsc'); ?>
+					<?php echo _nx( 'Sale', 'Sales', $sales_count, 'dashboard widget', 'wpsc' ); ?>
 				</td>
 			</tr>
 			<tr>
@@ -218,13 +218,13 @@ function wpsc_right_now() {
 					<?php echo $group_count; ?>
 				</td>
 				<td class='t'>
-					<?php echo _nx('Category', 'Categories', $group_count, 'dashboard widget', 'wpsc'); ?>
+					<?php echo _nx( 'Category', 'Categories', $group_count, 'dashboard widget', 'wpsc' ); ?>
 				</td>
 				<td class='b'>
 					<?php echo $pending_sales; ?>
 				</td>
 				<td class='last t waiting'>
-					<?php echo _n('Pending sale', 'Pending sales', $pending_sales, 'wpsc'); ?>
+					<?php echo _n( 'Pending sale', 'Pending sales', $pending_sales, 'wpsc' ); ?>
 				</td>
 			</tr>
 			<tr>
@@ -232,13 +232,13 @@ function wpsc_right_now() {
 					<?php echo $variation_count; ?>
 				</td>
 				<td class='t'>
-					<?php echo _nx('Variation', 'Variations', $variation_count, 'dashboard widget', 'wpsc'); ?>
+					<?php echo _nx( 'Variation', 'Variations', $variation_count, 'dashboard widget', 'wpsc' ); ?>
 				</td>
 				<td class='b'>
 					<?php echo $accept_sales; ?>
 				</td>
 				<td class='last t approved'>
-					<?php echo _n('Closed sale', 'Closed sales', $accept_sales, 'wpsc'); ?>
+					<?php echo _n( 'Closed sale', 'Closed sales', $accept_sales, 'wpsc'); ?>
 				</td>
 			</tr>
 		</table>
@@ -259,8 +259,8 @@ function wpsc_packing_slip( $purchase_id ) {
 
 	if($cart_log != null) {
 		echo "<div class='packing_slip'>\n\r";
-		echo apply_filters( 'wpsc_packing_slip_header', '<h2>' . __( 'Packing Slip', 'wpsc' ) . "</h2>\n\r" );
-		echo "<strong>".__('Order', 'wpsc')." #</strong> ".$purchase_id."<br /><br />\n\r";
+		echo apply_filters( 'wpsc_packing_slip_header', '<h2>' . esc_html__( 'Packing Slip', 'wpsc' ) . "</h2>\n\r" );
+		echo "<strong>". esc_html__( 'Order', 'wpsc' )." #</strong> ".$purchase_id."<br /><br />\n\r";
 		
 		echo "<table>\n\r";
 		
@@ -283,7 +283,7 @@ function wpsc_packing_slip( $purchase_id ) {
 						$delivery_region_count = $wpdb->get_var( $region_count_sql );
 			
 						if(is_numeric($purch_data['billing_region']) && ($delivery_region_count > 0)) 
-							echo "	<tr><td>".__('State', 'wpsc').":</td><td>".wpsc_get_region($purch_data['billing_region'])."</td></tr>\n\r";
+							echo "	<tr><td>".esc_html__('State', 'wpsc').":</td><td>".wpsc_get_region($purch_data['billing_region'])."</td></tr>\n\r";
 						
 						 echo "	<tr><td>".wp_kses($form_field['name'], array() ).":</td><td>".htmlentities(stripslashes($rekeyed_input[$form_field['id']]['value']), ENT_QUOTES, 'UTF-8')."</td></tr>\n\r";
 					break;
@@ -291,7 +291,7 @@ function wpsc_packing_slip( $purchase_id ) {
 					case 'delivery_country':
 					
 						if(is_numeric($purch_data['shipping_region']) && ($delivery_region_count > 0)) 
-							echo "	<tr><td>".__('State', 'wpsc').":</td><td>".wpsc_get_region($purch_data['shipping_region'])."</td></tr>\n\r";
+							echo "	<tr><td>".esc_html__('State', 'wpsc').":</td><td>".wpsc_get_region($purch_data['shipping_region'])."</td></tr>\n\r";
 						
 						 echo "	<tr><td>".wp_kses($form_field['name'], array() ).":</td><td>".htmlentities(stripslashes($rekeyed_input[$form_field['id']]['value']), ENT_QUOTES, 'UTF-8')."</td></tr>\n\r";
 					break;
@@ -305,33 +305,22 @@ function wpsc_packing_slip( $purchase_id ) {
 					break;
 
 					default:				
-						if( $form_field['name'] == "Cupcakes") {
-							parse_str($rekeyed_input[$form_field['id']]['value'], $cupcakes );
-							
-							foreach( $cupcakes as $product_id => $quantity ) {
-								$product = get_post($product_id);
-								$string .= "(".$quantity.") ".$product->post_title.", ";
-							}
-							
-							$string = rtrim($string, ", ");
-							echo "	<tr><td>".wp_kses($form_field['name'], array() ).":</td><td>".htmlentities(stripslashes($string), ENT_QUOTES, 'UTF-8')."</td></tr>\n\r";
-						} else {
+
 							if ($form_field['name']=="State" && !empty($purch_data['billing_region']) || $form_field['name']=="State" && !empty($purch_data['billing_region']))
 								echo "";
 							else
 								echo "	<tr><td>".wp_kses($form_field['name'], array() ).":</td><td>".
 									( isset( $rekeyed_input[$form_field['id']] ) ? htmlentities(stripslashes($rekeyed_input[$form_field['id']]['value']), ENT_QUOTES, 'UTF-8') : '' ).
 									"</td></tr>\n\r";
-						}
 					break;
 				}
 
 			}
 		} else {
-			echo "	<tr><td>".__('Name', 'wpsc').":</td><td>".$purch_data['firstname']." ".$purch_data['lastname']."</td></tr>\n\r";
-			echo "	<tr><td>".__('Address', 'wpsc').":</td><td>".$purch_data['address']."</td></tr>\n\r";
-			echo "	<tr><td>".__('Phone', 'wpsc').":</td><td>".$purch_data['phone']."</td></tr>\n\r";
-			echo "	<tr><td>".__('Email', 'wpsc').":</td><td>".$purch_data['email']."</td></tr>\n\r";
+			echo "	<tr><td>".esc_html__('Name', 'wpsc').":</td><td>".$purch_data['firstname']." ".$purch_data['lastname']."</td></tr>\n\r";
+			echo "	<tr><td>".esc_html__('Address', 'wpsc').":</td><td>".$purch_data['address']."</td></tr>\n\r";
+			echo "	<tr><td>".esc_html__('Phone', 'wpsc').":</td><td>".$purch_data['phone']."</td></tr>\n\r";
+			echo "	<tr><td>".esc_html__('Email', 'wpsc').":</td><td>".$purch_data['email']."</td></tr>\n\r";
 		}
 		
 		if ( 2 == get_option( 'payment_method' ) ) {
@@ -344,7 +333,7 @@ function wpsc_packing_slip( $purchase_id ) {
 						$gateway_name = $gateway['name'];
 					}
 				} else {
-					$gateway_name = __('Manual Payment', 'wpsc');
+					$gateway_name = esc_html__('Manual Payment', 'wpsc');
 				}
 			}
 		}
@@ -358,15 +347,15 @@ function wpsc_packing_slip( $purchase_id ) {
 		echo "<table class='packing_slip'>";
 			
 		echo "<tr>";
-		echo " <th>".__('Quantity', 'wpsc')." </th>";
+		echo " <th>".esc_html__('Quantity', 'wpsc')." </th>";
 		
-		echo " <th>".__('Name', 'wpsc')."</th>";
+		echo " <th>".esc_html__('Name', 'wpsc')."</th>";
 		
 		
-		echo " <th>".__('Price', 'wpsc')." </th>";
+		echo " <th>".esc_html__('Price', 'wpsc')." </th>";
 		
-		echo " <th>".__('Shipping', 'wpsc')." </th>";
-		echo '<th>' . __('Tax', 'wpsc') . '</th>';
+		echo " <th>".esc_html__('Shipping', 'wpsc')." </th>";
+		echo '<th>' . esc_html__('Tax', 'wpsc') . '</th>';
 		echo '</tr>';
 		$endtotal = 0;
 		$all_donations = true;
@@ -435,28 +424,24 @@ function wpsc_packing_slip( $purchase_id ) {
 		echo "</table>";
 		echo '<table class="packing-slip-totals">';
 		if ( floatval( $purch_data['discount_value'] ) )
-			echo '<tr><th>'.__('Discount', 'wpsc').'</th><td>(' . wpsc_currency_display( $purch_data['discount_value'] ) . ')</td></tr>';
+			echo '<tr><th>'.esc_html__('Discount', 'wpsc').'</th><td>(' . wpsc_currency_display( $purch_data['discount_value'] ) . ')</td></tr>';
 		
-		echo '<tr><th>'.__('Base Shipping','wpsc').'</th><td>' . wpsc_currency_display( $purch_data['base_shipping'] ) . '</td></tr>';
-		echo '<tr><th>'.__('Total Shipping','wpsc').'</th><td>' . wpsc_currency_display( $purch_data['base_shipping'] + $total_shipping ) . '</td></tr>';
+		echo '<tr><th>'.esc_html__('Base Shipping','wpsc').'</th><td>' . wpsc_currency_display( $purch_data['base_shipping'] ) . '</td></tr>';
+		echo '<tr><th>'.esc_html__('Total Shipping','wpsc').'</th><td>' . wpsc_currency_display( $purch_data['base_shipping'] + $total_shipping ) . '</td></tr>';
         //wpec_taxes
         if($purch_data['wpec_taxes_total'] != 0.00)
         {
-           echo '<tr><th>'.__('Taxes','wpsc').'</th><td>' . wpsc_currency_display( $purch_data['wpec_taxes_total'] ) . '</td></tr>';
+           echo '<tr><th>'.esc_html__('Taxes','wpsc').'</th><td>' . wpsc_currency_display( $purch_data['wpec_taxes_total'] ) . '</td></tr>';
         }
-		echo '<tr><th>'.__('Total Price','wpsc').'</th><td>' . wpsc_currency_display( $purch_data['totalprice'] ) . '</td></tr>';
+		echo '<tr><th>'.esc_html__('Total Price','wpsc').'</th><td>' . wpsc_currency_display( $purch_data['totalprice'] ) . '</td></tr>';
 		echo '</table>';
 		
 		echo "</div>\n\r";
 	} else {
-		echo "<br />".__('This users cart was empty', 'wpsc');
+		echo "<br />".esc_html__('This users cart was empty', 'wpsc');
 	}
 
 }
-
-
-		
-
 
 function wpsc_product_item_row() {
 }

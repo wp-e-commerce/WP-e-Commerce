@@ -176,10 +176,10 @@ jQuery(document).ready(function(){
 		}
 
 	});
-	jQuery("form[name='add_coupon'] input[name='submit_coupon']").click(function() {
+	jQuery("form[name='add_coupon']").submit(function() {
 		var title = jQuery("form[name='add_coupon'] input[name='add_coupon_code']").val();
 		if ( title == '') {
-			alert('Please enter a coupon code.');
+			jQuery('<div id="notice" class="error"><p>' + wpsc_adminL10n.empty_coupon + '</p></div>').insertAfter('div.wrap > h2').delay(2500).hide(350);
 			return false;
 		}
 	});
@@ -767,10 +767,10 @@ function show_status_box(id,image_id) {
 	state = document.getElementById(id).style.display;
 	if(state != 'block') {
 		document.getElementById(id).style.display = 'block';
-		document.getElementById(image_id).src =  WPSC_CORE_IMAGES_URL + '/icon_window_collapse.gif';
+		document.getElementById(image_id).src =  wpsc_adminL10n.wpsc_core_images_url + '/icon_window_collapse.gif';
 	} else {
 		document.getElementById(id).style.display = 'none';
-		document.getElementById(image_id).src =  WPSC_CORE_IMAGES_URL + '/icon_window_expand.gif';
+		document.getElementById(image_id).src =  wpsc_adminL10n.wpsc_core_images_url + '/icon_window_expand.gif';
 	}
 	return false;
 }
@@ -781,7 +781,7 @@ function editinline_get_id(){
 	has_var = jQuery('#inline_'+id+'_has_var').val();
 	if( has_var == '1'){
    		jQuery(".wpsc-cols").css('display', 'none');
-		jQuery(".wpsc-cols:first").text('Quick Edit options are limited when editing products that have variations. You will need to edit the variations themselves.')
+		jQuery(".wpsc-cols:first").text(wpsc_adminL10n.bulk_edit_no_vars)
 		.addClass('wpsc_var_description')
 		.css('display','block');
 	}else{

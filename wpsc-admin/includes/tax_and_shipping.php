@@ -5,11 +5,11 @@ $country_isocode = preg_match( "/[a-zA-Z]{2,4}/", $_GET['isocode'] ) ? $_GET['is
 $base_region = get_option('base_region');
 ?>
 <div class="wrap">
-  <h2><?php _e('GST/Tax Rate', 'wpsc');?></h2>
+  <h2><?php esc_html_e( 'GST/Tax Rate', 'wpsc' );?></h2>
   <?php
   if($changes_made === true)
     {
-    echo "Thanks, your changes have been made<br />";
+      echo esc_html__( 'Thanks, your changes have been made', 'wpsc' ) . "<br />";
     }
   ?>
   <form action='' method='post' name='regional_tax' class='wpsc_form_track'>
@@ -50,11 +50,11 @@ $base_region = get_option('base_region');
     else
       {
       $tax_percentage =  $country_data['tax'];
-      echo "<label for='country_tax'>Tax Rate:</label> ";
+      echo "<label for='country_tax'>" . esc_html__( 'Tax Rate', 'wpsc' ) .":</label> ";
       echo "<input type='text' id='country_tax' name='country_tax' value='".$tax_percentage."' class='tax_forms' maxlength='3' size='3'/>%";
       }
   ?>
   <input type='hidden' name='wpsc_admin_action' value='change_region_tax' />
-  <input class='button-secondary' type='submit' name='submit' value='<?php _e('Save Changes', 'wpsc');?>' />
+  <input class='button-secondary' type='submit' name='submit' value='<?php esc_attr_e( 'Save Changes', 'wpsc' );?>' />
   </form>
 </div>

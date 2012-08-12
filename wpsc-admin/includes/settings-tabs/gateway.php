@@ -34,20 +34,20 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab
 			} else {
 				switch($selected_gateway_data['payment_type']) {
 					case "paypal";
-						$display_name = "PayPal";
+						$display_name = __( 'PayPal', 'wpsc' );
 						break;
 
 					case "manual_payment":
-						$display_name = "Manual Payment";
+						$display_name = __( 'Manual Payment', 'wpsc' );
 						break;
 
 					case "google_checkout":
-						$display_name = "Google Checkout";
+						$display_name = __( 'Google Checkout', 'wpsc' );
 						break;
 
 					case "credit_card":
 					default:
-						$display_name = "Credit Card";
+						$display_name = __( 'Credit Card', 'wpsc' );
 						break;
 				}
 			}
@@ -64,7 +64,7 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab
 			<?php
 			$output = ob_get_clean();
 			$return = array(
-				'name' => $selected_gateway_data['name'],
+				'name'        => $selected_gateway_data['name'],
 				'form_fields' => $output . $selected_gateway_data['form'](),
 			);
 		}
@@ -147,26 +147,26 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab
 									<div class="wpsc-select-gateway">
 										<div class='wpsc-gateway-actions'>
 											<span class="edit">
-													<a class='edit-payment-module' data-gateway-id="<?php echo esc_attr( $gateway['internalname'] ); ?>" title="<?php _e( "Edit this Payment Gateway's Settings", 'wpsc' ) ?>" href='<?php echo esc_attr( $this->get_gateway_settings_url( $gateway['internalname'] ) ); ?>'><?php esc_html_e( 'Edit', 'wpsc' ); ?></a>
+													<a class='edit-payment-module' data-gateway-id="<?php echo esc_attr( $gateway['internalname'] ); ?>" title="<?php esc_attr_e( "Edit this Payment Gateway's Settings", 'wpsc' ) ?>" href='<?php echo esc_url( $this->get_gateway_settings_url( $gateway['internalname'] ) ); ?>'><?php esc_html_e( 'Edit', 'wpsc' ); ?></a>
 													<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
 											</span>
 									</div>
 									<p>
-										<input name='wpsc_options[custom_gateway_options][]' <?php checked( in_array( $gateway['internalname'], (array) $selected_gateways ) ); ?> type='checkbox' value='<?php esc_attr_e( $gateway['internalname'] ); ?>' id='<?php esc_attr_e( $gateway['internalname'] ); ?>_id' />
+										<input name='wpsc_options[custom_gateway_options][]' <?php checked( in_array( $gateway['internalname'], (array) $selected_gateways ) ); ?> type='checkbox' value='<?php echo esc_attr( $gateway['internalname'] ); ?>' id='<?php echo esc_attr( $gateway['internalname'] ); ?>_id' />
 										<label for='<?php echo esc_attr( $gateway['internalname'] ); ?>_id'><?php echo esc_attr( $gateway['name'] ); ?></label>
 									</p>
 								</div>
 					<?php }
 								?>
 								<div class='submit gateway_settings'>
-									<input type='submit' value='<?php _e( 'Update &raquo;', 'wpsc' ) ?>' name='updateoption' />
+									<input type='submit' value='<?php esc_attr_e( 'Update &raquo;', 'wpsc' ) ?>' name='updateoption' />
 								</div>
 								</div>
 							</div>
 
 								<h4><?php _e( 'We Recommend', 'wpsc' ); ?></h4>
-								<a style="border-bottom:none;" href="https://www.paypal.com/nz/mrb/pal=LENKCHY6CU2VY" target="_blank"><img src="<?php echo WPSC_CORE_IMAGES_URL; ?>/paypal-referal.gif" border="0" alt="Sign up for PayPal and start accepting credit card payments instantly." /></a> <br /><br />
-								<a style="border-bottom:none;" href="http://checkout.google.com/sell/?promo=seinstinct" target="_blank"><img src="https://checkout.google.com/buyer/images/google_checkout.gif" border="0" alt="Sign up for Google Checkout" /></a>
+								<a style="border-bottom:none;" href="https://www.paypal.com/nz/mrb/pal=LENKCHY6CU2VY" target="_blank"><img src="<?php echo WPSC_CORE_IMAGES_URL; ?>/paypal-referal.gif" border="0" alt="<?php esc_attr_e( 'Sign up for PayPal and start accepting credit card payments instantly.', 'wpsc' ); ?>" /></a> <br /><br />
+								<a style="border-bottom:none;" href="http://checkout.google.com/sell/?promo=seinstinct" target="_blank"><img src="https://checkout.google.com/buyer/images/google_checkout.gif" border="0" alt="<?php esc_attr_e( 'Sign up for Google Checkout', 'wpsc' ); ?>" /></a>
 
 							</td>
 
