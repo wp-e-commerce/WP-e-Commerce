@@ -315,7 +315,7 @@ class wpec_taxes {
 		//check for all markets ifset return the string 'All Markets'
 		if('all-markets' == $region_code)
 		{
-			$returnable = 'All Markets';
+			$returnable = __( 'All Markets', 'wpsc' );
 		}
 		else
 		{
@@ -348,7 +348,7 @@ class wpec_taxes {
 
 		//add the all markets option to the list
 		if ( ! empty( $result ) )
-			array_unshift($result, array('region_code'=>'all-markets', 'name'=>'All Markets'));
+			array_unshift($result, array('region_code'=>'all-markets', 'name' => __( 'All Markets', 'wpsc' ) ) );
 
 		return $result;
 	} // wpec_taxes_get_regions
