@@ -1,12 +1,12 @@
 <?php
 
 $nzshpcrt_gateways[$num] = array(
-	'name'                   => 'PayPal Pro 2.0',
+	'name'                   => __( 'PayPal Pro 2.0', 'wpsc' ),
 	'api_version'            => 2.0,
 	'class_name'             => 'wpsc_merchant_paypal_pro',
 	'has_recurring_billing'  => true,
 	'wp_admin_cannot_cancel' => true,
-	'display_name'			 => 'PayPal Pro',
+	'display_name'			 => __( 'PayPal Pro', 'wpsc' ),
 	'image' => WPSC_URL . '/images/cc.gif',
 	'requirements'           => array(
 		'php_version'        => 4.3,    // so that you can restrict merchant modules to PHP 5, if you use PHP 5 features
@@ -36,8 +36,13 @@ $nzshpcrt_gateways[$num] = array(
  */
 class wpsc_merchant_paypal_pro extends wpsc_merchant {
 
-	var $name              = 'PayPal Pro 2.0';
+	var $name              = '';
 	var $paypal_ipn_values = array( );
+
+	function wpsc_merchant_paypal_pro() {
+		$this->name = __( 'PayPal Pro 2.0', 'wpsc' );
+		parent::wpsc_merchant();
+	}
 
 	function get_local_currency_code() {
 		if ( empty( $this->local_currency_code ) ) {
@@ -154,7 +159,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 				$shipping_total -= 0.01;
 			}
 
-			$data["L_NAME{$i}"] = 'Coupon / Discount';
+			$data["L_NAME{$i}"] = _x( 'Coupon / Discount', 'PayPal Pro Item Name for Discounts', 'wpsc' );
 			$data["L_AMT{$i}"] = - $discount_value;
 			$data["L_NUMBER{$i}"] = $i;
 			$data["L_QTY{$i}"] = 1;
@@ -437,8 +442,8 @@ function form_paypal_pro() {
 	</tr>
 	<tr>
   	<td colspan="2">
-  	<span  class="wpscsmall description">
-  	Only enable test mode if you have a sandbox account with PayPal you can find out more about this <a href="https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/howto_testing_sandbox"> here </a></span>
+  	<span class="wpscsmall description">
+  	' . sprintf( __( "Only enable test mode if you have a sandbox account with PayPal you can find out more about this <a href='%s'>here</a>", 'wpsc' ), esc_url( 'https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/howto_testing_sandbox' ) ) . '</span>
   	</td>
   </tr>';
 
@@ -452,7 +457,7 @@ function form_paypal_pro() {
 	if($current_currency != $store_currency_code) {
 		$output .= "<tr> <td colspan='2'><strong class='form_group'>" . __( 'Currency Converter', 'wpsc' ) . "</td> </tr>
 		<tr>
-			<td colspan='2'>".__('Your website is using a currency not accepted by PayPal, select an accepted currency using the drop down menu bellow. Buyers on your site will still pay in your local currency however we will convert the currency and send the order through to PayPal using the currency you choose below.', 'wpsc')."</td>
+			<td colspan='2'>".__('Your website is using a currency not accepted by PayPal, select an accepted currency using the drop down menu below. Buyers on your site will still pay in your local currency however we will convert the currency and send the order through to PayPal using the currency you choose below.', 'wpsc')."</td>
 		</tr>\n";
 
 		$output .= "<tr>\n <td>" . __('Convert to', 'wpsc' ) . " </td>\n ";
@@ -477,8 +482,8 @@ function form_paypal_pro() {
 	}
 		$output .="<tr>
 			<td colspan='2'>
-			<span  class='wpscsmall description'>
-			For more help configuring Paypal Pro, please read our documentation <a href='http://docs.getshopped.org/wiki/documentation/payments/paypal-payments-pro'>here </a>  	</span>
+			<span class='wpscsmall description'>
+			" . sprintf( __( "For more help configuring Paypal Pro, please read our documentation <a href='%s'>here</a>", 'wpsc' ), esc_ur( 'http://docs.getshopped.org/wiki/documentation/payments/paypal-payments-pro' ) ) . "</span>
 			</td>
 		</tr>";
 	return $output;

@@ -48,8 +48,13 @@ $nzshpcrt_gateways[$num] = array(
 	* @subpackage wpsc-merchants
 */
 class wpsc_merchant_paypal_express extends wpsc_merchant {
-  var $name = 'PayPal Express';
+  var $name = '';
   var $paypal_ipn_values = array();
+
+  function wpsc_merchant_paypal_express() {
+  	$this->name = __( 'PayPal Express', 'wpsc' );
+  	parent::wpsc_merchant();
+  }
 
 	/**
 	* construct value array method, converts the data gathered by the base class code to something acceptable to the gateway
@@ -483,8 +488,8 @@ function form_paypal_express() {
 		</tr>
 		<tr>
 		  	<td colspan='2'>
-		  	<span  class='wpscsmall description'>
-		  	Only use the sandbox server if you have a sandbox account with PayPal you can find out more about this <a href='https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/howto_testing_sandbox'> here </a></span>
+		  	<span class='wpscsmall description'>
+		  	" . sprintf( __( "Only use the sandbox server if you have a sandbox account with PayPal you can find out more about this <a href='%s'>here</a>", 'wpsc' ), esc_url( 'https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/howto_testing_sandbox' ) ) . "</span>
 		  	</td>
   </tr>
 
@@ -500,7 +505,7 @@ function form_paypal_express() {
 		<tr>
 		  	<td colspan='2'>
 			  	<span  class='wpscsmall description'>
-				  	IPN (instant payment notification ) will automatically update your sales logs to 'Accepted payment' when a customers payment is successful. For IPN to work you also need to have IPN turned on in your Paypal settings. If it is not turned on, the sales sill remain as 'Order Pending' status until manually changed. It is highly recommend using IPN, especially if you are selling digital products.
+				  " . __( "IPN (instant payment notification ) will automatically update your sales logs to 'Accepted payment' when a customers payment is successful. For IPN to work you also need to have IPN turned on in your Paypal settings. If it is not turned on, the sales sill remain as 'Order Pending' status until manually changed. It is highly recommend using IPN, especially if you are selling digital products.", 'wpsc' ) . "
 			  	</span>
 		  	</td>
   </tr>
@@ -544,7 +549,7 @@ function form_paypal_express() {
  	$output .="<tr>
   	<td colspan='2'>
   	<span  class='wpscsmall description'>
-  	  For more help configuring Paypal Express, please read our documentation <a href='http://docs.getshopped.org/wiki/documentation/payments/paypal-express-checkout'>here </a>  	</span>
+  	 " . sprintf( __( "For more help configuring Paypal Express, please read our documentation <a href='%s'>here</a>", 'wpsc' ), esc_url( 'http://docs.getshopped.org/wiki/documentation/payments/paypal-express-checkout' ) ) . "</span>
   	</td>
    </tr>";
 
@@ -885,7 +890,7 @@ function paypal_processingfunctions(){
 					$output ="
 				       <table width='400' class='paypal_express_form'>
 				        <tr>
-				            <td align='left' class='firstcol'><b>Order Total:</b></td>
+				            <td align='left' class='firstcol'><b>" . __( 'Order Total:', 'wpsc' ) . "</b></td>
 				            <td align='left'>" . wpsc_currency_display($_SESSION['localPaypalAmount']) . "</td>
 				        </tr>
 						<tr>

@@ -9,13 +9,13 @@
   * for internal operations.
   */
 $nzshpcrt_gateways[$num] = array(
-	'name' => 'PayPal Payments Standard 2.0',
+	'name' => __( 'PayPal Payments Standard 2.0', 'wpsc' ),
 	'api_version' => 2.0,
 	'image' => WPSC_URL . '/images/paypal.gif',
 	'class_name' => 'wpsc_merchant_paypal_standard',
 	'has_recurring_billing' => true,
 	'wp_admin_cannot_cancel' => true,
-	'display_name' => 'PayPal Payments Standard',
+	'display_name' => __( 'PayPal Payments Standard', 'wpsc' ),
 	'requirements' => array(
 		/// so that you can restrict merchant modules to PHP 5, if you use PHP 5 features
 		'php_version' => 4.3,
@@ -48,8 +48,13 @@ $nzshpcrt_gateways[$num] = array(
 	* @subpackage wpsc-merchants
 */
 class wpsc_merchant_paypal_standard extends wpsc_merchant {
-  var $name = 'PayPal Payments Standard';
+  var $name = '';
   var $paypal_ipn_values = array();
+
+  function wpsc_merchant_paypal_standard() {
+  	$this->name = __( 'PayPal Payments Standard', 'wpsc' );
+  	parent::wpsc_merchant();
+  }
 
 	/**
 	* construct value array method, converts the data gathered by the base class code to something acceptable to the gateway
@@ -281,7 +286,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 				if ( $this->cart_data['has_discounts'] && ! $free_shipping )
 					$paypal_vars['discount_amount_cart'] = $this->convert( $this->cart_data['cart_discount_value'] );
 			} else {
-				$paypal_vars['item_name_'.$i] = "Your Shopping Cart";
+				$paypal_vars['item_name_'.$i] = __( "Your Shopping Cart", 'wpsc' );
 				$paypal_vars['amount_'.$i] = $this->convert( $this->cart_data['total_price'] ) - $this->convert( $this->cart_data['base_shipping'] );
 				$paypal_vars['quantity_'.$i] = 1;
 				$paypal_vars['shipping_'.$i] = 0;
@@ -604,8 +609,8 @@ function form_paypal_multiple() {
   </tr>
   <tr>
   	<td colspan='2'>
-  	<span  class='wpscsmall description'>
-  	IPN (instant payment notification ) will automatically update your sales logs to 'Accepted payment' when a customers payment is successful. For IPN to work you also need to have IPN turned on in your Paypal settings. If it is not turned on, the sales sill remain as 'Order Pending' status until manually changed. It is highly recommend using IPN, especially if you are selling digital products.
+  	<span class='wpscsmall description'>
+  	" . __( "IPN (instant payment notification ) will automatically update your sales logs to 'Accepted payment' when a customers payment is successful. For IPN to work you also need to have IPN turned on in your Paypal settings. If it is not turned on, the sales sill remain as 'Order Pending' status until manually changed. It is highly recommend using IPN, especially if you are selling digital products.", 'wpsc' ) . "
   	</span>
   	</td>
   </tr>
@@ -620,13 +625,13 @@ function form_paypal_multiple() {
   </tr>
   <tr>
   	<td colspan='2'>
-  	<span  class='wpscsmall description'>
-  	Note: If your checkout page does not have a shipping details section, or if you don't want to send Paypal shipping information. You should change Send shipping details option to No.</span>
+  	<span class='wpscsmall description'>
+  	" . __( "Note: If your checkout page does not have a shipping details section, or if you don't want to send Paypal shipping information. You should change Send shipping details option to No.", 'wpsc' ) . "</span>
   	</td>
   </tr>
   <tr>
      <td style='padding-bottom: 0px;'>
-      Address Override:
+      " . __( 'Address Override:', 'wpsc' ) . "
      </td>
      <td style='padding-bottom: 0px;'>
        <input type='radio' value='1' name='address_override' id='address_override1' ".$address_override1." /> <label for='address_override1'>".__('Yes', 'wpsc')."</label> &nbsp;
@@ -636,7 +641,7 @@ function form_paypal_multiple() {
    <tr>
   	<td colspan='2'>
   	<span  class='wpscsmall description'>
-  	This setting affects your PayPal purchase log. If your customers already have a PayPal account PayPal will try to populate your PayPal Purchase Log with their PayPal address. This setting tries to replace the address in the PayPal purchase log with the Address customers enter on your Checkout page.
+  	" . __( "This setting affects your PayPal purchase log. If your customers already have a PayPal account PayPal will try to populate your PayPal Purchase Log with their PayPal address. This setting tries to replace the address in the PayPal purchase log with the Address customers enter on your Checkout page.", 'wpsc' ) . "
   	</span>
   	</td>
    </tr>\n";
@@ -663,7 +668,7 @@ function form_paypal_multiple() {
 
 
 
-		$output .= "    <td>Select Currency:</td>\n";
+		$output .= "    <td>" . __( 'Select Currency:', 'wpsc' ) .  "</td>\n";
 		$output .= "          <td>\n";
 		$output .= "            <select name='paypal_curcode'>\n";
 
@@ -695,13 +700,13 @@ $output .= "
 
 	<tr class='firstrowth'>
 		<td style='border-bottom: medium none;' colspan='2'>
-			<strong class='form_group'>Forms Sent to Gateway</strong>
+			<strong class='form_group'>" . __( 'Forms Sent to Gateway', 'wpsc' ) . "</strong>
 		</td>
 	</tr>
 
     <tr>
       <td>
-      First Name Field
+      " . __( 'First Name Field', 'wpsc' ) . "
       </td>
       <td>
       <select name='paypal_form[first_name]'>
@@ -711,7 +716,7 @@ $output .= "
   </tr>
     <tr>
       <td>
-      Last Name Field
+      " . __( 'Last Name Field', 'wpsc' ) . "
       </td>
       <td>
       <select name='paypal_form[last_name]'>
@@ -721,7 +726,7 @@ $output .= "
   </tr>
     <tr>
       <td>
-      Address Field
+      " . __( 'Address Field', 'wpsc' ) . "
       </td>
       <td>
       <select name='paypal_form[address]'>
@@ -731,7 +736,7 @@ $output .= "
   </tr>
   <tr>
       <td>
-      City Field
+      " . __( 'City Field', 'wpsc' ) . "
       </td>
       <td>
       <select name='paypal_form[city]'>
@@ -741,7 +746,7 @@ $output .= "
   </tr>
   <tr>
       <td>
-      State Field
+      " . __( 'State Field', 'wpsc' ) . "
       </td>
       <td>
       <select name='paypal_form[state]'>
@@ -751,7 +756,7 @@ $output .= "
   </tr>
   <tr>
       <td>
-      Postal code/Zip code Field
+      " . __( 'Postal / ZIP Code Field', 'wpsc' ) . "
       </td>
       <td>
       <select name='paypal_form[post_code]'>
@@ -761,7 +766,7 @@ $output .= "
   </tr>
   <tr>
       <td>
-      Country Field
+      " . __( 'Country Field', 'wpsc' ) . "
       </td>
       <td>
       <select name='paypal_form[country]'>
@@ -772,7 +777,7 @@ $output .= "
   <tr>
   	<td colspan='2'>
   	<span  class='wpscsmall description'>
-  	  For more help configuring Paypal Standard, please read our documentation <a href='http://docs.getshopped.org/wiki/documentation/payments/paypal-payments-standard'>here </a>  	</span>
+  	  " . sprintf( __( "For more help configuring Paypal Standard, please read our documentation <a href='%s'>here</a>", 'wpsc' ), esc_url( 'http://docs.getshopped.org/wiki/documentation/payments/paypal-payments-standard' ) ) . "</span>
   	</td>
    </tr>
 

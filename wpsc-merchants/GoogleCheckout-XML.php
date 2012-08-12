@@ -10,7 +10,7 @@ require_once(WPSC_FILE_PATH.'/wpsc-merchants/library/googleresult.php');
 require_once(WPSC_FILE_PATH.'/wpsc-merchants/library/googlerequest.php');
 
 
-$nzshpcrt_gateways[$num]['name'] = 'Google Checkout';
+$nzshpcrt_gateways[$num]['name'] = __( 'Google Wallet', 'wpsc' );
 $nzshpcrt_gateways[$num]['image'] = WPSC_URL . '/images/google_checkout.gif';
 $nzshpcrt_gateways[$num]['internalname'] = 'google';
 $nzshpcrt_gateways[$num]['function'] = 'gateway_google';
@@ -18,7 +18,7 @@ $nzshpcrt_gateways[$num]['form'] = "form_google";
 $nzshpcrt_gateways[$num]['submit_function'] = "submit_google";
 $nzshpcrt_gateways[$num]['is_exclusive'] = true;
 $nzshpcrt_gateways[$num]['payment_type'] = "google_checkout";
-$nzshpcrt_gateways[$num]['display_name'] = 'Google Checkout';
+$nzshpcrt_gateways[$num]['display_name'] = __( 'Google Wallet', 'wpsc' );
 
 function gateway_google($fromcheckout = false){
 	global $wpdb, $wpsc_cart, $wpsc_checkout,$current_user,  $purchlogs;	
@@ -336,13 +336,13 @@ function form_google(){
 		
 	$output = "
 	<tr>
-		<td>Merchant ID		</td>
+		<td>" . __( 'Merchant ID', 'wpsc' ) . "		</td>
 		<td>
 		<input type='text' size='40' value='".get_option('google_id')."' name='google_id' />
 		</td>
 	</tr>
 	<tr>
-		<td>Merchant Key
+		<td>" . __( 'Merchant Key', 'wpsc' ) . " 
 		</td>
 		<td>
 		<input type='text' size='40' value='".get_option('google_key')."' name='google_key' />
@@ -350,35 +350,35 @@ function form_google(){
 	</tr>
 	<tr>
 		<td>
-		Turn on auto charging 
+		" . __( 'Turn on auto charging', 'wpsc' ) . " 
 		</td>
 		<td>
-			<input $google_auto_charge1 type='radio' name='google_auto_charge' value='1' /> Yes
-			<input $google_auto_charge2 type='radio' name='google_auto_charge' value='0' /> No
+			<input $google_auto_charge1 type='radio' name='google_auto_charge' value='1' /> " . __( 'Yes', 'wpsc' ) . "
+			<input $google_auto_charge2 type='radio' name='google_auto_charge' value='0' /> " . __( 'No', 'wpsc' ) . "
 		</td>
 	</tr>
 	<tr>
 		<td>Server Type
 		</td>
 		<td>
-			<input $google_server_type1 type='radio' name='google_server_type' value='sandbox' /> Sandbox
-			<input $google_server_type2 type='radio' name='google_server_type' value='production' /> Production
+			<input $google_server_type1 type='radio' name='google_server_type' value='sandbox' /> " . __( 'Sandbox', 'wpsc' ) . "
+			<input $google_server_type2 type='radio' name='google_server_type' value='production' /> " . __( 'Production', 'wpsc' ) . "
 		</td>
 	</tr>
 	  <tr>
 		  <td>
-		  Select your currency
+		  " . __( 'Select your currency', 'wpsc' ) . "
 		  </td>
 		  <td>
 		  <select name='google_cur'>";
 		  	if (get_option('google_cur') == 'USD') {
 			$output.=
-			"<option selected='selected' value='USD'>USD</option>
-		  	<option value='GBP'>GBP</option>";
+			"<option selected='selected' value='USD'>" . __( 'USD', 'wpsc' ) . "</option>
+		  	<option value='GBP'>" . __( 'GBP', 'wpsc' ) . "</option>";
 			} else {
 			$output.=
-			"<option value='USD'>USD</option>
-		  	<option value='GBP' selected='selected'>GBP</option>";
+			"<option value='USD'>" . __( 'USD', 'wpsc' ) . "</option>
+		  	<option value='GBP' selected='selected'>" . __( 'GBP', 'wpsc' ) . "</option>";
 			}
 		  $output.="</select>
 		  </td>
@@ -386,15 +386,15 @@ function form_google(){
 
 	<tr>
 		<td>
-		Select Shipping Countries
+		" . __( 'Select Shipping Countries', 'wpsc' ) . "
 		</td>
 		<td>
 		<a href='".add_query_arg(array("googlecheckoutshipping" =>  1, "page" =>
-"wpsc-settings"))."' alt='Set Shipping Options'>Set Shipping countries</a>		</td>
+"wpsc-settings"))."' alt='" . __( 'Set Shipping Options', 'wpsc' ) . "'>" . __( 'Set Shipping Countries', 'wpsc' ) . "</a>		</td>
 	</tr>
 
 	<tr>
-		  <td>Button Styles
+		  <td>" . __( 'Button Styles', 'wpsc' ) . "
 		  </td>
 			<td><div>Size:
 				<input $button_size1 type='radio' name='google_button_size' value='0' /> 180&times;46
@@ -402,10 +402,10 @@ function form_google(){
 				<input $button_size3 type='radio' name='google_button_size' value='2' /> 160&times;43
 				</div>
 				<div>
-				Background:
+				" . __( 'Background:', 'wpsc' ) . "
 		  <select name='google_button_bg'>
-		  <option $button_bg1 value='trans'>Transparent</option>
-		  <option $button_bg2 value='white'>White</option>
+		  <option $button_bg1 value='trans'>" . __( 'Transparent', 'wpsc' ) . "</option>
+		  <option $button_bg2 value='white'>" . __( 'White', 'wpsc' ) . "</option>
 		  </select>
 		  </div>				
 			</td>
@@ -424,7 +424,7 @@ function form_google(){
 	<tr>
 		<td colspan='2'>
 		<span  class='wpscsmall description'>
-		For more help configuring Google Checkout, please read our documentation <a href='http://docs.getshopped.org/wiki/documentation/payments/google-checkout'>here </a> </span>
+		" . sprintf( __( "For more help configuring Google Checkout, please read our documentation <a href='%s'>here</a>", 'wpsc' ), esc_url( 'http://docs.getshopped.org/wiki/documentation/payments/google-checkout' ) ) . "</span>
 		</td>
 		</tr>";
   return $output;

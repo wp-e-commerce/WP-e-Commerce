@@ -4,7 +4,7 @@
  * WP eCommerce Base Merchant Class
  *
  * This is the base merchant class, all merchant files that use the new API extend this class.
- * 
+ *
  *
  * @package wp-e-commerce
  * @since 3.7.6
@@ -29,7 +29,7 @@ if ( !function_exists( 'wpsc_merchant_sort' ) ) {
 }
 
 /**
- * This is the Merchant Gateway Class that all gateways should extend. It handles everything from collating user data, 
+ * This is the Merchant Gateway Class that all gateways should extend. It handles everything from collating user data,
  * cart data so all gateways have consistent data between them.
  *
  *
@@ -61,7 +61,7 @@ class wpsc_merchant {
 	 * collate_data method, collate purchase data, like addresses, like country
 	 * @access public
 	 */
-	
+
 	protected $address_keys = array (
 		'billing' => array (
 			'first_name' => 'billingfirstname',
@@ -82,7 +82,7 @@ class wpsc_merchant {
 			'post_code'  => 'shippingpostcode',
 		)
 	);
-	
+
 	function __construct( $purchase_id = null, $is_receiving = false ) {
 		global $wpdb;
 		if ( ($purchase_id == null) && ($is_receiving == true) ) {
@@ -144,15 +144,15 @@ class wpsc_merchant {
 				case 'billingcountry':
 				case 'shippingcountry':
 					$country = maybe_unserialize( $collected_form_row['value'] );
-					
+
 					if ( is_array( $country ) ) {
 						$address_data[$address_data_set]['state'] = wpsc_get_state_by_id( $country[1], 'code' );
 						$country = $country[0];
 					}
-					
+
 					$address_data[$address_data_set][$address_key] = $country;
 					break;
-				
+
 				case 'billingstate':
 				case 'shippingstate':
 					if ( empty( $address_data[$address_data_set]['state'] ) )
@@ -193,7 +193,7 @@ class wpsc_merchant {
 			'shipping_address'        => $address_data['shipping'],
 		);
 
-	} 
+	}
 
 	/**
 	 * collate_cart method, collate cart data
@@ -207,19 +207,19 @@ class wpsc_merchant {
 
 		foreach ( $original_cart_data as $cart_row ) {
 			$is_downloadable = false;
-			
+
 			if ( $wpdb->get_var( "SELECT `id` FROM `" . WPSC_TABLE_DOWNLOAD_STATUS . "` WHERE `cartid` = {$cart_row['id']}" ) )
 				$is_downloadable = true;
 
 			$is_recurring = (bool)get_post_meta( $cart_row['prodid'], '_wpsc_is_recurring', true );
-	
+
 			if ( $is_recurring == true )
 				$this->cart_data['is_subscription'] = true;
-					
+
 
 			if ( ! $rebill_interval = get_post_meta( $cart_row['prodid'], '_wpsc_rebill_interval', true ) )
 				$rebill_interval = array();
-			
+
 
 			$new_cart_item = array(
 				"cart_item_id"         => $cart_row['id'],
@@ -275,7 +275,7 @@ class wpsc_merchant {
 	 */
 	function go_to_transaction_results( $session_id ) {
 		global $wpdb, $purchase_log;
-		
+
 		//Now to do actions once the payment has been attempted
 		switch ($purchase_log['processed']) {
 			case 3:
@@ -304,7 +304,7 @@ class wpsc_merchant {
 	 */
 	function set_purchase_processed_by_purchid( $status=1 ) {
 		global $wpdb;
-		
+
 		$wpdb->update(
 			    WPSC_TABLE_PURCHASE_LOGS,
 			    array(
@@ -382,7 +382,7 @@ class wpsc_merchant {
 			return $wpdb->update(WPSC_TABLE_PURCHASE_LOGS,array('authcode'=>$new_authcode), array('id'=>absint($this->purchase_id)),array('%s'), array('%d'));
 		}
 	}
-		
+
 	/**
 	 * construct_value_array gateway specific data array, extended in merchant files
 	 * @abstract
