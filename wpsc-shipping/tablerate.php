@@ -17,7 +17,7 @@ class tablerate {
 	 */
 	function tablerate() {
 		$this->internal_name = "tablerate";
-		$this->name="Table Rate";
+		$this->name = __( "Table Rate", 'wpsc' );
 		$this->is_external=false;
 		return true;
 	}
@@ -58,8 +58,8 @@ class tablerate {
 						<small><?php echo esc_html( $currency ); ?></small>
 						<input type="text" name="wpsc_shipping_tablerate_shipping[]" value="<?php echo esc_attr( $shipping ); ?>" size="4" />
 						<div class="actions">
-							<a tabindex="-1" title="<?php _e( 'Add Layer', 'wpsc' ); ?>" class="action add" href="#">Add</a>
-							<a tabindex="-1" title="<?php _e( 'Delete Layer', 'wpsc' ); ?>" class="action delete" href="#">Delete</a>
+							<a tabindex="-1" title="<?php _e( 'Add Layer', 'wpsc' ); ?>" class="action add" href="#"><?php _e( 'Add', 'wpsc' ); ?></a>
+							<a tabindex="-1" title="<?php _e( 'Delete Layer', 'wpsc' ); ?>" class="action delete" href="#"><?php _e( 'Delete', 'wpsc' ); ?></a>
 						</div>
 					</div>
 				</td>
@@ -170,7 +170,7 @@ class tablerate {
 
 					}
 
-					return array("Table Rate"=>$shipping_amount);
+					return array( __( "Table Rate", 'wpsc' ) => $shipping_amount );
 
 				}
 
@@ -185,7 +185,7 @@ class tablerate {
 				$shipping_amount = $shipping;
 			}
 
-			return array("Table Rate"=>$shipping_amount);
+			return array( __( "Table Rate", 'wpsc' ) => $shipping_amount );
 
 		}
 	}

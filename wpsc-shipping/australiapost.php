@@ -5,48 +5,48 @@
  */
 class australiapost {
 	var $internal_name, $name;
-	
+
 	/**
 	 * List of Valid Australia Post services
 	 *
 	 * @var Array
 	 */
 	var $services = array();
-	
+
 	/**
 	 * Shipping module settings
 	 *
 	 * @var Array
 	 */
 	var $settings;
-	
+
 	var $base_country;
 	var $base_zipcode;
-	
+
 	/**
 	 * Constructor
 	 */
 	function australiapost () {
 		$this->internal_name = "australiapost";
-		$this->name = __('Australia Post', 'wpsc');
+		$this->name = __( 'Australia Post', 'wpsc' );
 		$this->is_external = true;
 		$this->requires_weight = true;
 		$this->needs_zipcode = true;
 		$this->debug = false; // change to true to log (to the PHP error log) the API URLs and responses for each active service
-		
+
 		// Initialise the list of available postage services
 		$this->services['STANDARD'] = __('Standard Parcel Post', 'wpsc');
 		$this->services['EXPRESS'] = __('Express Post', 'wpsc');
 		$this->services['AIR'] = __('Air Mail', 'wpsc');
 		$this->services['SEA'] = __('Sea Mail', 'wpsc');
 		$this->services['EPI'] = __('Express Post International', 'wpsc');
-		
+
 		// Attempt to load the existing settings
 		$this->settings = get_option("wpsc_australiapost_settings");
-		
+
 		$this->base_country = get_option('base_country');
 		$this->base_zipcode = get_option('base_zipcode');
-		
+
 		if (!$this->settings) {
 			// Initialise the settings
 			$this->settings = array();
@@ -55,36 +55,36 @@ class australiapost {
 			}
 			update_option('wpsc_australiapost_settings', $this->settings);
 		}
-		
+
 		return true;
 	}
-	
+
 	function getId() {
 	}
-	
+
 	function setId($id) {
 	}
-	
+
 	function getName() {
 		return $this->name;
 	}
-	
+
 	function getInternalName() {
 		return $this->internal_name;
 	}
-	
+
 	function getForm() {
 		$output = '';
 		// Only for Australian merchants
 		if ($this->base_country != 'AU') {
 			return __('This shipping module only works if the base country in settings, region is set to Australia.', 'wpsc');
 		}
-		
+
 		// Base postcode must be set
 		if (strlen($this->base_zipcode) != 4) {
 			return __('You must set your base postcode above before this shipping module will work.', 'wpsc');
 		}
-		
+
 		$output .= "<tr><td>" . __('Select the Australia Post services that you want to offer during checkout:', 'wpsc') . "</td></tr>\n\r";
 		$output .= "<tr><td>\n\r";
 		foreach ($this->services as $code => $value) {
@@ -95,20 +95,20 @@ class australiapost {
 		$output .= "</td></tr>";
 		$output .= "<tr><td><h4>" . __('Notes:', 'wpsc') . "</h4>";
 		$output .= __('1. The actual services quoted to the customer during checkout will depend on the destination country. Not all methods are available to all destinations.', 'wpsc') . "<br />";
-		$output .= __('2. Each product must have a valid weight configured. When editing a product, use the weight field.).', 'wpsc') . "<br />";
+		$output .= __('2. Each product must have a valid weight configured. When editing a product, use the weight field.', 'wpsc') . "<br />";
 		$output .= __('3. To ensure accurate quotes, each product must valid dimensions configured. When editing a product, use the height, width and length fields.', 'wpsc') . "<br />";
 		$output .= __('4. The combined dimensions are estimated by calculating the volume of each item, and then calculating the cubed root of the overall order volume which becomes width, length and height.', 'wpsc') . "<br />";
 		$output .= __('5. If no product dimensions are defined, then default package dimensions of 100mm x 100mm x 100mm will be used.', 'wpsc') . "<br />";
 		$output .= "</tr></td>";
 		return $output;
 	}
-	
+
 	function submit_form() {
 		$this->settings['services'] = array();
 
 		// Only continue if this module's options were updated
 		if ( !isset($_POST["{$this->internal_name}_updateoptions"]) || !$_POST["{$this->internal_name}_updateoptions"] ) return;
-		
+
 		if (isset($_POST['wpsc_australiapost_settings'])) {
 			if (isset($_POST['wpsc_australiapost_settings']['services'])) {
 				foreach ($this->services as $code => $name) {
@@ -120,17 +120,17 @@ class australiapost {
 		update_option('wpsc_australiapost_settings', $this->settings);
 		return true;
 	}
-	
+
 	function getQuote() {
 		global $wpdb, $wpsc_cart;
-		
+
 		if ($this->base_country != 'AU' || strlen($this->base_zipcode) != 4 || !count($wpsc_cart->cart_items)) return;
-		
+
 		$dest = $_SESSION['wpsc_delivery_country'];
 
 		$destzipcode = '';
 		if(isset($_POST['zipcode'])) {
-			$destzipcode = $_POST['zipcode'];      
+			$destzipcode = $_POST['zipcode'];
 			$_SESSION['wpsc_zipcode'] = $_POST['zipcode'];
 		} else if(isset($_SESSION['wpsc_zipcode'])) {
 			$destzipcode = $_SESSION['wpsc_zipcode'];
@@ -165,11 +165,11 @@ class australiapost {
 		In this case, we should query the Aus Post API, only taking into account the product(s) that attract shipping charges.
 		Products with "disregard shipping" ticked shouldn't have their weight or dimensions included in the quote.
 		*/
-		
+
 
 		// Weight is in grams
 		$weight = wpsc_convert_weight($wpsc_cart->calculate_total_weight(true), 'pound', 'gram');
- 
+
 		// Calculate the total cart dimensions by adding the volume of each product then calculating the cubed root
 		$volume = 0;
 
@@ -185,7 +185,7 @@ class australiapost {
 		$numItemsWithDisregardShippingTicked = 0;
 
 		foreach($wpsc_cart->cart_items as $cart_item) {
-			
+
 			if ( !$cart_item->uses_shipping ) {
 			    // The "Disregard Shipping for this product" option is ticked for this item.
 			    // Don't include it in the shipping quote.
@@ -194,15 +194,15 @@ class australiapost {
 			}
 
 			// If we are here then this item attracts shipping charges.
-			
+
 			$meta = get_product_meta($cart_item->product_id,'product_metadata',true);
 			$meta = $meta['dimensions'];
 
 			if ($meta && is_array($meta)) {
 				$productVolume = 1;
 				foreach (array('width','height','length') as $dimension) {
-					
-					
+
+
 					switch ($meta["{$dimension}_unit"]) {
 						// we need the units in mm
 						case 'cm':
@@ -222,15 +222,15 @@ class australiapost {
 				$volume += floatval($productVolume);
 			}
 		}
-		
+
 		// Calculate the cubic root of the total volume, rounding up
 		$cuberoot = ceil(pow($volume, 1 / 3));
-		
+
 		// Use default dimensions of 100mm if the volume is zero
 		$height=100;
 		$width=100;
 		$length=100;
-		
+
 		if ($cuberoot > 0) {
 		    $height = $width = $length = $cuberoot;
 		}
@@ -241,14 +241,14 @@ class australiapost {
 
 		// By default we should use Australia Post's quoted rate(s)
 		$shippingPriceNeedsToBeZero = false;
-		
+
 		if ($numItemsWithDisregardShippingTicked == $numItems) {
 		    // The cart consists of entirely "disregard shipping" products, so the shipping quote(s) should be $0.00
 		    // Set the weight to 1 gram so that we can obtain valid Australia Post quotes (which we will then ignore the quoted price of)
 		    $weight = 1;
 		    $shippingPriceNeedsToBeZero = true;
 		}
-		
+
 		// API Documentation: http://drc.edeliver.com.au/
 		$url = "http://drc.edeliver.com.au/ratecalc.asp";
 
@@ -272,7 +272,7 @@ class australiapost {
 		$methods = array();
 		foreach ($this->services as $code => $service) {
 			if (!$this->settings['services'][$code]) continue;
-			
+
 			$fullURL = add_query_arg('Service_Type', $code, $url);
 
 			// This cache key should be unique for a cart with these contents and destination
@@ -283,9 +283,9 @@ class australiapost {
 			$cachedResult = get_transient($cacheKey);
 
 			if ( false === $cachedResult ) {
-			    
+
 			    // Quote isn't cached -> query the Australia Post API and then cache the result for 10 minutes
-			    
+
 			    $response = wp_remote_get($fullURL);
 
 			    // Silently ignore any API server errors
@@ -332,17 +332,17 @@ class australiapost {
 		}
 		if ( $this->debug && strlen($log) )
 		    error_log( 'WP e-Commerce Australia Post shipping quotes for ' . site_url() . ":\n----------\n$log----------" );
-		
+
 		// Allow another WordPress plugin to override the quoted method(s)/amount(s)
-		
+
 		$methods = apply_filters('wpsc_australia_post_methods', $methods, $this->base_zipcode, $destzipcode, $dest, $weight);
-		
+
 		$quotedMethods = array();
-		
+
 		foreach ($methods as $code => $data) {
 			// Only include methods with an OK response
 			if ($data['err_msg'] != 'OK') continue;
-			
+
 			if ($data['days']) {
 				// If the estimated number of days is specified, so include it in the quote
 				$text = sprintf(_n('%1$s (estimated delivery time: %2$d business day)', '%1$s (estimated delivery time: %2$d business days)', $data['days'], 'wpsc'), $data['name'], $data['days']);
@@ -354,7 +354,7 @@ class australiapost {
 		}
 		return $quotedMethods;
 	}
-	
+
 	function get_item_shipping() {
 	}
 }

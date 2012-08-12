@@ -13,7 +13,7 @@ class ash_ups {
     function ash_ups() {
         global $wpec_ash;
         $this->internal_name = "ups";
-        $this->name="UPS";
+        $this->name = _x( "UPS", 'Shipping Module', 'wpsc' );
         $this->is_external=true;
         $this->requires_curl=true;
         $this->requires_weight=true;
@@ -58,39 +58,39 @@ class ash_ups {
 
     private function _includeUPSData(){
         $this->drop_types = array(
-                            "01"=>"Daily Pickup",
-                            "03"=>"Customer Counter",
-                            "06"=>"One Time Pickup",
-                            "07"=>"On Call Air",
-                            "19"=>"Letter Center",
-                            "20"=>"Air Service Center",
-                            "11"=>"Suggested Retail Rates (Advanced Config)"
+                            "01" => __( "Daily Pickup", 'wpsc' ),
+                            "03" => __( "Customer Counter", 'wpsc' ),
+                            "06" => __( "One Time Pickup", 'wpsc' ),
+                            "07" => __( "On Call Air", 'wpsc' ),
+                            "19" => __( "Letter Center", 'wpsc' ),
+                            "20" => __( "Air Service Center", 'wpsc' ),
+                            "11" => __( "Suggested Retail Rates (Advanced Config)", 'wpsc' ),
                             );
 
         $this->cust_types = array(
-                            "01" => "Daily Pickup, with UPS Account",
-                            "03" => "No Daily Pickup, with No or Other Account",
-                            "04" => "Retail Outlet (Only US origin shipments)"
+                            "01" => __( "Daily Pickup, with UPS Account", 'wpsc' ),
+                            "03" => __( "No Daily Pickup, with No or Other Account", 'wpsc' ),
+                            "04" => __( "Retail Outlet (Only US origin shipments)", 'wpsc' )
                             );
 
         $this->Services = array(
-            "14" => "Next Day Air Early AM",
-            "01" => "Next Day Air",
-            "13" => "Next Day Air Saver",
-            "59" => "2nd Day Air AM",
-            "02" => "2nd Day Air",
-            "12" => "3 Day Select",
-            "03" => "Ground",
-            "11" => "Standard",
-            "07" => "Worldwide Express",
-            "54" => "Worldwide Express Plus",
-            "08" => "Worldwide Expedited",
-            "65" => "Saver",
-            "82" => "UPS Today Standard",
-            "83" => "UPS Today Dedicated Courier",
-            "84" => "UPS Today Intercity",
-            "85" => "UPS Today Express",
-            "86" => "UPS Today Express Saver"
+            "14" => __( "Next Day Air Early AM", 'wpsc' ),
+            "01" => __( "Next Day Air", 'wpsc' ),
+            "13" => __( "Next Day Air Saver", 'wpsc' ),
+            "59" => __( "2nd Day Air AM", 'wpsc' ),
+            "02" => __( "2nd Day Air", 'wpsc' ),
+            "12" => __( "3 Day Select", 'wpsc' ),
+            "03" => __( "Ground", 'wpsc' ),
+            "11" => __( "Standard", 'wpsc' ),
+            "07" => __( "Worldwide Express", 'wpsc' ),
+            "54" => __( "Worldwide Express Plus", 'wpsc' ),
+            "08" => __( "Worldwide Expedited", 'wpsc' ),
+            "65" => __( "Saver", 'wpsc' ),
+            "82" => __( "UPS Today Standard", 'wpsc' ),
+            "83" => __( "UPS Today Dedicated Courier", 'wpsc' ),
+            "84" => __( "UPS Today Intercity", 'wpsc' ),
+            "85" => __( "UPS Today Express", 'wpsc' ),
+            "86" => __( "UPS Today Express Saver", 'wpsc' )
         );
     }
 
@@ -271,7 +271,7 @@ class ash_ups {
 
             $output .= ("       </div>
                                 <br />
-                                -Note: ".__('All services used if no services selected','wpsc')."
+                                ".__('Note: All services used if no services selected','wpsc')."
                             </td>
                         </tr>");
             $output .= ("<tr>
@@ -304,7 +304,7 @@ class ash_ups {
                             </td>
                         </tr>
                            <tr>
-           <td colspan='2'>For more help configuring UPS, please read our documentation <a href='http://docs.getshopped.org/wiki/documentation/shipping/ups'>here </a></td>
+           <td colspan='2'>" . sprintf( __( "For more help configuring UPS, please read our documentation <a href='%s'>here", 'wpsc' ), esc_url( 'http://docs.getshopped.org/wiki/documentation/shipping/ups' ) ) . "</a></td>
        </tr>");
 
 
@@ -809,10 +809,10 @@ class ash_ups {
 
         // If ths zip code is provided via a form post use it!
 		$args['dest_pcode'] = '';
-        if(isset($_POST['zipcode']) && ($_POST['zipcode'] != "Your Zipcode" && $_POST['zipcode'] != "YOURZIPCODE")) {
+        if(isset($_POST['zipcode']) && ($_POST['zipcode'] != __( "Your Zipcode", 'wpsc' ) && $_POST['zipcode'] != "YOURZIPCODE")) {
           $args['dest_pcode'] = esc_attr( $_POST['zipcode'] );
           $_SESSION['wpsc_zipcode'] = esc_attr( $_POST['zipcode'] );
-        } else if(isset($_SESSION['wpsc_zipcode']) && ($_POST['zipcode'] != "Your Zipcode" && $_POST['zipcode'] != "YOURZIPCODE")) {
+        } else if(isset($_SESSION['wpsc_zipcode']) && ($_POST['zipcode'] != __( "Your Zipcode", 'wpsc' ) && $_POST['zipcode'] != "YOURZIPCODE")) {
           // Well, we have a zip code in the session and no new one provided
           $args['dest_pcode'] = $_SESSION['wpsc_zipcode'];
         }
