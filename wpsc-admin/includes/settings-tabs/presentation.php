@@ -142,8 +142,8 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab
 							if(false !== array_search($file, (array)$themes_location))
 								$selected = 'checked="checked"';
 							?>
-							<li><input type='checkbox' id='<?php echo $id; ?>' <?php echo $selected; ?> value='<?php esc_attr( $file ); ?>' name='wpsc_templates_to_port[]' />
-							<label for='<?php echo $id; ?>'><?php esc_html( $file ); ?></label></li>
+							<li><input type='checkbox' id='<?php echo $id; ?>' <?php echo $selected; ?> value='<?php echo esc_attr( $file ); ?>' name='wpsc_templates_to_port[]' />
+							<label for='<?php echo $id; ?>'><?php echo esc_html( $file ); ?></label></li>
 					<?php }	 ?>
 					 </ul>
 					 <p>
@@ -795,7 +795,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab
 						}
 ?>
 						<input type='radio' onclick='hideelement1("dropshop_option", this.value)' value='3' name='wpsc_options[cart_location]' id='cart3' <?php if ( isset( $cart3 ) )
-							echo $cart3; ?> /> <label for='cart3'><?php esc_html_e( 'Manual', 'wpsc' ); ?> <span style='font-size: 7pt;'><?php esc_html( '(PHP code: <?php echo wpsc_shopping_cart(); ?> )')?></span></label>
+							echo $cart3; ?> /> <label for='cart3'><?php esc_html_e( 'Manual', 'wpsc' ); ?> <span style='font-size: 7pt;'><?php echo esc_html( '(PHP code: <?php echo wpsc_shopping_cart(); ?> )')?></span></label>
 						<div  style='display: <?php if ( !empty( $cart5 ) ) {
 							echo "block";
 						} else {
