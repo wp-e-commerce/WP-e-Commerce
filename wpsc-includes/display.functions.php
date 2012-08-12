@@ -47,8 +47,8 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 			} else {
 				$output .="<input type='hidden' name='undefined_quantity' value='0' />";
 			}
-			$output .="<input type='image' name='submit' border='0' src='https://www.paypal.com/en_US/i/btn/btn_buynow_LG.gif' alt='PayPal - The safer, easier way to pay online' />
-				<img alt='' border='0' width='1' height='1' src='https://www.paypal.com/en_US/i/scr/pixel.gif' />
+			$output .="<input type='image' name='submit' border='0' src='" .  . "' alt='" . esc_attr__( 'PayPal - The safer, easier way to pay online', 'wpsc' ) . "' />
+				<img alt='' border='0' width='1' height='1' src='" . esc_url( _x( 'https://www.paypal.com/en_US/i/scr/pixel.gif', 'PayPal Pixel. URL can change based on locale', 'wpsc' ) . "' />
 			</form>\n\r";
 		}
 	}
@@ -141,7 +141,7 @@ function wpsc_fancy_notifications( $return = false ) {
 		$output = "";
 		$output .= "<div id='fancy_notification'>\n\r";
 		$output .= "  <div id='loading_animation'>\n\r";
-		$output .= '<img id="fancy_notificationimage" title="Loading" alt="Loading" src="' . wpsc_loading_animation_url() . '" />' . __( 'Updating', 'wpsc' ) . "...\n\r";
+		$output .= '<img id="fancy_notificationimage" title="' . esc_attr__( 'Loading', 'wpsc' ) . '" alt="' . esc_attr__( 'Loading', 'wpsc' ) . '" src="' . wpsc_loading_animation_url() . '" />' . __( 'Updating', 'wpsc' ) . "...\n\r";
 		$output .= "  </div>\n\r";
 		$output .= "  <div id='fancy_notification_content'>\n\r";
 		$output .= "  </div>\n\r";

@@ -60,7 +60,7 @@
 			$rawdata = curl_exec($ch);
 			curl_close($ch);
 			if(empty($rawdata)){
-				throw new Exception('unable to connect to currency conversion service ');
+				throw new Exception( __( 'unable to connect to currency conversion service', 'wpsc' ) );
 			}
 
 			$rawdata = preg_replace( '/(\{|,\s*)([^\s:]+)(\s*:)/', '$1"$2"$3', $rawdata );

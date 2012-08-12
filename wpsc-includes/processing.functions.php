@@ -352,7 +352,7 @@ function wpsc_check_stock($state, $product) {
 	');
 		if( !empty( $no_stock ) ){
 			$state['state'] = true;
-			$state['messages'][] = __('One or more of this products variations are out of stock.', 'wpsc');
+			$state['messages'][] = __( 'One or more of this products variations are out of stock.', 'wpsc' );
 		}
 
 
