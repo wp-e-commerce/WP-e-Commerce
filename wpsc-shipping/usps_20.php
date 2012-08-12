@@ -28,7 +28,7 @@ class ash_usps{
      * This is the "prettier" version of $internal_name to be shown to end-users.
      * @var string
      */
-    var $name="USPS";
+    var $name = "USPS";
     /**
      * This flag is used by WP-E-Commerce to denote whether or not
      * it accesses an external API to provide shipping rates and requires cURL
@@ -117,15 +117,15 @@ class ash_usps{
         $services = array(
 //        	"Online Only *"=>"ONLINE",
 //            "All Services"=>"ALL",
-            "Parcel Post"=>"PARCEL",
+            __( "Parcel Post", 'wpsc' ) =>"PARCEL",
 //            "Media Mail"=>"MEDIA",
 //            "Library Mail"=>"LIBRARY",
-        	"First Class"=>"FIRST CLASS",
+        	__( "First Class", 'wpsc' ) =>"FIRST CLASS",
 //            "First Class Hold For Pickup Commercial"=>"FIRST CLASS HFP COMMERCIAL",
-            "Priority Mail"=>"PRIORITY",
+            __( "Priority Mail", 'wpsc' ) =>"PRIORITY",
 //            "Priority Commercial"=>"PRIORITY COMMERCIAL",
 //            "Priority Hold For Pickup Commercial"=>"PRIORITY HFP COMMERCIAL",
-            "Express Mail"=>"EXPRESS",
+            __( "Express Mail", 'wpsc' ) =>"EXPRESS",
 //            "Express Commerical"=>"EXPRESS COMMERCIAL",
 //            "Express SH"=>"EXPRESS SH",
 //            "Express SH Commercial"=> "EXPRESS SH COMMERCIAL",
@@ -200,7 +200,7 @@ class ash_usps{
     					<td>
     					</td>
     					<td>
-    					<span style=\"font-size: x-small\">	Make sure your account has been activated with USPS - if you're unsure if this applys to you then please check with USPS </span>
+    					<span style=\"font-size: x-small\">	" . __( "Make sure your account has been activated with USPS - if you're unsure if this applies to you then please check with USPS", 'wpsc' ) . " </span>
     					</td>
     				</tr>
     				<tr>
@@ -244,9 +244,9 @@ class ash_usps{
             $output .= ("    </div><!--
     						<span style=\"font-size: x-small\">".__("Online rates the following services only, when available",'wpsc')."
             					<br />
-            					US Domestic: Express Mail, Priority Mail
+            					" . __( "US Domestic: Express Mail, Priority Mail", 'wpsc' ) . "
             					<br />
-            					International : Global Express Guarenteed, Express Mail Intl. , Priority Mail Intl.
+            					" . __( "International : Global Express Guarenteed, Express Mail Intl. , Priority Mail Intl.", 'wpsc' ) . "
         					</span>
     						<br />
     						-->
@@ -259,13 +259,13 @@ class ash_usps{
     					<td>
     					");
             $mt_array = array(
-                              "Package",
-                              "Envelope",
-                              "Postcards or aerogrammes",
-                              "Matter for the Blind",
+                              __( "Package", 'wpsc' ),
+                             __( "Envelope", 'wpsc' ),
+                             __( "Postcards or aerogrammes", 'wpsc' ),
+                             __( "Matter for the Blind", 'wpsc' )
                               //"All"
                               );
-            $mt_selected = (array_key_exists("intl_pkg", $settings)) ? $settings["intl_pkg"] : "Package";
+            $mt_selected = (array_key_exists("intl_pkg", $settings)) ? $settings["intl_pkg"] : __( "Package", 'wpsc' );
             $output .= "<select id=\"wpec_usps_intl_pkg\" name=\"wpec_usps[intl_pkg]\">";
             foreach($mt_array as $mt){
                 $chk_mt = "";
@@ -284,7 +284,7 @@ class ash_usps{
 
             // If First Class, Online or All is selected then we need to know what Kind of First class
             // will be used.
-            $fcl_types = array("Parcel"=>"PARCEL", "Letter"=>"LETTER", "Flat"=>"FLAT", "Postcard"=>"POSTCARD");
+            $fcl_types = array( __( "Parcel", 'wpsc' ) => "PARCEL", __( "Letter", 'wpsc' ) => "LETTER", __( "Flat", 'wpsc' )=> "FLAT", __( "Postcard", 'wpsc' ) => "POSTCARD");
             $type_selected = (array_key_exists("fcl_type",$settings)) ? $settings["fcl_type"] : $fcl_types["Parcel"];
 
             $output .=("

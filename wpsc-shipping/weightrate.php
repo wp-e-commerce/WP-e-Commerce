@@ -16,7 +16,7 @@ class weightrate {
 	 */
 	function weightrate() {
 		$this->internal_name = "weightrate";
-		$this->name="Weight Rate";
+		$this->name = __( "Weight Rate", 'wpsc' );
 		$this->is_external=false;
 		return true;
 	}
@@ -56,8 +56,8 @@ class weightrate {
 						<small><?php echo esc_html( $currency ); ?></small>
 						<input type="text" name="wpsc_shipping_weightrate_shipping[]" value="<?php echo esc_attr( $shipping ); ?>" size="4" />
 						<div class="actions">
-							<a tabindex="-1" title="<?php _e( 'Add Layer', 'wpsc' ); ?>" class="action add" href="#">Add</a>
-							<a tabindex="-1" title="<?php _e( 'Delete Layer', 'wpsc' ); ?>" class="action delete" href="#">Delete</a>
+							<a tabindex="-1" title="<?php _e( 'Add Layer', 'wpsc' ); ?>" class="action add" href="#"><?php _e( 'Add', 'wpsc' ); ?></a>
+							<a tabindex="-1" title="<?php _e( 'Delete Layer', 'wpsc' ); ?>" class="action delete" href="#"><?php _e( 'Delete', 'wpsc' ); ?></a>
 						</div>
 					</div>
 				</td>
@@ -163,11 +163,11 @@ class weightrate {
 						// Shipping should be a % of the cart total
 						$shipping = str_replace('%', '', $shipping);
 						$shipping_amount = $cart_total * ( $shipping / 100 );
-						return array("Weight Rate"=>(float)$shipping_amount);
+						return array( __( "Weight Rate", 'wpsc' ) => (float)$shipping_amount );
 
 					} else {
 
-						return array("Weight Rate"=>$shipping);
+						return array( __( "Weight Rate", 'wpsc' ) => $shipping );
 
 					}
 
@@ -184,7 +184,7 @@ class weightrate {
 				$shipping_amount = $shipping;
 			}
 
-			return array("Weight Rate"=>(float)$shipping_amount);
+			return array( __( "Weight Rate", 'wpsc' ) => (float)$shipping_amount);
 		}
 
 	}
