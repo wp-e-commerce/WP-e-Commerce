@@ -447,7 +447,7 @@ function wpsc_user_details() {
 						$gateway_name = $gateway['name'];
 					}
 				} else {
-					$gateway_name = "Manual Payment";
+					$gateway_name = __( "Manual Payment", 'wpsc' );
 				}
 			}
 			echo $gateway_name;
@@ -587,7 +587,7 @@ function wpsc_user_details() {
 
 				echo '</tr>';
 			}
-			echo "<tr >";
+			echo "<tr>";
 
 			echo " <td>";
 			echo " </td>";

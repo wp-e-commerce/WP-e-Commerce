@@ -225,7 +225,7 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 					if ( $gateway['internalname'] == $purch_data[0]['gateway'] )
 						$gateway_name = $gateway['name'];
 				} else {
-					$gateway_name = "Manual Payment";
+					$gateway_name = __( "Manual Payment", 'wpsc' );
 				}
 
 				$variation_list = '';
@@ -295,7 +295,7 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 ', 'wpsc' ), wpsc_currency_display( $total, array( 'display_as_html' => false ) ));
 			if ( $purchase_log['discount_value'] > 0 ) {
 				$discount_email = __( 'Discount', 'wpsc' ) . "\n\r: ";
-				$discount_email .=$purchase_log['discount_data'] . ' : ' . wpsc_currency_display( $purchase_log['discount_value'], array( 'display_as_html' => false ) ) . "\n\r";
+				$discount_email .= $purchase_log['discount_data'] . ' : ' . wpsc_currency_display( $purchase_log['discount_value'], array( 'display_as_html' => false ) ) . "\n\r";
 
 				$report.= $discount_email . "\n\r";
 				$total_shipping_email .= $discount_email;
@@ -304,8 +304,8 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 
 			//only show total tax if tax is not included
 			if ( ( $wpec_taxes_controller->wpec_taxes_isenabled() && ! $wpec_taxes_controller->wpec_taxes_isincluded() ) ) {
-				$total_tax_html .= __('Total Tax', 'wpsc').': '. wpsc_currency_display( $purchase_log['wpec_taxes_total'] )."\n\r";
-				$total_tax .= __('Total Tax', 'wpsc').': '. wpsc_currency_display( $purchase_log['wpec_taxes_total'] , array( 'display_as_html' => false ) )."\n\r";
+				$total_tax_html .= __('Total Tax: ', 'wpsc') . wpsc_currency_display( $purchase_log['wpec_taxes_total'] )."\n\r";
+				$total_tax .= __('Total Tax: ', 'wpsc') . wpsc_currency_display( $purchase_log['wpec_taxes_total'] , array( 'display_as_html' => false ) )."\n\r";
 			}
 			if ( wpsc_uses_shipping() || ! empty( $purchase_log['base_shipping'] ) )
 				$total_shipping_html.= '<hr>' . sprintf(__( 'Total Shipping: %s
@@ -316,9 +316,9 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 ", 'wpsc'), $purchase_log['id']);
 
 			if ( isset( $_GET['ti'] ) ) {
-				$message.= "\n\r" . __( 'Your Transaction ID', 'wpsc' ) . ": " . $_GET['ti'];
-				$message_html.= "\n\r" . __( 'Your Transaction ID', 'wpsc' ) . ": " . $_GET['ti'];
-				$report.= "\n\r" . __( 'Transaction ID', 'wpsc' ) . ": " . $_GET['ti'];
+				$message.= "\n\r" . __( 'Your Transaction ID: ', 'wpsc' ) . $_GET['ti'];
+				$message_html.= "\n\r" . __( 'Your Transaction ID: ', 'wpsc' ) . $_GET['ti'];
+				$report.= "\n\r" . __( 'Transaction ID: ', 'wpsc' ) . $_GET['ti'];
 			}
 			$message = apply_filters( 'wpsc_transaction_result_message', $message );
 			$message = str_replace( '%purchase_id%', $report_id, $message );
