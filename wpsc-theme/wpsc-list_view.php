@@ -103,7 +103,7 @@ global $wp_query, $wpdb;
 
 							<?php if(wpsc_has_multi_adding()): ?>
                             <div class="quantity_container">
-								<label class="wpsc_quantity_update" for="wpsc_quantity_update_<?php echo wpsc_the_product_id(); ?>"><?php _e('Quantity', 'wpsc'); ?>:</label>
+								<label class="wpsc_quantity_update" for="wpsc_quantity_update_<?php echo wpsc_the_product_id(); ?>"><?php _e('Quantity:', 'wpsc'); ?></label>
 								<input type="text" id="wpsc_quantity_update_<?php echo wpsc_the_product_id(); ?>" name="wpsc_quantity_update" size="2" value="1" />
 								<input type="hidden" name="key" value="<?php echo wpsc_the_cart_item_key(); ?>"/>
 								<input type="hidden" name="wpsc_update_quantity" value="true" />
@@ -122,7 +122,7 @@ global $wp_query, $wpdb;
 										<input type="submit" value="<?php _e('Add To Cart', 'wpsc'); ?>" name="Buy" class="wpsc_buy_button" id="product_<?php echo wpsc_the_product_id(); ?>_submit_button" />
 											<?php endif; ?>
 										<div class="wpsc_loading_animation">
-											<img title="Loading" alt="Loading" src="<?php echo wpsc_loading_animation_url(); ?>" />
+											<img title="<?php esc_attr_e( 'Loading', 'wpsc' ); ?>" alt="<?php esc_attr_e( 'Loading', 'wpsc' ); ?>" src="<?php echo wpsc_loading_animation_url(); ?>" />
 											<?php _e('Updating cart...', 'wpsc'); ?>
 										</div><!--close wpsc_loading_animation-->
 									</div><!--close wpsc_buy_button_container-->

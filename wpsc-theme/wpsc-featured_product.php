@@ -13,11 +13,11 @@ foreach ( $query as $product ) :
                 <div class="item_text">
                     <h2><a href='<?php echo get_permalink( $product->ID ); ?>'><?php echo get_the_title( $product->ID ); ?></a></h2>
                       <div class="pricedisplay featured_product_price">
-                        Price: <?php echo wpsc_the_product_price(); ?>
+                        <?php esc_html_e( 'Price:', 'wpsc' ); ?> <?php echo wpsc_the_product_price(); ?>
                     </div>
                     
                     <div class='wpsc_description'>
-                        <?php echo wpsc_the_product_description(); ?> <a href='<?php echo get_permalink( $product->ID ); ?>'>More Information&hellip;</a>
+                        <?php echo wpsc_the_product_description(); ?> <a href='<?php echo get_permalink( $product->ID ); ?>'><?php esc_html_e( 'More Information&hellip;', 'wpsc' ); ?></a>
                     </div>
        
                 </div><?php if ( wpsc_the_product_thumbnail ( ) ) : ?>
@@ -26,7 +26,7 @@ foreach ( $query as $product ) :
                 </div><?php else: ?>
 
                 <div class="item_no_image">
-                    <a href="<?php echo get_the_title( $product->ID ); ?>"><span>No Image Available</span></a>
+                    <a href="<?php echo get_the_title( $product->ID ); ?>"><span><?php esc_html_e( 'No Image Available', 'wpsc' ); ?></span></a>
                 </div><?php endif; ?>
             </div>
             <div class="clear"></div>

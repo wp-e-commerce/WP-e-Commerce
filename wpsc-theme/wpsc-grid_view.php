@@ -71,7 +71,7 @@ $image_height = get_option('product_image_height');
 				<?php else: ?>
 					<div class="item_no_image">
 									<a href="<?php echo wpsc_the_product_permalink(); ?>">
-									<img class="no-image" id="product_image_<?php echo wpsc_the_product_id(); ?>" alt="No Image" title="<?php echo wpsc_the_product_title(); ?>" src="<?php echo WPSC_CORE_THEME_URL; ?>wpsc-images/noimage.png" width="<?php echo get_option('product_image_width'); ?>" height="<?php echo get_option('product_image_height'); ?>" />
+									<img class="no-image" id="product_image_<?php echo wpsc_the_product_id(); ?>" alt="<?php esc_attr_e( 'No Image', 'wpsc' ); ?>" title="<?php echo wpsc_the_product_title(); ?>" src="<?php echo WPSC_CORE_THEME_URL; ?>wpsc-images/noimage.png" width="<?php echo get_option('product_image_width'); ?>" height="<?php echo get_option('product_image_height'); ?>" />
 									</a>
 					</div><!--close item_no_image-->
 				<?php endif; ?>
@@ -91,7 +91,7 @@ $image_height = get_option('product_image_height');
 								<?php endif; ?>
 							</div><!--close price_container-->
 						<?php if(get_option('display_moredetails') == 1) : ?>
-							<a href="<?php echo wpsc_the_product_permalink(); ?>" class="more_details">More Details</a>
+							<a href="<?php echo wpsc_the_product_permalink(); ?>" class="more_details"><?php esc_html_e( 'More Details', 'wpsc' ); ?></a>
 						<?php endif; ?>
 					</div><!--close grid_product_info-->
 					<div class="grid_more_info">
@@ -132,7 +132,7 @@ $image_height = get_option('product_image_height');
 
 
 										<div class="wpsc_loading_animation">
-											<img title="Loading" alt="Loading" src="<?php echo wpsc_loading_animation_url(); ?>" />
+											<img title="<?php esc_attr_e( 'Loading', 'wpsc' ); ?>" alt="<?php esc_attr_e( 'Loading', 'wpsc' ); ?>" src="<?php echo wpsc_loading_animation_url(); ?>" />
 											<?php _e('Updating cart...', 'wpsc'); ?>
 										</div><!--close wpsc_loading_animation-->
 						<?php do_action ( 'wpsc_product_form_fields_end' ); ?>

@@ -83,7 +83,7 @@ $image_width = get_option('product_image_width');
 							</a>
 						<?php else: ?>
 								<a href="<?php echo wpsc_the_product_permalink(); ?>">
-								<img class="no-image" id="product_image_<?php echo wpsc_the_product_id(); ?>" alt="No Image" title="<?php echo wpsc_the_product_title(); ?>" src="<?php echo WPSC_CORE_THEME_URL; ?>wpsc-images/noimage.png" width="<?php echo get_option('product_image_width'); ?>" height="<?php echo get_option('product_image_height'); ?>" />
+								<img class="no-image" id="product_image_<?php echo wpsc_the_product_id(); ?>" alt="<?php esc_attr_e( 'No Image', 'wpsc' ); ?>" title="<?php echo wpsc_the_product_title(); ?>" src="<?php echo WPSC_CORE_THEME_URL; ?>wpsc-images/noimage.png" width="<?php echo get_option('product_image_width'); ?>" height="<?php echo get_option('product_image_height'); ?>" />
 								</a>
 						<?php endif; ?>
 						<?php
@@ -110,7 +110,7 @@ $image_width = get_option('product_image_width');
 						<?php if(wpsc_the_product_additional_description()) : ?>
 						<div class="additional_description_container">
 
-								<img class="additional_description_button"  src="<?php echo WPSC_CORE_THEME_URL; ?>wpsc-images/icon_window_expand.gif" alt="Additional Description" /><a href="<?php echo wpsc_the_product_permalink(); ?>" class="additional_description_link"><?php _e('More Details', 'wpsc'); ?>
+								<img class="additional_description_button"  src="<?php echo WPSC_CORE_THEME_URL; ?>wpsc-images/icon_window_expand.gif" alt="<?php esc_attr_e( 'Additional Description', 'wpsc' ); ?>" /><a href="<?php echo wpsc_the_product_permalink(); ?>" class="additional_description_link"><?php _e('More Details', 'wpsc'); ?>
 							</a>
 							<div class="additional_description">
 								<p><?php echo wpsc_the_product_additional_description(); ?></p>
@@ -191,7 +191,7 @@ $image_width = get_option('product_image_width');
 								<?php if(wpsc_product_has_stock()) : ?>
 									<div class="wpsc_buy_button_container">
 										<div class="wpsc_loading_animation">
-											<img title="Loading" alt="Loading" src="<?php echo wpsc_loading_animation_url(); ?>" />
+											<img title="" alt="<?php esc_attr_e( 'Loading', 'wpsc' ); ?>" src="<?php echo wpsc_loading_animation_url(); ?>" />
 											<?php _e('Updating cart...', 'wpsc'); ?>
 										</div><!--close wpsc_loading_animation-->
 											<?php if(wpsc_product_external_link(wpsc_the_product_id()) != '') : ?>
