@@ -30,9 +30,9 @@ class wpsc_merchant_testmode extends wpsc_merchant {
 
 	var $name = '';
 
-	function wpsc_merchant_testmode() {
+	function __construct( $purchase_id = null, $is_receiving = false ) {
 		$this->name = __( 'Test Gateway', 'wpsc' );
-		parent::wpsc_merchant();
+		parent::wpsc_merchant( $purchase_id, $is_receiving );
 	}
 
 	function submit() {

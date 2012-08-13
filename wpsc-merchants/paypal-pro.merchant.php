@@ -39,9 +39,9 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 	var $name              = '';
 	var $paypal_ipn_values = array( );
 
-	function wpsc_merchant_paypal_pro() {
+	function __construct( $purchase_id = null, $is_receiving = false ) {
 		$this->name = __( 'PayPal Pro 2.0', 'wpsc' );
-		parent::wpsc_merchant();
+		parent::wpsc_merchant( $purchase_id, $is_receiving );
 	}
 
 	function get_local_currency_code() {
