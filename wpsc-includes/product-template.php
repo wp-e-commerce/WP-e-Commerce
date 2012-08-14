@@ -84,6 +84,9 @@ function wpsc_pagination($totalpages = '', $per_page = '', $current_page = '', $
 	if( !empty( $_GET['product_order'] ) )
 		$additional_links .= $additional_links_separator . 'product_order=' . $_GET['product_order'];
 
+	if ( ! empty( $_GET['range'] ) )
+		$additional_links .= $additional_links_separator . 'range=' . $_GET['range'];
+
 	$additional_links = apply_filters('wpsc_pagination_additional_links', $additional_links);
 	//end of additional links
 
