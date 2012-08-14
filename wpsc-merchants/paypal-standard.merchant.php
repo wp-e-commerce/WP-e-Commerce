@@ -53,7 +53,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 
   function __construct( $purchase_id = null, $is_receiving = false ) {
   	$this->name = __( 'PayPal Payments Standard', 'wpsc' );
-  	parent::__construct();
+  	parent::__construct( $purchase_id, $is_receiving );
   }
 
 	/**
