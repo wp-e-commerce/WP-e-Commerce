@@ -510,6 +510,9 @@ function wpsc_update_location() {
 		$wpsc_cart->update_shipping( $wpsc_cart->selected_shipping_method, $wpsc_cart->selected_shipping_option );
 	}
 
+	if ( ! empty( $_SESSION['shippingSameBilling'] ) && ( $_SESSION['wpsc_delivery_country'] != $_SESSION['wpsc_selected_country'] || $_SESSION['wpsc_delivery_region'] != $_SESSION['wpsc_selected_region'] ) )
+		$_SESSION['shippingSameBilling'] = false;
+
 	if ( isset( $_GET['ajax'] ) && $_GET['ajax'] == 'true' )
 		exit;
 }
