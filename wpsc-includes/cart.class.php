@@ -1176,6 +1176,17 @@ class wpsc_cart {
       return $total;
   }
 
+  public function get_total_shipping_quantity() {
+   $total = 0;
+
+   foreach ( $this->cart_items as $key => $cart_item ) {
+      if ( $cart_item->uses_shipping )
+         $total += $cart_item->quantity;
+   }
+
+   return $total;
+  }
+
   /**
     * get category url name  method
     * @access public

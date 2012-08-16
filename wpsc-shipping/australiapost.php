@@ -201,38 +201,47 @@ class australiapost {
 			if ($meta && is_array($meta)) {
 				$productVolume = 1;
 				foreach (array('width','height','length') as $dimension) {
-
-
+					if ( empty( $meta[$dimension] ) )
+						$meta[$dimension] = 0;
 					switch ($meta["{$dimension}_unit"]) {
 						// we need the units in mm
 						case 'cm':
 							// convert from cm to mm
-							$productVolume = $productVolume * (floatval($meta[$dimension]) * 10);
+							$meta[$dimension] *= 10;
 							break;
 						case 'meter':
 							// convert from m to mm
-							$productVolume = $productVolume * (floatval($meta[$dimension]) * 1000);
+							$meta[$dimension] *= 1000;
 							break;
 						case 'in':
 							// convert from in to mm
-							$productVolume = $productVolume * (floatval($meta[$dimension]) * 25.4);
+							$meta[$dimension] *= 25.4;
 							break;
 					}
+
+					$productVolume *= $meta[$dimension];
 				}
 				$volume += floatval($productVolume);
 			}
 		}
 
-		// Calculate the cubic root of the total volume, rounding up
-		$cuberoot = ceil(pow($volume, 1 / 3));
+		// If there's only one item in the cart, its dimensions will be used
+		// But if there are multiple items, cubic root of total volume will be used instead
+		if ( $wpsc_cart->get_total_shipping_quantity() == 1 ) {
+			$height = $meta['height'];
+			$width = $meta['width'];
+			$length = $meta['length'];
+		} else {
+			// Calculate the cubic root of the total volume, rounding up
+			$cuberoot = ceil(pow($volume, 1 / 3));
 
-		// Use default dimensions of 100mm if the volume is zero
-		$height=100;
-		$width=100;
-		$length=100;
+			// Use default dimensions of 100mm if the volume is zero
+			$height=100;
+			$width=100;
+			$length=100;
 
-		if ($cuberoot > 0) {
-		    $height = $width = $length = $cuberoot;
+			if ($cuberoot > 0)
+			    $height = $width = $length = $cuberoot;
 		}
 
 		// As per http://auspost.com.au/personal/parcel-dimensions.html: if the parcel is box-shaped, both its length and width must be at least 15cm.
