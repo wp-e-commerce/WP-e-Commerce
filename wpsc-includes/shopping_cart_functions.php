@@ -1,10 +1,10 @@
 <?php
 
 function wpsc_shopping_cart( $input = null, $override_state = null ) {
-	global $wpdb;
+	global $wpdb, $wpsc_cart;
 
-	$nzshpcrt_cart = wpsc_get_customer_meta( 'nzshpcart' );
-	
+	$customer_id = wpsc_get_current_customer_id();
+
 	if ( is_numeric( $override_state ) )
 		$state = $override_state;
 	else
@@ -19,7 +19,7 @@ function wpsc_shopping_cart( $input = null, $override_state = null ) {
 			}
 			$fancy_collapser = "<a href='#' onclick='return shopping_cart_collapser()' id='fancy_collapser_link'><img src='" . WPSC_CORE_IMAGES_URL . "/$collapser_image' title='' alt='' id='fancy_collapser' /></a>";
 		} else {
-			if ( $nzshpcrt_cart ) {
+			if ( $customer_id ) {
 				$collapser_image = 'minus.png';
 			} else {
 				$collapser_image = 'plus.png';
@@ -32,20 +32,16 @@ function wpsc_shopping_cart( $input = null, $override_state = null ) {
 
 	if ( $state == 1 ) {
 		if ( $input != '' ) {
-			$cart = $nzshpcrt_cart;
 			echo "<div id='sideshoppingcart'><div id='shoppingcartcontents'>";
-			echo wpsc_shopping_basket_internals( $cart );
+			echo wpsc_shopping_basket_internals();
 			echo "</div></div>";
 		}
 	} else if ( ($state == 3) || ($state == 4) ) {
-		if ( $nzshpcrt_cart ) {
-			$cart = $nzshpcrt_cart;
-		}
 		if ( $state == 4 ) {
 			echo "<div id='widgetshoppingcart'>";
 			echo "<h3>" . __( 'Shopping Cart', 'wpsc' ) . "$fancy_collapser</h3>";
 			echo "  <div id='shoppingcartcontents'>";
-			echo wpsc_shopping_basket_internals( $cart, false, true );
+			echo wpsc_shopping_basket_internals(false, false, true );
 			echo "  </div>";
 			echo "</div>";
 			$dont_add_input = true;
@@ -53,24 +49,16 @@ function wpsc_shopping_cart( $input = null, $override_state = null ) {
 			echo "<div id='sideshoppingcart'>";
 			echo "<h3>" . __( 'Shopping Cart', 'wpsc' ) . "$fancy_collapser</h3>";
 			echo "  <div id='shoppingcartcontents'>";
-			if ( isset( $cart ) ) {
-				echo wpsc_shopping_basket_internals( $cart, false, true );
-			}
+			echo wpsc_shopping_basket_internals( false, false, true );
 			echo "  </div>";
 			echo "</div>";
 		}
 	} else {
 		if ( (isset( $GLOBALS['nzshpcrt_activateshpcrt'] ) && $GLOBALS['nzshpcrt_activateshpcrt'] === true ) ) {
-
-			$cart = $GLOBALS['nzshpcrt_activateshpcrt'];
-
-			if ( $nzshpcrt_cart ) {
-				$cart = $nzshpcrt_cart;
-			}
 			echo "<div id='shoppingcart'>";
 			echo "<h3>" . __( 'Shopping Cart', 'wpsc' ) . "$fancy_collapser</h3>";
 			echo "  <div id='shoppingcartcontents'>";
-			echo wpsc_shopping_basket_internals( $cart, false, true );
+			echo wpsc_shopping_basket_internals( false, false, true );
 			echo "  </div>";
 			echo "</div>";
 		}
@@ -78,7 +66,7 @@ function wpsc_shopping_cart( $input = null, $override_state = null ) {
 	return $input;
 }
 
-function wpsc_shopping_basket_internals( $cart, $quantity_limit = false, $no_title=false ) {
+function wpsc_shopping_basket_internals( $deprecated = false, $quantity_limit = false, $no_title=false ) {
 	global $wpdb;
 
 	$display_state = '';
