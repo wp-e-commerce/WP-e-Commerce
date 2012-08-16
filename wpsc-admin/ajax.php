@@ -575,3 +575,47 @@ function _wpsc_action_tinymce_window() {
 	exit;
 }
 add_action( 'wp_ajax_wpsc_tinymce_window', '_wpsc_action_tinymce_window' );
+
+
+/**
+ * Add tax rate
+ * @since  3.8.9
+ * @access private
+ * @return array|WP_Error Response args if successful, WP_Error if otherwise
+ */
+function _wpsc_ajax_add_tax_rate() {
+	//include taxes controller
+	$wpec_taxes_controller = new wpec_taxes_controller;
+
+	switch ( $_REQUEST['wpec_taxes_action'] ) {
+		case 'wpec_taxes_get_regions':
+			$regions = $wpec_taxes_controller->wpec_taxes->wpec_taxes_get_regions( $_REQUEST['country_code'] );
+			$key = $_REQUEST['current_key'];
+			$type = $_REQUEST['taxes_type'];
+			$default_option = array( 'region_code' => 'all-markets', 'name' => 'All Markets' );
+			$select_settings = array(
+				'id' => "{$type}-region-{$key}",
+				'name' => "wpsc_options[wpec_taxes_{$type}][{$key}][region_code]",
+				'class' => 'wpsc-taxes-region-drop-down'
+			);
+			$returnable = $wpec_taxes_controller->wpec_taxes_build_select_options( $regions, 'region_code', 'name', $default_option, $select_settings );
+			break;
+		case 'wpec_taxes_build_rates_form':
+			$key = $_REQUEST['current_key'];
+			$returnable = $wpec_taxes_controller->wpec_taxes_build_form( $key );
+			break;
+		case 'wpec_taxes_build_bands_form':
+			$key = $_REQUEST['current_key'];
+			//get a new key if a band is already defined for this key
+			while($wpec_taxes_controller->wpec_taxes->wpec_taxes_get_band_from_index($key))
+			{
+				$key++;
+			}
+			$returnable = $wpec_taxes_controller->wpec_taxes_build_form( $key, false, 'bands' );
+			break;
+	}// switch
+
+	return array(
+		'content' => $returnable,
+	);
+}
