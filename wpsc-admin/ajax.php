@@ -388,15 +388,27 @@ function _wpsc_ajax_change_purchase_log_status() {
 	set_current_screen( 'dashboard_page_wpsc-sales-logs' );
 
 	require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/purchase-log-list-table-class.php' );
-	ob_start();
 	$purchaselog_table = new WPSC_Purchase_Log_List_Table();
+	$purchaselog_table->prepare_items();
+
+	ob_start();
 	$purchaselog_table->views();
-	$content = ob_get_clean();
+	$views = ob_get_clean();
+
+	ob_start();
+	$purchaselog_table->display_tablenav( 'top' );
+	$tablenav_top = ob_get_clean();
+
+	ob_start();
+	$purchaselog_table->display_tablenav( 'bottom' );
+	$tablenav_bottom = ob_get_clean();
 
 	$return = array(
-		'id'         => $_POST['id'],
-		'new_status' => $_POST['new_status'],
-		'content'    => $content,
+		'id'              => $_POST['id'],
+		'new_status'      => $_POST['new_status'],
+		'views'           => $views,
+		'tablenav_top'    => $tablenav_top,
+		'tablenav_bottom' => $tablenav_bottom,
 	);
 
 	return $return;
