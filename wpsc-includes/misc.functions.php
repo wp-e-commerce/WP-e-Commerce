@@ -28,7 +28,7 @@ function wpsc_find_purchlog_status_name( $purchlog_status ) {
 
 /**
  * WPSC get state by id function, gets either state code or state name depending on param
- *
+*
  * @since 3.7
  * $param int $id the id for the region
  * @param string $return_value either 'name' or 'code' depending on what you want returned
@@ -370,7 +370,7 @@ function nzshpcrt_display_preview_image() {
 					$temp_h = $height;
 
 					// select our scaling method
-					$scaling_method = 'cropping';
+					$scaling_method = apply_filters( 'wpsc_preview_image_cropping_method', 'cropping' );
 
 					// set both offsets to zero
 					$offset_x = $offset_y = 0;
@@ -401,14 +401,15 @@ function nzshpcrt_display_preview_image() {
 					}
 
 					// Create temp resized image
+					$bgcolor_default = apply_filters( 'wpsc_preview_image_bgcolor', array( 255, 255, 255 ) );
 					$temp_img = ImageCreateTrueColor( $temp_w, $temp_h );
-					$bgcolor = ImageColorAllocate( $temp_img, 255, 255, 255 );
+					$bgcolor = ImageColorAllocate( $temp_img, $bgcolor_default[0], $bgcolor_default[1], $bgcolor_default[2] ) ;
 					ImageFilledRectangle( $temp_img, 0, 0, $temp_w, $temp_h, $bgcolor );
 					ImageAlphaBlending( $temp_img, TRUE );
 					ImageCopyResampled( $temp_img, $src_img, 0, 0, 0, 0, $temp_w, $temp_h, $source_w, $source_h );
 
 					$dst_img = ImageCreateTrueColor( $width, $height );
-					$bgcolor = ImageColorAllocate( $dst_img, 255, 255, 255 );
+					$bgcolor = ImageColorAllocate( $dst_img, $bgcolor_default[0], $bgcolor_default[1], $bgcolor_default[2] );
 					ImageFilledRectangle( $dst_img, 0, 0, $width, $height, $bgcolor );
 					ImageAlphaBlending( $dst_img, TRUE );
 

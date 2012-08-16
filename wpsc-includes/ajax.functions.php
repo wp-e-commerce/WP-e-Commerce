@@ -981,7 +981,8 @@ function wpsc_scale_image() {
 
 		if ( $generate_thumbnail == true ) {
 			//JS - 7.1.2010 - Added true parameter to function to not crop - causing issues on WPShop
-			$intermediate_size_data = image_make_intermediate_size( $file_path, $width, $height, true );
+			$crop = apply_filters( 'wpsc_scale_image_cropped', true );
+			$intermediate_size_data = image_make_intermediate_size( $file_path, $width, $height, $crop );
 			$attachment_metadata['sizes'][$intermediate_size] = $intermediate_size_data;
 			wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
 			$intermediate_image_data = image_get_intermediate_size( $attachment_id, $intermediate_size );
