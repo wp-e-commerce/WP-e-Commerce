@@ -2,12 +2,12 @@
 
 if(get_option('wpsc_trackingid_message') == ''){
 	update_option('wpsc_trackingid_message', __('Your purchase from %shop_name% has just been dispatched. It should arrive soon. To keep track of your products status a tracking id has been attached. \r\n your tracking id is: %trackid%', 'wpsc'));
-}     
+}
 if(get_option('wpsc_trackingid_subject') == ''){
 	update_option('wpsc_trackingid_subject', __('Your Order from %shop_name% has been dispatched', 'wpsc'));
-}     
+}
 
-if($wpdb->get_results("SHOW FULL COLUMNS FROM `".WPSC_TABLE_REGION_TAX."` LIKE 'code';",ARRAY_A)) {   
+if($wpdb->get_results("SHOW FULL COLUMNS FROM `".WPSC_TABLE_REGION_TAX."` LIKE 'code';",ARRAY_A)) {
 
   if($wpdb->get_var("SELECT COUNT(*) FROM `".WPSC_TABLE_REGION_TAX."` WHERE `code` NOT IN ('')") < 51) {
     $wpdb->query("UPDATE `".WPSC_TABLE_REGION_TAX."` SET `code` = 'AL' WHERE `name` IN ('Alabama') LIMIT 1 ;");
@@ -21,7 +21,7 @@ if($wpdb->get_results("SHOW FULL COLUMNS FROM `".WPSC_TABLE_REGION_TAX."` LIKE '
     $wpdb->query("UPDATE `".WPSC_TABLE_REGION_TAX."` SET `code` = 'FL' WHERE `name` IN ('Florida') LIMIT 1 ;");
     $wpdb->query("UPDATE `".WPSC_TABLE_REGION_TAX."` SET `code` = 'GA' WHERE `name` IN ('Georgia')  LIMIT 1 ;");
     $wpdb->query("UPDATE `".WPSC_TABLE_REGION_TAX."` SET `code` = 'HI' WHERE `name` IN ('Hawaii')  LIMIT 1 ;");
-    $wpdb->query("UPDATE `".WPSC_TABLE_REGION_TAX."` SET `code` = 'ID' WHERE`name` IN ('Idaho')  LIMIT 1 ;");
+    $wpdb->query("UPDATE `".WPSC_TABLE_REGION_TAX."` SET `code` = 'ID' WHERE `name` IN ('Idaho')  LIMIT 1 ;");
     $wpdb->query("UPDATE `".WPSC_TABLE_REGION_TAX."` SET `code` = 'IL' WHERE `name` IN ('Illinois')  LIMIT 1 ;");
     $wpdb->query("UPDATE `".WPSC_TABLE_REGION_TAX."` SET `code` = 'IN' WHERE `name` IN ('Indiana')  LIMIT 1 ;");
     $wpdb->query("UPDATE `".WPSC_TABLE_REGION_TAX."` SET `code` = 'IA' WHERE `name` IN ('Iowa')  LIMIT 1 ;");
@@ -83,7 +83,7 @@ if(get_option('payment_method') != null) {
 		$selected_gateways[] = 'testmode';
 		$selected_gateways[] = $current_gateway;
 		break;
-		
+
 		case 3;
 		// mode 3 is manual payment / test mode
 		$current_gateway = 'testmode';
@@ -377,25 +377,25 @@ if($wpdb->get_var("SELECT `option_id` FROM `{$wpdb->options}` WHERE `option_name
 
 if((get_option('flat_rates') == null) || (count(get_option('flat_rates')) < 1)) {
 	$local_shipping = get_option('base_local_shipping');
-	$international_shipping = get_option('base_international_shipping');  
+	$international_shipping = get_option('base_international_shipping');
 
 	// Local Shipping Settings
 	$shipping['local'] = $local_shipping;
-	
+
 	$shipping['southisland'] = $local_shipping;
-	$shipping['northisland'] = $local_shipping;	
-	
+	$shipping['northisland'] = $local_shipping;
+
 	// International Shipping Settings
 	$shipping['continental'] = $international_shipping;
 	$shipping['all'] = $international_shipping;
 	$shipping['canada'] = $international_shipping;
-	
+
 	$shipping['northamerica'] = $international_shipping;
 	$shipping['southamerica'] = $international_shipping;
 	$shipping['asiapacific'] = $international_shipping;
 	$shipping['europe'] = $international_shipping;
 	$shipping['africa'] = $international_shipping;
-	
+
 	update_option('flat_rates',$shipping);
 }
 
