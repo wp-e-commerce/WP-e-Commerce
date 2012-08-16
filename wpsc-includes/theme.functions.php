@@ -548,10 +548,11 @@ function wpsc_enqueue_user_script_and_css() {
 		$version_identifier = WPSC_VERSION . "." . WPSC_MINOR_VERSION;
 
 		$category_id = wpsc_get_current_category_id();
-		$remote_protocol = is_ssl() ? 'https://' : 'http://';
 
-		if( get_option( 'wpsc_share_this' ) == 1 )
-		    wp_enqueue_script( 'sharethis', $remote_protocol . 'w.sharethis.com/button/buttons.js', array(), false, true );
+		if( get_option( 'wpsc_share_this' ) == 1 ) {
+			$remote_protocol = is_ssl() ? 'https://ws' : 'http://w';
+			wp_enqueue_script( 'sharethis', $remote_protocol . '.sharethis.com/button/buttons.js', array(), false, true );
+		}
 
 		wp_enqueue_script( 'jQuery' );
 		wp_enqueue_script( 'wp-e-commerce',               WPSC_CORE_JS_URL	. '/wp-e-commerce.js',                 array( 'jquery' ), $version_identifier );
