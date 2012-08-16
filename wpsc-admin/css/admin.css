@@ -1988,3 +1988,189 @@ table.purchase-logs .column-id .delete {
 table.purchase-logs tr:hover .column-id .delete {
 	visibility:visible;
 }
+
+/* Product Variations */
+.no-js #wpsc_product_variation_forms iframe {
+	height:300px;
+}
+
+.js #wpsc_product_variation_forms iframe {
+	border:0;
+	margin:0;
+	overflow:hidden;
+	padding:0;
+}
+
+#wpsc_product_variation_forms iframe {
+	background:transparent;
+	width:100%;
+}
+
+.wpsc-product-variation-iframe {
+	min-width: 400px;
+}
+
+#wpsc-product-variations-wrapper .tablenav.top {
+	margin-top:0;
+}
+
+.wpsc-save-variations-top {
+	float:right;
+	margin:8px 0 5px;
+}
+
+#wpsc-product-variations-wrapper .column-stock input[type="text"],
+#wpsc-product-variations-wrapper .column-tax input[type="text"],
+#wpsc-product-variations-wrapper .column-price input[type="text"],
+#wpsc-product-variations-wrapper .column-sale_price input[type="text"],
+#wpsc-product-variations-wrapper .column-sku input[type="text"] {
+	width:100%;
+
+	box-sizing:border-box;
+	-o-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+}
+
+#wpsc-product-variations-wrapper .inline-edit-row.column-stock input[type="text"],
+#wpsc-product-variations-wrapper .inline-edit-row.column-tax input[type="text"],
+#wpsc-product-variations-wrapper .inline-edit-row.column-price input[type="text"],
+#wpsc-product-variations-wrapper .inline-edit-row.column-sale_price input[type="text"],
+#wpsc-product-variations-wrapper .inline-edit-row.column-sku input[type="text"] {
+	width: 60%;
+}
+
+#wpsc-product-variations-wrapper .column-stock, #wpsc-product-variations-wrapper .column-tax, #wpsc-product-variations-wrapper .column-price, #wpsc-product-variations-wrapper .column-sale_price, #wpsc-product-variations-wrapper .column-sku {
+	text-align:center;
+	width:11%;
+}
+
+#wpsc-product-variations-wrapper .column-stock input,
+#wpsc-product-variations-wrapper .column-tax input,
+#wpsc-product-variations-wrapper .column-price input,
+#wpsc-product-variations-wrapper .column-sale_price input,
+#wpsc-product-variations-wrapper .column-sku input {
+	text-align:right;
+}
+
+.js #wpsc-product-variations-wrapper tbody .active td, .js #wpsc-product-variations-wrapper tbody .active th {
+	border-bottom-style:dashed;
+}
+
+.js #wpsc-product-variations-wrapper tbody td, .js #wpsc-product-variations-wrapper tbody th {
+	border-bottom-style:solid;
+}
+
+#wpsc-product-variations-wrapper div.updated,
+#wpsc-product-variations-wrapper div.error {
+	margin: 15px 0 2px;
+}
+
+.js #wpsc-product-variations-wrapper .wpsc-stock-editor-row {
+	display:none;
+}
+
+#wpsc-product-variations-wrapper .wpsc-stock-editor-row td {
+	border-bottom-style:solid;
+}
+
+#wpsc-product-variations-wrapper .submit {
+	margin:0;
+	padding:0;
+}
+
+.wpsc-stock-editor .inside {
+	overflow:hidden;
+}
+
+.wpsc-stock-editor .wpsc-product-shipping-section {
+	display:inline-block;
+	vertical-align: top;
+	width:49%;
+}
+
+.wpsc-stock-editor .wpsc-form-field {
+	clear:both;
+}
+
+.wpsc-stock-editor .wpsc-product-shipping-section input[type="text"] {
+	text-align:right;
+	width:50px;
+}
+
+.wpsc-product-shipping-weight-dimensions label {
+	display:inline-block;
+	min-width:60px;
+}
+
+.wpsc-product-shipping-flat-rate label {
+	display:inline-block;
+	min-width:160px;
+}
+
+.wpsc-stock-editor {
+	overflow:hidden;
+}
+
+.wpsc-stock-editor select {
+	min-width:100px;
+}
+
+#wpsc_product_variation_forms .inside {
+	background: #fff;
+	padding: 0;
+	margin: 0;
+}
+
+.wpsc-product-variations-tabs {
+	background: #F1F1F1;
+	border-bottom: 1px solid #ccc;
+	padding: 10px 10px 0;
+	margin: 0;
+}
+
+.wpsc-product-variations-tabs li {
+	display: inline-block;
+	margin: 0 4px 2px 0;
+}
+
+.wpsc-product-variations-tabs a {
+	background-color: #fff;
+	border-color: #ccc #ccc #fff;
+	border-style: solid;
+	border-width: 1px 1px 0;
+	color: #aaa;
+	padding: 5px 7px 3px;
+	text-decoration: none;
+
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	-webkit-border-top-left-radius: 3px;
+	-webkit-border-top-right-radius: 3px;
+	-moz-border-top-left-radius: 3px;
+	-moz-border-top-right-radius: 3px;
+}
+
+.wpsc-product-variations-tabs a:hover {
+	color: #D54E21;
+}
+
+.wpsc-product-variations-tabs .active a {
+	border-bottom-width: 1px;
+	color: #333;
+	margin-bottom: 2px;
+}
+
+.wpsc-product-variations-tab-content {
+	padding: 0 10px;
+}
+
+.wpsc-product-variation-thumbnail {
+	float: left;
+	height: 50px;
+	width: 50px;
+}
+
+.wpsc-product-variation-title {
+	margin-left: 60px;
+}

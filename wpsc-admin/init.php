@@ -623,9 +623,6 @@ function wpsc_update_variations() {
 	//Setup postdata
 	$post_data = array( );
 	$post_data['edit_var_val'] = isset( $_POST['edit_var_val'] ) ? $_POST["edit_var_val"] : '';
-	$post_data['description'] = isset( $_POST['description'] ) ? $_POST["description"] : '';
-	$post_data['additional_description'] = isset( $_POST['additional_description'] ) ? $_POST['additional_description'] : '';
-	$post_data['name'] = (!empty($_POST['name']))?$_POST['name']:$_POST["post_title"];
 
 	//Add or delete variations
 	wpsc_edit_product_variations( $product_id, $post_data );

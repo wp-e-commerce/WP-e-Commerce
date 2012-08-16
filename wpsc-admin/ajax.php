@@ -80,6 +80,15 @@ function _wpsc_ajax_handler() {
 }
 add_action( 'wp_ajax_wpsc_ajax', '_wpsc_ajax_handler' );
 
+function wpsc_is_doing_ajax( $action = '' ) {
+	$ajax = defined( 'DOING_AJAX' ) && DOING_AJAX && ! empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'wpsc_ajax';
+
+	if ( $action )
+		$ajax = $ajax && ! empty( $_REQUEST['wpsc_action'] ) && $ajax_action == str_replace( '-', '_', $_REQUEST['wpsc_action'] );
+
+	return $ajax;
+}
+
 /**
  * Helper function that generates nonce for an AJAX action. Basically just a wrapper of
  * wp_create_nonce() but automatically add prefix.
@@ -554,7 +563,7 @@ function _wpsc_ajax_upload_product_file() {
  * @return array|WP_Error Response args if successful, WP_Error if otherwise
  */
 function _wpsc_ajax_update_variations() {
-	$product_id = absint( $_POST["product_id"] );
+	$product_id = absint( $_REQUEST["product_id"] );
 	wpsc_update_variations();
 
 	ob_start();
@@ -575,7 +584,6 @@ function _wpsc_action_tinymce_window() {
 	exit;
 }
 add_action( 'wp_ajax_wpsc_tinymce_window', '_wpsc_action_tinymce_window' );
-
 
 /**
  * Add tax rate
@@ -619,3 +627,40 @@ function _wpsc_ajax_add_tax_rate() {
 		'content' => $returnable,
 	);
 }
+
+function wpsc_product_variations_table() {
+	check_admin_referer( 'wpsc_product_variations_table' );
+	require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/product-variations-page.class.php' );
+	$page = new WPSC_Product_Variations_Page();
+	$page->display();
+
+	exit;
+}
+add_action( 'wp_ajax_wpsc_product_variations_table', 'wpsc_product_variations_table' );
+
+function _wpsc_ajax_set_variation_product_thumbnail() {
+	$response = array(
+		'success' => false
+	);
+
+	$post_ID = intval( $_POST['post_id'] );
+	if ( current_user_can( 'edit_post', $post_ID ) ) {
+		$thumbnail_id = intval( $_POST['thumbnail_id'] );
+		check_ajax_referer( "set_post_thumbnail-$post_ID" );
+
+		if ( $thumbnail_id == '-1' )
+			delete_post_thumbnail( $post_ID );
+
+		set_post_thumbnail( $post_ID, $thumbnail_id );
+
+		$thumbnail = wpsc_the_product_thumbnail( 50, 50, $post_ID, '' );
+		if ( ! $thumbnail )
+			$thumbnail = WPSC_CORE_IMAGES_URL . '/no-image-uploaded.gif';
+		$response['src'] = $thumbnail;
+		$response['success'] = true;
+	}
+
+	echo json_encode( $response );
+	exit;
+}
+add_action( 'wp_ajax_wpsc_set_variation_product_thumbnail', '_wpsc_ajax_set_variation_product_thumbnail' );

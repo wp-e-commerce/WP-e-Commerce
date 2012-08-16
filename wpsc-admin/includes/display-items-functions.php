@@ -385,263 +385,165 @@ function wpsc_product_taxes_forms() {
 }
 
 function wpsc_product_variation_forms() {
-	require_once( 'walker-variation-checklist.php' );
-	global $post, $wpdb, $wp_query, $variations_processor, $wpsc_product_defaults;
-
-	$db_version = get_option( 'db_version' );
-
-	$product_data = get_post_custom( $post->ID );
-	$product_data['meta'] = maybe_unserialize( $product_data );
-
-	foreach ( $product_data['meta'] as $meta_key => $meta_value )
-		$product_data['meta'][$meta_key] = $meta_value[0];
-
-	$product_meta = array();
-	if ( !empty( $product_data["_wpsc_product_metadata"] ) )
-		$product_meta = maybe_unserialize( $product_data["_wpsc_product_metadata"][0] );
-
-	$siteurl = get_option( 'siteurl' );
-	$output  = '';
-?>
-	<a name="#wpsc_variation_metabox"></a>
-		<?php if ( empty( $post->post_title ) ) : ?>
-			<p><?php esc_html_e( 'You must first save this Product as a Draft before adding variations.', 'wpsc' ); ?></p>
-			<h4><a href="<?php echo get_admin_url(); ?>/edit-tags.php?taxonomy=wpsc-variation&post_type=wpsc-product" target="_blank"><?php esc_html_e( '+ Add New Variation Set', 'wpsc' ); ?></a></h4>
-		<?php else : ?>
-			<div id="product_variations">
-				<p><a name='variation_control'>&nbsp;</a><?php esc_html_e( 'Select the Variation sets and then the corresponding Variants you want to add to this product.', 'wpsc' ) ?></p>
-
-				<ul class="variation_checkboxes">
-					<?php
-
-					wp_terms_checklist( $post->ID, array(
-						'taxonomy'      => 'wpsc-variation',
-						'walker'        => new WPSC_Walker_Variation_Checklist(),
-						'checked_ontop' => false,
-					) );
-
-					?>
-				</ul>
-
-				<p class="update-variations">
-					<a class="button update_variations_action" href='#'><?php esc_html_e( 'Apply Variations &rarr;', 'wpsc' ); ?></a>
-					<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" /><br class="clear" />
-				</p>
-
-				<div class="clear"></div>
-				<h4><a href="#wpsc_variation_metabox" class="add_variation_set_action"><?php esc_html_e( '+ Add New Variants', 'wpsc' ) ?></a></h4>
-
-				<div id="add-new-variation-set">
-					<p>
-						<label for="new-variation-set-name"><?php esc_html_e( "Enter variation set's name", 'wpsc' ); ?></label>
-						<input type="text" class="text-field" id="new-variation-set-name" /><br />
-					</p>
-					<p class="howto"><?php esc_html_e( 'Example: Color. If you want to add variants to an existing set, you can enter the name of that set here.', 'wpsc' ); ?></p>
-					<p>
-						<label for="new-variants"><?php esc_html_e( 'Enter new variants', 'wpsc' ); ?></label>
-						<input type="text" class="text-field" id="new-variants" /><br />
-					</p>
-					<p class="howto"><?php esc_html_e( 'Example: Red, Green, Blue. Separate variants with commas.', 'wpsc' ); ?></p>
-					<p>
-						<a class="button" href="#"><?php esc_html_e( 'Add New Variants', 'wpsc' ); ?></a>
-						<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" /><br class="clear" />
-					</p>
-				</div>
-			</div>
+	?>
+	<iframe src="<?php echo _wpsc_get_product_variation_form_url(); ?>"></iframe>
 	<?php
-	$parent_product = $post->ID;
-
-	$query = array(
-		'post_type'   => 'wpsc-product',
-		'orderby'     => 'menu_order post_title',
-		'post_parent' => $parent_product,
-		'post_status' => 'publish, inherit',
-		'order'       => 'ASC'
-	);
-
-	$args = array(
-		'post_type'   => 'attachment',
-		'numberposts' => 1,
-		'post_status' => null,
-		'post_parent' => $parent_product,
-		'orderby'     => 'menu_order',
-		'order'       => 'ASC'
-	);
-
-	$image_data                   = (array)get_posts( $args );
-	$parent_product_data['image'] = array_shift( $image_data );
-
-	if ( !isset( $parent_product_data ) )
-		$parent_product_data = null;
-?>
-			<table class="widefat page" id='wpsc_product_list' cellspacing="0">
-				<thead>
-					<tr>
-						<?php print_column_headers( 'wpsc-product_variants' ); ?>
-					</tr>
-				</thead>
-
-				<tfoot>
-					<tr>
-						<?php print_column_headers( 'wpsc-product_variants', false ); ?>
-					</tr>
-				</tfoot>
-
-				<tbody>
-				<?php
-					wpsc_admin_product_listing( $parent_product_data, $query );
-				?>
-				</tbody>
-
-			</table>
-
-        <?php
-	endif;
-
-	// reset the global $id variable. This is to prevent incompatibility with Genesis framework,
-	// which (wrongly) relies on this global.
-	$GLOBALS['id'] = null;
 }
-function wpsc_product_shipping_forms() {
-	global $post, $wpdb, $variations_processor, $wpsc_product_defaults;
 
-	$product_data = get_post_custom( $post->ID );
-	$product_data['meta'] = maybe_unserialize( $product_data );
+function _wpsc_get_product_variation_form_url( $id = false ) {
+	if ( ! $id )
+		$id = get_the_ID();
+	return admin_url( 'admin-ajax.php?action=wpsc_product_variations_table&product_id=' . $id . '&_wpnonce=' . wp_create_nonce( 'wpsc_product_variations_table' ) );
+}
 
-	foreach ( $product_data['meta'] as $meta_key => $meta_value )
-		$product_data['meta'][$meta_key] = $meta_value[0];
+function wpsc_product_shipping_forms_metabox() {
+	wpsc_product_shipping_forms();
+}
 
-	$product_meta = array();
-	if ( !empty( $product_data["_wpsc_product_metadata"] ) )
-		$product_meta = maybe_unserialize( $product_data["_wpsc_product_metadata"][0] );
+function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'meta[_wpsc_product_metadata]', $bulk = false ) {
+	if ( ! $product )
+		$product_id = get_the_ID();
+	else
+		$product_id = $product->ID;
 
-	$product_data['transformed'] = array();
-	if ( !isset( $product_meta['weight'] ) )
-		$product_meta['weight'] = "";
+	$meta = get_post_meta( $product_id, '_wpsc_product_metadata', true );
+	$defaults = array(
+		'weight' => '',
+		'weight_unit' => '',
+		'dimensions' => array(),
+		'shipping'   => array(),
+		'no_shipping' => '',
+		'display_weight_as' => '',
+	);
+	$dimensions_defaults = array(
+		'height_unit' => '',
+		'width_unit' => '',
+		'length_unit' => '',
+		'height' => 0,
+		'width' => 0,
+		'length' => 0,
+	);
+	$shipping_defaults = array(
+		'local' => '',
+		'international' => '',
+	);
+	$meta = array_merge( $defaults, $meta );
+	$meta['dimensions'] = array_merge( $dimensions_defaults, $meta['dimensions'] );
+	$meta['shipping'] = array_merge( $shipping_defaults, $meta['shipping'] );
 
-	if( !isset( $product_meta['weight_unit'] ) )
-		$product_meta['weight_unit'] = '';
+	extract( $meta, EXTR_SKIP );
 
-	$product_data['transformed']['weight'] = wpsc_convert_weight( $product_meta['weight'], "pound", $product_meta['weight_unit']);
+	foreach ( $shipping as $key => &$val ) {
+		$val = number_format( (float) $val, 2 );
+  	}
 
-	// Fix wp_debug notices
-	if(!isset($product_meta['dimensions'])){
-		$product_meta['dimensions'] = array(
-			'height' => 0,
-			'width' => 0,
-			'length' => 0
-		);
-	}
-	if( !isset($product_meta['display_weight_as']) )
-		$product_meta['display_weight_as'] = '';
+	$weight = wpsc_convert_weight( $weight, 'pound', $weight_unit );
 
-	if( !isset(	$product_meta['dimensions']['height_unit'] ) )
-		$product_meta['dimensions']['height_unit'] = '';
+	$dimension_units = array(
+		'in'    => __( 'inches', 'wpsc' ),
+		'cm'    => __( 'cm', 'wpsc' ),
+		'meter' => __( 'meters', 'wpsc' )
+	);
 
-	if( !isset(	$product_meta['dimensions']['width_unit'] ) )
-		$product_meta['dimensions']['width_unit'] = '';
+	$weight_units = array(
+		'pound'    => __( 'pounds', 'wpsc' ),
+		'ounce'    => __( 'ounces', 'wpsc' ),
+		'gram'     => __( 'grams', 'wpsc' ),
+		'kilogram' => __( 'kilograms', 'wpsc' )
+	);
 
-	if( !isset(	$product_meta['dimensions']['length_unit'] ) )
-		$product_meta['dimensions']['length_unit'] = '';
+	$measurements = $dimensions;
+	$measurements['weight'] = $weight;
+	$measurements['weight_unit'] = $weight_unit;
 
-	if( !isset(	$product_meta['shipping'] ) ){
-		$product_meta['shipping']['local'] = '';
-		$product_meta['shipping']['international'] = '';
-	}
-	if( !isset( $product_meta['no_shipping'] ) )
-		$product_meta['no_shipping'] = '';
-?>		<a name="wpsc_shipping"></a>
-		<table>
+	$measurement_fields = array(
+		array(
+			'name'   => 'weight',
+			'prefix' => '',
+			'label'  => __( 'Weight', 'wpsc' ),
+			'value'  => $weight,
+			'units'  => $weight_units,
+		),
+		array(
+			'name'   => 'height',
+			'prefix' => '[dimensions]',
+			'label'  => __( 'Height', 'wpsc' ),
+			'value'  => $dimensions['height'],
+			'units'  => $dimension_units,
+		),
+		array(
+			'name'   => 'width',
+			'prefix' => '[dimensions]',
+			'label'  => __( 'Width', 'wpsc' ),
+			'value'  => $dimensions['width'],
+			'units'  => $dimension_units,
+		),
+		array(
+			'name'   => 'length',
+			'prefix' => '[dimensions]',
+			'label'  => __( 'Length', 'wpsc' ),
+			'value'  => $dimensions['length'],
+			'units'  => $dimension_units,
+		),
+	);
+	$tabindex = 106;
+	if ( isset( $product->index ) )
+		$tabindex += $product->index * 20;
+?>
+	<div class="wpsc-stock-editor<?php if ( $bulk ) echo ' wpsc-bulk-edit' ?>">
+		<p class="wpsc-form-field">
+				<label><?php esc_html_e( 'Disregard Shipping for this Product', 'wpsc' ); ?></label>&nbsp;&nbsp;
+				<label><input tabindex="<?php echo $tabindex; ?>" type="radio" name="<?php echo $field_name_prefix ?>[no_shipping]" value="1" <?php checked( $no_shipping && ! $bulk ); ?> /> <?php echo esc_html_x( 'Yes', 'disregard shipping', 'wpsc' ); ?></label>&nbsp;&nbsp;
+				<label><input tabindex="<?php echo $tabindex + 1; ?>" type="radio" name="<?php echo $field_name_prefix ?>[no_shipping]" value="0" <?php checked( ! $no_shipping && ! $bulk ); ?> /> <?php echo esc_html_x( 'No', 'disregard shipping', 'wpsc' ); ?></label>&nbsp;&nbsp;
+		</p>
 
-     <!--USPS shipping changes-->
-		   <tr>
-			  <td>
-				<?php esc_html_e( 'Weight', 'wpsc' ); ?>
-			  </td>
-			  <td>
-				 <input type='text' size='5' name='meta[_wpsc_product_metadata][weight]' value='<?php echo $product_data['transformed']['weight']; ?>' />
-				 <select name='meta[_wpsc_product_metadata][weight_unit]'>
-					<option value='pound' <?php echo ( ( $product_meta['display_weight_as'] == 'pound' ) ? 'selected="selected"' : '' ); ?> ><?php esc_html_e( 'Pounds', 'wpsc' ); ?></option>
-					<option value='ounce' <?php echo ( ( preg_match( "/o(u)?nce/", $product_meta['display_weight_as'] ) ) ? 'selected="selected"' : '' ); ?> ><?php esc_html_e( 'Ounces', 'wpsc' ); ?></option>
-					<option value='gram' <?php echo ( ( $product_meta['display_weight_as'] == 'gram' ) ? 'selected="selected"' : '' ); ?> ><?php esc_html_e( 'Grams', 'wpsc' ); ?></option>
-					<option value='kilogram' <?php echo ( ( $product_meta['display_weight_as'] == 'kilogram' || $product_meta['display_weight_as'] == 'kilograms' ) ? 'selected="selected"' : '' ); ?> ><?php esc_html_e( 'Kilograms', 'wpsc' ); ?></option>
-				 </select>
-			  </td>
-                    </tr>
-			<!--dimension-->
-			<tr>
-				<td>
-					<?php esc_html_e( 'Height', 'wpsc' ); ?>
-				</td>
-				<td>
-					<input type='text' size='5' name='meta[_wpsc_product_metadata][dimensions][height]' value= '<?php echo  $product_meta['dimensions']['height'] ; ?>'>
-					<select name='meta[_wpsc_product_metadata][dimensions][height_unit]'>
-						<option value='in' <?php selected( 'in', $product_meta['dimensions']['height_unit'] ); ?> ><?php esc_html_e( 'inches', 'wpsc' ); ?></option>
-						<option value='cm' <?php selected( 'cm', $product_meta['dimensions']['height_unit'] ); ?> ><?php esc_html_e( 'cm', 'wpsc' ); ?></option>
-						<option value='meter' <?php selected( 'meter', $product_meta['dimensions']['height_unit'] ); ?> ><?php esc_html_e( 'meter', 'wpsc' ); ?></option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<?php esc_html_e( 'Width', 'wpsc' ); ?>
-				</td>
-				<td>
-					<input type='text' size='5' name='meta[_wpsc_product_metadata][dimensions][width]' value='<?php echo $product_meta['dimensions']['width']; ?> '>
-					<select name='meta[_wpsc_product_metadata][dimensions][width_unit]'>
-						<option value='in' <?php selected( 'in', $product_meta['dimensions']['width_unit'] ); ?> ><?php esc_html_e( 'inches', 'wpsc' ); ?></option>
-						<option value='cm' <?php selected( 'cm', $product_meta['dimensions']['width_unit'] ); ?> ><?php esc_html_e( 'cm', 'wpsc' ); ?></option>
-						<option value='meter' <?php selected( 'meter', $product_meta['dimensions']['width_unit'] ); ?> ><?php esc_html_e( 'meter', 'wpsc' ); ?></option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<?php esc_html_e( 'Length', 'wpsc' ); ?>
-				</td>
-				<td>
-					<input type='text' size='5' name='meta[_wpsc_product_metadata][dimensions][length]' value='<?php echo $product_meta['dimensions']['length']; ?>'>
-					<select name='meta[_wpsc_product_metadata][dimensions][length_unit]'>
-						<option value='in' <?php selected( 'in', $product_meta['dimensions']['length_unit'] ); ?> ><?php esc_html_e( 'inches', 'wpsc' ); ?></option>
-						<option value='cm' <?php selected( 'cm', $product_meta['dimensions']['length_unit'] ); ?> ><?php esc_html_e( 'cm', 'wpsc' ); ?></option>
-						<option value='meter' <?php selected( 'meter', $product_meta['dimensions']['length_unit'] ); ?> ><?php esc_html_e( 'meter', 'wpsc' ); ?></option>
-					</select>
-				</td>
-			</tr>
+		<div class="wpsc-product-shipping-section wpsc-product-shipping-weight-dimensions">
+			<p><strong><?php esc_html_e( 'Weight and Dimensions', 'wpsc' ); ?></strong></p>
+			<?php
+				foreach ( $measurement_fields as $field ):
+					$tabindex += 2;
+			?>
+				<p class="wpsc-form-field">
+					<?php if ( $bulk ): ?>
+						<input class="wpsc-bulk-edit-fields" type="checkbox" name="wpsc_bulk_edit[fields][measurements][<?php echo $field['name'] ?>]" value="1" />
+					<?php endif ?>
+					<label for="wpsc-product-shipping-<?php echo $field['name']; ?>"><?php echo esc_html( $field['label'] ); ?></label>
+					<span class="wpsc-product-shipping-input">
+						<input tabindex="<?php echo $tabindex; ?>" type="text" id="wpsc-product-shipping-<?php echo $field['name']; ?>" name="<?php echo $field_name_prefix . $field['prefix'] . '[' . $field['name'] . ']'; ?>" value="<?php if ( ! $bulk ) echo esc_attr( $field['value'] ); ?>" />
+						<select tabindex="<?php echo $tabindex + 1; ?>" name="<?php echo $field_name_prefix . $field['prefix'] . '[' . $field['name'] . '_unit]'; ?>">
+							<?php foreach ( $field['units'] as $unit => $unit_label ): ?>
+								<option value="<?php echo $unit; ?>" <?php if ( ! $bulk ) selected( $unit, $measurements[$field['name'] . '_unit'] ); ?>><?php echo esc_html( $unit_label ); ?></option>
+							<?php endforeach; ?>
+						</select>
+					</span>
+				</p>
+			<?php
+				endforeach;
+				$tabindex += 2;
+				 ?>
+		</div>
 
-    <!--//dimension-->
-    <!--USPS shipping changes ends-->
-			<tr>
-			  <td colspan='2'>
-			  <strong><?php esc_html_e( 'Flat Rate Settings', 'wpsc' ); ?></strong>
-			  </td>
-			</tr>
-			<tr>
-			  <td>
-                     <?php esc_html_e( 'Local Shipping Fee', 'wpsc' ); ?>
-			  </td>
-			  <td>
-				<input type='text' size='10' name='meta[_wpsc_product_metadata][shipping][local]' value='<?php echo number_format( (float)$product_meta['shipping']['local'], 2, '.', '' ); ?>' />
-			  </td>
-			</tr>
-
-			<tr>
-			  <td>
-                    <?php esc_html_e( 'International Shipping Fee', 'wpsc' ); ?>
-			  </td>
-			  <td>
-				<input type='text' size='10' name='meta[_wpsc_product_metadata][shipping][international]' value='<?php echo number_format( (float)$product_meta['shipping']['international'], 2, '.', '' ); ?>' />
-			  </td>
-			</tr>
-			<tr>
-				 <td>
-				 <br />
-				  <input id='add_form_no_shipping' type='checkbox' name='meta[_wpsc_product_metadata][no_shipping]' value='1' <?php echo ( ( $product_meta['no_shipping'] == 1 ) ? 'checked="checked"' : '' ); ?> />&nbsp;<label for='add_form_no_shipping'><?php esc_html_e( 'Disregard Shipping for this Product', 'wpsc' ); ?></label>
-			   </td>
-			</tr>
-	    </table>
+		<div class="wpsc-product-shipping-section wpsc-product-shipping-flat-rate">
+			<p><strong><?php esc_html_e( 'Flat Rate Settings', 'wpsc' ); ?></strong></p>
+			<p class="wpsc-form-field">
+				<?php if ( $bulk ): ?>
+					<input class="wpsc-bulk-edit-fields" type="checkbox" name="wpsc_bulk_edit[fields][shipping][local]" value="1" />
+				<?php endif; ?>
+				<label for="wpsc-product-shipping-flatrate-local"><?php esc_html_e( 'Local Shipping Fee', 'wpsc' ); ?></label>
+				<input tabindex="<?php echo $tabindex; ?>" type="text" id="wpsc-product-shipping-flatrate-local" name="<?php echo $field_name_prefix; ?>[shipping][local]" value="<?php if ( ! $bulk ) echo $shipping['local']; ?>"  />
+			</p>
+			<p class="wpsc-form-field">
+				<?php if ( $bulk ): ?>
+					<input class="wpsc-bulk-edit-fields" type="checkbox" name="wpsc_bulk_edit[fields][shipping][international]" value="1" />
+				<?php endif; ?>
+				<label for="wpsc-product-shipping-flatrate-international"><?php esc_html_e( 'International Shipping Fee', 'wpsc' ); ?></label>
+				<input tabindex="<?php echo $tabindex + 1; ?>" type="text" id="wpsc-product-shipping-flatrate-international" name="<?php echo $field_name_prefix; ?>[shipping][international]" value="<?php if ( ! $bulk ) echo $shipping['international']; ?>"  />
+			</p>
+		</div>
+	</div>
 <?php
 }
+
 function wpsc_product_advanced_forms() {
 	global $post, $wpdb, $variations_processor, $wpsc_product_defaults;
 	$product_data = get_post_custom( $post->ID );
@@ -879,8 +781,8 @@ function change_context( $context ) {
 }
 function change_link( $link ) {
 	global $post_ID, $current_screen;
-
-	if ( $current_screen->id != 'wpsc-product' )
+	$current_screen = get_current_screen();
+	if ( $current_screen && $current_screen->id != 'wpsc-product' )
 		return $link;
 
 	$uploading_iframe_ID = $post_ID;

@@ -47,25 +47,6 @@ function wpsc_additional_sortable_column_names( $columns ){
 
     return $columns;
 }
-function wpsc_additional_column_name_variations( $columns ){
-    global $post;
-
-    if(isset($post) && $post->post_parent != '0' )
-       remove_meta_box( 'wpsc_product_variation_forms', 'wpsc-product', 'normal' );
-
-    $columns['image']         = '';
-    $columns['hidden_alerts'] = '';
-    $columns['title']         = __( 'Name', 'wpsc' );
-    $columns['weight']        = __( 'Weight', 'wpsc' );
-    $columns['stock']         = __( 'Stock', 'wpsc' );
-    $columns['price']         = __( 'Price', 'wpsc' );
-    $columns['sale_price']    = __( 'Sale Price', 'wpsc' );
-    $columns['SKU']           = __( 'SKU', 'wpsc' );
-
-    //For BC for 3.0 (hoping to remove for WPEC 3.9)
-    register_column_headers( 'wpsc-product_variants', $columns );
-    return apply_filters( 'wpsc_variation_column_headers', $columns);
-}
 
 /**
  * wpsc_additional_column_data.
@@ -343,7 +324,6 @@ function wpsc_sortable_column_load() {
 }
 
 add_action( 'load-edit.php', 'wpsc_sortable_column_load' );
-add_action( 'admin_head', 'wpsc_additional_column_name_variations' );
 add_action( 'restrict_manage_posts', 'wpsc_cats_restrict_manage_posts' );
 add_action( 'manage_pages_custom_column', 'wpsc_additional_column_data', 10, 2 );
 add_filter( 'manage_edit-wpsc-product_sortable_columns', 'wpsc_additional_sortable_column_names' );
