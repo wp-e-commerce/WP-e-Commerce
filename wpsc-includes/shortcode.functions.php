@@ -16,6 +16,10 @@
 * @return string - html displaying one or more products, derived from wpsc_display_products
 */
 function wpsc_products_shorttag($atts) {
+	// disable this shortcode on products
+	if ( get_post_type() == 'wpsc-product' )
+		return '';
+
 	$query = shortcode_atts(array(
 		'product_id' => 0,
 		'old_product_id' => 0,
