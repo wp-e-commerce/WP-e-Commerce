@@ -11,6 +11,7 @@
 function wpsc_currency_display( $price_in, $args = null ) {
 	global $wpdb;
 	$currency_code = '';
+
 	$args = apply_filters( 'wpsc_toggle_display_currency_code', $args );
 	$query = shortcode_atts( array(
 		'display_currency_symbol' => true,
@@ -93,6 +94,7 @@ function wpsc_currency_display( $price_in, $args = null ) {
 			$format_string = '%1$s %2$s%3$s';
 			break;
 	}
+
 	// Compile the output
 	$output = trim( sprintf( $format_string, $currency_code, $currency_sign, $price_out ) );
 

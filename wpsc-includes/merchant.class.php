@@ -85,10 +85,12 @@ class wpsc_merchant {
 
 	function __construct( $purchase_id = null, $is_receiving = false ) {
 		global $wpdb;
+
 		if ( ($purchase_id == null) && ($is_receiving == true) ) {
 			$this->is_receiving = true;
 			$this->parse_gateway_notification();
 		}
+
 		if ( $purchase_id > 0 ) {
 			$this->purchase_id = $purchase_id;
 		}
@@ -97,9 +99,7 @@ class wpsc_merchant {
 	}
 
 	function wpsc_merchant( $purchase_id = null, $is_receiving = false ) {
-		if ( version_compare( PHP_VERSION, "5.0.0", "<" ) ) {
-			$this->__construct( $purchase_id, $is_receiving );
-		}
+		$this->__construct( $purchase_id, $is_receiving );
 	}
 
 	/**
@@ -307,63 +307,23 @@ class wpsc_merchant {
 	 * set_purchase_processed_by_purchid, this helps change the purchase log status
 	 * $status = integer status order
 	 */
-	function set_purchase_processed_by_purchid( $status=1 ) {
-		global $wpdb;
-
-		$wpdb->update(
-			    WPSC_TABLE_PURCHASE_LOGS,
-			    array(
-				'processed' => $status
-			    ),
-			    array(
-				'id' => $this->purchase_id
-			    ),
-			    '%d',
-			    '%d'
-			);
-		}
+	function set_purchase_processed_by_purchid( $status = 1 ) {
+		wpsc_update_purchase_log_status( $this->purchase_id, $status );
+	}
 
 	/**
 	 * set_purchase_processed_by_sessionid, this helps change the purchase log status
 	 * $status = integer status order
 	 */
-	function set_purchase_processed_by_sessionid( $status=1 ) {
-		global $wpdb;
-
-		$wpdb->update(
-			    WPSC_TABLE_PURCHASE_LOGS,
-			    array(
-				'processed' => $status
-			    ),
-			    array(
-				'sessionid' => $this->session_id
-			    ),
-			    '%d',
-			    '%d'
-			);
+	function set_purchase_processed_by_sessionid( $status = 1 ) {
+		wpsc_update_purchase_log_status( $this->session_id, $status, 'sessionid' );
 	}
 
 	/**
 	 * set_transaction_details, maybe extended in merchant files
 	 */
 	function set_transaction_details( $transaction_id, $status = 1 ) {
-		global $wpdb;
-
-		$wpdb->update(
-			    WPSC_TABLE_PURCHASE_LOGS,
-			    array(
-				'processed' => $status,
-				'transactid' => $transaction_id
-			    ),
-			    array(
-				'id' => $this->purchase_id
-			    ),
-			    array(
-				'%d',
-				'%s'
-			    ),
-			    '%d'
-			);
+		wpsc_update_purchase_log_details( $this->purchase_id, array( 'processed' => $status, 'transactid' => $transaction_id ) );
 	}
 
 	/**

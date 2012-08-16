@@ -1186,6 +1186,7 @@ function wpsc_transaction_results( $content = '' ) {
 		include( wpsc_get_template_file_path( 'wpsc-transaction_results.php' ) );
 		$output = ob_get_contents();
 		ob_end_clean();
+		$output = preg_replace( '#(?<!\\\\)(\\$|\\\\)#', '\\\\$1', $output );
 		return preg_replace( "/(<p>)*\[transactionresults\](<\/p>)*/", $output, $content );
 	} else {
 		return $content;

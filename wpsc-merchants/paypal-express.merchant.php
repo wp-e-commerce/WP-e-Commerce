@@ -735,38 +735,21 @@ function paypal_processingfunctions(){
 			switch($resArray['PAYMENTINFO_0_PAYMENTSTATUS']) {
 				case 'Processed': // I think this is mostly equivalent to Completed
 				case 'Completed':
-				$wpdb->update(
-					    WPSC_TABLE_PURCHASE_LOGS,
-					    array(
-						'processed' => 3,
-					    ),
-					    array(
-						'sessionid' => $sessionid
-					    ),
-					    '%d',
-					    '%s'
-					);
+					wpsc_update_purchase_log_status( $sessionid, 3, 'sessionid' );
 				transaction_results( $sessionid, false );
 				break;
 
 				case 'Pending': // need to wait for "Completed" before processing
-				$wpdb->update(
-					    WPSC_TABLE_PURCHASE_LOGS,
-					    array(
-						'processed' => 2,
-						'date' => time(),
-						'transactid' => $transaction_id
-					    ),
-					    array(
-						'sessionid' => $sessionid
-					    ),
-					    array(
-						'%d',
-						'%s',
-						'%s',
-					    ),
-					    '%s'
-					);				break;
+					wpsc_update_purchase_log_details(
+						$sessionid,
+						array(
+							'processed' => 2,
+							'date' => time(),
+							'transactid' => $transaction_id,
+						),
+						'sessionid'
+					);
+				break;
 			}
 			$location = add_query_arg('sessionid', $sessionid, get_option('transact_url'));
 

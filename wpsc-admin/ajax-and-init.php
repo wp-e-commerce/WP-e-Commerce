@@ -64,17 +64,8 @@ function wpsc_admin_ajax() {
 				wpsc_member_activate_subscriptions( $_POST['id'] );
 			}
 
-			$wpdb->update(
-				    WPSC_TABLE_PURCHASE_LOGS,
-				    array(
-					'processed' => $newvalue
-				    ),
-				    array(
-					'id' => $_POST['id']
-				    ),
-				    '%d',
-				    '%d'
-				);
+			wpsc_update_purchase_log_status( $_POST['id'], $newvalue );
+
 			if ( ($newvalue > $log_data['processed']) && ($log_data['processed'] < 2) ) {
 				transaction_results( $log_data['sessionid'], false );
 			}
