@@ -121,7 +121,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 
 		// Credit Card Data
 		$data['CREDITCARDTYPE'] = $_POST['cctype'];
-		$data['ACCT']           = $_POST['card_number'];
+		$data['ACCT']           = str_replace( array(' ', '-'), '', $_POST['card_number'] );
 		$data['EXPDATE']        = $_POST['expiry']['month'] . $_POST['expiry']['year'];
 		$data['CVV2']           = $_POST['card_code'];
 
