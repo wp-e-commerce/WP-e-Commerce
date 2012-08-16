@@ -745,7 +745,7 @@ if ( isset( $_GET['termsandconds'] ) && 'true' == $_GET['termsandconds'] ) {
 
 function wpsc_show_terms_and_conditions() {
 
-	echo wpautop( stripslashes( wp_kses_post( get_option( 'terms_and_conditions' ) ) ) );
+	echo wpautop( wp_kses_post( get_option( 'terms_and_conditions' ) ) );
 	die();
 }
 
@@ -1073,7 +1073,7 @@ function wpsc_download_file() {
 				header( 'Content-Type: ' . $file_data->post_mime_type );
 				header( 'Content-Length: ' . filesize( $file_path ) );
 				header( 'Content-Transfer-Encoding: binary' );
-				header( 'Content-Disposition: attachment; filename="' . stripslashes( $file_name ) . '"' );
+				header( 'Content-Disposition: attachment; filename="' . $file_name . '"' );
 				if ( isset( $_SERVER["HTTPS"] ) && ($_SERVER["HTTPS"] != '') ) {
 					/*
 					  There is a bug in how IE handles downloads from servers using HTTPS, this is part of the fix, you may also need:

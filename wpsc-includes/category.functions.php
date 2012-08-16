@@ -268,7 +268,7 @@ function wpsc_display_category_loop($query, $category_html, &$category_branch = 
 		if($category_row->description != '' && ! empty( $query['description_container'] ) ) {
 			$start_element = $query['description_container']['start_element'];
 			$end_element = $query['description_container']['end_element'];
-			$category_description =  $start_element.wpautop(wptexturize( wp_kses(stripslashes($category_row->description), $allowedtags ))).$end_element;
+			$category_description =  $start_element.wpautop(wptexturize( wp_kses( $category_row->description, $allowedtags ))).$end_element;
 		}
 
 
@@ -363,7 +363,7 @@ function wpsc_display_category_loop($query, $category_html, &$category_branch = 
 		$content_to_place = array(
 		esc_html($category_row->name),
 		$category_description,
-		get_term_link($category_row->slug, 'wpsc_product_category'),
+		esc_url( get_term_link( $category_row->slug, 'wpsc_product_category' ) ),
 		$category_row->term_id,
 		$category_classes,
 		$category_image_html,

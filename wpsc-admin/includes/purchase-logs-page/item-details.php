@@ -105,15 +105,13 @@
 							<input type="hidden" name="wpsc_purchlogs_update_notes_nonce" id="wpsc_purchlogs_update_notes_nonce" value="<?php echo wp_create_nonce( 'wpsc_purchlogs_update_notes' ); ?>" />
 							<input type='hidden' name='purchlog_id' value='<?php echo $this->log_id; ?>' />
 							<p>
-								<textarea name="purchlog_notes" rows="3" wrap="virtual" id="purchlog_notes" style="width:100%;">
-									<?php
+								<textarea name="purchlog_notes" rows="3" wrap="virtual" id="purchlog_notes" style="width:100%;"><?php
 										if ( isset( $_POST['purchlog_notes'] ) ) {
-											echo esc_html( $_POST['purchlog_notes'] );
+											echo esc_textarea( stripslashes( $_POST['purchlog_notes'] ) );
 										} else {
 											echo wpsc_display_purchlog_notes();
 										}
-									?>
-								</textarea>
+									?></textarea>
 							</p>
 							<p><input class="button" type="submit" name="button" id="button" value="<?php _e( 'Update Notes', 'wpsc' ); ?>" /></p>
 						</form>

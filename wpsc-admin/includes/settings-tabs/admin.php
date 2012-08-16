@@ -99,7 +99,7 @@ class WPSC_Settings_Tab_Admin extends WPSC_Settings_Tab
 					<?php esc_html_e( 'Terms and Conditions', 'wpsc' );?>:
 					</th>
 					<td>
-					<textarea name='wpsc_options[terms_and_conditions]' cols='' rows='' style='width: 300px; height: 200px;'><?php echo esc_textarea( stripslashes( trim( get_option( 'terms_and_conditions' ) ) ) ); ?></textarea>
+					<textarea name='wpsc_options[terms_and_conditions]' cols='' rows='' style='width: 300px; height: 200px;'><?php echo esc_textarea( get_option( 'terms_and_conditions' ) ); ?></textarea>
 					</td>
 				</tr>
 
@@ -120,7 +120,7 @@ class WPSC_Settings_Tab_Admin extends WPSC_Settings_Tab
 				</tr>
 				<tr>
 					<th><strong><?php esc_html_e( 'Purchase Receipt', 'wpsc' ); ?></strong></th>
-					<td><textarea name="wpsc_options[wpsc_email_receipt]" cols='' rows=''   style='width: 300px; height: 200px;'><?php echo esc_textarea( stripslashes( trim( get_option( 'wpsc_email_receipt' ) ) ) );?></textarea></td>
+					<td><textarea name="wpsc_options[wpsc_email_receipt]" cols='' rows=''   style='width: 300px; height: 200px;'><?php esc_textarea( get_option( 'wpsc_email_receipt' ) );?></textarea></td>
 				</tr>
 				<tr>
 					<td class='wpsc_td_note' colspan='2'>
@@ -131,7 +131,7 @@ class WPSC_Settings_Tab_Admin extends WPSC_Settings_Tab
 				</tr>
 				<tr>
 					<th><strong><?php esc_html_e( 'Admin Report', 'wpsc' ); ?></strong></th>
-					<td><textarea name="wpsc_options[wpsc_email_admin]" cols='' rows='' style='width: 300px; height: 200px;'><?php echo esc_textarea( stripslashes( trim( get_option( 'wpsc_email_admin' ) ) ) );?></textarea></td>
+					<td><textarea name="wpsc_options[wpsc_email_admin]" cols='' rows='' style='width: 300px; height: 200px;'><?php esc_textarea( get_option( 'wpsc_email_admin' ) );?></textarea></td>
 				</tr>
 			</table>
 
@@ -146,11 +146,11 @@ class WPSC_Settings_Tab_Admin extends WPSC_Settings_Tab
 				</tr>
 				<tr>
 					<th><strong><?php esc_html_e( 'Tracking Email Subject', 'wpsc' );?></strong></th>
-					<td><input name="wpsc_options[wpsc_trackingid_subject]" type='text' value='<?php echo esc_attr( stripslashes( get_option( 'wpsc_trackingid_subject' ) ) ); ?>' /></td>
+					<td><input name="wpsc_options[wpsc_trackingid_subject]" type='text' value='<?php echo esc_attr( get_option( 'wpsc_trackingid_subject' ) );?>' /></td>
 				</tr>
 				<tr>
 					<th><strong><?php esc_html_e( 'Tracking Email Message', 'wpsc' );?></strong></th>
-					<td><textarea name="wpsc_options[wpsc_trackingid_message]" cols='' rows='' style='width: 300px; height: 200px;'><?php echo esc_textarea( stripslashes( trim( get_option( 'wpsc_trackingid_message' ) ) ) );?></textarea></td>
+					<td><textarea name="wpsc_options[wpsc_trackingid_message]" cols='' rows=''   style='width: 300px; height: 200px;'><?php esc_textarea( get_option( 'wpsc_trackingid_message' ) );?></textarea></td>
 				</tr>
 			</table>
 		<?php

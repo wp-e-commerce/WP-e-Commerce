@@ -8,7 +8,7 @@ if( $coupon_num )
    $wpsc_coupons = new wpsc_coupons( $coupon_num );
 
 if(wpsc_cart_item_count() < 1) :
-   _e('Oops, there is nothing in your cart.', 'wpsc') . "<a href=".get_option("product_list_url").">" . __('Please visit our shop', 'wpsc') . "</a>";
+   _e('Oops, there is nothing in your cart.', 'wpsc') . "<a href=" . esc_url( get_option( "product_list_url" ) ) . ">" . __('Please visit our shop', 'wpsc') . "</a>";
    return;
 endif;
 ?>
@@ -45,7 +45,7 @@ endif;
          ?>
             <div class="item_no_image">
 				<?php do_action ( "wpsc_before_checkout_cart_item_image" ); ?>
-               <a href="<?php echo wpsc_the_product_permalink(); ?>">
+               <a href="<?php echo esc_url( wpsc_the_product_permalink() ); ?>">
                <span><?php _e('No Image','wpsc'); ?></span>
 
                </a>
@@ -56,12 +56,12 @@ endif;
 
          <td class="wpsc_product_name wpsc_product_name_<?php echo wpsc_the_cart_item_key(); ?>">
 			<?php do_action ( "wpsc_before_checkout_cart_item_name" ); ?>
-            <a href="<?php echo wpsc_cart_item_url();?>"><?php echo wpsc_cart_item_name(); ?></a>
+            <a href="<?php echo esc_url( wpsc_cart_item_url() );?>"><?php echo wpsc_cart_item_name(); ?></a>
 			<?php do_action ( "wpsc_after_checkout_cart_item_name" ); ?>
          </td>
 
          <td class="wpsc_product_quantity wpsc_product_quantity_<?php echo wpsc_the_cart_item_key(); ?>">
-            <form action="<?php echo get_option('shopping_cart_url'); ?>" method="post" class="adjustform qty">
+            <form action="<?php echo esc_url( get_option( 'shopping_cart_url' ) ); ?>" method="post" class="adjustform qty">
                <input type="text" name="quantity" size="2" value="<?php echo wpsc_cart_item_quantity(); ?>" />
                <input type="hidden" name="key" value="<?php echo wpsc_the_cart_item_key(); ?>" />
                <input type="hidden" name="wpsc_update_quantity" value="true" />
@@ -74,7 +74,7 @@ endif;
          <td class="wpsc_product_price wpsc_product_price_<?php echo wpsc_the_cart_item_key(); ?>"><span class="pricedisplay"><?php echo wpsc_cart_item_price(); ?></span></td>
 
          <td class="wpsc_product_remove wpsc_product_remove_<?php echo wpsc_the_cart_item_key(); ?>">
-            <form action="<?php echo get_option('shopping_cart_url'); ?>" method="post" class="adjustform remove">
+            <form action="<?php echo esc_url( get_option( 'shopping_cart_url' ) ); ?>" method="post" class="adjustform remove">
                <input type="hidden" name="quantity" value="0" />
                <input type="hidden" name="key" value="<?php echo wpsc_the_cart_item_key(); ?>" />
                <input type="hidden" name="wpsc_update_quantity" value="true" />
@@ -96,7 +96,7 @@ endif;
       <tr class="wpsc_coupon_row">
          <td colspan="2"><?php _e('Enter coupon code :', 'wpsc'); ?></td>
          <td  colspan="4" class="coupon_code">
-            <form  method="post" action="<?php echo get_option('shopping_cart_url'); ?>">
+            <form  method="post" action="<?php echo esc_url( get_option( 'shopping_cart_url' ) ); ?>">
                <input type="text" name="coupon_num" id="coupon_num" value="<?php echo $wpsc_cart->coupons_name; ?>" />
                <input type="submit" value="<?php _e('Update', 'wpsc') ?>" />
             </form>
@@ -275,8 +275,7 @@ endif;
    </tr>
    </table>
 
-	<form class='wpsc_checkout_forms' action='<?php echo get_option('shopping_cart_url'); ?>' method='post' enctype="multipart/form-data">
-
+	<form class='wpsc_checkout_forms' action='<?php echo esc_url( get_option( 'shopping_cart_url' ) ); ?>' method='post' enctype="multipart/form-data">
       <?php
       /**
        * Both the registration forms and the checkout details forms must be in the same form element as they are submitted together, you cannot have two form elements submit together without the use of JavaScript.
@@ -298,9 +297,8 @@ endif;
 				<label><?php _e('Password:', 'wpsc'); ?></label>
 				<input type="password" name="pwd" id="pwd" value="" size="20" /><br />
 
-				<label><?php _e('Email:', 'wpsc'); ?></label>
-	            <input type="text" name="user_email" id="user_email" value="<?php echo attribute_escape(stripslashes($user_email)); ?>" size="20" /><br />
-
+				<label><?php _e('E-mail', 'wpsc'); ?>:</label>
+	            <input type="text" name="user_email" id="user_email" value="<?php echo esc_attr( $user_email ); ?>" size="20" /><br />
 	            <div class="wpsc_signup_text"><?php _e('Signing up is free and easy! please fill out your details your registration will happen automatically as you checkout. Don\'t forget to use your details to login with next time!', 'wpsc');?></div>
 	        </fieldset>
 
@@ -484,7 +482,7 @@ endif;
       <?php if(wpsc_has_tnc()) : ?>
          <tr>
             <td colspan='2'>
-                <label for="agree"><input id="agree" type='checkbox' value='yes' name='agree' /> <?php printf(__("I agree to the <a class='thickbox' target='_blank' href='%s' class='termsandconds'>Terms and Conditions</a>", "wpsc"), site_url("?termsandconds=true&amp;width=360&amp;height=400")); ?> <span class="asterix">*</span></label>
+                <label for="agree"><input id="agree" type='checkbox' value='yes' name='agree' /> <?php printf(__("I agree to the <a class='thickbox' target='_blank' href='%s' class='termsandconds'>Terms and Conditions</a>", "wpsc"), esc_url( site_url( "?termsandconds=true&amp;width=360&amp;height=400" ) ); ?> <span class="asterix">*</span></label>
                </td>
          </tr>
       <?php endif; ?>

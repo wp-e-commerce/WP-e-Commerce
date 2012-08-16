@@ -24,7 +24,7 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 		return $post_ID;
 
     //Type-casting ( not so much sanitization, which would be good to do )
-    $post_data = $_POST;
+    $post_data = stripslashes_deep( $_POST );
     $product_id = $post_ID;
 	$post_data['additional_description'] = isset($post_data['additional_description']) ? $post_data['additional_description'] : '';
     $post_meta['meta'] = (array)$_POST['meta'];
@@ -131,9 +131,9 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 		if (!isset($post_data[$column])) $post_data[$column] = '';
 
 		if($post_data[$column] !== null) {
-			$update_values[$column] = stripslashes($post_data[$column]);
+			$update_values[$column] = $post_data[$column];
 		} else if(($update != true) && ($default !== null)) {
-			$update_values[$column] = stripslashes($default);
+			$update_values[$column] = ($default);
 		}
 	}
 	// if we succeed, we can do further editing (todo - if_wp_error)
@@ -252,6 +252,8 @@ function wpsc_sanitise_product_forms($post_data = null) {
 		$post_data = &$_POST;
 	}
 
+	$post_data = stripslashes_deep( $post_data );
+
 	$post_data['name'] = isset($post_data['post_title']) ? $post_data['post_title'] : '';
 	$post_data['title'] = $post_data['name'];
 	$post_data['description'] = isset($post_data['content']) ? $post_data['content'] : '';
@@ -342,9 +344,9 @@ function wpsc_insert_product($post_data, $wpsc_error = false) {
 		if (!isset($post_data[$column])) $post_data[$column] = '';
 
 		if($post_data[$column] !== null) {
-			$update_values[$column] = stripslashes($post_data[$column]);
+			$update_values[$column] = $post_data[$column];
 		} else if(($update != true) && ($default !== null)) {
-			$update_values[$column] = stripslashes($default);
+			$update_values[$column] = $default;
 		}
 	}
 

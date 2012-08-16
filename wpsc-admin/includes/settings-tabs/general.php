@@ -183,9 +183,9 @@ class WPSC_Settings_Tab_General extends WPSC_Settings_Tab
 				<tr>
 				<th scope="row"><?php esc_html_e( 'Thousands and decimal separators', 'wpsc' ); ?>:</th>
 					<td>
-						<?php esc_html_e( 'Thousands separator', 'wpsc' ); ?>: <input name="wpsc_options[wpsc_thousands_separator]" type="text" maxlength="1" size="1" value="<?php echo esc_attr( stripslashes( get_option( 'wpsc_thousands_separator' ) ) ); ?>" /> <br />
-						<?php esc_html_e( 'Decimal separator', 'wpsc' ); ?>: <input name="wpsc_options[wpsc_decimal_separator]" type="text" maxlength="1" size="1" value="<?php echo esc_attr( stripslashes( get_option( 'wpsc_decimal_separator' ) ) ); ?>" /> <br />
-						<?php esc_html_e( 'Preview', 'wpsc' ); ?>: <?php printf( _x( '10%1$s000%2$s00', 'Thousands / Decimal Separator Preview', 'wpsc' ), esc_html( get_option( 'wpsc_thousands_separator' ) ), esc_html( get_option( 'wpsc_decimal_separator' ) ) ); ?>
+						<?php esc_html_e( 'Thousands separator', 'wpsc' ); ?>: <input name="wpsc_options[wpsc_thousands_separator]" type="text" maxlength="1" size="1" value="<?php echo esc_attr(  get_option( 'wpsc_thousands_separator' ) ); ?>" /> <br />
+						<?php esc_html_e( 'Decimal separator', 'wpsc' ); ?>: <input name="wpsc_options[wpsc_decimal_separator]" type="text" maxlength="1" size="1" value="<?php echo esc_attr( get_option( 'wpsc_decimal_separator' ) ); ?>" /> <br />
+						<?php esc_html_e( 'Preview:', 'wpsc' ); ?> 10<?php echo esc_attr(  get_option( 'wpsc_thousands_separator' ) ); ?>000<?php echo esc_attr( get_option( 'wpsc_decimal_separator' ) ); ?>00
 					</td>
 				</tr>
 			</table>

@@ -155,7 +155,7 @@ function wpsc_latest_product( $args = null, $instance ) {
 				$output .= '</div>';
 			}
 			// Link
-			$output .= '<a href="' . wpsc_product_url( $latest_product->ID, null ) . '" class="wpsc-product-title">'.stripslashes( $latest_product->post_title ).'</a>';
+			$output .= '<a href="' . esc_url( wpsc_product_url( $latest_product->ID, null ) ) . '" class="wpsc-product-title">'.esc_html( $latest_product->post_title ).'</a>';
 			$output .= '</li>';
 		}
 		$output .= "</ul>";

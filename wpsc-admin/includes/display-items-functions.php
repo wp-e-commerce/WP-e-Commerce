@@ -263,7 +263,7 @@ function wpsc_stock_control_forms() {
 <?php
 	if ( !isset( $product_data['meta']['_wpsc_sku'] ) )
 		$product_data['meta']['_wpsc_sku'] = $wpsc_product_defaults['meta']['sku']; ?><br />
-			<input size='32' type='text' class='text' id="wpsc_sku" name='meta[_wpsc_sku]' value='<?php echo htmlentities( stripslashes( $product_data['meta']['_wpsc_sku'] ), ENT_QUOTES, 'UTF-8' ); ?>' />
+			<input size='32' type='text' class='text' id="wpsc_sku" name='meta[_wpsc_sku]' value='<?php echo esc_html( $product_data['meta']['_wpsc_sku'] ); ?>' />
 			<br style="clear:both" />
 			<?php
 	if ( !isset( $product_data['meta']['_wpsc_stock'] ) )
@@ -610,7 +610,7 @@ function wpsc_product_advanced_forms() {
 
 			<textarea cols='40' rows='3' name='meta[_wpsc_product_metadata][merchant_notes]' id='merchant_notes'><?php
 				if ( isset( $product_meta['merchant_notes'] ) )
-				echo stripslashes( trim( $product_meta['merchant_notes'] ) );
+				echo esc_textarea( trim( $product_meta['merchant_notes'] ) );
 			?></textarea>
 			<small><?php esc_html_e( 'These notes are only available here.', 'wpsc' ); ?></small>
 		</td>
@@ -718,7 +718,7 @@ function wpsc_product_image_forms() {
 function wpsc_additional_desc() {
 	global $post;
 ?>
-    <textarea name='additional_description' id='additional_description' cols='40' rows='5' ><?php echo esc_textarea( stripslashes( trim( $post->post_excerpt ) ) ); ?></textarea>
+    <textarea name='additional_description' id='additional_description' cols='40' rows='5' ><?php echo esc_textarea( $post->post_excerpt ); ?></textarea>
 <?php
 
 }

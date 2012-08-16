@@ -1489,7 +1489,7 @@ function wpsc_vargrp_id() {
  */
 function wpsc_the_variation_name() {
 	global $wpsc_variations;
-	return stripslashes( $wpsc_variations->variation->name );
+	return esc_html( $wpsc_variations->variation->name );
 }
 
 /**

@@ -173,7 +173,7 @@ function wpsc_category_widget_admin_category_list( $category, $level, $fieldconf
 	else
 		$checked = ''; ?>
 
-	<input type="checkbox" class="checkbox" id="<?php echo $fieldconfig['id']; ?>-<?php echo $category->term_id; ?>" name="<?php echo $fieldconfig['name']; ?>[<?php echo $category->term_id; ?>]" <?php echo $checked; ?>></input> <label for="<?php echo $fieldconfig['id']; ?>-<?php echo $category->term_id; ?>"><?php echo htmlentities($category->name, ENT_QUOTES, 'UTF-8' ); ?></label><br />
+	<input type="checkbox" class="checkbox" id="<?php echo esc_attr( $fieldconfig['id'] ); ?>-<?php echo esc_attr( $category->term_id ); ?>" name="<?php echo esc_attr( $fieldconfig['name'] ); ?>[<?php echo esc_attr( $category->term_id ); ?>]" <?php echo $checked; ?>></input> <label for="<?php echo esc_attr( $fieldconfig['id'] ); ?>-<?php echo esc_attr( $category->term_id ); ?>"><?php echo esc_html( $category->name ); ?></label><br />
 
 <?php 
 }

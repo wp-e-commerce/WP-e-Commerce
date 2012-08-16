@@ -641,9 +641,9 @@ class wpsc_checkout {
 
 	function form_name() {
 		if ( $this->form_name_is_required() && ($this->checkout_item->type != 'heading') )
-			return esc_html( stripslashes( $this->checkout_item->name ) ) . ' <span class="asterix">*</span> ';
+			return esc_html( $this->checkout_item->name ) . ' <span class="asterix">*</span> ';
 		else
-			return esc_html( stripslashes( $this->checkout_item->name ) );
+			return esc_html( $this->checkout_item->name );
 	}
 
 	function form_name_is_required() {
