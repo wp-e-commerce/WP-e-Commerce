@@ -77,8 +77,8 @@ $conditions = maybe_unserialize($coupon['condition']);
 	  $output .= esc_html__("Value", 'wpsc');
 	  $output .= "</th>";
 	  $output .= " </tr>\n\r";
-	  $i=0;
-	  foreach ($conditions as $condition){
+
+	  foreach ($conditions as $i => $condition){
 		  $output .= "<tr>";
 		  $output .= "<td>";
 		  $output .= "<input type='hidden' name='coupon_id' value='".$id."' />";
