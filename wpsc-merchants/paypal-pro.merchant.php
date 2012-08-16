@@ -501,7 +501,7 @@ if ( in_array( 'wpsc_merchant_paypal_pro', (array)get_option( 'custom_gateway_op
 		$curryear++;
 	}
 
-	$gateway_checkout_form_fields[$nzshpcrt_gateways[$num]['internalname']] = "
+	$output = "
 	<tr>
 		<td class='wpsc_CC_details'>" . __( 'Credit Card Number *', 'wpsc' ) . "</td>
 		<td>
@@ -539,15 +539,24 @@ if ( in_array( 'wpsc_merchant_paypal_pro', (array)get_option( 'custom_gateway_op
 	<tr>
 		<td class='wpsc_CC_details'>" . __( 'Card Type *', 'wpsc' ) . "</td>
 		<td>
-		<select class='wpsc_ccBox' name='cctype'>
-			<option value='Visa'>" . __( 'Visa', 'wpsc' ) . "</option>
-			<option value='Mastercard'>" . __( 'MasterCard', 'wpsc' ) . "</option>
-			<option value='Discover'>" . __( 'Discover', 'wpsc' ) . "</option>
-			<option value='Amex'>" . __( 'Amex', 'wpsc' ) . "</option>
-		</select>
+		<select class='wpsc_ccBox' name='cctype'>";
+
+	$card_types = array(
+		'Visa' => __( 'Visa', 'wpsc' ),
+		'Mastercard' => __( 'MasterCard', 'wpsc' ),
+		'Discover' => __( 'Discover', 'wpsc' ),
+		'Amex' => __( 'Amex', 'wpsc' ),
+	);
+	$card_types = apply_filters( 'wpsc_paypal_pro_accepted_cart_types', $card_types );
+	foreach ( $card_types as $type => $title ) {
+		$output .= sprintf( '<option value="%1$s">%2$s</option>', $type, esc_html( $title ) );
+	}
+	$output .= "</select>
 		</td>
 	</tr>
 ";
+
+$gateway_checkout_form_fields[$nzshpcrt_gateways[$num]['internalname']] = $output;
 
 }
 ?>
