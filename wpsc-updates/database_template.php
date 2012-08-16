@@ -4,9 +4,9 @@
  *
  * This is the WPSC database template it is a multidimensional associative array used to create and update the database tables.
  * @package wp-e-commerce
- * @subpackage wpsc-updating-code 
+ * @subpackage wpsc-updating-code
  */
- 
+
 // code to create or update the {$wpdb->prefix}wpsc_also_bought table
 $table_name = WPSC_TABLE_ALSO_BOUGHT; /* !wpsc_also_bought */
 $wpsc_database_template[$table_name]['columns']['id'] = "bigint(20) unsigned NOT NULL auto_increment";
@@ -61,7 +61,7 @@ $wpsc_database_template[$table_name]['columns']['default'] = "varchar(128) NOT N
 $wpsc_database_template[$table_name]['columns']['active'] = "varchar(1) NOT NULL DEFAULT '1' ";
 $wpsc_database_template[$table_name]['columns']['checkout_order'] = "int(10) unsigned NOT NULL DEFAULT '0' ";
 $wpsc_database_template[$table_name]['columns']['unique_name'] = "varchar(255) NOT NULL DEFAULT '' ";
-$wpsc_database_template[$table_name]['columns']['options'] = "varchar(255) NOT NULL DEFAULT '' ";
+$wpsc_database_template[$table_name]['columns']['options'] = "longtext NOT NULL DEFAULT '' ";
 $wpsc_database_template[$table_name]['columns']['checkout_set'] = "VARCHAR( 64 ) NOT NULL DEFAULT '0'";
 
 $wpsc_database_template[$table_name]['indexes']['PRIMARY'] = "PRIMARY KEY  ( `id` )";
