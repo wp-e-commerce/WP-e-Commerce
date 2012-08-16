@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * This entire file is shenanigans.  No need to copy WP core code when we can use these as wrappers for that code.
+ * @param type $args
+ * @return type
+ */
+
 function product_tag_cloud( $args = '' ) {
 
 	$defaults = array(
@@ -117,22 +123,7 @@ function wp_generate_product_tag_cloud( $tags, $args = '' ) {
 }
 
 function &get_product_tags( $args = '' ) {
-	global $wpdb, $category_links;
-
-	$key = md5( serialize( $args ) );
-
-	if ( $cache = wp_cache_get( 'get_product_tags', 'category' ) )
-		if ( isset( $cache[$key] ) )
-			return apply_filters( 'get_product_tags', $cache[$key], $args );
-
 	$tags = get_terms( 'product_tag', $args );
-
-	if ( empty( $tags ) )
-		return false;
-
-	$cache[$key] = $tags;
-	wp_cache_set( 'get_product_tags', $cache, 'category' );
-
 	$tags = apply_filters( 'get_product_tags', $tags, $args );
 	return $tags;
 }
@@ -144,86 +135,32 @@ function &get_product_tag( $tag, $output = OBJECT, $filter = 'raw' ) {
 //
 // Tags
 //
-
-function get_product_tag_link( $tag_id ) {
-	global $wp_rewrite;
-	$taglink = $wp_rewrite->get_tag_permastruct();
-
-	$tag = &get_term( $tag_id, 'product_tag' );
-
-	if ( is_wp_error( $tag ) )
-		return $tag;
-
-	$slug = $tag->slug;
-
-	if ( empty( $taglink ) ) {
-		$file = get_option( 'home' ) . '/';
-		$taglink = $file . '?product_tag=' . $slug;
-	} else {
-
-		$file = get_option( 'home' ) . '/';
-		$taglink = get_option( 'product_list_url' ) . '?product_tag=' . $slug;
-	}
-
-	return apply_filters( 'product_tag_link', $taglink, $tag_id );
+function wpsc_get_product_tag_link( $product_tag ) {
+	$taglink = get_term_link( $product_tag, 'product_tag' );
+	return apply_filters( 'product_tag_link', $taglink, $product_tag );
 }
 
-function get_the_product_tags( $id = 0 ) {
+function wpsc_get_the_product_tags( $id = 0 ) {
+	$tags = get_the_terms( $id, 'product_tag' );
+	return apply_filters( 'get_the_product_tags', $tags );
+}
+
+function wpsc_get_the_product_tag_list( $before = '', $sep = '', $after = '' ) {
 	global $post;
 
-	$id = (int)$id;
+	if ( ! $post->ID )
+		return false;
 
-	if ( !$id && !in_the_loop() )
-		return false; // in-the-loop function
-
-		if ( !$id )
-		$id = (int)$post->ID;
-
-	$tags = get_object_term_cache( $id, 'product_tag' );
-
-	if ( false === $tags )
-		$tags = wp_get_object_terms( $id, 'product_tag' );
-
-	$tags = apply_filters( 'get_the_tags', $tags );
+	$tags = get_the_term_list( $post->ID, 'product_tag', $before, $sep, $after );
 
 	if ( empty( $tags ) )
 		return false;
 
-	return $tags;
+	return apply_filters( 'the_product_tag_list', $tags );
 }
 
-function get_the_product_tag_list( $before = '', $sep = '', $after = '' ) {
-	$tags = get_the_tags();
-
-	if ( empty( $tags ) )
-		return false;
-
-	$tag_list = $before;
-
-	foreach ( $tags as $tag ) {
-		$link = get_tag_link( $tag->term_id );
-
-		if ( is_wp_error( $link ) )
-			return $link;
-
-		$tag_links[] = '<a href="' . $link . '" rel="tag">' . $tag->name . '</a>';
-	}
-
-	$tag_links = join( $sep, $tag_links );
-	$tag_links = apply_filters( 'the_tags', $tag_links );
-	$tag_list .= $tag_links;
-	$tag_list .= $after;
-
-	return $tag_list;
+function wpsc_the_product_tags( $before = null, $sep = ', ', $after = '' ) {
+	if ( is_null( $before ) )
+		$before = __( 'Tags', 'wpsc' );
+	echo wpsc_get_the_product_tag_list( $before, $sep, $after );
 }
-
-function the_product_tags( $before = 'Tags: ', $sep = ', ', $after = '' ) {
-	$return = get_the_product_tag_list( $before, $sep, $after );
-
-	if ( is_wp_error( $return ) )
-		return false;
-	else
-		echo $return;
-}
-
-?>
