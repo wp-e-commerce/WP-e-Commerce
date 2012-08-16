@@ -31,7 +31,6 @@ function nzshpcrt_region_list( $selected_country = null, $selected_region = null
 	$region_list = $wpdb->get_results( $wpdb->prepare( "SELECT `" . WPSC_TABLE_REGION_TAX . "`.* FROM `" . WPSC_TABLE_REGION_TAX . "`, `" . WPSC_TABLE_CURRENCY_LIST . "`  WHERE `" . WPSC_TABLE_CURRENCY_LIST . "`.`isocode` IN(%s) AND `" . WPSC_TABLE_CURRENCY_LIST . "`.`id` = `" . WPSC_TABLE_REGION_TAX . "`.`country_id`", $selected_country ), ARRAY_A );
 
 	if ( $region_list != null ) {
-		$output .= "<option value=''>" . esc_html__( 'None', 'wpsc' ) . "</option>";
 		foreach ( $region_list as $region ) {
 			if ( $selected_region == $region['id'] ) {
 				$selected = "selected='selected'";
