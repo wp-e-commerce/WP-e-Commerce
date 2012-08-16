@@ -34,12 +34,12 @@ $conditions = maybe_unserialize($coupon['condition']);
   $output .= "   </select>\n\r";
   $output .= "  </td>\n\r";
   $output .= "  <td>\n\r";
-  $coupon_start = explode(" ",$coupon['start']);
-  $output .= "<input type='text' class='pickdate' size='11' name='edit_coupon[".$id."][start]' value='{$coupon_start[0]}'>";
+  $coupon_start = get_date_from_gmt( $coupon['start'], 'Y-m-d' );
+  $output .= "<input type='text' class='pickdate' size='11' name='edit_coupon[".$id."][start]' value='{$coupon_start}'>";
   $output .= "  </td>\n\r";
   $output .= "  <td>\n\r";
-  $coupon_expiry = explode(" ",$coupon['expiry']);
-  $output .= "<input type='text' class='pickdate' size='11' name='edit_coupon[".$id."][expiry]' value='{$coupon_expiry[0]}'>";
+  $coupon_expiry = get_date_from_gmt( $coupon['expiry'], 'Y-m-d' );
+  $output .= "<input type='text' class='pickdate' size='11' name='edit_coupon[".$id."][expiry]' value='{$coupon_expiry}'>";
   $output .= "  </td>\n\r";
   $output .= "  <td>\n\r";
   $output .= "   <input type='hidden' value='0' name='edit_coupon[".$id."][use-once]' />\n\r";
@@ -304,7 +304,6 @@ function wpsc_packing_slip( $purchase_id ) {
 					break;
 
 					default:
-
 							if ($form_field['name']=="State" && !empty($purch_data['billing_region']) || $form_field['name']=="State" && !empty($purch_data['billing_region']))
 								echo "";
 							else
@@ -444,5 +443,3 @@ function wpsc_packing_slip( $purchase_id ) {
 
 function wpsc_product_item_row() {
 }
-
-?>

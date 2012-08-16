@@ -27,13 +27,13 @@ function wpsc_display_coupons_page() {
 					unset( $new_rule[$key] );
 				}
 			}
-			
+
 			$insert = $wpdb->insert(
 				    WPSC_TABLE_COUPON_CODES,
 				    array(
 						'coupon_code' => $coupon_code,
 						'value' => $discount,
-						'is-percentage' => $discount_type, 
+						'is-percentage' => $discount_type,
 						'use-once' => $use_once,
 						'is-used' => 0,
 						'active' => $is_active,
@@ -65,8 +65,8 @@ function wpsc_display_coupons_page() {
 			foreach ( (array)$_POST['edit_coupon'] as $coupon_id => $coupon_data ) {
 
 				$coupon_id             = (int)$coupon_id;
-				$coupon_data['start']  = $coupon_data['start'] . " 00:00:00";
-				$coupon_data['expiry'] = $coupon_data['expiry'] . " 00:00:00";
+				$coupon_data['start']  = get_gmt_from_date( $coupon_data['start'] . " 00:00:00" );
+				$coupon_data['expiry'] = get_gmt_from_date( $coupon_data['expiry'] . " 23:59:59" );
 				$check_values          = $wpdb->get_row( $wpdb->prepare( "SELECT `id`, `coupon_code`, `value`, `is-percentage`, `use-once`, `active`, `start`, `expiry`,`every_product` FROM `" . WPSC_TABLE_COUPON_CODES . "` WHERE `id` = %d", $coupon_id ), ARRAY_A );
 
 				// Sort both arrays to make sure that if they contain the same stuff,
@@ -120,12 +120,12 @@ function wpsc_display_coupons_page() {
 						$new_cond['value'] = $_POST['rules']['value'][0];
 						$conditions [] = $new_cond;
 					}
-					
+
 					$wpdb->update(
 						    WPSC_TABLE_COUPON_CODES,
 						    array(
 							'condition' => serialize( $conditions ),
-							
+
 						    ),
 						    array(
 							'id' => $_POST['coupon_id']
@@ -167,7 +167,7 @@ function wpsc_display_coupons_page() {
 			$new_cond['logic']    = $_POST['rules']['logic'][0];
 			$new_cond['value']    = $_POST['rules']['value'][0];
 			$conditions[]         = $new_cond;
-			
+
 			$wpdb->update(
 				    WPSC_TABLE_COUPON_CODES,
 				    array(
@@ -179,7 +179,7 @@ function wpsc_display_coupons_page() {
 				    '%s',
 				    '%d'
 				);
-			
+
 		}
 	} 
 
@@ -203,7 +203,7 @@ function wpsc_display_coupons_page() {
 				<?php esc_html_e( 'Add New', 'wpsc' ); ?>
 			</a>
 		</h2>
-		
+
 		<table style="width: 100%;">
 			<tr>
 				<td id="coupon_data">
@@ -323,7 +323,7 @@ function wpsc_display_coupons_page() {
 															'</span>  \n'+
 															'<img height="16" width="16" class="delete" alt="<?php esc_attr_e( 'Delete', 'wpsc' ); ?>" src="<?php echo WPSC_CORE_IMAGES_URL; ?>/cross.png" onclick="jQuery(this).parent().remove();"/></div> \n'+
 															'</div> ';
-		
+
 														jQuery('.coupon_condition :first').after(new_property);
 														coupon_number++;
 													}
@@ -384,6 +384,10 @@ function wpsc_display_coupons_page() {
 						if ( ($i % 2) != 0 ) {
 							$alternate = "class='alt'";
 						}
+
+						$start = get_date_from_gmt( $coupon['start'], 'd/m/Y' );
+						$expiry = get_date_from_gmt( $coupon['expiry'], 'd/m/Y' );
+
 						echo "<tr $alternate>\n\r";
 
 						echo "    <td>\n\r";
@@ -403,11 +407,11 @@ function wpsc_display_coupons_page() {
 						echo "    </td>\n\r";
 
 						echo "    <td>\n\r";
-						echo date( "d/m/Y", strtotime( esc_attr( $coupon['start'] ) ) );
+						echo $start;
 						echo "    </td>\n\r";
 
 						echo "    <td>\n\r";
-						echo date( "d/m/Y", strtotime( esc_attr( $coupon['expiry'] ) ) );
+						echo $expiry;
 						echo "    </td>\n\r";
 
 						echo "    <td>\n\r";
