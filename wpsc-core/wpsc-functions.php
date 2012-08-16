@@ -326,113 +326,130 @@ add_action( 'rdf_item', 'wpsc_add_product_price_to_rss' );
  */
 function wpsc_register_post_types() {
 	global $wpsc_page_titles;
-        $labels = array(
-            'name' => _x( 'Products', 'post type name', 'wpsc' ),
-            'singular_name' => _x( 'Product', 'post type singular name', 'wpsc' ),
-            'add_new' => _x( 'Add New', 'admin menu: add new product', 'wpsc' ),
-            'add_new_item' => __('Add New Product', 'wpsc' ),
-            'edit_item' => __('Edit Product', 'wpsc' ),
-            'new_item' => __('New Product', 'wpsc' ),
-            'view_item' => __('View Product', 'wpsc' ),
-            'search_items' => __('Search Products', 'wpsc' ),
-            'not_found' =>  __('No products found', 'wpsc' ),
-            'not_found_in_trash' => __( 'No products found in Trash', 'wpsc' ),
-            'parent_item_colon' => '',
-            'menu_name' => __( 'Products', 'wpsc' )
-          );
+
 	// Products
-	register_post_type( 'wpsc-product', array(
-		'capability_type' => 'post',
-		'supports' => array( 'title', 'editor', 'thumbnail' ),
-		'hierarchical' => true,
-		'exclude_from_search' => false,
-		'public' => true,
-		'show_ui' => true,
-		'show_in_nav_menus' => true,
-                'menu_icon' => WPSC_CORE_IMAGES_URL . "/credit_cards.png",
-		'labels' => $labels,
-		'query_var' => true,
+    $labels = array(
+		'name'               => _x( 'Products'                  , 'post type name'             , 'wpsc' ),
+		'singular_name'      => _x( 'Product'                   , 'post type singular name'    , 'wpsc' ),
+		'add_new'            => _x( 'Add New'                   , 'admin menu: add new product', 'wpsc' ),
+		'add_new_item'       => __( 'Add New Product'           , 'wpsc' ),
+		'edit_item'          => __( 'Edit Product'              , 'wpsc' ),
+		'new_item'           => __( 'New Product'               , 'wpsc' ),
+		'view_item'          => __( 'View Product'              , 'wpsc' ),
+		'search_items'       => __( 'Search Products'           , 'wpsc' ),
+		'not_found'          => __( 'No products found'         , 'wpsc' ),
+		'not_found_in_trash' => __( 'No products found in Trash', 'wpsc' ),
+		'menu_name'          => __( 'Products'                  , 'wpsc' ),
+		'parent_item_colon'  => '',
+      );
+    $args = array(
+		'capability_type'      => 'post',
+		'supports'             => array( 'title', 'editor', 'thumbnail' ),
+		'hierarchical'         => true,
+		'exclude_from_search'  => false,
+		'public'               => true,
+		'show_ui'              => true,
+		'show_in_nav_menus'    => true,
+		'menu_icon'            => WPSC_CORE_IMAGES_URL . "/credit_cards.png",
+		'labels'               => $labels,
+		'query_var'            => true,
 		'register_meta_box_cb' => 'wpsc_meta_boxes',
-		'rewrite' => array(
-			'slug' => $wpsc_page_titles['products'] . '/%wpsc_product_category%',
+		'rewrite'              => array(
+			'slug'       => $wpsc_page_titles['products'] . '/%wpsc_product_category%',
 			'with_front' => false
 		)
-	) );
+	);
+	$args = apply_filters( 'wpsc_register_post_types_products_args', $args );
+	register_post_type( 'wpsc-product', $args );
 
 	// Purchasable product files
-	register_post_type( 'wpsc-product-file', array(
-		'capability_type' => 'post',
-		'hierarchical' => false,
+	$args = array(
+		'capability_type'     => 'post',
+		'map_meta_cap'        => true,
+		'hierarchical'        => false,
 		'exclude_from_search' => true,
-		'rewrite' => false
-	) );
+		'rewrite'             => false,
+		'labels'              => array(
+			'name'          => __( 'Product Files', 'wpsc' ),
+			'singular_name' => __( 'Product File' , 'wpsc' ),
+		),
+	);
+	$args = apply_filters( 'wpsc_register_post_types_product_files_args', $args );
+	register_post_type( 'wpsc-product-file', $args );
 
 	// Product tags
-	$labels = array( 'name' => _x( 'Product Tags', 'taxonomy general name', 'wpsc' ),
-		'singular_name' => _x( 'Product Tag', 'taxonomy singular name', 'wpsc' ),
-		'search_items' => __( 'Product Search Tags', 'wpsc' ),
-		'all_items' => __( 'All Product Tags' , 'wpsc'),
-		'edit_item' => __( 'Edit Tag', 'wpsc' ),
-		'update_item' => __( 'Update Tag', 'wpsc' ),
-		'add_new_item' => __( 'Add new Product Tag', 'wpsc' ),
-		'new_item_name' => __( 'New Product Tag Name', 'wpsc' ) );
+	$labels = array(
+		'name'          => _x( 'Product Tags'        , 'taxonomy general name' , 'wpsc' ),
+		'singular_name' => _x( 'Product Tag'         , 'taxonomy singular name', 'wpsc' ),
+		'search_items'  => __( 'Product Search Tags' , 'wpsc' ),
+		'all_items'     => __( 'All Product Tags'    , 'wpsc' ),
+		'edit_item'     => __( 'Edit Tag'            , 'wpsc' ),
+		'update_item'   => __( 'Update Tag'          , 'wpsc' ),
+		'add_new_item'  => __( 'Add new Product Tag' , 'wpsc' ),
+		'new_item_name' => __( 'New Product Tag Name', 'wpsc' ),
+	);
 
-	register_taxonomy( 'product_tag', 'wpsc-product', array(
+	$args = array(
 		'hierarchical' => false,
 		'labels' => $labels,
 		'rewrite' => array(
 			'slug' => '/' . sanitize_title_with_dashes( _x( 'tagged', 'slug, part of url', 'wpsc' ) ),
 			'with_front' => false )
-	) );
+	);
+	$args = apply_filters( 'wpsc_register_taxonomies_product_tag_args', $args );
+	register_taxonomy( 'product_tag', 'wpsc-product', $args );
 
 	// Product categories, is heirarchical and can use permalinks
 	$labels = array(
-		'name' => _x( 'Product Categories', 'taxonomy general name', 'wpsc' ),
-		'singular_name' => _x( 'Product Category', 'taxonomy singular name', 'wpsc' ),
-		'search_items' => __( 'Search Product Categories', 'wpsc' ),
-		'all_items' => __( 'All Product Categories', 'wpsc' ),
-		'parent_item' => __( 'Parent Product Category', 'wpsc' ),
-		'parent_item_colon' => __( 'Parent Product Category:', 'wpsc' ),
-		'edit_item' => __( 'Edit Product Category', 'wpsc' ),
-		'update_item' => __( 'Update Product Category', 'wpsc' ),
-		'add_new_item' => __( 'Add New Product Category', 'wpsc' ),
-		'new_item_name' => __( 'New Product Category Name', 'wpsc' ),
-		'menu_name' => _x( 'Categories', 'taxonomy general name', 'wpsc' )
+		'name'              => _x( 'Product Categories'       , 'taxonomy general name' , 'wpsc' ),
+		'singular_name'     => _x( 'Product Category'         , 'taxonomy singular name', 'wpsc' ),
+		'search_items'      => __( 'Search Product Categories', 'wpsc' ),
+		'all_items'         => __( 'All Product Categories'   , 'wpsc' ),
+		'parent_item'       => __( 'Parent Product Category'  , 'wpsc' ),
+		'parent_item_colon' => __( 'Parent Product Category:' , 'wpsc' ),
+		'edit_item'         => __( 'Edit Product Category'    , 'wpsc' ),
+		'update_item'       => __( 'Update Product Category'  , 'wpsc' ),
+		'add_new_item'      => __( 'Add New Product Category' , 'wpsc' ),
+		'new_item_name'     => __( 'New Product Category Name', 'wpsc' ),
+		'menu_name'         => _x( 'Categories'               , 'taxonomy general name', 'wpsc' ),
 	);
-
-	register_taxonomy( 'wpsc_product_category', 'wpsc-product', array(
+	$args = array(
+		'labels'       => $labels,
 		'hierarchical' => true,
-		'rewrite' => array(
-			'slug' => $wpsc_page_titles['products'],
-			'with_front' => false,
+		'rewrite'      => array(
+			'slug'         => $wpsc_page_titles['products'],
+			'with_front'   => false,
 			'hierarchical' => (bool) get_option( 'product_category_hierarchical_url', 0 ),
 		),
-		'labels' => $labels,
-	) );
-	$labels = array(
-		'name' => _x( 'Variations', 'taxonomy general name', 'wpsc' ),
-		'singular_name' => _x( 'Variation', 'taxonomy singular name', 'wpsc' ),
-		'search_items' => __( 'Search Variations', 'wpsc' ),
-		'all_items' => __( 'All Variations', 'wpsc' ),
-		'parent_item' => __( 'Parent Variation', 'wpsc' ),
-		'parent_item_colon' => __( 'Parent Variations:', 'wpsc' ),
-		'edit_item' => __( 'Edit Variation', 'wpsc' ),
-		'update_item' => __( 'Update Variation', 'wpsc' ),
-		'add_new_item' => __( 'Add New Variation', 'wpsc' ),
-		'new_item_name' => __( 'New Variation Name', 'wpsc' ),
 	);
+	$args = apply_filters( 'wpsc_register_taxonomies_product_category_args', $args );
 
-	// Product Variations, is internally heirarchical, externally, two separate types of items, one containing the other
-	register_taxonomy( 'wpsc-variation', 'wpsc-product', array(
+	register_taxonomy( 'wpsc_product_category', 'wpsc-product', $args );
+	$labels = array(
+		'name'              => _x( 'Variations'        , 'taxonomy general name' , 'wpsc' ),
+		'singular_name'     => _x( 'Variation'         , 'taxonomy singular name', 'wpsc' ),
+		'search_items'      => __( 'Search Variations' , 'wpsc' ),
+		'all_items'         => __( 'All Variations'    , 'wpsc' ),
+		'parent_item'       => __( 'Parent Variation'  , 'wpsc' ),
+		'parent_item_colon' => __( 'Parent Variations:', 'wpsc' ),
+		'edit_item'         => __( 'Edit Variation'    , 'wpsc' ),
+		'update_item'       => __( 'Update Variation'  , 'wpsc' ),
+		'add_new_item'      => __( 'Add New Variation' , 'wpsc' ),
+		'new_item_name'     => __( 'New Variation Name', 'wpsc' ),
+	);
+	$args = array(
 		'hierarchical' => true,
-		'query_var' => 'variations',
-		'rewrite' => false,
-		'public' => true,
-		'labels' => $labels
-	) );
-	$role = get_role( 'administrator' );
-	$role->add_cap( 'read_wpsc-product' );
-	$role->add_cap( 'read_wpsc-product-file' );
+		'query_var'    => 'variations',
+		'rewrite'      => false,
+		'public'       => true,
+		'labels'       => $labels
+	);
+	$args = apply_filters( 'wpsc_register_taxonomies_product_variation_args', $args );
+	// Product Variations, is internally heirarchical, externally, two separate types of items, one containing the other
+	register_taxonomy( 'wpsc-variation', 'wpsc-product', $args );
+
+	do_action( 'wpsc_register_post_types_after' );
+	do_action( 'wpsc_register_taxonomies_after' );
 }
 add_action( 'init', 'wpsc_register_post_types', 8 );
 

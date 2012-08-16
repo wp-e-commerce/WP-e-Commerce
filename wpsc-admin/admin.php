@@ -141,14 +141,17 @@ function wpsc_admin_pages() {
 	if ( wpsc_show_update_link() )
 		$page_hooks[] = add_submenu_page( 'index.php', __( 'Update Store', 'wpsc' ), __( 'Store Update', 'wpsc' ), 'administrator', 'wpsc-update', 'wpsc_display_update_page' );
 
-	$page_hooks[] = add_submenu_page( 'index.php', __( 'Store Upgrades', 'wpsc' ), __( 'Store Upgrades', 'wpsc' ), 'administrator', 'wpsc-upgrades', 'wpsc_display_upgrades_page' );
+	$store_upgrades_cap = apply_filters( 'wpsc_upgrades_cap', 'administrator' );
+	$page_hooks[] = add_submenu_page( 'index.php', __( 'Store Upgrades', 'wpsc' ), __( 'Store Upgrades', 'wpsc' ), $store_upgrades_cap, 'wpsc-upgrades', 'wpsc_display_upgrades_page' );
 
-	$page_hooks[] = $purchase_logs_page = add_submenu_page( 'index.php', __( 'Store Sales', 'wpsc' ), __( 'Store Sales', 'wpsc' ), 'administrator', 'wpsc-purchase-logs', 'wpsc_display_purchase_logs_page' );
+	$purchase_logs_cap = apply_filters( 'wpsc_purchase_logs_cap', 'administrator' );
+	$page_hooks[] = $purchase_logs_page = add_submenu_page( 'index.php', __( 'Store Sales', 'wpsc' ), __( 'Store Sales', 'wpsc' ), $purchase_logs_cap, 'wpsc-purchase-logs', 'wpsc_display_purchase_logs_page' );
 
 	// Set the base page for Products
 	$products_page = 'edit.php?post_type=wpsc-product';
 
-	$page_hooks[] = $edit_coupons_page = add_submenu_page( $products_page , __( 'Coupons', 'wpsc' ), __( 'Coupons', 'wpsc' ), 'administrator', 'wpsc-edit-coupons', 'wpsc_display_coupons_page' );
+	$manage_coupon_cap = apply_filters( 'wpsc_coupon_cap', 'administrator' );
+	$page_hooks[] = $edit_coupons_page = add_submenu_page( $products_page , __( 'Coupons', 'wpsc' ), __( 'Coupons', 'wpsc' ), $manage_coupon_cap, 'wpsc-edit-coupons', 'wpsc_display_coupons_page' );
 
 	// Add Settings pages
 	$page_hooks[] = $edit_options_page = add_options_page( __( 'Store Settings', 'wpsc' ), __( 'Store', 'wpsc' ), 'administrator', 'wpsc-settings', 'wpsc_display_settings_page' );
@@ -685,28 +688,46 @@ function wpsc_dashboard_widget_setup() {
 		// Enqueue the styles and scripts necessary
 		wp_enqueue_style( 'wp-e-commerce-admin', WPSC_URL . '/wpsc-admin/css/admin.css', false, $version_identifier, 'all' );
 		wp_enqueue_script( 'datepicker-ui', WPSC_URL . "/wpsc-core/js/ui.datepicker.js", array( 'jquery', 'jquery-ui-core', 'jquery-ui-sortable' ), $version_identifier );
+
+		$news_cap            = apply_filters( 'wpsc_dashboard_news_cap'           , 'manage_options' );
+		$sales_cap           = apply_filters( 'wpsc_dashboard_sales_summary_cap'  , 'manage_options' );
+		$quarterly_sales_cap = apply_filters( 'wpsc_dashboard_quarterly_sales_cap', 'manage_options' );
+		$monthly_sales_cap   = apply_filters( 'wpsc_dashboard_monthly_sales_cap'  , 'manage_options' );
+
 		// Add the dashboard widgets
-		wp_add_dashboard_widget( 'wpsc_dashboard_news', __( 'Getshopped News' , 'wpsc' ), 'wpsc_dashboard_news' );
-		wp_add_dashboard_widget( 'wpsc_dashboard_widget', __( 'Sales Summary', 'wpsc' ), 'wpsc_dashboard_widget' );
-		wp_add_dashboard_widget( 'wpsc_quarterly_dashboard_widget', __( 'Sales by Quarter', 'wpsc' ), 'wpsc_quarterly_dashboard_widget' );
-		wp_add_dashboard_widget( 'wpsc_dashboard_4months_widget', __( 'Sales by Month', 'wpsc' ), 'wpsc_dashboard_4months_widget' );
+		if ( current_user_can( $news_cap ) )
+			wp_add_dashboard_widget( 'wpsc_dashboard_news', __( 'Getshopped News' , 'wpsc' ), 'wpsc_dashboard_news' );
+		if ( current_user_can( $sales_cap ) )
+			wp_add_dashboard_widget( 'wpsc_dashboard_widget', __( 'Sales Summary', 'wpsc' ), 'wpsc_dashboard_widget' );
+		if ( current_user_can( $quarterly_sales_cap ) )
+			wp_add_dashboard_widget( 'wpsc_quarterly_dashboard_widget', __( 'Sales by Quarter', 'wpsc' ), 'wpsc_quarterly_dashboard_widget' );
+		if ( current_user_can( $monthly_sales_cap ) )
+			wp_add_dashboard_widget( 'wpsc_dashboard_4months_widget', __( 'Sales by Month', 'wpsc' ), 'wpsc_dashboard_4months_widget' );
 
 		// Sort the Dashboard widgets so ours it at the top
 		global $wp_meta_boxes;
 		$normal_dashboard = $wp_meta_boxes['dashboard']['normal']['core'];
-		// Backup and delete our new dashbaord widget from the end of the array
-		$wpsc_widget_backup = array( 'wpsc_dashboard_news' => $normal_dashboard['wpsc_dashboard_news'] );
-		$wpsc_widget_backup += array( 'wpsc_dashboard_widget' => $normal_dashboard['wpsc_dashboard_widget'] );
-		$wpsc_widget_backup += array( 'wpsc_quarterly_dashboard_widget' => $normal_dashboard['wpsc_quarterly_dashboard_widget'] );
-		$wpsc_widget_backup += array( 'wpsc_dashboard_4months_widget' => $normal_dashboard['wpsc_dashboard_4months_widget'] );
 
-		unset( $normal_dashboard['wpsc_dashboard_news'] );
-		unset( $normal_dashboard['wpsc_dashboard_widget'] );
-		unset( $normal_dashboard['wpsc_quarterly_dashboard_widget'] );
-		unset( $normal_dashboard['wpsc_dashboard_4months_widget'] );
+		// Backup and delete our new dashbaord widget from the end of the array
+		$wpsc_widget_backup = array();
+		if ( isset( $normal_dashboard['wpsc_dashboard_news'] ) ) {
+			$wpsc_widget_backup['wpsc_dashboard_news'] = $normal_dashboard['wpsc_dashboard_news'];
+			unset( $normal_dashboard['wpsc_dashboard_news'] );
+		}
+		if ( isset( $normal_dashboard['wpsc_dashboard_widget'] ) ) {
+			$wpsc_widget_backup['wpsc_dashboard_widget'] = $normal_dashboard['wpsc_dashboard_widget'];
+			unset( $normal_dashboard['wpsc_dashboard_widget'] );
+		}
+		if ( isset( $normal_dashboard['wpsc_quarterly_dashboard_widget'] ) ) {
+			$wpsc_widget_backup['wpsc_quarterly_dashboard_widget'] = $normal_dashboard['wpsc_quarterly_dashboard_widget'];
+			unset( $normal_dashboard['wpsc_quarterly_dashboard_widget'] );
+		}
+		if ( isset( $normal_dashboard['wpsc_dashboard_4months_widget'] ) ) {
+			$wpsc_widget_backup['wpsc_dashboard_4months_widget'] = $normal_dashboard['wpsc_dashboard_4months_widget'];
+			unset( $normal_dashboard['wpsc_dashboard_4months_widget'] );
+		}
 
 		// Merge the two arrays together so our widget is at the beginning
-
 		$sorted_dashboard = array_merge( $wpsc_widget_backup, $normal_dashboard );
 
 		// Save the sorted array back into the original metaboxes
