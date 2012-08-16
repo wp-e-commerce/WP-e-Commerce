@@ -109,6 +109,7 @@ function wpsc_purchase_log_csv() {
 				SELECT *
 				FROM " . WPSC_TABLE_PURCHASE_LOGS . "
 				WHERE YEAR(FROM_UNIXTIME(date)) = %d AND MONTH(FROM_UNIXTIME(date)) = %d
+				ORDER BY `id` DESC
 			";
 			$month_year_sql = apply_filters( 'wpsc_purchase_log_month_year_csv', $month_year_sql );
 			$data = $wpdb->get_results( $wpdb->prepare( $month_year_sql, $year, $month ), ARRAY_A );
@@ -116,7 +117,7 @@ function wpsc_purchase_log_csv() {
 			$csv_name = _x( 'Purchase Log %1$s/%2$s.csv', 'exported purchase log csv file name', 'wpsc' );
 			$csv_name = sprintf( $csv_name, $month, $year );
 		} else {
-			$sql = apply_filters( 'wpsc_purchase_log_month_year_csv', "SELECT * FROM " . WPSC_TABLE_PURCHASE_LOGS );
+			$sql = apply_filters( 'wpsc_purchase_log_month_year_csv', "SELECT * FROM " . WPSC_TABLE_PURCHASE_LOGS . " ORDER BY `id` DESC" );
 			$data = $wpdb->get_results( $sql, ARRAY_A );
 			$csv_name = _x( "All Purchase Logs.csv", 'exported purchase log csv file name', 'wpsc' );
 		}

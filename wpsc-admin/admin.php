@@ -320,6 +320,7 @@ function wpsc_admin_include_purchase_logs_css_and_js() {
 		'sending_message'                        => _x( 'sending...', 'sending tracking email for purchase log', 'wpsc' ),
 		'sent_message'                           => _x( 'Email Sent!', 'sending tracking email for purchase log', 'wpsc' ),
 		'current_view'                           => empty( $_REQUEST['status'] ) ? 'all' : $_REQUEST['status'],
+		'current_filter'                         => empty( $_REQUEST['m'] ) ? '' : $_REQUEST['m'],
 	) );
 }
 

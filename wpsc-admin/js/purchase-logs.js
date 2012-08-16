@@ -125,6 +125,7 @@
 					action     : 'change_purchase_log_status',
 					id         : $(this).data('log-id'),
 					new_status : $(this).val(),
+					m          : WPSC_Purchase_Logs_Admin.current_filter,
 					status     : WPSC_Purchase_Logs_Admin.current_view,
 					_wp_http_referer : window.location.href
 				},
@@ -137,7 +138,9 @@
 					return;
 				}
 				spinner.removeClass('ajax-feedback-active');
-				$('ul.subsubsub').replaceWith(response.obj.content);
+				$('ul.subsubsub').replaceWith(response.obj.views);
+				$('.tablenav.top').replaceWith(response.obj.tablenav_top);
+				$('.tablenav.bottom').replaceWith(response.obj.tablenav_bottom);
 			};
 
 			$.wpsc_post(post_data, ajax_callback);
