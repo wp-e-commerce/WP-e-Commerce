@@ -444,7 +444,7 @@ add_action( 'update_option_product_category_hierarchical_url', 'wpsc_update_opti
 function _wpsc_action_sanitize_option_grid_number_per_row( $value, $option ) {
 	$value = (int) $value;
 	if ( $value === 0 ) {
-		add_settings_error( $option, 'invalid_grid_number_per_row', __( 'You set the number of item per row for the product list to 0. This means the column width will fall back to using whatever CSS you have for it. This could break your theme layout, so please make sure you have adjusted your theme\'s CSS accordingly.', 'wpsc' ) );
+		add_settings_error( $option, 'invalid_grid_number_per_row', __( 'You just set the number of item per row for the grid view to 0. This means the column width will fall back to using whatever CSS you have for it. This could break your theme layout, so please make sure you have adjusted your theme\'s CSS accordingly.', 'wpsc' ) );
 	}
 
 	return $value;
