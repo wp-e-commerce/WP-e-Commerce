@@ -718,3 +718,11 @@ function wpsc_delete_coupon(){
 //Delete Coupon
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( 'wpsc-delete-coupon' == $_REQUEST['wpsc_admin_action'] ) )
 	add_action( 'admin_init', 'wpsc_delete_coupon' );
+
+function _wpsc_action_update_option_base_country( $old_value, $new_value ) {
+	global $wpdb;
+	$region_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(`regions`.`id`) FROM `" . WPSC_TABLE_REGION_TAX . "` AS `regions` INNER JOIN `" . WPSC_TABLE_CURRENCY_LIST . "` AS `country` ON `country`.`id` = `regions`.`country_id` WHERE `country`.`isocode` IN('%s')",  $new_value ) );
+	if ( ! $region_count )
+		update_option( 'base_region', '' );
+}
+add_action( 'update_option_base_country', '_wpsc_action_update_option_base_country', 10, 2 );
