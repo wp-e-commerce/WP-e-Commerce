@@ -117,10 +117,11 @@ function wpsc_pagination($totalpages = '', $per_page = '', $current_page = '', $
 
 		$separator = '=';
 	}else{
+		global $wpsc_query;
+
 		if ( isset( $wp_query->query_vars['wpsc_product_category'] ) ) {
 			$category_id = get_term_by( 'slug', $wp_query->query_vars['wpsc_product_category'], 'wpsc_product_category' );
 			$page_link = trailingslashit( get_term_link( $category_id, 'wpsc_product_category' ) );
-
 			// in case we're displaying a category using shortcode, need to use the page's URL instead of the taxonomy URL
 			if ( $wp_the_query->is_page() ) {
 				$page = $wp_the_query->get_queried_object();
@@ -130,6 +131,8 @@ function wpsc_pagination($totalpages = '', $per_page = '', $current_page = '', $
 		} elseif ( is_tax( 'product_tag' ) ) {
 			$tag = get_queried_object();
 			$page_link = trailingslashit( get_term_link( (int) $tag->term_id, 'product_tag' ) );
+		} elseif ( $wpsc_query->is_front_page() ) {
+			$page_link = trailingslashit( home_url() );
 		} else {
 			$page_link = trailingslashit( get_option( 'product_list_url' ) );
 		}
