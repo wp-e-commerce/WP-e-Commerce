@@ -775,14 +775,10 @@ class wpsc_checkout {
 						$output = "<input class='shipping_region text' title='" . $this->checkout_item->unique_name . "' type='text' id='" . $this->form_element_id() . "' value='" . esc_attr( $saved_form_data ) . "' name='collected_data[{$this->checkout_item->id}]" . $an_array . "' ".$disabled." />";
 					}
 				} elseif ( $this->checkout_item->unique_name == 'billingstate' ) {
-					if ( wpsc_uses_shipping() && wpsc_has_regions( $billing_country ) ) {
-						$output = '';
-					} else {
-						$disabled = '';
-						if(wpsc_disregard_billing_state_fields())
-							$disabled = 'disabled = "disabled"';
-						$output = "<input class='billing_region text' title='" . $this->checkout_item->unique_name . "' type='text' id='" . $this->form_element_id() . "' value='" . esc_attr( $saved_form_data ) . "' name='collected_data[{$this->checkout_item->id}]" . $an_array . "' ".$disabled." />";
-					}
+					$disabled = '';
+					if(wpsc_disregard_billing_state_fields())
+						$disabled = 'disabled = "disabled"';
+					$output = "<input class='billing_region text' title='" . $this->checkout_item->unique_name . "' type='text' id='" . $this->form_element_id() . "' value='" . esc_attr( $saved_form_data ) . "' name='collected_data[{$this->checkout_item->id}]" . $an_array . "' ".$disabled." />";
 				} else {
 					$output = "<input title='" . $this->checkout_item->unique_name . "' type='text' id='" . $this->form_element_id() . "' class='text' value='" . esc_attr( $saved_form_data ) . "' name='collected_data[{$this->checkout_item->id}]" . $an_array . "' />";
 				}
@@ -876,6 +872,7 @@ class wpsc_checkout {
 			$user_ID = $our_user_id;
 		}
 
+		$location_changed = false;
 		//Basic Form field validation for billing and shipping details
 		foreach ( $this->checkout_items as $form_data ) {
 			$value = '';
@@ -917,9 +914,28 @@ class wpsc_checkout {
 						}
 						break;
 				}
+
 				if ( $bad_input === true ) {
 					$wpsc_checkout_error_messages[$form_data->id] = sprintf(__( 'Please enter a valid <span class="wpsc_error_msg_field_name">%s</span>.', 'wpsc' ), esc_attr($form_data->name) );
 					$wpsc_customer_checkout_details[$form_data->id] = '';
+				}
+			}
+
+			if ( ! $bad_input ) {
+				if ( $form_data->unique_name == 'shippingstate' ) {
+					$shipping_country_field_id = wpsc_get_country_form_id_by_type( 'delivery_country' );
+					$shipping_country = $_POST['collected_data'][$shipping_country_field_id];
+					if ( ! is_array( $shipping_country ) || ! isset( $shipping_country[1] ) ) {
+						wpsc_update_customer_meta( 'billing_region', $value );
+						$location_changed = true;
+					}
+				} elseif ( $form_data->unique_name == 'billingstate' ) {
+					$billing_country_field_id = wpsc_get_country_form_id_by_type( 'country' );
+					$billing_country = $_POST['collected_data'][$billing_country_field_id];
+					if ( ! is_array( $billing_country ) || ! isset( $billing_country[1] ) ) {
+						wpsc_update_customer_meta( 'billing_region', $value );
+						$location_changed = true;
+					}
 				}
 			}
 		}
@@ -928,6 +944,9 @@ class wpsc_checkout {
 		wpsc_update_customer_meta( 'gateway_error_messages'      , $wpsc_gateway_error_messages      );
 		wpsc_update_customer_meta( 'checkout_details'            , $wpsc_customer_checkout_details   );
 		wpsc_update_customer_meta( 'registration_error_messages' , $wpsc_registration_error_messages );
+
+		if ( $location_changed )
+			$wpsc_cart->update_location();
 
 		if ( ( $any_bad_inputs == false ) && ( $user_ID > 0 ) ) {
 			$meta_data = $_POST['collected_data'];
