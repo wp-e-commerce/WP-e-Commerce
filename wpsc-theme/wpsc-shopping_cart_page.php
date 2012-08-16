@@ -1,10 +1,11 @@
 <?php
-global $wpsc_cart, $wpdb, $wpsc_checkout, $wpsc_gateway, $wpsc_coupons;
+global $wpsc_cart, $wpdb, $wpsc_checkout, $wpsc_gateway, $wpsc_coupons, $wpsc_registration_error_messages;
 $wpsc_checkout = new wpsc_checkout();
 $wpsc_gateway = new wpsc_gateways();
 $alt = 0;
-if(isset($_SESSION['coupon_numbers']))
-   $wpsc_coupons = new wpsc_coupons($_SESSION['coupon_numbers']);
+$coupon_num = wpsc_get_customer_meta( 'coupon' );
+if( $coupon_num )
+   $wpsc_coupons = new wpsc_coupons( $coupon_num );
 
 if(wpsc_cart_item_count() < 1) :
    _e('Oops, there is nothing in your cart.', 'wpsc') . "<a href=".get_option("product_list_url").">" . __('Please visit our shop', 'wpsc') . "</a>";
@@ -68,7 +69,7 @@ endif;
             </form>
          </td>
 
-       
+
             <td><?php echo wpsc_cart_single_item_price(); ?></td>
          <td class="wpsc_product_price wpsc_product_price_<?php echo wpsc_the_cart_item_key(); ?>"><span class="pricedisplay"><?php echo wpsc_cart_item_price(); ?></span></td>
 
@@ -114,8 +115,7 @@ endif;
    <?php  //this HTML dispalys the calculate your order HTML   ?>
 
    <?php if(wpsc_has_category_and_country_conflict()): ?>
-      <p class='validation-error'><?php echo $_SESSION['categoryAndShippingCountryConflict']; ?></p>
-      <?php unset($_SESSION['categoryAndShippingCountryConflict']);
+      <p class='validation-error'><?php echo esc_html( wpsc_get_customer_meta( 'category_shipping_conflict' ) ); ?></p>
    endif;
 
    if(isset($_SESSION['WpscGatewayErrorMessage']) && $_SESSION['WpscGatewayErrorMessage'] != '') :?>
@@ -214,21 +214,19 @@ endif;
       </table>
    <?php endif; ?>
    <?php do_action('wpsc_before_form_of_shopping_cart'); ?>
-                 
-	<?php if(!empty($_SESSION['wpsc_checkout_user_error_messages'])): ?>
+
+	<?php if( ! empty( $wpsc_registration_error_messages ) ): ?>
 		<p class="validation-error">
 		<?php
-		foreach($_SESSION['wpsc_checkout_user_error_messages'] as $user_error )
-		echo $user_error."<br />\n";
-		
-		$_SESSION['wpsc_checkout_user_error_messages'] = array();
+		foreach( $wpsc_registration_error_messages as $user_error )
+		 echo $user_error."<br />\n";
 		?>
 	<?php endif; ?>
 
 	<?php if ( wpsc_show_user_login_form() && !is_user_logged_in() ): ?>
 			<p><?php _e('You must sign in or register with us to continue with your purchase', 'wpsc');?></p>
 			<div class="wpsc_registration_form">
-				
+
 				<fieldset class='wpsc_registration_form'>
 					<h2><?php _e( 'Sign in', 'wpsc' ); ?></h2>
 					<?php
@@ -241,7 +239,7 @@ endif;
 					<div class="wpsc_signup_text"><?php _e('If you have bought from us before please sign in here to purchase', 'wpsc');?></div>
 				</fieldset>
 			</div>
-	<?php endif; ?>	
+	<?php endif; ?>
    <table class='wpsc_checkout_table wpsc_checkout_table_totals'>
       <?php if(wpsc_uses_shipping()) : ?>
 	      <tr class="total_price total_shipping">
@@ -276,9 +274,9 @@ endif;
       </td>
    </tr>
    </table>
-   
+
 	<form class='wpsc_checkout_forms' action='<?php echo get_option('shopping_cart_url'); ?>' method='post' enctype="multipart/form-data">
-				
+
       <?php
       /**
        * Both the registration forms and the checkout details forms must be in the same form element as they are submitted together, you cannot have two form elements submit together without the use of JavaScript.
@@ -290,36 +288,36 @@ endif;
           get_currentuserinfo();   ?>
 
 		<div class="wpsc_registration_form">
-			
+
 	        <fieldset class='wpsc_registration_form wpsc_right_registration'>
 	        	<h2><?php _e('Join up now', 'wpsc');?></h2>
-	      
+
 				<label><?php _e('Username:', 'wpsc'); ?></label>
 				<input type="text" name="log" id="log" value="" size="20"/><br/>
-				
+
 				<label><?php _e('Password:', 'wpsc'); ?></label>
 				<input type="password" name="pwd" id="pwd" value="" size="20" /><br />
-				
+
 				<label><?php _e('Email:', 'wpsc'); ?></label>
 	            <input type="text" name="user_email" id="user_email" value="<?php echo attribute_escape(stripslashes($user_email)); ?>" size="20" /><br />
-	            
+
 	            <div class="wpsc_signup_text"><?php _e('Signing up is free and easy! please fill out your details your registration will happen automatically as you checkout. Don\'t forget to use your details to login with next time!', 'wpsc');?></div>
 	        </fieldset>
-	        
+
         </div>
         <div class="clear"></div>
    <?php endif; // closes user login form
-
-      if(!empty($_SESSION['wpsc_checkout_misc_error_messages'])): ?>
+      $misc_error_messages = wpsc_get_customer_meta( 'checkout_misc_error_messages' );
+      if( ! empty( $misc_error_messages ) ): ?>
          <div class='login_error'>
-            <?php foreach((array)$_SESSION['wpsc_checkout_misc_error_messages'] as $user_error ){?>
+            <?php foreach( $misc_error_messages as $user_error ){?>
                <p class='validation-error'><?php echo $user_error; ?></p>
                <?php } ?>
          </div>
 
       <?php
       endif;
-       $_SESSION['wpsc_checkout_misc_error_messages'] = array(); ?>
+      ?>
 <?php ob_start(); ?>
    <table class='wpsc_checkout_table table-1'>
       <?php $i = 0;
@@ -342,12 +340,13 @@ endif;
                <tr class='same_as_shipping_row'>
                   <td colspan ='2'>
                   <?php $checked = '';
+                  $shipping_same_as_billing = wpsc_get_customer_meta( 'shipping_same_as_billing' );
                   if(isset($_POST['shippingSameBilling']) && $_POST['shippingSameBilling'])
-                  	$_SESSION['shippingSameBilling'] = true;
+                     $shipping_same_as_billing = true;
                   elseif(isset($_POST['submit']) && !isset($_POST['shippingSameBilling']))
-                  	$_SESSION['shippingSameBilling'] = false;
-
-                  	if( isset( $_SESSION['shippingSameBilling'] ) && $_SESSION['shippingSameBilling'] == 'true' )
+                  	$shipping_same_as_billing = false;
+                  wpsc_update_customer_meta( 'shipping_same_as_billing', $shipping_same_as_billing );
+                  	if( $shipping_same_as_billing )
                   		$checked = 'checked="checked"';
                    ?>
 					<label for='shippingSameBilling'><?php _e('Same as billing address:','wpsc'); ?></label>
@@ -400,7 +399,7 @@ endif;
                   <p class='wpsc_email_address_p'>
                   <img src='https://secure.gravatar.com/avatar/empty?s=60&amp;d=mm' id='wpsc_checkout_gravatar' />
                   " . wpsc_checkout_form_field();
-                  
+
                    if(wpsc_the_checkout_item_error() != '')
                       $email_markup .= "<p class='validation-error'>" . wpsc_the_checkout_item_error() . "</p>";
                $email_markup .= "</div>";
@@ -422,8 +421,8 @@ endif;
          <?php }//endif; ?>
 
       <?php endwhile; ?>
- 
-<?php 
+
+<?php
 	$buffer_contents = ob_get_contents();
 	ob_end_clean();
 	if(isset($email_markup))
@@ -453,7 +452,7 @@ endif;
             <h3><?php _e('Payment Type', 'wpsc');?></h3>
             <?php while (wpsc_have_gateways()) : wpsc_the_gateway(); ?>
                <div class="custom_gateway">
-                     <label><input type="radio" value="<?php echo wpsc_gateway_internal_name();?>" <?php echo wpsc_gateway_is_checked(); ?> name="custom_gateway" class="custom_gateway"/><?php echo wpsc_gateway_name(); ?> 
+                     <label><input type="radio" value="<?php echo wpsc_gateway_internal_name();?>" <?php echo wpsc_gateway_is_checked(); ?> name="custom_gateway" class="custom_gateway"/><?php echo wpsc_gateway_name(); ?>
                      	<?php if( wpsc_show_gateway_image() ): ?>
                      	<img src="<?php echo wpsc_gateway_image_url(); ?>" alt="<?php echo wpsc_gateway_name(); ?>" style="position:relative; top:5px;" />
                      	<?php endif; ?>

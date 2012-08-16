@@ -548,7 +548,6 @@ function wpsc_enqueue_user_script_and_css() {
 		$version_identifier = WPSC_VERSION . "." . WPSC_MINOR_VERSION;
 
 		$category_id = wpsc_get_current_category_id();
-		
 		$remote_protocol = is_ssl() ? 'https://' : 'http://';
 
 		if( get_option( 'wpsc_share_this' ) == 1 )
@@ -623,9 +622,9 @@ function wpsc_get_current_category_id() {
 
 	$category_id = '';
 
-	if ( isset( $wp_query ) && isset( $wp_query->query_vars['taxonomy'] ) && ('wpsc_product_category' ==  $wp_query->query_vars['taxonomy'] ) || is_numeric( get_option( 'wpsc_default_category' ) ) ) 
+	if ( isset( $wp_query ) && isset( $wp_query->query_vars['taxonomy'] ) && ('wpsc_product_category' ==  $wp_query->query_vars['taxonomy'] ) || is_numeric( get_option( 'wpsc_default_category' ) ) )
 		$category_id = isset( $wp_query->query_vars['term'] ) && is_string( $wp_query->query_vars['term'] ) ? wpsc_get_category_id( $wp_query->query_vars['term'], 'slug' ) : get_option( 'wpsc_default_category' );
-		
+
 	return $category_id;
 }
 
@@ -671,11 +670,11 @@ if ( isset( $_GET['wpsc_user_dynamic_js'] ) && ($_GET['wpsc_user_dynamic_js'] ==
 
 /**
  * Returns Dynamic User CSS URL
- * 
- * This produces the cached CSS file if it exists and the uploads folder is writeable.    
+ *
+ * This produces the cached CSS file if it exists and the uploads folder is writeable.
  * If the folder is not writeable, we return the dynamic URL
  * If the folder is writeable, but for some reason a cached copy of the CSS doesn't exist, we attempt to create it and return that URL.
- * 
+ *
  * @since 3.8.9
  * @return string
  */
@@ -696,14 +695,14 @@ function wpsc_get_dynamic_user_css_url() {
 }
 
 /**
- * Moves dynamically generated input into a file in the uploads folder.  
+ * Moves dynamically generated input into a file in the uploads folder.
  * Also updates CSS hash timestamp.  Timestamp is appended to URL
- * 
+ *
  * @since 3.8.9
  * @return mixed File URL on successful move, false on failure
  */
 function wpsc_cache_to_upload() {
-	
+
 	$uploads_dir     = wp_upload_dir();
 	$upload_folder   = $uploads_dir['path'];
 	$path            = $upload_folder . '/wpsc_cached_styles.css';
@@ -724,8 +723,8 @@ function wpsc_cache_to_upload() {
 
 /**
  * Prints dynamic CSS.  This function is run either when the dynamic URL is hit, or when we need to grab new CSS to cache.
- * 
- * @since 3.8.9 
+ *
+ * @since 3.8.9
  * @return CSS
  */
 function wpsc_user_dynamic_css() {
@@ -741,13 +740,13 @@ function wpsc_user_dynamic_css() {
 
 /**
  * Returns dynamic CSS as string.  This function is run either when the dynamic URL is hit, or when we need to grab new CSS to cache.
- * 
- * @since 3.8.9 
+ *
+ * @since 3.8.9
  * @return string
  */
 function wpsc_get_user_dynamic_css() {
 	global $wpdb;
-	
+
 	ob_start();
 
 	if ( ! defined( 'WPSC_DISABLE_IMAGE_SIZE_FIXES' ) || (constant( 'WPSC_DISABLE_IMAGE_SIZE_FIXES' ) != true ) ) {
@@ -758,16 +757,16 @@ function wpsc_get_user_dynamic_css() {
 			$thumbnail_width = 96;
 
 		$thumbnail_height = get_option( 'product_image_height' );
-		
+
 		if ( $thumbnail_height <= 0 )
 			$thumbnail_height = 96;
 
 		$single_thumbnail_width  = get_option( 'single_view_image_width' );
 		$single_thumbnail_height = get_option( 'single_view_image_height' );
-		
+
 		if ( $single_thumbnail_width <= 0 )
 			$single_thumbnail_width = 128;
-		
+
 		$category_height = get_option( 'category_image_height' );
 		$category_width  = get_option( 'category_image_width' );
 ?>
@@ -976,8 +975,8 @@ function wpsc_display_products_page( $query ) {
 	else
 		$display_type = 'default';
 
-	if ( isset( $_SESSION['wpsc_display_type'] ) )
-		$display_type = $_SESSION['wpsc_display_type'];
+	$saved_display = wpsc_get_customer_meta( 'display_type' );
+	$display_type  = ! empty( $saved_display ) ? $saved_display : wpsc_check_display_type();
 
 	ob_start();
 	if( 'wpsc-product' == $wp_query->post->post_type && !is_archive() && $wp_query->post_count <= 1 )
@@ -1009,17 +1008,17 @@ function wpsc_include_products_page_template($display_type = 'default'){
 		switch ( $_GET['view_type'] ) {
 			case 'grid':
 				$display_type = 'grid';
-				$_SESSION['wpsc_display_type'] = $display_type;
+				wpsc_update_customer_meta( 'display_type', $display_type );
 				break;
 
 			case 'list':
 				$display_type = 'list';
-				$_SESSION['wpsc_display_type'] = $display_type;
+				wpsc_update_customer_meta( 'display_type', $display_type );
 				break;
 
 			case 'default':
 				$display_type = 'default';
-				$_SESSION['wpsc_display_type'] = $display_type;
+				wpsc_update_customer_meta( 'display_type', $display_type );
 				break;
 
 			default:
@@ -1055,9 +1054,8 @@ function wpsc_products_page( $content = '' ) {
 		$GLOBALS['nzshpcrt_activateshpcrt'] = true;
 
 		// get the display type for the productspage
-		$display_type = wpsc_check_display_type();
-		if ( isset( $_SESSION['wpsc_display_type'] ) )
-			$display_type = $_SESSION['wpsc_display_type'];
+		$saved_display = wpsc_get_customer_meta( 'display_type' );
+		$display_type  = ! empty( $saved_display ) ? $saved_display : wpsc_check_display_type();
 
 		ob_start();
 		wpsc_include_products_page_template($display_type);
@@ -1155,6 +1153,13 @@ function wpsc_count_themes_in_uploads_directory() {
 
 function wpsc_place_shopping_cart( $content = '' ) {
 	if ( preg_match( "/\[shoppingcart\]/", $content ) ) {
+		// BEGIN: compatibility fix for outdated theme files still relying on sessions
+		$_SESSION['coupon_numbers'                    ] = wpsc_get_customer_meta( 'coupon'                       );
+		$_SESSION['wpsc_checkout_misc_error_messages' ] = wpsc_get_customer_meta( 'checkout_misc_error_messages' );
+		$_SESSION['categoryAndShippingCountryConflict'] = wpsc_get_customer_meta( 'category_shipping_conflict'   );
+		$_SESSION['shippingSameBilling'               ] = wpsc_get_customer_meta( 'shipping_same_as_billing'     );
+		$_SESSION['wpsc_checkout_user_error_messages' ] = wpsc_get_customer_meta( 'registration_error_messages'  );
+		// END: compatibility fix
 		$GLOBALS['nzshpcrt_activateshpcrt'] = true;
 		define( 'DONOTCACHEPAGE', true );
 		ob_start();
@@ -1162,6 +1167,11 @@ function wpsc_place_shopping_cart( $content = '' ) {
 		$output = ob_get_contents();
 		ob_end_clean();
 		$output = str_replace( '$', '\$', $output );
+		wpsc_delete_customer_meta( 'checkout_misc_error_messages' );
+		wpsc_delete_customer_meta( 'category_shipping_conflict'   );
+		wpsc_delete_customer_meta( 'registration_error_messages'  );
+		wpsc_delete_customer_meta( 'checkout_error_messages'      );
+		wpsc_delete_customer_meta( 'gateway_error_messages'       );
 		return preg_replace( "/(<p>)*\[shoppingcart\](<\/p>)*/", $output, $content );
 	} else {
 		return $content;

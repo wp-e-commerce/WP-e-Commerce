@@ -76,7 +76,7 @@ class ASHXML{
 	            $xmlString .= "<".$node." ".$attrs.">\n";
                 $xmlString .= $this->build_message($value);
                 $xmlString .= "</".$node.">\n";
-	            
+
 	        }elseif(is_array($value) && $value_is_list){
 	            foreach($value as $iter_node){
 	                $temp = array($node=>$iter_node);
@@ -92,7 +92,7 @@ class ASHXML{
 	    }
 	    return $xmlString;
 	}
-    
+
 	/**
 	 * Sets the header content type to text/xml and displays a given XML doc
 	 * @author Greg Gullett (greg@ecsquest.com)
@@ -103,7 +103,7 @@ class ASHXML{
         header("content-type: text/xml");
         print $xml_doc;
     }
-    
+
 	/**
 	 * This is a helper function that retrieves an XML element from the
 	 * provided document. Since we are trying to keep PHP4 support
@@ -121,7 +121,7 @@ class ASHXML{
         }
         return FALSE;
 	}
-    
+
 }
 
 /**
@@ -160,14 +160,14 @@ class ASHTools{
                 "96661","96662","96663","96664","96665","96666","96667","96668","96669","96670",
                 "96671","96672","96673","96674","96675","96677","96678","96679","96681","96681",
                 "96682","96683","96684","96684","96686","96687","96698");
-        
+
         if (in_array($zipcode, $zips)){
             return TRUE;
         }else{
             return FALSE;
         }
     }
-    
+
     /**
      * Given an ISO country code, it will return the full country name
      * @author Greg Gullett (greg@ecsquest.com)
@@ -185,7 +185,7 @@ class ASHTools{
     							 	 WHERE isocode = %s", $short_country ) );
         return $full_name;
     }
-    
+
     /**
      * Given a WPEC state code (int), will return the state/region name
      * @author Greg Gullett (greg@ecsquest.com)
@@ -195,18 +195,18 @@ class ASHTools{
      */
     function get_state( $state_code ){
         global $wpdb;
-        
+
 		if ( ! defined ( "WPSC_TABLE_REGION_TAX") )
 			return $state_code;
-        
+
         $sql = $wpdb->prepare( "SELECT `".WPSC_TABLE_REGION_TAX."`.* FROM `".WPSC_TABLE_REGION_TAX."`
                                 WHERE `".WPSC_TABLE_REGION_TAX."`.`id` = %d", $_POST['region'] );
-        
+
 		$dest_region_data = $wpdb->get_results( $sql, ARRAY_A );
-        
+
 		return ( is_array( $dest_region_data ) ) ? $dest_region_data[0]['code'] : "";
     }
-    
+
     /**
      * Retrieves value for given key from $_POST or given session variable
      * You need to provide the session stub b/c it doenst know where you are looking
@@ -223,7 +223,7 @@ class ASHTools{
             return $session[$key];
         }
     }
-    
+
     /**
      * Retrieves the destination from session or post as an array
      * or "state","country", and "zipcode"
@@ -299,7 +299,7 @@ class ASHPackage{
      * @var decimal
      */
     var $insured_amount;
-    
+
     /**
      * The constructor for the ASHPackage class
      * Accepts an arguments array to fill out the class on initialization
@@ -324,7 +324,7 @@ class ASHPackage{
     function __get($item){
         return $this->$item;
     }
-    
+
     /**
      * This is a "magic function" that sets a property that has as protected scope
      * only for php5
@@ -336,7 +336,7 @@ class ASHPackage{
     function __set($item, $value){
         $this->$item = $value;
     }
-    
+
     /**
      * This is a magic function that controls how the string representation of
      * the class looks / behaves.
@@ -346,7 +346,7 @@ class ASHPackage{
     function __toString(){
         // Nothing here yet
     }
-    
+
     /**
      * Sets the dimensions for the package given an array
      * array values should be "Height", "Length", "Width" and weight
@@ -361,7 +361,7 @@ class ASHPackage{
         }
         $this->girth = 2*($this->width+$this->height);
     }
-    
+
 }
 
 /**
@@ -404,7 +404,7 @@ class ASHShipment{
      * @var unknown_type
      */
     var $total_weight = 0;
-    
+
     /**
      * Constructor for the ASHShipment class
      * @author Greg Gullett (greg@ecsquest.com)
@@ -421,17 +421,18 @@ class ASHShipment{
     function set_destination($internal_name, $dest=FALSE){
         if (!$dest){
             $tools = new ASHTools();
-            if (!array_key_exists("wpec_ash",$_SESSION)){
-                $_SESSION["wpec_ash"] = array();
-            }
-            $session_destination = (array_key_exists($internal_name,$_SESSION["wpec_ash"]) ? $_SESSION["wpec_ash"][$internal_name]["shipment"]["destination"] : array());
+            $wpec_ash = wpsc_get_customer_meta( 'shipping_ash' );
+            if ( ! $wpec_ash )
+                $wpec_ash = array();
+
+            $session_destination = ( array_key_exists( $internal_name, $wpec_ash ) ? $wpec_ash[$internal_name]["shipment"]["destination"] : array() );
             $this->destination = $tools->get_destination($session_destination);
         }else{
             $this->destination = $dest;
         }
-        
+
     }
-    
+
     /**
      * This is a magic function that controls access to protected items
      * and allows you to retrieve their values (php5)
@@ -441,7 +442,7 @@ class ASHShipment{
     function __get($item){
         return $this->$item;
     }
-    
+
     /**
      * This function sets the hazard flag on the class
      * while it seems inane, i am making sure that the values
@@ -455,7 +456,7 @@ class ASHShipment{
             $this->hazard = FALSE;
         }
     }
-    
+
     /**
      * Use this function to add a package object to the shipment.
      * it expects an object of class ASHPackage or throws an exception
@@ -475,7 +476,7 @@ class ASHShipment{
             throw new ErrorException("ASHSHipment expected object of class ASHPackage, got instance of {$type} instead");
         }
     }
-    
+
 }
 
 /**
@@ -498,7 +499,7 @@ class ASH{
      */
     function get_shipment(){
         global $wpdb, $wpsc_cart;
-        
+
         $shipment = new ASHShipment();
         if (!$wpsc_cart){
             return $shipment;
@@ -520,7 +521,7 @@ class ASH{
             $package->insured_amount = get_product_meta($cart_item->product_id,"ship_insured_amount");
             $package->value = $cart_item->unit_price;
             $package->contents = $cart_item->product_name;
-            
+
             if ($shipment->hazard === FALSE and $package->hazard === TRUE){
                 $shipment->set_hazard(TRUE);
             }
@@ -532,7 +533,7 @@ class ASH{
         }
         return $shipment;
     }
-    
+
     /**
      * Caches a result table for the given shipping module
      * @author Greg Gullett (greg@ecsquest.com)
@@ -541,18 +542,20 @@ class ASH{
      * @param ASHShipment $shipment
      */
     function cache_results($internal_name, $rate_table, $shipment){
-        if (!is_array($_SESSION["wpec_ash"])){
-            $_SESSION["wpec_ash"] = array();
-        }
-        if (!is_array($_SESSION["wpec_ash"][$internal_name])){
-            $_SESSION["wpec_ash"][$internal_name] = array();
-        }
-        $_SESSION["wpec_ash"][$internal_name]["rate_table"] = $rate_table;
+        $wpec_ash = wpsc_get_customer_meta( 'shipping_ash' );
+        if ( ! is_array( $wpec_ash ) )
+            $wpec_ash = array();
+
+        if ( empty( $wpec_ash[$internal_name] ) || ! is_array( $wpec_ash[$internal_name] ) )
+            $wpec_ash[$internal_name] = array();
+
+        $wpec_ash[$internal_name]["rate_table"] = $rate_table;
         $shipment_vals = array("package_count"=>$shipment->package_count,
                                "destination"  =>$shipment->destination,
                                "total_weight" =>$shipment->total_weight
             );
-        $_SESSION["wpec_ash"][$internal_name]["shipment"] = $shipment_vals;
+        $wpec_ash[$internal_name]["shipment"] = $shipment_vals;
+        wpsc_update_customer_meta( 'shipping_ash', $wpec_ash );
     }
     /**
      * Checks cached results for given shipping module and returns
@@ -562,22 +565,24 @@ class ASH{
      * @param ASHShipment $shipment
      */
     function check_cache($internal_name, $shipment){
-        if (!array_key_exists("wpec_ash", $_SESSION)){
-            return FALSE;
-        }
-        if (!array_key_exists($internal_name,$_SESSION["wpec_ash"])){
-            return FALSE;
-        }
-        if (is_object($_SESSION["wpec_ash"][$internal_name]["shipment"])){
-            $cached_shipment = $_SESSION["wpec_ash"][$internal_name]["shipment"];
-        }else{
-            if (!empty($_SESSION["wpec_ash"][$internal_name]["shipment"])){
-                if (is_array($_SESSION["wpec_ash"][$internal_name]["shipment"])){
-                    $cached_shipment = $_SESSION["wpec_ash"][$internal_name]["shipment"];
+        $wpec_ash = wpsc_get_customer_meta( 'shipping_ash' );
+
+        if ( ! $wpec_ash )
+            return false;
+
+        if ( ! array_key_exists( $internal_name, $wpec_ash ) )
+            return false;
+
+        if ( is_object( $wpec_ash[$internal_name]["shipment"] ) ){
+            $cached_shipment = $wpec_ash[$internal_name]["shipment"];
+        } else {
+            if ( ! empty( $wpec_ash[$internal_name]["shipment"] ) ){
+                if ( is_array( $wpec_ash[$internal_name]["shipment"] ) ){
+                    $cached_shipment = $wpec_ash[$internal_name]["shipment"];
                 }
             }
         }
-    
+
         $shipment_vals = array("package_count"=>$shipment->package_count,
                                "destination"  =>$shipment->destination,
                                "total_weight" =>$shipment->total_weight
@@ -589,9 +594,9 @@ class ASH{
         }elseif($cached_shipment["total_weight"] != $shipment_vals["total_weight"]){
             return FALSE;
         }else{
-            return $_SESSION["wpec_ash"][$internal_name];
+            return $wpec_ash[$internal_name];
         }
-       
+
     }
 
 }

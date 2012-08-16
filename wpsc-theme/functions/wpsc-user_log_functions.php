@@ -54,7 +54,7 @@ function validate_form_data() {
 
 					case "delivery_country":
 						if ( ($value != null ) ) {
-							$_SESSION['delivery_country'] == $value;
+							wpsc_update_customer_meta( 'shipping_country', $value );
 						}
 						break;
 

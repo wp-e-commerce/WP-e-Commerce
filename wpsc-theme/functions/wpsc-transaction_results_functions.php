@@ -21,10 +21,11 @@ function wpsc_transaction_theme() {
 
 	if ( isset( $_GET['gateway'] ) && 'google' == $_GET['gateway'] ) {
 		wpsc_google_checkout_submit();
-		unset( $_SESSION['wpsc_sessionid'] );
+		wpsc_delete_customer_meta( 'checkout_session_id' );
 	}
 
-	if ( isset( $_SESSION['wpsc_previous_selected_gateway'] ) && in_array( $_SESSION['wpsc_previous_selected_gateway'], array( 'paypal_certified', 'wpsc_merchant_paypal_express' ) ) )
+	$selected_gateway = wpsc_get_customer_meta( 'selected_gateway' );
+	if ( $selected_gateway && in_array( $selected_gateway, array( 'paypal_certified', 'wpsc_merchant_paypal_express' ) ) )
 		$sessionid = $_SESSION['paypalexpresssessionid'];
 
 	if ( isset( $_REQUEST['eway'] ) && '1' == $_REQUEST['eway'] )
@@ -38,14 +39,15 @@ function wpsc_transaction_theme() {
 
 	$dont_show_transaction_results = false;
 
-	if ( isset( $_SESSION['wpsc_previous_selected_gateway'] ) ) {
+	if ( $selected_gateway ) {
 		// Replaces the ugly if else for gateways
-		switch($_SESSION['wpsc_previous_selected_gateway']){
+		switch( $selected_gateway ){
 			case 'paypal_certified':
 			case 'wpsc_merchant_paypal_express':
-				echo $_SESSION['paypalExpressMessage'];
+				echo wpsc_get_customer_meta( 'paypal_express_message' );
 
-				if(isset($_SESSION['reshash']['PAYMENTINFO_0_TRANSACTIONTYPE']) && in_array( $_SESSION['reshash']['PAYMENTINFO_0_TRANSACTIONTYPE'], array( 'expresscheckout', 'cart' ) ) )
+				$reshash = wpsc_get_customer_meta( 'reshash' );
+				if( isset( $reshash['PAYMENTINFO_0_TRANSACTIONTYPE'] ) && in_array( $reshash['PAYMENTINFO_0_TRANSACTIONTYPE'], array( 'expresscheckout', 'cart' ) ) )
 					$dont_show_transaction_results = false;
 				else
 					$dont_show_transaction_results = true;
@@ -86,7 +88,7 @@ function wpsc_transaction_theme() {
            break;
            //default filter for other payment gateways to use
 		   default:
-           		$sessionid = apply_filters('wpsc_previous_selected_gateway_' . $_SESSION['wpsc_previous_selected_gateway'], $sessionid);
+           		$sessionid = apply_filters('wpsc_previous_selected_gateway_' . $selected_gateway, $sessionid);
            break;
 		}
 	}

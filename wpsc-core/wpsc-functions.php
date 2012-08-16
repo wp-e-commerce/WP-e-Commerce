@@ -514,7 +514,9 @@ function wpsc_serialize_shopping_cart() {
 	if ( is_object( $wpsc_cart ) )
 		$wpsc_cart->errors = array( );
 
-	$_SESSION['wpsc_cart'] = serialize( $wpsc_cart );
+	$customer_id = wpsc_get_current_customer_id();
+	if ( $customer_id )
+		set_transient( "wpsc_cart_{$customer_id}", serialize( $wpsc_cart ), WPSC_CUSTOMER_DATA_EXPIRATION ); // valid for 48 hours
 
 	return true;
 }
@@ -1477,7 +1479,6 @@ function wpsc_cron() {
 			wp_schedule_event( time(), $cron, "wpsc_{$cron}_cron_task" );
 	}
 }
-
 add_action( 'init', 'wpsc_cron' );
 
 /**
@@ -1495,4 +1496,101 @@ function wpsc_is_ssl() {
 }
 
 
-?>
+function wpsc_create_customer_id() {
+	$expire = time() + WPSC_CUSTOMER_DATA_EXPIRATION; // valid for 48 hours
+	$secure = is_ssl();
+	$id = '_' . wp_generate_password(); // make sure the ID is a string
+	$data = $id . $expire;
+	$hash = hash_hmac( 'md5', $data, wp_hash( $data ) );
+	$cookie = $id . '|' . $expire . '|' . $hash;
+
+	setcookie( WPSC_CUSTOMER_COOKIE, $cookie, $expire, WPSC_CUSTOMER_COOKIE_PATH, COOKIE_DOMAIN, $secure, true );
+	return $id;
+}
+
+function wpsc_validate_customer_cookie() {
+	$cookie = $_COOKIE[WPSC_CUSTOMER_COOKIE];
+	list( $id, $expire, $hash ) = explode( '|', $cookie );
+	$data = $id . $expire;
+	$hmac = hash_hmac( 'md5', $data, wp_hash( $data ) );
+
+	if ( $hmac != $hash )
+		return false;
+
+	return $id;
+}
+
+function wpsc_get_current_customer_id( $mode = '' ) {
+	if ( is_user_logged_in() )
+		return get_current_user_id();
+	elseif ( isset( $_COOKIE[WPSC_CUSTOMER_COOKIE] ) )
+		return wpsc_validate_customer_cookie();
+	elseif ( $mode == 'create' )
+		return wpsc_create_customer_id();
+
+	return false;
+}
+
+function wpsc_get_customer_meta( $key = '', $id = false ) {
+	if ( ! $id )
+		$id = wpsc_get_current_customer_id();
+
+	if ( ! $id )
+		return false;
+
+	if ( is_numeric( $id ) )
+		return get_user_meta( $id, "_wpsc_customer_{$key}", true );
+
+	$profile = get_transient( "wpsc_customer_meta_{$id}" );
+	if ( ! is_array( $profile ) )
+		$profile = array();
+
+	if ( $key === '' )
+		return $profile;
+
+	if ( ! array_key_exists( $key, $profile ) )
+		return false;
+
+	return $profile[$key];
+}
+
+function wpsc_update_customer_meta( $key, $value, $id = false ) {
+	if ( ! $id )
+		$id = wpsc_get_current_customer_id( 'create' );
+
+	if ( is_numeric( $id ) )
+		return update_user_meta( $id, "_wpsc_customer_{$key}", $value );
+
+	$profile = get_transient( "wpsc_customer_meta_{$id}" );
+	if ( ! $profile )
+		$profile = array();
+
+	if ( array_key_exists( $key, $profile ) && $profile[$key] == $value )
+		return true;
+
+	$profile[$key] = $value;
+
+	return set_transient( "wpsc_customer_meta_{$id}", $profile, WPSC_CUSTOMER_DATA_EXPIRATION ); // valid for 48 hours
+}
+
+function wpsc_delete_customer_meta( $key, $id = false ) {
+	if ( ! $id )
+		$id = wpsc_get_current_customer_id();
+
+	if ( ! $id )
+		return false;
+
+	if ( is_numeric( $id ) )
+		return delete_user_meta( $id, "_wpsc_customer_{$key}" );
+
+	$profile = wpsc_get_customer_meta( $id );
+	if ( ! $profile )
+		$profile = array();
+
+	if ( ! array_key_exists( $key, $profile ) )
+		return true;
+
+	unset( $profile[$key] );
+
+	return set_transient( "wpsc_customer_meta_{$id}", $profile, WPSC_CUSTOMER_DATA_EXPIRATION ); // valid for 48 hours
+}

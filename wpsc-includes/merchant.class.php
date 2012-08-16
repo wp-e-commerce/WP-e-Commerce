@@ -254,7 +254,12 @@ class wpsc_merchant {
 	function set_error_message( $error_message ) {
 		global $wpdb;
 
-		$_SESSION['wpsc_checkout_misc_error_messages'][] = $error_message;
+		$messages = wpsc_get_customer_meta( 'checkout_misc_error_messages' );
+		if ( ! is_array( $messages ) )
+			$messages = array();
+
+		$messages[] = $error_message;
+		wpsc_update_customer_meta( 'checkout_misc_error_messages', $messages );
 	}
 
 	/**

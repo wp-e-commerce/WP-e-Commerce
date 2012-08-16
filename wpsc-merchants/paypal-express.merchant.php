@@ -151,13 +151,12 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 	* @access public
 	*/
 	function submit() {
-		//$_SESSION['paypalExpressMessage']= '<h4>Transaction Canceled</h4>';
-				// PayPal Express Checkout Module
+
 		$paymentAmount = $this->cart_data['total_price'];
 
-		$_SESSION['paypalAmount'] = $this->convert( $paymentAmount );
-		$_SESSION['localPaypalAmount'] = $paymentAmount;
-		$_SESSION['paypalexpresssessionid'] = $this->cart_data['session_id'];
+		wpsc_update_customer_meta( 'paypal_express_converted_amount', $this->convert( $paymentAmount ) );
+		wpsc_update_customer_meta( 'paypal_express_original_amount', $paymentAmount );
+		wpsc_update_customer_meta( 'paypal_express_sessionid', $this->cart_data['session_id'] );
 		$currencyCodeType = $this->get_paypal_currency_code();
 		$paymentType = "Sale";
 
@@ -169,7 +168,7 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 		$transact_url = get_option('transact_url');
 		$returnURL =  $transact_url.$separator."sessionid=".$this->cart_data['session_id']."&gateway=paypal";
 		$cancelURL = get_option('shopping_cart_url');
-		$resArray = $this->CallShortcutExpressCheckout ($_SESSION['paypalAmount'], $currencyCodeType, $paymentType, $returnURL, $cancelURL);
+		$resArray = $this->CallShortcutExpressCheckout ( wpsc_get_customer_meta( 'paypal_express_converted_amount' ), $currencyCodeType, $paymentType, $returnURL, $cancelURL);
 		$ack = strtoupper($resArray["ACK"]);
 
 		if($ack=="SUCCESS")	{
@@ -300,14 +299,15 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 
 			$nvpstr = $nvpstr . "&".implode("&",$temp_data);
 		}
-		$_SESSION["currencyCodeType"] = $currencyCodeType;
-		$_SESSION["PaymentType"] = $paymentType;
+
+		wpsc_update_customer_meta( 'paypal_express_currency_code_type', $currencyCodeType );
+		wpsc_update_customer_meta( 'paypal_express_payment_type', $paymentType );
 
 	    $resArray= paypal_hash_call("SetExpressCheckout", $nvpstr);
 		$ack = strtoupper($resArray["ACK"]);
 		if($ack=="SUCCESS")	{
 			$token = urldecode($resArray["TOKEN"]);
-			$_SESSION['token']=$token;
+			wpsc_update_customer_meta( 'paypal_express_token', $token );
 		}
 
 	    return $resArray;
@@ -574,26 +574,26 @@ function wpsc_get_paypal_currency_code() {
 function paypal_processingfunctions(){
 	global $wpdb, $wpsc_cart;
 
-	$sessionid = '';
-	if (isset($_SESSION['paypalexpresssessionid']))
-	$sessionid = $_SESSION['paypalexpresssessionid'];
-	if(isset($_REQUEST['act']) && ($_REQUEST['act']=='error')){
-		session_start();
-		$resArray=$_SESSION['reshash'];
-		$_SESSION['paypalExpressMessage']= '
+	$sessionid = (string) wpsc_get_customer_meta( 'paypal_express_sessionid' );
+
+	if( isset( $_REQUEST['act'] ) && ( 'error' == $_REQUEST['act'] ) ) {
+
+		$resArray = wpsc_get_customer_meta( 'paypal_express_reshash' );
+		$paypal_express_message = '
 		<center>
 		<table width="700" align="left">
 		<tr>
 			<td colspan="2" class="header">' . __('The PayPal API has returned an error!', 'wpsc' ) . '</td>
 		</tr>
 		';
-	    //it will print if any URL errors
-		if(isset($_SESSION['curl_error_msg'])) {
-			$errorMessage=$_SESSION['curl_error_msg'] ;
-			$response = $_SESSION['response'];
-			session_unset();
 
-			$_SESSION['paypalExpressMessage'].='
+	    //it will print if any URL errors
+		if ( wpsc_get_customer_meta( 'paypal_express_curl_error_msg' ) ) {
+
+			$errorMessage = wpsc_get_customer_meta( 'paypal_express_curl_error_msg' );
+			$response = wpsc_get_customer_meta( 'paypal_express_response' );
+
+			$paypal_express_message .= '
 			<tr>
 				<td>response:</td>
 				<td>'.$response.'</td>
@@ -607,7 +607,7 @@ function paypal_processingfunctions(){
 
 			/* If there is no URL Errors, Construct the HTML page with
 			   Response Error parameters.   */
-			$_SESSION['paypalExpressMessage'] .="
+			$paypal_express_message .="
 				<tr>
 					<td>Ack:</td>
 					<td>".$resArray['ACK']."</td>
@@ -627,7 +627,7 @@ function paypal_processingfunctions(){
 				$shortMessage = $resArray["L_SHORTMESSAGE".$count];
 				$longMessage  = $resArray["L_LONGMESSAGE".$count];
 				$count=$count+1;
-				$_SESSION['paypalExpressMessage'] .="
+				$paypal_express_message .="
 					<tr>
 						<td>" . __('Error Number:', 'wpsc' ) . "</td>
 						<td> $errorCode </td>
@@ -643,10 +643,10 @@ function paypal_processingfunctions(){
 
 		 	}//end while
 		}// end else
-		$_SESSION['paypalExpressMessage'] .="
+		$paypal_express_message .="
 			</center>
 				</table>";
-
+		wpsc_update_customer_meta( 'paypal_express_message', $paypal_express_message );
 	}else if(isset($_REQUEST['act']) && ($_REQUEST['act']=='do')){
 		/* Gather the information to make the final call to
 		   finalize the PayPal payment.  The variable nvpstr
@@ -654,11 +654,11 @@ function paypal_processingfunctions(){
 
 		$token =urlencode($_REQUEST['token']);
 
-		$paymentAmount =urlencode ($_SESSION['paypalAmount']);
-		$paymentType = urlencode($_SESSION['PaymentType']);
-		$currCodeType = urlencode(wpsc_get_paypal_currency_code());
-		$payerID = urlencode($_REQUEST['PayerID']);
-		$serverName = urlencode($_SERVER['SERVER_NAME']);
+		$paymentAmount =urlencode ( wpsc_get_customer_meta( 'paypal_express_converted_amount' ) );
+		$paymentType = urlencode( wpsc_get_customer_meta( 'paypal_express_payment_type' ) );
+		$currCodeType = urlencode( wpsc_get_paypal_currency_code() );
+		$payerID = urlencode( $_REQUEST['PayerID'] );
+		$serverName = urlencode( $_SERVER['SERVER_NAME'] );
 		$BN='Instinct_e-commerce_wp-shopping-cart_NZ';
 		$nvpstr='&TOKEN='.$token.'&PAYERID='.$payerID.'&PAYMENTREQUEST_0_PAYMENTACTION=Sale&PAYMENTREQUEST_0_CURRENCYCODE='.$currCodeType.'&IPADDRESS='.$serverName."&BUTTONSOURCE=".$BN."&PAYMENTREQUEST_0_INVNUM=".urlencode( $sessionid );
 		// IPN data
@@ -726,7 +726,7 @@ function paypal_processingfunctions(){
 		   If the response from PayPal was a success, display the response parameters'
 		   If the response was an error, display the errors received using APIError.php. */
 		$ack = strtoupper($resArray["ACK"]);
-		$_SESSION['reshash']=$resArray;
+		wpsc_update_customer_meta( 'paypal_express_reshash', $resArray );
 
 		if($ack!="SUCCESS"){
 			$location = get_option('transact_url')."&act=error";
@@ -770,23 +770,22 @@ function paypal_processingfunctions(){
 			}
 			$location = add_query_arg('sessionid', $sessionid, get_option('transact_url'));
 
-			$_SESSION['paypalExpressMessage'] = null;
+			wpsc_delete_customer_meta( 'paypal_express_message' );
 			wp_redirect($location);
 			exit();
 		}
 
-		@$_SESSION['nzshpcrt_serialized_cart'] = '';
-		$_SESSION['nzshpcrt_cart'] = '';
-		$_SESSION['nzshpcrt_cart'] = Array();
+		wpsc_delete_customer_meta( 'nzshpcrt_serialized_cart' );
+		wpsc_delete_customer_meta( 'nzshpcart' );
 		$wpsc_cart->empty_cart();
 
 	} else if(isset($_REQUEST['paymentType']) || isset($_REQUEST['token'])){
 
 		$token = $_REQUEST['token'];
-		if(!isset($token)) {
-		   $paymentAmount=$_SESSION['paypalAmount'];
-		   $currencyCodeType=wpsc_get_paypal_currency_code();
-		   $paymentType='Sale';
+		if( ! isset( $token ) ) {
+		   $paymentAmount = wpsc_get_customer_meta( 'paypal_express_converted_amount' );
+		   $currencyCodeType = wpsc_get_paypal_currency_code();
+		   $paymentType = 'Sale';
 			if(get_option('permalink_structure') != '')
 				$separator ="?";
 			else
@@ -807,7 +806,7 @@ function paypal_processingfunctions(){
 			resulting errors
 			*/
 		   $resArray=paypal_hash_call("SetExpressCheckout",$nvpstr);
-		   $_SESSION['reshash']=$resArray;
+		   wpsc_update_customer_meta( 'paypal_express_reshash', $resArray );
 		   $ack = strtoupper($resArray["ACK"]);
 
 		   if($ack=="SUCCESS"){
@@ -841,9 +840,10 @@ function paypal_processingfunctions(){
 			call was a success, show the authorization details, and provide
 			an action to complete the payment.  If failed, show the error
 			*/
-		   $resArray=paypal_hash_call("GetExpressCheckoutDetails",$nvpstr);
+			$resArray=paypal_hash_call("GetExpressCheckoutDetails",$nvpstr);
 
-		   $_SESSION['reshash']=$resArray;
+			wpsc_update_customer_meta( 'paypal_express_reshash', $resArray );
+
 		   $ack = strtoupper($resArray["ACK"]);
 		   if($ack=="SUCCESS"){
 
@@ -868,10 +868,10 @@ function paypal_processingfunctions(){
 				authorization for the PayPal payment
 				*/
 
-				$_SESSION['token']=$_REQUEST['token'];
-				$_SESSION['payer_id'] = $_REQUEST['PayerID'];
+				wpsc_update_customer_meta( 'paypal_express_token', $_REQUEST['token'] );
+				wpsc_update_customer_meta( 'paypal_express_payer_id', $_REQUEST['PayerID'] );
 
-				$resArray=$_SESSION['reshash'];
+				$resArray = wpsc_get_customer_meta( 'paypal_express_reshash' );
 
 				if(get_option('permalink_structure') != '')
 					$separator ="?";
@@ -883,7 +883,9 @@ function paypal_processingfunctions(){
 				If the response from PayPal was a success, display the response parameters
 				*/
 				if(isset($_REQUEST['TOKEN']) && !isset($_REQUEST['PAYERID'])){
-					$_SESSION['paypalExpressMessage']= '<h4>TRANSACTION CANCELED</h4>';
+
+					wpsc_update_customer_meta( 'paypal_express_message', _x( '<h4>TRANSACTION CANCELED</h4>', 'paypal express cancel header', 'wpsc' ) );
+
 				}else{
 					if ( ! isset( $resArray['SHIPTOSTREET2'] ) )
 						$resArray['SHIPTOSTREET2'] = '';
@@ -891,7 +893,7 @@ function paypal_processingfunctions(){
 				       <table width='400' class='paypal_express_form'>
 				        <tr>
 				            <td align='left' class='firstcol'><b>" . __( 'Order Total:', 'wpsc' ) . "</b></td>
-				            <td align='left'>" . wpsc_currency_display($_SESSION['localPaypalAmount']) . "</td>
+				            <td align='left'>" . wpsc_currency_display( wpsc_get_customer_meta( 'paypal_express_original_amount' ) ) . "</td>
 				        </tr>
 						<tr>
 						    <td align='left' colspan='2'><b>" . __('Shipping Address:', 'wpsc' ) . " </b></td>
@@ -941,8 +943,8 @@ function paypal_processingfunctions(){
 					$output .= "	<input type='hidden' name='shippingState' value='".$resArray['SHIPTOSTATE']."' />\n";
 					$output .= "	<input type='hidden' name='postalCode' value='".$resArray['SHIPTOZIP']."' />\n";
 					$output .= "	<input type='hidden' name='country' value='".$resArray['SHIPTOCOUNTRYNAME']."' />\n";
-					$output .= "	<input type='hidden' name='token' value='".$_SESSION['token']."' />\n";
-					$output .= "	<input type='hidden' name='PayerID' value='".$_SESSION['payer_id']."' />\n";
+					$output .= "	<input type='hidden' name='token' value='" . wpsc_get_customer_meta( 'paypal_express_token' ) . "' />\n";
+					$output .= "	<input type='hidden' name='PayerID' value='" . wpsc_get_customer_meta( 'paypal_express_payer_id' ) . "' />\n";
 					$output .= "	<input type='hidden' name='act' value='do' />\n";
 					$output .= "	<p>  <input name='usePayPal' type='submit' value='".__('Confirm Payment','wpsc')."' /></p>\n";
 					$output .= "</form>";
@@ -951,7 +953,7 @@ function paypal_processingfunctions(){
 					    </table>
 					</center>
 					";
-					$_SESSION['paypalExpressMessage'] = $output;
+					wpsc_update_customer_meta( 'paypal_express_message', $output );
 				}
 			}
 		}
@@ -997,11 +999,13 @@ function paypal_hash_call($methodName,$nvpStr)	{
 	);
 
 	$nvpReqArray=paypal_deformatNVP($nvpreq);
-	$_SESSION['nvpReqArray']=$nvpReqArray;
+
+	wpsc_update_customer_meta( 'paypal_express_nvp_req_array', $nvpReqArray );
+
 	$res = wp_remote_post($API_Endpoint, $options);
 
 	if ( is_wp_error($res) ) {
-		$_SESSION['curl_error_msg'] = 'WP HTTP Error: ' . $res->get_error_message();
+		wpsc_update_customer_meta( 'paypal_express_curl_error_msg', 'WP HTTP Error: ' . $res->get_error_message() );
 		$nvpResArray=paypal_deformatNVP('');
 	} else {
 		$nvpResArray=paypal_deformatNVP($res['body']);

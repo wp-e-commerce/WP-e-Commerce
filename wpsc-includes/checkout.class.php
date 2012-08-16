@@ -72,7 +72,7 @@ function wpsc_get_buyers_email($purchase_id){
 function wpsc_google_checkout_submit() {
 	global $wpdb, $wpsc_cart, $current_user;
 	$wpsc_checkout = new wpsc_checkout();
-	$purchase_log_id = $wpdb->get_var( "SELECT `id` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `sessionid` IN(%s) LIMIT 1", $_SESSION['wpsc_sessionid'] );
+	$purchase_log_id = $wpdb->get_var( "SELECT `id` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `sessionid` IN(%s) LIMIT 1", wpsc_get_customer_meta( 'checkout_session_id' ) );
 	get_currentuserinfo();
 	if ( $current_user->display_name != '' ) {
 		foreach ( $wpsc_checkout->checkout_items as $checkoutfield ) {
@@ -190,10 +190,8 @@ function wpsc_show_user_login_form(){
  * @return (boolean) true or false
  */
 function wpsc_has_category_and_country_conflict(){
-	if(isset($_SESSION['categoryAndShippingCountryConflict']) && !empty($_SESSION['categoryAndShippingCountryConflict']))
-		return true;
-	else
-		return false;
+	$conflict = wpsc_get_customer_meta( 'category_shipping_conflict' );
+	return ( ! empty( $conflict ) );
 }
 
 /**
@@ -206,8 +204,10 @@ function wpsc_has_category_and_country_conflict(){
  * @since 3.8
  * @return (boolean) true or false
  */
-function wpsc_have_valid_shipping_zipcode() {
-	if ( empty( $_SESSION['wpsc_zipcode'] ) || ( ( __( 'Your Zipcode', 'wpsc' ) == $_SESSION['wpsc_zipcode'] ) && ( $_SESSION['wpsc_update_location'] ) ) || ! isset( $_POST['wpsc_submit_zipcode'] ) )
+function wpsc_have_valid_shipping_zipcode(){
+	$zip = wpsc_get_customer_meta( 'shipping_zip' );
+
+	if( ! $zip || ( __( 'Your Zipcode', 'wpsc' ) == $zip ) && ( wpsc_get_customer_meta( 'update_location' ) ) )
 		return true;
 	else
 		return false;
@@ -252,19 +252,20 @@ function wpsc_show_find_us(){
  */
 function wpsc_disregard_shipping_state_fields(){
 	global $wpsc_checkout;
-	if(!wpsc_uses_shipping()):
-	 	if( 'shippingstate' == $wpsc_checkout->checkout_item->unique_name && wpsc_has_regions($_SESSION['wpsc_delivery_country']))
+	if ( ! wpsc_uses_shipping() ):
+		$delivery_country = wpsc_get_customer_meta( 'shipping_country' );
+	 	if ( 'shippingstate' == $wpsc_checkout->checkout_item->unique_name && wpsc_has_regions( $delivery_country ) )
 	 		return true;
 	 	else
 	 		return false;
-	 elseif('billingstate' == $wpsc_checkout->checkout_item->unique_name && wpsc_has_regions($_SESSION['wpsc_selected_country'])):
-	 	return true;
-	 endif;
+	elseif ( 'billingstate' == $wpsc_checkout->checkout_item->unique_name && wpsc_has_regions( wpsc_get_customer_meta( 'billing_country' ) ) ):
+		return true;
+	endif;
 }
 
 function wpsc_disregard_billing_state_fields(){
 	global $wpsc_checkout;
-	if('billingstate' == $wpsc_checkout->checkout_item->unique_name && wpsc_has_regions($_SESSION['wpsc_selected_country']))
+	if ( 'billingstate' == $wpsc_checkout->checkout_item->unique_name && wpsc_has_regions( wpsc_get_customer_meta( 'billing_country' ) ) )
 		return true;
 	return false;
 }
@@ -281,11 +282,11 @@ function wpsc_shipping_details() {
 }
 
 function wpsc_the_checkout_item_error_class( $as_attribute = true ) {
-	global $wpsc_checkout;
+	global $wpsc_checkout, $wpsc_checkout_error_messages;
 
 	$class_name = '';
 
-	if ( isset( $_SESSION['wpsc_checkout_error_messages'][$wpsc_checkout->checkout_item->id] ) && $_SESSION['wpsc_checkout_error_messages'][$wpsc_checkout->checkout_item->id] != '' ) {
+	if ( ! empty( $wpsc_checkout_error_messages ) && isset( $wpsc_checkout_error_messages[$wpsc_checkout->checkout_item->id] ) && $wpsc_checkout_error_messages[$wpsc_checkout->checkout_item->id] != '' ) {
 		$class_name = 'validation-error';
 	}
 	if ( ($as_attribute == true ) ) {
@@ -297,49 +298,85 @@ function wpsc_the_checkout_item_error_class( $as_attribute = true ) {
 }
 
 function wpsc_the_checkout_item_error() {
-	global $wpsc_checkout;
+	global $wpsc_checkout, $wpsc_checkout_error_messages;
 	$output = false;
-	if ( isset( $_SESSION['wpsc_checkout_error_messages'][$wpsc_checkout->checkout_item->id] ) && $_SESSION['wpsc_checkout_error_messages'][$wpsc_checkout->checkout_item->id] != '' ) {
-		$output = $_SESSION['wpsc_checkout_error_messages'][$wpsc_checkout->checkout_item->id];
+	if ( ! empty( $wpsc_checkout_error_messages ) && isset( $wpsc_checkout_error_messages[$wpsc_checkout->checkout_item->id] ) && $wpsc_checkout_error_messages[$wpsc_checkout->checkout_item->id] != '' ) {
+		$output = $wpsc_checkout_error_messages[$wpsc_checkout->checkout_item->id];
 	}
 
 	return $output;
 }
 
 function wpsc_the_checkout_CC_validation() {
+	global $wpsc_gateway_error_messages;
+
 	$output = '';
-	if ( $_SESSION['wpsc_gateway_error_messages']['card_number'] != '' ) {
-		$output = $_SESSION['wpsc_gateway_error_messages']['card_number'];
-	}
+	if ( ! empty( $wpsc_gateway_error_messages ) && ! empty( $wpsc_gateway_error_messages['card_number'] ) )
+		$output = $wpsc_gateway_error_messages['card_number'];
+
 	return $output;
 }
 
 function wpsc_the_checkout_CC_validation_class() {
-	return empty( $_SESSION['wspc_gateway_error_messages']['card_number'] ) ? '' : 'class="validation-error"';
+	global $wpsc_gateway_error_messages;
+	if ( empty( $wpsc_gateway_error_messages ) )
+		return '';
+
+	return empty( $wpsc_gateway_error_messages['card_number'] ) ? '' : 'class="validation-error"';
 }
 
 function wpsc_the_checkout_CCexpiry_validation_class() {
-	return empty( $_SESSION['wpsc_gateway_error_messages']['expdate'] ) ? '' : 'class="validation-error"';
+	global $wpsc_gateway_error_messages;
+
+	if ( empty( $wpsc_gateway_error_messages ) )
+		return '';
+
+	return empty( $wpsc_gateway_error_messages['expdate'] ) ? '' : 'class="validation-error"';
 }
 
 function wpsc_the_checkout_CCexpiry_validation() {
-	return empty( $_SESSION['wpsc_gateway_error_messages']['expdate'] ) ? '' : $_SESSION['wpsc_gateway_error_messages']['expdate'];
+	global $wpsc_gateway_error_messages;
+
+	if ( empty( $wpsc_gateway_error_messages ) )
+		return '';
+
+	return empty( $wpsc_gateway_error_messages['expdate'] ) ? '' : $wpsc_gateway_error_messages['expdate'];
 }
 
 function wpsc_the_checkout_CCcvv_validation_class() {
-	return empty( $_SESSION['wpsc_gateway_error_messages']['card_code'] ) ? '' : 'class="validation-error"';
+	global $wpsc_gateway_error_messages;
+
+	if ( empty( $wpsc_gateway_error_messages ) )
+		return '';
+
+	return empty( $wpsc_gateway_error_messages['card_code'] ) ? '' : 'class="validation-error"';
 }
 
 function wpsc_the_checkout_CCcvv_validation() {
-	return empty( $_SESSION['wpsc_gateway_error_messages']['card_code'] ) ? '' : $_SESSION['wpsc_gateway_error_messages']['card_code'];
+	global $wpsc_gateway_error_messages;
+
+	if ( empty( $wpsc_gateway_error_messages ) )
+		return '';
+
+	return empty( $wpsc_gateway_error_messages['card_code'] ) ? '' : $wpsc_gateway_error_messages['card_code'];
 }
 
 function wpsc_the_checkout_CCtype_validation_class() {
-	return empty( $_SESSION['wpsc_gateway_error_messages']['cctype'] ) ? '' : 'class="validation-error"';
+	global $wpsc_gateway_error_messages;
+
+	if ( empty( $wpsc_gateway_error_messages ) )
+		return '';
+
+	return empty( $wpsc_gateway_error_messages['cctype'] ) ? '' : 'class="validation-error"';
 }
 
 function wpsc_the_checkout_CCtype_validation() {
-	return empty( $_SESSION['wpsc_gateway_error_messages']['cctype'] ) ? '' : $_SESSION['wpsc_gateway_error_messages']['cctype'];
+	global $wpsc_gateway_error_messages;
+
+	if ( empty( $wpsc_gateway_error_messages ) )
+		return '';
+
+	return empty( $wpsc_gateway_error_messages['cctype'] ) ? '' : $wpsc_gateway_error_messages['cctype'];
 }
 
 function wpsc_checkout_form_is_header() {
@@ -401,8 +438,8 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 		$output = "<input type='hidden' name='wpsc_ajax_actions' value='update_location' />";
 		$js = "  onchange='submit_change_country();'";
 	}
-	$selected_country = isset( $_SESSION['wpsc_delivery_country'] ) ? $_SESSION['wpsc_delivery_country'] : '';
-	$selected_region = isset( $_SESSION['wpsc_delivery_region'] ) ? $_SESSION['wpsc_delivery_region'] : '';
+	$selected_country = (string) wpsc_get_customer_meta( 'shipping_country' );
+	$selected_region  = (string) wpsc_get_customer_meta( 'shipping_region'  );
 
 	if ( empty( $selected_country ) )
 		$selected_country = esc_attr( get_option( 'base_country' ) );
@@ -433,30 +470,20 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 	$output .= wpsc_shipping_region_list( $selected_country, $selected_region, $shippingdetails );
 
 	if ( isset( $_POST['wpsc_update_location'] ) && $_POST['wpsc_update_location'] == 'true' ) {
-		$_SESSION['wpsc_update_location'] = true;
+		wpsc_update_customer_meta( 'update_location', true );
 	} else {
-		$_SESSION['wpsc_update_location'] = false;
+		wpsc_delete_customer_meta( 'update_location' );
 	}
 
-	if ( isset( $_POST['zipcode'] ) ) {
-		if ( $_POST['zipcode'] == '' ) {
-			$zipvalue = '';
-			$_SESSION['wpsc_zipcode'] = '';
-		} else {
-			$zipvalue = $_POST['zipcode'];
-			$_SESSION['wpsc_zipcode'] = $_POST['zipcode'];
-		}
-	} else if ( isset( $_SESSION['wpsc_zipcode'] ) && ($_SESSION['wpsc_zipcode'] != '') ) {
-		$zipvalue = $_SESSION['wpsc_zipcode'];
-	} else {
-		$zipvalue = '';
-		$_SESSION['wpsc_zipcode'] = '';
-	}
+	$zipvalue = (string) wpsc_get_customer_meta( 'shipping_zip' );
+	if ( ! empty( $_POST['zipcode'] ) )
+		$zipvalue = $_POST['zipcode'];
 
 	$zip_code_text = __( 'Your Zipcode', 'wpsc' );
 
-	if ( ($zipvalue != '') && ($zipvalue != $zip_code_text ) ) {
+	if ( ( $zipvalue != '' ) && ( $zipvalue != $zip_code_text ) ) {
 		$color = '#000';
+		wpsc_update_customer_meta( 'shipping_zip', $zipvalue );
 	} else {
 		$zipvalue = $zip_code_text;
 		$color = '#999';
@@ -498,6 +525,14 @@ class wpsc_checkout {
 	function wpsc_checkout( $checkout_set = 0 ) {
 		global $wpdb;
 		$this->checkout_items = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `active` = '1'  AND `checkout_set`= %s ORDER BY `checkout_order`;", $checkout_set ) );
+
+		$GLOBALS['wpsc_checkout_error_messages'    ] = wpsc_get_customer_meta( 'checkout_error_messages'     );
+		$GLOBALS['wpsc_gateway_error_messages'     ] = wpsc_get_customer_meta( 'gateway_error_messages'      );
+		$GLOBALS['wpsc_customer_checkout_details'  ] = wpsc_get_customer_meta( 'checkout_details'            );
+		$GLOBALS['wpsc_registration_error_messages'] = wpsc_get_customer_meta( 'registration_error_messages' );
+
+		if ( ! is_array( $GLOBALS['wpsc_customer_checkout_details'] ) )
+			$GLOBALS['wpsc_customer_checkout_details'] = array();
 
 		$category_list = wpsc_cart_item_categories( true );
 		$additional_form_list = array( );
@@ -571,27 +606,24 @@ class wpsc_checkout {
 	 * @access public
 	 */
 	function form_field() {
-		global $wpdb, $user_ID;
+		global $wpdb, $user_ID, $wpsc_customer_checkout_details;
 
 		if ( ( $user_ID > 0 ) ) {
-			if( ! isset( $_SESSION['wpsc_checkout_saved_values'] ) ) {
-				$meta_data = get_user_meta( $user_ID, 'wpshpcrt_usr_profile', 1 );
-				$meta_data = apply_filters( 'wpsc_checkout_user_profile_get', $meta_data, $user_ID );
-				$_SESSION['wpsc_checkout_saved_values'] = $meta_data;
-			}
-
 			$delivery_country_id = wpsc_get_country_form_id_by_type( 'delivery_country' );
      		$billing_country_id = wpsc_get_country_form_id_by_type( 'country' );
 		}
 
-		$saved_form_data = isset( $_SESSION['wpsc_checkout_saved_values'][$this->checkout_item->id] ) ? $_SESSION['wpsc_checkout_saved_values'][$this->checkout_item->id] : null;
-
+		$saved_form_data = empty( $wpsc_customer_checkout_details[$this->checkout_item->id] ) ? null : $wpsc_customer_checkout_details[$this->checkout_item->id];
 		$an_array = '';
 		if ( function_exists( 'wpsc_get_ticket_checkout_set' ) ) {
 			if ( $this->checkout_item->checkout_set == wpsc_get_ticket_checkout_set() )
 				$an_array = '[]';
 		}
 		$output = '';
+		$delivery_country = wpsc_get_customer_meta( 'shipping_country' );
+		$billing_country  = wpsc_get_customer_meta( 'billing_country'  );
+		$delivery_region  = wpsc_get_customer_meta( 'shipping_region'  );
+		$billing_region   = wpsc_get_customer_meta( 'billing_region'   );
 		switch ( $this->checkout_item->type ) {
 			case "address":
 			case "delivery_address":
@@ -616,16 +648,16 @@ class wpsc_checkout {
 				break;
 
 			case "country":
-				$output = wpsc_country_region_list( $this->checkout_item->id, false, $_SESSION['wpsc_selected_country'], $_SESSION['wpsc_selected_region'], $this->form_element_id() );
+				$output = wpsc_country_region_list( $this->checkout_item->id, false, $billing_country, $billing_region, $this->form_element_id() );
 				break;
 
 			case "delivery_country":
 				if ( wpsc_uses_shipping ( ) ) {
-					$country_name = $wpdb->get_var( $wpdb->prepare( "SELECT `country` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `isocode`= %s LIMIT 1", $_SESSION['wpsc_delivery_country'] ) );
-					$output = "<input title='" . $this->checkout_item->unique_name . "' type='hidden' id='" . $this->form_element_id() . "' class='shipping_country' name='collected_data[{$this->checkout_item->id}]' value='" . esc_attr( $_SESSION['wpsc_delivery_country'] ) . "' size='4' /><span class='shipping_country_name'>" . $country_name . "</span> ";
+					$country_name = $wpdb->get_var( $wpdb->prepare( "SELECT `country` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `isocode`= %s LIMIT 1", $delivery_country ) );
+					$output = "<input title='" . $this->checkout_item->unique_name . "' type='hidden' id='" . $this->form_element_id() . "' class='shipping_country' name='collected_data[{$this->checkout_item->id}]' value='" . esc_attr( $delivery_country ) . "' size='4' /><span class='shipping_country_name'>" . $country_name . "</span> ";
 				} else {
 					$checkoutfields = true;
-					$output = wpsc_country_region_list( $this->checkout_item->id, false, $_SESSION['wpsc_delivery_country'], $_SESSION['wpsc_delivery_region'], $this->form_element_id(), $checkoutfields );
+					$output = wpsc_country_region_list( $this->checkout_item->id, false, $delivery_country, $delivery_region, $this->form_element_id(), $checkoutfields );
 				}
 				break;
 			case "select":
@@ -660,9 +692,9 @@ class wpsc_checkout {
 			case "coupon":
 			default:
 				if ( $this->checkout_item->unique_name == 'shippingstate' ) {
-					if ( wpsc_uses_shipping() && wpsc_has_regions($_SESSION['wpsc_delivery_country']) ) {
-						$region_name = $wpdb->get_var( $wpdb->prepare( "SELECT `name` FROM `" . WPSC_TABLE_REGION_TAX . "` WHERE `id`= %d LIMIT 1", $_SESSION['wpsc_delivery_region'] ) );
-						$output = "<input title='" . $this->checkout_item->unique_name . "' type='hidden' id='" . $this->form_element_id() . "' class='shipping_region' name='collected_data[{$this->checkout_item->id}]' value='" . esc_attr( $_SESSION['wpsc_delivery_region'] ) . "' size='4' /><span class='shipping_region_name'>" . esc_html( $region_name ) . "</span> ";
+					if ( wpsc_uses_shipping() && wpsc_has_regions($delivery_country) ) {
+						$region_name = $wpdb->get_var( $wpdb->prepare( "SELECT `name` FROM `" . WPSC_TABLE_REGION_TAX . "` WHERE `id`= %d LIMIT 1", $delivery_region ) );
+						$output = "<input title='" . $this->checkout_item->unique_name . "' type='hidden' id='" . $this->form_element_id() . "' class='shipping_region' name='collected_data[{$this->checkout_item->id}]' value='" . esc_attr( $delivery_region ) . "' size='4' /><span class='shipping_region_name'>" . esc_html( $region_name ) . "</span> ";
 					} else {
 						$disabled = '';
 						if(wpsc_disregard_shipping_state_fields())
@@ -670,7 +702,7 @@ class wpsc_checkout {
 						$output = "<input class='shipping_region text' title='" . $this->checkout_item->unique_name . "' type='text' id='" . $this->form_element_id() . "' value='" . esc_attr( $saved_form_data ) . "' name='collected_data[{$this->checkout_item->id}]" . $an_array . "' ".$disabled." />";
 					}
 				} elseif ( $this->checkout_item->unique_name == 'billingstate' ) {
-					if ( wpsc_uses_shipping() && wpsc_has_regions($_SESSION['wpsc_selected_country']) ) {
+					if ( wpsc_uses_shipping() && wpsc_has_regions( $billing_country ) ) {
 						$output = '';
 					} else {
 						$disabled = '';
@@ -692,63 +724,65 @@ class wpsc_checkout {
 	 * @access public
 	 */
 	function validate_forms() {
-		global $wpdb, $current_user, $user_ID;
+		global $wpdb, $current_user, $user_ID, $wpsc_gateway_error_messages, $wpsc_checkout_error_messages, $wpsc_customer_checkout_details, $wpsc_registration_error_messages;
 		$any_bad_inputs = false;
 		$bad_input_message = '';
+		$wpsc_gateway_error_messages      = array();
+		$wpsc_checkout_error_messages     = array();
+		$wpsc_registration_error_messages = array();
 		// Credit Card Number Validation for PayPal Pro and maybe others soon
 		if ( isset( $_POST['card_number'] ) ) {
 			//should do some php CC validation here~
 		} else {
-			$_SESSION['wpsc_gateway_error_messages']['card_number'] = '';
+			$wpsc_gateway_error_messages['card_number'] = '';
 		}
 		if ( isset( $_POST['card_number1'] ) && isset( $_POST['card_number2'] ) && isset( $_POST['card_number3'] ) && isset( $_POST['card_number4'] ) ) {
 			if ( $_POST['card_number1'] != '' && $_POST['card_number2'] != '' && $_POST['card_number3'] != '' && $_POST['card_number4'] != '' && is_numeric( $_POST['card_number1'] ) && is_numeric( $_POST['card_number2'] ) && is_numeric( $_POST['card_number3'] ) && is_numeric( $_POST['card_number4'] ) ) {
-				$_SESSION['wpsc_gateway_error_messages']['card_number'] = '';
+				$wpsc_gateway_error_messages['card_number'] = '';
 			} else {
 
 				$any_bad_inputs = true;
 				$bad_input = true;
-				$_SESSION['wpsc_gateway_error_messages']['card_number'] = __( 'Please enter a valid card number.', 'wpsc' );
-				$_SESSION['wpsc_checkout_saved_values']['card_number'] = '';
+				$wpsc_gateway_error_messages['card_number'] = __( 'Please enter a valid card number.', 'wpsc' );
+				$wpsc_customer_checkout_details['card_number'] = '';
 			}
 		}
 		if ( isset( $_POST['expiry'] ) ) {
 			if ( !empty($_POST['expiry']['month']) && !empty($_POST['expiry']['month']) && is_numeric( $_POST['expiry']['month'] ) && is_numeric( $_POST['expiry']['year'] ) ) {
-				$_SESSION['wpsc_gateway_error_messages']['expdate'] = '';
+				$wpsc_gateway_error_messages['expdate'] = '';
 			} else {
 				$any_bad_inputs = true;
 				$bad_input = true;
-				$_SESSION['wpsc_gateway_error_messages']['expdate'] = __( 'Please enter a valid expiry date.', 'wpsc' );
-				$_SESSION['wpsc_checkout_saved_values']['expdate'] = '';
+				$wpsc_gateway_error_messages['expdate'] = __( 'Please enter a valid expiry date.', 'wpsc' );
+				$wpsc_customer_checkout_details['expdate'] = '';
 			}
 		}
 		if ( isset( $_POST['card_code'] ) ) {
 			if ( empty($_POST['card_code']) || (!is_numeric( $_POST['card_code'] )) ) {
 				$any_bad_inputs = true;
 				$bad_input = true;
-				$_SESSION['wpsc_gateway_error_messages']['card_code'] = __( 'Please enter a valid CVV.', 'wpsc' );
-				$_SESSION['wpsc_checkout_saved_values']['card_code'] = '';
+				$wpsc_gateway_error_messages['card_code'] = __( 'Please enter a valid CVV.', 'wpsc' );
+				$wpsc_customer_checkout_details['card_code'] = '';
 			} else {
-				$_SESSION['wpsc_gateway_error_messages']['card_code'] = '';
+				$wpsc_gateway_error_messages['card_code'] = '';
 			}
 		}
 		if ( isset( $_POST['cctype'] ) ) {
 			if ( $_POST['cctype'] == '' ) {
 				$any_bad_inputs = true;
 				$bad_input = true;
-				$_SESSION['wpsc_gateway_error_messages']['cctype'] = __( 'Please enter a valid CVV.', 'wpsc' );
-				$_SESSION['wpsc_checkout_saved_values']['cctype'] = '';
+				$wpsc_gateway_error_messages['cctype'] = __( 'Please enter a valid CVV.', 'wpsc' );
+				$wpsc_customer_checkout_details['cctype'] = '';
 			} else {
-				$_SESSION['wpsc_gateway_error_messages']['cctype'] = '';
+				$wpsc_gateway_error_messages['cctype'] = '';
 			}
 		}
 		if ( isset( $_POST['log'] ) || isset( $_POST['pwd'] ) || isset( $_POST['user_email'] ) ) {
 			$results = wpsc_add_new_user( $_POST['log'], $_POST['pwd'], $_POST['user_email'] );
-			$_SESSION['wpsc_checkout_user_error_messages'] = array( );
 			if ( is_callable( array( $results, "get_error_code" ) ) && $results->get_error_code() ) {
 				foreach ( $results->get_error_codes() as $code ) {
 					foreach ( $results->get_error_messages( $code ) as $error ) {
-						$_SESSION['wpsc_checkout_user_error_messages'][] = $error;
+						$wpsc_registration_error_messages[] = $error;
 					}
 
 					$any_bad_inputs = true;
@@ -768,6 +802,7 @@ class wpsc_checkout {
 		if ( isset( $our_user_id ) && $our_user_id > 0 ) {
 			$user_ID = $our_user_id;
 		}
+
 		//Basic Form field validation for billing and shipping details
 		foreach ( $this->checkout_items as $form_data ) {
 			$value = '';
@@ -775,7 +810,7 @@ class wpsc_checkout {
 			if( isset( $_POST['collected_data'][$form_data->id] ) )
 				$value = stripslashes_deep( $_POST['collected_data'][$form_data->id] );
 
-			$_SESSION['wpsc_checkout_saved_values'][$form_data->id] = $value;
+			$wpsc_customer_checkout_details[$form_data->id] = $value;
 			$bad_input = false;
 			if ( ($form_data->mandatory == 1) || ($form_data->type == "coupon") ) {
 				// dirty hack
@@ -810,11 +845,16 @@ class wpsc_checkout {
 						break;
 				}
 				if ( $bad_input === true ) {
-					$_SESSION['wpsc_checkout_error_messages'][$form_data->id] = sprintf(__( 'Please enter a valid <span class="wpsc_error_msg_field_name">%s</span>.', 'wpsc' ), esc_attr($form_data->name) );
-					$_SESSION['wpsc_checkout_saved_values'][$form_data->id] = '';
+					$wpsc_checkout_error_messages[$form_data->id] = sprintf(__( 'Please enter a valid <span class="wpsc_error_msg_field_name">%s</span>.', 'wpsc' ), esc_attr($form_data->name) );
+					$wpsc_customer_checkout_details[$form_data->id] = '';
 				}
 			}
 		}
+
+		wpsc_update_customer_meta( 'checkout_error_messages'     , $wpsc_checkout_error_messages     );
+		wpsc_update_customer_meta( 'gateway_error_messages'      , $wpsc_gateway_error_messages      );
+		wpsc_update_customer_meta( 'checkout_details'            , $wpsc_customer_checkout_details   );
+		wpsc_update_customer_meta( 'registration_error_messages' , $wpsc_registration_error_messages );
 
 		if ( ( $any_bad_inputs == false ) && ( $user_ID > 0 ) ) {
 			$meta_data = $_POST['collected_data'];
@@ -982,7 +1022,9 @@ class wpsc_checkout {
 	}
 
 	function rewind_checkout_items() {
-		$_SESSION['wpsc_checkout_error_messages'] = array( );
+		global $wpsc_checkout_error_messages;
+		$wpsc_checkout_error_messages = array();
+		wpsc_delete_customer_meta( 'checkout_error_messages' );
 		$this->current_checkout_item = -1;
 		if ( $this->checkout_item_count > 0 ) {
 			$this->checkout_item = $this->checkout_items[0];
@@ -1072,8 +1114,9 @@ function wpsc_gateway_internal_name() {
 function wpsc_gateway_is_checked() {
 	global $wpsc_gateway;
 	$is_checked = false;
-	if ( isset( $_SESSION['wpsc_previous_selected_gateway'] ) ) {
-		if ( $wpsc_gateway->gateway['internalname'] == $_SESSION['wpsc_previous_selected_gateway'] ) {
+	$selected_gateway = wpsc_get_customer_meta( 'selected_gateway' );
+	if ( $selected_gateway ) {
+		if ( $wpsc_gateway->gateway['internalname'] == $selected_gateway ) {
 			$is_checked = true;
 		}
 	} else {
@@ -1094,9 +1137,9 @@ function wpsc_gateway_cc_check() {
 }
 
 function wpsc_gateway_form_fields() {
-	global $wpsc_gateway, $gateway_checkout_form_fields;
+	global $wpsc_gateway, $gateway_checkout_form_fields, $wpsc_gateway_error_messages;
 
-	$messages = isset( $_SESSION['wpsc_gateway_error_messages'] ) ? $_SESSION['wpsc_gateway_error_messages'] : array();
+	$messages = is_array( $wpsc_gateway_error_messages ) ? $wpsc_gateway_error_messages : array();
 
 	$error = array(
 		'card_number' => empty( $messages['card_number'] ) ? '' : $messages['card_number'],
@@ -1148,8 +1191,9 @@ function wpsc_gateway_form_fields() {
 function wpsc_gateway_form_field_style() {
 	global $wpsc_gateway;
 	$is_checked = false;
-	if ( isset( $_SESSION['wpsc_previous_selected_gateway'] ) ) {
-		if ( $wpsc_gateway->gateway['internalname'] == $_SESSION['wpsc_previous_selected_gateway'] ) {
+	$selected_gateway = wpsc_get_customer_meta( 'selected_gateway' );
+	if ( $selected_gateway ) {
+		if ( $wpsc_gateway->gateway['internalname'] == $selected_gateway ) {
 			$is_checked = true;
 		}
 	} else {

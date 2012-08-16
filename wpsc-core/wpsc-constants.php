@@ -8,13 +8,18 @@ $wpsc_title_data    = array();
  * wpsc_core_load_session()
  *
  * Load up the WPEC session
+ *
+ * Pending Gary's feedback, I think we can actually get rid of this.
  */
 function wpsc_core_load_session() {
-	if ( !isset( $_SESSION ) )
+
+	if ( ! isset( $_SESSION ) )
 		$_SESSION = null;
 
-	if ( ( !is_array( $_SESSION ) ) xor ( !isset( $_SESSION['nzshpcrt_cart'] ) ) xor ( !$_SESSION ) )
+	if ( ( !is_array( $_SESSION ) ) xor ( ! isset( $_SESSION['nzshpcrt_cart'] ) ) xor ( !$_SESSION ) )
 		session_start();
+
+	return;
 }
 
 /**
@@ -46,6 +51,13 @@ function wpsc_core_constants() {
 	// Require loading of deprecated functions for now. We will ween WPEC off
 	// of this in future versions.
 	define( 'WPEC_LOAD_DEPRECATED', true );
+
+	define( 'WPSC_CUSTOMER_COOKIE', 'wpsc_customer_cookie_' . COOKIEHASH );
+	if ( ! defined( 'WPSC_CUSTOMER_COOKIE_PATH' ) )
+		define( 'WPSC_CUSTOMER_COOKIE_PATH', COOKIEPATH );
+
+	if ( ! defined( 'WPSC_CUSTOMER_DATA_EXPIRATION' ) )
+    	define( 'WPSC_CUSTOMER_DATA_EXPIRATION', 48 * 3600 );
 }
 
 /**
@@ -266,22 +278,18 @@ function wpsc_core_constants_uploads() {
  * Setup the cart
  */
 function wpsc_core_setup_cart() {
-	global $wpsc_cart;
-
 	if ( 2 == get_option( 'cart_location' ) )
 		add_filter( 'the_content', 'wpsc_shopping_cart', 14 );
 
-	// Cart exists in Session, so attempt to unserialize it
-	if ( isset( $_SESSION['wpsc_cart'] ) ) {
-		$wpsc_cart = maybe_unserialize( $_SESSION['wpsc_cart'] );
-		if ( !is_object( $wpsc_cart ) || ( 'wpsc_cart' != get_class( $wpsc_cart ) ) )
-			$wpsc_cart = new wpsc_cart;
+	$customer_id = wpsc_get_current_customer_id();
+	if ( $customer_id ) {
+		$GLOBALS['wpsc_cart'] = maybe_unserialize( get_transient( "wpsc_cart_{$customer_id}" ) );
 
-	// Cart doesn't exist in session, so create one
+		if ( ! is_object( $GLOBALS['wpsc_cart'] ) )
+			$GLOBALS['wpsc_cart'] = new wpsc_cart();
 	} else {
-		$wpsc_cart = new wpsc_cart;
+		$GLOBALS['wpsc_cart'] = new wpsc_cart();
 	}
-
 }
 
 /***

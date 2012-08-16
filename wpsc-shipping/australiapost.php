@@ -126,14 +126,12 @@ class australiapost {
 
 		if ($this->base_country != 'AU' || strlen($this->base_zipcode) != 4 || !count($wpsc_cart->cart_items)) return;
 
-		$dest = $_SESSION['wpsc_delivery_country'];
+		$dest = wpsc_get_customer_meta( 'shipping_country' );
 
-		$destzipcode = '';
-		if(isset($_POST['zipcode'])) {
+		$destzipcode = (string) wpsc_get_customer_meta( 'shipping_zip' );
+		if( isset($_POST['zipcode'] ) ) {
 			$destzipcode = $_POST['zipcode'];
-			$_SESSION['wpsc_zipcode'] = $_POST['zipcode'];
-		} else if(isset($_SESSION['wpsc_zipcode'])) {
-			$destzipcode = $_SESSION['wpsc_zipcode'];
+			wpsc_update_customer_meta( 'shipping_zip', $destzipcode );
 		}
 
 		if ($dest == 'AU' && strlen($destzipcode) != 4) {

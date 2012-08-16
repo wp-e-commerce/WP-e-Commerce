@@ -3,6 +3,8 @@
 function wpsc_shopping_cart( $input = null, $override_state = null ) {
 	global $wpdb;
 
+	$nzshpcrt_cart = wpsc_get_customer_meta( 'nzshpcart' );
+	
 	if ( is_numeric( $override_state ) )
 		$state = $override_state;
 	else
@@ -17,7 +19,7 @@ function wpsc_shopping_cart( $input = null, $override_state = null ) {
 			}
 			$fancy_collapser = "<a href='#' onclick='return shopping_cart_collapser()' id='fancy_collapser_link'><img src='" . WPSC_CORE_IMAGES_URL . "/$collapser_image' title='' alt='' id='fancy_collapser' /></a>";
 		} else {
-			if ( isset( $_SESSION['nzshpcrt_cart'] ) ) {
+			if ( $nzshpcrt_cart ) {
 				$collapser_image = 'minus.png';
 			} else {
 				$collapser_image = 'plus.png';
@@ -30,14 +32,14 @@ function wpsc_shopping_cart( $input = null, $override_state = null ) {
 
 	if ( $state == 1 ) {
 		if ( $input != '' ) {
-			$cart = $_SESSION['nzshpcrt_cart'];
+			$cart = $nzshpcrt_cart;
 			echo "<div id='sideshoppingcart'><div id='shoppingcartcontents'>";
 			echo wpsc_shopping_basket_internals( $cart );
 			echo "</div></div>";
 		}
 	} else if ( ($state == 3) || ($state == 4) ) {
-		if ( isset( $_SESSION['nzshpcrt_cart'] ) ) {
-			$cart = $_SESSION['nzshpcrt_cart'];
+		if ( $nzshpcrt_cart ) {
+			$cart = $nzshpcrt_cart;
 		}
 		if ( $state == 4 ) {
 			echo "<div id='widgetshoppingcart'>";
@@ -62,8 +64,8 @@ function wpsc_shopping_cart( $input = null, $override_state = null ) {
 
 			$cart = $GLOBALS['nzshpcrt_activateshpcrt'];
 
-			if ( isset( $_SESSION['nzshpcrt_cart'] ) ) {
-				$cart = $_SESSION['nzshpcrt_cart'];
+			if ( $nzshpcrt_cart ) {
+				$cart = $nzshpcrt_cart;
 			}
 			echo "<div id='shoppingcart'>";
 			echo "<h3>" . __( 'Shopping Cart', 'wpsc' ) . "$fancy_collapser</h3>";

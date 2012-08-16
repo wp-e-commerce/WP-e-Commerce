@@ -375,9 +375,9 @@ function wpsc_google_checkout(){
 }
 function wpsc_empty_google_logs(){
    global $wpdb;
-   $sql = $wpdb->prepare( "DELETE FROM  `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `sessionid` = '%s'", $_SESSION['wpsc_sessionid'] );
+   $sql = $wpdb->prepare( "DELETE FROM  `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `sessionid` = '%s'", wpsc_get_customer_meta( 'checkout_session_id' ) );
    $wpdb->query( $sql );
-   unset( $_SESSION['wpsc_sessionid'] );
+   wpsc_delete_customer_meta( 'checkout_session_id' );
 
 }
 /**
@@ -611,27 +611,31 @@ class wpsc_cart {
    */
    function update_location() {
 
-      if(!isset($_SESSION['wpsc_selected_country']) && !isset($_SESSION['wpsc_delivery_country'])) {
-      	$_SESSION['wpsc_delivery_country'] = get_option('base_country');
-	    $_SESSION['wpsc_selected_country'] = get_option('base_country');
+      $delivery_country = wpsc_get_customer_meta( 'shipping_country' );
+      $billing_country  = wpsc_get_customer_meta( 'billing_country'  );
+      $delivery_region  = wpsc_get_customer_meta( 'shipping_region'  );
+      $billing_region   = wpsc_get_customer_meta( 'billing_region'   );
 
-      } else {
-         if(!isset($_SESSION['wpsc_selected_country'])) {
-            $_SESSION['wpsc_selected_country'] = $_SESSION['wpsc_delivery_country'];
-         } else if(!isset($_SESSION['wpsc_delivery_country'])) {
-            $_SESSION['wpsc_delivery_country'] = $_SESSION['wpsc_selected_country'];
-         }
+      if( ! $billing_country && ! $delivery_country )
+         $billing_country = $delivery_country = get_option( 'base_country' );
+      elseif ( ! $billing_country )
+         $billing_country = $delivery_country;
+      elseif ( ! $delivery_country )
+         $delivery_country = $billing_country;
+
+      if( ! $billing_region && ! $delivery_region ) {
+         $billing_region = $delivery_region = get_option('base_region');
       }
 
-      if(!isset($_SESSION['wpsc_selected_region']) && !isset($_SESSION['wpsc_delivery_region'])) {
-         $_SESSION['wpsc_selected_region'] = get_option('base_region');
-         $_SESSION['wpsc_delivery_region'] = get_option('base_region');
-      }
+      wpsc_update_customer_meta( 'shipping_country', $delivery_country );
+      wpsc_update_customer_meta( 'billing_country' , $billing_country  );
+      wpsc_update_customer_meta( 'delivery_region' , $delivery_region  );
+      wpsc_update_customer_meta( 'billing_region'  , $billing_region   );
 
-      $this->delivery_country =& $_SESSION['wpsc_delivery_country'];
-      $this->selected_country =& $_SESSION['wpsc_selected_country'];
-      $this->delivery_region =& $_SESSION['wpsc_delivery_region'];
-      $this->selected_region =& $_SESSION['wpsc_selected_region'];
+      $this->delivery_country = $delivery_country;
+      $this->selected_country = $billing_country ;
+      $this->delivery_region  = $delivery_region ;
+      $this->selected_region  = $billing_region;
 
       //adding refresh item
       $this->wpsc_refresh_cart_items();
