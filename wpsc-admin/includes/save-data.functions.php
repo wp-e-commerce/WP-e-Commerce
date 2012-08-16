@@ -92,10 +92,9 @@ function wpsc_custom_category_column_data( $string, $column_name, $term_id ) {
   $name = $name->name;
 
   if( !empty( $image ) )
-      $image = "<img src=\"".WPSC_CATEGORY_URL.stripslashes( $image )."\" title='".$name."' alt='".$name."' width='30' height='30' />";
+      $image = "<img src=\"".WPSC_CATEGORY_URL . $image . "\" title='" . esc_attr( $name ) . "' alt='" . esc_attr( $name ) . "' width='30' height='30' />";
    else
-      $image = "<img src='".WPSC_CORE_IMAGES_URL."/no-image-uploaded.gif' title='".$name."' alt='".$name."' width='30' height='30' />";
-
+      $image = "<img src='" . WPSC_CORE_IMAGES_URL . "/no-image-uploaded.gif' title='" . esc_attr( $name ) . "' alt='" . esc_attr( $name ) . "' width='30' height='30' />";
 
     return $image;
 
@@ -253,7 +252,7 @@ function wpsc_admin_category_forms_add() {
 							if($used_additonal_form_set == $key)
 								$selected_state = "selected='selected'";
 							 ?>
-								<option <?php echo $selected_state; ?> value='<?php echo $key; ?>'><?php echo esc_html_e( stripslashes( $value ) ); ?></option>
+								<option <?php echo $selected_state; ?> value='<?php echo $key; ?>'><?php echo esc_html( $value ); ?></option>
 							<?php
 							}
 							?>
@@ -454,7 +453,7 @@ function wpsc_admin_category_forms_edit() {
                             if( $used_additonal_form_set == $key )
                                 $selected_state = "selected='selected'";
                      ?>
-                    <option <?php echo $selected_state; ?> value='<?php echo esc_attr( $key ); ?>'><?php echo esc_html( stripslashes( $value ) ); ?></option>
+                    <option <?php echo $selected_state; ?> value='<?php echo $key; ?>'><?php echo esc_html( $value ); ?></option>
                     <?php
                         }
                     ?>
@@ -540,11 +539,10 @@ function wpsc_save_category_set($category_id, $tt_id) {
 			wpsc_update_categorymeta($category_id, 'display_type',esc_sql(stripslashes($_POST['display_type'])));
 
 		if ( isset( $_POST['image_height'] ) )
-			wpsc_update_categorymeta($category_id, 'image_height', esc_sql(stripslashes($_POST['image_height'])));
+			wpsc_update_categorymeta( $category_id, 'image_height', absint( $_POST['image_height'] ) );
 
 		if ( isset( $_POST['image_width'] ) )
-			wpsc_update_categorymeta($category_id, 'image_width', esc_sql(stripslashes($_POST['image_width'])));
-
+			wpsc_update_categorymeta( $category_id, 'image_width', absint($_POST['image_width'] ) );
 
 		if ( ! empty( $_POST['use_additional_form_set'] ) ) {
 			wpsc_update_categorymeta($category_id, 'use_additional_form_set', $_POST['use_additional_form_set']);

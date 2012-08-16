@@ -637,6 +637,7 @@ final class WPSC_Settings_Page
 
 		//To update options
 		if ( isset( $_POST['wpsc_options'] ) ) {
+			$_POST['wpsc_options'] = stripslashes_deep( $_POST['wpsc_options'] );
 			// make sure stock keeping time is a number
 			if ( isset( $_POST['wpsc_options']['wpsc_stock_keeping_time'] ) ) {
 				$skt =& $_POST['wpsc_options']['wpsc_stock_keeping_time']; // I hate repeating myself
@@ -667,7 +668,7 @@ final class WPSC_Settings_Page
 
 						$option_name = $wpsc_gateways[$selected_gateway]['supported_currencies']['option_name'];
 
-						if ( !in_array( $option_name, $already_changed ) ) {
+						if ( ! in_array( $option_name, $already_changed ) ) {
 							update_option( $option_name, $currency_code );
 							$already_changed[] = $option_name;
 						}
@@ -680,7 +681,6 @@ final class WPSC_Settings_Page
 			if ( is_object( $shipping ) )
 				$shipping->submit_form();
 		}
-
 
 		//This is for submitting shipping details to the shipping module
 		if ( !isset( $_POST['update_gateways'] ) )

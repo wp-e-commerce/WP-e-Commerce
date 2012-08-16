@@ -97,13 +97,36 @@ function wpsc_add_new_user( $user_login, $user_pass, $user_email ) {
 	//wp_new_user_notification($user_id, $user_pass);
 }
 
+/**
+ * WPSC product has variations function
+ * @since 3.7
+ * @param int product id
+ * @return bool true or false
+ */
+function wpsc_product_has_variations( $product_id ) {
+	_deprecated_function( __FUNCTION__, '3.8', 'wpsc_have_variations()' );
+	global $wpdb;
+	if ( $product_id > 0 ) {
+		$variation_count = $wpdb->get_var( "SELECT COUNT(`id`) FROM `" . WPSC_TABLE_VARIATION_ASSOC . "` WHERE `type` IN('product') AND `associated_id` IN('{$product_id}')" );
+		if ( $variation_count > 0 ) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
+ * Deprecated function
+ *
+ * @deprecated 3.8.9
+ */
 function wpsc_post_title_seo( $title ) {
 	global $wpdb, $page_id, $wp_query;
 	$new_title = wpsc_obtain_the_title();
 	if ( $new_title != '' ) {
 		$title = $new_title;
 	}
-	return stripslashes( $title );
+	return esc_html( $title );
 }
 
 //add_filter( 'single_post_title', 'wpsc_post_title_seo' );
@@ -770,3 +793,16 @@ function wpsc_get_extension( $str ) {
 	return end( $parts );
 
 }
+
+/**
+ * Destroys checkout field values on logout.
+ */
+
+function wpsc_kill_user_session() {
+	unset( $_SESSION['wpsc_checkout_saved_values'] );
+}
+
+add_action( 'wp_logout', 'wpsc_kill_user_session' );
+
+?>
+>>>>>>> Fix: Improper escaping of user input. Props Justin Sainton for initial patch.

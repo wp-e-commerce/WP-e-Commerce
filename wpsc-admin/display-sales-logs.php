@@ -138,15 +138,15 @@ class WPSC_Purchase_Log_Page
                <h3 class='hndle'><?php esc_html_e( 'Additional Checkout Fields' , 'wpsc' ); ?></h3>
                <div class='inside'>
                   <?php
-                  foreach( (array) $purchlogitem->customcheckoutfields as $key => $value ) {
-                     $value['value'] = maybe_unserialize ($value['value'] );
-                     if( is_array( $value['value'] ) ) {
+                  foreach( (array) $purchlogitem->customcheckoutfields as $key => $value ){
+                     $value['value'] = maybe_unserialize($value['value']);
+                     if(is_array($value['value'])){
                      ?>
-                        <p><strong><?php echo $key; ?> :</strong> <?php echo implode( stripslashes( $value['value'] ), ',' ); ?></p>
+                        <p><strong><?php echo $key; ?> :</strong> <?php echo implode( $value['value'], ','); ?></p>
                      <?php
                      }else{
                      ?>
-                        <p><strong><?php echo $key; ?> :</strong> <?php echo stripslashes( $value['value'] ); ?></p>
+                        <p><strong><?php echo $key; ?> :</strong> <?php echo $value['value']; ?></p>
                      <?php
                      }
                   }

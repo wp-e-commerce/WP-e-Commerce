@@ -151,17 +151,17 @@ function wpsc_display_form_fields() {
 		if ( !empty( $form_field['unique_name'] ) ) {
 			$ff_tag = $form_field['unique_name'];
 		} else {
-			$ff_tag = htmlentities( stripslashes( strtolower( str_replace( ' ', '-', $form_field['name'] ) ) ), ENT_QUOTES, 'UTF-8' );
+			$ff_tag = esc_html( strtolower( str_replace( ' ', '-', $form_field['name'] ) ) );
 		}
 
 		if(!empty($meta_data[$form_field['id']]) && !is_array($meta_data[$form_field['id']]))
-			$meta_data[$form_field['id']] = htmlentities( stripslashes( $meta_data[$form_field['id']] ), ENT_QUOTES, 'UTF-8' );
+			$meta_data[$form_field['id']] = esc_html( $meta_data[$form_field['id']] );
 
 		if ( $form_field['type'] == 'heading' ) {
 			echo "
     <tr>
       <td colspan='2'>\n\r";
-			echo "<strong>" . apply_filters( 'wpsc_account_form_field_' . $ff_tag, $form_field['name'] ) . "</strong>";
+			echo "<strong>" . apply_filters( 'wpsc_account_form_field_' . $ff_tag, esc_html( $form_field['name'] ) ) . "</strong>";
 			echo "
       </td>
     </tr>\n\r";
@@ -192,7 +192,7 @@ function wpsc_display_form_fields() {
 				echo "
 			      <tr>
 	    		    <td align='left'>\n\r";
-						echo apply_filters( 'wpsc_account_form_field_' . $ff_tag, $form_field['name'] );
+						echo apply_filters( 'wpsc_account_form_field_' . $ff_tag, esc_html( $form_field['name'] ) );
 						if ( $form_field['mandatory'] == 1 )
 						echo " *";
 						echo "
@@ -635,7 +635,7 @@ function wpsc_user_details() {
 				foreach ( (array)$formfields as $form_field ) {
 					// If its a heading display the Name otherwise continue on
 					if( 'heading' == $form_field['type'] ){
-						echo "  <tr><td colspan='2'>" . $form_field['name'] . ":</td></tr>";
+						echo "  <tr><td colspan='2'>" . esc_html( $form_field['name'] ) . ":</td></tr>";
 						continue;
 					}
 
@@ -648,7 +648,7 @@ function wpsc_user_details() {
 							 else
 							 	$country = $form_field['value'];
 
-							 echo "  <tr><td>" . $form_field['name'] . ":</td><td>".$country ."</td></tr>";
+							 echo "  <tr><td>" . esc_html( $form_field['name'] ) . ":</td><td>" . esc_html( $country ) . "</td></tr>";
 							break;
 
 						case 'billingstate':
@@ -658,11 +658,11 @@ function wpsc_user_details() {
  	   						else
  	            				$state = $form_field['value'];
 
- 	            			 echo "  <tr><td>" . $form_field['name'] . ":</td><td>".$state ."</td></tr>";
+ 	            			 echo "  <tr><td>" . esc_html( $form_field['name'] ) . ":</td><td>" . esc_html( $state ) . "</td></tr>";
 							break;
 
 						default:
-							echo "  <tr><td>" . $form_field['name'] . ":</td><td>" . esc_html( $form_field['value'] ) . "</td></tr>";
+							echo "  <tr><td>" . esc_html( $form_field['name'] ) . ":</td><td>" . esc_html( $form_field['value'] ) . "</td></tr>";
 
 					}
 				}

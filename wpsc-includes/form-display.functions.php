@@ -94,7 +94,7 @@ function wpsc_category_options( $group_id, $this_category = null, $category_id =
 				$selected = "selected='selected'";
 			}
 
-			$output .= "<option $selected value='" . $option->term_id . "'>" . str_repeat( "-", $iteration ) . stripslashes( $option->name ) . "</option>\r\n";
+			$output .= "<option $selected value='" . $option->term_id . "'>" . str_repeat( "-", $iteration ) . esc_html( $option->name ) . "</option>\r\n";
 			$output .= wpsc_category_options( $option->term_id, $this_category, $option->term_id, $iteration + 1, $selected_id );
 			$selected = "";
 		}

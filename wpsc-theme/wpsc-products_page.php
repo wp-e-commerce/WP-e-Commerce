@@ -70,19 +70,19 @@ $image_width = get_option('product_image_width');
 							<?php if(get_option('hide_name_link') == 1) : ?>
 								<?php echo wpsc_the_product_title(); ?>
 							<?php else: ?>
-								<a class="wpsc_product_title" href="<?php echo wpsc_the_product_permalink(); ?>"><?php echo wpsc_the_product_title(); ?></a>
+								<a class="wpsc_product_title" href="<?php echo esc_url( wpsc_the_product_permalink() ); ?>"><?php echo wpsc_the_product_title(); ?></a>
 							<?php endif; ?>
 						</h2>
 				<?php if(wpsc_show_thumbnails()) :?>
 					<div class="imagecol" style="width:<?php echo $image_width; ?>;" id="imagecol_<?php echo wpsc_the_product_id(); ?>">
 						<?php if(wpsc_the_product_thumbnail()) :
 						?>
-							<a rel="<?php echo wpsc_the_product_title(); ?>" class="<?php echo wpsc_the_product_image_link_classes(); ?>" href="<?php echo wpsc_the_product_image(); ?>">
+							<a rel="<?php echo wpsc_the_product_title(); ?>" class="<?php echo wpsc_the_product_image_link_classes(); ?>" href="<?php echo esc_url( wpsc_the_product_image() ); ?>">
 								<img class="product_image" id="product_image_<?php echo wpsc_the_product_id(); ?>" alt="<?php echo wpsc_the_product_title(); ?>" title="<?php echo wpsc_the_product_title(); ?>" src="<?php echo wpsc_the_product_thumbnail(); ?>"/>
 
 							</a>
 						<?php else: ?>
-								<a href="<?php echo wpsc_the_product_permalink(); ?>">
+								<a href="<?php echo esc_url( wpsc_the_product_permalink() ); ?>">
 								<img class="no-image" id="product_image_<?php echo wpsc_the_product_id(); ?>" alt="<?php esc_attr_e( 'No Image', 'wpsc' ); ?>" title="<?php echo wpsc_the_product_title(); ?>" src="<?php echo WPSC_CORE_THEME_URL; ?>wpsc-images/noimage.png" width="<?php echo get_option('product_image_width'); ?>" height="<?php echo get_option('product_image_height'); ?>" />
 								</a>
 						<?php endif; ?>
@@ -109,8 +109,7 @@ $image_width = get_option('product_image_width');
 
 						<?php if(wpsc_the_product_additional_description()) : ?>
 						<div class="additional_description_container">
-
-								<img class="additional_description_button"  src="<?php echo WPSC_CORE_THEME_URL; ?>wpsc-images/icon_window_expand.gif" alt="<?php esc_attr_e( 'Additional Description', 'wpsc' ); ?>" /><a href="<?php echo wpsc_the_product_permalink(); ?>" class="additional_description_link"><?php _e('More Details', 'wpsc'); ?>
+								<img class="additional_description_button"  src="<?php echo WPSC_CORE_THEME_URL; ?>wpsc-images/icon_window_expand.gif" alt="<?php esc_html_e( 'Additional Description', 'wpsc' ); ?>" /><a href="<?php echo esc_url( wpsc_the_product_permalink() ); ?>" class="additional_description_link"><?php esc_html_e('More Details', 'wpsc'); ?>
 							</a>
 							<div class="additional_description">
 								<p><?php echo wpsc_the_product_additional_description(); ?></p>
@@ -121,9 +120,9 @@ $image_width = get_option('product_image_width');
 						<?php if(wpsc_product_external_link(wpsc_the_product_id()) != '') : ?>
 							<?php $action =  wpsc_product_external_link(wpsc_the_product_id()); ?>
 						<?php else: ?>
-						<?php $action = htmlentities(wpsc_this_page_url(), ENT_QUOTES, 'UTF-8' ); ?>
+						<?php $action = wpsc_this_page_url(); ?>
 						<?php endif; ?>
-						<form class="product_form"  enctype="multipart/form-data" action="<?php echo $action; ?>" method="post" name="product_<?php echo wpsc_the_product_id(); ?>" id="product_<?php echo wpsc_the_product_id(); ?>" >
+						<form class="product_form"  enctype="multipart/form-data" action="<?php echo esc_url( $action ); ?>" method="post" name="product_<?php echo wpsc_the_product_id(); ?>" id="product_<?php echo wpsc_the_product_id(); ?>" >
 						<?php do_action ( 'wpsc_product_form_fields_begin' ); ?>
 						<?php /** the variation group HTML and loop */?>
                         <?php if (wpsc_have_variation_groups()) { ?>
@@ -196,7 +195,7 @@ $image_width = get_option('product_image_width');
 										</div><!--close wpsc_loading_animation-->
 											<?php if(wpsc_product_external_link(wpsc_the_product_id()) != '') : ?>
 											<?php $action = wpsc_product_external_link( wpsc_the_product_id() ); ?>
-											<input class="wpsc_buy_button" type="submit" value="<?php echo wpsc_product_external_link_text( wpsc_the_product_id(), __( 'Buy Now', 'wpsc' ) ); ?>" onclick="return gotoexternallink('<?php echo $action; ?>', '<?php echo wpsc_product_external_link_target( wpsc_the_product_id() ); ?>')">
+											<input class="wpsc_buy_button" type="submit" value="<?php echo wpsc_product_external_link_text( wpsc_the_product_id(), __( 'Buy Now', 'wpsc' ) ); ?>" onclick="return gotoexternallink('<?php echo esc_url( $action ); ?>', '<?php echo wpsc_product_external_link_target( wpsc_the_product_id() ); ?>')">
 											<?php else: ?>
 										<input type="submit" value="<?php _e('Add To Cart', 'wpsc'); ?>" name="Buy" class="wpsc_buy_button" id="product_<?php echo wpsc_the_product_id(); ?>_submit_button"/>
 											<?php endif; ?>

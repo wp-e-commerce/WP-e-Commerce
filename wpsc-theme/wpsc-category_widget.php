@@ -8,7 +8,7 @@
 	
 	if ( $grid ) : ?>
 
-		<a href="<?php echo $link; ?>" style="padding: 4px 4px 0 0; width:<?php echo $width; ?>px; height:<?php echo $height; ?>px;" title="<?php echo $curr_cat['name']; ?>" class="wpsc_category_grid_item">
+		<a href="<?php echo esc_url( $link ); ?>" style="padding: 4px 4px 0 0; width:<?php echo $width; ?>px; height:<?php echo $height; ?>px;" title="<?php echo $curr_cat['name']; ?>" class="wpsc_category_grid_item">
 			<?php wpsc_parent_category_image( $show_thumbnails, $category_image , $width, $height, true ,$show_name); ?>
 		</a>
 
@@ -27,11 +27,11 @@
 			<ul class="wpsc_categories wpsc_top_level_categories">
 				<li class="wpsc_category_<?php echo $curr_cat['term_id']; wpsc_print_category_classes($curr_cat);  ?>">
 					<?php if(! ($category_image == WPSC_CATEGORY_URL) ){ ?>
-						<a href="<?php echo $link; ?>" class="wpsc_category_image_link"><?php 
+						<a href="<?php echo esc_url( $link ); ?>" class="wpsc_category_image_link"><?php 
 						wpsc_parent_category_image( $show_thumbnails, $category_image , $width, $height, false, $show_name ); ?></a>
 					<?php } ?>
 					
-					<a href="<?php echo $link; ?>"><?php echo esc_html( $curr_cat['name'] ); ?></a>
+					<a href="<?php echo esc_url( $link ); ?>"><?php echo esc_html( $curr_cat['name'] ); ?></a>
 
 					<ul class="wpsc_categories wpsc_second_level_categories">
 

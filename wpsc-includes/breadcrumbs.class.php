@@ -167,8 +167,8 @@ class wpsc_breadcrumbs {
 
 		if(!empty($query_data['product']) && !empty($wp_query->post)) {
 			$this->breadcrumbs[] = array(
-				'name' => htmlentities($wp_query->post->post_title, ENT_QUOTES, 'UTF-8'),
-				'url' => '',
+				'name' => esc_html( $wp_query->post->post_title ),
+				'url'  => '',
 				'slug' => $query_data['product']
 			);
 		}
@@ -188,8 +188,8 @@ class wpsc_breadcrumbs {
 
 		if( $term_data != false) {
 			$this->breadcrumbs[] = array(
-				'name' => htmlentities( $term_data->name, ENT_QUOTES, 'UTF-8'),
-				'url' => get_term_link( $term_data->slug, 'wpsc_product_category'),
+				'name' => esc_html( $term_data->name ),
+				'url'  => get_term_link( $term_data->slug, 'wpsc_product_category'),
 				'slug' => $term_data->slug
 			);
 
@@ -198,8 +198,8 @@ class wpsc_breadcrumbs {
 			while(($term_data->parent > 0) && ($i <= 20)) {
 				$term_data = get_term($term_data->parent, 'wpsc_product_category');
 				$this->breadcrumbs[] = array(
-					'name' => htmlentities( $term_data->name, ENT_QUOTES, 'UTF-8'),
-					'url' => get_term_link( $term_data->slug, 'wpsc_product_category')
+					'name' => esc_html( $term_data->name ),
+					'url'  => get_term_link( $term_data->slug, 'wpsc_product_category')
 				);
 				$i++;
 			}

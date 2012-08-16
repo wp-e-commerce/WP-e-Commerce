@@ -29,7 +29,7 @@
 		while ( wpsc_have_products() ) : wpsc_the_product(); ?>
 					<div class="imagecol">
 						<?php if ( wpsc_the_product_thumbnail() ) : ?>
-								<a rel="<?php echo wpsc_the_product_title(); ?>" class="<?php echo wpsc_the_product_image_link_classes(); ?>" href="<?php echo wpsc_the_product_image(); ?>">
+								<a rel="<?php echo wpsc_the_product_title(); ?>" class="<?php echo wpsc_the_product_image_link_classes(); ?>" href="<?php echo esc_url( wpsc_the_product_image() ); ?>">
 									<img class="product_image" id="product_image_<?php echo wpsc_the_product_id(); ?>" alt="<?php echo wpsc_the_product_title(); ?>" title="<?php echo wpsc_the_product_title(); ?>" src="<?php echo wpsc_the_product_thumbnail(get_option('product_image_width'),get_option('product_image_height'),'','single'); ?>"/>
 								</a>
 								<?php
@@ -37,7 +37,7 @@
 									echo gold_shpcrt_display_gallery( wpsc_the_product_id() );
 								?>
 						<?php else: ?>
-									<a href="<?php echo wpsc_the_product_permalink(); ?>">
+									<a href="<?php echo esc_url( wpsc_the_product_permalink() ); ?>">
 									<img class="no-image" id="product_image_<?php echo wpsc_the_product_id(); ?>" alt="No Image" title="<?php echo wpsc_the_product_title(); ?>" src="<?php echo WPSC_CORE_THEME_URL; ?>wpsc-images/noimage.png" width="<?php echo get_option('product_image_width'); ?>" height="<?php echo get_option('product_image_height'); ?>" />
 									</a>
 						<?php endif; ?>
@@ -73,8 +73,7 @@
 						 * Form data
 						 */
 						?>
-
-						<form class="product_form" enctype="multipart/form-data" action="<?php echo wpsc_this_page_url(); ?>" method="post" name="1" id="product_<?php echo wpsc_the_product_id(); ?>">
+						<form class="product_form" enctype="multipart/form-data" action="<?php echo esc_url( wpsc_this_page_url() ); ?>" method="post" name="1" id="product_<?php echo wpsc_the_product_id(); ?>">
 							<?php do_action ( 'wpsc_product_form_fields_begin' ); ?>
 							<?php if ( wpsc_product_has_personal_text() ) : ?>
 								<fieldset class="custom_text">
@@ -170,7 +169,7 @@
 									<div class="wpsc_buy_button_container">
 											<?php if(wpsc_product_external_link(wpsc_the_product_id()) != '') : ?>
 											<?php $action = wpsc_product_external_link( wpsc_the_product_id() ); ?>
-											<input class="wpsc_buy_button" type="submit" value="<?php echo wpsc_product_external_link_text( wpsc_the_product_id(), __( 'Buy Now', 'wpsc' ) ); ?>" onclick="return gotoexternallink('<?php echo $action; ?>', '<?php echo wpsc_product_external_link_target( wpsc_the_product_id() ); ?>')">
+											<input class="wpsc_buy_button" type="submit" value="<?php echo wpsc_product_external_link_text( wpsc_the_product_id(), __( 'Buy Now', 'wpsc' ) ); ?>" onclick="return gotoexternallink('<?php echo esc_url( $action ); ?>', '<?php echo wpsc_product_external_link_target( wpsc_the_product_id() ); ?>')">
 											<?php else: ?>
 										<input type="submit" value="<?php _e('Add To Cart', 'wpsc'); ?>" name="Buy" class="wpsc_buy_button" id="product_<?php echo wpsc_the_product_id(); ?>_submit_button"/>
 											<?php endif; ?>
@@ -200,8 +199,7 @@
 	                        </div><!--close FB_like-->
                         <?php endif; ?>
 					</div><!--close productcol-->
-
-					<form onsubmit="submitform(this);return false;" action="<?php echo wpsc_this_page_url(); ?>" method="post" name="product_<?php echo wpsc_the_product_id(); ?>" id="product_extra_<?php echo wpsc_the_product_id(); ?>">
+					<form onsubmit="submitform(this);return false;" action="<?php echo esc_url( wpsc_this_page_url() ); ?>" method="post" name="product_<?php echo wpsc_the_product_id(); ?>" id="product_extra_<?php echo wpsc_the_product_id(); ?>">
 						<input type="hidden" value="<?php echo wpsc_the_product_id(); ?>" name="prodid"/>
 						<input type="hidden" value="<?php echo wpsc_the_product_id(); ?>" name="item"/>
 					</form>

@@ -371,7 +371,7 @@ function wpsc_purchlogs_update_notes( $purchlog_id = '', $purchlog_notes = '' ) 
 	if ( wp_verify_nonce( $_POST['wpsc_purchlogs_update_notes_nonce'], 'wpsc_purchlogs_update_notes' ) ) {
 		if ( ($purchlog_id == '') && ($purchlog_notes == '') ) {
 			$purchlog_id = absint( $_POST['purchlog_id'] );
-			$purchlog_notes = $wpdb->escape( $_POST['purchlog_notes'] );
+			$purchlog_notes = stripslashes( $_POST['purchlog_notes'] );
 		}
 		$wpdb->update(
 			    WPSC_TABLE_PURCHASE_LOGS,

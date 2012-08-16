@@ -284,15 +284,14 @@ function wpsc_packing_slip( $purchase_id ) {
 						if(is_numeric($purch_data['billing_region']) && ($delivery_region_count > 0))
 							echo "	<tr><td>".esc_html__('State', 'wpsc').":</td><td>".wpsc_get_region($purch_data['billing_region'])."</td></tr>\n\r";
 
-						 echo "	<tr><td>".wp_kses($form_field['name'], array() ).":</td><td>".htmlentities(stripslashes($rekeyed_input[$form_field['id']]['value']), ENT_QUOTES, 'UTF-8')."</td></tr>\n\r";
+						 echo "	<tr><td>" . esc_html( $form_field['name'] ) . ":</td><td>" . esc_html(  $rekeyed_input[$form_field['id']]['value'] ) . "</td></tr>\n\r";
 					break;
 
 					case 'delivery_country':
-
 						if(is_numeric($purch_data['shipping_region']) && ($delivery_region_count > 0))
 							echo "	<tr><td>".esc_html__('State', 'wpsc').":</td><td>".wpsc_get_region($purch_data['shipping_region'])."</td></tr>\n\r";
 
-						 echo "	<tr><td>".wp_kses($form_field['name'], array() ).":</td><td>".htmlentities(stripslashes($rekeyed_input[$form_field['id']]['value']), ENT_QUOTES, 'UTF-8')."</td></tr>\n\r";
+						 echo "	<tr><td>" . esc_html( $form_field['name'] ) . ":</td><td>" . esc_html( $rekeyed_input[ $form_field['id']]['value'] ) . "</td></tr>\n\r";
 					break;
 
 					case 'heading':
@@ -300,16 +299,16 @@ function wpsc_packing_slip( $purchase_id ) {
                         if($form_field['name'] == "Hidden Fields")
                           continue;
                         else
-                          echo "	<tr class='heading'><td colspan='2'><strong>".wp_kses($form_field['name'], array()).":</strong></td></tr>\n\r";
+                          echo "	<tr class='heading'><td colspan='2'><strong>" . esc_html( $form_field['name'] ) . ":</strong></td></tr>\n\r";
 					break;
 
 					default:
-							if ($form_field['name']=="State" && !empty($purch_data['billing_region']) || $form_field['name']=="State" && !empty($purch_data['billing_region']))
-								echo "";
-							else
-								echo "	<tr><td>".wp_kses($form_field['name'], array() ).":</td><td>".
-									( isset( $rekeyed_input[$form_field['id']] ) ? htmlentities(stripslashes($rekeyed_input[$form_field['id']]['value']), ENT_QUOTES, 'UTF-8') : '' ).
-									"</td></tr>\n\r";
+						if ($form_field['name']=="State" && !empty($purch_data['billing_region']) || $form_field['name']=="State" && !empty($purch_data['billing_region']))
+							echo "";
+						else
+							echo "	<tr><td>" . esc_html( $form_field['name'] ) . ":</td><td>".
+								( isset( $rekeyed_input[$form_field['id']] ) ? esc_html( $rekeyed_input[$form_field['id']]['value'] ) : '' ) .
+								"</td></tr>\n\r";
 					break;
 				}
 
@@ -399,7 +398,7 @@ function wpsc_packing_slip( $purchase_id ) {
 
 			echo " <td>";
 			echo apply_filters( 'the_title', $cart_row['name'] );
-			echo stripslashes($variation_list);
+			echo $variation_list;
 			echo " </td>";
 
 

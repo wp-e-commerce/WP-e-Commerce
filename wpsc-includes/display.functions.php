@@ -95,9 +95,9 @@ function wpsc_also_bought( $product_id ) {
 					$output .= "</a>";
 				} else {
 					if ( get_option( 'product_image_width' ) != '' ) {
-						$output .= "<img src='" . WPSC_CORE_IMAGES_URL . "/no-image-uploaded.gif' title='" . get_the_title($also_bought_data['ID']) . "' alt='" . $also_bought_data['name'] . "' width='$image_display_height' height='$image_display_height' id='product_image_" . $also_bought_data['ID'] . "' class='product_image' />";
+						$output .= "<img src='" . WPSC_CORE_IMAGES_URL . "/no-image-uploaded.gif' title='" . esc_attr( get_the_title( $also_bought_data['ID'] ) ) . "' alt='" . esc_attr( $also_bought_data['name'] ) . "' width='$image_display_height' height='$image_display_height' id='product_image_" . $also_bought_data['ID'] . "' class='product_image' />";
 					} else {
-						$output .= "<img src='" . WPSC_CORE_IMAGES_URL . "/no-image-uploaded.gif' title='" . get_the_title($also_bought_data['ID']) . "' alt='" . htmlentities( stripslashes( get_the_title($also_bought_data['ID']) ), ENT_QUOTES, 'UTF-8' ) . "' id='product_image_" . $also_bought_data['ID'] . "' class='product_image' />";
+						$output .= "<img src='" . WPSC_CORE_IMAGES_URL . "/no-image-uploaded.gif' title='" . esc_attr( get_the_title( $also_bought_data['ID'] ) ) . "' alt='" . esc_attr( get_the_title( $also_bought_data['ID'] ) ) . "' id='product_image_" . $also_bought_data['ID'] . "' class='product_image' />";
 					}
 				}
 			}
@@ -366,7 +366,7 @@ function wpsc_obtain_the_title() {
 	}
 
 	if ( isset( $full_product_name ) && ($full_product_name != null) )
-		$output = htmlentities( stripslashes( $full_product_name ), ENT_QUOTES, 'UTF-8' );
+		$output = esc_html(  $full_product_name );
 	$seperator = ' | ';
 	$seperator = apply_filters('wpsc_the_wp_title_seperator' , $seperator);
 	return $output.$seperator;

@@ -124,7 +124,7 @@ function wpsc_country_region_list( $form_id = null, $ajax = false, $selected_cou
 			if ( $selected_country == $country['isocode'] ) {
 				$selected = "selected='selected'";
 			}
-			$output .= "<option value='" . $country['isocode'] . "' $selected>" . htmlentities( $country['country'], ENT_QUOTES, 'UTF-8' ) . "</option>\n\r";
+			$output .= "<option value='" . $country['isocode'] . "' $selected>" . esc_html( $country['country'] ) . "</option>\n\r";
 		}
 	}
 
@@ -154,7 +154,7 @@ function wpsc_country_region_list( $form_id = null, $ajax = false, $selected_cou
 			} else {
 				$selected = "";
 			}
-			$output .= "<option value='" . $region['id'] . "' $selected>" . htmlentities( $region['name'], ENT_QUOTES, 'UTF-8' ) . "</option>\n\r";
+			$output .= "<option value='" . $region['id'] . "' $selected>" . esc_html( $region['name'] ) . "</option>\n\r";
 		}
 		$output .= "</select>\n\r";
 	}

@@ -31,12 +31,12 @@ function wpsc_currency_display( $price_in, $args = null ) {
 	if('' == get_option('wpsc_decimal_separator'))
 		$decimal_separator = '.';
 	else
-		$decimal_separator = stripslashes( get_option('wpsc_decimal_separator') );
+		$decimal_separator = get_option( 'wpsc_decimal_separator' );
 
 	if('' == get_option('wpsc_thousands_separator'))
 		$thousands_separator = '.';
 	else
-		$thousands_separator = stripslashes( get_option('wpsc_thousands_separator') );
+		$thousands_separator = get_option( 'wpsc_thousands_separator' );
 
 	// Format the price for output
 	$price_out = number_format( (double)$price_in, $decimals, $decimal_separator, $thousands_separator );
