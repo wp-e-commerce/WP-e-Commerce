@@ -29,16 +29,6 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab
 	}
 
 	public function callback_submit_options() {
-
-		if ( ! get_option( 'do_not_use_shipping' ) && ! get_option( 'custom_shipping_options' ) ) {
-			update_option( 'do_not_use_shipping', '1' );
-			return array( 'shipping_disabled' => 1 );
-		} else {
-			$_SERVER['REQUEST_URI'] = remove_query_arg( 'shipping_disabled' );
-		}
-	}
-
-	public function callback_submit_options() {
 		global $wpsc_shipping_modules;
 
 		foreach ( $wpsc_shipping_modules as $shipping ) {
@@ -62,6 +52,13 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab
 					$shipadd++;
 				}
 			}
+		}
+
+		if ( ! get_option( 'do_not_use_shipping' ) && ! get_option( 'custom_shipping_options' ) ) {
+			update_option( 'do_not_use_shipping', '1' );
+			return array( 'shipping_disabled' => 1 );
+		} else {
+			$_SERVER['REQUEST_URI'] = remove_query_arg( 'shipping_disabled' );
 		}
 	}
 
