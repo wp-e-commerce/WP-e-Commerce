@@ -134,7 +134,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 		$shipping_total = $this->convert( $this->cart_data['base_shipping'] );
 
 		foreach ( $this->cart_items as $cart_row ) {
-			$data['L_NAME' . $i] = $cart_row['name'];
+			$data['L_NAME' . $i] = apply_filters( 'the_title', $cart_row['name'] );
 			$data['L_AMT' . $i] = $this->convert( $cart_row['price'] );
 			$data['L_NUMBER' . $i] = $i;
 			$data['L_QTY' . $i] = $cart_row['quantity'];

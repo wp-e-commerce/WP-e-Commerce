@@ -87,7 +87,7 @@ function wpsc_add_to_cart() {
 	$cart_item = $wpsc_cart->set_item( $product_id, $parameters );
 
 	if ( is_object( $cart_item ) ) {
-		$cart_messages[] = str_replace( "[product_name]", stripslashes( $cart_item->get_title() ), __( 'You just added "[product_name]" to your cart.', 'wpsc' ) );
+		$cart_messages[] = str_replace( "[product_name]", $cart_item->get_title(), __( 'You just added "[product_name]" to your cart.', 'wpsc' ) );
 	} else {
 		if ( $parameters['quantity'] <= 0 ) {
 			$cart_messages[] = __( 'Sorry, but you cannot add zero items to your cart', 'wpsc' );

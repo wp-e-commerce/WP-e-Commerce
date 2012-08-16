@@ -247,7 +247,7 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 		$shipping_total = 0;
 
 		foreach ( $this->cart_items as $cart_item ) {
-			$data["L_PAYMENTREQUEST_0_NAME{$i}"] = urlencode( $cart_item['name'] );
+			$data["L_PAYMENTREQUEST_0_NAME{$i}"] = urlencode( apply_filters( 'the_title', $cart_item['name'] ) );
 			$data["L_PAYMENTREQUEST_0_AMT{$i}"] = $this->convert( $cart_item['price'] );
 			$data["L_PAYMENTREQUEST_0_NUMBER{$i}"] = $i;
 			$data["L_PAYMENTREQUEST_0_QTY{$i}"] = $cart_item['quantity'];
@@ -677,7 +677,7 @@ function paypal_processingfunctions(){
 		$shipping_total = 0;
 		foreach ( $cart_data as $cart_item ) {
 			$converted_price = wpsc_paypal_express_convert( $cart_item['price'] );
-			$nvpstr .= "&L_PAYMENTREQUEST_0_NAME{$i}=" . urlencode( $cart_item['name'] );
+			$nvpstr .= "&L_PAYMENTREQUEST_0_NAME{$i}=" . urlencode( apply_filters( 'the_title', $cart_item['name'] ) );
 			$nvpstr .= "&L_PAYMENTREQUEST_0_AMT{$i}=" . $converted_price;
 			$nvpstr .= "&L_PAYMENTREQUEST_0_NUMBER{$i}=" . $i;
 			$nvpstr .= "&L_PAYMENTREQUEST_0_QTY{$i}=" . $cart_item['quantity'];

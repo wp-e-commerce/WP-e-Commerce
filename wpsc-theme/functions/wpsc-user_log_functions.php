@@ -556,7 +556,7 @@ function wpsc_user_details() {
 				echo "<tr $alternate>";
 
 				echo " <td>";
-				echo $cart_row['name'];
+				echo apply_filters( 'the_title', $cart_row['name'] );
 				echo $variation_list;
 				echo " </td>";
 

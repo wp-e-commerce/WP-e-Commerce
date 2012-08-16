@@ -253,8 +253,9 @@ function wpsc_the_cart_item_key() {
 */
 function wpsc_cart_item_name( $context = 'display' ) {
 	global $wpsc_cart;
-	$product_name = apply_filters( 'wpsc_cart_item_name', $wpsc_cart->cart_item->get_title(), $wpsc_cart->cart_item->product_id );
-	return esc_html( $product_name );
+   $product_name = apply_filters( 'the_title', $wpsc_cart->cart_item->product_name );
+	$product_name = apply_filters( 'wpsc_cart_item_name', $product_name, $wpsc_cart->cart_item->product_id );
+	return $product_name;
 }
  /**
 * cart item quantity function, no parameters
@@ -602,7 +603,7 @@ class wpsc_cart {
      $this->update_location();
      $this->wpsc_refresh_cart_items();
      $this->unique_id = sha1(uniqid(rand(), true));
-     $this->get_shipping_method();     
+     $this->get_shipping_method();
   }
 
   /**
@@ -1580,7 +1581,7 @@ class wpsc_cart_item {
         if ( ! empty( $cart_item->variation_values ) )
            $variation_product_ids[] = $cart_item->product_id;
      }
-      
+
       if ( empty( $variation_product_ids ) )
          return;
 
@@ -1688,7 +1689,7 @@ class wpsc_cart_item {
    	}
 
    	$price = apply_filters( 'wpsc_price', $price, $product_id );
-   	
+
    	// create the string containing the product name.
       $product_name = apply_filters( 'wpsc_cart_product_title', $product->post_title, $product_id );
 
@@ -1795,7 +1796,7 @@ class wpsc_cart_item {
          $title .= ' (' . $vars . ')';
       }
 
-      return $title;
+      return apply_filters( 'the_title', $title );
 
    }
 
