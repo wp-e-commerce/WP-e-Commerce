@@ -244,8 +244,9 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 			);
 
 			$free_shipping = false;
-			if ( isset( $_SESSION['coupon_numbers'] ) ) {
-				$coupon = new wpsc_coupons( $_SESSION['coupon_numbers'] );
+			$coupon = wpsc_get_customer_meta( 'coupon' );
+			if ( $coupon ) {
+				$coupon = new wpsc_coupons( $coupon );
 				$free_shipping = $coupon->is_percentage == '2';
 			}
 

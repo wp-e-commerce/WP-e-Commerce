@@ -801,21 +801,22 @@ class ash_ups {
         $args['units'] = "LBS";
         $args['weight'] = wpsc_cart_weight_total();
         // Destination zip code
-        $args['dest_ccode'] = $_SESSION['wpsc_delivery_country'];
+        $args['dest_ccode'] = wpsc_get_customer_meta( 'shipping_country' );
         if ($args['dest_ccode'] == "UK"){
             // So, UPS is a little off the times
             $args['dest_ccode'] = "GB";
         }
 
         // If ths zip code is provided via a form post use it!
-		$args['dest_pcode'] = '';
-        if(isset($_POST['zipcode']) && ($_POST['zipcode'] != __( "Your Zipcode", 'wpsc' ) && $_POST['zipcode'] != "YOURZIPCODE")) {
+		$args['dest_pcode'] = (string) wpsc_get_customer_meta( 'shipping_zip' );
+        if( isset($_POST['zipcode']) && ($_POST['zipcode'] != __( "Your Zipcode", 'wpsc' ) && $_POST['zipcode'] != "YOURZIPCODE" ) )
           $args['dest_pcode'] = esc_attr( $_POST['zipcode'] );
-          $_SESSION['wpsc_zipcode'] = esc_attr( $_POST['zipcode'] );
-        } else if(isset($_SESSION['wpsc_zipcode']) && ($_POST['zipcode'] != __( "Your Zipcode", 'wpsc' ) && $_POST['zipcode'] != "YOURZIPCODE")) {
-          // Well, we have a zip code in the session and no new one provided
-          $args['dest_pcode'] = $_SESSION['wpsc_zipcode'];
-        }
+
+        if ( in_array( $args['dest_pcode'], array( __( 'Your Zipcode', 'wpsc' ), 'YOURZIPCODE' ) ) )
+            $args['dest_pcode'] = '';
+
+        wpsc_update_customer_meta( 'shipping_zip', $args['dest_pcode'] );
+
 		if ( empty ( $args['dest_pcode'] ) ) {
             // We cannot get a quote without a zip code so might as well return!
             return array();
@@ -827,10 +828,10 @@ class ash_ups {
                                 WHERE `".WPSC_TABLE_REGION_TAX."`.`id` = %d", $_POST['region'] );
             $dest_region_data = $wpdb->get_results($query, ARRAY_A);
             $args['dest_state'] = (is_array($dest_region_data)) ? $dest_region_data[0]['code'] : "";
-            $_SESSION['wpsc_state'] = $args['dest_state'];
-        } else if(isset($_SESSION['wpsc_state'])) {
+            wpsc_update_customer_meta( 'ups_state', $args['dest_state'] );
+        } else if( $dest_state = wpsc_get_customer_meta( 'ups_state' ) ) {
             // Well, we have a zip code in the session and no new one provided
-            $args['dest_state'] = $_SESSION['wpsc_state'];
+            $args['dest_state'] = $dest_state;
         } else{
             $args['dest_state'] = "";
         }
@@ -838,23 +839,32 @@ class ash_ups {
         $shipping_cache_check['state'] = $args['dest_state'];
         $shipping_cache_check['zipcode'] = $args['dest_pcode'];
         $shipping_cache_check['weight'] = $args['weight'];
+        $session_cache_check = wpsc_get_customer_meta( 'ups_shipping_cache_check' );
+        if ( ! is_array( $session_cache_check ) )
+            $session_cache_check = array();
+        $session_cache = wpsc_get_customer_meta( 'ups_shipping_cache' );
+        if ( ! is_array( $session_cache ) )
+            $session_cache = array();
+
         if (!(boolean)$args["singular_shipping"]){
             // This is where shipping breaks out of UPS if weight is higher than 150 LBS
             if($weight > 150){
-                    unset($_SESSION['quote_shipping_method']);
+                    wpsc_delete_customer_meta( 'quote_shipping_method' );
                     $shipping_quotes[TXT_WPSC_OVER_UPS_WEIGHT] = 0;
-                    $_SESSION['wpsc_shipping_cache_check']['weight'] = $args['weight'];
-                    $_SESSION['wpsc_shipping_cache'][$this->internal_name] = $shipping_quotes;
-                    $_SESSION['quote_shipping_method'] = $this->internal_name;
+                    $session_cache_check['weight'] = $args['weight'];
+                    $session_cache[$this->internal_name] = $shipping_quotes;
+                    wpsc_update_customer_meta( 'quote_shipping_method', $this->internal_name );
+                    wpsc_update_customer_meta( 'ups_shipping_cache_check', $session_cache_check );
+                    wpsc_update_customer_meta( 'ups_shipping_cache', $session_cache );
                     return array($shipping_quotes);
             }
         }
         // We do not want to spam UPS (and slow down our process) if we already
         // have a shipping quote!
-        if(($_SESSION['wpsc_shipping_cache_check'] === $shipping_cache_check)
-                && ($_SESSION['wpsc_shipping_cache'][$this->internal_name] != null)) {
+        if ( ( $session_cache_check === $shipping_cache_check )
+                && ( ! empty( $session_cache[$this->internal_name] ) ) ) {
 
-            $rate_table = $_SESSION['wpsc_shipping_cache'][$this->internal_name];
+            $rate_table = $session_cache[$this->internal_name];
             return $rate_table;
         }else{
             global $wpsc_cart;

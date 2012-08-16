@@ -2,12 +2,12 @@
 
 /**
  * Handles our current Shipwire integration.
- * 
+ *
  * Integrates with Order Fulfillment API, Inventory Sync API, Shipping Quotes API and Tracking API.  Order Fullfillment is hooked into the ordering process.
  * Inventory and Tracking are handled through a manual 'Update Tracking and Inventory' click in Settings area.
- * 
+ *
  * Shipping is done via a custom shipping module.  Upon Shipwire activation, we disable all others and enable this.
- * 
+ *
  * @todo Determine demand for further automation of Inventory/Tracking APIs.  Easy enough to hook in to cron.
  * @todo Determine if there is any performance, elegance or feature-set gain to be made in converting the get_*_xml methods to DOMDocument or SimpleXML
  * @todo If and when purchase logs are moved to CPT, DO NOT FORGET TO REFACTOR!
@@ -33,7 +33,7 @@ class WPSC_Shipwire {
 	 * @return type
 	 */
 	public static function get_instance() {
-		
+
 		if ( empty( self::$instance ) )
 			self::$instance = new WPSC_Shipwire();
 
@@ -45,18 +45,18 @@ class WPSC_Shipwire {
 
 	/**
 	 * Sets up properties, sends Order via API on checkout success.  Initial hook for AJAX link in admin
-	 * 
+	 *
 	 * @since 3.8.9
 	 * @return type
 	 */
 	private function __construct() {
 
-		self::$email     = get_option( 'shipwireemail' ); 
-		self::$passwd    = get_option( 'shipwirepassword' ); 
-		self::$server    = 'Production'; 
-		self::$warehouse = '00'; 
+		self::$email     = get_option( 'shipwireemail' );
+		self::$passwd    = get_option( 'shipwirepassword' );
+		self::$server    = 'Production';
+		self::$warehouse = '00';
 		self::$endpoint  = 'https://api.shipwire.com/exec/'; //For testing, change to api.beta.shipwire
-		
+
 		//Hooks into transaction results for Order Fulfillment API.  wpsc_confirm_checkout would be logical - but it is run for each cart item.
 		//In fact, the only two current transaction page actions happen within the cart loop.  Not great.
 		//I believe there is a patch on Issue 490 that proposes a 'wpsc_transaction_results_shutdown' action.  It doesn't pass a $log_id, but it does pass a sessionid, which is fine.
@@ -64,11 +64,11 @@ class WPSC_Shipwire {
 
 		//Hooks into ajax handler for Inventory Sync and Tracking API.  Handler is run upon clicking "Update Tracking and Inventory" in Shipping Settings
 		add_action( 'wp_ajax_sync_shipwire_products', array( $this, 'sync_products' ) );
-	
+
 	}
 	/**
-	 * Checks if Shipwire option is set and SimpleXML is present.  We'll use SimpleXML to parse responses from the server.  
-	 * 
+	 * Checks if Shipwire option is set and SimpleXML is present.  We'll use SimpleXML to parse responses from the server.
+	 *
 	 * @since 3.8.9
 	 * @return boolean
 	 */
@@ -78,7 +78,7 @@ class WPSC_Shipwire {
 
 	/**
 	 * Builds XML API request for Order API
-	 * 
+	 *
 	 * @todo Use WPSC_Purchase_Log class instead of direct queries.
 	 * @uses apply_filters() Switch for 'wpsc_shipwire_show_declared_value' send declared value to Shipwire.  Defaults to true
 	 * @uses apply_filters() Switch for 'wpsc_shipwire_show_affiliate' to send referring affiliate to Shipwire. Defaults to false
@@ -107,25 +107,25 @@ class WPSC_Shipwire {
 		$customer_data = $wpdb->get_results( $wpdb->prepare( 'SELECT form_id, value FROM ' . WPSC_TABLE_SUBMITED_FORM_DATA . ' WHERE log_id = %d', $log_id ) );
 
 		foreach ( $customer_data as $data ) {
-			
+
 			if ( $data->form_id == $shippingfirstname )
 				$first_name = $data->value;
-			
+
 			if ( $data->form_id == $shippinglastname )
 				$last_name = $data->value;
 
 			if ( $data->form_id == $shippingaddress )
 				$address = $data->value;
-			
+
 			if ( $data->form_id == $shippingcity )
 				$city = $data->value;
-		
+
 			if ( $data->form_id == $shippingstate )
 				$state = wpsc_get_state_by_id( $data->value, 'code' );
-		
+
 			if ( $data->form_id == $shippingpostcode )
 				$zip = $data->value;
-			
+
 			if ( $data->form_id == $shippingcountry )
 				$country = $data->value;
 
@@ -153,7 +153,7 @@ class WPSC_Shipwire {
 		$xml .= '<Server>' . self::$server . '</Server>';
 
 		$referrer = apply_filters( 'wpsc_shipwire_show_affiliate', false );
-		
+
 		if ( $referrer )
 			$xml .= '<Referer>' . $referrer . '</Referer>';
 
@@ -182,7 +182,7 @@ class WPSC_Shipwire {
 
 			if ( $product->no_shipping )
 				continue;
-			
+
 			$xml .= '<Item num="' . $num . '">';
 			$xml .='<Code>' . get_post_meta( $product->prodid, '_wpsc_sku', true ) . '</Code>';
 			$xml .= '<Quantity>' . $product->quantity . '</Quantity>';
@@ -203,17 +203,17 @@ class WPSC_Shipwire {
 			$num++;
 
 		}
-		
+
 		$xml .='</Order>';
 		$xml .='</OrderList>';
-		
+
 		return apply_filters( 'get_order_xml', $xml, $log_id );
 	}
 
-	/** 
+	/**
 	 * Returns shipping string for order XML file.
-	 * 
-	 * @param int $log_id 
+	 *
+	 * @param int $log_id
 	 * @since 3.8.9
 	 * @return string Shipwire-ready shipping code
 	 */
@@ -228,7 +228,7 @@ class WPSC_Shipwire {
 
 	/**
 	 * Shipwire requires dimensions to be in inches and pounds.  This handles the conversion process, if one is required.
-	 * @param int $product_id 
+	 * @param int $product_id
 	 * @since 3.8.9
 	 * @return array $dimensions
 	 */
@@ -243,39 +243,39 @@ class WPSC_Shipwire {
 		$dimensions['length'] = ( 'in' == $original_dimensions['length_unit'] ) ? $original_dimensions['length'] : $this->convert_dimensions( $original_dimensions['length'], $original_dimensions['length_unit'] );
 		$dimensions['width'] = ( 'in' == $original_dimensions['width_unit'] ) ? $original_dimensions['width'] : $this->convert_dimensions( $original_dimensions['width'], $original_dimensions['width_unit'] );
 		$dimensions['height'] = ( 'in' == $original_dimensions['height_unit'] ) ? $original_dimensions['height'] : $this->convert_dimensions( $original_dimensions['height'], $original_dimensions['height_unit'] );
-		
+
 		return $dimensions;
 	}
 
 	/**
 	 * The wpsc_convert_weight function essentially converts weights to grams (based on input parameters).  Then converts grams to output unit.
-	 * 
+	 *
 	 * We do the same in this method, but for dimensions rather than weight, using centimeters as the base.  This is used if dimensions are sent to Shipwire
-	 * 
-	 * @param float $measurement_in 
-	 * @param string $unit_in 
-	 * @param string $unit_out 
-	 * @param boolean $raw 
+	 *
+	 * @param float $measurement_in
+	 * @param string $unit_in
+	 * @param string $unit_out
+	 * @param boolean $raw
 	 * @since 3.8.9
 	 * @return float $dimension
 	 */
 	public static function convert_dimensions( $measurement_in, $unit_in, $unit_out = 'inch', $raw = false ) {
-	
+
 		switch ( $unit_in ) {
 			case 'meter':
 				$intermediate_dimension = $measurement_in / 100;
 			break;
-			
+
 			case 'cm':
 				$intermediate_dimension = $measurement_in;
 			break;
-			
+
 			case 'in':
 			default:
 				$intermediate_dimension = $measurement_in * 2.54;
 			break;
 		}
-		
+
 		switch ( $unit_out ) {
 			case 'meter':
 				$dimension = $intermediate_dimension * 100;
@@ -299,7 +299,7 @@ class WPSC_Shipwire {
 
 	/**
 	 * Sends API request for Order API
-	 * @param string $xml 
+	 * @param string $xml
 	 * @since 3.8.9
 	 * @return mixed - false on WP_Error, XML response on success
 	 */
@@ -309,9 +309,9 @@ class WPSC_Shipwire {
 
 	/**
 	 * Hooks into to checkout process. Sends order to shipwire on successful checkout
-	 * @param type $object 
-	 * @param type $sessionid 
-	 * @param type $display 
+	 * @param type $object
+	 * @param type $sessionid
+	 * @param type $display
 	 * @since 3.8.9
 	 * @return type
 	 */
@@ -325,15 +325,15 @@ class WPSC_Shipwire {
 
 	/**
 	 * Processes Order Request
-	 * 
+	 *
 	 * Grabs XML via self::get_order_xml( $log_id ).  Sends through to Shipwire via self::send_order_request( $xml ).
-	 * 
-	 * @param int $log_id 
+	 *
+	 * @param int $log_id
 	 * @since 3.8.9
 	 * @return mixed - false on WP_Error, XML response on success
 	 */
 	public static function process_order_request( $log_id ) {
-		
+
 		$order_info = self::get_order_xml( $log_id );
 
 		return self::send_order_request( $order_info );
@@ -341,14 +341,14 @@ class WPSC_Shipwire {
 
 	/**
 	 * Builds XML API request for Inventory API
-	 * 
+	 *
 	 * @uses apply_filters() Ability to query inventory from specific warehouse on 'wpsc_shipwire_inventory_warehouse'
-	 * @uses apply_filters() 'get_inventory_xml' filters final XML 
+	 * @uses apply_filters() 'get_inventory_xml' filters final XML
 	 * @since 3.8.9
 	 * @return string $xml
 	 */
 	public static function get_inventory_xml( $product_code = '' ) {
-		
+
 		$xml  = '<?xml version="1.0" encoding="utf-8"?>';
 		$xml .= '<InventoryUpdate>';
 		$xml .= '<EmailAddress>' . self::$email . '</EmailAddress>';
@@ -357,16 +357,16 @@ class WPSC_Shipwire {
 
 		if ( false !== ( $warehouse = apply_filters( 'wpsc_shipwire_inventory_warehouse', false ) ) )
 			$xml .= '<Warehouse>' . $warehouse . '</Warehouse>';
-		
+
 		$xml .= '<ProductCode>' . $product_code . '</ProductCode>';
 		$xml .= '</InventoryUpdate>';
-		
+
 		return apply_filters( 'get_inventory_xml', $xml );
 	}
 
 	/**
 	 * Sends API request for Inventory API
-	 * @param string $xml 
+	 * @param string $xml
 	 * @since 3.8.9
 	 * @return mixed - false on WP_Error, XML response on success
 	 */
@@ -376,7 +376,7 @@ class WPSC_Shipwire {
 
 	/**
 	 * Builds XML API request for Tracking API
-	 * 
+	 *
 	 * @uses apply_filters() 'wpsc_shipwire_tracking_bookmark' filters tracking bookmark
 	 * @uses apply_filters() 'get_tracking_xml' filters final XML
 	 * @since 3.8.9
@@ -397,7 +397,7 @@ class WPSC_Shipwire {
 
 	/**
 	 * Sends API request for Tracking API
-	 * @param string $xml 
+	 * @param string $xml
 	 * @since 3.8.9
 	 * @return mixed - false on WP_Error, XML response on success
 	 */
@@ -407,7 +407,7 @@ class WPSC_Shipwire {
 
 	/**
 	 * Builds XML API request for Shipping Rates API
-	 * 	 * 
+	 * 	 *
 	 * @uses apply_filters - filters XML on return
 	 * @todo Get ZIP as transient when #437 is complete
 	 * @since 3.8.9
@@ -417,11 +417,11 @@ class WPSC_Shipwire {
 
 		global $wpsc_cart;
 
-		$zip      = $_SESSION['wpsc_zipcode'];
+		$zip      = wpsc_get_customer_meta( 'shipping_zip' );
 		$state    = wpsc_get_state_by_id( $wpsc_cart->delivery_region, 'code' );
-		$country  = $wpsc_cart->delivery_country; 
+		$country  = $wpsc_cart->delivery_country;
 		$products = $wpsc_cart->cart_items;
-		 
+
 		$products_xml = '';
 		$num = 0;
 
@@ -443,7 +443,7 @@ class WPSC_Shipwire {
 
 		if ( empty( $products_xml ) )
 			return false;
-	 	
+
 	 	$xml  = '<?xml version="1.0" encoding="utf-8"?>';
 		$xml .= '<RateRequest>';
 		$xml .= '<Username>' . wpsc_esc_xml( self::$email ) . '</Username>';
@@ -463,7 +463,7 @@ class WPSC_Shipwire {
 
 	/**
 	 * Sends API request for Shipping Rates API
-	 *  
+	 *
 	 * @param string $xml
 	 * @since 3.8.9
 	 * @return mixed - false on WP_Error, XML response on success
@@ -476,7 +476,7 @@ class WPSC_Shipwire {
 	/**
 	 * Creates cache key for current cart and ZIP code for shipping rates.
 	 * @since 3.8.9
-	 * @return string 
+	 * @return string
 	 */
 	public function get_cache_key() {
 		global $wpsc_cart;
@@ -485,8 +485,8 @@ class WPSC_Shipwire {
 			return false;
 
 		$cached_object = array();
-		$products      = $wpsc_cart->cart_items; 
-		$zip           = $_SESSION['wpsc_zipcode'];
+		$products      = $wpsc_cart->cart_items;
+		$zip           = wpsc_get_customer_meta( 'shipping_zip' );
 
 		$num = 0;
 
@@ -507,7 +507,7 @@ class WPSC_Shipwire {
 
 	/**
 	 * Returns XML Response from Shipwire API for Shipping Quotes
-	 * 
+	 *
 	 * @since 3.8.9
 	 * @return mixed - false on WP_Error, false on no shipping, XML response on success
 	 */
@@ -521,17 +521,17 @@ class WPSC_Shipwire {
 
 		//Returns live shipping request if no cached response exists, cached response if one does
 		if ( false === ( $rates = get_transient( $cache_key ) ) )
-			$rates = self::fetch_fresh_quotes();	
+			$rates = self::fetch_fresh_quotes();
 
 		return $rates;
 
 	}
 
 	/**
-	 * WordPress has some notable deficiencies when storing object data in the database.  
+	 * WordPress has some notable deficiencies when storing object data in the database.
 	 * It's generally inadvisable anyways - so we convert the shipping quote object into a simple array.
 	 * After that, we store the array as the quote in a transient.  Transient is stored for one hour - the expiration is filterable
-	 * 
+	 *
 	 * @uses simplexml_load_string()
 	 * @uses apply_filters() 'wpsc_shipwire_methods' filters the methods returns - the $methods array and $quotes object are both passed to the filter
 	 * @uses apply_filters() 'wpsc_shipwire_rates_cache_expiration' filters the expiration for the transient, defaults to one hour
@@ -555,9 +555,9 @@ class WPSC_Shipwire {
 
 			$methods[$service] = $cost;
 		}
-		
+
 		$methods = apply_filters( 'wpsc_shipwire_methods', $methods, $quotes );
-		
+
 		set_transient( self::get_cache_key(), $methods, apply_filters( 'wpsc_shipwire_rates_cache_expiration', 60 * 60 ) );
 
 		return $methods;
@@ -565,13 +565,13 @@ class WPSC_Shipwire {
 
 	/**
 	 * AJAX Handler for sync products link in shipping admin
-	 * 
+	 *
 	 * Pings Shipwire server to get real-time inventory and tracking information for products
 	 * Processes results by updating inventory on-site for each product
-	 * Updates tracking numbers for each purchase log with one of the numbers presented (sometimes multiples are presented).  
+	 * Updates tracking numbers for each purchase log with one of the numbers presented (sometimes multiples are presented).
 	 * We need to figure out a good UX for multiple tracking numbers. Could potentially update the notes, but that feels janky.
 	 * Also emails customer with tracking ID.  Email attempts to work out multiple tracking numbers
-	 * 
+	 *
 	 * @uses do_action() Calls 'wpsc_shipwire_pre_sync' on the $tracking and $inventory variables before database interaction
 	 * @uses do_action() Calls 'wpsc_shipwire_post_sync' on the $tracking and $inventory variables after database interaction
 	 * @uses apply_filters() Calls 'wpsc_shipwire_send_tracking_email' on the $order_id and $tracking_numbers arrays - a bool switch for sending the tracking email
@@ -606,9 +606,9 @@ class WPSC_Shipwire {
 
 		foreach ( $tracking as $order_id => $tracking_number ) {
 			$tracking_numbers  = array_keys( $tracking_number );
-			$update = (int) $wpdb->update( 
+			$update = (int) $wpdb->update(
 					WPSC_TABLE_PURCHASE_LOGS,
-					array( 
+					array(
 						'track_id' => $tracking_numbers[0]
 					),
 					array(
@@ -653,13 +653,13 @@ class WPSC_Shipwire {
 	}
 
 	/**
-	 * Essentially copies functionality from wpsc_purchase_log_send_tracking_email(). 
+	 * Essentially copies functionality from wpsc_purchase_log_send_tracking_email().
 	 * We should consider making "AJAX" functions like that process-agnostic.  Would be great to be able to utilize it from here.
 	 * A simple DOING_AJAX check for the nonces and die() and adding a parameter to the function to check before the $_POST would suffice.
 	 * Making private, primarily because I'd prefer this not to be used, even internally, pending AJAX refactor as suggested
-	 * 
-	 * @access private 
-	 * @global $wpdb 
+	 *
+	 * @access private
+	 * @global $wpdb
 	 * @param int $order_id
 	 * @param mixed $tracking_numbers Expects the $tracking_number object from self::get_tracking_info()
 	 * @todo Use new Notification class from Issue 490 when that is implemented
@@ -701,7 +701,7 @@ class WPSC_Shipwire {
 		remove_filter( 'wp_mail_content_type', array( __CLASS__, 'tracking_email_html' ) );
 
 		return $send;
-		
+
 	}
 
 	/**
@@ -715,15 +715,15 @@ class WPSC_Shipwire {
 
 	/**
 	 * Gathers tracking info from Shipwire API.  Called primarily from sync product link.
-	 * 
+	 *
 	 * Some interesting stuff happening here - Shipwire can send multiple tracking numbers per order, so we add them to an array, along with other potentially helpful information for plugins to use
 	 * The multiple tracking numbers does introduce a reality we should address - we need to be able to support multiple numbers in our UX.
-	 * 
+	 *
 	 * @since 3.8.9
 	 * @return array $orders
 	 */
 	public static function get_tracking_info() {
-		
+
 		$tracking = simplexml_load_string( self::send_tracking_request( self::get_tracking_xml() ) );
 
 		$orders = array();
@@ -731,11 +731,11 @@ class WPSC_Shipwire {
 		foreach ( $tracking->children() as $key => $order ) {
 			if ( 'Order' != $key )
 				continue;
-			
+
 			if ( ! empty ( $order->TrackingNumber ) ) {
 				$id = absint( $order['id'] );
 				$tn = (string) $order->TrackingNumber;
-				
+
 				$orders[$id][$tn]['link']                   = (string) $order['href'];
 				$orders[$id][$tn]['expected_delivery_date'] = (string) $order['expectedDeliveryDate'];
 				$orders[$id][$tn]['ship_date']              = (string) $order['shipDate'];
@@ -747,8 +747,8 @@ class WPSC_Shipwire {
 
 	/**
 	 * Gets updated inventory information from Shipwire.  Returns array of name-value pairs where the name is the SKU, value is quantity
-	 * 
-	 * @param string $product_code 
+	 *
+	 * @param string $product_code
 	 * @since 3.8.9
 	 * @return array $products
 	 */
@@ -761,10 +761,10 @@ class WPSC_Shipwire {
 		foreach ( $inventory->children() as $key => $product ) {
 			if ( 'Product' != $key )
 				continue;
-			
+
 				$qty  = absint( $product['good'] );
 				$code = (string) $product['code'] ;
-				
+
 				$products[$code] = $qty;
 			}
 
@@ -772,13 +772,13 @@ class WPSC_Shipwire {
 	}
 
 	/**
-	 * API Request Handler.  
-	 * 
+	 * API Request Handler.
+	 *
 	 * Sets content type to urlencoded form, sslverify to false (due to SSL cert issues on many setups) and timeout to 30 (more than sufficient for the most laborious API, Shipping Rates)
-	 * 
-	 * @param string $url 
-	 * @param string $method 
-	 * @param string $body 
+	 *
+	 * @param string $url
+	 * @param string $method
+	 * @param string $body
 	 * @since 3.8.9
 	 * @return mixed - false on WP_Error, XML response on success
 	 */
@@ -788,16 +788,16 @@ class WPSC_Shipwire {
 
 		$args = array(
 				'body'      => array( $method => trim( $body ) ),
-				'headers'   => array( 
+				'headers'   => array(
 								'accept'       => 'application/xml',
 								'content-type' => 'application/x-www-form-urlencoded'
 							),
 				'sslverify' => false,
 				'timeout'   => 30
 			);
-		
+
 		$request = wp_remote_post( $url, $args );
-		
+
 		if ( ! is_wp_error( $request ) )
 			return $request['body'];
 
@@ -810,7 +810,7 @@ add_action( 'init', array( 'WPSC_Shipwire', 'get_instance' ) );
 
 /**
  * Handy little XML escaping function.  Used primarily in shipping rate XML request.
- * 
+ *
  * @param string $value
  * @since 3.8.9
  * @return string
@@ -821,7 +821,7 @@ function wpsc_esc_xml( $value ) {
 
 /**
  * Helper function for getting services to the front-end from codes.  Actual carriers are irrelevant, as that can change based on cost, availability, etc.
- * @param string $service 
+ * @param string $service
  * @since 3.8.9
  * @return string
  */
@@ -850,7 +850,7 @@ function convert_code_to_service( $service ) {
 
 /**
  * Helper function for getting codes to the API from services.  Actual carriers are irrelevant, as that can change based on cost, availability, etc.
- * @param string $service 
+ * @param string $service
  * @since 3.8.9
  * @return string
  */

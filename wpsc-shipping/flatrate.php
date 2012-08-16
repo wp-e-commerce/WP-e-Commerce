@@ -98,20 +98,17 @@ class flatrate {
 	 * @return unknown
 	 */
 	function getQuote($for_display = false) {
-
 		global $wpdb, $wpsc_cart;
+		$quote_shipping_method = wpsc_get_customer_meta( 'quote_shipping_method' );
+		$quote_shipping_option = wpsc_get_customer_meta( 'quote_shipping_option' );
 
 		$country = '';
 
 		if (isset($_POST['country'])) {
-
 			$country = $_POST['country'];
-			$_SESSION['wpsc_delivery_country'] = $country;
-
-		} elseif ( isset( $_SESSION['wpsc_delivery_country'] ) ) {
-
-			$country = $_SESSION['wpsc_delivery_country'];
-
+			wpsc_update_customer_meta( 'shipping_country', $country );
+		} else {
+			$country = (string) wpsc_get_customer_meta( 'shipping_country' );
 		}
 
 		if (is_object($wpsc_cart)) {
@@ -125,15 +122,9 @@ class flatrate {
 			$flatrates = get_option('flat_rates');
 
 			if ($flatrates != '') {
+				if ( $quote_shipping_method == $this->internal_name && $quote_shipping_option != __( "Flat Rate", 'wpsc' ) )
+					wpsc_delete_customer_meta( 'quote_shipping_option' );
 
-				if (isset($_SESSION['quote_shipping_method']) && $_SESSION['quote_shipping_method'] == $this->internal_name) {
-
-					if ($_SESSION['quote_shipping_option'] != "Flat Rate") {
-						$_SESSION['quote_shipping_option'] = null;
-					}
-
-				}
-				
 				if ( isset ( $flatrates[$results] ) ) {
 
 				    if (stristr($flatrates[$results],'%')) {
@@ -142,7 +133,7 @@ class flatrate {
 					    $shipping_amount = $cart_total * ( $shipping_percent / 100 );
 					    $flatrates[$results] = (float)$shipping_amount;
 
-				    } 
+				    }
 
                     return array( __( "Flat Rate", 'wpsc' ) => (float) $flatrates[$results] );
                 }
@@ -192,12 +183,12 @@ class flatrate {
 
 			}
 
-			if (isset($_SESSION['quote_shipping_method']) && $_SESSION['quote_shipping_method'] == $this->internal_name) {
+			if ( $quote_shipping_method == $this->internal_name ) {
 
 				$shipping_options = array_keys($shipping_quotes);
 
-				if (array_search($_SESSION['quote_shipping_option'], $shipping_options) === false) {
-					$_SESSION['quote_shipping_option'] = null;
+				if ( array_search( $quote_shipping_option, $shipping_options ) === false) {
+					wpsc_delete_customer_meta( 'quote_shipping_option' );
 				}
 
 			}

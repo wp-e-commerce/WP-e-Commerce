@@ -137,8 +137,8 @@ class tablerate {
 	function getQuote() {
 
 		global $wpdb, $wpsc_cart;
-		if (isset($_SESSION['nzshpcrt_cart'])) {
-			$shopping_cart = $_SESSION['nzshpcrt_cart'];
+		if ( wpsc_get_customer_meta( 'nzshpcart' ) ) {
+			$shopping_cart = wpsc_get_customer_meta( 'nzshpcart' );
 		}
 		if (is_object($wpsc_cart)) {
 			$price = $wpsc_cart->calculate_subtotal(true);

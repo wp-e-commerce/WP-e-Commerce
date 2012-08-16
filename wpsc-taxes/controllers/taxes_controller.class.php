@@ -81,8 +81,9 @@ class wpec_taxes_controller {
 				}// foreach
 
 				$free_shipping = false;
-				if ( isset( $_SESSION['coupon_numbers'] ) ) {
-					$coupon = new wpsc_coupons( $_SESSION['coupon_numbers'] );
+        $coupon_num = wpsc_get_customer_meta( 'coupon' );
+				if ( $coupon_num ) {
+					$coupon = new wpsc_coupons( $coupon_num );
 					$free_shipping = $coupon->is_percentage == '2';
 				}
 
