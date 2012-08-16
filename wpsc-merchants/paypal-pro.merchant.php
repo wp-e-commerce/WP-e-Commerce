@@ -185,7 +185,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 			$paypal_url = "https://api-3t.paypal.com/nvp"; // Live
 
 		$options = array(
-			'timeout' => 15,
+			'timeout' => 20,
 			'body' => $this->collected_gateway_data,
 			'user-agent' => $this->cart_data['software_name'] . " " . get_bloginfo( 'url' ),
 			'sslverify' => false,
@@ -258,7 +258,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 		$received_values += stripslashes_deep ( $_POST );
 
 		$options = array(
-			'timeout'    => 5,
+			'timeout'    => 20,
 			'body'       => $received_values,
 			'user-agent' => ('WP e-Commerce/' . WPSC_PRESENTABLE_VERSION)
 		);

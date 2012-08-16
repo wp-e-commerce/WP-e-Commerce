@@ -347,7 +347,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 		$received_values['cmd'] = '_notify-validate';
   		$received_values += stripslashes_deep ($_POST);
 		$options = array(
-			'timeout' => 5,
+			'timeout' => 20,
 			'body' => $received_values,
 			'user-agent' => ('WP e-Commerce/'.WPSC_PRESENTABLE_VERSION)
 		);

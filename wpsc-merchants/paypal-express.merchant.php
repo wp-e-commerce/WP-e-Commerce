@@ -121,7 +121,7 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 		$received_values['cmd'] = '_notify-validate';
   		$received_values += stripslashes_deep ( $_POST );
 		$options = array(
-			'timeout' => 5,
+			'timeout' => 20,
 			'body' => $received_values,
 			'user-agent' => ('WP e-Commerce/'.WPSC_PRESENTABLE_VERSION)
 		);
@@ -976,7 +976,7 @@ function paypal_hash_call($methodName,$nvpStr)	{
 	add_filter('http_api_curl', 'wpsc_curl_ssl');
 
 	$options = array(
-		'timeout' => 5,
+		'timeout' => 20,
 		'body' => $nvpreq,
 		'sslverify' => false,
 	);
