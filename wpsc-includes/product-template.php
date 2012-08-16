@@ -120,14 +120,18 @@ function wpsc_pagination($totalpages = '', $per_page = '', $current_page = '', $
 	}else{
 		global $wpsc_query;
 
+		$separator = 'page/';
+
 		if ( isset( $wp_query->query_vars['wpsc_product_category'] ) ) {
 			$category_id = get_term_by( 'slug', $wp_query->query_vars['wpsc_product_category'], 'wpsc_product_category' );
 			$page_link = trailingslashit( get_term_link( $category_id, 'wpsc_product_category' ) );
 			// in case we're displaying a category using shortcode, need to use the page's URL instead of the taxonomy URL
 			if ( $wp_the_query->is_page() ) {
 				$page = $wp_the_query->get_queried_object();
-				if ( preg_match( '/\[wpsc\_products[^\]]*category_id=/', $page->post_content ) )
-					$page_link = get_permalink( $page->ID );
+				if ( preg_match( '/\[wpsc\_products[^\]]*category_id=/', $page->post_content ) ) {
+					$page_link = trailingslashit( get_permalink( $page->ID ) );
+					$separator = '';
+				}
 			}
 		} elseif ( is_tax( 'product_tag' ) ) {
 			$tag = get_queried_object();
@@ -136,8 +140,11 @@ function wpsc_pagination($totalpages = '', $per_page = '', $current_page = '', $
 			$page_link = trailingslashit( home_url() );
 		} else {
 			$page_link = trailingslashit( get_option( 'product_list_url' ) );
+			$separator = '';
 		}
-		$separator = 'page/';
+
+		if ( version_compare( get_bloginfo( 'version' ), '3.4', '<' ) )
+			$separator = 'page/';
 	}
 
 	// If there's only one page, return now and don't bother
@@ -166,7 +173,7 @@ function wpsc_pagination($totalpages = '', $per_page = '', $current_page = '', $
 				if($count == 1)
 					$output .= " <a href=\"". esc_url( $page_link . $additional_links ) . "\" title=\"" . sprintf( __('Page %s', 'wpsc'), $i ) . " \">".$i."</a>";
 				else
-					$output .= " <a href=\"". esc_url( $page_link .$separator. $i . $additional_links ) . "\" title=\"" . sprintf( __('Page %s', 'wpsc'), $i ) . " \">".$i."</a>";
+					$output .= " <a href=\"". esc_url( $page_link .$separator. $i . '/' . $additional_links ) . "\" title=\"" . sprintf( __('Page %s', 'wpsc'), $i ) . " \">".$i."</a>";
 			}
 			$i++;
 			$count++;
@@ -183,7 +190,7 @@ function wpsc_pagination($totalpages = '', $per_page = '', $current_page = '', $
 			while(($i) > $current_page){
 
 				if($count < $num_paged_links && ($count+$current_page) <= $totalpages){
-						$output .= " <a href=\"". esc_url( $page_link .$separator. ($count+$current_page) .$additional_links ) . "\" title=\"" . sprintf( __('Page %s', 'wpsc'), ($count+$current_page) ) . "\">".($count+$current_page)."</a>";
+						$output .= " <a href=\"". esc_url( $page_link .$separator. ($count+$current_page) . '/' .$additional_links ) . "\" title=\"" . sprintf( __('Page %s', 'wpsc'), ($count+$current_page) ) . "\">".($count+$current_page)."</a>";
 				$i++;
 				}else{
 				break;
@@ -194,11 +201,11 @@ function wpsc_pagination($totalpages = '', $per_page = '', $current_page = '', $
 
 		if($current_page < $totalpages) {
 			$next_page = $current_page + 1;
-			$output .= "<a href=\"". esc_url( $page_link  .$separator. $next_page . $additional_links ) . "\" title=\"" . __('Next Page', 'wpsc') . "\">" . __('Next &gt;', 'wpsc') . "</a>";
+			$output .= "<a href=\"". esc_url( $page_link  .$separator. $next_page . '/' . $additional_links ) . "\" title=\"" . __('Next Page', 'wpsc') . "\">" . __('Next &gt;', 'wpsc') . "</a>";
 		}
 		// Should we show the LAST PAGE link?
 		if($current_page < $totalpages) {
-			$output .= "<a href=\"". esc_url( $page_link  .$separator. $totalpages . $additional_links ) . "\" title=\"" . __('Last Page', 'wpsc') . "\">" . __('Last &raquo;', 'wpsc') . "</a>";
+			$output .= "<a href=\"". esc_url( $page_link  .$separator. $totalpages . '/' . $additional_links ) . "\" title=\"" . __('Last Page', 'wpsc') . "\">" . __('Last &raquo;', 'wpsc') . "</a>";
 		}
 	} else {
 		// Should we show the FIRST PAGE link?
