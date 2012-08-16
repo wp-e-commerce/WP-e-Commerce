@@ -441,6 +441,16 @@ function wpsc_update_option_product_category_hierarchical_url() {
 
 add_action( 'update_option_product_category_hierarchical_url', 'wpsc_update_option_product_category_hierarchical_url' );
 
+function _wpsc_action_sanitize_option_grid_number_per_row( $value, $option ) {
+	$value = (int) $value;
+	if ( $value === 0 ) {
+		add_settings_error( $option, 'invalid_grid_number_per_row', __( 'You set the number of item per row for the product list to 0. This means the column width will fall back to using whatever CSS you have for it. This could break your theme layout, so please make sure you have adjusted your theme\'s CSS accordingly.', 'wpsc' ) );
+	}
+
+	return $value;
+}
+add_filter( 'sanitize_option_grid_number_per_row', '_wpsc_action_sanitize_option_grid_number_per_row', 10, 2 );
+
 /**
  * wpsc_update_page_urls gets the permalinks for products pages and stores them in the options for quick reference
  * @public
