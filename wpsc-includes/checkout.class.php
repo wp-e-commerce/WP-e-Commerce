@@ -432,7 +432,7 @@ function wpsc_shipping_region_list( $selected_country, $selected_region, $shippi
 }
 
 function wpsc_shipping_country_list( $shippingdetails = false ) {
-	global $wpdb, $wpsc_shipping_modules;
+	global $wpdb, $wpsc_shipping_modules, $wpsc_country_data;
 	$js = '';
 	$output = '';
 	if ( !$shippingdetails ) {
@@ -448,13 +448,16 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 	if ( empty( $selected_region ) )
 		$selected_region = esc_attr( get_option( 'base_region' ) );
 
-	$country_data = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `visible`= '1' ORDER BY `country` ASC", ARRAY_A );
+	if ( empty( $wpsc_country_data ) )
+		$country_data = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `visible`= '1' ORDER BY `country` ASC", ARRAY_A );
+	else
+		$country_data = $wpsc_country_data;
+
+	$acceptable_countries = wpsc_get_acceptable_countries();
 
 	$output .= "<select name='country' id='current_country' " . $js . " >";
 
 	foreach ( $country_data as $country ) {
-		$selected = '';
-
 		if ( $selected_country == $country['isocode'] )
 			$selected = "selected='selected'";
 
@@ -463,7 +466,14 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 		if ( 'GB' == $country['isocode'] && 'GB' != get_option( 'base_country' ) )
 			continue;
 
-		$output .= "<option value='" . $country['isocode'] . "' $selected>" . esc_attr(htmlspecialchars( $country['country'] ) ) . "</option>";
+		if ( $acceptable_countries && ! is_array( $acceptable_countries ) )
+			$disabled = '';
+		elseif ( is_array( $acceptable_countries ) )
+			$disabled = ! in_array( $country['id'], $acceptable_countries ) ? ' disabled = "disabled"' : '';
+		else
+			$disabled = '';
+
+		$output .= "<option value='" . $country['isocode'] . "' ". selected( $selected_country, $country['isocode'], false ) . $disabled .">" . esc_html( $country['country'] ) . "</option>";
 	}
 
 	$output .= "</select>";
@@ -503,7 +513,69 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 	}
 	return $output;
 }
+ /**
+ * Cycles through the categories represented by the products in the cart.
+ * Retrieves their target markets and returns an array of acceptable markets
+ * We're only listing target markets that are acceptable for ALL categories in the cart
+ *
+ * @since 3.8.9
+ * @return array Countries that can be shipped to.  If empty, sets session variable with appropriate error message
+ */
+function wpsc_get_acceptable_countries() {
+	global $wpdb;
 
+	$cart_category_ids = array_unique( wpsc_cart_item_categories( true ) );
+
+	$target_market_ids = array();
+
+	foreach ( $cart_category_ids as $category_id ) {
+		$target_markets = wpsc_get_meta( $category_id, 'target_market', 'wpsc_category' );
+		if ( ! empty( $target_markets ) )
+			$target_market_ids[$category_id] = $target_markets;
+	}
+
+	$have_target_market = empty( $target_market_id );
+
+	//If we're comparing multiple categories
+	if ( count( $target_market_ids ) > 1 ) {
+		$target_market_ids = call_user_func_array( 'array_intersect', $target_market_ids );
+	} else {
+		$target_market_ids = array_values( $target_market_ids );
+		$target_market_ids = $target_market_ids[0];
+	}
+
+	$country_data = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `visible`= '1' ORDER BY `country` ASC", ARRAY_A );
+	$have_target_market = $have_target_market && count( $country_data ) != count( $target_market_ids );
+	$GLOBALS['wpsc_country_data'] = $country_data;
+
+	$conflict_error = wpsc_get_customer_meta( 'category_shipping_conflict' );
+	$target_conflict = wpsc_get_customer_meta( 'category_shipping_target_market_conflict' );
+
+	// Return true if there are no restrictions
+	if ( ! $have_target_market ) {
+		// clear out the target market messages
+		if ( ! empty( $target_conflict ) )
+			wpsc_delete_customer_meta( 'category_shipping_conflict' );
+
+		wpsc_update_customer_meta( 'category_shipping_target_market_conflict', false );
+		wpsc_update_customer_meta( 'category_shipping_conflict', false );
+		return true;
+	}
+
+	// temporarily hijack this session variable to display target market restriction warnings
+	if ( ! empty( $target_conflict ) || ! wpsc_has_category_and_country_conflict() ) {
+		wpsc_update_customer_meta( 'category_shipping_target_market_conflict', true );
+		wpsc_update_customer_meta( 'category_shipping_conflict', __( "Some of your cart items are targeted specifically to certain markets. As a result, you can only select those countries as your shipping destination.", 'wpsc' ) );
+	}
+
+	if ( empty( $target_market_ids ) ) {
+		wpsc_update_customer_meta( 'category_shipping_target_market_conflict', true );
+		wpsc_update_customer_meta( 'category_shipping_conflict', __( 'It appears that some products in your cart have conflicting target market restrictions. As a result, there is no common destination country where your cart items can be shipped to. Please contact the site administrator for more information.', 'wpsc' ) );
+	}
+
+	return $target_market_ids;
+
+}
 /**
  * The WPSC Checkout class
  */
