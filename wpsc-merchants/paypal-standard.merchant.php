@@ -203,7 +203,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 				}
 
 				$paypal_vars += array(
-					'item_name' => __('Your Subscription', 'wpsc'),
+					'item_name' => apply_filters( 'the_title', $cart_row['name'] ),
 					// I fail to see the point of sending a subscription to paypal as a subscription
 					// if it does not recur, if (src == 0) then (this == underfeatured waste of time)
 					'src' => '1'
