@@ -270,7 +270,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 			if (!$aggregate) {
 				foreach ($this->cart_items as $cart_row) {
 					$paypal_vars += array(
-						"item_name_$i" => $cart_row['name'],
+						"item_name_$i" => apply_filters( 'the_title', $cart_row['name'] ),
 						"amount_$i" => $this->convert($cart_row['price']),
 						"quantity_$i" => $cart_row['quantity'],
 						"item_number_$i" => $cart_row['product_id'],
