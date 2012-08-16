@@ -402,7 +402,7 @@ function wpsc_admin_category_forms_edit() {
             </th>
             <td>
                 <?php
-                    if ( @extension_loaded( 'suhosin' ) ) :
+                    if ( wpsc_is_suhosin_enabled() ) :
                  ?>
                 <em><?php esc_html_e( 'The Target Markets feature has been disabled because you have the Suhosin PHP extension installed on this server. If you need to use the Target Markets feature, then disable the suhosin extension. If you can not do this, you will need to contact your hosting provider.','wpsc' ); ?></em>
 

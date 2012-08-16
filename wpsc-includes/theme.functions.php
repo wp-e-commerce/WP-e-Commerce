@@ -1162,6 +1162,11 @@ function wpsc_place_shopping_cart( $content = '' ) {
 		// END: compatibility fix
 		$GLOBALS['nzshpcrt_activateshpcrt'] = true;
 		define( 'DONOTCACHEPAGE', true );
+
+		// call this function to detect conflicts when the cart page is first loaded, otherwise
+		// any conflict messages will only be displayed on the next page load
+		wpsc_get_acceptable_countries();
+
 		ob_start();
 		include( wpsc_get_template_file_path( 'wpsc-shopping_cart_page.php' ) );
 		$output = ob_get_contents();

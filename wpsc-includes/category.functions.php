@@ -578,4 +578,15 @@ function wpsc_get_terms_variation_sort_filter($terms){
 }
 add_filter('get_terms','wpsc_get_terms_variation_sort_filter');
 
+/**
+ * Abstracts Suhosin check into a function.  Used primarily in relation to target markets.  
+ * May be deprecated or never publicly launched if we change how the target market variables work.
+ * 
+ * @since 3.8.9
+ * @return boolean
+ */
+function wpsc_is_suhosin_enabled() {
+	return @ extension_loaded( 'suhosin' ) && @ ini_get( 'suhosin.post.max_vars' ) > 0 && @ ini_get( 'suhosin.post.max_vars' ) < 500; 
+}
+
 ?>
