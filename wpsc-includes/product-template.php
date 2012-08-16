@@ -519,7 +519,7 @@ function wpsc_display_categories() {
  */
 function wpsc_display_products() {
 	global $post;
-	$product_page_id = wpec_get_the_post_id_by_shortcode('[productspage]');
+	$product_page_id = wpsc_get_the_post_id_by_shortcode('[productspage]');
 	//we have to display something, if we are not displaying categories, then we must display products
 	$output = true;
 	if ( wpsc_display_categories ( ) ) {
