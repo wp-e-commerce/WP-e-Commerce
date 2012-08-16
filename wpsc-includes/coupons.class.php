@@ -84,7 +84,7 @@ class wpsc_coupons {
 				'every_product' => ''
 			), $coupon_data );
 
-			$this->value = $coupon_data['value'];
+			$this->value = (float) $coupon_data['value'];
 			$this->is_percentage = $coupon_data['is-percentage'];
 			$this->conditions = unserialize($coupon_data['condition']);
 			$this->is_used = $coupon_data['is-used'];
@@ -120,103 +120,422 @@ class wpsc_coupons {
 		return false;
 	}
 
+	/**
+	 * Check whether the coupon has conditions
+	 *
+	 * @since  3.8.9
+	 * @return boolean True if there are conditions
+	 */
+	public function has_conditions() {
+		return ! empty( $this->conditions );
+	}
 
-	function calculate_discount() {
+	/**
+	 * Check if item's name matches condition
+	 *
+	 * @since  3.8.9
+	 * @access private
+	 * @param  array  $condition Condition arguments
+	 * @param  object $cart_item Cart item
+	 * @return boolean
+	 */
+	public function _callback_condition_item_name( $condition, $cart_item ) {
+		$product_data = get_post( $cart_item->product_id );
+
+		switch( $condition['logic'] ) {
+			case 'equal': //Checks if the product name is exactly the same as the condition value
+				return $product_data->post_title == $condition['value'];
+			break;
+
+			case 'greater'://Checks if the product name is not the same as the condition value
+				return $product_data->post_title > $condition['value'];
+			break;
+
+			case 'less'://Checks if the product name is not the same as the condition value
+				return $product_data->post_title < $condition['value'];
+			break;
+
+			case 'contains'://Checks if the product name contains the condition value
+				return preg_match( "/(.*)".$condition['value']."(.*)/", $product_data->post_title );
+			break;
+
+			case 'category'://Checks if the product category is the condition value
+				$id = $product_data->ID;
+				if ( $product_data->post_parent )
+					$id = $product_data->post_parent;
+
+				return has_term( $condition['value'], 'wpsc_product_category', $id );
+			break;
+
+			case 'not_contain'://Checks if the product name contains the condition value
+				return ! preg_match( "/(.*)".$condition['value']."(.*)/", $product_data->post_title );
+			break;
+
+			case 'begins'://Checks if the product name begins with condition value
+				return preg_match( "/^".$condition['value']."/", $product_data->post_title );
+			break;
+
+			case 'ends'://Checks if the product name ends with condition value
+				return preg_match( "/".$c['value']."$/", $product_data->post_title );
+			break;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Check whether item quantity matches condition
+	 *
+	 * @since  3.8.9
+	 * @access private
+	 * @param  array  $condition Condition arguments
+	 * @param  object $cart_item Cart item
+	 * @return boolean
+	 */
+	public function _callback_condition_item_quantity( $condition, $cart_item ) {
+		$value = (int) $condition['value'];
+		switch( $condition['logic'] ) {
+			case 'equal': //Checks if the quantity of a product in the cart equals condition value
+				return $cart_item->quantity == $value;
+			break;
+
+			case 'greater'://Checks if the quantity of a product is greater than the condition value
+				return $cart_item->quantity > $value;
+			break;
+
+			case 'less'://Checks if the quantity of a product is less than the condition value
+				return $cart_item->quantity < $value;
+			break;
+
+			case 'contains'://Checks if the product name contains the condition value
+				return preg_match( "/(.*)" . $value . "(.*)/", $cart_item->quantity );
+			break;
+
+			case 'not_contain'://Checks if the product name contains the condition value
+				return preg_match( "/(.*)" . $value . "(.*)/",$cart_item->quantity );
+			break;
+
+			case 'begins'://Checks if the product name begins with condition value
+				return preg_match( "/^" . $value ."/", $cart_item->quantity );
+			break;
+
+			case 'ends'://Checks if the product name ends with condition value
+				return preg_match( "/" . $value . "$/",$product_obj->quantity );
+			break;
+  		}
+
+		return false;
+	}
+
+	/**
+	 * Check whether total quantity matches condition
+	 *
+	 * @since  3.8.9
+	 * @access private
+	 * @param  array  $condition Condition arguments
+	 * @param  object $cart_item Cart item
+	 * @return boolean
+	 */
+	public function _callback_condition_total_quantity( $condition, $cart_item ) {
+		$total_quantity = wpsc_cart_item_count();
+		$value = (int) $condition['value'];
+
+		switch( $condition['logic'] ) {
+			case 'equal'://Checks if the quantity of products in the cart equals condition value
+				return $total_quantity == $value;
+			break;
+
+			case 'greater'://Checks if the quantity in the cart is greater than the condition value
+				return $total_quantity > $value;
+			break;
+
+			case 'less'://Checks if the quantity in the cart is less than the condition value
+				return $total_quantity < $value;
+			break;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Checks whether subtotal matches condition
+	 *
+	 * @since  3.8.9
+	 * @access private
+	 * @param  array  $condition Condition arguments
+	 * @param  object $cart_item Cart item
+	 * @return
+	 */
+	public function _callback_condition_subtotal_amount( $condition, $cart_item ) {
+		global $wpsc_cart;
+		$subtotal = $wpsc_cart->calculate_subtotal();
+		$value = (int) $condition['value'];
+
+		switch( $condition['logic'] ) {
+			case 'equal'://Checks if the subtotal of products in the cart equals condition value
+				return $subtotal == $value;
+			break;
+
+			case 'greater'://Checks if the subtotal of the cart is greater than the condition value
+				return $subtotal > $value;
+			break;
+
+			case 'less'://Checks if the subtotal of the cart is less than the condition value
+				return $subtotal < $value;
+			break;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Filter out cart items that don't match coupon conditions
+	 *
+	 * @since  3.8.9
+	 * @access private
+	 * @param  object $cart_item Cart item
+	 * @return bool
+	 */
+	public function _filter_cart_item_conditions( $cart_item ) {
+		global $wpsc_cart;
+
+		foreach ( $this->conditions as $condition ) {
+			$callback = '_callback_condition_' . $condition['property'];
+			if ( ! is_callable( array( $this, $callback ) ) )
+				return false;
+
+			if ( ! $this->$callback( $condition, $cart_item ) )
+				return apply_filters( 'wpsc_coupon_compare_logic', false, $condition, $cart_item );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Get cart items that match coupon conditions
+	 *
+	 * @since  3.8.9
+	 * @access private
+	 * @return array Array containing eligible cart items
+	 */
+	public function get_eligible_items() {
+		global $wpsc_cart;
+
+		// cache product objects if we have a "item name" condition
+		if ( in_array( 'item_name', $this->conditions ) ) {
+			$ids = $wpsc_cart->get_items( array( 'fields' => 'product_id' ) );
+			get_posts( array(
+				'post_type'   => 'wpsc-product',
+				'numberposts' => -1,
+				'post__in'    => array( $ids ),
+			) );
+		}
+
+		// sort the items by total price so that we can use this in $this->calculate_discount_conditions()
+		$orderby = apply_filters( 'wpsc_coupon_select_item_orderby', 'unit_price' );
+		$order   = apply_filters( 'wpsc_coupon_select_item_order'  , 'ASC'        );
+		$cart_items = $wpsc_cart->get_items( array( 'orderby' => $orderby, 'order' => $order ) );
+
+		$cart_items = array_filter( $cart_items, array( $this, '_filter_cart_item_conditions' ) );
+
+		return $cart_items;
+	}
+
+	/**
+	 * Calculate the subtotal of the items passed in as argument
+	 *
+	 * @since  3.8.9
+	 * @access private
+	 * @param  array $items Array of items
+	 * @return float        Subtotal
+	 */
+	private function calculate_subtotal( $items ) {
+		$total = 0;
+
+		foreach ( $items as $item ) {
+			$total += $item->total_price;
+		}
+
+		return $total;
+	}
+
+	/**
+	 * Get the total quantity of the items passed in as argument
+	 *
+	 * @since  3.8.9
+	 * @access private
+	 * @param  array $items Array of items
+	 * @return float        Subtotal
+	 */
+	private function get_total_quantity( $items ) {
+		$total = 0;
+
+		foreach ( $items as $item ) {
+			$total += $item->quantity;
+		}
+
+		return $total;
+	}
+
+	/**
+	 * Calculate the discount amount, taking coupon conditions into consideration
+	 *
+	 * @since  3.8.9
+	 * @access private
+	 * @return float Discount amount
+	 */
+	private function calculate_discount_conditions() {
+		global $wpsc_cart;
+
+		// findout whether the cart meet the conditions
+		$items = $this->get_eligible_items();
+
+		if ( empty( $items ) )
+			return 0;
+
+		// if this is free shipping, return the total shipping regardless of whether "Apply on all
+		// products" is checked or not
+		if ( $this->is_free_shipping() )
+			return $this->calculate_free_shipping();
+
+		// if  "Apply on all products" is checked, discount amount should be based on the total values
+		// of eligible cart items
+		if ( $this->applies_to_all_items() ) {
+			if ( $this->is_percentage() ) {
+				$subtotal = $this->calculate_subtotal( $items );
+				$discount = $this->value * $subtotal / 100;
+  			} else {
+				$discount = $this->value * $this->get_total_quantity( $items );
+			}
+			return $discount;
+		}
+
+		// if "Apply on all products" is not checked and the coupon is percentage, the discount
+		// amount should be based on the eligible cart item with lowest unit price
+		if ( $this->is_percentage() ) {
+			$field = apply_filters( 'wpsc_coupon_select_item_field'  , 'unit_price' );
+			$item = array_shift( $items );
+			return $item->$field * $this->value / 100;
+		}
+
+		// if "Apply on all products" is not checked and the coupon is a fixed value
+		// return the discount value
+		return $this->value;
+	}
+
+	/**
+	 * Calculate discount amount without taking conditions into consideration
+	 *
+	 * @since  3.8.9
+	 * @access private
+	 * @return float Discount amount
+	 */
+	private function calculate_discount_without_conditions() {
+		global $wpsc_cart;
+
+		// if this is free shipping, return the total shipping regardless of whether "Apply on all
+		// products" is checked or not
+		if ( $this->is_free_shipping() )
+			return $this->calculate_free_shipping();
+
+		// if  "Apply on all products" is checked, discount amount should be based on the overall
+		// cart
+		if ( $this->applies_to_all_items() ) {
+			if ( $this->is_percentage() ) {
+				$subtotal = $wpsc_cart->calculate_subtotal();
+				$discount = $this->value * $subtotal / 100;
+			} else {
+				$discount = $this->value * wpsc_cart_item_count();
+  			}
+			return $discount;
+		}
+
+		// if "Apply on all products" is not checked and the coupon is percentage, the discount
+		// amount should be based on the cart item with lowest unit_price
+		if ( $this->is_percentage() ) {
+			$orderby = apply_filters( 'wpsc_coupon_select_item_orderby', 'unit_price' );
+			$order   = apply_filters( 'wpsc_coupon_select_item_order'  , 'ASC'        );
+			$field   = apply_filters( 'wpsc_coupon_select_item_field'  , 'unit_price' );
+			$cart_items = $wpsc_cart->get_items( array( 'fields' => $field, 'orderby' => $orderby, 'order' => $order ) );
+			if ( empty( $cart_items ) )
+				return 0;
+
+			$item = array_shift( $cart_items );
+
+			return $item * $this->value / 100;
+  		}
+
+		// if "Apply on all products" is not checked and the coupon is a fixed value
+		// return the discount value
+		return $this->value;
+	}
+
+	/**
+	 * Check whether this coupon is a "Free shipping" coupon
+	 *
+	 * @since  3.8.9
+	 * @return boolean
+	 */
+	public function is_free_shipping() {
+		return $this->is_percentage == '2';
+	}
+
+	/**
+	 * Check whether this coupon is a "percentage" coupon
+	 *
+	 * @since  3.8.9
+	 * @return boolean
+	 */
+	public function is_percentage() {
+		return $this->is_percentage == '1';
+	}
+
+	/**
+	 * Check whether this coupon is a fixed amount coupon
+	 *
+	 * @since  3.8.9
+	 * @return boolean
+	 */
+	public function is_fixed_amount() {
+		return ! $this->is_free_shipping() && ! $this->is_percentage();
+	}
+
+	/**
+	 * Check whether this coupon can be applied to all items
+	 *
+	 * @since  3.8.9
+	 * @return boolean
+	 */
+	public function applies_to_all_items() {
+		return $this->every_product == 1;
+	}
+
+	/**
+	 * Calculate the free shipping discount amount
+	 * @return float
+	 */
+	private function calculate_free_shipping() {
+		global $wpsc_cart;
+		return $wpsc_cart->calculate_total_shipping();
+	}
+
+
+	/**
+	 * Calculate the discount amount
+	 *
+	 * @since  3.8.9
+	 * @return float
+	 */
+	public function calculate_discount() {
 		global $wpdb, $wpsc_cart;
 
 		$wpsc_cart->clear_cache();
 
-		$return = 0;
+		if ( $this->has_conditions() )
+			return $this->calculate_discount_conditions();
 
-		// $this->is_percentage == '2' means "Free Shipping"
-		if ($this->is_percentage == '2'){
-
-			$discount_country = $this->free_shipping_details['discount_country'];
-			$discount_region = $this->free_shipping_details['discount_region'];
-			$delivery_country = $wpsc_cart->delivery_country;
-			$delivery_region = $wpsc_cart->delivery_region;
-
-			//if there is no region we just compare the countries otherwise compaire both the regions
-			//and countries or if there are no country/region limitation then its free shipping for everywhere
-			if (empty($discount_region) && ($discount_country == $delivery_country) || ($discount_country == $delivery_country) && ($delivery_region == $discount_region) || empty($this->free_shipping_details))
-				return $wpsc_cart->calculate_total_shipping();
-		}
-
-		//Calculates the discount for the whole cart if there is no condition on this coupon.
-		if ($this->conditions == '' || count($this->conditions) == 0) {
-
-			// $this->is_percentage == '1' means "%" discount
-			if ($this->is_percentage == '1') {
-
-				$total_price = $wpsc_cart->calculate_subtotal();
-				$this->discount = $total_price*$this->value/100;
-				return $this->discount;
-
-			// Anything else means "Fixed amount" discount
-			} else {
-
-			  if($this->every_product == 1) {
-					$item_count = (int)wpsc_cart_item_count();
-					return ($this->value * $item_count);
-			  } else {
-					return $this->value;
-				}
-			}
-
-		// The coupon has conditions so may not apply to all items
-		} else {
-
-			//Loop throught all products in the shopping cart, apply coupons on the ones match the conditions.
-			$cart  =& $wpsc_cart->have_cart_items();
-				foreach ($wpsc_cart->cart_items as $key => $item) {
-
-					$product_data = $wpdb->get_results("SELECT * FROM ". $wpdb->posts ." WHERE id='{$item->product_id}'");
-					$product_data = $product_data[0];
-
-					$match = true;
-					foreach ($this->conditions as $c) {
-
-						//Check if all the condictions are returning true, so it's an ALL logic, if anyone want to implement a ANY logic please do.
-
-						if (!$this->compare_logic($c, $item)) {
-							$match = false;
-							break;
-						}
-					}
-
-					// This product is eligible for discount
-					if ($match) {
-
-					    if ($this->is_percentage == '1') {
-							$this->discount = $item->unit_price*$item->quantity*$this->value/100;
-
-							$item->discount = $this->discount;
-							if($this->every_product == 1){
-								$return += $this->discount;
-							}else{
-								return $this->discount;
-							}
-						} else {
-							$item->discount = $this->value;
-							if($this->every_product == 1){
-								$return += $item->discount * $item->quantity;
-							}else{
-								return $item->discount;
-							}
-						}
-					// This product is not eligible for discount
-					}else{
-						$this->discount = 0;
-						$item->discount = $this->discount;
-						$return += $this->discount;
-					}
-				}
-		}
-
-		return $return;
-	}
-
-
+		return $this->calculate_discount_without_conditions();
+  	}
 
 	/**
 	 * Comparing logic with the product information
