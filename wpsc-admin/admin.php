@@ -397,21 +397,21 @@ function wpsc_meta_boxes() {
 		remove_meta_box( 'wpsc_product_categorydiv'        , 'wpsc-product', 'core' );
 	}
 
-	add_meta_box( 'wpsc_price_control_forms'   , __( 'Price Control', 'wpsc' )         , 'wpsc_price_control_forms'   , $pagename, 'side', 'low' );
-	add_meta_box( 'wpsc_stock_control_forms'   , __( 'Stock Control', 'wpsc' )         , 'wpsc_stock_control_forms'   , $pagename, 'side', 'low' );
-	add_meta_box( 'wpsc_product_taxes_forms'   , __( 'Taxes', 'wpsc' )                 , 'wpsc_product_taxes_forms'   , $pagename, 'side', 'low' );
-	add_meta_box( 'wpsc_additional_desc'       , __( 'Additional Description', 'wpsc' ), 'wpsc_additional_desc'       , $pagename, 'normal', 'high' );
-	add_meta_box( 'wpsc_product_download_forms', __( 'Product Download', 'wpsc' )      , 'wpsc_product_download_forms', $pagename, 'normal', 'high' );
-	add_meta_box( 'wpsc_product_image_forms'   , __( 'Product Images', 'wpsc' )        , 'wpsc_product_image_forms'   , $pagename, 'normal', 'high' );
-	add_meta_box( 'wpsc_product_shipping_forms', __( 'Shipping', 'wpsc' )              , 'wpsc_product_shipping_forms', $pagename, 'normal', 'high' );
-	add_meta_box( 'wpsc_product_advanced_forms', __( 'Advanced Settings', 'wpsc' )     , 'wpsc_product_advanced_forms', $pagename, 'normal', 'high' );
-
+	add_meta_box( 'wpsc_price_control_forms', __('Price Control', 'wpsc'), 'wpsc_price_control_forms', $pagename, 'side', 'low' );
+	add_meta_box( 'wpsc_stock_control_forms', __('Stock Control', 'wpsc'), 'wpsc_stock_control_forms', $pagename, 'side', 'low' );
+	add_meta_box( 'wpsc_product_taxes_forms', __('Taxes', 'wpsc'), 'wpsc_product_taxes_forms', $pagename, 'side', 'low' );
+	add_meta_box( 'wpsc_additional_desc', __('Additional Description', 'wpsc'), 'wpsc_additional_desc', $pagename, 'normal', 'high' );
+	add_meta_box( 'wpsc_product_download_forms', __('Product Download', 'wpsc'), 'wpsc_product_download_forms', $pagename, 'normal', 'high' );
+	add_meta_box( 'wpsc_product_image_forms', __('Product Images', 'wpsc'), 'wpsc_product_image_forms', $pagename, 'normal', 'high' );
+	if ( ! empty( $post->ID ) && ! wpsc_product_has_variations( $post->ID ) )
+		add_meta_box( 'wpsc_product_shipping_forms', __('Shipping', 'wpsc'), 'wpsc_product_shipping_forms_metabox', $pagename, 'normal', 'high' );
+	add_meta_box( 'wpsc_product_advanced_forms', __('Advanced Settings', 'wpsc'), 'wpsc_product_advanced_forms', $pagename, 'normal', 'high' );
 }
 
 add_action( 'admin_footer', 'wpsc_meta_boxes' );
 add_action( 'admin_enqueue_scripts', 'wpsc_admin_include_css_and_js_refac' );
 function wpsc_admin_include_css_and_js_refac( $pagehook ) {
-	global $post_type, $current_screen;
+	global $post_type, $current_screen, $post;
 
 	if ( version_compare( get_bloginfo( 'version' ), '3.3', '<' ) )
 		wp_admin_css( 'dashboard' );
@@ -432,7 +432,7 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 	$version_identifier = WPSC_VERSION . "." . WPSC_MINOR_VERSION;
 	$pages = array( 'index.php', 'options-general.php', 'edit.php', 'post.php', 'post-new.php' );
 
-	if ( ( in_array( $pagehook, $pages ) && $post_type == 'wpsc-product' )  || $current_screen->id == 'edit-wpsc_product_category' || $current_screen->id == 'dashboard_page_wpsc-sales-logs' || $current_screen->id == 'dashboard_page_wpsc-purchase-logs' || $current_screen->id == 'settings_page_wpsc-settings' || $current_screen->id == 'wpsc-product_page_wpsc-edit-coupons' || $current_screen->id == 'edit-wpsc-variation' ) {
+	if ( ( in_array( $pagehook, $pages ) && $post_type == 'wpsc-product' )  || $current_screen->id == 'edit-wpsc_product_category' || $current_screen->id == 'dashboard_page_wpsc-sales-logs' || $current_screen->id == 'dashboard_page_wpsc-purchase-logs' || $current_screen->id == 'settings_page_wpsc-settings' || $current_screen->id == 'wpsc-product_page_wpsc-edit-coupons' || $current_screen->id == 'edit-wpsc-variation' || $current_screen->id == 'wpsc-product-variations-iframe' ) {
 		wp_enqueue_script( 'livequery',                      WPSC_URL . '/wpsc-admin/js/jquery.livequery.js',             array( 'jquery' ), '1.0.3' );
 		wp_enqueue_script( 'wp-e-commerce-admin-parameters', admin_url( 'admin.php?wpsc_admin_dynamic_js=true' ), false,             $version_identifier );
 		wp_enqueue_script( 'wp-e-commerce-admin',            WPSC_URL . '/wpsc-admin/js/admin.js',                        array( 'jquery', 'jquery-ui-core', 'jquery-ui-sortable' ), $version_identifier, false );
@@ -448,6 +448,7 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 				array(                       // args
 					'add_variation_set_nonce' => _wpsc_create_ajax_nonce( 'add_variation_set' ),
 					'update_variations_nonce' => _wpsc_create_ajax_nonce( 'update_variations' ),
+					'thickbox_title'          => __( 'Add Media - %s', 'wpsc' ),
 				)
 			);
 		}
@@ -467,6 +468,25 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 			'variations_tutorial'      => esc_html__( 'Variations allow you to create options for your products. For example, if you\'re selling T-Shirts, they will generally have a "Size" option. Size will be the Variation Set name, and it will be a "New Variant Set". You will then create variants (small, medium, large) which will have the "Variation Set" of Size. Once you have made your set you can use the table on the right to manage them (edit, delete). You will be able to order your variants by dragging and dropping them within their Variation Set.', 'wpsc' )
 		) );
 	}
+
+	if ( $pagehook == 'wpsc-product-variations-iframe' ) {
+		wp_enqueue_script( 'wp-e-commerce-product-variations', WPSC_URL . '/wpsc-admin/js/product-variations.js', array( 'jquery' ), $version_identifier );
+		wp_localize_script( 'wp-e-commerce-product-variations', 'WPSC_Product_Variations', array(
+			'product_id' => $_REQUEST['product_id'],
+		) );
+	}
+
+	if ( $pagehook == 'media-upload-popup' ) {
+		wp_dequeue_script( 'set-post-thumbnail' );
+		wp_enqueue_script( 'wpsc-set-post-thumbnail', WPSC_URL . '/wpsc-admin/js/set-post-thumbnail.js', array( 'jquery' ), $version_identifier );
+		wp_localize_script( 'wpsc-set-post-thumbnail', 'WPSC_Set_Post_Thumbnail', array(
+			'link_text' => __( 'Use as Product Thumbnail', 'wpsc' ),
+			'saving'    => __( 'Saving...' ),
+			'error'     => __( 'Could not set that as the thumbnail image. Try a different attachment.' ),
+			'done'      => __( 'Done' ),
+		) );
+	}
+
 	if ( 'dashboard_page_wpsc-upgrades' == $pagehook || 'dashboard_page_wpsc-update' == $pagehook )
 		wp_enqueue_style( 'wp-e-commerce-admin', WPSC_URL . '/wpsc-admin/css/admin.css', false, $version_identifier, 'all' );
 }

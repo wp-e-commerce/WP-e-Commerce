@@ -185,7 +185,7 @@ function wpsc_pre_update( $data , $postarr ) {
         $data["post_parent"] = $postarr["parent_post"];
 
 	// Sanitize status for variations (see #324)
-	if ( $data['post_parent'] && ( ! isset( $data['ID'] ) || $data['post_parent'] != $data['ID'] ) ) {
+	if ( $data['post_parent'] && ( ! isset( $data['ID'] ) || $data['post_parent'] != $data['ID'] ) && $data['post_status'] == 'publish' ) {
 		$data['post_status'] = 'inherit';
 	}
 
@@ -531,14 +531,15 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 	$variation_sets_and_values = apply_filters('wpsc_edit_product_variation_sets_and_values', $variation_sets_and_values, $product_id);
 	wp_set_object_terms($product_id, $variation_sets_and_values, 'wpsc-variation');
 
+	$parent_id = $_REQUEST['product_id'];
+
 	$child_product_template = array(
 		'post_author' 	=> $user_ID,
-		'post_content' 	=> $post_data['description'],
-		'post_excerpt' 	=> $post_data['additional_description'],
-		'post_title' 	=> $post_data['name'],
+		'post_content' 	=> get_post_field( 'post_content', $parent_id, 'raw' ),
+		'post_excerpt' 	=> get_post_field( 'post_excerpt', $parent_id, 'raw' ),
+		'post_title' 	=> get_post_field( 'post_title', $parent_id, 'raw' ),
 		'post_status' 	=> 'inherit',
 		'post_type' 	=> "wpsc-product",
-		'post_name' 	=> sanitize_title($post_data['name']),
 		'post_parent' 	=> $product_id
 	);
 
