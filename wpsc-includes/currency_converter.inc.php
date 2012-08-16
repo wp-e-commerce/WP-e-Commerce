@@ -53,7 +53,7 @@
 			$url = "http://www.google.com/ig/calculator?hl=en&q=$amount$from_Currency=?$to_Currency";
 
 			$ch = curl_init();
-			$timeout = 0;
+			$timeout = 20;
 			curl_setopt ($ch, CURLOPT_URL, $url);
 			curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
