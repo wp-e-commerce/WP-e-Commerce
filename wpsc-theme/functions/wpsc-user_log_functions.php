@@ -166,39 +166,29 @@ function wpsc_display_form_fields() {
       </td>
     </tr>\n\r";
 		} else {
-			$continue = true;
-			if( $form_field['unique_name'] == 'billingstate'){
-				$selected_country_id = wpsc_get_country_form_id_by_type('country');
-				if(is_array($meta_data[$selected_country_id]) && isset($meta_data[$selected_country_id][1])){
-					$continue = false;
-				}else{
-					$continue = true;
-				}
 
+			$display = '';
+			if ( in_array( $form_field['unique_name'], array( 'shippingstate', 'billingstate' ) ) ) {
+				if ( $form_field['unique_name'] == 'shippingstate' )
+					$country_field_id = wpsc_get_country_form_id_by_type( 'delivery_country' );
+				else
+					$country_field_id = wpsc_get_country_form_id_by_type( 'country' );
+
+				$country = is_array( $meta_data[$country_field_id] ) ? $meta_data[$country_field_id][0] : $meta_data[$country_field_id];
+				if ( wpsc_has_regions( $country ) )
+					$display = ' style="display:none;"';
 			}
 
-			if( $form_field['unique_name'] == 'shippingstate'){
-				$delivery_country_id = wpsc_get_country_form_id_by_type('delivery_country');
+			echo "
+		      <tr{$display}>
+    		    <td align='left'>\n\r";
+					echo apply_filters( 'wpsc_account_form_field_' . $ff_tag, $form_field['name'] );
+					if ( $form_field['mandatory'] == 1 )
+					echo " *";
+					echo "
+        		</td>\n\r
+        		<td  align='left'>\n\r";
 
-				if((is_array($meta_data[$delivery_country_id]) && (isset($meta_data[$delivery_country_id][1]) ))|| is_numeric($meta_data[$form_field['id']])){
-					$shipping_form_field = $form_field;
-					$continue = false;
-				}else{
-					$continue = true;
-				}
-			}
-
-			if($continue){
-				echo "
-			      <tr>
-	    		    <td align='left'>\n\r";
-						echo apply_filters( 'wpsc_account_form_field_' . $ff_tag, esc_html( $form_field['name'] ) );
-						if ( $form_field['mandatory'] == 1 )
-						echo " *";
-						echo "
-	        		</td>\n\r
-	        		<td  align='left'>\n\r";
-        	}
 			switch ( $form_field['type'] ) {
 				case "city":
 				case "delivery_city":
@@ -213,13 +203,7 @@ function wpsc_display_form_fields() {
 
 				case "text":
 					$value = isset( $meta_data[$form_field['id']] ) ? $meta_data[$form_field['id']] : '';
-					if($continue){
-						echo "<input type='text' value='" . $value . "' name='collected_data[" . $form_field['id'] . "]' />";
-
-					}elseif('shippingstate' == $form_field['unique_name'] && is_numeric( $value )){
-
-					}
-
+					echo "<input type='text' value='" . $value . "' name='collected_data[" . $form_field['id'] . "]' />";
 					break;
 
 				case "region":
@@ -233,23 +217,32 @@ function wpsc_display_form_fields() {
 						$country_code = ($meta_data[$form_field['id']][0]);
 					else
 						$country_code = ($meta_data[$form_field['id']]);
-					echo "<select name='collected_data[" . $form_field['id'] . "][0]' >" . nzshpcrt_country_list( $country_code ) . "</select>";
-					if ( isset($meta_data[$form_field['id']][1]) )
-						echo "<br /><select name='collected_data[" . $form_field['id'] . "][1]'>" . nzshpcrt_region_list( $country_code, $meta_data[$form_field['id']][1] ) . "</select>";
+					$html_id = 'wpsc-profile-billing-country';
+					$js = "onchange=\"wpsc_set_profile_country('{$html_id}', '" . $form_field['id'] . "');\"";
+
+					echo "<select id='{$html_id}' {$js} name='collected_data[" . $form_field['id'] . "][0]' >" . nzshpcrt_country_list( $country_code ) . "</select>";
+
+					if ( wpsc_has_regions( $country_code ) ) {
+						$region = isset( $meta_data[$form_field['id']][1] ) ? $meta_data[$form_field['id']][1] : '';
+						echo "<br /><select name='collected_data[" . $form_field['id'] . "][1]'>" . nzshpcrt_region_list( $country_code, $region ) . "</select>";
+					}
+
 
 					break;
 
 				case "delivery_country":
-
 					if (is_array($meta_data[$form_field['id']]))
 						$country_code = ($meta_data[$form_field['id']][0]);
 					else
 						$country_code = ($meta_data[$form_field['id']]);
-					echo "<select name='collected_data[" . $form_field['id'] . "][0]' >" . nzshpcrt_country_list( $country_code ) . "</select>";
-					if( is_array($meta_data[$form_field['id']]))
-						echo "<br /><select name='collected_data[" . $form_field['id'] . "][1]'>" . nzshpcrt_region_list( $country_code, $meta_data[$form_field['id']][1] ) . "</select>";
-					elseif( isset($shipping_form_field) )
-						echo "<br /><select name='collected_data[" . $shipping_form_field['id'] . "][1]'>" . nzshpcrt_region_list( $country_code, $meta_data[$shipping_form_field['id']] ) . "</select>";
+					$html_id = 'wpsc-profile-shipping-country';
+					$js = "onchange=\"wpsc_set_profile_country('{$html_id}', '" . $form_field['id'] . "');\"";
+
+					echo "<select id='{$html_id}' {$js} name='collected_data[" . $form_field['id'] . "][0]' >" . nzshpcrt_country_list( $country_code ) . "</select>";
+					if( wpsc_has_regions( $country_code ) ) {
+						$region = isset( $meta_data[$form_field['id']][1] ) ? $meta_data[$form_field['id']][1] : '';
+						echo "<br /><select name='collected_data[" . $form_field['id'] . "][1]'>" . nzshpcrt_region_list( $country_code, $region ) . "</select>";
+					}
 					break;
 				case "email":
 					echo "<input type='text' value='" . $meta_data[$form_field['id']] . "' name='collected_data[" . $form_field['id'] . "]' />";
@@ -642,7 +635,7 @@ function wpsc_user_details() {
 					switch ($form_field['unique_name']){
 						case 'shippingcountry':
 						case 'billingcountry':
-						$country = unserialize($form_field['value']);
+						$country = maybe_unserialize($form_field['value']);
 							 if(is_array($country))
 							 	$country = $country[0];
 							 else

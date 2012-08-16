@@ -924,6 +924,34 @@ if ( isset( $_REQUEST['wpsc_ajax_action'] ) && ($_REQUEST['wpsc_ajax_action'] ==
 	add_action( 'init', 'wpsc_change_tax' );
 }
 
+function _wpsc_change_profile_country() {
+	global $wpdb;
+
+	$country_field_id = $_REQUEST['form_id'];
+	$country = $_REQUEST['country'];
+
+	$sql = $wpdb->prepare( 'SELECT unique_name FROM `'.WPSC_TABLE_CHECKOUT_FORMS.'` WHERE `id`= %d', $country_field_id );
+	$country_field_unique_name = $wpdb->get_var( $sql );
+
+	$has_regions = wpsc_has_regions( $country );
+	$response = array( 'has_regions' => $has_regions );
+
+	$region_unique_name = 'shippingstate';
+	if ( $country_field_unique_name == 'billingcountry' )
+		$region_unique_name = 'billingstate';
+
+	$sql = $wpdb->prepare( 'SELECT id FROM ' . WPSC_TABLE_CHECKOUT_FORMS . ' WHERE unique_name=%s AND active="1"', $region_unique_name );
+	$response['region_field_id'] = $wpdb->get_var( $sql );
+
+	if ( $has_regions )
+		$response['html'] = "<select name='collected_data[" . $country_field_id . "][1]'>" . nzshpcrt_region_list( $country, '' ) . "</select>";
+
+	echo json_encode( $response );
+	exit;
+}
+if ( isset( $_REQUEST['wpsc_ajax_action'] ) && $_REQUEST['wpsc_ajax_action'] == 'change_profile_country' )
+	add_action( 'init', '_wpsc_change_profile_country' );
+
 /**
  * wpsc scale image function, dynamically resizes an image oif no image already exists of that size.
  */
