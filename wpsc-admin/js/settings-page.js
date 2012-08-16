@@ -706,24 +706,24 @@
 		event_country_drop_down_changed : function() {
 			var c = $(this),
 			    post_data = {
-					action            : 'wpec_taxes_ajax',
+					action            : 'add_tax_rate',
 					wpec_taxes_action : 'wpec_taxes_get_regions',
 					current_key       : c.data('key'),
 					taxes_type        : c.data('type'),
 					country_code      : c.val(),
-					nonce             : WPSC_Settings_Page.nonce
+					nonce             : WPSC_Settings_Page.add_tax_rate_nonce
 				},
 				spinner = c.siblings('.ajax-feedback'),
 				ajax_callback = function(response) {
 					spinner.toggleClass('ajax-feedback-active');
-					if (response !== '') {
-						c.after(response);
+					if (response.is_successful) {
+						c.after(response.obj.content);
 					}
 				};
 			spinner.toggleClass('ajax-feedback-active');
 			c.siblings('.wpsc-taxes-region-drop-down').remove();
 
-			$.post(ajaxurl, post_data, ajax_callback, 'html');
+			$.wpsc_post(post_data, ajax_callback);
 		},
 
 		/**
@@ -772,17 +772,21 @@
 			var button_wrapper = $('#wpsc-add-tax-' + type),
 			    count = $('.wpsc-tax-' + type + '-row').size(),
 			    post_data = {
-			    	action            : 'wpec_taxes_ajax',
+			    	action            : 'add_tax_rate',
 			    	wpec_taxes_action : 'wpec_taxes_build_' + type + '_form',
 			    	current_key       : count,
-			    	nonce             : WPSC_Settings_Page.nonce
+			    	nonce             : WPSC_Settings_Page.add_tax_rate_nonce
 			    },
 			    ajax_callback = function(response) {
-			    	button_wrapper.before(response).find('img').toggleClass('ajax-feedback-active');
+			    	if (! response.is_successful) {
+			    		alert(response.error.messages.join("\n"));
+			    		return;
+			    	}
+			    	button_wrapper.before(response.obj.content).find('img').toggleClass('ajax-feedback-active');
 			    };
 
 			button_wrapper.find('img').toggleClass('ajax-feedback-active');
-			$.post(ajaxurl, post_data, ajax_callback, 'html');
+			$.wpsc_post(post_data, ajax_callback);
 		}
 	};
 	$(WPSC_Settings_Page).bind('wpsc_settings_tab_loaded_taxes', WPSC_Settings_Page.Taxes.event_init);
@@ -1004,7 +1008,7 @@
 
 		event_show_hide_dependencies : function () {
 			var e = $(this);
-			
+
 			if ( e.is( ':checked' ) )
 				e.parent('p').nextAll('p').hide();
 			else
