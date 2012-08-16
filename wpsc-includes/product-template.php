@@ -885,7 +885,7 @@ function wpsc_product_has_stock( $id = null ) {
 		return true;
 
 	$variations = get_children( array( "post_type" => "wpsc-product", "post_parent" => $id ) );
-	$filter_name = empty( $variations ) ? 'wpsc_product_variation_stock' : 'wpsc_product_stock';
+	$filter_name = empty( $variations ) ? 'wpsc_product_stock' : 'wpsc_product_variation_stock';
 	$stock = apply_filters( $filter_name, (int) $stock, $id );
 
 	if ( ! empty( $variations ) ) {
