@@ -128,7 +128,7 @@ function wpsc_latest_product( $args = null, $instance ) {
 
 	$latest_products = get_posts( array(
 		'post_type'   => 'wpsc-product',
-		'numberposts' => $number, 
+		'numberposts' => $number,
 		'orderby'     => 'post_date',
 		'post_parent' => 0,
 		'post_status' => 'publish',
@@ -137,27 +137,20 @@ function wpsc_latest_product( $args = null, $instance ) {
 	$output = '';
 
 	if ( count( $latest_products ) > 0 ) {
-		$output .= '<ul class="wpsc-latest-products">';		
+		$output .= '<ul class="wpsc-latest-products">';
 		foreach ( $latest_products as $latest_product ) {
 			$output .= '<li class="wpsc-latest-product">';
 			// Thumbnails, if required
 			if ($image) {
 				$output .= '<div class="item_image">';
 				$output .= '<a href="' . wpsc_product_url( $latest_product->ID, null ) . '">';
-				$attached_images = (array)get_posts( array(
-					'post_type'   => 'attachment',
-					'numberposts' => 1,
-					'post_status' => null,
-					'post_parent' => $latest_product->ID,
-					'orderby'     => 'menu_order',
-					'order'       => 'ASC'
-				) );
-				$attached_image = $attached_images[0]; 
-				if ( $attached_image->ID > 0 )
-						$output .= '<img src="' . wpsc_product_image( $attached_image->ID, $width, $height ) . '" title="' . $latest_product->post_title . '" alt="' . $latest_product->post_title . '" />';
+				$thumbnail = wpsc_the_product_thumbnail( $width, $height, $latest_product->ID, '' );
+
+				if ( $thumbnail )
+					$output .= '<img src="' . esc_url( $thumbnail ) . '" title="' . apply_filters( 'the_title', $latest_product->post_title ) . '" alt="' . apply_filters( 'the_title', $latest_product->post_title ) . '" />';
 				else
 					$output .='<img class="no-image" id="product_image_'.wpsc_the_product_id().'" alt="' . esc_attr__( 'No Image', 'wpsc' ) . '" title="'.wpsc_the_product_title().'" src="'.WPSC_URL.'/wpsc-theme/wpsc-images/noimage.png" width="' . $width . '" height="' . $height . '" />';
-				
+
 				$output .= '</a>';
 				$output .= '</div>';
 			}
