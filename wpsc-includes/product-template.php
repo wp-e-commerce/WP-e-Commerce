@@ -1,4 +1,5 @@
 <?php
+
 /**
  * WP eCommerce product functions and product utility function.
  *
@@ -394,7 +395,7 @@ function wpsc_product_variation_price_available( $product_id, $from_text = false
 	$price = apply_filters( 'wpsc_do_convert_price', $prices[0], $product_id );
 	$price = wpsc_currency_display( $price, array( 'display_as_html' => false ) );
 
-	if ( $prices[0] == $prices[count( $prices ) - 1] )
+	if ( isset( $prices[0] ) && $prices[0] == $prices[count( $prices ) - 1] )
 		$from_text = false;
 
 	if ( $from_text )
@@ -1786,11 +1787,36 @@ function gold_cart_display_gallery(){
 	return function_exists('gold_shpcrt_display_gallery');
 }
 
-function wpsc_you_save($args = null){
+function wpsc_remove_currency_code( $args ) {
+
+	$args['display_currency_symbol'] = false;
+	$args['display_currency_code']  = false;
+
+	return $args;
+}
+
+function wpsc_get_up_to_text( $product_id ) {
+
+		add_filter( 'wpsc_toggle_display_currency_code', 'wpsc_remove_currency_code' );
+
+		$savings_text  = '';
+
+		if ( wpsc_product_has_children( $product_id ) ) {
+			$maybe_variation_price = wpsc_product_variation_price_available( $product_id );
+			$savings_text = apply_filters( 'wpsc_you_save_variation_text', __( 'up to', 'wpsc' ) );
+		}
+
+		remove_filter( 'wpsc_toggle_display_currency_code', 'wpsc_remove_currency_code' );
+
+		return $savings_text;
+
+}
+
+function wpsc_you_save( $args = null ){
 
 	$defaults = array(
 		'product_id' => false,
-		'type' => "percentage",
+		'type'       => 'percentage',
 		'variations' => false
 	);
 
