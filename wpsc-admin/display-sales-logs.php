@@ -131,22 +131,23 @@ class WPSC_Purchase_Log_Page
 
    function purchase_logs_checkout_fields(){
       global $purchlogitem;
-      if ( ! empty($purchlogitem->customcheckoutfields ) ) {
+
+      if ( ! empty($purchlogitem->additional_fields ) ) {
       ?>
          <div class="metabox-holder">
             <div id="custom_checkout_fields" class="postbox">
                <h3 class='hndle'><?php esc_html_e( 'Additional Checkout Fields' , 'wpsc' ); ?></h3>
                <div class='inside'>
                   <?php
-                  foreach( (array) $purchlogitem->customcheckoutfields as $key => $value ){
-                     $value['value'] = maybe_unserialize($value['value']);
-                     if(is_array($value['value'])){
+                  foreach( (array) $purchlogitem->additional_fields as $value ) {
+                     $value['value'] = maybe_unserialize ($value['value'] );
+                     if( is_array( $value['value'] ) ) {
                      ?>
-                        <p><strong><?php echo $key; ?> :</strong> <?php echo implode( $value['value'], ','); ?></p>
+                        <p><strong><?php echo $value['name']; ?> :</strong> <?php echo implode( stripslashes( $value['value'] ), ',' ); ?></p>
                      <?php
                      }else{
                      ?>
-                        <p><strong><?php echo $key; ?> :</strong> <?php echo $value['value']; ?></p>
+                        <p><strong><?php echo $value['name']; ?> :</strong> <?php echo stripslashes( $value['value'] ); ?></p>
                      <?php
                      }
                   }
