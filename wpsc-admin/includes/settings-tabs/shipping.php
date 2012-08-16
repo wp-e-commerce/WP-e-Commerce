@@ -6,6 +6,36 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab
 
 		if ( isset( $_REQUEST['shipping_module_id'] ) )
 			update_user_option( get_current_user_id(), 'wpsc_settings_selected_shipping_module', $_REQUEST['shipping_module_id'] );
+
+		add_action( 'admin_notices', array( $this, 'no_shipping_notice' ) );
+	}
+
+	/**
+	 * Hooks shipping notice into admin_notice if shipping is enabled but no shipping methods are selected
+	 *
+	 * @since 3.8.9
+	 * @return null
+	 */
+	public function no_shipping_notice() {
+		if ( ! empty( $_GET['shipping_disabled'] ) ) {
+		?>
+
+			<div class="error fade">
+				<p><?php _e( '<strong>Shipping has been disabled.</strong> You enabled shipping but none of the shipping methods were selected.  Please re-enable shipping, select and configure a shipping method, and then update your settings.', 'wpsc' ); ?></p>
+			</div>
+
+		<?php
+		}
+	}
+
+	public function callback_submit_options() {
+
+		if ( ! get_option( 'do_not_use_shipping' ) && ! get_option( 'custom_shipping_options' ) ) {
+			update_option( 'do_not_use_shipping', '1' );
+			return array( 'shipping_disabled' => 1 );
+		} else {
+			$_SERVER['REQUEST_URI'] = remove_query_arg( 'shipping_disabled' );
+		}
 	}
 
 	public function callback_submit_options() {
