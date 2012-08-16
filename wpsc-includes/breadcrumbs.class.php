@@ -51,7 +51,7 @@ function wpsc_breadcrumb_name() {
 function wpsc_breadcrumb_slug() {
 	global $wpsc_breadcrumbs;
 
-	return (isset($wpsc_breadcrumbs->breadcrumb['slug']) ? $wpsc_breadcrumbs->breadcrumb['slug'] : '');
+	return ( isset( $wpsc_breadcrumbs->breadcrumb['slug'] ) ? sanitize_title_with_dashes( $wpsc_breadcrumbs->breadcrumb['slug'] ) : '' );
 }
 
 /**
