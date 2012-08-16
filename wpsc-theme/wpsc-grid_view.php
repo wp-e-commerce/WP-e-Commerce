@@ -13,7 +13,7 @@ $image_height = get_option('product_image_height');
 			<div class="wpsc_categories wpsc_category_grid group">
 				<?php wpsc_start_category_query(array('category_group'=> 1, 'show_thumbnails'=> 1)); ?>
 					<a href="<?php wpsc_print_category_url();?>" class="wpsc_category_grid_item  <?php wpsc_print_category_classes_section(); ?>" title="<?php wpsc_print_category_name();?>">
-						<?php wpsc_print_category_image(45, 45); ?>
+						<?php wpsc_print_category_image(); ?>
 					</a>
 					<?php wpsc_print_subcategory("", ""); ?>
 				<?php wpsc_end_category_query(); ?>
@@ -23,7 +23,7 @@ $image_height = get_option('product_image_height');
 			<ul class="wpsc_categories">
 				<?php wpsc_start_category_query(array('category_group'=> 1, 'show_thumbnails'=> get_option('show_category_thumbnails'))); ?>
 						<li>
-							<?php wpsc_print_category_image(32, 32); ?>
+							<?php wpsc_print_category_image(); ?>
 
 							<a href="<?php wpsc_print_category_url();?>" class="wpsc_category_link  <?php wpsc_print_category_classes_section(); ?>"><?php wpsc_print_category_name();?></a>
 							<?php if(get_option('wpsc_category_description')) :?>

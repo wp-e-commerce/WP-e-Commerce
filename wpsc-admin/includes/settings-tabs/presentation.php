@@ -967,7 +967,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab
 					</tr>
 					<tr>
 						<th scope="row">
-							<?php esc_html_e( 'Default Product Group Thumbnail Size', 'wpsc' ); ?>:
+							<?php esc_html_e( 'Default Product Category Thumbnail Size', 'wpsc' ); ?>:
 						</th>
 						<td>
 							 <?php esc_html_e( 'Width', 'wpsc' ); ?>:<input type='text' size='6' name='wpsc_options[category_image_width]' value='<?php esc_attr_e( get_option( 'category_image_width' ) ); ?>' />

@@ -11,7 +11,7 @@
 
 /**
  * wpsc_list_categories function.
- * 
+ *
  * @access public
  * @param string $callback_function - The function name you want to use for displaying the data
  * @param mixed $parameters (default: null) - the additional parameters to the callback function
@@ -28,7 +28,7 @@ function wpsc_list_categories($callback_function, $parameters = null, $category_
 			if(is_array($callback_output)) {
 				$output .= array_shift($callback_output);
 			} else {
-				$output .= $callback_output;  
+				$output .= $callback_output;
 			}
 			$output .= wpsc_list_categories($callback_function, $parameters , $category->term_id, ($level+1));
 			if(is_array($callback_output) && (isset($callback_output[1]))) {
@@ -42,12 +42,12 @@ function wpsc_list_categories($callback_function, $parameters = null, $category_
 
 /**
 * Gets the Function Parent Image link and checks whether Image should be displayed or not
-* 
+*
 */
 function wpsc_parent_category_image($show_thumbnails , $category_image , $width, $height, $grid=false, $show_name){
 
 	if(!$show_thumbnails) return;
-	
+
 	if($category_image == WPSC_CATEGORY_URL){
 		if(!$show_name) return;
 	?>
@@ -58,7 +58,7 @@ function wpsc_parent_category_image($show_thumbnails , $category_image , $width,
 	</span>
 	<?php
 	}else{
-	?><img src='<?php echo $category_image; ?>' width='<?php echo $width; ?>' height='<?php echo $height; ?>' /><?php	
+	?><img src='<?php echo $category_image; ?>' width='<?php echo $width; ?>' height='<?php echo $height; ?>' /><?php
 	}
 }
 /// category template tags start here
@@ -121,13 +121,13 @@ function wpsc_print_category_id() {
 */
 function wpsc_print_category_classes($category_to_print = false, $echo = true) {
 	global $wp_query, $wpdb;
-	
+
 	//if we are in wpsc category page then get the current category
 	if(isset($wp_query->query_vars['wpsc_product_category']) || (isset($wp_query->query_vars['taxonomy']) && 'wpsc_product_category' == $wp_query->query_vars['taxonomy']))
 		$curr_cat = get_term_by('slug',$wp_query->query_vars['term'], 'wpsc_product_category');
 	else
 		$curr_cat = false;
-	
+
 	//check if we are in wpsc category page and that we have a term_id of the category to print
 	//this is done here because none of the following matters if we don't have one of those and we can
 	//safely return
@@ -135,7 +135,7 @@ function wpsc_print_category_classes($category_to_print = false, $echo = true) {
 
 		//we will need a list of current category parents for the following if statement
 		$curr_cat_parents = wpsc_get_term_parents($curr_cat->term_id, 'wpsc_product_category');
-		
+
 		//if current category is the same as the one we are printing - then add wpsc-current-cat class
 		if( $category_to_print['term_id'] == $curr_cat->term_id )
 			$result = ' wpsc-current-cat ';
@@ -153,8 +153,8 @@ function wpsc_print_category_classes($category_to_print = false, $echo = true) {
 
 /**
 * wpsc_get_term_parents - get all parents of the term
-* 
-* @param int $id - id of the term 
+*
+* @param int $id - id of the term
 * @return array of term objects or empty array if anything went wrong or there were no parrents
 */
 function wpsc_get_term_parents( $term_id, $taxonomy ) {
@@ -165,9 +165,9 @@ function wpsc_get_term_parents( $term_id, $taxonomy ) {
 	$parent = &get_term( $term->parent, $taxonomy );
 	if ( is_wp_error( $parent ) )
 		return array();
- 	
+
  	$parents = array( $parent->term_id );
- 	
+
 	if ( $parent->parent && ( $parent->parent != $parent->term_id ) && !in_array( $parent->parent, $parents ) ) {
 		$parents = array_merge($parents, wpsc_get_term_parents( $parent->term_id, $taxonomy ));
 	}
@@ -238,7 +238,7 @@ function wpsc_end_category_query() {
 function wpsc_display_category_loop($query, $category_html, &$category_branch = null){
 	static $category_count_data = array(); // the array tree is stored in this
 
-	if( isset($query['parent_category_id']) )		
+	if( isset($query['parent_category_id']) )
 		$category_id = absint($query['parent_category_id']);
 	else
 		$category_id = 0;
@@ -250,77 +250,90 @@ function wpsc_display_category_loop($query, $category_html, &$category_branch = 
 		$category_branch =& $category_count_data;
 	}
 	$allowed_tags = array('a' => array('href' => array(),'title' => array()),'abbr' => array('title' => array()),'acronym' => array('title' => array()),'code' => array(),'em' => array(),'strong' => array(), 'b'=> array());
-	
+
 	$allowedtags = apply_filters('wpsc_category_description_allowed_tags' , $allowed_tags);
 
 	foreach((array)$category_data as $category_row) {
-	
+
 		// modifys the query for the next round
 		$modified_query = $query;
 		$modified_query['parent_category_id'] = $category_row->term_id;
-		
+
 		// gets the count of products associated with this category
 		$category_count = $category_row->count;
-		
-		
+
+
 		// Sticks the category description in
 		$category_description = '';
-		if($category_row->description != '') {
+		if($category_row->description != '' && ! empty( $query['description_container'] ) ) {
 			$start_element = $query['description_container']['start_element'];
 			$end_element = $query['description_container']['end_element'];
 			$category_description =  $start_element.wpautop(wptexturize( wp_kses(stripslashes($category_row->description), $allowedtags ))).$end_element;
 		}
-		
-		
+
+
 		// Creates the list of classes on the category item
 		$category_classes = wpsc_print_category_classes((array)$category_row, false);
-		
+
 		// Set the variables for this category
 		$category_branch[$category_row->term_id]['children'] = array();
 		$category_branch[$category_row->term_id]['count'] = (int)$category_count;
-		
-		
+
+
 		// Recurse into the next level of categories
 		$sub_categories = wpsc_display_category_loop($modified_query, $category_html, $category_branch[$category_row->term_id]['children']);
-		
-		// grab the product count from the subcategories		
+
+		// grab the product count from the subcategories
 		foreach((array)$category_branch[$category_row->term_id]['children'] as $child_category) {
 			$category_branch[$category_row->term_id]['count'] += (int)$child_category['count'];
 		}
-		
+
 		// stick the category count array together here
 		// this must run after the subcategories and the count of products belonging to them has been obtained
 
 		$category_count = $category_branch[$category_row->term_id]['count'];
-		
+
 		$start_element = '';
 		$end_element = '';
-		
+
 		if (isset($query['products_count']['start_element'])) {
 			$start_element = $query['products_count']['start_element'];
 		}
-		
+
 		if (isset($query['products_count']['end_element'])) {
 			$end_element = $query['products_count']['end_element'];
 		}
-		
+
 		$category_count_html =  $start_element.$category_count.$end_element;
-		
-		
+
+
 		if($sub_categories != '') {
 			$start_element = $query['subcategory_container']['start_element'];
 			$end_element = $query['subcategory_container']['end_element'];
 			$sub_categories = $start_element.$sub_categories.$end_element;
 		}
-		
-		
-		
-		
+
 		// get the category images
 		$category_image = wpsc_place_category_image($category_row->term_id, $modified_query);
 
-		$width = (isset($query['image_size']['width'])) ? ($query['image_size']['width']) : get_option('category_image_width');
-		$height = (isset($query['image_size']['height'])) ? ($query['image_size']['height']) : get_option('category_image_height');
+		if ( empty( $query['image_size']['width'] ) ) {
+			if ( ! wpsc_category_grid_view() )
+				$width = wpsc_get_categorymeta( $category_row->term_id, 'image_width' );
+			if ( empty( $width ) )
+				$width = get_option( 'category_image_width' );
+		} else {
+			$width = $query['image_size']['width'];
+		}
+
+		if ( empty( $query['image_size']['height'] ) ) {
+			if ( ! wpsc_category_grid_view() )
+				$height = wpsc_get_categorymeta( $category_row->term_id, 'image_height' );
+			if ( empty( $height ) )
+				$height = get_option( 'category_image_height' );
+		} else {
+			$height = $query['image_size']['height'];
+		}
+
 		$category_image = wpsc_get_categorymeta($category_row->term_id, 'image');
 		$category_image_html = '';
 		if(($query['show_thumbnails'] == 1)) {
@@ -333,9 +346,9 @@ function wpsc_display_category_loop($query, $category_html, &$category_branch = 
 				$category_image_html .= "	</span>\n\r";
 				$category_image_html .= "</span>\n\r";
 			}
-		
+
 		}
-		
+
 
 		// get the list of products associated with this category.
 		$tags_to_replace = array('[wpsc_category_name]',
@@ -356,7 +369,7 @@ function wpsc_display_category_loop($query, $category_html, &$category_branch = 
 		$category_image_html,
 		$sub_categories,
 		$category_count_html);
-		
+
 		// Stick all the category html together and concatenate it to the previously generated HTML
 		$output .= str_replace($tags_to_replace, $content_to_place ,$category_html);
 	}
@@ -381,7 +394,7 @@ function wpsc_place_category_image($category_id, $query) {
 /// category template tags end here
 
 /**
-* wpsc_category_url  function, makes permalink to the category or 
+* wpsc_category_url  function, makes permalink to the category or
 * @param integer category ID, can be 0
 * @param boolean permalink compatibility, adds a prefix to prevent permalink namespace conflicts
 */
@@ -398,7 +411,7 @@ function wpsc_is_in_category() {
   } else if(isset($_GET['wpsc_product_category']) && !empty($_GET['wpsc_product_category'])) {
     $is_in_category = true;
   }
-  
+
   return $is_in_category;
 }
 
@@ -406,7 +419,7 @@ function wpsc_is_in_category() {
 /**
  * Uses a category's, (in the wpsc_product_category taxonomy), slug to find its
  * ID, then returns it.
- * 
+ *
  * @param string $category_slug The slug of the category who's ID we want.
  * @return (int | bool) Returns the integer ID of the category if found, or a
  * boolean false if the category is not found.
@@ -465,7 +478,7 @@ function wpsc_category_description($category_id = null) {
 }
 
 function wpsc_category_name($category_id = null) {
-	if($category_id < 1) 
+	if($category_id < 1)
 		$category_id = wpsc_category_id();
 	$category = get_term_by('id', $category_id, 'wpsc_product_category');
 	return $category->name;
@@ -482,7 +495,7 @@ function nzshpcrt_display_categories_groups() {
 */
 function wpsc_list_subcategories($category_id = null) {
   global $wpdb,$category_data;
-  
+
     $category_list = $wpdb->get_col( $wpdb->prepare( "SELECT `id` FROM `".WPSC_TABLE_PRODUCT_CATEGORIES."` WHERE `category_parent` = %d", $category_id ) );
 
     if($category_list != null) {
@@ -506,36 +519,36 @@ function wpsc_list_subcategories($category_id = null) {
 function wpsc_get_terms_category_sort_filter($terms){
 	$new_terms = array();
 	$unsorted = array();
-	
+
 	foreach ( $terms as $term ) {
 		if ( ! is_object( $term ) )
 			return $terms;
-		
+
 		$term_order = ( $term->taxonomy == 'wpsc_product_category' ) ? wpsc_get_meta( $term->term_id, 'sort_order', 'wpsc_category' ) : null;
 		$term_order = (int) $term_order;
-		
+
 		// unsorted categories should go to the top of the list
 		if ( $term_order == 0 ) {
 			$term->sort_order = $term_order;
 			$unsorted[] = $term;
 			continue;
 		}
-		
+
 		while ( isset( $new_terms[$term_order] ) ) {
 			$term_order ++;
 		}
-		
+
 		$term->sort_order = $term_order;
 		$new_terms[$term_order] = $term;
 	}
-	
+
 	if ( ! empty( $new_terms ) )
 		ksort( $new_terms );
-	
-	for ( $i = count( $unsorted ) - 1; $i >= 0; $i-- ) { 
+
+	for ( $i = count( $unsorted ) - 1; $i >= 0; $i-- ) {
 		array_unshift( $new_terms, $unsorted[$i] );
 	}
-	
+
 	return array_values( $new_terms );
 }
 add_filter('get_terms','wpsc_get_terms_category_sort_filter');
@@ -544,36 +557,36 @@ add_filter('get_terms','wpsc_get_terms_category_sort_filter');
 function wpsc_get_terms_variation_sort_filter($terms){
 	$new_terms = array();
 	$unsorted = array();
-	
+
 	foreach ( $terms as $term ) {
 		if ( ! is_object( $term ) )
 			return $terms;
-		
+
 		$term_order = ( $term->taxonomy == 'wpsc-variation' ) ? wpsc_get_meta( $term->term_id, 'sort_order', 'wpsc_variation' ) : null;
 		$term_order = (int) $term_order;
-		
+
 		// unsorted categories should go to the top of the list
 		if ( $term_order == 0 ) {
 			$term->sort_order = $term_order;
 			$unsorted[] = $term;
 			continue;
 		}
-		
+
 		while ( isset( $new_terms[$term_order] ) ) {
 			$term_order ++;
 		}
-		
+
 		$term->sort_order = $term_order;
 		$new_terms[$term_order] = $term;
 	}
-	
+
 	if ( ! empty( $new_terms ) )
 		ksort( $new_terms );
-	
-	for ( $i = count( $unsorted ) - 1; $i >= 0; $i-- ) { 
+
+	for ( $i = count( $unsorted ) - 1; $i >= 0; $i-- ) {
 		array_unshift( $new_terms, $unsorted[$i] );
 	}
-	
+
 	return array_values( $new_terms );
 }
 add_filter('get_terms','wpsc_get_terms_variation_sort_filter');
