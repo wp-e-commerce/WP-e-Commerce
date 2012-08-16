@@ -1138,6 +1138,44 @@ class wpsc_cart {
       return $total;
   }
 
+	/**
+	 * Return the cart items.
+	 *
+	 * Accept an array of arguments:
+	 *
+	 * - 'fields': Defaults to 'all', which returns all the fields. Otherwise, specify a field such
+	 *             as 'quantity' or 'pnp' to get an array of that field only.
+	 * - 'orderby': Specify a field to sort the cart items. Default to '', which means "unsorted".
+	 * - 'order'  : Specify the direction of the sort, 'ASC' for ascending, 'DESC' for descending.
+	 *              Defaults to 'DESC'
+	 * @since  3.8.9
+	 * @access public
+	 * @param  array  $args Array of arguments
+	 * @return array        Cart items
+	 */
+	public function get_items( $args = array() ) {
+		$defaults = array(
+				'fields'  => 'all',
+				'orderby' => '',
+				'order'   => 'ASC',
+		);
+
+		$r = wp_parse_args( $args, $defaults );
+		extract( $r, EXTR_SKIP );
+
+		$results = $this->cart_items;
+
+		if ( ! empty( $orderby ) ) {
+			$comparison = new _WPSC_Comparison( $orderby, $order );
+			usort( $results, array( $comparison, 'compare' ) );
+		}
+
+		if ( $fields != 'all' )
+			$results = wp_list_pluck( $results, $fields );
+
+		return $results;
+	}
+
    /**
     * calculate total tax method
     * @access public
@@ -1521,10 +1559,6 @@ class wpsc_cart {
          }
    }
 
-   function get_items() {
-      return $this->cart_items;
-   }
-
 }
 
 /**
@@ -1707,9 +1741,9 @@ class wpsc_cart_item {
    	$this->has_limited_stock = (bool)$quantity_limited;
 
    	if($this->is_donation == 1)
-   		$this->unit_price = $this->provided_price;
+   		$this->unit_price = (float) $this->provided_price;
    	else
-   		$this->unit_price = $price;
+   		$this->unit_price = (float) $price;
 
    	$this->total_price = $this->unit_price * $this->quantity;
    	if ( $product->post_parent )
@@ -2032,4 +2066,53 @@ $wpdb->insert(
 
 }
 
-?>
+
+/**
+ * Comparison object that helps with ordering cart items
+ *
+ * @since  3.8.9
+ * @access private
+ */
+class _WPSC_Comparison
+{
+ private $orderby = '';
+ private $order = 'ASC';
+
+   /**
+    * Constructor
+    *
+    * @param string $orderby Field to order by
+    * @param string $order   Order direction, defaults to ASC for ascending.
+    */
+ public function __construct( $orderby, $order = 'ASC' ) {
+    $this->orderby = $orderby;
+    $this->order = $order;
+ }
+
+   /**
+    * This compare method can be passed into usort when sorting an array of object
+    *
+    * @since  3.8.9
+    *
+    * @param  object|array $a
+    * @param  object|array $b
+    * @return int          See usort() documentation for the meaning of this return value.
+    */
+ public function compare( $a, $b ) {
+    // cast them all to object, just in case any of them is an array
+    $a = (object) $a;
+    $b = (object) $b;
+
+    $key = $this->orderby;
+
+    $val_a = isset( $a->$key ) ? $a->$key : 0;
+    $val_b = isset( $b->$key ) ? $b->$key : 0;
+
+    $diff = $val_a - $val_b;
+
+    if ( $this->order != 'ASC' )
+       $diff = $diff * -1;
+
+    return $diff;
+ }
+}

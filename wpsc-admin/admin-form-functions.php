@@ -147,7 +147,16 @@ $output ='
 	<td colspan="3">
 		<input type="submit" value="'.esc_attr__("Update Coupon", "wpsc").'" class="button-primary" name="edit_coupon['.$id.'][submit_coupon]" />';
 
- 		$nonced_url = wp_nonce_url("admin.php?wpsc_admin_action=wpsc-delete-coupon&amp;delete_id=$id", 'delete-coupon');
+ 		$nonced_url = admin_url( 'admin.php' );
+ 		$nonced_url = add_query_arg(
+ 			array(
+				'wpsc_admin_action' => 'wpsc-delete-coupon',
+				'delete_id'         => $id,
+				'_wp_http_referer'  => urlencode( admin_url( 'edit.php?post_type=wpsc-product&page=wpsc-edit-coupons' ) ),
+ 			),
+ 			$nonced_url
+ 		);
+ 		$nonced_url = wp_nonce_url( $nonced_url, 'delete-coupon' );
 
 		$output.= "<a class='delete_button' style='text-decoration:none;' href=" .$nonced_url.">" . esc_html__( 'Delete', 'wpsc' ) . "</a>";
 
@@ -288,6 +297,7 @@ function wpsc_packing_slip( $purchase_id ) {
 					break;
 
 					case 'delivery_country':
+
 						if(is_numeric($purch_data['shipping_region']) && ($delivery_region_count > 0))
 							echo "	<tr><td>".esc_html__('State', 'wpsc').":</td><td>".wpsc_get_region($purch_data['shipping_region'])."</td></tr>\n\r";
 

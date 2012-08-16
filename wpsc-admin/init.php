@@ -718,10 +718,11 @@ function wpsc_delete_coupon(){
 			$deleted = 1;
 	}
 	$sendback = wp_get_referer();
+
 	if ( isset( $deleted ) )
 		$sendback = add_query_arg( 'deleted', $deleted, $sendback );
 
-	$sendback = remove_query_arg( array('deleteid',), $sendback );
+	$sendback = remove_query_arg( array( 'deleteid', 'wpsc_admin_action' ), $sendback );
 	wp_redirect( $sendback );
 	exit();
 }
