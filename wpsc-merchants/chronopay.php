@@ -85,7 +85,7 @@ function gateway_chronopay($separator, $sessionid)
 		$product_data = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `" . $wpdb->posts . "` WHERE `id`= %d LIMIT 1", $item['prodid'] ), ARRAY_A );
 		$product_data = $product_data[0];
 		$variation_count = count($product_variations);
-	
+
 		//Does this even still work in 3.8? We're not using this table.
 		$variation_sql = $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_CART_ITEM_VARIATIONS."` WHERE `cart_id` = %d", $item['id'] );
 		$variation_data = $wpdb->get_results( $variation_sql, ARRAY_A );
@@ -95,7 +95,7 @@ function gateway_chronopay($separator, $sessionid)
       	{
       		$variation_list = " (";
       		$j = 0;
-		
+
       		foreach($variation_data as $variation)
         	{
         		if($j > 0)
@@ -113,37 +113,37 @@ function gateway_chronopay($separator, $sessionid)
         {
         	$variation_list = '';
         }
-    
+
     	$local_currency_productprice = $item['price'];
 
 			$local_currency_shipping = $item['pnp'];
-    	
+
 
 			$chronopay_currency_productprice = $local_currency_productprice;
 			$chronopay_currency_shipping = $local_currency_shipping;
-			
+
     	$data['item_name_'.$i] = $product_data['name'].$variation_list;
     	$data['amount_'.$i] = number_format(sprintf("%01.2f", $chronopay_currency_productprice),$decimal_places,'.','');
     	$data['quantity_'.$i] = $item['quantity'];
     	$data['item_number_'.$i] = $product_data['id'];
-    	
+
 		if($item['donation'] !=1)
       	{
       		$all_donations = false;
       		$data['shipping_'.$i] = number_format($chronopay_currency_shipping,$decimal_places,'.','');
-      		$data['shipping2_'.$i] = number_format($chronopay_currency_shipping,$decimal_places,'.','');      
+      		$data['shipping2_'.$i] = number_format($chronopay_currency_shipping,$decimal_places,'.','');
       	}
       	else
       	{
       		$data['shipping_'.$i] = number_format(0,$decimal_places,'.','');
       		$data['shipping2_'.$i] = number_format(0,$decimal_places,'.','');
       	}
-        
+
     	if($product_data['no_shipping'] != 1) {
       		$all_no_shipping = false;
       	}
-    
-		
+
+
 		$total_price = $total_price + ($data['amount_'.$i] * $data['quantity_'.$i]);
 
 		if( $all_no_shipping != false )
@@ -230,9 +230,7 @@ function nzshpcrt_chronopay_callback()
 						'transactid' => $transact_id,
 						'date'       => time(),
 					);
-					$where = array( 'sessionid' => $sessionid );
-					$format = array( '%d', '%s', '%s' );
-					$wpdb->update( WPSC_TABLE_PURCHASE_LOGS, $data, $where, $format );
+					wpsc_update_purchase_log_details( $sessionid, $data, 'sessionid' );
 					transaction_results($sessionid, false, $transaction_id);
 	            	break;
 
@@ -510,12 +508,12 @@ function form_chronopay()
 		   <tr>
            <td colspan='2'>" . sprintf( __( 'For more help configuring Chronopay, read our documentation <a href="%s">here</a>', 'wpsc' ), esc_url( 'http://docs.getshopped.org/wiki/documentation/payments/chronopay' ) ) . "</td>
        </tr>";
-	
+
 	return $output;
 }
-  
-  
+
+
 add_action('init', 'nzshpcrt_chronopay_callback');
 add_action('init', 'nzshpcrt_chronopay_results');
-	
+
 ?>

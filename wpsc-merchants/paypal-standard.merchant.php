@@ -139,22 +139,22 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 				'address_override' => '1',
 				'no_shipping' => '0',
 			);
-		}
 
-		// Customer details
-		$paypal_vars += array(
-			'email' => $this->cart_data['email_address'],
-			'first_name' => $this->cart_data['shipping_address']['first_name'],
-			'last_name' => $this->cart_data['shipping_address']['last_name'],
-			'address1' => $this->cart_data['shipping_address']['address'],
-			'city' => $this->cart_data['shipping_address']['city'],
-			'country' => $this->cart_data['shipping_address']['country'],
-			'zip' => $this->cart_data['shipping_address']['post_code'],
-			'state' => $this->cart_data['shipping_address']['state'],
-		);
+			// Customer details
+			$paypal_vars += array(
+				'email' => $this->cart_data['email_address'],
+				'first_name' => $this->cart_data['shipping_address']['first_name'],
+				'last_name' => $this->cart_data['shipping_address']['last_name'],
+				'address1' => $this->cart_data['shipping_address']['address'],
+				'city' => $this->cart_data['shipping_address']['city'],
+				'country' => $this->cart_data['shipping_address']['country'],
+				'zip' => $this->cart_data['shipping_address']['post_code'],
+				'state' => $this->cart_data['shipping_address']['state'],
+			);
 
-		if ( $paypal_vars['country'] == 'UK' ) {
-			$paypal_vars['country'] = 'GB';
+			if ( $paypal_vars['country'] == 'UK' ) {
+				$paypal_vars['country'] = 'GB';
+			}
 		}
 
 		// Order settings to be sent to paypal

@@ -643,28 +643,30 @@ function wpsc_submit_checkout() {
 			$tax_percentage = 0.00;
 		}
 		$total = $wpsc_cart->calculate_total_price();
-		$wpdb->insert( WPSC_TABLE_PURCHASE_LOGS, array(
-			'totalprice' => $total,
-			'statusno' => '0',
-			'sessionid' => $sessionid,
-			'user_ID' => (int)$user_ID,
-			'date' => time(),
-			'gateway' => $submitted_gateway,
-			'billing_country' => $wpsc_cart->selected_country,
+		$args =  array(
+			'totalprice'       => $total,
+			'statusno'         => '0',
+			'sessionid'        => $sessionid,
+			'user_ID'          => (int) $user_ID,
+			'date'             => time(),
+			'gateway'          => $submitted_gateway,
+			'billing_country'  => $wpsc_cart->selected_country,
 			'shipping_country' => $delivery_country,
-			'billing_region' => $wpsc_cart->selected_region,
-			'shipping_region' => $delivery_region,
-			'base_shipping' => $base_shipping,
-			'shipping_method' => $shipping_method,
-			'shipping_option' => $shipping_option,
-			'plugin_version' => WPSC_VERSION,
-			'discount_value' => $wpsc_cart->coupons_amount,
-			'discount_data' => $wpsc_cart->coupons_name,
-			'find_us' => $find_us,
+			'billing_region'   => $wpsc_cart->selected_region,
+			'shipping_region'  => $delivery_region,
+			'base_shipping'    => $base_shipping,
+			'shipping_method'  => $shipping_method,
+			'shipping_option'  => $shipping_option,
+			'plugin_version'   => WPSC_VERSION,
+			'discount_value'   => $wpsc_cart->coupons_amount,
+			'discount_data'    => $wpsc_cart->coupons_name,
+			'find_us'          => $find_us,
 			'wpec_taxes_total' => $tax,
-			'wpec_taxes_rate' => $tax_percentage
-		) );
-		$purchase_log_id = $wpdb->insert_id;
+			'wpec_taxes_rate'  => $tax_percentage,
+		);
+		$purchase_log = new WPSC_Purchase_Log( $args );
+		$purchase_log->save();
+		$purchase_log_id = $purchase_log->get( 'id' );
 		$wpsc_checkout->save_forms_to_db( $purchase_log_id );
 		$wpsc_cart->save_to_db( $purchase_log_id );
 		$wpsc_cart->submit_stock_claims( $purchase_log_id );
@@ -688,15 +690,12 @@ function wpsc_submit_checkout() {
 			$merchant_instance->submit();
 		} elseif ( ($current_gateway_data['internalname'] == $submitted_gateway) && ($current_gateway_data['internalname'] != 'google') ) {
 			$gateway_used = $current_gateway_data['internalname'];
-			$wpdb->update( WPSC_TABLE_PURCHASE_LOGS, array(
-			'gateway' => $gateway_used
-			), array( 'id' => $purchase_log_id ) );
+			$purchase_log->set( 'gateway', $gateway_used );
+			$purchase_log->save();
 			$current_gateway_data['function']( $separator, $sessionid );
 		} elseif ( ($current_gateway_data['internalname'] == 'google') && ($current_gateway_data['internalname'] == $submitted_gateway) ) {
 			$gateway_used = $current_gateway_data['internalname'];
-			$wpdb->update( WPSC_TABLE_PURCHASE_LOGS, array(
-			'gateway' => $gateway_used
-			), array( 'id' => $purchase_log_id ) );
+			$purchase_log->set( 'gateway', $gateway_used );
 			wpsc_update_customer_meta( 'google_checkout', 'google' );
 			wp_redirect(get_option( 'shopping_cart_url' ));
 			exit;
@@ -1057,9 +1056,7 @@ function wpsc_download_file() {
 				}
 			}
 			if ( count( $cart_contents ) == $dl ) {
-				$wpdb->update( WPSC_TABLE_PURCHASE_LOGS, array(
-				'processed' => '4'
-				), array( 'id' => $download_data['purchid'] ) );
+				wpsc_update_purchase_log_status( $download_data['purchid'], 4 );
 			}
 
 
