@@ -805,5 +805,3 @@ function wpsc_3882_database_updates() {
 	update_option( 'wpsc_version', '3.8.8.2' );
 
 }
-
-add_action( 'plugins_loaded', 'wpsc_3882_database_updates' );
