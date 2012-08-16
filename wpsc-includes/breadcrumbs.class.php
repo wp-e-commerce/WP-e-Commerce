@@ -88,7 +88,7 @@ function wpsc_output_breadcrumbs( $options = null ) {
 	) );
 
 	$output = '';
-	$products_page_id = wpec_get_the_post_id_by_shortcode( '[productspage]' );
+	$products_page_id = wpsc_get_the_post_id_by_shortcode( '[productspage]' );
 	$products_page = get_post( $products_page_id );
 	if ( !wpsc_has_breadcrumbs() ) {
 		return;

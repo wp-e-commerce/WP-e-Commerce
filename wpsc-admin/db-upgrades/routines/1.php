@@ -12,6 +12,7 @@ function _wpsc_db_upgrade_1() {
 	_wpsc_fix_slovenia_currency();
 	_wpsc_fix_sudan_currency();
 	_wpsc_create_south_sudan();
+	wpsc_update_permalink_slugs();
 }
 
 function _wpsc_fix_checkout_field_limitation() {

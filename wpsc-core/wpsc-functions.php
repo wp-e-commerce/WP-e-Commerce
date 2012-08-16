@@ -709,7 +709,7 @@ function wpsc_start_the_query() {
 		$wp_query = new WP_Query($args);
 
 		if( empty( $wp_query->posts ) ){
-			$product_page_id = wpec_get_the_post_id_by_shortcode('[productspage]');
+			$product_page_id = wpsc_get_the_post_id_by_shortcode('[productspage]');
 			$wp_query = new WP_Query( 'page_id='.$product_page_id);
 		}
 	}
@@ -949,7 +949,7 @@ function wpsc_split_the_query( $query ) {
  */
 function wpsc_generate_product_query( $query ) {
 	global $wp_query;
-	$prod_page = wpec_get_the_post_id_by_shortcode('[productspage]');
+	$prod_page = wpsc_get_the_post_id_by_shortcode('[productspage]');
 	$prod_page = get_post($prod_page);
 	remove_filter( 'pre_get_posts', 'wpsc_generate_product_query', 11 );
 	$query->query_vars['taxonomy'] = null;
@@ -1376,18 +1376,18 @@ function wpsc_checkout_template_fallback() {
 
 /**
  * wpsc_get_page_post_names function.
- * Seems that using just one SQL query and then processing the results is probably going to be around as efficient as just doing three separate queries
- * But using three queries is a hell of a lot simpler to write and easier to read.
+ * 
  * @since 3.8
  * @access public
  * @return void
  */
 function wpsc_get_page_post_names() {
-	global $wpdb;
-	$wpsc_page['products']            = $wpdb->get_var( "SELECT post_name FROM `" . $wpdb->posts . "` WHERE `post_content` LIKE '%[productspage]%'  AND `post_type` = 'page' LIMIT 1" );
-	$wpsc_page['checkout']            = $wpdb->get_var( "SELECT post_name FROM `" . $wpdb->posts . "` WHERE `post_content` LIKE '%[shoppingcart]%'  AND `post_type` = 'page' LIMIT 1" );
-	$wpsc_page['transaction_results'] = $wpdb->get_var( "SELECT post_name FROM `" . $wpdb->posts . "` WHERE `post_content` LIKE '%[transactionresults]%'  AND `post_type` = 'page' LIMIT 1" );
-	$wpsc_page['userlog']             = $wpdb->get_var( "SELECT post_name FROM `" . $wpdb->posts . "` WHERE `post_content` LIKE '%[userlog]%'  AND `post_type` = 'page' LIMIT 1" );
+
+	$wpsc_page['products']            = basename( get_option( 'product_list_url' ) );
+	$wpsc_page['checkout']            = basename( get_option( 'checkout_url' ) );
+	$wpsc_page['transaction_results'] = basename( get_option( 'transact_url' ) );
+	$wpsc_page['userlog']             = basename( get_option( 'user_account_url' ) );
+
 	return $wpsc_page;
 }
 

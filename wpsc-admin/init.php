@@ -449,33 +449,12 @@ add_action( 'update_option_product_category_hierarchical_url', 'wpsc_update_opti
  * @param $auto (Boolean) true if coming from WordPress Permalink Page, false otherwise
  * @return nothing
  */
-function wpsc_update_page_urls($auto = false) {
+function wpsc_update_page_urls( $auto = false ) {
 	global $wpdb;
 
-	$wpsc_pageurl_option['product_list_url'] = '[productspage]';
-	$wpsc_pageurl_option['shopping_cart_url'] = '[shoppingcart]';
-	$check_chekout = $wpdb->get_var( "SELECT `guid` FROM `{$wpdb->posts}` WHERE `post_content` LIKE '%[checkout]%' LIMIT 1" );
-	if ( $check_chekout != null ) {
-		$wpsc_pageurl_option['checkout_url'] = '[checkout]';
-	} else {
-		$wpsc_pageurl_option['checkout_url'] = '[checkout]';
-	}
-	$wpsc_pageurl_option['transact_url'] = '[transactionresults]';
-	$wpsc_pageurl_option['user_account_url'] = '[userlog]';
-	$changes_made = false;
-	foreach ( $wpsc_pageurl_option as $option_key => $page_string ) {
-		$post_id = $wpdb->get_var( "SELECT `ID` FROM `{$wpdb->posts}` WHERE `post_type` IN('page','post') AND `post_content` LIKE '%$page_string%' LIMIT 1" );
-		if ( ! $post_id )
-			continue;
-		$the_new_link = _get_page_link( $post_id );
-		if ( stristr( get_option( $option_key ), "https://" ) ) {
-			$the_new_link = str_replace( 'http://', "https://", $the_new_link );
-		}
+	wpsc_update_permalink_slugs();
 
-		update_option( $option_key, $the_new_link );
-	}
-
-	if(!$auto){
+	if( ! $auto ){
 		$sendback = wp_get_referer();
 		if ( isset( $updated ) )
 			$sendback = add_query_arg( 'updated', $updated, $sendback );

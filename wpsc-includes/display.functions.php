@@ -234,43 +234,76 @@ function wpsc_add_to_cart_button( $product_id, $return = false ) {
 }
 
 /**
- * wpsc_refresh_page_urls( $content )
+ * wpsc_refresh_page_urls
  *
- * Refresh page urls when permalinks are turned on or altered
+ * Refresh page urls when pages are updated
  *
- * @global object $wpdb
- * @param string $content
- * @return string
+ * @param  int    $post_id
+ * @param  object $post
+ * @uses   wpsc_update_permalink_slugs()
+ * @return int    $post_id
  */
-function wpsc_refresh_page_urls( $content ) {
+function wpsc_refresh_page_urls( $post_id, $post ) {
+
+	if ( ! current_user_can( 'manage_options' ) )
+		return;
+
+	if ( 'page' != $post->post_type )
+		return;
+
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+		return;
+
+	if ( ! in_array( $post->post_status, array( 'publish', 'private' ) ) )
+		return;
+
+	wpsc_update_permalink_slugs();
+
+	return $post_id;
+}
+
+add_action( 'save_post', 'wpsc_refresh_page_urls', 10, 2 );
+
+/**
+ * Updates permalink slugs
+ *
+ * @since 3.8.9
+ * @return type
+ */
+function wpsc_update_permalink_slugs() {
 	global $wpdb;
 
-	$wpsc_pageurl_option['product_list_url'] = '[productspage]';
-	$wpsc_pageurl_option['shopping_cart_url'] = '[shoppingcart]';
-	$check_chekout = $wpdb->get_var( "SELECT `guid` FROM `{$wpdb->posts}` WHERE `post_content` LIKE '%[checkout]%' AND `post_type` NOT IN('revision') LIMIT 1" );
+	$wpsc_pageurl_option = array(
+		'product_list_url'  => '[productspage]',
+		'shopping_cart_url' => '[shoppingcart]',
+		'checkout_url'      => '[shoppingcart]',
+		'transact_url'      => '[transactionresults]',
+		'user_account_url'  => '[userlog]'
+	);
 
-	if ( $check_chekout != null )
-		$wpsc_pageurl_option['checkout_url'] = '[checkout]';
-	else
-		$wpsc_pageurl_option['checkout_url'] = '[checkout]';
+	$ids = array();
 
-	$wpsc_pageurl_option['transact_url'] = '[transactionresults]';
-	$wpsc_pageurl_option['user_account_url'] = '[userlog]';
-	$changes_made = false;
 	foreach ( $wpsc_pageurl_option as $option_key => $page_string ) {
-		$post_id = $wpdb->get_var( "SELECT `ID` FROM `{$wpdb->posts}` WHERE `post_type` IN('page','post') AND `post_content` LIKE '%$page_string%' AND `post_type` NOT IN('revision') LIMIT 1" );
-		$the_new_link = _get_page_link( $post_id );
+		$id = $wpdb->get_var( "SELECT `ID` FROM `{$wpdb->posts}` WHERE `post_type` = 'page' AND `post_content` LIKE '%$page_string%' LIMIT 1" );
+
+		if ( ! $id )
+			continue;
+
+		$ids[$page_string] = $id;
+
+		$the_new_link = get_page_link( $id );
 
 		if ( stristr( get_option( $option_key ), "https://" ) )
 			$the_new_link = str_replace( 'http://', "https://", $the_new_link );
 
+		if ( $option_key == 'shopping_cart_url' )
+			update_option( 'checkout_url', $the_new_link );
+
 		update_option( $option_key, $the_new_link );
 	}
-	return $content;
+
+	update_option( 'wpsc_shortcode_page_ids', $ids );
 }
-
-add_filter( 'mod_rewrite_rules', 'wpsc_refresh_page_urls' );
-
 
 /**
  * wpsc_obtain_the_title function, for replaacing the page title with the category or product

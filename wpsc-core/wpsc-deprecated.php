@@ -476,3 +476,8 @@ class WPSC_Query extends WP_Query
 		parent::WP_Query( $query );
 	}
 }
+
+function wpec_get_the_post_id_by_shortcode( $shortcode ) {
+	_deprecated_function( __FUNCTION__, '3.8.9', 'wpsc_get_the_post_id_by_shortcode' );
+	return wpsc_get_the_post_id_by_shortcode( $shortcode );
+}
