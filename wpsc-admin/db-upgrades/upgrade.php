@@ -73,7 +73,7 @@ function _wpsc_action_admin_notices_db_upgrade() {
 		_wpsc_upgrade_display_successful();
 	elseif ( _wpsc_is_db_upgrade_page() )
 		_wpsc_upgrade_display_backup_warning();
-	else
+	elseif ( _wpsc_needs_upgrade() )
 		_wpsc_upgrade_display_prompt();
 }
 add_action( 'admin_notices', '_wpsc_action_admin_notices_db_upgrade' );
