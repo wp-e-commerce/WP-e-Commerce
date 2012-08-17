@@ -79,6 +79,8 @@ function _wpsc_action_admin_notices_db_upgrade() {
 add_action( 'admin_notices', '_wpsc_action_admin_notices_db_upgrade' );
 
 function _wpsc_needs_3dot7_db_upgrade() {
+	global $wpdb;
+
 	static $return = null;
 
 	if ( is_null( $return ) ) {
