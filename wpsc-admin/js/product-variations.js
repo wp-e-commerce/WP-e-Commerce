@@ -1,9 +1,13 @@
 (function($){
-	$(function(){
-		var content_height;
+	var resize_iframe = function() {
 		if (typeof window.parent.wpsc_resize_iframe != 'undefined') {
 			window.parent.wpsc_resize_iframe();
 		}
+	};
+
+	$(function(){
+		var content_height;
+		resize_iframe();
 
 		$('.wpsc-variation-stock-editor-link').click(function(){
 			var parent = $(this).closest('tr'),
@@ -11,7 +15,7 @@
 
 			target_row.show();
 			parent.addClass('active');
-			window.parent.wpsc_resize_iframe();
+			resize_iframe();
 
 			return false;
 		});
@@ -185,7 +189,7 @@
 	 */
 	var event_toggle_children = function() {
 		var t = $(this);
-		t.siblings('ul').slideToggle(150);
+		t.siblings('ul').slideToggle(150, resize_iframe);
 		t.closest('li').toggleClass('expanded');
 		return false;
 	};

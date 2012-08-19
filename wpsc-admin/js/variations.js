@@ -1,5 +1,6 @@
 var wpsc_resize_iframe = function() {
 	var iframe = jQuery('#wpsc_product_variation_forms iframe')[0];
+	var inside = jQuery("#wpsc_product_variation_forms .inside");
 	var i_document = iframe.contentDocument;
 	var i_document_element = i_document.documentElement;
 
@@ -15,6 +16,7 @@ var wpsc_resize_iframe = function() {
 		i_document_element.clientHeight
 	);
 
+	inside.innerHeight(content_height);
 	iframe.style.height = content_height + 'px';
 };
 
