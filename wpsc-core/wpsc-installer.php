@@ -33,13 +33,17 @@ function wpsc_install() {
 	global $wpdb, $user_level, $wp_rewrite, $wp_version, $wpsc_page_titles;
 
 	$table_name    = $wpdb->prefix . "wpsc_product_list";
-	$first_install = false;
 
 	if( $wpdb->get_var("SHOW TABLES LIKE '$table_name'") !== $table_name ) {
 		// Table doesn't exist
-		$first_install = true;
 		add_option( 'wpsc_purchaselogs_fixed', true );
 	}
+
+	// the only consistent and reliable way to detect whether this is a fresh install is by checking
+	// whether WPSC_TABLE_CART_CONTENTS exists. This is an unfortunate hack, but we can do away with
+	// it in 3.9 as we'll drop support for 3.7.x then
+	if ( $wpdb->get_var( "SHOW TABLES LIKE '" . WPSC_TABLE_CART_CONTENTS . "'" ) != WPSC_TABLE_CART_CONTENTS )
+		add_option( 'wpsc_db_version', WPSC_DB_VERSION, '', 'yes' );
 
 	// run the create or update code here.
 	wpsc_create_or_update_tables();
@@ -49,10 +53,11 @@ function wpsc_install() {
 	$wpsc_version = get_option( 'wpsc_version', 0 );
 	$wpsc_minor_version = get_option( 'wspc_minor_version', 0 );
 
-	if ( $wpsc_version === false )
+	if ( $wpsc_version === false ) {
 		add_option( 'wpsc_version', WPSC_VERSION, '', 'yes' );
-	else
+	} else {
 		update_option( 'wpsc_version', WPSC_VERSION );
+	}
 
 	if ( $wpsc_minor_version === false )
 		add_option( 'wpsc_minor_version', WPSC_MINOR_VERSION, '', 'yes' );
