@@ -534,12 +534,12 @@ function wpsc_get_acceptable_countries() {
 			$target_market_ids[$category_id] = $target_markets;
 	}
 
-	$have_target_market = empty( $target_market_id );
+	$have_target_market = ! empty( $target_market_id );
 
 	//If we're comparing multiple categories
 	if ( count( $target_market_ids ) > 1 ) {
 		$target_market_ids = call_user_func_array( 'array_intersect', $target_market_ids );
-	} else {
+	} elseif ( $have_target_market ) {
 		$target_market_ids = array_values( $target_market_ids );
 		$target_market_ids = $target_market_ids[0];
 	}

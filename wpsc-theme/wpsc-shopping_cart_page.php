@@ -116,9 +116,9 @@ endif;
 
    <?php if(wpsc_has_category_and_country_conflict()): ?>
       <p class='validation-error'><?php echo esc_html( wpsc_get_customer_meta( 'category_shipping_conflict' ) ); ?></p>
-   endif;
+   <?php endif; ?>
 
-   if(isset($_SESSION['WpscGatewayErrorMessage']) && $_SESSION['WpscGatewayErrorMessage'] != '') :?>
+   <?php if(isset($_SESSION['WpscGatewayErrorMessage']) && $_SESSION['WpscGatewayErrorMessage'] != '') :?>
       <p class="validation-error"><?php echo $_SESSION['WpscGatewayErrorMessage']; ?></p>
    <?php
    endif;
@@ -482,7 +482,7 @@ endif;
       <?php if(wpsc_has_tnc()) : ?>
          <tr>
             <td colspan='2'>
-                <label for="agree"><input id="agree" type='checkbox' value='yes' name='agree' /> <?php printf(__("I agree to the <a class='thickbox' target='_blank' href='%s' class='termsandconds'>Terms and Conditions</a>", "wpsc"), esc_url( site_url( "?termsandconds=true&amp;width=360&amp;height=400" ) ); ?> <span class="asterix">*</span></label>
+                <label for="agree"><input id="agree" type='checkbox' value='yes' name='agree' /> <?php printf(__("I agree to the <a class='thickbox' target='_blank' href='%s' class='termsandconds'>Terms and Conditions</a>", "wpsc"), esc_url( site_url( "?termsandconds=true&amp;width=360&amp;height=400" ) ) ); ?> <span class="asterix">*</span></label>
                </td>
          </tr>
       <?php endif; ?>
@@ -505,5 +505,3 @@ endif;
 </div><!--close checkout_page_container-->
 <?php
 do_action('wpsc_bottom_of_shopping_cart');
-
-?>
