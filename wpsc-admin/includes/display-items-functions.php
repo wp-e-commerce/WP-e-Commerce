@@ -407,6 +407,9 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 		$product_id = $product->ID;
 
 	$meta = get_post_meta( $product_id, '_wpsc_product_metadata', true );
+	if ( ! is_array( $meta ) )
+		$meta = array();
+
 	$defaults = array(
 		'weight' => '',
 		'weight_unit' => '',
