@@ -1226,7 +1226,7 @@ function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id 
 	$thumbnail_id = wpsc_the_product_thumbnail_id( $product_id );
 
 	// If no thumbnail found for item, get it's parent image (props. TJM)
-	if ( ! $thumbnail_id ) {
+	if ( ! $thumbnail_id && $product->post_parent ) {
 		$thumbnail_id = wpsc_the_product_thumbnail_id( $product->post_parent );
 	}
 
