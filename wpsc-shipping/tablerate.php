@@ -117,12 +117,13 @@ class tablerate {
 		$new_layer = array();
 		if ($shippings != '') {
 			foreach ($shippings as $key => $price) {
-				if ( empty( $price ) || empty( $layers[$key] ) )
+				if ( ! is_numeric( $key ) || ! is_numeric( $price ) )
 					continue;
 
 				$new_layer[$layers[$key]] = $price;
 			}
 		}
+
 		// Sort the data before it goes into the database. Makes the UI make more sense
 		krsort( $new_layer );
 		update_option('table_rate_layers', $new_layer);
