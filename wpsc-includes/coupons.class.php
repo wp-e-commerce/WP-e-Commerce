@@ -95,7 +95,7 @@ class wpsc_coupons {
 			$this->start_date = $coupon_data['start'];
 			$this->end_date = $coupon_data['expiry'];
 			$this->every_product = $coupon_data['every_product'];
-			$this->errormsg = true;
+			$this->errormsg = false;
 			$valid = $this->validate_coupon();
 
 			return $valid;
