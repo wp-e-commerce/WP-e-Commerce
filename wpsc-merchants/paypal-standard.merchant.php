@@ -272,17 +272,23 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 					$item_number = get_post_meta( $cart_row['product_id'], '_wpsc_sku', true );
 					if ( ! $item_number )
 						$item_number = $cart_row['product_id'];
+
 					$paypal_vars += array(
 						"item_name_$i" => apply_filters( 'the_title', $cart_row['name'] ),
 						"amount_$i" => $this->convert($cart_row['price']),
 						"quantity_$i" => $cart_row['quantity'],
 						"item_number_$i" => $item_number,
-						// additional shipping for the the (first item / total of the items)
-						"shipping_$i" => $this->convert($cart_row['shipping']/ $cart_row['quantity'] ),
-						// additional shipping beyond the first item
-						"shipping2_$i" => $this->convert($cart_row['shipping']/ $cart_row['quantity'] ),
-						"handling_$i" => '',
 					);
+
+					if ( ! $free_shipping )
+						$paypal_vars += array(
+							// additional shipping for the the (first item / total of the items)
+							"shipping_$i" => $this->convert($cart_row['shipping']/ $cart_row['quantity'] ),
+							// additional shipping beyond the first item
+							"shipping2_$i" => $this->convert($cart_row['shipping']/ $cart_row['quantity'] ),
+							"handling_$i" => '',
+						);
+
 					if ( $add_tax && ! empty( $cart_row['tax'] ) )
 						$tax_total += $cart_row['tax'];
 					++$i;
