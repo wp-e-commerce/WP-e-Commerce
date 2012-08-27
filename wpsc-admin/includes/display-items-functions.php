@@ -1121,6 +1121,8 @@ function wpsc_save_quickedit_box( $post_id ) {
 			switch ( $post_key ) {
 				case 'weight':
 					$product_meta = get_post_meta( $post_id, '_wpsc_product_metadata', true );
+					if ( ! is_array( $product_meta ) )
+						$product_meta = array();
 					// draft products don't have product metadata set yet
 					$weight_unit = isset( $product_meta["weight_unit"] ) ? $product_meta["weight_unit"] : 'pound';
 					$weight = wpsc_convert_weight( $value, $weight_unit, "pound", true );
