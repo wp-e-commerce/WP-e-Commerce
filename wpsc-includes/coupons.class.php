@@ -17,7 +17,8 @@ function wpsc_uses_coupons() {
 }
 function wpsc_coupons_error(){
 	global $wpsc_coupons;
-	if(isset($wpsc_coupons->errormsg) && $wpsc_coupons->errormsg == false){
+
+	if(isset($wpsc_coupons->errormsg) && $wpsc_coupons->errormsg == true){
 		return true;
 	}else{
 		return false;
@@ -67,7 +68,8 @@ class wpsc_coupons {
 		$coupon_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_COUPON_CODES."` WHERE coupon_code = %s LIMIT 1", $code ) , ARRAY_A );
 
 		if ( ( $coupon_data == '' ) || ( $coupon_data == null ) || ( strtotime( $coupon_data['expiry'] ) < time() ) ) {
-			$this->errormsg = false;
+			$this->errormsg = true;
+			wpsc_delete_customer_meta( 'coupon' );
 			return false;
 		} else {
 			$coupon_data = array_merge( array(
