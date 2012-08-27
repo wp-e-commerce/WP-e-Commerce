@@ -252,6 +252,7 @@ function wpsc_coupon_price( $currCoupon = '' ) {
 			$wpsc_coupons->errormsg = true;
 			$wpsc_cart->coupons_amount = 0;
 			$wpsc_cart->coupons_name = '';
+			wpsc_delete_customer_meta( 'coupon' );
 		}
 	} else if ( (!isset( $_POST['coupon_num'] ) || $_POST['coupon_num'] == '') && $currCoupon == '' ) {
 		$wpsc_cart->coupons_amount = 0;
