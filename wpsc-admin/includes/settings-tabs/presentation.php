@@ -27,7 +27,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab
 
 		$categorylist .= "<option value='list' " . $selected . " >" . __( 'Show list of product categories', 'wpsc' ) . "</option>";
 
-		$categorylist .= "<optgroup label='<?php _e( 'Product Categories', 'wpsc' ); ?>'>";
+		$categorylist .= "<optgroup label='" . __( 'Product Categories', 'wpsc' ) . "'>";
 		foreach ( $group_data as $group ) {
 			$selected = "";
 			if ( $current_default == $group->term_id )
