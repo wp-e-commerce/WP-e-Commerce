@@ -793,7 +793,7 @@ class wpsc_checkout {
 	 * @access public
 	 */
 	function validate_forms() {
-		global $wpdb, $current_user, $user_ID, $wpsc_gateway_error_messages, $wpsc_checkout_error_messages, $wpsc_customer_checkout_details, $wpsc_registration_error_messages;
+		global $wpsc_cart, $wpdb, $current_user, $user_ID, $wpsc_gateway_error_messages, $wpsc_checkout_error_messages, $wpsc_customer_checkout_details, $wpsc_registration_error_messages;
 		$any_bad_inputs = false;
 		$bad_input_message = '';
 		$wpsc_gateway_error_messages      = array();
