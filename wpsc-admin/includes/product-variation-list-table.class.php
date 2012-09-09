@@ -198,8 +198,8 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 				</a>
 			</div>
 			<div class="wpsc-product-variation-title">
-				<strong>
-					<a class="row-title" href="<?php echo get_edit_post_link( $item->ID ); ?>" title="<?php esc_attr_e( 'Edit this variation', 'wpsc' ) ?>"><?php echo esc_html( $title ); ?></a>
+				<strong class="row-title">
+					<?php echo esc_html( $title ); ?>
 				</strong>
 				<?php echo $this->row_actions( $this->get_row_actions( $item ) ); ?>
 			</div>
