@@ -84,7 +84,7 @@ function wpsc_is_doing_ajax( $action = '' ) {
 	$ajax = defined( 'DOING_AJAX' ) && DOING_AJAX && ! empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'wpsc_ajax';
 
 	if ( $action )
-		$ajax = $ajax && ! empty( $_REQUEST['wpsc_action'] ) && $ajax_action == str_replace( '-', '_', $_REQUEST['wpsc_action'] );
+		$ajax = $ajax && ! empty( $_REQUEST['wpsc_action'] ) && $action == str_replace( '-', '_', $_REQUEST['wpsc_action'] );
 
 	return $ajax;
 }
