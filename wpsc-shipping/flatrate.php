@@ -50,6 +50,22 @@ class flatrate {
 		$output = "<tr><td colspan='2'>" . __('If you do not wish to ship to a particular region, leave the field blank. To offer free shipping to a region, enter 0.', 'wpsc') . "</td>";
 		$output .= "<tr><td colspan='1'><strong>" . __( 'Base Local', 'wpsc' ) . "</strong></td>";
 
+		$shipping = wp_parse_args(
+			$shipping,
+			array(
+				'southisland'  => '',
+				'northisland'  => '',
+				'continental'  => '',
+				'all'          => '',
+				'local'        => '',
+				'northamerica' => '',
+				'southamerica' => '',
+				'asiapacific'  => '',
+				'europe'       => '',
+				'africa'       => '',
+			)
+		);
+
 		switch (get_option('base_country')) {
 		case 'NZ':
 			$output .= "<tr class='rate_row'><td>" . __( 'South Island', 'wpsc' ) . "</td><td>$<input type='text' size='4' name='shipping[southisland]' value='".esc_attr($shipping['southisland'])."'></td></tr>";
