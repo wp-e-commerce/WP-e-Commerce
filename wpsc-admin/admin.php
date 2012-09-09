@@ -444,15 +444,13 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 
 		wp_enqueue_script( 'wpsc-sortable-table', WPSC_URL . '/wpsc-admin/js/sortable-table.js', array( 'jquery' ) );
 
-		if ( in_array( $current_screen->id, array( 'edit-wpsc-variation', 'wpsc-product' ) ) ) {
+		if ( in_array( $current_screen->id, array( 'wpsc-product', 'edit-wpsc-variation', 'wpsc-product' ) ) ) {
 			wp_enqueue_script( 'wp-e-commerce-variations', WPSC_URL . '/wpsc-admin/js/variations.js', array( 'jquery', 'wpsc-sortable-table' ), $version_identifier );
 			wp_localize_script(
 				'wp-e-commerce-variations',  // handle
 				'WPSC_Variations',           // variable name
 				array(                       // args
-					'add_variation_set_nonce' => _wpsc_create_ajax_nonce( 'add_variation_set' ),
-					'update_variations_nonce' => _wpsc_create_ajax_nonce( 'update_variations' ),
-					'thickbox_title'          => __( 'Add Media - %s', 'wpsc' ),
+					'thickbox_title' => __( 'Add Media - %s', 'wpsc' ),
 				)
 			);
 		}
@@ -476,7 +474,8 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 	if ( $pagehook == 'wpsc-product-variations-iframe' ) {
 		wp_enqueue_script( 'wp-e-commerce-product-variations', WPSC_URL . '/wpsc-admin/js/product-variations.js', array( 'jquery' ), $version_identifier );
 		wp_localize_script( 'wp-e-commerce-product-variations', 'WPSC_Product_Variations', array(
-			'product_id' => $_REQUEST['product_id'],
+			'product_id'              => $_REQUEST['product_id'],
+			'add_variation_set_nonce' => _wpsc_create_ajax_nonce( 'add_variation_set' ),
 		) );
 	}
 
