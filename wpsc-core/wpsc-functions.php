@@ -1395,7 +1395,7 @@ function wpsc_checkout_template_fallback() {
 
 /**
  * wpsc_get_page_post_names function.
- * 
+ *
  * @since 3.8
  * @access public
  * @return void
@@ -1611,3 +1611,8 @@ function wpsc_delete_customer_meta( $key, $id = false ) {
 
 	return set_transient( "wpsc_customer_meta_{$id}", $profile, WPSC_CUSTOMER_DATA_EXPIRATION ); // valid for 48 hours
 }
+
+function _wpsc_action_create_customer_id() {
+	wpsc_get_current_customer_id( 'create' );
+}
+add_action( 'plugins_loaded', '_wpsc_action_create_customer_id' );
