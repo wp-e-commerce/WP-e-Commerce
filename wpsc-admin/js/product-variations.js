@@ -6,7 +6,6 @@
 	};
 
 	$(function(){
-		var content_height;
 		resize_iframe();
 
 		$('.wpsc-variation-stock-editor-link').click(function(){
@@ -80,8 +79,8 @@
 					action        : 'add_variation_set',
 					variation_set : $('#new-variation-set-name').val(),
 					variants      : $('#new-variants').val(),
-					post_id       : $('input[name="post_ID"]').val(),
-					nonce         : WPSC_Variations.add_variation_set_nonce
+					post_id       : WPSC_Product_Variations.product_id,
+					nonce         : WPSC_Product_Variations.add_variation_set_nonce
 				},
 				ajax_callback = function(response) {
 					var checklist, color, set_id, existing_set, content;
@@ -189,7 +188,8 @@
 	 */
 	var event_toggle_children = function() {
 		var t = $(this);
-		t.siblings('ul').slideToggle(150, resize_iframe);
+		t.siblings('ul').toggle();
+		resize_iframe();
 		t.closest('li').toggleClass('expanded');
 		return false;
 	};

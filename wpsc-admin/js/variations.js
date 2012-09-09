@@ -1,23 +1,45 @@
+/**
+ * Resize iframe to its content's height.
+ * iframe is a pain in the ass. This is just some mild ointment to put on that pain.
+ * In the next iteration (3.9), the iframe content will be pulled out of the iframe and AJAXified.
+ *
+ * @since  3.8.9
+ */
 var wpsc_resize_iframe = function() {
-	var iframe = jQuery('#wpsc_product_variation_forms iframe')[0];
-	var inside = jQuery("#wpsc_product_variation_forms .inside");
+	var jiframe = jQuery('#wpsc_product_variation_forms iframe');
+	var iframe = jiframe[0];
 	var i_document = iframe.contentDocument;
-	var i_document_element = i_document.documentElement;
+	var height_elements = [
+		i_document,
+		i_document.documentElement,
+		i_document.body
+	];
+
+	// if iframe's parents are somehow hidden, need to briefly display them to get rendered height
+	var invisible_parent = jiframe.parents(':not(:visible)');
+	if (invisible_parent.length) {
+		invisible_parent.show();
+	}
 
 	iframe.style.height = '';
 
 	// getting true height of iframes in different browsers is a tricky business
-	var content_height = Math.max(
-		i_document.body.scrollHeight,
-		i_document.body.offsetHeight,
-		i_document.body.clientHeight,
-		i_document_element.scrollHeight,
-		i_document_element.offsetHeight,
-		i_document_element.clientHeight
-	);
+	var content_height = 0;
+	for (var i in height_elements) {
+		content_height = Math.max(
+			content_height,
+			height_elements[i].scrollHeight || 0,
+			height_elements[i].offsetHeight || 0,
+			height_elements[i].clientHeight || 0
+		);
+	}
 
-	inside.innerHeight(content_height);
 	iframe.style.height = content_height + 'px';
+
+	// in case the invisible parent was originally hidden and then displayed, we need to hide it again
+	if (invisible_parent.length) {
+		invisible_parent.css('display', '');
+	}
 };
 
 var wpsc_display_thickbox = function(title, url) {
