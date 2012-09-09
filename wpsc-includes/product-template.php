@@ -399,6 +399,8 @@ function wpsc_product_variation_price_available( $product_id, $from_text = false
 	}
 
 	sort( $prices );
+	if ( empty( $prices ) )
+		$prices[] = 0;
 	$price = apply_filters( 'wpsc_do_convert_price', $prices[0], $product_id );
 	$price = wpsc_currency_display( $price, array( 'display_as_html' => false ) );
 
