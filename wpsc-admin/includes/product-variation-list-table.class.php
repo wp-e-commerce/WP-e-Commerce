@@ -240,7 +240,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 
 	public function column_tax( $item ) {
 		$meta = get_post_meta( $item->ID, '_wpsc_product_metadata', true );
-		if ( ! $meta )
+		if ( ! $meta || ! isset( $meta['wpec_taxes_taxable_amount'] ) )
 			$tax = '';
 		else
 			$tax = (float) $meta['wpec_taxes_taxable_amount'];
