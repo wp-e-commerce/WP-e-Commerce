@@ -321,6 +321,7 @@ function wpsc_admin_include_purchase_logs_css_and_js() {
 		'sent_message'                           => _x( 'Email Sent!', 'sending tracking email for purchase log', 'wpsc' ),
 		'current_view'                           => empty( $_REQUEST['status'] ) ? 'all' : $_REQUEST['status'],
 		'current_filter'                         => empty( $_REQUEST['m'] ) ? '' : $_REQUEST['m'],
+		'current_page'                           => empty( $_REQUEST['paged']) ? '' : $_REQUEST['paged'],
 	) );
 }
 

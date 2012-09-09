@@ -127,6 +127,7 @@
 					new_status : $(this).val(),
 					m          : WPSC_Purchase_Logs_Admin.current_filter,
 					status     : WPSC_Purchase_Logs_Admin.current_view,
+					paged      : WPSC_Purchase_Logs_Admin.current_page,
 					_wp_http_referer : window.location.href
 				},
 				spinner = $(this).siblings('.ajax-feedback'),

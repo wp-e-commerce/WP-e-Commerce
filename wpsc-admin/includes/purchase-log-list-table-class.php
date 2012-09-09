@@ -23,6 +23,9 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 		WP_List_Table::__construct( array(
 			'plural' => 'purchase-logs',
 		) );
+
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX )
+			$_SERVER['REQUEST_URI'] = wp_get_referer();
 	}
 
 	public function disable_sortable() {
@@ -230,6 +233,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 
 	public function get_views() {
 		global $wpdb;
+
 		$view_labels = array(
 			1 => _nx_noop( 'Incomplete <span class="count">(%s)</span>', 'Incomplete <span class="count">(%s)</span>', 'purchase logs' ),
 			2 => _nx_noop( 'Received <span class="count">(%s)</span>'  , 'Received <span class="count">(%s)</span>'  , 'purchase logs' ),
@@ -256,6 +260,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 			_nx( 'All <span class="count">(%s)</span>', 'All <span class="count">(%s)</span>', $total_count, 'purchase logs', 'wpsc' ),
 			number_format_i18n( $total_count )
 		);
+
 		$all_href = remove_query_arg( array(
 			'status',
 			'paged',
@@ -278,12 +283,11 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 		);
 
 		foreach ( $statuses as $status => $count ) {
-			$url = ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ? wp_get_referer() : false;
 			$text = sprintf(
 				translate_nooped_plural( $view_labels[$status], $count, 'wpsc' ),
 				number_format_i18n( $count )
 			);
-			$href = add_query_arg( 'status', $status, $url );
+			$href = add_query_arg( 'status', $status );
 			$href = remove_query_arg( array(
 				'deleted',
 				'updated',
