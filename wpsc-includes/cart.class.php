@@ -253,7 +253,7 @@ function wpsc_the_cart_item_key() {
 */
 function wpsc_cart_item_name( $context = 'display' ) {
 	global $wpsc_cart;
-   $product_name = apply_filters( 'the_title', $wpsc_cart->cart_item->product_name );
+   $product_name = apply_filters( 'the_title', $wpsc_cart->cart_item->get_title() );
 	$product_name = apply_filters( 'wpsc_cart_item_name', $product_name, $wpsc_cart->cart_item->product_id );
 	return $product_name;
 }
