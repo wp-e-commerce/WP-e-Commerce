@@ -139,7 +139,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 
 		$actions = array();
 		if ( apply_filters( 'wpsc_product_variations_edit_action', false, $item ) && $can_edit_post && 'trash' != $item->post_status )
-			$actions['edit'] = '<a href="' . get_edit_post_link( $item->ID, true ) . '" title="' . esc_attr( __( 'Edit this item' ), 'wpsc' ) . '">' . __( 'Edit' ) . '</a>';
+			$actions['edit'] = '<a target="_blank" href="' . get_edit_post_link( $item->ID, true ) . '" title="' . esc_attr( __( 'Edit this item' ), 'wpsc' ) . '">' . __( 'Edit' ) . '</a>';
 
 		$actions['stock hide-if-no-js'] = '<a class="wpsc-variation-stock-editor-link" href="#" title="' . __( 'Show shipping editor', 'wpsc' ) . '">' . __( 'Edit Shipping', 'wpsc' ) . '</a>';
 
