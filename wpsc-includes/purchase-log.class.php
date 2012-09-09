@@ -245,8 +245,41 @@ class WPSC_Purchase_Log
 		return $this->meta_data['total_shipping'];
 	}
 
+	private function set_gateway_name() {
+		global $wpsc_gateways;
+		$gateway = $this->get( 'gateway' );
+		$gateway_name = $gateway;
+
+		if( 'wpsc_merchant_testmode' == $gateway )
+			$gateway_name = __( 'Manual Payment', 'wpsc' );
+		elseif ( isset( $wpsc_gateways[$gateway] ) )
+			$gateway_name = $wpsc_gateways[$gateway]['name'];
+
+		$this->meta_data['gateway_name'] = $gateway_name;
+		return $this->meta_data['gateway_name'];
+	}
+
+	private function set_shipping_method_names() {
+		global $wpsc_shipping_modules;
+
+		$shipping_method = $this->get( 'shipping_method' );
+		$shipping_option = $this->get( 'shipping_option' );
+		$shipping_method_name = $shipping_method;
+		$shipping_option_name = $shipping_option;
+
+		if ( ! empty ( $wpsc_shipping_modules[$shipping_method] ) ) {
+			$shipping_class = $wpsc_shipping_modules[$shipping_method];
+			$shipping_method_name = $shipping_class->name;
+		}
+
+		$this->meta_data['shipping_method_name'] = $shipping_method_name;
+		$this->meta_data['shipping_option_name'] = $shipping_option_name;
+	}
+
 	private function set_meta_props() {
 		$this->set_total_shipping();
+		$this->set_gateway_name();
+		$this->set_shipping_method_names();
 	}
 
 	/**
@@ -504,18 +537,23 @@ class WPSC_Purchase_Log
 		}
 
 		if ( $this->is_status_changed ) {
-			$current_status = $this->get( 'processed' );
-			do_action( 'wpsc_update_purchase_log_status', $this->get( 'id' ), $this->get( 'processed' ), $this->previous_status, $this );
 			if ( $this->is_transaction_completed() )
 				$this->update_downloadable_status();
-			$this->previous_status = false;
+			$current_status = $this->get( 'processed' );
+			$previous_status = $this->previous_status;
+			$this->previous_status = $current_status;
+			$this->is_status_changed = false;
+			do_action( 'wpsc_update_purchase_log_status', $this->get( 'id' ), $current_status, $previous_status, $this );
 		}
 
 		do_action( 'wpsc_purchase_log_save', $this );
+
 		return $result;
 	}
 
 	private function update_downloadable_status() {
+		global $wpdb;
+
 		foreach ( $this->get_cart_contents() as $item ) {
 			$wpdb->update(
 				WPSC_TABLE_DOWNLOAD_STATUS,
@@ -531,210 +569,38 @@ class WPSC_Purchase_Log
 	}
 
 	public function is_transaction_completed() {
-		$status = $this->get( 'processed' );
-		$completed_statuses = array(
-			self::ACCEPTED_PAYMENT,
-			self::JOB_DISPATCHED,
-			self::CLOSED_ORDER,
-		);
-		return in_array( $status, $completed_statuses );
+		return $this->is_accepted_payment() || $this->is_job_dispatched() || $this->is_closed_order();
 	}
 
-	private function get_table_args() {
-		$log_id = $this->get( 'id' );
-		$rows   = array();
-
-		$headings = array(
-			_x( 'Name'       , 'purchase log notification table heading', 'wpsc' ) => 'left',
-			_x( 'Price'      , 'purchase log notification table heading', 'wpsc' ) => 'right',
-			_x( 'Quantity'   , 'purchase log notification table heading', 'wpsc' ) => 'right',
-			_x( 'Item Total' , 'purchase log notification table heading', 'wpsc' ) => 'right',
-		);
-
-		foreach( $this->cart_contents as $item ) {
-			$cart_item_array = array(
-				'purchase_id'  => $log_id,
-				'cart_item'    => $item,
-				'purchase_log' => $this->get_data()
-			);
-
-			do_action( 'wpsc_transaction_result_cart_item', $cart_item_array );
-			do_action( 'wpsc_confirm_checkout', $log_id );
-
-			$item_total = $item->quantity * $item->price;
-			$item_total = wpsc_currency_display( $item_total , array( 'display_as_html' => false ) );
-			$item_price = wpsc_currency_display( $item->price, array( 'display_as_html' => false ) );
-			$rows[] = array( $item->name, $item_price, $item->quantity, $item_total );
-		}
-
-		return array( 'headings' => $headings, 'rows' => $rows );
+	public function is_order_received() {
+		return $this->get( 'processed' ) == self::ORDER_RECEIVED;
 	}
 
-	private function create_email_product_list() {
-		$table_args = $this->get_table_args();
-		$output = wpsc_get_plaintext_table( $table_args['headings'], $table_args['rows'] );
-
-		foreach ( $this->get_cart_contents() as $cart_item ) {
-			if ( empty( $cart_item->custom_message ) )
-				continue;
-
-			$custom_message_string = apply_filters( 'wpsc_email_product_list_plaintext_custom_message', __( 'Customization for %s', 'wpsc' ) );
-			$output .= "\r\n" . '=== ' . sprintf( $custom_message_string, $cart_item->name ) . ' ===' . "\r\n";
-			$output .= $cart_item->custom_message;
-			$output .= "\r\n";
-		}
-
-		$links = wpsc_get_downloadable_links( $this );
-		if ( empty( $links ) )
-			return $output;
-
-		$output .= '==' . __( 'Downloadable items', 'wpsc' ) . "==\r\n";
-		foreach ( $links as $item_name => $item_links ) {
-			$output .= $item_name . "\r\n";
-			foreach ( $item_links as $link_name => $url ) {
-				$output .= '  - ' . $link_name . "\r\n" . '    ' . $url . "\r\n";
-			}
-			$output .= "\r\n";
-		}
-		$output .= "\r\n";
-
-		return $output;
+	public function is_incomplete_sale() {
+		return $this->get( 'processed' ) == self::INCOMPLETE_SALE;
 	}
 
-	private function create_html_product_list() {
-		$table_args = $this->get_table_args();
-
-		$output = wpsc_get_purchase_log_html_table( $table_args['headings'], $table_args['rows'] );
-
-		foreach ( $this->get_cart_contents() as $cart_item ) {
-			if ( empty( $cart_item->custom_message ) )
-				continue;
-
-			$custom_message_string = apply_filters( 'wpsc_email_product_list_html_custom_message', __( 'Customization for %s', 'wpsc' ) );
-			$output .= '<hr />';
-			$output .= '<p><strong>' . sprintf( $custom_message_string, esc_html( $cart_item->name ) ) . '</strong></p>';
-			$output .= wpautop( esc_html( $cart_item->custom_message ) );
-		}
-
-		$links = wpsc_get_downloadable_links( $this );
-		if ( empty( $links ) )
-			return $output;
-
-		$output .= '<hr /><p><strong>' . esc_html__( 'Downloadable items', 'wpsc' ) . '</strong></p>';
-		foreach ( $links as $item_name => $item_links ) {
-			$output .= '<p>';
-			$output .= '<em>' . esc_html( $item_name ) . '</em><br />';
-			foreach ( $item_links as $link_name => $url ) {
-				$output .= '<a href="' . esc_attr( $url ) . '">' . esc_html( $link_name ) . '</a><br />';
-			}
-			$output .= '</p>';
-		}
-
-		return $output;
+	public function is_accepted_payment() {
+		return $this->get( 'processed' ) == self::ACCEPTED_PAYMENT;
 	}
 
-	private function get_notification_args() {
-		$data = $this->get_gateway_data();
-		$tax      = wpsc_currency_display( $data['tax'     ], array( 'display_as_html' => false ) );
-		$shipping = wpsc_currency_display( $data['shipping'], array( 'display_as_html' => false ) );
-		$total    = wpsc_currency_display( $data['amount'  ], array( 'display_as_html' => false ) );
-		$discount = wpsc_currency_display( $data['discount'], array( 'display_as_html' => false ) );
-		$subtotal = wpsc_currency_display( $data['subtotal'], array( 'display_as_html' => false ) );
-
-		$args = array(
-			// Legacy tags
-			// These tags are dumb because they force the string to go with the amount, giving no
-			// control to the user. Unfortunately we still have to support those for the next decade.
-			'purchase_id'     => sprintf( __( "Purchase # %s"     , 'wpsc' ), $this->get( 'id' ) ) . "\r\n",
-			'total_tax'       => sprintf( __( 'Total Tax: %s'     , 'wpsc' ), $tax               ) . "\r\n",
-			'total_shipping'  => sprintf( __( 'Total Shipping: %s', 'wpsc' ), $shipping          ) . "\r\n",
-			'total_price'     => sprintf( __( 'Total: %s'         , 'wpsc' ), $total             ) . "\r\n",
-			'shop_name'       => get_option( 'blogname' ),
-			'find_us'         => $this->get( 'find_us' ),
-			'discount'        => sprintf( __( 'Discount Amount: %s (%s)', 'wpsc' ), $discount, $this->get( 'discount_data' ) ) . "\r\n",
-
-			// New tags
-			'coupon_code'     => $this->get( 'discount_data'  ),
-			'transaction_id'  => $this->get( 'transactid'     ),
-			'purchase_log_id' => $this->get( 'id'             ),
-			'discount_amount' => $discount,
-			'tax'             => $tax,
-			'shipping'        => $shipping,
-			'total'           => $total,
-			'subtotal'        => $subtotal,
-		);
-
-		return apply_filters( 'wpsc_purchase_log_notification_args', $args, $this );
+	public function is_job_dispatched() {
+		return $this->get( 'processed' ) == self::JOB_DISPATCHED;
 	}
 
-	public function get_email_args() {
-		$args = $this->get_notification_args();
-		$args['product_list'] = $this->create_email_product_list();
-		return $args;
+	public function is_closed_order() {
+		return $this->get( 'processed' ) == self::CLOSED_ORDER;
 	}
 
-	public function get_html_output_args() {
-		$args = $this->get_notification_args();
-		$args['product_list'] = $this->create_html_product_list();
-		return $args;
+	public function is_payment_declined() {
+		return $this->get( 'processed' ) == self::PAYMENT_DECLINED;
 	}
 
-	public function filter_customer_notification_raw_message( $message, $id ) {
-		if ( $id != $this->get( 'id' ) )
-			return $message;
-
-		if ( $this->get( 'gateway' ) == 'wpsc_merchant_testmode' )
-			$message = get_option( 'payment_instructions', '' ) . "\r\n" . $message;
-
-		// little hack to make sure discount is displayed even when the tag is not in the option value
-		// which is a dumb behavior in previous versions
-		if ( $this->get( 'discount_data' ) && strpos( $message, '%discount%' ) === false ) {
-			$shipping_pos = strpos( $message, '%total_shipping%' );
-			if ( $shipping_pos !== false )
-				$message = str_replace( '%total_shipping%', '%total_shipping%%discount%', $message );
-		}
-		return $message;
+	public function is_refunded() {
+		return $this->get( 'processed' ) == self::REFUNDED;
 	}
 
-	public function send_customer_email() {
-		add_filter( 'wpsc_purchase_log_customer_notification_raw_message', array( $this, 'filter_customer_notification_raw_message' ), 10, 2 );
-		$address = wpsc_get_buyers_email( $this->get( 'id' ) );
-
-		if ( $this->is_transaction_completed() ) {
-			$email = new WPSC_Purchase_Log_Customer_Notification( $address, $this->get_email_args() );
-			$email->send();
-		} elseif ( $this->get( 'processed' ) == self::ORDER_RECEIVED ) {
-			$email = new WPSC_Purchase_Log_Customer_Pending_Notification( $address, $this->get_email_args() );
-			$email->send();
-		}
-		remove_filter( 'wpsc_purchase_log_customer_notification_raw_message', array( $this, 'filter_customer_notification_raw_message' ), 10, 2 );
-		do_action( 'wpsc_transaction_send_email_to_customer', $this->get( 'id' ) );
-	}
-
-	public function get_html_output() {
-		add_filter( 'wpsc_purchase_log_customer_html_notification_raw_message', array( $this, 'filter_customer_notification_raw_message' ), 10, 2 );
-
-		$output = '';
-		$address = wpsc_get_buyers_email( $this->get( 'id' ) );
-		if ( $this->is_transaction_completed() ) {
-			$notification = new WPSC_Purchase_Log_Customer_HTML_Notification( $address, $this->get_html_output_args() );
-			$output = $notification->get_message();
-		} elseif ( $this->get( 'processed' ) == self::ORDER_RECEIVED ) {
-			$notification = new WPSC_Purchase_Log_Customer_Pending_HTML_Notification( $address, $this->get_html_output_args() );
-			$output = $notification->get_message();
-		}
-		remove_filter( 'wpsc_purchase_log_customer_notification_raw_message', array( $this, 'filter_customer_notification_raw_message' ), 10, 2 );
-		return $output;
-	}
-
-	public function send_admin_email() {
-		if ( $this->get( 'email_sent' ) )
-			return;
-
-		$address = get_option( 'purch_log_email' );
-		$email = new WPSC_Purchase_Log_Admin_Notification( $address, $this->get_email_args(), $this->get( 'id' ) );
-		$email->send();
-		$this->set( 'email_sent', 1 );
-		$this->save();
+	public function is_refund_pending() {
+		return $this->get( 'processed' ) == self::REFUND_PENDING;
 	}
 }

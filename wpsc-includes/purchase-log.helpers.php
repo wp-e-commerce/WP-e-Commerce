@@ -52,8 +52,10 @@ function wpsc_get_plaintext_table( $headings, $rows ) {
 
 	$line = implode( '--', $line );
 	array_unshift( $output, $line );
-	array_unshift( $output, implode( '  ', $headings ) );
-	array_unshift( $output, $line );
+	if ( ! empty( $headings ) ) {
+		array_unshift( $output, implode( '  ', $headings ) );
+		array_unshift( $output, $line );
+	}
 	$output[] = $line;
 
 	return implode( "\r\n", $output ) . "\r\n";
@@ -136,11 +138,13 @@ function wpsc_get_purchase_log_html_table( $headings, $rows ) {
 
 	?>
 	<table class="wpsc-purchase-log-transaction-results">
-		<thead>
-			<?php foreach ( $headings as $heading => $align ): ?>
-				<th><?php echo esc_html( $heading ); ?></th>
-			<?php endforeach; ?>
-		</thead>
+		<?php if ( ! empty( $headings ) ): ?>
+			<thead>
+				<?php foreach ( $headings as $heading => $align ): ?>
+					<th><?php echo esc_html( $heading ); ?></th>
+				<?php endforeach; ?>
+			</thead>
+		<?php endif; ?>
 		<tbody>
 			<?php foreach ( $rows as $row ): ?>
 				<tr>
@@ -157,8 +161,9 @@ function wpsc_get_purchase_log_html_table( $headings, $rows ) {
 	return $output;
 }
 
-function _wpsc_process_transaction_coupon( $id ) {
-	$purchase_log = new WPSC_Purchase_Log( $id );
+function _wpsc_process_transaction_coupon( $purchase_log ) {
+	if ( ! is_object( $purchase_log ) )
+		$purchase_log = new WPSC_Purchase_Log( $purchase_log );
 	$discount_data = $purchase_log->get( 'discount_data' );
 	if ( ! empty( $discount_data ) ) {
 
@@ -180,8 +185,9 @@ function _wpsc_process_transaction_coupon( $id ) {
 }
 
 function _wpsc_action_update_purchase_log_status( $id, $status, $old_status, $purchase_log ) {
-	$purchase_log->send_customer_email();
-	$purchase_log->send_admin_email();
+	wpsc_send_customer_email( $purchase_log );
+	wpsc_send_admin_email( $purchase_log );
+
 	if ( ! $purchase_log->is_transaction_completed() )
 		return;
 
@@ -189,3 +195,44 @@ function _wpsc_action_update_purchase_log_status( $id, $status, $old_status, $pu
 	wpsc_decrement_claimed_stock( $id );
 }
 add_action( 'wpsc_update_purchase_log_status', '_wpsc_action_update_purchase_log_status', 10, 4 );
+
+function wpsc_send_customer_email( $purchase_log ) {
+	if ( ! is_object( $purchase_log ) )
+		$purchase_log = new WPSC_Purchase_Log( $purchase_log );
+
+	if ( ! $purchase_log->is_transaction_completed() && ! $purchase_log->is_order_received() )
+		return;
+
+	$email = new WPSC_Purchase_Log_Customer_Notification( $purchase_log );
+	$email->send();
+
+	do_action( 'wpsc_transaction_send_email_to_customer', $purchase_log );
+}
+
+function wpsc_send_admin_email( $purchase_log ) {
+	if ( ! is_object( $purchase_log ) )
+		$purchase_log = new WPSC_Purchase_Log( $purchase_log );
+
+	if ( $purchase_log->get( 'email_sent' ) )
+		return;
+
+	$email = new WPSC_Purchase_Log_Admin_Notification( $purchase_log );
+	$email->send();
+	$purchase_log->set( 'email_sent', 1 );
+	$purchase_log->save();
+	do_action( 'wpsc_transaction_send_email_to_admin', $purchase_log );
+}
+
+function wpsc_get_transaction_html_output( $purchase_log ) {
+	if ( ! is_object( $purchase_log ) )
+		$purchase_log = new WPSC_Purchase_Log( $purchase_log );
+
+	if ( ! $purchase_log->is_transaction_completed() && ! $purchase_log->is_order_received() )
+		return '';
+
+	$notification = new WPSC_Purchase_Log_Customer_HTML_Notification( $purchase_log );
+	$output = $notification->get_html_message();
+
+	$output = apply_filters( 'wpsc_get_transaction_html_output', $output, $purchase_log );
+	return $output;
+}
