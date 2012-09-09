@@ -70,27 +70,11 @@ class WPSC_Settings_Tab_Admin extends WPSC_Settings_Tab
 
 				<tr>
 					<th scope="row">
-					<?php esc_html_e( 'Purchase Log Email', 'wpsc' );?>:
+					<?php esc_html_e( 'Store Admin Email', 'wpsc' );?>:
 					</th>
 					<td>
 					<input class='text' name='wpsc_options[purch_log_email]' type='text' size='40' value='<?php echo esc_attr( get_option( 'purch_log_email' ) ); ?>' />
-					</td>
-				</tr>
-				<tr>
-					<th scope="row">
-					<?php esc_html_e( 'Purchase Receipt - Reply Address', 'wpsc' );?>:
-					</th>
-					<td>
-					<input class='text' name='wpsc_options[return_email]' type='text' size='40' value='<?php echo esc_attr( get_option( 'return_email' ) ); ?>'  />
-					</td>
-				</tr>
-
-				<tr>
-					<th scope="row">
-					<?php esc_html_e( 'Purchase Receipt - Reply Name', 'wpsc' );?>:
-					</th>
-					<td>
-					<input class='text' name='wpsc_options[return_name]' type='text' size='40' value='<?php echo esc_attr( get_option( 'return_name' ) ); ?>'  />
+					<p class="howto"><?php esc_html_e( 'Admin notifications will be sent here.' ); ?></p>
 					</td>
 				</tr>
 
@@ -104,7 +88,7 @@ class WPSC_Settings_Tab_Admin extends WPSC_Settings_Tab
 				</tr>
 
 			</table>
-			<h3 class="form_group"><?php esc_html_e( 'Custom Messages', 'wpsc' );?>:</h3>
+			<h3 class="form_group"><?php esc_html_e( 'Customer Purchase Receipt', 'wpsc' );?>:</h3>
 			<table class='wpsc_options form-table'>
 				<tr>
 					<th colspan="2"><?php esc_html_e( 'Tags can be used', 'wpsc' );?>: <?php echo esc_html( '%purchase_id%, %shop_name%, %product_list%, %total_price%, %total_shipping%, %find_us%, %total_tax%' ); ?></th>
@@ -119,19 +103,25 @@ class WPSC_Settings_Tab_Admin extends WPSC_Settings_Tab
 					</td>
 				</tr>
 				<tr>
-					<th><strong><?php esc_html_e( 'Purchase Receipt', 'wpsc' ); ?></strong></th>
-					<td><textarea name="wpsc_options[wpsc_email_receipt]" cols='' rows=''   style='width: 300px; height: 200px;'><?php esc_textarea( get_option( 'wpsc_email_receipt' ) );?></textarea></td>
+					<th scope="row">
+					<?php echo esc_html_x( 'From Address', 'purchase receipt', 'wpsc' );?>:
+					</th>
+					<td>
+					<input class='text' name='wpsc_options[return_email]' type='text' size='40' value='<?php echo esc_attr( get_option( 'return_email' ) ); ?>'  />
+					</td>
 				</tr>
+
 				<tr>
-					<td class='wpsc_td_note' colspan='2'>
-						<span class="wpscsmall description">
-						<?php esc_html_e( 'Note: The Admin Report is the email sent to the e-mail address set above as soon as someone successfully buys a product.', 'wpsc' ); ?>
-						</span>
+					<th scope="row">
+					<?php esc_html_e( 'Sender Name', 'wpsc' );?>:
+					</th>
+					<td>
+					<input class='text' name='wpsc_options[return_name]' type='text' size='40' value='<?php echo esc_attr( get_option( 'return_name' ) ); ?>'  />
 					</td>
 				</tr>
 				<tr>
-					<th><strong><?php esc_html_e( 'Admin Report', 'wpsc' ); ?></strong></th>
-					<td><textarea name="wpsc_options[wpsc_email_admin]" cols='' rows='' style='width: 300px; height: 200px;'><?php esc_textarea( get_option( 'wpsc_email_admin' ) );?></textarea></td>
+					<th><?php esc_html_e( 'Message Body', 'wpsc' ); ?></th>
+					<td><textarea name="wpsc_options[wpsc_email_receipt]" cols='' rows=''   style='width: 300px; height: 200px;'><?php echo esc_textarea( get_option( 'wpsc_email_receipt' ) );?></textarea></td>
 				</tr>
 			</table>
 
