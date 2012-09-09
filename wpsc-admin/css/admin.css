@@ -1792,6 +1792,7 @@ input.wpsc_cat_image_size {
 input.wpsc_cat_box {
     width:auto;
     margin:6px;
+    vertical-align:middle;
 }
 
 .wpsc_ie_field{
