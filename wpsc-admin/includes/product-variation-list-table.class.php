@@ -251,8 +251,15 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 	}
 
 	private function shipping_editor( $item = false ) {
-		static $row_class = '';
-		$row_class = ( $row_class == '' && $item ) ? ' alternate' : '';
+		static $alternate = '';
+
+		if ( ! $item )
+			$alternate = '';
+		else
+			$alternate = ( $alternate == '' ) ? ' alternate' : '';
+
+		$row_class = $alternate;
+
 		$style = '';
 		$bulk = false;
 		if ( ! $item ) {
@@ -261,6 +268,8 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 			$row_class .= " wpsc_bulk_edit_shipping";
 			if ( $this->is_bulk_edit )
 				$style = ' style="display:table-row;"';
+			else
+				$style = ' style="display:none;"';
 			$bulk = true;
 		} else {
 			$field_name = "wpsc_variations[{$item->ID}][product_metadata]";
