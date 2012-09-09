@@ -15,28 +15,20 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 	$echo_to_screen = $display_to_screen;
 
 	$purchase_log = new WPSC_Purchase_Log( $sessionid, 'sessionid' );
+
 	$message_html = _wpsc_transaction_results_html( $purchase_log );
 	$wpsc_cart->empty_cart();
 	return $message_html;
 }
 
 function _wpsc_transaction_results_html( $purchase_log ) {
-	$output = $purchase_log->get_html_output();
+	$output = wpsc_get_transaction_html_output( $purchase_log );
 
 	if ( version_compare( WPSC_VERSION, '3.8.9', '>=' ) )
 		echo $output;
 
-	return wpautop( $output );
+	return $output;
 }
-
-/**
- * WP eCommerce transaction results class
- *
- * This class is responsible for theming the transaction results page.
- *
- * @package wp-e-commerce
- * @since 3.8
- */
 
 function wpsc_transaction_theme() {
 	global $wpdb, $user_ID, $nzshpcrt_gateways, $sessionid, $cart_log_id, $errorcode;

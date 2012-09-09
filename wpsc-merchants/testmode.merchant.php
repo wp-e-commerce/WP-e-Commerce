@@ -33,14 +33,27 @@ class wpsc_merchant_testmode extends wpsc_merchant {
 	function __construct( $purchase_id = null, $is_receiving = false ) {
 		$this->name = __( 'Test Gateway', 'wpsc' );
 		parent::__construct( $purchase_id, $is_receiving );
+
+		add_filter( 'wpsc_purchase_log_customer_notification_raw_message'     , array( $this, '_filter_customer_notification_raw_message' ), 10, 2 );
+		add_filter( 'wpsc_purchase_log_customer_html_notification_raw_message', array( $this, '_filter_customer_notification_raw_message' ), 10, 2 );
 	}
 
 	function submit() {
 		$this->set_purchase_processed_by_purchid(2);
+
 	 	$this->go_to_transaction_results($this->cart_data['session_id']);
 
 	 	exit();
 
+	}
+
+	public function _filter_customer_notification_raw_message( $message, $notification ) {
+		$purchase_log = $notification->get_purchase_log();
+
+		if ( $purchase_log->get( 'gateway' ) == 'wpsc_merchant_testmode' )
+			$message = get_option( 'payment_instructions', '' ) . "\r\n" . $message;
+
+		return $message;
 	}
 }
 
