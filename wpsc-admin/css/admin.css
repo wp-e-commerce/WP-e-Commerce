@@ -2122,8 +2122,7 @@ table.purchase-logs tr:hover .column-id .delete {
 	margin: 0;
 }
 
-#wpsc_product_variation_forms,
-#wpsc_product_variation_forms .inside {
+#wpsc_product_variation_forms {
 	overflow: auto !important;
 }
 
