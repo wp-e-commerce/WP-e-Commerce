@@ -253,8 +253,7 @@ function wpsc_the_cart_item_key() {
 */
 function wpsc_cart_item_name( $context = 'display' ) {
 	global $wpsc_cart;
-   $product_name = apply_filters( 'the_title', $wpsc_cart->cart_item->get_title() );
-	$product_name = apply_filters( 'wpsc_cart_item_name', $product_name, $wpsc_cart->cart_item->product_id );
+	$product_name = apply_filters( 'wpsc_cart_item_name', $wpsc_cart->cart_item->get_title(), $wpsc_cart->cart_item->product_id );
 	return $product_name;
 }
  /**
@@ -1725,9 +1724,7 @@ class wpsc_cart_item {
    	$price = apply_filters( 'wpsc_price', $price, $product_id );
 
    	// create the string containing the product name.
-      $product_name = apply_filters( 'wpsc_cart_product_title', $product->post_title, $product_id );
-
-   	$this->product_name = $product_name;
+   	$this->product_name = $this->get_title( 'raw' );
    	$this->priceandstock_id = $priceandstock_id;
    	$this->meta = $product_meta;
 
@@ -1813,7 +1810,7 @@ class wpsc_cart_item {
        do_action_ref_array( 'wpsc_refresh_item', array( &$this ) );
    }
 
-   public function get_title() {
+   public function get_title( $mode = 'display' ) {
 
       if ( ! get_post_field( 'post_parent', $this->product_id ) )
          return get_post_field( 'post_title', $this->product_id);
@@ -1830,8 +1827,12 @@ class wpsc_cart_item {
          $title .= ' (' . $vars . ')';
       }
 
-      return apply_filters( 'the_title', $title );
+      $title = apply_filters( 'wpsc_cart_product_title', $title, $this->product_id );
 
+      if ( $mode == 'display' )
+         $title = apply_filters( 'the_title', $title );
+
+      return $title;
    }
 
    /**
@@ -1984,7 +1985,7 @@ $wpdb->insert(
 		WPSC_TABLE_CART_CONTENTS,
 		array(
 		    'prodid' => $this->product_id,
-		    'name' => $this->product_name,
+		    'name' => $this->get_title(),
 		    'purchaseid' => $purchase_log_id,
 		    'price' => $this->unit_price,
 		    'pnp' => $shipping,

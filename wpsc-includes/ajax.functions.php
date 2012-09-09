@@ -580,7 +580,7 @@ function wpsc_submit_checkout() {
 				$countries = wpsc_get_meta( $catid, 'target_market', 'wpsc_category' );
 
 			if ( !empty($countries) && !in_array( $selectedCountry[0]['id'], (array)$countries ) ) {
-				$errormessage = sprintf( __( '%s cannot be shipped to %s. To continue with your transaction please remove this product from the list below.', 'wpsc' ), $cartitem->product_name, $selectedCountry[0]['country'] );
+				$errormessage = sprintf( __( '%s cannot be shipped to %s. To continue with your transaction please remove this product from the list below.', 'wpsc' ), $cartitem->get_title(), $selectedCountry[0]['country'] );
 				wpsc_update_customer_meta( 'category_shipping_conflict', $errormessage );
 				$is_valid = false;
 			}
