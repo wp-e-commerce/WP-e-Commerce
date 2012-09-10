@@ -85,7 +85,8 @@ abstract class WPSC_Purchase_Log_Notification
 			$rows[] = array( $item->name, $item_price, $item->quantity, $item_total );
 		}
 
-		return array( 'headings' => $headings, 'rows' => $rows );
+		$table_args = array( 'headings' => $headings, 'rows' => $rows );
+		return apply_filters( 'wpsc_purchase_log_notification_product_table_args', $table_args, $this );
 	}
 
 	private function create_plaintext_product_list() {
