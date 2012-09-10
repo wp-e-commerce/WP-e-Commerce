@@ -2041,7 +2041,11 @@ table.purchase-logs tr:hover .column-id .delete {
 	width: 60%;
 }
 
-#wpsc-product-variations-wrapper .column-stock, #wpsc-product-variations-wrapper .column-tax, #wpsc-product-variations-wrapper .column-price, #wpsc-product-variations-wrapper .column-sale_price, #wpsc-product-variations-wrapper .column-sku {
+#wpsc-product-variations-wrapper .column-stock,
+#wpsc-product-variations-wrapper .column-tax,
+#wpsc-product-variations-wrapper .column-price,
+#wpsc-product-variations-wrapper .column-sale_price,
+#wpsc-product-variations-wrapper .column-sku {
 	text-align:center;
 	width:11%;
 }
