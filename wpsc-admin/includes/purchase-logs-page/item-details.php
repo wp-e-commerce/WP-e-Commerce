@@ -7,7 +7,8 @@
 	<div id='post-body'>
 		<?php if ( wpsc_has_purchlog_shipping() ): ?>
 			<div id='wpsc_shipping_details_box'>
-				<h3><?php esc_html_e( 'Shipping Address', 'wpsc' ); ?></h3>
+				<h3><?php esc_html_e( 'Shipping Details', 'wpsc' ); ?></h3>
+				<h4><?php esc_html_e( 'Shipping Address', 'wpsc' ); ?></h4>
 				<p><strong><?php echo wpsc_display_purchlog_shipping_name(); ?></strong></p>
 				<p>
 					<?php echo wpsc_display_purchlog_shipping_address(); ?><br />
@@ -15,7 +16,7 @@
 					<?php echo wpsc_display_purchlog_shipping_state_and_postcode(); ?><br />
 					<?php echo wpsc_display_purchlog_shipping_country(); ?><br />
 				</p>
-				<strong><?php esc_html_e( 'Shipping Options', 'wpsc' ); ?></strong>
+				<h4><?php esc_html_e( 'Shipping Options', 'wpsc' ); ?></h4>
 				<p>
 					<?php esc_html_e( 'Shipping Method:', 'wpsc' ); ?> <?php echo wpsc_display_purchlog_shipping_method(); ?><br />
 					<?php esc_html_e( 'Shipping Option:', 'wpsc' ); ?> <?php echo wpsc_display_purchlog_shipping_option(); ?><br />
