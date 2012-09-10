@@ -140,7 +140,7 @@ class WPSC_Settings_Tab_Admin extends WPSC_Settings_Tab
 				</tr>
 				<tr>
 					<th><strong><?php esc_html_e( 'Tracking Email Message', 'wpsc' );?></strong></th>
-					<td><textarea name="wpsc_options[wpsc_trackingid_message]" cols='' rows=''   style='width: 300px; height: 200px;'><?php esc_textarea( get_option( 'wpsc_trackingid_message' ) );?></textarea></td>
+					<td><textarea name="wpsc_options[wpsc_trackingid_message]" cols='' rows=''   style='width: 300px; height: 200px;'><?php echo esc_textarea( get_option( 'wpsc_trackingid_message' ) );?></textarea></td>
 				</tr>
 			</table>
 		<?php
