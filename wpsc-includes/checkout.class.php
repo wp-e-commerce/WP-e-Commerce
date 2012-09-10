@@ -534,7 +534,7 @@ function wpsc_get_acceptable_countries() {
 			$target_market_ids[$category_id] = $target_markets;
 	}
 
-	$have_target_market = ! empty( $target_market_id );
+	$have_target_market = ! empty( $target_market_ids );
 
 	//If we're comparing multiple categories
 	if ( count( $target_market_ids ) > 1 ) {
