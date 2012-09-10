@@ -1,5 +1,4 @@
 <?php
-
 class WPSC_Purchase_Log
 {
 	const INCOMPLETE_SALE  = 1;

@@ -106,15 +106,19 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 	}
 
 	public function get_columns() {
-		return array(
+		$columns = array(
 			'cb'         => '<input type="checkbox" />',
 			'title'      => __( 'Title', 'wpsc' ),
-			'stock'      => __( 'Stock', 'wpsc' ),
-			'tax'        => __( 'Tax', 'wpsc' ),
+			'sku'        => __( 'SKU', 'wpsc' ),
 			'price'      => __( 'Price', 'wpsc' ),
 			'sale_price' => __( 'Sale Price', 'wpsc' ),
-			'sku'        => __( 'SKU', 'wpsc' ),
+			'stock'      => __( 'Stock', 'wpsc' ),
 		);
+
+		if ( get_option( 'wpec_taxes_enabled' ) )
+			$columns[] = __( 'Taxable Amount', 'wpsc' );
+
+		return $columns;
 	}
 
 	public function get_sortable_columns() {
