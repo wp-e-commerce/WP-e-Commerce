@@ -197,8 +197,8 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 			$thumbnail = WPSC_CORE_IMAGES_URL . '/no-image-uploaded.gif';
 		?>
 			<div class="wpsc-product-variation-thumbnail">
-				<a data-title="<?php echo $title; ?>" href="<?php echo esc_url( admin_url( 'media-upload.php?post_id=' . $item->ID . '&TB_iframe=1&width=640&height=566&product_variation=1' ) ) ?>">
-					<img id="wpsc-variation-thumbnail-<?php echo $item->ID; ?>" src="<?php echo $thumbnail; ?>" alt="" />
+				<a data-title="<?php echo esc_attr( $title ); ?>" href="<?php echo esc_url( admin_url( 'media-upload.php?post_id=' . $item->ID . '&TB_iframe=1&width=640&height=566&product_variation=1' ) ) ?>">
+					<img id="wpsc-variation-thumbnail-<?php echo $item->ID; ?>" src="<?php echo esc_url( $thumbnail ); ?>" alt="" />
 				</a>
 			</div>
 			<div class="wpsc-product-variation-title">
