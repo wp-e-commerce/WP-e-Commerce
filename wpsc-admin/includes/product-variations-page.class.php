@@ -311,6 +311,8 @@ class WPSC_Product_Variations_Page
 		if ( empty( $current_action ) )
 			return;
 
+		_wpsc_remove_refresh_variation_parent_term_hooks();
+
 		check_admin_referer( 'wpsc_product_variations_bulk_action', 'bulk_action_nonce' );
 		$sendback = $_SERVER['REQUEST_URI'];
 		$callback = 'process_bulk_action_' . $current_action;
@@ -332,6 +334,8 @@ class WPSC_Product_Variations_Page
 			'last_paged'
 		), $sendback );
 
+		_wpsc_refresh_parent_product_terms( $this->parent_id );
+		_wpsc_add_refresh_variation_parent_term_hooks();
 		if ( $current_action != 'edit' ) {
 			wp_redirect( $sendback );
 			exit;
