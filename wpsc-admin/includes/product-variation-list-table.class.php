@@ -58,6 +58,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 
 		$ids = wp_list_pluck( $this->items, 'ID' );
 		$object_terms = wp_get_object_terms( $ids, 'wpsc-variation', array( 'fields' => 'all_with_object_id' ) );
+
 		foreach ( $object_terms as $term ) {
 			if ( ! array_key_exists( $term->object_id, $this->object_terms_cache ) )
 				$this->object_terms_cache[$term->object_id] = array();
@@ -177,7 +178,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 					),
 					$restore_url
 				);
-				$restore_url = wp_nonce_url( $restore_url, 'untrash-' . $item->post_type . '_' . $item->ID );
+				$restore_url = wp_nonce_url( $restore_url, 'untrash-post_' . $item->ID );
 				$actions['untrash'] = "<a title='" . esc_attr( __( 'Restore this item from the Trash' ) ) . "' href='" . $restore_url . "'>" . __( 'Restore' ) . "</a>";
 			} elseif ( EMPTY_TRASH_DAYS ) {
 				$actions['trash'] = "<a class='submitdelete' title='" . esc_attr( __( 'Move this item to the Trash' ) ) . "' href='" . $delete_link . "'>" . __( 'Trash' ) . "</a>";

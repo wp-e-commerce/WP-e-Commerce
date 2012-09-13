@@ -27,6 +27,7 @@ class wpsc_variations {
 		global $wpdb;
 
 		$product_terms = wp_get_object_terms($product_id, 'wpsc-variation');
+
 		$this->variation_groups = array();
 		$this->first_variations = array();
 		$this->all_associated_variations = array();

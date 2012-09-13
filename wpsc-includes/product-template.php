@@ -1896,7 +1896,7 @@ function wpsc_get_downloadable_file($file_id){
 *
 * @return boolean true if product does have variations, false otherwise
 */
-function wpsc_product_has_children( $id ){
+function wpsc_product_has_children( $id, $exclude_unpublished = true ){
 	return wpsc_product_has_variations( $id );
 }
 
@@ -1918,7 +1918,7 @@ function wpsc_product_has_variations( $id = 0 ) {
 		$args = array(
 			'post_parent' => $id,
 			'post_type'   => 'wpsc-product',
-			'post_status' => 'inherit publish'
+			'post_status' => array( 'inherit', 'publish' ),
 		);
 		$children = get_children( $args );
 
