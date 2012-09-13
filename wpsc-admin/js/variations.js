@@ -52,16 +52,18 @@ var wpsc_set_variation_product_thumbnail = function(id, src) {
 };
 
 (function($) {
-	var table = $('body.edit-tags-php .wp-list-table');
-	table.find('tbody tr').each(function(){
-		var t = $(this),
-			id = t.attr('id').replace(/[^0-9]+/g, '');
-		t.data('level', WPSC_Term_List_Levels[id]);
-		t.data('id', id);
-	});
+	$(function(){
+		var table = $('body.edit-tags-php .wp-list-table');
+		table.find('tbody tr').each(function(){
+			var t = $(this),
+				id = t.attr('id').replace(/[^0-9]+/g, '');
+			t.data('level', WPSC_Term_List_Levels[id]);
+			t.data('id', id);
+		});
 
-	table.wpsc_sortable_table({
-		stop : variation_sort
+		table.wpsc_sortable_table({
+			stop : variation_sort
+		});
 	});
 
 	/**
