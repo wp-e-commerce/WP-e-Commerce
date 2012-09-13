@@ -312,6 +312,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 					foreach ( $this->cart_items as $cart_row ) {
 						if ( $cart_row['is_recurring'] == true ) {
 							do_action( 'wpsc_activate_subscription', $cart_row['cart_item_id'], $this->paypal_ipn_values['subscr_id'] );
+							do_action('wpsc_activated_subscription', $cart_row['cart_item_id'], $this );
 						}
 					}
 					break;
