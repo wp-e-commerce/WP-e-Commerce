@@ -969,17 +969,42 @@ function wpsc_print_admin_scripts() {
 }
 
 /**
- * wpsc_update_permalinks update the product pages permalinks when WordPress permalinks are changed
+ * Update products page URL options when permalink scheme changes.
  *
- * @public
- *
- * @3.8
- * @returns nothing
+ * @since  3.8.9
+ * @access private
  */
-function wpsc_update_permalinks( $return = '' ) {
+function _wpsc_action_permalink_structure_changed() {
+	$wp_version = get_bloginfo( 'version' );
+
+	// see WordPress core trac ticket:
+	// http://core.trac.wordpress.org/ticket/16736
+	// this has been fixed in WordPress 3.3
+	if ( version_compare( $wp_version, '3.3', '<' ) )
+		_wpsc_display_permalink_refresh_notice();
+		add_action( 'admin_notices', 'wpsc_check_permalink_notice' );
+
 	wpsc_update_page_urls( true );
 	return $return;
 }
+
+/**
+ * Display warning if the user is using WordPress prior to 3.3 because there is a bug with custom
+ * post type and taxonomy permalink generation.
+ *
+ * @access private
+ * @since 3.8.9
+ */
+function _wpsc_display_permalink_refresh_notice(){
+	?>
+	<div id="notice" class="error fade">
+		<p>
+			<?php printf( __( 'Due to <a href="%1$s">a bug in WordPress prior to version 3.3</a>, you might run into 404 errors when viewing your products. To work around this, <a href="%2$s">upgrade to WordPress 3.3 or later</a>, or simply click "Save Changes" below a second time.' , 'wpsc' ), 'http://core.trac.wordpress.org/ticket/16736', 'http://codex.wordpress.org/Updating_WordPress' ); ?>
+		</p>
+	</div>
+	<?php
+}
+
 
 /**
  * wpsc_ajax_ie_save save changes made using inline edit
@@ -1047,16 +1072,6 @@ function wpsc_add_meta_boxes(){
 	add_meta_box( 'dashboard_right_now', __( 'Current Month', 'wpsc' ), 'wpsc_right_now', 'dashboard_page_wpsc-sales-logs', 'top' );
 }
 
-function wpsc_check_permalink_notice(){
-
-?>
-<div id="notice" class="error fade"><p>
-<?php printf( __( 'Due to a problem in WordPress Permalinks and Custom Post Types, WP e-Commerce encourages you to refresh your permalinks a second time. (for a more geeky explanation visit <a href="%s">trac</a>)' , 'wpsc' ), 'http://core.trac.wordpress.org/ticket/16736' ); ?>
-</p></div>
-<?php
-
-}
-
 /**
  * Displays notice if user has Great Britain selected as their base country
  * Since 3.8.9, we have deprecated Great Britain in favor of the UK
@@ -1071,9 +1086,7 @@ function wpsc_gb_deprecated_notice() {
 }
 
 add_action( 'admin_notices', 'wpsc_gb_deprecated_notice' );
-add_action( 'permalink_structure_changed' , 'wpsc_check_permalink_notice' );
-add_action( 'permalink_structure_changed' , 'wpsc_update_permalinks' );
-/* add_action( 'get_sample_permalink_html' , 'wpsc_update_permalinks' ); // this just seems unnecessary and produces PHP notices */
+add_action( 'permalink_structure_changed' , '_wpsc_action_permalink_structure_changed' );
 add_action( 'wp_ajax_category_sort_order', 'wpsc_ajax_set_category_order' );
 add_action( 'wp_ajax_variation_sort_order', 'wpsc_ajax_set_variation_order' );
 add_action( 'wp_ajax_wpsc_ie_save', 'wpsc_ajax_ie_save' );
