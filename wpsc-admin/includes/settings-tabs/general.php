@@ -115,7 +115,7 @@ class WPSC_Settings_Tab_General extends WPSC_Settings_Tab
 					<td>
 						<label><input type="radio" <?php checked( $hierarchical_category, 1 ); ?> name="wpsc_options[product_category_hierarchical_url]" value="1" /> <?php _e( 'Yes', 'wpsc' ); ?></label>&nbsp;&nbsp;
 						<label><input type="radio" <?php checked( $hierarchical_category, 0 ); ?>name="wpsc_options[product_category_hierarchical_url]" value="0" /> <?php _e( 'No', 'wpsc' ); ?></label><br />
-						<?php esc_html_e( 'When Hierarchical Product Category URL is enabled, parent product categories are also included in the product URL.<br />For example: example.com/products-page/parent-cat/sub-cat/product-name', 'wpsc' ); ?>
+						<?php _e( 'When Hierarchical Product Category URL is enabled, parent product categories are also included in the product URL.<br />For example: example.com/products-page/parent-cat/sub-cat/product-name', 'wpsc' ); ?>
 					</td>
 				</tr>
 			</table>
