@@ -70,7 +70,7 @@ function nzshpcrt_shopping_basket( $input = null, $override_state = null ) {
  *
  */
 function show_cats_brands($category_group = null , $display_method = null, $order_by = 'name', $image = null) {
-	_deprecated_function( __FUNCTION__, '3.8', 'wpsc_shopping_cart'); 
+	_deprecated_function( __FUNCTION__, '3.8', 'wpsc_shopping_cart');
 }
 /**
  * Filter: wpsc-purchlogitem-links-start
@@ -80,7 +80,7 @@ function show_cats_brands($category_group = null , $display_method = null, $orde
  *
  * @since 3.7.6rc2
  */
-function wpsc_purchlogitem_links_start_deprecated() {	
+function wpsc_purchlogitem_links_start_deprecated() {
 	do_action( 'wpsc-purchlogitem-links-start' );
 }
 add_action( 'wpsc_purchlogitem_links_start', 'wpsc_purchlogitem_links_start_deprecated' );
@@ -119,7 +119,7 @@ function nzshpcrt_latest_product( $args = null, $instance ) {
  * @access public
  * @param mixed $price_in
  * @param mixed $tax_status
- * @param bool $nohtml deprecated 
+ * @param bool $nohtml deprecated
  * @param bool $id. deprecated
  * @param bool $no_dollar_sign. (default: false)
  * @return void
@@ -174,17 +174,17 @@ if(!function_exists('wpsc_is_noca_gateway')){
  * @return (int) The current page number
  */
 function wpsc_current_page() {
-	
+
 	global $wpsc_query;
-	
+
 	$current_page = 1;
-	
+
 	if ( $wpsc_query->query_vars['page'] > 1) {
 		$current_page = $wpsc_query->query_vars['page'];
 	}
-	
+
 	return $current_page;
-	
+
 }
 
 /**
@@ -194,9 +194,9 @@ function wpsc_current_page() {
  * @return (string) Number of products showing
  */
 function wpsc_showing_products() {
-	
+
 	global $wpsc_query;
-				
+
 	// If we are using pages...
 	if ( ( get_option( 'use_pagination' ) == 1 ) ) {
 		$products_per_page = $wpsc_query->query_vars['number_per_page'];
@@ -207,9 +207,9 @@ function wpsc_showing_products() {
 		}
 		return ( $startnum + 1 ) . ' to ' . ( $startnum + wpsc_product_count() );
 	}
-	
+
 	return wpsc_total_product_count();
-	
+
 }
 
 /**
@@ -218,14 +218,14 @@ function wpsc_showing_products() {
  * @return (string) Number of pages showing.
  */
 function wpsc_showing_products_page() {
-	
+
 	global $wpsc_query;
-	
+
 	$output = $wpsc_query->page_count;
 	$current_page = wpsc_current_page();
-	
+
 	return $current_page . ' of ' . $output;
-	
+
 }
 
 
@@ -237,7 +237,7 @@ function wpsc_showing_products_page() {
  * @return (string) URL.
  */
 function wpsc_product_search_url( $url ) {
-			
+
 	if ( isset( $_GET['product_search'] ) ) {
 		if ( strrpos( $url, '?') ) {
 			$url .= '&product_search=' . $_GET['product_search'];
@@ -245,7 +245,7 @@ function wpsc_product_search_url( $url ) {
 			$url .= '?product_search=' . $_GET['product_search'];
 		}
 	}
-	
+
 	return $url;
 
 }
@@ -257,10 +257,10 @@ function wpsc_product_search_url( $url ) {
  * @return (string) URL for the adjacent products page link.
  */
 function wpsc_adjacent_products_url( $n ) {
-	
+
 	_deprecated_function( __FUNCTION__, '3.8', 'wpsc_pagination');
 	return false;
-	
+
 }
 
 /**
@@ -271,10 +271,10 @@ function wpsc_adjacent_products_url( $n ) {
  * @return (string) Next page link or text.
  */
 function wpsc_next_products_link( $text = 'Next', $show_disabled = false ) {
-	
+
 	_deprecated_function( __FUNCTION__, '3.8', 'wpsc_pagination');
 	return false;
-	
+
 }
 
 /**
@@ -285,10 +285,10 @@ function wpsc_next_products_link( $text = 'Next', $show_disabled = false ) {
  * @return (string) Previous page link or text.
  */
 function wpsc_previous_products_link( $text = 'Previous', $show_disabled = false ) {
-	
+
 	_deprecated_function( __FUNCTION__, '3.8', 'wpsc_pagination');
 	return false;;
-	
+
 }
 
 /**
@@ -299,10 +299,10 @@ function wpsc_previous_products_link( $text = 'Previous', $show_disabled = false
  * @return (string) First page link or text.
  */
 function wpsc_first_products_link( $text = 'First', $show_disabled = false ) {
-	
+
 	_deprecated_function( __FUNCTION__, '3.8', 'wpsc_pagination');
 	return false;
-	
+
 }
 
 /**
@@ -313,10 +313,10 @@ function wpsc_first_products_link( $text = 'First', $show_disabled = false ) {
  * @return (string) Last page link or text.
  */
 function wpsc_last_products_link( $text = 'Last', $show_disabled = false ) {
-	
+
 	_deprecated_function( __FUNCTION__, '3.8', 'wpsc_pagination');
 	return false;
-	
+
 }
 
 /**
@@ -437,7 +437,7 @@ function wpsc_is_admin() {
         if( 'post.php' == $pagenow && 'wpsc-product' == $current_screen->post_type ) return true;
 
     return false;
-    
+
 }
 
 /**
@@ -480,4 +480,24 @@ class WPSC_Query extends WP_Query
 function wpec_get_the_post_id_by_shortcode( $shortcode ) {
 	_deprecated_function( __FUNCTION__, '3.8.9', 'wpsc_get_the_post_id_by_shortcode' );
 	return wpsc_get_the_post_id_by_shortcode( $shortcode );
+}
+
+/**
+ * wpsc_update_permalinks update the product pages permalinks when WordPress permalinks are changed
+ *
+ * @public
+ *
+ * @deprecated Use _wpsc_action_permalink_structure_changed() instead.
+ * @3.8
+ * @returns nothing
+ */
+function wpsc_update_permalinks(  $return = '' ) {
+	_wpsc_action_permalink_structure_changed();
+}
+
+/**
+ * @deprecated Use _wpsc_display_permalink_refresh_notice() instead;
+ */
+function wpsc_check_permalink_notice() {
+	_wpsc_display_permalink_refresh_notice();
 }
