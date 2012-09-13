@@ -86,7 +86,10 @@ function wpsc_get_downloadable_links( $purchase_log ) {
 	$cart_contents = $purchase_log->get_cart_contents();
 	$links = array();
 	foreach ( $cart_contents as $item ) {
-		$links[$item->name] = _wpsc_get_cart_item_downloadable_links( $item, $purchase_log );
+		$item_links = _wpsc_get_cart_item_downloadable_links( $item, $purchase_log );
+		if ( empty( $item_links ) )
+			continue;
+		$links[$item->name] = $item_links;
 	}
 
 	return $links;
