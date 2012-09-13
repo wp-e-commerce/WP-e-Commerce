@@ -618,7 +618,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 			submit_button( __( 'Empty Trash' ), 'button-secondary apply', 'delete_all', false );
 		}
 		?></div>
-		<div class="alignright">
+		<div class="alignright actions">
 			<?php submit_button( __( 'Save Variations', 'wpsc' ) ); ?>
 		</div>
 		<?php
