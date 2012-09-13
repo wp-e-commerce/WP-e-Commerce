@@ -2079,6 +2079,10 @@ table.purchase-logs tr:hover .column-id .delete {
 	border-bottom-style:solid;
 }
 
+#wpsc-product-variations-wrapper {
+	padding-bottom: 5px;
+}
+
 #wpsc-product-variations-wrapper .submit {
 	margin:0;
 	padding:0;
