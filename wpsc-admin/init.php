@@ -453,6 +453,42 @@ function _wpsc_action_sanitize_option_grid_number_per_row( $value, $option ) {
 add_filter( 'sanitize_option_grid_number_per_row', '_wpsc_action_sanitize_option_grid_number_per_row', 10, 2 );
 
 /**
+ * Automatically enable "Anyone can register" if registration before checkout is required.
+ *
+ * @since  3.8.9
+ * @access private
+ * @param  mixed $old_value Old value
+ * @param  mixed $new_value New value
+ */
+function _wpsc_action_update_option_require_register( $old_value, $new_value ) {
+	if ( $new_value == 1 && ! get_option( 'users_can_register' ) ) {
+		update_option( 'users_can_register', 1 );
+		$message = __( 'You wanted to require your customers to log in before checking out. However, the WordPress setting <a href="%s">"Anyone can register"</a> was disabled. WP e-Commerce has enabled that setting for you automatically.', 'wpsc' );
+		$message = sprintf( $message, admin_url( 'options-general.php' ) );
+		add_settings_error( 'require_register', 'users_can_register_turned_on', $message, 'updated' );
+	}
+}
+add_action( 'update_option_require_register', '_wpsc_action_update_option_require_register', 10, 2 );
+
+/**
+ * Automatically turn off "require registration before checkout" if "Anyone can register" is disabled.
+ *
+ * @since  3.8.9
+ * @access private
+ * @param  mixed $old_value Old value
+ * @param  mixed $new_value New value
+ */
+function _wpsc_action_update_option_users_can_register( $old_value, $new_value ) {
+	if ( ! $new_value && get_option( 'require_register' ) ) {
+		update_option( 'require_register', 0 );
+		$message = __( 'You just disabled the "Anyone can register" setting. As a result, the <a href="%s">"Require registration before checking out"</a> setting has been disabled.', 'wpsc' );
+		$message = sprintf( $message, admin_url( 'options-general.php?page=wpsc-settings&tab=checkout' ) );
+		add_settings_error( 'users_can_register', 'require_register_turned_off', $message, 'updated' );
+	}
+}
+add_action( 'update_option_users_can_register', '_wpsc_action_update_option_users_can_register', 10, 2 );
+
+/**
  * wpsc_update_page_urls gets the permalinks for products pages and stores them in the options for quick reference
  * @public
  *
