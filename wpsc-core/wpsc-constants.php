@@ -281,15 +281,12 @@ function wpsc_core_setup_cart() {
 	if ( 2 == get_option( 'cart_location' ) )
 		add_filter( 'the_content', 'wpsc_shopping_cart', 14 );
 
-	$customer_id = wpsc_get_current_customer_id();
-	if ( $customer_id ) {
-		$GLOBALS['wpsc_cart'] = maybe_unserialize( get_transient( "wpsc_cart_{$customer_id}" ) );
+	$cart = maybe_unserialize( wpsc_get_customer_meta( 'cart' ) );
 
-		if ( ! is_object( $GLOBALS['wpsc_cart'] ) )
-			$GLOBALS['wpsc_cart'] = new wpsc_cart();
-	} else {
+	if ( is_object( $cart ) )
+		$GLOBALS['wpsc_cart'] = $cart;
+	else
 		$GLOBALS['wpsc_cart'] = new wpsc_cart();
-	}
 }
 
 /***
