@@ -531,9 +531,11 @@ function wpsc_serialize_shopping_cart() {
 	if ( is_object( $wpsc_cart ) )
 		$wpsc_cart->errors = array( );
 
+	// need to prevent set_cookie from being called at this stage in case the user just logged out
+	// because by now, some output must have been printed out
 	$customer_id = wpsc_get_current_customer_id();
 	if ( $customer_id )
-		set_transient( "wpsc_cart_{$customer_id}", serialize( $wpsc_cart ), WPSC_CUSTOMER_DATA_EXPIRATION ); // valid for 48 hours
+		wpsc_update_customer_meta( 'cart', serialize( $wpsc_cart ) );
 
 	return true;
 }
@@ -1537,7 +1539,39 @@ function wpsc_validate_customer_cookie() {
 	return $id;
 }
 
+/**
+ * Merge anonymous customer data (stored in transient) with an account meta data when the customer
+ * logs in.
+ *
+ * This is done to preserve customer settings and cart.
+ *
+ * @since 3.8.9
+ * @access private
+ */
+function _wpsc_merge_customer_data() {
+	$account_id = get_current_user_id();
+	$cookie_id = wpsc_validate_customer_cookie();
+
+	if ( ! $cookie_id )
+		return;
+
+	$cookie_data = get_transient( "wpsc_customer_meta_{$cookie_id}" );
+	if ( ! is_array( $cookie_data ) || empty( $cookie_data ) )
+		return;
+
+	foreach ( $cookie_data as $key => $value ) {
+		wpsc_update_customer_meta( $key, $value, $account_id );
+	}
+
+	delete_transient( "wpsc_customer_meta_{$cookie_id}" );
+	setcookie( WPSC_CUSTOMER_COOKIE, '', time() - 3600, WPSC_CUSTOMER_COOKIE_PATH, COOKIE_DOMAIN, is_ssl(), true );
+	unset( $_COOKIE[WPSC_CUSTOMER_COOKIE] );
+}
+
 function wpsc_get_current_customer_id( $mode = '' ) {
+	if ( is_user_logged_in() && isset( $_COOKIE[WPSC_CUSTOMER_COOKIE] ) )
+		_wpsc_merge_customer_data();
+
 	if ( is_user_logged_in() )
 		return get_current_user_id();
 	elseif ( isset( $_COOKIE[WPSC_CUSTOMER_COOKIE] ) )
@@ -1554,7 +1588,6 @@ function wpsc_get_customer_meta( $key = '', $id = false ) {
 
 	if ( ! $id )
 		return false;
-
 	if ( is_numeric( $id ) )
 		return get_user_meta( $id, "_wpsc_customer_{$key}", true );
 
