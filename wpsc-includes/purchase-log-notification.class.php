@@ -60,6 +60,7 @@ abstract class WPSC_Purchase_Log_Notification
 
 	private function get_table_args() {
 		$log_id = $this->purchase_log->get( 'id' );
+		$log_data = $this->purchase_log->get_data();
 		$rows   = array();
 
 		$headings = array(
@@ -69,20 +70,42 @@ abstract class WPSC_Purchase_Log_Notification
 			_x( 'Item Total' , 'purchase log notification table heading', 'wpsc' ) => 'right',
 		);
 
+		$has_additional_details = false;
+		$additional_details = array();
+
 		foreach( $this->purchase_log->get_cart_contents() as $item ) {
 			$cart_item_array = array(
 				'purchase_id'  => $log_id,
 				'cart_item'    => $item,
-				'purchase_log' => $this->purchase_log->get_data()
+				'purchase_log' => $log_data,
 			);
 
+			// legacy code, which Gary honestly doesn't fully understand because it just doesn't make sense
+			// prior to 3.8.9, these actions are called on each product item. Don't really know what they do.
 			do_action( 'wpsc_transaction_result_cart_item', $cart_item_array );
 			do_action( 'wpsc_confirm_checkout', $log_id );
+
+			// then there's also this annoying apply_filters call, which is apparently not the best example
+			// of how to use it, but we have to preserve them anyways
+			$additional_content = apply_filters( 'wpsc_transaction_result_content', array( "purchase_id" => $log_id, "cart_item" => $item, "purchase_log" => $log_data ) );
+			if ( ! is_string( $additional_content ) )
+				$additional_content = '';
+			else
+				$has_additional_details = true;
+			$additional_details[] = $additional_content;
 
 			$item_total = $item->quantity * $item->price;
 			$item_total = wpsc_currency_display( $item_total , array( 'display_as_html' => false ) );
 			$item_price = wpsc_currency_display( $item->price, array( 'display_as_html' => false ) );
 			$rows[] = array( $item->name, $item_price, $item->quantity, $item_total );
+		}
+
+		// Preserve the 'wpsc_transaction_result_content' filter for backward compat
+		if ( $has_additional_details ) {
+			$headings[] = __( 'Additional Details', 'wpsc' );
+			foreach ( $rows as $index => $row ) {
+				$rows[] = $additional_details[$index];
+			}
 		}
 
 		$table_args = array( 'headings' => $headings, 'rows' => $rows );
@@ -253,6 +276,8 @@ class WPSC_Purchase_Log_Customer_Notification extends WPSC_Purchase_Log_Notifica
 
 		$raw_message .= get_option( 'wpsc_email_receipt' );
 		$raw_message = $this->maybe_add_discount( $raw_message );
+		// pre-3.8.9 filter hook
+		$raw_message = apply_filters( 'wpsc_transaction_result_message', $raw_message );
 		return apply_filters( 'wpsc_purchase_log_customer_notification_raw_message', $raw_message, $this );
 	}
 
@@ -265,6 +290,16 @@ class WPSC_Purchase_Log_Customer_Notification extends WPSC_Purchase_Log_Notifica
 
 	public function get_address() {
 		return wpsc_get_buyers_email( $this->purchase_log->get( 'id' ) );
+	}
+
+	protected function process_plaintext_args() {
+		// preserve pre-3.8.9 filter
+		return apply_filters( 'wpsc_email_message', parent::process_plaintext_args() );
+	}
+
+	protected function process_html_args() {
+		// preserve pre-3.8.9 filter
+		return apply_filters( 'wpsc_email_message', parent::process_html_args() );
 	}
 }
 
@@ -340,6 +375,8 @@ class WPSC_Purchase_Log_Admin_Notification extends WPSC_Purchase_Log_Notificatio
 			$message .= "\r\n";
 		}
 
+		// preserve pre-3.8.9 hooks
+		$message = apply_filters( 'wpsc_transaction_result_report', $message );
 		return apply_filters( 'wpsc_purchase_log_admin_notification_raw_message', $message, $this );
 	}
 
@@ -359,13 +396,15 @@ class WPSC_Purchase_Log_Admin_Notification extends WPSC_Purchase_Log_Notificatio
 class WPSC_Purchase_Log_Customer_HTML_Notification extends WPSC_Purchase_Log_Customer_Notification
 {
 	public function get_raw_message() {
-		$raw_message = '';
+		$raw_message = apply_filters( 'wpsc_pre_transaction_results', '', $this );
 		if ( $this->purchase_log->get( 'processed' ) == WPSC_Purchase_Log::ORDER_RECEIVED )
 			$raw_message = __( 'Thank you, your purchase is pending, you will be sent an email once the order clears.', 'wpsc' ) . "\n\r";
 
 		$raw_message .= get_option( 'wpsc_email_receipt' );
 		$raw_message = $this->maybe_add_discount( $raw_message );
 
+		// preserve pre-3.8.9 filter hooks
+		$raw_message = apply_filters( 'wpsc_transaction_result_message_html', $raw_message );
 		return apply_filters( 'wpsc_purchase_log_customer_html_notification_raw_message', $raw_message, $this );
 	}
 }

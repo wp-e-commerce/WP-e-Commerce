@@ -17,6 +17,7 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 	$purchase_log = new WPSC_Purchase_Log( $sessionid, 'sessionid' );
 
 	$message_html = _wpsc_transaction_results_html( $purchase_log );
+
 	$wpsc_cart->empty_cart();
 	return $message_html;
 }
