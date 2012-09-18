@@ -601,8 +601,8 @@ class wpsc_checkout {
 
 		$GLOBALS['wpsc_checkout_error_messages'    ] = wpsc_get_customer_meta( 'checkout_error_messages'     );
 		$GLOBALS['wpsc_gateway_error_messages'     ] = wpsc_get_customer_meta( 'gateway_error_messages'      );
-		$GLOBALS['wpsc_customer_checkout_details'  ] = wpsc_get_customer_meta( 'checkout_details'            );
 		$GLOBALS['wpsc_registration_error_messages'] = wpsc_get_customer_meta( 'registration_error_messages' );
+		$GLOBALS['wpsc_customer_checkout_details'  ] = apply_filters( 'wpsc_customer_checkout_details', wpsc_get_customer_meta( 'checkout_details' ) );
 
 		if ( ! is_array( $GLOBALS['wpsc_customer_checkout_details'] ) )
 			$GLOBALS['wpsc_customer_checkout_details'] = array();

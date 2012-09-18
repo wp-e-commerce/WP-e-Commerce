@@ -119,7 +119,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 		if ( get_option( 'wpec_taxes_enabled' ) )
 			$columns['tax'] = __( 'Taxable Amount', 'wpsc' );
 
-		return $columns;
+		return apply_filters( 'wpsc_variation_column_headers', $columns );
 	}
 
 	public function get_sortable_columns() {
