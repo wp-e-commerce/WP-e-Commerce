@@ -39,7 +39,7 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 			$src = apply_filters( 'wpsc_buy_now_button_src', $src );
 
 			?>
-			<form action="<?php echo esc_url( home_url() ); ?>" method="post">
+			<form target="paypal" action="<?php echo esc_url( home_url() ); ?>" method="post">
 				<input type="hidden" name="wpsc_buy_now_callback" value="1" />
 				<input type="hidden" name="product_id" value="<?php echo esc_attr( $product_id ); ?>" />
 				<?php if ( get_option( 'multi_add' ) ): ?>
