@@ -110,23 +110,23 @@ function _wpsc_get_cart_item_downloadable_links( $item, $purchase_log ) {
 	$links = array();
 
 	foreach ( $results as $single_download ) {
-		$file_data = get_post( $single_download['product_id'] );
+		$file_data = get_post( $single_download->product_id );
 		$args = array(
 			'post_type'   => 'wpsc-product-file',
-			'post_parent' => $single_download['product_id'],
+			'post_parent' => $single_download->product_id,
 			'numberposts' => -1,
 			'post_status' => 'all',
 		);
 		$download_file_posts = (array) get_posts( $args );
 		foreach( $download_file_posts as $single_file_post ) {
-			if( $single_file_post->ID == $single_download['fileid'] ) {
+			if( $single_file_post->ID == $single_download->fileid ) {
 				$current_Dl_product_file_post = $single_file_post;
 				break;
 			}
 		}
 
 		$file_name = $current_Dl_product_file_post->post_title;
-		$downloadid = is_null( $single_download['uniqueid'] ) ? $single_download['id'] : $single_download['uniqueid'];
+		$downloadid = is_null( $single_download->uniqueid ) ? $single_download->id : $single_download->uniqueid;
 		$links[] = array(
 			'url' => add_query_arg( 'downloadid', $downloadid, site_url() ),
 			'name' => $file_name
