@@ -133,8 +133,8 @@ abstract class WPSC_Purchase_Log_Notification
 		$output .= '==' . __( 'Downloadable items', 'wpsc' ) . "==\r\n";
 		foreach ( $links as $item_name => $item_links ) {
 			$output .= $item_name . "\r\n";
-			foreach ( $item_links as $link_name => $url ) {
-				$output .= '  - ' . $link_name . "\r\n" . '    ' . $url . "\r\n";
+			foreach ( $item_links as $link ) {
+				$output .= '  - ' . $link['name'] . "\r\n" . '    ' . $link['url'] . "\r\n";
 			}
 			$output .= "\r\n";
 		}
@@ -166,8 +166,8 @@ abstract class WPSC_Purchase_Log_Notification
 		foreach ( $links as $item_name => $item_links ) {
 			$output .= '<p>';
 			$output .= '<em>' . esc_html( $item_name ) . '</em><br />';
-			foreach ( $item_links as $link_name => $url ) {
-				$output .= '<a href="' . esc_attr( $url ) . '">' . esc_html( $link_name ) . '</a><br />';
+			foreach ( $item_links as $link ) {
+				$output .= '<a href="' . esc_attr( $link['url'] ) . '">' . esc_html( $link['name'] ) . '</a><br />';
 			}
 			$output .= '</p>';
 		}
