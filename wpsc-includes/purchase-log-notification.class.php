@@ -76,7 +76,7 @@ abstract class WPSC_Purchase_Log_Notification
 		foreach( $this->purchase_log->get_cart_contents() as $item ) {
 			$cart_item_array = array(
 				'purchase_id'  => $log_id,
-				'cart_item'    => $item,
+				'cart_item'    => (array) $item,
 				'purchase_log' => $log_data,
 			);
 
