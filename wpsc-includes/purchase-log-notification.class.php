@@ -3,11 +3,15 @@ abstract class WPSC_Purchase_Log_Notification
 {
 	protected $address;
 	protected $args = array();
-	protected $raw_message;
-	protected $plaintext_message;
-	protected $html_message;
+	protected $raw_message = '';
+	protected $plaintext_message = '';
+	protected $html_message = '';
 	protected $title;
 	protected $purchase_log;
+	protected $plaintext_product_list = '';
+	protected $html_product_list = '';
+	protected $plaintext_args = '';
+	protected $html_args = '';
 
 	public function __construct( $purchase_log ) {
 		$this->purchase_log   = $purchase_log;
@@ -176,21 +180,23 @@ abstract class WPSC_Purchase_Log_Notification
 	}
 
 	private function get_plaintext_args() {
-		$plaintext_args = array(
-			'product_list' => $this->create_plaintext_product_list(),
+		$this->plaintext_product_list = $this->create_plaintext_product_list();
+		$this->plaintext_args = array(
+			'product_list' => $this->plaintext_product_list,
 		);
-		$plaintext_args = apply_filters( 'wpsc_purchase_log_notification_plaintext_args', $plaintext_args, $this );
-		return array_merge( $this->get_common_args(), $plaintext_args );
+		$this->plaintext_args = apply_filters( 'wpsc_purchase_log_notification_plaintext_args', $this->plaintext_args, $this );
+		return array_merge( $this->get_common_args(), $this->plaintext_args );
 	}
 
 	private function get_html_args() {
 		$common_args = $this->get_common_args();
 		$common_args = array_map( 'esc_html', $common_args );
-		$html_args = array(
-			'product_list' => $this->create_html_product_list(),
+		$this->html_product_list = $this->create_html_product_list();
+		$this->html_args = array(
+			'product_list' => $this->html_product_list,
 		);
-		$html_args = apply_filters( 'wpsc_purchase_log_notification_html_args', $html_args, $this );
-		return array_merge( $common_args, $html_args );
+		$this->html_args = apply_filters( 'wpsc_purchase_log_notification_html_args', $this->html_args, $this );
+		return array_merge( $common_args, $this->html_args );
 	}
 
 	protected function maybe_add_discount( $message ) {
@@ -294,12 +300,12 @@ class WPSC_Purchase_Log_Customer_Notification extends WPSC_Purchase_Log_Notifica
 
 	protected function process_plaintext_args() {
 		// preserve pre-3.8.9 filter
-		return apply_filters( 'wpsc_email_message', parent::process_plaintext_args() );
+		return apply_filters( 'wpsc_email_message', parent::process_plaintext_args(), $this->plaintext_args['purchase_id'], $this->plaintext_product_list, $this->plaintext_args['total_tax'], $this->plaintext_args['total_shipping'], $this->plaintext_args['total_price'] );
 	}
 
 	protected function process_html_args() {
 		// preserve pre-3.8.9 filter
-		return apply_filters( 'wpsc_email_message', parent::process_html_args() );
+		return apply_filters( 'wpsc_email_message', parent::process_html_args(), $this->html_args['purchase_id'], $this->html_product_list, $this->html_args['total_tax'], $this->html_args['total_shipping'], $this->html_args['total_price'] );
 	}
 }
 
