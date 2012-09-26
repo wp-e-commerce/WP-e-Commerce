@@ -137,7 +137,7 @@ function _wpsc_manage_products_column_stock( $post, $post_id, $has_variations ) 
 		$stock = __('N/A', 'wpsc');
 
 	if ( $has_variations ) {
-		echo '~'.wpsc_variations_stock_remaining( $post->ID );
+		echo '~ ' . wpsc_variations_stock_remaining( $post->ID );
 		return;
 	}
 
