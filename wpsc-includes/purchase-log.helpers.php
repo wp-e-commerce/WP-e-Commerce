@@ -207,23 +207,29 @@ function wpsc_send_customer_email( $purchase_log ) {
 		return;
 
 	$email = new WPSC_Purchase_Log_Customer_Notification( $purchase_log );
-	$email->send();
+	$email_sent = $email->send();
 
-	do_action( 'wpsc_transaction_send_email_to_customer', $purchase_log );
+	do_action( 'wpsc_transaction_send_email_to_customer', $email, $email_sent );
+	return $email_sent;
 }
 
-function wpsc_send_admin_email( $purchase_log ) {
+function wpsc_send_admin_email( $purchase_log, $force = false ) {
 	if ( ! is_object( $purchase_log ) )
 		$purchase_log = new WPSC_Purchase_Log( $purchase_log );
 
-	if ( $purchase_log->get( 'email_sent' ) )
+	if ( $purchase_log->get( 'email_sent' ) && ! $force )
 		return;
 
 	$email = new WPSC_Purchase_Log_Admin_Notification( $purchase_log );
-	$email->send();
-	$purchase_log->set( 'email_sent', 1 );
-	$purchase_log->save();
-	do_action( 'wpsc_transaction_send_email_to_admin', $purchase_log );
+	$email_sent = $email->send();
+
+	if ( $email_sent ) {
+		$purchase_log->set( 'email_sent', 1 );
+		$purchase_log->save();
+	}
+
+	do_action( 'wpsc_transaction_send_email_to_admin', $email, $email_sent );
+	return $email_sent;
 }
 
 function wpsc_get_transaction_html_output( $purchase_log ) {
@@ -236,6 +242,6 @@ function wpsc_get_transaction_html_output( $purchase_log ) {
 	$notification = new WPSC_Purchase_Log_Customer_HTML_Notification( $purchase_log );
 	$output = $notification->get_html_message();
 
-	$output = apply_filters( 'wpsc_get_transaction_html_output', $output, $purchase_log );
+	$output = apply_filters( 'wpsc_get_transaction_html_output', $output, $notification );
 	return $output;
 }

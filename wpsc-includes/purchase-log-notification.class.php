@@ -255,16 +255,26 @@ abstract class WPSC_Purchase_Log_Notification
 		return $html;
 	}
 
-	public function send() {
-		$from_email = get_option( 'return_email' );
-		$from_name  = get_option( 'return_name' );
+	public function get_email_headers() {
+		$from_email = apply_filters( 'wpsc_purchase_log_notification_from_email', get_option( 'return_email' ), $this );
+		$from_name  = apply_filters( 'wpsc_purchase_log_notification_from_name', get_option( 'return_name' ), $this );
 
 		// don't worry, wp_mail() will automatically assign default values if these options
 		// are not set and empty
 		$headers = 'From: "' . $from_name . '" <' . $from_email . '>';
+		return apply_filters( 'wpsc_purchase_log_notification_headers', $headers, $this );
+	}
+
+	public function send() {
+		if ( empty( $this->address ) )
+			return;
+
+		$headers = $this->get_email_headers();
 		add_action( 'phpmailer_init', array( $this, '_action_phpmailer_init_multipart' ), 10, 1 );
-		wp_mail( $this->address, $this->title, $this->html_message, $headers );
+		$email_sent = wp_mail( $this->address, $this->title, $this->html_message, $headers );
 		remove_action( 'phpmailer_init', array( $this, '_action_phpmailer_init_multipart' ), 10, 1 );
+
+		return $email_sent;
 	}
 
 	public function _action_phpmailer_init_multipart( $phpmailer ) {
@@ -288,14 +298,16 @@ class WPSC_Purchase_Log_Customer_Notification extends WPSC_Purchase_Log_Notifica
 	}
 
 	public function get_subject() {
-		if ( $this->purchase_log->get( 'processed' ) == WPSC_Purchase_Log::ORDER_RECEIVED )
-			return __( 'Order Pending: Payment Required', 'wpsc' );
+		$subject = __( 'Purchase Receipt', 'wpsc' );
 
-		return __( 'Purchase Receipt', 'wpsc' );
+		if ( $this->purchase_log->get( 'processed' ) == WPSC_Purchase_Log::ORDER_RECEIVED )
+			$subject = __( 'Order Pending: Payment Required', 'wpsc' );
+
+		return apply_filters( 'wpsc_purchase_log_customer_notification_subject', $subject, $this );
 	}
 
 	public function get_address() {
-		return wpsc_get_buyers_email( $this->purchase_log->get( 'id' ) );
+		return apply_filters( 'wpsc_purchase_log_customer_notification_address', wpsc_get_buyers_email( $this->purchase_log->get( 'id' ) ), $this );
 	}
 
 	protected function process_plaintext_args() {
@@ -312,7 +324,7 @@ class WPSC_Purchase_Log_Customer_Notification extends WPSC_Purchase_Log_Notifica
 class WPSC_Purchase_Log_Admin_Notification extends WPSC_Purchase_Log_Notification
 {
 	public function get_address() {
-		return get_option( 'purch_log_email' );
+		return apply_filters( 'wpsc_purchase_log_admin_notification_address', get_option( 'purch_log_email' ), $this );
 	}
 
 	public function get_raw_message() {
@@ -395,7 +407,7 @@ class WPSC_Purchase_Log_Admin_Notification extends WPSC_Purchase_Log_Notificatio
 	}
 
 	public function get_subject() {
-		return __( 'Transaction Report', 'wpsc' );
+		return apply_filters( 'wpsc_purchase_log_admin_notification_subject', __( 'Transaction Report', 'wpsc' ), $this );
 	}
 }
 
