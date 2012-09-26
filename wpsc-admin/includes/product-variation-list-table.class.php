@@ -128,13 +128,11 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 
 	public function column_cb( $item ) {
 		$checked = isset( $_REQUEST['variations'] ) ? checked( in_array( $item->ID, $_REQUEST['variations'] ), true, false ) : '';
-		$tabindex = 1000 + $item->index;
 		return sprintf(
-			'<input tabindex="%1$s" type="checkbox" %2$s name="%3$s[]" value="%4$s" />',
-			/*$1%s*/ $tabindex,
-			/*$2%s*/ $checked,
-			/*$3%s*/ 'post',
-			/*$4%s*/ $item->ID
+			'<input type="checkbox" %1$s name="%2$s[]" value="%3$s" />',
+			/*$1%s*/ $checked,
+			/*$2%s*/ 'post',
+			/*$3%s*/ $item->ID
 		);
 	}
 
@@ -213,33 +211,29 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 
 	public function column_stock( $item ) {
 		$stock = get_product_meta( $item->ID, 'stock', true );
-		$tabindex = 100 + $item->index * 20 + 1;
 		?>
-			<input tabindex="<?php echo $tabindex; ?>" type="text" name="wpsc_variations[<?php echo $item->ID; ?>][stock]" value="<?php echo esc_attr( $stock ); ?>" />
+			<input type="text" name="wpsc_variations[<?php echo $item->ID; ?>][stock]" value="<?php echo esc_attr( $stock ); ?>" />
 		<?php
 	}
 
 	public function column_price( $item ) {
 		$price = get_product_meta( $item->ID, 'price', true );
-		$tabindex = 100 + $item->index * 20 + 3;
 		?>
-			<input tabindex="<?php echo $tabindex; ?>" type="text" name="wpsc_variations[<?php echo $item->ID; ?>][price]" value="<?php echo esc_attr( $price ); ?>" />
+			<input type="text" name="wpsc_variations[<?php echo $item->ID; ?>][price]" value="<?php echo esc_attr( $price ); ?>" />
 		<?php
 	}
 
 	public function column_sale_price( $item ) {
 		$sale_price = get_product_meta( $item->ID, 'special_price', true );
-		$tabindex = 100 + $item->index * 20 + 4;
 		?>
-			<input tabindex="<?php echo $tabindex; ?>" type="text" name="wpsc_variations[<?php echo $item->ID; ?>][sale_price]" value="<?php echo esc_attr( $sale_price ); ?>">
+			<input type="text" name="wpsc_variations[<?php echo $item->ID; ?>][sale_price]" value="<?php echo esc_attr( $sale_price ); ?>">
 		<?php
 	}
 
 	public function column_sku( $item ) {
 		$sku = get_product_meta( $item->ID, 'sku', true );
-		$tabindex = 100 + $item->index * 20 + 5;
 		?>
-			<input tabindex="<?php echo $tabindex; ?>" type="text" name="wpsc_variations[<?php echo $item->ID; ?>][sku]" value="<?php echo esc_attr( $sku ); ?>" />
+			<input type="text" name="wpsc_variations[<?php echo $item->ID; ?>][sku]" value="<?php echo esc_attr( $sku ); ?>" />
 		<?php
 	}
 
@@ -249,9 +243,8 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 			$tax = '';
 		else
 			$tax = (float) $meta['wpec_taxes_taxable_amount'];
-		$tabindex = 100 + $item->index * 20 + 2;
 		?>
-			<input tabindex="<?php echo $tabindex; ?>" type="text" name="wpsc_variations[<?php echo $item->ID; ?>][product_metadata][wpec_taxes_taxable_amount]" value="<?php echo esc_attr( $tax ); ?>" />
+			<input type="text" name="wpsc_variations[<?php echo $item->ID; ?>][product_metadata][wpec_taxes_taxable_amount]" value="<?php echo esc_attr( $tax ); ?>" />
 		<?php
 	}
 
@@ -279,10 +272,11 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 		} else {
 			$field_name = "wpsc_variations[{$item->ID}][product_metadata]";
 		}
+		$colspan = count( $this->get_columns() ) - 1;
 		?>
 		<tr class="wpsc-stock-editor-row inline-edit-row<?php echo $row_class; ?>"<?php echo $style; ?> id="wpsc-stock-editor-row-<?php echo $item->ID; ?>">
 			<td></td>
-			<td colspan="6" class="colspanchange">
+			<td colspan="<?php echo $colspan; ?>" class="colspanchange">
 				<h4><?php esc_html_e( 'Variation Stock Editor', 'wpsc' ); ?></h4>
 				<?php wpsc_product_shipping_forms( $item, $field_name, $bulk ); ?>
 			</td>

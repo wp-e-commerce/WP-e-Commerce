@@ -489,22 +489,18 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 			'units'  => $dimension_units,
 		),
 	);
-	$tabindex = 106;
-	if ( isset( $product->index ) )
-		$tabindex += $product->index * 20;
 ?>
 	<div class="wpsc-stock-editor<?php if ( $bulk ) echo ' wpsc-bulk-edit' ?>">
 		<p class="wpsc-form-field">
 				<label><?php esc_html_e( 'Disregard Shipping for this Product', 'wpsc' ); ?></label>&nbsp;&nbsp;
-				<label><input tabindex="<?php echo $tabindex; ?>" type="radio" name="<?php echo $field_name_prefix ?>[no_shipping]" value="1" <?php checked( $no_shipping && ! $bulk ); ?> /> <?php echo esc_html_x( 'Yes', 'disregard shipping', 'wpsc' ); ?></label>&nbsp;&nbsp;
-				<label><input tabindex="<?php echo $tabindex + 1; ?>" type="radio" name="<?php echo $field_name_prefix ?>[no_shipping]" value="0" <?php checked( ! $no_shipping && ! $bulk ); ?> /> <?php echo esc_html_x( 'No', 'disregard shipping', 'wpsc' ); ?></label>&nbsp;&nbsp;
+				<label><input type="radio" name="<?php echo $field_name_prefix ?>[no_shipping]" value="1" <?php checked( $no_shipping && ! $bulk ); ?> /> <?php echo esc_html_x( 'Yes', 'disregard shipping', 'wpsc' ); ?></label>&nbsp;&nbsp;
+				<label><input type="radio" name="<?php echo $field_name_prefix ?>[no_shipping]" value="0" <?php checked( ! $no_shipping && ! $bulk ); ?> /> <?php echo esc_html_x( 'No', 'disregard shipping', 'wpsc' ); ?></label>&nbsp;&nbsp;
 		</p>
 
 		<div class="wpsc-product-shipping-section wpsc-product-shipping-weight-dimensions">
 			<p><strong><?php esc_html_e( 'Weight and Dimensions', 'wpsc' ); ?></strong></p>
 			<?php
 				foreach ( $measurement_fields as $field ):
-					$tabindex += 2;
 			?>
 				<p class="wpsc-form-field">
 					<?php if ( $bulk ): ?>
@@ -512,8 +508,8 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 					<?php endif ?>
 					<label for="wpsc-product-shipping-<?php echo $field['name']; ?>"><?php echo esc_html( $field['label'] ); ?></label>
 					<span class="wpsc-product-shipping-input">
-						<input tabindex="<?php echo $tabindex; ?>" type="text" id="wpsc-product-shipping-<?php echo $field['name']; ?>" name="<?php echo $field_name_prefix . $field['prefix'] . '[' . $field['name'] . ']'; ?>" value="<?php if ( ! $bulk ) echo esc_attr( $field['value'] ); ?>" />
-						<select tabindex="<?php echo $tabindex + 1; ?>" name="<?php echo $field_name_prefix . $field['prefix'] . '[' . $field['name'] . '_unit]'; ?>">
+						<input type="text" id="wpsc-product-shipping-<?php echo $field['name']; ?>" name="<?php echo $field_name_prefix . $field['prefix'] . '[' . $field['name'] . ']'; ?>" value="<?php if ( ! $bulk ) echo esc_attr( $field['value'] ); ?>" />
+						<select name="<?php echo $field_name_prefix . $field['prefix'] . '[' . $field['name'] . '_unit]'; ?>">
 							<?php foreach ( $field['units'] as $unit => $unit_label ): ?>
 								<option value="<?php echo $unit; ?>" <?php if ( ! $bulk ) selected( $unit, $measurements[$field['name'] . '_unit'] ); ?>><?php echo esc_html( $unit_label ); ?></option>
 							<?php endforeach; ?>
@@ -522,7 +518,6 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 				</p>
 			<?php
 				endforeach;
-				$tabindex += 2;
 				 ?>
 		</div>
 
@@ -533,14 +528,14 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 					<input class="wpsc-bulk-edit-fields" type="checkbox" name="wpsc_bulk_edit[fields][shipping][local]" value="1" />
 				<?php endif; ?>
 				<label for="wpsc-product-shipping-flatrate-local"><?php esc_html_e( 'Local Shipping Fee', 'wpsc' ); ?></label>
-				<input tabindex="<?php echo $tabindex; ?>" type="text" id="wpsc-product-shipping-flatrate-local" name="<?php echo $field_name_prefix; ?>[shipping][local]" value="<?php if ( ! $bulk ) echo $shipping['local']; ?>"  />
+				<input type="text" id="wpsc-product-shipping-flatrate-local" name="<?php echo $field_name_prefix; ?>[shipping][local]" value="<?php if ( ! $bulk ) echo $shipping['local']; ?>"  />
 			</p>
 			<p class="wpsc-form-field">
 				<?php if ( $bulk ): ?>
 					<input class="wpsc-bulk-edit-fields" type="checkbox" name="wpsc_bulk_edit[fields][shipping][international]" value="1" />
 				<?php endif; ?>
 				<label for="wpsc-product-shipping-flatrate-international"><?php esc_html_e( 'International Shipping Fee', 'wpsc' ); ?></label>
-				<input tabindex="<?php echo $tabindex + 1; ?>" type="text" id="wpsc-product-shipping-flatrate-international" name="<?php echo $field_name_prefix; ?>[shipping][international]" value="<?php if ( ! $bulk ) echo $shipping['international']; ?>"  />
+				<input type="text" id="wpsc-product-shipping-flatrate-international" name="<?php echo $field_name_prefix; ?>[shipping][international]" value="<?php if ( ! $bulk ) echo $shipping['international']; ?>"  />
 			</p>
 		</div>
 	</div>
