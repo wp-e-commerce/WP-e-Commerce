@@ -18,10 +18,13 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 	$product = get_post( $product_id );
 	$supported_gateways = array('wpsc_merchant_paypal_standard','paypal_multiple');
 	$selected_gateways = get_option( 'custom_gateway_options' );
+	if ( $replaced_shortcode )
+		ob_start();
+
 	if ( in_array( 'wpsc_merchant_paypal_standard', (array)$selected_gateways ) ) {
 		if ( $product_id > 0 ) {
 			$post_meta = get_post_meta( $product_id, '_wpsc_product_metadata', true );
-			$shipping = $post_meta['shipping']['local'];
+			$shipping = isset( $post_meta['shipping'] ) ? $post_meta['shipping']['local'] : '';
 			$price = get_post_meta( $product_id, '_wpsc_price', true );
 			$special_price = get_post_meta( $product_id, '_wpsc_special_price', true );
 			if ( $special_price )
@@ -31,32 +34,28 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 			} else {
 				$handling = $shipping;
 			}
-			$output .= "<form onsubmit='log_paypal_buynow(this)' target='paypal' action='" . get_option( 'paypal_multiple_url' ) . "' method='post' />
-				<input type='hidden' name='business' value='" . get_option( 'paypal_multiple_business' ) . "' />
-				<input type='hidden' name='cmd' value='_xclick' />
-				<input type='hidden' name='item_name' value='" . $product->post_title . "' />
-				<input type='hidden' id='item_number' name='item_number' value='" . $product_id . "' />
-				<input type='hidden' id='amount' name='amount' value='" . ($price) . "' />
-				<input type='hidden' id='unit' name='unit' value='" . $price . "' />
-				<input type='hidden' id='shipping' name='ship11' value='" . $shipping . "' />
-				<input type='hidden' name='handling' value='" . $handling . "' />
-				<input type='hidden' name='currency_code' value='" . get_option( 'paypal_curcode' ) . "' />";
-			if ( get_option( 'multi_add' ) == 1 ) {
-				$output .="<label for='quantity'>" . __( 'Quantity', 'wpsc' ) . "</label>";
-				$output .="<input type='text' size='4' id='quantity' name='quantity' value='' /><br />";
-			} else {
-				$output .="<input type='hidden' name='undefined_quantity' value='0' />";
-			}
-			$output .= "<input type='image' name='submit' border='0' src='" . esc_url( _x( 'https://www.paypal.com/en_US/i/btn/btn_buynow_LG.gif', 'PayPal Buy Now Button', 'wpsc' ) ) . "' alt='" . esc_attr__( 'PayPal - The safer, easier way to pay online', 'wpsc' ) . "' />
-				<img alt='' border='0' width='1' height='1' src='" . esc_url( _x( 'https://www.paypal.com/en_US/i/scr/pixel.gif', 'PayPal Pixel', 'wpsc' ) ) . "' />
-			</form>\n\r";
+
+			$src = _x( 'https://www.paypal.com/en_US/i/btn/btn_buynow_LG.gif', 'PayPal Buy Now Button', 'wpsc' );
+			$src = apply_filters( 'wpsc_buy_now_button_src', $src );
+			$classes = "wpsc-buy-now-form wpsc-buy-now-form-{$product_id}";
+			?>
+			<form class="<?php echo esc_attr( $classes ); ?>" target="paypal" action="<?php echo esc_url( home_url() ); ?>" method="post">
+				<input type="hidden" name="wpsc_buy_now_callback" value="1" />
+				<input type="hidden" name="product_id" value="<?php echo esc_attr( $product_id ); ?>" />
+				<?php if ( get_option( 'multi_add' ) ): ?>
+					<label for="quantity"><?php esc_html_e( 'Quantity', 'wpsc' ); ?></label>
+					<input type="text" size="4" id="quantity" name="quantity" value="" /><br />
+				<?php else: ?>
+					<input type="hidden" name="quantity" value="1" />
+				<?php endif ?>
+				<input class="wpsc-buy-now-button wpsc-buy-now-button-<?php echo esc_attr( $product_id ); ?>" type='image' name='submit' border='0' src='<?php echo esc_url( $src ); ?>' alt='<?php esc_attr_e( 'PayPal - The safer, easier way to pay online', 'wpsc' ); ?>' />
+				<img alt='' border='0' width='1' height='1' src='<?php echo esc_url( _x( 'https://www.paypal.com/en_US/i/scr/pixel.gif', 'PayPal Pixel', 'wpsc' ) ); ?>' />
+			</form>
+			<?php
 		}
 	}
-	if ( $replaced_shortcode == true ) {
-		return $output;
-	} else {
-		echo $output;
-	}
+	if ( $replaced_shortcode )
+		return ob_get_clean();
 }
 
 function wpsc_also_bought( $product_id ) {
