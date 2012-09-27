@@ -199,7 +199,7 @@ function wpsc_empty_cart() {
 	global $wpsc_cart;
 	$wpsc_cart->empty_cart( false );
 
-	if ( $_REQUEST['ajax'] == 'true' ) {
+	if ( isset( $_REQUEST['ajax'] ) && $_REQUEST['ajax'] == 'true' ) {
 		ob_start();
 
 		include_once( wpsc_get_template_file_path( 'wpsc-cart_widget.php' ) );
@@ -222,7 +222,7 @@ function wpsc_empty_cart() {
 	}
 
 	// this if statement is needed, as this function also runs on returning from the gateway
-	if ( $_REQUEST['wpsc_ajax_action'] == 'empty_cart' ) {
+	if ( isset( $_REQUEST['wpsc_ajax_action'] ) && $_REQUEST['wpsc_ajax_action'] == 'empty_cart' ) {
 		wp_redirect( remove_query_arg( array( 'wpsc_ajax_action', 'ajax' ) ) );
 		exit();
 	}
@@ -546,7 +546,7 @@ if ( isset( $_REQUEST['wpsc_action'] ) && ($_REQUEST['wpsc_action'] == 'cart_htm
  * submit checkout function, used through ajax and in normal page loading.
  * No parameters, returns nothing
  */
-function wpsc_submit_checkout() {
+function wpsc_submit_checkout( $collected_data = true ) {
 	global $wpdb, $wpsc_cart, $user_ID, $nzshpcrt_gateways, $wpsc_shipping_modules, $wpsc_gateways;
 
 	$num_items = 0;
@@ -562,13 +562,19 @@ function wpsc_submit_checkout() {
 	$selected_gateways = get_option( 'custom_gateway_options' );
 	$submitted_gateway = $_POST['custom_gateway'];
 	$options = get_option( 'custom_shipping_options' );
-	$form_validity = $wpsc_checkout->validate_forms();
-	extract( $form_validity ); // extracts $is_valid and $error_messages
+	if ( $collected_data ) {
+		$form_validity = $wpsc_checkout->validate_forms();
+		extract( $form_validity ); // extracts $is_valid and $error_messages
 
-	if ( isset( $_POST['agree'] ) && $_POST['agree'] != 'yes' ) {
-		$error_messages[] = __( 'Please agree to the terms and conditions, otherwise we cannot process your order.', 'wpsc' );
-		$is_valid = false;
+		if ( isset( $_POST['agree'] ) && $_POST['agree'] != 'yes' ) {
+			$error_messages[] = __( 'Please agree to the terms and conditions, otherwise we cannot process your order.', 'wpsc' );
+			$is_valid = false;
+		}
+	} else {
+		$is_valid = true;
+		$error_messages = array();
 	}
+
 	$selectedCountry = $wpdb->get_results( $wpdb->prepare( "SELECT id, country FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE isocode = '%s' ", wpsc_get_customer_meta( 'shipping_country' ) ), ARRAY_A );
 	foreach ( $wpsc_cart->cart_items as $cartitem ) {
 		if( ! empty( $cartitem->meta[0]['no_shipping'] ) ) continue;
@@ -598,13 +604,15 @@ function wpsc_submit_checkout() {
 	else
 		$is_valid = false;
 
-	if ( get_option( 'do_not_use_shipping' ) == 0 && ($wpsc_cart->selected_shipping_method == null || $wpsc_cart->selected_shipping_option == null) && ( $num_items != $disregard_shipping ) ) {
-		$error_messages[] = __( 'You must select a shipping method, otherwise we cannot process your order.', 'wpsc' );
-		$is_valid = false;
-	}
-	if ( (get_option( 'do_not_use_shipping' ) != 1) && (in_array( 'ups', (array)$options )) && ! wpsc_get_customer_meta( 'shipping_zip' ) && ( $num_items != $disregard_shipping ) ) {
-			wpsc_update_customer_meta( 'category_shipping_conflict', __( 'Please enter a Zipcode and click calculate to proceed', 'wpsc' ) );
+	if ( $collected_data ) {
+		if ( get_option( 'do_not_use_shipping' ) == 0 && ($wpsc_cart->selected_shipping_method == null || $wpsc_cart->selected_shipping_option == null) && ( $num_items != $disregard_shipping ) ) {
+			$error_messages[] = __( 'You must select a shipping method, otherwise we cannot process your order.', 'wpsc' );
 			$is_valid = false;
+		}
+		if ( (get_option( 'do_not_use_shipping' ) != 1) && (in_array( 'ups', (array)$options )) && ! wpsc_get_customer_meta( 'shipping_zip' ) && ( $num_items != $disregard_shipping ) ) {
+				wpsc_update_customer_meta( 'category_shipping_conflict', __( 'Please enter a Zipcode and click calculate to proceed', 'wpsc' ) );
+				$is_valid = false;
+		}
 	}
 
 	wpsc_update_customer_meta( 'checkout_misc_error_messages', $error_messages );
@@ -669,7 +677,8 @@ function wpsc_submit_checkout() {
 		$purchase_log = new WPSC_Purchase_Log( $args );
 		$purchase_log->save();
 		$purchase_log_id = $purchase_log->get( 'id' );
-		$wpsc_checkout->save_forms_to_db( $purchase_log_id );
+		if ( $collected_data )
+			$wpsc_checkout->save_forms_to_db( $purchase_log_id );
 		$wpsc_cart->save_to_db( $purchase_log_id );
 		$wpsc_cart->submit_stock_claims( $purchase_log_id );
 		if ( get_option( 'wpsc_also_bought' ) == 1 )
