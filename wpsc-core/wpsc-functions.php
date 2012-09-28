@@ -1515,18 +1515,34 @@ function wpsc_is_ssl() {
 }
 
 
+/**
+ * In case the user is not logged in, create a customer cookie with a unique
+ * ID to pair with the transient in the database.
+ *
+ * @access public
+ * @since 3.8.9
+ * @return string Customer ID
+ */
 function wpsc_create_customer_id() {
 	$expire = time() + WPSC_CUSTOMER_DATA_EXPIRATION; // valid for 48 hours
 	$secure = is_ssl();
 	$id = '_' . wp_generate_password(); // make sure the ID is a string
 	$data = $id . $expire;
 	$hash = hash_hmac( 'md5', $data, wp_hash( $data ) );
+	// store ID, expire and hash to validate later
 	$cookie = $id . '|' . $expire . '|' . $hash;
 
 	setcookie( WPSC_CUSTOMER_COOKIE, $cookie, $expire, WPSC_CUSTOMER_COOKIE_PATH, COOKIE_DOMAIN, $secure, true );
 	return $id;
 }
 
+/**
+ * Make sure the customer cookie is not compromised.
+ *
+ * @access public
+ * @since 3.8.9
+ * @return mixed Return the customer ID if the cookie is valid, false if otherwise.
+ */
 function wpsc_validate_customer_cookie() {
 	$cookie = $_COOKIE[WPSC_CUSTOMER_COOKIE];
 	list( $id, $expire, $hash ) = explode( '|', $cookie );
@@ -1568,6 +1584,20 @@ function _wpsc_merge_customer_data() {
 	unset( $_COOKIE[WPSC_CUSTOMER_COOKIE] );
 }
 
+/**
+ * Get current customer ID.
+ *
+ * If the user is logged in, return the user ID. Otherwise return the ID associated
+ * with the customer's cookie.
+ *
+ * If $mode is set to 'create', WPEC will create the customer ID if it hasn't
+ * already been created yet.
+ *
+ * @access public
+ * @since 3.8.9
+ * @param  string $mode Set to 'create' to create customer cookie and ID
+ * @return mixed        User ID (if logged in) or customer cookie ID
+ */
 function wpsc_get_current_customer_id( $mode = '' ) {
 	if ( is_user_logged_in() && isset( $_COOKIE[WPSC_CUSTOMER_COOKIE] ) )
 		_wpsc_merge_customer_data();
@@ -1582,69 +1612,137 @@ function wpsc_get_current_customer_id( $mode = '' ) {
 	return false;
 }
 
-function wpsc_get_customer_meta( $key = '', $id = false ) {
+/**
+ * Return an array containing all metadata of a customer
+ *
+ * @access public
+ * @since 3.8.9
+ * @param  mixed $id Customer ID. Default to the current user ID.
+ * @return WP_Error|array Return an array of metadata if no error occurs, WP_Error
+ *                        if otherwise.
+ */
+function wpsc_get_all_customer_meta( $id = false ) {
 	if ( ! $id )
 		$id = wpsc_get_current_customer_id();
 
 	if ( ! $id )
-		return false;
-	if ( is_numeric( $id ) )
-		return get_user_meta( $id, "_wpsc_customer_{$key}", true );
+		return new WP_Error( 'wpsc_customer_meta_invalid_customer_id', __( 'Invalid customer ID', 'wpsc' ), $id );
 
-	$profile = get_transient( "wpsc_customer_meta_{$id}" );
+	// take multisite into account
+	$blog_prefix = is_multisite() ? $wpdb->get_blog_prefix() : '';
+	if ( is_numeric( $id ) )
+		$profile = get_user_meta( $id, "_wpsc_{$blog_prefix}customer_profile", true );
+	else
+		$profile = get_transient( "wpsc_customer_meta_{$blog_prefix}{$id}" );
+
 	if ( ! is_array( $profile ) )
 		$profile = array();
 
-	if ( $key === '' )
+	return apply_filters( 'wpsc_get_all_customer_meta', $profile, $id );
+}
+
+/**
+ * Get a customer meta value.
+ *
+ * @access public
+ * @since  3.8.9
+ * @param  string  $key Meta key
+ * @param  int|string $id  Customer ID. Optional, defaults to current customer
+ * @return mixed           Meta value, or null if it doesn't exist. WP_Error will
+ *                         be returned if the customer ID is invalid.
+ */
+function wpsc_get_customer_meta( $key = '', $id = false ) {
+	global $wpdb;
+
+	$profile = wpsc_get_all_customer_meta( $id );
+
+	if ( is_wp_error( $profile ) )
 		return $profile;
 
 	if ( ! array_key_exists( $key, $profile ) )
-		return false;
+		return null;
 
 	return $profile[$key];
 }
 
-function wpsc_update_customer_meta( $key, $value, $id = false ) {
+/**
+ * Overwrite customer meta with an array of meta_key => meta_value.
+ *
+ * @access public
+ * @since  3.8.9
+ * @param  array      $profile Customer meta array
+ * @param  int|string $id      Customer ID. Optional. Defaults to current customer.
+ * @return boolean             True if meta values are updated successfully. False
+ *                             if otherwise.
+ */
+function wpsc_update_all_customer_meta( $profile, $id = false ) {
 	if ( ! $id )
 		$id = wpsc_get_current_customer_id( 'create' );
 
+	$blog_prefix = is_multisite() ? $wpdb->get_blog_prefix() : '';
+
 	if ( is_numeric( $id ) )
-		return update_user_meta( $id, "_wpsc_customer_{$key}", $value );
+		return update_user_meta( $id, "_wpsc_{$blog_prefix}customer_profile", $profile );
+	else
+		return set_transient( "wpsc_customer_meta_{$blog_prefix}{$id}", $profile, WPSC_CUSTOMER_DATA_EXPIRATION );
+}
 
-	$profile = get_transient( "wpsc_customer_meta_{$id}" );
-	if ( ! $profile )
-		$profile = array();
+/**
+ * Update a customer meta.
+ *
+ * @access public
+ * @since  3.8.9
+ * @param  string     $key   Meta key
+ * @param  mixed      $value Meta value
+ * @param  string|int $id    Customer ID. Optional. Defaults to current customer.
+ * @return boolean|WP_Error  True if successful, false if not successful, WP_Error
+ *                           if there are any errors.
+ */
+function wpsc_update_customer_meta( $key, $value, $id = false ) {
+	global $wpdb;
 
-	if ( array_key_exists( $key, $profile ) && $profile[$key] == $value )
-		return true;
+	if ( ! $id )
+		$id = wpsc_get_current_customer_id( 'create' );
+
+	$profile = wpsc_get_all_customer_meta( $id );
+
+	if ( is_wp_error( $profile ) )
+		return $profile;
 
 	$profile[$key] = $value;
 
-	return set_transient( "wpsc_customer_meta_{$id}", $profile, WPSC_CUSTOMER_DATA_EXPIRATION ); // valid for 48 hours
+	return wpsc_update_all_customer_meta( $profile, $id );
 }
 
+/**
+ * Delete customer meta.
+ *
+ * @access public
+ * @since  3.8.9
+ * @param  string     $key  Meta key
+ * @param  string|int $id   Customer ID. Optional. Defaults to current customer.
+ * @return boolean|WP_Error True if successful. False if not successful. WP_Error
+ *                          if there are any errors.
+ */
 function wpsc_delete_customer_meta( $key, $id = false ) {
-	if ( ! $id )
-		$id = wpsc_get_current_customer_id();
+	$profile = wpsc_get_all_customer_meta( $id );
 
-	if ( ! $id )
-		return false;
+	if ( is_wp_error( $profile ) )
+		return $profile;
 
-	if ( is_numeric( $id ) )
-		return delete_user_meta( $id, "_wpsc_customer_{$key}" );
+	if ( array_key_exists( $key, $profile ) )
+		unset( $profile[$key] );
 
-	$profile = wpsc_get_customer_meta( $id );
-	if ( ! $profile )
-		$profile = array();
-
-	if ( ! array_key_exists( $key, $profile ) )
-		return true;
-
-	unset( $profile[$key] );
-
-	return set_transient( "wpsc_customer_meta_{$id}", $profile, WPSC_CUSTOMER_DATA_EXPIRATION ); // valid for 48 hours
+	return wpsc_update_all_customer_meta( $profile, $id );
 }
 
+/**
+ * Create customer ID upon 'plugins_loaded' to make sure there's one exists before
+ * anything else.
+ *
+ * @access private
+ * @since  3.8.9
+ */
 function _wpsc_action_create_customer_id() {
 	wpsc_get_current_customer_id( 'create' );
 }
