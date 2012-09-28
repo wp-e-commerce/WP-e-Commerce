@@ -38,6 +38,8 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 			$src = _x( 'https://www.paypal.com/en_US/i/btn/btn_buynow_LG.gif', 'PayPal Buy Now Button', 'wpsc' );
 			$src = apply_filters( 'wpsc_buy_now_button_src', $src );
 			$classes = "wpsc-buy-now-form wpsc-buy-now-form-{$product_id}";
+			$button_html = '<input class="wpsc-buy-now-button wpsc-buy-now-button-' . esc_attr( $product_id ) . '" type="image" name="submit" border="0" src=' . esc_url( $src ) . ' alt="' . esc_attr( 'PayPal - The safer, easier way to pay online', 'wpsc' ) . '" />';
+			$button_html = apply_filters( 'wpsc_buy_now_button_html', $button_html, $product_id );
 			?>
 			<form class="<?php echo esc_attr( $classes ); ?>" target="paypal" action="<?php echo esc_url( home_url() ); ?>" method="post">
 				<input type="hidden" name="wpsc_buy_now_callback" value="1" />
@@ -48,7 +50,7 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 				<?php else: ?>
 					<input type="hidden" name="quantity" value="1" />
 				<?php endif ?>
-				<input class="wpsc-buy-now-button wpsc-buy-now-button-<?php echo esc_attr( $product_id ); ?>" type='image' name='submit' border='0' src='<?php echo esc_url( $src ); ?>' alt='<?php esc_attr_e( 'PayPal - The safer, easier way to pay online', 'wpsc' ); ?>' />
+				<?php echo $button_html; ?>
 				<img alt='' border='0' width='1' height='1' src='<?php echo esc_url( _x( 'https://www.paypal.com/en_US/i/scr/pixel.gif', 'PayPal Pixel', 'wpsc' ) ); ?>' />
 			</form>
 			<?php
