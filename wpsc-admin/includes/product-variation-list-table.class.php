@@ -141,7 +141,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 		$can_edit_post = current_user_can( $post_type_object->cap->edit_post, $item->ID );
 
 		$actions = array();
-		if ( apply_filters( 'wpsc_product_variations_edit_action', false, $item ) && $can_edit_post && 'trash' != $item->post_status )
+		if ( apply_filters( 'wpsc_show_product_variations_edit_action', true, $item ) && $can_edit_post && 'trash' != $item->post_status )
 			$actions['edit'] = '<a target="_blank" href="' . get_edit_post_link( $item->ID, true ) . '" title="' . esc_attr( __( 'Edit this item' ), 'wpsc' ) . '">' . __( 'Edit' ) . '</a>';
 
 		$actions['stock hide-if-no-js'] = '<a class="wpsc-variation-stock-editor-link" href="#" title="' . __( 'Show shipping editor', 'wpsc' ) . '">' . __( 'Edit Shipping', 'wpsc' ) . '</a>';
@@ -192,6 +192,8 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 	public function column_title( $item ) {
 		$title = implode( ', ', $this->object_terms_cache[$item->ID] );
 		$thumbnail = wpsc_the_product_thumbnail( 50, 50, $item->ID, '' );
+		$show_edit_link = apply_filters( 'wpsc_show_product_variations_edit_action', true, $item );
+
 		if ( ! $thumbnail )
 			$thumbnail = WPSC_CORE_IMAGES_URL . '/no-image-uploaded.gif';
 		?>
@@ -202,7 +204,13 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 			</div>
 			<div class="wpsc-product-variation-title">
 				<strong class="row-title">
+					<?php if ( $show_edit_link ): ?>
+						<a target="_blank" href="<?php echo esc_url( get_edit_post_link( $item->ID, true ) ); ?>" title="<?php esc_attr_e( __( 'Edit this item' ), 'wpsc' ); ?>">
+					<?php endif; ?>
 					<?php echo esc_html( $title ); ?>
+					<?php if ( $show_edit_link ): ?>
+						</a>
+					<?php endif; ?>
 				</strong>
 				<?php echo $this->row_actions( $this->get_row_actions( $item ) ); ?>
 			</div>
