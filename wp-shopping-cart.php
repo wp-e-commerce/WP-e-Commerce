@@ -114,6 +114,9 @@ class WP_eCommerce {
 		// Legacy action
 		do_action( 'wpsc_before_init' );
 
+		// Setup the customer ID just in case to make sure it's set up correctly
+		_wpsc_action_create_customer_id( 'create' );
+
 		// Setup the core WPEC globals
 		wpsc_core_setup_globals();
 
