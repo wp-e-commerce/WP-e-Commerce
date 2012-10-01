@@ -506,7 +506,7 @@ function form_chronopay()
 			</td>
 		</tr>
 		   <tr>
-           <td colspan='2'>" . sprintf( __( 'For more help configuring Chronopay, read our documentation <a href="%s">here</a>', 'wpsc' ), esc_url( 'http://docs.getshopped.org/wiki/documentation/payments/chronopay' ) ) . "</td>
+           <td colspan='2'>" . sprintf( __( 'For more help configuring Chronopay, read our documentation <a href="%s">here</a>', 'wpsc' ), esc_url( 'http://docs.getshopped.org/documentation/chronopay/' ) ) . "</td>
        </tr>";
 
 	return $output;
