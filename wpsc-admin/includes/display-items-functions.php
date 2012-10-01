@@ -129,7 +129,7 @@ function wpsc_price_control_forms() {
     	<?php /* Check product if a product has variations */ ?>
     	<?php if ( wpsc_product_has_children( $post->ID ) ) : ?>
     		<?php $price = wpsc_product_variation_price_available( $post->ID ); ?>
-			<p><?php _e( 'This Product has variations, to edit the price please use the <a href="#variation_control">Variation Controls</a>.' , 'wpsc'  ); ?></p>
+			<p><?php echo sprintf( __( 'This Product has variations, to edit the price please use the <a href="%s">Variation Controls</a>.' , 'wpsc'  ), '#wpsc_product_variation_forms' ); ?></p>
 			<p><?php printf( __( 'Price: %s and above.' , 'wpsc' ) , $price ); ?></p>
 		<?php else: ?>
 
