@@ -298,7 +298,7 @@ endif;
 				<input type="password" name="pwd" id="pwd" value="" size="20" /><br />
 
 				<label><?php _e('E-mail', 'wpsc'); ?>:</label>
-	            <input type="text" name="user_email" id="user_email" value="<?php echo esc_attr( $user_email ); ?>" size="20" /><br />
+	            <input type="text" name="user_email" id="user_email" value="" size="20" /><br />
 	            <div class="wpsc_signup_text"><?php _e('Signing up is free and easy! please fill out your details your registration will happen automatically as you checkout. Don\'t forget to use your details to login with next time!', 'wpsc');?></div>
 	        </fieldset>
 
