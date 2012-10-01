@@ -1746,4 +1746,3 @@ function wpsc_delete_customer_meta( $key, $id = false ) {
 function _wpsc_action_create_customer_id() {
 	wpsc_get_current_customer_id( 'create' );
 }
-add_action( 'plugins_loaded', '_wpsc_action_create_customer_id' );
