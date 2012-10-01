@@ -45,6 +45,7 @@ class flatrate {
 	 * @return unknown
 	 */
 	function getForm() {
+		global $wpdb;
 
 		$shipping = get_option('flat_rates');
 		$output = "<tr><td colspan='2'>" . __('If you do not wish to ship to a particular region, leave the field blank. To offer free shipping to a region, enter 0.', 'wpsc') . "</td>";
@@ -66,28 +67,31 @@ class flatrate {
 			)
 		);
 
+		$currency_data = $wpdb->get_row( "SELECT `symbol`,`symbol_html`,`code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id`='" . esc_attr( get_option( 'currency_type' ) ) . "' LIMIT 1", ARRAY_A );
+		$currency_sign = ! empty( $currency_data['symbol'] ) ? $currency_data['symbol_html'] : $currency_data['code'];
+
 		switch (get_option('base_country')) {
 		case 'NZ':
-			$output .= "<tr class='rate_row'><td>" . __( 'South Island', 'wpsc' ) . "</td><td>$<input type='text' size='4' name='shipping[southisland]' value='".esc_attr($shipping['southisland'])."'></td></tr>";
-			$output .= "<tr class='rate_row'><td>" . __( 'North Island', 'wpsc' ) . "</td><td>$<input type='text' size='4' name='shipping[northisland]'	value='".esc_attr($shipping['northisland'])."'></td></tr>";
+			$output .= "<tr class='rate_row'><td>" . __( 'South Island', 'wpsc' ) . "</td><td>" . esc_attr( $currency_sign ) . "<input type='text' size='4' name='shipping[southisland]' value='".esc_attr($shipping['southisland'])."'></td></tr>";
+			$output .= "<tr class='rate_row'><td>" . __( 'North Island', 'wpsc' ) . "</td><td>" . esc_attr( $currency_sign ) . "<input type='text' size='4' name='shipping[northisland]'	value='".esc_attr($shipping['northisland'])."'></td></tr>";
 			break;
 
 		case 'US':
-			$output .= "<tr class='rate_row'><td>" . __( 'Continental 48 States', 'wpsc' ) . "</td><td>$<input type='text' size='4' name='shipping[continental]' value='".esc_attr($shipping['continental'])."'></td></tr>";
-			$output .= "<tr class='rate_row'><td>" . __( 'All 50 States', 'wpsc' ) . "</td><td>$<input type='text' size='4' name='shipping[all]'	value='".esc_attr($shipping['all'])."'></td></tr>";
+			$output .= "<tr class='rate_row'><td>" . __( 'Continental 48 States', 'wpsc' ) . "</td><td>" . esc_attr( $currency_sign ) . "<input type='text' size='4' name='shipping[continental]' value='".esc_attr($shipping['continental'])."'></td></tr>";
+			$output .= "<tr class='rate_row'><td>" . __( 'All 50 States', 'wpsc' ) . "</td><td>" . esc_attr( $currency_sign ) . "<input type='text' size='4' name='shipping[all]'	value='".esc_attr($shipping['all'])."'></td></tr>";
 			break;
 
 		default:
-			$output .= "<td>$<input type='text' name='shipping[local]' size='4' value='".esc_attr($shipping['local'])."'></td></tr>";
+			$output .= "<td>" . esc_attr( $currency_sign ) . "<input type='text' name='shipping[local]' size='4' value='".esc_attr($shipping['local'])."'></td></tr>";
 			break;
 		}
 
-		$output.= "<tr ><td colspan='2'><strong>" . __( 'Base International', 'wpsc' ) . "</strong></td></tr>";
-		$output .= "<tr class='rate_row'><td>" . __( 'North America', 'wpsc' ) . "</td><td>$<input size='4' type='text' name='shipping[northamerica]'	value='".esc_attr($shipping['northamerica'])."'></td></tr>";
-		$output .= "<tr class='rate_row'><td>" . __( 'South America', 'wpsc' ) . "</td><td>$<input size='4' type='text' name='shipping[southamerica]'	value='".esc_attr($shipping['southamerica'])."'></td></tr>";
-		$output .= "<tr class='rate_row'><td>" . __( 'Asia and Pacific', 'wpsc' ) . "</td><td>$<input size='4' type='text' name='shipping[asiapacific]'	value='".esc_attr($shipping['asiapacific'])."'></td></tr>";
-		$output .= "<tr class='rate_row'><td>" . __( 'Europe', 'wpsc' ) . "</td><td>$<input type='text' size='4' name='shipping[europe]'	value='".esc_attr($shipping['europe'])."'></td></tr>";
-		$output .= "<tr class='rate_row'><td>" . __( 'Africa', 'wpsc' ) . "</td><td>$<input type='text' size='4' name='shipping[africa]'	value='".esc_attr($shipping['africa'])."'></td></tr>";
+		$output.= "<tr><td colspan='2'><strong>" . __( 'Base International', 'wpsc' ) . "</strong></td></tr>";
+		$output .= "<tr class='rate_row'><td>" . __( 'North America', 'wpsc' ) . "</td><td>" . esc_attr( $currency_sign ) . "<input size='4' type='text' name='shipping[northamerica]'	value='".esc_attr($shipping['northamerica'])."'></td></tr>";
+		$output .= "<tr class='rate_row'><td>" . __( 'South America', 'wpsc' ) . "</td><td>" . esc_attr( $currency_sign ) . "<input size='4' type='text' name='shipping[southamerica]'	value='".esc_attr($shipping['southamerica'])."'></td></tr>";
+		$output .= "<tr class='rate_row'><td>" . __( 'Asia and Pacific', 'wpsc' ) . "</td><td>" . esc_attr( $currency_sign ) . "<input size='4' type='text' name='shipping[asiapacific]'	value='".esc_attr($shipping['asiapacific'])."'></td></tr>";
+		$output .= "<tr class='rate_row'><td>" . __( 'Europe', 'wpsc' ) . "</td><td>" . esc_attr( $currency_sign ) . "<input type='text' size='4' name='shipping[europe]'	value='".esc_attr($shipping['europe'])."'></td></tr>";
+		$output .= "<tr class='rate_row'><td>" . __( 'Africa', 'wpsc' ) . "</td><td>" . esc_attr( $currency_sign ) . "<input type='text' size='4' name='shipping[africa]'	value='".esc_attr($shipping['africa'])."'></td></tr>";
 		return $output;
 	}
 
