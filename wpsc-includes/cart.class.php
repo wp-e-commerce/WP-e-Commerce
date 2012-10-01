@@ -402,7 +402,11 @@ function wpsc_the_shipping_method() {
 */
 function wpsc_shipping_method_name() {
    global $wpsc_cart, $wpsc_shipping_modules;
-   return apply_filters( 'wpsc_shipping_method_name', $wpsc_shipping_modules[$wpsc_cart->shipping_method]->name );
+   $name = '';
+   if ( ! empty( $wpsc_cart->shipping_method ) && isset( $wpsc_shipping_modules[$wpsc_cart->shipping_method] ) )
+      $name = $wpsc_shipping_modules[$wpsc_cart->shipping_method]->name;
+
+   return apply_filters( 'wpsc_shipping_method_name', $name );
 }
 
 

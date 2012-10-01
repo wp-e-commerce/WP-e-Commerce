@@ -560,7 +560,7 @@ function wpsc_submit_checkout( $collected_data = true ) {
 		$error_messages = array();
 	$wpsc_checkout = new wpsc_checkout();
 	$selected_gateways = get_option( 'custom_gateway_options' );
-	$submitted_gateway = $_POST['custom_gateway'];
+	$submitted_gateway = isset( $_POST['custom_gateway'] ) ? $_POST['custom_gateway'] : '';
 	$options = get_option( 'custom_shipping_options' );
 	if ( $collected_data ) {
 		$form_validity = $wpsc_checkout->validate_forms();
