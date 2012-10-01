@@ -165,12 +165,15 @@ function wpsc_get_purchase_log_html_table( $headings, $rows ) {
 }
 
 function _wpsc_process_transaction_coupon( $purchase_log ) {
+	global $wpdb;
+
 	if ( ! is_object( $purchase_log ) )
 		$purchase_log = new WPSC_Purchase_Log( $purchase_log );
+
 	$discount_data = $purchase_log->get( 'discount_data' );
 	if ( ! empty( $discount_data ) ) {
 
-		$coupon_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUPON_CODES . "` WHERE coupon_code = %s LIMIT 1", $discount_data, ARRAY_A ) );
+		$coupon_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUPON_CODES . "` WHERE coupon_code = %s LIMIT 1", $discount_data ), ARRAY_A );
 
 		if ( 1 == $coupon_data['use-once'] ) {
 			$wpdb->update(
