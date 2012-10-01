@@ -1716,7 +1716,7 @@ function wpsc_the_variation_price( $return_as_numeric = false ) {
 
 		$product_id = get_the_ID();
 		$wpq = array( 'variations' => $wpsc_variations->variation->slug,
-			'post_status' => 'inherit,publish',
+			'post_status' => array( 'inherit', 'publish' ),
 			'post_type' => 'wpsc-product',
 			'post_parent' => $product_id );
 		$query = new WP_Query( $wpq );
