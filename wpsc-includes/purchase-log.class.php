@@ -392,29 +392,29 @@ class WPSC_Purchase_Log
 			return array();
 
 		$subtotal = 0;
-		$shipping = wpsc_format_convert_price( (float) $this->get( 'base_shipping' ), $from_currency, $to_currency );
+		$shipping = wpsc_convert_currency( (float) $this->get( 'base_shipping' ), $from_currency, $to_currency );
 		$tax = 0;
 		$items = array();
 
 		$this->gateway_data = array(
-			'amount'  => wpsc_format_convert_price( $this->get( 'totalprice' ), $from_currency, $to_currency ),
+			'amount'  => wpsc_convert_currency( $this->get( 'totalprice' ), $from_currency, $to_currency ),
 			'invoice' => $this->get( 'sessionid' ),
-			'tax'     => wpsc_format_convert_price( $this->get( 'wpec_taxes_total' ), $from_currency, $to_currency ),
+			'tax'     => wpsc_convert_currency( $this->get( 'wpec_taxes_total' ), $from_currency, $to_currency ),
 		);
 
 		foreach ( $this->cart_contents as $item ) {
-			$item_price = wpsc_format_convert_price( $item->price, $from_currency, $to_currency );
+			$item_price = wpsc_convert_currency( $item->price, $from_currency, $to_currency );
 			$items[] = array(
 				'name'     => $item->name,
 				'amount'   => $item_price,
-				'tax'      => wpsc_format_convert_price( $item->tax_charged, $from_currency, $to_currency ),
+				'tax'      => wpsc_convert_currency( $item->tax_charged, $from_currency, $to_currency ),
 				'quantity' => $item->quantity,
 			);
 			$subtotal += $item_price * $item->quantity;
-			$shipping += wpsc_format_convert_price( $item->pnp, $from_currency, $to_currency );
+			$shipping += wpsc_convert_currency( $item->pnp, $from_currency, $to_currency );
 		}
 
-		$this->gateway_data['discount'] = wpsc_format_convert_price( (float) $this->get( 'discount_value' ), $from_currency, $to_currency );
+		$this->gateway_data['discount'] = wpsc_convert_currency( (float) $this->get( 'discount_value' ), $from_currency, $to_currency );
 
 		$this->gateway_data['items'] = $items;
 		$this->gateway_data['shipping'] = $shipping;
@@ -422,7 +422,7 @@ class WPSC_Purchase_Log
 
 		if ( $from_currency ) {
 			// adjust total amount in case there's slight decimal error
-			$total = $subtotal + $shipping + $this->gateway_data['tax'] - $this->get( 'discount' );
+			$total = $subtotal + $shipping + $this->gateway_data['tax'] - $this->gateway_data['discount'];
 			if ( $this->gateway_data['amount'] != $total )
 				$this->gateway_data['amount'] = $total;
 		}
