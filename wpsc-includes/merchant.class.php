@@ -71,6 +71,7 @@ class wpsc_merchant {
 			'state'      => 'billingstate',
 			'country'    => 'billingcountry',
 			'post_code'  => 'billingpostcode',
+			'phone'      => 'billingphone',
 		),
 		'shipping' => array (
 			'first_name' => 'shippingfirstname',
