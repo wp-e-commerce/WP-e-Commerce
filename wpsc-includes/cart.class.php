@@ -1936,8 +1936,9 @@ class wpsc_cart_item {
    */
    function update_claimed_stock() {
       global $wpdb;
+
       if($this->has_limited_stock == true) {
-         $current_datetime = date("Y-m-d H:i:s");
+         $current_datetime = date( "Y-m-d H:i:s" );
          $wpdb->query($wpdb->prepare("REPLACE INTO `".WPSC_TABLE_CLAIMED_STOCK."`
          ( `product_id` , `variation_stock_id` , `stock_claimed` , `last_activity` , `cart_id` )
          VALUES
