@@ -2178,6 +2178,14 @@ table.purchase-logs tr:hover .column-id .delete {
 	padding: 0 10px;
 }
 
+.wpsc-save-product-variations.top {
+	margin: 8px 0 5px;
+}
+
+.wpsc-save-product-variations.bottom {
+	padding-bottom: 5px;
+}
+
 .wpsc-product-variation-thumbnail {
 	float: left;
 	height: 50px;
