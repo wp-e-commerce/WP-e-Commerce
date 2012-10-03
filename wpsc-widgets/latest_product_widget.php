@@ -70,10 +70,11 @@ class WP_Widget_Latest_Products extends WP_Widget {
 
 		// Defaults
 		$instance = wp_parse_args( (array)$instance, array(
-			'title' => '',
+			'title'  => '',
 			'number' => 5,
-			'width' => 45,
-			'height' => 45
+			'width'  => 45,
+			'height' => 45,
+			'image'  => false,
 		) );
 
 		// Values
