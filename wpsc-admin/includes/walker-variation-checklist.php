@@ -19,9 +19,7 @@ class WPSC_Walker_Variation_Checklist extends Walker_Category_Checklist {
 		$input_class = ( $depth === 0 ) ? ' class="variation-set"' : '';
 		$li_classes = array( 'wpsc-variation-checklist-item' );
 		if ( $depth === 0 && wpsc_is_doing_ajax( 'add_variation_set' ) ) {
-			$li_classes[] = 'expanded';
 			$li_classes[] = 'ajax';
-		} elseif ( $checked && $depth === 0 ) {
 			$li_classes[] = 'expanded';
 		} elseif ( in_array( $category->term_id, $this->highlighted ) ) {
 			$li_classes[] = 'ajax';
