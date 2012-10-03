@@ -481,14 +481,17 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 	}
 
 	if ( $pagehook == 'media-upload-popup' ) {
-		wp_dequeue_script( 'set-post-thumbnail' );
-		wp_enqueue_script( 'wpsc-set-post-thumbnail', WPSC_URL . '/wpsc-admin/js/set-post-thumbnail.js', array( 'jquery' ), $version_identifier );
-		wp_localize_script( 'wpsc-set-post-thumbnail', 'WPSC_Set_Post_Thumbnail', array(
-			'link_text' => __( 'Use as Product Thumbnail', 'wpsc' ),
-			'saving'    => __( 'Saving...' ),
-			'error'     => __( 'Could not set that as the thumbnail image. Try a different attachment.' ),
-			'done'      => __( 'Done' ),
-		) );
+		$post = get_post( $_REQUEST['post_id'] );
+		if ( $post->post_type == 'wpsc-product' && $post->post_parent ) {
+			wp_dequeue_script( 'set-post-thumbnail' );
+			wp_enqueue_script( 'wpsc-set-post-thumbnail', WPSC_URL . '/wpsc-admin/js/set-post-thumbnail.js', array( 'jquery' ), $version_identifier );
+			wp_localize_script( 'wpsc-set-post-thumbnail', 'WPSC_Set_Post_Thumbnail', array(
+				'link_text' => __( 'Use as Product Thumbnail', 'wpsc' ),
+				'saving'    => __( 'Saving...' ),
+				'error'     => __( 'Could not set that as the thumbnail image. Try a different attachment.' ),
+				'done'      => __( 'Done' ),
+			) );
+		}
 	}
 
 	if ( 'dashboard_page_wpsc-upgrades' == $pagehook || 'dashboard_page_wpsc-update' == $pagehook )
