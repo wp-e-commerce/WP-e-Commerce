@@ -36,13 +36,17 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 		if ( ! empty( $this->items ) )
 			return;
 
+		$per_page = $this->get_items_per_page( 'edit_wpsc-product-variations_per_page' );
+		$per_page = apply_filters( 'edit_wpsc_product_variations_per_page', $per_page );
+
 		$this->args = array(
-			'post_type'   => 'wpsc-product',
-			'orderby'     => 'menu_order post_title',
-			'post_parent' => $this->product_id,
-			'post_status' => 'publish, inherit',
-			'numberposts' => -1,
-			'order'       => "ASC",
+			'post_type'      => 'wpsc-product',
+			'orderby'        => 'menu_order post_title',
+			'post_parent'    => $this->product_id,
+			'post_status'    => 'publish, inherit',
+			'numberposts'    => -1,
+			'order'          => "ASC",
+			'posts_per_page' => $per_page,
 		);
 
 		if ( isset( $_REQUEST['post_status'] ) )
@@ -51,7 +55,17 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 		if ( isset( $_REQUEST['s'] ) )
 			$this->args['s'] = $_REQUEST['s'];
 
-		$this->items = get_posts( $this->args );
+		$query = new WP_Query( $this->args );
+
+		$this->items = $query->posts;
+		$total_items = $query->found_posts;
+		$total_pages = $query->max_num_pages;
+
+		$this->set_pagination_args( array(
+			'total_items' => $total_items,
+			'total_pages' => $total_pages,
+			'per_page' => $per_page
+		) );
 
 		if ( empty( $this->items ) )
 			return;
@@ -619,10 +633,6 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 		if ( $this->is_trash && current_user_can( $post_type_object->cap->edit_others_posts ) ) {
 			submit_button( __( 'Empty Trash' ), 'button-secondary apply', 'delete_all', false );
 		}
-		?></div>
-		<div class="alignright actions">
-			<?php submit_button( __( 'Save Variations', 'wpsc' ) ); ?>
-		</div>
-		<?php
+		?></div><?php
 	}
 }
