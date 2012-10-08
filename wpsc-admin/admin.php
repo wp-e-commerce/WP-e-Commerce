@@ -687,57 +687,55 @@ add_action( 'wpsc_admin_pre_activity', 'wpsc_admin_latest_activity' );
  */
 
 function wpsc_dashboard_widget_setup() {
-	if ( is_admin() && current_user_can( 'manage_options' ) ) {
-		$version_identifier = WPSC_VERSION . "." . WPSC_MINOR_VERSION;
-		// Enqueue the styles and scripts necessary
-		wp_enqueue_style( 'wp-e-commerce-admin', WPSC_URL . '/wpsc-admin/css/admin.css', false, $version_identifier, 'all' );
-		wp_enqueue_script( 'datepicker-ui', WPSC_URL . "/wpsc-core/js/ui.datepicker.js", array( 'jquery', 'jquery-ui-core', 'jquery-ui-sortable' ), $version_identifier );
+	$version_identifier = WPSC_VERSION . "." . WPSC_MINOR_VERSION;
+	// Enqueue the styles and scripts necessary
+	wp_enqueue_style( 'wp-e-commerce-admin', WPSC_URL . '/wpsc-admin/css/admin.css', false, $version_identifier, 'all' );
+	wp_enqueue_script( 'datepicker-ui', WPSC_URL . "/wpsc-core/js/ui.datepicker.js", array( 'jquery', 'jquery-ui-core', 'jquery-ui-sortable' ), $version_identifier );
 
-		$news_cap            = apply_filters( 'wpsc_dashboard_news_cap'           , 'manage_options' );
-		$sales_cap           = apply_filters( 'wpsc_dashboard_sales_summary_cap'  , 'manage_options' );
-		$quarterly_sales_cap = apply_filters( 'wpsc_dashboard_quarterly_sales_cap', 'manage_options' );
-		$monthly_sales_cap   = apply_filters( 'wpsc_dashboard_monthly_sales_cap'  , 'manage_options' );
+	$news_cap            = apply_filters( 'wpsc_dashboard_news_cap'           , 'manage_options' );
+	$sales_cap           = apply_filters( 'wpsc_dashboard_sales_summary_cap'  , 'manage_options' );
+	$quarterly_sales_cap = apply_filters( 'wpsc_dashboard_quarterly_sales_cap', 'manage_options' );
+	$monthly_sales_cap   = apply_filters( 'wpsc_dashboard_monthly_sales_cap'  , 'manage_options' );
 
-		// Add the dashboard widgets
-		if ( current_user_can( $news_cap ) )
-			wp_add_dashboard_widget( 'wpsc_dashboard_news', __( 'Getshopped News' , 'wpsc' ), 'wpsc_dashboard_news' );
-		if ( current_user_can( $sales_cap ) )
-			wp_add_dashboard_widget( 'wpsc_dashboard_widget', __( 'Sales Summary', 'wpsc' ), 'wpsc_dashboard_widget' );
-		if ( current_user_can( $quarterly_sales_cap ) )
-			wp_add_dashboard_widget( 'wpsc_quarterly_dashboard_widget', __( 'Sales by Quarter', 'wpsc' ), 'wpsc_quarterly_dashboard_widget' );
-		if ( current_user_can( $monthly_sales_cap ) )
-			wp_add_dashboard_widget( 'wpsc_dashboard_4months_widget', __( 'Sales by Month', 'wpsc' ), 'wpsc_dashboard_4months_widget' );
+	// Add the dashboard widgets
+	if ( current_user_can( $news_cap ) )
+		wp_add_dashboard_widget( 'wpsc_dashboard_news', __( 'Getshopped News' , 'wpsc' ), 'wpsc_dashboard_news' );
+	if ( current_user_can( $sales_cap ) )
+		wp_add_dashboard_widget( 'wpsc_dashboard_widget', __( 'Sales Summary', 'wpsc' ), 'wpsc_dashboard_widget' );
+	if ( current_user_can( $quarterly_sales_cap ) )
+		wp_add_dashboard_widget( 'wpsc_quarterly_dashboard_widget', __( 'Sales by Quarter', 'wpsc' ), 'wpsc_quarterly_dashboard_widget' );
+	if ( current_user_can( $monthly_sales_cap ) )
+		wp_add_dashboard_widget( 'wpsc_dashboard_4months_widget', __( 'Sales by Month', 'wpsc' ), 'wpsc_dashboard_4months_widget' );
 
-		// Sort the Dashboard widgets so ours it at the top
-		global $wp_meta_boxes;
-		$normal_dashboard = $wp_meta_boxes['dashboard']['normal']['core'];
+	// Sort the Dashboard widgets so ours it at the top
+	global $wp_meta_boxes;
+	$normal_dashboard = $wp_meta_boxes['dashboard']['normal']['core'];
 
-		// Backup and delete our new dashbaord widget from the end of the array
-		$wpsc_widget_backup = array();
-		if ( isset( $normal_dashboard['wpsc_dashboard_news'] ) ) {
-			$wpsc_widget_backup['wpsc_dashboard_news'] = $normal_dashboard['wpsc_dashboard_news'];
-			unset( $normal_dashboard['wpsc_dashboard_news'] );
-		}
-		if ( isset( $normal_dashboard['wpsc_dashboard_widget'] ) ) {
-			$wpsc_widget_backup['wpsc_dashboard_widget'] = $normal_dashboard['wpsc_dashboard_widget'];
-			unset( $normal_dashboard['wpsc_dashboard_widget'] );
-		}
-		if ( isset( $normal_dashboard['wpsc_quarterly_dashboard_widget'] ) ) {
-			$wpsc_widget_backup['wpsc_quarterly_dashboard_widget'] = $normal_dashboard['wpsc_quarterly_dashboard_widget'];
-			unset( $normal_dashboard['wpsc_quarterly_dashboard_widget'] );
-		}
-		if ( isset( $normal_dashboard['wpsc_dashboard_4months_widget'] ) ) {
-			$wpsc_widget_backup['wpsc_dashboard_4months_widget'] = $normal_dashboard['wpsc_dashboard_4months_widget'];
-			unset( $normal_dashboard['wpsc_dashboard_4months_widget'] );
-		}
-
-		// Merge the two arrays together so our widget is at the beginning
-		$sorted_dashboard = array_merge( $wpsc_widget_backup, $normal_dashboard );
-
-		// Save the sorted array back into the original metaboxes
-
-		$wp_meta_boxes['dashboard']['normal']['core'] = $sorted_dashboard;
+	// Backup and delete our new dashbaord widget from the end of the array
+	$wpsc_widget_backup = array();
+	if ( isset( $normal_dashboard['wpsc_dashboard_news'] ) ) {
+		$wpsc_widget_backup['wpsc_dashboard_news'] = $normal_dashboard['wpsc_dashboard_news'];
+		unset( $normal_dashboard['wpsc_dashboard_news'] );
 	}
+	if ( isset( $normal_dashboard['wpsc_dashboard_widget'] ) ) {
+		$wpsc_widget_backup['wpsc_dashboard_widget'] = $normal_dashboard['wpsc_dashboard_widget'];
+		unset( $normal_dashboard['wpsc_dashboard_widget'] );
+	}
+	if ( isset( $normal_dashboard['wpsc_quarterly_dashboard_widget'] ) ) {
+		$wpsc_widget_backup['wpsc_quarterly_dashboard_widget'] = $normal_dashboard['wpsc_quarterly_dashboard_widget'];
+		unset( $normal_dashboard['wpsc_quarterly_dashboard_widget'] );
+	}
+	if ( isset( $normal_dashboard['wpsc_dashboard_4months_widget'] ) ) {
+		$wpsc_widget_backup['wpsc_dashboard_4months_widget'] = $normal_dashboard['wpsc_dashboard_4months_widget'];
+		unset( $normal_dashboard['wpsc_dashboard_4months_widget'] );
+	}
+
+	// Merge the two arrays together so our widget is at the beginning
+	$sorted_dashboard = array_merge( $wpsc_widget_backup, $normal_dashboard );
+
+	// Save the sorted array back into the original metaboxes
+
+	$wp_meta_boxes['dashboard']['normal']['core'] = $sorted_dashboard;
 }
 
 /*
@@ -854,10 +852,8 @@ function wpsc_quarterly_dashboard_widget() {
 
 
 function wpsc_dashboard_widget() {
-	if ( current_user_can( 'manage_options' ) ) {
-		do_action( 'wpsc_admin_pre_activity' );
-		do_action( 'wpsc_admin_post_activity' );
-	}
+	do_action( 'wpsc_admin_pre_activity' );
+	do_action( 'wpsc_admin_post_activity' );
 }
 
 /*
