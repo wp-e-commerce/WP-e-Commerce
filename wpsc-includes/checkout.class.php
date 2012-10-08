@@ -455,28 +455,14 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 
 	$acceptable_countries = wpsc_get_acceptable_countries();
 
-	$output .= "<select name='country' id='current_country' " . $js . " >";
-
-	foreach ( $country_data as $country ) {
-		if ( $selected_country == $country['isocode'] )
-			$selected = "selected='selected'";
-
-		// As of 3.8.9, we deprecated Great Britain as a country in favor of the UK.
-		// See http://code.google.com/p/wp-e-commerce/issues/detail?id=1079
-		if ( 'GB' == $country['isocode'] && 'GB' != get_option( 'base_country' ) )
-			continue;
-
-		if ( $acceptable_countries && ! is_array( $acceptable_countries ) )
-			$disabled = '';
-		elseif ( is_array( $acceptable_countries ) )
-			$disabled = ! in_array( $country['id'], $acceptable_countries ) ? ' disabled = "disabled"' : '';
-		else
-			$disabled = '';
-
-		$output .= "<option value='" . $country['isocode'] . "' ". selected( $selected_country, $country['isocode'], false ) . $disabled .">" . esc_html( $country['country'] ) . "</option>";
-	}
-
-	$output .= "</select>";
+	$output .= wpsc_get_country_dropdown( array(
+		'name'                  => 'country',
+		'id'                    => 'current_country',
+		'additional_attributes' => $js,
+		'acceptable_ids'        => $acceptable_countries,
+		'selected'              => $selected_country,
+		'placeholder'           => '',
+	) );
 
 	$output .= wpsc_shipping_region_list( $selected_country, $selected_region, $shippingdetails );
 

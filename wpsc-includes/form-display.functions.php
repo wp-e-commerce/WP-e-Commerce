@@ -1,24 +1,9 @@
 <?php
 
 function nzshpcrt_country_list( $selected_country = null ) {
-	global $wpdb;
-
-	$output = '';
-
-	if ( $selected_country == null )
-		$output = "<option value=''>" . __( 'Please select', 'wpsc' ) . "</option>";
-
-	$country_data = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_CURRENCY_LIST . "` ORDER BY `country` ASC", ARRAY_A );
-
-	foreach ( $country_data as $country ) {
-		$selected = '';
-		if ( $selected_country == $country['isocode'] )
-			$selected = "selected='selected'";
-
-		$output .= "<option value='" . $country['isocode'] . "' ".$selected.">" . $country['country'] . "</option>";
-	}
-
-	return $output;
+	return _wpsc_country_dropdown_options( array(
+		'selected' => $selected_country,
+	) );
 }
 
 function nzshpcrt_region_list( $selected_country = null, $selected_region = null ) {

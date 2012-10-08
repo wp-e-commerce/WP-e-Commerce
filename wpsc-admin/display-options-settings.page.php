@@ -23,31 +23,6 @@ function wpsc_the_settings_tabs() {
 	WPSC_Settings_Page::get_instance()->output_tabs();
 }
 
-function country_list( $selected_country = null ) {
-	global $wpdb;
-
-	$output       = '';
-	$output      .= "<option value=''></option>";
-	$country_data = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_CURRENCY_LIST . "` ORDER BY `country` ASC", ARRAY_A );
-
-	foreach ( (array)$country_data as $country ) {
-		$selected = '';
-
-		// As of 3.8.9, we deprecated Great Britain as a country in favor of the UK.
-		// See http://code.google.com/p/wp-e-commerce/issues/detail?id=1079
-		if ( 'GB' == $country['isocode'] && 'GB' != get_option( 'base_country' ) )
-			continue;
-
-		if ( $selected_country == $country['isocode'] )
-			$selected = "selected='selected'";
-
-		$output .= "<option value='" . $country['isocode'] . "' $selected>" . htmlspecialchars( $country['country'] ) . "</option>";
-	}
-
-	return $output;
-}
-
-
 function wpsc_settings_page_update_notification() {
 
 	if ( isset( $_GET['skipped'] ) || isset( $_GET['updated'] ) || isset( $_GET['regenerate'] ) || isset( $_GET['deleted'] ) || isset( $_GET['shipadd'] ) ) { ?>

@@ -1083,12 +1083,36 @@ function wpsc_add_meta_boxes(){
  * @since 3.8.9
  * @return html
  */
-function wpsc_gb_deprecated_notice() {
-	if ( 'GB' == get_option( 'base_country' ) )
-		echo '<div id="wpsc-warning" class="error"><p>' . sprintf( __( '<strong>We have deprecated Great Britain as a store option</strong>. <br /> We highly recommend changing your <em>Base Country</em> to the United Kingdom on the <a href="%1$s">General Settings</a> page.', 'wpsc' ), admin_url( 'options-general.php?page=wpsc-settings&tab=general' ) ) . '</p></div>';
+function _wpsc_action_admin_notices_deprecated_countries_notice() {
+	$base_country = get_option( 'base_country' );
+
+	if ( ! in_array( $base_country, WPSC_Country::get_outdated_isocodes() ) )
+		return;
+
+	switch ( $base_country ) {
+		case 'YU':
+			$message = __( 'Yugoslavia is no longer a valid official country name according to <a href="%1$s">ISO 3166</a> while both Serbia and Montenegro have been added to the country list.<br /> As a result, we highly recommend changing your <em>Base Country</em> to reflect this change on the <a href="%2$s">General Settings</a> page.', 'wpsc' );
+			break;
+		case 'UK':
+			$message = __( 'Prior to WP e-Commerce 3.8.9, in your database, United Kingdom\'s country code is UK and you have already selected that country code as the base country. However, now that you\'re using WP e-Commerce version %3$s, it is recommended that you change your base country to the official "GB" country code, according to <a href="%1$s">ISO 3166</a>.<br /> Please go to <a href="%2$s">General Setings</a> page to make this change.<br />The legacy "UK" item will be marked as "U.K. (legacy)" on the country drop down list. Simply switch to the official "United Kingdom (ISO 3166)" to use the "GB" country code.' , 'wpsc' );
+			break;
+		case 'AN':
+			$message = __( 'Netherlands Antilles is no longer a valid official country name according to <a href="%1$s">ISO 3166</a>.<br />Please consider changing your <em>Base Country</em> to reflect this change on the <a href="%2$s">General Settings</a> page.', 'wpsc' );
+		case 'TP':
+			$message = __( 'Prior to WP e-Commerce 3.8.9, in your database, East Timor\'s country code is TP and you have already selected that country code as the base country. However, now that you\'re using WP e-Commerce version %3$s, it is recommended that you change your base country to the official "TL" country code, according to <a href="%1$s">ISO 3166</a>.<br /> Please go to <a href="%2$s">General Setings</a> page to make this change.<br />The legacy "TP" item will be marked as "East Timor (legacy)" on the country drop down list. Simply switch to the official "Timor-Leste (ISO 3166)" to use the "TL" country code.' , 'wpsc' );
+			break;
+	}
+
+	$message = sprintf(
+		/* message */ $message,
+		/* %1$s    */ 'http://en.wikipedia.org/wiki/ISO_3166-1',
+		/* %2$s    */ admin_url( 'options-general.php?page=wpsc-settings&tab=general' ),
+		/* %3$s    */ WPSC_VERSION
+	);
+	echo '<div id="wpsc-warning" class="error"><p>' . $message . '</p></div>';
 }
 
-add_action( 'admin_notices', 'wpsc_gb_deprecated_notice' );
+add_action( 'admin_notices', '_wpsc_action_admin_notices_deprecated_countries_notice' );
 add_action( 'permalink_structure_changed' , '_wpsc_action_permalink_structure_changed' );
 add_action( 'wp_ajax_category_sort_order', 'wpsc_ajax_set_category_order' );
 add_action( 'wp_ajax_variation_sort_order', 'wpsc_ajax_set_variation_order' );
