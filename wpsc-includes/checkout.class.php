@@ -588,7 +588,11 @@ class wpsc_checkout {
 		$GLOBALS['wpsc_checkout_error_messages'    ] = wpsc_get_customer_meta( 'checkout_error_messages'     );
 		$GLOBALS['wpsc_gateway_error_messages'     ] = wpsc_get_customer_meta( 'gateway_error_messages'      );
 		$GLOBALS['wpsc_registration_error_messages'] = wpsc_get_customer_meta( 'registration_error_messages' );
-		$GLOBALS['wpsc_customer_checkout_details'  ] = apply_filters( 'wpsc_customer_checkout_details', wpsc_get_customer_meta( 'checkout_details' ) );
+		$GLOBALS['wpsc_customer_checkout_details'  ] = apply_filters( 'wpsc_get_customer_checkout_details', wpsc_get_customer_meta( 'checkout_details' ) );
+
+		// legacy filter
+		if ( is_user_logged_in() )
+			$GLOBALS['wpsc_customer_checkout_details'] = apply_filters( 'wpsc_checkout_user_profile_get', $GLOBALS['wpsc_customer_checkout_details'], get_current_user_id() );
 
 		if ( ! is_array( $GLOBALS['wpsc_customer_checkout_details'] ) )
 			$GLOBALS['wpsc_customer_checkout_details'] = array();
@@ -928,17 +932,18 @@ class wpsc_checkout {
 
 		wpsc_update_customer_meta( 'checkout_error_messages'     , $wpsc_checkout_error_messages     );
 		wpsc_update_customer_meta( 'gateway_error_messages'      , $wpsc_gateway_error_messages      );
-		wpsc_update_customer_meta( 'checkout_details'            , $wpsc_customer_checkout_details   );
 		wpsc_update_customer_meta( 'registration_error_messages' , $wpsc_registration_error_messages );
+
+		if ( ! $any_bad_inputs ) {
+			$filtered_checkout_details = apply_filters( 'wpsc_update_customer_checkout_details', $wpsc_customer_checkout_details );
+			// legacy filter
+			if ( is_user_logged_in() )
+				$filtered_checkout_details = apply_filters( 'wpsc_checkout_user_profile_update', $wpsc_customer_checkout_details, get_current_user_id() );
+			wpsc_update_customer_meta( 'checkout_details', $filtered_checkout_details );
+		}
 
 		if ( $location_changed )
 			$wpsc_cart->update_location();
-
-		if ( ( $any_bad_inputs == false ) && ( $user_ID > 0 ) ) {
-			$meta_data = $_POST['collected_data'];
-			$meta_data = apply_filters( 'wpsc_checkout_user_profile_update', $meta_data, $user_ID );
-			update_user_meta( $user_ID, 'wpshpcrt_usr_profile', $meta_data );
-		}
 
 		$states = array( 'is_valid' => !$any_bad_inputs, 'error_messages' => $bad_input_message );
 		$states = apply_filters('wpsc_checkout_form_validation', $states);
