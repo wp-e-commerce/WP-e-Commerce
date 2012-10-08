@@ -154,7 +154,6 @@ For more information visit [http://getshopped.org](http://getshopped.org "http:/
 Before updating please make a backup of your existing files and database. Just in case.
 After upgrading from earlier versions look for link "Update Store". This will update your database structure to work with new version.
 
-
 == Changelog ==
 = 3.8.9 =
 * New: Additional columns can now be added to Store Sales page via filter hook.
@@ -162,31 +161,43 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * New: Filters to enable image scaling (versus cropping).
 * New: More flexibility in role management.
 * New: New Hook for cancelling subscriptions with Memebers Access.
+* New: Pagination UI for product variations.
 * New: Users can bulk edit products' stock, price, sales price etc.
 * New: Users can now choose to "Notify site owner" and "Unpublish product" separately when stock runs out.
 * New: Users can now delete checkout form sets.
 * New: Users can now set product sorting direction in Settings->Presentation.
 * New: Variation UI enhancements.
+* Change: "Registration required" and "Anyone can register" are now synchronized.
 * Change: Default checkout shipping option to lowest shipping cost of all choices.
 * Fix: AJAX code audit (security)
+* Fix: Activating WP e-Commerce on a vanilla WordPress installation with pretty permalinks enabled messes up the rewrite rules.
 * Fix: Avoid using query_posts() which could break themes.
 * Fix: Base_region option remains set if base country is switched.
+* Fix: Can't add variations on new products.
 * Fix: Can't delete coupon conditions.
 * Fix: Can't order products properly in Products admin page.
 * Fix: Can't upload product category image when adding a new category.
 * Fix: Cart item name is not updated when corresponding variation name is changed.
 * Fix: Cart items are not translated for qTranslate.
+* Fix: Cart mix up when multisite is enabled.
 * Fix: Category image size metadata are not used properly on templates.
+* Fix: Changing an order status in Sales Log page incorrectly updates the views and pagination links.
 * Fix: Changing checkout field sort order doesn't work.
 * Fix: Checkout- Parent Product Thumbnail Displayed Instead of Product Variation Thumbnail.
+* Fix: Claimed stock cronjob doesn't take into consideration timezone.
+* Fix: Collapse product variation sets by default on Manage tab.
 * Fix: Colorbox Gallery doesn't work.
 * Fix: Coupon start and expiry date don't take into account local timezone.
 * Fix: Custom fields are missing in purchase log if they have the same name as other fields.
 * Fix: Customers are able able to purchase scheduled but unpublished products.
 * Fix: Database upgrade routines.
 * Fix: Division by zero in product-template.php.
+* Fix: Dollar signs are used in flat rate settings regardless of the main currency.
 * Fix: Duplicating a Product doesn't duplicate the images correctly.
 * Fix: Enabling shipping but not selecting any shipping methods causes frustrating unexpected issues.
+* Fix: Fatal error when quick editing products.
+* Fix: Fatal error when upgrading from 3.7.x.
+* Fix: Free shipping doesn't reset individual cart items' shipping amounts when submitted to PayPal.
 * Fix: Free-shipping doesn't work on PayPal Pro if the discount amount > item total.
 * Fix: Google Analytics is now tracking correctly.
 * Fix: Great Britain is redundant in country list (we already have U.K. and North Ireland).
@@ -201,6 +212,8 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * Fix: Make it clear that the sidebar widget doesn't include discount.
 * Fix: Number of products per page field in shortcode generator doesn't work.
 * Fix: On user details page, switching country to a country without region won't display the State (Region) text field.
+* Fix: Only display permalink double save warning if WordPress version is earlier than 3.3.
+* Fix: Outdated country codes and currency codes.
 * Fix: Pagination does not work with price range widget.
 * Fix: Pagination for category short codes does not work.
 * Fix: Pagination for tags does not work.
@@ -220,6 +233,7 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * Fix: Shipping rate choice not correctly encoded during checkout.
 * Fix: Shipwire settings are broken.
 * Fix: Shortcode button doesn't work in visual mode if WP folder configuration is different from default.
+* Fix: Table rate shipping doesn't accept $0 amount.
 * Fix: Target makret restrictions for product categories is broken.
 * Fix: Tax bands not working.
 * Fix: Template tags for product tags don't work.
