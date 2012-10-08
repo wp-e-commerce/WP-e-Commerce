@@ -108,7 +108,7 @@ function validate_form_data() {
 			}
 		}
 		$meta_data = apply_filters( 'wpsc_user_log_update', $meta_data, $user_ID );
-		update_user_meta( $user_ID, 'wpshpcrt_usr_profile', $meta_data );
+		wpsc_update_customer_meta( 'checkout_details', $meta_data );
 	}
 	if ( $changes_saved ) {
 		$message = __( 'Thanks, your changes have been saved.', 'wpsc' );
@@ -138,11 +138,7 @@ function wpsc_display_form_fields() {
 	if ( empty( $wpsc_checkout ) )
 		$wpsc_checkout = new WPSC_Checkout();
 
-	$meta_data = null;
-	$saved_data_sql = "SELECT * FROM `" . $wpdb->usermeta . "` WHERE `user_id` = '" . $user_ID . "' AND `meta_key` = 'wpshpcrt_usr_profile';";
-	$saved_data = $wpdb->get_row( $saved_data_sql, ARRAY_A );
-
-	$meta_data = get_user_meta( $user_ID, 'wpshpcrt_usr_profile', 1 );
+	$meta_data = wpsc_get_customer_meta( 'checkout_details' );
 	$meta_data = apply_filters( 'wpsc_user_log_get', $meta_data, $user_ID );
 
 	$form_sql = "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `active` = '1' ORDER BY `checkout_set`, `checkout_order`;";
