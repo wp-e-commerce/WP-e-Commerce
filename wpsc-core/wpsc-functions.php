@@ -1625,6 +1625,8 @@ function wpsc_get_all_customer_meta( $id = false ) {
 	if ( ! $id )
 		$id = wpsc_get_current_customer_id();
 
+	// error_log( "customer id: " . $id );
+
 	if ( ! $id )
 		return new WP_Error( 'wpsc_customer_meta_invalid_customer_id', __( 'Invalid customer ID', 'wpsc' ), $id );
 

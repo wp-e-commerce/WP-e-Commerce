@@ -97,9 +97,6 @@ function wpsc_country_region_list( $form_id = null, $ajax = false, $selected_cou
 	else
 		$html_form_id = 'region_country_form';
 
-	if ( $supplied_form_id != null )
-		$supplied_form_id = "id='$supplied_form_id'";
-
 	if ( $checkoutfields ) {
 		$js = "onchange='set_shipping_country(\"$html_form_id\", \"$form_id\");'";
 		$title = 'shippingcountry';
@@ -109,27 +106,16 @@ function wpsc_country_region_list( $form_id = null, $ajax = false, $selected_cou
 	}
 
 	$country_data = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_CURRENCY_LIST . "` ORDER BY `country` ASC", ARRAY_A );
+	$additional_attributes = "title='{$title}' {$js}";
 	$output .= "<div id='$html_form_id'>\n\r";
-	$output .= "<select $supplied_form_id title='$title' name='collected_data[" . $form_id . "][0]' class='current_country' $js >\n\r";
-
-	foreach ( $country_data as $country ) {
-		$selected = '';
-
-		// As of 3.8.9, we deprecated Great Britain as a country in favor of the UK.
-		// See http://code.google.com/p/wp-e-commerce/issues/detail?id=1079
-		if ( 'GB' == $country['isocode'] && 'GB' != get_option( 'base_country' ) )
-			continue;
-
-		if ( $country['visible'] == '1' ) {
-			if ( $selected_country == $country['isocode'] ) {
-				$selected = "selected='selected'";
-			}
-			$output .= "<option value='" . $country['isocode'] . "' $selected>" . esc_html( $country['country'] ) . "</option>\n\r";
-		}
-	}
-
-	$output .= "</select>\n\r";
-
+	$output .= wpsc_get_country_dropdown( array(
+		'id'                    => $supplied_form_id,
+		'name'                  => "collected_data[{$form_id}][0]",
+		'class'                 => 'current_country',
+		'selected'              => $selected_country,
+		'additional_attributes' => $additional_attributes,
+		'placeholder'           => '',
+	) );
 
 	$region_list    = $wpdb->get_results( $wpdb->prepare( "SELECT `" . WPSC_TABLE_REGION_TAX . "`.* FROM `" . WPSC_TABLE_REGION_TAX . "`, `" . WPSC_TABLE_CURRENCY_LIST . "`  WHERE `" . WPSC_TABLE_CURRENCY_LIST . "`.`isocode` IN(%s) AND `" . WPSC_TABLE_CURRENCY_LIST . "`.`id` = `" . WPSC_TABLE_REGION_TAX . "`.`country_id`", $selected_country ), ARRAY_A );
 	$sql            = "SELECT `" . WPSC_TABLE_CHECKOUT_FORMS . "`.`id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `unique_name` = 'shippingstate' ";

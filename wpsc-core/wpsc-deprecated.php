@@ -725,3 +725,12 @@ function wpsc_purchlog_is_checked_status() {
 	  return '';
    }
 }
+
+/**
+ * @deprecated since 3.8.9. Use _wpsc_country_dropdown_options instead.
+ * @param  string $selected_country ISO code of selected country
+ * @return string                   output
+ */
+function country_list( $selected_country = null ) {
+	return _wpsc_country_dropdown_options( array( 'selected' => $selected_country ) );
+}

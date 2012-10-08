@@ -44,9 +44,13 @@ class WPSC_Settings_Tab_General extends WPSC_Settings_Tab
 			<tr>
 				<th scope="row"><?php esc_html_e( 'Base Country/Region', 'wpsc' ); ?>: </th>
 				<td>
-					<select id="wpsc-base-country-drop-down" name='wpsc_options[base_country]'>
-						<?php echo country_list( esc_attr( get_option( 'base_country' ) ) ); ?>
-					</select>
+					<?php
+						wpsc_country_dropdown( array(
+							'id'       => 'wpsc-base-country-drop-down',
+							'name'     => 'wpsc_options[base_country]',
+							'selected' => get_option( 'base_country' ),
+						) );
+					?>
 					<span id='wpsc-base-region-drop-down'>
 						<?php $this->display_region_drop_down(); ?>
 						<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
