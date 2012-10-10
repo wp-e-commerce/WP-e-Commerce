@@ -142,7 +142,7 @@ function wpsc_get_product_tag_link( $product_tag ) {
 
 function wpsc_get_the_product_tags( $id = 0 ) {
 	$tags = get_the_terms( $id, 'product_tag' );
-	return apply_filters( 'get_the_product_tags', $tags );
+	return apply_filters( 'get_the_product_tags', $tags, $id );
 }
 
 function wpsc_get_the_product_tag_list( $before = '', $sep = '', $after = '' ) {
