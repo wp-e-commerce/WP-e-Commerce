@@ -1256,7 +1256,7 @@ function wpsc_get_the_post_id_by_shortcode( $shortcode ) {
 	// For back compat
 	$post_id = apply_filters( 'wpec_get_the_post_id_by_shortcode', $post_id );
 
-	return apply_filters( 'wpsc_get_the_post_id_by_shortcode', $post_id );
+	return apply_filters( 'wpsc_get_the_post_id_by_shortcode', $post_id, $shortcode );
 
 }
 
