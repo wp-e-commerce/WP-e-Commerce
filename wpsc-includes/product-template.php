@@ -1834,23 +1834,6 @@ function wpsc_remove_currency_code( $args ) {
 	return $args;
 }
 
-function wpsc_get_up_to_text( $product_id ) {
-
-		add_filter( 'wpsc_toggle_display_currency_code', 'wpsc_remove_currency_code' );
-
-		$savings_text  = '';
-
-		if ( wpsc_product_has_children( $product_id ) ) {
-			$maybe_variation_price = wpsc_product_variation_price_available( $product_id );
-			$savings_text = apply_filters( 'wpsc_you_save_variation_text', __( 'up to', 'wpsc' ) );
-		}
-
-		remove_filter( 'wpsc_toggle_display_currency_code', 'wpsc_remove_currency_code' );
-
-		return $savings_text;
-
-}
-
 function wpsc_you_save( $args = null ){
 
 	$defaults = array(
