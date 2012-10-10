@@ -1533,6 +1533,7 @@ function wpsc_create_customer_id() {
 	$cookie = $id . '|' . $expire . '|' . $hash;
 
 	setcookie( WPSC_CUSTOMER_COOKIE, $cookie, $expire, WPSC_CUSTOMER_COOKIE_PATH, COOKIE_DOMAIN, $secure, true );
+	$_COOKIE[WPSC_CUSTOMER_COOKIE] = $cookie;
 	return $id;
 }
 
