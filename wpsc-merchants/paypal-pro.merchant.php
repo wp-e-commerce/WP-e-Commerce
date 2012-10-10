@@ -548,7 +548,7 @@ if ( in_array( 'wpsc_merchant_paypal_pro', (array)get_option( 'custom_gateway_op
 		'Discover' => __( 'Discover', 'wpsc' ),
 		'Amex' => __( 'Amex', 'wpsc' ),
 	);
-	$card_types = apply_filters( 'wpsc_paypal_pro_accepted_cart_types', $card_types );
+	$card_types = apply_filters( 'wpsc_paypal_pro_accepted_card_types', $card_types );
 	foreach ( $card_types as $type => $title ) {
 		$output .= sprintf( '<option value="%1$s">%2$s</option>', $type, esc_html( $title ) );
 	}
