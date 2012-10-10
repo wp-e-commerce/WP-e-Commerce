@@ -282,7 +282,7 @@ function wpsc_core_setup_cart() {
 
 	$cart = maybe_unserialize( wpsc_get_customer_meta( 'cart' ) );
 
-	if ( is_object( $cart ) && is_wp_error( $cart ) )
+	if ( is_object( $cart ) && ! is_wp_error( $cart ) )
 		$GLOBALS['wpsc_cart'] = $cart;
 	else
 		$GLOBALS['wpsc_cart'] = new wpsc_cart();
