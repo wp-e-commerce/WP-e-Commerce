@@ -128,7 +128,7 @@ function nzshpcrt_currency_display($price_in, $tax_status, $nohtml = false, $id 
 	//_deprecated_function( __FUNCTION__, '3.8', 'wpsc_currency_display' );
 	$output = wpsc_currency_display($price_in, array(
 		'display_currency_symbol' => !(bool)$no_dollar_sign,
-		'display_as_html' => (bool)$nohtml,
+		'display_as_html' => ! (bool)$nohtml,
 		'display_decimal_point' => true,
 		'display_currency_code' => false
 	));
