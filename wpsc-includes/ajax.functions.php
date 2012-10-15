@@ -547,6 +547,7 @@ if ( isset( $_REQUEST['wpsc_action'] ) && ($_REQUEST['wpsc_action'] == 'cart_htm
  * No parameters, returns nothing
  */
 function wpsc_submit_checkout( $collected_data = true ) {
+	var_dump( $collected_data ); exit;
 	global $wpdb, $wpsc_cart, $user_ID, $nzshpcrt_gateways, $wpsc_shipping_modules, $wpsc_gateways;
 
 	$num_items = 0;
@@ -716,7 +717,7 @@ function wpsc_submit_checkout( $collected_data = true ) {
 
 // execute on POST and GET
 if ( isset( $_REQUEST['wpsc_action'] ) && ($_REQUEST['wpsc_action'] == 'submit_checkout') ) {
-	add_action( 'init', 'wpsc_submit_checkout' );
+	add_action( 'init', 'wpsc_submit_checkout', 10, 0 );
 }
 
 function wpsc_product_rss() {
