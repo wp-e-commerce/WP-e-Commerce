@@ -2,13 +2,12 @@ function WPSetAsThumbnail(id, nonce){
 	var $link = jQuery('a#wp-post-thumbnail-' + id);
 
 	$link.text( WPSC_Set_Post_Thumbnail.saving );
-	jQuery.post(
-		ajaxurl,
+	jQuery.wpsc_post(
 		{
 			action       :"set_variation_product_thumbnail",
 			post_id      : post_id,
 			thumbnail_id : id,
-			'nonce'      : nonce,
+			'nonce'      : WPSC_Set_Post_Thumbnail.nonce,
 			cookie       : encodeURIComponent(document.cookie)
 		},
 		function(response){
