@@ -484,7 +484,7 @@ function form_paypal_pro() {
 		$output .="<tr>
 			<td colspan='2'>
 			<span class='wpscsmall description'>
-			" . sprintf( __( "For more help configuring Paypal Pro, please read our documentation <a href='%s'>here</a>", 'wpsc' ), esc_ur( 'http://docs.getshopped.org/wiki/documentation/payments/paypal-payments-pro' ) ) . "</span>
+			" . sprintf( __( "For more help configuring Paypal Pro, please read our documentation <a href='%s'>here</a>", 'wpsc' ), esc_url( 'http://docs.getshopped.org/wiki/documentation/payments/paypal-payments-pro' ) ) . "</span>
 			</td>
 		</tr>";
 	return $output;
