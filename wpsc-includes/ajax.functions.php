@@ -547,7 +547,6 @@ if ( isset( $_REQUEST['wpsc_action'] ) && ($_REQUEST['wpsc_action'] == 'cart_htm
  * No parameters, returns nothing
  */
 function wpsc_submit_checkout( $collected_data = true ) {
-	var_dump( $collected_data ); exit;
 	global $wpdb, $wpsc_cart, $user_ID, $nzshpcrt_gateways, $wpsc_shipping_modules, $wpsc_gateways;
 
 	$num_items = 0;
@@ -567,7 +566,7 @@ function wpsc_submit_checkout( $collected_data = true ) {
 		$form_validity = $wpsc_checkout->validate_forms();
 		extract( $form_validity ); // extracts $is_valid and $error_messages
 
-		if ( isset( $_POST['agree'] ) && $_POST['agree'] != 'yes' ) {
+		if ( wpsc_has_tnc() && ( ! isset( $_POST['agree'] ) || $_POST['agree'] != 'yes' ) ) {
 			$error_messages[] = __( 'Please agree to the terms and conditions, otherwise we cannot process your order.', 'wpsc' );
 			$is_valid = false;
 		}
