@@ -168,8 +168,7 @@ class WPSC_Country
 	}
 
 	public function get( $key ) {
-		if ( ! $this->fetched )
-			$this->fetch();
+		$this->fetch();
 
 		if ( array_key_exists( $key, $this->data ) )
 			return $this->data[$key];
@@ -201,10 +200,15 @@ class WPSC_Country
 		}
 		$where_format = in_array( $this->args['col'], self::$string_cols ) ? '%s' : '%d';
 
-		if ( $where_col ) {
+		if ( $where_col && $this->exists() ) {
 			$result = $wpdb->update( WPSC_TABLE_CURRENCY_LIST, $this->data, array( $this->args['col'] => $this->args['value'] ), $format, $where_format );
 			self::delete_cache( $this->args['value'], $this->args['col'] );
 		} else {
+			if ( $where_col ) {
+				$this->set( $this->args['col'], $this->args['value'] );
+				$format[] = '%s';
+			}
+
 			$result = $wpdb->insert( WPSC_TABLE_CURRENCY_LIST, $this->data, $format );
 
 			if ( $result ) {
@@ -223,6 +227,7 @@ class WPSC_Country
 	}
 
 	public function exists() {
+		$this->fetch();
 		return $this->exists;
 	}
 }
@@ -276,7 +281,7 @@ function _wpsc_country_dropdown_options( $args = '' ) {
 		// base country, we should display both this and the more proper "GB" or "TL" options
 		// and distinguish these choices somehow
 		if ( is_admin() ) {
-			if ( in_array( $base_country, array( 'TP', 'UK' ) ) )
+			if ( in_array( $isocode, array( 'TP', 'UK' ) ) )
 				/* translators: This string will mark the legacy isocode "UK" and "TP" in the country selection dropdown as "legacy" */
 				$name = sprintf( __( '%s (legacy)', 'wpsc' ), $name );
 			elseif ( in_array( $isocode, array( 'GB', 'TL' ) ) )
