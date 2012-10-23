@@ -1209,7 +1209,6 @@ function _wpsc_regenerate_thumbnail_size( $thumbnail_id, $size ) {
  * @return string - the URL to the thumbnail image
  */
 function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id = 0, $page = 'products-page' ) {
-
 	$thumbnail = false;
 
 	$display = wpsc_check_display_type();
@@ -1233,47 +1232,49 @@ function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id 
 		$thumbnail_id = wpsc_the_product_thumbnail_id( $product->post_parent );
 	}
 
-	//Overwrite height & width if custom dimensions exist for thumbnail_id
-	if ( 'grid' != $display && 'products-page' == $page && isset($thumbnail_id)) {
-		$custom_width = get_post_meta( $thumbnail_id, '_wpsc_custom_thumb_w', true );
-		$custom_height = get_post_meta( $thumbnail_id, '_wpsc_custom_thumb_h', true );
+	if ( ! $width && ! $height ) {
+		//Overwrite height & width if custom dimensions exist for thumbnail_id
+		if ( 'grid' != $display && 'products-page' == $page && isset($thumbnail_id)) {
+			$custom_width = get_post_meta( $thumbnail_id, '_wpsc_custom_thumb_w', true );
+			$custom_height = get_post_meta( $thumbnail_id, '_wpsc_custom_thumb_h', true );
 
-		if ( !empty( $custom_width ) && !empty( $custom_height ) ) {
-			$width = $custom_width;
-			$height = $custom_height;
+			if ( !empty( $custom_width ) && !empty( $custom_height ) ) {
+				$width = $custom_width;
+				$height = $custom_height;
+			}
+		} elseif( $page == 'single' && isset($thumbnail_id)) {
+			$custom_thumbnail = get_post_meta( $thumbnail_id, '_wpsc_selected_image_size', true );
+			if ( ! $custom_thumbnail ) {
+				$custom_thumbnail = 'medium-single-product';
+				$current_size = image_get_intermediate_size( $thumbnail_id, $custom_thumbnail );
+				$settings_width = get_option( 'single_view_image_width' );
+				$settings_height = get_option( 'single_view_image_height' );
+
+				if (  ! $current_size
+				     || (
+				     	     $current_size['width'] != $settings_width
+					      && $current_size['height'] != $settings_height
+					    )
+				)
+					_wpsc_regenerate_thumbnail_size( $thumbnail_id, $custom_thumbnail );
+			}
+
+			$src = wp_get_attachment_image_src( $thumbnail_id, $custom_thumbnail );
+
+			if ( !empty( $src ) && is_string( $src[0] ) ) {
+				$thumbnail = $src[0];
+			}
+		} elseif ( $page == 'manage-products' && isset( $thumbnail_id ) ) {
+			$current_size = image_get_intermediate_size( $thumbnail_id, 'admin-product-thumbnails' );
+
+			if ( ! $current_size )
+				_wpsc_regenerate_thumbnail_size( $thumbnail_id, 'admin-product-thumbnails' );
+
+			$src = wp_get_attachment_image_src( $thumbnail_id, 'admin-product-thumbnails' );
+
+			if ( ! empty( $src ) && is_string( $src[0] ) )
+				$thumbnail = $src[0];
 		}
-	} elseif( $page == 'single' && isset($thumbnail_id)) {
-		$custom_thumbnail = get_post_meta( $thumbnail_id, '_wpsc_selected_image_size', true );
-		if ( ! $custom_thumbnail ) {
-			$custom_thumbnail = 'medium-single-product';
-			$current_size = image_get_intermediate_size( $thumbnail_id, $custom_thumbnail );
-			$settings_width = get_option( 'single_view_image_width' );
-			$settings_height = get_option( 'single_view_image_height' );
-
-			if (  ! $current_size
-			     || (
-			     	     $current_size['width'] != $settings_width
-				      && $current_size['height'] != $settings_height
-				    )
-			)
-				_wpsc_regenerate_thumbnail_size( $thumbnail_id, $custom_thumbnail );
-		}
-
-		$src = wp_get_attachment_image_src( $thumbnail_id, $custom_thumbnail );
-
-		if ( !empty( $src ) && is_string( $src[0] ) ) {
-			$thumbnail = $src[0];
-		}
-	} elseif ( $page == 'manage-products' && isset( $thumbnail_id ) ) {
-		$current_size = image_get_intermediate_size( $thumbnail_id, 'admin-product-thumbnails' );
-
-		if ( ! $current_size )
-			_wpsc_regenerate_thumbnail_size( $thumbnail_id, 'admin-product-thumbnails' );
-
-		$src = wp_get_attachment_image_src( $thumbnail_id, 'admin-product-thumbnails' );
-
-		if ( ! empty( $src ) && is_string( $src[0] ) )
-			$thumbnail = $src[0];
 	}
 
 	// calculate the height based on the ratio of the original demensions
