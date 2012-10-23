@@ -276,7 +276,7 @@ jQuery(document).ready(function ($) {
 				//No shipping quotes were returned, display an error.
 				jQuery('input#shippingSameBilling').after( '<p class="validation-error">' + wpsc_ajax.no_quotes + '</p>' );
 
-			} else {
+			} else if ('1' !== response) {
 				jQuery('table.productcart:eq(0)').html( response );
 			}
 			jQuery('img.ajax-feedback').remove();
