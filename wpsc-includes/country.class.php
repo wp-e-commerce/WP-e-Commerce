@@ -50,7 +50,7 @@ class WPSC_Country
 		return self::$outdated_isocodes;
 	}
 
-	public static function get_all() {
+	public static function get_all( $include_invisible = false ) {
 		global $wpdb;
 
 		$cache = wp_cache_get( 'all', 'wpsc_countries' );
@@ -58,7 +58,13 @@ class WPSC_Country
 		if ( $cache )
 			return $cache;
 
-		$sql = "SELECT * FROM " . WPSC_TABLE_CURRENCY_LIST . " ORDER BY country";
+		$sql = "SELECT * FROM " . WPSC_TABLE_CURRENCY_LIST;
+
+		if ( ! $include_invisible )
+			$sql .= " WHERE visible = '1'";
+
+		$sql .= ' ORDER BY country';
+
 		$db_results = $wpdb->get_results( $sql, ARRAY_A );
 		$list = array();
 
@@ -255,12 +261,13 @@ function _wpsc_is_country_disabled( $country, $args ) {
 
 function _wpsc_country_dropdown_options( $args = '' ) {
 	$defaults = array(
-		'acceptable'     => null,
-		'acceptable_ids' => null,
-		'selected'       => '',
-		'disabled'       => null,
-		'disabled_ids'   => null,
-		'placeholder'   => __( 'Please select', 'wpsc' ),
+		'acceptable'        => null,
+		'acceptable_ids'    => null,
+		'selected'          => '',
+		'disabled'          => null,
+		'disabled_ids'      => null,
+		'placeholder'       => __( 'Please select', 'wpsc' ),
+		'include_invisible' => false,
 	);
 
 	$args = wp_parse_args( $args, $defaults );
@@ -270,7 +277,7 @@ function _wpsc_country_dropdown_options( $args = '' ) {
 	if ( $args['placeholder'] )
 		$output .= "<option value=''>" . esc_html( $args['placeholder'] ) . "</option>";
 
-	$countries = WPSC_Country::get_all();
+	$countries = WPSC_Country::get_all( $args['include_invisible'] );
 	$base_country = get_option( 'base_country' );
 
 	foreach ( $countries as $country ) {
