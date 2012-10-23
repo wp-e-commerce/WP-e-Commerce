@@ -562,8 +562,12 @@ function wpsc_filter_query_request( $args ) {
 	if ( is_admin() )
 		return $args;
 
+	$is_sub_page =    ! empty( $args['wpsc_product_category'] )
+	               &&   'page' != $args['wpsc_product_category']
+	               && ! term_exists( $args['wpsc_product_category'], 'wpsc_product_category' );
+
 	// Make sure no 404 error is thrown for any sub pages of products-page
-	if ( ! empty( $args['wpsc_product_category'] ) && 'page' != $args['wpsc_product_category'] && ! term_exists($args['wpsc_product_category'], 'wpsc_product_category') ) {
+	if ( $is_sub_page ) {
 		// Probably requesting a page that is a sub page of products page
 		$pagename = "{$wpsc_page_titles['products']}/{$args['wpsc_product_category']}";
 		if ( isset($args['name']) ) {
@@ -575,7 +579,12 @@ function wpsc_filter_query_request( $args ) {
 
 	// When product page is set to display all products or a category, and pagination is enabled, $wp_query is messed up
 	// and is_home() is true. This fixes that.
-	if ( isset( $args['post_type'] ) && 'wpsc-product' == $args['post_type'] && ! empty( $args['wpsc-product'] ) && 'page' == $args['wpsc_product_category'] ) {
+	$needs_pagination_fix =      isset( $args['post_type'] )
+	                        && ! empty( $args['wpsc_product_category'] )
+	                        &&   'wpsc-product' == $args['post_type']
+	                        && ! empty( $args['wpsc-product'] )
+	                        &&   'page' == $args['wpsc_product_category'];
+	if ( $needs_pagination_fix ) {
 		$default_category = get_option( 'wpsc_default_category' );
 		if ( $default_category == 'all' || $default_category != 'list' ) {
 			$page = $args['wpsc-product'];
