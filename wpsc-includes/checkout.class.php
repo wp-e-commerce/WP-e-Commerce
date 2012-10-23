@@ -934,13 +934,11 @@ class wpsc_checkout {
 		wpsc_update_customer_meta( 'gateway_error_messages'      , $wpsc_gateway_error_messages      );
 		wpsc_update_customer_meta( 'registration_error_messages' , $wpsc_registration_error_messages );
 
-		if ( ! $any_bad_inputs ) {
-			$filtered_checkout_details = apply_filters( 'wpsc_update_customer_checkout_details', $wpsc_customer_checkout_details );
-			// legacy filter
-			if ( is_user_logged_in() )
-				$filtered_checkout_details = apply_filters( 'wpsc_checkout_user_profile_update', $wpsc_customer_checkout_details, get_current_user_id() );
-			wpsc_update_customer_meta( 'checkout_details', $filtered_checkout_details );
-		}
+		$filtered_checkout_details = apply_filters( 'wpsc_update_customer_checkout_details', $wpsc_customer_checkout_details );
+		// legacy filter
+		if ( is_user_logged_in() )
+			$filtered_checkout_details = apply_filters( 'wpsc_checkout_user_profile_update', $wpsc_customer_checkout_details, get_current_user_id() );
+		wpsc_update_customer_meta( 'checkout_details', $filtered_checkout_details );
 
 		if ( $location_changed )
 			$wpsc_cart->update_location();
