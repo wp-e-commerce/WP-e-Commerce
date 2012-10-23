@@ -474,7 +474,7 @@ function wpsc_update_location() {
 
 	$delivery_country = '';
 	$billing_country = '';
-	if ( $_POST['country'] != null ) {
+	if ( ! empty( $_POST['country'] ) ) {
 		$delivery_country = $_POST['country'];
 		$billing_country  = wpsc_get_customer_meta( 'billing_country'  );
 		$delivery_region  = wpsc_get_customer_meta( 'shipping_region'  );
