@@ -63,11 +63,20 @@
 				throw new Exception( __( 'unable to connect to currency conversion service', 'wpsc' ) );
 			}
 
-			$rawdata = preg_replace( '/(\{|,\s*)([^\s:]+)(\s*:)/', '$1"$2"$3', $rawdata );
-			$data = json_decode( $rawdata );
-			$to_amount = round( $data->rhs, 2 );
-			return $to_amount;
+			// google doesn't return a valid JSON response, so we have to
+			// parse that.
+			// attempt to use regexp to parse the converted amount. if that fails,
+			// fall back to using json_decode().
+			preg_match( '/rhs[^"]+"([\d\s.,]+)/', $rawdata, $matches );
+			if ( isset( $matches[1] ) ) {
+				$to_amount = (float) str_replace( array( ',', ' ' ), '', $matches[1] );
+			} else {
+				$rawdata = preg_replace( '/(\{|,\s*)([^\s:]+)(\s*:)/', '$1"$2"$3', $rawdata );
+				$data = json_decode( $rawdata );
+			}
+			$to_amount = round( $to_amount, 2 );
 
+			return $to_amount;
 		}
 	}
 ?>
