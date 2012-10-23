@@ -188,7 +188,7 @@ class ash_usps{
     						".__('USPS ID', 'wpsc').":
     					</td>
     					<td>
-    						<input type='text' name='wpec_usps[id]' value='".$settings["id"]."' />
+    						<input type='text' name='wpec_usps[id]' value='" . esc_attr( $settings["id"] ) ."' />
 
     					<br />
 						".__("Don't have a USPS API account ? ",'wpsc')."
@@ -313,7 +313,8 @@ class ash_usps{
     function submit_form() {
         // Completely revamped how these values are stored
 		if (!empty($_POST['wpec_usps'])) {
-            update_option('wpec_usps', $_POST['wpec_usps']);
+            $settings = stripslashes_deep( $_POST['wpec_usps'] );
+            update_option('wpec_usps', $settings);
 		}
 		return TRUE;
     }
