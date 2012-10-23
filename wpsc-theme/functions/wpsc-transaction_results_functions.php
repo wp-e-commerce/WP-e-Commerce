@@ -49,7 +49,7 @@ function wpsc_transaction_theme() {
 
 	$selected_gateway = wpsc_get_customer_meta( 'selected_gateway' );
 	if ( $selected_gateway && in_array( $selected_gateway, array( 'paypal_certified', 'wpsc_merchant_paypal_express' ) ) )
-		$sessionid = $_SESSION['paypalexpresssessionid'];
+		$sessionid = wpsc_get_customer_meta( 'paypal_express_sessionid' );
 
 	if ( isset( $_REQUEST['eway'] ) && '1' == $_REQUEST['eway'] )
 		$sessionid = $_GET['result'];
@@ -69,7 +69,7 @@ function wpsc_transaction_theme() {
 			case 'wpsc_merchant_paypal_express':
 				echo wpsc_get_customer_meta( 'paypal_express_message' );
 
-				$reshash = wpsc_get_customer_meta( 'reshash' );
+				$reshash = wpsc_get_customer_meta( 'paypal_express_reshash' );
 				if( isset( $reshash['PAYMENTINFO_0_TRANSACTIONTYPE'] ) && in_array( $reshash['PAYMENTINFO_0_TRANSACTIONTYPE'], array( 'expresscheckout', 'cart' ) ) )
 					$dont_show_transaction_results = false;
 				else

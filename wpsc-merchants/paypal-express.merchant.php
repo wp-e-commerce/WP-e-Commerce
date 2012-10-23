@@ -736,7 +736,7 @@ function paypal_processingfunctions(){
 				case 'Processed': // I think this is mostly equivalent to Completed
 				case 'Completed':
 					wpsc_update_purchase_log_status( $sessionid, 3, 'sessionid' );
-				transaction_results( $sessionid, false );
+					transaction_results( $sessionid, false );
 				break;
 
 				case 'Pending': // need to wait for "Completed" before processing
