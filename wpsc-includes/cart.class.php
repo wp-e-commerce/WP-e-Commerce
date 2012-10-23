@@ -1710,7 +1710,7 @@ class wpsc_cart_item {
    	if ( isset( $special_price ) && $special_price > 0 && $special_price < $price )
    		$price = $special_price;
    	$priceandstock_id = 0;
-   	$this->weight = $product_meta[0]["weight"];
+   	$this->weight = isset( $product_meta[0]['weight'] ) ? $product_meta[0]["weight"] : 0;
    	// if we are using table rate price
    	if ( isset( $product_meta[0]['table_rate_price'] ) ) {
    		$levels = $product_meta[0]['table_rate_price'];
