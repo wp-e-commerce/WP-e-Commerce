@@ -265,7 +265,7 @@ class ash_ups {
                     }
                 }
                 $output .= ("<input type=\"checkbox\" id=\"wps_ups_srv_$service\" name=\"wpsc_ups_services[]\" value=\"$service\" $checked />
-                             <label for=\"wps_ups_srv_$service\">".$this->Services[$service]."</label>
+                             <label for=\"wps_ups_srv_$service\">". esc_html( $this->Services[$service] )."</label>
                              <br />");
             }
 
@@ -277,25 +277,25 @@ class ash_ups {
             $output .= ("<tr>
                              <td>".__('UPS Account #', 'wpsc')." *:</td>
                              <td>
-                                 <input type=\"text\" name='wpsc_ups_settings[upsaccount]' value=\"".$wpsc_ups_settings['upsaccount']."\" />
+                                 <input type=\"text\" name='wpsc_ups_settings[upsaccount]' value=\"". esc_attr( $wpsc_ups_settings['upsaccount'] )."\" />
                              </td>
                          </tr>");
             $output .= ("<tr>
                              <td>".__('UPS Username', 'wpsc')." :</td>
                              <td>
-                                 <input type=\"text\" name='wpsc_ups_settings[upsusername]' value=\"".base64_decode($wpsc_ups_settings['upsusername'])."\" />
+                                 <input type=\"text\" name='wpsc_ups_settings[upsusername]' value=\"". esc_attr( base64_decode( $wpsc_ups_settings['upsusername'] ) )."\" />
                              </td>
                          </tr>");
             $output .= ("<tr>
                             <td>".__('UPS Password', 'wpsc')." :</td>
                             <td>
-                                <input type=\"password\" name='wpsc_ups_settings[upspassword]' value=\"".base64_decode($wpsc_ups_settings['upspassword'])."\" />
+                                <input type=\"password\" name='wpsc_ups_settings[upspassword]' value=\"".esc_attr( base64_decode($wpsc_ups_settings['upspassword'] ) )."\" />
                             </td>
                         </tr>");
             $output .= ("<tr>
                             <td>".__('UPS XML API Key', 'wpsc')." :</td>
                             <td>
-                                <input type=\"text\" name='wpsc_ups_settings[upsid]' value=\"".base64_decode($wpsc_ups_settings['upsid'])."\" />
+                                <input type=\"text\" name='wpsc_ups_settings[upsid]' value=\"" . esc_attr( base64_decode( $wpsc_ups_settings['upsid'] ) ) . "\" />
                                 <br />
                                 ".__('Don\'t have an API login/ID ?', 'wpsc')."
                                     <a href=\"https://www.ups.com/upsdeveloperkit?loc=en_US\" target=\"_blank\">".__('Click Here','wpsc')."</a>.
@@ -317,15 +317,17 @@ class ash_ups {
          * UPS settings area under Shipping to update the setttings.
          */
         if (isset( $_POST['wpsc_ups_settings'] ) && !empty( $_POST['wpsc_ups_settings'] ) ) {
-            $wpsc_ups_services = $_POST['wpsc_ups_services'];
-            update_option('wpsc_ups_services',$wpsc_ups_services);
-            $temp = $_POST['wpsc_ups_settings'];
+            if ( isset( $_POST['wpsc_ups_services'] ) ) {
+                $wpsc_ups_services = $_POST['wpsc_ups_services'];
+                update_option('wpsc_ups_services',$wpsc_ups_services);
+            }
+            $temp = stripslashes_deep( $_POST['wpsc_ups_settings'] );
             // base64_encode the information so it isnt stored as plaintext.
             // base64 is by no means secure but without knowing if the server
             // has mcrypt installed what can you do really?
-            $temp['upsusername'] = base64_encode($temp['upsusername']);
-            $temp['upspassword'] = base64_encode($temp['upspassword']);
-            $temp['upsid'] = base64_encode($temp['upsid']);
+            $temp['upsusername'] = base64_encode( $temp['upsusername'] );
+            $temp['upspassword'] = base64_encode( $temp['upspassword'] );
+            $temp['upsid'] = base64_encode( $temp['upsid'] );
 
             update_option('wpsc_ups_settings', $temp);
         }
