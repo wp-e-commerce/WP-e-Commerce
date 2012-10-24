@@ -263,7 +263,6 @@ function wpsc_coupon_price( $currCoupon = '' ) {
 		$wpsc_coupons = new wpsc_coupons( $coupon );
 
 		if ( $wpsc_coupons->validate_coupon() ) {
-
 			$discountAmount = $wpsc_coupons->calculate_discount();
 			$wpsc_cart->apply_coupons( $discountAmount, $coupon );
 			$wpsc_coupons->errormsg = false;
@@ -366,14 +365,23 @@ function wpsc_update_shipping_price() {
 	global $wpsc_cart;
 	$quote_shipping_method = $_POST['method'];
 	$quote_shipping_option = $_POST['option'];
+
 	if(!empty($quote_shipping_option) && !empty($quote_shipping_method)){
 		$wpsc_cart->update_shipping( $quote_shipping_method, $quote_shipping_option );
+
 		echo "
 		if(jQuery('.pricedisplay.checkout-shipping .pricedisplay')){
 			jQuery('.pricedisplay.checkout-shipping > .pricedisplay:first').html(\"" . wpsc_cart_shipping() . "\");
 			jQuery('.shoppingcart .pricedisplay.checkout-shipping > .pricedisplay:first').html(\"" . wpsc_cart_shipping() . "\");
 		} else {
 			jQuery('.pricedisplay.checkout-shipping').html(\"" . wpsc_cart_shipping() . "\");}";
+		echo "
+		if (jQuery('#coupons_amount .pricedisplay').size() > 0) {
+			jQuery('#coupons_amount .pricedisplay').html(\"" . wpsc_coupon_amount() . "\");
+		} else {
+			jQuery('#coupons_amount').html(\"" . wpsc_coupon_amount() . "\");
+		}
+		";
 		echo "jQuery('.pricedisplay.checkout-total').html(\"" . wpsc_cart_total() . "\");\n\r";
 	}
 	exit();

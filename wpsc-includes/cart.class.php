@@ -45,6 +45,7 @@ function wpsc_cart_item_count() {
 */
 function wpsc_coupon_amount($forDisplay=true) {
    global $wpsc_cart;
+
    if($forDisplay == true) {
      $output = wpsc_currency_display($wpsc_cart->coupons_amount);
    } else {
@@ -760,6 +761,13 @@ class wpsc_cart {
       }
       $this->clear_cache();
       $this->get_shipping_option();
+
+      // reapply coupon in case it's free shipping
+      if ( $this->coupons_name ) {
+         $coupon = new wpsc_coupons( $this->coupons_name );
+         if ( $coupon->is_free_shipping() )
+            $this->apply_coupons( $coupon->calculate_discount(), $this->coupons_name );
+      }
    }
 
    /**
@@ -1554,6 +1562,7 @@ class wpsc_cart {
       $this->clear_cache();
       $this->coupons_name = $coupon_name;
       $this->coupons_amount = apply_filters( 'wpsc_coupons_amount', $coupons_amount, $coupon_name );
+
       $this->calculate_total_price();
          if ( $this->total_price < 0 ) {
             $this->coupons_amount += $this->total_price;
@@ -1960,7 +1969,6 @@ class wpsc_cart_item {
    */
    function save_to_db($purchase_log_id) {
       global $wpdb, $wpsc_shipping_modules;
-
 
 	$method = $this->cart->selected_shipping_method;
 	$shipping = 0;
