@@ -1276,12 +1276,20 @@ class wpsc_cart {
     * @return float returns the shipping as a floating point value
    */
   function calculate_total_shipping() {
-   if( ! ( (get_option('shipping_discount')== 1) && (get_option('shipping_discount_value') <= $this->calculate_subtotal() ) ) && wpsc_uses_shipping()){
-         $total = $this->calculate_base_shipping();
-         $total += $this->calculate_per_item_shipping();
-    }else{
-         $total = 0;
-    }
+   $shipping_discount_value  = get_option( 'shipping_discount_value' );
+   $is_free_shipping_enabled = get_option( 'shipping_discount' );
+   $subtotal                 = $this->calculate_subtotal();
+
+   $has_free_shipping =    $is_free_shipping_enabled
+                        && $shipping_discount_value > 0
+                        && $shipping_discount_value <= $subtotal;
+
+   if ( ! wpsc_uses_shipping() || $has_free_shipping ) {
+      $total = 0;
+   } else {
+      $total = $this->calculate_base_shipping();
+      $total += $this->calculate_per_item_shipping();
+   }
 
     return apply_filters( 'wpsc_convert_total_shipping', $total );
 
@@ -1293,12 +1301,10 @@ class wpsc_cart {
    * @return float returns true or false depending on whether the cart subtotal is larger or equal to the shipping         * discount value.
    */
   function has_total_shipping_discount() {
-   if(get_option('shipping_discount')== 1) {
-      if(get_option('shipping_discount_value') <= $this->calculate_subtotal() ) {
-            return true;
-      }
-   }
-    return false;
+   $shipping_discount_value = get_option( 'shipping_discount_value' );
+   return get_option( 'shipping_discount' )
+          && $shipping_discount_value > 0
+          && $shipping_discount_value <= $this->calculate_subtotal();
   }
 
     /**
