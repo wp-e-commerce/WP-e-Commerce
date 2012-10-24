@@ -246,6 +246,12 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 		$tax_total = 0;
 		$shipping_total = 0;
 
+		$is_free_shipping = false;
+		if ( $this->cart_data['has_discounts'] && (float) $this->cart_data['cart_discount_value'] > 0 ) {
+			$coupon = new wpsc_coupons( $this->cart_data['cart_discount_coupon'] );
+			$is_free_shipping = $coupon->is_free_shipping();
+		}
+
 		foreach ( $this->cart_items as $cart_item ) {
 			$data["L_PAYMENTREQUEST_0_NAME{$i}"] = urlencode( apply_filters( 'the_title', $cart_item['name'] ) );
 			$data["L_PAYMENTREQUEST_0_AMT{$i}"] = $this->convert( $cart_item['price'] );
@@ -255,29 +261,32 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 			$shipping_total += $cart_item['shipping'];
 			$i ++;
 		}
+
 		//if we have a discount then include a negative amount with that discount
 		// in php 0.00 = true so we will change that here
 		if($this->cart_data['cart_discount_value'] == 0.00)
 			$this->cart_data['cart_discount_value'] = 0;
 
-		if ( $this->cart_data['cart_discount_value'] ){
-			$discount_value = $this->convert( $this->cart_data['cart_discount_value']);
+		$discount_value = $this->convert( $this->cart_data['cart_discount_value']);
 
+		if ( $this->cart_data['cart_discount_value'] && ! $is_free_shipping ){
 			// if item total < discount amount, leave at least 0.01 unit in item total, then subtract
 			// 0.01 from shipping as well
-			if ( $discount_value >= $item_total ) {
+			if ( ! $is_free_shipping && $discount_value >= $item_total ) {
 				$discount_value = $item_total - 0.01;
 				$shipping_total -= 0.01;
 			}
-
+			$item_total -= $discount_value;
 			$data["L_PAYMENTREQUEST_0_NAME{$i}"] = "Discount / Coupon";
 			$data["L_PAYMENTREQUEST_0_AMT{$i}"] = -$discount_value;
 			$data["L_PAYMENTREQUEST_0_NUMBER{$i}"] = $i;
 			$data["L_PAYMENTREQUEST_0_QTY{$i}"] = 1;
-			$item_total -= $discount_value;
 		}
 		$data["PAYMENTREQUEST_0_ITEMAMT"] = $this->format_price( $item_total ) ;
-		$data["PAYMENTREQUEST_0_SHIPPINGAMT"] = $this->convert( $this->cart_data['base_shipping'] + $shipping_total );
+		if ( $discount_value && $is_free_shipping )
+			$data["PAYMENTREQUEST_0_SHIPPINGAMT"] = 0;
+		else
+			$data["PAYMENTREQUEST_0_SHIPPINGAMT"] = $this->convert( $this->cart_data['base_shipping'] + $shipping_total );
 		$total = $data["PAYMENTREQUEST_0_ITEMAMT"] + $data["PAYMENTREQUEST_0_SHIPPINGAMT"];
 
 		if ( ! wpsc_tax_isincluded() ) {
