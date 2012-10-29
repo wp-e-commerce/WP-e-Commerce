@@ -418,7 +418,7 @@ class wpec_taxes_controller {
       $defaults = array(
          'type' => 'text',
          'class' => 'wpec-taxes-input',
-         'label' => ''
+         'label' => '',
       );
       $settings = wp_parse_args( $input_settings, $defaults );
       //extract( $settings, EXTR_SKIP );
@@ -439,8 +439,14 @@ class wpec_taxes_controller {
 
       //wrap the input in the label if one was specified
       if ( !empty( $settings['label'] ) ) {
-         $returnable = '<label>' . $returnable . $settings['label'] . '</label>';
-      }// if
+        if ( $settings['type'] == 'checkbox' )
+          $returnable = '<label>' . $returnable . $settings['label'] . '</label>';
+        else
+          $returnable = '<label>' . $settings['label'] . '</label>' . $returnable;
+      }
+
+      if ( ! empty( $settings['description'] ) )
+        $returnable .= '<br /><small>' . $settings['description'] . '</small>';
 
       return $returnable;
    } // wpec_taxes_build_input

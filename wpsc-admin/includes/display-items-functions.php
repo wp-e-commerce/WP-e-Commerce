@@ -365,7 +365,8 @@ function wpsc_product_taxes_forms() {
 		$taxable_amount_input_settings = array(
 			'id' => 'wpec_taxes_taxable_amount',
 			'name' => 'meta[_wpsc_product_metadata][wpec_taxes_taxable_amount]',
-			'label' => __( 'Taxable Amount', 'wpsc' )
+			'label' => __( 'Taxable Amount', 'wpsc' ),
+			'description' => __( 'Taxable amount in your currency, not percentage of price.', 'wpsc' ),
 		);
 
 		if ( isset( $product_meta['wpec_taxes_taxable_amount'] ) ) {
