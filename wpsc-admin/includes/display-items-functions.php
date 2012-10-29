@@ -714,9 +714,8 @@ function wpsc_product_image_forms() {
 <?php
 }
 function wpsc_additional_desc() {
-	global $post;
 ?>
-    <textarea name='additional_description' id='additional_description' cols='40' rows='5' ><?php echo esc_textarea( $post->post_excerpt ); ?></textarea>
+    <textarea name='additional_description' id='additional_description' cols='40' rows='5' ><?php echo esc_textarea( get_post_field( 'post_excerpt', get_the_ID() ) ); ?></textarea>
 <?php
 
 }
