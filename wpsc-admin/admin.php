@@ -1228,3 +1228,21 @@ function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
 	    wpsc_duplicate_product_process( $child_post, $new_parent_id );
 
 }
+
+function _wpsc_admin_notices_3dot8dot9() {
+	$message = '<p>' . __( 'You are currently using WP e-Commerce 3.8.9. There have been major changes in WP e-Commerce 3.8.9, so backward-compatibility with existing plugins might not always be guaranteed. If you are unsure, please roll back to 3.8.8.5, and set up a test site with 3.8.9 to make sure WP e-Commerce 3.8.9 is compatible with your existing themes and plugins.<br />If you find any incompatibility issues, please <a href="%1$s">report them to us</a> as well as the other plugins or themes\' developers.' , 'wpsc' ) . '</p>';
+	$message .= "\n<p>" . __( '<a href="%2$s">Hide this warning</a>', 'wpsc' ) . '</p>';
+	$message = sprintf(
+		$message,
+		'http://getshopped.org/wp-e-commerce-3-8-9-compatibility-issues/',
+		add_query_arg( 'dismiss_389_upgrade_notice', 1 )
+	);
+
+	echo '<div id="wpsc-3.8.9-notice" class="error">' . $message . '</div>';
+}
+
+if ( isset( $_REQUEST['dismiss_389_upgrade_notice'] ) )
+	update_option( 'wpsc_hide_3.8.9_notices', true );
+
+if ( ! get_option( 'wpsc_hide_3.8.9_notices' ) )
+	add_action( 'admin_notices', '_wpsc_admin_notices_3dot8dot9' );
