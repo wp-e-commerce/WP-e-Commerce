@@ -984,7 +984,6 @@ function _wpsc_action_permalink_structure_changed() {
 		add_action( 'admin_notices', 'wpsc_check_permalink_notice' );
 
 	wpsc_update_page_urls( true );
-	return $return;
 }
 
 /**
