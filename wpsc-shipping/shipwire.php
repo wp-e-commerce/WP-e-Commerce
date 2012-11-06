@@ -1,14 +1,16 @@
 <?php
 
+require_once( WPSC_FILE_PATH . '/wpsc-shipping/library/shipwire_functions.php' );
+
 /**
- * New Shipwire Shipping rates  
+ * New Shipwire Shipping rates
  * This is a very simple gateway - no settings, and essentially just a wrapper function for the Shipwire Shipping Rate API
  */
 
 class WPSC_Shipwire_Shipping {
 	public $internal_name;
-	public $name;	
-	
+	public $name;
+
 	/**
 	 * Constructor
 	 */
@@ -18,18 +20,18 @@ class WPSC_Shipwire_Shipping {
 		$this->is_external     = true;
 		$this->requires_weight = false;
 		$this->needs_zipcode   = true;
-		
+
 		return true;
 	}
-	
+
 	function getName() {
 		return $this->name;
 	}
-	
+
 	function getInternalName() {
 		return $this->internal_name;
 	}
-	
+
 
 	function getForm() {
 
@@ -40,7 +42,7 @@ class WPSC_Shipwire_Shipping {
 
 		return $output;
 	}
-	
+
 	function submit_form() {
 		return true;
 	}
@@ -57,5 +59,3 @@ if ( WPSC_Shipwire::is_active() ) {
 	$wpsc_shipwire = new WPSC_Shipwire_Shipping();
 	$wpsc_shipping_modules[$wpsc_shipwire->getInternalName()] = $wpsc_shipwire;
 }
-
-?>

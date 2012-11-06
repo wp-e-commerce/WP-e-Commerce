@@ -907,5 +907,3 @@ function shipwire_send_tracking_request( $xml ) {
 	_deprecated_function( __FUNCTION__, '3.8.9', 'WPSC_Shipwire' );
 	return WPSC_Shipwire::send_tracking_request( $xml );
 }
-
-?>
