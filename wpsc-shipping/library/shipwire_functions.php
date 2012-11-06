@@ -57,6 +57,9 @@ class WPSC_Shipwire {
 		self::$warehouse = '00';
 		self::$endpoint  = 'https://api.shipwire.com/exec/'; //For testing, change to api.beta.shipwire
 
+		if ( ! self::is_active() )
+			return;
+
 		//Hooks into transaction results for Order Fulfillment API.  wpsc_confirm_checkout would be logical - but it is run for each cart item.
 		//In fact, the only two current transaction page actions happen within the cart loop.  Not great.
 		//I believe there is a patch on Issue 490 that proposes a 'wpsc_transaction_results_shutdown' action.  It doesn't pass a $log_id, but it does pass a sessionid, which is fine.
@@ -315,7 +318,7 @@ class WPSC_Shipwire {
 	 * @since 3.8.9
 	 * @return type
 	 */
-	public function shipwire_on_checkout( $object, $sessionid, $display ) {
+	public function shipwire_on_checkout( $purchase_log_object, $sessionid, $display ) {
 		global $wpdb;
 		self::process_order_request( $purchase_log_object->get( 'id' ) );
 	}
