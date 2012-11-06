@@ -491,6 +491,8 @@ function wpsc_update_page_urls( $auto = false ) {
 	global $wpdb;
 
 	wpsc_update_permalink_slugs();
+	wpsc_core_load_page_titles();
+	wpsc_register_post_types();
 
 	if( ! $auto ){
 		$sendback = wp_get_referer();
