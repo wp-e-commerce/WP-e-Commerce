@@ -317,10 +317,7 @@ class WPSC_Shipwire {
 	 */
 	public function shipwire_on_checkout( $object, $sessionid, $display ) {
 		global $wpdb;
-
-		$log_id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE sessionid = %s", $sessionid ) );
-
-		self::process_order_request( $log_id );
+		self::process_order_request( $purchase_log_object->get( 'id' ) );
 	}
 
 	/**
