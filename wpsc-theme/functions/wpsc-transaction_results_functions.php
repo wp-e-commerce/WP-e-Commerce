@@ -56,10 +56,10 @@ function wpsc_transaction_theme() {
 	if ( isset( $_REQUEST['eway'] ) && '1' == $_REQUEST['eway'] )
 		$sessionid = $_GET['result'];
 	elseif ( isset( $_REQUEST['eway'] ) && '0' == $_REQUEST['eway'] )
-		echo $_SESSION['eway_message'];
+		echo wpsc_get_customer_meta( 'eway_message' );
 	elseif ( isset( $_REQUEST['payflow'] ) && '1' == $_REQUEST['payflow'] ){
-		echo $_SESSION['payflow_message'];
-		$_SESSION['payflow_message'] = '';
+		echo wpsc_get_customer_meta( 'payflow_message' );
+		wpsc_delete_customer_meta( 'payflow_message' );
 	}
 
 	$dont_show_transaction_results = false;
