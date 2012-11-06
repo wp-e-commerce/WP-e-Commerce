@@ -1656,6 +1656,8 @@ function wpsc_get_current_customer_id( $mode = '' ) {
  *                        if otherwise.
  */
 function wpsc_get_all_customer_meta( $id = false ) {
+	global $wpdb;
+
 	if ( ! $id )
 		$id = wpsc_get_current_customer_id();
 
@@ -1712,6 +1714,8 @@ function wpsc_get_customer_meta( $key = '', $id = false ) {
  *                             if otherwise.
  */
 function wpsc_update_all_customer_meta( $profile, $id = false ) {
+	global $wpdb;
+
 	if ( ! $id )
 		$id = wpsc_get_current_customer_id( 'create' );
 
