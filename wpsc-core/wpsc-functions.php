@@ -655,7 +655,7 @@ add_filter( 'wp_nav_menu_args', 'wpsc_switch_the_query', 99 );
 function _wpsc_pre_get_posts_reset_taxonomy_globals( $query ) {
 	global $wp_the_query;
 
-	if ( $query !== $wp_the_query )
+	if ( is_admin() || $query !== $wp_the_query )
 		return;
 
 	if ( ! $query->get( 'page' ) && ! $query->get( 'paged' ) )
