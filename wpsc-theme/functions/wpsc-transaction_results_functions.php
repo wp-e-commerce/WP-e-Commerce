@@ -25,6 +25,9 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 	$message_html = wpsc_get_transaction_html_output( $purchase_log_object );
 
 	$wpsc_cart->empty_cart();
+
+	do_action( 'wpsc_transaction_results_shutdown', $purchase_log_object, $sessionid, $display_to_screen );
+
 	return $message_html;
 }
 
