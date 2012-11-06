@@ -10,25 +10,27 @@
  * @param $transaction_id (int) the transaction id
  */
 function transaction_results( $sessionid, $display_to_screen = true, $transaction_id = null ) {
-	global $message_html, $echo_to_screen, $wpsc_cart;
+	global $message_html, $echo_to_screen, $wpsc_cart, $purchase_log;
 
+	// pre-3.8.9 variable
 	$echo_to_screen = $display_to_screen;
 
-	$purchase_log = new WPSC_Purchase_Log( $sessionid, 'sessionid' );
+	$purchase_log_object = new WPSC_Purchase_Log( $sessionid, 'sessionid' );
 
-	$message_html = _wpsc_transaction_results_html( $purchase_log );
+	// compatibility with pre-3.8.9 templates where they use a global
+	// $purchase_log object which is simply just a database row
+	$purchase_log = (object) $purchase_log_object->get_data();
+
+	// pre-3.8.9 templates also use this global variable
+	$message_html = wpsc_get_transaction_html_output( $purchase_log_object );
 
 	$wpsc_cart->empty_cart();
 	return $message_html;
 }
 
-function _wpsc_transaction_results_html( $purchase_log ) {
-	$output = wpsc_get_transaction_html_output( $purchase_log );
-
-	if ( version_compare( WPSC_VERSION, '3.8.9', '>=' ) )
-		echo $output;
-
-	return $output;
+function wpsc_transaction_html_output() {
+	global $message_html;
+	echo $message_html;
 }
 
 function wpsc_transaction_theme() {
