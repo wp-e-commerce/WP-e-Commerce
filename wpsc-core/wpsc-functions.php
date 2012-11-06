@@ -355,7 +355,7 @@ function wpsc_register_post_types() {
 		'query_var'            => true,
 		'register_meta_box_cb' => 'wpsc_meta_boxes',
 		'rewrite'              => array(
-			'slug'       => $wpsc_page_titles['products'] . '/%wpsc_product_category%',
+			'slug'       => str_replace( basename( home_url() ), '', $wpsc_page_titles['products'] ) . '/%wpsc_product_category%',
 			'with_front' => false
 		)
 	);
@@ -417,7 +417,7 @@ function wpsc_register_post_types() {
 		'labels'       => $labels,
 		'hierarchical' => true,
 		'rewrite'      => array(
-			'slug'         => $wpsc_page_titles['products'],
+			'slug'         => str_replace( basename( home_url() ), '', $wpsc_page_titles['products'] ),
 			'with_front'   => false,
 			'hierarchical' => (bool) get_option( 'product_category_hierarchical_url', 0 ),
 		),
@@ -1291,7 +1291,6 @@ function wpsc_is_checkout() {
  */
 function wpsc_product_link( $permalink, $post, $leavename ) {
 	global $wp_query, $wpsc_page_titles, $wpsc_query, $wp_current_filter;
-	$term_url = '';
 	$rewritecode = array(
 		'%wpsc_product_category%',
 		$leavename ? '' : '%postname%',
@@ -1311,9 +1310,9 @@ function wpsc_product_link( $permalink, $post, $leavename ) {
 		return $permalink;
 
 	$permalink_structure = get_option( 'permalink_structure' );
-	// This may become customiseable later
 
-	$our_permalink_structure = $wpsc_page_titles['products'] . "/%wpsc_product_category%/%postname%/";
+	// This may become customiseable later
+	$our_permalink_structure = str_replace( basename( home_url() ), '', $wpsc_page_titles['products'] ) . "/%wpsc_product_category%/%postname%/";
 	// Mostly the same conditions used for posts, but restricted to items with a post type of "wpsc-product "
 
 	if ( '' != $permalink_structure && !in_array( $post->post_status, array( 'draft', 'pending' ) ) ) {
@@ -1339,7 +1338,6 @@ function wpsc_product_link( $permalink, $post, $leavename ) {
 				$product_category = $link;
 			}
 			$category_slug = $product_category;
-			$term_url = get_term_link( $category_slug, 'wpsc_product_category' );
 		} else {
 			// If the product is associated with only one category, we only have one choice
 			if ( !isset( $product_categories[0] ) )
@@ -1354,8 +1352,6 @@ function wpsc_product_link( $permalink, $post, $leavename ) {
 				$product_category->slug = null;
 
 			$category_slug = $product_category->slug;
-
-			$term_url = get_term_link( $category_slug, 'wpsc_product_category' );
 		}
 
 		$post_name = $post->post_name;
@@ -1384,6 +1380,7 @@ function wpsc_product_link( $permalink, $post, $leavename ) {
 
 		$permalink = str_replace( $rewritecode, $rewritereplace, $our_permalink_structure );
 		$permalink = user_trailingslashit( $permalink, 'single' );
+
 		$permalink = home_url( $permalink );
 	}
 	return apply_filters( 'wpsc_product_permalink', $permalink, $post->ID );
@@ -1436,7 +1433,6 @@ function wpsc_checkout_template_fallback() {
  * @return void
  */
 function wpsc_get_page_post_names() {
-
 	$wpsc_page['products']            = basename( get_option( 'product_list_url' ) );
 	$wpsc_page['checkout']            = basename( get_option( 'checkout_url' ) );
 	$wpsc_page['transaction_results'] = basename( get_option( 'transact_url' ) );
