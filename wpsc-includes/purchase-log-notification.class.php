@@ -328,6 +328,8 @@ class WPSC_Purchase_Log_Admin_Notification extends WPSC_Purchase_Log_Notificatio
 	}
 
 	public function get_raw_message() {
+		global $wpdb;
+
 		$form_data = new WPSC_Checkout_Form_Data( $this->purchase_log->get( 'id' ) );
 		$raw_data = $form_data->get_raw_data();
 
@@ -386,8 +388,13 @@ class WPSC_Purchase_Log_Admin_Notification extends WPSC_Purchase_Log_Notificatio
 		foreach ( $data as $section ) {
 			if ( empty( $section['fields'] ) )
 				continue;
+
 			$message .= "<strong>{$section['title']}</strong>\r\n";
 			foreach ( $section['fields'] as $field ) {
+				if ( strpos( $field->unique_name, 'state' ) && is_numeric( $field->value ) ) {
+					$sql = $wpdb->prepare( "SELECT name FROM " . WPSC_TABLE_REGION_TAX . " WHERE id = %d", $field->value );
+					$field->value = $wpdb->get_var( $sql );
+				}
 				$message .= $field->name . ' : ' . $field->value . "\r\n";
 			}
 			$message .= "\r\n";
