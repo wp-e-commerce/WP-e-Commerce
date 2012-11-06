@@ -123,10 +123,12 @@ function wpsc_print_category_classes($category_to_print = false, $echo = true) {
 	global $wp_query, $wpdb;
 
 	//if we are in wpsc category page then get the current category
-	if(isset($wp_query->query_vars['wpsc_product_category']) || (isset($wp_query->query_vars['taxonomy']) && 'wpsc_product_category' == $wp_query->query_vars['taxonomy']))
-		$curr_cat = get_term_by('slug',$wp_query->query_vars['term'], 'wpsc_product_category');
-	else
-		$curr_cat = false;
+	$curr_cat = false;
+	$term = get_query_var( 'wpsc_product_category' );
+	if ( ! $term && get_query_var( 'taxonomy' ) == 'wpsc_product_category' )
+		$term = get_query_var( 'term' );
+	if ( $term )
+		$curr_cat = get_term_by( 'slug', $term, 'wpsc_product_category' );
 
 	//check if we are in wpsc category page and that we have a term_id of the category to print
 	//this is done here because none of the following matters if we don't have one of those and we can
@@ -592,14 +594,14 @@ function wpsc_get_terms_variation_sort_filter($terms){
 add_filter('get_terms','wpsc_get_terms_variation_sort_filter');
 
 /**
- * Abstracts Suhosin check into a function.  Used primarily in relation to target markets.  
+ * Abstracts Suhosin check into a function.  Used primarily in relation to target markets.
  * May be deprecated or never publicly launched if we change how the target market variables work.
- * 
+ *
  * @since 3.8.9
  * @return boolean
  */
 function wpsc_is_suhosin_enabled() {
-	return @ extension_loaded( 'suhosin' ) && @ ini_get( 'suhosin.post.max_vars' ) > 0 && @ ini_get( 'suhosin.post.max_vars' ) < 500; 
+	return @ extension_loaded( 'suhosin' ) && @ ini_get( 'suhosin.post.max_vars' ) > 0 && @ ini_get( 'suhosin.post.max_vars' ) < 500;
 }
 
 ?>
