@@ -734,3 +734,12 @@ function wpsc_purchlog_is_checked_status() {
 function country_list( $selected_country = null ) {
 	return _wpsc_country_dropdown_options( array( 'selected' => $selected_country ) );
 }
+
+/**
+ * @deprecated since 3.8.9. Use wpsc_get_the_product_tags() instead.
+ * @param  integer $id Product ID
+ * @return array       Product tags
+ */
+function get_the_product_tags( $id = 0 ) {
+	return wpsc_get_the_product_tags( $id );
+}
