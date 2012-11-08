@@ -702,6 +702,8 @@ class wpsc_cart {
                   continue;
 
                $raw_quotes = $wpsc_shipping_modules[$shipping_module]->getQuote();
+               if ( empty( $raw_quotes ) || ! is_array( $raw_quotes ) )
+                  continue;
                foreach ( $raw_quotes as $name => $value ) {
                   if ( $min_value === false || $value < $min_value ) {
                      $min_value = $value;
