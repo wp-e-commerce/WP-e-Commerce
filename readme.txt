@@ -155,6 +155,18 @@ Before updating please make a backup of your existing files and database. Just i
 After upgrading from earlier versions look for link "Update Store". This will update your database structure to work with new version.
 
 == Changelog ==
+= 3.8.9.1 =
+* Fix: Fatal error in Shipwire.
+* Fix: Fatal error with customer meta on multisite.
+* Fix: Pagination in admin product list doesn't work.
+* Fix: Permalinks are incorrect when products page is set as home page and permalink scheme is set to %post_name%.
+* Fix: Rewrite rules are not regenerated correctly when switching from "Default" to "Post name".
+* Fix: Shipwire and Google Analytics are not working properly.
+* Fix: Shipwire request is sent even when Shipwire is not active.
+* Fix: States are displayed as numbers in admin purchase report.
+* Fix: Transaction results displaying cart content twice as well as "Oops, there is nothing in your cart".
+* Fix: Use customer meta instead of $_SESSION for eway and payflow message.
+
 = 3.8.9 =
 * New: Additional columns can now be added to Store Sales page via filter hook.
 * New: Additional filters for purchase log notification classes.
