@@ -563,7 +563,7 @@ class wpsc_purchaselogs {
 	  if ( $status == '' || $status == '-1' ) {
 		 foreach ( (array)$dates as $date_pair ) {
 			if ( ($date_pair['end'] >= $this->earliest_timestamp) && ($date_pair['start'] <= $this->current_timestamp) ) {
-			   $sql = "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `date` BETWEEN '" . $date_pair['start'] . "' AND '" . $date_pair['end'] . $orderby;
+			   $sql = $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `date` BETWEEN %s AND %s {$orderby}", $date_pair['start'], $date_pair['end'] );
 			   $purchase_logs = $wpdb->get_results( $sql );
 			   array_push( $purchlog2, $purchase_logs );
 			}
@@ -571,7 +571,7 @@ class wpsc_purchaselogs {
 	  } else {
 		 foreach ( (array)$dates as $date_pair ) {
 			if ( ($date_pair['end'] >= $this->earliest_timestamp) && ($date_pair['start'] <= $this->current_timestamp) ) {
-			   $sql = "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `date` BETWEEN '" . $date_pair['start'] . "' AND '" . $date_pair['end'] . "' AND `processed`='" . $status . $orderby;
+			   $sql = $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `date` BETWEEN %s AND %s AND `processed`=%s {$orderby}", $date_pair['start'], $date_pair['end'], $status );
 			   $purchase_logs = $wpdb->get_results( $sql );
 			   array_push( $purchlog2, $purchase_logs );
 			}
