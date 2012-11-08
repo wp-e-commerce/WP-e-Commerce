@@ -158,6 +158,7 @@ After upgrading from earlier versions look for link "Update Store". This will up
 = 3.8.9.1 =
 * Fix: Fatal error in Shipwire.
 * Fix: Fatal error with customer meta on multisite.
+* Fix: Fatal error with get_the_product_tags().
 * Fix: Pagination in admin product list doesn't work.
 * Fix: Permalinks are incorrect when products page is set as home page and permalink scheme is set to %post_name%.
 * Fix: Rewrite rules are not regenerated correctly when switching from "Default" to "Post name".
@@ -166,6 +167,7 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * Fix: States are displayed as numbers in admin purchase report.
 * Fix: Transaction results displaying cart content twice as well as "Oops, there is nothing in your cart".
 * Fix: Use customer meta instead of $_SESSION for eway and payflow message.
+* Fix: Variation pagination doesn't work.
 
 = 3.8.9 =
 * New: Additional columns can now be added to Store Sales page via filter hook.
