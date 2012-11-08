@@ -316,7 +316,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 
 		if ( ! $this->month_filter ) {
 			if ( $m !== 0 )
-				echo '<input type="hidden" name="m" value="' . $m . '" />';
+				echo '<input type="hidden" name="m" value="' . esc_attr( $m ) . '" />';
 
 			return false;
 		}
