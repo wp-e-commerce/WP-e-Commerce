@@ -99,7 +99,7 @@ function gateway_google($fromcheckout = false){
 			    array(
 				'totalprice' => $total,
 				'statusno' => 0,
-				'sessionind' => $sessionid,
+				'sessionid' => $sessionid,
 				'user_ID' => $user_ID,
 				'date' => time(),
 				'gateway' => 'google',
