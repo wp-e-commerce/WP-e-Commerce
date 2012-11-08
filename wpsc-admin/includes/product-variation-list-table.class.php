@@ -55,6 +55,9 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 		if ( isset( $_REQUEST['s'] ) )
 			$this->args['s'] = $_REQUEST['s'];
 
+		if ( isset( $_REQUEST['paged'] ) )
+			$this->args['paged'] = $_REQUEST['paged'];
+
 		$query = new WP_Query( $this->args );
 
 		$this->items = $query->posts;
