@@ -299,7 +299,11 @@ function wpsc_purchlog_clear_download_items() {
 		$email_address = $wpdb->get_var( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` WHERE `log_id`='{$purchase_id}' AND `form_id` = '{$email_form_field}' LIMIT 1" );
 
 		foreach ( (array)$downloadable_items as $downloadable_item ) {
-			$download_links .= $siteurl . "?downloadid=" . $downloadable_item['uniqueid'] . "\n";
+			$download_links .= add_query_arg(
+				'downloadid',
+				$downloadable_item['uniqueid'],
+				home_url()
+			)  . "\n";
 		}
 
 

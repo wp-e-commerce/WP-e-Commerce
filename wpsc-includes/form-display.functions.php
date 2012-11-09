@@ -179,7 +179,13 @@ function wpsc_select_product_file( $product_id = null ) {
 		$file_dir = WPSC_FILE_DIR . $file->post_title;
 		$file_size = ( 'http://s3file' == $file->guid ) ? __( 'Remote file sizes cannot be calculated', 'wpsc' ) : wpsc_convert_byte( filesize( $file_dir ) );
 
-		$file_url = WPSC_FILE_URL.$file->post_title;
+		$file_url = add_query_arg(
+			array(
+				'wpsc_download_id' => $file->ID,
+				'_wpnonce'            => wp_create_nonce( 'wpsc-admin-download-file-' . $file->ID ),
+			),
+			admin_url()
+		);
 		$deletion_url = wp_nonce_url( "admin.php?wpsc_admin_action=delete_file&amp;file_name={$file->post_title}&amp;product_id={$product_id}&amp;row_number={$num}", 'delete_file_' . $file->post_title );
 
 		$class = ( ! wpsc_is_odd( $num ) ) ? 'alternate' : '';
@@ -209,6 +215,17 @@ function wpsc_select_product_file( $product_id = null ) {
 
 	return $output;
 }
+
+function _wpsc_admin_download_file() {
+	$file_id = $_REQUEST['wpsc_download_id'];
+	check_admin_referer( 'wpsc-admin-download-file-' . $file_id );
+
+	$file_data = get_post( $file_id );
+	_wpsc_force_download_file( $file_id );
+}
+
+if ( ! empty( $_REQUEST['wpsc_download_id'] ) )
+	add_action( 'admin_init', '_wpsc_admin_download_file' );
 
 function wpsc_select_variation_file( $file_id, $variation_ids, $variation_combination_id = null ) {
 	global $wpdb;
