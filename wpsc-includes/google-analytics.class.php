@@ -1,37 +1,38 @@
 <?php
 
 /**
- * 
+ *
  * Google Analytics class for WP E-Commerce.
- * 
+ *
  * No longer dependent upon Google Analytics for WordPress, we have a great internal analytics class that actually works now.
- * 
+ *
  * @since 3.8.9
  * @package wp-e-commerce
- */	
+ */
 class WPSC_Google_Analytics {
 
 	private $is_analytics_disabled = false;
 	private $is_theme_tracking     = false;
 	private $advanced_code         = false;
-	private $tracking_id           = '';   
+	private $tracking_id           = '';
 
 	public function __construct() {
-
-		$this->is_analytics_disabled = (bool) get_option( 'wpsc_ga_disable_tracking' );
 		$this->is_theme_tracking     = (bool) get_option( 'wpsc_ga_currently_tracking' );
 		$this->advanced_code         = (bool) get_option( 'wpsc_ga_advanced' );
 		$this->tracking_id           = esc_attr( get_option( 'wpsc_ga_tracking_id' ) );
+		$this->is_analytics_disabled =
+			   (bool) get_option( 'wpsc_ga_disable_tracking' )
+			|| ( ! $this->is_theme_tracking && empty( $this->tracking_id ) );
 
-		add_action( 'wpsc_transaction_results_shutdown', array( $this, 'print_script' ), 10, 2 );
-
+		if ( ! $this->is_analytics_disabled )
+			add_action( 'wpsc_transaction_results_shutdown', array( $this, 'print_script' ), 10, 2 );
 	}
 
 	/**
-	 * Sanitizes strings for Google Analytics.  
+	 * Sanitizes strings for Google Analytics.
 	 * Gratefully borrowed and modified from Google Analytics for WordPress
-	 * 
-	 * @param string $string 
+	 *
+	 * @param string $string
 	 * @since 3.8.9
 	 * @return string
 	 */
@@ -42,11 +43,11 @@ class WPSC_Google_Analytics {
 
 	/**
 	 * Builds out the proper script for tracking.
-	 * 
+	 *
 	 * Checks options to ensure we're actually supposed to be building the script, and which part of the script to build.
 	 * If analytics are disabled, we build nothing.
 	 * If the site already is tracking OR using the advanced option, we insert only the e-commerce portion, not the initial tracking info.
-	 * 
+	 *
 	 * @since 3.8.9
 	 * @return javascript
 	 */
@@ -115,7 +116,7 @@ class WPSC_Google_Analytics {
 		$output = '';
 
 		$city = $wpdb->get_var( $wpdb->prepare( "
-						SELECT tf.value FROM " . WPSC_TABLE_SUBMITED_FORM_DATA . " tf 
+						SELECT tf.value FROM " . WPSC_TABLE_SUBMITED_FORM_DATA . " tf
 						LEFT JOIN " . WPSC_TABLE_CHECKOUT_FORMS . " cf
 						ON cf.id = tf.form_id
 						WHERE cf.unique_name = 'billingcity'
@@ -143,9 +144,9 @@ class WPSC_Google_Analytics {
 
 		$cart_items = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid = %d", $purchase_id ), ARRAY_A );
 
-		$total_shipping = wpsc_get_total_shipping( $purchase_id );	
+		$total_shipping = wpsc_get_total_shipping( $purchase_id );
 		$total_tax 		= 0;
-		
+
 		foreach ( $cart_items as $item )
 			$total_tax	+=  $item['tax_charged'];
 
@@ -169,14 +170,17 @@ class WPSC_Google_Analytics {
 		remove_filter( 'wpsc_toggle_display_currency_code', array( $this, 'remove_currency_and_html' ) );
 
 		foreach( $cart_items as $item ) {
-			
-			$category = wp_get_object_terms( 
-				$item['prodid'], 
-				'wpsc_product_category', 
+
+			$category = wp_get_object_terms(
+				$item['prodid'],
+				'wpsc_product_category',
 				array( 'orderby' => 'count', 'order' => 'DESC', 'fields' => 'all_with_object_id' ) );
 
 			$item['sku']      = get_post_meta( $item['prodid'], '_wpsc_sku', true );
-			$item['category'] = $category[0]->name;
+			if ( $category )
+				$item['category'] = $category[0]->name;
+			else
+				$item['category'] = '';
 
 			$item = array_map( 'wp_specialchars_decode', $item );
 
