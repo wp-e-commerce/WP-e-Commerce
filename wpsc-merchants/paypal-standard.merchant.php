@@ -105,7 +105,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 	* @return array $paypal_vars The paypal vars
 	*/
 	function _construct_value_array($aggregate = false) {
-		global $wpdb;
+		global $wpdb, $wpsc_cart;
 		$paypal_vars = array();
 		$add_tax = ! wpsc_tax_isincluded();
 
@@ -306,8 +306,16 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 							$tax_total += $cart_row['tax'];
 						++$i;
 					}
-					if ( $this->cart_data['has_discounts'] && ! $free_shipping )
-						$paypal_vars['discount_amount_cart'] = $this->convert( $this->cart_data['cart_discount_value'] );
+
+					if ( $this->cart_data['has_discounts'] && ! $free_shipping ) {
+						$subtotal = $wpsc_cart->calculate_subtotal();
+						if ( $this->cart_data['cart_discount_value'] >= $wpsc_cart->calculate_subtotal() ) {
+							$paypal_vars['discount_amount_cart'] = $this->convert( $subtotal ) - 0.01;
+							if ( ! empty( $paypal_vars['handling_cart'] ) )
+								$paypal_vars['handling_cart'] -= 0.01;
+						}
+					}
+
 				} else {
 					$paypal_vars['item_name_'.$i] = __( "Your Shopping Cart", 'wpsc' );
 					$paypal_vars['amount_'.$i] = $this->convert( $this->cart_data['total_price'] ) - $this->convert( $this->cart_data['base_shipping'] );
