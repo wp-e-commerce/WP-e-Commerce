@@ -390,7 +390,7 @@ function wpsc_get_the_category_display($slug){
  * @return $content with wpsc-single_product content if its a single product
  */
 function wpsc_single_template( $content ) {
-	global $wpdb, $post, $wp_query, $wpsc_query;
+	global $wpdb, $post, $wp_query, $wpsc_query, $_wpsc_is_in_custom_loop;
 
 	//if we dont belong here exit out straight away
 	if((!isset($wp_query->is_product)) && !isset($wp_query->query_vars['wpsc_product_category']))return $content;
@@ -406,11 +406,13 @@ function wpsc_single_template( $content ) {
 		$wpsc_temp_query = new WP_Query( array( 'p' => $wp_query->post->ID , 'post_type' => 'wpsc-product','posts_per_page'=>1, 'preview' => $is_preview ) );
 
 		list( $wp_query, $wpsc_temp_query ) = array( $wpsc_temp_query, $wp_query ); // swap the wpsc_query object
+		$_wpsc_is_in_custom_loop = true;
 		ob_start();
 		include( $single_theme_path );
 		$content = ob_get_contents();
 		ob_end_clean();
 		list( $wp_query, $wpsc_temp_query ) = array( $wpsc_temp_query, $wp_query ); // swap the wpsc_query objects back
+		$_wpsc_is_in_custom_loop = false;
 
 	}
 
@@ -427,6 +429,11 @@ function wpsc_is_viewable_taxonomy(){
 		return false;
 }
 
+function _wpsc_is_in_custom_loop() {
+	global $_wpsc_is_in_custom_loop;
+	return (bool) $_wpsc_is_in_custom_loop;
+}
+
 /**
  * Checks and replaces the Page title with the category title if on a category page
  * @access public
@@ -438,7 +445,19 @@ function wpsc_is_viewable_taxonomy(){
  */
 function wpsc_the_category_title($title='', $id=''){
 	global $wp_query, $wp_current_filter;
-	$post = get_post($id);
+	if ( ! in_the_loop() || _wpsc_is_in_custom_loop() )
+		return $title;
+
+	$term = null;
+	if ( is_tax( 'wpsc_product_category' ) )
+		$term = get_term_by( 'slug', get_query_var( 'wpsc_product_category' ),'wpsc_product_category' );
+	elseif ( is_tax( 'product-tag' ) )
+		$term = get_term_by( 'slug', get_query_var( 'term' ),'product-tag' );
+
+	if ( $term )
+		return $term->name;
+
+	return $title;
 
 	//if this is paginated products_page
 	if( $wp_query->in_the_loop && empty($category->name) && isset( $wp_query->query_vars['paged'] ) && $wp_query->query_vars['paged'] && isset( $wp_query->query_vars['page'] ) && $wp_query->query_vars['page'] && 'wpsc-product' == $wp_query->query_vars['post_type']){
@@ -1032,7 +1051,7 @@ function wpsc_include_products_page_template($display_type = 'default'){
 
 //handles replacing the tags in the pages
 function wpsc_products_page( $content = '' ) {
-	global $wpdb, $wp_query, $wpsc_query, $wpsc_query_vars;
+	global $wpdb, $wp_query, $wpsc_query, $wpsc_query_vars, $_wpsc_is_in_custom_loop;
 	$output = '';
 	if ( preg_match( "/\[productspage\]/", $content ) ) {
 		global $more;
@@ -1040,6 +1059,7 @@ function wpsc_products_page( $content = '' ) {
 		remove_filter( 'the_content', 'wpautop' );
 
 		list($wp_query, $wpsc_query) = array( $wpsc_query, $wp_query ); // swap the wpsc_query object
+		$_wpsc_is_in_custom_loop = true;
 
 		$GLOBALS['nzshpcrt_activateshpcrt'] = true;
 
@@ -1059,6 +1079,7 @@ function wpsc_products_page( $content = '' ) {
 			$product_meta = get_post_meta( $product_id, '_wpsc_product_metadata', true );
 
 			list($wp_query, $wpsc_query) = array( $wpsc_query, $wp_query ); // swap the wpsc_query objects back
+			$_wpsc_is_in_custom_loop = false;
 			if ( ($is_single == false) || ($product_meta['enable_comments'] == '0') )
 				$GLOBALS['post'] = $wp_query->post;
 		}
@@ -1114,9 +1135,6 @@ function wpsc_all_products_on_page(){
 		if ( ! $template = get_query_template( 'page', $templates ) )
 			$template = get_index_template();
 
-		if ( is_tax() )
-			_wpsc_reset_taxonomy_title();
-
 		add_filter( 'thesis_custom_loop', 'wpsc_thesis_compat' );
 
 		include( $template );
@@ -1124,20 +1142,6 @@ function wpsc_all_products_on_page(){
 	}
 }
 add_action('template_redirect', 'wpsc_all_products_on_page');
-
-function _wpsc_reset_taxonomy_title() {
-	global $wp_query;
-
-	$term = null;
-	if ( is_tax( 'wpsc_product_category' ) ) {
-		$term = get_term_by( 'slug', get_query_var( 'wpsc_product_category' ),'wpsc_product_category' );
-	} elseif ( is_tax( 'product-tag' ) ) {
-		$term = get_term_by( 'slug', get_query_var( 'term' ),'product-tag' );
-	}
-
-	if ( $term )
-		$wp_query->post->post_title = $term->name;
-}
 
 /**
  * wpsc_count_themes_in_uploads_directory, does exactly what the name says

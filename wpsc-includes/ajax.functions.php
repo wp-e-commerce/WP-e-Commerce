@@ -728,12 +728,14 @@ if ( isset( $_REQUEST['wpsc_action'] ) && ($_REQUEST['wpsc_action'] == 'submit_c
 }
 
 function wpsc_product_rss() {
-	global $wp_query, $wpsc_query;
+	global $wp_query, $wpsc_query, $_wpsc_is_in_custom_loop;
 	list($wp_query, $wpsc_query) = array( $wpsc_query, $wp_query ); // swap the wpsc_query object
+	$_wpsc_is_in_custom_loop = true;
 	header( "Content-Type: application/xml; charset=UTF-8" );
 	header( 'Content-Disposition: inline; filename="E-Commerce_Product_List.rss"' );
 	require_once(WPSC_FILE_PATH . '/wpsc-includes/rss_template.php');
 	list($wp_query, $wpsc_query) = array( $wpsc_query, $wp_query ); // swap the wpsc_query object
+	$_wpsc_is_in_custom_loop = false;
 	exit();
 }
 
