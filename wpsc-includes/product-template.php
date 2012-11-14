@@ -1998,9 +1998,9 @@ function wpsc_the_product_price_display( $args = array() ) {
 	$old_price_before = sprintf( $old_price_before, $attributes );
 	$old_price_amount_before = sprintf( $old_price_amount_before, esc_attr( $old_price_amount_class ), esc_attr( $old_price_amount_id ) );
 
-	$price_class = apply_filters( 'wpsc_the_product_price_display_price_class', esc_attr( $price_class ), $id );
+	$price_class = 'class="' . esc_attr( apply_filters( 'wpsc_the_product_price_display_price_class', esc_attr( $price_class ), $id )  ) . '"';
 	$price_amount_class = apply_filters( 'wpsc_the_product_price_display_price_amount_class', esc_attr( $price_amount_class ), $id );
-	$price_before = sprintf( $price_before, esc_attr( $price_class ) );
+	$price_before = sprintf( $price_before, $price_class );
 	$price_amount_before = sprintf( $price_amount_before, esc_attr( $price_amount_class ), esc_attr( $price_amount_id ) );
 
 	$you_save_class = apply_filters( 'wpsc_the_product_price_display_you_save_class', $you_save_class, $id );
