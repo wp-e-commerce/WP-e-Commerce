@@ -272,7 +272,7 @@ table.widefat .column-cb {
 #wpsc_product_list .column-image, #wpsc_product_list .product-image,
 table.widefat .column-image, table.widefat .product-image {
 	padding-right: 0px;
-	/* 	width: 42px; */
+	width: 42px;
 }
 
 #wpsc_product_list .column-categories,

@@ -1208,7 +1208,7 @@ function _wpsc_regenerate_thumbnail_size( $thumbnail_id, $size ) {
  *
  * @return string - the URL to the thumbnail image
  */
-function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id = 0, $page = 'products-page' ) {
+function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id = 0, $page = false ) {
 	$thumbnail = false;
 
 	$display = wpsc_check_display_type();
@@ -1219,12 +1219,6 @@ function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id 
 	// Load the product
 	$product = get_post( $product_id );
 
-	// Load image proportions if none were passed
-	if ( ( $width < 10 ) || ( $height < 10 ) ) {
-		$width  = get_option( 'product_image_width' );
-		$height = get_option( 'product_image_height' );
-	}
-
 	$thumbnail_id = wpsc_the_product_thumbnail_id( $product_id );
 
 	// If no thumbnail found for item, get it's parent image (props. TJM)
@@ -1232,7 +1226,17 @@ function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id 
 		$thumbnail_id = wpsc_the_product_thumbnail_id( $product->post_parent );
 	}
 
+	if ( ! $page ) {
+		if ( is_single() )
+			$page = 'single';
+		else
+			$page = 'products-page';
+	}
+
 	if ( ! $width && ! $height ) {
+		$width  = get_option( 'product_image_width' );
+		$height = get_option( 'product_image_height' );
+
 		//Overwrite height & width if custom dimensions exist for thumbnail_id
 		if ( 'grid' != $display && 'products-page' == $page && isset($thumbnail_id)) {
 			$custom_width = get_post_meta( $thumbnail_id, '_wpsc_custom_thumb_w', true );
@@ -1244,6 +1248,7 @@ function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id 
 			}
 		} elseif( $page == 'single' && isset($thumbnail_id)) {
 			$custom_thumbnail = get_post_meta( $thumbnail_id, '_wpsc_selected_image_size', true );
+
 			if ( ! $custom_thumbnail ) {
 				$custom_thumbnail = 'medium-single-product';
 				$current_size = image_get_intermediate_size( $thumbnail_id, $custom_thumbnail );
@@ -1258,7 +1263,6 @@ function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id 
 				)
 					_wpsc_regenerate_thumbnail_size( $thumbnail_id, $custom_thumbnail );
 			}
-
 			$src = wp_get_attachment_image_src( $thumbnail_id, $custom_thumbnail );
 
 			if ( !empty( $src ) && is_string( $src[0] ) ) {
