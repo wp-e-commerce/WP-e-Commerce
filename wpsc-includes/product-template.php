@@ -531,17 +531,16 @@ function wpsc_display_categories() {
  * @return boolean - true for yes, false for no
  */
 function wpsc_display_products() {
-	global $post;
+	$post = get_queried_object();
 	$product_page_id = wpsc_get_the_post_id_by_shortcode('[productspage]');
 	//we have to display something, if we are not displaying categories, then we must display products
 	$output = true;
-	if ( wpsc_display_categories ( ) ) {
+	if ( wpsc_display_categories () && $post ) {
 		if ( get_option( 'wpsc_default_category' ) == 'list' && $post->ID == $product_page_id )
 			$output = false;
 
 		if ( isset( $_GET['range'] ) || isset( $_GET['category'] ) )
 			$output = true;
-
 	}
 	return $output;
 }
