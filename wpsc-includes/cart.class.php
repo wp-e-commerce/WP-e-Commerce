@@ -634,7 +634,7 @@ class wpsc_cart {
 
       wpsc_update_customer_meta( 'shipping_country', $delivery_country );
       wpsc_update_customer_meta( 'billing_country' , $billing_country  );
-      wpsc_update_customer_meta( 'delivery_region' , $delivery_region  );
+      wpsc_update_customer_meta( 'shipping_region' , $delivery_region  );
       wpsc_update_customer_meta( 'billing_region'  , $billing_region   );
 
       $this->delivery_country = $delivery_country;
