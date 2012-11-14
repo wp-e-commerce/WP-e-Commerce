@@ -391,6 +391,8 @@ function wpsc_get_the_category_display($slug){
  */
 function wpsc_single_template( $content ) {
 	global $wpdb, $post, $wp_query, $wpsc_query, $_wpsc_is_in_custom_loop;
+	if ( ! in_the_loop() )
+		return $content;
 
 	//if we dont belong here exit out straight away
 	if((!isset($wp_query->is_product)) && !isset($wp_query->query_vars['wpsc_product_category']))return $content;
@@ -1053,6 +1055,8 @@ function wpsc_include_products_page_template($display_type = 'default'){
 function wpsc_products_page( $content = '' ) {
 	global $wpdb, $wp_query, $wpsc_query, $wpsc_query_vars, $_wpsc_is_in_custom_loop;
 	$output = '';
+	if ( ! in_the_loop() )
+		return $content;
 	if ( preg_match( "/\[productspage\]/", $content ) ) {
 		global $more;
 		$more = 0;
@@ -1165,6 +1169,9 @@ function wpsc_count_themes_in_uploads_directory() {
 }
 
 function wpsc_place_shopping_cart( $content = '' ) {
+	if ( ! in_the_loop() )
+		return $content;
+
 	if ( preg_match( "/\[shoppingcart\]/", $content ) ) {
 		// BEGIN: compatibility fix for outdated theme files still relying on sessions
 		$_SESSION['coupon_numbers'                    ] = wpsc_get_customer_meta( 'coupon'                       );
@@ -1174,7 +1181,8 @@ function wpsc_place_shopping_cart( $content = '' ) {
 		$_SESSION['wpsc_checkout_user_error_messages' ] = wpsc_get_customer_meta( 'registration_error_messages'  );
 		// END: compatibility fix
 		$GLOBALS['nzshpcrt_activateshpcrt'] = true;
-		define( 'DONOTCACHEPAGE', true );
+		if ( ! defined( 'DONOTCACHEPAGE' ) )
+			define( 'DONOTCACHEPAGE', true );
 
 		// call this function to detect conflicts when the cart page is first loaded, otherwise
 		// any conflict messages will only be displayed on the next page load
@@ -1197,6 +1205,8 @@ function wpsc_place_shopping_cart( $content = '' ) {
 }
 
 function wpsc_transaction_results( $content = '' ) {
+	if ( ! in_the_loop() )
+		return $content;
 
 	if ( preg_match( "/\[transactionresults\]/", $content ) ) {
 		define( 'DONOTCACHEPAGE', true );
@@ -1212,7 +1222,8 @@ function wpsc_transaction_results( $content = '' ) {
 }
 
 function wpsc_user_log( $content = '' ) {
-
+	if ( ! in_the_loop() )
+		return $content;
 	if ( preg_match( "/\[userlog\]/", $content ) ) {
 		define( 'DONOTCACHEPAGE', true );
 
@@ -1328,6 +1339,9 @@ add_filter('request', 'wpsc_remove_page_from_query_string');
 
 function add_to_cart_shortcode( $content = '' ) {
 	static $fancy_notification_output = false;
+	if ( ! in_the_loop() )
+		return $content;
+
 	if ( preg_match_all( "/\[add_to_cart=([\d]+)\]/", $content, $matches ) ) {
 		foreach ( $matches[1] as $key => $product_id ) {
 			$original_string = $matches[0][$key];
