@@ -155,6 +155,18 @@ Before updating please make a backup of your existing files and database. Just i
 After upgrading from earlier versions look for link "Update Store". This will update your database structure to work with new version.
 
 == Changelog ==
+= 3.8.9.2 =
+* Fix: Admin cannot download file from product edit page.
+* Fix: Compatibility issues with Jetpack.
+* Fix: Google Analytics is printed out even when it's not active. Also, PHP notice when the product doesn't have a category.
+* Fix: Make sure PayPal Standard works with 100% discount.
+* Fix: Product page title is not properly replaced with the category or tag title in WP 3.5.
+* Fix: Products are sometimes displayed even when products page is set to only display list of categories.
+* Fix: Products thumbnail sizes are inconsistent with the settings.
+* Fix: Properly flush outdated customer meta from the transient table.
+* Fix: Typo in wpsc_cart::update_location().
+* Fix: Wrong class attribute for price display.
+
 = 3.8.9.1 =
 * Fix: Fatal error in Shipwire.
 * Fix: Fatal error with customer meta on multisite.
