@@ -108,7 +108,7 @@ function wpsc_pagination($totalpages = '', $per_page = '', $current_page = '', $
 	if(!get_option('permalink_structure')) {
 		$category = '?';
 
-		if(isset($wp_query->query_vars['wpsc_product_category']))
+		if( ! empty( $wp_query->query_vars['wpsc_product_category'] ) )
 			$category = '?wpsc_product_category='.$wp_query->query_vars['wpsc_product_category'];
 		if(isset($wp_query->query_vars['wpsc_product_category']) && is_string($wp_query->query_vars['wpsc_product_category'])){
 			$page_link = get_option('blogurl').$category.'&amp;paged';
