@@ -288,7 +288,7 @@ class WPSC_Purchase_Log_Customer_Notification extends WPSC_Purchase_Log_Notifica
 		$raw_message = '';
 
 		if ( $this->purchase_log->get( 'processed' ) == WPSC_Purchase_Log::ORDER_RECEIVED )
-			$raw_message = __( 'Thank you, your purchase is pending, you will be sent an email once the order clears.', 'wpsc' ) . "\n\r";
+			$raw_message = __( 'Thank you, your purchase is pending. You will be sent an email once the order clears.', 'wpsc' ) . "\n\r";
 
 		$raw_message .= get_option( 'wpsc_email_receipt' );
 		$raw_message = $this->maybe_add_discount( $raw_message );
