@@ -62,7 +62,8 @@ function _wpsc_new_country_serbia() {
 		'isocode'   => 'RS',
 		'currency'  => __('Serbian Dinar', 'wpsc'),
 		'code'      => __('RSD', 'wpsc'),
-		'continent' => 'europe'
+		'continent' => 'europe',
+		'visible'   => '0',
 	) );
 	$country->save();
 }
@@ -77,6 +78,7 @@ function _wpsc_new_country_montenegro() {
 		'symbol_html' => __( '&#8364;', 'wpsc' ),
 		'code'        => __( 'EUR', 'wpsc' ),
 		'continent'   => 'europe',
+		'visible'     => '0',
 	) );
 	$country->save();
 }
@@ -91,6 +93,7 @@ function _wpsc_fix_timor_leste_name() {
 		'symbol_html' => __( '&#036', 'wpsc' ),
 		'code'        => 'USD',
 		'continent'   => 'asiapacific',
+		'visible'     => '0',
 	) );
 	$country->save();
 }
@@ -105,6 +108,7 @@ function _wpsc_new_country_aland_islands() {
 		'symbol_html' => __( '&#8364;', 'wpsc' ),
 		'code'        => __( 'EUR', 'wpsc' ),
 		'continent'   => 'europe',
+		'visible'     => '0',
 	) );
 	$country->save();
 }
@@ -119,6 +123,7 @@ function _wpsc_new_country_saint_barthelemy() {
 		'symbol_html' => __( '&#8364;', 'wpsc' ),
 		'code'        => __( 'EUR', 'wpsc' ),
 		'continent'   => 'europe',
+		'visible'     => '0',
 	) );
 	$country->save();
 }
@@ -132,7 +137,8 @@ function _wpsc_new_country_bonaire_et_al() {
 		'symbol'      => __( '$', 'wpsc' ),
 		'symbol_html' => __( '&#036;', 'wpsc' ),
 		'code'        => __( 'USD', 'wpsc' ),
-		'continent'   => 'southamerica'
+		'continent'   => 'southamerica',
+		'visible'     => '0',
 	) );
 	$country->save();
 }
@@ -146,7 +152,8 @@ function _wpsc_new_country_curacao() {
 		'symbol'      => __( 'ƒ', 'wpsc' ),
 		'symbol_html' => __( '&#402;', 'wpsc' ),
 		'code'        => __( 'ANG', 'wpsc' ),
-		'continent'   => 'southamerica'
+		'continent'   => 'southamerica',
+		'visible'     => '0',
 	) );
 	$country->save();
 }
@@ -161,6 +168,7 @@ function _wpsc_new_country_saint_martin_french() {
 		'symbol_html' => __( '&#8364;', 'wpsc' ),
 		'code'        => __( 'EUR', 'wpsc' ),
 		'continent'   => 'southamerica',
+		'visible'     => '0',
 	) );
 	$country->save();
 }
@@ -175,6 +183,7 @@ function _wpsc_new_country_palestinian_territories() {
 		'symbol_html' => __( '&#8362;', 'wpsc' ),
 		'code'        => __( 'ILS', 'wpsc' ),
 		'continent'   => 'asiapacific',
+		'visible'     => '0',
 	) );
 	$country->save();
 }
@@ -198,6 +207,7 @@ function _wpsc_new_country_sint_maarten_dutch() {
 		'symbol_html' => __( '&#402;', 'wpsc' ),
 		'code'        => __( 'ANG', 'wpsc' ),
 		'continent'   => 'southamerica',
+		'visible'     => '0',
 	) );
 	$country->save();
 }
@@ -212,6 +222,7 @@ function _wpsc_new_country_french_guiana() {
 		'symbol_html' => __( '&#8364;', 'wpsc' ),
 		'code'        => __( 'EUR', 'wpsc' ),
 		'continent'   => 'southamerica',
+		'visible'     => '0',
 	) );
 	$country->save();
 }
