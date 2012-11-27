@@ -155,6 +155,16 @@ Before updating please make a backup of your existing files and database. Just i
 After upgrading from earlier versions look for link "Update Store". This will update your database structure to work with new version.
 
 == Changelog ==
+= 3.8.9.3 =
+* New: Add support for quantity field in default grid view template.
+* New: Let plugins add new column to product variation list table via filter 'wpsc_manage_product_variations_custom_column'.
+* Fix: Blank transaction results page when using paypal gateways.
+* Fix: Comment form is displayed even though comment is closed on products page.
+* Fix: Fatal error in formatting.php for some sites.
+* Fix: New countries in 3.8.9 automatically added to target market list.
+* Fix: PayPal Standard doesnt' take care of coupons.
+* Fix: Punctuation in pending transaction email.
+
 = 3.8.9.2 =
 * Fix: Admin cannot download file from product edit page.
 * Fix: Compatibility issues with Jetpack.
