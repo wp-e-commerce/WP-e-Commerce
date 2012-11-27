@@ -273,6 +273,11 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 		<?php
 	}
 
+	public function column_default( $item, $column_name ) {
+		$output = apply_filters( 'wpsc_manage_product_variations_custom_column', '', $column_name, $item );
+		return $output;
+	}
+
 	private function shipping_editor( $item = false ) {
 		static $alternate = '';
 
