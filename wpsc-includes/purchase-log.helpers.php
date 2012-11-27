@@ -239,9 +239,6 @@ function wpsc_get_transaction_html_output( $purchase_log ) {
 	if ( ! is_object( $purchase_log ) )
 		$purchase_log = new WPSC_Purchase_Log( $purchase_log );
 
-	if ( ! $purchase_log->is_transaction_completed() && ! $purchase_log->is_order_received() )
-		return '';
-
 	$notification = new WPSC_Purchase_Log_Customer_HTML_Notification( $purchase_log );
 	$output = $notification->get_html_message();
 
