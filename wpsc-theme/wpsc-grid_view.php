@@ -124,6 +124,14 @@ $image_height = get_option('product_image_height');
 							<?php endif ?>
 							<?php if((get_option('display_addtocart') == 1) && (get_option('addtocart_or_buynow') !='1')) :?>
 								<?php if(wpsc_product_has_stock()) : ?>
+									<?php if(wpsc_has_multi_adding()): ?>
+		                            <div class="quantity_container">
+										<label class="wpsc_quantity_update" for="wpsc_quantity_update_<?php echo wpsc_the_product_id(); ?>"><?php _e('Quantity:', 'wpsc'); ?></label>
+										<input type="text" id="wpsc_quantity_update_<?php echo wpsc_the_product_id(); ?>" name="wpsc_quantity_update" size="2" value="1" />
+										<input type="hidden" name="key" value="<?php echo wpsc_the_cart_item_key(); ?>"/>
+										<input type="hidden" name="wpsc_update_quantity" value="true" />
+									</div><!--close quantity_container-->
+									<?php endif ;?>
 									<input type="submit" value="<?php _e('Add To Cart', 'wpsc'); ?>" name="Buy" class="wpsc_buy_button" id="product_<?php echo wpsc_the_product_id(); ?>_submit_button"/>
 								<?php else : ?>
 									<p class="soldout"><?php _e('Sorry, sold out!', 'wpsc'); ?></p>
