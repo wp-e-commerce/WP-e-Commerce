@@ -141,6 +141,7 @@ function _wpsc_create_south_sudan() {
 		'currency'  => __( 'South Sudanese Pound', 'wpsc' ),
 		'code'      => __( 'SSP', 'wpsc' ),
 		'continent' => 'africa',
+		'visible'   => 0,
 	) );
 	$country->save();
 }
