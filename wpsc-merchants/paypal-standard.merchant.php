@@ -308,6 +308,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 					}
 
 					if ( $this->cart_data['has_discounts'] && ! $free_shipping ) {
+						$paypal_vars['discount_amount_cart'] = $this->convert( $this->cart_data['cart_discount_value'] );
 						$subtotal = $wpsc_cart->calculate_subtotal();
 						if ( $this->cart_data['cart_discount_value'] >= $wpsc_cart->calculate_subtotal() ) {
 							$paypal_vars['discount_amount_cart'] = $this->convert( $subtotal ) - 0.01;
