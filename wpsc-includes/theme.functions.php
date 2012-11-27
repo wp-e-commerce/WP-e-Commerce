@@ -415,7 +415,6 @@ function wpsc_single_template( $content ) {
 		ob_end_clean();
 		list( $wp_query, $wpsc_temp_query ) = array( $wpsc_temp_query, $wp_query ); // swap the wpsc_query objects back
 		$_wpsc_is_in_custom_loop = false;
-
 	}
 
 	return $content;
@@ -1083,9 +1082,11 @@ function wpsc_products_page( $content = '' ) {
 			$product_meta = get_post_meta( $product_id, '_wpsc_product_metadata', true );
 
 			list($wp_query, $wpsc_query) = array( $wpsc_query, $wp_query ); // swap the wpsc_query objects back
+
 			$_wpsc_is_in_custom_loop = false;
+
 			if ( ($is_single == false) || ($product_meta['enable_comments'] == '0') )
-				$GLOBALS['post'] = $wp_query->post;
+				wp_reset_postdata();
 		}
 		$wp_query->current_post = $wp_query->post_count;
 		return preg_replace( "/(<p>)*\[productspage\](<\/p>)*/", $output, $content );
