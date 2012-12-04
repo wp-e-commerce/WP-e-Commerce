@@ -1177,7 +1177,7 @@ function wpsc_update_shipping_quotes_on_shipping_same_as_billing() {
 	if ( get_option( 'do_not_use_shipping' ) )
 		die( '-1' );
 
-	if ( ! wpsc_have_shipping_quotes() ) {
+	if ( ! wpsc_have_shipping_quote() ) {
 		die( '0' );
 	}
 	else {
