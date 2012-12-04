@@ -531,6 +531,12 @@ if ( get_option( 'product_category_hierarchical_url' ) )
 function wpsc_serialize_shopping_cart() {
 	global $wpdb, $wpsc_start_time, $wpsc_cart;
 
+	// avoid flooding transients with bots hitting feeds
+	if ( is_feed() ) {
+		wpsc_delete_all_customer_meta();
+		return;
+	}
+
 	if ( is_object( $wpsc_cart ) )
 		$wpsc_cart->errors = array( );
 
@@ -1784,4 +1790,25 @@ function wpsc_delete_customer_meta( $key, $id = false ) {
  */
 function _wpsc_action_create_customer_id() {
 	wpsc_get_current_customer_id( 'create' );
+}
+
+/**
+ * Delete all customer meta for a certain customer ID
+ *
+ * @since  3.8.9.4
+ * @param  string|int $id Customer ID. Optional. Defaults to current customer
+ * @return boolean        True if successful, False if otherwise
+ */
+function wpsc_delete_all_customer_meta( $id = false ) {
+	global $wpdb;
+
+	if ( ! $id )
+		$id = wpsc_get_current_customer_id();
+
+	$blog_prefix = is_multisite() ? $wpdb->get_blog_prefix() : '';
+
+	if ( is_numeric( $id ) )
+		return delete_user_meta( $id, "_wpsc_{$blog_prefix}customer_profile" );
+	else
+		return delete_transient( "wpsc_customer_meta_{$blog_prefix}{$id}" );
 }
