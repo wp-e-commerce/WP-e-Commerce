@@ -582,10 +582,9 @@ class WPSC_Shipwire {
 	 */
 	public static function sync_products( $product_code = '' ) {
 		global $wpdb;
-
 		if ( defined ( 'DOING_AJAX' ) && DOING_AJAX ) {
 
-			if ( ! wp_verify_nonce( $_POST['nonce'], 'wpsc_settings_page_nonce' ) ) {
+			if ( ! _wpsc_ajax_verify_nonce( 'shipping_module_settings_form' ) ) {
 				die( __( 'Session expired. Try refreshing your Shipping Settings page.', 'wpsc' ) );
 			}
 
