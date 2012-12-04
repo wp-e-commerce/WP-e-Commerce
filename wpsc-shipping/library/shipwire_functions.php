@@ -630,11 +630,14 @@ class WPSC_Shipwire {
 		foreach ( $inventory as $sku => $qty ) {
 			$sql                = $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_wpsc_sku' AND meta_value = %s", $sku );
 			$queries[]          = $sql;
-			$product_id         = $wpdb->get_var( $sql );
-			$product_ids[]      = $product_id;
-			$stock_updates      = (int) update_post_meta( $product_id, '_wpsc_stock', $qty );
-
-			$inventory_updates += $stock_updates;
+			$synced_product_ids = $wpdb->get_col( $sql );
+			foreach ( $synced_product_ids as $product_id ) {
+				$product = get_post( $product_id );
+				if ( ! $product->post_status == 'publish' )
+					continue;
+				$product_ids[]      = $product_id;
+				$inventory_updates += (int) update_post_meta( $product_id, '_wpsc_stock', $qty );
+			}
 		}
 
 		do_action( 'wpsc_shipwire_post_sync', $tracking, $inventory );
