@@ -918,7 +918,7 @@
 			    spinner = element.siblings('.ajax-feedback'),
 			    post_data = {
 			    	action : 'sync_shipwire_products',
-			    	nonce  : WPSC_Settings_Page.nonce
+			    	nonce  : WPSC_Settings_Page.shipping_module_settings_form_nonce
 			    },
 			    ajax_callback = function(response) {
 			    	$('<div class="updated shipwire-update"><p><strong>' + response.tracking + '<br />' + response.inventory + '</strong></p></div>').
@@ -928,7 +928,6 @@
 			    	fadeOut('slow');
 			    	spinner.toggleClass('ajax-feedback-active');
 			    };
-
 			spinner.toggleClass('ajax-feedback-active');
 			$.post(ajaxurl, post_data, ajax_callback, 'json');
 			return false;
