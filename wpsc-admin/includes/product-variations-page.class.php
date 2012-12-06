@@ -98,6 +98,7 @@ class WPSC_Product_Variations_Page
 			$callback = "callback_tab_manage";
 
 		$this->$callback();
+
 		@header('Content-Type: ' . get_option('html_type') . '; charset=' . get_option('blog_charset'));
 		require_once( WPSC_FILE_PATH . "/wpsc-admin/includes/product-variations.page.php" );
 	}
@@ -341,4 +342,31 @@ class WPSC_Product_Variations_Page
 			exit;
 		}
 	}
+}
+
+/**
+ * Wrapper for _wp_admin_html_begin(), which might not be available on older
+ * WordPress versions.
+ *
+ * @access private
+ * @since 3.8.9.4
+ */
+function _wpsc_admin_html_begin() {
+	if ( function_exists( '_wp_admin_html_begin' ) ) {
+		_wp_admin_html_begin();
+		return;
+	}
+
+	$admin_html_class = ( is_admin_bar_showing() ) ? 'wp-toolbar' : '';
+	?>
+	<!DOCTYPE html>
+	<!--[if IE 8]>
+	<html xmlns="http://www.w3.org/1999/xhtml" class="ie8 <?php echo $admin_html_class; ?>" <?php do_action('admin_xml_ns'); ?> <?php language_attributes(); ?>>
+	<![endif]-->
+	<!--[if !(IE 8) ]><!-->
+	<html xmlns="http://www.w3.org/1999/xhtml" class="<?php echo $admin_html_class; ?>" <?php do_action('admin_xml_ns'); ?> <?php language_attributes(); ?>>
+	<!--<![endif]-->
+	<head>
+	<meta http-equiv="Content-Type" content="<?php bloginfo('html_type'); ?>; charset=<?php echo get_option('blog_charset'); ?>" />
+	<?php
 }
