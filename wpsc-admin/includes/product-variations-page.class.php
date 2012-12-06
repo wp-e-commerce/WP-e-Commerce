@@ -86,6 +86,9 @@ class WPSC_Product_Variations_Page
 		$admin_body_class = $hook_suffix;
 		$post_type_object = get_post_type_object( 'wpsc-product' );
 
+		wp_enqueue_style( 'global' );
+		wp_enqueue_style( 'wp-admin' );
+		wp_enqueue_style( 'buttons' );
 		wp_enqueue_style( 'colors' );
 		wp_enqueue_style( 'ie'     );
 		wp_enqueue_script( 'common'       );
