@@ -1,4 +1,4 @@
-<?php _wp_admin_html_begin(); ?>
+<?php _wpsc_admin_html_begin(); ?>
 <title><?php esc_html_e( 'Manage Product Variations', 'wpsc' ); ?></title>
 <script type="text/javascript">
 addLoadEvent = function(func){if(typeof jQuery!="undefined")jQuery(document).ready(func);else if(typeof wpOnload!='function'){wpOnload=func;}else{var oldonload=wpOnload;wpOnload=function(){oldonload();func();}}};
