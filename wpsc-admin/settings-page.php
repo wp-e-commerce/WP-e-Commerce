@@ -87,7 +87,7 @@ abstract class WPSC_Settings_Tab
 	 * @since 3.8.8.1
 	 * @access private
 	 */
-	private $is_update_message_displayed = true;
+	public $is_update_message_displayed = true;
 
 	/**
 	 * Whether to display the "Save Changes" button.
@@ -95,7 +95,7 @@ abstract class WPSC_Settings_Tab
 	 * @since 3.8.8.1
 	 * @access private
 	 */
-	private $is_submit_button_displayed= true;
+	public $is_submit_button_displayed= true;
 
 	/**
 	 * Constructor
