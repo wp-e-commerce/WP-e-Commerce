@@ -16,12 +16,15 @@
  * @package wp-e-commerce
  */
 class WP_eCommerce {
-
+	private $components = array(
+		'merchant' => array(),
+	);
 	/**
 	 * Start WPEC on plugins loaded
 	 */
 	function WP_eCommerce() {
 		add_action( 'plugins_loaded', array( $this, 'init' ), 8 );
+		add_action( 'wpsc_components', array( $this, '_register_core_components' ) );
 	}
 
 	/**
@@ -39,6 +42,16 @@ class WP_eCommerce {
 
 		// Finished initializing
 		do_action( 'wpsc_init' );
+	}
+
+	public function _register_core_components( $components ) {
+		$components['merchant']['core-v2'] = array(
+			'title' => __( 'WP e-Commerce Merchant API v2', 'wpsc' ),
+			'includes' =>
+				WPSC_FILE_PATH . '/wpsc-components/merchant-core-v2/merchant-core-v2.php'
+		);
+
+		return $components;
 	}
 
 	/**
@@ -99,6 +112,18 @@ class WP_eCommerce {
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-functions.php' );
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-installer.php' );
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-includes.php' );
+
+		$this->components = apply_filters( 'wpsc_components', $this->components );
+
+		foreach ( $this->components as $type => $registered ) {
+			foreach ( $registered as $component ) {
+				if ( ! is_array( $component['includes'] ) )
+					$component['includes'] = array( $component['includes' ] );
+				foreach ( $component['includes'] as $include ) {
+					require_once( $include );
+				}
+			}
+		}
 
 		// Any additional file includes can hook in here
 		do_action( 'wpsc_includes' );
