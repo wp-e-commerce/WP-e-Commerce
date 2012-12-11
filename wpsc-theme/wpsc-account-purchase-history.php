@@ -14,19 +14,19 @@ global $col_count; ?>
 	<?php if ( wpsc_has_purchases_this_month() ) : ?>
 		
 			<tr class="toprow">
-				<td><strong><?php _e( 'Status', 'wpsc' ); ?></strong></td>
-				<td><strong><?php _e( 'Date', 'wpsc' ); ?></strong></td>
-				<td><strong><?php _e( 'Price', 'wpsc' ); ?></strong></td>
+				<th class="status"><?php _e( 'Status', 'wpsc' ); ?></th>
+				<th class="date"><?php _e( 'Date', 'wpsc' ); ?></th>
+				<th class="price"><?php _e( 'Price', 'wpsc' ); ?></th>
 
 				<?php if ( get_option( 'payment_method' ) == 2 ) : ?>
 
-					<td><strong><?php _e( 'Payment Method', 'wpsc' ); ?></strong></td>
+					<th class="payment_method"><?php _e( 'Payment Method', 'wpsc' ); ?></th>
 
 				<?php endif; ?>
 
 			</tr>
 
-			<?php wpsc_user_details(); ?>
+			<?php wpsc_user_purchases(); ?>
 
 	<?php else : ?>
 
