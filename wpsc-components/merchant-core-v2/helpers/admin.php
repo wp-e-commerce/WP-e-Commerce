@@ -85,3 +85,34 @@ function _wpsc_filter_merchant_v2_gateway_form( $form, $selected_gateway ) {
 
 	return $return;
 }
+
+add_action(
+	'wpsc_submit_gateway_options',
+	'_wpsc_action_merchant_v2_submit_gateway_options'
+);
+
+function _wpsc_action_merchant_v2_submit_gateway_options() {
+	if ( isset( $_POST['user_defined_name'] ) && is_array( $_POST['user_defined_name'] ) ) {
+		$payment_gateway_names = get_option( 'payment_gateway_names' );
+
+		if ( !is_array( $payment_gateway_names ) ) {
+			$payment_gateway_names = array( );
+		}
+		$payment_gateway_names = array_merge( $payment_gateway_names, (array)$_POST['user_defined_name'] );
+		update_option( 'payment_gateway_names', $payment_gateway_names );
+	}
+	$custom_gateways = get_option( 'custom_gateway_options' );
+
+	$nzshpcrt_gateways = nzshpcrt_get_gateways();
+	foreach ( $nzshpcrt_gateways as $gateway ) {
+		if ( in_array( $gateway['internalname'], $custom_gateways ) ) {
+			if ( isset( $gateway['submit_function'] ) ) {
+				call_user_func_array( $gateway['submit_function'], array( ) );
+				$changes_made = true;
+			}
+		}
+	}
+	if ( (isset( $_POST['payment_gw'] ) && $_POST['payment_gw'] != null ) ) {
+		update_option( 'payment_gateway', $_POST['payment_gw'] );
+	}
+}

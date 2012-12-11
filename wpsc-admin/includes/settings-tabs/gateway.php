@@ -60,23 +60,11 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab
 
 	public function display() {
 		global $wpdb, $nzshpcrt_gateways;
-		$payment_gateway_names = get_option( 'payment_gateway_names' );
 		if ( empty( $nzshpcrt_gateways ) )
 			$nzshpcrt_gateways     = nzshpcrt_get_gateways();
 	?>
 
 		<div class='metabox-holder'>
-			<input type='hidden' name='gateway_submits' value='true' />
-			<input type='hidden' name='wpsc_gateway_settings' value='gateway_settings' />
-			<?php
-			if ( get_option( 'custom_gateway' ) == 1 ) {
-				$custom_gateway_hide = "style='display:block;'";
-				$custom_gateway1 = 'checked="checked"';
-			} else {
-				$custom_gateway_hide = "style='display:none;'";
-				$custom_gateway2 = 'checked="checked"';
-			}
-			 ?>
 			<table id='wpsc-payment-gateway-settings' class='wpsc-edit-module-options'>
 				<tr>
 					<td>
@@ -130,5 +118,9 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab
 		foreach ( $gateways as $gateway ) {
 			$this->gateway_list_item( $gateway );
 		}
+	}
+
+	public function callback_submit_options() {
+		do_action( 'wpsc_submit_gateway_options' );
 	}
 }
