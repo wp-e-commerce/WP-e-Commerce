@@ -366,7 +366,7 @@ function wpsc_has_purchases_this_month() {
 		return false;
 }
 
-function wpsc_user_details() {
+function wpsc_user_purchases() {
 	global $wpdb, $user_ID, $wpsc_purchlog_statuses, $gateway_checkout_form_fields, $purchase_log, $col_count;
 
 	$nzshpcrt_gateways = nzshpcrt_get_gateways();
@@ -382,10 +382,10 @@ function wpsc_user_details() {
 		$i++;
 
 		if ( ($i % 2) != 0 )
-			$alternate = "class='alt'";
+			$alternate = "alt";
 
-		echo "<tr $alternate>\n\r";
-		echo " <td class='processed'>";
+		echo "<tr class='$alternate'>\n\r";
+		echo " <td class='status processed'>";
 		echo "<a href='#' onclick='return show_details_box(\"status_box_" . $purchase['id'] . "\",\"log_expander_icon_" . $purchase['id'] . "\");'>";
 
 		if ( !empty($_GET['id']) && $_GET['id'] == $purchase['id'] ) {
@@ -399,11 +399,11 @@ function wpsc_user_details() {
 		echo "</a>";
 		echo " </td>\n\r";
 
-		echo " <td>";
+		echo " <td class='date'>";
 		echo date( "jS M Y", $purchase['date'] );
 		echo " </td>\n\r";
 
-		echo " <td>";
+		echo " <td class='price'>";
 		$country = get_option( 'country_form_field' );
 		if ( $purchase['shipping_country'] != '' ) {
 			$billing_country = $purchase['billing_country'];
@@ -420,7 +420,7 @@ function wpsc_user_details() {
 
 
 		if ( get_option( 'payment_method' ) == 2 ) {
-			echo " <td>";
+			echo " <td class='payment_method'>";
 			$gateway_name = '';
 			foreach ( (array)$nzshpcrt_gateways as $gateway ) {
 				if ( $purchase['gateway'] != 'testmode' ) {
@@ -492,29 +492,29 @@ function wpsc_user_details() {
 			echo "<table class='logdisplay'>";
 			echo "<tr class='toprow2'>";
 
-			echo " <td>";
+			echo " <th class='details_name'>";
 			_e( 'Name', 'wpsc' );
-			echo " </td>";
+			echo " </th>";
 
-			echo " <td>";
+			echo " <th class='details_quantity'>";
 			_e( 'Quantity', 'wpsc' );
-			echo " </td>";
+			echo " </th>";
 
-			echo " <td>";
+			echo " <th class='details_price'>";
 			_e( 'Price', 'wpsc' );
-			echo " </td>";
+			echo " </th>";
 
-			echo " <td>";
+			echo " <th class='details_tax'>";
 			_e( 'GST', 'wpsc' );
-			echo " </td>";
+			echo " </th>";
 
-			echo " <td>";
+			echo " <th class='details_shipping'>";
 			_e( 'Shipping', 'wpsc' );
-			echo " </td>";
+			echo " </th>";
 
-			echo " <td>";
+			echo " <th class='details_total'>";
 			_e( 'Total', 'wpsc' );
-			echo " </td>";
+			echo " </th>";
 
 			echo "</tr>";
 
@@ -525,7 +525,7 @@ function wpsc_user_details() {
 				$j++;
 
 				if ( ($j % 2) != 0 )
-					$alternate = "class='alt'";
+					$alternate = "alt";
 
 				$variation_list = '';
 
@@ -534,34 +534,34 @@ function wpsc_user_details() {
 
 				$shipping = $cart_row['pnp'];
 				$total_shipping += $shipping;
-				echo "<tr $alternate>";
+				echo "<tr class='$alternate'>";
 
-				echo " <td>";
+				echo " <td class='details_name'>";
 				echo apply_filters( 'the_title', $cart_row['name'] );
 				echo $variation_list;
 				echo " </td>";
 
-				echo " <td>";
+				echo " <td class='details_quantity'>";
 				echo $cart_row['quantity'];
 				echo " </td>";
 
-				echo " <td>";
+				echo " <td class='details_price'>";
 				$price = $cart_row['price'] * $cart_row['quantity'];
 				echo wpsc_currency_display( $price );
 				echo " </td>";
 
-				echo " <td>";
+				echo " <td class='details_tax'>";
 				$gst = $cart_row['tax_charged'];
 				if( $gst > 0)
 					$gsttotal += $gst;
 				echo wpsc_currency_display( $gst , array('display_as_html' => false) );
 				echo " </td>";
 
-				echo " <td>";
+				echo " <td class='details_shipping'>";
 				echo wpsc_currency_display( $shipping , array('display_as_html' => false) );
 				echo " </td>";
 
-				echo " <td>";
+				echo " <td class='details_total'>";
 				$endtotal += $price;
 				echo wpsc_currency_display( ( $shipping + $price ), array('display_as_html' => false)  );
 				echo " </td>";
@@ -581,13 +581,13 @@ function wpsc_user_details() {
 			echo " </td>";
 			echo " </td>";
 
-			echo " <td>";
+			echo " <td class='details_totals_labels'>";
 			echo "<strong>" . __( 'Total Shipping', 'wpsc' ) . ":</strong><br />";
 			echo "<strong>" . __( 'Total Tax', 'wpsc' ) . ":</strong><br />";
 			echo "<strong>" . __( 'Final Total', 'wpsc' ) . ":</strong>";
 			echo " </td>";
 
-			echo " <td>";
+			echo " <td class='details_totals_labels'>";
 			$total_shipping += $purchase['base_shipping'];
 			$endtotal += $total_shipping;
 			$endtotal += $purchase['wpec_taxes_total'];
