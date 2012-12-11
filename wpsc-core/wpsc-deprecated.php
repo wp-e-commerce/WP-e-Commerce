@@ -229,6 +229,37 @@ function wpsc_showing_products_page() {
 }
 
 
+/**
+ * is wpsc profile page
+ * Checks if the current account page tab is Edit Profile.
+ * @return (boolean) true if current tab ID is edit_profile.
+ */
+function is_wpsc_profile_page() {
+	_deprecated_function( __FUNCTION__, '3.9.3' );
+	return !empty($_REQUEST['tab']) && ( $_REQUEST['tab'] == 'edit_profile' );
+}
+
+/**
+ * is wpsc profile page
+ * Checks if the current account page tab is Downloads.
+ * @return (boolean) true if current tab ID is downloads.
+ */
+function is_wpsc_downloads_page() {
+	_deprecated_function( __FUNCTION__, '3.9.3' );
+	return !empty($_REQUEST['tab']) && ( $_REQUEST['tab'] == 'downloads' );
+}
+
+
+/**
+ * wpsc user details
+ * Displays the Purchase History account page section.
+ * @return (string) The Purchase History page template.
+ */
+function wpsc_user_details() {
+	_deprecated_function( __FUNCTION__, '3.9.3', 'wpsc_user_purchases' );
+	return wpsc_user_purchases();
+}
+
 
 /**
  * wpsc product search url
