@@ -17,14 +17,6 @@ else
 
 $siteurl = site_url();
 
-function is_wpsc_profile_page() {
-	return !empty($_REQUEST['edit_profile']) && ( $_REQUEST['edit_profile'] == 'true' );
-}
-
-function is_wpsc_downloads_page() {
-	return !empty($_REQUEST['downloads']) && ( $_REQUEST['downloads'] == 'true' );
-}
-
 function validate_form_data() {
 
 	global $wpdb, $user_ID, $wpsc_purchlog_statuses;
@@ -686,5 +678,21 @@ function wpsc_user_details() {
 		echo "</tr>\n\r";
 	}
 }
+
+
+function wpsc_purchase_history_section() {
+	include_once( WPSC_FILE_PATH . '/wpsc-theme/wpsc-account-purchase-history.php');
+}
+add_action( 'wpsc_additional_user_profile_section_purchase_history', 'wpsc_purchase_history_section' );
+
+function wpsc_edit_profile_section() {
+	include_once( WPSC_FILE_PATH . '/wpsc-theme/wpsc-account-edit-profile.php' );
+}
+add_action( 'wpsc_additional_user_profile_section_edit_profile', 'wpsc_edit_profile_section' );
+
+function wpsc_downloads_section() {
+	include_once( WPSC_FILE_PATH . '/wpsc-theme/wpsc-account-downloads.php' );
+}
+add_action( 'wpsc_additional_user_profile_section_downloads', 'wpsc_downloads_section' );
 
 ?>
