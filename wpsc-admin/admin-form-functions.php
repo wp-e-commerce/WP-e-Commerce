@@ -30,7 +30,7 @@ $conditions = maybe_unserialize($coupon['condition']);
   $output .= "   <select name='edit_coupon[".$id."][is-percentage]'>";
   $output .= "     <option value='0' ".(($coupon['is-percentage'] == 0) ? "selected='true'" : '')." >$</option>\n\r";//
   $output .= "     <option value='1' ".(($coupon['is-percentage'] == 1) ? "selected='true'" : '')." >%</option>\n\r";
-  $output .= "     <option value='2' ".(($coupon['is-percentage'] == 2) ? "selected='true'" : '')." >" . esc_html__( 'Free shipping', 'wpsc' ) . "'</option>\n\r";
+  $output .= "     <option value='2' ".(($coupon['is-percentage'] == 2) ? "selected='true'" : '')." >" . esc_html__( 'Free shipping', 'wpsc' ) . "</option>\n\r";
   $output .= "   </select>\n\r";
   $output .= "  </td>\n\r";
   $output .= "  <td>\n\r";
