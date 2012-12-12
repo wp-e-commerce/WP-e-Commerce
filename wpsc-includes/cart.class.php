@@ -698,7 +698,7 @@ class wpsc_cart {
             $min_quote = '';
             $min_method = '';
             foreach ( (array) $custom_shipping as $shipping_module ) {
-               if ( ! is_callable( array( $wpsc_shipping_modules[$shipping_module], 'getQuote' ) ) )
+               if ( empty( $wpsc_shipping_modules[$shipping_module] ) || ! is_callable( array( $wpsc_shipping_modules[$shipping_module], 'getQuote' ) ) )
                   continue;
 
                $raw_quotes = $wpsc_shipping_modules[$shipping_module]->getQuote();
