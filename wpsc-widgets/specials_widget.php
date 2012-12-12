@@ -139,8 +139,11 @@ function _wpsc_filter_special_widget_where( $where ) {
 	";
 
 	$parent_ids = $wpdb->get_col( $sql );
-	$parent_ids = array_map( 'absint', $parent_ids );
-	$where .= " AND ({$wpdb->posts}.ID IN (" . implode( ', ', $parent_ids ) . ") OR pm.meta_value > 0) ";
+
+	if ( $parent_ids ) {
+		$parent_ids = array_map( 'absint', $parent_ids );
+		$where .= " AND ({$wpdb->posts}.ID IN (" . implode( ', ', $parent_ids ) . ") OR pm.meta_value > 0) ";
+	}
 
 	return $where;
 }
