@@ -3,7 +3,7 @@ Contributors: mufasa, mychelle, garyc40, JustinSainton
 Donate link: http://getshopped.org
 Tags: e-commerce, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
 Requires at least: 3.1
-Tested up to: 3.4.2
+Tested up to: 3.5
 Stable tag: 3.8.9.3
 
 WP e-Commerce is a free WordPress Shopping Cart Plugin that lets customers buy your products, services and digital downloads online.
@@ -155,6 +155,26 @@ Before updating please make a backup of your existing files and database. Just i
 After upgrading from earlier versions look for link "Update Store". This will update your database structure to work with new version.
 
 == Changelog ==
+= 3.8.9.4 =
+* Fix: "No shipping quotes" error is displayed when selecting "Shipping same as billing".
+* Fix: Avoid flooding transient data when site's feed is being visited by bots.
+* Fix: Blank Checkout page for some certain installation when Shipping is enabled.
+* Fix: Can't add to cart on some server.
+* Fix: Fatal error when viewing product variation iframe, because _wp_admin_html_begin() does not exist on older WordPress versions.
+* Fix: MySQL error/warning in _wpsc_filter_special_widget_where().
+* Fix: Only show attachment fields when viewed on an edit product page.
+* Fix: PHP Notice in cart.class.php.
+* Fix: Properly escape columns in admin products page.
+* Fix: Purchase log's item names are not translatable via qTranslate.
+* Fix: Shipping same as billing saves "State" field label as the shipping region.
+* Fix: Shipwire settings are not updated.
+* Fix: Shipwire syncing doesn't take into consideration products in trash, or multiple products using the same SKUs (as in WPML)
+* Fix: Specials widget is empty when there are no product with variation sales.
+* Fix: Variation sets are not being sorted on the front-end.
+* Fix: WPEC doesn't cooperate with WP 3.5 media UI.
+* Fix: wpsc_pre_transaction_results filter is ignored.
+* Make sure admin styles are enqueued for product variations iframe in older version of WordPress.
+
 = 3.8.9.3 =
 * New: Add support for quantity field in default grid view template.
 * New: Let plugins add new column to product variation list table via filter 'wpsc_manage_product_variations_custom_column'.
