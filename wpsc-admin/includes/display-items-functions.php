@@ -793,7 +793,10 @@ function wpsc_form_multipart_encoding() {
 }
 
 add_action( 'post_edit_form_tag', 'wpsc_form_multipart_encoding' );
-add_filter( 'media_buttons_context', 'change_context' );
+
+if ( version_compare( get_bloginfo( 'version' ), '3.5', '<' ) )
+	add_filter( 'media_buttons_context', 'change_context' );
+
 add_filter( 'image_upload_iframe_src', "change_link" );
 /*
 * Modifications to Media Gallery
@@ -801,12 +804,12 @@ add_filter( 'image_upload_iframe_src', "change_link" );
 
 if ( ( isset( $_REQUEST['parent_page'] ) && ( $_REQUEST['parent_page'] == 'wpsc-edit-products' ) ) ) {
 	add_filter( 'media_upload_tabs', 'wpsc_media_upload_tab_gallery', 12 );
-	add_filter( 'attachment_fields_to_save', 'wpsc_save_attachment_fields', 9, 2 );
 	add_filter( 'media_upload_form_url', 'wpsc_media_upload_url', 9, 1 );
 	add_action( 'admin_head', 'wpsc_gallery_css_mods' );
 }
 add_filter( 'gettext', 'wpsc_filter_delete_text', 12 , 3 );
 add_filter( 'attachment_fields_to_edit', 'wpsc_attachment_fields', 11, 2 );
+add_filter( 'attachment_fields_to_save', 'wpsc_save_attachment_fields', 9, 2 );
 add_filter( 'gettext', 'wpsc_filter_feature_image_text', 12, 3 );
 add_filter( 'gettext_with_context', 'wpsc_filter_gettex_with_context', 12, 4);
 
@@ -863,7 +866,7 @@ function wpsc_attachment_fields( $form_fields, $post ) {
 	if ( $parent_post->post_type == "wpsc-product" ) {
 
 		//Unfortunate hack, as I'm not sure why the From Computer tab doesn't process filters the same way the Gallery does
-
+		ob_start();
 		echo '
 <script type="text/javascript">
 
@@ -886,6 +889,8 @@ function wpsc_attachment_fields( $form_fields, $post ) {
 		});
 
 </script>';
+		$out .= ob_get_clean();
+
 		$size_names = array( 'small-product-thumbnail' => __( 'Default Product Thumbnail Size', 'wpsc' ), 'medium-single-product' => __( 'Single Product Image Size', 'wpsc' ), 'full' => __( 'Full Size', 'wpsc' ) );
 
 		$check = get_post_meta( $post->ID, '_wpsc_selected_image_size', true );
@@ -897,16 +902,8 @@ function wpsc_attachment_fields( $form_fields, $post ) {
 		$settings_height = get_option( 'single_view_image_height' );
 
 		// regenerate size metadata in case it's missing
-		if ( ! $check || $current_size['width'] != $settings_width || $current_size['height'] != $settings_height ) {
-			if ( ! $metadata = wp_get_attachment_metadata( $post->ID ) )
-				$metadata = array();
-			if ( empty( $metadata['sizes'] ) )
-				$metadata['sizes'] = array();
-			$file = get_attached_file( $post->ID );
-			$generated = wp_generate_attachment_metadata( $post->ID, $file );
-			$metadata['sizes'] = array_merge((array) $metadata['sizes'], (array) $generated['sizes'] );
-
-			wp_update_attachment_metadata( $post->ID, $metadata );
+		if ( ! $check || ( $current_size['width'] != $settings_width && $current_size['height'] != $settings_height ) ) {
+			_wpsc_regenerate_thumbnail_size( $post->ID, $check );
 		}
 
 		//This loop attaches the custom thumbnail/single image sizes to this page
@@ -917,7 +914,7 @@ function wpsc_attachment_fields( $form_fields, $post ) {
 			$css_id = "image-size-{$size}-{$post->ID}";
 			// if this size is the default but that's not available, don't select it
 
-			$html = "<div class='image-size-item'><input type='radio' " . disabled( $enabled, false, false ) . "name='attachments[$post->ID][image-size]' id='{$css_id}' value='{$size}' " . checked( $size, $check, false ) . " />";
+			$html = "<div class='image-size-item'><input type='radio' " . disabled( $enabled, false, false ) . "name='attachments[$post->ID][wpsc_image_size]' id='{$css_id}' value='{$size}' " . checked( $size, $check, false ) . " />";
 
 			$html .= "<label for='{$css_id}'>$name</label>";
 			// only show the dimensions if that choice is available
@@ -932,7 +929,7 @@ function wpsc_attachment_fields( $form_fields, $post ) {
 		unset( $form_fields['post_excerpt'], $form_fields['image_url'], $form_fields['post_content'], $form_fields['post_title'], $form_fields['url'], $form_fields['align'], $form_fields['image_alt']['helps'], $form_fields["image-size"] );
 		$form_fields['image_alt']['helps'] =  __( 'Alt text for the product image, e.g. &#8220;Rockstar T-Shirt&#8221;', 'wpsc' );
 
-		$form_fields["image-size"] = array(
+		$form_fields["wpsc_image_size"] = array(
 			'label' => __( 'Single Product Page Thumbnail:', 'wpsc' ),
 			'input' => 'html',
 			'html'  => $out,
@@ -954,21 +951,19 @@ function wpsc_attachment_fields( $form_fields, $post ) {
 			"helps" => "<span style='text-align:left; clear:both; display:block; padding-top:3px;'>" . __( 'Custom thumbnail size for this image on the main Product Page', 'wpsc') . "</span>",
 			"html" => $custom_thumb_html
 		);
-
 	}
 	return $form_fields;
 
 }
 function wpsc_save_attachment_fields( $post, $attachment ) {
-
 	if ( isset  ( $attachment['wpsc_custom_thumb_w'] ) )
 		update_post_meta( $post['ID'], '_wpsc_custom_thumb_w', $attachment['wpsc_custom_thumb_w'] );
 
 	if ( isset  ( $attachment['wpsc_custom_thumb_h'] ) )
 		update_post_meta( $post['ID'], '_wpsc_custom_thumb_h', $attachment['wpsc_custom_thumb_h'] );
 
-	if ( isset  ( $attachment['image-size'] ) )
-		update_post_meta( $post['ID'], '_wpsc_selected_image_size', $attachment['image-size'] );
+	if ( isset  ( $attachment['wpsc_image_size'] ) )
+		update_post_meta( $post['ID'], '_wpsc_selected_image_size', $attachment['wpsc_image_size'] );
 
 	return $post;
 }

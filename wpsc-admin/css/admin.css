@@ -2195,3 +2195,8 @@ table.purchase-logs tr:hover .column-id .delete {
 .wpsc-product-variation-title {
 	margin-left: 60px;
 }
+
+.compat-field-wpsc_image_size input[type="radio"] {
+	width: auto;
+	margin-right:5px;
+}
