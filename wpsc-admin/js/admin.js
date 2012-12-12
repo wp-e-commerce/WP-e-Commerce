@@ -360,11 +360,6 @@ jQuery(document).ready(function(){
 		}
 		);
 
-
-	jQuery("a.thickbox").livequery(function(){
-		tb_init(this);
-	});
-
 	jQuery("div.admin_product_name a.shorttag_toggle").livequery(function(){
 		jQuery(this).toggle(
 			function () {

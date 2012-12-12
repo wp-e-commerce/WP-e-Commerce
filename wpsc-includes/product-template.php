@@ -291,7 +291,6 @@ function wpsc_show_stock_availability(){
  * @return string - the product image URL, or the URL of the resized version
  */
 function wpsc_product_image( $attachment_id = 0, $width = null, $height = null ) {
-
 	// Do some dancing around the image size
 	if ( ( ( $width >= 10 ) && ( $height >= 10 ) ) && ( ( $width <= 1024 ) && ( $height <= 1024 ) ) )
 		$intermediate_size = "wpsc-{$width}x{$height}";
@@ -315,13 +314,13 @@ function wpsc_product_image( $attachment_id = 0, $width = null, $height = null )
 			$intermediate_image_data = image_get_intermediate_size( $attachment_id, $intermediate_size );
 			$image_url = $intermediate_image_data['url'];
 		} else {
-			$image_url = home_url( "index.php?wpsc_action=scale_image&amp;attachment_id={$attachment_id}&amp;width=$width&amp;height=$height" );
+			$image_url = home_url( "index.php?wpsc_action=scale_image&attachment_id={$attachment_id}&width=$width&height=$height" );
 		}
 	// Not enough info so attempt to fallback
 	} else {
 
 		if ( !empty( $attachment_id ) ) {
-			$image_url = home_url( "index.php?wpsc_action=scale_image&amp;attachment_id={$attachment_id}&amp;width=$width&amp;height=$height" );
+			$image_url = home_url( "index.php?wpsc_action=scale_image&attachment_id={$attachment_id}&width=$width&height=$height" );
 		} else {
 			$image_url = false;
 		}

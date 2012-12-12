@@ -794,10 +794,11 @@ function wpsc_form_multipart_encoding() {
 
 add_action( 'post_edit_form_tag', 'wpsc_form_multipart_encoding' );
 
-if ( version_compare( get_bloginfo( 'version' ), '3.5', '<' ) )
+if ( version_compare( get_bloginfo( 'version' ), '3.5', '<' ) ) {
 	add_filter( 'media_buttons_context', 'change_context' );
+	add_filter( 'image_upload_iframe_src', "change_link" );
+}
 
-add_filter( 'image_upload_iframe_src', "change_link" );
 /*
 * Modifications to Media Gallery
 */
@@ -844,7 +845,6 @@ function wpsc_filter_gettex_with_context( $translation, $text, $context, $domain
  * @return string The translated / filtered text.
  */
 function wpsc_filter_feature_image_text( $translation, $text, $domain ) {
-
 	if ( 'Use as featured image' == $text && isset( $_REQUEST['post_id'] ) ) {
 		$post = get_post( $_REQUEST['post_id'] );
 		if ( $post->post_type != 'wpsc-product' ) return $translation;
