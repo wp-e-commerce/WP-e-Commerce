@@ -64,6 +64,7 @@
 	//End Share this JS
 
 	function wpsc_shipping_same_as_billing(){
+		var billing_state_input = jQuery('input[title="billingstate"]');
 		jQuery('#shippingsameasbillingmessage').slideDown('slow');
 		jQuery("input[title='billingfirstname'], input[title='billinglastname'], textarea[title='billingaddress'], input[title='billingcity'], input[title='billingpostcode'], input[title='billingphone'], input[title='billingfirstname'], input[title='billingstate']").unbind('change', wpsc_shipping_same_as_billing).unbind('keyup', wpsc_shipping_same_as_billing).keyup(wpsc_shipping_same_as_billing).change(wpsc_shipping_same_as_billing);
 
@@ -109,7 +110,7 @@
 				jQuery(fields[i][1]).addClass('intra-field-label');
 		}
 
-		if( jQuery("input[title='billingstate']").length ){
+		if( billing_state_input.length && ! billing_state_input.hasClass('intra-field-label') ){
 			jQuery("input[title='shippingstate']").val(jQuery("input[title='billingstate']").val());
 			jQuery("input[title='shippingstate']").parents('tr:first').hide();
 			if(!jQuery("input[title='billingstate']").hasClass('intra-field-label'))
@@ -210,7 +211,6 @@ jQuery(document).ready(function ($) {
 		wpsc_shipping_same_as_billing();
 
 	jQuery("#shippingSameBilling").change(function(){
-
 		if(jQuery(this).is(":checked")){
 			var data = {
 				action: 'wpsc_shipping_same_as_billing',
