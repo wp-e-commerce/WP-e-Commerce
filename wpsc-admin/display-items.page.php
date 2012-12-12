@@ -117,7 +117,7 @@ function _wpsc_manage_products_column_weight( $post, $post_id, $has_variations )
 		break;
 	}
 	echo $weight.$unit;
-	echo '<div id="inline_' . $post->ID . '_weight" class="hidden">' . $weight . '</div>';
+	echo '<div id="inline_' . $post->ID . '_weight" class="hidden">' . esc_html( $weight ) . '</div>';
 }
 add_action( 'wpsc_manage_products_column_weight', '_wpsc_manage_products_column_weight', 10, 3 );
 
@@ -142,7 +142,7 @@ function _wpsc_manage_products_column_stock( $post, $post_id, $has_variations ) 
 	}
 
 	echo $stock;
-	echo '<div id="inline_' . $post->ID . '_stock" class="hidden">' . $stock . '</div>';
+	echo '<div id="inline_' . $post->ID . '_stock" class="hidden">' . esc_html( $stock ) . '</div>';
 
 }
 add_action( 'wpsc_manage_products_column_stock', '_wpsc_manage_products_column_stock', 10, 3 );
@@ -203,7 +203,7 @@ function _wpsc_manage_products_column_sku( $post, $post_id ) {
 		$sku = __('N/A', 'wpsc');
 
 	echo $sku;
-	echo '<div id="inline_' . $post->ID . '_sku" class="hidden">' . $sku . '</div>';
+	echo '<div id="inline_' . $post->ID . '_sku" class="hidden">' . esc_html( $sku ) . '</div>';
 }
 add_action( 'wpsc_manage_products_column_sku', '_wpsc_manage_products_column_sku', 10, 2 );
 
