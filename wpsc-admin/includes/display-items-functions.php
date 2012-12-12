@@ -858,8 +858,9 @@ function wpsc_filter_feature_image_text( $translation, $text, $domain ) {
 }
 function wpsc_attachment_fields( $form_fields, $post ) {
 	$out = '';
-	if(isset($_GET["post_id"]))
-		$parent_post = get_post( absint($_GET["post_id"]) );
+
+	if( isset( $_REQUEST["post_id"] ) )
+		$parent_post = get_post( absint( $_REQUEST["post_id"] ) );
 	else
 		$parent_post = get_post( $post->post_parent );
 
