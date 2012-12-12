@@ -30,9 +30,9 @@ function wpsc_core_constants() {
 	if(!defined('WPSC_URL'))
 		define( 'WPSC_URL',       plugins_url( '', __FILE__ ) );
 	// Define Plugin version
-	define( 'WPSC_VERSION', '3.8.9.3' );
-	define( 'WPSC_MINOR_VERSION', '630512' );
-	define( 'WPSC_PRESENTABLE_VERSION', '3.8.9.3' );
+	define( 'WPSC_VERSION', '3.8.9.4' );
+	define( 'WPSC_MINOR_VERSION', '637865' );
+	define( 'WPSC_PRESENTABLE_VERSION', '3.8.9.4' );
 	define( 'WPSC_DB_VERSION', 3 );
 
 	// Define Debug Variables for developers
