@@ -101,6 +101,7 @@ abstract class WPSC_Purchase_Log_Notification
 			$item_total = $item->quantity * $item->price;
 			$item_total = wpsc_currency_display( $item_total , array( 'display_as_html' => false ) );
 			$item_price = wpsc_currency_display( $item->price, array( 'display_as_html' => false ) );
+			$item_name = apply_filters( 'the_title', $item->name );
 			$rows[] = array( $item->name, $item_price, $item->quantity, $item_total );
 		}
 
