@@ -28,6 +28,7 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/currency.helpers.php'            
 require_once( WPSC_FILE_PATH . '/wpsc-includes/purchase-log.helpers.php'            );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/purchase-log-notification.class.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/purchase-log.class.php'              );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/checkout-form.class.php'             );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/checkout-form-data.class.php'        );
 
 // Taxes
