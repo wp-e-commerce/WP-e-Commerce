@@ -1,7 +1,6 @@
 <?php
 global $wpsc_cart, $wpdb, $wpsc_checkout, $wpsc_gateway, $wpsc_coupons, $wpsc_registration_error_messages;
 $wpsc_checkout = new wpsc_checkout();
-$wpsc_gateway = new wpsc_gateways();
 $alt = 0;
 $coupon_num = wpsc_get_customer_meta( 'coupon' );
 if( $coupon_num )
@@ -446,38 +445,18 @@ endif;
       <?php  //this HTML displays activated payment gateways   ?>
       <?php if(wpsc_gateway_count() > 1): // if we have more than one gateway enabled, offer the user a choice ?>
          <tr>
-         <td colspan='2' class='wpsc_gateway_container'>
-            <h3><?php _e('Payment Type', 'wpsc');?></h3>
-            <?php while (wpsc_have_gateways()) : wpsc_the_gateway(); ?>
-               <div class="custom_gateway">
-                     <label><input type="radio" value="<?php echo wpsc_gateway_internal_name();?>" <?php echo wpsc_gateway_is_checked(); ?> name="custom_gateway" class="custom_gateway"/><?php echo wpsc_gateway_name(); ?>
-                     	<?php if( wpsc_show_gateway_image() ): ?>
-                     	<img src="<?php echo wpsc_gateway_image_url(); ?>" alt="<?php echo wpsc_gateway_name(); ?>" style="position:relative; top:5px;" />
-                     	<?php endif; ?>
-                     </label>
-
-                  <?php if(wpsc_gateway_form_fields()): ?>
-                     <table class='wpsc_checkout_table <?php echo wpsc_gateway_form_field_style();?>'>
-                        <?php echo wpsc_gateway_form_fields();?>
-                     </table>
-                  <?php endif; ?>
-               </div>
-            <?php endwhile; ?>
-            </td></tr>
-         <?php else: // otherwise, there is no choice, stick in a hidden form ?>
-            <tr><td colspan="2" class='wpsc_gateway_container'>
-            <?php while (wpsc_have_gateways()) : wpsc_the_gateway(); ?>
-               <input name='custom_gateway' value='<?php echo wpsc_gateway_internal_name();?>' type='hidden' />
-
-                  <?php if(wpsc_gateway_form_fields()): ?>
-                     <table class='wpsc_checkout_table <?php echo wpsc_gateway_form_field_style();?>'>
-                        <?php echo wpsc_gateway_form_fields();?>
-                     </table>
-                  <?php endif; ?>
-            <?php endwhile; ?>
-         </td>
+            <td colspan='2' class='wpsc_gateway_container'>
+               <h3><?php _e('Payment Type', 'wpsc');?></h3>
+               <?php wpsc_gateway_list(); ?>
+               </td>
          </tr>
-         <?php endif; ?>
+      <?php else: // otherwise, there is no choice, stick in a hidden form ?>
+         <tr>
+            <td colspan="2" class='wpsc_gateway_container'>
+               <?php wpsc_gateway_hidden_field(); ?>
+            </td>
+         </tr>
+      <?php endif; ?>
 
       <?php if(wpsc_has_tnc()) : ?>
          <tr>

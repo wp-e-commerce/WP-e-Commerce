@@ -121,7 +121,7 @@ td.gateway_settings textarea{
 	width:100%;
 }
 td.gateway_settings h4{
-	margin-top:0;
+	margin-bottom:5px;
 }
 
 div#wpsc_shipwire_setting, div#shipping_discount_value {
@@ -426,7 +426,7 @@ div.wpsc_shipping_options, div.wpsc-select-gateway {
 	margin:0px 9em 0 0;
 	float:right;
 }
-div.wpsc_shipping_options:hover .wpsc-shipping-actions, 
+div.wpsc_shipping_options:hover .wpsc-shipping-actions,
 div.wpsc-select-gateway:hover .wpsc-gateway-actions {
 	font-size:10px;
 	visibility:visible;
