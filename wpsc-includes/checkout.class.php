@@ -209,9 +209,9 @@ function wpsc_have_valid_shipping_zipcode(){
 	$zip = wpsc_get_customer_meta( 'shipping_zip' );
 
 	if( ! $zip || ( __( 'Your Zipcode', 'wpsc' ) == $zip ) && ( wpsc_get_customer_meta( 'update_location' ) ) )
-		return true;
-	else
 		return false;
+	else
+		return true;
 
 }
 
