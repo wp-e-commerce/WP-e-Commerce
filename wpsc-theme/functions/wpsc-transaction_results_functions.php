@@ -19,7 +19,7 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 
 	// compatibility with pre-3.8.9 templates where they use a global
 	// $purchase_log object which is simply just a database row
-	$purchase_log = (object) $purchase_log_object->get_data();
+	$purchase_log = $purchase_log_object->get_data();
 
 	// pre-3.8.9 templates also use this global variable
 	$message_html = wpsc_get_transaction_html_output( $purchase_log_object );
