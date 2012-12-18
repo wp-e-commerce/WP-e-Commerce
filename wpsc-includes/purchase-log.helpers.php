@@ -191,10 +191,12 @@ function _wpsc_process_transaction_coupon( $purchase_log ) {
 }
 
 function _wpsc_action_update_purchase_log_status( $id, $status, $old_status, $purchase_log ) {
-	wpsc_send_customer_email( $purchase_log );
-	wpsc_send_admin_email( $purchase_log );
+	if ( $purchase_log->is_order_received() || $purchase_log->is_accepted_payment() ) {
+		wpsc_send_customer_email( $purchase_log );
+		wpsc_send_admin_email( $purchase_log );
+	}
 
-	if ( ! $purchase_log->is_transaction_completed() )
+	if ( ! $purchase_log->is_accepted_payment() )
 		return;
 
 	_wpsc_process_transaction_coupon( $purchase_log );
