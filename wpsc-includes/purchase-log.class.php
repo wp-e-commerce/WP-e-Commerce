@@ -463,6 +463,9 @@ class WPSC_Purchase_Log
 				$this->is_status_changed = true;
 		}
 
+		if ( ! is_array( $this->data ) )
+			$this->data = array();
+
 		$this->data = array_merge( $this->data, $properties );
 		return $this;
 	}
