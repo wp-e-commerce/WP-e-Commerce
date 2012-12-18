@@ -5,7 +5,7 @@
  * Displays the user account page.
  *
  * @package WPSC
- * @since WPSC 3.8
+ * @since WPSC 3.8.10
  */
 ?>
 

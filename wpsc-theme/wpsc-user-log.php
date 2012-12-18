@@ -7,45 +7,22 @@
  * @package WPSC
  * @since WPSC 3.8
  */
-global $files, $separator, $col_count, $products; ?>
+global $current_tab; ?>
 
 <div class="wrap">
 	<?php if ( is_user_logged_in() ) : ?>
-		<?php do_action( 'wpsc_additional_before_user_profile_links' ); ?>
-
 		<div class="user-profile-links">
-			<?php
 
-			$profile_tabs = apply_filters( 'wpsc_user_profile_tabs', array(
-				'purchase_history'	=> __( 'Purchase History', 'wpsc' ),
-				'edit_profile'		=> __( 'Your Details', 'wpsc' ),
-				'downloads'			=> __( 'Your Downloads', 'wpsc' )
-			) );
+			<?php $default_profile_tab = apply_filters( 'wpsc_default_user_profile_tab', 'purchase_history' ); ?>
+			<?php $current_tab = isset( $_REQUEST['tab'] ) ? $_REQUEST['tab'] : $default_profile_tab; ?>
 
-			$default_profile_tab = apply_filters( 'wpsc_default_user_profile_tab', current( array_keys( $profile_tabs ) ) );
-			$current_tab = isset( $_REQUEST['tab'] ) ? $_REQUEST['tab'] : $default_profile_tab;
-
-			$i = 0;
-			foreach ( $profile_tabs as $tab_id => $tab_title ) : ?>
-				<a href="<?php echo get_option( 'user_account_url' ) . $separator . 'tab=' . $tab_id; ?>" class="<?php if ( $current_tab == $tab_id ) echo 'current'; ?>"><?php echo $tab_title; ?></a>
-				<?php if ( ++$i < count( $profile_tabs ) ) echo '|'; ?>
-			<?php endforeach; ?>
+			<?php wpsc_user_profile_links(); ?>
 
 			<?php do_action( 'wpsc_additional_user_profile_links', '|' ); ?>
 
 		</div>
 
-		<?php do_action( 'wpsc_additional_after_user_profile_links' ); ?>
-		<?php do_action( 'wpsc_additional_before_user_profile_section' ); ?>
-
-		<?php
-		if ( isset( $profile_tabs[$current_tab] ) )
-			do_action( 'wpsc_additional_user_profile_section_' . $current_tab );
-		else
-			do_action( 'wpsc_additional_user_profile_section_' . $default_profile_tab );
-
-		do_action( 'wpsc_additional_after_user_profile_section' );
-		?>
+		<?php do_action( 'wpsc_user_profile_section_' . $current_tab ); ?>
 
 	<?php else : ?>
 
