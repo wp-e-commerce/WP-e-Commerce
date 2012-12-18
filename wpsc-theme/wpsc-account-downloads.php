@@ -5,7 +5,7 @@
  * Displays the user account page.
  *
  * @package WPSC
- * @since WPSC 3.8
+ * @since WPSC 3.8.10
  */
 global $files, $products; ?>
 
@@ -54,5 +54,3 @@ global $files, $products; ?>
 	<?php _e( 'You have not purchased any downloadable products yet.', 'wpsc' ); ?>
 
 <?php endif; ?>
-
-</div>
