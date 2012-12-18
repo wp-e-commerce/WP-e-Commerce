@@ -199,8 +199,11 @@ class australiapost {
 			if ($meta && is_array($meta)) {
 				$productVolume = 1;
 				foreach (array('width','height','length') as $dimension) {
-					if ( empty( $meta[$dimension] ) )
-						$meta[$dimension] = 0;
+					// default dimension to 100mm
+					if ( empty( $meta[$dimension] ) ) {
+						$meta[$dimension] = 100;
+						$meta["{$dimension}_unit"] = 'mm';
+					}
 					switch ($meta["{$dimension}_unit"]) {
 						// we need the units in mm
 						case 'cm':
@@ -219,7 +222,8 @@ class australiapost {
 
 					$productVolume *= $meta[$dimension];
 				}
-				$volume += floatval($productVolume);
+
+				$volume += floatval($productVolume) * $cart_item->quantity;
 			}
 		}
 
@@ -232,11 +236,6 @@ class australiapost {
 		} else {
 			// Calculate the cubic root of the total volume, rounding up
 			$cuberoot = ceil(pow($volume, 1 / 3));
-
-			// Use default dimensions of 100mm if the volume is zero
-			$height=100;
-			$width=100;
-			$length=100;
 
 			if ($cuberoot > 0)
 			    $height = $width = $length = $cuberoot;
@@ -305,6 +304,8 @@ class australiapost {
 			    $lines = explode("\n", $response['body']);
 
 			    foreach($lines as $line) {
+			    	if ( empty( $line ) )
+			    		continue;
 				    list($key, $value) = explode('=', $line);
 				    $key = trim($key);
 				    $value = trim($value);
