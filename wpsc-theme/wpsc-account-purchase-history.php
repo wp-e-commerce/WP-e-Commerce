@@ -2,8 +2,10 @@
 /**
  * The Account - Purchase History template.
  *
+ * Displays the user's order history.
+ *
  * @package WPSC
- * @since WPSC 3.9.4
+ * @since WPSC 3.8.10
  */
 global $col_count; ?>
 
@@ -12,7 +14,7 @@ global $col_count; ?>
 	<table class="logdisplay">
 
 	<?php if ( wpsc_has_purchases_this_month() ) : ?>
-		
+
 			<tr class="toprow">
 				<th class="status"><?php _e( 'Status', 'wpsc' ); ?></th>
 				<th class="date"><?php _e( 'Date', 'wpsc' ); ?></th>

@@ -366,6 +366,46 @@ function wpsc_has_purchases_this_month() {
 		return false;
 }
 
+/**
+ * Displays the Account Page tabs
+ *
+ * @access public
+ * @since 3.8.10
+ *
+ */
+function wpsc_user_profile_links( $args = array() ) {
+	global $current_tab, $separator;
+
+	$defaults = array (
+ 		'before_link_list'	=> '',
+ 		'after_link_list'	=> '',
+ 		'before_link_item'	=> '',
+ 		'after_link_item'	=> '',
+ 		'link_separator'	=> '|'
+	);
+
+	$args = wp_parse_args( $args, $defaults );
+	extract( $args );
+
+	$profile_tabs = apply_filters( 'wpsc_user_profile_tabs', array(
+		'purchase_history'	=> __( 'Purchase History', 'wpsc' ),
+		'edit_profile'		=> __( 'Your Details', 'wpsc' ),
+		'downloads'			=> __( 'Your Downloads', 'wpsc' )
+	) );
+
+	echo $before_link_list;
+
+	$i = 0;
+	foreach ( $profile_tabs as $tab_id => $tab_title ) :
+		echo $before_link_item;
+		echo '<a href="' . get_option( 'user_account_url' ) . $separator . 'tab=' . $tab_id . '" class="' . ( $current_tab == $tab_id ? 'current' : '' ) . '">' . $tab_title . '</a>';
+		echo $after_link_item;
+		if ( ++$i < count( $profile_tabs ) ) echo $link_separator;
+	endforeach;
+
+	echo $after_link_list;
+}
+
 function wpsc_user_purchases() {
 	global $wpdb, $user_ID, $wpsc_purchlog_statuses, $gateway_checkout_form_fields, $purchase_log, $col_count;
 
@@ -680,19 +720,40 @@ function wpsc_user_purchases() {
 }
 
 
-function wpsc_purchase_history_section() {
+/**
+ * Displays the Purchase History template
+ *
+ * @access private
+ * @since 3.8.10
+ *
+ */
+function _wpsc_action_purchase_history_section() {
 	include_once( WPSC_FILE_PATH . '/wpsc-theme/wpsc-account-purchase-history.php');
 }
-add_action( 'wpsc_additional_user_profile_section_purchase_history', 'wpsc_purchase_history_section' );
+add_action( 'wpsc_user_profile_section_purchase_history', '_wpsc_action_purchase_history_section' );
 
-function wpsc_edit_profile_section() {
+/**
+ * Displays the Edit Profile template
+ *
+ * @access private
+ * @since 3.8.10
+ *
+ */
+function _wpsc_action_edit_profile_section() {
 	include_once( WPSC_FILE_PATH . '/wpsc-theme/wpsc-account-edit-profile.php' );
 }
-add_action( 'wpsc_additional_user_profile_section_edit_profile', 'wpsc_edit_profile_section' );
+add_action( 'wpsc_user_profile_section_edit_profile', '_wpsc_action_edit_profile_section' );
 
-function wpsc_downloads_section() {
+/**
+ * Displays the Downloads template
+ *
+ * @access private
+ * @since 3.8.10
+ *
+ */
+function _wpsc_action_downloads_section() {
 	include_once( WPSC_FILE_PATH . '/wpsc-theme/wpsc-account-downloads.php' );
 }
-add_action( 'wpsc_additional_user_profile_section_downloads', 'wpsc_downloads_section' );
+add_action( 'wpsc_user_profile_section_downloads', '_wpsc_action_downloads_section' );
 
 ?>
