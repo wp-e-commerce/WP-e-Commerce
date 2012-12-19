@@ -283,6 +283,8 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 		);
 
 		foreach ( $statuses as $status => $count ) {
+			if ( ! isset( $view_labels[$status] ) )
+				continue;
 			$text = sprintf(
 				translate_nooped_plural( $view_labels[$status], $count, 'wpsc' ),
 				number_format_i18n( $count )
