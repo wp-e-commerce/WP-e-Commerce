@@ -916,7 +916,7 @@ class wpsc_checkout {
 					$shipping_country_field_id = wpsc_get_country_form_id_by_type( 'delivery_country' );
 					$shipping_country = $_POST['collected_data'][$shipping_country_field_id];
 					if ( ! is_array( $shipping_country ) || ! isset( $shipping_country[1] ) ) {
-						wpsc_update_customer_meta( 'billing_region', $value );
+						wpsc_update_customer_meta( 'shipping_region', $value );
 						$location_changed = true;
 					}
 				} elseif ( $form_data->unique_name == 'billingstate' ) {
