@@ -442,7 +442,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 
 		echo "</select>\n";
 
-		submit_button( __( 'Apply' ), 'button-small action', false, false, array( 'id' => "doaction$two" ) );
+		submit_button( __( 'Apply' ), 'action', false, false, array( 'id' => "doaction$two" ) );
 		echo "\n";
 	}
 
