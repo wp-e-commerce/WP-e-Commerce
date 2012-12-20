@@ -1666,8 +1666,6 @@ function wpsc_get_all_customer_meta( $id = false ) {
 	if ( ! $id )
 		$id = wpsc_get_current_customer_id();
 
-	// error_log( "customer id: " . $id );
-
 	if ( ! $id )
 		return new WP_Error( 'wpsc_customer_meta_invalid_customer_id', __( 'Invalid customer ID', 'wpsc' ), $id );
 
@@ -1691,18 +1689,21 @@ function wpsc_get_all_customer_meta( $id = false ) {
  * @since  3.8.9
  * @param  string  $key Meta key
  * @param  int|string $id  Customer ID. Optional, defaults to current customer
- * @return mixed           Meta value, or null if it doesn't exist. WP_Error will
- *                         be returned if the customer ID is invalid.
+ * @return mixed           Meta value, or null if it doesn't exist or if the
+ *                         customer ID is invalid.
  */
 function wpsc_get_customer_meta( $key = '', $id = false ) {
 	global $wpdb;
 
 	$profile = wpsc_get_all_customer_meta( $id );
 
-	if ( is_wp_error( $profile ) )
-		return $profile;
+	// attempt to regenerate current customer ID if it's invalid
+	if ( is_wp_error( $profile ) && ! $id ) {
+		wpsc_create_customer_id();
+		$profile = wpsc_get_all_customer_meta();
+	}
 
-	if ( ! array_key_exists( $key, $profile ) )
+	if ( is_wp_error( $profile ) || ! array_key_exists( $key, $profile ) )
 		return null;
 
 	return $profile[$key];
