@@ -128,20 +128,6 @@ class wpsc_coupons {
 				
 		$return = 0;
 		
-		// $this->is_percentage == '2' means "Free Shipping"
-		if ($this->is_percentage == '2'){
-		
-			$discount_country = $this->free_shipping_details['discount_country'];
-			$discount_region = $this->free_shipping_details['discount_region'];
-			$delivery_country = $wpsc_cart->delivery_country;
-			$delivery_region = $wpsc_cart->delivery_region;
-			
-			//if there is no region we just compare the countries otherwise compaire both the regions 
-			//and countries or if there are no country/region limitation then its free shipping for everywhere
-			if (empty($discount_region) && ($discount_country == $delivery_country) || ($discount_country == $delivery_country) && ($delivery_region == $discount_region) || empty($this->free_shipping_details))
-				return $wpsc_cart->calculate_total_shipping();
-		}
-		
 		//Calculates the discount for the whole cart if there is no condition on this coupon.
 		if ($this->conditions == '' || count($this->conditions) == 0) {
 			
@@ -151,7 +137,20 @@ class wpsc_coupons {
 				$total_price = $wpsc_cart->calculate_subtotal();
 				$this->discount = $total_price*$this->value/100;
 				return $this->discount;
-
+		
+			// $this->is_percentage == '2' means "Free Shipping"
+			} elseif ($this->is_percentage == '2'){
+		
+				$discount_country = $this->free_shipping_details['discount_country'];
+				$discount_region = $this->free_shipping_details['discount_region'];
+				$delivery_country = $wpsc_cart->delivery_country;
+				$delivery_region = $wpsc_cart->delivery_region;
+			
+				//if there is no region we just compare the countries otherwise compaire both the regions 
+				//and countries or if there are no country/region limitation then its free shipping for everywhere
+				if (empty($discount_region) && ($discount_country == $delivery_country) || ($discount_country == $delivery_country) && ($delivery_region == $discount_region) || empty($this->free_shipping_details))
+					return $wpsc_cart->calculate_total_shipping();
+			
 			// Anything else means "Fixed amount" discount
 			} else {
 
@@ -196,6 +195,19 @@ class wpsc_coupons {
 							}else{
 								return $this->discount;
 							}
+						// $this->is_percentage == '2' means "Free Shipping"
+						} elseif ($this->is_percentage == '2'){
+		
+							$discount_country = $this->free_shipping_details['discount_country'];
+							$discount_region = $this->free_shipping_details['discount_region'];
+							$delivery_country = $wpsc_cart->delivery_country;
+							$delivery_region = $wpsc_cart->delivery_region;
+			
+							//if there is no region we just compare the countries otherwise compaire both the regions 
+							//and countries or if there are no country/region limitation then its free shipping for everywhere
+							if (empty($discount_region) && ($discount_country == $delivery_country) || ($discount_country == $delivery_country) && ($delivery_region == $discount_region) || empty($this->free_shipping_details))
+								return $wpsc_cart->calculate_total_shipping();
+			
 						} else {
 							$item->discount = $this->value;
 							if($this->every_product == 1){
@@ -356,7 +368,7 @@ class wpsc_coupons {
 			}
 		
 		} else if ($c['property'] == 'subtotal_amount'){
-			$subtotal = wpsc_cart_total(false);
+			$subtotal = wpsc_cart_subtotal(false);
 			switch($c['logic']) {
 				case 'equal'://Checks if the subtotal of products in the cart equals condition value
 				if ($subtotal == $c['value'])

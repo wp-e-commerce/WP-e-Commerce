@@ -69,6 +69,18 @@ function wpsc_cart_total( $forDisplay = true ) {
 
 }
 
+function wpsc_cart_subtotal( $forDisplay = true ) {
+   global $wpsc_cart;
+
+   $subtotal = $wpsc_cart->calculate_subtotal(false);
+
+    if( $forDisplay )
+        return wpsc_currency_display( $subtotal );
+    else
+        return $subtotal;
+
+}
+
 /**
  * Cart Total Widget
  *
