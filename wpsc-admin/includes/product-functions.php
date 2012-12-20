@@ -29,9 +29,9 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 	$post_data['additional_description'] = isset($post_data['additional_description']) ? $post_data['additional_description'] : '';
     $post_meta['meta'] = (array)$_POST['meta'];
 	if ( isset( $post_data['meta']['_wpsc_price'] ) )
-		$post_data['meta']['_wpsc_price'] = abs( (float) str_replace( ',', '', $post_data['meta']['_wpsc_price'] ) );
+		$post_data['meta']['_wpsc_price'] = wpsc_string_to_float( $post_data['meta']['_wpsc_price'] );
 	if ( isset( $post_data['meta']['_wpsc_special_price'] ) )
-		$post_data['meta']['_wpsc_special_price'] = abs((float)str_replace( ',','',$post_data['meta']['_wpsc_special_price'] ));
+		$post_data['meta']['_wpsc_special_price'] = wpsc_string_to_float( $post_data['meta']['_wpsc_special_price'] );
 	if($post_data['meta']['_wpsc_sku'] == __('N/A', 'wpsc'))
 		$post_data['meta']['_wpsc_sku'] = '';
 	if( isset( $post_data['meta']['_wpsc_is_donation'] ) )
@@ -62,7 +62,7 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 
 	if ( isset( $post_data['meta']['_wpsc_product_metadata']['weight'] ) ) {
 		$weight = wpsc_convert_weight($post_data['meta']['_wpsc_product_metadata']['weight'], $post_data['meta']['_wpsc_product_metadata']['weight_unit'], "pound", true);
-		$post_data['meta']['_wpsc_product_metadata']['weight'] = (float)$weight;
+		$post_data['meta']['_wpsc_product_metadata']['weight'] = wpsc_string_to_float( $weight );
         $post_data['meta']['_wpsc_product_metadata']['display_weight_as'] = $post_data['meta']['_wpsc_product_metadata']['weight_unit'];
 	}
 
@@ -85,8 +85,8 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 	}
 
 	if ( isset( $post_data['meta']['_wpsc_product_metadata']['shipping'] ) ) {
-		$post_data['meta']['_wpsc_product_metadata']['shipping']['local'] = (float)$post_data['meta']['_wpsc_product_metadata']['shipping']['local'];
-		$post_data['meta']['_wpsc_product_metadata']['shipping']['international'] = (float)$post_data['meta']['_wpsc_product_metadata']['shipping']['international'];
+		$post_data['meta']['_wpsc_product_metadata']['shipping']['local'] = wpsc_string_to_float( $post_data['meta']['_wpsc_product_metadata']['shipping']['local'] );
+		$post_data['meta']['_wpsc_product_metadata']['shipping']['international'] = wpsc_string_to_float( $post_data['meta']['_wpsc_product_metadata']['shipping']['international'] );
 	}
 
 	// Advanced Options
@@ -264,8 +264,8 @@ function wpsc_sanitise_product_forms($post_data = null) {
 		$post_data['post_status'] = 'draft';
 	}
 
-	$post_data['meta']['_wpsc_price'] = (float)str_replace( ',','',$post_data['meta']['_wpsc_price'] );
-	$post_data['meta']['_wpsc_special_price'] = (float)str_replace( ',','',$post_data['meta']['_wpsc_special_price'] );
+	$post_data['meta']['_wpsc_price'] = wpsc_string_to_float( $post_data['meta']['_wpsc_price'] );
+	$post_data['meta']['_wpsc_special_price'] = wpsc_string_to_float( $post_data['meta']['_wpsc_special_price'] );
 	$post_data['meta']['_wpsc_sku'] = $post_data['meta']['_wpsc_sku'];
 	if (!isset($post_data['meta']['_wpsc_is_donation'])) $post_data['meta']['_wpsc_is_donation'] = '';
 	$post_data['meta']['_wpsc_is_donation'] = (int)(bool)$post_data['meta']['_wpsc_is_donation'];
@@ -292,8 +292,9 @@ function wpsc_sanitise_product_forms($post_data = null) {
 	if(!isset($post_data['meta']['_wpsc_product_metadata']['display_weight_as'])) $post_data['meta']['_wpsc_product_metadata']['display_weight_as'] = '';
     if(!isset($post_data['meta']['_wpsc_product_metadata']['display_weight_as'])) $post_data['meta']['_wpsc_product_metadata']['display_weight_as'] = '';
 
-	$weight = wpsc_convert_weight($post_data['meta']['_wpsc_product_metadata']['weight'], $post_data['meta']['_wpsc_product_metadata']['weight_unit'], "pound", true);
-	$post_data['meta']['_wpsc_product_metadata']['weight'] = (float)$weight;
+    $weight = wpsc_string_to_float( $post_data['meta']['_wpsc_product_metadata']['weight'] );
+	$weight = wpsc_convert_weight( $weight, $post_data['meta']['_wpsc_product_metadata']['weight_unit'], "pound", true);
+	$post_data['meta']['_wpsc_product_metadata']['weight'] = $weight;
 	$post_data['meta']['_wpsc_product_metadata']['display_weight_as'] = $post_data['meta']['_wpsc_product_metadata']['weight_unit'];
 
 	$post_data['files'] = $_FILES;

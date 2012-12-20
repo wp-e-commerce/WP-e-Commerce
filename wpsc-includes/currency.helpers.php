@@ -36,3 +36,10 @@ function wpsc_convert_currency( $amt, $from, $to ) {
 
 	return $rate * $amt;
 }
+
+function wpsc_string_to_float( $string ) {
+	$decimal_separator = get_option( 'wpsc_decimal_separator' );
+	$string = preg_replace( '/[^0-9\\' . $decimal_separator . ']/', '', $string );
+	$string = str_replace( $decimal_separator, '.', $string );
+	return (float) $string;
+}
