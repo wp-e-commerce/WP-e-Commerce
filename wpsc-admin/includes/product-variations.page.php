@@ -30,7 +30,7 @@ var userSettings = {
 	}
 </style>
 </head>
-<body class="no-js wpsc-product-variation-iframe">
+<body class="no-js wp-admin wp-core-ui wpsc-product-variation-iframe">
 <script type="text/javascript">document.body.className = document.body.className.replace('no-js','js');</script>
 
 <div id="wpsc-product-variations-wrapper">
