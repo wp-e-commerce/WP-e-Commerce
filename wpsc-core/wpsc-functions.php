@@ -33,7 +33,7 @@ function wpsc_term_list_levels( $term_name, $term ) {
 	global $wp_list_table, $wpsc_term_list_levels;
 
 	$screen = get_current_screen();
-	if ( ! in_array( $screen->id, array( 'edit-wpsc-variation', 'edit-wpsc_product_category' ) ) )
+	if ( ! is_object( $screen ) || ! in_array( $screen->id, array( 'edit-wpsc-variation', 'edit-wpsc_product_category' ) ) )
 		return $term_name;
 
 	if ( ! isset( $wpsc_term_list_levels ) )
