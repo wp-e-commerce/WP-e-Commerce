@@ -178,7 +178,7 @@ class WPSC_Purchase_Log_Page
                      <h4><?php esc_html_e( 'Cart Items with Custom Messages' , 'wpsc' ); ?>:</h4>
                      <?php
                      foreach($messages as $message){
-                        echo $message;
+                        echo esc_html( $message );
                      }
                   } ?>
                </div>
