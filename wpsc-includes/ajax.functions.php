@@ -73,7 +73,7 @@ function wpsc_add_to_cart() {
 		$provided_parameters['is_customisable'] = true;
 
 		if ( isset( $_POST['custom_text'] ) ) {
-			$provided_parameters['custom_message'] = $_POST['custom_text'];
+			$provided_parameters['custom_message'] = stripslashes( $_POST['custom_text'] );
 		}
 		if ( isset( $_FILES['custom_file'] ) ) {
 			$provided_parameters['file_data'] = $_FILES['custom_file'];

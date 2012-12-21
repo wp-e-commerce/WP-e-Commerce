@@ -107,7 +107,7 @@ function wpsc_purchlogs_custommessages() {
    $messages = array();
    foreach ( $purchlogitem->allcartcontent as $cartitem ) {
 	  if ( $cartitem->custom_message != '' ) {
-		 $messages[] = $cartitem->name . ' :<br />' . $cartitem->custom_message;
+		 $messages[] = apply_filters( 'the_title', $cartitem->name ) . ' :<br />' . $cartitem->custom_message;
 	  }
    }
    return $messages;
