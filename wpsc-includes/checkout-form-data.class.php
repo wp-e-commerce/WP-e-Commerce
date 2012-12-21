@@ -24,7 +24,7 @@ class WPSC_Checkout_Form_Data
 			$sql = $wpdb->prepare( $sql, $log_id );
 			$this->raw_data = $wpdb->get_results( $sql );
 
-			wp_cache_set( $log_id, $this->data, 'wpsc_checkout_form_raw_data' );
+			wp_cache_set( $log_id, $this->raw_data, 'wpsc_checkout_form_raw_data' );
 		}
 
 		// At the moment, only core fields have unique_name. In the future, all fields will have
