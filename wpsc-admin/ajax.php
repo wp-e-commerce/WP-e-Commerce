@@ -385,10 +385,15 @@ function _wpsc_ajax_change_purchase_log_status() {
 	if ( ! $result )
 		return new WP_Error( 'wpsc_cannot_edit_purchase_log_status', __( "Couldn't modify purchase log's status. Please try again.", 'wpsc' ) );
 
-	set_current_screen( 'dashboard_page_wpsc-sales-logs' );
+	$args = array();
+
+	if ( version_compare( get_bloginfo( 'version' ), '3.5', '<' ) )
+		set_current_screen( 'dashboard_page_wpsc-sales-logs' );
+	else
+		$args['screen'] = 'dashboard_page_wpsc-sales-logs';
 
 	require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/purchase-log-list-table-class.php' );
-	$purchaselog_table = new WPSC_Purchase_Log_List_Table();
+	$purchaselog_table = new WPSC_Purchase_Log_List_Table( $args );
 	$purchaselog_table->prepare_items();
 
 	ob_start();
