@@ -19,10 +19,9 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 	private $where;
 	private $where_no_filter;
 
-	public function __construct() {
-		WP_List_Table::__construct( array(
-			'plural' => 'purchase-logs',
-		) );
+	public function __construct( $args = array() ) {
+		$args['plural'] = 'purchase-logs';
+		parent::__construct( $args );
 
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX )
 			$_SERVER['REQUEST_URI'] = wp_get_referer();
