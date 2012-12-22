@@ -286,6 +286,8 @@ class WPSC_Purchase_Log_Page
          $cols = 5;
       else
          $cols = 4;
+      $receipt_sent = ! empty( $_GET['sent'] );
+      $receipt_not_sent = isset( $_GET['sent'] ) && ! $_GET['sent'];
       include( 'includes/purchase-logs-page/item-details.php' );
    }
 

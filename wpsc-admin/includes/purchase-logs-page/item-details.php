@@ -4,6 +4,16 @@
 		<?php esc_html_e( 'Sales Log Details', 'wpsc' ); ?>
 		<span class="subtitle">#<?php echo $this->log_id; ?></span>
 	</h2>
+	<?php if ( $receipt_sent ): ?>
+		<div class="updated">
+			<p><?php esc_html_e( 'Receipt has been resent successfully.', 'wpsc' ); ?></p>
+		</div>
+	<?php elseif ( $receipt_not_sent) : ?>
+		<div class="error">
+			<p><?php esc_html_e( 'Receipt could not be sent to buyer. Please contact your hosting service and make sure your server can send emails.', 'wpsc' ); ?></p>
+		</div>
+	<?php endif; ?>
+
 	<div id='post-body'>
 		<?php if ( wpsc_has_purchlog_shipping() ): ?>
 			<div id='wpsc_shipping_details_box'>
