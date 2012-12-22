@@ -8,7 +8,7 @@
 		<div class="updated">
 			<p><?php esc_html_e( 'Receipt has been resent successfully.', 'wpsc' ); ?></p>
 		</div>
-	<?php elseif ( $receipt_not_sent) : ?>
+	<?php elseif ( $receipt_not_sent ) : ?>
 		<div class="error">
 			<p><?php esc_html_e( 'Receipt could not be sent to buyer. Please contact your hosting service and make sure your server can send emails.', 'wpsc' ); ?></p>
 		</div>
