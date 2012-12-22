@@ -268,12 +268,12 @@ function wpsc_purchlog_resend_email() {
 	$log_id = $_REQUEST['email_buyer_id'];
 	$wpec_taxes_controller = new wpec_taxes_controller();
 	if ( is_numeric( $log_id ) ) {
-		$selectsql = "SELECT `sessionid` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id`= %d LIMIT 1";
-		$purchase_log = $wpdb->get_var( $wpdb->prepare( $selectsql, $log_id ) );
-		transaction_results( $purchase_log, false );
-		$sent = true;
+		$purchase_log = new WPSC_Purchase_Log( $log_id );
+		$sent = wpsc_send_customer_email( $purchase_log );
 	}
+
 	$sendback = wp_get_referer();
+
 	if ( isset( $sent ) )
 	    $sendback = add_query_arg( 'sent', $sent, $sendback );
 
