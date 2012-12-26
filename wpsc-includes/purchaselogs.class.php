@@ -518,8 +518,8 @@ class wpsc_purchaselogs {
 	  } else {
 		 $this->getdates();
 		 if ( isset( $_GET['view_purchlogs_by'] ) && isset( $_GET['view_purchlogs_by_status'] ) ) {
-			$status = $_GET['view_purchlogs_by_status'];
-			$viewby = $_GET['view_purchlogs_by'];
+			$status = sanitize_text_field( $_GET['view_purchlogs_by_status'] );
+			$viewby = sanitize_text_field( $_GET['view_purchlogs_by'] );
 			if ( $viewby == 'all' ) {
 			   $dates = $this->getdates();
 			   $purchaselogs = $this->get_purchlogs( $dates, $status );
