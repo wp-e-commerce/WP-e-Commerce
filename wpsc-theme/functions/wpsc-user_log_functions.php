@@ -385,7 +385,6 @@ function wpsc_user_profile_links( $args = array() ) {
 	);
 
 	$args = wp_parse_args( $args, $defaults );
-	extract( $args );
 
 	$profile_tabs = apply_filters( 'wpsc_user_profile_tabs', array(
 		'purchase_history' => __( 'Purchase History', 'wpsc' ),
@@ -393,22 +392,22 @@ function wpsc_user_profile_links( $args = array() ) {
 		'downloads'        => __( 'Your Downloads', 'wpsc' )
 	) );
 
-	echo $before_link_list;
+	echo $args['before_link_list'];
 
 	$i = 0;
 	foreach ( $profile_tabs as $tab_id => $tab_title ) :
-		echo $before_link_item;
+		echo $args['before_link_item'];
 		printf(
 			'<a href="%1$s" class="%2$s">%3$s</a>',
 			esc_url( get_option( 'user_account_url' ) . $separator . 'tab=' . $tab_id ),
 			esc_attr( $current_tab == $tab_id ? 'current' : '' ),
 			$tab_title
 		);
-		echo $after_link_item;
-		if ( ++$i < count( $profile_tabs ) ) echo $link_separator;
+		echo $args['after_link_item'];
+		if ( ++$i < count( $profile_tabs ) ) echo $args['link_separator'];
 	endforeach;
 
-	echo $after_link_list;
+	echo $args['after_link_list'];
 }
 
 function wpsc_user_purchases() {
