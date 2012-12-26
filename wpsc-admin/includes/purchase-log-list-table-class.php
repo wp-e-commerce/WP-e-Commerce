@@ -275,8 +275,8 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 		$views = array(
 			'all' => sprintf(
 				'<a href="%s" %s>%s</a>',
-				$all_href,
-				$all_class,
+				esc_url( $all_href ),
+				sanitize_html_class( $all_class ),
 				$all_text
 			),
 		);
@@ -301,8 +301,8 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 			$class = ( $this->status == $status ) ? 'class="current"' : '';
 			$views[$status] = sprintf(
 				'<a href="%s" %s>%s</a>',
-				$href,
-				$class,
+				esc_url( $href ),
+				sanitize_html_class( $class ),
 				$text
 			);
 		}
