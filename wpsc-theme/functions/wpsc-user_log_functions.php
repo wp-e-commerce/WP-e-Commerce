@@ -377,20 +377,20 @@ function wpsc_user_profile_links( $args = array() ) {
 	global $current_tab, $separator;
 
 	$defaults = array (
- 		'before_link_list'	=> '',
- 		'after_link_list'	=> '',
- 		'before_link_item'	=> '',
- 		'after_link_item'	=> '',
- 		'link_separator'	=> '|'
+ 		'before_link_list' => '',
+ 		'after_link_list'  => '',
+ 		'before_link_item' => '',
+ 		'after_link_item'  => '',
+ 		'link_separator'   => '|'
 	);
 
 	$args = wp_parse_args( $args, $defaults );
 	extract( $args );
 
 	$profile_tabs = apply_filters( 'wpsc_user_profile_tabs', array(
-		'purchase_history'	=> __( 'Purchase History', 'wpsc' ),
-		'edit_profile'		=> __( 'Your Details', 'wpsc' ),
-		'downloads'			=> __( 'Your Downloads', 'wpsc' )
+		'purchase_history' => __( 'Purchase History', 'wpsc' ),
+		'edit_profile'     => __( 'Your Details', 'wpsc' ),
+		'downloads'        => __( 'Your Downloads', 'wpsc' )
 	) );
 
 	echo $before_link_list;
