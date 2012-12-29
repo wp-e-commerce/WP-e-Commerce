@@ -2008,6 +2008,7 @@ function wpsc_the_product_price_display( $args = array() ) {
 		$attributes .= ' style="display:none;"';
 	$you_save_before = sprintf( $you_save_before, $attributes );
 	$you_save_amount_before = sprintf( $you_save_amount_before, esc_attr( $you_save_amount_class ), esc_attr( $you_save_amount_id ) );
+    $you_save = wpsc_currency_display ( $you_save, array() );
 
 	$old_price     = $old_price_amount_before . $old_price . $old_price_amount_after;
 	$current_price = $price_amount_before . $current_price . $price_amount_after;
