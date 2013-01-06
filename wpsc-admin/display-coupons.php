@@ -254,5 +254,3 @@ function wpsc_display_coupons_page() {
 	} // end view check
 
 }
-
-?>
