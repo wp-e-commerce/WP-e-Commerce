@@ -67,24 +67,19 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 								<?php
 								//i dont think we need this cu we need to do an ajax request to generate this list
 								//based on the country chosen probably need the span place holder tho
-								$region_list = $wpdb->get_results( $wpdb->prepare( "SELECT `" . WPSC_TABLE_REGION_TAX . "`.* FROM `" . WPSC_TABLE_REGION_TAX . "`, `" . WPSC_TABLE_CURRENCY_LIST . "`  WHERE `" . WPSC_TABLE_CURRENCY_LIST . "`.`isocode` IN(%s) AND `" . WPSC_TABLE_CURRENCY_LIST . "`.`id` = `" . WPSC_TABLE_REGION_TAX . "`.`country_id`", get_option( $free_shipping_country ) ), ARRAY_A );
+								$region_list = $wpdb->get_results( "SELECT `" . WPSC_TABLE_REGION_TAX . "`.* FROM `" . WPSC_TABLE_REGION_TAX . "`, `" . WPSC_TABLE_CURRENCY_LIST . "`  WHERE `" . WPSC_TABLE_CURRENCY_LIST . "`.`isocode` AND `" . WPSC_TABLE_CURRENCY_LIST . "`.`id` = `" . WPSC_TABLE_REGION_TAX . "`.`country_id`", ARRAY_A );
 								if ( !empty( $region_list ) ) { ?>
 
 									<select name='free_shipping_options[discount_region]'>
 									<?php
-										foreach ( $region_list as $region ) {
-											if ( esc_attr( $free_shipping_region ) == $region['id'] ) {
-												$selected = "selected='selected'";
-											} else {
-												$selected = "";
-											}
-										?>
-										<option value='<?php echo $region['id']; ?>' <?php echo $selected; ?> ><?php echo esc_attr( $region['name'] ); ?></option> <?php
+										foreach ( $region_list as $region ) { ?>
+										 <option value='<?php echo $region['id']; ?>' <?php selected( $region['id'], $coupon['discount_region'] ); ?> ><?php echo esc_attr( $region['name'] ); ?></option>
+										 <?php
 										}
 									?>
 									</select>
-							<?php } ?>
-							</span>
+								<?php } ?>
+								</span>
 
 							</div>
 
