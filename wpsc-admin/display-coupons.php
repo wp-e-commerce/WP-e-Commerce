@@ -78,6 +78,9 @@ function wpsc_display_coupons_page() {
 
 			// update an existing coupon
 			if ( isset( $_POST['is_edit_coupon'] ) && ($_POST['is_edit_coupon'] == 'true') && !(isset( $_POST['delete_condition'] )) && !(isset( $_POST['submit_condition'] )) ) {
+
+				$rules = isset( $_POST['rules'] ) ? $_POST['rules'] : array();
+
 				$wpdb->update(
 					WPSC_TABLE_COUPON_CODES,
 					array(
@@ -92,7 +95,7 @@ function wpsc_display_coupons_page() {
 						'every_product' => $_POST['edit_coupon_every_product'],
 						'start'         => get_gmt_from_date( $_POST['edit_coupon_start'] . ' 00:00:00' ),
 						'expiry'        => get_gmt_from_date( $_POST['edit_coupon_end'] . ' 23:59:59' ),
-						'condition'     => serialize( $_POST['rules'] )
+						'condition'     => serialize( $rules )
 					),
 					array( 'id'         => absint( $_POST['coupon_id'] ) ),
 					array(
@@ -112,27 +115,6 @@ function wpsc_display_coupons_page() {
 					array( '%d' )
 				);
 
-			}
-
-			if ( isset( $_POST['delete_condition'] ) ) {
-
-				$conditions = $wpdb->get_var( $wpdb->prepare( "SELECT `condition` FROM `" . WPSC_TABLE_COUPON_CODES . "` WHERE `id` = %d LIMIT 1", $_POST['coupon_id'] ) );
-				$conditions = unserialize( $conditions );
-
-				unset( $conditions[(int)$_POST['delete_condition']] );
-
-				$wpdb->update(
-					WPSC_TABLE_COUPON_CODES,
-					array(
-					    'condition' => serialize( $conditions ),
-
-					),
-					array(
-					    'id' => $_POST['coupon_id']
-					),
-					'%s',
-					'%d'
-				    );
 			}
 
 			if ( isset( $_POST['submit_condition'] ) ) {
