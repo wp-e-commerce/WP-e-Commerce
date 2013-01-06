@@ -232,13 +232,6 @@ function wpsc_display_coupons_page() {
 								echo "<a title='" . esc_attr( $coupon['coupon_code'] ). "' href='" . add_query_arg( array( 'coupon' => $coupon['id'], 'view' => 'edit' ) ) . "' rel='" . $coupon['id'] . "'>" . __( 'Edit', 'wpsc' ) . "</a>";
 								echo "    </td>\n\r";
 								echo "  </tr>\n\r";
-								echo "  <tr class='coupon_edit'>\n\r";
-								echo "    <td colspan='7' style='padding-left:0px;'>\n\r";
-								echo "      <div id='coupon_box_" . $coupon['id'] . "' class='displaynone modify_coupon' >\n\r";
-								coupon_edit_form( $coupon );
-								echo "      </div>\n\r";
-								echo "    </td>\n\r";
-								echo "  </tr>\n\r";
 							}
 						else : ?>
 						<tr>
