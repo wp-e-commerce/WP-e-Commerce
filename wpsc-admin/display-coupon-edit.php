@@ -136,7 +136,7 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 						<td>
 							</span><input type='hidden' value='0' name='edit_coupon_every_product' />
 							<input type="checkbox" value="1"<?php checked( 1, $coupon['every_product'] ); ?> name='edit_coupon_every_product'/>
-							<span class='description'><?php _e( 'This coupon affects each product at checkout.', 'wpsc' ) ?></span>
+							<span><?php _e( 'This coupon affects each product at checkout.', 'wpsc' ) ?></span>
 						</td>
 					</tr>
 
@@ -182,6 +182,7 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 									</select>
 
 									<input type="text" name="rules[<?php echo $key; ?>][value]" value="<?php esc_attr_e( $condition['value'] ); ?>" style="width: 300px;"/>
+									<img height="16" width="16" class="delete" alt="Delete" src="<?php echo WPSC_CORE_IMAGES_URL; ?>/cross.png" onclick="jQuery(this).parent().remove();"/>
 								</div>
 								<?php endforeach;
 							else : ?>
@@ -208,6 +209,7 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 
 									<input type="text" name="rules[0][value]" style="width: 300px;"/>
 								</div>
+
 							</div>
 							<?php endif; ?>
 							<script>
