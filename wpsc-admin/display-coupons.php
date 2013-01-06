@@ -78,8 +78,7 @@ function wpsc_display_coupons_page() {
 
 			// update an existing coupon
 			if ( isset( $_POST['is_edit_coupon'] ) && ($_POST['is_edit_coupon'] == 'true') && !(isset( $_POST['delete_condition'] )) && !(isset( $_POST['submit_condition'] )) ) {
-
-				// update all but the conditions
+				//echo '<pre>'; print_r( $_POST['rules'] ); echo '</pre>'; exit;
 				$wpdb->update(
 					WPSC_TABLE_COUPON_CODES,
 					array(
@@ -93,7 +92,8 @@ function wpsc_display_coupons_page() {
 						'active'        => $_POST['edit_coupon_active'],
 						'every_product' => $_POST['edit_coupon_every_product'],
 						'start'         => get_gmt_from_date( $_POST['edit_coupon_start'] . ' 00:00:00' ),
-						'expiry'        => get_gmt_from_date( $_POST['edit_coupon_end'] . ' 23:59:59' )
+						'expiry'        => get_gmt_from_date( $_POST['edit_coupon_end'] . ' 23:59:59' ),
+						'condition'     => serialize( $_POST['rules'] )
 					),
 					array( 'id'         => absint( $_POST['coupon_id'] ) ),
 					array(
@@ -107,42 +107,10 @@ function wpsc_display_coupons_page() {
 						'%d',
 						'%d',
 						'%s',
+						'%s',
 						'%s'
 					),
 					array( '%d' )
-				);
-
-
-				// update discount rules
-				$rules = $_POST['rules'];
-				$new_rule = array();
-				foreach ( (array)$rules as $key => $rule ) {
-					foreach ( $rule as $k => $r ) {
-						if( $r['value'] != '' )
-							$new_rule[$k][$key] = $r;
-					}
-				}
-
-				$conditions = $wpdb->get_var( $wpdb->prepare( "SELECT `condition` FROM `" . WPSC_TABLE_COUPON_CODES . "` WHERE `id` = %d LIMIT 1", $_POST['coupon_id'] ) );
-				$conditions = unserialize( $conditions );
-				$new_cond = array();
-
-				if ( $_POST['rules']['value'][0] != '' ) {
-					$new_cond['property'] = $_POST['rules']['property'][0];
-					$new_cond['logic'] = $_POST['rules']['logic'][0];
-					$new_cond['value'] = $_POST['rules']['value'][0];
-					$conditions [] = $new_cond;
-				}
-				$wpdb->update(
-				    WPSC_TABLE_COUPON_CODES,
-				    array(
-						'condition' => serialize( $conditions )
-				    ),
-				    array(
-						'id' => absint( $_POST['coupon_id'] )
-				    ),
-				    '%s',
-				    '%d'
 				);
 
 			}
