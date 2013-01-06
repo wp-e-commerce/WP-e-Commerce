@@ -82,8 +82,8 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 
 		$views = array(
 			'all'		=> sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'status', $base ), $current === 'all' || $current == '' ? ' class="current"' : '', __('All', 'wpsc') . $total_count ),
-			'active'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'active', $base ), $current === 'active' ? ' class="current"' : '', __('Active', 'wpsc') . $active_count ),
-			'inactive'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'inactive', $base ), $current === 'inactive' ? ' class="current"' : '', __('Inactive', 'wpsc') . $inactive_count ),
+			'active'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', '1', $base ), $current === 'active' ? ' class="current"' : '', __('Active', 'wpsc') . $active_count ),
+			'inactive'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', '0', $base ), $current === 'inactive' ? ' class="current"' : '', __('Inactive', 'wpsc') . $inactive_count ),
 		);
 
 		return $views;
@@ -370,10 +370,19 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 
 		$per_page = $this->per_page;
 		$offset   = ( $page - 1 ) * $this->per_page;
+
+		$status   = isset( $_GET['status'] ) ? absint( $_GET['status'] ) : false;
+
+		if( $status !== false )
+			$where    = "WHERE active = $status";
+		else
+			$where    = '';
+
 		$order 	  = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
+
 		$limit    = " LIMIT $offset,$per_page;";
 
-		$coupons  = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_COUPON_CODES . "` ORDER BY id {$order} {$limit} ", ARRAY_A );
+		$coupons  = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_COUPON_CODES . "` {$where} ORDER BY id {$order} {$limit} ", ARRAY_A );
 
 		if ( $coupons ) {
 			foreach ( $coupons as $coupon ) {
@@ -423,10 +432,10 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 		$status = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
 
 		switch( $status ) {
-			case 'active':
+			case '1':
 				$total_items = $this->active_count;
 				break;
-			case 'inactive':
+			case '0':
 				$total_items = $this->inactive_count;
 				break;
 			case 'any':

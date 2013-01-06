@@ -117,7 +117,7 @@ function wpsc_display_coupons_page() {
 	 * Load the selected view
 	 */
 
-	if( isset( $_GET['wpsc-action'] ) && $_GET['wpsc-action'] == 'add' ) {
+	if( isset( $_GET['wpsc-action'] ) && $_GET['wpsc-action'] == 'add_coupon' ) {
 		// load the coupon add screen
 		include( dirname( __FILE__ ) . '/display-coupon-add.php' );
 
@@ -131,7 +131,7 @@ function wpsc_display_coupons_page() {
 		$coupons_table = new WPSC_Coupons_List_Table();
 		$coupons_table->prepare_items(); ?>
 		<div class="wrap">
-			<h2><?php _e( 'Coupons', 'wpsc' ); ?></h2>
+			<h2><?php _e( 'Coupons', 'wpsc' ); ?><a href="<?php echo add_query_arg( 'wpsc-action', 'add_coupon' ); ?>" class="add-new-h2"><?php _e( 'Add Coupon', 'wpsc' ); ?></a></h2>
 			<?php do_action( 'wpsc_coupons_page_top' ); ?>
 			<form id="wpsc-coupons-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=wpsc-product&page=wpsc-edit-coupons' ); ?>">
 
