@@ -6,8 +6,6 @@ if( !defined( 'ABSPATH' ) )
 
 $coupon_id = absint( $_GET['coupon'] );
 $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUPON_CODES . "` WHERE `id` = %d", $coupon_id ), ARRAY_A );
-echo '<pre>'; print_r( $coupon ); echo '</pre>';
-echo '<pre>'; print_r( unserialize( $coupon['condition'] ) ); echo '</pre>';
 ?>
 <div class="wrap" id+"coupon_data">
 	<div id="edit_coupon_box">
