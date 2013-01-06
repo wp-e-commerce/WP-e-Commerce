@@ -250,9 +250,9 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 
 	function get_bulk_actions() {
 		$actions = array(
-			'delete'     => __( 'Delete', 'wpsc' ),
 			'activate'   => __( 'Activate', 'wpsc' ),
-			'deactivate' => __( 'Deactivate', 'wpsc' )
+			'deactivate' => __( 'Deactivate', 'wpsc' ),
+			'delete'     => __( 'Delete', 'wpsc' )
 		);
 
 		return $actions;
