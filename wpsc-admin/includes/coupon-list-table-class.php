@@ -75,15 +75,15 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	function get_views() {
 		$base           = admin_url('edit.php?post_type=wpsc-product&page=wpsc-edit-coupons');
 
-		$current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
+		$current        = isset( $_GET['status'] ) ? $_GET['status'] : 'all';
 		$total_count    = '&nbsp;<span class="count">(' . $this->total_count    . ')</span>';
 		$active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';
 		$inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count  . ')</span>';
 
 		$views = array(
 			'all'		=> sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'status', $base ), $current === 'all' || $current == '' ? ' class="current"' : '', __('All', 'wpsc') . $total_count ),
-			'active'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', '1', $base ), $current === 'active' ? ' class="current"' : '', __('Active', 'wpsc') . $active_count ),
-			'inactive'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', '0', $base ), $current === 'inactive' ? ' class="current"' : '', __('Inactive', 'wpsc') . $inactive_count ),
+			'active'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', '1', $base ), $current === '1' ? ' class="current"' : '', __('Active', 'wpsc') . $active_count ),
+			'inactive'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', '0', $base ), $current === '0' ? ' class="current"' : '', __('Inactive', 'wpsc') . $inactive_count ),
 		);
 
 		return $views;
