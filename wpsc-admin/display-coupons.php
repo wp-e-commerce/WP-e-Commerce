@@ -7,12 +7,16 @@ function wpsc_display_coupons_page() {
 		// load the coupon add screen
 		include( dirname( __FILE__ ) . '/display-coupon-add.php' );
 
+	} elseif( isset( $_GET['view'] ) && $_GET['view'] == 'edit' ) {
+		// load the coupon add screen
+		include( dirname( __FILE__ ) . '/display-coupon-edit.php' );
+
 	} else {
 
 		if ( isset( $_POST ) && is_array( $_POST ) && !empty( $_POST ) ) {
 
 			if ( isset( $_POST['add_coupon'] ) && (!isset( $_POST['is_edit_coupon'] ) || !($_POST['is_edit_coupon'] == 'true')) ) {
-				
+
 				$coupon_code   = $_POST['add_coupon_code'];
 				$discount      = (double)$_POST['add_discount'];
 				$discount_type = (int)$_POST['add_discount_type'];
@@ -41,7 +45,7 @@ function wpsc_display_coupons_page() {
 					    array(
 							'coupon_code' => $coupon_code,
 							'value' => $discount,
-							'is-percentage' => $discount_type, 
+							'is-percentage' => $discount_type,
 							'use-once' => $use_once,
 							'use-x-times' => $use_x_times,
 							'free-shipping' => $free_shipping_details,
@@ -70,83 +74,6 @@ function wpsc_display_coupons_page() {
 				if ( $insert )
 				    echo "<div class='updated'><p align='center'>" . __( 'Thanks, the coupon has been added.', 'wpsc' ) . "</p></div>";
 
-			}
-
-			if ( isset( $_POST['is_edit_coupon'] ) && ($_POST['is_edit_coupon'] == 'true') && !(isset( $_POST['delete_condition'] )) && !(isset( $_POST['submit_condition'] )) ) {
-
-				foreach ( (array)$_POST['edit_coupon'] as $coupon_id => $coupon_data ) {
-
-					$coupon_id             = (int)$coupon_id;
-					$coupon_data['start']  = $coupon_data['start'] . " 00:00:00";
-					$coupon_data['expiry'] = $coupon_data['expiry'] . " 00:00:00";
-					$check_values          = $wpdb->get_row( $wpdb->prepare( "SELECT `id`, `coupon_code`, `value`, `is-percentage`, `use-once`, `active`, `start`, `expiry`,`every_product` FROM `" . WPSC_TABLE_COUPON_CODES . "` WHERE `id` = %d", $coupon_id ), ARRAY_A );
-
-					// Sort both arrays to make sure that if they contain the same stuff,
-					// that they will compare to be the same, may not need to do this, but what the heck
-					if ( $check_values != null )
-						ksort( $check_values );
-
-					ksort( $coupon_data );
-
-					if ( $check_values != $coupon_data ) {
-
-						$insert_array = array();
-
-						foreach ( $coupon_data as $coupon_key => $coupon_value ) {
-							if ( ($coupon_key == "submit_coupon") || ($coupon_key == "delete_coupon") )
-								continue;
-
-							if ( isset( $check_values[$coupon_key] ) && $coupon_value != $check_values[$coupon_key] )
-								$insert_array[] = "`$coupon_key` = '$coupon_value'";
-
-						}
-
-						if ( isset( $check_values['every_product'] ) && $coupon_data['add_every_product'] != $check_values['every_product'] )
-							$insert_array[] = "`every_product` = '$coupon_data[add_every_product]'";
-
-						if ( count( $insert_array ) > 0 )
-						    $wpdb->query( $wpdb->prepare( "UPDATE `" . WPSC_TABLE_COUPON_CODES . "` SET " . implode( ", ", $insert_array ) . " WHERE `id` = %d LIMIT 1;", $coupon_id ) );
-
-						unset( $insert_array );
-						$rules = $_POST['rules'];
-
-						foreach ( (array)$rules as $key => $rule ) {
-							foreach ( $rule as $k => $r ) {
-								$new_rule[$k][$key] = $r;
-							}
-						}
-
-						foreach ( (array)$new_rule as $key => $rule ) {
-							if ( $rule['value'] == '' ) {
-								unset( $new_rule[$key] );
-							}
-						}
-
-						$conditions = $wpdb->get_var( $wpdb->prepare( "SELECT `condition` FROM `" . WPSC_TABLE_COUPON_CODES . "` WHERE `id` = %d LIMIT 1", $_POST['coupon_id'] ) );
-						$conditions = unserialize( $conditions );
-						$new_cond = array();
-
-						if ( $_POST['rules']['value'][0] != '' ) {
-							$new_cond['property'] = $_POST['rules']['property'][0];
-							$new_cond['logic'] = $_POST['rules']['logic'][0];
-							$new_cond['value'] = $_POST['rules']['value'][0];
-							$conditions [] = $new_cond;
-						}
-
-						$wpdb->update(
-							    WPSC_TABLE_COUPON_CODES,
-							    array(
-								'condition' => serialize( $conditions ),
-								
-							    ),
-							    array(
-								'id' => $_POST['coupon_id']
-							    ),
-							    '%s',
-							    '%d'
-							);
-					}
-				}
 			}
 
 			if ( isset( $_POST['delete_condition'] ) ) {
@@ -262,7 +189,7 @@ function wpsc_display_coupons_page() {
 										echo __("Free Shipping - With Conditions ", 'wpsc');
 									else
 										echo __("Free Shipping - Global", 'wpsc');
-									
+
 								}
 								else
 									echo wpsc_currency_display( esc_attr( $coupon['value'] ) );
@@ -302,7 +229,7 @@ function wpsc_display_coupons_page() {
 
 								echo "    </td>\n\r";
 								echo "    <td>\n\r";
-								echo "<a title='" . esc_attr( $coupon['coupon_code'] ). "' href='#' rel='" . $coupon['id'] . "' class='wpsc_edit_coupon'  >" . __( 'Edit', 'wpsc' ) . "</a>";
+								echo "<a title='" . esc_attr( $coupon['coupon_code'] ). "' href='" . add_query_arg( array( 'coupon' => $coupon['id'], 'view' => 'edit' ) ) . "' rel='" . $coupon['id'] . "'>" . __( 'Edit', 'wpsc' ) . "</a>";
 								echo "    </td>\n\r";
 								echo "  </tr>\n\r";
 								echo "  <tr class='coupon_edit'>\n\r";
@@ -317,7 +244,7 @@ function wpsc_display_coupons_page() {
 						<tr>
 							<td colspn="7"><?php _e( 'No coupon codes created yet.', 'wpsc' ); ?></td>
 						</tr>
-						<?php 
+						<?php
 						endif;
 					?>
 				</tbody>
