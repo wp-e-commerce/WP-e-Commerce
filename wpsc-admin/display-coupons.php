@@ -136,31 +136,6 @@ function wpsc_display_coupons_page() {
 				);
 
 			}
-
-			if ( isset( $_POST['submit_condition'] ) ) {
-				$conditions = $wpdb->get_var( "SELECT `condition` FROM `" . WPSC_TABLE_COUPON_CODES . "` WHERE `id` = '" . (int)$_POST['coupon_id'] . "' LIMIT 1" );
-				$conditions = unserialize( $conditions );
-
-				$new_cond             = array();
-				$new_cond['property'] = $_POST['rules']['property'][0];
-				$new_cond['logic']    = $_POST['rules']['logic'][0];
-				$new_cond['value']    = $_POST['rules']['value'][0];
-				$conditions[]         = $new_cond;
-
-				$wpdb->update(
-				    WPSC_TABLE_COUPON_CODES,
-				    array(
-					'condition' => serialize( $conditions )
-				    ),
-				    array(
-					'id' => $_POST['coupon_id']
-				    ),
-				    '%s',
-				    '%d'
-				);
-			}
 		}
-
 	} // end view check
-
 }
