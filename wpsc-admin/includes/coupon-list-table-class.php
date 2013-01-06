@@ -144,6 +144,9 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 			case 'start' :
 				$start_date = strtotime( $item[ $column_name ] );
 				return date_i18n( get_option( 'date_format' ), $start_date );
+			case 'expiry' :
+				$expiry_date = strtotime( $item[ $column_name ] );
+				return date_i18n( get_option( 'date_format' ), $expiry_date );
 			default:
 				return $item[ $column_name ];
 		}
