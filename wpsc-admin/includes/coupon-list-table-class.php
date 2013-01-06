@@ -5,7 +5,7 @@
  * @package     WP e-Commerce
  * @subpackage  Coupon List Table Class
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       3.9
+ * @since       3.8.10
  */
 
 
@@ -24,7 +24,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  * Renders the Coupons table on the Coupons page
  *
  * @access      private
- * @since       3.9
+ * @since       3.8.10
  */
 
 class WPSC_Coupons_List_Table extends WP_List_Table {
@@ -33,7 +33,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	/**
 	 * Number of results to show per page
 	 *
-	 * @since       3.9
+	 * @since       3.8.10
 	 */
 	private $per_page = 30;
 
@@ -46,7 +46,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * Get things started
 	 *
 	 * @access      private
-	 * @since       3.9
+	 * @since       3.8.10
 	 * @return      void
 	 */
 
@@ -67,7 +67,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * Retrieve the view types
 	 *
 	 * @access      private
-	 * @since       3.9
+	 * @since       3.8.10
 	 * @return      array
 	 */
 
@@ -93,7 +93,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * Retrieve the table columnds
 	 *
 	 * @access      private
-	 * @since       3.9
+	 * @since       3.8.10
 	 * @return      array
 	 */
 
@@ -117,7 +117,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * Retrieve the table's sortable columns
 	 *
 	 * @access      private
-	 * @since       3.9
+	 * @since       3.8.10
 	 * @return      array
 	 */
 
@@ -134,7 +134,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * @access      private
 	 * @param       array $item Contains all the data of the discount code
 	 * @param       string $column_name The name of the column
-	 * @since       3.9
+	 * @since       3.8.10
 	 * @return      string
 	 */
 
@@ -153,7 +153,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 *
 	 * @access      private
 	 * @param       array $item Contains all the data of the discount code
-	 * @since       3.9
+	 * @since       3.8.10
 	 * @return      string
 	 */
 	function column_coupon( $item ) {
@@ -181,7 +181,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * Render the checkbox column
 	 *
 	 * @access      private
-	 * @since       3.9
+	 * @since       3.8.10
 	 * @return      string
 	 */
 
@@ -199,7 +199,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 *
 	 * @access      private
 	 * @param       array $item Contains all the data of the discount code
-	 * @since       3.9
+	 * @since       3.8.10
 	 * @return      string
 	 */
 
@@ -221,7 +221,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 *
 	 * @access      private
 	 * @param       array $item Contains all the data of the discount code
-	 * @since       3.9
+	 * @since       3.8.10
 	 * @return      string
 	 */
 
@@ -244,7 +244,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * Retrieve the bulk actions
 	 *
 	 * @access      private
-	 * @since       3.9
+	 * @since       3.8.10
 	 * @return      array
 	 */
 
@@ -263,7 +263,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * Process the bulk actions
 	 *
 	 * @access      private
-	 * @since       3.9
+	 * @since       3.8.10
 	 * @return      void
 	 */
 
@@ -290,7 +290,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * Retrieve the discount code counts
 	 *
 	 * @access      private
-	 * @since       3.9
+	 * @since       3.8.10
 	 * @return      array
 	 */
 	function count_coupons() {
@@ -308,7 +308,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * Retrieve all the data for all the discount codes
 	 *
 	 * @access      private
-	 * @since       3.9
+	 * @since       3.8.10
 	 * @return      array
 	 */
 	function coupons_data() {
@@ -350,7 +350,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * Setup the final data for the table
 	 *
 	 * @access      private
-	 * @since       3.9
+	 * @since       3.8.10
 	 * @return      array
 	 */
 	function prepare_items() {
