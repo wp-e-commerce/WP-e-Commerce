@@ -59,6 +59,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 			'ajax'      => false
 		) );
 
+		$this->process_single_actions();
 		$this->count_coupons();
 	}
 
@@ -294,6 +295,38 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 				$wpdb->query( $wpdb->prepare( "UPDATE " . WPSC_TABLE_COUPON_CODES . " SET active = 0 WHERE id = %d", $id ) );
 
 			}
+		}
+
+	}
+
+
+	/**
+	 * Process single actions
+	 *
+	 * @access      private
+	 * @since       3.8.10
+	 * @return      void
+	 */
+	function process_single_actions() {
+
+		global $wpdb;
+
+		if( ! isset( $_GET['wpsc-action'] ) || ! isset( $_GET['coupon'] ) )
+			return;
+
+		$coupon_id = absint( $_GET['coupon'] );
+
+		switch( $_GET['wpsc-action'] ) {
+
+			case 'activate_coupon':
+				$wpdb->query( $wpdb->prepare( "UPDATE " . WPSC_TABLE_COUPON_CODES . " SET active = 1 WHERE id = %d", $coupon_id ) );
+				break;
+			case 'deactivate_coupon':
+				$wpdb->query( $wpdb->prepare( "UPDATE " . WPSC_TABLE_COUPON_CODES . " SET active = 0 WHERE id = %d", $coupon_id ) );
+				break;
+			case 'delete_coupon':
+				$wpdb->query( $wpdb->prepare( "DELETE FROM " . WPSC_TABLE_COUPON_CODES . " WHERE id = %d", $coupon_id ) );
+				break;
 		}
 
 	}

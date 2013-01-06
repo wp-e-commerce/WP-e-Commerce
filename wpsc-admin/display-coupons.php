@@ -113,7 +113,6 @@ function wpsc_display_coupons_page() {
 		}
 	}
 
-
 	/**
 	 * Load the selected view
 	 */
