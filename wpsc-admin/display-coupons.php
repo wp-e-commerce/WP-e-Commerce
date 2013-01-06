@@ -78,7 +78,6 @@ function wpsc_display_coupons_page() {
 
 			// update an existing coupon
 			if ( isset( $_POST['is_edit_coupon'] ) && ($_POST['is_edit_coupon'] == 'true') && !(isset( $_POST['delete_condition'] )) && !(isset( $_POST['submit_condition'] )) ) {
-				//echo '<pre>'; print_r( $_POST['rules'] ); echo '</pre>'; exit;
 				$wpdb->update(
 					WPSC_TABLE_COUPON_CODES,
 					array(
