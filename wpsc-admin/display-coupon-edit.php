@@ -219,7 +219,7 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 										'<option value="item_quantity" rel="order">Item quantity</option>\n'+
 										'<option value="total_quantity" rel="order">Total quantity</option>\n'+
 										'<option value="subtotal_amount" rel="order">Subtotal amount</option>\n'+
-										'<?php echo apply_filters( 'wpsc_coupon_rule_property_options', '' ); ?>'+
+										'<?php do_action( 'wpsc_coupon_rule_property_options', '' ); ?>'+
 										'</select> \n'+
 										'<select name="rules[logic][]"> \n'+
 										'<option value="equal">Is equal to</option> \n'+
