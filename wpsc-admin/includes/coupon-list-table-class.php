@@ -283,9 +283,16 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 				$wpdb->query( $wpdb->prepare( "DELETE FROM " . WPSC_TABLE_COUPON_CODES . " WHERE id = %d", $id ) );
 
 			} elseif( 'activate' === $this->current_action() ) {
+
 				// activate a discount
+				$wpdb->query( $wpdb->prepare( "UPDATE " . WPSC_TABLE_COUPON_CODES . " SET active = 1 WHERE id = %d", $id ) );
+
+
 			} elseif( 'deactivate' === $this->current_action() ) {
+
 				// deactivate a discount
+				$wpdb->query( $wpdb->prepare( "UPDATE " . WPSC_TABLE_COUPON_CODES . " SET active = 0 WHERE id = %d", $id ) );
+
 			}
 		}
 
