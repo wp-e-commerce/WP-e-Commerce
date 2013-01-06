@@ -35,7 +35,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 *
 	 * @since       3.9
 	 */
-	private $per_page = 4;
+	private $per_page = 30;
 
 	private $total_count;
 	private $active_count;
@@ -158,18 +158,18 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 */
 	function column_coupon( $item ) {
 
-		$base     = admin_url( 'edit.php?post_type=wpsc-product&page=wpsc-edit-coupons&wpsc-action=edit_discount&discount=' . $item['ID'] );
+		$base     = admin_url( 'edit.php?post_type=wpsc-product&page=wpsc-edit-coupons&wpsc-action=edit_coupon&coupon=' . $item['ID'] );
 
 		$row_actions = array();
 
-		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'wpsc-action' => 'edit_discount', 'discount' => $item['ID'] ) ) . '">' . __( 'Edit', 'wpsc' ) . '</a>';
+		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'wpsc-action' => 'edit_coupon', 'coupon' => $item['ID'] ) ) . '">' . __( 'Edit', 'wpsc' ) . '</a>';
 
 		if( strtolower( $item['status'] ) == 'active' )
-			$row_actions['deactivate'] = '<a href="' . add_query_arg( array( 'wpsc-action' => 'deactivate_discount', 'discount' => $item['ID'] ) ) . '">' . __( 'Deactive', 'wpsc' ) . '</a>';
+			$row_actions['deactivate'] = '<a href="' . add_query_arg( array( 'wpsc-action' => 'deactivate_coupon', 'coupon' => $item['ID'] ) ) . '">' . __( 'Deactivate', 'wpsc' ) . '</a>';
 		else
-			$row_actions['activate'] = '<a href="' . add_query_arg( array( 'wpsc-action' => 'activate_discount', 'discount' => $item['ID'] ) ) . '">' . __( 'Activate', 'wpsc' ) . '</a>';
+			$row_actions['activate'] = '<a href="' . add_query_arg( array( 'wpsc-action' => 'activate_coupon', 'coupon' => $item['ID'] ) ) . '">' . __( 'Activate', 'wpsc' ) . '</a>';
 
-		$row_actions['delete'] = '<a href="' . add_query_arg( array( 'wpsc-action' => 'delete_discount', 'discount' => $item['ID'] ) ) . '">' . __( 'Delete', 'wpsc' ) . '</a>';
+		$row_actions['delete'] = '<a href="' . add_query_arg( array( 'wpsc-action' => 'delete_coupon', 'coupon' => $item['ID'] ) ) . '">' . __( 'Delete', 'wpsc' ) . '</a>';
 
 		$row_actions = apply_filters( 'wpsc_coupon_row_actions', $row_actions, $item['ID'] );
 
