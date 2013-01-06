@@ -269,6 +269,7 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 				</tbody>
 			</table>
 			<input type="hidden" name="coupon_id" value="<?php echo esc_attr( $coupon_id ); ?>"/>
+			<input type="hidden" name="edit_coupon_is_used" value="<?php echo esc_attr( $coupon['is-used'] ); ?>"/>
 			<input type="hidden" name="is_edit_coupon" value="true"/>
 			<?php submit_button( __( 'Update Coupon', 'wpsc' ), 'primary' ); ?>
 
