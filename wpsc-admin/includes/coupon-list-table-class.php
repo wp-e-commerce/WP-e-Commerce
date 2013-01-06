@@ -268,6 +268,9 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 */
 
 	function process_bulk_action() {
+
+		global $wpdb;
+
 		$ids = isset( $_GET['coupon'] ) ? $_GET['coupon'] : false;
 
 		if ( ! is_array( $ids ) )
@@ -275,7 +278,10 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 
 		foreach ( $ids as $id ) {
 			if ( 'delete' === $this->current_action() ) {
+
 				// delete a discount
+				$wpdb->query( $wpdb->prepare( "DELETE FROM " . WPSC_TABLE_COUPON_CODES . " WHERE id = %d", $id ) );
+
 			} elseif( 'activate' === $this->current_action() ) {
 				// activate a discount
 			} elseif( 'deactivate' === $this->current_action() ) {
