@@ -12,7 +12,7 @@
 		<form name='add_coupon' method="post" action="<?php echo admin_url( 'edit.php?post_type=wpsc-product&page=wpsc-edit-coupons' ); ?>">
 			<table class="form-table">
 				<tbody>
-					
+
 					<tr class="form-field">
 						<th scope="row" valign="top">
 							<label for="add_coupon_code"><?php _e( 'Coupon Code', 'wpsc' ); ?></label>
@@ -39,22 +39,22 @@
 						</th>
 						<td>
 							<select name='add_discount_type' id='add_discount_type' onchange = 'show_shipping_options();'>
-								<option value='0' >$</option>
-								<option value='1' >%</option>
-								<option value='2' ><?php _e( 'Free shipping', 'wpsc' ); ?></option>
+								<option value='0'>$</option>
+								<option value='1'>%</option>
+								<option value='2'><?php _e( 'Free shipping', 'wpsc' ); ?></option>
 							</select>
 							<p class="description"><?php _e( 'The discount type', 'wpsc' ); ?></p>
 
 							<div id="free_shipping_options" style="display:none;">
-								
+
 								<select name='free_shipping_options[discount_country]' id='coupon_country_list' onchange='show_region_list();'>
 									<option value='' ><?php _e( 'All Countries and Regions', 'wpsc' ); ?></option>
 									<?php echo country_list(); ?>
 								</select>
-								
+
 								<span id='discount_options_country'>
 								<?php
-								//i dont think we need this cu we need to do an ajax request to generate this list 
+								//i dont think we need this cu we need to do an ajax request to generate this list
 								//based on the country chosen probably need the span place holder tho
 								$region_list = $wpdb->get_results( $wpdb->prepare( "SELECT `" . WPSC_TABLE_REGION_TAX . "`.* FROM `" . WPSC_TABLE_REGION_TAX . "`, `" . WPSC_TABLE_CURRENCY_LIST . "`  WHERE `" . WPSC_TABLE_CURRENCY_LIST . "`.`isocode` IN(%s) AND `" . WPSC_TABLE_CURRENCY_LIST . "`.`id` = `" . WPSC_TABLE_REGION_TAX . "`.`country_id`", get_option( $free_shipping_country ) ), ARRAY_A );
 								if ( !empty( $region_list ) ) { ?>
@@ -71,10 +71,10 @@
 										<option value='<?php echo $region['id']; ?>' <?php echo $selected; ?> ><?php echo esc_attr( $region['name'] ); ?></option> <?php
 										}
 									?>
-									</select>	
+									</select>
 							<?php } ?>
 							</span>
-							
+
 							</div>
 
 						</td>
@@ -86,7 +86,7 @@
 						</th>
 						<td>
 							<span class="description"><?php _e( 'Start: ', 'wpsc' ); ?></span>
-							<input name="add_start" id="add_start" type="text" class="regular-text pickdate" style="width: 100px"/>	
+							<input name="add_start" id="add_start" type="text" class="regular-text pickdate" style="width: 100px"/>
 							<span class="description"><?php _e( 'End: ', 'wpsc' ); ?></span>
 							<input name="add_end" id="add_end" type="text" class="regular-text pickdate" style="width: 100px"/>
 						</td>
@@ -113,7 +113,7 @@
 							<span><?php _e( 'Deactivate coupon after it has been used.', 'wpsc' ) ?></span>
 						</td>
 					</tr>
-					
+
 					<tr>
 						<th scope="row" valign="top">
 							<label for="add_use-x-times"><?php _e( 'Apply On All Products', 'wpsc' ); ?></label>
@@ -193,7 +193,7 @@
 											jQuery('.coupon_condition :first').after(new_property);
 											coupon_number++;
 										}
-										
+
 										//displays the free shipping options
 										function show_shipping_options() {
 											var discount_type = document.getElementById("add_discount_type").value;
@@ -202,10 +202,10 @@
 												document.getElementById("discount_amount").style.display='none';
 											}else{
 												document.getElementById("free_shipping_options").style.display='none';
-												document.getElementById("discount_amount").style.display='table-row';		
+												document.getElementById("discount_amount").style.display='table-row';
 											}
 										}
-									
+
 										//need to send the selected country off via ajax to return the region select box for that country
 										function show_region_list(){
 											var country_id = document.getElementById("coupon_country_list").value;
@@ -217,7 +217,7 @@
 							<a class="wpsc_coupons_condition_add button-secondary" onclick="add_another_property(jQuery(this));">
 								<?php _e( 'Add New Condition', 'wpsc' ); ?>
 							</a>
-							
+
 						</td>
 					</tr>
 
