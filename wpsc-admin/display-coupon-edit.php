@@ -6,6 +6,8 @@ if( !defined( 'ABSPATH' ) )
 
 $coupon_id = absint( $_GET['coupon'] );
 $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUPON_CODES . "` WHERE `id` = %d", $coupon_id ), ARRAY_A );
+echo '<pre>'; print_r( $coupon ); echo '</pre>';
+echo '<pre>'; print_r( unserialize( $coupon['condition'] ) ); echo '</pre>';
 ?>
 <div class="wrap" id+"coupon_data">
 	<div id="edit_coupon_box">
@@ -162,7 +164,7 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 								foreach( $conditions as $key => $condition ) :
 								?>
 								<div class='coupon_condition'>
-									<select class="ruleprops" name="rules[property][]">
+									<select class="ruleprops" name="rules[<?php echo $key; ?>][property]">
 										<option value="item_name"<?php selected( 'item_name', $condition['property'] ); ?> rel="order"><?php _e( 'Item name', 'wpsc' ); ?></option>
 										<option value="item_quantity"<?php selected( 'item_quantity', $condition['property'] ); ?> rel="order"><?php _e( 'Item quantity', 'wpsc' ); ?></option>
 										<option value="total_quantity"<?php selected( 'total_quantity', $condition['property'] ); ?> rel="order"><?php _e( 'Total quantity', 'wpsc' ); ?></option>
@@ -170,7 +172,7 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 										<?php do_action( 'wpsc_coupon_rule_property_options' ); ?>
 									</select>
 
-									<select name="rules[logic][]">
+									<select name="rules[<?php echo $key; ?>][logic]">
 										<option value="equal"<?php selected( 'equal', $condition['logic'] ); ?>><?php _e( 'Is equal to', 'wpsc' ); ?></option>
 										<option value="greater"<?php selected( 'greater', $condition['logic'] ); ?>><?php _e( 'Is greater than', 'wpsc' ); ?></option>
 										<option value="less"<?php selected( 'less', $condition['logic'] ); ?>><?php _e( 'Is less than', 'wpsc' ); ?></option>
@@ -181,13 +183,13 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 										<option value="category"<?php selected( 'category', $condition['logic'] ); ?>><?php _e( 'In Category', 'wpsc' ); ?></option>
 									</select>
 
-									<input type="text" name="rules[value][]" value="<?php esc_attr_e( $condition['value'] ); ?>" style="width: 300px;"/>
+									<input type="text" name="rules[<?php echo $key; ?>][value]" value="<?php esc_attr_e( $condition['value'] ); ?>" style="width: 300px;"/>
 								</div>
 								<?php endforeach;
 							else : ?>
 							<div class='coupon_condition' >
 								<div class='first_condition'>
-									<select class="ruleprops" name="rules[property][]">
+									<select class="ruleprops" name="rules[0][property]">
 										<option value="item_name" rel="order"><?php _e( 'Item name', 'wpsc' ); ?></option>
 										<option value="item_quantity" rel="order"><?php _e( 'Item quantity', 'wpsc' ); ?></option>
 										<option value="total_quantity" rel="order"><?php _e( 'Total quantity', 'wpsc' ); ?></option>
@@ -195,7 +197,7 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 										<?php echo apply_filters( 'wpsc_coupon_rule_property_options', '' ); ?>
 									</select>
 
-									<select name="rules[logic][]">
+									<select name="rules[0][logic]">
 										<option value="equal"><?php _e( 'Is equal to', 'wpsc' ); ?></option>
 										<option value="greater"><?php _e( 'Is greater than', 'wpsc' ); ?></option>
 										<option value="less"><?php _e( 'Is less than', 'wpsc' ); ?></option>
@@ -206,22 +208,22 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 										<option value="category"><?php _e( 'In Category', 'wpsc' ); ?></option>
 									</select>
 
-									<input type="text" name="rules[value][]" style="width: 300px;"/>
+									<input type="text" name="rules[0][value]" style="width: 300px;"/>
 								</div>
 							</div>
 							<?php endif; ?>
 							<script>
-								var coupon_number=1;
+								var coupon_number = jQuery('.coupon_condition').length;
 								function edit_another_property(this_button){
 									var new_property='<div class="coupon_condition">\n'+
-										'<select class="ruleprops" name="rules[property][]"> \n'+
+										'<select class="ruleprops" name="rules['+coupon_number+'][property]"> \n'+
 										'<option value="item_name" rel="order">Item name</option> \n'+
 										'<option value="item_quantity" rel="order">Item quantity</option>\n'+
 										'<option value="total_quantity" rel="order">Total quantity</option>\n'+
 										'<option value="subtotal_amount" rel="order">Subtotal amount</option>\n'+
 										'<?php do_action( 'wpsc_coupon_rule_property_options', '' ); ?>'+
 										'</select> \n'+
-										'<select name="rules[logic][]"> \n'+
+										'<select name="rules['+coupon_number+'][logic]"> \n'+
 										'<option value="equal">Is equal to</option> \n'+
 										'<option value="greater">Is greater than</option> \n'+
 										'<option value="less">Is less than</option> \n'+
@@ -231,7 +233,7 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 										'<option value="ends">Ends with</option> \n'+
 										'</select> \n'+
 										'<span> \n'+
-										'<input type="text" name="rules[value][]" style="width:300px"/> \n'+
+										'<input type="text" name="rules['+coupon_number+'][value]" style="width:300px"/> \n'+
 										'</span>  \n'+
 										'<img height="16" width="16" class="delete" alt="Delete" src="<?php echo WPSC_CORE_IMAGES_URL; ?>/cross.png" onclick="jQuery(this).parent().remove();"/>\n' +
 										'</div> ';
