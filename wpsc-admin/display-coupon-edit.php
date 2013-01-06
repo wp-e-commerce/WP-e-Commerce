@@ -93,95 +93,123 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 
 					<tr class="form-field">
 						<th scope="row" valign="top">
-							<label for="edit_start"><?php _e( 'Start and End', 'wpsc' ); ?></label>
+							<label for="edit_coupon_start"><?php _e( 'Start and End', 'wpsc' ); ?></label>
 						</th>
 						<td>
 							<?php
 							$start = $coupon['start']  == '0000-00-00 00:00:00' ? '' : $coupon['start'];
-							$end   = $coupon['expiry'] == '0000-00-00 00:00:00' ? '' : $coupon['expiry'];
+							$end   = $coupon['expiry'] == '0000-00-00 23:59:59' ? '' : $coupon['expiry'];
 							?>
 							<span class="description"><?php _e( 'Start: ', 'wpsc' ); ?></span>
-							<input name="edit_start" id="edit_start" type="text" value="<?php esc_attr_e( $start ); ?>" class="regular-text pickdate" style="width: 100px"/>
+							<input name="edit_coupon_start" id="edit_coupon_start" type="text" value="<?php esc_attr_e( $start ); ?>" class="regular-text pickdate" style="width: 100px"/>
 							<span class="description"><?php _e( 'End: ', 'wpsc' ); ?></span>
-							<input name="edit_end" id="edit_end" type="text" value="<?php esc_attr_e( $end ); ?>" class="regular-text pickdate" style="width: 100px"/>
+							<input name="edit_coupon_end" id="edit_coupon_end" type="text" value="<?php esc_attr_e( $end ); ?>" class="regular-text pickdate" style="width: 100px"/>
 						</td>
 					</tr>
 
 					<tr>
 						<th scope="row" valign="top">
-							<label for="edit_active"><?php _e( 'Active', 'wpsc' ); ?></label>
+							<label for="edit_coupon_active"><?php _e( 'Active', 'wpsc' ); ?></label>
 						</th>
 						<td>
-							<input type='hidden' value='0' name='edit_active' />
-							<input type="checkbox" value='1'<?php checked( 1, $coupon['active'] ); ?> name='edit_active' id="edit_active" />
+							<input type='hidden' value='0' name='edit_coupon_active' />
+							<input type="checkbox" value='1'<?php checked( 1, $coupon['active'] ); ?> name='edit_coupon_active' id="edit_coupon_active" />
 							<span><?php _e( 'Is this coupon active?', 'wpsc' ) ?></span>
 						</td>
 					</tr>
 
 					<tr>
 						<th scope="row" valign="top">
-							<label for="edit_use-once"><?php _e( 'Use Once', 'wpsc' ); ?></label>
+							<label for="edit_coupon_use_once"><?php _e( 'Use Once', 'wpsc' ); ?></label>
 						</th>
 						<td>
-							<input type='hidden' value='0' name='edit_use-once' />
-							<input type='checkbox' value='1'<?php checked( 1, $coupon['use-once'] ); ?> name='edit_use-once' id="edit_use-once" />
+							<input type='hidden' value='0' name='edit_coupon_use_once' />
+							<input type='checkbox' value='1'<?php checked( 1, $coupon['use-once'] ); ?> name='edit_coupon_use_once' id="edit_coupon_use_once" />
 							<span><?php _e( 'Deactivate coupon after it has been used.', 'wpsc' ) ?></span>
 						</td>
 					</tr>
 
 					<tr>
 						<th scope="row" valign="top">
-							<label for="edit_use-x-times"><?php _e( 'Apply On All Products', 'wpsc' ); ?></label>
+							<label for="edit_coupon_use_x_times"><?php _e( 'Apply On All Products', 'wpsc' ); ?></label>
 						</th>
 						<td>
-							</span><input type='hidden' value='0' name='edit_every_product' />
-							<input type="checkbox" value="1"<?php checked( 1, $coupon['every_product'] ); ?> name='edit_every_product'/>
+							</span><input type='hidden' value='0' name='edit_coupon_every_product' />
+							<input type="checkbox" value="1"<?php checked( 1, $coupon['every_product'] ); ?> name='edit_coupon_every_product'/>
 							<span class='description'><?php _e( 'This coupon affects each product at checkout.', 'wpsc' ) ?></span>
 						</td>
 					</tr>
 
 					<tr class="form-field">
 						<th scope="row" valign="top">
-							<label for="edit_use-x-times"><?php _e( 'Max Use', 'wpsc' ); ?></label>
+							<label for="edit_coupon_use_x_times"><?php _e( 'Max Use', 'wpsc' ); ?></label>
 						</th>
 						<td>
-							<input type='hidden' value='0' name='edit_use-x-times' />
-							<input type='number' size='4' value='<?php esc_attr_e( absint( $coupon['use-x-times'] ) ); ?>' name='edit_use-x-times' class="small-text" />
+							<input type='hidden' value='0' name='edit_coupon_use_x_times' />
+							<input type='number' size='4' value='<?php esc_attr_e( absint( $coupon['use-x-times'] ) ); ?>' name='edit_coupon_use_x_times' class="small-text" />
 							<span class='description'><?php _e( 'Set the amount of times the coupon can be used.', 'wpsc' ) ?></span>
 						</td>
 					</tr>
 
 					<tr class="form-field">
 						<th scope="row" valign="top">
-							<label for="edit_use-x-times"><strong><?php _e( 'Conditions', 'wpsc' ); ?></strong></label>
+							<label><strong><?php _e( 'Conditions', 'wpsc' ); ?></strong></label>
 						</th>
 						<td>
 							<?php
 							$conditions = maybe_unserialize( $coupon['condition'] );
-							foreach( $conditions as $condition ) : ?>
-							<div class='coupon_condition'>
-								<select class="ruleprops" name="rules[property][]">
-									<option value="item_name"<?php selected( 'item_name', $condition['property'] ); ?> rel="order"><?php _e( 'Item name', 'wpsc' ); ?></option>
-									<option value="item_quantity"<?php selected( 'item_quantity', $condition['property'] ); ?> rel="order"><?php _e( 'Item quantity', 'wpsc' ); ?></option>
-									<option value="total_quantity"<?php selected( 'total_quantity', $condition['property'] ); ?> rel="order"><?php _e( 'Total quantity', 'wpsc' ); ?></option>
-									<option value="subtotal_amount"<?php selected( 'subtotal_amount', $condition['property'] ); ?> rel="order"><?php _e( 'Subtotal amount', 'wpsc' ); ?></option>
-									<?php do_action( 'wpsc_coupon_rule_property_options' ); ?>
-								</select>
+							if( ! empty( $conditions ) ) :
+								foreach( $conditions as $key => $condition ) :
+								?>
+								<div class='coupon_condition'>
+									<select class="ruleprops" name="rules[property][]">
+										<option value="item_name"<?php selected( 'item_name', $condition['property'] ); ?> rel="order"><?php _e( 'Item name', 'wpsc' ); ?></option>
+										<option value="item_quantity"<?php selected( 'item_quantity', $condition['property'] ); ?> rel="order"><?php _e( 'Item quantity', 'wpsc' ); ?></option>
+										<option value="total_quantity"<?php selected( 'total_quantity', $condition['property'] ); ?> rel="order"><?php _e( 'Total quantity', 'wpsc' ); ?></option>
+										<option value="subtotal_amount"<?php selected( 'subtotal_amount', $condition['property'] ); ?> rel="order"><?php _e( 'Subtotal amount', 'wpsc' ); ?></option>
+										<?php do_action( 'wpsc_coupon_rule_property_options' ); ?>
+									</select>
 
-								<select name="rules[logic][]">
-									<option value="equal"<?php selected( 'equal', $condition['logic'] ); ?>><?php _e( 'Is equal to', 'wpsc' ); ?></option>
-									<option value="greater"<?php selected( 'greater', $condition['logic'] ); ?>><?php _e( 'Is greater than', 'wpsc' ); ?></option>
-									<option value="less"<?php selected( 'less', $condition['logic'] ); ?>><?php _e( 'Is less than', 'wpsc' ); ?></option>
-									<option value="contains"<?php selected( 'contains', $condition['logic'] ); ?>><?php _e( 'Contains', 'wpsc' ); ?></option>
-									<option value="not_contain"<?php selected( 'not_contain', $condition['logic'] ); ?>><?php _e( 'Does not contain', 'wpsc' ); ?></option>
-									<option value="begins"<?php selected( 'begins', $condition['logic'] ); ?>><?php _e( 'Begins with', 'wpsc' ); ?></option>
-									<option value="ends"<?php selected( 'ends', $condition['logic'] ); ?>><?php _e( 'Ends with', 'wpsc' ); ?></option>
-									<option value="category"<?php selected( 'category', $condition['logic'] ); ?>><?php _e( 'In Category', 'wpsc' ); ?></option>
-								</select>
+									<select name="rules[logic][]">
+										<option value="equal"<?php selected( 'equal', $condition['logic'] ); ?>><?php _e( 'Is equal to', 'wpsc' ); ?></option>
+										<option value="greater"<?php selected( 'greater', $condition['logic'] ); ?>><?php _e( 'Is greater than', 'wpsc' ); ?></option>
+										<option value="less"<?php selected( 'less', $condition['logic'] ); ?>><?php _e( 'Is less than', 'wpsc' ); ?></option>
+										<option value="contains"<?php selected( 'contains', $condition['logic'] ); ?>><?php _e( 'Contains', 'wpsc' ); ?></option>
+										<option value="not_contain"<?php selected( 'not_contain', $condition['logic'] ); ?>><?php _e( 'Does not contain', 'wpsc' ); ?></option>
+										<option value="begins"<?php selected( 'begins', $condition['logic'] ); ?>><?php _e( 'Begins with', 'wpsc' ); ?></option>
+										<option value="ends"<?php selected( 'ends', $condition['logic'] ); ?>><?php _e( 'Ends with', 'wpsc' ); ?></option>
+										<option value="category"<?php selected( 'category', $condition['logic'] ); ?>><?php _e( 'In Category', 'wpsc' ); ?></option>
+									</select>
 
-								<input type="text" name="rules[value][]" value="<?php esc_attr_e( $condition['value'] ); ?>" style="width: 300px;"/>
+									<input type="text" name="rules[value][]" value="<?php esc_attr_e( $condition['value'] ); ?>" style="width: 300px;"/>
+								</div>
+								<?php endforeach;
+							else : ?>
+							<div class='coupon_condition' >
+								<div class='first_condition'>
+									<select class="ruleprops" name="rules[property][]">
+										<option value="item_name" rel="order"><?php _e( 'Item name', 'wpsc' ); ?></option>
+										<option value="item_quantity" rel="order"><?php _e( 'Item quantity', 'wpsc' ); ?></option>
+										<option value="total_quantity" rel="order"><?php _e( 'Total quantity', 'wpsc' ); ?></option>
+										<option value="subtotal_amount" rel="order"><?php _e( 'Subtotal amount', 'wpsc' ); ?></option>
+										<?php echo apply_filters( 'wpsc_coupon_rule_property_options', '' ); ?>
+									</select>
+
+									<select name="rules[logic][]">
+										<option value="equal"><?php _e( 'Is equal to', 'wpsc' ); ?></option>
+										<option value="greater"><?php _e( 'Is greater than', 'wpsc' ); ?></option>
+										<option value="less"><?php _e( 'Is less than', 'wpsc' ); ?></option>
+										<option value="contains"><?php _e( 'Contains', 'wpsc' ); ?></option>
+										<option value="not_contain"><?php _e( 'Does not contain', 'wpsc' ); ?></option>
+										<option value="begins"><?php _e( 'Begins with', 'wpsc' ); ?></option>
+										<option value="ends"><?php _e( 'Ends with', 'wpsc' ); ?></option>
+										<option value="category"><?php _e( 'In Category', 'wpsc' ); ?></option>
+									</select>
+
+									<input type="text" name="rules[value][]" style="width: 300px;"/>
+								</div>
 							</div>
-							<?php endforeach; ?>
+							<?php endif; ?>
 							<script>
 								var coupon_number=1;
 								function edit_another_property(this_button){
