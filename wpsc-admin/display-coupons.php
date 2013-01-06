@@ -76,6 +76,77 @@ function wpsc_display_coupons_page() {
 
 			}
 
+			// update an existing coupon
+			if ( isset( $_POST['is_edit_coupon'] ) && ($_POST['is_edit_coupon'] == 'true') && !(isset( $_POST['delete_condition'] )) && !(isset( $_POST['submit_condition'] )) ) {
+
+				// update all but the conditions
+				$wpdb->update(
+					WPSC_TABLE_COUPON_CODES,
+					array(
+						'coupon_code'   => $_POST['edit_coupon_code'],
+						'value'         => $_POST['edit_coupon_amount'],
+						'is-percentage' => $_POST['edit_discount_type'],
+						'use-once'      => $_POST['edit_coupon_use_once'],
+						'use-x-times'   => $_POST['edit_coupon_use_x_times'],
+						'free-shipping' => serialize( $_POST['free_shipping_options'] ),
+						'is-used'       => $_POST['edit_coupon_is_used'],
+						'active'        => $_POST['edit_coupon_active'],
+						'every_product' => $_POST['edit_coupon_every_product'],
+						'start'         => get_gmt_from_date( $_POST['edit_coupon_start'] . ' 00:00:00' ),
+						'expiry'        => get_gmt_from_date( $_POST['edit_coupon_end'] . ' 23:59:59' )
+					),
+					array( 'id'         => absint( $_POST['coupon_id'] ) ),
+					array(
+						'%s',
+						'%s',
+						'%d',
+						'%d',
+						'%d',
+						'%s',
+						'%d',
+						'%d',
+						'%d',
+						'%s',
+						'%s'
+					),
+					array( '%d' )
+				);
+
+
+				// update discount rules
+				$rules = $_POST['rules'];
+				$new_rule = array();
+				foreach ( (array)$rules as $key => $rule ) {
+					foreach ( $rule as $k => $r ) {
+						if( $r['value'] != '' )
+							$new_rule[$k][$key] = $r;
+					}
+				}
+
+				$conditions = $wpdb->get_var( $wpdb->prepare( "SELECT `condition` FROM `" . WPSC_TABLE_COUPON_CODES . "` WHERE `id` = %d LIMIT 1", $_POST['coupon_id'] ) );
+				$conditions = unserialize( $conditions );
+				$new_cond = array();
+
+				if ( $_POST['rules']['value'][0] != '' ) {
+					$new_cond['property'] = $_POST['rules']['property'][0];
+					$new_cond['logic'] = $_POST['rules']['logic'][0];
+					$new_cond['value'] = $_POST['rules']['value'][0];
+					$conditions [] = $new_cond;
+				}
+				$wpdb->update(
+				    WPSC_TABLE_COUPON_CODES,
+				    array(
+						'condition' => serialize( $conditions )
+				    ),
+				    array(
+						'id' => absint( $_POST['coupon_id'] )
+				    ),
+				    '%s',
+				    '%d'
+				);
+
+			}
+
 			if ( isset( $_POST['delete_condition'] ) ) {
 
 				$conditions = $wpdb->get_var( $wpdb->prepare( "SELECT `condition` FROM `" . WPSC_TABLE_COUPON_CODES . "` WHERE `id` = %d LIMIT 1", $_POST['coupon_id'] ) );
