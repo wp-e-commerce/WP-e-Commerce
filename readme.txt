@@ -155,6 +155,21 @@ Before updating please make a backup of your existing files and database. Just i
 After upgrading from earlier versions look for link "Update Store". This will update your database structure to work with new version.
 
 == Changelog ==
+= 3.8.9.5 =
+* New: Polish translation.
+* Fix: Attempt to regenerate customer ID if it's invalid to avoid fatal errors.
+* Fix: Australia Post doesn't return any quotes if the products' dimensions are not specified.
+* Fix: Billing state is set to shipping state upon checkout.
+* Fix: Cannot resent purchase receipt any more.
+* Fix: Custom Cart Messages on Sales Log need stripslashes.
+* Fix: Error message when changing purchase log status via AJAX.
+* Fix: Fatal error in merchant.class.php.
+* Fix: Giving stock or price of a product a 4 figure number will screw it up when the product is updated again.
+* Fix: Invalid zipcode is displayed even when the zipcode is not specified yet.
+* Fix: Quick editing a product doesn't work.
+* Fix: Transaction result emails are sent when an order is closed.
+* Fix: More native css support for product variations in WP 3.5+.
+
 = 3.8.9.4 =
 * Fix: "No shipping quotes" error is displayed when selecting "Shipping same as billing".
 * Fix: Avoid flooding transient data when site's feed is being visited by bots.
