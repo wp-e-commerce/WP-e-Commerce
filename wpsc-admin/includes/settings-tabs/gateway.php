@@ -11,6 +11,8 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab
 
 		$this->active_gateways = get_option( 'custom_gateway_options' );
 		$this->gateway_names = get_option( 'payment_gateway_names' );
+
+		$this->hide_submit_button();
 	}
 
 	private function get_gateway_form( $selected_gateway ) {
@@ -49,9 +51,7 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab
 				<?php echo $payment_data['form_fields']; ?>
 			</table>
 			<?php if ( empty( $payment_data['has_submit_button'] ) ) : ?>
-				<div class='submit'>
-					<input type='submit' value='<?php _e( 'Update &raquo;', 'wpsc' ) ?>' />
-				</div>
+				<?php submit_button( __( 'Save Changes' ) ); ?>
 			<?php endif ?>
 		</div>
 </td>
@@ -74,9 +74,7 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab
 								<p><?php _e( 'Activate the payment gateways that you want to make available to your customers by selecting them below.', 'wpsc' ); ?></p>
 								<br />
 								<?php $this->gateway_list(); ?>
-								<div class='submit gateway_settings'>
-									<input type='submit' value='<?php esc_attr_e( 'Update &raquo;', 'wpsc' ) ?>' name='updateoption' />
-								</div>
+								<?php submit_button( __( 'Save Changes' ) ); ?>
 								</div>
 							</div>
 
