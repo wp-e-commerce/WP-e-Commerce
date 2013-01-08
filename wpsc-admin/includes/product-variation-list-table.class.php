@@ -38,10 +38,9 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 
 		$per_page = $this->get_items_per_page( 'edit_wpsc-product-variations_per_page' );
 		$per_page = apply_filters( 'edit_wpsc_product_variations_per_page', $per_page );
-
 		$this->args = array(
 			'post_type'      => 'wpsc-product',
-			'orderby'        => 'menu_order post_title',
+			'orderby'        => 'menu_order title',
 			'post_parent'    => $this->product_id,
 			'post_status'    => 'publish, inherit',
 			'numberposts'    => -1,
