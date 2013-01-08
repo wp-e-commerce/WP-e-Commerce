@@ -1188,9 +1188,10 @@ function wpsc_place_shopping_cart( $content = '' ) {
 		// call this function to detect conflicts when the cart page is first loaded, otherwise
 		// any conflict messages will only be displayed on the next page load
 		wpsc_get_acceptable_countries();
-
 		ob_start();
+		do_action( 'wpsc_before_shopping_cart_page' );
 		include( wpsc_get_template_file_path( 'wpsc-shopping_cart_page.php' ) );
+		do_action( 'wpsc_after_shopping_cart_page' );
 		$output = ob_get_contents();
 		ob_end_clean();
 		$output = str_replace( '$', '\$', $output );
