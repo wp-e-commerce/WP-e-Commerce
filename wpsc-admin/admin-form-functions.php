@@ -256,7 +256,7 @@ function wpsc_right_now() {
 
 
 function wpsc_packing_slip( $purchase_id ) {
-	echo "<!DOCTYPE html><html><head><title>" . __( 'Packing Slip', 'wpsc' ) . "</title></head><body id='wpsc-packing-slip'>";
+	echo "<!DOCTYPE html><html><meta http-equiv=\"content-type\" content=\"text-html; charset=utf-8\"><head><title>" . __( 'Packing Slip', 'wpsc' ) . "</title></head><body id='wpsc-packing-slip'>";
 	global $wpdb;
 	$purch_sql = $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `id`=%d", $purchase_id );
 	$purch_data = $wpdb->get_row( $purch_sql, ARRAY_A ) ;
