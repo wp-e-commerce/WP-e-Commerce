@@ -485,7 +485,7 @@ final class WPSC_Settings_Page
 					<input type='hidden' name='wpsc_admin_action' value='submit_options' />
 					<?php wp_nonce_field( 'update-options', 'wpsc-update-options' ); ?>
 					<?php if ( $this->current_tab->is_submit_button_displayed() ): ?>
-						<input type="submit" class="button-primary" value="<?php _e( 'Save Changes', 'wpsc' ); ?>" name="updateoption" />
+						<?php submit_button( __( 'Save Changes' ) ); ?>
 					<?php endif ?>
 				</div>
 			</div>
