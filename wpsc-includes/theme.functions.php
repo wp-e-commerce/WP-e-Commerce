@@ -591,7 +591,7 @@ function wpsc_enqueue_user_script_and_css() {
 			}
 		}
 		wp_enqueue_style( 'wpsc-theme-css',               wpsc_get_template_file_url( 'wpsc-' . get_option( 'wpsc_selected_theme' ) . '.css' ), false, $version_identifier, 'all' );
-		wp_enqueue_style( 'wpsc-theme-css-compatibility', WPSC_CORE_THEME_URL . 'compatibility.css',                                    array( 'wpsc-theme-css' ), $version_identifier, 'all' );
+		wp_enqueue_style( 'wpsc-theme-css-compatibility', wpsc_get_template_file_url( 'compatibility.css' ),                                    array( 'wpsc-theme-css' ), $version_identifier, 'all' );
 
 		if ( function_exists( 'wp_add_inline_style' ) )
 			wp_add_inline_style( 'wpsc-theme-css', wpsc_get_user_dynamic_css() );
