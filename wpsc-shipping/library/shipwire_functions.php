@@ -878,37 +878,3 @@ function convert_service_to_code( $service ) {
 
 	return $service;
 }
-
-/**
- * Deprecated functions - HIGHLY doubt these are used anywhere, by anyone, for any reason.  But it's possible, as they've been in core since the beginning.
- */
-
-function shipwire_build_xml( $log_id ) {
-	_deprecated_function( __FUNCTION__, '3.8.9', 'WPSC_Shipwire' );
-	return WPSC_Shipwire::get_order_xml( $log_id );
-}
-
-function shipwire_built_sync_xml() {
-	_deprecated_function( __FUNCTION__, '3.8.9', 'WPSC_Shipwire' );
-	return WPSC_Shipwire::get_inventory_xml();
-}
-
-function shipwire_built_tracking_xml() {
-	_deprecated_function( __FUNCTION__, '3.8.9', 'WPSC_Shipwire' );
-	return WPSC_Shipwire::get_tracking_xml();
-}
-
-function shipwire_send_sync_request( $xml ) {
-	_deprecated_function( __FUNCTION__, '3.8.9', 'WPSC_Shipwire' );
-	return WPSC_Shipwire::send_inventory_request( $xml );
-}
-
-function shipwire_sent_request( $xml ) {
-	_deprecated_function( __FUNCTION__, '3.8.9', 'WPSC_Shipwire' );
-	return WPSC_Shipwire::send_order_request( $xml );
-}
-
-function shipwire_send_tracking_request( $xml ) {
-	_deprecated_function( __FUNCTION__, '3.8.9', 'WPSC_Shipwire' );
-	return WPSC_Shipwire::send_tracking_request( $xml );
-}

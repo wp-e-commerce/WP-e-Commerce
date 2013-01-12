@@ -902,7 +902,7 @@ function _wpsc_deprecated_file( $file, $version, $replacement = null, $message =
  * @param string $version The version of WordPress that deprecated the argument used
  * @param string $message Optional. A message regarding the change.
  */
-function _deprecated_argument( $function, $version, $message = null ) {
+function _wpsc_deprecated_argument( $function, $version, $message = null ) {
 
 	do_action( 'wpsc_deprecated_argument_run', $function, $message, $version );
 
