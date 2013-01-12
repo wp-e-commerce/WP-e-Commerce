@@ -396,18 +396,21 @@ function wpsc_user_profile_links( $args = array() ) {
 
 	$i = 0;
 	$user_account_url = get_option( 'user_account_url' );
+	$links = array();
 	foreach ( $profile_tabs as $tab_id => $tab_title ) :
-		echo $args['before_link_item'];
+		$tab_link = $args['before_link_item'];
 		$tab_url = add_query_arg( 'tab', $tab_id, $user_account_url );
-		printf(
+		$tab_link = sprintf(
 			'<a href="%1$s" class="%2$s">%3$s</a>',
 			esc_url( $tab_url ),
 			esc_attr( $current_tab == $tab_id ? 'current' : '' ),
 			$tab_title
 		);
-		echo $args['after_link_item'];
-		if ( ++$i < count( $profile_tabs ) ) echo $args['link_separator'];
+		$tab_link .= $args['after_link_item'];
+		$links[] = $tab_link;
 	endforeach;
+
+	echo implode( $args['link_separator'], $links );
 
 	echo $args['after_link_list'];
 }
