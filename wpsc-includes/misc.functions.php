@@ -775,3 +775,196 @@ function wpsc_get_extension( $str ) {
 	return end( $parts );
 
 }
+
+/**
+ * Marks a function as deprecated and informs when it has been used.
+ *
+ * There is a hook wpsc_deprecated_function_run that will be called that can be
+ * used to get the backtrace up to what file and function called the deprecated
+ * function.
+ *
+ * The current behavior is to trigger a user error if WP_DEBUG is true.
+ *
+ * This function is to be used in every function that is deprecated.
+ *
+ * @since 3.8.10
+ * @access private
+ *
+ * @uses do_action() Calls 'wpsc_deprecated_function_run' and passes the function name, what to use instead,
+ *   and the version the function was deprecated in.
+ * @uses apply_filters() Calls 'wpsc_deprecated_function_trigger_error' and expects boolean value of true to do
+ *   trigger or false to not trigger error.
+ *
+ * @param string $function The function that was called
+ * @param string $version The version of WordPress that deprecated the function
+ * @param string $replacement Optional. The function that should have been called
+ */
+function _wpsc_deprecated_function( $function, $version, $replacement = null ) {
+	do_action( 'wpsc_deprecated_function_run', $function, $replacement, $version );
+
+	// Allow plugin to filter the output error trigger
+	if ( WP_DEBUG && apply_filters( 'wpsc_deprecated_function_trigger_error', true ) ) {
+		if ( ! is_null($replacement) )
+			trigger_error(
+				sprintf( __( '%1$s is <strong>deprecated</strong> since WP e-Commerce version %2$s! Use %3$s instead.', 'wpsc' ),
+					$function,
+					$version,
+					$replacement
+				)
+			);
+		else
+			trigger_error(
+				sprintf( __( '%1$s is <strong>deprecated</strong> since WP e-Commerce version %2$s with no alternative available.', 'wpsc' ),
+					$function,
+					$version
+				)
+			);
+	}
+}
+
+/**
+ * Marks a file as deprecated and informs when it has been used.
+ *
+ * There is a hook wpsc_deprecated_file_included that will be called that can be
+ * used to get the backtrace up to what file and function included the
+ * deprecated file.
+ *
+ * The current behavior is to trigger a user error if WP_DEBUG is true.
+ *
+ * This function is to be used in every file that is deprecated.
+ *
+ * @since 3.8.10
+ * @access private
+ *
+ * @uses do_action() Calls 'wpsc_deprecated_file_included' and passes the file name, what to use instead,
+ *   the version in which the file was deprecated, and any message regarding the change.
+ * @uses apply_filters() Calls 'wpsc_deprecated_file_trigger_error' and expects boolean value of true to do
+ *   trigger or false to not trigger error.
+ *
+ * @param string $file The file that was included
+ * @param string $version The version of WordPress that deprecated the file
+ * @param string $replacement Optional. The file that should have been included based on ABSPATH
+ * @param string $message Optional. A message regarding the change
+ */
+function _wpsc_deprecated_file( $file, $version, $replacement = null, $message = '' ) {
+
+	do_action( 'wpsc_deprecated_file_included', $file, $replacement, $version, $message );
+
+	// Allow plugin to filter the output error trigger
+	if ( WP_DEBUG && apply_filters( 'wpsc_deprecated_file_trigger_error', true ) ) {
+		$message = empty( $message ) ? '' : ' ' . $message;
+		if ( ! is_null( $replacement ) )
+			trigger_error(
+				sprintf( __( '%1$s is <strong>deprecated</strong> since WP e-Commerce version %2$s! Use %3$s instead.', 'wpsc' ),
+					$file,
+					$version,
+					$replacement
+				) . $message
+			);
+		else
+			trigger_error(
+				sprintf( __( '%1$s is <strong>deprecated</strong> since WP e-Commerce version %2$s with no alternative available.', 'wpsc' ),
+					$file,
+					$version
+				) . $message
+			);
+	}
+}
+/**
+ * Marks a function argument as deprecated and informs when it has been used.
+ *
+ * This function is to be used whenever a deprecated function argument is used.
+ * Before this function is called, the argument must be checked for whether it
+ * was used by comparing it to its default value or evaluating whether it is
+ * empty.
+ *
+ * For example:
+ * <code>
+ * if ( ! empty( $deprecated ) )
+ * 	_wpsc_deprecated_argument( __FUNCTION__, '3.8.10' );
+ * </code>
+ *
+ * There is a hook wpsc_deprecated_argument_run that will be called that can be
+ * used to get the backtrace up to what file and function used the deprecated
+ * argument.
+ *
+ * The current behavior is to trigger a user error if WP_DEBUG is true.
+ *
+ * @since 3.8.10
+ * @access private
+ *
+ * @uses do_action() Calls 'wpsc_deprecated_argument_run' and passes the function name, a message on the change,
+ *   and the version in which the argument was deprecated.
+ * @uses apply_filters() Calls 'wpsc_deprecated_argument_trigger_error' and expects boolean value of true to do
+ *   trigger or false to not trigger error.
+ *
+ * @param string $function The function that was called
+ * @param string $version The version of WordPress that deprecated the argument used
+ * @param string $message Optional. A message regarding the change.
+ */
+function _deprecated_argument( $function, $version, $message = null ) {
+
+	do_action( 'wpsc_deprecated_argument_run', $function, $message, $version );
+
+	// Allow plugin to filter the output error trigger
+	if ( WP_DEBUG && apply_filters( 'wpsc_deprecated_argument_trigger_error', true ) ) {
+		if ( ! is_null( $message ) )
+			trigger_error(
+				sprintf(
+					__( '%1$s was called with an argument that is <strong>deprecated</strong> since WP e-Commerce version %2$s! %3$s', 'wpsc' ),
+					$function,
+					$version,
+					$message
+				)
+			);
+		else
+			trigger_error(
+				sprintf(
+					__( '%1$s was called with an argument that is <strong>deprecated</strong> since WP e-Commerce version %2$s with no alternative available.', 'wpsc' ),
+					$function,
+					$version
+				)
+			);
+	}
+}
+
+/**
+ * Marks something as being incorrectly called.
+ *
+ * There is a hook wpsc_doing_it_wrong_run that will be called that can be used
+ * to get the backtrace up to what file and function called the deprecated
+ * function.
+ *
+ * The current behavior is to trigger a user error if WP_DEBUG is true.
+ *
+ * @since 3.8.10
+ * @access private
+ *
+ * @uses do_action() Calls 'wpsc_doing_it_wrong_run' and passes the function arguments.
+ * @uses apply_filters() Calls 'wpsc_doing_it_wrong_trigger_error' and expects boolean value of true to do
+ *   trigger or false to not trigger error.
+ *
+ * @param string $function The function that was called.
+ * @param string $message A message explaining what has been done incorrectly.
+ * @param string $version The version of WordPress where the message was added.
+ */
+function _wpsc_doing_it_wrong( $function, $message, $version ) {
+
+	do_action( 'wpsc_doing_it_wrong_run', $function, $message, $version );
+
+	// Allow plugin to filter the output error trigger
+	if ( WP_DEBUG && apply_filters( 'wpsc_doing_it_wrong_trigger_error', true ) ) {
+		$version =   is_null( $version )
+		           ? ''
+		           : sprintf( __( '(This message was added in WP e-Commerce version %s.)', 'wpsc' ), $version );
+		$message .= ' ' . __( 'Please see <a href="http://codex.wordpress.org/Debugging_in_WordPress">Debugging in WordPress</a> for more information.', 'wpsc' );
+		trigger_error(
+			sprintf(
+				__( '%1$s was called <strong>incorrectly</strong>. %2$s %3$s', 'wpsc' ),
+				$function,
+				$message,
+				$version
+			)
+		);
+	}
+}
