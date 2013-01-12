@@ -737,7 +737,7 @@ function wpsc_user_purchases() {
  *
  */
 function _wpsc_action_purchase_history_section() {
-	include_once( WPSC_FILE_PATH . '/wpsc-theme/wpsc-account-purchase-history.php');
+	include( WPSC_FILE_PATH . '/wpsc-theme/wpsc-account-purchase-history.php' );
 }
 add_action( 'wpsc_user_profile_section_purchase_history', '_wpsc_action_purchase_history_section' );
 
@@ -749,7 +749,7 @@ add_action( 'wpsc_user_profile_section_purchase_history', '_wpsc_action_purchase
  *
  */
 function _wpsc_action_edit_profile_section() {
-	include_once( WPSC_FILE_PATH . '/wpsc-theme/wpsc-account-edit-profile.php' );
+	include( WPSC_FILE_PATH . '/wpsc-theme/wpsc-account-edit-profile.php' );
 }
 add_action( 'wpsc_user_profile_section_edit_profile', '_wpsc_action_edit_profile_section' );
 
@@ -761,7 +761,7 @@ add_action( 'wpsc_user_profile_section_edit_profile', '_wpsc_action_edit_profile
  *
  */
 function _wpsc_action_downloads_section() {
-	include_once( WPSC_FILE_PATH . '/wpsc-theme/wpsc-account-downloads.php' );
+	include( WPSC_FILE_PATH . '/wpsc-theme/wpsc-account-downloads.php' );
 }
 add_action( 'wpsc_user_profile_section_downloads', '_wpsc_action_downloads_section' );
 
