@@ -29,6 +29,7 @@ How to contribute code
 
 How to report issues
 --------------------
+* [Reporting a security issue](wiki/Reporting-a-security-issue)
 * [What makes a perfect issue ticket?](https://github.com/wp-e-commerce/wp-e-commerce/wiki/Creating-issue-tickets)
 * [Issue labels and workflow](https://github.com/wp-e-commerce/wp-e-commerce/wiki/Issue-Labels-and-Workflow)
 
