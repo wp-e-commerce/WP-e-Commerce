@@ -20,7 +20,7 @@ global $files, $products; ?>
 
 		<?php
 			$i = 0;
-			foreach ( (array)$files as $file ) :
+			foreach ( (array) $files as $file ) :
 
 				$alternate = "";
 
