@@ -1,6 +1,6 @@
 <?php
 /**
- * The Account - Edit Profile template.
+ * The Account > Edit Profile template.
  *
  * Displays the user account page.
  *
