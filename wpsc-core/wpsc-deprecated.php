@@ -5,10 +5,10 @@
  * Deprecated function for checking whether a cart item has a custom message or not
  *
  * @return false
- * @todo Actually correctly deprecate this
  */
 
 function wpsc_cart_item_custom_message(){
+	_wpsc_deprecated_function( __FUNCTION__, '3.8' );
 	return false;
 }
 
@@ -19,9 +19,10 @@ function wpsc_cart_item_custom_message(){
  *
  * @global array $nzshpcrt_gateways
  * @return array
- * @todo Actually correctly deprecate this
  */
 function nzshpcrt_get_gateways() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8' );
+
 	global $nzshpcrt_gateways;
 
 	if ( !is_array( $nzshpcrt_gateways ) )
@@ -38,11 +39,10 @@ function nzshpcrt_get_gateways() {
  *
  */
 function wpsc_merchants_modules_deprecated($nzshpcrt_gateways){
-
+	_wpsc_deprecated_function( __FUNCTION__, '3.8' );
 	$nzshpcrt_gateways = apply_filters( 'wpsc_gateway_modules', $nzshpcrt_gateways );
 	return $nzshpcrt_gateways;
 }
-add_filter('wpsc_merchants_modules','wpsc_merchants_modules_deprecated',1);
 
 /**
  * nzshpcrt_price_range()
@@ -54,12 +54,13 @@ add_filter('wpsc_merchants_modules','wpsc_merchants_modules_deprecated',1);
  * @param $args (array) Arguments.
  */
 function nzshpcrt_price_range($args){
+	_wpsc_deprecated_function( __FUNCTION__, '3.8' );
 	wpsc_price_range($args);
 }
 
 // preserved for backwards compatibility
 function nzshpcrt_shopping_basket( $input = null, $override_state = null ) {
-	_deprecated_function( __FUNCTION__, '3.8', 'wpsc_shopping_cart');
+	_wpsc_deprecated_function( __FUNCTION__, '3.8', 'wpsc_shopping_cart');
 	return wpsc_shopping_cart( $input, $override_state );
 }
 
@@ -70,7 +71,7 @@ function nzshpcrt_shopping_basket( $input = null, $override_state = null ) {
  *
  */
 function show_cats_brands($category_group = null , $display_method = null, $order_by = 'name', $image = null) {
-	_deprecated_function( __FUNCTION__, '3.8', 'wpsc_shopping_cart');
+	_wpsc_deprecated_function( __FUNCTION__, '3.8', 'wpsc_shopping_cart');
 }
 /**
  * Filter: wpsc-purchlogitem-links-start
@@ -81,12 +82,13 @@ function show_cats_brands($category_group = null , $display_method = null, $orde
  * @since 3.7.6rc2
  */
 function wpsc_purchlogitem_links_start_deprecated() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8' );
 	do_action( 'wpsc-purchlogitem-links-start' );
 }
-add_action( 'wpsc_purchlogitem_links_start', 'wpsc_purchlogitem_links_start_deprecated' );
 
 
 function nzshpcrt_donations($args){
+	_wpsc_deprecated_function( __FUNCTION__, '3.8' );
 	wpsc_donations($args);
 }
 
@@ -108,7 +110,7 @@ function nzshpcrt_donations($args){
  * 5. Function now expects two arrays as per the standard Widget API.
  */
 function nzshpcrt_latest_product( $args = null, $instance ) {
-	_deprecated_function( __FUNCTION__, '3.8', 'wpsc_latest_product');
+	_wpsc_deprecated_function( __FUNCTION__, '3.8', 'wpsc_latest_product');
 	echo wpsc_latest_product( $args, $instance );
 }
 
@@ -125,7 +127,8 @@ function nzshpcrt_latest_product( $args = null, $instance ) {
  * @return void
  */
 function nzshpcrt_currency_display($price_in, $tax_status, $nohtml = false, $id = false, $no_dollar_sign = false) {
-	//_deprecated_function( __FUNCTION__, '3.8', 'wpsc_currency_display' );
+	_wpsc_deprecated_function( __FUNCTION__, '3.8' );
+
 	$output = wpsc_currency_display($price_in, array(
 		'display_currency_symbol' => !(bool)$no_dollar_sign,
 		'display_as_html' => ! (bool)$nohtml,
@@ -135,8 +138,16 @@ function nzshpcrt_currency_display($price_in, $tax_status, $nohtml = false, $id 
 	return $output;
 }
 
-
+/**
+ * This should be deprecated using _wpsc_deprecated_function() however the
+ * constants are still being used in admin-legacy.js, which is still enqueued
+ * by default in wp-admin.
+ *
+ * @deprecated
+ */
 function wpsc_include_language_constants(){
+	// _wpsc_deprecated_function( __FUNCTION__, '3.8' );
+
 	if(!defined('TXT_WPSC_ABOUT_THIS_PAGE'))
 		include_once(WPSC_FILE_PATH.'/wpsc-languages/EN_en.php');
 }
@@ -144,6 +155,7 @@ add_action('init','wpsc_include_language_constants');
 
 if(!function_exists('wpsc_has_noca_message')){
 	function wpsc_has_noca_message(){
+		_wpsc_deprecated_function( __FUNCTION__, '3.8' );
 		if(isset($_SESSION['nocamsg']) && isset($_GET['noca']) && $_GET['noca'] == 'confirm')
 			return true;
 		else
@@ -153,6 +165,7 @@ if(!function_exists('wpsc_has_noca_message')){
 
 if(!function_exists('wpsc_is_noca_gateway')){
 	function wpsc_is_noca_gateway(){
+		_wpsc_deprecated_function( __FUNCTION__, '3.8' );
 		if(count($wpsc_gateway->wpsc_gateways) == 1 && $wpsc_gateway->wpsc_gateways[0]['name'] == 'Noca')
 			return true;
 		else
@@ -160,20 +173,12 @@ if(!function_exists('wpsc_is_noca_gateway')){
 	}
 }
 
-
-/**
- * wpsc pagination
- * It is intended to move some of this functionality to a paging class
- * so that paging functionality can easily be created for multiple uses.
- */
-
-
-
 /**
  * wpsc current_page
  * @return (int) The current page number
  */
 function wpsc_current_page() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8' );
 
 	global $wpsc_query;
 
@@ -194,6 +199,7 @@ function wpsc_current_page() {
  * @return (string) Number of products showing
  */
 function wpsc_showing_products() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8' );
 
 	global $wpsc_query;
 
@@ -218,6 +224,7 @@ function wpsc_showing_products() {
  * @return (string) Number of pages showing.
  */
 function wpsc_showing_products_page() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8' );
 
 	global $wpsc_query;
 
@@ -236,6 +243,7 @@ function wpsc_showing_products_page() {
  * @return (boolean) true if current tab ID is edit_profile.
  */
 function is_wpsc_profile_page() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.10' );
 	return !empty($_REQUEST['tab']) && ( $_REQUEST['tab'] == 'edit_profile' );
 }
 
@@ -246,6 +254,7 @@ function is_wpsc_profile_page() {
  * @return (boolean) true if current tab ID is downloads.
  */
 function is_wpsc_downloads_page() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.10' );
 	return !empty($_REQUEST['tab']) && ( $_REQUEST['tab'] == 'downloads' );
 }
 
@@ -253,10 +262,11 @@ function is_wpsc_downloads_page() {
 /**
  * wpsc user details
  * Displays the Purchase History account page section.
- * @seprecated since 3.8.10
+ * @deprecated since 3.8.10
  * @return (string) The Purchase History page template.
  */
 function wpsc_user_details() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.10' );
 	return wpsc_user_purchases();
 }
 
@@ -268,7 +278,7 @@ function wpsc_user_details() {
  * @return (string) URL.
  */
 function wpsc_product_search_url( $url ) {
-
+	_wpsc_deprecated_function( __FUNCTION__, '3.8' );
 	if ( isset( $_GET['product_search'] ) ) {
 		if ( strrpos( $url, '?') ) {
 			$url .= '&product_search=' . $_GET['product_search'];
@@ -288,8 +298,7 @@ function wpsc_product_search_url( $url ) {
  * @return (string) URL for the adjacent products page link.
  */
 function wpsc_adjacent_products_url( $n ) {
-
-	_deprecated_function( __FUNCTION__, '3.8', 'wpsc_pagination');
+	_wpsc_deprecated_function( __FUNCTION__, '3.8', 'wpsc_pagination');
 	return false;
 
 }
@@ -302,10 +311,8 @@ function wpsc_adjacent_products_url( $n ) {
  * @return (string) Next page link or text.
  */
 function wpsc_next_products_link( $text = 'Next', $show_disabled = false ) {
-
-	_deprecated_function( __FUNCTION__, '3.8', 'wpsc_pagination');
+	_wpsc_deprecated_function( __FUNCTION__, '3.8', 'wpsc_pagination');
 	return false;
-
 }
 
 /**
@@ -316,10 +323,8 @@ function wpsc_next_products_link( $text = 'Next', $show_disabled = false ) {
  * @return (string) Previous page link or text.
  */
 function wpsc_previous_products_link( $text = 'Previous', $show_disabled = false ) {
-
-	_deprecated_function( __FUNCTION__, '3.8', 'wpsc_pagination');
+	_wpsc_deprecated_function( __FUNCTION__, '3.8', 'wpsc_pagination');
 	return false;;
-
 }
 
 /**
@@ -330,10 +335,8 @@ function wpsc_previous_products_link( $text = 'Previous', $show_disabled = false
  * @return (string) First page link or text.
  */
 function wpsc_first_products_link( $text = 'First', $show_disabled = false ) {
-
-	_deprecated_function( __FUNCTION__, '3.8', 'wpsc_pagination');
+	_wpsc_deprecated_function( __FUNCTION__, '3.8', 'wpsc_pagination');
 	return false;
-
 }
 
 /**
@@ -344,8 +347,7 @@ function wpsc_first_products_link( $text = 'First', $show_disabled = false ) {
  * @return (string) Last page link or text.
  */
 function wpsc_last_products_link( $text = 'Last', $show_disabled = false ) {
-
-	_deprecated_function( __FUNCTION__, '3.8', 'wpsc_pagination');
+	_wpsc_deprecated_function( __FUNCTION__, '3.8', 'wpsc_pagination');
 	return false;
 
 }
@@ -356,7 +358,7 @@ function wpsc_last_products_link( $text = 'Last', $show_disabled = false ) {
  * @return nothing
  */
 function wpsc_save_variation_set() {
-	_deprecated_function( __FUNCTION__, '3.8');
+	_wpsc_deprecated_function( __FUNCTION__, '3.8');
 	return false;
 }
 
@@ -365,7 +367,7 @@ function wpsc_save_variation_set() {
  * @return boolean - true while we have pages to loop through
  */
 function wpsc_have_pages() {
-	_deprecated_function( __FUNCTION__, '3.8', 'wpsc_pagination');
+	_wpsc_deprecated_function( __FUNCTION__, '3.8', 'wpsc_pagination');
 	return false;
 }
 
@@ -374,7 +376,7 @@ function wpsc_have_pages() {
  * @return nothing - iterate through the pages
  */
 function wpsc_the_page() {
-	_deprecated_function( __FUNCTION__, '3.8', 'wpsc_pagination');
+	_wpsc_deprecated_function( __FUNCTION__, '3.8', 'wpsc_pagination');
 	return false;
 }
 
@@ -383,59 +385,59 @@ function wpsc_the_page() {
  * @return integer - the page number
  */
 function wpsc_page_number() {
-	_deprecated_function( __FUNCTION__, '3.8', 'wpsc_pagination');
+	_wpsc_deprecated_function( __FUNCTION__, '3.8', 'wpsc_pagination');
 	return false;
 }
 
 function wpsc_ordersummary() {
-	_deprecated_function( __FUNCTION__, '3.8');
+	_wpsc_deprecated_function( __FUNCTION__, '3.8');
 	return false;
 }
 
 function display_ecomm_rss_feed() {
-	_deprecated_function( __FUNCTION__, '3.8');
+	_wpsc_deprecated_function( __FUNCTION__, '3.8');
 	return false;
 }
 
 function display_ecomm_admin_menu() {
-	_deprecated_function( __FUNCTION__, '3.8');
+	_wpsc_deprecated_function( __FUNCTION__, '3.8');
 	return false;
 }
 
 // displays error messages if the category setup is odd in some way
 // needs to be in a function because there are at least three places where this code must be used.
 function wpsc_odd_category_setup() {
-	_deprecated_function( __FUNCTION__, '3.8');
+	_wpsc_deprecated_function( __FUNCTION__, '3.8');
 	return false;
 }
 
 function wpsc_product_image_html( $image_name, $product_id ) {
-	_deprecated_function( __FUNCTION__, '3.8');
+	_wpsc_deprecated_function( __FUNCTION__, '3.8');
 	return false;
 }
 
 function wpsc_delete_currency_layer() {
-	_deprecated_function( __FUNCTION__, '3.8');
+	_wpsc_deprecated_function( __FUNCTION__, '3.8');
 	return false;
 }
 
 function wpsc_akst_send_mail() {
-	_deprecated_function( __FUNCTION__, '3.8');
+	_wpsc_deprecated_function( __FUNCTION__, '3.8');
 	return false;
 }
 
 function wpsc_akst_hide_pop() {
-	_deprecated_function( __FUNCTION__, '3.8');
+	_wpsc_deprecated_function( __FUNCTION__, '3.8');
 	return false;
 }
 
 function wpsc_akst_page() {
-	_deprecated_function( __FUNCTION__, '3.8');
+	_wpsc_deprecated_function( __FUNCTION__, '3.8');
 	return false;
 }
 
 function wpsc_akst_share_link($action = 'print') {
-	_deprecated_function( __FUNCTION__, '3.8');
+	_wpsc_deprecated_function( __FUNCTION__, '3.8');
 	if($action == 'print')
 		echo '<div class="st_sharethis" displayText="ShareThis"></div>';
 	else
@@ -444,12 +446,12 @@ function wpsc_akst_share_link($action = 'print') {
 }
 
 function wpsc_akst_share_form() {
-	_deprecated_function( __FUNCTION__, '3.8');
+	_wpsc_deprecated_function( __FUNCTION__, '3.8');
 	return false;
 }
 
 function wpsc_has_shipping_form() {
-	_deprecated_function( __FUNCTION__, '3.8');
+	_wpsc_deprecated_function( __FUNCTION__, '3.8');
 	return false;
 }
 
@@ -462,7 +464,7 @@ function wpsc_has_shipping_form() {
  */
 
 function wpsc_is_admin() {
-	_deprecated_function( __FUNCTION__, '3.8');
+	_wpsc_deprecated_function( __FUNCTION__, '3.8');
     global $pagenow, $current_screen;
 
         if( 'post.php' == $pagenow && 'wpsc-product' == $current_screen->post_type ) return true;
@@ -478,7 +480,7 @@ function wpsc_is_admin() {
  * @return void
  */
 function wpsc_print_product_list() {
-	_deprecated_function( __FUNCTION__, '3.8' );
+	_wpsc_deprecated_function( __FUNCTION__, '3.8' );
 }
 
 /**
@@ -488,7 +490,7 @@ function wpsc_print_product_list() {
  * @return int
  */
 function wpsc_total_product_count() {
-	_deprecated_function( __FUNCTION__, '3.8' );
+	_wpsc_deprecated_function( __FUNCTION__, '3.8' );
 	return wpsc_product_count();
 }
 
@@ -501,15 +503,15 @@ function wpsc_total_product_count() {
 class WPSC_Query extends WP_Query
 {
 	function WPSC_Query( $query = '' ) {
+		_wpsc_deprecated_function( __FUNCTION__, '3.8', 'WP_Query()' );
 		$query = wp_parse_args( $query );
 		$query['post_type'] = 'wpsc-product';
-		_deprecated_function( __FUNCTION__, '3.8', 'WP_Query class' );
 		parent::WP_Query( $query );
 	}
 }
 
 function wpec_get_the_post_id_by_shortcode( $shortcode ) {
-	_deprecated_function( __FUNCTION__, '3.8.9', 'wpsc_get_the_post_id_by_shortcode' );
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.9', 'wpsc_get_the_post_id_by_shortcode' );
 	return wpsc_get_the_post_id_by_shortcode( $shortcode );
 }
 
@@ -523,6 +525,7 @@ function wpec_get_the_post_id_by_shortcode( $shortcode ) {
  * @returns nothing
  */
 function wpsc_update_permalinks(  $return = '' ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.9', '_wpsc_action_permalink_structure_changed' );
 	_wpsc_action_permalink_structure_changed();
 }
 
@@ -530,6 +533,7 @@ function wpsc_update_permalinks(  $return = '' ) {
  * @deprecated Use _wpsc_display_permalink_refresh_notice() instead;
  */
 function wpsc_check_permalink_notice() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.9', '_wpsc_display_permalink_refresh_notice' );
 	_wpsc_display_permalink_refresh_notice();
 }
 
@@ -537,6 +541,7 @@ function wpsc_check_permalink_notice() {
  * @deprecated since 3.8.8. Not used in core any more.
  */
 function wpsc_display_tracking_id(){
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.8' );
    $value = wpsc_trackingid_value();
    if(!empty($value))
 	  return $value;
@@ -548,6 +553,7 @@ function wpsc_display_tracking_id(){
  * @deprecated since 3.8.8. Not used in core any more.
  */
 function wpsc_the_purch_item_price() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.8' );
    global $purchlogs;
    if ( $purchlogs->purchitem->processed > 1 && $purchlogs->purchitem->processed != 6 ) {
 	  $purchlogs->totalAmount += $purchlogs->purchitem->totalprice;
@@ -559,6 +565,7 @@ function wpsc_the_purch_item_price() {
  * @deprecated since 3.8.8. Not used in core any more.
  */
 function wpsc_the_purch_item_date() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.8' );
    global $purchlogs;
    return date( 'M d Y,g:i a', $purchlogs->purchitem->date );
 }
@@ -567,6 +574,7 @@ function wpsc_the_purch_item_date() {
  * @deprecated since 3.8.8. Not used in core any more.
  */
 function wpsc_the_purch_item_name() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.8' );
    global $purchlogs;
    if ( wpsc_purchlogs_has_customfields( wpsc_the_purch_item_id() ) ) {
       return $purchlogs->the_purch_item_name() . '<img src="' . WPSC_CORE_IMAGES_URL . '/info_icon.jpg" title="' . esc_attr__( 'This Purchase has custom user content', 'wpsc' ) . '" alt="' . esc_attr__( 'exclamation icon', 'wpsc' ) . '" />';
@@ -579,6 +587,7 @@ function wpsc_the_purch_item_name() {
  * @deprecated since 3.8.8. Not used in core any more.
  */
 function wpsc_the_purch_item_id() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.8' );
    global $purchlogs;
    return $purchlogs->purchitem->id;
 }
@@ -587,6 +596,7 @@ function wpsc_the_purch_item_id() {
  * @deprecated since 3.8.8. Not used in core any more.
  */
 function wpsc_the_purch_item_details() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.8' );
    global $purchlogs;
    return $purchlogs->the_purch_item_details();
 }
@@ -597,6 +607,7 @@ function wpsc_the_purch_item_details() {
  * @deprecated since 3.8.8. Not used in core any more.
  */
 function wpsc_have_purch_items_statuses() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.8' );
    global $purchlogs;
    return $purchlogs->have_purch_status();
 }
@@ -605,8 +616,8 @@ function wpsc_have_purch_items_statuses() {
  * @deprecated since 3.8.8. Not used in core any more.
  */
 function wpsc_the_purch_status() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.8' );
    global $purchlogs;
-
    return $purchlogs->the_purch_status();
 }
 
@@ -614,6 +625,7 @@ function wpsc_the_purch_status() {
  * @deprecated since 3.8.8. Not used in core any more.
  */
 function wpsc_purchlogs_is_google_checkout() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.8' );
    global $purchlogs;
    if ( $purchlogs->purchitem->gateway == 'google' ) {
 	  return true;
@@ -626,6 +638,7 @@ function wpsc_purchlogs_is_google_checkout() {
  * @deprecated since 3.8.8. Not used in core any more.
  */
 function wpsc_the_purch_total() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.8' );
    global $purchlogs;
    return $purchlogs->totalAmount;
 }
@@ -634,6 +647,7 @@ function wpsc_the_purch_total() {
  * @deprecated since 3.8.8. Not used in core any more.
  */
 function wpsc_the_purch_item() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.8' );
    global $purchlogs;
    if ( isset( $_SESSION['newlogs'] ) ) {
 	  $purchlogs->allpurchaselogs = $_SESSION['newlogs'];
@@ -646,6 +660,7 @@ function wpsc_the_purch_item() {
  * @deprecated since 3.8.8. Not used in core any more.
  */
 function wpsc_the_purch_item_statuses() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.8' );
    global $purchlogs;
    return $purchlogs->the_purch_item_statuses();
 }
@@ -654,6 +669,7 @@ function wpsc_the_purch_item_statuses() {
  * @deprecated since 3.8.8. Not used in core any more.
  */
 function wpsc_the_purch_item_status() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.8' );
    global $purchlogs;
    return $purchlogs->the_purch_item_status();
 }
@@ -662,6 +678,7 @@ function wpsc_the_purch_item_status() {
  * @deprecated since 3.8.8. Not used in core any more.
  */
 function wpsc_the_purch_status_id() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.8' );
    global $purchlogs;
    return $purchlogs->purchstatus['order'];
 }
@@ -670,6 +687,7 @@ function wpsc_the_purch_status_id() {
  * @deprecated since 3.8.8. Not used in core any more.
  */
 function wpsc_purchlog_filter_by() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.8' );
 	wpsc_change_purchlog_view( $_POST['view_purchlogs_by'], $_POST['view_purchlogs_by_status'] );
 }
 
@@ -677,6 +695,7 @@ function wpsc_purchlog_filter_by() {
  * @deprecated since 3.8.8. Not used in core any more.
  */
 function wpsc_the_purch_status_name() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.8' );
    global $purchlogs;
    if ( isset( $purchlogs->purchstatus['label'] ) ) {
 	  return $purchlogs->purchstatus['label'];
@@ -687,6 +706,7 @@ function wpsc_the_purch_status_name() {
  * @deprecated since 3.8.8. Not used in core any more.
  */
 function wpsc_purchlogs_getfirstdates() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.8' );
    global $purchlogs;
    $dates = $purchlogs->getdates();
    $fDate = '';
@@ -706,6 +726,7 @@ function wpsc_purchlogs_getfirstdates() {
  * @deprecated since 3.8.8. Not used in core any more.
  */
 function wpsc_change_purchlog_view( $viewby, $status='' ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.8' );
    global $purchlogs;
    if ( $viewby == 'all' ) {
 	  $dates = $purchlogs->getdates();
@@ -737,6 +758,7 @@ function wpsc_change_purchlog_view( $viewby, $status='' ) {
  * @deprecated since 3.8.8. Not used in core any more.
  */
 function wpsc_search_purchlog_view( $search ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.8' );
    global $purchlogs;
    $newlogs = $purchlogs->search_purchlog_view( $search );
    $purchlogs->getDates();
@@ -748,6 +770,7 @@ function wpsc_search_purchlog_view( $search ) {
  * @deprecated since 3.8.8. Not used in core any more.
  */
 function wpsc_purchlog_is_checked_status() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.8' );
    global $purchlogitem, $purchlogs;
 
    if ( $purchlogs->purchstatus['order'] == $purchlogitem->extrainfo->processed ) {
@@ -763,6 +786,7 @@ function wpsc_purchlog_is_checked_status() {
  * @return string                   output
  */
 function country_list( $selected_country = null ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.9', '_wpsc_country_dropdown_options' );
 	return _wpsc_country_dropdown_options( array( 'selected' => $selected_country ) );
 }
 
@@ -772,6 +796,7 @@ function country_list( $selected_country = null ) {
  * @return array       Product tags
  */
 function get_the_product_tags( $id = 0 ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.9', 'wpsc_get_the_product_tags' );
 	return wpsc_get_the_product_tags( $id );
 }
 
@@ -781,6 +806,7 @@ function get_the_product_tags( $id = 0 ) {
  * @deprecated since 3.8.9
  */
 function wpsc_admin_product_listing( $parent_product = null, $args = array() ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.9' );
 	global $wp_query;
 
 	if ( empty( $args ) )
@@ -818,6 +844,7 @@ function wpsc_admin_product_listing( $parent_product = null, $args = array() ) {
  * @param $product (Object), $parent_product (Int) Note: I believe parent_product is unused
  */
 function wpsc_product_row(&$product, $parent_product = null) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.9' );
 	global $mode, $current_user, $wpsc_products;
 
 	//is this good practice? <v.bakaitis@gmail.com>
@@ -1168,9 +1195,127 @@ function wpsc_product_row(&$product, $parent_product = null) {
  * @return $post_status (array)
  */
 function wpsc_trashed_post_status($post_status){
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.9' );
 	$post = get_post(get_the_ID());
 	if( !empty($post) && 'wpsc-product' == $post->post_type && 'trash' == $post->post_status && !in_array('trash', $post_status))
 		$post_status[] = 'Trash';
 
 	return $post_status;
+}
+
+function wpsc_product_label_forms() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8' );
+	return false;
+}
+
+function wpsc_convert_weights($weight, $unit) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8', 'wpsc_convert_weight' );
+	if (is_array($weight)) {
+		$weight = $weight['weight'];
+	}
+	return wpsc_convert_weight( $weight, $unit, 'gram', true  );
+}
+
+/**
+ * wpsc in the loop function,
+ * @return boolean - true if we are in the loop
+ */
+function wpsc_in_the_loop() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8' );
+	global $wpsc_query;
+	return $wpsc_query->in_the_loop;
+}
+
+/**
+ * wpsc rewind products function, rewinds back to the first product
+ * @return nothing
+ */
+function wpsc_rewind_products() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8' );
+	global $wpsc_query;
+	return $wpsc_query->rewind_posts();
+}
+
+/**
+ * wpsc product has file function
+ * @return boolean - true if the product has a file
+ */
+function wpsc_product_has_file() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8' );
+	global $wpsc_query, $wpdb;
+	if ( is_numeric( $wpsc_query->product['file'] ) && ($wpsc_query->product['file'] > 0) )
+		return true;
+
+	return false;
+}
+
+/**
+ * wpsc currency sign function
+ * @return string - the selected currency sign for the store
+ */
+function wpsc_currency_sign() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8' );
+	global $wpdb;
+	$currency_sign_location = get_option( 'currency_sign_location' );
+	$currency_type = get_option( 'currency_type' );
+	$currency_symbol = $wpdb->get_var( $wpdb->prepare( "SELECT `symbol_html` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id` = %d LIMIT 1", $currency_type ) );
+
+	return $currency_symbol;
+}
+
+/**
+ * wpsc page is selected function
+ * @return boolean - true if the page is selected
+ */
+function wpsc_page_is_selected() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8' );
+	// determine if we are on this page
+	global $wpsc_query;
+	return $wpsc_query->page['selected'];
+}
+
+/**
+ * wpsc page URL function
+ * @return string - the page URL
+ */
+function wpsc_page_url() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8' );
+	// generate the page URL
+	global $wpsc_query;
+	return $wpsc_query->page['url'];
+}
+
+function shipwire_build_xml( $log_id ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.9', 'WPSC_Shipwire' );
+	return WPSC_Shipwire::get_order_xml( $log_id );
+}
+
+function shipwire_built_sync_xml() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.9', 'WPSC_Shipwire' );
+	return WPSC_Shipwire::get_inventory_xml();
+}
+
+function shipwire_built_tracking_xml() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.9', 'WPSC_Shipwire' );
+	return WPSC_Shipwire::get_tracking_xml();
+}
+
+function shipwire_send_sync_request( $xml ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.9', 'WPSC_Shipwire' );
+	return WPSC_Shipwire::send_inventory_request( $xml );
+}
+
+function shipwire_sent_request( $xml ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.9', 'WPSC_Shipwire' );
+	return WPSC_Shipwire::send_order_request( $xml );
+}
+
+function shipwire_send_tracking_request( $xml ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.9', 'WPSC_Shipwire' );
+	return WPSC_Shipwire::send_tracking_request( $xml );
+}
+
+function wpsc_rage_where( $where ) {
+    _wpsc_deprecated_function( __FUNCTION__, '3.8.8', 'wpsc_range_where()' );
+    return wpsc_range_where( $where );
 }

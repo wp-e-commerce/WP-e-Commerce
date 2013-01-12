@@ -655,26 +655,6 @@ function wpsc_the_product() {
 }
 
 /**
- * wpsc in the loop function,
- * @return boolean - true if we are in the loop
- */
-function wpsc_in_the_loop() {
-	_deprecated_function( __FUNCTION__, '3.8', 'the updated ' . __FUNCTION__ . '' );
-	global $wpsc_query;
-	return $wpsc_query->in_the_loop;
-}
-
-/**
- * wpsc rewind products function, rewinds back to the first product
- * @return nothing
- */
-function wpsc_rewind_products() {
-	_deprecated_function( __FUNCTION__, '3.8', 'the updated ' . __FUNCTION__ . '' );
-	global $wpsc_query;
-	return $wpsc_query->rewind_posts();
-}
-
-/**
  * wpsc the product id function,
  * @return integer - the product ID
  */
@@ -1009,19 +989,6 @@ function wpsc_product_on_special( $id = 0 ) {
 	}
 
 	return $on_special[$id];
-}
-
-/**
- * wpsc product has file function
- * @return boolean - true if the product has a file
- */
-function wpsc_product_has_file() {
-	_deprecated_function( __FUNCTION__, '3.8', 'the updated ' . __FUNCTION__ . '' );
-	global $wpsc_query, $wpdb;
-	if ( is_numeric( $wpsc_query->product['file'] ) && ($wpsc_query->product['file'] > 0) )
-		return true;
-
-	return false;
 }
 
 /**
@@ -1644,20 +1611,6 @@ function wpsc_product_new_rating( $product_id ) {
 }
 
 /**
- * wpsc currency sign function
- * @return string - the selected currency sign for the store
- */
-function wpsc_currency_sign() {
-	_deprecated_function( __FUNCTION__, '3.8', 'the updated ' . __FUNCTION__ . '' );
-	global $wpdb;
-	$currency_sign_location = get_option( 'currency_sign_location' );
-	$currency_type = get_option( 'currency_type' );
-	$currency_symbol = $wpdb->get_var( $wpdb->prepare( "SELECT `symbol_html` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id` = %d LIMIT 1", $currency_type ) );
-
-	return $currency_symbol;
-}
-
-/**
  * wpsc has pages function
  * @return boolean - true if we have pages
  */
@@ -1679,28 +1632,6 @@ function wpsc_has_multi_adding() {
 	} else {
 		return false;
 	}
-}
-
-/**
- * wpsc page is selected function
- * @return boolean - true if the page is selected
- */
-function wpsc_page_is_selected() {
-	_deprecated_function( __FUNCTION__, '3.8', 'the updated ' . __FUNCTION__ . '' );
-	// determine if we are on this page
-	global $wpsc_query;
-	return $wpsc_query->page['selected'];
-}
-
-/**
- * wpsc page URL function
- * @return string - the page URL
- */
-function wpsc_page_url() {
-	_deprecated_function( __FUNCTION__, '3.8', 'the updated ' . __FUNCTION__ . '' );
-	// generate the page URL
-	global $wpsc_query;
-	return $wpsc_query->page['url'];
 }
 
 /**

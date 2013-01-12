@@ -212,14 +212,6 @@ function wpsc_get_mimetype($file, $check_reliability = false) {
 	}
 }
 
-function wpsc_convert_weights($weight, $unit) {
-	_deprecated_function( __FUNCTION__, '3.8', 'wpsc_convert_weight' );
-	if (is_array($weight)) {
-		$weight = $weight['weight'];
-	}
-	return wpsc_convert_weight( $weight, $unit, 'gram', true  );
-}
-
 function wpsc_convert_weight($in_weight, $in_unit, $out_unit = 'pound', $raw = false) {
 	if (isset($weight) && is_array($weight)) {
 		$weight = $weight['weight'];

@@ -1388,7 +1388,7 @@ class wpsc_cart {
     * @return string a price with a currency sign
    */
    function process_as_currency($price) {
-   	  _deprecated_function( __FUNCTION__, '3.8', 'wpsc_currency_display');
+   	_wpsc_deprecated_function( __FUNCTION__, '3.8', 'wpsc_currency_display');
       return wpsc_currency_display($price);
   }
 

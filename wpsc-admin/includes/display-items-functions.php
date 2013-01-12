@@ -763,10 +763,7 @@ function wpsc_product_download_forms() {
 	}
 	$output = apply_filters( 'wpsc_downloads_metabox', $output );
 }
-function wpsc_product_label_forms() {
-	_deprecated_function( __FUNCTION__, '3.8' );
-	return false;
-}
+
 /**
  * Adding function to change text for media buttons
  */
