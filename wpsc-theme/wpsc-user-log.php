@@ -28,7 +28,7 @@ global $current_tab; ?>
 
 		<?php _e( 'You must be logged in to use this page. Please use the form below to login to your account.', 'wpsc' ); ?>
 
-		<form name="loginform" id="loginform" action="<?php echo wp_login_url(); ?>" method="post">
+		<form name="loginform" id="loginform" action="<?php echo esc_url( wp_login_url() ); ?>" method="post">
 			<p>
 				<label><?php _e( 'Username:', 'wpsc' ); ?><br /><input type="text" name="log" id="log" value="" size="20" tabindex="1" /></label>
 			</p>
