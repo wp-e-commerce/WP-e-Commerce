@@ -1,6 +1,6 @@
 <?php
 /**
- * The Account - Purchase History template.
+ * The Account > Purchase History template.
  *
  * Displays the user's order history.
  *
