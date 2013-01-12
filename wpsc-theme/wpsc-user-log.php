@@ -46,7 +46,7 @@ global $current_tab; ?>
 
 			<p class="submit">
 				<input type="submit" name="submit" id="submit" value="<?php _e( 'Login &raquo;', 'wpsc' ); ?>" tabindex="4" />
-				<input type="hidden" name="redirect_to" value="<?php echo get_option( 'user_account_url' ); ?>" />
+				<input type="hidden" name="redirect_to" value="<?php echo esc_url( get_option( 'user_account_url' ) ); ?>" />
 			</p>
 		</form>
 
