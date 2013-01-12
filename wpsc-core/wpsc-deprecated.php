@@ -229,6 +229,37 @@ function wpsc_showing_products_page() {
 }
 
 
+/**
+ * is wpsc profile page
+ * Checks if the current account page tab is Edit Profile.
+ * @deprecated since 3.8.10
+ * @return (boolean) true if current tab ID is edit_profile.
+ */
+function is_wpsc_profile_page() {
+	return !empty($_REQUEST['tab']) && ( $_REQUEST['tab'] == 'edit_profile' );
+}
+
+/**
+ * is wpsc profile page
+ * Checks if the current account page tab is Downloads.
+ * @deprecated since 3.8.10
+ * @return (boolean) true if current tab ID is downloads.
+ */
+function is_wpsc_downloads_page() {
+	return !empty($_REQUEST['tab']) && ( $_REQUEST['tab'] == 'downloads' );
+}
+
+
+/**
+ * wpsc user details
+ * Displays the Purchase History account page section.
+ * @seprecated since 3.8.10
+ * @return (string) The Purchase History page template.
+ */
+function wpsc_user_details() {
+	return wpsc_user_purchases();
+}
+
 
 /**
  * wpsc product search url
