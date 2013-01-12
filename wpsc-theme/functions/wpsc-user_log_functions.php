@@ -761,6 +761,33 @@ add_action( 'wpsc_user_profile_section_edit_profile', '_wpsc_action_edit_profile
  *
  */
 function _wpsc_action_downloads_section() {
+	global $files, $products;
+
+	$items = array();
+	if ( wpsc_has_downloads() && ! empty( $files ) ) {
+		foreach ( $files as $key => $file ) {
+			$item = array();
+			if ( $products[$key]['downloads'] > 0 ) {
+				$url = add_query_arg(
+					'downloadid',
+					$products[$key]['uniqueid'],
+					home_url()
+				);
+				$item['title'] = sprintf(
+					'<a href="%1$s">%2$s</a>',
+					esc_url( $url ),
+					esc_html( $file['post_title'] )
+				);
+			} else {
+				$item['title'] = esc_html( $file['post_title'] );
+			}
+
+			$item['downloads'] = $products[$key]['downloads'];
+			$item['datetime'] = date( get_option( 'date_format' ), strtotime( $products[$key]['datetime'] ) );
+			$items[] = (object) $item;
+		}
+	}
+
 	include( WPSC_FILE_PATH . '/wpsc-theme/wpsc-account-downloads.php' );
 }
 add_action( 'wpsc_user_profile_section_downloads', '_wpsc_action_downloads_section' );
