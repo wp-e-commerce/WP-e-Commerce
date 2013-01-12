@@ -1086,9 +1086,6 @@ function wpsc_download_file() {
 				wpsc_update_purchase_log_status( $download_data['purchid'], 4 );
 			}
 
-
-
-			do_action( 'wpsc_alter_download_action', $file_id );
 			_wpsc_force_download_file( $file_id );
 		} else {
 			exit( _e( 'This download is no longer valid, Please contact the site administrator for more information.', 'wpsc' ) );
@@ -1098,6 +1095,7 @@ function wpsc_download_file() {
 add_action( 'init', 'wpsc_download_file' );
 
 function _wpsc_force_download_file( $file_id ) {
+	do_action( 'wpsc_alter_download_action', $file_id );
 	$file_data = get_post( $file_id );
 	if ( ! $file_data )
 		wp_die( __( 'Invalid file ID.', 'wpsc' ) );
