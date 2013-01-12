@@ -1,6 +1,6 @@
 <?php
 /**
- * The Account - Downloads template.
+ * The Account > Downloads template.
  *
  * Displays the user account page.
  *
@@ -32,7 +32,7 @@ global $files, $products; ?>
 					<td>
 		<?php
 			if ( $products[$i]['downloads'] > 0 )
-			
+
 				echo "<a href = " . get_option('siteurl')."?downloadid=".$products[$i]['uniqueid'] . ">" . $file['post_title'] . "</a>";
 			else
 				echo $file['post_title'] . "";
