@@ -196,7 +196,19 @@ function _wpsc_action_update_purchase_log_status( $id, $status, $old_status, $pu
 		wpsc_send_admin_email( $purchase_log );
 	}
 
-	if ( ! $purchase_log->is_accepted_payment() )
+	if ( ! $purchase_log->is_transaction_completed() )
+		return;
+
+	$already_processed = in_array(
+		$old_status,
+		array(
+			WPSC_Purchase_Log::ACCEPTED_PAYMENT,
+			WPSC_Purchase_Log::JOB_DISPATCHED,
+			WPSC_Purchase_Log::CLOSED_ORDER,
+		)
+	);
+
+	if ( $already_processed )
 		return;
 
 	_wpsc_process_transaction_coupon( $purchase_log );
