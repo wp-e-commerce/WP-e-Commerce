@@ -796,7 +796,7 @@ function wpsc_get_extension( $str ) {
  *   trigger or false to not trigger error.
  *
  * @param string $function The function that was called
- * @param string $version The version of WordPress that deprecated the function
+ * @param string $version The version of WP e-Commerce that deprecated the function
  * @param string $replacement Optional. The function that should have been called
  */
 function _wpsc_deprecated_function( $function, $version, $replacement = null ) {
@@ -842,7 +842,7 @@ function _wpsc_deprecated_function( $function, $version, $replacement = null ) {
  *   trigger or false to not trigger error.
  *
  * @param string $file The file that was included
- * @param string $version The version of WordPress that deprecated the file
+ * @param string $version The version of WP e-Commerce that deprecated the file
  * @param string $replacement Optional. The file that should have been included based on ABSPATH
  * @param string $message Optional. A message regarding the change
  */
@@ -899,7 +899,7 @@ function _wpsc_deprecated_file( $file, $version, $replacement = null, $message =
  *   trigger or false to not trigger error.
  *
  * @param string $function The function that was called
- * @param string $version The version of WordPress that deprecated the argument used
+ * @param string $version The version of WP e-Commerce that deprecated the argument used
  * @param string $message Optional. A message regarding the change.
  */
 function _wpsc_deprecated_argument( $function, $version, $message = null ) {
@@ -946,7 +946,7 @@ function _wpsc_deprecated_argument( $function, $version, $message = null ) {
  *
  * @param string $function The function that was called.
  * @param string $message A message explaining what has been done incorrectly.
- * @param string $version The version of WordPress where the message was added.
+ * @param string $version The version of WP e-Commerce where the message was added.
  */
 function _wpsc_doing_it_wrong( $function, $message, $version ) {
 
