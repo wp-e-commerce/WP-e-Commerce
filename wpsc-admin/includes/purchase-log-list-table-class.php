@@ -193,7 +193,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table
 			'amount'   => __( 'Amount', 'wpsc' ),
 			'status'   => _x( 'Status', 'sales log list table column', 'wpsc' ),
 			'date'     => __( 'Date', 'wpsc' ),
-			'tracking' => __( 'Tracking ID', 'wpsc' ),
+			'tracking' => _x( 'Tracking ID', 'purchase log list table', 'wpsc' ),
 		);
 	}
 
