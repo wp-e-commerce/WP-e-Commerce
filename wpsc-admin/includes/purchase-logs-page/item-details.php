@@ -31,7 +31,7 @@
 					<?php esc_html_e( 'Shipping Method:', 'wpsc' ); ?> <?php echo wpsc_display_purchlog_shipping_method(); ?><br />
 					<?php esc_html_e( 'Shipping Option:', 'wpsc' ); ?> <?php echo wpsc_display_purchlog_shipping_option(); ?><br />
 					<?php if( wpsc_purchlogs_has_tracking() ) : ?>
-						<?php esc_html_e( 'Tracking ID:', 'wpsc' ); ?> <?php echo wpsc_purchlogitem_trackid(); ?><br />
+						<?php echo esc_html_x( 'Tracking ID:', 'purchase log', 'wpsc' ); ?> <?php echo wpsc_purchlogitem_trackid(); ?><br />
 						<?php esc_html_e( 'Shipping Status:', 'wpsc' ); ?> <?php echo wpsc_purchlogitem_trackstatus(); ?><br />
 						<?php esc_html_e( 'Track History:', 'wpsc' ); ?> <?php echo wpsc_purchlogitem_trackhistory(); ?>
 					<?php endif; ?>
