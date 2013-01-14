@@ -54,7 +54,7 @@ class WPSC_Settings_Tab_Marketing extends WPSC_Settings_Tab {
 				<span class='description'><?php _e( 'By default, we insert the multiple-domain asynchronous tracking code.  This should be fine for 99% of users.  If you need to fine-tune it, select the Advanced option.  Then, instead of simply entering your tracking ID, you will enter the enter tracking code from Google Analytics into the header.php file of your theme.', 'wpsc' ); ?></span>
 			</p><br />
 			<p class='wpsc_ga_tracking_id'>
-				<span class='input_label'><?php _x( 'Tracking ID', 'google analytics settings page', 'wpsc' ); ?></span>
+				<span class='input_label'><?php _ex( 'Tracking ID', 'google analytics', 'wpsc' ); ?></span>
 				<input value="<?php echo esc_attr( get_option( 'wpsc_ga_tracking_id' ) ); ?>" type='text' name='wpsc_ga_tracking_id' />
 				<span class='description'><?php _e( 'Enter your tracking ID here.', 'wpsc' ); ?></span>
 			</p><br />
