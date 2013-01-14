@@ -33,9 +33,6 @@ class wpsc_merchant_testmode extends wpsc_merchant {
 	function __construct( $purchase_id = null, $is_receiving = false ) {
 		$this->name = __( 'Test Gateway', 'wpsc' );
 		parent::__construct( $purchase_id, $is_receiving );
-
-		add_filter( 'wpsc_purchase_log_customer_notification_raw_message'     , array( $this, '_filter_customer_notification_raw_message' ), 10, 2 );
-		add_filter( 'wpsc_purchase_log_customer_html_notification_raw_message', array( $this, '_filter_customer_notification_raw_message' ), 10, 2 );
 	}
 
 	function submit() {
@@ -45,15 +42,6 @@ class wpsc_merchant_testmode extends wpsc_merchant {
 
 	 	exit();
 
-	}
-
-	public function _filter_customer_notification_raw_message( $message, $notification ) {
-		$purchase_log = $notification->get_purchase_log();
-
-		if ( $purchase_log->get( 'gateway' ) == 'wpsc_merchant_testmode' )
-			$message = get_option( 'payment_instructions', '' ) . "\r\n" . $message;
-
-		return $message;
 	}
 }
 
@@ -69,3 +57,25 @@ function form_testmode() {
 
 	return $output;
 }
+
+function _wpsc_filter_test_merchant_customer_notification_raw_message( $message, $notification ) {
+	$purchase_log = $notification->get_purchase_log();
+
+	if ( $purchase_log->get( 'gateway' ) == 'wpsc_merchant_testmode' )
+		$message = get_option( 'payment_instructions', '' ) . "\r\n" . $message;
+
+	return $message;
+}
+
+add_filter(
+	'wpsc_purchase_log_customer_notification_raw_message',
+	'_wpsc_filter_test_merchant_customer_notification_raw_message',
+	10,
+	2
+);
+add_filter(
+	'wpsc_purchase_log_customer_html_notification_raw_message',
+	'_wpsc_filter_test_merchant_customer_notification_raw_message',
+	10,
+	2
+);
