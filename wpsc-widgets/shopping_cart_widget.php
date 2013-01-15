@@ -80,7 +80,7 @@ class WP_Widget_Shopping_Cart extends WP_Widget {
 				<?php
 			} else {
 				?>
-				<div class="wpsc_cart_loading"><p><?php _e( 'Loading...', 'wpsc' ); ?></p>
+				<div class="wpsc_cart_loading"><p><?php _e( 'Loading...', 'wpsc' ); ?></p></div>
 				<?php
 			}
 			echo '</div>';
