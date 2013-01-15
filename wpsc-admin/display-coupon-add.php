@@ -1,14 +1,6 @@
 <div class="wrap" id+"coupon_data">
 	<div id="add_coupon_box">
 		<h2><?php _e( 'Add Coupon', 'wpsc' ); ?></h2>
-
-		<script type='text/javascript'>
-			jQuery(".pickdate").datepicker();
-			/* jQuery datepicker selector */
-			if (typeof jQuery('.pickdate').datepicker != "undefined") {
-				jQuery('.pickdate').datepicker({ dateFormat: 'yy-mm-dd' });
-			}
-		</script>
 		<form name='add_coupon' method="post" action="<?php echo admin_url( 'edit.php?post_type=wpsc-product&page=wpsc-edit-coupons' ); ?>">
 			<table class="form-table">
 				<tbody>
