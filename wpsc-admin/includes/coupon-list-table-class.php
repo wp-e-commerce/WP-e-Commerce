@@ -50,7 +50,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * @return      void
 	 */
 
-	function __construct(){
+	public function __construct(){
 		global $status, $page;
 
 		parent::__construct( array(
@@ -72,7 +72,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * @return      array
 	 */
 
-	function get_views() {
+	public function get_views() {
 		$base           = admin_url('edit.php?post_type=wpsc-product&page=wpsc-edit-coupons');
 
 		$current        = isset( $_GET['status'] ) ? $_GET['status'] : 'all';
@@ -98,7 +98,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * @return      array
 	 */
 
-	function get_columns() {
+	public function get_columns() {
 		$columns = array(
 			'cb'           => '<input type="checkbox" />',
 			'ID'           => __( 'ID', 'wpsc' ),
@@ -122,7 +122,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * @return      array
 	 */
 
-	function get_sortable_columns() {
+	public function get_sortable_columns() {
 		return array(
 			'ID'     => array( 'ID', true )
 		);
@@ -139,7 +139,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * @return      string
 	 */
 
-	function column_default( $item, $column_name ) {
+	public function column_default( $item, $column_name ) {
 		switch( $column_name ){
 			case 'start' :
 				$start_date = strtotime( $item[ $column_name ] );
@@ -160,7 +160,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * @since       3.8.10
 	 * @return      string
 	 */
-	function column_coupon( $item ) {
+	public function column_coupon( $item ) {
 
 		$base     = admin_url( 'edit.php?post_type=wpsc-product&page=wpsc-edit-coupons&wpsc-action=edit_coupon&coupon=' . $item['ID'] );
 
@@ -189,7 +189,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * @return      string
 	 */
 
-	function column_cb( $item ) {
+	public function column_cb( $item ) {
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
 			/*$1%s*/ $this->_args['singular'],
@@ -207,7 +207,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * @return      string
 	 */
 
-	function column_status( $item ) {
+	public function column_status( $item ) {
 		switch( $item['status'] ) {
 			case 'active' :
 				$img = '<img src="' . WPSC_CORE_IMAGES_URL . '/yes_stock.gif"/>';
@@ -229,7 +229,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * @return      string
 	 */
 
-	function column_discount( $item ) {
+	public function column_discount( $item ) {
 		switch( $item['type'] ) {
 			case 0:
 				return wpsc_currency_display( $item['discount'] );
@@ -252,7 +252,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * @return      array
 	 */
 
-	function get_bulk_actions() {
+	public function get_bulk_actions() {
 		$actions = array(
 			'activate'   => __( 'Activate', 'wpsc' ),
 			'deactivate' => __( 'Deactivate', 'wpsc' ),
@@ -271,7 +271,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * @return      void
 	 */
 
-	function process_bulk_action() {
+	public function process_bulk_action() {
 
 		global $wpdb;
 
@@ -310,7 +310,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * @since       3.8.10
 	 * @return      void
 	 */
-	function process_single_actions() {
+	public function process_single_actions() {
 
 		global $wpdb;
 
@@ -342,7 +342,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * @since       3.8.10
 	 * @return      array
 	 */
-	function count_coupons() {
+	public function count_coupons() {
 
 		global $wpdb;
 
@@ -360,7 +360,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * @since       3.8.10
 	 * @return      array
 	 */
-	function coupons_data() {
+	public function coupons_data() {
 
 		global $wpdb;
 
@@ -411,7 +411,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * @since       3.8.10
 	 * @return      array
 	 */
-	function prepare_items() {
+	public function prepare_items() {
 
 		$per_page = $this->per_page;
 
