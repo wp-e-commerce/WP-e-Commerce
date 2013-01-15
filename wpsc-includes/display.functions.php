@@ -90,11 +90,11 @@ function wpsc_also_bought( $product_id ) {
 				$image_path = wpsc_the_product_thumbnail( $image_display_width, $image_display_height, $also_bought_data['ID']);
 				if($image_path){
 					$output .= "<a href='" . get_permalink($also_bought_data['ID']) . "' class='preview_link'  rel='" . str_replace( " ", "_", get_the_title($also_bought_data['ID']) ) . "'>";
-					$output .= "<img src='$image_path' id='product_image_" . $also_bought_data['ID'] . "' class='product_image' style='margin-top: " . $margin_top . "px'/>";
+					$output .= "<img src='$image_path' id='product_image_" . $also_bought_data['ID'] . "' class='product_image' />";
 					$output .= "</a>";
 				} else {
 					if ( get_option( 'product_image_width' ) != '' ) {
-						$output .= "<img src='" . WPSC_CORE_IMAGES_URL . "/no-image-uploaded.gif' title='" . esc_attr( get_the_title( $also_bought_data['ID'] ) ) . "' alt='" . esc_attr( $also_bought_data['name'] ) . "' width='$image_display_height' height='$image_display_height' id='product_image_" . $also_bought_data['ID'] . "' class='product_image' />";
+						$output .= "<img src='" . WPSC_CORE_IMAGES_URL . "/no-image-uploaded.gif' title='" . esc_attr( get_the_title( $also_bought_data['ID'] ) ) . "' alt='" . esc_attr( $also_bought_data['post_name'] ) . "' width='$image_display_height' height='$image_display_height' id='product_image_" . $also_bought_data['ID'] . "' class='product_image' />";
 					} else {
 						$output .= "<img src='" . WPSC_CORE_IMAGES_URL . "/no-image-uploaded.gif' title='" . esc_attr( get_the_title( $also_bought_data['ID'] ) ) . "' alt='" . esc_attr( get_the_title( $also_bought_data['ID'] ) ) . "' id='product_image_" . $also_bought_data['ID'] . "' class='product_image' />";
 					}
