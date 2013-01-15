@@ -36,8 +36,8 @@
 							$currency_sign = ! empty( $currency_data['symbol'] ) ? $currency_data['symbol_html'] : $currency_data['code'];
 							?>
 							<select name='add_discount_type' id='add_discount_type' onchange = 'show_shipping_options();'>
-								<option value='0'><?php esc_html_e( $currency_sign ); ?></option>
-								<option value='1'>%</option>
+								<option value='0'><?php _e( 'Fixed Amount', 'wpsc' ); ?></option>
+								<option value='1'><?php _e( 'Percentage', 'wpsc' ); ?></option>
 								<option value='2'><?php _e( 'Free shipping', 'wpsc' ); ?></option>
 							</select>
 							<p class="description"><?php _e( 'The discount type', 'wpsc' ); ?></p>
