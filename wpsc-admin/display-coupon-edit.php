@@ -207,54 +207,6 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 
 							</div>
 							<?php endif; ?>
-							<script>
-								var coupon_number = jQuery('.coupon_condition').length;
-								function edit_another_property(this_button){
-									var new_property='<div class="coupon_condition">\n'+
-										'<select class="ruleprops" name="rules['+coupon_number+'][property]"> \n'+
-										'<option value="item_name" rel="order">Item name</option> \n'+
-										'<option value="item_quantity" rel="order">Item quantity</option>\n'+
-										'<option value="total_quantity" rel="order">Total quantity</option>\n'+
-										'<option value="subtotal_amount" rel="order">Subtotal amount</option>\n'+
-										'<?php do_action( 'wpsc_coupon_rule_property_options', '' ); ?>'+
-										'</select> \n'+
-										'<select name="rules['+coupon_number+'][logic]"> \n'+
-										'<option value="equal">Is equal to</option> \n'+
-										'<option value="greater">Is greater than</option> \n'+
-										'<option value="less">Is less than</option> \n'+
-										'<option value="contains">Contains</option> \n'+
-										'<option value="not_contain">Does not contain</option> \n'+
-										'<option value="begins">Begins with</option> \n'+
-										'<option value="ends">Ends with</option> \n'+
-										'</select> \n'+
-										'<span> \n'+
-										'<input type="text" name="rules['+coupon_number+'][value]" style="width:300px"/> \n'+
-										'</span>  \n'+
-										'<img height="16" width="16" class="delete" alt="Delete" src="<?php echo WPSC_CORE_IMAGES_URL; ?>/cross.png" onclick="jQuery(this).parent().remove();"/>\n' +
-										'</div> ';
-
-									jQuery('.coupon_condition :last').after(new_property);
-									coupon_number++;
-								}
-
-								//displays the free shipping options
-								function show_shipping_options() {
-									var discount_type = document.getElementById("edit_discount_type").value;
-									if (discount_type == "2") {
-										document.getElementById("free_shipping_options").style.display='block';
-										document.getElementById("discount_amount").style.display='none';
-									}else{
-										document.getElementById("free_shipping_options").style.display='none';
-										document.getElementById("discount_amount").style.display='table-row';
-									}
-								}
-
-								//need to send the selected country off via ajax to return the region select box for that country
-								function show_region_list(){
-									var country_id = document.getElementById("coupon_country_list").value;
-								}
-
-							</script>
 							<br/>
 							<a class="wpsc_coupons_condition_add button-secondary" onclick="edit_another_property(jQuery(this));">
 								<?php _e( 'Add New Condition', 'wpsc' ); ?>
