@@ -139,7 +139,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * @return      string
 	 */
 
-	public function column_default( $item, $column_name ) {
+	protected function column_default( $item, $column_name ) {
 		switch( $column_name ){
 			case 'start' :
 				$start_date = strtotime( $item[ $column_name ] );
@@ -160,7 +160,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * @since       3.8.10
 	 * @return      string
 	 */
-	public function column_coupon( $item ) {
+	protected function column_coupon( $item ) {
 
 		$base     = admin_url( 'edit.php?post_type=wpsc-product&page=wpsc-edit-coupons&wpsc-action=edit_coupon&coupon=' . $item['ID'] );
 
@@ -189,7 +189,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * @return      string
 	 */
 
-	public function column_cb( $item ) {
+	protected function column_cb( $item ) {
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
 			/*$1%s*/ $this->_args['singular'],
@@ -207,7 +207,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * @return      string
 	 */
 
-	public function column_status( $item ) {
+	protected function column_status( $item ) {
 		switch( $item['status'] ) {
 			case 'active' :
 				$img = '<img src="' . WPSC_CORE_IMAGES_URL . '/yes_stock.gif"/>';
@@ -229,7 +229,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * @return      string
 	 */
 
-	public function column_discount( $item ) {
+	protected function column_discount( $item ) {
 		switch( $item['type'] ) {
 			case 0:
 				return wpsc_currency_display( $item['discount'] );
