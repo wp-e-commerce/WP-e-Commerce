@@ -73,7 +73,7 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 									<select name='free_shipping_options[discount_region]'>
 									<?php
 										foreach ( $region_list as $region ) { ?>
-										 <option value='<?php echo $region['id']; ?>' <?php selected( $region['id'], $coupon['discount_region'] ); ?> ><?php echo esc_attr( $region['name'] ); ?></option>
+										 <option value='<?php esc_attr_e( $region['id'] ); ?>' <?php selected( $region['id'], $coupon['discount_region'] ); ?> ><?php echo esc_html( $region['name'] ); ?></option>
 										 <?php
 										}
 									?>
