@@ -30,11 +30,6 @@
 							<label for="add_discount_type"><?php _e( 'Discount Type', 'wpsc' ); ?></label>
 						</th>
 						<td>
-							<?php
-							global $wpdb;
-							$currency_data = $wpdb->get_row( "SELECT `symbol`,`symbol_html`,`code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id`='" . esc_attr( get_option( 'currency_type' ) ) . "' LIMIT 1", ARRAY_A );
-							$currency_sign = ! empty( $currency_data['symbol'] ) ? $currency_data['symbol_html'] : $currency_data['code'];
-							?>
 							<select name='add_discount_type' id='add_discount_type' onchange = 'show_shipping_options();'>
 								<option value='0'><?php _e( 'Fixed Amount', 'wpsc' ); ?></option>
 								<option value='1'><?php _e( 'Percentage', 'wpsc' ); ?></option>
