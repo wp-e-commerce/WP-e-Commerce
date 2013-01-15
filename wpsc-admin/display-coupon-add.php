@@ -59,8 +59,6 @@
 
 								<span id='discount_options_country'>
 								<?php
-								//i dont think we need this cu we need to do an ajax request to generate this list
-								//based on the country chosen probably need the span place holder tho
 								$region_list = $wpdb->get_results( $wpdb->prepare( "SELECT `" . WPSC_TABLE_REGION_TAX . "`.* FROM `" . WPSC_TABLE_REGION_TAX . "`, `" . WPSC_TABLE_CURRENCY_LIST . "`  WHERE `" . WPSC_TABLE_CURRENCY_LIST . "`.`isocode` IN(%s) AND `" . WPSC_TABLE_CURRENCY_LIST . "`.`id` = `" . WPSC_TABLE_REGION_TAX . "`.`country_id`", get_option( $free_shipping_country ) ), ARRAY_A );
 								if ( !empty( $region_list ) ) { ?>
 
