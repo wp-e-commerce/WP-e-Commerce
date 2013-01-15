@@ -17,10 +17,10 @@
 
 					<tr class="form-field" id="discount_amount">
 						<th scope="row" valign="top">
-							<label for="add_discount"><?php _e( 'Discount', 'wpsc' ); ?></label>
+							<label for="add-coupon-code"><?php _e( 'Discount', 'wpsc' ); ?></label>
 						</th>
 						<td>
-							<input name="add_discount" id="add_discount" type="number" class="small-text"/>
+							<input name="add_discount" id="add-coupon-code" type="number" class="small-text"/>
 							<span class="description"><?php _e( 'The discount amount', 'wpsc' ); ?></span>
 						</td>
 					</tr>
