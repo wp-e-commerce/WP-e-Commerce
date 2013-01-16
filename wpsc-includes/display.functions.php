@@ -60,60 +60,69 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 		return ob_get_clean();
 }
 
+/**
+ * Displays products that were bought along with the product defined by $product_id.
+ * This functionality will be deprecated and be provided by a plugin in a future version.
+ */
 function wpsc_also_bought( $product_id ) {
-	/*
-	 * Displays products that were bought aling with the product defined by $product_id
-	 * most of it scarcely needs describing
-	 */
 	global $wpdb;
 
 	if ( get_option( 'wpsc_also_bought' ) == 0 ) {
-		//returns nothing if this is off
 		return '';
 	}
-
-
-	// to be made customiseable in a future release
+	
+	// To be made customiseable in a future release
 	$also_bought_limit = 3;
 	$element_widths = 96;
 	$image_display_height = 96;
 	$image_display_width = 96;
-
-	$output = '';
+	
+	// Filter will be used by a plugin to provide 'Also Bought' functionality when this is deprecated from core.
+	// Filter is currently private and should not be used by plugin/theme devs as it may only be temporary.
+	$output = apply_filters( '_wpsc_also_bought', '', $product_id );
+	if ( ! empty( $output ) ) {
+		return $output;
+	}
+	
+	// If above filter returns output then the following is ignore and can be deprecated in future.
 	$also_bought = $wpdb->get_results( $wpdb->prepare( "SELECT `" . $wpdb->posts . "`.* FROM `" . WPSC_TABLE_ALSO_BOUGHT . "`, `" . $wpdb->posts . "` WHERE `selected_product`= %d AND `" . WPSC_TABLE_ALSO_BOUGHT . "`.`associated_product` = `" . $wpdb->posts . "`.`id` AND `" . $wpdb->posts . "`.`post_status` IN('publish','protected') ORDER BY `" . WPSC_TABLE_ALSO_BOUGHT . "`.`quantity` DESC LIMIT $also_bought_limit", $product_id ), ARRAY_A );
-	if ( count( $also_bought ) > 0 ) {
-		$output .= "<h2 class='prodtitles wpsc_also_bought' >" . __( 'People who bought this item also bought', 'wpsc' ) . "</h2>";
-		$output .= "<div class='wpsc_also_bought'>";
-		foreach ( (array)$also_bought as $also_bought_data ) {
-			$output .= "<div class='wpsc_also_bought_item' style='width: " . $element_widths . "px;'>";
+	if ( is_array( $also_bought ) && count( $also_bought ) > 0 ) {
+		$output .= '<h2 class="prodtitles wpsc_also_bought">' . __( 'People who bought this item also bought', 'wpsc' ) . '</h2>';
+		$output .= '<div class="wpsc_also_bought">';
+		foreach ( $also_bought as $also_bought_data ) {
+			$output .= '<div class="wpsc_also_bought_item" style="width: ' . $element_widths . 'px;">';
 			if ( get_option( 'show_thumbnails' ) == 1 ) {
-				$image_path = wpsc_the_product_thumbnail( $image_display_width, $image_display_height, $also_bought_data['ID']);
-				if($image_path){
-					$output .= "<a href='" . get_permalink($also_bought_data['ID']) . "' class='preview_link'  rel='" . str_replace( " ", "_", get_the_title($also_bought_data['ID']) ) . "'>";
-					$output .= "<img src='$image_path' id='product_image_" . $also_bought_data['ID'] . "' class='product_image' />";
-					$output .= "</a>";
+				$image_path = wpsc_the_product_thumbnail( $image_display_width, $image_display_height, $also_bought_data['ID'] );
+				if ( $image_path ) {
+					$output .= '<a href="' . esc_attr( get_permalink( $also_bought_data['ID'] ) ) . '" class="preview_link" rel="' . esc_attr( sanitize_html_class( get_the_title( $also_bought_data['ID'] ) ) ) . '">';
+					$output .= '<img src="' . esc_attr( $image_path ) . '" id="product_image_' . $also_bought_data['ID'] . '" class="product_image" />';
+					$output .= '</a>';
 				} else {
 					if ( get_option( 'product_image_width' ) != '' ) {
-						$output .= "<img src='" . WPSC_CORE_IMAGES_URL . "/no-image-uploaded.gif' title='" . esc_attr( get_the_title( $also_bought_data['ID'] ) ) . "' alt='" . esc_attr( $also_bought_data['post_name'] ) . "' width='$image_display_height' height='$image_display_height' id='product_image_" . $also_bought_data['ID'] . "' class='product_image' />";
+						$width_and_height = 'width="' . $image_display_height . '" height="' . $image_display_height . '" ';
 					} else {
-						$output .= "<img src='" . WPSC_CORE_IMAGES_URL . "/no-image-uploaded.gif' title='" . esc_attr( get_the_title( $also_bought_data['ID'] ) ) . "' alt='" . esc_attr( get_the_title( $also_bought_data['ID'] ) ) . "' id='product_image_" . $also_bought_data['ID'] . "' class='product_image' />";
+						$width_and_height = '';
 					}
+					$output .= '<img src="' . WPSC_CORE_THEME_URL . '/wpsc-images/noimage.png" title="' . esc_attr( get_the_title( $also_bought_data['ID'] ) ) . '" alt="' . esc_attr( get_the_title( $also_bought_data['ID'] ) ) . '" id="product_image_' . $also_bought_data['ID'] . '" class="product_image" ' . $width_and_height . '/>';
 				}
 			}
 
-			$output .= "<a class='wpsc_product_name' href='" . get_permalink($also_bought_data['ID']) . "'>" . get_the_title($also_bought_data['ID']) . "</a>";
-			$price = get_product_meta($also_bought_data['ID'], 'price', true);
-			$special_price = get_product_meta($also_bought_data['ID'], 'special_price', true);
-			if(!empty($special_price)){
-				$output .= '<span style="text-decoration: line-through;">' . wpsc_currency_display( $price ) . '</span>';
-				$output .= wpsc_currency_display( $special_price );
-			} else {
-				$output .= wpsc_currency_display( $price );
+			$output .= '<a class="wpsc_product_name" href="' . get_permalink( $also_bought_data['ID'] ) . '">' . get_the_title( $also_bought_data['ID'] ) . '</a>';
+			if ( ! wpsc_product_is_donation( $also_bought_data['ID'] ) ) {
+				// Ideally use the wpsc_the_product_price_display() function here but needs some tweaking
+				$price = get_product_meta( $also_bought_data['ID'], 'price', true );
+				$special_price = get_product_meta( $also_bought_data['ID'], 'special_price', true );
+				if ( ! empty( $special_price ) ) {
+					$output .= '<span style="text-decoration: line-through;">' . wpsc_currency_display( $price ) . '</span>';
+					$output .= wpsc_currency_display( $special_price );
+				} else {
+					$output .= wpsc_currency_display( $price );
+				}
 			}
-			$output .= "</div>";
+			$output .= '</div>';
 		}
-		$output .= "</div>";
-		$output .= "<br clear='all' />";
+		$output .= '</div>';
+		$output .= '<br clear="all" />';
 	}
 	return $output;
 }
