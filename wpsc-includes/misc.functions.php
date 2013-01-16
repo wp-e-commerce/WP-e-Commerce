@@ -199,13 +199,15 @@ function wpsc_set_aioseop_keywords( $data ) {
 add_filter( 'aioseop_keywords', 'wpsc_set_aioseop_keywords' );
 
 /**
- * wpsc_populate_also_bought_list function, runs on checking out, populates the also bought list.
+ * Populate Also Bought List
+ * Runs on checking out and populates the also bought list.
  */
 function wpsc_populate_also_bought_list() {
 	global $wpdb, $wpsc_cart, $wpsc_coupons;
-	$new_also_bought_data = array( );
+	
+	$new_also_bought_data = array();
 	foreach ( $wpsc_cart->cart_items as $outer_cart_item ) {
-		$new_also_bought_data[$outer_cart_item->product_id] = array( );
+		$new_also_bought_data[$outer_cart_item->product_id] = array();
 		foreach ( $wpsc_cart->cart_items as $inner_cart_item ) {
 			if ( $outer_cart_item->product_id != $inner_cart_item->product_id ) {
 				$new_also_bought_data[$outer_cart_item->product_id][$inner_cart_item->product_id] = $inner_cart_item->quantity;
@@ -215,10 +217,10 @@ function wpsc_populate_also_bought_list() {
 		}
 	}
 
-	$insert_statement_parts = array( );
+	$insert_statement_parts = array();
 	foreach ( $new_also_bought_data as $new_also_bought_id => $new_also_bought_row ) {
 		$new_other_ids = array_keys( $new_also_bought_row );
-		$also_bought_data = $wpdb->get_results( $wpdb->prepare( "SELECT `id`, `associated_product`, `quantity` FROM `" . WPSC_TABLE_ALSO_BOUGHT . "` WHERE `selected_product` IN(%d) AND `associated_product` IN(" . implode( "','", $new_other_ids ) . ")", $new_also_bought_id ), ARRAY_A );
+		$also_bought_data = $wpdb->get_results( $wpdb->prepare( "SELECT `id`, `associated_product`, `quantity` FROM `" . WPSC_TABLE_ALSO_BOUGHT . "` WHERE `selected_product` IN(%d) AND `associated_product` IN('" . implode( "','", $new_other_ids ) . "')", $new_also_bought_id ), ARRAY_A );
 		$altered_new_also_bought_row = $new_also_bought_row;
 
 		foreach ( (array)$also_bought_data as $also_bought_row ) {
@@ -235,9 +237,8 @@ function wpsc_populate_also_bought_list() {
 				),
 				'%d',
 				'%d'
-			    );
+			);
 	    }
-
 
 		if ( count( $altered_new_also_bought_row ) > 0 ) {
 			foreach ( $altered_new_also_bought_row as $associated_product => $quantity ) {
@@ -247,7 +248,6 @@ function wpsc_populate_also_bought_list() {
 	}
 
 	if ( count( $insert_statement_parts ) > 0 ) {
-
 		$insert_statement = "INSERT INTO `" . WPSC_TABLE_ALSO_BOUGHT . "` (`selected_product`, `associated_product`, `quantity`) VALUES " . implode( ",\n ", $insert_statement_parts );
 		$wpdb->query( $insert_statement );
 	}
