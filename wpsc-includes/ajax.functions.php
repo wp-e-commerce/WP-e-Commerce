@@ -550,6 +550,11 @@ if ( isset( $_REQUEST['wpsc_action'] ) && ($_REQUEST['wpsc_action'] == 'cart_htm
 	add_action( 'init', 'wpsc_cart_html_page', 110 );
 }
 
+// Populate Also Bought products on checkout
+if ( get_option( 'wpsc_also_bought' ) == 1 )
+	add_action( 'wpsc_submit_checkout', 'wpsc_populate_also_bought_list' );
+
+
 /**
  * submit checkout function, used through ajax and in normal page loading.
  * No parameters, returns nothing
@@ -689,8 +694,6 @@ function wpsc_submit_checkout( $collected_data = true ) {
 			$wpsc_checkout->save_forms_to_db( $purchase_log_id );
 		$wpsc_cart->save_to_db( $purchase_log_id );
 		$wpsc_cart->submit_stock_claims( $purchase_log_id );
-		if ( get_option( 'wpsc_also_bought' ) == 1 )
-			wpsc_populate_also_bought_list();
 		if( !isset( $our_user_id ) && isset( $user_ID ))
 			$our_user_id = $user_ID;
 		$wpsc_cart->log_id = $purchase_log_id;
