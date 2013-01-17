@@ -223,7 +223,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 					<?php if ( $show_edit_link ): ?>
 						<a target="_blank" href="<?php echo esc_url( get_edit_post_link( $item->ID, true ) ); ?>" title="<?php esc_attr_e( __( 'Edit this item' ), 'wpsc' ); ?>">
 					<?php endif; ?>
-					<?php echo esc_html( $title ); ?>
+					<?php echo esc_html( apply_filters( 'wpsc_variation_name', $title ) ); ?>
 					<?php if ( $show_edit_link ): ?>
 						</a>
 					<?php endif; ?>
