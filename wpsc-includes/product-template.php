@@ -712,8 +712,8 @@ function wpsc_edit_the_product_link( $link = null, $before = '', $after = '', $i
  * wpsc the product title function
  * @return string - the product title
  */
-function wpsc_the_product_title() {
-	return get_the_title();
+function wpsc_the_product_title( $post = 0 ) {
+	return get_the_title( $post );
 }
 
 /**
