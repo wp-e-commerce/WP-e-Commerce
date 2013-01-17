@@ -217,6 +217,10 @@ class WP_eCommerce {
 
 	/**
 	 * WPEC Activation Hook
+     *
+     * @uses deactivate_plugins     Deactivates plugins by string
+     * @uses wp_die                 Kills loading and returns the HTML
+     * @uses wpsc_install           Performs checks to see if this is a clean install or not
 	 */
 	function install() {
 		global $wp_version;
@@ -232,7 +236,14 @@ class WP_eCommerce {
 
 	}
 
-	public function deactivate() {
+    /**
+     * Runs the WPEC deactivation routines which basically just removes the cron
+     * jobs that WPEC has set.
+     *
+     * @uses wp_get_schedules           Retrieves all filtered Cron recurrences
+     * @uses wp_clear_scheduled_hook    Removes any hooks on cron
+     */
+    public function deactivate() {
 		foreach ( wp_get_schedules() as $cron => $schedule ) {
 			wp_clear_scheduled_hook( "wpsc_{$cron}_cron_task" );
 		}
