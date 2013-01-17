@@ -163,6 +163,19 @@ class WP_eCommerce {
 
 	/**
 	 * Setup the WPEC core
+     *
+     * @uses do_action  Calls 'wpsc_pre_load' which runs before WPEC setup
+     * @uses do_action  Calls 'wpsc_before_init' which is a legacy action
+     * @uses _wpsc_action_create_customer_id        Sets up a customer id just in case we don't have it
+     * @uses wpsc_core_setup_globals                Sets up the WPEC core globals
+     * @uses wpsc_core_setup_cart                   Sets up the WPEC core cart
+     * @uses wpsc_core_load_thumbnail_sizes         Sets up the core WPEC thumbnail sizes
+     * @uses wpsc_core_load_purchase_log_statuses   Loads the statuses for the purchase logs
+     * @uses wpsc_core_load_checkout_data           Sets up the core WPEC form checkout data
+     * @uses wpsc_core_load_gateways                Loads the merchants from the directory
+     * @uses wpsc_core_load_shipping_modules        Gets shipping modules from the shipping directory
+     * @uses wpsc_core_load_page_titles             Loads the core WPEC pagetitles
+     * @uses do_action  Calls 'wpsc_loaded' which runs after WPEC is fully loaded
 	 */
 	function load() {
 		// Before setup
