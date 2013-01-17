@@ -1473,7 +1473,7 @@ function wpsc_vargrp_id() {
  */
 function wpsc_the_variation_name() {
 	global $wpsc_variations;
-	return esc_html( $wpsc_variations->variation->name );
+	return esc_html( apply_filters( 'wpsc_variation_name', $wpsc_variations->variation->name ) );
 }
 
 /**
