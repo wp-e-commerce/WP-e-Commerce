@@ -123,6 +123,16 @@ function wpsc_show_update_link() {
  *
  * If the permissions are changed here, they will likewise need to be changed for the other sections of the admin that either use ajax
  * or bypass the normal download system.
+ *
+ * @uses wpsc_show_update_link  Decides whether or not to show the update link
+ * @uses add_submenu_page       Adds a WordPress submenu page
+ * @uses apply_filters          Calls wpsc_upgrades_cap allows hooking caps for adiministrator
+ * @uses apply_filters          Calls wpsc_coupon_cap allows filtering for the coupon caps
+ * @uses add_options_page       Adds a submenu to the settings page
+ * @uses add_action             Calls 'admin_print_scripts.$edit_options_page prints out WPEC admin scripts
+ * @uses apply_filters          Calls 'wpsc_additional_pages' Passes the page_hooks and product_page URL
+ * @uses do_action              Calls 'wpsc_add_submenu' Allows you to hook in to the WPEC menu
+ * @uses update_option          Updates option given key and value
  */
 function wpsc_admin_pages() {
 
@@ -214,6 +224,11 @@ function wpsc_admin_pages() {
 /**
  * This function adds contextual help to all WPEC screens.
  * add_contextual_help() is supported as well as $screen->add_help_tab().
+ *
+ * @uses get_current_screen     Returns WordPress admin screen object
+ * @uses get_bloginfo           Returns information about the WordPress site
+ * @uses add_contextual_help    DEPRECATED
+ * @uses add_help_tab           Used to add a tab to the contextual help menu
  *
  * @since 3.8.8
  */
@@ -310,6 +325,12 @@ function wpsc_add_help_tabs() {
 	}
 }
 
+/**
+ * Includes purchase logs CSS and JS
+ *
+ * @uses wp_enqueue_script      Recommended way of adding scripts in WordPress
+ * @uses wp_localize_script     Adds noncing and other data to the logs script
+ */
 function wpsc_admin_include_purchase_logs_css_and_js() {
 	wp_enqueue_script( 'wp-e-commerce-purchase-logs', WPSC_URL . '/wpsc-admin/js/purchase-logs.js', array( 'jquery' ), WPSC_VERSION . '.' . WPSC_MINOR_VERSION );
 	wp_localize_script( 'wp-e-commerce-purchase-logs', 'WPSC_Purchase_Logs_Admin', array(
@@ -325,24 +346,50 @@ function wpsc_admin_include_purchase_logs_css_and_js() {
 	) );
 }
 
+/**
+ * Loads the WPEC settings page
+ *
+ * @uses WPSC_Settings_Page::get_instance   Gets instance of WPEC settings page
+ */
 function wpsc_load_settings_page() {
 	require_once('settings-page.php');
 	WPSC_Settings_Page::get_instance();
 }
 
+/**
+ * Leads the purchase logs page
+ *
+ * @uses WPSC_Purchase_Log_Page     Loads the edit and view sales page
+ */
 function wpsc_load_purchase_logs_page() {
 	require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/purchase-log-list-table-class.php' );
 	require_once( WPSC_FILE_PATH . '/wpsc-admin/display-sales-logs.php' );
 	$page = new WPSC_Purchase_Log_Page();
 }
 
+/**
+ * @uses do_action  Calls 'wpsc_display_purchase_logs_page' allows hooking of the sales log page
+ */
 function wpsc_display_purchase_logs_page() {
 	do_action( 'wpsc_display_purchase_logs_page' );
 }
 
+/**
+ * Produces an RSS feed for the product log
+ *
+ * @uses add_query_arg  Allows you to add arguments to the end of a URL
+ * @uses admin_url      Retrieves URL to the WordPress admin
+ */
 function wpsc_product_log_rss_feed() {
 	echo "<link type='application/rss+xml' href='" . add_query_arg( array( 'rss' => 'true', 'rss_key' => 'key', 'action' => 'purchase_log', 'type' => 'rss' ), admin_url( 'index.php' ) ) . "' title='" . esc_attr( 'WP e-Commerce Purchase Log RSS', 'wpsc' ) . "' rel='alternate' />";
 }
+
+/**
+ * Includes and enqueues scripts and styles for coupons
+ *
+ * @uses wp_enqueue_style   Includes and prints styles for WPEC in the WordPress admin
+ * @uses wp_enqueue_script  Includes and prints scripts for WPEC in the WordPress admin
+ */
 function wpsc_admin_include_coupon_js() {
 
 	// Variables
@@ -360,8 +407,13 @@ function wpsc_admin_include_coupon_js() {
 }
 
 /**
- * wpsc_admin_include_optionspage_css_and_js function, includes the wpsc_admin CSS and JS for the specific options page
- * No parameters, returns nothing
+ * Includes and enqueues scripts and styles for the WPEC options page
+ *
+ * @uses wp_enqueue_script          Includes and prints out the JS for the WPEC options page
+ * @uses wp_localize_script         Sets up the JS vars needed
+ * @uses _wpsc_create_ajax_nonce    Alias for wp_create_nonce, creates a random one time use token
+ * @uses get_current_tab_id         Returns the current tab id
+ * @uses wp_enqueue_style           Includes and prints out the CSS for the WPEC options page
  */
 function wpsc_admin_include_optionspage_css_and_js() {
 	$version_identifier = WPSC_VERSION . "." . WPSC_MINOR_VERSION;
@@ -412,6 +464,7 @@ function wpsc_meta_boxes() {
 		add_meta_box( 'wpsc_product_shipping_forms', __('Shipping', 'wpsc'), 'wpsc_product_shipping_forms_metabox', $pagename, 'normal', 'high' );
 	add_meta_box( 'wpsc_product_advanced_forms', __('Advanced Settings', 'wpsc'), 'wpsc_product_advanced_forms', $pagename, 'normal', 'high' );
 }
+add_action( 'admin_footer', 'wpsc_meta_boxes' );
 add_action( 'admin_enqueue_scripts', 'wpsc_admin_include_css_and_js_refac' );
 
 function wpsc_admin_include_css_and_js_refac( $pagehook ) {
