@@ -56,9 +56,11 @@ var wpsc_set_variation_product_thumbnail = function(id, src) {
 		var table = $('body.edit-tags-php .wp-list-table');
 		table.find('tbody tr').each(function(){
 			var t = $(this),
+			if (!t.hasClass('no-items')) {
 				id = t.attr('id').replace(/[^0-9]+/g, '');
-			t.data('level', WPSC_Term_List_Levels[id]);
-			t.data('id', id);
+				t.data('level', WPSC_Term_List_Levels[id]);
+				t.data('id', id);
+			}
 		});
 
 		table.wpsc_sortable_table({
