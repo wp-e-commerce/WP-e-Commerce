@@ -19,11 +19,12 @@ class WP_eCommerce {
 	private $components = array(
 		'merchant' => array(),
 	);
+
 	/**
 	 * Start WPEC on plugins loaded
 	 *
-	 * @uses add_action     Attaches to plugins_loaded hook
-	 * @uses add_action     Attaches to wpsc_components hook
+	 * @uses add_action()   Attaches to 'plugins_loaded' hook
+	 * @uses add_action()   Attaches to 'wpsc_components' hook
 	 */
 	function WP_eCommerce() {
 		add_action( 'plugins_loaded', array( $this, 'init' ), 8 );
@@ -33,12 +34,12 @@ class WP_eCommerce {
 	/**
 	 * Takes care of loading up WPEC
 	 *
-	 * @uses start      Initializes basic WPEC constants
-	 * @uses constants  Setup WPEC core constants
-	 * @uses includes   Includes the WPEC files
-	 * @uses load       Setup WPEC Core
-	 * @uses do_action  Calls 'wpsc_pre_init' which runs before WPEC initializes
-	 * @uses do_action  Calls 'wpsc_init' runs just after WPEC initializes
+	 * @uses start()        Initializes basic WPEC constants
+	 * @uses constants()    Setup WPEC core constants
+	 * @uses includes()     Includes the WPEC files
+	 * @uses load()         Setup WPEC Core
+	 * @uses do_action()    Calls 'wpsc_pre_init' which runs before WPEC initializes
+	 * @uses do_action()    Calls 'wpsc_init' runs just after WPEC initializes
 	 */
 	function init() {
 		// Previous to initializing
@@ -58,6 +59,7 @@ class WP_eCommerce {
 	 * @todo we need documentation finished here
 	 *
 	 * @param           $components
+	 *
 	 * @return  array
 	 */
 	public function _register_core_components( $components ) {
@@ -76,7 +78,7 @@ class WP_eCommerce {
 	 * @uses plugins_url                Retrieves url to plugins directory
 	 * @uses load_plugin_textdomain     Loads plugin transations strings
 	 * @uses plugin_basename            Gets the basename of a plugin (extracts the name of a plugin from its filename)
-	 * @uses do_action                  Calls wpsc_started which runs after WPEC has started
+	 * @uses do_action()                Calls 'wpsc_started' which runs after WPEC has started
 	 */
 	function start() {
 		// Set the core file path
@@ -106,7 +108,7 @@ class WP_eCommerce {
 	 * @uses wpsc_core_constants_version_processing     Checks and sets a constant for WordPress version
 	 * @uses wpsc_core_constants_table_names            Sets constants for WPEC table names
 	 * @uses wpsc_core_constants_uploads                Set the upload related constants
-	 * @uses do_action                                  Calls wpsc_constants which runs after the WPEC constants are defined
+	 * @uses do_action()                                Calls 'wpsc_constants' which runs after the WPEC constants are defined
 	 */
 	function constants() {
 		// Define globals and constants used by wp-e-commerce
@@ -137,8 +139,8 @@ class WP_eCommerce {
 	/**
 	 * Include the rest of WPEC's files
 	 *
-	 * @usse apply_filters  Calls the private merchant components
-	 * @uses do_action      Calls wpsc_includes which runs after WPEC files have been included
+	 * @usse apply_filters()    Calls 'wpsc_components' private merchant components
+	 * @uses do_action()        Calls 'wpsc_includes' which runs after WPEC files have been included
 	 */
 	function includes() {
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-functions.php' );
@@ -164,8 +166,8 @@ class WP_eCommerce {
 	/**
 	 * Setup the WPEC core
 	 *
-	 * @uses do_action  Calls 'wpsc_pre_load' which runs before WPEC setup
-	 * @uses do_action  Calls 'wpsc_before_init' which is a legacy action
+	 * @uses do_action()                            Calls 'wpsc_pre_load' which runs before WPEC setup
+	 * @uses do_action()                            Calls 'wpsc_before_init' which is a legacy action
 	 * @uses _wpsc_action_create_customer_id        Sets up a customer id just in case we don't have it
 	 * @uses wpsc_core_setup_globals                Sets up the WPEC core globals
 	 * @uses wpsc_core_setup_cart                   Sets up the WPEC core cart
@@ -175,7 +177,7 @@ class WP_eCommerce {
 	 * @uses wpsc_core_load_gateways                Loads the merchants from the directory
 	 * @uses wpsc_core_load_shipping_modules        Gets shipping modules from the shipping directory
 	 * @uses wpsc_core_load_page_titles             Loads the core WPEC pagetitles
-	 * @uses do_action  Calls 'wpsc_loaded' which runs after WPEC is fully loaded
+	 * @uses do_action()                            Calls 'wpsc_loaded' which runs after WPEC is fully loaded
 	 */
 	function load() {
 		// Before setup
