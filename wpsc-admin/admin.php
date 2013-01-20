@@ -368,6 +368,8 @@ function wpsc_load_purchase_logs_page() {
 }
 
 /**
+ * Displays the WPEC purchase logs
+ *
  * @uses do_action  Calls 'wpsc_display_purchase_logs_page' allows hooking of the sales log page
  */
 function wpsc_display_purchase_logs_page() {
@@ -439,6 +441,12 @@ function wpsc_admin_include_optionspage_css_and_js() {
 	wp_enqueue_style( 'wp-e-commerce-ui-tabs', WPSC_URL . '/wpsc-admin/css/jquery.ui.tabs.css', false, $version_identifier, 'all' );
 }
 
+/**
+ * Sets up the WPEC metaboxes
+ *
+ * @uses remove_meta_box    Removes the default taxonomy meta box so our own can be added
+ * @uses add_meta_bax       Adds metaboxes to the WordPress admin interface
+ */
 function wpsc_meta_boxes() {
 	global $post;
 	$pagename = 'wpsc-product';
@@ -467,6 +475,18 @@ function wpsc_meta_boxes() {
 add_action( 'admin_footer', 'wpsc_meta_boxes' );
 add_action( 'admin_enqueue_scripts', 'wpsc_admin_include_css_and_js_refac' );
 
+/**
+ * Includes the JS and CSS
+ *
+ * @param $pagehook     The pagehook for the currently viewing page
+ *
+ * @uses wp_admin_css               Enqueues or prints a stylesheet in the admin
+ * @uses wp_enqueue_script          Enqueues the specified script
+ * @uses wp_localize_script         Sets up the JS vars needed
+ * @uses wp_enqueue_style           Enqueues the styles
+ * @uses wp_dequeue_script          Removes a previously enqueued script by handle
+ * @uses _wpsc_create_ajax_nonce    Alias for wp_create_nonce, creates a random one time use token
+ */
 function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 	global $post_type, $post;
 
@@ -552,6 +572,11 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 		wp_enqueue_style( 'wp-e-commerce-admin', WPSC_URL . '/wpsc-admin/css/admin.css', false, $version_identifier, 'all' );
 }
 
+/**
+ * @todo docs
+ *
+ * @uses get_option     Gets an option by name from the WordPress database
+ */
 function wpsc_admin_dynamic_js() {
 	header( 'Content-Type: text/javascript' );
 	header( 'Expires: ' . gmdate( 'r', mktime( 0, 0, 0, date( 'm' ), ( date( 'd' ) + 12 ), date( 'Y' ) ) ) . '' );
@@ -621,6 +646,11 @@ if ( isset( $_GET['wpsc_admin_dynamic_js'] ) && ( $_GET['wpsc_admin_dynamic_js']
 	add_action( "admin_init", 'wpsc_admin_dynamic_js' );
 }
 
+/**
+ * @todo finish docs
+ *
+ * @uses apply_filters      Allows manipulation of the flash upload params.
+ */
 function wpsc_admin_dynamic_css() {
 	header( 'Content-Type: text/css' );
 	header( 'Expires: ' . gmdate( 'r', mktime( 0, 0, 0, date( 'm' ), ( date( 'd' ) + 12 ), date( 'Y' ) ) ) . '' );
@@ -659,7 +689,16 @@ if ( isset( $_GET['wpsc_admin_dynamic_css'] ) && ( $_GET['wpsc_admin_dynamic_css
 
 add_action( 'admin_menu', 'wpsc_admin_pages' );
 
-
+/**
+ * Displays latest activity in the Dashboard widget
+ *
+ * @uses get_var                    Returns single variable from the database
+ * @uses esc_html__                 Gets translation of $text and escapes it for HTML output
+ * @uses wpsc_currency_display      Displays the currency
+ * @uses admin_display_total_price  Displays the total price
+ * @uses esc_html_x
+ * @uses _n                         Retrieves the singular or plural version
+ */
 function wpsc_admin_latest_activity() {
 	global $wpdb;
 	$totalOrders = $wpdb->get_var( "SELECT COUNT(*) FROM `" . WPSC_TABLE_PURCHASE_LOGS . "`" );
@@ -730,16 +769,19 @@ function wpsc_admin_latest_activity() {
 	echo "</div>";
 	echo "<div style='clear:both'></div>";
 }
-
 add_action( 'wpsc_admin_pre_activity', 'wpsc_admin_latest_activity' );
-
 
 /*
  * Dashboard Widget Setup
  * Adds the dashboard widgets if the user is an admin
+ *
+ * @uses wp_enqueue_style           Enqueues CSS
+ * @uses wp_enqueue_script          Enqueues JS
+ * @uses wp_add_dashboard_widget    Adds a new widget to the WordPress admin dashboard
+ * @uses current_user_can           Checks the capabilities of the current user
+ *
  * Since 3.6
  */
-
 function wpsc_dashboard_widget_setup() {
 	$version_identifier = WPSC_VERSION . "." . WPSC_MINOR_VERSION;
 	// Enqueue the styles and scripts necessary
@@ -798,6 +840,12 @@ function wpsc_dashboard_widget_setup() {
 
 add_action( 'wp_dashboard_setup', 'wpsc_dashboard_widget_setup' );
 
+/**
+ * Shows the RSS feed for the WPEC dashboard widget
+ *
+ * @uses fetch_feed             Build SimplePie object based on RSS or Atom feed from URL.
+ * @uses wp_widget_rss_output   Display the RSS entries in a list
+ */
 function wpsc_dashboard_news() {
 	$rss = fetch_feed( 'http://getshopped.org/category/wp-e-commerce-plugin/' );
 	$args = array( 'show_author' => 1, 'show_date' => 1, 'show_summary' => 1, 'items'=>3 );
@@ -805,6 +853,14 @@ function wpsc_dashboard_news() {
 
 }
 
+/**
+ * Gets the quarterly summary of revenue
+ *
+ * @uses get_option                 Retrieves an option from the WordPress database
+ * @uses admin_display_total_price  Displays the total price
+ *
+ * @return array        The array of prices
+ */
 function wpsc_get_quarterly_summary() {
 	(int)$firstquarter = get_option( 'wpsc_first_quart' );
 	(int)$secondquarter = get_option( 'wpsc_second_quart' );
@@ -819,6 +875,12 @@ function wpsc_get_quarterly_summary() {
 	return $results;
 }
 
+/**
+ * Called by wp_add_dashboard_widget and ads the quarterly revenue reports to the WordPress admin dashboard
+ *
+ * @uses get_option     Gets the specified option from database
+ * @uses esc_html_e     Displays translated text that has been escaped for safe use in HTML
+ */
 function wpsc_quarterly_dashboard_widget() {
 	if ( get_option( 'wpsc_business_year_start' ) == false ) {
 ?>
@@ -904,7 +966,12 @@ function wpsc_quarterly_dashboard_widget() {
 	}
 }
 
-
+/**
+ * Called by wp_add_dashboard_widget to add the WPSC dashboard widget
+ *
+ * @uses do_action()    Calls 'wpsc_admin_pre_activity'
+ * @uses do_action()    Calls 'wpsc_admin_post_activity'
+ */
 function wpsc_dashboard_widget() {
 	do_action( 'wpsc_admin_pre_activity' );
 	do_action( 'wpsc_admin_post_activity' );
@@ -917,8 +984,11 @@ function wpsc_dashboard_widget() {
 
 /*
  * Dashboard Widget Last Four Month Sales.
+ *
+ * @uses get_results            Gets generic multiple row results from the WordPress database
+ * @uses get_var                Returns a single variable from the database
+ * @uses wpsc_currency_display  Returns the currency with the display options applied
  */
-
 function wpsc_dashboard_4months_widget() {
 	global $wpdb;
 
