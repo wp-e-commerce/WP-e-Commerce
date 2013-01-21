@@ -34,12 +34,12 @@ class WP_eCommerce {
 	/**
 	 * Takes care of loading up WPEC
 	 *
-	 * @uses start()        Initializes basic WPEC constants
-	 * @uses constants()    Setup WPEC core constants
-	 * @uses includes()     Includes the WPEC files
-	 * @uses load()         Setup WPEC Core
-	 * @uses do_action()    Calls 'wpsc_pre_init' which runs before WPEC initializes
-	 * @uses do_action()    Calls 'wpsc_init' runs just after WPEC initializes
+	 * @uses WP_eCommerce::start()      Initializes basic WPEC constants
+	 * @uses WP_eCommerce::constants()  Setup WPEC core constants
+	 * @uses WP_eCommerce::includes()   Includes the WPEC files
+	 * @uses WP_eCommerce::load()       Setup WPEC Core
+	 * @uses do_action()                Calls 'wpsc_pre_init' which runs before WPEC initializes
+	 * @uses do_action()                Calls 'wpsc_init' runs just after WPEC initializes
 	 */
 	function init() {
 		// Previous to initializing
@@ -58,7 +58,7 @@ class WP_eCommerce {
 	/**
 	 * @todo we need documentation finished here
 	 *
-	 * @param           $components
+	 * @param   array   $components
 	 *
 	 * @return  array
 	 */
@@ -102,12 +102,12 @@ class WP_eCommerce {
 	/**
 	 * Setup the WPEC core constants
 	 *
-	 * @uses wpsc_core_constants                        Loads the WPEC Core constants
-	 * @uses wpsc_core_is_multisite                     Checks if this is a multisite install. True if is multisite
-	 * @uses wpsc_core_load_session                     Loads the WPEC core session
-	 * @uses wpsc_core_constants_version_processing     Checks and sets a constant for WordPress version
-	 * @uses wpsc_core_constants_table_names            Sets constants for WPEC table names
-	 * @uses wpsc_core_constants_uploads                Set the upload related constants
+	 * @uses wpsc_core_constants()                      Loads the WPEC Core constants
+	 * @uses wpsc_core_is_multisite()                   Checks if this is a multisite install. True if is multisite
+	 * @uses wpsc_core_load_session()                   Loads the WPEC core session
+	 * @uses wpsc_core_constants_version_processing()   Checks and sets a constant for WordPress version
+	 * @uses wpsc_core_constants_table_names()          Sets constants for WPEC table names
+	 * @uses wpsc_core_constants_uploads()              Set the upload related constants
 	 * @uses do_action()                                Calls 'wpsc_constants' which runs after the WPEC constants are defined
 	 */
 	function constants() {
@@ -139,7 +139,7 @@ class WP_eCommerce {
 	/**
 	 * Include the rest of WPEC's files
 	 *
-	 * @usse apply_filters()    Calls 'wpsc_components' private merchant components
+	 * @uses apply_filters()    Calls 'wpsc_components' private merchant components
 	 * @uses do_action()        Calls 'wpsc_includes' which runs after WPEC files have been included
 	 */
 	function includes() {
