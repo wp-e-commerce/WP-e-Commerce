@@ -18,7 +18,6 @@ li.widget_wp_shopping_cart ul li:before{
 	content: "" !important;
 }
 
-
 div.categorydisplay ul li:before{
 	/* Countermand any content properties like the one in the default wordpress theme.  */
 	content: "" !important;
