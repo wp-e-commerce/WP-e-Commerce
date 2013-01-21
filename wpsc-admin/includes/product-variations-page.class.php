@@ -24,7 +24,7 @@ class WPSC_Product_Variations_Page
 			if ( ! isset( $updated[$key] ) )
 				continue;
 
-			if ( is_array( $original[$key] ) ) {
+			if ( isset( $original[$key] ) && is_array( $original[$key] ) ) {
 				$original[$key] = $this->merge_meta_deep( $original[$key]	, $updated[$key] );
 			} else {
 				$original[$key] = $updated[$key];
@@ -39,6 +39,8 @@ class WPSC_Product_Variations_Page
 
 	private function save_variation_meta( $id, $data ) {
 		$product_meta = get_product_meta( $id, 'product_metadata', true );
+		if ( ! is_array( $product_meta ) )
+			$product_meta = array();
 		$product_meta = $this->merge_meta_deep( $product_meta, $data['product_metadata'] );
 
 		// convert to pound to maintain backward compat with shipping modules
