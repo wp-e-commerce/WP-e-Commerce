@@ -1086,6 +1086,13 @@ function wpsc_fav_action( $actions ) {
 }
 add_filter( 'favorite_actions', 'wpsc_fav_action' );
 
+/**
+ * Prits out the admin scripts
+ *
+ * @uses is_ssl                 Defines if SSL is true
+ * @uses wp_enqueue_script      Enqueues scripts
+ * @uses home_url               Returns the base url for the site
+ */
 function wpsc_print_admin_scripts() {
 	$scheme = is_ssl() ? 'https' : 'http';
 	wp_enqueue_script( 'wp-e-commerce-dynamic', home_url( "/index.php?wpsc_user_dynamic_js=true", $scheme ) );
@@ -1093,6 +1100,11 @@ function wpsc_print_admin_scripts() {
 
 /**
  * Update products page URL options when permalink scheme changes.
+ *
+ * @uses get_bloginfo                               Returns information about your site to be used elsewhere
+ * @uses version_compare                            Compares two "PHP-standardized" version number strings
+ * @uses _wpsc_display_permalink_refresh_notice     Display warning on older WordPress versions
+ * @uses wpsc_update_page_urls                      Gets the premalinks for product pages and stores for quick reference
  *
  * @since  3.8.9
  * @access private
@@ -1130,6 +1142,17 @@ function _wpsc_display_permalink_refresh_notice(){
 
 /**
  * wpsc_ajax_ie_save save changes made using inline edit
+ *
+ * @uses get_post_type_object       Gets post object for given registered post type name
+ * @uses current_user_can           Checks the capabilities of the current user
+ * @uses absint                     Converts to a nonnegative integer
+ * @uses get_post                   Gets the post object given post id
+ * @uses wp_get_object_terms        Gets terms for given post object
+ * @uses wp_update_post             Updates the post in the database
+ * @uses get_product_meta           An alias for get_post_meta prefixes with the WPSC key
+ * @uses wpsc_convert_weight        Converts to weight format specified by user
+ * @uses json_encode                Encodes array for JS
+ * @uses esc_js                     Escape single quotes, htmlspecialchar " < > &, and fix line endings.
  *
  * @public
  *
@@ -1190,6 +1213,11 @@ function wpsc_ajax_ie_save() {
 	die();
 }
 
+/**
+ * @todo docs
+ *
+ * @uses add_meta_box  Allows addition of metaboxes to the wpsc_add_meta_boxes admin
+ */
 function wpsc_add_meta_boxes(){
 	add_meta_box( 'dashboard_right_now', __( 'Current Month', 'wpsc' ), 'wpsc_right_now', 'dashboard_page_wpsc-sales-logs', 'top' );
 }
@@ -1197,6 +1225,12 @@ function wpsc_add_meta_boxes(){
 /**
  * Displays notice if user has Great Britain selected as their base country
  * Since 3.8.9, we have deprecated Great Britain in favor of the UK
+ *
+ * @uses get_option             Retrieves option from the WordPress database
+ * @uses get_outdate_isocodes   Returns outdated isocodes
+ * @uses admin_url              Returns admin_url of the site
+ *
+ * @access private
  *
  * @link http://code.google.com/p/wp-e-commerce/issues/detail?id=1079
  * @since 3.8.9
@@ -1238,6 +1272,17 @@ add_action( 'wp_ajax_variation_sort_order', 'wpsc_ajax_set_variation_order' );
 add_action( 'wp_ajax_wpsc_ie_save', 'wpsc_ajax_ie_save' );
 add_action('in_admin_header', 'wpsc_add_meta_boxes');
 
+/**
+ * @param int       $product_id     req        The id of the product
+ * @param string    $file_name      req        The string
+ *
+ * @return mixed
+ *
+ * @uses prepare            Prepares a database query by escaping
+ * @uses wp_delete_post     Removes a post attachment or page
+ *
+ * @access private
+ */
 function _wpsc_delete_file( $product_id, $file_name ) {
 	global $wpdb;
 
@@ -1246,6 +1291,19 @@ function _wpsc_delete_file( $product_id, $file_name ) {
 	return wp_delete_post( $product_id_to_delete, true );
 }
 
+/**
+ * Duplicates a product
+ *
+ * @param object    $post           req     The post object
+ * @param bool      $new_parent_id  opt     The parent post id
+ *
+ * @return int|WP_Error     New post id or error
+ *
+ * @uses wp_insert_post                 Inserts a new post to the database
+ * @uses wpsc_duplicate_taxonomies      Copy the taxonomies of a post to another post
+ * @uses wpsc_duplicate_product_meta    Copy the metadata of a post to another post
+ * @uses wpsc_duplicate_children        Copy the children of the product
+ */
 function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
 	$new_post_date     = $post->post_date;
 	$new_post_date_gmt = get_gmt_from_date( $new_post_date );
@@ -1297,6 +1355,10 @@ function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
 
 /**
  * Copy the taxonomies of a post to another post
+ *
+ * @uses get_object_taxonomies  Gets taxonomies for the give object
+ * @uses wp_get_object_terms    Gets terms for the taxonomies
+ * @uses wp_set_object_terms    Sets the terms for a post object
  */
 function wpsc_duplicate_taxonomies( $id, $new_id, $post_type ) {
 	$taxonomies = get_object_taxonomies( $post_type ); //array("category", "post_tag");
@@ -1310,6 +1372,10 @@ function wpsc_duplicate_taxonomies( $id, $new_id, $post_type ) {
 
 /**
  * Copy the meta information of a post to another post
+ *
+ * @uses get_results        Gets generic multirow results from the database
+ * @uses prepare            Prepares a database query making it safe
+ * @uses query              Runs an SQL query
  */
 function wpsc_duplicate_product_meta( $id, $new_id ) {
 	global $wpdb;
@@ -1337,6 +1403,9 @@ function wpsc_duplicate_product_meta( $id, $new_id ) {
 
 /**
  * Duplicates children product and children meta
+ *
+ * @uses get_posts                          Gets an array of posts given array of arguments
+ * @uses wpsc_duplicate_product_process     Duplicates product
  */
 function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
 
@@ -1354,6 +1423,14 @@ function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
 
 }
 
+/**
+ *
+ * @access private
+ *
+ * @uses add_query_arg      Adds argument to the WordPress query
+ * @uses update_option      Updates an option in the WordPress database given string and value
+ * @uses get_option         Gets option from the database given string
+ */
 function _wpsc_admin_notices_3dot8dot9() {
 	$message = '<p>' . __( 'You are currently using WP e-Commerce 3.8.9. There have been major changes in WP e-Commerce 3.8.9, so backward-compatibility with existing plugins might not always be guaranteed. If you are unsure, please roll back to 3.8.8.5, and set up a test site with 3.8.9 to make sure WP e-Commerce 3.8.9 is compatible with your existing themes and plugins.<br />If you find any incompatibility issues, please <a href="%1$s">report them to us</a> as well as the other plugins or themes\' developers.' , 'wpsc' ) . '</p>';
 	$message .= "\n<p>" . __( '<a href="%2$s">Hide this warning</a>', 'wpsc' ) . '</p>';
