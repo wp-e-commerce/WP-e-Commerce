@@ -132,6 +132,7 @@
 			<!-- End Order Notes (by Ben) -->
 
 			<?php $this->purchase_logs_checkout_fields(); ?>
+			<?php do_action( 'wpsc_purchlogitem_metabox_end', $this->log_id ); ?>
 
 		</div>
 	</div>
