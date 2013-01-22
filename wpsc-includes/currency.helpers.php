@@ -45,12 +45,8 @@ function wpsc_string_to_float( $string ) {
 		$wp_locale->number_format['decimal_point']
 	);
 
-	$locale = localeconv();
-
-	if ( $decimal_separator != $locale['decimal_point'] ) {
-		$string = preg_replace( '/[^0-9\\' . $decimal_separator . ']/', '', $string );
-		$string = str_replace( $decimal_separator, $locale['decimal_point'], $string );
-	}
+	$string = preg_replace( '/[^0-9\\' . $decimal_separator . ']/', '', $string );
+	$string = str_replace( $decimal_separator, '.', $string );
 
 	return (float) $string;
 }
