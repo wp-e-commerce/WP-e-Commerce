@@ -28,18 +28,9 @@ function wpsc_currency_display( $price_in, $args = null ) {
 		$decimals = 2; // default is 2
 
 	$decimals = apply_filters('wpsc_modify_decimals' , $decimals);
-	if('' == get_option('wpsc_decimal_separator'))
-		$decimal_separator = '.';
-	else
-		$decimal_separator = get_option( 'wpsc_decimal_separator' );
-
-	if('' == get_option('wpsc_thousands_separator'))
-		$thousands_separator = '.';
-	else
-		$thousands_separator = get_option( 'wpsc_thousands_separator' );
 
 	// Format the price for output
-	$price_out = number_format( (double)$price_in, $decimals, $decimal_separator, $thousands_separator );
+	$price_out = wpsc_format_number( $price_in, $decimals );
 
 	if ( ! $query['isocode'] ) {
 		// Get currency settings
@@ -213,9 +204,6 @@ function wpsc_get_mimetype($file, $check_reliability = false) {
 }
 
 function wpsc_convert_weight($in_weight, $in_unit, $out_unit = 'pound', $raw = false) {
-	if (isset($weight) && is_array($weight)) {
-		$weight = $weight['weight'];
-	}
 	switch($in_unit) {
 		case "kilogram":
 		$intermediate_weight = $in_weight * 1000;

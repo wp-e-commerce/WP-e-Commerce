@@ -233,7 +233,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 	}
 
 	public function column_stock( $item ) {
-		$stock = get_product_meta( $item->ID, 'stock', true );
+		$stock = (int) get_product_meta( $item->ID, 'stock', true );
 		?>
 			<input type="text" name="wpsc_variations[<?php echo $item->ID; ?>][stock]" value="<?php echo esc_attr( $stock ); ?>" />
 		<?php
@@ -241,6 +241,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 
 	public function column_price( $item ) {
 		$price = get_product_meta( $item->ID, 'price', true );
+		$price = wpsc_format_number( $price );
 		?>
 			<input type="text" name="wpsc_variations[<?php echo $item->ID; ?>][price]" value="<?php echo esc_attr( $price ); ?>" />
 		<?php
@@ -248,6 +249,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 
 	public function column_sale_price( $item ) {
 		$sale_price = get_product_meta( $item->ID, 'special_price', true );
+		$sale_price = wpsc_format_number( $sale_price );
 		?>
 			<input type="text" name="wpsc_variations[<?php echo $item->ID; ?>][sale_price]" value="<?php echo esc_attr( $sale_price ); ?>">
 		<?php
@@ -265,7 +267,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 		if ( ! $meta || ! isset( $meta['wpec_taxes_taxable_amount'] ) )
 			$tax = '';
 		else
-			$tax = (float) $meta['wpec_taxes_taxable_amount'];
+			$tax = wpsc_format_number( $meta['wpec_taxes_taxable_amount'] );
 		?>
 			<input type="text" name="wpsc_variations[<?php echo $item->ID; ?>][product_metadata][wpec_taxes_taxable_amount]" value="<?php echo esc_attr( $tax ); ?>" />
 		<?php
