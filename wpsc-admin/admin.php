@@ -328,15 +328,12 @@ function wpsc_add_help_tabs() {
 		}
 		$content .= '<p>' . implode( '<br />', $links ) . '</p>';
 
-		if ( version_compare( get_bloginfo( 'version' ), '3.3', '<' ) ) {
-			add_contextual_help( $screen->id, $content );
-		} else {
-			$screen->add_help_tab( array(
-				'id'      => $screen->id . '_help',
-				'title'   => $tab['title'],
-				'content' => $content,
-			) );
-		}
+		$screen->add_help_tab( array(
+			'id'      => $screen->id . '_help',
+			'title'   => $tab['title'],
+			'content' => $content,
+		) );
+
 	}
 }
 
