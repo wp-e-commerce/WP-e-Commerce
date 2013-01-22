@@ -75,9 +75,9 @@ class WP_eCommerce {
 	/**
 	 * Initialize the basic WPEC constants
 	 *
-	 * @uses plugins_url                Retrieves url to plugins directory
-	 * @uses load_plugin_textdomain     Loads plugin transations strings
-	 * @uses plugin_basename            Gets the basename of a plugin (extracts the name of a plugin from its filename)
+	 * @uses plugins_url()              Retrieves url to plugins directory
+	 * @uses load_plugin_textdomain()   Loads plugin transations strings
+	 * @uses plugin_basename()          Gets the basename of a plugin (extracts the name of a plugin from its filename)
 	 * @uses do_action()                Calls 'wpsc_started' which runs after WPEC has started
 	 */
 	function start() {
@@ -168,15 +168,15 @@ class WP_eCommerce {
 	 *
 	 * @uses do_action()                            Calls 'wpsc_pre_load' which runs before WPEC setup
 	 * @uses do_action()                            Calls 'wpsc_before_init' which is a legacy action
-	 * @uses _wpsc_action_create_customer_id        Sets up a customer id just in case we don't have it
-	 * @uses wpsc_core_setup_globals                Sets up the WPEC core globals
-	 * @uses wpsc_core_setup_cart                   Sets up the WPEC core cart
-	 * @uses wpsc_core_load_thumbnail_sizes         Sets up the core WPEC thumbnail sizes
-	 * @uses wpsc_core_load_purchase_log_statuses   Loads the statuses for the purchase logs
-	 * @uses wpsc_core_load_checkout_data           Sets up the core WPEC form checkout data
-	 * @uses wpsc_core_load_gateways                Loads the merchants from the directory
-	 * @uses wpsc_core_load_shipping_modules        Gets shipping modules from the shipping directory
-	 * @uses wpsc_core_load_page_titles             Loads the core WPEC pagetitles
+	 * @uses _wpsc_action_create_customer_id()      Sets up a customer id just in case we don't have it
+	 * @uses wpsc_core_setup_globals()              Sets up the WPEC core globals
+	 * @uses wpsc_core_setup_cart()                 Sets up the WPEC core cart
+	 * @uses wpsc_core_load_thumbnail_sizes()       Sets up the core WPEC thumbnail sizes
+	 * @uses wpsc_core_load_purchase_log_statuses() Loads the statuses for the purchase logs
+	 * @uses wpsc_core_load_checkout_data()         Sets up the core WPEC form checkout data
+	 * @uses wpsc_core_load_gateways()              Loads the merchants from the directory
+	 * @uses wpsc_core_load_shipping_modules()      Gets shipping modules from the shipping directory
+	 * @uses wpsc_core_load_page_titles()           Loads the core WPEC pagetitles
 	 * @uses do_action()                            Calls 'wpsc_loaded' which runs after WPEC is fully loaded
 	 */
 	function load() {
@@ -220,9 +220,9 @@ class WP_eCommerce {
 	/**
 	 * WPEC Activation Hook
 	 *
-	 * @uses deactivate_plugins     Deactivates plugins by string
-	 * @uses wp_die                 Kills loading and returns the HTML
-	 * @uses wpsc_install           Performs checks to see if this is a clean install or not
+	 * @uses deactivate_plugins()     Deactivates plugins by string
+	 * @uses wp_die()                 Kills loading and returns the HTML
+	 * @uses wpsc_install()           Performs checks to see if this is a clean install or not
 	 */
 	function install() {
 		global $wp_version;
@@ -242,8 +242,8 @@ class WP_eCommerce {
 	 * Runs the WPEC deactivation routines which basically just removes the cron
 	 * jobs that WPEC has set.
 	 *
-	 * @uses wp_get_schedules           Retrieves all filtered Cron recurrences
-	 * @uses wp_clear_scheduled_hook    Removes any hooks on cron
+	 * @uses wp_get_schedules()           Retrieves all filtered Cron recurrences
+	 * @uses wp_clear_scheduled_hook()    Removes any hooks on cron
 	 */
 	public function deactivate() {
 		foreach ( wp_get_schedules() as $cron => $schedule ) {
