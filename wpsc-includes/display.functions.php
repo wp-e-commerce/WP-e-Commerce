@@ -264,47 +264,6 @@ function wpsc_refresh_page_urls( $post_id, $post ) {
 add_action( 'save_post', 'wpsc_refresh_page_urls', 10, 2 );
 
 /**
- * Updates permalink slugs
- *
- * @since 3.8.9
- * @return type
- */
-function wpsc_update_permalink_slugs() {
-	global $wpdb;
-
-	$wpsc_pageurl_option = array(
-		'product_list_url'  => '[productspage]',
-		'shopping_cart_url' => '[shoppingcart]',
-		'checkout_url'      => '[shoppingcart]',
-		'transact_url'      => '[transactionresults]',
-		'user_account_url'  => '[userlog]'
-	);
-
-	$ids = array();
-
-	foreach ( $wpsc_pageurl_option as $option_key => $page_string ) {
-		$id = $wpdb->get_var( "SELECT `ID` FROM `{$wpdb->posts}` WHERE `post_type` = 'page' AND `post_content` LIKE '%$page_string%' LIMIT 1" );
-
-		if ( ! $id )
-			continue;
-
-		$ids[$page_string] = $id;
-
-		$the_new_link = get_page_link( $id );
-
-		if ( stristr( get_option( $option_key ), "https://" ) )
-			$the_new_link = str_replace( 'http://', "https://", $the_new_link );
-
-		if ( $option_key == 'shopping_cart_url' )
-			update_option( 'checkout_url', $the_new_link );
-
-		update_option( $option_key, $the_new_link );
-	}
-
-	update_option( 'wpsc_shortcode_page_ids', $ids );
-}
-
-/**
  * wpsc_obtain_the_title function, for replaacing the page title with the category or product
  * @return string - the new page title
  */

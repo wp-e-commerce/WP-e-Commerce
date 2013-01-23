@@ -268,6 +268,8 @@ You ordered these items:
 	//unset products page
 	unset($pages['products-page']);
 
+	require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-functions.php' );
+
 	//create other pages
 	foreach( (array)$pages as $page ){
 		//check if page exists and get it's ID
@@ -298,11 +300,10 @@ You ordered these items:
 	//if we have created any new pages, then flush... do we need to do this? probably should be removed
 	if ( $newpages ) {
 		wp_cache_delete( 'all_page_ids', 'pages' );
-		$wp_rewrite->flush_rules();
+		wpsc_update_permalink_slugs();
 	}
 	// Product categories, temporarily register them to create first default category if none exist
 	// @todo: investigate those require once lines and move them to right place (not from here, but from their original location, which seems to be wrong, since i cant access wpsc_register_post_types and wpsc_update_categorymeta here) - Vales <v.bakaitis@gmail.com>
-	require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-functions.php' );
 	wpsc_core_load_page_titles();
 	wpsc_register_post_types();
 	$category_list = get_terms( 'wpsc_product_category', 'hide_empty=0&parent=0' );
@@ -314,7 +315,6 @@ You ordered these items:
 		$term = get_term_by( 'id', $new_category['term_id'], 'wpsc_product_category' );
 		$url_name = $term->slug;
 
-		$wp_rewrite->flush_rules();
 		wpsc_update_categorymeta( $category_id, 'nice-name', $url_name );
 		wpsc_update_categorymeta( $category_id, 'description', __( "This is a description", 'wpsc' ) );
 		wpsc_update_categorymeta( $category_id, 'image', '' );
