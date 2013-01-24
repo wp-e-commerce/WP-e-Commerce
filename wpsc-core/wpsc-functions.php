@@ -628,6 +628,18 @@ function _wpsc_menu_exists( $args ) {
 		}
 	}
 
+	// If the menu exists, get its items.
+	if ( $menu && ! is_wp_error($menu) && !isset($menu_items) )
+		$menu_items = wp_get_nav_menu_items( $menu->term_id );
+
+	// If no menu was found or if the menu has no items and no location was requested, call the fallback_cb if it exists
+	if ( ( !$menu || is_wp_error($menu) || ( isset($menu_items) && empty($menu_items) && !$args->theme_location ) ) )
+			return false;
+
+	// If no fallback function was specified and the menu doesn't exists, bail.
+	if ( ! $menu || is_wp_error($menu) || empty( $menu_items ) )
+		return false;
+
 	return (bool) $menu;
 }
 
