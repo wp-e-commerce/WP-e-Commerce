@@ -101,7 +101,6 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'cb'           => '<input type="checkbox" />',
-			'ID'           => __( 'ID', 'wpsc' ),
 			'coupon'       => __( 'Code', 'wpsc' ),
 			'discount'     => __( 'Discount', 'wpsc' ),
 			'max_uses' 	   => __( 'Max Uses', 'wpsc' ),
@@ -111,21 +110,6 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 		);
 
 		return $columns;
-	}
-
-
-	/**
-	 * Retrieve the table's sortable columns
-	 *
-	 * @access      private
-	 * @since       3.8.10
-	 * @return      array
-	 */
-
-	public function get_sortable_columns() {
-		return array(
-			'ID'     => array( 'ID', true )
-		);
 	}
 
 
