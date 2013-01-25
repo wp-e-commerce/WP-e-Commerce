@@ -8,14 +8,14 @@
  * @package wp-e-commerce
  * @since 3.7
  *
- * @uses update_option                              Updates option in the database given key and value
- * @uses wp_delete_term                             Removes term from the database
- * @uses fetch_rss                                  DEPRECATED
- * @uses wpsc_member_dedeactivate_subscriptions     @todo docs
- * @uses wpsc_member_deactivate_subscriptions       @todo docs
- * @uses wpsc_update_purchase_log_status            Updates the status of the logs for a purchase
- * @uses transaction_results                        Main function for creating purchase reports
- * @uses wpsc_find_purchlog_status_name             Finds name of given status
+ * @uses update_option()                              Updates option in the database given key and value
+ * @uses wp_delete_term()                             Removes term from the database
+ * @uses fetch_rss()                                  DEPRECATED
+ * @uses wpsc_member_dedeactivate_subscriptions()     @todo docs
+ * @uses wpsc_member_deactivate_subscriptions()       @todo docs
+ * @uses wpsc_update_purchase_log_status()            Updates the status of the logs for a purchase
+ * @uses transaction_results()                        Main function for creating purchase reports
+ * @uses wpsc_find_purchlog_status_name()             Finds name of given status
  */
 function wpsc_admin_ajax() {
 	global $wpdb;
@@ -159,9 +159,9 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
  *
  * @uses $wpdb              WordPress database object for queries
  * @uses $wp_rewrite        Global variable instance of the WP_Rewrite Class
- * @uses wp_get_referer     Retrieve referer from '_wp_http_referer' or HTTP referer.
- * @uses add_query_arg      Retrieve a modified URL query string.
- * @uses wp_redirect        Redirects to string given as argument
+ * @uses wp_get_referer()   Retrieve referer from '_wp_http_referer' or HTTP referer.
+ * @uses add_query_arg()    Retrieve a modified URL query string.
+ * @uses wp_redirect()      Redirects to string given as argument
  */
 function wpsc_clean_categories() {
 	global $wpdb, $wp_rewrite;
