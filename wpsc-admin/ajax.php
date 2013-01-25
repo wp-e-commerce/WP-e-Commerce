@@ -5,6 +5,10 @@
  *
  * @since  3.8.9
  * @access private
+ *
+ * @uses WP_Error           WordPress Error Class
+ * @uses wp_verify_nonce()    Verify that correct nonce was used with time limit.
+ *
  * @param string $ajax_action Name of AJAX action
  * @return WP_Error|boolean True if nonce is valid. WP_Error if otherwise.
  */
@@ -30,6 +34,9 @@ function _wpsc_ajax_verify_nonce( $ajax_action ) {
  *
  * @since  3.8.9
  * @access private
+ *
+ * @uses WP_Error   WordPress Error object
+ *
  * @param  string $ajax_action Name of AJAX action
  * @return WP_Error|array Array of response args if callback is valid. WP_Error if otherwise.
  */
@@ -52,6 +59,12 @@ function _wpsc_ajax_fire_callback( $ajax_action ) {
  *
  * @since 3.8.9
  * @access private
+ *
+ * @uses _wpsc_ajax_fire_callback()     Verify ajax callback if it exists
+ * @uses _wpsc_ajax_verify_nonce()      Verify nonce of an ajax request
+ * @uses is_wp_error()                  Check whether variable is a WordPress Error.
+ *
+ * @return array $output    json encoded response
  */
 function _wpsc_ajax_handler() {
 	$ajax_action = str_replace( '-', '_', $_REQUEST['wpsc_action'] );
@@ -80,6 +93,12 @@ function _wpsc_ajax_handler() {
 }
 add_action( 'wp_ajax_wpsc_ajax', '_wpsc_ajax_handler' );
 
+/**
+ * Checks if WPSC is doing ajax
+ *
+ * @param   string  $action     req     The action we're checking
+ * @return  bool    True if doing ajax
+ */
 function wpsc_is_doing_ajax( $action = '' ) {
 	$ajax = defined( 'DOING_AJAX' ) && DOING_AJAX && ! empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'wpsc_ajax';
 
@@ -95,6 +114,9 @@ function wpsc_is_doing_ajax( $action = '' ) {
  *
  * @since  3.8.9
  * @access private
+ *
+ * @uses wp_create_nonce()  Creates a random one time use token
+ *
  * @param  string $action AJAX action without prefix
  * @return string         The generated nonce.
  */
@@ -110,6 +132,19 @@ function _wpsc_create_ajax_nonce( $ajax_action ) {
  *
  * @since 3.8.8
  * @access private
+ *
+ * @uses term_exists()                      Returns true if term exists
+ * @uses get_term()                         Gets all term data by term_id
+ * @uses wp_insert_term()                   Inserts a term to the WordPress database
+ * @uses is_wp_error()                      Checks whether variable is a WordPress error
+ * @uses WP_Error                           WordPress Error class
+ * @uses clean_term_cache()                 Will remove all of the term ids from the cache.
+ * @uses delete_option()                    Deletes option from the database
+ * @uses wp_cache_set()                     Saves the data to the cache.
+ * @uses _get_term_hierarchy()              Retrieves children of taxonomy as Term IDs.
+ * @uses wp_terms_checklist()               Output an unordered list of checkbox <input> elements labelled
+ * @uses WPSC_Walker_Variation_Checklist    Walker variation checklist
+ *
  * @return array Response args
  */
 function _wpsc_ajax_add_variation_set() {
@@ -184,6 +219,10 @@ function _wpsc_ajax_add_variation_set() {
  *
  * @since  3.8.9
  * @access private
+ *
+ * @uses WPSC_Settings_Tab_Gateway
+ * @uses WPSC_Settings_Tab_Gateway::display_payment_gateway_settings_form()     Displays payment gateway form
+ *
  * @return array Response args
  */
 function _wpsc_ajax_payment_gateway_settings_form() {
@@ -204,7 +243,11 @@ function _wpsc_ajax_payment_gateway_settings_form() {
  *
  * @since  3.8.9
  * @access private
- * @return array Response args
+ *
+ * @uses WPSC_Settings_Table_Shipping
+ * @uses WPSC_Settings_Table_Shipping::display_shipping_module_settings_form()  Displays shipping module form
+ *
+ * @return array $return    Response args
  */
 function _wpsc_ajax_shipping_module_settings_form() {
 	require_once( 'settings-page.php' );
@@ -224,7 +267,11 @@ function _wpsc_ajax_shipping_module_settings_form() {
  *
  * @since 3.8.9
  * @access private
- * @return array Response args
+ *
+ * @uses WPSC_Settings_Page
+ * @uses WPSC_Settings_Page::display_current_tab()  Shows current tab of settings page
+ *
+ * @return array $return    Response args
  */
 function _wpsc_ajax_navigate_settings_tab() {
 	require_once( 'settings-page.php' );
@@ -237,12 +284,17 @@ function _wpsc_ajax_navigate_settings_tab() {
 
 	return $return;
 }
+
 /**
  * Display base region list in Store Settings -> General
  *
  * @since 3.8.9
  * @access private
- * @return array Response args
+ *
+ * @uses WPSC_Settings_Tab_General
+ * @uses WPSC_Settings_Tab_General::display_region_drop_down()  Shows region dropdown
+ *
+ * @return array    $return     Response args
  */
 function _wpsc_ajax_display_region_list() {
 	require_once( 'settings-page.php' );
@@ -262,7 +314,10 @@ function _wpsc_ajax_display_region_list() {
  *
  * @since 3.8.9
  * @access private
- * @return array|WP_Error Response args if successful, WP_Error if otherwise.
+ *
+ * @uses WP_Error   WordPress Error class
+ *
+ * @return array|WP_Error   $return     Response args if successful, WP_Error if otherwise.
  */
 function _wpsc_ajax_purchase_log_save_tracking_id() {
 	global $wpdb;
@@ -296,7 +351,15 @@ function _wpsc_ajax_purchase_log_save_tracking_id() {
  *
  * @since 3.8.9
  * @access private
- * @return array|WP_Error Response args if successful, WP_Error if otherwise
+ *
+ * @uses $wpdb              WordPress database object for queries
+ * @uses get_option()       Gets option from DB given key
+ * @uses add_filter()       Calls 'wp_mail_from' which can replace the from email address
+ * @uses add_filter()       Calls 'wp_mail_from_name' allows replacement of the from name on WordPress emails
+ * @uses wp_mail()          All the emailses in WordPress are sent through this function
+ * @uses WP_Error           WordPress Error class
+ *
+ * @return array|WP_Error   $return     Response args if successful, WP_Error if otherwise
  */
 function _wpsc_ajax_purchase_log_send_tracking_email() {
 	global $wpdb;
@@ -339,7 +402,11 @@ function _wpsc_ajax_purchase_log_send_tracking_email() {
  *
  * @since 3.8.9
  * @access private
- * @return array|WP_Error Response args if successful, WP_Error if otherwise
+ *
+ * @uses _wpsc_delete_file()    Deletes files associated with a product
+ * @uses WP_Error               WordPress error class
+ *
+ * @return array|WP_Error   $return     Response args if successful, WP_Error if otherwise
  */
 function _wpsc_ajax_delete_file() {
 	$product_id = absint( $_REQUEST['product_id'] );
@@ -363,7 +430,11 @@ function _wpsc_ajax_delete_file() {
  *
  * @since 3.8.9
  * @access private
- * @return  array|WP_Error Response args if successful, WP_Error if otherwise
+ *
+ * @uses delete_meta()      Deletes metadata by meta id
+ * @uses WP_Error           WordPress error class
+ *
+ * @return  array|WP_Error  $return     Response args if successful, WP_Error if otherwise
  */
 function _wpsc_ajax_remove_product_meta() {
 	$meta_id = (int) $_POST['meta_id'];
@@ -378,7 +449,17 @@ function _wpsc_ajax_remove_product_meta() {
  *
  * @since 3.8.9
  * @access private
- * @return array|WP_Error Response args if successful, WP_Error if otherwise.
+ *
+ * @uses wpsc_purchlog_edit_status()                    Edits purchase log status
+ * @uses WP_Error                                       WordPress Error class
+ * @uses get_bloginfo()                                 Gets information about your WordPress site
+ * @uses set_current_screen()                           Sets current screen object
+ * @uses WPSC_Purchase_Log_List_Table
+ * @uses WPSC_Purchase_Log_List_Table::prepare_items()
+ * @uses WPSC_Purchase_Log_List_Table::views()
+ * @uses WPSC_Purchase_Log_List_Table::display_tablenav()   @todo docs
+ *
+ * @return array|WP_Error   $return     Response args if successful, WP_Error if otherwise.
  */
 function _wpsc_ajax_change_purchase_log_status() {
 	$result = wpsc_purchlog_edit_status( $_POST['id'], $_POST['new_status'] );
@@ -424,6 +505,11 @@ function _wpsc_ajax_change_purchase_log_status() {
  *
  * @since 3.8.9
  * @access private
+ *
+ * @uses $wpdb              WordPress database object for use in queries
+ * @uses wp_update_post()   Updates post based on passed $args. Needs a post_id
+ * @uses WP_Error           WordPress Error class
+ *
  * @return array|WP_Error Response args if successful, WP_Error if otherwise
  */
 function _wpsc_ajax_save_product_order() {
@@ -462,6 +548,10 @@ function _wpsc_ajax_save_product_order() {
  *
  * @since 3.8.9
  * @access private
+ *
+ * @uses $wpdb      WordPress database object used for queries
+ * @uses WP_Error   WordPress error class
+ *
  * @return array|WP_Error Response args or WP_Error
  */
 function _wpsc_ajax_update_checkout_fields_order() {
@@ -507,6 +597,17 @@ function _wpsc_ajax_update_checkout_fields_order() {
  *
  * @since 3.8.9
  * @access private
+ *
+ * @uses $wpdb                          WordPress database object for use in queries
+ * @uses _wpsc_create_ajax_nonce()      Creates nonce for an ajax action
+ * @uses wpsc_get_mimetype()            Returns mimetype of file
+ * @uses wp_insert_post()               Inserts post to WordPress database
+ * @uses wp_nonce_url()                 Retrieve URL with nonce added to URL query.
+ * @uses wpsc_convert_bytes()           Formats bytes
+ * @uses wpsc_get_extension()           Gets extension of file
+ * @uses esc_attr()                     Escapes HTML attributes
+ * @uses _x()                           Retrieve translated string with gettext context
+ *
  * @return array|WP_Error Response args if successful, WP_Error if otherwise.
  */
 function _wpsc_ajax_upload_product_file() {
@@ -576,6 +677,10 @@ function _wpsc_ajax_upload_product_file() {
  *
  * @since 3.8.9
  * @access private
+ *
+ * @uses wpsc_update_variations()       Updates prouct variations given
+ * @uses wpsc_admin_product_listing()   DEPRECATED
+ *
  * @return array|WP_Error Response args if successful, WP_Error if otherwise
  */
 function _wpsc_ajax_update_variations() {
@@ -605,6 +710,13 @@ add_action( 'wp_ajax_wpsc_tinymce_window', '_wpsc_action_tinymce_window' );
  * Add tax rate
  * @since  3.8.9
  * @access private
+ *
+ * @uses wpec_taxes_controller                                                  Contains all the logic to communicate with the taxes system
+ * @uses wpec_taxes_controller::wpec_taxes::wpec_taxes_get_regions()            Gets tax regions based on input country code
+ * @uses wpec_taxes_controller::wpec_taxes_build_select_options()               Returns HTML formatted options from input array
+ * @uses wpec_taxes_controller::wpec_taxes_build_form()                         Builds the tax rate form
+ * @uses wpec_taxes_controller::wpec_taxes::wpec_taxes_get_band_from_index()    Retrieves tax band for given name
+ *
  * @return array|WP_Error Response args if successful, WP_Error if otherwise
  */
 function _wpsc_ajax_add_tax_rate() {
@@ -644,6 +756,13 @@ function _wpsc_ajax_add_tax_rate() {
 	);
 }
 
+/**
+ * Displays the WPSC product variations table
+ *
+ * @uses check_admin_referrer()                     Makes sure user was referred from another admin page
+ * @uses WPSC_Product_Variations_Page               The WPSC Product variations class
+ * @uses WPSC_Product_Variations_Page::display()    Displays the product variations page
+ */
 function wpsc_product_variations_table() {
 	check_admin_referer( 'wpsc_product_variations_table' );
 	require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/product-variations-page.class.php' );
@@ -654,6 +773,16 @@ function wpsc_product_variations_table() {
 }
 add_action( 'wp_ajax_wpsc_product_variations_table', 'wpsc_product_variations_table' );
 
+/**
+ * @access private
+ *
+ * @uses current_user_can()             Checks user capabilities given string
+ * @uses delete_post_thumbnail()        Deletes post thumbnail given thumbnail id
+ * @uses set_post_thumbnail()           Sets post thumbnail given post_id and thumbnail_id
+ * @uses wpsc_the_product_thumbnail()   Returns URL to the product thumbnail
+ *
+ * @return array    $response           Includes the thumbnail URL and success bool value
+ */
 function _wpsc_ajax_set_variation_product_thumbnail() {
 	$response = array(
 		'success' => false
