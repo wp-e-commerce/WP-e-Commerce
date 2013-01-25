@@ -138,7 +138,7 @@ function _wpsc_ajax_add_variation_set() {
 		return new WP_Error( 'wpsc_invalid_variation_id', __( 'Cannot retrieve the variation set in order to proceed.', 'wpsc' ) );
 
 	foreach ( $variants as $variant ) {
-		$results = wp_insert_term( apply_filters( 'wpsc_new_variants', $variant ), 'wpsc-variation', array( 'parent' => $variation_set_id ) );
+		$results = wp_insert_term( apply_filters( 'wpsc_new_variant', $variant, $variation_set_id ), 'wpsc-variation', array( 'parent' => $variation_set_id ) );
 
 		if ( is_wp_error( $results ) )
 			return $results;

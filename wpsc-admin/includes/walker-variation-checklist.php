@@ -41,7 +41,7 @@ class WPSC_Walker_Variation_Checklist extends Walker_Category_Checklist {
 					id="in-<?php echo esc_attr( $taxonomy ) . '-' . $category->term_id; ?>"
 					<?php checked( $checked, true ); disabled( empty( $args['disabled'] ), false ); ?>
 				/>
-				<?php echo esc_html( apply_filters( 'wpsc_variation_name', $category->name ) ); ?>
+				<?php echo esc_html( apply_filters( 'wpsc_variation_name', $category->name, $category ) ); ?>
 			</label>
 		<?php
 		$output .= ob_get_clean();
