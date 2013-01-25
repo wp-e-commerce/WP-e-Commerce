@@ -341,7 +341,7 @@ function wpsc_cart_item_image( $width = 31, $height = 31 ) {
     if( is_ssl() )
 		$cart_image = str_replace( 'http://', 'https://', $cart_image );
 
-   return $cart_image;
+   return apply_filters( 'wpsc_cart_item_image', $cart_image, $wpsc_cart->cart_item->product_id );
 }
 
 /**
