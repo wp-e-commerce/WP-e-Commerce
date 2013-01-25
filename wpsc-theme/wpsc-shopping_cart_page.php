@@ -68,8 +68,8 @@ endif;
             </form>
          </td>
 
+         <td class="wpsc_product_item_price wpsc_wpsc_product_item_price_<?php echo wpsc_the_cart_item_key();?>"><?php echo wpsc_cart_single_item_price();?></td>
 
-            <td><?php echo wpsc_cart_single_item_price(); ?></td>
          <td class="wpsc_product_price wpsc_product_price_<?php echo wpsc_the_cart_item_key(); ?>"><span class="pricedisplay"><?php echo wpsc_cart_item_price(); ?></span></td>
 
          <td class="wpsc_product_remove wpsc_product_remove_<?php echo wpsc_the_cart_item_key(); ?>">
