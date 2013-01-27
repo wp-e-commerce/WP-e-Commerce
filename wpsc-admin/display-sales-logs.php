@@ -190,23 +190,26 @@ class WPSC_Purchase_Log_Page
 
    private function purchase_log_cart_items() {
       while( wpsc_have_purchaselog_details() ) : wpsc_the_purchaselog_item(); ?>
+      	<?php $column_count = 0;?>
       <tr>
-         <td><?php echo wpsc_purchaselog_details_name(); ?></td> <!-- NAME! -->
-         <td><?php echo wpsc_purchaselog_details_SKU(); ?></td> <!-- SKU! -->
-         <td><?php echo wpsc_purchaselog_details_quantity(); ?></td> <!-- QUANTITY! -->
+         <td><?php echo wpsc_purchaselog_details_name(); $column_count++;?></td> <!-- NAME! -->
+         <td><?php echo wpsc_purchaselog_details_SKU(); $column_count++;?></td> <!-- SKU! -->
+         <td><?php echo wpsc_purchaselog_details_quantity(); $column_count++; ?></td> <!-- QUANTITY! -->
          <td>
 	    <?php
 		echo wpsc_currency_display( wpsc_purchaselog_details_price() );
 		do_action( 'wpsc_additional_sales_amount_info', wpsc_purchaselog_details_id() );
+		$column_count++;
 	    ?>
 	 </td> <!-- PRICE! -->
-         <td><?php echo wpsc_currency_display( wpsc_purchaselog_details_shipping() ); ?></td> <!-- SHIPPING! -->
+         <td><?php echo wpsc_currency_display( wpsc_purchaselog_details_shipping() ); $column_count++;?></td> <!-- SHIPPING! -->
          <?php if( wpec_display_product_tax() ): ?>
-            <td><?php echo wpsc_currency_display( wpsc_purchaselog_details_tax() ); ?></td> <!-- TAX! -->
+            <td><?php echo wpsc_currency_display( wpsc_purchaselog_details_tax() ); $column_count++;?></td> <!-- TAX! -->
          <?php endif; ?>
-         <!-- <td><?php echo wpsc_currency_display( wpsc_purchaselog_details_discount() ); ?></td> --> <!-- DISCOUNT! -->
-         <td class="amount"><?php echo wpsc_currency_display( wpsc_purchaselog_details_total() ); ?></td> <!-- TOTAL! -->
+         <!-- <td><?php echo wpsc_currency_display( wpsc_purchaselog_details_discount() ); $column_count++;?></td> --> <!-- DISCOUNT! -->
+         <td class="amount"><?php echo wpsc_currency_display( wpsc_purchaselog_details_total() ); $column_count++;?></td> <!-- TOTAL! -->
       </tr>
+      <?php do_action( 'wpsc_additional_sales_item_info', wpsc_purchaselog_details_prodid(), wpsc_purchaselog_details_id(), $column_count ); ?>      
       <?php
       endwhile;
    }
