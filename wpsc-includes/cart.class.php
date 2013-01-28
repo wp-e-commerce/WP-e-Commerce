@@ -1665,7 +1665,7 @@ class wpsc_cart_item {
    	if ( !isset( $value ) || ($value == null)  ) {
    		$result = $this->delete_meta($key);
    	} else {
-   		$result = isset($this->meta[$key])?$this->meta[$key]:false;
+   		$result = isset($this->meta[$key])?$this->meta[$key]:null;
    		$this->item_meta[$key] = $value;
    	}
    	 
