@@ -1658,7 +1658,7 @@ class wpsc_cart_item {
     * @access public
     * @param meta key name
     * @param meta key value
-    * @return previous meta value if it existed, false otherwise
+    * @return previous meta value if it existed, null otherwise
     */
    function update_meta($key,$value=null) {
    	
@@ -1677,7 +1677,7 @@ class wpsc_cart_item {
     * get cart item meta value
     * @access public
     * @param meta key name, optional, empty returns all meta as an array
-    * @return previous meta value if it existed, false otherwise
+    * @return previous meta value if it existed, null otherwise
     */
    function get_meta($key='') {
    	
