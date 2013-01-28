@@ -427,7 +427,6 @@ function _wpsc_ajax_change_purchase_log_status() {
  * @return array|WP_Error Response args if successful, WP_Error if otherwise
  */
 function _wpsc_ajax_save_product_order() {
-	global $wpdb;
 
 	$products = array( );
 	foreach ( $_POST['post'] as $product ) {
