@@ -8,6 +8,13 @@
  *
  * @package wp-e-commerce
  * @since 3.7
+ *
+ * @uses wp_die()                               Kill WordPress execution and display HTML message with error message.
+ * @uses $wpdb                                  WordPress database variable for queries
+ * @uses admin_url()                            Gets URL to the admin of the current site
+ * @uses wp_nonce_url()                         Retrieve URL with nonce added to URL query.
+ * @uses wpsc_convert_products_to_posts()       Converts legacy data format to post_types
+ * @todo docs
  */
 function wpsc_debug_page() {
 	if ( !current_user_can('manage_options') )
