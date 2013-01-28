@@ -73,6 +73,9 @@ $conditions = maybe_unserialize($coupon['condition']);
 	  $output .= "<th>";
 	  $output .= esc_html__("Logic", 'wpsc');
 	  $output .= "</th>";
+      $output .= "<th>";
+      $output .= esc_html__("Operator","wpsc");
+      $output .= "</th>";
 	  $output .= "<th>";
 	  $output .= esc_html__("Value", 'wpsc');
 	  $output .= "</th>";
@@ -90,6 +93,9 @@ $conditions = maybe_unserialize($coupon['condition']);
 		  $output .= "</td>";
 		  $output .= "<td>";
 		  $output .= $condition['logic'];
+		  $output .= "</td>";
+		  $output .= "<td>";
+		  $output .= $condition['operator'];
 		  $output .= "</td>";
 		  $output .= "<td>";
 		  $output .= $condition['value'];
@@ -118,6 +124,10 @@ $output ='
 <tr><td colspan="6">
 	<div class="coupon_condition">
 		<div>
+            <select class="ruleoperator" name="rules[operator][]">
+                <option value="or">OR</option>
+                <option value="and">AND</option>
+            </select>
 			<select class="ruleprops" name="rules[property][]">
 				<option value="item_name" rel="order">' . esc_html__( 'Item name', 'wpsc') . '</option>
 				<option value="item_quantity" rel="order">' . esc_html__( 'Item quantity', 'wpsc') . '</option>
