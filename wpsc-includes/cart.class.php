@@ -1662,7 +1662,7 @@ class wpsc_cart_item {
     */
    function update_meta($key,$value=null) {
    	
-   	if ( !isset( $value ) || ($value == null)  ) {
+   	if ( !isset( $value ) ) {
    		$result = $this->delete_meta($key);
    	} else {
    		$result = isset($this->meta[$key])?$this->meta[$key]:null;
