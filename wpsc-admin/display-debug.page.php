@@ -351,5 +351,3 @@ function wpsc_mass_resize_thumbnails_and_clean_images() {
 	}
 	$wpdb->query( "DELETE FROM `" . WPSC_TABLE_PRODUCT_IMAGES . "` WHERE `product_id` IN('0')" );
 }
-
-?>
