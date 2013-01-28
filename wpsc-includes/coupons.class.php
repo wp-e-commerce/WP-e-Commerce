@@ -301,16 +301,38 @@ class wpsc_coupons {
 	public function _filter_cart_item_conditions( $cart_item ) {
 		global $wpsc_cart;
 
+        $retVal = false;
 		foreach ( $this->conditions as $condition ) {
 			$callback = '_callback_condition_' . $condition['property'];
 			if ( ! is_callable( array( $this, $callback ) ) )
 				return false;
 
-			if ( ! $this->$callback( $condition, $cart_item ) )
-				return apply_filters( 'wpsc_coupon_compare_logic', false, $condition, $cart_item );
+			if ( ! $this->$callback( $condition, $cart_item ) ){
+                switch( $condition['operator'] ){
+                    case 'or':
+                    $retVal = $retVal || apply_filters('wpsc_coupon_compare_logic',false,$condition,$cart_item);
+                    break;
+                    case 'and':
+                    $retVal = $retVal && apply_filters('wpsc_coupon_compare_logic',false,$condition,$cart_item);
+                    break;
+                    default:
+				    $retVal = apply_filters( 'wpsc_coupon_compare_logic', false, $condition, $cart_item );
+                }
+            } else {
+                switch( $condition['operator'] ){
+                    case 'or':
+                    $retVal = $retVal || $this->$callback($condition,$cart_item);
+                    break;
+                    case 'and':
+                    $retVal = $retVal && $this->$callback($condition,$cart_item);
+                    break;
+                    default:
+				    $retVal = $this->$callback($condition, $cart_item );
+                }
+            }
 		}
 
-		return true;
+		return $retVal;
 	}
 
 	/**

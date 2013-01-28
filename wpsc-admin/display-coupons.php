@@ -117,6 +117,7 @@ function wpsc_display_coupons_page() {
 					if ( $_POST['rules']['value'][0] != '' ) {
 						$new_cond['property'] = $_POST['rules']['property'][0];
 						$new_cond['logic'] = $_POST['rules']['logic'][0];
+                        $new_cond['operator'] = $_POST['rules']['operator'][0];
 						$new_cond['value'] = $_POST['rules']['value'][0];
 						$conditions [] = $new_cond;
 					}
@@ -275,6 +276,7 @@ function wpsc_display_coupons_page() {
 									<td colspan="8">
 									<div class='coupon_condition' >
 										<div class='first_condition'>
+                                            <input type="hidden" name="rules[operator][]" value="" />
 											<select class="ruleprops" name="rules[property][]">
 												<option value="item_name" rel="order"><?php esc_html_e( 'Item name', 'wpsc' ); ?></option>
 												<option value="item_quantity" rel="order"><?php esc_html_e( 'Item quantity', 'wpsc' ); ?></option>
@@ -300,6 +302,10 @@ function wpsc_display_coupons_page() {
 												function add_another_property(this_button){
 													var new_property='<div class="coupon_condition">\n'+
 														'<div> \n'+
+                                                        '<select class="operator" name="rules[operator][]"> \n'+
+                                                        '<option value="or">OR</option> \n'+
+                                                        '<option value="and">AND</option> \n'+
+                                                        '</select> \n'+
 														'<select class="ruleprops" name="rules[property][]"> \n'+
 														'<option value="item_name" rel="order"><?php echo esc_js( __( 'Item name', 'wpsc' ) ); ?></option> \n'+
 														'<option value="item_quantity" rel="order"><?php echo esc_js( __( 'Item quantity', 'wpsc' ) ); ?></option>\n'+
