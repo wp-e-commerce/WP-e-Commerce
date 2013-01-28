@@ -12,7 +12,14 @@
  */
 
 /**
-* wpsc products shorttag function
+* Displays products based on defined parameters
+ *
+ * @uses get_post_type()                Returns string for current post_type
+ * @uses shortcode_atts()               Combine user attributes with known attributes and fill in defaults when needed.
+ * @uses get_option()                   Gets option from the WordPress database
+ * @uses get_query_var()                Retrieve variable in the WP_Query class.
+ * @uses wpsc_display_products_page()   Displays products
+ *
 * @return string - html displaying one or more products, derived from wpsc_display_products
 */
 function wpsc_products_shorttag($atts) {
@@ -58,10 +65,17 @@ function wpsc_products_shorttag($atts) {
 }
 add_shortcode('wpsc_products', 'wpsc_products_shorttag');
 
+/**
+ * Shows the WPSC buy now button
+ *
+ * @uses wpsce_buy_now_button()      Shows the buy now button for a given product_id
+ *
+ * @param $atts     The shortcode attributes. In this case, the product_id
+ * @return string
+ */
 function wpsc_buy_now_shortcode($atts){
 	$output = wpsc_buy_now_button( $atts['product_id'], true );
 	return $output;
 }
 
 add_shortcode('buy_now_button', 'wpsc_buy_now_shortcode');
-?>
