@@ -99,7 +99,7 @@ function wpsc_generate_product_feed() {
 			if ($image_link !== FALSE) {
 
 				if ($_GET['xmlformat'] == 'google') {
-					echo "      <g:image_link>$image_link</g:image_link>\n\r";
+					echo "      <g:image_link><![CDATA[$image_link]]></g:image_link>\n\r";
 				} else {
 					echo "      <enclosure url='$image_link' />\n\r";
 				}
