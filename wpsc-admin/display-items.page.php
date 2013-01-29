@@ -38,6 +38,11 @@ function wpsc_additional_column_names( $columns ){
 
 	return $columns;
 }
+
+/**
+ * @param array $columns        The array of sortable columns
+ * @return array
+ */
 function wpsc_additional_sortable_column_names( $columns ){
 
 	$columns['stock'] = 'stock';
@@ -53,8 +58,12 @@ function wpsc_additional_sortable_column_names( $columns ){
  *
  * @since 3.8.9
  * @access private
+ *
  * @param object $post Post object
  * @param int $post_id Post ID
+ *
+ * @uses wpsc_the_product_thumbnail()   Prints URL to the product thumbnail
+ * @uses esc_url()                      Makes sure we have a safe URL
  */
 function _wpsc_manage_products_column_image( $post, $post_id ) {
 	$src = wpsc_the_product_thumbnail( false, false, $post_id, 'manage-products' );
@@ -71,9 +80,16 @@ add_action( 'wpsc_manage_products_column_image', '_wpsc_manage_products_column_i
  *
  * @since 3.8.9
  * @access private
+ *
  * @param  object  $post    Post object
  * @param  int     $post_id Post ID
  * @param  boolean $has_variations Whether the product has variations
+ *
+ * @uses esc_html_e()           Safe HTML with translation
+ * @uses get_post_meta()        Gets post meta given key and post_id
+ * @uses maybe_unserialize()    Unserialize value only if it was serialized.
+ * @uses wpsc_convert_weight()  Does weight conversions
+ * @uses esc_html()             Makes sure things are safe
  */
 function _wpsc_manage_products_column_weight( $post, $post_id, $has_variations ) {
 	if( $has_variations ) {
@@ -126,9 +142,14 @@ add_action( 'wpsc_manage_products_column_weight', '_wpsc_manage_products_column_
  *
  * @since  3.8.9
  * @access private
+ *
  * @param  object  $post           Post Object
  * @param  int     $post_id        Post ID
  * @param  boolean $has_variations Whether the product has variations
+ *
+ * @uses get_post_meta()                    Gets post meta given key and post_id
+ * @uses wpsc_variations_stock_remaining()  Gets remaining stock level for given post_id
+ * @uses esc_html()                         Because we need safe HTML right???
  */
 function _wpsc_manage_products_column_stock( $post, $post_id, $has_variations ) {
 	$stock = get_post_meta( $post->ID, '_wpsc_stock', true );
@@ -152,9 +173,14 @@ add_action( 'wpsc_manage_products_column_stock', '_wpsc_manage_products_column_s
  *
  * @since  3.8.9
  * @access private
+ *
  * @param  object  $post           Post object
  * @param  int     $post_id        Post ID
  * @param  boolean $has_variations Whether the product has variations
+ *
+ * @uses get_post_meta()                            Gets post meta given key and post_id
+ * @uses wpsc_currency_display()                    Returns the currency after dealing with how the user wants it to be displayed
+ * @uses wpsc_product_variation_price_available()   Gets the lowest price for the given post_id
  */
 function _wpsc_manage_products_column_price( $post, $post_id, $has_variations ) {
 	$price = get_post_meta( $post->ID, '_wpsc_price', true );
@@ -175,9 +201,14 @@ add_action( 'wpsc_manage_products_column_price', '_wpsc_manage_products_column_p
  *
  * @since  3.8.9
  * @access private
+ *
  * @param  object  $post           Post object
  * @param  int     $post_id        Post ID
  * @param  boolean $has_variations Whether the product has variations
+ *
+ * @uses get_post_meta()            Gets post meta given key and post_id
+ * @uses wpsc_currency_display()    Returns currency after taking user display options in to account
+ * @uses wpsc_product_variation_price_available()   Gets the lowest price for the given post_id
  */
 function _wpsc_manage_products_column_sale_price( $post, $post_id, $has_variations ) {
 	$price = get_post_meta( $post->ID, '_wpsc_special_price', true );
@@ -194,8 +225,12 @@ add_action( 'wpsc_manage_products_column_sale_price', '_wpsc_manage_products_col
  *
  * @since  3.8.9
  * @access private
+ *
  * @param  object $post    Post object
  * @param  int    $post_id Post ID
+ *
+ * @uses get_post_meta()        Gets post meta given key and post_id
+ * @uses esc_html()             Escapes the stuff inside
  */
 function _wpsc_manage_products_column_sku( $post, $post_id ) {
 	$sku = get_post_meta( $post->ID, '_wpsc_sku', true );
@@ -212,8 +247,13 @@ add_action( 'wpsc_manage_products_column_sku', '_wpsc_manage_products_column_sku
  *
  * @since  3.8.9
  * @access private
+ *
  * @param  object $post    Post object
  * @param  int    $post_id Post ID
+ *
+ * @uses get_the_product_category()     Gets the category for the given post_id
+ * @uses esc_html()                     Makes sure we have safe HTML
+ * @uses sanitize_term_field()          Cleanse the field value in the term based on the context.
  */
 function _wpsc_manage_products_column_cats( $post, $post_id ) {
 	$categories = get_the_product_category( $post->ID );
