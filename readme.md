@@ -4,7 +4,7 @@ WP e-Commerce
 About
 -----
 
-WP e-Commerce is a free opensource WordPress Shopping Cart Plugin that lets customers buy your products, services and digital downloads online.
+WP e-Commerce is a free open-source WordPress Shopping Cart Plugin that lets customers buy your products, services and digital downloads online.
 
 More details about this plugin features can be found on our website at [getshopped.org](http://getshopped.org/features/).
 
