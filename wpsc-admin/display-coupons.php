@@ -466,5 +466,3 @@ function wpsc_display_coupons_page() {
 <?php
 
 }
-
-?>

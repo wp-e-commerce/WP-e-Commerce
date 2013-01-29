@@ -310,24 +310,24 @@ class wpsc_coupons {
 			if ( ! $this->$callback( $condition, $cart_item ) ){
                 switch( $condition['operator'] ){
                     case 'or':
-                    $retVal = $retVal || apply_filters('wpsc_coupon_compare_logic',false,$condition,$cart_item);
+                        $retVal = $retVal || apply_filters('wpsc_coupon_compare_logic',false,$condition,$cart_item);
                     break;
                     case 'and':
-                    $retVal = $retVal && apply_filters('wpsc_coupon_compare_logic',false,$condition,$cart_item);
+                        $retVal = $retVal && apply_filters('wpsc_coupon_compare_logic',false,$condition,$cart_item);
                     break;
                     default:
-				    $retVal = apply_filters( 'wpsc_coupon_compare_logic', false, $condition, $cart_item );
+				        $retVal = apply_filters( 'wpsc_coupon_compare_logic', false, $condition, $cart_item );
                 }
             } else {
                 switch( $condition['operator'] ){
                     case 'or':
-                    $retVal = $retVal || $this->$callback($condition,$cart_item);
+                        $retVal = $retVal || $this->$callback($condition,$cart_item);
                     break;
                     case 'and':
-                    $retVal = $retVal && $this->$callback($condition,$cart_item);
+                        $retVal = $retVal && $this->$callback($condition,$cart_item);
                     break;
                     default:
-				    $retVal = $this->$callback($condition, $cart_item );
+				        $retVal = $this->$callback($condition, $cart_item );
                 }
             }
 		}
@@ -740,4 +740,3 @@ class wpsc_coupons {
 
 
 }
-?>
