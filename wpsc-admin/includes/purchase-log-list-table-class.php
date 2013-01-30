@@ -185,7 +185,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 	}
 
 	public function get_columns() {
-		return array(
+		return apply_filters ( 'wpsc_manage_purchase_logs_columns', array(
 			'cb'       => '<input type="checkbox" />',
 			'id'       => __( 'Order ID', 'wpsc' ),
 			'customer' => __( 'Customer', 'wpsc' ),
@@ -193,18 +193,18 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 			'status'   => _x( 'Status', 'sales log list table column', 'wpsc' ),
 			'date'     => __( 'Date', 'wpsc' ),
 			'tracking' => _x( 'Tracking ID', 'purchase log', 'wpsc' ),
-		);
+		) );
 	}
 
 	public function get_sortable_columns() {
 		if ( ! $this->sortable )
 			return array();
 
-		return array(
+		return apply_filters ( 'wpsc_manage_purchase_logs_columns_sortable', array(
 			'date'   => 'id',
 			'status' => 'processed',
 			'amount' => 'totalprice',
-		);
+		) );
 	}
 
 	private function get_months() {
@@ -449,7 +449,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 
 	public function column_default( $item, $column_name ) {
 		$default = isset( $item->$column_name ) ? $item->$column_name : '';
-		$output = apply_filters( 'wpsc_manage_purchase_logs_custom_column',  $default, $column_name, $item );
+		$output = apply_filters( 'wpsc_manage_purchase_logs_custom_column', $default, $column_name, $item );
 		return $output;
 	}
 
