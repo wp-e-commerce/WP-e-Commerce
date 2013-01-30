@@ -47,8 +47,7 @@
  * 'callback_submit_options()'. Then process your submitted fields there.
  *
  * <code>
- * class WPSC_Settings_Tab_Recommendation_System extends WPSC_Settings_Tab
- * {
+ * class WPSC_Settings_Tab_Recommendation_System extends WPSC_Settings_Tab {
  * 	// ...
  * 	public function callback_submit_options() {
  * 		if ( isset( $_POST['my_option'] ) )
@@ -70,8 +69,7 @@
  * @package wp-e-commerce
  * @subpackage settings-api
  */
-abstract class WPSC_Settings_Tab
-{
+abstract class WPSC_Settings_Tab {
 	/**
 	 * Display the content of the tab. This function has to be overridden.
 	 *
@@ -174,8 +172,7 @@ abstract class WPSC_Settings_Tab
  * @subpackage settings-api
  * @final
  */
-final class WPSC_Settings_Page
-{
+final class WPSC_Settings_Page {
 	/**
 	 * @staticvar object The active object instance
 	 * @since 3.8.8

@@ -1,7 +1,6 @@
 <?php
 
-class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab
-{
+class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 	private $active_gateways;
 	private $gateway_names;
 
