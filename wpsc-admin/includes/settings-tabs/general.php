@@ -1,6 +1,5 @@
 <?php
-class WPSC_Settings_Tab_General extends WPSC_Settings_Tab
-{
+class WPSC_Settings_Tab_General extends WPSC_Settings_Tab {
 	private $regions = array();
 
 	public function __construct() {

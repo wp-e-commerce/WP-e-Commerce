@@ -1,7 +1,6 @@
 <?php
 
-class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab
-{
+class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 	private $file = false;
 	private $step = 1;
 	private $display_data = array();

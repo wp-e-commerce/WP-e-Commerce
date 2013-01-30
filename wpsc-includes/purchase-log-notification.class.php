@@ -1,6 +1,5 @@
 <?php
-abstract class WPSC_Purchase_Log_Notification
-{
+abstract class WPSC_Purchase_Log_Notification {
 	protected $address;
 	protected $args = array();
 	protected $raw_message = '';
@@ -283,8 +282,7 @@ abstract class WPSC_Purchase_Log_Notification
 	}
 }
 
-class WPSC_Purchase_Log_Customer_Notification extends WPSC_Purchase_Log_Notification
-{
+class WPSC_Purchase_Log_Customer_Notification extends WPSC_Purchase_Log_Notification {
 	public function get_raw_message() {
 		$raw_message = '';
 
@@ -322,8 +320,7 @@ class WPSC_Purchase_Log_Customer_Notification extends WPSC_Purchase_Log_Notifica
 	}
 }
 
-class WPSC_Purchase_Log_Admin_Notification extends WPSC_Purchase_Log_Notification
-{
+class WPSC_Purchase_Log_Admin_Notification extends WPSC_Purchase_Log_Notification {
 	public function get_address() {
 		return apply_filters( 'wpsc_purchase_log_admin_notification_address', get_option( 'purch_log_email' ), $this );
 	}
@@ -419,8 +416,7 @@ class WPSC_Purchase_Log_Admin_Notification extends WPSC_Purchase_Log_Notificatio
 	}
 }
 
-class WPSC_Purchase_Log_Customer_HTML_Notification extends WPSC_Purchase_Log_Customer_Notification
-{
+class WPSC_Purchase_Log_Customer_HTML_Notification extends WPSC_Purchase_Log_Customer_Notification {
 	public function get_raw_message() {
 		$raw_message = apply_filters( 'wpsc_pre_transaction_results', '', $this );
 		if ( ! $this->purchase_log->is_transaction_completed() )

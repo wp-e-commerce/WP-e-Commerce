@@ -1,7 +1,6 @@
 <?php
 
-class WPSC_Product_Variations_Page
-{
+class WPSC_Product_Variations_Page {
 	private $list_table;
 	private $parent_id;
 	private $current_tab = 'manage';

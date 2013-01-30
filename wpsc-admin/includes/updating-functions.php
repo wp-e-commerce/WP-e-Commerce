@@ -6,8 +6,7 @@
  * @since 3.8
  */
 
-class WPSC_Update
-{
+class WPSC_Update {
 	private static $instance;
 	private $timeout;
 	private $script_start;
@@ -69,8 +68,7 @@ class WPSC_Update
 	}
 }
 
-class WPSC_Update_Progress
-{
+class WPSC_Update_Progress {
 	private $milestone;
 	private $start;
 	private $count;

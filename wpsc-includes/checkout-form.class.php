@@ -1,7 +1,6 @@
 <?php
 
-class WPSC_Checkout_Form
-{
+class WPSC_Checkout_Form {
 	/**
 	 * Contains an array of created instances of type WPSC_Checkout_Form
 	 *

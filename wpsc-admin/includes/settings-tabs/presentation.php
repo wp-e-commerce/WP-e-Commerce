@@ -1,7 +1,6 @@
 <?php
 
-class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab
-{
+class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 	public function __construct() {
 		$this->page_title = __( 'General Settings', 'wpsc' );
 	}

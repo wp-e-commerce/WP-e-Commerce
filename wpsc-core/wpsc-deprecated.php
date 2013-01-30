@@ -500,8 +500,7 @@ function wpsc_total_product_count() {
  * the results might not be what you expect.
  *
  */
-class WPSC_Query extends WP_Query
-{
+class WPSC_Query extends WP_Query {
 	function WPSC_Query( $query = '' ) {
 		_wpsc_deprecated_function( __FUNCTION__, '3.8', 'WP_Query()' );
 		$query = wp_parse_args( $query );

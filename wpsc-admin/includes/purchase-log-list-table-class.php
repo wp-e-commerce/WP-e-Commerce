@@ -5,8 +5,7 @@
 require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 require_once( ABSPATH . 'wp-admin/includes/class-wp-posts-list-table.php' );
 
-class WPSC_Purchase_Log_List_Table extends WP_List_Table
-{
+class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 	private $search_box = true;
 	private $bulk_actions = true;
 	private $sortable = true;

@@ -3,8 +3,7 @@
 require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 require_once( ABSPATH . 'wp-admin/includes/class-wp-posts-list-table.php' );
 
-class WPSC_Product_Variation_List_Table extends WP_List_Table
-{
+class WPSC_Product_Variation_List_Table extends WP_List_Table {
 	private $product_id;
 	private $object_terms_cache = array();
 	private $args = array();

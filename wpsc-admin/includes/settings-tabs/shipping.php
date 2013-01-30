@@ -1,6 +1,5 @@
 <?php
-class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab
-{
+class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 	public function __construct() {
 		parent::__construct();
 

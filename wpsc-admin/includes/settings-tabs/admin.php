@@ -1,7 +1,6 @@
 <?php
 
-class WPSC_Settings_Tab_Admin extends WPSC_Settings_Tab
-{
+class WPSC_Settings_Tab_Admin extends WPSC_Settings_Tab {
 	public function display() {
 		?>
 			<h3><?php esc_html_e( 'Admin Settings', 'wpsc' ); ?></h3>

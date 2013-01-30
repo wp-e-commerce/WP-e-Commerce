@@ -10,8 +10,7 @@
 
 
 
-class WPSC_Purchase_Log_Page
-{
+class WPSC_Purchase_Log_Page {
    private $list_table;
    private $output;
 
