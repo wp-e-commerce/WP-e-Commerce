@@ -1,7 +1,6 @@
 <?php
 
-class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab
-{
+class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 	private $require_register;
 	private $shipping_same_as_billing;
 	private $force_ssl;
