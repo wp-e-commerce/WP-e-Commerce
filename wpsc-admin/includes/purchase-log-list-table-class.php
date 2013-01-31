@@ -132,7 +132,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		$orderby = empty( $_REQUEST['orderby'] ) ? 'p.id' : 'p.' . $_REQUEST['orderby'];
 		$order = empty( $_REQUEST['order'] ) ? 'DESC' : $_REQUEST['order'];
 
-		$orderby = esc_sql( $orderby );
+		$orderby = esc_sql( apply_filters( 'wpsc_manage_purchase_logs_orderby', $orderby ) );
 		$order = esc_sql( $order );
 
 		$submitted_data_log = WPSC_TABLE_SUBMITED_FORM_DATA;
@@ -144,7 +144,8 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 			ORDER BY {$orderby} {$order}
 			{$limit}
 		";
-		$this->items = $wpdb->get_results( $purchase_log_sql );
+
+		$this->items = apply_filters( 'wpsc_manage_purchase_logs_items', $wpdb->get_results( $purchase_log_sql ) );
 		if ( $this->per_page ) {
 			$total_items = $wpdb->get_var( "SELECT FOUND_ROWS()" );
 
