@@ -2069,7 +2069,7 @@ class wpsc_cart_item {
       
       do_action('wpsc_before_save_cart_item', $cart_id, $this );
 
-$wpdb->insert(
+      $wpdb->insert(
 		WPSC_TABLE_CART_CONTENTS,
 		array(
 		    'prodid' => $this->product_id,
