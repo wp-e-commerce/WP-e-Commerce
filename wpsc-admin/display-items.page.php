@@ -273,8 +273,12 @@ add_action( 'wpsc_manage_products_column_cats', '_wpsc_manage_products_column_ca
  *
  * @since  3.8.9
  * @access private
+ *
  * @param  object $post    Post object
  * @param  int    $post_id Post ID
+ *
+ * @uses get_option()       Gets option from the WordPress database
+ * @uses _e()               Displays the returned translated text from translate()
  */
 function _wpsc_manage_products_column_featured( $post, $post_id ) {
 	$featured_product_url = wp_nonce_url( "index.php?wpsc_admin_action=update_featured_product&amp;product_id=$post->ID", 'feature_product_' . $post->ID);
@@ -295,8 +299,11 @@ add_action( 'wpsc_manage_products_column_featured', '_wpsc_manage_products_colum
  *
  * @since  3.8.9
  * @access private
+ *
  * @param  object $post    Post object
  * @param  int    $post_id Post ID
+ *
+ * @uses apply_filters()        Calls 'wpsc_product_alert'
  */
 function _wpsc_manage_products_column_hidden_alerts( $post, $post_id ) {
 	$product_alert = apply_filters( 'wpsc_product_alert', array( false, '' ), $post );
@@ -318,14 +325,19 @@ add_action( 'wpsc_manage_products_column_hidden_alerts', '_wpsc_manage_products_
 
 
 /**
- * wpsc_additional_column_data.
+ * Adds extra data to post columns
  *
  * @access public
+ *
  * @param (array) $column
  * @return void
+ *
  * @todo Need to check titles / alt tags ( I don't think thumbnails have any in this code )
  * @desc Switch function to generate columns the right way...no more UI hacking!
  *
+ * @uses get_post()                         Gets post object from provided post_id
+ * @uses wpsc_product_has_children()        Checks if a product has variations or not
+ * @uses do_action()                        Calls 'wpsc_manage_products_column_$column'
  */
 function wpsc_additional_column_data( $column, $post_id ) {
 	$post = get_post( $post_id );
@@ -335,6 +347,10 @@ function wpsc_additional_column_data( $column, $post_id ) {
 	do_action( "wpsc_manage_products_column_{$column}", $post, $post_id, $is_parent );
 }
 
+/**
+ * @param   array   $vars       Array of query vars
+ * @return  array   $vars       Our modified vars
+ */
 function wpsc_column_sql_orderby( $vars ) {
 	if ( ! isset( $vars['post_type'] ) || 'wpsc-product' != $vars['post_type'] || ! isset( $vars['orderby'] ) )
 		return $vars;
@@ -381,6 +397,12 @@ function wpsc_column_sql_orderby( $vars ) {
 
 	return $vars;
 }
+
+/**
+ *
+ * @uses get_taxonomy()                                 Retrieves the taxonomy object of $taxonomy.
+ * @uses wpsc_cats_restrict_manage_posts_print_terms()  @todo docs
+ */
 function wpsc_cats_restrict_manage_posts() {
     global $typenow;
 
@@ -402,7 +424,15 @@ function wpsc_cats_restrict_manage_posts() {
     }
 }
 
-function wpsc_cats_restrict_manage_posts_print_terms($taxonomy, $parent = 0, $level = 0){
+/**
+ * @todo docs
+ * @param $taxonomy
+ * @param int $parent
+ * @param int $level
+ *
+ * @uses get_terms()        Retrieve the terms in a given taxonomy or list of taxonomies.
+ */
+function wpsc_cats_restrict_manage_posts_print_terms( $taxonomy, $parent = 0, $level = 0 ) {
 	$prefix = str_repeat( '&nbsp;&nbsp;&nbsp;' , $level );
 	$terms = get_terms( $taxonomy, array( 'parent' => $parent, 'hide_empty' => false ) );
 	if( !($terms instanceof WP_Error) && !empty($terms) )
@@ -413,11 +443,10 @@ function wpsc_cats_restrict_manage_posts_print_terms($taxonomy, $parent = 0, $le
 }
 
 /**
- * wpsc no minors allowed
  * Restrict the products page to showing only parent products and not variations.
+ *
  * @since 3.8
  */
-
 function wpsc_no_minors_allowed( $vars ) {
 	$current_screen = get_current_screen();
 
@@ -434,8 +463,9 @@ function wpsc_no_minors_allowed( $vars ) {
  *
  * Only sorts columns on edit.php page.
  * @since 3.8.8
+ *
+ * @uses add_filter()
  */
-
 function wpsc_sortable_column_load() {
 	add_filter( 'request', 'wpsc_no_minors_allowed' );
 	add_filter( 'request', 'wpsc_column_sql_orderby', 8 );
@@ -456,6 +486,12 @@ add_filter( 'manage_wpsc-product_posts_columns', 'wpsc_additional_column_names' 
  * @access public
  * @todo Should be refactored to e
  * @return void
+ *
+ * @uses check_admin_referrer()     Makes sure that a user was referred from another admin page.
+ * @uses get_option()               Gets option from the WordPress database
+ * @uses update_option()            Updates an option in the WordPress database
+ * @uses wp_redirect()              Redirects to another page.
+ * @uses wp_get_referrer()          Retrieve referer from '_wp_http_referer' or HTTP referer.
  */
 function wpsc_update_featured_products() {
 	$is_ajax = (int)(bool)$_POST['ajax'];
@@ -486,9 +522,18 @@ function wpsc_update_featured_products() {
 	wp_redirect( wp_get_referer() );
 	exit();
 }
-
 add_filter( 'page_row_actions','my_action_row', 10, 2 );
 
+/**
+ * @param $actions
+ * @param $post
+ * @return mixed
+ *
+ * @uses admin_url()            Gets the WordPress admin url
+ * @uses add_query_arg()        Adds a query arg to url
+ * @uses esc_url()              Makes sure the URL is safe, we like safe
+ * @uses esc_html_x()           Displays translated string with gettext context
+ */
 function my_action_row( $actions, $post ) {
 
 	if ( $post->post_type != "wpsc-product" )
@@ -503,4 +548,3 @@ function my_action_row( $actions, $post ) {
 
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( $_REQUEST['wpsc_admin_action'] == 'update_featured_product' ) )
 	add_action( 'admin_init', 'wpsc_update_featured_products' );
-
