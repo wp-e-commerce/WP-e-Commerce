@@ -21,6 +21,11 @@ function wpsc_generate_product_feed() {
 	global $wpdb, $wp_query, $post;
 
     set_time_limit(0);
+    
+    $xmlformat = '';
+    if ( isset( $_GET['xmlformat'] ) ) {
+    	$xmlformat = $_GET['xmlformat'];
+    }
 	
 	// Don't build up a huge posts cache for the whole store - http://code.google.com/p/wp-e-commerce/issues/detail?id=885
 	// WP 3.3+ only
@@ -55,7 +60,7 @@ function wpsc_generate_product_feed() {
 
 	$google_checkout_note = false;
 
-	if ($_GET['xmlformat'] == 'google') {
+	if ( $xmlformat == 'google' ) {
 		echo ' xmlns:g="http://base.google.com/ns/1.0"';
 		// Is Google Checkout available as a payment gateway
         	$selected_gateways = get_option('custom_gateway_options');
@@ -98,7 +103,7 @@ function wpsc_generate_product_feed() {
 
 			if ($image_link !== FALSE) {
 
-				if ($_GET['xmlformat'] == 'google') {
+				if ( $xmlformat == 'google' ) {
 					echo "      <g:image_link><![CDATA[$image_link]]></g:image_link>\n\r";
 				} else {
 					echo "      <enclosure url='$image_link' />\n\r";
@@ -128,7 +133,7 @@ function wpsc_generate_product_feed() {
 				}
 			}
 
-			if ($_GET['xmlformat'] == 'google') {
+			if ( $xmlformat == 'google' ) {
 
 				echo "      <g:price>".$price."</g:price>\n\r";
 
