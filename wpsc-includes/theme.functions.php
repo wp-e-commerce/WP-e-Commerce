@@ -437,12 +437,19 @@ function _wpsc_is_in_custom_loop() {
 
 /**
  * Checks and replaces the Page title with the category title if on a category page
- * @access public
  *
  * @since 3.8
+ * @access public
+ *
  * @param $title (string) The Page Title
  * @param $id (int) The Page ID
  * @return $title (string) the new title
+ *
+ * @uses in_the_loop()                  Returns true if you are  in the loop
+ * @uses _wpsc_is_in_custom_loop()      Returns true if in the WPSC custom loop
+ * @uses is_tax()                       Returns true if you are on the supplied registered taxonomy
+ * @uses get_term_by()                  Gets term object by defined item, and what you pass
+ * @uses get_query_var()                Gets query var from wp_query
  */
 function wpsc_the_category_title( $title='', $id='' ){
 
