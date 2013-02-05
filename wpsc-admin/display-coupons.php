@@ -29,8 +29,8 @@ function wpsc_display_coupons_page() {
 			}
 
 			$insert = $wpdb->insert(
-				    WPSC_TABLE_COUPON_CODES,
-				    array(
+					WPSC_TABLE_COUPON_CODES,
+					array(
 						'coupon_code' => $coupon_code,
 						'value' => $discount,
 						'is-percentage' => $discount_type,
@@ -41,8 +41,8 @@ function wpsc_display_coupons_page() {
 						'start' => $start_date,
 						'expiry' => $end_date,
 						'condition' => serialize( $new_rule )
-				    ),
-				    array(
+					),
+					array(
 						'%s',
 						'%f',
 						'%d',
@@ -53,10 +53,10 @@ function wpsc_display_coupons_page() {
 						'%s',
 						'%s',
 						'%s'
-				    )
+					)
 				);
 			if ( $insert )
-			    echo "<div class='updated'><p align='center'>" . esc_html__( 'Thanks, the coupon has been added.', 'wpsc' ) . "</p></div>";
+				echo "<div class='updated'><p align='center'>" . esc_html__( 'Thanks, the coupon has been added.', 'wpsc' ) . "</p></div>";
 
 		}
 
@@ -93,7 +93,7 @@ function wpsc_display_coupons_page() {
 						$insert_array[] = "`every_product` = '$coupon_data[add_every_product]'";
 
 					if ( count( $insert_array ) > 0 )
-					    $wpdb->query( $wpdb->prepare( "UPDATE `" . WPSC_TABLE_COUPON_CODES . "` SET " . implode( ", ", $insert_array ) . " WHERE `id` = %d LIMIT 1;", $coupon_id ) );
+						$wpdb->query( $wpdb->prepare( "UPDATE `" . WPSC_TABLE_COUPON_CODES . "` SET " . implode( ", ", $insert_array ) . " WHERE `id` = %d LIMIT 1;", $coupon_id ) );
 
 					unset( $insert_array );
 					$rules = $_POST['rules'];
@@ -117,22 +117,22 @@ function wpsc_display_coupons_page() {
 					if ( $_POST['rules']['value'][0] != '' ) {
 						$new_cond['property'] = $_POST['rules']['property'][0];
 						$new_cond['logic'] = $_POST['rules']['logic'][0];
-                        $new_cond['operator'] = $_POST['rules']['operator'][0];
+						$new_cond['operator'] = $_POST['rules']['operator'][0];
 						$new_cond['value'] = $_POST['rules']['value'][0];
 						$conditions [] = $new_cond;
 					}
 
 					$wpdb->update(
-						    WPSC_TABLE_COUPON_CODES,
-						    array(
+							WPSC_TABLE_COUPON_CODES,
+							array(
 							'condition' => serialize( $conditions ),
 
-						    ),
-						    array(
+							),
+							array(
 							'id' => $_POST['coupon_id']
-						    ),
-						    '%s',
-						    '%d'
+							),
+							'%s',
+							'%d'
 						);
 				}
 			}
@@ -148,15 +148,15 @@ function wpsc_display_coupons_page() {
 			$wpdb->update(
 				WPSC_TABLE_COUPON_CODES,
 				array(
-				    'condition' => serialize( $conditions ),
+					'condition' => serialize( $conditions ),
 
 				),
 				array(
-				    'id' => $_POST['coupon_id']
+					'id' => $_POST['coupon_id']
 				),
 				'%s',
 				'%d'
-			    );
+				);
 		}
 
 		if ( isset( $_POST['submit_condition'] ) ) {
@@ -170,15 +170,15 @@ function wpsc_display_coupons_page() {
 			$conditions[]         = $new_cond;
 
 			$wpdb->update(
-				    WPSC_TABLE_COUPON_CODES,
-				    array(
+					WPSC_TABLE_COUPON_CODES,
+					array(
 					'condition' => serialize( $conditions )
-				    ),
-				    array(
+					),
+					array(
 					'id' => $_POST['coupon_id']
-				    ),
-				    '%s',
-				    '%d'
+					),
+					'%s',
+					'%d'
 				);
 
 		}
@@ -276,7 +276,7 @@ function wpsc_display_coupons_page() {
 									<td colspan="8">
 									<div class='coupon_condition' >
 										<div class='first_condition'>
-                                            <input type="hidden" name="rules[operator][]" value="" />
+											<input type="hidden" name="rules[operator][]" value="" />
 											<select class="ruleprops" name="rules[property][]">
 												<option value="item_name" rel="order"><?php esc_html_e( 'Item name', 'wpsc' ); ?></option>
 												<option value="item_quantity" rel="order"><?php esc_html_e( 'Item quantity', 'wpsc' ); ?></option>
@@ -302,10 +302,10 @@ function wpsc_display_coupons_page() {
 												function add_another_property(this_button){
 													var new_property='<div class="coupon_condition">\n'+
 														'<div> \n'+
-                                                        '<select class="operator" name="rules[operator][]"> \n'+
-                                                        '<option value="or">OR</option> \n'+
-                                                        '<option value="and">AND</option> \n'+
-                                                        '</select> \n'+
+														'<select class="operator" name="rules[operator][]"> \n'+
+														'<option value="or">OR</option> \n'+
+														'<option value="and">AND</option> \n'+
+														'</select> \n'+
 														'<select class="ruleprops" name="rules[property][]"> \n'+
 														'<option value="item_name" rel="order"><?php echo esc_js( __( 'Item name', 'wpsc' ) ); ?></option> \n'+
 														'<option value="item_quantity" rel="order"><?php echo esc_js( __( 'Item quantity', 'wpsc' ) ); ?></option>\n'+
