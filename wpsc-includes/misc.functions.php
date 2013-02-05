@@ -10,7 +10,7 @@
  */
 
 /**
- * WPSC find purchlog status name looksthrough the wpsc_purchlog_statuses variable to find the name of the given status
+ * WPSC find purchlog status name looks through the wpsc_purchlog_statuses variable to find the name of the given status
  *
  * @since 3.8
  * $param int $id the id for the region
