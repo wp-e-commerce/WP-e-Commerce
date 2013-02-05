@@ -453,6 +453,8 @@ function _wpsc_is_in_custom_loop() {
  */
 function wpsc_the_category_title( $title='', $id='' ){
 
+	global $wp_query;
+
 	if ( ! in_the_loop() || _wpsc_is_in_custom_loop() )
 		return $title;
 
