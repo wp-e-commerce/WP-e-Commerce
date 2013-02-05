@@ -1424,4 +1424,4 @@ function wpsc_delete_variations( $postid ) {
 			wp_delete_post( $variation->ID, true );
 		}
 }
-add_action( 'delete_post', 'wpsc_delete_variations' );
+add_action( 'before_delete_post', 'wpsc_delete_variations' );
