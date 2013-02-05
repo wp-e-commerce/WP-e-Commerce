@@ -445,7 +445,7 @@ function _wpsc_is_in_custom_loop() {
  * @return $title (string) the new title
  */
 function wpsc_the_category_title($title='', $id=''){
-	global $wp_query, $wp_current_filter;
+
 	if ( ! in_the_loop() || _wpsc_is_in_custom_loop() )
 		return $title;
 
