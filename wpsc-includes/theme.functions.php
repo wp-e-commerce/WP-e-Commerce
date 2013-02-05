@@ -441,9 +441,9 @@ function _wpsc_is_in_custom_loop() {
  * @since 3.8
  * @access public
  *
- * @param $title (string) The Page Title
- * @param $id (int) The Page ID
- * @return $title (string) the new title
+ * @param string    $title      The Page Title
+ * @param int       $id         The Page ID
+ * @return string   $title      The new title
  *
  * @uses in_the_loop()                  Returns true if you are  in the loop
  * @uses _wpsc_is_in_custom_loop()      Returns true if in the WPSC custom loop
