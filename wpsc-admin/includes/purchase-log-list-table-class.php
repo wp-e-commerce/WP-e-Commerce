@@ -456,7 +456,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 
 	public function column_status( $item ) {
 		global $wpsc_purchlog_statuses;
-		$dropdown_options = array();
+		$dropdown_options = '';
 		$current_status = false;
 		foreach ( $wpsc_purchlog_statuses as $status ) {
 			$selected = '';
