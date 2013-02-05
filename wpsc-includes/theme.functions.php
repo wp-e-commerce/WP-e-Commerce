@@ -455,20 +455,15 @@ function wpsc_the_category_title( $title='', $id='' ){
 
 	global $wp_query;
 
-
 	if ( ! in_the_loop() || _wpsc_is_in_custom_loop() )
 		return $title;
 
 	$term = null;
-	if ( is_tax( 'wpsc_product_category' ) ){
+	if ( is_tax( 'wpsc_product_category' ) ) {
 		$term = get_term_by( 'slug', get_query_var( 'wpsc_product_category' ),'wpsc_product_category' );
-
-	} elseif ( is_tax( 'product_tag' ) ){
+	} elseif ( is_tax( 'product_tag' ) ) {
 		$term = get_term_by( 'slug', get_query_var( 'term' ),'product_tag' );
 	} // is_tax
-
-	elseif ( is_tax( 'product_tag' ) )
-		$term = get_term_by( 'slug', get_query_var( 'term' ),'product_tag' );
 
 	if ( $term )
 		return $term->name;
