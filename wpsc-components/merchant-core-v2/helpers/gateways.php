@@ -108,6 +108,8 @@ function wpsc_gateway_form_fields() {
 		'cctype' => empty( $messages['cctype'] ) ? '' : $messages['cctype'],
 	);
 
+	$output = '';
+
 	// Match fields to gateway
 	switch ( $wpsc_gateway->gateway['internalname'] ) {
 
@@ -142,10 +144,12 @@ function wpsc_gateway_form_fields() {
 
 	}
 
-	if ( isset( $output ) && !empty( $output ) )
-		return $output;
-	elseif ( isset( $gateway_checkout_form_fields[$wpsc_gateway->gateway['internalname']] ) )
-		return $gateway_checkout_form_fields[$wpsc_gateway->gateway['internalname']];
+	if ( empty( $output ) && isset( $gateway_checkout_form_fields[$wpsc_gateway->gateway['internalname']] ) ) {
+		$output = $gateway_checkout_form_fields[$wpsc_gateway->gateway['internalname']];
+	}
+
+	return apply_filters ( 'wpsc_gateway_checkout_form_'.$wpsc_gateway->gateway['internalname'], $output );
+
 }
 
 function wpsc_gateway_form_field_style() {
