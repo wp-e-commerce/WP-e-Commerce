@@ -421,7 +421,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 	public function column_id( $item ) {
 		?>
 		<a href="<?php echo esc_url( $this->item_url( $item ) ); ?>" title="<?php esc_attr_e( 'View order details', 'wpsc' ) ?>"><?php echo esc_html( $item->id ); ?></a>
-		<?php if ( ! $this->current_action() == 'delete' ): ?>
+		<?php if ( ! $this->current_action() == 'delete' && current_user_can('level_10')): ?>
 			<br />
 			<small><a class="delete" href="<?php echo esc_url( $this->delete_url( $item ) ); ?>"><?php echo esc_html_x( 'Delete', 'Sales log page', 'wpsc' ); ?></a></small>
 		<?php endif ?>
