@@ -64,7 +64,7 @@ endif;
                <input type="text" name="quantity" size="2" value="<?php echo wpsc_cart_item_quantity(); ?>" />
                <input type="hidden" name="key" value="<?php echo wpsc_the_cart_item_key(); ?>" />
                <input type="hidden" name="wpsc_update_quantity" value="true" />
-               <input type="submit" value="<?php _e('Update', 'wpsc'); ?>" name="submit" />
+               <input type="submit" value="<?php _e('Update', 'wpsc'); ?>" />
             </form>
          </td>
 
@@ -77,7 +77,7 @@ endif;
                <input type="hidden" name="quantity" value="0" />
                <input type="hidden" name="key" value="<?php echo wpsc_the_cart_item_key(); ?>" />
                <input type="hidden" name="wpsc_update_quantity" value="true" />
-               <input type="submit" value="<?php _e('Remove', 'wpsc'); ?>" name="submit" />
+               <input type="submit" value="<?php _e('Remove', 'wpsc'); ?>" />
             </form>
          </td>
       </tr>
@@ -474,7 +474,7 @@ endif;
                <input type='hidden' value='yes' name='agree' />
             <?php endif; ?>
                <input type='hidden' value='submit_checkout' name='wpsc_action' />
-               <input type='submit' value='<?php _e('Purchase', 'wpsc');?>' name='submit' class='make_purchase wpsc_buy_button' />
+               <input type='submit' value='<?php _e('Purchase', 'wpsc');?>' class='make_purchase wpsc_buy_button' />
          </span>
       </div>
 
