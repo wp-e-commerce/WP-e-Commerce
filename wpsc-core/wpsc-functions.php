@@ -1503,7 +1503,10 @@ add_action( 'wp', 'wpsc_select_theme_functions', 10, 1 );
  */
 function wpsc_force_ssl() {
 	global $wp_query;
-	if ( '1' == get_option( 'wpsc_force_ssl' ) && ! is_ssl() && false !== strpos( $wp_query->post->post_content, '[shoppingcart]' ) ) {
+	if ( '1' == get_option( 'wpsc_force_ssl' ) &&
+	    ! is_ssl() &&
+	    ! empty ( $wp_query->post->post_content ) && 
+	    false !== strpos( $wp_query->post->post_content, '[shoppingcart]' ) ) {
 		$sslurl = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 		wp_redirect( $sslurl );
 		exit;
