@@ -1,0 +1,119 @@
+
+#wpsc_akst_form {
+	background: #999;
+	border: 1px solid #ddd;
+	display: none;
+	position: absolute;
+	width: 350px;
+	z-index: 999;
+}
+#wpsc_akst_form a.akst_close {
+	color: #fff;
+	float: right;
+	margin: 5px;
+}
+#wpsc_akst_form ul.tabs {
+	border: 1px solid #999;
+	list-style: none;
+	margin: 10px 10px 0 10px;
+	padding: 0;
+}
+#wpsc_akst_form ul.tabs li {
+	background: #ccc;
+	border-bottom: 1px solid #999;
+	cursor: pointer;
+	float: left;
+	margin: 0 3px 0 0;
+	padding: 3px 5px 2px 5px;
+}
+#wpsc_akst_form ul.tabs li.selected {
+	background: #fff;
+	border-bottom: 1px solid #fff;
+	cursor: default;
+	padding: 4px 5px 1px 5px;
+}
+#wpsc_akst_form div.clear {
+	clear: both;
+	float: none;
+}
+#wpsc_akst_social,
+#wpsc_akst_email {
+	background: #fff;
+	border: 1px solid #fff;
+	padding: 10px;
+}
+#wpsc_akst_social ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+#wpsc_akst_social ul li {
+	float: left;
+	margin: 0;
+	padding: 0;
+	width: 45%;
+}
+#wpsc_akst_social ul li a {
+	background-position: 0px 2px;
+	background-repeat: no-repeat;
+	display: block;
+	float: left;
+	height: 24px;
+	padding: 4px 0 0 22px;
+	vertical-align: middle;
+}
+
+#wpsc_akst_delicious     { background-image: url(../wpsc-core/images/social_networking/delicious.gif); }
+#wpsc_akst_digg          { background-image: url(../wpsc-core/images/social_networking/digg.gif); }
+#wpsc_akst_furl          { background-image: url(../wpsc-core/images/social_networking/furl.gif); }
+#wpsc_akst_netscape      { background-image: url(../wpsc-core/images/social_networking/netscape.gif); }
+#wpsc_akst_yahoo_myweb   { background-image: url(../wpsc-core/images/social_networking/yahoo_myweb.gif); }
+#wpsc_akst_stumbleupon   { background-image: url(../wpsc-core/images/social_networking/stumbleupon.gif); }
+#wpsc_akst_google_bmarks { background-image: url(../wpsc-core/images/social_networking/google_bmarks.gif); }
+#wpsc_akst_technorati    { background-image: url(../wpsc-core/images/social_networking/technorati.gif); }
+#wpsc_akst_blinklist     { background-image: url(../wpsc-core/images/social_networking/blinklist.gif); }
+#wpsc_akst_newsvine      { background-image: url(../wpsc-core/images/social_networking/newsvine.gif); }
+#wpsc_akst_magnolia      { background-image: url(../wpsc-core/images/social_networking/magnolia.gif); }
+#wpsc_akst_reddit        { background-image: url(../wpsc-core/images/social_networking/reddit.gif); }
+#wpsc_akst_windows_live  { background-image: url(../wpsc-core/images/social_networking/windows_live.gif); }
+#wpsc_akst_tailrank      { background-image: url(../wpsc-core/images/social_networking/tailrank.gif); }
+
+#wpsc_akst_email {
+	display: none;
+	text-align: left;
+}
+#wpsc_akst_email form,
+#wpsc_akst_email fieldset {
+	border: 0;
+	margin: 0;
+	padding: 0;
+}
+#wpsc_akst_email fieldset legend {
+	display: none;
+}
+#wpsc_akst_email ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+#wpsc_akst_email ul li {
+	margin: 0 0 7px 0;
+	padding: 0;
+}
+#wpsc_akst_email ul li label {
+	color: #555;
+	display: block;
+	margin-bottom: 3px;
+}
+#wpsc_akst_email ul li input {
+	padding: 3px 10px;
+}
+#wpsc_akst_email ul li input.akst_text {
+	padding: 3px;
+	width: 280px;
+}
+.wpsc_akst_share_link {
+	display: block;
+	margin: 0px 0px 6px 0px;
+	width: 119px;
+}

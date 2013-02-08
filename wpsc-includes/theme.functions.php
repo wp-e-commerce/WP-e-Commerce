@@ -556,9 +556,11 @@ function wpsc_enqueue_user_script_and_css() {
 
 		$category_id = wpsc_get_current_category_id();
 
-		if( get_option( 'wpsc_share_this' ) == 1 ) {
+		if ( get_option( 'wpsc_share_this' ) == 1 ) {
 			$remote_protocol = is_ssl() ? 'https://ws' : 'http://w';
 			wp_enqueue_script( 'sharethis', $remote_protocol . '.sharethis.com/button/buttons.js', array(), false, true );
+			wp_enqueue_script( 'wpsc-sharethis', WPSC_CORE_JS_URL . '/sharethis.js', array( 'jquery', 'sharethis' ), $version_identifier );
+			wp_enqueue_style( 'wpsc-sharethis-css', WPSC_CORE_JS_URL . '/sharethis.css', false, $version_identifier, 'all' );
 		}
 
 		wp_enqueue_script( 'jQuery' );
