@@ -90,11 +90,11 @@ function wpsc_add_new_user( $user_login, $user_pass, $user_email ) {
 		$errors->add( 'registerfail', sprintf( __( '<strong>ERROR</strong>: Couldn&#8217;t register you... please contact the <a href="mailto:%s">webmaster</a> !', 'wpsc' ), get_option( 'admin_email' ) ) );
 		return $errors;
 	}
-	$credentials = array( 'user_login' => $user_login, 'user_password' => $user_pass, 'remember' => true );
-	$user = wp_signon( $credentials );
+	
+	$user = wp_signon( array( 'user_login' => $user_login, 'user_password' => $user_pass, 'remember' => true ) );
+	wp_set_current_user( $user->ID );
+	
 	return $user;
-
-	//wp_new_user_notification($user_id, $user_pass);
 }
 
 /**
