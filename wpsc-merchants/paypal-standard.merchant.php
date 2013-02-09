@@ -459,7 +459,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 		// loop through the prepared data array and insert them
 		foreach ( $inserts as $insert ) {
 			$wpdb->insert(
-				WPSC_TABLE_SUBMITED_FORM_DATA,
+				WPSC_TABLE_SUBMITTED_FORM_DATA,
 				$insert,
 				array(
 					'%d',
