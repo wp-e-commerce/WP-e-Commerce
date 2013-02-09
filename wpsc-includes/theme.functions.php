@@ -455,6 +455,10 @@ function wpsc_the_category_title( $title='', $id='' ){
 
 	global $wp_query;
 
+	if ( ! empty( $id ) ){
+		_wpsc_deprecated_argument( __FUNCTION__, '3.8.10', 'The $id param is no longer used' );
+	}
+
 	if ( ! in_the_loop() || _wpsc_is_in_custom_loop() )
 		return $title;
 
