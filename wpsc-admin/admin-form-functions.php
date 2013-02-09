@@ -272,7 +272,7 @@ function wpsc_packing_slip( $purchase_id ) {
 
 		echo "<table>\n\r";
 
-		$form_sql = $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_SUBMITED_FORM_DATA."` WHERE `log_id` = %d", $purchase_id );
+		$form_sql = $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_SUBMITTED_FORM_DATA."` WHERE `log_id` = %d", $purchase_id );
 		$input_data = $wpdb->get_results($form_sql,ARRAY_A);
 
 		foreach($input_data as $input_row) {

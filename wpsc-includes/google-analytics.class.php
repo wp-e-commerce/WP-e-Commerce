@@ -123,7 +123,7 @@ class WPSC_Google_Analytics {
 		$output = '';
 
 		$city = $wpdb->get_var( $wpdb->prepare( "
-						SELECT tf.value FROM " . WPSC_TABLE_SUBMITED_FORM_DATA . " tf
+						SELECT tf.value FROM " . WPSC_TABLE_SUBMITTED_FORM_DATA . " tf
 						LEFT JOIN " . WPSC_TABLE_CHECKOUT_FORMS . " cf
 						ON cf.id = tf.form_id
 						WHERE cf.unique_name = 'billingcity'
@@ -131,7 +131,7 @@ class WPSC_Google_Analytics {
 
 		$state = $wpdb->get_var( $wpdb->prepare( "
 						SELECT tf.value
-						FROM " . WPSC_TABLE_SUBMITED_FORM_DATA . " tf
+						FROM " . WPSC_TABLE_SUBMITTED_FORM_DATA . " tf
 						LEFT JOIN " . WPSC_TABLE_CHECKOUT_FORMS . " cf
 						ON cf.id = tf.form_id
 						WHERE cf.unique_name = 'billingstate'
@@ -139,7 +139,7 @@ class WPSC_Google_Analytics {
 
 		$country = $wpdb->get_var( $wpdb->prepare( "
 						SELECT tf.value
-						FROM " . WPSC_TABLE_SUBMITED_FORM_DATA . " tf
+						FROM " . WPSC_TABLE_SUBMITTED_FORM_DATA . " tf
 						LEFT JOIN " . WPSC_TABLE_CHECKOUT_FORMS . " cf
 						ON cf.id = tf.form_id
 						WHERE cf.unique_name = 'billingcountry'

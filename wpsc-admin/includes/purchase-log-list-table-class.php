@@ -81,7 +81,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 			$table_as = 's' . $i;
 			$select_as = str_replace('billing', '', $field->unique_name );
 			$selects[] = $table_as . '.value AS ' . $select_as;
-			$joins[] = $wpdb->prepare( "LEFT OUTER JOIN " . WPSC_TABLE_SUBMITED_FORM_DATA . " AS {$table_as} ON {$table_as}.log_id = p.id AND {$table_as}.form_id = %d", $field->id );
+			$joins[] = $wpdb->prepare( "LEFT OUTER JOIN " . WPSC_TABLE_SUBMITTED_FORM_DATA . " AS {$table_as} ON {$table_as}.log_id = p.id AND {$table_as}.form_id = %d", $field->id );
 
 			// build search term queries for first name, last name, email
 			foreach ( $search_terms as $term ) {
@@ -135,7 +135,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		$orderby = esc_sql( apply_filters( 'wpsc_manage_purchase_logs_orderby', $orderby ) );
 		$order = esc_sql( $order );
 
-		$submitted_data_log = WPSC_TABLE_SUBMITED_FORM_DATA;
+		$submitted_data_log = WPSC_TABLE_SUBMITTED_FORM_DATA;
 		$purchase_log_sql = "
 			SELECT SQL_CALC_FOUND_ROWS {$selects}
 			FROM " . WPSC_TABLE_PURCHASE_LOGS . " AS p

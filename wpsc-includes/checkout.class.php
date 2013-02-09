@@ -60,7 +60,7 @@ function wpsc_get_buyers_email($purchase_id){
 
 	if ( ! $email_form_field )
 		return '';
-	$email = $wpdb->get_var( $wpdb->prepare( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` WHERE `log_id` = %d AND `form_id` = %d LIMIT 1", $purchase_id, $email_form_field ) );
+	$email = $wpdb->get_var( $wpdb->prepare( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` WHERE `log_id` = %d AND `form_id` = %d LIMIT 1", $purchase_id, $email_form_field ) );
 	return $email;
 }
 
@@ -987,7 +987,7 @@ class wpsc_checkout {
 
 					$value = $value[0];
 					$prepared_query = $wpdb->insert(
-								    WPSC_TABLE_SUBMITED_FORM_DATA,
+								    WPSC_TABLE_SUBMITTED_FORM_DATA,
 								    array(
 									'log_id' => $purchase_id,
 									'form_id' => $form_data->id,
@@ -1002,7 +1002,7 @@ class wpsc_checkout {
 				} else {
 					foreach ( (array)$value as $v ) {
 					    $prepared_query = $wpdb->insert(
-								    WPSC_TABLE_SUBMITED_FORM_DATA,
+								    WPSC_TABLE_SUBMITTED_FORM_DATA,
 								    array(
 									'log_id' => $purchase_id,
 									'form_id' => $form_data->id,
@@ -1018,7 +1018,7 @@ class wpsc_checkout {
 				}
 			} else {
 			    $prepared_query = $wpdb->insert(
-							WPSC_TABLE_SUBMITED_FORM_DATA,
+							WPSC_TABLE_SUBMITTED_FORM_DATA,
 							array(
 							    'log_id' => $purchase_id,
 							    'form_id' => $form_data->id,
@@ -1035,7 +1035,7 @@ class wpsc_checkout {
 
 		// update the states
 		$wpdb->insert(
-			    WPSC_TABLE_SUBMITED_FORM_DATA,
+			    WPSC_TABLE_SUBMITTED_FORM_DATA,
 			    array(
 				'log_id' => $purchase_id,
 				'form_id' => $shipping_state_id,
@@ -1048,7 +1048,7 @@ class wpsc_checkout {
 			    )
 			);
 		$wpdb->insert(
-			    WPSC_TABLE_SUBMITED_FORM_DATA,
+			    WPSC_TABLE_SUBMITTED_FORM_DATA,
 			    array(
 				'log_id' => $purchase_id,
 				'form_id' => $billing_state_id,

@@ -107,7 +107,7 @@ class WPSC_Shipwire {
 		//Extracts unique name variables for comparison.
 		extract( $form_ids );
 
-		$customer_data = $wpdb->get_results( $wpdb->prepare( 'SELECT form_id, value FROM ' . WPSC_TABLE_SUBMITED_FORM_DATA . ' WHERE log_id = %d', $log_id ) );
+		$customer_data = $wpdb->get_results( $wpdb->prepare( 'SELECT form_id, value FROM ' . WPSC_TABLE_SUBMITTED_FORM_DATA . ' WHERE log_id = %d', $log_id ) );
 
 		foreach ( $customer_data as $data ) {
 
@@ -687,7 +687,7 @@ class WPSC_Shipwire {
 		$message = str_replace( '%shop_name%', $site_name, $message );
 
 		$email_form_field = $wpdb->get_var( "SELECT `id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `type` IN ('email') AND `active` = '1' ORDER BY `checkout_order` ASC LIMIT 1" );
-		$email            = $wpdb->get_var( $wpdb->prepare( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` WHERE `log_id` = %d AND `form_id` = %d LIMIT 1", $id, $email_form_field ) );
+		$email            = $wpdb->get_var( $wpdb->prepare( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` WHERE `log_id` = %d AND `form_id` = %d LIMIT 1", $id, $email_form_field ) );
 
 		$subject = get_option( 'wpsc_trackingid_subject' );
 		$subject = str_replace( '%shop_name%', $site_name, $subject );

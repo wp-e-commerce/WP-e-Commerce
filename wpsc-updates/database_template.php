@@ -168,7 +168,7 @@ $wpsc_database_template[$table_name]['previous_names'] = "{$wpdb->prefix}region_
 
 
 // code to create or update the {$wpdb->prefix}wpsc_submited_form_data table
-$table_name = WPSC_TABLE_SUBMITED_FORM_DATA; /* !wpsc_submitted_form_data */
+$table_name = WPSC_TABLE_SUBMITTED_FORM_DATA; /* !wpsc_submitted_form_data */
 $wpsc_database_template[$table_name]['columns']['id'] = "bigint(20) unsigned NOT NULL auto_increment";
 $wpsc_database_template[$table_name]['columns']['log_id'] = "bigint(20) unsigned NOT NULL DEFAULT '0' ";
 $wpsc_database_template[$table_name]['columns']['form_id'] = "bigint(20) unsigned NOT NULL DEFAULT '0' ";
