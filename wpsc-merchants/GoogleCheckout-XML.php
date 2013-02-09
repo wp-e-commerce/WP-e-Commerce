@@ -556,7 +556,7 @@ function nzsc_googleResponse() {
 			}
 			//logging to submited_form_data
 			$billing_fname_id = $wpdb->get_var("SELECT `id` FROM `".WPSC_TABLE_CHECKOUT_FORMS."` WHERE `type`='first_name' LIMIT 1") ;
-			$sql = "INSERT INTO `".WPSC_TABLE_SUBMITED_FORM_DATA."` (log_id, form_id, value) VALUES ('".$log_id."','".$billing_fname_id."','". esc_sql( $billing_firstname ) ."')";
+			$sql = "INSERT INTO `".WPSC_TABLE_SUBMITTED_FORM_DATA."` (log_id, form_id, value) VALUES ('".$log_id."','".$billing_fname_id."','". esc_sql( $billing_firstname ) ."')";
 			$billing_lname_id = $wpdb->get_var("SELECT `id` FROM `".WPSC_TABLE_CHECKOUT_FORMS."` WHERE `type`='last_name' LIMIT 1") ;
 			$sql .= ", ('".$log_id."','".$billing_lname_id."','" . esc_sql( $billing_lastname ) . "')";
 			$billing_address_id = $wpdb->get_var("SELECT `id` FROM `".WPSC_TABLE_CHECKOUT_FORMS."` WHERE `type`='address' LIMIT 1") ;
