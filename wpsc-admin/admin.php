@@ -1126,13 +1126,13 @@ function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
 	$new_post_date_gmt = get_gmt_from_date( $new_post_date );
 
 	$new_post_type = $post->post_type;
-	$post_content = $post->post_content;
-	$post_content_filtered = $post->post_content_filtered;
-	$post_excerpt = $post->post_excerpt;
-	$post_title = $post->post_title . ' (Duplicate)';
-	$post_name = $post->post_name;
-	$comment_status = $post->comment_status;
-	$ping_status = $post->ping_status;
+	$post_content = stripslashes_deep( $post->post_content );
+	$post_content_filtered = stripslashes_deep( $post->post_content_filtered );
+	$post_excerpt = stripslashes_deep( $post->post_excerpt );
+	$post_title = stripslashes_deep( $post->post_title ) . ' (Duplicate)';
+	$post_name = stripslashes_deep( $post->post_name );
+	$comment_status = stripslashes_deep( $post->comment_status );
+	$ping_status = stripslashes_deep( $post->ping_status );
 
 	$defaults = array(
 		'post_status'           => $post->post_status,
