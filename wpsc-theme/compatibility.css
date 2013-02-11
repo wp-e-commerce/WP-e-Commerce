@@ -18,14 +18,13 @@ li.widget_wp_shopping_cart ul li:before{
 	content: "" !important;
 }
 
-
 div.categorydisplay ul li:before{
 	/* Countermand any content properties like the one in the default wordpress theme.  */
 	content: "" !important;
 }
 
 a.additional_description_link img {
-	margin:0px 3px 0px 0px;
+	margin:0 3px 0 0px;
 }
 
 div.textcol form {
@@ -46,5 +45,5 @@ table.wpsc_checkout_table label{
 }
 aside.widget_wpsc_product_specials span.oldprice {
 	text-decoration: line-through;
-	color: #666; 
+	color: #666;
 }
