@@ -1122,17 +1122,17 @@ function _wpsc_delete_file( $product_id, $file_name ) {
 }
 
 function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
-	$new_post_date = $post->post_date;
+	$new_post_date     = $post->post_date;
 	$new_post_date_gmt = get_gmt_from_date( $new_post_date );
 
-	$new_post_type = $post->post_type;
-	$post_content = str_replace( "'", "''", $post->post_content );
-	$post_content_filtered = str_replace( "'", "''", $post->post_content_filtered );
-	$post_excerpt = str_replace( "'", "''", $post->post_excerpt );
-	$post_title = str_replace( "'", "''", $post->post_title ) . " (Duplicate)";
-	$post_name = str_replace( "'", "''", $post->post_name );
-	$comment_status = str_replace( "'", "''", $post->comment_status );
-	$ping_status = str_replace( "'", "''", $post->ping_status );
+	$new_post_type         = $post->post_type;
+	$post_content          = $post->post_content;
+	$post_content_filtered = $post->post_content_filtered;
+	$post_excerpt          = $post->post_excerpt;
+	$post_title            = $post->post_title . " (Duplicate)";
+	$post_name             = $post->post_name;
+	$comment_status        = $post->comment_status;
+	$ping_status           = $post->ping_status;
 
 	$defaults = array(
 		'post_status'           => $post->post_status,
@@ -1140,7 +1140,7 @@ function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
 		'ping_status'           => $ping_status,
 		'post_parent'           => $new_parent_id ? $new_parent_id : $post->post_parent,
 		'menu_order'            => $post->menu_order,
-		'to_ping'               =>  $post->to_ping,
+		'to_ping'               => $post->to_ping,
 		'pinged'                => $post->pinged,
 		'post_excerpt'          => $post_excerpt,
 		'post_title'            => $post_title,
@@ -1152,6 +1152,8 @@ function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
 
 	if ( 'attachment' == $post->post_type )
 		$defaults['guid'] = $post->guid;
+
+	$defaults = stripslashes_deep( $defaults );
 
 	// Insert the new template in the post table
 	$new_post_id = wp_insert_post($defaults);
