@@ -58,7 +58,7 @@ class wpsc_coupons {
 	 * @return bool True if coupon code exists, False otherwise.
 	 */
 	function wpsc_coupons($code = ''){
-	    global $wpdb;
+		global $wpdb;
 
 		if ( empty( $code ) )
 			return false;
@@ -224,7 +224,7 @@ class wpsc_coupons {
 			case 'ends'://Checks if the product name ends with condition value
 				return preg_match( "/" . $value . "$/",$product_obj->quantity );
 			break;
-  		}
+		}
 
 		return false;
 	}
@@ -301,16 +301,38 @@ class wpsc_coupons {
 	public function _filter_cart_item_conditions( $cart_item ) {
 		global $wpsc_cart;
 
+		$compare_logic = false;
 		foreach ( $this->conditions as $condition ) {
 			$callback = '_callback_condition_' . $condition['property'];
 			if ( ! is_callable( array( $this, $callback ) ) )
 				return false;
 
-			if ( ! $this->$callback( $condition, $cart_item ) )
-				return apply_filters( 'wpsc_coupon_compare_logic', false, $condition, $cart_item );
+			if ( ! $this->$callback( $condition, $cart_item ) ) {
+				switch ( $condition['operator'] ) {
+					case 'or':
+						$compare_logic = $compare_logic || apply_filters('wpsc_coupon_compare_logic',false,$condition,$cart_item);
+					break;
+					case 'and':
+						$compare_logic = $compare_logic && apply_filters('wpsc_coupon_compare_logic',false,$condition,$cart_item);
+					break;
+					default:
+						$compare_logic = apply_filters( 'wpsc_coupon_compare_logic', false, $condition, $cart_item );
+				}
+			} else {
+				switch ( $condition['operator'] ) {
+					case 'or':
+						$compare_logic = $compare_logic || $this->$callback( $condition, $cart_item );
+					break;
+					case 'and':
+						$compare_logic = $compare_logic && $this->$callback( $condition, $cart_item );
+					break;
+					default:
+						$compare_logic = $this->$callback( $condition, $cart_item );
+				}
+			}
 		}
 
-		return true;
+		return $compare_logic;
 	}
 
 	/**
@@ -406,7 +428,7 @@ class wpsc_coupons {
 			if ( $this->is_percentage() ) {
 				$subtotal = $this->calculate_subtotal( $items );
 				$discount = $this->value * $subtotal / 100;
-  			} else {
+			} else {
 				$discount = $this->value * $this->get_total_quantity( $items );
 			}
 			return $discount;
@@ -448,7 +470,7 @@ class wpsc_coupons {
 				$discount = $this->value * $subtotal / 100;
 			} else {
 				$discount = $this->value * wpsc_cart_item_count();
-  			}
+			}
 			return $discount;
 		}
 
@@ -465,7 +487,7 @@ class wpsc_coupons {
 			$item = array_shift( $cart_items );
 
 			return $item * $this->value / 100;
-  		}
+		}
 
 		// if "Apply on all products" is not checked and the coupon is a fixed value
 		// return the discount value
@@ -537,7 +559,7 @@ class wpsc_coupons {
 			return $this->calculate_discount_conditions();
 
 		return $this->calculate_discount_without_conditions();
-  	}
+	}
 
 	/**
 	 * Comparing logic with the product information
@@ -718,4 +740,3 @@ class wpsc_coupons {
 
 
 }
-?>
