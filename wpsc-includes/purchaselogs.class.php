@@ -332,12 +332,6 @@ function wpsc_display_purchlog_buyers_email() {
 
 function wpsc_display_purchlog_buyers_address() {
    global $purchlogitem;
-
-   if(is_numeric($purchlogitem->extrainfo->billing_region))
-		$state = wpsc_get_region($purchlogitem->extrainfo->billing_region);
-   else
-		$state = $purchlogitem->userinfo['billingstate']['value'];
-
    return nl2br( esc_html( $purchlogitem->userinfo['billingaddress']['value'] ) );
 }
 
