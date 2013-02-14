@@ -282,13 +282,13 @@ function wpsc_cart_item_quantity_single_prod($id) {
 /**
  * Product Maximum Cart Quantity
  *
- * @since  3.8.9
+ * @since  3.8.10
  * @access public
  *
- * @param int $prod_id Optional. Product ID.
- * @return int The maximum quantity that can be added to the cart.
+ * @param  int  $prod_id    Optional. Product ID.
+ * @return int              The maximum quantity that can be added to the cart.
  *
- * @uses apply_filters  Calls 'wpsc_product_max_cart_quantity' passing product ID. 
+ * @uses   apply_filters    Calls 'wpsc_product_max_cart_quantity' passing product ID. 
  */
 function wpsc_product_max_cart_quantity( $product_id = 0 ) {
 	$product_id = absint( $product_id );
@@ -299,14 +299,14 @@ function wpsc_product_max_cart_quantity( $product_id = 0 ) {
  * Validate Product Cart Quantity
  * Checks that the quantity is within the permitted bounds and return a valid quantity. 
  *
- * @since  3.8.9
+ * @since  3.8.10
  * @access public
  *
- * @param int $quantity Cart item product quantity.
- * @param int $prod_id Optional. Product ID.
- * @return int The maximum quantity that can be added to the cart.
+ * @param  int  $quantity                    Cart item product quantity.
+ * @param  int  $prod_id                     Optional. Product ID.
+ * @return int                               The maximum quantity that can be added to the cart.
  *
- * @uses wpsc_product_max_cart_quantity  Gets the maximum product cart quantity.
+ * @uses   wpsc_product_max_cart_quantity    Gets the maximum product cart quantity.
  */
 function wpsc_validate_product_cart_quantity( $quantity, $product_id = 0 ) {
 	$max_quantity = wpsc_product_max_cart_quantity( $product_id );
@@ -319,14 +319,14 @@ function wpsc_validate_product_cart_quantity( $quantity, $product_id = 0 ) {
  * Validate Cart Product Quantity
  * Triggered by 'wpsc_add_item' and 'wpsc_edit_item' actions when products are added to the cart.
  *
- * @since  3.8.9
+ * @since  3.8.10
  * @access private
  *
- * @param int $product_id Cart product ID.
- * @param array $parameters Cart item parameters.
- * @param object $cart Cart object.
+ * @param int     $product_id                    Cart product ID.
+ * @param array   $parameters                    Cart item parameters.
+ * @param object  $cart                          Cart object.
  *
- * @uses wpsc_validate_product_cart_quantity  Filters and restricts the product cart quantity.
+ * @uses  wpsc_validate_product_cart_quantity    Filters and restricts the product cart quantity.
  */
 function _wpsc_validate_cart_product_quantity( $product_id, $parameters, $cart ) {
 	foreach ( $cart->cart_items as $key => $cart_item ) {
