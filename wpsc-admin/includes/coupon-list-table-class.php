@@ -148,6 +148,8 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 
 		$base     = admin_url( 'edit.php?post_type=wpsc-product&page=wpsc-edit-coupons&wpsc-action=edit_coupon&coupon=' . $item['ID'] );
 
+		$coupon   = '<strong><a href="' . add_query_arg( array( 'wpsc-action' => 'edit_coupon', 'coupon' => $item['ID'] ) ) . '">' . esc_html( $item['coupon'] ) . '</a></strong>';
+
 		$row_actions = array();
 
 		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'wpsc-action' => 'edit_coupon', 'coupon' => $item['ID'] ) ) . '">' . __( 'Edit', 'wpsc' ) . '</a>';
@@ -161,7 +163,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 
 		$row_actions = apply_filters( 'wpsc_coupon_row_actions', $row_actions, $item['ID'] );
 
-		return $item['coupon'] . $this->row_actions( $row_actions );
+		return $coupon . $this->row_actions( $row_actions );
 	}
 
 
