@@ -126,11 +126,27 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	protected function column_default( $item, $column_name ) {
 		switch( $column_name ){
 			case 'start' :
-				$start_date = strtotime( $item[ $column_name ] );
-				return date_i18n( get_option( 'date_format' ), $start_date );
+
+				if( ! empty( $item[ 'start'] ) && '0000-00-00 00:00:00' != $item['start'] ) {
+					$start_date = strtotime( $item[ $column_name ] );
+					$value      = date_i18n( get_option( 'date_format' ), $start_date );
+				} else {
+					$value = __( 'None', 'wpsc' );
+				}
+
+				return $value;
+
 			case 'expiry' :
-				$expiry_date = strtotime( $item[ $column_name ] );
-				return date_i18n( get_option( 'date_format' ), $expiry_date );
+
+				if( ! empty( $item[ 'expiry'] ) && '0000-00-00 00:00:00' != $item['expiry'] ) {
+					$expiry_date = strtotime( $item[ $column_name ] );
+					$value      = date_i18n( get_option( 'date_format' ), $expiry_date );
+				} else {
+					$value = __( 'None', 'wpsc' );
+				}
+
+				return $value;
+
 			default:
 				return $item[ $column_name ];
 		}
@@ -372,7 +388,6 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 
 		if ( $coupons ) {
 			foreach ( $coupons as $coupon ) {
-
 
 				$coupons_data[] = array(
 					'ID'           => $coupon['id'],
