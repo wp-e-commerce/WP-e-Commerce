@@ -80,7 +80,7 @@ class WPSC_Product_Variations_Page {
 	}
 
 	public function display() {
-		global $title, $hook_suffix, $current_screen, $wp_locale, $pagenow, $wp_version, $is_iphone,
+		global $title, $hook_suffix, $wp_locale, $pagenow, $wp_version, $is_iphone,
 		$current_site, $update_title, $total_update_count, $parent_file;
 
 		$current_screen = get_current_screen();

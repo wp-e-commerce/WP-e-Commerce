@@ -768,14 +768,14 @@ function wpsc_product_download_forms() {
  * Adding function to change text for media buttons
  */
 function change_context( $context ) {
-	global $current_screen;
+	$current_screen = get_current_screen();
 
 	if ( $current_screen->id != 'wpsc-product' )
 		return $context;
 	return __( 'Upload Image%s', 'wpsc' );
 }
 function change_link( $link ) {
-	global $post_ID, $current_screen;
+	global $post_ID;
 	$current_screen = get_current_screen();
 	if ( $current_screen && $current_screen->id != 'wpsc-product' )
 		return $link;

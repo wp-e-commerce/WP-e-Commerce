@@ -379,7 +379,7 @@ function wpsc_cats_restrict_manage_posts_print_terms($taxonomy, $parent = 0, $le
  */
 
 function wpsc_no_minors_allowed( $vars ) {
-	global $current_screen;
+	$current_screen = get_current_screen();
 
 	if( $current_screen->post_type != 'wpsc-product' )
 		return $vars;

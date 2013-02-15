@@ -415,7 +415,9 @@ function wpsc_meta_boxes() {
 add_action( 'admin_enqueue_scripts', 'wpsc_admin_include_css_and_js_refac' );
 
 function wpsc_admin_include_css_and_js_refac( $pagehook ) {
-	global $post_type, $current_screen, $post;
+	global $post_type, $post;
+
+	$current_screen = get_current_screen();
 
 	if ( version_compare( get_bloginfo( 'version' ), '3.3', '<' ) )
 		wp_admin_css( 'dashboard' );

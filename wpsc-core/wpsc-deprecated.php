@@ -465,7 +465,9 @@ function wpsc_has_shipping_form() {
 
 function wpsc_is_admin() {
 	_wpsc_deprecated_function( __FUNCTION__, '3.8');
-    global $pagenow, $current_screen;
+    global $pagenow;
+
+    $current_screen = get_current_screen();
 
         if( 'post.php' == $pagenow && 'wpsc-product' == $current_screen->post_type ) return true;
 

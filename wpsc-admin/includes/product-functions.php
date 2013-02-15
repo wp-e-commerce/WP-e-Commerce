@@ -18,7 +18,9 @@ function wpsc_get_max_upload_size(){
 * @return nothing
 */
 function wpsc_admin_submit_product( $post_ID, $post ) {
-	global $current_screen, $wpdb;
+	global $wpdb;
+
+	$current_screen = get_current_screen();
 
 	if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || empty( $current_screen ) || $current_screen->id != 'wpsc-product' || $post->post_type != 'wpsc-product' || empty( $_POST['meta'] ) )
 		return $post_ID;
