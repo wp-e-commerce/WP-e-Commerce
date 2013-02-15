@@ -1340,7 +1340,7 @@ function wpsc_product_link( $permalink, $post, $leavename ) {
 	// Mostly the same conditions used for posts, but restricted to items with a post type of "wpsc-product "
 
 	if ( '' != $permalink_structure && !in_array( $post->post_status, array( 'draft', 'pending' ) ) ) {
-		$product_categories = wp_get_object_terms( $post_id, 'wpsc_product_category' );
+		$product_categories = wpsc_get_product_terms( $post_id, 'wpsc_product_category' );
 		$product_category_slugs = array( );
 		foreach ( $product_categories as $product_category ) {
 			$product_category_slugs[] = $product_category->slug;
@@ -1505,7 +1505,7 @@ function wpsc_force_ssl() {
 	global $wp_query;
 	if ( '1' == get_option( 'wpsc_force_ssl' ) &&
 	    ! is_ssl() &&
-	    ! empty ( $wp_query->post->post_content ) && 
+	    ! empty ( $wp_query->post->post_content ) &&
 	    false !== strpos( $wp_query->post->post_content, '[shoppingcart]' ) ) {
 		$sslurl = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 		wp_redirect( $sslurl );

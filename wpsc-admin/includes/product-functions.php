@@ -449,6 +449,36 @@ function term_id_price($term_id, $parent_price) {
 }
 
 /**
+ * Return an array of terms assigned to a product.
+ *
+ * This function is basically a wrapper for get_the_terms(), and should be used
+ * instead of get_the_terms() and wp_get_object_terms() because of two reasons:
+ *
+ * - wp_get_object_terms() doesn't utilize object cache.
+ * - get_the_terms() returns false when no terms are found. We want something
+ *   that returns an empty array instead.
+ *
+ * @since 3.8.10
+ * @param  int    $product_id Product ID
+ * @param  string $tax        Taxonomy
+ * @param  string $field      If you want to return only an array of a certain field, specify it here.
+ * @return stdObject[]
+ */
+function wpsc_get_product_terms( $product_id, $tax, $field = '' ) {
+	$terms = get_the_terms( $product_id, $tax );
+
+	if ( ! $terms )
+		$terms = array();
+
+	if ( $field )
+		$terms = wp_list_pluck( $terms, $field );
+
+	// remove the redundant array keys, could cause issues in loops with iterator
+	$terms = array_values( $terms );
+	return $terms;
+}
+
+/**
  * Determine the price of a variation product based on the variation it's assigned
  * to. Because each variation term can have its own price (eg. 10, +10, -5%), this
  * function also takes those into account.
@@ -467,7 +497,7 @@ function wpsc_determine_variation_price( $variation_id, $term_ids = false ) {
 	$price = (float) get_product_meta( $variation->post_parent, 'price', true );
 
 	if ( ! $term_ids )
-		$term_ids = wp_get_object_terms( $variation_id, 'wpsc-variation', array( 'fields' => 'ids' ) );
+		$term_ids = wpsc_get_product_terms( $variation_id, 'wpsc-variation', 'term_id' );
 
 	$term_price_arr = get_option( 'term_prices' );
 	foreach ( $term_ids as $term_id ) {
@@ -526,7 +556,7 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 	// Retrieve the array containing the combinations of each variation set to be associated with this product.
 	$combinations = $wpsc_combinator->return_combinations();
 
-	$product_terms = wp_get_object_terms($product_id, 'wpsc-variation');
+	$product_terms = wpsc_get_product_terms( $product_id, 'wpsc-variation' );
 
 	$variation_sets_and_values = array_merge($variation_sets, $variation_values);
 	$variation_sets_and_values = apply_filters('wpsc_edit_product_variation_sets_and_values', $variation_sets_and_values, $product_id);
@@ -1071,7 +1101,7 @@ function _wpsc_refresh_parent_product_terms( $parent_id ) {
 
 	$children_ids = wp_list_pluck( $children, 'ID' );
 
-	$children_terms = wp_get_object_terms( $children_ids, 'wpsc-variation' );
+	$children_terms = wpsc_get_product_terms( $children_ids, 'wpsc-variation' );
 	$new_terms = array();
 	foreach ( $children_terms as $term ) {
 		if ( $term->parent )

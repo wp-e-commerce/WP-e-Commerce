@@ -1023,7 +1023,7 @@ function wpsc_ajax_ie_save() {
 	$id = absint( $_POST['id'] );
 	$post = get_post( $_POST['id'] );
 	$parent = get_post( $post->post_parent );
-	$terms = wp_get_object_terms( $id, 'wpsc-variation', array( 'fields' => 'names' ) );
+	$terms = wpsc_get_product_terms( $id, 'wpsc-variation', 'name' );
 
 	$product = array(
 		'ID' => $_POST['id'],
@@ -1176,9 +1176,7 @@ function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
 function wpsc_duplicate_taxonomies( $id, $new_id, $post_type ) {
 	$taxonomies = get_object_taxonomies( $post_type ); //array("category", "post_tag");
 	foreach ( $taxonomies as $taxonomy ) {
-		$post_terms = get_the_terms( $id, $taxonomy );
-		if ( ! $post_terms )
-			continue;
+		$post_terms = wpsc_get_product_terms( $id, $taxonomy );
 		foreach ( $post_terms as $post_term ) {
 			wp_set_object_terms( $new_id, $post_term->slug, $taxonomy, true );
 		}
