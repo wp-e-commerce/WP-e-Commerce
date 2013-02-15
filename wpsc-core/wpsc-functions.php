@@ -1872,3 +1872,34 @@ function wpsc_update_permalink_slugs() {
 
 	update_option( 'wpsc_shortcode_page_ids', $ids );
 }
+
+/**
+ * Return an array of terms assigned to a product.
+ *
+ * This function is basically a wrapper for get_the_terms(), and should be used
+ * instead of get_the_terms() and wp_get_object_terms() because of two reasons:
+ *
+ * - wp_get_object_terms() doesn't utilize object cache.
+ * - get_the_terms() returns false when no terms are found. We want something
+ *   that returns an empty array instead.
+ *
+ * @since 3.8.10
+ * @param  int    $product_id Product ID
+ * @param  string $tax        Taxonomy
+ * @param  string $field      If you want to return only an array of a certain field, specify it here.
+ * @return stdObject[]
+ */
+function wpsc_get_product_terms( $product_id, $tax, $field = '' ) {
+	$terms = get_the_terms( $product_id, $tax );
+
+	if ( ! $terms )
+		$terms = array();
+
+	if ( $field )
+		$terms = wp_list_pluck( $terms, $field );
+
+	// remove the redundant array keys, could cause issues in loops with iterator
+	$terms = array_values( $terms );
+	return $terms;
+}
+
