@@ -840,11 +840,20 @@ function convert_code_to_service( $service ) {
 			$service = _x( 'Two-Day Shipping', 'shipwire shipping method', 'wpsc' );
 			break;
 		case 'INTL' :
-			$service = _x( 'International Shipping', 'shipwire shipping method', 'wpsc' );
+			$service = _x( 'Standard Shipping', 'shipwire shipping method', 'wpsc' );
 			break;
 		case 'FT' :
 			$service = _x( 'Freight Shipping', 'shipwire shipping method', 'wpsc' );
 			break;
+		case 'E-INTL' :
+			$service = _x( 'Economy Shipping', 'shipwire shipping method', 'wpsc' );
+			break;
+		case 'PL-INTL' :
+			$service = _x( 'Plus Shipping', 'shipwire shipping method', 'wpsc' );
+			break;
+		case 'PM-INTL' :
+			$service = _x( 'Premium Shipping', 'shipwire shipping method', 'wpsc' );
+			break;	 
 		endswitch;
 
 	return $service;
@@ -857,7 +866,7 @@ function convert_code_to_service( $service ) {
  * @return string
  */
 function convert_service_to_code( $service ) {
-
+	
 	switch ( $service ) :
 		case _x( 'Ground', 'shipwire shipping method', 'wpsc' ) :
 			$service = 'GD';
@@ -868,12 +877,21 @@ function convert_service_to_code( $service ) {
 		case _x( 'Two-Day Shipping', 'shipwire shipping method', 'wpsc' ) :
 			$service = '2D';
 			break;
-		case _x( 'International Shipping', 'shipwire shipping method', 'wpsc' ) :
+		case _x( 'Standard Shipping', 'shipwire shipping method', 'wpsc' ) :
 			$service = 'INTL';
 			break;
 		case _x( 'Freight Shipping', 'shipwire shipping method', 'wpsc' ) :
 			$service = 'FT';
 			break;
+		case _x( 'Economy Shipping', 'shipwire shipping method', 'wpsc' ) :
+			$service = 'E-INTL';
+			break;
+		case _x( 'Plus Shipping', 'shipwire shipping method', 'wpsc' ) :
+			$service = 'PL-INTL';
+			break;						
+		case _x( 'Premium Shipping', 'shipwire shipping method', 'wpsc' ) :
+			$service = 'PM-INTL';
+			break;			 
 		endswitch;
 
 	return $service;
