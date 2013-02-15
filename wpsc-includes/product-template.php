@@ -830,7 +830,7 @@ function wpsc_check_variation_stock_availability( $product_id, $variations ) {
 
 	foreach ( $selected_post as $variation ) {
 		$matches = 0;
-		$terms = wp_get_object_terms( $variation->ID, 'wpsc-variation' );
+		$terms = wpsc_get_product_terms( $variation->ID, 'wpsc-variation' );
 		foreach ( $terms as $term ) {
 			if ( in_array( $term->term_id, $variations ) )
 				$matches++;

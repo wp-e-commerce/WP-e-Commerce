@@ -1340,7 +1340,6 @@ add_action( 'wpsc-variation_edit_form_fields', 'variation_price_field_check' );
  * @param <type> $term_id
  */
 function save_term_prices( $term_id ) {
-
 	// First - Saves options from input
 	if ( isset( $_POST['variation_price'] ) || isset( $_POST["apply_to_current"] ) ) {
 
