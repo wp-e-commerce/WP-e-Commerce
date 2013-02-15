@@ -38,7 +38,7 @@ function wpsc_add_to_cart() {
 	$permitted_post_statuses = current_user_can( $post_type_object->cap->edit_posts ) ? array( 'private', 'draft', 'pending', 'publish' ) : array( 'publish' );
 
 	/// sanitise submitted values
-	$product_id = apply_filters( 'wpsc_add_to_cart_product_id', (int)$_POST['product_id'] );
+	$product_id = apply_filters( 'wpsc_add_to_cart_product_id', (int) $_POST['product_id'] );
 
 	$product = get_post( $product_id );
 
@@ -51,25 +51,28 @@ function wpsc_add_to_cart() {
 	}
 
 	if(isset($_POST['variation'])){
-		foreach ( (array)$_POST['variation'] as $key => $variation )
-			$provided_parameters['variation_values'][(int)$key] = (int)$variation;
+		foreach ( (array) $_POST['variation'] as $key => $variation ) {
+			$provided_parameters['variation_values'][ (int) $key ] = (int) $variation;
+		}
 
 		if ( count( $provided_parameters['variation_values'] ) > 0 ) {
 			$variation_product_id = wpsc_get_child_object_in_terms( $product_id, $provided_parameters['variation_values'], 'wpsc-variation' );
-			if ( $variation_product_id > 0 )
+			if ( $variation_product_id > 0 ) {
 				$product_id = $variation_product_id;
+			}
 		}
 
 	}
 
-	if ((isset($_POST['quantity']) && $_POST['quantity'] > 0) && (!isset( $_POST['wpsc_quantity_update'] )) ) {
-		$provided_parameters['quantity'] = (int)$_POST['quantity'];
+	if ( (isset( $_POST['quantity'] ) && $_POST['quantity'] > 0) && (!isset( $_POST['wpsc_quantity_update'] )) ) {
+		$provided_parameters['quantity'] = (int) $_POST['quantity'];
 	} else if ( isset( $_POST['wpsc_quantity_update'] ) ) {
 		$wpsc_cart->remove_item( $_POST['key'] );
-		$provided_parameters['quantity'] = (int)$_POST['wpsc_quantity_update'];
+		$provided_parameters['quantity'] = (int) $_POST['wpsc_quantity_update'];
 	}
 
-	if (isset( $_POST['is_customisable']) &&  $_POST['is_customisable'] == 'true' ) {
+	if ( isset( $_POST['is_customisable'] ) &&  
+		'true' == $_POST['is_customisable'] ) {
 		$provided_parameters['is_customisable'] = true;
 
 		if ( isset( $_POST['custom_text'] ) ) {
@@ -79,10 +82,12 @@ function wpsc_add_to_cart() {
 			$provided_parameters['file_data'] = $_FILES['custom_file'];
 		}
 	}
-	if ( isset($_POST['donation_price']) && ((float)$_POST['donation_price'] > 0 ) ) {
-		$provided_parameters['provided_price'] = (float)$_POST['donation_price'];
+
+	if ( isset( $_POST['donation_price'] ) && ( (float) $_POST['donation_price'] > 0 ) ) {
+		$provided_parameters['provided_price'] = (float) $_POST['donation_price'];
 	}
-	$parameters = array_merge( $default_parameters, (array)$provided_parameters );
+
+	$parameters = array_merge( $default_parameters, (array) $provided_parameters );
 
 	$cart_item = $wpsc_cart->set_item( $product_id, $parameters );
 
@@ -100,7 +105,7 @@ function wpsc_add_to_cart() {
 		}
 	}
 
-	if ( isset($_GET['ajax']) && $_GET['ajax'] == 'true' ) {
+	if ( isset( $_GET['ajax'] ) && $_GET['ajax'] == 'true' ) {
 		if ( ($product_id != null) && (get_option( 'fancy_notifications' ) == 1) ) {
 			echo "if(jQuery('#fancy_notification_content')) {\n\r";
 			echo "   jQuery('#fancy_notification_content').html(\"" . str_replace( array( "\n", "\r" ), array( '\n', '\r' ), addslashes( fancy_notification_content( $cart_messages ) ) ) . "\");\n\r";
