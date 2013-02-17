@@ -473,19 +473,6 @@ function wpsc_the_category_title( $title='', $id='' ){
 
 	return $title;
 
-	//if this is paginated products_page
-	if( $wp_query->in_the_loop && empty($category->name) && isset( $wp_query->query_vars['paged'] ) && $wp_query->query_vars['paged'] && isset( $wp_query->query_vars['page'] ) && $wp_query->query_vars['page'] && 'wpsc-product' == $wp_query->query_vars['post_type']){
-		$post_id = wpsc_get_the_post_id_by_shortcode('[productspage]');
-		$post = get_post($post_id);
-		$title = $post->post_title;
-		remove_filter('the_title','wpsc_the_category_title');
-	}
-
-	if ( ! empty( $category->name ) ){
-		return $category->name;
-	} else {
-		return $title;
-	} // ! empty( $category->name )
 }
 
 /**
