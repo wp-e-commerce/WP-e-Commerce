@@ -861,7 +861,8 @@ function wpsc_attachment_fields( $form_fields, $post ) {
 	else
 		$parent_post = get_post( $post->post_parent );
 
-	if ( $parent_post->post_type == "wpsc-product" ) {
+	// check if post is set before accessing
+	if ( isset( $parent_post ) && $parent_post->post_type == "wpsc-product" ) {
 
 		//Unfortunate hack, as I'm not sure why the From Computer tab doesn't process filters the same way the Gallery does
 		ob_start();
