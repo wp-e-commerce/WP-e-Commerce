@@ -2200,3 +2200,24 @@ table.purchase-logs tr:hover .column-id .delete {
 	width: auto;
 	margin-right:5px;
 }
+
+.wpsc-button-round {
+	padding: 0 0 1px !important;
+	height: 24px !important;
+	text-align: center;
+	width: 24px !important;
+	-webkit-border-radius: 12px !important;
+	border-radius: 12px !important;
+	outline: 0 !important;
+}
+
+/* make the minus sign look balanced with the plus sign */
+.wpsc-button-minus {
+	font-weight: bold;
+	font-size: 10px !important;
+}
+
+span.wpsc-button-round {
+	cursor: default !important;
+	opacity: 0.3;
+}
