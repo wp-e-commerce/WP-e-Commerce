@@ -579,9 +579,9 @@ class wpsc_coupons {
 
 				case 'category'://Checks if the product category is the condition value
 				if ( $product_data->post_parent ) {
-					$categories = wp_get_post_terms( $product_data->post_parent, 'wpsc_product_category' );
+					$categories = wpsc_get_product_terms( $product_data->post_parent, 'wpsc_product_category' );
 				} else {
-					$categories = wp_get_post_terms( $product_data->ID, 'wpsc_product_category' );
+					$categories = wpsc_get_product_terms( $product_data->ID, 'wpsc_product_category' );
 				}
 				foreach ( $categories as $cat ) {
 					if ( strtolower( $cat->name ) == strtolower( $c['value'] ) )
