@@ -1305,7 +1305,7 @@ function wpsc_remove_page_from_query_string($query_string)
 
 	if ( isset($query_string['name']) && $query_string['name'] == 'page' && isset($query_string['page']) ) {
 		unset($query_string['name']);
-		list($delim, $page_index) = split('/', $query_string['page']);
+		list($delim, $page_index) = explode( '/', $query_string['page'] );
 
 		$query_string['paged'] = $page_index;
 	}
