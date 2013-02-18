@@ -40,6 +40,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	private $total_count;
 	private $active_count;
 	private $inactive_count;
+	private $statuses;
 
 
 	/**
@@ -58,6 +59,12 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 			'plural'    => 'coupons',
 			'ajax'      => false
 		) );
+
+		$this->statuses = array(
+			'active'   => _x( 'Active', 'coupon status', 'wpsc' ),
+			'inactive' => _x( 'Inactive', 'coupon status', 'wpsc' ),
+			'unknown'  => _x( 'Unknown', 'coupon status', 'wpsc' ),
+		);
 
 		$this->process_single_actions();
 		$this->count_coupons();
@@ -209,15 +216,13 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 */
 
 	protected function column_status( $item ) {
-		switch( $item['status'] ) {
-			case 'active' :
-				$img = '<img src="' . WPSC_CORE_IMAGES_URL . '/yes_stock.gif"/>';
-				break;
-			case 'inactive' :
-				$img = '<img src="' . WPSC_CORE_IMAGES_URL . '/no_stock.gif"/>';
-				break;
-		}
-		return $img;
+		if ( ! array_key_exists( $item['status'], $this->statuses ) )
+			$item['status'] = 'unknown';
+
+		$column = '<span class="wpsc-coupon-status wpsc-coupon-status-%1$s">%2$s</a>';
+		$column = sprintf( $column, $item['status'], $this->statuses[$item['status']] );
+
+		return $column;
 	}
 
 
