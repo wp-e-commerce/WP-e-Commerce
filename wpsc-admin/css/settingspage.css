@@ -291,10 +291,6 @@ a.nav-tab-loading {
 	margin-right:10px;
 }
 
-.wpsc-shipping-module-settings-tablerate td .add, .wpsc-shipping-module-settings-weightrate td .add {
-	display:none;
-}
-
 #wpsc_options .action {
 	display:none;
 }
@@ -319,41 +315,6 @@ a.nav-tab-loading {
 .js #wpsc_options .wpsc-shipping-module-settings-weightrate td span.action,
 .js #wpsc_checkout_list span.action {
 	opacity:0.3;
-}
-
-.js .wpsc-shipping-module-settings-tablerate td a.add:hover,
-.js .wpsc-shipping-module-settings-weightrate td a.add:hover,
-.js #wpsc_checkout_list .actionscol a.add:hover,
-.js .wpsc-field-options-table .column-actions a.add:hover {
-	background-position:-20px 0;
-}
-
-.js .wpsc-shipping-module-settings-tablerate td a.add:active,
-.js .wpsc-shipping-module-settings-weightrate td a.add:active,
-.js #wpsc_checkout_list .actionscol a.add:active,
-.js .wpsc-field-options-table .column-actions a.add:active {
-	background-position:-40px 0;
-}
-
-.js .wpsc-shipping-module-settings-tablerate td a.delete:hover,
-.js .wpsc-shipping-module-settings-weightrate td a.delete:hover,
-.js #wpsc_checkout_list .actionscol a.delete:hover,
-.js .wpsc-field-options-table .column-actions a.delete:hover {
-	background-position:-20px -20px;
-}
-
-.js .wpsc-shipping-module-settings-tablerate td a.delete:active,
-.js .wpsc-shipping-module-settings-weightrate td a.delete:active,
-.js #wpsc_checkout_list .actionscol a.delete:active,
-.js .wpsc-field-options-table .column-actions a.delete:active {
-	background-position:-40px -20px;
-}
-
-.js .wpsc-shipping-module-settings-tablerate td .delete,
-.js .wpsc-shipping-module-settings-weightrate td .delete,
-.js #wpsc_checkout_list .actionscol .delete,
-.js .wpsc-field-options-table .column-actions .delete {
-	background-position:0 -20px;
 }
 
 #wpsc_checkout_list .wpsc-field-options-table {
