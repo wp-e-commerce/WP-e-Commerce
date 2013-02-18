@@ -56,33 +56,6 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 							<p class="description"><?php _e( 'The discount type', 'wpsc' ); ?></p>
 
 							<?php $display = $type == 2 ? '' : 'style="display:none;"'; ?>
-							<div id="free_shipping_options" <?php echo $display; ?>>
-
-								<select name='free_shipping_options[discount_country]' id='coupon_country_list' onchange='show_region_list();'>
-									<option value='' ><?php _e( 'All Countries and Regions', 'wpsc' ); ?></option>
-									<?php echo country_list(); ?>
-								</select>
-
-								<span id='discount_options_country'>
-								<?php
-								//i dont think we need this cu we need to do an ajax request to generate this list
-								//based on the country chosen probably need the span place holder tho
-								$region_list = $wpdb->get_results( "SELECT `" . WPSC_TABLE_REGION_TAX . "`.* FROM `" . WPSC_TABLE_REGION_TAX . "`, `" . WPSC_TABLE_CURRENCY_LIST . "`  WHERE `" . WPSC_TABLE_CURRENCY_LIST . "`.`isocode` AND `" . WPSC_TABLE_CURRENCY_LIST . "`.`id` = `" . WPSC_TABLE_REGION_TAX . "`.`country_id`", ARRAY_A );
-								if ( !empty( $region_list ) ) { ?>
-
-									<select name='free_shipping_options[discount_region]'>
-									<?php
-										foreach ( $region_list as $region ) { ?>
-										 <option value='<?php esc_attr_e( $region['id'] ); ?>' <?php selected( $region['id'], $coupon['discount_region'] ); ?> ><?php echo esc_html( $region['name'] ); ?></option>
-										 <?php
-										}
-									?>
-									</select>
-								<?php } ?>
-								</span>
-
-							</div>
-
 						</td>
 					</tr>
 
@@ -132,17 +105,6 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 							</span><input type='hidden' value='0' name='edit_coupon_every_product' />
 							<input type="checkbox" value="1"<?php checked( 1, $coupon['every_product'] ); ?> name='edit_coupon_every_product'/>
 							<span><?php _e( 'This coupon affects each product at checkout.', 'wpsc' ) ?></span>
-						</td>
-					</tr>
-
-					<tr class="form-field">
-						<th scope="row" valign="top">
-							<label for="edit_coupon_use_x_times"><?php _e( 'Max Use', 'wpsc' ); ?></label>
-						</th>
-						<td>
-							<input type='hidden' value='0' name='edit_coupon_use_x_times' />
-							<input type='number' size='4' value='<?php esc_attr_e( absint( $coupon['use-x-times'] ) ); ?>' name='edit_coupon_use_x_times' class="small-text" />
-							<span class='description'><?php _e( 'Set the amount of times the coupon can be used.', 'wpsc' ) ?></span>
 						</td>
 					</tr>
 

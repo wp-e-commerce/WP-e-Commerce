@@ -15,11 +15,9 @@ function wpsc_display_coupons_page() {
 			$coupon_code   = $_POST['add_coupon_code'];
 			$discount      = (double)$_POST['add_discount'];
 			$discount_type = (int)$_POST['add_discount_type'];
-			$free_shipping_details = serialize( (array)$_POST['free_shipping_options'] );
 			$use_once      = (int)(bool)$_POST['add_use-once'];
 			$every_product = (int)(bool)$_POST['add_every_product'];
 			$is_active     = (int)(bool)$_POST['add_active'];
-			$use_x_times   = (int)$_POST['add_use-x-times'];
 			$start_date    = ! empty( $_POST['add_start'] ) ? date( 'Y-m-d', strtotime( $_POST['add_start'] ) ) . " 00:00:00" : null;
 			$end_date      = ! empty( $_POST['add_end'] ) ? date( 'Y-m-d', strtotime( $_POST['add_end'] ) ) . " 23:59:59" : null;
 			$rules         = $_POST['rules'];
@@ -42,8 +40,6 @@ function wpsc_display_coupons_page() {
 						'value' => $discount,
 						'is-percentage' => $discount_type,
 						'use-once' => $use_once,
-						'use-x-times' => $use_x_times,
-						'free-shipping' => $free_shipping_details,
 						'is-used' => 0,
 						'active' => $is_active,
 						'every_product' => $every_product,
@@ -83,8 +79,6 @@ function wpsc_display_coupons_page() {
 					'value'         => $_POST['edit_coupon_amount'],
 					'is-percentage' => $_POST['edit_discount_type'],
 					'use-once'      => $_POST['edit_coupon_use_once'],
-					'use-x-times'   => $_POST['edit_coupon_use_x_times'],
-					'free-shipping' => serialize( $_POST['free_shipping_options'] ),
 					'is-used'       => $_POST['edit_coupon_is_used'],
 					'active'        => $_POST['edit_coupon_active'],
 					'every_product' => $_POST['edit_coupon_every_product'],

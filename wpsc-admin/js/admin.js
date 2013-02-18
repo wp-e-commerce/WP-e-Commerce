@@ -821,20 +821,3 @@ function add_another_property(this_button){
 	jQuery('.coupon_condition :first').after(new_property);
 	coupon_number++;
 }
-
-//displays the free shipping options
-function show_shipping_options() {
-	var discount_type = document.getElementById("add_discount_type").value;
-	if (discount_type == "2") {
-		document.getElementById("free_shipping_options").style.display='block';
-		document.getElementById("discount_amount").style.display='none';
-	}else{
-		document.getElementById("free_shipping_options").style.display='none';
-		document.getElementById("discount_amount").style.display='table-row';
-	}
-}
-
-//need to send the selected country off via ajax to return the region select box for that country
-function show_region_list(){
-	var country_id = document.getElementById("coupon_country_list").value;
-}

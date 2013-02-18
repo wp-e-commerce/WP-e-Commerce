@@ -79,8 +79,6 @@ class wpsc_coupons {
 				'is-used' => '',
 				'active' => '',
 				'use-once' => '',
-				'use-x-times' => '',
-				'free-shipping' => '',
 				'start' => '',
 				'expiry' => '',
 				'every_product' => ''
