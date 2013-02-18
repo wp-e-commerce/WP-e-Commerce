@@ -173,7 +173,7 @@ class wpsc_breadcrumbs {
 			);
 		}
 		if( is_single() ){
-			$categories = wp_get_object_terms( $wp_query->post->ID , 'wpsc_product_category' );
+			$categories = wpsc_get_product_terms( $wp_query->post->ID , 'wpsc_product_category' );
 			//if product is associated w more than one category
 			if(count($categories) > 1 && isset($wpsc_query->query_vars['wpsc_product_category']))
 				$query_data['category'] = $wpsc_query->query_vars['wpsc_product_category'];

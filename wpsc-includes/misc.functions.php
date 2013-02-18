@@ -90,10 +90,10 @@ function wpsc_add_new_user( $user_login, $user_pass, $user_email ) {
 		$errors->add( 'registerfail', sprintf( __( '<strong>ERROR</strong>: Couldn&#8217;t register you... please contact the <a href="mailto:%s">webmaster</a> !', 'wpsc' ), get_option( 'admin_email' ) ) );
 		return $errors;
 	}
-	
+
 	$user = wp_signon( array( 'user_login' => $user_login, 'user_password' => $user_pass, 'remember' => true ) );
 	wp_set_current_user( $user->ID );
-	
+
 	return $user;
 }
 
@@ -186,7 +186,7 @@ function wpsc_set_aioseop_keywords( $data ) {
 			$category_list = $wpdb->get_col( "SELECT `categories`.`name` FROM `" . WPSC_TABLE_ITEM_CATEGORY_ASSOC . "` AS `assoc` , `" . WPSC_TABLE_PRODUCT_CATEGORIES . "` AS `categories` WHERE `assoc`.`product_id` IN ('{$product_id}') AND `assoc`.`category_id` = `categories`.`id` AND `categories`.`active` IN('1')" );
 			$replacement_data_array += $category_list;
 		}
-		$replacement_data_array += wp_get_object_terms( $product_id, 'product_tag', array( 'fields' => 'names' ) );
+		$replacement_data_array += wpsc_get_product_terms( $product_id, 'product_tag', 'name' );
 		$replacement_data .= implode( ",", $replacement_data_array );
 		if ( $replacement_data != '' ) {
 			$data = strtolower( $replacement_data );
@@ -204,7 +204,7 @@ add_filter( 'aioseop_keywords', 'wpsc_set_aioseop_keywords' );
  */
 function wpsc_populate_also_bought_list() {
 	global $wpdb, $wpsc_cart, $wpsc_coupons;
-	
+
 	$new_also_bought_data = array();
 	foreach ( $wpsc_cart->cart_items as $outer_cart_item ) {
 		$new_also_bought_data[$outer_cart_item->product_id] = array();
@@ -601,7 +601,7 @@ function wp_get_product_tags( $product_id = 0, $args = array( ) ) {
 	$defaults = array( 'fields' => 'ids' );
 	$args = wp_parse_args( $args, $defaults );
 
-	$cats = wp_get_object_terms( $product_id, 'product_tag' );
+	$cats = wpsc_get_product_terms( $product_id, 'product_tag' );
 	return $cats;
 }
 
@@ -625,7 +625,7 @@ function wp_get_product_categories( $product_id = 0, $args = array( ) ) {
 	$defaults = array( 'fields' => 'ids' );
 	$args = wp_parse_args( $args, $defaults );
 
-	$cats = wp_get_object_terms( $product_id, 'wpsc_product_category' );
+	$cats = wpsc_get_product_terms( $product_id, 'wpsc_product_category' );
 	return $cats;
 }
 
@@ -670,11 +670,7 @@ function get_the_product_category( $id ) {
 
 	$id = (int)$id;
 
-	$categories = get_object_term_cache( $id, 'wpsc_product_category' );
-	if ( false === $categories ) {
-		$categories = wp_get_object_terms( $id, 'wpsc_product_category' );
-		wp_cache_add( $id, $categories, 'product_category_relationships' );
-	}
+	$categories = wpsc_get_product_terms( $id, 'wpsc_product_category' );
 
 	if ( !empty( $categories ) )
 		usort( $categories, '_usort_terms_by_name' );

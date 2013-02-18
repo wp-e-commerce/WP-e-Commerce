@@ -1340,7 +1340,7 @@ function wpsc_product_link( $permalink, $post, $leavename ) {
 	// Mostly the same conditions used for posts, but restricted to items with a post type of "wpsc-product "
 
 	if ( '' != $permalink_structure && !in_array( $post->post_status, array( 'draft', 'pending' ) ) ) {
-		$product_categories = wp_get_object_terms( $post_id, 'wpsc_product_category' );
+		$product_categories = wpsc_get_product_terms( $post_id, 'wpsc_product_category' );
 		$product_category_slugs = array( );
 		foreach ( $product_categories as $product_category ) {
 			$product_category_slugs[] = $product_category->slug;
@@ -1505,7 +1505,7 @@ function wpsc_force_ssl() {
 	global $wp_query;
 	if ( '1' == get_option( 'wpsc_force_ssl' ) &&
 	    ! is_ssl() &&
-	    ! empty ( $wp_query->post->post_content ) && 
+	    ! empty ( $wp_query->post->post_content ) &&
 	    false !== strpos( $wp_query->post->post_content, '[shoppingcart]' ) ) {
 		$sslurl = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 		wp_redirect( $sslurl );
@@ -1872,3 +1872,34 @@ function wpsc_update_permalink_slugs() {
 
 	update_option( 'wpsc_shortcode_page_ids', $ids );
 }
+
+/**
+ * Return an array of terms assigned to a product.
+ *
+ * This function is basically a wrapper for get_the_terms(), and should be used
+ * instead of get_the_terms() and wp_get_object_terms() because of two reasons:
+ *
+ * - wp_get_object_terms() doesn't utilize object cache.
+ * - get_the_terms() returns false when no terms are found. We want something
+ *   that returns an empty array instead.
+ *
+ * @since 3.8.10
+ * @param  int    $product_id Product ID
+ * @param  string $tax        Taxonomy
+ * @param  string $field      If you want to return only an array of a certain field, specify it here.
+ * @return stdObject[]
+ */
+function wpsc_get_product_terms( $product_id, $tax, $field = '' ) {
+	$terms = get_the_terms( $product_id, $tax );
+
+	if ( ! $terms )
+		$terms = array();
+
+	if ( $field )
+		$terms = wp_list_pluck( $terms, $field );
+
+	// remove the redundant array keys, could cause issues in loops with iterator
+	$terms = array_values( $terms );
+	return $terms;
+}
+
