@@ -2221,3 +2221,11 @@ span.wpsc-button-round {
 	cursor: default !important;
 	opacity: 0.3;
 }
+
+.wpsc-coupon-status-active {
+	color: #1be032;
+}
+
+.wpsc-coupon-status-inactive {
+	color: #e01b1b;
+}
