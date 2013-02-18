@@ -84,39 +84,38 @@
 						</td>
 					</tr>
 
-					<tr class="form-field">
+					<tr class="form-field coupon-conditions">
 						<th scope="row" valign="top">
 							<label><strong><?php _e( 'Conditions', 'wpsc' ); ?></strong></label>
 						</th>
 						<td>
-							<div class='coupon_condition' >
-								<div class='first_condition'>
-									<select class="ruleprops" name="rules[property][]">
-										<option value="item_name" rel="order"><?php _e( 'Item name', 'wpsc' ); ?></option>
-										<option value="item_quantity" rel="order"><?php _e( 'Item quantity', 'wpsc' ); ?></option>
-										<option value="total_quantity" rel="order"><?php _e( 'Total quantity', 'wpsc' ); ?></option>
-										<option value="subtotal_amount" rel="order"><?php _e( 'Subtotal amount', 'wpsc' ); ?></option>
-										<?php echo apply_filters( 'wpsc_coupon_rule_property_options', '' ); ?>
-									</select>
+							<div class='coupon-condition' >
+								<select class="ruleprops" name="rules[property][]">
+									<option value="item_name" rel="order"><?php _e( 'Item name', 'wpsc' ); ?></option>
+									<option value="item_quantity" rel="order"><?php _e( 'Item quantity', 'wpsc' ); ?></option>
+									<option value="total_quantity" rel="order"><?php _e( 'Total quantity', 'wpsc' ); ?></option>
+									<option value="subtotal_amount" rel="order"><?php _e( 'Subtotal amount', 'wpsc' ); ?></option>
+									<?php echo apply_filters( 'wpsc_coupon_rule_property_options', '' ); ?>
+								</select>
 
-									<select name="rules[logic][]">
-										<option value="equal"><?php _e( 'Is equal to', 'wpsc' ); ?></option>
-										<option value="greater"><?php _e( 'Is greater than', 'wpsc' ); ?></option>
-										<option value="less"><?php _e( 'Is less than', 'wpsc' ); ?></option>
-										<option value="contains"><?php _e( 'Contains', 'wpsc' ); ?></option>
-										<option value="not_contain"><?php _e( 'Does not contain', 'wpsc' ); ?></option>
-										<option value="begins"><?php _e( 'Begins with', 'wpsc' ); ?></option>
-										<option value="ends"><?php _e( 'Ends with', 'wpsc' ); ?></option>
-										<option value="category"><?php _e( 'In Category', 'wpsc' ); ?></option>
-									</select>
+								<select name="rules[logic][]">
+									<option value="equal"><?php _e( 'Is equal to', 'wpsc' ); ?></option>
+									<option value="greater"><?php _e( 'Is greater than', 'wpsc' ); ?></option>
+									<option value="less"><?php _e( 'Is less than', 'wpsc' ); ?></option>
+									<option value="contains"><?php _e( 'Contains', 'wpsc' ); ?></option>
+									<option value="not_contain"><?php _e( 'Does not contain', 'wpsc' ); ?></option>
+									<option value="begins"><?php _e( 'Begins with', 'wpsc' ); ?></option>
+									<option value="ends"><?php _e( 'Ends with', 'wpsc' ); ?></option>
+									<option value="category"><?php _e( 'In Category', 'wpsc' ); ?></option>
+								</select>
 
-									<input type="text" name="rules[value][]" style="width: 300px;"/>
-								</div>
+								<input type="text" name="rules[value][]" style="width: 300px;"/>
+								<a title="<?php esc_attr_e( 'Delete condition', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus" href="#"><?php echo _x( '&ndash;', 'delete item', 'wpsc' ); ?></a>
+								<a title="<?php esc_attr_e( 'Add condition', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-plus" href="#"><?php echo _x( '+', 'add item', 'wpsc' ); ?></a>
 							</div><br/>
-							<a class="wpsc_coupons_condition_add button-secondary" onclick="add_another_property(jQuery(this));">
+							<a class="wpsc-coupons-condition-add button-secondary" onclick="add_another_property(jQuery(this));">
 								<?php _e( 'Add New Condition', 'wpsc' ); ?>
 							</a>
-
 						</td>
 					</tr>
 

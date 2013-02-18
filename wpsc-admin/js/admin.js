@@ -585,6 +585,44 @@ jQuery(document).ready(function(){
 		jQuery(this).find('.wpsc_ie_sale_price').val(sale_price);
 		jQuery(this).find('.wpsc_ie_sku').val(sku);
 	});
+
+	jQuery('.coupon-conditions').on('click', '.wpsc-button-plus', function() {
+		var parent = jQuery(this).closest('.coupon-condition'),
+		    prototype = parent.clone();
+
+		prototype.find('select').val('');
+		prototype.find('input').val('');
+		prototype.hide();
+		prototype.insertAfter(parent).slideDown(150);
+
+		return false;
+	});
+
+	jQuery('.coupon-conditions').on('click', '.wpsc-button-minus', function() {
+		var parent = jQuery(this).closest('.coupon-condition'),
+		    conditions_count = jQuery('.coupon-condition').size(),
+		    prototype;
+
+		if (conditions_count == 1) {
+			prototype = parent.clone();
+			prototype.find('select').val('');
+			prototype.find('input').val('');
+			prototype.hide();
+			jQuery('.coupon-conditions').find('td').prepend(prototype);
+			parent.slideUp(150, function(){
+				prototype.slideDown(150);
+				parent.remove();
+			});
+
+			return false;
+		}
+
+		parent.slideUp(150, function(){
+			parent.remove();
+		});
+
+		return false;
+	});
 });
 
 // function for adding more custom meta
@@ -791,33 +829,4 @@ function editinline_get_id(){
 // inline-edit-post.dev.js prepend tag edit textarea into the last fieldset. We need to undo that
 function bulkedit_edit_tags_hack() {
 	jQuery('<fieldset class="inline-edit-col-right"><div class="inline-edit-col"></div></fieldset>').insertBefore('#bulk-edit .wpsc-cols:first').find('.inline-edit-col').append(jQuery('#bulk-edit .inline-edit-tags'));
-}
-
-// Coupon conditions
-var coupon_number = jQuery('.coupon_condition').length;
-function add_another_property(this_button){
-	var new_property='<div class="coupon_condition">\n'+
-		'<select class="ruleprops" name="rules[property][]"> \n'+
-		'<option value="item_name" rel="order">Item name</option> \n'+
-		'<option value="item_quantity" rel="order">Item quantity</option>\n'+
-		'<option value="total_quantity" rel="order">Total quantity</option>\n'+
-		'<option value="subtotal_amount" rel="order">Subtotal amount</option>\n'+
-		'</select> \n'+
-		'<select name="rules[logic][]"> \n'+
-		'<option value="equal">Is equal to</option> \n'+
-		'<option value="greater">Is greater than</option> \n'+
-		'<option value="less">Is less than</option> \n'+
-		'<option value="contains">Contains</option> \n'+
-		'<option value="not_contain">Does not contain</option> \n'+
-		'<option value="begins">Begins with</option> \n'+
-		'<option value="ends">Ends with</option> \n'+
-		'</select> \n'+
-		'<span> \n'+
-		'<input type="text" name="rules[value][]" style="width:300px"/> \n'+
-		'</span>  \n'+
-		'<img height="16" width="16" class="delete" alt="Delete" src="' + wpsc_adminL10n.wpsc_core_images_url + '/cross.png" onclick="jQuery(this).parent().remove();"/>\n' +
-		'</div> ';
-
-	jQuery('.coupon_condition :first').after(new_property);
-	coupon_number++;
 }
