@@ -108,17 +108,24 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 						</td>
 					</tr>
 
-					<tr class="form-field">
+					<tr class="form-field coupon-conditions">
 						<th scope="row" valign="top">
 							<label><strong><?php _e( 'Conditions', 'wpsc' ); ?></strong></label>
 						</th>
 						<td>
 							<?php
 							$conditions = maybe_unserialize( $coupon['condition'] );
-							if( ! empty( $conditions ) ) :
-								foreach( $conditions as $key => $condition ) :
+							if ( empty( $conditions ) )
+								$conditions = array(
+									array(
+										'property' => '',
+										'logic'    => '',
+										'value'    => '',
+									)
+								);
+							foreach( $conditions as $key => $condition ) :
 								?>
-								<div class='coupon_condition'>
+								<div class='coupon-condition'>
 									<select class="ruleprops" name="rules[<?php echo $key; ?>][property]">
 										<option value="item_name"<?php selected( 'item_name', $condition['property'] ); ?> rel="order"><?php _e( 'Item name', 'wpsc' ); ?></option>
 										<option value="item_quantity"<?php selected( 'item_quantity', $condition['property'] ); ?> rel="order"><?php _e( 'Item quantity', 'wpsc' ); ?></option>
@@ -139,41 +146,10 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 									</select>
 
 									<input type="text" name="rules[<?php echo $key; ?>][value]" value="<?php esc_attr_e( $condition['value'] ); ?>" style="width: 300px;"/>
-									<img height="16" width="16" class="delete" alt="Delete" src="<?php echo WPSC_CORE_IMAGES_URL; ?>/cross.png" onclick="jQuery(this).parent().remove();"/>
+									<a title="<?php esc_attr_e( 'Delete condition', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus" href="#"><?php echo _x( '&ndash;', 'delete item', 'wpsc' ); ?></a>
+									<a title="<?php esc_attr_e( 'Add condition', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-plus" href="#"><?php echo _x( '+', 'add item', 'wpsc' ); ?></a>
 								</div>
-								<?php endforeach;
-							else : ?>
-							<div class='coupon_condition' >
-								<div class='first_condition'>
-									<select class="ruleprops" name="rules[0][property]">
-										<option value="item_name" rel="order"><?php _e( 'Item name', 'wpsc' ); ?></option>
-										<option value="item_quantity" rel="order"><?php _e( 'Item quantity', 'wpsc' ); ?></option>
-										<option value="total_quantity" rel="order"><?php _e( 'Total quantity', 'wpsc' ); ?></option>
-										<option value="subtotal_amount" rel="order"><?php _e( 'Subtotal amount', 'wpsc' ); ?></option>
-										<?php echo apply_filters( 'wpsc_coupon_rule_property_options', '' ); ?>
-									</select>
-
-									<select name="rules[0][logic]">
-										<option value="equal"><?php _e( 'Is equal to', 'wpsc' ); ?></option>
-										<option value="greater"><?php _e( 'Is greater than', 'wpsc' ); ?></option>
-										<option value="less"><?php _e( 'Is less than', 'wpsc' ); ?></option>
-										<option value="contains"><?php _e( 'Contains', 'wpsc' ); ?></option>
-										<option value="not_contain"><?php _e( 'Does not contain', 'wpsc' ); ?></option>
-										<option value="begins"><?php _e( 'Begins with', 'wpsc' ); ?></option>
-										<option value="ends"><?php _e( 'Ends with', 'wpsc' ); ?></option>
-										<option value="category"><?php _e( 'In Category', 'wpsc' ); ?></option>
-									</select>
-
-									<input type="text" name="rules[0][value]" style="width: 300px;"/>
-								</div>
-
-							</div>
-							<?php endif; ?>
-							<br/>
-							<a class="wpsc_coupons_condition_add button-secondary" onclick="edit_another_property(jQuery(this));">
-								<?php _e( 'Add New Condition', 'wpsc' ); ?>
-							</a>
-
+							<?php endforeach; ?>
 						</td>
 					</tr>
 
