@@ -300,12 +300,12 @@
 		event_init : function() {
 			var wrapper = $('#options_checkout');
 			wrapper.delegate('.add_new_form_set', 'click', WPSC_Settings_Page.Checkout.event_add_new_form_set).
-			        delegate('.actionscol a.add', 'click', WPSC_Settings_Page.Checkout.event_add_new_field).
-			        delegate('.actionscol a.delete', 'click', WPSC_Settings_Page.Checkout.event_delete_field).
+			        delegate('.actionscol a.wpsc-button-plus', 'click', WPSC_Settings_Page.Checkout.event_add_new_field).
+			        delegate('.actionscol a.wpsc-button-minus', 'click', WPSC_Settings_Page.Checkout.event_delete_field).
 			        delegate('a.edit-options', 'click', WPSC_Settings_Page.Checkout.event_edit_field_options).
 			        delegate('select[name^="form_type"], select[name^="new_field_type"]', 'change', WPSC_Settings_Page.Checkout.event_form_type_changed).
-			        delegate('.field-option-cell-wrapper .add', 'click', WPSC_Settings_Page.Checkout.event_add_field_option).
-			        delegate('.field-option-cell-wrapper .delete', 'click', WPSC_Settings_Page.Checkout.event_delete_field_option).
+			        delegate('.field-option-cell-wrapper .wpsc-button-plus', 'click', WPSC_Settings_Page.Checkout.event_add_field_option).
+			        delegate('.field-option-cell-wrapper .wpsc-button-minus', 'click', WPSC_Settings_Page.Checkout.event_delete_field_option).
 			        delegate('#wpsc-delete-checkout-set', 'click', WPSC_Settings_Page.Checkout.event_delete_checkout_set).
 			        delegate('#wpsc_form_set', 'change', WPSC_Settings_Page.Checkout.event_select_form_set);
 			$('#wpsc-settings-form').bind('submit', WPSC_Settings_Page.Checkout.event_form_submit);
@@ -806,8 +806,8 @@
 			WPSC_Settings_Page.Shipping.table_rate = WPSC_Settings_Page.Shipping.wrapper.find('.table-rate');
 			WPSC_Settings_Page.Shipping.wrapper.
 				delegate('.edit-shipping-module'         , 'click'   , WPSC_Settings_Page.Shipping.event_edit_shipping_module).
-				delegate('.table-rate .add'              , 'click'   , WPSC_Settings_Page.Shipping.event_add_table_rate_layer).
-				delegate('.table-rate .delete'           , 'click'   , WPSC_Settings_Page.Shipping.event_delete_table_rate_layer).
+				delegate('.table-rate .wpsc-button-plus' , 'click'   , WPSC_Settings_Page.Shipping.event_add_table_rate_layer).
+				delegate('.table-rate .wpsc-button-minus', 'click'   , WPSC_Settings_Page.Shipping.event_delete_table_rate_layer).
 				delegate('.table-rate input[type="text"]', 'keypress', WPSC_Settings_Page.Shipping.event_enter_key_pressed).
 				delegate('a.shipwire_sync'               , 'click'   , WPSC_Settings_Page.Shipping.event_sync_shipwire);
 		},

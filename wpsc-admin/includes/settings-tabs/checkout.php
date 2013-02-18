@@ -299,8 +299,8 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 			</td>
 			<td class="actionscol">
 				<div class="cell-wrapper">
-					<a tabindex="-1" title="<?php _e( 'Delete Field', 'wpsc' ); ?>" class="action delete" href="#"><?php esc_html_e( 'Delete', 'wpsc' ); ?></a>
-					<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="action add" href="#"><?php esc_html_e( 'Add', 'wpsc' ); ?></a>
+					<a tabindex="-1" title="<?php _e( 'Delete Field', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus" href="#"><?php echo _x( '&ndash;', 'delete item', 'wpsc' ); ?></a>
+					<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-plus" href="#"><?php echo _x( '+', 'add item', 'wpsc' ); ?></a>
 				</div>
 			</td>
 		</tr>
@@ -329,8 +329,8 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 								</td>
 								<td class="column-actions">
 									<div class="field-option-cell-wrapper">
-										<a tabindex="-1" title="<?php _e( 'Delete Field', 'wpsc' ); ?>" class="action delete" href="#"><?php esc_html_e( 'Delete', 'wpsc' ); ?></a>
-										<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="action add" href="#"><?php esc_html_e( 'Add', 'wpsc' ); ?></a>
+										<a tabindex="-1" title="<?php _e( 'Delete Field', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus" href="#"><?php echo _x( '&ndash;', 'delete item', 'wpsc' ); ?></a>
+										<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-plus" href="#"><?php echo _x( '+', 'add item', 'wpsc' ); ?></a>
 									</div>
 								</td>
 							</tr>
@@ -510,11 +510,11 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 							<td class="actionscol">
 								<div class="cell-wrapper">
 									<?php if ( ! $this->is_field_default( $form_field ) ): ?>
-										<a tabindex="-1" title="<?php esc_attr_e( 'Delete Field', 'wpsc' ); ?>" class="action delete" href="#"><?php esc_html_e( 'Delete', 'wpsc' ); ?></a>
+										<a tabindex="-1" title="<?php esc_attr_e( 'Delete Field', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus" href="#"><?php echo _x( '&ndash;', 'delete item', 'wpsc' ); ?></a>
 									<?php else: ?>
-										<span title="<?php _e( 'Cannot Delete Default Fields', 'wpsc' ); ?>" class="action delete"><?php esc_html_e( 'Delete', 'wpsc' ); ?></span>
+										<span title="<?php _e( 'Cannot Delete Default Fields', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus"><?php echo _x( '&ndash;', 'delete item', 'wpsc' ); ?></span>
 									<?php endif; ?>
-									<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="action add" href="#"><?php esc_html_e( 'Add', 'wpsc' ); ?></a>
+									<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-plus" href="#"><?php echo _x( '+', 'add item', 'wpsc' ); ?></a>
 								</div>
 							</td>
 						</tr>
