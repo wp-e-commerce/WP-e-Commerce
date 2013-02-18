@@ -36,37 +36,6 @@
 								<option value='2'><?php _e( 'Free shipping', 'wpsc' ); ?></option>
 							</select>
 							<p class="description"><?php _e( 'The discount type', 'wpsc' ); ?></p>
-
-							<div id="free_shipping_options" style="display:none;">
-
-								<select name='free_shipping_options[discount_country]' id='coupon_country_list' onchange='show_region_list();'>
-									<option value='' ><?php _e( 'All Countries and Regions', 'wpsc' ); ?></option>
-									<?php echo country_list(); ?>
-								</select>
-
-								<span id='discount_options_country'>
-								<?php
-								$region_list = $wpdb->get_results( $wpdb->prepare( "SELECT `" . WPSC_TABLE_REGION_TAX . "`.* FROM `" . WPSC_TABLE_REGION_TAX . "`, `" . WPSC_TABLE_CURRENCY_LIST . "`  WHERE `" . WPSC_TABLE_CURRENCY_LIST . "`.`isocode` IN(%s) AND `" . WPSC_TABLE_CURRENCY_LIST . "`.`id` = `" . WPSC_TABLE_REGION_TAX . "`.`country_id`", get_option( $free_shipping_country ) ), ARRAY_A );
-								if ( !empty( $region_list ) ) { ?>
-
-									<select name='free_shipping_options[discount_region]'>
-									<?php
-										foreach ( $region_list as $region ) {
-											if ( esc_attr( $free_shipping_region ) == $region['id'] ) {
-												$selected = "selected='selected'";
-											} else {
-												$selected = "";
-											}
-										?>
-										<option value='<?php echo $region['id']; ?>' <?php echo $selected; ?> ><?php echo esc_attr( $region['name'] ); ?></option> <?php
-										}
-									?>
-									</select>
-							<?php } ?>
-							</span>
-
-							</div>
-
 						</td>
 					</tr>
 
@@ -106,29 +75,18 @@
 
 					<tr>
 						<th scope="row" valign="top">
-							<label for="add_use-x-times"><?php _e( 'Apply On All Products', 'wpsc' ); ?></label>
+							<label for="add_every-product"><?php _e( 'Apply On All Products', 'wpsc' ); ?></label>
 						</th>
 						<td>
 							</span><input type='hidden' value='0' name='add_every_product' />
-							<input type="checkbox" value="1" name='add_every_product'/>
+							<input type="checkbox" value="1" name='add_every_product' id="add_every-product"/>
 							<span class='description'><?php _e( 'This coupon affects each product at checkout.', 'wpsc' ) ?></span>
 						</td>
 					</tr>
 
 					<tr class="form-field">
 						<th scope="row" valign="top">
-							<label for="add_use-x-times"><?php _e( 'Max Use', 'wpsc' ); ?></label>
-						</th>
-						<td>
-							<input type='hidden' value='0' name='add_use-x-times' />
-							<input type='number' size='4' value='' name='add_use-x-times' class="small-text" />
-							<span class='description'><?php _e( 'Set the amount of times the coupon can be used.', 'wpsc' ) ?></span>
-						</td>
-					</tr>
-
-					<tr class="form-field">
-						<th scope="row" valign="top">
-							<label for="add_use-x-times"><strong><?php _e( 'Conditions', 'wpsc' ); ?></strong></label>
+							<label><strong><?php _e( 'Conditions', 'wpsc' ); ?></strong></label>
 						</th>
 						<td>
 							<div class='coupon_condition' >
