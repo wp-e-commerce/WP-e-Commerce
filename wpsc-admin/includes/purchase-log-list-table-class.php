@@ -185,8 +185,14 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		return $this->search_box;
 	}
 
+	/**
+	 * Define the columns in our list table. You can add/amend this list using
+	 * WordPress core filter manage_{screen}_columns, specifically
+	 * manage_dashboard_page_wpsc-purchase-logs_columns.
+	 * @return array List of column headings
+	 */
 	public function get_columns() {
-		return apply_filters ( 'wpsc_manage_purchase_logs_columns', array(
+		return array(
 			'cb'       => '<input type="checkbox" />',
 			'id'       => __( 'Order ID', 'wpsc' ),
 			'customer' => __( 'Customer', 'wpsc' ),
@@ -194,18 +200,24 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 			'status'   => _x( 'Status', 'sales log list table column', 'wpsc' ),
 			'date'     => __( 'Date', 'wpsc' ),
 			'tracking' => _x( 'Tracking ID', 'purchase log', 'wpsc' ),
-		) );
+		) ;
 	}
 
+	/**
+	 * Define the columns in the table which are sortable. You can add/amend
+	 * this list using the WordPress core filter manage_{screen}_sortable_columns
+	 * Specifically: manage_dashboard_page_wpsc-purchase-logs_sortable_columns
+	 * @return [type] [description]
+	 */
 	public function get_sortable_columns() {
 		if ( ! $this->sortable )
 			return array();
 
-		return apply_filters ( 'wpsc_manage_purchase_logs_columns_sortable', array(
+		return array(
 			'date'   => 'id',
 			'status' => 'processed',
 			'amount' => 'totalprice',
-		) );
+		) ;
 	}
 
 	private function get_months() {
