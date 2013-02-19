@@ -21,18 +21,19 @@ function wpsc_display_coupons_page() {
 			$start_date    = ! empty( $_POST['add_start'] ) ? date( 'Y-m-d', strtotime( $_POST['add_start'] ) ) . " 00:00:00" : null;
 			$end_date      = ! empty( $_POST['add_end'] ) ? date( 'Y-m-d', strtotime( $_POST['add_end'] ) ) . " 23:59:59" : null;
 			$rules         = $_POST['rules'];
+			$new_rules     = array();
 
 			foreach ( $rules as $key => $rule ) {
 				foreach ( $rule as $k => $r ) {
-					$new_rule[$k][$key] = $r;
+					$new_rules[$k][$key] = $r;
 				}
 			}
 
-			foreach ( $new_rule as $key => $rule ) {
-				if ( '' == $rule['value'] ) {
-					unset( $new_rule[$key] );
-				}
+			foreach ( $new_rules as $key => $rule ) {
+				if ( '' == $rule['value'] )
+					unset( $new_rules[$key] );
 			}
+
 			$insert = $wpdb->insert(
 				    WPSC_TABLE_COUPON_CODES,
 				    array(
@@ -70,7 +71,19 @@ function wpsc_display_coupons_page() {
 		// update an existing coupon
 		if ( isset( $_POST['is_edit_coupon'] ) && ($_POST['is_edit_coupon'] == 'true') && !(isset( $_POST['delete_condition'] )) && !(isset( $_POST['submit_condition'] )) ) {
 
-			$rules = isset( $_POST['rules'] ) ? $_POST['rules'] : array();
+			$rules     = isset( $_POST['rules'] ) ? $_POST['rules'] : array();
+			$new_rules = array();
+
+			foreach ( $rules as $key => $rule ) {
+				foreach ( $rule as $k => $r ) {
+					$new_rules[$k][$key] = $r;
+				}
+			}
+
+			foreach ( $new_rules as $key => $rule ) {
+				if ( '' == $rule['value'] )
+					unset( $new_rules[$key] );
+			}
 
 			$wpdb->update(
 				WPSC_TABLE_COUPON_CODES,
@@ -84,7 +97,7 @@ function wpsc_display_coupons_page() {
 					'every_product' => $_POST['edit_coupon_every_product'],
 					'start'         => ! empty( $_POST['edit_coupon_start'] ) ? get_gmt_from_date( $_POST['edit_coupon_start'] . ' 00:00:00' ) : null,
 					'expiry'        => ! empty( $_POST['edit_coupon_end'] ) ? get_gmt_from_date( $_POST['edit_coupon_end'] . ' 23:59:59' ) : null,
-					'condition'     => serialize( $rules )
+					'condition'     => serialize( $new_rules )
 				),
 				array( 'id'         => absint( $_POST['coupon_id'] ) ),
 				array(
@@ -120,7 +133,6 @@ function wpsc_display_coupons_page() {
 		include( dirname( __FILE__ ) . '/display-coupon-edit.php' );
 
 	} else {
-
 		require_once WPSC_FILE_PATH . '/wpsc-admin/includes/coupon-list-table-class.php';
 		$coupons_table = new WPSC_Coupons_List_Table();
 		$coupons_table->prepare_items(); ?>
