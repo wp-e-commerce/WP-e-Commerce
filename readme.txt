@@ -155,6 +155,37 @@ Before updating please make a backup of your existing files and database. Just i
 After upgrading from earlier versions look for link "Update Store". This will update your database structure to work with new version.
 
 == Changelog ==
+= 3.8.10 =
+* New: Coupon UI is revamped.
+* New: [Shipwire] Addition of Shipping Services, Economy, Plus & Premium.
+* Change: After filling out a registration form, the user is logged in.
+* Change: Limit quantity of individual products that can be added to the cart. Default value is filterable.
+* Change: Remove FPDF which is not used any more.
+* Change: Return cart item messages as key => value array rather than HTML.
+* Change: Variation table class orderby to 'menu_order title'
+* Change: When displaying packing slip, form data should be output in the same order as that of checkout page.
+* Fix: "you save" prices are not correct on variations with a value over 1000
+* Fix: Cart widget missing closing </div> tag.
+* Fix: Display the "You save" price as a currency, not just a raw unformatted number
+* Fix: Ensure all variations are deleted when deleting a product.
+* Fix: Foreign characters are not displayed correctly in packing slip.
+* Fix: Improved performance with variations.
+* Fix: JavaScript error when no variations exist in admin.
+* Fix: Make sure Add / Edit Product page respects decimal and thousands separators set in Settings->Store->General.
+* Fix: Manual / Test Payment instructions don't appear on transaction results page and email.
+* Fix: Only print Google Analytics scripts on transaction results footer
+* Fix: PHP Warnings when bulk editing variations.
+* Fix: Prevent old paypal express from hijacking new paypal express callback.
+* Fix: Product category pages don't respect pagination and sort order settings.
+* Fix: Re-generate products pages' IDs after plugin reactivation.
+* Fix: Refactor user account page
+* Fix: SQL IN error in wpsc_populate_also_bought_list().
+* Fix: Switching a purchase log status to "Closed Order" doesn't reduce stocks.
+* Fix: WPML compatibility
+* Fix: Wrong cache set for checkout form data.
+* Fix: split() deprecation notice in PHP 5.3+
+* Fix: stripslashes issues when duplicating products.
+
 = 3.8.9.5 =
 * New: Polish translation.
 * Fix: Attempt to regenerate customer ID if it's invalid to avoid fatal errors.
@@ -616,116 +647,6 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * Fix: Span tag is not closed in issue 598.
 * Fix: Faulty php tag in template (issue 589).
 * Fix: PHP Notices when checking out with shipping disabled.
-
-= 3.8.4 =
-* Add: User can duplicate a product in admin panel
-* Add: WooThemes integration support
-* Change: Total in Cart widget now excludes shipping and tax
-* Fix: Invalid country code in paypal-standard.merchant.php
-* Fix: Tax is not passed properly to Paypal Pro
-* Fix: Currency code preference not correctly selected in Paypal gateways
-* Fix: Paypal gateways doesn't check whether the currency being sent to Paypal is accepted or not, resulting in wrong currency
-* Fix: Checkout form selecting the wrong field when a previous field with the same uniquename was deleted
-* Fix: Various issues with Google Checkout
-* Fix: State data outside of US is not passed to payment gateways
-* Fix: State is not displaying correctly in the users purchase history
-* Fix: Wrong generated product permalink when a product is assigned multiple cats, and a product category is being viewed
-* Fix: Submitting a checkout form with mandatory billing state only refreshes the form although everything is filled out correctly
-* Fix: Billing Country is trimmed, and Billing State is not properly decoded
-* Fix: Billing and shipping state no longer stored correctly
-* Fix: Checkout form validation skips mandatory custom checkout fields on default form set
-* Fix: Paystation does not properly update purchase logs
-* Fix: When there's no product, and Sort Product By is set to 'dragndrop', viewing the admin product list would produce a Division by zero warning
-* Fix: Store sub-pages return 404 error
-* Fix: Only Purchase History in Your Account show the login option
-* Fix: Weight on Variations contain too many decimals
-* Fix: Add to Cart in grid view bypasses Variations selection
-* Fix: get_queried_object() requires WP 3.1
-* Fix: Invalid version number in display-update.page.php
-* Fix: Correct HTML, to stop Free Shipping Discount getting blanked
-* Fix: Support taxonomy archives for product_tag taxonomy
-
-= 3.8.3 =
-* New: Individual item details are sent to Paypal Express Checkout
-* Change: Automatically reload database update page when PHP maximum execution time is detected
-* Change: Add progress bar and estimated time remaining for database update tasks
-* Change: Themes can now use taxonomy-wpsc_product_category-{$term}.php and taxonomy-wpsc_product_category.php templates, which take precedence over page.php when viewing a product category
-* Change: Paypal Express Checkout API is updated to ver 71.0
-* Fix: Tax is calculated incorrectly when a coupon is used
-* Fix: Update a large database of products and variations take ages
-* Fix: Reloading database update page makes wpec scan the records from the beginning instead of continuing where it left off
-* Fix: Reactivating the plugin causes Fatal Error (PHP Timeout) if there are a lot of attached images (not just post products, but all image attachments)
-* Fix: Purchase logs' statuses are not properly updated when upgrading from 3.7.x
-* Fix: Billing state is not sent to checkout
-* Fix: Country name is truncated when sending to payment gateway
-* Fix: Billing state code is not properly converted before sending to payment gateway
-* Fix: Wrong USA country code is sent to Paypal Standard Payment
-* Fix: Wrong sandbox gateway URL for Paypal Pro
-* Fix: SSLVERIFY error when connecting to Paypal Pro Gateway
-* Fix: Template hierarchy error with child themes
-* Fix: Total amount is not visible when checking out with Paypal Express Checkout
-* Fix: Transaction result page is inaccurate after checking out with Paypal Express Checkout
-* Fix: Incompatibility with Thesis theme's loop when viewing product category, or paginated product listing
-
-= 3.8.2 =
-* Add: Currency display for Google RSS feed
-* Add: Third-party plugins can now filter 'wpsc-tax_rate' to provide their own tax solution
-* Change: Merchant subclasses now have access to $this->address_keys
-* Change: Grid Settings are now always visible
-* Change: Total Shipping is no longer included in notification email when shipping is disabled
-* Change: Thumbnail size for single product view now defaults to Single Product Page thumbnail size option
-* Change: wpsc_the_product_thumbnail() defaults to 'medium-single-product' size when in single product view
-* Fix: Update notice being displayed when it has already been completed
-* Fix: Broken image in latest products widget
-* Fix: Custom checkout field not always saved
-* Fix: Downloadable file list not updated after existing files are selected
-* Fix: Already attached downloadable files are duplicated each time you select an existing downloadable file
-* Fix: Inconsistent behavior when adding a new field to a checkout form set
-* Fix: Custom product slug not editable
-* Fix: Incompatibility issues with shipping helper and modules
-* Fix: Product meta are not included in Google product feed
-* Fix: Incorrect variation "from" price
-* Fix: Shortcode not working in single product description
-* Fix: Item cost not correctly calculated in paypal-standard-merchant
-* Fix: Invalid SSL URL for some images
-* Fix: Select from wrong table in WPSC_Merchant::get_authcode()
-* Fix: Wrong use of get_query_var() in wpsc_category_id()
-* Fix: Table `wordpress.wp_wpsc_product_list` doesn't exist
-* Fix: ?items_per_page=all is ignored
-* Fix: Duplicate transaction result emails
-* Fix: Wrong filter in wpsc_item_add_preview_file()
-* Fix: Wrong display type when using advanced search view mode and viewing a category
-* Fix: Category list is displayed in tag archive
-* Fix: wpsc_display_products_page() outputs "Fail" when the product shortcode is used 10 times (no kidding)
-* Fix: Single product view's thumbnail size is incorrect
-* Fix: Wrong featured thumbnail is displayed in Single Product View when there are multiple attached product images
-* Fix: Incorrect condition statements in WPSC_Coupons::compare_logic()
-* Fix: Can't add new field to checkout form set in IE
-* Fix: Missing trash icon when adding custom options to dropdowns in checkout form
-* Fix: Custom select, checkbox and radio fields are displayed as textbox on [userlog] page
-* Fix: Custom checkboxes, radios and select fields are not properly populated in Checkout form
-* Fix: Attachment metadata are not properly generated when converting product thumbnails from 3.7.x to 3.8
-
-= 3.8.1 =
-* Fix: Special price mix-up when ugprade to 3.8
-* Fix: Missing database update notice
-* Fix: Breadcrumb markup and style fixes
-* Fix: Deprecate WPSC_Query()
-* Fix: Deprecate wpsc_total_product_count()
-* Fix: Deprecate wpsc_print_product_list()
-* Change: Warning message for PHP 4 users. GoldCart requires PHP 5 or above.
-* Change: Don't display categories when there's a search
-
-= 3.8 =
-* Utilize custom post types for products
-* Utilize custom taxonomy for categories and variations
-* Database optimization
-* Redesigned taxes and shipping systems
-* New user interface
-* Integrates with WordPress Media Manager
-* Better template integration for designers
-* Optimized for ticketing (Tikipress)
-
 
 == Frequently Asked Questions ==
 
