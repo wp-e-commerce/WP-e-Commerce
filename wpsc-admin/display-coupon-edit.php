@@ -65,8 +65,8 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 						</th>
 						<td>
 							<?php
-							$start = $coupon['start']  == '0000-00-00 00:00:00' ? '' : $coupon['start'];
-							$end   = $coupon['expiry'] == '0000-00-00 23:59:59' ? '' : $coupon['expiry'];
+							$start = $coupon['start']  == '0000-00-00 00:00:00' ? '' : get_date_from_gmt( $coupon['start'], 'Y-m-d' );
+							$end   = $coupon['expiry'] == '0000-00-00 00:00:00' ? '' : get_date_from_gmt( $coupon['expiry'], 'Y-m-d' );
 							?>
 							<span class="description"><?php _e( 'Start: ', 'wpsc' ); ?></span>
 							<input name="edit_coupon_start" id="edit_coupon_start" type="text" value="<?php esc_attr_e( $start ); ?>" class="regular-text pickdate" style="width: 100px"/>
@@ -77,34 +77,34 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 
 					<tr>
 						<th scope="row" valign="top">
-							<label for="edit_coupon_active"><?php _e( 'Active', 'wpsc' ); ?></label>
+							<?php _e( 'Active', 'wpsc' ); ?>
 						</th>
 						<td>
 							<input type='hidden' value='0' name='edit_coupon_active' />
 							<input type="checkbox" value='1'<?php checked( 1, $coupon['active'] ); ?> name='edit_coupon_active' id="edit_coupon_active" />
-							<span><?php _e( 'Is this coupon active?', 'wpsc' ) ?></span>
+							<label for="edit_coupon_active"><?php _e( 'Is this coupon active?', 'wpsc' ) ?></label>
 						</td>
 					</tr>
 
 					<tr>
 						<th scope="row" valign="top">
-							<label for="edit_coupon_use_once"><?php _e( 'Use Once', 'wpsc' ); ?></label>
+							<?php _e( 'Use Once', 'wpsc' ); ?>
 						</th>
 						<td>
 							<input type='hidden' value='0' name='edit_coupon_use_once' />
 							<input type='checkbox' value='1'<?php checked( 1, $coupon['use-once'] ); ?> name='edit_coupon_use_once' id="edit_coupon_use_once" />
-							<span><?php _e( 'Deactivate coupon after it has been used.', 'wpsc' ) ?></span>
+							<label for="edit_coupon_use_once"><?php _e( 'Deactivate coupon after it has been used.', 'wpsc' ) ?></label>
 						</td>
 					</tr>
 
 					<tr>
 						<th scope="row" valign="top">
-							<label for="edit_coupon_use_x_times"><?php _e( 'Apply On All Products', 'wpsc' ); ?></label>
+							<?php _e( 'Apply On All Products', 'wpsc' ); ?>
 						</th>
 						<td>
 							</span><input type='hidden' value='0' name='edit_coupon_every_product' />
-							<input type="checkbox" value="1"<?php checked( 1, $coupon['every_product'] ); ?> name='edit_coupon_every_product'/>
-							<span><?php _e( 'This coupon affects each product at checkout.', 'wpsc' ) ?></span>
+							<input type="checkbox" value="1"<?php checked( 1, $coupon['every_product'] ); ?> name='edit_coupon_every_product' id="edit-coupon-every-product"/>
+							<label for="edit-coupon-every-product"><?php _e( 'This coupon affects each product at checkout.', 'wpsc' ) ?></label>
 						</td>
 					</tr>
 

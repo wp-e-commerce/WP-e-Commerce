@@ -53,34 +53,34 @@
 
 					<tr>
 						<th scope="row" valign="top">
-							<label for="add_active"><?php _e( 'Active', 'wpsc' ); ?></label>
+							<?php _e( 'Active', 'wpsc' ); ?>
 						</th>
 						<td>
 							<input type='hidden' value='0' name='add_active' />
 							<input type="checkbox" value='1' checked='checked' name='add_active' id="add_active" />
-							<span><?php _e( 'Activate coupon on creation.', 'wpsc' ) ?></span>
+							<label for="add_active"><?php _e( 'Activate coupon on creation.', 'wpsc' ) ?></label>
 						</td>
 					</tr>
 
 					<tr>
 						<th scope="row" valign="top">
-							<label for="add_use-once"><?php _e( 'Use Once', 'wpsc' ); ?></label>
+							<?php _e( 'Use Once', 'wpsc' ); ?>
 						</th>
 						<td>
 							<input type='hidden' value='0' name='add_use-once' />
 							<input type='checkbox' value='1' name='add_use-once' id="add_use-once" />
-							<span><?php _e( 'Deactivate coupon after it has been used.', 'wpsc' ) ?></span>
+							<label for="add_use-once"><?php _e( 'Deactivate coupon after it has been used.', 'wpsc' ) ?></label>
 						</td>
 					</tr>
 
 					<tr>
 						<th scope="row" valign="top">
-							<label for="add_every-product"><?php _e( 'Apply On All Products', 'wpsc' ); ?></label>
+							<?php _e( 'Apply On All Products', 'wpsc' ); ?>
 						</th>
 						<td>
 							</span><input type='hidden' value='0' name='add_every_product' />
 							<input type="checkbox" value="1" name='add_every_product' id="add_every-product"/>
-							<span class='description'><?php _e( 'This coupon affects each product at checkout.', 'wpsc' ) ?></span>
+							<label for="add_every-product"><?php _e( 'This coupon affects each product at checkout.', 'wpsc' ) ?></label>
 						</td>
 					</tr>
 
@@ -112,10 +112,7 @@
 								<input type="text" name="rules[value][]" style="width: 150px;"/>
 								<a title="<?php esc_attr_e( 'Delete condition', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus" href="#"><?php echo _x( '&ndash;', 'delete item', 'wpsc' ); ?></a>
 								<a title="<?php esc_attr_e( 'Add condition', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-plus" href="#"><?php echo _x( '+', 'add item', 'wpsc' ); ?></a>
-							</div><br/>
-							<a class="wpsc-coupons-condition-add button-secondary" onclick="add_another_property(jQuery(this));">
-								<?php _e( 'Add New Condition', 'wpsc' ); ?>
-							</a>
+							</div>
 						</td>
 					</tr>
 
