@@ -1362,7 +1362,7 @@ function wpsc_enable_page_filters( $excerpt = '' ) {
 	add_filter( 'the_content', 'wpsc_products_page', 1 );
 	add_filter( 'the_content', 'wpsc_single_template',12 );
 	add_filter( 'archive_template','wpsc_the_category_template');
-	add_filter( 'the_title', 'wpsc_the_category_title',10,2 );
+	add_filter( 'the_title', 'wpsc_the_category_title',10 );
 	add_filter( 'the_content', 'wpsc_place_shopping_cart', 12 );
 	add_filter( 'the_content', 'wpsc_transaction_results', 12 );
 	add_filter( 'the_content', 'wpsc_user_log', 12 );
