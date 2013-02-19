@@ -120,6 +120,17 @@ function wpsc_price_control_forms() {
 	if ( !isset( $product_data['meta']['_wpsc_special_price'] ) )
 		$product_data['meta']['_wpsc_special_price'] = $wpsc_product_defaults['special_price'];
 
+	$product_data['meta']['_wpsc_special_price'] = wpsc_format_number(
+		$product_data['meta']['_wpsc_special_price']
+	);
+
+	if ( ! isset( $product_data['meta']['_wpsc_price'] ) )
+		$product_data['meta']['_wpsc_price'] = 0;
+
+	$product_data['meta']['_wpsc_price'] = wpsc_format_number(
+		$product_data['meta']['_wpsc_price']
+	);
+
 	$currency_data = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_CURRENCY_LIST . "` ORDER BY `country` ASC", ARRAY_A );
 ?>
         <input type="hidden" id="parent_post" name="parent_post" value="<?php echo $post->post_parent; ?>" />
@@ -132,16 +143,15 @@ function wpsc_price_control_forms() {
 			<p><?php echo sprintf( __( 'This Product has variations, to edit the price please use the <a href="%s">Variation Controls</a>.' , 'wpsc'  ), '#wpsc_product_variation_forms' ); ?></p>
 			<p><?php printf( __( 'Price: %s and above.' , 'wpsc' ) , $price ); ?></p>
 		<?php else: ?>
-
     	<div class='wpsc_floatleft' style="width:85px;">
     		<label><?php esc_html_e( 'Price', 'wpsc' ); ?>:</label><br />
-			<input type='text' class='text' size='10' name='meta[_wpsc_price]' value='<?php echo ( isset($product_data['meta']['_wpsc_price']) ) ? number_format( (float)$product_data['meta']['_wpsc_price'], 2, '.', '' ) : '0.00';  ?>' />
+			<input type='text' class='text' size='10' name='meta[_wpsc_price]' value='<?php echo esc_attr( $product_data['meta']['_wpsc_price'] );  ?>' />
 		</div>
 		<div class='wpsc_floatleft' style='display:<?php if ( ( $product_data['special'] == 1 ) ? 'block' : 'none'
 	); ?>; width:85px; margin-left:30px;'>
 			<label for='add_form_special'><?php esc_html_e( 'Sale Price', 'wpsc' ); ?>:</label>
 			<div id='add_special'>
-				<input type='text' size='10' value='<?php echo ( isset($product_data['meta']['_wpsc_special_price']) ) ? number_format( (float)$product_data['meta']['_wpsc_special_price'], 2, '.', '' ) : '0.00' ; ?>' name='meta[_wpsc_special_price]' />
+				<input type='text' size='10' value='<?php echo esc_attr( $product_data['meta']['_wpsc_special_price'] ); ?>' name='meta[_wpsc_special_price]' />
 			</div>
 		</div>
 		<br style="clear:both" />
@@ -371,6 +381,11 @@ function wpsc_product_taxes_forms() {
 
 		if ( isset( $product_meta['wpec_taxes_taxable_amount'] ) ) {
 			$taxable_amount_input_settings['value'] = $product_meta['wpec_taxes_taxable_amount'];
+
+			if ( ! empty( $product_meta['wpec_taxes_taxable_amount'] ) )
+				$taxable_amount_input_settings['value'] = wpsc_format_number(
+					$taxable_amount_input_settings['value']
+				);
 		}
 	}// if
 
@@ -438,7 +453,7 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 	extract( $meta, EXTR_SKIP );
 
 	foreach ( $shipping as $key => &$val ) {
-		$val = number_format( (float) $val, 2 );
+		$val = wpsc_format_number( $val );
   	}
 
 	$weight = wpsc_convert_weight( $weight, 'pound', $weight_unit );
@@ -509,7 +524,7 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 					<?php endif ?>
 					<label for="wpsc-product-shipping-<?php echo $field['name']; ?>"><?php echo esc_html( $field['label'] ); ?></label>
 					<span class="wpsc-product-shipping-input">
-						<input type="text" id="wpsc-product-shipping-<?php echo $field['name']; ?>" name="<?php echo $field_name_prefix . $field['prefix'] . '[' . $field['name'] . ']'; ?>" value="<?php if ( ! $bulk ) echo esc_attr( $field['value'] ); ?>" />
+						<input type="text" id="wpsc-product-shipping-<?php echo $field['name']; ?>" name="<?php echo $field_name_prefix . $field['prefix'] . '[' . $field['name'] . ']'; ?>" value="<?php if ( ! $bulk ) echo esc_attr( wpsc_format_number( $field['value'] ) ); ?>" />
 						<select name="<?php echo $field_name_prefix . $field['prefix'] . '[' . $field['name'] . '_unit]'; ?>">
 							<?php foreach ( $field['units'] as $unit => $unit_label ): ?>
 								<option value="<?php echo $unit; ?>" <?php if ( ! $bulk ) selected( $unit, $measurements[$field['name'] . '_unit'] ); ?>><?php echo esc_html( $unit_label ); ?></option>

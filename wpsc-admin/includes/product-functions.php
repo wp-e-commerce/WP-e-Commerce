@@ -63,9 +63,20 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 	if(!isset($post_data['meta']['_wpsc_product_metadata']['display_weight_as'])) $post_data['meta']['_wpsc_product_metadata']['display_weight_as'] = '';
 
 	if ( isset( $post_data['meta']['_wpsc_product_metadata']['weight'] ) ) {
-		$weight = wpsc_convert_weight($post_data['meta']['_wpsc_product_metadata']['weight'], $post_data['meta']['_wpsc_product_metadata']['weight_unit'], "pound", true);
-		$post_data['meta']['_wpsc_product_metadata']['weight'] = wpsc_string_to_float( $weight );
+		$weight = wpsc_string_to_float( $post_data['meta']['_wpsc_product_metadata']['weight'] );
+		$weight = wpsc_convert_weight( $weight, $post_data['meta']['_wpsc_product_metadata']['weight_unit'], "pound", true);
+		$post_data['meta']['_wpsc_product_metadata']['weight'] = $weight;
         $post_data['meta']['_wpsc_product_metadata']['display_weight_as'] = $post_data['meta']['_wpsc_product_metadata']['weight_unit'];
+	}
+
+	if ( isset( $post_data['meta']['_wpsc_product_metadata']['dimensions'] ) ) {
+		$dimensions =& $post_data['meta']['_wpsc_product_metadata']['dimensions'];
+		foreach ( $dimensions as $key => $value ) {
+			if ( ! in_array( $key, array( 'height', 'width', 'length' ) ) )
+				continue;
+
+			$dimensions[$key] = wpsc_string_to_float( $value );
+		}
 	}
 
 	// table rate price
@@ -90,6 +101,11 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 		$post_data['meta']['_wpsc_product_metadata']['shipping']['local'] = wpsc_string_to_float( $post_data['meta']['_wpsc_product_metadata']['shipping']['local'] );
 		$post_data['meta']['_wpsc_product_metadata']['shipping']['international'] = wpsc_string_to_float( $post_data['meta']['_wpsc_product_metadata']['shipping']['international'] );
 	}
+
+	if ( ! empty( $post_data['meta']['_wpsc_product_metadata']['wpec_taxes_taxable_amount'] ) )
+		$post_data['meta']['_wpsc_product_metadata']['wpec_taxes_taxable_amount'] = wpsc_string_to_float(
+			$post_data['meta']['_wpsc_product_metadata']['wpec_taxes_taxable_amount']
+		);
 
 	// Advanced Options
 	$post_data['meta']['_wpsc_product_metadata']['engraved'] = (int)(bool)$post_data['meta']['_wpsc_product_metadata']['engraved'];
@@ -146,6 +162,7 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 		$post_data['tax_input']['wpsc_product_category'][1] = wpsc_add_product_category_default($product_id);
 
 	}
+
 	// and the meta
 	wpsc_update_product_meta($product_id, $post_data['meta']);
 

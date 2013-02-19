@@ -49,10 +49,10 @@ class WPSC_Product_Variations_Page {
 		update_product_meta( $id, 'product_metadata', $product_meta );
 
 		if ( isset( $data['price'] ) )
-			update_product_meta( $id, 'price', (float) $data['price'] );
+			update_product_meta( $id, 'price', wpsc_string_to_float( $data['price'] ) );
 
 		if ( isset( $data['sale_price'] ) )
-			update_product_meta( $id, 'special_price', $data['sale_price'] );
+			update_product_meta( $id, 'special_price', wpsc_string_to_float( $data['sale_price'] ) );
 
 		if ( isset( $data['sku'] ) )
 			update_product_meta( $id, 'sku', $data['sku'] );
