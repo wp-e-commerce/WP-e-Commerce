@@ -134,7 +134,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 			case 'start' :
 
 				if( ! empty( $item[ 'start'] ) && '0000-00-00 00:00:00' != $item['start'] ) {
-					$start_date = strtotime( $item[ $column_name ] );
+					$start_date = strtotime( get_date_from_gmt( $item[ $column_name ] ) );
 					$value      = date_i18n( get_option( 'date_format' ), $start_date );
 				} else {
 					$value = __( 'None', 'wpsc' );
@@ -145,8 +145,8 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 			case 'expiry' :
 
 				if( ! empty( $item[ 'expiry'] ) && '0000-00-00 00:00:00' != $item['expiry'] ) {
-					$expiry_date = strtotime( $item[ $column_name ] );
-					$value      = date_i18n( get_option( 'date_format' ), $expiry_date );
+					$expiry_date = strtotime( get_date_from_gmt( $item[ $column_name ] ) );
+					$value       = date_i18n( get_option( 'date_format' ), $expiry_date );
 				} else {
 					$value = __( 'None', 'wpsc' );
 				}
@@ -332,7 +332,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 					WPSC_TABLE_COUPON_CODES,
 					array( 'active' => 1 ),
 					array( 'id' => $coupon_id ),
-					array( '%d' ),
+					array( '%s' ),
 					array( '%d' )
 				);
 
@@ -344,7 +344,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 					WPSC_TABLE_COUPON_CODES,
 					array( 'active' => 0 ),
 					array( 'id' => $coupon_id ),
-					array( '%d' ),
+					array( '%s' ),
 					array( '%d' )
 				);
 
