@@ -109,7 +109,7 @@
 									<option value="category"><?php _e( 'In Category', 'wpsc' ); ?></option>
 								</select>
 
-								<input type="text" name="rules[value][]" style="width: 300px;"/>
+								<input type="text" name="rules[value][]" style="width: 150px;"/>
 								<a title="<?php esc_attr_e( 'Delete condition', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus" href="#"><?php echo _x( '&ndash;', 'delete item', 'wpsc' ); ?></a>
 								<a title="<?php esc_attr_e( 'Add condition', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-plus" href="#"><?php echo _x( '+', 'add item', 'wpsc' ); ?></a>
 							</div><br/>
