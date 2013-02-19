@@ -437,41 +437,40 @@ function _wpsc_is_in_custom_loop() {
 
 /**
  * Checks and replaces the Page title with the category title if on a category page
- * @access public
  *
  * @since 3.8
- * @param $title (string) The Page Title
- * @param $id (int) The Page ID
- * @return $title (string) the new title
+ * @access public
+ *
+ * @param string    $title      The Page Title
+ * @param int       $id         The Page ID
+ * @return string   $title      The new title
+ *
+ * @uses in_the_loop()                  Returns true if you are  in the loop
+ * @uses _wpsc_is_in_custom_loop()      Returns true if in the WPSC custom loop
+ * @uses is_tax()                       Returns true if you are on the supplied registered taxonomy
+ * @uses get_term_by()                  Gets term object by defined item, and what you pass
+ * @uses get_query_var()                Gets query var from wp_query
  */
-function wpsc_the_category_title($title='', $id=''){
-	global $wp_query, $wp_current_filter;
+function wpsc_the_category_title( $title='', $id='' ){
+
+	if ( ! empty( $id ) )
+		_wpsc_deprecated_argument( __FUNCTION__, '3.8.10', 'The $id param is not used. If you are trying to get the title of the category use get_term' );
+
 	if ( ! in_the_loop() || _wpsc_is_in_custom_loop() )
 		return $title;
 
 	$term = null;
-	if ( is_tax( 'wpsc_product_category' ) )
+	if ( is_tax( 'wpsc_product_category' ) ){
 		$term = get_term_by( 'slug', get_query_var( 'wpsc_product_category' ),'wpsc_product_category' );
-	elseif ( is_tax( 'product-tag' ) )
-		$term = get_term_by( 'slug', get_query_var( 'term' ),'product-tag' );
+	} elseif ( is_tax( 'product_tag' ) ){
+		$term = get_term_by( 'slug', get_query_var( 'term' ),'product_tag' );
+	} // is_tax
 
 	if ( $term )
 		return $term->name;
 
 	return $title;
 
-	//if this is paginated products_page
-	if( $wp_query->in_the_loop && empty($category->name) && isset( $wp_query->query_vars['paged'] ) && $wp_query->query_vars['paged'] && isset( $wp_query->query_vars['page'] ) && $wp_query->query_vars['page'] && 'wpsc-product' == $wp_query->query_vars['post_type']){
-		$post_id = wpsc_get_the_post_id_by_shortcode('[productspage]');
-		$post = get_post($post_id);
-		$title = $post->post_title;
-		remove_filter('the_title','wpsc_the_category_title');
-	}
-
-	if(!empty($category->name))
-		return $category->name;
-	else
-		return $title;
 }
 
 /**
