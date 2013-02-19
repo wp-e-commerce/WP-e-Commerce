@@ -56,33 +56,6 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 							<p class="description"><?php _e( 'The discount type', 'wpsc' ); ?></p>
 
 							<?php $display = $type == 2 ? '' : 'style="display:none;"'; ?>
-							<div id="free_shipping_options" <?php echo $display; ?>>
-
-								<select name='free_shipping_options[discount_country]' id='coupon_country_list' onchange='show_region_list();'>
-									<option value='' ><?php _e( 'All Countries and Regions', 'wpsc' ); ?></option>
-									<?php echo country_list(); ?>
-								</select>
-
-								<span id='discount_options_country'>
-								<?php
-								//i dont think we need this cu we need to do an ajax request to generate this list
-								//based on the country chosen probably need the span place holder tho
-								$region_list = $wpdb->get_results( "SELECT `" . WPSC_TABLE_REGION_TAX . "`.* FROM `" . WPSC_TABLE_REGION_TAX . "`, `" . WPSC_TABLE_CURRENCY_LIST . "`  WHERE `" . WPSC_TABLE_CURRENCY_LIST . "`.`isocode` AND `" . WPSC_TABLE_CURRENCY_LIST . "`.`id` = `" . WPSC_TABLE_REGION_TAX . "`.`country_id`", ARRAY_A );
-								if ( !empty( $region_list ) ) { ?>
-
-									<select name='free_shipping_options[discount_region]'>
-									<?php
-										foreach ( $region_list as $region ) { ?>
-										 <option value='<?php esc_attr_e( $region['id'] ); ?>' <?php selected( $region['id'], $coupon['discount_region'] ); ?> ><?php echo esc_html( $region['name'] ); ?></option>
-										 <?php
-										}
-									?>
-									</select>
-								<?php } ?>
-								</span>
-
-							</div>
-
 						</td>
 					</tr>
 
@@ -92,8 +65,8 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 						</th>
 						<td>
 							<?php
-							$start = $coupon['start']  == '0000-00-00 00:00:00' ? '' : $coupon['start'];
-							$end   = $coupon['expiry'] == '0000-00-00 23:59:59' ? '' : $coupon['expiry'];
+							$start = $coupon['start']  == '0000-00-00 00:00:00' ? '' : get_date_from_gmt( $coupon['start'], 'Y-m-d' );
+							$end   = $coupon['expiry'] == '0000-00-00 00:00:00' ? '' : get_date_from_gmt( $coupon['expiry'], 'Y-m-d' );
 							?>
 							<span class="description"><?php _e( 'Start: ', 'wpsc' ); ?></span>
 							<input name="edit_coupon_start" id="edit_coupon_start" type="text" value="<?php esc_attr_e( $start ); ?>" class="regular-text pickdate" style="width: 100px"/>
@@ -104,60 +77,57 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 
 					<tr>
 						<th scope="row" valign="top">
-							<label for="edit_coupon_active"><?php _e( 'Active', 'wpsc' ); ?></label>
+							<?php _e( 'Active', 'wpsc' ); ?>
 						</th>
 						<td>
 							<input type='hidden' value='0' name='edit_coupon_active' />
 							<input type="checkbox" value='1'<?php checked( 1, $coupon['active'] ); ?> name='edit_coupon_active' id="edit_coupon_active" />
-							<span><?php _e( 'Is this coupon active?', 'wpsc' ) ?></span>
+							<label for="edit_coupon_active"><?php _e( 'Is this coupon active?', 'wpsc' ) ?></label>
 						</td>
 					</tr>
 
 					<tr>
 						<th scope="row" valign="top">
-							<label for="edit_coupon_use_once"><?php _e( 'Use Once', 'wpsc' ); ?></label>
+							<?php _e( 'Use Once', 'wpsc' ); ?>
 						</th>
 						<td>
 							<input type='hidden' value='0' name='edit_coupon_use_once' />
 							<input type='checkbox' value='1'<?php checked( 1, $coupon['use-once'] ); ?> name='edit_coupon_use_once' id="edit_coupon_use_once" />
-							<span><?php _e( 'Deactivate coupon after it has been used.', 'wpsc' ) ?></span>
+							<label for="edit_coupon_use_once"><?php _e( 'Deactivate coupon after it has been used.', 'wpsc' ) ?></label>
 						</td>
 					</tr>
 
 					<tr>
 						<th scope="row" valign="top">
-							<label for="edit_coupon_use_x_times"><?php _e( 'Apply On All Products', 'wpsc' ); ?></label>
+							<?php _e( 'Apply On All Products', 'wpsc' ); ?>
 						</th>
 						<td>
 							</span><input type='hidden' value='0' name='edit_coupon_every_product' />
-							<input type="checkbox" value="1"<?php checked( 1, $coupon['every_product'] ); ?> name='edit_coupon_every_product'/>
-							<span><?php _e( 'This coupon affects each product at checkout.', 'wpsc' ) ?></span>
+							<input type="checkbox" value="1"<?php checked( 1, $coupon['every_product'] ); ?> name='edit_coupon_every_product' id="edit-coupon-every-product"/>
+							<label for="edit-coupon-every-product"><?php _e( 'This coupon affects each product at checkout.', 'wpsc' ) ?></label>
 						</td>
 					</tr>
 
-					<tr class="form-field">
-						<th scope="row" valign="top">
-							<label for="edit_coupon_use_x_times"><?php _e( 'Max Use', 'wpsc' ); ?></label>
-						</th>
-						<td>
-							<input type='hidden' value='0' name='edit_coupon_use_x_times' />
-							<input type='number' size='4' value='<?php esc_attr_e( absint( $coupon['use-x-times'] ) ); ?>' name='edit_coupon_use_x_times' class="small-text" />
-							<span class='description'><?php _e( 'Set the amount of times the coupon can be used.', 'wpsc' ) ?></span>
-						</td>
-					</tr>
-
-					<tr class="form-field">
+					<tr class="form-field coupon-conditions">
 						<th scope="row" valign="top">
 							<label><strong><?php _e( 'Conditions', 'wpsc' ); ?></strong></label>
 						</th>
 						<td>
 							<?php
 							$conditions = maybe_unserialize( $coupon['condition'] );
-							if( ! empty( $conditions ) ) :
-								foreach( $conditions as $key => $condition ) :
+
+							if ( empty( $conditions ) )
+								$conditions = array(
+									array(
+										'property' => '',
+										'logic'    => '',
+										'value'    => '',
+									)
+								);
+							foreach( $conditions as $key => $condition ) :
 								?>
-								<div class='coupon_condition'>
-									<select class="ruleprops" name="rules[<?php echo $key; ?>][property]">
+								<div class='coupon-condition'>
+									<select class="ruleprops" name="rules[property][]">
 										<option value="item_name"<?php selected( 'item_name', $condition['property'] ); ?> rel="order"><?php _e( 'Item name', 'wpsc' ); ?></option>
 										<option value="item_quantity"<?php selected( 'item_quantity', $condition['property'] ); ?> rel="order"><?php _e( 'Item quantity', 'wpsc' ); ?></option>
 										<option value="total_quantity"<?php selected( 'total_quantity', $condition['property'] ); ?> rel="order"><?php _e( 'Total quantity', 'wpsc' ); ?></option>
@@ -165,7 +135,7 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 										<?php do_action( 'wpsc_coupon_rule_property_options' ); ?>
 									</select>
 
-									<select name="rules[<?php echo $key; ?>][logic]">
+									<select name="rules[logic][]">
 										<option value="equal"<?php selected( 'equal', $condition['logic'] ); ?>><?php _e( 'Is equal to', 'wpsc' ); ?></option>
 										<option value="greater"<?php selected( 'greater', $condition['logic'] ); ?>><?php _e( 'Is greater than', 'wpsc' ); ?></option>
 										<option value="less"<?php selected( 'less', $condition['logic'] ); ?>><?php _e( 'Is less than', 'wpsc' ); ?></option>
@@ -176,42 +146,11 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 										<option value="category"<?php selected( 'category', $condition['logic'] ); ?>><?php _e( 'In Category', 'wpsc' ); ?></option>
 									</select>
 
-									<input type="text" name="rules[<?php echo $key; ?>][value]" value="<?php esc_attr_e( $condition['value'] ); ?>" style="width: 300px;"/>
-									<img height="16" width="16" class="delete" alt="Delete" src="<?php echo WPSC_CORE_IMAGES_URL; ?>/cross.png" onclick="jQuery(this).parent().remove();"/>
+									<input type="text" name="rules[value][]" value="<?php esc_attr_e( $condition['value'] ); ?>" style="width: 150px;"/>
+									<a title="<?php esc_attr_e( 'Delete condition', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus" href="#"><?php echo _x( '&ndash;', 'delete item', 'wpsc' ); ?></a>
+									<a title="<?php esc_attr_e( 'Add condition', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-plus" href="#"><?php echo _x( '+', 'add item', 'wpsc' ); ?></a>
 								</div>
-								<?php endforeach;
-							else : ?>
-							<div class='coupon_condition' >
-								<div class='first_condition'>
-									<select class="ruleprops" name="rules[0][property]">
-										<option value="item_name" rel="order"><?php _e( 'Item name', 'wpsc' ); ?></option>
-										<option value="item_quantity" rel="order"><?php _e( 'Item quantity', 'wpsc' ); ?></option>
-										<option value="total_quantity" rel="order"><?php _e( 'Total quantity', 'wpsc' ); ?></option>
-										<option value="subtotal_amount" rel="order"><?php _e( 'Subtotal amount', 'wpsc' ); ?></option>
-										<?php echo apply_filters( 'wpsc_coupon_rule_property_options', '' ); ?>
-									</select>
-
-									<select name="rules[0][logic]">
-										<option value="equal"><?php _e( 'Is equal to', 'wpsc' ); ?></option>
-										<option value="greater"><?php _e( 'Is greater than', 'wpsc' ); ?></option>
-										<option value="less"><?php _e( 'Is less than', 'wpsc' ); ?></option>
-										<option value="contains"><?php _e( 'Contains', 'wpsc' ); ?></option>
-										<option value="not_contain"><?php _e( 'Does not contain', 'wpsc' ); ?></option>
-										<option value="begins"><?php _e( 'Begins with', 'wpsc' ); ?></option>
-										<option value="ends"><?php _e( 'Ends with', 'wpsc' ); ?></option>
-										<option value="category"><?php _e( 'In Category', 'wpsc' ); ?></option>
-									</select>
-
-									<input type="text" name="rules[0][value]" style="width: 300px;"/>
-								</div>
-
-							</div>
-							<?php endif; ?>
-							<br/>
-							<a class="wpsc_coupons_condition_add button-secondary" onclick="edit_another_property(jQuery(this));">
-								<?php _e( 'Add New Condition', 'wpsc' ); ?>
-							</a>
-
+							<?php endforeach; ?>
 						</td>
 					</tr>
 

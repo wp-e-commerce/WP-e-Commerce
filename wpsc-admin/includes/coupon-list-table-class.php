@@ -40,6 +40,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	private $total_count;
 	private $active_count;
 	private $inactive_count;
+	private $statuses;
 
 
 	/**
@@ -58,6 +59,12 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 			'plural'    => 'coupons',
 			'ajax'      => false
 		) );
+
+		$this->statuses = array(
+			'active'   => _x( 'Active', 'coupon status', 'wpsc' ),
+			'inactive' => _x( 'Inactive', 'coupon status', 'wpsc' ),
+			'unknown'  => _x( 'Unknown', 'coupon status', 'wpsc' ),
+		);
 
 		$this->process_single_actions();
 		$this->count_coupons();
@@ -103,7 +110,6 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 			'cb'           => '<input type="checkbox" />',
 			'coupon'       => __( 'Code', 'wpsc' ),
 			'discount'     => __( 'Discount', 'wpsc' ),
-			'max_uses' 	   => __( 'Max Uses', 'wpsc' ),
 			'start'        => __( 'Start Date', 'wpsc' ),
 			'expiry'       => __( 'Expiration', 'wpsc' ),
 			'status'  	   => __( 'Status', 'wpsc' ),
@@ -128,7 +134,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 			case 'start' :
 
 				if( ! empty( $item[ 'start'] ) && '0000-00-00 00:00:00' != $item['start'] ) {
-					$start_date = strtotime( $item[ $column_name ] );
+					$start_date = strtotime( get_date_from_gmt( $item[ $column_name ] ) );
 					$value      = date_i18n( get_option( 'date_format' ), $start_date );
 				} else {
 					$value = __( 'None', 'wpsc' );
@@ -139,8 +145,8 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 			case 'expiry' :
 
 				if( ! empty( $item[ 'expiry'] ) && '0000-00-00 00:00:00' != $item['expiry'] ) {
-					$expiry_date = strtotime( $item[ $column_name ] );
-					$value      = date_i18n( get_option( 'date_format' ), $expiry_date );
+					$expiry_date = strtotime( get_date_from_gmt( $item[ $column_name ] ) );
+					$value       = date_i18n( get_option( 'date_format' ), $expiry_date );
 				} else {
 					$value = __( 'None', 'wpsc' );
 				}
@@ -210,15 +216,13 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 */
 
 	protected function column_status( $item ) {
-		switch( $item['status'] ) {
-			case 'active' :
-				$img = '<img src="' . WPSC_CORE_IMAGES_URL . '/yes_stock.gif"/>';
-				break;
-			case 'inactive' :
-				$img = '<img src="' . WPSC_CORE_IMAGES_URL . '/no_stock.gif"/>';
-				break;
-		}
-		return $img;
+		if ( ! array_key_exists( $item['status'], $this->statuses ) )
+			$item['status'] = 'unknown';
+
+		$column = '<span class="wpsc-coupon-status wpsc-coupon-status-%1$s">%2$s</a>';
+		$column = sprintf( $column, $item['status'], $this->statuses[$item['status']] );
+
+		return $column;
 	}
 
 
@@ -324,16 +328,41 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 		switch( $_GET['wpsc-action'] ) {
 
 			case 'activate_coupon':
-				$wpdb->query( $wpdb->prepare( "UPDATE " . WPSC_TABLE_COUPON_CODES . " SET active = 1 WHERE id = %d", $coupon_id ) );
+				$updated = $wpdb->update(
+					WPSC_TABLE_COUPON_CODES,
+					array( 'active' => 1 ),
+					array( 'id' => $coupon_id ),
+					array( '%s' ),
+					array( '%d' )
+				);
+
+				if ( $updated )
+				    echo "<div class='updated'><p>" . __( 'The coupon has been activated.', 'wpsc' ) . "</p></div>";
 				break;
 			case 'deactivate_coupon':
-				$wpdb->query( $wpdb->prepare( "UPDATE " . WPSC_TABLE_COUPON_CODES . " SET active = 0 WHERE id = %d", $coupon_id ) );
+				$updated = $wpdb->update(
+					WPSC_TABLE_COUPON_CODES,
+					array( 'active' => 0 ),
+					array( 'id' => $coupon_id ),
+					array( '%s' ),
+					array( '%d' )
+				);
+
+				if ( $updated )
+				    echo "<div class='updated'><p>" . __( 'The coupon has been deactivated.', 'wpsc' ) . "</p></div>";
 				break;
 			case 'delete_coupon':
-				$wpdb->query( $wpdb->prepare( "DELETE FROM " . WPSC_TABLE_COUPON_CODES . " WHERE id = %d", $coupon_id ) );
+				$deleted = $wpdb->delete(
+					WPSC_TABLE_COUPON_CODES,
+					array( 'id' => $coupon_id ),
+					array( '%d' )
+				);
+
+				if ( $deleted )
+					echo "<div class='updated'><p>" . __( 'The coupon has been deleted.', 'wpsc' ) . "</p></div>";
+
 				break;
 		}
-
 	}
 
 
@@ -394,7 +423,6 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 					'coupon'       => $coupon['coupon_code'],
 					'discount' 	   => $coupon['value'],
 					'type' 	       => $coupon['is-percentage'],
-					'max_uses' 	   => $coupon['use-x-times'],
 					'start'        => $coupon['start'],
 					'expiry'       => $coupon['expiry'],
 					'status'  	   => $coupon['active'] == 1 ? 'active' : 'inactive',
