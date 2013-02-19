@@ -16,7 +16,7 @@ Development status
 -------------------------
 
 * The latest stable version is [3.8.9.5](http://wordpress.org/extend/plugins/wp-e-commerce).
-* Active development version: 3.8.10-dev (branch [master](https://github.com/wp-e-commerce/WP-e-Commerce))
+* Active development version: 3.8.10-beta (branch [master](https://github.com/wp-e-commerce/WP-e-Commerce))
 * [Roadmap for 3.8.10](https://github.com/wp-e-commerce/wp-e-commerce/wiki/Roadmap)
 * [3.8.10 tickets](https://github.com/wp-e-commerce/wp-e-commerce/issues?labels=&milestone=4&page=1&sort=updated&state=open)
 
