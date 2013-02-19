@@ -46,7 +46,7 @@ function wpsc_display_coupons_page() {
 						'every_product' => $every_product,
 						'start' => $start_date,
 						'expiry' => $end_date,
-						'condition' => serialize( $new_rule )
+						'condition' => serialize( $new_rules )
 				    ),
 				    array(
 						'%s',
@@ -59,8 +59,6 @@ function wpsc_display_coupons_page() {
 						'%s',
 						'%s',
 						'%s',
-						'%s',
-						'%s'
 				    )
 				);
 			if ( $insert )
@@ -102,14 +100,12 @@ function wpsc_display_coupons_page() {
 				array( 'id'         => absint( $_POST['coupon_id'] ) ),
 				array(
 					'%s',
+					'%f',
 					'%s',
-					'%d',
-					'%d',
-					'%d',
 					'%s',
-					'%d',
-					'%d',
-					'%d',
+					'%s',
+					'%s',
+					'%s',
 					'%s',
 					'%s',
 					'%s'

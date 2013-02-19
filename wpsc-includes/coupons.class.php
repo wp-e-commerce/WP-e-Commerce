@@ -109,8 +109,7 @@ class wpsc_coupons {
 	 * @return bool True if coupon is not expried, used and still active, False otherwise.
 	 */
 	function validate_coupon() {
-		$now = date("Y-m-d H:i:s");
-		$now = strtotime($now);
+		$now = current_time( 'timestamp', true );
 
 		if ( ($this->active=='1') && !(($this->use_once == '1') && ($this->is_used=='1'))){
 			if ((strtotime($this->start_date) < $now)&&(strtotime($this->end_date) > $now)){
