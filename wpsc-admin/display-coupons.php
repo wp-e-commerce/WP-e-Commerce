@@ -64,7 +64,7 @@ function wpsc_display_coupons_page() {
 				    )
 				);
 			if ( $insert )
-			    echo "<div class='updated'><p align='center'>" . __( 'Thanks, the coupon has been added.', 'wpsc' ) . "</p></div>";
+			    echo "<div class='updated'><p>" . __( 'The coupon has been added.', 'wpsc' ) . "</p></div>";
 
 		}
 
@@ -85,7 +85,7 @@ function wpsc_display_coupons_page() {
 					unset( $new_rules[$key] );
 			}
 
-			$wpdb->update(
+			$update = $wpdb->update(
 				WPSC_TABLE_COUPON_CODES,
 				array(
 					'coupon_code'   => $_POST['edit_coupon_code'],
@@ -117,6 +117,8 @@ function wpsc_display_coupons_page() {
 				array( '%d' )
 			);
 
+			if ( $update )
+			    echo "<div class='updated'><p>" . __( 'The coupon has been updated.', 'wpsc' ) . "</p></div>";
 		}
 	}
 

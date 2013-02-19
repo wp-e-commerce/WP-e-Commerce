@@ -328,16 +328,41 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 		switch( $_GET['wpsc-action'] ) {
 
 			case 'activate_coupon':
-				$wpdb->query( $wpdb->prepare( "UPDATE " . WPSC_TABLE_COUPON_CODES . " SET active = 1 WHERE id = %d", $coupon_id ) );
+				$updated = $wpdb->update(
+					WPSC_TABLE_COUPON_CODES,
+					array( 'active' => 1 ),
+					array( 'id' => $coupon_id ),
+					array( '%d' ),
+					array( '%d' )
+				);
+
+				if ( $updated )
+				    echo "<div class='updated'><p>" . __( 'The coupon has been activated.', 'wpsc' ) . "</p></div>";
 				break;
 			case 'deactivate_coupon':
-				$wpdb->query( $wpdb->prepare( "UPDATE " . WPSC_TABLE_COUPON_CODES . " SET active = 0 WHERE id = %d", $coupon_id ) );
+				$updated = $wpdb->update(
+					WPSC_TABLE_COUPON_CODES,
+					array( 'active' => 0 ),
+					array( 'id' => $coupon_id ),
+					array( '%d' ),
+					array( '%d' )
+				);
+
+				if ( $updated )
+				    echo "<div class='updated'><p>" . __( 'The coupon has been deactivated.', 'wpsc' ) . "</p></div>";
 				break;
 			case 'delete_coupon':
-				$wpdb->query( $wpdb->prepare( "DELETE FROM " . WPSC_TABLE_COUPON_CODES . " WHERE id = %d", $coupon_id ) );
+				$deleted = $wpdb->delete(
+					WPSC_TABLE_COUPON_CODES,
+					array( 'id' => $coupon_id ),
+					array( '%d' )
+				);
+
+				if ( $deleted )
+					echo "<div class='updated'><p>" . __( 'The coupon has been deleted.', 'wpsc' ) . "</p></div>";
+
 				break;
 		}
-
 	}
 
 
