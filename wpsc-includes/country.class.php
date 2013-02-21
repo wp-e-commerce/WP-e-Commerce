@@ -1,6 +1,5 @@
 <?php
-class WPSC_Country
-{
+class WPSC_Country {
 	private static $string_cols = array(
 		'country',
 		'isocode',
