@@ -140,12 +140,19 @@ function wpsc_purchase_log_csv() {
 
 		$output = '';
 
+		foreach ( (array)$form_data as $form_field ) {
+			if ( empty ( $form_field['unique_name'] ) ) {
+				$form_headers_array[] = $form_field['name'];
+			} else {
+				$form_headers_array[] = $form_field['unique_name'];
+			}
+		}
+
 		foreach ( (array)$data as $purchase ) {
 			$form_headers = '';
 			$output .= "\"" . $purchase['id'] . "\","; //Purchase ID
 			$output .= "\"" . $purchase['totalprice'] . "\","; //Purchase Total
 			foreach ( (array)$form_data as $form_field ) {
-				$form_headers_array[] = $form_field['unique_name'];
 				$collected_data_sql = "SELECT * FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` WHERE `log_id` = '" . $purchase['id'] . "' AND `form_id` = '" . $form_field['id'] . "' LIMIT 1";
 				$collected_data = $wpdb->get_results( $collected_data_sql, ARRAY_A );
 				$collected_data = $collected_data[0];
@@ -187,10 +194,10 @@ function wpsc_purchase_log_csv() {
 			$headers3[] = _x( 'SKU', 'purchase log csv headers', 'wpsc' );
 		}
 
-		$headers      = '"' . implode( '","', $headers_array ) . '"';
-		$form_headers = '"' . implode( '","', $form_headers_array ) . '"';
-		$headers2     = '"' . implode( '","', $headers2_array ) . '"';
-		$headers3     = '"' . implode( '","', $headers3_array ) . '"';
+		$headers      = '"' . implode( '","', $headers_array ) . '",';
+		$form_headers = '"' . implode( '","', $form_headers_array ) . '",';
+		$headers2     = '"' . implode( '","', $headers2_array ) . '",';
+		$headers3     = '"' . implode( '","', $headers3 ) . '"';
 
 		$headers      = apply_filters( 'wpsc_purchase_log_csv_headers', $headers . $form_headers . $headers2 . $headers3, $data, $form_data );
 		$output       = apply_filters( 'wpsc_purchase_log_csv_output', $output, $data, $form_data );
