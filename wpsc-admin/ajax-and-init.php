@@ -10,7 +10,7 @@
  *
  * @uses update_option()                              Updates option in the database given key and value
  * @uses wp_delete_term()                             Removes term from the database
- * @uses fetch_rss()                                  DEPRECATED
+ * @uses fetch_feed()                                 Fetches RSS feed
  * @uses wpsc_member_dedeactivate_subscriptions()     @todo docs
  * @uses wpsc_member_deactivate_subscriptions()       @todo docs
  * @uses wpsc_update_purchase_log_status()            Updates the status of the logs for a purchase
@@ -50,7 +50,7 @@ function wpsc_admin_ajax() {
 
 	if ( isset( $_POST['hide_ecom_dashboard'] ) && $_POST['hide_ecom_dashboard'] == 'true' ) {
 		require_once (ABSPATH . WPINC . '/rss.php');
-		$rss = fetch_rss( 'http://www.instinct.co.nz/feed/' );
+		$rss = fetch_feed( 'http://www.instinct.co.nz/feed/' );
 		$rss->items = array_slice( $rss->items, 0, 5 );
 		$rss_hash = sha1( serialize( $rss->items ) );
 		update_option( 'wpsc_ecom_news_hash', $rss_hash );
