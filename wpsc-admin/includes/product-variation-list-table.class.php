@@ -232,10 +232,19 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 		<?php
 	}
 
+	/**
+	 * Stock Column
+	 *
+	 * @uses   get_product_meta  Get product meta data.
+     *
+     * @param  object $item      Product
+	 */
 	public function column_stock( $item ) {
-		$stock = (int) get_product_meta( $item->ID, 'stock', true );
+		$stock = get_product_meta( $item->ID, 'stock', true );
+		if ( ! empty( $stock ) )
+			$stock = absint( $stock );
 		?>
-			<input type="text" name="wpsc_variations[<?php echo $item->ID; ?>][stock]" value="<?php echo esc_attr( $stock ); ?>" />
+		<input type="text" name="wpsc_variations[<?php echo $item->ID; ?>][stock]" value="<?php echo esc_attr( $stock ); ?>" />
 		<?php
 	}
 
