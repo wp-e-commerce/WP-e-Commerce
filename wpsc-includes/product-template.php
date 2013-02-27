@@ -355,30 +355,44 @@ function wpsc_show_pnp(){
 		return true;
 	return false;
 }
+
 /**
-* wpsc_product_variation_price_available function
-* Checks for the lowest price of a products variations
-*
-* @return $price (string) number formatted price
-*/
-function wpsc_product_variation_price_available( $product_id, $from_text = false, $only_normal_price = false ){
-	static $price_data = array();
+ * WPSC Product Variation Price From
+ * Gets the formatted lowest price of a product's variations.
+ *
+ * @since  3.8.10
+ *
+ * @param  $product_id  (int)       Product ID
+ * @param  $args        (array)     Array of options
+ * @return              (string)    Number formatted price
+ *
+ * @uses   apply_filters()          Calls 'wpsc_do_convert_price' passing price and product ID.
+ * @uses   wpsc_currency_display()  Passing price and args.
+ */
+function wpsc_product_variation_price_from( $product_id, $args = null ) {
 	global $wpdb;
+	$args = wp_parse_args( $args, array(
+		'from_text'         => false,
+		'only_normal_price' => false,
+		'only_in_stock'     => false
+	) );
+
+	static $price_data = array();
 
 	if ( isset( $price_data[$product_id] ) ) {
 		$results = $price_data[$product_id];
 	} else {
+		$stock_sql = '';
+		if ( $args['only_in_stock'] )
+			$stock_sql = "INNER JOIN {$wpdb->postmeta} AS pm3 ON pm3.post_id = p.id AND pm3.meta_key = '_wpsc_stock' AND pm3.meta_value != '0'";
 		$sql = $wpdb->prepare( "
 			SELECT pm.meta_value AS price, pm2.meta_value AS special_price
 			FROM {$wpdb->posts} AS p
 			INNER JOIN {$wpdb->postmeta} AS pm ON pm.post_id = p.id AND pm.meta_key = '_wpsc_price'
 			INNER JOIN {$wpdb->postmeta} AS pm2 ON pm2.post_id = p.id AND pm2.meta_key = '_wpsc_special_price'
-			INNER JOIN {$wpdb->postmeta} AS pm3 ON pm3.post_id = p.id AND pm3.meta_key = '_wpsc_stock' AND pm3.meta_value != '0'
-
-			WHERE
-				p.post_type = 'wpsc-product'
-				AND
-				p.post_parent = %d
+			$stock_sql
+			WHERE p.post_type = 'wpsc-product'
+				AND p.post_parent = %d
 		", $product_id );
 
 		$results = $wpdb->get_results( $sql );
@@ -389,7 +403,7 @@ function wpsc_product_variation_price_available( $product_id, $from_text = false
 
 	foreach ( $results as $row ) {
 		$price = (float) $row->price;
-		if ( ! $only_normal_price ) {
+		if ( ! $args['only_normal_price'] ) {
 			$special_price = (float) $row->special_price;
 			if ( $special_price != 0 && $special_price < $price )
 				$price = $special_price;
@@ -404,12 +418,34 @@ function wpsc_product_variation_price_available( $product_id, $from_text = false
 	$price = wpsc_currency_display( $price, array( 'display_as_html' => false ) );
 
 	if ( isset( $prices[0] ) && $prices[0] == $prices[count( $prices ) - 1] )
-		$from_text = false;
+		$args['from_text'] = false;
 
-	if ( $from_text )
-		$price = sprintf( $from_text, $price );
+	if ( $args['from_text'] )
+		$price = sprintf( $args['from_text'], $price );
 
 	return $price;
+}
+
+/**
+ * WPSC Product Variation Price Available
+ * Gets the formatted lowest price of a product's available variations.
+ *
+ * @todo Deprecate in favour of wpsc_product_variation_price_from() and $only_in_stock arg.
+ *
+ * @param  $product_id         (int)     Product ID
+ * @param  $from_text          (string)  From text with price placeholder eg. 'from %s'
+ * @param  $only_normal_price  (bool)    Don't show sale price
+ * @return                     (string)  Number formatted price
+ *
+ * @uses   wpsc_product_variation_price_from()
+ */
+function wpsc_product_variation_price_available( $product_id, $from_text = false, $only_normal_price = false ) {
+	$args = array(
+		'from_text'         => $from_text,
+		'only_normal_price' => $only_normal_price,
+		'only_in_stock'     => true
+	);
+	return wpsc_product_variation_price_from( $product_id, $args );
 }
 
 /**
