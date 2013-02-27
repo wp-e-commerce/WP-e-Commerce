@@ -174,20 +174,20 @@ add_action( 'wpsc_manage_products_column_stock', '_wpsc_manage_products_column_s
  * @since  3.8.9
  * @access private
  *
- * @param  object  $post           Post object
- * @param  int     $post_id        Post ID
- * @param  boolean $has_variations Whether the product has variations
+ * @param  object   $post                     Post object
+ * @param  int      $post_id                  Post ID
+ * @param  boolean  $has_variations           Whether the product has variations
  *
- * @uses get_post_meta()                            Gets post meta given key and post_id
- * @uses wpsc_currency_display()                    Returns the currency after dealing with how the user wants it to be displayed
- * @uses wpsc_product_variation_price_available()   Gets the lowest price for the given post_id
+ * @uses get_post_meta()                      Gets post meta given key and post_id
+ * @uses wpsc_currency_display()              Returns the currency after dealing with how the user wants it to be displayed
+ * @uses wpsc_product_variation_price_from()  Gets the lowest variation price for the given post_id
  */
 function _wpsc_manage_products_column_price( $post, $post_id, $has_variations ) {
 	$price = get_post_meta( $post->ID, '_wpsc_price', true );
 	$has_var = '1';
 	if( ! $has_variations ) {
 		echo wpsc_currency_display( $price );
-		echo '<div id="inline_' . $post->ID . '_price" class="hidden">' . trim($price) . '</div>';
+		echo '<div id="inline_' . $post->ID . '_price" class="hidden">' . trim( $price ) . '</div>';
 		$has_var = '0';
 	}
 	else
@@ -205,13 +205,13 @@ add_action( 'wpsc_manage_products_column_price', '_wpsc_manage_products_column_p
  * @since  3.8.9
  * @access private
  *
- * @param  object  $post           Post object
- * @param  int     $post_id        Post ID
- * @param  boolean $has_variations Whether the product has variations
+ * @param  object   $post                     Post object
+ * @param  int      $post_id                  Post ID
+ * @param  boolean  $has_variations           Whether the product has variations
  *
- * @uses get_post_meta()            Gets post meta given key and post_id
- * @uses wpsc_currency_display()    Returns currency after taking user display options in to account
- * @uses wpsc_product_variation_price_available()   Gets the lowest price for the given post_id
+ * @uses get_post_meta()                      Gets post meta given key and post_id
+ * @uses wpsc_currency_display()              Returns currency after taking user display options in to account
+ * @uses wpsc_product_variation_price_from()  Gets the lowest variation price for the given post_id
  */
 function _wpsc_manage_products_column_sale_price( $post, $post_id, $has_variations ) {
 	$price = get_post_meta( $post->ID, '_wpsc_special_price', true );

@@ -458,8 +458,18 @@ function wpsc_product_normal_price() {
 }
 
 /**
- * wpsc product price function
- * @return string - the product price
+ * WPSC Product Price
+ *
+ * @param  $no_decimals        (bool)           Don't show decimals
+ * @param  $only_normal_price  (bool)           Don't show sale price
+ * @param  $product_id         (int)            Product ID
+ * @return                     (string)         Formatted product price
+ *
+ * @uses   apply_filters()                      Calls 'wpsc_product_variation_text' passing "from" text.
+ * @uses   apply_filters()                      Calls 'wpsc_do_convert_price' passing price and product ID.
+ * @uses   wpsc_product_has_variations()        Check if product has variations passing product ID.
+ * @uses   wpsc_product_variation_price_from()  Passing product ID and options.
+ * @uses   wpsc_currency_display()              Passing price and args.
  */
 function wpsc_the_product_price( $no_decimals = false, $only_normal_price = false, $product_id = 0 ) {
 	global $wpsc_query, $wpsc_variations, $wpdb;
@@ -1889,6 +1899,26 @@ function wpsc_product_has_variations( $id = 0 ) {
 	return $has_variations[$id];
 }
 
+/**
+ * WPSC The Product Price Display
+ *
+ * @param  $args  (array)   Array of args.
+ * @return        (string)  HTML formatted prices
+ *
+ * @uses   apply_filters()                      Calls 'wpsc_the_product_price_display_old_price_class' passing class and product ID
+ * @uses   apply_filters()                      Calls 'wpsc_the_product_price_display_old_price_amount_class' passing class and product ID
+ * @uses   apply_filters()                      Calls 'wpsc_the_product_price_display_price_class' passing class and product ID
+ * @uses   apply_filters()                      Calls 'wpsc_the_product_price_display_price_amount_class' passing class and product ID
+ * @uses   apply_filters()                      Calls 'wpsc_the_product_price_display_you_save_class' passing class and product ID
+ * @uses   apply_filters()                      Calls 'wpsc_the_product_price_display_you_save_amount_class' passing class and product ID
+ * @uses   wpsc_product_normal_price()          Get the normal price
+ * @uses   wpsc_the_product_price()             Get the current price
+ * @uses   wpsc_you_save()                      Get pricing saving
+ * @uses   wpsc_product_on_special()            Is product on sale?
+ * @uses   wpsc_product_has_variations()        Checks if product has variations
+ * @uses   wpsc_product_variation_price_from()  Gets the lowest variation price
+ * @uses   wpsc_currency_display()              Display price as currency
+ */
 function wpsc_the_product_price_display( $args = array() ) {
 	if ( empty( $args['id'] ) )
 		$id = get_the_ID();
