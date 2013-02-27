@@ -470,7 +470,10 @@ function wpsc_the_product_price( $no_decimals = false, $only_normal_price = fals
 	if ( wpsc_product_has_variations( $product_id ) ) {
 		$from_text = __( ' from %s', 'wpsc' );
 		$from_text = apply_filters( 'wpsc_product_variation_text', $from_text );
-		$output = wpsc_product_variation_price_available( $product_id, $from_text, $only_normal_price );
+		$output = wpsc_product_variation_price_from( $product_id, array(
+			'from_text'         => $from_text,
+			'only_normal_price' => $only_normal_price
+		) );
 	} else {
 		$price = $full_price = get_post_meta( $product_id, '_wpsc_price', true );
 
@@ -1942,8 +1945,8 @@ function wpsc_the_product_price_display( $args = array() ) {
 		// a specific variation
 		$show_you_save = false;
 
-		$old_price_number = wpsc_product_variation_price_available( $id, false, true );
-		$current_price_number = wpsc_product_variation_price_available( $id, false, false );
+		$old_price_number = wpsc_product_variation_price_from( $id, array( 'only_normal_price' => true ) );
+		$current_price_number = wpsc_product_variation_price_from( $id );
 
 		// if coincidentally, one of the variations are not on special, but its price is equal to
 		// or lower than the lowest variation sale price, old price should be hidden, and current

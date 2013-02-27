@@ -191,8 +191,11 @@ function _wpsc_manage_products_column_price( $post, $post_id, $has_variations ) 
 		$has_var = '0';
 	}
 	else
-		echo wpsc_product_variation_price_available( $post->ID ).'+';
-	echo '<input type="hidden" value="'.$has_var.'" id="inline_' . $post->ID . '_has_var" />';
+		echo wpsc_product_variation_price_from( $post->ID, array(
+			'only_normal_price' => true,
+			'from_text'         => '%s+'
+		) );
+	echo '<input type="hidden" value="' . $has_var . '" id="inline_' . $post->ID . '_has_var" />';
 }
 add_action( 'wpsc_manage_products_column_price', '_wpsc_manage_products_column_price', 10, 3 );
 
@@ -216,7 +219,7 @@ function _wpsc_manage_products_column_sale_price( $post, $post_id, $has_variatio
 		echo wpsc_currency_display( $price );
 		echo '<div id="inline_' . $post->ID . '_sale_price" class="hidden">' . $price  . '</div>';
 	} else
-		echo wpsc_product_variation_price_available( $post->ID ).'+';
+		echo wpsc_product_variation_price_from( $post->ID, array( 'from_text' => '%s+' ) );
 }
 add_action( 'wpsc_manage_products_column_sale_price', '_wpsc_manage_products_column_sale_price', 10, 3 );
 
