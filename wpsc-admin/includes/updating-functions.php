@@ -728,7 +728,7 @@ function wpsc_convert_variation_combinations() {
 					$post_data['_wpsc_product_metadata']['display_weight_as'] = $variation_item->weight_unit;
 					$post_data['_wpsc_product_metadata']['weight_unit'] = $variation_item->weight_unit;
 
-					// Parts of the code (eg wpsc_product_variation_price_available() make the assumption that these meta keys exist
+					// Parts of the code (eg wpsc_product_variation_price_from() make the assumption that these meta keys exist
  					$post_data['_wpsc_special_price'] = 0;
  					$post_data['_wpsc_sku'] = '';
 
