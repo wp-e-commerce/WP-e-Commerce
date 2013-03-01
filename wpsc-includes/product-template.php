@@ -427,28 +427,6 @@ function wpsc_product_variation_price_from( $product_id, $args = null ) {
 }
 
 /**
- * WPSC Product Variation Price Available
- * Gets the formatted lowest price of a product's available variations.
- *
- * @todo Deprecate in favour of wpsc_product_variation_price_from() and $only_in_stock arg.
- *
- * @param  $product_id         (int)     Product ID
- * @param  $from_text          (string)  From text with price placeholder eg. 'from %s'
- * @param  $only_normal_price  (bool)    Don't show sale price
- * @return                     (string)  Number formatted price
- *
- * @uses   wpsc_product_variation_price_from()
- */
-function wpsc_product_variation_price_available( $product_id, $from_text = false, $only_normal_price = false ) {
-	$args = array(
-		'from_text'         => $from_text,
-		'only_normal_price' => $only_normal_price,
-		'only_in_stock'     => true
-	);
-	return wpsc_product_variation_price_from( $product_id, $args );
-}
-
-/**
  * wpsc normal product price function
  * TODO determine why this function is here
  * @return string - returns some form of product price
