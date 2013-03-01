@@ -1320,3 +1320,24 @@ function wpsc_rage_where( $where ) {
     _wpsc_deprecated_function( __FUNCTION__, '3.8.8', 'wpsc_range_where()' );
     return wpsc_range_where( $where );
 }
+
+/**
+ * WPSC Product Variation Price Available
+ * Gets the formatted lowest price of a product's available variations.
+ *
+ * @param  $product_id         (int)     Product ID
+ * @param  $from_text          (string)  From text with price placeholder eg. 'from %s'
+ * @param  $only_normal_price  (bool)    Don't show sale price
+ * @return                     (string)  Number formatted price
+ *
+ * @uses   wpsc_product_variation_price_from()
+ */
+function wpsc_product_variation_price_available( $product_id, $from_text = false, $only_normal_price = false ) {
+    _wpsc_deprecated_function( __FUNCTION__, '3.8.10', 'wpsc_product_variation_price_from()' );
+	$args = array(
+		'from_text'         => $from_text,
+		'only_normal_price' => $only_normal_price,
+		'only_in_stock'     => true
+	);
+	return wpsc_product_variation_price_from( $product_id, $args );
+}
