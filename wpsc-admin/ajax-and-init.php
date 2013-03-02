@@ -48,15 +48,6 @@ function wpsc_admin_ajax() {
 		exit();
 	}
 
-	if ( isset( $_POST['hide_ecom_dashboard'] ) && $_POST['hide_ecom_dashboard'] == 'true' ) {
-		require_once (ABSPATH . WPINC . '/rss.php');
-		$rss = fetch_rss( 'http://www.instinct.co.nz/feed/' );
-		$rss->items = array_slice( $rss->items, 0, 5 );
-		$rss_hash = sha1( serialize( $rss->items ) );
-		update_option( 'wpsc_ecom_news_hash', $rss_hash );
-		exit( 1 );
-	}
-
 	if ( isset( $_REQUEST['log_state'] ) && $_REQUEST['log_state'] == "true" && is_numeric( $_POST['id'] ) && is_numeric( $_POST['value'] ) ) {
 		$newvalue = $_POST['value'];
 		if ( $_REQUEST['suspend'] == 'true' ) {
