@@ -1,8 +1,8 @@
 <?php
 /**
- * Some parts of this code were copied from functions.bb-meta.php in bbpress 
+ * Some parts of this code were copied from functions.bb-meta.php in bbpress
  */
- 
+
 function wpsc_sanitize_meta_key( $key )
 {
 	return preg_replace( '|[^a-z0-9_]|i', '', $key );
@@ -43,9 +43,9 @@ function wpsc_update_meta( $object_id = 0, $meta_key, $meta_value, $type, $globa
 		return false;
 	}
 	$cache_object_id = $object_id = (int) $object_id;
-	
+
 	$object_type = $type;
-	
+
 	$meta_key = wpsc_sanitize_meta_key( $meta_key );
 
 	$meta_tuple = compact( 'object_type', 'object_id', 'meta_key', 'meta_value', 'type' );
@@ -82,7 +82,7 @@ function wpsc_delete_meta( $object_id = 0, $meta_key, $meta_value, $type, $globa
 		return false;
 
 	$cache_object_id = $object_id = (int) $object_id;
-	
+
 	$object_type = $type;
 
 	$meta_key = wpsc_sanitize_meta_key( $meta_key );
@@ -156,7 +156,7 @@ function wpsc_delete_categorymeta( $cart_id, $meta_key, $meta_value = '' ) {
 
 /**
  * add_product_meta function.
- * 
+ *
  * @access public
  * @param mixed $product_id
  * @param mixed $key
@@ -171,7 +171,7 @@ function add_product_meta($product_id, $key, $value, $unique = false, $custom = 
 
 /**
  * delete_product_meta function.
- * 
+ *
  * @access public
  * @param mixed $product_id
  * @param mixed $key
@@ -185,7 +185,7 @@ function delete_product_meta($product_id, $key, $value = '') {
 
 /**
  * get_product_meta function.
- * 
+ *
  * @access public
  * @param mixed $product_id
  * @param mixed $key
@@ -199,7 +199,7 @@ function get_product_meta($product_id, $key, $single = false) {
 
 /**
  * update_product_meta function.
- * 
+ *
  * @access public
  * @param mixed $product_id
  * @param mixed $key
@@ -226,16 +226,16 @@ class wpsc_custom_meta {
 
 	function wpsc_custom_meta($postid) {
 		global $wpdb;
-		
+
 		$this->custom_meta = $wpdb->get_results( $wpdb->prepare("SELECT meta_key, meta_value, meta_id, post_id
-			FROM $wpdb->postmeta 
+			FROM $wpdb->postmeta
 			WHERE post_id = %d
 			AND `meta_key` NOT REGEXP '^_'
 			ORDER BY meta_key,meta_id", $postid), ARRAY_A );
-		
+
 		$this->custom_meta_count = count($this->custom_meta);
 	}
-	
+
 
 	function have_custom_meta() {
 		if (($this->current_custom_meta + 1) < $this->custom_meta_count) {
@@ -245,7 +245,7 @@ class wpsc_custom_meta {
 		}
 		return false;
 	}
-	
+
 	/*
 	 * Custom Meta Loop Code Starts here
 	*/
@@ -255,7 +255,7 @@ class wpsc_custom_meta {
 		return $this->custom_meta_values;
 	}
 
-	
+
 	function the_custom_meta() {
 		$this->custom_meta_values = $this->next_custom_meta();
 		return $this->custom_meta_values;
@@ -265,6 +265,5 @@ class wpsc_custom_meta {
 		if ($this->custom_meta_count > 0) {
 			$this->custom_meta_values = $this->custom_meta[0];
 		}
-	}	
+	}
 }
-?>
