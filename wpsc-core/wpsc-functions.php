@@ -741,7 +741,7 @@ function wpsc_start_the_query() {
 				$wpsc_query_vars['term'] = get_query_var( 'term' );
 			}else{
 				$wpsc_query_vars['post_type'] = 'wpsc-product';
-				$wpsc_query_vars['pagename'] = 'products-page';
+				$wpsc_query_vars['pagename']  = wpsc_get_page_slug( '[productspage]' );
 			}
 			if(1 == get_option('use_pagination')){
 				$wpsc_query_vars['nopaging'] = false;
@@ -1903,3 +1903,18 @@ function wpsc_get_product_terms( $product_id, $tax, $field = '' ) {
 	return $terms;
 }
 
+/**
+ * Returns page slug that corresponds to a given WPEC-specific shortcode.
+ *
+ * @since 3.8.10
+ * 
+ * @uses   wpsc_get_the_post_id_by_shortcode()  Gets page ID of shortcode.
+ * @uses   get_post_field()                     Returns post name of page ID.
+ * 
+ * @param  string $shortcode                    Shortcode of WPEC-specific page, e.g. '[productspage]''
+ * @return string                               Post slug
+ */
+function wpsc_get_page_slug( $shortcode ) {
+     $id = wpsc_get_the_post_id_by_shortcode( $shortcode );
+     return get_post_field( 'post_name', $id );
+}
