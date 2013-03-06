@@ -1262,7 +1262,6 @@ function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id 
 	}
 
 	// Calculate the height based on the ratio of the original dimensions.
-	// Blame Cameron if this is buggy :P
 	if ( $height == 0 || $width == 0 ) {
 		$attachment_meta = get_post_meta( $thumbnail_id, '_wp_attachment_metadata', false );
 		$original_width  = $attachment_meta[0]['width'];
