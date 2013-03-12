@@ -744,7 +744,7 @@ class wpsc_purchaselogs {
 	  $fname = $wpdb->get_var( $sql );
 	  $sql = "SELECT value FROM " . WPSC_TABLE_SUBMITTED_FORM_DATA . " WHERE log_id=" . $this->purchitem->id . " AND form_id=" . $lNameformid;
 	  $lname = $wpdb->get_var( $sql );
-	  $namestring = esc_html( $fname ) . ' ' . esc_html( $lname ) . ' (<a href="mailto:' . esc_attr( $email ) . '?subject=Message From ' . get_option( 'siteurl' ) . '">' . esc_html( $email ) . '</a>) ';
+	  $namestring = esc_html( $fname ) . ' ' . esc_html( $lname ) . ' (<a href="mailto:' . esc_attr( $email ) . '?subject=Message From ' . home_url() . '">' . esc_html( $email ) . '</a>) ';
 	  if ( $fname == '' && $lname == '' && $email == '' ) {
 		 $namestring = __('N/A', 'wpsc');
 	  }

@@ -315,9 +315,9 @@ function wpsc_has_downloads() {
 
 	foreach ( (array)$products as $key => $product ) {
 	if( empty( $product['uniqueid'] ) ) { // if the uniqueid is not equal to null, its "valid", regardless of what it is
-			$links[] = site_url() . "/?downloadid=" . $product['id'];
+			$links[] = home_url( '/?downloadid=' . $product['id'] );
 		} else {
-			$links[] = site_url() . "/?downloadid=" . $product['uniqueid'];
+			$links[] = home_url( '/?downloadid=' . $product['uniqueid'] );
  		}
 		$sql = $wpdb->prepare( "SELECT * FROM $wpdb->posts WHERE id = %d", $product['fileid'] );
 		$file = $wpdb->get_results( $sql, ARRAY_A );

@@ -54,7 +54,7 @@
 			</p>
 
 			<p><strong><?php esc_html_e( 'Phone:', 'wpsc' ); ?> </strong><?php echo wpsc_display_purchlog_buyers_phone(); ?></p>
-			<p><strong><?php esc_html_e( 'Email:', 'wpsc' ); ?> </strong><a href="mailto:<?php echo wpsc_display_purchlog_buyers_email(); ?>?subject=<?php echo rawurlencode( sprintf( __( 'Message from %s', 'wpsc' ), site_url() ) ); ?>"><?php echo wpsc_display_purchlog_buyers_email(); ?></a></p>
+			<p><strong><?php esc_html_e( 'Email:', 'wpsc' ); ?> </strong><a href="mailto:<?php echo wpsc_display_purchlog_buyers_email(); ?>?subject=<?php echo rawurlencode( sprintf( __( 'Message from %s', 'wpsc' ), home_url() ) ); ?>"><?php echo wpsc_display_purchlog_buyers_email(); ?></a></p>
 			<p><strong><?php esc_html_e( 'Payment Method:', 'wpsc' ); ?> </strong><?php echo wpsc_display_purchlog_paymentmethod(); ?></p>
 			<?php if(wpsc_display_purchlog_display_howtheyfoundus()) : ?>
 				<p><strong><?php esc_html_e( 'How User Found Us:', 'wpsc' ); ?> </strong><?php echo wpsc_display_purchlog_howtheyfoundus(); ?></p>

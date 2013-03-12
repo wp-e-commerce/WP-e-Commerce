@@ -181,7 +181,7 @@ class wpsc_merchant {
 			'cart_discount_value'     => $purchase_logs['discount_value'],
 			'cart_discount_coupon'    => $purchase_logs['discount_data'],
 			'cart_tax'                => $purchase_logs['wpec_taxes_total'],
-			'notification_url'        => add_query_arg( 'wpsc_action', 'gateway_notification', (get_option( 'siteurl' ) . "/index.php" ) ),
+			'notification_url'        => add_query_arg( 'wpsc_action', 'gateway_notification', home_url( '/index.php' ) ),
 			'transaction_results_url' => get_option( 'transact_url' ),
 			'shopping_cart_url'       => get_option( 'shopping_cart_url' ),
 			'products_page_url'       => get_option( 'product_list_url' ),

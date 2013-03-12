@@ -50,7 +50,7 @@ function wpsc_generate_product_feed() {
 
 	$args = apply_filters( 'wpsc_productfeed_query_args', $args );
 
-	$self = site_url( "/index.php?rss=true&amp;action=product_list$selected_category$selected_product" );
+	$self = home_url( "/index.php?rss=true&amp;action=product_list$selected_category$selected_product" );
 
 	header("Content-Type: application/xml; charset=UTF-8");
 	header('Content-Disposition: inline; filename="E-Commerce_Product_List.rss"');

@@ -640,8 +640,7 @@ function wpsc_get_current_category_id() {
 
 
 function wpsc_product_list_rss_feed() {
-	$rss_url = get_option('siteurl');
-	$rss_url = add_query_arg( 'wpsc_action', 'rss', $rss_url );
+	$rss_url = add_query_arg( 'wpsc_action', 'rss', home_url() );
 	$rss_url = str_replace('&', '&amp;', $rss_url);
 	$rss_url = esc_url( $rss_url ); // URL santization - IMPORTANT!
 
