@@ -567,7 +567,7 @@ define('TXT_WPSC_SELECTACATEGORY', 'Select a Product Group');
 define('TXT_WPSC_SELECTABRAND', 'Select a Brand');
 define('TXT_WPSC_ADDITIONALDESCRIPTION', 'Additional Description');
 define('TXT_WPSC_PRICE', 'Price');
-define('TXT_WPSC_TAXALREADYINCLUDED', 'Do not include tax (tax is set in <a href="'. get_option('siteurl').'/wp-admin/admin.php?page=wpsc-settings">shop config</a>)'); // this text has changed and needs updating
+define('TXT_WPSC_TAXALREADYINCLUDED', 'Do not include tax (tax is set in <a href="' . admin_url( 'admin.php?page=wpsc-settings' ) . '">shop config</a>)'); // this text has changed and needs updating
 define('TXT_WPSC_SPECIAL', 'Sale Price :'); // this text has changed and needs updating
 define('TXT_WPSC_PRODUCT_DISPLAY', 'Product Display');
 
