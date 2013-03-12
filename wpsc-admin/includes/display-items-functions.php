@@ -1044,9 +1044,8 @@ function wpsc_filter_delete_text( $translation, $text, $domain ) {
 }
 function edit_multiple_image_gallery( $post ) {
 	global $wpdb;
-	//Make sure thumbnail isn't duplicated
-	$siteurl = site_url();
 
+	// Make sure thumbnail isn't duplicated
 	if ( $post->ID > 0 ) {
 		if ( has_post_thumbnail( $post->ID ) )
 			echo get_the_post_thumbnail( $post->ID, 'admin-product-thumbnails' );

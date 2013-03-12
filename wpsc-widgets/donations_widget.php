@@ -121,9 +121,7 @@ function wpsc_donations( $args = null ) {
 	
 	// Args not used yet but this is ready for when it is
 	$args = wp_parse_args( (array)$args, array() );
-	
-	$siteurl = get_option( 'siteurl' );
-	
+
 	$products = $wpdb->get_results( "SELECT DISTINCT `p` . * , `m`.`meta_value` AS `special_price`
 		FROM `" . $wpdb->postmeta . "` AS `m`
 		JOIN `" . $wpdb->posts . "` AS `p` ON `m`.`post_id` = `p`.`ID`

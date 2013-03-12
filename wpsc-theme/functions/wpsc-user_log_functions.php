@@ -15,8 +15,6 @@ if ( get_option( 'permalink_structure' ) != '' )
 else
 	$separator = "&amp;";
 
-$siteurl = site_url();
-
 function validate_form_data() {
 
 	global $wpdb, $user_ID, $wpsc_purchlog_statuses;
