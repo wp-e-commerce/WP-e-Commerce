@@ -176,8 +176,6 @@ function wpsc_specials( $args = null, $instance ) {
 
 	$args = wp_parse_args( (array) $args, array( 'number' => 5 ) );
 
-	$siteurl = get_option( 'siteurl' );
-
 	if ( ! $number = (int) $instance['number'] )
 		$number = 5;
 

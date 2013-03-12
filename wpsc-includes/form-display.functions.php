@@ -66,7 +66,6 @@ function wpsc_parent_category_list( $taxonomies, $args, $parent, $current_term_i
  */
 function wpsc_category_options( $group_id, $this_category = null, $category_id = null, $iteration = 0, $selected_id = null ) {
 	global $wpdb;
-	$siteurl = get_option( 'siteurl' );
 	$selected_term = get_term($selected_id,'wpsc_product_category');
 	$values = get_terms( 'wpsc_product_category', 'hide_empty=0&parent=' . $group_id );
 	$selected = "";
