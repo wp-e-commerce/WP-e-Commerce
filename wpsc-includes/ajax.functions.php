@@ -71,7 +71,7 @@ function wpsc_add_to_cart() {
 		$provided_parameters['quantity'] = (int) $_POST['wpsc_quantity_update'];
 	}
 
-	if ( isset( $_POST['is_customisable'] ) &&  
+	if ( isset( $_POST['is_customisable'] ) &&
 		'true' == $_POST['is_customisable'] ) {
 		$provided_parameters['is_customisable'] = true;
 
@@ -87,7 +87,7 @@ function wpsc_add_to_cart() {
 		$provided_parameters['provided_price'] = (float) $_POST['donation_price'];
 	}
 
-	$parameters = array_merge( $default_parameters, (array) $provided_parameters );
+	$parameters = array_merge( $default_parameters, apply_filters('wpsc_add_to_cart_parameters', $provided_parameters) );
 
 	$cart_item = $wpsc_cart->set_item( $product_id, $parameters );
 
