@@ -128,7 +128,7 @@ function _wpsc_get_cart_item_downloadable_links( $item, $purchase_log ) {
 		$file_name = $current_Dl_product_file_post->post_title;
 		$downloadid = is_null( $single_download->uniqueid ) ? $single_download->id : $single_download->uniqueid;
 		$links[] = array(
-			'url' => add_query_arg( 'downloadid', $downloadid, home_url() ),
+			'url' => add_query_arg( 'downloadid', $downloadid, home_url( '/' ) ),
 			'name' => $file_name
 		);
 	}

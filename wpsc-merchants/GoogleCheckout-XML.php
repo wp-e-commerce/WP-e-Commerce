@@ -424,7 +424,7 @@ function form_google(){
 		<td>".__('API callback URL','wpsc').":</td>
 	</tr>
 	<tr>
-		<td colspan='2'><strong>" . home_url( '/index.php' ) . "</strong></td>
+		<td colspan='2'><strong>" . home_url( '/' ) . "</strong></td>
 	</tr>
 	<tr>
 		<td colspan='2'>
