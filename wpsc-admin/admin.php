@@ -601,7 +601,6 @@ function wpsc_admin_dynamic_js() {
 	header( 'Cache-Control: public, must-revalidate, max-age=86400' );
 	header( 'Pragma: public' );
 
-	$siteurl = get_option( 'siteurl' );
 	$hidden_boxes = get_option( 'wpsc_hidden_box' );
 
 	$form_types1 = get_option( 'wpsc_checkout_form_fields' );
@@ -618,7 +617,7 @@ function wpsc_admin_dynamic_js() {
 	}
 
 	$hidden_boxes = implode( ',', (array)$hidden_boxes );
-	echo "var base_url = '" . esc_js( $siteurl ) . "';\n\r";
+	echo "var base_url = '" . esc_js( site_url() ) . "';\n\r";
 	echo "var WPSC_URL = '" . esc_js( WPSC_URL ) . "';\n\r";
 	echo "var WPSC_IMAGE_URL = '" . esc_js( WPSC_IMAGE_URL ) . "';\n\r";
 	echo "var WPSC_DIR_NAME = '" . esc_js( WPSC_DIR_NAME ) . "';\n\r";

@@ -124,7 +124,7 @@ function wpsc_display_upgrades_page() {
 function wpsc_reset_api_key() {
 	if ( isset( $_POST['reset_api_key'] ) && ( $_POST['reset_api_key'] == 'true' ) ) {
 		if ( $_POST['activation_name'] != null ) {
-			$target = "http://instinct.co.nz/wp-goldcart-api/api_register.php?name=" . $_POST['activation_name'] . "&key=" . $_POST['activation_key'] . "&url=" . get_option( 'siteurl' ) . "";
+			$target = "http://instinct.co.nz/wp-goldcart-api/api_register.php?name=" . $_POST['activation_name'] . "&key=" . $_POST['activation_key'] . "&url=" . site_url() . "";
 
 			$remote_access_fail = false;
 			$useragent = 'WP e-Commerce plugin';
@@ -133,7 +133,7 @@ function wpsc_reset_api_key() {
 			$activation_key = urlencode( $_POST['activation_key'] );
 			$activation_state = update_option( 'activation_state', "false" );
 
-			$siteurl = urlencode( get_option( 'siteurl' ) );
+			$siteurl = urlencode( site_url() );
 			$request = '';
 
 			$http_request = "GET /wp-goldcart-api/api_register.php?name=$activation_name&key=&url=$siteurl HTTP/1.0\r\n";
