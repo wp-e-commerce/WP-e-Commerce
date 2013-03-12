@@ -672,7 +672,7 @@ function paypal_processingfunctions(){
 		$nvpstr='&TOKEN='.$token.'&PAYERID='.$payerID.'&PAYMENTREQUEST_0_PAYMENTACTION=Sale&PAYMENTREQUEST_0_CURRENCYCODE='.$currCodeType.'&IPADDRESS='.$serverName."&BUTTONSOURCE=".$BN."&PAYMENTREQUEST_0_INVNUM=".urlencode( $sessionid );
 		// IPN data
 		if (get_option('paypal_ipn') == 1) {
-			$notify_url = add_query_arg( 'wpsc_action', 'gateway_notification', (get_option( 'siteurl' ) . "/index.php" ) );
+			$notify_url = add_query_arg( 'wpsc_action', 'gateway_notification', home_url( '/index.php' ) );
 			$notify_url = add_query_arg('gateway', 'wpsc_merchant_paypal_express', $notify_url);
 			$notify_url = apply_filters('wpsc_paypal_express_notify_url', $notify_url);
 			$nvpstr .= '&PAYMENTREQUEST_0_NOTIFYURL='.urlencode( $notify_url );

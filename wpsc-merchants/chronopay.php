@@ -24,9 +24,9 @@ function gateway_chronopay($separator, $sessionid)
 	$data['product_name'] = get_option('chronopay_product_name');
 	$data['product_price_currency'] = get_option('chronopay_curcode');
 	$data['language'] = get_option('chronopay_language');
-	$data['cb_url'] = get_option('siteurl')."/?chronopay_callback=true";
+	$data['cb_url'] = home_url( '/?chronopay_callback=true' );
 	$data['cb_type'] = 'P';
-	$data['decline_url'] = get_option('siteurl')."/?chronopay_callback=true";
+	$data['decline_url'] = home_url( '/?chronopay_callback=true' );
 	$data['cs1'] = $sessionid;
 	$data['cs2'] = 'chronopay';
 	$salt = get_option('chronopay_salt');
