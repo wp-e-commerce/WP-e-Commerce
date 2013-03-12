@@ -139,7 +139,7 @@ function wpsc_decrement_claimed_stock($purchase_log_id) {
 						if ( ! empty( $product_meta["unpublish_when_none_left"] ) ) {
 							$result = wp_update_post( array(
 								'ID'          => $product->ID,
-								'post_status' => $draft,
+								'post_status' => 'draft',
 							) );
 
 							if ( $result )
