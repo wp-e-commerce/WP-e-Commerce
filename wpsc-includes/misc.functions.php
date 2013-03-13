@@ -57,7 +57,7 @@ function wpsc_country_has_state($country_code){
  * @return int The new user's ID.
  */
 function wpsc_add_new_user( $user_login, $user_pass, $user_email ) {
-	require_once(ABSPATH . WPINC . '/registration.php');
+
 	$errors = new WP_Error();
 	$user_login = sanitize_user( $user_login );
 	$user_email = apply_filters( 'user_registration_email', $user_email );
