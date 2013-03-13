@@ -309,7 +309,7 @@ function wpsc_display_category_loop($query, $category_html, &$category_branch = 
 		$category_count_html =  $start_element.$category_count.$end_element;
 
 
-		if($sub_categories != '') {
+		if($sub_categories != '' && isset( $query['subcategory_container'] ) ) {
 			$start_element = $query['subcategory_container']['start_element'];
 			$end_element = $query['subcategory_container']['end_element'];
 			$sub_categories = $start_element.$sub_categories.$end_element;
