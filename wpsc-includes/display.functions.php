@@ -348,12 +348,9 @@ function wpsc_obtain_the_description() {
 
 	// Return Category Description
 	if ( is_numeric( get_query_var('category_id') ) ) {
-		$category_id = get_query_var('category_id');
+		$output = wpsc_get_categorymeta( get_query_var('category_id'), 'description' );
 	} else if ( ! empty($_GET['category']) ) {
-		$category_id = absint( $_GET['category'] );
-	}
-	if ( is_numeric( $category_id ) ) {
-		$output = wpsc_get_categorymeta( $category_id, 'description' );
+		$output = wpsc_get_categorymeta( absint( $_GET['category'] ), 'description' );
 	}
 
 	// Return product content as description if product page
