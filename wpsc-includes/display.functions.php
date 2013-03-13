@@ -357,7 +357,7 @@ function wpsc_obtain_the_description() {
 	}
 
 	// Return product content as description if product page
-	if ( !empty($_GET['product_id'] )) && is_numeric( $_GET['product_id'] ) ) {
+	if ( !empty($_GET['product_id'] ) && is_numeric( $_GET['product_id'] ) ) {
 		$product = get_post(absint( $_GET['product_id'] ));
 		$output = $product->post_content;
 	}
