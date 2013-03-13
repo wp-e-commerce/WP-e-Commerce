@@ -70,20 +70,20 @@ function wpsc_also_bought( $product_id ) {
 	if ( get_option( 'wpsc_also_bought' ) == 0 ) {
 		return '';
 	}
-	
+
 	// To be made customiseable in a future release
 	$also_bought_limit = 3;
 	$element_widths = 96;
 	$image_display_height = 96;
 	$image_display_width = 96;
-	
+
 	// Filter will be used by a plugin to provide 'Also Bought' functionality when this is deprecated from core.
 	// Filter is currently private and should not be used by plugin/theme devs as it may only be temporary.
 	$output = apply_filters( '_wpsc_also_bought', '', $product_id );
 	if ( ! empty( $output ) ) {
 		return $output;
 	}
-	
+
 	// If above filter returns output then the following is ignore and can be deprecated in future.
 	$also_bought = $wpdb->get_results( $wpdb->prepare( "SELECT `" . $wpdb->posts . "`.* FROM `" . WPSC_TABLE_ALSO_BOUGHT . "`, `" . $wpdb->posts . "` WHERE `selected_product`= %d AND `" . WPSC_TABLE_ALSO_BOUGHT . "`.`associated_product` = `" . $wpdb->posts . "`.`id` AND `" . $wpdb->posts . "`.`post_status` IN('publish','protected') ORDER BY `" . WPSC_TABLE_ALSO_BOUGHT . "`.`quantity` DESC LIMIT $also_bought_limit", $product_id ), ARRAY_A );
 	if ( is_array( $also_bought ) && count( $also_bought ) > 0 ) {
@@ -339,25 +339,29 @@ function wpsc_obtain_the_title() {
 	return $output.$seperator;
 }
 
+/**
+ *	Return category or product description depending on queried item
+ */
 function wpsc_obtain_the_description() {
-	global $wpdb, $wp_query, $wpsc_title_data;
+
 	$output = null;
 
-	if ( is_numeric( $wp_query->query_vars['category_id'] ) ) {
-		$category_id = $wp_query->query_vars['category_id'];
-	} else if ( $_GET['category'] ) {
+	// Return Category Description
+	if ( is_numeric( get_query_var('category_id') ) ) {
+		$category_id = get_query_var('category_id');
+	} else if ( ! empty($_GET['category']) ) {
 		$category_id = absint( $_GET['category'] );
 	}
-
 	if ( is_numeric( $category_id ) ) {
 		$output = wpsc_get_categorymeta( $category_id, 'description' );
 	}
 
-
-	if ( is_numeric( $_GET['product_id'] ) ) {
-		$product_id = absint( $_GET['product_id'] );
-		$output = $wpdb->get_var( $wpdb->prepare( "SELECT `post_content` FROM `" . $wpdb->posts . "` WHERE `id` = %d LIMIT 1", $product_id ) );
+	// Return product content as description if product page
+	if ( !empty($_GET['product_id'] )) && is_numeric( $_GET['product_id'] ) ) {
+		$product = get_post(absint( $_GET['product_id'] ));
+		$output = $product->post_content;
 	}
+
 	return $output;
 }
 
