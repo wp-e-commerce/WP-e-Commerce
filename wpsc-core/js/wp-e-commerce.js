@@ -1,13 +1,14 @@
-function wpsc_shipping_same_as_billing(){
-		var billing_state_input = jQuery('input[title="billingstate"]'),
-		billing_vars = jQuery("input[title='billingfirstname'], input[title='billinglastname'], textarea[title='billingaddress'], input[title='billingcity'], input[title='billingpostcode'], input[title='billingphone'], input[title='billingfirstname'], input[title='billingstate']");
+
+	function wpsc_shipping_same_as_billing(){
+		var billing_state_input = jQuery('input[title="billingstate"]');
 		jQuery('#shippingsameasbillingmessage').slideDown('slow');
+		jQuery("input[title='billingfirstname'], input[title='billinglastname'], textarea[title='billingaddress'], input[title='billingcity'], input[title='billingpostcode'], input[title='billingphone'], input[title='billingfirstname'], input[title='billingstate']").unbind('change', wpsc_shipping_same_as_billing).unbind('keyup', wpsc_shipping_same_as_billing).keyup(wpsc_shipping_same_as_billing).change(wpsc_shipping_same_as_billing);
 
 		billing_vars.off( 'change', wpsc_shipping_same_as_billing);
 		billing_vars.off('keyup', wpsc_shipping_same_as_billing);
 		billing_vars.keyup(wpsc_shipping_same_as_billing).change(wpsc_shipping_same_as_billing);
 
-		jQuery("select[title='billingregion'], select[title='billingstate'], select[title='billingcountry'], input[title='billingstate']").on( 'change', wpsc_shipping_same_as_billing );
+		jQuery("select[title='billingregion'], select[title='billingstate'], select[title='billingcountry'], input[title='billingstate']").die( 'change', wpsc_shipping_same_as_billing ).live( 'change', wpsc_shipping_same_as_billing );
 		jQuery("select[title='billingregion'], select[title='billingstate'], select[title='billingcountry'], input[title='billingstate']").off( 'change', wpsc_shipping_same_as_billing );
 
 		var fields = new Array(
@@ -297,6 +298,7 @@ jQuery(document).ready(function ($) {
 	// update the price when the variations are altered.
 	jQuery( 'div.wpsc_variation_forms' ).on( 'change', '.wpsc_select_variation', function() {
 		jQuery('option[value="0"]', this).attr('disabled', 'disabled');
+		self = this;
 		var parent_form = jQuery(this).closest("form.product_form");
 		if ( parent_form.length === 0 )
 			return;
@@ -311,7 +313,7 @@ jQuery(document).ready(function ($) {
 				donation_price = jQuery('input#donation_price_' + prod_id),
 				old_price = jQuery('#old_product_price_' + prod_id),
 				save = jQuery('#yousave_' + prod_id),
-				buynow = jQuery('#BB_BuyButtonForm' + prod_id);
+				buynow = jQuery('#buy-now-product_' + prod_id);
 
 			jQuery( document ).trigger( { type : 'wpsc_select_variation', response : response } );
 
@@ -342,6 +344,9 @@ jQuery(document).ready(function ($) {
 					}
 				}
 				donation_price.val(response.numeric_price);
+
+				buynow.find('input[name="'+$(self).prop('name')+'"]').val($(self).val());
+				buynow.find('input.wpsc-buy-now-button').prop('disabled', false);
 			}
 		}, 'json' );
 	});
