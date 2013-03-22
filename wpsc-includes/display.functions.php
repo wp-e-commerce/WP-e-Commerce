@@ -35,11 +35,12 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 				$handling = $shipping;
 			}
 
+			$has_variants = wpsc_product_has_variations($product_id);
 			$src = _x( 'https://www.paypal.com/en_US/i/btn/btn_buynow_LG.gif', 'PayPal Buy Now Button', 'wpsc' );
 			$src = apply_filters( 'wpsc_buy_now_button_src', $src );
 			$classes = "wpsc-buy-now-form wpsc-buy-now-form-{$product_id}";
 			$button_html = sprintf('<input %s class="wpsc-buy-now-button wpsc-buy-now-button-%s" type="image" name="submit" border="0" src="%s" alt="%s" />',
-				disabled(wpsc_product_has_variations($product_id), true, false),
+				disabled( $has_variants, true, false ),
 				esc_attr( $product_id ),
 				esc_url( $src ),
 				esc_attr__( 'PayPal - The safer, easier way to pay online', 'wpsc' )
@@ -50,7 +51,7 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 				<input type="hidden" name="wpsc_buy_now_callback" value="1" />
 				<input type="hidden" name="product_id" value="<?php echo esc_attr( $product_id ); ?>" />
 <?php
-				if( wpsc_product_has_variations($product_id) ):
+				if( $has_variants ):
 					// grab the variation form fields here
 					$wpsc_variations = new wpsc_variations( $product_id );
 					while ( wpsc_have_variation_groups() ) : wpsc_the_variation_group();
