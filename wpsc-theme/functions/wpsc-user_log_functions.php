@@ -435,14 +435,14 @@ function wpsc_user_purchases() {
 
 		echo "<tr class='$alternate'>\n\r";
 		echo " <td class='status processed'>";
-		echo "<a href='#' onclick='return show_details_box(\"status_box_" . $purchase['id'] . "\",\"log_expander_icon_" . $purchase['id'] . "\");'>";
+		echo "<a href=\"#\" onclick=\"return show_details_box('status_box_" . $purchase['id'] . "','log_expander_icon_" . $purchase['id'] . "');\">";
 
 		if ( !empty($_GET['id']) && $_GET['id'] == $purchase['id'] ) {
 			$status_state = "collapse";
 			$status_style = "style='display: block;'";
 		}
 
-		echo "<img class='log_expander_icon' id='log_expander_icon_" . $purchase['id'] . "' src='" . WPSC_CORE_IMAGES_URL . "/icon_window_$status_state.gif' alt='' title='' />";
+		echo "<img class=\"log_expander_icon\" id=\"log_expander_icon_" . $purchase['id'] . "\" src=\"" . WPSC_CORE_IMAGES_URL . "/icon_window_$status_state.gif\" alt=\"\" title=\"\" />";
 
 		echo "<span id='form_group_" . $purchase['id'] . "_text'>" . __( 'Details', 'wpsc' ) . "</span>";
 		echo "</a>";
