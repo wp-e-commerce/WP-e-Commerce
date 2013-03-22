@@ -345,7 +345,7 @@ jQuery(document).ready(function ($) {
 				}
 				donation_price.val(response.numeric_price);
 
-				buynow.find('input[name="'+$(self).prop('name')+'"]').val($(self).val());
+				buynow.find('input[name="'+jQuery(self).prop('name')+'"]').val(jQuery(self).val());
 				buynow.find('input.wpsc-buy-now-button').prop('disabled', false);
 			}
 		}, 'json' );
