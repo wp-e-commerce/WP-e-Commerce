@@ -280,6 +280,7 @@ jQuery(document).ready(function ($) {
 	// update the price when the variations are altered.
 	jQuery(".wpsc_select_variation").live('change', function() {
 		jQuery('option[value="0"]', this).attr('disabled', 'disabled');
+		self = this;
 		var parent_form = jQuery(this).closest("form.product_form");
 		if ( parent_form.length == 0 )
 			return;
@@ -292,7 +293,7 @@ jQuery(document).ready(function ($) {
 				donation_price = jQuery('input#donation_price_' + prod_id),
 				old_price = jQuery('#old_product_price_' + prod_id),
 				save = jQuery('#yousave_' + prod_id),
-				buynow = jQuery('#BB_BuyButtonForm' + prod_id);
+				buynow = jQuery('#buy-now-product_' + prod_id);
 			if ( response.variation_found ) {
 				if ( response.stock_available ) {
 					stock_display.removeClass('out_of_stock').addClass('in_stock');
@@ -320,6 +321,9 @@ jQuery(document).ready(function ($) {
 					}
 				}
 				donation_price.val(response.numeric_price);
+
+				buynow.find('input[name="'+jQuery(self).prop('name')+'"]').val(jQuery(self).val());
+				buynow.find('input.wpsc-buy-now-button').prop('disabled', false);
 			}
 		}, 'json');
 	});

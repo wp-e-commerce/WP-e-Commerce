@@ -35,15 +35,29 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 				$handling = $shipping;
 			}
 
+			$has_variants = wpsc_product_has_variations($product_id);
 			$src = _x( 'https://www.paypal.com/en_US/i/btn/btn_buynow_LG.gif', 'PayPal Buy Now Button', 'wpsc' );
 			$src = apply_filters( 'wpsc_buy_now_button_src', $src );
 			$classes = "wpsc-buy-now-form wpsc-buy-now-form-{$product_id}";
-			$button_html = '<input class="wpsc-buy-now-button wpsc-buy-now-button-' . esc_attr( $product_id ) . '" type="image" name="submit" border="0" src=' . esc_url( $src ) . ' alt="' . esc_attr( 'PayPal - The safer, easier way to pay online', 'wpsc' ) . '" />';
+			$button_html = sprintf('<input'.disabled( $has_variants, true, false ).' class="wpsc-buy-now-button wpsc-buy-now-button-%s" type="image" name="submit" border="0" src="%s" alt="%s" />',
+				esc_attr( $product_id ),
+				esc_url( $src ),
+				esc_attr__( 'PayPal - The safer, easier way to pay online', 'wpsc' )
+			);
 			$button_html = apply_filters( 'wpsc_buy_now_button_html', $button_html, $product_id );
-			?>
-			<form class="<?php echo esc_attr( $classes ); ?>" target="paypal" action="<?php echo esc_url( home_url() ); ?>" method="post">
+?>
+			<form class="<?php echo esc_attr( $classes ); ?>" id="buy-now-product_<?php echo $product_id; ?>"target="paypal" action="<?php echo esc_url( home_url() ); ?>" method="post">
 				<input type="hidden" name="wpsc_buy_now_callback" value="1" />
 				<input type="hidden" name="product_id" value="<?php echo esc_attr( $product_id ); ?>" />
+<?php
+				if( $has_variants ):
+					// grab the variation form fields here
+					$wpsc_variations = new wpsc_variations( $product_id );
+					while ( wpsc_have_variation_groups() ) : wpsc_the_variation_group();
+						printf('<input type="hidden" class="variation-value" name="variation[%s]" id="%s" value="0"/>', wpsc_vargrp_id(), wpsc_vargrp_form_id());
+					endwhile;
+				endif; /* END wpsc_product_has_variations */
+?>
 				<?php if ( get_option( 'multi_add' ) ): ?>
 					<label for="quantity"><?php esc_html_e( 'Quantity', 'wpsc' ); ?></label>
 					<input type="text" size="4" id="quantity" name="quantity" value="" /><br />
@@ -70,20 +84,20 @@ function wpsc_also_bought( $product_id ) {
 	if ( get_option( 'wpsc_also_bought' ) == 0 ) {
 		return '';
 	}
-	
+
 	// To be made customiseable in a future release
 	$also_bought_limit = 3;
 	$element_widths = 96;
 	$image_display_height = 96;
 	$image_display_width = 96;
-	
+
 	// Filter will be used by a plugin to provide 'Also Bought' functionality when this is deprecated from core.
 	// Filter is currently private and should not be used by plugin/theme devs as it may only be temporary.
 	$output = apply_filters( '_wpsc_also_bought', '', $product_id );
 	if ( ! empty( $output ) ) {
 		return $output;
 	}
-	
+
 	// If above filter returns output then the following is ignore and can be deprecated in future.
 	$also_bought = $wpdb->get_results( $wpdb->prepare( "SELECT `" . $wpdb->posts . "`.* FROM `" . WPSC_TABLE_ALSO_BOUGHT . "`, `" . $wpdb->posts . "` WHERE `selected_product`= %d AND `" . WPSC_TABLE_ALSO_BOUGHT . "`.`associated_product` = `" . $wpdb->posts . "`.`id` AND `" . $wpdb->posts . "`.`post_status` IN('publish','protected') ORDER BY `" . WPSC_TABLE_ALSO_BOUGHT . "`.`quantity` DESC LIMIT $also_bought_limit", $product_id ), ARRAY_A );
 	if ( is_array( $also_bought ) && count( $also_bought ) > 0 ) {
