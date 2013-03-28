@@ -290,7 +290,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 			'all' => sprintf(
 				'<a href="%s" %s>%s</a>',
 				esc_url( $all_href ),
-				sanitize_html_class( $all_class ),
+				$all_class,
 				$all_text
 			),
 		);
@@ -316,7 +316,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 			$views[$status] = sprintf(
 				'<a href="%s" %s>%s</a>',
 				esc_url( $href ),
-				sanitize_html_class( $class ),
+				$class,
 				$text
 			);
 		}
