@@ -3,8 +3,7 @@
 require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 require_once( ABSPATH . 'wp-admin/includes/class-wp-posts-list-table.php' );
 
-class WPSC_Product_Variation_List_Table extends WP_List_Table
-{
+class WPSC_Product_Variation_List_Table extends WP_List_Table {
 	private $product_id;
 	private $object_terms_cache = array();
 	private $args = array();
@@ -38,10 +37,9 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 
 		$per_page = $this->get_items_per_page( 'edit_wpsc-product-variations_per_page' );
 		$per_page = apply_filters( 'edit_wpsc_product_variations_per_page', $per_page );
-
 		$this->args = array(
 			'post_type'      => 'wpsc-product',
-			'orderby'        => 'menu_order post_title',
+			'orderby'        => 'menu_order title',
 			'post_parent'    => $this->product_id,
 			'post_status'    => 'publish, inherit',
 			'numberposts'    => -1,
@@ -224,7 +222,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 					<?php if ( $show_edit_link ): ?>
 						<a target="_blank" href="<?php echo esc_url( get_edit_post_link( $item->ID, true ) ); ?>" title="<?php esc_attr_e( __( 'Edit this item' ), 'wpsc' ); ?>">
 					<?php endif; ?>
-					<?php echo esc_html( $title ); ?>
+					<?php echo esc_html( apply_filters( 'wpsc_variation_name', $title, $item ) ); ?>
 					<?php if ( $show_edit_link ): ?>
 						</a>
 					<?php endif; ?>
@@ -234,15 +232,25 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 		<?php
 	}
 
+	/**
+	 * Stock Column
+	 *
+	 * @uses   get_product_meta  Get product meta data.
+     *
+     * @param  object $item      Product
+	 */
 	public function column_stock( $item ) {
 		$stock = get_product_meta( $item->ID, 'stock', true );
+		if ( ! empty( $stock ) )
+			$stock = absint( $stock );
 		?>
-			<input type="text" name="wpsc_variations[<?php echo $item->ID; ?>][stock]" value="<?php echo esc_attr( $stock ); ?>" />
+		<input type="text" name="wpsc_variations[<?php echo $item->ID; ?>][stock]" value="<?php echo esc_attr( $stock ); ?>" />
 		<?php
 	}
 
 	public function column_price( $item ) {
 		$price = get_product_meta( $item->ID, 'price', true );
+		$price = wpsc_format_number( $price );
 		?>
 			<input type="text" name="wpsc_variations[<?php echo $item->ID; ?>][price]" value="<?php echo esc_attr( $price ); ?>" />
 		<?php
@@ -250,6 +258,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 
 	public function column_sale_price( $item ) {
 		$sale_price = get_product_meta( $item->ID, 'special_price', true );
+		$sale_price = wpsc_format_number( $sale_price );
 		?>
 			<input type="text" name="wpsc_variations[<?php echo $item->ID; ?>][sale_price]" value="<?php echo esc_attr( $sale_price ); ?>">
 		<?php
@@ -267,7 +276,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table
 		if ( ! $meta || ! isset( $meta['wpec_taxes_taxable_amount'] ) )
 			$tax = '';
 		else
-			$tax = (float) $meta['wpec_taxes_taxable_amount'];
+			$tax = wpsc_format_number( $meta['wpec_taxes_taxable_amount'] );
 		?>
 			<input type="text" name="wpsc_variations[<?php echo $item->ID; ?>][product_metadata][wpec_taxes_taxable_amount]" value="<?php echo esc_attr( $tax ); ?>" />
 		<?php

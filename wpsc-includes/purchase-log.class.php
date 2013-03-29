@@ -1,6 +1,5 @@
 <?php
-class WPSC_Purchase_Log
-{
+class WPSC_Purchase_Log {
 	const INCOMPLETE_SALE  = 1;
 	const ORDER_RECEIVED   = 2;
 	const ACCEPTED_PAYMENT = 3;

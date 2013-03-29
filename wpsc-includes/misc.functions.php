@@ -10,7 +10,7 @@
  */
 
 /**
- * WPSC find purchlog status name looksthrough the wpsc_purchlog_statuses variable to find the name of the given status
+ * WPSC find purchlog status name looks through the wpsc_purchlog_statuses variable to find the name of the given status
  *
  * @since 3.8
  * $param int $id the id for the region
@@ -90,11 +90,11 @@ function wpsc_add_new_user( $user_login, $user_pass, $user_email ) {
 		$errors->add( 'registerfail', sprintf( __( '<strong>ERROR</strong>: Couldn&#8217;t register you... please contact the <a href="mailto:%s">webmaster</a> !', 'wpsc' ), get_option( 'admin_email' ) ) );
 		return $errors;
 	}
-	$credentials = array( 'user_login' => $user_login, 'user_password' => $user_pass, 'remember' => true );
-	$user = wp_signon( $credentials );
-	return $user;
 
-	//wp_new_user_notification($user_id, $user_pass);
+	$user = wp_signon( array( 'user_login' => $user_login, 'user_password' => $user_pass, 'remember' => true ) );
+	wp_set_current_user( $user->ID );
+
+	return $user;
 }
 
 /**
@@ -186,7 +186,7 @@ function wpsc_set_aioseop_keywords( $data ) {
 			$category_list = $wpdb->get_col( "SELECT `categories`.`name` FROM `" . WPSC_TABLE_ITEM_CATEGORY_ASSOC . "` AS `assoc` , `" . WPSC_TABLE_PRODUCT_CATEGORIES . "` AS `categories` WHERE `assoc`.`product_id` IN ('{$product_id}') AND `assoc`.`category_id` = `categories`.`id` AND `categories`.`active` IN('1')" );
 			$replacement_data_array += $category_list;
 		}
-		$replacement_data_array += wp_get_object_terms( $product_id, 'product_tag', array( 'fields' => 'names' ) );
+		$replacement_data_array += wpsc_get_product_terms( $product_id, 'product_tag', 'name' );
 		$replacement_data .= implode( ",", $replacement_data_array );
 		if ( $replacement_data != '' ) {
 			$data = strtolower( $replacement_data );
@@ -199,13 +199,15 @@ function wpsc_set_aioseop_keywords( $data ) {
 add_filter( 'aioseop_keywords', 'wpsc_set_aioseop_keywords' );
 
 /**
- * wpsc_populate_also_bought_list function, runs on checking out, populates the also bought list.
+ * Populate Also Bought List
+ * Runs on checking out and populates the also bought list.
  */
 function wpsc_populate_also_bought_list() {
 	global $wpdb, $wpsc_cart, $wpsc_coupons;
-	$new_also_bought_data = array( );
+
+	$new_also_bought_data = array();
 	foreach ( $wpsc_cart->cart_items as $outer_cart_item ) {
-		$new_also_bought_data[$outer_cart_item->product_id] = array( );
+		$new_also_bought_data[$outer_cart_item->product_id] = array();
 		foreach ( $wpsc_cart->cart_items as $inner_cart_item ) {
 			if ( $outer_cart_item->product_id != $inner_cart_item->product_id ) {
 				$new_also_bought_data[$outer_cart_item->product_id][$inner_cart_item->product_id] = $inner_cart_item->quantity;
@@ -215,10 +217,10 @@ function wpsc_populate_also_bought_list() {
 		}
 	}
 
-	$insert_statement_parts = array( );
+	$insert_statement_parts = array();
 	foreach ( $new_also_bought_data as $new_also_bought_id => $new_also_bought_row ) {
 		$new_other_ids = array_keys( $new_also_bought_row );
-		$also_bought_data = $wpdb->get_results( $wpdb->prepare( "SELECT `id`, `associated_product`, `quantity` FROM `" . WPSC_TABLE_ALSO_BOUGHT . "` WHERE `selected_product` IN(%d) AND `associated_product` IN(" . implode( "','", $new_other_ids ) . ")", $new_also_bought_id ), ARRAY_A );
+		$also_bought_data = $wpdb->get_results( $wpdb->prepare( "SELECT `id`, `associated_product`, `quantity` FROM `" . WPSC_TABLE_ALSO_BOUGHT . "` WHERE `selected_product` IN(%d) AND `associated_product` IN('" . implode( "','", $new_other_ids ) . "')", $new_also_bought_id ), ARRAY_A );
 		$altered_new_also_bought_row = $new_also_bought_row;
 
 		foreach ( (array)$also_bought_data as $also_bought_row ) {
@@ -235,9 +237,8 @@ function wpsc_populate_also_bought_list() {
 				),
 				'%d',
 				'%d'
-			    );
+			);
 	    }
-
 
 		if ( count( $altered_new_also_bought_row ) > 0 ) {
 			foreach ( $altered_new_also_bought_row as $associated_product => $quantity ) {
@@ -247,7 +248,6 @@ function wpsc_populate_also_bought_list() {
 	}
 
 	if ( count( $insert_statement_parts ) > 0 ) {
-
 		$insert_statement = "INSERT INTO `" . WPSC_TABLE_ALSO_BOUGHT . "` (`selected_product`, `associated_product`, `quantity`) VALUES " . implode( ",\n ", $insert_statement_parts );
 		$wpdb->query( $insert_statement );
 	}
@@ -601,7 +601,7 @@ function wp_get_product_tags( $product_id = 0, $args = array( ) ) {
 	$defaults = array( 'fields' => 'ids' );
 	$args = wp_parse_args( $args, $defaults );
 
-	$cats = wp_get_object_terms( $product_id, 'product_tag' );
+	$cats = wpsc_get_product_terms( $product_id, 'product_tag' );
 	return $cats;
 }
 
@@ -625,7 +625,7 @@ function wp_get_product_categories( $product_id = 0, $args = array( ) ) {
 	$defaults = array( 'fields' => 'ids' );
 	$args = wp_parse_args( $args, $defaults );
 
-	$cats = wp_get_object_terms( $product_id, 'wpsc_product_category' );
+	$cats = wpsc_get_product_terms( $product_id, 'wpsc_product_category' );
 	return $cats;
 }
 
@@ -670,11 +670,7 @@ function get_the_product_category( $id ) {
 
 	$id = (int)$id;
 
-	$categories = get_object_term_cache( $id, 'wpsc_product_category' );
-	if ( false === $categories ) {
-		$categories = wp_get_object_terms( $id, 'wpsc_product_category' );
-		wp_cache_add( $id, $categories, 'product_category_relationships' );
-	}
+	$categories = wpsc_get_product_terms( $id, 'wpsc_product_category' );
 
 	if ( !empty( $categories ) )
 		usort( $categories, '_usort_terms_by_name' );
@@ -774,4 +770,197 @@ function wpsc_get_extension( $str ) {
 	$parts = explode( '.', $str );
 	return end( $parts );
 
+}
+
+/**
+ * Marks a function as deprecated and informs when it has been used.
+ *
+ * There is a hook wpsc_deprecated_function_run that will be called that can be
+ * used to get the backtrace up to what file and function called the deprecated
+ * function.
+ *
+ * The current behavior is to trigger a user error if WP_DEBUG is true.
+ *
+ * This function is to be used in every function that is deprecated.
+ *
+ * @since 3.8.10
+ * @access private
+ *
+ * @uses do_action() Calls 'wpsc_deprecated_function_run' and passes the function name, what to use instead,
+ *   and the version the function was deprecated in.
+ * @uses apply_filters() Calls 'wpsc_deprecated_function_trigger_error' and expects boolean value of true to do
+ *   trigger or false to not trigger error.
+ *
+ * @param string $function The function that was called
+ * @param string $version The version of WP e-Commerce that deprecated the function
+ * @param string $replacement Optional. The function that should have been called
+ */
+function _wpsc_deprecated_function( $function, $version, $replacement = null ) {
+	do_action( 'wpsc_deprecated_function_run', $function, $replacement, $version );
+
+	// Allow plugin to filter the output error trigger
+	if ( WP_DEBUG && apply_filters( 'wpsc_deprecated_function_trigger_error', true ) ) {
+		if ( ! is_null($replacement) )
+			trigger_error(
+				sprintf( __( '%1$s is <strong>deprecated</strong> since WP e-Commerce version %2$s! Use %3$s instead.', 'wpsc' ),
+					$function,
+					$version,
+					$replacement
+				)
+			);
+		else
+			trigger_error(
+				sprintf( __( '%1$s is <strong>deprecated</strong> since WP e-Commerce version %2$s with no alternative available.', 'wpsc' ),
+					$function,
+					$version
+				)
+			);
+	}
+}
+
+/**
+ * Marks a file as deprecated and informs when it has been used.
+ *
+ * There is a hook wpsc_deprecated_file_included that will be called that can be
+ * used to get the backtrace up to what file and function included the
+ * deprecated file.
+ *
+ * The current behavior is to trigger a user error if WP_DEBUG is true.
+ *
+ * This function is to be used in every file that is deprecated.
+ *
+ * @since 3.8.10
+ * @access private
+ *
+ * @uses do_action() Calls 'wpsc_deprecated_file_included' and passes the file name, what to use instead,
+ *   the version in which the file was deprecated, and any message regarding the change.
+ * @uses apply_filters() Calls 'wpsc_deprecated_file_trigger_error' and expects boolean value of true to do
+ *   trigger or false to not trigger error.
+ *
+ * @param string $file The file that was included
+ * @param string $version The version of WP e-Commerce that deprecated the file
+ * @param string $replacement Optional. The file that should have been included based on ABSPATH
+ * @param string $message Optional. A message regarding the change
+ */
+function _wpsc_deprecated_file( $file, $version, $replacement = null, $message = '' ) {
+
+	do_action( 'wpsc_deprecated_file_included', $file, $replacement, $version, $message );
+
+	// Allow plugin to filter the output error trigger
+	if ( WP_DEBUG && apply_filters( 'wpsc_deprecated_file_trigger_error', true ) ) {
+		$message = empty( $message ) ? '' : ' ' . $message;
+		if ( ! is_null( $replacement ) )
+			trigger_error(
+				sprintf( __( '%1$s is <strong>deprecated</strong> since WP e-Commerce version %2$s! Use %3$s instead.', 'wpsc' ),
+					$file,
+					$version,
+					$replacement
+				) . $message
+			);
+		else
+			trigger_error(
+				sprintf( __( '%1$s is <strong>deprecated</strong> since WP e-Commerce version %2$s with no alternative available.', 'wpsc' ),
+					$file,
+					$version
+				) . $message
+			);
+	}
+}
+/**
+ * Marks a function argument as deprecated and informs when it has been used.
+ *
+ * This function is to be used whenever a deprecated function argument is used.
+ * Before this function is called, the argument must be checked for whether it
+ * was used by comparing it to its default value or evaluating whether it is
+ * empty.
+ *
+ * For example:
+ * <code>
+ * if ( ! empty( $deprecated ) )
+ * 	_wpsc_deprecated_argument( __FUNCTION__, '3.8.10' );
+ * </code>
+ *
+ * There is a hook wpsc_deprecated_argument_run that will be called that can be
+ * used to get the backtrace up to what file and function used the deprecated
+ * argument.
+ *
+ * The current behavior is to trigger a user error if WP_DEBUG is true.
+ *
+ * @since 3.8.10
+ * @access private
+ *
+ * @uses do_action() Calls 'wpsc_deprecated_argument_run' and passes the function name, a message on the change,
+ *   and the version in which the argument was deprecated.
+ * @uses apply_filters() Calls 'wpsc_deprecated_argument_trigger_error' and expects boolean value of true to do
+ *   trigger or false to not trigger error.
+ *
+ * @param string $function The function that was called
+ * @param string $version The version of WP e-Commerce that deprecated the argument used
+ * @param string $message Optional. A message regarding the change.
+ */
+function _wpsc_deprecated_argument( $function, $version, $message = null ) {
+
+	do_action( 'wpsc_deprecated_argument_run', $function, $message, $version );
+
+	// Allow plugin to filter the output error trigger
+	if ( WP_DEBUG && apply_filters( 'wpsc_deprecated_argument_trigger_error', true ) ) {
+		if ( ! is_null( $message ) )
+			trigger_error(
+				sprintf(
+					__( '%1$s was called with an argument that is <strong>deprecated</strong> since WP e-Commerce version %2$s! %3$s', 'wpsc' ),
+					$function,
+					$version,
+					$message
+				)
+			);
+		else
+			trigger_error(
+				sprintf(
+					__( '%1$s was called with an argument that is <strong>deprecated</strong> since WP e-Commerce version %2$s with no alternative available.', 'wpsc' ),
+					$function,
+					$version
+				)
+			);
+	}
+}
+
+/**
+ * Marks something as being incorrectly called.
+ *
+ * There is a hook wpsc_doing_it_wrong_run that will be called that can be used
+ * to get the backtrace up to what file and function called the deprecated
+ * function.
+ *
+ * The current behavior is to trigger a user error if WP_DEBUG is true.
+ *
+ * @since 3.8.10
+ * @access private
+ *
+ * @uses do_action() Calls 'wpsc_doing_it_wrong_run' and passes the function arguments.
+ * @uses apply_filters() Calls 'wpsc_doing_it_wrong_trigger_error' and expects boolean value of true to do
+ *   trigger or false to not trigger error.
+ *
+ * @param string $function The function that was called.
+ * @param string $message A message explaining what has been done incorrectly.
+ * @param string $version The version of WP e-Commerce where the message was added.
+ */
+function _wpsc_doing_it_wrong( $function, $message, $version ) {
+
+	do_action( 'wpsc_doing_it_wrong_run', $function, $message, $version );
+
+	// Allow plugin to filter the output error trigger
+	if ( WP_DEBUG && apply_filters( 'wpsc_doing_it_wrong_trigger_error', true ) ) {
+		$version =   is_null( $version )
+		           ? ''
+		           : sprintf( __( '(This message was added in WP e-Commerce version %s.)', 'wpsc' ), $version );
+		$message .= ' ' . __( 'Please see <a href="http://codex.wordpress.org/Debugging_in_WordPress">Debugging in WordPress</a> for more information.', 'wpsc' );
+		trigger_error(
+			sprintf(
+				__( '%1$s was called <strong>incorrectly</strong>. %2$s %3$s', 'wpsc' ),
+				$function,
+				$message,
+				$version
+			)
+		);
+	}
 }

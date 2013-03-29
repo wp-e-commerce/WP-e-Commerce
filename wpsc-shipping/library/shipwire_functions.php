@@ -107,7 +107,7 @@ class WPSC_Shipwire {
 		//Extracts unique name variables for comparison.
 		extract( $form_ids );
 
-		$customer_data = $wpdb->get_results( $wpdb->prepare( 'SELECT form_id, value FROM ' . WPSC_TABLE_SUBMITED_FORM_DATA . ' WHERE log_id = %d', $log_id ) );
+		$customer_data = $wpdb->get_results( $wpdb->prepare( 'SELECT form_id, value FROM ' . WPSC_TABLE_SUBMITTED_FORM_DATA . ' WHERE log_id = %d', $log_id ) );
 
 		foreach ( $customer_data as $data ) {
 
@@ -687,7 +687,7 @@ class WPSC_Shipwire {
 		$message = str_replace( '%shop_name%', $site_name, $message );
 
 		$email_form_field = $wpdb->get_var( "SELECT `id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `type` IN ('email') AND `active` = '1' ORDER BY `checkout_order` ASC LIMIT 1" );
-		$email            = $wpdb->get_var( $wpdb->prepare( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` WHERE `log_id` = %d AND `form_id` = %d LIMIT 1", $id, $email_form_field ) );
+		$email            = $wpdb->get_var( $wpdb->prepare( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` WHERE `log_id` = %d AND `form_id` = %d LIMIT 1", $id, $email_form_field ) );
 
 		$subject = get_option( 'wpsc_trackingid_subject' );
 		$subject = str_replace( '%shop_name%', $site_name, $subject );
@@ -840,11 +840,20 @@ function convert_code_to_service( $service ) {
 			$service = _x( 'Two-Day Shipping', 'shipwire shipping method', 'wpsc' );
 			break;
 		case 'INTL' :
-			$service = _x( 'International Shipping', 'shipwire shipping method', 'wpsc' );
+			$service = _x( 'Standard Shipping', 'shipwire shipping method', 'wpsc' );
 			break;
 		case 'FT' :
 			$service = _x( 'Freight Shipping', 'shipwire shipping method', 'wpsc' );
 			break;
+		case 'E-INTL' :
+			$service = _x( 'Economy Shipping', 'shipwire shipping method', 'wpsc' );
+			break;
+		case 'PL-INTL' :
+			$service = _x( 'Plus Shipping', 'shipwire shipping method', 'wpsc' );
+			break;
+		case 'PM-INTL' :
+			$service = _x( 'Premium Shipping', 'shipwire shipping method', 'wpsc' );
+			break;	 
 		endswitch;
 
 	return $service;
@@ -857,7 +866,7 @@ function convert_code_to_service( $service ) {
  * @return string
  */
 function convert_service_to_code( $service ) {
-
+	
 	switch ( $service ) :
 		case _x( 'Ground', 'shipwire shipping method', 'wpsc' ) :
 			$service = 'GD';
@@ -868,47 +877,22 @@ function convert_service_to_code( $service ) {
 		case _x( 'Two-Day Shipping', 'shipwire shipping method', 'wpsc' ) :
 			$service = '2D';
 			break;
-		case _x( 'International Shipping', 'shipwire shipping method', 'wpsc' ) :
+		case _x( 'Standard Shipping', 'shipwire shipping method', 'wpsc' ) :
 			$service = 'INTL';
 			break;
 		case _x( 'Freight Shipping', 'shipwire shipping method', 'wpsc' ) :
 			$service = 'FT';
 			break;
+		case _x( 'Economy Shipping', 'shipwire shipping method', 'wpsc' ) :
+			$service = 'E-INTL';
+			break;
+		case _x( 'Plus Shipping', 'shipwire shipping method', 'wpsc' ) :
+			$service = 'PL-INTL';
+			break;						
+		case _x( 'Premium Shipping', 'shipwire shipping method', 'wpsc' ) :
+			$service = 'PM-INTL';
+			break;			 
 		endswitch;
 
 	return $service;
-}
-
-/**
- * Deprecated functions - HIGHLY doubt these are used anywhere, by anyone, for any reason.  But it's possible, as they've been in core since the beginning.
- */
-
-function shipwire_build_xml( $log_id ) {
-	_deprecated_function( __FUNCTION__, '3.8.9', 'WPSC_Shipwire' );
-	return WPSC_Shipwire::get_order_xml( $log_id );
-}
-
-function shipwire_built_sync_xml() {
-	_deprecated_function( __FUNCTION__, '3.8.9', 'WPSC_Shipwire' );
-	return WPSC_Shipwire::get_inventory_xml();
-}
-
-function shipwire_built_tracking_xml() {
-	_deprecated_function( __FUNCTION__, '3.8.9', 'WPSC_Shipwire' );
-	return WPSC_Shipwire::get_tracking_xml();
-}
-
-function shipwire_send_sync_request( $xml ) {
-	_deprecated_function( __FUNCTION__, '3.8.9', 'WPSC_Shipwire' );
-	return WPSC_Shipwire::send_inventory_request( $xml );
-}
-
-function shipwire_sent_request( $xml ) {
-	_deprecated_function( __FUNCTION__, '3.8.9', 'WPSC_Shipwire' );
-	return WPSC_Shipwire::send_order_request( $xml );
-}
-
-function shipwire_send_tracking_request( $xml ) {
-	_deprecated_function( __FUNCTION__, '3.8.9', 'WPSC_Shipwire' );
-	return WPSC_Shipwire::send_tracking_request( $xml );
 }

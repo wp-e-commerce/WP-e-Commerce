@@ -140,13 +140,20 @@ function wpsc_purchase_log_csv() {
 
 		$output = '';
 
+		foreach ( (array)$form_data as $form_field ) {
+			if ( empty ( $form_field['unique_name'] ) ) {
+				$form_headers_array[] = $form_field['name'];
+			} else {
+				$form_headers_array[] = $form_field['unique_name'];
+			}
+		}
+
 		foreach ( (array)$data as $purchase ) {
 			$form_headers = '';
 			$output .= "\"" . $purchase['id'] . "\","; //Purchase ID
 			$output .= "\"" . $purchase['totalprice'] . "\","; //Purchase Total
 			foreach ( (array)$form_data as $form_field ) {
-				$form_headers_array[] = $form_field['unique_name'];
-				$collected_data_sql = "SELECT * FROM `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` WHERE `log_id` = '" . $purchase['id'] . "' AND `form_id` = '" . $form_field['id'] . "' LIMIT 1";
+				$collected_data_sql = "SELECT * FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` WHERE `log_id` = '" . $purchase['id'] . "' AND `form_id` = '" . $form_field['id'] . "' LIMIT 1";
 				$collected_data = $wpdb->get_results( $collected_data_sql, ARRAY_A );
 				$collected_data = $collected_data[0];
 				$output .= "\"" . $collected_data['value'] . "\","; // get form fields
@@ -187,10 +194,10 @@ function wpsc_purchase_log_csv() {
 			$headers3[] = _x( 'SKU', 'purchase log csv headers', 'wpsc' );
 		}
 
-		$headers      = '"' . implode( '","', $headers_array ) . '"';
-		$form_headers = '"' . implode( '","', $form_headers_array ) . '"';
-		$headers2     = '"' . implode( '","', $headers2_array ) . '"';
-		$headers3     = '"' . implode( '","', $headers3_array ) . '"';
+		$headers      = '"' . implode( '","', $headers_array ) . '",';
+		$form_headers = '"' . implode( '","', $form_headers_array ) . '",';
+		$headers2     = '"' . implode( '","', $headers2_array ) . '",';
+		$headers3     = '"' . implode( '","', $headers3 ) . '"';
 
 		$headers      = apply_filters( 'wpsc_purchase_log_csv_headers', $headers . $form_headers . $headers2 . $headers3, $data, $form_data );
 		$output       = apply_filters( 'wpsc_purchase_log_csv_output', $output, $data, $form_data );
@@ -296,7 +303,7 @@ function wpsc_purchlog_clear_download_items() {
 		$cleared = true;
 
 		$email_form_field = $wpdb->get_var( "SELECT `id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `type` IN ('email') AND `active` = '1' ORDER BY `checkout_order` ASC LIMIT 1" );
-		$email_address = $wpdb->get_var( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` WHERE `log_id`='{$purchase_id}' AND `form_id` = '{$email_form_field}' LIMIT 1" );
+		$email_address = $wpdb->get_var( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` WHERE `log_id`='{$purchase_id}' AND `form_id` = '{$email_form_field}' LIMIT 1" );
 
 		foreach ( (array)$downloadable_items as $downloadable_item ) {
 			$download_links .= add_query_arg(
@@ -411,7 +418,7 @@ function wpsc_delete_purchlog( $purchlog_id='' ) {
 	}
 
 	$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid` = %d", $purchlog_id ) );
-	$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` WHERE `log_id` IN (%d)", $purchlog_id ) );
+	$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` WHERE `log_id` IN (%d)", $purchlog_id ) );
 	$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id` = %d LIMIT 1", $purchlog_id ) );
 
 	$deleted = 1;
@@ -593,45 +600,6 @@ function wpsc_product_files_existing() {
 }
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'product_files_existing') )
 	add_action( 'admin_init', 'wpsc_product_files_existing' );
-
-//change the gateway settings
-function wpsc_gateway_settings() {
-	//To update options
-	if ( isset( $_POST['wpsc_options'] ) ) {
-		foreach ( $_POST['wpsc_options'] as $key => $value ) {
-			if ( $value != get_option( $key ) ) {
-				update_option( $key, $value );
-			}
-		}
-		unset( $_POST['wpsc_options'] );
-	}
-
-	if ( isset( $_POST['user_defined_name'] ) && is_array( $_POST['user_defined_name'] ) ) {
-		$payment_gateway_names = get_option( 'payment_gateway_names' );
-
-		if ( !is_array( $payment_gateway_names ) ) {
-			$payment_gateway_names = array( );
-		}
-		$payment_gateway_names = array_merge( $payment_gateway_names, (array)$_POST['user_defined_name'] );
-		update_option( 'payment_gateway_names', $payment_gateway_names );
-	}
-	$custom_gateways = get_option( 'custom_gateway_options' );
-
-	$nzshpcrt_gateways = nzshpcrt_get_gateways();
-	foreach ( $nzshpcrt_gateways as $gateway ) {
-		if ( in_array( $gateway['internalname'], $custom_gateways ) ) {
-			if ( isset( $gateway['submit_function'] ) ) {
-				call_user_func_array( $gateway['submit_function'], array( ) );
-				$changes_made = true;
-			}
-		}
-	}
-	if ( (isset( $_POST['payment_gw'] ) && $_POST['payment_gw'] != null ) ) {
-		update_option( 'payment_gateway', $_POST['payment_gw'] );
-	}
-}
-if ( isset( $_REQUEST['wpsc_gateway_settings'] ) && ($_REQUEST['wpsc_gateway_settings'] == 'gateway_settings') )
-	add_action( 'admin_init', 'wpsc_gateway_settings' );
 
 function wpsc_google_shipping_settings() {
 	if ( isset( $_POST['submit'] ) ) {

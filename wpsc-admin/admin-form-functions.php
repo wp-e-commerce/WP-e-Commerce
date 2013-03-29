@@ -256,7 +256,7 @@ function wpsc_right_now() {
 
 
 function wpsc_packing_slip( $purchase_id ) {
-	echo "<!DOCTYPE html><html><head><title>" . __( 'Packing Slip', 'wpsc' ) . "</title></head><body id='wpsc-packing-slip'>";
+	echo "<!DOCTYPE html><html><meta http-equiv=\"content-type\" content=\"text-html; charset=utf-8\"><head><title>" . __( 'Packing Slip', 'wpsc' ) . "</title></head><body id='wpsc-packing-slip'>";
 	global $wpdb;
 	$purch_sql = $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `id`=%d", $purchase_id );
 	$purch_data = $wpdb->get_row( $purch_sql, ARRAY_A ) ;
@@ -272,7 +272,7 @@ function wpsc_packing_slip( $purchase_id ) {
 
 		echo "<table>\n\r";
 
-		$form_sql = $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_SUBMITED_FORM_DATA."` WHERE `log_id` = %d", $purchase_id );
+		$form_sql = $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_SUBMITTED_FORM_DATA."` WHERE `log_id` = %d", $purchase_id );
 		$input_data = $wpdb->get_results($form_sql,ARRAY_A);
 
 		foreach($input_data as $input_row) {
@@ -281,7 +281,7 @@ function wpsc_packing_slip( $purchase_id ) {
 
 
 		if($input_data != null) {
-			$form_data = $wpdb->get_results("SELECT * FROM `".WPSC_TABLE_CHECKOUT_FORMS."` WHERE `active` = '1'",ARRAY_A);
+			$form_data = $wpdb->get_results( "SELECT * FROM `".WPSC_TABLE_CHECKOUT_FORMS."` WHERE `active` = '1' ORDER BY `checkout_order`" , ARRAY_A );
 
 			foreach($form_data as $form_field) {
 

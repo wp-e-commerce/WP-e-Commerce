@@ -437,41 +437,40 @@ function _wpsc_is_in_custom_loop() {
 
 /**
  * Checks and replaces the Page title with the category title if on a category page
- * @access public
  *
  * @since 3.8
- * @param $title (string) The Page Title
- * @param $id (int) The Page ID
- * @return $title (string) the new title
+ * @access public
+ *
+ * @param string    $title      The Page Title
+ * @param int       $id         The Page ID
+ * @return string   $title      The new title
+ *
+ * @uses in_the_loop()                  Returns true if you are  in the loop
+ * @uses _wpsc_is_in_custom_loop()      Returns true if in the WPSC custom loop
+ * @uses is_tax()                       Returns true if you are on the supplied registered taxonomy
+ * @uses get_term_by()                  Gets term object by defined item, and what you pass
+ * @uses get_query_var()                Gets query var from wp_query
  */
-function wpsc_the_category_title($title='', $id=''){
-	global $wp_query, $wp_current_filter;
+function wpsc_the_category_title( $title='', $id='' ){
+
+	if ( ! empty( $id ) )
+		_wpsc_deprecated_argument( __FUNCTION__, '3.8.10', 'The $id param is not used. If you are trying to get the title of the category use get_term' );
+
 	if ( ! in_the_loop() || _wpsc_is_in_custom_loop() )
 		return $title;
 
 	$term = null;
-	if ( is_tax( 'wpsc_product_category' ) )
+	if ( is_tax( 'wpsc_product_category' ) ){
 		$term = get_term_by( 'slug', get_query_var( 'wpsc_product_category' ),'wpsc_product_category' );
-	elseif ( is_tax( 'product-tag' ) )
-		$term = get_term_by( 'slug', get_query_var( 'term' ),'product-tag' );
+	} elseif ( is_tax( 'product_tag' ) ){
+		$term = get_term_by( 'slug', get_query_var( 'term' ),'product_tag' );
+	} // is_tax
 
 	if ( $term )
 		return $term->name;
 
 	return $title;
 
-	//if this is paginated products_page
-	if( $wp_query->in_the_loop && empty($category->name) && isset( $wp_query->query_vars['paged'] ) && $wp_query->query_vars['paged'] && isset( $wp_query->query_vars['page'] ) && $wp_query->query_vars['page'] && 'wpsc-product' == $wp_query->query_vars['post_type']){
-		$post_id = wpsc_get_the_post_id_by_shortcode('[productspage]');
-		$post = get_post($post_id);
-		$title = $post->post_title;
-		remove_filter('the_title','wpsc_the_category_title');
-	}
-
-	if(!empty($category->name))
-		return $category->name;
-	else
-		return $title;
 }
 
 /**
@@ -557,9 +556,11 @@ function wpsc_enqueue_user_script_and_css() {
 
 		$category_id = wpsc_get_current_category_id();
 
-		if( get_option( 'wpsc_share_this' ) == 1 ) {
+		if ( get_option( 'wpsc_share_this' ) == 1 ) {
 			$remote_protocol = is_ssl() ? 'https://ws' : 'http://w';
 			wp_enqueue_script( 'sharethis', $remote_protocol . '.sharethis.com/button/buttons.js', array(), false, true );
+			wp_enqueue_script( 'wpsc-sharethis', WPSC_CORE_JS_URL . '/sharethis.js', array( 'jquery', 'sharethis' ), $version_identifier );
+			wp_enqueue_style( 'wpsc-sharethis-css', WPSC_CORE_JS_URL . '/sharethis.css', false, $version_identifier, 'all' );
 		}
 
 		wp_enqueue_script( 'jQuery' );
@@ -591,7 +592,7 @@ function wpsc_enqueue_user_script_and_css() {
 			}
 		}
 		wp_enqueue_style( 'wpsc-theme-css',               wpsc_get_template_file_url( 'wpsc-' . get_option( 'wpsc_selected_theme' ) . '.css' ), false, $version_identifier, 'all' );
-		wp_enqueue_style( 'wpsc-theme-css-compatibility', WPSC_CORE_THEME_URL . 'compatibility.css',                                    array( 'wpsc-theme-css' ), $version_identifier, 'all' );
+		wp_enqueue_style( 'wpsc-theme-css-compatibility', wpsc_get_template_file_url( 'compatibility.css' ),                                    array( 'wpsc-theme-css' ), $version_identifier, 'all' );
 
 		if ( function_exists( 'wp_add_inline_style' ) )
 			wp_add_inline_style( 'wpsc-theme-css', wpsc_get_user_dynamic_css() );
@@ -1188,9 +1189,10 @@ function wpsc_place_shopping_cart( $content = '' ) {
 		// call this function to detect conflicts when the cart page is first loaded, otherwise
 		// any conflict messages will only be displayed on the next page load
 		wpsc_get_acceptable_countries();
-
 		ob_start();
+		do_action( 'wpsc_before_shopping_cart_page' );
 		include( wpsc_get_template_file_path( 'wpsc-shopping_cart_page.php' ) );
+		do_action( 'wpsc_after_shopping_cart_page' );
 		$output = ob_get_contents();
 		ob_end_clean();
 		$output = str_replace( '$', '\$', $output );
@@ -1304,7 +1306,7 @@ function wpsc_remove_page_from_query_string($query_string)
 
 	if ( isset($query_string['name']) && $query_string['name'] == 'page' && isset($query_string['page']) ) {
 		unset($query_string['name']);
-		list($delim, $page_index) = split('/', $query_string['page']);
+		list($delim, $page_index) = explode( '/', $query_string['page'] );
 
 		$query_string['paged'] = $page_index;
 	}
@@ -1362,7 +1364,7 @@ function wpsc_enable_page_filters( $excerpt = '' ) {
 	add_filter( 'the_content', 'wpsc_products_page', 1 );
 	add_filter( 'the_content', 'wpsc_single_template',12 );
 	add_filter( 'archive_template','wpsc_the_category_template');
-	add_filter( 'the_title', 'wpsc_the_category_title',10,2 );
+	add_filter( 'the_title', 'wpsc_the_category_title',10 );
 	add_filter( 'the_content', 'wpsc_place_shopping_cart', 12 );
 	add_filter( 'the_content', 'wpsc_transaction_results', 12 );
 	add_filter( 'the_content', 'wpsc_user_log', 12 );

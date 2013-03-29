@@ -1,7 +1,6 @@
 <?php
 
-class WPSC_Product_Variations_Page
-{
+class WPSC_Product_Variations_Page {
 	private $list_table;
 	private $parent_id;
 	private $current_tab = 'manage';
@@ -24,7 +23,7 @@ class WPSC_Product_Variations_Page
 			if ( ! isset( $updated[$key] ) )
 				continue;
 
-			if ( is_array( $original[$key] ) ) {
+			if ( isset( $original[$key] ) && is_array( $original[$key] ) ) {
 				$original[$key] = $this->merge_meta_deep( $original[$key]	, $updated[$key] );
 			} else {
 				$original[$key] = $updated[$key];
@@ -39,6 +38,8 @@ class WPSC_Product_Variations_Page
 
 	private function save_variation_meta( $id, $data ) {
 		$product_meta = get_product_meta( $id, 'product_metadata', true );
+		if ( ! is_array( $product_meta ) )
+			$product_meta = array();
 		$product_meta = $this->merge_meta_deep( $product_meta, $data['product_metadata'] );
 
 		// convert to pound to maintain backward compat with shipping modules
@@ -48,10 +49,10 @@ class WPSC_Product_Variations_Page
 		update_product_meta( $id, 'product_metadata', $product_meta );
 
 		if ( isset( $data['price'] ) )
-			update_product_meta( $id, 'price', (float) $data['price'] );
+			update_product_meta( $id, 'price', wpsc_string_to_float( $data['price'] ) );
 
 		if ( isset( $data['sale_price'] ) )
-			update_product_meta( $id, 'special_price', $data['sale_price'] );
+			update_product_meta( $id, 'special_price', wpsc_string_to_float( $data['sale_price'] ) );
 
 		if ( isset( $data['sku'] ) )
 			update_product_meta( $id, 'sku', $data['sku'] );
@@ -79,7 +80,7 @@ class WPSC_Product_Variations_Page
 	}
 
 	public function display() {
-		global $title, $hook_suffix, $current_screen, $wp_locale, $pagenow, $wp_version, $is_iphone,
+		global $title, $hook_suffix, $wp_locale, $pagenow, $wp_version, $is_iphone,
 		$current_site, $update_title, $total_update_count, $parent_file;
 
 		$current_screen = get_current_screen();

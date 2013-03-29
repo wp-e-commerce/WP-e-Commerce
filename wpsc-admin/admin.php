@@ -34,11 +34,14 @@ if ( ! get_option( 'wpsc_checkout_form_sets' ) ) {
 }
 /**
  * wpsc_query_vars_product_list sets the ordering for the edit-products page list
- * @access public
  *
  * @since 3.8
- * @param $vars (array) - default query arguments
- * @return  $vars (array) - modified query arguments
+ * @access public
+ *
+ * @uses get_option()   Gets option from the DB given key
+ *
+ * @param array     $vars  req  Default query arguments
+ * @return array    $vars       Modified query arguments
  */
 function wpsc_query_vars_product_list( $vars ){
 
@@ -58,12 +61,15 @@ function wpsc_query_vars_product_list( $vars ){
 
 /**
  * setting the screen option to between 1 and 999
- * @access public
  *
  * @since 3.8
- * @param $status
- * @param $option (string) name of option being saved
- * @param $value (string) value of option being saved
+ * @access public
+ *
+ * @uses update_user_option()   Updates user option given userid, key, value
+ *
+ * @param           $status
+ * @param string    $option     req     Name of option being saved
+ * @param string    $value      req     Value of option being saved
  * @return $value after changes...
  */
 function wpsc_set_screen_option($status, $option, $value){
@@ -82,8 +88,12 @@ add_filter('set-screen-option', 'wpsc_set_screen_option', 99, 3);
  * @access public
  *
  * @since 3.8
- * @param $per_page (int) number of products per page
- * @param $post_type (string) name of current post type
+ * @access public
+ *
+ * @uses get_option()   Gets option from the database given key
+ *
+ * @param int       $per_page   req     number of products per page
+ * @param string    $post_type  req     name of current post type
  * @return $per_page after changes...
  */
 function wpsc_drag_and_drop_ordering($per_page, $post_type){
@@ -94,12 +104,15 @@ function wpsc_drag_and_drop_ordering($per_page, $post_type){
 }
 add_filter( 'request', 'wpsc_query_vars_product_list' );
 add_filter('edit_posts_per_page' , 'wpsc_drag_and_drop_ordering', 10, 2 );
+
 /**
  * Checks whether to display or hide the update wp-e-commerce link
  *
+ * @since 3.8
  * @access public
  *
- * @since 3.8
+ * @uses get_option()   Gets option from DB given key
+ *
  * @return boolean true - show link, false- hide link
  */
 function wpsc_show_update_link() {
@@ -123,6 +136,18 @@ function wpsc_show_update_link() {
  *
  * If the permissions are changed here, they will likewise need to be changed for the other sections of the admin that either use ajax
  * or bypass the normal download system.
+ *
+ * @access public
+ *
+ * @uses wpsc_show_update_link()    Decides whether or not to show the update link
+ * @uses add_submenu_page()         Adds a WordPress submenu page
+ * @uses apply_filters()            Calls wpsc_upgrades_cap allows hooking caps for adiministrator
+ * @uses apply_filters()            Calls wpsc_coupon_cap allows filtering for the coupon caps
+ * @uses add_options_page()         Adds a submenu to the settings page
+ * @uses add_action()               Calls 'admin_print_scripts.$edit_options_page prints out WPEC admin scripts
+ * @uses apply_filters()            Calls 'wpsc_additional_pages' Passes the page_hooks and product_page URL
+ * @uses do_action()                Calls 'wpsc_add_submenu' Allows you to hook in to the WPEC menu
+ * @uses update_option()            Updates option given key and value
  */
 function wpsc_admin_pages() {
 
@@ -216,6 +241,11 @@ function wpsc_admin_pages() {
  * add_contextual_help() is supported as well as $screen->add_help_tab().
  *
  * @since 3.8.8
+ * @access public
+ *
+ * @uses get_current_screen()   Returns WordPress admin screen object
+ * @uses get_bloginfo()         Returns information about the WordPress site
+ * @uses add_help_tab()         Used to add a tab to the contextual help menu
  */
 function wpsc_add_help_tabs() {
 	$tabs = array(
@@ -298,18 +328,23 @@ function wpsc_add_help_tabs() {
 		}
 		$content .= '<p>' . implode( '<br />', $links ) . '</p>';
 
-		if ( version_compare( get_bloginfo( 'version' ), '3.3', '<' ) ) {
-			add_contextual_help( $screen->id, $content );
-		} else {
-			$screen->add_help_tab( array(
-				'id'      => $screen->id . '_help',
-				'title'   => $tab['title'],
-				'content' => $content,
-			) );
-		}
+		$screen->add_help_tab( array(
+			'id'      => $screen->id . '_help',
+			'title'   => $tab['title'],
+			'content' => $content,
+		) );
+
 	}
 }
 
+/**
+ * Includes purchase logs CSS and JS
+ *
+ * @acces public
+ *
+ * @uses wp_enqueue_script()    Recommended way of adding scripts in WordPress
+ * @uses wp_localize_script()   Adds noncing and other data to the logs script
+ */
 function wpsc_admin_include_purchase_logs_css_and_js() {
 	wp_enqueue_script( 'wp-e-commerce-purchase-logs', WPSC_URL . '/wpsc-admin/js/purchase-logs.js', array( 'jquery' ), WPSC_VERSION . '.' . WPSC_MINOR_VERSION );
 	wp_localize_script( 'wp-e-commerce-purchase-logs', 'WPSC_Purchase_Logs_Admin', array(
@@ -325,24 +360,54 @@ function wpsc_admin_include_purchase_logs_css_and_js() {
 	) );
 }
 
+/**
+ * Loads the WPEC settings page
+ *
+ * @access public
+ *
+ * @uses WPSC_Settings_Page::get_instance()   Gets instance of WPEC settings page
+ */
 function wpsc_load_settings_page() {
 	require_once('settings-page.php');
 	WPSC_Settings_Page::get_instance();
 }
 
+/**
+ * Leads the purchase logs page
+ *
+ * @uses WPSC_Purchase_Log_Page()     Loads the edit and view sales page
+ */
 function wpsc_load_purchase_logs_page() {
 	require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/purchase-log-list-table-class.php' );
 	require_once( WPSC_FILE_PATH . '/wpsc-admin/display-sales-logs.php' );
 	$page = new WPSC_Purchase_Log_Page();
 }
 
+/**
+ * Displays the WPEC purchase logs
+ *
+ * @uses do_action()  Calls 'wpsc_display_purchase_logs_page' allows hooking of the sales log page
+ */
 function wpsc_display_purchase_logs_page() {
 	do_action( 'wpsc_display_purchase_logs_page' );
 }
 
+/**
+ * Produces an RSS feed for the product log
+ *
+ * @uses add_query_arg()  Allows you to add arguments to the end of a URL
+ * @uses admin_url()      Retrieves URL to the WordPress admin
+ */
 function wpsc_product_log_rss_feed() {
 	echo "<link type='application/rss+xml' href='" . add_query_arg( array( 'rss' => 'true', 'rss_key' => 'key', 'action' => 'purchase_log', 'type' => 'rss' ), admin_url( 'index.php' ) ) . "' title='" . esc_attr( 'WP e-Commerce Purchase Log RSS', 'wpsc' ) . "' rel='alternate' />";
 }
+
+/**
+ * Includes and enqueues scripts and styles for coupons
+ *
+ * @uses wp_enqueue_style()   Includes and prints styles for WPEC in the WordPress admin
+ * @uses wp_enqueue_script()  Includes and prints scripts for WPEC in the WordPress admin
+ */
 function wpsc_admin_include_coupon_js() {
 
 	// Variables
@@ -355,13 +420,20 @@ function wpsc_admin_include_coupon_js() {
 	// Coupon JS
 	wp_enqueue_script( 'wp-e-commerce-admin-parameters', admin_url( '/wp-admin/admin.php?wpsc_admin_dynamic_js=true' ), false,                     $version_identifier );
 	wp_enqueue_script( 'livequery',                     WPSC_URL         . '/wpsc-admin/js/jquery.livequery.js',             array( 'jquery' ),         '1.0.3' );
-	wp_enqueue_script( 'datepicker-ui',                 WPSC_CORE_JS_URL . '/ui.datepicker.js',                              array( 'jquery-ui-core' ), $version_identifier );
-	wp_enqueue_script( 'wp-e-commerce-admin_legacy',    WPSC_URL         . '/wpsc-admin/js/admin-legacy.js',                 array( 'jquery', 'jquery-ui-core', 'jquery-ui-sortable', 'datepicker-ui' ), $version_identifier );
+	wp_enqueue_script( 'jquery-ui-datepicker' );
+	wp_enqueue_script( 'wp-e-commerce-admin_legacy',    WPSC_URL         . '/wpsc-admin/js/admin-legacy.js',                 array( 'jquery', 'jquery-ui-core', 'jquery-ui-sortable', 'jquery-ui-datepicker' ), $version_identifier );
+
+	wp_enqueue_style ( 'wpsc-jquery-ui-datepicker', WPSC_URL . '/wpsc-admin/css/jquery.ui.datepicker-' . get_user_option( 'admin_color' ) . '.css', false, $version_identifier );
 }
 
 /**
- * wpsc_admin_include_optionspage_css_and_js function, includes the wpsc_admin CSS and JS for the specific options page
- * No parameters, returns nothing
+ * Includes and enqueues scripts and styles for the WPEC options page
+ *
+ * @uses wp_enqueue_script()          Includes and prints out the JS for the WPEC options page
+ * @uses wp_localize_script()         Sets up the JS vars needed
+ * @uses _wpsc_create_ajax_nonce()    Alias for wp_create_nonce, creates a random one time use token
+ * @uses get_current_tab_id()         Returns the current tab id
+ * @uses wp_enqueue_style()           Includes and prints out the CSS for the WPEC options page
  */
 function wpsc_admin_include_optionspage_css_and_js() {
 	$version_identifier = WPSC_VERSION . "." . WPSC_MINOR_VERSION;
@@ -387,6 +459,12 @@ function wpsc_admin_include_optionspage_css_and_js() {
 	wp_enqueue_style( 'wp-e-commerce-ui-tabs', WPSC_URL . '/wpsc-admin/css/jquery.ui.tabs.css', false, $version_identifier, 'all' );
 }
 
+/**
+ * Sets up the WPEC metaboxes
+ *
+ * @uses remove_meta_box()    Removes the default taxonomy meta box so our own can be added
+ * @uses add_meta_bax()       Adds metaboxes to the WordPress admin interface
+ */
 function wpsc_meta_boxes() {
 	global $post;
 	$pagename = 'wpsc-product';
@@ -412,11 +490,25 @@ function wpsc_meta_boxes() {
 		add_meta_box( 'wpsc_product_shipping_forms', __('Shipping', 'wpsc'), 'wpsc_product_shipping_forms_metabox', $pagename, 'normal', 'high' );
 	add_meta_box( 'wpsc_product_advanced_forms', __('Advanced Settings', 'wpsc'), 'wpsc_product_advanced_forms', $pagename, 'normal', 'high' );
 }
-
 add_action( 'admin_footer', 'wpsc_meta_boxes' );
 add_action( 'admin_enqueue_scripts', 'wpsc_admin_include_css_and_js_refac' );
+
+/**
+ * Includes the JS and CSS
+ *
+ * @param string    $pagehook     The pagehook for the currently viewing page, provided by the 'admin_enqueue_scripts' action
+ *
+ * @uses wp_admin_css()               Enqueues or prints a stylesheet in the admin
+ * @uses wp_enqueue_script()          Enqueues the specified script
+ * @uses wp_localize_script()         Sets up the JS vars needed
+ * @uses wp_enqueue_style()           Enqueues the styles
+ * @uses wp_dequeue_script()          Removes a previously enqueued script by handle
+ * @uses _wpsc_create_ajax_nonce()    Alias for wp_create_nonce, creates a random one time use token
+ */
 function wpsc_admin_include_css_and_js_refac( $pagehook ) {
-	global $post_type, $current_screen, $post;
+	global $post_type, $post;
+
+	$current_screen = get_current_screen();
 
 	if ( version_compare( get_bloginfo( 'version' ), '3.3', '<' ) )
 		wp_admin_css( 'dashboard' );
@@ -498,6 +590,11 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 		wp_enqueue_style( 'wp-e-commerce-admin', WPSC_URL . '/wpsc-admin/css/admin.css', false, $version_identifier, 'all' );
 }
 
+/**
+ * @todo docs
+ *
+ * @uses get_option()     Gets an option by name from the WordPress database
+ */
 function wpsc_admin_dynamic_js() {
 	header( 'Content-Type: text/javascript' );
 	header( 'Expires: ' . gmdate( 'r', mktime( 0, 0, 0, date( 'm' ), ( date( 'd' ) + 12 ), date( 'Y' ) ) ) . '' );
@@ -567,6 +664,11 @@ if ( isset( $_GET['wpsc_admin_dynamic_js'] ) && ( $_GET['wpsc_admin_dynamic_js']
 	add_action( "admin_init", 'wpsc_admin_dynamic_js' );
 }
 
+/**
+ * @todo finish docs
+ *
+ * @uses apply_filters()      Allows manipulation of the flash upload params.
+ */
 function wpsc_admin_dynamic_css() {
 	header( 'Content-Type: text/css' );
 	header( 'Expires: ' . gmdate( 'r', mktime( 0, 0, 0, date( 'm' ), ( date( 'd' ) + 12 ), date( 'Y' ) ) ) . '' );
@@ -605,7 +707,17 @@ if ( isset( $_GET['wpsc_admin_dynamic_css'] ) && ( $_GET['wpsc_admin_dynamic_css
 
 add_action( 'admin_menu', 'wpsc_admin_pages' );
 
-
+/**
+ * Displays latest activity in the Dashboard widget
+ *
+ * @uses $wpdb                          WordPress database object for queries
+ * @uses get_var()                      Returns single variable from the database
+ * @uses esc_html__()                   Gets translation of $text and escapes it for HTML output
+ * @uses wpsc_currency_display()        Displays the currency
+ * @uses admin_display_total_price()    Displays the total price
+ * @uses esc_html_x()
+ * @uses _n()                           Retrieves the singular or plural version
+ */
 function wpsc_admin_latest_activity() {
 	global $wpdb;
 	$totalOrders = $wpdb->get_var( "SELECT COUNT(*) FROM `" . WPSC_TABLE_PURCHASE_LOGS . "`" );
@@ -676,16 +788,19 @@ function wpsc_admin_latest_activity() {
 	echo "</div>";
 	echo "<div style='clear:both'></div>";
 }
-
 add_action( 'wpsc_admin_pre_activity', 'wpsc_admin_latest_activity' );
-
 
 /*
  * Dashboard Widget Setup
  * Adds the dashboard widgets if the user is an admin
+ *
  * Since 3.6
+ *
+ * @uses wp_enqueue_style()           Enqueues CSS
+ * @uses wp_enqueue_script()          Enqueues JS
+ * @uses wp_add_dashboard_widget()    Adds a new widget to the WordPress admin dashboard
+ * @uses current_user_can()           Checks the capabilities of the current user
  */
-
 function wpsc_dashboard_widget_setup() {
 	$version_identifier = WPSC_VERSION . "." . WPSC_MINOR_VERSION;
 	// Enqueue the styles and scripts necessary
@@ -744,6 +859,12 @@ function wpsc_dashboard_widget_setup() {
 
 add_action( 'wp_dashboard_setup', 'wpsc_dashboard_widget_setup' );
 
+/**
+ * Shows the RSS feed for the WPEC dashboard widget
+ *
+ * @uses fetch_feed()             Build SimplePie object based on RSS or Atom feed from URL.
+ * @uses wp_widget_rss_output()   Display the RSS entries in a list
+ */
 function wpsc_dashboard_news() {
 	$rss = fetch_feed( 'http://getshopped.org/category/wp-e-commerce-plugin/' );
 	$args = array( 'show_author' => 1, 'show_date' => 1, 'show_summary' => 1, 'items'=>3 );
@@ -751,6 +872,14 @@ function wpsc_dashboard_news() {
 
 }
 
+/**
+ * Gets the quarterly summary of revenue
+ *
+ * @uses get_option()                 Retrieves an option from the WordPress database
+ * @uses admin_display_total_price()  Displays the total price
+ *
+ * @return array        The array of prices
+ */
 function wpsc_get_quarterly_summary() {
 	(int)$firstquarter = get_option( 'wpsc_first_quart' );
 	(int)$secondquarter = get_option( 'wpsc_second_quart' );
@@ -765,6 +894,12 @@ function wpsc_get_quarterly_summary() {
 	return $results;
 }
 
+/**
+ * Called by wp_add_dashboard_widget and ads the quarterly revenue reports to the WordPress admin dashboard
+ *
+ * @uses get_option()     Gets the specified option from database
+ * @uses esc_html_e()     Displays translated text that has been escaped for safe use in HTML
+ */
 function wpsc_quarterly_dashboard_widget() {
 	if ( get_option( 'wpsc_business_year_start' ) == false ) {
 ?>
@@ -850,7 +985,12 @@ function wpsc_quarterly_dashboard_widget() {
 	}
 }
 
-
+/**
+ * Called by wp_add_dashboard_widget to add the WPSC dashboard widget
+ *
+ * @uses do_action()    Calls 'wpsc_admin_pre_activity'
+ * @uses do_action()    Calls 'wpsc_admin_post_activity'
+ */
 function wpsc_dashboard_widget() {
 	do_action( 'wpsc_admin_pre_activity' );
 	do_action( 'wpsc_admin_post_activity' );
@@ -863,8 +1003,12 @@ function wpsc_dashboard_widget() {
 
 /*
  * Dashboard Widget Last Four Month Sales.
+ *
+ * @uses $wpdb                      WordPress database object for queries
+ * @uses get_results()              Gets generic multiple row results from the WordPress database
+ * @uses get_var()                  Returns a single variable from the database
+ * @uses wpsc_currency_display()    Returns the currency with the display options applied
  */
-
 function wpsc_dashboard_4months_widget() {
 	global $wpdb;
 
@@ -948,6 +1092,12 @@ function wpsc_dashboard_4months_widget() {
 
 //Modification to allow for multiple column layout
 
+/**
+ * @todo docs
+ * @param $columns
+ * @param $screen
+ * @return mixed
+ */
 function wpec_two_columns( $columns, $screen ) {
 	if ( $screen == 'toplevel_page_wpsc-edit-products' )
 		$columns['toplevel_page_wpsc-edit-products'] = 2;
@@ -956,12 +1106,24 @@ function wpec_two_columns( $columns, $screen ) {
 }
 add_filter( 'screen_layout_columns', 'wpec_two_columns', 10, 2 );
 
+/**
+ * @todo docs
+ * @param $actions
+ * @return mixed
+ */
 function wpsc_fav_action( $actions ) {
 	$actions['post-new.php?post_type=wpsc-product'] = array( 'New Product', 'manage_options' );
 	return $actions;
 }
 add_filter( 'favorite_actions', 'wpsc_fav_action' );
 
+/**
+ * Prits out the admin scripts
+ *
+ * @uses is_ssl()                 Defines if SSL is true
+ * @uses wp_enqueue_script()      Enqueues scripts
+ * @uses home_url()               Returns the base url for the site
+ */
 function wpsc_print_admin_scripts() {
 	$scheme = is_ssl() ? 'https' : 'http';
 	wp_enqueue_script( 'wp-e-commerce-dynamic', home_url( "/index.php?wpsc_user_dynamic_js=true", $scheme ) );
@@ -972,6 +1134,11 @@ function wpsc_print_admin_scripts() {
  *
  * @since  3.8.9
  * @access private
+ *
+ * @uses get_bloginfo()                               Returns information about your site to be used elsewhere
+ * @uses version_compare()                            Compares two "PHP-standardized" version number strings
+ * @uses _wpsc_display_permalink_refresh_notice()     Display warning on older WordPress versions
+ * @uses wpsc_update_page_urls()                      Gets the premalinks for product pages and stores for quick reference
  */
 function _wpsc_action_permalink_structure_changed() {
 	$wp_version = get_bloginfo( 'version' );
@@ -990,8 +1157,8 @@ function _wpsc_action_permalink_structure_changed() {
  * Display warning if the user is using WordPress prior to 3.3 because there is a bug with custom
  * post type and taxonomy permalink generation.
  *
- * @access private
  * @since 3.8.9
+ * @access private
  */
 function _wpsc_display_permalink_refresh_notice(){
 	?>
@@ -1007,9 +1174,20 @@ function _wpsc_display_permalink_refresh_notice(){
 /**
  * wpsc_ajax_ie_save save changes made using inline edit
  *
- * @public
+ * @since  3.8
+ * @access public
  *
- * @3.8
+ * @uses get_post_type_object()       Gets post object for given registered post type name
+ * @uses current_user_can()           Checks the capabilities of the current user
+ * @uses absint()                     Converts to a nonnegative integer
+ * @uses get_post()                   Gets the post object given post id
+ * @uses wp_get_object_terms()        Gets terms for given post object
+ * @uses wp_update_post()             Updates the post in the database
+ * @uses get_product_meta()           An alias for get_post_meta prefixes with the WPSC key
+ * @uses wpsc_convert_weight()        Converts to weight format specified by user
+ * @uses json_encode()                Encodes array for JS
+ * @uses esc_js()                     Escape single quotes, htmlspecialchar " < > &, and fix line endings.
+ *
  * @returns nothing
  */
 function wpsc_ajax_ie_save() {
@@ -1024,7 +1202,7 @@ function wpsc_ajax_ie_save() {
 	$id = absint( $_POST['id'] );
 	$post = get_post( $_POST['id'] );
 	$parent = get_post( $post->post_parent );
-	$terms = wp_get_object_terms( $id, 'wpsc-variation', array( 'fields' => 'names' ) );
+	$terms = wpsc_get_product_terms( $id, 'wpsc-variation', 'name' );
 
 	$product = array(
 		'ID' => $_POST['id'],
@@ -1066,6 +1244,11 @@ function wpsc_ajax_ie_save() {
 	die();
 }
 
+/**
+ * @todo docs
+ *
+ * @uses add_meta_box  Allows addition of metaboxes to the wpsc_add_meta_boxes admin
+ */
 function wpsc_add_meta_boxes(){
 	add_meta_box( 'dashboard_right_now', __( 'Current Month', 'wpsc' ), 'wpsc_right_now', 'dashboard_page_wpsc-sales-logs', 'top' );
 }
@@ -1074,9 +1257,15 @@ function wpsc_add_meta_boxes(){
  * Displays notice if user has Great Britain selected as their base country
  * Since 3.8.9, we have deprecated Great Britain in favor of the UK
  *
- * @link http://code.google.com/p/wp-e-commerce/issues/detail?id=1079
  * @since 3.8.9
- * @return html
+ * @access private
+ * @link http://code.google.com/p/wp-e-commerce/issues/detail?id=1079
+ *
+ * @uses get_option()             Retrieves option from the WordPress database
+ * @uses get_outdate_isocodes()   Returns outdated isocodes
+ * @uses admin_url()              Returns admin_url of the site
+ *
+ * @return string  The admin notices for deprecated countries
  */
 function _wpsc_action_admin_notices_deprecated_countries_notice() {
 	$base_country = get_option( 'base_country' );
@@ -1114,6 +1303,21 @@ add_action( 'wp_ajax_variation_sort_order', 'wpsc_ajax_set_variation_order' );
 add_action( 'wp_ajax_wpsc_ie_save', 'wpsc_ajax_ie_save' );
 add_action('in_admin_header', 'wpsc_add_meta_boxes');
 
+/**
+ * Deletes file associated with a product.
+ *
+ * @access private
+ *
+ * @uses $wpdb              WordPress database object for queries
+ * @uses prepare()          Prepares a database query by escaping
+ * @uses wp_delete_post()   Removes a post attachment or page*
+ *
+ * @param int       $product_id     req        The id of the product
+ * @param string    $file_name      req        The string
+ *
+ * @return mixed
+ *
+ */
 function _wpsc_delete_file( $product_id, $file_name ) {
 	global $wpdb;
 
@@ -1122,18 +1326,31 @@ function _wpsc_delete_file( $product_id, $file_name ) {
 	return wp_delete_post( $product_id_to_delete, true );
 }
 
+/**
+ * Duplicates a product
+ *
+ * @uses wp_insert_post()                 Inserts a new post to the database
+ * @uses wpsc_duplicate_taxonomies()      Copy the taxonomies of a post to another post
+ * @uses wpsc_duplicate_product_meta()    Copy the metadata of a post to another post
+ * @uses wpsc_duplicate_children()        Copy the children of the product
+ *
+ * @param object    $post           req     The post object
+ * @param bool      $new_parent_id  opt     The parent post id
+ *
+ * @return int|WP_Error     New post id or error
+ */
 function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
-	$new_post_date = $post->post_date;
+	$new_post_date     = $post->post_date;
 	$new_post_date_gmt = get_gmt_from_date( $new_post_date );
 
-	$new_post_type = $post->post_type;
-	$post_content = str_replace( "'", "''", $post->post_content );
-	$post_content_filtered = str_replace( "'", "''", $post->post_content_filtered );
-	$post_excerpt = str_replace( "'", "''", $post->post_excerpt );
-	$post_title = str_replace( "'", "''", $post->post_title ) . " (Duplicate)";
-	$post_name = str_replace( "'", "''", $post->post_name );
-	$comment_status = str_replace( "'", "''", $post->comment_status );
-	$ping_status = str_replace( "'", "''", $post->ping_status );
+	$new_post_type         = $post->post_type;
+	$post_content          = $post->post_content;
+	$post_content_filtered = $post->post_content_filtered;
+	$post_excerpt          = $post->post_excerpt;
+	$post_title            = $post->post_title . ' ' . __( '(Duplicate)', 'wpsc' );
+	$post_name             = $post->post_name;
+	$comment_status        = $post->comment_status;
+	$ping_status           = $post->ping_status;
 
 	$defaults = array(
 		'post_status'           => $post->post_status,
@@ -1141,7 +1358,7 @@ function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
 		'ping_status'           => $ping_status,
 		'post_parent'           => $new_parent_id ? $new_parent_id : $post->post_parent,
 		'menu_order'            => $post->menu_order,
-		'to_ping'               =>  $post->to_ping,
+		'to_ping'               => $post->to_ping,
 		'pinged'                => $post->pinged,
 		'post_excerpt'          => $post_excerpt,
 		'post_title'            => $post_title,
@@ -1153,6 +1370,8 @@ function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
 
 	if ( 'attachment' == $post->post_type )
 		$defaults['guid'] = $post->guid;
+
+	$defaults = stripslashes_deep( $defaults );
 
 	// Insert the new template in the post table
 	$new_post_id = wp_insert_post($defaults);
@@ -1171,19 +1390,35 @@ function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
 
 /**
  * Copy the taxonomies of a post to another post
+ *
+ * @uses get_object_taxonomies()  Gets taxonomies for the give object
+ * @uses wp_get_object_terms()    Gets terms for the taxonomies
+ * @uses wp_set_object_terms()    Sets the terms for a post object
+ *
+ * @param int       $id         req     ID of the post we are duping
+ * @param int       $new_id     req     ID of the new post
+ * @param string    $post_type  req     The post type we are setting
  */
 function wpsc_duplicate_taxonomies( $id, $new_id, $post_type ) {
 	$taxonomies = get_object_taxonomies( $post_type ); //array("category", "post_tag");
 	foreach ( $taxonomies as $taxonomy ) {
-		$post_terms = wp_get_object_terms( $id, $taxonomy );
-		for ( $i = 0; $i < count( $post_terms ); $i++ ) {
-			wp_set_object_terms( $new_id, $post_terms[$i]->slug, $taxonomy, true );
+		$post_terms = wpsc_get_product_terms( $id, $taxonomy );
+		foreach ( $post_terms as $post_term ) {
+			wp_set_object_terms( $new_id, $post_term->slug, $taxonomy, true );
 		}
 	}
 }
 
 /**
  * Copy the meta information of a post to another post
+ *
+ * @uses $wpdb              WordPress database object for queries
+ * @uses get_results()      Gets generic multirow results from the database
+ * @uses prepare()          Prepares a database query making it safe
+ * @uses query()            Runs an SQL query
+ *
+ * @param int   $id     req ID of the post we are duping
+ * @param int   $new_id req ID of the new post
  */
 function wpsc_duplicate_product_meta( $id, $new_id ) {
 	global $wpdb;
@@ -1211,6 +1446,12 @@ function wpsc_duplicate_product_meta( $id, $new_id ) {
 
 /**
  * Duplicates children product and children meta
+ *
+ * @uses get_posts()                          Gets an array of posts given array of arguments
+ * @uses wpsc_duplicate_product_process()     Duplicates product
+ *
+ * @param   int     $old_parent_id  req     Post id for old parent
+ * @param   int     $new_parenc_id  req     Post id for the new parent
  */
 function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
 
@@ -1228,6 +1469,14 @@ function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
 
 }
 
+/**
+ * @todo docs
+ * @access private
+ *
+ * @uses add_query_arg()      Adds argument to the WordPress query
+ * @uses update_option()      Updates an option in the WordPress database given string and value
+ * @uses get_option()         Gets option from the database given string
+ */
 function _wpsc_admin_notices_3dot8dot9() {
 	$message = '<p>' . __( 'You are currently using WP e-Commerce 3.8.9. There have been major changes in WP e-Commerce 3.8.9, so backward-compatibility with existing plugins might not always be guaranteed. If you are unsure, please roll back to 3.8.8.5, and set up a test site with 3.8.9 to make sure WP e-Commerce 3.8.9 is compatible with your existing themes and plugins.<br />If you find any incompatibility issues, please <a href="%1$s">report them to us</a> as well as the other plugins or themes\' developers.' , 'wpsc' ) . '</p>';
 	$message .= "\n<p>" . __( '<a href="%2$s">Hide this warning</a>', 'wpsc' ) . '</p>';

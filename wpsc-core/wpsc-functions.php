@@ -223,7 +223,10 @@ function wpsc_core_load_purchase_log_statuses() {
  */
 function wpsc_core_load_page_titles() {
 	global $wpsc_page_titles;
-	$wpsc_page_titles = wpsc_get_page_post_names();
+	$wpsc_page_titles = apply_filters( 'wpsc_page_titles', false );
+
+	if ( empty( $wpsc_page_titles ) )
+		$wpsc_page_titles = wpsc_get_page_post_names();
 }
 
 /***
@@ -615,15 +618,27 @@ function _wpsc_menu_exists( $args ) {
 		$menu = wp_get_nav_menu_object( $locations[ $args->theme_location ] );
 
 	// get the first menu that has items if we still can't find a menu
-	if ( ! $menu && !$args->theme_location ) {
+	if ( ! $menu && ! $args->theme_location ) {
 		$menus = wp_get_nav_menus();
 		foreach ( $menus as $menu_maybe ) {
-			if ( $menu_items = wp_get_nav_menu_items($menu_maybe->term_id) ) {
+			if ( $menu_items = wp_get_nav_menu_items( $menu_maybe->term_id ) ) {
 				$menu = $menu_maybe;
 				break;
 			}
 		}
 	}
+
+	// If the menu exists, get its items.
+	if ( $menu && ! is_wp_error( $menu ) && ! isset( $menu_items ) )
+		$menu_items = wp_get_nav_menu_items( $menu->term_id );
+
+	// If no menu was found or if the menu has no items and no location was requested, call the fallback_cb if it exists
+	if ( ( ! $menu || is_wp_error( $menu ) || ( isset( $menu_items ) && empty( $menu_items ) && ! $args->theme_location ) ) )
+		return false;
+
+	// If no fallback function was specified and the menu doesn't exists, bail.
+	if ( ! $menu || is_wp_error( $menu ) || empty( $menu_items ) )
+		return false;
 
 	return (bool) $menu;
 }
@@ -726,7 +741,7 @@ function wpsc_start_the_query() {
 				$wpsc_query_vars['term'] = get_query_var( 'term' );
 			}else{
 				$wpsc_query_vars['post_type'] = 'wpsc-product';
-				$wpsc_query_vars['pagename'] = 'products-page';
+				$wpsc_query_vars['pagename']  = wpsc_get_page_slug( '[productspage]' );
 			}
 			if(1 == get_option('use_pagination')){
 				$wpsc_query_vars['nopaging'] = false;
@@ -1325,7 +1340,7 @@ function wpsc_product_link( $permalink, $post, $leavename ) {
 	// Mostly the same conditions used for posts, but restricted to items with a post type of "wpsc-product "
 
 	if ( '' != $permalink_structure && !in_array( $post->post_status, array( 'draft', 'pending' ) ) ) {
-		$product_categories = wp_get_object_terms( $post_id, 'wpsc_product_category' );
+		$product_categories = wpsc_get_product_terms( $post_id, 'wpsc_product_category' );
 		$product_category_slugs = array( );
 		foreach ( $product_categories as $product_category ) {
 			$product_category_slugs[] = $product_category->slug;
@@ -1488,7 +1503,10 @@ add_action( 'wp', 'wpsc_select_theme_functions', 10, 1 );
  */
 function wpsc_force_ssl() {
 	global $wp_query;
-	if ( '1' == get_option( 'wpsc_force_ssl' ) && ! is_ssl() && false !== strpos( $wp_query->post->post_content, '[shoppingcart]' ) ) {
+	if ( '1' == get_option( 'wpsc_force_ssl' ) &&
+	    ! is_ssl() &&
+	    ! empty ( $wp_query->post->post_content ) &&
+	    false !== strpos( $wp_query->post->post_content, '[shoppingcart]' ) ) {
 		$sslurl = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 		wp_redirect( $sslurl );
 		exit;
@@ -1812,4 +1830,91 @@ function wpsc_delete_all_customer_meta( $id = false ) {
 		return delete_user_meta( $id, "_wpsc_{$blog_prefix}customer_profile" );
 	else
 		return delete_transient( "wpsc_customer_meta_{$blog_prefix}{$id}" );
+}
+
+/**
+ * Updates permalink slugs
+ *
+ * @since 3.8.9
+ * @return type
+ */
+function wpsc_update_permalink_slugs() {
+	global $wpdb;
+
+	$wpsc_pageurl_option = array(
+		'product_list_url'  => '[productspage]',
+		'shopping_cart_url' => '[shoppingcart]',
+		'checkout_url'      => '[shoppingcart]',
+		'transact_url'      => '[transactionresults]',
+		'user_account_url'  => '[userlog]'
+	);
+
+	$ids = array();
+
+	foreach ( $wpsc_pageurl_option as $option_key => $page_string ) {
+		$id = $wpdb->get_var( "SELECT `ID` FROM `{$wpdb->posts}` WHERE `post_type` = 'page' AND `post_content` LIKE '%$page_string%' LIMIT 1" );
+
+		if ( ! $id )
+			continue;
+
+		$ids[$page_string] = $id;
+
+		$the_new_link = get_page_link( $id );
+
+		if ( stristr( get_option( $option_key ), "https://" ) )
+			$the_new_link = str_replace( 'http://', "https://", $the_new_link );
+
+		if ( $option_key == 'shopping_cart_url' )
+			update_option( 'checkout_url', $the_new_link );
+
+		update_option( $option_key, $the_new_link );
+	}
+
+	update_option( 'wpsc_shortcode_page_ids', $ids );
+}
+
+/**
+ * Return an array of terms assigned to a product.
+ *
+ * This function is basically a wrapper for get_the_terms(), and should be used
+ * instead of get_the_terms() and wp_get_object_terms() because of two reasons:
+ *
+ * - wp_get_object_terms() doesn't utilize object cache.
+ * - get_the_terms() returns false when no terms are found. We want something
+ *   that returns an empty array instead.
+ *
+ * @since 3.8.10
+ * @param  int    $product_id Product ID
+ * @param  string $tax        Taxonomy
+ * @param  string $field      If you want to return only an array of a certain field, specify it here.
+ * @return stdObject[]
+ */
+function wpsc_get_product_terms( $product_id, $tax, $field = '' ) {
+	$terms = get_the_terms( $product_id, $tax );
+
+	if ( ! $terms )
+		$terms = array();
+
+	if ( $field )
+		$terms = wp_list_pluck( $terms, $field );
+
+	// remove the redundant array keys, could cause issues in loops with iterator
+	$terms = array_values( $terms );
+	return $terms;
+}
+
+/**
+ * Returns page slug that corresponds to a given WPEC-specific shortcode.
+ *
+ * @since 3.8.10
+ * 
+ * @uses   wpsc_get_the_post_id_by_shortcode()  Gets page ID of shortcode.
+ * @uses   get_post_field()                     Returns post name of page ID.
+ * 
+ * @param  string $shortcode                    Shortcode of WPEC-specific page, e.g. '[productspage]''
+ * @return string                               Post slug
+ */
+function wpsc_get_page_slug( $shortcode ) {
+     $id = wpsc_get_the_post_id_by_shortcode( $shortcode );
+     return get_post_field( 'post_name', $id );
 }

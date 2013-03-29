@@ -18,7 +18,9 @@ function wpsc_get_max_upload_size(){
 * @return nothing
 */
 function wpsc_admin_submit_product( $post_ID, $post ) {
-	global $current_screen, $wpdb;
+	global $wpdb;
+
+	$current_screen = get_current_screen();
 
 	if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || empty( $current_screen ) || $current_screen->id != 'wpsc-product' || $post->post_type != 'wpsc-product' || empty( $_POST['meta'] ) )
 		return $post_ID;
@@ -61,9 +63,20 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 	if(!isset($post_data['meta']['_wpsc_product_metadata']['display_weight_as'])) $post_data['meta']['_wpsc_product_metadata']['display_weight_as'] = '';
 
 	if ( isset( $post_data['meta']['_wpsc_product_metadata']['weight'] ) ) {
-		$weight = wpsc_convert_weight($post_data['meta']['_wpsc_product_metadata']['weight'], $post_data['meta']['_wpsc_product_metadata']['weight_unit'], "pound", true);
-		$post_data['meta']['_wpsc_product_metadata']['weight'] = wpsc_string_to_float( $weight );
+		$weight = wpsc_string_to_float( $post_data['meta']['_wpsc_product_metadata']['weight'] );
+		$weight = wpsc_convert_weight( $weight, $post_data['meta']['_wpsc_product_metadata']['weight_unit'], "pound", true);
+		$post_data['meta']['_wpsc_product_metadata']['weight'] = $weight;
         $post_data['meta']['_wpsc_product_metadata']['display_weight_as'] = $post_data['meta']['_wpsc_product_metadata']['weight_unit'];
+	}
+
+	if ( isset( $post_data['meta']['_wpsc_product_metadata']['dimensions'] ) ) {
+		$dimensions =& $post_data['meta']['_wpsc_product_metadata']['dimensions'];
+		foreach ( $dimensions as $key => $value ) {
+			if ( ! in_array( $key, array( 'height', 'width', 'length' ) ) )
+				continue;
+
+			$dimensions[$key] = wpsc_string_to_float( $value );
+		}
 	}
 
 	// table rate price
@@ -88,6 +101,11 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 		$post_data['meta']['_wpsc_product_metadata']['shipping']['local'] = wpsc_string_to_float( $post_data['meta']['_wpsc_product_metadata']['shipping']['local'] );
 		$post_data['meta']['_wpsc_product_metadata']['shipping']['international'] = wpsc_string_to_float( $post_data['meta']['_wpsc_product_metadata']['shipping']['international'] );
 	}
+
+	if ( ! empty( $post_data['meta']['_wpsc_product_metadata']['wpec_taxes_taxable_amount'] ) )
+		$post_data['meta']['_wpsc_product_metadata']['wpec_taxes_taxable_amount'] = wpsc_string_to_float(
+			$post_data['meta']['_wpsc_product_metadata']['wpec_taxes_taxable_amount']
+		);
 
 	// Advanced Options
 	$post_data['meta']['_wpsc_product_metadata']['engraved'] = (int)(bool)$post_data['meta']['_wpsc_product_metadata']['engraved'];
@@ -144,6 +162,7 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 		$post_data['tax_input']['wpsc_product_category'][1] = wpsc_add_product_category_default($product_id);
 
 	}
+
 	// and the meta
 	wpsc_update_product_meta($product_id, $post_data['meta']);
 
@@ -467,7 +486,7 @@ function wpsc_determine_variation_price( $variation_id, $term_ids = false ) {
 	$price = (float) get_product_meta( $variation->post_parent, 'price', true );
 
 	if ( ! $term_ids )
-		$term_ids = wp_get_object_terms( $variation_id, 'wpsc-variation', array( 'fields' => 'ids' ) );
+		$term_ids = wpsc_get_product_terms( $variation_id, 'wpsc-variation', 'term_id' );
 
 	$term_price_arr = get_option( 'term_prices' );
 	foreach ( $term_ids as $term_id ) {
@@ -526,7 +545,7 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 	// Retrieve the array containing the combinations of each variation set to be associated with this product.
 	$combinations = $wpsc_combinator->return_combinations();
 
-	$product_terms = wp_get_object_terms($product_id, 'wpsc-variation');
+	$product_terms = wpsc_get_product_terms( $product_id, 'wpsc-variation' );
 
 	$variation_sets_and_values = array_merge($variation_sets, $variation_values);
 	$variation_sets_and_values = apply_filters('wpsc_edit_product_variation_sets_and_values', $variation_sets_and_values, $product_id);
@@ -1071,7 +1090,7 @@ function _wpsc_refresh_parent_product_terms( $parent_id ) {
 
 	$children_ids = wp_list_pluck( $children, 'ID' );
 
-	$children_terms = wp_get_object_terms( $children_ids, 'wpsc-variation' );
+	$children_terms = wpsc_get_product_terms( $children_ids, 'wpsc-variation' );
 	$new_terms = array();
 	foreach ( $children_terms as $term ) {
 		if ( $term->parent )

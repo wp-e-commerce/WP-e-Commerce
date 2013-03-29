@@ -7,6 +7,15 @@
  *
  * @package wp-e-commerce
  * @since 3.7
+ *
+ * @uses update_option()                              Updates option in the database given key and value
+ * @uses wp_delete_term()                             Removes term from the database
+ * @uses fetch_rss()                                  DEPRECATED
+ * @uses wpsc_member_dedeactivate_subscriptions()     @todo docs
+ * @uses wpsc_member_deactivate_subscriptions()       @todo docs
+ * @uses wpsc_update_purchase_log_status()            Updates the status of the logs for a purchase
+ * @uses transaction_results()                        Main function for creating purchase reports
+ * @uses wpsc_find_purchlog_status_name()             Finds name of given status
  */
 function wpsc_admin_ajax() {
 	global $wpdb;
@@ -37,15 +46,6 @@ function wpsc_admin_ajax() {
 		$value_id = absint( $_GET['variation_value_id'] );
 		echo wp_delete_term( $value_id, 'wpsc-variation' );
 		exit();
-	}
-
-	if ( isset( $_POST['hide_ecom_dashboard'] ) && $_POST['hide_ecom_dashboard'] == 'true' ) {
-		require_once (ABSPATH . WPINC . '/rss.php');
-		$rss = fetch_rss( 'http://www.instinct.co.nz/feed/' );
-		$rss->items = array_slice( $rss->items, 0, 5 );
-		$rss_hash = sha1( serialize( $rss->items ) );
-		update_option( 'wpsc_ecom_news_hash', $rss_hash );
-		exit( 1 );
 	}
 
 	if ( isset( $_REQUEST['log_state'] ) && $_REQUEST['log_state'] == "true" && is_numeric( $_POST['id'] ) && is_numeric( $_POST['value'] ) ) {
@@ -89,7 +89,11 @@ function wpsc_admin_ajax() {
 if ( isset( $_REQUEST['ajax'] ) && isset( $_REQUEST['admin'] ) && ($_REQUEST['ajax'] == "true") && ($_REQUEST['admin'] == "true") )
 	add_action( 'admin_init', 'wpsc_admin_ajax' );
 
-function wpsc_change_currency() {
+/**
+ * @todo docs
+ * @uses $wpdb  WordPress database object for queries
+ */
+function wpsc_change_currency() { echo 'test';
 	if ( is_numeric( $_POST['currencyid'] ) ) {
 		$currency_data = $wpdb->get_results( $wpdb->prepare( "SELECT `symbol`,`symbol_html`,`code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id`=%d LIMIT 1", $_POST['currencyid'] ), ARRAY_A );
 		$price_out = null;
@@ -104,6 +108,10 @@ function wpsc_change_currency() {
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'change_currency') )
 	add_action( 'admin_init', 'wpsc_change_currency' );
 
+/**
+ * @todo docs
+ * @uses $wpdb  WordPress database object for queries
+ */
 function wpsc_rearrange_images() {
 	global $wpdb;
 	$images = explode( ",", $_POST['order'] );
@@ -137,6 +145,15 @@ function wpsc_rearrange_images() {
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'rearrange_images') )
 	add_action( 'admin_init', 'wpsc_rearrange_images' );
 
+/**
+ * @todo docs
+ *
+ * @uses $wpdb              WordPress database object for queries
+ * @uses $wp_rewrite        Global variable instance of the WP_Rewrite Class
+ * @uses wp_get_referer()   Retrieve referer from '_wp_http_referer' or HTTP referer.
+ * @uses add_query_arg()    Retrieve a modified URL query string.
+ * @uses wp_redirect()      Redirects to string given as argument
+ */
 function wpsc_clean_categories() {
 	global $wpdb, $wp_rewrite;
 	$sql_query = "SELECT `id`, `name`, `active` FROM `" . WPSC_TABLE_PRODUCT_CATEGORIES . "`";

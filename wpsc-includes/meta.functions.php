@@ -267,4 +267,3 @@ class wpsc_custom_meta {
 		}
 	}	
 }
-?>

@@ -154,6 +154,7 @@
 
 		return false;
 	});
+
 })(jQuery);
 
 jQuery(document).ready(function(){
@@ -183,6 +184,7 @@ jQuery(document).ready(function(){
 			return false;
 		}
 	});
+
 	//Animateedit products columns
 	jQuery('.wpsc-separator').livequery(function(){
 		jQuery(this).click(function(){
@@ -582,6 +584,44 @@ jQuery(document).ready(function(){
 		jQuery(this).find('.wpsc_ie_price').val(price);
 		jQuery(this).find('.wpsc_ie_sale_price').val(sale_price);
 		jQuery(this).find('.wpsc_ie_sku').val(sku);
+	});
+
+	jQuery('.coupon-conditions').on('click', '.wpsc-button-plus', function() {
+		var parent = jQuery(this).closest('.coupon-condition'),
+		    prototype = parent.clone();
+
+		prototype.find('select').val('');
+		prototype.find('input').val('');
+		prototype.hide();
+		prototype.insertAfter(parent).slideDown(150);
+
+		return false;
+	});
+
+	jQuery('.coupon-conditions').on('click', '.wpsc-button-minus', function() {
+		var parent = jQuery(this).closest('.coupon-condition'),
+		    conditions_count = jQuery('.coupon-condition').size(),
+		    prototype;
+
+		if (conditions_count == 1) {
+			prototype = parent.clone();
+			prototype.find('select').val('');
+			prototype.find('input').val('');
+			prototype.hide();
+			jQuery('.coupon-conditions').find('td').prepend(prototype);
+			parent.slideUp(150, function(){
+				prototype.slideDown(150);
+				parent.remove();
+			});
+
+			return false;
+		}
+
+		parent.slideUp(150, function(){
+			parent.remove();
+		});
+
+		return false;
 	});
 });
 

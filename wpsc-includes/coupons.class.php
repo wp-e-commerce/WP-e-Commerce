@@ -79,8 +79,6 @@ class wpsc_coupons {
 				'is-used' => '',
 				'active' => '',
 				'use-once' => '',
-				'use-x-times' => '',
-				'free-shipping' => '',
 				'start' => '',
 				'expiry' => '',
 				'every_product' => ''
@@ -111,8 +109,7 @@ class wpsc_coupons {
 	 * @return bool True if coupon is not expried, used and still active, False otherwise.
 	 */
 	function validate_coupon() {
-		$now = date("Y-m-d H:i:s");
-		$now = strtotime($now);
+		$now = current_time( 'timestamp', true );
 
 		if ( ($this->active=='1') && !(($this->use_once == '1') && ($this->is_used=='1'))){
 			if ((strtotime($this->start_date) < $now)&&(strtotime($this->end_date) > $now)){
@@ -579,9 +576,9 @@ class wpsc_coupons {
 
 				case 'category'://Checks if the product category is the condition value
 				if ( $product_data->post_parent ) {
-					$categories = wp_get_post_terms( $product_data->post_parent, 'wpsc_product_category' );
+					$categories = wpsc_get_product_terms( $product_data->post_parent, 'wpsc_product_category' );
 				} else {
-					$categories = wp_get_post_terms( $product_data->ID, 'wpsc_product_category' );
+					$categories = wpsc_get_product_terms( $product_data->ID, 'wpsc_product_category' );
 				}
 				foreach ( $categories as $cat ) {
 					if ( strtolower( $cat->name ) == strtolower( $c['value'] ) )

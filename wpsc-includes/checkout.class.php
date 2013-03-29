@@ -60,7 +60,7 @@ function wpsc_get_buyers_email($purchase_id){
 
 	if ( ! $email_form_field )
 		return '';
-	$email = $wpdb->get_var( $wpdb->prepare( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITED_FORM_DATA . "` WHERE `log_id` = %d AND `form_id` = %d LIMIT 1", $purchase_id, $email_form_field ) );
+	$email = $wpdb->get_var( $wpdb->prepare( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` WHERE `log_id` = %d AND `form_id` = %d LIMIT 1", $purchase_id, $email_form_field ) );
 	return $email;
 }
 
@@ -631,9 +631,9 @@ class wpsc_checkout {
 
 	function form_name() {
 		if ( $this->form_name_is_required() && ($this->checkout_item->type != 'heading') )
-			return esc_html( $this->checkout_item->name ) . ' <span class="asterix">*</span> ';
+			return esc_html( apply_filters( 'wpsc_checkout_field_name', $this->checkout_item->name ) ) . ' <span class="asterix">*</span> ';
 		else
-			return esc_html( $this->checkout_item->name );
+			return esc_html( apply_filters( 'wpsc_checkout_field_name', $this->checkout_item->name ) );
 	}
 
 	function form_name_is_required() {
@@ -987,7 +987,7 @@ class wpsc_checkout {
 
 					$value = $value[0];
 					$prepared_query = $wpdb->insert(
-								    WPSC_TABLE_SUBMITED_FORM_DATA,
+								    WPSC_TABLE_SUBMITTED_FORM_DATA,
 								    array(
 									'log_id' => $purchase_id,
 									'form_id' => $form_data->id,
@@ -1002,7 +1002,7 @@ class wpsc_checkout {
 				} else {
 					foreach ( (array)$value as $v ) {
 					    $prepared_query = $wpdb->insert(
-								    WPSC_TABLE_SUBMITED_FORM_DATA,
+								    WPSC_TABLE_SUBMITTED_FORM_DATA,
 								    array(
 									'log_id' => $purchase_id,
 									'form_id' => $form_data->id,
@@ -1018,7 +1018,7 @@ class wpsc_checkout {
 				}
 			} else {
 			    $prepared_query = $wpdb->insert(
-							WPSC_TABLE_SUBMITED_FORM_DATA,
+							WPSC_TABLE_SUBMITTED_FORM_DATA,
 							array(
 							    'log_id' => $purchase_id,
 							    'form_id' => $form_data->id,
@@ -1035,7 +1035,7 @@ class wpsc_checkout {
 
 		// update the states
 		$wpdb->insert(
-			    WPSC_TABLE_SUBMITED_FORM_DATA,
+			    WPSC_TABLE_SUBMITTED_FORM_DATA,
 			    array(
 				'log_id' => $purchase_id,
 				'form_id' => $shipping_state_id,
@@ -1048,7 +1048,7 @@ class wpsc_checkout {
 			    )
 			);
 		$wpdb->insert(
-			    WPSC_TABLE_SUBMITED_FORM_DATA,
+			    WPSC_TABLE_SUBMITTED_FORM_DATA,
 			    array(
 				'log_id' => $purchase_id,
 				'form_id' => $billing_state_id,
@@ -1114,241 +1114,29 @@ class wpsc_checkout {
 
 }
 
-/**
- * The WPSC Gateway functions
- */
+function wpsc_get_gateway_list() {
+	return apply_filters( 'wpsc_get_gateway_list', '' );
+}
+
+function wpsc_gateway_list() {
+	echo wpsc_get_gateway_list();
+}
+
 function wpsc_gateway_count() {
-	global $wpsc_gateway;
-	return $wpsc_gateway->gateway_count;
+	return apply_filters( 'wpsc_gateway_count', 0 );
 }
 
-function wpsc_have_gateways() {
-	global $wpsc_gateway;
-	return $wpsc_gateway->have_gateways();
-}
-
-function wpsc_the_gateway() {
-	global $wpsc_gateway;
-	return $wpsc_gateway->the_gateway();
-}
-
-//return true only when gateway has image set
-function wpsc_show_gateway_image(){
-	global $wpsc_gateway;
-	if( isset($wpsc_gateway->gateway['image']) && !empty($wpsc_gateway->gateway['image']) )
-		return true;
-	else
-		return false;
-}
-
-
-//return gateway image url (string) or false if none.
-function wpsc_gateway_image_url(){
-	global $wpsc_gateway;
-	if( wpsc_show_gateway_image() )
-		return $wpsc_gateway->gateway['image'];
-	else
-		return false;
-}
-
-function wpsc_gateway_name() {
-	global $wpsc_gateway;
-	$display_name = '';
-
-	$payment_gateway_names = get_option( 'payment_gateway_names' );
-
-	if ( isset( $payment_gateway_names[$wpsc_gateway->gateway['internalname']] ) && ( $payment_gateway_names[$wpsc_gateway->gateway['internalname']] != '' || wpsc_show_gateway_image() ) ) {
-		$display_name = $payment_gateway_names[$wpsc_gateway->gateway['internalname']];
-	} elseif ( isset( $wpsc_gateway->gateway['payment_type'] ) ) {
-		switch ( $wpsc_gateway->gateway['payment_type'] ) {
-			case "paypal":
-			case "paypal_pro":
-			case "wpsc_merchant_paypal_pro";
-				$display_name = __( 'PayPal', 'wpsc' );
-				break;
-
-			case "manual_payment":
-				$display_name =  __( 'Manual Payment', 'wpsc' );
-				break;
-
-			case "google_checkout":
-				$display_name = __( 'Google Wallet', 'wpsc' );
-				break;
-
-			case "credit_card":
-			default:
-				$display_name = __( 'Credit Card', 'wpsc' );
-				break;
-		}
-	}
-	if ( $display_name == '' && !wpsc_show_gateway_image() ) {
-		$display_name = __( 'Credit Card', 'wpsc' );
-	}
-	return $display_name;
-}
-
-function wpsc_gateway_internal_name() {
-	global $wpsc_gateway;
-	return $wpsc_gateway->gateway['internalname'];
-}
-
-function wpsc_gateway_is_checked() {
-	global $wpsc_gateway;
-	$is_checked = false;
-	$selected_gateway = wpsc_get_customer_meta( 'selected_gateway' );
-	if ( $selected_gateway ) {
-		if ( $wpsc_gateway->gateway['internalname'] == $selected_gateway ) {
-			$is_checked = true;
-		}
-	} else {
-		if ( $wpsc_gateway->current_gateway == 0 ) {
-			$is_checked = true;
-		}
-	}
-	if ( $is_checked == true ) {
-		$output = 'checked="checked"';
-	} else {
-		$output = '';
-	}
-	return $output;
-}
-
-function wpsc_gateway_cc_check() {
-
-}
-
-function wpsc_gateway_form_fields() {
-	global $wpsc_gateway, $gateway_checkout_form_fields, $wpsc_gateway_error_messages;
-
-	$messages = is_array( $wpsc_gateway_error_messages ) ? $wpsc_gateway_error_messages : array();
-
-	$error = array(
-		'card_number' => empty( $messages['card_number'] ) ? '' : $messages['card_number'],
-		'expdate' => empty( $messages['expdate'] ) ? '' : $messages['expdate'],
-		'card_code' => empty( $messages['card_code'] ) ? '' : $messages['card_code'],
-		'cctype' => empty( $messages['cctype'] ) ? '' : $messages['cctype'],
+function wpsc_get_gateway_hidden_field() {
+	$output = sprintf(
+		'<input name="custom_gateway" value="%s" type="hidden" />',
+		apply_filters( 'wpsc_gateway_hidden_field_value', '' )
 	);
 
-	// Match fields to gateway
-	switch ( $wpsc_gateway->gateway['internalname'] ) {
-
-		case 'paypal_pro' : // legacy
-		case 'wpsc_merchant_paypal_pro' :
-			$output = sprintf( $gateway_checkout_form_fields[$wpsc_gateway->gateway['internalname']], wpsc_the_checkout_CC_validation_class(), $error['card_number'],
-				wpsc_the_checkout_CCexpiry_validation_class(), $error['expdate'],
-				wpsc_the_checkout_CCcvv_validation_class(), $error['card_code'],
-				wpsc_the_checkout_CCtype_validation_class(), $error['cctype']
-			);
-			break;
-
-		case 'authorize' :
-		case 'paypal_payflow' :
-			$output = @sprintf( $gateway_checkout_form_fields[$wpsc_gateway->gateway['internalname']], wpsc_the_checkout_CC_validation_class(), $error['card_number'],
-				wpsc_the_checkout_CCexpiry_validation_class(), $error['expdate'],
-				wpsc_the_checkout_CCcvv_validation_class(), $error['card_code']
-			);
-			break;
-
-		case 'eway' :
-		case 'bluepay' :
-			$output = sprintf( $gateway_checkout_form_fields[$wpsc_gateway->gateway['internalname']], wpsc_the_checkout_CC_validation_class(), $error['card_number'],
-				wpsc_the_checkout_CCexpiry_validation_class(), $error['expdate']
-			);
-			break;
-		case 'linkpoint' :
-			$output = sprintf( $gateway_checkout_form_fields[$wpsc_gateway->gateway['internalname']], wpsc_the_checkout_CC_validation_class(), $error['card_number'],
-				wpsc_the_checkout_CCexpiry_validation_class(), $error['expdate']
-			);
-			break;
-
-	}
-
-	if ( isset( $output ) && !empty( $output ) )
-		return $output;
-	elseif ( isset( $gateway_checkout_form_fields[$wpsc_gateway->gateway['internalname']] ) )
-		return $gateway_checkout_form_fields[$wpsc_gateway->gateway['internalname']];
-}
-
-function wpsc_gateway_form_field_style() {
-	global $wpsc_gateway;
-	$is_checked = false;
-	$selected_gateway = wpsc_get_customer_meta( 'selected_gateway' );
-	if ( $selected_gateway ) {
-		if ( $wpsc_gateway->gateway['internalname'] == $selected_gateway ) {
-			$is_checked = true;
-		}
-	} else {
-		if ( $wpsc_gateway->current_gateway == 0 ) {
-			$is_checked = true;
-		}
-	}
-	if ( $is_checked == true ) {
-		$output = 'checkout_forms';
-	} else {
-		$output = 'checkout_forms_hidden';
-	}
 	return $output;
 }
 
-/**
- * The WPSC Gateway class
- */
-class wpsc_gateways {
-
-	var $wpsc_gateways;
-	var $gateway;
-	var $gateway_count = 0;
-	var $current_gateway = -1;
-	var $in_the_loop = false;
-
-	function wpsc_gateways() {
-		global $nzshpcrt_gateways;
-
-		$gateway_options = get_option( 'custom_gateway_options' );
-		foreach ( $nzshpcrt_gateways as $gateway ) {
-			if ( array_search( $gateway['internalname'], (array)$gateway_options ) !== false ) {
-				$this->wpsc_gateways[] = $gateway;
-			}
-		}
-		$this->gateway_count = count( $this->wpsc_gateways );
-	}
-
-	/**
-	 * checkout loop methods
-	 */
-	function next_gateway() {
-		$this->current_gateway++;
-		$this->gateway = $this->wpsc_gateways[$this->current_gateway];
-		return $this->gateway;
-	}
-
-	function the_gateway() {
-		$this->in_the_loop = true;
-		$this->gateway = $this->next_gateway();
-		if ( $this->current_gateway == 0 ) // loop has just started
-			do_action( 'wpsc_checkout_loop_start' );
-	}
-
-	function have_gateways() {
-		if ( $this->current_gateway + 1 < $this->gateway_count ) {
-			return true;
-		} else if ( $this->current_gateway + 1 == $this->gateway_count && $this->gateway_count > 0 ) {
-			do_action( 'wpsc_checkout_loop_end' );
-			// Do some cleaning up after the loop,
-			$this->rewind_gateways();
-		}
-
-		$this->in_the_loop = false;
-		return false;
-	}
-
-	function rewind_gateways() {
-		$this->current_gateway = -1;
-		if ( $this->gateway_count > 0 ) {
-			$this->gateway = $this->wpsc_gateways[0];
-		}
-	}
-
+function wpsc_gateway_hidden_field() {
+	do_action( 'wpsc_before_gateway_hidden_field' );
+	echo wpsc_get_gateway_hidden_field();
+	do_action( 'wpsc_after_gateway_hidden_field' );
 }
-
-?>
