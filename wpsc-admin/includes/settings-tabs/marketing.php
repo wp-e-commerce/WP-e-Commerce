@@ -119,7 +119,7 @@ class WPSC_Settings_Tab_Marketing extends WPSC_Settings_Tab {
 
 	function google_merch_center_meta_box() {
 		?>
-			<p><?php esc_html_e( 'To import your products into <a href="http://www.google.com/merchants/" target="_blank">Google Merchant Centre</a> so that they appear within Google Product Search results, sign up for a Google Merchant Centre account and add a scheduled data feed with the following URL:', 'wpsc' ); ?></p>
+			<p><?php echo wp_kses( __( 'To import your products into <a href="http://www.google.com/merchants/" target="_blank">Google Merchant Centre</a> so that they appear within Google Product Search results, sign up for a Google Merchant Centre account and add a scheduled data feed with the following URL:', 'wpsc' ), wp_kses_allowed_html() ); ?></p>
 
 			<?php $google_feed_url = add_query_arg( array( 'rss' => 'true', 'action' => 'product_list', 'xmlformat' => 'google' ), home_url( '/' ) ); ?>
 
