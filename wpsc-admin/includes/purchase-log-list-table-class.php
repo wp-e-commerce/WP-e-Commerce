@@ -124,9 +124,10 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 			$where[] = "MONTH(FROM_UNIXTIME(date)) = " . esc_sql( $month );
 		}
 
-		$selects = implode( ', ', $selects );
-		$this->joins = implode( ' ', $joins );
-		$this->where = implode( ' AND ', $where );
+		$selects     = apply_filters( 'wpsc_manage_purchase_logs_selects', implode( ', ', $selects ) );
+		$this->joins = apply_filters( 'wpsc_manage_purchase_logs_joins', implode( ' ', $joins ) );
+		$this->where = apply_filters( 'wpsc_manage_purchase_logs_where', implode( ' AND ', $where ) );
+		
 		$limit = ( $this->per_page !== 0 ) ? "LIMIT {$offset}, {$this->per_page}" : '';
 
 		$orderby = empty( $_REQUEST['orderby'] ) ? 'p.id' : 'p.' . $_REQUEST['orderby'];
@@ -136,14 +137,14 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		$order = esc_sql( $order );
 
 		$submitted_data_log = WPSC_TABLE_SUBMITTED_FORM_DATA;
-		$purchase_log_sql = "
+		$purchase_log_sql = apply_filters( 'wpsc_manage_purchase_logs_sql', "
 			SELECT SQL_CALC_FOUND_ROWS {$selects}
 			FROM " . WPSC_TABLE_PURCHASE_LOGS . " AS p
 			{$this->joins}
 			WHERE {$this->where}
 			ORDER BY {$orderby} {$order}
 			{$limit}
-		";
+		" );
 
 		$this->items = apply_filters( 'wpsc_manage_purchase_logs_items', $wpdb->get_results( $purchase_log_sql ) );
 		if ( $this->per_page ) {
