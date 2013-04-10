@@ -114,6 +114,13 @@ table.wpsc-edit-module-options tr td {
 	border: 1px solid #ccc;
 	background-color: #fff;
 }
+.widefat .gateway_settings_form td {
+	border: none;
+}
+.gateway_settings_form p.submit {
+	margin-top: 2em;
+}
+
 .gateway_settings input[type=text]{
 	width: 200px;
 }
@@ -122,6 +129,7 @@ table.wpsc-edit-module-options tr td {
 	margin-right: 20px;
 	margin-top: 5px;
 }
+
 tr.rate_row td input[type=text]{
 	width:50px;
 }
