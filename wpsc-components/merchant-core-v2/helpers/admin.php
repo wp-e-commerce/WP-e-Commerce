@@ -40,9 +40,9 @@ function _wpsc_filter_merchant_v2_gateway_form( $form, $selected_gateway ) {
 	}
 
 	if ( $selected_gateway_data ) {
-		if ( array_key_exists( $selected_gateway, $payment_gateway_names ) ) {
+		if ( array_key_exists( $selected_gateway, $payment_gateway_names ) && $payment_gateway_names[$selected_gateway] !== "") {
 			$display_name = $payment_gateway_names[$selected_gateway];
-		} elseif ( ! empty( $selected_gateway_data['display_name'] ) ) {
+		} elseif ( ! empty( $selected_gateway_data['display_name'] ) && $selected_gateway_data['display_name'] !== "" ) {
 			$display_name = $selected_gateway_data['display_name'];
 		} else {
 			switch($selected_gateway_data['payment_type']) {
