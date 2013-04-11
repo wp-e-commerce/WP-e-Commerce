@@ -57,7 +57,10 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 					<input type='submit' value='<?php _e( 'Update &raquo;', 'wpsc' ) ?>' />
 				</div>
 				-->
-				<?php submit_button( __( 'Update &raquo;', 'wpsc' ) ); ?>
+				<p class="submit">
+					<input type="submit" name="submit" class="button button-primary" value='<?php _e( "Update &raquo;", 'wpsc' ); ?>'>
+					<a class="button edit-payment-module-cancel" title="<?php esc_attr_e( "Cancel editing this Payment Gateway's settings", 'wpsc' ) ?>"><?php esc_html_e( "Cancel", 'wpsc' ); ?></a>
+				</p>
 			<?php } ?>
 		</div>
 		<?php
@@ -109,7 +112,7 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 		$display_name = $payment_gateway_names[ $gateway['id'] ];
 		$gateway_data = false;
 		?>
-			<tr class="wpsc-select-gateway <?php echo $active; ?>" id="gateway_list_item_<?php echo $gateway['id'];?>">
+			<tr class="wpsc-select-gateway <?php echo $active; ?>" data-gateway-id="<?php echo esc_attr( $gateway['id'] ); ?>" id="gateway_list_item_<?php echo $gateway['id'];?>">
 				<th scope="row" class="check-column">
 					<label class="screen-reader-text" for="<?php echo esc_attr( $gateway['id'] ); ?>_id"><?php _e( "Select", "wpsc" ); ?> <?php echo esc_html( $gateway['name'] ); ?></label>
 					<input name='wpsc_options[custom_gateway_options][]' <?php checked( $checked ); ?> type='checkbox' value='<?php echo esc_attr( $gateway['id'] ); ?>' id='<?php echo esc_attr( $gateway['id'] ); ?>_id' />
@@ -118,7 +121,7 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 					<label for='<?php echo esc_attr( $gateway['id'] ); ?>_id'><strong><?php echo esc_html( $gateway['name'] ); ?></strong></label>
 					<div class="row-actions-visible">
 						<span class="edit">
-							<a class='edit-payment-module' data-gateway-id="<?php echo esc_attr( $gateway['id'] ); ?>" title="<?php esc_attr_e( "Edit this Payment Gateway's Settings", 'wpsc' ) ?>" href='<?php echo esc_url( $this->get_gateway_settings_url( $gateway['id'] ) ); ?>'><?php esc_html_e( 'Settings', 'wpsc' ); ?></a>
+							<a class='edit-payment-module' title="<?php esc_attr_e( "Edit this Payment Gateway's Settings", 'wpsc' ) ?>" href='<?php echo esc_url( $this->get_gateway_settings_url( $gateway['id'] ) ); ?>'><?php esc_html_e( 'Settings', 'wpsc' ); ?></a>
 							<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
 						</span>
 					</div>
@@ -127,10 +130,9 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 					<?php echo esc_html( $display_name ); ?>
 				</td>
 			</tr>
-			<tr id="wpsc_gateway_settings_<?php echo esc_attr( $gateway['id'] ); ?>" class='gateway_settings' <?php echo $hidden; ?> >
+			<tr id="wpsc_gateway_settings_<?php echo esc_attr( $gateway['id'] ); ?>" data-gateway-id="<?php echo esc_attr( $gateway['id'] ); ?>" class='gateway_settings' <?php echo $hidden; ?> >
 				<td>&nbsp;</td>
 				<td colspan="2" id="wpsc_gateway_settings_<?php echo esc_attr( $gateway['id'] ); ?>_container">
-					<a class="edit-payment-module-cancel" data-gateway-id="<?php echo esc_attr( $gateway['id'] ); ?>" title="<?php esc_attr_e( "Cancel editing this Payment Gateway's settings", 'wpsc' ) ?>" href='<?php echo esc_url( $this->get_gateway_settings_url( '' ) ); ?>'><?php esc_html_e( 'Cancel', 'wpsc' ); ?></a>
 					<?php if ( $force ) {
 						$this->display_payment_gateway_settings_form( $gateway['id'] );
 					} ?>

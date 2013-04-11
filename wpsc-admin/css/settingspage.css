@@ -116,6 +116,7 @@ table.wpsc-edit-module-options tr td {
 }
 .widefat .gateway_settings_form td {
 	border: none;
+	overflow: initial;
 }
 .gateway_settings_form p.submit {
 	margin-top: 2em;
@@ -123,11 +124,6 @@ table.wpsc-edit-module-options tr td {
 
 .gateway_settings input[type=text]{
 	width: 200px;
-}
-.edit-payment-module-cancel {
-	float: right;
-	margin-right: 20px;
-	margin-top: 5px;
 }
 
 tr.rate_row td input[type=text]{
