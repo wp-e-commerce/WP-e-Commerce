@@ -48,20 +48,19 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 		?>
 		<div id="gateway_settings_<?php echo esc_attr( $selected_gateway ); ?>_form" class='gateway_settings_form'>
 			<table class='form-table'>
-				<?php echo $payment_data['form_fields']; ?>
+				<tbody>
+					<?php echo $payment_data['form_fields']; ?>
+					<tr><td colspan="2">
+						<?php // hidden because most gateways provide their own update button. ?>
+						<?php if ($payment_data['has_submit_button'] !== 1) { ?>
+							<p class="submit inline-edit-save">
+								<a class="button edit-payment-module-cancel" title="<?php esc_attr_e( "Cancel editing this Payment Gateway's settings", 'wpsc' ) ?>"><?php esc_html_e( "Cancel", 'wpsc' ); ?></a>
+								<input type="submit" name="submit" class="button button-primary edit-payment-module-update" value='<?php _e( "Update &raquo;", 'wpsc' ); ?>'>
+							</p>
+						<?php } ?>
+					</td></tr>
+				</tbody>
 			</table>
-			<?php // hidden because most gateways provide their own update button. ?>
-			<?php if ($payment_data['has_submit_button'] !== 1) { ?>
-				<!--
-				<div class='submit'>
-					<input type='submit' value='<?php _e( 'Update &raquo;', 'wpsc' ) ?>' />
-				</div>
-				-->
-				<p class="submit">
-					<input type="submit" name="submit" class="button button-primary" value='<?php _e( "Update &raquo;", 'wpsc' ); ?>'>
-					<a class="button edit-payment-module-cancel" title="<?php esc_attr_e( "Cancel editing this Payment Gateway's settings", 'wpsc' ) ?>"><?php esc_html_e( "Cancel", 'wpsc' ); ?></a>
-				</p>
-			<?php } ?>
 		</div>
 		<?php
 	}
@@ -130,9 +129,8 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 					<?php echo esc_html( $display_name ); ?>
 				</td>
 			</tr>
-			<tr id="wpsc_gateway_settings_<?php echo esc_attr( $gateway['id'] ); ?>" data-gateway-id="<?php echo esc_attr( $gateway['id'] ); ?>" class='gateway_settings' <?php echo $hidden; ?> >
-				<td>&nbsp;</td>
-				<td colspan="2" id="wpsc_gateway_settings_<?php echo esc_attr( $gateway['id'] ); ?>_container">
+			<tr id="wpsc_gateway_settings_<?php echo esc_attr( $gateway['id'] ); ?>" data-gateway-id="<?php echo esc_attr( $gateway['id'] ); ?>" class='gateway_settings <?php echo $active; ?>' <?php echo $hidden; ?> >
+				<td colspan="3" id="wpsc_gateway_settings_<?php echo esc_attr( $gateway['id'] ); ?>_container">
 					<?php if ( $force ) {
 						$this->display_payment_gateway_settings_form( $gateway['id'] );
 					} ?>

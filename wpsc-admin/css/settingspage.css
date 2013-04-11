@@ -109,10 +109,7 @@ table.wpsc-edit-module-options tr td {
 	width:394px;
 }
 .gateway_settings_form {
-	padding: 10px;
-	margin: 10px;
-	border: 1px solid #ccc;
-	background-color: #fff;
+	padding: .5em;
 }
 .widefat .gateway_settings_form td {
 	border: none;
@@ -124,6 +121,9 @@ table.wpsc-edit-module-options tr td {
 
 .gateway_settings input[type=text]{
 	width: 200px;
+}
+.edit-payment-module-update {
+	float: right;
 }
 
 tr.rate_row td input[type=text]{
