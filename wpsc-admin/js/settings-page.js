@@ -957,7 +957,7 @@
 		},
 		event_edit_payment_gateway : function() {
 			var element = $(this), // edit link
-				payment_gateway_id = element.data('gateway-id'),
+				payment_gateway_id = element.closest('.wpsc-select-gateway').data('gateway-id'),
 				spinner = element.siblings('.ajax-feedback'),
 				post_data = {
 					action               : 'payment_gateway_settings_form',
@@ -986,7 +986,7 @@
 		},
 		event_edit_payment_gateway_cancel : function() {
 			var element = $(this),
-				payment_gateway_id = element.data('gateway-id');
+				payment_gateway_id = element.closest('.gateway_settings').data('gateway-id');
 			if (history.pushState) {
 				var new_url = '?page=wpsc-settings&tab=' + WPSC_Settings_Page.current_tab;
 				history.pushState({'url' : new_url}, '', new_url);
