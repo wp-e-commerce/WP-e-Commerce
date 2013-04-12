@@ -32,7 +32,7 @@ function wpsc_additional_column_names( $columns ){
 	$columns['SKU']           = __('SKU', 'wpsc');
 	$columns['weight']        = __('Weight', 'wpsc');
 	$columns['cats']          = __('Categories', 'wpsc');
-	$columns['featured']      = '<img src="' . WPSC_CORE_IMAGES_URL . '/black-star.png" alt="' . __( 'Featured', 'wpsc' ) . '" title="' . __( 'Featured', 'wpsc' ) . '" width="16" height="15">';
+	$columns['featured']      = '<img src="' . WPSC_CORE_IMAGES_URL . '/black-star.png" alt="' . __( 'Featured', 'wpsc' ) . '" title="' . __( 'Featured', 'wpsc' ) . '">';
 	$columns['hidden_alerts'] = '';
 	$columns['date']          = __('Date', 'wpsc');
 
@@ -288,9 +288,9 @@ function _wpsc_manage_products_column_featured( $post, $post_id ) {
 	?>
 		<a class="wpsc_featured_product_toggle featured_toggle_<?php echo $post->ID; ?>" href='<?php echo $featured_product_url; ?>' >
 			<?php if ( in_array( $post->ID, (array)get_option( 'sticky_products' ) ) ) : ?>
-				<img class='gold-star' src='<?php echo WPSC_CORE_IMAGES_URL; ?>/gold-star.gif' alt='<?php _e( 'Unmark as Featured', 'wpsc' ); ?>' title='<?php _e( 'Unmark as Featured', 'wpsc' ); ?>' />
+				<img class='gold-star' src='<?php echo WPSC_CORE_IMAGES_URL; ?>/gold-star.png' alt='<?php _e( 'Unmark as Featured', 'wpsc' ); ?>' title='<?php _e( 'Unmark as Featured', 'wpsc' ); ?>' />
 			<?php else: ?>
-				<img class='grey-star' src='<?php echo WPSC_CORE_IMAGES_URL; ?>/grey-star.gif' alt='<?php _e( 'Mark as Featured', 'wpsc' ); ?>' title='<?php _e( 'Mark as Featured', 'wpsc' ); ?>' />
+				<img class='grey-star' src='<?php echo WPSC_CORE_IMAGES_URL; ?>/grey-star.png' alt='<?php _e( 'Mark as Featured', 'wpsc' ); ?>' title='<?php _e( 'Mark as Featured', 'wpsc' ); ?>' />
 			<?php endif; ?>
 		</a>
 	<?php
@@ -523,16 +523,13 @@ function wpsc_update_featured_products() {
 
 	update_option( 'sticky_products', $status );
 
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		$json_response = array(
-			'text'       => $new_status ? esc_attr__( 'Unmark as Featured', 'wpsc' ) : esc_attr__( 'Mark as Featured', 'wpsc' ),
-			'product_id' => $product_id,
-			'class'      => $new_status ? 'gold-star' : 'grey-star',
-			'image'      => $new_status ? WPSC_CORE_IMAGES_URL . '/gold-star.gif' : WPSC_CORE_IMAGES_URL . '/grey-star.gif'
-		);
-
-		echo json_encode( $json_response );
-
+	if ( $is_ajax == true ) {
+		if ( $new_status == true ) : ?>
+                    jQuery('.featured_toggle_<?php echo $product_id; ?>').html("<img class='gold-star' src='<?php echo WPSC_CORE_IMAGES_URL; ?>/gold-star.png' alt='<?php esc_attr_e( 'Unmark as Featured', 'wpsc' ); ?>' title='<?php esc_attr_e( 'Unmark as Featured', 'wpsc' ); ?>' />");
+            <?php else: ?>
+                    jQuery('.featured_toggle_<?php echo $product_id; ?>').html("<img class='grey-star' src='<?php echo WPSC_CORE_IMAGES_URL; ?>/grey-star.png' alt='<?php esc_attr_e( 'Mark as Featured', 'wpsc' ); ?>' title='<?php esc_attr_e( 'Mark as Featured', 'wpsc' ); ?>' />");
+<?php
+		endif;
 		exit();
 	}
 	wp_redirect( wp_get_referer() );

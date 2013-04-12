@@ -596,16 +596,16 @@ table.list_productdisplay p.soldout {
 	background-position:0 0;
 	display:block;
 	height:100%;
-	background:transparent url(wpsc-images/grey-star.gif) no-repeat scroll 0 0;
+	background:transparent url(wpsc-images/grey-star.png) no-repeat scroll 0 0;
 	outline: none;
 }
 .wpsc_product_rating .star a:hover {
 	background-position:0 0;
-	background:transparent url(wpsc-images/gold-star.gif) no-repeat scroll 0 0;
+	background:transparent url(wpsc-images/gold-star.png) no-repeat scroll 0 0;
 }
 .wpsc_product_rating .star a.selected {
 	background-position:0 0;
-	background:transparent url(wpsc-images/gold-star.gif) no-repeat scroll 0 0;
+	background:transparent url(wpsc-images/gold-star.png) no-repeat scroll 0 0;
 }
 .wpsc_product_rating .star a, .wpsc_product_rating .star a:focus {
 	outline: none;
