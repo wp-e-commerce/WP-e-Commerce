@@ -26,13 +26,13 @@ function wpsc_additional_column_names( $columns ){
 	$columns['cb']            = '<input type="checkbox" />';
 	$columns['image']         = '';
 	$columns['title']         = __('Name', 'wpsc');
-	$columns['weight']        = __('Weight', 'wpsc');
 	$columns['stock']         = __('Stock', 'wpsc');
 	$columns['price']         = __('Price', 'wpsc');
-	$columns['sale_price']    = __('Sale Price', 'wpsc');
+	$columns['sale_price']    = __('Sale', 'wpsc');
 	$columns['SKU']           = __('SKU', 'wpsc');
+	$columns['weight']        = __('Weight', 'wpsc');
 	$columns['cats']          = __('Categories', 'wpsc');
-	$columns['featured']      = __('Featured', 'wpsc');
+	$columns['featured']      = '<img src="' . WPSC_CORE_IMAGES_URL . '/black-star.png" alt="' . __( 'Featured', 'wpsc' ) . '" title="' . __( 'Featured', 'wpsc' ) . '" width="16" height="15">';
 	$columns['hidden_alerts'] = '';
 	$columns['date']          = __('Date', 'wpsc');
 
