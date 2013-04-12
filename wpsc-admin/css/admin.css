@@ -2,6 +2,29 @@
 * This is the new WPSC Admin CSS file
 
 */
+table.wp-list-table .column-title {
+	width: 26%;
+}
+table.wp-list-table .column-featured {
+	width: 22px;
+}
+table.wp-list-table .column-price,
+table.wp-list-table .column-sale_price {
+	width: 8%;
+}
+table.wp-list-table .column-SKU {
+	width: 11%;
+}
+table.wp-list-table .column-stock {
+	width: 8%;
+}
+table.wp-list-table .column-weight {
+	width: 7%;
+}
+table.wp-list-table .column-cats {
+	width: 15%;
+}
+
 ul.variation_checkboxes li {
 margin: 1px 0 3px;
 }
@@ -1362,14 +1385,14 @@ a.wpsc_featured_product_toggle {
 	display: block;
 	height: 18px;
 	width: 18px;
-	margin: 4px 0px 0px 6px;
+	margin: 4px 0px 0px 0px;
 }
 
 a.wpsc_featured_product_toggle img {
 	display: block;
 	margin: 0px auto 0px auto;
-
 }
+
 
 div.wpsc_clear {
 	clear: both;
