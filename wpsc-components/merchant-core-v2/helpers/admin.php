@@ -68,10 +68,10 @@ function _wpsc_filter_merchant_v2_gateway_form( $form, $selected_gateway ) {
 		ob_start();
 		?>
 			<tr>
-				<td><?php esc_html_e( 'Display Name', 'wpsc' ); ?></td>
+				<td width="150"><?php esc_html_e( 'Display Name', 'wpsc' ); ?></td>
 				<td>
 					<input type="text" name="user_defined_name[<?php echo esc_attr( $selected_gateway ); ?>]" value="<?php echo esc_html( $display_name ); ?>" /><br />
-					<small><?php esc_html_e( 'The text that people see when making a purchase.', 'wpsc' ); ?></small>
+					<p class="description"><?php esc_html_e( 'The text that people see when making a purchase.', 'wpsc' ); ?></p>
 				</td>
 			</tr>
 		<?php
