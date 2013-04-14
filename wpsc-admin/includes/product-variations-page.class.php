@@ -60,7 +60,7 @@ class WPSC_Product_Variations_Page {
 		if ( isset( $data['sku'] ) )
 			update_product_meta( $id, 'sku', $data['sku'] );
 
-		if ( isset( $data['stock'] ) ) {
+		if ( isset( $data['stock'] ) && $data['stock'] !== '' ) {
 			if ( is_numeric( $data['stock'] ) )
 				update_product_meta( $id, 'stock', absint( $data['stock'] ) );
 			else
