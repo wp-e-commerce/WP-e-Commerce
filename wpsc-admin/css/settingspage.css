@@ -115,6 +115,9 @@ table.wpsc-edit-module-options tr td {
 	border: none;
 	overflow: initial;
 }
+.widefat p.description {
+	color: #666;
+}
 .gateway_settings_form p.submit {
 	margin-top: 2em;
 }
