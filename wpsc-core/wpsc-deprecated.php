@@ -1341,3 +1341,19 @@ function wpsc_product_variation_price_available( $product_id, $from_text = false
 	);
 	return wpsc_product_variation_price_from( $product_id, $args );
 }
+
+/**
+ * Deprecated function
+ *
+ * @deprecated 3.8.9
+ */
+function wpsc_post_title_seo( $title ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.9' );
+	global $wpdb, $page_id, $wp_query;
+	$new_title = wpsc_obtain_the_title();
+	if ( $new_title != '' ) {
+		$title = $new_title;
+	}
+	return esc_html( $title );
+}
+

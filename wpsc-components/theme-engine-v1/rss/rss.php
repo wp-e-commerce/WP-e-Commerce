@@ -15,7 +15,7 @@
             <guid><![CDATA[<?php echo wpsc_the_product_permalink(); ?>]]></guid>
             <g:price><![CDATA[<?php echo wpsc_product_normal_price(true); ?>]]></g:price>
             <g:image_link><![CDATA[<?php echo wpsc_the_product_thumbnail(); ?>]]></g:image_link>
-          </item>          
+          </item>
 <?php endwhile; ?>
       </channel>
     </rss>

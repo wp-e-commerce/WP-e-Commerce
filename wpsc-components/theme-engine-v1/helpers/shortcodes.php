@@ -1,4 +1,8 @@
 <?php
+add_shortcode('buy_now_button', 'wpsc_buy_now_shortcode');
+add_shortcode('wpsc_products', 'wpsc_products_shorttag');
+add_shortcode('showcategories', 'wpsc_show_categories');
+
 /**
  * WP eCommerce shortcode definitions
  *
@@ -63,7 +67,6 @@ function wpsc_products_shorttag($atts) {
 
 	return wpsc_display_products_page($query);
 }
-add_shortcode('wpsc_products', 'wpsc_products_shorttag');
 
 /**
  * Shows the WPSC buy now button
@@ -78,4 +81,14 @@ function wpsc_buy_now_shortcode($atts){
 	return $output;
 }
 
-add_shortcode('buy_now_button', 'wpsc_buy_now_shortcode');
+//displays a list of categories when the code [showcategories] is present in a post or page.
+function wpsc_show_categories( $content ) {
+
+	ob_start();
+	include( wpsc_get_template_file_path( 'wpsc-category-list.php' ) );
+	$output = ob_get_contents();
+
+	ob_end_clean();
+	return $output;
+
+}

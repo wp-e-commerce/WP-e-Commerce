@@ -57,11 +57,11 @@ class WP_Widget_Product_Categories extends WP_Widget {
 					$instance['categories'][$categories->term_id] = 'on';
 				}
 			}
-		
+
 		}
 		foreach ( array_keys( (array)$instance['categories'] ) as $category_id ) {
 
-			if (!get_term($category_id, "wpsc_product_category")) 
+			if (!get_term($category_id, "wpsc_product_category"))
 				continue;
 
 			if ( file_exists( wpsc_get_template_file_path( 'wpsc-category_widget.php' ) ) ) {
@@ -94,7 +94,7 @@ class WP_Widget_Product_Categories extends WP_Widget {
 		$instance['grid']       = $new_instance['grid'] ? 1 : 0;
 		$instance['height']     = (int)$new_instance['height'];
 		$instance['width']      = (int)$new_instance['width'];
-		$instance['show_name']	= (bool)$new_instance['show_name'];	
+		$instance['show_name']	= (bool)$new_instance['show_name'];
 		return $instance;
 
 	}
@@ -124,7 +124,7 @@ class WP_Widget_Product_Categories extends WP_Widget {
 		$width    = (int) $instance['width'];
 		$height   = (int) $instance['height'];
 		$grid     = (bool) $instance['grid'];
-		$show_name= (bool) $instance['show_name'];	
+		$show_name= (bool) $instance['show_name'];
 		 ?>
 
 		<p>
@@ -147,7 +147,7 @@ class WP_Widget_Product_Categories extends WP_Widget {
 
 		<div class="wpsc_category_image"<?php if( !checked( $image ) ) { echo ' style="display:none;"'; } ?>>
 			<p>
-				
+
 				<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('show_name'); ?>" name="<?php echo $this->get_field_name('show_name'); ?>"<?php checked( $show_name ); ?> /><label for="<?php echo $this->get_field_id('show_name'); ?>"><?php _e(' Show N/A when No Image Available', 'wpsc'); ?></label>
 			</p>
 			<p>
@@ -175,6 +175,5 @@ function wpsc_category_widget_admin_category_list( $category, $level, $fieldconf
 
 	<input type="checkbox" class="checkbox" id="<?php echo esc_attr( $fieldconfig['id'] ); ?>-<?php echo esc_attr( $category->term_id ); ?>" name="<?php echo esc_attr( $fieldconfig['name'] ); ?>[<?php echo esc_attr( $category->term_id ); ?>]" <?php echo $checked; ?>></input> <label for="<?php echo esc_attr( $fieldconfig['id'] ); ?>-<?php echo esc_attr( $category->term_id ); ?>"><?php echo esc_html( $category->name ); ?></label><br />
 
-<?php 
+<?php
 }
-?>

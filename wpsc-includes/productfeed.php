@@ -87,7 +87,7 @@ function wpsc_generate_product_feed() {
 
 			setup_postdata($post);
 
-			$purchase_link = wpsc_product_url($post->ID);
+			$purchase_link = get_permalink($post->ID);
 
 			echo "    <item>\n\r";
 			if ($google_checkout_note) {

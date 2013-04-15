@@ -71,39 +71,6 @@ function wpsc_cart_total( $forDisplay = true ) {
 }
 
 /**
- * Cart Total Widget
- *
- * Can be used to display the cart total excluding shipping, tax or coupons.
- *
- * @since 3.7.6.2
- *
- * @return string The subtotal price of the cart, with a currency sign.
- */
-function wpsc_cart_total_widget( $shipping = true, $tax = true, $coupons = true ) {
-
-   global $wpsc_cart;
-
-   $total = $wpsc_cart->calculate_subtotal();
-
-   if ( $shipping ) {
-      $total += $wpsc_cart->calculate_total_shipping();
-   }
-   if ( $tax && wpsc_tax_isincluded() == false ) {
-      $total += $wpsc_cart->calculate_total_tax();
-   }
-   if ( $coupons ) {
-      $total -= $wpsc_cart->coupons_amount;
-   }
-
-   if ( get_option( 'add_plustax' ) == 1 ) {
-      return wpsc_currency_display( $wpsc_cart->calculate_subtotal() );
-   } else {
-      return wpsc_currency_display( $total );
-   }
-
-}
-
-/**
 * nzshpcrt_overall_total_price function, no parameters
 * @return string the total price of the cart, with a currency sign
 */
@@ -224,62 +191,6 @@ function wpsc_cart_item_categories($get_ids = false) {
 }
 
 /**
-* have cart items function, no parameters
-* @return boolean true if there are cart items left
-*/
-function wpsc_have_cart_items() {
-   global $wpsc_cart;
-   return $wpsc_cart->have_cart_items();
-}
-
-function wpsc_the_cart_item() {
-   global $wpsc_cart;
-   return $wpsc_cart->the_cart_item();
-}
-
-
-
-/**
-* cart item key function, no parameters
-* @return integer - the cart item key from the array in the cart object
-*/
-function wpsc_the_cart_item_key() {
-   global $wpsc_cart;
-   return $wpsc_cart->current_cart_item;
-}
-
- /**
-* cart item name function, no parameters
-* @return string the cart item name
-*/
-function wpsc_cart_item_name( $context = 'display' ) {
-	global $wpsc_cart;
-	$product_name = apply_filters( 'wpsc_cart_item_name', $wpsc_cart->cart_item->get_title(), $wpsc_cart->cart_item->product_id );
-	return $product_name;
-}
- /**
-* cart item quantity function, no parameters
-* @return string the selected quantity of items
-*/
-function wpsc_cart_item_product_id() {
-   global $wpsc_cart;
-   return $wpsc_cart->cart_item->product_id;
-}
- /**
-* cart item quantity function, no parameters
-* @return string the selected quantity of items
-*/
-function wpsc_cart_item_quantity() {
-   global $wpsc_cart;
-   return $wpsc_cart->cart_item->quantity;
-}
-
-function wpsc_cart_item_quantity_single_prod($id) {
-   global $wpsc_cart;
-   return $wpsc_cart;
-}
-
-/**
  * Product Maximum Cart Quantity
  *
  * @since  3.8.10
@@ -340,72 +251,6 @@ add_action( 'wpsc_add_item', '_wpsc_validate_cart_product_quantity', 10, 3 );
 add_action( 'wpsc_edit_item', '_wpsc_validate_cart_product_quantity', 10, 3 );
 
 /**
-* cart item price function, no parameters
-* @return string the cart item price multiplied by the quantity, with a currency sign
-*/
-function wpsc_cart_item_price($forDisplay = true) {
-   global $wpsc_cart;
-   if($forDisplay){
-      return wpsc_currency_display($wpsc_cart->cart_item->total_price);
-   }else{
-      return $wpsc_cart->cart_item->total_price;
-   }
-}
-
-/**
-* cart item individual single price function, no parameters
-* @return string the cart individual single item price (1 quantity)
-*/
-function wpsc_cart_single_item_price($forDisplay = true) {
-   global $wpsc_cart;
-   if($forDisplay){
-      return wpsc_currency_display(($wpsc_cart->cart_item->total_price) / ($wpsc_cart->cart_item->quantity));
-   }else{
-      return ($wpsc_cart->cart_item->total_price / $wpsc_cart->cart_item->quantity);
-   }
-}
-
-/**
-* cart item shipping function, no parameters
-* @return string the cart item price multiplied by the quantity, with a currency sign
-*/
-function wpsc_cart_item_shipping($forDisplay = true) {
-   global $wpsc_cart;
-   if($forDisplay){
-      return wpsc_currency_display($wpsc_cart->cart_item->shipping);
-   }else{
-      return $wpsc_cart->cart_item->shipping;
-   }
-}
-
-/**
-* cart item url function, no parameters
-* @return string the cart item url
-*/
-function wpsc_cart_item_url() {
-   global $wpsc_cart;
-   return apply_filters( 'wpsc_cart_item_url', $wpsc_cart->cart_item->product_url, $wpsc_cart->cart_item->product_id );
-}
-
-/**
-* cart item image function
-* returns the url to the to the cart item thumbnail image, if a width and height is specified, it resizes the thumbnail image to that size using the preview code (which caches the thumbnail also)
-* @param integer width
-* @param integer height
-* @return string url to the to the cart item thumbnail image
-*/
-function wpsc_cart_item_image( $width = 31, $height = 31 ) {
-   global $wpsc_cart;
-
-   $cart_image = wpsc_the_product_thumbnail( $width, $height, $wpsc_cart->cart_item->product_id, "shopping_cart");
-
-    if( is_ssl() )
-		$cart_image = str_replace( 'http://', 'https://', $cart_image );
-
-   return apply_filters( 'wpsc_cart_item_image', $cart_image, $wpsc_cart->cart_item->product_id );
-}
-
-/**
  * cart all shipping quotes, used for google checkout
  * returns all the quotes for a selected shipping method
  * @access public
@@ -442,154 +287,7 @@ function wpsc_empty_google_logs(){
    wpsc_delete_customer_meta( 'checkout_session_id' );
 
 }
-/**
-* have shipping methods function, no parameters
-* @return boolean
-*/
-function wpsc_have_shipping_methods() {
-   global $wpsc_cart;
-   return $wpsc_cart->have_shipping_methods();
-}
-/**
-* the shipping method function, no parameters
-* @return boolean
-*/
-function wpsc_the_shipping_method() {
-   global $wpsc_cart;
-   return $wpsc_cart->the_shipping_method();
-}
-/**
-* the shipping method name function, no parameters
-* @return string shipping method name
-*/
-function wpsc_shipping_method_name() {
-   global $wpsc_cart, $wpsc_shipping_modules;
-   $name = '';
-   if ( ! empty( $wpsc_cart->shipping_method ) && isset( $wpsc_shipping_modules[$wpsc_cart->shipping_method] ) )
-      $name = $wpsc_shipping_modules[$wpsc_cart->shipping_method]->name;
 
-   return apply_filters( 'wpsc_shipping_method_name', $name );
-}
-
-
-/**
-* the shipping method  internal name function, no parameters
-* @return string shipping method internal name
-*/
-function wpsc_shipping_method_internal_name() {
-   global $wpsc_cart, $wpsc_shipping_modules;
-   return $wpsc_cart->shipping_method;
-}
-
-
-/**
-* have shipping quotes function, no parameters
-* @return string the cart item url
-*/
-function wpsc_have_shipping_quotes() {
-   global $wpsc_cart;
-   return $wpsc_cart->have_shipping_quotes();
-}
-
-/**
-* the shipping quote function, no parameters
-* @return string the cart item url
-*/
-function wpsc_the_shipping_quote() {
-   global $wpsc_cart;
-   return $wpsc_cart->the_shipping_quote();
-}
-
-/**
-* the shipping quote name function, no parameters
-* @return string shipping quote name
-*/
-function wpsc_shipping_quote_name() {
-   global $wpsc_cart;
-   return apply_filters( 'wpsc_shipping_quote_name', $wpsc_cart->shipping_quote['name'] );
-}
-
-/**
-* the shipping quote value function, no parameters
-* @return string shipping quote value
-*/
-function wpsc_shipping_quote_value( $numeric = false ) {
-   global $wpsc_cart;
-
-   $value = apply_filters( 'wpsc_shipping_quote_value', $wpsc_cart->shipping_quote['value'] );
-
-   return ( $numeric ) ? $value : wpsc_currency_display( $value );
-
-}
-
-/**
-* the shipping quote html ID function, no parameters
-* @return string shipping quote html ID
-*/
-function wpsc_shipping_quote_html_id() {
-   global $wpsc_cart;
-   return $wpsc_cart->shipping_method."_".$wpsc_cart->current_shipping_quote;
-}
-
-/**
-* the shipping quote selected state function, no parameters
-* @return string true or false
-*/
-function wpsc_shipping_quote_selected_state() {
-   global $wpsc_cart;
-   if(($wpsc_cart->selected_shipping_method == $wpsc_cart->shipping_method) && ($wpsc_cart->selected_shipping_option == $wpsc_cart->shipping_quote['name']) ) {
-	  $wpsc_cart->selected_shipping_amount = $wpsc_cart->base_shipping;
-      return "checked='checked'";
-   } else {
-      return "";
-   }
-}
-function wpsc_have_morethanone_shipping_quote(){
-   global $wpsc_cart, $wpsc_shipping_modules;
-
-    // if it's fixed rate shipping, and all the prices are the same, then there aren't really options.
-    if ( count($wpsc_cart->shipping_methods) == 1 && $wpsc_cart->shipping_methods[0] == 'flatrate' ) {
-        $last_price = false;
-        $first_quote_name = false;
-
-		$quotes = $wpsc_shipping_modules['flatrate']->getQuote();
-		if ( empty( $quotes ) )
-			return false;
-
-        foreach ((array)$quotes as $name => $quote) {
-            if (!$first_quote_name) $first_quote_name = $name;
-            if ($last_price !== false && $quote != $last_price) return true;
-            $last_price = $quote;
-        }
-        $wpsc_cart->rewind_shipping_methods();
-
-        $wpsc_cart->update_shipping('flatrate', $name);
-        return false;
-    }
-    return true;
-}
-
-function wpsc_have_morethanone_shipping_methods_and_quotes(){
-   global $wpsc_cart;
-
-   if(count($wpsc_cart->shipping_quotes) > 1 || count($wpsc_cart->shipping_methods) > 1 || count($wpsc_cart->shipping_quotes) == $wpsc_cart->shipping_quote_count){
-      return true;
-   }else{
-      return false;
-   }
-}
-/**
- * Whether or not there is a valid shipping quote/option available to the customer when checking out
- *
- * @return bool
- */
-function wpsc_have_shipping_quote(){
-   global $wpsc_cart;
-   if ($wpsc_cart->shipping_quote_count > 0 || count($wpsc_cart->shipping_quotes) > 0) {
-      return true;
-   }
-   return false;
-}
 function wpsc_update_shipping_single_method(){
    global $wpsc_cart;
    if(!empty($wpsc_cart->shipping_method)) {
@@ -1846,7 +1544,7 @@ class wpsc_cart_item {
    		$this->tax = $taxes['tax'];
    	}
 
-   	$this->product_url = wpsc_product_url( $product_id );
+   	$this->product_url = get_permalink( $product_id );
 
    	if( ! is_array( $this->variation_values ) )
    		$attach_parent = $product_id;

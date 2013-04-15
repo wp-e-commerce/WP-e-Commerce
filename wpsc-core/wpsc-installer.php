@@ -398,7 +398,7 @@ function wpsc_create_upload_directories() {
 		WPSC_USER_UPLOADS_DIR,
 		WPSC_CACHE_DIR,
 		WPSC_UPGRADES_DIR,
-		WPSC_THEMES_PATH
+		// WPSC_THEMES_PATH
 	);
 	foreach ( $folders as $folder ) {
 		wp_mkdir_p( $folder );
