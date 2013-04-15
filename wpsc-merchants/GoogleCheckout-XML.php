@@ -51,8 +51,8 @@ function gateway_google($fromcheckout = false){
 	$total = $wpsc_cart->calculate_total_price();
 	if($total > 0 ){
 		$update = $wpdb->update(
-			    WPSC_TABLE_PURCHASE_LOGS,
-			    array(
+				WPSC_TABLE_PURCHASE_LOGS,
+				array(
 				'totalprice' => $total,
 				'statusno' => 0,
 				'user_ID' => $user_ID,
@@ -66,11 +66,11 @@ function gateway_google($fromcheckout = false){
 				'plugin_version' => WPSC_VERSION,
 				'discount_value' => $wpsc_cart->coupons_amount,
 				'discount_data' => $wpsc_cart->coupons_name
-			    ),
-			    array(
+				),
+				array(
 				'sessionid' => $sessionid
-			    ),
-			    array(
+				),
+				array(
 				'%f',
 				'%d',
 				'%d',
@@ -84,8 +84,8 @@ function gateway_google($fromcheckout = false){
 				'%s',
 				'%f',
 				'%s',
-			    ),
-			    '%s'
+				),
+				'%s'
 			);
 		$sql = $wpdb->prepare( "SELECT `id` FROM `".WPSC_TABLE_PURCHASE_LOGS."` WHERE sessionid = %s", $sessionid );
 		$purchase_log_id = $wpdb->get_var($sql);
@@ -95,8 +95,8 @@ function gateway_google($fromcheckout = false){
 		}
 		if( ! $update ){
 			$wpdb->insert(
-			    WPSC_TABLE_PURCHASE_LOGS,
-			    array(
+				WPSC_TABLE_PURCHASE_LOGS,
+				array(
 				'totalprice' => $total,
 				'statusno' => 0,
 				'sessionid' => $sessionid,
@@ -111,8 +111,8 @@ function gateway_google($fromcheckout = false){
 				'plugin_version' => WPSC_VERSION,
 				'discount_value' => $wpsc_cart->coupons_amount,
 				'discount_data' => $wpsc_cart->coupons_name
-			    ),
-			    array(
+				),
+				array(
 				'%f',
 				'%d',
 				'%s',
@@ -127,8 +127,8 @@ function gateway_google($fromcheckout = false){
 				'%s',
 				'%f',
 				'%s',
-			    ),
-			    '%s'
+				),
+				'%s'
 			);
 			$purchase_log_id = $wpdb->insert_id;
 
@@ -166,10 +166,10 @@ function Usecase($separator, $sessionid, $fromcheckout) {
 	$cart->SetEditCartUrl(get_option('shopping_cart_url'));
 
 	//google prohibited items not implemented
-    $currency_converter  =  new CURRENCYCONVERTER();
-    $currency_code       = $wpdb->get_results("SELECT `code` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id`='".get_option('currency_type')."' LIMIT 1",ARRAY_A);
-    $local_currency_code = $currency_code[0]['code'];
-    $google_curr         = get_option('google_cur');
+	$currency_converter  =  new CURRENCYCONVERTER();
+	$currency_code       = $wpdb->get_results("SELECT `code` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id`='".get_option('currency_type')."' LIMIT 1",ARRAY_A);
+	$local_currency_code = $currency_code[0]['code'];
+	$google_curr         = get_option('google_cur');
 	$currentcy_rate		 = 1;
 
 	if($google_curr != $local_currency_code){
@@ -233,7 +233,7 @@ function Usecase($separator, $sessionid, $fromcheckout) {
 		$cart->AddShipping($shipping);
 	}
 
-    // Add tax rules
+	// Add tax rules
 	if (!empty($shipping_country)){
 		$tax_rule = new GoogleDefaultTaxRule( (wpsc_cart_tax(false)/$wpsc_cart->calculate_subtotal() ));
 		$tax_rule->AddPostalArea($shipping_country);
@@ -254,21 +254,21 @@ function Usecase($separator, $sessionid, $fromcheckout) {
 function wpsc_google_checkout_page(){
 	global $wpsc_gateway;
 	$script = "<script type='text/javascript'>
-	 				jQuery(document).ready(
-  						function()
- 						 {
-	 						jQuery('div#wpsc_shopping_cart_container h2').hide();
-	 						jQuery('div#wpsc_shopping_cart_container .wpsc_cart_shipping').hide();
- 							jQuery('.wpsc_checkout_forms').hide();
-	 					});
-	 			</script>";
+					jQuery(document).ready(
+						function()
+						 {
+							jQuery('div#wpsc_shopping_cart_container h2').hide();
+							jQuery('div#wpsc_shopping_cart_container .wpsc_cart_shipping').hide();
+							jQuery('.wpsc_checkout_forms').hide();
+						});
+				</script>";
 
 	$options = get_option('payment_gateway');
 
 	if( in_array( 'google', (array) get_option( 'custom_gateway_options' ) ) && 'google' == wpsc_get_customer_meta( 'google_checkout' ) ) {
 		wpsc_delete_customer_meta( 'google_checkout' );
 		echo $script;
- 		gateway_google(true);
+		gateway_google(true);
 	}
 }
 
@@ -343,14 +343,14 @@ function form_google(){
 	<tr>
 		<td>" . __( 'Merchant ID', 'wpsc' ) . "		</td>
 		<td>
-		<input type='text' size='40' value='".get_option('google_id')."' name='google_id' />
+			<input type='text' size='40' value='".get_option('google_id')."' name='google_id' />
 		</td>
 	</tr>
 	<tr>
 		<td>" . __( 'Merchant Key', 'wpsc' ) . "
 		</td>
 		<td>
-		<input type='text' size='40' value='".get_option('google_key')."' name='google_key' />
+			<input type='text' size='40' value='".get_option('google_key')."' name='google_key' />
 		</td>
 	</tr>
 	<tr>
@@ -358,82 +358,89 @@ function form_google(){
 		" . __( 'Turn on auto charging', 'wpsc' ) . "
 		</td>
 		<td>
-			<input $google_auto_charge1 type='radio' name='google_auto_charge' value='1' /> " . __( 'Yes', 'wpsc' ) . "
-			<input $google_auto_charge2 type='radio' name='google_auto_charge' value='0' /> " . __( 'No', 'wpsc' ) . "
+			<input $google_auto_charge1 type='radio' name='google_auto_charge' value='1' id='google_auto_charge1' /> <label for='google_auto_charge1'>" . __( 'Yes', 'wpsc' ) . "</label> &nbsp;
+			<input $google_auto_charge2 type='radio' name='google_auto_charge' value='0' id='google_auto_charge2' /> <label for='google_auto_charge2'>" . __( 'No', 'wpsc' ) . "</label>
 		</td>
 	</tr>
 	<tr>
-		<td>Server Type
+		<td>
+		" . __( 'Server Type', 'wpsc' ) . "
 		</td>
 		<td>
-			<input $google_server_type1 type='radio' name='google_server_type' value='sandbox' /> " . __( 'Sandbox', 'wpsc' ) . "
-			<input $google_server_type2 type='radio' name='google_server_type' value='production' /> " . __( 'Production', 'wpsc' ) . "
+			<input $google_server_type1 type='radio' name='google_server_type' value='sandbox' id='google_server_type_sandbox' /> <label for='google_server_type_sandbox'>" . __( 'Sandbox', 'wpsc' ) . "</label> &nbsp;
+			<input $google_server_type2 type='radio' name='google_server_type' value='production' id='google_server_type_production' /> <label for='google_server_type_production'>" . __( 'Production', 'wpsc' ) . "</label>
 		</td>
 	</tr>
-	  <tr>
-		  <td>
-		  " . __( 'Select your currency', 'wpsc' ) . "
-		  </td>
-		  <td>
-		  <select name='google_cur'>";
-		  	if (get_option('google_cur') == 'USD') {
-			$output.=
-			"<option selected='selected' value='USD'>" . __( 'USD', 'wpsc' ) . "</option>
-		  	<option value='GBP'>" . __( 'GBP', 'wpsc' ) . "</option>";
-			} else {
-			$output.=
-			"<option value='USD'>" . __( 'USD', 'wpsc' ) . "</option>
-		  	<option value='GBP' selected='selected'>" . __( 'GBP', 'wpsc' ) . "</option>";
-			}
-		  $output.="</select>
+	<tr>
+		<td>
+		" . __( 'Select your currency', 'wpsc' ) . "
+		</td>
+		<td>
+			<select name='google_cur'>\n";
+
+	if ( get_option( 'google_cur' ) == 'USD' ) {
+		$output .= "<option selected='selected' value='USD'>" . __( 'USD', 'wpsc' ) . "</option>
+			<option value='GBP'>" . __( 'GBP', 'wpsc' ) . "</option>";
+	} else {
+		$output .= "<option value='USD'>" . __( 'USD', 'wpsc' ) . "</option>
+			<option value='GBP' selected='selected'>" . __( 'GBP', 'wpsc' ) . "</option>";
+	}
+
+	$output .= "</select>
 		  </td>
 	</tr>
-
 	<tr>
 		<td>
 		" . __( 'Select Shipping Countries', 'wpsc' ) . "
 		</td>
 		<td>
-		<a href='".add_query_arg(array("googlecheckoutshipping" =>  1, "page" =>
-"wpsc-settings"))."' alt='" . __( 'Set Shipping Options', 'wpsc' ) . "'>" . __( 'Set Shipping Countries', 'wpsc' ) . "</a>		</td>
+			<a href='" . add_query_arg( array( "googlecheckoutshipping" =>  1, "page" => "wpsc-settings" ) ) . "' alt='" . __( 'Set Shipping Options', 'wpsc' ) . "'>" . __( 'Set Shipping Countries', 'wpsc' ) . "</a>
+		</td>
 	</tr>
 
 	<tr>
-		  <td>" . __( 'Button Styles', 'wpsc' ) . "
-		  </td>
-			<td><div>Size:
-				<input $button_size1 type='radio' name='google_button_size' value='0' /> 180&times;46
-				<input $button_size2 type='radio' name='google_button_size' value='1' /> 168&times;44
-				<input $button_size3 type='radio' name='google_button_size' value='2' /> 160&times;43
-				</div>
-				<div>
-				" . __( 'Background:', 'wpsc' ) . "
-		  <select name='google_button_bg'>
-		  <option $button_bg1 value='trans'>" . __( 'Transparent', 'wpsc' ) . "</option>
-		  <option $button_bg2 value='white'>" . __( 'White', 'wpsc' ) . "</option>
-		  </select>
-		  </div>
-			</td>
+		<td>
+		" . __( 'Button Styles', 'wpsc' ) . "
+		</td>
+		<td>
+			<span class='label'>" . __( 'Size', 'wpsc') . ":</span> &nbsp;
+			<input $button_size1 type='radio' name='google_button_size' value='0' id='google_button_size_0' /> <label for='google_button_size_0'>180&times;46</label> &nbsp;
+			<input $button_size2 type='radio' name='google_button_size' value='1' id='google_button_size_1' /> <label for='google_button_size_1'>168&times;44</label> &nbsp;
+			<input $button_size3 type='radio' name='google_button_size' value='2' id='google_button_size_2' /> <label for='google_button_size_2'>160&times;43</label> &nbsp;
+		</td>
+	</tr>
+	<tr>
+		<td>
+		</td>
+		<td>
+			<label for='google_button_bg'>" . __( 'Background:', 'wpsc' ) . "</label> &nbsp;
+			<select name='google_button_bg'>
+				<option $button_bg1 value='trans'>" . __( 'Transparent', 'wpsc' ) . "</option>
+				<option $button_bg2 value='white'>" . __( 'White', 'wpsc' ) . "</option>
+			</select>
+		</td>
 	</tr>
 
 	<tr>
-		<td>".__('API version','wpsc').":</td>
-		<td><strong>2.0</strong></td>
+		<td>" . __( 'API version', 'wpsc' ) . ":</td>
+		<td>
+			<strong>2.0</strong>
+		</td>
 	<td>
 	<tr>
 		<td>".__('API callback URL','wpsc').":</td>
-	</tr>
-	<tr>
-		<td colspan='2'><strong>" . home_url( '/' ) . "</strong></td>
+		<td><code><strong>" . home_url( '/' ) . "</strong></code></td>
 	</tr>
 	<tr>
 		<td colspan='2'>
-		<span  class='wpscsmall description'>
-		" . sprintf( __( "For more help configuring Google Checkout, please read our documentation <a href='%s'>here</a>", 'wpsc' ), esc_url( 'http://docs.getshopped.org/wiki/documentation/payments/google-checkout' ) ) . "</span>
+			<p class='description'>
+				" . sprintf( __( "For more help configuring Google Checkout, please read our documentation <a href='%s'>here</a>", 'wpsc' ), esc_url( 'http://docs.getshopped.org/wiki/documentation/payments/google-checkout' ) ) . "
+			</p>
 		</td>
-		</tr>";
-  return $output;
-  }
+	</tr>\n";
+
+	return $output;
+}
 
 function nzsc_googleResponse() {
 	global $wpdb, $user_ID;
@@ -500,8 +507,8 @@ function nzsc_googleResponse() {
 			$region_number = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM ".WPSC_TABLE_REGION_TAX."` WHERE code = %s", $billing_region ) );
 
 			$wpdb->insert(
-				    WPSC_TABLE_PURCHASE_LOGS,
-				    array(
+					WPSC_TABLE_PURCHASE_LOGS,
+					array(
 					'totalprice' => $total_price,
 					'sessionid' => $sessionid,
 					'date' => time(),
@@ -515,8 +522,8 @@ function nzsc_googleResponse() {
 					'google_order_number' => $google_order_number,
 					'google_user_marketing_preference' => $user_marketing_preference,
 					'affiliate_id' => $affiliate_id
-				    ),
-				    array(
+					),
+					array(
 					'%f',
 					'%s',
 					'%s',
@@ -530,25 +537,25 @@ function nzsc_googleResponse() {
 					'%s',
 					'%s',
 					'%s'
-				    )
+					)
 				);
 
 			$log_id = $wpdb->get_var( $wpdb->prepare( "SELECT `id` FROM `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `sessionid` IN(%s) LIMIT 1", $sessionid ) ) ;
 
 			$wpdb->update(
-				    WPSC_TABLE_PURCHASE_LOGS,
-				    array(
+					WPSC_TABLE_PURCHASE_LOGS,
+					array(
 					'firstname' => $shipping_firstname,
 					'lastname' => $shipping_lastname,
 					'email' => $billing_email,
 					'phone' => $billing_phone,
 
-				    ),
-				    array(
+					),
+					array(
 					'id' => $log_id
-				    ),
-				    '%s',
-				    '%d'
+					),
+					'%s',
+					'%d'
 				);
 
 			if (array_key_exists(0,$cart_items['item'])) {
@@ -619,8 +626,8 @@ function nzsc_googleResponse() {
 				}
 
 				$wpdb->insert(
-					    WPSC_TABLE_CART_CONTENTS,
-					    array(
+						WPSC_TABLE_CART_CONTENTS,
+						array(
 						'prodid' => $product_id,
 						'purchaseid' => $log_id,
 						'price' => $item_unit_price,
@@ -629,8 +636,8 @@ function nzsc_googleResponse() {
 						'quantity' => $item_quantity,
 						'donation' => $product_info['donation'],
 						'no_shipping' => $product_info['no_shipping']
-					    ),
-					    array(
+						),
+						array(
 						'%d',
 						'%d',
 						'%s',
@@ -639,7 +646,7 @@ function nzsc_googleResponse() {
 						'%d',
 						'%s',
 						'%s',
-					    )
+						)
 					);
 				}
 		}
@@ -656,13 +663,13 @@ function nzsc_googleResponse() {
 			$google_status = serialize($google_status);
 
 			$wpdb->update(
-				    WPSC_TABLE_PURCHASE_LOGS,
-				    array(
+					WPSC_TABLE_PURCHASE_LOGS,
+					array(
 					'google_status' => $google_status
-				    ),
-				    array(
+					),
+					array(
 					'google_order_number' => $google_order_number
-				    )
+					)
 				);
 
 			if (($data['order-state-change-notification']['new-financial-order-state']['VALUE'] == 'CHARGEABLE') && (get_option('google_auto_charge') == '1')) {
@@ -674,13 +681,13 @@ function nzsc_googleResponse() {
 				wpsc_delete_customer_meta( 'google_session' );
 
 				$wpdb->update(
-					    WPSC_TABLE_PURCHASE_LOGS,
-					    array(
+						WPSC_TABLE_PURCHASE_LOGS,
+						array(
 						'processed' => '3'
-					    ),
-					    array(
+						),
+						array(
 						'google_order_number' => $google_order_number
-					    )
+						)
 					);
 			}
 		}
@@ -700,15 +707,15 @@ function nzsc_googleResponse() {
 			$google_status = serialize($google_status);
 
 			$wpdb->update(
-				    WPSC_TABLE_PURCHASE_LOGS,
-				    array(
+					WPSC_TABLE_PURCHASE_LOGS,
+					array(
 					'google_status' => $google_status,
-				    ),
-				    array(
+					),
+					array(
 					'google_order_number' => $google_order_number
-				    )
+					)
 				);
-		    }
+			}
 
 		if ($root == "refund-amount-notification") {
 			$google_order_number = $data['refund-amount-notification']['google-order-number']['VALUE'];
@@ -725,13 +732,13 @@ function nzsc_googleResponse() {
 			$google_status = serialize($google_status);
 
 			$wpdb->update(
-				    WPSC_TABLE_PURCHASE_LOGS,
-				    array(
+					WPSC_TABLE_PURCHASE_LOGS,
+					array(
 					'google_status' => $google_status
-				    ),
-				    array(
+					),
+					array(
 					'google_order_number' => $google_order_number
-				    )
+					)
 				);
 		}
 
@@ -744,13 +751,13 @@ function nzsc_googleResponse() {
 			$google_status['protection']=$data['risk-information-notification']['risk-information']['eligible-for-protection']['VALUE'];
 			$google_status = serialize($google_status);
 			$wpdb->update(
-				    WPSC_TABLE_PURCHASE_LOGS,
-				    array(
+					WPSC_TABLE_PURCHASE_LOGS,
+					array(
 					'google_status' => $google_status
-				    ),
-				    array(
+					),
+					array(
 					'google_order_number' => $google_order_number
-				    )
+					)
 				);
 			if ($data['risk-information-notification']['risk-information']['cvn-response']['VALUE'] == 'E') {
 				$google_risk='cvn';
@@ -763,14 +770,14 @@ function nzsc_googleResponse() {
 				}
 			}
 			if (isset($google_risk)) {
-			    $wpdb->update(
-				    WPSC_TABLE_PURCHASE_LOGS,
-				    array(
+				$wpdb->update(
+					WPSC_TABLE_PURCHASE_LOGS,
+					array(
 					'google_risk' => $google_risk
-				    ),
-				    array(
+					),
+					array(
 					'google_order_number' => $google_order_number
-				    )
+					)
 				);
 			}
 		}
@@ -783,13 +790,13 @@ function nzsc_googleResponse() {
 				$google_status[0] = "CANCELLED_BY_GOOGLE";
 
 				$wpdb->update(
-					    WPSC_TABLE_PURCHASE_LOGS,
-					    array(
+						WPSC_TABLE_PURCHASE_LOGS,
+						array(
 						'google_status' => serialize( $google_status )
-					    ),
-					    array(
+						),
+						array(
 						'google_order_number' => $google_order_number
-					    )
+						)
 					);
 
 				}
