@@ -47,7 +47,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 	function get_local_currency_code() {
 		if ( empty( $this->local_currency_code ) ) {
 			global $wpdb;
-			$this->local_currency_code = $wpdb->get_var( $wpdb->prepare( "SELECT `code` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id`= %d LIMIT 1", get_option( 'currency_type' ) ) );
+			$this->local_currency_code = $wpdb->get_var( $wpdb->prepare( "SELECT `code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id`= %d LIMIT 1", get_option( 'currency_type' ) ) );
 		}
 
 		return $this->local_currency_code;
@@ -121,7 +121,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 
 		// Credit Card Data
 		$data['CREDITCARDTYPE'] = $_POST['cctype'];
-		$data['ACCT']           = str_replace( array(' ', '-'), '', $_POST['card_number'] );
+		$data['ACCT']           = str_replace( array( ' ', '-' ), '', $_POST['card_number'] );
 		$data['EXPDATE']        = $_POST['expiry']['month'] . $_POST['expiry']['year'];
 		$data['CVV2']           = $_POST['card_code'];
 
@@ -438,15 +438,13 @@ function form_paypal_pro() {
 			<label for="paypal_pro_testmode">' . __( 'Test Mode Enabled:', 'wpsc' ) . '</label>
 		</td>
 		<td>
-			<input type="hidden" name="PayPalPro[testmode]" value="off" /><input type="checkbox" name="PayPalPro[testmode]" id="paypal_pro_testmode" value="on" ' . $selected . ' />
-		</td>
-	</tr>
-	<tr>
-  	<td colspan="2">
-  	<span class="wpscsmall description">
-  	' . sprintf( __( "Only enable test mode if you have a sandbox account with PayPal you can find out more about this <a href='%s'>here</a>", 'wpsc' ), esc_url( 'https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/howto_testing_sandbox' ) ) . '</span>
-  	</td>
-  </tr>';
+			<input type="hidden" name="PayPalPro[testmode]" value="off" />
+			<label for="paypal_pro_testmode"><input type="checkbox" name="PayPalPro[testmode]" id="paypal_pro_testmode" value="on" ' . $selected . ' /> ' . __( 'Test Mode Enabled', 'wpsc') . '</label>
+			<p class=" description">
+  				' . sprintf( __( "Only enable test mode if you have a sandbox account with PayPal you can find out more about this <a href='%s'>here</a>", 'wpsc' ), esc_url( 'https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/howto_testing_sandbox' ) ) . '
+  			</p>
+  		</td>
+  	</tr>';
 
 	$store_currency_code = $wpdb->get_var( $wpdb->prepare( "SELECT `code` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id` IN (%d)", get_option( 'currency_type' ) ) );
 	$current_currency = get_option('paypal_curcode');
@@ -459,10 +457,12 @@ function form_paypal_pro() {
 		$output .= "<tr> <td colspan='2'><strong class='form_group'>" . __( 'Currency Converter', 'wpsc' ) . "</td> </tr>
 		<tr>
 			<td colspan='2'>".__('Your website is using a currency not accepted by PayPal, select an accepted currency using the drop down menu below. Buyers on your site will still pay in your local currency however we will convert the currency and send the order through to PayPal using the currency you choose below.', 'wpsc')."</td>
-		</tr>\n";
+		</tr>
 
-		$output .= "<tr>\n <td>" . __('Convert to', 'wpsc' ) . " </td>\n ";
-		$output .= "<td>\n <select name='paypal_curcode'>\n";
+		<tr>
+			<td>" . __('Convert to', 'wpsc' ) . " </td>
+			<td>
+				<select name='paypal_curcode'>\n";
 
 		if (!isset($wpsc_gateways['wpsc_merchant_paypal_pro']['supported_currencies']['currency_list']))
 			$wpsc_gateways['wpsc_merchant_paypal_pro']['supported_currencies']['currency_list'] = array();
@@ -477,16 +477,20 @@ function form_paypal_pro() {
 			}
 			$output .= "<option ".$selected_currency." value='{$currency_item['code']}'>{$currency_item['currency']}</option>";
 		}
-		$output .= "            </select> \n";
-		$output .= "          </td>\n";
-		$output .= "       </tr>\n";
-	}
-		$output .="<tr>
-			<td colspan='2'>
-			<span class='wpscsmall description'>
-			" . sprintf( __( "For more help configuring Paypal Pro, please read our documentation <a href='%s'>here</a>", 'wpsc' ), esc_url( 'http://docs.getshopped.org/wiki/documentation/payments/paypal-payments-pro' ) ) . "</span>
+		$output .= "
+				</select>
 			</td>
-		</tr>";
+		</tr>\n";
+	}
+
+	$output .="
+	<tr>
+		<td colspan='2'>
+			<p class='description'>
+				" . sprintf( __( "For more help configuring Paypal Pro, please read our documentation <a href='%s'>here</a>", 'wpsc' ), esc_url( 'http://docs.getshopped.org/wiki/documentation/payments/paypal-payments-pro' ) ) . "
+				</p>
+		</td>
+	</tr>";
 	return $output;
 }
 
