@@ -20,48 +20,13 @@ class WPSC_Settings_Tab_Marketing extends WPSC_Settings_Tab {
 	}
 
 	public function display() {
-		?>
-			<div class='metabox-holder'>
-				<?php
-					add_meta_box( 'wpsc_marketing_settings', __( 'Marketing Section', 'wpsc' ), array( $this, 'marketing_meta_box' ), 'wpsc' );
-					add_meta_box( 'wpsc_rss_address', __( 'RSS Address', 'wpsc' ), array( $this, 'rss_address_meta_box' ), 'wpsc' );
-					add_meta_box( 'wpsc_google_merch_center', __( 'Google Merchant Centre / Google Product Search', 'wpsc' ), array( $this, 'google_merch_center_meta_box' ), 'wpsc' );
-					add_meta_box( 'wpsc_google_analytics_integration', __( 'Google Analytics', 'wpsc' ), array( $this, 'google_analytics_integration' ), 'wpsc' );
-
-					do_meta_boxes( 'wpsc', 'advanced', null );
-				?>
-
-			</div>
-		<?php
+		$this->marketing_settings_form();
+		$this->rss_address_settings_form();
+		$this->google_merch_center_settings_form();
+		$this->google_analytics_integration_settings_form();
 	}
 
-	public function google_analytics_integration() {
-		?>
-			<input type='hidden' name='change-settings' value='true' />
-			<p>
-				<span class='input_label'><?php _e( 'Disable Google Analytics tracking', 'wpsc' ); ?></span>
-				<input value='1' <?php checked( '1', get_option( 'wpsc_ga_disable_tracking' ) ); ?> type='checkbox' name='wpsc_ga_disable_tracking' />
-				<span class='description'><?php _e( 'If, for whatever reason, you decide you do not want any tracking, disable it.', 'wpsc' ); ?></span>
-			</p><br />
-			<p class="wpsc_ga_currently_tracking">
-				<span class='input_label'><?php _e( 'Currently tracking Google Analytics', 'wpsc' ); ?></span>
-				<input value='1' <?php checked( '1', get_option( 'wpsc_ga_currently_tracking' ) ); ?> type='checkbox' name='wpsc_ga_currently_tracking' />
-				<span class='description'><?php _e( 'If you have already manually placed your Google Analytics tracking code in your theme, or have another plugin handling it, check this box.', 'wpsc' ); ?></span>
-			</p><br />
-			<p class="wpsc_ga_advanced">
-				<span class='input_label'><?php _e( 'Advanced', 'wpsc' ); ?></span>
-				<input value='1' <?php checked( '1', get_option( 'wpsc_ga_advanced' ) ); ?> type='checkbox' name='wpsc_ga_advanced' /><br />
-				<span class='description'><?php _e( 'By default, we insert the multiple-domain asynchronous tracking code.  This should be fine for 99% of users.  If you need to fine-tune it, select the Advanced option.  Then, instead of simply entering your tracking ID, you will enter the enter tracking code from Google Analytics into the header.php file of your theme.', 'wpsc' ); ?></span>
-			</p><br />
-			<p class='wpsc_ga_tracking_id'>
-				<span class='input_label'><?php _ex( 'Tracking ID', 'google analytics', 'wpsc' ); ?></span>
-				<input value="<?php echo esc_attr( get_option( 'wpsc_ga_tracking_id' ) ); ?>" type='text' name='wpsc_ga_tracking_id' />
-				<span class='description'><?php _e( 'Enter your tracking ID here.', 'wpsc' ); ?></span>
-			</p><br />
-	<?php
-	}
-
-	public function marketing_meta_box() {
+	public function marketing_settings_form() {
 
 		$wpsc_also_bought  = get_option( 'wpsc_also_bought' );
 		$wpsc_also_bought1 = '';
@@ -84,47 +49,149 @@ class WPSC_Settings_Tab_Marketing extends WPSC_Settings_Tab {
 		$display_find_us1 = '';
 
 		if ( '1' == $display_find_us )
-			$display_find_us1 = "checked ='checked'"; ?>
-			<input type='hidden' name='change-settings' value='true' />
-			<p>
-				<span class='input_label'><?php esc_html_e( 'Display Cross Sales', 'wpsc' ); ?></span>
-				<input <?php echo $wpsc_also_bought1; ?> type='checkbox' name='wpsc_also_bought' />
-				<span class='description'><?php esc_html_e( 'Adds the \'Users who bought this also bought\' item to the single products page.', 'wpsc' ); ?></span>
-			</p><br />
-			<p>
-				<span class='input_label'><?php esc_html_e( 'Show Share This (Social Bookmarks)', 'wpsc' ); ?></span>
-				<input <?php echo $wpsc_share_this1; ?> type='checkbox' name='wpsc_share_this' />
-				<span class='description'>  <?php esc_html_e( 'Adds the \'Share this link\' item to the single products page.', 'wpsc' ); ?></span>
-			</p><br />
-			<p>
-				<span class='input_label'> <?php esc_html_e( 'Display How Customer Found Us Survey', 'wpsc' ) ?></span>
-				<input <?php echo $display_find_us1; ?> type='checkbox' name='display_find_us' />
-				<span class='description'>  <?php esc_html_e( 'Adds the \'How did you find out about us\' drop-down option at checkout.', 'wpsc' ) ?></span>
-			</p><br />
-			<p>
-				<span class='input_label'> <?php esc_html_e( 'Display Facebook Like', 'wpsc' ) ?></span>
-				<input type='hidden' value='0' name='wpsc_options[wpsc_facebook_like]' />
-				<input <?php echo $facebook_like1; ?> type='checkbox' name='wpsc_options[wpsc_facebook_like]' />
-				<span class='description'>  <?php esc_html_e( 'Adds the Facebook Like button on your single products page.', 'wpsc' ) ?></span>
-			</p><br />
-	<?php
-	}
+			$display_find_us1 = "checked ='checked'";
 
-	public function rss_address_meta_box() {
 		?>
-			<p><?php esc_html_e( 'People can use this RSS feed to keep up to date with your product list.', 'wpsc' ); ?></p>
-			<p><?php esc_html_e( 'RSS Feed Address', 'wpsc' ) ?> :	<?php echo get_bloginfo( 'url' ) . "/index.php?rss=true&amp;action=product_list"; ?></p>
+
+		<h3><?php esc_html_e( 'Marketing Settings', 'wpsc'); ?></h3>
+		<table class='form-table'>
+			<tr>
+				<th>
+					<?php esc_html_e( "'Users who bought this also bought'", 'wpsc' ); ?>
+				</th>
+				<td>
+					<label>
+						<input <?php echo $wpsc_also_bought1; ?> type='checkbox' name='wpsc_also_bought' />
+						<?php esc_html_e( "Add 'Users who bought this also bought' item to the single products page.", 'wpsc' ); ?>
+					</label>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<?php esc_html_e( "'Share This' Social Bookmarks", 'wpsc' ); ?>
+				</th>
+				<td>
+					<label>
+						<input <?php echo $wpsc_share_this1; ?> type='checkbox' name='wpsc_share_this' />
+						<?php esc_html_e( 'Add the \'Share this link\' item to the single products page.', 'wpsc' ); ?>
+					</label>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<?php esc_html_e( "'How Customer Found Us' Survey", 'wpsc' ) ?>
+				</th>
+				<td>
+					<label>
+						<input <?php echo $display_find_us1; ?> type='checkbox' name='display_find_us' />
+						<?php esc_html_e( 'Add the \'How did you find out about us\' drop-down option at checkout.', 'wpsc' ); ?>
+					</label>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<?php esc_html_e( "Facebook 'Like' Button", 'wpsc' ) ?>
+				</th>
+				<td>
+					<input type='hidden' value='0' name='wpsc_options[wpsc_facebook_like]' />
+					<input <?php echo $facebook_like1; ?> type='checkbox' name='wpsc_options[wpsc_facebook_like]' />
+					<?php esc_html_e( 'Add the Facebook Like button on your single products page.', 'wpsc' ); ?>
+				</td>
+			</tr>
+		</table>
 		<?php
 	}
 
-	function google_merch_center_meta_box() {
+	public function rss_address_settings_form() {
 		?>
-			<p><?php esc_html_e( 'To import your products into <a href="http://www.google.com/merchants/" target="_blank">Google Merchant Centre</a> so that they appear within Google Product Search results, sign up for a Google Merchant Centre account and add a scheduled data feed with the following URL:', 'wpsc' ); ?></p>
+		<h3><?php esc_html_e( 'Product RSS Address', 'wpsc'); ?></h3>
+		<p><?php esc_html_e( 'People can use this RSS feed to keep up to date with your product list.', 'wpsc' ); ?></p>
 
-			<?php $google_feed_url = add_query_arg( array( 'rss' => 'true', 'action' => 'product_list', 'xmlformat' => 'google' ), home_url( '/' ) ); ?>
-
-			<a href="<?php echo esc_url( $google_feed_url ); ?>"><?php echo esc_url( $google_feed_url ); ?></a>
-
+		<table class='form-table'>
+			<tr>
+				<th>
+					<?php esc_html_e( 'RSS Feed Address', 'wpsc' ); ?>
+				</th>
+				<td>
+					<?php $rss_url = add_query_arg( array( 'rss' => 'true', 'action' => 'product_list' ), home_url( '/' ) ); ?>
+					<a href="<?php echo esc_url( $rss_url ); ?>"><code><?php echo esc_url( $rss_url ); ?></code></a>
+				</td>
+			</tr>
+		</table>
 		<?php
 	}
+
+	public function google_merch_center_settings_form() {
+		?>
+		<h3><?php esc_html_e( 'Google Merchant Centre / Google Product Search', 'wpsc'); ?></h3>
+		<p><?php _e( 'To import your products into <a href="http://www.google.com/merchants/" target="_blank">Google Merchant Centre</a> so that they appear within Google Product Search results, sign up for a Google Merchant Centre account and add a scheduled data feed with the following URL:', 'wpsc' ); ?></p>
+
+		<table class='form-table'>
+			<tr>
+				<th>
+					<?php esc_html_e( 'Google Product Feed', 'wpsc' ); ?>
+				</th>
+				<td>
+					<?php $google_feed_url = add_query_arg( array( 'rss' => 'true', 'action' => 'product_list', 'xmlformat' => 'google' ), home_url( '/' ) ); ?>
+					<a href="<?php echo esc_url( $google_feed_url ); ?>"><code><?php echo esc_url( $google_feed_url ); ?></code></a>
+				</td>
+			</tr>
+		</table>
+		<?php
+	}
+
+	public function google_analytics_integration_settings_form() {
+		?>
+		<h3><?php esc_html_e( 'Google Analytics', 'wpsc' ); ?></h3>
+		<input type='hidden' name='change-settings' value='true' />
+		<table class='form-table'>
+			<tr>
+				<th>
+					<?php _e( 'Disable Google Analytics tracking', 'wpsc' ); ?>
+				</th>
+				<td>
+					<label>
+						<input value='1' <?php checked( '1', get_option( 'wpsc_ga_disable_tracking' ) ); ?> type='checkbox' name='wpsc_ga_disable_tracking' />
+						<?php _e( 'Disable Google Analytics tracking', 'wpsc' ); ?>
+					</label>
+					<p class='description'><?php _e( 'If, for whatever reason, you decide you do not want any tracking, disable it.', 'wpsc' ); ?></p>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<?php _e( 'Currently tracking Google Analytics', 'wpsc' ); ?>
+				</th>
+				<td>
+					<label>
+						<input value='1' <?php checked( '1', get_option( 'wpsc_ga_currently_tracking' ) ); ?> type='checkbox' name='wpsc_ga_currently_tracking' />
+						<?php _e( 'Google Analytics is tracking my site', 'wpsc' ); ?>
+					</label>
+					<p class='description'><?php _e( 'If you have already manually placed your Google Analytics tracking code in your theme, or have another plugin handling it, check this box.', 'wpsc' ); ?></p>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<?php _e( 'Advanced Mode', 'wpsc' ); ?>
+				</th>
+				<td>
+					<label>
+						<input value='1' <?php checked( '1', get_option( 'wpsc_ga_advanced' ) ); ?> type='checkbox' name='wpsc_ga_advanced' />
+						<?php _e( 'Enable Advanced Mode', 'wpsc' ); ?>
+					</label>
+					<p class='description'><?php _e( 'By default, we insert the multiple-domain asynchronous tracking code.  This should be fine for 99% of users.  If you need to fine-tune it, select the Advanced option.  Then, instead of simply entering your tracking ID, you will enter the enter tracking code from Google Analytics into the header.php file of your theme.', 'wpsc' ); ?></p>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<?php _ex( 'Google Analytics Tracking ID', 'google analytics', 'wpsc' ); ?>
+				</th>
+				<td>
+					<input value="<?php echo esc_attr( get_option( 'wpsc_ga_tracking_id' ) ); ?>" type='text' name='wpsc_ga_tracking_id' />
+					<span class='description'><?php _e( 'e.g. <code>UA-XXXXX-Y</code>', 'wpsc' ); ?></span>
+				</td>
+			</tr>
+		</table>
+		<?php
+	}
+
 }
