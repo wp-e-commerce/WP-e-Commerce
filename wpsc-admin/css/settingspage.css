@@ -30,6 +30,13 @@ th.column-unique_name {
 	width:150px;
 }
 
+#wpsc_imported_columns ol {
+	margin-top: 0;
+}
+#wpsc_imported_columns .empty {
+	color: #999;
+}
+
 #checkout_message{
 	display: none;
 }

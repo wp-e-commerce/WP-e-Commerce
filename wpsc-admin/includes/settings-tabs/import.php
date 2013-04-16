@@ -38,13 +38,25 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 			$this->reset_state();
 			return;
 		}
+		$rows = array();
+		while ( count($rows) < 5 && ( $data = fgetcsv($handle) ) !== FALSE ) {
+        	array_push( $rows, $data );
+		}
 
-		$first_row = @fgetcsv( $handle );
+		$sample_row_data = array();
+		foreach ( $rows as $row => $columns ) {
+			foreach ( $columns as $column => $data ) {
+				if ( ! isset( $sample_row_data[$column] ) )
+					$sample_row_data[$column] = array();
+				array_push( $sample_row_data[$column], $data );
+			}
+		}
+
 		$categories = get_terms( 'wpsc_product_category', 'hide_empty=0' );
 
 		$this->display_data = array(
-			'columns'    => $first_row,
-			'categories' => $categories,
+			'sample_row_data'    => $sample_row_data,
+			'categories'         => $categories,
 		);
 	}
 
@@ -67,6 +79,8 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 
 		$column_map = array_flip( $_POST['value_name'] );
 		extract( $column_map, EXTR_SKIP );
+
+		$record_count = 0;
 
 		while ( $row = @fgetcsv( $handle, $length, ',' ) ) {
 			$product = array(
@@ -108,12 +122,15 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 			// status needs to be set here because wpsc_sanitise_product_forms overwrites it :/
 			$product['post_status'] = $_POST['post_status'];
 			$product_id = wpsc_insert_product( $product );
-			wp_set_object_terms( $product_id , array( (int)$_POST['category'] ) , 'wpsc_product_category' );
+			if ( (int)$_POST['category'] > 0 ) {
+				wp_set_object_terms( $product_id , array( (int)$_POST['category'] ) , 'wpsc_product_category' );
+			}
+			$record_count += 1;
 		}
 
 		$this->reset_state();
 		$this->completed = true;
-		add_settings_error( 'wpsc-settings', 'settings_updated', __( 'CSV file imported.', 'wpsc' ), 'updated' );
+		add_settings_error( 'wpsc-settings', 'settings_updated', sprintf( __( 'CSV file successfully processed. %s record(s) imported.', 'wpsc' ), $record_count ), 'updated' );
 	}
 
 	public function callback_submit_options() {
@@ -137,73 +154,156 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 	private function display_imported_columns() {
 		extract( $this->display_data );
 		?>
-			<p><?php esc_html_e( 'For each column, select the field it corresponds to in \'Belongs to\'. You can upload as many products as you like.', 'wpsc' ); ?></p>
-			<div class='metabox-holder' style='width:90%'>
-				<div style='width:100%;' class='postbox'>
-					<h3 class='hndle'><?php esc_html_e( 'Product Status' , 'wpsc' ); ?></h3>
-					<div class='inside'>
-						<table>
-							<tr>
-								<td style='width:80%;'>
-									<?php esc_html_e( 'Select if you would like to import your products in as Drafts or Publish them right away.' , 'wpsc' ); ?>
-									<br />
-								</td>
-								<td>
-									<select name='post_status'>
-										<option value='publish'><?php esc_html_e( 'Publish', 'wpsc' ); ?></option>
-										<option value='draft'  ><?php esc_html_e( 'Draft'  , 'wpsc' ); ?></option>
+			<h3 class='hndle'><?php esc_html_e( 'Assign CSV Columns to Product Fields', 'wpsc'); ?></h3>
+			<p><?php esc_html_e( 'For each column, select the field it corresponds to in \'Product Field\'.', 'wpsc' ); ?></p>
+			<p><?php esc_html_e( 'Note: In this view we only show sample data from the first 5 records. All records in the uploaded import file will actually be imported.', 'wpsc' ); ?></p>
+			<table class='wp-list-table widefat plugins' id="wpsc_imported_columns">
+				<thead>
+					<tr>
+						<th scope="col" class="manage-column"><?php _e( 'Column', 'wpsc' ); ?></th>
+						<th scope="col" class="manage-column"><?php _e( 'Sample Data from Column', 'wpsc' ); ?></th>
+						<th scope="col" class="manage-column"><?php _e( 'Product Field', 'wpsc' ); ?></th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php foreach ( $sample_row_data as $key => $sample_data ): ?>
+						<tr>
+							<td>
+								<p><?php printf( __('Column %s', 'wpsc' ), $this->num_to_alphacolumn( $key ) ); ?></p>
+							</td>
+							<td>
+								<ol>
+								<?php foreach ($sample_data as $datum) : ?>
+									<li>
+										<?php if ( $datum != "" ): ?>
+											<code><?php echo esc_html( $datum ); ?></code>
+										<?php else: ?>
+											<?php _e( '<em class="empty">empty</em>', 'wpsc' ); ?>
+										<?php endif; ?>
+									</li>
+								<?php endforeach; ?>
+								</ol>
+							</td>
+							<td>
+								<p>
+									<select  name='value_name[<?php echo $key; ?>]'>
+										<option <?php selected( $key, 0 ); ?> value='column_name'                  ><?php esc_html_e( 'Product Name'          , 'wpsc' ); ?></option>
+										<option <?php selected( $key, 1 ); ?> value='column_description'           ><?php esc_html_e( 'Description'           , 'wpsc' ); ?></option>
+										<option <?php selected( $key, 2 ); ?> value='column_additional_description'><?php esc_html_e( 'Additional Description', 'wpsc' ); ?></option>
+										<option <?php selected( $key, 3 ); ?> value='column_price'                 ><?php esc_html_e( 'Price'                 , 'wpsc' ); ?></option>
+										<option <?php selected( $key, 4 ); ?> value='column_sku'                   ><?php esc_html_e( 'SKU'                   , 'wpsc' ); ?></option>
+										<option <?php selected( $key, 5 ); ?> value='column_weight'                ><?php esc_html_e( 'Weight'                , 'wpsc' ); ?></option>
+										<option <?php selected( $key, 6 ); ?> value='column_weight_unit'           ><?php esc_html_e( 'Weight Unit'           , 'wpsc' ); ?></option>
+										<option <?php selected( $key, 7 ); ?> value='column_quantity'              ><?php esc_html_e( 'Stock Quantity'        , 'wpsc' ); ?></option>
+										<option <?php selected( $key, 8 ); ?> value='column_quantity_limited'      ><?php esc_html_e( 'Stock Quantity Limit'  , 'wpsc' ); ?></option>
 									</select>
-								</td>
-							</tr>
-						</table>
-					</div>
-				</div>
-				<?php foreach ( $columns as $key => $datum ): ?>
-					<div style='width:100%;' class='postbox'>
-						<h3 class='hndle'><?php printf( __('Column (%s)', 'wpsc' ), ( $key + 1 ) ); ?></h3>
-						<div class='inside'>
-							<table>
-								<tr>
-									<td style='width:80%;'>
-										<?php echo $datum; ?>
-										<br />
-									</td>
-									<td>
-										<select  name='value_name[<?php echo $key; ?>]'>
-											<option <?php selected( $key, 0 ); ?> value='column_name'                  ><?php esc_html_e( 'Product Name'          , 'wpsc' ); ?></option>
-											<option <?php selected( $key, 1 ); ?> value='column_description'           ><?php esc_html_e( 'Description'           , 'wpsc' ); ?></option>
-											<option <?php selected( $key, 2 ); ?> value='column_additional_description'><?php esc_html_e( 'Additional Description', 'wpsc' ); ?></option>
-											<option <?php selected( $key, 3 ); ?> value='column_price'                 ><?php esc_html_e( 'Price'                 , 'wpsc' ); ?></option>
-											<option <?php selected( $key, 4 ); ?> value='column_sku'                   ><?php esc_html_e( 'SKU'                   , 'wpsc' ); ?></option>
-											<option <?php selected( $key, 5 ); ?> value='column_weight'                ><?php esc_html_e( 'Weight'                , 'wpsc' ); ?></option>
-											<option <?php selected( $key, 6 ); ?> value='column_weight_unit'           ><?php esc_html_e( 'Weight Unit'           , 'wpsc' ); ?></option>
-											<option <?php selected( $key, 7 ); ?> value='column_quantity'              ><?php esc_html_e( 'Stock Quantity'        , 'wpsc' ); ?></option>
-											<option <?php selected( $key, 8 ); ?> value='column_quantity_limited'      ><?php esc_html_e( 'Stock Quantity Limit'  , 'wpsc' ); ?></option>
-										</select>
-									</td>
-								</tr>
-							</table>
-						</div>
-					</div>
-				<?php endforeach; ?>
-				<label for='category'><?php esc_html_e( 'Please select a category you would like to place all products from this CSV into' , 'wpsc' ); ?>:</label>
-				<select id='category' name='category'>
-					<?php foreach ( $categories as $category ): ?>
-						<option value="<?php echo $category->term_id; ?>"><?php echo esc_html( $category->name ); ?></option>
+								</p>
+							</td>
+						</tr>
 					<?php endforeach; ?>
-				</select>
-				<input type="hidden" name="step" value="3" />
-				<input type='submit' value='<?php echo esc_html_x( 'Continue', 'import csv', 'wpsc' ); ?>' class='button-primary'>
-			</div>
+				</tbody>
+			</table>
+			<h3><?php esc_html_e( 'Import Options', 'wpsc' ); ?></h3>
+			<table class='form-table'>
+				<tr>
+					<th>
+						<label for='post_status'><?php esc_html_e( 'Product Status' , 'wpsc' ); ?>
+					</th>
+					<td>
+						<select name='post_status' id='post_status'>
+							<option value='publish'><?php esc_html_e( 'Publish', 'wpsc' ); ?></option>
+							<option value='draft'  ><?php esc_html_e( 'Draft'  , 'wpsc' ); ?></option>
+						</select>
+						<p class="description">
+							<?php esc_html_e( 'Set your imported products as drafts, or publish them right away.' , 'wpsc' ); ?>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<th><label for="category"><?php esc_html_e( 'Import to Category', 'wpsc' ); ?></label></th>
+					<td>
+						<select id='category' name='category'>
+							<option value=""><?php esc_html_e( "No Category", 'wpsc' ); ?></option>
+							<?php foreach ( $categories as $category ): ?>
+								<option value="<?php echo $category->term_id; ?>"><?php echo esc_html( $category->name ); ?></option>
+							<?php endforeach; ?>
+						</select>
+						<p class="description">
+							<?php esc_html_e( 'Products imported from this CSV file will be placed in the selected category.', 'wpsc' ); ?></p>
+						</p>
+					</td>
+				</tr>
+			</table>
+			<input type="hidden" name="step" value="3" />
+			<input type='submit' value='<?php echo esc_html_x( 'Import Products', 'import csv', 'wpsc' ); ?>' class='button-primary'>
+
 		<?php
+	}
+
+	private function num_to_alphacolumn($n) {
+		// from http://stackoverflow.com/questions/3302857/algorithm-to-get-the-excel-like-column-name-of-a-number
+    	for( $r = ""; $n >= 0; $n = intval( $n / 26 ) - 1 )
+        	$r = chr( $n % 26 + 0x41) . $r;
+    	return $r;
 	}
 
 	private function display_default() {
 		extract( $this->display_data );
 		?>
-			<?php _e( '<p>You can import your products from a comma delimited text file.</p><p>An example of a csv import file would look like this: </p><p>Description, Additional Description, Product Name, Price, SKU, weight, weight unit, stock quantity, is limited quantity</p>', 'wpsc' ); ?>
-			<input type='file' name='csv_file' />
+			<h3><?php _e( 'Import Products', 'wpsc' ); ?></h3>
+			<p><?php _e( 'You can import your products from a <a href="http://en.wikipedia.org/wiki/Comma-separated_values"><abbr title="Comma-separated values">CSV</abbr> (Comma-separated values) file</a>, exportable from most spread-sheet programs or other software.</p>', 'wpsc' ); ?></p>
+
+			<h4><?php _e( 'Import New Products from CSV', 'wpsc' ); ?></h4>
+			<table class='form-table'>
+				<tr>
+					<th><label for='wpsc_csv_file'><?php _e( 'CSV File', 'wpsc' ); ?><label></th>
+					<td>
+						<input type='file' name='csv_file' id='wpsc_csv_file' />
+					</td>
+				</tr>
+			</table>
 			<?php submit_button( esc_html_x( 'Upload', 'import csv', 'wpsc' ) ); ?>
+
+			<h4><?php _e( 'Useful Information', 'wpsc' ); ?></h4>
+			<table class='form-table'>
+				<tr>
+					<th><?php echo _e( 'Supported Fields', 'wpsc' ); ?></th>
+					<td>
+						<?php _e( 'Columns supported are, in their default order:', 'wpsc'); ?><br />
+						<code>
+							<?php _e( 'Product Name, Description, Additional Description, Price, SKU, Weight, Weight Unit, Stock Quantity, Stock Quantity Limited', 'wpsc' ); ?>
+						</code>
+					</td>
+				</tr>
+				<tr>
+					<th><?php _e( 'Understood Weight Units', 'wpsc' ); ?></th>
+					<td>
+						<?php _e( 'Metric', 'wpsc' ); ?>: <code>kilogram</code>,<code>kilograms</code>,<code>kg</code>,<code>kgs</code>,<code>gram</code>,<code>grams</code>,<code>g</code>,<code>gs</code><br />
+						<?php _e( 'Imperial', 'wpsc' ); ?>: <code>ounce</code>,<code>once</code>,<code>ounces</code>,<code>oz</code>,<code>pound</code>,<code>pounds</code>,<code>lb</code>,<code>lbs</code>
+					</td>
+				</tr>
+				<tr>
+					<th><?php _e( 'Stock Fields', 'wpsc' ); ?></th>
+					<td>
+						<?php _e( '<code>Stock Quantity</code> values are used only when <code>Stock Quantity Limited</code> is blank or <code>""</code>.', 'wpsc' ); ?>
+					</td>
+				</tr>
+				<tr>
+					<th><?php _e( 'HTML', 'wpsc' ); ?></th>
+					<td>
+						<?php _e( 'Supported in <code>Description</code> and <code>Additional Description</code>. Be sure you "quote" the whole description, and slash-escape \"quotes\" inside the description itself.', 'wpsc' ); ?>
+				</tr>
+				<tr>
+					<th><?php _e( 'Example CSV File'); ?></th>
+					<td>
+						<ol>
+							<li><code><?php esc_html_e( 'Banana, The Yellow Fruit, Contains Potassium, 0.67, "BANANA", 150, "g", 0, ""', 'wpsc' ); ?></code></li>
+							<li><code><?php esc_html_e( '"Apple, red", "Red, round, juicy. Isn\'t an <a href=\"http://example.com\">orange</a>.", "Red Delicious", 0.25, "RED_DELICIOUS", 5, "oz", 10, true', 'wpsc' ); ?></code></li>
+						</ol>
+					</td>
+				</tr>
+			</table>
+
 		<?php
 	}
 
