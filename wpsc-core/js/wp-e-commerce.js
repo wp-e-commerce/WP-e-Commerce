@@ -1,4 +1,3 @@
-
 	function wpsc_shipping_same_as_billing(){
 		var billing_state_input = jQuery('input[title="billingstate"]');
 		jQuery('#shippingsameasbillingmessage').slideDown('slow');
@@ -236,7 +235,7 @@ jQuery(document).ready(function ($) {
 			if(jQuery('#fancy_notification').length == 0) {
 				jQuery('div.wpsc_loading_animation',this).css('visibility', 'visible');
 			}
-			jQuery.post( 'index.php?ajax=true', form_values, function(returned_data) {
+			jQuery.post( './?ajax=true', form_values, function(returned_data) {
 				eval(returned_data);
 				jQuery('div.wpsc_loading_animation').css('visibility', 'hidden');
 
@@ -285,7 +284,7 @@ jQuery(document).ready(function ($) {
 			return;
 		var prod_id = jQuery("input[name='product_id']",parent_form).val();
 		var form_values =jQuery("input[name='product_id'], .wpsc_select_variation",parent_form).serialize( );
-		jQuery.post( 'index.php?update_product_price=true', form_values, function(response) {
+		jQuery.post( './?update_product_price=true', form_values, function(response) {
 			var stock_display = jQuery('div#stock_display_' + prod_id),
 				price_field = jQuery('input#product_price_' + prod_id),
 				price_span = jQuery('#product_price_' + prod_id + '.pricedisplay, #product_price_' + prod_id + ' .currentprice'),
@@ -334,7 +333,7 @@ jQuery(document).ready(function ($) {
 	// Ajax cart loading code.
 	jQuery("div.wpsc_cart_loading").livequery(function(){
 		form_values = "ajax=true"
-		jQuery.post( 'index.php?wpsc_ajax_action=get_cart', form_values, function(returned_data) {
+		jQuery.post( './?wpsc_ajax_action=get_cart', form_values, function(returned_data) {
 			eval(returned_data);
 		});
 	});
@@ -348,7 +347,7 @@ jQuery(document).ready(function ($) {
 		jQuery(this).submit(function() {
 			form_values = "ajax=true&";
 			form_values += jQuery(this).serialize();
-			jQuery.post( 'index.php', form_values, function(returned_data) {
+			jQuery.post( './', form_values, function(returned_data) {
 				eval(returned_data);
 			});
 			return false;
