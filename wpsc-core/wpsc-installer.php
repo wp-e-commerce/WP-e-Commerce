@@ -142,6 +142,7 @@ function wpsc_install() {
 	add_option( 'do_not_use_shipping', '1', '', 'yes' );
 
 	add_option( 'postage_and_packaging', '0','', 'yes' );
+    add_option( 'shipwire', '0', '', 'yes' );
 
 	add_option( 'purch_log_email', '', '', 'yes' );
 	add_option( 'return_email', '', '', 'yes' );
