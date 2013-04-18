@@ -270,7 +270,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 			</td>
 			<td class="namecol">
 				<div class="cell-wrapper">
-					<input type="text" name="new_field_name[<?php echo $new_field_id; ?>]" value="" />
+					<input type="text" name="new_field_name[<?php echo $new_field_id; ?>]" value="" /><br />
 					<a class="edit-options" href="#"><?php esc_html_e( 'Edit Options', 'wpsc' ); ?></a>
 				</div>
 			</td>
@@ -441,7 +441,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 					<?php $this->prototype_field( 'new' ); ?>
 				<?php else: ?>
 					<?php foreach ( $this->form_fields as $form_field ): ?>
-						<tr data-field-id="<?php echo esc_attr( $form_field->id ); ?>" id="checkout_<?php echo esc_attr( $form_field->id ); ?>" class="checkout_form_field">
+						<tr data-field-id="<?php echo esc_attr( $form_field->id ); ?>" data-field-type="<?php echo $form_field->type; ?>" id="checkout_<?php echo esc_attr( $form_field->id ); ?>" class="checkout_form_field field_type_<?php echo $form_field->type; ?>">
 							<td class="drag">
 								<div class="cell-wrapper">
 									<a title="<?php esc_attr_e( 'Click and Drag to Order Checkout Fields', 'wpsc' ); ?>">

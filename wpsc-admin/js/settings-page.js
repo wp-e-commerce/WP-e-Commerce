@@ -377,6 +377,7 @@
 			var t = $(this),
 				target_row = t.closest('tr'),
 				id = target_row.data('field-id'),
+				type = target_row.data('field-type'),
 				link = target_row.find('.edit-options'),
 				options_row_id = 'wpsc-field-edit-options-' + id;
 
@@ -384,7 +385,11 @@
 				id = target_row.data('new-field-id');
 				options_row_id = 'wpsc-new-field-edit-options-' + id;
 			}
-
+			target_row
+				.removeClass('field_type_'+type)
+				.addClass('field_type_'+t.val())
+				.data('field-type', t.val());
+			type = t.val();
 			if ($.inArray(t.val(), ['select', 'radio', 'checkbox']) !== -1) {
 				link.show();
 			} else {
