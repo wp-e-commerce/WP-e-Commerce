@@ -12,9 +12,6 @@ th#actions{
 th#drag{
 	width:50px;
 }
-th#name {
-	width:205px;
-}
 tr.wpsc_grey{
 	background-color: #ededed;
 }
@@ -22,12 +19,28 @@ td.drag a:hover{
 	cursor: move;
 }
 
-th.column-type{
-	width:150px;
+th.column-type {
+	width: 9em;
+}
+#wpsc_checkout_list th.column-type {
+	width: 9em;
 }
 
 th.column-unique_name {
-	width:150px;
+	width: 9em;
+}
+
+th.column-mandatory, th.column-display {
+	width: 6em;
+}
+
+.widefat th.column-mandatory, td.mandatorycol, .widefat th.column-display, td.displaycol, .widefat th.column-trash, td.trashcol {
+	text-align:center;
+	vertical-align: top
+}
+
+#wpsc_checkout_list td.typecol select {
+	width: 100%;
 }
 
 #checkout_message{
@@ -55,16 +68,12 @@ td.drag a img {
 	margin-left:4px;
 }
 
-th.column-mandatory, th.column-display {
-	width: 101px;
-}
-
-.widefat th.column-mandatory, td.mandatorycol, .widefat th.column-display, td.displaycol, .widefat th.column-trash, td.trashcol {
-	text-align:center;
-}
-
 #wpsc_checkout_list .ui-sortable-helper {
 	margin-left:0;
+}
+
+#wpsc_checkout_list .namecol input {
+	width: 98%;
 }
 
 #wpsc_checkout_list .actionscol .cell-wrapper {
@@ -367,7 +376,7 @@ a.nav-tab-loading {
 }
 
 .js #wpsc_checkout_list .edit-options {
-	display:none;
+	display: none;
 }
 
 .js .form-field-options {
@@ -383,7 +392,7 @@ a.nav-tab-loading {
 }
 
 #wpsc_checkout_list .wpsc-field-options-table td .field-option-cell-wrapper {
-	padding:7px 0;
+	padding: 2px 0;
 }
 
 #wpsc_checkout_list .wpsc-field-options-table .column-actions {

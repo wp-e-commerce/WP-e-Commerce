@@ -271,7 +271,6 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 			<td class="namecol">
 				<div class="cell-wrapper">
 					<input type="text" name="new_field_name[<?php echo $new_field_id; ?>]" value="" /><br />
-					<a class="edit-options" href="#"><?php esc_html_e( 'Edit Options', 'wpsc' ); ?></a>
 				</div>
 			</td>
 			<td class="typecol">
@@ -286,6 +285,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 				</div>
 			</td>
 			<td class="uniquenamecol">
+				<a class="edit-options" href="#"><?php esc_html_e( 'Edit Options', 'wpsc' ); ?></a>
 			</td>
 			<td class="displaycol">
 				<div class="cell-wrapper">
@@ -353,53 +353,44 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 		do_action( 'wpsc_checkout_form_fields_page' );
 		?>
 
-		<div class='metabox-holder' style='width:95%;'>
-			<div class='postbox'>
-				<input type='hidden' name='checkout_submits' value='true' />
-				<h3 class='hndle'><?php esc_html_e( 'Misc Checkout Options' , 'wpsc' ); ?></h3>
-				<div class='inside'>
-					<table>
-						<tr>
-							<td><?php esc_html_e('Users must register before checking out', 'wpsc'); ?>:</td>
-							<td>
-							<input type='radio' value='1' name='wpsc_options[require_register]' id='require_register1' <?php checked( $this->require_register, 1 ); ?> />
-							<label for='require_register1'><?php _e( 'Yes', 'wpsc' );?></label> &nbsp;
-							<input type='radio' value='0' name='wpsc_options[require_register]' id='require_register2' <?php checked( $this->require_register, 0 ); ?> />
-							<label for='require_register2'><?php _e( 'No', 'wpsc' );?></label>
-							</td>
-							<td>
-							<a title='<?php esc_attr_e( 'If yes then you must also turn on the wordpress option "Any one can register"', 'wpsc' ); ?>' class='flag_email' href='#' ><img src='<?php echo WPSC_CORE_IMAGES_URL; ?>/help.png' alt='' /> </a>
-							</td>
-						</tr>
+		<input type='hidden' name='checkout_submits' value='true' />
+		<h3><?php esc_html_e( 'Checkout Settings' , 'wpsc' ); ?></h3>
+		<table class='form-table'>
+			<tr>
+				<th scope="row"><?php esc_html_e('Force User Registration', 'wpsc'); ?></th>
+				<td>
+					<input type='radio' value='0' name='wpsc_options[require_register]' id='require_register2' <?php checked( $this->require_register, 0 ); ?> />
+					<label for='require_register2'><?php _e( 'Users can checkout without a user account', 'wpsc' );?></label><br />
+					<input type='radio' value='1' name='wpsc_options[require_register]' id='require_register1' <?php checked( $this->require_register, 1 ); ?> />
+					<label for='require_register1'><?php _e( 'Users must register before checking out', 'wpsc' );?></label>
+					<p class='description'><?php esc_attr_e( 'If users must register, you must also turn on "Membership: Anyone can register" from within WordPress Settings &gt; General', 'wpsc' ); ?></p>
+				</td>
+			</tr>
 
-						<tr>
-							<td scope="row"><?php esc_html_e('Enable Shipping Same as Billing Option', 'wpsc' ); ?>:</td>
-							<td>
-								<input type='radio' value='1' name='wpsc_options[shippingsameasbilling]' id='shippingsameasbilling1' <?php checked( $this->shipping_same_as_billing, 1 ); ?> />
-								<label for='shippingsameasbilling1'><?php _e( 'Yes', 'wpsc' );?></label> &nbsp;
-								<input type='radio' value='0' name='wpsc_options[shippingsameasbilling]' id='shippingsameasbilling2' <?php checked( $this->shipping_same_as_billing, 0 ); ?> />
-								<label for='shippingsameasbilling2'><?php _e( 'No', 'wpsc' );?></label>
-							</td>
-						</tr>
-						<tr>
-							<td><?php _e('Force users to use SSL', 'wpsc'); ?>:</td>
-							<td>
-								<input type='radio' value='1' name='wpsc_options[wpsc_force_ssl]' id='wpsc_force_ssl1' <?php checked( $this->force_ssl, 1 ); ?> />
-								<label for='wpsc_force_ssl1'><?php _e( 'Yes', 'wpsc' );?></label> &nbsp;
-								<input type='radio' value='0' name='wpsc_options[wpsc_force_ssl]' id='wpsc_force_ssl2' <?php checked( $this->force_ssl, 0 ); ?> />
-								<label for='wpsc_force_ssl2'><?php _e( 'No', 'wpsc' );?></label>
-							</td>
-							<td>
-								<a title='<?php esc_html_e( 'This can cause warnings for your users if you do not have a properly configured SSL certificate', 'wpsc' );?>' class='flag_email' href='#' ><img src='<?php echo WPSC_CORE_IMAGES_URL; ?>/help.png' alt='' /> </a>
-							</td>
-						</tr>
-					</table>
-				</div>
-			</div>
-		</div>
+			<tr>
+				<th scope="row"><?php esc_html_e('Shipping Same as Billing', 'wpsc' ); ?></th>
+				<td>
+					<input type='radio' value='1' name='wpsc_options[shippingsameasbilling]' id='shippingsameasbilling1' <?php checked( $this->shipping_same_as_billing, 1 ); ?> />
+					<label for='shippingsameasbilling1'><?php _e( 'Enable "Same as billing address" checkbox with Shipping Address fields', 'wpsc' );?></label><br />
+					<input type='radio' value='0' name='wpsc_options[shippingsameasbilling]' id='shippingsameasbilling2' <?php checked( $this->shipping_same_as_billing, 0 ); ?> />
+					<label for='shippingsameasbilling2'><?php _e( 'Users must re-enter Shipping Address', 'wpsc' );?></label>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><?php _e('Security and Encryption', 'wpsc'); ?></th>
+				<td>
+					<input type='radio' value='1' name='wpsc_options[wpsc_force_ssl]' id='wpsc_force_ssl1' <?php checked( $this->force_ssl, 1 ); ?> />
+					<label for='wpsc_force_ssl1'><?php _e( 'Force users to use SSL Encryption', 'wpsc' );?></label><br />
+					<input type='radio' value='0' name='wpsc_options[wpsc_force_ssl]' id='wpsc_force_ssl2' <?php checked( $this->force_ssl, 0 ); ?> />
+					<label for='wpsc_force_ssl2'><?php _e( 'Allow site to be used insecurely and unencrypted', 'wpsc' );?></label>
+					<p class='description'><?php esc_html_e( 'This can cause warnings for your users if you do not have a properly configured SSL certificate', 'wpsc' );?></p>
+				</td>
+			</tr>
+		</table>
 
-		<h3><?php esc_html_e( 'Form Fields', 'wpsc' ); ?></h3>
-		<p><?php esc_html_e( 'Here you can customise the forms to be displayed in your checkout page. The checkout page is where you collect important user information that will show up in your purchase logs i.e. the buyers address, and name...', 'wpsc' );?></p>
+
+		<h3><?php esc_html_e( 'Checkout Form Fields', 'wpsc' ); ?></h3>
+		<p><?php esc_html_e( 'Here you can customise the forms to be displayed in your checkout page. The checkout page is where you collect important user information that will show up in your purchase logs i.e. the buyer\'s address, and name...', 'wpsc' );?></p>
 
 		<p>
 			<label for='wpsc_form_set'><?php esc_html_e( 'Select a Form Set' , 'wpsc' ); ?>:</label>
@@ -441,6 +432,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 					<?php $this->prototype_field( 'new' ); ?>
 				<?php else: ?>
 					<?php foreach ( $this->form_fields as $form_field ): ?>
+
 						<tr data-field-id="<?php echo esc_attr( $form_field->id ); ?>" data-field-type="<?php echo $form_field->type; ?>" id="checkout_<?php echo esc_attr( $form_field->id ); ?>" class="checkout_form_field field_type_<?php echo $form_field->type; ?>">
 							<td class="drag">
 								<div class="cell-wrapper">
@@ -453,13 +445,6 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 							<td class="namecol">
 								<div class="cell-wrapper">
 									<input type="text" name="form_name[<?php echo esc_attr( $form_field->id ); ?>]" value="<?php echo esc_attr( $form_field->name ); ?>" />
-									<a
-										class="edit-options" href="#"
-										<?php
-											if ( in_array( $form_field->type, array( 'select', 'radio', 'checkbox' ) ) )
-												echo 'style="display:inline;"';
-										?>
-									><?php esc_html_e( 'Edit Options', 'wpsc' ); ?></a>
 								</div>
 							</td>
 							<td class="typecol">
@@ -490,9 +475,16 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 
 							<td class="uniquenamecol">
 								<div class="cell-wrapper">
-								<?php if ( $form_field->type != 'heading' && ! empty( $form_field->unique_name ) ): ?>
-									<small><?php echo esc_html( $form_field->unique_name ); ?></small>
-								<?php endif ?>
+									<?php if ( $form_field->type != 'heading' && ! empty( $form_field->unique_name ) ): ?>
+										<small><?php echo esc_html( $form_field->unique_name ); ?></small>
+									<?php endif ?>
+									<?php
+										$style = '';
+										if ( in_array( $form_field->type, array( 'select', 'radio', 'checkbox' ) ) ) {
+											$style = 'style="display: inline;"';
+										}
+									?>
+									<a class="edit-options" href="#" <?php echo $style; ?> ><?php esc_html_e( 'Edit Options', 'wpsc' ); ?></a>
 								</div>
 							</td>
 							<td class="displaycol">
