@@ -1165,18 +1165,25 @@ ul.categorisation_links li{
 ul.categorisation_links li.selected a{
 	color: #D54E21;
 }
+.multiple-select-container {
+	margin-left: 0.5em;
+}
 
 .multiple-select {
 	background: white none repeat scroll 0px 0px;
 	border: 1px solid #DFDFDF;
 	display: inline-block;
 	height: 120px;
-	margin: 10px 0;
 	overflow-x: hidden;
 	overflow-y: auto;
-	padding: 0px;
+	padding: 0 0 0 5px;
 	position: relative;
-	width:98%
+}
+.multiple-select input {
+	width: inherit;
+}
+.multiple-select label {
+	display: inherit;
 }
 
 table.category_forms  a.delete_button {
