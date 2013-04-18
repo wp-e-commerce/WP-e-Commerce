@@ -18,7 +18,7 @@ function wpsc_ajax_set_variation_order(){
 
 		$value = preg_replace( '/[^0-9]/', '', $value );
 
-		if( !wpsc_update_meta( $value, 'sort_order', $key, 'wpsc_variation' ) )
+		if( ! wpsc_update_meta( $value, 'sort_order', $key, 'wpsc_variation' ) )
 			$result = false;
 	}
 }
@@ -38,13 +38,13 @@ function wpsc_ajax_set_category_order(){
 	$parent_id  = $_POST['parent_id'];
 
 	$result = true;
-	foreach( $sort_order as $key=>$value ){
+	foreach ( $sort_order as $key=>$value ){
 		if ( empty( $value ) )
 			continue;
 
 		$value = preg_replace( '/[^0-9]/', '', $value );
 
-		if( !wpsc_update_meta( $value, 'sort_order', $key, 'wpsc_category' ) )
+		if ( ! wpsc_update_meta( $value, 'sort_order', $key, 'wpsc_category' ) )
 			$result = false;
 	}
 }
@@ -91,8 +91,8 @@ function wpsc_custom_category_column_data( $string, $column_name, $term_id ) {
   $name = get_term_by( 'id', $term_id, 'wpsc_product_category' );
   $name = $name->name;
 
-  if( !empty( $image ) )
-	  $image = "<img src=\"".WPSC_CATEGORY_URL . $image . "\" title='" . esc_attr( $name ) . "' alt='" . esc_attr( $name ) . "' width='30' height='30' />";
+  if ( ! empty( $image ) )
+	  $image = "<img src='" . WPSC_CATEGORY_URL . $image . "' title='" . esc_attr( $name ) . "' alt='" . esc_attr( $name ) . "' width='30' height='30' />";
    else
 	  $image = "<img src='" . WPSC_CORE_IMAGES_URL . "/no-image-uploaded.gif' title='" . esc_attr( $name ) . "' alt='" . esc_attr( $name ) . "' width='30' height='30' />";
 
@@ -106,28 +106,36 @@ function wpsc_custom_category_column_data( $string, $column_name, $term_id ) {
  * for use in other list functions
  * @param int $parent_id
  */
-function wpsc_admin_get_category_array($parent_id = null){
-  global $wpdb;
-  $orderedList = array();
-  if(!isset($parent_id)) $parent_id = 0;
-  $category_list = get_terms('wpsc_product_category','hide_empty=0&parent='.$parent_id);
-  if(!is_array($category_list)){
-	return false;
-  }
-  foreach($category_list as $category){
-	$category_order = wpsc_get_categorymeta($category->term_id, 'order');
-	$category_image = wpsc_get_categorymeta($category->term_id, 'image');
-	if(!isset($category_order) || $category_order == 0) $category_order = (count($orderedList) +1);
-	print "<!-- setting category Order number to ".$category_order."-->";
-	$orderedList[$category_order]['id'] = $category->term_id;
-	$orderedList[$category_order]['name'] = $category->name;
-	$orderedList[$category_order]['image'] = $category_image;
-	$orderedList[$category_order]['parent_id'] = $parent_id;
-	$orderedList[$category_order]['children'] = wpsc_admin_get_category_array($category->term_id);
-  }
+function wpsc_admin_get_category_array( $parent_id = null ){
+	global $wpdb;
 
-  ksort($orderedList);
-  return($orderedList);
+	$orderedList = array();
+
+	if ( ! isset( $parent_id ) )
+		$parent_id = 0;
+
+	$category_list = get_terms( 'wpsc_product_category', 'hide_empty=0&parent=' . $parent_id );
+
+	if ( ! is_array( $category_list ) ) {
+		return false;
+	}
+
+	foreach ( $category_list as $category ) {
+		$category_order = wpsc_get_categorymeta( $category->term_id, 'order' );
+		$category_image = wpsc_get_categorymeta( $category->term_id, 'image' );
+
+		if ( ! isset( $category_order ) || $category_order == 0 )
+			$category_order = ( count( $orderedList ) + 1 );
+		print "<!-- setting category Order number to " . $category_order . "-->";
+		$orderedList[$category_order]['id'] = $category->term_id;
+		$orderedList[$category_order]['name'] = $category->name;
+		$orderedList[$category_order]['image'] = $category_image;
+		$orderedList[$category_order]['parent_id'] = $parent_id;
+		$orderedList[$category_order]['children'] = wpsc_admin_get_category_array( $category->term_id );
+	}
+
+	ksort( $orderedList );
+	return $orderedList;
 }
 
 /**
@@ -191,7 +199,7 @@ function wpsc_admin_category_forms_add() {
 	<h4><?php esc_html_e( 'Restrict to Target Markets', 'wpsc' )?></h4>
 	<div class='form-field'>
 		<?php if( @extension_loaded( 'suhosin' ) ) : ?>
-			<em> <?php esc_html__( "The Target Markets feature has been disabled because you have the Suhosin PHP extension installed on this server. If you need to use the Target Markets feature then disable the suhosin extension, if you can not do this, you will need to contact your hosting provider.", 'wpsc' ); ?></em>
+			<em><?php esc_html__( "The Target Markets feature has been disabled because you have the Suhosin PHP extension installed on this server. If you need to use the Target Markets feature then disable the suhosin extension, if you can not do this, you will need to contact your hosting provider.", 'wpsc' ); ?></em>
 		<?php else: ?>
 			<div class='multiple-select-container'>
 				<span><?php esc_html_e( 'Select', 'wpsc' ); ?> <a href='' class='wpsc_select_all'><?php esc_html_e( 'All', 'wpsc' ); ?></a>&nbsp; <a href='' class='wpsc_select_none'><?php esc_html_e( 'None', 'wpsc' ); ?></a></span><br />
@@ -216,7 +224,7 @@ function wpsc_admin_category_forms_add() {
 
 	<?php
 		if ( ! isset( $category['term_id'] ) ) $category['term_id'] = '';
-			$used_additonal_form_set = wpsc_get_categorymeta( $category['term_id'], 'use_additional_form_set' ); 
+			$used_additonal_form_set = wpsc_get_categorymeta( $category['term_id'], 'use_additional_form_set' );
 	?>
 	<div class='form-field'>
 		<label for="use_additional_form_set"><?php esc_html_e( 'Category requires additional checkout form fields', 'wpsc' ); ?></label>
@@ -251,7 +259,7 @@ function wpsc_admin_category_forms_add() {
 
 		</tr>
 	</table>
-  <?php
+	<?php
 }
 
 /**
@@ -275,18 +283,17 @@ function wpsc_admin_category_forms_edit() {
 	$category = array();
 
 	$category_id = absint( $_REQUEST["tag_ID"] );
-	$category = get_term($category_id, 'wpsc_product_category', ARRAY_A);
-	$category['nice-name'] = wpsc_get_categorymeta($category['term_id'], 'nice-name');
-	$category['description'] = wpsc_get_categorymeta($category['term_id'], 'description');
-	$category['image'] = wpsc_get_categorymeta($category['term_id'], 'image');
-	$category['fee'] = wpsc_get_categorymeta($category['term_id'], 'fee');
-	$category['active'] = wpsc_get_categorymeta($category['term_id'], 'active');
-	$category['order'] = wpsc_get_categorymeta($category['term_id'], 'order');
-	$category['display_type'] = wpsc_get_categorymeta($category['term_id'], 'display_type');
-	$category['image_height'] = wpsc_get_categorymeta($category['term_id'], 'image_height');
-	$category['image_width'] = wpsc_get_categorymeta($category['term_id'], 'image_width');
-	$category['use_additional_form_set'] = wpsc_get_categorymeta($category['term_id'], 'use_additional_form_set');
-
+	$category = get_term( $category_id, 'wpsc_product_category', ARRAY_A );
+	$category['nice-name']               = wpsc_get_categorymeta( $category['term_id'], 'nice-name' );
+	$category['description']             = wpsc_get_categorymeta( $category['term_id'], 'description' );
+	$category['image']                   = wpsc_get_categorymeta( $category['term_id'], 'image' );
+	$category['fee']                     = wpsc_get_categorymeta( $category['term_id'], 'fee' );
+	$category['active']                  = wpsc_get_categorymeta( $category['term_id'], 'active' );
+	$category['order']                   = wpsc_get_categorymeta( $category['term_id'], 'order' );
+	$category['display_type']            = wpsc_get_categorymeta( $category['term_id'], 'display_type' );
+	$category['image_height']            = wpsc_get_categorymeta( $category['term_id'], 'image_height' );
+	$category['image_width']             = wpsc_get_categorymeta( $category['term_id'], 'image_width' );
+	$category['use_additional_form_set'] = wpsc_get_categorymeta( $category['term_id'], 'use_additional_form_set' );
 
 	?>
 
@@ -324,14 +331,14 @@ function wpsc_admin_category_forms_edit() {
 				<span class="description"><?php esc_html_e( 'You can set an image for the category here.  If one exists, check the box to delete.', 'wpsc' ); ?></span>
 			</td>
 	</tr>
-	<?php if( function_exists( "getimagesize" ) ) : ?>
+	<?php if ( function_exists( "getimagesize" ) ) : ?>
 		<tr class="form-field">
 			<th scope="row" valign="top">
 				<label for="image"><?php esc_html_e( 'Thumbnail Size', 'wpsc' ); ?></label>
 			</th>
 			<td>
-				<?php esc_html_e( 'Width', 'wpsc' ); ?> <input type='text' class="wpsc_cat_image_size" value='<?php if (isset($category['image_width'])) echo $category['image_width']; ?>' name='image_width' size='6' />
-				<?php esc_html_e( 'Height', 'wpsc' ); ?> <input type='text' class="wpsc_cat_image_size" value='<?php if (isset($category['image_height'])) echo $category['image_height']; ?>' name='image_height' size='6' /><br/>
+				<?php esc_html_e( 'Width', 'wpsc' ); ?> <input type='text' class="wpsc_cat_image_size" value='<?php if ( isset( $category['image_width'] ) ) echo $category['image_width']; ?>' name='image_width' size='6' />
+				<?php esc_html_e( 'Height', 'wpsc' ); ?> <input type='text' class="wpsc_cat_image_size" value='<?php if ( isset( $category['image_height'] ) ) echo $category['image_height']; ?>' name='image_height' size='6' /><br/>
 			</td>
 		</tr>
 	<?php endif; // 'getimagesize' condition ?>
@@ -410,6 +417,7 @@ function wpsc_admin_category_forms_edit() {
 	<?php
 		if ( !isset( $category['term_id'] ) )
 			$category['term_id'] = '';
+
 		$used_additonal_form_set = wpsc_get_categorymeta( $category['term_id'], 'use_additional_form_set' );
 		$checkout_sets = get_option('wpsc_checkout_form_sets');
 		unset($checkout_sets[0]);
@@ -425,14 +433,14 @@ function wpsc_admin_category_forms_edit() {
 				<?php
 					foreach( (array) $checkout_sets as $key => $value ) {
 						$selected_state = "";
-						if( $used_additonal_form_set == $key )
+						if ( $used_additonal_form_set == $key ) {
 							$selected_state = "selected='selected'";
-				 ?>
-				<option <?php echo $selected_state; ?> value='<?php echo $key; ?>'><?php echo esc_html( $value ); ?></option>
-				<?php
+						} ?>
+						<option <?php echo $selected_state; ?> value='<?php echo $key; ?>'><?php echo esc_html( $value ); ?></option>
+						<?php
 					}
 				?>
-			</select><br />
+			</select>
 		</td>
 	</tr>
 
@@ -447,7 +455,7 @@ function wpsc_admin_category_forms_edit() {
 		</td>
 	</tr>
 
- 	<?php
+	<?php
 }
 
 /**
@@ -455,14 +463,14 @@ function wpsc_admin_category_forms_edit() {
  * @param nothing
  * @return nothing
  */
-function wpsc_save_category_set($category_id, $tt_id) {
+function wpsc_save_category_set( $category_id, $tt_id ) {
 	global $wpdb;
 
-	if( !empty( $_POST ) ) {
+	if ( ! empty( $_POST ) ) {
 		/* Image Processing Code*/
-		if( !empty( $_FILES['image'] ) && preg_match( "/\.(gif|jp(e)*g|png){1}$/i", $_FILES['image']['name'] ) ) {
-			if( function_exists( "getimagesize" ) ) {
-				if( isset( $_POST['width'] ) && ( (int) $_POST['width'] > 10 && (int) $_POST['width'] < 512 ) && ((int)$_POST['height'] > 10 && (int)$_POST['height'] < 512) ) {
+		if ( ! empty( $_FILES['image'] ) && preg_match( "/\.(gif|jp(e)*g|png){1}$/i", $_FILES['image']['name'] ) ) {
+			if ( function_exists( "getimagesize" ) ) {
+				if ( isset( $_POST['width'] ) && ( (int) $_POST['width'] > 10 && (int) $_POST['width'] < 512 ) && ( (int)$_POST['height'] > 10 && (int)$_POST['height'] < 512 ) ) {
 					$width = (int) $_POST['width'];
 					$height = (int) $_POST['height'];
 					image_processing( $_FILES['image']['tmp_name'], ( WPSC_CATEGORY_DIR.$_FILES['image']['name'] ), $width, $height, 'image' );
@@ -482,36 +490,36 @@ function wpsc_save_category_set($category_id, $tt_id) {
 			$image = '';
 		}
 		//Good to here
-		if( isset( $_POST['tag_ID'] ) ) {
+		if ( isset( $_POST['tag_ID'] ) ) {
 			//Editing
-			$category_id= $_POST['tag_ID'];
+			$category_id = $_POST['tag_ID'];
 			$category = get_term_by( 'id', $category_id, 'wpsc_product_category' );
-			$url_name=$category->slug;
+			$url_name = $category->slug;
 
 		}
-		if(isset($_POST['deleteimage']) && $_POST['deleteimage'] == 1) {
-			wpsc_delete_categorymeta($category_id, 'image');
-		} else if($image != '') {
-			wpsc_update_categorymeta($category_id, 'image', $image);
+		if ( isset( $_POST['deleteimage'] ) && $_POST['deleteimage'] == 1 ) {
+			wpsc_delete_categorymeta( $category_id, 'image' );
+		} else if ( $image != '' ) {
+			wpsc_update_categorymeta( $category_id, 'image', $image );
 		}
 
-		if ( !empty( $_POST['height'] ) && is_numeric( $_POST['height'] ) && !empty( $_POST['width'] ) && is_numeric( $_POST['width'] ) && $image == null ) {
-			$imagedata = wpsc_get_categorymeta($category_id, 'image');
-			if($imagedata != null) {
+		if ( ! empty( $_POST['height'] ) && is_numeric( $_POST['height'] ) && ! empty( $_POST['width'] ) && is_numeric( $_POST['width'] ) && $image == null ) {
+			$imagedata = wpsc_get_categorymeta( $category_id, 'image' );
+			if ( $imagedata != null ) {
 				$height = $_POST['height'];
 				$width = $_POST['width'];
 				$imagepath = WPSC_CATEGORY_DIR . $imagedata;
 				$image_output = WPSC_CATEGORY_DIR . $imagedata;
-				image_processing($imagepath, $image_output, $width, $height);
+				image_processing( $imagepath, $image_output, $width, $height );
 			}
 		}
 
-		wpsc_update_categorymeta($category_id, 'fee', '0');
-		wpsc_update_categorymeta($category_id, 'active', '1');
-		wpsc_update_categorymeta($category_id, 'order', '0');
+		wpsc_update_categorymeta( $category_id, 'fee', '0' );
+		wpsc_update_categorymeta( $category_id, 'active', '1' );
+		wpsc_update_categorymeta( $category_id, 'order', '0' );
 
 		if ( isset( $_POST['display_type'] ) )
-			wpsc_update_categorymeta($category_id, 'display_type',esc_sql(stripslashes($_POST['display_type'])));
+			wpsc_update_categorymeta( $category_id, 'display_type', esc_sql( stripslashes( $_POST['display_type'] ) ) );
 
 		if ( isset( $_POST['image_height'] ) )
 			wpsc_update_categorymeta( $category_id, 'image_height', absint( $_POST['image_height'] ) );
@@ -520,33 +528,33 @@ function wpsc_save_category_set($category_id, $tt_id) {
 			wpsc_update_categorymeta( $category_id, 'image_width', absint($_POST['image_width'] ) );
 
 		if ( ! empty( $_POST['use_additional_form_set'] ) ) {
-			wpsc_update_categorymeta($category_id, 'use_additional_form_set', $_POST['use_additional_form_set']);
+			wpsc_update_categorymeta( $category_id, 'use_additional_form_set', $_POST['use_additional_form_set'] );
 			//exit('<pre>'.print_r($_POST,1).'</pre>');
 		} else {
-			wpsc_delete_categorymeta($category_id, 'use_additional_form_set');
+			wpsc_delete_categorymeta( $category_id, 'use_additional_form_set' );
 		}
 
 		if ( ! empty( $_POST['uses_billing_address'] ) ) {
-			wpsc_update_categorymeta($category_id, 'uses_billing_address', 1);
+			wpsc_update_categorymeta( $category_id, 'uses_billing_address', 1 );
 			$uses_additional_forms = true;
 		} else {
-			wpsc_update_categorymeta($category_id, 'uses_billing_address', 0);
+			wpsc_update_categorymeta( $category_id, 'uses_billing_address', 0 );
 			$uses_additional_forms = false;
 		}
 
-		if( ! empty( $_POST['countrylist2'] ) && ($category_id > 0)){
+		if ( ! empty( $_POST['countrylist2'] ) && ( $category_id > 0 ) ) {
 			$AllSelected = false;
-			$countryList = $wpdb->get_col("SELECT `id` FROM  `".WPSC_TABLE_CURRENCY_LIST."`");
+			$countryList = $wpdb->get_col( "SELECT `id` FROM  `" . WPSC_TABLE_CURRENCY_LIST . "`" );
 
-			if($AllSelected != true){
-				$unselectedCountries = array_diff($countryList, $_POST['countrylist2']);
+			if ( $AllSelected != true ){
+				$unselectedCountries = array_diff( $countryList, $_POST['countrylist2'] );
 				//find the countries that are selected
-				$selectedCountries = array_intersect($countryList, $_POST['countrylist2']);
-				wpsc_update_categorymeta( $category_id,   'target_market', $selectedCountries);
+				$selectedCountries = array_intersect( $countryList, $_POST['countrylist2'] );
+				wpsc_update_categorymeta( $category_id, 'target_market', $selectedCountries );
 			}
 
-		} elseif ( ! isset($_POST['countrylist2'] ) ){
-			wpsc_update_categorymeta( $category_id,   'target_market','');
+		} elseif ( ! isset( $_POST['countrylist2'] ) ){
+			wpsc_update_categorymeta( $category_id,   'target_market', '' );
 			$AllSelected = true;
 		}
 
