@@ -162,6 +162,9 @@ table#form_field_table tr td.namecol{ }
 table#form_field_table tr *.namecol{ width: 170px; padding-right: 8px; }
 table#form_field_table tr *.namecol input{ width: 160px; }
 
+tr td.namecol{ padding-left: 2em; }
+tr.field_type_heading td.namecol { padding-left: 0; }
+
 table#form_field_table tr *.typecol{ width: 120px; }
 table#form_field_table tr *.typecol select{ width: 115px; }
 
