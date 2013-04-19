@@ -200,7 +200,7 @@ class WPSC_Settings_Tab_Taxes extends WPSC_Settings_Tab {
 		<div id='wpec-taxes-bands-container'>
 			<h3><?php esc_html_e( 'Tax Bands', 'wpsc' ); ?></h3>
 			<div id='wpec-taxes-bands'>
-				<p><?php _e( 'Note: Tax Bands are special tax rules you can create and apply on a per-product basis. <br /> Please visit the product page to apply your Tax Band.', 'wpsc' ); ?></p>
+				<p><?php _e( 'Note: Tax Bands are special tax rules you can create and apply on a per-product basis. Please visit the product page to apply your Tax Band.', 'wpsc' ); ?></p>
 				<?php
 					//echo message regarding inclusive tax
 					if ( !$wpec_taxes_controller->wpec_taxes_isincluded() ) {
