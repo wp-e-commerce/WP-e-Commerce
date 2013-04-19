@@ -422,3 +422,18 @@ table.form-table td .updated.shipwire-update {
 	font-size : 12px;
 	line-height : 1.6em;
 }
+
+/* tax */
+
+.wpec-taxes-form-field {
+	display: inline-block;
+	margin-right: 8px;
+}
+
+.wpec-taxes-form-field label {
+	margin-right: 5px;
+}
+
+.wpsc-tax-bands-row, .wpsc-tax-rates-row {
+	line-height: 3.2;
+}

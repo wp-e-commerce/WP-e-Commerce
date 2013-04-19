@@ -44,7 +44,7 @@ class wpec_taxes_controller {
 		global $wpsc_cart;
 
 		//initialize return variable
-		$returnable = array( 'total' => 0, 'rate' => 0);
+		$returnable = array( 'total' => 0, 'rate' => 0 );
 
 		//check if tax is enabled
 		if ( $this->wpec_taxes->wpec_taxes_get_enabled() ) {
@@ -195,7 +195,7 @@ class wpec_taxes_controller {
 		return $returnable;
 	} //wpec_taxes_calculate_included_tax
 
-	function wpec_taxes_retrieve_selected_country(){
+	function wpec_taxes_retrieve_selected_country() {
 		global $wpsc_cart;
 
 		switch ( $this->wpec_taxes->wpec_taxes_get_logic() ) {
@@ -429,12 +429,17 @@ class wpec_taxes_controller {
 			if ( $settings['type'] == 'checkbox' ) {
 				$returnable = '<label>' . $returnable . ' ' . $settings['label'] . '</label>';
 			} else {
-				$returnable = '<label for="' . $settings['id'] . '">' . $settings['label'] . '</label>' . $returnable;
+				$returnable = '<span class="wpec-taxes-form-field"><label for="' . $settings['id'] . '">' . $settings['label'] . '</label>' . $returnable;
 			}
 		}
 
-		if ( ! empty( $settings['description'] ) )
+		if ( ! empty( $settings['description'] ) ) {
 			$returnable .= '<br /><small>' . $settings['description'] . '</small>';
+		}
+
+		if ( $settings['type'] != 'hidden' ) {
+			$returnable = '<div class="wpec-taxes-form-field">' . $returnable . '</div>';
+		}
 
 		return $returnable;
 	} // wpec_taxes_build_input
@@ -452,7 +457,7 @@ class wpec_taxes_controller {
 	*                                      Example: array('id'=>'my-select-id', 'name'=>'my-name')
 	* @return: string
 	* */
-	function wpec_taxes_build_select_options( $input_array, $option_value, $option_text, $option_selected=false, $select_settings='' ) {
+	function wpec_taxes_build_select_options( $input_array, $option_value, $option_text, $option_selected = false, $select_settings = '' ) {
 		$returnable = '';
 		$options = '';
 		if ( empty( $input_array ) ) {
@@ -512,6 +517,8 @@ class wpec_taxes_controller {
 			}
 		}// if
 
+		$returnable = '<div class="wpec-taxes-form-field">' . $returnable . '</div>';
+
 		return $returnable;
 	} // wpec_taxes_get_select_options
 
@@ -532,7 +539,7 @@ class wpec_taxes_controller {
 	*                           Note: be sure to see the tax-settings page and taxes-functions
 	*                           pages to see where the types come into play.
 	* */
-	function wpec_taxes_build_form( $key=0, $tax_rate=false, $type='rates' ) {
+	function wpec_taxes_build_form( $key = 0, $tax_rate = false, $type = 'rates' ) {
 		//default settings
 		$country_select_settings = array(
 			'id' => "{$type}-country-{$key}",
@@ -639,7 +646,7 @@ class wpec_taxes_controller {
 
 		//build the rate form based on the information gathered
 		if ( $type == 'bands' ) {
-			$returnable[] = $this->wpec_taxes_build_input( $bands_input_settings ) . ''; //add a break for the html formatting
+			$returnable[] = $this->wpec_taxes_build_input( $bands_input_settings );
 			$returnable[] = $this->wpec_taxes_build_input( $bands_hidden_index );
 		}
 		$returnable[] = $this->wpec_taxes_build_input( $rate_input_settings );
@@ -652,7 +659,7 @@ class wpec_taxes_controller {
 		}
 		$returnable[] = "<a class='wpsc-taxes-{$type}-delete' id='wpsc-taxes-{$type}-delete-{$key}' href='#'>" . __( 'Delete', 'wpsc' ) . "</a>";
 		$returnable[] = '<img src="' . esc_url( admin_url( 'images/wpspin_light.gif' ) ) . '" class="ajax-feedback" title="" alt="" />';
-		$returnable = "<p id='wpsc-taxes-{$type}-row-{$key}' class='wpsc-tax-{$type}-row'>" . implode( "\n", $returnable ) . '</p>';
+		$returnable = "<div id='wpsc-taxes-{$type}-row-{$key}' class='wpsc-tax-{$type}-row'>" . implode( "\n", $returnable ) . '</div>';
 
       return $returnable;
    } // wpec_taxes_build_form
