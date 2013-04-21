@@ -344,8 +344,12 @@ function wpsc_display_purchlog_buyers_state_and_postcode() {
 
    $output = esc_html( $state );
 
-   if ( isset( $purchlogitem->userinfo['billingpostcode']['value'] ) )
-      $output .= ', ' . esc_html( $purchlogitem->userinfo['billingpostcode']['value'] );
+   if ( isset( $purchlogitem->userinfo['billingpostcode']['value'] ) && ! empty( $purchlogitem->userinfo['billingpostcode']['value'] ) ) {
+      if (! empty( $output ) ) {
+         $output .= ', ';
+      }
+      $output .= esc_html( $purchlogitem->userinfo['billingpostcode']['value'] );
+   }
 
    return $output;
 }
