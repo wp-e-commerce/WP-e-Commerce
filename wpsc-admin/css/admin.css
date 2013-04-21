@@ -203,7 +203,6 @@ th#status{
 #wpsc_shipping_details_box{
 	width:45%;
 	float:left;
-	border:1px #d3d3d3 solid;
 	margin:.4em;
 	padding:.6em;
 	margin-right:5em;
@@ -214,6 +213,12 @@ th#status{
 	margin:.4em;
 	padding:.6em;
 }
+
+#wpsc_shipping_details_box em.field-blank,
+#wpsc_billing_details_box em.field-blank {
+	color: #999;
+}
+
 #wpsc_purchlog_searchbox{
 	width:100%;
 	text-align:right;

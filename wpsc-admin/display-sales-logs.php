@@ -140,14 +140,18 @@ class WPSC_Purchase_Log_Page {
                   <?php
                   foreach( (array) $purchlogitem->additional_fields as $value ) {
                      $value['value'] = maybe_unserialize ($value['value'] );
-                     if( is_array( $value['value'] ) ) {
-                     ?>
-                        <p><strong><?php echo $value['name']; ?> :</strong> <?php echo implode( stripslashes( $value['value'] ), ',' ); ?></p>
-                     <?php
-                     }else{
-                     ?>
-                        <p><strong><?php echo $value['name']; ?> :</strong> <?php echo stripslashes( $value['value'] ); ?></p>
-                     <?php
+                     if ( is_array( $value['value'] ) ) {
+                        ?>
+                           <p><strong><?php echo $value['name']; ?> :</strong> <?php echo implode( stripslashes( $value['value'] ), ',' ); ?></p>
+                        <?php
+                     } else {
+                        $thevalue = esc_html(stripslashes( $value['value'] ));
+                        if ( $thevalue == "" ) {
+                           $thevalue = __( '<em>blank</em>', 'wpsc' );
+                        }
+                        ?>
+                           <p><strong><?php echo $value['name']; ?> :</strong> <?php echo $thevalue; ?></p>
+                        <?php
                      }
                   }
                   ?>
