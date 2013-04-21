@@ -719,11 +719,6 @@ function wpsc_submit_checkout( $collected_data = true ) {
 	}
 }
 
-function wpsc_show_terms_and_conditions() {
-	echo wpautop( wp_kses_post( get_option( 'terms_and_conditions' ) ) );
-	die();
-}
-
 /**
  * wpsc_change_tax function, used through ajax and in normal page loading.
  * No parameters, returns nothing

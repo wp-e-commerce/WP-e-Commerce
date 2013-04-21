@@ -13,26 +13,6 @@ function wpsc_cart_item_custom_message(){
 }
 
 /**
- * nzshpcrt_get_gateways()
- *
- * Deprecated function for returning the merchants global
- *
- * @global array $nzshpcrt_gateways
- * @return array
- */
-function nzshpcrt_get_gateways() {
-	_wpsc_deprecated_function( __FUNCTION__, '3.8' );
-
-	global $nzshpcrt_gateways;
-
-	if ( !is_array( $nzshpcrt_gateways ) )
-		wpsc_core_load_gateways();
-
-	return $nzshpcrt_gateways;
-
-}
-
-/**
  * wpsc_merchants_modules_deprecated()
  *
  * Deprecated function for merchants modules

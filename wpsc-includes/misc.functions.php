@@ -869,3 +869,24 @@ function wpsc_invalidate_max_purchase_id_transient () {
 
 add_action( 'wpsc_purchase_log_insert', 'wpsc_invalidate_max_purchase_id_transient' );
 add_action( 'wpsc_purchase_log_delete', 'wpsc_invalidate_max_purchase_id_transient' );
+
+/** Checks to see whether terms and conditions are empty
+ * @access public
+ *
+ * @since 3.8
+ * @return (boolean) true or false
+ */
+function wpsc_has_tnc(){
+	if('' == get_option('terms_and_conditions'))
+		return false;
+	else
+		return true;
+}
+
+if ( isset( $_GET['termsandconds'] ) && 'true' == $_GET['termsandconds'] )
+	add_action( 'init', 'wpsc_show_terms_and_conditions' );
+
+function wpsc_show_terms_and_conditions() {
+	echo wpautop( wp_kses_post( get_option( 'terms_and_conditions' ) ) );
+	die();
+}

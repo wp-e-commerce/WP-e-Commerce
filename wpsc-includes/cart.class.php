@@ -907,6 +907,7 @@ class wpsc_cart {
          $total = $this->subtotal;
       }
    }
+
       return $total;
   }
 
@@ -1162,6 +1163,12 @@ class wpsc_cart {
       foreach($this->cart_items as $key => $cart_item) {
         $cart_item->save_to_db($purchase_log_id);
       }
+  }
+
+  public function empty_db( $purchase_log_id ) {
+    global $wpdb;
+    $sql = $wpdb->prepare( "DELETE FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid = %d", $purchase_log_id );
+    $wpdb->query( $sql );
   }
 
   /**

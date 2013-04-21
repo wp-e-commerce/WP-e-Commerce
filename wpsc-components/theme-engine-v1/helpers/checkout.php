@@ -104,20 +104,6 @@ function wpsc_have_valid_shipping_zipcode(){
 }
 
 /**
- * Checks to see whether terms and conditions are empty
- * @access public
- *
- * @since 3.8
- * @return (boolean) true or false
- */
-function wpsc_has_tnc(){
-	if('' == get_option('terms_and_conditions'))
-		return false;
-	else
-		return true;
-}
-
-/**
  * show find us checks whether the 'how you found us' drop down should be displayed
  * @access public
  *

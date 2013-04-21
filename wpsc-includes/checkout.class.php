@@ -188,7 +188,7 @@ class wpsc_checkout {
 	var $current_checkout_item = -1;
 	var $in_the_loop = false;
 	//the ticket additions
-	var $additional_fields = array( );
+	var $additional_fields = array();
 	var $formfield_count = 0;
 
 	/**
