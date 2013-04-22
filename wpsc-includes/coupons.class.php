@@ -211,7 +211,7 @@ class wpsc_coupons {
 			break;
 
 			case 'not_contain'://Checks if the product name contains the condition value
-				return preg_match( "/(.*)" . $value . "(.*)/",$cart_item->quantity );
+				return ! preg_match( "/(.*)" . $value . "(.*)/",$cart_item->quantity );
 			break;
 
 			case 'begins'://Checks if the product name begins with condition value
