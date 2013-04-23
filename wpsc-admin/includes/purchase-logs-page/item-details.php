@@ -2,7 +2,7 @@
 	<div id="icon-users" class="icon32"><br/></div>
 	<h2>
 		<?php esc_html_e( 'Sales Log Details', 'wpsc' ); ?>
-		<span class="subtitle">#<?php echo $this->log_id; ?></span>
+		<span class="subtitle">#<?php echo $this->log_id; ?> – <?php echo wpsc_purchaselog_details_date(); ?></span>
 	</h2>
 	<?php if ( $receipt_sent ): ?>
 		<div class="updated">
@@ -18,16 +18,14 @@
 		<?php if ( wpsc_has_purchlog_shipping() ): ?>
 			<div id='wpsc_shipping_details_box'>
 				<h3><?php esc_html_e( 'Shipping Details', 'wpsc' ); ?></h3>
-				<blockquote>
-					<p>
-						<strong><?php echo (wpsc_display_purchlog_shipping_name() != "") ? wpsc_display_purchlog_shipping_name() : __( '<em class="field-blank">blank</em>', 'wpsc' ); ?></strong><br />
-						<?php echo ( wpsc_display_purchlog_shipping_address() != ""            ) ? wpsc_display_purchlog_shipping_address()            : __( '<em class="field-blank">blank</em>', 'wpsc' ); ?><br />
-						<?php echo ( wpsc_display_purchlog_shipping_city() != ""               ) ? wpsc_display_purchlog_shipping_city()               : __( '<em class="field-blank">blank</em>', 'wpsc' ); ?><br />
-						<?php echo ( wpsc_display_purchlog_shipping_state_and_postcode() != "" ) ? wpsc_display_purchlog_shipping_state_and_postcode() : __( '<em class="field-blank">blank</em>', 'wpsc' ); ?><br />
-						<?php echo ( wpsc_display_purchlog_shipping_country() != ""            ) ? wpsc_display_purchlog_shipping_country()            : __( '<em class="field-blank">blank</em>', 'wpsc' ); ?><br />
-					</p>
-				</blockquote>
-				<h4><?php esc_html_e( 'Shipping Options', 'wpsc' ); ?></h4>
+				<ul class='wpsc-address'>
+					<li><strong><?php echo (wpsc_display_purchlog_shipping_name() != "") ? wpsc_display_purchlog_shipping_name() : '&nbsp;' ?></strong></li>
+					<li><?php echo ( wpsc_display_purchlog_shipping_address() != ""            ) ? wpsc_display_purchlog_shipping_address()            : '&nbsp;'; ?></li>
+					<li><?php echo ( wpsc_display_purchlog_shipping_city() != ""               ) ? wpsc_display_purchlog_shipping_city()               : '&nbsp;' ?></li>
+					<li><?php echo ( wpsc_display_purchlog_shipping_state_and_postcode() != "" ) ? wpsc_display_purchlog_shipping_state_and_postcode() : '&nbsp;' ?></li>
+					<li><?php echo ( wpsc_display_purchlog_shipping_country() != ""            ) ? wpsc_display_purchlog_shipping_country()            : '&nbsp;' ?></li>
+				</ul>
+				<h4><?php esc_html_e( 'Shipping Details', 'wpsc' ); ?></h4>
 				<p>
 					<?php esc_html_e( 'Shipping Method:', 'wpsc' ); ?> <?php echo wpsc_display_purchlog_shipping_method(); ?>
 				</p>
@@ -47,22 +45,19 @@
 		<div id='wpsc_billing_details_box'>
 			<?php do_action( 'wpsc_billing_details_top' ); ?>
 			<h3><?php esc_html_e( 'Billing Details', 'wpsc' ); ?></h3>
-			<p><strong><?php esc_html_e( 'Purchase Log Date:', 'wpsc' ); ?> </strong><?php echo wpsc_purchaselog_details_date(); ?> </p>
-			<p><strong><?php esc_html_e( 'Purchase Number:', 'wpsc' ); ?> </strong><?php echo wpsc_purchaselog_details_purchnumber(); ?> </p>
-			<blockquote>
-				<p>
-					<strong><?php echo wpsc_display_purchlog_buyers_name(); ?></strong><br />
-					<?php echo ( wpsc_display_purchlog_buyers_address() != ""            ) ? wpsc_display_purchlog_buyers_address()            : __( '<em class="field-blank">blank</em>', 'wpsc' ); ?><br />
-					<?php echo ( wpsc_display_purchlog_buyers_city() != ""               ) ? wpsc_display_purchlog_buyers_city()               : __( '<em class="field-blank">blank</em>', 'wpsc' ); ?><br />
-					<?php echo ( wpsc_display_purchlog_buyers_state_and_postcode() != "" ) ? wpsc_display_purchlog_buyers_state_and_postcode() : __( '<em class="field-blank">blank</em>', 'wpsc' ); ?><br />
-					<?php echo ( wpsc_display_purchlog_buyers_country() != ""            ) ? wpsc_display_purchlog_buyers_country()            : __( '<em class="field-blank">blank</em>', 'wpsc' ); ?><br />
-				</p>
-			</blockquote>
-			<p><strong><?php esc_html_e( 'Phone:', 'wpsc' ); ?> </strong><?php echo ( wpsc_display_purchlog_buyers_phone() != "" ) ? wpsc_display_purchlog_buyers_phone() : __( '<em class="field-blank">blank</em>', 'wpsc' ); ?></p>
+			<ul class='wpsc-address'>
+				<li><strong><?php echo wpsc_display_purchlog_buyers_name(); ?></strong></li>
+				<li><?php echo ( wpsc_display_purchlog_buyers_address() != ""            ) ? wpsc_display_purchlog_buyers_address()            : '&nbsp;' ?></li>
+				<li><?php echo ( wpsc_display_purchlog_buyers_city() != ""               ) ? wpsc_display_purchlog_buyers_city()               : '&nbsp;' ?></li>
+				<li><?php echo ( wpsc_display_purchlog_buyers_state_and_postcode() != "" ) ? wpsc_display_purchlog_buyers_state_and_postcode() : '&nbsp;' ?></li>
+				<li><?php echo ( wpsc_display_purchlog_buyers_country() != ""            ) ? wpsc_display_purchlog_buyers_country()            : '&nbsp;' ?></li>
+			</ul>
+			<h4><?php esc_html_e( 'Payment Details', 'wpsc' ); ?></h4>
+			<p><strong><?php esc_html_e( 'Phone:', 'wpsc' ); ?> </strong><?php echo ( wpsc_display_purchlog_buyers_phone() != "" ) ? wpsc_display_purchlog_buyers_phone() : __( '<em class="field-blank">not provided</em>', 'wpsc' ); ?></p>
 			<p>
 				<strong><?php esc_html_e( 'Email:', 'wpsc' ); ?> </strong>
 				<a href="mailto:<?php echo wpsc_display_purchlog_buyers_email(); ?>?subject=<?php echo rawurlencode( sprintf( __( 'Message from %s', 'wpsc' ), site_url() ) ); ?>">
-					<?php echo ( wpsc_display_purchlog_buyers_email() != "" ) ? wpsc_display_purchlog_buyers_email() : __( '<em class="field-blank">blank</em>', 'wpsc' ); ?>
+					<?php echo ( wpsc_display_purchlog_buyers_email() != "" ) ? wpsc_display_purchlog_buyers_email() : __( '<em class="field-blank">not provided</em>', 'wpsc' ); ?>
 				</a>
 			</p>
 			<p><strong><?php esc_html_e( 'Payment Method:', 'wpsc' ); ?> </strong><?php echo wpsc_display_purchlog_paymentmethod(); ?></p>
