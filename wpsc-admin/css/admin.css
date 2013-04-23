@@ -1969,20 +1969,8 @@ span.wpsc-button-round {
 .wpsc-coupon-status-inactive {
 	color: #e01b1b;
 }
-.wpsc-address {
-	display: inline-block;
-	list-style: none;
-	border-left: 1px solid #FCB1DE;
-	padding: 5px 0;
-}
-.wpsc-address li {
-	padding: 0 30px 0 10px;
-	margin: 0;
-	border-bottom: 1px dotted #B3DFF1;
-}
-.wpsc-address li:nth-of-type(1) {
-	border-top: 1px dotted #B3DFF1;
-}
-div.new_layer {
-	display: none;
+
+th.right-col {
+	text-align: right;
+	padding: 0;
 }

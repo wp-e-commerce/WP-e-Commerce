@@ -355,9 +355,15 @@ function wpsc_display_purchlog_buyers_state_and_postcode() {
 }
 
 function wpsc_display_purchlog_buyers_country() {
-   global $purchlogitem;
-   return esc_html( $purchlogitem->extrainfo->billing_country );
-}
+   global $purchlogitem, $wpdb;
+   $isocode = $purchlogitem->extrainfo->billing_country;
+   $selectedCountry = $wpdb->get_col( $wpdb->prepare( "SELECT country FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE isocode = '%s' ", $isocode ) );
+   if ($selectedCountry[0]) {
+      $selectedCountry = $selectedCountry[0];
+   } else {
+      $selectedCountry = $isocode;
+   }
+   return esc_html( $selectedCountry );}
 
 function wpsc_display_purchlog_buyers_phone() {
    global $purchlogitem;
@@ -402,8 +408,16 @@ function wpsc_display_purchlog_shipping_state_and_postcode() {
 }
 
 function wpsc_display_purchlog_shipping_country() {
-   global $purchlogitem;
-   return esc_html( $purchlogitem->shippinginfo['shippingcountry']['value'] );
+   global $purchlogitem, $wpdb;
+   $isocode = $purchlogitem->shippinginfo['shippingcountry']['value'];
+
+   $selectedCountry = $wpdb->get_col( $wpdb->prepare( "SELECT country FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE isocode = '%s' ", $isocode ) );
+   if ($selectedCountry[0]) {
+      $selectedCountry = $selectedCountry[0];
+   } else {
+      $selectedCountry = $isocode;
+   }
+   return esc_html( $selectedCountry );
 }
 
 function wpsc_display_purchlog_shipping_method() {
