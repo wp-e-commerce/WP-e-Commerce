@@ -18,13 +18,15 @@
 		<?php if ( wpsc_has_purchlog_shipping() ): ?>
 			<div id='wpsc_shipping_details_box'>
 				<h3><?php esc_html_e( 'Shipping Details', 'wpsc' ); ?></h3>
-				<ul class='wpsc-address'>
-					<li><strong><?php echo (wpsc_display_purchlog_shipping_name() != "") ? wpsc_display_purchlog_shipping_name() : '&nbsp;' ?></strong></li>
-					<li><?php echo ( wpsc_display_purchlog_shipping_address() != ""            ) ? wpsc_display_purchlog_shipping_address()            : '&nbsp;'; ?></li>
-					<li><?php echo ( wpsc_display_purchlog_shipping_city() != ""               ) ? wpsc_display_purchlog_shipping_city()               : '&nbsp;' ?></li>
-					<li><?php echo ( wpsc_display_purchlog_shipping_state_and_postcode() != "" ) ? wpsc_display_purchlog_shipping_state_and_postcode() : '&nbsp;' ?></li>
-					<li><?php echo ( wpsc_display_purchlog_shipping_country() != ""            ) ? wpsc_display_purchlog_shipping_country()            : '&nbsp;' ?></li>
-				</ul>
+				<blockquote>
+					<strong>
+						<?php echo ( wpsc_display_purchlog_shipping_name() != ""           ) ? wpsc_display_purchlog_shipping_name() . "<br />"               : '<span class="field-blank">' . __( 'Anonymous', 'wpsc' ) . '</span>' ; ?>
+					</strong>
+					<?php echo ( wpsc_display_purchlog_shipping_address() != ""            ) ? wpsc_display_purchlog_shipping_address() . "<br />"            : '' ; ?>
+					<?php echo ( wpsc_display_purchlog_shipping_city() != ""               ) ? wpsc_display_purchlog_shipping_city() . "<br />"               : '' ; ?>
+					<?php echo ( wpsc_display_purchlog_shipping_state_and_postcode() != "" ) ? wpsc_display_purchlog_shipping_state_and_postcode() . "<br />" : '' ; ?>
+					<?php echo ( wpsc_display_purchlog_shipping_country() != ""            ) ? wpsc_display_purchlog_shipping_country() . "<br />"            : '<span class="field-blank">' . __( 'Country not specified', 'wpsc' ) . '</span>' ; ?>
+				</blockquote>
 				<h4><?php esc_html_e( 'Shipping Details', 'wpsc' ); ?></h4>
 				<p>
 					<?php esc_html_e( 'Shipping Method:', 'wpsc' ); ?> <?php echo wpsc_display_purchlog_shipping_method(); ?>
@@ -45,13 +47,15 @@
 		<div id='wpsc_billing_details_box'>
 			<?php do_action( 'wpsc_billing_details_top' ); ?>
 			<h3><?php esc_html_e( 'Billing Details', 'wpsc' ); ?></h3>
-			<ul class='wpsc-address'>
-				<li><strong><?php echo wpsc_display_purchlog_buyers_name(); ?></strong></li>
-				<li><?php echo ( wpsc_display_purchlog_buyers_address() != ""            ) ? wpsc_display_purchlog_buyers_address()            : '&nbsp;' ?></li>
-				<li><?php echo ( wpsc_display_purchlog_buyers_city() != ""               ) ? wpsc_display_purchlog_buyers_city()               : '&nbsp;' ?></li>
-				<li><?php echo ( wpsc_display_purchlog_buyers_state_and_postcode() != "" ) ? wpsc_display_purchlog_buyers_state_and_postcode() : '&nbsp;' ?></li>
-				<li><?php echo ( wpsc_display_purchlog_buyers_country() != ""            ) ? wpsc_display_purchlog_buyers_country()            : '&nbsp;' ?></li>
-			</ul>
+			<blockquote>
+				<strong>
+					<?php echo ( wpsc_display_purchlog_buyers_name() != ""           ) ? wpsc_display_purchlog_buyers_name() . "<br />"               : '<span class="field-blank">' . __( 'Anonymous', 'wpsc' ) . '</span>' ; ?>
+				</strong>
+				<?php echo ( wpsc_display_purchlog_buyers_address() != ""            ) ? wpsc_display_purchlog_buyers_address() . "<br />"            : '' ; ?>
+				<?php echo ( wpsc_display_purchlog_buyers_city() != ""               ) ? wpsc_display_purchlog_buyers_city() . "<br />"               : '' ; ?>
+				<?php echo ( wpsc_display_purchlog_buyers_state_and_postcode() != "" ) ? wpsc_display_purchlog_buyers_state_and_postcode() . "<br />" : '' ; ?>
+				<?php echo ( wpsc_display_purchlog_buyers_country() != ""            ) ? wpsc_display_purchlog_buyers_country() . "<br />"            : '<span class="field-blank">' . __( 'Country not specified', 'wpsc' ) . '</span>' ; ?>
+			</blockquote>
 			<h4><?php esc_html_e( 'Payment Details', 'wpsc' ); ?></h4>
 			<p><strong><?php esc_html_e( 'Phone:', 'wpsc' ); ?> </strong><?php echo ( wpsc_display_purchlog_buyers_phone() != "" ) ? wpsc_display_purchlog_buyers_phone() : __( '<em class="field-blank">not provided</em>', 'wpsc' ); ?></p>
 			<p>
@@ -85,26 +89,26 @@
 								<?php esc_html_e( 'Coupon Code', 'wpsc' ); ?>: <?php echo wpsc_display_purchlog_discount_data(); ?>
 							<?php endif; ?>
 						</td>
-						<th><?php esc_html_e( 'Discount', 'wpsc' ); ?> </th>
+						<th class='right-col'><?php esc_html_e( 'Discount', 'wpsc' ); ?> </th>
 						<td><?php echo wpsc_display_purchlog_discount(); ?></td>
 					</tr>
 
 					<?php if( ! wpec_display_product_tax() ): ?>
 						<tr>
 							<td colspan='<?php echo $cols; ?>'></td>
-							<th><?php esc_html_e( 'Taxes', 'wpsc' ); ?> </th>
+							<th class='right-col'><?php esc_html_e( 'Taxes', 'wpsc' ); ?> </th>
 							<td><?php echo wpsc_display_purchlog_taxes(); ?></td>
 						</tr>
 					<?php endif; ?>
 
 					<tr>
 						<td colspan='<?php echo $cols; ?>'></td>
-						<th><?php esc_html_e( 'Shipping', 'wpsc' ); ?> </th>
+						<th class='right-col'><?php esc_html_e( 'Shipping', 'wpsc' ); ?> </th>
 						<td><?php echo wpsc_display_purchlog_shipping(); ?></td>
 					</tr>
 					<tr>
 						<td colspan='<?php echo $cols; ?>'></td>
-						<th><?php esc_html_e( 'Total', 'wpsc' ); ?> </th>
+						<th class='right-col'><?php esc_html_e( 'Total', 'wpsc' ); ?> </th>
 						<td><?php echo wpsc_display_purchlog_totalprice(); ?></td>
 					</tr>
 				</tbody>
@@ -122,12 +126,12 @@
 							<input type='hidden' name='purchlog_id' value='<?php echo $this->log_id; ?>' />
 							<p>
 								<textarea name="purchlog_notes" rows="3" wrap="virtual" id="purchlog_notes" style="width:100%;"><?php
-										if ( isset( $_POST['purchlog_notes'] ) ) {
-											echo esc_textarea( stripslashes( $_POST['purchlog_notes'] ) );
-										} else {
-											echo wpsc_display_purchlog_notes();
-										}
-									?></textarea>
+									if ( isset( $_POST['purchlog_notes'] ) ) {
+										echo esc_textarea( stripslashes( $_POST['purchlog_notes'] ) );
+									} else {
+										echo wpsc_display_purchlog_notes();
+									}
+								?></textarea>
 							</p>
 							<p><input class="button" type="submit" name="button" id="button" value="<?php _e( 'Update Notes', 'wpsc' ); ?>" /></p>
 						</form>
