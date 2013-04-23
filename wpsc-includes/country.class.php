@@ -176,9 +176,24 @@ class WPSC_Country {
 		$this->fetch();
 
 		if ( array_key_exists( $key, $this->data ) )
-			return $this->data[$key];
+			return apply_filters( 'wpsc_country_get_property', $this->data[$key], $key, $this );
 
 		return null;
+	}
+	
+	/**
+	 * Returns the whole database row in the form of an associative array
+	 *
+	 * @access public
+	 * @since 3.8.11
+	 *
+	 * @return array
+	 */
+	public function get_data() {
+		if ( empty( $this->data ) )
+			$this->fetch();
+
+		return apply_filters( 'wpsc_country_get_data', $this->data, $this );
 	}
 
 	public function set( $key, $value = '' ) {
