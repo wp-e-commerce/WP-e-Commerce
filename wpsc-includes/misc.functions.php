@@ -261,9 +261,8 @@ function wpsc_get_country_form_id_by_type($type){
 }
 
 function wpsc_get_country( $country_code ) {
-	global $wpdb;
-	$country = $wpdb->get_var( $wpdb->prepare( "SELECT `country` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `isocode` IN (%s) LIMIT 1", $country_code ) );
-	return $country;
+	$country = new WPSC_Country( $country_code, 'isocode' );
+	return $country->get( 'country' );
 }
 
 function wpsc_get_region( $region_id ) {
