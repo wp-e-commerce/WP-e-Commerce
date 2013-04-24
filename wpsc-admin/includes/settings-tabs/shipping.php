@@ -69,7 +69,7 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 		if ( $found_selected_module ) {
 			$selected_module = $wpsc_shipping_modules[$selected_module_id];
 			$title = $selected_module->name;
-			$content = $selected_module->getForm();
+			$content = apply_filters( 'wpsc_shipping_module_settings_form', $selected_module->getForm(), $selected_module );
 			$classes[] = 'wpsc-shipping-module-settings-' . $selected_module_id;
 		} else {
 			$title = __( 'Edit Shipping Module Settings', 'wpsc' );
