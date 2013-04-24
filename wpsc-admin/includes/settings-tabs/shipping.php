@@ -53,6 +53,8 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 			}
 		}
 
+        do_action('wpsc_submit_shipping_options');
+        
 		if ( ! get_option( 'do_not_use_shipping' ) && ! get_option( 'custom_shipping_options' ) ) {
 			update_option( 'do_not_use_shipping', '1' );
 			return array( 'shipping_disabled' => 1 );
@@ -69,7 +71,7 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 		if ( $found_selected_module ) {
 			$selected_module = $wpsc_shipping_modules[$selected_module_id];
 			$title = $selected_module->name;
-			$content = $selected_module->getForm();
+			$content = apply_filters('wpsc_shipping_module_settings_form', $selected_module->getForm(), $selected_module->getInternalName());
 			$classes[] = 'wpsc-shipping-module-settings-' . $selected_module_id;
 		} else {
 			$title = __( 'Edit Shipping Module Settings', 'wpsc' );
