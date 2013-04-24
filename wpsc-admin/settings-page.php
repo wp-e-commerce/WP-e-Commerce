@@ -378,7 +378,10 @@ final class WPSC_Settings_Page {
 
 		if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( $_REQUEST['wpsc_admin_action'] == 'submit_options' ) ) {
 			check_admin_referer( 'update-options', 'wpsc-update-options' );
+			
 			$this->save_options();
+			do_action( 'wpsc_save_' . $this->current_tab_id . '_settings', $this->current_tab );
+		
 			$query_args = array();
 			if ( is_callable( array( $this->current_tab, 'callback_submit_options' ) ) ) {
 				$additional_query_args = $this->current_tab->callback_submit_options();
@@ -477,7 +480,7 @@ final class WPSC_Settings_Page {
 					}
 				?>
 
-				<?php do_action('wpsc_' . $this->current_tab_id . '_settings_page'); ?>
+				<?php do_action( 'wpsc_' . $this->current_tab_id . '_settings_page' ); ?>
 				<div class="submit">
 					<input type='hidden' name='wpsc_admin_action' value='submit_options' />
 					<?php wp_nonce_field( 'update-options', 'wpsc-update-options' ); ?>
@@ -509,7 +512,7 @@ final class WPSC_Settings_Page {
 				</h2>
 				<?php $this->output_tabs(); ?>
 				<div id='wpsc_options_page'>
-					<form method='post' action='<?php echo esc_attr( $this->submit_url() ); ?>' enctype='multipart/form-data' id='wpsc-settings-form'>
+					<form method='post' action='<?php echo esc_url( $this->submit_url() ); ?>' enctype='multipart/form-data' id='wpsc-settings-form'>
 						<?php $this->display_current_tab(); ?>
 					</form>
 				</div>
@@ -526,7 +529,7 @@ final class WPSC_Settings_Page {
 	 * @uses wpdb::get_col() Queries the database.
 	 * @access public
 	 */
-	private function save_options( $selected='' ) {
+	private function save_options( $selected = '' ) {
 		global $wpdb, $wpsc_gateways;
 		$updated = 0;
 
