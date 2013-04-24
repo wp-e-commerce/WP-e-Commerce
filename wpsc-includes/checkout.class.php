@@ -408,7 +408,7 @@ function wpsc_checkout_form_field() {
 function wpsc_shipping_region_list( $selected_country, $selected_region, $shippingdetails = false ) {
 	global $wpdb;
 	$output = '';
-	$region_data = $wpdb->get_results( $wpdb->prepare( "SELECT `regions`.* FROM `" . WPSC_TABLE_REGION_TAX . "` AS `regions` INNER JOIN `" . WPSC_TABLE_CURRENCY_LIST . "` AS `country` ON `country`.`id` = `regions`.`country_id` WHERE `country`.`isocode` IN(%s)", $selected_country ), ARRAY_A );
+	$region_data = $wpdb->get_results( $wpdb->prepare( "SELECT `regions`.* FROM `" . WPSC_TABLE_REGION_TAX . "` AS `regions` INNER JOIN `" . WPSC_TABLE_CURRENCY_LIST . "` AS `country` ON `country`.`id` = `regions`.`country_id` WHERE `country`.`isocode` IN(%s) ORDER BY name ASC", $selected_country ), ARRAY_A );
 	$js = '';
 	if ( !$shippingdetails ) {
 		$js = "onchange='submit_change_country();'";
