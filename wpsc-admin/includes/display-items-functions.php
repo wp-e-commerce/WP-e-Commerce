@@ -653,7 +653,7 @@ function wpsc_product_advanced_forms() {
 		<td class='itemfirstcol' colspan='2'>
 
 			<input type='checkbox' <?php echo $product_meta['google_prohibited']; ?> name='meta[_wpsc_product_metadata][google_prohibited]' id='add_google_prohibited' /> <label for='add_google_prohibited'>
-			<?php esc_html_e( 'Prohibited <a href="http://checkout.google.com/support/sell/bin/answer.py?answer=75724">by Google?</a>', 'wpsc' ); ?>
+			<?php echo wp_kses( __( 'Prohibited <a href="http://checkout.google.com/support/sell/bin/answer.py?answer=75724">by Google?</a>', 'wpsc' ), wp_kses_allowed_html() ); ?>
 			</label><br />
 		</td>
 	</tr>

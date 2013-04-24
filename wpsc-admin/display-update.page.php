@@ -87,7 +87,7 @@ function wpsc_display_update_page() {
 
 			echo '<br /><br /><strong>' . esc_html__( 'WP e-Commerce updated successfully!', 'wpsc' ) . '</strong><br />';
 			if( '' != get_option('permalink_structure')){ ?>
-				<em><?php echo esc_html( sprintf( __( 'Note: It looks like you have custom permalinks, you will need to refresh your permalinks <a href="%s">here</a>', 'wpsc' ) , admin_url( 'options-permalink.php' ) ) ); ?></em>
+				<em><?php echo wp_kses( sprintf( __( 'Note: It looks like you have custom permalinks, you will need to refresh your permalinks <a href="%s">here</a>', 'wpsc' ) , admin_url( 'options-permalink.php' ) ), wp_kses_allowed_html() ); ?></em>
 			<?php
 			}
 			update_option('wpsc_version', 3.8);
