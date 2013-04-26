@@ -1,8 +1,8 @@
 <?php
 
 class WPSC_Checkout_Form_Data {
-	private $data = array();
-	private $raw_data = array();
+	private $data         = array();
+	private $raw_data     = array();
 	private $gateway_data = array();
 	private $log_id;
 
