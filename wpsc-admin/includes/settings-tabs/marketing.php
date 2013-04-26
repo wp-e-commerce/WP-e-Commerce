@@ -32,24 +32,24 @@ class WPSC_Settings_Tab_Marketing extends WPSC_Settings_Tab {
 		$wpsc_also_bought1 = '';
 
 		if ( '1' == $wpsc_also_bought )
-			$wpsc_also_bought1 = "checked ='checked'";
+			$wpsc_also_bought1 = "checked='checked'";
 
 		$wpsc_share_this  = get_option( 'wpsc_share_this' );
 		$wpsc_share_this1 = '';
 
 		if ( '1' == $wpsc_share_this )
-			$wpsc_share_this1 = "checked ='checked'";
+			$wpsc_share_this1 = "checked='checked'";
 
 		$facebook_like  = get_option( 'wpsc_facebook_like' );
 		$facebook_like1 = '';
 		if ( 'on' == $facebook_like )
-			$facebook_like1 = "checked ='checked'";
+			$facebook_like1 = "checked='checked'";
 
 		$display_find_us  = get_option( 'display_find_us' );
 		$display_find_us1 = '';
 
 		if ( '1' == $display_find_us )
-			$display_find_us1 = "checked ='checked'";
+			$display_find_us1 = "checked='checked'";
 
 		?>
 
@@ -124,7 +124,7 @@ class WPSC_Settings_Tab_Marketing extends WPSC_Settings_Tab {
 	public function google_merch_center_settings_form() {
 		?>
 		<h3><?php esc_html_e( 'Google Merchant Centre / Google Product Search', 'wpsc'); ?></h3>
-		<p><?php _e( 'To import your products into <a href="http://www.google.com/merchants/" target="_blank">Google Merchant Centre</a> so that they appear within Google Product Search results, sign up for a Google Merchant Centre account and add a scheduled data feed with the following URL:', 'wpsc' ); ?></p>
+   		<p><?php printf( __( 'To import your products into <a href="%s" target="_blank">Google Merchant Centre</a> so that they appear within Google Product Search results, sign up for a Google Merchant Centre account and add a scheduled data feed with the following URL:', 'wpsc' ), 'http://www.google.com/merchants/' ); ?></p>
 
 		<table class='form-table'>
 			<tr>
@@ -142,31 +142,42 @@ class WPSC_Settings_Tab_Marketing extends WPSC_Settings_Tab {
 
 	public function google_analytics_integration_settings_form() {
 		?>
-		<h3><?php esc_html_e( 'Google Analytics', 'wpsc' ); ?></h3>
+		<h3><?php esc_html_e( 'Google Analytics E-Commerce Tracking', 'wpsc' ); ?></h3>
+		<p><?php printf( __( 'Track successful transactions and items purchased in <a href="%s">Google Analytics</a>.', 'wpsc' ), 'http://www.google.com/analytics/' ); ?></p>
 		<input type='hidden' name='change-settings' value='true' />
 		<table class='form-table'>
 			<tr>
 				<th>
-					<?php _e( 'Disable Google Analytics tracking', 'wpsc' ); ?>
+					<?php _e( 'Enable', 'wpsc' ); ?>
 				</th>
 				<td>
-					<label>
-						<input value='1' <?php checked( '1', get_option( 'wpsc_ga_disable_tracking' ) ); ?> type='checkbox' name='wpsc_ga_disable_tracking' />
-						<?php _e( 'Disable Google Analytics tracking', 'wpsc' ); ?>
+					<label><?php echo get_option( 'wpsc_ga_disable_tracking' ); ?>
+						<input value='1' type='hidden' name='wpsc_ga_disable_tracking' />
+						<input value='0' <?php checked( '0', get_option( 'wpsc_ga_disable_tracking' ) ); ?> type='checkbox' name='wpsc_ga_disable_tracking' />
+						<?php _e( 'Enable Google Analytics tracking', 'wpsc' ); ?>
 					</label>
 					<p class='description'><?php _e( 'If, for whatever reason, you decide you do not want any tracking, disable it.', 'wpsc' ); ?></p>
 				</td>
 			</tr>
 			<tr>
 				<th>
-					<?php _e( 'Currently tracking Google Analytics', 'wpsc' ); ?>
+					<?php _ex( 'Google Analytics Tracking ID', 'google analytics', 'wpsc' ); ?>
+				</th>
+				<td>
+					<input value="<?php echo esc_attr( get_option( 'wpsc_ga_tracking_id' ) ); ?>" type='text' name='wpsc_ga_tracking_id' />
+					<span class='description'><?php _e( 'e.g. <code>UA-XXXXX-Y</code>', 'wpsc' ); ?></span>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<?php _e( 'Tracking Code Present', 'wpsc' ); ?>
 				</th>
 				<td>
 					<label>
 						<input value='1' <?php checked( '1', get_option( 'wpsc_ga_currently_tracking' ) ); ?> type='checkbox' name='wpsc_ga_currently_tracking' />
 						<?php _e( 'Google Analytics is tracking my site', 'wpsc' ); ?>
 					</label>
-					<p class='description'><?php _e( 'If you have already manually placed your Google Analytics tracking code in your theme, or have another plugin handling it, check this box.', 'wpsc' ); ?></p>
+					<p class='description'><?php printf( __( 'Enable this if the Google Analytics tracking code is already present on your site, e.g. manually placed your in your theme, or managed by another plugin. We will only insert the <a href="%s">E-Commerce tracking events</a> on the transaction results page.', 'wpsc' ), 'https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiEcommerce'); ?></p>
 				</td>
 			</tr>
 			<tr>
@@ -179,15 +190,6 @@ class WPSC_Settings_Tab_Marketing extends WPSC_Settings_Tab {
 						<?php _e( 'Enable Advanced Mode', 'wpsc' ); ?>
 					</label>
 					<p class='description'><?php _e( 'By default, we insert the multiple-domain asynchronous tracking code.  This should be fine for 99% of users.  If you need to fine-tune it, select the Advanced option.  Then, instead of simply entering your tracking ID, you will enter the enter tracking code from Google Analytics into the header.php file of your theme.', 'wpsc' ); ?></p>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					<?php _ex( 'Google Analytics Tracking ID', 'google analytics', 'wpsc' ); ?>
-				</th>
-				<td>
-					<input value="<?php echo esc_attr( get_option( 'wpsc_ga_tracking_id' ) ); ?>" type='text' name='wpsc_ga_tracking_id' />
-					<span class='description'><?php _e( 'e.g. <code>UA-XXXXX-Y</code>', 'wpsc' ); ?></span>
 				</td>
 			</tr>
 		</table>
