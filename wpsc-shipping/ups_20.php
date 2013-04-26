@@ -616,7 +616,7 @@ class ash_ups {
     private function _parseQuote($raw){
         global $wpdb;
 
-        $config = get_option('wpsc_ups_settings');
+        $config = get_option( 'wpsc_ups_settings', array() );
         $debug  = (array_key_exists('upsenvironment', $config)) ? $config['upsenvironment'] : "";
 
         $rate_table = array();
