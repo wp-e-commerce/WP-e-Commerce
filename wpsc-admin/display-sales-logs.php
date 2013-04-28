@@ -128,6 +128,27 @@ class WPSC_Purchase_Log_Page {
       add_action( 'wpsc_display_purchase_logs_page', array( $this, 'display_upgrade_purchase_logs_3_8' ) );
    }
 
+   function purchase_logs_pagination() {
+      global $wpdb, $purchlogitem;
+
+      if ( $this->log_id > 1 ) {
+         $href = $this->get_purchase_log_url( ( $this->log_id - 1 ) );
+         ?>
+         <a href='<?php esc_attr_e( $href ); ?>' class='wpsc-purchase-logs-previous'>&laquo; <?php _e( 'Previous', 'wpsc' ); ?></a>
+         <?php
+      }
+
+      $query = "SELECT MAX(id) FROM " . WPSC_TABLE_PURCHASE_LOGS;
+      $max_purchase_id = $wpdb->get_var( $query );
+
+      if ( $max_purchase_id > $this->log_id ) {
+         $href = $this->get_purchase_log_url( ( $this->log_id + 1 ) );
+         ?>
+         <a href='<?php esc_attr_e( $href ); ?>' class='wpsc-purchase-logs-next'><?php _e( 'Next', 'wpsc' ); ?> &raquo;</a>
+         <?php
+      }
+   }
+
    function purchase_logs_checkout_fields(){
       global $purchlogitem;
 
@@ -388,4 +409,15 @@ class WPSC_Purchase_Log_Page {
 
       include( 'includes/purchase-logs-page/list-table.php' );
    }
+
+   private function get_purchase_log_url( $id ) {
+      $location = admin_url( 'index.php' );
+      $location = add_query_arg( array(
+         'page' => 'wpsc-purchase-logs',
+         'c'    => 'item_details',
+         'id'   => $id,
+      ), $location );
+      return $location;
+   }
+
 }
