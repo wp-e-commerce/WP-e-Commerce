@@ -106,89 +106,23 @@ function wpsc_add_to_cart() {
 		}
 	}
 
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		if ( ($product_id != null) && (get_option( 'fancy_notifications' ) == 1) ) {
-			echo "if(jQuery('#fancy_notification_content')) {\n\r";
-			echo "   jQuery('#fancy_notification_content').html(\"" . str_replace( array( "\n", "\r" ), array( '\n', '\r' ), addslashes( fancy_notification_content( $cart_messages ) ) ) . "\");\n\r";
-			echo "   jQuery('#loading_animation').css('display', 'none');\n\r";
-			echo "   jQuery('#fancy_notification_content').css('display', 'block');\n\r";
-			echo "}\n\r";
-			$error_messages = array( );
-		}
+	$json_response = array( 'cart_messages' => $cart_messages, 'product_id' => $product_id );
+	$output = _wpsc_ajax_get_cart( false, $cart_messages );
 
-		ob_start();
+	$json_response = $json_response + $output;
 
-		include_once( wpsc_get_template_file_path( 'wpsc-cart_widget.php' ) );
+	if ( is_numeric( $product_id ) && 1 == get_option( 'fancy_notifications' ) )
+		$json_response['fancy_notification'] = str_replace( array( "\n", "\r" ), array( '\n', '\r' ), fancy_notification_content( $cart_messages ) );
 
-		$output = ob_get_contents();
-		ob_end_clean();
-		$output = str_replace( Array( "\n", "\r" ), Array( "\\n", "\\r" ), addslashes( $output ) );
-		echo "jQuery('div.shopping-cart-wrapper').html('$output');\n";
-
-
-		if ( get_option( 'show_sliding_cart' ) == 1 ) {
-			if ( (wpsc_cart_item_count() > 0) || (count( $cart_messages ) > 0) ) {
-				$_SESSION['slider_state'] = 1;
-				echo "
-               jQuery('#sliding_cart').slideDown('fast',function(){
-                  jQuery('#fancy_collapser').attr('src', ('".WPSC_CORE_IMAGES_URL."/minus.png'));
-               });
-         ";
-			} else {
-				$_SESSION['slider_state'] = 0;
-				echo "
-               jQuery('#sliding_cart').slideUp('fast',function(){
-                  jQuery('#fancy_collapser').attr('src', ('".WPSC_CORE_IMAGES_URL."/plus.png'));
-               });
-         ";
-			}
-		}
-
-		echo "jQuery('.cart_message').delay(3000).slideUp(500);";
-
-		do_action( 'wpsc_alternate_cart_html', $cart_messages );
-		exit();
-	}
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX )
+		die( json_encode( $json_response ) );
 }
 
 add_action( 'wp_ajax_add_to_cart'       , 'wpsc_add_to_cart' );
 add_action( 'wp_ajax_nopriv_add_to_cart', 'wpsc_add_to_cart' );
 
 function wpsc_get_cart() {
-	global $wpsc_cart;
-
-	ob_start();
-
-	include_once( wpsc_get_template_file_path( 'wpsc-cart_widget.php' ) );
-	$output = ob_get_contents();
-
-	ob_end_clean();
-
-	$output = str_replace( Array( "\n", "\r" ), Array( "\\n", "\\r" ), addslashes( $output ) );
-	echo "jQuery('div.shopping-cart-wrapper').html('$output');\n";
-
-
-	if ( get_option( 'show_sliding_cart' ) == 1 ) {
-		if ( (wpsc_cart_item_count() > 0) || (count( $cart_messages ) > 0) ) {
-			$_SESSION['slider_state'] = 1;
-			echo "
-            jQuery('#sliding_cart').slideDown('fast',function(){
-               jQuery('#fancy_collapser').attr('src', (WPSC_CORE_IMAGES_URL+'/minus.png'));
-            });
-      ";
-		} else {
-			$_SESSION['slider_state'] = 0;
-			echo "
-            jQuery('#sliding_cart').slideUp('fast',function(){
-               jQuery('#fancy_collapser').attr('src', (WPSC_CORE_IMAGES_URL+'/plus.png'));
-            });
-      ";
-		}
-	}
-
-
-	do_action( 'wpsc_alternate_cart_html', '' );
-	exit();
+	_wpsc_ajax_get_cart();
 }
 
 add_action( 'wp_ajax_get_cart'       , 'wpsc_get_cart' );
@@ -202,33 +136,8 @@ function wpsc_empty_cart() {
 	global $wpsc_cart;
 	$wpsc_cart->empty_cart( false );
 
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		ob_start();
-
-		include_once( wpsc_get_template_file_path( 'wpsc-cart_widget.php' ) );
-		$output = ob_get_contents();
-
-		ob_end_clean();
-		$output = str_replace( Array( "\n", "\r" ), Array( "\\n", "\\r" ), addslashes( $output ) );
-		echo "jQuery('div.shopping-cart-wrapper').html('$output');";
-		do_action( 'wpsc_alternate_cart_html' );
-
-		if ( get_option( 'show_sliding_cart' ) == 1 ) {
-			$_SESSION['slider_state'] = 0;
-			echo "
-            jQuery('#sliding_cart').slideUp('fast',function(){
-               jQuery('#fancy_collapser').attr('src', (WPSC_CORE_IMAGES_URL+'/plus.png'));
-            });
-      ";
-		}
-		exit();
-	}
-
-	// this if statement is needed, as this function also runs on returning from the gateway
-	if ( isset( $_REQUEST['wpsc_ajax_action'] ) && $_REQUEST['wpsc_ajax_action'] == 'empty_cart' ) {
-		wp_redirect( remove_query_arg( array( 'wpsc_ajax_action', 'ajax' ) ) );
-		exit();
-	}
+	$output = _wpsc_ajax_get_cart( false );
+	die( json_encode( $output ) );
 }
 
 add_action( 'wp_ajax_empty_cart'       , 'wpsc_empty_cart' );
@@ -299,21 +208,60 @@ function wpsc_update_item_quantity() {
 		}
 	}
 
-	if ( isset( $_REQUEST['ajax'] ) && $_REQUEST['ajax'] == 'true' ) {
+	_wpsc_ajax_get_cart();
+}
+
+/**
+ * Returns the Cart Widget
+ *
+ * @param  boolean $die          Whether or not to return the output (for new JSON requests) or to die() on the old $output / action.
+ * @param  array   $cart_message An array of cart messages to be optionally passed.  Primarily passed via wpsc_add_to_cart().
+ *
+ * @since 3.8.11
+ * @return mixed                 Returns an array of output data, alternatively
+ */
+function _wpsc_ajax_get_cart( $die = true, $cart_message = array() ) {
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+
+		$return = array();
+
+		ob_start();
+		include_once( wpsc_get_template_file_path( 'wpsc-cart_widget.php' ) );
+
+		$output = ob_get_contents();
+		ob_end_clean();
+		$output = str_replace( array( '\n', '\r' ), '', $output );
+
+		$return['widget_output']   = $output;
+		$return['core_images_url'] = WPSC_CORE_IMAGES_URL;
+
+		if ( 1 == get_option( 'show_sliding_cart' ) || empty( $cart_messages ) ) {
+			if ( wpsc_cart_item_count()  ) {
+				$_SESSION['slider_state']     = 1;
+				$return['sliding_cart_state'] = 'show';
+			} else {
+				$_SESSION['slider_state']     = 0;
+				$return['sliding_cart_state'] = 'hide';
+			}
+		}
+
+		//Deprecated action. Do not use.  We now have a custom JS event called 'wpsc_fancy_notification'. There is access to the complete $json_response object.
 		ob_start();
 
-		include_once( wpsc_get_template_file_path( 'wpsc-cart_widget.php' ) );
-		$output = ob_get_contents();
+		do_action( 'wpsc_alternate_cart_html', $cart_messages );
+		$action_output = ob_get_contents();
 
 		ob_end_clean();
 
-		$output = str_replace( Array( "\n", "\r" ), Array( "\\n", "\\r" ), addslashes( $output ) );
+		if ( ! empty( $action_output ) ) {
+			wpsc_doing_it_wrong( 'wpsc_alternate_cart_html', __( 'As of WPeC 3.8.11, it is improper to hook into "wpsc_alternate_cart_html" to output javascript.  We now have a custom javascript event called "wpsc_fancy_notification" you can hook into.', 'wpsc' ), '3.8.11' );
+			$return['action_output'] = $action_output;
+		}
 
-		echo "jQuery('div.shopping-cart-wrapper').html('$output');\n";
-		do_action( 'wpsc_alternate_cart_html' );
-
-
-		exit();
+		if ( $die )
+			die( $output . $action_output );
+		else
+			return $return;
 	}
 }
 
@@ -367,24 +315,14 @@ function wpsc_update_shipping_price() {
 	$quote_shipping_method = $_POST['method'];
 	$quote_shipping_option = $_POST['option'];
 
-	if(!empty($quote_shipping_option) && !empty($quote_shipping_method)){
+	if ( ! empty( $quote_shipping_option ) && ! empty( $quote_shipping_method ) ) {
 		$wpsc_cart->update_shipping( $quote_shipping_method, $quote_shipping_option );
 
-		echo "
-		if(jQuery('.pricedisplay.checkout-shipping .pricedisplay')){
-			jQuery('.pricedisplay.checkout-shipping > .pricedisplay:first').html(\"" . wpsc_cart_shipping() . "\");
-			jQuery('.shoppingcart .pricedisplay.checkout-shipping > .pricedisplay:first').html(\"" . wpsc_cart_shipping() . "\");
-		} else {
-			jQuery('.pricedisplay.checkout-shipping').html(\"" . wpsc_cart_shipping() . "\");}";
-		echo "
-		if (jQuery('#coupons_amount .pricedisplay').size() > 0) {
-			jQuery('#coupons_amount .pricedisplay').html(\"" . wpsc_coupon_amount() . "\");
-		} else {
-			jQuery('#coupons_amount').html(\"" . wpsc_coupon_amount() . "\");
-		}
-		";
-		echo "jQuery('.pricedisplay.checkout-total').html(\"" . wpsc_cart_total() . "\");\n\r";
+		$json_response = array( 'shipping' => wpsc_cart_shipping(), 'coupon' => wpsc_coupon_amount(), 'cart_total' => wpsc_cart_total(), 'tax' => wpsc_cart_tax() );
+
+		echo json_encode( $json_response );
 	}
+
 	exit();
 }
 
@@ -798,7 +736,6 @@ function wpsc_change_tax() {
 		$wpsc_delivery_region = null;
 	}
 
-
 	$wpsc_cart->update_location();
 	$wpsc_cart->get_shipping_method();
 	$wpsc_cart->get_shipping_option();
@@ -817,105 +754,64 @@ function wpsc_change_tax() {
 		$wpsc_cart->total_price = null;
 		$wpsc_cart->calculate_total_price();
 	}
-	ob_start();
 
-	include_once( wpsc_get_template_file_path( 'wpsc-cart_widget.php' ) );
-	$output = ob_get_contents();
-
-	ob_end_clean();
 	$delivery_country = wpsc_get_customer_meta( 'shipping_country' );
-	$output = str_replace( Array( "\n", "\r" ), Array( "\\n", "\\r" ), addslashes( $output ) );
+	$output           = _wpsc_ajax_get_cart( false );
+	$output           = $output['widget_output'];
+
+	$json_response = array();
+
+	$json_response['delivery_country'] = esc_js( $delivery_country );
+	$json_response['widget_output']    = $output;
+	$json_response['shipping_keys']    = array();
+	$json_response['cart_shipping']    = wpsc_cart_shipping();
+	$json_response['form_id']          = $form_id;
+	$json_response['tax']              = $tax;
+	$json_response['display_tax']      = wpsc_cart_tax();
+	$json_response['total']            = $total;
+	$json_response['total_input']      = $total_input;
+
 	if ( get_option( 'lock_tax' ) == 1 ) {
-		echo "jQuery('#current_country').val('" . esc_js( $delivery_country ) . "'); \n";
-		if ( $delivery_country == 'US' && get_option( 'lock_tax' ) == 1 ) {
+
+		$json_response['lock_tax']     = get_option( 'lock_tax' );
+		$json_response['country_name'] = wpsc_get_country( $delivery_country );
+
+		if ( $delivery_country == 'US' || $delivery_country == 'CA' ) {
 			$output = wpsc_shipping_region_list( $delivery_country, wpsc_get_customer_meta( 'shipping_region' ) );
-			$output = str_replace( Array( "\n", "\r" ), Array( "\\n", "\\r" ), addslashes( $output ) );
-			echo "jQuery('#region').remove();\n\r";
-			echo "jQuery('#change_country').append(\"" . $output . "\");\n\r";
+			$output = str_replace( array( "\n", "\r" ), '', $output );
+			$json_response['shipping_region_list'] = $output;
 		}
 	}
-
 
 	foreach ( $wpsc_cart->cart_items as $key => $cart_item ) {
-		echo "jQuery('#shipping_$key').html(\"" . wpsc_currency_display( $cart_item->shipping ) . "\");\n\r";
+		$json_response['shipping_keys'][$key] = wpsc_currency_display( $cart_item->shipping );
 	}
-
-	echo "jQuery('#checkout_shipping').html(\"" . wpsc_cart_shipping() . "\");\n\r";
-
-	echo "jQuery('div.shopping-cart-wrapper').html('$output');\n";
-	if ( get_option( 'lock_tax' ) == 1 ) {
-		echo "jQuery('.shipping_country').val('" . esc_js( $delivery_country ) . "') \n";
-		$sql = $wpdb->prepare( "SELECT `country` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `isocode`= '%s'", $delivery_country );
-		$country_name = $wpdb->get_var( $sql );
-		echo "jQuery('.shipping_country_name').html('" . $country_name . "') \n";
-	}
-
 
 	$form_selected_country = null;
-	$form_selected_region = null;
-	$onchange_function = null;
+	$form_selected_region  = null;
+	$onchange_function     = null;
 
-	if ( ! empty( $_POST['billing_country'] ) && $_POST['billing_country'] != 'undefined' && !isset( $_POST['shipping_country'] ) ) {
+	if ( ! empty( $_POST['billing_country'] ) && $_POST['billing_country'] != 'undefined' && ! isset( $_POST['shipping_country'] ) ) {
 		$form_selected_country = $wpsc_selected_country;
-		$form_selected_region = $wpsc_selected_region;
-		$onchange_function = 'set_billing_country';
-	} else if ( ! empty( $_POST['shipping_country'] ) && $_POST['shipping_country'] != 'undefined' && !isset( $_POST['billing_country'] ) ) {
+		$form_selected_region  = $wpsc_selected_region;
+		$onchange_function     = 'set_billing_country';
+	} else if ( ! empty( $_POST['shipping_country'] ) && $_POST['shipping_country'] != 'undefined' && ! isset( $_POST['billing_country'] ) ) {
 		$form_selected_country = $wpsc_delivery_country;
-		$form_selected_region = $wpsc_delivery_region;
-		$onchange_function = 'set_shipping_country';
+		$form_selected_region  = $wpsc_delivery_region;
+		$onchange_function     = 'set_shipping_country';
 	}
 
-	if ( ($form_selected_country != null) && ($onchange_function != null) ) {
-		$region_list = $wpdb->get_results( $wpdb->prepare( "SELECT `" . WPSC_TABLE_REGION_TAX . "`.* FROM `" . WPSC_TABLE_REGION_TAX . "`, `" . WPSC_TABLE_CURRENCY_LIST . "`  WHERE `" . WPSC_TABLE_CURRENCY_LIST . "`.`isocode` IN('%s') AND `" . WPSC_TABLE_CURRENCY_LIST . "`.`id` = `" . WPSC_TABLE_REGION_TAX . "`.`country_id`", $form_selected_country ), ARRAY_A );
+	if ( $form_selected_country != null && $onchange_function != null ) {
+
+		$checkoutfields = 'set_shipping_country' == $onchange_function;
+		$region_list = wpsc_country_region_list( $form_id, false, $form_selected_country, $form_selected_region, $form_id, $checkoutfields );
+
 		if ( $region_list != null ) {
-			$title = (empty($_POST['billing_country']))?'shippingstate':'billingstate';
-			$output = "<select name='collected_data[" . $form_id . "][1]' class='current_region' onchange='$onchange_function(\"region_country_form_$form_id\", \"$form_id\");' title='" . $title . "'>\n\r";
-
-			foreach ( $region_list as $region ) {
-				if ( $form_selected_region == $region['id'] ) {
-					$selected = "selected='selected'";
-				} else {
-					$selected = "";
-				}
-				$output .= "   <option value='" . $region['id'] . "' $selected>" . htmlspecialchars( $region['name'] ) . "</option>\n\r";
-			}
-			$output .= "</select>\n\r";
-
-			$output = str_replace( Array( "\n", "\r" ), Array( "\\n", "\\r" ), addslashes( $output ) );
-			echo "jQuery('#region_select_$form_id').html(\"" . $output . "\");\n\r";
-			echo "
-				var wpsc_checkout_table_selector = jQuery('#region_select_$form_id').parents('.wpsc_checkout_table').attr('class');
-				wpsc_checkout_table_selector = wpsc_checkout_table_selector.replace(' ','.');
-				wpsc_checkout_table_selector = '.'+wpsc_checkout_table_selector;
-				jQuery(wpsc_checkout_table_selector + ' input.billing_region').attr('disabled', 'disabled');
-				jQuery(wpsc_checkout_table_selector + ' input.shipping_region').attr('disabled', 'disabled');
-				jQuery(wpsc_checkout_table_selector + ' .billing_region').parent().parent().hide();
-				jQuery(wpsc_checkout_table_selector + ' .shipping_region').parent().parent().hide();
-			";
-		} else {
-			if ( get_option( 'lock_tax' ) == 1 ) {
-				echo "jQuery('#region').hide();";
-			}
-			echo "jQuery('#region_select_$form_id').html('');\n\r";
-			echo "
-				var wpsc_checkout_table_selector = jQuery('#region_select_$form_id').parents('.wpsc_checkout_table').attr('class');
-				wpsc_checkout_table_selector = wpsc_checkout_table_selector.replace(' ','.');
-				wpsc_checkout_table_selector = '.'+wpsc_checkout_table_selector;
-				jQuery(wpsc_checkout_table_selector + ' input.billing_region').removeAttr('disabled');
-				jQuery(wpsc_checkout_table_selector + ' input.shipping_region').removeAttr('disabled');
-				jQuery(wpsc_checkout_table_selector + ' .billing_region').parent().parent().show();
-				jQuery(wpsc_checkout_table_selector + ' .shipping_region').parent().parent().show();
-			";
+			$json_response['region_list'] = str_replace( array( "\n", "\r" ), '', $region_list );
 		}
 	}
 
-	if ( $tax > 0 ) {
-		echo "jQuery(\"tr.total_tax\").show();\n\r";
-	} else {
-		echo "jQuery(\"tr.total_tax\").hide();\n\r";
-	}
-	echo "jQuery('#checkout_tax').html(\"<span class='pricedisplay'>" . wpsc_cart_tax() . "</span>\");\n\r";
-	echo "jQuery('#checkout_total').html(\"{$total}<input id='shopping_cart_total_price' type='hidden' value='{$total_input}' />\");\n\r";
+	echo json_encode( $json_response );
 	exit();
 }
 
