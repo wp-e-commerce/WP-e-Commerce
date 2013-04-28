@@ -360,10 +360,7 @@ function wpsc_display_purchlog_buyers_state_and_postcode() {
 
 function wpsc_display_purchlog_buyers_country() {
    global $purchlogitem;
-   $country = new WPSC_Country( $purchlogitem->extrainfo->billing_country, 'isocode' );
-   $countryname = $country->get( 'country' );
-   return esc_html( $countryname );
-}
+   return esc_html( wpsc_get_country( $purchlogitem->extrainfo->billing_country ) );}
 
 function wpsc_display_purchlog_buyers_phone() {
    global $purchlogitem;
@@ -409,9 +406,7 @@ function wpsc_display_purchlog_shipping_state_and_postcode() {
 
 function wpsc_display_purchlog_shipping_country() {
    global $purchlogitem;
-   $country = new WPSC_Country( $purchlogitem->shippinginfo['shippingcountry']['value'], 'isocode' );
-   $countryname = $country->get( 'country' );
-   return esc_html( $countryname );
+   return esc_html( wpsc_get_country( $purchlogitem->shippinginfo['shippingcountry']['value'] ) );
 }
 
 function wpsc_display_purchlog_shipping_method() {
