@@ -213,6 +213,10 @@ function wpsc_purchaselog_details_date() {
    return date( 'jS M Y', $purchlogitem->extrainfo->date );
 }
 
+function wpsc_purchaselog_details_datetime() {
+   global $purchlogitem;
+   return date( 'g:ia jS M Y', $purchlogitem->extrainfo->date );
+}
 function wpsc_purchaselog_details_total() {
    global $purchlogitem;
    $total = 0;
