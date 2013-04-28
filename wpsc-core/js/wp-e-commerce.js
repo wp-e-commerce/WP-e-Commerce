@@ -224,37 +224,66 @@ jQuery(document).ready(function ($) {
 
 		jQuery('input#shippingSameBilling').after( '<img class="ajax-feedback" src="' + wpsc_ajax.spinner + '" alt="" />' );
 
-		jQuery.post(wpsc_ajax.ajaxurl, data, success, 'html');
+		jQuery.post( wpsc_ajax.ajaxurl, data, success, 'html' );
 
 	}
 
 	// Submit the product form using AJAX
-	jQuery("form.product_form, .wpsc-add-to-cart-button-form").live('submit', function() {
+	jQuery("form.product_form, .wpsc-add-to-cart-button-form").live( 'submit', function() {
 		// we cannot submit a file through AJAX, so this needs to return true to submit the form normally if a file formfield is present
-		file_upload_elements = jQuery.makeArray(jQuery('input[type="file"]', jQuery(this)));
+		file_upload_elements = jQuery.makeArray( jQuery( 'input[type="file"]', jQuery( this ) ) );
 		if(file_upload_elements.length > 0) {
 			return true;
 		} else {
 			form_values = jQuery(this).serialize() + '&action=' + jQuery( 'input[name="wpsc_ajax_action"]' ).val();
 
 			// Sometimes jQuery returns an object instead of null, using length tells us how many elements are in the object, which is more reliable than comparing the object to null
-			if(jQuery('#fancy_notification').length == 0) {
-				jQuery('div.wpsc_loading_animation',this).css('visibility', 'visible');
+			if( jQuery( '#fancy_notification' ).length == 0 ) {
+				jQuery( 'div.wpsc_loading_animation', this ).css( 'visibility', 'visible' );
 			}
-			jQuery.post( wpsc_ajax.ajaxurl, form_values, function(returned_data) {
-				eval(returned_data);
+
+			var success = function( response ) {
+
+				if ( response.fancy_notification ) {
+					if ( jQuery( '#fancy_notification_content' ) ) {
+						jQuery( '#fancy_notification_content' ).html( response.fancy_notification );
+						jQuery( '#loading_animation').css( 'display', 'none' );
+						jQuery( '#fancy_notification_content' ).css( 'display', 'block' );
+					}
+				}
+				jQuery('div.shopping-cart-wrapper').html( response.widget_output );
 				jQuery('div.wpsc_loading_animation').css('visibility', 'hidden');
 
-				if(jQuery('#fancy_notification') != null) {
-					jQuery('#loading_animation').css("display", 'none');
+				if ( 'show' == response.sliding_cart_state ) {
+					jQuery( '#sliding_cart' ).slideDown( 'fast',function(){
+						jQuery( '#fancy_collapser' ).attr( 'src', response.core_images_url + '/minus.png' );
+					});
+				} else {
+					jQuery( '#sliding_cart' ).slideUp( 'fast',function(){
+						jQuery( '#fancy_collapser' ).attr( 'src', response.core_images_url + '/plus.png' );
+					});
 				}
 
-			});
+				jQuery( '.cart_message' ).delay( 3000 ).slideUp( 500 );
+
+				//Until we get to an acceptable level of education on the new custom event - this is probably necessary for plugins.
+				if ( response.wpsc_alternate_cart_html ) {
+					eval( response.wpsc_alternate_cart_html );
+				}
+
+				jQuery( document ).trigger( { type : 'wpsc_fancy_notification', response : response } );
+
+				if ( jQuery( '#fancy_notification' ).length > 0 ) {
+					jQuery( '#loading_animation' ).css( "display", 'none' );
+				}
+			};
+
+			jQuery.post( wpsc_ajax.ajaxurl, form_values, success, 'json' );
+
 			wpsc_fancy_notification(this);
 			return false;
 		}
 	});
-
 
 	jQuery('a.wpsc_category_link, a.wpsc_category_image_link').click(function(){
 		product_list_count = jQuery.makeArray(jQuery('ul.category-product-list'));
@@ -340,9 +369,9 @@ jQuery(document).ready(function ($) {
 	// Ajax cart loading code.
 	jQuery("div.wpsc_cart_loading").livequery(function(){
 		form_values = { action : 'get_cart' };
-		jQuery.post( wpsc_ajax.ajaxurl, form_values, function(returned_data) {
-			eval(returned_data);
-		});
+		jQuery.post( wpsc_ajax.ajaxurl, form_values, function( response ) {
+			jQuery( 'div.shopping-cart-wrapper' ).html( response.widget_output );
+		}, 'json');
 	});
 
 	// Object frame destroying code.
@@ -350,25 +379,14 @@ jQuery(document).ready(function ($) {
 		jQuery(this).rating();
 	});
 
-	jQuery("form.wpsc_empty_the_cart").livequery(function(){
-		jQuery(this).submit(function() {
-			form_values = jQuery(this).serialize() + '&action=' + jQuery( 'input[name="wpsc_ajax_action"]' ).val();
-
-			jQuery.post( wpsc_ajax.ajaxurl, form_values, function(returned_data) {
-				eval(returned_data);
-			});
-			return false;
-		});
-	});
-
-	jQuery("form.wpsc_empty_the_cart a.emptycart").live('click',function(){
+	jQuery( 'form.wpsc_empty_the_cart a.emptycart' ).live('click',function(){
 		parent_form = jQuery(this).parents("form.wpsc_empty_the_cart");
+		form_values = jQuery(parent_form).serialize() + '&action=' + jQuery( 'input[name="wpsc_ajax_action"]', parent_form ).val();
 
-		form_values = jQuery(this).serialize() + '&action=' + jQuery( 'input[name="wpsc_ajax_action"]' ).val();
+		jQuery.post( wpsc_ajax.ajaxurl, form_values, function(response) {
+			jQuery('div.shopping-cart-wrapper').html( response.widget_output );
+		}, 'json');
 
-		jQuery.post( wpsc_ajax.ajaxurl, form_values, function(returned_data) {
-			eval(returned_data);
-		});
 		return false;
 	});
 
@@ -383,15 +401,29 @@ jQuery(document).ready(function ($) {
 });
 
 // update the totals when shipping methods are changed.
-function switchmethod( key, key1 ){
+function switchmethod( key, key1 ) {
 	data = {
 		action : 'update_shipping_price',
 		option : key,
 		method : key1
 	};
-	jQuery.post( wpsc_ajax.ajaxurl, data, function(returned_data) {
-		eval(returned_data);
-	});
+	jQuery.post( wpsc_ajax.ajaxurl, data, function( response ) {
+
+		jQuery( document ).trigger( { type : 'switchmethod', response : response } );
+
+		if ( jQuery( '.pricedisplay.checkout-shipping .pricedisplay' ) ) {
+			jQuery( '.pricedisplay.checkout-shipping > .pricedisplay:first' ).html( response.shipping );
+			jQuery( '.shoppingcart .pricedisplay.checkout-shipping > .pricedisplay:first' ).html( response.shipping );
+		} else {
+			jQuery( '.pricedisplay.checkout-shipping' ).html( response.shipping );
+		}
+		if ( jQuery( '#coupons_amount .pricedisplay' ).size() > 0 ) {
+			jQuery( '#coupons_amount .pricedisplay' ).html( response.coupon );
+		} else {
+			jQuery( '#coupons_amount' ).html( response.coupon );
+		}
+		jQuery( '.pricedisplay.checkout-total' ).html( response.cart_total );
+	}, 'json' );
 }
 
 // submit the country forms.
@@ -463,14 +495,11 @@ function set_billing_country(html_form_id, form){
 		billing_region  : region
 	};
 
-	jQuery.post( wpsc_ajax.ajaxurl, form_values, function(returned_data) {
-		eval(returned_data);
-		if(jQuery("#shippingSameBilling").is(':checked')){
-			jQuery('.shipping_region').parent().parent().hide();
-			jQuery('.shipping_country_name').parent().parent().hide();
-		}
-	});
+	jQuery.post( wpsc_ajax.ajaxurl, form_values, function( response ) {
+		wpsc_handle_country_change( response );
+	}, 'json' );
 }
+
 function set_shipping_country(html_form_id, form){
 	var shipping_region = '';
 	country = jQuery(("div#"+html_form_id+" select[class='current_country']")).val();
@@ -491,14 +520,73 @@ function set_shipping_country(html_form_id, form){
 		shipping_region  : region
 	},
 
-	jQuery.post( wpsc_ajax.ajaxurl, form_values, function(returned_data) {
-		eval(returned_data);
-		if(jQuery("#shippingSameBilling").is(':checked')){
-			jQuery('.shipping_region').parent().parent().hide();
-			jQuery('.shipping_country_name').parent().parent().hide();
+	jQuery.post( wpsc_ajax.ajaxurl, form_values, function( response ) {
+		wpsc_handle_country_change( response );
+	}, 'json' );
+}
+
+function wpsc_handle_country_change( response ) {
+	var wpsc_checkout_table_selector;
+
+	if ( response.lock_tax ) {
+		jQuery( '#current_country' ).val( response.delivery_country );
+
+		jQuery('.shipping_country').val( response.delivery_country );
+		jQuery('.shipping_country_name').html( response.country_name );
+
+		if ( response.delivery_country == 'US' || response.delivery_country == 'CA' ) {
+			jQuery( '#region' ).remove();
+			jQuery( '#change_country' ).append( response.shipping_region_list );
 		}
+	}
+
+	jQuery.each( response.shipping_keys, function( key, shipping ) {
+		jQuery( '#shipping_' + key ).html( shipping );
 	});
 
+	if ( response.region_list ) {
+		jQuery( '#region_country_form_' + response.form_id ).html( response.region_list );
+		wpsc_checkout_table_selector = jQuery( '#region_select_' + response.form_id ).parents( '.wpsc_checkout_table' ).attr( 'class' );
+			wpsc_checkout_table_selector = wpsc_checkout_table_selector.replace( ' ', '.' );
+			wpsc_checkout_table_selector = '.' + wpsc_checkout_table_selector;
+
+			jQuery( wpsc_checkout_table_selector + ' input.billing_region' ).attr( 'disabled', 'disabled' );
+			jQuery( wpsc_checkout_table_selector + ' input.shipping_region' ).attr( 'disabled', 'disabled' );
+			jQuery( wpsc_checkout_table_selector + ' .billing_region' ).parent().parent().hide();
+			jQuery( wpsc_checkout_table_selector + ' .shipping_region' ).parent().parent().hide();
+	} else {
+		if ( response.lock_tax ) {
+			jQuery( '#region' ).hide();
+		}
+
+		jQuery( '#region_select_' + response.form_id ).html( '' );
+
+		wpsc_checkout_table_selector = jQuery( '#region_select_' + response.form_id ).parents( '.wpsc_checkout_table' ).attr( 'class' );
+		wpsc_checkout_table_selector = wpsc_checkout_table_selector.replace( ' ', '.' );
+		wpsc_checkout_table_selector = '.' + wpsc_checkout_table_selector;
+
+		jQuery( wpsc_checkout_table_selector + ' input.billing_region' ).removeAttr( 'disabled' );
+		jQuery( wpsc_checkout_table_selector + ' input.shipping_region' ).removeAttr( 'disabled' );
+		jQuery( wpsc_checkout_table_selector + ' .billing_region' ).parent().parent().show();
+		jQuery( wpsc_checkout_table_selector + ' .shipping_region' ).parent().parent().show();
+	}
+
+	if ( response.tax > 0 ) {
+		jQuery( 'tr.total_tax' ).show();
+	} else {
+		jQuery( 'tr.total_tax' ).hide();
+	}
+
+	jQuery( '#checkout_shipping' ).html( response.cart_shipping );
+	jQuery( 'div.shopping-cart-wrapper' ).html( response.widget_output );
+
+	jQuery( '#checkout_tax' ).html( "<span class='pricedisplay'>" + response.display_tax + "</span>" );
+	jQuery( '#checkout_total' ).html( response.total + "<input id='shopping_cart_total_price' type='hidden' value='" + response.total_input + "' />" );
+
+	if ( jQuery( "#shippingSameBilling" ).is( ':checked' ) ) {
+		jQuery( '.shipping_region' ).parent().parent().hide();
+		jQuery( '.shipping_country_name' ).parent().parent().hide();
+	}
 }
 
 function wpsc_set_profile_country(html_form_id, form_id) {
