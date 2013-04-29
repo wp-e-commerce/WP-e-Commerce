@@ -132,7 +132,7 @@ function wpsc_shipping_same_as_billing(){
 				}
 			);
 		}
-	}
+}
 
 // this function is for binding actions to events and rebinding them after they are replaced by AJAX
 // these functions are bound to events on elements when the page is fully loaded.
@@ -178,19 +178,18 @@ jQuery(document).ready(function ($) {
 
 	});
 
-
 	/**
 	 * Update shipping quotes when "Shipping same as Billing" is checked or unchecked.
 	 * @since 3.8.8
 	 */
 	function wpsc_update_shipping_quotes() {
 
-		var original_shipping_region           = jQuery('select#region');
-		var original_shipping_zip              = jQuery('input#zipcode');
-		var original_country                   = jQuery('select#current_country');
-		var shipping_same_as_billing_region    = jQuery('input[title="shippingstate"]');
-		var shipping_same_as_billing_zip       = jQuery('input[title="shippingpostcode"]');
-		var shipping_same_as_billing_country   = jQuery('input[title="shippingcountry"]');
+		var original_shipping_region         = jQuery('select#region');
+		var original_shipping_zip            = jQuery('input#zipcode');
+		var original_country                 = jQuery('select#current_country');
+		var shipping_same_as_billing_region  = jQuery('input[title="shippingstate"]');
+		var shipping_same_as_billing_zip     = jQuery('input[title="shippingpostcode"]');
+		var shipping_same_as_billing_country = jQuery('input[title="shippingcountry"]');
 
 		jQuery('p.validation-error').remove();
 
@@ -225,11 +224,10 @@ jQuery(document).ready(function ($) {
 		jQuery('input#shippingSameBilling').after( '<img class="ajax-feedback" src="' + wpsc_ajax.spinner + '" alt="" />' );
 
 		jQuery.post( wpsc_ajax.ajaxurl, data, success, 'html' );
-
 	}
 
 	// Submit the product form using AJAX
-	jQuery("form.product_form, .wpsc-add-to-cart-button-form").live( 'submit', function() {
+	jQuery( 'form.product_form, .wpsc-add-to-cart-button-form' ).on( 'submit', function() {
 		// we cannot submit a file through AJAX, so this needs to return true to submit the form normally if a file formfield is present
 		file_upload_elements = jQuery.makeArray( jQuery( 'input[type="file"]', jQuery( this ) ) );
 		if(file_upload_elements.length > 0) {
@@ -285,23 +283,13 @@ jQuery(document).ready(function ($) {
 		}
 	});
 
-	jQuery('a.wpsc_category_link, a.wpsc_category_image_link').click(function(){
+	jQuery( 'a.wpsc_category_link, a.wpsc_category_image_link' ).click(function(){
 		product_list_count = jQuery.makeArray(jQuery('ul.category-product-list'));
 		if(product_list_count.length > 0) {
 			jQuery('ul.category-product-list', jQuery(this).parent()).toggle();
 			return false;
 		}
 	});
-
-	//  this is for storing data with the product image, like the product ID, for things like dropshop and the the ike.
-	jQuery("form.product_form").livequery(function(){
-		product_id = jQuery('input[name="product_id"]',this).val();
-		image_element_id = 'product_image_'+product_id;
-		jQuery("#"+image_element_id).data("product_id", product_id);
-		parent_container = jQuery(this).parents('div.product_view_'+product_id);
-		jQuery("div.item_no_image", parent_container).data("product_id", product_id);
-	});
-	//jQuery("form.product_form").trigger('load');
 
 	// Toggle the additional description content
 	jQuery("a.additional_description_link").click(function() {
@@ -311,7 +299,7 @@ jQuery(document).ready(function ($) {
 	});
 
 	// update the price when the variations are altered.
-	jQuery(".wpsc_select_variation").live('change', function() {
+	jQuery( 'div.wpsc_variation_forms' ).on( 'change', '.wpsc_select_variation', function() {
 		jQuery('option[value="0"]', this).attr('disabled', 'disabled');
 		var parent_form = jQuery(this).closest("form.product_form");
 		if ( parent_form.length == 0 )
@@ -359,28 +347,41 @@ jQuery(document).ready(function ($) {
 		}, 'json');
 	});
 
-	// Object frame destroying code.
-	jQuery("div.shopping_cart_container").livequery(function(){
-		object_html = jQuery(this).html();
-		window.parent.jQuery("div.shopping-cart-wrapper").html(object_html);
-	});
+	//First pass cruft comment - make sure to test the following livequery replacements
+
+		//Object frame destroying code.
+		jQuery( 'div.shopping_cart_container' ).load( function(){
+			object_html = jQuery(this).html();
+			window.parent.jQuery("div.shopping-cart-wrapper").html(object_html);
+		});
+
+		//this is for storing data with the product image, like the product ID, for things like dropshop and the like.
+		jQuery( 'form.product_form' ).load(  function() {
+			product_id = jQuery('input[name="product_id"]',this).val();
+			image_element_id = 'product_image_'+product_id;
+			jQuery( "#"+image_element_id).data("product_id", product_id );
+			parent_container = jQuery(this).parents('div.product_view_'+product_id);
+			jQuery("div.item_no_image", parent_container).data("product_id", product_id);
+		});
 
 
-	// Ajax cart loading code.
-	jQuery("div.wpsc_cart_loading").livequery(function(){
-		form_values = { action : 'get_cart' };
-		jQuery.post( wpsc_ajax.ajaxurl, form_values, function( response ) {
-			jQuery( 'div.shopping-cart-wrapper' ).html( response.widget_output );
-		}, 'json');
-	});
+		// Ajax cart loading code.
+		jQuery( 'div.wpsc_cart_loading' ).load( function(){
+			form_values = { action : 'get_cart' };
+			jQuery.post( wpsc_ajax.ajaxurl, form_values, function( response ) {
+				jQuery( 'div.shopping-cart-wrapper' ).html( response.widget_output );
+			}, 'json');
+		});
 
-	// Object frame destroying code.
-	jQuery("form.wpsc_product_rating").livequery(function(){
-		jQuery(this).rating();
-	});
+		// Object frame destroying code.
+		jQuery( 'form.wpsc_product_rating' ).load( function(){
+			jQuery(this).rating();
+		});
 
-	jQuery( 'form.wpsc_empty_the_cart a.emptycart' ).live('click',function(){
-		parent_form = jQuery(this).parents("form.wpsc_empty_the_cart");
+	//End livequery changes.  Note: This first pass probably won't work.  Test when elements are dynamically created.
+
+	jQuery( 'body' ).on( 'click', 'a.emptycart', function(){
+		parent_form = jQuery(this).parents( 'form' );
 		form_values = jQuery(parent_form).serialize() + '&action=' + jQuery( 'input[name="wpsc_ajax_action"]', parent_form ).val();
 
 		jQuery.post( wpsc_ajax.ajaxurl, form_values, function(response) {
