@@ -5,16 +5,16 @@
 
 		init : function() {
 			$(function(){
-				$('table.purchase-logs').delegate('.wpsc-purchase-log-status', 'change', WPSC_Purchase_Logs_Admin.event_log_status_change).
-				                         delegate('.wpsc-purchase-log-tracking-id', 'focus', WPSC_Purchase_Logs_Admin.event_tracking_id_focused).
-				                         delegate('.column-tracking a.add', 'click', WPSC_Purchase_Logs_Admin.event_button_add_clicked).
-				                         delegate('.wpsc-purchase-log-tracking-id', 'blur', WPSC_Purchase_Logs_Admin.event_tracking_id_blurred).
-				                         delegate('.column-tracking a.save', 'click', WPSC_Purchase_Logs_Admin.event_button_save_clicked).
-				                         delegate('.column-tracking .send-email a', 'click', WPSC_Purchase_Logs_Admin.event_button_send_email_clicked).
-				                         delegate('.wpsc-purchase-log-tracking-id', 'keypress', WPSC_Purchase_Logs_Admin.event_enter_key_pressed).
-				                         delegate('.column-tracking a.save', 'mousedown', WPSC_Purchase_Logs_Admin.event_disable_textbox_resize).
-				                         delegate('.column-tracking a.save', 'focus', WPSC_Purchase_Logs_Admin.event_disable_textbox_resize);
-
+				var wrapper = $('table.purchase-logs');
+				wrapper.on( 'change'   , '.wpsc-purchase-log-status'     , WPSC_Purchase_Logs_Admin.event_log_status_change );
+				wrapper.on( 'focus'    , '.wpsc-purchase-log-tracking-id', WPSC_Purchase_Logs_Admin.event_tracking_id_focused );
+				wrapper.on( 'click'    , '.column-tracking a.add'        , WPSC_Purchase_Logs_Admin.event_button_add_clicked );
+				wrapper.on( 'blur'     , '.wpsc-purchase-log-tracking-id', WPSC_Purchase_Logs_Admin.event_tracking_id_blurred );
+				wrapper.on( 'click'    , '.column-tracking a.save'       , WPSC_Purchase_Logs_Admin.event_button_save_clicked );
+				wrapper.on( 'click'    , '.column-tracking .send-email a', WPSC_Purchase_Logs_Admin.event_button_send_email_clicked );
+				wrapper.on( 'keypress' , '.wpsc-purchase-log-tracking-id', WPSC_Purchase_Logs_Admin.event_enter_key_pressed );
+				wrapper.on( 'mousedown', '.column-tracking a.save'       , WPSC_Purchase_Logs_Admin.event_disable_textbox_resize );
+				wrapper.on( 'focus'    , '.column-tracking a.save'       , WPSC_Purchase_Logs_Admin.event_disable_textbox_resize );
 			});
 		},
 

@@ -23,19 +23,20 @@
 	var new_variation_set_count = 0;
 
 	$(function(){
-		$('.variation_checkboxes').delegate('.variation-set', 'click', event_toggle_checkboxes).
-		                           delegate('a.expand', 'click', event_toggle_children).
-		                           delegate('.selectit input:checkbox', 'click', event_display_apply_variations).
-		                           delegate('.children input:checkbox', 'click', event_toggle_parent);
+		$('.variation_checkboxes').on( 'click', '.variation-set', event_toggle_checkboxes );
+		$('.variation_checkboxes').on( 'click', 'a.expand', event_toggle_children );
+		$('.variation_checkboxes').on( 'click', '.selectit input:checkbox', event_display_apply_variations );
+		$('.variation_checkboxes').on( 'click', '.children input:checkbox', event_toggle_parent );
 
-		$('a.add_variation_set_action').bind('click', event_add_new_variation_set);
-		$('#add-new-variation-set .button').bind('click', event_variation_set_add);
-		$('#add-new-variation-set input[type="text"]').bind('keypress', event_variation_set_inputs_keypress).
-		                                               bind('focus', event_variation_set_inputs_focus).
-		                                               bind('blur', event_variation_set_inputs_blur);
-		$('.wpsc-product-variation-thumbnail a').bind('click', event_variation_thumbnail_click);
-		$('.wpsc-bulk-edit').delegate('input.wpsc-bulk-edit-fields', 'change', event_bulk_edit_checkboxes_changed).
-		                     delegate('input[type="text"]', 'keyup', event_bulk_edit_textboxes_keyup);
+		$('a.add_variation_set_action').on( 'click', event_add_new_variation_set );
+		$('#add-new-variation-set .button').on( 'click', event_variation_set_add );
+		$('#add-new-variation-set input[type="text"]').on( 'keypress', event_variation_set_inputs_keypress );
+		$('#add-new-variation-set input[type="text"]').on( 'focus', event_variation_set_inputs_focus );
+		$('#add-new-variation-set input[type="text"]').on( 'blur', event_variation_set_inputs_blur );
+
+		$('.wpsc-product-variation-thumbnail a').on( 'click', event_variation_thumbnail_click );
+		$('.wpsc-bulk-edit').on( 'change', 'input.wpsc-bulk-edit-fields', event_bulk_edit_checkboxes_changed );
+      	$('.wpsc-bulk-edit').on( 'keyup', 'input[type="text"]', event_bulk_edit_textboxes_keyup );
 	});
 
 	var event_bulk_edit_textboxes_keyup = function() {
