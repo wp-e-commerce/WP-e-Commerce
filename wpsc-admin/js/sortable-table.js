@@ -87,7 +87,7 @@
 			var t = $(this);
 			t.find('tr').addClass('sortable');
 			t.sortable({
-				axix : 'y',
+				axis : 'y',
 				items : 'tr.sortable',
 				containment : t,
 				placeholder : 'wpsc-sortable-table-placeholder',
