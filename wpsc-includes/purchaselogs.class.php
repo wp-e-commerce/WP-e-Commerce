@@ -157,6 +157,11 @@ function wpsc_purchaselog_details_name() {
    return esc_html( apply_filters( 'the_title', $purchlogitem->purchitem->name ) );
 }
 
+function wpsc_purchaselog_details_prodid() {
+	global $purchlogitem;
+	return $purchlogitem->purchitem->prodid;
+}
+
 function wpsc_purchaselog_details_id() {
    global $purchlogitem;
    return $purchlogitem->purchitem->id;

@@ -919,7 +919,7 @@ class wpsc_cart {
 
     if(($parameters['quantity'] > 0) && ($this->check_remaining_quantity($product_id, $parameters['variation_values'], $parameters['quantity']) == true)) {
          $new_cart_item = new wpsc_cart_item($product_id,$parameters, $this);
-         do_action('wpsc_set_cart_item' , $product_id , $parameters , $this);
+         do_action('wpsc_set_cart_item' , $product_id , $parameters , $this, $new_cart_item);
          $add_item = true;
          $edit_item = false;
          if((count($this->cart_items) > 0) && ($new_cart_item->is_donation != 1)) {
@@ -929,19 +929,23 @@ class wpsc_cart {
                if(($cart_item->product_id == $new_cart_item->product_id) &&
                  ($cart_item->product_variations == $new_cart_item->product_variations) &&
                  ($cart_item->custom_message == $new_cart_item->custom_message) &&
-                 ($cart_item->custom_file == $new_cart_item->custom_file)) {
+                 ($cart_item->custom_file == $new_cart_item->custom_file) &&
+               	 count( array_diff($cart_item->get_meta(), $new_cart_item->get_meta() ) ) == 0
+               ) 
+               {
                   // if they are the same, increment the count, and break out;
                   if(!$updater){
                      $this->cart_items[$key]->quantity  += $new_cart_item->quantity;
                   } else {
                      $this->cart_items[$key]->quantity  = $new_cart_item->quantity;
-
                   }
+                  
                   $this->cart_items[$key]->refresh_item();
                   $add_item = false;
                   $edit_item = true;
                   do_action('wpsc_edit_item' , $product_id , $parameters , $this);
 
+                  break;
                }
             }
 
@@ -1678,6 +1682,8 @@ class wpsc_cart_item {
    var $thumbnail_image;
    var $custom_tax_rate = null;
    var $meta = array();
+   
+   private $item_meta = array();
 
    var $is_donation = false;
    var $apply_tax = true;
@@ -1686,6 +1692,65 @@ class wpsc_cart_item {
    // user provided values
    var $custom_message = null;
    var $custom_file = null;
+
+   
+   
+   /**
+    * add cart item meta value
+    * @access public
+    * @param meta key name
+    * @param meta key value
+    * @return previous meta value if it existed, nothing otherwise
+    */
+   function delete_meta($key) {
+   	
+   	if ( isset($this->item_meta[$key]) ) {
+   		$value = $this->item_meta[$key];
+   		unset( $this->item_meta[$key]);
+   		return $value;
+   	}
+   	 
+   	return;
+   }
+   
+   
+   /**
+    * update or add cart item meta value
+    * @access public
+    * @param meta key name
+    * @param meta key value
+    * @return previous meta value if it existed, null otherwise
+    */
+   function update_meta($key,$value=null) {
+   	
+   	if ( !isset( $value ) ) {
+   		$result = $this->delete_meta($key);
+   	} else {
+   		$result = isset($this->meta[$key])?$this->meta[$key]:null;
+   		$this->item_meta[$key] = $value;
+   	}
+   	 
+   	return $result;
+   }
+   
+   
+   /**
+    * get cart item meta value
+    * @access public
+    * @param meta key name, optional, empty returns all meta as an array
+    * @return previous meta value if it existed, null otherwise
+    */
+   function get_meta($key='') {
+   	
+   	if ( empty($key) ) {
+   		$result = $this->item_meta;
+   	} else {
+   		$result = isset($this->item_meta[$key])?$this->item_meta[$key]:null;
+   	}
+   	
+   	return $result;
+   }
+   
 
    public static function refresh_variation_cache() {
       global $wpsc_cart;
@@ -2062,8 +2127,10 @@ class wpsc_cart_item {
          $tax_rate = $taxes['rate'];
          $tax = $taxes['tax'];
       }
+      
+      do_action('wpsc_before_save_cart_item', $cart_id, $this );
 
-$wpdb->insert(
+      $wpdb->insert(
 		WPSC_TABLE_CART_CONTENTS,
 		array(
 		    'prodid' => $this->product_id,
@@ -2100,6 +2167,10 @@ $wpdb->insert(
       $cart_id = $wpdb->get_var( "SELECT " . $wpdb->insert_id . " AS `id` FROM `".WPSC_TABLE_CART_CONTENTS."` LIMIT 1");
 
       wpsc_update_cartmeta($cart_id, 'sku', $this->sku);
+      
+      if ( !empty( $this->item_meta) ) {
+      	wpsc_update_cartmeta($cart_id, 'item_meta', serialize($this->item_meta) );
+      }
 
        $downloads = get_option('max_downloads');
       if($this->is_downloadable == true) {
@@ -2144,6 +2215,9 @@ $wpdb->insert(
 
       }
 
+      do_action('wpsc_after_save_cart_item', $cart_id, $this );
+
+      // wpsc_save_cart_item should be deprecated in favor of wpsc_after_save_cart_item
       do_action('wpsc_save_cart_item', $cart_id, $this->product_id);
    }
 
