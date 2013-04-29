@@ -90,7 +90,7 @@ abstract class WPSC_Purchase_Log_Notification {
 
 			// then there's also this annoying apply_filters call, which is apparently not the best example
 			// of how to use it, but we have to preserve them anyways
-			$additional_content = apply_filters( 'wpsc_transaction_result_content', array( "purchase_id" => $log_id, "cart_item" => $item, "purchase_log" => $log_data ) );
+			$additional_content = apply_filters( 'wpsc_transaction_result_content', $cart_item_array );
 			if ( ! is_string( $additional_content ) )
 				$additional_content = '';
 			else
