@@ -607,7 +607,7 @@ class ash_usps{
     	        $temp_rate = $wpec_ash_xml->get("Rate",$postage);
     	        $rate = (!empty($temp_rate)) ? $temp_rate[0] : 0.0;
     	        if (!empty($service_name)){
-    	            $temp[$service_name] = $rate;
+    	            $temp[$service_name] = apply_filters( 'wpsc_usps_domestic_rate', $rate, $service_name );
     	        }
 	        }
 	        array_push($package_services, $temp);
@@ -636,8 +636,8 @@ class ash_usps{
 	        $service_name = $this->_get_service("SvcDescription",$service);
 	        $temp_rate = $wpec_ash_xml->get("Postage",$service);
 	        $rate = (!empty($temp_rate)) ? $temp_rate[0] : 0.0;
-	        if (!empty($service)){
-	            $service_table[$service_name] = $rate;
+	        if (!empty($service_name)){
+	            $service_table[$service_name] = apply_filters( 'wpsc_usps_intl_rate', $rate, $service_name );
 	        }
 	    }
 	    return $service_table;
