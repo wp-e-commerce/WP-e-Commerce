@@ -3,7 +3,7 @@ function wpsc_shipping_same_as_billing(){
 		jQuery('#shippingsameasbillingmessage').slideDown('slow');
 		jQuery("input[title='billingfirstname'], input[title='billinglastname'], textarea[title='billingaddress'], input[title='billingcity'], input[title='billingpostcode'], input[title='billingphone'], input[title='billingfirstname'], input[title='billingstate']").unbind('change', wpsc_shipping_same_as_billing).unbind('keyup', wpsc_shipping_same_as_billing).keyup(wpsc_shipping_same_as_billing).change(wpsc_shipping_same_as_billing);
 
-		jQuery("select[title='billingregion'], select[title='billingstate'], select[title='billingcountry'], input[title='billingstate']").die( 'change', wpsc_shipping_same_as_billing ).live( 'change', wpsc_shipping_same_as_billing );
+		jQuery("select[title='billingregion'], select[title='billingstate'], select[title='billingcountry'], input[title='billingstate']").on( 'change', wpsc_shipping_same_as_billing ).off( 'change', wpsc_shipping_same_as_billing );
 
 		var fields = new Array(
 			Array(
