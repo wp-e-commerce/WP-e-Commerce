@@ -3,18 +3,16 @@
  * Some parts of this code were copied from functions.bb-meta.php in bbpress
  */
 
-function wpsc_sanitize_meta_key( $key )
-{
+function wpsc_sanitize_meta_key( $key ) {
 	return preg_replace( '|[^a-z0-9_]|i', '', $key );
 }
-
 
 /**
  * Gets meta data from the database
  * This needs caching implemented for it, but I have not yet figured out how to make this work for it
  * @internal
  */
-function wpsc_get_meta( $object_id = 0, $meta_key, $type) {
+function wpsc_get_meta( $object_id = 0, $meta_key, $type ) {
 	global $wpdb;
 	$cache_object_id = $object_id = (int)$object_id;
 	$object_type = $type;
@@ -27,10 +25,6 @@ function wpsc_get_meta( $object_id = 0, $meta_key, $type) {
 	$meta_value = maybe_unserialize( $meta_value );
 	return $meta_value;
 }
-
-
-
-
 
 /**
  * Adds and updates meta data in the database
@@ -68,9 +62,6 @@ function wpsc_update_meta( $object_id = 0, $meta_key, $meta_value, $type, $globa
 	}
 }
 
-
-
-
 /**
  * Deletes meta data from the database
  *
@@ -106,13 +97,9 @@ function wpsc_delete_meta( $object_id = 0, $meta_key, $meta_value, $type, $globa
 	return true;
 }
 
-
-
 /**
  * Cart meta functions are as follows:
 */
-
-
 function wpsc_get_cartmeta( $cart_id, $meta_key ) {
 	return wpsc_get_meta( $cart_id, $meta_key, 'wpsc_cart_item' );
 }
@@ -124,9 +111,6 @@ function wpsc_update_cartmeta( $cart_id, $meta_key, $meta_value ) {
 function wpsc_delete_cartmeta( $cart_id, $meta_key, $meta_value = '' ) {
 	return wpsc_delete_meta( $cart_id, $meta_key, $meta_value, 'wpsc_cart_item' );
 }
-/**
- * Cart meta functions end here.
-*/
 
 /**
  * category meta functions are as follows:
@@ -135,9 +119,9 @@ function wpsc_delete_cartmeta( $cart_id, $meta_key, $meta_value = '' ) {
 /**
  * Retrieve meta field for a category
  *
- * @param int $cat_id Category ID.
- * @param string $meta_key The meta key to retrieve.
- * @return mixed Will be value of meta data field
+ * @param  int    $cat_id   Category ID.
+ * @param  string $meta_key The meta key to retrieve.
+ * @return mixed            Will be value of meta data field
  */
 function wpsc_get_categorymeta( $cat_id, $meta_key ) {
 	return wpsc_get_meta( $cat_id, $meta_key, 'wpsc_category' );
@@ -146,10 +130,10 @@ function wpsc_get_categorymeta( $cat_id, $meta_key ) {
 /**
  * Update meta field for a category
  *
- * @param int $cat_id Category ID.
- * @param string $meta_key The meta key to retrieve.
- * @param string $meta_value The value to be stored.
- * @return mixed true if up
+ * @param  int    $cat_id     Category ID.
+ * @param  string $meta_key   The meta key to retrieve.
+ * @param  string $meta_value The value to be stored.
+ * @return mixed              True if updated
  */
 function wpsc_update_categorymeta( $cat_id, $meta_key, $meta_value ) {
 	return wpsc_update_meta( $cat_id, $meta_key, $meta_value, 'wpsc_category' );
@@ -158,10 +142,10 @@ function wpsc_update_categorymeta( $cat_id, $meta_key, $meta_value ) {
 /**
  * Delete meta field for a category
  *
- * @param int $cat_id Category ID.
- * @param string $meta_key The meta key to retrieve.
- * @param string $meta_value Value to be compared before deleting.
- * @return mixed true if up
+ * @param  int    $cat_id     Category ID.
+ * @param  string $meta_key   The meta key to retrieve.
+ * @param  string $meta_value Value to be compared before deleting.
+ * @return mixed              True if updated
  */
 function wpsc_delete_categorymeta( $cat_id, $meta_key, $meta_value = '' ) {
 	return wpsc_delete_meta( $cat_id, $meta_key, $meta_value, 'wpsc_category' );
@@ -183,10 +167,10 @@ function wpsc_delete_categorymeta( $cat_id, $meta_key, $meta_value = '' ) {
  * @param mixed $product_id
  * @param mixed $key
  * @param mixed $value
- * @param bool $unique - obsolete
- * @param bool $custom - obsolete
+ * @param bool  $unique - obsolete
+ * @param bool  $custom - obsolete
  */
-function add_product_meta($product_id, $key, $value, $unique = false, $custom = false) {
+function add_product_meta( $product_id, $key, $value, $unique = false, $custom = false ) {
 	$key = WPSC_META_PREFIX.$key;
 	return add_post_meta($product_id, $key, $value);
 }
@@ -197,7 +181,7 @@ function add_product_meta($product_id, $key, $value, $unique = false, $custom = 
  * @access public
  * @param mixed $product_id
  * @param mixed $key
- * @param bool $value. (default: '')
+ * @param bool  $value. (default: '')
  */
 function delete_product_meta($product_id, $key, $value = '') {
 	$key = WPSC_META_PREFIX.$key;
@@ -211,7 +195,7 @@ function delete_product_meta($product_id, $key, $value = '') {
  * @access public
  * @param mixed $product_id
  * @param mixed $key
- * @param bool $single. (default: false)
+ * @param bool  $single. (default: false)
  * @return void
  */
 function get_product_meta($product_id, $key, $single = false) {
@@ -223,10 +207,10 @@ function get_product_meta($product_id, $key, $single = false) {
  * update_product_meta function.
  *
  * @access public
- * @param mixed $product_id
- * @param mixed $key
- * @param mixed $value
- * @param string $prev_value. (default: '')
+ * @param  mixed  $product_id
+ * @param  mixed  $key
+ * @param  mixed  $value
+ * @param  string $prev_value. (default: '')
  * @return void
  */
 function update_product_meta($product_id, $key, $value, $prev_value = '') {
