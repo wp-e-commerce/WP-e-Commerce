@@ -913,7 +913,7 @@ class ash_usps{
             $wpec_ash = new ASH();
         }
 	    if (!is_object($wpec_ash_tools)){
-            $wpec_ash = new ASHTools();
+            $wpec_ash_tools = new ASHTools();
         }
 
 	    $this->shipment = $wpec_ash->get_shipment();
