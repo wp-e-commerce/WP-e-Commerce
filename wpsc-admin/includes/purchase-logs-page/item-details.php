@@ -2,7 +2,7 @@
 	<div id="icon-users" class="icon32"><br/></div>
 	<h2>
 		<?php esc_html_e( 'Sales Log Details', 'wpsc' ); ?>
-		<span class="subtitle">#<?php echo $this->log_id; ?> – <?php echo wpsc_purchaselog_details_datetime(); ?></span>
+		<span class="subtitle">#<?php echo $this->log_id; ?> – <?php echo wpsc_purchaselog_details_date_time(); ?></span>
  		<?php $this->purchase_logs_pagination() ?>
  	</h2>
 	<?php if ( $receipt_sent ): ?>
