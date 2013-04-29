@@ -823,7 +823,6 @@ if ( ( isset( $_REQUEST['parent_page'] ) && ( $_REQUEST['parent_page'] == 'wpsc-
 add_filter( 'gettext', 'wpsc_filter_delete_text', 12 , 3 );
 add_filter( 'attachment_fields_to_edit', 'wpsc_attachment_fields', 11, 2 );
 add_filter( 'attachment_fields_to_save', 'wpsc_save_attachment_fields', 9, 2 );
-add_filter( 'gettext', 'wpsc_filter_feature_image_text', 12, 3 );
 add_filter( 'gettext_with_context', 'wpsc_filter_gettex_with_context', 12, 4);
 
 /*
@@ -851,6 +850,7 @@ function wpsc_filter_gettex_with_context( $translation, $text, $context, $domain
  * specifically for the words 'Use as featured image' with 'Use as Product Thumbnail' when the user is selecting a Product Thumbnail
  * using media gallery.
  *
+ * @todo As this feature is entirely cosmetic and breaks with WP_DEBUG on in WP 3.5+, we've removed the filter for it.  Will revisit the functionality in 3.9 when we look at new media workflows.
  * @param $translation The current translation
  * @param $text The text being translated
  * @param $domain The domain for the translation
