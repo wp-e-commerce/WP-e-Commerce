@@ -1668,10 +1668,13 @@ function wpsc_the_variation_price( $return_as_numeric = false ) {
 	if ( $wpsc_variations->variation_count > 0 ) {
 
 		$product_id = get_the_ID();
-		$wpq = array( 'variations' => $wpsc_variations->variation->slug,
+		$wpq = array( 
+			'variations'  => $wpsc_variations->variation->slug,
 			'post_status' => array( 'inherit', 'publish' ),
-			'post_type' => 'wpsc-product',
-			'post_parent' => $product_id );
+			'post_type'   => 'wpsc-product',
+			'post_parent' => $product_id 
+		);
+		
 		$query = new WP_Query( $wpq );
 		// Should never happen
 		if ( $query->post_count != 1 )
@@ -1679,18 +1682,18 @@ function wpsc_the_variation_price( $return_as_numeric = false ) {
 
 		$variation_product_id = $query->posts[0]->ID;
 
-		$price = get_product_meta( $variation_product_id, "price",true );
-		$special_price = get_product_meta( $variation_product_id, "special_price", true );
-		if($special_price < $price && $special_price > 0)
+		$price         = get_product_meta( $variation_product_id, 'price',true );
+		$special_price = get_product_meta( $variation_product_id, 'special_price', true );
+		
+		if ( $special_price < $price && $special_price > 0 )
 			$price = $special_price;
-		if ( !$return_as_numeric ) {
-			$output = wpsc_currency_display( $price,array( 'display_as_html' => false ) );
-		} else {
-			$output = $price;
-		}
+			
+		$price  = apply_filters( 'wpsc_do_convert_price', $price, $product_id, $variation_product_id );
+		$output = $return_as_numeric ? $price :  wpsc_currency_display( $price, array( 'display_as_html' => false ) );
 	} else {
 		$output = false;
 	}
+	
 	return $output;
 }
 
