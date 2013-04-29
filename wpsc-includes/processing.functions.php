@@ -276,7 +276,7 @@ function wpsc_send_ping($server) {
 	// when set to true, this outputs debug messages by itself
 	$client->debug = false;
 	$home = trailingslashit( get_option('product_list_url') );
-	$rss_url = get_option('siteurl')."/index.php?rss=true&amp;action=product_list";
+	$rss_url = add_query_arg( array( 'rss' => 'true', 'action' => 'product_list' ), home_url( '/' ) );
 	if ( !$client->query('weblogUpdates.extendedPing', get_option('blogname'), $home, $rss_url ) ) {
 		$client->query('weblogUpdates.ping', get_option('blogname'), $home);
 	}
