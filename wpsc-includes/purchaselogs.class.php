@@ -210,13 +210,14 @@ function wpsc_purchaselog_details_discount() {
 
 function wpsc_purchaselog_details_date() {
    global $purchlogitem;
-   return date( 'jS M Y', $purchlogitem->extrainfo->date );
+   return date_i18n( apply_filters( 'wpsc_single_purchase_log_date_format', get_option( 'date_format' ) ), $purchlogitem->extrainfo->date );
 }
 
 function wpsc_purchaselog_details_datetime() {
    global $purchlogitem;
-   return date( 'jS M Y g:ia', $purchlogitem->extrainfo->date );
+   return date_i18n( apply_filters( 'wpsc_single_purchase_log_date_format', get_option( 'date_format' ) . ' g:ia' ), $purchlogitem->extrainfo->date );
 }
+
 function wpsc_purchaselog_details_total() {
    global $purchlogitem;
    $total = 0;
