@@ -42,9 +42,10 @@
 
 			$(window).on('popstate', WPSC_Settings_Page.event_pop_state);
 			$(function(){
-				$('#wpsc_options').on( 'click' , 'a.nav-tab'              , WPSC_Settings_Page.event_tab_button_clicked);
-				$('#wpsc_options').on( 'change', 'input, textarea, select', WPSC_Settings_Page.event_settings_changed);
-				$('#wpsc_options').on( 'submit', '#wpsc-settings-form'    , WPSC_Settings_Page.event_settings_form_submitted);
+				var wpsc_options = $('#wpsc_options');
+				wpsc_options.on( 'click' , 'a.nav-tab'              , WPSC_Settings_Page.event_tab_button_clicked);
+				wpsc_options.on( 'change', 'input, textarea, select', WPSC_Settings_Page.event_settings_changed);
+				wpsc_options.on( 'submit', '#wpsc-settings-form'    , WPSC_Settings_Page.event_settings_form_submitted);
 				$(window).on('beforeunload', WPSC_Settings_Page.event_before_unload);
 				$(WPSC_Settings_Page).trigger('wpsc_settings_tab_loaded');
 				$(WPSC_Settings_Page).trigger('wpsc_settings_tab_loaded_' + WPSC_Settings_Page.current_tab);
