@@ -5,7 +5,7 @@
  */
 
 /**
- * @TODO Needs desription adding, and return value clarifying.
+ * @todo Needs desription adding, and return value clarifying.
  * @return bool [description]
  */
 function wpsc_have_gateways() {
@@ -14,7 +14,7 @@ function wpsc_have_gateways() {
 }
 
 /**
- * @TODO Needs desription adding, and return value clarifying.
+ * @todo Needs desription adding, and return value clarifying.
  * @return [type] [description]
  */
 function wpsc_the_gateway() {
@@ -179,7 +179,7 @@ function wpsc_gateway_form_fields() {
 		$output = $gateway_checkout_form_fields[$wpsc_gateway->gateway['internalname']];
 	}
 
-	return apply_filters ( 'wpsc_gateway_checkout_form_'.$wpsc_gateway->gateway['internalname'], $output );
+	return apply_filters ( 'wpsc_gateway_checkout_form_' . $wpsc_gateway->gateway['internalname'], $output );
 
 }
 
@@ -215,7 +215,7 @@ add_action(
 );
 
 /**
- * @TODO Clarify what this is doing
+ * @todo Clarify what this is doing
  */
 function _wpsc_merchant_v2_before_shopping_cart() {
 	$GLOBALS['wpsc_gateway'] = new wpsc_gateways();
