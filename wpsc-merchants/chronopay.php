@@ -364,149 +364,139 @@ function form_chronopay()
 	$output = "
 		<tr>
 			<td>" . __( 'Product ID', 'wpsc' ) . "</td>
-			<td><input type='text' size='40' value='".get_option('chronopay_product_id')."' name='chronopay_product_id' /></td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td><small>" . __( 'This should be set to your product ID that has been set up in the ChronoPay client interface.
-			This is the ChronoPay product that all purchases will be processed against. The cost will be changed depending on the grand total of the users cart.', 'wpsc' ) . "</small></td>
+			<td>
+				<input type='text' size='40' value='" . get_option( 'chronopay_product_id' ) . "' name='chronopay_product_id' />
+				<p class='description'>
+					" . __( 'This should be set to your product ID that has been set up in the ChronoPay client interface. This is the ChronoPay product that all purchases will be processed against. The cost will be changed depending on the grand total of the users cart.', 'wpsc' ) . "
+				</p>
+			</td>
 		</tr>
 		<tr>
 			<td>" . __( 'Product Name', 'wpsc' ) . "</td>
-			<td><input type='text' size='40' value='".get_option('chronopay_product_name')."' name='chronopay_product_name' /></td>
+			<td>
+				<input type='text' size='40' value='" . get_option( 'chronopay_product_name' ) . "' name='chronopay_product_name' />
+				<p class='description'>
+					" . __( 'This is not important and is usually set to the name of the web shop. It is displayed on the ChronoPay secure processing page.', 'wpsc' ) . "
+				</p>
 		</tr>
 		<tr>
-			<td>&nbsp;</td>
-			<td><small>" . __( 'This is not important and is usually set to the name of the web shop. It is displayed on the ChronoPay secure processing page.', 'wpsc' ) . "</small></td>
-		</tr>
-		<tr>
-			<td>" . __( 'Accepted Currency (USD, EUR)', 'wpsc' ) . "</td>
-			<td><select name='chronopay_curcode'>
-					<option ".$select_currency['USD']." value='USD'>" . __( 'USD - U.S. Dollar', 'wpsc' ) . "</option>
-					<option ".$select_currency['EUR']." value='EUR'>" . __( 'EUR - Euros', 'wpsc' ) . "</option>
+			<td>" . __( 'Accepted Currency', 'wpsc' ) . "</td>
+			<td>
+				<select name='chronopay_curcode'>
+					<option " . $select_currency['USD'] . " value='USD'>" . __( 'USD - U.S. Dollar', 'wpsc' ) . "</option>
+					<option " . $select_currency['EUR'] . " value='EUR'>" . __( 'EUR - Euros', 'wpsc' ) . "</option>
 				</select>
-			</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td><small>" . __( 'The currency code that ChronoPay will process the payment in. All products must be set up in this currency.', 'wpsc' ) . "</small></td>
+				<p class='description'>
+					" . __( 'The currency code that ChronoPay will process the payment in. All products must be set up in this currency.', 'wpsc' ) . "
+				</p>
 		</tr>
 		<tr>
 			<td>" . __( 'Language', 'wpsc' ) . "</td>
-			<td><select name='chronopay_language'>
-					<option ".$select_language['EN']." value='EN'>Engish</option>
-					<option ".$select_language['ES']." value='ES'>Spanish</option>
-					<option ".$select_language['NL']." value='NL'>Dutch</option>
-					<option ".$select_language['RU']." value='RU'>Russian</option>
+			<td>
+				<select name='chronopay_language'>
+					<option " . $select_language['EN'] . " value='EN'>Engish</option>
+					<option " . $select_language['ES'] . " value='ES'>Spanish</option>
+					<option " . $select_language['NL'] . " value='NL'>Dutch</option>
+					<option " . $select_language['RU'] . " value='RU'>Russian</option>
 				</select>
-			</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td><small>" . __( 'The language that the ChronoPay secure processing page will be displayed in.', 'wpsc' ) . "</small></td>
+				<p class='description'>
+					" . __( 'The language that the ChronoPay secure processing page will be displayed in.', 'wpsc' ) . "
+				</p>
 		</tr>
 		<tr>
 			<td>" . __( 'Processing URL', 'wpsc' ) . "</td>
-			<td><input type='text' size='40' value='".$chronopay_url."' name='chronopay_url' /></td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td><small>" . __( 'URL of the secure payment page customers are sent to for payment processing. If unsure leave at default setting.', 'wpsc' ) . "</small></td>
+			<td>
+				<input type='text' size='40' value='" . $chronopay_url . "' name='chronopay_url' />
+				<p class='description'>
+					" . __( 'URL of the secure payment page customers are sent to for payment processing. If unsure leave at default setting.', 'wpsc' ) . "
+				</p>
 		</tr>
 		<tr>
 			<td>" . __( 'Return URL', 'wpsc' ) . "</td>
-			<td><input type='text' size='40' value='".get_option('transact_url')."' name='chronopay_return_url' /></td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td><small>" . __( 'Enter this URL in the ChronoPay web client against the Product ID that you have set up. This page is the transaction details page that you have configured in Shop Options.  It can not be edited on this page.', 'wpsc' ) . "</small></td>
+			<td>
+				<input type='text' size='40' value='".get_option('transact_url')."' name='chronopay_return_url' />
+				<p class='description'>
+					" . __( 'Enter this URL in the ChronoPay web client against the Product ID that you have set up. This page is the transaction details page that you have configured in Shop Options.  It can not be edited on this page.', 'wpsc' ) . "
+				</p>
 		</tr>
 		<tr>
 			<td>" . __( 'Security Key', 'wpsc' ) . "</td>
-			<td><input type='text' size='40' value='".$chronopay_salt."' name='chronopay_salt' /></td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td><small>" . __( 'A bit of security... This is a keyword that is used to ensure transaction approval calls from ChronoPay to this application are real and were instigated from this server.  Enter a unique word into this field.' , 'wpsc' ) . "</small></td>
+			<td>
+				<input type='text' size='40' value='" . $chronopay_salt . "' name='chronopay_salt' />
+				<p class='description'>
+					" . __( 'A bit of security... This is a keyword that is used to ensure transaction approval calls from ChronoPay to this application are real and were instigated from this server.  Enter a unique word into this field.' , 'wpsc' ) . "
+				</p>
 		</tr>
 		<tr>
 			<td>" . __( 'Debug Mode', 'wpsc' ) . "</td>
 			<td>
-				<input type='radio' value='1' name='chronopay_debug' id='chronopay_debug1' ".$chronopay_debug1." /> <label for='chronopay_debug1'>".__('Yes', 'wpsc')."</label> &nbsp;
-				<input type='radio' value='0' name='chronopay_debug' id='chronopay_debug2' ".$chronopay_debug2." /> <label for='chronopay_debug2'>".__('No', 'wpsc')."</label>
+				<input type='radio' value='1' name='chronopay_debug' id='chronopay_debug1' " . $chronopay_debug1 . " /> <label for='chronopay_debug1'>".__('Yes', 'wpsc')."</label> &nbsp;
+				<input type='radio' value='0' name='chronopay_debug' id='chronopay_debug2' " . $chronopay_debug2 . " /> <label for='chronopay_debug2'>".__('No', 'wpsc')."</label>
+				<p class='description'>
+					" . __( 'Debug mode is used to write HTTP communications between the ChronoPay server and your host to a log file.  This should only be activated for testing!', 'wpsc' ) . "
+				</p>
+		</tr>
+
+		<tr class='firstrowth'>
+			<td style='border-bottom: medium none;' colspan='2'>
+				<strong class='form_group'>" . __( 'Forms Sent to Gateway', 'wpsc' ) . "</strong>
 			</td>
 		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td><small>" . __( 'Debug mode is used to write HTTP communications between the ChronoPay server and your host to a log file.  This should only be activated for testing!', 'wpsc' ) . "</small></td>
-		</tr>
-
-
-	<tr class='update_gateway' >
-		<td colspan='2'>
-			<div class='submit'>
-			<input type='submit' value='".__('Update &raquo;', 'wpsc')."' name='updateoption'/>
-		</div>
-		</td>
-	</tr>
-
-	<tr class='firstrowth'>
-		<td style='border-bottom: medium none;' colspan='2'>
-			<strong class='form_group'>" . __( 'Forms Sent to Gateway', 'wpsc' ) . "</strong>
-		</td>
-	</tr>
 
 		<tr>
 			<td>" . __( 'First Name Field', 'wpsc' ) . "</td>
-			<td><select name='chronopay_form[first_name]'>
-				".nzshpcrt_form_field_list(get_option('chronopay_form_first_name'))."
+			<td>
+				<select name='chronopay_form[first_name]'>
+				" . nzshpcrt_form_field_list(get_option('chronopay_form_first_name')) . "
 				</select>
 			</td>
 		</tr>
 		<tr>
 			<td>" . __( 'Last Name Field', 'wpsc' ) . "</td>
 			<td><select name='chronopay_form[last_name]'>
-				".nzshpcrt_form_field_list(get_option('chronopay_form_last_name'))."
+				" . nzshpcrt_form_field_list( get_option ( 'chronopay_form_last_name' ) ) . "
 				</select>
 			</td>
 		</tr>
 		<tr>
 			<td>" . __( 'Address Field', 'wpsc' ) . "</td>
 			<td><select name='chronopay_form[address]'>
-				".nzshpcrt_form_field_list(get_option('chronopay_form_address'))."
+				" . nzshpcrt_form_field_list( get_option ( 'chronopay_form_address' ) ) . "
 				</select>
 			</td>
 		</tr>
 		<tr>
 			<td>" . __( 'City Field', 'wpsc' ) . "</td>
 			<td><select name='chronopay_form[city]'>
-				".nzshpcrt_form_field_list(get_option('chronopay_form_city'))."
+				" . nzshpcrt_form_field_list( get_option ( 'chronopay_form_city' ) ) . "
 				</select>
 			</td>
 		</tr>
 		<tr>
 			<td>" . __( 'State Field', 'wpsc' ) . "</td>
 			<td><select name='chronopay_form[state]'>
-				".nzshpcrt_form_field_list(get_option('chronopay_form_state'))."
+				" . nzshpcrt_form_field_list( get_option ( 'chronopay_form_state' ) ) . "
 				</select>
 			</td>
 		</tr>
 		<tr>
 			<td>" . __( 'Postal/ZIP Code Field', 'wpsc' ) . "</td>
 			<td><select name='chronopay_form[post_code]'>
-				".nzshpcrt_form_field_list(get_option('chronopay_form_post_code'))."
+				" . nzshpcrt_form_field_list( get_option ( 'chronopay_form_post_code' ) ) . "
 				</select>
 			</td>
 		</tr>
 		<tr>
 			<td>" . __( 'Country Field', 'wpsc' ) . "</td>
 			<td><select name='chronopay_form[country]'>
-				".nzshpcrt_form_field_list(get_option('chronopay_form_country'))."
+				" . nzshpcrt_form_field_list( get_option ( 'chronopay_form_country' ) ) . "
 				</select>
 			</td>
 		</tr>
 		   <tr>
-           <td colspan='2'>" . sprintf( __( 'For more help configuring Chronopay, read our documentation <a href="%s">here</a>', 'wpsc' ), esc_url( 'http://docs.getshopped.org/documentation/chronopay/' ) ) . "</td>
+           <td colspan='2'>
+           	" . sprintf( __( 'For more help configuring Chronopay, read our documentation <a href="%s">here</a>', 'wpsc' ), esc_url( 'http://docs.getshopped.org/documentation/chronopay/' ) ) . "
+           </td>
        </tr>";
 
 	return $output;
