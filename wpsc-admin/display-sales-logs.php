@@ -422,12 +422,11 @@ class WPSC_Purchase_Log_Page {
    }
 
    private function get_purchase_log_url( $id ) {
-      $location = admin_url( 'index.php' );
       $location = add_query_arg( array(
          'page' => 'wpsc-purchase-logs',
          'c'    => 'item_details',
          'id'   => $id,
-      ), $location );
+      ), admin_url( 'index.php' ) );
       return $location;
    }
 
