@@ -678,7 +678,7 @@ function _wpsc_ajax_upload_product_file() {
  * @since 3.8.9
  * @access private
  *
- * @uses wpsc_update_variations()       Updates prouct variations given
+ * @uses wpsc_update_variations()       Updates product variations given
  * @uses wpsc_admin_product_listing()   DEPRECATED
  *
  * @return array|WP_Error Response args if successful, WP_Error if otherwise
