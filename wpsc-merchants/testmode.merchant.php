@@ -46,15 +46,19 @@ class wpsc_merchant_testmode extends wpsc_merchant {
 }
 
 function form_testmode() {
-	$output = "<tr>\n\r";
-	$output .= "	<td colspan='2'>\n\r";
-
-	$output .= "<strong>".__('Enter the payment instructions that you wish to display to your customers when they make a purchase', 'wpsc').":</strong><br />\n\r";
-	$output .= "<textarea cols='40' rows='9' name='wpsc_options[payment_instructions]'>" . esc_textarea( get_option( 'payment_instructions' ) ) . "</textarea><br />\n\r";
-	$output .= "<em>".__('For example, this is where you the Shop Owner might enter your bank account details or address so that your customer can make their manual payment.', 'wpsc')."</em>\n\r";
-	$output .= "	</td>\n\r";
-	$output .= "</tr>\n\r";
-
+	$output = "
+		<tr>
+			<td>
+				" . __( 'Payment Instructions', 'wpsc' ) . "
+			</td>
+			<td>
+				".__('Enter the payment instructions that you wish to display to your customers when they make a purchase', 'wpsc')."
+				<textarea cols='40' rows='9' name='wpsc_options[payment_instructions]'>" . esc_textarea( get_option( 'payment_instructions' ) ) . "</textarea><br />
+				<p class='description'>
+					".__('For example, this is where you the Shop Owner might enter your bank account details or address so that your customer can make their manual payment.', 'wpsc')."
+				</p>
+			</td>
+		</tr>\n";
 	return $output;
 }
 
