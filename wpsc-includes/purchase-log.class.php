@@ -552,6 +552,18 @@ class WPSC_Purchase_Log {
 		return $result;
 	}
 
+	static function max_purchase_id() {
+		if ( false === ( $max_purchase_id = get_transient( 'max_purchase_id' ) ) ) {
+			 $max_purchase_id = $wpdb->get_var( 'SELECT MAX( id ) FROM ' . WPSC_TABLE_PURCHASE_LOGS );
+			 set_transient( 'max_purchase_id', $max_purchase_id, 60 * 60 * 24 ); // day of seconds
+		}
+		return $max_purchase_id;
+	}
+
+	static function invalidate_max_purchase_id_transient () {
+		 delete_transient( 'max_purchase_id' );
+	}
+
 	private function update_downloadable_status() {
 		global $wpdb;
 
@@ -605,3 +617,5 @@ class WPSC_Purchase_Log {
 		return $this->get( 'processed' ) == self::REFUND_PENDING;
 	}
 }
+
+add_action( 'wpsc_purchase_log_insert', array( 'WPSC_Purchase_Log', 'invalidate_max_purchase_id_transient') );
