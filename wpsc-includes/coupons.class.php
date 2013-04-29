@@ -268,7 +268,7 @@ class wpsc_coupons {
 	public function _callback_condition_subtotal_amount( $condition, $cart_item ) {
 		global $wpsc_cart;
 		$subtotal = $wpsc_cart->calculate_subtotal();
-		$value = (int) $condition['value'];
+		$value = (float) $condition['value'];
 
 		switch( $condition['logic'] ) {
 			case 'equal'://Checks if the subtotal of products in the cart equals condition value
