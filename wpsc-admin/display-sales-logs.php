@@ -176,8 +176,8 @@ class WPSC_Purchase_Log_Page {
                   <?php if(count($messages) > 0){ ?>
                      <h4><?php esc_html_e( 'Cart Items with Custom Messages' , 'wpsc' ); ?>:</h4>
                      <?php
-                     foreach($messages as $message){
-                        echo esc_html( $message['title'] ) . ':<br />' . nl2br( esc_html( $message['message'] ) );
+                     foreach ( $messages as $message ) {
+                        echo esc_html( $message['title'] ) . ':<br />' . nl2br( wp_kses_post( $message['message'] ) );
                      }
                   } ?>
                </div>
