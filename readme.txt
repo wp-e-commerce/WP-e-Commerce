@@ -20,24 +20,24 @@ Features:
 * Plays well with other Plugins
 * Supports regular WordPress widgets, as well as a few snazzy ones of our own
 * Utilizes shortcodes and template tags (just like WordPress)
-* Works out-of-the-box with WordPress MU (make sure you use sub domains with your MU setup)
+* Works out-of-the-box with WordPress Multisite (make sure you use sub-domains with your Multisite setup)
 
 = 100% Customizable =
-* A designers dream – use your own HTML & CSS and have complete control over the look and feel of your store
+* Use your own HTML & CSS and have complete control over the look and feel of your store
 * Easy to modify templates
 
-= Amazing Support =
+= Support =
 * Lots of video tutorials
-* Guaranteed speedy response (through our premium forums)
+* Speedy response (through our premium forums)
 * Access to instant support from our community of users
 
 = Payment Gateways Integration =
-* Manual Payment (checks/money orders) (included)
-* PayPal Payments Standard (included)
-* PayPal Payments Pro (included)
-* PayPal Express Checkout (included)
-* Google Checkout (Level 2) (included)
-* Chronopay (included)
+* Manual Payment (checks/money orders)
+* PayPal Payments Standard
+* PayPal Payments Pro
+* PayPal Express Checkout
+* Google Wallet (Level 2)
+* Chronopay
 * PayPal Payflow Pro (available with Gold Cart)
 * Authorize.net (available with Gold Cart)
 * FirstData/LinkPoint (available with Gold Cart)
@@ -47,7 +47,7 @@ Features:
 * DPS (available with Gold Cart)
 * Paystation (available with Gold Cart)
 * SagePay (available with Gold Cart)
-* If you still aren’t happy, we provide you with the necessary info to write your payment gateway
+* Need a different gateway?  We have documentation available for developing your own custom payment gateway
 
 = Marketing =
 * Flexible coupon/discount pricing rules
@@ -57,24 +57,20 @@ Features:
 * Multi-tier pricing for quantity discounts.
 * Search Engine Friendly URLs
 * New Products widget
-* Cross-sells on product pages (in 3.8 this is now available as a Plugin)
-* Google Site Map
+* Cross-sells on product pages
+* Google Sitemap and Google Analytics
 * Uses the popular “Share This” button for easily promoting your products on popular social networking sites
-* Integrates with Facebook Marketplace (Facebook Marketplace API has closed – we’re working on it)
 * Integrates with Google Base
-* Integrates with Campaign Monitor for advanced email marketing
-* Integrates with Intense Debate for shared comments
-* Mail Chimp integration coming soon
 
 = Search Engine Optimization =
 * 100% Search Engine Friendly
 * Meta-information for products and categories
 * RSS feeds for products and categories
 * Integrates with Google (XML site maps and Google Merchant Centre)
-* Integrates with the All in One SEO plugin for WordPress (which includes Google Analytics)
+* Integrates with the All in One SEO plugin for WordPress
 
 = Internationalization Support =
-* Multi-lingual (the first Plugin to fully utilize and integrate with GlotPress)
+* Basic support for popular multi-lingual plugins (qTranslate and WPML)
 * Support for multiple currencies
 * Ability to target specific countries
 
@@ -87,7 +83,6 @@ Features:
 * Weight rate shipping
 
 = Checkout =
-* One-Page Checkout or Stepped Checkout, whichever you prefer
 * SSL security support for orders on both front-end and back-end
 * Checkout without account/Guest Checkout
 * Shopping Cart with tax and shipping estimates
@@ -104,30 +99,25 @@ Features:
 = Catalog Management =
 * Single-page product data entry
 * Ability to duplicate products
-* Quickly edit your products from the store front (saving you heaps of time)
-* Smart Groups allow you to organize your products with hierarchical categories, as well as by brand.
+* Quickly edit your products from the store front
+* Organize your products with hierarchical categories
 * Batch import/export of catalog
-* Google Base integration
 * Product variation management
-* Create attributes on the fly
 * Downloadable/Digital Products
 * Support for donations
 * Customer Personalized Products
 * Media Manager with automatic image resizing
-* Handles multiple product images with easy drag-and-drop sorting
-* support for Special Prices
 * Tax rates per location
 * Basic inventory control
 
 = Catalog Browsing =
-* Live product search – mmm just like apple.com (available add on)
 * Cross-sells
 * Product listing in list format
 * Product listing in grid format (available with Gold Cart)
 * Breadcrumbs
 * Product Image Zoom-in Capability
 * Stock Availability
-* Multiple Images Per Product (activated with Gold Cart)
+* Multiple Images Per Product (available with Gold Cart)
 * Product comments
 * Filter by Product Tags
 * New Products widget
