@@ -50,7 +50,7 @@ function wpsc_generate_product_feed() {
 
 	$args = apply_filters( 'wpsc_productfeed_query_args', $args );
 
-	$self = site_url( "/index.php?rss=true&amp;action=product_list$selected_category$selected_product" );
+	$self = home_url( "/index.php?rss=true&amp;action=product_list$selected_category$selected_product" );
 
 	header("Content-Type: application/xml; charset=UTF-8");
 	header('Content-Disposition: inline; filename="E-Commerce_Product_List.rss"');
@@ -74,7 +74,7 @@ function wpsc_generate_product_feed() {
 	echo ">\n\r";
 	echo "  <channel>\n\r";
 	echo "    <title><![CDATA[" . sprintf( _x( '%s Products', 'XML Feed Title', 'wpsc' ), get_option( 'blogname' ) ) . "]]></title>\n\r";
-	echo "    <link>".get_option('siteurl')."/wp-admin/admin.php?page=".WPSC_DIR_NAME."/display-log.php</link>\n\r";
+	echo "    <link>" . admin_url( 'admin.php?page=' . WPSC_DIR_NAME . '/display-log.php' ) . "</link>\n\r";
 	echo "    <description>" . _x( 'This is the WP e-Commerce Product List RSS feed', 'XML Feed Description', 'wpsc' ) . "</description>\n\r";
 	echo "    <generator>" . _x( 'WP e-Commerce Plugin', 'XML Feed Generator', 'wpsc' ) . "</generator>\n\r";
 	echo "    <atom:link href='$self' rel='self' type='application/rss+xml' />\n\r";

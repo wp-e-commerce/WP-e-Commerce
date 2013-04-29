@@ -116,7 +116,6 @@ add_action( 'widgets_init', create_function( '', 'return register_widget("WP_Wid
 function wpsc_latest_product( $args = null, $instance ) {
 	global $wpdb;
 	$args = wp_parse_args( (array)$args, array( 'number' => 5 ) );
-	$siteurl = get_option( 'siteurl' );
 	$options = get_option( 'wpsc-widget_latest_products' );
 	$number  = isset($instance['number']) ? (int)$instance['number'] : 5;
 	$image  = isset($instance['image']) ? (bool)$instance['image'] : FALSE;

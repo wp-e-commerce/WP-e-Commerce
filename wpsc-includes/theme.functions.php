@@ -640,8 +640,7 @@ function wpsc_get_current_category_id() {
 
 
 function wpsc_product_list_rss_feed() {
-	$rss_url = get_option('siteurl');
-	$rss_url = add_query_arg( 'wpsc_action', 'rss', $rss_url );
+	$rss_url = add_query_arg( 'wpsc_action', 'rss', home_url( '/' ) );
 	$rss_url = str_replace('&', '&amp;', $rss_url);
 	$rss_url = esc_url( $rss_url ); // URL santization - IMPORTANT!
 
@@ -654,12 +653,11 @@ function wpsc_user_dynamic_js() {
 	header( 'Expires: ' . gmdate( 'r', mktime( 0, 0, 0, date( 'm' ), (date( 'd' ) + 12 ), date( 'Y' ) ) ) . '' );
 	header( 'Cache-Control: public, must-revalidate, max-age=86400' );
 	header( 'Pragma: public' );
-	$siteurl = get_option( 'siteurl' );
 ?>
 		jQuery.noConflict();
 
 		/* base url */
-		var base_url = "<?php echo $siteurl; ?>";
+		var base_url = "<?php echo site_url(); ?>";
 		var WPSC_URL = "<?php echo WPSC_URL; ?>";
 		var WPSC_IMAGE_URL = "<?php echo WPSC_IMAGE_URL; ?>";
 		var WPSC_DIR_NAME = "<?php echo WPSC_DIR_NAME; ?>";
