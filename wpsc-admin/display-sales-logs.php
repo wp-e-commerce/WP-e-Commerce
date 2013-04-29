@@ -130,23 +130,34 @@ class WPSC_Purchase_Log_Page {
 
    function purchase_logs_pagination() {
       global $wpdb, $purchlogitem;
-
-      if ( $this->log_id > 1 ) {
-         $href = $this->get_purchase_log_url( ( $this->log_id - 1 ) );
-         ?>
-         <a href='<?php esc_attr_e( $href ); ?>' class='wpsc-purchase-logs-previous'>&laquo; <?php _e( 'Previous', 'wpsc' ); ?></a>
+      ?>
+      <span class='tablenav'><span class='tablenav-pages'><span class='pagination-links'>
          <?php
-      }
-
-      $query = "SELECT MAX(id) FROM " . WPSC_TABLE_PURCHASE_LOGS;
-      $max_purchase_id = $wpdb->get_var( $query );
-
-      if ( $max_purchase_id > $this->log_id ) {
-         $href = $this->get_purchase_log_url( ( $this->log_id + 1 ) );
+         $href = "#";
+         $disabled = "disabled";
+         if ( $this->log_id > 1 ) {
+            $href = $this->get_purchase_log_url( ( $this->log_id - 1 ) );
+            $disabled = '';
+         }
          ?>
-         <a href='<?php esc_attr_e( $href ); ?>' class='wpsc-purchase-logs-next'><?php _e( 'Next', 'wpsc' ); ?> &raquo;</a>
+         <a href='<?php esc_attr_e( $href ); ?>' class='prev-page <?php echo $disabled; ?>'>&lsaquo; <?php _e( 'Previous', 'wpsc' ); ?></a>
          <?php
-      }
+
+
+         $query = "SELECT MAX(id) FROM " . WPSC_TABLE_PURCHASE_LOGS;
+         $max_purchase_id = $wpdb->get_var( $query );
+
+         $href = "#";
+         $disabled = "disabled";
+         if ( $max_purchase_id > $this->log_id ) {
+            $href = $this->get_purchase_log_url( ( $this->log_id + 1 ) );
+            $disabled = '';
+         }
+         ?>
+         <a href='<?php esc_attr_e( $href ); ?>' class='next-page <?php echo $disabled; ?>'><?php _e( 'Next', 'wpsc' ); ?> &rsaquo;</a>
+
+      </span></span></span>
+      <?php
    }
 
    function purchase_logs_checkout_fields(){
