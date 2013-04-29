@@ -17,7 +17,7 @@
 	 * Wrapper for $.get. Takes care of the 'wpsc_action' and 'action' data arguments.
 	 *
 	 * @since  3.8.9
-	 * @param  {object}   data      Data to pass to the AJAX destination
+	 * @param  {object}   data    Data to pass to the AJAX destination
 	 * @param  {function} handler Response handler
 	 */
 	$.wpsc_get = function(data, handler) {
@@ -125,7 +125,7 @@
 				find('p:even').removeClass('alt').end().
 				find('p:odd').addClass('alt');
 		});
-		event.preventDefault();
+		return false;
 	});
 
 	// delete upload
