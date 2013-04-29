@@ -702,14 +702,11 @@ function wpsc_edit_the_product_link( $link = null, $before = '', $after = '', $i
 	if ( $id > 0 )
 		$product_id = $id;
 
-
-	$siteurl = get_option( 'siteurl' );
-
 	$output = '';
 	if(is_user_logged_in()){
 		get_currentuserinfo();
 		if ( $current_user->{$table_prefix . 'capabilities'}['administrator'] == 1 )
-			$output = $before . "<a class='wpsc_edit_product' href='{$siteurl}/wp-admin/post.php?action=edit&amp;post={$product_id}'>" . $link . "</a>" . $after;
+			$output = $before . '<a class="wpsc_edit_product" href="' . esc_attr( get_edit_post_link( $product_id ) ) . '">' . $link . '</a>' . $after;
 
 	}
 	return $output;

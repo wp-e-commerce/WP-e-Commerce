@@ -227,12 +227,12 @@ function wpsc_admin_sale_rss() {
 		$output .= "<rss version='2.0'>\n\r";
 		$output .= "  <channel>\n\r";
 		$output .= "    <title>" . _x( 'WP e-Commerce Product Log', 'admin rss product feed', 'wpsc' ) . "</title>\n\r";
-		$output .= "    <link>" . get_option( 'siteurl' ) . "/wp-admin/admin.php?page=" . WPSC_DIR_NAME . "/display-log.php</link>\n\r";
+		$output .= "    <link>" . admin_url( 'admin.php?page=' . WPSC_DIR_NAME . '/display-log.php' ) . "</link>\n\r";
 		$output .= "    <description>" . _x( 'This is the WP e-Commerce Product Log RSS feed', 'admin rss product feed', 'wpsc' ) . "</description>\n\r";
 		$output .= "    <generator>" . _x( 'WP e-Commerce Plugin', 'admin rss product feed', 'wpsc' ) . "</generator>\n\r";
 
 		foreach ( (array)$purchase_log as $purchase ) {
-			$purchase_link = get_option( 'siteurl' ) . "/wp-admin/admin.php?page=" . WPSC_DIR_NAME . "/display-log.php&amp;purchaseid=" . $purchase['id'];
+			$purchase_link = admin_url( 'admin.php?page=' . WPSC_DIR_NAME . '/display-log.php' ) . "&amp;purchaseid=" . $purchase['id'];
 			$purchase_title = _x( 'Purchase # %d', 'admin rss product feed', 'wpsc' );
 			$purchase_title = sprintf( $purchase_title, $purchase['id'] );
 			$output .= "    <item>\n\r";
