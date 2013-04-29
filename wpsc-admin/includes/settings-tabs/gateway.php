@@ -22,19 +22,18 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 
 	private function get_gateway_settings_url( $gateway ) {
 		$location = isset( $_REQUEST['current_url'] ) ? $_REQUEST['current_url'] : $_SERVER['REQUEST_URI'];
-		$location = add_query_arg( array(
+		$gateway  = ! empty( $gateway ) ? $gateway : '';
+		
+		return add_query_arg( array(
 			'tab'                => 'gateway',
 			'page'               => 'wpsc-settings',
-			'payment_gateway_id' => $gateway || "",
+			'payment_gateway_id' => $gateway
 		), $location );
-		return $location;
 	}
 
 	public function display_payment_gateway_settings_form( $selected_gateway = null ) {
 		if ( ! $selected_gateway ) {
 			$selected_gateway = (string) get_user_option( 'wpsc_settings_selected_payment_gateway', get_current_user_id() );
-			// if ( empty( $selected_gateway ) && ! empty( $this->active_gateways ) )
-			// 	$selected_gateway = $this->active_gateways[0];
 		}
 		$payment_data = $this->get_gateway_form( $selected_gateway );
 		if ( ! $payment_data ) {
@@ -52,7 +51,7 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 					<?php echo $payment_data['form_fields']; ?>
 					<tr><td colspan="2">
 						<?php // hidden because most gateways provide their own update button. ?>
-						<?php if ($payment_data['has_submit_button'] !== 1) { ?>
+						<?php if ( $payment_data['has_submit_button'] !== 1 ) { ?>
 							<p class="submit inline-edit-save">
 								<a class="button edit-payment-module-cancel" title="<?php esc_attr_e( "Cancel editing this Payment Gateway's settings", 'wpsc' ) ?>"><?php esc_html_e( "Cancel", 'wpsc' ); ?></a>
 								<input type="submit" name="submit" class="button button-primary edit-payment-module-update" value='<?php _e( "Update &raquo;", 'wpsc' ); ?>'>
@@ -103,11 +102,13 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 
 	private function gateway_list_item( $gateway, $force ) {
 		$checked = in_array( $gateway['id'], $this->active_gateways );
-		$active = ( $checked ? "active" : "inactive" );
-		$hidden = ( $force ? "" : "style='display: none;'" );
-		$edithidden = ( $force ? "style='display: none;'" : "");
+		
+		$active = $checked ? 'active' : 'inactive';
+		$hidden = $force   ? '' : "style='display: none;'";
+	
+		$edithidden = $hidden;
 
-		$payment_gateway_names = get_option('payment_gateway_names');
+		$payment_gateway_names = get_option( 'payment_gateway_names' );
 		$display_name = $payment_gateway_names[ $gateway['id'] ];
 		$gateway_data = false;
 		?>
@@ -144,10 +145,7 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 		$gateways = apply_filters( 'wpsc_settings_get_gateways', array() );
 
 		$selected_gateway = (string) get_user_option( 'wpsc_settings_selected_payment_gateway', get_current_user_id() );
-		// if ( empty( $selected_gateway ) && ! empty( $this->active_gateways ) ) {
-		// 	$selected_gateway = $this->active_gateways[0];
-		// }
-
+	
 		foreach ( $gateways as $gateway ) {
 			$this->gateway_list_item( $gateway, $selected_gateway === $gateway['id'] );
 		}
