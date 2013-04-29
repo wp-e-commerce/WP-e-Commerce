@@ -498,7 +498,11 @@ add_filter( 'manage_wpsc-product_posts_columns', 'wpsc_additional_column_names' 
  */
 function wpsc_update_featured_products() {
 	if ( ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) &&
-		 ! ( isset( $_REQUEST['wpsc_admin_action'] ) && ( $_REQUEST['wpsc_admin_action'] == 'update_featured_product' ) ) )
+		 ! ( isset( $_REQUEST['wpsc_admin_action'] ) &&
+		 	( $_REQUEST['wpsc_admin_action'] == 'update_featured_product' ) ) )
+		return;
+
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX && 'update_featured_product' !== $_REQUEST['action'] )
 		return;
 
 	$product_id = absint( $_REQUEST['product_id'] );
@@ -561,4 +565,4 @@ function my_action_row( $actions, $post ) {
 }
 
 add_action( 'wp_ajax_update_featured_product', 'wpsc_update_featured_products' );
-add_action( 'admin_init', 'wpsc_update_featured_products' );
+add_action( 'admin_init'                     , 'wpsc_update_featured_products' );
