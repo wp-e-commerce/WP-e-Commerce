@@ -1,8 +1,8 @@
 <?php
 /**
- * Some parts of this code were copied from functions.bb-meta.php in bbpress 
+ * Some parts of this code were copied from functions.bb-meta.php in bbpress
  */
- 
+
 function wpsc_sanitize_meta_key( $key )
 {
 	return preg_replace( '|[^a-z0-9_]|i', '', $key );
@@ -43,9 +43,9 @@ function wpsc_update_meta( $object_id = 0, $meta_key, $meta_value, $type, $globa
 		return false;
 	}
 	$cache_object_id = $object_id = (int) $object_id;
-	
+
 	$object_type = $type;
-	
+
 	$meta_key = wpsc_sanitize_meta_key( $meta_key );
 
 	$meta_tuple = compact( 'object_type', 'object_id', 'meta_key', 'meta_value', 'type' );
@@ -82,7 +82,7 @@ function wpsc_delete_meta( $object_id = 0, $meta_key, $meta_value, $type, $globa
 		return false;
 
 	$cache_object_id = $object_id = (int) $object_id;
-	
+
 	$object_type = $type;
 
 	$meta_key = wpsc_sanitize_meta_key( $meta_key );
@@ -132,17 +132,39 @@ function wpsc_delete_cartmeta( $cart_id, $meta_key, $meta_value = '' ) {
  * category meta functions are as follows:
 */
 
-
-function wpsc_get_categorymeta( $cart_id, $meta_key ) {
-	return wpsc_get_meta( $cart_id, $meta_key, 'wpsc_category' );
+/**
+ * Retrieve meta field for a category
+ *
+ * @param int $cat_id Category ID.
+ * @param string $meta_key The meta key to retrieve.
+ * @return mixed Will be value of meta data field
+ */
+function wpsc_get_categorymeta( $cat_id, $meta_key ) {
+	return wpsc_get_meta( $cat_id, $meta_key, 'wpsc_category' );
 }
 
-function wpsc_update_categorymeta( $cart_id, $meta_key, $meta_value ) {
-	return wpsc_update_meta( $cart_id, $meta_key, $meta_value, 'wpsc_category' );
+/**
+ * Update meta field for a category
+ *
+ * @param int $cat_id Category ID.
+ * @param string $meta_key The meta key to retrieve.
+ * @param string $meta_value The value to be stored.
+ * @return mixed true if up
+ */
+function wpsc_update_categorymeta( $cat_id, $meta_key, $meta_value ) {
+	return wpsc_update_meta( $cat_id, $meta_key, $meta_value, 'wpsc_category' );
 }
 
-function wpsc_delete_categorymeta( $cart_id, $meta_key, $meta_value = '' ) {
-	return wpsc_delete_meta( $cart_id, $meta_key, $meta_value, 'wpsc_category' );
+/**
+ * Delete meta field for a category
+ *
+ * @param int $cat_id Category ID.
+ * @param string $meta_key The meta key to retrieve.
+ * @param string $meta_value Value to be compared before deleting.
+ * @return mixed true if up
+ */
+function wpsc_delete_categorymeta( $cat_id, $meta_key, $meta_value = '' ) {
+	return wpsc_delete_meta( $cat_id, $meta_key, $meta_value, 'wpsc_category' );
 }
 /**
  * category meta functions end here.
@@ -156,7 +178,7 @@ function wpsc_delete_categorymeta( $cart_id, $meta_key, $meta_value = '' ) {
 
 /**
  * add_product_meta function.
- * 
+ *
  * @access public
  * @param mixed $product_id
  * @param mixed $key
@@ -171,7 +193,7 @@ function add_product_meta($product_id, $key, $value, $unique = false, $custom = 
 
 /**
  * delete_product_meta function.
- * 
+ *
  * @access public
  * @param mixed $product_id
  * @param mixed $key
@@ -185,7 +207,7 @@ function delete_product_meta($product_id, $key, $value = '') {
 
 /**
  * get_product_meta function.
- * 
+ *
  * @access public
  * @param mixed $product_id
  * @param mixed $key
@@ -199,7 +221,7 @@ function get_product_meta($product_id, $key, $single = false) {
 
 /**
  * update_product_meta function.
- * 
+ *
  * @access public
  * @param mixed $product_id
  * @param mixed $key
@@ -226,16 +248,16 @@ class wpsc_custom_meta {
 
 	function wpsc_custom_meta($postid) {
 		global $wpdb;
-		
+
 		$this->custom_meta = $wpdb->get_results( $wpdb->prepare("SELECT meta_key, meta_value, meta_id, post_id
-			FROM $wpdb->postmeta 
+			FROM $wpdb->postmeta
 			WHERE post_id = %d
 			AND `meta_key` NOT REGEXP '^_'
 			ORDER BY meta_key,meta_id", $postid), ARRAY_A );
-		
+
 		$this->custom_meta_count = count($this->custom_meta);
 	}
-	
+
 
 	function have_custom_meta() {
 		if (($this->current_custom_meta + 1) < $this->custom_meta_count) {
@@ -245,7 +267,7 @@ class wpsc_custom_meta {
 		}
 		return false;
 	}
-	
+
 	/*
 	 * Custom Meta Loop Code Starts here
 	*/
@@ -255,7 +277,7 @@ class wpsc_custom_meta {
 		return $this->custom_meta_values;
 	}
 
-	
+
 	function the_custom_meta() {
 		$this->custom_meta_values = $this->next_custom_meta();
 		return $this->custom_meta_values;
@@ -265,5 +287,5 @@ class wpsc_custom_meta {
 		if ($this->custom_meta_count > 0) {
 			$this->custom_meta_values = $this->custom_meta[0];
 		}
-	}	
+	}
 }
