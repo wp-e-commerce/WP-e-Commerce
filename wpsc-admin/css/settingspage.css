@@ -144,7 +144,8 @@ table.wpsc-edit-module-options tr td {
 .gateway_settings input[type=text]{
 	width: 200px;
 }
-.edit-payment-module-update {
+.edit-payment-module-update,
+.edit-shipping-module-update {
 	float: right;
 }
 
