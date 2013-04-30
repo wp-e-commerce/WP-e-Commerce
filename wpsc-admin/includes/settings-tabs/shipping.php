@@ -78,19 +78,15 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 		$classes = implode( ' ', $classes );
 		?>
 			<td id="wpsc-shipping-module-settings" class="<?php echo esc_attr( $classes ); ?>" rowspan='2'>
-				<div class='postbox'>
-					<h3 class='hndle'><?php echo esc_html( $title ); ?></h3>
-					<div class='inside'>
-						<table class='form-table'>
-							<?php echo $content; ?>
-						</table>
-						<?php if ( $found_selected_module ): ?>
-							<p class="submit">
-								<input type="submit" value="<?php _e( 'Update &raquo;', 'wpsc' ); ?>" />
-							</p>
-						<?php endif; ?>
-					</div>
-				</div>
+				<h3><?php echo esc_html( $title ); ?></h3>
+				<table class='form-table'>
+					<?php echo $content; ?>
+				</table>
+				<?php if ( $found_selected_module ): ?>
+					<p class="submit">
+						<input type="submit" value="<?php _e( 'Update &raquo;', 'wpsc' ); ?>" />
+					</p>
+				<?php endif; ?>
 			</td>
 		<?php
 	}
@@ -128,12 +124,14 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 		}
 		//get shipping options that are selected
 		$selected_shippings = get_option( 'custom_shipping_options' );
-		?>
-		<div class="metabox-holder">
-			<input type='hidden' name='shipping_submits' value='true' />
-			<?php wp_nonce_field( 'update-options', 'wpsc-update-options' ); ?>
-			<input type='hidden' name='wpsc_admin_action' value='submit_options' />
 
+		?>
+
+		<h3><?php esc_html_e( 'Shipping Settings', 'wpsc'); ?></h3>
+		<input type='hidden' name='shipping_submits' value='true' />
+		<?php wp_nonce_field( 'update-options', 'wpsc-update-options' ); ?>
+		<input type='hidden' name='wpsc_admin_action' value='submit_options' />
+		<table class='form-table'>
 			<?php
 
 			if ( get_option( 'custom_gateway' ) == 1 ) {
@@ -147,192 +145,175 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 			/* wpsc_setting_page_update_notification displays the wordpress styled notifications */
 			wpsc_settings_page_update_notification();
 			?>
-			<div class='postbox'>
-				<h3 class='hndle'><?php esc_html_e( 'General Settings', 'wpsc' ); ?></h3>
-				<div class='inside'>
-					<table class='wpsc_options form-table'>
-						<tr>
-							<th scope="row"><?php _e( 'Use Shipping', 'wpsc' ); ?>:</th>
-							<td>
-								<?php
-								$do_not_use_shipping = get_option( 'do_not_use_shipping' );
-								$do_not_use_shipping1 = "";
-								$do_not_use_shipping2 = "";
-								if( $do_not_use_shipping )
-									$do_not_use_shipping1 = "checked ='checked'";
-								else
-									$do_not_use_shipping2 = "checked ='checked'";
-								?>
-								<input type='radio' value='0' name='wpsc_options[do_not_use_shipping]' id='do_not_use_shipping2' <?php echo $do_not_use_shipping2; ?> /> <label for='do_not_use_shipping2'><?php _e( 'Yes', 'wpsc' ); ?></label>&nbsp;
-								<input type='radio' value='1' name='wpsc_options[do_not_use_shipping]' id='do_not_use_shipping1' <?php echo $do_not_use_shipping1; ?> /> <label for='do_not_use_shipping1'><?php _e( 'No', 'wpsc' ); ?></label><br />
-								<?php esc_html_e( 'If you are only selling digital downloads, you should select no to disable the shipping on your site.', 'wpsc' ); ?>
-							</td>
-						</tr>
+			<tr>
+				<th scope="row"><?php _e( 'Use Shipping', 'wpsc' ); ?></th>
+				<td>
+					<input type='hidden' value='1' name='wpsc_options[do_not_use_shipping]' />
+					<input type='checkbox' value='0' name='wpsc_options[do_not_use_shipping]' id='do_not_use_shipping' <?php checked( '0',  get_option( 'do_not_use_shipping' ) ); ?> /> <label for='do_not_use_shipping'><?php _e( 'Enable Shipping settings', 'wpsc' ); ?></label>
+					<p class='description'><?php esc_html_e( 'If you are only selling digital downloads, you should turn this off.', 'wpsc' ); ?></p>
+				</td>
+			</tr>
 
-						<tr>
-							<th><?php esc_html_e( 'Base City:', 'wpsc' ); ?></th>
-							<td>
-								<input type='text' name='wpsc_options[base_city]' value='<?php esc_attr_e( get_option( 'base_city' ) ); ?>' />
-								<br /><?php esc_html_e( 'Please provide for more accurate rates', 'wpsc' ); ?>
-							</td>
-						</tr>
-						<tr>
-							<th><?php esc_html_e( 'Base Zipcode/Postcode:', 'wpsc' ); ?></th>
-							<td>
-								<input type='text' name='wpsc_options[base_zipcode]' value='<?php esc_attr_e( get_option( 'base_zipcode' ) ); ?>' />
-								<br /><?php esc_html_e( 'If you are based in America then you need to set your own Zipcode for UPS and USPS to work. This should be the Zipcode for your Base of Operations.', 'wpsc' ); ?>
-							</td>
-						</tr>
-						<tr>
-							<th scope="row"><?php _e( 'Shipwire Settings', 'wpsc' ); ?><span style='color: red;'></span>:</th>
-							<?php
-								switch ( get_option( 'shipwire' ) ) {
-									case 1:
-										$shipwire_settings = 'style=\'display: block;\'';
-										break;
+			<tr>
+				<th><?php esc_html_e( 'Shipping Origin City', 'wpsc' ); ?></th>
+				<td>
+					<input type='text' name='wpsc_options[base_city]' value='<?php esc_attr_e( get_option( 'base_city' ) ); ?>' />
+					<p class='description'><?php esc_html_e( 'The name of the city where you fulfill and ship orders from. This enables us to give your customers more accurate shipping pricing.', 'wpsc' ); ?></p>
+				</td>
+			</tr>
+			<tr>
+				<th><?php esc_html_e( 'Shipping Origin Zipcode/Postcode', 'wpsc' ); ?></th>
+				<td>
+					<input type='text' name='wpsc_options[base_zipcode]' value='<?php esc_attr_e( get_option( 'base_zipcode' ) ); ?>' />
+					<p class='description'>
+						<?php esc_html_e( 'The zipcode/postcode for where you fulfill and ship orders from.', 'wpsc' ); ?><br />
+						<?php esc_html_e( 'If you are based in the United States then this field is required in order for the UPS and USPS Shipping Calculators to work.', 'wpsc' ); ?>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><?php _e( 'Shipwire', 'wpsc' ); ?><span style='color: red;'></span></th>
+				<td>
+					<input type='hidden' value='0' name='wpsc_options[shipwire]' />
+					<input type='checkbox' onclick='jQuery("#wpsc_shipwire_setting").toggle( jQuery(this).prop("checked") );' value='1' name='wpsc_options[shipwire]' id='shipwire' <?php checked( '1',  get_option( 'shipwire' ) ); ?> />
+					<label for='shipwire'><?php _e( 'Enable Shipwire Integration', 'wpsc' ); ?></label>
+					<p class='description'><?php printf( __( '<a href="%1$s" target="_blank">Shipwire</a> provide e-commerce fulfillment warehouses. WP e-Commerce can integrate stock inventory and shipping tracking with their service.', 'wpsc' ), 'http://www.shipwire.com/' ); ?></p>
+				</td>
+			</tr>
+			<?php
+				switch ( get_option( 'shipwire' ) ) {
+					case 1:
+						$shipwire_settings = 'style="display: block;"';
+						break;
 
-									case 0:
-									default:
-										$shipwire_settings = '';
-										break;
-								}
-							?>
-							<td>
-								<input type='radio' onclick='jQuery("#wpsc_shipwire_setting").show()' value='1' name='wpsc_options[shipwire]' id='shipwire1' <?php checked( '1',  get_option( 'shipwire' ) ); ?> /> <label for='shipwire1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
-								<input type='radio' onclick='jQuery("#wpsc_shipwire_setting").hide()' value='0' name='wpsc_options[shipwire]' id='shipwire2' <?php checked( '0',  get_option( 'shipwire' ) ); ?> /> <label for='shipwire2'><?php _e( 'No', 'wpsc' ); ?></label>
-								<div id='wpsc_shipwire_setting' <?php echo $shipwire_settings; ?>>
-									<table>
-										<tr>
-											<td><?php esc_html_e( 'Shipwire Email', 'wpsc' ); ?> :</td><td> <input type="text" name='wpsc_options[shipwireemail]' value="<?php esc_attr_e( get_option( 'shipwireemail' ) ); ?>" /></td>
-										</tr>
-										<tr>
-											<td><?php esc_html_e( 'Shipwire Password', 'wpsc' ); ?> :</td><td><input type="text" name='wpsc_options[shipwirepassword]' value="<?php esc_attr_e( get_option( 'shipwirepassword' ) ); ?>" /></td>
-										</tr>
-										<tr>
-											<td>
-												<a class="shipwire_sync button"><?php esc_html_e( 'Update Tracking and Inventory', 'wpsc' ); ?></a>
-												<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
-											</td>
-										</tr>
-									</table>
-								</div>
-							</td>
+					case 0:
+					default:
+						$shipwire_settings = 'style="display: none;"';
+						break;
+				}
+			?>
+			<tr id='wpsc_shipwire_setting' <?php echo $shipwire_settings; ?>>
+				<th>&nbsp;</th>
+				<td>
+					<table>
+						<tr>
+							<th><?php esc_html_e( 'Shipwire Email', 'wpsc' ); ?></th>
+							<td><input type="text" name='wpsc_options[shipwireemail]' value="<?php esc_attr_e( get_option( 'shipwireemail' ) ); ?>" /></td>
 						</tr>
 						<tr>
-							<th scope="row">
-								<?php _e( 'Enable Free Shipping Discount', 'wpsc' ); ?>
-							</th>
-							<td>
-								<?php
-									if ( get_option( 'shipping_discount' ) == 1 ) {
-										$selected2 = '';
-										$selected1 = 'checked="checked"';
-										$shipping_discount_settings = 'style=\'display: block;\'';
-									} else {
-										$selected2 = 'checked="checked"';
-										$selected1 = '';
-										$shipping_discount_settings = '';
-									}
-								?>
-								<input type='radio' onclick='jQuery("#shipping_discount_value").show()' value='1' name='wpsc_options[shipping_discount]' id='shipping_discount1' <?php echo $selected1; ?> /> <label for='shipping_discount1'><?php _e( 'Yes', 'wpsc' ); ?></label> &nbsp;
-								<input type='radio' onclick='jQuery("#shipping_discount_value").hide()' value='0' name='wpsc_options[shipping_discount]' id='shipping_discount2' <?php echo $selected2; ?> /> <label for='shipping_discount2'><?php _e( 'No', 'wpsc' ); ?></label>
-
-							</td>
+							<th><?php esc_html_e( 'Shipwire Password', 'wpsc' ); ?></th>
+							<td><input type="text" name='wpsc_options[shipwirepassword]' value="<?php esc_attr_e( get_option( 'shipwirepassword' ) ); ?>" /></td>
 						</tr>
 						<tr>
-							<td>&nbsp;</td>
-							<td colspan="2">
-								<?php
-									$value = esc_attr( get_option( 'shipping_discount_value' ) );
-								?>
-								<div <?php echo $shipping_discount_settings; ?> id='shipping_discount_value'>
-
-								<?php printf( __( 'Sales over or equal to: %1$s<input type="text" size="6" name="wpsc_options[shipping_discount_value]" value="%2$s" id="shipping_discount_value" /> will receive free shipping.', 'wpsc' ), $currency_sign, $value ); ?>
-								</div>
+							<th><?php esc_html_e( 'Force Sync with Shipwire', 'wpsc' ); ?></th>
+							<td>
+								<a class="shipwire_sync button"><?php esc_html_e( 'Update Tracking and Inventory', 'wpsc' ); ?></a>
+								<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
 							</td>
 						</tr>
 					</table>
+				</td>
+			</tr>
+			<tr>
+				<th><?php _e( 'Free Shipping Discount', 'wpsc' ); ?></th>
+				<td>
+					<?php
+						if ( get_option( 'shipping_discount' ) == 1 ) {
+							$shipping_discount_settings = 'style=\'display: block;\'';
+						} else {
+							$shipping_discount_settings = '';
+						}
+					?>
+					<input type='hidden' value='0' name='wpsc_options[shipping_discount]' />
+					<input type='checkbox' onclick='jQuery("#shipping_discount_value").toggle( jQuery(this).prop("checked") );' value='1' name='wpsc_options[shipping_discount]' id='shipping_discount' <?php checked( '1',  get_option( 'shipping_discount' ) ); ?> />
+					<label for='shipping_discount'><?php _e( 'Enable Free Shipping Discount', 'wpsc' ); ?></label>
+
+				</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td colspan="2">
+					<?php
+						$value = esc_attr( get_option( 'shipping_discount_value' ) );
+					?>
+					<div <?php echo $shipping_discount_settings; ?> id='shipping_discount_value'>
+
+					<?php printf( __( 'Sales over or equal to %1$s<input type="text" size="6" name="wpsc_options[shipping_discount_value]" value="%2$s" id="shipping_discount_value" /> will receive free shipping.', 'wpsc' ), $currency_sign, $value ); ?>
+					</div>
+				</td>
+			</tr>
+		</table>
+
+		<h3><?php _e( 'Shipping Modules', 'wpsc' ) ?></h3>
+		<p>
+			<?php _e( 'To enable shipping in WP e-Commerce you must select which shipping methods you want to enable on your site.<br /> If you want to use fixed-price shipping options like "Pickup - $0, Overnight - $10, Same day - $20, etc." you can download a WordPress plugin from plugins directory for <a href="http://wordpress.org/extend/plugins/wp-e-commerce-fixed-rate-shipping/">Simple shipping</a>. It will appear in the list as "Fixed rate".', 'wpsc' ); ?>
+		</p>
+		<br />
+		<p>
+			<strong><?php _e( 'Internal Shipping Calculators', 'wpsc' ); ?></strong>
+		</p>
+		<?php
+			foreach ( $internal_shipping_modules as $shipping ) {
+				$shipping->checked = '';
+				if ( is_object( $shipping ) && in_array( $shipping->getInternalName(), (array)$selected_shippings ) ) {
+					$shipping->checked = ' checked = "checked" ';
+				}
+				?>
+				<div class='wpsc_shipping_options'>
+					<div class='wpsc-shipping-actions'>
+						<span class="edit">
+							<a class='edit-shipping-module' data-module-id="<?php echo $shipping->internal_name; ?>" title="<?php esc_attr_e( 'Edit this Shipping Module', 'wpsc' ); ?>" href='<?php echo esc_url( $this->get_shipping_module_url( $shipping ) ); ?>' style="cursor:pointer;"><?php _ex( 'Edit', 'Shipping modules link to individual settings', 'wpsc' ); ?></a>
+							<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
+						</span>
+					</div>
+					<p><input name='custom_shipping_options[]' <?php echo $shipping->checked; ?> type='checkbox' value='<?php echo $shipping->internal_name; ?>' id='<?php echo $shipping->internal_name; ?>_id' /><label for='<?php echo $shipping->internal_name; ?>_id'> <?php echo $shipping->name; ?></label></p>
 				</div>
-			</div>
+			<?php }	// end foreach ?>
+		<br />
+		<p>
+			<strong><?php _e( 'External Shipping Calculators', 'wpsc' ); ?></strong>
+			<?php if ( ! function_exists( 'curl_init' ) ) : ?>
+				<br />
+				<span style='color: red; font-size:8pt; line-height:10pt;'>
+					<?php _e( 'The following shipping modules all need cURL which is not installed on this server, you may need to contact your web hosting provider to get it set up. ', 'wpsc' ); ?>
+				</span>
+			<?php endif; ?>
+		</p>
+		<?php
+			// print the internal shipping methods
+			foreach ( $external_shipping_modules as $shipping ) {
+				$disabled = '';
+				if ( isset( $shipping->requires_curl ) && $shipping->requires_curl && ! function_exists( 'curl_init' ) ) {
+					$disabled = "disabled='disabled'";
+				}
+				$shipping->checked = '';
+				if ( in_array( $shipping->getInternalName(), (array)$selected_shippings ) ) {
+					$shipping->checked = " checked='checked' ";
+				}
 
-			<table id='wpsc-shipping-module-options' class='wpsc-edit-module-options'>
-				<tr>
-					<td class='select_gateway'>
-					<a name="gateway_options"></a>
-					<div class='postbox'>
-						<h3 class='hndle'><?php _e( 'Shipping Modules', 'wpsc' ) ?></h3>
-							<div class='inside'>
-								<p>
-									<?php _e( 'To enable shipping in WP e-Commerce you must select which shipping methods you want to enable on your site.<br /> If you want to use fixed-price shipping options like "Pickup - $0, Overnight - $10, Same day - $20, etc." you can download a WordPress plugin from plugins directory for <a href="http://wordpress.org/extend/plugins/wp-e-commerce-fixed-rate-shipping/">Simple shipping</a>. It will appear in the list as "Fixed rate".', 'wpsc' ); ?>
-								</p>
-								<br />
-								<p>
-									<strong><?php _e( 'Internal Shipping Calculators', 'wpsc' ); ?></strong>
-								</p>
-								<?php
-									foreach ( $internal_shipping_modules as $shipping ) {
-										$shipping->checked = '';
-										if ( is_object( $shipping ) && in_array( $shipping->getInternalName(), (array)$selected_shippings ) ) {
-											$shipping->checked = ' checked = "checked" ';
-										}
-										?>
-										<div class='wpsc_shipping_options'>
-											<div class='wpsc-shipping-actions'>
-												<span class="edit">
-													<a class='edit-shipping-module' data-module-id="<?php echo $shipping->internal_name; ?>" title="<?php esc_attr_e( 'Edit this Shipping Module', 'wpsc' ); ?>" href='<?php echo esc_url( $this->get_shipping_module_url( $shipping ) ); ?>' style="cursor:pointer;"><?php _ex( 'Edit', 'Shipping modules link to individual settings', 'wpsc' ); ?></a>
-													<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
-												</span>
-											</div>
-											<p><input name='custom_shipping_options[]' <?php echo $shipping->checked; ?> type='checkbox' value='<?php echo $shipping->internal_name; ?>' id='<?php echo $shipping->internal_name; ?>_id' /><label for='<?php echo $shipping->internal_name; ?>_id'> <?php echo $shipping->name; ?></label></p>
-										</div>
-									<?php }	// end foreach ?>
-								<br />
-								<p>
-									<strong><?php _e( 'External Shipping Calculators', 'wpsc' ); ?></strong>
-									<?php if ( ! function_exists( 'curl_init' ) ) : ?>
-										<br />
-										<span style='color: red; font-size:8pt; line-height:10pt;'>
-											<?php _e( 'The following shipping modules all need cURL which is not installed on this server, you may need to contact your web hosting provider to get it set up. ', 'wpsc' ); ?>
-										</span>
-									<?php endif; ?>
-								</p>
-								<?php
-									// print the internal shipping methods
-									foreach ( $external_shipping_modules as $shipping ) {
-										$disabled = '';
-										if ( isset( $shipping->requires_curl ) && $shipping->requires_curl && ! function_exists( 'curl_init' ) ) {
-											$disabled = "disabled='disabled'";
-										}
-										$shipping->checked = '';
-										if ( in_array( $shipping->getInternalName(), (array)$selected_shippings ) ) {
-											$shipping->checked = " checked='checked' ";
-										}
-
-										?>
-										<div class='wpsc_shipping_options'>
-											<div class="wpsc-shipping-actions">
-												<span class="edit">
-													<a class='edit-shipping-module' data-module-id="<?php echo $shipping->internal_name; ?>"  title="<?php esc_attr_e( 'Edit this Shipping Module', 'wpsc' ); ?>" href='<?php echo esc_url( $this->get_shipping_module_url( $shipping ) ); ?>' style="cursor:pointer;"><?php _ex( 'Edit', 'Shipping modules link to individual settings', 'wpsc' ); ?></a>
-													<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
-												</span>
-											</div>
-											<p>
-												<input <?php echo $disabled; ?> name='custom_shipping_options[]' <?php echo $shipping->checked; ?> type='checkbox' value='<?php echo $shipping->internal_name; ?>' id='<?php echo $shipping->internal_name; ?>_id' />
-												<label for='<?php echo $shipping->internal_name; ?>_id'><?php echo $shipping->name; ?></label>
-											</p>
-										</div>
-								<?php } // end foreach ?>
-								<p class="submit">
-									<input type='hidden' value='true' name='update_gateways' />
-									<input type="submit" value="<?php _e( 'Update &raquo;', 'wpsc' ); ?>" />
-								</p>
-							</div>
-						</div>
-					</td>
-					<?php $this->display_shipping_module_settings_form(); ?>
-				</tr>
-			</table>
-		</div>
+				?>
+				<div class='wpsc_shipping_options'>
+					<div class="wpsc-shipping-actions">
+						<span class="edit">
+							<a class='edit-shipping-module' data-module-id="<?php echo $shipping->internal_name; ?>"  title="<?php esc_attr_e( 'Edit this Shipping Module', 'wpsc' ); ?>" href='<?php echo esc_url( $this->get_shipping_module_url( $shipping ) ); ?>' style="cursor:pointer;"><?php _ex( 'Edit', 'Shipping modules link to individual settings', 'wpsc' ); ?></a>
+							<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
+						</span>
+					</div>
+					<p>
+						<input <?php echo $disabled; ?> name='custom_shipping_options[]' <?php echo $shipping->checked; ?> type='checkbox' value='<?php echo $shipping->internal_name; ?>' id='<?php echo $shipping->internal_name; ?>_id' />
+						<label for='<?php echo $shipping->internal_name; ?>_id'><?php echo $shipping->name; ?></label>
+					</p>
+				</div>
+		<?php } // end foreach ?>
+		<p class="submit">
+			<input type='hidden' value='true' name='update_gateways' />
+			<input type="submit" value="<?php _e( 'Update &raquo;', 'wpsc' ); ?>" />
+		</p>
+		<table>
+			<tr>
+				<?php $this->display_shipping_module_settings_form(); ?>
+			</tr>
+		</table>
 		<?php
 	}
 }
