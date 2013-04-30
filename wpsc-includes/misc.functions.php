@@ -962,3 +962,39 @@ function _wpsc_doing_it_wrong( $function, $message, $version ) {
 		);
 	}
 }
+
+/**
+ * Returns the ID of the highest numbered purchase log
+ *
+ * Fetches the max_purchase_id transient, or fetches it from the database and sets the transient
+ *
+ * @since 3.8.11
+ *
+ * @return integer The ID of the highest numbered purchase log in the database
+ *
+ * @see invalidate_max_purchase_id_transient()
+ */
+function max_purchase_id() {
+	if ( false === ( $max_purchase_id = get_transient( 'max_purchase_id' ) ) ) {
+		 $max_purchase_id = $wpdb->get_var( 'SELECT MAX( id ) FROM ' . WPSC_TABLE_PURCHASE_LOGS );
+		 set_transient( 'max_purchase_id', $max_purchase_id, 60 * 60 * 24 ); // day of seconds
+	}
+	return (int)$max_purchase_id;
+}
+
+/**
+ * Invalidates transient for highest numbered purchase log id
+ *
+ * Used especially with actions wpsc_purchase_log_insert and wpsc_purchase_log_delete
+ *
+ * @since 3.8.11
+ *
+ * @see max_purchase_id()
+ */
+
+function invalidate_max_purchase_id_transient () {
+	 delete_transient( 'max_purchase_id' );
+}
+
+add_action( 'wpsc_purchase_log_insert', 'invalidate_max_purchase_id_transient' );
+add_action( 'wpsc_purchase_log_delete', 'invalidate_max_purchase_id_transient' );
