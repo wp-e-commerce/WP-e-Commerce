@@ -143,7 +143,7 @@ class WPSC_Purchase_Log_Page {
 			<a href='<?php esc_attr_e( $href ); ?>' class='prev-page <?php echo $disabled; ?>'>&lsaquo; <?php _e( 'Previous', 'wpsc' ); ?></a>
 			<?php
 
-			$max_purchase_id = max_purchase_id();
+			$max_purchase_id = wpsc_max_purchase_id();
 			$href = "#";
 			$disabled = "disabled";
 			if ( $max_purchase_id > $this->log_id ) {
