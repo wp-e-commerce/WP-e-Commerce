@@ -210,7 +210,12 @@ function wpsc_purchaselog_details_discount() {
 
 function wpsc_purchaselog_details_date() {
    global $purchlogitem;
-   return date( 'jS M Y', $purchlogitem->extrainfo->date );
+   return date_i18n( apply_filters( 'wpsc_single_purchase_log_date_format', get_option( 'date_format' ) ), $purchlogitem->extrainfo->date );
+}
+
+function wpsc_purchaselog_details_date_time() {
+   global $purchlogitem;
+   return date_i18n( apply_filters( 'wpsc_single_purchase_log_date_time_format', get_option( 'date_format' ) . ' g:ia' ), $purchlogitem->extrainfo->date );
 }
 
 function wpsc_purchaselog_details_total() {
@@ -344,16 +349,19 @@ function wpsc_display_purchlog_buyers_state_and_postcode() {
 
    $output = esc_html( $state );
 
-   if ( isset( $purchlogitem->userinfo['billingpostcode']['value'] ) )
-      $output .= ', ' . esc_html( $purchlogitem->userinfo['billingpostcode']['value'] );
+   if ( isset( $purchlogitem->userinfo['billingpostcode']['value'] ) && ! empty( $purchlogitem->userinfo['billingpostcode']['value'] ) ) {
+      if (! empty( $output ) ) {
+         $output .= ', ';
+      }
+      $output .= esc_html( $purchlogitem->userinfo['billingpostcode']['value'] );
+   }
 
    return $output;
 }
 
 function wpsc_display_purchlog_buyers_country() {
    global $purchlogitem;
-   return esc_html( $purchlogitem->extrainfo->billing_country );
-}
+   return esc_html( wpsc_get_country( $purchlogitem->extrainfo->billing_country ) );}
 
 function wpsc_display_purchlog_buyers_phone() {
    global $purchlogitem;
@@ -399,7 +407,7 @@ function wpsc_display_purchlog_shipping_state_and_postcode() {
 
 function wpsc_display_purchlog_shipping_country() {
    global $purchlogitem;
-   return esc_html( $purchlogitem->shippinginfo['shippingcountry']['value'] );
+   return esc_html( wpsc_get_country( $purchlogitem->shippinginfo['shippingcountry']['value'] ) );
 }
 
 function wpsc_display_purchlog_shipping_method() {
