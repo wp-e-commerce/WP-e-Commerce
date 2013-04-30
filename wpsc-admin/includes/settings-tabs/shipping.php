@@ -114,20 +114,12 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 			if ( empty( $module ) )
 				continue;
 
-			if ( isset( $module->is_external ) && $module->is_external )
+			if ( isset( $module->is_external ) && $module->is_external ) {
 				$external_shipping_modules[$key] = $module;
-			else
+			} else {
 				$internal_shipping_modules[$key] = $module;
+			}
 		}
-
-		$currency_data = $wpdb->get_row( $wpdb->prepare( "SELECT `symbol`,`symbol_html`,`code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id` = %d LIMIT 1", get_option( 'currency_type' ) ), ARRAY_A );
-		if ( $currency_data['symbol'] != '' ) {
-			$currency_sign = $currency_data['symbol_html'];
-		} else {
-			$currency_sign = $currency_data['code'];
-		}
-		//get shipping options that are selected
-		$selected_shippings = get_option( 'custom_shipping_options' );
 
 		?>
 
@@ -137,17 +129,8 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 		<input type='hidden' name='wpsc_admin_action' value='submit_options' />
 		<table class='form-table'>
 			<?php
-
-			if ( get_option( 'custom_gateway' ) == 1 ) {
-				$custom_gateway_hide = "style='display:block;'";
-				$custom_gateway1 = 'checked="checked"';
-			} else {
-				$custom_gateway_hide = "style='display:none;'";
-				$custom_gateway2 = 'checked="checked"';
-			}
-
-			/* wpsc_setting_page_update_notification displays the wordpress styled notifications */
-			wpsc_settings_page_update_notification();
+				/* wpsc_setting_page_update_notification displays the wordpress styled notifications */
+				wpsc_settings_page_update_notification();
 			?>
 			<tr>
 				<th scope="row"><?php _e( 'Use Shipping', 'wpsc' ); ?></th>
@@ -218,6 +201,14 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 					</table>
 				</td>
 			</tr>
+			<?php
+				$currency_data = $wpdb->get_row( $wpdb->prepare( "SELECT `symbol`,`symbol_html`,`code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id` = %d LIMIT 1", get_option( 'currency_type' ) ), ARRAY_A );
+				if ( $currency_data['symbol'] != '' ) {
+					$currency_sign = $currency_data['symbol_html'];
+				} else {
+					$currency_sign = $currency_data['code'];
+				}
+			?>
 			<tr>
 				<th><?php _e( 'Free Shipping Discount', 'wpsc' ); ?></th>
 				<td>
@@ -287,17 +278,17 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 				<?php _e( 'The following shipping modules all need cURL which is not installed on this server, you may need to contact your web hosting provider to get it set up. ', 'wpsc' ); ?>
 			</p>
 		<?php endif; ?>
-		<table id='wpsc-shipping-options-internal' class='wpsc-edit-module-options wp-list-table widefat plugins'>
+		<table id='wpsc-shipping-options-external' class='wpsc-edit-module-options wp-list-table widefat plugins'>
 			<thead>
 				<tr>
-					<th scope="col" id="wpsc-shipping-options-internal-active" class="manage-column"><?php _e( 'Active', 'wpsc' ); ?></th>
-					<th scope="col" id="wpsc-shipping-options-internal-name" class="manage-column column-name"><?php _e( 'Shipping Calculator', 'wpsc' ); ?></th>
+					<th scope="col" id="wpsc-shipping-options-external-active" class="manage-column"><?php _e( 'Active', 'wpsc' ); ?></th>
+					<th scope="col" id="wpsc-shipping-options-external-name" class="manage-column column-name"><?php _e( 'Shipping Calculator', 'wpsc' ); ?></th>
 				</tr>
 			</thead>
 			<tfoot>
 				<tr>
-					<th scope="col" id="wpsc-shipping-options-internal-active" class="manage-column"><?php _e( 'Active', 'wpsc' ); ?></th>
-					<th scope="col" id="wpsc-shipping-options-internal-name" class="manage-column column-name"><?php _e( 'Shipping Calculator', 'wpsc' ); ?></th>
+					<th scope="col" id="wpsc-shipping-options-external-active" class="manage-column"><?php _e( 'Active', 'wpsc' ); ?></th>
+					<th scope="col" id="wpsc-shipping-options-external-name" class="manage-column column-name"><?php _e( 'Shipping Calculator', 'wpsc' ); ?></th>
 				</tr>
 			</tfoot>
 			<tbody>
@@ -313,6 +304,9 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 	}
 
 	private function shipping_list_item ( $shipping, $force ) {
+		//get shipping options that are selected
+		$selected_shippings = get_option( 'custom_shipping_options' );
+
 		$shipping->checked = is_object( $shipping ) && in_array( $shipping->getInternalName(), (array) $selected_shippings );
 		$shipping->active  = $shipping->checked ? 'active' : 'inactive';
 		$shipping->hidden  = $force             ? ''       : "style='display: none;'";
