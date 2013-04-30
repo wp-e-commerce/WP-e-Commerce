@@ -814,6 +814,8 @@
 			WPSC_Settings_Page.Shipping.wrapper.on( 'click'   , '.table-rate .wpsc-button-minus', WPSC_Settings_Page.Shipping.event_delete_table_rate_layer);
 			WPSC_Settings_Page.Shipping.wrapper.on( 'keypress', '.table-rate input[type="text"]', WPSC_Settings_Page.Shipping.event_enter_key_pressed);
 			WPSC_Settings_Page.Shipping.wrapper.on( 'click'   , 'a.shipwire_sync'               , WPSC_Settings_Page.Shipping.event_sync_shipwire);
+
+			WPSC_Settings_Page.Shipping.wrapper.on( 'click'   , '.edit-shipping-module-cancel'   , WPSC_Settings_Page.Shipping.event_edit_shipping_module_cancel);
 		},
 
 		/**
@@ -887,7 +889,7 @@
 		 */
 		event_edit_shipping_module : function() {
 			var element = $(this),
-				shipping_module_id = element.data('module-id'),
+				shipping_module_id = element.closest('.wpsc-select-shipping').data('shipping-id'),
 				spinner = element.siblings('.ajax-feedback'),
 				post_data = {
 					action : 'shipping_module_settings_form',
@@ -905,11 +907,31 @@
 						history.pushState({url : new_url}, '', new_url);
 					}
 					spinner.toggleClass('ajax-feedback-active');
-					$('#wpsc-shipping-module-settings').replaceWith(response.obj.content);
+					$('#wpsc_shipping_settings_' + shipping_module_id + '_form').remove();
+					$('#wpsc_shipping_settings_'+ shipping_module_id).show();
+					$('#wpsc_shipping_settings_'+ shipping_module_id + '_container').append(response.obj.content);
+
 				};
 
 			spinner.toggleClass('ajax-feedback-active');
 			$.wpsc_post(post_data, ajax_callback);
+			return false;
+		},
+
+		/**
+		 * Remove Shipping Module settings from from page when "Cancel" is clicked.
+		 * @since 3.8.11
+		 */
+		event_edit_shipping_module_cancel : function() {
+			var element = $(this),
+				shipping_module_id = element.closest('.wpsc-select-shipping').data('shipping-id');
+			console.log('cancel', shipping_module_id);
+			if (history.pushState) {
+				var new_url = '?page=wpsc-settings&tab=' + WPSC_Settings_Page.current_tab;
+				history.pushState({'url' : new_url}, '', new_url);
+			}
+			$('#wpsc_shipping_settings_' + shipping_module_id + '_form').remove();
+			$('#wpsc_shipping_settings_' + shipping_module_id).hide();
 			return false;
 		},
 
@@ -996,7 +1018,7 @@
 				history.pushState({'url' : new_url}, '', new_url);
 			}
 			$('#gateway_settings_' + payment_gateway_id + '_form').remove();
-			$('#wpsc_gateway_settings_'+ payment_gateway_id).hide();
+			$('#wpsc_gateway_settings_' + payment_gateway_id).hide();
 			return false;
 		}
 	};
