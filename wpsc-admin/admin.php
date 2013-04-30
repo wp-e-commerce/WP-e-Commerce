@@ -813,7 +813,7 @@ function wpsc_dashboard_widget_setup() {
 
 	// Add the dashboard widgets
 	if ( current_user_can( $news_cap ) )
-		wp_add_dashboard_widget( 'wpsc_dashboard_news', __( 'Getshopped News' , 'wpsc' ), 'wpsc_dashboard_news' );
+		wp_add_dashboard_widget( 'wpsc_dashboard_news', __( 'WP e-Commerce News' , 'wpsc' ), 'wpsc_dashboard_news' );
 	if ( current_user_can( $sales_cap ) )
 		wp_add_dashboard_widget( 'wpsc_dashboard_widget', __( 'Sales Summary', 'wpsc' ), 'wpsc_dashboard_widget' );
 	if ( current_user_can( $quarterly_sales_cap ) )
@@ -865,8 +865,8 @@ add_action( 'wp_dashboard_setup', 'wpsc_dashboard_widget_setup' );
  * @uses wp_widget_rss_output()   Display the RSS entries in a list
  */
 function wpsc_dashboard_news() {
-	$rss = fetch_feed( 'http://getshopped.org/category/wp-e-commerce-plugin/' );
-	$args = array( 'show_author' => 1, 'show_date' => 1, 'show_summary' => 1, 'items'=>3 );
+	$rss = fetch_feed( 'http://getshopped.org/feed/?category_name=wp-e-commerce-plugin' );
+	$args = array( 'show_author' => 1, 'show_date' => 1, 'show_summary' => 1, 'items' = >3 );
 	wp_widget_rss_output( $rss, $args );
 
 }
