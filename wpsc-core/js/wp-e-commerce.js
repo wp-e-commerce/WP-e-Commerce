@@ -1,10 +1,14 @@
-
-	function wpsc_shipping_same_as_billing(){
-		var billing_state_input = jQuery('input[title="billingstate"]');
+function wpsc_shipping_same_as_billing(){
+		var billing_state_input = jQuery('input[title="billingstate"]'),
+		billing_vars = jQuery("input[title='billingfirstname'], input[title='billinglastname'], textarea[title='billingaddress'], input[title='billingcity'], input[title='billingpostcode'], input[title='billingphone'], input[title='billingfirstname'], input[title='billingstate']");
 		jQuery('#shippingsameasbillingmessage').slideDown('slow');
-		jQuery("input[title='billingfirstname'], input[title='billinglastname'], textarea[title='billingaddress'], input[title='billingcity'], input[title='billingpostcode'], input[title='billingphone'], input[title='billingfirstname'], input[title='billingstate']").unbind('change', wpsc_shipping_same_as_billing).unbind('keyup', wpsc_shipping_same_as_billing).keyup(wpsc_shipping_same_as_billing).change(wpsc_shipping_same_as_billing);
 
-		jQuery("select[title='billingregion'], select[title='billingstate'], select[title='billingcountry'], input[title='billingstate']").die( 'change', wpsc_shipping_same_as_billing ).live( 'change', wpsc_shipping_same_as_billing );
+		billing_vars.off( 'change', wpsc_shipping_same_as_billing);
+		billing_vars.off('keyup', wpsc_shipping_same_as_billing);
+		billing_vars.keyup(wpsc_shipping_same_as_billing).change(wpsc_shipping_same_as_billing);
+
+		jQuery("select[title='billingregion'], select[title='billingstate'], select[title='billingcountry'], input[title='billingstate']").on( 'change', wpsc_shipping_same_as_billing );
+		jQuery("select[title='billingregion'], select[title='billingstate'], select[title='billingcountry'], input[title='billingstate']").off( 'change', wpsc_shipping_same_as_billing );
 
 		var fields = new Array(
 			Array(
@@ -111,13 +115,18 @@
 				jQuery('#region option').removeAttr('selected');
 				jQuery('#region option[value='+jQuery('select[title="billingstate"]').val()+']').attr('selected', 'selected');
 			}
-			var request_vars = {'country' : jQuery('#current_country').val(), 'wpsc_ajax_actions' : 'update_location', 'wpsc_update_location' : true, 'wpsc_submit_zipcode' : 'Calculate' };
+			var request_vars = {
+				'country' : jQuery('#current_country').val(),
+				'action' : 'update_location',
+				'wpsc_update_location' : true,
+				'wpsc_submit_zipcode' : 'Calculate'
+			};
 			if(jQuery('#region'))
 				request_vars.region = jQuery('#region').val();
 			if(typeof(updated_shipping_quote_after)=='undefined')
 				updated_shipping_quote_after = false;
 			jQuery.post(
-				location.href,
+				wpsc_ajax.ajaxurl,
 				request_vars,
 				function(){
 					if(!updated_shipping_quote_after){
@@ -128,7 +137,7 @@
 				}
 			);
 		}
-	}
+}
 
 // this function is for binding actions to events and rebinding them after they are replaced by AJAX
 // these functions are bound to events on elements when the page is fully loaded.
@@ -166,14 +175,14 @@ jQuery(document).ready(function ($) {
 			jQuery(this).parents('table:first').find('tr').show();
 			jQuery('.shipping_country_name').show();
 			jQuery('#shippingsameasbillingmessage').hide();
-			jQuery("select[title='billingregion'], select[title='billingstate'], select[title='billingcountry'], input[title='billingstate']").die( 'change', wpsc_shipping_same_as_billing );
-			jQuery("input[title='billingfirstname'], input[title='billinglastname'], textarea[title='billingaddress'], input[title='billingcity'], input[title='billingpostcode'], input[title='billingphone'], input[title='billingfirstname'], input[title='billingstate']").unbind('change', wpsc_shipping_same_as_billing).unbind('keyup', wpsc_shipping_same_as_billing);
+			jQuery("select[title='billingregion'], select[title='billingstate'], select[title='billingcountry'], input[title='billingstate']").off( 'change', wpsc_shipping_same_as_billing );
+			jQuery("input[title='billingfirstname'], input[title='billinglastname'], textarea[title='billingaddress'], input[title='billingcity'], input[title='billingpostcode'], input[title='billingphone'], input[title='billingfirstname'], input[title='billingstate']").off('change', wpsc_shipping_same_as_billing);
+			jQuery("input[title='billingfirstname'], input[title='billinglastname'], textarea[title='billingaddress'], input[title='billingcity'], input[title='billingpostcode'], input[title='billingphone'], input[title='billingfirstname'], input[title='billingstate']").off('keyup', wpsc_shipping_same_as_billing);
 		}
 
 		wpsc_update_shipping_quotes();
 
 	});
-
 
 	/**
 	 * Update shipping quotes when "Shipping same as Billing" is checked or unchecked.
@@ -181,12 +190,12 @@ jQuery(document).ready(function ($) {
 	 */
 	function wpsc_update_shipping_quotes() {
 
-		var original_shipping_region           = jQuery('select#region');
-		var original_shipping_zip              = jQuery('input#zipcode');
-		var original_country                   = jQuery('select#current_country');
-		var shipping_same_as_billing_region    = jQuery('input[title="shippingstate"]');
-		var shipping_same_as_billing_zip       = jQuery('input[title="shippingpostcode"]');
-		var shipping_same_as_billing_country   = jQuery('input[title="shippingcountry"]');
+		var original_shipping_region         = jQuery('select#region');
+		var original_shipping_zip            = jQuery('input#zipcode');
+		var original_country                 = jQuery('select#current_country');
+		var shipping_same_as_billing_region  = jQuery('input[title="shippingstate"]');
+		var shipping_same_as_billing_zip     = jQuery('input[title="shippingpostcode"]');
+		var shipping_same_as_billing_country = jQuery('input[title="shippingcountry"]');
 
 		jQuery('p.validation-error').remove();
 
@@ -220,55 +229,73 @@ jQuery(document).ready(function ($) {
 
 		jQuery('input#shippingSameBilling').after( '<img class="ajax-feedback" src="' + wpsc_ajax.spinner + '" alt="" />' );
 
-		jQuery.post(wpsc_ajax.ajaxurl, data, success, 'html');
-
+		jQuery.post( wpsc_ajax.ajaxurl, data, success, 'html' );
 	}
 
 	// Submit the product form using AJAX
-	jQuery("form.product_form, .wpsc-add-to-cart-button-form").live('submit', function() {
+	jQuery( 'form.product_form, .wpsc-add-to-cart-button-form' ).on( 'submit', function() {
 		// we cannot submit a file through AJAX, so this needs to return true to submit the form normally if a file formfield is present
-		file_upload_elements = jQuery.makeArray(jQuery('input[type="file"]', jQuery(this)));
+		file_upload_elements = jQuery.makeArray( jQuery( 'input[type="file"]', jQuery( this ) ) );
 		if(file_upload_elements.length > 0) {
 			return true;
 		} else {
-			form_values = jQuery(this).serialize();
+			form_values = jQuery(this).serialize() + '&action=' + jQuery( 'input[name="wpsc_ajax_action"]' ).val();
+
 			// Sometimes jQuery returns an object instead of null, using length tells us how many elements are in the object, which is more reliable than comparing the object to null
-			if(jQuery('#fancy_notification').length == 0) {
-				jQuery('div.wpsc_loading_animation',this).css('visibility', 'visible');
+			if( jQuery( '#fancy_notification' ).length == 0 ) {
+				jQuery( 'div.wpsc_loading_animation', this ).css( 'visibility', 'visible' );
 			}
-			jQuery.post( 'index.php?ajax=true', form_values, function(returned_data) {
-				eval(returned_data);
+
+			var success = function( response ) {
+
+				if ( response.fancy_notification ) {
+					if ( jQuery( '#fancy_notification_content' ) ) {
+						jQuery( '#fancy_notification_content' ).html( response.fancy_notification );
+						jQuery( '#loading_animation').css( 'display', 'none' );
+						jQuery( '#fancy_notification_content' ).css( 'display', 'block' );
+					}
+				}
+				jQuery('div.shopping-cart-wrapper').html( response.widget_output );
 				jQuery('div.wpsc_loading_animation').css('visibility', 'hidden');
 
-				if(jQuery('#fancy_notification') != null) {
-					jQuery('#loading_animation').css("display", 'none');
-				//jQuery('#fancy_notificationimage').css("display", 'none');
+				if ( 'show' == response.sliding_cart_state ) {
+					jQuery( '#sliding_cart' ).slideDown( 'fast',function(){
+						jQuery( '#fancy_collapser' ).attr( 'src', response.core_images_url + '/minus.png' );
+					});
+				} else {
+					jQuery( '#sliding_cart' ).slideUp( 'fast',function(){
+						jQuery( '#fancy_collapser' ).attr( 'src', response.core_images_url + '/plus.png' );
+					});
 				}
 
-			});
+				jQuery( '.cart_message' ).delay( 3000 ).slideUp( 500 );
+
+				//Until we get to an acceptable level of education on the new custom event - this is probably necessary for plugins.
+				if ( response.wpsc_alternate_cart_html ) {
+					eval( response.wpsc_alternate_cart_html );
+				}
+
+				jQuery( document ).trigger( { type : 'wpsc_fancy_notification', response : response } );
+
+				if ( jQuery( '#fancy_notification' ).length > 0 ) {
+					jQuery( '#loading_animation' ).css( "display", 'none' );
+				}
+			};
+
+			jQuery.post( wpsc_ajax.ajaxurl, form_values, success, 'json' );
+
 			wpsc_fancy_notification(this);
 			return false;
 		}
 	});
 
-
-	jQuery('a.wpsc_category_link, a.wpsc_category_image_link').click(function(){
+	jQuery( 'a.wpsc_category_link, a.wpsc_category_image_link' ).click(function(){
 		product_list_count = jQuery.makeArray(jQuery('ul.category-product-list'));
 		if(product_list_count.length > 0) {
 			jQuery('ul.category-product-list', jQuery(this).parent()).toggle();
 			return false;
 		}
 	});
-
-	//  this is for storing data with the product image, like the product ID, for things like dropshop and the the ike.
-	jQuery("form.product_form").livequery(function(){
-		product_id = jQuery('input[name="product_id"]',this).val();
-		image_element_id = 'product_image_'+product_id;
-		jQuery("#"+image_element_id).data("product_id", product_id);
-		parent_container = jQuery(this).parents('div.product_view_'+product_id);
-		jQuery("div.item_no_image", parent_container).data("product_id", product_id);
-	});
-	//jQuery("form.product_form").trigger('load');
 
 	// Toggle the additional description content
 	jQuery("a.additional_description_link").click(function() {
@@ -278,14 +305,16 @@ jQuery(document).ready(function ($) {
 	});
 
 	// update the price when the variations are altered.
-	jQuery(".wpsc_select_variation").live('change', function() {
+	jQuery( 'div.wpsc_variation_forms' ).on( 'change', '.wpsc_select_variation', function() {
 		jQuery('option[value="0"]', this).attr('disabled', 'disabled');
 		var parent_form = jQuery(this).closest("form.product_form");
 		if ( parent_form.length == 0 )
 			return;
+
 		var prod_id = jQuery("input[name='product_id']",parent_form).val();
-		var form_values =jQuery("input[name='product_id'], .wpsc_select_variation",parent_form).serialize( );
-		jQuery.post( 'index.php?update_product_price=true', form_values, function(response) {
+		var form_values = jQuery("input[name='product_id'], .wpsc_select_variation",parent_form).serialize() + '&action=update_product_price';
+
+		jQuery.post( wpsc_ajax.ajaxurl, form_values, function(response) {
 			var stock_display = jQuery('div#stock_display_' + prod_id),
 				price_field = jQuery('input#product_price_' + prod_id),
 				price_span = jQuery('#product_price_' + prod_id + '.pricedisplay, #product_price_' + prod_id + ' .currentprice'),
@@ -324,48 +353,50 @@ jQuery(document).ready(function ($) {
 		}, 'json');
 	});
 
-	// Object frame destroying code.
-	jQuery("div.shopping_cart_container").livequery(function(){
-		object_html = jQuery(this).html();
-		window.parent.jQuery("div.shopping-cart-wrapper").html(object_html);
-	});
+	//First pass cruft comment - make sure to test the following livequery replacements
 
-
-	// Ajax cart loading code.
-	jQuery("div.wpsc_cart_loading").livequery(function(){
-		form_values = "ajax=true"
-		jQuery.post( 'index.php?wpsc_ajax_action=get_cart', form_values, function(returned_data) {
-			eval(returned_data);
+		//Object frame destroying code.
+		jQuery( 'div.shopping_cart_container' ).load( function(){
+			object_html = jQuery(this).html();
+			window.parent.jQuery("div.shopping-cart-wrapper").html(object_html);
 		});
-	});
 
-	// Object frame destroying code.
-	jQuery("form.wpsc_product_rating").livequery(function(){
-		jQuery(this).rating();
-	});
-
-	jQuery("form.wpsc_empty_the_cart").livequery(function(){
-		jQuery(this).submit(function() {
-			form_values = "ajax=true&";
-			form_values += jQuery(this).serialize();
-			jQuery.post( 'index.php', form_values, function(returned_data) {
-				eval(returned_data);
-			});
-			return false;
+		//this is for storing data with the product image, like the product ID, for things like dropshop and the like.
+		jQuery( 'form.product_form' ).load(  function() {
+			product_id = jQuery('input[name="product_id"]',this).val();
+			image_element_id = 'product_image_'+product_id;
+			jQuery( "#"+image_element_id).data("product_id", product_id );
+			parent_container = jQuery(this).parents('div.product_view_'+product_id);
+			jQuery("div.item_no_image", parent_container).data("product_id", product_id);
 		});
-	});
 
-	jQuery("form.wpsc_empty_the_cart a.emptycart").live('click',function(){
-		parent_form = jQuery(this).parents("form.wpsc_empty_the_cart");
-		form_values = "ajax=true&";
-		form_values += jQuery(parent_form).serialize();
-		jQuery.post( 'index.php', form_values, function(returned_data) {
-			eval(returned_data);
+
+		// Ajax cart loading code.
+		jQuery( 'div.wpsc_cart_loading' ).load( function(){
+			form_values = { action : 'get_cart' };
+			jQuery.post( wpsc_ajax.ajaxurl, form_values, function( response ) {
+				jQuery( 'div.shopping-cart-wrapper' ).html( response.widget_output );
+			}, 'json');
 		});
+
+		// Object frame destroying code.
+		jQuery( 'form.wpsc_product_rating' ).load( function(){
+			jQuery(this).rating();
+		});
+
+	//End livequery changes.  Note: This first pass probably won't work.  Test when elements are dynamically created.
+
+	jQuery( 'body' ).on( 'click', 'a.emptycart', function(){
+		parent_form = jQuery(this).parents( 'form' );
+		form_values = jQuery(parent_form).serialize() + '&action=' + jQuery( 'input[name="wpsc_ajax_action"]', parent_form ).val();
+
+		jQuery.post( wpsc_ajax.ajaxurl, form_values, function(response) {
+			jQuery('div.shopping-cart-wrapper').html( response.widget_output );
+		}, 'json');
+
 		return false;
 	});
 
-	//Shipping bug fix by James Collins
 	var radios = jQuery(".productcart input:radio[name='shipping_method']");
 	if (radios.length == 1) {
 		// If there is only 1 shipping quote available during checkout, automatically select it
@@ -377,16 +408,29 @@ jQuery(document).ready(function ($) {
 });
 
 // update the totals when shipping methods are changed.
-function switchmethod( key, key1 ){
+function switchmethod( key, key1 ) {
 	data = {
-		ajax : 'true',
-		wpsc_ajax_action : 'update_shipping_price',
+		action : 'update_shipping_price',
 		option : key,
 		method : key1
-	}
-	jQuery.post( 'index.php', data, function(returned_data) {
-		eval(returned_data);
-	});
+	};
+	jQuery.post( wpsc_ajax.ajaxurl, data, function( response ) {
+
+		jQuery( document ).trigger( { type : 'switchmethod', response : response } );
+
+		if ( jQuery( '.pricedisplay.checkout-shipping .pricedisplay' ) ) {
+			jQuery( '.pricedisplay.checkout-shipping > .pricedisplay:first' ).html( response.shipping );
+			jQuery( '.shoppingcart .pricedisplay.checkout-shipping > .pricedisplay:first' ).html( response.shipping );
+		} else {
+			jQuery( '.pricedisplay.checkout-shipping' ).html( response.shipping );
+		}
+		if ( jQuery( '#coupons_amount .pricedisplay' ).size() > 0 ) {
+			jQuery( '#coupons_amount .pricedisplay' ).html( response.coupon );
+		} else {
+			jQuery( '#coupons_amount' ).html( response.coupon );
+		}
+		jQuery( '.pricedisplay.checkout-total' ).html( response.cart_total );
+	}, 'json' );
 }
 
 // submit the country forms.
@@ -421,17 +465,21 @@ function wpsc_fancy_notification(parent_form){
 }
 
 function shopping_cart_collapser() {
+	form_values = { set_slider : 'true' };
+
 	switch(jQuery("#sliding_cart").css("display")) {
 		case 'none':
+			form_values.state = '1';
 			jQuery("#sliding_cart").slideToggle("fast",function(){
-				jQuery.post( 'index.php', "ajax=true&set_slider=true&state=1", function(returned_data) { });
+				jQuery.post( wpsc_ajax.ajaxurl, form_values, function(returned_data) { });
 				jQuery("#fancy_collapser").attr("src", (WPSC_CORE_IMAGES_URL + "/minus.png"));
 			});
 			break;
 
 		default:
+			form_values.state = '0';
 			jQuery("#sliding_cart").slideToggle("fast",function(){
-				jQuery.post( 'index.php', "ajax=true&set_slider=true&state=0", function(returned_data) { });
+				jQuery.post( wpsc_ajax.ajaxurl, form_values, function(returned_data) { });
 				jQuery("#fancy_collapser").attr("src", (WPSC_CORE_IMAGES_URL + "/plus.png"));
 			});
 			break;
@@ -439,7 +487,7 @@ function shopping_cart_collapser() {
 	return false;
 }
 
-function set_billing_country(html_form_id, form_id){
+function set_billing_country(html_form_id, form){
 	var billing_region = '';
 	country = jQuery(("div#"+html_form_id+" select[class='current_country']")).val();
 	region = jQuery(("div#"+html_form_id+" select[class='current_region']")).val();
@@ -447,16 +495,19 @@ function set_billing_country(html_form_id, form_id){
 		billing_region = "&billing_region="+region;
 	}
 
-	form_values = "wpsc_ajax_action=change_tax&form_id="+form_id+"&billing_country="+country+billing_region;
-	jQuery.post( 'index.php', form_values, function(returned_data) {
-		eval(returned_data);
-		if(jQuery("#shippingSameBilling").is(':checked')){
-			jQuery('.shipping_region').parent().parent().hide();
-			jQuery('.shipping_country_name').parent().parent().hide();
-		}
-	});
+	form_values = {
+		action          : 'change_tax',
+		form_id         : form,
+		billing_country : country,
+		billing_region  : region
+	};
+
+	jQuery.post( wpsc_ajax.ajaxurl, form_values, function( response ) {
+		wpsc_handle_country_change( response );
+	}, 'json' );
 }
-function set_shipping_country(html_form_id, form_id){
+
+function set_shipping_country(html_form_id, form){
 	var shipping_region = '';
 	country = jQuery(("div#"+html_form_id+" select[class='current_country']")).val();
 
@@ -470,31 +521,90 @@ function set_shipping_country(html_form_id, form_id){
 	}
 
 	form_values = {
-		wpsc_ajax_action: "change_tax",
-		form_id: form_id,
-		shipping_country: country,
-		shipping_region: region
+		action           : 'change_tax',
+		form_id          : form,
+		shipping_country : country,
+		shipping_region  : region
+	},
+
+	jQuery.post( wpsc_ajax.ajaxurl, form_values, function( response ) {
+		wpsc_handle_country_change( response );
+	}, 'json' );
+}
+
+function wpsc_handle_country_change( response ) {
+	var wpsc_checkout_table_selector;
+
+	if ( response.lock_tax ) {
+		jQuery( '#current_country' ).val( response.delivery_country );
+
+		jQuery('.shipping_country').val( response.delivery_country );
+		jQuery('.shipping_country_name').html( response.country_name );
+
+		if ( response.delivery_country == 'US' || response.delivery_country == 'CA' ) {
+			jQuery( '#region' ).remove();
+			jQuery( '#change_country' ).append( response.shipping_region_list );
+		}
 	}
 
-	jQuery.post( 'index.php', form_values, function(returned_data) {
-		eval(returned_data);
-		if(jQuery("#shippingSameBilling").is(':checked')){
-			jQuery('.shipping_region').parent().parent().hide();
-			jQuery('.shipping_country_name').parent().parent().hide();
-		}
+	jQuery.each( response.shipping_keys, function( key, shipping ) {
+		jQuery( '#shipping_' + key ).html( shipping );
 	});
 
+	if ( response.region_list ) {
+		jQuery( '#region_country_form_' + response.form_id ).html( response.region_list );
+		wpsc_checkout_table_selector = jQuery( '#region_select_' + response.form_id ).parents( '.wpsc_checkout_table' ).attr( 'class' );
+			wpsc_checkout_table_selector = wpsc_checkout_table_selector.replace( ' ', '.' );
+			wpsc_checkout_table_selector = '.' + wpsc_checkout_table_selector;
+
+			jQuery( wpsc_checkout_table_selector + ' input.billing_region' ).attr( 'disabled', 'disabled' );
+			jQuery( wpsc_checkout_table_selector + ' input.shipping_region' ).attr( 'disabled', 'disabled' );
+			jQuery( wpsc_checkout_table_selector + ' .billing_region' ).parent().parent().hide();
+			jQuery( wpsc_checkout_table_selector + ' .shipping_region' ).parent().parent().hide();
+	} else {
+		if ( response.lock_tax ) {
+			jQuery( '#region' ).hide();
+		}
+
+		jQuery( '#region_select_' + response.form_id ).html( '' );
+
+		wpsc_checkout_table_selector = jQuery( '#region_select_' + response.form_id ).parents( '.wpsc_checkout_table' ).attr( 'class' );
+		wpsc_checkout_table_selector = wpsc_checkout_table_selector.replace( ' ', '.' );
+		wpsc_checkout_table_selector = '.' + wpsc_checkout_table_selector;
+
+		jQuery( wpsc_checkout_table_selector + ' input.billing_region' ).removeAttr( 'disabled' );
+		jQuery( wpsc_checkout_table_selector + ' input.shipping_region' ).removeAttr( 'disabled' );
+		jQuery( wpsc_checkout_table_selector + ' .billing_region' ).parent().parent().show();
+		jQuery( wpsc_checkout_table_selector + ' .shipping_region' ).parent().parent().show();
+	}
+
+	if ( response.tax > 0 ) {
+		jQuery( 'tr.total_tax' ).show();
+	} else {
+		jQuery( 'tr.total_tax' ).hide();
+	}
+
+	jQuery( '#checkout_shipping' ).html( response.cart_shipping );
+	jQuery( 'div.shopping-cart-wrapper' ).html( response.widget_output );
+
+	jQuery( '#checkout_tax' ).html( "<span class='pricedisplay'>" + response.display_tax + "</span>" );
+	jQuery( '#checkout_total' ).html( response.total + "<input id='shopping_cart_total_price' type='hidden' value='" + response.total_input + "' />" );
+
+	if ( jQuery( "#shippingSameBilling" ).is( ':checked' ) ) {
+		jQuery( '.shipping_region' ).parent().parent().hide();
+		jQuery( '.shipping_country_name' ).parent().parent().hide();
+	}
 }
 
 function wpsc_set_profile_country(html_form_id, form_id) {
-	var country_field = jQuery('#' + html_form_id);
-	var form_values = {
-		wpsc_ajax_action : "change_profile_country",
+	var country_field = jQuery('#' + html_form_id),
+	form_values = {
+		action  : "change_profile_country",
 		form_id : form_id,
 		country : country_field.val()
 	};
 
-	jQuery.post(location.href, form_values, function(response) {
+	jQuery.post( wpsc_ajax.ajaxurl, form_values, function(response) {
 		country_field.siblings('select').remove();
 		if (response.has_regions) {
 			country_field.after('<br />' + response.html);

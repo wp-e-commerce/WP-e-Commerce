@@ -231,13 +231,6 @@ textarea#additional_description{
 	border: 1px solid #dfdfdf;
 	/* width:465px !important; */
 }
-.wpsc-separator {
-	background:transparent url(../../images/menu-arrows.gif) no-repeat scroll left 5px;
-	cursor:w-resize;
-	height:21px;
-	margin:0;
-	padding:0;
-}
 
 #poststuff h3.form_heading {
 	font-size:1.1em;
@@ -470,43 +463,6 @@ div.flash-image-uploader {
 	height: 16px;
 }
 
-
-button#add-product-image {
-	float: left;
-}
-
-div#swfupload_img_indicator {
-	float: left;
-	height: 20px;
-	width: 20px;
-	display: none;
-}
-
-div#swfupload_img_indicator img{
-	margin: 4px 2px 2px 4px;
-}
-
-ul#gallery_list{
-	clear:both;
-	list-style-type:none;
-	list-style-position: inside;
-	cursor: pointer;
-	min-height:70px;
-	_height:70px;
-	padding-left:0px;
-	margin: 6px 0px 0px 6px;
-}
-
-ul#gallery_list li{
-	float:left;
-}
-
-ul#gallery_list li *{
-	z-index:79;
-}
-ul#gallery_list li.first *{
-	z-index:80;
-}
 .ui-selected {
 	border:2px dashed #969696;
 }
@@ -596,11 +552,6 @@ div.previewimage {
 
 tr.edit_product_image *{
 	z-index:80;
-}
-
-a.closeimagesettings{
-	cursor:pointer;
-	margin-left:90px;
 }
 
 div.browser-image-uploader {
@@ -2012,4 +1963,8 @@ span.wpsc-button-round {
 
 .wpsc-coupon-status-inactive {
 	color: #e01b1b;
+}
+
+div.new_layer {
+	display: none;
 }

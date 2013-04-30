@@ -497,34 +497,49 @@ add_filter( 'manage_wpsc-product_posts_columns', 'wpsc_additional_column_names' 
  * @uses wp_get_referrer()          Retrieve referer from '_wp_http_referer' or HTTP referer.
  */
 function wpsc_update_featured_products() {
-	$is_ajax = (int)(bool)$_POST['ajax'];
-	$product_id = absint( $_GET['product_id'] );
-	check_admin_referer( 'feature_product_' . $product_id );
+	if ( ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) &&
+		 ! ( isset( $_REQUEST['wpsc_admin_action'] ) &&
+		 	( $_REQUEST['wpsc_admin_action'] == 'update_featured_product' ) ) )
+		return;
+
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX && 'update_featured_product' !== $_REQUEST['action'] )
+		return;
+
+	$product_id = absint( $_REQUEST['product_id'] );
+
+	if ( ! DOING_AJAX )
+		check_admin_referer( 'feature_product_' . $product_id );
+
 	$status = get_option( 'sticky_products' );
 
-	$new_status = (in_array( $product_id, $status )) ? false : true;
+	$new_status = ! in_array( $product_id, $status );
 
 	if ( $new_status ) {
-
 		$status[] = $product_id;
 	} else {
 		$status = array_diff( $status, array( $product_id ) );
 		$status = array_values( $status );
 	}
+
 	update_option( 'sticky_products', $status );
 
-	if ( $is_ajax == true ) {
-		if ( $new_status == true ) : ?>
-                    jQuery('.featured_toggle_<?php echo $product_id; ?>').html("<img class='gold-star' src='<?php echo WPSC_CORE_IMAGES_URL; ?>/gold-star.gif' alt='<?php esc_attr_e( 'Unmark as Featured', 'wpsc' ); ?>' title='<?php esc_attr_e( 'Unmark as Featured', 'wpsc' ); ?>' />");
-            <?php else: ?>
-                    jQuery('.featured_toggle_<?php echo $product_id; ?>').html("<img class='grey-star' src='<?php echo WPSC_CORE_IMAGES_URL; ?>/grey-star.gif' alt='<?php esc_attr_e( 'Mark as Featured', 'wpsc' ); ?>' title='<?php esc_attr_e( 'Mark as Featured', 'wpsc' ); ?>' />");
-<?php
-		endif;
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		$json_response = array(
+			'text'       => $new_status ? esc_attr__( 'Unmark as Featured', 'wpsc' ) : esc_attr__( 'Mark as Featured', 'wpsc' ),
+			'product_id' => $product_id,
+			'class'      => $new_status ? 'gold-star' : 'grey-star',
+			'image'      => $new_status ? WPSC_CORE_IMAGES_URL . '/gold-star.gif' : WPSC_CORE_IMAGES_URL . '/grey-star.gif'
+		);
+
+		echo json_encode( $json_response );
+
 		exit();
 	}
 	wp_redirect( wp_get_referer() );
-	exit();
+	exit;
+
 }
+
 add_filter( 'page_row_actions','my_action_row', 10, 2 );
 
 /**
@@ -549,5 +564,5 @@ function my_action_row( $actions, $post ) {
 	return $actions;
 }
 
-if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( $_REQUEST['wpsc_admin_action'] == 'update_featured_product' ) )
-	add_action( 'admin_init', 'wpsc_update_featured_products' );
+add_action( 'wp_ajax_update_featured_product', 'wpsc_update_featured_products' );
+add_action( 'admin_init'                     , 'wpsc_update_featured_products' );
