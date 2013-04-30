@@ -866,7 +866,7 @@ add_action( 'wp_dashboard_setup', 'wpsc_dashboard_widget_setup' );
  */
 function wpsc_dashboard_news() {
 	$rss = fetch_feed( 'http://getshopped.org/feed/?category_name=wp-e-commerce-plugin' );
-	$args = array( 'show_author' => 1, 'show_date' => 1, 'show_summary' => 1, 'items' = >3 );
+	$args = array( 'show_author' => 1, 'show_date' => 1, 'show_summary' => 1, 'items' => 3 );
 	wp_widget_rss_output( $rss, $args );
 
 }
