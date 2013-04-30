@@ -980,7 +980,7 @@ function wpsc_max_purchase_id() {
 		 $max_purchase_id = $wpdb->get_var( 'SELECT MAX( id ) FROM ' . WPSC_TABLE_PURCHASE_LOGS );
 		 set_transient( 'max_purchase_id', $max_purchase_id, 60 * 60 * 24 ); // day of seconds
 	}
-	return (int)$max_purchase_id;
+	return (int) $max_purchase_id;
 }
 
 /**
