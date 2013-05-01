@@ -132,8 +132,8 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 									if ( isset( $condition["operator"] ) && ! empty( $condition["operator"] ) ) :
 								?>
 									<select name="rules[operator][]">
-										<option value="or"<?php selected( 'or'  , $condition["operator"] ); ?>><?php _ex( 'OR' , 'Coupon comparison logic', 'wpsc' );?></option>
 										<option value="and"<?php selected( 'and', $condition["operator"] ); ?>><?php _ex( 'AND', 'Coupon comparison logic', 'wpsc' );?></option>
+										<option value="or"<?php  selected( 'or' , $condition["operator"] ); ?>><?php _ex( 'OR' , 'Coupon comparison logic', 'wpsc' );?></option>
 									</select>
 								<?php endif; ?>
 									<select class="ruleprops" name="rules[property][]">
