@@ -173,3 +173,4 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 		</form>
 	</div>
 </div><!--end .wrap-->
+
