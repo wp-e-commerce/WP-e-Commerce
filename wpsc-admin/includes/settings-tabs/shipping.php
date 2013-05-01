@@ -82,14 +82,14 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 			<div id='wpsc_shipping_settings_<?php esc_attr_e( $selected_module_id ); ?>_form' class='shipping-module-settings-form'>
 				<table class='form-table'>
 					<?php echo $content; ?>
-					<tr>
-						<td colspan='2'>
-							<p class="submit inline-edit-save">
-								<a class="button edit-shipping-module-cancel" title="<?php esc_attr_e( "Cancel editing this shipping calculator's settings", 'wpsc' ) ?>"><?php esc_html_e( "Cancel", 'wpsc' ); ?></a>
-								<input type="submit" name="submit" class="button button-primary edit-shipping-module-update" value='<?php _e( "Update &raquo;", 'wpsc' ); ?>'>
-							</p>
-						</td>
-					</tr>
+				</table>
+				<table class='form-table'>
+					<tr><td colspan='2'>
+						<p class="submit inline-edit-save">
+							<a class="button edit-shipping-module-cancel" title="<?php esc_attr_e( "Cancel editing this shipping calculator's settings", 'wpsc' ) ?>"><?php esc_html_e( "Cancel", 'wpsc' ); ?></a>
+							<input type="submit" name="submit" class="button button-primary edit-shipping-module-update" value='<?php _e( "Update &raquo;", 'wpsc' ); ?>'>
+						</p>
+					</td></tr>
 				</table>
 			</div>
 		<?php
