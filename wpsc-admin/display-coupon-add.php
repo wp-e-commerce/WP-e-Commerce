@@ -89,6 +89,7 @@
 							<label><strong><?php _e( 'Conditions', 'wpsc' ); ?></strong></label>
 						</th>
 						<td>
+							<input type="hidden" name="rules[operator][]" value="" />
 							<div class='coupon-condition' >
 								<select class="ruleprops" name="rules[property][]">
 									<option value="item_name" rel="order"><?php _e( 'Item name', 'wpsc' ); ?></option>

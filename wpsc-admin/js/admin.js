@@ -327,7 +327,17 @@ jQuery(document).ready(function(){
 
 	jQuery('.coupon-conditions').on( 'click', '.wpsc-button-plus', function() {
 		var parent = jQuery(this).closest('.coupon-condition'),
+		    conditions_count = jQuery('.coupon-condition').size(),
 		    prototype = parent.clone();
+		
+		// If it is adding first additional condition, create conditional operator select box and prepend it.
+		if (conditions_count === 1) {
+			var operator_box = jQuery('<select/>',{name:'rules[operator][]'});
+			operator_box.append("<option value='or'>OR</option>");
+			operator_box.append("<option value='and'>AND</option>");
+
+			prototype.prepend(operator_box);
+		}
 
 		prototype.find('select').val('');
 		prototype.find('input').val('');
