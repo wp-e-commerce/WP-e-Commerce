@@ -325,6 +325,14 @@ jQuery(document).ready(function(){
 		jQuery(this).find('.wpsc_ie_sku').val(sku);
 	});
 
+	jQuery( 'div.coupon-condition' ).each( function( index, value ){
+		if( jQuery( 'select[name="rules[operator][]"]', jQuery( this ) ).length !== 0 ) {
+			margin = jQuery( 'select.ruleprops', jQuery( this ) ).offset().left - jQuery( this ).offset().left;
+			margin = parseInt( margin, 10 ) - 1;
+			jQuery( 'select[name="rules[operator][]"]', jQuery( this ) ).css( 'margin-left', '-' + margin + 'px' );
+		}
+	});
+
 	jQuery( '.coupon-conditions' ).on( 'click', '.wpsc-button-plus', function() {
 		var parent = jQuery( this ).closest( '.coupon-condition' ),
 			conditions_count = jQuery( '.coupon-condition' ).size(),
