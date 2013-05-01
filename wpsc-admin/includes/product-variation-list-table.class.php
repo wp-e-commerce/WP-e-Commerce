@@ -241,7 +241,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 	 */
 	public function column_stock( $item ) {
 		$stock = get_product_meta( $item->ID, 'stock', true );
-		if ( ! empty( $stock ) )
+		if ( is_numeric( $stock ) )
 			$stock = absint( $stock );
 		?>
 		<input type="text" name="wpsc_variations[<?php echo $item->ID; ?>][stock]" value="<?php echo esc_attr( $stock ); ?>" />
@@ -258,7 +258,8 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 
 	public function column_sale_price( $item ) {
 		$sale_price = get_product_meta( $item->ID, 'special_price', true );
-		$sale_price = wpsc_format_number( $sale_price );
+		if ( is_numeric( $sale_price ) )
+			$sale_price = wpsc_format_number( $sale_price );
 		?>
 			<input type="text" name="wpsc_variations[<?php echo $item->ID; ?>][sale_price]" value="<?php echo esc_attr( $sale_price ); ?>">
 		<?php
