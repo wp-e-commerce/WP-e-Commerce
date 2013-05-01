@@ -308,7 +308,7 @@ jQuery(document).ready(function ($) {
 	jQuery( 'div.wpsc_variation_forms' ).on( 'change', '.wpsc_select_variation', function() {
 		jQuery('option[value="0"]', this).attr('disabled', 'disabled');
 		var parent_form = jQuery(this).closest("form.product_form");
-		if ( parent_form.length == 0 )
+		if ( parent_form.length === 0 )
 			return;
 
 		var prod_id = jQuery("input[name='product_id']",parent_form).val();
@@ -322,9 +322,9 @@ jQuery(document).ready(function ($) {
 				old_price = jQuery('#old_product_price_' + prod_id),
 				save = jQuery('#yousave_' + prod_id),
 				buynow = jQuery('#BB_BuyButtonForm' + prod_id);
-				
+
 			jQuery( document ).trigger( { type : 'wpsc_select_variation', response : response } );
-			
+
 			if ( response.variation_found ) {
 				if ( response.stock_available ) {
 					stock_display.removeClass('out_of_stock').addClass('in_stock');
