@@ -150,3 +150,4 @@ function wpsc_display_coupons_page() {
 		<?php
 	} // end view check
 }
+
