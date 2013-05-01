@@ -19,6 +19,8 @@ function _wpsc_maybe_update_user_log_file() {
 		'3.8.10' => '09e2cb9c753587c9228a4e9e8008a82f',
 	);
 
+	wpsc_flush_theme_transients( true );
+
 	//Make sure the theme has actually been moved.
 	$file = wpsc_get_template_file_path( 'wpsc-user-log.php' );
 	if ( false !== strpos( WPSC_CORE_THEME_PATH, $file ) )
@@ -36,11 +38,5 @@ function _wpsc_maybe_update_user_log_file() {
 	} else {
 		//This means they have indeed changed the file.  We need to add a notice letting them know about the issue and how to fix it.
 		update_option( '_wpsc_3811_user_log_notice', '1' );
-
 	}
-
-
-
-
-
 }
