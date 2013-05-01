@@ -1090,7 +1090,7 @@ function _wpsc_refresh_parent_product_terms( $parent_id ) {
 
 	$children_ids = wp_list_pluck( $children, 'ID' );
 
-	$children_terms = wpsc_get_product_terms( $children_ids, 'wpsc-variation' );
+	$children_terms = wp_get_object_terms( $children_ids, 'wpsc-variation' );
 	$new_terms = array();
 	foreach ( $children_terms as $term ) {
 		if ( $term->parent )
