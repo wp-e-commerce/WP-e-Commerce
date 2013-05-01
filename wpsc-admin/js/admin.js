@@ -208,8 +208,8 @@ jQuery(document).ready(function(){
 			event.preventDefault();
 	});
 
-    //As far as I can tell, WP provides no good way of unsetting elements in the bulk edit area...tricky jQuery action will do for now....not ideal whatsoever, nor eternally stable.
-     if( pagenow == 'edit-wpsc-product' ) {
+	//As far as I can tell, WP provides no good way of unsetting elements in the bulk edit area...tricky jQuery action will do for now....not ideal whatsoever, nor eternally stable.
+	 if( pagenow == 'edit-wpsc-product' ) {
 		jQuery('.inline-edit-password-input').closest('.inline-edit-group').css('display', 'none');
 		var vcl = jQuery('.inline-edit-col input[name="tax_input[wpsc-variation][]"]').css('display', 'none');
 		vcl.each(function(){
@@ -220,10 +220,10 @@ jQuery(document).ready(function(){
 		jQuery('#bulk-edit select[name=post_parent]').closest('fieldset').css('display', 'none');
 		jQuery('.inline-edit-col select[name=post_parent]').parent().css('display', 'none');
 		jQuery('.inline-edit-status').parent().css('display', 'none');
-    }
-        if( wpsc_adminL10n.dragndrop_set == "true" && typenow == "wpsc-product" && adminpage == "edit-php" ) {
-            // this makes the product list table sortable
-            jQuery('table.widefat:not(.tags)').sortable({
+	}
+		if( wpsc_adminL10n.dragndrop_set == "true" && typenow == "wpsc-product" && adminpage == "edit-php" ) {
+			// this makes the product list table sortable
+			jQuery('table.widefat:not(.tags)').sortable({
 		update: function(event, ui) {
 			var category_id = jQuery('select#wpsc_product_category option:selected').val(),
 				product_order = jQuery('table.widefat').sortable( 'toArray' ),
@@ -242,9 +242,9 @@ jQuery(document).ready(function(){
 		axis: 'y',
 		containment: 'table.widefat tbody',
 		placeholder: 'product-placeholder',
-                cursor: 'move',
-                cancel: 'tr.inline-edit-wpsc-product'
-            });
+				cursor: 'move',
+				cancel: 'tr.inline-edit-wpsc-product'
+			});
 	}
 
 	var limited_stock_checkbox = jQuery('input.limited_stock_checkbox');
@@ -308,7 +308,7 @@ jQuery(document).ready(function(){
 		var id = jQuery(this).attr('id');
 		id     = id.replace(/^edit-/, '');
 
-		if ( ! id || ! parseInt( id ) ) {
+		if ( ! id || ! parseInt( id, 10 ) ) {
 			return;
 		}
 
@@ -326,31 +326,39 @@ jQuery(document).ready(function(){
 	});
 
 	jQuery( '.coupon-conditions' ).on( 'click', '.wpsc-button-plus', function() {
-		var parent = jQuery(this).closest('.coupon-condition'),
-		    conditions_count = jQuery('.coupon-condition').size(),
-		    prototype = parent.clone();
-		
-		// If it is adding first additional condition, create conditional operator select box and prepend it.
-		if (conditions_count === 1) {
-			var operator_box = jQuery('<select/>',{name:'rules[operator][]'});
-			operator_box.append("<option value='or'>OR</option>");
-			operator_box.append("<option value='and'>AND</option>");
+		var parent = jQuery( this ).closest( '.coupon-condition' ),
+			conditions_count = jQuery( '.coupon-condition' ).size(),
+			prototype = parent.clone();
 
-			prototype.prepend(operator_box);
-		}
+			var operator_box = jQuery('<select/>',{name:'rules[operator][]'});
+
+			if ( jQuery( 'select[name="rules[operator][]"]', prototype ).length === 0 ) {
+				operator_box.append("<option value='and'>" + wpsc_adminL10n.coupons_compare_and +  "</option>");
+				operator_box.append("<option value='or'>" + wpsc_adminL10n.coupons_compare_or + "</option>");
+				prototype.prepend(operator_box);
+			}
+
 
 		prototype.find('select').val('');
 		prototype.find('input').val('');
-		prototype.hide();
-		prototype.insertAfter(parent).slideDown(150);
+		prototype.css( { 'opacity' : '0' } );
+		prototype.insertAfter(parent);
+
+		margin = jQuery( 'select.ruleprops', prototype ).offset().left - prototype.offset().left;
+		margin = parseInt( margin, 10 ) - 1;
+
+		prototype.animate( { opacity: 1, 'margin-left': '-' + margin + 'px', height: 'show' }, 150 );
 
 		return false;
 	});
 
 	jQuery('.coupon-conditions').on( 'click', '.wpsc-button-minus', function() {
 		var parent = jQuery(this).closest('.coupon-condition'),
-		    conditions_count = jQuery('.coupon-condition').size(),
-		    prototype;
+			conditions_count = jQuery('.coupon-condition').size(),
+			prototype;
+
+		if ( jQuery( this ).index( jQuery( '.wpsc-button-minus' ) ) === 0 )
+			return false;
 
 		if (conditions_count == 1) {
 			prototype = parent.clone();
@@ -377,7 +385,7 @@ jQuery(document).ready(function(){
 // function for adding more custom meta
 function add_more_meta(e) {
 	var current_meta_forms = jQuery(e).parent().children("div.product_custom_meta:last"), // grab the form container
-	    new_meta_forms = current_meta_forms.clone(); // clone the form container
+		new_meta_forms = current_meta_forms.clone(); // clone the form container
 
 	new_meta_forms.find('input, textarea').val('');
 	current_meta_forms.after(new_meta_forms);  // append it after the container of the clicked element

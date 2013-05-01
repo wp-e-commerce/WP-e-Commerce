@@ -560,7 +560,10 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 			'variation_parent_swap'    => esc_html_x( 'New Variation Set', 'Variation taxonomy parent', 'wpsc' ),
 			/* translators             : This string is prepended to the 'New Variation Set' string */
 			'variation_helper_text'    => esc_html_x( 'Choose the Variation Set you want to add variants to. If you\'re creating a new variation set then select', 'Variation helper text', 'wpsc' ),
-			'variations_tutorial'      => esc_html__( 'Variations allow you to create options for your products. For example, if you\'re selling T-Shirts, they will generally have a "Size" option. Size will be the Variation Set name, and it will be a "New Variant Set". You will then create variants (small, medium, large) which will have the "Variation Set" of Size. Once you have made your set you can use the table on the right to manage them (edit, delete). You will be able to order your variants by dragging and dropping them within their Variation Set.', 'wpsc' )
+			'variations_tutorial'      => esc_html__( 'Variations allow you to create options for your products. For example, if you\'re selling T-Shirts, they will generally have a "Size" option. Size will be the Variation Set name, and it will be a "New Variant Set". You will then create variants (small, medium, large) which will have the "Variation Set" of Size. Once you have made your set you can use the table on the right to manage them (edit, delete). You will be able to order your variants by dragging and dropping them within their Variation Set.', 'wpsc' ),
+			/* translators             : These strings are dynamically inserted as a drop-down for the Coupon comparison conditions */
+			'coupons_compare_or'       => esc_html_x( 'OR'  , 'Coupon comparison logic', 'wpsc' ),
+			'coupons_compare_and'      => esc_html_x( 'AND' , 'Coupon comparison logic', 'wpsc' ),
 		) );
 	}
 	if ( $pagehook == 'wpsc-product-variations-iframe' ) {
