@@ -325,7 +325,7 @@ jQuery(document).ready(function(){
 		jQuery(this).find('.wpsc_ie_sku').val(sku);
 	});
 
-	jQuery('.coupon-conditions').on( 'click', '.wpsc-button-plus', function() {
+	jQuery( '.coupon-conditions' ).on( 'click', '.wpsc-button-plus', function() {
 		var parent = jQuery(this).closest('.coupon-condition'),
 		    conditions_count = jQuery('.coupon-condition').size(),
 		    prototype = parent.clone();
