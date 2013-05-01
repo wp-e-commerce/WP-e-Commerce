@@ -307,10 +307,10 @@ class wpsc_coupons {
 			if ( ! $this->$callback( $condition, $cart_item ) ) {
 				switch ( $condition['operator'] ) {
 					case 'or':
-						$compare_logic = $compare_logic || apply_filters('wpsc_coupon_compare_logic',false,$condition,$cart_item);
+						$compare_logic = $compare_logic || apply_filters( 'wpsc_coupon_compare_logic', false, $condition, $cart_item );
 					break;
 					case 'and':
-						$compare_logic = $compare_logic && apply_filters('wpsc_coupon_compare_logic',false,$condition,$cart_item);
+						$compare_logic = $compare_logic && apply_filters( 'wpsc_coupon_compare_logic', false, $condition, $cart_item );
 					break;
 					default:
 						$compare_logic = apply_filters( 'wpsc_coupon_compare_logic', false, $condition, $cart_item );
