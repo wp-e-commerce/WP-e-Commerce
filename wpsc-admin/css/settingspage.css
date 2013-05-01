@@ -124,7 +124,8 @@ table.wpsc-edit-module-options tr td {
 	padding: 0 0 8px 8px;
 	width:394px;
 }
-.gateway_settings_form {
+.gateway_settings_form,
+.shipping-module-settings-form {
 	padding: .5em;
 }
 .widefat .gateway_settings_form td {
@@ -137,7 +138,8 @@ table.wpsc-edit-module-options tr td {
 .widefat .inactive p.description {
 	margin-left: 0;
 }
-.gateway_settings_form p.submit {
+.gateway_settings_form p.submit,
+.shipping-module-settings-form p.submit {
 	margin-top: 2em;
 }
 
