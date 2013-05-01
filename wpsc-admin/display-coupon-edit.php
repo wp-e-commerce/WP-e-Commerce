@@ -113,6 +113,7 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 							<label><strong><?php _e( 'Conditions', 'wpsc' ); ?></strong></label>
 						</th>
 						<td>
+							<input type="hidden" name="rules[operator][]" value="" />
 							<?php
 							$conditions = maybe_unserialize( $coupon['condition'] );
 
@@ -127,6 +128,14 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 							foreach( $conditions as $key => $condition ) :
 								?>
 								<div class='coupon-condition'>
+								<?php
+								if(isset($condition["operator"]) && !empty($condition["operator"])):
+								?>
+									<select name="rules[operator][]">
+										<option value="or"<?php selected('or',$condition["operator"]);?>><?php _e('OR','wpsc');?></option>
+										<option value="and"<?php selected('and',$condition["operator"]);?>><?php _e('AND','wpsc');?></option>
+									</select>
+								<?php endif; ?>
 									<select class="ruleprops" name="rules[property][]">
 										<option value="item_name"<?php selected( 'item_name', $condition['property'] ); ?> rel="order"><?php _e( 'Item name', 'wpsc' ); ?></option>
 										<option value="item_quantity"<?php selected( 'item_quantity', $condition['property'] ); ?> rel="order"><?php _e( 'Item quantity', 'wpsc' ); ?></option>
