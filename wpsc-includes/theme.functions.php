@@ -90,9 +90,9 @@ function wpsc_flush_theme_transients( $force = false ) {
 	// No files were registered so return false
 	return false;
 }
-add_action( 'wpsc_move_theme', 'wpsc_flush_theme_transients', 10, true );
+add_action( 'wpsc_move_theme'  , 'wpsc_flush_theme_transients', 10, true );
 add_action( 'wpsc_switch_theme', 'wpsc_flush_theme_transients', 10, true );
-add_action( 'switch_theme', 'wpsc_flush_theme_transients', 10, true );
+add_action( 'switch_theme'     , 'wpsc_flush_theme_transients', 10, true );
 
 /**
  * wpsc_check_theme_location()
@@ -321,7 +321,7 @@ function wpsc_get_template_file_path( $file = '' ){
 
 			// Use the bundled file
 			} else {
-				$file_path = WPSC_CORE_THEME_PATH . '/' . $file;
+				$file_path = path_join( WPSC_CORE_THEME_PATH, $file );
 			}
 		}
 		// Save the transient and update it every 12 hours
