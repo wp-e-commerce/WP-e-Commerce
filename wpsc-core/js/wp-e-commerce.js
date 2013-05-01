@@ -322,6 +322,9 @@ jQuery(document).ready(function ($) {
 				old_price = jQuery('#old_product_price_' + prod_id),
 				save = jQuery('#yousave_' + prod_id),
 				buynow = jQuery('#BB_BuyButtonForm' + prod_id);
+				
+			jQuery( document ).trigger( { type : 'wpsc_select_variation', response : response } );
+			
 			if ( response.variation_found ) {
 				if ( response.stock_available ) {
 					stock_display.removeClass('out_of_stock').addClass('in_stock');
@@ -350,7 +353,7 @@ jQuery(document).ready(function ($) {
 				}
 				donation_price.val(response.numeric_price);
 			}
-		}, 'json');
+		}, 'json' );
 	});
 
 	//First pass cruft comment - make sure to test the following livequery replacements
