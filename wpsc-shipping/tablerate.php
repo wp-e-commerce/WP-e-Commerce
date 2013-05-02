@@ -60,10 +60,10 @@ class tablerate {
 					<div class="cell-wrapper">
 						<small><?php echo esc_html( $currency ); ?></small>
 						<input type="text" name="wpsc_shipping_tablerate_shipping[]" value="<?php echo esc_attr( $shipping ); ?>" size="4" />
-						<div class="actions">
+						<span class="actions">
 							<a tabindex="-1" title="<?php _e( 'Delete Layer', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus" href="#"><?php echo _x( '&ndash;', 'delete item', 'wpsc' ); ?></a>
 							<a tabindex="-1" title="<?php _e( 'Add Layer', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-plus" href="#"><?php echo _x( '+', 'add item', 'wpsc' ); ?></a>
-						</div>
+						</span>
 					</div>
 				</td>
 			</tr>
@@ -80,28 +80,34 @@ class tablerate {
 		$this->alt = false;
 		ob_start();
 		?>
-			<thead>
-				<tr>
-					<th class="total"><?php _e('Total Price', 'wpsc' ); ?></th>
-					<th class="shipping"><?php _e( 'Shipping Price', 'wpsc' ); ?></th>
-				</tr>
-			</thead>
-			<tbody class="table-rate">
-				<tr class="js-warning">
-					<td colspan="2">
-						<small><?php echo sprintf( __( 'To remove a rate layer, simply leave the values on that row blank. By the way, <a href="%s">enable JavaScript</a> for a better user experience.', 'wpsc'), 'http://www.google.com/support/bin/answer.py?answer=23852' ); ?></small>
-					</td>
-				</tr>
-				<?php if ( ! empty( $layers ) ): ?>
-					<?php
-						foreach( $layers as $key => $shipping ){
-							$this->output_row( $key, $shipping );
-						}
-					?>
-				<?php else: ?>
-					<?php $this->output_row(); ?>
-				<?php endif ?>
-			</tbody>
+		<tr>
+			<td colspan='2'>
+				<table>
+					<thead>
+						<tr>
+							<th class="total"><?php _e('Total Price', 'wpsc' ); ?></th>
+							<th class="shipping"><?php _e( 'Shipping Price', 'wpsc' ); ?></th>
+						</tr>
+					</thead>
+					<tbody class="table-rate">
+						<tr class="js-warning">
+							<td colspan="2">
+								<small><?php echo sprintf( __( 'To remove a rate layer, simply leave the values on that row blank. By the way, <a href="%s">enable JavaScript</a> for a better user experience.', 'wpsc'), 'http://www.google.com/support/bin/answer.py?answer=23852' ); ?></small>
+							</td>
+						</tr>
+						<?php if ( ! empty( $layers ) ): ?>
+							<?php
+								foreach( $layers as $key => $shipping ){
+									$this->output_row( $key, $shipping );
+								}
+							?>
+						<?php else: ?>
+							<?php $this->output_row(); ?>
+						<?php endif ?>
+					</tbody>
+				</table>
+			</td>
+		</tr>
 		<?php
 		return ob_get_clean();
 	}
