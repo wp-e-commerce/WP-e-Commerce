@@ -63,9 +63,6 @@ class flatrate {
 			)
 		);
 
-		$currency_data = $wpdb->get_row( "SELECT `symbol`,`symbol_html`,`code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id`='" . esc_attr( get_option( 'currency_type' ) ) . "' LIMIT 1", ARRAY_A );
-		$currency_sign = ! empty( $currency_data['symbol'] ) ? $currency_data['symbol_html'] : $currency_data['code'];
-
 		$output = "<tr><td colspan='2'>";
 
 		$output .= "<table>";
@@ -73,26 +70,26 @@ class flatrate {
 		$output .= "<tr><th colspan='2'><strong>" . __( 'Base Local', 'wpsc' ) . "</strong></th></tr>";
 		switch ( get_option( 'base_country' ) ) {
 			case 'NZ':
-				$output .= $this->settings_form_shipping_price_field( 'southisland', __( 'South Island', 'wpsc' ),  $shipping['southisland'], $currency_sign );
-				$output .= $this->settings_form_shipping_price_field( 'northisland', __( 'North Island', 'wpsc' ),  $shipping['northisland'], $currency_sign );
+				$output .= $this->settings_form_shipping_price_field( 'southisland', __( 'South Island', 'wpsc' ),  $shipping['southisland'] );
+				$output .= $this->settings_form_shipping_price_field( 'northisland', __( 'North Island', 'wpsc' ),  $shipping['northisland'] );
 				break;
 
 			case 'US':
-				$output .= $this->settings_form_shipping_price_field( 'continental', __( 'South Island', 'wpsc' ),  $shipping['continental'], $currency_sign );
-				$output .= $this->settings_form_shipping_price_field( 'all',         __( 'All 50 States', 'wpsc' ), $shipping['all'],         $currency_sign );
+				$output .= $this->settings_form_shipping_price_field( 'continental', __( 'South Island', 'wpsc' ),  $shipping['continental'] );
+				$output .= $this->settings_form_shipping_price_field( 'all',         __( 'All 50 States', 'wpsc' ), $shipping['all'] );
 				break;
 
 			default:
-				$output .= $this->settings_form_shipping_price_field( 'local',       __( 'Domestic', 'wpsc' ),      $shipping['local'],       $currency_sign );
+				$output .= $this->settings_form_shipping_price_field( 'local',       __( 'Domestic', 'wpsc' ),      $shipping['local'] );
 				break;
 		}
 
 		$output .= "<tr><th colspan='2'><strong>" . __( 'Base International', 'wpsc' ) . "</strong></th></tr>";
-		$output .= $this->settings_form_shipping_price_field( 'northamerica', __( 'North America', 'wpsc' ),    $shipping['northamerica'], $currency_sign );
-		$output .= $this->settings_form_shipping_price_field( 'southamerica', __( 'South America', 'wpsc' ),    $shipping['southamerica'], $currency_sign );
-		$output .= $this->settings_form_shipping_price_field( 'asiapacific',  __( 'Asia and Pacific', 'wpsc' ), $shipping['asiapacific'],  $currency_sign );
-		$output .= $this->settings_form_shipping_price_field( 'europe',       __( 'Europe', 'wpsc' ),           $shipping['europe'],       $currency_sign );
-		$output .= $this->settings_form_shipping_price_field( 'africa',       __( 'Africa', 'wpsc' ),           $shipping['africa'],       $currency_sign );
+		$output .= $this->settings_form_shipping_price_field( 'northamerica', __( 'North America', 'wpsc' ),    $shipping['northamerica'] );
+		$output .= $this->settings_form_shipping_price_field( 'southamerica', __( 'South America', 'wpsc' ),    $shipping['southamerica'] );
+		$output .= $this->settings_form_shipping_price_field( 'asiapacific',  __( 'Asia and Pacific', 'wpsc' ), $shipping['asiapacific'] );
+		$output .= $this->settings_form_shipping_price_field( 'europe',       __( 'Europe', 'wpsc' ),           $shipping['europe'] );
+		$output .= $this->settings_form_shipping_price_field( 'africa',       __( 'Africa', 'wpsc' ),           $shipping['africa'] );
 		$output .= "</table>";
 
 		$output .= "<br /><p class='description'>" . __( 'If you do not wish to ship to a particular region, leave the field blank. To offer free shipping to a region, enter 0.', 'wpsc' ) . "</p>";
@@ -106,10 +103,10 @@ class flatrate {
 	 *
 	 * @return string HTML snippet, a <tr> with two columns.
 	 */
-	function settings_form_shipping_price_field( $id, $label, $value, $currency_sign ) {
+	function settings_form_shipping_price_field( $id, $label, $value ) {
 		$output = "<tr><td>" . $label . "</td>";
 		$output .= "<td>";
-		$output .= esc_attr( $currency_sign );
+		$output .= esc_attr( wpsc_get_currency_symbol() );
 		$output .= "<input size='4' type='text' name='shipping[" . esc_attr( $id ) . "]' value='" . esc_attr( $value ) . "'>";
 		$output .= "</td></tr>";
 
