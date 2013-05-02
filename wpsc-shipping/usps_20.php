@@ -191,128 +191,105 @@ class ash_usps {
 		$settings = array_merge( $defaults, $settings );
 		$settings['services'] = array_merge( $defaults['services'], $settings['services'] );
 
-		$output=("
-					<tr>
-						<td>
-							".__('USPS ID', 'wpsc').":
-						</td>
-						<td>
-							<input type='text' name='wpec_usps[id]' value='" . esc_attr( $settings["id"] ) ."' />
+		ob_start();
+		?>
+		<tr>
+			<td><?php _e( 'USPS ID', 'wpsc' ); ?></td>
+			<td>
+				<input type='text' name='wpec_usps[id]' value='<?php esc_attr_e( $settings["id"] ); ?>' />
+				<p class='description'><?php printf( __("Don't have a USPS API account? <a href='%s' target='_blank'>Register for USPS Web Tools</a>", 'wpsc' ), 'https://secure.shippingapis.com/registration/' ); ?></p>
+				<p class='description'><?php _e( "Make sure your account has been activated with USPS - if you're unsure if this applies to you then please check with USPS", 'wpsc' ); ?></p>
+			</td>
+		</tr>
 
-						<br />
-						".__("Don't have a USPS API account ? ",'wpsc')."
+		<tr>
+			<td><?php _e( 'Shipping Settings', 'wpsc' ); ?></td>
+			<td>
+				<label>
+					<input type='checkbox' <?php checked( $settings['test_server'], 1 ); ?> name='wpec_usps[test_server]' value='1' />
+					<?php _e( 'Use Test Server', 'wpsc' ); ?>
+				</label>
+				<br />
 
-						<a href=\"https://secure.shippingapis.com/registration/\" target=\"_blank\" >".__('Click Here','wpsc')."</a>
-						</td>
-					</tr>
-					<tr>
-						<td>
-						</td>
-						<td>
-						<span style=\"font-size: x-small\">	" . __( "Make sure your account has been activated with USPS - if you're unsure if this applies to you then please check with USPS", 'wpsc' ) . " </span>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							".__('Use Test Server:','wpsc')."
-						</td>
-						<td>
-							<input type='checkbox' ". checked( $settings['test_server'], 1, false ) ." name='wpec_usps[test_server]' value='1' />
+				<label>
+					<input type='checkbox' <?php checked( $settings['adv_rate'], 1 ); ?> name='wpec_usps[adv_rate]' value='1' />
+					<?php _e( 'Advanced Rates', 'wpsc' ); ?>
+				</label>
+				<p class='description'><?php _e( 'This setting will provide rates based on the dimensions from each item in your cart', 'wpsc' ); ?></p>
+			</td>
+		</tr>
 
-							Yes
-						</td>
-					</tr>
-					<tr>
-						<td>
-							".__('Advanced Rates:','wpsc')."
-						</td>
-						<td>
-							<input type='checkbox' ". checked( $settings['adv_rate'], 1, false ) . " name='wpec_usps[adv_rate]' value='1' />
-
-							Yes
-							<br />
-							<span style=\"font-size: x-small\">" . __( 'This setting will provide rates based on the dimensions from each item in your cart', 'wpsc' )."</span>
-						</td>
-					</tr>
-					<tr>
-						<td>".__('Select Services','wpsc')."</td>
-						<td>
-							<div id=\"resizeable\" class=\"ui-widget-content multiple-select\">");
+		<?php
 			$wpec_usps_services = $settings["services"];
+		?>
+		<tr>
+			<td><?php _e( 'Select Services', 'wpsc' ); ?></td>
+			<td>
+				<div class="ui-widget-content multiple-select">
+					<?php foreach ( $this->services as $label => $service ): ?>
+						<input type="checkbox" id="wpec_usps_srv_<?php esc_attr_e( $service ); ?>" name="wpec_usps[services][]" value="<?php echo esc_attr_e( $service ); ?>" <?php checked( array_search( $service, $wpec_usps_services ) ); ?> />
+				 		<label for="wpec_usps_srv_$service"><?php echo $label; ?></label>
+				 		<br />
+					<?php endforeach; ?>
+				</div>
+				<!--
+				<span style=\"font-size: x-small\">".__("Online rates the following services only, when available",'wpsc')."
+					<br />
+					" . __( "US Domestic: Express Mail, Priority Mail", 'wpsc' ) . "
+					<br />
+					" . __( "International : Global Express Guarenteed, Express Mail Intl. , Priority Mail Intl.", 'wpsc' ) . "
+				</span>
+				<br />
+				-->
+			</td>
+		</tr>
 
-			foreach($this->services as $label=>$service){
-				$checked = "";
-				if ((array_search($service, $wpec_usps_services) !== false)){
-					$checked = "checked=\"checked\"";
-				}
-				$output .= ("<input type=\"checkbox\" id=\"wpec_usps_srv_$service\" name=\"wpec_usps[services][]\" value=\"".$service."\" $checked />
-							 <label for=\"wpec_usps_srv_$service\">".$label."</label>
-							 <br />");
-			}
-
-			$output .= ("    </div><!--
-							<span style=\"font-size: x-small\">".__("Online rates the following services only, when available",'wpsc')."
-								<br />
-								" . __( "US Domestic: Express Mail, Priority Mail", 'wpsc' ) . "
-								<br />
-								" . __( "International : Global Express Guarenteed, Express Mail Intl. , Priority Mail Intl.", 'wpsc' ) . "
-							</span>
-							<br />
-							-->
-						</td>
-					</tr>
-					<tr>
-						<td>
-							".__("International Package Type","wpsc")."
-						</td>
-						<td>
-						");
+		<?php
 			$mt_array = array(
-							  __( "Package", 'wpsc' ),
-							 __( "Envelope", 'wpsc' ),
-							 __( "Postcards or aerogrammes", 'wpsc' ),
-							 __( "Matter for the Blind", 'wpsc' )
-							  //"All"
-							  );
-			$mt_selected = (array_key_exists("intl_pkg", $settings)) ? $settings["intl_pkg"] : __( "Package", 'wpsc' );
-			$output .= "<select id=\"wpec_usps_intl_pkg\" name=\"wpec_usps[intl_pkg]\">";
-			foreach($mt_array as $mt){
-				$chk_mt = "";
-				if ($mt == $mt_selected){ $chk_mt = 'selected=\"selected\"'; }
-				$output .= "<option value=\"".$mt."\" ".$chk_mt." >".$mt."</option>\n";
-			}
-			$output .= ("	</select>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							".__("First Class Mail Type", "wpsc")."
-						</td>
-						<td>
-							");
+				__( "Package", 'wpsc' ),
+				__( "Envelope", 'wpsc' ),
+				__( "Postcards or aerogrammes", 'wpsc' ),
+				__( "Matter for the Blind", 'wpsc' )
+				// "All"
+			);
+			$mt_selected = ( array_key_exists( "intl_pkg", $settings ) ) ? $settings["intl_pkg"] : __( "Package", 'wpsc' );
+		?>
+		<tr>
+			<td><?php _e( "International Package Type", "wpsc" ); ?></td>
+			<td>
+				<select id="wpec_usps_intl_pkg" name="wpec_usps[intl_pkg]">
+					<?php foreach ( $mt_array as $mt ): ?>
+						<option value="<?php esc_attr_e( $mt ); ?>" <?php selected( $mt, $mt_selected );?> ><?php echo $mt; ?></option>
+					<?php endforeach; ?>
+				</select>
+			</td>
+		</tr>
 
+		<?php
 			// If First Class, Online or All is selected then we need to know what Kind of First class
 			// will be used.
-			$fcl_types = array( __( "Parcel", 'wpsc' ) => "PARCEL", __( "Letter", 'wpsc' ) => "LETTER", __( "Flat", 'wpsc' )=> "FLAT", __( "Postcard", 'wpsc' ) => "POSTCARD");
-			$type_selected = (array_key_exists("fcl_type",$settings)) ? $settings["fcl_type"] : $fcl_types["Parcel"];
-
-			$output .=("
-							<select id =\"\first_cls_type\" name=\"wpec_usps[fcl_type]\">
-							");
-							foreach($fcl_types as $label=>$value){
-									$type_sel = "";
-								if ($value == $type_selected){
-									$type_sel = "selected=\"selected\"";
-								}
-								$output .= "<option value=\"".$value."\" ".$type_sel." >".$label."</option>\n";
-							}
-			$output .=("
-							</select>
-							<br />
-							<span style=\"font-size: x-small\" >Note : ".__("Only used for First Class service rates if selected","wpsc")."</span>
-						</td>
-					</tr>");
-		return $output;
+			$fcl_types = array(
+				__( "Parcel", 'wpsc' )   => "PARCEL",
+				__( "Letter", 'wpsc' )   => "LETTER",
+				__( "Flat", 'wpsc' )     => "FLAT",
+				__( "Postcard", 'wpsc' ) => "POSTCARD"
+			);
+			$type_selected = ( array_key_exists( "fcl_type", $settings ) ) ? $settings["fcl_type"] : $fcl_types["Parcel"];
+		?>
+		<tr>
+			<td><?php _e( "First Class Mail Type", "wpsc" ); ?></td>
+			<td>
+				<select id="first_cls_type" name="wpec_usps[fcl_type]">
+					<?php foreach ( $fcl_types as $label => $value ): ?>
+						<option value="<?php esc_attr_e( $value ); ?>" <?php selected( $value, $type_selected ); ?>><?php echo $label; ?></option>
+					<?php endforeach; ?>
+				</select>
+				<br />
+				<p class='description'><?php _e( "Note: Only used for First Class service rates if selected", "wpsc" ); ?></span>
+			</td>
+		</tr>
+		<?php
+		return ob_get_clean();
 	}
 
 	/**
