@@ -10,9 +10,9 @@ class weightrate {
 	var $internal_name, $name;
 
 	/**
+	 * Constructor
 	 *
-	 *
-	 * @return unknown
+	 * @return boolean Always returns true.
 	 */
 	function weightrate() {
 		$this->internal_name = "weightrate";
@@ -22,23 +22,26 @@ class weightrate {
 	}
 
 	/**
+	 * Returns i18n-ized name of shipping module.
 	 *
-	 *
-	 * @return unknown
+	 * @return string
 	 */
 	function getName() {
 		return $this->name;
 	}
 
 	/**
+	 * Returns internal name of shipping module.
 	 *
-	 *
-	 * @return unknown
+	 * @return string
 	 */
 	function getInternalName() {
 		return $this->internal_name;
 	}
 
+	/**
+	 * generates row of table rate fields
+	 */
 	private function output_row( $key = '', $shipping = '' ) {
 		$currency = wpsc_get_currency_symbol();
 		$class = ( $this->alt ) ? ' class="alternate"' : '';
@@ -55,10 +58,10 @@ class weightrate {
 					<div class="cell-wrapper">
 						<small><?php echo esc_html( $currency ); ?></small>
 						<input type="text" name="wpsc_shipping_weightrate_shipping[]" value="<?php echo esc_attr( $shipping ); ?>" size="4" />
-						<div class="actions">
+						<span class="actions">
 							<a tabindex="-1" title="<?php _e( 'Delete Layer', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus" href="#"><?php echo _x( '&ndash;', 'delete item', 'wpsc' ); ?></a>
 							<a tabindex="-1" title="<?php _e( 'Add Layer', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-plus" href="#"><?php echo _x( '+', 'add item', 'wpsc' ); ?></a>
-						</div>
+						</span>
 					</div>
 				</td>
 			</tr>
@@ -67,47 +70,53 @@ class weightrate {
 
 
 	/**
+	 * Returns HTML settings form. Should be a collection of <tr> elements containing two columns.
 	 *
-	 *
-	 * @return unknown
+	 * @return string HTML snippet.
 	 */
 	function getForm() {
 		$this->alt = false;
 		$layers = get_option( 'weight_rate_layers', array() );
 		ob_start();
 		?>
-			<thead>
-				<tr>
-					<th class="total-weight" title="<?php _e( 'You must enter the weight here in pounds, regardless of what you used on your products', 'wpsc' ); ?>">
-						<?php _e( 'Total Weight', 'wpsc' ); ?><br /><small><?php _e( 'in pounds', 'wpsc' ); ?></small>
-					</th>
-					<th class="shipping"><?php _e( 'Shipping Price', 'wpsc' ); ?></th>
-				</tr>
-			</thead>
-			<tbody class="table-rate">
-				<tr class="js-warning">
-					<td colspan="2">
-						<small><?php echo sprintf( __( 'To remove a rate layer, simply leave the values on that row blank. By the way, <a href="%s">enable JavaScript</a> for a better user experience.', 'wpsc'), 'http://www.google.com/support/bin/answer.py?answer=23852' ); ?></small>
-					</td>
-				</tr>
-				<?php if ( ! empty( $layers ) ): ?>
-					<?php
-						foreach( $layers as $key => $shipping ){
-							$this->output_row( $key, $shipping );
-						}
-					?>
-				<?php else: ?>
-					<?php $this->output_row(); ?>
-				<?php endif ?>
-			</tbody>
+		<tr>
+			<td colspan='2'>
+				<table>
+					<thead>
+						<tr>
+							<th class="total-weight" title="<?php _e( 'You must enter the weight here in pounds, regardless of what you used on your products', 'wpsc' ); ?>">
+								<?php _e( 'Total Weight', 'wpsc' ); ?><br /><small><?php _e( 'in pounds', 'wpsc' ); ?></small>
+							</th>
+							<th class="shipping"><?php _e( 'Shipping Price', 'wpsc' ); ?></th>
+						</tr>
+					</thead>
+					<tbody class="table-rate">
+						<tr class="js-warning">
+							<td colspan="2">
+								<small><?php echo sprintf( __( 'To remove a rate layer, simply leave the values on that row blank. By the way, <a href="%s">enable JavaScript</a> for a better user experience.', 'wpsc'), 'http://www.google.com/support/bin/answer.py?answer=23852' ); ?></small>
+							</td>
+						</tr>
+						<?php if ( ! empty( $layers ) ): ?>
+							<?php
+								foreach( $layers as $key => $shipping ){
+									$this->output_row( $key, $shipping );
+								}
+							?>
+						<?php else: ?>
+							<?php $this->output_row(); ?>
+						<?php endif ?>
+					</tbody>
+				</table>
+			</td>
+		</tr>
 		<?php
 		return ob_get_clean();
 	}
 
 	/**
+	 * Saves shipping module settings.
 	 *
-	 *
-	 * @return unknown
+	 * @return boolean Always returns true.
 	 */
 	function submit_form() {
 		if ( empty( $_POST['wpsc_shipping_weightrate_shipping'] ) || empty( $_POST['wpsc_shipping_weightrate_layer'] ) )
@@ -135,9 +144,9 @@ class weightrate {
 	}
 
 	/**
+	 * returns shipping quotes using this shipping module.
 	 *
-	 *
-	 * @return unknown
+	 * @return array collection of rates applicable.
 	 */
 	function getQuote() {
 
@@ -190,10 +199,10 @@ class weightrate {
 	}
 
 	/**
+	 * calculates shipping price for an individual cart item.
 	 *
-	 *
-	 * @param unknown $cart_item (reference)
-	 * @return unknown
+	 * @param object $cart_item (reference)
+	 * @return float price of shipping for the item.
 	 */
 	function get_item_shipping(&$cart_item) {
 
