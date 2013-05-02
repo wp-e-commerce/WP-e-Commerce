@@ -10,9 +10,9 @@ class flatrate {
 	var $internal_name, $name;
 
 	/**
+	 * Constructor
 	 *
-	 *
-	 * @return unknown
+	 * @return boolean Always returns true.
 	 */
 	function flatrate() {
 		$this->internal_name = "flatrate";
@@ -22,27 +22,27 @@ class flatrate {
 	}
 
 	/**
+	 * Returns i18n-ized name of shipping module.
 	 *
-	 *
-	 * @return unknown
+	 * @return string
 	 */
 	function getName() {
 		return $this->name;
 	}
 
 	/**
+	 * Returns internal name of shipping module.
 	 *
-	 *
-	 * @return unknown
+	 * @return string
 	 */
 	function getInternalName() {
 		return $this->internal_name;
 	}
 
 	/**
+	 * Returns HTML settings form. Should be a collection of <tr> elements.
 	 *
-	 *
-	 * @return unknown
+	 * @return string HTML snippet
 	 */
 	function getForm() {
 		global $wpdb;
@@ -96,9 +96,9 @@ class flatrate {
 	}
 
 	/**
+	 * Saves shipping module settings.
 	 *
-	 *
-	 * @return unknown
+	 * @return boolean Always returns true.
 	 */
 	function submit_form() {
 		if (!isset($_POST['shipping'])) $_POST['shipping'] = null;
@@ -112,10 +112,10 @@ class flatrate {
 	}
 
 	/**
+	 * returns shipping quotes using this shipping module.
 	 *
-	 *
-	 * @param unknown $for_display (optional)
-	 * @return unknown
+	 * @param boolean $for_display (optional) (unused)
+	 * @return array collection of rates applicable.
 	 */
 	function getQuote($for_display = false) {
 		global $wpdb, $wpsc_cart;
@@ -219,10 +219,10 @@ class flatrate {
 	}
 
 	/**
+	 * calculates shipping price for an individual cart item.
 	 *
-	 *
-	 * @param unknown $cart_item (reference)
-	 * @return unknown
+	 * @param object $cart_item (reference)
+	 * @return float price of shipping for the item.
 	 */
 	function get_item_shipping(&$cart_item) {
 
