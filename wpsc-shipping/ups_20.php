@@ -196,32 +196,17 @@ class ash_ups {
 			</tr>
 
 			<tr>
-				<td>&nbsp;</td>
+				<td><?php _e( 'Shipping Settings', 'wpsc' ); ?></td>
 				<td>
 					<input type="checkbox" id="ups_env_test" name="wpsc_ups_settings[upsenvironment]" value="1" <?php checked( 1, $wpsc_ups_settings['upsenvironment'] ); ?> />
 					<label for="ups_env_test" ><?php _e( 'Use Testing Environment', 'wpsc' ); ?></label>
-				</td>
-			</tr>
-
-			<tr>
-				<td>&nbsp;</td>
-				<td>
+					<br />
 					<input type="checkbox" id="ups_negotiated_rates" name="wpsc_ups_settings[ups_negotiated_rates]" value="1" <?php checked( 1, $wpsc_ups_settings['ups_negotiated_rates'] ); ?> />
 					<label for="ups_negotiated_rates" ><?php _e( 'Show UPS negotiated rates', 'wpsc' ); ?> *</label>
-				</td>
-			</tr>
-
-			<tr>
-				<td>&nbsp;</td>
-				<td>
+					<br />
 					<input type="checkbox" id="ups_insured_shipment" name="wpsc_ups_settings[insured_shipment]" value="1" <?php checked( 1, $wpsc_ups_settings['insured_shipment'] ); ?> />
 					<label for="ups_insured_shipment" ><?php _e( 'Insure shipment against cart total', 'wpsc' ); ?> *</label>
-				</td>
-			</tr>
-
-			<tr>
-				<td>&nbsp;</td>
-				<td>
+					<br />
 					<input type="checkbox" id="ups_singular_shipping" name="wpsc_ups_settings[singular_shipping]" value="1" <?php checked( 1, $wpsc_ups_settings['singular_shipping'] ); ?> />
 					<label for="ups_singular_shipping" ><?php _e( 'Singular Shipping', 'wpsc' ); ?> *</label>
 					<p class='description'><?php _e( 'Rate each quantity of items in a cart as its own package using dimensions on product', 'wpsc' ); ?></p>
@@ -235,7 +220,7 @@ class ash_ups {
 			<tr>
 				<td><?php _e( 'UPS Preferred Services', 'wpsc' ); ?></td>
 				<td>
-					<div id="resizeable" class="ui-widget-content multiple-select">
+					<div class="ui-widget-content multiple-select">
 						<?php foreach( array_keys( $this->Services ) as $service ): ?>
 							<input type="checkbox" id="wps_ups_srv_<?php esc_attr_e( $service ); ?>" name="wpsc_ups_services[]" value="<?php esc_attr_e( $service ); ?>" <?php checked( is_array( $wpsc_ups_services ) && ( array_search( $service, $wpsc_ups_services ) !== false ) ); ?> />
 							<label for="wps_ups_srv_<?php esc_attr_e( $service); ?>"><?php esc_html_e( $this->Services[$service] ); ?></label><br />
@@ -246,19 +231,22 @@ class ash_ups {
 			</tr>
 
 			<tr>
-				<td><?php _e( 'UPS Account #', 'wpsc' ); ?> *</td>
+				<td colspan='2'><strong><?php _e( 'My UPS', 'wpsc' ); ?></strong></td>
+			</tr>
+			<tr>
+				<td><?php _e( 'Account Number', 'wpsc' ); ?> *</td>
 				<td>
 					<input type="text" name='wpsc_ups_settings[upsaccount]' value="<?php esc_attr_e( $wpsc_ups_settings['upsaccount'] ); ?>" />
 				</td>
 			</tr>
 			<tr>
-				<td><?php _e( 'UPS Username', 'wpsc' ); ?></td>
+				<td><?php _e( 'Username', 'wpsc' ); ?></td>
 				<td>
 					<input type="text" name='wpsc_ups_settings[upsusername]' value="<?php esc_attr_e( base64_decode( $wpsc_ups_settings['upsusername'] ) ); ?>" />
 				</td>
 			</tr>
 			<tr>
-				<td><?php _e( 'UPS Password', 'wpsc' ); ?></td>
+				<td><?php _e( 'Password', 'wpsc' ); ?></td>
 				<td>
 					<input type="password" name='wpsc_ups_settings[upspassword]' value="<?php esc_attr_e( base64_decode( $wpsc_ups_settings['upspassword'] ) ); ?>" />
 				</td>
@@ -267,12 +255,12 @@ class ash_ups {
 				<td><?php _e( 'UPS XML API Key', 'wpsc' ); ?></td>
 				<td>
 					<input type="text" name='wpsc_ups_settings[upsid]' value="<?php esc_attr_e( base64_decode( $wpsc_ups_settings['upsid'] ) ); ?>" />
-					<p class='description'><?php printf( __( "Don't have an API login/ID? <a href='%1$s' target='_blank'>Sign up for UPS Developer Kit</a>", 'wpsc' ), esc_url( "https://www.ups.com/upsdeveloperkit?loc=en_US" ) ); ?></p>
+					<p class='description'><?php printf( __( "Don't have an API login/ID? <a href='%s' target='_blank'>Sign up for My UPS</a>", 'wpsc' ), esc_url( "https://www.ups.com/upsdeveloperkit?loc=en_US" ) ); ?></p>
 				</td>
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<p class='description'><?php _e( 'Note: For Negotiated rates, you must enter a UPS account number and select "Show UPS negotiated rates" ', 'wpsc' ); ?></p>
+					<p class='description'><?php _e( '* For Negotiated rates, you must enter a UPS account number and select "Show UPS negotiated rates" ', 'wpsc' ); ?></p>
 					<p class='description'><?php printf( __( "For more help configuring UPS, please <a href='%s'>read our documentation</a>", 'wpsc' ), esc_url( 'http://docs.getshopped.org/wiki/documentation/shipping/ups' ) ); ?></p>
 				</td>
 			</tr>
