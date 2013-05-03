@@ -223,7 +223,7 @@ class ash_ups {
                         </tr>
                         ");
             $insured_shipment = "";
-            if ($wpsc_ups_settings['insured_shipment'] == "1"){
+            if ( isset( $wpsc_ups_settings['insured_shipment'] ) && $wpsc_ups_settings['insured_shipment'] == "1"){
                 $insured_shipment = "checked=\"checked\"";
             }
             $output .= ("
@@ -235,7 +235,7 @@ class ash_ups {
                         </tr>
                         ");
             $singular_shipping = "";
-            if ($wpsc_ups_settings['singular_shipping'] == "1"){
+            if ( isset( $wpsc_ups_settings['singular_shipping'] ) && $wpsc_ups_settings['singular_shipping'] == "1"){
                 $singular_shipping = "checked=\"checked\"";
             }
             $output .= ("
