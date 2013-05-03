@@ -103,7 +103,7 @@ function _wpsc_action_merchant_v2_submit_gateway_options() {
 	}
 	$custom_gateways = get_option( 'custom_gateway_options' );
 
-	$nzshpcrt_gateways = nzshpcrt_get_gateways();
+	global $nzshpcrt_gateways;
 	foreach ( $nzshpcrt_gateways as $gateway ) {
 		if ( in_array( $gateway['internalname'], $custom_gateways ) ) {
 			if ( isset( $gateway['submit_function'] ) ) {

@@ -23,7 +23,7 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 	private function get_gateway_settings_url( $gateway ) {
 		$location = isset( $_REQUEST['current_url'] ) ? $_REQUEST['current_url'] : $_SERVER['REQUEST_URI'];
 		$gateway  = ! empty( $gateway ) ? $gateway : '';
-		
+
 		return add_query_arg( array(
 			'tab'                => 'gateway',
 			'page'               => 'wpsc-settings',
@@ -66,8 +66,6 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 
 	public function display() {
 		global $wpdb, $nzshpcrt_gateways;
-		if ( empty( $nzshpcrt_gateways ) )
-			$nzshpcrt_gateways     = nzshpcrt_get_gateways();
 	?>
 
 		<h3><?php _e( 'Select Payment Gateways', 'wpsc' ); ?></h3>
@@ -102,10 +100,10 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 
 	private function gateway_list_item( $gateway, $force ) {
 		$checked = in_array( $gateway['id'], $this->active_gateways );
-		
+
 		$active = $checked ? 'active' : 'inactive';
 		$hidden = $force   ? '' : "style='display: none;'";
-	
+
 		$edithidden = $hidden;
 
 		$payment_gateway_names = get_option( 'payment_gateway_names' );
@@ -145,7 +143,7 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 		$gateways = apply_filters( 'wpsc_settings_get_gateways', array() );
 
 		$selected_gateway = (string) get_user_option( 'wpsc_settings_selected_payment_gateway', get_current_user_id() );
-	
+
 		foreach ( $gateways as $gateway ) {
 			$this->gateway_list_item( $gateway, $selected_gateway === $gateway['id'] );
 		}

@@ -332,7 +332,7 @@ function wpsc_packing_slip( $purchase_id ) {
 
 		if ( 2 == get_option( 'payment_method' ) ) {
 			$gateway_name = '';
-			$nzshpcrt_gateways = nzshpcrt_get_gateways();
+			global $nzshpcrt_gateways;
 
 			foreach( $nzshpcrt_gateways as $gateway ) {
 				if ( $purch_data['gateway'] != 'testmode' ) {
