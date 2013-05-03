@@ -414,15 +414,14 @@ function wpsc_user_profile_links( $args = array() ) {
 }
 
 function wpsc_user_purchases() {
-	global $wpdb, $user_ID, $wpsc_purchlog_statuses, $gateway_checkout_form_fields, $purchase_log, $col_count;
+	global $wpdb, $user_ID, $wpsc_purchlog_statuses, $gateway_checkout_form_fields, $purchase_log, $col_count, $nzshpcrt_gateways;
 
-	$nzshpcrt_gateways = nzshpcrt_get_gateways();
 	$i = 0;
 	$subtotal = 0;
 
-        do_action( 'wpsc_pre_purchase_logs' );
+	do_action( 'wpsc_pre_purchase_logs' );
 
-	foreach ( (array)$purchase_log as $purchase ) {
+	foreach ( (array) $purchase_log as $purchase ) {
 		$status_state = "expand";
 		$status_style = "display:none;";
 		$alternate = "";
