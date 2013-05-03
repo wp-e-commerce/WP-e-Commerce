@@ -10,7 +10,7 @@
           <item>
             <title><![CDATA[<?php echo wpsc_the_product_title(); ?>]]></title>
             <link><![CDATA[<?php echo wpsc_the_product_permalink(); ?>]]></link>
-            <description><![CDATA[<?php echo wpsc_category_description(); ?>]]></description>
+            <description><![CDATA[<?php echo wpsc_the_product_description(); ?>]]></description>
             <pubDate><![CDATA[<?php echo wpsc_product_creation_time('D, d M Y H:i:s +0000'); ?>]]></pubDate>
             <guid><![CDATA[<?php echo wpsc_the_product_permalink(); ?>]]></guid>
             <g:price><![CDATA[<?php echo wpsc_product_normal_price(true); ?>]]></g:price>
