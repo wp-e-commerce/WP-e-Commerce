@@ -1,4 +1,4 @@
-x<?php
+<?php
 /**
  * WP eCommerce Database template
  *
