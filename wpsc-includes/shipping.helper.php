@@ -196,15 +196,17 @@ class ASHTools{
     function get_state( $state_code ){
         global $wpdb;
 
-		if ( ! defined ( "WPSC_TABLE_REGION_TAX") )
-			return $state_code;
+        if ( ! defined ( "WPSC_TABLE_REGION_TAX") )
+            return $state_code;
+
+        $state_code = isset( $_POST['region'] ) ? $_POST['region'] : $state_code;
 
         $sql = $wpdb->prepare( "SELECT `".WPSC_TABLE_REGION_TAX."`.* FROM `".WPSC_TABLE_REGION_TAX."`
-                                WHERE `".WPSC_TABLE_REGION_TAX."`.`id` = %d", $_POST['region'] );
+        WHERE `".WPSC_TABLE_REGION_TAX."`.`id` = %d", $state_code );
 
 		$dest_region_data = $wpdb->get_results( $sql, ARRAY_A );
 
-		return ( is_array( $dest_region_data ) ) ? $dest_region_data[0]['code'] : "";
+		return is_array( $dest_region_data ) && isset( $dest_region_data[0] ) ? $dest_region_data[0]['code'] : "";
     }
 
     /**
@@ -548,6 +550,8 @@ class ASH{
 
         if ( empty( $wpec_ash[$internal_name] ) || ! is_array( $wpec_ash[$internal_name] ) )
             $wpec_ash[$internal_name] = array();
+
+
 
         $wpec_ash[$internal_name]["rate_table"] = $rate_table;
         $shipment_vals = array("package_count"=>$shipment->package_count,

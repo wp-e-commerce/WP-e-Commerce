@@ -928,7 +928,7 @@ class ash_usps{
         $data = array();
         //*** WPEC Configuration values ***\\
         $settings = get_option("wpec_usps");
-        $this->use_test_env = ( bool ) $settings["test_server"];
+        $this->use_test_env = ! isset( $settings["test_server"] ) ? false : ( bool ) $settings['test_server'];
         $data["fcl_type"] = (!empty($settings["fcl_type"])) ? $settings["fcl_type"] : "PARCEL";
         $data["mail_type"] = (!empty($settings["intl_pkg"])) ? $settings["intl_pkg"] : "Package";
         $data["base_zipcode"] = get_option("base_zipcode");
