@@ -220,7 +220,7 @@ function wpsc_update_item_quantity() {
  * @since 3.8.11
  * @return mixed                 Returns an array of output data, alternatively
  */
-function _wpsc_ajax_get_cart( $die = true, $cart_message = array() ) {
+function _wpsc_ajax_get_cart( $die = true, $cart_messages = array() ) {
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 
 		$return = array();
