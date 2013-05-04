@@ -1974,3 +1974,8 @@ th.right-col {
 	text-align: right;
 	padding: 0;
 }
+
+div.new_layer,
+div#table_rate {
+	display:none;
+}
