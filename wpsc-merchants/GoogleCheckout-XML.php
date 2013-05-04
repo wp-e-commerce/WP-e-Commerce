@@ -434,7 +434,7 @@ function form_google(){
 	<tr>
 		<td colspan='2'>
 			<p class='description'>
-				" . sprintf( __( "For more help configuring Google Checkout, please read our documentation <a href='%s'>here</a>", 'wpsc' ), esc_url( 'http://docs.getshopped.org/wiki/documentation/payments/google-checkout' ) ) . "
+				" . sprintf( __( "For more help configuring Google Checkout, please read our documentation <a href='%s'>here</a>", 'wpsc' ), esc_url( 'http://docs.getshopped.org/documentation/google-checkout/' ) ) . "
 			</p>
 		</td>
 	</tr>\n";
