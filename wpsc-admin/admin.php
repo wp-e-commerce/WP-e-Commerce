@@ -826,7 +826,10 @@ function wpsc_dashboard_widget_setup() {
 
 	// Sort the Dashboard widgets so ours it at the top
 	global $wp_meta_boxes;
-	$normal_dashboard = $wp_meta_boxes['dashboard']['normal']['core'];
+	$boxes  = $wp_meta_boxes['dashboard'];
+	$normal = isset( $wp_meta_boxes['dashboard']['normal'] ) ? $wp_meta_boxes['dashboard']['normal'] : array();
+
+	$normal_dashboard   = isset( $normal['core'] ) ? $normal['core'] : array();
 
 	// Backup and delete our new dashbaord widget from the end of the array
 	$wpsc_widget_backup = array();
