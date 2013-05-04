@@ -107,7 +107,7 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 		$edithidden = $hidden;
 
 		$payment_gateway_names = get_option( 'payment_gateway_names' );
-		$display_name = $payment_gateway_names[ $gateway['id'] ];
+		$display_name = isset( $payment_gateway_names[ $gateway['id'] ] ) ? $payment_gateway_names[ $gateway['id'] ] : '' ;
 		$gateway_data = false;
 		?>
 			<tr class="wpsc-select-gateway <?php echo $active; ?>" data-gateway-id="<?php echo esc_attr( $gateway['id'] ); ?>" id="gateway_list_item_<?php echo $gateway['id'];?>">
