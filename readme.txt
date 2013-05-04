@@ -166,6 +166,8 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * Change: wpsc_the_variation_price() output is now filtered through wpsc_do_convert_price filter.
 * Change: Submitted_Form_Data table now has a value field with a LONGTEXT data type, rather than varchar(255).
 * Change: Continued internal cleanup of coding standards and documentation.
+* Fix: Properly substitute placeholder in "Out of stock" email to administrator.
+* Fix: Fixed PHP notices when accessing Dashboard as subscriber.
 * Fix: Coupon logic improvements (edge case of using 'not_contains" logic with item_quantity).
 * Fix: Automated fix when possible, and nag when not, for 3.8.10 regression in User Management templates.
 * Fix: Error notices on category functions.
