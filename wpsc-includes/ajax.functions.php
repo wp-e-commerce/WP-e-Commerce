@@ -254,7 +254,7 @@ function _wpsc_ajax_get_cart( $die = true, $cart_message = array() ) {
 		ob_end_clean();
 
 		if ( ! empty( $action_output ) ) {
-			wpsc_doing_it_wrong( 'wpsc_alternate_cart_html', __( 'As of WPeC 3.8.11, it is improper to hook into "wpsc_alternate_cart_html" to output javascript.  We now have a custom javascript event called "wpsc_fancy_notification" you can hook into.', 'wpsc' ), '3.8.11' );
+			_wpsc_doing_it_wrong( 'wpsc_alternate_cart_html', __( 'As of WPeC 3.8.11, it is improper to hook into "wpsc_alternate_cart_html" to output javascript.  We now have a custom javascript event called "wpsc_fancy_notification" you can hook into.', 'wpsc' ), '3.8.11' );
 			$return['action_output'] = $action_output;
 		}
 
