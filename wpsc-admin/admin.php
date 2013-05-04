@@ -1494,7 +1494,7 @@ function _wpsc_admin_notices_3dot8dot9() {
 	echo '<div id="wpsc-3.8.9-notice" class="error">' . $message . '</div>';
 }
 
-if ( isset( $_REQUEST['dismiss_389_upgrade_notice'] ) )
+if ( isset( $_REQUEST['dismiss_389_upgrade_notice'] ) || version_compare( WPSC_VERSION, '3.8.10', '>=' ) )
 	update_option( 'wpsc_hide_3.8.9_notices', true );
 
 if ( ! get_option( 'wpsc_hide_3.8.9_notices' ) )
