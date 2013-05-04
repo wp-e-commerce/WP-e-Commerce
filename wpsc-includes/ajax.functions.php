@@ -470,8 +470,13 @@ function wpsc_update_location() {
 	if ( wpsc_get_customer_meta( 'shipping_same_as_billing' ) && ( $delivery_country != $billing_country || $delivery_region != $billing_region ) )
 		wpsc_update_customer_meta( 'shipping_same_as_billing', false );
 
-	if ( isset( $_GET['ajax'] ) && $_GET['ajax'] == 'true' )
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX )
 		exit;
+}
+
+// execute on POST and GET
+if ( isset( $_REQUEST['wpsc_ajax_actions'] ) && $_REQUEST['wpsc_ajax_actions'] == 'update_location' ) {
+	add_action( 'init', 'wpsc_update_location' );
 }
 
 add_action( 'wp_ajax_update_location'       , 'wpsc_update_location' );
