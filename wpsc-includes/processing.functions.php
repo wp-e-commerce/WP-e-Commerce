@@ -143,7 +143,7 @@ function wpsc_decrement_claimed_stock($purchase_log_id) {
 							) );
 
 							if ( $result )
-								$email_message = __( 'The product "%s" is out of stock and has been unpublished.', 'wpsc' );
+								$email_message = sprintf( __( 'The product "%s" is out of stock and has been unpublished.', 'wpsc' ), $product->post_title );
 						}
 
 						if ( $product_meta["notify_when_none_left"] == 1 )
