@@ -7,8 +7,6 @@ $wpsc_title_data    = array();
  * wpsc_core_load_session()
  *
  * Load up the WPEC session
- *
- * Pending Gary's feedback, I think we can actually get rid of this.
  */
 function wpsc_core_load_session() {
 
@@ -30,9 +28,9 @@ function wpsc_core_constants() {
 	if(!defined('WPSC_URL'))
 		define( 'WPSC_URL',       plugins_url( '', __FILE__ ) );
 	// Define Plugin version
-	define( 'WPSC_VERSION', '3.8.11' );
+	define( 'WPSC_VERSION', '3.8.12-alpha' );
 	define( 'WPSC_MINOR_VERSION', '9a0e98132c' );
-	define( 'WPSC_PRESENTABLE_VERSION', '3.8.11' );
+	define( 'WPSC_PRESENTABLE_VERSION', '3.8.12-alpha' );
 	define( 'WPSC_DB_VERSION', 4 );
 
 	// Define Debug Variables for developers
