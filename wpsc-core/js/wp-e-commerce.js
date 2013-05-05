@@ -258,16 +258,6 @@ jQuery(document).ready(function ($) {
 				jQuery('div.shopping-cart-wrapper').html( response.widget_output );
 				jQuery('div.wpsc_loading_animation').css('visibility', 'hidden');
 
-				if ( 'show' == response.sliding_cart_state ) {
-					jQuery( '#sliding_cart' ).slideDown( 'fast',function(){
-						jQuery( '#fancy_collapser' ).attr( 'src', response.core_images_url + '/minus.png' );
-					});
-				} else {
-					jQuery( '#sliding_cart' ).slideUp( 'fast',function(){
-						jQuery( '#fancy_collapser' ).attr( 'src', response.core_images_url + '/plus.png' );
-					});
-				}
-
 				jQuery( '.cart_message' ).delay( 3000 ).slideUp( 500 );
 
 				//Until we get to an acceptable level of education on the new custom event - this is probably necessary for plugins.
