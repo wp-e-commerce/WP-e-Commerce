@@ -216,8 +216,8 @@ function wpsc_update_item_quantity() {
 			wpsc_coupon_price( $coupon );
 		}
 	}
-
-	_wpsc_ajax_get_cart();
+	$die = ! ( isset( $_REQUEST['wpsc_ajax_action'] ) && 'true' == $_REQUEST['wpsc_ajax_action'] );
+	_wpsc_ajax_get_cart( $die );
 }
 
 /**
@@ -230,9 +230,9 @@ function wpsc_update_item_quantity() {
  * @return mixed                 Returns an array of output data, alternatively
  */
 function _wpsc_ajax_get_cart( $die = true, $cart_messages = array() ) {
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+	$return = array();
 
-		$return = array();
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 
 		ob_start();
 		include_once( wpsc_get_template_file_path( 'wpsc-cart_widget.php' ) );
@@ -266,12 +266,12 @@ function _wpsc_ajax_get_cart( $die = true, $cart_messages = array() ) {
 			_wpsc_doing_it_wrong( 'wpsc_alternate_cart_html', __( 'As of WPeC 3.8.11, it is improper to hook into "wpsc_alternate_cart_html" to output javascript.  We now have a custom javascript event called "wpsc_fancy_notification" you can hook into.', 'wpsc' ), '3.8.11' );
 			$return['action_output'] = $action_output;
 		}
-
-		if ( $die )
-			die( $output . $action_output );
-		else
-			return $return;
 	}
+
+	if ( $die )
+		die( $output . $action_output );
+	else
+		return $return;
 }
 
 // execute on POST and GET
