@@ -103,7 +103,7 @@ function wpsc_add_to_cart() {
 	}
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		$json_response = array( 'cart_messages' => $cart_messages, 'product_id' => $product_id );
+		$json_response = array( 'cart_messages' => $cart_messages, 'product_id' => $product_id, 'cart_item' => $cart_item, 'cart_total' => wpsc_cart_total() );
 		$output = _wpsc_ajax_get_cart( false, $cart_messages );
 
 		$json_response = $json_response + $output;
@@ -220,6 +220,40 @@ function wpsc_update_item_quantity() {
 	_wpsc_ajax_get_cart( $die );
 }
 
+function _wpsc_get_alternate_html() {
+	// These shenanigans are necessary for two reasons.
+	// 1) Some hook into POST, some GET, some REQUEST. They check for the conditional params below.
+	// 2) Most functions properly die() - that means that our output buffer stops there and won't continue on for our purposes.
+	// If there is a better way to get that output without dying, I'm all ears.  A nice slow HTTP request for now.
+	$javascript = wp_remote_retrieve_body(
+					wp_remote_post(
+						add_query_arg(
+							array( 'ajax' => 'true', 'wpsc_action' => 'wpsc_get_alternate_html', 'ajax' => 'true', 'wpsc_ajax_action' => 'add_to_cart' ), home_url() ),
+							array( 'body' =>
+								array( 'cart_messages' => $cart_messages, 'ajax' => 'true', 'wpsc_ajax_action' => 'add_to_cart', 'product_id' => $_REQUEST['product_id']
+									)
+							)
+						)
+					);
+	return $javascript;
+}
+
+/**
+ * Returns the jQuery that is likely included in calls to this action.  For back compat only, will be deprecated soon.
+ * Couldn't think up a better way to return this output, which most often will end in die(), without die()ing early ourselves.
+ *
+ * @param  array  $cart_messages [description]
+ */
+function _wpsc_ajax_return_alternate_html() {
+	$cart_messages = is_array( $_POST['cart_messages'] ) ? $_POST['cart_messages'] : array();
+
+	do_action( 'wpsc_alternate_cart_html', $cart_messages );
+	die;
+}
+
+if ( isset( $_REQUEST['wpsc_action'] ) && 'wpsc_get_alternate_html' == $_REQUEST['wpsc_action'] )
+	add_action( 'init', '_wpsc_ajax_return_alternate_html' );
+
 /**
  * Returns the Cart Widget
  *
@@ -254,17 +288,20 @@ function _wpsc_ajax_get_cart( $die = true, $cart_messages = array() ) {
 			}
 		}
 
-		//Deprecated action. Do not use.  We now have a custom JS event called 'wpsc_fancy_notification'. There is access to the complete $json_response object.
-		ob_start();
+		$action_output = '';
+		if ( has_action( 'wpsc_alternate_cart_html' ) ) {
+			//Deprecated action. Do not use.  We now have a custom JS event called 'wpsc_fancy_notification'. There is access to the complete $json_response object.
+			ob_start();
 
-		do_action( 'wpsc_alternate_cart_html', $cart_messages );
-		$action_output = ob_get_contents();
+			echo _wpsc_get_alternate_html();
+			$action_output = ob_get_contents();
 
-		ob_end_clean();
+			ob_end_clean();
+		}
 
 		if ( ! empty( $action_output ) ) {
 			_wpsc_doing_it_wrong( 'wpsc_alternate_cart_html', __( 'As of WPeC 3.8.11, it is improper to hook into "wpsc_alternate_cart_html" to output javascript.  We now have a custom javascript event called "wpsc_fancy_notification" you can hook into.', 'wpsc' ), '3.8.11' );
-			$return['action_output'] = $action_output;
+			$return['wpsc_alternate_cart_html'] = $action_output;
 		}
 	}
 
