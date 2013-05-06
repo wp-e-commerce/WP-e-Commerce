@@ -16,10 +16,6 @@ if ( isset( $_REQUEST['wpsc_ajax_action'] ) && ($_REQUEST['wpsc_ajax_action'] ==
 	add_action( 'init', 'wpsc_special_widget' );
 }
 
-/**
- * add_to_cart function, used through ajax and in normal page loading.
- * No parameters, returns nothing
- */
 function wpsc_add_to_cart() {
 	global $wpsc_cart;
 
@@ -968,7 +964,7 @@ function wpsc_download_file() {
 		$download_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_DOWNLOAD_STATUS . "` WHERE `uniqueid` = '%s' AND `downloads` > '0' AND `active`='1' LIMIT 1", $downloadid ), ARRAY_A );
 
 		if ( is_null( $download_data ) && is_numeric( $downloadid ) )
-		    $download_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_DOWNLOAD_STATUS . "` WHERE `id` = %d AND `downloads` > '0' AND `active`='1' AND `uniqueid` IS NULL LIMIT 1", $downloadid ), ARRAY_A );
+			$download_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_DOWNLOAD_STATUS . "` WHERE `id` = %d AND `downloads` > '0' AND `active`='1' AND `uniqueid` IS NULL LIMIT 1", $downloadid ), ARRAY_A );
 
 
 		if ( (get_option( 'wpsc_ip_lock_downloads' ) == 1) && ($_SERVER['REMOTE_ADDR'] != null) ) {
@@ -1054,7 +1050,7 @@ function _wpsc_force_download_file( $file_id ) {
 			header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
 		}
 		header( "Pragma: public" );
-                        header( "Expires: 0" );
+						header( "Expires: 0" );
 
 		// destroy the session to allow the file to be downloaded on some buggy browsers and webservers
 		session_destroy();
@@ -1087,69 +1083,66 @@ function wpsc_update_shipping_quotes_on_shipping_same_as_billing() {
 	}
 	else {
 		?>
-   <tr class="wpsc_shipping_info">
-            <td colspan="5">
-               <?php _e( 'Please choose a country below to calculate your shipping costs', 'wpsc' ); ?>
-            </td>
-         </tr>
+		<tr class="wpsc_shipping_info">
+				<td colspan="5">
+					<?php _e( 'Please choose a country below to calculate your shipping costs', 'wpsc' ); ?>
+				</td>
+		</tr>
 
-         <?php if (!wpsc_have_shipping_quote()) : // No valid shipping quotes ?>
-            <?php if (wpsc_have_valid_shipping_zipcode()) : ?>
-                  <tr class='wpsc_update_location'>
-                     <td colspan='5' class='shipping_error' >
-                        <?php _e('Please provide a Zipcode and click Calculate in order to continue.', 'wpsc'); ?>
-                     </td>
-                  </tr>
-            <?php else: ?>
-               <tr class='wpsc_update_location_error'>
-                  <td colspan='5' class='shipping_error' >
-                     <?php _e('Sorry, online ordering is unavailable to this destination and/or weight. Please double check your destination details.', 'wpsc'); ?>
-                  </td>
-               </tr>
-            <?php endif; ?>
-         <?php endif; ?>
-         <tr class='wpsc_change_country'>
-            <td colspan='5'>
-               <form name='change_country' id='change_country' action='' method='post'>
-                  <?php echo wpsc_shipping_country_list();?>
-                  <input type='hidden' name='wpsc_update_location' value='true' />
-                  <input type='submit' name='wpsc_submit_zipcode' value='Calculate' />
-               </form>
-            </td>
-         </tr>
+		<?php if ( ! wpsc_have_shipping_quote() ) : // No valid shipping quotes ?>
+			<?php if ( wpsc_have_valid_shipping_zipcode() ) : ?>
+				<tr class='wpsc_update_location'>
+					<td colspan='5' class='shipping_error' >
+						<?php _e('Please provide a Zipcode and click Calculate in order to continue.', 'wpsc'); ?>
+					</td>
+				</tr>
+			<?php else : ?>
+				<tr class='wpsc_update_location_error'>
+					<td colspan='5' class='shipping_error' >
+						<?php _e('Sorry, online ordering is unavailable to this destination and/or weight. Please double check your destination details.', 'wpsc'); ?>
+					</td>
+				</tr>
+			<?php endif; ?>
+		<?php endif; ?>
+		<tr class='wpsc_change_country'>
+			<td colspan='5'>
+				<form name='change_country' id='change_country' action='' method='post'>
+					<?php echo wpsc_shipping_country_list();?>
+					<input type='hidden' name='wpsc_update_location' value='true' />
+					<input type='submit' name='wpsc_submit_zipcode' value='<?php esc_attr_e( 'Calculate', 'wpsc' ); ?>' />
+				</form>
+			</td>
+		</tr>
 
-         <?php if (wpsc_have_morethanone_shipping_quote()) :?>
-            <?php while (wpsc_have_shipping_methods()) : wpsc_the_shipping_method(); ?>
-                  <?php    if (!wpsc_have_shipping_quotes()) { continue; } // Don't display shipping method if it doesn't have at least one quote ?>
-                  <tr class='wpsc_shipping_header'><td class='shipping_header' colspan='5'><?php echo wpsc_shipping_method_name().__(' - Choose a Shipping Rate', 'wpsc'); ?> </td></tr>
-                  <?php while (wpsc_have_shipping_quotes()) : wpsc_the_shipping_quote();  ?>
-                     <tr class='<?php echo wpsc_shipping_quote_html_id(); ?>'>
-                        <td class='wpsc_shipping_quote_name wpsc_shipping_quote_name_<?php echo wpsc_shipping_quote_html_id(); ?>' colspan='3'>
-                           <label for='<?php echo wpsc_shipping_quote_html_id(); ?>'><?php echo wpsc_shipping_quote_name(); ?></label>
-                        </td>
-                        <td class='wpsc_shipping_quote_price wpsc_shipping_quote_price_<?php echo wpsc_shipping_quote_html_id(); ?>' style='text-align:center;'>
-                           <label for='<?php echo wpsc_shipping_quote_html_id(); ?>'><?php echo wpsc_shipping_quote_value(); ?></label>
-                        </td>
-                        <td class='wpsc_shipping_quote_radio wpsc_shipping_quote_radio_<?php echo wpsc_shipping_quote_html_id(); ?>' style='text-align:center;'>
-                           <?php if(wpsc_have_morethanone_shipping_methods_and_quotes()): ?>
-                              <input type='radio' id='<?php echo wpsc_shipping_quote_html_id(); ?>' <?php echo wpsc_shipping_quote_selected_state(); ?>  onclick='switchmethod("<?php echo wpsc_shipping_quote_name(); ?>", "<?php echo wpsc_shipping_method_internal_name(); ?>")' value='<?php echo wpsc_shipping_quote_value(true); ?>' name='shipping_method' />
-                           <?php else: ?>
-                              <input <?php echo wpsc_shipping_quote_selected_state(); ?> disabled='disabled' type='radio' id='<?php echo wpsc_shipping_quote_html_id(); ?>'  value='<?php echo wpsc_shipping_quote_value(true); ?>' name='shipping_method' />
-                                 <?php wpsc_update_shipping_single_method(); ?>
-                           <?php endif; ?>
-                        </td>
-                     </tr>
-                  <?php endwhile; ?>
-            <?php endwhile; ?>
-         <?php endif; ?>
+		<?php if (wpsc_have_morethanone_shipping_quote()) :?>
+			<?php while (wpsc_have_shipping_methods()) : wpsc_the_shipping_method(); ?>
+				<?php if ( ! wpsc_have_shipping_quotes() ) { continue; } // Don't display shipping method if it doesn't have at least one quote ?>
+				<tr class='wpsc_shipping_header'><td class='shipping_header' colspan='5'><?php echo wpsc_shipping_method_name().__(' - Choose a Shipping Rate', 'wpsc'); ?> </td></tr>
+				<?php while (wpsc_have_shipping_quotes()) : wpsc_the_shipping_quote();  ?>
+					<tr class='<?php echo wpsc_shipping_quote_html_id(); ?>'>
+						<td class='wpsc_shipping_quote_name wpsc_shipping_quote_name_<?php echo wpsc_shipping_quote_html_id(); ?>' colspan='3'>
+							<label for='<?php echo wpsc_shipping_quote_html_id(); ?>'><?php echo wpsc_shipping_quote_name(); ?></label>
+						</td>
+						<td class='wpsc_shipping_quote_price wpsc_shipping_quote_price_<?php echo wpsc_shipping_quote_html_id(); ?>' style='text-align:center;'>
+							<label for='<?php echo wpsc_shipping_quote_html_id(); ?>'><?php echo wpsc_shipping_quote_value(); ?></label>
+						</td>
+						<td class='wpsc_shipping_quote_radio wpsc_shipping_quote_radio_<?php echo wpsc_shipping_quote_html_id(); ?>' style='text-align:center;'>
+							<?php if(wpsc_have_morethanone_shipping_methods_and_quotes()): ?>
+								<input type='radio' id='<?php echo wpsc_shipping_quote_html_id(); ?>' <?php echo wpsc_shipping_quote_selected_state(); ?>  onclick='switchmethod("<?php echo wpsc_shipping_quote_name(); ?>", "<?php echo wpsc_shipping_method_internal_name(); ?>")' value='<?php echo wpsc_shipping_quote_value(true); ?>' name='shipping_method' />
+							<?php else: ?>
+								<input <?php echo wpsc_shipping_quote_selected_state(); ?> disabled='disabled' type='radio' id='<?php echo wpsc_shipping_quote_html_id(); ?>'  value='<?php echo wpsc_shipping_quote_value(true); ?>' name='shipping_method' />
+									<?php wpsc_update_shipping_single_method(); ?>
+							<?php endif; ?>
+						</td>
+					</tr>
+				<?php endwhile; ?>
+			<?php endwhile; ?>
+		<?php endif; ?>
 
-         <?php wpsc_update_shipping_multiple_methods(); ?>
+		<?php wpsc_update_shipping_multiple_methods(); ?>
 
 		<?php
 
 	}
 	exit;
-
 }
-
-?>
