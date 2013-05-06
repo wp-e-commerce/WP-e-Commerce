@@ -150,47 +150,27 @@ class WPSC_Settings_Tab_Taxes extends WPSC_Settings_Tab {
 		<h3><?php esc_html_e( 'Tax Rates', 'wpsc' ); ?></h3>
 		<div id='wpec-taxes-rates'>
 			<!--Start Taxes Output-->
-			<?php
-				/**
-				 * Add New Tax Rate - should add another paragraph with the
-				 * another key specified for the input array
-				 * Delete - Should remove the given paragraph from the page
-				 * and either ajax delete it from the DB or mark it for
-				 * deletion and process it after the changes are made.
-				 * Selecting a Country - should automatically populate the
-				 * regions select box. Selecting a different country should
-				 * remove the region select box. If the user selects a
-				 * different country with regions it shouldn't matter because
-				 * the code should automatically add the region select in.
-				 *  - Allow users to define tax for entire country even if regions exist.
-				 * Shipping Tax - needs to be per region or per tax rate.
-				 * Remove the setting from the main Tax Settings area.
-				 * Constraints -
-				 * 1. Should not allow a user to add more than one
-				 * tax rate for the same area.
-				 * 2. If a country tax rate is specified and then a region tax
-				 * rate, the region tax rate takes precedence.
-				 * */
-
-				/**
-				 * Removed Shipping Restriction on Included tax - 01-20-2011
-				 *	//if tax is included warn about shipping
-				 *	if ( $wpec_taxes_controller->wpec_taxes_isincluded() ) {
-				 *		echo '<p>' . __( 'Note: Tax is not applied to shipping when product prices are tax inclusive.' ) . '</p>';
-				 *	}// if
-				 **/
-
-				//get current tax rates
-				// TODO: Refactor to get rid of the need for wpec_taxes_build_form(). It's a horribly written function.
-				$tax_rates = $wpec_taxes_controller->wpec_taxes->wpec_taxes_get_rates();
-				$tax_rate_count = 0;
-				if ( !empty( $tax_rates ) ) {
-					foreach ( $tax_rates as $tax_rate ) {
-						echo $wpec_taxes_controller->wpec_taxes_build_form( $tax_rate_count, $tax_rate );
-						$tax_rate_count++;
-					}// foreach
-				}// if
-			?>
+			<table class='widefat page fixed ui-sortable'>
+				<thead>
+					<th scope='col'><?php _e( 'Market', 'wpsc' ); ?></th>
+					<th scope='col'><?php _e( 'Tax Rate', 'wpsc' ); ?></th>
+					<th scope='col'><?php _e( 'Tax Shipping?', 'wpsc' ); ?></th>
+					<th scope='col'><?php _e( 'Actions', 'wpsc' ); ?></th>
+				</thead>
+				<tbody>
+					<?php
+						// TODO: Refactor to get rid of the need for wpec_taxes_build_form(). It's a horribly written function.
+						$tax_rates = $wpec_taxes_controller->wpec_taxes->wpec_taxes_get_rates();
+						$tax_rate_count = 0;
+						if ( ! empty( $tax_rates ) ) {
+							foreach ( $tax_rates as $tax_rate ) {
+								echo $wpec_taxes_controller->wpec_taxes_build_form( $tax_rate_count, $tax_rate );
+								$tax_rate_count++;
+							}
+						}
+					?>
+				</tbody>
+			</table>
 			<!--End Taxes Output-->
 			<p id="wpsc-add-tax-rates">
 				<a href="#"><?php esc_html_e( 'Add New Tax Rate', 'wpsc' ); ?></a>
@@ -201,23 +181,29 @@ class WPSC_Settings_Tab_Taxes extends WPSC_Settings_Tab {
 			<h3><?php esc_html_e( 'Tax Bands', 'wpsc' ); ?></h3>
 			<div id='wpec-taxes-bands'>
 				<p><?php _e( 'Note: Tax Bands are special tax rules you can create and apply on a per-product basis. Please visit the product page to apply your Tax Band.', 'wpsc' ); ?></p>
-				<?php
-					//echo message regarding inclusive tax
-					if ( !$wpec_taxes_controller->wpec_taxes_isincluded() ) {
-						?>
-						<p class="form-invalid"><?php _e( 'Warning: Tax Bands do not take affect when product prices are tax exclusive.', 'wpsc' ); ?></p>
+				<?php if ( !$wpec_taxes_controller->wpec_taxes_isincluded() ) : ?>
+					<p class="form-invalid"><?php _e( 'Warning: Tax Bands do not take affect when product prices are tax exclusive.', 'wpsc' ); ?></p>
+				<?php endif; ?>
+				<table class='widefat page fixed ui-sortable'>
+					<thead>
+						<th scope='col'><?php _e( 'Band Name', 'wpsc' ); ?></th>
+						<th scope='col'><?php _e( 'Market', 'wpsc' ); ?></th>
+						<th scope='col'><?php _e( 'Tax Rate', 'wpsc' ); ?></th>
+						<th scope='col'><?php _e( 'Actions', 'wpsc' ); ?></th>
+					</thead>
+					<tbody>
 						<?php
-					}
-
-					$tax_bands = $wpec_taxes_controller->wpec_taxes->wpec_taxes_get_bands();
-					$tax_band_count = 0;
-					if ( ! empty( $tax_bands ) ) {
-						foreach ( $tax_bands as $tax_band ) {
-							echo $wpec_taxes_controller->wpec_taxes_build_form( $tax_band_count, $tax_band, 'bands' );
-							$tax_band_count++;
-						}
-					}
-				?>
+							$tax_bands = $wpec_taxes_controller->wpec_taxes->wpec_taxes_get_bands();
+							$tax_band_count = 0;
+							if ( ! empty( $tax_bands ) ) {
+								foreach ( $tax_bands as $tax_band ) {
+									echo $wpec_taxes_controller->wpec_taxes_build_form( $tax_band_count, $tax_band, 'bands' );
+									$tax_band_count++;
+								}
+							}
+						?>
+					</tbody>
+				</table>
 				<p id="wpsc-add-tax-bands">
 					<a href="#"><?php _e( 'Add New Tax Band', 'wpsc' ); ?></a>
 					<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
