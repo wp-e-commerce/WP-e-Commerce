@@ -106,20 +106,26 @@ function wpsc_add_to_cart() {
 		}
 	}
 
-	$json_response = array( 'cart_messages' => $cart_messages, 'product_id' => $product_id );
-	$output = _wpsc_ajax_get_cart( false, $cart_messages );
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		$json_response = array( 'cart_messages' => $cart_messages, 'product_id' => $product_id );
+		$output = _wpsc_ajax_get_cart( false, $cart_messages );
 
-	$json_response = $json_response + $output;
+		$json_response = $json_response + $output;
 
-	if ( is_numeric( $product_id ) && 1 == get_option( 'fancy_notifications' ) )
-		$json_response['fancy_notification'] = str_replace( array( "\n", "\r" ), array( '\n', '\r' ), fancy_notification_content( $cart_messages ) );
+		if ( is_numeric( $product_id ) && 1 == get_option( 'fancy_notifications' ) )
+			$json_response['fancy_notification'] = str_replace( array( "\n", "\r" ), array( '\n', '\r' ), fancy_notification_content( $cart_messages ) );
 
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX )
 		die( json_encode( $json_response ) );
+	}
 }
 
 add_action( 'wp_ajax_add_to_cart'       , 'wpsc_add_to_cart' );
 add_action( 'wp_ajax_nopriv_add_to_cart', 'wpsc_add_to_cart' );
+
+// execute on POST and GET
+if ( isset( $_REQUEST['wpsc_ajax_action'] ) && 'add_to_cart' == $_REQUEST['wpsc_ajax_action'] ) {
+	add_action( 'init', 'wpsc_add_to_cart' );
+}
 
 function wpsc_get_cart() {
 	_wpsc_ajax_get_cart();
@@ -313,6 +319,7 @@ if ( isset( $_REQUEST['wpsc_ajax_action'] ) && ($_REQUEST['wpsc_ajax_action'] ==
 	add_action( 'init', 'wpsc_update_product_rating' );
 }
 
+
 /**
  * update_shipping_price function, used through ajax and in normal page loading.
  * No parameters, returns nothing
@@ -419,6 +426,11 @@ function wpsc_update_product_price() {
 add_action( 'wp_ajax_update_product_price'       , 'wpsc_update_product_price' );
 add_action( 'wp_ajax_nopriv_update_product_price', 'wpsc_update_product_price' );
 
+// execute on POST and GET
+if ( isset( $_REQUEST['update_product_price'] ) && 'true' == $_REQUEST['update_product_price'] && ! empty( $_POST['product_id'] ) && is_numeric( $_POST['product_id'] ) ) {
+	add_action( 'init', 'wpsc_update_product_price' );
+}
+
 /**
  * update location function, used through ajax and in normal page loading.
  * No parameters, returns nothing
@@ -481,13 +493,14 @@ function wpsc_update_location() {
 		exit;
 }
 
+add_action( 'wp_ajax_update_location'       , 'wpsc_update_location' );
+add_action( 'wp_ajax_nopriv_update_location', 'wpsc_update_location' );
+
 // execute on POST and GET
-if ( isset( $_REQUEST['wpsc_ajax_actions'] ) && $_REQUEST['wpsc_ajax_actions'] == 'update_location' ) {
+if ( isset( $_REQUEST['wpsc_ajax_actions'] ) && 'update_location' == $_REQUEST['wpsc_ajax_actions'] ) {
 	add_action( 'init', 'wpsc_update_location' );
 }
 
-add_action( 'wp_ajax_update_location'       , 'wpsc_update_location' );
-add_action( 'wp_ajax_nopriv_update_location', 'wpsc_update_location' );
 
 function wpsc_cart_html_page() {
 	require_once(WPSC_FILE_PATH . "/wpsc-includes/shopping_cart_container.php");
@@ -829,6 +842,11 @@ function wpsc_change_tax() {
 
 add_action( 'wp_ajax_change_tax'       , 'wpsc_change_tax' );
 add_action( 'wp_ajax_nopriv_change_tax', 'wpsc_change_tax' );
+
+// execute on POST and GET
+if ( isset( $_REQUEST['wpsc_ajax_action'] ) && 'change_tax' == $_REQUEST['wpsc_ajax_action'] ) {
+	add_action( 'init', 'wpsc_change_tax' );
+}
 
 function _wpsc_change_profile_country() {
 	global $wpdb;
