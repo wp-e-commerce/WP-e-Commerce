@@ -547,14 +547,12 @@ class wpec_taxes_controller {
 			'class' => 'wpsc-taxes-country-drop-down',
 			'data-key' => $key,
 			'data-type' => $type,
-			'label' =>  __( 'Market', 'wpsc' )
 		);
 		$rate_input_settings = array(
 			'id' => "{$type}-rate-{$key}",
 			'name' => "wpsc_options[wpec_taxes_{$type}][{$key}][rate]",
 			'class' => "taxes-{$type}",
 			'size' => 3,
-			'label' => __( 'Tax', 'wpsc' ) .' &#37;'
 		);
 
 		//add name for tax band
@@ -564,7 +562,6 @@ class wpec_taxes_controller {
 				'id' => "band-name-{$key}",
 				'name' => "wpsc_options[wpec_taxes_{$type}][{$key}][name]",
 				'class' => 'taxes-band',
-				'label' => __( 'Name', 'wpsc' )
 			);
 			$bands_hidden_index = array(
 				'type' => 'hidden',
@@ -645,23 +642,36 @@ class wpec_taxes_controller {
 		$countries = $this->wpec_taxes->wpec_taxes_get_countries();
 
 		//build the rate form based on the information gathered
-		if ( $type == 'bands' ) {
-			$returnable[] = $this->wpec_taxes_build_input( $bands_input_settings );
-			$returnable[] = $this->wpec_taxes_build_input( $bands_hidden_index );
-		}
-		$returnable[] = $this->wpec_taxes_build_input( $rate_input_settings );
-		$returnable[] = $this->wpec_taxes_build_select_options( $countries, 'isocode', 'country', $selected_country, $country_select_settings );
-		if ( isset( $region_select ) ) {
-			$returnable[] = $region_select;
-		}
-		if ( $type == 'rates' ) {
-			$returnable[] = $this->wpec_taxes_build_input( $shipping_input_settings );
-		}
-		$returnable[] = "<a class='wpsc-taxes-{$type}-delete' id='wpsc-taxes-{$type}-delete-{$key}' href='#'>" . __( 'Delete', 'wpsc' ) . "</a>";
-		$returnable[] = '<img src="' . esc_url( admin_url( 'images/wpspin_light.gif' ) ) . '" class="ajax-feedback" title="" alt="" />';
-		$returnable = "<div id='wpsc-taxes-{$type}-row-{$key}' class='wpsc-tax-{$type}-row'>" . implode( "\n", $returnable ) . '</div>';
+		$output = "<tr id='wpsc-taxes-{$type}-row-{$key}' class='wpsc-tax-{$type}-row'>";
 
-      return $returnable;
+		// band name
+		if ( $type == 'bands' ) {
+			$output .= "<td>" . $this->wpec_taxes_build_input( $bands_input_settings );
+			$output .= $this->wpec_taxes_build_input( $bands_hidden_index ) . "</td>";
+		}
+		// market
+		$output .= "<td>" . $this->wpec_taxes_build_select_options( $countries, 'isocode', 'country', $selected_country, $country_select_settings );
+		if ( isset( $region_select ) ) {
+			$output .= $region_select;
+		}
+		$output .= "</td>";
+
+		// tax %
+		$output .= "<td>" . $this->wpec_taxes_build_input( $rate_input_settings ) . "% </td>";
+
+		// tax shipping rate
+		if ( $type == 'rates' ) {
+			$output .= "<td>" . $this->wpec_taxes_build_input( $shipping_input_settings ) . "</td>";
+		}
+
+
+		// actions
+		$output .= "<td><a class='wpsc-taxes-{$type}-delete' id='wpsc-taxes-{$type}-delete-{$key}' href='#'>" . __( 'Delete', 'wpsc' ) . "</a>";
+		$output .= '<img src="' . esc_url( admin_url( 'images/wpspin_light.gif' ) ) . '" class="ajax-feedback" title="" alt="" /></td>';
+
+		$output .= '</tr>';
+
+      return $output;
    } // wpec_taxes_build_form
 } // wpec_taxes_controller
 
