@@ -216,7 +216,8 @@ function wpsc_update_item_quantity() {
 			wpsc_coupon_price( $coupon );
 		}
 	}
-	$die = ! ( isset( $_REQUEST['wpsc_ajax_action'] ) && 'true' == $_REQUEST['wpsc_ajax_action'] );
+	$die = ! ( ( isset( $_REQUEST['wpsc_ajax_action'] ) && 'true' == $_REQUEST['wpsc_ajax_action'] ) || ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) );
+
 	_wpsc_ajax_get_cart( $die );
 }
 
