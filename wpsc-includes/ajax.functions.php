@@ -136,12 +136,19 @@ function wpsc_empty_cart() {
 	global $wpsc_cart;
 	$wpsc_cart->empty_cart( false );
 
-	$output = _wpsc_ajax_get_cart( false );
-	die( json_encode( $output ) );
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		$output = _wpsc_ajax_get_cart( false );
+		die( json_encode( $output ) );
+	}
 }
 
 add_action( 'wp_ajax_empty_cart'       , 'wpsc_empty_cart' );
 add_action( 'wp_ajax_nopriv_empty_cart', 'wpsc_empty_cart' );
+
+// execute on POST and GET
+if ( isset( $_REQUEST['wpsc_ajax_action'] ) && ( 'empty_cart' == $_REQUEST['wpsc_ajax_action'] || isset( $_GET['sessionid'] )  && $_GET['sessionid'] > 0 ) ) {
+	add_action( 'init', 'wpsc_empty_cart' );
+}
 
 /**
  * coupons price, used through ajax and in normal page loading.
