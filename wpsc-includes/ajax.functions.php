@@ -107,8 +107,6 @@ function wpsc_add_to_cart() {
 
 		$json_response = array( 'cart_messages' => $cart_messages, 'product_id' => $product_id, 'cart_total' => wpsc_cart_total() );
 
-		die( json_encode( $json_response ) );
-
 		$output = _wpsc_ajax_get_cart( false, $cart_messages );
 
 		$json_response = $json_response + $output;
