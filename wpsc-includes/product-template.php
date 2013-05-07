@@ -1101,9 +1101,10 @@ function wpsc_the_product_image( $width = '', $height = '', $product_id = '' ) {
 
 	$product_thumbnail_id = wpsc_the_product_thumbnail_id( $product_id );
 	$src = wp_get_attachment_image_src( $product_thumbnail_id, 'large' );
+	$src = is_array( $src ) ? $src[0] : $src;
 
 	if ( is_ssl() && ! empty( $src ) )
-		$src = str_replace( 'http://', 'https://', $src );
+		$src = str_replace( 'http://', 'https://', $src[0] );
 
 	return apply_filters( 'wpsc_product_image', $src );
 }
@@ -1665,13 +1666,13 @@ function wpsc_the_variation_price( $return_as_numeric = false ) {
 	if ( $wpsc_variations->variation_count > 0 ) {
 
 		$product_id = get_the_ID();
-		$wpq = array( 
+		$wpq = array(
 			'variations'  => $wpsc_variations->variation->slug,
 			'post_status' => array( 'inherit', 'publish' ),
 			'post_type'   => 'wpsc-product',
-			'post_parent' => $product_id 
+			'post_parent' => $product_id
 		);
-		
+
 		$query = new WP_Query( $wpq );
 		// Should never happen
 		if ( $query->post_count != 1 )
@@ -1681,16 +1682,16 @@ function wpsc_the_variation_price( $return_as_numeric = false ) {
 
 		$price         = get_product_meta( $variation_product_id, 'price',true );
 		$special_price = get_product_meta( $variation_product_id, 'special_price', true );
-		
+
 		if ( $special_price < $price && $special_price > 0 )
 			$price = $special_price;
-			
+
 		$price  = apply_filters( 'wpsc_do_convert_price', $price, $product_id, $variation_product_id );
 		$output = $return_as_numeric ? $price :  wpsc_currency_display( $price, array( 'display_as_html' => false ) );
 	} else {
 		$output = false;
 	}
-	
+
 	return $output;
 }
 
