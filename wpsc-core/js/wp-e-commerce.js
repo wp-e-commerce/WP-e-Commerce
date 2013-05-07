@@ -247,7 +247,7 @@ jQuery(document).ready(function ($) {
 			}
 
 			var success = function( response ) {
-				console.log(response);
+
 				if ( response.fancy_notification ) {
 					if ( jQuery( '#fancy_notification_content' ) ) {
 						jQuery( '#fancy_notification_content' ).html( response.fancy_notification );
@@ -271,7 +271,7 @@ jQuery(document).ready(function ($) {
 					jQuery( '#loading_animation' ).css( "display", 'none' );
 				}
 			};
-			console.log(form_values);
+
 			jQuery.post( wpsc_ajax.ajaxurl, form_values, success, 'json' );
 
 			wpsc_fancy_notification(this);
