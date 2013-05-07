@@ -88,6 +88,7 @@ function wpsc_add_to_cart() {
 
 	$cart_item = $wpsc_cart->set_item( $product_id, $parameters );
 
+
 	if ( is_object( $cart_item ) ) {
 		do_action( 'wpsc_add_to_cart', $product, $cart_item );
 		$cart_messages[] = str_replace( "[product_name]", $cart_item->get_title(), __( 'You just added "[product_name]" to your cart.', 'wpsc' ) );
@@ -103,7 +104,11 @@ function wpsc_add_to_cart() {
 	}
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		$json_response = array( 'cart_messages' => $cart_messages, 'product_id' => $product_id, 'cart_item' => $cart_item, 'cart_total' => wpsc_cart_total() );
+
+		$json_response = array( 'cart_messages' => $cart_messages, 'product_id' => $product_id, 'cart_total' => wpsc_cart_total() );
+
+		die( json_encode( $json_response ) );
+
 		$output = _wpsc_ajax_get_cart( false, $cart_messages );
 
 		$json_response = $json_response + $output;
