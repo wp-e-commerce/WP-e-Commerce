@@ -437,9 +437,9 @@ class wpec_taxes_controller {
 			$returnable .= '<br /><small>' . $settings['description'] . '</small>';
 		}
 
-		if ( $settings['type'] != 'hidden' ) {
-			$returnable = '<div class="wpec-taxes-form-field">' . $returnable . '</div>';
-		}
+		// if ( $settings['type'] != 'hidden' ) {
+		// 	$returnable = '<div class="wpec-taxes-form-field">' . $returnable . '</div>';
+		// }
 
 		return $returnable;
 	} // wpec_taxes_build_input
@@ -469,20 +469,32 @@ class wpec_taxes_controller {
 			// As of 3.8.9, we deprecated Great Britain as a country in favor of the UK.
 			// See http://code.google.com/p/wp-e-commerce/issues/detail?id=1079
 
-        if ( ! is_array( $value ) && 'GB' != get_option( 'base_country' ) && ( ( isset( $input_array[$value] ) && 'GB' == $input_array[$value] ) || ( is_array( $value ) && 'GB' != get_option( 'base_country' ) && in_array( 'GB', $value ) ) ) )
-          continue;
+			if ( ! is_array( $value ) && 'GB' != get_option( 'base_country' ) &&
+				(
+					(
+						isset( $input_array[$value] ) &&
+						'GB' == $input_array[$value]
+					) || (
+						is_array( $value ) &&
+						'GB' != get_option( 'base_country' ) &&
+						in_array( 'GB', $value )
+					)
+				)
+			) {
+		  		continue;
+		  	}
 
 			//if the selected value exists in the input array skip it and continue processing
 			if ( is_array( $value ) ) {
 
-            if ( ( isset( $option_selected[$option_value] ) && stripslashes($value[$option_value]) == $option_selected[$option_value] ) || ( isset( $option_selected ) && (stripslashes($value[$option_value]) == $option_selected) ) )
-               continue;
-         }
+			if ( ( isset( $option_selected[$option_value] ) && esc_attr($value[$option_value]) == $option_selected[$option_value] ) || ( isset( $option_selected ) && (esc_attr($value[$option_value]) == $option_selected) ) )
+			   continue;
+			}
 
 			if ( is_array( $value ) ) {
-				$options .= '<option value="' . stripslashes( $value[$option_value] ) . '">' . stripslashes( $value[$option_text] ) . '</option>';
+				$options .= '<option value="' . esc_attr( $value[$option_value] ) . '">' . esc_attr( $value[$option_text] ) . '</option>';
 			} else {
-				$options .= '<option value="' . stripslashes( $value ) . '">' . stripslashes( $value ) . '</option>';
+				$options .= '<option value="' . esc_attr( $value ) . '">' . esc_attr( $value ) . '</option>';
 			}
 		}// foreach
 
@@ -490,7 +502,7 @@ class wpec_taxes_controller {
 			//add default option - using !== operator so that blank values can be passed as the selected option
 			if ( $option_selected !== false ) {
 				if ( is_array( $option_selected ) ) {
-					$selected_option = '<option selected="selected" value="' . stripslashes( $option_selected[$option_value] ) . '">' . stripslashes( $option_selected[$option_text] ) . '</option>';
+					$selected_option = '<option selected="selected" value="' . esc_attr( $option_selected[$option_value] ) . '">' . esc_attr( $option_selected[$option_text] ) . '</option>';
 				} else {
 					$selected_option = '<option selected="selected" value="' . $option_selected . '">' . $option_selected . '</option>';
 				}
@@ -503,7 +515,7 @@ class wpec_taxes_controller {
 					if ( $key == 'label' ) {
 						continue;
 					} elseif ( $key == 'value') {
-						$setting = stripslashes($setting);
+						$setting = esc_attr( $setting );
 					}
 					$returnable .= $key."='".$setting."'";
 				}// foreach
@@ -517,162 +529,123 @@ class wpec_taxes_controller {
 			}
 		}// if
 
-		$returnable = '<div class="wpec-taxes-form-field">' . $returnable . '</div>';
-
 		return $returnable;
 	} // wpec_taxes_get_select_options
 
 	/**
-	* @description: wpec_taxes_build_form - build the tax rate form
+	* generates a row for use in tax settings tables
 	*
-	* @param: key(optional) - used as the array key for this form row.
-	*                         Defaults to 0
-	* @param: tax_rate(optional) - expects an array consisting of tax rate settings
-	*                              if specified the function will build return the
-	*                              form inputs with the tax_rate settings already
-	*                              selected. This is used to load the form information
-	*                              from the database.
-	*                              Default: false
-	* @param: type (optional) - expects a string. Used to set the id and include type
-	*                           specific options. Currently used to differentiate between
-	*                           rates and bands though it could be expanded in the future.
-	*                           Note: be sure to see the tax-settings page and taxes-functions
-	*                           pages to see where the types come into play.
+	* @param string specifies mode of row to generate. Options: rates, bands
+	* @param string the key number for the row
+	* @param array tax rate settings (used keys: rate, name, country_code, region_code, shipping, index, row_class)
 	* */
-	function wpec_taxes_build_form( $key = 0, $tax_rate = false, $type = 'rates' ) {
-		//default settings
-		$country_select_settings = array(
-			'id' => "{$type}-country-{$key}",
-			'name' => "wpsc_options[wpec_taxes_{$type}][{$key}][country_code]",
-			'class' => 'wpsc-taxes-country-drop-down',
-			'data-key' => $key,
-			'data-type' => $type,
-		);
-		$rate_input_settings = array(
-			'id' => "{$type}-rate-{$key}",
-			'name' => "wpsc_options[wpec_taxes_{$type}][{$key}][rate]",
-			'class' => "taxes-{$type}",
-			'size' => 3,
-		);
+	function wpsc_build_taxes_row( $row_mode = 'rates', $row_key = 0, $tax_rate = false ) {
 
-		//add name for tax band
-		if ( $type == 'bands' ) {
-			$bands_input_settings = array(
-				'type' => 'text',
-				'id' => "band-name-{$key}",
-				'name' => "wpsc_options[wpec_taxes_{$type}][{$key}][name]",
-				'class' => 'taxes-band',
-			);
-			$bands_hidden_index = array(
-				'type' => 'hidden',
-				'id' => "band-index-{$key}",
-				'name' => "wpsc_options[wpec_taxes_{$type}][{$key}][index]",
-				'value' => $key
-			);
-		} elseif ( $type == 'rates' ) {
-			$shipping_input_settings = array(
-				'type' => 'checkbox',
-				'id' => "shipping-{$key}",
-				'name' => "wpsc_options[wpec_taxes_{$type}][{$key}][shipping]",
-				'class' => "taxes-{$type}",
-				'label' => __( 'Apply to Shipping', 'wpsc'  )
+		if ( ! $tax_rate ) {
+			$defaults = array(
+				'rate' => null,
+				'name' => null,
+				'country_code' => null,
+				'region_code' => null,
+				'shipping' => null,
+				'index' => null,
+				'row_class' => null
 			);
 		}
 
-		if ( $tax_rate ) {
-			if ( isset( $tax_rate['rate'] ) ) {
-				$rate_input_settings['value'] = $tax_rate['rate'];
-			}
+		$countries = $this->wpec_taxes->wpec_taxes_get_countries();
 
-			if ( isset( $tax_rate['name'] ) ) {
-				$bands_input_settings['value'] = $tax_rate['name'];
-			}
-
-			if ( isset( $tax_rate['country_code'] ) ) {
-				$country_code = $tax_rate['country_code'];
-			}
-
-			$regions = $this->wpec_taxes->wpec_taxes_get_regions( $country_code );
-
-			if ( isset( $tax_rate['region_code'] ) && ! empty( $regions ) ) {
-				//set the region up
-				$region_select_settings = array(
-					'id' => "{$type}-region-{$key}",
-					'name' => "wpsc_options[wpec_taxes_{$type}][{$key}][region_code]",
-					'class' => 'wpsc-taxes-region-drop-down'
-				);
-
-				//country code should be set - but just in case it's not
-				if ( ! isset( $country_code ) ) {
-					$country_id = $this->wpec_taxes->wpec_taxes_get_region_information( $tax_rate['region_code'], 'country_id' );
-					$country_code = $this->wpec_taxes->wpec_taxes_get_country_information( 'isocode', array( 'id' => $country_id ) );
-				}
-
-				$selected_region = array(
-					'region_code' => $tax_rate['region_code'],
-					'name' => $this->wpec_taxes->wpec_taxes_get_region_information( $tax_rate['region_code'], 'name' )
-				);
-
-				$region_select = $this->wpec_taxes_build_select_options( $regions, 'region_code', 'name', $selected_region, $region_select_settings );
-			}// if
-
-			if ( isset( $tax_rate['shipping'] ) ) {
-				if ( $tax_rate['shipping'] == 1 ) {
-					$shipping_input_settings['checked'] = 'checked';
-				}
-			}
-
+		if ( ! empty( $tax_rate['country_code'] ) && $tax_rate['country_code'] != 'all-markets' ) {
 			$selected_country = array(
-				'isocode' => $country_code,
-				'country' => $this->wpec_taxes->wpec_taxes_get_country_information( 'country', array( 'isocode' => $country_code ) )
+				'isocode' => $tax_rate['country_code'],
+				'country' => wpsc_get_country( $tax_rate['country_code'] )
 			);
-
-			if ( isset( $tax_rate['index'] ) ) {
-				$bands_hidden_index['value'] = $tax_rate['index'];
-			}
 		} else {
-			//select All Markets by default
 			$selected_country = array(
 				'isocode' => 'all-markets',
 				'country' => __('All Markets', 'wpsc')
 			);
 		}
 
-		//get countries
-		$countries = $this->wpec_taxes->wpec_taxes_get_countries();
+		ob_start();
+		?>
+		<tr id='wpsc-taxes-<?php esc_attr_e( $row_mode ); ?>-row-<?php esc_attr_e( $row_key ); ?>' data-row-key="<?php esc_attr_e( $row_key ); ?>" class='wpsc-tax-<?php esc_attr_e( $row_mode ); ?>-row <?php esc_attr_e( $tax_rate['row_class'] ); ?>'>
 
-		//build the rate form based on the information gathered
-		$output = "<tr id='wpsc-taxes-{$type}-row-{$key}' class='wpsc-tax-{$type}-row'>";
+			<?php if ( $row_mode == 'bands' ) : // BAND NAME ?>
+				<td>
+					<input type='hidden' id='band-index-<?php esc_attr_e( $row_key ); ?>' name="wpsc_options[wpec_taxes_bands][<?php esc_attr_e( $row_key ); ?>][index]" value="<?php esc_attr_e( $row_key ); ?>" />
+					<input id='band-name-<?php esc_attr_e( $row_key ); ?>' name="wpsc_options[wpec_taxes_bands][<?php esc_attr_e( $row_key ); ?>][name]" class='taxes-band' type='text' value='<?php esc_attr_e( $tax_rate['name'] ); ?>' />
+				</td>
+			<?php endif; ?>
 
-		// band name
-		if ( $type == 'bands' ) {
-			$output .= "<td>" . $this->wpec_taxes_build_input( $bands_input_settings );
-			$output .= $this->wpec_taxes_build_input( $bands_hidden_index ) . "</td>";
-		}
-		// market
-		$output .= "<td>" . $this->wpec_taxes_build_select_options( $countries, 'isocode', 'country', $selected_country, $country_select_settings );
-		if ( isset( $region_select ) ) {
-			$output .= $region_select;
-		}
-		$output .= "</td>";
+			<td>
+				<?php // MARKET COUNTRY SELECT
 
-		// tax %
-		$output .= "<td>" . $this->wpec_taxes_build_input( $rate_input_settings ) . "% </td>";
+					echo $this->wpec_taxes_build_select_options(
+						$countries,
+						'isocode',
+						'country',
+						$selected_country,
+						array( // select settings
+							'id' => $row_mode . "-country-" . $row_key,
+							'name' => "wpsc_options[wpec_taxes_". $row_mode . "][" . $row_key . "][country_code]",
+							'class' => 'wpsc-taxes-country-drop-down',
+							'data-row-key' => $row_key,
+							'data-row-mode' => $row_mode,
+						)
+					);
+					// MARKET REGION SELECT
+					if ( ! empty( $tax_rate['region_code'] ) ) {
 
-		// tax shipping rate
-		if ( $type == 'rates' ) {
-			$output .= "<td>" . $this->wpec_taxes_build_input( $shipping_input_settings ) . "</td>";
-		}
+						$regions = $this->wpec_taxes->wpec_taxes_get_regions( $tax_rate['country_code'] );
+
+						if ( ! empty( $regions ) ) {
+
+							echo $this->wpec_taxes_build_select_options(
+								$regions,
+								'region_code',
+								'name',
+								array( // selected region
+									'region_code' => $tax_rate['region_code'],
+									'name' => $this->wpec_taxes->wpec_taxes_get_region_information( $tax_rate['region_code'], 'name' )
+								),
+								array( // select settings
+									'id' => $row_mode . "-region-" . $row_key,
+									'name' =>  "wpsc_options[wpec_taxes_". $row_mode . "][" . $row_key . "][region_code]",
+									'class' => 'wpsc-taxes-region-drop-down'
+								)
+							);
+						}
+					} // if
+				?>
+				<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
+			</td>
 
 
-		// actions
-		$output .= "<td><a class='wpsc-taxes-{$type}-delete' id='wpsc-taxes-{$type}-delete-{$key}' href='#'>" . __( 'Delete', 'wpsc' ) . "</a>";
-		$output .= '<img src="' . esc_url( admin_url( 'images/wpspin_light.gif' ) ) . '" class="ajax-feedback" title="" alt="" /></td>';
+			<td><?php // TAX RATE ?>
+				<input type='text' size='3' id="<?php esc_attr_e( $row_mode ); ?>-rate-<?php esc_attr_e( $row_key ); ?>" name="wpsc_options[wpec_taxes_<?php esc_attr_e( $row_mode ); ?>][<?php esc_attr_e( $row_key ); ?>][rate]" class="taxes-<?php esc_attr_e( $row_mode ); ?>" value="<?php esc_attr_e( $tax_rate['rate'] ); ?>" /> %
+			</td>
 
-		$output .= '</tr>';
+			<?php if ( $row_mode == 'rates' ): // TAX SHIPPING ? ?>
+				<td>
+					<label>
+						<input type='checkbox' id="shipping-<?php esc_attr_e( $row_key ); ?>" name="wpsc_options[wpec_taxes_<?php esc_attr_e( $row_mode ); ?>][<?php esc_attr_e( $row_key ); ?>][shipping]" class="taxes-<?php esc_attr_e( $row_mode ); ?>" <?php checked( $tax_rate['shipping'] == 1 ); ?> />
+						<?php _e( 'Apply to Shipping', 'wpsc' ); ?>
+					</label>
+				</td>
+			<?php endif; ?>
 
-      return $output;
-   } // wpec_taxes_build_form
+			<?php // ACTIONS ?>
+			<td>
+				<a tabindex="-1" title="<?php _e( 'Delete Field', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-minus wpsc-taxes-<?php esc_attr_e( $row_mode ); ?>-delete" id="wpsc-taxes-<?php esc_attr_e( $row_mode ); ?>-delete-<?php esc_attr_e( $row_key ); ?>" href="#"><?php echo _x( '&ndash;', 'delete item', 'wpsc' ); ?></a>
+				<a tabindex="-1" title="<?php _e( 'Add Field', 'wpsc' ); ?>" class="button-secondary wpsc-button-round wpsc-button-plus wpsc-taxes-<?php esc_attr_e( $row_mode ); ?>-add" href="#"><?php echo _x( '+', 'add item', 'wpsc' ); ?></a>
+			</td>
+
+		</tr>
+		<?php
+		return ob_get_clean();
+	}
+
 } // wpec_taxes_controller
 
 ?>
