@@ -736,19 +736,6 @@ function _wpsc_ajax_add_tax_rate() {
 			);
 			$returnable = $wpec_taxes_controller->wpec_taxes_build_select_options( $regions, 'region_code', 'name', $default_option, $select_settings );
 			break;
-		case 'wpec_taxes_build_rates_form':
-			$key = $_REQUEST['current_key'];
-			$returnable = $wpec_taxes_controller->wpec_taxes_build_form( $key );
-			break;
-		case 'wpec_taxes_build_bands_form':
-			$key = $_REQUEST['current_key'];
-			//get a new key if a band is already defined for this key
-			while($wpec_taxes_controller->wpec_taxes->wpec_taxes_get_band_from_index($key))
-			{
-				$key++;
-			}
-			$returnable = $wpec_taxes_controller->wpec_taxes_build_form( $key, false, 'bands' );
-			break;
 	}// switch
 
 	return array(

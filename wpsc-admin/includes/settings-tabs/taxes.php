@@ -152,19 +152,23 @@ class WPSC_Settings_Tab_Taxes extends WPSC_Settings_Tab {
 			<!--Start Taxes Output-->
 			<table class='widefat page fixed ui-sortable'>
 				<thead>
-					<th scope='col'><?php _e( 'Market', 'wpsc' ); ?></th>
-					<th scope='col'><?php _e( 'Tax Rate', 'wpsc' ); ?></th>
+					<th scope='col' width='60%'><?php _e( 'Market', 'wpsc' ); ?></th>
+					<th scope='col' width='10%'><?php _e( 'Tax Rate', 'wpsc' ); ?></th>
 					<th scope='col'><?php _e( 'Tax Shipping?', 'wpsc' ); ?></th>
-					<th scope='col'><?php _e( 'Actions', 'wpsc' ); ?></th>
+					<th scope='col' style='width: 60px'><?php _e( 'Actions', 'wpsc' ); ?></th>
 				</thead>
 				<tbody>
 					<?php
-						// TODO: Refactor to get rid of the need for wpec_taxes_build_form(). It's a horribly written function.
 						$tax_rates = $wpec_taxes_controller->wpec_taxes->wpec_taxes_get_rates();
+						echo $wpec_taxes_controller->wpsc_build_taxes_row( 'rates', 'prototype', array( 'row_class' => 'prototype' ) );
+						if ( count( $tax_rates ) === 0 ) {
+							echo $wpec_taxes_controller->wpsc_build_taxes_row( 'rates', 0, null );
+						}
 						$tax_rate_count = 0;
 						if ( ! empty( $tax_rates ) ) {
 							foreach ( $tax_rates as $tax_rate ) {
-								echo $wpec_taxes_controller->wpec_taxes_build_form( $tax_rate_count, $tax_rate );
+								// OLD: echo $wpec_taxes_controller->wpec_taxes_build_form( $tax_rate_count, $tax_rate );
+								echo $wpec_taxes_controller->wpsc_build_taxes_row( 'rates', $tax_rate_count, $tax_rate );
 								$tax_rate_count++;
 							}
 						}
@@ -172,10 +176,6 @@ class WPSC_Settings_Tab_Taxes extends WPSC_Settings_Tab {
 				</tbody>
 			</table>
 			<!--End Taxes Output-->
-			<p id="wpsc-add-tax-rates">
-				<a href="#"><?php esc_html_e( 'Add New Tax Rate', 'wpsc' ); ?></a>
-				<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
-			</p>
 		</div>
 		<div id='wpec-taxes-bands-container'>
 			<h3><?php esc_html_e( 'Tax Bands', 'wpsc' ); ?></h3>
@@ -187,27 +187,29 @@ class WPSC_Settings_Tab_Taxes extends WPSC_Settings_Tab {
 				<table class='widefat page fixed ui-sortable'>
 					<thead>
 						<th scope='col'><?php _e( 'Band Name', 'wpsc' ); ?></th>
-						<th scope='col'><?php _e( 'Market', 'wpsc' ); ?></th>
-						<th scope='col'><?php _e( 'Tax Rate', 'wpsc' ); ?></th>
-						<th scope='col'><?php _e( 'Actions', 'wpsc' ); ?></th>
+						<th scope='col' width="50%"><?php _e( 'Market', 'wpsc' ); ?></th>
+						<th scope='col' width='20%'><?php _e( 'Tax Rate', 'wpsc' ); ?></th>
+						<th scope='col' style='width: 60px'><?php _e( 'Actions', 'wpsc' ); ?></th>
 					</thead>
 					<tbody>
 						<?php
 							$tax_bands = $wpec_taxes_controller->wpec_taxes->wpec_taxes_get_bands();
+							echo $wpec_taxes_controller->wpsc_build_taxes_row( 'bands', 'prototype', array( 'row_class' => 'prototype' ) );
+							if ( count( $tax_bands ) === 0 ) {
+								echo $wpec_taxes_controller->wpsc_build_taxes_row( 'bands', 0, null );
+							}
 							$tax_band_count = 0;
 							if ( ! empty( $tax_bands ) ) {
 								foreach ( $tax_bands as $tax_band ) {
-									echo $wpec_taxes_controller->wpec_taxes_build_form( $tax_band_count, $tax_band, 'bands' );
+									// OLD: echo $wpec_taxes_controller->wpec_taxes_build_form( $tax_band_count, $tax_band, 'bands' );
+									echo $wpec_taxes_controller->wpsc_build_taxes_row( 'bands', $tax_band_count, $tax_band );
 									$tax_band_count++;
 								}
 							}
 						?>
+
 					</tbody>
 				</table>
-				<p id="wpsc-add-tax-bands">
-					<a href="#"><?php _e( 'Add New Tax Band', 'wpsc' ); ?></a>
-					<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
-				</p>
 			</div>
 		</div><!--wpec-taxes-bands-container-->
 		<?php
