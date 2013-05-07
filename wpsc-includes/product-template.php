@@ -1104,7 +1104,7 @@ function wpsc_the_product_image( $width = '', $height = '', $product_id = '' ) {
 	$src = is_array( $src ) ? $src[0] : $src;
 
 	if ( is_ssl() && ! empty( $src ) )
-		$src = str_replace( 'http://', 'https://', $src[0] );
+		$src = str_replace( 'http://', 'https://', $src );
 
 	return apply_filters( 'wpsc_product_image', $src );
 }
