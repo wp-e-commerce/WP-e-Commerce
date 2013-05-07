@@ -149,6 +149,7 @@ After upgrading from earlier versions look for link "Update Store". This will up
 = 3.8.11.1 =
 * Fix: Some users had theme compatibilities and other configurations that caused "Add to Cart" to no longer function as expected.
 * Fix: Customer uploads for products broke with JS overhaul
+* Fix: Product image links broke.
 
 = 3.8.11 =
 * New: Payment Gateway UI is revamped.
