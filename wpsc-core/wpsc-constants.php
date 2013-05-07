@@ -29,7 +29,7 @@ function wpsc_core_constants() {
 		define( 'WPSC_URL',       plugins_url( '', __FILE__ ) );
 	// Define Plugin version
 	define( 'WPSC_VERSION', '3.8.11.1' );
-	define( 'WPSC_MINOR_VERSION', '9a0e98132c' );
+	define( 'WPSC_MINOR_VERSION', '74e9456712' );
 	define( 'WPSC_PRESENTABLE_VERSION', '3.8.11.1' );
 	define( 'WPSC_DB_VERSION', 4 );
 
