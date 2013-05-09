@@ -1450,12 +1450,11 @@ function wpsc_display_product_multicurrency() {
 
 /**
  * wpsc variation group name function
- * @return string - the variaton group name
+ * @return string - the variation group name
  */
 function wpsc_the_vargrp_name() {
-	// get the variation group name;
 	global $wpsc_variations;
-	return $wpsc_variations->variation_group->name;
+	return apply_filters( 'wpsc_vargrp_name', $wpsc_variations->variation_group->name, $wpsc_variations->variation_group );
 }
 
 /**
