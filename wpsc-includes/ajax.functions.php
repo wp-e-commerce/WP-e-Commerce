@@ -35,9 +35,8 @@ function wpsc_add_to_cart() {
 	$permitted_post_statuses = current_user_can( $post_type_object->cap->edit_posts ) ? array( 'private', 'draft', 'pending', 'publish' ) : array( 'publish' );
 
 	/// sanitise submitted values
-	$product_id = apply_filters( 'wpsc_add_to_cart_product_id', (int) $_POST['product_id'] );
-
-	$product = get_post( $product_id );
+	$product_id = apply_filters( 'wpsc_add_to_cart_product_id'    , (int) $_POST['product_id'] );
+	$product    = apply_filters( 'wpsc_add_to_cart_product_object', get_post( $product_id, OBJECT, 'display' ) );
 
 	if ( ! in_array( $product->post_status, $permitted_post_statuses ) || 'wpsc-product' != $product->post_type )
 		return false;
@@ -88,7 +87,6 @@ function wpsc_add_to_cart() {
 
 	$cart_item = $wpsc_cart->set_item( $product_id, $parameters );
 
-
 	if ( is_object( $cart_item ) ) {
 		do_action( 'wpsc_add_to_cart', $product, $cart_item );
 		$cart_messages[] = str_replace( "[product_name]", $cart_item->get_title(), __( 'You just added "[product_name]" to your cart.', 'wpsc' ) );
@@ -102,6 +100,7 @@ function wpsc_add_to_cart() {
 			$cart_messages[] = sprintf( __( 'Sorry, but the item "%s" is out of stock.', 'wpsc' ), $product->post_title	);
 		}
 	}
+
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 
@@ -526,7 +525,7 @@ function wpsc_update_location() {
 	if ( wpsc_get_customer_meta( 'shipping_same_as_billing' ) && ( $delivery_country != $billing_country || $delivery_region != $billing_region ) )
 		wpsc_update_customer_meta( 'shipping_same_as_billing', false );
 
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX )
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX && isset( $_REQUEST['action'] ) && 'update_location' == $_REQUEST['action'] )
 		exit;
 }
 
