@@ -487,20 +487,20 @@ function wpsc_sortable_column_load() {
 function wpsc_product_list_exclude_child_categories( $query ) {
 	$current_screen = get_current_screen();
 	if ( is_admin() && is_main_query() && 'edit-wpsc-product' == $current_screen->id ) {
-		if ( ! empty( $query->query_vars['wpsc_product_category'] ) ) {
-			$query->query_vars['tax_query'] = array(
+		$wpsc_product_category = $query->get( 'wpsc_product_category' );
+		if ( ! empty( $wpsc_product_category ) ) {
+			$query->set( 'tax_query', array(
 				array(
 					'taxonomy' => 'wpsc_product_category',
 					'field' => 'slug',
-					'terms' => $query->query_vars['wpsc_product_category'],
+					'terms' => $wpsc_product_category,
 					'include_children' => false
 				)
-			);
-			unset( $query->query_vars['wpsc_product_category'] );
+			) );
 		}
 	}
 }
-add_action( 'parse_request', 'wpsc_product_list_exclude_child_categories' );
+add_action( 'pre_get_posts', 'wpsc_product_list_exclude_child_categories', 7 );
 
 add_action( 'load-edit.php', 'wpsc_sortable_column_load' );
 add_action( 'restrict_manage_posts', 'wpsc_cats_restrict_manage_posts' );
