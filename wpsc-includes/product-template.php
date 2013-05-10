@@ -1106,6 +1106,10 @@ function wpsc_the_product_image( $width = '', $height = '', $product_id = '' ) {
 	if ( is_ssl() && ! empty( $src ) )
 		$src = str_replace( 'http://', 'https://', $src );
 
+	// WordPress's esc_url() function strips out spaces, so encode them here to ensure they don't get stripped out
+	// Ref: http://core.trac.wordpress.org/ticket/23605
+	$src = str_replace( ' ', '%20', $src );
+
 	return apply_filters( 'wpsc_product_image', $src );
 }
 
@@ -1279,6 +1283,10 @@ function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id 
 
 	if ( ! empty( $thumbnail ) && is_ssl() )
 		$thumbnail = str_replace( 'http://', 'https://', $thumbnail );
+
+	// WordPress's esc_url() function strips out spaces, so encode them here to ensure they don't get stripped out
+	// Ref: http://core.trac.wordpress.org/ticket/23605
+	$thumbnail = str_replace( ' ', '%20', $thumbnail );
 
 	return $thumbnail;
 }
