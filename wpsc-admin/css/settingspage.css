@@ -429,3 +429,15 @@ table.form-table td .updated.shipwire-update {
 	font-size : 12px;
 	line-height : 1.6em;
 }
+
+/* tax */
+
+
+.wpsc-tax-bands-row, .wpsc-tax-rates-row {
+	line-height: 3.2;
+}
+
+.wpsc-tax-bands-row.prototype,
+.wpsc-tax-rates-row.prototype {
+	display: none;
+}

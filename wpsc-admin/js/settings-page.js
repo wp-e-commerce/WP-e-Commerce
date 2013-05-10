@@ -694,9 +694,10 @@
 		event_init : function() {
 			var wrapper = $('#options_taxes');
 
-			wrapper.on( 'click' , '#wpsc-add-tax-rates a'        , WPSC_Settings_Page.Taxes.event_add_tax_rate);
+			wrapper.on( 'click' , '.wpsc-button-minus'           , function () { return false; } );
+			wrapper.on( 'click' , '.wpsc-taxes-rates-add'        , WPSC_Settings_Page.Taxes.event_add_tax_rate);
 			wrapper.on( 'click' , '.wpsc-taxes-rates-delete'     , WPSC_Settings_Page.Taxes.event_delete_tax_rate);
-			wrapper.on( 'click' , '#wpsc-add-tax-bands a'        , WPSC_Settings_Page.Taxes.event_add_tax_band);
+			wrapper.on( 'click' , '.wpsc-taxes-bands-add'        , WPSC_Settings_Page.Taxes.event_add_tax_band);
 			wrapper.on( 'click' , '.wpsc-taxes-bands-delete'     , WPSC_Settings_Page.Taxes.event_delete_tax_band);
 			wrapper.on( 'change', '.wpsc-taxes-country-drop-down', WPSC_Settings_Page.Taxes.event_country_drop_down_changed);
 		},
@@ -710,8 +711,8 @@
 				post_data = {
 					action            : 'add_tax_rate',
 					wpec_taxes_action : 'wpec_taxes_get_regions',
-					current_key       : c.data('key'),
-					taxes_type        : c.data('type'),
+					current_key       : c.data('row-key'),
+					taxes_type        : c.data('row-mode'),
 					country_code      : c.val(),
 					nonce             : WPSC_Settings_Page.add_tax_rate_nonce
 				},
@@ -744,6 +745,9 @@
 		 */
 		event_delete_tax_rate : function() {
 			$(this).parents('.wpsc-tax-rates-row').remove();
+			if ($('.wpsc-tax-rates-row').size() === 1) {
+				WPSC_Settings_Page.Taxes.add_field('rates');
+			}
 			return false;
 		},
 
@@ -762,6 +766,9 @@
 		 */
 		event_delete_tax_band : function() {
 			$(this).parents('.wpsc-tax-bands-row').remove();
+			if ($('.wpsc-tax-bands-row').size() === 1) {
+				WPSC_Settings_Page.Taxes.add_field('bands');
+			}
 			return false;
 		},
 
@@ -771,24 +778,14 @@
 		 * @since 3.8.8
 		 */
 		add_field : function(type) {
-			var button_wrapper = $('#wpsc-add-tax-' + type),
+			var tbody = $('#wpec-taxes-' + type + ' tbody'),
 				count = $('.wpsc-tax-' + type + '-row').size(),
-				post_data = {
-					action            : 'add_tax_rate',
-					wpec_taxes_action : 'wpec_taxes_build_' + type + '_form',
-					current_key       : count,
-					nonce             : WPSC_Settings_Page.add_tax_rate_nonce
-				},
-				ajax_callback = function(response) {
-					if (! response.is_successful) {
-						alert(response.error.messages.join("\n"));
-						return;
-					}
-					button_wrapper.before(response.obj.content).find('img').toggleClass('ajax-feedback-active');
-				};
-
-			button_wrapper.find('img').toggleClass('ajax-feedback-active');
-			$.wpsc_post(post_data, ajax_callback);
+				new_prototype_row = $('#wpsc-taxes-' + type + '-row-prototype').clone();
+			new_prototype_row.removeClass('prototype');
+			new_prototype_row.attr('id', new_prototype_row.attr('id').replace(/prototype/g, count));
+			new_prototype_row.attr('data-row-key', new_prototype_row.attr('data-row-key').replace(/prototype/g, count));
+			new_prototype_row.html( new_prototype_row.html().replace(/prototype/g, count) );
+			tbody.append(new_prototype_row);
 		}
 	};
 	$(WPSC_Settings_Page).on('wpsc_settings_tab_loaded_taxes', WPSC_Settings_Page.Taxes.event_init);
