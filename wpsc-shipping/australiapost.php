@@ -38,13 +38,13 @@ class australiapost {
 		
 		// DOMESTIC (Australia only)
 		$this->services['STANDARD'] = __('Standard Parcel Post', 'wpsc');
-		$this->services['EXPRESS'] = __('Express Post', 'wpsc');
+		$this->services['EXPRESS']  = __('Express Post', 'wpsc');
 
 		// INTERNATIONAL
-		$this->services['AIR'] = __('Air Mail', 'wpsc');
-		$this->services['SEA'] = __('Sea Mail', 'wpsc');
+		$this->services['AIR']   = __('Air Mail', 'wpsc');
+		$this->services['SEA']   = __('Sea Mail', 'wpsc');
 		$this->services['ECI_M'] = __('Express Courier International', 'wpsc'); // Express Courier International Merchandise
-		$this->services['EPI'] = __('Express Post International', 'wpsc');
+		$this->services['EPI']   = __('Express Post International', 'wpsc');
 
 		// Attempt to load the existing settings
 		$this->settings = get_option("wpsc_australiapost_settings");
