@@ -1188,6 +1188,9 @@ ul.categorisation_links li{
 ul.categorisation_links li.selected a{
 	color: #D54E21;
 }
+.multiple-select-container {
+	margin-left: 0.5em;
+}
 
 .multiple-select {
 	background: white none repeat scroll 0px 0px;
