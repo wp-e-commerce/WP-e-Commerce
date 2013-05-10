@@ -487,14 +487,13 @@ add_filter( 'manage_wpsc-product_posts_columns', 'wpsc_additional_column_names' 
  * wpsc_update_featured_products function.
  *
  * @access public
- * @todo Should be refactored to e
  * @return void
  *
- * @uses check_admin_referrer()     Makes sure that a user was referred from another admin page.
- * @uses get_option()               Gets option from the WordPress database
- * @uses update_option()            Updates an option in the WordPress database
- * @uses wp_redirect()              Redirects to another page.
- * @uses wp_get_referrer()          Retrieve referer from '_wp_http_referer' or HTTP referer.
+ * @uses check_admin_referer()     Makes sure that a user was referred from another admin page.
+ * @uses get_option()              Gets option from the WordPress database
+ * @uses update_option()           Updates an option in the WordPress database
+ * @uses wp_redirect()             Redirects to another page.
+ * @uses wp_get_referer()          Retrieve referer from '_wp_http_referer' or HTTP referer.
  */
 function wpsc_update_featured_products() {
 	if ( ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) &&
@@ -523,18 +522,20 @@ function wpsc_update_featured_products() {
 
 	update_option( 'sticky_products', $status );
 
-	if ( $is_ajax == true ) {
-		if ( $new_status == true ) : ?>
-                    jQuery('.featured_toggle_<?php echo $product_id; ?>').html("<img class='gold-star' src='<?php echo WPSC_CORE_IMAGES_URL; ?>/gold-star.png' alt='<?php esc_attr_e( 'Unmark as Featured', 'wpsc' ); ?>' title='<?php esc_attr_e( 'Unmark as Featured', 'wpsc' ); ?>' />");
-            <?php else: ?>
-                    jQuery('.featured_toggle_<?php echo $product_id; ?>').html("<img class='grey-star' src='<?php echo WPSC_CORE_IMAGES_URL; ?>/grey-star.png' alt='<?php esc_attr_e( 'Mark as Featured', 'wpsc' ); ?>' title='<?php esc_attr_e( 'Mark as Featured', 'wpsc' ); ?>' />");
-<?php
-		endif;
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		$json_response = array(
+			'text'       => $new_status ? esc_attr__( 'Unmark as Featured', 'wpsc' ) : esc_attr__( 'Mark as Featured', 'wpsc' ),
+			'product_id' => $product_id,
+			'color'      => $new_status ? 'gold-star' : 'grey-star',
+			'image'      => $new_status ? WPSC_CORE_IMAGES_URL . '/gold-star.png' : WPSC_CORE_IMAGES_URL . '/grey-star.png'
+		);
+
+		echo json_encode( $json_response );
+
 		exit();
 	}
 	wp_redirect( wp_get_referer() );
 	exit;
-
 }
 
 add_filter( 'page_row_actions','my_action_row', 10, 2 );

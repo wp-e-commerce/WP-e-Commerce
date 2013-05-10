@@ -296,7 +296,7 @@ jQuery(document).ready(function(){
 		};
 
 		jQuery.post( ajaxurl, post_values, function( response ) {
-			jQuery( '.featured_toggle_' + response.product_id ).html( "<img class='" + response.class + "' src='" + response.image + "' alt='" + response.text + "' title='" + response.text + "' />" );
+			jQuery( '.featured_toggle_' + response.product_id ).html( "<img class='" + response.color + "' src='" + response.image + "' alt='" + response.text + "' title='" + response.text + "' />" );
 		}, 'json' );
 
 		return false;
