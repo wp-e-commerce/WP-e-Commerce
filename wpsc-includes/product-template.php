@@ -1587,11 +1587,11 @@ function wpsc_product_existing_rating( $product_id ) {
 	$count = $get_average[0]['count'];
 	$output  = "  <span class='votetext'>";
 	for ( $l = 1; $l <= $average; ++$l ) {
-		$output .= "<img class='goldstar' src='" . WPSC_CORE_IMAGES_URL . "/gold-star.gif' alt='$l' title='$l' />";
+		$output .= "<img class='goldstar' src='" . WPSC_CORE_IMAGES_URL . "/gold-star.png' alt='$l' title='$l' />";
 	}
 	$remainder = 5 - $average;
 	for ( $l = 1; $l <= $remainder; ++$l ) {
-		$output .= "<img class='goldstar' src='" . WPSC_CORE_IMAGES_URL . "/grey-star.gif' alt='$l' title='$l' />";
+		$output .= "<img class='goldstar' src='" . WPSC_CORE_IMAGES_URL . "/grey-star.png' alt='$l' title='$l' />";
 	}
 	$output .= "<span class='vote_total'>&nbsp;(<span id='vote_total_{$product_id}'>" . $count . "</span>)</span> \r\n";
 	$output .= "</span> \r\n";
