@@ -35,10 +35,15 @@ class australiapost {
 		$this->debug = false; // change to true to log (to the PHP error log) the API URLs and responses for each active service
 
 		// Initialise the list of available postage services
+		
+		// DOMESTIC (Australia only)
 		$this->services['STANDARD'] = __('Standard Parcel Post', 'wpsc');
 		$this->services['EXPRESS'] = __('Express Post', 'wpsc');
+
+		// INTERNATIONAL
 		$this->services['AIR'] = __('Air Mail', 'wpsc');
 		$this->services['SEA'] = __('Sea Mail', 'wpsc');
+		$this->services['ECI_M'] = __('Express Courier International', 'wpsc'); // Express Courier International Merchandise
 		$this->services['EPI'] = __('Express Post International', 'wpsc');
 
 		// Attempt to load the existing settings
@@ -165,6 +170,7 @@ class australiapost {
 		*/
 
 
+		// Obtain the total combined weight for all items(s) in the cart (excluding items that have the "Disregard Shipping for this product" option ticked)
 		// Weight is in grams
 		$weight = wpsc_convert_weight($wpsc_cart->calculate_total_weight(true), 'pound', 'gram');
 
