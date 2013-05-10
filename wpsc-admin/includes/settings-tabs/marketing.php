@@ -151,7 +151,7 @@ class WPSC_Settings_Tab_Marketing extends WPSC_Settings_Tab {
 					<?php _e( 'Enable', 'wpsc' ); ?>
 				</th>
 				<td>
-					<label><?php echo get_option( 'wpsc_ga_disable_tracking' ); ?>
+					<label>
 						<input value='1' type='hidden' name='wpsc_ga_disable_tracking' />
 						<input value='0' <?php checked( '0', get_option( 'wpsc_ga_disable_tracking' ) ); ?> type='checkbox' name='wpsc_ga_disable_tracking' />
 						<?php _e( 'Enable Google Analytics tracking', 'wpsc' ); ?>
