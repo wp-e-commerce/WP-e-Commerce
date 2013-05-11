@@ -21,18 +21,18 @@ function wpsc_generate_product_feed() {
 	global $wpdb, $wp_query, $post;
 
     set_time_limit(0);
-    
+
     $xmlformat = '';
     if ( isset( $_GET['xmlformat'] ) ) {
     	$xmlformat = $_GET['xmlformat'];
     }
-	
+
 	// Don't build up a huge posts cache for the whole store - http://code.google.com/p/wp-e-commerce/issues/detail?id=885
 	// WP 3.3+ only
 	if ( function_exists ( 'wp_suspend_cache_addition' ) ) {
 		wp_suspend_cache_addition(true);
 	}
-	
+
     $chunk_size = apply_filters ( 'wpsc_productfeed_chunk_size', 50 );
 
     // Don't cache feed under WP Super-Cache
@@ -96,7 +96,6 @@ function wpsc_generate_product_feed() {
 			echo "      <title><![CDATA[".get_the_title()."]]></title>\n\r";
 			echo "      <link>$purchase_link</link>\n\r";
 			echo "      <description><![CDATA[".apply_filters ('the_content', get_the_content())."]]></description>\n\r";
-			echo "      <pubDate>".$post->post_modified_gmt."</pubDate>\n\r";
 			echo "      <guid>$purchase_link</guid>\n\r";
 
 			$image_link = wpsc_the_product_thumbnail() ;
