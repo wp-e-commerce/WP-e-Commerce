@@ -688,6 +688,9 @@ function _wpsc_pre_get_posts_reset_taxonomy_globals( $query ) {
 	if ( ! get_option( 'use_pagination' ) )
 		return;
 
+	if ( ! is_page( wpsc_get_the_post_id_by_shortcode( '[productspage]' ) ) && ! $query->get( 'wpsc_product_category' ) )
+		return;
+
 	$query->set( 'posts_per_page', get_option( 'wpsc_products_per_page' ) );
 
 	$post_type_object = get_post_type_object( 'wpsc-product' );
@@ -1907,10 +1910,10 @@ function wpsc_get_product_terms( $product_id, $tax, $field = '' ) {
  * Returns page slug that corresponds to a given WPEC-specific shortcode.
  *
  * @since 3.8.10
- * 
+ *
  * @uses   wpsc_get_the_post_id_by_shortcode()  Gets page ID of shortcode.
  * @uses   get_post_field()                     Returns post name of page ID.
- * 
+ *
  * @param  string $shortcode                    Shortcode of WPEC-specific page, e.g. '[productspage]''
  * @return string                               Post slug
  */
