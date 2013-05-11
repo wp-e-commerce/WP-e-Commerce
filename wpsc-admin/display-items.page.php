@@ -474,6 +474,34 @@ function wpsc_sortable_column_load() {
 	add_filter( 'request', 'wpsc_column_sql_orderby', 8 );
 }
 
+/**
+ * Product List Exclude Child Categories
+ *
+ * When filtering the product list by category in the admin this ensures that
+ * only products in the selected category are shown, not any of it's sub-categories.
+ *
+ * @param object $query WP_Query
+ *
+ * @uses get_current_screen()
+ */
+function wpsc_product_list_exclude_child_categories( $query ) {
+	$current_screen = get_current_screen();
+	if ( is_admin() && is_main_query() && 'edit-wpsc-product' == $current_screen->id ) {
+		$wpsc_product_category = $query->get( 'wpsc_product_category' );
+		if ( ! empty( $wpsc_product_category ) ) {
+			$query->set( 'tax_query', array(
+				array(
+					'taxonomy' => 'wpsc_product_category',
+					'field' => 'slug',
+					'terms' => $wpsc_product_category,
+					'include_children' => false
+				)
+			) );
+		}
+	}
+}
+add_action( 'pre_get_posts', 'wpsc_product_list_exclude_child_categories', 7 );
+
 add_action( 'load-edit.php', 'wpsc_sortable_column_load' );
 add_action( 'restrict_manage_posts', 'wpsc_cats_restrict_manage_posts' );
 add_action( 'manage_wpsc-product_posts_custom_column', 'wpsc_additional_column_data', 10, 2 );
