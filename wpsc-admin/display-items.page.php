@@ -485,29 +485,34 @@ function wpsc_sortable_column_load() {
  * @uses get_current_screen()
  */
 function wpsc_product_list_exclude_child_categories( $query ) {
-	$current_screen = get_current_screen();
-	if ( is_admin() && is_main_query() && 'edit-wpsc-product' == $current_screen->id ) {
+
+	if ( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) )
+		return;
+
+	if ( 'edit-wpsc-product' == get_current_screen()->id ) {
 		$wpsc_product_category = $query->get( 'wpsc_product_category' );
 		if ( ! empty( $wpsc_product_category ) ) {
-			$query->set( 'tax_query', array(
-				array(
-					'taxonomy' => 'wpsc_product_category',
-					'field' => 'slug',
-					'terms' => $wpsc_product_category,
-					'include_children' => false
-				)
-			) );
+			$tax_query = array(
+							array(
+								'taxonomy'         => 'wpsc_product_category',
+								'field'            => 'slug',
+								'terms'            => $wpsc_product_category,
+								'include_children' => false
+							)
+						);
+			$query->set( 'tax_query', $tax_query );
 		}
 	}
 }
-add_action( 'pre_get_posts', 'wpsc_product_list_exclude_child_categories', 7 );
 
-add_action( 'load-edit.php', 'wpsc_sortable_column_load' );
-add_action( 'restrict_manage_posts', 'wpsc_cats_restrict_manage_posts' );
-add_action( 'manage_wpsc-product_posts_custom_column', 'wpsc_additional_column_data', 10, 2 );
+add_action( 'pre_get_posts', 'wpsc_product_list_exclude_child_categories', 15 );
+
+add_action( 'load-edit.php'                            , 'wpsc_sortable_column_load' );
+add_action( 'restrict_manage_posts'                    , 'wpsc_cats_restrict_manage_posts' );
+add_action( 'manage_wpsc-product_posts_custom_column'  , 'wpsc_additional_column_data', 10, 2 );
 add_filter( 'manage_edit-wpsc-product_sortable_columns', 'wpsc_additional_sortable_column_names' );
-add_filter( 'manage_edit-wpsc-product_columns', 'wpsc_additional_column_names' );
-add_filter( 'manage_wpsc-product_posts_columns', 'wpsc_additional_column_names' );
+add_filter( 'manage_edit-wpsc-product_columns'         , 'wpsc_additional_column_names' );
+add_filter( 'manage_wpsc-product_posts_columns'        , 'wpsc_additional_column_names' );
 
 
 
