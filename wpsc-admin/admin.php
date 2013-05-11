@@ -437,7 +437,6 @@ function wpsc_admin_include_coupon_js() {
  */
 function wpsc_admin_include_optionspage_css_and_js() {
 	$version_identifier = WPSC_VERSION . "." . WPSC_MINOR_VERSION;
-	wp_enqueue_script( 'wp-e-commerce-js-ajax', WPSC_URL . '/wpsc-core/js/ajax.js', false, $version_identifier );
 	wp_enqueue_script( 'wp-e-commerce-admin-settings-page', WPSC_URL . '/wpsc-admin/js/settings-page.js', array( 'jquery-query' ), $version_identifier );
 
 	wp_localize_script( 'wp-e-commerce-admin-settings-page', 'WPSC_Settings_Page', array(
@@ -533,8 +532,6 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 		wp_enqueue_script( 'livequery',                      WPSC_URL . '/wpsc-admin/js/jquery.livequery.js',             array( 'jquery' ), '1.0.3' );
 		wp_enqueue_script( 'wp-e-commerce-admin-parameters', admin_url( 'admin.php?wpsc_admin_dynamic_js=true' ), false,             $version_identifier );
 		wp_enqueue_script( 'wp-e-commerce-admin',            WPSC_URL . '/wpsc-admin/js/admin.js',                        array( 'jquery', 'jquery-ui-core', 'jquery-ui-sortable' ), $version_identifier, false );
-		wp_enqueue_script( 'wp-e-commerce-legacy-ajax',      WPSC_URL . '/wpsc-admin/js/ajax.js',                         false,             $version_identifier ); // needs removing
-
 		wp_enqueue_script( 'wpsc-sortable-table', WPSC_URL . '/wpsc-admin/js/sortable-table.js', array( 'jquery' ) );
 
 		if ( in_array( $current_screen->id, array( 'wpsc-product', 'edit-wpsc-variation', 'wpsc-product' ) ) ) {
