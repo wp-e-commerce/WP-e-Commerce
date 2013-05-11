@@ -65,7 +65,7 @@ function wpsc_a_page_url($page=null) {
  *
  * @return
  */
-function wpsc_pagination($totalpages = '', $per_page = '', $current_page = '', $page_link = '') {
+function wpsc_pagination( $totalpages = '', $per_page = '', $current_page = '', $page_link = '' ) {
 	global $wp_query, $wpsc_query, $wp_the_query;
 
 	$num_paged_links = 4; //amount of links to show on either side of current page
@@ -264,7 +264,7 @@ function wpsc_pagination($totalpages = '', $per_page = '', $current_page = '', $
 		}
 	}
 	// Return the output.
-	echo $output;
+	echo apply_filters( 'wpsc_pagination', $output, $totalpages, $per_page, $current_page, $page_link );
 }
 
 /**
