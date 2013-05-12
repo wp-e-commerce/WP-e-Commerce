@@ -485,18 +485,21 @@ function wpsc_sortable_column_load() {
  * @uses get_current_screen()
  */
 function wpsc_product_list_exclude_child_categories( $query ) {
+	if ( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) )
+		return;
 	$current_screen = get_current_screen();
-	if ( is_admin() && is_main_query() && 'edit-wpsc-product' == $current_screen->id ) {
+	if ( is_main_query() && 'edit-wpsc-product' == $current_screen->id ) {
 		$wpsc_product_category = $query->get( 'wpsc_product_category' );
 		if ( ! empty( $wpsc_product_category ) ) {
-			$query->set( 'tax_query', array(
-				array(
-					'taxonomy' => 'wpsc_product_category',
-					'field' => 'slug',
-					'terms' => $wpsc_product_category,
-					'include_children' => false
-				)
-			) );
+			$category_query = array(
+				'taxonomy' => 'wpsc_product_category',
+				'field' => 'slug',
+				'terms' => array( $wpsc_product_category ),
+				'include_children' => false,
+				'operator' => 'IN'
+			);
+			$query->set( 'tax_query', array( $category_query ) );
+			$query->tax_query->queries = $query->get( 'tax_query' );
 		}
 	}
 }
