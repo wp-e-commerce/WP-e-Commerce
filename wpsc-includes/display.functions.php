@@ -48,19 +48,19 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 			);
 			$button_html = apply_filters( 'wpsc_buy_now_button_html', $button_html, $product_id );
 ?>
-			<form class="<?php echo esc_attr( sanitize_html_class($classes, '') ); ?>" id="buy-now-product_<?php echo $product_id; ?>"target="paypal" action="<?php echo esc_url( home_url() ); ?>" method="post">
+			<form class="<?php echo esc_attr( sanitize_html_class($classes, '') ); ?>" id="buy-now-product_<?php echo $product_id; ?>" target="paypal" action="<?php echo esc_url( home_url() ); ?>" method="post">
 				<input type="hidden" name="wpsc_buy_now_callback" value="1" />
 				<input type="hidden" name="product_id" value="<?php echo esc_attr( $product_id ); ?>" />
 <?php
-				if( $has_variants ):
+				if( $has_variants ) :
 					// grab the variation form fields here
 					$wpsc_variations = new wpsc_variations( $product_id );
 					while ( wpsc_have_variation_groups() ) : wpsc_the_variation_group();
-						printf('<input type="hidden" class="variation-value" name="variation[%1$d]" id="%2$s" value="0"/>', wpsc_vargrp_id(), wpsc_vargrp_form_id());
+						printf('<input type="hidden" class="variation-value" name="variation[%1$d]" id="%2$s" value="0"/>', wpsc_vargrp_id(), wpsc_vargrp_form_id() );
 					endwhile;
 				endif; /* END wpsc_product_has_variations */
 ?>
-				<?php if ( get_option( 'multi_add' ) ): ?>
+				<?php if ( get_option( 'multi_add' ) ) : ?>
 					<label for="quantity"><?php esc_html_e( 'Quantity', 'wpsc' ); ?></label>
 					<input type="text" size="4" id="quantity" name="quantity" value="" /><br />
 				<?php else: ?>
