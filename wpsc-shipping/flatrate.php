@@ -10,49 +10,45 @@ class flatrate {
 	var $internal_name, $name;
 
 	/**
+	 * Constructor
 	 *
-	 *
-	 * @return unknown
+	 * @return boolean Always returns true.
 	 */
 	function flatrate() {
 		$this->internal_name = "flatrate";
 		$this->name= __( "Flat Rate", 'wpsc' );
-		$this->is_external=false;
+		$this->is_external = false;
 		return true;
 	}
 
 	/**
+	 * Returns i18n-ized name of shipping module.
 	 *
-	 *
-	 * @return unknown
+	 * @return string
 	 */
 	function getName() {
 		return $this->name;
 	}
 
 	/**
+	 * Returns internal name of shipping module.
 	 *
-	 *
-	 * @return unknown
+	 * @return string
 	 */
 	function getInternalName() {
 		return $this->internal_name;
 	}
 
 	/**
+	 * Returns HTML settings form. Should be a collection of <tr> elements containing two columns.
 	 *
-	 *
-	 * @return unknown
+	 * @return string HTML snippet
 	 */
 	function getForm() {
 		global $wpdb;
 
-		$shipping = get_option('flat_rates');
-		$output = "<tr><td colspan='2'>" . __('If you do not wish to ship to a particular region, leave the field blank. To offer free shipping to a region, enter 0.', 'wpsc') . "</td>";
-		$output .= "<tr><td colspan='1'><strong>" . __( 'Base Local', 'wpsc' ) . "</strong></td>";
-
 		$shipping = wp_parse_args(
-			$shipping,
+			get_option( 'flat_rates' ),
 			array(
 				'southisland'  => '',
 				'northisland'  => '',
@@ -67,38 +63,60 @@ class flatrate {
 			)
 		);
 
-		$currency_data = $wpdb->get_row( "SELECT `symbol`,`symbol_html`,`code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id`='" . esc_attr( get_option( 'currency_type' ) ) . "' LIMIT 1", ARRAY_A );
-		$currency_sign = ! empty( $currency_data['symbol'] ) ? $currency_data['symbol_html'] : $currency_data['code'];
+		$output = "<tr><td colspan='2'>";
 
-		switch (get_option('base_country')) {
-		case 'NZ':
-			$output .= "<tr class='rate_row'><td>" . __( 'South Island', 'wpsc' ) . "</td><td>" . esc_attr( $currency_sign ) . "<input type='text' size='4' name='shipping[southisland]' value='".esc_attr($shipping['southisland'])."'></td></tr>";
-			$output .= "<tr class='rate_row'><td>" . __( 'North Island', 'wpsc' ) . "</td><td>" . esc_attr( $currency_sign ) . "<input type='text' size='4' name='shipping[northisland]'	value='".esc_attr($shipping['northisland'])."'></td></tr>";
-			break;
+		$output .= "<table>";
 
-		case 'US':
-			$output .= "<tr class='rate_row'><td>" . __( 'Continental 48 States', 'wpsc' ) . "</td><td>" . esc_attr( $currency_sign ) . "<input type='text' size='4' name='shipping[continental]' value='".esc_attr($shipping['continental'])."'></td></tr>";
-			$output .= "<tr class='rate_row'><td>" . __( 'All 50 States', 'wpsc' ) . "</td><td>" . esc_attr( $currency_sign ) . "<input type='text' size='4' name='shipping[all]'	value='".esc_attr($shipping['all'])."'></td></tr>";
-			break;
+		$output .= "<tr><th colspan='2'><strong>" . __( 'Base Local', 'wpsc' ) . "</strong></th></tr>";
+		switch ( get_option( 'base_country' ) ) {
+			case 'NZ':
+				$output .= $this->settings_form_shipping_price_field( 'southisland', __( 'South Island', 'wpsc' ),  $shipping['southisland'] );
+				$output .= $this->settings_form_shipping_price_field( 'northisland', __( 'North Island', 'wpsc' ),  $shipping['northisland'] );
+				break;
 
-		default:
-			$output .= "<td>" . esc_attr( $currency_sign ) . "<input type='text' name='shipping[local]' size='4' value='".esc_attr($shipping['local'])."'></td></tr>";
-			break;
+			case 'US':
+				$output .= $this->settings_form_shipping_price_field( 'continental', __( 'South Island', 'wpsc' ),  $shipping['continental'] );
+				$output .= $this->settings_form_shipping_price_field( 'all',         __( 'All 50 States', 'wpsc' ), $shipping['all'] );
+				break;
+
+			default:
+				$output .= $this->settings_form_shipping_price_field( 'local',       __( 'Domestic', 'wpsc' ),      $shipping['local'] );
+				break;
 		}
 
-		$output.= "<tr><td colspan='2'><strong>" . __( 'Base International', 'wpsc' ) . "</strong></td></tr>";
-		$output .= "<tr class='rate_row'><td>" . __( 'North America', 'wpsc' ) . "</td><td>" . esc_attr( $currency_sign ) . "<input size='4' type='text' name='shipping[northamerica]'	value='".esc_attr($shipping['northamerica'])."'></td></tr>";
-		$output .= "<tr class='rate_row'><td>" . __( 'South America', 'wpsc' ) . "</td><td>" . esc_attr( $currency_sign ) . "<input size='4' type='text' name='shipping[southamerica]'	value='".esc_attr($shipping['southamerica'])."'></td></tr>";
-		$output .= "<tr class='rate_row'><td>" . __( 'Asia and Pacific', 'wpsc' ) . "</td><td>" . esc_attr( $currency_sign ) . "<input size='4' type='text' name='shipping[asiapacific]'	value='".esc_attr($shipping['asiapacific'])."'></td></tr>";
-		$output .= "<tr class='rate_row'><td>" . __( 'Europe', 'wpsc' ) . "</td><td>" . esc_attr( $currency_sign ) . "<input type='text' size='4' name='shipping[europe]'	value='".esc_attr($shipping['europe'])."'></td></tr>";
-		$output .= "<tr class='rate_row'><td>" . __( 'Africa', 'wpsc' ) . "</td><td>" . esc_attr( $currency_sign ) . "<input type='text' size='4' name='shipping[africa]'	value='".esc_attr($shipping['africa'])."'></td></tr>";
+		$output .= "<tr><th colspan='2'><strong>" . __( 'Base International', 'wpsc' ) . "</strong></th></tr>";
+		$output .= $this->settings_form_shipping_price_field( 'northamerica', __( 'North America', 'wpsc' ),    $shipping['northamerica'] );
+		$output .= $this->settings_form_shipping_price_field( 'southamerica', __( 'South America', 'wpsc' ),    $shipping['southamerica'] );
+		$output .= $this->settings_form_shipping_price_field( 'asiapacific',  __( 'Asia and Pacific', 'wpsc' ), $shipping['asiapacific'] );
+		$output .= $this->settings_form_shipping_price_field( 'europe',       __( 'Europe', 'wpsc' ),           $shipping['europe'] );
+		$output .= $this->settings_form_shipping_price_field( 'africa',       __( 'Africa', 'wpsc' ),           $shipping['africa'] );
+		$output .= "</table>";
+
+		$output .= "<br /><p class='description'>" . __( 'If you do not wish to ship to a particular region, leave the field blank. To offer free shipping to a region, enter 0.', 'wpsc' ) . "</p>";
+		$output .= "</td></tr>";
+
 		return $output;
 	}
 
 	/**
+	 * Create shipping price field
 	 *
+	 * @return string HTML snippet, a <tr> with two columns.
+	 */
+	function settings_form_shipping_price_field( $id, $label, $value ) {
+		$output = "<tr><td>" . $label . "</td>";
+		$output .= "<td>";
+		$output .= esc_attr( wpsc_get_currency_symbol() );
+		$output .= "<input size='4' type='text' name='shipping[" . esc_attr( $id ) . "]' value='" . esc_attr( $value ) . "'>";
+		$output .= "</td></tr>";
+
+		return $output;
+	}
+
+	/**
+	 * Saves shipping module settings.
 	 *
-	 * @return unknown
+	 * @return boolean Always returns true.
 	 */
 	function submit_form() {
 		if (!isset($_POST['shipping'])) $_POST['shipping'] = null;
@@ -112,10 +130,10 @@ class flatrate {
 	}
 
 	/**
+	 * returns shipping quotes using this shipping module.
 	 *
-	 *
-	 * @param unknown $for_display (optional)
-	 * @return unknown
+	 * @param boolean $for_display (optional) (unused)
+	 * @return array collection of rates applicable.
 	 */
 	function getQuote($for_display = false) {
 		global $wpdb, $wpsc_cart;
@@ -219,10 +237,10 @@ class flatrate {
 	}
 
 	/**
+	 * calculates shipping price for an individual cart item.
 	 *
-	 *
-	 * @param unknown $cart_item (reference)
-	 * @return unknown
+	 * @param object $cart_item (reference)
+	 * @return float price of shipping for the item.
 	 */
 	function get_item_shipping(&$cart_item) {
 
