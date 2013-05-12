@@ -38,10 +38,13 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 			}
 
 			$has_variants = wpsc_product_has_variations($product_id);
+
 			$src = _x( 'https://www.paypal.com/en_US/i/btn/btn_buynow_LG.gif', 'PayPal Buy Now Button', 'wpsc' );
 			$src = apply_filters( 'wpsc_buy_now_button_src', $src );
 			$classes = apply_filters( 'wpsc_buy_now_button_class', "wpsc-buy-now-form wpsc-buy-now-form-{$product_id}" );
-			$button_html = sprintf('<input'.disabled( $has_variants, true, false ).' class="wpsc-buy-now-button wpsc-buy-now-button-%s" type="image" name="submit" border="0" src="%s" alt="%s" />',
+
+			$button_html = sprintf( '<input%1$s class="wpsc-buy-now-button wpsc-buy-now-button-%2$s" type="image" name="submit" border="0" src="%3$s" alt="%4$s" />',
+				disabled( $has_variants, true, false ),
 				esc_attr( $product_id ),
 				esc_url( $src ),
 				esc_attr__( 'PayPal - The safer, easier way to pay online', 'wpsc' )
