@@ -15,6 +15,8 @@
  * @return string - html displaying one or more products
  */
 function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
+	$product_id = absint($product_id);
+
 	$product = get_post( $product_id );
 	$supported_gateways = array('wpsc_merchant_paypal_standard','paypal_multiple');
 	$selected_gateways = get_option( 'custom_gateway_options' );
@@ -38,7 +40,7 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 			$has_variants = wpsc_product_has_variations($product_id);
 			$src = _x( 'https://www.paypal.com/en_US/i/btn/btn_buynow_LG.gif', 'PayPal Buy Now Button', 'wpsc' );
 			$src = apply_filters( 'wpsc_buy_now_button_src', $src );
-			$classes = "wpsc-buy-now-form wpsc-buy-now-form-{$product_id}";
+			$classes = apply_filters( 'wpsc_buy_now_button_class', "wpsc-buy-now-form wpsc-buy-now-form-{$product_id}" );
 			$button_html = sprintf('<input'.disabled( $has_variants, true, false ).' class="wpsc-buy-now-button wpsc-buy-now-button-%s" type="image" name="submit" border="0" src="%s" alt="%s" />',
 				esc_attr( $product_id ),
 				esc_url( $src ),
@@ -46,7 +48,7 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 			);
 			$button_html = apply_filters( 'wpsc_buy_now_button_html', $button_html, $product_id );
 ?>
-			<form class="<?php echo esc_attr( $classes ); ?>" id="buy-now-product_<?php echo $product_id; ?>"target="paypal" action="<?php echo esc_url( home_url() ); ?>" method="post">
+			<form class="<?php echo esc_attr( sanitize_html_class($classes, '') ); ?>" id="buy-now-product_<?php echo $product_id; ?>"target="paypal" action="<?php echo esc_url( home_url() ); ?>" method="post">
 				<input type="hidden" name="wpsc_buy_now_callback" value="1" />
 				<input type="hidden" name="product_id" value="<?php echo esc_attr( $product_id ); ?>" />
 <?php
