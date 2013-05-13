@@ -242,13 +242,14 @@ h3.form_group a{
 	color: #000;
 }
 div.product_and_button_settings {
+	position: relative;
 }
 
 div#themes_and_appearance {
 	border: 1px solid #DFDFDF;
 	width: 360px;
 	position: absolute;
-	right: 10px;
+	left: 45em;
 }
 
 div#themes_and_appearance p {
