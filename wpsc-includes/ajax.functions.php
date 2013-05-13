@@ -387,7 +387,7 @@ function wpsc_get_rating_count() {
 	global $wpdb, $wpsc_cart;
 	$prodid = $_POST['product_id'];
 	$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) AS `count` FROM `" . WPSC_TABLE_PRODUCT_RATING . "` WHERE `productid` = %d", $prodid ) );
-	echo $count . "," . $prodid;
+	echo $count . "," . absint( $prodid );
 	exit();
 }
 
@@ -887,8 +887,8 @@ if ( isset( $_REQUEST['wpsc_ajax_action'] ) && 'change_tax' == $_REQUEST['wpsc_a
 function _wpsc_change_profile_country() {
 	global $wpdb;
 
-	$country_field_id = $_REQUEST['form_id'];
-	$country = $_REQUEST['country'];
+	$country_field_id = absint( $_REQUEST['form_id'] );
+	$country          = $_REQUEST['country'];
 
 	$sql = $wpdb->prepare( 'SELECT unique_name FROM `'.WPSC_TABLE_CHECKOUT_FORMS.'` WHERE `id`= %d', $country_field_id );
 	$country_field_unique_name = $wpdb->get_var( $sql );
