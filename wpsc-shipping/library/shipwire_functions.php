@@ -554,10 +554,14 @@ class WPSC_Shipwire {
 	 * @return array
 	 */
 	public static function fetch_fresh_quotes() {
-		$quotes = simplexml_load_string( self::send_shipping_request( self::get_shipping_xml() ) );
+		$quotes = self::send_shipping_request( self::get_shipping_xml() );
+
+		$quotes  = $quotes ? simplexml_load_string( $quotes ) : false;
 		$methods = array();
 
-		$quotes = is_object( $quotes ) ? $quotes->Order->Quotes->Quote : $methods;
+		$quotes = is_object( $quotes ) && isset( $quotes->Order )  ? $quotes->Order  : $methods;
+		$quotes = is_object( $quotes ) && isset( $quotes->Quotes ) ? $quotes->Quotes : $methods;
+		$quotes = is_object( $quotes ) && isset( $quotes->Quote )  ? $quotes->Quote  : $methods;
 
 		if ( ! is_object( $quotes ) )
 			return $methods;
