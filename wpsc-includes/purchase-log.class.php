@@ -15,7 +15,7 @@ class WPSC_Purchase_Log {
 	 *
 	 * @access private
 	 * @static
-	 * @since 3.9
+	 * @since 3.8.9
 	 *
 	 * @var array
 	 */

@@ -288,7 +288,7 @@ function wpsc_cart_item_quantity_single_prod($id) {
  * @param  int  $prod_id    Optional. Product ID.
  * @return int              The maximum quantity that can be added to the cart.
  *
- * @uses   apply_filters    Calls 'wpsc_product_max_cart_quantity' passing product ID. 
+ * @uses   apply_filters    Calls 'wpsc_product_max_cart_quantity' passing product ID.
  */
 function wpsc_product_max_cart_quantity( $product_id = 0 ) {
 	$product_id = absint( $product_id );
@@ -297,7 +297,7 @@ function wpsc_product_max_cart_quantity( $product_id = 0 ) {
 
 /**
  * Validate Product Cart Quantity
- * Checks that the quantity is within the permitted bounds and return a valid quantity. 
+ * Checks that the quantity is within the permitted bounds and return a valid quantity.
  *
  * @since  3.8.10
  * @access public
@@ -1957,12 +1957,12 @@ class wpsc_cart_item {
       $accepted_file_types['mime'][] = 'image/pjpeg';  // Added for IE compatibility
       $accepted_file_types['mime'][] = 'image/x-png';  // Added for IE compatibility
 
-
       $accepted_file_types['ext'][] = 'jpeg';
       $accepted_file_types['ext'][] = 'jpg';
       $accepted_file_types['ext'][] = 'gif';
       $accepted_file_types['ext'][] = 'png';
 
+      $accepted_file_types = apply_filters( 'wpsc_customer_upload_accepted_file_types', $accepted_file_types );
 
       $can_have_uploaded_image = get_product_meta($this->product_id,'product_metadata',true);
      $product = get_post($this->product_id);
@@ -1975,7 +1975,10 @@ class wpsc_cart_item {
          $name_parts = explode('.',basename($file_data['name']));
          $extension = array_pop($name_parts);
 
-         if((   (array_search($file_data['type'], $accepted_file_types['mime']) !== false) || (get_option('wpsc_check_mime_types') == 1) ) && (array_search($extension, $accepted_file_types['ext']) !== false) ) {
+         if ( ( (
+            array_search( strtolower( $file_data['type'] ), $accepted_file_types['mime'] ) !== false ) ||
+            get_option( 'wpsc_check_mime_types' ) == 1 ) &&
+            array_search( strtolower( $extension ), $accepted_file_types['ext'] ) !== false ) {
 
            if(is_file(WPSC_USER_UPLOADS_DIR.$file_data['name'])) {
                $name_parts = explode('.',basename($file_data['name']));
