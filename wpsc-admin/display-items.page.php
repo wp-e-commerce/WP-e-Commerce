@@ -492,15 +492,15 @@ function wpsc_product_list_exclude_child_categories( $query ) {
 	if ( 'edit-wpsc-product' == get_current_screen()->id ) {
 		$wpsc_product_category = $query->get( 'wpsc_product_category' );
 		if ( ! empty( $wpsc_product_category ) ) {
-			$tax_query = array(
-							array(
-								'taxonomy'         => 'wpsc_product_category',
-								'field'            => 'slug',
-								'terms'            => $wpsc_product_category,
-								'include_children' => false
-							)
-						);
-			$query->set( 'tax_query', $tax_query );
+			$category_query = array(
+					'taxonomy'         => 'wpsc_product_category',
+					'field'            => 'slug',
+					'terms'            => array( $wpsc_product_category ),
+					'include_children' => false,
+					'operator'         => 'IN'
+			);
+			$query->set( 'tax_query', array( $category_query ) );
+			$query->tax_query->queries = $query->get( 'tax_query' );
 		}
 	}
 }
