@@ -61,7 +61,7 @@ $wpsc_database_template[$table_name]['columns']['default'] = "varchar(128) NOT N
 $wpsc_database_template[$table_name]['columns']['active'] = "varchar(1) NOT NULL DEFAULT '1' ";
 $wpsc_database_template[$table_name]['columns']['checkout_order'] = "int(10) unsigned NOT NULL DEFAULT '0' ";
 $wpsc_database_template[$table_name]['columns']['unique_name'] = "varchar(255) NOT NULL DEFAULT '' ";
-$wpsc_database_template[$table_name]['columns']['options'] = "longtext NOT NULL DEFAULT '' ";
+$wpsc_database_template[$table_name]['columns']['options'] = "longtext ";
 $wpsc_database_template[$table_name]['columns']['checkout_set'] = "VARCHAR( 64 ) NOT NULL DEFAULT '0'";
 
 $wpsc_database_template[$table_name]['indexes']['PRIMARY'] = "PRIMARY KEY  ( `id` )";
@@ -172,7 +172,7 @@ $table_name = WPSC_TABLE_SUBMITTED_FORM_DATA; /* !wpsc_submitted_form_data */
 $wpsc_database_template[$table_name]['columns']['id'] = "bigint(20) unsigned NOT NULL auto_increment";
 $wpsc_database_template[$table_name]['columns']['log_id'] = "bigint(20) unsigned NOT NULL DEFAULT '0' ";
 $wpsc_database_template[$table_name]['columns']['form_id'] = "bigint(20) unsigned NOT NULL DEFAULT '0' ";
-$wpsc_database_template[$table_name]['columns']['value'] = "longtext NOT NULL DEFAULT '' ";
+$wpsc_database_template[$table_name]['columns']['value'] = "longtext ";
 $wpsc_database_template[$table_name]['indexes']['PRIMARY'] = "PRIMARY KEY  ( `id` )";
 $wpsc_database_template[$table_name]['indexes']['log_id'] = " KEY `log_id` ( `log_id`, `form_id` )";
 $wpsc_database_template[$table_name]['previous_names'] = "{$wpdb->prefix}submited_form_data";
