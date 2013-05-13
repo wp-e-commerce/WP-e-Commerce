@@ -814,8 +814,7 @@
 			WPSC_Settings_Page.Shipping.wrapper.on( 'click'   , '.table-rate .wpsc-button-minus', WPSC_Settings_Page.Shipping.event_delete_table_rate_layer);
 			WPSC_Settings_Page.Shipping.wrapper.on( 'keypress', '.table-rate input[type="text"]', WPSC_Settings_Page.Shipping.event_enter_key_pressed);
 			WPSC_Settings_Page.Shipping.wrapper.on( 'click'   , 'a.shipwire_sync'               , WPSC_Settings_Page.Shipping.event_sync_shipwire);
-
-			WPSC_Settings_Page.Shipping.wrapper.on( 'click'   , '.edit-shipping-module-cancel'   , WPSC_Settings_Page.Shipping.event_edit_shipping_module_cancel);
+			WPSC_Settings_Page.Shipping.wrapper.on( 'click'   , '.edit-shipping-module-cancel'  , WPSC_Settings_Page.Shipping.event_edit_shipping_module_cancel);
 		},
 
 		/**
@@ -943,8 +942,11 @@
 			var element = $(this),
 				spinner = element.siblings('.ajax-feedback'),
 				post_data = {
-					action : 'sync_shipwire_products',
-					nonce  : WPSC_Settings_Page.shipping_module_settings_form_nonce
+					action    : 'sync_shipwire_products',
+					email     : $('input[name="wpsc_options[shipwireemail]"]').val(),
+					password  : $('input[name="wpsc_options[shipwirepassword]"]').val(),
+					server    : $('input[name="wpsc_options[shipwire_test_server]"]').val(),
+					nonce     : WPSC_Settings_Page.shipping_module_settings_form_nonce
 				},
 				ajax_callback = function(response) {
 					$('<div class="updated shipwire-update"><p><strong>' + response.tracking + '<br />' + response.inventory + '</strong></p></div>').

@@ -46,14 +46,14 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 
 		$shipadd = 0;
 		foreach ( $wpsc_shipping_modules as $shipping ) {
-			foreach ( (array)$_POST['custom_shipping_options'] as $shippingoption ) {
+			foreach ( (array) $_POST['custom_shipping_options'] as $shippingoption ) {
 				if ( $shipping->internal_name == $shippingoption ) {
 					$shipadd++;
 				}
 			}
 		}
 
-		if ( ! get_option( 'do_not_use_shipping' ) && ! get_option( 'custom_shipping_options' ) ) {
+		if ( ! get_option( 'do_not_use_shipping' ) && ! get_option( 'custom_shipping_options' ) && ! ( bool ) get_option( 'shipwire' ) ) {
 			update_option( 'do_not_use_shipping', '1' );
 			return array( 'shipping_disabled' => 1 );
 		} else {
@@ -170,7 +170,7 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 			<?php
 				switch ( get_option( 'shipwire' ) ) {
 					case 1:
-						$shipwire_settings = 'style="display: block;"';
+						$shipwire_settings = '';
 						break;
 
 					case 0:
@@ -190,6 +190,10 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 						<tr>
 							<th><?php esc_html_e( 'Shipwire Password', 'wpsc' ); ?></th>
 							<td><input type="text" name='wpsc_options[shipwirepassword]' value="<?php esc_attr_e( get_option( 'shipwirepassword' ) ); ?>" /></td>
+						</tr>
+						<tr>
+							<th><?php esc_html_e( 'Use Test Server?', 'wpsc' ); ?></th>
+							<td><input type="checkbox" name='wpsc_options[shipwire_test_server]' value="0" <?php checked( '1',  get_option( 'shipwire_test_server', '0' ) ); ?> /></td>
 						</tr>
 						<tr>
 							<th><?php esc_html_e( 'Force Sync with Shipwire', 'wpsc' ); ?></th>
@@ -239,6 +243,7 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 			</tr>
 		</table>
 
+		<?php submit_button( __( 'Save Changes' ) ); ?>
 
 		<h3><?php _e( 'Shipping Modules', 'wpsc' ) ?></h3>
 		<p class='description'><?php _e( 'To enable shipping in WP e-Commerce you must select which shipping methods you want to enable on your site.', 'wpsc' ); ?></p>

@@ -53,7 +53,7 @@ class WPSC_Shipwire_Shipping {
 }
 
 if ( WPSC_Shipwire::is_active() ) {
-	if ( ! in_array( 'shipwire', get_option( 'custom_shipping_options' ) ) )
+	if ( ! in_array( 'shipwire', ( array ) get_option( 'custom_shipping_options', array() ) ) )
 		update_option( 'custom_shipping_options', array( 'shipwire' ) );
 
 	$wpsc_shipwire = new WPSC_Shipwire_Shipping();
