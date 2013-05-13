@@ -61,7 +61,7 @@ $wpsc_database_template[$table_name]['columns']['default'] = "varchar(128) NOT N
 $wpsc_database_template[$table_name]['columns']['active'] = "varchar(1) NOT NULL DEFAULT '1' ";
 $wpsc_database_template[$table_name]['columns']['checkout_order'] = "int(10) unsigned NOT NULL DEFAULT '0' ";
 $wpsc_database_template[$table_name]['columns']['unique_name'] = "varchar(255) NOT NULL DEFAULT '' ";
-$wpsc_database_template[$table_name]['columns']['options'] = "longtext NOT NULL DEFAULT '' ";
+$wpsc_database_template[$table_name]['columns']['options'] = "longtext NOT NULL ";
 $wpsc_database_template[$table_name]['columns']['checkout_set'] = "VARCHAR( 64 ) NOT NULL DEFAULT '0'";
 
 $wpsc_database_template[$table_name]['indexes']['PRIMARY'] = "PRIMARY KEY  ( `id` )";
