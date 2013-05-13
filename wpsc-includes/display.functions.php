@@ -15,32 +15,36 @@
  * @return string - html displaying one or more products
  */
 function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
+
 	$product_id = absint($product_id);
 
-	$product = get_post( $product_id );
-	$supported_gateways = array('wpsc_merchant_paypal_standard','paypal_multiple');
-	$selected_gateways = get_option( 'custom_gateway_options' );
+	$product            = get_post( $product_id );
+	$supported_gateways = array( 'wpsc_merchant_paypal_standard', 'paypal_multiple' );
+	$selected_gateways  = get_option( 'custom_gateway_options' );
+
 	if ( $replaced_shortcode )
 		ob_start();
 
-	if ( in_array( 'wpsc_merchant_paypal_standard', (array)$selected_gateways ) ) {
+	if ( in_array( 'wpsc_merchant_paypal_standard', (array) $selected_gateways ) ) {
 		if ( $product_id > 0 ) {
-			$post_meta = get_post_meta( $product_id, '_wpsc_product_metadata', true );
-			$shipping = isset( $post_meta['shipping'] ) ? $post_meta['shipping']['local'] : '';
-			$price = get_post_meta( $product_id, '_wpsc_price', true );
+
+			$post_meta     = get_post_meta( $product_id, '_wpsc_product_metadata', true );
+			$shipping      = isset( $post_meta['shipping'] ) ? $post_meta['shipping']['local'] : '';
+			$price         = get_post_meta( $product_id, '_wpsc_price', true );
 			$special_price = get_post_meta( $product_id, '_wpsc_special_price', true );
+
 			if ( $special_price )
 				$price = $special_price;
+
 			if ( wpsc_uses_shipping ( ) ) {
 				$handling = get_option( 'base_local_shipping' );
 			} else {
 				$handling = $shipping;
 			}
 
-			$has_variants = wpsc_product_has_variations($product_id);
+			$has_variants = wpsc_product_has_variations( $product_id );
 
-			$src = _x( 'https://www.paypal.com/en_US/i/btn/btn_buynow_LG.gif', 'PayPal Buy Now Button', 'wpsc' );
-			$src = apply_filters( 'wpsc_buy_now_button_src', $src );
+			$src     = apply_filters( 'wpsc_buy_now_button_src', _x( 'https://www.paypal.com/en_US/i/btn/btn_buynow_LG.gif', 'PayPal Buy Now Button', 'wpsc' ) );
 			$classes = apply_filters( 'wpsc_buy_now_button_class', "wpsc-buy-now-form wpsc-buy-now-form-{$product_id}" );
 
 			$button_html = sprintf( '<input%1$s class="wpsc-buy-now-button wpsc-buy-now-button-%2$s" type="image" name="submit" border="0" src="%3$s" alt="%4$s" />',
@@ -49,13 +53,14 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 				esc_url( $src ),
 				esc_attr__( 'PayPal - The safer, easier way to pay online', 'wpsc' )
 			);
+
 			$button_html = apply_filters( 'wpsc_buy_now_button_html', $button_html, $product_id );
 ?>
-			<form class="<?php echo esc_attr( sanitize_html_class($classes, '') ); ?>" id="buy-now-product_<?php echo $product_id; ?>" target="paypal" action="<?php echo esc_url( home_url() ); ?>" method="post">
+			<form class="<?php echo esc_attr( sanitize_html_class( $classes, '' ) ); ?>" id="buy-now-product_<?php echo $product_id; ?>" target="paypal" action="<?php echo esc_url( home_url() ); ?>" method="post">
 				<input type="hidden" name="wpsc_buy_now_callback" value="1" />
 				<input type="hidden" name="product_id" value="<?php echo esc_attr( $product_id ); ?>" />
 <?php
-				if( $has_variants ) :
+				if ( $has_variants ) :
 					// grab the variation form fields here
 					$wpsc_variations = new wpsc_variations( $product_id );
 					while ( wpsc_have_variation_groups() ) : wpsc_the_variation_group();
