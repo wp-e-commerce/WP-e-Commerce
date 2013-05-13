@@ -179,6 +179,9 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 	public function display() {
 		?>
 			<div class='product_and_button_settings'>
+
+			<?php $this->theme_metabox(); ?>
+
 			<h3 class="form_group"><?php esc_html_e( 'Button Settings', 'wpsc' ); ?></h3>
 			<table class='wpsc_options form-table'>
 				<tr>
@@ -375,9 +378,6 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 			</table>
 		</div>
 
-		<?php $this->theme_metabox(); ?>
-
-			<div style='clear:both;'></div>
 
 			<h3 class="form_group"><?php esc_html_e( 'Product Page Settings', 'wpsc' ); ?></h3>
 			<table class='wpsc_options form-table'>
@@ -606,7 +606,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 								break;
 						}
 					?>
-								<input type='radio' value='0' name='wpsc_options[catsprods_display_type]' id='catsprods_display_type1' <?php echo $catsprods_display_type1; ?> /> <label for='catsprods_display_type1'><?php _e( 'Product Groups Only (All products displayed)', 'wpsc' ); ?></label> &nbsp;
+								<input type='radio' value='0' name='wpsc_options[catsprods_display_type]' id='catsprods_display_type1' <?php echo $catsprods_display_type1; ?> /> <label for='catsprods_display_type1'><?php _e( 'Product Groups Only (All products displayed)', 'wpsc' ); ?></label><br/>
 								<input type='radio' value='1' name='wpsc_options[catsprods_display_type]' id='catsprods_display_type2' <?php echo $catsprods_display_type2; ?> /> <label for='catsprods_display_type2'><?php _e( 'Sliding Product Groups (1 product per page)', 'wpsc' ); ?></label>
 							</td>
 						</tr>
