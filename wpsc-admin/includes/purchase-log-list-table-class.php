@@ -64,8 +64,10 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		$joins = array();
 		$where = array( '1 = 1' );
 
-		if ( isset( $_REQUEST['post'] ) )
-			$where[] = 'p.id IN (' . implode( ', ', $_REQUEST['post'] ) . ')';
+		if ( isset( $_REQUEST['post'] ) ) {
+			$posts   = array_map( 'absint', $_REQUEST['post'] );
+			$where[] = 'p.id IN (' . implode( ', ', $posts ) . ')';
+		}
 
 		$i = 1;
 		$selects = array( 'p.id', 'p.totalprice AS amount', 'p.processed AS status', 'p.track_id', 'p.date' );
@@ -125,19 +127,19 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		}
 
 		$selects     = apply_filters( 'wpsc_manage_purchase_logs_selects', implode( ', ', $selects ) );
-		$this->joins = apply_filters( 'wpsc_manage_purchase_logs_joins', implode( ' ', $joins ) );
-		$this->where = apply_filters( 'wpsc_manage_purchase_logs_where', implode( ' AND ', $where ) );
-		
+		$this->joins = apply_filters( 'wpsc_manage_purchase_logs_joins'  , implode( ' ', $joins ) );
+		$this->where = apply_filters( 'wpsc_manage_purchase_logs_where'  , implode( ' AND ', $where ) );
+
 		$limit = ( $this->per_page !== 0 ) ? "LIMIT {$offset}, {$this->per_page}" : '';
 
 		$orderby = empty( $_REQUEST['orderby'] ) ? 'p.id' : 'p.' . $_REQUEST['orderby'];
-		$order = empty( $_REQUEST['order'] ) ? 'DESC' : $_REQUEST['order'];
+		$order   = empty( $_REQUEST['order'] ) ? 'DESC' : $_REQUEST['order'];
 
 		$orderby = esc_sql( apply_filters( 'wpsc_manage_purchase_logs_orderby', $orderby ) );
-		$order = esc_sql( $order );
+		$order   = esc_sql( $order );
 
 		$submitted_data_log = WPSC_TABLE_SUBMITTED_FORM_DATA;
-		$purchase_log_sql = apply_filters( 'wpsc_manage_purchase_logs_sql', "
+		$purchase_log_sql   = apply_filters( 'wpsc_manage_purchase_logs_sql', "
 			SELECT SQL_CALC_FOUND_ROWS {$selects}
 			FROM " . WPSC_TABLE_PURCHASE_LOGS . " AS p
 			{$this->joins}

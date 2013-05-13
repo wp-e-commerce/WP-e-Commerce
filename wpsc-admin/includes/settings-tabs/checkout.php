@@ -12,13 +12,13 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 	public function __construct() {
 		global $wpdb;
 
-		$this->require_register = get_option( 'require_register', 0 );
+		$this->require_register         = get_option( 'require_register', 0 );
 		$this->shipping_same_as_billing = get_option( 'shippingsameasbilling', 0 );
-		$this->force_ssl = get_option( 'wpsc_force_ssl', 0 );
-		$this->checkout_sets = get_option( 'wpsc_checkout_form_sets' );
-		$this->current_checkout_set = empty( $_GET['checkout_set'] ) ? 0 : (int) $_GET['checkout_set'];
-		$this->field_types = get_option( 'wpsc_checkout_form_fields' );
-		$this->user_field_types = array('text','textarea','heading','select','radio','checkbox');
+		$this->force_ssl                = get_option( 'wpsc_force_ssl', 0 );
+		$this->checkout_sets            = get_option( 'wpsc_checkout_form_sets' );
+		$this->current_checkout_set     = empty( $_GET['checkout_set'] ) ? 0 : (int) $_GET['checkout_set'];
+		$this->field_types              = get_option( 'wpsc_checkout_form_fields' );
+		$this->user_field_types         = array('text','textarea','heading','select','radio','checkbox');
 
 		if ( ! isset( $this->checkout_sets[$this->current_checkout_set] ) ) {
 			wp_redirect( remove_query_arg( 'checkout_set' ) );
@@ -131,7 +131,8 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 						$value = $_POST['form_options'][$field_id]['value'][$key];
 						if ( $label === '' && $value === '')
 							continue;
-						$options[$label] = $value;
+						$label           = sanitize_text_field( $label );
+						$options[$label] = sanitize_text_field( $value );
 					}
 					$data['options'] = serialize( $options );
 					$data_format[] = '%s';
