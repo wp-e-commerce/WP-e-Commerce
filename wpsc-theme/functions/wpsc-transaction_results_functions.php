@@ -103,8 +103,7 @@ function wpsc_transaction_theme() {
 			case 'wpsc_merchant_paymentexpress' :
                // Payment Express sends back there own session id, which is temporarily stored in the Auth field
                // so just swapping that over here
-               $query = "SELECT `sessionid` FROM  `" .WPSC_TABLE_PURCHASE_LOGS. "` WHERE  `authcode` ='" . $sessionid . "'";
-               $result = $wpdb->get_var($query);
+               $result = $wpdb->get_var( $wpdb->prepare( "SELECT `sessionid` FROM  `" .WPSC_TABLE_PURCHASE_LOGS. "` WHERE `authcode` = %s", $sessionid ) );
                if($result != null){
                    // just in case they are using an older version old gold cart (pre 2.9.5)
                    $sessionid = $result;
