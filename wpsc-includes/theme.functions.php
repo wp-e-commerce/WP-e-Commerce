@@ -565,7 +565,6 @@ function wpsc_enqueue_user_script_and_css() {
 
 		wp_enqueue_script( 'jQuery' );
 		wp_enqueue_script( 'wp-e-commerce',               WPSC_CORE_JS_URL	. '/wp-e-commerce.js',                 array( 'jquery' ), $version_identifier );
-		wp_enqueue_script( 'infieldlabel',               WPSC_CORE_JS_URL	. '/jquery.infieldlabel.min.js',                 array( 'jquery' ), $version_identifier );
 		wp_enqueue_script( 'wp-e-commerce-dynamic', home_url( '/index.php?wpsc_user_dynamic_js=true', $scheme ), false,             $version_identifier );
 
 		wp_localize_script( 'wp-e-commerce-dynamic', 'wpsc_ajax', array(
