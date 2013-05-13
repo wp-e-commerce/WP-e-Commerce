@@ -113,7 +113,7 @@ tr.checkout-placeholder td {
 }
 
 #options_presentation{
-	min-width:850px;
+	margin-right: 370px;
 }
 
 table.wpsc-edit-module-options tr td {
@@ -236,21 +236,19 @@ table#form_field_table tr th{ padding-left: 0px; padding-right: 0px;  }
 }
 
 h3.form_group {
-	clear: both;
+	clear: left;
 }
 h3.form_group a{
 	color: #000;
 }
 div.product_and_button_settings {
-	width: 450px;
-	float: left;
-
 }
 
 div#themes_and_appearance {
 	border: 1px solid #DFDFDF;
 	width: 360px;
-	float: left;
+	position: absolute;
+	right: 10px;
 }
 
 div#themes_and_appearance p {
