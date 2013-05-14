@@ -402,14 +402,10 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
 function wpsc_delete_purchlog( $purchlog_id='' ) {
 	global $wpdb;
 	$deleted = 0;
+
 	if ( $purchlog_id == '' ) {
 		$purchlog_id = absint( $_GET['purchlog_id'] );
 		check_admin_referer( 'delete_purchlog_' . $purchlog_id );
-	}
-
-	if ( is_numeric( $purchlog_id ) ) {
-		$delete_log_form_sql = "SELECT * FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid`='$purchlog_id'";
-		$cart_content = $wpdb->get_results( $delete_log_form_sql, ARRAY_A );
 	}
 
 	$purchlog_status = $wpdb->get_var( $wpdb->prepare( "SELECT `processed` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id`= %d", $purchlog_id ) );
