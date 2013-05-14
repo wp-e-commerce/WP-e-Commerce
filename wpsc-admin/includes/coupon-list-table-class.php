@@ -403,16 +403,10 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 		$offset   = ( $page - 1 ) * $this->per_page;
 
 		$status   = isset( $_GET['status'] ) ? absint( $_GET['status'] ) : false;
+		$where    = $status !== false ? "WHERE active = $status" : '';
 
-		if( $status !== false )
-			$where    = "WHERE active = $status";
-		else
-			$where    = '';
-
-		$order 	  = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
-
+		$order 	  = strtoupper( $_GET['order'] ) === 'ASC' ? 'ASC' : 'DESC';
 		$limit    = " LIMIT $offset,$per_page;";
-
 		$coupons  = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_COUPON_CODES . "` {$where} ORDER BY id {$order} {$limit} ", ARRAY_A );
 
 		if ( $coupons ) {
