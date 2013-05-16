@@ -91,7 +91,7 @@ function _wpsc_action_merchant_v2_submit_checkout( $gateway, $purchase_log ) {
 		$purchase_log->set( 'gateway', $gateway_used );
 		$purchase_log->save();
 		$current_gateway_data['function']( $separator, $purchase_log->get( 'sessionid' ) );
-	} elseif ( ($current_gateway_data['internalname'] == 'google') && ($current_gateway_data['internalname'] == $submitted_gateway) ) {
+	} elseif ( $current_gateway_data['internalname'] == 'google' ) {
 		$gateway_used = $current_gateway_data['internalname'];
 		$purchase_log->set( 'gateway', $gateway_used );
 		wpsc_update_customer_meta( 'google_checkout', 'google' );
