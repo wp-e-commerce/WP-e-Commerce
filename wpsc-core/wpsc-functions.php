@@ -724,7 +724,7 @@ function wpsc_start_the_query() {
 		if ( count( $wpsc_query_vars ) <= 1 ) {
 			$post_type_object = get_post_type_object( 'wpsc-product' );
 			$wpsc_query_vars = array(
-				'post_status' => current_user_can( $post_type_object->cap->edit_posts ) ? 'private,draft,pending,publish' : 'publish',
+				'post_status' => apply_filters( 'wpsc_product_display_status', array( 'publish' ) ),
 				'post_parent' => 0,
 				'order'       => apply_filters( 'wpsc_product_order', get_option( 'wpsc_product_order', 'ASC' ) )
 			);
@@ -1182,8 +1182,7 @@ class wpsc_products_by_category {
 			}
 
 			$post_type_object = get_post_type_object( 'wpsc-product' );
-			$permitted_post_statuses = current_user_can( $post_type_object->cap->edit_posts ) ? "'private', 'draft', 'pending', 'publish'" : "'publish'";
-
+			$permitted_post_statuses = "'" . implode( "', '", $query->query_vars['post_status'] ) . "'";
 
 			$whichcat .= " AND $wpdb->posts.post_status IN ($permitted_post_statuses) ";
 			$groupby = "{$wpdb->posts}.ID";
