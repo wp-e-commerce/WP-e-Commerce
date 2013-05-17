@@ -2103,7 +2103,11 @@ $wpdb->insert(
       $cart_id = $wpdb->get_var( "SELECT " . $wpdb->insert_id . " AS `id` FROM `".WPSC_TABLE_CART_CONTENTS."` LIMIT 1");
 
       wpsc_update_cartmeta($cart_id, 'sku', $this->sku);
-
+      
+      if ( !empty( $this->item_meta) ) {
+      	wpsc_update_cartmeta($cart_id, 'item_meta', $this->item_meta );
+      }
+      
        $downloads = get_option('max_downloads');
       if($this->is_downloadable == true) {
 
@@ -2147,6 +2151,7 @@ $wpdb->insert(
 
       }
 
+      do_action('wpsc_save_cart_item', $cart_id, $this->product_id);
       do_action('wpsc_save_cart_item', $cart_id, $this->product_id);
    }
 
