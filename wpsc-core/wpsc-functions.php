@@ -1460,6 +1460,11 @@ function wpsc_checkout_template_fallback() {
  */
 function wpsc_get_page_post_names() {
 	$wpsc_page['products']            = basename( get_option( 'product_list_url' ) );
+	if ( empty($wpsc_page['products']) || false !== strpos($wpsc_page['products'], '?page_id=') ) {
+		// Products page either doesn't exist, or is a draft
+		// Default to /product/xyz permalinks for products
+		$wpsc_page['products'] = 'product';
+	}
 	$wpsc_page['checkout']            = basename( get_option( 'checkout_url' ) );
 	$wpsc_page['transaction_results'] = basename( get_option( 'transact_url' ) );
 	$wpsc_page['userlog']             = basename( get_option( 'user_account_url' ) );
