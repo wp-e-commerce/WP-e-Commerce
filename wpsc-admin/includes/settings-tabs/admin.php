@@ -8,7 +8,7 @@ class WPSC_Settings_Tab_Admin extends WPSC_Settings_Tab {
 				<tr>
 					<th scope="row"><?php esc_html_e( 'Max downloads per file', 'wpsc' ); ?>:	</th>
 					<td>
-						<input type='text' size='10' value='<?php echo esc_attr( get_option('max_downloads') ); ?>' name='wpsc_options[max_downloads]' />
+						<input type="number" size="10" value="<?php echo esc_attr( get_option('max_downloads') ); ?>" name="wpsc_options[max_downloads]" />
 					</td>
 				</tr>
 				<?php
