@@ -1,0 +1,198 @@
+<?php 
+
+//
+// THINGAMABOB meta functions
+//
+
+/**
+ * Add meta data field to a THINGAMABOB.
+ *
+ * This meta data function mirrors a corresponding wordpress post meta function.
+ *
+ * @since 3.9.0
+ * @uses $wpdb
+ *
+ * @param int $THINGAMABOB_id THINGAMABOB ID.
+ * @param string $meta_key Metadata name.
+ * @param mixed $meta_value Metadata value.
+ * @param bool $unique Optional, default is false. Whether the same key should not be added.
+ * @return bool False for failure. True for success.
+ */
+function add_THINGAMABOB_meta($THINGAMABOB_id, $meta_key, $meta_value, $unique = false) {
+	return add_metadata('THINGAMABOB', $THINGAMABOB_id, $meta_key, $meta_value, $unique);
+}
+
+/**
+ * Remove metadata matching criteria from a THINGAMABOB.
+ *
+ * You can match based on the key, or key and value. Removing based on key and
+ * value, will keep from removing duplicate metadata with the same key. It also
+ * allows removing all metadata matching key, if needed.
+ 
+ * This meta data function mirrors a corresponding wordpress post meta function.
+ *
+ * @since 3.9.0
+ * @uses $wpdb
+ *
+ * @param int $THINGAMABOB_id THINGAMABOB ID
+ * @param string $meta_key Metadata name.
+ * @param mixed $meta_value Optional. Metadata value.
+ * @return bool False for failure. True for success.
+ */
+function delete_THINGAMABOB_meta($THINGAMABOB_id, $meta_key, $meta_value = '') {
+	return delete_metadata('THINGAMABOB', $THINGAMABOB_id, $meta_key, $meta_value);
+}
+
+/**
+ * Retrieve THINGAMABOB meta field for a THINGAMABOB.
+ *
+ * @since 3.9.0
+ * @uses $wpdb
+ * @link http://codex.wordpress.org/Function_Reference/get_THINGAMABOB_meta
+ *
+ * @param int $THINGAMABOB_id THINGAMABOB ID.
+ * @param string $key Optional. The meta key to retrieve. By default, returns data for all keys.
+ * @param bool $single Whether to return a single value.
+ * @return mixed Will be an array if $single is false. Will be value of meta data field if $single
+ *  is true.
+ */
+function get_THINGAMABOB_meta($THINGAMABOB_id, $key = '', $single = false) {
+	return get_metadata('THINGAMABOB', $THINGAMABOB_id, $key, $single);
+}
+
+/**
+ *  Determine if a meta key is set for a given THINGAMABOB.
+ *
+ * @since 3.9.0
+ * @uses $wpdb
+ * @link http://codex.wordpress.org/Function_Reference/get_THINGAMABOB_meta
+ *
+ * @param int $THINGAMABOB_id THINGAMABOB ID.
+ * @param string $key Optional. The meta key to retrieve. By default, returns data for all keys.
+* @return boolean true of the key is set, false if not.
+ *  is true.
+ */
+function THINGAMABOB_meta_exists($THINGAMABOB_id, $meta_key ) {
+	return metadata_exists( 'THINGAMABOB', $THINGAMABOB_id, $meta_key );
+
+}
+
+
+
+
+/**
+ * Update THINGAMABOB meta field based on THINGAMABOB ID.
+ *
+ * Use the $prev_value parameter to differentiate between meta fields with the
+ * same key and THINGAMABOB ID.
+ *
+ * If the meta field for the THINGAMABOB does not exist, it will be added.
+
+ * This meta data function mirrors a corresponding wordpress post meta function.
+ *
+ * @since 3.9.0
+ * @uses $wpdb
+ *
+ * @param int $THINGAMABOB_id $THINGAMABOB ID.
+ * @param string $meta_key Metadata key.
+ * @param mixed $meta_value Metadata value.
+ * @param mixed $prev_value Optional. Previous value to check before removing.
+ * @return bool False on failure, true if success.
+ */
+function update_THINGAMABOB_meta($THINGAMABOB_id, $meta_key, $meta_value, $prev_value = '') {
+	return update_metadata('THINGAMABOB', $THINGAMABOB_id, $meta_key, $meta_value, $prev_value);
+}
+
+/**
+ * Delete everything from THINGAMABOB meta matching meta key.
+ * This meta data function mirrors a corresponding wordpress post meta function.
+ * @since 3.9.0
+ * @uses $wpdb
+ *
+ * @param string $THINGAMABOB_meta_key Key to search for when deleting.
+ * @return bool Whether the THINGAMABOB meta key was deleted from the database
+ */
+function delete_THINGAMABOB_meta_by_key($THINGAMABOB_meta_key) {
+	return delete_metadata( 'THINGAMABOB', null, $THINGAMABOB_meta_key, '', true );
+}
+
+/**
+ * Retrieve THINGAMABOB meta fields, based on THINGAMABOB ID.
+ *
+ * The THINGAMABOB meta fields are retrieved from the cache where possible,
+ * so the function is optimized to be called more than once.
+ * This meta data function mirrors a corresponding wordpress post meta function.
+ *
+ * @since 3.9.0
+ *
+ * @param int $THINGAMABOB_id THINGAMABOB ID.
+ * @return array
+ */
+function get_THINGAMABOB_custom( $THINGAMABOB_id = 0 ) {
+	$THINGAMABOB_id = absint( $THINGAMABOB_id );
+	if ( ! $THINGAMABOB_id )
+		$THINGAMABOB_id = get_the_ID();
+
+	return get_THINGAMABOB_meta( $THINGAMABOB_id );
+}
+
+/**
+ * Retrieve meta field names for a THINGAMABOB.
+ *
+ * If there are no meta fields, then nothing (null) will be returned.
+ * This meta data function mirrors a corresponding wordpress post meta function.
+ *
+ * @since 3.9.0
+ *
+ * @param int $THINGAMABOB_id THINGAMABOB ID
+ * @return array|null Either array of the keys, or null if keys could not be retrieved.
+ */
+function get_THINGAMABOB_custom_keys( $THINGAMABOB_id = 0 ) {
+	$custom = get_THINGAMABOB_custom( $THINGAMABOB_id );
+
+	if ( !is_array($custom) )
+		return;
+
+	if ( $keys = array_keys($custom) )
+		return $keys;
+}
+
+/**
+ * Retrieve values for a custom THINGAMABOB field.
+ *
+ * The parameters must not be considered optional. All of the THINGAMABOB meta fields
+ * will be retrieved and only the meta field key values returned.
+ * This meta data function mirrors a corresponding wordpress post meta function.
+ *
+ * @since 3.9.0
+ *
+ * @param string $key Meta field key.
+ * @param int $THINGAMABOB_id THINGAMABOB ID
+ * @return array Meta field values.
+ */
+function get_THINGAMABOB_custom_values( $key = '', $THINGAMABOB_id = 0 ) {
+	if ( !$key )
+		return null;
+
+	$custom = get_THINGAMABOB_custom($THINGAMABOB_id);
+
+	return isset($custom[$key]) ? $custom[$key] : null;
+}
+
+
+
+/**
+ * Get meta timestamp by meta ID
+ *
+ * @since 3.9.0
+ *
+ * @param string $meta_type Type of object metadata is for (e.g., variation. cart, etc)
+ 	* @param int $meta_id ID for a specific meta row
+ * @return object Meta object or false.
+ */
+function get_THINGAMABOB_meta_timestamp( $THINGAMABOB_id, $meta_key  ) {
+	return wpsc_get_metadata_timestamp( 'THINGAMABOB', $THINGAMABOB_id, $meta_key );
+}
+
+
+
