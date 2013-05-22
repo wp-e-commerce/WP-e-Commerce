@@ -317,9 +317,8 @@ function wpsc_admin_category_forms_edit() {
 			<td>
 				<?php
 				$category_image = wpsc_category_image( $category['term_id'] );
-				if ( $category_image ) {
-					echo '<p><img src=' . esc_attr( $category_image ) . ' alt="' . esc_attr( $category['name'] ) . '" title="' . esc_attr( $category['name'] ) . '" class="wpsc_category_image" style="max-width:256px;max-height:256px;min-width:128px;" /></p>';
-				}
+				if ( $category_image )
+					echo '<p><img src=' . esc_url( $category_image ) . ' alt="' . esc_attr( $category['name'] ) . '" title="' . esc_attr( $category['name'] ) . '" class="wpsc_category_image" /></p>';
 				?>
 				<input type='file' name='image' value='' /><br />
 				<label><input type='checkbox' name='deleteimage' class="wpsc_cat_box" value='1' /><?php esc_html_e( 'Delete Image', 'wpsc' ); ?></label><br/>
