@@ -20,8 +20,8 @@ function wpsc_register_custom_meta_tables () {
 		$wpdb_property = wpsc_meta_table_property( $meta_object_type );
 		$wpdb->$wpdb_property = $table_name;
 
-		if ( !wpsc_meta_table_exists( $meta_object_type ) ) {
-			/* Vecuase a filter can override the list of object_types we 
+		if ( ! wpsc_meta_table_exists( $meta_object_type ) ) {
+			/* Becuase a filter can override the list of object_types we 
 			 * can keep meta for, we double check to be sure that the
 			 * functions required to access that meta exist before doing
 			 * anything iin the database
@@ -32,12 +32,10 @@ function wpsc_register_custom_meta_tables () {
 			}
 		}
 	}
-	$end = microtime(true);
-
 }
 
-add_action( 'init', 'wpsc_register_custom_meta_tables', 1 );
-add_action( 'switch_blog', 'wpsc_register_custom_meta_tables' );
+add_action( 'init' , 'wpsc_register_custom_meta_tables' , 1 );
+add_action( 'switch_blog' , 'wpsc_register_custom_meta_tables' );
 
 
 /**
@@ -52,8 +50,8 @@ add_action( 'switch_blog', 'wpsc_register_custom_meta_tables' );
  * @return array object types that have custom meta. 
  */
 function wpsc_custom_meta_object_types () {
-	$meta_object_types = array ( 'cart_item', 'customer', 'category', 'purchase_log', 'variation' );
-	$meta_object_types = apply_filters('wpsc_custom_meta_object_types', $meta_object_types);
+	$meta_object_types = array ( 'cart_item' , 'customer' , 'category' , 'purchase_log' , 'variation' );
+	$meta_object_types = apply_filters( 'wpsc_custom_meta_object_types' , $meta_object_types );
 	return $meta_object_types;
 }
 
@@ -100,7 +98,7 @@ function wpsc_meta_table_exists( $meta_object_type ) {
 
 	$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '%s' AND table_name = '%s';", $wpdb->dbname, wpsc_meta_table_name($meta_object_type) ) );
 
-	return intval($count) == 1;
+	return intval( $count ) == 1;
 }
 
 /**
@@ -118,7 +116,7 @@ function wpsc_create_meta_table( $meta_object_type ) {
 	
 	$sql = "CREATE TABLE IF NOT EXISTS `".wpsc_meta_table_name($meta_object_type)."` ("
 				."`meta_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,"
-				."`".$meta_object_type."_id` bigint(20) unsigned NOT NULL DEFAULT '0',"
+				."`".$meta_object_type."_id` bigint(20) unsigned NOT NULL DEFAULT '0' ,"
 				."`meta_key` varchar(255) DEFAULT NULL,"
 				."`meta_value` longtext,"
 				."`meta_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,"
@@ -155,7 +153,7 @@ function wpsc_initialize_meta_table( $meta_object_type ) {
 	$old_meta_rows = $wpdb->get_results( $wpdb->prepare($sql, 'wpsc_'.$meta_object_type ) );
 	
 	foreach ( $old_meta_rows as $old_meta_row ) {
-		add_metadata($meta_object_type, $old_meta_row->object_id, $old_meta_row->meta_key, $old_meta_row->meta_value, false);
+		add_metadata( $meta_object_type, $old_meta_row->object_id, $old_meta_row->meta_key, $old_meta_row->meta_value, false );
 	}	
 }
 
@@ -173,10 +171,10 @@ function wpsc_get_metadata_timestamp( $meta_object_type, $meta_id, $meta_key ) {
 	
 	$meta_id = intval( $meta_id );
 
-	if ( !empty($meta_object_type) && !empty($meta_id)  && !empty($meta_key) ) {	
+	if ( ! empty($meta_object_type) && !empty($meta_id)  && !empty($meta_key) ) {	
 		$wpdb_property = $meta_object_type.'meta';
 	
-		if ( !empty( $wpdb->$wpdb_property)) {
+		if ( ! empty( $wpdb->$wpdb_property)) {
 			$sql =  "SELECT meta_timestamp FROM ".wpsc_meta_table_name($meta_object_type)." WHERE meta_id = %d ORDER BY meta_timestamp DESC LIMIT 1";
 			$timestamp = $wpdb->get_row( $wpdb->prepare($sql, $meta_id ) );
 		}
@@ -215,7 +213,7 @@ function wpsc_check_meta_access_functions($meta_object_type) {
 			'?>'.PHP_EOL.PHP_EOL;
 		
 		file_put_contents($meta_functions_file, $msg);
-		$new_code = str_replace( 'THINGAMABOB', $meta_object_type, $template );
+		$new_code = str_replace( '{$OBJECT_TYPE}' , $meta_object_type, $template );
 		file_put_contents($meta_functions_file, $new_code, FILE_APPEND);
 		chmod ( $meta_functions_file, 555 );
 		$meta_access_functions_ok = file_exists( $meta_functions_file ) ;
@@ -234,7 +232,7 @@ function wpsc_check_meta_access_functions($meta_object_type) {
  * @since 3.9.0
  *
  * @param string $meta_object_type Type of object metadata is for (e.g., variation. cart, etc)
- 	* @return string Name of the custom meta property
+ * @return string Name of the custom meta property
  */
 function wpsc_meta_functions_file ( $meta_object_type ) {
 	$meta_functions_file = dirname( __FILE__ ) .'\wpsc_'.$meta_object_type.'_meta.php';

@@ -2,7 +2,7 @@
  /* 
  * NOTICE: 
  * This file was automatically created, strongly suggest that it not be edited directly.
- * See the code in the file wpsc_custom_meta_init.php at line 213 for more details.
+ * See the code in the file wpsc_custom_meta_init.php at line 211 for more details.
  */
 ?>
 
@@ -18,7 +18,6 @@
  * This meta data function mirrors a corresponding wordpress post meta function.
  *
  * @since 3.9.0
- * @uses $wpdb
  *
  * @param int $variation_id variation ID.
  * @param string $meta_key Metadata name.
@@ -26,8 +25,8 @@
  * @param bool $unique Optional, default is false. Whether the same key should not be added.
  * @return bool False for failure. True for success.
  */
-function add_variation_meta($variation_id, $meta_key, $meta_value, $unique = false) {
-	return add_metadata('variation', $variation_id, $meta_key, $meta_value, $unique);
+function add_variation_meta( $variation_id , $meta_key , $meta_value , $unique = false ) {
+	return add_metadata( 'variation' ,  $variation_id, $meta_key , $meta_value, $unique );
 }
 
 /**
@@ -40,23 +39,20 @@ function add_variation_meta($variation_id, $meta_key, $meta_value, $unique = fal
  * This meta data function mirrors a corresponding wordpress post meta function.
  *
  * @since 3.9.0
- * @uses $wpdb
  *
  * @param int $variation_id variation ID
  * @param string $meta_key Metadata name.
  * @param mixed $meta_value Optional. Metadata value.
  * @return bool False for failure. True for success.
  */
-function delete_variation_meta($variation_id, $meta_key, $meta_value = '') {
-	return delete_metadata('variation', $variation_id, $meta_key, $meta_value);
+function delete_variation_meta( $variation_id , $meta_key , $meta_value = '' ) {
+	return delete_metadata( 'variation' ,  $variation_id , $meta_key , $meta_value );
 }
 
 /**
  * Retrieve variation meta field for a variation.
  *
  * @since 3.9.0
- * @uses $wpdb
- * @link http://codex.wordpress.org/Function_Reference/get_variation_meta
  *
  * @param int $variation_id variation ID.
  * @param string $key Optional. The meta key to retrieve. By default, returns data for all keys.
@@ -64,29 +60,23 @@ function delete_variation_meta($variation_id, $meta_key, $meta_value = '') {
  * @return mixed Will be an array if $single is false. Will be value of meta data field if $single
  *  is true.
  */
-function get_variation_meta($variation_id, $key = '', $single = false) {
-	return get_metadata('variation', $variation_id, $key, $single);
+function get_variation_meta( $variation_id , $key = '' , $single = false ) {
+	return get_metadata( 'variation' , $variation_id , $key, $single );
 }
 
 /**
  *  Determine if a meta key is set for a given variation.
  *
  * @since 3.9.0
- * @uses $wpdb
- * @link http://codex.wordpress.org/Function_Reference/get_variation_meta
  *
  * @param int $variation_id variation ID.
  * @param string $key Optional. The meta key to retrieve. By default, returns data for all keys.
 * @return boolean true of the key is set, false if not.
  *  is true.
  */
-function variation_meta_exists($variation_id, $meta_key ) {
-	return metadata_exists( 'variation', $variation_id, $meta_key );
-
+function variation_meta_exists( $variation_id , $meta_key ) {
+	return metadata_exists( 'variation' , $variation_id , $meta_key );
 }
-
-
-
 
 /**
  * Update variation meta field based on variation ID.
@@ -99,7 +89,6 @@ function variation_meta_exists($variation_id, $meta_key ) {
  * This meta data function mirrors a corresponding wordpress post meta function.
  *
  * @since 3.9.0
- * @uses $wpdb
  *
  * @param int $variation_id $variation ID.
  * @param string $meta_key Metadata key.
@@ -107,21 +96,20 @@ function variation_meta_exists($variation_id, $meta_key ) {
  * @param mixed $prev_value Optional. Previous value to check before removing.
  * @return bool False on failure, true if success.
  */
-function update_variation_meta($variation_id, $meta_key, $meta_value, $prev_value = '') {
-	return update_metadata('variation', $variation_id, $meta_key, $meta_value, $prev_value);
+function update_variation_meta( $variation_id , $meta_key , $meta_value , $prev_value = '' ) {
+	return update_metadata( 'variation' , $variation_id , $meta_key , $meta_value , $prev_value );
 }
 
 /**
  * Delete everything from variation meta matching meta key.
  * This meta data function mirrors a corresponding wordpress post meta function.
  * @since 3.9.0
- * @uses $wpdb
  *
  * @param string $variation_meta_key Key to search for when deleting.
  * @return bool Whether the variation meta key was deleted from the database
  */
-function delete_variation_meta_by_key($variation_meta_key) {
-	return delete_metadata( 'variation', null, $variation_meta_key, '', true );
+function delete_variation_meta_by_key( $variation_meta_key ) {
+	return delete_metadata( 'variation' , null , $variation_meta_key , '' , true );
 }
 
 /**
@@ -138,9 +126,6 @@ function delete_variation_meta_by_key($variation_meta_key) {
  */
 function get_variation_custom( $variation_id = 0 ) {
 	$variation_id = absint( $variation_id );
-	if ( ! $variation_id )
-		$variation_id = get_the_ID();
-
 	return get_variation_meta( $variation_id );
 }
 
@@ -158,10 +143,10 @@ function get_variation_custom( $variation_id = 0 ) {
 function get_variation_custom_keys( $variation_id = 0 ) {
 	$custom = get_variation_custom( $variation_id );
 
-	if ( !is_array($custom) )
+	if ( !is_array( $custom ) )
 		return;
 
-	if ( $keys = array_keys($custom) )
+	if ( $keys = array_keys( $custom ) )
 		return $keys;
 }
 
@@ -182,9 +167,9 @@ function get_variation_custom_values( $key = '', $variation_id = 0 ) {
 	if ( !$key )
 		return null;
 
-	$custom = get_variation_custom($variation_id);
+	$custom = get_variation_custom( $variation_id );
 
-	return isset($custom[$key]) ? $custom[$key] : null;
+	return isset( $custom[$key] ) ? $custom[$key] : null;
 }
 
 
