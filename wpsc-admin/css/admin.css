@@ -2009,3 +2009,9 @@ div.new_layer,
 div#table_rate {
 	display:none;
 }
+
+body.edit-tags-php img.wpsc_category_image {
+	max-width:256px;
+	max-height:256px;
+	min-width:128px;
+}
