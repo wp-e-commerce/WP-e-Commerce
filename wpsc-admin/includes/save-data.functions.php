@@ -165,25 +165,14 @@ function wpsc_admin_category_forms_add() {
 	</div>
 	<?php if ( function_exists( "getimagesize" ) ) : ?>
 		<div class="form-field">
-			<?php esc_html_e( 'Thumbnail&nbsp;Size', 'wpsc' ); ?>
-			<table>
-				<tr>
-					<th>
-						<label for="image_width"><?php esc_html_e( 'Width', 'wpsc' ); ?></label>
-					</th>
-					<td>
-						<input type='text' value='<?php if (isset($category['image_width'])) echo $category['image_width']; ?>' name='image_width' size='6' style="width: 6em;" />
-					</td>
-				</tr>
-				<tr>
-					<th>
-						<label for="image_height"><?php esc_html_e( 'Height', 'wpsc' ); ?></label>
-					</th>
-					<td>
-						<input type='text' value='<?php if (isset($category['image_height'])) echo $category['image_height']; ?>' name='image_height' size='6' style="width: 6em;" />
-					</td>
-				</tr>
-			</table>
+			<?php esc_html_e( 'Thumbnail Size', 'wpsc' ); ?>
+			<fieldset>
+				<legend class="screen-reader-text"><span><?php esc_html_e( 'Thumbnail Size', 'wpsc' ); ?></span></legend>
+				<label for="image_width" style="display:inline;"><?php esc_html_e( 'Width', 'wpsc' ); ?></label>
+				<input name="image_width" type="number" step="1" min="0" id="image_width" value="<?php if ( isset( $category['image_width'] ) ) echo esc_attr( $category['image_width'] ); ?>" class="small-text">
+				<label for="large_size_h" style="display:inline;"><?php esc_html_e( 'Height', 'wpsc' ); ?></label>
+				<input name="image_height" type="number" step="1" min="0" id="image_height" value="<?php if ( isset( $category['image_height'] ) ) echo esc_attr( $category['image_height'] ); ?>" class="small-text">
+			</fieldset>
 		</div>
 	<?php endif;?>
 
@@ -337,8 +326,13 @@ function wpsc_admin_category_forms_edit() {
 				<label for="image"><?php esc_html_e( 'Thumbnail Size', 'wpsc' ); ?></label>
 			</th>
 			<td>
-				<?php esc_html_e( 'Width', 'wpsc' ); ?> <input type='text' class="wpsc_cat_image_size" value='<?php if ( isset( $category['image_width'] ) ) echo $category['image_width']; ?>' name='image_width' size='6' />
-				<?php esc_html_e( 'Height', 'wpsc' ); ?> <input type='text' class="wpsc_cat_image_size" value='<?php if ( isset( $category['image_height'] ) ) echo $category['image_height']; ?>' name='image_height' size='6' /><br/>
+				<fieldset>
+					<legend class="screen-reader-text"><span><?php esc_html_e( 'Thumbnail Size', 'wpsc' ); ?></span></legend>
+					<label for="image_width"><?php esc_html_e( 'Width', 'wpsc' ); ?></label>
+					<input name="image_width" type="number" step="1" min="0" id="image_width" value="<?php if ( isset( $category['image_width'] ) ) echo esc_attr( $category['image_width'] ); ?>" class="small-text">
+					<label for="large_size_h"><?php esc_html_e( 'Height', 'wpsc' ); ?></label>
+					<input name="image_height" type="number" step="1" min="0" id="image_height" value="<?php if ( isset( $category['image_height'] ) ) echo esc_attr( $category['image_height'] ); ?>" class="small-text">
+				</fieldset>
 			</td>
 		</tr>
 	<?php endif; // 'getimagesize' condition ?>

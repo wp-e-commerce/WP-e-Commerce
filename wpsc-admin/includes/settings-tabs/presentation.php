@@ -470,7 +470,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 				<tr id="wpsc-grid-settings">
 					<th scope="row"><?php esc_html_e( 'Grid view settings:', 'wpsc' ) ?></th>
 					<td>
-						<input type='text'  name='wpsc_options[grid_number_per_row]' id='grid_number_per_row' size='1' value='<?php esc_attr_e( get_option( 'grid_number_per_row' ) ); ?>' />
+						<input type='number' name='wpsc_options[grid_number_per_row]' id='grid_number_per_row' size='2' value='<?php esc_attr_e( get_option( 'grid_number_per_row' ) ); ?>' />
 						<label for='grid_number_per_row'><?php esc_html_e( 'Products Per Row', 'wpsc' ); ?></label><br />
 
 						<input type='hidden' value='0' name='wpsc_options[show_images_only]' />
@@ -959,9 +959,12 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 					<tr>
 						<th scope="row"><?php esc_html_e( 'Default Product Thumbnail Size', 'wpsc' ); ?>:</th>
 						<td>
-							<?php esc_html_e( 'Width', 'wpsc' ); ?>:<input type='text' size='6' name='wpsc_options[product_image_width]' class='wpsc_prod_thumb_option' value='<?php esc_attr_e( get_option( 'product_image_width' ) ); ?>' />
-							<?php esc_html_e( 'Height', 'wpsc' ); ?>:<input type='text' size='6' name='wpsc_options[product_image_height]' class='wpsc_prod_thumb_option' value='<?php esc_attr_e( get_option( 'product_image_height' ) ); ?>' />
-
+							<fieldset>
+								<label for="image_width"><?php esc_html_e( 'Width', 'wpsc' ); ?></label>
+								<input name="wpsc_options[product_image_width]" type="number" step="1" min="0" id="product_image_width" value="<?php esc_attr_e( get_option( 'product_image_width' ) ); ?>" class="small-text">
+								<label for="large_size_h"><?php esc_html_e( 'Height', 'wpsc' ); ?></label>
+								<input name="wpsc_options[product_image_height]" type="number" step="1" min="0" id="product_image_height" value="<?php esc_attr_e( get_option( 'product_image_height' ) ); ?>" class="small-text">
+							</fieldset>
 						</td>
 					</tr>
 					<tr>
@@ -969,17 +972,25 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 							<?php esc_html_e( 'Default Product Category Thumbnail Size', 'wpsc' ); ?>:
 						</th>
 						<td>
-							 <?php esc_html_e( 'Width', 'wpsc' ); ?>:<input type='text' size='6' name='wpsc_options[category_image_width]' value='<?php esc_attr_e( get_option( 'category_image_width' ) ); ?>' />
-							<?php esc_html_e( 'Height', 'wpsc' ); ?>:<input type='text' size='6' name='wpsc_options[category_image_height]' value='<?php esc_attr_e( get_option( 'category_image_height' ) ); ?>' />
+							<fieldset>
+								<label for="image_width"><?php esc_html_e( 'Width', 'wpsc' ); ?></label>
+								<input name="wpsc_options[category_image_width]" type="number" step="1" min="0" id="category_image_width" value="<?php esc_attr_e( get_option( 'category_image_width' ) ); ?>" class="small-text">
+								<label for="large_size_h"><?php esc_html_e( 'Height', 'wpsc' ); ?></label>
+								<input name="wpsc_options[category_image_height]" type="number" step="1" min="0" id="category_image_height" value="<?php esc_attr_e( get_option( 'category_image_height' ) ); ?>" class="small-text">
+							</fieldset>
 						</td>
 					</tr>
 					<tr>
 						<th scope="row">
-					<?php esc_html_e( 'Single Product Image Size', 'wpsc' ); ?>:
+							<?php esc_html_e( 'Single Product Image Size', 'wpsc' ); ?>:
 						</th>
 						<td>
-						<?php esc_html_e( 'Width', 'wpsc' ); ?>:<input type='text' size='6' name='wpsc_options[single_view_image_width]' value='<?php esc_attr_e( get_option( 'single_view_image_width' ) ); ?>' />
-						<?php esc_html_e( 'Height', 'wpsc' ); ?>:<input type='text' size='6' name='wpsc_options[single_view_image_height]' value='<?php esc_attr_e( get_option( 'single_view_image_height' ) ); ?>' />
+							<fieldset>
+								<label for="image_width"><?php esc_html_e( 'Width', 'wpsc' ); ?></label>
+								<input name="wpsc_options[single_view_image_width]" type="number" step="1" min="0" id="single_view_image_width" value="<?php esc_attr_e( get_option( 'single_view_image_width' ) ); ?>" class="small-text">
+								<label for="large_size_h"><?php esc_html_e( 'Height', 'wpsc' ); ?></label>
+								<input name="wpsc_options[single_view_image_height]" type="number" step="1" min="0" id="single_view_image_height" value="<?php esc_attr_e( get_option( 'single_view_image_height' ) ); ?>" class="small-text">
+							</fieldset>
 						</td>
 					</tr>
 					<tr>
