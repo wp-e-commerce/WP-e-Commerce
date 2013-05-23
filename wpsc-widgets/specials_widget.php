@@ -209,7 +209,7 @@ function wpsc_specials( $args = null, $instance ) {
 	while ( $special_products->have_posts() ) :
 		$special_products->the_post();
 		?>
-		<h4><strong><a class="wpsc_product_title" href="<?php echo esc_attr( wpsc_product_url( wpsc_the_product_id(), false ) ); ?>"><?php echo esc_html( wpsc_the_product_title() ); ?></a></h4></strong>
+		<h4><strong><a class="wpsc_product_title" href="<?php echo esc_url( wpsc_product_url( wpsc_the_product_id(), false ) ); ?>"><?php echo esc_html( wpsc_the_product_title() ); ?></a></h4></strong>
 
 		<?php if ( $show_description ): ?>
 			<div class="wpsc-special-description">
@@ -224,9 +224,9 @@ function wpsc_specials( $args = null, $instance ) {
 			$height = get_option( 'product_image_height' );
 			if( $show_thumbnails ) :
 				if ( wpsc_the_product_thumbnail() ) : ?>
-					<a rel="<?php echo str_replace(array(" ", '"',"'", '&quot;','&#039;'), array("_", "", "", "",''), wpsc_the_product_title()); ?>" href="<?php echo wpsc_the_product_permalink(); ?>"><img class="product_image" id="product_image_<?php echo esc_attr( wpsc_the_product_id() ); ?>" alt="<?php echo esc_attr( wpsc_the_product_title() ); ?>" title="<?php echo esc_attr( wpsc_the_product_title() ); ?>" src="<?php echo esc_url( wpsc_the_product_thumbnail( $width, $height ) ); ?>"/></a>
+					<a rel="<?php echo str_replace(array(" ", '"',"'", '&quot;','&#039;'), array("_", "", "", "",''), wpsc_the_product_title()); ?>" href="<?php echo esc_url( wpsc_the_product_permalink() ); ?>"><img class="product_image" id="product_image_<?php echo esc_attr( wpsc_the_product_id() ); ?>" alt="<?php echo esc_attr( wpsc_the_product_title() ); ?>" title="<?php echo esc_attr( wpsc_the_product_title() ); ?>" src="<?php echo esc_url( wpsc_the_product_thumbnail( $width, $height ) ); ?>"/></a>
 				<?php else : ?>
-					<a href="<?php esc_attr( wpsc_the_product_permalink() ); ?>"><img class="no-image" id="product_image_<?php echo esc_attr( wpsc_the_product_id() ); ?>" alt="<?php echo esc_attr( wpsc_the_product_title() ); ?>" title="<?php echo esc_attr( wpsc_the_product_title() ); ?>" src="<?php echo WPSC_URL; ?>/wpsc-theme/wpsc-images/noimage.png" width="<?php echo esc_attr( $width ); ?>" height="<?php echo esc_attr( $height ); ?>" /></a>
+					<a href="<?php esc_url( wpsc_the_product_permalink() ); ?>"><img class="no-image" id="product_image_<?php echo esc_attr( wpsc_the_product_id() ); ?>" alt="<?php echo esc_attr( wpsc_the_product_title() ); ?>" title="<?php echo esc_attr( wpsc_the_product_title() ); ?>" src="<?php echo WPSC_URL . '/wpsc-theme/wpsc-images/noimage.png'; ?>" width="<?php echo esc_attr( $width ); ?>" height="<?php echo esc_attr( $height ); ?>" /></a>
 				<?php endif; ?>
 				<br />
 			<?php endif; // close show thumbnails ?>
