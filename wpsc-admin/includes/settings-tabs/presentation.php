@@ -959,7 +959,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 					<tr>
 						<th scope="row"><?php esc_html_e( 'Default Product Thumbnail Size', 'wpsc' ); ?>:</th>
 						<td>
-							<fieldset>
+							<fieldset class="wpsc-width-height-fields">
 								<label for="image_width"><?php esc_html_e( 'Width', 'wpsc' ); ?></label>
 								<input name="wpsc_options[product_image_width]" type="number" step="1" min="0" id="product_image_width" value="<?php esc_attr_e( get_option( 'product_image_width' ) ); ?>" class="small-text">
 								<label for="large_size_h"><?php esc_html_e( 'Height', 'wpsc' ); ?></label>
@@ -972,7 +972,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 							<?php esc_html_e( 'Default Product Category Thumbnail Size', 'wpsc' ); ?>:
 						</th>
 						<td>
-							<fieldset>
+							<fieldset class="wpsc-width-height-fields">
 								<label for="image_width"><?php esc_html_e( 'Width', 'wpsc' ); ?></label>
 								<input name="wpsc_options[category_image_width]" type="number" step="1" min="0" id="category_image_width" value="<?php esc_attr_e( get_option( 'category_image_width' ) ); ?>" class="small-text">
 								<label for="large_size_h"><?php esc_html_e( 'Height', 'wpsc' ); ?></label>
@@ -985,7 +985,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 							<?php esc_html_e( 'Single Product Image Size', 'wpsc' ); ?>:
 						</th>
 						<td>
-							<fieldset>
+							<fieldset class="wpsc-width-height-fields">
 								<label for="image_width"><?php esc_html_e( 'Width', 'wpsc' ); ?></label>
 								<input name="wpsc_options[single_view_image_width]" type="number" step="1" min="0" id="single_view_image_width" value="<?php esc_attr_e( get_option( 'single_view_image_width' ) ); ?>" class="small-text">
 								<label for="large_size_h"><?php esc_html_e( 'Height', 'wpsc' ); ?></label>
