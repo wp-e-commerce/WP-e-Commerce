@@ -561,7 +561,7 @@ function wpsc_display_products() {
 	$product_page_id = wpsc_get_the_post_id_by_shortcode('[productspage]');
 	//we have to display something, if we are not displaying categories, then we must display products
 	$output = true;
-	if ( wpsc_display_categories () && $post ) {
+	if ( wpsc_display_categories () && isset ( $post->ID ) ) {
 		if ( get_option( 'wpsc_default_category' ) == 'list' && $post->ID == $product_page_id )
 			$output = false;
 
