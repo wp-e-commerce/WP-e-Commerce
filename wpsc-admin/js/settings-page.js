@@ -309,6 +309,7 @@
 			wrapper.on( 'click', '.field-option-cell-wrapper .wpsc-button-minus', WPSC_Settings_Page.Checkout.event_delete_field_option);
 			wrapper.on( 'click', '#wpsc-delete-checkout-set', WPSC_Settings_Page.Checkout.event_delete_checkout_set);
 			wrapper.on( 'change', '#wpsc_form_set', WPSC_Settings_Page.Checkout.event_select_form_set);
+            wrapper.on( 'click', '.mandatorycol input[type="checkbox"]', WPSC_Settings_Page.Checkout.event_disabled_toggeled);
 			$('#wpsc-settings-form').on( 'submit', WPSC_Settings_Page.Checkout.event_form_submit);
 
 			wrapper.find('#wpsc_checkout_list').
@@ -555,6 +556,10 @@
 			WPSC_Settings_Page.unsaved_settings = true;
 			return false;
 		},
+
+        event_disabled_toggeled : function() {
+            alert('test');
+        },
 
 		/**
 		 * This hack is to make sure the dragged row has 100% width
