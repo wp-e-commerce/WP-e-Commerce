@@ -285,7 +285,7 @@ add_action( 'wpsc_manage_products_column_cats', '_wpsc_manage_products_column_ca
  */
 function _wpsc_manage_products_column_featured( $post, $post_id ) {
 	$featured_product_url = wp_nonce_url( "index.php?wpsc_admin_action=update_featured_product&amp;product_id=$post->ID", 'feature_product_' . $post->ID);
-	if ( in_array( $post->ID, (array) get_option( 'sticky_products') ) ){
+	if ( in_array( $post->ID, (array) get_option( 'sticky_products' ) ) ) {
 		$class = 'gold-star';
 		$title = __( 'Unmark as Featured', 'wpsc' );
 	} else {
