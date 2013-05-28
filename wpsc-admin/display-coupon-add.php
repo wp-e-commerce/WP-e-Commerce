@@ -30,7 +30,7 @@
 							<label for="add_discount_type"><?php _e( 'Discount Type', 'wpsc' ); ?></label>
 						</th>
 						<td>
-							<select name='add_discount_type' id='add_discount_type' onchange = 'show_shipping_options();'>
+							<select name='add_discount_type' id='add_discount_type'>
 								<option value='0'><?php _e( 'Fixed Amount', 'wpsc' ); ?></option>
 								<option value='1'><?php _e( 'Percentage', 'wpsc' ); ?></option>
 								<option value='2'><?php _e( 'Free shipping', 'wpsc' ); ?></option>
