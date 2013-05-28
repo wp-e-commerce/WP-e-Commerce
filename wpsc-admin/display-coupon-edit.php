@@ -48,7 +48,7 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 						</th>
 						<td>
 							<?php $type = absint( $coupon['is-percentage'] ); ?>
-							<select name='edit_discount_type' id='edit_discount_type' onchange='show_shipping_options();'>
+							<select name='edit_discount_type' id='edit_discount_type'>
 								<option value='0'<?php selected( 0, $type ); ?>><?php _e( 'Fixed Amount', 'wpsc' ); ?></option>
 								<option value='1'<?php selected( 1, $type ); ?>><?php _e( 'Percentage', 'wpsc' ); ?></option>
 								<option value='2'<?php selected( 2, $type ); ?>><?php _e( 'Free shipping', 'wpsc' ); ?></option>
