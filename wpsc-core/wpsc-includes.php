@@ -59,6 +59,9 @@ include_once( WPSC_FILE_PATH . '/wpsc-widgets/price_range_widget.php' );
 include_once( WPSC_FILE_PATH . '/wpsc-widgets/admin_menu_widget.php' );
 include_once( WPSC_FILE_PATH . '/wpsc-widgets/category_widget.php' );
 
+// Meta
+require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-init.php' );
+
 // Gregs ASH Shipping
 require_once( WPSC_FILE_PATH . '/wpsc-includes/shipping.helper.php' );
 

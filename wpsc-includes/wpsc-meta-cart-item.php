@@ -1,9 +1,9 @@
 <?php
- /* 
- * NOTICE: 
- * This file was automatically created, strongly suggest that it not be edited directly.
- * See the code in the file wpsc_custom_meta_init.php at line 211 for more details.
- */
+/* 
+** NOTICE: 
+** This file was automatically created, strongly suggest that it not be edited directly.
+** See the code in the file wpsc-meta-init.php near line 317 for more details.
+*/
 ?>
 
 <?php 
@@ -25,7 +25,7 @@
  * @param bool $unique Optional, default is false. Whether the same key should not be added.
  * @return bool False for failure. True for success.
  */
-function add_cart_item_meta( $cart_item_id , $meta_key , $meta_value , $unique = false ) {
+function wpsc_add_cart_item_meta( $cart_item_id, $meta_key, $meta_value, $unique = false ) {
 	return add_metadata( 'cart_item' ,  $cart_item_id, $meta_key , $meta_value, $unique );
 }
 
@@ -45,7 +45,7 @@ function add_cart_item_meta( $cart_item_id , $meta_key , $meta_value , $unique =
  * @param mixed $meta_value Optional. Metadata value.
  * @return bool False for failure. True for success.
  */
-function delete_cart_item_meta( $cart_item_id , $meta_key , $meta_value = '' ) {
+function wpsc_delete_cart_item_meta( $cart_item_id, $meta_key, $meta_value = '' ) {
 	return delete_metadata( 'cart_item' ,  $cart_item_id , $meta_key , $meta_value );
 }
 
@@ -60,7 +60,7 @@ function delete_cart_item_meta( $cart_item_id , $meta_key , $meta_value = '' ) {
  * @return mixed Will be an array if $single is false. Will be value of meta data field if $single
  *  is true.
  */
-function get_cart_item_meta( $cart_item_id , $key = '' , $single = false ) {
+function wpsc_get_cart_item_meta( $cart_item_id, $key = '', $single = false ) {
 	return get_metadata( 'cart_item' , $cart_item_id , $key, $single );
 }
 
@@ -74,7 +74,7 @@ function get_cart_item_meta( $cart_item_id , $key = '' , $single = false ) {
 * @return boolean true of the key is set, false if not.
  *  is true.
  */
-function cart_item_meta_exists( $cart_item_id , $meta_key ) {
+function wpsc_cart_item_meta_exists( $cart_item_id, $meta_key ) {
 	return metadata_exists( 'cart_item' , $cart_item_id , $meta_key );
 }
 
@@ -96,7 +96,7 @@ function cart_item_meta_exists( $cart_item_id , $meta_key ) {
  * @param mixed $prev_value Optional. Previous value to check before removing.
  * @return bool False on failure, true if success.
  */
-function update_cart_item_meta( $cart_item_id , $meta_key , $meta_value , $prev_value = '' ) {
+function wpsc_update_cart_item_meta( $cart_item_id, $meta_key, $meta_value, $prev_value = '' ) {
 	return update_metadata( 'cart_item' , $cart_item_id , $meta_key , $meta_value , $prev_value );
 }
 
@@ -108,7 +108,7 @@ function update_cart_item_meta( $cart_item_id , $meta_key , $meta_value , $prev_
  * @param string $cart_item_meta_key Key to search for when deleting.
  * @return bool Whether the cart_item meta key was deleted from the database
  */
-function delete_cart_item_meta_by_key( $cart_item_meta_key ) {
+function wpsc_delete_cart_item_meta_by_key( $cart_item_meta_key ) {
 	return delete_metadata( 'cart_item' , null , $cart_item_meta_key , '' , true );
 }
 
@@ -124,7 +124,7 @@ function delete_cart_item_meta_by_key( $cart_item_meta_key ) {
  * @param int $cart_item_id cart_item ID.
  * @return array
  */
-function get_cart_item_custom( $cart_item_id = 0 ) {
+function wpsc_get_cart_item_custom( $cart_item_id = 0 ) {
 	$cart_item_id = absint( $cart_item_id );
 	return get_cart_item_meta( $cart_item_id );
 }
@@ -132,7 +132,7 @@ function get_cart_item_custom( $cart_item_id = 0 ) {
 /**
  * Retrieve meta field names for a cart_item.
  *
- * If there are no meta fields, then nothing (null) will be returned.
+ * If there are no meta fields, then nothing(null) will be returned.
  * This meta data function mirrors a corresponding wordpress post meta function.
  *
  * @since 3.9.0
@@ -140,10 +140,10 @@ function get_cart_item_custom( $cart_item_id = 0 ) {
  * @param int $cart_item_id cart_item ID
  * @return array|null Either array of the keys, or null if keys could not be retrieved.
  */
-function get_cart_item_custom_keys( $cart_item_id = 0 ) {
+function wpsc_get_cart_item_custom_keys( $cart_item_id = 0 ) {
 	$custom = get_cart_item_custom( $cart_item_id );
 
-	if ( !is_array( $custom ) )
+	if ( ! is_array( $custom ) )
 		return;
 
 	if ( $keys = array_keys( $custom ) )
@@ -159,12 +159,13 @@ function get_cart_item_custom_keys( $cart_item_id = 0 ) {
  *
  * @since 3.9.0
  *
- * @param string $key Meta field key.
+ * @param string $metakey Meta field key.
  * @param int $cart_item_id cart_item ID
  * @return array Meta field values.
  */
-function get_cart_item_custom_values( $key = '', $cart_item_id = 0 ) {
-	if ( !$key )
+function wpsc_get_cart_item_custom_values( $metakey = '', $cart_item_id = 0 ) {
+	
+	if ( ! $key )
 		return null;
 
 	$custom = get_cart_item_custom( $cart_item_id );
@@ -172,20 +173,24 @@ function get_cart_item_custom_values( $key = '', $cart_item_id = 0 ) {
 	return isset( $custom[$key] ) ? $custom[$key] : null;
 }
 
-
-
 /**
- * Get meta timestamp by meta ID
+ * Calls function for each meta matching the timestamp criteria.  Callback function
+ * will get a single parameter that is an object representing the meta.
  *
  * @since 3.9.0
  *
- * @param string $meta_type Type of object metadata is for (e.g., variation. cart, etc)
- 	* @param int $meta_id ID for a specific meta row
- * @return object Meta object or false.
+ * @param function $callback function to invoke once for each meta matching criteria 
+ * @param int|string $timestamp timestamp to compare meta items against, if int a unix timestamp is assumed, 
+ *								if string a mysql timestamp is assumed
+ * @param string $comparison any one of the supported comparison operators,(=,>=,>,<=,<,<>,!=)
+ * @param string $meta_key restrict testing of meta to the values with the specified meta key
+ * @return int count of meta items matching the criteria
  */
-function get_cart_item_meta_timestamp( $cart_item_id, $meta_key  ) {
-	return wpsc_get_metadata_timestamp( 'cart_item', $cart_item_id, $meta_key );
+function wpsc_get_cart_item_meta_by_timestamp( $callback = null, $timestamp = 0, $comparison = '>', $metakey = '' ) {
+	return wpsc_get_meta_by_timestamp( 'cart_item', $callback , $timestamp , $comparison , $metakey );
 }
+
+
 
 
 
