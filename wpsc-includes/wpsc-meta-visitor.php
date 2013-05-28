@@ -2,7 +2,7 @@
 /* 
 ** NOTICE: 
 ** This file was automatically created, strongly suggest that it not be edited directly.
-** See the code in the file wpsc-meta-init.php near line 317 for more details.
+** See the code in the file wpsc-meta-init.php near line 320 for more details.
 */
 ?>
 
@@ -17,7 +17,7 @@
  *
  * This meta data function mirrors a corresponding wordpress post meta function.
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param int $visitor_id visitor ID.
  * @param string $meta_key Metadata name.
@@ -38,7 +38,7 @@ function wpsc_add_visitor_meta( $visitor_id, $meta_key, $meta_value, $unique = f
  
  * This meta data function mirrors a corresponding wordpress post meta function.
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param int $visitor_id visitor ID
  * @param string $meta_key Metadata name.
@@ -52,7 +52,7 @@ function wpsc_delete_visitor_meta( $visitor_id, $meta_key, $meta_value = '' ) {
 /**
  * Retrieve visitor meta field for a visitor.
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param int $visitor_id visitor ID.
  * @param string $key Optional. The meta key to retrieve. By default, returns data for all keys.
@@ -67,7 +67,7 @@ function wpsc_get_visitor_meta( $visitor_id, $key = '', $single = false ) {
 /**
  *  Determine if a meta key is set for a given visitor.
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param int $visitor_id visitor ID.
  * @param string $key Optional. The meta key to retrieve. By default, returns data for all keys.
@@ -88,7 +88,7 @@ function wpsc_visitor_meta_exists( $visitor_id, $meta_key ) {
 
  * This meta data function mirrors a corresponding wordpress post meta function.
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param int $visitor_id $visitor ID.
  * @param string $meta_key Metadata key.
@@ -103,7 +103,7 @@ function wpsc_update_visitor_meta( $visitor_id, $meta_key, $meta_value, $prev_va
 /**
  * Delete everything from visitor meta matching meta key.
  * This meta data function mirrors a corresponding wordpress post meta function.
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param string $visitor_meta_key Key to search for when deleting.
  * @return bool Whether the visitor meta key was deleted from the database
@@ -119,7 +119,7 @@ function wpsc_delete_visitor_meta_by_key( $visitor_meta_key ) {
  * so the function is optimized to be called more than once.
  * This meta data function mirrors a corresponding wordpress post meta function.
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param int $visitor_id visitor ID.
  * @return array
@@ -135,7 +135,7 @@ function wpsc_get_visitor_custom( $visitor_id = 0 ) {
  * If there are no meta fields, then nothing(null) will be returned.
  * This meta data function mirrors a corresponding wordpress post meta function.
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param int $visitor_id visitor ID
  * @return array|null Either array of the keys, or null if keys could not be retrieved.
@@ -157,7 +157,7 @@ function wpsc_get_visitor_custom_keys( $visitor_id = 0 ) {
  * will be retrieved and only the meta field key values returned.
  * This meta data function mirrors a corresponding wordpress post meta function.
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param string $metakey Meta field key.
  * @param int $visitor_id visitor ID
@@ -177,7 +177,7 @@ function wpsc_get_visitor_custom_values( $metakey = '', $visitor_id = 0 ) {
  * Calls function for each meta matching the timestamp criteria.  Callback function
  * will get a single parameter that is an object representing the meta.
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param function $callback function to invoke once for each meta matching criteria 
  * @param int|string $timestamp timestamp to compare meta items against, if int a unix timestamp is assumed, 

@@ -1,6 +1,5 @@
 <?php 
 
-wpsc_create_or_update_tables();
 /**
  * Tells us what cire object types have a custom meta table.
  *
@@ -8,7 +7,7 @@ wpsc_create_or_update_tables();
  * can be accessed using wpsc meta functions.  This list should grow as the
  * data in wpsc_{dbprfix}_is ported to this custom emta infrastructure
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @return array object types that have custom meta.
  */
@@ -29,7 +28,7 @@ function wpsc_meta_core_object_types() {
  * can be accessed using custom meta functions.  List can be changed with filter
  * wpsc_meta_custom_object_types.
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @return array object types that have custom meta.
  */
@@ -45,7 +44,7 @@ function wpsc_meta_custom_object_types() {
  * Use data from the legacy WPEC meta table.  Copies the data from the legacy
  * table to the custom meta table for the object type specified
  *
- * @since 3.9.0
+ * @since 3.8.12
  * 
  * @param array $meta_object_types array of object type names, when null core 
  * object types are used
@@ -63,7 +62,7 @@ function wpsc_meta_register_types( $meta_object_types = null ) {
 /**
  * Register the custom meta type within wpdb
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param string $meta_object_type object type to setup with wpdb
  *
@@ -93,7 +92,7 @@ function wpsc_meta_register_type( $meta_object_type ) {
 /**
  * The name of the meta table for a specific meta object type.
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param string $meta_object_type Type of object metadata is for (e.g., variation. cart, etc)
  * @return string Name of the custom meta table
@@ -106,7 +105,7 @@ function wpsc_meta_table_name( $meta_object_type ) {
 /**
  * The name of the $wpdb meta property for a specific meta object type.
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param string $meta_object_type Type of object metadata is for (e.g., variation. cart, etc)
  * @return string Name of the custom meta property
@@ -119,7 +118,7 @@ function wpsc_meta_table_property( $meta_object_type ) {
 /**
  * Does the meta table for the object type already exist
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param string $meta_object_type Type of object metadata is for (e.g., variation. cart, etc)
  * @return boolean True if the meta table for the object type exits, false otherwise
@@ -138,7 +137,7 @@ function wpsc_meta_table_exists( $meta_object_type ) {
 /**
  * Does the meta table for the object type already exist
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param string $meta_object_type Type of object metadata is for (e.g., variation. cart, etc)
  	* @return boolean True if the meta table for the object type exits, false otherwise
@@ -160,7 +159,7 @@ function wpsc_meta_table_empty( $meta_object_type ) {
 /**
  * Create the meta table for the specified object type
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param string $meta_object_type Type of object metadata is for (e.g., variation. cart, etc)
  */
@@ -194,7 +193,7 @@ function wpsc_create_meta_table( $meta_object_type ) {
  * table to the custom meta table for the object type specified. Legacy data remains
  * untouched
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param string $meta_object_type Type of object metadata is for (e.g., variation. cart, etc)
 */
@@ -216,7 +215,7 @@ function wpsc_initialize_meta_table( $meta_object_type ) {
 /**
  * Get meta timestamp of the by object type, meta id and key, if multiple records exist
  * the timestamp of the newest record is returned
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param string $meta_object_type Type of object metadata is for (e.g., variation. cart, etc)
  * @param int $meta_id ID for a specific meta row
@@ -246,7 +245,7 @@ function wpsc_get_metadata_timestamp( $meta_object_type, $meta_id, $meta_key ) {
  * Calls function for each meta matching the timestamp criteria.  Callback function
  * will get a single parameter that is an object representing the meta.
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param function $callback function to invoke once for each meta matching criteria
  * @param int|string $timestamp timestamp to compare meta items against, if int a unix timestamp is assumed,
@@ -263,19 +262,19 @@ function wpsc_get_meta_by_timestamp( $meta_object_type, $callback = null, $times
 		$sql = "SELECT * FROM `{$meta_table}` WHERE 1=1 ";
 	} else {
 		// validate the comparison operator
-		if ( '=' !=  $comparison &&
-				'>='  !=  $comparison &&
-					'>'  !=  $comparison &&
-						'<='  !=  $comparison &&
-							'<'  !=  $comparison &&
-								'<>'  !=  $comparison &&
-									'!='  !=  $comparison
+		if ( '=' != $comparison &&
+				'>=' != $comparison &&
+					'>' != $comparison &&
+						'<=' != $comparison &&
+							'<' != $comparison &&
+								'<>' != $comparison &&
+									'!=' != $comparison
 		) {
 			return false;
 		}
 		
 		if ( is_int( $timestamp ) ) {
-			$timestamp = date("Y-m-d H:i:s", $timestamp);
+			$timestamp = date( 'Y-m-d H:i:s', $timestamp );
 		}
 
 		$sql = "SELECT * FROM {$meta_table} where meta_timestamp {$comparison} '{$timestamp}'";
@@ -302,7 +301,7 @@ function wpsc_get_meta_by_timestamp( $meta_object_type, $callback = null, $times
 /**
  * Confirm that the meta access functions exist and include them
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param string $meta_object_type Type of object metadata is for (e.g., variation. cart, etc)
  * @return boolean True if meta functions file exists, false otehrwise
@@ -337,7 +336,7 @@ function wpsc_check_meta_access_functions( $meta_object_type ) {
  * The name of the file we expect to contain the meta functions used to access 
  * custom object meta.
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param string $meta_object_type Type of object metadata is for (e.g., variation. cart, etc)
  * @return string Name of the custom meta property

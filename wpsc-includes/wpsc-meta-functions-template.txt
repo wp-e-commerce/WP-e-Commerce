@@ -9,7 +9,7 @@
  *
  * This meta data function mirrors a corresponding wordpress post meta function.
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param int ${$OBJECT_TYPE}_id {$OBJECT_TYPE} ID.
  * @param string $meta_key Metadata name.
@@ -30,7 +30,7 @@ function wpsc_add_{$OBJECT_TYPE}_meta( ${$OBJECT_TYPE}_id, $meta_key, $meta_valu
  
  * This meta data function mirrors a corresponding wordpress post meta function.
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param int ${$OBJECT_TYPE}_id {$OBJECT_TYPE} ID
  * @param string $meta_key Metadata name.
@@ -44,7 +44,7 @@ function wpsc_delete_{$OBJECT_TYPE}_meta( ${$OBJECT_TYPE}_id, $meta_key, $meta_v
 /**
  * Retrieve {$OBJECT_TYPE} meta field for a {$OBJECT_TYPE}.
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param int ${$OBJECT_TYPE}_id {$OBJECT_TYPE} ID.
  * @param string $key Optional. The meta key to retrieve. By default, returns data for all keys.
@@ -59,7 +59,7 @@ function wpsc_get_{$OBJECT_TYPE}_meta( ${$OBJECT_TYPE}_id, $key = '', $single = 
 /**
  *  Determine if a meta key is set for a given {$OBJECT_TYPE}.
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param int ${$OBJECT_TYPE}_id {$OBJECT_TYPE} ID.
  * @param string $key Optional. The meta key to retrieve. By default, returns data for all keys.
@@ -80,7 +80,7 @@ function wpsc_{$OBJECT_TYPE}_meta_exists( ${$OBJECT_TYPE}_id, $meta_key ) {
 
  * This meta data function mirrors a corresponding wordpress post meta function.
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param int ${$OBJECT_TYPE}_id ${$OBJECT_TYPE} ID.
  * @param string $meta_key Metadata key.
@@ -95,7 +95,7 @@ function wpsc_update_{$OBJECT_TYPE}_meta( ${$OBJECT_TYPE}_id, $meta_key, $meta_v
 /**
  * Delete everything from {$OBJECT_TYPE} meta matching meta key.
  * This meta data function mirrors a corresponding wordpress post meta function.
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param string ${$OBJECT_TYPE}_meta_key Key to search for when deleting.
  * @return bool Whether the {$OBJECT_TYPE} meta key was deleted from the database
@@ -111,7 +111,7 @@ function wpsc_delete_{$OBJECT_TYPE}_meta_by_key( ${$OBJECT_TYPE}_meta_key ) {
  * so the function is optimized to be called more than once.
  * This meta data function mirrors a corresponding wordpress post meta function.
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param int ${$OBJECT_TYPE}_id {$OBJECT_TYPE} ID.
  * @return array
@@ -127,7 +127,7 @@ function wpsc_get_{$OBJECT_TYPE}_custom( ${$OBJECT_TYPE}_id = 0 ) {
  * If there are no meta fields, then nothing(null) will be returned.
  * This meta data function mirrors a corresponding wordpress post meta function.
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param int ${$OBJECT_TYPE}_id {$OBJECT_TYPE} ID
  * @return array|null Either array of the keys, or null if keys could not be retrieved.
@@ -149,7 +149,7 @@ function wpsc_get_{$OBJECT_TYPE}_custom_keys( ${$OBJECT_TYPE}_id = 0 ) {
  * will be retrieved and only the meta field key values returned.
  * This meta data function mirrors a corresponding wordpress post meta function.
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param string $metakey Meta field key.
  * @param int ${$OBJECT_TYPE}_id {$OBJECT_TYPE} ID
@@ -169,7 +169,7 @@ function wpsc_get_{$OBJECT_TYPE}_custom_values( $metakey = '', ${$OBJECT_TYPE}_i
  * Calls function for each meta matching the timestamp criteria.  Callback function
  * will get a single parameter that is an object representing the meta.
  *
- * @since 3.9.0
+ * @since 3.8.12
  *
  * @param function $callback function to invoke once for each meta matching criteria 
  * @param int|string $timestamp timestamp to compare meta items against, if int a unix timestamp is assumed, 
