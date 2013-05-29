@@ -285,15 +285,16 @@ add_action( 'wpsc_manage_products_column_cats', '_wpsc_manage_products_column_ca
  */
 function _wpsc_manage_products_column_featured( $post, $post_id ) {
 	$featured_product_url = wp_nonce_url( "index.php?wpsc_admin_action=update_featured_product&amp;product_id=$post->ID", 'feature_product_' . $post->ID);
+	if ( in_array( $post->ID, (array) get_option( 'sticky_products' ) ) ) {
+		$class = 'gold-star';
+		$title = __( 'Unmark as Featured', 'wpsc' );
+	} else {
+		$class = 'grey-star';
+		$title = __( 'Mark as Featured', 'wpsc' );
+	}
 	?>
-		<a class="wpsc_featured_product_toggle featured_toggle_<?php echo $post->ID; ?>" href='<?php echo $featured_product_url; ?>' >
-			<?php if ( in_array( $post->ID, (array)get_option( 'sticky_products' ) ) ) : ?>
-				<img class='gold-star' src='<?php echo WPSC_CORE_IMAGES_URL; ?>/gold-star.png' alt='<?php _e( 'Unmark as Featured', 'wpsc' ); ?>' title='<?php _e( 'Unmark as Featured', 'wpsc' ); ?>' />
-			<?php else: ?>
-				<img class='grey-star' src='<?php echo WPSC_CORE_IMAGES_URL; ?>/grey-star.png' alt='<?php _e( 'Mark as Featured', 'wpsc' ); ?>' title='<?php _e( 'Mark as Featured', 'wpsc' ); ?>' />
-			<?php endif; ?>
-		</a>
-	<?php
+	<a class="wpsc_featured_product_toggle featured_toggle_<?php echo $post->ID; ?> <?php echo esc_attr( $class ); ?>" href='<?php echo $featured_product_url; ?>' title="<?php echo esc_attr( $title ); ?>" ></a>
+<?php
 }
 add_action( 'wpsc_manage_products_column_featured', '_wpsc_manage_products_column_featured', 10, 2 );
 
