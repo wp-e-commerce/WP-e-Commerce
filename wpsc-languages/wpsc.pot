@@ -1,4 +1,4 @@
-# Copyright (C) 2013 
+# Copyright (C) 2013
 # This file is distributed under the same license as the  package.
 msgid ""
 msgstr ""
@@ -1927,17 +1927,6 @@ msgstr ""
 msgid ""
 "This plugin offers shop owners the ability to provide Fedex Shipping Quotes "
 "for products with weights."
-msgstr ""
-
-#: wpsc-admin/display-upgrades.page.php:62
-msgid "Piggy"
-msgstr ""
-
-#: wpsc-admin/display-upgrades.page.php:63
-msgid ""
-"Your WP E-Commerce sales, in your pocket. Piggy is a web-app that provides "
-"mobile access to view sales data for your WP E-Commerce powered WordPress "
-"website. Works on iOS and Android."
 msgstr ""
 
 #: wpsc-admin/display-upgrades.page.php:64
