@@ -6,7 +6,7 @@ table.wp-list-table .column-title {
 	width: 26%;
 }
 table.wp-list-table .column-featured {
-	width: 22px;
+	width: 30px;
 }
 table.wp-list-table .column-price,
 table.wp-list-table .column-sale_price {
@@ -1395,11 +1395,10 @@ a.wpsc_featured_product_toggle {
 	margin: 4px 0px 0px 0px;
 }
 
-a.wpsc_featured_product_toggle img {
-	display: block;
-	margin: 0px auto 0px auto;
-}
-
+.column-featured a { background:url( '../../wpsc-core/images/core-sprite.png') no-repeat 0 -32px transparent; }
+.column-featured a.gold-star { background-position:0 -16px; }
+.column-featured a:active,
+.column-featured a.gold-star:active { background-position:0 0; }
 
 div.wpsc_clear {
 	clear: both;
