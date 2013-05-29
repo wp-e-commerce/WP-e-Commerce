@@ -184,7 +184,7 @@ function wpsc_get_child_object_in_select_terms( $parent_id, $terms, $taxonomy ){
  * @param array $args. ( default: array() )
  * @return void
  */
-function better_wpsc_get_child_object_in_terms( $parent_id, $terms, $taxonomies = 'wpsc-variation', $args = array() ) {
+function wpsc_get_child_object_in_terms( $parent_id, $terms, $taxonomies = 'wpsc-variation', $args = array() ) {
 
 	$parent_id = absint( $parent_id );
 
