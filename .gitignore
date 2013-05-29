@@ -15,3 +15,7 @@ sitemap.xml
 sitemap.xml.gz
 .DS_Store
 thumb.jpg
+.project
+.gitattributes
+.gitignore
+*.log
