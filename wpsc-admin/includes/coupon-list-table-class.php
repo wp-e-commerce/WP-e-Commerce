@@ -392,26 +392,30 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 * @return      array
 	 */
 	public function coupons_data() {
-
 		global $wpdb;
 
 		$coupons_data = array();
 
-		if ( isset( $_GET['paged'] ) ) $page = $_GET['paged']; else $page = 1;
+		$query = wp_parse_args( $_GET, array(
+			'order'  => 'DESC',
+			'paged'  => 1,
+			'status' => false
+		) );
+
+		$page = absint( $query['paged'] );
 
 		$per_page = $this->per_page;
 		$offset   = ( $page - 1 ) * $this->per_page;
 
-		$status   = isset( $_GET['status'] ) ? absint( $_GET['status'] ) : false;
+		$status   = $query['status'] !== false ? absint( $query['status'] ) : false;
 		$where    = $status !== false ? "WHERE active = $status" : '';
 
-		$order 	  = strtoupper( $_GET['order'] ) === 'ASC' ? 'ASC' : 'DESC';
+		$order 	  = strtoupper( $query['order'] ) === 'ASC' ? 'ASC' : 'DESC';
 		$limit    = " LIMIT $offset,$per_page;";
 		$coupons  = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_COUPON_CODES . "` {$where} ORDER BY id {$order} {$limit} ", ARRAY_A );
 
 		if ( $coupons ) {
 			foreach ( $coupons as $coupon ) {
-
 				$coupons_data[] = array(
 					'ID'           => $coupon['id'],
 					'coupon'       => $coupon['coupon_code'],
