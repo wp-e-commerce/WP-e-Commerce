@@ -57,13 +57,6 @@ function wpsc_display_upgrades_page() {
 				<p class='wpsc_gold_text'><?php esc_html_e( 'This plugin offers shop owners the ability to provide Fedex Shipping Quotes for products with weights.', 'wpsc' ); ?></p>
 				<span class='wpsc_gold_info'><?php esc_html_e( '$40', 'wpsc' ); ?></span>
 			</div>
-			<div class='wpsc_gold_module'>
-				<br />
-				<a href="http://www.bravenewcode.com/store/plugins/piggy/?utm_source=affiliate-6331&amp;utm_medium=affiliates&amp;utm_campaign=wpec" target="_blank"><strong><?php esc_html_e( 'Piggy', 'wpsc' ); ?> </strong></a>
-				<p class='wpsc_gold_text'><?php esc_html_e( 'Your WP E-Commerce sales, in your pocket. Piggy is a web-app that provides mobile access to view sales data for your WP E-Commerce powered WordPress website. Works on iOS and Android.', 'wpsc' ); ?></p>
-				<span class='wpsc_gold_info'><?php esc_html_e( '$39', 'wpsc' ); ?></span>
-			</div>
-
 		</div>
 
 		<h2><?php esc_html_e( 'Upgrades', 'wpsc' ); ?></h2>

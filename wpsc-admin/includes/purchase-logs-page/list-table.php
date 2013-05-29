@@ -74,18 +74,10 @@
 		<?php do_action( 'wpsc_purchase_logs_list_table_after' ); ?>
 	</form>
 
-	<?php
-		$piggy_url = 'http://www.bravenewcode.com/store/plugins/piggy/?utm_source=affiliate-6331&utm_medium=affiliates&utm_campaign=wpec#1';
-	?>
-
 	<p>
 		<a class='admin_download' href='<?php echo esc_url( add_query_arg( 'action', 'download_csv' ) ); ?>' >
 			<img class='wpsc_pushdown_img' src='<?php echo WPSC_CORE_IMAGES_URL; ?>/download.gif' alt='' title='' />
 			<span><?php _e( 'Download CSV', 'wpsc' ); ?></span>
-		</a>
-		<a target="_blank" class='admin_download' href='<?php echo esc_url( $piggy_url) ; ?>'>
-			<img class='wpsc_pushdown_img' src='<?php echo esc_url( WPSC_CORE_IMAGES_URL ); ?>/mobile.png' alt='' title='' />
-			<span><?php _e( 'Mobile Sales App', 'wpsc' ); ?></span>
 		</a>
 	</p>
 </div>
