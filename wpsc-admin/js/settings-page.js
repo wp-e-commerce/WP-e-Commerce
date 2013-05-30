@@ -558,7 +558,14 @@
 		},
 
         event_disabled_toggeled : function() {
-            alert('test');
+
+            var displaycol = $(this).parents('.mandatorycol').siblings('.displaycol');
+
+            if ( $(this).is(':checked') ){
+                $(displaycol).find('input[type="checkbox"]').prop('checked', true ).attr( 'disabled', 'disabled' );
+            } else {
+                 $(displaycol).find('input[type="checkbox"]').attr( 'disabled', this.checked );
+            }
         },
 
 		/**
