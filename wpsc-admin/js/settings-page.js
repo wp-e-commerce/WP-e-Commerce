@@ -327,6 +327,17 @@
 				});
 
 			WPSC_Settings_Page.Checkout.new_field_count = $('.new-field').length;
+
+            wrapper.find( '.mandatorycol input[type="checkbox"]').each( function( event ){
+                var displaycol = $(this).parents('.mandatorycol').siblings('.displaycol');
+
+                if ( $(this).is(':checked') ){
+                    $(displaycol).find('input[type="checkbox"]').prop('checked', true ).attr( 'disabled', 'disabled' );
+                } else {
+                    $(displaycol).find('input[type="checkbox"]').attr( 'disabled', this.checked );
+                }
+            });
+
 		},
 
 		event_add_field_option : function() {
