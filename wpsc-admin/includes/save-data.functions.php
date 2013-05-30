@@ -264,6 +264,9 @@ function _wpsc_is_display_type_supported( $display_type ) {
 	return function_exists( $callback );
 }
 
+/**
+ * Renders the additional content for the category edit page
+ */
 function wpsc_admin_category_forms_edit() {
 	global $wpdb;
 

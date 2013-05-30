@@ -1473,7 +1473,7 @@ function is_products_page(){
 
 }
 /**
- * wpsc_display_products_page function.
+ * wpsc_display_featured_products_page function.
  *
  * @access public
  * @param mixed $query
@@ -1515,7 +1515,7 @@ if(get_option( 'wpsc_hide_featured_products' ) == 1){
 
 
 /**
- * wpsc_display_products_page class
+ * WPSC_Hide_subcatsprods_in_cat class
  *
  * Shows only products from current category, but not from subcategories.
  *
