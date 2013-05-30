@@ -435,25 +435,17 @@ function submit_change_country(){
 	document.forms.change_country.submit();
 }
 
-// submit the fancy notifications forms.
+//submit the fancy notifications forms.
 function wpsc_fancy_notification(parent_form){
 	if(typeof(WPSC_SHOW_FANCY_NOTIFICATION) == 'undefined'){
 		WPSC_SHOW_FANCY_NOTIFICATION = true;
 	}
 	if((WPSC_SHOW_FANCY_NOTIFICATION == true) && (jQuery('#fancy_notification') != null)){
-		var options = {
-			margin: 1 ,
-			border: 1 ,
-			padding: 1 ,
-			scroll: 1
-		};
-
-		form_button_id = jQuery(parent_form).attr('id') + "_submit_button";
-		var button_offset = jQuery('#'+form_button_id).offset();
-
-		jQuery('#fancy_notification').css("left", (button_offset.left - 130) + 'px');
-		jQuery('#fancy_notification').css("top", (button_offset.top + 40) + 'px');
-
+		jQuery('#fancy_notification').css({
+		        position:'fixed',
+		        left: (jQuery(window).width() - jQuery('#fancy_notification').outerWidth())/2,
+		        top: (jQuery(window).height() - jQuery('#fancy_notification').outerHeight())/2
+		    });
 
 		jQuery('#fancy_notification').css("display", 'block');
 		jQuery('#loading_animation').css("display", 'block');
