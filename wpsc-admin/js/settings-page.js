@@ -328,15 +328,19 @@
 
 			WPSC_Settings_Page.Checkout.new_field_count = $('.new-field').length;
 
-            wrapper.find( '.mandatorycol input[type="checkbox"]').each( function( event ){
-                var displaycol = $(this).parents('.mandatorycol').siblings('.displaycol');
+			/**
+			 * Finding checkboxes that are mandatory and disabling the display option.
+			 * If it's mandatory you no have choice for display.
+			 */
+			wrapper.find( '.mandatorycol input[type="checkbox"]').each( function(){
+				var displaycol = $(this).parents('.mandatorycol').siblings('.displaycol');
 
-                if ( $(this).is(':checked') ){
-                    $(displaycol).find('input[type="checkbox"]').prop('checked', true ).attr( 'disabled', 'disabled' );
-                } else {
-                    $(displaycol).find('input[type="checkbox"]').attr( 'disabled', this.checked );
-                }
-            });
+				if ( $(this).is(':checked') ){
+					$(displaycol).find('input[type="checkbox"]').prop('checked', true ).attr( 'disabled', 'disabled' );
+				} else {
+					$(displaycol).find('input[type="checkbox"]').attr( 'disabled', this.checked );
+				}
+			});
 
 		},
 
@@ -568,16 +572,20 @@
 			return false;
 		},
 
-        event_disabled_toggeled : function() {
+		/**
+		 * Disables and checks the display option if you make a field mandatory. If you uncheck
+		 * mandatory then it just enables you to uncheck the display box.
+		 */
+		event_disabled_toggeled : function() {
 
-            var displaycol = $(this).parents('.mandatorycol').siblings('.displaycol');
+			var displaycol = $(this).parents('.mandatorycol').siblings('.displaycol');
 
-            if ( $(this).is(':checked') ){
-                $(displaycol).find('input[type="checkbox"]').prop('checked', true ).attr( 'disabled', 'disabled' );
-            } else {
-                 $(displaycol).find('input[type="checkbox"]').attr( 'disabled', this.checked );
-            }
-        },
+			if ( $(this).is(':checked') ){
+				$(displaycol).find('input[type="checkbox"]').prop('checked', true ).attr( 'disabled', 'disabled' );
+			} else {
+				 $(displaycol).find('input[type="checkbox"]').attr( 'disabled', this.checked );
+			}
+		},
 
 		/**
 		 * This hack is to make sure the dragged row has 100% width
