@@ -354,7 +354,7 @@ function wpsc_admin_category_forms_edit() {
 			<label for="image"><?php esc_html_e( 'Display Category Shortcode', 'wpsc' ); ?></label>
 		</th>
 		<td>
-			<code>[wpsc_products category_url_name='<?php echo $category["slug"]; ?>']</code><br />
+			<code>[wpsc_products category_url_name='<?php echo esc_html($category['slug']); ?>']</code><br />
 			<span class="description"><?php esc_html_e( 'Shortcodes are used to display a particular category or group within any WordPress page or post.', 'wpsc' ); ?></span>
 		</td>
 	</tr>
@@ -363,7 +363,7 @@ function wpsc_admin_category_forms_edit() {
 			<label for="image"><?php esc_html_e( 'Display Category Template Tag', 'wpsc' ); ?></label>
 		</th>
 		<td>
-			<code>&lt;?php echo wpsc_display_products_page( array( 'category_url_name' => '<?php echo $category["slug"]; ?>' ) ); ?&gt;</code><br />
+			<code>&lt;?php echo wpsc_display_products_page( array( 'category_url_name' =&gt; '<?php echo esc_html( $category['slug'] ); ?>' ) ); ?&gt;</code><br />
 			<span class="description"><?php esc_html_e( 'Template tags are used to display a particular category or group within your theme / template.', 'wpsc' ); ?></span>
 		</td>
 	</tr>
@@ -392,13 +392,13 @@ function wpsc_admin_category_forms_edit() {
 					<?php foreach ( $countrylist as $country ) {
 						if ( in_array( $country['id'], (array)$selectedCountries ) ) {
 							?>
-							<input type='checkbox' name='countrylist2[]' id='countrylist2-<?php echo $country['id']; ?>' value='<?php echo $country['id']; ?>' checked='<?php echo $country['visible']; ?>' />
-							<label for="countrylist2-<?php echo $country['id']; ?>"><?php esc_html_e( $country['country'] ); ?></label><br />
+							<input type='checkbox' name='countrylist2[]' id='countrylist2-<?php echo esc_attr( $country['id'] ); ?>' value='<?php echo esc_attr( $country['id'] ); ?>' checked='<?php echo esc_attr( $country['visible'] ); ?>' />
+							<label for="countrylist2-<?php echo esc_attr( $country['id'] ); ?>"><?php esc_html_e( $country['country'] ); ?></label><br />
 							<?php
 						} else {
 							?>
-							<input type='checkbox' name='countrylist2[]' id='countrylist2-<?php echo $country['id']; ?>' value='<?php echo $country['id']; ?>'  />
-							<label for="countrylist2-<?php echo $country['id']; ?>"><?php esc_html_e( $country['country'] ); ?></label><br />
+							<input type='checkbox' name='countrylist2[]' id='countrylist2-<?php echo esc_attr( $country['id'] ); ?>' value='<?php echo esc_attr( $country['id'] ); ?>'  />
+							<label for="countrylist2-<?php echo esc_attr( $country['id'] ); ?>"><?php esc_html_e( $country['country'] ); ?></label><br />
 							<?php
 						}
 					} ?>
@@ -437,7 +437,7 @@ function wpsc_admin_category_forms_edit() {
 						if ( $used_additonal_form_set == $key ) {
 							$selected_state = "selected='selected'";
 						} ?>
-						<option <?php echo $selected_state; ?> value='<?php echo $key; ?>'><?php echo esc_html( $value ); ?></option>
+						<option <?php echo $selected_state; ?> value='<?php echo esc_attr( $key ); ?>'><?php echo esc_html( $value ); ?></option>
 						<?php
 					}
 				?>
