@@ -329,7 +329,7 @@ class wpsc_coupons {
 			}
 		}
 
-		return true;
+		return $compare_logic;
 	}
 
 	/**
