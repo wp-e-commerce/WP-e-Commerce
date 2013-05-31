@@ -51,12 +51,17 @@ function wpsc_meta_custom_object_types() {
  *
  */
 function wpsc_meta_register_types( $meta_object_types = null ) {
-	if ( isnull( $meta_object_types ) )
+	if ( empty( $meta_object_types ) )
 		$meta_object_types = wpsc_meta_core_object_types();
-
+	
 	foreach ( $meta_object_types as $meta_object_type ) {
+		if ( wpsc_meta_table_exists( $meta_object_type ) && wpsc_check_meta_access_functions( $meta_object_type ) ) {
+			$meta_functions_file = wpsc_meta_functions_file( $meta_object_type );
+			include_once( $meta_functions_file );
+		}
+		
 		wpsc_meta_register_type( $meta_object_type );
-	}
+	}	
 }
 
 /**
@@ -73,7 +78,6 @@ function wpsc_meta_register_type( $meta_object_type ) {
 	$wpdb_property = wpsc_meta_table_property( $meta_object_type );
 	if ( ! isset( $wpdb->$wpdb_property ) ) {		
 		$table_name = wpsc_meta_table_name( $meta_object_type );		
-		$wpdb->$wpdb_property = $table_name;
 		
 		if ( ! wpsc_meta_table_exists( $meta_object_type ) ) {
 			/* Becuase a filter can override the list of object_types we
@@ -86,6 +90,9 @@ function wpsc_meta_register_type( $meta_object_type ) {
 				wpsc_initialize_meta_table( $meta_object_type );
 			}
 		}
+		
+		$wpdb->$wpdb_property = $table_name;
+		$wpdb->tables[] = $meta_object_type.'meta';		
 	}
 }
 
@@ -363,13 +370,7 @@ function wpsc_meta_functions_file( $meta_object_type ) {
  * alwyas be laoded.  The check for the core types here is done out of an abundance of caution to
  * confirm that the init/upgrade process completed properly.
  */
-$meta_object_types = wpsc_meta_core_object_types();
-foreach ( $meta_object_types as $meta_object_type ) {
-	if ( wpsc_meta_table_exists( $meta_object_type ) && wpsc_check_meta_access_functions( $meta_object_type ) ) {
-		$meta_functions_file = wpsc_meta_functions_file( $meta_object_type );
-		include_once( $meta_functions_file );
-	}
-}
+wpsc_meta_register_types( wpsc_meta_core_object_types() );
 
 /*
  * We allow the custom object types to be extended, to the initialization for this 
@@ -378,12 +379,7 @@ foreach ( $meta_object_types as $meta_object_type ) {
 function wpsc_init_custom_object_types() {
 	$meta_object_types = wpsc_meta_custom_object_types();
 	if ( ! empty( $meta_object_types ) ){
-		foreach ( $meta_object_types as $meta_object_type ) {
-			if ( wpsc_meta_table_exists( $meta_object_type ) && wpsc_check_meta_access_functions( $meta_object_type ) ) {
-				$meta_functions_file = wpsc_meta_functions_file( $meta_object_type );
-				include_once( $meta_functions_file );
-			}
-		}
+		wpsc_meta_register_types ( wpsc_meta_core_object_types() );
 	}
 }
 
