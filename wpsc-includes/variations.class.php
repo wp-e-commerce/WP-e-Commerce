@@ -193,7 +193,7 @@ function wpsc_get_child_object_in_terms( $parent_id, $terms, $taxonomies = 'wpsc
 		$terms = array( $terms );
 
 	if ( ! is_array( $taxonomies ) )
-		$taxonomies = ( array ) $taxonomies;
+		$taxonomies = array( $taxonomies );
 
 	foreach ( $taxonomies as $taxonomy ) {
 		if ( ! taxonomy_exists( $taxonomy ) )
