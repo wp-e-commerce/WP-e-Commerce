@@ -1,6 +1,7 @@
 <?php 
 /**
- * Tells us what cire object types have a custom meta table.
+ * Tells us which custom object types have a custom meta table and are managed
+ * using the wordpress meta data infrastructure
  *
  * Returns an array of strings holding the names of cire object types that
  * can be accessed using wpsc meta functions.  This list should grow as the
