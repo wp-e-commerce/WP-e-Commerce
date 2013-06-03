@@ -79,76 +79,76 @@ class wpsc_variations {
 	/*
 	 * ( Variation Group and Variation ) Loop Code Starts here
 	*/
-	function get_variation_groups( ) {
+	function get_variation_groups() {
 		global $wpdb;
 		$this->variation_group_count = count( $this->variation_groups );
-		$this->get_first_variations( );
+		$this->get_first_variations();
 	}
 
 
-	function next_variation_group( ) {
+	function next_variation_group() {
 		$this->current_variation_group++;
 		$this->variation_group = $this->variation_groups[$this->current_variation_group];
 		return $this->variation_group;
 	}
 
 
-	function the_variation_group( ) {
-		$this->variation_group = $this->next_variation_group( );
-		$this->get_variations( );
+	function the_variation_group() {
+		$this->variation_group = $this->next_variation_group();
+		$this->get_variations();
 	}
 
-	function have_variation_groups( ) {
+	function have_variation_groups() {
 		if ( $this->current_variation_group + 1 < $this->variation_group_count ) {
 			return true;
 		} else if ( $this->current_variation_group + 1 == $this->variation_group_count && $this->variation_group_count > 0 ) {
-			$this->rewind_variation_groups( );
+			$this->rewind_variation_groups();
 		}
 		return false;
 	}
 
-	function rewind_variation_groups( ) {
+	function rewind_variation_groups() {
 		$this->current_variation_group = -1;
 		if ( $this->variation_group_count > 0 ) {
 			$this->variation_group = $this->variation_groups[0];
 		}
 	}
 
-	function get_first_variations( ) {
+	function get_first_variations() {
 		global $wpdb;
 		return null;
 	}
 
 
-	function get_variations( ) {
+	function get_variations() {
 		global $wpdb;
 		$this->variations = $this->all_associated_variations[$this->variation_group->term_id];
 		$this->variation_count = count( $this->variations );
 	}
 
 
-	function next_variation( ) {
+	function next_variation() {
 		$this->current_variation++;
 		$this->variation = $this->variations[$this->current_variation];
 		return $this->variation;
 	}
 
 
-	function the_variation( ) {
-		$this->variation = $this->next_variation( );
+	function the_variation() {
+		$this->variation = $this->next_variation();
 	}
 
-	function have_variations( ) {
+	function have_variations() {
 		if ( $this->current_variation + 1 < $this->variation_count ) {
 			return true;
 		} else if ( $this->current_variation + 1 == $this->variation_count && $this->variation_count > 0 ) {
 			// Do some cleaning up after the loop,
-			$this->rewind_variations( );
+			$this->rewind_variations();
 		}
 		return false;
 	}
 
-	function rewind_variations( ) {
+	function rewind_variations() {
 		$this->current_variation = -1;
 		if ( $this->variation_count > 0 ) {
 			$this->variation = $this->variations[0];
@@ -190,7 +190,7 @@ function wpsc_get_child_object_in_terms( $parent_id, $terms, $taxonomies = 'wpsc
 	$parent_id = absint( $parent_id );
 
 	if ( ! is_array( $terms ) )
-		$terms =  array( $terms );
+		$terms = array( $terms );
 
 	if ( ! is_array( $taxonomies ) )
 		$taxonomies = ( array ) $taxonomies;
@@ -263,10 +263,10 @@ function wpsc_get_child_object_in_terms_var( $parent_id, $terms, $taxonomies, $a
 		if ( $current_version_number < 3.8 ) {
 			if ( ! taxonomy_exists( $taxonomy ) )
 				return new WP_Error( 'invalid_taxonomy', __( 'Invalid Taxonomy', 'wpsc' ) );
-			} else {
+		} else {
 			if ( !taxonomy_exists( $taxonomy ) )
 				return new WP_Error( 'invalid_taxonomy', __( 'Invalid Taxonomy', 'wpsc' ) );
-			}
+		}
 	}
 
 	$defaults = array( 'order' => 'ASC' );
