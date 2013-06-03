@@ -178,18 +178,19 @@ function wpsc_get_child_object_in_select_terms( $parent_id, $terms, $taxonomy ){
  * gets the
  *
  * @access public
- * @param mixed $parent_id
- * @param mixed $terms
- * @param mixed $taxonomies
- * @param array $args. ( default: array() )
- * @return void
+ * @param int $parent_id
+ * @param int|array of int $terms
+ * @param int|array taxonomiy id(s) ti look for
+ * @param array $args  additional arguments to query against
+ * @return boolean|int|array result false if product not found, a single product id when 
+ *                           one id found, or an array of product ids if more than one found
  */
 function wpsc_get_child_object_in_terms( $parent_id, $terms, $taxonomies = 'wpsc-variation', $args = array() ) {
 
 	$parent_id = absint( $parent_id );
 
 	if ( ! is_array( $terms ) )
-		$terms = ( array ) $terms;
+		$terms =  array( $terms );
 
 	if ( ! is_array( $taxonomies ) )
 		$taxonomies = ( array ) $taxonomies;
@@ -209,7 +210,7 @@ function wpsc_get_child_object_in_terms( $parent_id, $terms, $taxonomies = 'wpsc
 	$args = wp_parse_args( $args, $defaults );
 
 	$terms     = array_map( 'intval', $terms );
-	$tax_query = array( 	'relation' => 'AND' );
+	$tax_query = array( 'relation' => 'AND' );
 
 	foreach ( $terms as $term_index => $term_id ) {
 		$taxonomy    = isset( $taxonomies[$term_index] ) ? $taxonomies[$term_index] : 'wpsc-variation';
