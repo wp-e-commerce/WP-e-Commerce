@@ -1,5 +1,4 @@
 <?php 
-
 /**
  * Tells us what cire object types have a custom meta table.
  *
@@ -213,7 +212,10 @@ function wpsc_initialize_meta_table( $meta_object_type ) {
 			add_metadata( $meta_object_type, $old_meta_row->object_id, $old_meta_row->meta_key, $meta_data, false );			
 		}
 		
-		do_action ( "wpsc_loaded_{$meta_object_type}_meta_table" );
+		// we now have the custom meta table, and maybe data in it, it is safe to load the access routines
+		include_once( wpsc_meta_functions_file( $meta_object_type ) );
+		
+		do_action( "wpsc_loaded_{$meta_object_type}_meta_table" );
 	}	
 }
 
@@ -382,7 +384,6 @@ foreach ( $meta_object_types as $meta_object_type ) {
 */
 wpsc_meta_register_types( wpsc_meta_core_object_types() );
 
-
 /*
  * We allow the custom object types to be extended, to the initialization for this 
  * after all plugins are loaded
@@ -390,7 +391,7 @@ wpsc_meta_register_types( wpsc_meta_core_object_types() );
 function wpsc_init_custom_object_types() {
 	$meta_object_types = wpsc_meta_custom_object_types();
 	if ( ! empty( $meta_object_types ) ){
-		wpsc_meta_register_types ( wpsc_meta_core_object_types() );
+		wpsc_meta_register_types( wpsc_meta_core_object_types() );
 	}
 }
 
@@ -400,6 +401,6 @@ add_action( 'plugins_loaded', 'wpsc_init_custom_object_types' );
  *  migration routines to take meta from the old wpsc meta table and
  *  move the to the custom meta infrastructure
  */
-function wpsc_meta_migrate_cart_item( ) {
+function wpsc_meta_migrate_cart_item() {
 	wpsc_initialize_meta_table( 'cart_item' );
 }
