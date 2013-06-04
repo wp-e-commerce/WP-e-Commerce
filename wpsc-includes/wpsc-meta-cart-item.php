@@ -4,9 +4,6 @@
 ** This file was automatically created, strongly suggest that it not be edited directly.
 ** See the code in the file wpsc-meta-init.php near line 320 for more details.
 */
-?>
-
-<?php 
 
 //
 // cart_item meta functions
@@ -189,8 +186,4 @@ function wpsc_get_cart_item_custom_values( $metakey = '', $cart_item_id = 0 ) {
 function wpsc_get_cart_item_meta_by_timestamp( $callback = null, $timestamp = 0, $comparison = '>', $metakey = '' ) {
 	return wpsc_get_meta_by_timestamp( 'cart_item', $callback , $timestamp , $comparison , $metakey );
 }
-
-
-
-
 

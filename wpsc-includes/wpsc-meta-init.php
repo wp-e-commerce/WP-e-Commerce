@@ -325,8 +325,7 @@ function wpsc_check_meta_access_functions( $meta_object_type ) {
 			'** NOTICE: '.PHP_EOL.
 			'** This file was automatically created, strongly suggest that it not be edited directly.'.PHP_EOL.
 			'** See the code in the file '.basename( __FILE__ ).' near line '.__LINE__.' for more details.'.PHP_EOL.
-			'*/'.PHP_EOL.
-			'?>'.PHP_EOL.PHP_EOL;
+			'*/'.PHP_EOL.PHP_EOL;
 		
 		file_put_contents( $meta_functions_file , $msg );
 		$new_code = str_replace( '{$OBJECT_TYPE}' , $meta_object_type, $template );

@@ -1,5 +1,3 @@
-<?php 
-
 //
 // {$OBJECT_TYPE} meta functions
 //

@@ -4,9 +4,7 @@
 ** This file was automatically created, strongly suggest that it not be edited directly.
 ** See the code in the file wpsc-meta-init.php near line 320 for more details.
 */
-?>
 
-<?php 
 
 //
 // visitor meta functions
