@@ -233,8 +233,9 @@ function _wpsc_get_alternate_html() {
 						add_query_arg(
 							array( 'ajax' => 'true', 'wpsc_action' => 'wpsc_get_alternate_html', 'ajax' => 'true', 'wpsc_ajax_action' => 'add_to_cart' ), home_url() ),
 							array( 'body' =>
-								array( 'cart_messages' => $cart_messages, 'ajax' => 'true', 'wpsc_ajax_action' => 'add_to_cart', 'product_id' => $_REQUEST['product_id']
-									)
+								array(
+									'cart_messages' => $cart_messages, 'ajax' => 'true', 'wpsc_ajax_action' => 'add_to_cart', 'product_id' => $_REQUEST['product_id']
+								)
 							)
 						)
 					);
