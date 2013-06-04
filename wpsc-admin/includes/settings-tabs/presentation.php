@@ -183,7 +183,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 			<?php $this->theme_metabox(); ?>
 
 			<h3 class="form_group"><?php esc_html_e( 'Button Settings', 'wpsc' ); ?></h3>
-			<table class='wpsc_options form-table'>
+			<table class='wpsc_options form-table' style="width:550px">
 				<tr>
 					<th scope="row"><?php esc_html_e( 'Button Type', 'wpsc' ); ?>:</th>
 					<td>
