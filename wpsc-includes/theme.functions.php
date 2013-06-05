@@ -902,68 +902,69 @@ function wpsc_get_the_new_id($prod_id){
 function wpsc_display_products_page( $query ) {
 	global $wpdb, $wpsc_query,$wp_query, $wp_the_query;
 
-	remove_filter('the_title','wpsc_the_category_title');
+	remove_filter( 'the_title','wpsc_the_category_title' );
 
 	// If the data is coming from a shortcode parse the values into the args variable,
 	// I did it this was to preserve backwards compatibility
-	if(!empty($query)){
+	if ( ! empty( $query ) ) {
 		$args = array();
 
 		$args['post_type'] = 'wpsc-product';
-		if(!empty($query['product_id']) && is_array($query['product_id'])){
+		if ( ! empty( $query['product_id'] ) && is_array( $query['product_id'] ) ) {
 			$args['post__in'] = $query['product_id'];
-		}elseif(is_string($query['product_id'])){
+		} elseif ( is_string( $query['product_id'] ) ) {
 			$args['post__in'] = (array)$query['product_id'];
 		}
-		if(!empty($query['old_product_id'])){
-			$post_id = wpsc_get_the_new_id($query['old_product_id']);
+		if ( ! empty( $query['old_product_id'] ) ) {
+			$post_id = wpsc_get_the_new_id( $query['old_product_id'] );
 			$args['post__in'] = (array)$post_id;
 		}
-		if(!empty($query['price']) && 'sale' != $query['price']){
+		if ( ! empty( $query['price'] ) && 'sale' != $query['price'] ) {
 			$args['meta_key'] = '_wpsc_price';
 			$args['meta_value'] = $query['price'];
-		}elseif(!empty($query['price']) && 'sale' == $query['price']){
+		} elseif ( ! empty( $query['price'] ) && 'sale' == $query['price'] ) {
 			$args['meta_key'] = '_wpsc_special_price';
 			$args['meta_compare'] = '>=';
 			$args['meta_value'] = '1';
 		}
-		if(!empty($query['product_name'])){
+		if ( ! empty( $query['product_name'] ) ) {
 			$args['pagename'] = $query['product_name'];
 		}
-		if(!empty($query['category_id'])){
-			$term = get_term($query['category_id'],'wpsc_product_category');
-			$id = wpsc_get_meta($query['category_id'], 'category_id','wpsc_old_category');
-			if( !empty($id)){
-				$term = get_term($id,'wpsc_product_category');
+		if ( ! empty( $query['category_id'] ) ) {
+			$term = get_term( $query['category_id'],'wpsc_product_category' );
+			$id = wpsc_get_meta( $query['category_id'], 'category_id','wpsc_old_category' );
+			if ( ! empty( $id ) ){
+				$term = get_term( $id,'wpsc_product_category' );
 				$args['wpsc_product_category'] = $term->slug;
 				$args['wpsc_product_category__in'] = $term->term_id;
-			}else{
+			} else {
 				$args['wpsc_product_category'] = $term->slug;
 				$args['wpsc_product_category__in'] = $term->term_id;
 			}
 		}
-		if(!empty($query['category_url_name'])){
+		if ( ! empty( $query['category_url_name'] ) ) {
 			$args['wpsc_product_category'] = $query['category_url_name'];
 		}
 		$orderby = ( !empty($query['sort_order']) ) ? $query['sort_order'] : null;
 
-		$args = array_merge( $args, wpsc_product_sort_order_query_vars($orderby) );
+		$args = array_merge( $args, wpsc_product_sort_order_query_vars( $orderby ) );
 
-		if(!empty($query['order'])){
+		if ( ! empty( $query['order'] ) ) {
 			$args['order'] = $query['order'];
 		}
-		if(!empty($query['limit_of_items']) && '1' == get_option('use_pagination')){
-			$args['posts_per_page'] = $query['limit_of_items'];
-		}
-		if(!empty($query['number_per_page']) && '1' == get_option('use_pagination')){
-			$args['posts_per_page'] = $query['number_per_page'];
-			$args['paged'] = $query['page'];
-		}
-		if( '0' == get_option('use_pagination') ){
+		if ( '0' == get_option( 'use_pagination' ) ) {
 			$args['nopaging'] = true;
 			$args['posts_per_page'] = '-1';
 		}
-		if(!empty($query['tag'])){
+		if ( ! empty( $query['limit_of_items'] ) ) {
+			$args['posts_per_page'] = $query['limit_of_items'];
+			$args['nopaging'] = false;
+		}
+		if ( ! empty( $query['number_per_page'] ) ) {
+			$args['posts_per_page'] = $query['number_per_page'];
+			$args['nopaging'] = false;
+		}
+		if ( ! empty( $query['tag'] ) ) {
 			$args['product_tag'] = $query['tag'];
 		}
 		query_posts( $args );
@@ -974,12 +975,13 @@ function wpsc_display_products_page( $query ) {
 
 	// Pretty sure this single_product code is legacy...but fixing it up just in case.
 	// get the display type for the selected category
-	if(!empty($temp_wpsc_query->query_vars['term']))
-		$display_type = wpsc_get_the_category_display($temp_wpsc_query->query_vars['term']);
-	elseif( !empty( $args['wpsc_product_category'] ) )
-		$display_type = wpsc_get_the_category_display($args['wpsc_product_category']);
-	else
+	if ( ! empty( $temp_wpsc_query->query_vars['term'] ) ) {
+		$display_type = wpsc_get_the_category_display( $temp_wpsc_query->query_vars['term'] );
+	} elseif ( ! empty( $args['wpsc_product_category'] ) ) {
+		$display_type = wpsc_get_the_category_display( $args['wpsc_product_category'] );
+	} else {
 		$display_type = 'default';
+	}
 
 	$saved_display = wpsc_get_customer_meta( 'display_type' );
 	$display_type  = ! empty( $saved_display ) ? $saved_display : wpsc_check_display_type();
@@ -1472,7 +1474,7 @@ function is_products_page(){
 
 }
 /**
- * wpsc_display_products_page function.
+ * wpsc_display_featured_products_page function.
  *
  * @access public
  * @param mixed $query
@@ -1514,7 +1516,7 @@ if(get_option( 'wpsc_hide_featured_products' ) == 1){
 
 
 /**
- * wpsc_display_products_page class
+ * WPSC_Hide_subcatsprods_in_cat class
  *
  * Shows only products from current category, but not from subcategories.
  *

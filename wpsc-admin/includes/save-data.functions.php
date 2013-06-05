@@ -264,6 +264,9 @@ function _wpsc_is_display_type_supported( $display_type ) {
 	return function_exists( $callback );
 }
 
+/**
+ * Renders the additional content for the category edit page
+ */
 function wpsc_admin_category_forms_edit() {
 	global $wpdb;
 
@@ -271,7 +274,7 @@ function wpsc_admin_category_forms_edit() {
 	$category_name = '';
 	$category = array();
 
-	$category_id = absint( $_REQUEST["tag_ID"] );
+	$category_id = absint( $_REQUEST['tag_ID'] );
 	$category = get_term( $category_id, 'wpsc_product_category', ARRAY_A );
 	$category['nice-name']               = wpsc_get_categorymeta( $category['term_id'], 'nice-name' );
 	$category['description']             = wpsc_get_categorymeta( $category['term_id'], 'description' );
@@ -305,7 +308,7 @@ function wpsc_admin_category_forms_edit() {
 			?>
 			<select name='display_type'>
 				<option value='default'<?php checked( $display_type, 'default' ); ?>><?php esc_html_e( 'Default View', 'wpsc' ); ?></option>
-				<option value='list'<?php disabled( _wpsc_is_display_type_supported( 'list' ), false ); ?><?php checked( $display_type, 'list' ); ?>><?php esc_html_e('List View', 'wpsc'); ?></option>
+				<option value='list'<?php disabled( _wpsc_is_display_type_supported( 'list' ), false ); ?><?php checked( $display_type, 'list' ); ?>><?php esc_html_e( 'List View', 'wpsc' ); ?></option>
 				<option value='grid' <?php disabled( _wpsc_is_display_type_supported( 'grid' ), false ); ?><?php checked( $display_type, 'grid' ); ?>><?php esc_html_e( 'Grid View', 'wpsc' ); ?></option>
 			</select><br />
 		</td>
@@ -325,7 +328,7 @@ function wpsc_admin_category_forms_edit() {
 				<span class="description"><?php esc_html_e( 'You can set an image for the category here.  If one exists, check the box to delete.', 'wpsc' ); ?></span>
 			</td>
 	</tr>
-	<?php if ( function_exists( "getimagesize" ) ) : ?>
+	<?php if ( function_exists( 'getimagesize' ) ) : ?>
 		<tr class="form-field">
 			<th scope="row" valign="top">
 				<label for="image"><?php esc_html_e( 'Thumbnail Size', 'wpsc' ); ?></label>
@@ -342,7 +345,6 @@ function wpsc_admin_category_forms_edit() {
 		</tr>
 	<?php endif; // 'getimagesize' condition ?>
 
-
 	<tr>
 		<td colspan="2"><h4><?php esc_html_e( 'Shortcodes and Template Tags', 'wpsc' ); ?></h4></td>
 	</tr>
@@ -352,7 +354,7 @@ function wpsc_admin_category_forms_edit() {
 			<label for="image"><?php esc_html_e( 'Display Category Shortcode', 'wpsc' ); ?></label>
 		</th>
 		<td>
-			<code>[wpsc_products category_url_name='<?php echo $category["slug"]; ?>']</code><br />
+			<code>[wpsc_products category_url_name='<?php echo esc_html($category['slug']); ?>']</code><br />
 			<span class="description"><?php esc_html_e( 'Shortcodes are used to display a particular category or group within any WordPress page or post.', 'wpsc' ); ?></span>
 		</td>
 	</tr>
@@ -361,7 +363,7 @@ function wpsc_admin_category_forms_edit() {
 			<label for="image"><?php esc_html_e( 'Display Category Template Tag', 'wpsc' ); ?></label>
 		</th>
 		<td>
-			<code>&lt;?php echo wpsc_display_products_page( array( 'category_url_name' => '<?php echo $category["slug"]; ?>' ) ); ?&gt;</code><br />
+			<code>&lt;?php echo wpsc_display_products_page( array( 'category_url_name' =&gt; '<?php echo esc_html( $category['slug'] ); ?>' ) ); ?&gt;</code><br />
 			<span class="description"><?php esc_html_e( 'Template tags are used to display a particular category or group within your theme / template.', 'wpsc' ); ?></span>
 		</td>
 	</tr>
@@ -374,7 +376,7 @@ function wpsc_admin_category_forms_edit() {
 		</td>
 	</tr>
 	<?php
-		$countrylist = $wpdb->get_results( "SELECT id,country,visible FROM `".WPSC_TABLE_CURRENCY_LIST."` ORDER BY country ASC ",ARRAY_A );
+		$countrylist = $wpdb->get_results( 'SELECT id,country,visible FROM `'.WPSC_TABLE_CURRENCY_LIST.'` ORDER BY country ASC ',ARRAY_A );
 		$selectedCountries = wpsc_get_meta( $category_id,'target_market','wpsc_category' );
 	?>
 	<tr>
@@ -387,16 +389,16 @@ function wpsc_admin_category_forms_edit() {
 			<?php else : ?>
 				<span><?php esc_html_e( 'Select', 'wpsc' ); ?>: <a href='' class='wpsc_select_all'><?php esc_html_e( 'All', 'wpsc' ); ?></a>&nbsp; <a href='' class='wpsc_select_none'><?php esc_html_e( 'None', 'wpsc' ); ?></a></span><br />
 				<div id='resizeable' class='ui-widget-content multiple-select'>
-					<?php foreach( $countrylist as $country ) {
+					<?php foreach ( $countrylist as $country ) {
 						if ( in_array( $country['id'], (array)$selectedCountries ) ) {
 							?>
-							<input type='checkbox' name='countrylist2[]' id='countrylist2-<?php echo $country['id']; ?>' value='<?php echo $country['id']; ?>' checked='<?php echo $country['visible']; ?>' />
-							<label for="countrylist2-<?php echo $country['id']; ?>"><?php esc_html_e( $country['country'] ); ?></label><br />
+							<input type='checkbox' name='countrylist2[]' id='countrylist2-<?php echo esc_attr( $country['id'] ); ?>' value='<?php echo esc_attr( $country['id'] ); ?>' checked='<?php echo esc_attr( $country['visible'] ); ?>' />
+							<label for="countrylist2-<?php echo esc_attr( $country['id'] ); ?>"><?php esc_html_e( $country['country'] ); ?></label><br />
 							<?php
 						} else {
 							?>
-							<input type='checkbox' name='countrylist2[]' id='countrylist2-<?php echo $country['id']; ?>' value='<?php echo $country['id']; ?>'  />
-							<label for="countrylist2-<?php echo $country['id']; ?>"><?php esc_html_e( $country['country'] ); ?></label><br />
+							<input type='checkbox' name='countrylist2[]' id='countrylist2-<?php echo esc_attr( $country['id'] ); ?>' value='<?php echo esc_attr( $country['id'] ); ?>'  />
+							<label for="countrylist2-<?php echo esc_attr( $country['id'] ); ?>"><?php esc_html_e( $country['country'] ); ?></label><br />
 							<?php
 						}
 					} ?>
@@ -418,7 +420,7 @@ function wpsc_admin_category_forms_edit() {
 			$category['term_id'] = '';
 
 		$used_additonal_form_set = wpsc_get_categorymeta( $category['term_id'], 'use_additional_form_set' );
-		$checkout_sets = get_option('wpsc_checkout_form_sets');
+		$checkout_sets = get_option( 'wpsc_checkout_form_sets' );
 		unset($checkout_sets[0]);
 		$uses_billing_address = (bool)wpsc_get_categorymeta( $category['term_id'], 'uses_billing_address' );
 	?>
@@ -430,12 +432,12 @@ function wpsc_admin_category_forms_edit() {
 			<select name='use_additional_form_set'>
 				<option value=''><?php esc_html_e( 'None', 'wpsc' ); ?></option>
 				<?php
-					foreach( (array) $checkout_sets as $key => $value ) {
-						$selected_state = "";
+					foreach ( (array) $checkout_sets as $key => $value ) {
+						$selected_state = '';
 						if ( $used_additonal_form_set == $key ) {
 							$selected_state = "selected='selected'";
 						} ?>
-						<option <?php echo $selected_state; ?> value='<?php echo $key; ?>'><?php echo esc_html( $value ); ?></option>
+						<option <?php echo $selected_state; ?> value='<?php echo esc_attr( $key ); ?>'><?php echo esc_html( $value ); ?></option>
 						<?php
 					}
 				?>
@@ -448,8 +450,8 @@ function wpsc_admin_category_forms_edit() {
 			<label><?php esc_html_e( 'Address to calculate shipping with', 'wpsc' ); ?></label>
 		</th>
 		<td>
-			<label><input type='radio' class='wpsc_cat_box'  value='0' name='uses_billing_address' <?php echo ( ( $uses_billing_address != true ) ? "checked='checked'" : "" ); ?> /> <?php esc_html_e( 'Default Setting', 'wpsc' ); ?></label>
-			<label><input type='radio' class='wpsc_cat_box' value='1' name='uses_billing_address' <?php echo ( ( $uses_billing_address == true ) ? "checked='checked'" : "" ); ?> /> <?php esc_html_e( 'Billing Address', 'wpsc' ); ?></label>
+			<label><input type='radio' class='wpsc_cat_box'  value='0' name='uses_billing_address' <?php checked( $uses_billing_address, false ); ?> /> <?php esc_html_e( 'Default Setting', 'wpsc' ); ?></label>
+			<label><input type='radio' class='wpsc_cat_box' value='1' name='uses_billing_address' <?php checked( $uses_billing_address ); ?> /> <?php esc_html_e( 'Billing Address', 'wpsc' ); ?></label>
 			<p class='description'><?php esc_html_e( 'Products in this category will use the address specified to calculate shipping costs.', 'wpsc' ); ?></p>
 		</td>
 	</tr>
