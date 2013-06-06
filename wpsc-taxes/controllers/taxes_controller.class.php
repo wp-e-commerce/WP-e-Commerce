@@ -541,17 +541,17 @@ class wpec_taxes_controller {
 	* */
 	function wpsc_build_taxes_row( $row_mode = 'rates', $row_key = 0, $tax_rate = false ) {
 
-		if ( ! $tax_rate ) {
-			$defaults = array(
-				'rate' => null,
-				'name' => null,
-				'country_code' => null,
-				'region_code' => null,
-				'shipping' => null,
-				'index' => null,
-				'row_class' => null
-			);
-		}
+		$defaults = array(
+			'rate' => null,
+			'name' => null,
+			'country_code' => null,
+			'region_code' => null,
+			'shipping' => null,
+			'index' => null,
+			'row_class' => null,
+		);
+
+		$tax_rate = array_merge( $defaults, (array) $tax_rate );
 
 		$countries = $this->wpec_taxes->wpec_taxes_get_countries();
 
