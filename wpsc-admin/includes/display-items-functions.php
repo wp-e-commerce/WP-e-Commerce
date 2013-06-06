@@ -433,6 +433,21 @@ function wpsc_weight_units() {
 	);
 }
 
+function wpsc_weight_unit_display( $unit ) {
+	switch ( $unit ) {
+		case 'pound' :
+			return __( ' lbs.', 'wpsc' );
+		case 'ounce' :
+			return __( ' oz.', 'wpsc' );
+		case 'gram' :
+			return __( ' g', 'wpsc' );
+		case 'kilograms' :
+		case 'kilogram' :
+			return __( ' kgs.', 'wpsc' );
+	}
+	return '';
+}
+
 function wpsc_validate_dimension_unit( $unit = '' ) {
 	$default_unit = apply_filters( 'wpsc_default_dimension_unit', $unit );
 	if ( empty( $unit ) && array_key_exists( $default_unit, wpsc_dimension_units() ) )

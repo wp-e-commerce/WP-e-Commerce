@@ -117,22 +117,7 @@ function _wpsc_manage_products_column_weight( $post, $post_id, $has_variations )
 
 	$unit = $product_data['meta']['_wpsc_product_metadata']['weight_unit'];
 
-	switch( $unit ) {
-		case "pound":
-			$unit = __(" lbs.", "wpsc");
-		break;
-		case "ounce":
-			$unit = __(" oz.", "wpsc");
-		break;
-		case "gram":
-			$unit = __(" g", "wpsc");
-		break;
-		case "kilograms":
-		case "kilogram":
-			$unit = __(" kgs.", "wpsc");
-		break;
-	}
-	echo $weight.$unit;
+	echo $weight . wpsc_weight_unit_display( $unit );
 	echo '<div id="inline_' . $post->ID . '_weight" class="hidden">' . esc_html( $weight ) . '</div>';
 }
 add_action( 'wpsc_manage_products_column_weight', '_wpsc_manage_products_column_weight', 10, 3 );
