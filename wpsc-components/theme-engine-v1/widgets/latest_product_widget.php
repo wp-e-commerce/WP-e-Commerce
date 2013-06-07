@@ -149,7 +149,7 @@ function wpsc_latest_product( $args = null, $instance ) {
 				if ( $thumbnail )
 					$output .= '<img src="' . esc_url( $thumbnail ) . '" title="' . apply_filters( 'the_title', $latest_product->post_title ) . '" alt="' . apply_filters( 'the_title', $latest_product->post_title ) . '" />';
 				else
-					$output .='<img class="no-image" id="product_image_'.wpsc_the_product_id().'" alt="' . esc_attr__( 'No Image', 'wpsc' ) . '" title="'.wpsc_the_product_title().'" src="'.WPSC_URL.'/wpsc-theme/wpsc-images/noimage.png" width="' . $width . '" height="' . $height . '" />';
+					$output .='<img class="no-image" id="product_image_'.wpsc_the_product_id().'" alt="' . esc_attr__( 'No Image', 'wpsc' ) . '" title="'.wpsc_the_product_title().'" src="' . WPSC_CORE_THEME_PATH . '/wpsc-images/noimage.png" width="' . $width . '" height="' . $height . '" />';
 
 				$output .= '</a>';
 				$output .= '</div>';
