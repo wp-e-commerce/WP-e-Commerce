@@ -1548,10 +1548,30 @@ if ( is_ssl() ) {
 	add_filter( 'option_user_account_url',  'wpsc_add_https_to_page_url_options' );
 }
 
+
+/**
+ * wpsc_cron()
+ *
+ * Schedules wpsc worpress cron tasks
+ *
+ * @param none
+ * @return void
+ */
 function wpsc_cron() {
+	$default_schedules = array( 'hourly', 'twicedaily', 'daily');
+	
+	/*
+	 * Create a cron event for each likely cron schedule.  The likely cron schedules 
+	 * are the default WordPress cron intervals (hourly, twicedaily and daily are 
+	 * defined in wordpress 3.5.1) and any cron schedules added by our plugin or 
+	 * it's related plugins.  We recognize these by checking if the schedule 
+	 * name is prefixed by 'wpsc_'.
+	 */
 	foreach ( wp_get_schedules() as $cron => $schedule ) {
-		if ( ! wp_next_scheduled( "wpsc_{$cron}_cron_task" ) )
-			wp_schedule_event( time(), $cron, "wpsc_{$cron}_cron_task" );
+		if ( in_array($cron, $default_schedules) || ( stripos($cron, 'wpsc_', 0) === 0 ) ) {
+			if ( ! wp_next_scheduled( "wpsc_{$cron}_cron_task" ) )
+				wp_schedule_event( time(), $cron, "wpsc_{$cron}_cron_task" );
+		}
 	}
 }
 add_action( 'init', 'wpsc_cron' );
