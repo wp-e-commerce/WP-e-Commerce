@@ -4,7 +4,7 @@ Donate link: http://getshopped.org
 Tags: e-commerce, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
 Requires at least: 3.4
 Tested up to: 3.6
-Stable tag: 3.8.12
+Stable tag: 3.8.11
 
 WP e-Commerce is a free WordPress Shopping Cart Plugin that lets customers buy your products, services and digital downloads online.
 
@@ -145,6 +145,23 @@ Before updating please make a backup of your existing files and database. Just i
 After upgrading from earlier versions look for link "Update Store". This will update your database structure to work with new version.
 
 == Changelog ==
+
+= 3.8.12 =
+* New: Filter to hide drafts on the front-end: "wpsc_product_display_status"
+* New: Shipwire staging / production option
+* Change: Remove deprecated and unused javascript (and by extension, CSS) from core
+* Change: Remove nusoap
+* Change: Improvements to Marketing admin panel
+* Change: Improvements to Products List Admin Page
+* Fix: WP e-Commerce pagination breaks WordPress pagination
+* Fix: Wrong thumbnail size in Product Specials widget
+* Fix: Filtering by a category also shows all products in subcategories
+* Fix: admin.js throwing a Parse Error in Safari
+* Fix: Product Image Links not working when over HTTPS
+* Fix: If AJAX_URL returns HTTPS and Add to Cart is on HTTP, errors
+* Fix: Add to Cart button doesn't work
+* Fix: Can no longer upload customer attachments
+
 
 = 3.8.11.1 =
 * Fix: Some users had theme compatibilities and other configurations that caused "Add to Cart" to no longer function as expected.
