@@ -143,19 +143,19 @@ function wpsc_latest_product( $args = null, $instance ) {
 			// Thumbnails, if required
 			if ($image) {
 				$output .= '<div class="item_image">';
-				$output .= '<a href="' . wpsc_product_url( $latest_product->ID, null ) . '">';
+				$output .= '<a href="' . get_permalink( $latest_product->ID, null ) . '">';
 				$thumbnail = wpsc_the_product_thumbnail( $width, $height, $latest_product->ID, '' );
 
 				if ( $thumbnail )
 					$output .= '<img src="' . esc_url( $thumbnail ) . '" title="' . apply_filters( 'the_title', $latest_product->post_title ) . '" alt="' . apply_filters( 'the_title', $latest_product->post_title ) . '" />';
 				else
-					$output .='<img class="no-image" id="product_image_'.wpsc_the_product_id().'" alt="' . esc_attr__( 'No Image', 'wpsc' ) . '" title="'.wpsc_the_product_title().'" src="'.WPSC_URL.'/wpsc-theme/wpsc-images/noimage.png" width="' . $width . '" height="' . $height . '" />';
+					$output .='<img class="no-image" id="product_image_'.wpsc_the_product_id().'" alt="' . esc_attr__( 'No Image', 'wpsc' ) . '" title="'.wpsc_the_product_title().'" src="' . WPSC_CORE_THEME_PATH . '/wpsc-images/noimage.png" width="' . $width . '" height="' . $height . '" />';
 
 				$output .= '</a>';
 				$output .= '</div>';
 			}
 			// Link
-			$output .= '<a href="' . esc_url( wpsc_product_url( $latest_product->ID, null ) ) . '" class="wpsc-product-title">'. apply_filters( 'the_title', $latest_product->post_title ).'</a>';
+			$output .= '<a href="' . esc_url( get_permalink( $latest_product->ID ) ) . '" class="wpsc-product-title">'. apply_filters( 'the_title', $latest_product->post_title ).'</a>';
 			$output .= '</li>';
 		}
 		$output .= "</ul>";

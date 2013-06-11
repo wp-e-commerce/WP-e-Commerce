@@ -22,6 +22,172 @@ function _wpsc_filter_merchant_v2_get_gateway_list() {
 	return ob_get_clean();
 }
 
+function _wpsc_filter_merchant_v2_payment_method_form_fields( $fields ) {
+	$selected_value =   isset( $_POST['wpsc_payment_method'] )
+	                   ? $_POST['wpsc_payment_method']
+	                   : '';
+
+	if ( empty( $selected_value ) ) {
+		$current_purchase_log_id = wpsc_get_customer_meta( 'current_purchase_log_id' );
+		$purchase_log = new WPSC_Purchase_Log( $current_purchase_log_id );
+		$selected_value = $purchase_log->get( 'gateway' );
+	}
+
+	foreach ( _wpsc_merchant_v2_get_active_gateways() as $gateway ) {
+		$gateway = (object) $gateway;
+		$title = $gateway->name;
+		if ( ! empty( $gateway->image ) )
+			$title .= ' <img src="' . $gateway->image . '" alt="' . $gateway->name . '" />';
+
+		$field = array(
+			'title' => $title,
+			'type' => 'radio',
+			'value' => $gateway->internalname,
+			'name' => 'wpsc_payment_method',
+			'checked' => $selected_value == $gateway->internalname,
+		);
+
+		$fields[] = $field;
+	}
+
+	// check the first payment gateway by default
+	if ( empty( $selected_value ) )
+		$fields[0]['checked'] = true;
+
+	return $fields;
+}
+
+add_filter(
+	'wpsc_payment_method_form_fields',
+	'_wpsc_filter_merchant_v2_payment_method_form_fields'
+);
+
+function _wpsc_filter_merchant_v2_field_after( $output, $field, $r ) {
+	if ( $field['name'] != 'wpsc_payment_method' )
+		return $output;
+
+	foreach ( _wpsc_merchant_v2_get_active_gateways() as $gateway ) {
+		if ( $gateway['internalname'] == $field['value'] ) {
+			$extra_form = _wpsc_merchant_v2_get_gateway_form( $gateway );
+			$extra_form = _wpsc_merchant_v2_hack_gateway_field_names( $extra_form, $gateway );
+			if ( ! empty( $extra_form ) ) {
+				$output .= '<table class="wpsc-payment-gateway-extra-form wpsc-payment-gateway-extra-form-' . $gateway['internalname'] . '"><tbody>';
+				$output .= $extra_form;
+				$output .= '</tbody></table>';
+			}
+			break;
+		}
+	}
+
+	return $output;
+}
+add_filter( 'wpsc_field_after', '_wpsc_filter_merchant_v2_field_after', 10, 3 );
+
+function _wpsc_merchant_v2_hack_gateway_field_names( $extra_form, $gateway ) {
+	$fields = array(
+		'card_number',
+		'card_number1',
+		'card_number2',
+		'card_number3',
+		'card_number4',
+		'expiry',
+		'card_code',
+		'cctype',
+	);
+
+	$regexp = '/(name\s*=\s*[\'"])(' . implode( '|', $fields ) . ')(["\'\[])/';
+	$replace = '/$1extra_form[' . $gateway['internalname'] . '][$2]$3';
+	$extra_form = preg_replace( $regexp, $replace, $extra_form );
+	return $extra_form;
+}
+
+function _wpsc_merchant_v2_get_active_gateways() {
+	global $nzshpcrt_gateways;
+	static $gateways = null;
+
+	if ( is_null( $gateways ) ) {
+		$active = get_option( 'custom_gateway_options' );
+		foreach ( $nzshpcrt_gateways as $gateway ) {
+			if ( in_array( $gateway['internalname'], (array) $active ) )
+				$gateways[] = $gateway;
+		}
+	}
+
+	return $gateways;
+}
+
+function _wpsc_merchant_v2_get_gateway_form( $gateway ) {
+	global $gateway_checkout_form_fields, $wpsc_gateway_error_messages;
+
+	$submitted_gateway = isset( $_POST['wpsc_payment_method'] )
+	                     ? $_POST['wpsc_payment_method']
+	                     : '';
+
+	$error = array(
+		'card_number' => '',
+		'expdate' => '',
+		'card_code' => '',
+		'cctype' => '',
+	);
+
+	if (
+		   ! empty( $submitted_gateway )
+		&& $submitted_gateway == $gateway['internalname']
+		&& is_array( $wpsc_gateway_error_messages )
+	)
+		$error = array_merge( $error, $wpsc_gateway_error_messages );
+
+	$classes = array();
+	foreach ( array( 'card_number', 'expdate', 'card_code', 'cctype' ) as $field ) {
+		if ( empty( $error[$field] ) )
+			$classes[$field] = '';
+		else
+			$classes[$field] = 'class="validation-error"';
+	}
+
+	// Match fields to gateway
+	switch ( $gateway['internalname'] ) {
+		case 'paypal_pro' : // legacy
+		case 'wpsc_merchant_paypal_pro' :
+			$output = sprintf(
+				$gateway_checkout_form_fields[$gateway['internalname']],
+				$classes['card_number'], $error['card_number'],
+				$classes['expdate'], $error['expdate'],
+				$classes['card_code'], $error['card_code'],
+				$classes['cctype'], $error['cctype']
+			);
+			break;
+
+		case 'authorize' :
+		case 'paypal_payflow' :
+			$output = @sprintf( $gateway_checkout_form_fields[$gateway['internalname']], $classes['card_number'], $error['card_number'],
+				$classes['expdate'], $error['expdate'],
+				$classes['card_code'], $error['card_code']
+			);
+			break;
+
+		case 'eway' :
+		case 'bluepay' :
+			$output = sprintf( $gateway_checkout_form_fields[$gateway['internalname']], $classes['card_number'], $error['card_number'],
+				$classes['expdate'], $error['expdate']
+			);
+			break;
+		case 'linkpoint' :
+			$output = sprintf( $gateway_checkout_form_fields[$gateway['internalname']], $classes['card_number'], $error['card_number'],
+				$classes['expdate'], $error['expdate']
+			);
+			break;
+
+	}
+
+	if ( isset( $output ) && !empty( $output ) )
+		return $output;
+	elseif ( isset( $gateway_checkout_form_fields[$gateway['internalname']] ) )
+		return $gateway_checkout_form_fields[$gateway['internalname']];
+	return '';
+}
+
+
 add_filter( 'wpsc_gateway_count', '_wpsc_filter_merchant_v2_gateway_count' );
 
 function _wpsc_filter_merchant_v2_gateway_count( $count ) {

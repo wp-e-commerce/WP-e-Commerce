@@ -160,9 +160,6 @@ function wpsc_core_constants_table_names() {
 	define( 'WPSC_TABLE_VARIATION_VALUES_ASSOC', "{$wp_table_prefix}wpsc_variation_values_assoc" );
 	define( 'WPSC_TABLE_VARIATION_COMBINATIONS', "{$wp_table_prefix}wpsc_variation_combinations" );
 	define( 'WPSC_TABLE_REGION_TAX',             "{$wp_table_prefix}wpsc_region_tax" );
-	define( 'WPEC_TRANSIENT_THEME_PATH_PREFIX', 'wpsc_path_' );
-	define( 'WPEC_TRANSIENT_THEME_URL_PREFIX', 'wpsc_url_' );
-
 }
 
 /**
@@ -245,28 +242,6 @@ function wpsc_core_constants_uploads() {
 	define( 'WPSC_THEME_BACKUP_URL', $wpsc_urls[8] );
 	define( 'WPSC_OLD_THEMES_URL',   $wpsc_urls[9] );
 
-	// Themes folder locations
-	define( 'WPSC_CORE_THEME_PATH', WPSC_FILE_PATH . '/wpsc-theme/' );
-	define( 'WPSC_CORE_THEME_URL' , WPSC_URL       . '/wpsc-theme/' );
-
-	// No transient so look for the themes directory
-	if ( false === ( $theme_path = get_transient( 'wpsc_theme_path' ) ) ) {
-
-		// Use the old path if it exists
-		if ( file_exists( WPSC_OLD_THEMES_PATH.get_option('wpsc_selected_theme') ) )
-			define( 'WPSC_THEMES_PATH', WPSC_OLD_THEMES_PATH );
-
-		// Use the built in theme files
-		else
-			define( 'WPSC_THEMES_PATH', WPSC_CORE_THEME_PATH );
-
-		// Store the theme directory in a transient for safe keeping
-		set_transient( 'wpsc_theme_path', WPSC_THEMES_PATH, 60 * 60 * 12 );
-
-	// Transient exists, so use that
-	} else {
-		define( 'WPSC_THEMES_PATH', $theme_path );
-	}
 }
 
 /**
@@ -298,17 +273,6 @@ function wpsc_core_setup_globals() {
 
 	// Setup some globals
 	$wpsc_query_vars = array();
-	$selected_theme  = get_option( 'wpsc_selected_theme' );
-
-	// Pick selected theme or fallback to default
-	if ( empty( $selected_theme ) || !file_exists( WPSC_THEMES_PATH ) )
-		define( 'WPSC_THEME_DIR', 'default' );
-	else
-		define( 'WPSC_THEME_DIR', $selected_theme );
-
-	// Include a file named after the current theme, if one exists
-	if ( !empty( $selected_theme ) && file_exists( WPSC_THEMES_PATH . $selected_theme . '/' . $selected_theme . '.php' ) )
-		include_once( WPSC_THEMES_PATH . $selected_theme . '/' . $selected_theme . '.php' );
     require_once( WPSC_FILE_PATH . '/wpsc-includes/shipping.helper.php');
     $wpec_ash = new ASH();
 }

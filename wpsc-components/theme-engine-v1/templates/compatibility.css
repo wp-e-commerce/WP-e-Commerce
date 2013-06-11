@@ -1,0 +1,50 @@
+/*
+Generalised theme compatibility fixes, the shopping cart does not need bullets
+*/
+
+li.widget_wp_shopping_cart ul {
+	list-style-image: none !important;
+	list-style-type: none !important;
+}
+
+li.widget_wp_shopping_cart ul li {
+	list-style-image: none !important;
+	list-style-type: none !important;
+	background: none !important;
+}
+
+li.widget_wp_shopping_cart ul li:before{
+	/* Countermand any content properties like the one in the default wordpress theme.  */
+	content: "" !important;
+}
+
+
+div.categorydisplay ul li:before{
+	/* Countermand any content properties like the one in the default wordpress theme.  */
+	content: "" !important;
+}
+
+a.additional_description_link img {
+	margin:0px 3px 0px 0px;
+}
+
+div.textcol form {
+	min-width: 300px;
+}
+
+div.wpsc_loading_animation {
+	visibility: hidden;
+}
+
+#idc-container-parent{
+	clear:both;
+
+}
+table.wpsc_checkout_table label{
+	display:inline;
+	padding-right:10px;
+}
+aside.widget_wpsc_product_specials span.oldprice {
+	text-decoration: line-through;
+	color: #666; 
+}

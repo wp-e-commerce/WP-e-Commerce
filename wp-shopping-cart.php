@@ -69,6 +69,12 @@ class WP_eCommerce {
 				WPSC_FILE_PATH . '/wpsc-components/merchant-core-v2/merchant-core-v2.php'
 		);
 
+		$components['theme-engine']['core-v1'] = array(
+			'title' => __( 'WP e-Commerce Theme Engine v1', 'wpsc' ),
+			'includes' =>
+				WPSC_FILE_PATH . '/wpsc-components/theme-engine-v1/theme-engine-v1.php'
+		);
+
 		return $components;
 	}
 
@@ -195,9 +201,6 @@ class WP_eCommerce {
 		// Setup the core WPEC cart
 		wpsc_core_setup_cart();
 
-		// Load the thumbnail sizes
-		wpsc_core_load_thumbnail_sizes();
-
 		// Load the purchase log statuses
 		wpsc_core_load_purchase_log_statuses();
 
@@ -209,9 +212,6 @@ class WP_eCommerce {
 
 		// Load the shipping modules
 		wpsc_core_load_shipping_modules();
-
-		// Set page title array for important WPSC pages
-		wpsc_core_load_page_titles();
 
 		// WPEC is fully loaded
 		do_action( 'wpsc_loaded' );

@@ -260,5 +260,3 @@ class wpsc_breadcrumbs {
 	}
 
 }
-
-?>

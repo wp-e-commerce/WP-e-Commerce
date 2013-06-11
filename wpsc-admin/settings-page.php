@@ -203,7 +203,6 @@ final class WPSC_Settings_Page {
 	public static function init() {
 		self::$default_tabs = array(
 			'general'      => _x( 'General'     , 'General settings tab in Settings->Store page'     , 'wpsc' ),
-			'presentation' => _x( 'Presentation', 'Presentation settings tab in Settings->Store page', 'wpsc' ),
 			'admin'        => _x( 'Admin'       , 'Admin settings tab in Settings->Store page'       , 'wpsc' ),
 			'taxes'        => _x( 'Taxes'       , 'Taxes settings tab in Settings->Store page'       , 'wpsc' ),
 			'shipping'     => _x( 'Shipping'    , 'Shipping settings tab in Settings->Store page'    , 'wpsc' ),
@@ -378,10 +377,10 @@ final class WPSC_Settings_Page {
 
 		if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( $_REQUEST['wpsc_admin_action'] == 'submit_options' ) ) {
 			check_admin_referer( 'update-options', 'wpsc-update-options' );
-			
+
 			$this->save_options();
 			do_action( 'wpsc_save_' . $this->current_tab_id . '_settings', $this->current_tab );
-		
+
 			$query_args = array();
 			if ( is_callable( array( $this->current_tab, 'callback_submit_options' ) ) ) {
 				$additional_query_args = $this->current_tab->callback_submit_options();
@@ -445,6 +444,7 @@ final class WPSC_Settings_Page {
 	 */
 	private function submit_url() {
 		$location = add_query_arg( 'tab', $this->current_tab_id );
+		$location = apply_filters( 'wpsc_settings_page_submit_url', $location, $this, $this->current_tab );
 		return $location;
 	}
 
@@ -476,14 +476,14 @@ final class WPSC_Settings_Page {
 			<div id="options_<?php echo esc_attr( $this->current_tab_id ); ?>" class="tab-content">
 				<?php
 					if ( is_callable( array( $this->current_tab, 'display' ) ) ) {
+						do_action( 'wpsc_before_settings_tab', $this, $this->current_tab );
 						$this->current_tab->display();
+						do_action( 'wpsc_after_settings_tab', $this, $this->current_tab );
 					}
 				?>
 
 				<?php do_action( 'wpsc_' . $this->current_tab_id . '_settings_page' ); ?>
 				<div class="submit">
-					<input type='hidden' name='wpsc_admin_action' value='submit_options' />
-					<?php wp_nonce_field( 'update-options', 'wpsc-update-options' ); ?>
 					<?php if ( $this->current_tab->is_submit_button_displayed() ): ?>
 						<?php submit_button( __( 'Save Changes' ) ); ?>
 					<?php endif ?>
@@ -706,3 +706,12 @@ final class WPSC_Settings_Page {
 }
 
 WPSC_Settings_Page::init();
+
+add_action( 'wpsc_after_settings_tab', '_wpsc_action_after_settings_tab' );
+
+function _wpsc_action_after_settings_tab() {
+	?>
+	<input type='hidden' name='wpsc_admin_action' value='submit_options' />
+	<?php
+	wp_nonce_field( 'update-options', 'wpsc-update-options' );
+}

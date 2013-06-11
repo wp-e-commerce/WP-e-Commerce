@@ -1906,24 +1906,38 @@ table.purchase-logs tr:hover .column-id .delete {
 
 .wpsc-product-variations-tabs {
 	background: #F1F1F1;
-	border-bottom: 1px solid #ccc;
-	padding: 10px 10px 0;
+	border-bottom: 1px solid #dfdfdf;
+	padding: 5px 4px 0;
 	margin: 0;
+	width: 100%;
+}
+
+.wpsc-product-variations-tabs:before,
+.wpsc-product-variations-tabs:after {
+	display: table;
+	content: "";
+}
+
+.wpsc-product-variations-tabs:after {
+	clear: both;
 }
 
 .wpsc-product-variations-tabs li {
-	display: inline-block;
-	margin: 0 4px 2px 0;
+	float: left;
+	margin: 0 4px 0 0;
 }
 
 .wpsc-product-variations-tabs a {
-	background-color: #fff;
-	border-color: #ccc #ccc #fff;
+	display: block;
+	background-color: #f1f1f1;
+	border-color: #dfdfdf #dfdfdf #fff;
 	border-style: solid;
 	border-width: 1px 1px 0;
+	line-height: 1em;
 	color: #aaa;
 	padding: 5px 7px 3px;
 	text-decoration: none;
+	vertical-align: middle;
 
 	border-top-left-radius: 3px;
 	border-top-right-radius: 3px;
@@ -1938,12 +1952,14 @@ table.purchase-logs tr:hover .column-id .delete {
 }
 
 .wpsc-product-variations-tabs .active a {
+	background: #fff;
 	border-bottom-width: 1px;
 	color: #333;
-	margin-bottom: 2px;
+	margin-bottom: -1px;
 }
 
 .wpsc-product-variations-tab-content {
+	clear: both;
 	padding: 0 10px;
 }
 

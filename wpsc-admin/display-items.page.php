@@ -487,7 +487,7 @@ function wpsc_sortable_column_load() {
  */
 function wpsc_product_list_exclude_child_categories( $query ) {
 
-	if ( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) )
+	if ( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || ! $query->is_main_query() )
 		return;
 
 	if ( 'edit-wpsc-product' == get_current_screen()->id ) {

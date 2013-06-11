@@ -13,26 +13,6 @@ function wpsc_cart_item_custom_message(){
 }
 
 /**
- * nzshpcrt_get_gateways()
- *
- * Deprecated function for returning the merchants global
- *
- * @global array $nzshpcrt_gateways
- * @return array
- */
-function nzshpcrt_get_gateways() {
-	_wpsc_deprecated_function( __FUNCTION__, '3.8' );
-
-	global $nzshpcrt_gateways;
-
-	if ( !is_array( $nzshpcrt_gateways ) )
-		wpsc_core_load_gateways();
-
-	return $nzshpcrt_gateways;
-
-}
-
-/**
  * wpsc_merchants_modules_deprecated()
  *
  * Deprecated function for merchants modules
@@ -1341,3 +1321,19 @@ function wpsc_product_variation_price_available( $product_id, $from_text = false
 	);
 	return wpsc_product_variation_price_from( $product_id, $args );
 }
+
+/**
+ * Deprecated function
+ *
+ * @deprecated 3.8.9
+ */
+function wpsc_post_title_seo( $title ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.9' );
+	global $wpdb, $page_id, $wp_query;
+	$new_title = wpsc_obtain_the_title();
+	if ( $new_title != '' ) {
+		$title = $new_title;
+	}
+	return esc_html( $title );
+}
+
