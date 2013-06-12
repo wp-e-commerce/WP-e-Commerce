@@ -205,7 +205,7 @@ function wpsc_core_load_gateways() {
  * the shipping directory for modules.
  */
 function wpsc_core_load_shipping_modules() {
-	global $wpsc_shipping_modules, $wpsc_cart;
+	global $wpsc_shipping_modules;
 
 	$shipping_directory     = WPSC_FILE_PATH . '/wpsc-shipping';
 	$nzshpcrt_shipping_list = wpsc_list_dir( $shipping_directory );
@@ -218,7 +218,20 @@ function wpsc_core_load_shipping_modules() {
 
 	$wpsc_shipping_modules = apply_filters( 'wpsc_shipping_modules', $wpsc_shipping_modules );
 
-	if ( ! get_option( 'do_not_use_shipping' ) && empty( $wpsc_cart->selected_shipping_method ) )
+	if ( ! get_option( 'do_not_use_shipping' ) )
+		add_action( 'wpsc_setup_customer', '_wpsc_action_get_shipping_method' );
+}
+
+/**
+ * If shipping is enabled and shipping methods have not been initialized, then
+ * do so.
+ *
+ * @access private
+ * @since 3.8.13
+ */
+function _wpsc_action_get_shipping_method() {
+	global $wpsc_cart;
+	if ( empty( $wpsc_cart->selected_shipping_method ) )
 		$wpsc_cart->get_shipping_method();
 }
 
@@ -716,14 +729,17 @@ function wpsc_delete_customer_meta( $key, $id = false ) {
 }
 
 /**
- * Create customer ID upon 'plugins_loaded' to make sure there's one exists before
- * anything else.
+ * Setup current user object and customer ID as well as cart.
+ *
+ * @uses  do_action() Calls 'wpsc_setup_customer' after customer data is ready
  *
  * @access private
- * @since  3.8.9
+ * @since  3.8.13
  */
-function _wpsc_action_create_customer_id() {
+function _wpsc_action_setup_customer() {
 	wpsc_get_current_customer_id( 'create' );
+	wpsc_core_setup_cart();
+	do_action( 'wpsc_setup_customer' );
 }
 
 /**

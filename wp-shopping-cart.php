@@ -192,14 +192,11 @@ class WP_eCommerce {
 		// Legacy action
 		do_action( 'wpsc_before_init' );
 
-		// Setup the customer ID just in case to make sure it's set up correctly
-		_wpsc_action_create_customer_id( 'create' );
-
 		// Setup the core WPEC globals
 		wpsc_core_setup_globals();
 
-		// Setup the core WPEC cart
-		wpsc_core_setup_cart();
+		// Setup the customer ID just in case to make sure it's set up correctly
+		add_action( 'wp', '_wpsc_action_setup_customer', 1 );
 
 		// Load the purchase log statuses
 		wpsc_core_load_purchase_log_statuses();
