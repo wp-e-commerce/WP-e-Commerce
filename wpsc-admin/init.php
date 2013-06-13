@@ -187,7 +187,7 @@ function wpsc_purchase_log_csv() {
 			$output .= "\n"; // terminates the row/line in the CSV file
 		}
 		// Get the most number of products and create a header for them
-		$headers3 = "";
+		$headers3 = array();
 		for( $i = 0; $i < $count; $i++ ){
 			$headers3[] = _x( 'Quantity', 'purchase log csv headers', 'wpsc' );
 			$headers3[] = _x( 'Product Name', 'purchase log csv headers', 'wpsc' );
