@@ -13,8 +13,6 @@ function _wpsc_maybe_update_product_meta_array_keys() {
 
 	$product_ids = $wpdb->get_col( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key='_wpsc_product_metadata' AND meta_value LIKE  '%_wpsc_%'" );
 
-	om4_debug_variable($product_ids);
-
 	foreach ( $product_ids as $product_id ) {
 		$metadata_needs_saving = false;
 		$product_metadata = get_post_meta( $product_id, '_wpsc_product_metadata', true );
