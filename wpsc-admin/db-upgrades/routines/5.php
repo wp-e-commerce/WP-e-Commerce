@@ -18,7 +18,7 @@ function _wpsc_maybe_update_product_meta_array_keys() {
 		$product_metadata = get_post_meta( $product_id, '_wpsc_product_metadata', true );
 		if ( is_array( $product_metadata ) ) {
 			foreach ( $product_metadata as $meta_key => $meta_value ) {
-				if ( '_wpsc_' == substr( $meta_key, 0, 6 ) ) {
+				if ( '_wpsc_' === substr( $meta_key, 0, 6 ) ) {
 					/*
 					 Typical meta keys that need renaming are:
 						 wpsc_url_name
@@ -31,13 +31,13 @@ function _wpsc_maybe_update_product_meta_array_keys() {
 					$new_meta_key = substr( $meta_key, 6 );
 
 					// remove the old (_wpsc_ prefixed) metadata from the array
-					unset ( $product_metadata[$meta_key] );
+					unset ( $product_metadata[ $meta_key ] );
 					$metadata_needs_saving = true;
 
 					// If metadata doesn't already exist with the new non-prefixed key, add it to the array
 					// This check ensures that we don't overwrite newer product metadata
-					if ( !isset($product_metadata[$new_meta_key]) ) {
-						$product_metadata[$new_meta_key] = $meta_value;
+					if ( ! isset( $product_metadata[ $new_meta_key ] ) ) {
+						$product_metadata[ $new_meta_key ] = $meta_value;
 					}
 				}
 			}
