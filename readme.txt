@@ -149,6 +149,7 @@ After upgrading from earlier versions look for link "Update Store". This will up
 = 3.8.12 =
 * New: Filter to hide drafts on the front-end: "wpsc_product_display_status"
 * New: Shipwire staging / production option
+* New: Database upgrade routine to migrate product metadata from old installations
 * Change: Remove deprecated and unused javascript (and by extension, CSS) from core
 * Change: Remove nusoap
 * Change: Improvements to Marketing admin panel
