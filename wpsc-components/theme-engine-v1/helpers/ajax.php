@@ -162,6 +162,8 @@ function wpsc_add_to_cart() {
 		if ( is_numeric( $product_id ) && 1 == get_option( 'fancy_notifications' ) )
 			$json_response['fancy_notification'] = str_replace( array( "\n", "\r" ), array( '\n', '\r' ), fancy_notification_content( $cart_messages ) );
 
+		$json_response = apply_filters( 'wpsc_add_to_cart_json_response', $json_response );
+
 		die( json_encode( $json_response ) );
 	}
 }
