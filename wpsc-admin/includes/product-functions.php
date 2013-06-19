@@ -7,7 +7,7 @@
  */
 
 function wpsc_get_max_upload_size(){
-	return wp_convert_bytes_to_hr( wp_max_upload_size() );
+	return size_format( wp_max_upload_size() );
 }
 
 /**
