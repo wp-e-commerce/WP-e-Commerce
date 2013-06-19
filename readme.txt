@@ -162,6 +162,7 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * Fix: If AJAX_URL returns HTTPS and Add to Cart is on HTTP, errors
 * Fix: Add to Cart button doesn't work
 * Fix: Can no longer upload customer attachments
+* Fix: Deprecated warning for wp_convert_bytes_to_hr() function in WordPress 3.6
 
 
 = 3.8.11.1 =
