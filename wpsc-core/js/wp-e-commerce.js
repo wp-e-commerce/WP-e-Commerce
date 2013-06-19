@@ -389,6 +389,7 @@ jQuery(document).ready(function ($) {
 
 		jQuery.post( wpsc_ajax.ajaxurl, form_values, function(response) {
 			jQuery('div.shopping-cart-wrapper').html( response.widget_output );
+			jQuery( document ).trigger( { type : 'wpsc_empty_cart', response : response } );
 		}, 'json');
 
 		return false;
