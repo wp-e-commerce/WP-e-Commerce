@@ -405,7 +405,7 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 		$status   = isset( $_GET['status'] ) ? absint( $_GET['status'] ) : false;
 		$where    = $status !== false ? "WHERE active = $status" : '';
 
-		$order 	  = strtoupper( $_GET['order'] ) === 'ASC' ? 'ASC' : 'DESC';
+		$order 	  = isset( $_GET['order'] ) && strtoupper( $_GET['order'] ) === 'ASC' ? 'ASC' : 'DESC';
 		$limit    = " LIMIT $offset,$per_page;";
 		$coupons  = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_COUPON_CODES . "` {$where} ORDER BY id {$order} {$limit} ", ARRAY_A );
 
