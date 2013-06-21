@@ -163,7 +163,12 @@ class wpsc_coupons {
 				if ( $product_data->post_parent )
 					$id = $product_data->post_parent;
 
-				return has_term( $condition['value'], 'wpsc_product_category', $id );
+				$category_condition = $condition['value'];
+				if ( strpos( $category_condition, ',' ) ) {
+					$category_condition = explode( ',', $condition['value'] );
+					$category_condition = array_map( 'trim', $cond );
+				}
+				return has_term( $category_condition, 'wpsc_product_category', $id );
 			break;
 
 			case 'not_contain'://Checks if the product name contains the condition value
