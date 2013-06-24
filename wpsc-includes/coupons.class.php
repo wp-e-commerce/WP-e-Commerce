@@ -164,7 +164,7 @@ class wpsc_coupons {
 					$id = $product_data->post_parent;
 
 				$category_condition = $condition['value'];
-				if ( strpos( $category_condition, ',' ) ) {
+				if ( false !== strpos( $category_condition, ',' ) ) {
 					$category_condition = explode( ',', $condition['value'] );
 					$category_condition = array_map( 'trim', $cond );
 				}
