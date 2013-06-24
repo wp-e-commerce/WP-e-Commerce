@@ -89,6 +89,10 @@ endif;
 
    if(wpsc_uses_coupons()): ?>
 
+      <tr class="wpsc_total_before_shipping">
+         <td colspan="3"><?php _e('Cost before shipping:','wpsc'); ?></td>
+         <td colspan="3" class="wpsc_total_amount_before_shipping"><?php echo wpsc_cart_total_widget(false,false,false);?></td>
+      </tr>
       <?php if(wpsc_coupons_error()): ?>
          <tr class="wpsc_coupon_row wpsc_coupon_error_row"><td colspan="6"><?php _e('Coupon is not valid.', 'wpsc'); ?></td></tr>
       <?php endif; ?>
@@ -100,10 +104,6 @@ endif;
                <input type="submit" value="<?php _e('Update', 'wpsc') ?>" />
             </form>
          </td>
-      </tr>
-      <tr class="wpsc_total_before_shipping">
-	      <td colspan="3"><?php _e('Cost before shipping:','wpsc'); ?></td>
-	      <td colspan="3" class="wpsc_total_amount_before_shipping"><?php echo wpsc_cart_total_widget(false,false,false);?></td>
       </tr>
    <?php endif; ?>
    </table>
