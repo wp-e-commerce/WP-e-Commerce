@@ -64,6 +64,8 @@ function _wpsc_action_theme_engine_v1_includes() {
 	require_once( WPSC_THEME_ENGINE_V1_PATH . '/helpers/shortcodes.php' );
 	require_once( WPSC_THEME_ENGINE_V1_PATH . '/helpers/form.php' );
 	include_once( WPSC_THEME_ENGINE_V1_PATH . '/helpers/admin.php' );
+	include_once( WPSC_THEME_ENGINE_V1_PATH . '/helpers/shipping.php' );
+	include_once( WPSC_THEME_ENGINE_V1_PATH . '/helpers/rss.php' );
 
 	require_once( WPSC_CORE_THEME_PATH . 'functions/wpsc-transaction_results_functions.php' );
 	require_once( WPSC_CORE_THEME_PATH . 'functions/wpsc-user_log_functions.php' );
