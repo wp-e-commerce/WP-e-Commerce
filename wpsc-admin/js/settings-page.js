@@ -333,12 +333,12 @@
 			 * If it's mandatory you no have choice for display.
 			 */
 			wrapper.find( '.mandatorycol input[type="checkbox"]').each( function(){
-				var displaycol = $(this).parents('.mandatorycol').siblings('.displaycol');
+				var displaycol = $( this ).parents( '.mandatorycol' ).siblings( '.displaycol' );
 
-				if ( $(this).is(':checked') ){
-					$(displaycol).find('input[type="checkbox"]').prop('checked', true ).attr( 'disabled', 'disabled' );
+				if ( $( this ).is( ':checked' ) ) {
+					$( displaycol ).find( 'input[type="checkbox"]' ).prop( 'checked', true ).prop( 'readonly', true );
 				} else {
-					$(displaycol).find('input[type="checkbox"]').attr( 'disabled', this.checked );
+					$( displaycol ).find( 'input[type="checkbox"]' ).prop( 'readonly', this.checked );
 				}
 			});
 
