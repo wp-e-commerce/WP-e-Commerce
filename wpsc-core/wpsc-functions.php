@@ -441,6 +441,9 @@ add_filter( 'post_updated_messages', 'wpsc_post_updated_messages' );
 function wpsc_serialize_shopping_cart() {
 	global $wpdb, $wpsc_start_time, $wpsc_cart;
 
+	if ( is_admin() )
+		return;
+
 	// avoid flooding transients with bots hitting feeds
 	if ( is_feed() ) {
 		wpsc_delete_all_customer_meta();
