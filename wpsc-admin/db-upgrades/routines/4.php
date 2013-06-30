@@ -19,7 +19,8 @@ function _wpsc_maybe_update_user_log_file() {
 		'3.8.10' => '09e2cb9c753587c9228a4e9e8008a82f',
 	);
 
-	wpsc_flush_theme_transients( true );
+	if ( function_exists( 'wpsc_flush_theme_transients' ) )
+		wpsc_flush_theme_transients( true );
 
 	//Make sure the theme has actually been moved.
 	$file = wpsc_get_template_file_path( 'wpsc-user-log.php' );
