@@ -75,7 +75,7 @@ function wpsc_admin_edit_posts_orderby( $orderby_sql ) {
 			if ( ! empty( $orderby_sql ) )
 				$orderby_sql = ', ' . $orderby_sql;
 			$orderby_sql = " {$wpdb->term_relationships}.term_order ASC" . $orderby_sql;
-			remove_filter('posts_orderby', 'my_edit_posts_orderby');
+			remove_filter( 'posts_orderby', 'wpsc_admin_edit_posts_orderby' );
 		}
 	}
 	return $orderby_sql;
