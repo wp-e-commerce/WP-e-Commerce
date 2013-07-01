@@ -530,6 +530,10 @@ function _wpsc_ajax_save_product_order() {
 			$failed[] = $product_id;
 	}
 
+	// Validate data before exposing to action
+	$category = isset( $_POST['category_id'] ) ? get_term_by( 'slug', $_POST['category_id'], 'wpsc_product_category' ) : false;
+	do_action( 'wpsc_save_product_order', $products, $category );
+
 	if ( ! empty( $failed ) ) {
 		$error_data = array(
 			'failed_ids' => $failed,
@@ -542,6 +546,39 @@ function _wpsc_ajax_save_product_order() {
 		'ids' => $products,
 	);
 }
+
+/**
+ * Save Category Product Order
+ *
+ * Note that this uses the 'term_order' field in the 'term_relationships' table to store
+ * the order. Although this column presently seems to be unused by WordPress, the intention
+ * is it should be used to store the order of terms associates to a post, not the order
+ * of posts as we are doing. This shouldn't be an issue for WPEC unless WordPress adds a UI
+ * for this. More info at http://core.trac.wordpress.org/ticket/9547
+ *
+ * @since 3.9
+ * @access private
+ *
+ * @uses $wpdb   WordPress database object used for queries
+ */
+function _wpsc_save_category_product_order( $products, $category ) {
+	global $wpdb;
+ 
+	// Only save category product order if in category
+	if ( ! $category )
+		return;
+ 
+	// Save product order in term_relationships table
+	foreach ( $products as $order => $product_id ) {
+		$wpdb->update( $wpdb->term_relationships,
+			array( 'term_order' => $order ),
+			array( 'object_id' => $product_id, 'term_taxonomy_id' => $category->term_taxonomy_id ),
+			array( '%d' ),
+			array( '%d', '%d' )
+		);
+	}
+}
+add_action( 'wpsc_save_product_order', '_wpsc_save_category_product_order', 10, 2 );
 
 /**
  * Update Checkout fields order

@@ -56,15 +56,21 @@ class wpsc_products_by_category {
 			$groupby = "{$wpdb->posts}.ID";
 
 			$this->sql_components['join']     = $join;
-			$this->sql_components['fields']   = "{$wpdb->posts}.*, {$wpdb->term_taxonomy}.term_id";
+			$this->sql_components['fields']   = "{$wpdb->posts}.*, {$wpdb->term_taxonomy}.term_id, {$wpdb->term_relationships}.term_order";
 			$this->sql_components['group_by'] = $groupby;
 
 			//what about ordering by price
 			if(isset($q['meta_key']) && '_wpsc_price' == $q['meta_key']){
 				$whichcat .= " AND $wpdb->postmeta.meta_key = '_wpsc_price'";
 			}else{
-
 				$this->sql_components['order_by'] = "{$wpdb->term_taxonomy}.term_id";
+
+				// Term Taxonomy ID Ordering
+				if ( $q['orderby'] == 'menu_order' ) {
+					if ( $term_data ) {
+						$this->sql_components['order_by'] = "{$wpdb->term_relationships}.term_order ASC";
+					}
+				}
 			}
 			$this->sql_components['where']    = $whichcat;
 			add_filter( 'posts_join', array( &$this, 'join_sql' ) );
