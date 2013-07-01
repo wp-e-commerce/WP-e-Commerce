@@ -60,6 +60,29 @@ function wpsc_query_vars_product_list( $vars ){
 }
 
 /**
+ * Admin Edit Posts Order
+ *
+ * @since 3.8.12
+ * @access public
+ *
+ * @param   string  $orderby_sql  Order by SQL.
+ * @return  string  Filtered order by SQL.
+ */
+function wpsc_admin_edit_posts_orderby( $orderby_sql ) {
+	global $wp_query, $wpdb;
+	if ( 'dragndrop' == get_option( 'wpsc_sort_by' ) ) {
+		if ( function_exists( 'is_main_query' ) && is_main_query() && 'wpsc-product' == get_query_var( 'post_type' ) && is_tax( 'wpsc_product_category' ) ) {
+			if ( ! empty( $orderby_sql ) )
+				$orderby_sql = ', ' . $orderby_sql;
+			$orderby_sql = " {$wpdb->term_relationships}.term_order ASC" . $orderby_sql;
+			remove_filter( 'posts_orderby', 'wpsc_admin_edit_posts_orderby' );
+		}
+	}
+	return $orderby_sql;
+}
+add_filter( 'posts_orderby', 'wpsc_admin_edit_posts_orderby' );
+
+/**
  * setting the screen option to between 1 and 999
  *
  * @since 3.8
