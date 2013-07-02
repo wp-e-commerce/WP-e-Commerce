@@ -207,6 +207,22 @@ function wpsc_product_max_cart_quantity( $product_id = 0 ) {
 }
 
 /**
+ * Product Minimum Cart Quantity
+ *
+ * @since  3.8.13
+ * @access public
+ *
+ * @param  int  $prod_id    Optional. Product ID.
+ * @return int              The minimum quantity that can be added to the cart.
+ *
+ * @uses   apply_filters    Calls 'wpsc_product_min_cart_quantity' passing product ID.
+ */
+function wpsc_product_min_cart_quantity( $product_id = 0 ) {
+	$product_id = absint( $product_id );
+	return apply_filters( 'wpsc_product_min_cart_quantity', 1, $product_id );
+}
+
+/**
  * Validate Product Cart Quantity
  * Checks that the quantity is within the permitted bounds and return a valid quantity.
  *
@@ -218,11 +234,15 @@ function wpsc_product_max_cart_quantity( $product_id = 0 ) {
  * @return int                               The maximum quantity that can be added to the cart.
  *
  * @uses   wpsc_product_max_cart_quantity    Gets the maximum product cart quantity.
+ * @uses   wpsc_product_min_cart_quantity    Gets the minimum product cart quantity.
  */
 function wpsc_validate_product_cart_quantity( $quantity, $product_id = 0 ) {
 	$max_quantity = wpsc_product_max_cart_quantity( $product_id );
+	$min_quantity = wpsc_product_min_cart_quantity( $product_id );
 	if ( $quantity > $max_quantity )
 		return $max_quantity;
+	if ( $quantity < $min_quantity )
+		return $min_quantity;
 	return $quantity;
 }
 
