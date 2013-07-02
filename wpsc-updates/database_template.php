@@ -209,9 +209,11 @@ $wpsc_database_template[$table_name]['indexes']['last_activity'] = "KEY `last_ac
 $wpsc_database_template[$table_name]['indexes']['cart_submitted'] = "KEY `cart_submitted` ( `cart_submitted` )";
 
 // code to create or update the all of the wpsc custom meta tables that are managed using the wordpress meta functionalilty
-$meta_object_types = wpsc_meta_core_object_types();
-foreach ( $meta_object_types as $meta_object_type ) {	
-	$table_name = wpsc_meta_table_name( $meta_object_type );  
+// the meta object types should be those listed in the wpsc_meta_core_object_types() function, they are repeated here to allow
+// the database init and upgrade to happen prior to the include of the meta function defintions
+$meta_object_types = array( 'cart_item', 'visitor' );
+foreach ( $meta_object_types as $meta_object_type ) {
+	$table_name = $wpdb->prefix.$meta_object_type.'_meta'; // this is the same as the function wpsc_meta_table_name( $meta_object_type );
 	$wpsc_database_template[$table_name]['columns']['meta_id'] = "bigint(20) unsigned NOT NULL AUTO_INCREMENT ";
 	$wpsc_database_template[$table_name]['columns'][$meta_object_type.'_id'] = "bigint(20) unsigned NOT NULL DEFAULT '0' ";
 	$wpsc_database_template[$table_name]['columns']['meta_key'] = "varchar(255) default NULL ";
@@ -222,11 +224,10 @@ foreach ( $meta_object_types as $meta_object_type ) {
 	$wpsc_database_template[$table_name]['indexes']['meta_value'] = "KEY `meta_value` ( `meta_value`(20) ) ";
 	$wpsc_database_template[$table_name]['indexes']['meta_key_and_value'] = "KEY `meta_key_and_value` ( `meta_key`(191), `meta_value`(32) ) ";
 	$wpsc_database_template[$table_name]['indexes']['meta_timestamp_index'] = "KEY meta_timestamp_index (meta_timestamp) ";
-	$wpsc_database_template[$table_name]['indexes'][$meta_object_type.'_id'] = 'KEY '.$meta_object_type.'_id ( `' . $meta_object_type . '_id` ) ';	
+	$wpsc_database_template[$table_name]['indexes'][$meta_object_type.'_id'] = 'KEY '.$meta_object_type.'_id ( `' . $meta_object_type . '_id` ) ';
 	if ( function_exists( $meta_migrate_function_name = 'wpsc_meta_migrate_'.$meta_object_type ) ) {
 		$wpsc_database_template[$table_name]['actions']['after']['all'] = $meta_migrate_function_name;
 	}
-	
 }
 
 ?>
