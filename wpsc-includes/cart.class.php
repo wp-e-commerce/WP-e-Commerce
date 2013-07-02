@@ -366,7 +366,6 @@ class wpsc_cart {
      $this->update_location();
      $this->wpsc_refresh_cart_items();
      $this->unique_id = sha1(uniqid(rand(), true));
-     $this->get_shipping_method();
   }
 
   /**

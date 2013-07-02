@@ -259,6 +259,8 @@ function wpsc_core_setup_cart() {
 		$GLOBALS['wpsc_cart'] = $cart;
 	else
 		$GLOBALS['wpsc_cart'] = new wpsc_cart();
+
+	$GLOBALS['wpsc_cart']->get_shipping_method();
 }
 
 /***
