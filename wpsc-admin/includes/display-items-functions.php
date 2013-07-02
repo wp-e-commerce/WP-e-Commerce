@@ -416,6 +416,13 @@ function wpsc_product_shipping_forms_metabox() {
 	wpsc_product_shipping_forms();
 }
 
+/**
+ * Dimension Units
+ *
+ * @since   3.8.13
+ *
+ * @return  array  List of valid dimension units.
+ */
 function wpsc_dimension_units() {
 	return array(
 		'in'    => __( 'inches', 'wpsc' ),
@@ -424,6 +431,13 @@ function wpsc_dimension_units() {
 	);
 }
 
+/**
+ * Weight Units
+ *
+ * @since   3.8.13
+ *
+ * @return  array  List of valid weight units.
+ */
 function wpsc_weight_units() {
 	return array(
 		'pound'    => __( 'pounds', 'wpsc' ),
@@ -433,6 +447,16 @@ function wpsc_weight_units() {
 	);
 }
 
+/**
+ * Weight Unit Display
+ *
+ * Returns a weight unit abbreviation for display.
+ *
+ * @since   3.8.13
+ *
+ * @param   string  $unit  Weight unit.
+ * @return  string         Weight unit string.
+ */
 function wpsc_weight_unit_display( $unit ) {
 	switch ( $unit ) {
 		case 'pound' :
@@ -448,6 +472,20 @@ function wpsc_weight_unit_display( $unit ) {
 	return '';
 }
 
+/**
+ * Validate Dimension Unit
+ *
+ * Returns a valid dimensions unit.
+ * If the unit is not set or invalid it will be filtered using 'wpsc_default_dimension_unit'
+ * so that an alternative default unit can be set.
+ *
+ * @since   3.8.13
+ *
+ * @param   string  $unit  Dimension unit.
+ * @return  string         Dimension unit string.
+ *
+ * @uses    wpsc_default_dimension_unit
+ */
 function wpsc_validate_dimension_unit( $unit = '' ) {
 	$default_unit = apply_filters( 'wpsc_default_dimension_unit', $unit );
 	if ( empty( $unit ) && array_key_exists( $default_unit, wpsc_dimension_units() ) )
@@ -455,6 +493,20 @@ function wpsc_validate_dimension_unit( $unit = '' ) {
 	return $unit;
 }
 
+/**
+ * Validate Weight Unit
+ *
+ * Returns a valid weight unit.
+ * If the unit is not set or invalid it will be filtered using 'wpsc_default_weight_unit'
+ * so that an alternative default unit can be set.
+ *
+ * @since   3.8.13
+ *
+ * @param   string  $unit  Weight unit.
+ * @return  string         Weight unit string.
+ *
+ * @uses    wpsc_default_weight_unit
+ */
 function wpsc_validate_weight_unit( $unit = '' ) {
 	$default_unit = apply_filters( 'wpsc_default_weight_unit', $unit );
 	if ( empty( $unit ) && array_key_exists( $default_unit, wpsc_weight_units() ) )
@@ -462,6 +514,12 @@ function wpsc_validate_weight_unit( $unit = '' ) {
 	return $unit;
 }
 
+/**
+ * Product Shipping Forms
+ *
+ * @uses  wpsc_validate_weight_unit()
+ * @uses  wpsc_validate_dimension_unit()
+ */
 function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'meta[_wpsc_product_metadata]', $bulk = false ) {
 	if ( ! $product )
 		$product_id = get_the_ID();
