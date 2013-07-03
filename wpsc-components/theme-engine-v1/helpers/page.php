@@ -17,8 +17,12 @@ add_filter( 'aioseop_description', 'wpsc_set_aioseop_description' );
 add_filter('request', 'wpsc_remove_page_from_query_string');
 add_action( 'post_thumbnail_html', 'wpsc_no_featured_image_on_product_page', 10, 4 );
 
+//Potentially unnecessary, as I believe this option is deprecated
+add_action( 'update_option_show_categorybrands'     , 'wpsc_cache_to_upload' );
+
+
 /**
- * wpsc_the_featured_image_fix( $html )
+ * wpsc_no_featured_image_on_product_page( $html )
  *
  * prevents the post thumbnail ( aka featured image ) from being show on wpec
  * product pages
@@ -44,10 +48,6 @@ function wpsc_no_featured_image_on_product_page( $html, $post_id, $post_thumbnai
 
 	return $html;
 }
-
-
-//Potentially unnecessary, as I believe this option is deprecated
-add_action( 'update_option_show_categorybrands'     , 'wpsc_cache_to_upload' );
 
 if ( ! is_admin() )
 	add_action( 'init', 'wpsc_enqueue_user_script_and_css' );
