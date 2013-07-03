@@ -74,7 +74,7 @@ $image_width = get_option('product_image_width');
 							<?php endif; ?>
 						</h2>
 				<?php if(wpsc_show_thumbnails()) :?>
-					<div class="imagecol" style="width:<?php echo $image_width; ?>px; float:left;" id="imagecol_<?php echo wpsc_the_product_id(); ?>">
+					<div class="imagecol" style="width:<?php echo $image_width; ?>px;" id="imagecol_<?php echo wpsc_the_product_id(); ?>">
 						<?php if(wpsc_the_product_thumbnail()) :
 						?>
 							<a rel="<?php echo wpsc_the_product_title(); ?>" class="<?php echo wpsc_the_product_image_link_classes(); ?>" href="<?php echo esc_url( wpsc_the_product_image() ); ?>">
