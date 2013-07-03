@@ -68,15 +68,12 @@ Author URI: http://instinct.co.nz
 }
 
 .wpsc_category_grid_item .item_no_image {
-	color:#000;
+	color:#000;http://pyebrook.local/wp-content/plugins/WP-e-Commercewpsc-componentstheme-engine-v1/templates/wpsc-default.css?ver=3.8.12-beta.55f8cfa0d7http://pyebrook.local/wp-content/plugins/WP-e-Commercewpsc-componentstheme-engine-v1/templates/wpsc-default.css?ver=3.8.12-beta.55f8cfa0d7
 }
-
 
 #default_products_page_container .wpsc_page_numbers_top a:link, #default_products_page_container .wpsc_page_numbers_top a:visited, #default_products_page_container .wpsc_page_numbers_bottom a:link, #default_products_page_container .wpsc_page_numbers_bottom a:visited {
 	padding:5px 4px;
-
 }
-
 
 #default_products_page_container .wpsc_page_numbers_top a:hover, #default_products_page_container .wpsc_page_numbers_top a:active, #default_products_page_container .wpsc_page_numbers_bottom a:hover, #default_products_page_container .wpsc_page_numbers_bottom a:active {
 
@@ -93,14 +90,12 @@ Author URI: http://instinct.co.nz
 }
 
 .default_product_display .imagecol {
-
 	text-align: right;
 	display: table-cell;
 	vertical-align: middle;
 	min-height: 50px;
 	height: 100%;
 	overflow: auto;
-
 }
 
 .default_product_display .imagecol img.product_image {
