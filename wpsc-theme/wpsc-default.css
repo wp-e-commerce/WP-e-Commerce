@@ -586,6 +586,7 @@ table.list_productdisplay p.soldout {
 	width: 17px;
 	float: left;
 }
+
 .wpsc_product_rating .star a {
 	background-position:0 0;
 	display:block;
@@ -593,17 +594,21 @@ table.list_productdisplay p.soldout {
 	background:transparent url(wpsc-images/grey-star.png) no-repeat scroll 0 0;
 	outline: none;
 }
+
 .wpsc_product_rating .star a:hover {
 	background-position:0 0;
 	background:transparent url(wpsc-images/gold-star.png) no-repeat scroll 0 0;
 }
+
 .wpsc_product_rating .star a.selected {
 	background-position:0 0;
 	background:transparent url(wpsc-images/gold-star.png) no-repeat scroll 0 0;
 }
+
 .wpsc_product_rating .star a, .wpsc_product_rating .star a:focus {
 	outline: none;
 }
+
 div.product_footer{
 	position: relative;
 	clear: both;
@@ -613,11 +618,13 @@ div.product_footer{
 	height: 35px;
 	margin-top: 1em;
 }
+
 div.product_footer strong{
 	display: block;
 	font-size: 7pt;
 	font-weight: normal;
 }
+
 div.product_average_vote{
 	position: absolute;
 	top: 0;
@@ -627,6 +634,7 @@ div.product_average_vote{
 	margin: 0 !important;
 	height: inherit;
 }
+
 div.product_user_vote{
 	position: absolute;
 	top: 0;
@@ -635,16 +643,19 @@ div.product_user_vote{
 	margin: 0 !important;
 	height: inherit;
 }
+
 span.vote_total{
 	position: relative;
 	top: -3px;
 	left: 2px;
 	font-size: 7pt;
 }
+
 span.rating_saved{
 	color: #990000;
 	display: none;
 } 
+
 /*-----FANCY NOTIFICATION STYLING-----*/
 #fancy_notification{
 	position: absolute;
@@ -656,9 +667,11 @@ span.rating_saved{
 	height: auto;
 	z-index: 9;
 }
+
 #fancy_notification #loading_animation{
 	display: none;
 }
+
 #fancy_notification #fancy_notification_content{
 	display: none;
 	width: 300px;
@@ -667,11 +680,13 @@ span.rating_saved{
 	text-align: left;
 	margin: 0 !important;
 }
+
 #fancy_notification #fancy_notification_content span{
 	margin: 0 0 6px 0;
 	display: block;
 	font-weight: normal;
 }
+
 #fancy_notification #fancy_notification_content a{
 	display: block;
 	float: left;
