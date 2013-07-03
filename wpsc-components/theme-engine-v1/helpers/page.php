@@ -15,7 +15,7 @@ add_action( 'update_option_category_image_height'   , 'wpsc_cache_to_upload' );
 add_action('template_redirect', 'wpsc_all_products_on_page');
 add_filter( 'aioseop_description', 'wpsc_set_aioseop_description' );
 add_filter('request', 'wpsc_remove_page_from_query_string');
-add_action( 'post_thumbnail_html', 'wpsc_no_featured_image_on_product_page', 10, 4 );
+add_action( 'post_thumbnail_html', 'wpsc_no_featured_image_on_product_page', 10, 5 );
 
 //Potentially unnecessary, as I believe this option is deprecated
 add_action( 'update_option_show_categorybrands'     , 'wpsc_cache_to_upload' );
