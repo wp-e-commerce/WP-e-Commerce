@@ -5,7 +5,7 @@ add_action( 'wpsc_includes', '_wpsc_action_theme_engine_v1_includes' );
 _wpsc_action_theme_engine_v1_constants();
 function _wpsc_action_theme_engine_v1_constants() {
 	define( 'WPSC_THEME_ENGINE_V1_PATH', dirname( __FILE__ ) );
-	define( 'WPSC_THEME_ENGINE_V1_URL', WPSC_URL . str_replace( WPSC_FILE_PATH, '', WPSC_THEME_ENGINE_V1_PATH ) );
+	define( 'WPSC_THEME_ENGINE_V1_URL', WPSC_URL . str_replace('\\', '/', str_replace( WPSC_FILE_PATH, '', WPSC_THEME_ENGINE_V1_PATH ) ) );
 
 	// Themes folder locations
 	define( 'WPSC_CORE_THEME_PATH', WPSC_THEME_ENGINE_V1_PATH . '/templates/' );
