@@ -325,7 +325,6 @@ Author URI: http://instinct.co.nz
 
 /*-----LIST VIEW PRODUCT DISPLAY-----*/
 #list_view_products_page_container {
-/* 	width:650px;	 */
 	position:relative;
 }
 
@@ -426,7 +425,6 @@ table.list_productdisplay p.soldout {
 
 /*-----SINGLE PRODUCTS PAGE-----*/
 #single_product_page_container {
-	width:650px;	
 	position:relative;	
 }
 
@@ -815,7 +813,6 @@ span.rating_saved{
 
 /*-----CHECKOUT PAGE-----*/
 #checkout_page_container {
-	width:650px;
 	position:relative;
 	clear:both;
 }
