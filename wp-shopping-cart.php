@@ -17,7 +17,8 @@
  */
 class WP_eCommerce {
 	private $components = array(
-		'merchant' => array(),
+		'merchant'    => array(),
+		'marketplace' => array(),
 	);
 
 	/**
@@ -56,23 +57,33 @@ class WP_eCommerce {
 	}
 
 	/**
-	 * @todo we need documentation finished here
+	 * New WPSC components API.
 	 *
-	 * @param   array   $components
+	 * Allows for modular coupling of different functionalities within WPSC.
+	 * This is the way we'll be introducing cutting-edge APIs
 	 *
-	 * @return  array
+	 * @since 3.8.9.5
+	 *
+	 * @param   array $components
+	 * @return  array $components
 	 */
 	public function _register_core_components( $components ) {
 		$components['merchant']['core-v2'] = array(
-			'title' => __( 'WP e-Commerce Merchant API v2', 'wpsc' ),
+			'title'    => __( 'WP e-Commerce Merchant API v2', 'wpsc' ),
 			'includes' =>
 				WPSC_FILE_PATH . '/wpsc-components/merchant-core-v2/merchant-core-v2.php'
 		);
 
 		$components['theme-engine']['core-v1'] = array(
-			'title' => __( 'WP e-Commerce Theme Engine v1', 'wpsc' ),
+			'title'    => __( 'WP e-Commerce Theme Engine v1', 'wpsc' ),
 			'includes' =>
 				WPSC_FILE_PATH . '/wpsc-components/theme-engine-v1/theme-engine-v1.php'
+		);
+
+		$components['marketplace']['core-v1'] = array(
+			'title'    => __( 'WP e-Commerce Marketplace API v1', 'wpsc' ),
+			'includes' =>
+				WPSC_FILE_PATH . '/wpsc-components/marketplace-core-v1/marketplace-core-v1.php'
 		);
 
 		return $components;
