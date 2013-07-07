@@ -11,7 +11,7 @@ class Sputnik_API {
 	 * we override the domain. This is because we need to ensure Baikonur receives the Saas domain,
 	 * not the end-user domain. Only relevant where Sputnik is available to an end-user, not a Saas.
 	 */
-	protected static $domain_override = '';
+	protected static $domain_override = 'http://getshopped.org';
 
 	public static function get_all($page = 1, $params = null) {
 		$url = '/';
