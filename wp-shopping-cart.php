@@ -29,7 +29,7 @@ class WP_eCommerce {
 	 */
 	function WP_eCommerce() {
 		add_action( 'plugins_loaded' , array( $this, 'init' ), 8 );
-		add_action( 'wpsc_components', array( $this, '_register_core_components' ) );
+		add_filter( 'wpsc_components', array( $this, '_register_core_components' ) );
 	}
 
 	/**
@@ -109,7 +109,7 @@ class WP_eCommerce {
 		define( 'WPSC_URL',       plugins_url( '', __FILE__ ) );
 
 		//load text domain
-		if( !load_plugin_textdomain( 'wpsc', false, '../languages/' ) )
+		if ( ! load_plugin_textdomain( 'wpsc', false, '../languages/' ) )
 			load_plugin_textdomain( 'wpsc', false, dirname( plugin_basename( __FILE__ ) ) . '/wpsc-languages/' );
 
 		// Finished starting
@@ -234,9 +234,10 @@ class WP_eCommerce {
 	 */
 	function install() {
 		global $wp_version;
-		if((float)$wp_version < 3.0){
-			 deactivate_plugins(plugin_basename(__FILE__)); // Deactivate ourselves
-			 wp_die( __('Looks like you\'re running an older version of WordPress, you need to be running at least WordPress 3.0 to use WP e-Commerce 3.8', 'wpsc'), __('WP e-Commerce 3.8 not compatible', 'wpsc'), array('back_link' => true));
+
+		if ( ( float ) $wp_version < 3.0 ) {
+			 deactivate_plugins( plugin_basename( __FILE__ ) ); // Deactivate ourselves
+			 wp_die( __( 'Looks like you\'re running an older version of WordPress, you need to be running at least WordPress 3.0 to use WP e-Commerce 3.8', 'wpsc' ), __( 'WP e-Commerce 3.8 not compatible', 'wpsc' ), array( 'back_link' => true ) );
 			return;
 		}
 		define( 'WPSC_FILE_PATH', dirname( __FILE__ ) );
