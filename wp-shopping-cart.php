@@ -27,7 +27,7 @@ class WP_eCommerce {
 	 * @uses add_action()   Attaches to 'plugins_loaded' hook
 	 * @uses add_action()   Attaches to 'wpsc_components' hook
 	 */
-	function WP_eCommerce() {
+	function __construct() {
 		add_action( 'plugins_loaded' , array( $this, 'init' ), 8 );
 		add_filter( 'wpsc_components', array( $this, '_register_core_components' ) );
 	}
