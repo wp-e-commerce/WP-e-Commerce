@@ -207,7 +207,7 @@ class WP_eCommerce {
 		wpsc_core_setup_globals();
 
 		// Setup the customer ID just in case to make sure it's set up correctly
-		add_action( 'wp', '_wpsc_action_setup_customer', 1 );
+		add_action( 'init', '_wpsc_action_setup_customer', 1 );
 
 		// Load the purchase log statuses
 		wpsc_core_load_purchase_log_statuses();
