@@ -80,33 +80,33 @@ class Sputnik_Updater {
 		return $plugins;
 	}
 
-	public static function mangle_update_themes($themes) {
+	public static function mangle_update_themes( $themes ) {
 		// WP saves once before checking, in case it fails
 		static $tried = false;
-		if (!$tried) {
+		if ( ! $tried) {
 			$tried = true;
-			return $plugins;
+			return $themes;
 		}
 
-		$ours = Sputnik::get_installed(true);
+		$ours = Sputnik::get_installed( true );
 
-		if (empty($ours)) {
-			return $plugins;
+		if ( empty( $ours ) ) {
+			return $themes;
 		}
 
 		$data = array();
 		$files = array();
-		foreach ($ours as $file => $plugin) {
+		foreach ( $ours as $file => $theme ) {
 			// If something accidentally slipped in...
-			if (empty($plugin['Sputnik ID'])) {
+			if ( empty( $theme['Sputnik ID'] ) ) {
 				// ...ignore it.
 				continue;
 			}
 
-			$name = $plugin['Sputnik ID'];
+			$name = $theme['Sputnik ID'];
 
 			$files[$name] = $file;
-			$data[$name] = $plugin['Version'];
+			$data[$name] = $theme['Version'];
 		}
 
 		$url = Sputnik::API_BASE . '/version';
@@ -116,41 +116,41 @@ class Sputnik_Updater {
 				'X-WP-Domain' => self::domain(),
 			)
 		);
-		$url = add_query_arg('plugins', urlencode(json_encode($data)), $url);
-		$req = wp_remote_get($url, $options);
+		$url = add_query_arg( 'themes', urlencode( json_encode( $data ) ), $url );
+		$req = wp_remote_get( $url, $options );
 		if (is_wp_error($req) || $req['response']['code'] !== 200) {
-			return $plugins;
+			return $themes;
 		}
 
-		$response = json_decode($req['body']);
+		$response = json_decode( $req['body'] );
 
-		if (empty($response)) {
-			return $plugins;
+		if ( empty( $response ) ) {
+			return $themes;
 		}
 
-		foreach ($response as $name => $result) {
+		foreach ( $response as $name => $result ) {
 			$file = $files[$name];
 
-			if ($result->status === 410) {
+			if ( $result->status === 410 ) {
 				self::$suspended[$name] = $result;
-				Sputnik::suspend_plugin($name, $file, $result);
+				Sputnik::suspend_plugin( $name, $file, $result );
 				continue;
 			}
-			if ($result->status !== 200) {
+			if ( $result->status !== 200 ) {
 				continue;
 			}
 
 			$info = (object) array(
-				'package' => $result->location,
-				'url' => $result->url,
+				'package'     => $result->location,
+				'url'         => $result->url,
 				'new_version' => $result->version,
-				'slug' => 'sputnik-' . $name,
-				'sputnik_id' => $name
+				'slug'        => 'sputnik-' . $name,
+				'sputnik_id'  => $name
 			);
-			$plugins->response[$file] = $info;
+			$themes->response[$file] = $info;
 		}
 
-		return $plugins;
+		return $themes;
 	}
 
 	/**
@@ -172,7 +172,7 @@ class Sputnik_Updater {
 	}
 
 	public static function mangle_bulk_http($r, $url) {
-		
+
 		if (strpos($url, Sputnik::API_BASE) === false) {
 			return $r;
 		}
