@@ -31,7 +31,7 @@ function wpsc_core_constants() {
 	define( 'WPSC_VERSION', '3.8.13-dev' );
 	define( 'WPSC_MINOR_VERSION', '819b5037cc' );
 	define( 'WPSC_PRESENTABLE_VERSION', '3.8.13-dev' );
-	define( 'WPSC_DB_VERSION', 5 );
+	define( 'WPSC_DB_VERSION', 6 );
 
 	// Define Debug Variables for developers
 	define( 'WPSC_DEBUG', false );
@@ -253,7 +253,7 @@ function wpsc_core_setup_cart() {
 	if ( 2 == get_option( 'cart_location' ) )
 		add_filter( 'the_content', 'wpsc_shopping_cart', 14 );
 
-	$cart = maybe_unserialize( wpsc_get_customer_meta( 'cart' ) );
+	$cart = maybe_unserialize( wpsc_get_customer_data( 'cart' ) );
 
 	if ( is_object( $cart ) && ! is_wp_error( $cart ) )
 		$GLOBALS['wpsc_cart'] = $cart;

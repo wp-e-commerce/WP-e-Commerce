@@ -112,8 +112,30 @@ class WP_eCommerce {
 		if ( ! load_plugin_textdomain( 'wpsc', false, '../languages/' ) )
 			load_plugin_textdomain( 'wpsc', false, dirname( plugin_basename( __FILE__ ) ) . '/wpsc-languages/' );
 
+		$this->setup_table_names();
+
 		// Finished starting
 		do_action( 'wpsc_started' );
+	}
+
+	function setup_table_names() {
+		global $wpdb;
+		$wpdb->wpsc_meta                = "{$wpdb->prefix}wpsc_meta";
+		$wpdb->wpsc_also_bought         = "{$wpdb->prefix}wpsc_also_bought";
+		$wpdb->wpsc_region_tax          = "{$wpdb->prefix}wpsc_region_tax";
+		$wpdb->wpsc_coupon_codes        = "{$wpdb->prefix}wpsc_coupon_codes";
+		$wpdb->wpsc_visitormeta         = "{$wpdb->prefix}wpsc_visitor_meta"; // required for _get_meta_table()
+		$wpdb->wpsc_visitor_meta        = "{$wpdb->prefix}wpsc_visitor_meta";
+		$wpdb->wpsc_cart_contents       = "{$wpdb->prefix}wpsc_cart_contents";
+		$wpdb->wpsc_claimed_stock       = "{$wpdb->prefix}wpsc_claimed_stock";
+		$wpdb->wpsc_currency_list       = "{$wpdb->prefix}wpsc_currency_list";
+		$wpdb->wpsc_purchase_logs       = "{$wpdb->prefix}wpsc_purchase_logs";
+		$wpdb->wpsc_checkout_forms      = "{$wpdb->prefix}wpsc_checkout_forms";
+		$wpdb->wpsc_cart_itemmeta       = "{$wpdb->prefix}wpsc_cart_item_meta"; // required for _get_meta_table()
+		$wpdb->wpsc_cart_item_meta      = "{$wpdb->prefix}wpsc_cart_item_meta";
+		$wpdb->wpsc_product_rating      = "{$wpdb->prefix}wpsc_product_rating";
+		$wpdb->wpsc_download_status     = "{$wpdb->prefix}wpsc_download_status";
+		$wpdb->wpsc_submitted_form_data = "{$wpdb->prefix}wpsc_submited_form_data";
 	}
 
 	/**
@@ -160,6 +182,7 @@ class WP_eCommerce {
 	 * @uses do_action()        Calls 'wpsc_includes' which runs after WPEC files have been included
 	 */
 	function includes() {
+		require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-init.php' );
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-functions.php' );
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-installer.php' );
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-includes.php' );
