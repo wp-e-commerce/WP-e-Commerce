@@ -21,12 +21,12 @@ function wpsc_the_shipping_method() {
 * @return string shipping method name
 */
 function wpsc_shipping_method_name() {
-   global $wpsc_cart, $wpsc_shipping_modules;
-   $name = '';
-   if ( ! empty( $wpsc_cart->shipping_method ) && isset( $wpsc_shipping_modules[$wpsc_cart->shipping_method] ) )
-      $name = $wpsc_shipping_modules[$wpsc_cart->shipping_method]->getName();
-
-   return apply_filters( 'wpsc_shipping_method_name', $name );
+	global $wpsc_cart, $wpsc_shipping_modules;
+	$name = '';
+	if ( ! empty( $wpsc_cart->shipping_method ) && isset( $wpsc_shipping_modules[$wpsc_cart->shipping_method] ) ) {
+		$name = $wpsc_shipping_modules[$wpsc_cart->shipping_method]->getName();
+	}
+	return apply_filters( 'wpsc_shipping_method_name', $name );
 }
 
 
