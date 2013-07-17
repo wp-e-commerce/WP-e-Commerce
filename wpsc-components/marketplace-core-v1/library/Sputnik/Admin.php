@@ -719,40 +719,17 @@ class Sputnik_Admin {
 	}
 
 	protected static function auth() {
-		$oauth_url    = self::build_url(array('oauth' => 'request'));
+		$oauth_url    = self::build_url(array('oauth' => 'request', 'TB_iframe' => true));
 
 		if ( isset( $_GET['auth'] ) && $_GET['auth'] == 'denied' ) {
 			self::print_message( __( 'Authorization cancelled.', 'sputnik' ) );
 		}
 ?>
 <div id="sputnik-auth">
-	<p><?php _e( 'Welcome to WPEconomy! Before we can get started, we need to link this site with your WPEconomy.org account. Your details should have been emailed to you!', 'sputnik' );?></p>
-	<p class="buttons"><a id="oauth-link" href="<?php echo $oauth_url; ?>" class="button"><?php _e( 'Link account', 'sputnik' ) ?></a></p>
+	<p><?php _e( 'Welcome to WPEconomy! Before we can get started, we need to link this site with your WPEconomy.org account. If you have not created a free account, you will be prompted to do so.', 'sputnik' );?></p>
+	<p class="buttons"><a href="<?php echo $oauth_url; ?>" class="button thickbox"><?php _e( 'Link account', 'sputnik' ) ?></a></p>
 </div>
-<script type="text/javascript">
-jQuery(document).ready(function($){
 
-	$('#oauth-link').click(function(){
-		openOAuthWindow($(this).attr('href'));
-		return false;
-	});
-
-	function openOAuthWindow(url) {
-		var w = 400;
-		var h = 360;
-		var left = (screen.width/2)-(w/2);
-		var top = (screen.height/2)-h;
-		var OAuthWindow = window.open(
-			url,
-			'oauth_window',
-			'resizable, width='+w+', height='+h+', left='+left+', top='+top
-		);
-		if (window.focus) {
-			OAuthWindow.focus();
-		}
-	}
-});
-</script>
 <?php
 	}
 

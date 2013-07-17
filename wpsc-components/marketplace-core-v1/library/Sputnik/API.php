@@ -81,9 +81,10 @@ class Sputnik_API {
 
 		$auth_url = self::$auth->get_authorize_url( $token );
 
+		//Modifying to add marketplace and user email to query string.
 		if ( $redirect ) {
-			wp_redirect( $auth_url );
-			die();
+			wp_redirect( add_query_arg( array( 'domain' => self::domain(), 'user' => rawurlencode( wp_get_current_user()->user_email ) ), $auth_url ) );
+			exit;
 		} else {
 			return $auth_url;
 		}
@@ -113,7 +114,7 @@ class Sputnik_API {
 	<head>
 		<title><?php _e( 'Redirecting ...', 'wpsc' ); ?></title>
 		<script type="text/javascript">
-		window.opener.location = '<?php echo $return_url; ?>';
+		parent.location = '<?php echo $return_url; ?>';
 		window.close();
 		</script>
 	</head>
