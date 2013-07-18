@@ -1,7 +1,7 @@
 <?php
 
 function wpsc_ajax_sales_quarterly() {
-	$lastdate = $_POST['add_start'];
+	$lastdate = sanitize_text_field( $_POST['add_start'] );
 	$date = preg_split( '/-/', $lastdate );
 	if ( !isset( $date[0] ) )
 		$date[0] = 0;
@@ -29,7 +29,7 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
 
 function wpsc_delete_file() {
 	$product_id = absint( $_REQUEST['product_id'] );
-	$file_name = basename( $_REQUEST['file_name'] );
+	$file_name  = basename( $_REQUEST['file_name'] );
 	check_admin_referer( 'delete_file_' . $file_name );
 
 	_wpsc_delete_file( $product_id, $file_name );
@@ -95,7 +95,7 @@ function wpsc_purchase_log_csv() {
 	if ( 'key' == $_REQUEST['rss_key'] && current_user_can( 'manage_options' ) ) {
 		if ( isset( $_REQUEST['start_timestamp'] ) && isset( $_REQUEST['end_timestamp'] ) ) {
 			$start_timestamp = $_REQUEST['start_timestamp'];
-			$end_timestamp = $_REQUEST['end_timestamp'];
+			$end_timestamp   = $_REQUEST['end_timestamp'];
 			$start_end_sql = "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `date` BETWEEN '%d' AND '%d' ORDER BY `date` DESC";
 			$start_end_sql = apply_filters( 'wpsc_purchase_log_start_end_csv', $start_end_sql );
 			$data = $wpdb->get_results( $wpdb->prepare( $start_end_sql, $start_timestamp, $end_timestamp ), ARRAY_A );
@@ -297,16 +297,15 @@ function wpsc_purchlog_clear_download_items() {
 	global $wpdb;
 	if ( is_numeric( $_GET['purchaselog_id'] ) ) {
 		$purchase_id = (int)$_GET['purchaselog_id'];
-		$downloadable_items = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_DOWNLOAD_STATUS . "` WHERE `purchid` IN ('$purchase_id')", ARRAY_A );
+		$downloadable_items = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_DOWNLOAD_STATUS . "` WHERE `purchid` = %d" ), $purchase_id ), ARRAY_A );
 
-		$clear_locks_sql = "UPDATE`" . WPSC_TABLE_DOWNLOAD_STATUS . "` SET `ip_number` = '' WHERE `purchid` IN ('$purchase_id')";
-		$wpdb->query( $clear_locks_sql );
+		$wpdb->update( WPSC_TABLE_DOWNLOAD_STATUS, array( 'ip_number' => '' ), array( 'purchid' => $purchase_id ), '%s', '%d' );
 		$cleared = true;
 
 		$email_form_field = $wpdb->get_var( "SELECT `id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `type` IN ('email') AND `active` = '1' ORDER BY `checkout_order` ASC LIMIT 1" );
-		$email_address = $wpdb->get_var( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` WHERE `log_id`='{$purchase_id}' AND `form_id` = '{$email_form_field}' LIMIT 1" );
+		$email_address = $wpdb->get_var( $wpdb->prepare( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` WHERE `log_id` = %d AND `form_id` = '{$email_form_field}' LIMIT 1", $purchase_id ) );
 
-		foreach ( (array)$downloadable_items as $downloadable_item ) {
+		foreach ( (array) $downloadable_items as $downloadable_item ) {
 			$download_links .= add_query_arg(
 				'downloadid',
 				$downloadable_item['uniqueid'],
@@ -315,14 +314,14 @@ function wpsc_purchlog_clear_download_items() {
 		}
 
 
-		wp_mail( $email_address, __( 'The administrator has unlocked your file', 'wpsc' ), str_replace( "[download_links]", $download_links, __( 'Dear CustomerWe are pleased to advise you that your order has been updated and your downloads are now active.Please download your purchase using the links provided below.[download_links]Thank you for your custom.', 'wpsc' ) ), "From: " . get_option( 'return_email' ) . "" );
-
+		wp_mail( $email_address, __( 'The administrator has unlocked your file', 'wpsc' ), str_replace( "[download_links]", $download_links, __( 'Dear CustomerWe are pleased to advise you that your order has been updated and your downloads are now active.Please download your purchase using the links provided below.[download_links]Thank you for your custom.', 'wpsc' ) ), "From: " . get_option( 'return_email' )  );
 
 		$sendback = wp_get_referer();
 
 		if ( isset( $cleared ) ) {
 			$sendback = add_query_arg( 'cleared', $cleared, $sendback );
 		}
+
 		wp_redirect( $sendback );
 		exit();
 	}
