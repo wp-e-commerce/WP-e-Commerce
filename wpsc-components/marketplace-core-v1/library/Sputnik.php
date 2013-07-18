@@ -90,7 +90,6 @@ class Sputnik {
 		add_action( 'wp', array( get_class(), 'show_login_form' ) );
 		add_filter( 'extra_plugin_headers', array(get_class(), 'extra_headers'));
 		add_filter( 'extra_theme_headers', array(get_class(), 'extra_headers'));
-		add_action( 'widgets_init', create_function( '', 'return register_widget("Sputnik_Widget_Add_Product");' ) );
 
 		add_action( 'wpsc_update_purchase_log_status', array( get_class(), 'push_sales_data' ), 10, 4 );
 		add_action( 'init', array( get_class(), 'sales_data_postback' ) );
