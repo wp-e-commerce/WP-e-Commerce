@@ -297,7 +297,7 @@ function wpsc_purchlog_clear_download_items() {
 	global $wpdb;
 	if ( is_numeric( $_GET['purchaselog_id'] ) ) {
 		$purchase_id = (int)$_GET['purchaselog_id'];
-		$downloadable_items = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_DOWNLOAD_STATUS . "` WHERE `purchid` = %d" ), $purchase_id ), ARRAY_A );
+		$downloadable_items = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_DOWNLOAD_STATUS . "` WHERE `purchid` = %d", $purchase_id ), ARRAY_A );
 
 		$wpdb->update( WPSC_TABLE_DOWNLOAD_STATUS, array( 'ip_number' => '' ), array( 'purchid' => $purchase_id ), '%s', '%d' );
 		$cleared = true;
