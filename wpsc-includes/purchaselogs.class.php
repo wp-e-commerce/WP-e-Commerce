@@ -415,7 +415,7 @@ function wpsc_display_purchlog_shipping_method() {
 
    if ( ! empty ( $wpsc_shipping_modules[$purchlogitem->extrainfo->shipping_method] ) ) {
 	  $shipping_class = &$wpsc_shipping_modules[$purchlogitem->extrainfo->shipping_method];
-	  return esc_html( $shipping_class->name );
+	  return esc_html( $shipping_class->getName() );
    } else {
 	  return esc_html( $purchlogitem->extrainfo->shipping_method );
    }
