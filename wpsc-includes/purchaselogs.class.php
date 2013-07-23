@@ -443,6 +443,16 @@ function wpsc_display_purchlog_paymentmethod() {
 
 }
 
+function wpsc_purchaselog_order_summary_headers() {
+	global $purchlogitem;
+	do_action( 'wpsc_purchaselog_order_summary_headers', $purchlogitem );
+}
+
+function wpsc_purchaselog_order_summary() {
+	global $purchlogitem;
+	do_action( 'wpsc_purchaselog_order_summary', $purchlogitem );
+}
+
 function wpsc_has_purchlog_shipping() {
    global $purchlogitem;
    if ( $purchlogitem->shippinginfo['shippingfirstname']['value'] != '' ) {
