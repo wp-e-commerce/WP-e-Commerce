@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: WP e-Commerce\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/wp-e-commerce\n"
 "POT-Creation-Date: 2013-07-11 02:44:22+00:00\n"
-"PO-Revision-Date: 2013-07-24 17:42+0100\n"
+"PO-Revision-Date: 2013-07-24 17:53+0100\n"
 "Last-Translator: Benjamin Pick <b.pick@yellowtree.de>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -1479,7 +1479,6 @@ msgid "Palestinian Territories"
 msgstr "Französische südliche Territorien"
 
 #: wpsc-admin/db-upgrades/routines/2.php:181
-#, fuzzy
 msgid "Israeli New Sheqel"
 msgstr "Israelischer neuer Schekel"
 
@@ -1558,7 +1557,6 @@ msgstr "cm"
 
 #: wpsc-admin/db-upgrades/routines/2.php:286
 #: wpsc-updates/currency_list.php:89
-#, fuzzy
 msgid "Republic of the Congo"
 msgstr "Demokratische Republik Kongo"
 
@@ -1586,7 +1584,6 @@ msgstr "XAF"
 
 #: wpsc-admin/db-upgrades/routines/2.php:330
 #: wpsc-updates/currency_list.php:10
-#, fuzzy
 msgid "Malagasy Ariary"
 msgstr "Malegassischer Franc"
 
@@ -1635,7 +1632,6 @@ msgid "New Taiwanese Dollar"
 msgstr "Taiwanesischer Dollar"
 
 #: wpsc-admin/db-upgrades/routines/2.php:400
-#, fuzzy
 msgid "Tajikistan Somoni"
 msgstr "Tadschikistan"
 
@@ -1669,7 +1665,6 @@ msgstr "YUN"
 
 #: wpsc-admin/db-upgrades/routines/2.php:433
 #: wpsc-updates/currency_list.php:232
-#, fuzzy
 msgid "Venezuelan Bolivar Fuerte"
 msgstr "Venezolanischer Bolivar"
 
