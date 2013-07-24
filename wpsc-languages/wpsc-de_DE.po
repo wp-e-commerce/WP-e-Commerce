@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: WP e-Commerce\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/wp-e-commerce\n"
 "POT-Creation-Date: 2013-07-11 02:44:22+00:00\n"
-"PO-Revision-Date: 2013-07-24 17:19+0100\n"
+"PO-Revision-Date: 2013-07-24 17:42+0100\n"
 "Last-Translator: Benjamin Pick <b.pick@yellowtree.de>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -6699,7 +6699,7 @@ msgstr "Bitte besuchen Sie unseren Shop"
 #: wpsc-components/theme-engine-v1/templates/wpsc-shopping_cart_page.php:15
 #: wpsc-theme/wpsc-shopping_cart_page.php:15
 msgid "Please review your order"
-msgstr "Bitte Bestellung überprüfen"
+msgstr "Bitte überprüfen Sie Ihre Bestellung:"
 
 #: wpsc-components/theme-engine-v1/templates/wpsc-shopping_cart_page.php:80
 #: wpsc-theme/wpsc-shopping_cart_page.php:80
@@ -6755,19 +6755,16 @@ msgstr "Wenn Sie schon früher bei uns eingekauft haben, dann melden Sie sich bi
 
 #: wpsc-components/theme-engine-v1/templates/wpsc-shopping_cart_page.php:246
 #: wpsc-theme/wpsc-shopping_cart_page.php:246
-#, fuzzy
 msgid "Total Shipping:"
 msgstr "Lieferkosten"
 
 #: wpsc-components/theme-engine-v1/templates/wpsc-shopping_cart_page.php:257
 #: wpsc-theme/wpsc-shopping_cart_page.php:257
-#, fuzzy
 msgid "Discount:"
 msgstr "Rabatt"
 
 #: wpsc-components/theme-engine-v1/templates/wpsc-shopping_cart_page.php:269
 #: wpsc-theme/wpsc-shopping_cart_page.php:269
-#, fuzzy
 msgid "Total Price:"
 msgstr "Gesamtpreis"
 
@@ -6848,7 +6845,6 @@ msgstr "Zahlungsmethode"
 
 #: wpsc-components/theme-engine-v1/templates/wpsc-shopping_cart_page.php:464
 #: wpsc-theme/wpsc-shopping_cart_page.php:464
-#, fuzzy
 msgid "I agree to the <a class='thickbox' target='_blank' href='%s' class='termsandconds'>Terms and Conditions</a>"
 msgstr "Ich stimme den <a class='thickbox' target='_blank' href='%s' class='termsandconds'>Allgemeinen Geschäftsbedingungen</a> zu"
 
@@ -6934,7 +6930,6 @@ msgstr ""
 
 #: wpsc-components/theme-engine-v1/widgets/admin_menu_widget.php:104
 #: wpsc-widgets/admin_menu_widget.php:104
-#, fuzzy
 msgid "Add Products"
 msgstr "Produkt hinzufügen"
 
@@ -6945,7 +6940,6 @@ msgstr ""
 
 #: wpsc-components/theme-engine-v1/widgets/admin_menu_widget.php:105
 #: wpsc-widgets/admin_menu_widget.php:105
-#, fuzzy
 msgid "Presentation"
 msgstr "Präsentation"
 
@@ -7019,7 +7013,6 @@ msgid "Under "
 msgstr ""
 
 #: wpsc-components/theme-engine-v1/widgets/price_range_widget.php:135
-#, fuzzy
 msgctxt "price range widget"
 msgid "Show All"
 msgstr "Alles anzeigen"
@@ -7069,12 +7062,10 @@ msgid "Show Description"
 msgstr "Beschreibung anzeigen"
 
 #: wpsc-components/theme-engine-v1/widgets/specials_widget.php:114
-#, fuzzy
 msgid "Show Old Price"
 msgstr "Alter Preis"
 
 #: wpsc-components/theme-engine-v1/widgets/specials_widget.php:116
-#, fuzzy
 msgid "Show Discount"
 msgstr "Rabatt"
 
@@ -7360,7 +7351,6 @@ msgid "Delivery Country"
 msgstr "Lieferstatus"
 
 #: wpsc-core/wpsc-functions.php:86
-#, fuzzy
 msgid "Text Area"
 msgstr "Textarea"
 
@@ -7378,7 +7368,6 @@ msgid "Please backup your website before updating!"
 msgstr "Bitte machen Sie einen Backup Ihrer Website vor dem Update!"
 
 #: wpsc-core/wpsc-functions.php:250
-#, fuzzy
 msgid "Before updating please backup your database and files in case anything goes wrong."
 msgstr "In dieser Version haben sich viele Dinge geändert. Vor dem Update erstellen Sie bitte einen Backup von der Datenbank und von den Dateien, für den Fall, dass irgend etwas schief gehen sollte."
 
@@ -7475,7 +7464,6 @@ msgid "tagged"
 msgstr "markiert"
 
 #: wpsc-core/wpsc-functions.php:357
-#, fuzzy
 msgctxt "taxonomy general name"
 msgid "Product Categories"
 msgstr "Produktkategorien"
@@ -7557,7 +7545,6 @@ msgid "Update Variation"
 msgstr "Variante updaten"
 
 #: wpsc-core/wpsc-functions.php:390
-#, fuzzy
 msgid "Add New Variation"
 msgstr "Neue Variante/Set hinzufügen"
 
@@ -7698,7 +7685,6 @@ msgid "It appears that some products in your cart have conflicting target market
 msgstr ""
 
 #: wpsc-includes/checkout.class.php:344
-#, fuzzy
 msgctxt "Dropdown default when called within checkout class"
 msgid "Select an Option"
 msgstr "Eine Option wählen"
@@ -7775,9 +7761,8 @@ msgid "Download"
 msgstr "Download CSV"
 
 #: wpsc-includes/form-display.functions.php:122
-#, fuzzy
 msgid "There are no files attached to this product. Upload a new file or select from other product files."
-msgstr "An dieses Produkt sind keine Dateien angehängt. Laden Sie eine neue Datei hoch oder wählen Sie aus anderen Produktedateien."
+msgstr "An dieses Produkt sind keine Dateien angehängt. Laden Sie eine neue Datei hoch oder wählen Sie aus anderen Produktdateien."
 
 #: wpsc-includes/form-display.functions.php:149
 msgid "Choose a downloadable file for this variation"
@@ -7926,7 +7911,6 @@ msgid "Quantity"
 msgstr "Anzahl"
 
 #: wpsc-includes/purchase-log-notification.class.php:73
-#, fuzzy
 msgctxt "purchase log notification table heading"
 msgid "Item Total"
 msgstr "Summe"
@@ -7988,19 +7972,16 @@ msgid "Subtotal"
 msgstr "Gesamtanzahl"
 
 #: wpsc-includes/purchase-log-notification.class.php:374
-#, fuzzy
 msgid "Shipping Method"
 msgstr "Versandmethode:"
 
 #: wpsc-includes/purchase-log-notification.class.php:375
-#, fuzzy
 msgid "Shipping Option"
 msgstr "Versandoptionen"
 
 #: wpsc-includes/purchase-log-notification.class.php:381
-#, fuzzy
 msgid "Items"
-msgstr "%s Artikel"
+msgstr "Artikel"
 
 #: wpsc-includes/purchase-log-notification.class.php:415
 #, fuzzy
@@ -8024,7 +8005,6 @@ msgid "Visit author homepage"
 msgstr "Homepage der Autoren besuchen"
 
 #: wpsc-includes/variations.class.php:49
-#, fuzzy
 msgid "-- Please Select --"
 msgstr "Bitte auswählen"
 
@@ -8073,7 +8053,6 @@ msgid "Select Shipping Countries"
 msgstr "Google Versand Land"
 
 #: wpsc-merchants/GoogleCheckout-XML.php:397
-#, fuzzy
 msgid "Set Shipping Options"
 msgstr "Versandoptionen"
 
@@ -8140,7 +8119,6 @@ msgid "Accepted Currency"
 msgstr "Zahlung aktzeptiert"
 
 #: wpsc-merchants/chronopay.php:386
-#, fuzzy
 msgid "USD - U.S. Dollar"
 msgstr "US Dollar"
 
@@ -8199,13 +8177,11 @@ msgstr ""
 
 #: wpsc-merchants/chronopay.php:447
 #: wpsc-merchants/paypal-standard.merchant.php:791
-#, fuzzy
 msgid "First Name Field"
 msgstr "Vorname"
 
 #: wpsc-merchants/chronopay.php:455
 #: wpsc-merchants/paypal-standard.merchant.php:799
-#, fuzzy
 msgid "Last Name Field"
 msgstr "Nachname"
 
@@ -8222,7 +8198,6 @@ msgstr ""
 
 #: wpsc-merchants/chronopay.php:476
 #: wpsc-merchants/paypal-standard.merchant.php:828
-#, fuzzy
 msgid "State Field"
 msgstr "Bundesland"
 
@@ -8232,7 +8207,6 @@ msgstr "PLZ"
 
 #: wpsc-merchants/chronopay.php:490
 #: wpsc-merchants/paypal-standard.merchant.php:848
-#, fuzzy
 msgid "Country Field"
 msgstr "Land"
 
@@ -8403,7 +8377,6 @@ msgid "Test Mode Enabled:"
 msgstr "Testmodus aktiviert:"
 
 #: wpsc-merchants/paypal-pro.merchant.php:442
-#, fuzzy
 msgid "Test Mode Enabled"
 msgstr "Testmodus aktiviert:"
 
@@ -8412,7 +8385,6 @@ msgid "Only enable test mode if you have a sandbox account with PayPal you can f
 msgstr ""
 
 #: wpsc-merchants/paypal-pro.merchant.php:459
-#, fuzzy
 msgid "Your website is using a currency not accepted by PayPal, select an accepted currency using the drop down menu below. Buyers on your site will still pay in your local currency however we will convert the currency and send the order through to PayPal using the currency you choose below."
 msgstr "Ihre Homepage benutzt eine Währung, die von Paypal nicht akzeptiert wird. Wählen Sie eine akzeptierte Währung aus. Käufer können trotzdem in ihrer lokalen Währung einkaufen, aber wir werden die Währung umrechnen und die Bestellung zu Paypal mit der unten ausgewählten Währung schicken."
 
@@ -8462,7 +8434,6 @@ msgid "PayPal Payments Standard"
 msgstr ""
 
 #: wpsc-merchants/paypal-standard.merchant.php:321
-#, fuzzy
 msgid "Your Shopping Cart"
 msgstr "Warenkorb"
 
