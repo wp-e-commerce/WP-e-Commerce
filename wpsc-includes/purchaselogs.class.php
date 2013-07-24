@@ -415,7 +415,7 @@ function wpsc_display_purchlog_shipping_method() {
 
    if ( ! empty ( $wpsc_shipping_modules[$purchlogitem->extrainfo->shipping_method] ) ) {
 	  $shipping_class = &$wpsc_shipping_modules[$purchlogitem->extrainfo->shipping_method];
-	  return esc_html( $shipping_class->name );
+	  return esc_html( $shipping_class->getName() );
    } else {
 	  return esc_html( $purchlogitem->extrainfo->shipping_method );
    }
@@ -441,6 +441,16 @@ function wpsc_display_purchlog_paymentmethod() {
    else
 	  return esc_html( $purchlogitem->extrainfo->gateway );
 
+}
+
+function wpsc_purchaselog_order_summary_headers() {
+	global $purchlogitem;
+	do_action( 'wpsc_purchaselog_order_summary_headers', $purchlogitem );
+}
+
+function wpsc_purchaselog_order_summary() {
+	global $purchlogitem;
+	do_action( 'wpsc_purchaselog_order_summary', $purchlogitem );
 }
 
 function wpsc_has_purchlog_shipping() {
