@@ -345,7 +345,7 @@ function wpsc_enqueue_user_script_and_css() {
 		wp_enqueue_script( 'wp-e-commerce',               WPSC_CORE_JS_URL	. '/wp-e-commerce.js',                 array( 'jquery' ), $version_identifier );
 		wp_enqueue_script( 'wp-e-commerce-dynamic', home_url( '/index.php?wpsc_user_dynamic_js=true', $scheme ), false,             $version_identifier );
 
-		wp_localize_script( 'wp-e-commerce-dynamic', 'wpsc_ajax', array(
+		wp_localize_script( 'wp-e-commerce', 'wpsc_ajax', array(
 			'ajaxurl'   => admin_url( 'admin-ajax.php', 'relative' ),
 			'spinner'   => esc_url( admin_url( 'images/wpspin_light.gif' ) ),
 			'no_quotes' => __( 'It appears that there are no shipping quotes for the shipping information provided.  Please check the information and try again.', 'wpsc' )

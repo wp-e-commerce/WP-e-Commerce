@@ -4090,7 +4090,7 @@ msgid "No Image"
 msgstr "Nessuna Immagine"
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:88
-msgid "Enter coupon code"
+msgid "Enter coupon code :"
 msgstr "Inserire il codice coupon"
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:159

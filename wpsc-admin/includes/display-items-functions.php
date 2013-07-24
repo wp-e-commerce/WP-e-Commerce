@@ -416,6 +416,110 @@ function wpsc_product_shipping_forms_metabox() {
 	wpsc_product_shipping_forms();
 }
 
+/**
+ * Dimension Units
+ *
+ * @since   3.8.13
+ *
+ * @return  array  List of valid dimension units.
+ */
+function wpsc_dimension_units() {
+	return array(
+		'in'    => __( 'inches', 'wpsc' ),
+		'cm'    => __( 'cm', 'wpsc' ),
+		'meter' => __( 'meters', 'wpsc' )
+	);
+}
+
+/**
+ * Weight Units
+ *
+ * @since   3.8.13
+ *
+ * @return  array  List of valid weight units.
+ */
+function wpsc_weight_units() {
+	return array(
+		'pound'    => __( 'pounds', 'wpsc' ),
+		'ounce'    => __( 'ounces', 'wpsc' ),
+		'gram'     => __( 'grams', 'wpsc' ),
+		'kilogram' => __( 'kilograms', 'wpsc' )
+	);
+}
+
+/**
+ * Weight Unit Display
+ *
+ * Returns a weight unit abbreviation for display.
+ *
+ * @since   3.8.13
+ *
+ * @param   string  $unit  Weight unit.
+ * @return  string         Weight unit string.
+ */
+function wpsc_weight_unit_display( $unit ) {
+	switch ( $unit ) {
+		case 'pound' :
+			return __( ' lbs.', 'wpsc' );
+		case 'ounce' :
+			return __( ' oz.', 'wpsc' );
+		case 'gram' :
+			return __( ' g', 'wpsc' );
+		case 'kilograms' :
+		case 'kilogram' :
+			return __( ' kgs.', 'wpsc' );
+	}
+	return '';
+}
+
+/**
+ * Validate Dimension Unit
+ *
+ * Returns a valid dimensions unit.
+ * If the unit is not set or invalid it will be filtered using 'wpsc_default_dimension_unit'
+ * so that an alternative default unit can be set.
+ *
+ * @since   3.8.13
+ *
+ * @param   string  $unit  Dimension unit.
+ * @return  string         Dimension unit string.
+ *
+ * @uses    wpsc_default_dimension_unit
+ */
+function wpsc_validate_dimension_unit( $unit = '' ) {
+	$default_unit = apply_filters( 'wpsc_default_dimension_unit', $unit );
+	if ( empty( $unit ) && array_key_exists( $default_unit, wpsc_dimension_units() ) )
+		$unit = $default_unit;
+	return $unit;
+}
+
+/**
+ * Validate Weight Unit
+ *
+ * Returns a valid weight unit.
+ * If the unit is not set or invalid it will be filtered using 'wpsc_default_weight_unit'
+ * so that an alternative default unit can be set.
+ *
+ * @since   3.8.13
+ *
+ * @param   string  $unit  Weight unit.
+ * @return  string         Weight unit string.
+ *
+ * @uses    wpsc_default_weight_unit
+ */
+function wpsc_validate_weight_unit( $unit = '' ) {
+	$default_unit = apply_filters( 'wpsc_default_weight_unit', $unit );
+	if ( empty( $unit ) && array_key_exists( $default_unit, wpsc_weight_units() ) )
+		$unit = $default_unit;
+	return $unit;
+}
+
+/**
+ * Product Shipping Forms
+ *
+ * @uses  wpsc_validate_weight_unit()
+ * @uses  wpsc_validate_dimension_unit()
+ */
 function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'meta[_wpsc_product_metadata]', $bulk = false ) {
 	if ( ! $product )
 		$product_id = get_the_ID();
@@ -428,16 +532,16 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 
 	$defaults = array(
 		'weight' => '',
-		'weight_unit' => '',
+		'weight_unit' => wpsc_validate_weight_unit(),
 		'dimensions' => array(),
 		'shipping'   => array(),
 		'no_shipping' => '',
 		'display_weight_as' => '',
 	);
 	$dimensions_defaults = array(
-		'height_unit' => '',
-		'width_unit' => '',
-		'length_unit' => '',
+		'height_unit' => wpsc_validate_dimension_unit(),
+		'width_unit' => wpsc_validate_dimension_unit(),
+		'length_unit' => wpsc_validate_dimension_unit(),
 		'height' => 0,
 		'width' => 0,
 		'length' => 0,
@@ -458,18 +562,8 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 
 	$weight = wpsc_convert_weight( $weight, 'pound', $weight_unit );
 
-	$dimension_units = array(
-		'in'    => __( 'inches', 'wpsc' ),
-		'cm'    => __( 'cm', 'wpsc' ),
-		'meter' => __( 'meters', 'wpsc' )
-	);
-
-	$weight_units = array(
-		'pound'    => __( 'pounds', 'wpsc' ),
-		'ounce'    => __( 'ounces', 'wpsc' ),
-		'gram'     => __( 'grams', 'wpsc' ),
-		'kilogram' => __( 'kilograms', 'wpsc' )
-	);
+	$dimension_units = wpsc_dimension_units();
+	$weight_units = wpsc_weight_units();
 
 	$measurements = $dimensions;
 	$measurements['weight'] = $weight;

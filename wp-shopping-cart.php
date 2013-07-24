@@ -3,7 +3,7 @@
   * Plugin Name: WP e-Commerce
   * Plugin URI: http://getshopped.org/
   * Description: A plugin that provides a WordPress Shopping Cart. See also: <a href="http://getshopped.org" target="_blank">GetShopped.org</a> | <a href="http://getshopped.org/forums/" target="_blank">Support Forum</a> | <a href="http://docs.getshopped.org/" target="_blank">Documentation</a>
-  * Version: 3.8.12-beta
+  * Version: 3.8.13-dev
   * Author: Instinct Entertainment
   * Author URI: http://getshopped.org/
   **/
@@ -17,7 +17,8 @@
  */
 class WP_eCommerce {
 	private $components = array(
-		'merchant' => array(),
+		'merchant'    => array(),
+		'marketplace' => array(),
 	);
 
 	/**
@@ -26,9 +27,9 @@ class WP_eCommerce {
 	 * @uses add_action()   Attaches to 'plugins_loaded' hook
 	 * @uses add_action()   Attaches to 'wpsc_components' hook
 	 */
-	function WP_eCommerce() {
+	function __construct() {
 		add_action( 'plugins_loaded' , array( $this, 'init' ), 8 );
-		add_action( 'wpsc_components', array( $this, '_register_core_components' ) );
+		add_filter( 'wpsc_components', array( $this, '_register_core_components' ) );
 	}
 
 	/**
@@ -56,23 +57,33 @@ class WP_eCommerce {
 	}
 
 	/**
-	 * @todo we need documentation finished here
+	 * New WPSC components API.
 	 *
-	 * @param   array   $components
+	 * Allows for modular coupling of different functionalities within WPSC.
+	 * This is the way we'll be introducing cutting-edge APIs
 	 *
-	 * @return  array
+	 * @since 3.8.9.5
+	 *
+	 * @param   array $components
+	 * @return  array $components
 	 */
 	public function _register_core_components( $components ) {
 		$components['merchant']['core-v2'] = array(
-			'title' => __( 'WP e-Commerce Merchant API v2', 'wpsc' ),
+			'title'    => __( 'WP e-Commerce Merchant API v2', 'wpsc' ),
 			'includes' =>
 				WPSC_FILE_PATH . '/wpsc-components/merchant-core-v2/merchant-core-v2.php'
 		);
 
 		$components['theme-engine']['core-v1'] = array(
-			'title' => __( 'WP e-Commerce Theme Engine v1', 'wpsc' ),
+			'title'    => __( 'WP e-Commerce Theme Engine v1', 'wpsc' ),
 			'includes' =>
 				WPSC_FILE_PATH . '/wpsc-components/theme-engine-v1/theme-engine-v1.php'
+		);
+
+		$components['marketplace']['core-v1'] = array(
+			'title'    => __( 'WP e-Commerce Marketplace API v1', 'wpsc' ),
+			'includes' =>
+				WPSC_FILE_PATH . '/wpsc-components/marketplace-core-v1/marketplace-core-v1.php'
 		);
 
 		return $components;
@@ -98,7 +109,7 @@ class WP_eCommerce {
 		define( 'WPSC_URL',       plugins_url( '', __FILE__ ) );
 
 		//load text domain
-		if( !load_plugin_textdomain( 'wpsc', false, '../languages/' ) )
+		if ( ! load_plugin_textdomain( 'wpsc', false, '../languages/' ) )
 			load_plugin_textdomain( 'wpsc', false, dirname( plugin_basename( __FILE__ ) ) . '/wpsc-languages/' );
 
 		// Finished starting
@@ -192,14 +203,11 @@ class WP_eCommerce {
 		// Legacy action
 		do_action( 'wpsc_before_init' );
 
-		// Setup the customer ID just in case to make sure it's set up correctly
-		_wpsc_action_create_customer_id( 'create' );
-
 		// Setup the core WPEC globals
 		wpsc_core_setup_globals();
 
-		// Setup the core WPEC cart
-		wpsc_core_setup_cart();
+		// Setup the customer ID just in case to make sure it's set up correctly
+		add_action( 'init', '_wpsc_action_setup_customer', 1 );
 
 		// Load the purchase log statuses
 		wpsc_core_load_purchase_log_statuses();
@@ -226,10 +234,10 @@ class WP_eCommerce {
 	 */
 	function install() {
 		global $wp_version;
-		if((float)$wp_version < 3.0){
-			 deactivate_plugins(plugin_basename(__FILE__)); // Deactivate ourselves
-			 wp_die( __('Looks like you\'re running an older version of WordPress, you need to be running at least WordPress 3.0 to use WP e-Commerce 3.8', 'wpsc'), __('WP e-Commerce 3.8 not compatible', 'wpsc'), array('back_link' => true));
-			return;
+
+		if ( ( float ) $wp_version < 3.0 ) {
+			 deactivate_plugins( plugin_basename( __FILE__ ) ); // Deactivate ourselves
+			 wp_die( __( 'Looks like you\'re running an older version of WordPress, you need to be running at least WordPress 3.0 to use WP e-Commerce 3.8', 'wpsc' ), __( 'WP e-Commerce 3.8 not compatible', 'wpsc' ), array( 'back_link' => true ) );
 		}
 		define( 'WPSC_FILE_PATH', dirname( __FILE__ ) );
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-installer.php' );

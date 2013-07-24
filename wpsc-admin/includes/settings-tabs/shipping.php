@@ -47,7 +47,7 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 		$shipadd = 0;
 		foreach ( $wpsc_shipping_modules as $shipping ) {
 			foreach ( (array) $_POST['custom_shipping_options'] as $shippingoption ) {
-				if ( $shipping->internal_name == $shippingoption ) {
+				if ( $shipping->getInternalName() == $shippingoption ) {
 					$shipadd++;
 				}
 			}
@@ -71,7 +71,7 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 
 		if ( $found_selected_module ) {
 			$selected_module = $wpsc_shipping_modules[$selected_module_id];
-			$title = $selected_module->name;
+			$title = $selected_module->getName();
 			$content = apply_filters( 'wpsc_shipping_module_settings_form', $selected_module->getForm(), $selected_module );
 		} else {
 			$title = __( 'Edit Shipping Module Settings', 'wpsc' );
@@ -100,7 +100,7 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 		$location = add_query_arg( array(
 			'tab'                => 'shipping',
 			'page'               => 'wpsc-settings',
-			'shipping_module_id' => $shipping->internal_name,
+			'shipping_module_id' => $shipping->getInternalName(),
 		), $location );
 		$location .= '#wpsc-shipping-module-options';
 		return $location;
@@ -269,7 +269,7 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 			<tbody>
 				<?php
 					foreach ( $internal_shipping_modules as $shipping ) {
-						$force = ( $shipping->internal_name === (string) get_user_option( 'wpsc_settings_selected_shipping_module', get_current_user_id() ) );
+						$force = ( $shipping->getInternalName() === (string) get_user_option( 'wpsc_settings_selected_shipping_module', get_current_user_id() ) );
 						$this->shipping_list_item( $shipping, $force );
 					}
 				?>
@@ -299,7 +299,7 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 			<tbody>
 				<?php
 					foreach ( $external_shipping_modules as $shipping ) {
-						$force = ( $shipping->internal_name === (string) get_user_option( 'wpsc_settings_selected_shipping_module', get_current_user_id() ) );
+						$force = ( $shipping->getInternalName() === (string) get_user_option( 'wpsc_settings_selected_shipping_module', get_current_user_id() ) );
 						$this->shipping_list_item( $shipping, $force );
 					}
 				?>
@@ -318,23 +318,23 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 		$shipping->disabled = isset( $shipping->requires_curl ) && $shipping->requires_curl && ! function_exists( 'curl_init' ) ;
 
 		?>
-			<tr class="wpsc-select-shipping <?php echo $shipping->active; ?>" data-shipping-id="<?php echo esc_attr( $shipping->internal_name ); ?>" id="shipping_list_item_<?php echo $shipping->internal_name;?>">
+			<tr class="wpsc-select-shipping <?php echo $shipping->active; ?>" data-shipping-id="<?php echo esc_attr( $shipping->getInternalName() ); ?>" id="shipping_list_item_<?php echo $shipping->getInternalName();?>">
 				<th scope="row" class="check-column">
-					<input name='custom_shipping_options[]' <?php disabled( $shipping->disabled ); ?> <?php checked( $shipping->checked ); ?> type='checkbox' value='<?php echo $shipping->internal_name; ?>' id='<?php echo $shipping->internal_name; ?>_id' />
+					<input name='custom_shipping_options[]' <?php disabled( $shipping->disabled ); ?> <?php checked( $shipping->checked ); ?> type='checkbox' value='<?php echo $shipping->getInternalName(); ?>' id='<?php echo $shipping->getInternalName(); ?>_id' />
 				</th>
 				<td class="plugin-title">
-					<label for='<?php echo $shipping->internal_name; ?>_id'><strong><?php echo $shipping->name; ?></strong></label>
+					<label for='<?php echo $shipping->getInternalName(); ?>_id'><strong><?php echo $shipping->getName(); ?></strong></label>
 					<div class="row-actions-visible">
 						<span class="edit">
-							<a class='edit-shipping-module' data-module-id="<?php echo $shipping->internal_name; ?>" title="<?php esc_attr_e( 'Edit this Shipping Module', 'wpsc' ); ?>" href='<?php echo esc_url( $this->get_shipping_module_url( $shipping ) ); ?>'><?php _ex( 'Settings', 'Shipping modules link to individual settings', 'wpsc' ); ?>
+							<a class='edit-shipping-module' data-module-id="<?php echo $shipping->getInternalName(); ?>" title="<?php esc_attr_e( 'Edit this Shipping Module', 'wpsc' ); ?>" href='<?php echo esc_url( $this->get_shipping_module_url( $shipping ) ); ?>'><?php _ex( 'Settings', 'Shipping modules link to individual settings', 'wpsc' ); ?>
 							<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
 						</span>
 					</div>
 				</td>
 			</tr>
-			<tr id="wpsc_shipping_settings_<?php echo esc_attr( $shipping->internal_name ); ?>" data-shipping-id="<?php echo esc_attr( $shipping->internal_name ); ?>" class='wpsc-select-shipping <?php echo $shipping->active; ?>' <?php echo $shipping->hidden; ?> >
-				<td colspan="3" id="wpsc_shipping_settings_<?php echo esc_attr( $shipping->internal_name ); ?>_container">
-					<?php $this->display_shipping_module_settings_form( $shipping->internal_name ); ?>
+			<tr id="wpsc_shipping_settings_<?php echo esc_attr( $shipping->getInternalName() ); ?>" data-shipping-id="<?php echo esc_attr( $shipping->getInternalName() ); ?>" class='wpsc-select-shipping <?php echo $shipping->active; ?>' <?php echo $shipping->hidden; ?> >
+				<td colspan="3" id="wpsc_shipping_settings_<?php echo esc_attr( $shipping->getInternalName() ); ?>_container">
+					<?php $this->display_shipping_module_settings_form( $shipping->getInternalName() ); ?>
 				</td>
 			</tr>
 		<?php

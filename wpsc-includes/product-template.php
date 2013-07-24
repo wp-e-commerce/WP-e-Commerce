@@ -11,6 +11,30 @@
  */
 
 /**
+ * Get The Product Excerpt
+ *
+ * WPEC uses the excerpt field in the database to store additional product details.
+ * This means that where themes output the excerpt (like in search results) the product's
+ * additional details are displayed which is not the expected behaviour.
+ *
+ * This function filters the excerpt early and returns an empty string which forces the default
+ * WordPress behaviour to use a truncated version of the content instead.
+ *
+ * Always use wpsc_the_product_additional_description() to return the addition product description.
+ *
+ * @since  3.8.13
+ *
+ * @param   string  $excerpt  The post excerpt (which for products is the additional description).
+ * @return  string            The empty excerpt.
+ */
+function wpsc_get_the_excerpt( $excerpt ) {
+	if ( 'wpsc-product' == get_post_type() )
+		return '';
+	return $excerpt;
+}
+add_filter( 'get_the_excerpt', 'wpsc_get_the_excerpt', 2 );
+
+/**
  * WPSC Product Variation Price From
  * Gets the formatted lowest price of a product's variations.
  *

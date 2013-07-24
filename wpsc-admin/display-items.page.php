@@ -85,11 +85,12 @@ add_action( 'wpsc_manage_products_column_image', '_wpsc_manage_products_column_i
  * @param  int     $post_id Post ID
  * @param  boolean $has_variations Whether the product has variations
  *
- * @uses esc_html_e()           Safe HTML with translation
- * @uses get_post_meta()        Gets post meta given key and post_id
- * @uses maybe_unserialize()    Unserialize value only if it was serialized.
- * @uses wpsc_convert_weight()  Does weight conversions
- * @uses esc_html()             Makes sure things are safe
+ * @uses esc_html_e()                Safe HTML with translation
+ * @uses get_post_meta()             Gets post meta given key and post_id
+ * @uses maybe_unserialize()         Unserialize value only if it was serialized.
+ * @uses wpsc_convert_weight()       Does weight conversions
+ * @uses esc_html()                  Makes sure things are safe
+ * @uses wpsc_weight_unit_display()  Gets weight unit for display
  */
 function _wpsc_manage_products_column_weight( $post, $post_id, $has_variations ) {
 	if( $has_variations ) {
@@ -117,22 +118,7 @@ function _wpsc_manage_products_column_weight( $post, $post_id, $has_variations )
 
 	$unit = $product_data['meta']['_wpsc_product_metadata']['weight_unit'];
 
-	switch( $unit ) {
-		case "pound":
-			$unit = __(" lbs.", "wpsc");
-		break;
-		case "ounce":
-			$unit = __(" oz.", "wpsc");
-		break;
-		case "gram":
-			$unit = __(" g", "wpsc");
-		break;
-		case "kilograms":
-		case "kilogram":
-			$unit = __(" kgs.", "wpsc");
-		break;
-	}
-	echo $weight.$unit;
+	echo $weight . wpsc_weight_unit_display( $unit );
 	echo '<div id="inline_' . $post->ID . '_weight" class="hidden">' . esc_html( $weight ) . '</div>';
 }
 add_action( 'wpsc_manage_products_column_weight', '_wpsc_manage_products_column_weight', 10, 3 );

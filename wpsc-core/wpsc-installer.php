@@ -588,7 +588,7 @@ function wpsc_create_or_update_tables( $debug = false ) {
 		update_option( 'wpsc_database_check', $template_hash );
 		return true;
 	} else {
-		return false;
+		return $failure_reasons;
 	}
 }
 

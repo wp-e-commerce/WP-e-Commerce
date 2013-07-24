@@ -205,7 +205,7 @@ function wpsc_core_load_gateways() {
  * the shipping directory for modules.
  */
 function wpsc_core_load_shipping_modules() {
-	global $wpsc_shipping_modules, $wpsc_cart;
+	global $wpsc_shipping_modules;
 
 	$shipping_directory     = WPSC_FILE_PATH . '/wpsc-shipping';
 	$nzshpcrt_shipping_list = wpsc_list_dir( $shipping_directory );
@@ -218,7 +218,20 @@ function wpsc_core_load_shipping_modules() {
 
 	$wpsc_shipping_modules = apply_filters( 'wpsc_shipping_modules', $wpsc_shipping_modules );
 
-	if ( ! get_option( 'do_not_use_shipping' ) && empty( $wpsc_cart->selected_shipping_method ) )
+	if ( ! get_option( 'do_not_use_shipping' ) )
+		add_action( 'wpsc_setup_customer', '_wpsc_action_get_shipping_method' );
+}
+
+/**
+ * If shipping is enabled and shipping methods have not been initialized, then
+ * do so.
+ *
+ * @access private
+ * @since 3.8.13
+ */
+function _wpsc_action_get_shipping_method() {
+	global $wpsc_cart;
+	if ( empty( $wpsc_cart->selected_shipping_method ) )
 		$wpsc_cart->get_shipping_method();
 }
 
@@ -428,6 +441,9 @@ add_filter( 'post_updated_messages', 'wpsc_post_updated_messages' );
 function wpsc_serialize_shopping_cart() {
 	global $wpdb, $wpsc_start_time, $wpsc_cart;
 
+	if ( is_admin() )
+		return;
+
 	// avoid flooding transients with bots hitting feeds
 	if ( is_feed() ) {
 		wpsc_delete_all_customer_meta();
@@ -456,6 +472,11 @@ add_action( 'shutdown', 'wpsc_serialize_shopping_cart' );
  */
 function wpsc_get_page_post_names() {
 	$wpsc_page['products']            = basename( get_option( 'product_list_url' ) );
+	if ( empty($wpsc_page['products']) || false !== strpos($wpsc_page['products'], '?page_id=') ) {
+		// Products page either doesn't exist, or is a draft
+		// Default to /product/xyz permalinks for products
+		$wpsc_page['products'] = 'product';
+	}
 	$wpsc_page['checkout']            = basename( get_option( 'checkout_url' ) );
 	$wpsc_page['transaction_results'] = basename( get_option( 'transact_url' ) );
 	$wpsc_page['userlog']             = basename( get_option( 'user_account_url' ) );
@@ -716,14 +737,17 @@ function wpsc_delete_customer_meta( $key, $id = false ) {
 }
 
 /**
- * Create customer ID upon 'plugins_loaded' to make sure there's one exists before
- * anything else.
+ * Setup current user object and customer ID as well as cart.
+ *
+ * @uses  do_action() Calls 'wpsc_setup_customer' after customer data is ready
  *
  * @access private
- * @since  3.8.9
+ * @since  3.8.13
  */
-function _wpsc_action_create_customer_id() {
+function _wpsc_action_setup_customer() {
 	wpsc_get_current_customer_id( 'create' );
+	wpsc_core_setup_cart();
+	do_action( 'wpsc_setup_customer' );
 }
 
 /**
