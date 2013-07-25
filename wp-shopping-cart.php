@@ -112,30 +112,28 @@ class WP_eCommerce {
 		if ( ! load_plugin_textdomain( 'wpsc', false, '../languages/' ) )
 			load_plugin_textdomain( 'wpsc', false, dirname( plugin_basename( __FILE__ ) ) . '/wpsc-languages/' );
 
-		$this->setup_table_names();
-
 		// Finished starting
 		do_action( 'wpsc_started' );
 	}
 
 	function setup_table_names() {
 		global $wpdb;
-		$wpdb->wpsc_meta                = "{$wpdb->prefix}wpsc_meta";
-		$wpdb->wpsc_also_bought         = "{$wpdb->prefix}wpsc_also_bought";
-		$wpdb->wpsc_region_tax          = "{$wpdb->prefix}wpsc_region_tax";
-		$wpdb->wpsc_coupon_codes        = "{$wpdb->prefix}wpsc_coupon_codes";
-		$wpdb->wpsc_visitormeta         = "{$wpdb->prefix}wpsc_visitor_meta"; // required for _get_meta_table()
-		$wpdb->wpsc_visitor_meta        = "{$wpdb->prefix}wpsc_visitor_meta";
-		$wpdb->wpsc_cart_contents       = "{$wpdb->prefix}wpsc_cart_contents";
-		$wpdb->wpsc_claimed_stock       = "{$wpdb->prefix}wpsc_claimed_stock";
-		$wpdb->wpsc_currency_list       = "{$wpdb->prefix}wpsc_currency_list";
-		$wpdb->wpsc_purchase_logs       = "{$wpdb->prefix}wpsc_purchase_logs";
-		$wpdb->wpsc_checkout_forms      = "{$wpdb->prefix}wpsc_checkout_forms";
-		$wpdb->wpsc_cart_itemmeta       = "{$wpdb->prefix}wpsc_cart_item_meta"; // required for _get_meta_table()
-		$wpdb->wpsc_cart_item_meta      = "{$wpdb->prefix}wpsc_cart_item_meta";
-		$wpdb->wpsc_product_rating      = "{$wpdb->prefix}wpsc_product_rating";
-		$wpdb->wpsc_download_status     = "{$wpdb->prefix}wpsc_download_status";
-		$wpdb->wpsc_submitted_form_data = "{$wpdb->prefix}wpsc_submited_form_data";
+		$wpdb->wpsc_meta                = WPSC_TABLE_META;
+		$wpdb->wpsc_also_bought         = WPSC_TABLE_ALSO_BOUGHT;
+		$wpdb->wpsc_region_tax          = WPSC_TABLE_REGION_TAX;
+		$wpdb->wpsc_coupon_codes        = WPSC_TABLE_COUPON_CODES;
+		$wpdb->wpsc_visitormeta         = WPSC_TABLE_VISITOR_META; // required for _get_meta_table()
+		$wpdb->wpsc_visitor_meta        = WPSC_TABLE_VISITOR_META;
+		$wpdb->wpsc_cart_contents       = WPSC_TABLE_CART_CONTENTS;
+		$wpdb->wpsc_claimed_stock       = WPSC_TABLE_CLAIMED_STOCK;
+		$wpdb->wpsc_currency_list       = WPSC_TABLE_CURRENCY_LIST;
+		$wpdb->wpsc_purchase_logs       = WPSC_TABLE_PURCHASE_LOGS;
+		$wpdb->wpsc_checkout_forms      = WPSC_TABLE_CHECKOUT_FORMS;
+		$wpdb->wpsc_cart_itemmeta       = WPSC_TABLE_CART_ITEM_META; // required for _get_meta_table()
+		$wpdb->wpsc_cart_item_meta      = WPSC_TABLE_CART_ITEM_META;
+		$wpdb->wpsc_product_rating      = WPSC_TABLE_PRODUCT_RATING;
+		$wpdb->wpsc_download_status     = WPSC_TABLE_DOWNLOAD_STATUS;
+		$wpdb->wpsc_submitted_form_data = WPSC_TABLE_SUBMITTED_FORM_DATA;
 	}
 
 	/**
@@ -167,6 +165,9 @@ class WP_eCommerce {
 
 		// WPEC Table names and related constants
 		wpsc_core_constants_table_names();
+
+		// setup wpdb table name attributes
+		$this->setup_table_names();
 
 		// Uploads directory info
 		wpsc_core_constants_uploads();
