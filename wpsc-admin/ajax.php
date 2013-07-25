@@ -20,13 +20,17 @@ function _wpsc_ajax_verify_nonce( $ajax_action ) {
 	elseif ( isset( $_REQUEST['_wpnonce'] ) )
 		$nonce = $_REQUEST['_wpnonce'];
 	else
-		return new WP_Error( 'wpsc_ajax_invalid_nonce', __( 'Your session has expired. Please refresh the page and try again.', 'wpsc' ) );
+		return _wpsc_error_invalid_nonce();
 
 	// validate nonce
 	if ( ! wp_verify_nonce( $nonce, 'wpsc_ajax_' . $ajax_action ) )
-		return new WP_Error( 'wpsc_ajax_invalid_nonce', __( 'Your session has expired. Please refresh the page and try again.', 'wpsc' ) );
+		return _wpsc_error_invalid_nonce();
 
 	return true;
+}
+
+function _wpsc_error_invalid_nonce() {
+	return new WP_Error( 'wpsc_ajax_invalid_nonce', __( 'Your session has expired. Please refresh the page and try again.', 'wpsc' ) );
 }
 
 /**
@@ -68,7 +72,11 @@ function _wpsc_ajax_fire_callback( $ajax_action ) {
  */
 function _wpsc_ajax_handler() {
 	$ajax_action = str_replace( '-', '_', $_REQUEST['wpsc_action'] );
-	$result = _wpsc_ajax_verify_nonce( $ajax_action );
+
+	if ( is_callable( '_wpsc_ajax_verify_' . $ajax_action ) )
+		$result = call_user_func( '_wpsc_ajax_verify_' . $ajax_action );
+	else
+		$result = _wpsc_ajax_verify_nonce( $ajax_action );
 
 	if ( ! is_wp_error( $result ) )
 		$result = _wpsc_ajax_fire_callback( $ajax_action );
@@ -563,11 +571,11 @@ function _wpsc_ajax_save_product_order() {
  */
 function _wpsc_save_category_product_order( $products, $category ) {
 	global $wpdb;
- 
+
 	// Only save category product order if in category
 	if ( ! $category )
 		return;
- 
+
 	// Save product order in term_relationships table
 	foreach ( $products as $order => $product_id ) {
 		$wpdb->update( $wpdb->term_relationships,
@@ -789,6 +797,8 @@ function _wpsc_ajax_add_tax_rate() {
  */
 function wpsc_product_variations_table() {
 	check_admin_referer( 'wpsc_product_variations_table' );
+	set_current_screen( 'wpsc-product' );
+	wp_enqueue_media( array( 'post' => absint( $_REQUEST['product_id'] ) ) );
 	require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/product-variations-page.class.php' );
 	$page = new WPSC_Product_Variations_Page();
 	$page->display();

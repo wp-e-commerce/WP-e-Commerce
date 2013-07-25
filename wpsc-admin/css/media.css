@@ -1,0 +1,26 @@
+.wpsc-featured-label {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: #f1f1f1;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#f1f1f1), to(#e1e1e1));
+	background-image: -webkit-linear-gradient(top, #f1f1f1, #e1e1e1);
+	background-image:    -moz-linear-gradient(top, #f1f1f1, #e1e1e1);
+	background-image:      -o-linear-gradient(top, #f1f1f1, #e1e1e1);
+	background-image:   linear-gradient(to bottom, #f1f1f1, #e1e1e1);
+	box-shadow: 0 0 0 1px rgba( 0, 0, 0, 0.15 );
+	font-weight: bold;
+	text-align: center;
+	color: rgb(70, 70, 70);
+	max-height: 100%;
+	padding: 5px 10px;
+	outline: 0 none;
+	opacity: 0.95;
+	line-height: 1em;
+}
+
+.selection-view .wpsc-featured-label {
+	font-size:7px;
+	padding: 2px 0;
+}

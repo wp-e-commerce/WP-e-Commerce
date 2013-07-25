@@ -812,17 +812,6 @@ function wpsc_product_external_link_forms() {
         </table>
 <?php
 }
-function wpsc_product_image_forms() {
-
-	global $post;
-
-	edit_multiple_image_gallery( $post );
-
-?>
-
-    <p><strong <?php if ( isset( $display ) ) echo $display; ?>><a href="media-upload.php?parent_page=wpsc-edit-products&amp;post_id=<?php echo $post->ID; ?>&amp;type=image&amp;tab=gallery&amp;TB_iframe=1&amp;width=640&amp;height=566" class="thickbox" title="<?php esc_attr_e( 'Manage Product Images', 'wpsc' ); ?>"><?php esc_html_e( 'Manage Product Images', 'wpsc' ); ?></a></strong></p>
-<?php
-}
 function wpsc_additional_desc() {
 ?>
     <textarea name='additional_description' id='additional_description' cols='40' rows='5' ><?php echo esc_textarea( get_post_field( 'post_excerpt', get_the_ID() ) ); ?></textarea>
@@ -909,12 +898,6 @@ if ( version_compare( get_bloginfo( 'version' ), '3.5', '<' ) ) {
 * Modifications to Media Gallery
 */
 
-if ( ( isset( $_REQUEST['parent_page'] ) && ( $_REQUEST['parent_page'] == 'wpsc-edit-products' ) ) ) {
-	add_filter( 'media_upload_tabs', 'wpsc_media_upload_tab_gallery', 12 );
-	add_filter( 'media_upload_form_url', 'wpsc_media_upload_url', 9, 1 );
-	add_action( 'admin_head', 'wpsc_gallery_css_mods' );
-}
-add_filter( 'gettext', 'wpsc_filter_delete_text', 12 , 3 );
 add_filter( 'attachment_fields_to_edit', 'wpsc_attachment_fields', 11, 2 );
 add_filter( 'attachment_fields_to_save', 'wpsc_save_attachment_fields', 9, 2 );
 add_filter( 'gettext_with_context', 'wpsc_filter_gettex_with_context', 12, 4);
@@ -939,29 +922,6 @@ function wpsc_filter_gettex_with_context( $translation, $text, $context, $domain
 	return $translation;
 }
 
-/*
- * This filter translates string before it is displayed
- * specifically for the words 'Use as featured image' with 'Use as Product Thumbnail' when the user is selecting a Product Thumbnail
- * using media gallery.
- *
- * @todo As this feature is entirely cosmetic and breaks with WP_DEBUG on in WP 3.5+, we've removed the filter for it.  Will revisit the functionality in 3.9 when we look at new media workflows.
- * @param $translation The current translation
- * @param $text The text being translated
- * @param $domain The domain for the translation
- * @return string The translated / filtered text.
- */
-function wpsc_filter_feature_image_text( $translation, $text, $domain ) {
-	if ( 'Use as featured image' == $text && isset( $_REQUEST['post_id'] ) ) {
-		$post = get_post( $_REQUEST['post_id'] );
-		if ( $post->post_type != 'wpsc-product' ) return $translation;
-		$translations = &get_translations_for_domain( $domain );
-		return $translations->translate( 'Use as Product Thumbnail', 'wpsc' );
-		//this will never happen, this is here only for gettexr to pick up the translation
-		return __( 'Use as Product Thumbnail', 'wpsc' );
-	}
-
-	return $translation;
-}
 function wpsc_attachment_fields( $form_fields, $post ) {
 	$out = '';
 
@@ -1074,95 +1034,6 @@ function wpsc_save_attachment_fields( $post, $attachment ) {
 		update_post_meta( $post['ID'], '_wpsc_selected_image_size', $attachment['wpsc_image_size'] );
 
 	return $post;
-}
-function wpsc_media_upload_url( $form_action_url ) {
-
-	$form_action_url = esc_url( add_query_arg( array( 'parent_page'=>'wpsc-edit-products' ) ) );
-
-	return $form_action_url;
-
-}
-function wpsc_gallery_css_mods() {
-
-	print '<style type="text/css">
-			#gallery-settings *{
-			display:none;
-			}
-			a.wp-post-thumbnail {
-					color:green;
-			}
-			#media-upload a.del-link {
-				color:red;
-			}
-			#media-upload a.wp-post-thumbnail {
-				margin-left:0px;
-			}
-			td.savesend input.button {
-				display:none;
-			}
-	</style>';
-	print '
-	<script type="text/javascript">
-	jQuery(function(){
-		jQuery("td.A1B1").each(function(){
-
-			var target = jQuery(this).next();
-				jQuery("p > input.button", this).appendTo(target);
-
-		});
-
-		jQuery("a.wp-post-thumbnail").each(function(){
-			var product_image = jQuery(this).text();
-			if (product_image == "' . __( 'Use as featured image' ) . '") {
-				jQuery(this).text("' . __( 'Use as Product Thumbnail', 'wpsc' ) . '");
-			}
-		});
-	});
-
-	</script>';
-}
-function wpsc_media_upload_tab_gallery( $tabs ) {
-
-	unset( $tabs['gallery'] );
-	$tabs['gallery'] = __( 'Product Image Gallery', 'wpsc' );
-
-	return $tabs;
-}
-function wpsc_filter_delete_text( $translation, $text, $domain ) {
-
-	if ( 'Delete' == $text && isset( $_REQUEST['post_id'] ) && isset( $_REQUEST['parent_page'] ) ) {
-		$translations = &get_translations_for_domain( $domain );
-		return $translations->translate( 'Trash' ) ;
-	}
-	return $translation;
-}
-function edit_multiple_image_gallery( $post ) {
-	global $wpdb;
-
-	// Make sure thumbnail isn't duplicated
-	if ( $post->ID > 0 ) {
-		if ( has_post_thumbnail( $post->ID ) )
-			echo get_the_post_thumbnail( $post->ID, 'admin-product-thumbnails' );
-
-		$args = array(
-			'post_type' => 'attachment',
-			'numberposts' => -1,
-			'post_status' => null,
-			'post_parent' => $post->ID,
-			'orderby' => 'menu_order',
-			'order' => 'ASC'
-		);
-
-		$attached_images = (array)get_posts( $args );
-
-		if ( count( $attached_images ) > 0 ) {
-			foreach ( $attached_images as $images ) {
-				$attached_image = wp_get_attachment_image( $images->ID, 'admin-product-thumbnails' );
-				echo $attached_image. '&nbsp;';
-			}
-		}
-
-	}
 }
 
 /**
