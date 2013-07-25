@@ -27,6 +27,9 @@ if ( isset( $_REQUEST['wpsc_ajax_action'] ) && (($_REQUEST['wpsc_ajax_action'] =
 if ( isset( $_POST['coupon_num'] ) )
 	add_action( 'init', 'wpsc_coupon_price' );
 
+if ( isset( $_REQUEST['wpsc_ajax_action'] ) && 'add_to_cart' == $_REQUEST['wpsc_ajax_action'] )
+    add_action( 'init', 'wpsc_add_to_cart' );
+
 if ( isset( $_REQUEST['wpsc_update_quantity'] ) && ($_REQUEST['wpsc_update_quantity'] == 'true') )
 	add_action( 'init', 'wpsc_update_item_quantity' );
 
