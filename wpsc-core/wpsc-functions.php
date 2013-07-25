@@ -441,7 +441,7 @@ add_filter( 'post_updated_messages', 'wpsc_post_updated_messages' );
 function wpsc_serialize_shopping_cart() {
 	global $wpdb, $wpsc_start_time, $wpsc_cart;
 
-	if ( is_admin() )
+	if ( is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) )
 		return;
 
 	// avoid flooding transients with bots hitting feeds
