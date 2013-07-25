@@ -108,6 +108,7 @@
 									<option value="begins"><?php _e( 'Begins with', 'wpsc' ); ?></option>
 									<option value="ends"><?php _e( 'Ends with', 'wpsc' ); ?></option>
 									<option value="category"><?php _e( 'In Category', 'wpsc' ); ?></option>
+									<?php echo apply_filters( 'wpsc_coupon_rule_logic_options', '' ); ?>
 								</select>
 
 								<input type="text" name="rules[value][]" style="width: 150px;"/>
