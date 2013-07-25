@@ -155,20 +155,22 @@ class Sputnik_Admin {
 	}
 
 	public static function connect_notice() {
-		if (self::$page_is_current === true) {
+		if ( self::$page_is_current != true )
 			return;
-		}
 
-		if (!current_user_can('install_plugins')) {
+		if ( ! current_user_can( 'install_plugins' ) )
 			return;
-		}
+
+		$oauth_url    = self::build_url(array('oauth' => 'request', 'TB_iframe' => true));
+
 
 ?>
-			<div class="sputnik-message">
-				<div class="inner">
-					<h4><?php _e( '<strong>WPEConomy is now installed!</strong> &#8211; Get started by linking with your account!', 'sputnik' ); ?></h4>
-					<p class="submit"><a href="<?php echo self::build_url() ?>" class="button-primary"><?php _e( 'Link now', 'sputnik' ); ?></a></p>
-				</div>
+			<div class="sputnik-message updated">
+				<p>
+					<?php _e( '<strong>WPEConomy is now installed!</strong> &#8211; Get started by linking with your account!', 'wpsc' ); ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+					<?php _e( "If you haven't created an account yet, don't worry, you will be prompted to do so.", 'wpsc') ?>
+				</p>
+				<a href="<?php echo esc_html( $oauth_url ); ?>" class="thickbox button button-primary thickbox`"><?php _e( 'Link your account now', 'sputnik' ); ?></a>
 			</div>
 <?php
 	}
@@ -724,13 +726,6 @@ class Sputnik_Admin {
 		if ( isset( $_GET['auth'] ) && $_GET['auth'] == 'denied' ) {
 			self::print_message( __( 'Authorization cancelled.', 'sputnik' ) );
 		}
-?>
-<div id="sputnik-auth">
-	<p><?php _e( 'Welcome to WPEconomy! Before we can get started, we need to link this site with your WPEconomy.org account. If you have not created a free account, you will be prompted to do so.', 'sputnik' );?></p>
-	<p class="buttons"><a href="<?php echo $oauth_url; ?>" class="button thickbox"><?php _e( 'Link account', 'sputnik' ) ?></a></p>
-</div>
-
-<?php
 	}
 
 	/**
