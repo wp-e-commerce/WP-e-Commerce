@@ -219,7 +219,7 @@
 	);
 
 	/**
-	 * Extend media.view.Atachment
+	 * Extend media.view.Attachment
 	 */
 	WPSC.mixin(
 		media.view.Attachment,
