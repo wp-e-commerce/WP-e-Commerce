@@ -208,26 +208,35 @@ $wpsc_database_template[$table_name]['indexes']['unique_key'] = "UNIQUE KEY `uni
 $wpsc_database_template[$table_name]['indexes']['last_activity'] = "KEY `last_activity` ( `last_activity` )";
 $wpsc_database_template[$table_name]['indexes']['cart_submitted'] = "KEY `cart_submitted` ( `cart_submitted` )";
 
-// code to create or update the all of the wpsc custom meta tables that are managed using the wordpress meta functionalilty
-// the meta object types should be those listed in the wpsc_meta_core_object_types() function, they are repeated here to allow
-// the database init and upgrade to happen prior to the include of the meta function defintions
-$meta_object_types = array( 'cart_item', 'visitor' );
-foreach ( $meta_object_types as $meta_object_type ) {
-	$table_name = $wpdb->prefix.$meta_object_type.'_meta'; // this is the same as the function wpsc_meta_table_name( $meta_object_type );
-	$wpsc_database_template[$table_name]['columns']['meta_id'] = "bigint(20) unsigned NOT NULL AUTO_INCREMENT ";
-	$wpsc_database_template[$table_name]['columns'][$meta_object_type.'_id'] = "bigint(20) unsigned NOT NULL DEFAULT '0' ";
-	$wpsc_database_template[$table_name]['columns']['meta_key'] = "varchar(255) default NULL ";
-	$wpsc_database_template[$table_name]['columns']['meta_value'] = "longtext ";
-	$wpsc_database_template[$table_name]['columns']['meta_timestamp'] = "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ";
-	$wpsc_database_template[$table_name]['indexes']['PRIMARY'] = "PRIMARY KEY  ( `meta_id` ) ";
-	$wpsc_database_template[$table_name]['indexes']['meta_key'] = "KEY `meta_key` ( `meta_key`(191) ) ";
-	$wpsc_database_template[$table_name]['indexes']['meta_value'] = "KEY `meta_value` ( `meta_value`(20) ) ";
-	$wpsc_database_template[$table_name]['indexes']['meta_key_and_value'] = "KEY `meta_key_and_value` ( `meta_key`(191), `meta_value`(32) ) ";
-	$wpsc_database_template[$table_name]['indexes']['meta_timestamp_index'] = "KEY meta_timestamp_index (meta_timestamp) ";
-	$wpsc_database_template[$table_name]['indexes'][$meta_object_type.'_id'] = 'KEY '.$meta_object_type.'_id ( `' . $meta_object_type . '_id` ) ';
-	if ( function_exists( $meta_migrate_function_name = 'wpsc_meta_migrate_'.$meta_object_type ) ) {
-		$wpsc_database_template[$table_name]['actions']['after']['all'] = $meta_migrate_function_name;
-	}
-}
+require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-init.php' );
 
-?>
+// code to create or update the {$wpdb->prefix}wpsc_cart_item_meta table
+$table_name = $wpdb->wpsc_cart_item_meta;
+$wpsc_database_template[$table_name]['columns']['meta_id'] = "bigint(20) unsigned NOT NULL AUTO_INCREMENT ";
+$wpsc_database_template[$table_name]['columns']['wpsc_cart_item_id'] = "bigint(20) unsigned NOT NULL DEFAULT '0' ";
+$wpsc_database_template[$table_name]['columns']['meta_key'] = "varchar(255) default NULL ";
+$wpsc_database_template[$table_name]['columns']['meta_value'] = "longtext ";
+$wpsc_database_template[$table_name]['columns']['meta_timestamp'] = "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ";
+$wpsc_database_template[$table_name]['indexes']['PRIMARY'] = "PRIMARY KEY  ( `meta_id` ) ";
+$wpsc_database_template[$table_name]['indexes']['meta_key'] = "KEY `meta_key` ( `meta_key`(191) ) ";
+$wpsc_database_template[$table_name]['indexes']['meta_value'] = "KEY `meta_value` ( `meta_value`(20) ) ";
+$wpsc_database_template[$table_name]['indexes']['meta_key_and_value'] = "KEY `meta_key_and_value` ( `meta_key`(191), `meta_value`(32) ) ";
+$wpsc_database_template[$table_name]['indexes']['meta_timestamp_index'] = "KEY meta_timestamp_index (meta_timestamp) ";
+$wpsc_database_template[$table_name]['indexes']['wpsc_cart_item_id'] = 'KEY wpsc_cart_item_id ( `wpsc_cart_item_id` ) ';
+$wpsc_database_template[$table_name]['actions']['after']['all'] = '_wpsc_meta_migrate_wpsc_cart_item';
+
+// code to create or update the {$wpdb->prefix}wpsc_visitor_meta table
+$table_name = $wpdb->wpsc_visitor_meta;
+$wpsc_database_template[$table_name]['columns']['meta_id'] = "bigint(20) unsigned NOT NULL AUTO_INCREMENT ";
+$wpsc_database_template[$table_name]['columns']['wpsc_visitor_id'] = "bigint(20) unsigned NOT NULL DEFAULT '0' ";
+$wpsc_database_template[$table_name]['columns']['meta_key'] = "varchar(255) default NULL ";
+$wpsc_database_template[$table_name]['columns']['meta_value'] = "longtext ";
+$wpsc_database_template[$table_name]['columns']['meta_timestamp'] = "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ";
+$wpsc_database_template[$table_name]['indexes']['PRIMARY'] = "PRIMARY KEY  ( `meta_id` ) ";
+$wpsc_database_template[$table_name]['indexes']['meta_key'] = "KEY `meta_key` ( `meta_key`(191) ) ";
+$wpsc_database_template[$table_name]['indexes']['meta_value'] = "KEY `meta_value` ( `meta_value`(20) ) ";
+$wpsc_database_template[$table_name]['indexes']['meta_key_and_value'] = "KEY `meta_key_and_value` ( `meta_key`(191), `meta_value`(32) ) ";
+$wpsc_database_template[$table_name]['indexes']['meta_timestamp_index'] = "KEY meta_timestamp_index (meta_timestamp) ";
+$wpsc_database_template[$table_name]['indexes']['wpsc_visitor_id'] = 'KEY wpsc_visitor_id ( `wpsc_visitor_id` ) ';
+if ( function_exists( 'wpsc_meta_migrate_wpsc_visitor' ) )
+	$wpsc_database_template[$table_name]['actions']['after']['all'] = 'wpsc_meta_migrate_wpsc_visitor';

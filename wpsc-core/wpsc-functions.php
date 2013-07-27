@@ -507,6 +507,10 @@ function wpsc_cron() {
 }
 add_action( 'init', 'wpsc_cron' );
 
+function _wpsc_is_customer_user( $id = false ) {
+	return( ! $id && is_user_logged_in() ) || ( is_int( $id ) );
+}
+
 /**
  * In case the user is not logged in, create a customer cookie with a unique
  * ID to pair with the transient in the database.
@@ -516,9 +520,11 @@ add_action( 'init', 'wpsc_cron' );
  * @return string Customer ID
  */
 function wpsc_create_customer_id() {
+	$max_visitor_id = get_option( 'wpsc_max_visitor_id', 0 );
+	$max_visitor_id ++;
 	$expire = time() + WPSC_CUSTOMER_DATA_EXPIRATION; // valid for 48 hours
 	$secure = is_ssl();
-	$id = '_' . wp_generate_password(); // make sure the ID is a string
+	$id = $max_visitor_id . ':' . wp_generate_password( 10 );
 	$data = $id . $expire;
 	$hash = hash_hmac( 'md5', $data, wp_hash( $data ) );
 	// store ID, expire and hash to validate later
@@ -526,6 +532,8 @@ function wpsc_create_customer_id() {
 
 	setcookie( WPSC_CUSTOMER_COOKIE, $cookie, $expire, WPSC_CUSTOMER_COOKIE_PATH, COOKIE_DOMAIN, $secure, true );
 	$_COOKIE[WPSC_CUSTOMER_COOKIE] = $cookie;
+
+	update_option( 'wpsc_max_visitor_id', $max_visitor_id );
 	return $id;
 }
 
@@ -605,51 +613,66 @@ function wpsc_get_current_customer_id( $mode = '' ) {
 	return false;
 }
 
-/**
- * Return an array containing all metadata of a customer
- *
- * @access public
- * @since 3.8.9
- * @param  mixed $id Customer ID. Default to the current user ID.
- * @return WP_Error|array Return an array of metadata if no error occurs, WP_Error
- *                        if otherwise.
- */
-function wpsc_get_all_customer_meta( $id = false ) {
-	global $wpdb;
-
-	if ( ! $id )
-		$id = wpsc_get_current_customer_id();
-
-	if ( ! $id )
-		return new WP_Error( 'wpsc_customer_meta_invalid_customer_id', __( 'Invalid customer ID', 'wpsc' ), $id );
-
-	// take multisite into account
-	$blog_prefix = is_multisite() ? $wpdb->get_blog_prefix() : '';
-	if ( is_numeric( $id ) )
-		$profile = get_user_meta( $id, "_wpsc_{$blog_prefix}customer_profile", true );
+function wpsc_get_all_customer_data( $id = false ) {
+	if ( _wpsc_is_customer_user( $id ) )
+		$profile = wpsc_get_all_user_data( $key, $id );
 	else
-		$profile = get_transient( "wpsc_customer_meta_{$blog_prefix}{$id}" );
-
-	if ( ! is_array( $profile ) )
-		$profile = array();
+		$profile = wpsc_get_all_visitor_data( $key, $id );
 
 	return apply_filters( 'wpsc_get_all_customer_meta', $profile, $id );
 }
 
-/**
- * Get a customer meta value.
- *
- * @access public
- * @since  3.8.9
- * @param  string  $key Meta key
- * @param  int|string $id  Customer ID. Optional, defaults to current customer
- * @return mixed           Meta value, or null if it doesn't exist or if the
- *                         customer ID is invalid.
- */
-function wpsc_get_customer_meta( $key = '', $id = false ) {
+function wpsc_get_all_user_data( $id = false ) {
 	global $wpdb;
+	if ( ! $id )
+		if ( ! is_user_logged_in() )
+			return array();
+		else
+			$id = wpsc_get_current_customer_id();
 
-	$profile = wpsc_get_all_customer_meta( $id );
+	if ( ! $id )
+		return new WP_Error( 'wpsc_customer_meta_invalid_user_id', __( 'Invalid user ID', 'wpsc' ), $id );
+
+	// take multisite into account
+	$blog_prefix = is_multisite() ? $wpdb->get_blog_prefix() : '';
+	$profile = get_user_meta( $id, "_wpsc_{$blog_prefix}customer_profile", true );
+
+	if ( ! is_array( $profile ) )
+		$profile = array();
+
+	return apply_filters( 'wpsc_get_all_user_data', $profile, $id );
+}
+
+function wpsc_get_all_visitor_data( $id = false ) {
+	if ( ! $id )
+		if ( is_user_logged_in() )
+			return array();
+		else
+			$id = wpsc_get_current_customer_id();
+
+	if ( ! $id )
+		return new WP_Error( 'wpsc_customer_meta_invalid_user_id', __( 'Invalid visitor ID', 'wpsc' ), $id );
+
+	$profile = wpsc_get_visitor_meta( $id, 'customer_data', true );
+
+	if ( ! is_array( $profile ) )
+		$profile = array();
+
+	return apply_filters( 'wpsc_get_all_visitor_data', $profile, $id );
+}
+
+function wpsc_get_customer_data( $key = '', $id = false ) {
+	if ( _wpsc_is_customer_user( $id ) )
+		return wpsc_get_user_data( $key, $id );
+	else
+		return wpsc_get_visitor_data( $key, $id );
+}
+
+function wpsc_get_user_data( $key = '', $id = false ) {
+	if ( ! $id && ! is_user_logged_in() )
+		return false;
+
+	$profile = wpsc_get_all_user_data( $id );
 
 	// attempt to regenerate current customer ID if it's invalid
 	if ( is_wp_error( $profile ) && ! $id ) {
@@ -663,69 +686,104 @@ function wpsc_get_customer_meta( $key = '', $id = false ) {
 	return $profile[$key];
 }
 
-/**
- * Overwrite customer meta with an array of meta_key => meta_value.
- *
- * @access public
- * @since  3.8.9
- * @param  array      $profile Customer meta array
- * @param  int|string $id      Customer ID. Optional. Defaults to current customer.
- * @return boolean             True if meta values are updated successfully. False
- *                             if otherwise.
- */
-function wpsc_update_all_customer_meta( $profile, $id = false ) {
-	global $wpdb;
+function wpsc_get_visitor_data( $key = '', $id = false ) {
+	if ( ! $id && is_user_logged_in() )
+		return false;
 
-	if ( ! $id )
-		$id = wpsc_get_current_customer_id( 'create' );
+	$profile = wpsc_get_all_visitor_data( $id );
 
-	$blog_prefix = is_multisite() ? $wpdb->get_blog_prefix() : '';
+	// attempt to regenerate current customer ID if it's invalid
+	if ( is_wp_error( $profile ) && ! $id ) {
+		wpsc_create_customer_id();
+		$profile = wpsc_get_all_customer_meta();
+	}
 
-	if ( is_numeric( $id ) )
-		return update_user_meta( $id, "_wpsc_{$blog_prefix}customer_profile", $profile );
-	else
-		return set_transient( "wpsc_customer_meta_{$blog_prefix}{$id}", $profile, WPSC_CUSTOMER_DATA_EXPIRATION );
+	if ( is_wp_error( $profile ) || ! array_key_exists( $key, $profile ) )
+		return null;
+
+	return $profile[$key];
 }
 
-/**
- * Update a customer meta.
- *
- * @access public
- * @since  3.8.9
- * @param  string     $key   Meta key
- * @param  mixed      $value Meta value
- * @param  string|int $id    Customer ID. Optional. Defaults to current customer.
- * @return boolean|WP_Error  True if successful, false if not successful, WP_Error
- *                           if there are any errors.
- */
-function wpsc_update_customer_meta( $key, $value, $id = false ) {
+function wpsc_update_all_customer_data( $profile, $id = false ) {
+	if ( _wpsc_is_customer_user( $id ) )
+		return wpsc_update_all_user_data( $profile, $id );
+	else
+		return wpsc_update_all_visitor_data( $profile, $id );
+}
+
+function wpsc_update_all_user_data( $profile, $id = false ) {
 	global $wpdb;
 
 	if ( ! $id )
-		$id = wpsc_get_current_customer_id( 'create' );
+		if ( ! is_user_logged_in() )
+			return false;
+		else
+			$id = wpsc_get_current_customer_id( 'create' );
 
-	$profile = wpsc_get_all_customer_meta( $id );
+	$blog_prefix = is_multisite() ? $wpdb->get_blog_prefix() : '';
+	return update_user_meta( $id, "_wpsc_{$blog_prefix}customer_profile", $profile );
+}
+
+function wpsc_update_all_visitor_data( $profile, $id = false ) {
+	return wpsc_update_visitor_meta( $id, 'customer_data', $profile );
+}
+
+function wpsc_update_customer_data( $key, $value, $id = false ) {
+	if ( _wpsc_is_customer_user( $id ) )
+		return wpsc_update_user_data( $key, $value, $id );
+	else
+		return wpsc_update_visitor_data( $key, $value, $id );
+}
+
+function wpsc_update_user_data( $key, $value, $id = false ) {
+	if ( ! $id )
+		if ( ! is_user_logged_in() )
+			return false;
+		else
+			$id = wpsc_get_current_customer_id( 'create' );
+
+	$profile = wpsc_get_all_user_data( $id );
 
 	if ( is_wp_error( $profile ) )
 		return $profile;
 
 	$profile[$key] = $value;
 
-	return wpsc_update_all_customer_meta( $profile, $id );
+	return wpsc_update_all_user_data( $profile, $id );
 }
 
-/**
- * Delete customer meta.
- *
- * @access public
- * @since  3.8.9
- * @param  string     $key  Meta key
- * @param  string|int $id   Customer ID. Optional. Defaults to current customer.
- * @return boolean|WP_Error True if successful. False if not successful. WP_Error
- *                          if there are any errors.
- */
-function wpsc_delete_customer_meta( $key, $id = false ) {
-	$profile = wpsc_get_all_customer_meta( $id );
+function wpsc_update_visitor_data( $key, $value, $id = false ) {
+	if ( ! $id )
+		if ( is_user_logged_in() )
+			return false;
+		else
+			$id = wpsc_get_current_customer_id( 'create' );
+
+	$profile = wpsc_get_all_user_data( $id );
+
+	if ( is_wp_error( $profile ) )
+		return $profile;
+
+	$profile[$key] = $value;
+
+	return wpsc_update_all_visitor_data( $profile, $id );
+}
+
+function wpsc_delete_customer_data( $key, $id = false ) {
+	if ( _wpsc_is_customer_user( $id ) )
+		return wpsc_delete_user_data( $key, $id = false );
+	else
+		return wpsc_delete_visitor_meta( $key, $id = false );
+}
+
+function wpsc_delete_user_data( $key, $id = false ) {
+	if ( ! $id )
+		if ( ! is_user_logged_in() )
+			return false;
+		else
+			$id = wpsc_get_current_customer_id( 'create' );
+
+	$profile = wpsc_get_all_user_data( $id );
 
 	if ( is_wp_error( $profile ) )
 		return $profile;
@@ -733,7 +791,25 @@ function wpsc_delete_customer_meta( $key, $id = false ) {
 	if ( array_key_exists( $key, $profile ) )
 		unset( $profile[$key] );
 
-	return wpsc_update_all_customer_meta( $profile, $id );
+	return wpsc_update_all_user_data( $profile, $id );
+}
+
+function wpsc_delete_visitor_data( $key, $id = false ) {
+	if ( ! $id )
+		if ( is_user_logged_in() )
+			return false;
+		else
+			$id = wpsc_get_current_customer_id( 'create' );
+
+	$profile = wpsc_get_all_user_data( $id );
+
+	if ( is_wp_error( $profile ) )
+		return $profile;
+
+	if ( array_key_exists( $key, $profile ) )
+		unset( $profile[$key] );
+
+	return wpsc_update_all_visitor_data( $profile, $id );
 }
 
 /**
@@ -751,24 +827,75 @@ function _wpsc_action_setup_customer() {
 }
 
 /**
- * Delete all customer meta for a certain customer ID
+ * Delete all customer data.
  *
- * @since  3.8.9.4
- * @param  string|int $id Customer ID. Optional. Defaults to current customer
- * @return boolean        True if successful, False if otherwise
+ * It is recommended that this function is used only in case you want to manipulate
+ * current customer data.
+ *
+ * If you are passing in $id by using a value derived from wpsc_create_customer_id(),
+ * you can pass it safely to this function without having to know whether it's an
+ * id of a user or a visitor.
+ *
+ * If you want to specify an ID, you should use wpsc_delete_all_user_data() for
+ * registered customer, and wpsc_delete_all_visitor_data() for unregistered customer.
+ *
+ *
+ * @since  3.8.13
+ * @param  int|boolean $id Optional. ID of the customer (numeric for registered, string for unregistered)
+ * @return boolean         True if successful, False otherwise.
  */
-function wpsc_delete_all_customer_meta( $id = false ) {
+function wpsc_delete_all_customer_data( $id = false ) {
+	if ( ! $id )
+		if ( is_user_logged_in() )
+			return wpsc_delete_all_user_data();
+		else
+			return wpsc_delete_all_visitor_data();
+
+	if ( is_int( $id ) )
+		return wpsc_delete_all_user_data( $id );
+	else
+		return wpsc_delete_all_visitor_data( $id );
+}
+
+/**
+ * Delete all customer data for an unregistered visitor.
+ *
+ * @since  3.8.13
+ * @param  int|boolean $id Optional. Visitor ID. Defaults to current visitor.
+ * @return boolean         True if successful, False otherwise
+ */
+function wpsc_delete_all_visitor_data( $id = false ) {
+	if ( ! $id )
+		if ( is_user_logged_in() )
+			return false;
+		else
+			$id = wpsc_get_current_customer_id( 'create' );
+
+	$id = absint( $id );
+
+	wpsc_delete_visitor_meta( $id, 'customer_data' );
+}
+
+/**
+ * Delete all customer data for a registered user.
+ *
+ * @since 3.8.13
+ *
+ * @param  int|boolean $id Optional. User ID. Default to current user.
+ * @return boolean         True if successful, False otherwise
+ */
+function wpsc_delete_all_user_meta( $id = false ) {
 	global $wpdb;
 
-	if ( ! $id )
-		$id = wpsc_get_current_customer_id();
+	if ( ! $id  )
+		if ( ! is_user_logged_in() )
+			return false;
+		else
+			$id = get_current_user_id();
 
 	$blog_prefix = is_multisite() ? $wpdb->get_blog_prefix() : '';
 
-	if ( is_numeric( $id ) )
-		return delete_user_meta( $id, "_wpsc_{$blog_prefix}customer_profile" );
-	else
-		return delete_transient( "wpsc_customer_meta_{$blog_prefix}{$id}" );
+	return delete_user_meta( $id, "_wpsc_{$blog_prefix}customer_profile" );
 }
 
 /**
@@ -867,3 +994,85 @@ function wpsc_core_load_page_titles() {
 	if ( empty( $wpsc_page_titles ) )
 		$wpsc_page_titles = wpsc_get_page_post_names();
 }
+
+/**
+ * Delete all customer meta for a certain customer ID
+ *
+ * @since  3.8.9.4
+ * @param  string|int $id Customer ID. Optional. Defaults to current customer
+ * @return boolean        True if successful, False if otherwise
+ */
+function wpsc_delete_all_customer_meta( $id = false ) {
+	return wpsc_delete_all_customer_data( $id );
+}
+
+/**
+ * Delete customer meta.
+ *
+ * @access public
+ * @since  3.8.9
+ * @param  string     $key  Meta key
+ * @param  string|int $id   Customer ID. Optional. Defaults to current customer.
+ * @return boolean|WP_Error True if successful. False if not successful. WP_Error
+ *                          if there are any errors.
+ */
+function wpsc_delete_customer_meta( $key, $id = false ) {
+	wpsc_delete_customer_data( $key, $id );
+}
+
+/**
+ * Update a customer meta.
+ *
+ * @access public
+ * @since  3.8.9
+ * @param  string     $key   Meta key
+ * @param  mixed      $value Meta value
+ * @param  string|int $id    Customer ID. Optional. Defaults to current customer.
+ * @return boolean|WP_Error  True if successful, false if not successful, WP_Error
+ *                           if there are any errors.
+ */
+function wpsc_update_customer_meta( $key, $value, $id = false ) {
+	wpsc_update_customer_data( $key, $value, $id );
+}
+
+/**
+ * Overwrite customer meta with an array of meta_key => meta_value.
+ *
+ * @access public
+ * @since  3.8.9
+ * @param  array      $profile Customer meta array
+ * @param  int|string $id      Customer ID. Optional. Defaults to current customer.
+ * @return boolean             True if meta values are updated successfully. False
+ *                             if otherwise.
+ */
+function wpsc_update_all_customer_meta( $profile, $id = false ) {
+	wpsc_update_all_customer_data( $profile, $id );
+}
+
+/**
+ * Get a customer meta value.
+ *
+ * @access public
+ * @since  3.8.9
+ * @param  string  $key Meta key
+ * @param  int|string $id  Customer ID. Optional, defaults to current customer
+ * @return mixed           Meta value, or null if it doesn't exist or if the
+ *                         customer ID is invalid.
+ */
+function wpsc_get_customer_meta( $key = '', $id = false ) {
+	wpsc_get_customer_data( $key, $id );
+}
+
+/**
+ * Return an array containing all metadata of a customer
+ *
+ * @access public
+ * @since 3.8.9
+ * @param  mixed $id Customer ID. Default to the current user ID.
+ * @return WP_Error|array Return an array of metadata if no error occurs, WP_Error
+ *                        if otherwise.
+ */
+function wpsc_get_all_customer_meta( $id = false ) {
+	wpsc_get_all_customer_data( $id );
+}
+

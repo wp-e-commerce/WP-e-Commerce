@@ -48,9 +48,6 @@ require_once( WPSC_FILE_PATH . '/wpsc-shipping/library/shipwire_functions.php' )
 // Widgets
 include_once( WPSC_FILE_PATH . '/wpsc-widgets/admin_menu_widget.php' );
 
-// Meta
-require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-init.php' );
-
 // Gregs ASH Shipping
 require_once( WPSC_FILE_PATH . '/wpsc-includes/shipping.helper.php' );
 

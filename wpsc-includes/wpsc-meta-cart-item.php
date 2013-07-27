@@ -1,6 +1,6 @@
 <?php
-/* 
-** NOTICE: 
+/*
+** NOTICE:
 ** This file was automatically created, strongly suggest that it not be edited directly.
 ** See the code in the file wpsc-meta-init.php near line 320 for more details.
 */
@@ -23,7 +23,7 @@
  * @return bool False for failure. True for success.
  */
 function wpsc_add_cart_item_meta( $cart_item_id, $meta_key, $meta_value, $unique = false ) {
-	return add_metadata( 'cart_item' ,  $cart_item_id, $meta_key , $meta_value, $unique );
+	return add_metadata( 'wpsc_cart_item' ,  $cart_item_id, $meta_key , $meta_value, $unique );
 }
 
 /**
@@ -32,7 +32,7 @@ function wpsc_add_cart_item_meta( $cart_item_id, $meta_key, $meta_value, $unique
  * You can match based on the key, or key and value. Removing based on key and
  * value, will keep from removing duplicate metadata with the same key. It also
  * allows removing all metadata matching key, if needed.
- 
+ *
  * This meta data function mirrors a corresponding wordpress post meta function.
  *
  * @since 3.8.12
@@ -43,7 +43,7 @@ function wpsc_add_cart_item_meta( $cart_item_id, $meta_key, $meta_value, $unique
  * @return bool False for failure. True for success.
  */
 function wpsc_delete_cart_item_meta( $cart_item_id, $meta_key, $meta_value = '' ) {
-	return delete_metadata( 'cart_item' ,  $cart_item_id , $meta_key , $meta_value );
+	return delete_metadata( 'wpsc_cart_item' ,  $cart_item_id , $meta_key , $meta_value );
 }
 
 /**
@@ -58,7 +58,7 @@ function wpsc_delete_cart_item_meta( $cart_item_id, $meta_key, $meta_value = '' 
  *  is true.
  */
 function wpsc_get_cart_item_meta( $cart_item_id, $key = '', $single = false ) {
-	return get_metadata( 'cart_item' , $cart_item_id , $key, $single );
+	return get_metadata( 'wpsc_cart_item' , $cart_item_id , $key, $single );
 }
 
 /**
@@ -72,7 +72,7 @@ function wpsc_get_cart_item_meta( $cart_item_id, $key = '', $single = false ) {
  *  is true.
  */
 function wpsc_cart_item_meta_exists( $cart_item_id, $meta_key ) {
-	return metadata_exists( 'cart_item' , $cart_item_id , $meta_key );
+	return metadata_exists( 'wpsc_cart_item' , $cart_item_id , $meta_key );
 }
 
 /**
@@ -82,7 +82,7 @@ function wpsc_cart_item_meta_exists( $cart_item_id, $meta_key ) {
  * same key and cart_item ID.
  *
  * If the meta field for the cart_item does not exist, it will be added.
-
+ *
  * This meta data function mirrors a corresponding wordpress post meta function.
  *
  * @since 3.8.12
@@ -94,7 +94,7 @@ function wpsc_cart_item_meta_exists( $cart_item_id, $meta_key ) {
  * @return bool False on failure, true if success.
  */
 function wpsc_update_cart_item_meta( $cart_item_id, $meta_key, $meta_value, $prev_value = '' ) {
-	return update_metadata( 'cart_item' , $cart_item_id , $meta_key , $meta_value , $prev_value );
+	return update_metadata( 'wpsc_cart_item' , $cart_item_id , $meta_key , $meta_value , $prev_value );
 }
 
 /**
@@ -106,7 +106,7 @@ function wpsc_update_cart_item_meta( $cart_item_id, $meta_key, $meta_value, $pre
  * @return bool Whether the cart_item meta key was deleted from the database
  */
 function wpsc_delete_cart_item_meta_by_key( $cart_item_meta_key ) {
-	return delete_metadata( 'cart_item' , null , $cart_item_meta_key , '' , true );
+	return delete_metadata( 'wpsc_cart_item' , null , $cart_item_meta_key , '' , true );
 }
 
 /**
@@ -161,7 +161,7 @@ function wpsc_get_cart_item_custom_keys( $cart_item_id = 0 ) {
  * @return array Meta field values.
  */
 function wpsc_get_cart_item_custom_values( $metakey = '', $cart_item_id = 0 ) {
-	
+
 	if ( ! $key )
 		return null;
 
@@ -176,14 +176,13 @@ function wpsc_get_cart_item_custom_values( $metakey = '', $cart_item_id = 0 ) {
  *
  * @since 3.8.12
  *
- * @param function $callback function to invoke once for each meta matching criteria 
- * @param int|string $timestamp timestamp to compare meta items against, if int a unix timestamp is assumed, 
+ * @param int|string $timestamp timestamp to compare meta items against, if int a unix timestamp is assumed,
  *								if string a mysql timestamp is assumed
  * @param string $comparison any one of the supported comparison operators,(=,>=,>,<=,<,<>,!=)
  * @param string $meta_key restrict testing of meta to the values with the specified meta key
- * @return int count of meta items matching the criteria
+ * @return array metadata matching the query
  */
-function wpsc_get_cart_item_meta_by_timestamp( $callback = null, $timestamp = 0, $comparison = '>', $metakey = '' ) {
-	return wpsc_get_meta_by_timestamp( 'cart_item', $callback , $timestamp , $comparison , $metakey );
+function wpsc_get_cart_item_meta_by_timestamp( $timestamp = 0, $comparison = '>', $metakey = '' ) {
+	return wpsc_get_meta_by_timestamp( 'wpsc_cart_item', $timestamp , $comparison , $metakey );
 }
 

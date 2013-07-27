@@ -31,7 +31,7 @@ function wpsc_core_constants() {
 	define( 'WPSC_VERSION', '3.8.13-dev' );
 	define( 'WPSC_MINOR_VERSION', '819b5037cc' );
 	define( 'WPSC_PRESENTABLE_VERSION', '3.8.13-dev' );
-	define( 'WPSC_DB_VERSION', 5 );
+	define( 'WPSC_DB_VERSION', 6 );
 
 	// Define Debug Variables for developers
 	define( 'WPSC_DEBUG', false );
@@ -160,6 +160,9 @@ function wpsc_core_constants_table_names() {
 	define( 'WPSC_TABLE_VARIATION_VALUES_ASSOC', "{$wp_table_prefix}wpsc_variation_values_assoc" );
 	define( 'WPSC_TABLE_VARIATION_COMBINATIONS', "{$wp_table_prefix}wpsc_variation_combinations" );
 	define( 'WPSC_TABLE_REGION_TAX',             "{$wp_table_prefix}wpsc_region_tax" );
+
+	define( 'WPSC_TABLE_CART_ITEM_META',         "{$wp_table_prefix}wpsc_cart_item_meta" );
+	define( 'WPSC_TABLE_VISITOR_META',           "{$wp_table_prefix}wpsc_visitor_meta" );
 }
 
 /**
@@ -253,7 +256,7 @@ function wpsc_core_setup_cart() {
 	if ( 2 == get_option( 'cart_location' ) )
 		add_filter( 'the_content', 'wpsc_shopping_cart', 14 );
 
-	$cart = maybe_unserialize( wpsc_get_customer_meta( 'cart' ) );
+	$cart = maybe_unserialize( wpsc_get_customer_data( 'cart' ) );
 
 	if ( is_object( $cart ) && ! is_wp_error( $cart ) )
 		$GLOBALS['wpsc_cart'] = $cart;
