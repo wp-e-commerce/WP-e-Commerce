@@ -971,7 +971,6 @@ function wpsc_get_product_terms( $product_id, $tax, $field = '' ) {
 
 /**
  * Abstracts Suhosin check into a function.  Used primarily in relation to target markets.
- * May be deprecated or never publicly launched if we change how the target market variables work.
  *
  * @since 3.8.9
  * @return boolean
