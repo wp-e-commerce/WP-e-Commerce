@@ -254,20 +254,6 @@ function wpsc_admin_sale_rss() {
 if ( isset( $_GET['action'] ) && ( 'purchase_log' == $_GET['action'] ) )
 	add_action( 'admin_init', 'wpsc_admin_sale_rss' );
 
-function wpsc_display_invoice() {
-	$purchase_id = (int)$_REQUEST['purchaselog_id'];
-	add_action('wpsc_packing_slip', 'wpsc_packing_slip');
-	do_action('wpsc_before_packing_slip', $purchase_id);
-	do_action('wpsc_packing_slip', $purchase_id);
-	exit();
-}
-//other actions are here
-if ( isset( $_GET['display_invoice'] ) && ( 'true' == $_GET['display_invoice'] ) )
-	add_action( 'admin_init', 'wpsc_display_invoice', 0 );
-
-if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( 'wpsc_display_invoice' == $_REQUEST['wpsc_admin_action'] ) )
-	add_action( 'admin_init', 'wpsc_display_invoice' );
-
 /**
  * Purchase log ajax code starts here
  */
