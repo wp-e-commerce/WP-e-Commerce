@@ -1530,10 +1530,11 @@ if ( ! get_option( 'wpsc_hide_3.8.9_notices' ) )
  * @uses get_option()         Gets option from the database given string
  */
 function _wpsc_admin_notices_3dot8dot11() {
-	$message = '<p>' . __( 'You are currently using WPeC 3.8.11.  We have included a fix for a <a href="%1$s">bug on the User Account management page</a>. We are able to fix this automatically on most sites, but it appears that you have made changes to your wpsc-user-log.php page.  For that reason, we have some <a href="%2$s">simple instructions for you to follow</a> to resolve the issue.  We are sorry for the inconvenience.' , 'wpsc' ) . '</p>';
-	$message .= "\n<p>" . __( '<a href="%3$s">Hide this warning</a>', 'wpsc' ) . '</p>';
+	$message = '<p>' . __( 'You are currently using WPeC %1$s.  We introduced a regression in WPeC 3.8.10 which affects your customer user account page. We have included a fix for a <a href="%2$s">bug on the User Account management page</a>. We are able to fix this automatically on most sites, but it appears that you have made changes to your wpsc-user-log.php page.  For that reason, we have some <a href="%3$s">simple instructions for you to follow</a> to resolve the issue.  We are sorry for the inconvenience.' , 'wpsc' ) . '</p>';
+	$message .= "\n<p>" . __( '<a href="%4$s">Hide this warning</a>', 'wpsc' ) . '</p>';
 	$message = sprintf(
 		$message,
+		WPSC_VERSION,
 		'https://github.com/wp-e-commerce/WP-e-Commerce/issues/359',
 		'http://docs.getshopped.org/documentation/3-8-11-user-logs',
 		add_query_arg( 'dismiss_3811_upgrade_notice', 1 )
