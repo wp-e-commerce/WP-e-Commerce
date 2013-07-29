@@ -298,7 +298,7 @@ class ash_ups {
 			foreach( $data as $key => $value ) {
 				$xml .= "<" . trim( $key ) . ">";
 				$xml .= $this->array2xml($value);
-				$xml .= "<" . trim( $key ) . ">";
+				$xml .= "</" . trim( $key ) . ">";
 			}
 		} else if ( is_bool( $data ) ) {
 			if ( $data ){
@@ -425,7 +425,7 @@ class ash_ups {
 		if ( $dropCode == "11" && $args['shipr_ccode'] == "US" ) {
 			// Set the request code
 			$CustCode = ( array_key_exists( 'CustomerType', $args ) ) ? $args['CustomerType'] : '01';
-			$CustomerType = array( 
+			$CustomerType = array(
 				"CustomerClassification" => array(
 					"Code"=>$CustCode
 				)

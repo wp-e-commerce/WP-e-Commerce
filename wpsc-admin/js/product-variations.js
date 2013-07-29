@@ -53,8 +53,30 @@
 	};
 
 	var event_variation_thumbnail_click = function() {
-		var t = $(this);
-		window.parent.wpsc_display_thickbox(t.data('title'), t.attr('href'));
+		var t = $( this ), postId = t.data( 'id' ), nonce = t.data( 'nonce' );
+
+		$.wpsc_post(
+			{
+				action: 'get_variation_gallery',
+				nonce: nonce,
+				id: postId
+			},
+			function( response ) {
+				if ( ! response.is_successful ) {
+					alert( response.error.messages.join( "\n" ) );
+					return;
+				}
+
+				window.parent.WPSC_Media.open({
+					id: postId,
+					featuredId: response.obj.featuredId,
+					models: response.obj.models,
+					galleryNonce: t.data( 'save-gallery-nonce' ),
+					featuredNonce: t.data( 'featured-nonce' )
+				});
+			}
+		);
+
 		return false;
 	};
 

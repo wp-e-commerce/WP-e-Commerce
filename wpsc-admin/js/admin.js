@@ -10,7 +10,7 @@
 		data['wpsc_action'] = data['action'];
 		data['action'] = 'wpsc_ajax';
 
-		$.post(ajaxurl, data, handler, 'json');
+		return $.post(ajaxurl, data, handler, 'json');
 	};
 
 	/**
@@ -24,7 +24,7 @@
 		data['wpsc_action'] = data['action'];
 		data['action'] = 'wpsc_ajax';
 
-		$.get(ajaxurl, data, handler, 'json');
+		return $.get(ajaxurl, data, handler, 'json');
 	};
 
 	if( pagenow == 'edit-wpsc_product_category' ) {
@@ -155,7 +155,7 @@
 		return false;
 	});
 
-})(jQuery);
+}(jQuery));
 
 jQuery(document).ready(function(){
 	jQuery('td.hidden_alerts img').each(function(){

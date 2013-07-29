@@ -46,9 +46,15 @@ var wpsc_display_thickbox = function(title, url) {
 	tb_show(WPSC_Variations.thickbox_title.replace('%s', title), url);
 };
 
-var wpsc_set_variation_product_thumbnail = function(id, src) {
+var wpsc_set_variation_product_thumbnail = function(id, src, thumbId) {
 	var iframe = jQuery('#wpsc_product_variation_forms iframe');
-	iframe.contents().find('#wpsc-variation-thumbnail-' + id).attr('src', src);
+	var el = iframe.contents().find('#wpsc-variation-thumbnail-' + id);
+	el.attr('src', src);
+	el.parent().data( 'image-id', thumbId );
+};
+
+var wpsc_refresh_variation_iframe = function() {
+	jQuery('#wpsc_product_variation_forms iframe')[0].contentWindow.location.reload();
 };
 
 (function($) {

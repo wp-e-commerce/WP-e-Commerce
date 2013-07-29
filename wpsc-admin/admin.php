@@ -24,6 +24,7 @@ require_once( WPSC_FILE_PATH . '/wpsc-admin/init.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/ajax-and-init.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/display-options-settings.page.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/db-upgrades/upgrade.php' );
+require_once( WPSC_FILE_PATH . '/wpsc-admin/media.php' );
 
 if ( ( isset( $_SESSION['wpsc_activate_debug_page'] ) && ( $_SESSION['wpsc_activate_debug_page'] == true ) ) || ( defined( 'WPSC_ADD_DEBUG_PAGE' ) && ( constant( 'WPSC_ADD_DEBUG_PAGE' ) == true ) ) )
 	require_once( WPSC_FILE_PATH . '/wpsc-admin/display-debug.page.php' );
@@ -507,7 +508,7 @@ function wpsc_meta_boxes() {
 	add_meta_box( 'wpsc_product_taxes_forms', __('Taxes', 'wpsc'), 'wpsc_product_taxes_forms', $pagename, 'side', 'low' );
 	add_meta_box( 'wpsc_additional_desc', __('Additional Description', 'wpsc'), 'wpsc_additional_desc', $pagename, 'normal', 'high' );
 	add_meta_box( 'wpsc_product_download_forms', __('Product Download', 'wpsc'), 'wpsc_product_download_forms', $pagename, 'normal', 'high' );
-	add_meta_box( 'wpsc_product_image_forms', __('Product Images', 'wpsc'), 'wpsc_product_image_forms', $pagename, 'normal', 'high' );
+
 	if ( ! empty( $post->ID ) && ! wpsc_product_has_variations( $post->ID ) )
 		add_meta_box( 'wpsc_product_shipping_forms', __('Shipping', 'wpsc'), 'wpsc_product_shipping_forms_metabox', $pagename, 'normal', 'high' );
 	add_meta_box( 'wpsc_product_advanced_forms', __('Advanced Settings', 'wpsc'), 'wpsc_product_advanced_forms', $pagename, 'normal', 'high' );
@@ -1529,10 +1530,11 @@ if ( ! get_option( 'wpsc_hide_3.8.9_notices' ) )
  * @uses get_option()         Gets option from the database given string
  */
 function _wpsc_admin_notices_3dot8dot11() {
-	$message = '<p>' . __( 'You are currently using WPeC 3.8.11.  We have included a fix for a <a href="%1$s">bug on the User Account management page</a>. We are able to fix this automatically on most sites, but it appears that you have made changes to your wpsc-user-log.php page.  For that reason, we have some <a href="%2$s">simple instructions for you to follow</a> to resolve the issue.  We are sorry for the inconvenience.' , 'wpsc' ) . '</p>';
-	$message .= "\n<p>" . __( '<a href="%3$s">Hide this warning</a>', 'wpsc' ) . '</p>';
+	$message = '<p>' . __( 'You are currently using WPeC %1$s.  We introduced a regression in WPeC 3.8.10 which affects your customer user account page. We have included a fix for a <a href="%2$s">bug on the User Account management page</a>. We are able to fix this automatically on most sites, but it appears that you have made changes to your wpsc-user-log.php page.  For that reason, we have some <a href="%3$s">simple instructions for you to follow</a> to resolve the issue.  We are sorry for the inconvenience.' , 'wpsc' ) . '</p>';
+	$message .= "\n<p>" . __( '<a href="%4$s">Hide this warning</a>', 'wpsc' ) . '</p>';
 	$message = sprintf(
 		$message,
+		WPSC_VERSION,
 		'https://github.com/wp-e-commerce/WP-e-Commerce/issues/359',
 		'http://docs.getshopped.org/documentation/3-8-11-user-logs',
 		add_query_arg( 'dismiss_3811_upgrade_notice', 1 )

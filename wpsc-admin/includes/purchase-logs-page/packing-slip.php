@@ -104,6 +104,7 @@
 					<th><?php echo esc_html_x( 'Order ID', 'packing slip', 'wpsc' ); ?></th>
 					<th><?php echo esc_html_x( 'Shipping Method', 'packing slip', 'wpsc' ); ?></th>
 					<th><?php echo esc_html_x( 'Payment Method', 'packing slip', 'wpsc' ); ?></th>
+					<?php wpsc_purchaselog_order_summary_headers(); ?>
 				</tr>
 			</thead>
 			<tbody>
@@ -112,6 +113,7 @@
 					<td><?php echo wpsc_purchaselog_details_purchnumber(); ?></td>
 					<td><?php echo wpsc_display_purchlog_shipping_method(); ?></td>
 					<td><?php echo wpsc_display_purchlog_paymentmethod(); ?></td>
+					<?php wpsc_purchaselog_order_summary(); ?>
 				</tr>
 			</tbody>
 		</table>

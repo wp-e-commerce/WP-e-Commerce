@@ -74,14 +74,14 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 		<table id='wpsc-payment-gateway-settings' class='wpsc-edit-module-options wp-list-table widefat plugins'>
 			<thead>
 				<tr>
-					<th scope="col" id="wpsc-gateway-active" class="manage-column"><?php _e( 'Active', 'wpsc' ); ?></th>
+					<th scope="col" id="wpsc-gateway-active" class="manage-column"></th>
 					<th scope="col" id="wpsc-gateway-name" class="manage-column column-name"><?php _e( 'Payment Gateway', 'wpsc' ); ?></th>
 					<th scope="col" id="wpsc-gateway-display-name" class="manage-column column-description"><?php _e( 'Display Name', 'wpsc' ); ?></th>
 				</tr>
 			</thead>
 			<tfoot>
 				<tr>
-					<th scope="col" id="wpsc-gateway-active" class="manage-column"><?php _e( 'Active', 'wpsc' ); ?></th>
+					<th scope="col" id="wpsc-gateway-active" class="manage-column"></th>
 					<th scope="col" id="wpsc-gateway-name" class="manage-column column-name"><?php _e( 'Payment Gateway', 'wpsc' ); ?></th>
 					<th scope="col" id="wpsc-gateway-display-name" class="manage-column column-description"><?php _e( 'Display Name', 'wpsc' ); ?></th>
 				</tr>
