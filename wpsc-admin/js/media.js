@@ -1,4 +1,6 @@
+/*global _, WPSC_Media, Backbone, alert, WPSC, wp, wpsc_refresh_variation_iframe, wpsc_set_variation_product_thumbnail, jQuery */
 (function($) {
+	"use strict";
 	window.WPSC = window.WPSC || {};
 
 	/**
@@ -18,7 +20,7 @@
 		var chain = {};
 
 		_.each( modules, function( module ) {
-			var override = module._mixin_override;
+			var override = module._mixin_override || [];
 			module = _.omit( module, [ '_mixin_override'] );
 
 			_.each( module, function( value, key ) {
@@ -28,21 +30,17 @@
 				}
 
 				if ( _.isFunction( value ) ) {
-					if ( clss.prototype[key] ) {
+					if ( clss.prototype[key] )
 						chain[key] = [clss.prototype[key]];
-						delete clss.prototype[key];
-					}
 
 					chain[key].push( value );
 				} else if ( _.isObject( value ) ) {
 					chain[key] = chain[key] || [{}];
-					if ( clss.prototype[key] ) {
+					if ( clss.prototype[key] )
 						chain[key] = [clss.prototype[key]];
-						delete clss.prototype[key];
-					}
+
 					chain[key].push( _.extend( {}, chain[key][0], value ) );
 				} else {
-					delete clss.prototype[key];
 					chain[key] = chain[key] || [];
 					chain[key].push( value );
 				}
@@ -58,13 +56,14 @@
 			}
 
 			clss.prototype[key] = function() {
-				var ret;
+				var ret, args = arguments, that = this;
 				_.each( values, function( fn ) {
-					var fnRet = fn.apply( this, arguments );
-					ret =   _.isUndefined( fnRet )
-					      ? ret
-					      : fnRet;
-				}, this);
+					var fnRet = fn.apply( that, args );
+					ret =
+						_.isUndefined( fnRet ) ?
+						ret :
+						fnRet;
+				});
 
 				return ret;
 			};
@@ -89,27 +88,37 @@
 			}, media.controller.Library.prototype.defaults ),
 
 			initialize: function( options ) {
+				var selection = new media.model.wpsc.ProductGallerySelection(
+					[],
+					{
+						postId: media.model.settings.post.id,
+						multiple: this.get( 'multiple' ),
+						nonce: options.nonce || WPSC_Media.updateGalleryNonce
+					}
+				);
 				this.set(
 					'selection',
-					new media.model.wpsc.ProductGallerySelection(
-						[],
-						{
-							postId: media.model.settings.post.id,
-							multiple: this.get( 'multiple' ),
-							nonce: options.nonce || WPSC_Media.updateGalleryNonce
-						}
-					)
+					selection
 				);
 
-				this.get( 'selection' ).set( options.models || WPSC_Media.gallery, { parse: true } );
+				var models = options.models || WPSC_Media.gallery;
+
+				// work around for backbone.js 0.9.2
+				if ( _.isUndefined( Backbone.Collection.prototype.set ) ) {
+					// force parse the response
+					models = selection.parse( models );
+					selection.reset( models );
+				} else {
+					selection.set( models, { parse: true } );
+				}
 
 				media.controller.Library.prototype.initialize.apply( this, arguments );
 
 				this.on( 'select', function() {
-					this.get( 'selection' ).save_gallery();
+					selection.save_gallery();
 				} );
 
-				this.get( 'library' ).observe( this.get( 'selection' ) );
+				this.get( 'library' ).observe( selection );
 			}
 		})
 	};
@@ -128,9 +137,16 @@
 						items: this.pluck( 'id' )
 					},
 					success: function( resp, status, xhr ) {
-						this.set( resp.obj, { parse: true } );
+						// in case of backbone 0.9.2
+						if ( _.isUndefined( this.set ) ) {
+							// force parse the response
+							resp.obj = this.parse( resp.obj, xhr );
+							this.reset( resp.obj );
+						} else {
+							this.set( resp.obj, { parse: true } );
+						}
 					},
-					error: function( resp, status, xhr ) {
+					error: function( resp ) {
 						alert( resp.error.messages.join( "\n" ) );
 					}
 				} );
@@ -138,6 +154,8 @@
 			},
 
 			sync: function( method, collection, options ) {
+				var data;
+
 				options = options ? _.clone( options ) : {};
 
 				options.success = _.bind( options.success, this );
@@ -211,7 +229,6 @@
 
 				if ( ! this.options.nonce )
 					this.options.nonce = WPSC_Media.updateGalleryNonce;
-
 				this.wpsc.createStates.apply( this );
 				this.wpsc.bindHandlers.apply( this );
 			}
@@ -224,10 +241,6 @@
 	WPSC.mixin(
 		media.view.Attachment,
 		{
-			_mixin_override: [
-				'toggleSelection'
-			],
-
 			render: function() {
 				if ( this.controller.state().id != 'wpsc-product-gallery' )
 					return;
@@ -241,28 +254,30 @@
 	);
 
 	WPSC_Media.open = function( options ) {
-		var state, selection, workflow;
+		var workflow;
 
-		media.editor.remove( 'wpsc-variation-media' );
 		media.view.settings.post.id = options.id;
 		media.view.settings.post.featuredImageId = options.featuredId;
 		media.view.settings.post.nonce = options.featuredNonce;
 		media.model.settings.post = media.view.settings.post;
-
-		workflow = media.editor.open( 'wpsc-variation-media', { models: options.models, nonce: options.galleryNonce } );
+		media.editor.remove( 'wpsc-variation-media' );
+		media.editor.add( 'wpsc-variation-media', {
+			models: options.models,
+			nonce: options.galleryNonce
+		});
+		workflow = media.editor.open( 'wpsc-variation-media' );
 	};
 
 	var oldEditorOpen = media.editor.open;
-	media.editor.open = function( id, options ) {
+	media.editor.open = function( id ) {
 		if ( id == 'content' ) {
 			media.view.settings.post = _.clone( backup );
 			media.model.settings.post = media.view.settings.post;
 		}
-		oldEditorOpen.apply( this, arguments );
+		return oldEditorOpen.apply( this, arguments );
 	};
 
 	// hack the set featured image function
-	var oldSetFeatured = wp.media.featuredImage.set;
 	wp.media.featuredImage.set = function( id ) {
 		var settings = wp.media.view.settings;
 		var currentId = settings.post.id;
