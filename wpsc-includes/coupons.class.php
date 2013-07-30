@@ -155,7 +155,7 @@ class wpsc_coupons {
 			break;
 
 			case 'contains'://Checks if the product name contains the condition value
-				return preg_match( "/(.*)" . preg_quote( $condition['value'] ) . "(.*)/", $product_data->post_title );
+				return preg_match( "/(.*)" . preg_quote( $condition['value'], '/' ) . "(.*)/", $product_data->post_title );
 			break;
 
 			case 'category'://Checks if the product category is the condition value
@@ -172,15 +172,15 @@ class wpsc_coupons {
 			break;
 
 			case 'not_contain'://Checks if the product name contains the condition value
-				return ! preg_match( "/(.*)" . preg_quote( $condition['value'] ) . "(.*)/", $product_data->post_title );
+				return ! preg_match( "/(.*)" . preg_quote( $condition['value'], '/' ) . "(.*)/", $product_data->post_title );
 			break;
 
 			case 'begins'://Checks if the product name begins with condition value
-				return preg_match( "/^" . preg_quote( $condition['value'] ) . "/", $product_data->post_title );
+				return preg_match( "/^" . preg_quote( $condition['value'], '/' ) . "/", $product_data->post_title );
 			break;
 
 			case 'ends'://Checks if the product name ends with condition value
-				return preg_match( "/" . preg_quote( $c['value'] ) . "$/", $product_data->post_title );
+				return preg_match( "/" . preg_quote( $c['value'], '/' ) . "$/", $product_data->post_title );
 			break;
 		}
 
@@ -594,7 +594,7 @@ class wpsc_coupons {
 				break;
 
 				case 'contains'://Checks if the product name contains the condition value
-					preg_match( "/(.*)" . preg_quote( $c['value'] ) . "(.*)/", $product_data->post_title, $match );
+					preg_match( "/(.*)" . preg_quote( $c['value'], '/' ) . "(.*)/", $product_data->post_title, $match );
 
 					if ( ! empty( $match ) )
 						return true;
@@ -613,20 +613,20 @@ class wpsc_coupons {
 				break;
 
 				case 'not_contain'://Checks if the product name contains the condition value
-					preg_match( "/(.*)" . preg_quote( $c['value'] ) . "(.*)/", $product_data->post_title, $match );
+					preg_match( "/(.*)" . preg_quote( $c['value'], '/' ) . "(.*)/", $product_data->post_title, $match );
 
 					if ( empty( $match ) )
 						return true;
 				break;
 
 				case 'begins'://Checks if the product name begins with condition value
-					preg_match( "/^" . preg_quote( $c['value'] ) . "/", $product_data->post_title, $match );
+					preg_match( "/^" . preg_quote( $c['value'], '/' ) . "/", $product_data->post_title, $match );
 					if ( ! empty( $match ) )
 						return true;
 				break;
 
 				case 'ends'://Checks if the product name ends with condition value
-					preg_match( "/" . preg_quote( $c['value'] ) . "$/", $product_data->post_title, $match );
+					preg_match( "/" . preg_quote( $c['value'], '/' ) . "$/", $product_data->post_title, $match );
 					if ( ! empty( $match ) )
 						return true;
 				break;
