@@ -206,7 +206,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 
 	public function column_title( $item ) {
 		$title = implode( ', ', $this->object_terms_cache[$item->ID] );
-		$thumbnail = wpsc_the_product_thumbnail( 50, 50, $item->ID, '' );
+		$thumbnail = wpsc_the_product_thumbnail( false, false, $item->ID, 'manage-products' );
 		$show_edit_link = apply_filters( 'wpsc_show_product_variations_edit_action', true, $item );
 
 		$nonce = wp_create_nonce( "wpsc_ajax_get_variation_gallery_{$item->ID}" );
