@@ -301,9 +301,15 @@ function wpsc_update_item_quantity() {
 
 	if ( is_numeric( $_POST['key'] ) ) {
 		$key = (int)$_POST['key'];
-		if ( $_POST['quantity'] > 0 ) {
+
+		$quantity = isset( $_POST['wpsc_quantity_update'] ) ? $_POST['wpsc_quantity_update'] : '';
+
+		if ( isset( $_POST['quantity'] ) )
+			$quantity = $_POST['quantity'];
+
+		if ( $quantity > 0 ) {
 			// if the quantity is greater than 0, update the item;
-			$parameters['quantity'] = (int)$_POST['quantity'];
+			$parameters['quantity'] = (int) $quantity;
 			$wpsc_cart->edit_item( $key, $parameters );
 		} else {
 			// if the quantity is 0, remove the item.
