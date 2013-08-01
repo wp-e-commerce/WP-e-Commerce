@@ -8,7 +8,7 @@ include_once( WPSC_FILE_PATH . '/wpsc-widgets/tagging_functions.php' );
  * @since 3.8
  */
 class WP_Widget_Product_Tags extends WP_Widget {
-	
+
 	/**
 	 * Widget Constuctor
 	 */
@@ -18,9 +18,9 @@ class WP_Widget_Product_Tags extends WP_Widget {
 			'classname'   => 'widget_wpsc_product_tags',
 			'description' => __( 'Product Tags Widget', 'wpsc' )
 		);
-		
-		$this->WP_Widget( 'wpsc_product_tags', __( 'Product Tags', 'wpsc' ), $widget_ops );
-	
+
+		$this->WP_Widget( 'wpsc_product_tags', __( '(WPEC) Product Tags', 'wpsc' ), $widget_ops );
+
 	}
 
 	/**
@@ -32,11 +32,11 @@ class WP_Widget_Product_Tags extends WP_Widget {
 	 * @todo Add individual capability checks for each menu item rather than just manage_options.
 	 */
 	function widget( $args, $instance ) {
-		
+
 		global $wpdb, $table_prefix;
-		
+
 		extract( $args );
-	
+
 		echo $before_widget;
 		$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Product Tags', 'wpsc' ) : $instance['title'] );
 		if ( $title ) {
@@ -56,12 +56,12 @@ class WP_Widget_Product_Tags extends WP_Widget {
 	 * @return (array) New values.
 	 */
 	function update( $new_instance, $old_instance ) {
-	
+
 		$instance = $old_instance;
 		$instance['title']  = strip_tags( $new_instance['title'] );
 
 		return $instance;
-		
+
 	}
 
 	/**
@@ -70,22 +70,22 @@ class WP_Widget_Product_Tags extends WP_Widget {
 	 * @param $instance (array) Widget values.
 	 */
 	function form( $instance ) {
-		
+
 		global $wpdb;
-		
+
 		// Defaults
 		$instance = wp_parse_args( (array)$instance, array( 'title' => '' ) );
-		
+
 		// Values
 		$title  = esc_attr( $instance['title'] );
-		
+
 		?>
 		<p>
 			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:', 'wpsc' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>" />
 		</p>
 		<?php
-		
+
 	}
 
 }
