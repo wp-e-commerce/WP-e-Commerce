@@ -124,39 +124,42 @@ function wpsc_purchase_log_csv() {
 
 		$form_sql = "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `active` = '1' AND `type` != 'heading' ORDER BY `checkout_order` DESC;";
 		$form_data = $wpdb->get_results( $form_sql, ARRAY_A );
-		$csv = 'Purchase ID, Price, Firstname, Lastname, Email, Order Status, Data, ';
 
 		$headers_array = array(
-			_x( 'Purchase ID', 'purchase log csv headers', 'wpsc' ),
+			_x( 'Purchase ID'   , 'purchase log csv headers', 'wpsc' ),
 			_x( 'Purchase Total', 'purchase log csv headers', 'wpsc' ),
 		);
 		$headers2_array = array(
 			_x( 'Payment Gateway', 'purchase log csv headers', 'wpsc' ),
-			_x( 'Payment Status', 'purchase log csv headers', 'wpsc' ),
-			_x( 'Purchase Date', 'purchase log csv headers', 'wpsc' ),
+			_x( 'Payment Status' , 'purchase log csv headers', 'wpsc' ),
+			_x( 'Purchase Date'  , 'purchase log csv headers', 'wpsc' ),
 		);
 		$form_headers_array = array();
-		$headers3_array = array();
 
 		$output = '';
 
-		foreach ( (array)$form_data as $form_field ) {
+		foreach ( (array) $form_data as $form_field ) {
 			if ( empty ( $form_field['unique_name'] ) ) {
 				$form_headers_array[] = $form_field['name'];
 			} else {
-				$form_headers_array[] = $form_field['unique_name'];
+				$prefix = false === strstr( $form_field['unique_name'], 'billing' ) ? _x( 'Shipping ', 'purchase log csv header field prefix', 'wpsc' ) : _x( 'Billing ', 'purchase log csv header field prefix', 'wpsc' );
+				$form_headers_array[] = $prefix . $form_field['name'];
 			}
 		}
 
-		foreach ( (array)$data as $purchase ) {
+		foreach ( (array) $data as $purchase ) {
 			$form_headers = '';
 			$output .= "\"" . $purchase['id'] . "\","; //Purchase ID
 			$output .= "\"" . $purchase['totalprice'] . "\","; //Purchase Total
-			foreach ( (array)$form_data as $form_field ) {
+			foreach ( (array) $form_data as $form_field ) {
 				$collected_data_sql = "SELECT * FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` WHERE `log_id` = '" . $purchase['id'] . "' AND `form_id` = '" . $form_field['id'] . "' LIMIT 1";
 				$collected_data = $wpdb->get_results( $collected_data_sql, ARRAY_A );
 				$collected_data = $collected_data[0];
-				$output .= "\"" . $collected_data['value'] . "\","; // get form fields
+
+				if (  ( 'billingstate' == $form_field['unique_name'] || 'shippingstate' == $form_field['unique_name'] ) && is_numeric( $collected_data['value'] ) )
+					$output .= "\"" . wpsc_get_state_by_id( $collected_data['value'], 'code' ) . "\","; // get form fields
+				else
+					$output .= "\"" . str_replace( array( "\r", "\r\n", "\n" ), ' ', $collected_data['value'] ) . "\","; // get form fields
 			}
 
 			if ( isset( $wpsc_gateways[$purchase['gateway']] ) && isset( $wpsc_gateways[$purchase['gateway']]['display_name'] ) )
