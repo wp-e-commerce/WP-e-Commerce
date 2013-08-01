@@ -19,7 +19,7 @@ class WP_Widget_Price_Range extends WP_Widget {
 			'description' => __( 'Price Range Widget', 'wpsc' )
 		);
 
-		$this->WP_Widget( 'wpsc_price_range', __( 'Price Range', 'wpsc' ), $widget_ops );
+		$this->WP_Widget( 'wpsc_price_range', __( '(WPEC) Price Range', 'wpsc' ), $widget_ops );
 
 	}
 

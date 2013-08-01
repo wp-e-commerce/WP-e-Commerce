@@ -19,7 +19,7 @@ class WP_Widget_Shopping_Cart extends WP_Widget {
 			'description' => __( 'Shopping Cart Widget', 'wpsc' )
 		);
 
-		$this->WP_Widget( 'wpsc_shopping_cart', __( 'Shopping Cart', 'wpsc' ), $widget_ops );
+		$this->WP_Widget( 'wpsc_shopping_cart', __( '(WPEC) Shopping Cart', 'wpsc' ), $widget_ops );
 
 	}
 
@@ -139,11 +139,11 @@ class WP_Widget_Shopping_Cart extends WP_Widget {
 		</p>
 		<input type='hidden' name="<?php echo $this->get_field_name( 'show_sliding_cart' ); ?>" value='0' />
 		<p>
-			
+
 			<label for="<?php echo $this->get_field_id('show_sliding_cart'); ?>"><?php _e( 'Use Sliding Cart:', 'wpsc' ); ?></label>
 			<input id="<?php echo $this->get_field_id( 'show_sliding_cart' ); ?>" name="<?php echo $this->get_field_name( 'show_sliding_cart' ); ?>" type="checkbox" value="1" <?php echo $show_sliding_cart; ?> />
 		</p>
-		
+
 		<?php
 	}
 }
