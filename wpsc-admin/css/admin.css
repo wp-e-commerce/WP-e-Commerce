@@ -1831,10 +1831,6 @@ table.purchase-logs tr:hover .column-id .delete {
 	border-bottom-style:dashed;
 }
 
-.js #wpsc-product-variations-wrapper tbody td, .js #wpsc-product-variations-wrapper tbody th {
-	border-bottom-style:solid;
-}
-
 #wpsc-product-variations-wrapper div.updated,
 #wpsc-product-variations-wrapper div.error {
 	margin: 15px 0 2px;
