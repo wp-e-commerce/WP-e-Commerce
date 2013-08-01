@@ -115,6 +115,7 @@ function wpsc_product_normal_price() {
 
 function wpsc_calculate_price( $product_id, $variations = false, $special = true ) {
 	global $wpdb;
+
 	$p_id = $product_id;
 	if ( ! empty( $variations ) )
 		$product_id = wpsc_get_child_object_in_terms( $product_id, $variations, 'wpsc-variation' );
