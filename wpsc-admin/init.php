@@ -176,17 +176,30 @@ function wpsc_purchase_log_csv() {
 			$cartsql = "SELECT `prodid`, `quantity`, `name` FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid`=" . $purchase['id'] . "";
 			$cart = $wpdb->get_results( $cartsql, ARRAY_A );
 
-			if( $count < count( $cart ) )
+			if ( $count < count( $cart ) )
 			    $count = count( $cart );
+
+			$items = count( $cart );
+			$i     = 1;
+
 			// Go through all products in cart and display quantity and sku
-			foreach ( (array)$cart as $item ) {
+			foreach ( (array) $cart as $item ) {
 				$skuvalue = get_product_meta( $item['prodid'], 'sku', true );
 				if( empty( $skuvalue ) )
 				    $skuvalue = __( 'N/A', 'wpsc' );
 				$output .= "\"" . $item['quantity'] . "\",";
-				$output .= "\"" . str_replace( '"', '\"', $item['name'] ) . "\"";
-				$output .= "," . $skuvalue."," ;
+				$output .= "\"" . str_replace( '"', '\"', $item['name'] ) . "\",";
+
+				if ( $items <= 1 )
+					$output .= "\"" . $skuvalue . "\"" ;
+				elseif ( $items > 1 && $i != $items  )
+					$output .= "\"" . $skuvalue . "\"," ;
+				else
+					$output .= "\"" . $skuvalue . "\"" ;
+
+				$i++;
 			}
+
 			$output .= "\n"; // terminates the row/line in the CSV file
 		}
 		// Get the most number of products and create a header for them
@@ -203,8 +216,10 @@ function wpsc_purchase_log_csv() {
 		$headers3     = '"' . implode( '","', $headers3 ) . '"';
 
 		$headers      = apply_filters( 'wpsc_purchase_log_csv_headers', $headers . $form_headers . $headers2 . $headers3, $data, $form_data );
-		$output       = apply_filters( 'wpsc_purchase_log_csv_output', $output, $data, $form_data );
+		$output       = apply_filters( 'wpsc_purchase_log_csv_output' , $output, $data, $form_data );
+
 		do_action( 'wpsc_purchase_log_csv' );
+
 		header( 'Content-Type: text/csv' );
 		header( 'Content-Disposition: inline; filename="' . $csv_name . '"' );
 		echo $headers . "\n". $output;
