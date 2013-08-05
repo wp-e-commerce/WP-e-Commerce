@@ -486,21 +486,6 @@ function wpsc_get_page_post_names() {
 	return $wpsc_page;
 }
 
-/**
- * Disable SSL validation for Curl. Added/removed on a per need basis, like so:
- *
- * add_filter('http_api_curl', 'wpsc_curl_ssl');
- * remove_filter('http_api_curl', 'wpsc_curl_ssl');
- *
- * @param resource $ch
- * @return resource $ch
- **/
-function wpsc_curl_ssl($ch) {
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-	return $ch;
-}
-
 function wpsc_cron() {
 	foreach ( wp_get_schedules() as $cron => $schedule ) {
 		if ( ! wp_next_scheduled( "wpsc_{$cron}_cron_task" ) )
@@ -510,7 +495,7 @@ function wpsc_cron() {
 add_action( 'init', 'wpsc_cron' );
 
 function _wpsc_is_customer_user( $id = false ) {
-	return( ! $id && is_user_logged_in() ) || ( is_int( $id ) );
+	return ( ! $id && is_user_logged_in() ) || ( is_int( $id ) );
 }
 
 /**

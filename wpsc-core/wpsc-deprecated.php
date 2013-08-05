@@ -1685,3 +1685,21 @@ if ( isset( $_GET['display_invoice'] ) && ( 'true' == $_GET['display_invoice'] )
 
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( 'wpsc_display_invoice' == $_REQUEST['wpsc_admin_action'] ) )
 	add_action( 'admin_init', 'wpsc_display_invoice' );
+
+
+/**
+ * Disable SSL validation for Curl. Added/removed on a per need basis, like so:
+ *
+ * add_filter('http_api_curl', 'wpsc_curl_ssl');
+ * remove_filter('http_api_curl', 'wpsc_curl_ssl');
+ *
+ * @param resource $ch
+ * @return resource $ch
+ **/
+function wpsc_curl_ssl( $ch ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.13', __( "add_filter( 'https_ssl_verify', '__return_false' )", 'wpsc' ) );
+
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+	return $ch;
+}

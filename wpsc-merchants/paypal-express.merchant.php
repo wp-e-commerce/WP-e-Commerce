@@ -987,7 +987,7 @@ function paypal_hash_call( $methodName, $nvpStr ) {
 			define( 'WP_PROXY_PORT', $PROXY_PORT );
 		}
 	}
-	add_filter( 'http_api_curl', 'wpsc_curl_ssl' );
+	add_filter( 'https_ssl_verify', '__return_false' );
 
 	$options = array(
 		'timeout' => 20,

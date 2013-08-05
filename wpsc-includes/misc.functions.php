@@ -668,7 +668,7 @@ function _wpsc_deprecated_function( $function, $version, $replacement = null ) {
 
 	// Allow plugin to filter the output error trigger
 	if ( WP_DEBUG && apply_filters( 'wpsc_deprecated_function_trigger_error', true ) ) {
-		if ( ! is_null($replacement) )
+		if ( ! is_null( $replacement ) )
 			trigger_error(
 				sprintf( __( '%1$s is <strong>deprecated</strong> since WP e-Commerce version %2$s! Use %3$s instead.', 'wpsc' ),
 					$function,
