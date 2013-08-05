@@ -321,8 +321,10 @@ function wpsc_update_shipping_multiple_methods(){
    }
 }
 
-function wpsc_get_remaining_quantity($product_id, $variations = array(), $quantity = 1) {
-	return wpsc_cart::get_remaining_quantity($product_id, $variations, $quantity);
+function wpsc_get_remaining_quantity( $product_id, $variations = array(), $quantity = 1 ) {
+  global $wpsc_cart;
+
+	return $wpsc_cart->get_remaining_quantity( $product_id, $variations, $quantity );
 }
 
 /**
