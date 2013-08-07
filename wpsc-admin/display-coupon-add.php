@@ -20,7 +20,7 @@
 							<label for="add-coupon-code"><?php _e( 'Discount', 'wpsc' ); ?></label>
 						</th>
 						<td>
-							<input name="add_discount" id="add-coupon-code" type="number" class="small-text"/>
+							<input name="add_discount" id="add-coupon-code" type="number" class="small-text" min="0" />
 							<span class="description"><?php _e( 'The discount amount', 'wpsc' ); ?></span>
 						</td>
 					</tr>
