@@ -170,16 +170,16 @@ function wpsc_get_child_object_in_select_terms( $parent_id, $terms, $taxonomy ) 
 }
 
 /**
- * Retreives the child product ID (or IDs) when given the parent ID and associated terms.
+ * wpsc_get_child_objects_in_term function.
+ * gets the
  *
  * @access public
- *
  * @param int $parent_id
  * @param int|array of int $terms
  * @param int|array taxonomiy id(s) ti look for
  * @param array $args  additional arguments to query against
- *
- * @return mixed False if product not found, single product id or an array of product ids if more than one found
+ * @return boolean|int|array result false if product not found, a single product id when
+ *                           one id found, or an array of product ids if more than one found
  */
 function wpsc_get_child_object_in_terms( $parent_id, $terms, $taxonomies = 'wpsc-variation', $args = array() ) {
 
@@ -197,10 +197,10 @@ function wpsc_get_child_object_in_terms( $parent_id, $terms, $taxonomies = 'wpsc
 	}
 
 	$defaults = array(
-			'post_type'   => 'wpsc-product',
-			'post_status' => 'inherit',
-			'numberposts' => 1,
-			'post_parent' => $parent_id,
+			'post_type'      => 'wpsc-product',
+			'post_status'    => 'inherit',
+			'posts_per_page' => 1,
+			'post_parent'    => $parent_id,
 	);
 
 	$args = wp_parse_args( $args, $defaults );
@@ -209,7 +209,7 @@ function wpsc_get_child_object_in_terms( $parent_id, $terms, $taxonomies = 'wpsc
 	$tax_query = array( 'relation' => 'AND' );
 
 	foreach ( $terms as $term_index => $term_id ) {
-		$taxonomy    = isset( $taxonomies[ $term_index ] ) ? $taxonomies[ $term_index ] : 'wpsc-variation';
+		$taxonomy    = isset( $taxonomies[$term_index] ) ? $taxonomies[$term_index] : 'wpsc-variation';
 		$tax_query[] = array( 'taxonomy' => $taxonomy, 'field' => 'id', 'terms' => array( $term_id ), 'operator' => 'IN' );
 	}
 
@@ -232,6 +232,7 @@ function wpsc_get_child_object_in_terms( $parent_id, $terms, $taxonomies = 'wpsc
 
 	return $result;
 }
+
 
 /**
  * wpsc_get_child_objects_in_term function.
