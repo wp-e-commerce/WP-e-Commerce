@@ -174,79 +174,64 @@ function wpsc_get_child_object_in_select_terms($parent_id, $terms, $taxonomy){
  * gets the
  *
  * @access public
- * @param mixed $parent_id
- * @param mixed $terms
- * @param mixed $taxonomies
- * @param array $args. (default: array())
- * @return void
+ * @param int $parent_id
+ * @param int|array of int $terms
+ * @param int|array taxonomiy id(s) ti look for
+ * @param array $args  additional arguments to query against
+ * @return boolean|int|array result false if product not found, a single product id when
+ *                           one id found, or an array of product ids if more than one found
  */
-function wpsc_get_child_object_in_terms($parent_id, $terms, $taxonomies, $args = array() ) {
-	global $wpdb, $current_version_number;
-	$wpdb->show_errors = true;
-	$parent_id = absint($parent_id);
+function wpsc_get_child_object_in_terms( $parent_id, $terms, $taxonomies = 'wpsc-variation', $args = array() ) {
 
-	if ( !is_array( $terms) )
-		$terms = array($terms);
+	$parent_id = absint( $parent_id );
 
-	if ( !is_array($taxonomies) )
-		$taxonomies = array($taxonomies);
+	if ( ! is_array( $terms ) )
+		$terms = array( $terms );
 
-	foreach ( (array) $taxonomies as $taxonomy ) {
-		if ($current_version_number < 3.8) {
-			if ( ! taxonomy_exists($taxonomy) )
-				return new WP_Error('invalid_taxonomy', __('Invalid Taxonomy', 'wpsc'));
-			} else {
-			if ( !taxonomy_exists($taxonomy) )
-				return new WP_Error('invalid_taxonomy', __('Invalid Taxonomy', 'wpsc'));
-			}
+	if ( ! is_array( $taxonomies ) )
+		$taxonomies = array( $taxonomies );
 
+	foreach ( $taxonomies as $taxonomy ) {
+		if ( ! taxonomy_exists( $taxonomy ) )
+			return new WP_Error( 'invalid_taxonomy', __( 'Invalid Taxonomy', 'wpsc' ) );
 	}
 
-	$defaults = array('order' => 'ASC');
+	$defaults = array(
+			'post_type'      => 'wpsc-product',
+			'post_status'    => 'inherit',
+			'posts_per_page' => 1,
+			'post_parent'    => $parent_id,
+	);
+
 	$args = wp_parse_args( $args, $defaults );
-	extract($args, EXTR_SKIP);
 
-	$order = ( 'desc' == strtolower($order) ) ? 'DESC' : 'ASC';
+	$terms     = array_map( 'intval', $terms );
+	$tax_query = array( 'relation' => 'AND' );
 
-	$terms = array_map('intval', $terms);
-
-	$taxonomy_count = count($taxonomies);
-	$term_count = count($terms);
-
-	$taxonomies = "'" . implode("', '", $taxonomies) . "'";
-	$terms = "'" . implode("', '", $terms) . "'";
-
-	// This SQL statement finds the item associated with all variations in the selected combination that is a child of the target product
-	$object_sql = "SELECT tr.object_id, COUNT(tr.object_id) AS `count`
-	FROM {$wpdb->term_relationships} AS tr
-	INNER JOIN {$wpdb->posts} AS posts
-		ON posts.ID = tr.object_id
-	INNER JOIN {$wpdb->term_taxonomy} AS tt
-		ON tr.term_taxonomy_id = tt.term_taxonomy_id
-	WHERE posts.post_parent = {$parent_id}
-		AND tt.taxonomy IN ({$taxonomies})
-		AND tt.term_id IN ({$terms})
-		AND tt.parent > 0
-		AND (
-			SELECT COUNT(DISTINCT tt2.parent) FROM
-			{$wpdb->term_relationships} AS tr2
-			INNER JOIN {$wpdb->term_taxonomy} AS tt2
-				ON tr2.term_taxonomy_id = tt2.term_taxonomy_id
-			WHERE tr2.object_id = tr.object_id
-			AND tt2.taxonomy IN ({$taxonomies})
-			AND tt2.parent > 0
-		) = {$term_count}
-	GROUP BY tr.object_id
-	HAVING `count` = {$term_count}";
-	$object_ids = $wpdb->get_row($object_sql, ARRAY_A);
-	if (count($object_ids) > 0) {
-		return $object_ids['object_id'];
-	} else {
-
-		return false;
+	foreach ( $terms as $term_index => $term_id ) {
+		$taxonomy    = isset( $taxonomies[$term_index] ) ? $taxonomies[$term_index] : 'wpsc-variation';
+		$tax_query[] = array( 'taxonomy' => $taxonomy, 'field' => 'id', 'terms' => array( $term_id ), 'operator' => 'IN' );
 	}
-}
 
+	$args['tax_query'] = $tax_query;
+
+	$children = get_posts( $args );
+	$child_id = ! empty( $children ) ? $children[0]->ID : false;
+
+	// return false if product not found, a single product id if one id found, or an array of ids if many found
+	if ( empty( $children ) ) {
+		$result = false;
+	} elseif ( count( $children ) == 1 ) {
+		$result = $children[0]->ID;
+	} else {
+		$result = array();
+		foreach ( $children as $child ) {
+			$result[] = $child->ID;
+		}
+	}
+
+	return $result;
+}
 
 /**
  * wpsc_get_child_objects_in_term function.
