@@ -209,7 +209,7 @@ function wpsc_get_child_object_in_terms( $parent_id, $terms, $taxonomies = 'wpsc
 	$tax_query = array( 'relation' => 'AND' );
 
 	foreach ( $terms as $term_index => $term_id ) {
-		$taxonomy    = isset( $taxonomies[$term_index] ) ? $taxonomies[$term_index] : 'wpsc-variation';
+		$taxonomy    = isset( $taxonomies[ $term_index ] ) ? $taxonomies[ $term_index ] : 'wpsc-variation';
 		$tax_query[] = array( 'taxonomy' => $taxonomy, 'field' => 'id', 'terms' => array( $term_id ), 'operator' => 'IN' );
 	}
 
