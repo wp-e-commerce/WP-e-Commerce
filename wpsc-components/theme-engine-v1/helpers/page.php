@@ -348,7 +348,8 @@ function wpsc_enqueue_user_script_and_css() {
 		wp_localize_script( 'wp-e-commerce', 'wpsc_ajax', array(
 			'ajaxurl'   => admin_url( 'admin-ajax.php', 'relative' ),
 			'spinner'   => esc_url( admin_url( 'images/wpspin_light.gif' ) ),
-			'no_quotes' => __( 'It appears that there are no shipping quotes for the shipping information provided.  Please check the information and try again.', 'wpsc' )
+			'no_quotes' => __( 'It appears that there are no shipping quotes for the shipping information provided.  Please check the information and try again.', 'wpsc' ),
+			'ajax_get_cart_error' => __( '<i>There was a problem getting the current contents of the shopping cart.</i>', 'wpsc' ),
 			)
 		);
 
