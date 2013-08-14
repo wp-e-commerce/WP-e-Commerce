@@ -49,6 +49,8 @@ class wpsc_cart_item {
 	var $custom_tax_rate = null;
 	var $meta = array();
 
+	private $item_meta = array();
+
 	var $is_donation = false;
 	var $apply_tax = true;
 	var $priceandstock_id;
@@ -56,6 +58,65 @@ class wpsc_cart_item {
 	// user provided values
 	var $custom_message = null;
 	var $custom_file = null;
+
+
+
+	/**
+	 * add cart item meta value
+	 * @access public
+	 * @param meta key name
+	 * @param meta key value
+	 * @return previous meta value if it existed, nothing otherwise
+	 */
+	function delete_meta($key) {
+
+		if ( isset($this->item_meta[$key]) ) {
+			$value = $this->item_meta[$key];
+			unset( $this->item_meta[$key]);
+			return $value;
+		}
+
+		return;
+	}
+
+
+	/**
+	 * update or add cart item meta value
+	 * @access public
+	 * @param meta key name
+	 * @param meta key value
+	 * @return previous meta value if it existed, null otherwise
+	 */
+	function update_meta($key,$value=null) {
+
+		if ( !isset( $value ) ) {
+			$result = $this->delete_meta($key);
+		} else {
+			$result = isset($this->meta[$key])?$this->meta[$key]:null;
+			$this->item_meta[$key] = $value;
+		}
+
+		return $result;
+	}
+
+
+	/**
+	 * get cart item meta value
+	 * @access public
+	 * @param meta key name, optional, empty returns all meta as an array
+	 * @return previous meta value if it existed, null otherwise
+	 */
+	function get_meta($key='') {
+
+		if ( empty($key) ) {
+			$result = $this->item_meta;
+		} else {
+			$result = isset($this->item_meta[$key])?$this->item_meta[$key]:null;
+		}
+
+		return $result;
+	}
+
 
 	public static function refresh_variation_cache() {
 		global $wpsc_cart;
@@ -470,9 +531,15 @@ class wpsc_cart_item {
 				)
 		);
 
-		$cart_id = $wpdb->get_var( "SELECT " . $wpdb->insert_id . " AS `id` FROM `".WPSC_TABLE_CART_CONTENTS."` LIMIT 1");
+		$cart_item_id = $wpdb->get_var( "SELECT " . $wpdb->insert_id . " AS `id` FROM `".WPSC_TABLE_CART_CONTENTS."` LIMIT 1");
 
-		wpsc_update_cartmeta($cart_id, 'sku', $this->sku);
+		wpsc_add_cart_item_meta($cart_item_id, 'sku', $this->sku, true );
+
+		if ( !empty( $this->item_meta) ) {
+			foreach( $this->item_meta as $item_meta_key => $item_meta_value ) {
+				wpsc_add_cart_item_meta( $cart_item_id, $item_meta_key, $item_meta_value, true );
+			}
+		}
 
 		$downloads = get_option('max_downloads');
 		if($this->is_downloadable == true) {
@@ -493,7 +560,7 @@ class wpsc_cart_item {
 								'product_id' => $this->product_id,
 								'fileid' => $file->ID,
 								'purchid' => $purchase_log_id,
-								'cartid' => $cart_id,
+								'cartid' => $cart_item_id,
 								'uniqueid' => $unique_id,
 								'downloads' => $downloads,
 								'active' => 0,
@@ -517,7 +584,7 @@ class wpsc_cart_item {
 
 		}
 
-		do_action('wpsc_save_cart_item', $cart_id, $this->product_id);
+		do_action('wpsc_save_cart_item', $cart_item_id, $this->product_id);
 	}
 
 }
