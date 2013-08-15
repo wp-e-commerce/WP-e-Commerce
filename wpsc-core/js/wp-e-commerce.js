@@ -247,8 +247,8 @@ jQuery(document).ready(function ($) {
 			}
 
 			var success = function( response ) {
-				if ( (response!=null) ) {
-					if ( response.fancy_notification ) {
+				if ( ( response ) ) {
+					if ( response.hasOwnProperty('fancy_notification') && response.fancy_notification ) {
 						if ( jQuery( '#fancy_notification_content' ) ) {
 							jQuery( '#fancy_notification_content' ).html( response.fancy_notification );
 							jQuery( '#loading_animation').css( 'display', 'none' );
