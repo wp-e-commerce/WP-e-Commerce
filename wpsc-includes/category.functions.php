@@ -13,21 +13,22 @@
 * wpsc_get_term_parents - get all parents of the term
 *
 * @param int $id - id of the term
-* @return array of term objects or empty array if anything went wrong or there were no parrents
+* @return array of term objects or empty array if anything went wrong or there were no parents
 */
 function wpsc_get_term_parents( $term_id, $taxonomy ) {
-	$term = &get_term( $term_id, $taxonomy );
+	$term = get_term( $term_id, $taxonomy );
 
-	if(empty($term->parent))
+	if( empty( $term->parent ) )
 		return array();
-	$parent = &get_term( $term->parent, $taxonomy );
+
+	$parent = get_term( $term->parent, $taxonomy );
 	if ( is_wp_error( $parent ) )
 		return array();
 
  	$parents = array( $parent->term_id );
 
 	if ( $parent->parent && ( $parent->parent != $parent->term_id ) && !in_array( $parent->parent, $parents ) ) {
-		$parents = array_merge($parents, wpsc_get_term_parents( $parent->term_id, $taxonomy ));
+		$parents = array_merge( $parents, wpsc_get_term_parents( $parent->term_id, $taxonomy ) );
 	}
 
 	return $parents;
