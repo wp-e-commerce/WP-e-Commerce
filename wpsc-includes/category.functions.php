@@ -16,12 +16,12 @@
 * @return array of term objects or empty array if anything went wrong or there were no parents
 */
 function wpsc_get_term_parents( $term_id, $taxonomy ) {
-	$term = &get_term( $term_id, $taxonomy );
+	$term = get_term( $term_id, $taxonomy );
 
 	if( empty( $term->parent ) )
 		return array();
-	$parent = &get_term( $term->parent, $taxonomy );
 
+	$parent = get_term( $term->parent, $taxonomy );
 	if ( is_wp_error( $parent ) )
 		return array();
 
