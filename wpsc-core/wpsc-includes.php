@@ -18,6 +18,7 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/category.functions.php'          
 require_once( WPSC_FILE_PATH . '/wpsc-includes/processing.functions.php'            );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/form-display.functions.php'          );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/merchant.class.php'                  );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/product.class.php'                   );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/meta.functions.php'                  );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/productfeed.php'                     );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/image_processing.php'                );
