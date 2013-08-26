@@ -246,7 +246,7 @@ class WPSC_Purchase_Log {
 	 * @param  int $id ID of the product
 	 * @return array   Array containing 'sales' and 'earnings' stats
 	 */
-	public static function get_stats_for_product( $id, $args ) {
+	public static function get_stats_for_product( $id, $args = '' ) {
 		global $wpdb;
 
 		$product = WPSC_Product::get_instance( $id );
