@@ -603,11 +603,27 @@ class WPSC_Product {
 			&& count( $this->variation_sets ) > 0;
 	}
 
+	/**
+	 * Lazy load stats
+	 *
+	 * @since 3.8.13
+	 */
 	private function process_stats() {
 		if ( $this->post->_wpsc_stats === '' ) {
 			$stats = WPSC_Purchase_Log::get_stats_for_product( $this->post->ID );
 			update_post_meta( $this->post->ID, '_wpsc_stats', $stats );
 		}
+	}
+
+	/**
+	 * Get more specific stats by providing an array of arguments
+	 *
+	 * @since 3.8.13
+	 * @param  array $args Arguments. See {@link WPSC_Purchase_Log::fetch_stats()}
+	 * @return array       'sales' and 'earnings' stats
+	 */
+	public function get_stats( $args = '' ) {
+		return WPSC_Purchase_Log::get_stats_for_product( $this->post->ID, $args );
 	}
 }
 
@@ -710,7 +726,7 @@ class WPSC_Products {
 	 *
 	 * @since 3.8.13
 	 */
-	private function process_stats( $args ) {
+	private function process_stats() {
 		// bail if this is already set
 		if ( isset( $this->stats ) )
 			return;
@@ -720,7 +736,22 @@ class WPSC_Products {
 
 		$args['products'] = $this->products;
 
-		$this->stats = WPSC_Purchase_Log::fetch_stats( $args );
+		$this->stats = WPSC_Purchase_Log::fetch_stats();
+	}
+
+	/**
+	 * Get stats of the products, specifying some more arguments
+	 *
+	 * @since 3.8.13
+	 * @param  array $args Arguments. See {@link WPSC_Purchase_Log::fetch_stats()}.
+	 * @return array       'earnings' and 'sales' stats
+	 */
+	public function get_stats( $args ) {
+		$this->fetch_products();
+
+		$args['products'] = $this->products;
+
+		return WPSC_Purchase_Log::fetch_stats( $args );
 	}
 
 	/**
