@@ -25,6 +25,8 @@
  * @property-read int     $all_stock               Total inventory of this product
  * @property-read int     $claimed_stock           Total claimed stock of this product
  * @property-read int     $stock                   Total available stock of this product
+ * @property-read float   $sales                   Sales stats for this product
+ * @property-read float   $earnings                Earnings stats for this product
  */
 class WPSC_Product {
 	/**
@@ -225,6 +227,30 @@ class WPSC_Product {
 	private $stock;
 
 	/**
+	 * Sales and earnings for this product.
+	 *
+	 * @since 3.8.13
+	 * @var array
+	 */
+	private $stats;
+
+	/**
+	 * Earnings stats for this product.
+	 *
+	 * @since 3.8.13
+	 * @var float
+	 */
+	private $earnings;
+
+	/**
+	 * Sales stats for this product.
+	 *
+	 * @since 3.8.13
+	 * @var float
+	 */
+	private $sales;
+
+	/**
 	 * Magic properties
 	 *
 	 * @since 3.8.13
@@ -268,12 +294,38 @@ class WPSC_Product {
 			) ) )
 				$this->process_stocks();
 
+			// lazy load stats
+			if ( in_array( $name, array(
+				'sales',
+				'earnings',
+			) ) ) {
+				$this->process_stats();
+				$stats = $this->post->_wpsc_stats;
+				return $stats[$name];
+			}
 		}
 
 		if ( isset( $this->$name ) )
 			return $this->$name;
 
 		return null;
+	}
+
+	/**
+	 * Magic setters for 'sales' and 'earnings' properties
+	 *
+	 * @since 3.8.13
+	 * @param string $name  Name of property
+	 * @param mixed $value  Value of property
+	 */
+	public function __set( $name, $value ) {
+		if ( in_array( $name, array(
+			'sales',
+			'earnings',
+		) ) ) {
+			$this->stats[$name] = $value;
+			update_post_meta( $this->post->ID, '_wpsc_stats', $stats );
+		}
 	}
 
 	/**
@@ -549,5 +601,141 @@ class WPSC_Product {
 		$this->has_variations =
 			   count( $this->variations ) > 0
 			&& count( $this->variation_sets ) > 0;
+	}
+
+	private function process_stats() {
+		if ( $this->post->_wpsc_stats === '' ) {
+			$stats = WPSC_Purchase_Log::get_stats_for_product( $this->post->ID );
+			update_post_meta( $this->post->ID, '_wpsc_stats', $stats );
+		}
+	}
+}
+
+/**
+ * Collection of WPSC_Product objects
+ *
+ * Pass in the constructor an array containing arguments similar to WP_Query.
+ *
+ * @since 3.8.13
+ * @property-read array $products An array containing the queried products
+ * @property-read WP_Query $query The WP_Query object associated with this collection
+ * @property-read int $sales The total sales of the products in this collection
+ * @property-read float $earnings The total earnings of the products in this collection
+ */
+class WPSC_Products {
+	/**
+	 * An array containing the queried products
+	 *
+	 * @since 3.8.13
+	 * @var array
+	 */
+	private $products;
+
+	/**
+	 * The WP_Query object associated with this collection
+	 *
+	 * @since 3.8.13
+	 * @var array
+	 */
+	private $query;
+
+	/**
+	 * The arguments that are passed into $this->query
+	 *
+	 * @since 3.8.13
+	 * @var array
+	 */
+	private $args;
+
+	/**
+	 * An associative array containing 'sales' and 'earnings' keys.
+	 *
+	 * @since 3.8.13
+	 * @var array
+	 */
+	private $stats;
+
+	/**
+	 * Magic getters for the following properties:
+	 *
+	 * 	- $query
+	 * 	- $products
+	 * 	- $sales
+	 * 	- $earnings
+	 *
+	 * @since 3.8.13
+	 * @param  string $name Name of variable
+	 * @return mixed        Value
+	 */
+	public function __get( $name ) {
+		// Lazy load the query and products
+		if ( in_array( $name, array(
+			'query',
+			'products',
+		) ) ) {
+			$this->fetch_products();
+			return $this->products;
+		}
+
+		// Lazy load the sales and earnings
+		if ( in_array( $name, array(
+			'sales',
+			'earnings',
+		) ) ) {
+			$this->process_stats();
+			return $this->stats[$name];
+		}
+
+		return null;
+	}
+
+	/**
+	 * Constructor of the WPSC_Products instance
+	 *
+	 * @since 3.8.13
+	 * @param string $args Arguments. See {@link WP_Query::__construct()}.
+	 */
+	public function __construct( $args = '' ) {
+		$defaults = array(
+			'post_type' => 'wpsc-product',
+			'nopaging'  => true,
+		);
+
+		$this->args = wp_parse_args( $args, $defaults );
+		$this->query = new WP_Query();
+	}
+
+	/**
+	 * Fetch stats from the database
+	 *
+	 * @since 3.8.13
+	 */
+	private function process_stats( $args ) {
+		// bail if this is already set
+		if ( isset( $this->stats ) )
+			return;
+
+		// get posts from the database
+		$this->fetch_products();
+
+		$args['products'] = $this->products;
+
+		$this->stats = WPSC_Purchase_Log::fetch_stats( $args );
+	}
+
+	/**
+	 * Fetch products from the database
+	 *
+	 * @since 3.8.13
+	 */
+	private function fetch_products() {
+		if ( isset( $this->products ) )
+			return;
+
+		// query the DB
+		$this->query->query( $this->args );
+
+		// wrap the WP_Post object into WPSC_Product objects
+		$this->products = array_map( array( 'WPSC_Product', 'get_instance' ), $this->query->posts );
 	}
 }
