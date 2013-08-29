@@ -102,7 +102,7 @@ class Sputnik {
 		Sputnik_Pointers::bootstrap();
 	}
 
-	public function add_download_link( $message, $notification ) {
+	public static function add_download_link( $message, $notification ) {
 		$cart_contents = $notification->get_purchase_log()->get_cart_contents();
 
 		$products = '';
@@ -325,7 +325,7 @@ class Sputnik {
 		}
 	}
 
-	public function sales_data_postback() {
+	public static function sales_data_postback() {
 		if ( ! isset( $_REQUEST['sales_data'] ) )
 			return;
 
