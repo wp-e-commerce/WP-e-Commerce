@@ -7,9 +7,10 @@ function _wpsc_filter_merchant_v2_get_gateway_list() {
 	while (wpsc_have_gateways()) : wpsc_the_gateway(); ?>
 		<div class="custom_gateway">
 			<label><input type="radio" value="<?php echo wpsc_gateway_internal_name();?>" <?php echo wpsc_gateway_is_checked(); ?> name="custom_gateway" class="custom_gateway"/><?php echo wpsc_gateway_name(); ?>
-				<?php if( wpsc_show_gateway_image() ): ?>
-				<img src="<?php echo wpsc_gateway_image_url(); ?>" alt="<?php echo wpsc_gateway_name(); ?>" style="position:relative; top:5px;" />
-				<?php endif; ?>
+				<?php if( wpsc_show_gateway_image() ):
+					$gateway_image= '<img src="' . wpsc_gateway_image_url(). '" alt="' . wpsc_gateway_name() . '" style="position:relative; top:5px;" />';
+					echo apply_filters ( 'wpsc_gateway_image', $gateway_image, wpsc_gateway_internal_name() );
+				endif; ?>
 			</label>
 
 			<?php if(wpsc_gateway_form_fields()): ?>
