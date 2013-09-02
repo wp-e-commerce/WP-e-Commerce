@@ -117,6 +117,7 @@ $image_height = get_option('product_image_height');
 								</select></td></tr>
 							<?php endwhile; ?>
                             </table>
+   							<div id="variation_display_<?php echo wpsc_the_product_id(); ?>" class="is_variation"><?php _e('Combination of product variants is not available', 'wpsc'); ?></div>
 						</div><!--close wpsc_variation_forms-->
                         </fieldset>
 								<?php /** the variation group HTML and loop ends here */?>
