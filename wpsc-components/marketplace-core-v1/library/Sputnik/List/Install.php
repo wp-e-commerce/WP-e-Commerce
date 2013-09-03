@@ -149,6 +149,9 @@ class Sputnik_List_Install extends WP_List_Table {
 		if ($tab === 'account')
 			return;
 
+		if ( Sputnik_Admin::$require_auth )
+			return;
+
 		$account = Sputnik::get_account();
 		if ( 'top' ==  $which ) { ?>
 			<div class="tablenav top">
@@ -411,23 +414,25 @@ class Sputnik_List_Install extends WP_List_Table {
 					<h4><?php echo $name ?></h4>
 					<span class="price"><?php echo $plugin->price ?></span>
 					<p><?php echo $plugin->description ?></p>
-					<div class="footer" style="display:none">
-						<div class="star-holder" title="<?php printf( _n( '(based on %s rating)', '(based on %s ratings)', $plugin->rating->count, 'wpsc' ), number_format_i18n( $plugin->rating->count ) ) ?>">
-							<div class="star star-rating" style="width: <?php echo (int) (20 * $plugin->rating->average) ?>px"></div>
-							<?php
-								$color = get_user_option('admin_color');
-								if ( empty($color) || 'fresh' == $color )
-									$star_url = admin_url( 'images/stars.png?v=20110615' ); // 'Fresh' Gray star for list tables
-								else
-									$star_url = admin_url( 'images/stars.png?v=20110615' ); // 'Classic' Blue star
-							?>
-							<div class="star star5"><img src="<?php echo $star_url; ?>" alt="" /></div>
-							<div class="star star4"><img src="<?php echo $star_url; ?>" alt="" /></div>
-							<div class="star star3"><img src="<?php echo $star_url; ?>" alt="" /></div>
-							<div class="star star2"><img src="<?php echo $star_url; ?>" alt="" /></div>
-							<div class="star star1"><img src="<?php echo $star_url; ?>" alt="" /></div>
+					<?php if ( isset( $plugin->rating ) && isset( $plugin->rating->count ) ): ?>
+						<div class="footer" style="display:none">
+							<div class="star-holder" title="<?php printf( _n( '(based on %s rating)', '(based on %s ratings)', $plugin->rating->count, 'wpsc' ), number_format_i18n( $plugin->rating->count ) ) ?>">
+								<div class="star star-rating" style="width: <?php echo (int) (20 * $plugin->rating->average) ?>px"></div>
+								<?php
+									$color = get_user_option('admin_color');
+									if ( empty($color) || 'fresh' == $color )
+										$star_url = admin_url( 'images/stars.png?v=20110615' ); // 'Fresh' Gray star for list tables
+									else
+										$star_url = admin_url( 'images/stars.png?v=20110615' ); // 'Classic' Blue star
+								?>
+								<div class="star star5"><img src="<?php echo $star_url; ?>" alt="" /></div>
+								<div class="star star4"><img src="<?php echo $star_url; ?>" alt="" /></div>
+								<div class="star star3"><img src="<?php echo $star_url; ?>" alt="" /></div>
+								<div class="star star2"><img src="<?php echo $star_url; ?>" alt="" /></div>
+								<div class="star star1"><img src="<?php echo $star_url; ?>" alt="" /></div>
+							</div>
 						</div>
-					</div>
+					<?php endif; ?>
 				</div>
 			</div>
 		</div>

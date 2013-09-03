@@ -5,6 +5,7 @@ class Sputnik_Admin {
 	protected static $list_table;
 
 	protected static $page = 'dash';
+	public static $require_auth = false;
 
 	public static function bootstrap() {
 		add_action( 'admin_init', array(__CLASS__, 'init'), 0);
@@ -560,10 +561,14 @@ class Sputnik_Admin {
 			$url = wp_nonce_url(self::build_url(array('buy' => $api->slug)), 'sputnik_install-plugin_' . $api->slug);
 		}
 
+		if ( self::$require_auth ) {
+			$url = self::build_url( array( 'oauth' => 'request', 'TB_iframe' => true ) );
+		}
+
 		return compact('status', 'url', 'version');
 	}
 
-	protected static function header($title, $account) {
+	protected static function header( $account ) {
 		if ($account !== false) {
 			$tabs = array(
 				'dash' => __('Store', 'sputnik'),
@@ -605,33 +610,23 @@ class Sputnik_Admin {
 			$account = Sputnik::get_account();
 		}
 		catch (Exception $e) {
-			if ($e->getCode() === 1) {
-				$GLOBALS['tab'] = 'auth';
-			}
-			elseif ($e->getCode() === 401) {
+			if ($e->getCode() === 401) {
 				delete_option('sputnik_oauth_access');
 				delete_option('sputnik_oauth_request');
-				$GLOBALS['tab'] = 'auth';
 			}
-			else {
+			elseif ( $e->getCode() !== 1 ) {
 				echo '<p>' . sprintf(__('Problem: %s', 'sputnik'), $e->getMessage() ). '</p>';
 			}
+
+			self::$require_auth = true;
 		}
 
-		if ($GLOBALS['tab'] !== 'auth') {
-			self::header('Browse', $account);
-		} else {
-			self::header('Authentication', $account);
-		}
+		self::header( $account );
 
-		switch ($GLOBALS['tab']) {
-			case 'auth':
-				self::auth();
-				break;
-			default:
-				self::$list_table->display();
-				break;
-		}
+		if ( self::$require_auth )
+			self::auth();
+
+		self::$list_table->display();
 
 		self::footer();
 	}

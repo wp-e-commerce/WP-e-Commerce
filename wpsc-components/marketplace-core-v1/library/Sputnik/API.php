@@ -66,6 +66,7 @@ class Sputnik_API {
 
 	protected static function authenticate() {
 		$token = get_option('sputnik_oauth_access', false);
+
 		if ($token == false) {
 			throw new Exception('Need to authenticate first', 1);
 		}
