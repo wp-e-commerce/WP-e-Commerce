@@ -288,10 +288,13 @@ class Sputnik_Admin {
 		require_once(ABSPATH . 'wp-admin/includes/plugin-install.php');
 
 		try {
-			$account = Sputnik::get_account();
-			$api = Sputnik::get_plugin($plugin, $account->ID);
-		}
-		catch (Exception $e) {
+			if ( Sputnik::account_is_linked() ) {
+				$account = Sputnik::get_account();
+				$api = Sputnik::get_plugin( $plugin, $account->ID );
+			} else {
+				$api = Sputnik::get_plugin( $plugin );
+			}
+		} catch (Exception $e) {
 			status_header(500);
 			iframe_header( __('Plugin Install', 'sputnik') );
 			echo $e->getMessage();
