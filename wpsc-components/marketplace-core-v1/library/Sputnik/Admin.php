@@ -5,7 +5,6 @@ class Sputnik_Admin {
 	protected static $list_table;
 
 	protected static $page = 'dash';
-	public static $require_auth = false;
 
 	public static function bootstrap() {
 		add_action( 'admin_init', array(__CLASS__, 'init'), 0);
@@ -33,7 +32,12 @@ class Sputnik_Admin {
 		// Run most OAuth stuff now, before output
 		if (!empty($_GET['oauth'])) {
 			if ($_GET['oauth'] == 'request') {
-				Sputnik_API::auth_request();
+				$redirect_url = '';
+				if ( ! empty( $_REQUEST['oauth_buy'] ) ) {
+					$redirect_url = self::build_url( array( 'oauth' => 'callback' ) );
+					$redirect_url = add_query_arg( 'oauth_buy', $_REQUEST['oauth_buy'], $redirect_url );
+				}
+				Sputnik_API::auth_request( $redirect_url );
 			}
 			if ($_GET['oauth'] == 'callback') {
 				Sputnik_API::auth_access();
@@ -214,6 +218,7 @@ class Sputnik_Admin {
 
 	public static function build_url($args = array()) {
 		$url = add_query_arg( array( 'post_type' => 'wpsc-product', 'page' => 'sputnik' ), admin_url( 'edit.php' ) );
+
 		if (!empty($args)) {
 			$url = add_query_arg( $args, $url );
 		}
@@ -244,10 +249,20 @@ class Sputnik_Admin {
 		wp_enqueue_script('jquery-masonry', plugins_url( 'static/jquery.masonry.js', Sputnik::$path . '/wpsc-marketplace' ), array('jquery'), '20110901' );
 		wp_enqueue_script( 'paypal', 'https://www.paypalobjects.com/js/external/dg.js' );
 		wp_enqueue_script('sputnik_js', plugins_url( 'static/admin.js', Sputnik::$path . '/wpsc-marketplace' ), array( 'jquery', 'jquery-masonry', 'thickbox', 'paypal' ), '20110924' );
-		wp_localize_script('sputnik_js', 'sputnikL10n', array(
+
+		$l10n = array(
 			'plugin_information' => __('Plugin Information:', 'sputnik'),
 			'ays' => __('Are you sure you want to install this plugin?', 'sputnik')
-		) );
+		);
+
+		if ( ! empty( $_REQUEST['oauth_buy'] ) ) {
+			$plugin = Sputnik::get_plugin( $_REQUEST['oauth_buy'] );
+			$status = self::install_status( $plugin );
+			$l10n['buy_id'] = $plugin->slug;
+			$l10n['buy_href'] = $status['url'];
+		}
+
+		wp_localize_script('sputnik_js', 'sputnikL10n', $l10n );
 	}
 
 	public static function page() {

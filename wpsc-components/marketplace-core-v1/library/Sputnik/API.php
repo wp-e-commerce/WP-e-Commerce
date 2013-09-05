@@ -105,7 +105,10 @@ class Sputnik_API {
 
 			update_option('sputnik_oauth_access', $access);
 
-			$return_url = Sputnik_Admin::build_url();
+			$args = array();
+			if ( ! empty( $_REQUEST['oauth_buy']  ) )
+				$args['oauth_buy'] = $_REQUEST['oauth_buy'];
+			$return_url = Sputnik_Admin::build_url( $args );
 		}
 
 		delete_option('sputnik_oauth_request');
@@ -115,8 +118,8 @@ class Sputnik_API {
 	<head>
 		<title><?php _e( 'Redirecting ...', 'wpsc' ); ?></title>
 		<script type="text/javascript">
-		parent.location = '<?php echo $return_url; ?>';
-		window.close();
+			parent.location = '<?php echo $return_url; ?>';
+			window.close();
 		</script>
 	</head>
 	<body>&nbsp;</body>
