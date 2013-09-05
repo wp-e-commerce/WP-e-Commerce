@@ -25,11 +25,6 @@ class Sputnik_Admin {
 		add_action('admin_print_styles', array(__CLASS__, 'styles'));
 		add_action('admin_print_scripts', array(__CLASS__, 'scripts'));
 
-		if (!Sputnik::account_is_linked()) {
-			foreach ( array( 'user_admin_notices', 'admin_notices' ) as $filter ) {
-				add_action($filter, array(__CLASS__, 'connect_notice'));
-			}
-		}
 		global $plugin_page;
 
 		if ( $plugin_page !== 'sputnik' && $plugin_page !== 'sputnik-account' )
