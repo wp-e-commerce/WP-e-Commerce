@@ -149,7 +149,7 @@ class Sputnik_List_Install extends WP_List_Table {
 		if ($tab === 'account')
 			return;
 
-		if ( Sputnik_Admin::$require_auth )
+		if ( ! Sputnik::account_is_linked() )
 			return;
 
 		$account = Sputnik::get_account();

@@ -559,9 +559,12 @@ class Sputnik_Admin {
 			$url = wp_nonce_url(self::build_url(array('buy' => $api->slug)), 'sputnik_install-plugin_' . $api->slug);
 		}
 
-		if ( self::$require_auth ) {
-			$url = self::build_url( array( 'oauth' => 'request', 'TB_iframe' => true ) );
-		}
+		if ( ! Sputnik::account_is_linked() )
+			$url = self::build_url( array(
+				'oauth'     => 'request',
+				'oauth_buy' => $api->slug,
+				'TB_iframe' => true,
+			) );
 
 		return compact('status', 'url', 'version');
 	}
@@ -615,13 +618,11 @@ class Sputnik_Admin {
 			elseif ( $e->getCode() !== 1 ) {
 				echo '<p>' . sprintf(__('Problem: %s', 'sputnik'), $e->getMessage() ). '</p>';
 			}
-
-			self::$require_auth = true;
 		}
 
 		self::header( $account );
 
-		if ( self::$require_auth )
+		if ( Sputnik::account_is_linked() )
 			self::auth();
 
 		self::$list_table->display();
