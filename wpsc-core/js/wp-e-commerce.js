@@ -239,7 +239,9 @@ jQuery(document).ready(function ($) {
 		if(file_upload_elements.length > 0) {
 			return true;
 		} else {
-			form_values = jQuery(this).serialize() + '&action=' + jQuery( 'input[name="wpsc_ajax_action"]' ).val();
+			var action_buttons = jQuery(this).children('input[name="wpsc_ajax_action"]');
+			var action = action_buttons[0].value;
+			form_values = jQuery(this).serialize() + '&action=' + action;
 
 			// Sometimes jQuery returns an object instead of null, using length tells us how many elements are in the object, which is more reliable than comparing the object to null
 			if( jQuery( '#fancy_notification' ).length === 0 ) {
