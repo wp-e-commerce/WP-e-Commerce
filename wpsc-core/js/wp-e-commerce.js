@@ -325,7 +325,16 @@ jQuery(document).ready(function ($) {
 				}
 				variation_display.removeClass('no_variation').addClass('is_variation');
 			} else {
-				variation_display.removeClass('is_variation').addClass('no_variation');
+				var dropdowns = jQuery('div.wpsc_variation_forms').closest('form').find('.wpsc_select_variation');
+				var not_selected = false;
+				dropdowns.each(function(){
+					var t = jQuery(this);
+					if(t.val() <= 0){
+						not_selected = true;
+					}
+				});
+				if (!not_selected)
+					variation_display.removeClass('is_variation').addClass('no_variation');
 			}
 
 			stock_display.html(response.variation_msg);
