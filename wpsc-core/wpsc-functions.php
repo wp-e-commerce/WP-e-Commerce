@@ -601,10 +601,11 @@ function wpsc_get_current_customer_id( $mode = '' ) {
 }
 
 function wpsc_get_all_customer_data( $id = false ) {
-	if ( _wpsc_is_customer_user( $id ) )
-		$profile = wpsc_get_all_user_data( $key, $id );
-	else
-		$profile = wpsc_get_all_visitor_data( $key, $id );
+	if ( _wpsc_is_customer_user( $id ) ) {
+		$profile = wpsc_get_all_user_data( $id );
+	} else {
+		$profile = wpsc_get_all_visitor_data( $id );
+	}
 
 	return apply_filters( 'wpsc_get_all_customer_meta', $profile, $id );
 }
@@ -623,6 +624,8 @@ function wpsc_get_all_user_data( $id = false ) {
 	// take multisite into account
 	$blog_prefix = is_multisite() ? $wpdb->get_blog_prefix() : '';
 	$profile = get_user_meta( $id, "_wpsc_{$blog_prefix}customer_profile", true );
+
+
 
 	if ( ! is_array( $profile ) )
 		$profile = array();
@@ -746,7 +749,7 @@ function wpsc_update_visitor_data( $key, $value, $id = false ) {
 		else
 			$id = wpsc_get_current_customer_id( 'create' );
 
-	$profile = wpsc_get_all_user_data( $id );
+	$profile = wpsc_get_all_customer_data( $id );
 
 	if ( is_wp_error( $profile ) )
 		return $profile;
