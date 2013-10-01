@@ -24,11 +24,6 @@ class Sputnik_Admin {
 		add_action('admin_print_styles', array(__CLASS__, 'styles'));
 		add_action('admin_print_scripts', array(__CLASS__, 'scripts'));
 
-		if (!Sputnik::account_is_linked()) {
-			foreach ( array( 'user_admin_notices', 'admin_notices' ) as $filter ) {
-				add_action($filter, array(__CLASS__, 'connect_notice'));
-			}
-		}
 		global $plugin_page;
 
 		if ( $plugin_page !== 'sputnik' && $plugin_page !== 'sputnik-account' )
@@ -37,7 +32,12 @@ class Sputnik_Admin {
 		// Run most OAuth stuff now, before output
 		if (!empty($_GET['oauth'])) {
 			if ($_GET['oauth'] == 'request') {
-				Sputnik_API::auth_request();
+				$redirect_url = '';
+				if ( ! empty( $_REQUEST['oauth_buy'] ) ) {
+					$redirect_url = self::build_url( array( 'oauth' => 'callback' ) );
+					$redirect_url = add_query_arg( 'oauth_buy', $_REQUEST['oauth_buy'], $redirect_url );
+				}
+				Sputnik_API::auth_request( $redirect_url );
 			}
 			if ($_GET['oauth'] == 'callback') {
 				Sputnik_API::auth_access();
@@ -218,6 +218,7 @@ class Sputnik_Admin {
 
 	public static function build_url($args = array()) {
 		$url = add_query_arg( array( 'post_type' => 'wpsc-product', 'page' => 'sputnik' ), admin_url( 'edit.php' ) );
+
 		if (!empty($args)) {
 			$url = add_query_arg( $args, $url );
 		}
@@ -248,10 +249,20 @@ class Sputnik_Admin {
 		wp_enqueue_script('jquery-masonry', plugins_url( 'static/jquery.masonry.js', Sputnik::$path . '/wpsc-marketplace' ), array('jquery'), '20110901' );
 		wp_enqueue_script( 'paypal', 'https://www.paypalobjects.com/js/external/dg.js' );
 		wp_enqueue_script('sputnik_js', plugins_url( 'static/admin.js', Sputnik::$path . '/wpsc-marketplace' ), array( 'jquery', 'jquery-masonry', 'thickbox', 'paypal' ), '20110924' );
-		wp_localize_script('sputnik_js', 'sputnikL10n', array(
+
+		$l10n = array(
 			'plugin_information' => __('Plugin Information:', 'sputnik'),
 			'ays' => __('Are you sure you want to install this plugin?', 'sputnik')
-		) );
+		);
+
+		if ( ! empty( $_REQUEST['oauth_buy'] ) ) {
+			$plugin = Sputnik::get_plugin( $_REQUEST['oauth_buy'] );
+			$status = self::install_status( $plugin );
+			$l10n['buy_id'] = $plugin->slug;
+			$l10n['buy_href'] = $status['url'];
+		}
+
+		wp_localize_script('sputnik_js', 'sputnikL10n', $l10n );
 	}
 
 	public static function page() {
@@ -292,10 +303,13 @@ class Sputnik_Admin {
 		require_once(ABSPATH . 'wp-admin/includes/plugin-install.php');
 
 		try {
-			$account = Sputnik::get_account();
-			$api = Sputnik::get_plugin($plugin, $account->ID);
-		}
-		catch (Exception $e) {
+			if ( Sputnik::account_is_linked() ) {
+				$account = Sputnik::get_account();
+				$api = Sputnik::get_plugin( $plugin, $account->ID );
+			} else {
+				$api = Sputnik::get_plugin( $plugin );
+			}
+		} catch (Exception $e) {
 			status_header(500);
 			iframe_header( __('Plugin Install', 'sputnik') );
 			echo $e->getMessage();
@@ -560,10 +574,17 @@ class Sputnik_Admin {
 			$url = wp_nonce_url(self::build_url(array('buy' => $api->slug)), 'sputnik_install-plugin_' . $api->slug);
 		}
 
+		if ( ! Sputnik::account_is_linked() )
+			$url = self::build_url( array(
+				'oauth'     => 'request',
+				'oauth_buy' => $api->slug,
+				'TB_iframe' => true,
+			) );
+
 		return compact('status', 'url', 'version');
 	}
 
-	protected static function header($title, $account) {
+	protected static function header( $account ) {
 		if ($account !== false) {
 			$tabs = array(
 				'dash' => __('Store', 'sputnik'),
@@ -605,33 +626,21 @@ class Sputnik_Admin {
 			$account = Sputnik::get_account();
 		}
 		catch (Exception $e) {
-			if ($e->getCode() === 1) {
-				$GLOBALS['tab'] = 'auth';
-			}
-			elseif ($e->getCode() === 401) {
+			if ($e->getCode() === 401) {
 				delete_option('sputnik_oauth_access');
 				delete_option('sputnik_oauth_request');
-				$GLOBALS['tab'] = 'auth';
 			}
-			else {
+			elseif ( $e->getCode() !== 1 ) {
 				echo '<p>' . sprintf(__('Problem: %s', 'sputnik'), $e->getMessage() ). '</p>';
 			}
 		}
 
-		if ($GLOBALS['tab'] !== 'auth') {
-			self::header('Browse', $account);
-		} else {
-			self::header('Authentication', $account);
-		}
+		self::header( $account );
 
-		switch ($GLOBALS['tab']) {
-			case 'auth':
-				self::auth();
-				break;
-			default:
-				self::$list_table->display();
-				break;
-		}
+		if ( Sputnik::account_is_linked() )
+			self::auth();
+
+		self::$list_table->display();
 
 		self::footer();
 	}
