@@ -85,6 +85,8 @@ endif;
    <?php endwhile; ?>
    <?php //this HTML displays coupons if there are any active coupons to use ?>
 
+	<?php do_action ( 'wpsc_after_checkout_cart_rows' ); ?>
+
    <?php
 
    if(wpsc_uses_coupons()): ?>
