@@ -94,6 +94,7 @@ class Sputnik_API_Auth {
 	 */
 	public function request($url, $method, $parameters) {
 		$request = $this->sign($url, $method, $parameters);
+
 		switch ($method) {
 			case 'GET':
 				return $this->http($request->to_url(), 'GET');

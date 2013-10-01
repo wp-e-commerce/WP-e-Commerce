@@ -1,4 +1,8 @@
 jQuery(document).ready(function($) {
+	if ( sputnikL10n.buy_id && sputnikL10n.buy_href ) {
+		var dg = new PAYPAL.apps.DGFlow({trigger:sputnikL10n.buy_id});
+		dg.startFlow(sputnikL10n.buy_href);
+	}
 	$('#menu-posts-wpsc-product div ul li a[href$="page=sputnik-account"]').parent('li').remove();
 	$('.grid-view').masonry({
 		selector: '.plugin'
@@ -50,6 +54,12 @@ jQuery(document).ready(function($) {
 	});
 
 	$('.buy').click(function(){
+		var href = $(this).attr('href');
+		if (href.indexOf('TB_iframe') !== -1) {
+			tb_show($(this).attr('title'), href);
+			return false;
+		}
+
 		var dg = new PAYPAL.apps.DGFlow({trigger:$(this).attr('id')});
 		dg.startFlow($(this).attr('href'));
 		return false;
