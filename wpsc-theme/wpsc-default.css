@@ -236,6 +236,11 @@ Author URI: http://instinct.co.nz
 	*zoom:1;
 }
 
+.default_product_display .is_variation,
+.single_product_display .is_variation {
+	display: none;
+}
+
 .default_product_display .in_stock,
 .single_product_display .in_stock {
 	position: relative;
@@ -245,6 +250,8 @@ Author URI: http://instinct.co.nz
 	left:-5px;
 }
 
+.default_product_display .no_variation,
+.single_product_display .no_variation,
 .default_product_display .out_of_stock,
 .single_product_display .out_of_stock {
 	position: relative;

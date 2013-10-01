@@ -308,6 +308,7 @@ jQuery(document).ready(function ($) {
 		var form_values = jQuery("input[name='product_id'], .wpsc_select_variation",parent_form).serialize() + '&action=update_product_price';
 
 		jQuery.post( wpsc_ajax.ajaxurl, form_values, function(response) {
+			var variation_display = jQuery('div#variation_display_' + prod_id );
 			var stock_display = jQuery('div#stock_display_' + prod_id),
 				price_field = jQuery('input#product_price_' + prod_id),
 				price_span = jQuery('#product_price_' + prod_id + '.pricedisplay, #product_price_' + prod_id + ' .currentprice'),
@@ -324,6 +325,9 @@ jQuery(document).ready(function ($) {
 				} else {
 					stock_display.addClass('out_of_stock').removeClass('in_stock');
 				}
+				variation_display.removeClass('no_variation').addClass('is_variation');
+			} else {
+				variation_display.removeClass('is_variation').addClass('no_variation');
 			}
 
 			stock_display.html(response.variation_msg);
