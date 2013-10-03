@@ -350,9 +350,14 @@ function _wpsc_is_bot_user() {
 	if ( strpos( $_SERVER['HTTP_USER_AGENT'], 'wordpress' ) )
 		return true;
 
-	// the user agent could be google bot, bing bot or some other bot,  one would hope real user agents do not have the string 'bot' in them
+	// the user agent could be google bot, bing bot or some other bot,  one would hope real user agents do not have the
+	// string 'bot|spider|crawler' in them, there are bots that don't do us the kindness of identifying themselves as such,
 	// check for the user being logged in in a real user is using a bot to access content from our site
-	if ( !is_user_logged_in() && strpos( $_SERVER['HTTP_USER_AGENT'], 'bot' ) )
+	if ( !is_user_logged_in() && (
+			( strpos( $_SERVER['HTTP_USER_AGENT'], 'bot' ) !== false )
+				|| ( strpos( $_SERVER['HTTP_USER_AGENT'], 'crawler' ) !== false )
+					|| ( strpos( $_SERVER['HTTP_USER_AGENT'], 'spider' ) !== false )
+		) )
 		return true;
 
 	// Are we feeding the masses?
