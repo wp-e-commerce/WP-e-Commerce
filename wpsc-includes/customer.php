@@ -31,31 +31,52 @@ function _wpsc_set_customer_cookie( $cookie, $expire ) {
  * @return string Customer ID
  */
 function wpsc_create_customer_id() {
+	static $cached_current_customer_id = false;
 	global $wp_roles;
 
-	$username = '_' . wp_generate_password( 8, false, false );
-	$password = wp_generate_password( 12, false );
+	if ( $cached_current_customer_id !== false ) {
+		return $cached_current_customer_id;
+	}
 
-	$role = $wp_roles->get_role( 'wpsc_anonymous' );
+	if ( $is_a_bot_user = _wpsc_is_bot_user() ) {
+		$username = '_wpsc_bot';
+		$wp_user = get_user_by( 'login', $username );
+		if ( $wp_user === false ) {
+			$password = wp_generate_password( 12, false );
+			$id = wp_create_user( $username, $password );
+		} else {
+			$id = $wp_user->ID;
+		}
+	} else {
+		$username = '_' . wp_generate_password( 8, false, false );
+		$password = wp_generate_password( 12, false );
 
-	if ( ! $role )
-		$wp_roles->add_role( 'wpsc_anonymous', __( 'Anonymous', 'wpsc' ) );
+		$role = $wp_roles->get_role( 'wpsc_anonymous' );
 
-	$id = wp_create_user( $username, $password );
-	$user = new WP_User( $id );
-	$user->set_role( 'wpsc_anonymous' );
+		if ( ! $role )
+			$wp_roles->add_role( 'wpsc_anonymous', __( 'Anonymous', 'wpsc' ) );
 
-	update_user_meta( $id, '_wpsc_last_active', time() );
+		$id = wp_create_user( $username, $password );
+		$user = new WP_User( $id );
+		$user->set_role( 'wpsc_anonymous' );
 
-	$expire = time() + WPSC_CUSTOMER_DATA_EXPIRATION; // valid for 48 hours
+		update_user_meta( $id, '_wpsc_last_active', time() );
+		update_user_meta( $id, '_wpsc_temporary_profile', 48 ); // 48 hours, cron job to delete will tick once per hour
+	}
 
-	$data = $id . $expire;
-	$hash = hash_hmac( 'md5', $data, wp_hash( $data ) );
 
-	// store ID, expire and hash to validate later
-	$cookie = $id . '|' . $expire . '|' . $hash;
+	// set cookie for all live users
+	if ( !$is_a_bot_user ) {
+		$expire = time() + WPSC_CUSTOMER_DATA_EXPIRATION; // valid for 48 hours
+		$data = $id . $expire;
+		$hash = hash_hmac( 'md5', $data, wp_hash( $data ) );
+		$cookie = $id . '|' . $expire . '|' . $hash;
 
-	_wpsc_set_customer_cookie( $cookie, $expire );
+		// store ID, expire and hash to validate later
+		_wpsc_set_customer_cookie( $cookie, $expire );
+	}
+
+	$cached_current_customer_id = $id;
 
 	return $id;
 }
@@ -68,14 +89,30 @@ function wpsc_create_customer_id() {
  * @return mixed Return the customer ID if the cookie is valid, false if otherwise.
  */
 function wpsc_validate_customer_cookie() {
+	static $validated_user_id = false;
+
+	// we hold on to the validated user id once we have it becuase this function might
+	// be called many times per url request.
+	if ( $validated_user_id !== false )
+		return $validated_user_id;
+
 	$cookie = $_COOKIE[WPSC_CUSTOMER_COOKIE];
-	list( $id, $expire, $hash ) = explode( '|', $cookie );
+	list( $id, $expire, $hash ) = $x = explode( '|', $cookie );
 	$data = $id . $expire;
 	$hmac = hash_hmac( 'md5', $data, wp_hash( $data ) );
 
-	if ( $hmac != $hash )
+	if ( ($hmac != $hash) || empty( $id ) || !is_numeric($id)) {
 		return false;
+	} else {
+		// check to be sure the user still exists, could have been purged
+		$id = intval( $id );
+		$wp_user = get_user_by( 'id', $id );
+		if ( $wp_user === false ) {
+			return false;
+		}
+	}
 
+	$validated_user_id = $id;
 	return $id;
 }
 
@@ -97,14 +134,17 @@ function wpsc_get_current_customer_id() {
 	if ( is_user_logged_in() && isset( $_COOKIE[WPSC_CUSTOMER_COOKIE] ) )
 		_wpsc_set_customer_cookie( '', time() - 3600 );
 
-	if ( is_user_logged_in() )
+	// if the user is logged in we use the user id
+	if ( is_user_logged_in() ) {
 		return get_current_user_id();
-	elseif ( isset( $_COOKIE[WPSC_CUSTOMER_COOKIE] ) )
-		return wpsc_validate_customer_cookie();
-	else
-		return wpsc_create_customer_id();
+	} elseif ( isset( $_COOKIE[WPSC_CUSTOMER_COOKIE] ) ) {
+		// check the customer cookie, get the id, or if that doesn't work move on and create the user
+		$id = wpsc_validate_customer_cookie();
+		if ( $id != false )
+			return $id;
+	}
 
-	return false;
+	return wpsc_create_customer_id();
 }
 
 /**
@@ -245,6 +285,8 @@ function wpsc_get_customer_meta( $key = '', $id = false ) {
  *                        if otherwise.
  */
 function wpsc_get_all_customer_meta( $id = false ) {
+	global $wpdb;
+
 	if ( ! $id )
 		$id = wpsc_get_current_customer_id();
 
@@ -255,7 +297,7 @@ function wpsc_get_all_customer_meta( $id = false ) {
 	$return = array();
 
 	foreach ( $meta as $key => $value ) {
-		if ( ! strpos( $key, $key_pattern ) === 0 )
+		if ( strpos( $key, $key_pattern ) === FALSE )
 			continue;
 
 		$short_key = str_replace( $key_pattern, '', $key );
@@ -273,5 +315,51 @@ function wpsc_get_all_customer_meta( $id = false ) {
  */
 function _wpsc_update_customer_last_active() {
 	$id = wpsc_get_current_customer_id();
-	update_user_meta( '_wpsc_last_active', time() );
+	update_user_meta( $id, '_wpsc_last_active', time() );
+	$meta_value = get_user_meta($id, '_wpsc_temporary_profile', true);
+	if ( !empty( $meta_value ) )
+		update_user_meta( $id, '_wpsc_temporary_profile', 48 );
+}
+
+
+/**
+ * Is the user an automata not worthy of a WPEC profile to hold shopping cart and other info
+ *
+ * @access private
+ * @since  3.8.13
+ */
+function _wpsc_is_bot_user() {
+
+	// Cron jobs are not flesh originated
+	if ( defined('DOING_CRON') && DOING_CRON )
+		return true;
+
+	// XML RPC requests are probably form cybernetic beasts
+	if ( defined('XMLRPC_REQUEST') && XMLRPC_REQUEST )
+		return true;
+
+	// Ajax requests when there isn't a customer cookie don't smell like shopping beings
+	if ( defined('DOING_AJAX') && DOING_AJAX && !isset($_COOKIE[WPSC_CUSTOMER_COOKIE]) )
+		return true;
+
+	// coming to login first, after the user logs in we know they are a live being, until then they are something else
+	if ( strpos( $_SERVER['REQUEST_URI'], 'wp-login' ) || strpos( $_SERVER['REQUEST_URI'], 'wp-register' ) )
+		return true;
+
+	// even web servers talk to themselves when they think no one is listening
+	if ( strpos( $_SERVER['HTTP_USER_AGENT'], 'wordpress' ) )
+		return true;
+
+	// the user agent could be google bot, bing bot or some other bot,  one would hope real user agents do not have the string 'bot' in them
+	// check for the user being logged in in a real user is using a bot to access content from our site
+	if ( !is_user_logged_in() && strpos( $_SERVER['HTTP_USER_AGENT'], 'bot' ) )
+		return true;
+
+	// Are we feeding the masses?
+	if ( is_feed() )
+		return true;
+
+	// at this point we have eliminated all but the most obvious choice, a human (or cylon?)
+	return false;
+
 }

@@ -29,12 +29,20 @@ function _wpsc_clear_customer_meta() {
 
 	require_once( ABSPATH . 'wp-admin/includes/user.php' );
 
+	$sql = 'UPDATE ' . $wpdb->usermeta . '
+		SET
+			meta_value = meta_value - 1,
+			meta_key = IF (meta_value < 0, "_wpsc_temporary_profile_to_delete", meta_key )
+		WHERE
+			meta_key = "_wpsc_temporary_profile"';
+
+	$count_updated = $wpdb->get_results( $sql );
+
 	$sql = "
 		SELECT user_id
 		FROM {$wpdb->usermeta}
 		WHERE
-			meta_key = '_wpsc_last_active'
-			AND meta_value < UNIX_TIMESTAMP() - " . WPSC_CUSTOMER_DATA_EXPIRATION . "
+			meta_key = '_wpsc_temporary_profile_to_delete'
 	";
 
 	$ids = $wpdb->get_col( $sql );
