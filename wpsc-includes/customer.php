@@ -38,7 +38,7 @@ function wpsc_create_customer_id() {
 		return $cached_current_customer_id;
 	}
 
-	if ( $is_a_bot_user = _wpsc_is_bot_user() ) {
+	if ( $is_a_bot_user = wpsc_is_bot_user() ) {
 		$username = '_wpsc_bot';
 		$wp_user = get_user_by( 'login', $username );
 		if ( $wp_user === false ) {
@@ -66,7 +66,7 @@ function wpsc_create_customer_id() {
 
 
 	// set cookie for all live users
-	if ( !$is_a_bot_user ) {
+	if ( wpsc_is_bot_user() ) {
 		$expire = time() + WPSC_CUSTOMER_DATA_EXPIRATION; // valid for 48 hours
 		$data = $id . $expire;
 		$hash = hash_hmac( 'md5', $data, wp_hash( $data ) );
@@ -74,6 +74,9 @@ function wpsc_create_customer_id() {
 
 		// store ID, expire and hash to validate later
 		_wpsc_set_customer_cookie( $cookie, $expire );
+	} else {
+		// set a customer meta so that functionality can be based on if the current user is a bot
+		wp_update_customer_meta( 'is_bot_user' , true );
 	}
 
 	$cached_current_customer_id = $id;
@@ -325,30 +328,45 @@ function _wpsc_update_customer_last_active() {
 /**
  * Is the user an automata not worthy of a WPEC profile to hold shopping cart and other info
  *
- * @access private
+ * @access public
  * @since  3.8.13
  */
-function _wpsc_is_bot_user() {
+function wpsc_is_bot_user() {
+
+	static $is_a_bot_user = null;
+
+	if ( $is_a_bot_user !== null )
+		return $is_a_bot_user;
 
 	// Cron jobs are not flesh originated
-	if ( defined('DOING_CRON') && DOING_CRON )
+	if ( defined('DOING_CRON') && DOING_CRON ) {
+		$is_a_bot_user = true;
 		return true;
+	}
 
 	// XML RPC requests are probably from cybernetic beasts
-	if ( defined('XMLRPC_REQUEST') && XMLRPC_REQUEST )
+	if ( defined('XMLRPC_REQUEST') && XMLRPC_REQUEST ) {
+		$is_a_bot_user = true;
 		return true;
+	}
 
 	// Ajax requests when there isn't a customer cookie don't smell like shopping beings
-	if ( defined('DOING_AJAX') && DOING_AJAX && !isset($_COOKIE[WPSC_CUSTOMER_COOKIE]) )
+	if ( defined('DOING_AJAX') && DOING_AJAX && !isset($_COOKIE[WPSC_CUSTOMER_COOKIE]) ) {
+		$is_a_bot_user = true;
 		return true;
+	}
 
 	// coming to login first, after the user logs in we know they are a live being, until then they are something else
-	if ( strpos( $_SERVER['REQUEST_URI'], 'wp-login' ) || strpos( $_SERVER['REQUEST_URI'], 'wp-register' ) )
+	if ( strpos( $_SERVER['REQUEST_URI'], 'wp-login' ) || strpos( $_SERVER['REQUEST_URI'], 'wp-register' ) ) {
+		$is_a_bot_user = true;
 		return true;
+	}
 
 	// even web servers talk to themselves when they think no one is listening
-	if ( strpos( $_SERVER['HTTP_USER_AGENT'], 'wordpress' ) )
+	if ( strpos( $_SERVER['HTTP_USER_AGENT'], 'wordpress' ) ) {
+		$is_a_bot_user = true;
 		return true;
+	}
 
 	// the user agent could be google bot, bing bot or some other bot,  one would hope real user agents do not have the
 	// string 'bot|spider|crawler' in them, there are bots that don't do us the kindness of identifying themselves as such,
@@ -357,16 +375,21 @@ function _wpsc_is_bot_user() {
 			( strpos( $_SERVER['HTTP_USER_AGENT'], 'bot' ) !== false )
 				|| ( strpos( $_SERVER['HTTP_USER_AGENT'], 'crawler' ) !== false )
 					|| ( strpos( $_SERVER['HTTP_USER_AGENT'], 'spider' ) !== false )
-		) )
+		) ) {
+		$is_a_bot_user = true;
 		return true;
+	}
 
 	// Are we feeding the masses?
-	if ( is_feed() )
+	if ( is_feed() ) {
+		$is_a_bot_user = true;
 		return true;
+	}
+
+	$is_a_bot_user = false;
 
 	// at this point we have eliminated all but the most obvious choice, a human (or cylon?)
 	return false;
-
 }
 
 
