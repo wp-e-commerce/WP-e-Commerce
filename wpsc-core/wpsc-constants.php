@@ -162,7 +162,6 @@ function wpsc_core_constants_table_names() {
 	define( 'WPSC_TABLE_REGION_TAX',             "{$wp_table_prefix}wpsc_region_tax" );
 
 	define( 'WPSC_TABLE_CART_ITEM_META',         "{$wp_table_prefix}wpsc_cart_item_meta" );
-	define( 'WPSC_TABLE_VISITOR_META',           "{$wp_table_prefix}wpsc_visitor_meta" );
 }
 
 /**
@@ -256,7 +255,7 @@ function wpsc_core_setup_cart() {
 	if ( 2 == get_option( 'cart_location' ) )
 		add_filter( 'the_content', 'wpsc_shopping_cart', 14 );
 
-	$cart = maybe_unserialize( wpsc_get_customer_data( 'cart' ) );
+	$cart = maybe_unserialize( base64_decode( wpsc_get_customer_meta( 'cart' ) ) );
 
 	if ( is_object( $cart ) && ! is_wp_error( $cart ) )
 		$GLOBALS['wpsc_cart'] = $cart;

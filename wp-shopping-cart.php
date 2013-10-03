@@ -122,8 +122,6 @@ class WP_eCommerce {
 		$wpdb->wpsc_also_bought         = WPSC_TABLE_ALSO_BOUGHT;
 		$wpdb->wpsc_region_tax          = WPSC_TABLE_REGION_TAX;
 		$wpdb->wpsc_coupon_codes        = WPSC_TABLE_COUPON_CODES;
-		$wpdb->wpsc_visitormeta         = WPSC_TABLE_VISITOR_META; // required for _get_meta_table()
-		$wpdb->wpsc_visitor_meta        = WPSC_TABLE_VISITOR_META;
 		$wpdb->wpsc_cart_contents       = WPSC_TABLE_CART_CONTENTS;
 		$wpdb->wpsc_claimed_stock       = WPSC_TABLE_CLAIMED_STOCK;
 		$wpdb->wpsc_currency_list       = WPSC_TABLE_CURRENCY_LIST;
