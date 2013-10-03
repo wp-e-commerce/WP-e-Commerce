@@ -334,7 +334,7 @@ function _wpsc_is_bot_user() {
 	if ( defined('DOING_CRON') && DOING_CRON )
 		return true;
 
-	// XML RPC requests are probably form cybernetic beasts
+	// XML RPC requests are probably from cybernetic beasts
 	if ( defined('XMLRPC_REQUEST') && XMLRPC_REQUEST )
 		return true;
 
