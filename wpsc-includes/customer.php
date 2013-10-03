@@ -363,3 +363,31 @@ function _wpsc_is_bot_user() {
 	return false;
 
 }
+
+
+/**
+ * Attach a purchase log to our customer profile
+ *
+ * @access private
+ * @since  3.8.13
+ */
+function _wpsc_set_purchase_log_customer_id( $data ) {
+
+	// if there is a purchase log for this user we don't want to delete the
+	// user id, even if the transaction isn't successful.  there may be useful
+	// information in the customer profile related to the transaction
+	wpsc_delete_customer_meta('_wpsc_temporary_profile');
+
+	// if there isn't already user id we set the user id of the current customer id
+	if ( empty ( $data['user_ID'] ) ) {
+		$id = wpsc_get_current_customer_id();
+		$data['user_ID'] = $id;
+	}
+
+	return $data;
+}
+
+if ( !is_user_logged_in() ) {
+	add_filter( 'wpsc_purchase_log_update_data', '_wpsc_set_purchase_log_customer_id', 1, 1 );
+	add_filter( 'wpsc_purchase_log_insert_data', '_wpsc_set_purchase_log_customer_id', 1, 1 );
+}
