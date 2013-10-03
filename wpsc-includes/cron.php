@@ -36,7 +36,7 @@ function _wpsc_clear_customer_meta() {
 		WHERE
 			meta_key = "_wpsc_temporary_profile"';
 
-	$count_updated = $wpdb->get_results( $sql );
+	$wpdb->get_results( $sql );
 
 	$sql = "
 		SELECT user_id
