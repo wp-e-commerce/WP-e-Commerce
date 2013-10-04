@@ -66,7 +66,7 @@ function wpsc_create_customer_id() {
 
 
 	// set cookie for all live users
-	if ( wpsc_is_bot_user() ) {
+	if ( !wpsc_is_bot_user() ) {
 		$expire = time() + WPSC_CUSTOMER_DATA_EXPIRATION; // valid for 48 hours
 		$data = $id . $expire;
 		$hash = hash_hmac( 'md5', $data, wp_hash( $data ) );
@@ -76,7 +76,7 @@ function wpsc_create_customer_id() {
 		_wpsc_set_customer_cookie( $cookie, $expire );
 	} else {
 		// set a customer meta so that functionality can be based on if the current user is a bot
-		wp_update_customer_meta( 'is_bot_user' , true );
+		_wpsc_update_customer_meta( 'is_bot_user' , true );
 	}
 
 	$cached_current_customer_id = $id;
