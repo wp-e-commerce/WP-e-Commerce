@@ -338,6 +338,16 @@ function wpsc_is_bot_user() {
 	if ( $is_a_bot_user !== null )
 		return $is_a_bot_user;
 
+	if ( is_user_logged_in() ) {
+		$is_a_bot_user = false;
+		return false;
+	}
+
+	if ( strpos( $_SERVER['REQUEST_URI'], '?wpsc_action=rss' ) ) {
+		$is_a_bot_user = true;
+		return true;
+	}
+
 	// Cron jobs are not flesh originated
 	if ( defined('DOING_CRON') && DOING_CRON ) {
 		$is_a_bot_user = true;
@@ -363,7 +373,7 @@ function wpsc_is_bot_user() {
 	}
 
 	// even web servers talk to themselves when they think no one is listening
-	if ( strpos( $_SERVER['HTTP_USER_AGENT'], 'wordpress' ) ) {
+	if ( stripos( $_SERVER['HTTP_USER_AGENT'], 'wordpress' ) !== false ) {
 		$is_a_bot_user = true;
 		return true;
 	}
@@ -372,9 +382,9 @@ function wpsc_is_bot_user() {
 	// string 'bot|spider|crawler' in them, there are bots that don't do us the kindness of identifying themselves as such,
 	// check for the user being logged in in a real user is using a bot to access content from our site
 	if ( !is_user_logged_in() && (
-			( strpos( $_SERVER['HTTP_USER_AGENT'], 'bot' ) !== false )
-				|| ( strpos( $_SERVER['HTTP_USER_AGENT'], 'crawler' ) !== false )
-					|| ( strpos( $_SERVER['HTTP_USER_AGENT'], 'spider' ) !== false )
+			( stripos( $_SERVER['HTTP_USER_AGENT'], 'bot' ) !== false )
+				|| ( stripos( $_SERVER['HTTP_USER_AGENT'], 'crawler' ) !== false )
+					|| ( stripos( $_SERVER['HTTP_USER_AGENT'], 'spider' ) !== false )
 		) ) {
 		$is_a_bot_user = true;
 		return true;
