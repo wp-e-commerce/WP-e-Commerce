@@ -74,9 +74,6 @@ function wpsc_create_customer_id() {
 
 		// store ID, expire and hash to validate later
 		_wpsc_set_customer_cookie( $cookie, $expire );
-	} else {
-		// set a customer meta so that functionality can be based on if the current user is a bot
-		_wpsc_update_customer_meta( 'is_bot_user' , true );
 	}
 
 	$cached_current_customer_id = $id;
