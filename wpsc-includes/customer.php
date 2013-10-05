@@ -48,20 +48,23 @@ function wpsc_create_customer_id() {
 			$id = $wp_user->ID;
 		}
 	} else {
-		$username = '_' . wp_generate_password( 8, false, false );
-		$password = wp_generate_password( 12, false );
+		if ( !($id =_wpsc_recently_created_user()) ) {
+			$username = '_' . wp_generate_password( 8, false, false );
+			$password = wp_generate_password( 12, false );
 
-		$role = $wp_roles->get_role( 'wpsc_anonymous' );
+			$role = $wp_roles->get_role( 'wpsc_anonymous' );
 
-		if ( ! $role )
-			$wp_roles->add_role( 'wpsc_anonymous', __( 'Anonymous', 'wpsc' ) );
+			if ( ! $role )
+				$wp_roles->add_role( 'wpsc_anonymous', __( 'Anonymous', 'wpsc' ) );
 
-		$id = wp_create_user( $username, $password );
-		$user = new WP_User( $id );
-		$user->set_role( 'wpsc_anonymous' );
+			$id = wp_create_user( $username, $password );
+			$user = new WP_User( $id );
+			$user->set_role( 'wpsc_anonymous' );
 
-		update_user_meta( $id, '_wpsc_last_active', time() );
-		update_user_meta( $id, '_wpsc_temporary_profile', 48 ); // 48 hours, cron job to delete will tick once per hour
+			update_user_meta( $id, '_wpsc_last_active', time() );
+			update_user_meta( $id, '_wpsc_temporary_profile', 48 ); // 48 hours, cron job to delete will tick once per hour
+			update_user_meta( $id, _wpsc_user_hash_meta_key(), microtime( true ) );
+		}
 	}
 
 
@@ -370,13 +373,13 @@ function wpsc_is_bot_user() {
 	}
 
 	// the user agent could be google bot, bing bot or some other bot,  one would hope real user agents do not have the
-	// string 'bot|spider|crawler|bing' in them, there are bots that don't do us the kindness of identifying themselves as such,
+	// string 'bot|spider|crawler|preview' in them, there are bots that don't do us the kindness of identifying themselves as such,
 	// check for the user being logged in in a real user is using a bot to access content from our site
 	if ( !is_user_logged_in() && (
 			( stripos( $_SERVER['HTTP_USER_AGENT'], 'bot' ) !== false )
 				|| ( stripos( $_SERVER['HTTP_USER_AGENT'], 'crawler' ) !== false )
 					|| ( stripos( $_SERVER['HTTP_USER_AGENT'], 'spider' ) !== false )
-						|| ( stripos( $_SERVER['HTTP_USER_AGENT'], 'BingPreview' ) !== false )
+						|| ( stripos( $_SERVER['HTTP_USER_AGENT'], 'Preview' ) !== false )
 		) ) {
 		$is_a_bot_user = true;
 		return true;
@@ -420,4 +423,45 @@ function _wpsc_set_purchase_log_customer_id( $data ) {
 if ( !is_user_logged_in() ) {
 	add_filter( 'wpsc_purchase_log_update_data', '_wpsc_set_purchase_log_customer_id', 1, 1 );
 	add_filter( 'wpsc_purchase_log_insert_data', '_wpsc_set_purchase_log_customer_id', 1, 1 );
+}
+
+
+/**
+ * Create a hash from what we know about a user's connection to try to determine if it is unique
+ *
+ * @access private
+ * @since  3.8.13
+ */
+function _wpsc_user_hash_meta_key() {
+	$user_hash_meta_key = '_wpsc_' . md5( $_SERVER['REMOTE_ADDR'] . $_SERVER['REMOTE_PORT'] .  $_SERVER['HTTP_USER_AGENT'] );
+	return $user_hash_meta_key;
+}
+
+/**
+ * Check users with similiar information to see if they were created in the last
+ * milliseconds so that we don't create two users when two requests come to the server
+ * in parallel.
+ *
+ * @access private
+ * @since  3.8.13
+ */
+function _wpsc_recently_created_user() {
+	global $wpdb;
+
+	$recently_created_user_id = false;
+
+	$sql = 'SELECT user_id, meta_value FROM ' . $wpdb->usermeta . ' WHERE meta_key = "' . _wpsc_user_hash_meta_key() . '"';
+
+	$similiar_users = $wpdb->get_results( $sql );
+
+	$now = microtime( true );
+	foreach ( $similiar_users as $similiar_user ) {
+		$then = floatval( $similiar_user->meta_value );
+		if ( ($now - $then) < 500000 ) { // 500000 miliiseconds is one half second
+			$recently_created_user_id = $similiar_user->user_id;
+			break;
+		}
+	}
+
+	return $recently_created_user_id;
 }
