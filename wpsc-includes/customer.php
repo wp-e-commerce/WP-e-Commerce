@@ -357,12 +357,6 @@ function wpsc_is_bot_user() {
 		return true;
 	}
 
-	// Ajax requests when there isn't a customer cookie don't smell like shopping beings
-	if ( defined('DOING_AJAX') && DOING_AJAX && !isset($_COOKIE[WPSC_CUSTOMER_COOKIE]) ) {
-		$is_a_bot_user = true;
-		return true;
-	}
-
 	// coming to login first, after the user logs in we know they are a live being, until then they are something else
 	if ( strpos( $_SERVER['REQUEST_URI'], 'wp-login' ) || strpos( $_SERVER['REQUEST_URI'], 'wp-register' ) ) {
 		$is_a_bot_user = true;
