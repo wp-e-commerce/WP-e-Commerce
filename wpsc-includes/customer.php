@@ -370,12 +370,13 @@ function wpsc_is_bot_user() {
 	}
 
 	// the user agent could be google bot, bing bot or some other bot,  one would hope real user agents do not have the
-	// string 'bot|spider|crawler' in them, there are bots that don't do us the kindness of identifying themselves as such,
+	// string 'bot|spider|crawler|bing' in them, there are bots that don't do us the kindness of identifying themselves as such,
 	// check for the user being logged in in a real user is using a bot to access content from our site
 	if ( !is_user_logged_in() && (
 			( stripos( $_SERVER['HTTP_USER_AGENT'], 'bot' ) !== false )
 				|| ( stripos( $_SERVER['HTTP_USER_AGENT'], 'crawler' ) !== false )
 					|| ( stripos( $_SERVER['HTTP_USER_AGENT'], 'spider' ) !== false )
+						|| ( stripos( $_SERVER['HTTP_USER_AGENT'], 'BingPreview' ) !== false )
 		) ) {
 		$is_a_bot_user = true;
 		return true;
