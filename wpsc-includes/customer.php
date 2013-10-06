@@ -457,7 +457,8 @@ function _wpsc_recently_created_user() {
 	$now = microtime( true );
 	foreach ( $similiar_users as $similiar_user ) {
 		$then = floatval( $similiar_user->meta_value );
-		if ( ($now - $then) < 500000 ) { // 500000 miliiseconds is one half second
+		$howlong = $now - $then;
+		if ( $howlong < 0.5 ) { // one half second
 			$recently_created_user_id = $similiar_user->user_id;
 			break;
 		}
