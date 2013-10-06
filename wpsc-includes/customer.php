@@ -433,12 +433,12 @@ if ( !is_user_logged_in() ) {
  * @since  3.8.13
  */
 function _wpsc_user_hash_meta_key() {
-	$user_hash_meta_key = '_wpsc_' . md5( $_SERVER['REMOTE_ADDR'] . $_SERVER['REMOTE_PORT'] .  $_SERVER['HTTP_USER_AGENT'] );
+	$user_hash_meta_key = '_wpsc_' . md5( $_SERVER['REMOTE_ADDR'] .  $_SERVER['HTTP_USER_AGENT'] );
 	return $user_hash_meta_key;
 }
 
 /**
- * Check users with similiar information to see if they were created in the last
+ * Check users with similar information to see if they were created in the last
  * milliseconds so that we don't create two users when two requests come to the server
  * in parallel.
  *
