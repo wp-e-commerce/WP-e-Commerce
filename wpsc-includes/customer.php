@@ -442,6 +442,44 @@ function _wpsc_user_hash_meta_key() {
  * milliseconds so that we don't create two users when two requests come to the server
  * in parallel.
  *
+ * Why do we do this?
+ * WPEC creates a user profile for each visitor at the start of each visit. The user profile is used
+ * to hold information like the cart contents, shipping data, checkout errors, or anything that a WPEC
+ * aware plug-in may wish to save with the user.
+ *
+ * Creating the profile as soon as the user starts a visit has some advantages over waiting
+ * until there is data to save before creating the profile. Mostly it allows code to be written
+ * knowing that the user visit information can be saved to the profile without worrying about if
+ * any special initialization has taken place.
+ *
+ * It also has some disadvantages that need to be addressed. In addition to detecting if a visit is
+ * some type of bot, handled in _wpsc_is_bot, we need to make sure multiple profiles are not
+ * inadvertently created.  How can this happen?
+ *
+ * Consider this common scenario.  WPEC based site is built and used page caching, a page that is cached is
+ * is delivered to a real user.  When that page is delivered Wordpress/WPEC typically is unaware that anything
+ * has taken place because the cache software/hardware has done all of the communication with the user's browser.
+ *
+ * The browser parses and processes the cached page HTML and java script.  When the page is processed there are
+ * embedded AJAX calls, or other HTTP requests that are serviced by WPEC/Wordpress.  Modern browsers make the requests
+ * to the server in parallel.  THat means that a web server might have as many as 4-8 requests working at the same time,
+ * none of which has the WPEC customer cookie set.
+ *
+ * Without some means of detecting that each of these requests is coming from the same live user, a new user profile would
+ * be created for each request, and a unique customer cookie would be set in each request.  That's
+ * kind of messy.  It also could cause a problem if one of the HTTP requests coming to the server was an add to cart
+ * operation.  An item could be added to the cart, show on the users screen as in the cart, but not be there when the
+ * user goes to checkout because the cookie from a different request was what was ultimately set in the user's
+ * web browser. Keep in mind that hte JAX requests that create a user profile don't have to be WPEC requests. They
+ * could be requests from any plugin, doing anything that the plug-in intended.
+ *
+ * We are limited in what we can do to detect a common source for multiple requests. We look at the originating
+ * IP address, the user agent string and the time.  If the user agent and the ip address are the same, and the time
+ * is within half a second of a previous create profile request we treat the requests as coming from the same user.
+ *
+ *  When does this fail? Two users both behind the same caching proxy, or NAT firewall, who both go to the same website,
+ *  and the pages they go to are cached, and they do it at almost exactly the same time.
+ *
  * @access private
  * @since  3.8.13
  */
