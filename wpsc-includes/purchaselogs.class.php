@@ -169,7 +169,7 @@ function wpsc_the_purchaselog_item() {
 
 function wpsc_purchaselog_details_SKU() {
    global $purchlogitem;
-   $meta_value = wpsc_get_cartmeta( $purchlogitem->purchitem->id, 'sku' );
+   $meta_value = wpsc_get_cart_item_meta( $purchlogitem->purchitem->id, 'sku', true );
    if ( $meta_value != null ) {
 	  return esc_attr( $meta_value );
    } else {
