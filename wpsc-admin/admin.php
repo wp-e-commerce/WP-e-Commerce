@@ -25,6 +25,7 @@ require_once( WPSC_FILE_PATH . '/wpsc-admin/ajax-and-init.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/display-options-settings.page.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/db-upgrades/upgrade.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/media.php' );
+require_once( WPSC_FILE_PATH . '/wpsc-admin/users.php' );
 
 if ( ( isset( $_SESSION['wpsc_activate_debug_page'] ) && ( $_SESSION['wpsc_activate_debug_page'] == true ) ) || ( defined( 'WPSC_ADD_DEBUG_PAGE' ) && ( constant( 'WPSC_ADD_DEBUG_PAGE' ) == true ) ) )
 	require_once( WPSC_FILE_PATH . '/wpsc-admin/display-debug.page.php' );

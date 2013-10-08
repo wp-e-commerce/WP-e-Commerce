@@ -1,6 +1,5 @@
 <?php
 
-require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-visitor.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-cart-item.php' );
 
 /**
@@ -36,35 +35,6 @@ function _wpsc_create_cart_item_meta_table() {
 				.'meta_timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, '
 				.'PRIMARY KEY  (meta_id), '
 				.'KEY wpsc_cart_item_id (wpsc_cart_item_id), '
-				.'KEY meta_key (meta_key(191)), '
-				.'KEY meta_value (meta_value(20)), '
-				.'KEY meta_key_and_value (meta_key(191),meta_value(32)), '
-				.'KEY meta_timestamp_index (meta_timestamp) '
-				.') '. $charset_collate;
-
-	dbDelta( $sql );
-}
-
-/**
- * Create the meta table for Cart Item
- *
- * @since 3.8.12
- * @access private
- *
- */
-function _wpsc_create_visitor_meta_table() {
-	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-	global $wpdb;
-	global $charset_collate;
-
-	$sql = 'CREATE TABLE IF NOT EXISTS '. $wpdb->wpsc_visitor_meta .' ('
-				.'meta_id bigint(20) unsigned NOT NULL AUTO_INCREMENT, '
-				.'wpsc_visitor_id bigint(20) unsigned NOT NULL DEFAULT 0 , '
-				.'meta_key varchar(255) DEFAULT NULL, '
-				.'meta_value longtext, '
-				.'meta_timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, '
-				.'PRIMARY KEY  (meta_id), '
-				.'KEY wpsc_visitor_id (wpsc_visitor_id), '
 				.'KEY meta_key (meta_key(191)), '
 				.'KEY meta_value (meta_value(20)), '
 				.'KEY meta_key_and_value (meta_key(191),meta_value(32)), '

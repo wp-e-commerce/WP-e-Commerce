@@ -27,11 +27,26 @@ function wpsc_clear_stock_claims() {
 function _wpsc_clear_customer_meta() {
 	global $wpdb;
 
-	$sql = $wpdb->prepare( "SELECT option_name FROM " . $wpdb->options . " WHERE option_name LIKE '_transient_timeout_wpsc_customer_meta_%%' AND option_value < %d", time() );
-	$results = $wpdb->get_col( $sql );
+	require_once( ABSPATH . 'wp-admin/includes/user.php' );
 
-	foreach ( $results as $row ) {
-		$customer_id = str_replace( '_transient_timeout_wpsc_customer_meta_', '', $row );
-		delete_transient( "wpsc_customer_meta_{$customer_id}" );
+	$sql = 'UPDATE ' . $wpdb->usermeta . '
+		SET
+			meta_value = meta_value - 1,
+			meta_key = IF (meta_value < 0, "_wpsc_temporary_profile_to_delete", meta_key )
+		WHERE
+			meta_key = "_wpsc_temporary_profile"';
+
+	$wpdb->get_results( $sql );
+
+	$sql = "
+		SELECT user_id
+		FROM {$wpdb->usermeta}
+		WHERE
+			meta_key = '_wpsc_temporary_profile_to_delete'
+	";
+
+	$ids = $wpdb->get_col( $sql );
+	foreach ( $ids as $id ) {
+		wp_delete_user( $id );
 	}
 }
