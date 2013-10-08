@@ -97,20 +97,6 @@ function wpsc_delete_meta( $object_id = 0, $meta_key, $meta_value, $type, $globa
 	return true;
 }
 
-/**
- * Cart meta functions are as follows:
-*/
-function wpsc_get_cartmeta( $cart_id, $meta_key ) {
-	return wpsc_get_meta( $cart_id, $meta_key, 'wpsc_cart_item' );
-}
-
-function wpsc_update_cartmeta( $cart_id, $meta_key, $meta_value ) {
-	return wpsc_update_meta( $cart_id, $meta_key, $meta_value, 'wpsc_cart_item' );
-}
-
-function wpsc_delete_cartmeta( $cart_id, $meta_key, $meta_value = '' ) {
-	return wpsc_delete_meta( $cart_id, $meta_key, $meta_value, 'wpsc_cart_item' );
-}
 
 /**
  * category meta functions are as follows:
