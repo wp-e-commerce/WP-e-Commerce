@@ -342,15 +342,33 @@ function wpsc_enqueue_user_script_and_css() {
 		}
 
 		wp_enqueue_script( 'jQuery' );
-		wp_enqueue_script( 'wp-e-commerce',               WPSC_CORE_JS_URL	. '/wp-e-commerce.js',                 array( 'jquery' ), $version_identifier );
-		wp_enqueue_script( 'wp-e-commerce-dynamic', home_url( '/index.php?wpsc_user_dynamic_js=true', $scheme ), false,             $version_identifier );
+		wp_enqueue_script( 'wp-e-commerce',         WPSC_CORE_JS_URL . '/wp-e-commerce.js',   array( 'jquery' ), $version_identifier );
+		wp_enqueue_script( 'wp-e-commerce-dynamic', WPSC_CORE_JS_URL . '/wpsc-user-dynamic.js', false,             $version_identifier );
 
-		wp_localize_script( 'wp-e-commerce', 'wpsc_ajax', array(
-			'ajaxurl'   => admin_url( 'admin-ajax.php', 'relative' ),
-			'spinner'   => esc_url( admin_url( 'images/wpspin_light.gif' ) ),
-			'no_quotes' => __( 'It appears that there are no shipping quotes for the shipping information provided.  Please check the information and try again.', 'wpsc' )
-			)
+		$user_dynamic_data = array(
+				'ajaxurl'             => admin_url( 'admin-ajax.php' ),
+				'spinner'             => esc_url( admin_url( 'images/wpspin_light.gif' ) ),
+				'no_quotes'           => __( 'It appears that there are no shipping quotes for the shipping information provided.  Please check the information and try again.', 'wpsc' ),
+				'ajax_get_cart_error' => __( 'There was a problem getting the current contents of the shopping cart.', 'wpsc' ),
+
+				/* wpsc user dynamic fields */
+				'base_url'             => site_url(),
+				'WPSC_URL'             => WPSC_URL,
+				'WPSC_IMAGE_URL'       => WPSC_IMAGE_URL,
+				'WPSC_DIR_NAME'        => WPSC_DIR_NAME,
+				'WPSC_CORE_IMAGES_URL' => WPSC_CORE_IMAGES_URL,
+
+				/* LightBox Configuration start*/
+				'fileLoadingImage'         => WPSC_CORE_IMAGES_URL . '/loading.gif',
+				'fileBottomNavCloseImage'  => WPSC_CORE_IMAGES_URL . '/closelabel.gif',
+				'fileThickboxLoadingImage' => WPSC_CORE_IMAGES_URL . '/loadingAnimation.gif',
+				'resizeSpeed'              => 9,  // controls the speed of the image resizing (1=slowest and 10=fastest)
+				'borderSize'               => 10, //if you adjust the padding in the CSS, you will need to update this variable
 		);
+
+		$user_dynamic_data = apply_filters( 'WPSC_USER_DYNAMIC_DATA', $user_dynamic_data );
+
+		wp_localize_script( 'wp-e-commerce-dynamic', 'wpsc_ajax', $user_dynamic_data );
 
 		wp_enqueue_script( 'livequery',                   WPSC_URL 			. '/wpsc-admin/js/jquery.livequery.js',   array( 'jquery' ), '1.0.3' );
 		if( get_option( 'product_ratings' ) == 1 )

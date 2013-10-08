@@ -204,7 +204,7 @@ function wpsc_admin_pages() {
 
 	// Add Settings pages
 	$page_hooks[] = $edit_options_page = add_options_page( __( 'Store Settings', 'wpsc' ), __( 'Store', 'wpsc' ), 'administrator', 'wpsc-settings', 'wpsc_display_settings_page' );
-	add_action( 'admin_print_scripts-' . $edit_options_page , 'wpsc_print_admin_scripts' );
+	add_action( 'admin_print_scripts-' . $edit_options_page , 'wpsc_admin_enqueue_user_dynamic' );
 
 	// Debug Page
 	if ( ( defined( 'WPSC_ADD_DEBUG_PAGE' ) && ( WPSC_ADD_DEBUG_PAGE == true ) ) || ( isset( $_SESSION['wpsc_activate_debug_page'] ) && ( true == $_SESSION['wpsc_activate_debug_page'] ) ) )
@@ -1144,15 +1144,40 @@ function wpsc_fav_action( $actions ) {
 add_filter( 'favorite_actions', 'wpsc_fav_action' );
 
 /**
- * Prits out the admin scripts
+ * Enqueue the user admin scripts into the admin interface
  *
- * @uses is_ssl()                 Defines if SSL is true
  * @uses wp_enqueue_script()      Enqueues scripts
- * @uses home_url()               Returns the base url for the site
  */
-function wpsc_print_admin_scripts() {
-	$scheme = is_ssl() ? 'https' : 'http';
-	wp_enqueue_script( 'wp-e-commerce-dynamic', home_url( "/index.php?wpsc_user_dynamic_js=true", $scheme ) );
+function wpsc_admin_enqueue_user_dynamic() {
+
+	$version_identifier = WPSC_VERSION . "." . WPSC_MINOR_VERSION;
+	wp_enqueue_script( 'wp-e-commerce-dynamic', WPSC_CORE_JS_URL . '/wpsc-user-dynamic.js', false,  $version_identifier );
+
+	$user_dynamic_data = array(
+			'ajaxurl'             => admin_url( 'admin-ajax.php' ),
+			'spinner'             => esc_url( admin_url( 'images/wpspin_light.gif' ) ),
+			'no_quotes'           => __( 'It appears that there are no shipping quotes for the shipping information provided.  Please check the information and try again.', 'wpsc' ),
+			'ajax_get_cart_error' => __( 'There was a problem getting the current contents of the shopping cart.', 'wpsc' ),
+
+			/* wpsc user dynamic fields */
+			'base_url'             => site_url(),
+			'WPSC_URL'             => WPSC_URL,
+			'WPSC_IMAGE_URL'       => WPSC_IMAGE_URL,
+			'WPSC_DIR_NAME'        => WPSC_DIR_NAME,
+			'WPSC_CORE_IMAGES_URL' => WPSC_CORE_IMAGES_URL,
+
+			/* LightBox Configuration start*/
+			'fileLoadingImage'         => WPSC_CORE_IMAGES_URL . '/loading.gif',
+			'fileBottomNavCloseImage'  => WPSC_CORE_IMAGES_URL . '/closelabel.gif',
+			'fileThickboxLoadingImage' => WPSC_CORE_IMAGES_URL . '/loadingAnimation.gif',
+			'resizeSpeed'              => 9,  // controls the speed of the image resizing (1=slowest and 10=fastest)
+			'borderSize'               => 10, //if you adjust the padding in the CSS, you will need to update this variable
+	);
+
+	$user_dynamic_data = apply_filters( 'WPSC_USER_DYNAMIC_DATA', $user_dynamic_data );
+
+	wp_localize_script( 'wp-e-commerce-dynamic', 'wpsc_ajax', $user_dynamic_data );
+
 }
 
 /**
