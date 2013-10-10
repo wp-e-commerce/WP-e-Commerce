@@ -450,16 +450,7 @@ class wpsc_cart_item {
 		global $wpdb;
 
 		if($this->has_limited_stock == true) {
-			$current_datetime = date( "Y-m-d H:i:s" );
-			$wpdb->query($wpdb->prepare("REPLACE INTO `".WPSC_TABLE_CLAIMED_STOCK."`
-         ( `product_id` , `variation_stock_id` , `stock_claimed` , `last_activity` , `cart_id` )
-         VALUES
-         ('%d', '%d', '%s', '%s', '%s');",
-					$this->product_id,
-					$this->priceandstock_id,
-					$this->quantity,
-					$current_datetime,
-					$this->cart->unique_id));
+			WPSC_Claimed_Stock::update_claimed_stock( $this->cart->unique_id, $this->product_id, $this->quantity );
 		}
 	}
 

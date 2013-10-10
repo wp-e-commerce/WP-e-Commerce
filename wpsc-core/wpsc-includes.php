@@ -30,6 +30,7 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/purchase-log-notification.class.p
 require_once( WPSC_FILE_PATH . '/wpsc-includes/purchase-log.class.php'              );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/checkout-form.class.php'             );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/checkout-form-data.class.php'        );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/claimed-stock.class.php'             );
 
 // Taxes
 require_once( WPSC_FILE_PATH . '/wpsc-taxes/taxes_module.php' );

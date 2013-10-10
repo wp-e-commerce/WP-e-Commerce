@@ -730,7 +730,7 @@ class wpsc_cart {
          $priceandstock_id = 0;
 
          if($stock > 0) {
-            $claimed_stock = $wpdb->get_var( $wpdb->prepare( "SELECT SUM(`stock_claimed`) FROM `".WPSC_TABLE_CLAIMED_STOCK."` WHERE `product_id` IN(%d) AND `variation_stock_id` IN('%d')", $product_id, $priceandstock_id  ) );
+            $claimed_stock = WPSC_Claimed_Stock::get_claimed_variation_stock( $product_id, $priceandstock_id );
             if(($claimed_stock + $quantity) <= $stock) {
                $output = true;
             } else {
@@ -768,7 +768,7 @@ class wpsc_cart {
 			$priceandstock_id = 0;
 
 			if ( $stock > 0 ) {
-				$claimed_stock = $wpdb->get_var( "SELECT SUM(`stock_claimed`) FROM `" . WPSC_TABLE_CLAIMED_STOCK . "` WHERE `product_id` IN('$product_id') AND `variation_stock_id` IN('$priceandstock_id')" );
+				$claimed_stock = WPSC_Claimed_Stock::get_claimed_variation_stock( $product_id, $priceandstock_id );
 				$output = $stock - $claimed_stock;
 			}
 		}
@@ -852,8 +852,7 @@ class wpsc_cart {
     * No parameters, nothing returned
    */
   function submit_stock_claims($purchase_log_id) {
-    global $wpdb;
-      $wpdb->query($wpdb->prepare("UPDATE `".WPSC_TABLE_CLAIMED_STOCK."` SET `cart_id` = '%d', `cart_submitted` = '1' WHERE `cart_id` IN('%s')", $purchase_log_id, $this->unique_id));
+		WPSC_Claimed_Stock::submit_stock_claims( $this->unique_id, $purchase_log_id );
    }
 
       /**
