@@ -2,28 +2,50 @@
 
 add_filter( 'wpsc_get_gateway_list', '_wpsc_filter_merchant_v2_get_gateway_list' );
 
+/**
+ * Get Gateway List
+ *
+ * HTML to display radio button list of payment gateways.
+ *
+ * @return  string  Payment gateways HTML.
+ *
+ * @uses  apply_filters()                  Calls 'wpsc_gateway_image'.
+ * @uses  wpsc_have_gateways()             Are there any gateways?
+ * @uses  wpsc_the_gateway()               Setup gateway data.
+ * @uses  wpsc_gateway_name()              Gateway display name.
+ * @uses  wpsc_gateway_internal_name()     Gateway internal name.
+ * @uses  wpsc_gateway_is_checked()        Gateway radio button checked attribute.
+ * @uses  wpsc_show_gateway_image()        Show gateway image?
+ * @uses  wpsc_gateway_image_url()         Gateway image URL
+ * @uses  wpsc_gateway_form_field_style()  Adds class to show/hide fields based on selected gateway.
+ * @uses  wpsc_gateway_form_fields()       Addition fields for the gateway.
+ */
 function _wpsc_filter_merchant_v2_get_gateway_list() {
 	ob_start();
-	while ( wpsc_have_gateways() ) : wpsc_the_gateway(); ?>
+	while ( wpsc_have_gateways() ) :
+		wpsc_the_gateway();
+		$gateway_name = wpsc_gateway_name();
+		?>
 		<div class="custom_gateway <?php echo sanitize_html_class( wpsc_gateway_internal_name() ); ?>">
 			<label><input type="radio" value="<?php echo wpsc_gateway_internal_name(); ?>" <?php echo wpsc_gateway_is_checked(); ?> name="custom_gateway" class="custom_gateway" />
-				<?php $gateway_name = wpsc_gateway_name(); ?>
 				<?php if ( ! empty( $gateway_name ) ) { ?>
 					<span class="custom_gateway_name"><?php echo $gateway_name; ?></span>
 				<?php } ?>
-				<?php if ( wpsc_show_gateway_image() ):
+				<?php
+				if ( wpsc_show_gateway_image() ) :
 					$gateway_image = '<img src="' . esc_url( wpsc_gateway_image_url() ) . '" alt="' . esc_attr( $gateway_name ) . '" class="custom_gateway_image" />';
 					echo apply_filters( 'wpsc_gateway_image', $gateway_image, wpsc_gateway_internal_name() );
-				endif; ?>
+				endif;
+				?>
 			</label>
-
 			<?php if ( wpsc_gateway_form_fields() ) : ?>
-				<table class='wpsc_checkout_table <?php echo wpsc_gateway_form_field_style();?>'>
-					<?php echo wpsc_gateway_form_fields();?>
+				<table class="wpsc_checkout_table <?php echo wpsc_gateway_form_field_style(); ?>">
+					<?php echo wpsc_gateway_form_fields(); ?>
 				</table>
 			<?php endif; ?>
 		</div>
-	<?php endwhile;
+	<?php
+	endwhile;
 	return ob_get_clean();
 }
 
