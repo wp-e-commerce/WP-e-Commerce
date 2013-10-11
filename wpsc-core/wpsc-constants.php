@@ -26,7 +26,7 @@ function wpsc_core_load_session() {
  */
 function wpsc_core_constants() {
 	if(!defined('WPSC_URL'))
-		define( 'WPSC_URL',       plugins_url( '', __FILE__ ) );
+		define( 'WPSC_URL', plugins_url( '', __FILE__ ) );
 	// Define Plugin version
 	define( 'WPSC_VERSION', '3.8.13-dev' );
 	define( 'WPSC_MINOR_VERSION', '819b5037cc' );
