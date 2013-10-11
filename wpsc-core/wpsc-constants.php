@@ -31,7 +31,7 @@ function wpsc_core_constants() {
 	define( 'WPSC_VERSION', '3.8.13-dev' );
 	define( 'WPSC_MINOR_VERSION', '819b5037cc' );
 	define( 'WPSC_PRESENTABLE_VERSION', '3.8.13-dev' );
-	define( 'WPSC_DB_VERSION', 6 );
+	define( 'WPSC_DB_VERSION', 7 );
 
 	// Define Debug Variables for developers
 	define( 'WPSC_DEBUG', false );
