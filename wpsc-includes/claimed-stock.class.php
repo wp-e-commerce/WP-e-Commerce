@@ -80,7 +80,7 @@ class WPSC_Claimed_Stock {
 	 * @uses  wpdb::get_var()  Queries DB.
 	 * @uses  wpdb::prepare()  Prepare DB query.
 	 */
-	function get_claimed_stock( $product_id ) {
+	public static function get_claimed_stock( $product_id ) {
 		global $wpdb;
 		return $wpdb->get_var( $wpdb->prepare( 'SELECT SUM(`stock_claimed`) FROM `' . WPSC_TABLE_CLAIMED_STOCK . '` WHERE `product_id` IN(%d)', $product_id ) );
 	}
@@ -102,7 +102,7 @@ class WPSC_Claimed_Stock {
 	 * @uses  wpdb::get_var()  Queries DB.
 	 * @uses  wpdb::prepare()  Prepare DB query.
 	 */
-	function get_claimed_variation_stock( $product_id, $priceandstock_id = 0 ) {
+	public static function get_claimed_variation_stock( $product_id, $priceandstock_id = 0 ) {
 		global $wpdb;
 		return $wpdb->get_var( $wpdb->prepare( 'SELECT SUM(`stock_claimed`) FROM `' . WPSC_TABLE_CLAIMED_STOCK . '` WHERE `product_id` IN(%d) AND `variation_stock_id` IN(%d)', $product_id, $priceandstock_id ) );
 	}
@@ -124,7 +124,7 @@ class WPSC_Claimed_Stock {
 	 * @uses  wpdb::query()                            Queries DB.
 	 * @uses  wpdb::prepare()                          Prepare DB query.
 	 */
-	function clear_claimed_stock( $seconds = null ) {
+	public static function clear_claimed_stock( $seconds = null ) {
 		global $wpdb;
 
 		// If seconds not set, use default settings
@@ -152,7 +152,7 @@ class WPSC_Claimed_Stock {
 	 * @uses  wpdb::query()    Queries DB.
 	 * @uses  wpdb::prepare()  Prepare DB query.
 	 */
-	function update_claimed_stock( $cart_id, $product_id, $stock_claimed ) {
+	public static function update_claimed_stock( $cart_id, $product_id, $stock_claimed ) {
 		global $wpdb;
 		$wpdb->query( $wpdb->prepare( 'REPLACE INTO `' . WPSC_TABLE_CLAIMED_STOCK . '`
 			( `product_id` , `stock_claimed` , `last_activity` , `cart_id` )
@@ -176,7 +176,7 @@ class WPSC_Claimed_Stock {
 	 * @uses  wpdb::get_results()  Queries DB.
 	 * @uses  wpdb::prepare()      Prepare DB query.
 	 */
-	function get_purchase_log_claimed_stock( $purchase_log_id ) {
+	public static function get_purchase_log_claimed_stock( $purchase_log_id ) {
 		global $wpdb;
 		return $wpdb->get_results( $wpdb->prepare(
 			"SELECT `cs`.`product_id`, `cs`.`stock_claimed`, `pl`.`id`, `pl`.`processed`
@@ -199,7 +199,7 @@ class WPSC_Claimed_Stock {
 	 * @uses  wpdb::query()    Queries DB.
 	 * @uses  wpdb::prepare()  Prepare DB query.
 	 */
-	function clear_purchase_log_claimed_stock( $purchase_log_id ) {
+	public static function clear_purchase_log_claimed_stock( $purchase_log_id ) {
 		global $wpdb;
 		$wpdb->query( $wpdb->prepare(
 			"DELETE FROM `" . WPSC_TABLE_CLAIMED_STOCK . "` WHERE `cart_id` IN (%s)",
@@ -221,7 +221,7 @@ class WPSC_Claimed_Stock {
 	 * @uses  wpdb::query()    Queries DB.
 	 * @uses  wpdb::prepare()  Prepare DB query.
 	 */
-	function submit_stock_claims( $cart_id, $purchase_log_id ) {
+	public static function submit_stock_claims( $cart_id, $purchase_log_id ) {
 		global $wpdb;
 		$wpdb->query( $wpdb->prepare(
 			"UPDATE `" . WPSC_TABLE_CLAIMED_STOCK . "` 
