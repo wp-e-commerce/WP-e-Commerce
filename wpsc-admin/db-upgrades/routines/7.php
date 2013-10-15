@@ -33,6 +33,4 @@ function _wpsc_migrate_user_meta() {
 
 		delete_user_meta( $row->user_id, $row->meta_key );
 	}
-
-	exit;
 }
