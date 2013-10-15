@@ -1,74 +1,70 @@
 <?php
 
 /**
+ * Get Stock Keeping Time
+ *
+ * Defaults to day if not set.
+ *
+ * @since   3.8.13
+ * @access  public
+ *
+ * @return  int  Stock keeping time.
+ *
+ * @uses  get_option()
+ */
+function wpsc_get_stock_keeping_time() {
+	return (float) get_option( 'wpsc_stock_keeping_time', 1 );
+}
+
+/**
+ * Get Stock Keeping Interval
+ *
+ * Gets the stock keeping interval unit - hour / day / week.
+ * Defaults to day if not set.
+ *
+ * @since   3.8.13
+ * @access  public
+ *
+ * @return  int  Stock keeping interval unit.
+ *
+ * @uses  get_option()
+ */
+function wpsc_get_stock_keeping_interval() {
+	return get_option( 'wpsc_stock_keeping_interval', 'day' );
+}
+
+/**
+ * Convert time interval to seconds.
+ *
+ * Takes a number an unit of time (hour/day/week) and converts it to seconds.
+ * It allows decimal intervals like 1.5 days.
+ *
+ * @since   3.8.13
+ * @access  public
+ *
+ * @param   int  $time      Stock keeping time.
+ * @param   int  $interval  Stock keeping interval unit (hour/day/week).
+ * @return  int             Seconds.
+ */
+function wpsc_convert_time_interval_to_seconds( $time, $interval ) {
+	$convert = array(
+		'hour' => 3600,
+		'day'  => 86400,
+		'week' => 604800,
+	);
+	return floor( $time * $convert[$interval] );
+}
+
+/**
  * WP eCommerce Claimed Stock Class
  *
  * The Cart class handles adding, removing and adjusting claimed stock.
  *
  * @package     wp-e-commerce
- * @since       3.8.12
+ * @since       3.8.13
  * @subpackage  wpsc-claimed-stock-class
-*/
-
-/**
- * The WPSC Claimed Stock class
  */
 class WPSC_Claimed_Stock {
-
-	/**
-	 * Get Stock Keeping Time
-	 *
-	 * Defaults to day if not set.
-	 *
-	 * @since   3.8.13
-	 * @access  public
-	 *
-	 * @return  int  Stock keeping time.
-	 *
-	 * @uses  get_option()
-	 */
-	function get_stock_keeping_time() {
-		return (float) get_option( 'wpsc_stock_keeping_time', 1 );
-	}
-
-	/**
-	 * Get Stock Keeping Interval
-	 *
-	 * Gets the stock keeping interval unit - hour / day / week.
-	 * Defaults to day if not set.
-	 *
-	 * @since   3.8.13
-	 * @access  public
-	 *
-	 * @return  int  Stock keeping interval unit.
-	 *
-	 * @uses  get_option()
-	 */
-	function get_stock_keeping_interval() {
-		return get_option( 'wpsc_stock_keeping_interval', 'day' );
-	}
-
-	/**
-	 * Convert time interval to seconds.
-	 *
-	 * Takes a number an unit of time (hour/day/week) and converts it to seconds.
-	 * It allows decimal intervals like 1.5 days.
-	 *
-	 * @since   3.8.13
-	 * @access  public
-	 *
-	 * @param   int  $time      Stock keeping time.
-	 * @param   int  $interval  Stock keeping interval unit (hour/day/week).
-	 * @return  int             Seconds.
-	 */
-	function convert_time_interval_to_seconds( $time, $interval ) {
-		$convert = array(
-			'hour' => 3600,
-			'day'  => 86400,
-			'week' => 604800,
-		);
-		return floor( $time * $convert[$interval] );
-	}
 
 	/**
 	 * Get Claimed Stock
@@ -122,19 +118,20 @@ class WPSC_Claimed_Stock {
 	 *
 	 * @param  int  $seconds  Clear stock over this number of seconds old.
 	 *
-	 * @uses  WPSC_Claimed_Stock::get_stock_keeping_time()      Gets stock keeping time.
-	 * @uses  WPSC_Claimed_Stock::get_stock_keeping_interval()  Gets stock leeping unit (hour/day/week).
-	 * @uses  wpdb::query()                                     Queries DB.
-	 * @uses  wpdb::prepare()                                   Prepare DB query.
+	 * @uses  wpsc_get_stock_keeping_time()            Gets stock keeping time.
+	 * @uses  wpsc_get_stock_keeping_interval()        Gets stock leeping unit (hour/day/week).
+	 * @uses  wpsc_convert_time_interval_to_seconds()  Converts time and interval to seconds.
+	 * @uses  wpdb::query()                            Queries DB.
+	 * @uses  wpdb::prepare()                          Prepare DB query.
 	 */
 	function clear_claimed_stock( $seconds = null ) {
 		global $wpdb;
 
 		// If seconds not set, use default settings
 		if ( ! is_int( $seconds ) ) {
-			$time     = WPSC_Claimed_Stock::get_stock_keeping_time();
-			$interval = WPSC_Claimed_Stock::get_stock_keeping_interval();
-			$seconds  = WPSC_Claimed_Stock::convert_time_interval_to_seconds( $time, $interval );
+			$time     = wpsc_get_stock_keeping_time();
+			$interval = wpsc_get_stock_keeping_interval();
+			$seconds  = wpsc_convert_time_interval_to_seconds( $time, $interval );
 		}
 
 		$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . WPSC_TABLE_CLAIMED_STOCK . ' WHERE last_activity < UTC_TIMESTAMP() - INTERVAL %d SECOND', $seconds ) );
