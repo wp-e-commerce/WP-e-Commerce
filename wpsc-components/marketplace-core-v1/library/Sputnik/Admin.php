@@ -12,8 +12,6 @@ class Sputnik_Admin {
 		add_action( 'admin_menu', array(__CLASS__, 'menu'));
 		add_action( 'admin_head-wpsc-product_page_sputnik', array(__CLASS__, 'admin_head_page'));
 		add_action( 'admin_head-wpsc-product_page_sputnik-account', array(__CLASS__, 'admin_head_page'));
-		add_action( 'load-wpsc-product_page_sputnik', array(__CLASS__, 'load_page'));
-		add_action( 'load-wpsc-product_page_sputnik-account', array(__CLASS__, 'load_page'));
 		add_action( 'install_plugins_pre_plugin-information', array(__CLASS__, 'maybe_info'), 0);
 		add_action( 'load-update.php', array(__CLASS__, 'maybe_redirect_update'));
 		add_filter( 'plugin_row_meta', array(__CLASS__, 'add_row_note'), 10, 3);
@@ -205,7 +203,7 @@ class Sputnik_Admin {
 
 	public static function menu() {
 		$hooks[] = add_submenu_page( 'edit.php?post_type=wpsc-product', _x('Add-Ons', 'page title', 'sputnik'), _x('Add-Ons', 'menu title', 'sputnik'), 'install_plugins', 'sputnik', array(__CLASS__, 'page') );
-		$hooks[] = add_submenu_page( 'edit.php?post_type=wpsc-product', _x('Account', 'page title', 'sputnik'), _x('Account', 'menu title', 'sputnik'), 'install_plugins', 'sputnik-account', array(__CLASS__, 'account') );
+		// $hooks[] = add_submenu_page( 'edit.php?post_type=wpsc-product', _x('Account', 'page title', 'sputnik'), _x('Account', 'menu title', 'sputnik'), 'install_plugins', 'sputnik-account', array(__CLASS__, 'account') );
 
 		// /add_filter('custom_menu_order', '__return_true');
 		//add_filter('menu_order', array(__CLASS__, 'menu_order'), 40);
@@ -621,6 +619,8 @@ class Sputnik_Admin {
 	}
 
 	protected static function other_pages() {
+		global $tab;
+
 		$account = false;
 		try {
 			$account = Sputnik::get_account();
@@ -637,11 +637,28 @@ class Sputnik_Admin {
 
 		self::header( $account );
 
-		if ( Sputnik::account_is_linked() )
+		if ( Sputnik::account_is_linked() ) {
 			self::auth();
-
+			?>
+			<div class="account-card">
+				<div class="block">
+					<?php echo get_avatar($account->email) ?>
+					<p class="lead-in">Logged in as</p>
+					<h3><?php echo esc_html($account->name) ?></h3>
+					<p><?php printf(__('<a href="%s">Log out</a> of your account', 'sputnik'), self::build_url(array('oauth' => 'reset'))) ?></p>
+				</div>
+				<div class="block">
+					<p>Email: <code><?php echo $account->email ?></code></p>
+					<?php if ( $tab != 'purchased' ): ?>
+						<p class="stat"><?php printf(__('<strong>%d</strong> <abbr title="Plugins you can install right now">Available</abbr>', 'sputnik'), count( self::$list_table->items )) ?></p>
+					<?php endif; ?>
+					<p class="stat"><?php printf(__('<strong>%d</strong> <abbr title="Plugins you have bought from the store">Purchased</abbr>', 'sputnik'), count( $account->purchased ) ) ?></p>
+				</div>
+			</div>
+			<?php
+		}
+		self::$list_table->views();
 		self::$list_table->display();
-
 		self::footer();
 	}
 
@@ -907,10 +924,10 @@ class Sputnik_Admin {
 
 		?><form id="search-plugins" method="get" action="">
 			<input type="hidden" name="page" value="sputnik" />
+			<input type="hidden" name="post_type" value="wpsc-product" />
 			<input type="hidden" name="tab" value="search" />
 			<input type="text" name="s" value="<?php echo esc_attr($term) ?>" />
-			<label class="screen-reader-text" for="plugin-search-input"><?php _e('Search Plugins'); ?></label>
-			<?php submit_button( __( 'Search Plugins' ), 'button', 'plugin-search-input', false ); ?>
+			<?php submit_button( __( 'Search Plugins' ), 'button', '', false ); ?>
 		</form><?php
 	}
 
