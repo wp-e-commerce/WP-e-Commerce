@@ -398,6 +398,11 @@ function wpsc_get_all_customer_meta( $id = false ) {
  */
 function _wpsc_action_update_customer_last_active() {
 	$id = wpsc_get_current_customer_id();
+
+	$user = get_user_by( 'id', $id );
+	if ( $user->role != 'wpsc_anonymous' )
+		return;
+
 	update_user_meta( $id, '_wpsc_last_active', time() );
 
 	// also extend cookie expiration
