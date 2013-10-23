@@ -798,7 +798,6 @@ function _wpsc_ajax_add_tax_rate() {
 function wpsc_product_variations_table() {
 	check_admin_referer( 'wpsc_product_variations_table' );
 	set_current_screen( 'wpsc-product' );
-	wp_enqueue_media( array( 'post' => absint( $_REQUEST['product_id'] ) ) );
 	require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/product-variations-page.class.php' );
 	$page = new WPSC_Product_Variations_Page();
 	$page->display();

@@ -88,6 +88,7 @@
 			}, media.controller.Library.prototype.defaults ),
 
 			initialize: function( options ) {
+				options = options || {};
 				var selection = new media.model.wpsc.ProductGallerySelection(
 					[],
 					{
@@ -296,4 +297,35 @@
 			}
 		});
 	};
+
+	$(function() {
+		$('#wpsc-manage-product-gallery').on('click', function( e ) {
+			var frame;
+
+			e.preventDefault();
+			e.stopPropagation();
+
+			frame = wp.media({
+				state: 'wpsc-product-gallery',
+				states: [ new wp.media.controller.wpsc.ProductGallery() ]
+			});
+
+			frame.on( 'toolbar:create:wpsc-save-gallery', function(toolbar) {
+				this.createSelectToolbar( toolbar, {
+					text : WPSC_Media.l10n.saveGallery,
+					state: this.options.state
+				} );
+			}, frame );
+			frame.on( 'toolbar:render:wpsc-save-gallery', function( view ) {
+				view.set( 'selection', new media.view.Selection({
+					controller: this,
+					collection: this.state().get( 'selection' ),
+					priority: -40,
+					editable: this.state().get('editable')
+				}).render());
+			}, frame );
+
+			frame.open();
+		});
+	});
 }(jQuery));

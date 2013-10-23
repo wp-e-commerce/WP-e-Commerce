@@ -99,6 +99,8 @@ class WPSC_Product_Variations_Page {
 		wp_enqueue_script( 'jquery-color' );
 		wp_enqueue_script( 'utils'        );
 		wp_enqueue_script( 'jquery-query' );
+		wp_enqueue_media( array( 'post' => absint( $_REQUEST['product_id'] ) ) );
+
 
 		$callback = "callback_tab_{$this->current_tab}";
 		if ( ! is_callable( array( $this, "callback_tab_{$this->current_tab}" ) ) )

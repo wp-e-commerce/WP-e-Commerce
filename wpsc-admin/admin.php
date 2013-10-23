@@ -504,6 +504,7 @@ function wpsc_meta_boxes() {
 		remove_meta_box( 'wpsc_product_categorydiv'        , 'wpsc-product', 'core' );
 	}
 
+	add_meta_box( 'wpsc_product_gallery', __( 'Product Gallery', 'wpsc' ), 'wpsc_product_gallery', $pagename, 'side', 'low' );
 	add_meta_box( 'wpsc_price_control_forms', __('Price Control', 'wpsc'), 'wpsc_price_control_forms', $pagename, 'side', 'low' );
 	add_meta_box( 'wpsc_stock_control_forms', __('Stock Control', 'wpsc'), 'wpsc_stock_control_forms', $pagename, 'side', 'low' );
 	add_meta_box( 'wpsc_product_taxes_forms', __('Taxes', 'wpsc'), 'wpsc_product_taxes_forms', $pagename, 'side', 'low' );

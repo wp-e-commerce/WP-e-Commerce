@@ -818,6 +818,14 @@ function wpsc_additional_desc() {
 <?php
 
 }
+
+function wpsc_product_gallery( $post ) {
+	$upload_iframe_src = esc_url( get_upload_iframe_src( 'image', $post->ID ) );
+	?>
+	<p class="hide-if-no-js"><a title="<? esc_attr_e( 'Manage product gallery', 'wpsc' ); ?>" href="<?php echo $upload_iframe_src; ?>" id="wpsc-manage-product-gallery" class="thickbox"><?php esc_html_e( 'Manage product gallery', 'wpsc' ); ?></a></p>
+	<?php
+}
+
 function wpsc_product_download_forms() {
 	global $post, $wpdb, $wpsc_product_defaults;
 	$product_data = get_post_custom( $post->ID );
