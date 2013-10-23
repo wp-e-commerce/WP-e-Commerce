@@ -914,7 +914,7 @@ add_filter( 'gettext_with_context', 'wpsc_filter_gettex_with_context', 12, 4);
 function wpsc_filter_gettex_with_context( $translation, $text, $context, $domain ) {
 
 	if ( 'Taxonomy Parent' == $context && 'Parent' == $text && isset($_GET['taxonomy']) && 'wpsc-variation' == $_GET['taxonomy'] ) {
-		$translations = &get_translations_for_domain( $domain );
+		$translations = get_translations_for_domain( $domain );
 		return $translations->translate( 'Variation Set', 'wpsc' );
 		//this will never happen, this is here only for gettext to pick up the translation
 		return __( 'Variation Set', 'wpsc' );

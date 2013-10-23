@@ -365,7 +365,7 @@ function wpsc_split_the_query( $query ) {
 		$query->query_vars['name']      = '';
 		$query->query_vars['post_type'] = '';
 
-		$query->queried_object = & get_page_by_path( $query->query['pagename'] );
+		$query->queried_object = get_page_by_path( $query->query['pagename'] );
 
 		if ( !empty( $query->queried_object ) )
 			$query->queried_object_id = (int)$query->queried_object->ID;
