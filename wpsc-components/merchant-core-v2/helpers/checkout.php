@@ -5,10 +5,10 @@ add_filter( 'wpsc_get_gateway_list', '_wpsc_filter_merchant_v2_get_gateway_list'
 function _wpsc_filter_merchant_v2_get_gateway_list() {
 	ob_start();
 	while (wpsc_have_gateways()) : wpsc_the_gateway(); ?>
-		<div class="custom_gateway">
-			<label><input type="radio" value="<?php echo wpsc_gateway_internal_name();?>" <?php echo wpsc_gateway_is_checked(); ?> name="custom_gateway" class="custom_gateway"/><?php echo wpsc_gateway_name(); ?>
+		<div class="custom_gateway <?php echo sanitize_html_class( wpsc_gateway_internal_name() ); ?>">
+			<label><input type="radio" value="<?php echo wpsc_gateway_internal_name();?>" <?php echo wpsc_gateway_is_checked(); ?> name="custom_gateway" class="custom_gateway"/><span class="custom_gateway_name"><?php echo wpsc_gateway_name(); ?></span>
 				<?php if( wpsc_show_gateway_image() ):
-					$gateway_image= '<img src="' . wpsc_gateway_image_url(). '" alt="' . wpsc_gateway_name() . '" style="position:relative; top:5px;" />';
+					$gateway_image = '<img src="' . wpsc_gateway_image_url() . '" alt="' . wpsc_gateway_name() . '" class="custom_gateway_image" />';
 					echo apply_filters ( 'wpsc_gateway_image', $gateway_image, wpsc_gateway_internal_name() );
 				endif; ?>
 			</label>
