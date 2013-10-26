@@ -6178,7 +6178,7 @@ msgstr "Paramètres du produit"
 
 #: wpsc-admin/includes/settings-pages/presentation.php:318
 msgid "Display Fancy Purchase Notifications"
-msgstr "Affichage d\"alerte en cas d\"achat fantaisiste"
+msgstr "Afficher les notifications d\'achat fantaisie"
 
 #: wpsc-admin/includes/settings-pages/presentation.php:364
 msgid "Disable link in Title"
