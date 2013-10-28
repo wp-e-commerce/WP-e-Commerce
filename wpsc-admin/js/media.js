@@ -94,7 +94,8 @@
 					{
 						postId: media.model.settings.post.id,
 						multiple: this.get( 'multiple' ),
-						nonce: options.nonce || WPSC_Media.updateGalleryNonce
+						updateNonce: options.updateNonce || WPSC_Media.updateGalleryNonce,
+						getNonce: options.getNonce || WPSC_Media.getGalleryNonce
 					}
 				);
 				this.set(
@@ -119,6 +120,10 @@
 					selection.save_gallery();
 				} );
 
+				this.on( 'reset', function() {
+					selection.get_gallery();
+				}) ;
+
 				this.get( 'library' ).observe( selection );
 			}
 		})
@@ -129,7 +134,8 @@
 			initialize: function( models, options ) {
 				media.model.Selection.prototype.initialize.apply( this, [models, options] );
 				this.postId = options && options.postId;
-				this.nonce = options.nonce || WPSC_Media.updateGalleryNonce;
+				this.updateNonce = options.updateNonce || WPSC_Media.updateGalleryNonce;
+				this.getNonce = options.getNonce || WPSC_Media.getGalleryNonce;
 			},
 
 			save_gallery: function( options ) {
@@ -154,6 +160,25 @@
 				this.sync( 'update', this, options );
 			},
 
+			get_gallery: function( options ) {
+				options = _.extend( options || {}, {
+					success: function( resp, status, xhr ) {
+						// in case of backbone 0.9.2
+						if ( _.isUndefined( this.set ) ) {
+							// force parse the response
+							resp.obj = this.parse( resp.obj, xhr );
+							this.reset( resp.obj );
+						} else {
+							this.set( resp.obj, { parse: true } );
+						}
+					},
+					error: function( resp ) {
+						alert( resp.error.messages.join( "\n" ) );
+					}
+				} );
+				this.sync( 'read', this, options );
+			},
+
 			sync: function( method, collection, options ) {
 				var data;
 
@@ -164,26 +189,22 @@
 
 				switch (method) {
 					case 'read':
+						options.data = options.data || {};
+						data = _.defaults( {
+							action: 'get_product_gallery',
+							nonce : this.getNonce,
+							postId: this.postId
+						}, options.data );
 						break;
 
 					case 'update':
 						options.data = options.data || {};
 						data = _.defaults( {
 							action: 'save_product_gallery',
-							nonce : this.nonce,
+							nonce : this.updateNonce,
 							items : this.pluck( 'id' ),
 							postId: this.postId
 						}, options.data );
-
-						$.wpsc_post( data ).done( function( resp, status, xhr ) {
-							if ( resp.is_successful ) {
-								options.success( resp, status, xhr );
-							}
-							else {
-								options.error( resp, status, xhr );
-							}
-						} );
-
 						break;
 
 					case 'create':
@@ -191,6 +212,14 @@
 						// do nothing for now
 						break;
 				}
+
+				$.wpsc_post( data ).done( function( resp, status, xhr ) {
+					if ( resp.is_successful ) {
+						options.success( resp, status, xhr );
+					} else {
+						options.error( resp, status, xhr );
+					}
+				} );
 			}
 		} )
 	};
@@ -216,7 +245,7 @@
 					} );
 				},
 				createStates: function() {
-					this.states.add( new media.controller.wpsc.ProductGallery( { models: this.options.models, nonce: this.options.nonce } ) );
+					this.states.add( new media.controller.wpsc.ProductGallery( { models: this.options.models, updateNonce: this.options.updateNonce, getNonce: this.options.getNonce } ) );
 				},
 				bindHandlers: function() {
 					this.on( 'toolbar:create:wpsc-save-gallery', this.wpsc.saveGalleryToolbar, this );
@@ -228,8 +257,12 @@
 				if ( ! this.options.models )
 					this.options.models = WPSC_Media.gallery;
 
-				if ( ! this.options.nonce )
-					this.options.nonce = WPSC_Media.updateGalleryNonce;
+				if ( ! this.options.updateNonce )
+					this.options.updateNonce = WPSC_Media.updateGalleryNonce;
+
+				if ( ! this.options.getNonce )
+					this.options.getNonce = WPSC_Media.getGalleryNonce;
+
 				this.wpsc.createStates.apply( this );
 				this.wpsc.bindHandlers.apply( this );
 			}
@@ -264,7 +297,8 @@
 		media.editor.remove( 'wpsc-variation-media' );
 		media.editor.add( 'wpsc-variation-media', {
 			models: options.models,
-			nonce: options.galleryNonce
+			updateNonce: options.galleryUpdateNonce,
+			getNonce: options.galleryGetNonce
 		});
 		workflow = media.editor.open( 'wpsc-variation-media' );
 	};
@@ -272,8 +306,15 @@
 	var oldEditorOpen = media.editor.open;
 	media.editor.open = function( id ) {
 		if ( id == 'content' ) {
-			media.view.settings.post = _.clone( backup );
-			media.model.settings.post = media.view.settings.post;
+			if ( media.view.settings.post.id == backup.id ) {
+				// always make sure the backup copy is up to date
+				backup = _.clone( media.view.settings.post );
+			} else {
+				// if the frame was opened for a variation previously, this time
+				// restore the globals from the backup
+				media.view.settings.post = _.clone( backup );
+				media.model.settings.post = media.view.settings.post;
+			}
 		}
 		return oldEditorOpen.apply( this, arguments );
 	};
@@ -283,13 +324,15 @@
 		var settings = wp.media.view.settings;
 		var currentId = settings.post.id;
 
+		settings.post.featuredImageId = id;
+
 		wp.media.post( 'set-post-thumbnail', {
 			json:         true,
 			post_id:      settings.post.id,
-			thumbnail_id: id,
+			thumbnail_id: settings.post.featuredImageId,
 			_wpnonce:     settings.post.nonce
 		}).done( function( html ) {
-			if ( settings.post.id == backup.id ) {
+			if ( currentId == backup.id ) {
 				wpsc_refresh_variation_iframe();
 				$( '.inside', '#postimagediv' ).html( html );
 			} else {

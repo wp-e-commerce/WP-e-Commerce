@@ -211,6 +211,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 
 		$nonce = wp_create_nonce( "wpsc_ajax_get_variation_gallery_{$item->ID}" );
 		$save_gallery_nonce = wp_create_nonce( "wpsc_ajax_update_gallery_{$item->ID}" );
+		$get_gallery_nonce = wp_create_nonce( "wpsc_ajax_get_gallery_{$item->ID}" );
 
 		if ( ! $thumbnail )
 			$thumbnail = WPSC_CORE_IMAGES_URL . '/no-image-uploaded.gif';
@@ -221,6 +222,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 					data-featured-nonce="<?php echo esc_attr( wp_create_nonce( "update-post_{$item->ID}" ) ); ?>"
 					data-nonce="<?php echo esc_attr( $nonce ); ?>"
 					data-save-gallery-nonce="<?php echo esc_attr( $save_gallery_nonce ); ?>"
+					data-get-gallery-nonce="<?php echo esc_attr( $get_gallery_nonce ); ?>"
 					data-image-id="<?php echo wpsc_the_product_thumbnail_id( $item->ID ); ?>"
 					data-id="<?php echo $item->ID; ?>"
 					data-title="<?php echo esc_attr( $title ); ?>"

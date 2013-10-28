@@ -71,7 +71,8 @@
 					id: postId,
 					featuredId: response.obj.featuredId,
 					models: response.obj.models,
-					galleryNonce: t.data( 'save-gallery-nonce' ),
+					galleryUpdateNonce: t.data( 'save-gallery-nonce' ),
+					galleryGetNonce: t.data( 'get-gallery-nonce' ),
 					featuredNonce: t.data( 'featured-nonce' )
 				});
 			}

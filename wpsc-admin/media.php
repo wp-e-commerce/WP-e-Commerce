@@ -23,6 +23,7 @@ function _wpsc_action_enqueue_media_scripts() {
 			),
 			'gallery' => $gallery,
 			'updateGalleryNonce' => wp_create_nonce( 'wpsc_ajax_update_gallery_' . $id ),
+			'getGalleryNonce'    => wp_create_nonce( 'wpsc_ajax_get_gallery_' . $id )
 		) );
 	}
 }
@@ -65,6 +66,10 @@ function _wpsc_ajax_verify_save_product_gallery() {
 	return _wpsc_ajax_verify_nonce( 'update_gallery_' . absint( $_REQUEST['postId'] ) );
 }
 
+function _wpsc_ajax_verify_get_product_gallery() {
+	return _wpsc_ajax_verify_nonce( 'get_gallery_' . absint( $_REQUEST['postId'] ) );
+}
+
 function _wpsc_ajax_save_product_gallery() {
 	$id = absint( $_REQUEST['postId'] );
 	$items = array_map( 'absint', $_REQUEST['items'] );
@@ -77,7 +82,11 @@ function _wpsc_ajax_save_product_gallery() {
 	$result = wpsc_set_product_gallery( $id, $items );
 
 	return _wpsc_get_product_gallery_json( $id );
+}
 
+function _wpsc_ajax_get_product_gallery() {
+	$id = absint( $_REQUEST['postId'] );
+	return _wpsc_get_product_gallery_json( $id );
 }
 
 function _wpsc_get_product_gallery_json( $id ) {
