@@ -822,7 +822,7 @@ function wpsc_additional_desc() {
 function wpsc_product_gallery( $post ) {
 	$upload_iframe_src = esc_url( get_upload_iframe_src( 'image', $post->ID ) );
 	?>
-	<p class="hide-if-no-js"><a title="<? esc_attr_e( 'Manage product gallery', 'wpsc' ); ?>" href="<?php echo $upload_iframe_src; ?>" id="wpsc-manage-product-gallery" class="thickbox"><?php esc_html_e( 'Manage product gallery', 'wpsc' ); ?></a></p>
+	<p class="hide-if-no-js"><a title="<? esc_attr_e( 'Add product gallery images', 'wpsc' ); ?>" href="<?php echo $upload_iframe_src; ?>" id="wpsc-manage-product-gallery" class="thickbox"><?php esc_html_e( 'Add product gallery images', 'wpsc' ); ?></a></p>
 	<?php
 }
 

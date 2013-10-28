@@ -172,15 +172,8 @@ function wpsc_the_product_thumbnail_id( $product_id ) {
 	if ( has_post_thumbnail( $product_id ) ) {
 		$thumbnail_id = get_post_thumbnail_id( $product_id  );
 	} else {
-		// ... or get first image
-		$attached_images = (array) get_posts( array(
-			'post_type'   => 'attachment',
-			'numberposts' => 1,
-			'post_status' => null,
-			'post_parent' => $product_id,
-			'orderby'     => 'menu_order',
-			'order'       => 'ASC'
-		) );
+		// ... or get first image in the product gallery
+		$attached_images = wpsc_get_product_gallery( $product_id );
 		if ( ! empty( $attached_images ) )
 			$thumbnail_id = $attached_images[0]->ID;
 	}

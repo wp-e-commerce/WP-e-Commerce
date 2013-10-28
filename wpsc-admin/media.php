@@ -15,10 +15,10 @@ function _wpsc_action_enqueue_media_scripts() {
 			$id = $post->ID;
 
 		$gallery = _wpsc_get_product_gallery_json( $id );
-		wp_enqueue_script( 'wpsc-media', WPSC_URL . '/wpsc-admin/js/media.js', array( 'media-editor', 'wp-e-commerce-admin' ), WPSC_VERSION );
+		wp_enqueue_script( 'wpsc-media', WPSC_URL . '/wpsc-admin/js/media.js', array( 'media-editor', 'wp-e-commerce-admin', 'post' ), WPSC_VERSION );
 		wp_localize_script( 'wpsc-media', 'WPSC_Media', array(
 			'l10n' => array(
-				'productMediaTitle' => __( 'Product Images', 'wpsc' ),
+				'productMediaTitle' => __( 'Add Images to Product Gallery', 'wpsc' ),
 				'saveGallery'       => __( 'Set Product Images', 'wpsc' ),
 			),
 			'gallery' => $gallery,
@@ -73,7 +73,7 @@ function _wpsc_ajax_verify_get_product_gallery() {
 function _wpsc_ajax_save_product_gallery() {
 	$id = absint( $_REQUEST['postId'] );
 	$items = array_map( 'absint', $_REQUEST['items'] );
-	$thumb = wpsc_the_product_thumbnail_id( $id );
+	$thumb = get_post_thumbnail_id( $id );
 
 	// always make sure the thumbnail is included
 	if ( $thumb && ! in_array( $thumb, $items ) )
@@ -96,29 +96,38 @@ function _wpsc_get_product_gallery_json( $id ) {
 
 function wpsc_get_product_gallery( $id ) {
 	$ids = get_post_meta( $id, '_wpsc_product_gallery', true );
-	if ( ! is_array( $ids ) )
-		$ids = array();
 
-	$thumb_id = wpsc_the_product_thumbnail_id( $id );
-
-	// always make sure post thumbnail is included in the gallery
-	if ( $thumb_id && ! in_array( $thumb_id, $ids ) )
-		$ids[] = $thumb_id;
-
-
-	if ( ! is_array( $ids ) || empty( $ids ) )
-		return array();
-
-	$attachments = get_posts( array(
+	$args = array(
 		'nopaging' => true,
-		'post__in' => $ids,
-		'orderby'  => 'menu_order',
 		'post_status' => 'all',
 		'post_type' => 'attachment'
-	) );
+	);
 
+	// By default, when the user took no action to select product gallery, all the
+	// images attached to a product are treated as gallery images. If $ids is not
+	// empty, however, it means the user has made some selection for the product
+	// gallery, we should respect that selection.
+	if ( empty( $ids ) ) {
+		$args['post_parent'] = $id;
+		$args['orderby'] = 'menu_order';
+		$args['order'] = 'ASC';
+	} else {
+		if ( ! is_array( $ids ) )
+			$ids = array();
 
-	return $attachments;
+		if ( has_post_thumbnail( $id ) ) {
+			$thumb_id = get_post_thumbnail_id( $id );
+			if ( ! in_array( $thumb_id, $ids ) )
+				array_unshift( $ids, $thumb_id );
+		}
+
+		if ( ! is_array( $ids ) || empty( $ids ) )
+			return array();
+
+		$args['post__in'] = $ids;
+	}
+
+	return get_posts( $args );
 }
 
 function wpsc_set_product_gallery( $id, $attachments ) {

@@ -1,4 +1,4 @@
-/*global _, WPSC_Media, Backbone, alert, WPSC, wp, wpsc_refresh_variation_iframe, wpsc_set_variation_product_thumbnail, jQuery */
+/*global _, WPSC_Media, Backbone, alert, WPSC, wp, wpsc_refresh_variation_iframe, wpsc_set_variation_product_thumbnail, jQuery, WPRemoveThumbnail */
 (function($) {
 	"use strict";
 	window.WPSC = window.WPSC || {};
@@ -171,6 +171,7 @@
 						} else {
 							this.set( resp.obj, { parse: true } );
 						}
+						wpsc_refresh_variation_iframe();
 					},
 					error: function( resp ) {
 						alert( resp.error.messages.join( "\n" ) );
@@ -181,7 +182,6 @@
 
 			sync: function( method, collection, options ) {
 				var data;
-
 				options = options ? _.clone( options ) : {};
 
 				options.success = _.bind( options.success, this );
@@ -241,7 +241,8 @@
 				saveGalleryToolbar: function( toolbar ) {
 					this.createSelectToolbar( toolbar, {
 						text : WPSC_Media.l10n.saveGallery,
-						state: this.options.state
+						state: this.options.state,
+						reset: false
 					} );
 				},
 				createStates: function() {
@@ -340,6 +341,23 @@
 			}
 		});
 	};
+
+	// hack the Remove thumbnail link so that it refreshes the variation iframe
+	// after the AJAX request is processed
+	WPRemoveThumbnail = function(nonce){
+		$.post(ajaxurl, {
+			action:"set-post-thumbnail", post_id: $('#post_ID').val(), thumbnail_id: -1, _ajax_nonce: nonce, cookie: encodeURIComponent(document.cookie)
+		}, function(str){
+			if ( str == '0' ) {
+				alert( setPostThumbnailL10n.error );
+			} else {
+				WPSetThumbnailHTML(str);
+				wpsc_refresh_variation_iframe();
+			}
+		}
+		);
+	};
+
 
 	$(function() {
 		$('#wpsc-manage-product-gallery').on('click', function( e ) {

@@ -223,7 +223,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 					data-nonce="<?php echo esc_attr( $nonce ); ?>"
 					data-save-gallery-nonce="<?php echo esc_attr( $save_gallery_nonce ); ?>"
 					data-get-gallery-nonce="<?php echo esc_attr( $get_gallery_nonce ); ?>"
-					data-image-id="<?php echo wpsc_the_product_thumbnail_id( $item->ID ); ?>"
+					data-image-id="<?php echo get_post_thumbnail_id( $item->ID ); ?>"
 					data-id="<?php echo $item->ID; ?>"
 					data-title="<?php echo esc_attr( $title ); ?>"
 					href="<?php echo esc_url( admin_url( 'media-upload.php?post_id=' . $item->ID . '&width=640&height=566&product_variation=1' ) ) ?>"
