@@ -2,9 +2,6 @@
 * This is the new WPSC Admin CSS file
 
 */
-table.wp-list-table .column-title {
-	width: 26%;
-}
 table.wp-list-table .column-featured {
 	width: 30px;
 }
