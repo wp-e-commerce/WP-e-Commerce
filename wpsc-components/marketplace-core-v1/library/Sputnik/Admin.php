@@ -9,7 +9,9 @@ class Sputnik_Admin {
 	public static function bootstrap() {
 		add_action( 'admin_init', array(__CLASS__, 'init'), 0);
 		add_action( 'all_admin_notices', array(__CLASS__, 'report_errors'));
+
 		add_action( 'admin_menu', array(__CLASS__, 'menu'));
+
 		add_action( 'admin_head-wpsc-product_page_sputnik', array(__CLASS__, 'admin_head_page'));
 		add_action( 'admin_head-wpsc-product_page_sputnik-account', array(__CLASS__, 'admin_head_page'));
 		add_action( 'install_plugins_pre_plugin-information', array(__CLASS__, 'maybe_info'), 0);
@@ -203,10 +205,6 @@ class Sputnik_Admin {
 
 	public static function menu() {
 		$hooks[] = add_submenu_page( 'edit.php?post_type=wpsc-product', _x('Add-Ons', 'page title', 'sputnik'), _x('Add-Ons', 'menu title', 'sputnik'), 'install_plugins', 'sputnik', array(__CLASS__, 'page') );
-		// $hooks[] = add_submenu_page( 'edit.php?post_type=wpsc-product', _x('Account', 'page title', 'sputnik'), _x('Account', 'menu title', 'sputnik'), 'install_plugins', 'sputnik-account', array(__CLASS__, 'account') );
-
-		// /add_filter('custom_menu_order', '__return_true');
-		//add_filter('menu_order', array(__CLASS__, 'menu_order'), 40);
 		$hooks[] = 'plugin-install.php';
 		foreach ($hooks as $hook) {
 			add_action("admin_print_styles-$hook", array(__CLASS__, 'page_styles'));
