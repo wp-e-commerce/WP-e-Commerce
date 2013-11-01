@@ -13,7 +13,7 @@ add_action( 'update_option_single_view_image_height', 'wpsc_cache_to_upload' );
 add_action( 'update_option_category_image_width'    , 'wpsc_cache_to_upload' );
 add_action( 'update_option_category_image_height'   , 'wpsc_cache_to_upload' );
 add_action('template_redirect', 'wpsc_all_products_on_page');
-add_action('post_thumbnail_html','wpsc_the_featured_image_fix');
+add_action('post_thumbnail_html','wpsc_the_featured_image_fix', 10, 2);
 add_filter( 'aioseop_description', 'wpsc_set_aioseop_description' );
 add_filter('request', 'wpsc_remove_page_from_query_string');
 
@@ -1225,15 +1225,25 @@ function wpsc_hidesubcatprods_init() {
 	add_action( 'pre_get_posts', array( &$hide_subcatsprods, 'get_posts' ) );
 }
 
-function wpsc_the_featured_image_fix($stuff){
+function wpsc_the_featured_image_fix( $stuff, $post_ID ){
 	global $wp_query;
-	remove_action('post_thumbnail_html','wpsc_the_featured_image_fix');
-	if(isset($wp_query->query_vars['wpsc-product'])){
-		$stuff ='';	?>
-		<img src="<?php header_image(); ?>" width="<?php echo HEADER_IMAGE_WIDTH; ?>" height="<?php echo HEADER_IMAGE_HEIGHT; ?>" alt="" /><?php
-	}
-	return $stuff;
 
+	$is_tax = is_tax( 'wpsc_product_category' );
+
+	$queried_object = get_queried_object();
+	$is_single = is_single() && $queried_object->ID == $post_ID && get_post_type() == 'wpsc-product';
+
+	if ( $is_tax || $is_single ) {
+		$header_image = get_header_image();
+		$stuff = '';
+
+		if ( $header_image )
+			$stuff = '<img src="' . esc_url( $header_image ) . '" width="' . HEADER_IMAGE_WIDTH . '" height="' . HEADER_IMAGE_HEIGHT . '" alt="" />';
+	}
+
+	remove_action('post_thumbnail_html','wpsc_the_featured_image_fix');
+
+	return $stuff;
 }
 
 // check for all in one SEO pack and the is_static_front_page function
