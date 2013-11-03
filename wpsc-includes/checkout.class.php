@@ -245,9 +245,9 @@ class wpsc_checkout {
 
 	function form_name() {
 		if ( $this->form_name_is_required() && ($this->checkout_item->type != 'heading') )
-			return esc_html( apply_filters( 'wpsc_checkout_field_name', $this->checkout_item->name ) ) . ' <span class="asterix">*</span> ';
+			return esc_html( apply_filters( 'wpsc_checkout_field_name', __($this->checkout_item->name, 'wpsc' ) ) ) . ' <span class="asterix">*</span> ';
 		else
-			return esc_html( apply_filters( 'wpsc_checkout_field_name', $this->checkout_item->name ) );
+			return esc_html( apply_filters( 'wpsc_checkout_field_name', __($this->checkout_item->name, 'wpsc' ) ) );
 	}
 
 	function form_name_is_required() {
