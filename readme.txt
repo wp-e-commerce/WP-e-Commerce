@@ -3,7 +3,7 @@ Contributors: mufasa, garyc40, JustinSainton
 Donate link: http://getshopped.org
 Tags: e-commerce, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
 Requires at least: 3.5
-Tested up to: 3.6
+Tested up to: 3.7
 Stable tag: 3.8.12.1
 
 WP e-Commerce is a free WordPress Shopping Cart Plugin that lets customers buy your products, services and digital downloads online.
@@ -145,6 +145,38 @@ Before updating please make a backup of your existing files and database. Just i
 After upgrading from earlier versions look for link "Update Store". This will update your database structure to work with new version.
 
 == Changelog ==
+
+= 3.8.13 =
+
+* New: Product Media UI.
+* New: Cart Item Meta API
+* New: 'wpsc_after_checkout_cart_rows' action.
+* New: Add 'wpsc_default_dimension_unit' and 'wpsc_default_weight_unit' filters.
+* New: Add 'wpsc_save_product_order' action and use it to save category product order in the term_relationships table.
+* New: Add logic filter for coupons.  We currently have one for properties, this should sufficiently round out the extensibility for the UI.
+* New: Allow gateway images to be filtered.
+* New: Allow multiple comma-separated categories in coupon conditions.
+* New: Product Gallery metabox.
+* Change: Better Customer API.
+* Change: Prepend (WPEC) to widget names in wp-admin
+* Change: Replace default noimage.png with a better image.
+* Change: Updated NL language
+* Change: Updated german language strings
+* Fix: Add preg_quote() to coupon regexes that intend to parse strings. Fixes issue where unexpected results occur when strings contain slashes, or really, any regex-oriented characters.
+* Fix: Change wpsc_get_remaining_quantity() to call the method dynamically, rather than statically.  The previous behaviour caused a strict standards warning.
+* Fix: Database Upgrade Routine to rename old _wpsc_* product metadata array keys so they no longer include the '_wpsc_' prefix
+* Fix: In Purchase log admin screen, item count is sum of quantity field rather than count of rows
+* Fix: Invert logic on shipping ZIP code check in core theme files.
+* Fix: Modify behavior in Download CSV functionality to properly convert region IDs to regions.
+* Fix: Modify wpsc_update_item_quantity() to listen for wpsc_quantity_update, reverting to $_POST['quantity'] only if it exists.
+* Fix: PHP strict warnings.
+* Fix: Properly quote SKUs in CSV file.
+* Fix: Rename generically named function.
+* Fix: Stock and sale price empty values should be preserved.
+* Fix: Variation thumbnail size in admin screen.
+* Fix: cart is not initialized when some shipping modules are triggered
+* Fix: redundant product thumbnail is displayed on category / single product list.
+* Fix: variation checkbox column width in WP 3.7.
 
 = 3.8.12.1 =
 * Fix: Fatal error in wpsc_product_list_exclude_child_categories() due to other themes
@@ -668,37 +700,6 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * Fix: Incompatibility with Prototype JS library.
 * Fix: Checking (or unchecking) Stock checkbox when editing product causes variation table columns to break.
 * Fix: jQuery 1.6 incompatibility with attr( 'className' ).
-
-
-= 3.8.5 =
-* New: Added hooks to support WPML.
-* New: Links to WP e-Commerce documentation for individual payment gateways.
-* Change: User can specify 0 in thumbnail width or height to make it scale proportional.
-* Change: Show display name, not internal name for shipping method on purchase log view.
-* Change: Presentation settings page is restored to WPEC Settings page when WooTheme is activated.
-* Fix: Add to cart using Donation widget causes the page to reload and the item is added twice.
-* Fix: Free-shipping discount causes tax to be calculated incorrectly.
-* Fix: Paypal Buy Now button passes the wrong price to Paypal if product is on sale.
-* Fix: Thumbnail sizes are not generated correctly.
-* Fix: Broken output buffering rendering wpsc_add_advanced_options hook useless.
-* Fix: Paypal Pro doesn't properly account for discount and coupon.
-* Fix: IPN doesn't work on Paypal Standard.
-* Fix: IPN doesn't work on Paypal Pro gateway.
-* Fix: Paypal Express doesn't handle discounts.
-* Fix: Paypal Express doesn't handle IPN.
-* Fix: Paypal Express doesn't send purchase receipt after a payment is accepted on Paypal.
-* Fix: Paypal Express doesn't include item description, quantity, tax etc. in email receipts.
-* Fix: Invalid country code in Paypal Pro and Express, should be GB instead of UK
-* Fix: Take Discount into account when DoExpressCheckout in Paypal Express gateway.
-* Fix: Category checkout form sets don't work.
-* Fix: Incorrect Product display mode selected when ['view_type'] is set and 'show_advanced_search' is disabled.
-* Fix: PHP notice in wpsc-transaction_results_functions.php.
-* Fix: attr('checked') == true always evaluates to false. Use is(':checked') instead.
-* Fix: jQuery 1.6 select by attribute incompatibility.
-* Fix: Price tag is added to RSS even when there is no price.
-* Fix: Span tag is not closed in issue 598.
-* Fix: Faulty php tag in template (issue 589).
-* Fix: PHP Notices when checking out with shipping disabled.
 
 == Frequently Asked Questions ==
 
