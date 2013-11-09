@@ -4,16 +4,16 @@ add_filter( 'wpsc_get_gateway_list', '_wpsc_filter_merchant_v2_get_gateway_list'
 
 function _wpsc_filter_merchant_v2_get_gateway_list() {
 	ob_start();
-	while (wpsc_have_gateways()) : wpsc_the_gateway(); ?>
+	while ( wpsc_have_gateways() ) : wpsc_the_gateway(); ?>
 		<div class="custom_gateway">
 			<label><input type="radio" value="<?php echo wpsc_gateway_internal_name();?>" <?php echo wpsc_gateway_is_checked(); ?> name="custom_gateway" class="custom_gateway"/><?php echo wpsc_gateway_name(); ?>
-				<?php if( wpsc_show_gateway_image() ):
-					$gateway_image= '<img src="' . wpsc_gateway_image_url(). '" alt="' . wpsc_gateway_name() . '" style="position:relative; top:5px;" />';
-					echo apply_filters ( 'wpsc_gateway_image', $gateway_image, wpsc_gateway_internal_name() );
+				<?php if ( wpsc_show_gateway_image() ):
+					$gateway_image = '<img src="' . esc_url( wpsc_gateway_image_url() ) . '" alt="' . esc_attr( wpsc_gateway_name() ) . '" style="position:relative; top:5px;" />';
+					echo apply_filters( 'wpsc_gateway_image', $gateway_image, wpsc_gateway_internal_name() );
 				endif; ?>
 			</label>
 
-			<?php if(wpsc_gateway_form_fields()): ?>
+			<?php if ( wpsc_gateway_form_fields() ) : ?>
 				<table class='wpsc_checkout_table <?php echo wpsc_gateway_form_field_style();?>'>
 					<?php echo wpsc_gateway_form_fields();?>
 				</table>
@@ -41,10 +41,10 @@ function _wpsc_filter_merchant_v2_payment_method_form_fields( $fields ) {
 			$title .= ' <img src="' . $gateway->image . '" alt="' . $gateway->name . '" />';
 
 		$field = array(
-			'title' => $title,
-			'type' => 'radio',
-			'value' => $gateway->internalname,
-			'name' => 'wpsc_payment_method',
+			'title'   => $title,
+			'type'    => 'radio',
+			'value'   => $gateway->internalname,
+			'name'    => 'wpsc_payment_method',
 			'checked' => $selected_value == $gateway->internalname,
 		);
 
@@ -181,7 +181,7 @@ function _wpsc_merchant_v2_get_gateway_form( $gateway ) {
 
 	}
 
-	if ( isset( $output ) && !empty( $output ) )
+	if ( isset( $output ) && ! empty( $output ) )
 		return $output;
 	elseif ( isset( $gateway_checkout_form_fields[$gateway['internalname']] ) )
 		return $gateway_checkout_form_fields[$gateway['internalname']];

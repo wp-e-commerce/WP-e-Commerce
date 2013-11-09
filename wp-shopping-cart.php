@@ -286,5 +286,5 @@ class WP_eCommerce {
 $wpec = new WP_eCommerce();
 
 // Activation
-register_activation_hook( __FILE__, array( $wpec, 'install' ) );
+register_activation_hook( __FILE__  , array( $wpec, 'install' ) );
 register_deactivation_hook( __FILE__, array( $wpec, 'deactivate' ) );
