@@ -109,7 +109,7 @@ function wpsc_decrement_claimed_stock($purchase_log_id) {
 	global $wpdb;
 
 	//processed
-	$all_claimed_stock = $wpdb->get_results( $wpdb->prepare( "SELECT `cs`.`product_id`, `cs`.`stock_claimed`, `pl`.`id`, `pl`.`processed` FROM `" . WPSC_TABLE_CLAIMED_STOCK . "` `cs` JOIN `" . WPSC_TABLE_PURCHASE_LOGS . "` `pl` ON `cs`.`cart_id` = `pl`.`id` WHERE `cs`.`cart_id` = '%s'", $purchase_log_id ) );
+	$all_claimed_stock = WPSC_Claimed_Stock::get_purchase_log_claimed_stock( $purchase_log_id );
 
 	if( !empty( $all_claimed_stock ) ){
 		switch($all_claimed_stock[0]->processed){
@@ -151,7 +151,7 @@ function wpsc_decrement_claimed_stock($purchase_log_id) {
 					}
 				}
 			case 6:
-				$wpdb->query( $wpdb->prepare( "DELETE FROM `".WPSC_TABLE_CLAIMED_STOCK."` WHERE `cart_id` IN (%s)", $purchase_log_id ) );
+				WPSC_Claimed_Stock::clear_purchase_log_claimed_stock( $purchase_log_id );
 				break;
 		}
 	}
