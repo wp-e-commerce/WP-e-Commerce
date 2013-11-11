@@ -149,7 +149,7 @@ function wpsc_add_to_cart() {
 			$quantity = $wpsc_cart->get_remaining_quantity( $product_id, $parameters['variation_values'], $parameters['quantity'] );
 			$cart_messages[] = sprintf( _n( 'Sorry, but there is only %s of this item in stock.', 'Sorry, but there are only %s of this item in stock.', $quantity, 'wpsc' ), $quantity );
 		} else {
-			$cart_messages[] = sprintf( __( 'Sorry, but the item "%s" is out of stock.', 'wpsc' ), $product->post_title	);
+			$cart_messages[] = sprintf( __( 'Sorry, but the item "%s" is out of stock.', 'wpsc' ), $cart_item->get_title() );
 		}
 	}
 
@@ -1030,7 +1030,7 @@ function _wpsc_get_alternate_html( $cart_messages ) {
 						'cart_messages' => $cart_messages, 'ajax' => 'true', 'wpsc_ajax_action' => 'add_to_cart', 'product_id' => empty( $_REQUEST['product_id'] ) ? '' : $_REQUEST['product_id'], '_wpsc_compat_ajax' => true
 					),
 
-				'cookies' => $cookies,
+				'cookies'    => $cookies,
 				'user-agent' => $_SERVER['HTTP_USER_AGENT']
 			)
 		)
