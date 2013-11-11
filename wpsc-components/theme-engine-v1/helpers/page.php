@@ -1176,6 +1176,9 @@ function wpsc_remove_page_from_query_string($query_string)
 function is_products_page(){
 	global $post;
 
+	if ( empty( $post ) || ! is_object( $post ) || empty( $post->ID ) )
+		return false;
+
 	$product_page_id = wpsc_get_the_post_id_by_shortcode( '[productspage]' );
 
 	return $post->ID == $product_page_id;

@@ -153,9 +153,7 @@ function wpsc_add_to_cart() {
 		}
 	}
 
-
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-
 		$json_response = array( 'cart_messages' => $cart_messages, 'product_id' => $product_id, 'cart_total' => wpsc_cart_total() );
 
 		$output = _wpsc_ajax_get_cart( false, $cart_messages );
@@ -315,13 +313,13 @@ function wpsc_update_item_quantity() {
 			// if the quantity is 0, remove the item.
 			$wpsc_cart->remove_item( $key );
 		}
+
 		$coupon = wpsc_get_customer_meta( 'coupon' );
 		if ( $coupon ) {
 			wpsc_coupon_price( $coupon );
 		}
 	}
 	$die = ! ( ( isset( $_REQUEST['wpsc_ajax_action'] ) && 'true' == $_REQUEST['wpsc_ajax_action'] ) || ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) );
-
 	_wpsc_ajax_get_cart( $die );
 }
 
@@ -1007,22 +1005,36 @@ function wpsc_update_shipping_quotes_on_shipping_same_as_billing() {
 
 }
 
-function _wpsc_get_alternate_html() {
+function _wpsc_get_alternate_html( $cart_messages ) {
 	// These shenanigans are necessary for two reasons.
 	// 1) Some hook into POST, some GET, some REQUEST. They check for the conditional params below.
 	// 2) Most functions properly die() - that means that our output buffer stops there and won't continue on for our purposes.
 	// If there is a better way to get that output without dying, I'm all ears.  A nice slow HTTP request for now.
+
+	$cookies = array();
+	foreach ( $_COOKIE as $name => $value ) {
+		if ( 'PHPSESSID' == $name )
+			continue;
+
+		$cookies[] = new WP_Http_Cookie( array( 'name' => $name, 'value' => $value ) );
+	}
+
+	wpsc_serialize_shopping_cart();
+
 	$javascript = wp_remote_retrieve_body(
-					wp_remote_post(
-						add_query_arg(
-							array( 'ajax' => 'true', 'wpsc_action' => 'wpsc_get_alternate_html', 'ajax' => 'true', 'wpsc_ajax_action' => 'add_to_cart' ), home_url() ),
-							array( 'body' =>
-								array(
-									'cart_messages' => $cart_messages, 'ajax' => 'true', 'wpsc_ajax_action' => 'add_to_cart', 'product_id' => $_REQUEST['product_id']
-								)
-							)
-						)
-					);
+		wp_remote_post(
+			add_query_arg( array( 'wpsc_action' => 'wpsc_get_alternate_html', 'ajax' => 'true', 'wpsc_ajax_action' => 'add_to_cart' ), home_url() ),
+			array(
+				'body' =>
+					array(
+						'cart_messages' => $cart_messages, 'ajax' => 'true', 'wpsc_ajax_action' => 'add_to_cart', 'product_id' => empty( $_REQUEST['product_id'] ) ? '' : $_REQUEST['product_id'], '_wpsc_compat_ajax' => true
+					),
+
+				'cookies' => $cookies,
+				'user-agent' => $_SERVER['HTTP_USER_AGENT']
+			)
+		)
+	);
 	return $javascript;
 }
 
@@ -1033,8 +1045,7 @@ function _wpsc_get_alternate_html() {
  * @param  array  $cart_messages [description]
  */
 function _wpsc_ajax_return_alternate_html() {
-	$cart_messages = is_array( $_POST['cart_messages'] ) ? $_POST['cart_messages'] : array();
-
+	$cart_messages = empty( $_POST['cart_messages'] ) ? array() : (array) $_POST['cart_messages'];
 	do_action( 'wpsc_alternate_cart_html', $cart_messages );
 	die;
 }
@@ -1055,7 +1066,6 @@ function _wpsc_ajax_get_cart( $die = true, $cart_messages = array() ) {
 	$return = array();
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-
 		ob_start();
 		include_once( wpsc_get_template_file_path( 'wpsc-cart_widget.php' ) );
 
@@ -1077,13 +1087,13 @@ function _wpsc_ajax_get_cart( $die = true, $cart_messages = array() ) {
 		}
 
 		$action_output = '';
-		if ( has_action( 'wpsc_alternate_cart_html' ) ) {
+		if ( has_action( 'wpsc_alternate_cart_html' ) && empty( $_REQUEST['_wpsc_compat_ajax'] ) ) {
 			//Deprecated action. Do not use.  We now have a custom JS event called 'wpsc_fancy_notification'. There is access to the complete $json_response object.
 			ob_start();
 
-			echo _wpsc_get_alternate_html();
+			echo _wpsc_get_alternate_html( $cart_messages );
 			$action_output = ob_get_contents();
-
+			$output = '';
 			ob_end_clean();
 		}
 
@@ -1093,8 +1103,10 @@ function _wpsc_ajax_get_cart( $die = true, $cart_messages = array() ) {
 		}
 	}
 
-	if ( $die )
-		die( $output . $action_output );
-	else
+	if ( $die ) {
+		echo $output . $action_output;
+		die();
+	} else {
 		return $return;
+	}
 }
