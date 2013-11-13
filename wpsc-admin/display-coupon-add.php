@@ -90,7 +90,7 @@
 						</th>
 						<td>
 							<input type="hidden" name="rules[operator][]" value="" />
-							<div class='coupon-condition' >
+							<div class='coupon-condition'>
 								<select class="ruleprops" name="rules[property][]">
 									<option value="item_name" rel="order"><?php _e( 'Item name', 'wpsc' ); ?></option>
 									<option value="item_quantity" rel="order"><?php _e( 'Item quantity', 'wpsc' ); ?></option>

@@ -326,7 +326,7 @@ class wpsc_cart_item {
 	public function get_title( $mode = 'display' ) {
 
 		if ( ! get_post_field( 'post_parent', $this->product_id ) )
-			return get_post_field( 'post_title', $this->product_id);
+			return get_post_field( 'post_title', $this->product_id );
 
 		if ( empty( self::$variation_cache ) )
 			self::refresh_variation_cache();
@@ -334,9 +334,9 @@ class wpsc_cart_item {
 		$primary_product_id = get_post_field( 'post_parent', $this->product_id );
 		$title = get_post_field( 'post_title', $primary_product_id );
 
-		if ( isset( self::$variation_cache[$this->product_id] ) ) {
-			ksort( self::$variation_cache[$this->product_id] );
-			$vars   = implode( ', ', self::$variation_cache[$this->product_id] );
+		if ( isset( self::$variation_cache[ $this->product_id ] ) ) {
+			ksort( self::$variation_cache[ $this->product_id ] );
+			$vars   = implode( ', ', self::$variation_cache[ $this->product_id ] );
 			$title .= ' (' . $vars . ')';
 		}
 

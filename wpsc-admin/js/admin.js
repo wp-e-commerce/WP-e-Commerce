@@ -343,7 +343,6 @@ jQuery(document).ready(function(){
 			if ( jQuery( 'select[name="rules[operator][]"]', prototype ).length === 0 ) {
 				operator_box.append("<option value='and'>" + wpsc_adminL10n.coupons_compare_and +  "</option>");
 				operator_box.append("<option value='or'>" + wpsc_adminL10n.coupons_compare_or + "</option>");
-				prototype.prepend(operator_box);
 			}
 
 
@@ -354,6 +353,7 @@ jQuery(document).ready(function(){
 
 		margin = jQuery( 'select.ruleprops', prototype ).offset().left - prototype.offset().left;
 		margin = parseInt( margin, 10 ) - 1;
+		prototype.find('input').focus();
 
 		prototype.animate( { opacity: 1, 'margin-left': '-' + margin + 'px', height: 'show' }, 150 );
 
