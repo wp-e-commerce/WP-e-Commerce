@@ -280,19 +280,19 @@ class wpsc_merchant {
 	 * go to transaction results, if this changes and you extend this, your merchant module may go to the wrong place
 	 */
 	function go_to_transaction_results( $session_id ) {
-		global $wpdb, $purchase_log;
+		$purchase_log = new WPSC_Purchase_Log( $this->purchase_id );
 
 		//Now to do actions once the payment has been attempted
-		switch ($purchase_log['processed']) {
-			case 3:
+		switch ( $purchase_log->get( 'processed' ) ) {
+			case WPSC_Purchase_Log::ACCEPTED_PAYMENT:
 				// payment worked
 				do_action('wpsc_payment_successful');
 				break;
-			case 1:
+			case WPSC_Purchase_Log::INCOMPLETE_SALE:
 				// payment declined
 				do_action('wpsc_payment_failed');
 				break;
-			case 2:
+			case WPSC_Purchase_Log::ORDER_RECEIVED:
 				// something happened with the payment
 				do_action('wpsc_payment_incomplete');
 				break;
