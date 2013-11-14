@@ -890,23 +890,3 @@ function wpsc_show_terms_and_conditions() {
 	echo wpautop( wp_kses_post( get_option( 'terms_and_conditions' ) ) );
 	die();
 }
-
-/** Return permalink to parent product when a permalink is requested for a child product
- * @access private
- *
- * @since 3.8.13
- * @return (string) permalink to product
- */
-function _wpsc_redirect_child_product_permalink( $post_link, $post, $leavename, $sample ) {
-	if ( is_numeric( $post ) ) {
-		$post = get_post( $post );
-	}
-
-	if ( ($post->post_type == 'wpsc-product') && ($post->post_status = 'inherit') && ($post->post_parent != 0 ) ) {
-		$post_link = get_permalink( $post->post_parent );
-	}
-
-	return $post_link;
-}
-
-add_action( 'post_type_link', '_wpsc_redirect_child_product_permalink' , 10, 4 );

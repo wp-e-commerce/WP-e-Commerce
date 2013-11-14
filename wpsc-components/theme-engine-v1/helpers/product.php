@@ -35,6 +35,12 @@ function wpsc_product_link( $permalink, $post, $leavename ) {
 	if ($post->post_type != 'wpsc-product')
 		return $permalink;
 
+	// Return permalink to parent product when a permalink is requested for a child product
+	if ( ($post->post_status = 'inherit') && ($post->post_parent != 0) ) {
+		$post_id = $post->post_parent;
+		$post = get_post( $post_id );
+	}
+
 	$permalink_structure = get_option( 'permalink_structure' );
 
 	// This may become customiseable later
