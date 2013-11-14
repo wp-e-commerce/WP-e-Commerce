@@ -898,6 +898,10 @@ function wpsc_show_terms_and_conditions() {
  * @return (string) permalink to product
  */
 function _wpsc_redirect_child_product_permalink( $post_link, $post, $leavename, $sample ) {
+	if ( is_numeric( $post ) ) {
+		$post = get_post( $post );
+	}
+
 	if ( ($post->post_type == 'wpsc-product') && ($post->post_status = 'inherit') && ($post->post_parent != 0 ) ) {
 		$post_link = get_permalink( $post->post_parent );
 	}
