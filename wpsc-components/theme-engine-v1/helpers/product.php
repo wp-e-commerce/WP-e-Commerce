@@ -551,22 +551,21 @@ function wpsc_category_image($category_id = null) {
 function wpsc_category_description($category_id = null) {
   if($category_id < 1)
 	$category_id = wpsc_category_id();
-  $category = get_term_by('id', $category_id, 'wpsc_product_category');
-  return  $category->description;
+  $category = get_term_by( 'id', $category_id, 'wpsc_product_category' );
+  return $category ? $category->description : '';
 }
 
 function wpsc_category_name($category_id = null) {
-	if($category_id < 1)
+	if ( $category_id < 1 )
 		$category_id = wpsc_category_id();
-	$category = get_term_by('id', $category_id, 'wpsc_product_category');
-	return $category->name;
+
+	$category = get_term_by( 'id', $category_id, 'wpsc_product_category' );
+	return $category ? $category->name : '';
 }
 
 function nzshpcrt_display_categories_groups() {
-    global $wpdb;
-
-    return $output;
-  }
+	return '';
+}
 
 /** wpsc list subcategories function
 		used to get an array of all the subcategories of a category.
