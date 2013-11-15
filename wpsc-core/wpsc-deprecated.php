@@ -1697,7 +1697,7 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( 'wpsc_display_invoice' == $_RE
  * @return resource $ch
  **/
 function wpsc_curl_ssl( $ch ) {
-	_wpsc_deprecated_function( __FUNCTION__, '3.8.13', __( "add_filter( 'https_ssl_verify', '__return_false' )", 'wpsc' ) );
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.13', "add_filter( 'https_ssl_verify', '__return_false' )" );
 
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
 	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
