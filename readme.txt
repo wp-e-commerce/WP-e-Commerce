@@ -178,6 +178,7 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * Fix: redundant product thumbnail is displayed on category / single product list.
 * Fix: variation checkbox column width in WP 3.7.
 * Fix: Out of stock message for variations now correctly shows variation of product for the title, rather than main product.
+* Fix: Update currency converting API, as the previous API was deprecated.
 
 = 3.8.12.1 =
 * Fix: Fatal error in wpsc_product_list_exclude_child_categories() due to other themes
