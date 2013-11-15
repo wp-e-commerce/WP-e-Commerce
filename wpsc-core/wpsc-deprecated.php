@@ -1738,3 +1738,7 @@ function wpsc_delete_cartmeta( $cart_item_id, $meta_key, $meta_value = '' ) {
 	return wpsc_delete_cart_item_meta( $cart_item_id, $meta_key, $meta_value );
 }
 
+function wpsc_get_exchange_rate( $from, $to ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.13' );
+	return _wpsc_get_exchange_rate( $from, $to );
+}

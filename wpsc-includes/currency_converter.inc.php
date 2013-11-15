@@ -25,10 +25,11 @@
 			$this->_amt  = $amt;
 			$this->_to   = $to;
 			$this->_from = $from;
+
+			return wpsc_convert_currency( $amt, $from, $to );
 		}
 
-		function error()
-		{
+		function error() {
 			return $this->_error;
 		}
 
@@ -50,26 +51,7 @@
 			$from   = urlencode( $from );
 			$to     = urlencode( $to );
 
-            $url = add_query_arg(
-            		array(
-            			'a'    => $amount,
-            			'from' => $from,
-            			'to'   => $to
-        			),
-    			'http://www.google.com/finance/converter'
-			);
-
-			$response = wp_remote_retrieve_body( wp_remote_get( $url, array( 'timeout' => 20 ) ) );
-
-			/* Return unconverted amount if we cannot convert */
-			if ( empty( $response ) ) {
-				return $amount;
-			} else {
-				$data = explode( 'bld>', $request );
-				$data = explode( $to_Currency, $data[1] );
-	            return round($data[0], 2);
-			}
-
+			return wpsc_convert_currency( $amt, $from, $to );
 		}
 	}
 ?>
