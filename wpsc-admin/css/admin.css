@@ -311,8 +311,33 @@ table.widefat tbody tr td.product-image img {
 }
 
 .newCurrency{
-	width:150px;
+	width:50%;
+	word-wrap:break-word;
+	height:auto;
+	border: none;
+	background: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
 }
+
+.newCurrPrice{
+	width: 30%;
+}
+
+.wpsc_delete_currency_layer{
+	text-decoration: none;
+	display: block-inline;
+	width: calc(20% - 10px);
+	color: red;
+	font-weight: bold;
+	text-align: center;
+}
+
+.wpsc_delete_currency_layer:hover{
+	text-decoration:underline;
+}
+
 div.wpsc_floatleft{
 	width:161px;
 	float:left;
@@ -1112,7 +1137,11 @@ table#wpsc_category_list td div.subcategory table.itemlist {
 }
 
 
-label.select_categorisation_group, select#select_categorisation_group, a.add_categorisation_group, a.edit_categorisation_group, #submit_categorisation_form span {
+label.select_categorisation_group, 
+select#select_categorisation_group, 
+a.add_categorisation_group, 
+a.edit_categorisation_group, 
+#submit_categorisation_form span {
 	display: block;
 	float: left;
 }
@@ -1170,9 +1199,7 @@ ul.categorisation_links{
 	clear: both;
 	padding: 0px;
 }
-.wpsc_add_new_currency{
-text-decoration: none;
-}
+
 ul.categorisation_links li{
 	display: block;
 	float: left;
@@ -1470,36 +1497,41 @@ ul.wpsc_categories {
 	clear: both;
 }
 
-a.update_variations_action
-{
+a.update_variations_action {
 	vertical-align:middle;
 }
+
 #poststuff .inside p.update-variations {
 	display:none;
 	margin-top:1em;
 }
+
 #search-products{
-width:auto;
-float:right;
+	width:auto;
+	float:right;
 }
+
 .productnav{
-height: 30px;
-margin: 6px 0px 4px;
-vertical-align: middle;
+	height: 30px;
+	margin: 6px 0px 4px;
+	vertical-align: middle;
 }
 
 #wpsc_stock_control_forms .edit_stock {
-	margin-top:0.5em;
+	margin-top:15px;
 	line-height:16px;
 }
+
 #wpsc_stock_control_forms .unpublish_when_none_left,
 #wpsc_stock_control_forms .notify_when_none_left {
 	margin:0.5em 0;
 }
+
 #media-upload form p.help {
 	text-align:left;
 	clear:both;
 }
+
 ul#category_list_li, ul.poll-options {
 }
 ul#category_list_li li div,
@@ -1855,13 +1887,19 @@ table.purchase-logs tr:hover .column-id .delete {
 }
 
 .wpsc-stock-editor .wpsc-product-shipping-section {
-	display:inline-block;
 	vertical-align: top;
-	width:49%;
 }
 
 .wpsc-stock-editor .wpsc-form-field {
 	clear:both;
+}
+
+.wpsc-stock-editor .wpsc-form-field label {
+	width: 150px;
+}
+
+.wpsc-stock-editor .wpsc-form-field input[type="number"] {
+	width: 70px;
 }
 
 .wpsc-stock-editor .wpsc-product-shipping-section input[type="text"] {
@@ -2013,9 +2051,14 @@ th.right-col {
 	padding: 0;
 }
 
-div.new_layer,
-div#table_rate {
-	display:none;
+div.new_layer{
+	display: block;
+	margin-bottom: 10px;
+}
+
+div.new_layer>*{
+	display: inline-block;
+	vertical-align: middle;
 }
 
 body.edit-tags-php img.wpsc_category_image {
@@ -2026,4 +2069,78 @@ body.edit-tags-php img.wpsc_category_image {
 
 .wpsc-width-height-fields label {
 	display: inline;
+}
+
+.remove_line{
+	color: red;
+	text-decoration: none;
+	text-align: center;
+	font-weight: bold;
+}
+
+.remove_line:hover{
+	text-decoration: underline;
+}
+
+#table_rate td{
+	padding-bottom: 10px;
+}
+
+#wpsc_product_delivery_tabs li,
+#wpsc_product_details_tabs li{
+	float: left;
+	padding: 4px 8px;
+	background: #fff;
+	border: 1px solid #dfdfdf;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	border-bottom: none;
+	margin-bottom: 0px;
+	margin-right: 7px;
+	position: relative;
+	top: 1px;
+}
+
+#wpsc_product_delivery_tabs a,
+#wpsc_product_details_tabs a{
+	text-decoration: none;
+	color: #999;
+}
+
+#wpsc_product_delivery_tabs a:hover,
+#wpsc_product_details_tabs a:hover{
+	color: #f00;
+}
+
+#wpsc_product_delivery_tabs a.active,
+#wpsc_product_delivery_tabs a.active:hover,
+#wpsc_product_details_tabs a.active,
+#wpsc_product_details_tabs a.active:hover{
+	color: #000;
+}
+
+.wpsc_pd_tabs_panel{
+	clear: both;
+	border: 1px solid #dfdfdf;
+	background: #fff;
+	min-height: 50px;
+	padding: 10px;
+}
+
+#wpsc_product_delivery-external_link th{
+	width: 50px;
+}
+
+#external_link_target input{
+	width: auto;
+}
+
+#external_link_target span{
+	margin-left: 10px;
+	margin-right: 30px;
+}
+
+#wpsc_product_gallery .gallery-icon{
+	float: left;
+	margin-right: 10px;
 }

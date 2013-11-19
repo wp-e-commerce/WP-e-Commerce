@@ -191,11 +191,11 @@ jQuery(document).ready(function(){
 
 	jQuery('#wpsc_price_control_forms').on( 'click', 'a.wpsc_add_new_currency', function( event ){
 			if(firstclick == true){
-				jQuery('div.new_layer').show();
+				jQuery('div.new_layer').first().show();
 				html = jQuery('div.new_layer').html();
 				firstclick = false;
 			}else{
-				jQuery('div.new_layer').after('<div>'+html+'</div>');
+				jQuery('a.wpsc_add_new_currency').before('<div class="new_layer">'+html+'</div>');
 			}
 			event.preventDefault();
 	});
@@ -204,7 +204,7 @@ jQuery(document).ready(function(){
 	jQuery('#wpsc_price_control_forms').on( 'click', 'a.wpsc_delete_currency_layer', function(event){
 			jQuery(this).prev('input').val('');
 			jQuery(this).prev('select').val('');
-			jQuery(this).parent('div:first').hide();
+			jQuery(this).parent('div:first').remove();
 			event.preventDefault();
 	});
 
@@ -264,14 +264,6 @@ jQuery(document).ready(function(){
 		toggle_stock_fields(limited_stock_checkbox.is(':checked'));
 	});
 
-	jQuery("#table_rate_price").on( 'click', function(){
-		if (this.checked) {
-			jQuery("#table_rate").show();
-		} else {
-			jQuery("#table_rate").hide();
-		}
-	});
-
 	jQuery("#custom_tax_checkbox").on( 'click', function(){
 			if (this.checked) {
 				jQuery("#custom_tax").show();
@@ -281,12 +273,18 @@ jQuery(document).ready(function(){
 			}
 	});
 
+	// Obtain row template of rate table
+	var sample_qd = jQuery('#sample_qd').remove().removeAttr('id');
+
+	// Add new row to rate table
 	jQuery( 'div#table_rate' ).on( 'click', '.add_level', function(){
-		added = jQuery(this).parent().children('table').append('<tr><td><input type="text" size="10" value="" name="table_rate_price[quantity][]"/> and above</td><td><input type="text" size="10" value="" name="table_rate_price[table_price][]"/></td></tr>');
+		added = jQuery('#table_rate tbody').append(sample_qd.clone());
 	});
 
+	// Remove a row from rate table
 	jQuery( 'div#table_rate' ).on( 'click', '.remove_line', function(){
 		jQuery(this).parent().parent('tr').remove();
+		event.preventDefault();
 	});
 
 	jQuery( '.wpsc_featured_product_toggle' ).on( 'click', function(){
@@ -387,6 +385,16 @@ jQuery(document).ready(function(){
 		});
 
 		return false;
+	});
+
+	jQuery('#wpsc_product_delivery_tabs a, #wpsc_product_details_tabs a').click(function(){
+		var href = jQuery(this).attr('href');
+
+		jQuery(this).parent().parent().find('a').removeClass('active');
+		jQuery(this).addClass('active');
+		jQuery(this).parent().parent().parent().find('.wpsc_pd_tabs_panel').hide();
+		jQuery(href).show();
+		event.preventDefault();
 	});
 });
 

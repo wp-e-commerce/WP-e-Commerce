@@ -277,12 +277,18 @@ class WPSC_Product_Variations_Page {
 				unset( $data['product_metadata']['weight_unit'] );
 			}
 
-			foreach ( array( 'height', 'width', 'length' ) as $field ) {
-				if ( empty( $fields['measurements'][$field] ) ) {
+			if ( empty( $fields['measurements']['dimensions'] ) ) {
+				foreach ( array( 'height', 'width', 'length' ) as $field ) {
 					unset( $data['product_metadata']['dimensions'][$field] );
 					unset( $data['product_metadata']['dimensions'][$field . '_unit'] );
+				}				
+			} else {
+				foreach ( array( 'height', 'width', 'length' ) as $field ) {
+					$data['product_metadata']['dimensions'][$field . '_unit'] = $data['product_metadata']['dimensions_unit'];
 				}
 			}
+
+			unset( $data['product_metadata']['dimensions_unit'] );
 		}
 
 		unset( $data['post'] );
