@@ -72,14 +72,13 @@ function wpsc_select_product_file( $product_id = null ) {
 
 	$attached_files = (array)get_posts( $args );
 
-	$output = '<table class="wp-list-table widefat fixed posts select_product_file">';
+	$output = '<table id="wpsc_digital_download_table" class="wp-list-table wpsc_wideflat posts select_product_file">';
 		$output .= '<thead>';
 			$output .= '<tr>';
 				$output .= '<th>' . _x( 'Title', 'Digital download UI', 'wpsc' ) . '</th>';
 				$output .= '<th>' . _x( 'Size', 'Digital download UI', 'wpsc' ) . '</th>';
 				$output .= '<th>' . _x( 'File Type', 'Digital download UI', 'wpsc' ) . '</th>';
-				$output .= '<th>' . _x( 'Trash', 'Digital download UI', 'wpsc' ) . '</th>';
-				$output .= '<th>' . _x( 'Preview', 'Digital download UI', 'wpsc' ) . '</th>';
+				$output .= '<th>' . _x( 'Actions', 'Digital download UI', 'wpsc' ) . '</th>';
 			$output .= '</tr>';
 		$output .= '</thead>';
 
@@ -103,12 +102,14 @@ function wpsc_select_product_file( $product_id = null ) {
 
 		$class = ( ! wpsc_is_odd( $num ) ) ? 'alternate' : '';
 
+		$file_type = get_post_mime_type($file->ID);
+		$icon_url  = wp_mime_type_icon($file_type);
+
 		$output .= '<tr class="wpsc_product_download_row ' . $class . '">';
-		$output .= '<td style="padding-right: 30px;">' . $file->post_title . '</td>';
+		$output .= '<td style="padding-right: 30px;"><img src="'. $icon_url .'"><span>' . $file->post_title . '</span></td>';
 		$output .= '<td>' . $file_size .'</td>';
-		$output .= '<td>.' . wpsc_get_extension( $file->post_title ) . '</td>';
-		$output .= "<td><a data-file-name='" . esc_attr( $file->post_title ) . "' data-product-id='" . esc_attr( $product_id ) . "' data-nonce='" . esc_attr( $delete_nonce ) . "' class='file_delete_button' href='{$deletion_url}' >" . _x( 'Delete', 'Digital download row UI', 'wpsc' ) . "</a></td>";
-		$output .= '<td><a href=' .$file_url .'>' . _x( 'Download', 'Digital download row UI', 'wpsc' ) . '</a></td>';
+		$output .= '<td>' . $file_type . '</td>';
+		$output .= '<td><a href="' .$file_url .'">' . _x( 'Download', 'Digital download row UI', 'wpsc' ) . '</a><a data-file-name="' . esc_attr( $file->post_title ) . '" data-product-id="' . esc_attr( $product_id ) . '" data-nonce="' . esc_attr( $delete_nonce ) . '" class="file_delete_button" href="{$deletion_url}" >' . _x( "Delete", "Digital download row UI", "wpsc" ) . '</a></td>';
 
 		$output .= '</tr>';
 

@@ -1,4 +1,4 @@
-/*
+
 * This is the new WPSC Admin CSS file
 
 */
@@ -457,7 +457,7 @@ h4.product_action_link {
 
 
 /* custom meta styling */
-div.product_custom_meta {
+/*div.product_custom_meta {
 	display: block;
 	width: 100%;
 	vertical-align: top;
@@ -496,7 +496,7 @@ div.product_custom_meta label input {
 
 div.product_custom_meta br {
 	clear: both;
-}
+}*/
 
 /* image form styling */
 div.flash-image-uploader {
@@ -888,11 +888,11 @@ img.wpsc_add_download {
 	top: 2px;
 }
 
-div#poststuff table tr.wpsc_product_download_row td {
+/*div#poststuff table tr.wpsc_product_download_row td {
 	padding: 6px 7px;
 	vertical-align: middle;
 	line-height: 16px;
-}
+}*/
 
 a.file_delete_button {
 	cursor:pointer;
@@ -2143,4 +2143,58 @@ body.edit-tags-php img.wpsc_category_image {
 #wpsc_product_gallery .gallery-icon{
 	float: left;
 	margin-right: 10px;
+}
+
+
+/*Wideflat table style*/
+
+.wpsc_wideflat{
+	margin-bottom: 10px;
+	width: 100%;
+	border-spacing:0px;
+    border: 1px solid #CCC;
+}
+
+.wpsc_wideflat th,
+.wpsc_wideflat td{
+	padding: 10px 10px;
+}
+
+.wpsc_wideflat th{
+	background: #f1f1f1;
+	text-align: left;
+}
+
+.wpsc_wideflat td{
+	background: #f9f9f9;
+}
+
+
+/*Digital download table style*/
+
+#wpsc_digital_download_table a,
+#wpsc_digital_download_table img{
+	display: inline-block;
+	margin-right: 10px;
+}
+
+#wpsc_digital_download_table span{
+	display: inline-block;
+	vertical-align: middle;
+}
+
+#wpsc_digital_download_table img{
+	max-height: 20px;
+	vertical-align: middle;
+}
+
+
+/*Custom meta style*/
+
+#wpsc_product_meta_table input{
+	width: 100%;
+}
+
+a.wpsc_remove_meta{
+	color: red;
 }

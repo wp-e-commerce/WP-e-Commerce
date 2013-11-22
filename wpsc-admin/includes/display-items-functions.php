@@ -724,6 +724,7 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 <?php
 }
 
+// aka custom meta form
 function wpsc_product_advanced_forms() {
 	global $post, $wpdb, $variations_processor, $wpsc_product_defaults;
 	$product_data = get_post_custom( $post->ID );
@@ -752,78 +753,45 @@ function wpsc_product_advanced_forms() {
 	if( !isset( $product_meta['can_have_uploaded_image'] ) )
 		$product_meta['can_have_uploaded_image'] = '';
 
-?>
+	$output = '<table id="wpsc_product_meta_table" class="wp-list-table wpsc_wideflat posts">';
+		$output .= '<thead>';
+			$output .= '<tr>';
+				$output .= '<th>' . _x( 'Name', 'Product meta UI', 'wpsc' ) . '</th>';
+				$output .= '<th>' . _x( 'Value', 'Product meta UI', 'wpsc' ) . '</th>';
+				$output .= '<th>' . _x( 'Action', 'Product meta UI', 'wpsc' ) . '</th>';
+			$output .= '</tr>';
+		$output .= '</thead>';
+		$output .= '<tbody>';
+		
+		// Display all available metadata
+		foreach ( (array)$custom_fields as $custom_field ) {
+			$i = $custom_field['meta_id'];
 
-        <table>
-            <tr>
-                <td colspan='2' class='itemfirstcol'>
-                    <strong><?php esc_html_e( 'Custom Meta', 'wpsc' ); ?>:</strong><br />
-                    <a href='#' class='add_more_meta' onclick="return add_more_meta(this)"><?php esc_html_e( '+ Add Custom Meta', 'wpsc' );?> </a><br /><br />
+			$output .= '<tr>';
+				$output .= '<td><input type="text" value="'.$custom_field['meta_key'].'" name="custom_meta['.$i.'][name]" id="custom_meta_name_'.$i.'"></input></td>';
+				$output .= '<td><input type="text" value="'.esc_html($custom_field['meta_value']).'" name="custom_meta['.$i.'][value]" id="custom_meta_value_'.$i.'"></input></td>';
+				$output .= '<td><a href="#" data-nonce="'.esc_attr( $delete_nonce ).'" class="wpsc_remove_meta" onclick="wpsc_remove_custom_meta(this,'.$i.')">'.esc_html( 'Delete', 'wpsc' ).'</a></td>';
+			$output .= '</tr>';
+		}
 
-                    <?php
-	foreach ( (array)$custom_fields as $custom_field ) {
-		$i = $custom_field['meta_id'];
+			// Template for new metadata input
+			$output .= '<tr id="wpsc_new_meta_template">';
+				$output .= '<td><input type="text" name="new_custom_meta[name][]"  value=""></input></td>';
+				$output .= '<td><input type="text" name="new_custom_meta[value][]" value=""></input></td>';
+				$output .= '<td><a href="#" class="wpsc_remove_meta" onclick="wpsc_remove_empty_meta(this)">'.esc_html( 'Delete', 'wpsc' ).'</a></td>';
+			$output .= '</tr>';
 
-?>
-                            <div class='product_custom_meta'  id='custom_meta_<?php echo $i; ?>'>
-                                    <?php esc_html_e( 'Name', 'wpsc' ); ?>
-                                    <input type='text' class='text'  value='<?php echo $custom_field['meta_key']; ?>' name='custom_meta[<?php echo $i; ?>][name]' id='custom_meta_name_<?php echo $i; ?>'>
-                                    <?php esc_html_e( 'Value', 'wpsc' ); ?>
-                                    <textarea class='text' name='custom_meta[<?php echo $i; ?>][value]' id='custom_meta_value_<?php echo $i; ?>'><?php echo esc_textarea( $custom_field['meta_value'] ); ?></textarea>
-                                    <a href='#' data-nonce="<?php echo esc_attr( $delete_nonce ); ?>" class='remove_meta' onclick='return remove_meta(this, <?php echo $i; ?>)'><?php esc_html_e( 'Delete', 'wpsc' ); ?></a>
-                                    <br />
-                            </div>
-                    <?php
-	}
-?>
-				<div class='product_custom_meta'>
-					<?php esc_html_e( 'Name', 'wpsc' ); ?>: <br />
-					<input type='text' name='new_custom_meta[name][]' value='' class='text'/><br />
-					<?php esc_html_e( 'Description', 'wpsc' ); ?>: <br />
-					<textarea name='new_custom_meta[value][]' cols='40' rows='10' class='text' ></textarea>
-					<br />
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<td class='itemfirstcol' colspan='2'><br /> <strong><?php esc_html_e( 'Merchant Notes:', 'wpsc' ); ?></strong><br />
+		$output .= '</tbody>';
+	$output .= '</table>';
+	
+	$output .= '<a href="#" class="add_more_meta  button button-small" id="wpsc_add_custom_meta">'.esc_html( '+ Add Custom Meta', 'wpsc' ).'</a>';
 
-			<textarea cols='40' rows='3' name='meta[_wpsc_product_metadata][merchant_notes]' id='merchant_notes'><?php
-				if ( isset( $product_meta['merchant_notes'] ) )
-				echo esc_textarea( trim( $product_meta['merchant_notes'] ) );
-			?></textarea>
-			<small><?php esc_html_e( 'These notes are only available here.', 'wpsc' ); ?></small>
-		</td>
-	</tr>
-        <?php
-	if ( get_option( 'payment_gateway' ) == 'google' ) {
-?>
-	<tr>
-		<td class='itemfirstcol' colspan='2'>
 
-			<input type='checkbox' <?php echo $product_meta['google_prohibited']; ?> name='meta[_wpsc_product_metadata][google_prohibited]' id='add_google_prohibited' /> <label for='add_google_prohibited'>
-			<?php esc_html_e( 'Prohibited <a href="http://checkout.google.com/support/sell/bin/answer.py?answer=75724">by Google?</a>', 'wpsc' ); ?>
-			</label><br />
-		</td>
-	</tr>
-	<?php
-	}
-	do_action( 'wpsc_add_advanced_options', $post->ID );
-?>
-	<tr>
-		<td class='itemfirstcol' colspan='2'><br />
-			<strong><?php esc_html_e( 'Enable Comments', 'wpsc' ); ?>:</strong><br />
-			<select name='meta[_wpsc_product_metadata][enable_comments]'>
-				<option value='' <?php echo ( ( isset( $product_meta['enable_comments'] ) && $product_meta['enable_comments'] == '' ) ? 'selected' : '' ); ?> ><?php esc_html_e( 'Use Default', 'wpsc' ); ?></option>
-				<option value='1' <?php echo ( ( isset( $product_meta['enable_comments'] ) && $product_meta['enable_comments'] == '1' ) ? 'selected' : '' ); ?> ><?php esc_html_e( 'Yes', 'wpsc' ); ?></option>
-				<option value='0' <?php echo ( ( isset( $product_meta['enable_comments'] ) && $product_meta['enable_comments'] == '0' ) ? 'selected' : '' ); ?> ><?php esc_html_e( 'No', 'wpsc' ); ?></option>
-			</select>
-			<br/><?php esc_html_e( 'Allow users to comment on this Product.', 'wpsc' ); ?>
-		</td>
-	</tr>
-    </table>
-<?php
+	echo $output;
+	return;
 }
+
+
 function wpsc_product_external_link_forms() {
 
 	global $post, $wpdb, $variations_processor, $wpsc_product_defaults;
@@ -902,6 +870,7 @@ function wpsc_product_download_forms() {
 
 	<a href="admin.php?wpsc_admin_action=product_files_existing&amp;product_id=<?php echo $post->ID; ?>" class="thickbox button button-small" title="<?php echo esc_attr( sprintf( __( 'Select all downloadable files for %s', 'wpsc' ), $post->post_title ) ); ?>"><?php esc_html_e( 'Add existing files...', 'wpsc' ); ?></a>
 	<a name="wpsc_downloads"></a>
+	
 	<input type='file' name='file' class="button button-small" value='' />
 
 <?php
