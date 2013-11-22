@@ -273,7 +273,7 @@ jQuery(document).ready(function(){
 			}
 	});
 
-	// Obtain row template of rate table
+	// RATE TABLE
 	var sample_qd = jQuery('#sample_qd').remove().removeAttr('id');
 
 	// Add new row to rate table
@@ -396,37 +396,42 @@ jQuery(document).ready(function(){
 		jQuery(href).show();
 		event.preventDefault();
 	});
+
+	// Meta table
+	var meta_inp_tem = jQuery('#wpsc_new_meta_template').remove().removeAttr('id');
+
+	jQuery('#wpsc_add_custom_meta').click(function(){
+		jQuery('#wpsc_product_meta_table tbody').append(meta_inp_tem.clone());
+		event.preventDefault();
+	});
 });
 
-// function for adding more custom meta
-function add_more_meta(e) {
-	var current_meta_forms = jQuery(e).parent().children("div.product_custom_meta:last"), // grab the form container
-		new_meta_forms = current_meta_forms.clone(); // clone the form container
 
-	new_meta_forms.find('input, textarea').val('');
-	current_meta_forms.after(new_meta_forms);  // append it after the container of the clicked element
-	return false;
+// Remove new/empty custom meta input row
+function wpsc_remove_empty_meta(caller){
+	jQuery(caller).closest('tr').remove();
+	event.preventDefault();
 }
 
 // function for removing custom meta
-function remove_meta(e, meta_id) {
-	var t = jQuery(e),
-		current_meta_form = t.parent("div.product_custom_meta"),  // grab the form container
-		post_data = {
+function wpsc_remove_custom_meta(caller, meta_id) {
+	var post_data = {
 			action    : 'remove_product_meta',
 			'meta_id' : meta_id,
-			nonce     : t.data('nonce')
-		},
-		response_handler = function(response) {
+			nonce     : jQuery(caller).data('nonce')
+		};
+
+	var response_handler = function(response) {
 			if (! response.is_successful) {
 				alert(response.error.messages.join("\n"));
 				return;
 			}
-			jQuery("div#custom_meta_"+meta_id).remove();
-		};
+			jQuery(caller).closest('tr').remove();
+		};		
 
 	jQuery.wpsc_post(post_data, response_handler);
-	return false;
+	
+	event.preventDefault();
 }
 
 var prevElement = null;
