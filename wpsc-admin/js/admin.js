@@ -404,6 +404,18 @@ jQuery(document).ready(function(){
 		jQuery('#wpsc_product_meta_table tbody').append(meta_inp_tem.clone());
 		event.preventDefault();
 	});
+
+	// Init delivery metabox live title
+	if (jQuery('#wpsc_product_delivery_forms').length > 0){
+		jQuery('#wpsc_product_delivery_forms input, #wpsc_product_delivery_forms select').change(wpsc_update_delivery_metabox_live_title);
+		wpsc_update_delivery_metabox_live_title();
+	}
+
+	// Init product details metabox live title
+	if (jQuery('#wpsc_product_details_forms').length > 0){
+		jQuery('#wpsc_product_details_forms a').click(wpsc_update_product_details_metabox_live_title);
+		wpsc_update_product_details_metabox_live_title();
+	}
 });
 
 
@@ -430,8 +442,48 @@ function wpsc_remove_custom_meta(caller, meta_id) {
 		};		
 
 	jQuery.wpsc_post(post_data, response_handler);
+	wpsc_update_product_details_metabox_live_title();
 	
 	event.preventDefault();
+}
+
+// Copy value of caller to target text
+function wpsc_push_v2t(caller, target_slt){
+	jQuery(target_slt).text(jQuery(caller).val());
+}
+
+// Compose and update live title for shipping metabox
+function wpsc_update_delivery_metabox_live_title(){
+	if (jQuery('#wpsc_product_delivery_forms').length <= 0) return;
+
+	var weight             = jQuery('#wpsc-product-shipping-weight').val();
+	var weight_unit        = jQuery('#wpsc-product-shipping-weight-unit').val();
+	var length             = jQuery('#wpsc-product-shipping-length').val();
+	var width              = jQuery('#wpsc-product-shipping-width').val();
+	var height             = jQuery('#wpsc-product-shipping-height').val();
+	var dimensions_unit    = jQuery('#wpsc-product-shipping-dimensions-unit').val();
+	var number_of_download = jQuery('.wpsc_product_download_row').length;
+
+	var vol = length * width * height;
+		vol = Math.round(vol * 100) / 100; // Round up to two decimal
+
+	var output = weight + ' ' + weight_unit + ', ';
+		output += vol + ' ' + dimensions_unit + '<sup>3</sup>, ';
+		output += number_of_download + ' downloads';
+
+	jQuery('#wpsc_product_delivery_metabox_live_title>p').html(output);
+}	
+
+function wpsc_update_product_details_metabox_live_title(){
+	if (jQuery('#wpsc_product_details_forms').length <= 0) return;
+
+	var number_of_photos = jQuery('#wpsc_product_gallery img').length;
+	var number_of_meta   = jQuery('#wpsc_product_meta_table tbody tr').length;
+
+	var output = number_of_photos + ' images, ';
+		output += number_of_meta + ' metadata';
+
+	jQuery('#wpsc_product_details_metabox_live_title>p').html(output);
 }
 
 var prevElement = null;

@@ -77,6 +77,7 @@ function wpsc_css_header() {
         </style>
         <?php
 }
+
 function wpsc_price_control_forms() {
 	global $post, $wpdb, $variations_processor, $wpsc_product_defaults;
 	$product_data = get_post_custom( $post->ID );
@@ -139,9 +140,16 @@ function wpsc_price_control_forms() {
 	$currency_type = get_option( 'currency_type' );
 	$country = new WPSC_Country( $currency_type );
 
-	$ct_code = $country->get( 'code' );	// Country name
+	$ct_code = $country->get( 'code' );		// Country name
 	$ct_symb = $country->get( 'symbol' );	// Country symbol
+
+	$price 		= $product_data['meta']['_wpsc_price'];
+	$sale_price = $product_data['meta']['_wpsc_special_price'];
 ?>
+		<em id="wpsc_product_price_metabox_live_title" class="wpsc_metabox_live_title">
+			<p>&nbsp;<?php esc_html_e($ct_symb); ?><span><?php esc_html_e($sale_price) ?></span></p>
+			<del><?php esc_html_e($ct_symb); ?><span><?php esc_html_e($price) ?></span></del>
+		</em>
         <input type="hidden" id="parent_post" name="parent_post" value="<?php echo $post->post_parent; ?>" />
         <?php /* Lots of tedious work is avoided with this little line. */ ?>
         <input type="hidden" id="product_id" name="product_id" value="<?php echo $post->ID; ?>" />
@@ -155,18 +163,24 @@ function wpsc_price_control_forms() {
 
     	<div class='wpsc_floatleft' style="width:85px;">	
     		<label><?php esc_html_e( 'Price '.$ct_code.' '.$ct_symb, 'wpsc' ); ?></label>
-			<input 	type='text' class='text' size='10' 
-					name='meta[_wpsc_price]' 
-					value='<?php echo esc_attr( $product_data['meta']['_wpsc_price'] );  ?>' />
+			<input 	type='number' size='10'
+					min="0" step="0.10" 
+					name='meta[_wpsc_price]'
+					style="width:80px;" 
+					value="<?php echo esc_attr( $product_data['meta']['_wpsc_price'] );  ?>"
+					onChange="wpsc_push_v2t(this, '#wpsc_product_price_metabox_live_title>del>span')" />
 		</div>
 
 		<div 	class='wpsc_floatleft' 
 				style='display:<?php if ( ( $product_data['special'] == 1 ) ? 'block' : 'none'
 	); ?>; width:85px; margin-left:30px;'>
 			<label for='add_form_special'><?php esc_html_e( 'Sale Price '.$ct_code.' '.$ct_symb, 'wpsc' ); ?></label>
-			<input 	type='text' size='10' 
-					value='<?php echo esc_attr( $product_data['meta']['_wpsc_special_price'] ); ?>' 
-					name='meta[_wpsc_special_price]' />
+			<input 	type='number' size='10'
+					min="0" step="0.10" 
+					style="width:80px;"
+					value="<?php echo esc_attr( $product_data['meta']['_wpsc_special_price'] ); ?>"
+					name='meta[_wpsc_special_price]'
+					onChange="wpsc_push_v2t(this, '#wpsc_product_price_metabox_live_title>p>span')" />
 		</div>
 
 		<div style="clear:both; margin-bottom:20px;"></div>
@@ -324,10 +338,17 @@ function wpsc_stock_control_forms() {
 	if ( !isset( $product_meta['unpublish_when_none_left'] ) )
 		$product_meta['unpublish_when_none_left'] = '';
 
+	// Display live title if stock is set
+	if ( is_numeric( $product_data['meta']['_wpsc_stock'] )){
+		$live_title = '<em id="wpsc_product_stock_metabox_live_title" class="wpsc_metabox_live_title">';
+			$live_title .= '<p><span>'.$product_data['meta']['_wpsc_stock'].'</span> in stock</p>';
+		$live_title .= '</em>';
+
+		echo $live_title;
+	}
+
 	if ( ! empty( $product_meta['unpublish_when_none_left'] ) && ! isset( $product_meta['notify_when_none_left'] ) )
-
 ?>
-
         <label for="wpsc_sku"><abbr title="<?php esc_attr_e( 'Stock Keeping Unit', 'wpsc' ); ?>"><?php esc_html_e( 'SKU:', 'wpsc' ); ?></abbr></label>
 <?php
 	if ( !isset( $product_data['meta']['_wpsc_sku'] ) )
@@ -356,7 +377,8 @@ function wpsc_stock_control_forms() {
 							<input 	type='number' min="0" step="1" style="width:80px; margin-left:50px;"
 									id="stock_limit_quantity" name='meta[_wpsc_stock]' 
 									size='3' value='<?php echo $product_data['meta']['_wpsc_stock']; ?>' 
-									class='stock_limit_quantity' />
+									class='stock_limit_quantity' 
+									onChange="wpsc_push_v2t(this, '#wpsc_product_stock_metabox_live_title>p>span')" />
 						</div>
 
 						<?php
@@ -436,7 +458,7 @@ function wpsc_product_taxes_forms() {
 		'type' => 'checkbox',
 		'id' => 'wpec_taxes_taxable',
 		'name' => 'meta[_wpsc_product_metadata][wpec_taxes_taxable]',
-		'label' => __( 'This product is not taxable.', 'wpsc' )
+		'label' => __( 'Product is exempt from taxation.', 'wpsc' )
 	);
 
 	if ( isset( $product_meta['wpec_taxes_taxable'] ) && 'on' == $product_meta['wpec_taxes_taxable'] ) {
@@ -462,15 +484,14 @@ function wpsc_product_taxes_forms() {
 		}
 	}// if
 
-?>			<a name="wpsc_tax"></a>
-            <p><?php echo $wpec_taxes_controller->wpec_taxes_display_tax_bands( $band_select_settings, $wpec_taxes_band ); ?></p>
-				<p>
-					<?php if ( !$wpec_taxes_controller->wpec_taxes_isincluded() ): ?>
-						<?php echo $wpec_taxes_controller->wpec_taxes_build_input( $taxable_amount_input_settings );?>
-					<?php endif;?>
-				</p>
-            <p><?php echo $wpec_taxes_controller->wpec_taxes_build_input( $taxable_checkbox_settings ); ?></p>
-<?php
+	$output = '<a name="wpsc_tax"></a>';
+	$output .= '<p>'.$wpec_taxes_controller->wpec_taxes_build_input( $taxable_checkbox_settings ).'</p>';
+	$output .= '<p>'.$wpec_taxes_controller->wpec_taxes_display_tax_bands( $band_select_settings, $wpec_taxes_band ).'</p>';
+	$output .= '<p>';
+		$output .= 	( !$wpec_taxes_controller->wpec_taxes_isincluded() ) ? $wpec_taxes_controller->wpec_taxes_build_input( $taxable_amount_input_settings ) : '';
+	$output .= '</p>';
+
+	echo $output;
 }
 
 function wpsc_product_variation_forms() {
@@ -660,7 +681,7 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 				<label for="wpsc-product-shipping-weight"><?php echo esc_html_e( 'Weight', 'wpsc' ); ?></label>
 				<span class="wpsc-product-shipping-input">
 					<input type="number" min="0" step="0.1" id="wpsc-product-shipping-weight" name="<?php echo $field_name_prefix; ?>[weight]" value="<?php if ( ! $bulk ) echo esc_attr( wpsc_format_number( $weight ) ); ?>" />
-					<select name="<?php echo $field_name_prefix; ?>[weight_unit]">
+					<select id="wpsc-product-shipping-weight-unit" name="<?php echo $field_name_prefix; ?>[weight_unit]">
 							<?php foreach ( $weight_units as $unit => $unit_label ): ?>
 								<option value="<?php echo $unit; ?>" <?php if ( ! $bulk ) selected( $unit, $measurements['weight_unit'] ); ?>><?php echo esc_html( $unit_label ); ?></option>
 							<?php endforeach; ?>
@@ -679,9 +700,9 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 					<input type="number" min="0" step="0.1" placeholder="L" id="wpsc-product-shipping-length" name="<?php echo $field_name_prefix; ?>[dimensions][length]" value="<?php if ( !$bulk && $dimensions['length']>0 ) echo esc_attr( wpsc_format_number( $dimensions['length'] ) ); ?>" />&nbsp;x&nbsp;
 					<input type="number" min="0" step="0.1" placeholder="W" id="wpsc-product-shipping-width" name="<?php echo $field_name_prefix; ?>[dimensions][width]" value="<?php if ( !$bulk && $dimensions['width']>0 ) echo esc_attr( wpsc_format_number( $dimensions['width'] ) ); ?>" />&nbsp;x&nbsp;
 					<input type="number" min="0" step="0.1" placeholder="H" id="wpsc-product-shipping-height" name="<?php echo $field_name_prefix; ?>[dimensions][height]" value="<?php if ( !$bulk && $dimensions['height']>0 ) echo esc_attr( wpsc_format_number( $dimensions['height'] ) ); ?>" />
-					<select name="<?php echo $field_name_prefix; ?>[dimensions_unit]">
+					<select id="wpsc-product-shipping-dimensions-unit" name="<?php echo $field_name_prefix; ?>[dimensions_unit]">
 						<?php foreach ( $dimension_units as $unit => $unit_label ): ?>
-							<option value="<?php echo $unit; ?>" <?php if ( ! $bulk ) selected( $unit, $measurements['height_unit'] ); // Dirty code ?>><?php echo esc_html( $unit_label ); ?></option>
+							<option value="<?php echo $unit; ?>" <?php if ( ! $bulk ) selected( $unit, $measurements['width_unit'] ); // Dirty code ?>><?php echo esc_html( $unit_label ); ?></option>
 						<?php endforeach; ?>
 					</select>
 				</span>
@@ -756,9 +777,9 @@ function wpsc_product_advanced_forms() {
 	$output = '<table id="wpsc_product_meta_table" class="wp-list-table wpsc_wideflat posts">';
 		$output .= '<thead>';
 			$output .= '<tr>';
-				$output .= '<th>' . _x( 'Name', 'Product meta UI', 'wpsc' ) . '</th>';
-				$output .= '<th>' . _x( 'Value', 'Product meta UI', 'wpsc' ) . '</th>';
-				$output .= '<th>' . _x( 'Action', 'Product meta UI', 'wpsc' ) . '</th>';
+				$output .= '<th id="wpsc_custom_meta_name_th">' . _x( 'Name', 'Product meta UI', 'wpsc' ) . '</th>';
+				$output .= '<th id="wpsc_custom_meta_value_th">' . _x( 'Value', 'Product meta UI', 'wpsc' ) . '</th>';
+				$output .= '<th id="wpsc_custom_meta_action_th">' . _x( 'Action', 'Product meta UI', 'wpsc' ) . '</th>';
 			$output .= '</tr>';
 		$output .= '</thead>';
 		$output .= '<tbody>';
@@ -869,9 +890,12 @@ function wpsc_product_download_forms() {
 	<?php echo wpsc_select_product_file( $post->ID ); ?>
 
 	<a href="admin.php?wpsc_admin_action=product_files_existing&amp;product_id=<?php echo $post->ID; ?>" class="thickbox button button-small" title="<?php echo esc_attr( sprintf( __( 'Select all downloadable files for %s', 'wpsc' ), $post->post_title ) ); ?>"><?php esc_html_e( 'Add existing files...', 'wpsc' ); ?></a>
-	<a name="wpsc_downloads"></a>
-	
-	<input type='file' name='file' class="button button-small" value='' />
+
+	<div class="wpsc_fileUpload button button-small">	
+		<span><?php esc_html_e('Upload new file...','wpsc'); ?></span>
+		<input type='file' name='file' class="button button-small" value='' onchange="wpsc_push_v2t(this, '#wpsc_fileupload_path')" />
+	</div>
+	<em id="wpsc_fileupload_path"></em>
 
 <?php
 	if ( function_exists( "make_mp3_preview" ) || function_exists( "wpsc_media_player" ) ) {
@@ -921,6 +945,10 @@ function wpsc_product_personalization_forms(){
 
 function wpsc_product_delivery_forms(){ 
 ?>
+	<em id="wpsc_product_delivery_metabox_live_title" class="wpsc_metabox_live_title">
+		<p></p>
+	</em>
+
 	<div id="wpsc_product_delivery_forms">
 		<ul id="wpsc_product_delivery_tabs">
 			<li><a href="#wpsc_product_delivery-shipping" class="active">Shipping</a></li>
@@ -950,6 +978,10 @@ function wpsc_product_delivery_forms(){
 
 function wpsc_product_details_forms(){
 ?>
+	<em id="wpsc_product_details_metabox_live_title" class="wpsc_metabox_live_title">
+		<p></p>
+	</em>
+
 	<div id="wpsc_product_details_forms">
 		<ul id="wpsc_product_details_tabs">
 			<li><a href="#wpsc_product_details-desc" class="active">Short Description</a></li>
