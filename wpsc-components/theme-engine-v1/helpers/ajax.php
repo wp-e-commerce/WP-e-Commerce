@@ -36,6 +36,10 @@ if ( isset( $_REQUEST['wpsc_update_quantity'] ) && ($_REQUEST['wpsc_update_quant
 if ( isset( $_REQUEST['wpsc_ajax_action'] ) && ($_REQUEST['wpsc_ajax_action'] == 'rate_product') )
 	add_action( 'init', 'wpsc_update_product_rating' );
 
+if ( isset( $_REQUEST['wpsc_ajax_actions'] ) && 'update_location' == $_REQUEST['wpsc_ajax_actions'] ) {
+	add_action( 'init', 'wpsc_update_location' );
+}
+
 add_action( 'wp_ajax_add_to_cart'       , 'wpsc_add_to_cart' );
 add_action( 'wp_ajax_nopriv_add_to_cart', 'wpsc_add_to_cart' );
 add_action( 'wp_ajax_get_cart'       , 'wpsc_get_cart' );
