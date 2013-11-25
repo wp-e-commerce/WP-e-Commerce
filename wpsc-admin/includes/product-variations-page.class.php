@@ -3,7 +3,7 @@
 class WPSC_Product_Variations_Page {
 	private $list_table;
 	private $parent_id;
-	private $current_tab = 'manage';
+	private $current_tab;
 	private $post;
 
 	public function __construct() {
@@ -12,8 +12,18 @@ class WPSC_Product_Variations_Page {
 		$this->parent_id = absint( $_REQUEST['product_id'] );
 		set_current_screen();
 
-		if ( ! empty( $_REQUEST['tab'] ) )
+		if ( ! empty( $_REQUEST['tab'] ) ) {
 			$this->current_tab = $_REQUEST['tab'];
+		} else {
+			$args = array(	
+				'post_parent' => $this->parent_id,
+				'post_type'   => 'wpsc-product', 
+				'post_status' => 'any');
+
+			$number_of_variations = count(get_children($args));
+
+			$this->current_tab = ($number_of_variations > 0) ? 'manage' : 'setup';
+		}
 	}
 
 	private function merge_meta_deep( $original, $updated ) {
@@ -117,6 +127,7 @@ class WPSC_Product_Variations_Page {
 			'manage'   => _x( 'Manage', 'manage product variations', 'wpsc' ),
 			'setup' => __( 'Setup', 'wpsc' ),
 		);
+
 		echo '<ul class="wpsc-product-variations-tabs">';
 		foreach ( $tabs as $tab => $title ) {
 			$class = ( $tab == $this->current_tab ) ? ' class="active"' : '';
@@ -284,7 +295,7 @@ class WPSC_Product_Variations_Page {
 				}				
 			} else {
 				foreach ( array( 'height', 'width', 'length' ) as $field ) {
-					$data['product_metadata']['dimensions'][$field . '_unit'] = $data['product_metadata']['dimensions_unit'];
+					$data['product_metadata']['dimensions'][$field . '_unit'] = "cm";
 				}
 			}
 
