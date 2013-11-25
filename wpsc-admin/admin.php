@@ -506,7 +506,7 @@ function wpsc_meta_boxes() {
 
 	// add_meta_box( 'wpsc_product_gallery', __( 'Product Gallery', 'wpsc' ), 'wpsc_product_gallery', $pagename, 'side', 'low' );
 	add_meta_box( 'wpsc_price_control_forms', __('Product Pricing', 'wpsc'), 'wpsc_price_control_forms', $pagename, 'side', 'low' );
-	add_meta_box( 'wpsc_stock_control_forms', __('Stock Control', 'wpsc'), 'wpsc_stock_control_forms', $pagename, 'side', 'low' );
+	add_meta_box( 'wpsc_stock_control_forms', __('Stock Inventory', 'wpsc'), 'wpsc_stock_control_forms', $pagename, 'side', 'low' );
 	add_meta_box( 'wpsc_product_taxes_forms', __('Taxes', 'wpsc'), 'wpsc_product_taxes_forms', $pagename, 'side', 'low' );
 	// add_meta_box( 'wpsc_additional_desc', __('Additional Description', 'wpsc'), 'wpsc_additional_desc', $pagename, 'normal', 'high' );
 	// add_meta_box( 'wpsc_product_download_forms', __('Product Download', 'wpsc'), 'wpsc_product_download_forms', $pagename, 'normal', 'high' );

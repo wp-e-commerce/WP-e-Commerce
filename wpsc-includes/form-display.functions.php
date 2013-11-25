@@ -78,7 +78,7 @@ function wpsc_select_product_file( $product_id = null ) {
 				$output .= '<th>' . _x( 'Title', 'Digital download UI', 'wpsc' ) . '</th>';
 				$output .= '<th>' . _x( 'Size', 'Digital download UI', 'wpsc' ) . '</th>';
 				$output .= '<th>' . _x( 'File Type', 'Digital download UI', 'wpsc' ) . '</th>';
-				$output .= '<th>' . _x( 'Actions', 'Digital download UI', 'wpsc' ) . '</th>';
+				$output .= '<th id="wpsc_digital_download_action_th">' . _x( 'Actions', 'Digital download UI', 'wpsc' ) . '</th>';
 			$output .= '</tr>';
 		$output .= '</thead>';
 
