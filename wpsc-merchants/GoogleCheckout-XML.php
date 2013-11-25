@@ -9,7 +9,7 @@ require_once(WPSC_FILE_PATH.'/wpsc-merchants/library/googlemerchantcalculations.
 require_once(WPSC_FILE_PATH.'/wpsc-merchants/library/googleresult.php');
 require_once(WPSC_FILE_PATH.'/wpsc-merchants/library/googlerequest.php');
 
-
+/*
 $nzshpcrt_gateways[$num]['name'] = __( 'Google Wallet', 'wpsc' );
 $nzshpcrt_gateways[$num]['image'] = WPSC_URL . '/images/google_checkout.gif';
 $nzshpcrt_gateways[$num]['internalname'] = 'google';
@@ -19,6 +19,7 @@ $nzshpcrt_gateways[$num]['submit_function'] = "submit_google";
 $nzshpcrt_gateways[$num]['is_exclusive'] = true;
 $nzshpcrt_gateways[$num]['payment_type'] = "google_checkout";
 $nzshpcrt_gateways[$num]['display_name'] = __( 'Google Wallet', 'wpsc' );
+*/
 
 function gateway_google($fromcheckout = false){
 	global $wpdb, $wpsc_cart, $wpsc_checkout,$current_user,  $purchlogs;
