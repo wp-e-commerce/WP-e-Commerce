@@ -163,24 +163,26 @@ function wpsc_price_control_forms() {
 
     	<div class='wpsc_floatleft' style="width:85px;">	
     		<label><?php esc_html_e( 'Price '.$ct_code.' '.$ct_symb, 'wpsc' ); ?></label>
-			<input 	type='number' size='10'
+			<input 	id = "wpsc_price"
+					type="number" size='10'
 					min="0" step="0.10" 
-					name='meta[_wpsc_price]'
+					name="meta[_wpsc_price]"
 					style="width:80px;" 
 					value="<?php echo esc_attr( $product_data['meta']['_wpsc_price'] );  ?>"
-					onChange="wpsc_push_v2t(this, '#wpsc_product_price_metabox_live_title>del>span')" />
+					onChange="wpsc_update_price_live_preview()" />
 		</div>
 
 		<div 	class='wpsc_floatleft' 
 				style='display:<?php if ( ( $product_data['special'] == 1 ) ? 'block' : 'none'
 	); ?>; width:85px; margin-left:30px;'>
 			<label for='add_form_special'><?php esc_html_e( 'Sale Price '.$ct_code.' '.$ct_symb, 'wpsc' ); ?></label>
-			<input 	type='number' size='10'
+			<input 	id = "wpsc_sale_price"
+					type="number" size='10'
 					min="0" step="0.10" 
 					style="width:80px;"
 					value="<?php echo esc_attr( $product_data['meta']['_wpsc_special_price'] ); ?>"
 					name='meta[_wpsc_special_price]'
-					onChange="wpsc_push_v2t(this, '#wpsc_product_price_metabox_live_title>p>span')" />
+					onChange="wpsc_update_price_live_preview()" />
 		</div>
 
 		<div style="clear:both; margin-bottom:20px;"></div>
@@ -625,23 +627,21 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 		$meta = array();
 
 	$defaults = array(
-		'weight' => '',
-		'weight_unit' => wpsc_validate_weight_unit(),
-		'dimensions' => array(),
-		'shipping'   => array(),
-		'no_shipping' => '',
+		'weight'            => '',
+		'weight_unit'       => wpsc_validate_weight_unit(),
+		'demension_unit'    => wpsc_validate_dimension_unit(),
+		'dimensions'        => array(),
+		'shipping'          => array(),
+		'no_shipping'       => '',
 		'display_weight_as' => '',
 	);
 	$dimensions_defaults = array(
-		'height_unit' => wpsc_validate_dimension_unit(),
-		'width_unit' => wpsc_validate_dimension_unit(),
-		'length_unit' => wpsc_validate_dimension_unit(),
 		'height' => 0,
-		'width' => 0,
+		'width'  => 0,
 		'length' => 0,
 	);
 	$shipping_defaults = array(
-		'local' => '',
+		'local'         => '',
 		'international' => '',
 	);
 	$meta = array_merge( $defaults, $meta );
@@ -659,9 +659,11 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 	$dimension_units = wpsc_dimension_units();
 	$weight_units = wpsc_weight_units();
 
+	// Why we need this????
 	$measurements = $dimensions;
 	$measurements['weight'] = $weight;
 	$measurements['weight_unit'] = $weight_unit;
+	// End why 
 
 ?>
 	<div class="wpsc-stock-editor<?php if ( $bulk ) echo ' wpsc-bulk-edit' ?>">
@@ -700,9 +702,9 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 					<input type="number" min="0" step="0.1" placeholder="L" id="wpsc-product-shipping-length" name="<?php echo $field_name_prefix; ?>[dimensions][length]" value="<?php if ( !$bulk && $dimensions['length']>0 ) echo esc_attr( wpsc_format_number( $dimensions['length'] ) ); ?>" />&nbsp;x&nbsp;
 					<input type="number" min="0" step="0.1" placeholder="W" id="wpsc-product-shipping-width" name="<?php echo $field_name_prefix; ?>[dimensions][width]" value="<?php if ( !$bulk && $dimensions['width']>0 ) echo esc_attr( wpsc_format_number( $dimensions['width'] ) ); ?>" />&nbsp;x&nbsp;
 					<input type="number" min="0" step="0.1" placeholder="H" id="wpsc-product-shipping-height" name="<?php echo $field_name_prefix; ?>[dimensions][height]" value="<?php if ( !$bulk && $dimensions['height']>0 ) echo esc_attr( wpsc_format_number( $dimensions['height'] ) ); ?>" />
-					<select id="wpsc-product-shipping-dimensions-unit" name="<?php echo $field_name_prefix; ?>[dimensions_unit]">
+					<select id="wpsc-product-shipping-dimensions-unit" name="<?php echo $field_name_prefix; ?>[dimension_unit]">
 						<?php foreach ( $dimension_units as $unit => $unit_label ): ?>
-							<option value="<?php echo $unit; ?>" <?php if ( ! $bulk ) selected( $unit, $measurements['width_unit'] ); // Dirty code ?>><?php echo esc_html( $unit_label ); ?></option>
+							<option value="<?php echo $unit; ?>" <?php if ( ! $bulk ) selected( $unit, $meta['dimension_unit'] ); // Dirty code ?>><?php echo esc_html( $unit_label ); ?></option>
 						<?php endforeach; ?>
 					</select>
 				</span>
@@ -869,12 +871,28 @@ function wpsc_additional_desc() {
 
 function wpsc_product_gallery( $post ) {
 	$upload_iframe_src = esc_url( get_upload_iframe_src( 'image', $post->ID ) );
-	?>
-	<div id="wpsc_product_gallery">
-		<?php echo do_shortcode('[gallery]'); ?>
-	</div>
-	<p class="hide-if-no-js"><a class="button button-small" title="<? esc_attr_e( 'Manage Product Image Gallery...', 'wpsc' ); ?>" href="<?php echo $upload_iframe_src; ?>" id="wpsc-manage-product-gallery" class="thickbox"><?php esc_html_e( 'Manage Product Image Gallery...', 'wpsc' ); ?></a></p>
-	<?php
+	
+	$photos = wpsc_get_product_gallery($post->ID);
+
+	$output = '<div id="wpsc_product_gallery">';
+		$output .= '<ul>';
+
+		foreach ($photos as $photo) {
+			$output .= '<li>';
+				$output .= '<img src="'.wp_get_attachment_thumb_url($photo->ID).'">';
+			$output .= '</li>';	
+		}
+
+		$output .= '</ul>';
+		$output .= '<div class="clear"></div>';
+	$output .= '</div>';
+	$output .= '<p class="hide-if-no-js">';
+		$output .= '<a class="button button-small thickbox" title="'.esc_attr('Manage Product Image Gallery...', 'wpsc').'" href="'.$upload_iframe_src.'" id="wpsc-manage-product-gallery">';
+			$output .= esc_html('Manage Product Image Gallery...', 'wpsc');
+		$output .= '<a>';
+	$output .= '</p>';
+
+	echo $output;
 }
 
 function wpsc_product_download_forms() {
@@ -949,27 +967,27 @@ function wpsc_product_delivery_forms(){
 		<p></p>
 	</em>
 
-	<div id="wpsc_product_delivery_forms">
-		<ul id="wpsc_product_delivery_tabs">
-			<li><a href="#wpsc_product_delivery-shipping" class="active">Shipping</a></li>
+	<div id="wpsc_product_delivery_forms" class="categorydiv wpsc-categorydiv">
+		<ul id="wpsc_product_delivery_tabs" class="category-tabs">
+			<li class="tabs"><a href="#wpsc_product_delivery-shipping">Shipping</a></li>
 			<li><a href="#wpsc_product_delivery-download">Download</a></li>
 			<li><a href="#wpsc_product_delivery-personalization">Personalization</a></li>
 			<li><a href="#wpsc_product_delivery-external_link">External Link</a></li>
 		</ul>
 
-		<div id="wpsc_product_delivery-shipping" class="wpsc_pd_tabs_panel" style="display: block;">
+		<div id="wpsc_product_delivery-shipping" class="tabs-panel" style="display: block;">
 			<?php wpsc_product_shipping_forms(); ?>
 		</div>
 
-		<div id="wpsc_product_delivery-download" class="wpsc_pd_tabs_panel" style="display: none;">
+		<div id="wpsc_product_delivery-download" class="tabs-panel" style="display: none;">
 			<?php wpsc_product_download_forms(); ?>
 		</div>
 
-		<div id="wpsc_product_delivery-personalization" class="wpsc_pd_tabs_panel" style="display: none;">
+		<div id="wpsc_product_delivery-personalization" class="tabs-panel" style="display: none;">
 			<?php wpsc_product_personalization_forms(); ?>
 		</div>
 
-		<div id="wpsc_product_delivery-external_link" class="wpsc_pd_tabs_panel" style="display: none;">
+		<div id="wpsc_product_delivery-external_link" class="tabs-panel" style="display: none;">
 			<?php wpsc_product_external_link_forms(); ?>
 		</div>
 	</div>
@@ -982,23 +1000,23 @@ function wpsc_product_details_forms(){
 		<p></p>
 	</em>
 
-	<div id="wpsc_product_details_forms">
-		<ul id="wpsc_product_details_tabs">
-			<li><a href="#wpsc_product_details-desc" class="active">Short Description</a></li>
+	<div id="wpsc_product_details_forms" class="categorydiv wpsc-categorydiv">
+		<ul id="wpsc_product_details_tabs"  class="category-tabs">
+			<li class="tabs"><a href="#wpsc_product_details-desc">Short Description</a></li>
 			<li><a href="#wpsc_product_details-image">Image Gallery</a></li>
 			<li><a href="#wpsc_product_details-meta">Metadata</a></li>
 		</ul>
 
-		<div id="wpsc_product_details-desc" class="wpsc_pd_tabs_panel" style="display: block;">
+		<div id="wpsc_product_details-desc" class="tabs-panel" style="display: block;">
 			<?php wpsc_additional_desc(); ?>
 		</div>
 
-		<div id="wpsc_product_details-image" class="wpsc_pd_tabs_panel" style="display: none;">
+		<div id="wpsc_product_details-image" class="tabs-panel" style="display: none;">
 			<?php global $post; ?>
 			<?php wpsc_product_gallery($post); ?>
 		</div>
 
-		<div id="wpsc_product_details-meta" class="wpsc_pd_tabs_panel" style="display: none;">
+		<div id="wpsc_product_details-meta" class="tabs-panel" style="display: none;">
 			<?php wpsc_product_advanced_forms(); ?>
 		</div>
 	</div>	
