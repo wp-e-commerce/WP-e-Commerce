@@ -387,12 +387,12 @@ jQuery(document).ready(function(){
 		return false;
 	});
 
-	jQuery('#wpsc_product_delivery_tabs a, #wpsc_product_details_tabs a').click(function(){
+	jQuery('.wpsc-categorydiv .category-tabs a').click(function(){
 		var href = jQuery(this).attr('href');
 
-		jQuery(this).parent().parent().find('a').removeClass('active');
-		jQuery(this).addClass('active');
-		jQuery(this).parent().parent().parent().find('.wpsc_pd_tabs_panel').hide();
+		jQuery(this).closest('ul').find('li').removeClass('tabs');
+		jQuery(this).closest('li').addClass('tabs');
+		jQuery(this).closest('div').find('.tabs-panel').hide();
 		jQuery(href).show();
 		event.preventDefault();
 	});
@@ -450,6 +450,20 @@ function wpsc_remove_custom_meta(caller, meta_id) {
 // Copy value of caller to target text
 function wpsc_push_v2t(caller, target_slt){
 	jQuery(target_slt).text(jQuery(caller).val());
+}
+
+function wpsc_update_price_live_preview(){
+	var price      = jQuery('#wpsc_price').val();
+	var sale_price = jQuery('#wpsc_sale_price').val();
+
+	if (sale_price > 0){
+		jQuery('#wpsc_product_price_metabox_live_title>p>span').text(sale_price);
+		jQuery('#wpsc_product_price_metabox_live_title>del>span').text(price);
+		jQuery('#wpsc_product_price_metabox_live_title>del').show();
+	} else {
+		jQuery('#wpsc_product_price_metabox_live_title>p>span').text(price);
+		jQuery('#wpsc_product_price_metabox_live_title>del').hide();
+	}
 }
 
 // Compose and update live title for shipping metabox

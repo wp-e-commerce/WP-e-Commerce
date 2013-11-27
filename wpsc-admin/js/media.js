@@ -181,6 +181,7 @@
 			},
 
 			sync: function( method, collection, options ) {
+
 				var data;
 				options = options ? _.clone( options ) : {};
 
