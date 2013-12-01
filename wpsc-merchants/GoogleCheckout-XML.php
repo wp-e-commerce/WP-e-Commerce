@@ -449,8 +449,6 @@ function nzsc_googleResponse() {
 	$server_type = get_option('google_server_type');
 	$currency = get_option('google_cur');
 
-	$xml_response = isset($HTTP_RAW_POST_DATA)?$HTTP_RAW_POST_DATA:file_get_contents("php://input");
-
 	define('RESPONSE_HANDLER_ERROR_LOG_FILE', 'library/googleerror.log');
 	define('RESPONSE_HANDLER_LOG_FILE', 'library/googlemessage.log');
 	if (stristr($_SERVER['HTTP_USER_AGENT'],"Google Checkout Notification Agent")) {
