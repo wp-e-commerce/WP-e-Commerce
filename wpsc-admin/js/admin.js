@@ -416,6 +416,8 @@ jQuery(document).ready(function(){
 		jQuery('#wpsc_product_details_forms a').click(wpsc_update_product_details_metabox_live_title);
 		wpsc_update_product_details_metabox_live_title();
 	}
+
+	wpsc_update_price_live_preview();
 });
 
 
@@ -498,6 +500,25 @@ function wpsc_update_product_details_metabox_live_title(){
 		output += number_of_meta + ' metadata';
 
 	jQuery('#wpsc_product_details_metabox_live_title>p').html(output);
+}
+
+function wpsc_update_product_gallery_tab(obj){
+	var output;
+	output = '<div id="wpsc_product_gallery">';
+		output += '<ul>';
+	
+		for (var i = 0; i < obj.length; i++){
+			output += '<li>';
+				output += '<img src="' + obj[i].sizes.thumbnail.url + '">';
+			output += '</li>';
+		}
+
+		output += '</ul>';
+		output += '<div class="clear"></div>';
+	output += '</div>';
+
+	jQuery('#wpsc_product_gallery').replaceWith(output);
+	wpsc_update_product_details_metabox_live_title();
 }
 
 var prevElement = null;

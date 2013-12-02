@@ -15,6 +15,7 @@
 function _wpsc_ajax_verify_nonce( $ajax_action ) {
 	// nonce can be passed with name wpsc_nonce or _wpnonce
 	$nonce = '';
+	
 	if ( isset( $_REQUEST['nonce'] ) )
 		$nonce = $_REQUEST['nonce'];
 	elseif ( isset( $_REQUEST['_wpnonce'] ) )

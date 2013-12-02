@@ -72,7 +72,7 @@ function wpsc_select_product_file( $product_id = null ) {
 
 	$attached_files = (array)get_posts( $args );
 
-	$output = '<table id="wpsc_digital_download_table" class="wp-list-table wpsc_wideflat posts select_product_file">';
+	$output = '<table id="wpsc_digital_download_table" class="wp-list-table widefat posts select_product_file">';
 		$output .= '<thead>';
 			$output .= '<tr>';
 				$output .= '<th>' . _x( 'Title', 'Digital download UI', 'wpsc' ) . '</th>';
@@ -81,6 +81,14 @@ function wpsc_select_product_file( $product_id = null ) {
 				$output .= '<th id="wpsc_digital_download_action_th">' . _x( 'Actions', 'Digital download UI', 'wpsc' ) . '</th>';
 			$output .= '</tr>';
 		$output .= '</thead>';
+		$output .= '<tfoot>';
+			$output .= '<tr>';
+				$output .= '<th>' . _x( 'Title', 'Digital download UI', 'wpsc' ) . '</th>';
+				$output .= '<th>' . _x( 'Size', 'Digital download UI', 'wpsc' ) . '</th>';
+				$output .= '<th>' . _x( 'File Type', 'Digital download UI', 'wpsc' ) . '</th>';
+				$output .= '<th id="wpsc_digital_download_action_th">' . _x( 'Actions', 'Digital download UI', 'wpsc' ) . '</th>';
+			$output .= '</tr>';
+		$output .= '</tfoot>';
 
 	$num = 0;
 
@@ -94,7 +102,7 @@ function wpsc_select_product_file( $product_id = null ) {
 		$file_url = add_query_arg(
 			array(
 				'wpsc_download_id' => $file->ID,
-				'_wpnonce'            => wp_create_nonce( 'wpsc-admin-download-file-' . $file->ID ),
+				'_wpnonce'         => wp_create_nonce( 'wpsc-admin-download-file-' . $file->ID ),
 			),
 			admin_url()
 		);
