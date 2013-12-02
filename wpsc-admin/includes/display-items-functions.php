@@ -157,7 +157,7 @@ function wpsc_price_control_forms() {
     	<?php /* Check product if a product has variations */ ?>
     	<?php if ( wpsc_product_has_children( $post->ID ) ) : ?>
     		<?php $price = wpsc_product_variation_price_from( $post->ID ); ?>
-			<p><?php echo sprintf( __( 'This Product has variations, to edit the price please use the <a href="%s">Variation Controls</a>.' , 'wpsc'  ), '#wpsc_product_variation_forms' ); ?></p>
+			<p style="margin-top: 6px;"><?php echo sprintf( __( 'This Product has variations, to edit the price please use the <a href="%s">Variation Controls</a>.' , 'wpsc'  ), '#wpsc_product_variation_forms' ); ?></p>
 			<p><?php printf( __( 'Price: %s and above.' , 'wpsc' ) , $price ); ?></p>
 		<?php else: ?>
 
@@ -699,8 +699,8 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 				<?php endif; ?>
 				<label for="wpsc-product-shipping-weight"><?php echo esc_html_e( 'Dimensions', 'wpsc' ); ?></label>
 				<span class="wpsc-product-shipping-input">
-					<input type="number" min="0" step="0.1" placeholder="L" id="wpsc-product-shipping-length" name="<?php echo $field_name_prefix; ?>[dimensions][length]" value="<?php if ( !$bulk && $dimensions['length']>0 ) echo esc_attr( wpsc_format_number( $dimensions['length'] ) ); ?>" />&nbsp;x&nbsp;
-					<input type="number" min="0" step="0.1" placeholder="W" id="wpsc-product-shipping-width" name="<?php echo $field_name_prefix; ?>[dimensions][width]" value="<?php if ( !$bulk && $dimensions['width']>0 ) echo esc_attr( wpsc_format_number( $dimensions['width'] ) ); ?>" />&nbsp;x&nbsp;
+					<input type="number" min="0" step="0.1" placeholder="L" id="wpsc-product-shipping-length" name="<?php echo $field_name_prefix; ?>[dimensions][length]" value="<?php if ( !$bulk && $dimensions['length']>0 ) echo esc_attr( wpsc_format_number( $dimensions['length'] ) ); ?>" />&nbsp;&times;&nbsp;
+					<input type="number" min="0" step="0.1" placeholder="W" id="wpsc-product-shipping-width" name="<?php echo $field_name_prefix; ?>[dimensions][width]" value="<?php if ( !$bulk && $dimensions['width']>0 ) echo esc_attr( wpsc_format_number( $dimensions['width'] ) ); ?>" />&nbsp;&times;&nbsp;
 					<input type="number" min="0" step="0.1" placeholder="H" id="wpsc-product-shipping-height" name="<?php echo $field_name_prefix; ?>[dimensions][height]" value="<?php if ( !$bulk && $dimensions['height']>0 ) echo esc_attr( wpsc_format_number( $dimensions['height'] ) ); ?>" />
 					<select id="wpsc-product-shipping-dimensions-unit" name="<?php echo $field_name_prefix; ?>[dimension_unit]">
 						<?php foreach ( $dimension_units as $unit => $unit_label ): ?>
@@ -776,7 +776,7 @@ function wpsc_product_advanced_forms() {
 	if( !isset( $product_meta['can_have_uploaded_image'] ) )
 		$product_meta['can_have_uploaded_image'] = '';
 
-	$output = '<table id="wpsc_product_meta_table" class="wp-list-table wpsc_wideflat posts">';
+	$output = '<table id="wpsc_product_meta_table" class="wp-list-table widefat posts">';
 		$output .= '<thead>';
 			$output .= '<tr>';
 				$output .= '<th id="wpsc_custom_meta_name_th">' . _x( 'Name', 'Product meta UI', 'wpsc' ) . '</th>';
@@ -784,13 +784,23 @@ function wpsc_product_advanced_forms() {
 				$output .= '<th id="wpsc_custom_meta_action_th">' . _x( 'Action', 'Product meta UI', 'wpsc' ) . '</th>';
 			$output .= '</tr>';
 		$output .= '</thead>';
+		$output .= '<tfoot>';
+			$output .= '<tr>';
+				$output .= '<th>' . _x( 'Name', 'Product meta UI', 'wpsc' ) . '</th>';
+				$output .= '<th>' . _x( 'Value', 'Product meta UI', 'wpsc' ) . '</th>';
+				$output .= '<th>' . _x( 'Action', 'Product meta UI', 'wpsc' ) . '</th>';
+			$output .= '</tr>';
+		$output .= '</tfood>';
+
 		$output .= '<tbody>';
 		
 		// Display all available metadata
+		$alternate = false;
 		foreach ( (array)$custom_fields as $custom_field ) {
 			$i = $custom_field['meta_id'];
-
-			$output .= '<tr>';
+			$alternate = !$alternate;
+			
+			$output .= '<tr'. ($alternate ? ' class="alternate"' : '') .'>';
 				$output .= '<td><input type="text" value="'.$custom_field['meta_key'].'" name="custom_meta['.$i.'][name]" id="custom_meta_name_'.$i.'"></input></td>';
 				$output .= '<td><input type="text" value="'.esc_html($custom_field['meta_value']).'" name="custom_meta['.$i.'][value]" id="custom_meta_value_'.$i.'"></input></td>';
 				$output .= '<td><a href="#" data-nonce="'.esc_attr( $delete_nonce ).'" class="wpsc_remove_meta" onclick="wpsc_remove_custom_meta(this,'.$i.')">'.esc_html( 'Delete', 'wpsc' ).'</a></td>';
@@ -886,6 +896,7 @@ function wpsc_product_gallery( $post ) {
 		$output .= '</ul>';
 		$output .= '<div class="clear"></div>';
 	$output .= '</div>';
+
 	$output .= '<p class="hide-if-no-js">';
 		$output .= '<a class="button button-small thickbox" title="'.esc_attr('Manage Product Image Gallery...', 'wpsc').'" href="'.$upload_iframe_src.'" id="wpsc-manage-product-gallery">';
 			$output .= esc_html('Manage Product Image Gallery...', 'wpsc');
@@ -971,7 +982,6 @@ function wpsc_product_delivery_forms(){
 		<ul id="wpsc_product_delivery_tabs" class="category-tabs">
 			<li class="tabs"><a href="#wpsc_product_delivery-shipping">Shipping</a></li>
 			<li><a href="#wpsc_product_delivery-download">Download</a></li>
-			<li><a href="#wpsc_product_delivery-personalization">Personalization</a></li>
 			<li><a href="#wpsc_product_delivery-external_link">External Link</a></li>
 		</ul>
 
@@ -981,10 +991,6 @@ function wpsc_product_delivery_forms(){
 
 		<div id="wpsc_product_delivery-download" class="tabs-panel" style="display: none;">
 			<?php wpsc_product_download_forms(); ?>
-		</div>
-
-		<div id="wpsc_product_delivery-personalization" class="tabs-panel" style="display: none;">
-			<?php wpsc_product_personalization_forms(); ?>
 		</div>
 
 		<div id="wpsc_product_delivery-external_link" class="tabs-panel" style="display: none;">
@@ -1004,6 +1010,7 @@ function wpsc_product_details_forms(){
 		<ul id="wpsc_product_details_tabs"  class="category-tabs">
 			<li class="tabs"><a href="#wpsc_product_details-desc">Short Description</a></li>
 			<li><a href="#wpsc_product_details-image">Image Gallery</a></li>
+			<li><a href="#wpsc_product_details-personalization">Personalization</a></li>
 			<li><a href="#wpsc_product_details-meta">Metadata</a></li>
 		</ul>
 
@@ -1014,6 +1021,10 @@ function wpsc_product_details_forms(){
 		<div id="wpsc_product_details-image" class="tabs-panel" style="display: none;">
 			<?php global $post; ?>
 			<?php wpsc_product_gallery($post); ?>
+		</div>
+
+		<div id="wpsc_product_details-personalization" class="tabs-panel" style="display: none;">
+			<?php wpsc_product_personalization_forms(); ?>
 		</div>
 
 		<div id="wpsc_product_details-meta" class="tabs-panel" style="display: none;">

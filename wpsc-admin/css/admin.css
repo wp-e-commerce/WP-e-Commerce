@@ -316,6 +316,7 @@ table.widefat tbody tr td.product-image img {
 	height:auto;
 	border: none;
 	background: none;
+	box-shadow: none;
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
@@ -2012,6 +2013,10 @@ div.new_layer>*{
 	vertical-align: middle;
 }
 
+div.new_layer select{
+	height: auto !important;
+}
+
 body.edit-tags-php img.wpsc_category_image {
 	max-width:256px;
 	max-height:256px;
@@ -2059,7 +2064,7 @@ body.edit-tags-php img.wpsc_category_image {
 }
 
 #wpsc_product_details_metabox_live_title{
-	top: -36px;
+	top: -39px;
 }
 
 /*PRODUCT PRICE META BOX*/
@@ -2095,32 +2100,12 @@ body.edit-tags-php img.wpsc_category_image {
 	margin-right: 10px;
 }
 
-
-/*Wideflat table style*/
-
-.wpsc_wideflat{
-	margin-bottom: 10px;
-	width: 100%;
-	border-spacing:0px;
-    border: 1px solid #CCC;
-}
-
-.wpsc_wideflat th,
-.wpsc_wideflat td{
-	padding: 10px 10px;
-}
-
-.wpsc_wideflat th{
-	background: #f1f1f1;
-	text-align: left;
-}
-
-.wpsc_wideflat td{
-	background: #f9f9f9;
-}
-
-
 /*Digital download table style*/
+
+#wpsc_digital_download_table{
+	margin-top: 10px;
+	margin-bottom: 15px;
+}
 
 #wpsc_digital_download_table a,
 #wpsc_digital_download_table img{
@@ -2144,6 +2129,11 @@ body.edit-tags-php img.wpsc_category_image {
 
 
 /*Custom meta style*/
+
+#wpsc_product_meta_table{
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
 
 #wpsc_product_meta_table input{
 	width: 100%;
@@ -2186,7 +2176,7 @@ a.wpsc_remove_meta{
 }
 
 #wpsc_product_price_metabox_live_title{
-	top: -40px;
+	top: -34px;
 }
 
 #wpsc_product_stock_metabox_live_title{
