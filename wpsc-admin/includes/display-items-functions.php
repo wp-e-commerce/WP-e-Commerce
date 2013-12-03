@@ -1008,19 +1008,19 @@ function wpsc_product_details_forms(){
 
 	<div id="wpsc_product_details_forms" class="categorydiv wpsc-categorydiv">
 		<ul id="wpsc_product_details_tabs"  class="category-tabs">
-			<li class="tabs"><a href="#wpsc_product_details-desc">Short Description</a></li>
-			<li><a href="#wpsc_product_details-image">Image Gallery</a></li>
+			<li class="tabs"><a href="#wpsc_product_details-image">Image Gallery</a></li>
+			<li><a href="#wpsc_product_details-desc">Short Description</a></li>
 			<li><a href="#wpsc_product_details-personalization">Personalization</a></li>
 			<li><a href="#wpsc_product_details-meta">Metadata</a></li>
 		</ul>
 
-		<div id="wpsc_product_details-desc" class="tabs-panel" style="display: block;">
-			<?php wpsc_additional_desc(); ?>
-		</div>
-
-		<div id="wpsc_product_details-image" class="tabs-panel" style="display: none;">
+		<div id="wpsc_product_details-image" class="tabs-panel" style="display: block;">
 			<?php global $post; ?>
 			<?php wpsc_product_gallery($post); ?>
+		</div>
+
+		<div id="wpsc_product_details-desc" class="tabs-panel" style="display: none;">
+			<?php wpsc_additional_desc(); ?>
 		</div>
 
 		<div id="wpsc_product_details-personalization" class="tabs-panel" style="display: none;">
