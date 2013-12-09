@@ -2103,8 +2103,13 @@ body.edit-tags-php img.wpsc_category_image {
 /*Digital download table style*/
 
 #wpsc_digital_download_table{
+	border-bottom: 0px;
 	margin-top: 10px;
 	margin-bottom: 15px;
+}
+
+#wpsc_digital_download_table tfoot {
+	display: none;
 }
 
 #wpsc_digital_download_table a,
@@ -2131,8 +2136,13 @@ body.edit-tags-php img.wpsc_category_image {
 /*Custom meta style*/
 
 #wpsc_product_meta_table{
+	border-bottom: 0px;
 	margin-bottom: 10px;
 	margin-top: 10px;
+}
+
+#wpsc_product_meta_table tfoot {
+	display: none;
 }
 
 #wpsc_product_meta_table input{
