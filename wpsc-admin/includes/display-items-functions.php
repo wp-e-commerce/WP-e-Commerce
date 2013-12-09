@@ -900,7 +900,7 @@ function wpsc_product_gallery( $post ) {
 	$output .= '<p class="hide-if-no-js">';
 		$output .= '<a class="button button-small thickbox" title="'.esc_attr('Manage Product Image Gallery...', 'wpsc').'" href="'.$upload_iframe_src.'" id="wpsc-manage-product-gallery">';
 			$output .= esc_html('Manage Product Image Gallery...', 'wpsc');
-		$output .= '<a>';
+		$output .= '</a>';
 	$output .= '</p>';
 
 	echo $output;
