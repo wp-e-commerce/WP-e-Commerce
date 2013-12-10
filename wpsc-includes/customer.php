@@ -212,6 +212,8 @@ function _wpsc_action_setup_customer() {
  * @return string      Internal meta key
  */
 function _wpsc_get_customer_meta_key( $key ) {
+	global $wpdb;
+
 	$blog_prefix = is_multisite() ? $wpdb->get_blog_prefix() : '';
 	return "{$blog_prefix}_wpsc_{$key}";
 }
@@ -226,6 +228,8 @@ function _wpsc_get_customer_meta_key( $key ) {
  * @return boolean        True if successful, False if otherwise
  */
 function wpsc_delete_all_customer_meta( $id = false ) {
+	global $wpdb;
+
 	if ( ! $id )
 		$id = wpsc_get_current_customer_id();
 
