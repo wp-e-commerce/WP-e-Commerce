@@ -123,23 +123,20 @@ function _wpsc_validate_customer_cookie() {
 	$data = $id . $expire;
 	$hmac = hash_hmac( 'md5', $data, wp_hash( $data ) );
 
-	$valid = true;
+	$valid = false;
 
-	if ( ($hmac != $hash) || empty( $id ) || !is_numeric($id)) {
-		$valid = false;
-	} else {
+	if ( $hmac == $hash && !empty( $id ) && is_numeric( $id ) ) {
 		// check to be sure the user still exists, could have been purged
 		$id = intval( $id );
 		$wp_user = get_user_by( 'id', $id );
-		if ( $wp_user === false ) {
-			$valid = false;
+		if ( $wp_user !== false ) {
+			$valid = true;
 		}
 	}
 
 	// if the cookie is invalid, just delete it and a new user will be generated
 	// later
 	if ( ! $valid ) {
-		unset( $_COOKIE[WPSC_CUSTOMER_COOKIE] );
 		_wpsc_set_customer_cookie( '', time() - 3600 );
 	}
 }
