@@ -516,9 +516,7 @@ class ash_usps {
 	 * @param string $response Reference to the $response string
 	 */
 	function _clean_response( &$response ) {
-		$bad_encoding = array( "&amp;lt;sup&amp;gt;&amp;amp;", ";&amp;lt;/sup&amp;gt;" );
-		$good_encoding = array( "<sup>","</sup>" );
-		$response = str_replace( $bad_encoding, $good_encoding, $response );
+		return wp_specialchars_decode( $response );
 	}
 
 	/**

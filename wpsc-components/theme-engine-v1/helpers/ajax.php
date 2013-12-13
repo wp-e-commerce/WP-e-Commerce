@@ -378,7 +378,7 @@ function wpsc_update_shipping_price() {
     }
 
     if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
- 		echo json_encode( array( 'shipping' => wpsc_cart_shipping(), 'coupon' => wpsc_coupon_amount(), 'cart_total' => wpsc_cart_total() ) );
+ 		echo json_encode( array( 'shipping' => wpsc_cart_shipping(), 'coupon' => wpsc_coupon_amount(), 'cart_total' => wpsc_cart_total(), 'tax' => wpsc_cart_tax()  ) );
     	exit();
     }
 

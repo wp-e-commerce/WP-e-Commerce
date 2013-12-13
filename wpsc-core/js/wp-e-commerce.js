@@ -428,12 +428,19 @@ function switchmethod( key, key1 ) {
 		} else {
 			jQuery( '.pricedisplay.checkout-shipping' ).html( response.shipping );
 		}
+
 		if ( jQuery( '#coupons_amount .pricedisplay' ).size() > 0 ) {
 			jQuery( '#coupons_amount .pricedisplay' ).html( response.coupon );
 		} else {
 			jQuery( '#coupons_amount' ).html( response.coupon );
 		}
+
+		if ( jQuery( '#checkout_tax.pricedisplay' ).size() > 0 ) {
+			jQuery( '.pricedisplay.checkout-tax' ).html( response.tax );
+		}
+
 		jQuery( '.pricedisplay.checkout-total' ).html( response.cart_total );
+
 	}, 'json' );
 }
 
