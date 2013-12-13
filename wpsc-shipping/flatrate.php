@@ -75,8 +75,8 @@ class flatrate {
 				break;
 
 			case 'US':
-				$output .= $this->settings_form_shipping_price_field( 'continental', __( 'South Island', 'wpsc' ),  $shipping['continental'] );
-				$output .= $this->settings_form_shipping_price_field( 'all',         __( 'All 50 States', 'wpsc' ), $shipping['all'] );
+				$output .= $this->settings_form_shipping_price_field( 'continental', __( 'Continental 48 States', 'wpsc' ),  $shipping['continental'] );
+				$output .= $this->settings_form_shipping_price_field( 'all',         __( 'All 50 States'        , 'wpsc' ), $shipping['all'] );
 				break;
 
 			default:
