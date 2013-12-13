@@ -4,6 +4,7 @@ add_action( 'wpsc_theme_footer', 'wpsc_fancy_notifications' );
 
 if ( get_option( 'wpsc_replace_page_title' ) == 1 )
 	add_filter( 'wp_title', 'wpsc_replace_wp_title', 10, 2 );
+
 add_filter( 'post_type_link', 'wpsc_product_link', 10, 3 );
 
 /**
@@ -32,8 +33,14 @@ function wpsc_product_link( $permalink, $post, $leavename ) {
 
 	// Only applies to WPSC products, don't stop on permalinks of other CPTs
 	// Fixes http://code.google.com/p/wp-e-commerce/issues/detail?id=271
-	if ($post->post_type != 'wpsc-product')
+	if ( 'wpsc-product' !== $post->post_type ) {
 		return $permalink;
+	}
+
+	if ( 'inherit' === $post->post_status && 0 !== $post->post_parent ) {
+		$post_id = $post->post_parent;
+		$post    = get_post( $post_id );
+	}
 
 	$permalink_structure = get_option( 'permalink_structure' );
 
