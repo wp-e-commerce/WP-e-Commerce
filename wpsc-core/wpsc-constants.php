@@ -264,6 +264,28 @@ function wpsc_core_setup_cart() {
 		$GLOBALS['wpsc_cart'] = new wpsc_cart();
 }
 
+/**
+ * _wpsc_action_init_shipping_method()
+ *
+ * The cart was setup at the beginning of the init sequence, and that's
+ * too early to do shipping calculations because custom taxonomies, types
+ * and other plugins may not have been initialized.  So we save the shipping
+ * method initialization for the end of the init sequence.
+ */
+function _wpsc_action_init_shipping_method() {
+	global $wpsc_cart;
+
+	if ( ! is_object( $wpsc_cart ) ) {
+		wpsc_core_setup_cart();
+	}
+
+	if ( empty( $wpsc_cart->selected_shipping_method ) ) {
+		$wpsc_cart->get_shipping_method();
+	}
+}
+
+add_action( 'wpsc_register_post_types_after', '_wpsc_action_init_shipping_method' );
+
 /***
  * wpsc_core_setup_globals()
  *
