@@ -516,7 +516,7 @@ class ash_usps {
 	 * @param string $response Reference to the $response string
 	 */
 	function _clean_response( &$response ) {
-		return wp_specialchars_decode( $response );
+		return html_entity_decode( html_entity_decode( $response ) );
 	}
 
 	/**
