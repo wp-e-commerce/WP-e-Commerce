@@ -40,6 +40,10 @@ if ( isset( $_REQUEST['wpsc_ajax_actions'] ) && 'update_location' == $_REQUEST['
 	add_action( 'init', 'wpsc_update_location' );
 }
 
+if ( isset( $_REQUEST['wpsc_ajax_action'] ) && 'update_shipping_price' == $_REQUEST['wpsc_ajax_action'] ) {
+    add_action( 'init', 'wpsc_update_shipping_price' );
+}
+
 add_action( 'wp_ajax_add_to_cart'       , 'wpsc_add_to_cart' );
 add_action( 'wp_ajax_nopriv_add_to_cart', 'wpsc_add_to_cart' );
 add_action( 'wp_ajax_get_cart'       , 'wpsc_get_cart' );
@@ -365,28 +369,19 @@ function wpsc_update_product_rating() {
  */
 function wpsc_update_shipping_price() {
 	global $wpsc_cart;
+
 	$quote_shipping_method = $_POST['method'];
 	$quote_shipping_option = $_POST['option'];
 
-	if(!empty($quote_shipping_option) && !empty($quote_shipping_method)){
-		$wpsc_cart->update_shipping( $quote_shipping_method, $quote_shipping_option );
+    if ( ! empty( $quote_shipping_option ) && ! empty( $quote_shipping_method ) ) {
+        $wpsc_cart->update_shipping( $quote_shipping_method, $quote_shipping_option );
+    }
 
-		echo "
-		if(jQuery('.pricedisplay.checkout-shipping .pricedisplay')){
-			jQuery('.pricedisplay.checkout-shipping > .pricedisplay:first').html(\"" . wpsc_cart_shipping() . "\");
-			jQuery('.shoppingcart .pricedisplay.checkout-shipping > .pricedisplay:first').html(\"" . wpsc_cart_shipping() . "\");
-		} else {
-			jQuery('.pricedisplay.checkout-shipping').html(\"" . wpsc_cart_shipping() . "\");}";
-		echo "
-		if (jQuery('#coupons_amount .pricedisplay').size() > 0) {
-			jQuery('#coupons_amount .pricedisplay').html(\"" . wpsc_coupon_amount() . "\");
-		} else {
-			jQuery('#coupons_amount').html(\"" . wpsc_coupon_amount() . "\");
-		}
-		";
-		echo "jQuery('.pricedisplay.checkout-total').html(\"" . wpsc_cart_total() . "\");\n\r";
-	}
-	exit();
+    if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+ 		echo json_encode( array( 'shipping' => wpsc_cart_shipping(), 'coupon' => wpsc_coupon_amount(), 'cart_total' => wpsc_cart_total() ) );
+    	exit();
+    }
+
 }
 
 /**
