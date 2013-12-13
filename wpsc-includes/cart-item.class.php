@@ -277,7 +277,11 @@ class wpsc_cart_item {
 			$this->tax = $taxes['tax'];
 		}
 
-		$this->product_url = get_permalink( $product_id );
+		if ( $product->post_parent ) {
+			$this->product_url = get_permalink( $product->post_parent );
+		} else {
+			$this->product_url = get_permalink( $product_id );
+		}
 
 		if( ! is_array( $this->variation_values ) )
 			$attach_parent = $product_id;
