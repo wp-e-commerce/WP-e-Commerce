@@ -160,7 +160,7 @@ function wpsc_core_load_purchase_log_statuses() {
 			'order'          => 6,
 		),
 	);
-	$wpsc_purchlog_statuses = apply_filters('wpsc_set_purchlog_statuses',$wpsc_purchlog_statuses);
+	$wpsc_purchlog_statuses = apply_filters( 'wpsc_set_purchlog_statuses', $wpsc_purchlog_statuses );
 }
 
 /***
@@ -231,8 +231,10 @@ function wpsc_core_load_shipping_modules() {
  */
 function _wpsc_action_get_shipping_method() {
 	global $wpsc_cart;
-	if ( empty( $wpsc_cart->selected_shipping_method ) )
+
+	if ( empty( $wpsc_cart->selected_shipping_method ) ) {
 		$wpsc_cart->get_shipping_method();
+	}
 }
 
 /**
@@ -404,6 +406,7 @@ function wpsc_register_post_types() {
 	do_action( 'wpsc_register_post_types_after' );
 	do_action( 'wpsc_register_taxonomies_after' );
 }
+
 add_action( 'init', 'wpsc_register_post_types', 8 );
 
 /**
@@ -439,7 +442,7 @@ add_filter( 'post_updated_messages', 'wpsc_post_updated_messages' );
  * unserialized one gets butchered by various things
  */
 function wpsc_serialize_shopping_cart() {
-	global $wpdb, $wpsc_start_time, $wpsc_cart;
+	global $wpsc_cart;
 
 	if ( is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) )
 		return;
@@ -451,16 +454,18 @@ function wpsc_serialize_shopping_cart() {
 	}
 
 	if ( is_object( $wpsc_cart ) )
-		$wpsc_cart->errors = array( );
+		$wpsc_cart->errors = array();
 
 	// need to prevent set_cookie from being called at this stage in case the user just logged out
 	// because by now, some output must have been printed out
 	$customer_id = wpsc_get_current_customer_id();
+
 	if ( $customer_id )
 		wpsc_update_customer_meta( 'cart', base64_encode( serialize( $wpsc_cart ) ) );
 
 	return true;
 }
+
 add_action( 'shutdown', 'wpsc_serialize_shopping_cart' );
 
 /**
