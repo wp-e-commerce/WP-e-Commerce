@@ -324,7 +324,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 						$altered_count = 0;
 						if ( (bool)$cart_row['is_recurring'] == true ) {
 							$altered_count++;
-							wpsc_update_cartmeta( $cart_row['cart_item_id'], 'is_subscribed', 0 );
+							wpsc_update_cart_item_meta( $cart_row['cart_item_id'], 'is_subscribed', 0 );
 						}
 					}
 					break;

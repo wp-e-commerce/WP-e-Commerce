@@ -231,7 +231,7 @@ class wpsc_merchant {
 				"tax"                  => $cart_row['tax_charged'],
 				"quantity"             => $cart_row['quantity'],
 				"is_downloadable"      => $is_downloadable,
-				"is_capability"        => (bool)wpsc_get_cartmeta( $cart_row['id'], 'provided_capabilities', true ),
+				"is_capability"        => (bool) wpsc_get_cart_item_meta( $cart_row['id'], 'provided_capabilities', true ),
 				"is_recurring"         => $is_recurring,
 				"is_subscription"      => $is_recurring,
 				"recurring_data"       => array(
