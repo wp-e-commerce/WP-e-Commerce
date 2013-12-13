@@ -263,8 +263,24 @@ function wpsc_core_setup_cart() {
 	else
 		$GLOBALS['wpsc_cart'] = new wpsc_cart();
 
-	$GLOBALS['wpsc_cart']->get_shipping_method();
 }
+
+/**
+ * wpsc_recalc_cart_shipping()
+ *
+ * The cart was setup at the beginning of the init sequence, and that's
+ * too early to do shipping calculations because custom taxonomies, types
+ * and other plugins may not have been initialized.  So we save the shipping
+ * method initialization for the end of the init sequence.
+ */
+function wpsc_recalc_cart_shipping() {
+	global $wpsc_cart;
+
+	$wpsc_cart->get_shipping_method();
+}
+
+add_action ( 'init', 'wpsc_recalc_cart_shipping', PHP_INT_MAX );
+
 
 /***
  * wpsc_core_setup_globals()
