@@ -505,7 +505,7 @@ function wpsc_update_page_urls( $auto = false ) {
 	wpsc_core_load_page_titles();
 	wpsc_register_post_types();
 
-	if( ! $auto ){
+	if ( ! $auto ) {
 		$sendback = wp_get_referer();
 		if ( isset( $updated ) )
 			$sendback = add_query_arg( 'updated', $updated, $sendback );

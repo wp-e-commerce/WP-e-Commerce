@@ -284,7 +284,7 @@ function _wpsc_action_init_shipping_method() {
 	}
 }
 
-add_action( 'wpsc_register_post_types_after', '_wpsc_action_init_shipping_method' );
+add_action( 'wpsc_init', '_wpsc_action_init_shipping_method' );
 
 /***
  * wpsc_core_setup_globals()
