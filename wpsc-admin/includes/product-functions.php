@@ -20,10 +20,8 @@ function wpsc_get_max_upload_size(){
 function wpsc_admin_submit_product( $post_ID, $post ) {
 	global $wpdb;
 
-	$current_screen = get_current_screen();
-
-	if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || empty( $current_screen ) || $current_screen->id != 'wpsc-product' || $post->post_type != 'wpsc-product' || empty( $_POST['meta'] ) )
-		return $post_ID;
+	if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || $post->post_type != 'wpsc-product' )
+		return;
 
     //Type-casting ( not so much sanitization, which would be good to do )
     $post_data = stripslashes_deep( $_POST );
