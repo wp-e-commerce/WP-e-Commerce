@@ -233,7 +233,7 @@ endif;
 					<?php
 					$args = array(
 						'remember' => false,
-                    	'redirect' => home_url( $_SERVER['REQUEST_URI'] )
+                    	'redirect' => get_option( 'shopping_cart_url' )
 					);
 					wp_login_form( $args );
 					?>
