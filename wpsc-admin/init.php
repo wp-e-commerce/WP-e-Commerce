@@ -570,7 +570,7 @@ function wpsc_product_files_existing() {
 
 	$output = "<span class='admin_product_notes select_product_note '>" . esc_html__( 'Choose a downloadable file for this product:', 'wpsc' ) . "</span><br>";
 	$output .= "<form method='post' class='product_upload'>";
-	$output .= "<div class='ui-widget-content multiple-select select_product_file'>";
+	$output .= '<div class="ui-widget-content multiple-select select_product_file" style="width:100%">';
 	$num = 0;
 	foreach ( (array)$file_list as $file ) {
 		$num++;
