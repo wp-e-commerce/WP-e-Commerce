@@ -31,17 +31,17 @@ function _wpsc_set_customer_cookie( $cookie, $expire ) {
  * @return string Customer ID
  */
 function _wpsc_create_customer_id() {
-	global $wp_roles;
 
-	$role = $wp_roles->get_role( 'wpsc_anonymous' );
+	$role = get_role( 'wpsc_anonymous' );
 
-	if ( ! $role )
-		$wp_roles->add_role( 'wpsc_anonymous', __( 'Anonymous', 'wpsc' ) );
+	if ( ! $role ) {
+		add_role( 'wpsc_anonymous', __( 'Anonymous', 'wpsc' ) );
+	}
 
 	$username = '_' . wp_generate_password( 8, false, false );
 	$password = wp_generate_password( 12, false );
 
-	$id = wp_create_user( $username, $password );
+	$id   = wp_create_user( $username, $password );
 	$user = new WP_User( $id );
 	$user->set_role( 'wpsc_anonymous' );
 
