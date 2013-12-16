@@ -505,7 +505,7 @@ function wpec_get_the_post_id_by_shortcode( $shortcode ) {
  * @3.8
  * @returns nothing
  */
-function wpsc_update_permalinks(  $return = '' ) {
+function wpsc_update_permalinks( $return = '' ) {
 	_wpsc_deprecated_function( __FUNCTION__, '3.8.9', '_wpsc_action_permalink_structure_changed' );
 	_wpsc_action_permalink_structure_changed();
 }
