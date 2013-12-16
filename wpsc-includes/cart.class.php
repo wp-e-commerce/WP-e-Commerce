@@ -644,10 +644,12 @@ class wpsc_cart {
             //loop through each cart item
             foreach($this->cart_items as $key => $cart_item) {
                // compare product ids and variations.
-               if(($cart_item->product_id == $new_cart_item->product_id) &&
-                 ($cart_item->product_variations == $new_cart_item->product_variations) &&
-                 ($cart_item->custom_message == $new_cart_item->custom_message) &&
-                 ($cart_item->custom_file == $new_cart_item->custom_file)) {
+               	if( ($cart_item->product_id == $new_cart_item->product_id) &&
+               			($cart_item->product_variations == $new_cart_item->product_variations) &&
+               				($cart_item->custom_message == $new_cart_item->custom_message) &&
+               					($cart_item->custom_file == $new_cart_item->custom_file) &&
+               						$cart_item->item_meta_equal($new_cart_item) ) {
+
                   // if they are the same, increment the count, and break out;
                   if(!$updater){
                      $this->cart_items[$key]->quantity  += $new_cart_item->quantity;
