@@ -66,9 +66,10 @@ class wpsc_cart_item {
 	 * @return returns true if the cart item meta for this item is the same as is in the cart item in the argument
 	 */
 	function item_meta_equal( $other_cart_item ) {
-		$my_item_meta_key = serialize( $this->item_meta );
+		$my_item_meta_key    = serialize( $this->item_meta );
 		$other_item_meta_key = serialize( $other_cart_item->item_meta );
-		return strcmp($my_item_meta_key, $other_item_meta_key) == 0;
+
+		return strcmp( $my_item_meta_key, $other_item_meta_key ) == 0;
 	}
 
 	/**
