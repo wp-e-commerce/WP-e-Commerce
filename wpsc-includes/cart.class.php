@@ -15,10 +15,6 @@
  */
 
 /**
-* cart item count function, no parameters
-* * @return integer the item countf
-*/
-/**
 * tax is included function, no parameters
 * * @return boolean true or false depending on settings>general page
 */
@@ -28,6 +24,10 @@ function wpsc_tax_isincluded() {
    return $wpec_taxes_controller->wpec_taxes_isincluded();
 }
 
+/**
+* cart item count function, no parameters
+* * @return integer the item count
+*/
 function wpsc_cart_item_count() {
    global $wpsc_cart;
    $count = 0;
@@ -36,7 +36,6 @@ function wpsc_cart_item_count() {
    }
    return $count;
 }
-
 
 /**
 * coupon amount function, no parameters

@@ -7,10 +7,9 @@
  *
  *
  * @package wp-e-commerce
- * @since 3.9
+ * @since 3.8
  * @subpackage wpsc-cart-classes
 */
-
 
 /**
  * The WPSC Cart Items class

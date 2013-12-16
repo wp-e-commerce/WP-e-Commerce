@@ -1207,7 +1207,7 @@
  */
 
 .sputnik-frame .spinner {
-	background: url(../images/wpspin.gif) no-repeat;
+	background: url(../images/spinner.gif) no-repeat;
 	background-size: 16px 16px;
 	display: none;
 	opacity: 0.7;
@@ -1623,6 +1623,6 @@
   	}
 
   	.sputnik-frame .spinner {
-  		background-image: url(../images/wpspin-2x.gif);
+  		background-image: url(../images/spinner-2x.gif);
   	}
 }
