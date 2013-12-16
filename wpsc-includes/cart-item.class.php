@@ -59,7 +59,17 @@ class wpsc_cart_item {
 	var $custom_message = null;
 	var $custom_file = null;
 
-
+	/**
+	 * compare cart item meta
+	 * @access public
+	 * @param other cart item against which this items meta will be compared
+	 * @return returns true if the cart item meta for this item is the same as is in the cart item in the argument
+	 */
+	function item_meta_equal( $other_cart_item ) {
+		$my_item_meta_key = serialize( $this->item_meta );
+		$other_item_meta_key = serialize( $other_cart_item->item_meta );
+		return strcmp($my_item_meta_key, $other_item_meta_key) == 0;
+	}
 
 	/**
 	 * Add cart item meta value
