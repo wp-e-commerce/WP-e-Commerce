@@ -23,7 +23,7 @@
  * @return bool False for failure. True for success.
  */
 function wpsc_add_cart_item_meta( $cart_item_id, $meta_key, $meta_value, $unique = false ) {
-	return add_metadata( 'wpsc_cart_item' ,  $cart_item_id, $meta_key , $meta_value, $unique );
+	return add_metadata( 'wpsc_cart_item' , $cart_item_id, $meta_key , $meta_value, $unique );
 }
 
 /**
@@ -43,7 +43,7 @@ function wpsc_add_cart_item_meta( $cart_item_id, $meta_key, $meta_value, $unique
  * @return bool False for failure. True for success.
  */
 function wpsc_delete_cart_item_meta( $cart_item_id, $meta_key, $meta_value = '' ) {
-	return delete_metadata( 'wpsc_cart_item' ,  $cart_item_id , $meta_key , $meta_value );
+	return delete_metadata( 'wpsc_cart_item', $cart_item_id , $meta_key , $meta_value );
 }
 
 /**

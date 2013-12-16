@@ -62,17 +62,18 @@ class wpsc_cart_item {
 
 
 	/**
-	 * add cart item meta value
+	 * Add cart item meta value
+	 *
 	 * @access public
 	 * @param meta key name
 	 * @param meta key value
 	 * @return previous meta value if it existed, nothing otherwise
 	 */
-	function delete_meta($key) {
+	function delete_meta( $key ) {
 
-		if ( isset($this->item_meta[$key]) ) {
-			$value = $this->item_meta[$key];
-			unset( $this->item_meta[$key]);
+		if ( isset( $this->item_meta[ $key ] ) ) {
+			$value = $this->item_meta[ $key ];
+			unset( $this->item_meta[ $key ] );
 			return $value;
 		}
 
@@ -101,17 +102,18 @@ class wpsc_cart_item {
 
 
 	/**
-	 * get cart item meta value
+	 * Get cart item meta value
+	 *
 	 * @access public
 	 * @param meta key name, optional, empty returns all meta as an array
 	 * @return previous meta value if it existed, null otherwise
 	 */
-	function get_meta($key='') {
+	function get_meta( $key = '' ) {
 
-		if ( empty($key) ) {
+		if ( empty( $key ) ) {
 			$result = $this->item_meta;
 		} else {
-			$result = isset($this->item_meta[$key])?$this->item_meta[$key]:null;
+			$result = isset( $this->item_meta[ $key ] ) ? $this->item_meta[ $key ] : null;
 		}
 
 		return $result;
@@ -234,7 +236,7 @@ class wpsc_cart_item {
 			}
 		}
 
-		$price = apply_filters( 'wpsc_price', $price, $product_id );
+		$price = apply_filters( 'wpsc_price', $price, $product_id, $this );
 
 		// create the string containing the product name.
 		$this->product_name = $this->get_title( 'raw' );
@@ -344,10 +346,10 @@ class wpsc_cart_item {
 			$title .= ' (' . $vars . ')';
 		}
 
-		$title = apply_filters( 'wpsc_cart_product_title', $title, $this->product_id );
+		$title = apply_filters( 'wpsc_cart_product_title', $title, $this->product_id, $this );
 
 		if ( $mode == 'display' )
-			$title = apply_filters( 'the_title', $title );
+			$title = apply_filters( 'the_title', $title, $this );
 
 		return $title;
 	}
@@ -397,7 +399,7 @@ class wpsc_cart_item {
 		$accepted_file_types['ext'][] = 'gif';
 		$accepted_file_types['ext'][] = 'png';
 
-		$accepted_file_types = apply_filters( 'wpsc_customer_upload_accepted_file_types', $accepted_file_types );
+		$accepted_file_types = apply_filters( 'wpsc_customer_upload_accepted_file_types', $accepted_file_types, $this );
 
 		$can_have_uploaded_image = get_product_meta($this->product_id,'product_metadata',true);
 		$product = get_post($this->product_id);
@@ -545,10 +547,10 @@ class wpsc_cart_item {
 			}
 		}
 
-		$downloads = get_option('max_downloads');
-		if($this->is_downloadable == true) {
+		$downloads = get_option( 'max_downloads' );
+		if ( $this->is_downloadable == true ) {
 
-			$product_files = (array)get_posts(array(
+			$product_files = (array) get_posts( array(
 					'post_type' => 'wpsc-product-file',
 					'post_parent' => $this->product_id,
 					'numberposts' => -1,
@@ -562,13 +564,13 @@ class wpsc_cart_item {
 						WPSC_TABLE_DOWNLOAD_STATUS,
 						array(
 								'product_id' => $this->product_id,
-								'fileid' => $file->ID,
-								'purchid' => $purchase_log_id,
-								'cartid' => $cart_item_id,
-								'uniqueid' => $unique_id,
-								'downloads' => $downloads,
-								'active' => 0,
-								'datetime' => date( 'Y-m-d H:i:s' )
+								'fileid'     => $file->ID,
+								'purchid'    => $purchase_log_id,
+								'cartid'     => $cart_item_id,
+								'uniqueid'   => $unique_id,
+								'downloads'  => $downloads,
+								'active'     => 0,
+								'datetime'   => date( 'Y-m-d H:i:s' )
 						),
 						array(
 								'%d',
@@ -588,7 +590,7 @@ class wpsc_cart_item {
 
 		}
 
-		do_action('wpsc_save_cart_item', $cart_item_id, $this->product_id);
+		do_action( 'wpsc_save_cart_item', $cart_item_id, $this->product_id, $this );
 	}
 
 }
@@ -600,8 +602,8 @@ class wpsc_cart_item {
  * @since  3.8.9
  * @access private
  */
-class _WPSC_Comparison
-{
+class _WPSC_Comparison {
+
 	private $orderby = '';
 	private $order = 'ASC';
 

@@ -266,7 +266,7 @@ function _wpsc_validate_cart_product_quantity( $product_id, $parameters, $cart )
 		}
 	}
 }
-add_action( 'wpsc_add_item', '_wpsc_validate_cart_product_quantity', 10, 3 );
+add_action( 'wpsc_add_item' , '_wpsc_validate_cart_product_quantity', 10, 3 );
 add_action( 'wpsc_edit_item', '_wpsc_validate_cart_product_quantity', 10, 3 );
 
 /**
