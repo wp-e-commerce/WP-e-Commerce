@@ -890,3 +890,23 @@ function wpsc_show_terms_and_conditions() {
 	echo wpautop( wp_kses_post( get_option( 'terms_and_conditions' ) ) );
 	die();
 }
+
+/**
+ * Helper function to display proper spinner icon, depending on WP version used.
+ * This way, WP 3.8+ users will not feel like they are in a time-warp.
+ *
+ * @since 3.8.13
+ *
+ * @return void
+ */
+function wpsc_get_ajax_spinner() {
+	global $wp_version;
+
+	if ( version_compare( $wp_version, '3.8', '<' ) ) {
+		$url = admin_url( 'images/wpspin_light.gif' );
+	} else {
+		$url = admin_url( 'images/spinner.gif' );
+	}
+
+	return apply_filters( 'wpsc_get_ajax_spinner', $url );
+}
