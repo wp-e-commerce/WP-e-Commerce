@@ -551,26 +551,29 @@ class wpsc_cart_item {
 
 		$cart_item_id = $wpdb->get_var( "SELECT " . $wpdb->insert_id . " AS `id` FROM `".WPSC_TABLE_CART_CONTENTS."` LIMIT 1");
 
-		wpsc_add_cart_item_meta($cart_item_id, 'sku', $this->sku, true );
+		wpsc_add_cart_item_meta( $cart_item_id, 'sku', $this->sku, true );
 
-		if ( !empty( $this->item_meta) ) {
-			foreach( $this->item_meta as $item_meta_key => $item_meta_value ) {
+		if ( ! empty( $this->item_meta ) ) {
+			foreach ( $this->item_meta as $item_meta_key => $item_meta_value ) {
 				wpsc_add_cart_item_meta( $cart_item_id, $item_meta_key, $item_meta_value, true );
 			}
 		}
 
-		$downloads = get_option( 'max_downloads' );
 		if ( $this->is_downloadable == true ) {
 
 			$product_files = (array) get_posts( array(
-					'post_type' => 'wpsc-product-file',
+					'post_type'   => 'wpsc-product-file',
 					'post_parent' => $this->product_id,
 					'numberposts' => -1,
 					'post_status' => 'inherit'
-			));
-			foreach($product_files as $file){
+			) );
+
+			$downloads = get_option( 'max_downloads' );
+
+			foreach ( $product_files as $file ) {
+
 				// if the file is downloadable, check that the file is real
-				$unique_id = sha1(uniqid(mt_rand(), true));
+				$unique_id = sha1( uniqid( mt_rand(), true ) );
 
 				$wpdb->insert(
 						WPSC_TABLE_DOWNLOAD_STATUS,
@@ -597,7 +600,7 @@ class wpsc_cart_item {
 				);
 
 				$download_id = $wpdb->get_var( "SELECT " . $wpdb->insert_id . " AS `id` FROM `".WPSC_TABLE_DOWNLOAD_STATUS."` LIMIT 1");
-				wpsc_update_meta($download_id, '_is_legacy', 'false', 'wpsc_downloads');
+				wpsc_update_meta( $download_id, '_is_legacy', 'false', 'wpsc_downloads' );
 			}
 
 		}

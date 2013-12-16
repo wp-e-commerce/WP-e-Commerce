@@ -644,7 +644,7 @@ class wpsc_cart {
          $add_item  = true;
          $edit_item = false;
 
-         if ( count( $this->cart_items) > 0 && $new_cart_item->is_donation != 1 ) {
+         if ( count( $this->cart_items ) > 0 && $new_cart_item->is_donation != 1 ) {
 
             //loop through each cart item
             foreach ( $this->cart_items as $key => $cart_item ) {
