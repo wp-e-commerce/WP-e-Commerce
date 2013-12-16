@@ -347,7 +347,7 @@ function wpsc_enqueue_user_script_and_css() {
 
 		wp_localize_script( 'wp-e-commerce', 'wpsc_ajax', array(
 			'ajaxurl'   => admin_url( 'admin-ajax.php', 'relative' ),
-			'spinner'   => esc_url( admin_url( 'images/wpspin_light.gif' ) ),
+			'spinner'   => esc_url( wpsc_get_ajax_spinner() ),
 			'no_quotes' => __( 'It appears that there are no shipping quotes for the shipping information provided.  Please check the information and try again.', 'wpsc' )
 			)
 		);

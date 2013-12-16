@@ -508,7 +508,7 @@ final class WPSC_Settings_Page {
 				<div id="icon_card" class="icon32"></div>
 				<h2 id="wpsc-settings-page-title">
 					<?php esc_html_e( 'Store Settings', 'wpsc' ); ?>
-					<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
+					<img src="<?php echo esc_url( wpsc_get_ajax_spinner() ); ?>" class="ajax-feedback" title="" alt="" />
 				</h2>
 				<?php $this->output_tabs(); ?>
 				<div id='wpsc_options_page'>

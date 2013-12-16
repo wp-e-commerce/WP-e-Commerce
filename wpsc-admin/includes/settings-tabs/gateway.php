@@ -120,7 +120,7 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 					<div class="row-actions-visible">
 						<span class="edit">
 							<a class='edit-payment-module' title="<?php esc_attr_e( "Edit this Payment Gateway's Settings", 'wpsc' ) ?>" href='<?php echo esc_url( $this->get_gateway_settings_url( $gateway['id'] ) ); ?>'><?php esc_html_e( 'Settings', 'wpsc' ); ?></a>
-							<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
+							<img src="<?php echo esc_url( wpsc_get_ajax_spinner() ); ?>" class="ajax-feedback" title="" alt="" />
 						</span>
 					</div>
 				</td>

@@ -199,7 +199,7 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 							<th><?php esc_html_e( 'Force Sync with Shipwire', 'wpsc' ); ?></th>
 							<td>
 								<a class="shipwire_sync button"><?php esc_html_e( 'Update Tracking and Inventory', 'wpsc' ); ?></a>
-								<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
+								<img src="<?php echo esc_url( wpsc_get_ajax_spinner() ); ?>" class="ajax-feedback" title="" alt="" />
 							</td>
 						</tr>
 					</table>
@@ -327,7 +327,7 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 					<div class="row-actions-visible">
 						<span class="edit">
 							<a class='edit-shipping-module' data-module-id="<?php echo $shipping->getInternalName(); ?>" title="<?php esc_attr_e( 'Edit this Shipping Module', 'wpsc' ); ?>" href='<?php echo esc_url( $this->get_shipping_module_url( $shipping ) ); ?>'><?php _ex( 'Settings', 'Shipping modules link to individual settings', 'wpsc' ); ?>
-							<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
+							<img src="<?php echo esc_url( wpsc_get_ajax_spinner() ); ?>" class="ajax-feedback" title="" alt="" />
 						</span>
 					</div>
 				</td>

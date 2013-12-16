@@ -53,7 +53,7 @@ class WPSC_Settings_Tab_General extends WPSC_Settings_Tab {
 					?>
 					<span id='wpsc-base-region-drop-down'>
 						<?php $this->display_region_drop_down(); ?>
-						<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" />
+						<img src="<?php echo esc_url( wpsc_get_ajax_spinner() ); ?>" class="ajax-feedback" title="" alt="" />
 					</span>
 					<p class='description'><?php esc_html_e( 'Select your primary business location.', 'wpsc' ); ?></p>
 				</td>

@@ -14,7 +14,7 @@
 		<p class="howto"><?php esc_html_e( "Example: Red, Green, Blue. Separate variants with commas.", 'wpsc' ); ?></p>
 		<p>
 			<a class="button" href="#"><?php esc_html_e( 'Add New Variants', 'wpsc' ); ?></a>
-			<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" /><br class="clear" />
+			<img src="<?php echo esc_url( wpsc_get_ajax_spinner() ); ?>" class="ajax-feedback" title="" alt="" /><br class="clear" />
 		</p>
 	</div>
 
