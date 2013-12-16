@@ -90,7 +90,6 @@ class wpsc_cart_item {
 		return;
 	}
 
-
 	/**
 	 * update or add cart item meta value
 	 * @access public
@@ -110,7 +109,6 @@ class wpsc_cart_item {
 		return $result;
 	}
 
-
 	/**
 	 * Get cart item meta value
 	 *
@@ -128,7 +126,6 @@ class wpsc_cart_item {
 
 		return $result;
 	}
-
 
 	public static function refresh_variation_cache() {
 		global $wpsc_cart;
@@ -207,8 +204,6 @@ class wpsc_cart_item {
 		$this->quantity = (int)$quantity;
 		$this->refresh_item();
 		$this->update_claimed_stock();
-
-
 	}
 
 	/**
