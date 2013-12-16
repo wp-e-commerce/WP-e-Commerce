@@ -187,6 +187,7 @@ class wpsc_cart_item {
 		if(($parameters['is_customisable'] == true) && ($parameters['file_data'] != null)) {
 			$this->save_provided_file($this->file_data);
 		}
+
 		$this->refresh_item();
 
 		if ( ! has_action( 'wpsc_add_item', array( 'wpsc_cart_item', 'refresh_variation_cache' ) ) )

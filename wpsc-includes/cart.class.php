@@ -639,7 +639,7 @@ class wpsc_cart {
 
          $new_cart_item = new wpsc_cart_item( $product_id, $parameters, $this );
 
-         do_action( 'wpsc_set_cart_item' , $product_id , $parameters , $this );
+         do_action( 'wpsc_set_cart_item', $product_id, $parameters, $this, $new_cart_item );
 
          $add_item  = true;
          $edit_item = false;
