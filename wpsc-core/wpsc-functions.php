@@ -524,9 +524,9 @@ function wpsc_update_permalink_slugs() {
 		if ( ! $id )
 			continue;
 
-		$ids[$page_string] = $id;
+		$ids[ $page_string ] = $id;
 
-		$the_new_link = get_page_link( $id );
+		$the_new_link = _get_page_link( $id );
 
 		if ( stristr( get_option( $option_key ), "https://" ) )
 			$the_new_link = str_replace( 'http://', "https://", $the_new_link );
