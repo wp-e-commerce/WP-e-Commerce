@@ -960,7 +960,7 @@ function wpsc_product_personalization_forms(){
 		<li>
 			<input type='hidden' name='meta[_wpsc_product_metadata][engraved]' value='0' />
 			<input type='checkbox' name='meta[_wpsc_product_metadata][engraved]' <?php echo ( ( $product_meta['engraved'] == true ) ? 'checked="checked"' : '' ); ?> id='add_engrave_text' />
-			<label for='add_engrave_text'><?php esc_html_e( 'Users can personalize this Product by leaving a message on single product page', 'wpsc' ); ?></label>
+			<label for='add_engrave_text'><?php esc_html_e( 'Users can personalize this product by leaving a message on single product page', 'wpsc' ); ?></label>
 		</li>
 		<li>
 			<input type='hidden' name='meta[_wpsc_product_metadata][can_have_uploaded_image]' value='0' />
