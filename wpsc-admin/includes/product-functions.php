@@ -216,7 +216,7 @@ function wpsc_pre_update( $data , $postarr ) {
     return $data;
 }
 add_filter( 'wp_insert_post_data','wpsc_pre_update', 99, 2 );
-add_action( 'save_post', 'wpsc_admin_submit_product', 10, 2 );
+add_action( 'save_post', 'wpsc_admin_submit_product', 5, 2 );
 add_action( 'admin_notices', 'wpsc_admin_submit_notices' );
 
 /**
