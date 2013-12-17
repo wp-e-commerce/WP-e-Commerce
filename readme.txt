@@ -181,6 +181,8 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * Fix: Out of stock message for variations now correctly shows variation of product for the title, rather than main product.
 * Fix: Use proper link in checkout for variation products.
 * Fix: Return tax information in switchmethod() JS function.
+* Fix: Resolve conflict with Advanced Custom Fields on save_post hook for products.
+* Fix: Update Bulgarian Currency symbol.
 * Fix: Resolve issue where updating pages causes rewrite rule conflicts when pretty permalinks are enabled.
 
 = 3.8.12.1 =

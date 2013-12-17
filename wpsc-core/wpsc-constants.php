@@ -32,10 +32,10 @@ function wpsc_core_constants() {
 	define( 'WPSC_VERSION'            , '3.8.13' );
 	define( 'WPSC_MINOR_VERSION'      , 'f4b508e650' );
 	define( 'WPSC_PRESENTABLE_VERSION', '3.8.13' );
-	define( 'WPSC_DB_VERSION'         , 7 );
+	define( 'WPSC_DB_VERSION'         , 8 );
 
 	// Define Debug Variables for developers
-	define( 'WPSC_DEBUG', false );
+	define( 'WPSC_DEBUG'        , false );
 	define( 'WPSC_GATEWAY_DEBUG', false );
 
 	// Images URL
