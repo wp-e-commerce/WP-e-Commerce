@@ -102,7 +102,7 @@ INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (100, '" . __( 'Canada', 'wpsc
 INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (101, '" . __( 'Cambodia', 'wpsc' ) ."', 'KH', '" . __('Kampuchean Riel', 'wpsc') ."', '', '', '" . __('KHR', 'wpsc') . "', '0', '0','asiapacific','1');
 INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (102, '" . __( 'Burundi', 'wpsc' ) ."', 'BI', '" . __('Burundi Franc', 'wpsc') ."', '', '', '" . __('BIF', 'wpsc') . "', '0', '0','africa','1');
 INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (103, '" . __( 'Burkina Faso', 'wpsc' ) ."', 'BF', '" . __('CFA Franc BCEAO', 'wpsc') ."', '', '', '" . __('XOF', 'wpsc') . "', '0', '0','africa','1');
-INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (104, '" . __( 'Bulgaria', 'wpsc' ) ."', 'BG', '" . __('Bulgarian Lev', 'wpsc') ."', '', '', '" . __('BGL', 'wpsc') . "', '0', '0','europe','1');
+INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (104, '" . __( 'Bulgaria', 'wpsc' ) ."', 'BG', '" . __('Bulgarian Lev', 'wpsc') ."', '', '', '" . __('BGN', 'wpsc') . "', '0', '0','europe','1');
 INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (105, '" . __( 'Brunei Darussalam', 'wpsc' ) ."', 'BN', '" . __('Brunei Dollar', 'wpsc') ."', '" . __('$', 'wpsc') . "', '" . __('&#036;', 'wpsc') . "', '" . __('BND', 'wpsc') . "', '0', '0','asiapacific','1');
 INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (106, '" . __( 'British Indian Ocean Territory', 'wpsc' ) ."', 'IO', '" . __('US Dollar', 'wpsc') ."', '$', '&#036;', 'USD', '0', '0','asiapacific','1');
 INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (107, '" . __( 'Brazil', 'wpsc' ) ."', 'BR', '" . __('Brazilian Real', 'wpsc') ."', '', '', '" . __('BRL', 'wpsc') . "', '0', '0','southamerica','1');
