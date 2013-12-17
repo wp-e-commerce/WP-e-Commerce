@@ -2132,11 +2132,11 @@ body.edit-tags-php img.wpsc_category_image {
 	width: 120px;
 }
 
+/**
+ * Custom meta style
+ */
 
-/*Custom meta style*/
-
-#wpsc_product_meta_table{
-	border-bottom: 0px;
+#wpsc_product_meta_table {
 	margin-bottom: 10px;
 	margin-top: 10px;
 }
