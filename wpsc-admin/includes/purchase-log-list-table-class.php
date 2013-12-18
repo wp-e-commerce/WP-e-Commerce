@@ -327,7 +327,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		return $views;
 	}
 
-	public function months_dropdown() {
+	public function months_dropdown( $post_type = '' ) {
 		global $wp_locale;
 
 		$m = isset( $_REQUEST['m'] ) ? $_REQUEST['m'] : 0;
