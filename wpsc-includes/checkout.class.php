@@ -491,7 +491,13 @@ class wpsc_checkout {
 				// dirty hack
 				if ( $form_data->unique_name == 'billingstate' && empty( $value ) ) {
 					$billing_country_id = $wpdb->get_var( "SELECT `" . WPSC_TABLE_CHECKOUT_FORMS . "`.`id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `unique_name` = 'billingcountry' AND active = '1' " );
-					$value = $_POST['collected_data'][$billing_country_id][1];
+
+					if ( isset( $_POST['collected_data'][ $billing_country_id ][1] ) ) {
+						$value = $_POST['collected_data'][ $billing_country_id ][1];
+					} else {
+						$any_bad_inputs = true;
+						$bad_input      = true;
+					}
 				}
 
 				switch ( $form_data->type ) {

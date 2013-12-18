@@ -305,7 +305,7 @@ function wpsc_register_post_types() {
 		'public'               => true,
 		'show_ui'              => true,
 		'show_in_nav_menus'    => true,
-		'menu_icon'            => WPSC_CORE_IMAGES_URL . "/credit_cards.png",
+		'menu_icon'            => version_compare( $GLOBALS['wp_version'], '3.8', '<' ) ? WPSC_CORE_IMAGES_URL . '/credit_cards.png' : 'dashicons-cart',
 		'labels'               => $labels,
 		'query_var'            => true,
 		'register_meta_box_cb' => 'wpsc_meta_boxes',

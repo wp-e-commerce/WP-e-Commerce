@@ -640,7 +640,7 @@ final class WPSC_Settings_Page {
 			$_POST['wpsc_options'] = stripslashes_deep( $_POST['wpsc_options'] );
 			// make sure stock keeping time is a number
 			if ( isset( $_POST['wpsc_options']['wpsc_stock_keeping_time'] ) ) {
-				$skt =& $_POST['wpsc_options']['wpsc_stock_keeping_time']; // I hate repeating myself
+				$skt = $_POST['wpsc_options']['wpsc_stock_keeping_time']; // I hate repeating myself
 				$skt = (float) $skt;
 				if ( $skt <= 0 || ( $skt < 1 && $_POST['wpsc_options']['wpsc_stock_keeping_interval'] == 'hour' ) ) {
 					unset( $_POST['wpsc_options']['wpsc_stock_keeping_time'] );

@@ -24,20 +24,27 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 		return;
 
     //Type-casting ( not so much sanitization, which would be good to do )
-    $post_data = stripslashes_deep( $_POST );
+    $post_data  = stripslashes_deep( $_POST );
     $product_id = $post_ID;
-	$post_data['additional_description'] = isset($post_data['additional_description']) ? $post_data['additional_description'] : '';
-    $post_meta['meta'] = (array)$_POST['meta'];
+
+	$post_data['additional_description'] = isset( $post_data['additional_description'] ) ? $post_data['additional_description'] : '';
+
+    $post_data['meta'] = (array) $_POST['meta'];
+
 	if ( isset( $post_data['meta']['_wpsc_price'] ) )
 		$post_data['meta']['_wpsc_price'] = wpsc_string_to_float( $post_data['meta']['_wpsc_price'] );
+
 	if ( isset( $post_data['meta']['_wpsc_special_price'] ) )
 		$post_data['meta']['_wpsc_special_price'] = wpsc_string_to_float( $post_data['meta']['_wpsc_special_price'] );
+
 	if($post_data['meta']['_wpsc_sku'] == __('N/A', 'wpsc'))
 		$post_data['meta']['_wpsc_sku'] = '';
+
 	if( isset( $post_data['meta']['_wpsc_is_donation'] ) )
 		$post_data['meta']['_wpsc_is_donation'] = 1;
 	else
 		$post_data['meta']['_wpsc_is_donation'] = 0;
+
 	if ( ! isset( $post_data['meta']['_wpsc_limited_stock'] ) ){
 		$post_data['meta']['_wpsc_stock'] = false;
 	} else {
@@ -106,13 +113,11 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 		);
 
 	// Advanced Options
-	$post_data['meta']['_wpsc_product_metadata']['engraved'] = (int)(bool)$post_data['meta']['_wpsc_product_metadata']['engraved'];
-	$post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'] = (int)(bool)$post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'];
+	$post_data['meta']['_wpsc_product_metadata']['engraved'] = (int) (bool) isset( $post_data['meta']['_wpsc_product_metadata']['engraved'] );
+	$post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'] = (int)(bool) isset( $post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'] );
+
 	if(!isset($post_data['meta']['_wpsc_product_metadata']['google_prohibited'])) $post_data['meta']['_wpsc_product_metadata']['google_prohibited'] = '';
 	$post_data['meta']['_wpsc_product_metadata']['google_prohibited'] = (int)(bool)$post_data['meta']['_wpsc_product_metadata']['google_prohibited'];
-
-	$post_data['meta']['_wpsc_product_metadata']['enable_comments'] = $post_data['meta']['_wpsc_product_metadata']['enable_comments'];
-	$post_data['meta']['_wpsc_product_metadata']['merchant_notes'] = $post_data['meta']['_wpsc_product_metadata']['merchant_notes'];
 
 	$post_data['files'] = $_FILES;
 
