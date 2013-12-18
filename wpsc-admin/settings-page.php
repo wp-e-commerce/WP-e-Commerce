@@ -365,10 +365,13 @@ final class WPSC_Settings_Page {
 	 */
 	public function set_current_tab( $tab_id = null ) {
 		if ( ! $tab_id ) {
+			$tabs = $this->tabs;
+
 			if ( isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $this->tabs ) )
 				$this->current_tab_id = $_GET['tab'];
 			else
-				$this->current_tab_id = array_shift( array_keys( $this->tabs ) );
+				$this->current_tab_id = array_shift( array_keys( $tabs ) );
+
 		} else {
 			$this->current_tab_id = $tab_id;
 		}
