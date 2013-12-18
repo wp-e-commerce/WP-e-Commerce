@@ -581,10 +581,16 @@ function wpsc_handle_country_change( response ) {
 		jQuery( wpsc_checkout_table_selector + ' .shipping_region' ).parent().parent().show();
 	}
 
+	if ( 'US' !== response.delivery_country && 'CA' !== response.delivery_country ) {
+		var shipping_state = jQuery( wpsc_checkout_table_selector + ' input[title="shippingstate"]' );
+		shipping_state.parents( 'tr' ).show();
+		shipping_state.val( '' ).prop( 'disabled', false );
+	}
+
 	if ( 'US' !== response.billing_country && 'CA' !== response.billing_country ) {
 		var billing_state = jQuery( wpsc_checkout_table_selector + ' input[title="billingstate"]' );
 		billing_state.parents( 'tr' ).show();
-		billing_state.prop( 'disabled', false );
+		billing_state.val( '' ).prop( 'disabled', false );
 	}
 
 	if ( response.tax > 0 ) {
