@@ -582,7 +582,9 @@ function wpsc_handle_country_change( response ) {
 	}
 
 	if ( 'US' !== response.billing_country && 'CA' !== response.billing_country ) {
-		jQuery( wpsc_checkout_table_selector + ' input[title="billingstate"]' ).parents( 'tr' ).show();
+		var billing_state = jQuery( wpsc_checkout_table_selector + ' input[title="billingstate"]' );
+		billing_state.parents( 'tr' ).show();
+		billing_state.prop( 'disabled', false );
 	}
 
 	if ( response.tax > 0 ) {
