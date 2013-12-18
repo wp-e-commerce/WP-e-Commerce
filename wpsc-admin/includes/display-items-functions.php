@@ -727,7 +727,7 @@ function wpsc_product_advanced_forms() {
 		<td class='itemfirstcol' colspan='2'><br />
 			<strong><?php esc_html_e( 'Personalisation Options', 'wpsc' ); ?>:</strong><br />
 			<input type='hidden' name='meta[_wpsc_product_metadata][engraved]' value='0' />
-			<input type='checkbox' name='meta[_wpsc_product_metadata][engraved]' <?php echo ( ( $product_meta['engraved'] == true ) ? 'checked="checked"' : '' ); ?> id='add_engrave_text' />
+			<input type='checkbox' name='meta[_wpsc_product_metadata][engraved]' <?php checked( $product_meta['engraved'], '1' ); ?> id='add_engrave_text' />
 			<label for='add_engrave_text'><?php esc_html_e( 'Users can personalize this product by leaving a message on single product page', 'wpsc' ); ?></label>
 			<br />
 		</td>
@@ -735,7 +735,7 @@ function wpsc_product_advanced_forms() {
 	<tr>
 		<td class='itemfirstcol' colspan='2'>
 			<input type='hidden' name='meta[_wpsc_product_metadata][can_have_uploaded_image]' value='0' />
-			<input type='checkbox' name='meta[_wpsc_product_metadata][can_have_uploaded_image]' <?php echo ( $product_meta['can_have_uploaded_image'] == true ) ? 'checked="checked"' : ''; ?> id='can_have_uploaded_image' />
+			<input type='checkbox' name='meta[_wpsc_product_metadata][can_have_uploaded_image]' <?php checked( $product_meta['can_have_uploaded_image'], '1' ); ?> id='can_have_uploaded_image' />
 			<label for='can_have_uploaded_image'> <?php esc_html_e( 'Users can upload images on single product page to purchase logs.', 'wpsc' ); ?> </label>
 			<br />
 		</td>

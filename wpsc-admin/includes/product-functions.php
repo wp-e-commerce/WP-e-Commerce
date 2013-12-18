@@ -116,10 +116,19 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 		);
 
 	// Advanced Options
-	$post_data['meta']['_wpsc_product_metadata']['engraved'] = (int) (bool) isset( $post_data['meta']['_wpsc_product_metadata']['engraved'] );
-	$post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'] = (int)(bool) isset( $post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'] );
+	if ( isset( $post_data['meta']['_wpsc_product_metadata']['engraved'] ) ) {
+		$post_data['meta']['_wpsc_product_metadata']['engraved'] = (int) (bool) $post_data['meta']['_wpsc_product_metadata']['engraved'];
+	} else {
+		$post_data['meta']['_wpsc_product_metadata']['engraved'] = 0;
+	}
 
-	if(!isset($post_data['meta']['_wpsc_product_metadata']['google_prohibited'])) $post_data['meta']['_wpsc_product_metadata']['google_prohibited'] = '';
+	if ( isset( $post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'] ) ) {
+		$post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'] = (int) (bool) $post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'];
+	} else {
+		$post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'] = 0;
+	}
+
+	if ( ! isset($post_data['meta']['_wpsc_product_metadata']['google_prohibited'])) $post_data['meta']['_wpsc_product_metadata']['google_prohibited'] = '';
 	$post_data['meta']['_wpsc_product_metadata']['google_prohibited'] = (int)(bool)$post_data['meta']['_wpsc_product_metadata']['google_prohibited'];
 
 	$post_data['files'] = $_FILES;
@@ -164,9 +173,8 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 	// if we succeed, we can do further editing (todo - if_wp_error)
 
 	// if we have no categories selected, assign one.
-	if( isset( $post_data['tax_input']['wpsc_product_category'] ) && count( $post_data['tax_input']['wpsc_product_category'] ) == 1 && $post_data['tax_input']['wpsc_product_category'][0] == 0){
+	if ( isset( $post_data['tax_input']['wpsc_product_category'] ) && count( $post_data['tax_input']['wpsc_product_category'] ) == 1 && $post_data['tax_input']['wpsc_product_category'][0] == 0){
 		$post_data['tax_input']['wpsc_product_category'][1] = wpsc_add_product_category_default($product_id);
-
 	}
 
 	// and the meta
