@@ -581,6 +581,10 @@ function wpsc_handle_country_change( response ) {
 		jQuery( wpsc_checkout_table_selector + ' .shipping_region' ).parent().parent().show();
 	}
 
+	if ( 'US' !== response.billing_country && 'CA' !== response.billing_country ) {
+		jQuery( wpsc_checkout_table_selector + ' input[title="billingstate"]' ).parents( 'tr' ).show();
+	}
+
 	if ( response.tax > 0 ) {
 		jQuery( 'tr.total_tax' ).show();
 	} else {

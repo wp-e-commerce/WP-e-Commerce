@@ -804,6 +804,7 @@ function wpsc_change_tax() {
 	$json_response = array();
 
 	$json_response['delivery_country'] = esc_js( $delivery_country );
+	$json_response['billing_country']  = esc_js( $wpsc_selected_country );
 	$json_response['widget_output']    = $output;
 	$json_response['shipping_keys']    = array();
 	$json_response['cart_shipping']    = wpsc_cart_shipping();
