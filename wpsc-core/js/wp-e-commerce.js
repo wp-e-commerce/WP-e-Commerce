@@ -150,6 +150,16 @@ jQuery(document).ready(function ($) {
 
 	jQuery('#fancy_notification').appendTo('body');
 
+	/* Clears shipping state and billing state on body load if they are numeric */
+	$( 'input[title="shippingstate"], input[title="billingstate"]' ).each( function( index, value ){
+		var $this = $( this ), $val = $this.val();
+
+		if ( $this.is( ':visible' ) && ! isNaN( parseFloat( $val ) ) && isFinite( $val ) ) {
+			$this.val( '' );
+		}
+
+	});
+
 	//this bit of code runs on the checkout page. If the checkbox is selected it copies the valus in the billing country and puts it in the shipping country form fields. 23.07.09
 	//Added 6/25/2012 - Added function to update shiping quotes.  This whole file is a bit of a mess in need of some Gary magic.
 	if(jQuery("#shippingSameBilling").is(":checked"))
