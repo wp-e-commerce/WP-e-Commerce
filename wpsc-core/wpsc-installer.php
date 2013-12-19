@@ -11,7 +11,7 @@ function wpsc_auto_update() {
 	wpsc_check_and_copy_files();
 
 	$wpsc_version = get_option( 'wpsc_version' );
-	$wpsc_minor_version = get_option( 'wspc_minor_version' );
+	$wpsc_minor_version = get_option( 'wpsc_minor_version' );
 
 	if ( $wpsc_version === false )
 		add_option( 'wpsc_version', WPSC_VERSION, '', 'yes' );
