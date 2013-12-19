@@ -95,20 +95,21 @@ function _wpsc_maybe_setup_bot_user() {
  * @param  boolean $fake_it Defaults to false
  */
 function _wpsc_create_customer_id_cookie( $id, $fake_it = false ) {
-	$expire = time() + WPSC_CUSTOMER_DATA_EXPIRATION; // valid for 48 hours
-	$data = $id . $expire;
 
-	$user = get_user_by( 'id', $id );
+	$expire = time() + WPSC_CUSTOMER_DATA_EXPIRATION; // valid for 48 hours
+	$data   = $id . $expire;
+
+	$user      = get_user_by( 'id', $id );
 	$pass_frag = substr( $user->user_pass, 8, 4 );
 
-	$key = wp_hash( $user->user_login . $pass_frag . '|' . $expiration, $scheme );
+	$key = wp_hash( $user->user_login . $pass_frag . '|' . $expire );
 
-	$hash = hash_hmac( 'md5', $data, $key );
+	$hash   = hash_hmac( 'md5', $data, $key );
 	$cookie = $id . '|' . $expire . '|' . $hash;
 
 	// store ID, expire and hash to validate later
 	if ( $fake_it )
-		$_COOKIE[WPSC_CUSTOMER_COOKIE] = $cookie;
+		$_COOKIE[ WPSC_CUSTOMER_COOKIE ] = $cookie;
 	else
 		_wpsc_set_customer_cookie( $cookie, $expire );
 }
@@ -121,10 +122,10 @@ function _wpsc_create_customer_id_cookie( $id, $fake_it = false ) {
  * @return mixed Return the customer ID if the cookie is valid, false if otherwise.
  */
 function _wpsc_validate_customer_cookie() {
-	if ( is_admin() || ! isset( $_COOKIE[WPSC_CUSTOMER_COOKIE] ) )
+	if ( is_admin() || ! isset( $_COOKIE[ WPSC_CUSTOMER_COOKIE ] ) )
 		return;
 
-	$cookie = $_COOKIE[WPSC_CUSTOMER_COOKIE];
+	$cookie = $_COOKIE[ WPSC_CUSTOMER_COOKIE ];
 	list( $id, $expire, $hash ) = $x = explode( '|', $cookie );
 	$data = $id . $expire;
 
@@ -141,16 +142,13 @@ function _wpsc_validate_customer_cookie() {
 		return false;
 
 	$pass_frag = substr( $user->user_pass, 8, 4 );
-	$key = wp_hash( $user->user_login . $pass_frag . '|' . $expiration, $scheme );
-	$hmac = hash_hmac( 'md5', $data, $key );
+	$key       = wp_hash( $user->user_login . $pass_frag . '|' . $expire );
+	$hmac      = hash_hmac( 'md5', $data, $key );
 
 	// integrity check
 	if ( $hmac == $hash )
 		return $id;
 
-	// if the cookie is invalid, just delete it and a new user will be generated
-	// later
-	unset( $_COOKIE[WPSC_CUSTOMER_COOKIE] );
 	_wpsc_set_customer_cookie( '', time() - 3600 );
 	return false;
 }
