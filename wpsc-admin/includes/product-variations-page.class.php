@@ -128,11 +128,11 @@ class WPSC_Product_Variations_Page {
 			'setup' => __( 'Setup', 'wpsc' ),
 		);
 
-		echo '<ul class="wpsc-product-variations-tabs">';
+		echo '<ul id="wpsc-product-variations-tabs" class="category-tabs">';
 		foreach ( $tabs as $tab => $title ) {
-			$class = ( $tab == $this->current_tab ) ? ' class="active"' : '';
+			$class = ( $tab == $this->current_tab ) ? ' class="tabs"' : '';
 			$item = '<li' . $class . '>';
-			$item .= '<a href="' . add_query_arg( 'tab', $tab ) . '">' . esc_html( $title ) . '</a></li>';
+			$item .= '<a href="' . add_query_arg( 'tab', $tab ) . '">' . esc_html( $title ) . '</a></li> ';
 			echo $item;
 		}
 		echo '</ul>';

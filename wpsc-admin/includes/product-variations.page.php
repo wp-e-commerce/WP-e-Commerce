@@ -41,10 +41,12 @@ $admin_body_class .= ' locale-' . sanitize_html_class( strtolower( str_replace( 
 <body class="no-js wp-admin wp-core-ui wpsc-product-variation-iframe<?php echo $admin_body_class; ?>">
 <script type="text/javascript">document.body.className = document.body.className.replace('no-js','js');</script>
 
-<div id="wpsc-product-variations-wrapper">
-	<?php $this->display_tabs(); ?>
-	<div class="wpsc-product-variations-tab-content">
-		<?php $this->display_current_tab(); ?>
+<div id="post-body">
+	<div id="wpsc-product-variations-wrapper" class="categorydiv wpsc-categorydiv">
+		<?php $this->display_tabs(); ?>
+		<div class="wpsc-product-variations-tab-content tabs-panel">
+			<?php $this->display_current_tab(); ?>
+		</div>
 	</div>
 </div>
 
