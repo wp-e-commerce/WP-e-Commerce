@@ -45,7 +45,6 @@ class Sputnik_Admin {
 			if ($_GET['oauth'] == 'reset') {
 				delete_option('sputnik_oauth_request');
 				delete_option('sputnik_oauth_access');
-				delete_transient('sputnik_account');
 
 				wp_redirect(self::build_url());
 			}
@@ -298,6 +297,8 @@ class Sputnik_Admin {
 		global $tab;
 		require_once(ABSPATH . 'wp-admin/includes/plugin-install.php');
 
+		define( 'IFRAME_REQUEST', true );
+
 		try {
 			if ( Sputnik::account_is_linked() ) {
 				$account = Sputnik::get_account();
@@ -328,8 +329,9 @@ class Sputnik_Admin {
 			'changelog'    => _x('Changelog',    'Plugin installer section title', 'sputnik'),
 			'other_notes'  => _x('Other Notes',  'Plugin installer section title', 'sputnik')
 		);
+
 		//Sanitize HTML
-		$api->sections = (array) $api->sections;
+		$api->sections = isset( $api->sections ) ? (array) $api->sections : array();
 		$api->author = links_add_target($api->author, '_blank');
 		foreach ( $api->sections as $section_name => $content )
 			$api->sections[$section_name] = wp_kses($content, $plugins_allowedtags);
@@ -403,6 +405,7 @@ class Sputnik_Admin {
 			$san_section = esc_attr($section_name);
 			echo "\t<li><a name='$san_section' href='$href'$class>$title</a></li>\n";
 		}
+
 		if (!empty($api->screenshots)) {
 			$title = $plugins_section_titles['screenshots'];
 			$class = ( 'screenshots' == $section ) ? ' class="current"' : '';
@@ -575,6 +578,9 @@ class Sputnik_Admin {
 				'oauth'     => 'request',
 				'oauth_buy' => $api->slug,
 				'TB_iframe' => true,
+				'height'    => 550,
+				'width'     => 640,
+				'modal'     => 'true'
 			) );
 
 		return compact('status', 'url', 'version');
@@ -699,6 +705,7 @@ class Sputnik_Admin {
 	public static function account() {
 		self::$page = 'account';
 		$account = false;
+
 		try {
 			$account = Sputnik::get_account();
 		}
@@ -767,7 +774,7 @@ class Sputnik_Admin {
 		}
 
 		// Request a checkout token from the Baikonur REST API for this product (associate user ID in custom field?)
-		$response = Sputnik_API::get_checkout_token( $plugin_id );
+		$response = Sputnik_API::get_checkout_token( $plugin );
 
 		// Redirect to PayPal with token in checkout URL
 		wp_redirect( $response['body']->checkout_uri );
@@ -850,7 +857,7 @@ class Sputnik_Admin {
 		ini_set( 'display_errors', '1' );
 		error_reporting( E_ALL );
 
-		if ( $api->is_theme )
+		if ( in_array( 'theme', $api->categories ) )
 			$upgrader = new Sputnik_ThemeUpgrader( new Sputnik_Upgrader_Skin( compact('title', 'url', 'nonce', 'plugin', 'api') ) );
 		else
 			$upgrader = new Sputnik_Upgrader( new Sputnik_Upgrader_Skin( compact('title', 'url', 'nonce', 'plugin', 'api') ) );

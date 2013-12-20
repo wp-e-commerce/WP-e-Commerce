@@ -25,6 +25,7 @@ class Sputnik_API_Auth {
 			$parameters['oauth_callback'] = $callback;
 		}
 		$request = $this->request('/auth/request_token', 'GET', $parameters);
+
 		$token = Sputnik_OAuth_Util::parse_parameters($request);
 		$this->token = new Sputnik_OAuth_Consumer($token['oauth_token'], $token['oauth_token_secret']);
 		return $token;
@@ -56,7 +57,9 @@ class Sputnik_API_Auth {
 		if (!empty($verifier)) {
 			$parameters['oauth_verifier'] = $verifier;
 		}
+
 		$request = $this->request('/auth/access_token', 'GET', $parameters);
+
 		$token = Sputnik_OAuth_Util::parse_parameters($request);
 		$this->token = new Sputnik_OAuth_Consumer($token['oauth_token'], $token['oauth_token_secret']);
 		return $token;
@@ -69,6 +72,7 @@ class Sputnik_API_Auth {
 		if (strpos($url, 'http') !== 0) {
 			$url = Sputnik::API_BASE . $url;
 		}
+
 		$request = Sputnik_OAuth_Request::from_consumer_and_token($this->consumer, $this->token, $method, $url, $parameters);
 		$request->sign_request($this->sha1_method, $this->consumer, $this->token);
 		return $request;
@@ -116,6 +120,8 @@ class Sputnik_API_Auth {
 				break;
 		}
 
+		$args['headers'] = array( 'X-WP-Domain' => Sputnik_API::domain() );
+
 		$response = wp_remote_request($url, $args);
 		//echo '<pre />' . debug_print_backtrace();
 		//echo '<pre />' . print_r( $url, 1 );
@@ -125,7 +131,7 @@ class Sputnik_API_Auth {
 			throw new Exception($response->get_error_message());
 		}
 
-		if ($response['response']['code'] !== 200) {
+		if ($response['response']['code'] != 200) {
 			throw new Exception($response['body']);
 		}
 		return $response['body'];

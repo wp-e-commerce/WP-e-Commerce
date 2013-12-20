@@ -156,30 +156,24 @@
 	padding: 0;
 	margin: 10px 25px 5px 0;
 	float: left;
-	height: 210px;
+	height: 244px;
 }
 	.sputnik-card {
 		width: 200px;
-		height: 200px;
+		height: 234px;
 		border: 1px solid #cfcfcf;
 		box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.22);
 
 		position: relative;
 		overflow: hidden;
 	}
-		.sputnik-plugin-thumb, .sputnik-plugin-details {
-			position: absolute;
-		}
-		.sputnik-plugin-thumb {
-			display: none;
-		}
 		.sputnik-plugin-details {
-			height: 180px;
+			height: 214px;
 			width: 176px;
 			background: #F9F9F9;
 			padding: 10px 12px;
 			overflow: hidden;
-			position: relative;
+			position: absolute;
 		}
 			.sputnik-plugin-details h4 {
 				margin: 0 0 14px;
@@ -216,25 +210,34 @@
 				float: right;
 			}
 
-	.sputnik-plugin.has-thumb .sputnik-card {
+	.sputnik-plugin .sputnik-card {
 		-o-transition: 0.4s;
 		-moz-transition: 0.4s;
 		-webkit-transition: 0.4s;
 	}
+		.sputnik-plugin .sputnik-plugin-thumb {
+			display: table-cell;
+			text-align: center;
+			vertical-align: middle;
+			width: 200px;
+			height: 200px;
+			margin-top: 25px;
+		}
 		.sputnik-plugin.has-thumb .sputnik-plugin-thumb {
-			display: block;
+			margin-top: 0;
 		}
-		.sputnik-plugin.has-thumb .sputnik-plugin-thumb img {
-			max-width:100%;
+		.sputnik-plugin .sputnik-plugin-thumb img {
+			max-width: 100%;
+			max-height: 100%;
 		}
-		.sputnik-plugin.has-thumb .sputnik-plugin-details {
-			top: 166px;
+		.sputnik-plugin .sputnik-plugin-details {
+			top: 200px;
 			background: rgba(250,250,250,0.7);
 			-o-transition: 0.4s;
 			-moz-transition: 0.4s;
 			-webkit-transition: 0.4s;
 		}
-		.sputnik-plugin.has-thumb:hover .sputnik-plugin-details {
+		.sputnik-plugin:hover .sputnik-plugin-details {
 			top: 0;
 			background: #F9F9F9;
 		}
@@ -300,8 +303,9 @@
 
 #sputnik-plugin-information {
 	background: url('fyi-back.png') repeat-y #fff;
-	height: auto;
 	min-height: 100%;
+	margin: 0;
+	padding: 0;
 }
 
 	#sputnik-plugin-information #plugin-information-header {
@@ -364,9 +368,10 @@
 	}
 
 	#sputnik-plugin-information .fyi {
+		position: fixed;
 		margin: 0;
-		padding: 0 10px 50px;
-		width: 210px;
+		padding: 0 10px;
+		width: 225px;
 		height: 100%;
 		background-color: #333;
 		color: #aaa;
@@ -405,7 +410,7 @@
 
 	#sputnik-plugin-information #section-holder {
 		padding: 10px;
-		margin-left: 240px;
+		margin-left: 260px;
 		margin-top: 0;
 	}
 

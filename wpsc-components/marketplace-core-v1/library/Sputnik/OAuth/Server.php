@@ -141,6 +141,8 @@ class Sputnik_OAuth_Server {
 				 ? $request->get_parameter('oauth_token')
 				 : NULL;
 
+
+
 		$token = $this->data_store->lookup_token(
 			$consumer, $token_type, $token_field
 		);
@@ -215,6 +217,7 @@ class Sputnik_OAuth_Server {
 			$nonce,
 			$timestamp
 		);
+
 		if ($found) {
 			throw new Sputnik_OAuth_Exception("Nonce already used: $nonce");
 		}

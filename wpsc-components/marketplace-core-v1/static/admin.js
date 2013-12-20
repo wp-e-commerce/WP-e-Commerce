@@ -1,4 +1,10 @@
 jQuery(document).ready(function($) {
+	var receiveMessage = function() {
+		if ( event.data == 'tb_close' )
+			tb_remove();
+	}
+	window.addEventListener( 'message', receiveMessage ,false );
+
 	if ( sputnikL10n.buy_id && sputnikL10n.buy_href ) {
 		var dg = new PAYPAL.apps.DGFlow({trigger:sputnikL10n.buy_id});
 		dg.startFlow(sputnikL10n.buy_href);
