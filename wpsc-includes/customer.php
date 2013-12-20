@@ -3,6 +3,7 @@
 add_action( 'wpsc_set_cart_item'         , '_wpsc_action_update_customer_last_active'     );
 add_action( 'wpsc_add_item'              , '_wpsc_action_update_customer_last_active'     );
 add_action( 'wpsc_before_submit_checkout', '_wpsc_action_update_customer_last_active'     );
+add_action( 'wp_login'                   , '_wpsc_action_setup_customer'                  );
 
 /**
  * Helper function for setting the customer cookie content and expiration
@@ -171,11 +172,6 @@ function wpsc_get_current_customer_id() {
 	if ( ! empty( $id ) )
 		return $id;
 
-	// if the user is logged in and the cookie is still there, delete the cookie
-	if ( is_user_logged_in() && isset( $_COOKIE[WPSC_CUSTOMER_COOKIE] ) ) {
-		_wpsc_set_customer_cookie( '', time() - 3600 );
-	}
-
 	// if the user is logged in we use the user id
 	if ( is_user_logged_in() ) {
 		return get_current_user_id();
@@ -196,6 +192,10 @@ function wpsc_get_current_customer_id() {
  * @since  3.8.13
  */
 function _wpsc_action_setup_customer() {
+	// if the user is logged in and the cookie is still there, delete the cookie
+	if ( is_user_logged_in() && isset( $_COOKIE[WPSC_CUSTOMER_COOKIE] ) )
+		_wpsc_set_customer_cookie( '', time() - 3600 );
+
 	// if the customer cookie is invalid, unset it
 	_wpsc_validate_customer_cookie();
 

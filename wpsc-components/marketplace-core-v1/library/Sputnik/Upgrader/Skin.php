@@ -15,9 +15,9 @@ class Sputnik_Upgrader_Skin extends WP_Upgrader_Skin {
 	}
 
 	function before() {
-		
+
 		if ( ! empty( $this->api ) ) {
-			$asset_type = $this->api->is_theme ? 'theme' : 'plugin';			
+			$asset_type = in_array( 'theme', $this->api->categories ) ? 'theme' : 'plugin';
 			$this->upgrader->strings['process_success'] = sprintf( __('Successfully installed the %s <strong>%s %s</strong>.'), $asset_type, $this->api->name, $this->api->version);
 		}
 

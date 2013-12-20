@@ -21,24 +21,24 @@ class Sputnik {
 	/**
 	 * Base URI for store URLs
 	 */
-	const SITE_BASE = 'http://www.wpeconomy.org';
+	const SITE_BASE = 'http://getshopped.org';
 
 	/**
 	 * Base URI for API URLs
 	 */
-	const API_BASE = 'http://api.wpeconomy.org';
+	const API_BASE = 'http://getshopped.org/wpec';
 
 	/**
 	 * OAuth client key
 	 */
-	const OAUTH_KEY = '2lOEJMYjLho3';
+	const OAUTH_KEY = 'NuDmOncs1pNb';
 
 	/**
 	 * OAuth client secret
 	 *
 	 * Not so secret any more.
 	 */
-	const OAUTH_SECRET = 'mPGuYG1DTt3DuoQtpimidEusg9WhoxRxJaXozkYVmf7q1QwM';
+	const OAUTH_SECRET = 'Gf25Y3G2zoPGtFfiARoHCy1tWFDYqi9E1Wrhrp3tSkR4Tuht';
 
 	/**
 	 * Path to Sputnik
@@ -65,6 +65,8 @@ class Sputnik {
 	 * Plugins which have been suspended remotely
 	 */
 	protected static $suspended = array();
+
+	protected static $account = null;
 
 	/**
 	 * Register everything we need
@@ -428,14 +430,12 @@ class Sputnik {
 	 * @return stdObject
 	 */
 	public static function get_account() {
-		$account = get_transient('sputnik_account');
-		if ($account === false) {
+		if ( is_null( self::$account ) ) {
 			$account = Sputnik_API::get_account();
-			$account = $account['body'];
-			set_transient('sputnik_account', $account, 3600);
+			self::$account = $account['body'];
 		}
 
-		return $account;
+		return self::$account;
 	}
 
 	/**
@@ -444,13 +444,8 @@ class Sputnik {
 	 * @return stdObject
 	 */
 	public static function update_account() {
-		delete_transient( 'sputnik_account' );
-
-		$account = Sputnik_API::get_account();
-
-		set_transient( 'sputnik_account', $account['body'], 60*60*12 );
-
-		return $account['body'];
+		self::$account = null;
+		return self::get_account();
 	}
 
 	/**
