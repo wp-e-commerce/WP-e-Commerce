@@ -789,44 +789,47 @@ function wpsc_update_custom_meta($product_id, $post_data) {
  * @param array the file array from $_FILES
  * @param array the preview file array from $_FILES
  */
-function wpsc_item_process_file($product_id, $submitted_file, $preview_file = null) {
-	global $wpdb;
-	add_filter('upload_dir', 'wpsc_modify_upload_directory');
-	$overrides = array('test_form'=>false);
+function wpsc_item_process_file( $product_id, $submitted_file, $preview_file = null ) {
+
+	add_filter( 'upload_dir', 'wpsc_modify_upload_directory' );
+
+	overrides = array('test_form'=>false);
 
 	$time = current_time('mysql');
-	if ( $post = get_post($product_id) ) {
+	if ( $post = get_post( $product_id ) ) {
 		if ( substr( $post->post_date, 0, 4 ) > 0 )
 			$time = $post->post_date;
 	}
 
-	$file = wp_handle_upload($submitted_file, $overrides, $time);
-	if ( isset($file['error']) )
+	$file = wp_handle_upload( $submitted_file, $overrides, $time );
+
+	if ( isset( $file['error'] ) ) {
 		return new WP_Error( 'upload_error', $file['error'] );
+	}
 
-	$name_parts = pathinfo($file['file']);
-	$name = $name_parts['basename'];
+	$name_parts = pathinfo( $file['file'] );
+	$name       = $name_parts['basename'];
 
-	$url = $file['url'];
-	$type = $file['type'];
-	$file = $file['file'];
-	$title = $name;
+	$url     = $file['url'];
+	$type    = $file['type'];
+	$file    = $file['file'];
+	$title   = $name;
 	$content = '';
 
 	// Construct the attachment array
 	$attachment = array(
 		'post_mime_type' => $type,
-		'guid' => $url,
-		'post_parent' => $product_id,
-		'post_title' => $title,
-		'post_content' => $content,
-		'post_type' => "wpsc-product-file",
-		'post_status' => 'inherit'
+		'guid'           => $url,
+		'post_parent'    => $product_id,
+		'post_title'     => $title,
+		'post_content'   => $content,
+		'post_type'      => "wpsc-product-file",
+		'post_status'    => 'inherit'
 	);
 
 	// Save the data
-	$id = wp_insert_post($attachment, $file, $product_id);
-	remove_filter('upload_dir', 'wpsc_modify_upload_directory');
+	$id = wp_insert_attachment( $attachment, $file, $product_id );
+	remove_filter( 'upload_dir', 'wpsc_modify_upload_directory' );
 }
 
 function wpsc_modify_upload_directory($input) {
