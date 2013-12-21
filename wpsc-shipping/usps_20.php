@@ -1,7 +1,7 @@
 <?php
 /**
  * New USPS module for V4 Domestic RateRequest API and V2 International Rate Request
- * @author Greg Gullett (ecsquest.net) and Instinct.co.nz
+ *
  * @version 2.1
  */
 class ash_usps {
@@ -119,7 +119,6 @@ class ash_usps {
 	 * Houses the list of services available to USPS API.
 	 * The majority is commented out until a proper
 	 * Service->Package map can be created
-	 * @author Greg Gullett (greg@ecsquest.com)
 	 * @since 2.0
 	 */
 	function _load_services() {
@@ -148,7 +147,7 @@ class ash_usps {
 	/**
 	 * Provides the appropriate endpoint for the API to use to
 	 * retrieve rates from USPS
-	 * @author Greg Gullett (greg@ecsquest.com)
+	 *
 	 * @since 2.0
 	 * @param boolean $intl Flag denotes if we are getting international rates or not, Default FALSE
 	 * @return string The endpoint / URL
@@ -163,9 +162,9 @@ class ash_usps {
 			),
 		);
 
-		$api = "RateV4";
+		$api = "API=RateV4";			//"API=" was missing https://www.usps.com/business/web-tools-apis/price-calculators.htm.
 		if ( $intl ) {
-			$api = "IntlRateV2";
+			$api = "API=IntlRateV2";	//"API=" was missing https://www.usps.com/business/web-tools-apis/price-calculators.htm.
 		}
 
 		$env = "prod";
@@ -228,7 +227,7 @@ class ash_usps {
 				<div class="ui-widget-content multiple-select">
 					<?php foreach ( $this->services as $label => $service ): ?>
 						<input type="checkbox" id="wpec_usps_srv_<?php esc_attr_e( $service ); ?>" name="wpec_usps[services][]" value="<?php echo esc_attr_e( $service ); ?>" <?php checked( (bool) array_search( $service, $wpec_usps_services ) ); ?> />
-                        <label for="wpec_usps_srv_<?php echo esc_attr_e( $service ) ?>"><?php echo $label; ?></label>
+				 		<label for="wpec_usps_srv_$service"><?php echo $label; ?></label>
 				 		<br />
 					<?php endforeach; ?>
 				</div>
@@ -276,7 +275,7 @@ class ash_usps {
 					<?php endforeach; ?>
 				</select>
 				<br />
-				<p class='description'><?php _e( "Note: Only used for First Class service rates if selected", "wpsc" ); ?></span>
+				<p class='description'><?php _e( "Note: Only used for First Class service rates if selected", "wpsc" ); ?></p>
 			</td>
 		</tr>
 		<?php
@@ -300,7 +299,7 @@ class ash_usps {
 	 * This is a temporary hack until I can
 	 * build a UI to build "Service Packages" so you can designate
 	 * all of these based on services
-	 * @author Greg Gullett (greg@ecsquest.com)
+	 *
 	 * @since 2.0
 	 * @param array $base
 	 * @param string $service
@@ -343,7 +342,7 @@ class ash_usps {
 
 	/**
 	 * Helper function that builds the list of packages for domestic rating
-	 * @author Greg Gullett (greg@ecsquest.com)
+	 *
 	 * @since 2.0
 	 * @param array reference $request
 	 * @param array $data
@@ -398,7 +397,7 @@ class ash_usps {
 
 	/**
 	 * Helper function that builds the list of packages for international rating
-	 * @author Greg Gullett (greg@ecsquest.com)
+	 *
 	 * @since 2.0
 	 * @param array reference $request
 	 * @param array $data
@@ -443,7 +442,7 @@ class ash_usps {
 
 	/**
 	 * Used to build request to send to USPS API
-	 * @author Greg Gullett (greg@ecsquest.com)
+	 *
 	 * @since 2.0
 	 * @param array $data
 	 * @return array
@@ -471,7 +470,7 @@ class ash_usps {
 
 	/**
 	 * Handles contacting the USPS server via cURL
-	 * @author Greg Gullett (greg@ecsquest.com)
+	 *
 	 * @since 2.0
 	 * @param string $request is the raw XML request
 	 * @param boolean $intl flag to denote if it is US Domestic or International
@@ -502,17 +501,17 @@ class ash_usps {
 	/**
 	 * USPS seems to be not able to encode their own XML appropriately
 	 * This function is used to fix their mistakes.
-	 * @author Greg Gullett (greg@ecsquest.com)
+	 *
 	 * @since 2.0
 	 * @param string $response Reference to the $response string
 	 */
 	function _clean_response( &$response ) {
-		return html_entity_decode( html_entity_decode( $response ) );
+		$response = html_entity_decode( html_entity_decode( $response ) );
 	}
 
 	/**
 	 * Parse the service out of the package
-	 * @author Greg Gullett (greg@ecsquest.com)
+	 *
 	 * @since 2.0
 	 * @param string $package
 	 * @return string
@@ -536,7 +535,7 @@ class ash_usps {
 
 	/**
 	 * Merges N-Many arrays together by key, without replacement
-	 * @author Greg Gullett (greg@ecsquest.com)
+	 *
 	 * @since 2.0
 	 * @param array $arrays
 	 * @return array
@@ -563,7 +562,7 @@ class ash_usps {
 
 	/**
 	 * This function parses the provided XML response from USPS to retrieve the final rates.
-	 * @author Greg Gullett (greg@ecsquest.com)
+	 *
 	 * @since 2.0
 	 * @param string $response The XML response from USPS
 	 * @return array
@@ -600,7 +599,7 @@ class ash_usps {
 	/**
 	 * This function parses the provided XML response for international requests
 	 * from USPS to retrieve the final rates as an array.
-	 * @author Greg Gullett (greg@ecsquest.com)
+	 *
 	 * @since 2.0
 	 * @param string $response The XML response from USPS
 	 * @return array
@@ -627,7 +626,7 @@ class ash_usps {
 
 	/**
 	 * Returns an array using the common keys from all arrasy and the sum of those common keys values;
-	 * @author Greg Gullett (greg@ecsquest.com)
+	 *
 	 * @since 2.0
 	 * @param array $rate_tables
 	 * @return array
@@ -640,7 +639,7 @@ class ash_usps {
 		if ( count( $rate_tables ) < 2 ) {
 			return $rate_tables[0];
 		}
-		$temp_services = call_user_func_array( "array_intersect_key", $rate_tables );
+		$temp_services = call_user_func_array( 'array_intersect_key', $rate_tables );
 
 		$valid_services = array_keys( $temp_services );
 		foreach ( $rate_tables as $rate_table ) {
@@ -658,7 +657,7 @@ class ash_usps {
 
 	/**
 	 * Merges arrays and adds the values of common keys.
-	 * @author Greg Gullett (greg@ecsquest.com)
+	 *
 	 * @since 2.0
 	 * @param array $arrays
 	 * @return array
@@ -669,7 +668,7 @@ class ash_usps {
 			return array();
 		}
 		if ( count( $arrays ) > 1 ) {
-			$temp_arr = call_user_func_array( "array_intersect_key", $arrays );
+			$temp_arr = call_user_func_array( 'array_intersect_key', $arrays );
 			$intersect_keys = array_keys( (array) $temp_arr );
 		} else {
 			$intersect_keys = array_keys( $arrays[0] );
@@ -690,7 +689,7 @@ class ash_usps {
 
 	/**
 	 * Runs the quote process for a simple quote and returns the final quote table
-	 * @author Greg Gullett (greg@ecsquest.com)
+	 *
 	 * @since 2.0
 	 * @param array $data
 	 * @return array
@@ -717,7 +716,7 @@ class ash_usps {
 
 	/**
 	 * Runs the quote process for an advanced quote and returns the final quote table
-	 * @author Greg Gullett (greg@ecsquest.com)
+	 *
 	 * @since 2.0
 	 * @param array $data
 	 * @return array
@@ -725,7 +724,8 @@ class ash_usps {
 	function _quote_advanced( array $data ) {
 		global $wpec_ash_xml;
 		$rate_tables = array();
-		foreach ( $this->shipment->packages as $package ) {
+		$cart_shipment = apply_filters('wpsc_the_shipment',$this->name,$this->shipment); //Filter to allow reprocesing the shipment before is quoted.
+		foreach ( $cart_shipment->packages as $package ) {
 			$temp_data = $data;
 			$request = $this->_build_request( $temp_data );
 			if ( empty( $request ) ) {
@@ -752,7 +752,7 @@ class ash_usps {
 
 	/**
 	 * Runs the quote process for an international quote and returns the final quote table
-	 * @author Greg Gullett (greg@ecsquest.com)
+	 *
 	 * @since 2.0
 	 * @param array $data
 	 * @return array
@@ -760,7 +760,8 @@ class ash_usps {
 	function _quote_intl( array $data ) {
 		global $wpec_ash_xml;
 		$rate_tables = array();
-		foreach ( $this->shipment->packages as $package ) {
+		$cart_shipment = apply_filters('wpsc_the_shipment',$this->name,$this->shipment); //Filter to allow reprocesing the shipment before is quoted.
+		foreach ( $cart_shipment->packages as $package ) {
 			$temp_data = $data;
 			$request = $this->_build_request( $temp_data );
 			if ( empty( $request ) ) {
@@ -782,7 +783,7 @@ class ash_usps {
 
 	/**
 	 * Returns an updated country based on several rules that USPS has
-	 * @author Greg Gullett (greg@ecsquest.com)
+	 *
 	 * @since 2.0
 	 * @param string $full_name The countries full name
 	 * @return string
@@ -809,14 +810,14 @@ class ash_usps {
 
 	/**
 	 * Takes a rate table and returns a new table with only services selected in the back end
-	 * @author Greg Gullett (greg@ecsquest.com)
+	 *
 	 * @since 2.0
 	 * @param array $rate_table
 	 * @param array $data
 	 * @return array
 	 */
 	function _validate_services( $rate_table, $data ) {
-		global $wpdb;
+
 		if ( ! is_array( $rate_table ) ) {
 			return array();
 		}
@@ -835,7 +836,7 @@ class ash_usps {
 	 * This function handles the process of getting a quote.
 	 * It is kept abstracted from the entry points so you can
 	 * implement a testing framework separate from wordpress.
-	 * @author Greg Gullett (greg@ecsquest.com)
+	 *
 	 * @since 2.0
 	 * @param array $data This is an array that USPS uses to build its request
 	 *
@@ -847,18 +848,6 @@ class ash_usps {
 	 */
 	function _run_quote( array $data ) {
 		global $wpec_ash_tools;
-		//************** These values are common to all entry points **************
-		//*** Grab Total Weight from the shipment object for simple shipping
-		$data["weight"] = $this->shipment->total_weight;
-		//*** User/Customer Entered Values ***\\
-		$data["dest_zipcode"] = $this->shipment->destination["zipcode"];
-		if ( empty( $data["weight"] ) ) {
-			return array();
-		}
-
-		if ( empty( $data["dest_zipcode"] ) ) {
-			return array();
-		}
 
 		if ( $wpec_ash_tools->is_military_zip( $data["dest_zipcode"] ) ) {
 			$data["dest_country"] = "USA";
@@ -899,30 +888,74 @@ class ash_usps {
 		if ( ! is_object( $wpec_ash_tools ) ) {
 			$wpec_ash_tools = new ASHTools();
 		}
-
+		$data = array();
 		$this->shipment = $wpec_ash->get_shipment();
-		$this->shipment->set_destination( $this->internal_name );
+		//************** These values are common to all entry points **************
+		//*** Grab Total Weight from the shipment object for simple shipping
+		$data["weight"] = wpsc_cart_weight_total();
+		if ( empty( $data["weight"] ) ) {
+			return array();
+		}
+
+		//*** User/Customer Entered Values ***\\
+		// If ths zip code is provided via a form post use it!
+		$data["dest_zipcode"] = (string) wpsc_get_customer_meta( 'shipping_zip' );
+		if ( isset( $_POST['zipcode'] ) && ( $_POST['zipcode'] != __( "Your Zipcode", 'wpsc' ) && $_POST['zipcode'] != "YOURZIPCODE" ) )
+			$data["dest_zipcode"] = esc_attr( $_POST['zipcode'] );
+		if ( in_array( $data["dest_zipcode"], array( __( 'Your Zipcode', 'wpsc' ), 'YOURZIPCODE' ) ) )
+			$data["dest_zipcode"] = '';
+		wpsc_update_customer_meta( 'shipping_zip', $data["dest_zipcode"] );
+		if ( empty ( $data["dest_zipcode"] ) ) {
+			// We cannot get a quote without a zip code so might as well return!
+			return array();
+		}
+
+		// If the region code is provided via a form post use it!
+		if ( isset( $_POST['region'] ) && ! empty( $_POST['region'] ) ) {
+			$query = $wpdb->prepare( "SELECT `" . WPSC_TABLE_REGION_TAX . "`.* FROM `" . WPSC_TABLE_REGION_TAX . "` WHERE `" . WPSC_TABLE_REGION_TAX . "`.`id` = %d", $_POST['region'] );
+			$dest_region_data = $wpdb->get_results( $query, ARRAY_A );
+			$data['dest_state'] = ( is_array( $dest_region_data ) ) ? $dest_region_data[0]['code'] : "";
+			wpsc_update_customer_meta( 'usps_state', $data['dest_state'] );
+		} else if ( $dest_state = wpsc_get_customer_meta( 'usps_state' ) ) {
+			// Well, we have a zip code in the session and no new one provided
+			$data['dest_state'] = $dest_state;
+		} else {
+			$data['dest_state'] = "";
+		}
+
+		//*** Set up the destination country ***\
+		$data["dest_country"] = wpsc_get_customer_meta( 'shipping_country' );
+		$data["dest_country"] = $wpec_ash_tools->get_full_country( $data["dest_country"] );
+		$data["dest_country"] = $this->_update_country( $data["dest_country"] );
+
+		$shipping_cache_check['state'] = $data['dest_state'];
+		$shipping_cache_check['country'] = $data['dest_country'];
+		$shipping_cache_check['zipcode'] = $data["dest_zipcode"];
+		$this->shipment->set_destination( $this->internal_name, $shipping_cache_check );
+
+		$settings = get_option( "wpec_usps" );
+		$data["adv_rate"] = (!empty($settings["adv_rate"])) ? $settings["adv_rate"] : FALSE; // Use advanced shipping for Domestic Rates ? Not available
+		$this->shipment->rates_expire = date('Y-m-d'); //Date will be checked against the cached date.
+		if ( $data["weight"] > 70 && ! $data["adv_rate"] ) { //Yes, USPS has a weight limit too: https://www.usps.com/send/can-you-mail-it.htm?#3.
+			$shipping_quotes[TXT_WPSC_OVER_UPS_WEIGHT]=0; //FIXME Remove UPS and 150lb from this message, and it can be used here too. Temporary fix.
+			$wpec_ash->cache_results( $this->internal_name, array($shipping_quotes), $this->shipment );
+			return array($shipping_quotes);
+		}
+
 		// Check to see if the cached shipment is still accurate, if not we need new rate
 		$cache = $wpec_ash->check_cache( $this->internal_name, $this->shipment );
 
-		if ( $cache ) {
+		if ( count($cache["rate_table"]) >= 1 ) { //$cache['rate_table'] could be array(0).
 			return $cache["rate_table"];
 		}
 
-		$data = array();
 		//*** WPEC Configuration values ***\\
-		$settings = get_option( "wpec_usps" );
 		$this->use_test_env   = ( ! isset( $settings["test_server"] ) ) ? false : ( bool ) $settings['test_server'];
 		$data["fcl_type"]     = ( ! empty( $settings["fcl_type"] ) ) ? $settings["fcl_type"] : "PARCEL";
 		$data["mail_type"]    = ( ! empty( $settings["intl_pkg"] ) ) ? $settings["intl_pkg"] : "Package";
 		$data["base_zipcode"] = get_option( "base_zipcode" );
 		$data["services"]     = ( ! empty( $settings["services"] ) ) ? $settings["services"] : array( "PRIORITY", "EXPRESS", "FIRST CLASS" );
 		$data["user_id"]      = $settings["id"];
-		$data["adv_rate"]     = ( ! empty( $settings["adv_rate"] ) ) ? $settings["adv_rate"] : FALSE;   // Use advanced shipping for Domestic Rates ? Not available
-		//*** Set up the destination country ***\
-		$country              = $this->shipment->destination["country"];
-		$data["dest_country"] = $wpec_ash_tools->get_full_country( $country );
-		$data["dest_country"] = $this->_update_country( $data["dest_country"] );
 		//************ GET THE RATE ************\\
 		$rate_table           = $this->_run_quote( $data );
 		//************ CACHE the Results ************\\

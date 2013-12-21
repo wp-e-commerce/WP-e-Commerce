@@ -41,7 +41,7 @@ class ash_ups {
 	private function _setServiceURL () {
 		global $wpdb;
 		$wpsc_ups_settings = get_option( "wpsc_ups_settings" );
-		$wpsc_ups_environment = ( array_key_exists( "upsenvironment", (array) $wpsc_ups_settings ) ) ? $wpsc_ups_settings["upsenvironment"] : "1";
+		$wpsc_ups_environment = ( array_key_exists( "upsenvironment", (array) $wpsc_ups_settings ) ) ? $wpsc_ups_settings["upsenvironment"] : "0"; //(1) testing, else (0) production.
 
 		if ( $wpsc_ups_environment == "1" ){
 			$this->service_url = "https://wwwcie.ups.com/ups.app/xml/Rate";
@@ -315,8 +315,8 @@ class ash_ups {
 	private function _is_large( &$pack, $package ) {
 		$maximum = 165; // in inches
 		$large_floor = 130; // in inches
-		$calc_total = ( ( 2 * $package->width ) + ( 2 * $package->height ) );
-		if ( $calc_total >= $maximum ) {
+		$calc_total=(round($package->length)+(2*round($package->width))+(2*round($package->height))); //see http://www.ups.com/content/us/en/resources/prepare/oversize.html.
+		if ( $calc_total > $maximum || round( $package->length ) > 108 ) { //see http://www.ups.com/content/us/en/resources/prepare/oversize.html.
 			throw new Exception( "Package dimensions exceed non-freight limits" );
 		} elseif ( $calc_total > $large_floor ) {
 			$pack["LargePackageIndicator"] = "";
@@ -344,7 +344,7 @@ class ash_ups {
 	}
 
 	private function _build_shipment( &$Shipment, $args ){
-		$cart_shipment = $this->shipment;
+		$cart_shipment = apply_filters('wpsc_the_shipment',$this->name,$this->shipment); //Filter to allow reprocessing shipment packages.
 
 		foreach ( $cart_shipment->packages as $package ) {
 			$pack = array(
@@ -798,36 +798,38 @@ class ash_ups {
 			$args['dest_state'] = $dest_state;
 		} else {
 			$args['dest_state'] = "";
-		}
-
-		$shipping_cache_check['state'] = $args['dest_state'];
-		$shipping_cache_check['zipcode'] = $args['dest_pcode'];
-		$shipping_cache_check['weight'] = $args['weight'];
-		$session_cache_check = wpsc_get_customer_meta( 'ups_shipping_cache_check' );
+		}		
+		$shipping_cache_check['package_count'] = $this->shipment->package_count; //Package count is needed for cached shipment check.
+		$shipping_cache_check['destination']['state'] = $args['dest_state']; //The destination is needed for cached shipment check.
+		$shipping_cache_check['destination']['country'] = $args['dest_ccode'];
+		$shipping_cache_check['destination']['zipcode'] = $args['dest_pcode'];
+		$shipping_cache_check['total_weight'] = $args['weight']; 
+		$shipping_cache_check['rates_expire'] = date('Y-m-d'); 
+		$this->shipment->rates_expire = date('Y-m-d'); 
+		$this->shipment->set_destination($this->internal_name,$shipping_cache_check['destination']); //Set this shipment's destination.
+ 		$session_cache_check = $wpec_ash->check_cache( $this->internal_name, $this->shipment ); //Now, we're ready to check cache.
 		if ( ! is_array( $session_cache_check ) ) {
 			$session_cache_check = array();
 		}
-		$session_cache = wpsc_get_customer_meta( 'ups_shipping_cache' );
+		$session_cache = $session_cache_check;
 		if ( ! is_array( $session_cache ) ) {
 			$session_cache = array();
-		}
+		} else
+			$session_cache_check = $session_cache_check['shipment'];
 		if ( ! (boolean) $args["singular_shipping"] ) {
 			// This is where shipping breaks out of UPS if weight is higher than 150 LBS
-			if ( $weight > 150 ) {
-					wpsc_delete_customer_meta( 'quote_shipping_method' );
+			if ( $args['weight'] > 150 ) {
+					$this->shipment->set_destination($this->internal_name,$shipping_cache_check['destination']); 
+					$this->shipment->rates_expire = date('Y-m-d');
 					$shipping_quotes[ TXT_WPSC_OVER_UPS_WEIGHT ] = 0; // yes, a constant.
-					$session_cache_check['weight'] = $args['weight'];
-					$session_cache[ $this->internal_name ] = $shipping_quotes;
-					wpsc_update_customer_meta( 'quote_shipping_method', $this->internal_name );
-					wpsc_update_customer_meta( 'ups_shipping_cache_check', $session_cache_check );
-					wpsc_update_customer_meta( 'ups_shipping_cache', $session_cache );
+					$wpec_ash->cache_results($this->internal_name,array($shipping_quotes),$this->shipment); //Update shipment cache.
 					return array( $shipping_quotes );
 			}
 		}
 		// We do not want to spam UPS (and slow down our process) if we already
 		// have a shipping quote!
-		if ( ( $session_cache_check === $shipping_cache_check ) && ( ! empty( $session_cache[$this->internal_name] ) ) ) {
-			$rate_table = $session_cache[$this->internal_name];
+		if ( ( $session_cache_check === $shipping_cache_check ) && ( count( $session_cache['rate_table']) >= 1 ) ) { //'rate_table' could be array(0).
+			$rate_table = $session_cache['rate_table'];
 			return $rate_table;
 		} else {
 			global $wpsc_cart;
@@ -856,12 +858,10 @@ class ash_ups {
 				}
 			}
 		}
-
+		$this->shipment->rates_expire = date('Y-m-d'); //Refresh rates once a day.
+		$this->shipment->set_destination($this->internal_name,$shipping_cache_check['destination']); //Set destination before caching rates.
 		$wpec_ash->cache_results(
 			$this->internal_name,
-			$args["dest_ccode"],
-			$args["dest_state"],
-			$args["dest_pcode"],
 			$rate_table,
 			$this->shipment
 		);

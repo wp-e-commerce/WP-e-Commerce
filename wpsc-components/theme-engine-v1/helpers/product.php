@@ -512,7 +512,6 @@ function wpsc_is_in_category() {
  * @todo Cache the results of this somewhere.  It could save quite a few trips
  * to the MySQL server.
  *
- * @author John Beales ( johnbeales.com )
  */
 function wpsc_category_id($category_slug = '') {
 	if(empty($category_slug))

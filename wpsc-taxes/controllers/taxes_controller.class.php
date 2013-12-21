@@ -1,7 +1,6 @@
 <?php
 
 /**
- * @author: Jeremy Smith - www.dnawebagency.com
  * @description: wpec_taxes_controller contains all of the functions necessary
  *               to communicate with the taxes system.
  * */

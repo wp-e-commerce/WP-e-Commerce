@@ -4,7 +4,7 @@ class ASHXML{
     /**
      * This function iterates over the keys from an array, if there is any
      * non-numeric keys, it is associative, else it is a "list"
-     * @author Greg Gullett (greg@ecsquest.com)
+     *
      * @since 0.0.1
      * @param array $data
      * @return boolean
@@ -22,7 +22,7 @@ class ASHXML{
 
 	/**
 	 * Helper function that parses xml attributes from an array into a string
-	 * @author Greg Gullett (greg@ecsquest.com)
+	 *
 	 * @since 0.0.1
 	 * @param array $attrs
 	 * @return string
@@ -38,7 +38,7 @@ class ASHXML{
 	/**
 	 * Accepts an associative array and produces an XML document
 	 * Attributes are supported by this function, see example.
-	 * @author Greg Gullett (greg@ecsquest.com)
+	 *
 	 * @since 0.0.1
 	 * @param array $data Associative array, can be multi-dimensional
 	 * @return string The resulting XML document
@@ -95,7 +95,7 @@ class ASHXML{
 
 	/**
 	 * Sets the header content type to text/xml and displays a given XML doc
-	 * @author Greg Gullett (greg@ecsquest.com)
+	 *
 	 * @since 0.0.1
 	 * @param string $xml_doc
 	 */
@@ -108,7 +108,7 @@ class ASHXML{
 	 * This is a helper function that retrieves an XML element from the
 	 * provided document. Since we are trying to keep PHP4 support
 	 * I cannot use simpleXML
-	 * @author Greg Gullett (greg@ecsquest.com)
+	 *
 	 * @since 0.0.1
 	 * @param string $element  The element to find in document
 	 * @param string $document The XML Document to search
@@ -128,13 +128,13 @@ class ASHXML{
  *
  * This is a helper class for ASH-based / enabled Shipping plugins.
  * Helpful centralized functions will be stored here for ease of use.
- * @author Greg Gullett (greg@ecsquest)
+ *
  * @since 0.0.1
  */
 class ASHTools{
     /**
      * Determines if the given zipcode is a US Military APO/AFO zip code
-     * @author Greg Gullett (greg@ecsquest.com)
+     *
      * @since 0.0.1
      * @param int $zipcode
      * @return boolean
@@ -170,7 +170,7 @@ class ASHTools{
 
     /**
      * Given an ISO country code, it will return the full country name
-     * @author Greg Gullett (greg@ecsquest.com)
+     *
      * @since 0.0.1
      * @param string $short_country
      * @return string
@@ -188,7 +188,7 @@ class ASHTools{
 
     /**
      * Given a WPEC state code (int), will return the state/region name
-     * @author Greg Gullett (greg@ecsquest.com)
+     *
      * @since 0.0.1
      * @param int $state_code
      * @return string|int will be int if wordpress database & wpec are not available
@@ -212,7 +212,7 @@ class ASHTools{
     /**
      * Retrieves value for given key from $_POST or given session variable
      * You need to provide the session stub b/c it doenst know where you are looking
-     * @author Greg Gullett (greg@ecsquest.com)
+     *
      * @since 0.0.1
      * @param mixed $key
      * @param array $session
@@ -229,7 +229,7 @@ class ASHTools{
     /**
      * Retrieves the destination from session or post as an array
      * or "state","country", and "zipcode"
-     * @author Greg Gullett (greg@ecsquest.com)
+     *
      * @since 0.0.1
      * @param array $session
      * @return array
@@ -246,10 +246,15 @@ class ASHTools{
 /**
  * Object representation of a package from a shipment.
  * This is the fundamental element of a shipment.
- * @author Greg Gullett (greg@ecsquest.com)
+ *
  * @since 0.0.1
  */
 class ASHPackage{
+	/**
+	 * Product ids included in package
+	 * @var array
+	 */
+	var $product_id = array();
     /**
      * Weight in pounds of the package
      * @var decimal
@@ -301,11 +306,16 @@ class ASHPackage{
      * @var decimal
      */
     var $insured_amount;
+	/**
+	 * The package can't be shipped sideways.
+	 * var boolean
+	 */
+	var $this_side_up = FALSE;
 
     /**
      * The constructor for the ASHPackage class
      * Accepts an arguments array to fill out the class on initialization
-     * @author Greg Gullett (greg@ecsquest.com)
+     *
      * @since 0.0.1
      * @param array $args
      */
@@ -318,7 +328,7 @@ class ASHPackage{
      * This is a "magic function" that will be used when I can convert to PHP5
      * When a property / function is set to private, this controls access
      * to outside functions
-     * @author Greg Gullett (greg@ecsquest.com)
+     *
      * @since 0.0.1
      * @param string $item
      * @return mixed
@@ -330,7 +340,7 @@ class ASHPackage{
     /**
      * This is a "magic function" that sets a property that has as protected scope
      * only for php5
-     * @author Greg Gullett (greg@ecsquest.com)
+     *
      * @since 0.0.1
      * @param string $item
      * @param mixed $value
@@ -342,7 +352,7 @@ class ASHPackage{
     /**
      * This is a magic function that controls how the string representation of
      * the class looks / behaves.
-     * @author Greg Gullett (greg@ecsquest.com)
+     *
      * @since 0.0.1
      */
     function __toString(){
@@ -353,7 +363,7 @@ class ASHPackage{
      * Sets the dimensions for the package given an array
      * array values should be "Height", "Length", "Width" and weight
      * girth is automatically calculated
-     * @author Greg Gullett (greg@ecsquest.com)
+     *
      * @since 0.0.1
      * @param array $dimensions
      */
@@ -369,7 +379,7 @@ class ASHPackage{
 /**
  * Object representation of a shipment of packages based on
  * the contents of a shopping cart
- * @author Greg Gullett (greg@ecsquest.com)
+ *
  * @since 0.0.1
  */
 class ASHShipment{
@@ -406,10 +416,15 @@ class ASHShipment{
      * @var unknown_type
      */
     var $total_weight = 0;
+	/**
+	 * Sets a rate expire date
+	 * @var string
+	 */
+	var $rates_expire = '';
 
     /**
      * Constructor for the ASHShipment class
-     * @author Greg Gullett (greg@ecsquest.com)
+     *
      * @since 0.0.1
      */
     function ASHShipment(){
@@ -462,7 +477,7 @@ class ASHShipment{
     /**
      * Use this function to add a package object to the shipment.
      * it expects an object of class ASHPackage or throws an exception
-     * @author Greg Gullett (greg@ecsquest.com)
+     *
      * @since 0.0.1
      * @param ASHPackage $package
      * @throws ErrorException
@@ -484,19 +499,19 @@ class ASHShipment{
 /**
  * This is the heart of the Advanced Shipping Helper for WPEC
  * It is the entrypoint for interaction between ASH and WPEC
- * @author Greg Gullett (greg@ecsquest.com)
+ *
  */
 class ASH{
     /**
      * General constructor for ASH class
-     * @author Greg Gullett (greg@ecsquest.com)
+     *
      */
     function ASH(){
     }
 
     /**
      * Builds a shipment object representing the cart contents from WPEC
-     * @author Greg Gullett (greg@ecsquest.com)
+     *
      * @return ASHShipment
      */
     function get_shipment(){
@@ -510,7 +525,8 @@ class ASH{
         foreach($wpsc_cart->cart_items as $cart_item){
             $package = new ASHPackage();
             //*** Set package dimensions ***\\
-            $dimensions = get_product_meta($cart_item->product_id, 'dimensions');
+            $dimensions = get_product_meta($cart_item->product_id, 'product_metadata'); //The 'dimensions' meta doesn't exist.
+            $dimensions = $dimensions[0]['dimensions'];
             $dim_array = array();
             $dim_array["weight"] = $cart_item->weight;
             $dim_array["height"] = ( !empty( $dimensions["height"] ) && is_numeric( $dimensions["height"] ) ) ? $dimensions["height"] : 1;
@@ -518,17 +534,17 @@ class ASH{
             $dim_array["length"] = ( !empty( $dimensions["length"] ) && is_numeric( $dimensions["length"] ) ) ? $dimensions["length"] : 1;
             $package->set_dimensions($dim_array);
             //*** Set other meta ***\\
-            $package->hazard = (get_product_meta($cart_item->product_id,"ship_hazard") === FALSE) ? FALSE : TRUE;
-            $package->insurance = get_product_meta($cart_item->product_id,"ship_insurance");
-            $package->insured_amount = get_product_meta($cart_item->product_id,"ship_insured_amount");
+            $package->hazard = (get_post_meta($cart_item->product_id,"g:ship_hazard",TRUE) === TRUE) ? TRUE : FALSE;	//Doesn't exist. Allow the user to enter Google formatted meta.
+            $package->insurance = (get_post_meta($cart_item->product_id,"g:ship_insurance",TRUE)=== TRUE)? TRUE:FALSE;	//Doesn't exist. Allow the user to enter Google formatted meta.
+            $package->insured_amount = get_post_meta($cart_item->product_id,"g:ship_insured_amount",TRUE);				//Doesn't exist. Allow the user to enter Google formatted meta.
             $package->value = $cart_item->unit_price;
             $package->contents = $cart_item->product_name;
-
+			$package->this_side_up = (get_post_meta($cart_item->product_id,"g:this_side_up",TRUE)=== TRUE)?TRUE:FALSE;	//Product can't be shipped sideways.
             if ($shipment->hazard === FALSE and $package->hazard === TRUE){
                 $shipment->set_hazard(TRUE);
             }
             $quantity = (int)$cart_item->quantity;
-
+			$package->product_id[$cart_item->product_id] = 1; // The product in this package.
             for($i=1; $i <= $quantity; $i++){
                 $shipment->add_package($package);
             }
@@ -538,7 +554,7 @@ class ASH{
 
     /**
      * Caches a result table for the given shipping module
-     * @author Greg Gullett (greg@ecsquest.com)
+     *
      * @param string $internal_name
      * @param array $rate_table
      * @param ASHShipment $shipment
@@ -556,15 +572,15 @@ class ASH{
         $wpec_ash[$internal_name]["rate_table"] = $rate_table;
         $shipment_vals = array("package_count"=>$shipment->package_count,
                                "destination"  =>$shipment->destination,
-                               "total_weight" =>$shipment->total_weight
-            );
+                               "total_weight" =>$shipment->total_weight,
+                               "rates_expire" =>$shipment->rates_expire ); //Refresh rates after today.
         $wpec_ash[$internal_name]["shipment"] = $shipment_vals;
         wpsc_update_customer_meta( 'shipping_ash', $wpec_ash );
     }
     /**
      * Checks cached results for given shipping module and returns
      * the cached rates if nothing has changed.
-     * @author Greg Gullett (greg@ecsquest.com)
+     *
      * @param string $internal_name
      * @param ASHShipment $shipment
      */
@@ -589,14 +605,16 @@ class ASH{
 
         $shipment_vals = array("package_count"=>$shipment->package_count,
                                "destination"  =>$shipment->destination,
-                               "total_weight" =>$shipment->total_weight
-            );
+                               "total_weight" =>$shipment->total_weight,
+                               "rates_expire" =>$shipment->rates_expire ); //Refresh rates after today.
         if ($cached_shipment["package_count"] != $shipment->package_count){
             return FALSE;
         }elseif($cached_shipment["destination"] != $shipment_vals["destination"]){
             return FALSE;
         }elseif($cached_shipment["total_weight"] != $shipment_vals["total_weight"]){
             return FALSE;
+        }elseif($cached_shipment["rates_expire"] != $shipment_vals["rates_expire"]) { //Refresh rates after today.
+           	return FALSE;
         }else{
             return $wpec_ash[$internal_name];
         }
