@@ -554,7 +554,7 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 	$version_identifier = WPSC_VERSION . "." . WPSC_MINOR_VERSION;
 	$pages = array( 'index.php', 'options-general.php', 'edit.php', 'post.php', 'post-new.php' );
 
-	if ( ( in_array( $pagehook, $pages ) && $post_type == 'wpsc-product' )  || $current_screen->id == 'edit-wpsc_product_category' || $current_screen->id == 'dashboard_page_wpsc-sales-logs' || $current_screen->id == 'dashboard_page_wpsc-purchase-logs' || $current_screen->id == 'settings_page_wpsc-settings' || $current_screen->id == 'wpsc-product_page_wpsc-edit-coupons' || $current_screen->id == 'edit-wpsc-variation' || $current_screen->id == 'wpsc-product-variations-iframe' || ( $pagehook == 'media-upload-popup' && get_post_type( $_REQUEST['post_id'] ) == 'wpsc-product' ) ) {
+	if ( ( in_array( $pagehook, $pages ) && $post_type == 'wpsc-product' ) || $current_screen->id == 'dashboard_page_wpsc-credits' || $current_screen->id == 'dashboard_page_wpsc-about' || $current_screen->id == 'edit-wpsc_product_category' || $current_screen->id == 'dashboard_page_wpsc-sales-logs' || $current_screen->id == 'dashboard_page_wpsc-purchase-logs' || $current_screen->id == 'settings_page_wpsc-settings' || $current_screen->id == 'wpsc-product_page_wpsc-edit-coupons' || $current_screen->id == 'edit-wpsc-variation' || $current_screen->id == 'wpsc-product-variations-iframe' || ( $pagehook == 'media-upload-popup' && get_post_type( $_REQUEST['post_id'] ) == 'wpsc-product' ) ) {
 		wp_enqueue_script( 'livequery',                      WPSC_URL . '/wpsc-admin/js/jquery.livequery.js',             array( 'jquery' ), '1.0.3' );
 		wp_enqueue_script( 'wp-e-commerce-admin-parameters', admin_url( 'admin.php?wpsc_admin_dynamic_js=true' ), false,             $version_identifier );
 		wp_enqueue_script( 'wp-e-commerce-admin',            WPSC_URL . '/wpsc-admin/js/admin.js',                        array( 'jquery', 'jquery-ui-core', 'jquery-ui-sortable' ), $version_identifier, false );
@@ -1550,3 +1550,268 @@ if ( isset( $_REQUEST['dismiss_3811_upgrade_notice'] ) )
 
 if ( get_option( '_wpsc_3811_user_log_notice' ) )
 	add_action( 'admin_notices', '_wpsc_admin_notices_3dot8dot11' );
+
+add_action( 'admin_head', '_wpsc_action_remove_about_menu' );
+
+function _wpsc_action_remove_about_menu() {
+	remove_submenu_page( 'index.php', 'wpsc-about' );
+	remove_submenu_page( 'index.php', 'wpsc-credit' );
+}
+
+add_action( 'admin_menu', '_wpsc_action_add_about_page' );
+
+function _wpsc_action_add_about_page() {
+	if ( ! current_user_can( 'activate_plugins' ) )
+		return;
+
+	add_dashboard_page(
+		__( 'Welcome to WP e-Commerce', 'wpsc' ),
+		__( 'Welcome to WP e-Commerce', 'wpsc' ),
+		'activate_plugins',
+		'wpsc-about',
+		'_wpsc_action_about_page'
+	);
+
+	add_dashboard_page(
+		__( 'Credits', 'wpsc' ),
+		__( 'Credits', 'wpsc' ),
+		'activate_plugins',
+		'wpsc-credits',
+		'_wpsc_action_credits_page'
+	);
+}
+
+function _wpsc_action_about_page() {
+	list( $display_version ) = explode( '-', WPSC_VERSION );
+	?>
+	<div class="wrap about-wrap">
+
+	<h1><?php printf( __( 'Welcome to WP e-Commerce %s' ), $display_version ); ?></h1>
+
+	<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version. WordPress %s makes your writing experience even better.' ), $display_version ); ?></div>
+
+	<div class="wpsc-badge"><?php echo sprintf( __( 'Version %s', 'wpsc' ), $display_version ); ?></div>
+
+	<h2 class="nav-tab-wrapper">
+		<a href="index.php?page=wpsc-about" class="nav-tab nav-tab-active">
+			<?php _e( 'What&#8217;s New' ); ?>
+		</a><a href="index.php?page=wpsc-credits" class="nav-tab">
+			<?php _e( 'Credits' ); ?>
+		</a>
+	</h2>
+
+	<div class="changelog">
+		<h3><?php _e( 'Colorful New Theme' ); ?></h3>
+
+		<div class="feature-section images-stagger-right">
+			<img alt="" src="<?php echo is_ssl() ? 'https://' : '//s.'; ?>wordpress.org/images/core/3.6/twentythirteen.png" class="image-66" />
+			<h4><?php _e( 'Introducing Twenty Thirteen' ); ?></h4>
+			<p><?php printf( __( "The new default theme puts focus on your content with a colorful, single-column design made for media-rich blogging." ) ); ?></p>
+			<p><?php _e( 'Inspired by modern art, Twenty Thirteen features quirky details, beautiful typography, and bold, high-contrast colors &mdash; all with a flexible layout that looks great on any device, big or small.' ); ?></p>
+		</div>
+	</div>
+
+	<div class="changelog">
+		<h3><?php _e( 'Write with Confidence' ); ?></h3>
+
+		<div class="feature-section images-stagger-right">
+			<img alt="" src="<?php echo is_ssl() ? 'https://' : '//s.'; ?>wordpress.org/images/core/3.6/revisions.png" class="image-66" />
+			<h4><?php _e( 'Explore Revisions' ); ?></h4>
+			<p></p>
+			<p><?php _e( 'From the first word you write, WordPress saves every change. Each revision is always at your fingertips. Text is highlighted as you scroll through revisions at lightning speed, so you can see what changes have been made along the way.' ); ?></p>
+			<p><?php _e( 'It&#8217;s easy to compare two revisions from any point in time, and to restore a revision and go back to writing. Now you can be confident that no mistake is permanent.' ); ?></p>
+		</div>
+
+		<div class="feature-section col two-col">
+			<div>
+				<h4><?php _e( 'Improved Autosaves' ); ?></h4>
+				<p><?php _e( 'Never lose a word you&#8217;ve written. Autosaving is now even better; whether your power goes out, your browser crashes, or you lose your internet connection, your content is safe.' ); ?></p>
+			</div>
+			<div class="last-feature">
+				<h4><?php _e( 'Better Post Locking' ); ?></h4>
+				<p><?php _e( 'Always know who&#8217;s editing with live updates that appear in the list of posts. And if someone leaves for lunch with a post open, you can take over where they left off.' ); ?></p>
+			</div>
+		</div>
+	</div>
+
+	<div class="changelog">
+		<h3><?php _e( 'Support for Audio and Video' ); ?></h3>
+
+		<div class="feature-section images-stagger-right">
+			<div class="video image-66"><?php
+				$sample_video = ( is_ssl() ? 'https://' : 'http://s.' ) . 'wordpress.org/images/core/3.6/sample-video';
+				$args = array(
+					'mp4' => "$sample_video.mp4",
+					'ogv' => "$sample_video.ogv",
+					'width' => 625,
+					'height' => 360,
+				);
+				// Opera 12 (Presto, pre-Chromium) fails to load ogv properly
+				// when combined with ME.js. Works fine in Opera 15.
+				// Don't serve ogv to Opera 12 to avoid complete brokeness.
+				if ( $GLOBALS['is_opera'] )
+					unset( $args['ogv'] );
+				// Our current ME.js API is limited to shortcodes in posts.
+				echo wp_video_shortcode( $args );
+			?></div>
+			<h4><?php _e( 'New Media Player' ); ?></h4>
+			<p><?php _e( 'Share your audio and video with the new built-in HTML5 media player. Upload files using the media manager and embed them in your posts.' ); ?></p>
+
+			<h4><?php _e( 'Embed Music from Spotify, Rdio, and SoundCloud' ); ?></h4>
+			<p><?php _e( 'Embed songs and albums from your favorite artists, or playlists you&#8217;ve mixed yourself. It&#8217;s as simple as pasting a URL into a post on its own line.' ); ?></p>
+			<p><?php printf( __( '(Love another service? Check out all of the <a href="%s">embeds</a> that WordPress supports.)' ), 'http://codex.wordpress.org/Embeds' ); ?></p>
+		</div>
+	</div>
+
+	<div class="changelog">
+		<h3><?php _e( 'Under the Hood' ); ?></h3>
+
+		<div class="feature-section col three-col">
+			<div>
+				<h4><?php _e( 'Audio/Video API' ); ?></h4>
+				<p><?php _e( 'The new audio/video APIs give developers access to powerful media metadata, like ID3 tags.' ); ?></p>
+			</div>
+			<div>
+				<h4><?php _e( 'Semantic Markup' ); ?></h4>
+				<p><?php _e( 'Themes can now choose improved HTML5 markup for comment forms, search forms, and comment lists.' ); ?></p>
+			</div>
+			<div class="last-feature">
+				<h4><?php _e( 'JavaScript Utilities' ); ?></h4>
+				<p><?php _e( 'Handy JavaScript utilities ease common tasks like Ajax requests, templating, and Backbone view management.' ); ?></p>
+			</div>
+		</div>
+
+		<div class="feature-section col three-col">
+			<div>
+				<h4><?php _e( 'Shortcode Improvements' ); ?></h4>
+				<p><?php _e( 'Search content for shortcodes with <code>has_shortcode()</code> and adjust shortcode attributes with a new filter.' ); ?></p>
+			</div>
+			<div>
+				<h4><?php _e( 'Revision Control' ); ?></h4>
+				<p><?php _e( 'Fine-grained revision controls allow you to keep a different number of revisions for each post type.' ); ?></p>
+			</div>
+			<div class="last-feature">
+				<h4><?php _e( 'External Libraries' ); ?></h4>
+				<p><?php
+					/* translators: placeholders 2, 3 and 4 are version numbers */
+					printf( __( 'New and updated libraries: <a href="%1$s">MediaElement.js</a>, jQuery %2$s, jQuery UI %3$s, jQuery Migrate, Backbone %4$s.' ), 'http://mediaelementjs.com/', '1.10.2', '1.10.3', '1.0' ); ?></p>
+			</div>
+		</div>
+	</div>
+
+	<div class="return-to-dashboard">
+		<a href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'wpsc-settings' ), 'options-general.php' ) ) ); ?>"><?php
+			_e( 'Go to Store Settings' ); ?></a>
+	</div>
+
+	</div>
+<?php
+}
+
+function _wpsc_action_credits_page() {
+	list( $display_version ) = explode( '-', WPSC_VERSION );
+	?>
+	<div class="wrap about-wrap">
+
+	<h1><?php printf( __( 'Welcome to WP e-Commerce %s' ), $display_version ); ?></h1>
+
+	<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version. WordPress %s makes your writing experience even better.' ), $display_version ); ?></div>
+
+	<div class="wpsc-badge"><?php echo sprintf( __( 'Version %s', 'wpsc' ), $display_version ); ?></div>
+
+	<h2 class="nav-tab-wrapper">
+		<a href="index.php?page=wpsc-about" class="nav-tab">
+			<?php _e( 'What&#8217;s New' ); ?>
+		</a><a href="index.php?page=wpsc-credits" class="nav-tab nav-tab-active">
+			<?php _e( 'Credits' ); ?>
+		</a>
+	</h2>
+
+	<p class="about-description"><?php esc_html_e( 'bbPress is created by a worldwide swarm of busy, busy bees.', 'bbpress' ); ?></p>
+
+	<h4 class="wp-people-group"><?php esc_html_e( 'Project Leaders', 'bbpress' ); ?></h4>
+	<ul class="wp-people-group " id="wp-people-group-project-leaders">
+		<li class="wp-person" id="wp-person-matt">
+			<a href="http://profiles.wordpress.org/matt"><img src="http://0.gravatar.com/avatar/767fc9c115a1b989744c755db47feb60?s=60" class="gravatar" alt="Matt Mullenweg" /></a>
+			<a class="web" href="http://profiles.wordpress.org/matt">Matt Mullenweg</a>
+			<span class="title"><?php esc_html_e( 'Founding Developer', 'bbpress' ); ?></span>
+		</li>
+		<li class="wp-person" id="wp-person-johnjamesjacoby">
+			<a href="http://profiles.wordpress.org/johnjamesjacoby"><img src="http://0.gravatar.com/avatar/81ec16063d89b162d55efe72165c105f?s=60" class="gravatar" alt="John James Jacoby" /></a>
+			<a class="web" href="http://profiles.wordpress.org/johnjamesjacoby">John James Jacoby</a>
+			<span class="title"><?php esc_html_e( 'Lead Developer', 'bbpress' ); ?></span>
+		</li>
+		<li class="wp-person" id="wp-person-jmdodd">
+			<a href="http://profiles.wordpress.org/jmdodd"><img src="http://0.gravatar.com/avatar/6a7c997edea340616bcc6d0fe03f65dd?s=60" class="gravatar" alt="Jennifer M. Dodd" /></a>
+			<a class="web" href="http://profiles.wordpress.org/jmdodd">Jennifer M. Dodd</a>
+			<span class="title"></span>
+		</li>
+	</ul>
+
+	<h4 class="wp-people-group"><?php esc_html_e( 'Contributing Developers', 'bbpress' ); ?></h4>
+	<ul class="wp-people-group " id="wp-people-group-contributing-developers">
+		<li class="wp-person" id="wp-person-netweb">
+			<a href="http://profiles.wordpress.org/netweb"><img src="http://0.gravatar.com/avatar/97e1620b501da675315ba7cfb740e80f?s=60" class="gravatar" alt="Stephen Edgar" /></a>
+			<a class="web" href="http://profiles.wordpress.org/netweb">Stephen Edgar</a>
+			<span class="title"></span>
+		</li>
+		<li class="wp-person" id="wp-person-jaredatch">
+			<a href="http://profiles.wordpress.org/jaredatch"><img src="http://0.gravatar.com/avatar/e341eca9e1a85dcae7127044301b4363?s=60" class="gravatar" alt="Jared Atchison" /></a>
+			<a class="web" href="http://profiles.wordpress.org/jaredatch">Jared Atchison</a>
+			<span class="title"></span>
+		</li>
+		<li class="wp-person" id="wp-person-gautamgupta">
+			<a href="http://profiles.wordpress.org/gautamgupta"><img src="http://0.gravatar.com/avatar/b0810422cbe6e4eead4def5ae7a90b34?s=60" class="gravatar" alt="Gautam Gupta" /></a>
+			<a class="web" href="http://profiles.wordpress.org/gautamgupta">Gautam Gupta</a>
+			<span class="title"></span>
+		</li>
+	</ul>
+
+	<h4 class="wp-people-group"><?php esc_html_e( 'Core Contributors to bbPress 2.3', 'bbpress' ); ?></h4>
+	<p class="wp-credits-list">
+		<a href="http://profiles.wordpress.org/alexvorn2">alexvorn2</a>,
+		<a href="http://profiles.wordpress.org/alex-ye">alex-ye</a>,
+		<a href="http://profiles.wordpress.org/anointed">anointed</a>,
+		<a href="http://profiles.wordpress.org/boonebgorges">boonebgorges</a>,
+		<a href="http://profiles.wordpress.org/chexee">chexee</a>,
+		<a href="http://profiles.wordpress.org/cnorris23">cnorris23</a>,
+		<a href="http://profiles.wordpress.org/DanielJuhl">DanielJuhl</a>,
+		<a href="http://profiles.wordpress.org/daveshine">daveshine</a>,
+		<a href="http://profiles.wordpress.org/dimadin">dimadin</a>,
+		<a href="http://profiles.wordpress.org/DJPaul">DJPaul</a>,
+		<a href="http://profiles.wordpress.org/duck_">duck_</a>,
+		<a href="http://profiles.wordpress.org/gawain">gawain</a>,
+		<a href="http://profiles.wordpress.org/iamzippy">iamzippy</a>,
+		<a href="http://profiles.wordpress.org/isaacchapman">isaacchapman</a>,
+		<a href="http://profiles.wordpress.org/jane">jane</a>,
+		<a href="http://profiles.wordpress.org/jkudish">jkudish</a>,
+		<a href="http://profiles.wordpress.org/mamaduka">mamaduka</a>,
+		<a href="http://profiles.wordpress.org/mercime">mercime</a>,
+		<a href="http://profiles.wordpress.org/mesayre">mesayre</a>,
+		<a href="http://profiles.wordpress.org/mordauk">mordauk</a>,
+		<a href="http://profiles.wordpress.org/MZAWeb">MZAWeb</a>,
+		<a href="http://profiles.wordpress.org/nexia">nexia</a>,
+		<a href="http://profiles.wordpress.org/Omicron7">Omicron7</a>,
+		<a href="http://profiles.wordpress.org/otto42">otto42</a>,
+		<a href="http://profiles.wordpress.org/pavelevap">pavelevap</a>,
+		<a href="http://profiles.wordpress.org/plescheff">plescheff</a>,
+		<a href="http://profiles.wordpress.org/scribu">scribu</a>,
+		<a href="http://profiles.wordpress.org/sorich87">sorich87</a>,
+		<a href="http://profiles.wordpress.org/SteveAtty">SteveAtty</a>,
+		<a href="http://profiles.wordpress.org/tmoorewp">tmoorewp</a>,
+		<a href="http://profiles.wordpress.org/tott">tott</a>,
+		<a href="http://profiles.wordpress.org/tungdo">tungdo</a>,
+		<a href="http://profiles.wordpress.org/vibol">vibol</a>,
+		<a href="http://profiles.wordpress.org/wonderboymusic">wonderboymusic</a>,
+		<a href="http://profiles.wordpress.org/westi">westi</a>,
+		<a href="http://profiles.wordpress.org/xiosen">xiosen</a>,
+	</p>
+
+	<div class="return-to-dashboard">
+		<a href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'wpsc-settings' ), 'options-general.php' ) ) ); ?>"><?php
+			_e( 'Go to Store Settings' ); ?></a>
+	</div>
+
+	</div>
+<?php
+}

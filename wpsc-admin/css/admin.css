@@ -2027,3 +2027,24 @@ body.edit-tags-php img.wpsc_category_image {
 .wpsc-width-height-fields label {
 	display: inline;
 }
+
+.wpsc-badge {
+	position: absolute;
+	top: 25px;
+	right: 0;
+	height: 209px;
+	width: 196px;
+	background-image: url("badge.png");
+	background-size: 196px 209px;
+	text-indent: -9999em;
+}
+
+@media print,
+	(-o-min-device-pixel-ratio: 5/4),
+	(-webkit-min-device-pixel-ratio: 1.25),
+	(min-resolution: 120dpi) {
+
+	.wpsc-badge {
+		background-image: url("badge-2x.png");
+	}
+}
