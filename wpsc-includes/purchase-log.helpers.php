@@ -238,9 +238,24 @@ function wpsc_get_transaction_html_output( $purchase_log ) {
 	if ( ! is_object( $purchase_log ) )
 		$purchase_log = new WPSC_Purchase_Log( $purchase_log );
 
+
 	$notification = new WPSC_Purchase_Log_Customer_HTML_Notification( $purchase_log );
 	$output = $notification->get_html_message();
 
-	$output = apply_filters( 'wpsc_get_transaction_html_output', $output, $notification );
+	// see if the customer trying to view this transaction output is the person
+	// who made the purchase.
+	$customer_meta = wpsc_get_all_customer_meta();
+    if(
+    	isset($customer_meta['checkout_session_id'])
+    	&& $customer_meta['checkout_session_id'] == $purchase_log->get('sessionid')
+    ) {
+    	// if so, show the output.
+    	$output = apply_filters( 'wpsc_get_transaction_html_output', $output, $notification );
+	} else {
+		// Otherwise, show nothing, (should there be an error or not found message here?)
+		$output = '';
+	}
+
+	
 	return $output;
 }
