@@ -1404,14 +1404,14 @@ function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
 	// Insert the new template in the post table
 	$new_post_id = wp_insert_post($defaults);
 
+	// Finds children (Which includes product files AND product images), their meta values, and duplicates them.
+	wpsc_duplicate_children( $post->ID, $new_post_id );
+
 	// Copy the taxonomies
 	wpsc_duplicate_taxonomies( $post->ID, $new_post_id, $post->post_type );
 
 	// Copy the meta information
 	wpsc_duplicate_product_meta( $post->ID, $new_post_id );
-
-	// Finds children (Which includes product files AND product images), their meta values, and duplicates them.
-	wpsc_duplicate_children( $post->ID, $new_post_id );
 
 	return $new_post_id;
 }
