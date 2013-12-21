@@ -163,9 +163,9 @@ class ash_usps {
 			),
 		);
 
-		$api = "RateV4";
+		$api = "API=RateV4";			//"API=" was missing https://www.usps.com/business/web-tools-apis/price-calculators.htm.
 		if ( $intl ) {
-			$api = "IntlRateV2";
+			$api = "API=IntlRateV2";	//"API=" was missing https://www.usps.com/business/web-tools-apis/price-calculators.htm. 
 		}
 
 		$env = "prod";
@@ -227,7 +227,7 @@ class ash_usps {
 			<td>
 				<div class="ui-widget-content multiple-select">
 					<?php foreach ( $this->services as $label => $service ): ?>
-						<input type="checkbox" id="wpec_usps_srv_<?php esc_attr_e( $service ); ?>" name="wpec_usps[services][]" value="<?php echo esc_attr_e( $service ); ?>" <?php checked( array_search( $service, $wpec_usps_services ) ); ?> />
+						<input type="checkbox" id="wpec_usps_srv_<?php esc_attr_e( $service ); ?>" name="wpec_usps[services][]" value="<?php echo esc_attr_e( $service ); ?>" <?php checked( (bool) array_search( $service, $wpec_usps_services ) ); ?> />
 				 		<label for="wpec_usps_srv_$service"><?php echo $label; ?></label>
 				 		<br />
 					<?php endforeach; ?>
@@ -285,7 +285,7 @@ class ash_usps {
 					<?php endforeach; ?>
 				</select>
 				<br />
-				<p class='description'><?php _e( "Note: Only used for First Class service rates if selected", "wpsc" ); ?></span>
+				<p class='description'><?php _e( "Note: Only used for First Class service rates if selected", "wpsc" ); ?></p>
 			</td>
 		</tr>
 		<?php
@@ -516,9 +516,7 @@ class ash_usps {
 	 * @param string $response Reference to the $response string
 	 */
 	function _clean_response( &$response ) {
-		$bad_encoding = array( "&amp;lt;sup&amp;gt;&amp;amp;", ";&amp;lt;/sup&amp;gt;" );
-		$good_encoding = array( "<sup>","</sup>" );
-		$response = str_replace( $bad_encoding, $good_encoding, $response );
+		$response = html_entity_decode( html_entity_decode( $response ) ); //a) $response is set by reference. b) $this->_clean_response doesn't set a value (see _parse_domestic_response).
 	}
 
 	/**
@@ -736,7 +734,8 @@ class ash_usps {
 	function _quote_advanced( array $data ) {
 		global $wpec_ash_xml;
 		$rate_tables = array();
-		foreach ( $this->shipment->packages as $package ) {
+		$cart_shipment = apply_filters('wpsc_the_shipment',$this->name,$this->shipment); //Filter to allow reprocesing the shipment before is quoted.
+		foreach ( $cart_shipment->packages as $package ) {
 			$temp_data = $data;
 			$request = $this->_build_request( $temp_data );
 			if ( empty( $request ) ) {
@@ -771,7 +770,8 @@ class ash_usps {
 	function _quote_intl( array $data ) {
 		global $wpec_ash_xml;
 		$rate_tables = array();
-		foreach ( $this->shipment->packages as $package ) {
+		$cart_shipment = apply_filters('wpsc_the_shipment',$this->name,$this->shipment); //Filter to allow reprocesing the shipment before is quoted.
+		foreach ( $cart_shipment->packages as $package ) {
 			$temp_data = $data;
 			$request = $this->_build_request( $temp_data );
 			if ( empty( $request ) ) {
@@ -858,18 +858,6 @@ class ash_usps {
 	 */
 	function _run_quote( array $data ) {
 		global $wpec_ash_tools;
-		//************** These values are common to all entry points **************
-		//*** Grab Total Weight from the shipment object for simple shipping
-		$data["weight"] = $this->shipment->total_weight;
-		//*** User/Customer Entered Values ***\\
-		$data["dest_zipcode"] = $this->shipment->destination["zipcode"];
-		if ( empty( $data["weight"] ) ) {
-			return array();
-		}
-
-		if ( empty( $data["dest_zipcode"] ) ) {
-			return array();
-		}
 
 		if ( $wpec_ash_tools->is_military_zip( $data["dest_zipcode"] ) ) {
 			$data["dest_country"] = "USA";
@@ -910,30 +898,74 @@ class ash_usps {
 		if ( ! is_object( $wpec_ash_tools ) ) {
 			$wpec_ash_tools = new ASHTools();
 		}
-
+		$data = array();
 		$this->shipment = $wpec_ash->get_shipment();
-		$this->shipment->set_destination( $this->internal_name );
+		//************** These values are common to all entry points **************
+		//*** Grab Total Weight from the shipment object for simple shipping
+		$data["weight"] = wpsc_cart_weight_total();
+		if ( empty( $data["weight"] ) ) {
+			return array();
+		}
+
+		//*** User/Customer Entered Values ***\\
+		// If ths zip code is provided via a form post use it!
+		$data["dest_zipcode"] = (string) wpsc_get_customer_meta( 'shipping_zip' );
+		if ( isset( $_POST['zipcode'] ) && ( $_POST['zipcode'] != __( "Your Zipcode", 'wpsc' ) && $_POST['zipcode'] != "YOURZIPCODE" ) )
+			$data["dest_zipcode"] = esc_attr( $_POST['zipcode'] );		
+		if ( in_array( $data["dest_zipcode"], array( __( 'Your Zipcode', 'wpsc' ), 'YOURZIPCODE' ) ) )
+			$data["dest_zipcode"] = '';
+		wpsc_update_customer_meta( 'shipping_zip', $data["dest_zipcode"] );
+		if ( empty ( $data["dest_zipcode"] ) ) {
+			// We cannot get a quote without a zip code so might as well return!
+			return array();
+		}
+
+		// If the region code is provided via a form post use it!
+		if ( isset( $_POST['region'] ) && ! empty( $_POST['region'] ) ) {
+			$query = $wpdb->prepare( "SELECT `" . WPSC_TABLE_REGION_TAX . "`.* FROM `" . WPSC_TABLE_REGION_TAX . "` WHERE `" . WPSC_TABLE_REGION_TAX . "`.`id` = %d", $_POST['region'] );
+			$dest_region_data = $wpdb->get_results( $query, ARRAY_A );
+			$data['dest_state'] = ( is_array( $dest_region_data ) ) ? $dest_region_data[0]['code'] : "";
+			wpsc_update_customer_meta( 'usps_state', $data['dest_state'] );
+		} else if ( $dest_state = wpsc_get_customer_meta( 'usps_state' ) ) {
+			// Well, we have a zip code in the session and no new one provided
+			$data['dest_state'] = $dest_state;
+		} else {
+			$data['dest_state'] = "";
+		}
+			
+		//*** Set up the destination country ***\
+		$data["dest_country"] = wpsc_get_customer_meta( 'shipping_country' );
+		$data["dest_country"] = $wpec_ash_tools->get_full_country( $data["dest_country"] );
+		$data["dest_country"] = $this->_update_country( $data["dest_country"] );
+		
+		$shipping_cache_check['state'] = $data['dest_state'];
+		$shipping_cache_check['country'] = $data['dest_country'];
+		$shipping_cache_check['zipcode'] = $data["dest_zipcode"];
+		$this->shipment->set_destination( $this->internal_name, $shipping_cache_check );
+		
+		$settings = get_option( "wpec_usps" );
+		$data["adv_rate"] = (!empty($settings["adv_rate"])) ? $settings["adv_rate"] : FALSE; // Use advanced shipping for Domestic Rates ? Not available
+		$this->shipment->rates_expire = date('Y-m-d'); //Date will be checked against the cached date.
+		if ( $data["weight"] > 70 && ! $data["adv_rate"] ) { //Yes, USPS has a weight limit too: https://www.usps.com/send/can-you-mail-it.htm?#3.
+			$shipping_quotes[TXT_WPSC_OVER_UPS_WEIGHT]=0; //FIXME Remove UPS and 150lb from this message, and it can be used here too. Temporary fix.
+			$wpec_ash->cache_results( $this->internal_name, array($shipping_quotes), $this->shipment ); 
+			return array($shipping_quotes);
+		}
+		
 		// Check to see if the cached shipment is still accurate, if not we need new rate
 		$cache = $wpec_ash->check_cache( $this->internal_name, $this->shipment );
 
-		if ( $cache ) {
+		if ( count($cache["rate_table"]) >= 1 ) { //$cache['rate_table'] could be array(0).
 			return $cache["rate_table"];
 		}
 
-		$data = array();
 		//*** WPEC Configuration values ***\\
-		$settings = get_option( "wpec_usps" );
 		$this->use_test_env   = ( ! isset( $settings["test_server"] ) ) ? false : ( bool ) $settings['test_server'];
 		$data["fcl_type"]     = ( ! empty( $settings["fcl_type"] ) ) ? $settings["fcl_type"] : "PARCEL";
 		$data["mail_type"]    = ( ! empty( $settings["intl_pkg"] ) ) ? $settings["intl_pkg"] : "Package";
 		$data["base_zipcode"] = get_option( "base_zipcode" );
 		$data["services"]     = ( ! empty( $settings["services"] ) ) ? $settings["services"] : array( "PRIORITY", "EXPRESS", "FIRST CLASS" );
 		$data["user_id"]      = $settings["id"];
-		$data["adv_rate"]     = ( ! empty( $settings["adv_rate"] ) ) ? $settings["adv_rate"] : FALSE;   // Use advanced shipping for Domestic Rates ? Not available
-		//*** Set up the destination country ***\
-		$country              = $this->shipment->destination["country"];
-		$data["dest_country"] = $wpec_ash_tools->get_full_country( $country );
-		$data["dest_country"] = $this->_update_country( $data["dest_country"] );
 		//************ GET THE RATE ************\\
 		$rate_table           = $this->_run_quote( $data );
 		//************ CACHE the Results ************\\

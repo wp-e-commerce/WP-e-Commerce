@@ -250,6 +250,11 @@ class ASHTools{
  * @since 0.0.1
  */
 class ASHPackage{
+	/** 
+	 * Product ids included in package
+	 * @var array 
+	 */ 
+	var $product_id = array();
     /**
      * Weight in pounds of the package
      * @var decimal
@@ -301,7 +306,12 @@ class ASHPackage{
      * @var decimal
      */
     var $insured_amount;
-
+	/** 
+	 * The package can't be shipped sideways. 
+	 * var boolean 
+	 */
+	var $this_side_up = FALSE;
+	
     /**
      * The constructor for the ASHPackage class
      * Accepts an arguments array to fill out the class on initialization
@@ -406,7 +416,12 @@ class ASHShipment{
      * @var unknown_type
      */
     var $total_weight = 0;
-
+	/** 
+	 * Sets a rate expire date 
+	 * @var string 
+	 */ 
+	var $rates_expire = '';
+	
     /**
      * Constructor for the ASHShipment class
      * @author Greg Gullett (greg@ecsquest.com)
@@ -510,7 +525,8 @@ class ASH{
         foreach($wpsc_cart->cart_items as $cart_item){
             $package = new ASHPackage();
             //*** Set package dimensions ***\\
-            $dimensions = get_product_meta($cart_item->product_id, 'dimensions');
+            $dimensions = get_product_meta($cart_item->product_id, 'product_metadata'); //The 'dimensions' meta doesn't exist.
+            $dimensions = $dimensions[0]['dimensions']; 
             $dim_array = array();
             $dim_array["weight"] = $cart_item->weight;
             $dim_array["height"] = ( !empty( $dimensions["height"] ) && is_numeric( $dimensions["height"] ) ) ? $dimensions["height"] : 1;
@@ -518,17 +534,17 @@ class ASH{
             $dim_array["length"] = ( !empty( $dimensions["length"] ) && is_numeric( $dimensions["length"] ) ) ? $dimensions["length"] : 1;
             $package->set_dimensions($dim_array);
             //*** Set other meta ***\\
-            $package->hazard = (get_product_meta($cart_item->product_id,"ship_hazard") === FALSE) ? FALSE : TRUE;
-            $package->insurance = get_product_meta($cart_item->product_id,"ship_insurance");
-            $package->insured_amount = get_product_meta($cart_item->product_id,"ship_insured_amount");
+            $package->hazard = (get_post_meta($cart_item->product_id,"g:ship_hazard",TRUE) === TRUE) ? TRUE : FALSE;	//Doesn't exist. Allow the user to enter Google formatted meta.
+            $package->insurance = (get_post_meta($cart_item->product_id,"g:ship_insurance",TRUE)=== TRUE)? TRUE:FALSE;	//Doesn't exist. Allow the user to enter Google formatted meta.
+            $package->insured_amount = get_post_meta($cart_item->product_id,"g:ship_insured_amount",TRUE);				//Doesn't exist. Allow the user to enter Google formatted meta.
             $package->value = $cart_item->unit_price;
             $package->contents = $cart_item->product_name;
-
+			$package->this_side_up = (get_post_meta($cart_item->product_id,"g:this_side_up",TRUE)=== TRUE)?TRUE:FALSE;	//Product can't be shipped sideways.
             if ($shipment->hazard === FALSE and $package->hazard === TRUE){
                 $shipment->set_hazard(TRUE);
             }
             $quantity = (int)$cart_item->quantity;
-
+			$package->product_id[$cart_item->product_id] = 1; // The product in this package.
             for($i=1; $i <= $quantity; $i++){
                 $shipment->add_package($package);
             }
@@ -556,8 +572,8 @@ class ASH{
         $wpec_ash[$internal_name]["rate_table"] = $rate_table;
         $shipment_vals = array("package_count"=>$shipment->package_count,
                                "destination"  =>$shipment->destination,
-                               "total_weight" =>$shipment->total_weight
-            );
+                               "total_weight" =>$shipment->total_weight,
+                               "rates_expire" =>$shipment->rates_expire ); //Refresh rates after today.
         $wpec_ash[$internal_name]["shipment"] = $shipment_vals;
         wpsc_update_customer_meta( 'shipping_ash', $wpec_ash );
     }
@@ -589,14 +605,16 @@ class ASH{
 
         $shipment_vals = array("package_count"=>$shipment->package_count,
                                "destination"  =>$shipment->destination,
-                               "total_weight" =>$shipment->total_weight
-            );
+                               "total_weight" =>$shipment->total_weight,
+                               "rates_expire" =>$shipment->rates_expire ); //Refresh rates after today.
         if ($cached_shipment["package_count"] != $shipment->package_count){
             return FALSE;
         }elseif($cached_shipment["destination"] != $shipment_vals["destination"]){
             return FALSE;
         }elseif($cached_shipment["total_weight"] != $shipment_vals["total_weight"]){
             return FALSE;
+        }elseif($cached_shipment["rates_expire"] != $shipment_vals["rates_expire"]) { //Refresh rates after today.
+           	return FALSE;
         }else{
             return $wpec_ash[$internal_name];
         }
