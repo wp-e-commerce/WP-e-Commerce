@@ -30,7 +30,7 @@ function wpsc_core_constants() {
 
 	// Define Plugin version
 	define( 'WPSC_VERSION'            , '3.8.13' );
-	define( 'WPSC_MINOR_VERSION'      , 'f4b508e650' );
+	define( 'WPSC_MINOR_VERSION'      , 'e8a508c011' );
 	define( 'WPSC_PRESENTABLE_VERSION', '3.8.13' );
 	define( 'WPSC_DB_VERSION'         , 8 );
 
