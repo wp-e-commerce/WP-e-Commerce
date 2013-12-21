@@ -227,8 +227,8 @@ class ash_usps {
 			<td>
 				<div class="ui-widget-content multiple-select">
 					<?php foreach ( $this->services as $label => $service ): ?>
-						<input type="checkbox" id="wpec_usps_srv_<?php esc_attr_e( $service ); ?>" name="wpec_usps[services][]" value="<?php echo esc_attr_e( $service ); ?>" <?php checked( array_search( $service, $wpec_usps_services ) ); ?> />
-				 		<label for="wpec_usps_srv_$service"><?php echo $label; ?></label>
+						<input type="checkbox" id="wpec_usps_srv_<?php esc_attr_e( $service ); ?>" name="wpec_usps[services][]" value="<?php echo esc_attr_e( $service ); ?>" <?php checked( (bool) array_search( $service, $wpec_usps_services ) ); ?> />
+                        <label for="wpec_usps_srv_<?php echo esc_attr_e( $service ) ?>"><?php echo $label; ?></label>
 				 		<br />
 					<?php endforeach; ?>
 				</div>
