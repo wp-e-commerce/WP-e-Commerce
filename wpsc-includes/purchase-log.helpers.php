@@ -244,18 +244,13 @@ function wpsc_get_transaction_html_output( $purchase_log ) {
 
 	// see if the customer trying to view this transaction output is the person
 	// who made the purchase.
-	$customer_meta = wpsc_get_all_customer_meta();
-    if(
-    	isset($customer_meta['checkout_session_id'])
-    	&& $customer_meta['checkout_session_id'] == $purchase_log->get('sessionid')
-    ) {
-    	// if so, show the output.
+	$checkout_session_id = wpsc_get_customer_meta( 'checkout_session_id' );
+
+    if ( $checkout_session_id == $purchase_log->get( 'sessionid' ) ) {
     	$output = apply_filters( 'wpsc_get_transaction_html_output', $output, $notification );
 	} else {
-		// Otherwise, show nothing, (should there be an error or not found message here?)
-		$output = '';
+		$output = apply_filters( 'wpsc_get_transaction_unauthorized_view', __( "You don't have the permission to view this page", 'wpsc' ), $output, $notification );
 	}
 
-	
 	return $output;
 }
