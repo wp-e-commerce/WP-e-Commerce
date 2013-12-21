@@ -1,8 +1,9 @@
 <?php
 // by default, expire stats cache after 48 hours
-// this doesn't have any effect if you're not using APC or memcache
+// this doesn't have any effect if you're not using APC or memcached
+
 if ( ! defined( 'WPSC_PURCHASE_LOG_STATS_CACHE_EXPIRE' ) )
-	define( 'WPSC_PURCHASE_LOG_STATS_CACHE_EXPIRE', 3600 * 48 );
+	define( 'WPSC_PURCHASE_LOG_STATS_CACHE_EXPIRE', DAY_IN_SECONDS * 2 );
 
 class WPSC_Purchase_Log {
 	const INCOMPLETE_SALE  = 1;
@@ -103,20 +104,20 @@ class WPSC_Purchase_Log {
 	 *  - 'page': Which page of the results to fetch, defaults to 1.
 	 *            Has no effect if per_page is set to 0.
 	 *
-	 * @since 3.8.13
+	 * @since 3.8.14
 	 * @param  array $args Arguments
 	 * @return array       Array containing 'sales' and 'earnings' stats
 	 */
 	public static function fetch_stats( $args ) {
 		$defaults = array(
-			'ids' => array(), // IDs of the products to be queried
+			'ids'      => array(), // IDs of the products to be queried
 			'products' => array(), // Array of WPSC_Products objects
-			'start' => 0, // Int. timestamp, has to be UTC
-			'end'   => 0, // Int. timestamp, has to be UTC
-			'order' => 'ASC',
-			'orderby' => 'id',
+			'start'    => 0,       // Int. timestamp, has to be UTC
+			'end'      => 0,       // Int. timestamp, has to be UTC
+			'order'    => 'ASC',
+			'orderby'  => 'id',
 			'per_page' => 0,
-			'page' => 1,
+			'page'     => 1,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -133,10 +134,12 @@ class WPSC_Purchase_Log {
 		// eliminate duplicates
 		$products = array_unique( $products );
 
-		if ( empty( $products ) )
+		if ( empty( $products ) ) {
 			return null;
+		}
 
 		$need_fetching = array();
+
 		$stats = array(
 			'sales'    => 0,
 			'earnings' => 0,
@@ -148,23 +151,25 @@ class WPSC_Purchase_Log {
 
 		// if we do NOT have date restriction, find out which WPSC_Product object
 		// has stats cache, and which don't
-		if ( ! $has_date_restriction )
+		if ( ! $has_date_restriction ) {
 			foreach ( $products as $product ) {
 				// store the ID if this product doesn't have a stats cache yet
 				if ( $product->post->_wpsc_stats === '' ) {
 					$needs_fetching[] = $product->post->ID;
 				} else {
 					// tally up the sales and earnings if this one has cache already
-					$stats['sales'] += $product->sales;
+					$stats['sales']    += $product->sales;
 					$stats['earnings'] += $product->earnings;
 				}
 			}
+		}
 
 		// never hurts to make sure
 		$needs_fetching = array_map( 'absint', $needs_fetching );
 
 		// pagination arguments
-		$limit = "";
+		$limit = '';
+
 		if ( ! empty( $args['per_page'] ) ) {
 			$offset = ( $args['page'] - 1 ) * $args['per_page'];
 			$limit = "LIMIT " . absint( $args['per_page'] ) . " OFFSET " . absint( $offset );
@@ -172,11 +177,13 @@ class WPSC_Purchase_Log {
 
 		// sorting
 		$order = '';
+
 		if ( ! empty( $args['orderby'] ) )
 			$order = "ORDER BY " . esc_sql( $args['orderby'] ) . " " . esc_sql( $args['order'] );
 
 		// date
 		$where = "WHERE p.processed IN (3, 4, 5)";
+
 		if ( $has_date_restriction ) {
 			// start date equal or larger than $args['start']
 			if ( ! empty( $args['start'] ) )
@@ -206,8 +213,9 @@ class WPSC_Purchase_Log {
 
 		// if the result is cached, don't bother querying the database
 		$cache_key = md5( $sql );
-		$results = wp_cache_get( $cache_key, 'wpsc_purchase_logs_stats' );
-		if ( $results === false ) {
+		$results   = wp_cache_get( $cache_key, 'wpsc_purchase_logs_stats' );
+
+		if ( false === $results ) {
 			$results = $wpdb->get_results( $sql );
 			wp_cache_set( $cache_key, $results, 'wpsc_purchase_logs_stats', WPSC_PURCHASE_LOG_STATS_CACHE_EXPIRE );
 		}
@@ -215,12 +223,12 @@ class WPSC_Purchase_Log {
 		// tally up the sales and earnings from the query results
 		foreach ( $results as $row ) {
 			if ( ! $has_date_restriction ) {
-				$product = WPSC_Product::get_instance( $row->id );
-				$product->sales = $row->sales;
+				$product           = WPSC_Product::get_instance( $row->id );
+				$product->sales    = $row->sales;
 				$product->earnings = $row->earnings;
 			}
 
-			$stats['sales'] += $row->sales;
+			$stats['sales']    += $row->sales;
 			$stats['earnings'] += $row->earnings;
 		}
 
@@ -231,6 +239,7 @@ class WPSC_Purchase_Log {
 	 * Convert advanced date/time arguments like year, month, day, 'ago' etc.
 	 * into basic arguments which are "start" and "end".
 	 *
+	 * @since  3.8.14
 	 * @param  array $args Arguments
 	 * @return array       Arguments after converting
 	 */
@@ -242,12 +251,11 @@ class WPSC_Purchase_Log {
 	/**
 	 * Get overall sales and earning stats for just one product
 	 *
-	 * @since 3.8.13
+	 * @since 3.8.14
 	 * @param  int $id ID of the product
 	 * @return array   Array containing 'sales' and 'earnings' stats
 	 */
 	public static function get_stats_for_product( $id, $args = '' ) {
-		global $wpdb;
 
 		$product = WPSC_Product::get_instance( $id );
 
@@ -283,7 +291,7 @@ class WPSC_Purchase_Log {
 	 * Contains the values fetched from the DB
 	 *
 	 * @access private
-	 * @since 3.9
+	 * @since 3.8.9
 	 *
 	 * @var array
 	 */
@@ -303,7 +311,7 @@ class WPSC_Purchase_Log {
 	 * True if the DB row is fetched into $this->data.
 	 *
 	 * @access private
-	 * @since 3.9
+	 * @since 3.8.9
 	 *
 	 * @var string
 	 */
@@ -320,7 +328,7 @@ class WPSC_Purchase_Log {
 	 * to fetch a property with the same object.
 	 *
 	 * @access private
-	 * @since 3.9
+	 * @since 3.8.9
 	 *
 	 * @var array
 	 */
@@ -333,7 +341,7 @@ class WPSC_Purchase_Log {
 	 * True if the row exists in DB
 	 *
 	 * @access private
-	 * @since 3.9
+	 * @since 3.8.9
 	 *
 	 * @var string
 	 */
@@ -344,7 +352,7 @@ class WPSC_Purchase_Log {
 	 *
 	 * @access public
 	 * @static
-	 * @since 3.9
+	 * @since 3.8.9
 	 *
 	 * @param WPSC_Purchase_Log $log The log object that you want to store into cache
 	 * @return void
@@ -366,7 +374,7 @@ class WPSC_Purchase_Log {
 	 *
 	 * @access public
 	 * @static
-	 * @since 3.9
+	 * @since 3.8.9
 	 *
 	 * @param string $value The value to query
 	 * @param string $col Optional. Defaults to 'id'. Whether to delete cache by using
@@ -387,7 +395,7 @@ class WPSC_Purchase_Log {
 	 *
 	 * @access public
 	 * @static
-	 * @since 3.9
+	 * @since 3.8.9
 	 *
 	 * @param string $log_id ID of the log
 	 * @return void
@@ -415,7 +423,7 @@ class WPSC_Purchase_Log {
 	 * $log = new WPSC_Purchase_Log( 'asdf', 'sessionid' )
 	 *
 	 * @access public
-	 * @since 3.9
+	 * @since 3.8.9
 	 *
 	 * @param string $value Optional. Defaults to false.
 	 * @param string $col Optional. Defaults to 'id'.
@@ -510,7 +518,7 @@ class WPSC_Purchase_Log {
 	 * Fetches the actual record from the database
 	 *
 	 * @access private
-	 * @since 3.9
+	 * @since 3.8.9
 	 *
 	 * @return void
 	 */
@@ -550,7 +558,7 @@ class WPSC_Purchase_Log {
 	 * Whether the DB row for this purchase log exists
 	 *
 	 * @access public
-	 * @since 3.9
+	 * @since 3.8.9
 	 *
 	 * @return bool True if it exists. Otherwise false.
 	 */
@@ -563,7 +571,7 @@ class WPSC_Purchase_Log {
 	 * Returns the value of the specified property of the purchase log
 	 *
 	 * @access public
-	 * @since 3.9
+	 * @since 3.8.9
 	 *
 	 * @param string $key Name of the property (column)
 	 * @return mixed
@@ -601,7 +609,7 @@ class WPSC_Purchase_Log {
 	 * Returns the whole database row in the form of an associative array
 	 *
 	 * @access public
-	 * @since 3.9
+	 * @since 3.8.9
 	 *
 	 * @return array
 	 */
@@ -661,7 +669,7 @@ class WPSC_Purchase_Log {
 	 * as arguments, or an associative array containing key value pairs.
 	 *
 	 * @access public
-	 * @since 3.9
+	 * @since 3.8.9
 	 *
 	 * @param mixed $key Name of the property (column), or an array containing key
 	 *                   value pairs
@@ -700,7 +708,7 @@ class WPSC_Purchase_Log {
 	 * $wpdb methods (update, insert etc.)
 	 *
 	 * @access private
-	 * @since 3.9
+	 * @since 3.8.9
 	 *
 	 * @param array $data
 	 * @return array
@@ -719,7 +727,7 @@ class WPSC_Purchase_Log {
 	 * Saves the purchase log back to the database
 	 *
 	 * @access public
-	 * @since 3.9
+	 * @since 3.8.9
 	 *
 	 * @return void
 	 */
