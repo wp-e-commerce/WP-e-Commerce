@@ -232,15 +232,6 @@ class ash_usps {
 				 		<br />
 					<?php endforeach; ?>
 				</div>
-				<!--
-				<span style=\"font-size: x-small\">".__("Online rates the following services only, when available",'wpsc')."
-					<br />
-					" . __( "US Domestic: Express Mail, Priority Mail", 'wpsc' ) . "
-					<br />
-					" . __( "International : Global Express Guarenteed, Express Mail Intl. , Priority Mail Intl.", 'wpsc' ) . "
-				</span>
-				<br />
-				-->
 			</td>
 		</tr>
 
@@ -250,8 +241,8 @@ class ash_usps {
 				__( "Envelope", 'wpsc' ),
 				__( "Postcards or aerogrammes", 'wpsc' ),
 				__( "Matter for the Blind", 'wpsc' )
-				// "All"
 			);
+
 			$mt_selected = ( array_key_exists( "intl_pkg", $settings ) ) ? $settings["intl_pkg"] : __( "Package", 'wpsc' );
 		?>
 		<tr>
