@@ -47,13 +47,16 @@ class WPSC_Product {
 	 */
 	public static function get_instance( $post ) {
 		$id = $post;
-		if ( is_object( $post ) )
+
+		if ( is_object( $post ) ) {
 			$id = $post->ID;
+		}
 
-		if ( ! isset( self::$instances[$id] ) )
-			self::$instances[$id] = new WPSC_Product( $id );
+		if ( ! isset( self::$instances[ $id ] ) ) {
+			self::$instances[ $id ] = new WPSC_Product( $id );
+		}
 
-		return self::$instances[$id];
+		return self::$instances[ $id ];
 	}
 
 	/**
