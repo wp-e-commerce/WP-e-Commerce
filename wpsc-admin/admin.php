@@ -1566,7 +1566,7 @@ function _wpsc_notify_google_checkout_deprecation() {
 
 	$message  = '<p>' . __( 'Effective November 20th, 2013, Google Checkout was shut down and is no longer processing payments.  You are seeing this warning because it appears that Google Checkout was your payment gateway processor.  If it was your sole processor, we have enabled the Test Gateway to ensure that orders are coming through on your site, but we highly recommend enabling a proper gateway.  If you have no preference, we highly recommend Stripe.' , 'wpsc' ) . '</p>';
 
-	echo '<div id="wpsc-3.8.11-notice" class="warning">' . $message . '</div>';
+	echo '<div id="wpsc-3.8.11-notice" class="error">' . $message . '</div>';
 }
 
 if ( in_array( 'google', get_option( 'custom_gateway_options', array() ) ) ) {
