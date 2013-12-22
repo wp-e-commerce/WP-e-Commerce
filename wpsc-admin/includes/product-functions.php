@@ -793,7 +793,7 @@ function wpsc_item_process_file( $product_id, $submitted_file, $preview_file = n
 
 	add_filter( 'upload_dir', 'wpsc_modify_upload_directory' );
 
-	overrides = array('test_form'=>false);
+	$overrides = array( 'test_form' => false );
 
 	$time = current_time('mysql');
 	if ( $post = get_post( $product_id ) ) {
