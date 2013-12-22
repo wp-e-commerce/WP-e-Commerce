@@ -1532,9 +1532,9 @@ if ( ! get_option( 'wpsc_hide_3.8.9_notices' ) )
  * @uses get_option()         Gets option from the database given string
  */
 function _wpsc_admin_notices_3dot8dot11() {
-	$message = '<p>' . __( 'You are currently using WPeC %1$s.  We introduced a regression in WPeC 3.8.10 which affects your customer user account page. We have included a fix for a <a href="%2$s">bug on the User Account management page</a>. We are able to fix this automatically on most sites, but it appears that you have made changes to your wpsc-user-log.php page.  For that reason, we have some <a href="%3$s">simple instructions for you to follow</a> to resolve the issue.  We are sorry for the inconvenience.' , 'wpsc' ) . '</p>';
+	$message  = '<p>' . __( 'You are currently using WPeC %1$s.  We introduced a regression in WPeC 3.8.10 which affects your customer user account page. We have included a fix for a <a href="%2$s">bug on the User Account management page</a>. We are able to fix this automatically on most sites, but it appears that you have made changes to your wpsc-user-log.php page.  For that reason, we have some <a href="%3$s">simple instructions for you to follow</a> to resolve the issue.  We are sorry for the inconvenience.' , 'wpsc' ) . '</p>';
 	$message .= "\n<p>" . __( '<a href="%4$s">Hide this warning</a>', 'wpsc' ) . '</p>';
-	$message = sprintf(
+	$message  = sprintf(
 		$message,
 		WPSC_VERSION,
 		'https://github.com/wp-e-commerce/WP-e-Commerce/issues/359',
@@ -1550,3 +1550,25 @@ if ( isset( $_REQUEST['dismiss_3811_upgrade_notice'] ) )
 
 if ( get_option( '_wpsc_3811_user_log_notice' ) )
 	add_action( 'admin_notices', '_wpsc_admin_notices_3dot8dot11' );
+
+function _wpsc_notify_google_checkout_deprecation() {
+	$gateways = get_option( 'custom_gateway_options', array() );
+
+	if ( false !== ( $key = array_search( 'google', $gateways ) ) ) {
+		unset( $gateways[ $key ] );
+	}
+
+	if ( empty( $gateways ) ) {
+		$gateways[] = 'wpsc_merchant_testmode';
+	}
+
+	update_option( 'custom_gateway_options', $gateways );
+
+	$message  = '<p>' . __( 'Effective November 20th, 2013, Google Checkout was shut down and is no longer processing payments.  You are seeing this warning because it appears that Google Checkout was your payment gateway processor.  If it was your sole processor, we have enabled the Test Gateway to ensure that orders are coming through on your site, but we highly recommend enabling a proper gateway.  If you have no preference, we highly recommend Stripe.' , 'wpsc' ) . '</p>';
+
+	echo '<div id="wpsc-3.8.11-notice" class="warning">' . $message . '</div>';
+}
+
+if ( in_array( 'google', get_option( 'custom_gateway_options', array() ) ) ) {
+	add_action( 'admin_notices', '_wpsc_notify_google_checkout_deprecation' );
+}
