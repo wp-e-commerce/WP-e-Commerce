@@ -123,6 +123,7 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 		$options = array(
 			'timeout' => 20,
 			'body' => $received_values,
+			'httpversion' => '1.1',
 			'user-agent' => ('WP e-Commerce/'.WPSC_PRESENTABLE_VERSION)
 		);
 
@@ -992,6 +993,7 @@ function paypal_hash_call( $methodName, $nvpStr ) {
 	$options = array(
 		'timeout' => 20,
 		'body' => $nvpreq,
+		'httpversion' => '1.1',
 		'sslverify' => false,
 	);
 

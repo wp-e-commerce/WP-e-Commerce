@@ -393,6 +393,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 		$options = array(
 			'timeout' => 20,
 			'body' => $received_values,
+			'httpversion' => '1.1',
 			'user-agent' => ( 'WP e-Commerce/' . WPSC_PRESENTABLE_VERSION )
 		);
 

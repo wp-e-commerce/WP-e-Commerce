@@ -187,6 +187,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 		$options = array(
 			'timeout' => 20,
 			'body' => $this->collected_gateway_data,
+			'httpversion' => '1.1',
 			'user-agent' => $this->cart_data['software_name'] . " " . get_bloginfo( 'url' ),
 			'sslverify' => false,
 		);
@@ -260,6 +261,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 		$options = array(
 			'timeout'    => 20,
 			'body'       => $received_values,
+			'httpversion' => '1.1',
 			'user-agent' => ('WP e-Commerce/' . WPSC_PRESENTABLE_VERSION)
 		);
 
