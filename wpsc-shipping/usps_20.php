@@ -723,8 +723,10 @@ class ash_usps {
 	 */
 	function _quote_advanced( array $data ) {
 		global $wpec_ash_xml;
-		$rate_tables = array();
-		$cart_shipment = apply_filters('wpsc_the_shipment',$this->name,$this->shipment); //Filter to allow reprocesing the shipment before is quoted.
+
+		$rate_tables   = array();
+		$cart_shipment = apply_filters( 'wpsc_cart_shipment', $this->shipment, $this->name ); //Filter to allow reprocesing the shipment before is quoted.
+
 		foreach ( $cart_shipment->packages as $package ) {
 			$temp_data = $data;
 			$request = $this->_build_request( $temp_data );

@@ -344,7 +344,8 @@ class ash_ups {
 	}
 
 	private function _build_shipment( &$Shipment, $args ){
-		$cart_shipment = apply_filters('wpsc_the_shipment',$this->name,$this->shipment); //Filter to allow reprocessing shipment packages.
+
+		$cart_shipment = apply_filters( 'wpsc_cart_shipment', $this->shipment, $this->name ); //Filter to allow reprocessing shipment packages.
 
 		foreach ( $cart_shipment->packages as $package ) {
 			$pack = array(
@@ -798,14 +799,14 @@ class ash_ups {
 			$args['dest_state'] = $dest_state;
 		} else {
 			$args['dest_state'] = "";
-		}		
+		}
 		$shipping_cache_check['package_count'] = $this->shipment->package_count; //Package count is needed for cached shipment check.
 		$shipping_cache_check['destination']['state'] = $args['dest_state']; //The destination is needed for cached shipment check.
 		$shipping_cache_check['destination']['country'] = $args['dest_ccode'];
 		$shipping_cache_check['destination']['zipcode'] = $args['dest_pcode'];
-		$shipping_cache_check['total_weight'] = $args['weight']; 
-		$shipping_cache_check['rates_expire'] = date('Y-m-d'); 
-		$this->shipment->rates_expire = date('Y-m-d'); 
+		$shipping_cache_check['total_weight'] = $args['weight'];
+		$shipping_cache_check['rates_expire'] = date('Y-m-d');
+		$this->shipment->rates_expire = date('Y-m-d');
 		$this->shipment->set_destination($this->internal_name,$shipping_cache_check['destination']); //Set this shipment's destination.
  		$session_cache_check = $wpec_ash->check_cache( $this->internal_name, $this->shipment ); //Now, we're ready to check cache.
 		if ( ! is_array( $session_cache_check ) ) {
@@ -819,7 +820,7 @@ class ash_ups {
 		if ( ! (boolean) $args["singular_shipping"] ) {
 			// This is where shipping breaks out of UPS if weight is higher than 150 LBS
 			if ( $args['weight'] > 150 ) {
-					$this->shipment->set_destination($this->internal_name,$shipping_cache_check['destination']); 
+					$this->shipment->set_destination($this->internal_name,$shipping_cache_check['destination']);
 					$this->shipment->rates_expire = date('Y-m-d');
 					$shipping_quotes[ TXT_WPSC_OVER_UPS_WEIGHT ] = 0; // yes, a constant.
 					$wpec_ash->cache_results($this->internal_name,array($shipping_quotes),$this->shipment); //Update shipment cache.
