@@ -56,11 +56,15 @@ function wpsc_check_purchase_processed($processed){
  */
 function wpsc_get_buyers_email($purchase_id){
 	global $wpdb;
-	$email_form_field = $wpdb->get_var( "SELECT `id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `type` IN ('email') AND `active` = '1' ORDER BY `checkout_order` ASC LIMIT 1" );
+	$email_form_field = $wpdb->get_col( "SELECT `id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `type` IN ('email') AND `active` = '1' ORDER BY `checkout_order` ASC" );
 
-	if ( ! $email_form_field )
+	if ( empty( $email_form_field ) )
 		return '';
-	$email = $wpdb->get_var( $wpdb->prepare( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` WHERE `log_id` = %d AND `form_id` = %d LIMIT 1", $purchase_id, $email_form_field ) );
+
+	$email_in = '(' . implode( ',', array_map( 'absint', $email_form_field ) ) . ')';
+
+	$email = $wpdb->get_var( $wpdb->prepare( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` WHERE `log_id` = %d AND `form_id` IN {$email_in} LIMIT 1", $purchase_id ) );
+
 	return $email;
 }
 
