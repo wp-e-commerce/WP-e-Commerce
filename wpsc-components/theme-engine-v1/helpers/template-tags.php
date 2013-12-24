@@ -996,9 +996,9 @@ function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id 
 	if ( ! $thumbnail_id && $product->post_parent )
 		$thumbnail_id = wpsc_the_product_thumbnail_id( $product->post_parent );
 
-	// if still no thumbnail ID is found, bail
+	// if still no thumbnail ID is found, return our fallback function
 	if ( ! $thumbnail_id )
-		return;
+		return wpsc_product_image();
 
 	if ( ! $page ) {
 		if ( is_single() )
@@ -1052,8 +1052,13 @@ function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id 
 	// Calculate the height based on the ratio of the original dimensions.
 	if ( $height == 0 || $width == 0 ) {
 		$attachment_meta = get_post_meta( $thumbnail_id, '_wp_attachment_metadata', true );
-		$original_width  = absint( $attachment_meta['width'] );
-		$original_height = absint( $attachment_meta['height'] );
+
+		$original_width  = isset( $attachment_meta['width'] )	? absint( $attachment_meta['width'] )	: 0;
+		$original_height = isset( $attachment_meta['height'] )	? absint( $attachment_meta['height'] )	: 0;
+
+		// bail if either original value is zero. can't divide by zero.
+		if ( $original_width == 0 || $original_height == 0 )
+			return;
 
 		if ( $width != 0 ) {
 			$height = ( $original_height / $original_width ) * $width;
