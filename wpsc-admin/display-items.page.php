@@ -542,6 +542,8 @@ function wpsc_update_featured_products() {
 
 	update_option( 'sticky_products', $status );
 
+	do_action( 'wpsc_featured_product_update', $update, $status );
+
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 		$json_response = array(
 			'text'       => $new_status ? esc_attr__( 'Unmark as Featured', 'wpsc' ) : esc_attr__( 'Mark as Featured', 'wpsc' ),
