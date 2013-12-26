@@ -842,7 +842,6 @@ function wpsc_product_on_special( $id = 0 ) {
 					p.post_type = 'wpsc-product'
 					AND
 					p.post_parent = %d
-				ORDER BY sale_price ASC
 			", $id );
 
 			$results = $wpdb->get_col( $sql );
