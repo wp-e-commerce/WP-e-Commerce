@@ -833,7 +833,7 @@ function wpsc_product_on_special( $id = 0 ) {
 		// don't rely on product sales price if it has variations
 		if ( wpsc_product_has_variations( $id ) ) {
 			$sql = $wpdb->prepare("
-				SELECT p.id, CAST(pm.meta_value AS DECIMAL(10, 2)) AS sale_price
+				SELECT COUNT(*)
 				FROM {$wpdb->posts} AS p
 				INNER JOIN {$wpdb->postmeta} AS pm ON pm.post_id = p.id AND pm.meta_key = '_wpsc_special_price' AND pm.meta_value != '0' AND pm.meta_value != ''
 				INNER JOIN {$wpdb->postmeta} AS pm2 ON pm2.post_id = p.id AND pm2.meta_key = '_wpsc_stock' AND pm2.meta_value != '0'
@@ -845,9 +845,9 @@ function wpsc_product_on_special( $id = 0 ) {
 				ORDER BY sale_price ASC
 			", $id );
 
-			$results = $wpdb->get_results( $sql );
+			$results = $wpdb->get_col( $sql );
 
-			$on_special[$id] = ! empty( $results );
+			$on_special[$id] = ( $results > 0 );
 		} else {
 			$price =  get_product_meta( $id, 'price', true );
 			$special_price = get_product_meta( $id, 'special_price', true );
