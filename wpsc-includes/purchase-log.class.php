@@ -109,6 +109,9 @@ class WPSC_Purchase_Log {
 	 * @return array       Array containing 'sales' and 'earnings' stats
 	 */
 	public static function fetch_stats( $args ) {
+
+		global $wpdb;
+
 		$defaults = array(
 			'ids'      => array(), // IDs of the products to be queried
 			'products' => array(), // Array of WPSC_Products objects
@@ -201,9 +204,9 @@ class WPSC_Purchase_Log {
 		// assemble the SQL query
 		$sql = "
 			SELECT cc.prodid AS id, SUM(cc.quantity) AS sales, SUM(cc.quantity * cc.price) AS earnings
-			FROM wp_wpsc_purchase_logs AS p
+			FROM $wpdb->wpsc_purchase_logs AS p
 			INNER JOIN
-				wp_wpsc_cart_contents AS cc
+				$wpdb->wpsc_cart_contents AS cc
 				ON p.id = cc.purchaseid AND cc.prodid IN (" . implode( ', ', $needs_fetching ) . ")
 			{$where}
 			GROUP BY cc.prodid
