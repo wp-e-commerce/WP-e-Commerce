@@ -1,6 +1,6 @@
 <?php
 
-add_action( 'wpsc_update_purchase_log_status', '_wpsc_action_update_product_stats', 10, 3 );
+add_action( 'wpsc_update_purchase_log_status', '_wpsc_action_update_product_stats', 10, 4 );
 
 /**
  * Update product stats when a purchase log containing it changes status
@@ -11,7 +11,7 @@ add_action( 'wpsc_update_purchase_log_status', '_wpsc_action_update_product_stat
  * @param int $new_status New status
  * @param int $old_status Old status
  */
-function _wpsc_action_update_product_stats( $log, $new_status, $old_status ) {
+function _wpsc_action_update_product_stats( $log_id, $new_status, $old_status, $log ) {
 	$cart_contents = $log->get_cart_contents();
 	$new_status_completed = $log->is_transaction_completed();
 	$old_status_completed = WPSC_Purchase_Log::is_order_status_completed( $old_status );
@@ -35,7 +35,7 @@ function _wpsc_action_update_product_stats( $log, $new_status, $old_status ) {
 
 		// if this product has parent, make the same changes to the parent
 		if ( $product->post->post_parent ) {
-			$parent            = WPCS_Product::get_instance( $product->post->post_parent );
+			$parent            = WPSC_Product::get_instance( $product->post->post_parent );
 			$parent->sales    += $diff_sales;
 			$parent->earnings += $diff_earnings;
 		}
