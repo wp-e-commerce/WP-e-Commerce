@@ -833,7 +833,7 @@ function wpsc_product_on_special( $id = 0 ) {
 		// don't rely on product sales price if it has variations
 		if ( wpsc_product_has_variations( $id ) ) {
 			$sql = $wpdb->prepare("
-				SELECT p.id, CAST(pm.meta_value AS DECIMAL(10, 2)) AS sale_price
+				SELECT COUNT(*)
 				FROM {$wpdb->posts} AS p
 				INNER JOIN {$wpdb->postmeta} AS pm ON pm.post_id = p.id AND pm.meta_key = '_wpsc_special_price' AND pm.meta_value != '0' AND pm.meta_value != ''
 				INNER JOIN {$wpdb->postmeta} AS pm2 ON pm2.post_id = p.id AND pm2.meta_key = '_wpsc_stock' AND pm2.meta_value != '0'
@@ -842,12 +842,11 @@ function wpsc_product_on_special( $id = 0 ) {
 					p.post_type = 'wpsc-product'
 					AND
 					p.post_parent = %d
-				ORDER BY sale_price ASC
 			", $id );
 
-			$results = $wpdb->get_results( $sql );
+			$results = $wpdb->get_col( $sql );
 
-			$on_special[$id] = ! empty( $results );
+			$on_special[$id] = ( $results > 0 );
 		} else {
 			$price =  get_product_meta( $id, 'price', true );
 			$special_price = get_product_meta( $id, 'special_price', true );
@@ -996,6 +995,10 @@ function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id 
 	if ( ! $thumbnail_id && $product->post_parent )
 		$thumbnail_id = wpsc_the_product_thumbnail_id( $product->post_parent );
 
+	// if still no thumbnail ID is found, return our fallback function
+	if ( ! $thumbnail_id )
+		return wpsc_product_image();
+
 	if ( ! $page ) {
 		if ( is_single() )
 			$page = 'single';
@@ -1047,9 +1050,14 @@ function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id 
 
 	// Calculate the height based on the ratio of the original dimensions.
 	if ( $height == 0 || $width == 0 ) {
-		$attachment_meta = get_post_meta( $thumbnail_id, '_wp_attachment_metadata', false );
-		$original_width  = $attachment_meta[0]['width'];
-		$original_height = $attachment_meta[0]['height'];
+		$attachment_meta = get_post_meta( $thumbnail_id, '_wp_attachment_metadata', true );
+
+		$original_width  = isset( $attachment_meta['width'] )	? absint( $attachment_meta['width'] )	: 0;
+		$original_height = isset( $attachment_meta['height'] )	? absint( $attachment_meta['height'] )	: 0;
+
+		// bail if either original value is zero. can't divide by zero.
+		if ( $original_width == 0 || $original_height == 0 )
+			return;
 
 		if ( $width != 0 ) {
 			$height = ( $original_height / $original_width ) * $width;
