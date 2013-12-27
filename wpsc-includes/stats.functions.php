@@ -7,9 +7,10 @@ add_action( 'wpsc_update_purchase_log_status', '_wpsc_action_update_product_stat
  *
  * @since 3.8.13
  *
- * @param WPSC_Purchase_Log $log purchase log
- * @param int $new_status New status
- * @param int $old_status Old status
+ * @param int               $log_id     Purchase Log ID
+ * @param int               $new_status New status
+ * @param int               $old_status Old status
+ * @param WPSC_Purchase_Log $log        Purchase Log
  */
 function _wpsc_action_update_product_stats( $log_id, $new_status, $old_status, $log ) {
 	$cart_contents = $log->get_cart_contents();
