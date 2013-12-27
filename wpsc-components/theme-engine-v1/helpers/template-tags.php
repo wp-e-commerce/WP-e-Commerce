@@ -829,7 +829,7 @@ function wpsc_product_on_special( $id = 0 ) {
 	if ( ! $id )
 		$id = get_the_ID();
 
-	if ( ! isset( $on_special[$id] ) ) {
+	if ( ! isset( $on_special[ $id ] ) ) {
 		// don't rely on product sales price if it has variations
 		if ( wpsc_product_has_variations( $id ) ) {
 			$sql = $wpdb->prepare("
@@ -844,17 +844,17 @@ function wpsc_product_on_special( $id = 0 ) {
 					p.post_parent = %d
 			", $id );
 
-			$results = $wpdb->get_col( $sql );
+			$results = $wpdb->get_var( $sql );
 
-			$on_special[$id] = ( $results > 0 );
+			$on_special[ $id ] = ( $results > 0 );
 		} else {
-			$price =  get_product_meta( $id, 'price', true );
-			$special_price = get_product_meta( $id, 'special_price', true );
-			$on_special[$id] = $special_price > 0 && $price > $special_price;
+			$price             = get_product_meta( $id, 'price', true );
+			$special_price     = get_product_meta( $id, 'special_price', true );
+			$on_special[ $id ] = $special_price > 0 && $price > $special_price;
 		}
 	}
 
-	return $on_special[$id];
+	return $on_special[ $id ];
 }
 
 /**
