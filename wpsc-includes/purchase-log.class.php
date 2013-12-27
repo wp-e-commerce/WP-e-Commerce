@@ -134,7 +134,7 @@ class WPSC_Purchase_Log {
 		);
 
 		// eliminate duplicates
-		$products = array_unique( $products );
+		$products = array_unique( $products, SORT_REGULAR );
 
 		if ( empty( $products ) ) {
 			return null;
