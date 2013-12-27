@@ -7,11 +7,12 @@ add_action( 'wpsc_update_purchase_log_status', '_wpsc_action_update_product_stat
  *
  * @since 3.8.13
  *
- * @param WPSC_Purchase_Log $log purchase log
+ * @param int $log        Purchase log ID
  * @param int $new_status New status
  * @param int $old_status Old status
  */
-function _wpsc_action_update_product_stats( $log, $new_status, $old_status ) {
+function _wpsc_action_update_product_stats( $log_id, $new_status, $old_status ) {
+    $log = new WPSC_Purchase_Log( $log_id );
 	$cart_contents = $log->get_cart_contents();
 	$new_status_completed = $log->is_transaction_completed();
 	$old_status_completed = WPSC_Purchase_Log::is_order_status_completed( $old_status );
