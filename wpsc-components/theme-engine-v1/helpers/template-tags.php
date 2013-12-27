@@ -854,7 +854,7 @@ function wpsc_product_on_special( $id = 0 ) {
 		}
 	}
 
-	return $on_special[ $id ];
+	return apply_filters( 'wpsc_product_on_special', $on_special[ $id ], $id );
 }
 
 /**
