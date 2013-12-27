@@ -307,8 +307,7 @@ class WPSC_Product {
 				'earnings',
 			) ) ) {
 				$this->process_stats();
-				$stats = $this->post->_wpsc_stats;
-				return $stats[ $name ];
+				return $this->post->_wpsc_stats[ $name ];
 			}
 		}
 
@@ -624,8 +623,8 @@ class WPSC_Product {
 	 */
 	private function process_stats() {
 		if ( $this->post->_wpsc_stats === '' ) {
-			$stats = WPSC_Purchase_Log::get_stats_for_product( $this->post->ID );
-			update_post_meta( $this->post->ID, '_wpsc_stats', $stats );
+			$this->post->_wpsc_stats = WPSC_Purchase_Log::get_stats_for_product( $this->post->ID );
+			update_post_meta( $this->post->ID, '_wpsc_stats', $this->post->_wpsc_stats );
 		}
 	}
 
