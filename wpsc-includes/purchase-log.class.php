@@ -268,7 +268,7 @@ class WPSC_Purchase_Log {
 			$args['products'] = $product->variations;
 		else
 			// otherwise, get stats of only this product
-			$args['product'] = $product;
+			$args['products'] = array($product);
 
 		return self::fetch_stats( $args );
 	}
