@@ -910,3 +910,23 @@ function wpsc_get_ajax_spinner() {
 
 	return apply_filters( 'wpsc_get_ajax_spinner', $url );
 }
+
+function _wpsc_remove_erroneous_files() {
+	$files = array(
+		 WPSC_FILE_PATH . '/wpsc-components/marketplace-core-v1/library/Sputnik/.htaccess',
+		 WPSC_FILE_PATH . '/wpsc-components/marketplace-core-v1/library/Sputnik/error_log',
+		 WPSC_FILE_PATH . '/wpsc-components/marketplace-core-v1/library/Sputnik/functions.php',
+		 WPSC_FILE_PATH . '/wpsc-components/marketplace-core-v1/library/Sputnik/admin-functions.php',
+		 WPSC_FILE_PATH . '/wpsc-components/marketplace-core-v1/library/Sputnik/advanced-cache.php'
+	);
+
+	foreach ( $files as $file ) {
+		@unlink( $file );
+	}
+
+	update_option( 'wpsc_38131_file_check', false );
+}
+
+if ( get_option( 'wpsc_38131_file_check', true ) ) {
+	add_action( 'admin_init', '_wpsc_remove_erroneous_files' );
+}
