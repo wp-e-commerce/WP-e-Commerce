@@ -138,7 +138,7 @@ define("TXT_WPSC_AT_A_GLANCE", "At a Glance");
 define("TXT_WPSC_CHECKOUT", "Checkout");
 define("TXT_WPSC_RECIEPT_EMAIL_ADDRESS", "This will be the Email address that the Purchase Reciept is sent to.");
 
-define("TXT_WPSC_OVER_UPS_WEIGHT", "Because your order is over 150lbs, the Site Owner will contact you directly about shipping rates.");
+define("TXT_WPSC_OVER_WEIGHT", "Your order exceeds the standard shipping weight limit. Please contact us to quote other shipping alternatives.");
 define("TXT_WPSC_ADD_TO_CART_PHP", "Add to Cart PHP");
 define("TXT_WPSC_BUY_NOW_PHP", "Buy Now PHP");
 
