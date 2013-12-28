@@ -166,6 +166,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		$total_sql = "
 			SELECT SUM(totalprice)
 			FROM " . WPSC_TABLE_PURCHASE_LOGS . " AS p
+			{$this->joins}
 			WHERE {$total_where}
 		";
 
@@ -238,6 +239,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		$sql = "
 			SELECT DISTINCT YEAR(FROM_UNIXTIME(date)) AS year, MONTH(FROM_UNIXTIME(date)) AS month
 			FROM " . WPSC_TABLE_PURCHASE_LOGS . " AS p
+			{$this->joins}
 			WHERE {$this->where_no_filter}
 			ORDER BY date DESC
 		";
