@@ -304,9 +304,9 @@ function wpsc_admin_category_forms_edit() {
 				$display_type = isset( $category['display_type'] ) ? $category['display_type'] : '';
 			?>
 			<select name='display_type'>
-				<option value='default'<?php checked( $display_type, 'default' ); ?>><?php esc_html_e( 'Default View', 'wpsc' ); ?></option>
-				<option value='list'<?php disabled( _wpsc_is_display_type_supported( 'list' ), false ); ?><?php checked( $display_type, 'list' ); ?>><?php esc_html_e('List View', 'wpsc'); ?></option>
-				<option value='grid' <?php disabled( _wpsc_is_display_type_supported( 'grid' ), false ); ?><?php checked( $display_type, 'grid' ); ?>><?php esc_html_e( 'Grid View', 'wpsc' ); ?></option>
+				<option value='default'<?php selected( $display_type, 'default' ); ?>><?php esc_html_e( 'Default View', 'wpsc' ); ?></option>
+				<option value='list'<?php disabled( _wpsc_is_display_type_supported( 'list' ), false ); ?><?php selected( $display_type, 'list' ); ?>><?php esc_html_e('List View', 'wpsc'); ?></option>
+				<option value='grid' <?php disabled( _wpsc_is_display_type_supported( 'grid' ), false ); ?><?php selected( $display_type, 'grid' ); ?>><?php esc_html_e( 'Grid View', 'wpsc' ); ?></option>
 			</select><br />
 		</td>
 	</tr>
