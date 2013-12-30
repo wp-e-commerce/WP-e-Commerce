@@ -20,7 +20,7 @@ class WPSC_Purchase_Log_Page {
 
 		if ( isset( $_REQUEST['c'] ) && method_exists( $this, 'controller_' . $_REQUEST['c'] ) ) {
 			$controller = $_REQUEST['c'];
-			$controller_method = 'controller_' . $controller;
+			$controller_method = 'controller_' . esc_html($controller); // may change the escape function. I am unaware what c is actually taking in.
 		}
 
 		$this->$controller_method();

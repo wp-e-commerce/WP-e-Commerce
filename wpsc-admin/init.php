@@ -94,8 +94,9 @@ function wpsc_purchase_log_csv() {
 	$count = 0;
 	if ( 'key' == $_REQUEST['rss_key'] && current_user_can( 'manage_options' ) ) {
 		if ( isset( $_REQUEST['start_timestamp'] ) && isset( $_REQUEST['end_timestamp'] ) ) {
-			$start_timestamp = $_REQUEST['start_timestamp'];
-			$end_timestamp   = $_REQUEST['end_timestamp'];
+		    $allowed_protocols = array('http','https');
+			$start_timestamp = wp_kses($_REQUEST['start_timestamp'],$allowed_html,$allowed_protocols); // updated
+			$end_timestamp   = wp_kses($_REQUEST['end_timestamp'],$allowed_html,$allowed_protocols); //updated 
 			$start_end_sql = "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `date` BETWEEN '%d' AND '%d' ORDER BY `date` DESC";
 			$start_end_sql = apply_filters( 'wpsc_purchase_log_start_end_csv', $start_end_sql );
 			$data = $wpdb->get_results( $wpdb->prepare( $start_end_sql, $start_timestamp, $end_timestamp ), ARRAY_A );
