@@ -633,12 +633,8 @@ function wpsc_products_page( $content = '' ) {
 		$GLOBALS['nzshpcrt_activateshpcrt'] = true;
 
 		// get the display type for the productspage
-		$display_type = wpsc_check_display_type();
-		if ( get_option( 'show_search' ) && get_option( 'show_advanced_search' ) ) {
-			$saved_display = wpsc_get_customer_meta( 'display_type' );
-			if ( ! empty( $saved_display ) )
-				$display_type = $saved_display;
-		}
+		$saved_display = wpsc_get_customer_meta( 'display_type' );
+		$display_type  = ! empty( $saved_display ) ? $saved_display : wpsc_check_display_type();
 
 		ob_start();
 		wpsc_include_products_page_template($display_type);
