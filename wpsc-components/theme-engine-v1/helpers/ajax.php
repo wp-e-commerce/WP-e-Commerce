@@ -44,6 +44,10 @@ if ( isset( $_REQUEST['wpsc_ajax_action'] ) && 'update_shipping_price' == $_REQU
     add_action( 'init', 'wpsc_update_shipping_price' );
 }
 
+if ( isset( $_REQUEST['update_product_price'] ) && 'true' == $_REQUEST['update_product_price'] && ! empty( $_POST['product_id'] ) && is_numeric( $_POST['product_id'] ) ) {
+    add_action( 'init', 'wpsc_update_product_price' );
+}
+
 add_action( 'wp_ajax_add_to_cart'       , 'wpsc_add_to_cart' );
 add_action( 'wp_ajax_nopriv_add_to_cart', 'wpsc_add_to_cart' );
 add_action( 'wp_ajax_get_cart'       , 'wpsc_get_cart' );
