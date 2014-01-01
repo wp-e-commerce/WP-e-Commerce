@@ -506,7 +506,7 @@ function wpsc_display_products_page( $query ) {global $wpdb, $wpsc_query,$wp_que
 		$display_type = 'default';
 
 	$saved_display = wpsc_get_customer_meta( 'display_type' );
-	$display_type  = ! empty( $saved_display ) ? $saved_display : wpsc_check_display_type();
+	$display_type  = ! empty( $saved_display ) ? $saved_display : $display_type;
 
 	ob_start();
 	if( 'wpsc-product' == $wp_query->post->post_type && !is_archive() && $wp_query->post_count <= 1 )
