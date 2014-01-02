@@ -157,7 +157,7 @@ function wpsc_price_control_forms() {
     	<?php /* Check product if a product has variations */ ?>
     	<?php if ( wpsc_product_has_children( $post->ID ) ) : ?>
     		<?php $price = wpsc_product_variation_price_from( $post->ID ); ?>
-			<p style="margin-top: 6px;"><?php echo sprintf( __( 'This Product has variations, to edit the price please use the <a href="%s">Variation Controls</a>.' , 'wpsc'  ), '#wpsc_product_variation_forms' ); ?></p>
+			<p style="margin-top: 6px;"><?php echo sprintf( __( 'This product has variations. To edit the price please use the <a href="%s">Variation Controls</a>.' , 'wpsc'  ), '#wpsc_product_variation_forms' ); ?></p>
 			<p><?php printf( __( 'Price: %s and above.' , 'wpsc' ) , $price ); ?></p>
 		<?php else: ?>
 
@@ -371,7 +371,7 @@ function wpsc_stock_control_forms() {
 		} ?>
 					<?php if ( wpsc_product_has_children( $post->ID ) ) : ?>
 			    		<?php $stock = wpsc_variations_stock_remaining( $post->ID ); ?>
-						<p><?php esc_html_e( 'This Product has variations, to edit the quantity please use the Variation Controls below.' , 'wpsc' ); ?></p>
+						<p><?php echo sprintf( __( 'This product has variations. To edit the quantity please use the <a href="%s">Variation Controls</a> below.' , 'wpsc' ), '#wpsc_product_variation_forms' ); ?></p>
 						<p><?php printf( _n( "%s variant item in stock.", "%s variant items in stock.", $stock, 'wpsc' ), $stock ); ?></p>
 					<?php else: ?>
 						<div style="margin-bottom:20px;">
@@ -968,7 +968,7 @@ function wpsc_product_personalization_forms(){
 			<label for='can_have_uploaded_image'> <?php esc_html_e( 'Users can upload images on single product page to purchase logs.', 'wpsc' ); ?> </label>
 		</li>
 	</ul>
-	<em>Form fields for customer to personalise this product will be shown on it single product page.</em>
+	<em><?php _e( "Form fields for the customer to personalize this product will be shown on it's single product page.", 'wpsc' ); ?></em>
 <?php
 }
 
