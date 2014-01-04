@@ -497,24 +497,18 @@ function wpsc_meta_boxes() {
 	//if a variation page do not show these metaboxes
 	if ( is_object( $post ) && $post->post_parent == 0 ) {
 		add_meta_box( 'wpsc_product_variation_forms'    , __( 'Variations', 'wpsc' )           , 'wpsc_product_variation_forms'    , $pagename, 'normal', 'high' );
-		add_meta_box( 'wpsc_product_external_link_forms', __( 'Off Site Product link', 'wpsc' ), 'wpsc_product_external_link_forms', $pagename, 'normal', 'high' );
 	} else if( is_object( $post ) && $post->post_status == "inherit" ) {
 		remove_meta_box( 'tagsdiv-product_tag'             , 'wpsc-product', 'core' );
-		remove_meta_box( 'wpsc_product_external_link_forms', 'wpsc-product', 'core' );
 		remove_meta_box( 'wpsc_product_categorydiv'        , 'wpsc-product', 'core' );
 	}
 
-	add_meta_box( 'wpsc_product_gallery', __( 'Product Gallery', 'wpsc' ), 'wpsc_product_gallery', $pagename, 'side', 'low' );
-	add_meta_box( 'wpsc_price_control_forms', __('Price Control', 'wpsc'), 'wpsc_price_control_forms', $pagename, 'side', 'low' );
-	add_meta_box( 'wpsc_stock_control_forms', __('Stock Control', 'wpsc'), 'wpsc_stock_control_forms', $pagename, 'side', 'low' );
+	add_meta_box( 'wpsc_price_control_forms', __('Product Pricing', 'wpsc'), 'wpsc_price_control_forms', $pagename, 'side', 'low' );
+	add_meta_box( 'wpsc_stock_control_forms', __('Stock Inventory', 'wpsc'), 'wpsc_stock_control_forms', $pagename, 'side', 'low' );
 	add_meta_box( 'wpsc_product_taxes_forms', __('Taxes', 'wpsc'), 'wpsc_product_taxes_forms', $pagename, 'side', 'low' );
-	add_meta_box( 'wpsc_additional_desc', __('Additional Description', 'wpsc'), 'wpsc_additional_desc', $pagename, 'normal', 'high' );
-	add_meta_box( 'wpsc_product_download_forms', __('Product Download', 'wpsc'), 'wpsc_product_download_forms', $pagename, 'normal', 'high' );
-
-	if ( ! empty( $post->ID ) && ! wpsc_product_has_variations( $post->ID ) )
-		add_meta_box( 'wpsc_product_shipping_forms', __('Shipping', 'wpsc'), 'wpsc_product_shipping_forms_metabox', $pagename, 'normal', 'high' );
-	add_meta_box( 'wpsc_product_advanced_forms', __('Advanced Settings', 'wpsc'), 'wpsc_product_advanced_forms', $pagename, 'normal', 'high' );
+	add_meta_box( 'wpsc_product_delivery_forms', __('Product Delivery', 'wpsc'), 'wpsc_product_delivery_forms', $pagename, 'normal', 'high' );
+	add_meta_box( 'wpsc_product_details_forms', __('Product Details', 'wpsc'), 'wpsc_product_details_forms', $pagename, 'normal', 'high' );
 }
+
 add_action( 'admin_footer', 'wpsc_meta_boxes' );
 add_action( 'admin_enqueue_scripts', 'wpsc_admin_include_css_and_js_refac' );
 
