@@ -10,5 +10,7 @@ function _manually_load_plugin() {
 }
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
+ob_start();
 require $_tests_dir . '/includes/bootstrap.php';
+ob_end_clean();
 
