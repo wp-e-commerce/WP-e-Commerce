@@ -70,7 +70,11 @@ function wpsc_register_core_theme_files() {
 	wpsc_register_theme_file( 'wpsc-featured_product.php' );
 	wpsc_register_theme_file( 'wpsc-category-list.php' );
 	wpsc_register_theme_file( 'wpsc-category_widget.php' );
-	// Let other plugins register their theme files
+	wpsc_register_theme_file( 'wpsc-account-downloads.php' );
+	wpsc_register_theme_file( 'wpsc-account-edit-profile.php' );
+	wpsc_register_theme_file( 'wpsc-account-purchase-history.php' );
+
+	/* Let other plugins register their theme files */
 	do_action( 'wpsc_register_core_theme_files' );
 }
 
