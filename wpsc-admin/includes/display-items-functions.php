@@ -341,7 +341,7 @@ function wpsc_stock_control_forms() {
 		$product_meta['unpublish_when_none_left'] = '';
 
 	// Display live title if stock is set
-	if ( is_numeric( $product_data['meta']['_wpsc_stock'] )){
+	if ( isset( $product_data['meta']['_wpsc_stock'] ) && is_numeric( $product_data['meta']['_wpsc_stock'] )){
 		$live_title = '<em id="wpsc_product_stock_metabox_live_title" class="wpsc_metabox_live_title">';
 			$live_title .= '<p><span>'.$product_data['meta']['_wpsc_stock'].'</span> in stock</p>';
 		$live_title .= '</em>';
@@ -704,7 +704,7 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 					<input type="number" min="0" step="0.1" placeholder="H" id="wpsc-product-shipping-height" name="<?php echo $field_name_prefix; ?>[dimensions][height]" value="<?php if ( !$bulk && $dimensions['height']>0 ) echo esc_attr( wpsc_format_number( $dimensions['height'] ) ); ?>" />
 					<select id="wpsc-product-shipping-dimensions-unit" name="<?php echo $field_name_prefix; ?>[dimension_unit]">
 						<?php foreach ( $dimension_units as $unit => $unit_label ): ?>
-							<option value="<?php echo $unit; ?>" <?php if ( ! $bulk ) selected( $unit, $meta['dimension_unit'] ); // Dirty code ?>><?php echo esc_html( $unit_label ); ?></option>
+							<option value="<?php echo $unit; ?>" <?php if ( ! $bulk && isset( $meta['dimension_unit'] ) ) selected( $unit, $meta['dimension_unit'] ); // Dirty code ?>><?php echo esc_html( $unit_label ); ?></option>
 						<?php endforeach; ?>
 					</select>
 				</span>
@@ -959,12 +959,12 @@ function wpsc_product_personalization_forms(){
 	<ul id="wpsc_product_personalization_option">
 		<li>
 			<input type='hidden' name='meta[_wpsc_product_metadata][engraved]' value='0' />
-			<input type='checkbox' name='meta[_wpsc_product_metadata][engraved]' <?php checked( $product_meta['engraved'], '1' ); ?> id='add_engrave_text' />
+			<input type='checkbox' name='meta[_wpsc_product_metadata][engraved]' <?php if ( isset( $product_meta['engraved'] ) ) checked( $product_meta['engraved'], '1' ); ?> id='add_engrave_text' />
 			<label for='add_engrave_text'><?php esc_html_e( 'Users can personalize this product by leaving a message on single product page', 'wpsc' ); ?></label>
 		</li>
 		<li>
 			<input type='hidden' name='meta[_wpsc_product_metadata][can_have_uploaded_image]' value='0' />
-			<input type='checkbox' name='meta[_wpsc_product_metadata][can_have_uploaded_image]' <?php checked( $product_meta['can_have_uploaded_image'], '1' ); ?> id='can_have_uploaded_image' />
+			<input type='checkbox' name='meta[_wpsc_product_metadata][can_have_uploaded_image]' <?php if ( isset( $product_meta['can_have_uploaded_image'] ) ) checked( $product_meta['can_have_uploaded_image'], '1' ); ?> id='can_have_uploaded_image' />
 			<label for='can_have_uploaded_image'> <?php esc_html_e( 'Users can upload images on single product page to purchase logs.', 'wpsc' ); ?> </label>
 		</li>
 	</ul>
