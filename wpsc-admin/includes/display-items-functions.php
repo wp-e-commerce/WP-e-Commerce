@@ -266,7 +266,7 @@ function wpsc_price_control_forms() {
 								<input type="text" size="10" value="<?php echo $table_price; ?>" name="table_rate_price[table_price][]" />
 							</td>
 							<td>
-								<img src="<?php echo WPSC_CORE_IMAGES_URL; ?>/cross.png" class="remove_line" />
+								<a href="#" class="remove_line<?php echo $currency_delete_class; ?>"><?php echo $currency_delete_text; ?></a>
 							</td>
 						</tr>
 <?php
@@ -295,7 +295,7 @@ function wpsc_price_control_forms() {
 								</span>
 							</td>
 							<td style="vertical-align:middle; width:20px; text-align:center;">
-								<a href="#" class="remove_line">x</a>
+								<a href="#" class="remove_line<?php echo $currency_delete_class; ?>"><?php echo $currency_delete_text; ?></a>
 							</td>
 						</tr>
 						</tbody>
