@@ -145,6 +145,11 @@ function wpsc_price_control_forms() {
 
 	$price 		= $product_data['meta']['_wpsc_price'];
 	$sale_price = $product_data['meta']['_wpsc_special_price'];
+
+	$wp_38 = version_compare( $GLOBALS['wp_version'], '3.8', '>=' );
+
+	$currency_delete_class = $wp_38 ? ' dashicons dashicons-dismiss' : '';
+	$currency_delete_text  = $wp_38 ? '' : 'x';
 ?>
 		<em id="wpsc_product_price_metabox_live_title" class="wpsc_metabox_live_title">
 			<p>&nbsp;<?php esc_html_e($ct_symb); ?><span><?php esc_html_e($sale_price) ?></span></p>
@@ -161,24 +166,24 @@ function wpsc_price_control_forms() {
 			<p><?php printf( __( 'Price: %s and above.' , 'wpsc' ) , $price ); ?></p>
 		<?php else: ?>
 
-    	<div class='wpsc_floatleft' style="width:85px;">	
-    		<label><?php esc_html_e( 'Price '.$ct_code.' '.$ct_symb, 'wpsc' ); ?></label>
+    	<div class='wpsc_floatleft' style="width:85px;">
+    		<label><?php esc_html_e( 'Price '. $ct_code .' ' . $ct_symb, 'wpsc' ); ?></label>
 			<input 	id = "wpsc_price"
 					type="number" size='10'
-					min="0" step="0.10" 
+					min="0" step="0.10"
 					name="meta[_wpsc_price]"
-					style="width:80px;" 
+					style="width:80px;"
 					value="<?php echo esc_attr( $product_data['meta']['_wpsc_price'] );  ?>"
 					onChange="wpsc_update_price_live_preview()" />
 		</div>
 
-		<div 	class='wpsc_floatleft' 
+		<div 	class='wpsc_floatleft'
 				style='display:<?php if ( ( $product_data['special'] == 1 ) ? 'block' : 'none'
 	); ?>; width:85px; margin-left:30px;'>
 			<label for='add_form_special'><?php esc_html_e( 'Sale Price '.$ct_code.' '.$ct_symb, 'wpsc' ); ?></label>
 			<input 	id = "wpsc_sale_price"
 					type="number" size='10'
-					min="0" step="0.10" 
+					min="0" step="0.10"
 					style="width:80px;"
 					value="<?php echo esc_attr( $product_data['meta']['_wpsc_special_price'] ); ?>"
 					name='meta[_wpsc_special_price]'
@@ -192,22 +197,22 @@ function wpsc_price_control_forms() {
 
 			<?php foreach ( (array)$currency_data as $currency ) {?>
 				<option value='<?php echo $currency['id']; ?>' >
-					<?php echo htmlspecialchars( $currency['country'] ); ?>
-				</option> 
+					<?php echo esc_html( $currency['country'] ); ?>
+				</option>
 			<?php } ?>
 			</select>
-			
-			<input 	type='number' min="0" step="0.1" 
-					class='newCurrPrice text' 
-					size='8' 
-					name='newCurrPrice[]' 
+
+			<input 	type='number' min="0" step="0.1"
+					class='newCurrPrice text'
+					size='8'
+					name='newCurrPrice[]'
 					value='0.00' />
-			<a href="#" class='wpsc_delete_currency_layer'>x</a>
+			<a href="#" class='wpsc_delete_currency_layer<?php echo $currency_delete_class; ?>'><?php echo $currency_delete_text; ?></a>
 
 		</div>
 
-		<a 	href='#' 
-			class='button button-small wpsc_add_new_currency' 
+		<a 	href='#'
+			class='button button-small wpsc_add_new_currency'
 			style="margin-top:10px;">
 			<?php esc_html_e( '+ Currency Option', 'wpsc' ); ?>
 		</a>
@@ -216,33 +221,33 @@ function wpsc_price_control_forms() {
 	if ( isset( $product_alt_currency ) && is_array( $product_alt_currency ) ) :
 		$i = 0;
 		foreach ( $product_alt_currency as $iso => $alt_price ) :
-			$i++; 
+			$i++;
 	?>
 				<div class='wpsc_additional_currency'>
 				<label for='newCurrency[]'><?php esc_html_e( 'Currency type', 'wpsc' ); ?>:</label><br />
-				<select name='newCurrency[]' class='newCurrency' style='width:42%'> 
+				<select name='newCurrency[]' class='newCurrency' style='width:42%'>
 				<?php
 					foreach ( $currency_data as $currency ) :
 						if ( $iso == $currency['isocode'] )
 							$selected = "selected='selected'";
 						else
-							$selected = ""; 
+							$selected = "";
 				?>
 								<option value='<?php echo $currency['id']; ?>' <?php echo $selected; ?> >
 									<?php echo htmlspecialchars( $currency['country'] ); ?> (<?php echo $currency['currency']; ?>)
-								</option> 
+								</option>
 				<?php endforeach; ?>
 				</select>
-				
+
 				<?php esc_html_e( 'Price:', 'wpsc' ); ?> <input type='text' class='text' size='8' name='newCurrPrice[]' value='<?php echo $alt_price; ?>' style=' display:inline' />
-				<a href='' class='wpsc_delete_currency_layer' rel='<?php echo $iso; ?>'><img src='<?php echo WPSC_CORE_IMAGES_URL; ?>/cross.png' /></a></div>
-	<?php 
+				<a href='#' class='wpsc_delete_currency_layer<?php echo $currency_delete_class; ?>' rel='<?php echo $iso; ?>'><?php if ( $wp_38 ) : ?><img src='<?php echo WPSC_CORE_IMAGES_URL; ?>/cross.png' /><?php endif; ?></a></div>
+	<?php
 		endforeach;
 	endif;
 	?>
 
 				<div id='table_rate'>
-					
+
 					<br style='clear:both' />
 					<table style="width:100%">
 						<tbody>
@@ -274,10 +279,10 @@ function wpsc_price_control_forms() {
 								<span>
 									<input 	type="number" size="5"
 											min="0" step="1" value="0"
-											style="width:60px;" 
+											style="width:60px;"
 											name="table_rate_price[quantity][]"/>
 									<?php esc_html_e( '+', 'wpsc' );?>
-								</span> 
+								</span>
 							</td>
 
 							<td style="text-align:right;">
@@ -296,17 +301,17 @@ function wpsc_price_control_forms() {
 						</tbody>
 					</table>
 
-					<a 	class='add_level button button-small' 
+					<a 	class='add_level button button-small'
 						style="margin-top:10px;">
 						<?php esc_html_e( '+ Quantity Discount', 'wpsc' ); ?>
 					</a>
-					
+
 					<div style='clear:both; margin-bottom:20px;'></div>
-          			
-          			<input 	id='add_form_donation' 
-          					type='checkbox' 
-          					name='meta[_wpsc_is_donation]' 
-          					value='yes' 
+
+          			<input 	id='add_form_donation'
+          					type='checkbox'
+          					name='meta[_wpsc_is_donation]'
+          					value='yes'
           					<?php checked( $product_data['meta']['_wpsc_is_donation'] , 1 ); ?> />
 
           			<label for='add_form_donation'><?php echo __( 'Purchase is a donation.', 'wpsc' ) ?></label>
@@ -377,9 +382,9 @@ function wpsc_stock_control_forms() {
 						<div style="margin-bottom:20px;">
 							<label for="stock_limit_quantity"><?php esc_html_e( 'Quantity in stock', 'wpsc' ); ?></label>
 							<input 	type='number' min="0" step="1" style="width:80px; margin-left:50px;"
-									id="stock_limit_quantity" name='meta[_wpsc_stock]' 
-									size='3' value='<?php echo $product_data['meta']['_wpsc_stock']; ?>' 
-									class='stock_limit_quantity' 
+									id="stock_limit_quantity" name='meta[_wpsc_stock]'
+									size='3' value='<?php echo $product_data['meta']['_wpsc_stock']; ?>'
+									class='stock_limit_quantity'
 									onChange="wpsc_push_v2t(this, '#wpsc_product_stock_metabox_live_title>p>span')" />
 						</div>
 
@@ -388,10 +393,10 @@ function wpsc_stock_control_forms() {
 							$reserved_quantity = $product_data['meta']['_wpsc_stock'] - $remaining_quantity;
 							if($reserved_quantity) {
 								echo '<p><em>';
-								printf(_n('%s of them is reserved for pending or recently completed orders.', 
-										  '%s of them are reserved for pending or recently completed orders.', 
+								printf(_n('%s of them is reserved for pending or recently completed orders.',
+										  '%s of them are reserved for pending or recently completed orders.',
 										  $reserved_quantity, 'wpsc'), $reserved_quantity);
-					
+
 								echo '</em></p>';
 							}
 						?>
@@ -399,17 +404,17 @@ function wpsc_stock_control_forms() {
 
 						<p><?php esc_html_e( 'When stock reduces to zero:', 'wpsc' ); ?></p>
 						<div class='notify_when_none_left'>
-							<input 	type='checkbox' id="notify_when_oos" 
-									name='meta[_wpsc_product_metadata][notify_when_none_left]' 
+							<input 	type='checkbox' id="notify_when_oos"
+									name='meta[_wpsc_product_metadata][notify_when_none_left]'
 									class='notify_when_oos'<?php checked( $product_meta['notify_when_none_left'] ); ?> />
 							<label for="notify_when_oos"><?php esc_html_e( 'Notify site owner via email', 'wpsc' ); ?></label>
 						</div>
 						<div class='unpublish_when_none_left'>
-							<input 	type='checkbox' id="unpublish_when_oos" 
-									name='meta[_wpsc_product_metadata][unpublish_when_none_left]' 
+							<input 	type='checkbox' id="unpublish_when_oos"
+									name='meta[_wpsc_product_metadata][unpublish_when_none_left]'
 									class='unpublish_when_oos'<?php checked( $product_meta['unpublish_when_none_left'] ); ?> />
 							<label for="unpublish_when_oos"><?php esc_html_e( 'Unpublish product from website', 'wpsc' ); ?></label>
-							
+
 						</div>
 				</div> <?php
 	} else { ?>
@@ -663,7 +668,7 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 	$measurements = $dimensions;
 	$measurements['weight'] = $weight;
 	$measurements['weight_unit'] = $weight_unit;
-	// End why 
+	// End why
 
 ?>
 	<div class="wpsc-stock-editor<?php if ( $bulk ) echo ' wpsc-bulk-edit' ?>">
@@ -674,7 +679,7 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 
 		<div class="wpsc-product-shipping-section wpsc-product-shipping-weight-dimensions">
 			<p><strong><?php esc_html_e( 'Calculate Shipping Costs based on measurements', 'wpsc' ); ?></strong></p>
-			
+
 			<!-- WEIGHT INPUT -->
 			<p class="wpsc-form-field">
 				<?php if ( $bulk ) : ?>
@@ -710,7 +715,7 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 				</span>
 			</p>
 			<!-- END DEMENSION INPUT -->
-			
+
 		</div>
 
 		<?php
@@ -793,13 +798,13 @@ function wpsc_product_advanced_forms() {
 		$output .= '</tfood>';
 
 		$output .= '<tbody>';
-		
+
 		// Display all available metadata
 		$alternate = false;
 		foreach ( (array)$custom_fields as $custom_field ) {
 			$i = $custom_field['meta_id'];
 			$alternate = !$alternate;
-			
+
 			$output .= '<tr'. ($alternate ? ' class="alternate"' : '') .'>';
 				$output .= '<td><input type="text" value="'.$custom_field['meta_key'].'" name="custom_meta['.$i.'][name]" id="custom_meta_name_'.$i.'"></input></td>';
 				$output .= '<td><input type="text" value="'.esc_html($custom_field['meta_value']).'" name="custom_meta['.$i.'][value]" id="custom_meta_value_'.$i.'"></input></td>';
@@ -816,7 +821,7 @@ function wpsc_product_advanced_forms() {
 
 		$output .= '</tbody>';
 	$output .= '</table>';
-	
+
 	$output .= '<a href="#" class="add_more_meta  button button-small" id="wpsc_add_custom_meta">'.esc_html( '+ Add Custom Meta', 'wpsc' ).'</a>';
 
 
@@ -861,7 +866,7 @@ function wpsc_product_external_link_forms() {
 
                     	<input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value="_self" <?php  echo $external_link_target_value_selected['_self'] ; ?>>
                     	<span><?php esc_html_e( 'Force open in same window', 'wpsc' ); ?></span>
-                    	
+
                     	<input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value="_blank" <?php echo $external_link_target_value_selected['_blank'] ; ?>>
                     	<span><?php esc_html_e( 'Force open in new window', 'wpsc' ); ?></span>
                     </td>
@@ -881,7 +886,7 @@ function wpsc_additional_desc() {
 
 function wpsc_product_gallery( $post ) {
 	$upload_iframe_src = esc_url( get_upload_iframe_src( 'image', $post->ID ) );
-	
+
 	$photos = wpsc_get_product_gallery($post->ID);
 
 	$output = '<div id="wpsc_product_gallery">';
@@ -890,7 +895,7 @@ function wpsc_product_gallery( $post ) {
 		foreach ($photos as $photo) {
 			$output .= '<li>';
 				$output .= '<img src="'.wp_get_attachment_thumb_url($photo->ID).'">';
-			$output .= '</li>';	
+			$output .= '</li>';
 		}
 
 		$output .= '</ul>';
@@ -920,7 +925,7 @@ function wpsc_product_download_forms() {
 
 	<a href="admin.php?wpsc_admin_action=product_files_existing&amp;product_id=<?php echo $post->ID; ?>" class="thickbox button button-small" title="<?php echo esc_attr( sprintf( __( 'Select all downloadable files for %s', 'wpsc' ), $post->post_title ) ); ?>"><?php esc_html_e( 'Add existing files...', 'wpsc' ); ?></a>
 
-	<div class="wpsc_fileUpload button button-small">	
+	<div class="wpsc_fileUpload button button-small">
 		<span><?php esc_html_e('Upload new file...','wpsc'); ?></span>
 		<input type='file' name='file' class="button button-small" value='' onchange="wpsc_push_v2t(this, '#wpsc_fileupload_path')" />
 	</div>
@@ -972,7 +977,7 @@ function wpsc_product_personalization_forms(){
 <?php
 }
 
-function wpsc_product_delivery_forms(){ 
+function wpsc_product_delivery_forms(){
 ?>
 	<em id="wpsc_product_delivery_metabox_live_title" class="wpsc_metabox_live_title">
 		<p></p>
@@ -1030,7 +1035,7 @@ function wpsc_product_details_forms(){
 		<div id="wpsc_product_details-meta" class="tabs-panel" style="display: none;">
 			<?php wpsc_product_advanced_forms(); ?>
 		</div>
-	</div>	
+	</div>
 <?php
 }
 

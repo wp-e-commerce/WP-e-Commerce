@@ -1126,10 +1126,10 @@ table#wpsc_category_list td div.subcategory table.itemlist {
 	float: left;
 }
 
-label.select_categorisation_group, 
-select#select_categorisation_group, 
-a.add_categorisation_group, 
-a.edit_categorisation_group, 
+label.select_categorisation_group,
+select#select_categorisation_group,
+a.add_categorisation_group,
+a.edit_categorisation_group,
 #submit_categorisation_form span {
 	display: block;
 	float: left;
