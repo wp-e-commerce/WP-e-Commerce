@@ -4,6 +4,9 @@ add_action( 'wpsc_set_cart_item'         , '_wpsc_action_update_customer_last_ac
 add_action( 'wpsc_add_item'              , '_wpsc_action_update_customer_last_active'     );
 add_action( 'wpsc_before_submit_checkout', '_wpsc_action_update_customer_last_active'     );
 add_action( 'wp_login'                   , '_wpsc_action_setup_customer'                  );
+add_action( 'load-users.php'             , '_wpsc_action_load_users'                      );
+add_filter( 'views_users'                , '_wpsc_filter_views_users'                     );
+add_filter( 'editable_roles'             , '_wpsc_filter_editable_roles'                  );
 
 /**
  * Helper function for setting the customer cookie content and expiration
@@ -474,4 +477,98 @@ function _wpsc_is_bot_user() {
 
 	// at this point we have eliminated all but the most obvious choice, a human (or cylon?)
 	return false;
+}
+
+/**
+ * Given a users.php view's HTML code, this function returns the user count displayed
+ * in the view.
+ *
+ * If `count_users()` had implented caching, we could have just called that function again
+ * instead of using this hack.
+ *
+ * @access private
+ * @since  3.8.13.2
+ * @param  string $view
+ * @return int
+ */
+function _wpsc_extract_user_count( $view ) {
+	if ( preg_match( '/class="count">\((\d+)\)/', $view, $matches ) ) {
+		return absint( $matches[1] );
+	}
+
+	return 0;
+}
+
+/**
+ * Filter the user views so that Anonymous role is not displayed
+ *
+ * @since  3.8.13.2
+ * @access private
+ * @param  array $views
+ * @return array
+ */
+function _wpsc_filter_views_users( $views ) {
+	if ( isset( $views['wpsc_anonymous'] ) ) {
+		// ugly hack to make the anonymous users not count towards "All"
+		// really wish WordPress had a filter in count_users(), but in the mean time
+		// this will do
+		$anon_count = _wpsc_extract_user_count( $views['wpsc_anonymous'] );
+		$all_count = _wpsc_extract_user_count( $views['all'] );
+		$new_count = $all_count - $anon_count;
+		$views['all'] = str_replace( "(${all_count})", "(${new_count})", $views['all'] );
+	}
+
+	unset( $views['wpsc_anonymous'] );
+	return $views;
+}
+
+/**
+ * Add the action necessary to filter out anonymous users
+ *
+ * @since 3.8.13.2
+ * @access private
+ */
+function _wpsc_action_load_users() {
+	add_action( 'pre_user_query', '_wpsc_action_pre_user_query', 10, 1 );
+}
+
+/**
+ * Filter out anonymous users in "All" view
+ *
+ * @since 3.8.13.2
+ * @access private
+ * @param  WP_User_Query $query
+ */
+function _wpsc_action_pre_user_query( $query ) {
+	global $wpdb;
+
+	// only do this when we're viewing all users
+	if ( ! empty( $query->query_vars['role'] ) )
+		return;
+
+	$cap_meta_query = array(
+		array(
+			'key'     => $wpdb->get_blog_prefix( $query->query_vars['blog_id'] ) . 'capabilities',
+			'value'   => '"wpsc_anonymous"',
+			'compare' => 'not like',
+		)
+	);
+
+	$meta_query = new WP_Meta_Query( $cap_meta_query );
+	$clauses = $meta_query->get_sql( 'user', $wpdb->users, 'ID', $query );
+
+	$query->query_from .= $clauses['join'];
+	$query->query_where .= $clauses['where'];
+}
+
+/**
+ * Make sure Anonymous role not editable
+ *
+ * @since 3.8.13.2
+ * @param  array $editable_roles
+ * @return array
+ */
+function _wpsc_filter_editable_roles( $editable_roles ) {
+	unset( $editable_roles['wpsc_anonymous'] );
+	return $editable_roles;
 }
