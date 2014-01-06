@@ -921,7 +921,9 @@ function _wpsc_remove_erroneous_files() {
 	);
 
 	foreach ( $files as $file ) {
-		@unlink( $file );
+		if ( is_file( $file ) ) {
+			@unlink( $file );
+		}
 	}
 
 	update_option( 'wpsc_38131_file_check', false );
