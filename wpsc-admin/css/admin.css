@@ -2113,6 +2113,7 @@ div.new_layer > * {
 
 div.new_layer select {
 	height: auto !important;
+	white-space: nowrap;
 }
 
 body.edit-tags-php img.wpsc_category_image {
