@@ -10,20 +10,23 @@ class WPSC_Walker_Variation_Checklist extends Walker_Category_Checklist {
 		$this->highlighted = $highlighted;
 	}
 
-	public function start_el(&$output, $category, $depth, $args) {
-		extract($args);
-		if ( empty($taxonomy) )
+	public function start_el( &$output, $category, $depth = 0, $args = array(), $current_object_id = 0 ) {
+		extract( $args );
+		if ( empty( $taxonomy ) ) {
 			$taxonomy = 'category';
+		}
 
-		$checked = in_array( $category->term_id, $selected_cats );
+		$checked     = in_array( $category->term_id, $selected_cats );
 		$input_class = ( $depth === 0 ) ? ' class="variation-set"' : '';
-		$li_classes = array( 'wpsc-variation-checklist-item' );
+		$li_classes  = array( 'wpsc-variation-checklist-item' );
+
 		if ( $depth === 0 && wpsc_is_doing_ajax( 'add_variation_set' ) ) {
 			$li_classes[] = 'ajax';
 			$li_classes[] = 'expanded';
 		} elseif ( in_array( $category->term_id, $this->highlighted ) ) {
 			$li_classes[] = 'ajax';
 		}
+
 		ob_start();
 		?>
 		<li id="<?php echo esc_attr( $taxonomy ); ?>-<?php echo $category->term_id; ?>" class="<?php echo implode( ' ', $li_classes ); ?>">
