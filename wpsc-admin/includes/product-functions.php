@@ -223,10 +223,11 @@ function wpsc_pre_update( $data , $postarr ) {
 		$data['post_status'] = 'inherit';
 	}
 
-    if ( !empty( $postarr['meta'] ) && ( $postarr['meta']['_wpsc_product_metadata']['enable_comments'] == 0 || empty( $postarr['meta']['_wpsc_product_metadata']['enable_comments'] ) ) )
-        $data["comment_status"] = "closed";
-    else
-        $data["comment_status"] = "open";
+	if ( ! empty( $postarr['meta'] ) && ( ! isset( $postarr['meta']['_wpsc_product_metadata']['enable_comments'] ) || $postarr['meta']['_wpsc_product_metadata']['enable_comments'] == 0 || empty( $postarr['meta']['_wpsc_product_metadata']['enable_comments'] ) ) ) {
+		$data["comment_status"] = "closed";
+	} else {
+		$data["comment_status"] = "open";
+	}
 
     //Can anyone explain to me why this is here?
     if ( isset( $sku ) && ( $sku != '' ) )
