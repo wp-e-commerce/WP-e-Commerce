@@ -2194,6 +2194,10 @@ body.edit-tags-php img.wpsc_category_image {
 	width: 50px;
 }
 
+#external_link_target {
+	padding-top: 21px;
+}
+
 #external_link_target input {
 	width: auto;
 }
