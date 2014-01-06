@@ -344,12 +344,6 @@ table.widefat tbody tr td.product-image img {
 	width: 50%;
 	word-wrap: break-word;
 	height: auto;
-	border: none;
-	background: none;
-	box-shadow: none;
-	-webkit-appearance: none;
-	-moz-appearance:    none;
-	appearance:         none;
 }
 
 .newCurrPrice {
