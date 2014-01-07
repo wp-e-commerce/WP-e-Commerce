@@ -40,7 +40,7 @@ function _wpsc_clear_customer_meta() {
 		LIMIT {$purge_count}
 	";
 
-	// do this in batch of 50 to avoid memory issues when there are too many
+	// do this in batch of 200 to avoid memory issues when there are too many
 	// anonymous users
 	@set_time_limit( 0 ); // no time limit
 	do {
