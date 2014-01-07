@@ -240,7 +240,7 @@ function wpsc_price_control_forms() {
 				</select>
 
 				<?php esc_html_e( 'Price:', 'wpsc' ); ?> <input type='text' class='text' size='8' name='newCurrPrice[]' value='<?php echo $alt_price; ?>' style=' display:inline' />
-				<a href='#' class='wpsc_delete_currency_layer<?php echo $currency_delete_class; ?>' rel='<?php echo $iso; ?>'><?php if ( $wp_38 ) : ?><img src='<?php echo WPSC_CORE_IMAGES_URL; ?>/cross.png' /><?php endif; ?></a></div>
+				<a href='#' class='wpsc_delete_currency_layer<?php echo $currency_delete_class; ?>' rel='<?php echo $iso; ?>'><?php if ( ! $wp_38 ) : ?><img src='<?php echo WPSC_CORE_IMAGES_URL; ?>/cross.png' /><?php endif; ?></a></div>
 	<?php
 		endforeach;
 	endif;
