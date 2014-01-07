@@ -366,7 +366,7 @@ function wpsc_stock_control_forms() {
 	if ( !isset( $product_data['meta']['_wpsc_stock'] ) )
 		$product_data['meta']['_wpsc_stock'] = ''; ?>
 			<br /><input class='limited_stock_checkbox' id='add_form_quantity_limited' type='checkbox' value='yes' <?php if ( is_numeric( $product_data['meta']['_wpsc_stock'] ) ) echo 'checked="checked"'; else echo ''; ?> name='meta[_wpsc_limited_stock]' />
-			<label for='add_form_quantity_limited' class='small'><?php esc_html_e( 'Product has limit stock', 'wpsc' ); ?></label>
+			<label for='add_form_quantity_limited' class='small'><?php esc_html_e( 'Product has limited stock', 'wpsc' ); ?></label>
 			<?php
 	if ( $post->ID > 0 ) {
 		if ( is_numeric( $product_data['meta']['_wpsc_stock'] ) ) {?>
