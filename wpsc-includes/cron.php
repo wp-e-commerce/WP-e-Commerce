@@ -3,12 +3,17 @@ add_action( 'wpsc_hourly_cron_task', 'wpsc_clear_stock_claims' );
 add_action( 'wpsc_hourly_cron_task', '_wpsc_clear_customer_meta' );
 
 /**
- * wpsc_clear_stock_claims, clears the stock claims, runs using wp-cron and when editing purchase log statuses via the dashboard
+ * Clears the stock claims, runs using on hourly WP_Cron event and when editing purchase log statuses.
+ *
+ * @since 3.8.9
+ * @access public
+ *
+ * @return void
  */
 function wpsc_clear_stock_claims() {
 	global $wpdb;
 
-	$time = (float) get_option( 'wpsc_stock_keeping_time', 1 );
+	$time     = (float) get_option( 'wpsc_stock_keeping_time', 1 );
 	$interval = get_option( 'wpsc_stock_keeping_interval', 'day' );
 
 	// we need to convert into seconds because we're allowing decimal intervals like 1.5 days
@@ -50,6 +55,7 @@ function _wpsc_clear_customer_meta() {
 
 	/* Do this in batches of 200 to avoid memory issues when there are too many anonymous users */
 	@set_time_limit( 0 ); // no time limit
+
 	do {
 		$ids = $wpdb->get_col( $sql );
 		foreach ( $ids as $id ) {
