@@ -29,16 +29,24 @@ function _wpsc_clear_customer_meta() {
 
 	require_once( ABSPATH . 'wp-admin/includes/user.php' );
 
+	$purge_count = 200;
+
 	$sql = "
 		SELECT user_id
 		FROM {$wpdb->usermeta}
 		WHERE
 		meta_key = '_wpsc_last_active'
 		AND meta_value < UNIX_TIMESTAMP() - " . WPSC_CUSTOMER_DATA_EXPIRATION . "
+		LIMIT {$purge_count}
 	";
 
-	$ids = $wpdb->get_col( $sql );
-	foreach ( $ids as $id ) {
-		wp_delete_user( $id );
-	}
+	// do this in batch of 200 to avoid memory issues when there are too many
+	// anonymous users
+	@set_time_limit( 0 ); // no time limit
+	do {
+		$ids = $wpdb->get_col( $sql );
+		foreach ( $ids as $id ) {
+			wp_delete_user( $id );
+		}
+	} while ( count( $ids ) == $purge_count );
 }
