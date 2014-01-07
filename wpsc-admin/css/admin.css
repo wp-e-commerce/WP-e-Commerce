@@ -2057,6 +2057,11 @@ table.purchase-logs tr:hover .column-id .delete {
 	width: 50px;
 }
 
+.wpsc-product-variation-thumbnail img {
+	max-height: 50px;
+	max-width: 50px;
+}
+
 .wpsc-product-variation-title {
 	margin-left: 60px;
 }
