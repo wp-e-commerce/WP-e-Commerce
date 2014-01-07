@@ -3,7 +3,7 @@ add_action( 'wpsc_hourly_cron_task', 'wpsc_clear_stock_claims' );
 add_action( 'wpsc_hourly_cron_task', '_wpsc_clear_customer_meta' );
 
 /**
- * Clears the stock claims, runs using on hourly WP_Cron event and when editing purchase log statuses.
+ * Clears the stock claims, runs on hourly WP_Cron event and when editing purchase log statuses.
  *
  * @since 3.8.9
  * @access public
