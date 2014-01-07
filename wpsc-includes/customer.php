@@ -546,6 +546,12 @@ function _wpsc_action_pre_user_query( $query ) {
 	if ( ! empty( $query->query_vars['role'] ) )
 		return;
 
+	// if the site is multisite, a JOIN is already done
+	if ( is_multisite() ) {
+		$query->query_where .= " AND CAST($wpdb->usermeta.meta_value AS CHAR) NOT LIKE '%" . like_escape( '"wpsc_anonymous"' ) . "%'";
+		return;
+	}
+
 	$cap_meta_query = array(
 		array(
 			'key'     => $wpdb->get_blog_prefix( $query->query_vars['blog_id'] ) . 'capabilities',
