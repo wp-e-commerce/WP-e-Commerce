@@ -49,6 +49,4 @@ function _wpsc_clear_customer_meta() {
 			wp_delete_user( $id );
 		}
 	} while ( count( $ids ) == $purge_count );
-
-	exit;
 }
