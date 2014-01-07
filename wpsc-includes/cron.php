@@ -18,12 +18,20 @@ function wpsc_clear_stock_claims() {
 		'week' => 604800,
 	);
 
-	$seconds = floor( $time * $convert[$interval] );
+	$seconds = floor( $time * $convert[ $interval ] );
 
 	$sql = $wpdb->prepare( "DELETE FROM " . WPSC_TABLE_CLAIMED_STOCK . " WHERE last_activity < UTC_TIMESTAMP() - INTERVAL %d SECOND", $seconds );
 	$wpdb->query( $sql );
 }
 
+/**
+ * Purges customer meta that is older than WPSC_CUSTOMER_DATA_EXPIRATION on an hourly WP_Cron event.
+ *
+ * @since 3.8.9.2
+ * @access public
+ *
+ * @return void
+ */
 function _wpsc_clear_customer_meta() {
 	global $wpdb;
 
@@ -40,8 +48,7 @@ function _wpsc_clear_customer_meta() {
 		LIMIT {$purge_count}
 	";
 
-	// do this in batch of 200 to avoid memory issues when there are too many
-	// anonymous users
+	/* Do this in batches of 200 to avoid memory issues when there are too many anonymous users */
 	@set_time_limit( 0 ); // no time limit
 	do {
 		$ids = $wpdb->get_col( $sql );
