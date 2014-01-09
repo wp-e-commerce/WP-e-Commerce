@@ -2412,3 +2412,39 @@ a.wpsc_remove_meta {
 	}
 
 }
+
+
+/**
+ * Pre WordPress 3.8 Compatibility
+ */
+
+.branch-3-7 #wpsc_product_price_metabox_live_title,
+.branch-3-6 #wpsc_product_price_metabox_live_title {
+	top: -28px;
+}
+
+.branch-3-7 #wpsc_product_delivery_metabox_live_title,
+.branch-3-6 #wpsc_product_delivery_metabox_live_title {
+	top: -38px;
+}
+
+.branch-3-7 #wpsc_product_details_metabox_live_title,
+.branch-3-6 #wpsc_product_details_metabox_live_title {
+	top: -34px;
+}
+
+.branch-3-7.wpsc-product-variation-iframe #post-body,
+.branch-3-6.wpsc-product-variation-iframe #post-body {
+	background: #f5f5f5;
+	background-image: -webkit-gradient(linear,left bottom,left top,from(#f5f5f5),to(#f9f9f9));
+	background-image: -webkit-linear-gradient(bottom, #f5f5f5, #f9f9f9);
+	background-image: -moz-linear-gradient(bottom, #f5f5f5, #f9f9f9);
+	background-image: -o-linear-gradient(bottom, #f5f5f5, #f9f9f9);
+	background-image: linear-gradient(to top, #f5f5f5, #f9f9f9);
+}
+
+.branch-3-7.wpsc-product-variation-iframe .widefat td.column-title,
+.branch-3-6.wpsc-product-variation-iframe .widefat td.column-title {
+	padding-bottom: 5px;
+}
+
