@@ -324,6 +324,13 @@ table.widefat .product-image {
 	width: 42px;
 }
 
+.post-type-wpsc-product table.widefat .column-image img {
+	max-width: 100%;
+	max-height: 100%;
+	width: auto;
+	height: auto;
+}
+
 #wpsc_product_list .column-categories,
 table.widefat .column-categories {
 	padding-right:18px;
