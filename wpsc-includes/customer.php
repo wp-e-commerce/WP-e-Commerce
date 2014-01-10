@@ -126,8 +126,10 @@ function _wpsc_create_customer_id_cookie( $id, $fake_it = false ) {
  * @return mixed Return the customer ID if the cookie is valid, false if otherwise.
  */
 function _wpsc_validate_customer_cookie() {
-	if ( is_admin() || ! isset( $_COOKIE[ WPSC_CUSTOMER_COOKIE ] ) )
+
+	if ( is_admin() || ! isset( $_COOKIE[ WPSC_CUSTOMER_COOKIE ] ) ) {
 		return false;
+	}
 
 	$cookie = $_COOKIE[ WPSC_CUSTOMER_COOKIE ];
 	list( $id, $expire, $hash ) = $x = explode( '|', $cookie );
@@ -136,22 +138,25 @@ function _wpsc_validate_customer_cookie() {
 	$id = intval( $id );
 
 	// invalid ID
-	if ( ! $id )
+	if ( ! $id ) {
 		return false;
+	}
 
 	$user = get_user_by( 'id', $id );
 
 	// no user found
-	if ( $user === false )
+	if ( $user === false ) {
 		return false;
+	}
 
 	$pass_frag = substr( $user->user_pass, 8, 4 );
 	$key       = wp_hash( $user->user_login . $pass_frag . '|' . $expire );
 	$hmac      = hash_hmac( 'md5', $data, $key );
 
 	// integrity check
-	if ( $hmac == $hash )
+	if ( $hmac == $hash ) {
 		return $id;
+	}
 
 	_wpsc_set_customer_cookie( '', time() - 3600 );
 	return false;
@@ -202,15 +207,13 @@ function _wpsc_action_setup_customer() {
 	// it's time to merge the carts
 	if ( isset( $_COOKIE[WPSC_CUSTOMER_COOKIE] ) && is_user_logged_in() ) {
 		// merging cart requires the taxonomies to have been initialized
-		if ( did_action( 'wpsc_register_taxonomies_after' ) )
+		if ( did_action( 'wpsc_register_taxonomies_after' ) ) {
 			_wpsc_merge_cart();
-		else
+		}
+		else {
 			add_action( 'wpsc_register_taxonomies_after', '_wpsc_merge_cart', 1 );
+		}
 	}
-
-	// if the user is logged in and the cookie is still there, delete the cookie
-	if ( is_user_logged_in() && isset( $_COOKIE[WPSC_CUSTOMER_COOKIE] ) )
-
 
 	// if this request is by a bot, prevent multiple account creation
 	_wpsc_maybe_setup_bot_user();
@@ -226,13 +229,15 @@ function _wpsc_action_setup_customer() {
 
 function _wpsc_merge_cart() {
 	$old_id = _wpsc_validate_customer_cookie();
-	if ( ! $old_id )
+
+	if ( ! $old_id ) {
 		return;
+	}
 
 	$new_id = get_current_user_id();
 
 	$old_cart = wpsc_get_customer_cart( $old_id );
-	$items = $old_cart->get_items();
+	$items    = $old_cart->get_items();
 
 	$new_cart = wpsc_get_customer_cart( $new_id );
 
