@@ -506,7 +506,11 @@ class ash_usps {
 	 * @param string $response Reference to the $response string
 	 */
 	function _clean_response( &$response ) {
+		$response = str_replace('&amp;lt;sup&amp;gt;&amp;#174;&amp;lt;/sup&amp;gt;', '&reg;', $response);
+		$response = str_replace('&amp;lt;sup&amp;gt;&amp;#8482;&amp;lt;/sup&amp;gt;', '&trade;', $response);
 		$response = html_entity_decode( html_entity_decode( $response ) );
+
+		return $response;
 	}
 
 	/**
