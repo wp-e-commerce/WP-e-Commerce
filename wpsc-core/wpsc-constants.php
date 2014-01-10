@@ -256,12 +256,7 @@ function wpsc_core_setup_cart() {
 	if ( 2 == get_option( 'cart_location' ) )
 		add_filter( 'the_content', 'wpsc_shopping_cart', 14 );
 
-	$cart = maybe_unserialize( base64_decode( wpsc_get_customer_meta( 'cart' ) ) );
-
-	if ( is_object( $cart ) && ! is_wp_error( $cart ) )
-		$GLOBALS['wpsc_cart'] = $cart;
-	else
-		$GLOBALS['wpsc_cart'] = new wpsc_cart();
+	$GLOBALS['wpsc_cart'] = wpsc_get_customer_cart();
 }
 
 /**
