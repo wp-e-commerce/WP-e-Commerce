@@ -127,7 +127,7 @@ function _wpsc_create_customer_id_cookie( $id, $fake_it = false ) {
  */
 function _wpsc_validate_customer_cookie() {
 	if ( is_admin() || ! isset( $_COOKIE[ WPSC_CUSTOMER_COOKIE ] ) )
-		return;
+		return false;
 
 	$cookie = $_COOKIE[ WPSC_CUSTOMER_COOKIE ];
 	list( $id, $expire, $hash ) = $x = explode( '|', $cookie );
@@ -195,12 +195,22 @@ function wpsc_get_current_customer_id() {
  * @since  3.8.13
  */
 function _wpsc_action_setup_customer() {
+	// if the customer cookie is invalid, unset it
+	$id = _wpsc_validate_customer_cookie();
+
+	// if a valid ID is present in the cookie, and the user is logged in,
+	// it's time to merge the carts
+	if ( isset( $_COOKIE[WPSC_CUSTOMER_COOKIE] ) && is_user_logged_in() ) {
+		// merging cart requires the taxonomies to have been initialized
+		if ( did_action( 'wpsc_register_taxonomies_after' ) )
+			_wpsc_merge_cart();
+		else
+			add_action( 'wpsc_register_taxonomies_after', '_wpsc_merge_cart', 1 );
+	}
+
 	// if the user is logged in and the cookie is still there, delete the cookie
 	if ( is_user_logged_in() && isset( $_COOKIE[WPSC_CUSTOMER_COOKIE] ) )
-		_wpsc_set_customer_cookie( '', time() - 3600 );
 
-	// if the customer cookie is invalid, unset it
-	_wpsc_validate_customer_cookie();
 
 	// if this request is by a bot, prevent multiple account creation
 	_wpsc_maybe_setup_bot_user();
@@ -212,6 +222,62 @@ function _wpsc_action_setup_customer() {
 	wpsc_core_setup_cart();
 
 	do_action( 'wpsc_setup_customer' );
+}
+
+function _wpsc_merge_cart() {
+	$old_id = _wpsc_validate_customer_cookie();
+	if ( ! $old_id )
+		return;
+
+	$new_id = get_current_user_id();
+
+	$old_cart = wpsc_get_customer_cart( $old_id );
+	$items = $old_cart->get_items();
+
+	$new_cart = wpsc_get_customer_cart( $new_id );
+
+	// first of all empty the old cart so that the claimed stock and related
+	// hooks are released
+	$old_cart->empty_cart();
+
+	// add each item to the new cart
+	foreach ( $items as $item ) {
+		$new_cart->set_item( $item->product_id, array(
+			'quantity'         => $item->quantity,
+			'variation_values' => $item->variation_values,
+			'custom_message'   => $item->custom_message,
+			'provided_price'   => $item->provided_price,
+			'time_requested'   => $item->time_requested,
+			'custom_file'      => $item->custom_file,
+			'is_customisable'  => $item->is_customisable,
+			'meta'             => $item->meta
+		) );
+	}
+
+	require_once( ABSPATH . 'wp-admin/includes/user.php' );
+	wp_delete_user( $old_id );
+
+	_wpsc_set_customer_cookie( '', time() - 3600 );
+}
+
+function wpsc_get_customer_cart( $id = false ) {
+	global $wpsc_cart;
+
+	if ( ! empty( $wpsc_cart ) && ( ! $id || $id == wpsc_get_current_customer_id() ) )
+		return $wpsc_cart;
+
+	$cart = maybe_unserialize( base64_decode( wpsc_get_customer_meta( 'cart', $id ) ) );
+	if ( empty( $cart ) || ! $cart instanceof wpsc_cart )
+		$cart = new wpsc_cart();
+
+	return $cart;
+}
+
+function wpsc_update_customer_cart( $cart, $id = false ) {
+	if ( ! $id || $id == wpsc_get_current_customer_id() )
+		return wpsc_serialize_shopping_cart();
+
+	return wpsc_update_customer_meta( 'cart', base64_encode( serialize( $wpsc_cart ) ), $id );
 }
 
 /**
