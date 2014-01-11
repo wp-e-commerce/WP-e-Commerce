@@ -4,7 +4,7 @@ Donate link: http://getshopped.org
 Tags: e-commerce, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
 Requires at least: 3.7
 Tested up to: 3.8
-Stable tag: 3.8.14-dev
+Stable tag: 3.8.13.2
 
 WP e-Commerce is a free WordPress Shopping Cart Plugin that lets customers buy your products, services and digital downloads online.
 
@@ -146,15 +146,13 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 == Changelog ==
 
-= 3.8.14 =
-
-* New:
-* Change:
-* Fix:
+= 3.8.13.2 =
+* Fix: Anonymous customers should not be visible in admin UI.
+* Fix: Cronjob to purge anonymous customers doesn't work due to memory issues.
+* Fix: Anonymous cart items will be lost after signing in.
 
 = 3.8.13.1 =
-
-* Security and maintenance release.
+* Security and maintenance release
 
 = 3.8.13 =
 
