@@ -122,7 +122,7 @@ function wpsc_meta_migrate( $meta_object_type ) {
 
 	foreach ( $old_meta_rows as $old_meta_row ) {
 		$meta_data = maybe_unserialize( $old_meta_row->meta_value );
-		add_metadata( $meta_object_type, $old_meta_row->object_id, $old_meta_row->meta_key, $meta_data, false );
+		add_metadata( 'wpsc_' . $meta_object_type, $old_meta_row->object_id, $old_meta_row->meta_key, $meta_data, false );
 	}
 }
 
