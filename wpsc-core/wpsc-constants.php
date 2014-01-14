@@ -32,7 +32,7 @@ function wpsc_core_constants() {
 	define( 'WPSC_VERSION'            , '3.8.14-dev' );
 	define( 'WPSC_MINOR_VERSION'      , 'e8a508c011' );
 	define( 'WPSC_PRESENTABLE_VERSION', '3.8.14-dev' );
-	define( 'WPSC_DB_VERSION'         , 8 );
+	define( 'WPSC_DB_VERSION'         , 9 );
 
 	// Define Debug Variables for developers
 	define( 'WPSC_DEBUG'        , false );
@@ -163,6 +163,7 @@ function wpsc_core_constants_table_names() {
 	define( 'WPSC_TABLE_REGION_TAX',             "{$wp_table_prefix}wpsc_region_tax" );
 
 	define( 'WPSC_TABLE_CART_ITEM_META',         "{$wp_table_prefix}wpsc_cart_item_meta" );
+	define( 'WPSC_TABLE_PURCHASE_META',          "{$wp_table_prefix}wpsc_purchase_meta" );
 }
 
 /**
