@@ -167,7 +167,7 @@ function wpsc_get_purchase_custom_values( $metakey = '', $purchase_id = 0 ) {
 
 	$custom = get_purchase_custom( $purchase_id );
 
-	return isset( $custom[$key] ) ? $custom[$key] : null;
+	return isset( $custom[ $key ] ) ? $custom[ $key ] : null;
 }
 
 /**
