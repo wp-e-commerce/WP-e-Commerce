@@ -140,11 +140,12 @@ function wpsc_get_purchase_custom( $purchase_id = 0 ) {
 function wpsc_get_purchase_custom_keys( $purchase_id = 0 ) {
 	$custom = wpsc_get_purchase_custom( $purchase_id );
 
-	if ( ! is_array( $custom ) )
+	if ( ! is_array( $custom ) ) {
 		return;
-
-	if ( $keys = array_keys( $custom ) )
+	}
+	if ( $keys = array_keys( $custom ) ) {
 		return $keys;
+	}
 }
 
 /**
@@ -162,9 +163,9 @@ function wpsc_get_purchase_custom_keys( $purchase_id = 0 ) {
  */
 function wpsc_get_purchase_custom_values( $metakey = '', $purchase_id = 0 ) {
 
-	if ( ! $key )
+	if ( ! $key ) {
 		return null;
-
+	}
 	$custom = wpsc_get_purchase_custom( $purchase_id );
 
 	return isset( $custom[ $key ] ) ? $custom[ $key ] : null;
