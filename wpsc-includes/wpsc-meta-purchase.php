@@ -123,7 +123,7 @@ function wpsc_delete_purchase_meta_by_key( $purchase_meta_key ) {
  */
 function wpsc_get_purchase_custom( $purchase_id = 0 ) {
 	$purchase_id = absint( $purchase_id );
-	return get_purchase_meta( $purchase_id );
+	return wpsc_get_purchase_meta( $purchase_id );
 }
 
 /**
@@ -138,7 +138,7 @@ function wpsc_get_purchase_custom( $purchase_id = 0 ) {
  * @return array|null Either array of the keys, or null if keys could not be retrieved.
  */
 function wpsc_get_purchase_custom_keys( $purchase_id = 0 ) {
-	$custom = get_purchase_custom( $purchase_id );
+	$custom = wpsc_get_purchase_custom( $purchase_id );
 
 	if ( ! is_array( $custom ) )
 		return;
@@ -165,7 +165,7 @@ function wpsc_get_purchase_custom_values( $metakey = '', $purchase_id = 0 ) {
 	if ( ! $key )
 		return null;
 
-	$custom = get_purchase_custom( $purchase_id );
+	$custom = wpsc_get_purchase_custom( $purchase_id );
 
 	return isset( $custom[ $key ] ) ? $custom[ $key ] : null;
 }
