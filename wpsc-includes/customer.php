@@ -563,8 +563,9 @@ function _wpsc_is_bot_user() {
  * @return int
  */
 function _wpsc_extract_user_count( $view ) {
-	if ( preg_match( '/class="count">\((\d+)\)/', $view, $matches ) ) {
-		return absint( $matches[1] );
+	global $wp_locale;
+	if ( preg_match( '/class="count">\((.+)\)/', $view, $matches ) ) {
+		return absint( str_replace( $wp_locale->number_format['thousands_sep'], '', $matches[1] ) );
 	}
 
 	return 0;
@@ -586,7 +587,7 @@ function _wpsc_filter_views_users( $views ) {
 		$anon_count = _wpsc_extract_user_count( $views['wpsc_anonymous'] );
 		$all_count = _wpsc_extract_user_count( $views['all'] );
 		$new_count = $all_count - $anon_count;
-		$views['all'] = str_replace( "(${all_count})", "(${new_count})", $views['all'] );
+		$views['all'] = preg_replace( '/class="count">\(.+\)/', 'class="count">(' . number_format_i18n( $new_count ) . ')', $views['all'] );
 	}
 
 	unset( $views['wpsc_anonymous'] );
