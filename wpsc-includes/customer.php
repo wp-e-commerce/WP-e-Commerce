@@ -617,9 +617,14 @@ function _wpsc_action_pre_user_query( $query ) {
 	if ( ! empty( $query->query_vars['role'] ) )
 		return;
 
-	// if the site is multisite, a JOIN is already done
+	// if the site is multisite, we need to do things a bit differently
 	if ( is_multisite() ) {
-		$query->query_where .= " AND CAST($wpdb->usermeta.meta_value AS CHAR) NOT LIKE '%" . like_escape( '"wpsc_anonymous"' ) . "%'";
+		// on Network Admin, a JOIN with usermeta is not possible (some users don't have capabilities set, so we fall back to matching user_login, although this is not ideal)
+		if ( empty( $query->query_vars['blog_id'] ) ) {
+			$query->query_where .= " AND $wpdb->users.user_login NOT LIKE '\_________'";
+		} else {
+			$query->query_where .= " AND CAST($wpdb->usermeta.meta_value AS CHAR) NOT LIKE '%" . like_escape( '"wpsc_anonymous"' ) . "%'";
+		}
 		return;
 	}
 
