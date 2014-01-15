@@ -185,30 +185,71 @@ jQuery(document).ready(function(){
 		}
 	});
 
-	//new currency JS in admin product page
+	/*
+	Alternative Currencies
+	Trigger and handle UI events for adding and removing currency layers.
+	*/
 
-	var firstclick = true;
+	var currencyRowTemplate = jQuery( '.wpsc-currency-layers tr.template' ).remove().removeClass( 'template hidden' ).removeAttr( 'id' );
 
-	jQuery('#wpsc_price_control_forms').on( 'click', 'a.wpsc_add_new_currency', function( event ){
-			if(firstclick == true){
-				jQuery('div.new_layer').first().show();
-				html = jQuery('div.new_layer').html();
-				firstclick = false;
-			}else{
-				jQuery('a.wpsc_add_new_currency').before('<div class="new_layer">'+html+'</div>');
-			}
-			event.preventDefault();
+	// Hide table if empty
+	if ( jQuery( '.wpsc-currency-layers tbody tr' ).length == 0 ) {
+		jQuery( '.wpsc-currency-layers table' ).hide();
+	}
+
+	// Add new currency layer
+	jQuery( '.wpsc-currency-layers' ).on( 'click', 'a.wpsc_add_new_currency', function( e ) {
+		jQuery( this ).siblings( 'table' ).show();
+		jQuery( '.wpsc-currency-layers tbody' ).append( currencyRowTemplate.clone() );
+		e.preventDefault();
 	});
 
-	//delete currency layer in admin product page
-	jQuery('#wpsc_price_control_forms').on( 'click', 'a.wpsc_delete_currency_layer', function(event){
-			jQuery(this).prev('input').val('');
-			jQuery(this).prev('select').val('');
-			jQuery(this).parent('div:first').remove();
-			event.preventDefault();
+	// Delete currency layer in admin product page
+	jQuery( '.wpsc-currency-layers' ).on( 'click', 'a.wpsc_delete_currency_layer', function( e ) {
+		var currencyRow = jQuery( this ).closest( 'tr' );
+		currencyRow.find( 'input' ).val( '' );
+		currencyRow.find( 'select' ).val( '' );
+		if ( currencyRow.siblings().length == 0 ) {
+			currencyRow.closest( 'table' ).hide();
+		}
+		currencyRow.remove();
+		e.preventDefault();
 	});
 
-	//As far as I can tell, WP provides no good way of unsetting elements in the bulk edit area...tricky jQuery action will do for now....not ideal whatsoever, nor eternally stable.
+	/*
+	Quantity Discounts
+	Trigger and handle UI events for adding and removing quantity dicounts.
+	*/
+
+	var qtyRowTemplate = jQuery( '.wpsc-quantity-discounts tr.template' ).remove().removeClass( 'template hidden' ).removeAttr( 'id' );
+
+	// Hide table if empty
+	if ( jQuery( '.wpsc-quantity-discounts tbody tr' ).length == 0 ) {
+		jQuery( '.wpsc-quantity-discounts table' ).hide();
+	}
+
+	// Add new row to rate table
+	jQuery( '.wpsc-quantity-discounts' ).on( 'click', '.add_level', function( e ) {
+		jQuery( this ).siblings( 'table' ).show();
+		added = jQuery( '.wpsc-quantity-discounts tbody' ).append( qtyRowTemplate.clone() );
+		e.preventDefault();
+	});
+
+	// Remove a row from rate table
+	jQuery( '.wpsc-quantity-discounts' ).on( 'click', '.remove_line', function( e ) {
+		var qtyRow = jQuery( this ).closest( 'tr' );
+		qtyRow.find( 'input' ).val( '' );
+		if ( qtyRow.siblings().length == 0 ) {
+			qtyRow.closest( 'table' ).hide();
+		}
+		qtyRow.remove();
+		e.preventDefault();
+	});
+
+	/*
+	As far as I can tell, WP provides no good way of unsetting elements in the bulk edit area...
+	tricky jQuery action will do for now....not ideal whatsoever, nor eternally stable.
+	*/
 	 if( pagenow == 'edit-wpsc-product' ) {
 		jQuery('.inline-edit-password-input').closest('.inline-edit-group').css('display', 'none');
 		var vcl = jQuery('.inline-edit-col input[name="tax_input[wpsc-variation][]"]').css('display', 'none');
@@ -271,20 +312,6 @@ jQuery(document).ready(function(){
 				jQuery("#custom_tax input").val('');
 				jQuery("#custom_tax").hide();
 			}
-	});
-
-	// RATE TABLE
-	var sample_qd = jQuery('#sample_qd').remove().removeAttr('id');
-
-	// Add new row to rate table
-	jQuery( 'div#table_rate' ).on( 'click', '.add_level', function(){
-		added = jQuery('#table_rate tbody').append(sample_qd.clone());
-	});
-
-	// Remove a row from rate table
-	jQuery( 'div#table_rate' ).on( 'click', '.remove_line', function(){
-		jQuery(this).parent().parent('tr').remove();
-		event.preventDefault();
 	});
 
 	jQuery( '.wpsc_featured_product_toggle' ).on( 'click', function(){
