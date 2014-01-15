@@ -1742,3 +1742,33 @@ function wpsc_get_exchange_rate( $from, $to ) {
 	_wpsc_deprecated_function( __FUNCTION__, '3.8.13' );
 	return _wpsc_get_exchange_rate( $from, $to );
 }
+
+
+/**
+ * @access public
+ * @param unknown $stuff
+ * @param unknown $post_ID
+ * @return string
+ * @deprecated since 3.8.13.3
+ */
+function wpsc_the_featured_image_fix( $stuff, $post_ID ){
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.13.2', 'wpsc_the_featured_image_fix');
+	global $wp_query;
+
+	$is_tax = is_tax( 'wpsc_product_category' );
+
+	$queried_object = get_queried_object();
+	$is_single = is_single() && $queried_object->ID == $post_ID && get_post_type() == 'wpsc-product';
+
+	if ( $is_tax || $is_single ) {
+		$header_image = get_header_image();
+		$stuff = '';
+
+		if ( $header_image )
+			$stuff = '<img src="' . esc_url( $header_image ) . '" width="' . HEADER_IMAGE_WIDTH . '" height="' . HEADER_IMAGE_HEIGHT . '" alt="" />';
+	}
+
+	remove_action('post_thumbnail_html','wpsc_the_featured_image_fix');
+
+	return $stuff;
+}
