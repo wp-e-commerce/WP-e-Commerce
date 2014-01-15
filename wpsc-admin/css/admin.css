@@ -872,6 +872,7 @@ div#side-sortables input[type="file"] {
 	overflow-x: hidden;
 	overflow-y: auto;
 	position: relative;
+	width: 100%;
 }
 
 span.select_product_note {
