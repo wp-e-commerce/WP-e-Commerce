@@ -504,27 +504,36 @@ function _wpsc_action_update_customer_last_active() {
  * @since  3.8.13
  */
 function _wpsc_is_bot_user() {
-	if ( is_user_logged_in() )
-		return false;
 
-	if ( strpos( $_SERVER['REQUEST_URI'], '?wpsc_action=rss' ) )
+	$is_bot = false;
+
+	if ( is_user_logged_in() ) {
+		return false;
+	}
+
+	if ( strpos( $_SERVER['REQUEST_URI'], '?wpsc_action=rss' ) ) {
 		return true;
+	}
 
 	// Cron jobs are not flesh originated
-	if ( defined('DOING_CRON') && DOING_CRON )
+	if ( defined('DOING_CRON') && DOING_CRON ) {
 		return true;
+	}
 
 	// XML RPC requests are probably from cybernetic beasts
-	if ( defined('XMLRPC_REQUEST') && XMLRPC_REQUEST )
+	if ( defined('XMLRPC_REQUEST') && XMLRPC_REQUEST ) {
 		return true;
+	}
 
 	// coming to login first, after the user logs in we know they are a live being, until then they are something else
-	if ( strpos( $_SERVER['PHP_SELF'], 'wp-login' ) || strpos( $_SERVER['PHP_SELF'], 'wp-register' ) )
+	if ( strpos( $_SERVER['PHP_SELF'], 'wp-login' ) || strpos( $_SERVER['PHP_SELF'], 'wp-register' ) ) {
 		return true;
+	}
 
 	// even web servers talk to themselves when they think no one is listening
-	if ( stripos( $_SERVER['HTTP_USER_AGENT'], 'wordpress' ) !== false )
+	if ( stripos( $_SERVER['HTTP_USER_AGENT'], 'wordpress' ) !== false ) {
 		return true;
+	}
 
 	// the user agent could be google bot, bing bot or some other bot,  one would hope real user agents do not have the
 	// string 'bot|spider|crawler|preview' in them, there are bots that don't do us the kindness of identifying themselves as such,
@@ -539,15 +548,17 @@ function _wpsc_is_bot_user() {
 
 	$pattern = '/(' . implode( '|', $bot_agents_patterns ) . ')/i';
 
-	if ( preg_match( $pattern, $_SERVER['HTTP_USER_AGENT'] ) )
+	if ( preg_match( $pattern, $_SERVER['HTTP_USER_AGENT'] ) ) {
 		return true;
+	}
 
 	// Are we feeding the masses?
-	if ( is_feed() )
+	if ( is_feed() ) {
 		return true;
+	}
 
 	// at this point we have eliminated all but the most obvious choice, a human (or cylon?)
-	return false;
+	return apply_filters( 'wpsc_is_bot_user', false );
 }
 
 /**
