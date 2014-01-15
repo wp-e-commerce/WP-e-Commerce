@@ -846,12 +846,13 @@ div#side-sortables input[type="file"] {
 }
 .select_product_file,
 .edit_select_product_file {
- 	margin-bottom:0;
- 	margin-top:3px;
- 	overflow-x:hidden;
- 	overflow-y:auto;
- 	position:relative;
- }
+	margin-bottom: 0;
+	margin-top: 3px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	position: relative;
+	width: 100%;
+}
 
 span.select_product_note {
 	margin: 0 0 5px;
