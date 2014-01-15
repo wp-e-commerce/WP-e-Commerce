@@ -347,26 +347,96 @@ table.widefat tbody tr td.product-image img {
 	cursor: move;
 }
 
-.newCurrency {
-	width: 50%;
-	word-wrap: break-word;
-	height: auto;
+
+/**
+ * Product Currency and Quantity Discount Layers
+ */
+
+.wpsc-currency-layers {
+	clear: both;
+	margin: 0 0 15px 0;
+	padding: 15px 0 0 0;
 }
 
-.newCurrPrice {
+.wpsc-quantity-discounts {
+	clear: both;
+	margin: 0 0 20px 0;
+}
+
+.wpsc-currency-layers table,
+.wpsc-quantity-discounts table {
+	border-collapse: collapse;
+	margin: 10px 0;
+	width: 100%;
+}
+
+.wpsc-quantity-discounts table {
+	margin-top: 20px;
+}
+
+.wpsc-currency-layers th,
+.wpsc-quantity-discounts th {
+	font-weight: normal;
+	text-align: left;
+	vertical-align: bottom;
+}
+
+.wpsc-currency-layers th.price,
+.wpsc-quantity-discounts th.price {
 	width: 30%;
 }
 
-.wpsc_delete_currency_layer {
-	text-decoration: none;
-	display: block-inline;
-	color: red;
-	font-weight: bold;
-	text-align: center;
+.wpsc-quantity-discounts th.qty {
+	width: 40%;
 }
 
-.wpsc_delete_currency_layer:hover {
-	text-decoration: underline;
+.wpsc-quantity-discounts td {
+	line-height: 28px;
+}
+
+.wpsc-quantity-discounts td.curr {
+	text-align: right;
+}
+
+.wpsc-currency-layers th.remove,
+.wpsc-quantity-discounts th.remove {
+	width: 20px;
+}
+
+.wpsc-currency-layers td,
+.wpsc-quantity-discounts td {
+	padding: 3px 2px 3px 0px;
+}
+
+.wpsc-currency-layers .newCurrency {
+	margin: 0px;
+	width: 95%;
+}
+
+.wpsc-quantity-discounts .qty input {
+	width: 4em;
+}
+
+.wpsc-currency-layers .newCurrPrice,
+.wpsc-quantity-discounts .newCurrPrice {
+	width: 100%;
+}
+
+.wpsc_delete_currency_layer,
+.wpsc-quantity-discounts .remove_line {
+	color: #bbb;
+	display: block-inline;
+	font size: 16px;
+	line-height: 20px;
+	margin: 4px 0 0 0;
+	text-align: center;
+	width: 20px;
+	height: 20px;
+}
+
+.wpsc_delete_currency_layer:hover,
+.wpsc-quantity-discounts .remove_line:hover {
+	color: #c00;
 }
 
 div.wpsc_floatleft {
@@ -375,8 +445,8 @@ div.wpsc_floatleft {
 }
 
 div.wpsc_floatleft label {
-    line-height: 18px;
-    white-space: nowrap;
+	line-height: 18px;
+	white-space: nowrap;
 }
 
 
@@ -2139,17 +2209,6 @@ body.edit-tags-php img.wpsc_category_image {
 	display: inline;
 }
 
-.remove_line {
-	color: red;
-	text-decoration: none;
-	text-align: center;
-	font-weight: bold;
-}
-
-.remove_line:hover {
-	text-decoration: underline;
-}
-
 
 /**
  * Live Title Meta Box
@@ -2192,10 +2251,6 @@ body.edit-tags-php img.wpsc_category_image {
 	overflow: visible !important;
 	padding-top: 5px !important;
 	padding-bottom: 5px !important;
-}
-
-#table_rate td {
-	padding-bottom: 10px;
 }
 
 
