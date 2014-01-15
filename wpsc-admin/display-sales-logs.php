@@ -301,11 +301,11 @@ class WPSC_Purchase_Log_Page {
 
 		register_column_headers( 'wpsc_purchase_log_item_details', $columns );
 
-
-		if ( file_exists(get_stylesheet_directory() . '/packing-slip.php' ) )
-			include( get_stylesheet_directory() . '/packing-slip.php' );
-		else
+		if ( file_exists( get_stylesheet_directory() . '/wpsc-packing-slip.php' ) ) {
+			include( get_stylesheet_directory() . '/wpsc-packing-slip.php' );
+		} else {
 			include( 'includes/purchase-logs-page/packing-slip.php' );
+		}
 
 		exit;
 	}
