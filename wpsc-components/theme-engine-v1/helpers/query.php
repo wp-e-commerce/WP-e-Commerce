@@ -168,7 +168,7 @@ function _wpsc_pre_get_posts_reset_taxonomy_globals( $query ) {
  * wpsc_start_the_query
  */
 function wpsc_start_the_query() {
-	global $wpsc_page_titles, $wp_query, $wpsc_query, $wpsc_query_vars;
+	global $wp_query, $wpsc_query, $wpsc_query_vars;
 
 	$is_404 = false;
 	if ( null == $wpsc_query ) {
@@ -184,11 +184,11 @@ function wpsc_start_the_query() {
 				$wpsc_query_vars['wpsc_product_category'] = $wp_query->query_vars['name'];
 		}
 		if ( count( $wpsc_query_vars ) <= 1 ) {
-			$post_type_object = get_post_type_object( 'wpsc-product' );
 			$wpsc_query_vars = array(
 				'post_status' => apply_filters( 'wpsc_product_display_status', array( 'publish' ) ),
 				'post_parent' => 0,
-				'order'       => apply_filters( 'wpsc_product_order', get_option( 'wpsc_product_order', 'ASC' ) )
+				'order'       => apply_filters( 'wpsc_product_order', get_option( 'wpsc_product_order', 'ASC' ) ),
+				'post_type'   => apply_filters( 'wpsc_product_post_type', array( 'wpsc-product') ),
 			);
 			if($wp_query->query_vars['preview'])
 				$wpsc_query_vars['post_status'] = 'any';
