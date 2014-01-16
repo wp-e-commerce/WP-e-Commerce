@@ -240,7 +240,7 @@ class WPSC_Purchase_Log_Page {
 			<td class="amount"><?php echo wpsc_currency_display( wpsc_purchaselog_details_total() ); ?></td> <!-- TOTAL! -->
 		</tr>
 		<?php
-		do_action( 'wpsc_additional_sales_item_info' );
+		do_action( 'wpsc_additional_sales_item_info', wpsc_purchaselog_details_id() );
 		endwhile;
 	}
 
