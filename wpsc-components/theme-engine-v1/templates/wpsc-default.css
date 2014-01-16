@@ -1059,6 +1059,11 @@ background-color: #f5f5f5;
 	display:none;
 }
 
+.wpsc_gateway_container .custom_gateway_image {
+	position: relative;
+	top: 5px;
+}
+
 .wpsc_no_image{
 	display: none;
 }
