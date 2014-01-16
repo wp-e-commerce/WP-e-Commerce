@@ -168,7 +168,7 @@ function _wpsc_pre_get_posts_reset_taxonomy_globals( $query ) {
  * wpsc_start_the_query
  */
 function wpsc_start_the_query() {
-	global $wp_query, $wpsc_query, $wpsc_query_vars;
+	global $wpsc_page_titles, $wp_query, $wpsc_query, $wpsc_query_vars;
 
 	$is_404 = false;
 	if ( null == $wpsc_query ) {
