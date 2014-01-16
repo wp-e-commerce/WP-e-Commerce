@@ -261,7 +261,7 @@ function wpsc_price_control_forms() {
 									<td class="remove"><a href="#" class="remove_line<?php echo $currency_delete_class; ?>"><?php echo $currency_delete_text; ?></a></td>
 									<td class="qty">
 										<input type="text" size="5" value="<?php echo $quantity; ?>" name="table_rate_price[quantity][]" />
-										<span class="description"><?php esc_html_e( 'and above', 'wpsc' ); ?></span>
+										<?php esc_html_e( '+', 'wpsc' ); ?>
 									</td>
 									<td class="curr"><?php echo $ct_code . ' ' . $ct_symb; ?></td>
 									<td><input type="number" size="10" min="0" step="0.1" class="newCurrPrice text" value="<?php echo $table_price; ?>" name="table_rate_price[table_price][]" /></td>
@@ -283,6 +283,7 @@ function wpsc_price_control_forms() {
 				</tbody>
 			</table>
 			<a href="#wpsc_quantity_discount_row_template" class="add_level button button-small"><?php esc_html_e( 'Add a Quantity Discount', 'wpsc' ); ?></a>
+			<?php wp_nonce_field( 'update-options', 'wpsc-update-quantity-discounts', false ); ?>
 		</div>
 
 		<input id="add_form_donation" type="checkbox" name="meta[_wpsc_is_donation]" value="yes" <?php checked( $product_data['meta']['_wpsc_is_donation'], 1 ); ?> />
