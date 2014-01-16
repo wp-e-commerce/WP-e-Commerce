@@ -188,7 +188,7 @@ function wpsc_start_the_query() {
 				'post_status' => apply_filters( 'wpsc_product_display_status', array( 'publish' ) ),
 				'post_parent' => 0,
 				'order'       => apply_filters( 'wpsc_product_order', get_option( 'wpsc_product_order', 'ASC' ) ),
-				'post_type'   => apply_filters( 'wpsc_product_post_type', array( 'wpsc-product') ),
+				'post_type'   => apply_filters( 'wpsc_product_post_type', array( 'wpsc-product' ) ),
 			);
 			if($wp_query->query_vars['preview'])
 				$wpsc_query_vars['post_status'] = 'any';
