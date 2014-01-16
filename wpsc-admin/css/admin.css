@@ -2504,3 +2504,22 @@ a.wpsc_remove_meta {
 	padding-bottom: 5px;
 }
 
+.branch-3-7 .wpsc-currency-layers td.remove a,
+.branch-3-7 .wpsc-quantity-discounts td.remove a,
+.branch-3-6 .wpsc-currency-layers td.remove a,
+.branch-3-6 .wpsc-quantity-discounts td.remove a {
+	background: url(xit.gif) no-repeat 0 0;
+	display: inline-block;
+	margin-top: 7px;
+	overflow: hidden;
+	text-indent: -999px;
+	width: 10px;
+	height: 10px;
+}
+
+.branch-3-7 .wpsc-currency-layers td.remove a:hover,
+.branch-3-7 .wpsc-quantity-discounts td.remove a:hover,
+.branch-3-6 .wpsc-currency-layers td.remove a:hover,
+.branch-3-6 .wpsc-quantity-discounts td.remove a:hover {
+	background-position: -10px 0;
+}

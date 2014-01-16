@@ -206,7 +206,7 @@ function wpsc_price_control_forms() {
 							$i++;
 							?>
 							<tr class="wpsc_additional_currency">
-								<td class="remove"><a href="#" class="wpsc_delete_currency_layer<?php echo $currency_delete_class; ?>" rel="<?php echo $iso; ?>"><?php if ( ! $wp_38 ) : ?><img src="<?php echo WPSC_CORE_IMAGES_URL; ?>/cross.png" /><?php endif; ?></a></td>
+								<td class="remove"><a href="#" class="wpsc_delete_currency_layer<?php echo $currency_delete_class; ?>" rel="<?php echo $iso; ?>"><?php echo $currency_delete_text; ?></a></td>
 								<td>
 									<select name="newCurrency[]" class="newCurrency">
 										<?php foreach ( $currency_data as $currency ) : ?>
