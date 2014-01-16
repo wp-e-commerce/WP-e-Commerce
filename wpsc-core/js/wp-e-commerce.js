@@ -309,7 +309,7 @@ jQuery(document).ready(function ($) {
 	// update the price when the variations are altered.
 	jQuery( 'div.wpsc_variation_forms' ).on( 'change', '.wpsc_select_variation', function() {
 		jQuery('option[value="0"]', this).attr('disabled', 'disabled');
-		self = this;
+		var self = this;
 		var parent_form = jQuery(this).closest("form.product_form");
 		if ( parent_form.length === 0 )
 			return;
