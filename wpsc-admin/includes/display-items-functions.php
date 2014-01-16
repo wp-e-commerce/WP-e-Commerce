@@ -238,6 +238,7 @@ function wpsc_price_control_forms() {
 				</tbody>
 			</table>
 			<a href="#wpsc_currency_row_template" class="button button-small wpsc_add_new_currency"><?php esc_html_e( 'Add a Currency Option', 'wpsc' ); ?></a>
+			<?php wp_nonce_field( 'update-options', 'wpsc-update-currency-layers', false ); ?>
 		</div>
 
 		<div class="wpsc-quantity-discounts">

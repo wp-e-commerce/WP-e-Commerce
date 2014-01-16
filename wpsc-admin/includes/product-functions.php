@@ -186,10 +186,16 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 	// and the custom meta
 	wpsc_update_custom_meta($product_id, $post_data);
 
-	//and the alt currency
-	if ( ! empty( $post_data['newCurrency'] ) ) {
-		foreach( (array) $post_data['newCurrency'] as $key =>$value ){
-			wpsc_update_alt_product_currency( $product_id, $value, $post_data['newCurrPrice'][$key] );
+	// Update the alternative currencies
+	if ( isset( $post_data['wpsc-update-currency-layers'] ) && wp_verify_nonce( $post_data['wpsc-update-currency-layers'], 'update-options' ) ) {
+		
+		// Clear currencies before re-saving to make sure deleted currencies are removed
+		update_product_meta( $product_id, 'currency', array() );
+
+		if ( ! empty( $post_data['newCurrency'] ) ) {
+			foreach( (array) $post_data['newCurrency'] as $key =>$value ) {
+				wpsc_update_alt_product_currency( $product_id, $value, $post_data['newCurrPrice'][ $key ] );
+			}
 		}
 	}
 
