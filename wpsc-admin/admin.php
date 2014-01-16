@@ -1060,7 +1060,7 @@ function wpsc_dashboard_4months_widget() {
 	$timeranges[2]["start"] = mktime( 0, 0, 0, $this_month - 1, 1, $this_year );
 	$timeranges[2]["end"] = mktime( 0, 0, 0, $this_month, 1, $this_year );
 	$timeranges[3]["start"] = mktime( 0, 0, 0, $this_month, 1, $this_year );
-	$timeranges[3]["end"] = mktime();
+	$timeranges[3]["end"] = time(); // using mktime here can generate a php runtime warning
 
 	$prod_data = array( );
 	foreach ( (array)$products as $product ) { //run through products and get each product income amounts and name
