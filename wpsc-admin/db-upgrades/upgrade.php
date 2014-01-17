@@ -14,7 +14,7 @@
  * @since 3.8.9
  */
 function _wpsc_maybe_upgrade() {
-	$current_db_ver = (int) get_option( 'wpsc_db_version', 0 );
+	$current_db_ver = 9;//(int) get_option( 'wpsc_db_version', 0 );
 
 	if ( ! _wpsc_needs_upgrade() )
 		return;
@@ -104,7 +104,7 @@ function _wpsc_needs_upgrade() {
 	if ( ! current_user_can( 'update_plugins' ) )
 		return false;
 
-	$current_db_ver = get_option( 'wpsc_db_version', 0 );
+	$current_db_ver = 9;//get_option( 'wpsc_db_version', 0 );
 
 	if ( WPSC_DB_VERSION <= $current_db_ver )
 		return false;

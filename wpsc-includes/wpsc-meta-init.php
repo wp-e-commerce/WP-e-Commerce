@@ -1,20 +1,5 @@
 <?php
 
-require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-cart-item.php' );
-require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-purchase.php' );
-
-/**
- * The name of the meta table for a specific meta object type.
- *
- * @since 3.8.12
- *
- * @param string $meta_object_type Type of object metadata is for (e.g., variation. cart, etc)
- * @return string Name of the custom meta table
- */
-function wpsc_meta_table_name( $meta_object_type ) {
-	global $wpdb;
-	return $wpdb->prefix . $meta_object_type . '_meta';
-}
 
 /**
  * Create the meta table for Cart Item
@@ -28,7 +13,7 @@ function _wpsc_create_cart_item_meta_table() {
 	global $wpdb;
 	global $charset_collate;
 
-	$sql = 'CREATE TABLE IF NOT EXISTS '. $wpdb->wpsc_cart_item_meta .' ('
+	$sql = 'CREATE TABLE IF NOT EXISTS '. $wpdb->wpsc_cart_itemmeta .' ('
 				.'meta_id bigint(20) unsigned NOT NULL AUTO_INCREMENT, '
 				.'wpsc_cart_item_id bigint(20) unsigned NOT NULL DEFAULT 0 , '
 				.'meta_key varchar(255) DEFAULT NULL, '
@@ -57,7 +42,7 @@ function _wpsc_create_purchase_meta_table() {
 	global $wpdb;
 	global $charset_collate;
 
-	$sql = 'CREATE TABLE IF NOT EXISTS '. $wpdb->wpsc_purchase_meta .' ('
+	$sql = 'CREATE TABLE IF NOT EXISTS '. $wpdb->wpsc_purchasemeta .' ('
 				.'meta_id bigint(20) unsigned NOT NULL AUTO_INCREMENT, '
 				.'wpsc_purchase_id bigint(20) unsigned NOT NULL DEFAULT 0 , '
 				.'meta_key varchar(255) DEFAULT NULL, '
@@ -74,74 +59,6 @@ function _wpsc_create_purchase_meta_table() {
 	dbDelta( $sql );
 }
 
-/**
- * Get meta timestamp of the by object type, meta id and key, if multiple records exist
- * the timestamp of the newest record is returned
- * @since 3.8.12
- *
- * @param string $meta_object_type Type of object metadata is for (e.g., variation. cart, etc)
- * @param int $meta_id ID for a specific meta row
- * @return object Meta object or false.
- */
-function wpsc_get_metadata_timestamp( $meta_object_type, $meta_id, $meta_key ) {
-	global $wpdb;
-
-	$meta_id = intval( $meta_id );
-
-	if ( ! empty($meta_object_type) && !empty($meta_id)  && !empty($meta_key) ) {
-		$wpdb_property = $meta_object_type.'meta';
-
-		if ( ! empty( $wpdb->$wpdb_property ) ) {
-			$sql = 'SELECT meta_timestamp FROM '.wpsc_meta_table_name( $meta_object_type ).' WHERE meta_id = %d ORDER BY meta_timestamp DESC LIMIT 1';
-			$timestamp = $wpdb->get_row( $wpdb->prepare( $sql , $meta_id ) );
-		}
-	}
-
-	if ( empty( $timestamp ) )
-		$timestamp = false;
-
-	return $timestamp;
-}
-
-/**
- * Calls function for each meta matching the timestamp criteria.  Callback function
- * will get a single parameter that is an object representing the meta.
- *
- * @since 3.8.12
- *
- * @param int|string $timestamp timestamp to compare meta items against, if int a unix timestamp is assumed,
- *								if string a mysql timestamp is assumed
- * @param string $comparison any one of the supported comparison operators,(=,>=,>,<=,<,<>,!=)
- * @param string $meta_key restrict testing of meta to the values with the specified meta key
- * @return array metadata matching the query
- */
-function wpsc_get_meta_by_timestamp( $meta_object_type, $timestamp = 0, $comparison = '>', $meta_key = '' ) {
-	global $wpdb;
-
-	$meta_table = wpsc_meta_table_name( $meta_object_type );
-	if ( ($timestamp == 0) || empty( $timestamp ) ) {
-		$sql = "SELECT * FROM `{$meta_table}` WHERE 1=1 ";
-	} else {
-		// validate the comparison operator
-		if ( ! in_array( $comparison, array(
-				'=', '>=', '>', '<=', '<', '<>', '!='
-		) ) )
-			return false;
-
-		if ( is_int( $timestamp ) )
-			$timestamp = date( 'Y-m-d H:i:s', $timestamp );
-
-		$sql = 'SELECT * FROM {$meta_table} where meta_timestamp {$comparison} %s';
-	}
-
-	if ( ! empty ($meta_key ) )
-		$sql .= ' AND meta_key = %s';
-
-	$sql = $wpdb->prepare( $sql, $timestamp, $meta_key );
-	$meta_rows = $wpdb->get_results( $sql, OBJECT  );
-
-	return $meta_rows;
-}
 
 function wpsc_meta_migrate( $meta_object_type ) {
 	global $wpdb;
@@ -163,3 +80,4 @@ function _wpsc_meta_migrate_wpsc_cart_item() {
 function _wpsc_meta_migrate_wpsc_purchase() {
 	wpsc_meta_migrate( 'purchase' );
 }
+

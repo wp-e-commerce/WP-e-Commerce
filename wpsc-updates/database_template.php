@@ -210,8 +210,8 @@ $wpsc_database_template[$table_name]['indexes']['cart_submitted'] = "KEY `cart_s
 
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-init.php' );
 
-// code to create or update the {$wpdb->prefix}wpsc_cart_item_meta table
-$table_name = $wpdb->wpsc_cart_item_meta;
+// code to create or update the {$wpdb->prefix}wpsc_cart_itemmeta table
+$table_name = $wpdb->wpsc_cart_itemmeta;
 $wpsc_database_template[$table_name]['columns']['meta_id'] = "bigint(20) unsigned NOT NULL AUTO_INCREMENT ";
 $wpsc_database_template[$table_name]['columns']['wpsc_cart_item_id'] = "bigint(20) unsigned NOT NULL DEFAULT '0' ";
 $wpsc_database_template[$table_name]['columns']['meta_key'] = "varchar(255) default NULL ";
@@ -225,8 +225,8 @@ $wpsc_database_template[$table_name]['indexes']['meta_timestamp_index'] = "KEY m
 $wpsc_database_template[$table_name]['indexes']['wpsc_cart_item_id'] = 'KEY wpsc_cart_item_id ( `wpsc_cart_item_id` ) ';
 $wpsc_database_template[$table_name]['actions']['after']['all'] = '_wpsc_meta_migrate_wpsc_cart_item';
 
-// code to create or update the {$wpdb->prefix}wpsc_purchase_meta table
-$table_name = $wpdb->wpsc_purchase_meta;
+// code to create or update the {$wpdb->prefix}wpsc_purchasemeta table
+$table_name = $wpdb->wpsc_purchasemeta;
 $wpsc_database_template[$table_name]['columns']['meta_id'] = "bigint(20) unsigned NOT NULL AUTO_INCREMENT ";
 $wpsc_database_template[$table_name]['columns']['wpsc_purchase_id'] = "bigint(20) unsigned NOT NULL DEFAULT '0' ";
 $wpsc_database_template[$table_name]['columns']['meta_key'] = "varchar(255) default NULL ";
@@ -239,3 +239,37 @@ $wpsc_database_template[$table_name]['indexes']['meta_key_and_value'] = "KEY `me
 $wpsc_database_template[$table_name]['indexes']['meta_timestamp_index'] = "KEY meta_timestamp_index (meta_timestamp) ";
 $wpsc_database_template[$table_name]['indexes']['wpsc_purchase_id'] = 'KEY wpsc_purchase_id ( `wpsc_purchase_id` ) ';
 $wpsc_database_template[$table_name]['actions']['after']['all'] = '_wpsc_meta_migrate_wpsc_purchase';
+
+// code to create or update the {$wpdb->prefix}wpsc_visitors table
+$table_name = $wpdb->wpsc_visitors;
+$wpsc_database_template[$table_name]['columns']['id'] = 'bigint(20) unsigned NOT NULL AUTO_INCREMENT ';
+$wpsc_database_template[$table_name]['columns']['user_id'] = 'bigint(20) unsigned DEFAULT NULL ';
+$wpsc_database_template[$table_name]['columns']['last_active'] = 'timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP';
+$wpsc_database_template[$table_name]['columns']['expires'] = 'DEFAULT NULL';
+$wpsc_database_template[$table_name]['columns']['created'] = 'timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP';
+$wpsc_database_template[$table_name]['indexes']['PRIMARY'] = 'PRIMARY KEY  ( `id` ) ';
+$wpsc_database_template[$table_name]['indexes']['user_id'] = 'KEY `user_id` ( `user_id` ) ';
+$wpsc_database_template[$table_name]['indexes']['last_active'] = 'KEY last_active ( `last_active` ) ';
+$wpsc_database_template[$table_name]['indexes']['exipres'] = 'KEY last_active ( `last_active` ) ';
+$wpsc_database_template[$table_name]['indexes']['created'] = 'KEY created ( `created` ) ';
+$wpsc_database_template[$table_name]['actions']['after']['all'] = '_wpsc_create_well_known_users';
+
+// code to create or update the {$wpdb->prefix}wpsc_visitormeta table
+$table_name = $wpdb->wpsc_visitormeta;
+$wpsc_database_template[$table_name]['columns']['meta_id'] = 'bigint(20) unsigned NOT NULL AUTO_INCREMENT ';
+$wpsc_database_template[$table_name]['columns']['wpsc_visitor_id'] = "bigint(20) unsigned NOT NULL DEFAULT '0' ";
+$wpsc_database_template[$table_name]['columns']['meta_key'] = 'varchar(255) default NULL ';
+$wpsc_database_template[$table_name]['columns']['meta_value'] = 'longtext ';
+$wpsc_database_template[$table_name]['columns']['meta_timestamp'] = 'timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ';
+$wpsc_database_template[$table_name]['indexes']['PRIMARY'] = 'PRIMARY KEY  ( `meta_id` ) ';
+$wpsc_database_template[$table_name]['indexes']['meta_key'] = 'KEY `meta_key` ( `meta_key`(191) ) ';
+$wpsc_database_template[$table_name]['indexes']['meta_value'] = 'KEY `meta_value` ( `meta_value`(20) ) ';
+$wpsc_database_template[$table_name]['indexes']['meta_key_and_value'] = 'KEY `meta_key_and_value` ( `meta_key`(191), `meta_value`(32) ) ';
+$wpsc_database_template[$table_name]['indexes']['meta_timestamp_index'] = 'KEY meta_timestamp_index (meta_timestamp) ';
+$wpsc_database_template[$table_name]['indexes']['wpsc_visitor_id'] = 'KEY wpsc_purchase_id ( `wpsc_visitor_id` ) ';
+$wpsc_database_template[$table_name]['actions']['after']['all'] = '_wpsc_meta_migrate_anonymous_users';
+
+
+
+
+
