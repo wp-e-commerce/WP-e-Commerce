@@ -29,6 +29,7 @@ function _wpsc_is_session_started() {
  * wpsc_core_load_session()
  *
  * Load up the WPEC session
+ * @return boolean
  */
 function wpsc_core_load_session() {
 
