@@ -177,15 +177,18 @@ function _wpsc_validate_customer_cookie() {
 function wpsc_get_current_customer_id() {
 	$id = apply_filters( 'wpsc_get_current_customer_id', null );
 
-	if ( ! empty( $id ) )
+	if ( ! empty( $id ) ) {
 		return $id;
+	}
 
 	// if the user is logged in we use the user id
 	if ( is_user_logged_in() ) {
 		return get_current_user_id();
 	} elseif ( isset( $_COOKIE[WPSC_CUSTOMER_COOKIE] ) ) {
-		list( $id, $expire, $hash ) = explode( '|', $_COOKIE[WPSC_CUSTOMER_COOKIE] );
-		return $id;
+		$id = wpsc_validate_customer_cookie();
+		if ( $id !== false ) {
+			return $id;
+		}
 	}
 
 	return _wpsc_create_customer_id();
