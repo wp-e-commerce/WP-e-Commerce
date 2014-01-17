@@ -13,7 +13,7 @@ function wpsc_core_load_session() {
 	if ( ! isset( $_SESSION ) )
 		$_SESSION = null;
 
-	if ( ( !is_array( $_SESSION ) ) xor ( ! isset( $_SESSION['nzshpcrt_cart'] ) ) xor ( !$_SESSION ) )
+	if ( session_id() != '' )
 		session_start();
 
 	return;
