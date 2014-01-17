@@ -45,7 +45,8 @@ function _wpsc_create_customer_id() {
 	$username = '_' . wp_generate_password( 8, false, false );
 	$password = wp_generate_password( 12, false );
 
-	$id   = wp_create_user( $username, $password );
+	// filter gives chance for others to do some processing before the new user is handled
+	$id   = apply_filter( 'wpsc_create_customer_user' , wp_create_user( $username, $password ) );
 	$user = new WP_User( $id );
 	$user->set_role( 'wpsc_anonymous' );
 
@@ -304,7 +305,7 @@ function _wpsc_action_update_customer_last_active() {
 /**
  * Is the user an automata not worthy of a WPEC profile to hold shopping cart and other info
  *
- * @access public
+ * @access private
  * @since  3.8.13
  */
 function _wpsc_is_bot_user() {
@@ -469,4 +470,92 @@ function _wpsc_action_pre_user_query( $query ) {
 function _wpsc_filter_editable_roles( $editable_roles ) {
 	unset( $editable_roles['wpsc_anonymous'] );
 	return $editable_roles;
+}
+
+/**
+ * Attach a purchase log to our customer profile
+ *
+ * @access private
+ * @since  3.8.14
+ */
+function _wpsc_set_purchase_log_customer_id( $data ) {
+
+	// if there is a purchase log for this user we don't want to delete the
+	// user id, even if the transaction isn't successful.  there may be useful
+	// information in the customer profile related to the transaction
+	wpsc_delete_customer_meta('_wpsc_temporary_profile');
+
+	// if there isn't already user id we set the user id of the current customer id
+	if ( empty ( $data['user_ID'] ) ) {
+		$id = wpsc_get_current_customer_id();
+		$data['user_ID'] = $id;
+	}
+
+	return $data;
+}
+
+if ( !is_user_logged_in() ) {
+	add_filter( 'wpsc_purchase_log_update_data', '_wpsc_set_purchase_log_customer_id', 1, 1 );
+	add_filter( 'wpsc_purchase_log_insert_data', '_wpsc_set_purchase_log_customer_id', 1, 1 );
+}
+
+
+/**
+ * get the count of posts by the customer
+ * @since 3.8.14
+ * @access public
+ * @return int
+ */
+function wpsc_customer_post_count( $id = false ) {
+
+	if ( ! $id )
+		$id = wpsc_get_current_customer_id();
+
+	return count_user_posts( $id );
+}
+
+
+/**
+ * get the count of comments by the customer
+ * @since 3.8.14
+ * @access public
+ * @param string $id
+ * @return int
+ */
+function wpsc_customer_comment_count( $id = false ) {
+
+	if ( ! $id )
+		$id = wpsc_get_current_customer_id();
+
+	global $wpdb;
+	$count = $wpdb->get_var('SELECT COUNT(comment_ID) FROM ' . $wpdb->comments. ' WHERE user_id = "' . $id . '"');
+
+	if ( empty($count) || ! is_numeric($count) ) {
+		$count = 0;
+	}
+
+	return $count;
+}
+
+
+/**
+ * get the count of purchases by the customer
+ * @since 3.8.14
+ * @access public
+ * @param string $id
+ * @return int
+ */
+function wpsc_customer_purchase_count( $id = false ) {
+
+	if ( ! $id )
+		$id = wpsc_get_current_customer_id();
+
+	global $wpdb;
+	$count = $wpdb->get_var('SELECT COUNT(user_ID) FROM ' . WPSC_TABLE_PURCHASE_LOGS. ' WHERE user_id = "' . $id . '"');
+
+	if ( empty($count) || ! is_numeric($count) ) {
+		$count = 0;
+	}
+
+	return $count;
 }

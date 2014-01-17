@@ -74,7 +74,19 @@ function wpsc_delete_customer_meta( $key, $id = false ) {
 	if ( $result )
 		return $result;
 
-	return delete_user_meta( $id, _wpsc_get_customer_meta_key( $key ) );
+	$success = delete_user_meta( $id, _wpsc_get_customer_meta_key( $key ) );
+
+	// notification when any meta item has been deleted
+	if ( $success && has_action( $action = 'wpsc_deleted_customer_meta' ) ) {
+		do_action( $action, $key, $id );
+	}
+
+	// notification when a specific meta item has been deleted
+	if ( $success && has_action( $action = 'wpsc_deleted_customer_meta_' . $key  ) ) {
+		do_action( $action, $key, $id );
+	}
+
+	return $success;
 }
 
 /**
@@ -96,11 +108,21 @@ function wpsc_update_customer_meta( $key, $value, $id = false ) {
 
 	$result = apply_filters( 'wpsc_update_customer_meta', null, $key, $value, $id );
 
-	if ( $result )
+	if ( $result ) {
 		return $result;
+	}
 
-	return update_user_meta( $id, _wpsc_get_customer_meta_key( $key ), $value );
-}
+	// notification when any meta item has changed
+	if ( $success && has_action( $action = 'wpsc_updated_customer_meta' ) ) {
+		do_action( $action, $value, $key, $id );
+	}
+
+	// notification when a specific meta item has changed
+	if ( $success && has_action( $action = 'wpsc_updated_customer_meta_' . $key  ) ) {
+		do_action( $action, $value, $key, $id );
+	}
+
+	return $success;}
 
 /**
  * Overwrite customer meta with an array of meta_key => meta_value.
@@ -151,10 +173,19 @@ function wpsc_get_customer_meta( $key = '', $id = false ) {
 
 	$result = apply_filters( 'wpsc_get_customer_meta', null, $key, $id );
 
-	if ( $result )
-		return $result;
+	$meta_value = get_user_meta( $id, _wpsc_get_customer_meta_key( $key ), true );
 
-	return get_user_meta( $id, _wpsc_get_customer_meta_key( $key ), true );
+	// notification when any meta item has changed
+	if ( has_filter( $filter = 'wpsc_get_customer_meta' ) ) {
+		$meta_value = apply_filters( $filter,  $meta_value, $key, $id );
+	}
+
+	// notification when a specific meta item has changed
+	if ( has_filter( $filter = 'wpsc_get_customer_meta_' . $key  ) ) {
+		$meta_value = apply_filters( $filter,  $meta_value, $key, $id );
+	}
+
+	return $meta_value;
 }
 
 /**
@@ -176,12 +207,15 @@ function wpsc_get_all_customer_meta( $id = false ) {
 
 	$result = apply_filters( 'wpsc_get_all_customer_meta', null, $id );
 
-	if ( $result )
+	if ( $result ) {
 		return $result;
+	}
 
 	$meta = get_user_meta( $id );
 	$blog_prefix = is_multisite() ? $wpdb->get_blog_prefix() : '';
 	$key_pattern = "{$blog_prefix}_wpsc_";
+
+	$meta_value = get_user_meta( $id, _wpsc_get_customer_meta_key( $key ), true );
 
 	$return = array();
 
@@ -191,8 +225,68 @@ function wpsc_get_all_customer_meta( $id = false ) {
 
 		$short_key = str_replace( $key_pattern, '', $key );
 		$return[$short_key] = $value[0];
+
+		// notification when a specific meta item has changed
+		if ( has_filter( $filter = 'wpsc_get_customer_meta_' . $short_key  ) ) {
+			$return[$short_key] = apply_filters( $filter,  $return[$short_key], $short_key, $id );
+		}
 	}
 
 	return $return;
 }
+
+
+
+/**
+ * Return an the customer cart
+ *
+ * @access public
+ * @since 3.8.9
+ * @param  mixed $id Customer ID. Default to the current user ID.
+ * @return WP_Error|array Return an array of metadata if no error occurs, WP_Error
+ *                        if otherwise.
+ */
+function wpsc_get_customer_cart( $id = false  ) {
+
+	if ( ! $id )
+		$id = wpsc_get_current_customer_id();
+
+	$cart = maybe_unserialize( base64_decode( wpsc_get_customer_meta( 'cart', $id ) ) );
+
+	if ( !( is_object( $cart ) && ! is_wp_error( $cart ) ) ) {
+		$cart = new wpsc_cart();
+	}
+
+	return $cart;
+}
+
+
+/**
+ * Update a customers cart
+ * @access public
+ * @since 3.8.9
+ * @param string $id
+ * @param unknown $cart
+ * @return boolean
+ */
+function wpsc_update_customer_cart( $id = false, $cart ) {
+	global $wpdb, $wpsc_start_time, $wpsc_cart;
+
+	if ( !is_a( $cart, 'wpsc_cart' ) )
+		return false;
+
+	if ( $id == wpsc_get_current_customer_id() ) {
+		$wpsc_cart = $cart;
+	}
+
+	if ( ! $id )
+		$id = wpsc_get_current_customer_id();
+
+	wpsc_update_customer_meta( 'cart', base64_encode( serialize( $cart ) ) , $id );
+
+	$wpsc_cart->clear_cache(); // do this to fire off actions that happen when a cart is changed
+
+	return true;
+}
+
 
