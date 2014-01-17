@@ -206,7 +206,7 @@ function wpsc_price_control_forms() {
 							$i++;
 							?>
 							<tr class="wpsc_additional_currency">
-								<td class="remove"><a href="#" class="wpsc_delete_currency_layer<?php echo $currency_delete_class; ?>" rel="<?php echo $iso; ?>"><?php if ( ! $wp_38 ) : ?><img src="<?php echo WPSC_CORE_IMAGES_URL; ?>/cross.png" /><?php endif; ?></a></td>
+								<td class="remove"><a href="#" class="wpsc_delete_currency_layer<?php echo $currency_delete_class; ?>" rel="<?php echo $iso; ?>"><?php echo $currency_delete_text; ?></a></td>
 								<td>
 									<select name="newCurrency[]" class="newCurrency">
 										<?php foreach ( $currency_data as $currency ) : ?>
@@ -238,6 +238,7 @@ function wpsc_price_control_forms() {
 				</tbody>
 			</table>
 			<a href="#wpsc_currency_row_template" class="button button-small wpsc_add_new_currency"><?php esc_html_e( 'Add a Currency Option', 'wpsc' ); ?></a>
+			<?php wp_nonce_field( 'update-options', 'wpsc-update-currency-layers', false ); ?>
 		</div>
 
 		<div class="wpsc-quantity-discounts">
@@ -260,7 +261,7 @@ function wpsc_price_control_forms() {
 									<td class="remove"><a href="#" class="remove_line<?php echo $currency_delete_class; ?>"><?php echo $currency_delete_text; ?></a></td>
 									<td class="qty">
 										<input type="text" size="5" value="<?php echo $quantity; ?>" name="table_rate_price[quantity][]" />
-										<span class="description"><?php esc_html_e( 'and above', 'wpsc' ); ?></span>
+										<?php esc_html_e( '+', 'wpsc' ); ?>
 									</td>
 									<td class="curr"><?php echo $ct_code . ' ' . $ct_symb; ?></td>
 									<td><input type="number" size="10" min="0" step="0.1" class="newCurrPrice text" value="<?php echo $table_price; ?>" name="table_rate_price[table_price][]" /></td>
@@ -282,6 +283,7 @@ function wpsc_price_control_forms() {
 				</tbody>
 			</table>
 			<a href="#wpsc_quantity_discount_row_template" class="add_level button button-small"><?php esc_html_e( 'Add a Quantity Discount', 'wpsc' ); ?></a>
+			<?php wp_nonce_field( 'update-options', 'wpsc-update-quantity-discounts', false ); ?>
 		</div>
 
 		<input id="add_form_donation" type="checkbox" name="meta[_wpsc_is_donation]" value="yes" <?php checked( $product_data['meta']['_wpsc_is_donation'], 1 ); ?> />
