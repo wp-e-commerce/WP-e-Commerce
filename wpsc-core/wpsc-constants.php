@@ -8,18 +8,19 @@ $wpsc_title_data    = array();
  * _wpsc_is_session_started()
  *
  * Check if PHP session is started using method suggested on php.net
+ * @since 3.8.14
  * @return boolean
  */
 function _wpsc_is_session_started() {
 
 	if ( version_compare( phpversion(), '5.4.0', '>=' ) ) {
-		return session_status() === PHP_SESSION_ACTIVE ? true : false;
+		return session_status() === PHP_SESSION_ACTIVE;
 	} else {
-		if ( ! isset( $_SESSION ) ) {
+		if ( !isset( $_SESSION ) ) {
 			$_SESSION = null;
 		}
 
-		return session_id() === '' ? false : true;
+		return session_id() !== '';
 	}
 
 	return false;
@@ -33,7 +34,7 @@ function _wpsc_is_session_started() {
  */
 function wpsc_core_load_session() {
 
-	if ( !_wpsc_is_session_started()  ) {
+	if ( !_wpsc_is_session_started() ) {
 		session_start();
 	}
 
