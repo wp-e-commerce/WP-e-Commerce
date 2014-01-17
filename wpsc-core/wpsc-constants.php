@@ -16,7 +16,7 @@ function _wpsc_is_session_started() {
 	if ( version_compare( phpversion(), '5.4.0', '>=' ) ) {
 		return session_status() === PHP_SESSION_ACTIVE;
 	} else {
-		if ( !isset( $_SESSION ) ) {
+		if ( ! isset( $_SESSION ) ) {
 			$_SESSION = null;
 		}
 
@@ -34,7 +34,7 @@ function _wpsc_is_session_started() {
  */
 function wpsc_core_load_session() {
 
-	if ( !_wpsc_is_session_started() ) {
+	if ( ! _wpsc_is_session_started() ) {
 		session_start();
 	}
 
