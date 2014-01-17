@@ -36,7 +36,6 @@ Features:
 * PayPal Payments Standard
 * PayPal Payments Pro
 * PayPal Express Checkout
-* Google Wallet (Level 2)
 * Chronopay
 * PayPal Payflow Pro (available with Gold Cart)
 * Authorize.net (available with Gold Cart)
