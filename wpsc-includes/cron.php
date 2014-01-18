@@ -18,12 +18,15 @@ function wpsc_clear_stock_claims() {
 		'week' => 604800,
 	);
 
-	$seconds = floor( $time * $convert[$interval] );
+	$seconds = floor( $time * $convert[ $interval ] );
 
 	$sql = $wpdb->prepare( "DELETE FROM " . WPSC_TABLE_CLAIMED_STOCK . " WHERE last_activity < UTC_TIMESTAMP() - INTERVAL %d SECOND", $seconds );
 	$wpdb->query( $sql );
 }
 
+/**
+ *
+ */
 function _wpsc_clear_customer_meta() {
 	global $wpdb;
 
@@ -49,10 +52,27 @@ function _wpsc_clear_customer_meta() {
 	// If important data is found the user is no longer temporary. We also use a filter so that if other plug-ins
 	// want to either stop the user from being deleted, or do something with the information in the profile they
 	// have that chance.
+
+	if ( ! defined( 'WPSC_MAX_DELETE_PROFILE_TIME' ) ) {
+		define( 'WPSC_MAX_DELETE_PROFILE_TIME', 10 );
+	}
+
+	$five_seconds_from_start = time() + WPSC_MAX_DELETE_PROFILE_TIME;
+
 	foreach ( $wp_user_query->results as $id ) {
-		// for extra safety
+
+		// in case we have a lot of users to delete we do some checking to make sure we don't
+		// get caught in a loop using server resources for an extended period of time without yielding.
+		// Different environments will be able to delete a different number of users in the allowed time,
+		// that's the reason for the defined variable
+		if ( time() > $five_seconds_from_start ) {
+			wp_schedule_single_event( time() + 300, '_wpsc_clear_customer_meta' );
+			break;
+		}
+
+		// for extra safety we cehck to be sire we wouldn't be orphaning data if we deleted a customer profile
 		$ok_to_delete_temporary_customer_profile = ( wpsc_customer_purchase_count( $id ) == 0 ) && ( wpsc_customer_post_count( $id ) == 0 ) && ( wpsc_customer_comment_count( $id ) == 0 );
-		if ( apply_filters( 'wpsc_before_delete_customer_profile', $ok_to_delete_temporary_customer_profile, $id ) ) {
+		if ( apply_filters( 'wpsc_before_delete_temp_customer_profile', $ok_to_delete_temporary_customer_profile, $id ) ) {
 			wp_delete_user( $id );
 			do_action( 'wpsc_after_delete_temp_customer_profile', $id );
 		} else {
@@ -65,5 +85,5 @@ function _wpsc_clear_customer_meta() {
 	}
 }
 
-add_action( 'testclearmeta' , _wpsc_clear_customer_meta );
+add_action( '_wpsc_clear_customer_meta' , _wpsc_clear_customer_meta );
 
