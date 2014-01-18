@@ -38,7 +38,7 @@ function _wpsc_clear_customer_meta() {
 					array(
 							'key'     => _wpsc_get_customer_meta_key( 'temporary_profile' ),
 							'value'   => time(),
-							'type'    => 'numeric',
+							'type'    => 'UNSIGNED',
 							'compare' => '<'
 					)
 			),
@@ -68,7 +68,7 @@ function _wpsc_clear_customer_meta() {
 		if ( time() > $a_little_bit_of_time_after_start ) {
 			// next delete processing will happen no sooner than in a couple minutes, but as the time allowed for
 			// delete processing increases the interval between cycles will also extend.
-			wp_schedule_single_event( time() + (120 + 2*WPSC_MAX_DELETE_PROFILE_TIME), '_wpsc_clear_customer_meta' );
+			wp_schedule_single_event( time() + (120 + 2*WPSC_MAX_DELETE_PROFILE_TIME), '_wpsc_clear_customer_meta_action' );
 			break;
 		}
 
@@ -87,5 +87,5 @@ function _wpsc_clear_customer_meta() {
 	}
 }
 
-add_action( '_wpsc_clear_customer_meta' , _wpsc_clear_customer_meta );
+add_action( '_wpsc_clear_customer_meta_action' , '_wpsc_clear_customer_meta' );
 

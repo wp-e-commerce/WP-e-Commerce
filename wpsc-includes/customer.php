@@ -43,10 +43,13 @@
  * If present, the value of the "temporary_profile" meta is automatically adjusted when the last_active time
  * is adjusted. The value will be the unix time stamp after which the profile can be marked for deletion.  When
  * the meta is first added to the newly created user profile the "safe to delete time" is set to the current time
- * plus 2 hours.  Subsequent updates to last active move the safe to delete time to the last active time plus 48
- * hours.  This means that customer profiles create for visitors that only do a single page view will quickly be purged
- * from the WordPress user table.  On the other hand visitors that view more than a single page of a site will have
- * profiles available for a longer time.
+ * plus 2 hours.  Using this method, visitor profiles that are created by mechanisms like aggregator framing web site pages
+ * for user preview rather than browsing are more quickly deleted.
+ *
+ * Subsequent updates to last active move the safe to delete time to the last active time plus 48
+ * hours.  This also means that customer profiles create for visitors that only do a single page view will
+ * quickly be purged from the WordPress user table.  On the other hand visitors that view more than a single
+ * page of a site will have profiles available for a longer time.
  *
  */
 
