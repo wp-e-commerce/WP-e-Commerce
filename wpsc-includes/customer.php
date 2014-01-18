@@ -8,6 +8,7 @@ add_action( 'load-users.php'             , '_wpsc_action_load_users'            
 add_filter( 'views_users'                , '_wpsc_filter_views_users'                     );
 add_filter( 'editable_roles'             , '_wpsc_filter_editable_roles'                  );
 
+
 /**
  * Helper function for setting the customer cookie content and expiration
  *
