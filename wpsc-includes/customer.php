@@ -25,10 +25,10 @@
  * standard, multi-site safe, prefix.  This prefix is automatically removed when you retrieve meta values using
  * the WPEC meta API.
  *
- * Customer profiles when created have added to them  a meta value 'last_active'.  This meta value contains the UNIX
- * timestamp (see php time() function) of the last meaningful change to the profile.   This value can be queried for
- * whatever end purposes you might want, but it's core purposes are two-fold.  Thus value makes it possible to detect
- * abandoned carts and return cart stock, and it makes it possible to detect temporary profiles that are no longer needed.
+ * Customer profiles have added to them  a meta value 'last_active' immediatly upon creation.  This meta value
+ * contains the UNIX timestamp (see php time() function) of the last meaningful change to the profile.
+ * whatever end purposes you might want, but it's core purposes are two-fold.  (1) This value makes it possible to detect
+ * abandoned carts and return cart stock, (2) and it makes it possible to detect temporary profiles that are no longer needed.
  * This value can also be used to implement advanced features like email reminders to customers that they have items in
  * their carts, or  haven't visited a store for a period of time.
  *
@@ -40,12 +40,13 @@
  * Because the above values (profile name, roles, etc.) can be altered by user interface or other plug-ins, having this
  * dedicated meta value gives us a safe and fast way of finding temporary profiles.
  *
- * If present, the value of the "temporary_profile" meta is automatically adjusted when the last_active time is adjusted.   The value
- * will be the unix time stamp after which the profile can be marked for deletion.  When the meta is first added to the newly created
- * user profile the safe to delete time is set to the current time plus 2 hours.  Subsequent updates to last active move the safe to
- * delete time to the last active time plus 48 hours.  This means that customer profiles single page view visitors will quickly be purged
- * from the WordPress user table.  On the other hand visitors that view more than a single page of a site will have profiles available
- * for a longer time.
+ * If present, the value of the "temporary_profile" meta is automatically adjusted when the last_active time
+ * is adjusted. The value will be the unix time stamp after which the profile can be marked for deletion.  When
+ * the meta is first added to the newly created user profile the "safe to delete time" is set to the current time
+ * plus 2 hours.  Subsequent updates to last active move the safe to delete time to the last active time plus 48
+ * hours.  This means that customer profiles create for visitors that only do a single page view will quickly be purged
+ * from the WordPress user table.  On the other hand visitors that view more than a single page of a site will have
+ * profiles available for a longer time.
  *
  */
 
@@ -53,9 +54,12 @@ add_action( 'wpsc_set_cart_item'         , '_wpsc_action_update_current_customer
 add_action( 'wpsc_add_item'              , '_wpsc_action_update_current_customer_last_active' );
 add_action( 'wpsc_before_submit_checkout', '_wpsc_action_update_current_customer_last_active' );
 add_action( 'wp_login'                   , '_wpsc_action_setup_customer'                  	  );
-add_action( 'load-users.php'             , '_wpsc_action_load_users'                          );
-add_filter( 'views_users'                , '_wpsc_filter_views_users'                         );
-add_filter( 'editable_roles'             , '_wpsc_filter_editable_roles'                      );
+
+if ( is_admin() ) {
+	add_action( 'load-users.php'             , '_wpsc_action_load_users'                          );
+	add_filter( 'views_users'                , '_wpsc_filter_views_users'                         );
+	add_filter( 'editable_roles'             , '_wpsc_filter_editable_roles'                      );
+}
 
 /**
  * Helper function for setting the customer cookie content and expiration
@@ -279,7 +283,13 @@ function _wpsc_action_setup_customer() {
 	do_action( 'wpsc_setup_customer' );
 }
 
-function _wpsc_merge_cart() {
+/**
+ * Merge cart from anonymous user with cart from logged in user
+ *
+ * @since 3.8.13
+ * @access private
+ */
+ function _wpsc_merge_cart() {
 	$old_id = _wpsc_validate_customer_cookie();
 
 	if ( ! $old_id ) {
@@ -349,7 +359,6 @@ function _wpsc_action_update_current_customer_last_active() {
 	// also extend cookie expiration
 	_wpsc_create_customer_id_cookie( $id );
 }
-
 
 /**
  * Is the user an automata not worthy of a WPEC profile to hold shopping cart and other info
@@ -548,7 +557,6 @@ if ( ! is_user_logged_in() ) {
 	add_filter( 'wpsc_purchase_log_insert_data', '_wpsc_set_purchase_log_customer_id', 1, 1 );
 }
 
-
 /**
  * get the count of posts by the customer
  * @since 3.8.14
@@ -563,7 +571,6 @@ function wpsc_customer_post_count( $id = false ) {
 
 	return count_user_posts( $id );
 }
-
 
 /**
  * get the count of comments by the customer
@@ -586,7 +593,6 @@ function wpsc_customer_comment_count( $id = false ) {
 
 	return $count;
 }
-
 
 /**
  * get the count of purchases by the customer
