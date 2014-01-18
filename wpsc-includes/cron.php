@@ -57,7 +57,7 @@ function _wpsc_clear_customer_meta() {
 		define( 'WPSC_MAX_DELETE_PROFILE_TIME', 10 );
 	}
 
-	$five_seconds_from_start = time() + WPSC_MAX_DELETE_PROFILE_TIME;
+	$a_little_bit_of_time_after_start = time() + WPSC_MAX_DELETE_PROFILE_TIME;
 
 	foreach ( $wp_user_query->results as $id ) {
 
@@ -65,7 +65,7 @@ function _wpsc_clear_customer_meta() {
 		// get caught in a loop using server resources for an extended period of time without yielding.
 		// Different environments will be able to delete a different number of users in the allowed time,
 		// that's the reason for the defined variable
-		if ( time() > $five_seconds_from_start ) {
+		if ( time() > $a_little_bit_of_time_after_start ) {
 			wp_schedule_single_event( time() + 300, '_wpsc_clear_customer_meta' );
 			break;
 		}
