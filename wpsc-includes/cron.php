@@ -70,7 +70,7 @@ function _wpsc_clear_customer_meta() {
 			break;
 		}
 
-		// for extra safety we cehck to be sire we wouldn't be orphaning data if we deleted a customer profile
+		// for extra safety we check to be sure we wouldn't be orphaning data if we deleted a customer profile
 		$ok_to_delete_temporary_customer_profile = ( wpsc_customer_purchase_count( $id ) == 0 ) && ( wpsc_customer_post_count( $id ) == 0 ) && ( wpsc_customer_comment_count( $id ) == 0 );
 		if ( apply_filters( 'wpsc_before_delete_temp_customer_profile', $ok_to_delete_temporary_customer_profile, $id ) ) {
 			wp_delete_user( $id );
