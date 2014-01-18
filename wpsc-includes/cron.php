@@ -66,7 +66,9 @@ function _wpsc_clear_customer_meta() {
 		// Different environments will be able to delete a different number of users in the allowed time,
 		// that's the reason for the defined variable
 		if ( time() > $a_little_bit_of_time_after_start ) {
-			wp_schedule_single_event( time() + 300, '_wpsc_clear_customer_meta' );
+			// next delete processing will happen no sooner than in a couple minutes, but as the time allowed for
+			// delete processing increases the interval between cycles will also extend.
+			wp_schedule_single_event( time() + (120 + 2*WPSC_MAX_DELETE_PROFILE_TIME), '_wpsc_clear_customer_meta' );
 			break;
 		}
 
