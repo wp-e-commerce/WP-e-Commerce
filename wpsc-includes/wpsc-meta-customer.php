@@ -1,25 +1,5 @@
 <?php
 
-function wpsc_get_customer_cart( $id = false ) {
-	global $wpsc_cart;
-
-	if ( ! empty( $wpsc_cart ) && ( ! $id || $id == wpsc_get_current_customer_id() ) )
-		return $wpsc_cart;
-
-	$cart = maybe_unserialize( base64_decode( wpsc_get_customer_meta( 'cart', $id ) ) );
-	if ( empty( $cart ) || ! $cart instanceof wpsc_cart )
-		$cart = new wpsc_cart();
-
-	return $cart;
-}
-
-function wpsc_update_customer_cart( $cart, $id = false ) {
-	if ( ! $id || $id == wpsc_get_current_customer_id() )
-		return wpsc_serialize_shopping_cart();
-
-	return wpsc_update_customer_meta( 'cart', base64_encode( serialize( $wpsc_cart ) ), $id );
-}
-
 /**
  * Delete all customer meta for a certain customer ID.
  *
@@ -112,17 +92,20 @@ function wpsc_update_customer_meta( $key, $value, $id = false ) {
 		return $result;
 	}
 
+	$result = update_user_meta( $id, _wpsc_get_customer_meta_key( $key ), $value );
+
 	// notification when any meta item has changed
-	if ( $success && has_action( $action = 'wpsc_updated_customer_meta' ) ) {
+	if ( $result && has_action( $action = 'wpsc_updated_customer_meta' ) ) {
 		do_action( $action, $value, $key, $id );
 	}
 
 	// notification when a specific meta item has changed
-	if ( $success && has_action( $action = 'wpsc_updated_customer_meta_' . $key  ) ) {
+	if ( $result && has_action( $action = 'wpsc_updated_customer_meta_' . $key  ) ) {
 		do_action( $action, $value, $key, $id );
 	}
 
-	return $success;}
+	return $result;
+}
 
 /**
  * Overwrite customer meta with an array of meta_key => meta_value.
@@ -146,13 +129,13 @@ function wpsc_update_all_customer_meta( $profile, $id = false ) {
 		return $result;
 
 	wpsc_delete_all_customer_meta( $id );
-	$success = true;
+	$result = true;
 
 	foreach ( $profile as $key => $value ) {
-		$success = $success && wpsc_update_customer_meta( $key, $value, $id );
+		$result = $result && wpsc_update_customer_meta( $key, $value, $id );
 	}
 
-	return $success;
+	return $result;
 }
 
 /**
@@ -175,12 +158,12 @@ function wpsc_get_customer_meta( $key = '', $id = false ) {
 
 	$meta_value = get_user_meta( $id, _wpsc_get_customer_meta_key( $key ), true );
 
-	// notification when any meta item has changed
+	// notification when any meta item is retrieved
 	if ( has_filter( $filter = 'wpsc_get_customer_meta' ) ) {
 		$meta_value = apply_filters( $filter,  $meta_value, $key, $id );
 	}
 
-	// notification when a specific meta item has changed
+	// notification when a specific meta item is retrieved
 	if ( has_filter( $filter = 'wpsc_get_customer_meta_' . $key  ) ) {
 		$meta_value = apply_filters( $filter,  $meta_value, $key, $id );
 	}
@@ -279,14 +262,46 @@ function wpsc_update_customer_cart( $id = false, $cart ) {
 		$wpsc_cart = $cart;
 	}
 
-	if ( ! $id )
+	if ( ! $id ) {
 		$id = wpsc_get_current_customer_id();
+	}
 
 	wpsc_update_customer_meta( 'cart', base64_encode( serialize( $cart ) ) , $id );
 
 	$wpsc_cart->clear_cache(); // do this to fire off actions that happen when a cart is changed
 
 	return true;
+}
+
+
+/**
+ * Update the customer's last active time
+ *
+ * Last active time is automatically set for certain AJAX transactions (see customer.php) but
+ * can be updated manually for specific  customer id as necessary in admin or plugin logic
+ *
+ * @param string $id     the customer id.
+ * @access public
+ * @since  3.8.13
+ * @return int customer id
+ */
+function wpsc_update_customer_last_active( $id = false ) {
+
+	if ( ! $id ) {
+		$id = wpsc_get_current_customer_id();
+	}
+
+	$id = wpsc_get_current_customer_id();
+
+	wpsc_update_customer_meta( 'last_active', $last_active = time(), $id );
+
+	// if there is a temporary profile value we update it with a new time
+	$temporary_profile = wpsc_get_customer_meta(  $id , 'temporary_profile' );
+	if ( ! empty( $temporary_profile ) ) {
+		wpsc_update_customer_meta( 'last_active', $last_active + 48 *60 * 60, $id );
+	}
+
+	return $id;
 }
 
 

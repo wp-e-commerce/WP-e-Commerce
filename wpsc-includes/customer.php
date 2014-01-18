@@ -1,12 +1,61 @@
 <?php
+/*
+ * About WPEC customer profiles.
+ *
+ * WPEC customer profiles are nothing more than WordPress users created and used to hold information
+ * related to a shoppers experience on a WPEC site.  Using WordPress users rather than a special purpose
+ * database table makes all of the existing WordPress user functionality available when working with
+ * customer profiles.
+ *
+ * Additionally, WordPress user functionality makes use of the built in caching capabilities within WordPress,
+ * this makes user profile access quick.  All of this comes without the costs of additional code to maintain.
+ *
+ * WPEC, themes and plug-ins can add information to a customer profile at any time.  The functions making up the
+ * API are in the wpsc-meta-customer.php.  You'll notice that theAPI for working with customer profiles mirrors
+ * the WordPress API used to work with other types of meta data.  Customer meta can be manipulated just as
+ * you would manipulate user meta, post meta, or any of the other types of meta available with a WordPress site.
+ *
+ * There are a few specifics about customer profiles that you may want to be aware of, but you shouldn't need
+ * to know unless you are contributing to the WPEC meta functionality.
+ *
+ * Customer profile users when created are prefixed with '_wpsc_'.  Don't rely on this when creating database queries
+ * because other plug-ins, or even administrators, can change user names.
+ *
+ * If you properly use the WPEC meta API, any meta you add to a customer profile will be prefixed with a
+ * standard, multi-site safe, prefix.  This prefix is automatically removed when you retrieve meta values using
+ * the WPEC meta API.
+ *
+ * Customer profiles when created have added to them  a meta value 'last_active'.  This meta value contains the UNIX
+ * timestamp (see php time() function) of the last meaningful change to the profile.   This value can be queried for
+ * whatever end purposes you might want, but it's core purposes are two-fold.  Thus value makes it possible to detect
+ * abandoned carts and return cart stock, and it makes it possible to detect temporary profiles that are no longer needed.
+ * This value can also be used to implement advanced features like email reminders to customers that they have items in
+ * their carts, or  haven't visited a store for a period of time.
+ *
+ * Customer profiles when created have added to them a role of Anonymous.  This makes it possible to distinguish which users
+ * are created from WPEC operations from the users that are created by typical WordPress blog actions and other plug-ins.
+ *
+ * Customer profiles when automatically created have added to them a wpsc meta value "temporary_profile".  The presence of this
+ * value indicates a WordPress user that will likely be deleted if the visitor doesn't take any future actions.
+ * Because the above values (profile name, roles, etc.) can be altered by user interface or other plug-ins, having this
+ * dedicated meta value gives us a safe and fast way of finding temporary profiles.
+ *
+ * If present, the value of the "temporary_profile" meta is automatically adjusted when the last_active time is adjusted.   The value
+ * will be the unix time stamp after which the profile can be marked for deletion.  When the meta is first added to the newly created
+ * user profile the safe to delete time is set to the current time plus 2 hours.  Subsequent updates to last active move the safe to
+ * delete time to the last active time plus 48 hours.  This means that customer profiles single page view visitors will quickly be purged
+ * from the WordPress user table.  On the other hand visitors that view more than a single page of a site will have profiles available
+ * for a longer time.
+ *
+ */
 
-add_action( 'wpsc_set_cart_item'         , '_wpsc_action_update_customer_last_active'     );
-add_action( 'wpsc_add_item'              , '_wpsc_action_update_customer_last_active'     );
-add_action( 'wpsc_before_submit_checkout', '_wpsc_action_update_customer_last_active'     );
-add_action( 'wp_login'                   , '_wpsc_action_setup_customer'                  );
-add_action( 'load-users.php'             , '_wpsc_action_load_users'                      );
-add_filter( 'views_users'                , '_wpsc_filter_views_users'                     );
-add_filter( 'editable_roles'             , '_wpsc_filter_editable_roles'                  );
+add_action( 'wpsc_set_cart_item'         , '_wpsc_action_update_current_customer_last_active' );
+add_action( 'wpsc_add_item'              , '_wpsc_action_update_current_customer_last_active' );
+add_action( 'wpsc_before_submit_checkout', '_wpsc_action_update_current_customer_last_active' );
+add_action( 'wp_login'                   , '_wpsc_action_setup_customer'                  	  );
+add_action( 'load-users.php'             , '_wpsc_action_load_users'                          );
+add_filter( 'views_users'                , '_wpsc_filter_views_users'                         );
+add_filter( 'editable_roles'             , '_wpsc_filter_editable_roles'                      );
 
 /**
  * Helper function for setting the customer cookie content and expiration
@@ -46,13 +95,15 @@ function _wpsc_create_customer_id() {
 	$password = wp_generate_password( 12, false );
 
 	// filter gives chance for others to do some processing before the new user is handled
-	$id   = apply_filter( 'wpsc_create_customer_user' , wp_create_user( $username, $password ) );
+	$id   = apply_filters( 'wpsc_create_customer_user' , wp_create_user( $username, $password ) );
 	$user = new WP_User( $id );
 	$user->set_role( 'wpsc_anonymous' );
 
-	update_user_meta( $id, '_wpsc_last_active', time() );
-
 	_wpsc_create_customer_id_cookie( $id );
+
+	$now = time();
+	wpsc_update_customer_meta( 'temporary_profile', $now + 2 * 60 * 60, $id ); // profile is retained for at least two hours
+	wpsc_update_customer_meta( 'last_active', $now, $id );
 
 	return $id;
 }
@@ -283,19 +334,17 @@ function _wpsc_get_customer_meta_key( $key ) {
 }
 
 /**
- * Update the customer's last active time
+ * Update the current customer's last active time
  *
  * @access private
  * @since  3.8.13
  */
-function _wpsc_action_update_customer_last_active() {
+function _wpsc_action_update_current_customer_last_active() {
+	// get the current users id
 	$id = wpsc_get_current_customer_id();
 
-	$user = get_user_by( 'id', $id );
-	if ( $user->role != 'wpsc_anonymous' )
-		return;
-
-	update_user_meta( $id, '_wpsc_last_active', time() );
+	// go through the common update routine that allows any users last active time to be changed
+	wpsc_update_customer_last_active( $id );
 
 	// also extend cookie expiration
 	_wpsc_create_customer_id_cookie( $id );
@@ -483,7 +532,7 @@ function _wpsc_set_purchase_log_customer_id( $data ) {
 	// if there is a purchase log for this user we don't want to delete the
 	// user id, even if the transaction isn't successful.  there may be useful
 	// information in the customer profile related to the transaction
-	wpsc_delete_customer_meta('_wpsc_temporary_profile');
+	wpsc_delete_customer_meta('temporary_profile');
 
 	// if there isn't already user id we set the user id of the current customer id
 	if ( empty ( $data['user_ID'] ) ) {
@@ -494,7 +543,7 @@ function _wpsc_set_purchase_log_customer_id( $data ) {
 	return $data;
 }
 
-if ( !is_user_logged_in() ) {
+if ( ! is_user_logged_in() ) {
 	add_filter( 'wpsc_purchase_log_update_data', '_wpsc_set_purchase_log_customer_id', 1, 1 );
 	add_filter( 'wpsc_purchase_log_insert_data', '_wpsc_set_purchase_log_customer_id', 1, 1 );
 }
@@ -508,8 +557,9 @@ if ( !is_user_logged_in() ) {
  */
 function wpsc_customer_post_count( $id = false ) {
 
-	if ( ! $id )
+	if ( ! $id ) {
 		$id = wpsc_get_current_customer_id();
+	}
 
 	return count_user_posts( $id );
 }
