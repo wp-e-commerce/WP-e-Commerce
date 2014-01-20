@@ -324,8 +324,8 @@ function _wpsc_action_setup_customer() {
 		) );
 	}
 
-	require_once( ABSPATH . 'wp-admin/includes/user.php' );
-	wp_delete_user( $old_id );
+	// The old profile is no longer needed
+	_wpsc_abandon_temporary_customer_profile( $old_id );
 
 	_wpsc_set_customer_cookie( '', time() - 3600 );
 }
@@ -617,4 +617,16 @@ function wpsc_customer_purchase_count( $id = false ) {
 	}
 
 	return $count;
+}
+
+
+function _wpsc_abandon_temporary_customer_profile( $id = false ) {
+
+	if ( ! $id ) {
+		$id = wpsc_get_current_customer_id();
+	}
+
+	// set the temporary profile keep until time to sometime in the past, the delete
+	// processing will take care of the cleanup on the next processing cycle
+	wpsc_update_customer_meta( 'temporary_profile', time() - 1, $id );
 }
