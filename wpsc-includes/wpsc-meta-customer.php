@@ -199,11 +199,11 @@ function wpsc_get_all_customer_meta( $id = false ) {
 		return $result;
 	}
 
-	$meta = get_user_meta( $id );
+	$meta        = get_user_meta( $id );
 	$blog_prefix = is_multisite() ? $wpdb->get_blog_prefix() : '';
 	$key_pattern = "{$blog_prefix}_wpsc_";
 
-	$meta_value = get_user_meta( $id, _wpsc_get_customer_meta_key( $key ), true );
+	$meta = get_user_meta( $id );
 
 	$return = array();
 
