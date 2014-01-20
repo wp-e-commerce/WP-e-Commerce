@@ -465,7 +465,7 @@ class wpsc_cart {
 
      do_action( 'wpsc_before_get_shipping_method' , $this );
 
-     if((get_option('do_not_use_shipping') != 1) && (count($this->shipping_methods) > 0)  &&  apply_filters( wpsc_ready_to_calculate_shipping, true, $this ) ) {
+     if((get_option('do_not_use_shipping') != 1) && (count($this->shipping_methods) > 0)  &&  apply_filters( 'wpsc_ready_to_calculate_shipping', true, $this ) ) {
          $shipping_quotes = null;
          if($this->selected_shipping_method != null) {
             // use the selected shipping module
