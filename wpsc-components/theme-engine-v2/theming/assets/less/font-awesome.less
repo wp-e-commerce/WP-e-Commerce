@@ -1,0 +1,541 @@
+/*!
+ *  Font Awesome 3.0.2
+ *  the iconic font designed for use with Twitter Bootstrap
+ *  -------------------------------------------------------
+ *  The full suite of pictographic icons, examples, and documentation
+ *  can be found at: http://fortawesome.wpsc-github.com/Font-Awesome/
+ *
+ *  License
+ *  -------------------------------------------------------
+ *  - The Font Awesome font is licensed under the SIL Open Font License - http://scripts.wpsc-sil.org/OFL
+ *  - Font Awesome CSS, LESS, and SASS files are licensed under the MIT License -
+ *    http://opensource.wpsc-org/licenses/mit-license.html
+ *  - The Font Awesome pictograms are licensed under the CC BY 3.0 License - http://creativecommons.org/licenses/by/3.0/
+ *  - Attribution is no longer required in Font Awesome 3.0, but much appreciated:
+ *    "Font Awesome by Dave Gandy - http://fortawesome.wpsc-github.com/Font-Awesome"
+
+ *  Contact
+ *  -------------------------------------------------------
+ *  Email: dave@davegandy.wpsc-com
+ *  Twitter: http://twitter.wpsc-com/fortaweso_me
+ *  Work: Lead Product Designer @ http://kyruus.wpsc-com
+ *
+ * Modified to work with WPEC default styles
+ */
+
+@FontAwesomePath:   "../font";
+@borderColor:       #eee;
+@iconMuted:         #eee;
+.wpsc-border-radius(@radius) { -webkit-border-radius: @radius; -moz-border-radius: @radius; border-radius: @radius; }
+
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('@{FontAwesomePath}/fontawesome-webfont.eot?v=3.0.1');
+  src: url('@{FontAwesomePath}/fontawesome-webfont.eot?#iefix&v=3.0.1') format('embedded-opentype'),
+    url('@{FontAwesomePath}/fontawesome-webfont.woff?v=3.0.1') format('woff'),
+    url('@{FontAwesomePath}/fontawesome-webfont.ttf?v=3.0.1') format('truetype');
+//    url('@{FontAwesomePath}/fontawesome-webfont.svg#fontawesomeregular?v=3.0.1') format('svg');
+
+//  src: url('@{FontAwesomePath}/FontAwesome.otf') format('opentype');
+
+  font-weight: normal;
+  font-style: normal;
+}
+
+/*  Font Awesome styles
+    ------------------------------------------------------- */
+.wpsc-controller {
+  [class^="wpsc-icon-"],
+  [class*=" wpsc-icon-"] {
+    font-family: FontAwesome;
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: inherit;
+    -webkit-font-smoothing: antialiased;
+
+  /* sprites.wpsc-less reset */
+    display: inline;
+    width: auto;
+    height: auto;
+    line-height: normal;
+    vertical-align: baseline;
+    background-image: none;
+    background-position: 0% 0%;
+    background-repeat: repeat;
+    margin-top: 0;
+  }
+
+  /* more sprites.wpsc-less reset */
+  .wpsc-icon-white,
+  .wpsc-nav-pills > .active > a > [class^="wpsc-icon-"],
+  .wpsc-nav-pills > .active > a > [class*=" wpsc-icon-"],
+  .wpsc-nav-list > .active > a > [class^="wpsc-icon-"],
+  .wpsc-nav-list > .active > a > [class*=" wpsc-icon-"],
+  .wpsc-navbar-inverse .nav > .active > a > [class^="wpsc-icon-"],
+  .wpsc-navbar-inverse .nav > .active > a > [class*=" wpsc-icon-"],
+  .wpsc-dropdown-menu > li > a:hover > [class^="wpsc-icon-"],
+  .wpsc-dropdown-menu > li > a:hover > [class*=" wpsc-icon-"],
+  .wpsc-dropdown-menu > .active > a > [class^="wpsc-icon-"],
+  .wpsc-dropdown-menu > .active > a > [class*=" wpsc-icon-"],
+  .wpsc-dropdown-submenu:hover > a > [class^="wpsc-icon-"],
+  .wpsc-dropdown-submenu:hover > a > [class*=" wpsc-icon-"] {
+    background-image: none;
+  }
+
+  [class^="wpsc-icon-"]:before,
+  [class*=" wpsc-icon-"]:before {
+    text-decoration: inherit;
+    display: inline-block;
+    speak: none;
+  }
+
+  /* makes sure icons active on rollover in links */
+  a {
+    [class^="wpsc-icon-"],
+    [class*=" wpsc-icon-"] {
+      display: inline-block;
+    }
+  }
+
+  /* makes the font 33% larger relative to the icon container */
+  .wpsc-icon-large:before {
+    vertical-align: -10%;
+    font-size: 4/3em;
+  }
+
+  .wpsc-button, .wpsc-nav {
+    [class^="wpsc-icon-"],
+    [class*=" wpsc-icon-"] {
+      display: inline;
+      /* keeps button heights with and without icons the same */
+      &.wpsc-icon-large { line-height: .9em; }
+      &.wpsc-icon-spin { display: inline-block; }
+    }
+  }
+
+  .wpsc-nav-tabs, .wpsc-nav-pills {
+    [class^="wpsc-icon-"],
+    [class*=" wpsc-icon-"] {
+    /* keeps button heights with and without icons the same */
+      &, &.wpsc-icon-large { line-height: .9em; }
+    }
+  }
+
+  li, .wpsc-nav li {
+    [class^="wpsc-icon-"],
+    [class*=" wpsc-icon-"] {
+      display: inline-block;
+      width: 1.25em;
+      text-align: center;
+      &.wpsc-icon-large {
+        /* increased font size for icon-large */
+        width: 1.25*1.25em;
+      }
+    }
+  }
+
+  ul.wpsc-icons {
+    list-style-type: none;
+    text-indent: -75em;
+
+    li {
+      [class^="wpsc-icon-"],
+      [class*=" wpsc-icon-"] {
+        width: .75em;
+      }
+    }
+  }
+
+  .wpsc-icon-muted {
+    color: @iconMuted;
+  }
+
+  // Icon Borders
+  // -------------------------
+
+  .wpsc-icon-border {
+    border: solid 1px @borderColor;
+    padding: .2em .25em .15em;
+    .wpsc-border-radius(3px);
+  }
+
+  // Icon Sizes
+  // -------------------------
+
+  .wpsc-icon-2x {
+    font-size: 2em;
+    &.wpsc-icon-border {
+      border-width: 2px;
+      .wpsc-border-radius(4px);
+    }
+  }
+  .wpsc-icon-3x {
+    font-size: 3em;
+    &.wpsc-icon-border {
+      border-width: 3px;
+      .wpsc-border-radius(5px);
+    }
+  }
+  .wpsc-icon-4x {
+    font-size: 4em;
+    &.wpsc-icon-border {
+      border-width: 4px;
+      .wpsc-border-radius(6px);
+    }
+  }
+
+  // Floats
+  // -------------------------
+
+  // Quick floats
+  .wpsc-pull-right { float: right; }
+  .wpsc-pull-left { float: left; }
+
+  [class^="wpsc-icon-"],
+  [class*=" wpsc-icon-"] {
+    &.wpsc-pull-left {
+      margin-right: .3em;
+    }
+    &.wpsc-pull-right {
+      margin-left: .3em;
+    }
+  }
+
+  .wpsc-button {
+    [class^="wpsc-icon-"],
+    [class*=" wpsc-icon-"] {
+      &.wpsc-pull-left, &.wpsc-pull-right {
+        &.wpsc-icon-2x { margin-top: .18em; }
+      }
+      &.wpsc-icon-spin.wpsc-icon-large { line-height: .8em; }
+    }
+  }
+
+  .wpsc-button.wpsc-button-small {
+    [class^="wpsc-icon-"],
+    [class*=" wpsc-icon-"] {
+      &.wpsc-pull-left, &.wpsc-pull-right {
+        &.wpsc-icon-2x { margin-top: .25em; }
+      }
+    }
+  }
+
+  .wpsc-button.wpsc-button-large {
+    [class^="wpsc-icon-"],
+    [class*=" wpsc-icon-"] {
+      margin-top: 0; // overrides bootstrap default
+      &.wpsc-pull-left, &.wpsc-pull-right {
+        &.wpsc-icon-2x { margin-top: .05em; }
+      }
+      &.wpsc-pull-left.wpsc-icon-2x { margin-right: .2em; }
+      &.wpsc-pull-right.wpsc-icon-2x { margin-left: .2em; }
+    }
+  }
+
+
+  .wpsc-icon-spin {
+    display: inline-block;
+    -moz-animation: spin 2s infinite linear;
+    -o-animation: spin 2s infinite linear;
+    -webkit-animation: spin 2s infinite linear;
+    animation: spin 2s infinite linear;
+  }
+
+  @-moz-keyframes spin {
+    0% { -moz-transform: rotate(0deg); }
+    100% { -moz-transform: rotate(359deg); }
+  }
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(359deg); }
+  }
+  @-o-keyframes spin {
+    0% { -o-transform: rotate(0deg); }
+    100% { -o-transform: rotate(359deg); }
+  }
+  @-ms-keyframes spin {
+    0% { -ms-transform: rotate(0deg); }
+    100% { -ms-transform: rotate(359deg); }
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(359deg); }
+  }
+
+  @-moz-document url-prefix() {
+    .wpsc-icon-spin { height: .9em; }
+    .wpsc-button .wpsc-icon-spin { height: auto; }
+    .wpsc-icon-spin.wpsc-icon-large { height: 1.25em; }
+    .wpsc-button .wpsc-icon-spin.wpsc-icon-large { height: .75em; }
+  }
+
+  /*  Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
+      readers do not read off random characters that represent icons */
+  .wpsc-icon-glass:before                { content: "\f000"; }
+  .wpsc-icon-music:before                { content: "\f001"; }
+  .wpsc-icon-search:before               { content: "\f002"; }
+  .wpsc-icon-envelope:before             { content: "\f003"; }
+  .wpsc-icon-heart:before                { content: "\f004"; }
+  .wpsc-icon-star:before                 { content: "\f005"; }
+  .wpsc-icon-star-empty:before           { content: "\f006"; }
+  .wpsc-icon-user:before                 { content: "\f007"; }
+  .wpsc-icon-film:before                 { content: "\f008"; }
+  .wpsc-icon-th-large:before             { content: "\f009"; }
+  .wpsc-icon-th:before                   { content: "\f00a"; }
+  .wpsc-icon-th-list:before              { content: "\f00b"; }
+  .wpsc-icon-ok:before                   { content: "\f00c"; }
+  .wpsc-icon-remove:before               { content: "\f00d"; }
+  .wpsc-icon-zoom-in:before              { content: "\f00e"; }
+
+  .wpsc-icon-zoom-out:before             { content: "\f010"; }
+  .wpsc-icon-off:before                  { content: "\f011"; }
+  .wpsc-icon-signal:before               { content: "\f012"; }
+  .wpsc-icon-cog:before                  { content: "\f013"; }
+  .wpsc-icon-trash:before                { content: "\f014"; }
+  .wpsc-icon-home:before                 { content: "\f015"; }
+  .wpsc-icon-file:before                 { content: "\f016"; }
+  .wpsc-icon-time:before                 { content: "\f017"; }
+  .wpsc-icon-road:before                 { content: "\f018"; }
+  .wpsc-icon-download-alt:before         { content: "\f019"; }
+  .wpsc-icon-download:before             { content: "\f01a"; }
+  .wpsc-icon-upload:before               { content: "\f01b"; }
+  .wpsc-icon-inbox:before                { content: "\f01c"; }
+  .wpsc-icon-play-circle:before          { content: "\f01d"; }
+  .wpsc-icon-repeat:before               { content: "\f01e"; }
+
+  /* \f020 doesn't work in Safari.wpsc- all shifted one down */
+  .wpsc-icon-refresh:before              { content: "\f021"; }
+  .wpsc-icon-list-alt:before             { content: "\f022"; }
+  .wpsc-icon-lock:before                 { content: "\f023"; }
+  .wpsc-icon-flag:before                 { content: "\f024"; }
+  .wpsc-icon-headphones:before           { content: "\f025"; }
+  .wpsc-icon-volume-off:before           { content: "\f026"; }
+  .wpsc-icon-volume-down:before          { content: "\f027"; }
+  .wpsc-icon-volume-up:before            { content: "\f028"; }
+  .wpsc-icon-qrcode:before               { content: "\f029"; }
+  .wpsc-icon-barcode:before              { content: "\f02a"; }
+  .wpsc-icon-tag:before                  { content: "\f02b"; }
+  .wpsc-icon-tags:before                 { content: "\f02c"; }
+  .wpsc-icon-book:before                 { content: "\f02d"; }
+  .wpsc-icon-bookmark:before             { content: "\f02e"; }
+  .wpsc-icon-print:before                { content: "\f02f"; }
+
+  .wpsc-icon-camera:before               { content: "\f030"; }
+  .wpsc-icon-font:before                 { content: "\f031"; }
+  .wpsc-icon-bold:before                 { content: "\f032"; }
+  .wpsc-icon-italic:before               { content: "\f033"; }
+  .wpsc-icon-text-height:before          { content: "\f034"; }
+  .wpsc-icon-text-width:before           { content: "\f035"; }
+  .wpsc-icon-align-left:before           { content: "\f036"; }
+  .wpsc-icon-align-center:before         { content: "\f037"; }
+  .wpsc-icon-align-right:before          { content: "\f038"; }
+  .wpsc-icon-align-justify:before        { content: "\f039"; }
+  .wpsc-icon-list:before                 { content: "\f03a"; }
+  .wpsc-icon-indent-left:before          { content: "\f03b"; }
+  .wpsc-icon-indent-right:before         { content: "\f03c"; }
+  .wpsc-icon-facetime-video:before       { content: "\f03d"; }
+  .wpsc-icon-picture:before              { content: "\f03e"; }
+
+  .wpsc-icon-pencil:before               { content: "\f040"; }
+  .wpsc-icon-map-marker:before           { content: "\f041"; }
+  .wpsc-icon-adjust:before               { content: "\f042"; }
+  .wpsc-icon-tint:before                 { content: "\f043"; }
+  .wpsc-icon-edit:before                 { content: "\f044"; }
+  .wpsc-icon-share:before                { content: "\f045"; }
+  .wpsc-icon-check:before                { content: "\f046"; }
+  .wpsc-icon-move:before                 { content: "\f047"; }
+  .wpsc-icon-step-backward:before        { content: "\f048"; }
+  .wpsc-icon-fast-backward:before        { content: "\f049"; }
+  .wpsc-icon-backward:before             { content: "\f04a"; }
+  .wpsc-icon-play:before                 { content: "\f04b"; }
+  .wpsc-icon-pause:before                { content: "\f04c"; }
+  .wpsc-icon-stop:before                 { content: "\f04d"; }
+  .wpsc-icon-forward:before              { content: "\f04e"; }
+
+  .wpsc-icon-fast-forward:before         { content: "\f050"; }
+  .wpsc-icon-step-forward:before         { content: "\f051"; }
+  .wpsc-icon-eject:before                { content: "\f052"; }
+  .wpsc-icon-chevron-left:before         { content: "\f053"; }
+  .wpsc-icon-chevron-right:before        { content: "\f054"; }
+  .wpsc-icon-plus-sign:before            { content: "\f055"; }
+  .wpsc-icon-minus-sign:before           { content: "\f056"; }
+  .wpsc-icon-remove-sign:before          { content: "\f057"; }
+  .wpsc-icon-ok-sign:before              { content: "\f058"; }
+  .wpsc-icon-question-sign:before        { content: "\f059"; }
+  .wpsc-icon-info-sign:before            { content: "\f05a"; }
+  .wpsc-icon-screenshot:before           { content: "\f05b"; }
+  .wpsc-icon-remove-circle:before        { content: "\f05c"; }
+  .wpsc-icon-ok-circle:before            { content: "\f05d"; }
+  .wpsc-icon-ban-circle:before           { content: "\f05e"; }
+
+  .wpsc-icon-arrow-left:before           { content: "\f060"; }
+  .wpsc-icon-arrow-right:before          { content: "\f061"; }
+  .wpsc-icon-arrow-up:before             { content: "\f062"; }
+  .wpsc-icon-arrow-down:before           { content: "\f063"; }
+  .wpsc-icon-share-alt:before            { content: "\f064"; }
+  .wpsc-icon-resize-full:before          { content: "\f065"; }
+  .wpsc-icon-resize-small:before         { content: "\f066"; }
+  .wpsc-icon-plus:before                 { content: "\f067"; }
+  .wpsc-icon-minus:before                { content: "\f068"; }
+  .wpsc-icon-asterisk:before             { content: "\f069"; }
+  .wpsc-icon-exclamation-sign:before     { content: "\f06a"; }
+  .wpsc-icon-gift:before                 { content: "\f06b"; }
+  .wpsc-icon-leaf:before                 { content: "\f06c"; }
+  .wpsc-icon-fire:before                 { content: "\f06d"; }
+  .wpsc-icon-eye-open:before             { content: "\f06e"; }
+
+  .wpsc-icon-eye-close:before            { content: "\f070"; }
+  .wpsc-icon-warning-sign:before         { content: "\f071"; }
+  .wpsc-icon-plane:before                { content: "\f072"; }
+  .wpsc-icon-calendar:before             { content: "\f073"; }
+  .wpsc-icon-random:before               { content: "\f074"; }
+  .wpsc-icon-comment:before              { content: "\f075"; }
+  .wpsc-icon-magnet:before               { content: "\f076"; }
+  .wpsc-icon-chevron-up:before           { content: "\f077"; }
+  .wpsc-icon-chevron-down:before         { content: "\f078"; }
+  .wpsc-icon-retweet:before              { content: "\f079"; }
+  .wpsc-icon-shopping-cart:before        { content: "\f07a"; }
+  .wpsc-icon-folder-close:before         { content: "\f07b"; }
+  .wpsc-icon-folder-open:before          { content: "\f07c"; }
+  .wpsc-icon-resize-vertical:before      { content: "\f07d"; }
+  .wpsc-icon-resize-horizontal:before    { content: "\f07e"; }
+
+  .wpsc-icon-bar-chart:before            { content: "\f080"; }
+  .wpsc-icon-twitter-sign:before         { content: "\f081"; }
+  .wpsc-icon-facebook-sign:before        { content: "\f082"; }
+  .wpsc-icon-camera-retro:before         { content: "\f083"; }
+  .wpsc-icon-key:before                  { content: "\f084"; }
+  .wpsc-icon-cogs:before                 { content: "\f085"; }
+  .wpsc-icon-comments:before             { content: "\f086"; }
+  .wpsc-icon-thumbs-up:before            { content: "\f087"; }
+  .wpsc-icon-thumbs-down:before          { content: "\f088"; }
+  .wpsc-icon-star-half:before            { content: "\f089"; }
+  .wpsc-icon-heart-empty:before          { content: "\f08a"; }
+  .wpsc-icon-signout:before              { content: "\f08b"; }
+  .wpsc-icon-linkedin-sign:before        { content: "\f08c"; }
+  .wpsc-icon-pushpin:before              { content: "\f08d"; }
+  .wpsc-icon-external-link:before        { content: "\f08e"; }
+
+  .wpsc-icon-signin:before               { content: "\f090"; }
+  .wpsc-icon-trophy:before               { content: "\f091"; }
+  .wpsc-icon-github-sign:before          { content: "\f092"; }
+  .wpsc-icon-upload-alt:before           { content: "\f093"; }
+  .wpsc-icon-lemon:before                { content: "\f094"; }
+  .wpsc-icon-phone:before                { content: "\f095"; }
+  .wpsc-icon-check-empty:before          { content: "\f096"; }
+  .wpsc-icon-bookmark-empty:before       { content: "\f097"; }
+  .wpsc-icon-phone-sign:before           { content: "\f098"; }
+  .wpsc-icon-twitter:before              { content: "\f099"; }
+  .wpsc-icon-facebook:before             { content: "\f09a"; }
+  .wpsc-icon-github:before               { content: "\f09b"; }
+  .wpsc-icon-unlock:before               { content: "\f09c"; }
+  .wpsc-icon-credit-card:before          { content: "\f09d"; }
+  .wpsc-icon-rss:before                  { content: "\f09e"; }
+
+  .wpsc-icon-hdd:before                  { content: "\f0a0"; }
+  .wpsc-icon-bullhorn:before             { content: "\f0a1"; }
+  .wpsc-icon-bell:before                 { content: "\f0a2"; }
+  .wpsc-icon-certificate:before          { content: "\f0a3"; }
+  .wpsc-icon-hand-right:before           { content: "\f0a4"; }
+  .wpsc-icon-hand-left:before            { content: "\f0a5"; }
+  .wpsc-icon-hand-up:before              { content: "\f0a6"; }
+  .wpsc-icon-hand-down:before            { content: "\f0a7"; }
+  .wpsc-icon-circle-arrow-left:before    { content: "\f0a8"; }
+  .wpsc-icon-circle-arrow-right:before   { content: "\f0a9"; }
+  .wpsc-icon-circle-arrow-up:before      { content: "\f0aa"; }
+  .wpsc-icon-circle-arrow-down:before    { content: "\f0ab"; }
+  .wpsc-icon-globe:before                { content: "\f0ac"; }
+  .wpsc-icon-wrench:before               { content: "\f0ad"; }
+  .wpsc-icon-tasks:before                { content: "\f0ae"; }
+
+  .wpsc-icon-filter:before               { content: "\f0b0"; }
+  .wpsc-icon-briefcase:before            { content: "\f0b1"; }
+  .wpsc-icon-fullscreen:before           { content: "\f0b2"; }
+
+  .wpsc-icon-group:before                { content: "\f0c0"; }
+  .wpsc-icon-link:before                 { content: "\f0c1"; }
+  .wpsc-icon-cloud:before                { content: "\f0c2"; }
+  .wpsc-icon-beaker:before               { content: "\f0c3"; }
+  .wpsc-icon-cut:before                  { content: "\f0c4"; }
+  .wpsc-icon-copy:before                 { content: "\f0c5"; }
+  .wpsc-icon-paper-clip:before           { content: "\f0c6"; }
+  .wpsc-icon-save:before                 { content: "\f0c7"; }
+  .wpsc-icon-sign-blank:before           { content: "\f0c8"; }
+  .wpsc-icon-reorder:before              { content: "\f0c9"; }
+  .wpsc-icon-list-ul:before              { content: "\f0ca"; }
+  .wpsc-icon-list-ol:before              { content: "\f0cb"; }
+  .wpsc-icon-strikethrough:before        { content: "\f0cc"; }
+  .wpsc-icon-underline:before            { content: "\f0cd"; }
+  .wpsc-icon-table:before                { content: "\f0ce"; }
+
+  .wpsc-icon-magic:before                { content: "\f0d0"; }
+  .wpsc-icon-truck:before                { content: "\f0d1"; }
+  .wpsc-icon-pinterest:before            { content: "\f0d2"; }
+  .wpsc-icon-pinterest-sign:before       { content: "\f0d3"; }
+  .wpsc-icon-google-plus-sign:before     { content: "\f0d4"; }
+  .wpsc-icon-google-plus:before          { content: "\f0d5"; }
+  .wpsc-icon-money:before                { content: "\f0d6"; }
+  .wpsc-icon-caret-down:before           { content: "\f0d7"; }
+  .wpsc-icon-caret-up:before             { content: "\f0d8"; }
+  .wpsc-icon-caret-left:before           { content: "\f0d9"; }
+  .wpsc-icon-caret-right:before          { content: "\f0da"; }
+  .wpsc-icon-columns:before              { content: "\f0db"; }
+  .wpsc-icon-sort:before                 { content: "\f0dc"; }
+  .wpsc-icon-sort-down:before            { content: "\f0dd"; }
+  .wpsc-icon-sort-up:before              { content: "\f0de"; }
+
+  .wpsc-icon-envelope-alt:before         { content: "\f0e0"; }
+  .wpsc-icon-linkedin:before             { content: "\f0e1"; }
+  .wpsc-icon-undo:before                 { content: "\f0e2"; }
+  .wpsc-icon-legal:before                { content: "\f0e3"; }
+  .wpsc-icon-dashboard:before            { content: "\f0e4"; }
+  .wpsc-icon-comment-alt:before          { content: "\f0e5"; }
+  .wpsc-icon-comments-alt:before         { content: "\f0e6"; }
+  .wpsc-icon-bolt:before                 { content: "\f0e7"; }
+  .wpsc-icon-sitemap:before              { content: "\f0e8"; }
+  .wpsc-icon-umbrella:before             { content: "\f0e9"; }
+  .wpsc-icon-paste:before                { content: "\f0ea"; }
+  .wpsc-icon-lightbulb:before            { content: "\f0eb"; }
+  .wpsc-icon-exchange:before             { content: "\f0ec"; }
+  .wpsc-icon-cloud-download:before       { content: "\f0ed"; }
+  .wpsc-icon-cloud-upload:before         { content: "\f0ee"; }
+
+  .wpsc-icon-user-md:before              { content: "\f0f0"; }
+  .wpsc-icon-stethoscope:before          { content: "\f0f1"; }
+  .wpsc-icon-suitcase:before             { content: "\f0f2"; }
+  .wpsc-icon-bell-alt:before             { content: "\f0f3"; }
+  .wpsc-icon-coffee:before               { content: "\f0f4"; }
+  .wpsc-icon-food:before                 { content: "\f0f5"; }
+  .wpsc-icon-file-alt:before             { content: "\f0f6"; }
+  .wpsc-icon-building:before             { content: "\f0f7"; }
+  .wpsc-icon-hospital:before             { content: "\f0f8"; }
+  .wpsc-icon-ambulance:before            { content: "\f0f9"; }
+  .wpsc-icon-medkit:before               { content: "\f0fa"; }
+  .wpsc-icon-fighter-jet:before          { content: "\f0fb"; }
+  .wpsc-icon-beer:before                 { content: "\f0fc"; }
+  .wpsc-icon-h-sign:before               { content: "\f0fd"; }
+  .wpsc-icon-plus-sign-alt:before        { content: "\f0fe"; }
+
+  .wpsc-icon-double-angle-left:before    { content: "\f100"; }
+  .wpsc-icon-double-angle-right:before   { content: "\f101"; }
+  .wpsc-icon-double-angle-up:before      { content: "\f102"; }
+  .wpsc-icon-double-angle-down:before    { content: "\f103"; }
+  .wpsc-icon-angle-left:before           { content: "\f104"; }
+  .wpsc-icon-angle-right:before          { content: "\f105"; }
+  .wpsc-icon-angle-up:before             { content: "\f106"; }
+  .wpsc-icon-angle-down:before           { content: "\f107"; }
+  .wpsc-icon-desktop:before              { content: "\f108"; }
+  .wpsc-icon-laptop:before               { content: "\f109"; }
+  .wpsc-icon-tablet:before               { content: "\f10a"; }
+  .wpsc-icon-mobile-phone:before         { content: "\f10b"; }
+  .wpsc-icon-circle-blank:before         { content: "\f10c"; }
+  .wpsc-icon-quote-left:before           { content: "\f10d"; }
+  .wpsc-icon-quote-right:before          { content: "\f10e"; }
+
+  .wpsc-icon-spinner:before              { content: "\f110"; }
+  .wpsc-icon-circle:before               { content: "\f111"; }
+  .wpsc-icon-reply:before                { content: "\f112"; }
+  .wpsc-icon-github-alt:before           { content: "\f113"; }
+  .wpsc-icon-folder-close-alt:before     { content: "\f114"; }
+  .wpsc-icon-folder-open-alt:before      { content: "\f115"; }
+}

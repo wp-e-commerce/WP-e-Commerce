@@ -1,0 +1,64 @@
+.wpsc-form-radio-wrapper, .wpsc-form-checkbox-wrapper {
+	display: block;
+	margin-bottom: 5px;
+}
+
+/* Settings->Store->Pages */
+#wpsc-settings-form .button-view-page {
+	margin-left: 5px;
+}
+
+input[id$="-slug"].regular-text {
+	width: auto;
+}
+
+/* Settings->Store->Presentation */
+#options_presentation {
+	margin-right: 0;
+}
+
+.wpsc-settings-category-filter-custom-select-all,
+.wpsc-settings-category-filter-custom-deselect-all {
+	margin: 0 0 0 5px;
+}
+
+.wpsc-settings-all-none {
+	font-size: 0.8em;
+	margin-bottom: 5px;
+}
+
+#wpbody #categories-to-filter-custom-select {
+	width: 200px;
+	height: 120px;
+}
+
+.chosen-container-multi .chosen-choices {
+	background-image: none;
+	max-height:200px;
+	overflow: auto;
+}
+
+.chosen-container-multi .chosen-choices li.search-field {
+	margin: 3px 0;
+}
+
+.chosen-container-multi .chosen-choices li.search-field input[type="text"] {
+	padding: 0;
+	margin: 3px 0 3px 5px;
+}
+
+.chosen-container-multi .chosen-choices li.search-choice {
+	float: none;
+	margin-right: 3px;
+}
+
+/* Appearance -> Widgets -> Category Drill Down */
+[id*=wpsc_widget_drill_down] {
+	overflow: visible !important;
+}
+
+[id*=wpsc_widget_drill_down] .chosen-container,
+[id*=wpsc_widget_drill_down] .chosen-choices,
+[id*=wpsc_widget_drill_down] .default {
+	width: 100% !important;
+}

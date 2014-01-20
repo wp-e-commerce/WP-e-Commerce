@@ -1,0 +1,81 @@
+.wpsc-controller {
+	.wpsc-wizard {
+/* 		.gradient(@gradient-normal-1, @gradient-normal-2, @color-normal);
+		border: 1px solid @border-color-wizard;
+		.border-radius(@border-radius);
+		.box-shadow(0 1px 4px rgba(0,0,0,.065)); */
+		.clearfix();
+		margin: 0 0 @line-height-m;
+		padding: 0;
+		list-style:none;
+		width: auto;
+	}
+	.wpsc-wizard > li {
+		/* border-right: 1px solid @border-color-wizard; */
+		float: left;
+		padding: 0;
+		margin: 0;
+		display: block;
+		position: relative;
+
+		&:last-child {
+			/* border-right: none; */
+			/* &:after {
+				content: "";
+				border: none;
+				display: none;
+			} */
+		}
+		&.split-3 {
+			.calc(~"33% - 0.66px");
+		}
+		&.split-4 {
+			.calc(~"25% - 0.75px");
+		}
+		&.split-5 {
+			.calc(~"20% - 0.8px");
+		}
+		/* &:after {
+			border-bottom: 6px solid transparent;
+			border-left: 6px solid @border-color-wizard;
+			border-top: 6px solid transparent;
+			content: " ";
+			display: block;
+			height: 0;
+			left: 100%;
+			position: absolute;
+			top: 39%;
+			width: 0;
+			z-index: 10000;
+		}; */
+	}
+	.wpsc-wizard > li {
+		> a,
+		> span {
+			/* font-size: @font-size-m; */
+			display: block;
+			/* color: @font-color; */
+			text-decoration: none;
+			float: none;
+			padding: 10px 0;
+			text-align: center;
+			width: 100%;
+			outline: none;
+		}
+	}
+	.wpsc-wizard > .active > a {
+/*		.gradient(@gradient-normal-1-active, @gradient-normal-2-active, @color-normal); */
+
+	}
+	.wpsc-wizard > li.disabled > span {
+		opacity: 0.5;
+	}
+	/* .wpsc-wizard > li.completed > a:after {
+		content: " \f046";
+		font-family: FontAwesome;
+		font-weight: normal;
+		font-style: normal;
+		text-decoration: inherit;
+		-webkit-font-smoothing: antialiased;
+	} */
+}
