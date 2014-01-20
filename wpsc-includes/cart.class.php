@@ -463,6 +463,8 @@ class wpsc_cart {
      $this->shipping_methods = get_option('custom_shipping_options');
      $this->shipping_method_count = count($this->shipping_methods);
 
+     do_action( 'wpsc_before_get_shipping_method' , $this );
+
       if((get_option('do_not_use_shipping') != 1) && (count($this->shipping_methods) > 0)  ) {
          $shipping_quotes = null;
          if($this->selected_shipping_method != null) {
@@ -498,6 +500,8 @@ class wpsc_cart {
             }
          }
       }
+
+      do_action( 'wpsc_after_get_shipping_method', $this );
   }
 
   /**
