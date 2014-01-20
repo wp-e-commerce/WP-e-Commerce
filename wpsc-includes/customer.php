@@ -102,7 +102,7 @@ function _wpsc_create_customer_id() {
 	$password = wp_generate_password( 12, false );
 
 	// filter gives chance for others to do some processing before the new user is handled
-	$id   = apply_filters( 'wpsc_create_customer_user' , wp_create_user( $username, $password ) );
+	$id   = wp_create_user( $username, $password );
 	$user = new WP_User( $id );
 	$user->set_role( 'wpsc_anonymous' );
 
@@ -111,6 +111,8 @@ function _wpsc_create_customer_id() {
 	$now = time();
 	wpsc_update_customer_meta( 'temporary_profile', $now + 2 * 60 * 60, $id ); // profile is retained for at least two hours
 	wpsc_update_customer_meta( 'last_active', $now, $id );
+
+	do_action( 'wpsc_create_customer_user' , $id , $user );
 
 	return $id;
 }
