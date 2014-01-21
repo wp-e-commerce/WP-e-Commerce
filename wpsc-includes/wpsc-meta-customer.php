@@ -299,7 +299,7 @@ function wpsc_update_customer_last_active( $id = false ) {
 	wpsc_update_customer_meta( 'last_active', $last_active = time(), $id );
 
 	// if there is a temporary profile value we update it with a new time
-	$temporary_profile = wpsc_get_customer_meta(  $id , 'temporary_profile' );
+	$temporary_profile = wpsc_get_customer_meta( 'temporary_profile',  $id  );
 	if ( ! empty( $temporary_profile ) ) {
 		wpsc_update_customer_meta( 'last_active', $last_active + 48 *60 * 60, $id );
 	}
