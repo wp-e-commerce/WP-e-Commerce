@@ -18,13 +18,14 @@ add_filter( 'editable_roles'             , '_wpsc_filter_editable_roles'        
  * @param  int   $expire  Expiration timestamp
  */
 function _wpsc_set_customer_cookie( $cookie, $expire ) {
-	$secure = is_ssl();
-	setcookie( WPSC_CUSTOMER_COOKIE, $cookie, $expire, WPSC_CUSTOMER_COOKIE_PATH, COOKIE_DOMAIN, $secure, true );
 
-	if ( $expire < time() )
-		unset( $_COOKIE[WPSC_CUSTOMER_COOKIE] );
-	else
-		$_COOKIE[WPSC_CUSTOMER_COOKIE] = $cookie;
+	setcookie( WPSC_CUSTOMER_COOKIE, $cookie, $expire, WPSC_CUSTOMER_COOKIE_PATH, COOKIE_DOMAIN, false, true );
+
+	if ( $expire < time() ) {
+		unset( $_COOKIE[ WPSC_CUSTOMER_COOKIE ] );
+	} else {
+		$_COOKIE[ WPSC_CUSTOMER_COOKIE ] = $cookie;
+	}
 }
 
 /**
