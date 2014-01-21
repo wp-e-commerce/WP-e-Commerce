@@ -16,7 +16,7 @@ abstract class WPSC_Purchase_Log_Notification {
 		$this->purchase_log   = $purchase_log;
 		$this->address        = $this->get_address();
 		$this->plaintext_args = $this->get_plaintext_args();
-		$this->html_args       = $this->get_html_args();
+		$this->html_args      = $this->get_html_args();
 		$this->raw_message    = $this->get_raw_message();
 		$this->title          = $this->get_subject();
 
