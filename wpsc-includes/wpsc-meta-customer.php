@@ -203,8 +203,6 @@ function wpsc_get_all_customer_meta( $id = false ) {
 	$blog_prefix = is_multisite() ? $wpdb->get_blog_prefix() : '';
 	$key_pattern = "{$blog_prefix}_wpsc_";
 
-	$meta = get_user_meta( $id );
-
 	$return = array();
 
 	foreach ( $meta as $key => $value ) {
