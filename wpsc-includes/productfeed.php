@@ -28,15 +28,12 @@ function wpsc_generate_product_feed() {
     }
 
 	// Don't build up a huge posts cache for the whole store - http://code.google.com/p/wp-e-commerce/issues/detail?id=885
-	// WP 3.3+ only
-	if ( function_exists ( 'wp_suspend_cache_addition' ) ) {
-		wp_suspend_cache_addition(true);
-	}
+	wp_suspend_cache_addition(true);
 
     $chunk_size = apply_filters ( 'wpsc_productfeed_chunk_size', 50 );
 
     // Don't cache feed under WP Super-Cache
-    define( 'DONOTCACHEPAGE',TRUE );
+    define( 'DONOTCACHEPAGE', true );
 
 	$selected_category = '';
 	$selected_product = '';
@@ -136,18 +133,18 @@ function wpsc_generate_product_feed() {
 
 				echo "      <g:price>".$price."</g:price>\n\r";
 
-				$google_elements = Array ();
+				$google_elements = array();
 
 				$product_meta = get_post_custom ( $post->ID );
 
                 if ( is_array ( $product_meta ) ) {
 				    foreach ( $product_meta as $meta_key => $meta_value ) {
-					    if ( stripos($meta_key,'g:') === 0 )
-						    $google_elements[$meta_key] = $meta_value;
+					    if ( stripos( $meta_key, 'g:' ) === 0 )
+						    $google_elements[ $meta_key ] = $meta_value;
 				    }
                 }
 
-				$google_elements = apply_filters( 'wpsc_google_elements', array ( 'product_id' => $post->ID, 'elements' => $google_elements ) );
+				$google_elements = apply_filters( 'wpsc_google_elements', array( 'product_id' => $post->ID, 'elements' => $google_elements ) );
 				$google_elements = $google_elements['elements'];
 
 	            $done_condition = FALSE;

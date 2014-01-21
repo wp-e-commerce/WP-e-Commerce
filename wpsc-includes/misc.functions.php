@@ -206,10 +206,7 @@ function nzshpcrt_display_preview_image() {
 			}
 
 			if ( $use_cache === true ) {
-				$cache_url = WPSC_CACHE_URL;
-				if ( is_ssl ( ) ) {
-					$cache_url = str_replace( "http://", "https://", $cache_url );
-				}
+				$cache_url = set_url_scheme( WPSC_CACHE_URL );
 				header( "Location: " . $cache_url . $cache_filename . $extension );
 				exit( '' );
 			} else {

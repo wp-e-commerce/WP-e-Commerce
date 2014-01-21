@@ -312,8 +312,7 @@ function wpsc_get_template_file_url( $file = '' ) {
 		}
 	}
 
-	if ( is_ssl() )
-		$file_url = str_replace('http://', 'https://', $file_url);
+	$file_url = set_url_scheme( $file_url );
 
 	// Return filtered result
 	return apply_filters( WPEC_TRANSIENT_THEME_URL_PREFIX . $file, $file_url );
@@ -334,19 +333,18 @@ function wpsc_enqueue_user_script_and_css() {
 		/**
 		 * end of added by xiligroup.dev to be compatible with touchshop
 		 */
-		$scheme = is_ssl() ? 'https' : 'http';
-		$version_identifier = WPSC_VERSION . "." . WPSC_MINOR_VERSION;
+		$version_identifier = WPSC_VERSION . '.' . WPSC_MINOR_VERSION;
 
 		$category_id = wpsc_get_current_category_id();
 
-		if( get_option( 'wpsc_share_this' ) == 1 ) {
+		if ( get_option( 'wpsc_share_this' ) == 1 ) {
 			$remote_protocol = is_ssl() ? 'https://ws' : 'http://w';
 			wp_enqueue_script( 'sharethis', $remote_protocol . '.sharethis.com/button/buttons.js', array(), false, true );
 		}
 
 		wp_enqueue_script( 'jQuery' );
 		wp_enqueue_script( 'wp-e-commerce',               WPSC_CORE_JS_URL	. '/wp-e-commerce.js',                 array( 'jquery' ), $version_identifier );
-		wp_enqueue_script( 'wp-e-commerce-dynamic', home_url( '/index.php?wpsc_user_dynamic_js=true', $scheme ), false,             $version_identifier );
+		wp_enqueue_script( 'wp-e-commerce-dynamic', home_url( '/index.php?wpsc_user_dynamic_js=true' ), false,             $version_identifier );
 
 		wp_localize_script( 'wp-e-commerce', 'wpsc_ajax', array(
 			'ajaxurl'   => admin_url( 'admin-ajax.php', 'relative' ),

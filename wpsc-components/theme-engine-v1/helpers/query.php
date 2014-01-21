@@ -5,10 +5,10 @@ add_action( 'template_redirect', 'wpsc_start_the_query', 8 );
 add_action( 'wp', 'wpsc_force_ssl' );
 
 if ( is_ssl() ) {
-	add_filter( 'option_product_list_url',  'wpsc_add_https_to_page_url_options' );
-	add_filter( 'option_shopping_cart_url', 'wpsc_add_https_to_page_url_options' );
-	add_filter( 'option_transact_url',      'wpsc_add_https_to_page_url_options' );
-	add_filter( 'option_user_account_url',  'wpsc_add_https_to_page_url_options' );
+	add_filter( 'option_product_list_url',  'set_url_scheme' );
+	add_filter( 'option_shopping_cart_url', 'set_url_scheme' );
+	add_filter( 'option_transact_url',      'set_url_scheme' );
+	add_filter( 'option_user_account_url',  'set_url_scheme' );
 }
 
 add_filter( 'wp_nav_menu_args', 'wpsc_switch_the_query', 99 );
@@ -592,6 +592,7 @@ function wpsc_force_ssl() {
  * Forces SSL onto option URLs
  *
  * @param string $url
+ * @deprecated 3.8.14
  * @return string
  */
 function wpsc_add_https_to_page_url_options( $url ) {

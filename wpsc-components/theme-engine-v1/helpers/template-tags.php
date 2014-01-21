@@ -567,9 +567,8 @@ function wpsc_product_image( $attachment_id = 0, $width = null, $height = null )
 		if ( ! empty( $image_meta ) )
 			$image_url = $uploads['baseurl'].'/'.$image_meta[0];
 	}
-        if( is_ssl() ) str_replace('http://', 'https://', $image_url);
 
-	return apply_filters( 'wpsc_product_image', $image_url );
+	return apply_filters( 'wpsc_product_image', set_url_scheme( $image_url ) );
 }
 
 function wpsc_product_no_image_fallback( $image_url = '' ) {
@@ -945,14 +944,11 @@ function wpsc_the_product_image( $width = '', $height = '', $product_id = '' ) {
 	$src = wp_get_attachment_image_src( $product_thumbnail_id, 'large' );
 	$src = is_array( $src ) ? $src[0] : $src;
 
-	if ( is_ssl() && ! empty( $src ) )
-		$src = str_replace( 'http://', 'https://', $src );
-
 	// WordPress's esc_url() function strips out spaces, so encode them here to ensure they don't get stripped out
 	// Ref: http://core.trac.wordpress.org/ticket/23605
 	$src = str_replace( ' ', '%20', $src );
 
-	return apply_filters( 'wpsc_product_image', $src );
+	return apply_filters( 'wpsc_product_image', set_url_scheme( $src ) );
 }
 
 /**
@@ -1071,14 +1067,11 @@ function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id 
 	if ( ! $thumbnail && isset( $thumbnail_id ) )
 		$thumbnail = wpsc_product_image( $thumbnail_id, $width, $height );
 
-	if ( ! empty( $thumbnail ) && is_ssl() )
-		$thumbnail = str_replace( 'http://', 'https://', $thumbnail );
-
 	// WordPress's esc_url() function strips out spaces, so encode them here to ensure they don't get stripped out
 	// Ref: http://core.trac.wordpress.org/ticket/23605
 	$thumbnail = str_replace( ' ', '%20', $thumbnail );
 
-	return $thumbnail;
+	return apply_filters( 'wpsc_the_product_thumbnail', set_url_scheme( $thumbnail ) );
 }
 
 /**
