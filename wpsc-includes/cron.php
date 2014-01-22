@@ -74,7 +74,12 @@ if ( defined( 'DOING_AJAX') && DOING_AJAX && ($_SERVER['SERVER_ADDR'] == $_SERVE
 			define( 'WPSC_MAX_DELETE_PROFILE_TIME', 10 );
 		}
 
+		if ( ! defined( 'WPSC_MAX_DELETE_MEMORY_USAGE' ) ) {
+			define( 'WPSC_MAX_DELETE_MEMORY_USAGE',  20*1024*1024); // allow up to 20 megabytes to be consumed by the delete processing
+		}
+
 		$a_little_bit_of_time_after_start = time() + WPSC_MAX_DELETE_PROFILE_TIME;
+		$too_much_memory_is_being_used = memory_get_usage( true ) + WPSC_MAX_DELETE_MEMORY_USAGE;
 
 		foreach ( $wp_user_query->results as $id ) {
 
@@ -82,7 +87,7 @@ if ( defined( 'DOING_AJAX') && DOING_AJAX && ($_SERVER['SERVER_ADDR'] == $_SERVE
 			// get caught in a loop using server resources for an extended period of time without yielding.
 			// Different environments will be able to delete a different number of users in the allowed time,
 			// that's the reason for the defined variable
-			if ( time() > $a_little_bit_of_time_after_start ) {
+			if ( (time() > $a_little_bit_of_time_after_start) || ( memory_get_usage( true ) > $too_much_memory_is_being_used ) ) {
 				// next delete processing will happen no sooner than in a couple minutes, but as the time allowed for
 				// delete processing increases the interval between cycles will also extend.
 				wp_schedule_single_event( time() + (120 + 2*WPSC_MAX_DELETE_PROFILE_TIME), '_wpsc_clear_customer_meta_action' );
