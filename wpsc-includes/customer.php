@@ -196,29 +196,27 @@ function _wpsc_validate_customer_cookie() {
 	list( $id, $expire, $hash ) = $x = explode( '|', $cookie );
 	$data = $id . $expire;
 
-	$id = intval( $id );
+	// check to see if the ID is valid, it must be an integer, empty test is because old versions of php
+	// can return true on empty string
+	if ( !empty( $id ) &&  ctype_digit ( $id ) ) {
+		$id = intval( $id );
 
-	// invalid ID
-	if ( ! $id ) {
-		return false;
+		$user = get_user_by( 'id', $id );
+
+		// if a user is found keep checking, user not found clear the cookie and return invalid
+		if ( $user !== false ) {
+			$pass_frag = substr( $user->user_pass, 8, 4 );
+			$key       = wp_hash( $user->user_login . $pass_frag . '|' . $expire );
+			$hmac      = hash_hmac( 'md5', $data, $key );
+
+			// integrity check
+			if ( $hmac == $hash ) {
+				return $id;
+			}
+		}
 	}
 
-	$user = get_user_by( 'id', $id );
-
-	// no user found
-	if ( $user === false ) {
-		return false;
-	}
-
-	$pass_frag = substr( $user->user_pass, 8, 4 );
-	$key       = wp_hash( $user->user_login . $pass_frag . '|' . $expire );
-	$hmac      = hash_hmac( 'md5', $data, $key );
-
-	// integrity check
-	if ( $hmac == $hash ) {
-		return $id;
-	}
-
+	// if we get to here the cookie or user is not valid
 	_wpsc_set_customer_cookie( '', time() - 3600 );
 	return false;
 }
