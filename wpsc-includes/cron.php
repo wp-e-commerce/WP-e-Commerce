@@ -20,7 +20,7 @@ function wpsc_clear_stock_claims() {
 
 	$seconds = floor( $time * $convert[ $interval ] );
 
-	$sql = $wpdb->prepare( "DELETE FROM " . WPSC_TABLE_CLAIMED_STOCK . " WHERE last_activity < UTC_TIMESTAMP() - INTERVAL %d SECOND", $seconds );
+	$sql = $wpdb->prepare( 'DELETE FROM ' . WPSC_TABLE_CLAIMED_STOCK . ' WHERE last_activity < UTC_TIMESTAMP() - INTERVAL %d SECOND', $seconds );
 	$wpdb->query( $sql );
 }
 
@@ -39,7 +39,7 @@ add_action( '_wpsc_clear_customer_meta_action' , '_wpsc_clear_expired_user_profi
 
 
 // If we are doing ajax and the request came from ourselves  we can setup the clear user profiles ajax
-if ( defined( 'DOING_AJAX') && DOING_AJAX && ($_SERVER['SERVER_ADDR'] == $_SERVER['REMOTE_ADDR'] ) ) {
+if ( defined( 'DOING_AJAX' ) && DOING_AJAX && ( $_SERVER['SERVER_ADDR'] == $_SERVER['REMOTE_ADDR'] ) ) {
 
 	add_action( 'wp_ajax_wpsc_wpsc_clear_expired_profiles', '_wpsc_clear_expired_user_profiles_ajax' );
 	add_action( 'wp_ajax_nopriv_wpsc_clear_expired_profiles', '_wpsc_clear_expired_user_profiles_ajax' );
@@ -56,13 +56,13 @@ if ( defined( 'DOING_AJAX') && DOING_AJAX && ($_SERVER['SERVER_ADDR'] == $_SERVE
 								'key'     => _wpsc_get_customer_meta_key( 'temporary_profile' ),
 								'value'   => time(),
 								'type'    => 'UNSIGNED',
-								'compare' => '<'
-						)
+								'compare' => '<',
+						),
 				),
-				'fields' => 'ID'
+				'fields' => 'ID',
 		);
 
-		 $wp_user_query = new WP_User_Query( $args );
+		$wp_user_query = new WP_User_Query( $args );
 
 
 		// For each of the ids double check to be sure there isn't any important data associated with the temporary user.
@@ -75,7 +75,7 @@ if ( defined( 'DOING_AJAX') && DOING_AJAX && ($_SERVER['SERVER_ADDR'] == $_SERVE
 		}
 
 		if ( ! defined( 'WPSC_MAX_DELETE_MEMORY_USAGE' ) ) {
-			define( 'WPSC_MAX_DELETE_MEMORY_USAGE',  20*1024*1024); // allow up to 20 megabytes to be consumed by the delete processing
+			define( 'WPSC_MAX_DELETE_MEMORY_USAGE',  20 * 1024 * 1024 ); // allow up to 20 megabytes to be consumed by the delete processing
 		}
 
 		$a_little_bit_of_time_after_start = time() + WPSC_MAX_DELETE_PROFILE_TIME;
@@ -90,7 +90,7 @@ if ( defined( 'DOING_AJAX') && DOING_AJAX && ($_SERVER['SERVER_ADDR'] == $_SERVE
 			if ( (time() > $a_little_bit_of_time_after_start) || ( memory_get_usage( true ) > $too_much_memory_is_being_used ) ) {
 				// next delete processing will happen no sooner than in a couple minutes, but as the time allowed for
 				// delete processing increases the interval between cycles will also extend.
-				wp_schedule_single_event( time() + (120 + 2*WPSC_MAX_DELETE_PROFILE_TIME), '_wpsc_clear_customer_meta_action' );
+				wp_schedule_single_event( time() + ( 120 + 2 * WPSC_MAX_DELETE_PROFILE_TIME ), '_wpsc_clear_customer_meta_action' );
 				break;
 			}
 
