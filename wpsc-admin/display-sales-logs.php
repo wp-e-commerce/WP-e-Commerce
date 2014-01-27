@@ -308,7 +308,7 @@ class WPSC_Purchase_Log_Page {
 			$packing_slip_file = 'includes/purchase-logs-page/packing-slip.php';
 		}
 
-		$packing_slip_file - apply_filters( 'wpsc_packing_packing_slip_path', $packing_slip_file );
+		$packing_slip_file = apply_filters( 'wpsc_packing_packing_slip_path', $packing_slip_file );
 
 		include( $packing_slip_file );
 
