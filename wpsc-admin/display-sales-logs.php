@@ -285,11 +285,11 @@ class WPSC_Purchase_Log_Page {
 		$purchlogitem = new wpsc_purchaselogs_items( $this->log_id );
 
 		$columns = array(
-			'title'    => __( 'Item Name','wpsc' ),
-			'sku'      => __( 'SKU','wpsc' ),
-			'quantity' => __( 'Quantity','wpsc' ),
-			'price'    => __( 'Price','wpsc' ),
-			'shipping' => __( 'Item Shipping','wpsc'),
+			'title'    => __( 'Item Name', 'wpsc' ),
+			'sku'      => __( 'SKU', 'wpsc' ),
+			'quantity' => __( 'Quantity', 'wpsc' ),
+			'price'    => __( 'Price', 'wpsc' ),
+			'shipping' => __( 'Item Shipping','wpsc' ),
 		);
 
 		if ( wpec_display_product_tax() ) {
@@ -303,10 +303,14 @@ class WPSC_Purchase_Log_Page {
 		register_column_headers( 'wpsc_purchase_log_item_details', $columns );
 
 		if ( file_exists( get_stylesheet_directory() . '/wpsc-packing-slip.php' ) ) {
-			include( get_stylesheet_directory() . '/wpsc-packing-slip.php' );
+			$packing_slip_file = get_stylesheet_directory() . '/wpsc-packing-slip.php';
 		} else {
-			include( 'includes/purchase-logs-page/packing-slip.php' );
+			$packing_slip_file = 'includes/purchase-logs-page/packing-slip.php';
 		}
+
+		$packing_slip_file - apply_filters( 'wpsc_packing_packing_slip_html_path', $packing_slip_file );
+
+		include( $packing_slip_file );
 
 		exit;
 	}
