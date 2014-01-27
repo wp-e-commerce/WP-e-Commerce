@@ -18,6 +18,7 @@
 	<div id='post-body'>
 		<?php if ( wpsc_has_purchlog_shipping() ): ?>
 			<div id='wpsc_shipping_details_box'>
+				<?php do_action( 'wpsc_shipping_details_top' ); ?>
 				<h3><?php esc_html_e( 'Shipping Details', 'wpsc' ); ?></h3>
 				<blockquote>
 					<strong>
@@ -35,13 +36,20 @@
 				<p>
 					<?php esc_html_e( 'Shipping Option:', 'wpsc' ); ?> <?php echo wpsc_display_purchlog_shipping_option(); ?>
 				</p>
-				<?php if( wpsc_purchlogs_has_tracking() ) : ?>
+				<?php if ( wpsc_purchlogs_has_tracking() ) { ?>
 					<p>
 						<?php echo esc_html_x( 'Tracking ID:', 'purchase log', 'wpsc' ); ?> <?php echo wpsc_purchlogitem_trackid(); ?><br />
-						<?php esc_html_e( 'Shipping Status:', 'wpsc' ); ?> <?php echo wpsc_purchlogitem_trackstatus(); ?><br />
-						<?php esc_html_e( 'Track History:', 'wpsc' ); ?> <?php echo wpsc_purchlogitem_trackhistory(); ?>
+						<?php $tracking_status = wpsc_purchlogitem_trackstatus(); ?>
+						<?php if ( ! empty( $tracking_status ) ) {?>
+							<?php esc_html_e( 'Shipping Status:', 'wpsc' ); ?> <?php echo $tracking_status; ?><br />
+						<?php } ?>
+						<?php $tracking_history = wpsc_purchlogitem_trackhistory(); ?>
+						<?php if ( ! empty( $tracking_history ) ) {?>
+							<?php esc_html_e( 'Track History:', 'wpsc' ); ?> <?php echo wpsc_purchlogitem_trackhistory(); ?>
+						<?php } ?>
 					</p>
-				<?php endif; ?>
+				<?php } ?>
+				<?php do_action( 'wpsc_shipping_details_bottom' ); ?>
 			</div>
 		<?php endif ?>
 
