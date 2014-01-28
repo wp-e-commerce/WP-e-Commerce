@@ -86,6 +86,31 @@ function wpsc_purchlogitem_trackhistory() {
 	}
 }
 
+function wpsc_purchlogs_get_weight( $id = '' ) {
+	global $purchlogitem;
+	$weight = 0.0;
+
+	if ( empty( $id ) ) {
+		$thepurchlogitem = $purchlogitem;
+	} else {
+		$thepurchlogitem = new wpsc_purchaselogs_items( $id );
+	}
+
+	if ( empty( $thepurchlogitem ) ) {
+		return false;
+	}
+
+	foreach ( ( array ) $thepurchlogitem->allcartcontent as $cartitem ) {
+		$product_meta = get_product_meta( $cartitem->prodid, 'product_metadata', true );
+		if ( ! empty( $product_meta ['weight'] ) ) {
+			$weight += $product_meta ['weight'] * $cartitem->quantity;
+		}
+	}
+
+	return $weight;
+}
+
+
 function wpsc_purchlogs_has_customfields( $id = '' ) {
    global $purchlogitem;
    if ( $id == '' ) {

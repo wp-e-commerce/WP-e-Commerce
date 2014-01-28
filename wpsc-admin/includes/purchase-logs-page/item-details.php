@@ -35,6 +35,10 @@
 				<p>
 					<?php esc_html_e( 'Shipping Option:', 'wpsc' ); ?> <?php echo wpsc_display_purchlog_shipping_option(); ?>
 				</p>
+				<?php $purchase_weight = wpsc_purchlogs_get_weight(); ?>
+				<?php if ( ! empty( $purchase_weight ) ) { ?>
+					<strong><?php esc_html_e( 'Purchase Weight:', 'wpsc' ); ?></strong> <?php echo $purchase_weight; ?><br />
+				<?php } ?>
 				<?php if( wpsc_purchlogs_has_tracking() ) : ?>
 					<p>
 						<?php echo esc_html_x( 'Tracking ID:', 'purchase log', 'wpsc' ); ?> <?php echo wpsc_purchlogitem_trackid(); ?><br />
