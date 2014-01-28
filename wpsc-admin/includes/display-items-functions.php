@@ -190,133 +190,105 @@ function wpsc_price_control_forms() {
 					onChange="wpsc_update_price_live_preview()" />
 		</div>
 
-		<div style="clear:both; margin-bottom:20px;"></div>
-
-		<div class='new_layer' style="display:none">
-			<select name='newCurrency[]' class='newCurrency'>
-
-			<?php foreach ( (array)$currency_data as $currency ) {?>
-				<option value='<?php echo $currency['id']; ?>' >
-					<?php echo esc_html( $currency['country'] ); ?>
-				</option>
-			<?php } ?>
-			</select>
-
-			<input 	type='number' min="0" step="0.1"
-					class='newCurrPrice text'
-					size='8'
-					name='newCurrPrice[]'
-					value='0.00' />
-			<a href="#" class='wpsc_delete_currency_layer<?php echo $currency_delete_class; ?>'><?php echo $currency_delete_text; ?></a>
-
+		<div class="wpsc-currency-layers">
+			<table>
+				<thead>
+					<tr>
+						<th class="type" colspan="2"><?php esc_html_e( 'Alternative Currencies:', 'wpsc' ); ?></th>
+						<th class="price"><?php esc_html_e( 'Price:', 'wpsc' ); ?></th>
+					<tr>
+				</thead>
+				<tbody>
+					<?php
+					if ( isset( $product_alt_currency ) && is_array( $product_alt_currency ) ) :
+						$i = 0;
+						foreach ( $product_alt_currency as $iso => $alt_price ) :
+							$i++;
+							?>
+							<tr class="wpsc_additional_currency">
+								<td class="remove"><a href="#" class="wpsc_delete_currency_layer<?php echo $currency_delete_class; ?>" rel="<?php echo $iso; ?>"><?php echo $currency_delete_text; ?></a></td>
+								<td>
+									<select name="newCurrency[]" class="newCurrency">
+										<?php foreach ( $currency_data as $currency ) : ?>
+											<option value="<?php echo $currency['id']; ?>" <?php selected( $iso, $currency['isocode'] ); ?>>
+												<?php echo htmlspecialchars( $currency['country'] ); ?> (<?php echo $currency['currency']; ?>)
+											</option>
+										<?php endforeach; ?>
+									</select>
+								</td>
+								<td><input type="number" min="0" step="0.1" class="newCurrPrice text" size="8" name="newCurrPrice[]" value="<?php echo $alt_price; ?>" /></td>
+							</tr>
+							<?php
+						endforeach;
+					endif;
+					?>
+					<tr id="wpsc_currency_row_template" class="template hidden">
+						<td class="remove"><a href="#" class="wpsc_delete_currency_layer<?php echo $currency_delete_class; ?>"><?php echo $currency_delete_text; ?></a></td>
+						<td>
+							<select name="newCurrency[]" class="newCurrency">
+								<?php foreach ( (array)$currency_data as $currency ) { ?>
+									<option value="<?php echo $currency['id']; ?>">
+										<?php echo esc_html( $currency['country'] ); ?>
+									</option>
+								<?php } ?>
+							</select>
+						</td>
+						<td><input type="number" min="0" step="0.1" class="newCurrPrice text" size="8" name="newCurrPrice[]" value="0.00" /></td>
+					</tr>
+				</tbody>
+			</table>
+			<a href="#wpsc_currency_row_template" class="button button-small wpsc_add_new_currency"><?php esc_html_e( 'Add a Currency Option', 'wpsc' ); ?></a>
+			<?php wp_nonce_field( 'update-options', 'wpsc-update-currency-layers', false ); ?>
 		</div>
 
-		<a 	href='#'
-			class='button button-small wpsc_add_new_currency'
-			style="margin-top:10px;">
-			<?php esc_html_e( '+ Currency Option', 'wpsc' ); ?>
-		</a>
+		<div class="wpsc-quantity-discounts">
+			<table>
+				<thead>
+					<tr>
+						<th class="qty" colspan="2"><?php esc_html_e( 'Quantity:', 'wpsc' ); ?></th>
+						<th class="curr"><span class="hidden"><?php esc_html_e( 'Currency:', 'wpsc' ); ?><span></th>
+						<th class="price"><?php esc_html_e( 'Price:', 'wpsc' ); ?></th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php
+					if ( count( $product_meta['table_rate_price']['quantity'] ) > 0 ) {
+						foreach ( (array)$product_meta['table_rate_price']['quantity'] as $key => $quantity ) {
+							if ( $quantity != '' ) {
+								$table_price = number_format( $product_meta['table_rate_price']['table_price'][ $key ], 2, '.', '' );
+								?>
+								<tr>
+									<td class="remove"><a href="#" class="remove_line<?php echo $currency_delete_class; ?>"><?php echo $currency_delete_text; ?></a></td>
+									<td class="qty">
+										<input type="text" size="5" value="<?php echo $quantity; ?>" name="table_rate_price[quantity][]" />
+										<?php esc_html_e( '+', 'wpsc' ); ?>
+									</td>
+									<td class="curr"><?php echo $ct_code . ' ' . $ct_symb; ?></td>
+									<td><input type="number" size="10" min="0" step="0.1" class="newCurrPrice text" value="<?php echo $table_price; ?>" name="table_rate_price[table_price][]" /></td>
+								</tr>
+								<?php
+							}
+						}
+					}
+					?>
+					<tr id="wpsc_quantity_discount_row_template" class="template hidden">
+						<td class="remove"><a href="#" class="remove_line<?php echo $currency_delete_class; ?>"><?php echo $currency_delete_text; ?></a></td>
+						<td class="qty">
+							<input type="number" size="5" min="0" step="1" value="0" name="table_rate_price[quantity][]" />
+							<?php esc_html_e( '+', 'wpsc' ); ?>
+						</td>
+						<td class="curr"><?php echo $ct_code . ' ' . $ct_symb; ?></td>
+						<td><input type="number" size="10" min="0" step="0.1" class="newCurrPrice text" value="0" name="table_rate_price[table_price][]" /></td>
+					</tr>
+				</tbody>
+			</table>
+			<a href="#wpsc_quantity_discount_row_template" class="add_level button button-small"><?php esc_html_e( 'Add a Quantity Discount', 'wpsc' ); ?></a>
+			<?php wp_nonce_field( 'update-options', 'wpsc-update-quantity-discounts', false ); ?>
+		</div>
 
-	<?php
-	if ( isset( $product_alt_currency ) && is_array( $product_alt_currency ) ) :
-		$i = 0;
-		foreach ( $product_alt_currency as $iso => $alt_price ) :
-			$i++;
-	?>
-				<div class='wpsc_additional_currency'>
-				<label for='newCurrency[]'><?php esc_html_e( 'Currency type', 'wpsc' ); ?>:</label><br />
-				<select name='newCurrency[]' class='newCurrency' style='width:42%'>
-				<?php
-					foreach ( $currency_data as $currency ) :
-						if ( $iso == $currency['isocode'] )
-							$selected = "selected='selected'";
-						else
-							$selected = "";
-				?>
-								<option value='<?php echo $currency['id']; ?>' <?php echo $selected; ?> >
-									<?php echo htmlspecialchars( $currency['country'] ); ?> (<?php echo $currency['currency']; ?>)
-								</option>
-				<?php endforeach; ?>
-				</select>
+		<input id="add_form_donation" type="checkbox" name="meta[_wpsc_is_donation]" value="yes" <?php checked( $product_data['meta']['_wpsc_is_donation'], 1 ); ?> />
+		<label for="add_form_donation"><?php _e( 'Purchase is a donation.', 'wpsc' ) ?></label>
 
-				<?php esc_html_e( 'Price:', 'wpsc' ); ?> <input type='text' class='text' size='8' name='newCurrPrice[]' value='<?php echo $alt_price; ?>' style=' display:inline' />
-				<a href='#' class='wpsc_delete_currency_layer<?php echo $currency_delete_class; ?>' rel='<?php echo $iso; ?>'><?php if ( ! $wp_38 ) : ?><img src='<?php echo WPSC_CORE_IMAGES_URL; ?>/cross.png' /><?php endif; ?></a></div>
-	<?php
-		endforeach;
-	endif;
-	?>
-
-				<div id='table_rate'>
-
-					<br style='clear:both' />
-					<table style="width:100%">
-						<tbody>
-<?php
-	if ( count( $product_meta['table_rate_price']['quantity'] ) > 0 ) {
-		foreach ( (array)$product_meta['table_rate_price']['quantity'] as $key => $quantity ) {
-			if ( $quantity != '' ) {
-				$table_price = number_format( $product_meta['table_rate_price']['table_price'][$key], 2, '.', '' );
-?>
-						<tr>
-							<td>
-								<input type="text" size="5" value="<?php echo $quantity; ?>" name="table_rate_price[quantity][]"/>
-								<span class='description'><?php esc_html_e( 'and above', 'wpsc' ); ?></span>
-							</td>
-							<td>
-								<input type="text" size="10" value="<?php echo $table_price; ?>" name="table_rate_price[table_price][]" />
-							</td>
-							<td>
-								<a href="#" class="remove_line<?php echo $currency_delete_class; ?>"><?php echo $currency_delete_text; ?></a>
-							</td>
-						</tr>
-<?php
-			}
-		}
-	}
-?>
-						<tr id="sample_qd">
-							<td>
-								<span>
-									<input 	type="number" size="5"
-											min="0" step="1" value="0"
-											style="width:60px;"
-											name="table_rate_price[quantity][]"/>
-									<?php esc_html_e( '+', 'wpsc' );?>
-								</span>
-							</td>
-
-							<td style="text-align:right;">
-								<span>
-									<?php echo $ct_code.' '.$ct_symb; ?>
-									<input 	type="number" size="10"
-											min = "0" step="0.1" value="0"
-											style="width:80px;"
-											name="table_rate_price[table_price][]" />
-								</span>
-							</td>
-							<td style="vertical-align:middle; width:20px; text-align:center;">
-								<a href="#" class="remove_line<?php echo $currency_delete_class; ?>"><?php echo $currency_delete_text; ?></a>
-							</td>
-						</tr>
-						</tbody>
-					</table>
-
-					<a 	class='add_level button button-small'
-						style="margin-top:10px;">
-						<?php esc_html_e( '+ Quantity Discount', 'wpsc' ); ?>
-					</a>
-
-					<div style='clear:both; margin-bottom:20px;'></div>
-
-          			<input 	id='add_form_donation'
-          					type='checkbox'
-          					name='meta[_wpsc_is_donation]'
-          					value='yes'
-          					<?php checked( $product_data['meta']['_wpsc_is_donation'] , 1 ); ?> />
-
-          			<label for='add_form_donation'><?php echo __( 'Purchase is a donation.', 'wpsc' ) ?></label>
-
-				</div>
 				<?php endif; ?>
 <?php
 }

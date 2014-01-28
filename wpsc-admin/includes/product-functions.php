@@ -90,20 +90,29 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 		}
 	}
 
-	// table rate price
-	$post_data['meta']['_wpsc_product_metadata']['table_rate_price'] = isset( $post_data['table_rate_price'] ) ? $post_data['table_rate_price'] : array();
+	// Update the table rate prices (quantity discounts)
+	if ( isset( $post_data['wpsc-update-quantity-discounts'] ) && wp_verify_nonce( $post_data['wpsc-update-quantity-discounts'], 'update-options' ) ) {
+		$post_data['meta']['_wpsc_product_metadata']['table_rate_price'] = isset( $post_data['table_rate_price'] ) ? $post_data['table_rate_price'] : array();
 
-	// if table_rate_price is unticked, wipe the table rate prices
-	if ( empty( $post_data['table_rate_price']['state'] ) ) {
-		$post_data['meta']['_wpsc_product_metadata']['table_rate_price']['table_price'] = array();
-		$post_data['meta']['_wpsc_product_metadata']['table_rate_price']['quantity'] = array();
-	}
+		// If table_rate_price is empty, set empty table rate price arrays
+		if ( empty( $post_data['meta']['_wpsc_product_metadata']['table_rate_price'] ) ) {
+			$post_data['meta']['_wpsc_product_metadata']['table_rate_price']['table_price'] = array();
+			$post_data['meta']['_wpsc_product_metadata']['table_rate_price']['quantity'] = array();
+		}
 
-	if ( ! empty( $post_data['meta']['_wpsc_product_metadata']['table_rate_price']['table_price'] ) ) {
-		foreach ( (array) $post_data['meta']['_wpsc_product_metadata']['table_rate_price']['table_price'] as $key => $value ){
-			if(empty($value)){
-				unset($post_data['meta']['_wpsc_product_metadata']['table_rate_price']['table_price'][$key]);
-				unset($post_data['meta']['_wpsc_product_metadata']['table_rate_price']['quantity'][$key]);
+		// Remove any rates with no quantity or price
+		if ( ! empty( $post_data['meta']['_wpsc_product_metadata']['table_rate_price']['table_price'] ) ) {
+			foreach ( (array) $post_data['meta']['_wpsc_product_metadata']['table_rate_price']['quantity'] as $key => $value ) {
+				if ( empty( $value ) ) {
+					unset( $post_data['meta']['_wpsc_product_metadata']['table_rate_price']['table_price'][ $key ] );
+					unset( $post_data['meta']['_wpsc_product_metadata']['table_rate_price']['quantity'][ $key ] );
+				}
+			}
+			foreach ( (array) $post_data['meta']['_wpsc_product_metadata']['table_rate_price']['table_price'] as $key => $value ) {
+				if ( empty( $value ) ) {
+					unset( $post_data['meta']['_wpsc_product_metadata']['table_rate_price']['table_price'][ $key ] );
+					unset( $post_data['meta']['_wpsc_product_metadata']['table_rate_price']['quantity'][ $key ] );
+				}
 			}
 		}
 	}
@@ -186,10 +195,16 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 	// and the custom meta
 	wpsc_update_custom_meta($product_id, $post_data);
 
-	//and the alt currency
-	if ( ! empty( $post_data['newCurrency'] ) ) {
-		foreach( (array) $post_data['newCurrency'] as $key =>$value ){
-			wpsc_update_alt_product_currency( $product_id, $value, $post_data['newCurrPrice'][$key] );
+	// Update the alternative currencies
+	if ( isset( $post_data['wpsc-update-currency-layers'] ) && wp_verify_nonce( $post_data['wpsc-update-currency-layers'], 'update-options' ) ) {
+		
+		// Clear currencies before re-saving to make sure deleted currencies are removed
+		update_product_meta( $product_id, 'currency', array() );
+
+		if ( ! empty( $post_data['newCurrency'] ) ) {
+			foreach( (array) $post_data['newCurrency'] as $key =>$value ) {
+				wpsc_update_alt_product_currency( $product_id, $value, $post_data['newCurrPrice'][ $key ] );
+			}
 		}
 	}
 

@@ -1060,7 +1060,7 @@ function wpsc_dashboard_4months_widget() {
 	$timeranges[2]["start"] = mktime( 0, 0, 0, $this_month - 1, 1, $this_year );
 	$timeranges[2]["end"] = mktime( 0, 0, 0, $this_month, 1, $this_year );
 	$timeranges[3]["start"] = mktime( 0, 0, 0, $this_month, 1, $this_year );
-	$timeranges[3]["end"] = mktime();
+	$timeranges[3]["end"] = time(); // using mktime here can generate a php runtime warning
 
 	$prod_data = array( );
 	foreach ( (array)$products as $product ) { //run through products and get each product income amounts and name
@@ -1142,13 +1142,11 @@ add_filter( 'favorite_actions', 'wpsc_fav_action' );
 /**
  * Prits out the admin scripts
  *
- * @uses is_ssl()                 Defines if SSL is true
  * @uses wp_enqueue_script()      Enqueues scripts
  * @uses home_url()               Returns the base url for the site
  */
 function wpsc_print_admin_scripts() {
-	$scheme = is_ssl() ? 'https' : 'http';
-	wp_enqueue_script( 'wp-e-commerce-dynamic', home_url( "/index.php?wpsc_user_dynamic_js=true", $scheme ) );
+	wp_enqueue_script( 'wp-e-commerce-dynamic', home_url( '/index.php?wpsc_user_dynamic_js=true' ) );
 }
 
 /**

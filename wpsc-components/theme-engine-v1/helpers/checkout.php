@@ -136,6 +136,8 @@ function wpsc_disregard_shipping_state_fields(){
 	elseif ( 'billingstate' == $wpsc_checkout->checkout_item->unique_name && wpsc_has_regions( wpsc_get_customer_meta( 'billing_country' ) ) ):
 		return true;
 	endif;
+
+	return false;
 }
 
 function wpsc_disregard_billing_state_fields(){

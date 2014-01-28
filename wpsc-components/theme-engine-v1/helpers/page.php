@@ -13,7 +13,6 @@ add_action( 'update_option_single_view_image_height', 'wpsc_cache_to_upload' );
 add_action( 'update_option_category_image_width'    , 'wpsc_cache_to_upload' );
 add_action( 'update_option_category_image_height'   , 'wpsc_cache_to_upload' );
 add_action('template_redirect', 'wpsc_all_products_on_page');
-add_action('post_thumbnail_html','wpsc_the_featured_image_fix', 10, 2);
 add_filter( 'aioseop_description', 'wpsc_set_aioseop_description' );
 add_filter('request', 'wpsc_remove_page_from_query_string');
 
@@ -313,8 +312,7 @@ function wpsc_get_template_file_url( $file = '' ) {
 		}
 	}
 
-	if ( is_ssl() )
-		$file_url = str_replace('http://', 'https://', $file_url);
+	$file_url = set_url_scheme( $file_url );
 
 	// Return filtered result
 	return apply_filters( WPEC_TRANSIENT_THEME_URL_PREFIX . $file, $file_url );
@@ -335,19 +333,18 @@ function wpsc_enqueue_user_script_and_css() {
 		/**
 		 * end of added by xiligroup.dev to be compatible with touchshop
 		 */
-		$scheme = is_ssl() ? 'https' : 'http';
-		$version_identifier = WPSC_VERSION . "." . WPSC_MINOR_VERSION;
+		$version_identifier = WPSC_VERSION . '.' . WPSC_MINOR_VERSION;
 
 		$category_id = wpsc_get_current_category_id();
 
-		if( get_option( 'wpsc_share_this' ) == 1 ) {
+		if ( get_option( 'wpsc_share_this' ) == 1 ) {
 			$remote_protocol = is_ssl() ? 'https://ws' : 'http://w';
 			wp_enqueue_script( 'sharethis', $remote_protocol . '.sharethis.com/button/buttons.js', array(), false, true );
 		}
 
 		wp_enqueue_script( 'jQuery' );
 		wp_enqueue_script( 'wp-e-commerce',               WPSC_CORE_JS_URL	. '/wp-e-commerce.js',                 array( 'jquery' ), $version_identifier );
-		wp_enqueue_script( 'wp-e-commerce-dynamic', home_url( '/index.php?wpsc_user_dynamic_js=true', $scheme ), false,             $version_identifier );
+		wp_enqueue_script( 'wp-e-commerce-dynamic', home_url( '/index.php?wpsc_user_dynamic_js=true' ), false,             $version_identifier );
 
 		wp_localize_script( 'wp-e-commerce', 'wpsc_ajax', array(
 			'ajaxurl'   => admin_url( 'admin-ajax.php', 'relative' ),
@@ -1226,27 +1223,6 @@ function wpsc_display_featured_products_page() {
 function wpsc_hidesubcatprods_init() {
 	$hide_subcatsprods = new WPSC_Hide_subcatsprods_in_cat;
 	add_action( 'pre_get_posts', array( &$hide_subcatsprods, 'get_posts' ) );
-}
-
-function wpsc_the_featured_image_fix( $stuff, $post_ID ){
-	global $wp_query;
-
-	$is_tax = is_tax( 'wpsc_product_category' );
-
-	$queried_object = get_queried_object();
-	$is_single = is_single() && $queried_object->ID == $post_ID && get_post_type() == 'wpsc-product';
-
-	if ( $is_tax || $is_single ) {
-		$header_image = get_header_image();
-		$stuff = '';
-
-		if ( $header_image )
-			$stuff = '<img src="' . esc_url( $header_image ) . '" width="' . HEADER_IMAGE_WIDTH . '" height="' . HEADER_IMAGE_HEIGHT . '" alt="" />';
-	}
-
-	remove_action('post_thumbnail_html','wpsc_the_featured_image_fix');
-
-	return $stuff;
 }
 
 // check for all in one SEO pack and the is_static_front_page function

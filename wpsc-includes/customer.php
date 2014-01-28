@@ -8,6 +8,7 @@ add_action( 'load-users.php'             , '_wpsc_action_load_users'            
 add_filter( 'views_users'                , '_wpsc_filter_views_users'                     );
 add_filter( 'editable_roles'             , '_wpsc_filter_editable_roles'                  );
 
+
 /**
  * Helper function for setting the customer cookie content and expiration
  *
@@ -17,13 +18,14 @@ add_filter( 'editable_roles'             , '_wpsc_filter_editable_roles'        
  * @param  int   $expire  Expiration timestamp
  */
 function _wpsc_set_customer_cookie( $cookie, $expire ) {
-	$secure = is_ssl();
-	setcookie( WPSC_CUSTOMER_COOKIE, $cookie, $expire, WPSC_CUSTOMER_COOKIE_PATH, COOKIE_DOMAIN, $secure, true );
 
-	if ( $expire < time() )
-		unset( $_COOKIE[WPSC_CUSTOMER_COOKIE] );
-	else
-		$_COOKIE[WPSC_CUSTOMER_COOKIE] = $cookie;
+	setcookie( WPSC_CUSTOMER_COOKIE, $cookie, $expire, WPSC_CUSTOMER_COOKIE_PATH, COOKIE_DOMAIN, false, true );
+
+	if ( $expire < time() ) {
+		unset( $_COOKIE[ WPSC_CUSTOMER_COOKIE ] );
+	} else {
+		$_COOKIE[ WPSC_CUSTOMER_COOKIE ] = $cookie;
+	}
 }
 
 /**
@@ -265,26 +267,6 @@ function _wpsc_merge_cart() {
 	_wpsc_set_customer_cookie( '', time() - 3600 );
 }
 
-function wpsc_get_customer_cart( $id = false ) {
-	global $wpsc_cart;
-
-	if ( ! empty( $wpsc_cart ) && ( ! $id || $id == wpsc_get_current_customer_id() ) )
-		return $wpsc_cart;
-
-	$cart = maybe_unserialize( base64_decode( wpsc_get_customer_meta( 'cart', $id ) ) );
-	if ( empty( $cart ) || ! $cart instanceof wpsc_cart )
-		$cart = new wpsc_cart();
-
-	return $cart;
-}
-
-function wpsc_update_customer_cart( $cart, $id = false ) {
-	if ( ! $id || $id == wpsc_get_current_customer_id() )
-		return wpsc_serialize_shopping_cart();
-
-	return wpsc_update_customer_meta( 'cart', base64_encode( serialize( $wpsc_cart ) ), $id );
-}
-
 /**
  * Return the internal customer meta key, which depends on the blog prefix
  * if this is a multi-site installation.
@@ -299,182 +281,6 @@ function _wpsc_get_customer_meta_key( $key ) {
 
 	$blog_prefix = is_multisite() ? $wpdb->get_blog_prefix() : '';
 	return "{$blog_prefix}_wpsc_{$key}";
-}
-
-/**
- * Delete all customer meta for a certain customer ID.
- *
- * Implement your own system by hooking into 'wpsc_delete_all_customer_meta'.
- *
- * @since  3.8.9.4
- * @param  string|int $id Customer ID. Optional. Defaults to current customer
- * @return boolean        True if successful, False if otherwise
- */
-function wpsc_delete_all_customer_meta( $id = false ) {
-	global $wpdb;
-
-	if ( ! $id )
-		$id = wpsc_get_current_customer_id();
-
-	$result = apply_filters( 'wpsc_delete_all_customer_meta', null, $id );
-
-	if ( $result )
-		return $result;
-
-	$meta = get_user_meta( $id );
-	$blog_prefix = is_multisite() ? $wpdb->get_blog_prefix() : '';
-	$key_pattern = "{$blog_prefix}_wpsc_";
-	$success = true;
-
-	foreach ( $meta as $key => $value ) {
-		if ( strpos( $key, $key_pattern ) === 0 )
-			$success = $success && delete_user_meta( $id, $key );
-	}
-
-	return $success;
-}
-
-/**
- * Delete customer meta.
- *
- * Implement your own system by hooking into 'wpsc_delete_customer_meta'.
- *
- * @access public
- * @since  3.8.9
- * @param  string     $key  Meta key
- * @param  string|int $id   Customer ID. Optional. Defaults to current customer.
- * @return boolean|WP_Error True if successful. False if not successful. WP_Error
- *                          if there are any errors.
- */
-function wpsc_delete_customer_meta( $key, $id = false ) {
-	if ( ! $id )
-		$id = wpsc_get_current_customer_id();
-
-	$result = apply_filters( 'wpsc_delete_customer_meta', null, $key, $id );
-
-	if ( $result )
-		return $result;
-
-	return delete_user_meta( $id, _wpsc_get_customer_meta_key( $key ) );
-}
-
-/**
- * Update a customer meta.
- *
- * Implement your own system by hooking into 'wpsc_update_customer_meta'.
- *
- * @access public
- * @since  3.8.9
- * @param  string     $key   Meta key
- * @param  mixed      $value Meta value
- * @param  string|int $id    Customer ID. Optional. Defaults to current customer.
- * @return boolean|WP_Error  True if successful, false if not successful, WP_Error
- *                           if there are any errors.
- */
-function wpsc_update_customer_meta( $key, $value, $id = false ) {
-	if ( ! $id )
-		$id = wpsc_get_current_customer_id();
-
-	$result = apply_filters( 'wpsc_update_customer_meta', null, $key, $value, $id );
-
-	if ( $result )
-		return $result;
-
-	return update_user_meta( $id, _wpsc_get_customer_meta_key( $key ), $value );
-}
-
-/**
- * Overwrite customer meta with an array of meta_key => meta_value.
- *
- * Implement your own system by hooking into 'wpsc_update_all_customer_meta'.
- *
- * @access public
- * @since  3.8.9
- * @param  array      $profile Customer meta array
- * @param  int|string $id      Customer ID. Optional. Defaults to current customer.
- * @return boolean             True if meta values are updated successfully. False
- *                             if otherwise.
- */
-function wpsc_update_all_customer_meta( $profile, $id = false ) {
-	if ( ! $id )
-		$id = wpsc_get_current_customer_id();
-
-	$result = apply_filters( 'wpsc_update_all_customer_meta', null, $profile, $id );
-
-	if ( $result )
-		return $result;
-
-	wpsc_delete_all_customer_meta( $id );
-	$success = true;
-
-	foreach ( $profile as $key => $value ) {
-		$success = $success && wpsc_update_customer_meta( $key, $value, $id );
-	}
-
-	return $success;
-}
-
-/**
- * Get a customer meta value.
- *
- * Implement your own system by hooking into 'wpsc_get_customer_meta'.
- *
- * @access public
- * @since  3.8.9
- * @param  string  $key Meta key
- * @param  int|string $id  Customer ID. Optional, defaults to current customer
- * @return mixed           Meta value, or null if it doesn't exist or if the
- *                         customer ID is invalid.
- */
-function wpsc_get_customer_meta( $key = '', $id = false ) {
-	if ( ! $id )
-		$id = wpsc_get_current_customer_id();
-
-	$result = apply_filters( 'wpsc_get_customer_meta', null, $key, $id );
-
-	if ( $result )
-		return $result;
-
-	return get_user_meta( $id, _wpsc_get_customer_meta_key( $key ), true );
-}
-
-/**
- * Return an array containing all metadata of a customer
- *
- * Implement your own system by hooking into 'wpsc_get_all_customer_meta'.
- *
- * @access public
- * @since 3.8.9
- * @param  mixed $id Customer ID. Default to the current user ID.
- * @return WP_Error|array Return an array of metadata if no error occurs, WP_Error
- *                        if otherwise.
- */
-function wpsc_get_all_customer_meta( $id = false ) {
-	global $wpdb;
-
-	if ( ! $id )
-		$id = wpsc_get_current_customer_id();
-
-	$result = apply_filters( 'wpsc_get_all_customer_meta', null, $id );
-
-	if ( $result )
-		return $result;
-
-	$meta = get_user_meta( $id );
-	$blog_prefix = is_multisite() ? $wpdb->get_blog_prefix() : '';
-	$key_pattern = "{$blog_prefix}_wpsc_";
-
-	$return = array();
-
-	foreach ( $meta as $key => $value ) {
-		if ( strpos( $key, $key_pattern ) === FALSE )
-			continue;
-
-		$short_key = str_replace( $key_pattern, '', $key );
-		$return[$short_key] = $value[0];
-	}
-
-	return $return;
 }
 
 /**
@@ -504,27 +310,36 @@ function _wpsc_action_update_customer_last_active() {
  * @since  3.8.13
  */
 function _wpsc_is_bot_user() {
-	if ( is_user_logged_in() )
-		return false;
 
-	if ( strpos( $_SERVER['REQUEST_URI'], '?wpsc_action=rss' ) )
+	$is_bot = false;
+
+	if ( is_user_logged_in() ) {
+		return false;
+	}
+
+	if ( strpos( $_SERVER['REQUEST_URI'], '?wpsc_action=rss' ) ) {
 		return true;
+	}
 
 	// Cron jobs are not flesh originated
-	if ( defined('DOING_CRON') && DOING_CRON )
+	if ( defined('DOING_CRON') && DOING_CRON ) {
 		return true;
+	}
 
 	// XML RPC requests are probably from cybernetic beasts
-	if ( defined('XMLRPC_REQUEST') && XMLRPC_REQUEST )
+	if ( defined('XMLRPC_REQUEST') && XMLRPC_REQUEST ) {
 		return true;
+	}
 
 	// coming to login first, after the user logs in we know they are a live being, until then they are something else
-	if ( strpos( $_SERVER['PHP_SELF'], 'wp-login' ) || strpos( $_SERVER['PHP_SELF'], 'wp-register' ) )
+	if ( strpos( $_SERVER['PHP_SELF'], 'wp-login' ) || strpos( $_SERVER['PHP_SELF'], 'wp-register' ) ) {
 		return true;
+	}
 
 	// even web servers talk to themselves when they think no one is listening
-	if ( stripos( $_SERVER['HTTP_USER_AGENT'], 'wordpress' ) !== false )
+	if ( stripos( $_SERVER['HTTP_USER_AGENT'], 'wordpress' ) !== false ) {
 		return true;
+	}
 
 	// the user agent could be google bot, bing bot or some other bot,  one would hope real user agents do not have the
 	// string 'bot|spider|crawler|preview' in them, there are bots that don't do us the kindness of identifying themselves as such,
@@ -539,15 +354,17 @@ function _wpsc_is_bot_user() {
 
 	$pattern = '/(' . implode( '|', $bot_agents_patterns ) . ')/i';
 
-	if ( preg_match( $pattern, $_SERVER['HTTP_USER_AGENT'] ) )
+	if ( preg_match( $pattern, $_SERVER['HTTP_USER_AGENT'] ) ) {
 		return true;
+	}
 
 	// Are we feeding the masses?
-	if ( is_feed() )
+	if ( is_feed() ) {
 		return true;
+	}
 
 	// at this point we have eliminated all but the most obvious choice, a human (or cylon?)
-	return false;
+	return apply_filters( 'wpsc_is_bot_user', false );
 }
 
 /**
@@ -563,8 +380,9 @@ function _wpsc_is_bot_user() {
  * @return int
  */
 function _wpsc_extract_user_count( $view ) {
-	if ( preg_match( '/class="count">\((\d+)\)/', $view, $matches ) ) {
-		return absint( $matches[1] );
+	global $wp_locale;
+	if ( preg_match( '/class="count">\((.+)\)/', $view, $matches ) ) {
+		return absint( str_replace( $wp_locale->number_format['thousands_sep'], '', $matches[1] ) );
 	}
 
 	return 0;
@@ -586,7 +404,7 @@ function _wpsc_filter_views_users( $views ) {
 		$anon_count = _wpsc_extract_user_count( $views['wpsc_anonymous'] );
 		$all_count = _wpsc_extract_user_count( $views['all'] );
 		$new_count = $all_count - $anon_count;
-		$views['all'] = str_replace( "(${all_count})", "(${new_count})", $views['all'] );
+		$views['all'] = preg_replace( '/class="count">\(.+\)/', 'class="count">(' . number_format_i18n( $new_count ) . ')', $views['all'] );
 	}
 
 	unset( $views['wpsc_anonymous'] );
@@ -617,9 +435,14 @@ function _wpsc_action_pre_user_query( $query ) {
 	if ( ! empty( $query->query_vars['role'] ) )
 		return;
 
-	// if the site is multisite, a JOIN is already done
+	// if the site is multisite, we need to do things a bit differently
 	if ( is_multisite() ) {
-		$query->query_where .= " AND CAST($wpdb->usermeta.meta_value AS CHAR) NOT LIKE '%" . like_escape( '"wpsc_anonymous"' ) . "%'";
+		// on Network Admin, a JOIN with usermeta is not possible (some users don't have capabilities set, so we fall back to matching user_login, although this is not ideal)
+		if ( empty( $query->query_vars['blog_id'] ) ) {
+			$query->query_where .= " AND $wpdb->users.user_login NOT LIKE '\_________'";
+		} else {
+			$query->query_where .= " AND CAST($wpdb->usermeta.meta_value AS CHAR) NOT LIKE '%" . like_escape( '"wpsc_anonymous"' ) . "%'";
+		}
 		return;
 	}
 
