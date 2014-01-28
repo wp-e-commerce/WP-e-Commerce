@@ -17,8 +17,9 @@
 
 	<div id='post-body'>
 		<?php if ( wpsc_has_purchlog_shipping() ): ?>
+		<?php do_action( 'wpsc_shipping_details_top' ); ?>
 			<div id='wpsc_shipping_details_box'>
-				<h3><?php esc_html_e( 'Shipping Details', 'wpsc' ); ?></h3>
+				<h3><?php esc_html_e( 'Shipping Address', 'wpsc' ); ?></h3>
 				<blockquote>
 					<strong>
 						<?php echo ( wpsc_display_purchlog_shipping_name() != ""           ) ? wpsc_display_purchlog_shipping_name() . "<br />"               : '<span class="field-blank">' . __( 'Anonymous', 'wpsc' ) . '</span>' ; ?>
@@ -29,19 +30,16 @@
 					<?php echo ( wpsc_display_purchlog_shipping_country() != ""            ) ? wpsc_display_purchlog_shipping_country() . "<br />"            : '<span class="field-blank">' . __( 'Country not specified', 'wpsc' ) . '</span>' ; ?>
 				</blockquote>
 				<h4><?php esc_html_e( 'Shipping Details', 'wpsc' ); ?></h4>
-				<p>
-					<?php esc_html_e( 'Shipping Method:', 'wpsc' ); ?> <?php echo wpsc_display_purchlog_shipping_method(); ?>
-				</p>
-				<p>
-					<?php esc_html_e( 'Shipping Option:', 'wpsc' ); ?> <?php echo wpsc_display_purchlog_shipping_option(); ?>
-				</p>
-				<?php if( wpsc_purchlogs_has_tracking() ) : ?>
-					<p>
+				<blockquote>
+					<strong><?php esc_html_e( 'Shipping Method:', 'wpsc' ); ?></strong> <?php echo wpsc_display_purchlog_shipping_method(); ?><br />
+					<strong><?php esc_html_e( 'Shipping Option:', 'wpsc' ); ?></strong> <?php echo wpsc_display_purchlog_shipping_option(); ?><br />
+					<?php if ( wpsc_purchlogs_has_tracking() ) : ?>
 						<?php echo esc_html_x( 'Tracking ID:', 'purchase log', 'wpsc' ); ?> <?php echo wpsc_purchlogitem_trackid(); ?><br />
 						<?php esc_html_e( 'Shipping Status:', 'wpsc' ); ?> <?php echo wpsc_purchlogitem_trackstatus(); ?><br />
-						<?php esc_html_e( 'Track History:', 'wpsc' ); ?> <?php echo wpsc_purchlogitem_trackhistory(); ?>
-					</p>
-				<?php endif; ?>
+						<?php esc_html_e( 'Track History:', 'wpsc' ); ?> <?php echo wpsc_purchlogitem_trackhistory(); ?><br />
+					<?php endif; ?>
+				</blockquote>
+				<?php do_action( 'wpsc_shipping_details_bottom' ); ?>
 			</div>
 		<?php endif ?>
 
