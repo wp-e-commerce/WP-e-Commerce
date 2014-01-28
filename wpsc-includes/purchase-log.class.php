@@ -360,7 +360,7 @@ class WPSC_Purchase_Log {
 	public function get_cart_contents() {
 		global $wpdb;
 
-		if ( $this->fetched )
+		if ( $this->fetched && !empty($this->cart_contents) )
 			return $this->cart_contents;
 
 		$id = $this->get( 'id' );
@@ -466,6 +466,7 @@ class WPSC_Purchase_Log {
 			$this->data = array();
 
 		$this->data = array_merge( $this->data, $properties );
+		$this->set_meta_props();
 		return $this;
 	}
 
@@ -516,6 +517,8 @@ class WPSC_Purchase_Log {
 			$data = apply_filters( 'wpsc_purchase_log_update_data', $this->data );
 			$format = $this->get_data_format( $data );
 			$result = $wpdb->update( WPSC_TABLE_PURCHASE_LOGS, $data, array( $where_col => $where_val ), $format, array( $where_format ) );
+			$this->set_meta_props();
+			self::update_cache( $this );
 			do_action( 'wpsc_purchase_log_update', $this );
 		} else {
 			do_action( 'wpsc_purchase_log_pre_insert' );
@@ -532,6 +535,9 @@ class WPSC_Purchase_Log {
 					'col'   => 'id',
 					'value' => $this->get( 'id' ),
 				);
+
+				$this->set_meta_props();
+				self::update_cache( $this );
 			}
 
 			do_action( 'wpsc_purchase_log_insert', $this );
