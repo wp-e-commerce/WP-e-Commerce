@@ -198,7 +198,7 @@ function _wpsc_validate_customer_cookie() {
 
 	// check to see if the ID is valid, it must be an integer, empty test is because old versions of php
 	// can return true on empty string
-	if ( !empty( $id ) &&  ctype_digit ( $id ) ) {
+	if ( ! empty( $id ) &&  ctype_digit( $id ) ) {
 		$id = intval( $id );
 
 		$user = get_user_by( 'id', $id );
@@ -292,7 +292,7 @@ function _wpsc_action_setup_customer() {
  * @since 3.8.13
  * @access private
  */
- function _wpsc_merge_cart() {
+function _wpsc_merge_cart() {
 	$old_id = _wpsc_validate_customer_cookie();
 
 	if ( ! $old_id ) {
@@ -382,12 +382,12 @@ function _wpsc_is_bot_user() {
 	}
 
 	// Cron jobs are not flesh originated
-	if ( defined('DOING_CRON') && DOING_CRON ) {
+	if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
 		return true;
 	}
 
 	// XML RPC requests are probably from cybernetic beasts
-	if ( defined('XMLRPC_REQUEST') && XMLRPC_REQUEST ) {
+	if ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST ) {
 		return true;
 	}
 
@@ -544,7 +544,7 @@ function _wpsc_set_purchase_log_customer_id( $data ) {
 	// if there is a purchase log for this user we don't want to delete the
 	// user id, even if the transaction isn't successful.  there may be useful
 	// information in the customer profile related to the transaction
-	wpsc_delete_customer_meta('temporary_profile');
+	wpsc_delete_customer_meta( 'temporary_profile' );
 
 	// if there isn't already user id we set the user id of the current customer id
 	if ( empty ( $data['user_ID'] ) ) {
@@ -588,9 +588,9 @@ function wpsc_customer_comment_count( $id = false ) {
 		$id = wpsc_get_current_customer_id();
 
 	global $wpdb;
-	$count = $wpdb->get_var('SELECT COUNT(comment_ID) FROM ' . $wpdb->comments. ' WHERE user_id = "' . $id . '"');
+	$count = $wpdb->get_var( 'SELECT COUNT(comment_ID) FROM ' . $wpdb->comments. ' WHERE user_id = "' . $id . '"' );
 
-	if ( empty($count) || ! is_numeric($count) ) {
+	if ( empty($count) || ! is_numeric( $count ) ) {
 		$count = 0;
 	}
 
@@ -610,9 +610,9 @@ function wpsc_customer_purchase_count( $id = false ) {
 		$id = wpsc_get_current_customer_id();
 
 	global $wpdb;
-	$count = $wpdb->get_var('SELECT COUNT(user_ID) FROM ' . WPSC_TABLE_PURCHASE_LOGS. ' WHERE user_id = "' . $id . '"');
+	$count = $wpdb->get_var( 'SELECT COUNT(user_ID) FROM ' . WPSC_TABLE_PURCHASE_LOGS. ' WHERE user_id = "' . $id . '"' );
 
-	if ( empty($count) || ! is_numeric($count) ) {
+	if ( empty( $count ) || ! is_numeric( $count ) ) {
 		$count = 0;
 	}
 
