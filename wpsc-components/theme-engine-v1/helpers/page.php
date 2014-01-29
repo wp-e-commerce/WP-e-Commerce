@@ -15,9 +15,39 @@ add_action( 'update_option_category_image_height'   , 'wpsc_cache_to_upload' );
 add_action('template_redirect', 'wpsc_all_products_on_page');
 add_filter( 'aioseop_description', 'wpsc_set_aioseop_description' );
 add_filter('request', 'wpsc_remove_page_from_query_string');
+add_action( 'post_thumbnail_html', 'wpsc_no_featured_image_on_product_page', 10, 5 );
 
 //Potentially unnecessary, as I believe this option is deprecated
 add_action( 'update_option_show_categorybrands'     , 'wpsc_cache_to_upload' );
+
+
+/**
+ * wpsc_no_featured_image_on_product_page( $html )
+ *
+ * prevents the post thumbnail ( aka featured image ) from being show on wpec
+ * product pages
+ *
+ * @param $html image tag for the thumbnail created by wordpress
+ * @param $post_id post id of the item used to get the thumbnail
+ * @param $post_thumbnail_id
+ * @param $size image size requested
+ * @param $attr image attributes requested
+ */
+function wpsc_no_featured_image_on_product_page( $html, $post_id, $post_thumbnail_id, $size, $attr ){
+	global $wp_query;
+	remove_action('post_thumbnail_html','wpsc_no_featured_image_on_product_page');
+
+	// TODO:
+	// Perhaps this could be done more efficiently by checking the post type using the post id?
+	// Another question is should we use the post thumbnail functionality to create our
+	// product images so that when a product image is requested and displayed on a page other than
+	// a wpec page it respects the store settings configured by the administrator?
+	if ( isset( $wp_query->query_vars['wpsc-product'] ) ) {
+		$html = '';
+	}
+
+	return $html;
+}
 
 if ( ! is_admin() )
 	add_action( 'init', 'wpsc_enqueue_user_script_and_css' );
