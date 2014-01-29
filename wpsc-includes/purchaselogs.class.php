@@ -100,7 +100,7 @@ function wpsc_purchlogitem_trackhistory() {
 
 
 
-/** Wieght of current or specified purchase
+/** Weight of current or specified purchase
  * @param string $id
  * @return boolean|number
  */
