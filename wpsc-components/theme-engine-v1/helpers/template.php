@@ -184,7 +184,7 @@ function wpsc_get_template_file_path( $file = '' ){
 
 		// Plugin may override the template file, get the file name and check to be sure file exists
 		$file_path = apply_filters( 'wpsc_get_template_file_path' , false );
-		if ( !empty( $file_path ) && file_exists( $file_path ) ) {
+		if ( ! empty( $file_path ) && file_exists( $file_path ) ) {
 			$file_path = realpath( $file_path ); // real path just in case plugin doesn't return canonicalized path name
 
 		// Look for file in stylesheet directory
