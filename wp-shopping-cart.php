@@ -129,6 +129,7 @@ class WP_eCommerce {
 		$wpdb->wpsc_checkout_forms      = WPSC_TABLE_CHECKOUT_FORMS;
 		$wpdb->wpsc_cart_itemmeta       = WPSC_TABLE_CART_ITEM_META; // required for _get_meta_table()
 		$wpdb->wpsc_cart_item_meta      = WPSC_TABLE_CART_ITEM_META;
+    $wpdb->wpsc_purchasemeta        = WPSC_TABLE_PURCHASE_META; // required for _get_meta_table()
 		$wpdb->wpsc_purchase_meta       = WPSC_TABLE_PURCHASE_META;
 		$wpdb->wpsc_product_rating      = WPSC_TABLE_PRODUCT_RATING;
 		$wpdb->wpsc_download_status     = WPSC_TABLE_DOWNLOAD_STATUS;
