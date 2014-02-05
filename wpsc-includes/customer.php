@@ -11,7 +11,7 @@
  * this makes user profile access quick.  All of this comes without the costs of additional code to maintain.
  *
  * WPEC, themes and plug-ins can add information to a customer profile at any time.  The functions making up the
- * API are in the wpsc-meta-customer.php.  You'll notice that theAPI for working with customer profiles mirrors
+ * API are in the wpsc-meta-customer.php.  You'll notice that the API for working with customer profiles mirrors
  * the WordPress API used to work with other types of meta data.  Customer meta can be manipulated just as
  * you would manipulate user meta, post meta, or any of the other types of meta available with a WordPress site.
  *
@@ -25,8 +25,8 @@
  * standard, multi-site safe, prefix.  This prefix is automatically removed when you retrieve meta values using
  * the WPEC meta API.
  *
- * Customer profiles have added to them  a meta value 'last_active' immediatly upon creation.  This meta value
- * contains the UNIX timestamp (see php time() function) of the last meaningful change to the profile.
+ * Customer profiles have added to them  a meta value 'last_active' immediately upon creation.  This meta value
+ * contains the UNIX timestamp (see PHP time() function) of the last meaningful change to the profile.
  * whatever end purposes you might want, but it's core purposes are two-fold.  (1) This value makes it possible to detect
  * abandoned carts and return cart stock, (2) and it makes it possible to detect temporary profiles that are no longer needed.
  * This value can also be used to implement advanced features like email reminders to customers that they have items in
