@@ -10,7 +10,7 @@ WP e-Commerce is a free WordPress Shopping Cart Plugin that lets customers buy y
 
 == Description ==
 
-We make setting up an ecommerce shop easy, and with over 2.6 Million downloads, we have unparalleled experience.
+We make setting up an ecommerce shop easy, and with over 2.7 Million downloads, we have unparalleled experience.
 
 Features:
 
