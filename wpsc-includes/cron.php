@@ -218,11 +218,27 @@ if ( defined( 'DOING_AJAX' ) && DOING_AJAX && ( $_SERVER['SERVER_ADDR'] == $_SER
 			$temporary_profiles = $wpdb->get_results( 'SELECT user_id, meta_value FROM ' . $wpdb->usermeta . ' WHERE meta_key = "' . _wpsc_get_customer_meta_key( 'temporary_profile' ) . '"', OBJECT_K );
 
 			$two_hours_from_now = time() + ( 2 * 60 * 60 );
-			foreach ( $last_actives as $id => $data ) {
-				if ( empty( $temporary_profiles[$id] ) ) {
-					$temporary_profile_meta_count++;
-					$profile_expire_time = max( intval( $data->meta_value ) + ( 60 * 60 * 48 ) , $two_hours_from_now );
-					update_user_meta( $id, _wpsc_get_customer_meta_key( 'temporary_profile' ), $profile_expire_time );
+
+			$args = array(
+					'role'     => 'wpsc_anonymous',
+					'orderby ' => 'ID',
+					'fields'   => array(  'ID', 'user_registered', ),
+			);
+
+			$wp_user_query = new WP_User_Query( $args );
+			foreach ( $wp_user_query->results as $user ) {
+
+				// if it isn't a temporary profile, and the user doesn't have any posts, comments or purchases, then mark it as a temporary profile
+				if ( empty( $temporary_profiles[$user->ID] ) ) {
+					$is_temporary_customer_profile = ( wpsc_customer_purchase_count( $user->ID ) == 0 ) && ( wpsc_customer_post_count( $user->ID ) == 0 ) && ( wpsc_customer_comment_count( $user->ID ) == 0 );
+					if ( $is_temporary_customer_profile ) {
+						update_user_meta( $user->ID, _wpsc_get_customer_meta_key( 'temporary_profile' ), $two_hours_from_now );
+					}
+				}
+
+				// set last active to now
+				if ( empty( $last_actives[$user->ID] ) ) {
+					update_user_meta( $user->ID, _wpsc_get_customer_meta_key( 'last_active' ), strtotime( $user->user_registered ) );
 				}
 			}
 
