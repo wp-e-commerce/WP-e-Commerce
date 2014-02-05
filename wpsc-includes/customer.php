@@ -312,22 +312,28 @@ function _wpsc_merge_cart() {
 
 	// add each item to the new cart
 	foreach ( $items as $item ) {
-		$new_cart->set_item( $item->product_id, array(
-			'quantity'         => $item->quantity,
-			'variation_values' => $item->variation_values,
-			'custom_message'   => $item->custom_message,
-			'provided_price'   => $item->provided_price,
-			'time_requested'   => $item->time_requested,
-			'custom_file'      => $item->custom_file,
-			'is_customisable'  => $item->is_customisable,
-			'meta'             => $item->meta
-		) );
+		$new_cart->set_item(
+			$item->product_id, array(
+										'quantity'         => $item->quantity,
+										'variation_values' => $item->variation_values,
+										'custom_message'   => $item->custom_message,
+										'provided_price'   => $item->provided_price,
+										'time_requested'   => $item->time_requested,
+										'custom_file'      => $item->custom_file,
+										'is_customisable'  => $item->is_customisable,
+										'meta'             => $item->meta,
+									)
+			);
 	}
 
 	// The old profile is no longer needed
 	_wpsc_abandon_temporary_customer_profile( $old_id );
 
-	_wpsc_set_customer_cookie( '', time() - 3600 );
+	// only clear the cookie if headers have not been sent, if headers have been sent
+	// the cookie should clear on the next HTTP request by the logged in user
+	if ( ! headers_sent() ) {
+		_wpsc_set_customer_cookie( '', time() - 3600 );
+	}
 }
 
 /**
