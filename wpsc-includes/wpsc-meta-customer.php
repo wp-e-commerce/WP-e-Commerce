@@ -250,23 +250,24 @@ function wpsc_get_customer_cart( $id = false  ) {
 /**
  * Update a customers cart
  * @access public
- * @since 3.8.9
- * @param string $id
+ * @since 3.8.14
  * @param unknown $cart
+ * @param int $id
  * @return boolean
  */
-function wpsc_update_customer_cart( $id = false, $cart ) {
+function wpsc_update_customer_cart( $cart, $id = false ) {
 	global $wpdb, $wpsc_start_time, $wpsc_cart;
 
-	if ( !is_a( $cart, 'wpsc_cart' ) )
+	if ( ! is_a( $cart, 'wpsc_cart' ) ) {
 		return false;
-
-	if ( $id == wpsc_get_current_customer_id() ) {
-		$wpsc_cart = $cart;
 	}
 
 	if ( ! $id ) {
 		$id = wpsc_get_current_customer_id();
+	}
+
+	if ( $id == wpsc_get_current_customer_id() ) {
+		$wpsc_cart = $cart;
 	}
 
 	wpsc_update_customer_meta( 'cart', base64_encode( serialize( $cart ) ) , $id );
