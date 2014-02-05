@@ -47,12 +47,12 @@ add_action( '_wpsc_clear_customer_meta_action' , '_wpsc_clear_expired_user_profi
 // If we are doing ajax and the request came from ourselves  we can setup the clear user profiles ajax
 if ( defined( 'DOING_AJAX' ) && DOING_AJAX && ( $_SERVER['SERVER_ADDR'] == $_SERVER['REMOTE_ADDR'] ) ) {
 
-	add_action( 'wp_ajax_wpsc_wpsc_clear_expired_profiles', '_wpsc_clear_expired_user_profiles_ajax' );
+	add_action( 'wp_ajax_wpsc_clear_expired_profiles', '_wpsc_clear_expired_user_profiles_ajax' );
 	add_action( 'wp_ajax_nopriv_wpsc_clear_expired_profiles', '_wpsc_clear_expired_user_profiles_ajax' );
 
 	$already_cleaned_up_anonymous_profiles = get_option( 'wpsc_cleaned_up_anonymous_profiles', false );
 	if ( ! $already_cleaned_up_anonymous_profiles ) {
-		add_action( 'wp_ajax_wpsc_wpsc_clear_expired_anonymous_profiles', '_wpsc_clear_expired_anonymous_profiles_ajax' );
+		add_action( 'wp_ajax_wpsc_clear_expired_anonymous_profiles', '_wpsc_clear_expired_anonymous_profiles_ajax' );
 		add_action( 'wp_ajax_nopriv_wpsc_clear_expired_anonymous_profiles', '_wpsc_clear_expired_anonymous_profiles_ajax' );
 	}
 
