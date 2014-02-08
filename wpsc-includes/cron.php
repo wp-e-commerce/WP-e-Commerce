@@ -128,7 +128,7 @@ if ( defined( 'DOING_AJAX' ) && DOING_AJAX && ( $_SERVER['SERVER_ADDR'] == $_SER
 
 	/**
 	 * Action processing to cleanup pre 3.8.14 WPEC user profiles that haven't been used for a while
-	 * Note: This is essentially an upgrade routine but cannot be run in the normal WPEC upgrade path becuase
+	 * Note: This is essentially an upgrade routine but cannot be run in the normal WPEC upgrade path because
 	 * it is possible that total processing could take minutes to a small number of hours on slower sites.
 	 * Processing time is dependent on how many of the old style temporary profiles have accumulated
 	 * in the database.  Tests with 50,000 expired profiles on a fast highly tuned system show that
