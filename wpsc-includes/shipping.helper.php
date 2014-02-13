@@ -526,7 +526,9 @@ class ASH{
             $package = new ASHPackage();
             //*** Set package dimensions ***\\
             $dimensions = get_product_meta($cart_item->product_id, 'product_metadata'); //The 'dimensions' meta doesn't exist.
-            $dimensions = $dimensions[0]['dimensions'];
+            if ( isset( $dimensions[0]['dimensions'] ) ) {
+				$dimensions = $dimensions[0]['dimensions'];
+            }
             $dim_array = array();
             $dim_array["weight"] = $cart_item->weight;
             $dim_array["height"] = ( !empty( $dimensions["height"] ) && is_numeric( $dimensions["height"] ) ) ? $dimensions["height"] : 1;
@@ -534,12 +536,12 @@ class ASH{
             $dim_array["length"] = ( !empty( $dimensions["length"] ) && is_numeric( $dimensions["length"] ) ) ? $dimensions["length"] : 1;
             $package->set_dimensions($dim_array);
             //*** Set other meta ***\\
-            $package->hazard = (get_post_meta($cart_item->product_id,"g:ship_hazard",TRUE) === TRUE) ? TRUE : FALSE;	//Doesn't exist. Allow the user to enter Google formatted meta.
-            $package->insurance = (get_post_meta($cart_item->product_id,"g:ship_insurance",TRUE)=== TRUE)? TRUE:FALSE;	//Doesn't exist. Allow the user to enter Google formatted meta.
-            $package->insured_amount = get_post_meta($cart_item->product_id,"g:ship_insured_amount",TRUE);				//Doesn't exist. Allow the user to enter Google formatted meta.
+            $package->hazard = ( get_product_meta( $cart_item->product_id, "ship_hazard", TRUE ) === TRUE) ? TRUE : FALSE;			//Fixed ternary evaluation.
+            $package->insurance = ( get_product_meta( $cart_item->product_id, "ship_insurance", TRUE ) === TRUE) ? TRUE : FALSE;	//Fixed ternary evaluation.
+            $package->insured_amount = get_product_meta( $cart_item->product_id,"ship_insured_amount", TRUE );						//Fixed ternary evaluation.
             $package->value = $cart_item->unit_price;
             $package->contents = $cart_item->product_name;
-			$package->this_side_up = (get_post_meta($cart_item->product_id,"g:this_side_up",TRUE)=== TRUE)?TRUE:FALSE;	//Product can't be shipped sideways.
+			$package->this_side_up = ( get_post_meta( $cart_item->product_id, "h:this_side_up", TRUE ) === TRUE ) ? TRUE : FALSE;	//Prod. page hide, prod. UI display
             if ($shipment->hazard === FALSE and $package->hazard === TRUE){
                 $shipment->set_hazard(TRUE);
             }
@@ -587,12 +589,12 @@ class ASH{
     function check_cache($internal_name, $shipment){
         $wpec_ash = wpsc_get_customer_meta( 'shipping_ash' );
 
-        if ( ! $wpec_ash )
+        if ( ! $wpec_ash || ! is_array( $wpec_ash ) ) { //Avoids: Warning: 'array_key_exists' expects array.
             return false;
-
-        if ( ! array_key_exists( $internal_name, $wpec_ash ) )
+        }
+        if ( ! array_key_exists( $internal_name, $wpec_ash ) ) {
             return false;
-
+        }
         if ( is_object( $wpec_ash[$internal_name]["shipment"] ) ){
             $cached_shipment = $wpec_ash[$internal_name]["shipment"];
         } else {
