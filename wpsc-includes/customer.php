@@ -67,16 +67,17 @@ function _wpsc_create_customer_id() {
  * @access private
  */
 function _wpsc_maybe_setup_bot_user() {
-	if ( ! _wpsc_is_bot_user() )
-		return;
+	if ( ! _wpsc_is_bot_user() ) {
+		return false;
+	}
 
 	$username = '_wpsc_bot';
-	$wp_user  = get_user_by( 'login', $username );
+	$wp_user = get_user_by( 'login', $username );
 
 	if ( $wp_user === false ) {
 		$password = wp_generate_password( 12, false );
-		$id       = wp_create_user( $username, $password );
-		$user     = new WP_User( $id );
+		$id = wp_create_user( $username, $password );
+		$user = new WP_User( $id );
 		$user->set_role( 'wpsc_anonymous' );
 	} else {
 		$id = $wp_user->ID;
@@ -87,6 +88,8 @@ function _wpsc_maybe_setup_bot_user() {
 
 	return $id;
 }
+
+
 
 /**
  * Create a cookie for a specific customer ID.
@@ -175,21 +178,29 @@ function _wpsc_validate_customer_cookie() {
  * @return mixed        User ID (if logged in) or customer cookie ID
  */
 function wpsc_get_current_customer_id() {
-	$id = apply_filters( 'wpsc_get_current_customer_id', null );
+       $id = apply_filters( 'wpsc_get_current_customer_id', null );
 
-	if ( ! empty( $id ) )
-		return $id;
+        if ( ! empty ( $id ) )
+               return $id;
 
-	// if the user is logged in we use the user id
-	if ( is_user_logged_in() ) {
-		return get_current_user_id();
-	} elseif ( isset( $_COOKIE[WPSC_CUSTOMER_COOKIE] ) ) {
-		list( $id, $expire, $hash ) = explode( '|', $_COOKIE[WPSC_CUSTOMER_COOKIE] );
-		return $id;
-	}
+        // if the user is logged in we use the user id
+        if ( is_user_logged_in() ) {
+               return get_current_user_id();
+       } elseif ( isset ( $_COOKIE[WPSC_CUSTOMER_COOKIE] ) ) {
+               list( $id, $expire, $hash ) = explode( '|' , $_COOKIE[WPSC_CUSTOMER_COOKIE] );
+               return $id;
+       }
 
-	return _wpsc_create_customer_id();
+        // if this request is by a bot, prevent multiple account creation
+        if ( $id = _wpsc_maybe_setup_bot_user() ) {
+               return $id;
+       }
+
+
+        return _wpsc_create_customer_id();
 }
+
+
 
 /**
  * Setup current user object and customer ID as well as cart.
