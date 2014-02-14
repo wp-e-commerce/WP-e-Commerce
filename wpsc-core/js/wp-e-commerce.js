@@ -1,3 +1,12 @@
+if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {	
+	var wpsc_http = new XMLHttpRequest();
+	wpsc_http.open("POST",wpsc_ajax.ajaxurl + "?action=wpsc_validate_customer", true);
+	wpsc_http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+	wpsc_http.timeout = 1000;
+	wpsc_http.send();	
+}
+
+
 function wpsc_shipping_same_as_billing(){
 		var billing_state_input = jQuery('input[title="billingstate"]'),
 		billing_vars = jQuery("input[title='billingfirstname'], input[title='billinglastname'], textarea[title='billingaddress'], input[title='billingcity'], input[title='billingpostcode'], input[title='billingphone'], input[title='billingfirstname'], input[title='billingstate']");

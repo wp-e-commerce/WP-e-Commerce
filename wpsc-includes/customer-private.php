@@ -42,7 +42,12 @@ function _wpsc_action_setup_customer() {
 	}
 
 	// initialize customer ID if it's not already there
-	wpsc_get_current_customer_id();
+	$customer_id = wpsc_get_current_customer_id();
+
+	// make sure the cookie gets set if it wasn't set previously
+	if ( empty ( $visitor_id_from_cookie ) ) {
+		_wpsc_create_customer_id_cookie( $customer_id );
+	}
 
 	// setup the cart and restore its items
 	wpsc_core_setup_cart();
@@ -74,7 +79,7 @@ function _wpsc_set_customer_cookie( $cookie, $expire ) {
 
 	// only set the cookie if headers have not been sent, if headers have been sent
 	if ( ! headers_sent() ) {
-		setcookie( WPSC_CUSTOMER_COOKIE, $cookie, $expire, WPSC_CUSTOMER_COOKIE_PATH, COOKIE_DOMAIN, false, true );
+		setcookie( WPSC_CUSTOMER_COOKIE, $cookie, $expire, WPSC_CUSTOMER_COOKIE_PATH, COOKIE_DOMAIN, false, false );
 	}
 
 	if ( $expire < time() ) {

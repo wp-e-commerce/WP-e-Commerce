@@ -14,7 +14,7 @@
 function _wpsc_doing_customer_meta_ajax( $action = '' ) {
 
 	$result = ( defined( 'DOING_AJAX' ) && DOING_AJAX  && isset( $_REQUEST['action'] )
-			&& ( strpos( $_REQUEST['action'], '_customer_meta' ) !== false ) );
+			&& ( strpos( $_REQUEST['action'], 'wpsc_' ) !== false ) );
 
 	if ( $result && ! empty( $action ) ) {
 		$result = $_REQUEST['action'] == $action;
@@ -32,7 +32,7 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 	 */
 	function wpsc_validate_customer_ajax() {
 		// most of the validation should be done by the WPEC initialization, just return the current customer values
-		$response = array( 'valid' => _wpsc_validate_customer_cookie(), 'id' => wpsc_get_current_customer_id() );
+		$response = array( 'valid' => _wpsc_validate_customer_cookie() != false, 'id' => wpsc_get_current_customer_id() );
 		$response = json_encode( $response );
 		echo $response;
 		die();
@@ -199,24 +199,22 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 		die();
 	}
 
-	if ( wpsc_doing_customer_meta_ajax() ) {
-		add_action( 'wp_ajax_wpsc_validate_customer'       		, 'wpsc_validate_customer_ajax' );
-		add_action( 'wp_ajax_nopriv_wpsc_validate_customer'		, 'wpsc_validate_customer_ajax' );
+	add_action( 'wp_ajax_wpsc_validate_customer'       		, 'wpsc_validate_customer_ajax' );
+	add_action( 'wp_ajax_nopriv_wpsc_validate_customer'		, 'wpsc_validate_customer_ajax' );
 
-		add_action( 'wp_ajax_wpsc_get_customer_meta'       		, 'wpsc_get_customer_meta_ajax' );
-		add_action( 'wp_ajax_nopriv_wpsc_get_customer_meta'		, 'wpsc_get_customer_meta_ajax' );
+	add_action( 'wp_ajax_wpsc_get_customer_meta'       		, 'wpsc_get_customer_meta_ajax' );
+	add_action( 'wp_ajax_nopriv_wpsc_get_customer_meta'		, 'wpsc_get_customer_meta_ajax' );
 
-		add_action( 'wp_ajax_wpsc_get_customer_metas'       	, 'wpsc_get_customer_metas_ajax' );
-		add_action( 'wp_ajax_nopriv_wpsc_get_customer_metas'	, 'wpsc_get_customer_metas_ajax' );
+	add_action( 'wp_ajax_wpsc_get_customer_metas'       	, 'wpsc_get_customer_metas_ajax' );
+	add_action( 'wp_ajax_nopriv_wpsc_get_customer_metas'	, 'wpsc_get_customer_metas_ajax' );
 
-		add_action( 'wp_ajax_wpsc_delete_customer_meta'       	, 'wpsc_delete_customer_meta_ajax' );
-		add_action( 'wp_ajax_nopriv_wpsc_delete_customer_meta'	, 'wpsc_delete_customer_meta_ajax' );
+	add_action( 'wp_ajax_wpsc_delete_customer_meta'       	, 'wpsc_delete_customer_meta_ajax' );
+	add_action( 'wp_ajax_nopriv_wpsc_delete_customer_meta'	, 'wpsc_delete_customer_meta_ajax' );
 
-		add_action( 'wp_ajax_wpsc_update_customer_meta'       	, 'wpsc_update_customer_meta_ajax' );
-		add_action( 'wp_ajax_nopriv_wpsc_update_customer_meta'	, 'wpsc_update_customer_meta_ajax' );
+	add_action( 'wp_ajax_wpsc_update_customer_meta'       	, 'wpsc_update_customer_meta_ajax' );
+	add_action( 'wp_ajax_nopriv_wpsc_update_customer_meta'	, 'wpsc_update_customer_meta_ajax' );
 
-		add_action( 'wp_ajax_wpsc_update_customer_metas'       	, 'wpsc_update_customer_metas_ajax' );
-		add_action( 'wp_ajax_nopriv_wpsc_update_customer_metas'	, 'wpsc_update_customer_metas_ajax' );
+	add_action( 'wp_ajax_wpsc_update_customer_metas'       	, 'wpsc_update_customer_metas_ajax' );
+	add_action( 'wp_ajax_nopriv_wpsc_update_customer_metas'	, 'wpsc_update_customer_metas_ajax' );
 
-	}
 }
