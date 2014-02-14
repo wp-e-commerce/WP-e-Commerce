@@ -57,17 +57,12 @@ function wpsc_get_current_customer_id() {
  */
 function wpsc_customer_post_count( $id = false ) {
 
-	$count = 0;
 
 	if ( ! $id ) {
 		$id = wpsc_get_current_customer_id();
 	}
 
-	if ( $wp_user_id = _wpsc_get_wp_user_visitor_id( $id ) ) {
-		$count = count_user_posts( $wp_user_id );
-	}
-
-	return $count;
+	return wpsc_visitor_post_count( $id );
 }
 
 /**
@@ -83,7 +78,7 @@ function wpsc_customer_comment_count( $id = false ) {
 		$id = wpsc_get_current_customer_id();
 	}
 
-	return wpsc_customer_comment_count( $id );
+	return wpsc_visitor_comment_count( $id );
 }
 
 /**
