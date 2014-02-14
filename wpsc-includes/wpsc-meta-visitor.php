@@ -160,7 +160,7 @@ function wpsc_set_visitor_expiration( $visitor_id, $expires_in_time = null ) {
 	} else {
 		global $wpdb;
 		$expires_timestamp = $timestamp = date( 'Y-m-d H:i:s', $result = ( time() + $expires_in_time) );
-		$wpdb->query( 'UPDATE ' . $wpdb->wpsc_visitors . ' SET expires = ' . $expires_timestamp . ' WHERE id = ' . $visitor_id );
+		$wpdb->query( 'UPDATE ' . $wpdb->wpsc_visitors . ' SET expires = "' . $expires_timestamp . '" WHERE id = ' . $visitor_id );
 	}
 
 	return $result;
