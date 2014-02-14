@@ -1142,11 +1142,13 @@ add_filter( 'favorite_actions', 'wpsc_fav_action' );
 /**
  * Prits out the admin scripts
  *
+ * @uses is_ssl()                 Defines if SSL is true
  * @uses wp_enqueue_script()      Enqueues scripts
  * @uses home_url()               Returns the base url for the site
  */
 function wpsc_print_admin_scripts() {
-	wp_enqueue_script( 'wp-e-commerce-dynamic', home_url( '/index.php?wpsc_user_dynamic_js=true' ) );
+	$scheme = is_ssl() ? 'https' : 'http';
+	wp_enqueue_script( 'wp-e-commerce-dynamic', home_url( "/index.php?wpsc_user_dynamic_js=true", $scheme ) );
 }
 
 /**
