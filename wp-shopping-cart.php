@@ -127,7 +127,6 @@ class WP_eCommerce {
 		$wpdb->wpsc_currency_list       = WPSC_TABLE_CURRENCY_LIST;
 		$wpdb->wpsc_purchase_logs       = WPSC_TABLE_PURCHASE_LOGS;
 		$wpdb->wpsc_checkout_forms      = WPSC_TABLE_CHECKOUT_FORMS;
-    $wpdb->wpsc_purchasemeta        = WPSC_TABLE_PURCHASE_META; // required for _get_meta_table()
 		$wpdb->wpsc_product_rating      = WPSC_TABLE_PRODUCT_RATING;
 		$wpdb->wpsc_download_status     = WPSC_TABLE_DOWNLOAD_STATUS;
 		$wpdb->wpsc_submitted_form_data = WPSC_TABLE_SUBMITTED_FORM_DATA;
