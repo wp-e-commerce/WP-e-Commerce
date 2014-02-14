@@ -136,8 +136,8 @@ function wpsc_set_visitor_last_active( $visitor_id, $timestamp = null ) {
 		$timestamp = date( 'Y-m-d H:i:s', $last_active = time() );
 	}
 
-	$result = $wpdb->get_var( 'UPDATE ' . $wpdb->wpsc_visitors . 'SET  last_active = `' . $timestamp . '` WHERE id = ' . $visitor_id );
-	if ( $result !== 1 ) {
+	$wpdb->query( 'UPDATE ' . $wpdb->wpsc_visitors . ' SET last_active = "' . $timestamp . '" WHERE id = ' . $visitor_id );
+	if ( $wpdb->rows_affected !== 1 ) {
 		$last_active = false;
 	}
 
