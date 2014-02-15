@@ -1,0 +1,347 @@
+<?php
+
+add_action( 'wpsc_set_cart_item'         , '_wpsc_action_update_current_customer_last_active' );
+add_action( 'wpsc_add_item'              , '_wpsc_action_update_current_customer_last_active' );
+add_action( 'wpsc_before_submit_checkout', '_wpsc_action_update_current_customer_last_active' );
+add_action( 'wp_login'                   , '_wpsc_action_setup_customer'                  	  );
+
+
+/**
+ * Setup current user object and customer ID as well as cart.
+ *
+ * @uses  do_action() Calls 'wpsc_setup_customer' after customer data is ready
+ *
+ * @access private
+ * @since  3.8.13
+ */
+function _wpsc_action_setup_customer() {
+	// if the customer cookie is invalid, unset it
+	$visitor_id_from_cookie = _wpsc_validate_customer_cookie();
+
+	if ( $visitor_id_from_cookie && is_user_logged_in() ) {
+		$id_from_wp_user = get_user_meta( get_current_user_id(), _wpsc_get_visitor_meta_key( 'visitor_id' ), true );
+		if ( empty( $id_from_wp_user ) ) {
+			_wpsc_update_wp_user_visitor_id( get_current_user_id(), $visitor_id_from_cookie );
+		} elseif ( $visitor_id_from_cookie != $id_from_wp_user ) {
+
+			// save the old visitor id so the merge cart function can do its work
+			wpsc_update_customer_meta( 'merge_cart_vistor_id', $visitor_id_from_cookie );
+
+			// make the current customer cookie match the cookie that is in the WordPress user meta
+			_wpsc_create_customer_id_cookie( $id_from_wp_user );
+
+			// merging cart requires the taxonomies to have been initialized
+			if ( did_action( 'wpsc_register_taxonomies_after' ) ) {
+				_wpsc_merge_cart();
+			} else {
+				add_action( 'wpsc_register_taxonomies_after', '_wpsc_merge_cart', 1 );
+			}
+		}
+	} else {
+		$id_from_wp_user = '';
+	}
+
+	// initialize customer ID if it's not already there
+	wpsc_get_current_customer_id();
+
+	// setup the cart and restore its items
+	wpsc_core_setup_cart();
+
+	do_action( 'wpsc_setup_customer' );
+}
+
+
+function _wpsc_abandon_temporary_customer_profile( $id = false ) {
+
+	if ( ! $id ) {
+		$id = wpsc_get_current_customer_id();
+	}
+
+	// set the temporary profile keep until time to sometime in the past, the delete
+	// processing will take care of the cleanup on the next processing cycle
+	wpsc_set_visitor_expiration( $id, -1 );
+}
+
+/**
+ * Helper function for setting the customer cookie content and expiration
+ *
+ * @since  3.8.13
+ * @access private
+ * @param  mixed $cookie  Cookie data
+ * @param  int   $expire  Expiration timestamp
+ */
+function _wpsc_set_customer_cookie( $cookie, $expire ) {
+
+	// only set the cookie if headers have not been sent, if headers have been sent
+	if ( ! headers_sent() ) {
+		setcookie( WPSC_CUSTOMER_COOKIE, $cookie, $expire, WPSC_CUSTOMER_COOKIE_PATH, COOKIE_DOMAIN, false, true );
+	}
+
+	if ( $expire < time() ) {
+		unset( $_COOKIE[ WPSC_CUSTOMER_COOKIE ] );
+	} else {
+		$_COOKIE[ WPSC_CUSTOMER_COOKIE ] = $cookie;
+	}
+}
+
+/**
+ * Create a new visitor account for the current visitor and store its ID
+ * in a cookie
+ *
+ * @access public
+ * @since 3.8.9
+ * @return string Customer ID
+ */
+function _wpsc_create_customer_id() {
+
+	$args = array();
+	if ( is_user_logged_in() ) {
+		$args['user_id'] = get_current_user_id();
+	}
+
+	$id = wpsc_create_visitor( $args );
+
+	_wpsc_create_customer_id_cookie( $id );
+
+	do_action( 'wpsc_create_visitor' , $id );
+
+	return $id;
+}
+
+/**
+ * Create a cookie for a specific customer ID.
+ *
+ * You can also fake it by just assigning the cookie to $_COOKIE superglobal.
+ *
+ * @since  3.8.13
+ * @access private
+ * @param  int  $id      Customer ID
+ * @param  boolean $fake_it Defaults to false
+ */
+function _wpsc_create_customer_id_cookie( $id, $fake_it = false ) {
+
+	$expire = time() + WPSC_CUSTOMER_DATA_EXPIRATION; // valid for 48 hours
+	$data   = $id . $expire;
+
+	$user = get_user_by( 'id', $id );
+	$key = wp_hash( _wpsc_visitor_security_key( $id ) . '|' . $expire );
+
+	$hash   = hash_hmac( 'md5', $data, $key );
+	$cookie = $id . '|' . $expire . '|' . $hash;
+
+	// store ID, expire and hash to validate later
+	if ( $fake_it ) {
+		$_COOKIE[ WPSC_CUSTOMER_COOKIE ] = $cookie;
+	} else {
+		_wpsc_set_customer_cookie( $cookie, $expire );
+	}
+}
+
+/**
+ * Make sure the customer cookie is not compromised.
+ *
+ * @access public
+ * @since 3.8.9
+ * @return mixed Return the customer ID if the cookie is valid, false if otherwise.
+ */
+function _wpsc_validate_customer_cookie() {
+
+	if ( ! isset( $_COOKIE[ WPSC_CUSTOMER_COOKIE ] ) ) {
+		return false;
+	}
+
+	$cookie = $_COOKIE[ WPSC_CUSTOMER_COOKIE ];
+	list( $id, $expire, $hash ) = $x = explode( '|', $cookie );
+	$data = $id . $expire;
+
+	// check to see if the ID is valid, it must be an integer, empty test is because old versions of php
+	// can return true on empty string
+	if ( ! empty( $id ) &&  ctype_digit( $id ) ) {
+		$id = intval( $id );
+		$security_key = _wpsc_visitor_security_key( $id );
+
+		// if a user is found keep checking, user not found clear the cookie and return invalid
+		if ( ! empty( $security_key ) ) {
+			$key = wp_hash( $security_key . '|' . $expire );
+			$hmac = hash_hmac( 'md5', $data, $key );
+
+			// integrity check
+			if ( $hmac == $hash ) {
+				return $id;
+			}
+		}
+	}
+
+	// if we get to here the cookie or user is not valid
+	_wpsc_set_customer_cookie( '', time() - 3600 );
+	return false;
+}
+
+
+/**
+ * Attach a purchase log to our customer profile
+ *
+ * @access private
+ * @since  3.8.14
+ */
+function _wpsc_set_purchase_log_customer_id( $wpsc_purchase_log ) {
+
+	// if there is a purchase log for this user we don't want to delete the
+	// user id, even if the transaction isn't successful.  there may be useful
+	// information in the customer profile related to the transaction
+	wpsc_delete_customer_meta( 'temporary_profile' );
+
+	// connect the purchase to the visitor id
+	wpsc_update_purchase_meta( $wpsc_purchase_log->id, 'visitor_id', wpsc_get_current_customer_id(), true );
+
+	// connect the visitor to purchase
+	wpsc_add_visitor_meta( wpsc_get_current_customer_id(), 'purchase_id',  $wpsc_purchase_log->id, false );
+
+	return $data;
+}
+
+add_filter( 'wpsc_purchase_log_insert', '_wpsc_set_purchase_log_customer_id', 10, 1 );
+
+/**
+ * Return the internal customer meta key, which depends on the blog prefix
+ * if this is a multi-site installation.
+ *
+ * @since  3.8.13
+ * @access private
+ * @param  string $key Meta key
+ * @return string      Internal meta key
+ */
+function _wpsc_get_customer_meta_key( $key ) {
+	return _wpsc_get_visitor_meta_key( $key );
+}
+
+/**
+ * Update the current customer's last active time
+ *
+ * @access private
+ * @since  3.8.13
+ */
+function _wpsc_action_update_current_customer_last_active() {
+	// get the current users id
+	$id = wpsc_get_current_customer_id();
+
+	// go through the common update routine that allows any users last active time to be changed
+	wpsc_update_customer_last_active( $id );
+
+	// also extend cookie expiration
+	_wpsc_create_customer_id_cookie( $id );
+}
+
+/**
+ * Merge cart from anonymous user with cart from logged in user
+ *
+ * @since 3.8.13
+ * @access private
+ */
+function _wpsc_merge_cart() {
+
+	$id_from_wp_user = get_user_meta( get_current_user_id(), _wpsc_get_visitor_meta_key( 'visitor_id' ), true );
+
+	if ( empty( $id_from_wp_user ) ) {
+		return;
+	}
+
+	$id_from_customer_meta = wpsc_get_customer_meta( 'merge_cart_vistor_id' );
+	wpsc_delete_customer_meta( 'merge_cart_vistor_id' );
+
+
+	$old_cart = wpsc_get_customer_cart( $id_from_customer_meta );
+	$items    = $old_cart->get_items();
+
+	$new_cart = wpsc_get_customer_cart( $id_from_wp_user );
+
+	// first of all empty the old cart so that the claimed stock and related
+	// hooks are released
+	$old_cart->empty_cart();
+
+	// add each item to the new cart
+	foreach ( $items as $item ) {
+		$new_cart->set_item(
+				$item->product_id, array(
+						'quantity'         => $item->quantity,
+						'variation_values' => $item->variation_values,
+						'custom_message'   => $item->custom_message,
+						'provided_price'   => $item->provided_price,
+						'time_requested'   => $item->time_requested,
+						'custom_file'      => $item->custom_file,
+						'is_customisable'  => $item->is_customisable,
+						'meta'             => $item->meta,
+				)
+		);
+	}
+
+	wpsc_update_customer_cart( $new_cart );
+
+	// The old profile is no longer needed
+	_wpsc_abandon_temporary_customer_profile( $id_from_customer_meta );
+
+}
+
+
+/**
+ * Is the user an automata not worthy of a WPEC profile to hold shopping cart and other info
+ *
+ * @access private
+ * @since  3.8.13
+ */
+function _wpsc_is_bot_user() {
+
+	$is_bot = false;
+
+	if ( is_user_logged_in() ) {
+		return false;
+	}
+
+	if ( strpos( $_SERVER['REQUEST_URI'], '?wpsc_action=rss' ) ) {
+		return true;
+	}
+
+	// Cron jobs are not flesh originated
+	if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
+		return true;
+	}
+
+	// XML RPC requests are probably from cybernetic beasts
+	if ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST ) {
+		return true;
+	}
+
+	// coming to login first, after the user logs in we know they are a live being, until then they are something else
+	if ( strpos( $_SERVER['PHP_SELF'], 'wp-login' ) || strpos( $_SERVER['PHP_SELF'], 'wp-register' ) ) {
+		return true;
+	}
+
+	// even web servers talk to themselves when they think no one is listening
+	if ( stripos( $_SERVER['HTTP_USER_AGENT'], 'wordpress' ) !== false ) {
+		return true;
+	}
+
+	// the user agent could be google bot, bing bot or some other bot,  one would hope real user agents do not have the
+	// string 'bot|spider|crawler|preview' in them, there are bots that don't do us the kindness of identifying themselves as such,
+	// check for the user being logged in in a real user is using a bot to access content from our site
+	$bot_agents_patterns = apply_filters(
+											'wpsc_bot_user_agents',
+											array(
+												'robot',
+												'bot',
+												'crawler',
+												'spider',
+												'preview',
+											)
+										);
+
+	$pattern = '/(' . implode( '|', $bot_agents_patterns ) . ')/i';
+
+	if ( preg_match( $pattern, $_SERVER['HTTP_USER_AGENT'] ) ) {
+		return true;
+	}
+
+	// at this point we have eliminated all but the most obvious choice, a human (or cylon?)
+	return apply_filters( 'wpsc_is_bot_user', false );
+}
+

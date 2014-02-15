@@ -127,13 +127,13 @@ class WP_eCommerce {
 		$wpdb->wpsc_currency_list       = WPSC_TABLE_CURRENCY_LIST;
 		$wpdb->wpsc_purchase_logs       = WPSC_TABLE_PURCHASE_LOGS;
 		$wpdb->wpsc_checkout_forms      = WPSC_TABLE_CHECKOUT_FORMS;
-		$wpdb->wpsc_cart_itemmeta       = WPSC_TABLE_CART_ITEM_META; // required for _get_meta_table()
-		$wpdb->wpsc_cart_item_meta      = WPSC_TABLE_CART_ITEM_META;
-    $wpdb->wpsc_purchasemeta        = WPSC_TABLE_PURCHASE_META; // required for _get_meta_table()
-		$wpdb->wpsc_purchase_meta       = WPSC_TABLE_PURCHASE_META;
 		$wpdb->wpsc_product_rating      = WPSC_TABLE_PRODUCT_RATING;
 		$wpdb->wpsc_download_status     = WPSC_TABLE_DOWNLOAD_STATUS;
 		$wpdb->wpsc_submitted_form_data = WPSC_TABLE_SUBMITTED_FORM_DATA;
+		$wpdb->wpsc_cart_itemmeta       = WPSC_TABLE_CART_ITEM_META;
+		$wpdb->wpsc_purchasemeta        = WPSC_TABLE_PURCHASE_META;
+		$wpdb->wpsc_visitors            = WPSC_TABLE_VISITORS;
+		$wpdb->wpsc_visitormeta         = WPSC_TABLE_VISITOR_META;
 	}
 
 	/**
@@ -183,7 +183,11 @@ class WP_eCommerce {
 	 * @uses do_action()        Calls 'wpsc_includes' which runs after WPEC files have been included
 	 */
 	function includes() {
-		require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-init.php' );
+		require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-util.php'                  );
+		require_once( WPSC_FILE_PATH . '/wpsc-includes/customer.php'                        );
+		require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-customer.php'              );
+		require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-visitor.php'               );
+		require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-cart-item.php'             );
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-functions.php' );
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-installer.php' );
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-includes.php' );

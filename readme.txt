@@ -58,7 +58,7 @@ Features:
 * New Products widget
 * Cross-sells on product pages
 * Google Sitemap and Google Analytics
-* Uses the popular “Share This” button for easily promoting your products on popular social networking sites
+* Uses the popular â€œShare Thisâ€� button for easily promoting your products on popular social networking sites
 * Integrates with Google Base
 
 = Search Engine Optimization =
@@ -124,12 +124,12 @@ Features:
 * Live updating shopping cart (put it wherever you want)
 
 = Additional Modules =
-* Gold Cart & Grid Module – adds more options and functionality to your store
-* Drop Shop – an incredibly snazzy way for buyers to add products to their cart, via a simple drag n drop process.
-* Mp3 Audio Player – Preview audio clips on your website
-* NextGen Gallery Buy Now Buttons – turns your NextGen gallery into an ecommerce solution
-* Product Slider – Display your products in a new and fancy way
-* Members Only Module – Create pay to view subscription sites
+* Gold Cart & Grid Module â€“ adds more options and functionality to your store
+* Drop Shop â€“ an incredibly snazzy way for buyers to add products to their cart, via a simple drag n drop process.
+* Mp3 Audio Player â€“ Preview audio clips on your website
+* NextGen Gallery Buy Now Buttons â€“ turns your NextGen gallery into an ecommerce solution
+* Product Slider â€“ Display your products in a new and fancy way
+* Members Only Module â€“ Create pay to view subscription sites
 
 For more information visit [http://getshopped.org](http://getshopped.org "http://getshopped.org")
 
@@ -144,6 +144,12 @@ Before updating please make a backup of your existing files and database. Just i
 After upgrading from earlier versions look for link "Update Store". This will update your database structure to work with new version.
 
 == Changelog ==
+
+= 3.8.14 =
+* Fix: Improved visitor profiles performance, new infrastructure does not use WordPress Users
+* New: AJAX API to get and set information about customers
+* New: Visitor API to get and set information about current and past visits
+* Fix: When page caching is being used, probability of empty or superfluous visitor profiles being created drastically diminished    
 
 = 3.8.13.3 =
 * Fix: Users disappear in Network Admin -> Users page (for multisite)
