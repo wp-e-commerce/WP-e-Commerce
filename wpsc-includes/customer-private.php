@@ -79,7 +79,7 @@ function _wpsc_set_customer_cookie( $cookie, $expire ) {
 
 	// only set the cookie if headers have not been sent, if headers have been sent
 	if ( ! headers_sent() ) {
-		setcookie( WPSC_CUSTOMER_COOKIE, $cookie, $expire, WPSC_CUSTOMER_COOKIE_PATH, COOKIE_DOMAIN, false, true );
+		setcookie( WPSC_CUSTOMER_COOKIE, $cookie, $expire, WPSC_CUSTOMER_COOKIE_PATH, COOKIE_DOMAIN, false, false );
 	}
 
 	if ( $expire < time() ) {
