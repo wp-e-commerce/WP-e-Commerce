@@ -10,7 +10,7 @@ add_action( 'wp_login'                   , '_wpsc_action_setup_customer'        
  * Setup current user object and customer ID as well as cart.
  *
  * @uses  do_action() Calls 'wpsc_setup_customer' after customer data is ready
- *
+ * @returns int visitor id
  * @access private
  * @since  3.8.13
  */
@@ -42,7 +42,12 @@ function _wpsc_action_setup_customer() {
 	}
 
 	// initialize customer ID if it's not already there
-	wpsc_get_current_customer_id();
+	$visitor_id = wpsc_get_current_customer_id();
+
+	// if there wasn't a visitor id in the cookies we set it now
+	if ( $visitor_id && empty( $visitor_id_from_cookie ) && is_user_logged_in() ) {
+		_wpsc_create_customer_id_cookie( $visitor_id );
+	}
 
 	// setup the cart and restore its items
 	wpsc_core_setup_cart();

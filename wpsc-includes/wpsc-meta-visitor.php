@@ -56,8 +56,6 @@ function wpsc_create_visitor( $args = null ) {
 	if ( isset( $args['user_id'] ) && is_numeric( $args['user_id'] ) && ( $args['user_id'] != 0 ) ) {
 		$wp_user_id = intval( $args['user_id'] );
 		_wpsc_update_wp_user_visitor_id( $wp_user_id, $new_visitor_id );
-	} else {
-		wpsc_set_visitor_expiration( $new_visitor_id, time() + HOUR_IN_SECONDS  );
 	}
 
 	return $new_visitor_id;
