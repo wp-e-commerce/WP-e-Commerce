@@ -145,15 +145,11 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 == Changelog ==
 
-= 3.8.13.4 =
-Fix: Improved visitor meta performance that does not use WordPress Users
-New: AJAX API to get and set information about customers
-New: Visitor API to get and set information about current and past visits 
-
 = 3.8.13.3 =
 * Fix: Users disappear in Network Admin -> Users page (for multisite)
 * Fix: User counts are incorrect when there are thousands separators.
 * Fix: "Save Product Files" button doesn't like being clicked on.
+
 
 = 3.8.13.2 =
 * Fix: Anonymous customers should not be visible in admin UI.
