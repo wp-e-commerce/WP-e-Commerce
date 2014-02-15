@@ -396,7 +396,7 @@ function wpsc_visitor_has_purchases( $visitor_id ) {
 	if ( $wp_user_id = _wpsc_get_wp_user_visitor_id( $visitor_id ) ) {
 
 		global $wpdb;
-		$count = $wpdb->get_var( 'SELECT COUNT(user_ID) FROM ' . WPSC_TABLE_PURCHASE_LOGS. ' WHERE $wp_user_id = "' . $wp_user_id . '"' );
+		$count = $wpdb->get_var( 'SELECT COUNT(user_ID) FROM ' . WPSC_TABLE_PURCHASE_LOGS. ' WHERE user_ID = "' . $wp_user_id . '"' );
 
 		if ( ! empty( $count ) && is_numeric( $count ) && intval( $count ) > 0 ) {
 			$has_purchases = true;
