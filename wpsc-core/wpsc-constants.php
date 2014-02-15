@@ -3,42 +3,20 @@
 $wpsc_currency_data = array();
 $wpsc_title_data    = array();
 
-
-/**
- * _wpsc_is_session_started()
- *
- * Check if PHP session is started using method suggested on php.net
- * @since 3.8.14
- * @return boolean
- */
-function _wpsc_is_session_started() {
-
-	if ( version_compare( phpversion(), '5.4.0', '>=' ) ) {
-		return session_status() === PHP_SESSION_ACTIVE;
-	} else {
-		if ( ! isset( $_SESSION ) ) {
-			$_SESSION = null;
-		}
-
-		return session_id() !== '';
-	}
-
-	return false;
-}
-
 /**
  * wpsc_core_load_session()
  *
  * Load up the WPEC session
- * @return boolean
  */
 function wpsc_core_load_session() {
 
-	if ( ! _wpsc_is_session_started() ) {
-		session_start();
-	}
+	if ( ! isset( $_SESSION ) )
+		$_SESSION = null;
 
-	return _wpsc_is_session_started();
+	if ( ( !is_array( $_SESSION ) ) xor ( ! isset( $_SESSION['nzshpcrt_cart'] ) ) xor ( !$_SESSION ) )
+		session_start();
+
+	return;
 }
 
 /**
@@ -54,7 +32,7 @@ function wpsc_core_constants() {
 	define( 'WPSC_VERSION'            , '3.8.14-dev' );
 	define( 'WPSC_MINOR_VERSION'      , 'e8a508c011' );
 	define( 'WPSC_PRESENTABLE_VERSION', '3.8.14-dev' );
-	define( 'WPSC_DB_VERSION'         , 9 );
+	define( 'WPSC_DB_VERSION'         , 10 );
 
 	// Define Debug Variables for developers
 	define( 'WPSC_DEBUG'        , false );
@@ -186,6 +164,10 @@ function wpsc_core_constants_table_names() {
 
 	define( 'WPSC_TABLE_CART_ITEM_META',         "{$wp_table_prefix}wpsc_cart_item_meta" );
 	define( 'WPSC_TABLE_PURCHASE_META',          "{$wp_table_prefix}wpsc_purchase_meta" );
+
+	define( 'WPSC_TABLE_VISITORS',         		 "{$wp_table_prefix}wpsc_visitors" );
+	define( 'WPSC_TABLE_VISITOR_META',           "{$wp_table_prefix}wpsc_visitor_meta" );
+
 }
 
 /**
@@ -208,7 +190,11 @@ function wpsc_core_constants_uploads() {
 
 	// Upload DIR
 	if ( isset( $wp_upload_dir_data['baseurl'] ) )
-		$upload_url = set_url_scheme( $wp_upload_dir_data['baseurl'] );
+		$upload_url = $wp_upload_dir_data['baseurl'];
+
+	// SSL Check for URL
+	if ( is_ssl() )
+		$upload_url = str_replace( 'http://', 'https://', $upload_url );
 
 	// Set DIR and URL strings
 	$wpsc_upload_sub_dir = '/wpsc/';
