@@ -58,7 +58,7 @@ Features:
 * New Products widget
 * Cross-sells on product pages
 * Google Sitemap and Google Analytics
-* Uses the popular â€œShare Thisâ€� button for easily promoting your products on popular social networking sites
+* Uses the popular “Share This” button for easily promoting your products on popular social networking sites
 * Integrates with Google Base
 
 = Search Engine Optimization =
@@ -124,12 +124,12 @@ Features:
 * Live updating shopping cart (put it wherever you want)
 
 = Additional Modules =
-* Gold Cart & Grid Module â€“ adds more options and functionality to your store
-* Drop Shop â€“ an incredibly snazzy way for buyers to add products to their cart, via a simple drag n drop process.
-* Mp3 Audio Player â€“ Preview audio clips on your website
-* NextGen Gallery Buy Now Buttons â€“ turns your NextGen gallery into an ecommerce solution
-* Product Slider â€“ Display your products in a new and fancy way
-* Members Only Module â€“ Create pay to view subscription sites
+* Gold Cart & Grid Module – adds more options and functionality to your store
+* Drop Shop – an incredibly snazzy way for buyers to add products to their cart, via a simple drag n drop process.
+* Mp3 Audio Player – Preview audio clips on your website
+* NextGen Gallery Buy Now Buttons – turns your NextGen gallery into an ecommerce solution
+* Product Slider – Display your products in a new and fancy way
+* Members Only Module – Create pay to view subscription sites
 
 For more information visit [http://getshopped.org](http://getshopped.org "http://getshopped.org")
 
@@ -154,7 +154,6 @@ New: Visitor API to get and set information about current and past visits
 * Fix: Users disappear in Network Admin -> Users page (for multisite)
 * Fix: User counts are incorrect when there are thousands separators.
 * Fix: "Save Product Files" button doesn't like being clicked on.
-
 
 = 3.8.13.2 =
 * Fix: Anonymous customers should not be visible in admin UI.
