@@ -92,6 +92,31 @@ function _wpsc_update_wp_user_visitor_id( $wp_user_id, $visitor_id ) {
 	return update_user_meta( $wp_user_id, _wpsc_get_visitor_meta_key( 'visitor_id' ), $visitor_id );
 }
 
+
+
+/**
+ * Gets a valid WordPress User ID associated weith a WPEC visitor
+ * @access private
+ * @since 3.8.14
+ * @param int $visitor_id
+ */
+function wpsc_get_visitor_wp_user_id( $visitor_id ) {
+	global $wpdb;
+
+	$wp_user_id = false;
+
+	if ( ! empty( $visitor_id ) ) {
+		$wp_user_id = $wpdb->get_var( 'SELECT user_id FROM ' . $wpdb->wpsc_visitors . ' WHERE id = ' . $visitor_id );
+		if ( $wp_user_id === NULL ) {
+			$wp_user_id = false;
+		}
+	}
+
+
+	return $wp_user_id;
+}
+
+
 /**
  * Gets a valid WPEC visitor id associated with a WordPress user
  * @access private
@@ -281,7 +306,7 @@ function wpsc_update_visitor(  $visitor_id, $args ) {
  */
 function wpsc_delete_visitor( $visitor_id ) {
 
-	if ( empty( $visitor_id ) ) {
+	if ( empty( $visitor_id ) || ( $visitor_id == WPSC_BOT_VISITOR_ID ) ) {
 		return false;
 	}
 
@@ -334,7 +359,7 @@ function wpsc_delete_visitor( $visitor_id ) {
  */
 function wpsc_get_expired_visitor_ids() {
 	global $wpdb;
-	$sql = 'SELECT id FROM ' . $wpdb->wpsc_visitors . ' WHERE expires IS NOT NULL AND expires <  NOW() ORDER BY expires ASC';
+	$sql = 'SELECT id FROM ' . $wpdb->wpsc_visitors . ' WHERE expires IS NOT NULL AND expires <  NOW() AND id <> ' . WPSC_BOT_VISITOR_ID . ' ORDER BY expires ASC';
 	$visitor_ids = $wpdb->get_col( $sql, 0 );
 	$visitor_ids = array_map( 'intval', $visitor_ids );
 	return $visitor_ids;
@@ -439,6 +464,7 @@ function wpsc_update_visitor_cart( $visitor_id, $wpsc_cart ) {
 			}
 
 			wpsc_update_visitor_meta( $visitor_id, $cart_property_meta_key, $value );
+
 		} else {
 			wpsc_delete_visitor_meta( $visitor_id, $cart_property_meta_key );
 		}
@@ -465,10 +491,12 @@ function _wpsc_encode_meta_value( $value  ) {
  */
 function _wpsc_decode_meta_value( $value ) {
 
-	$decoded = base64_decode( $value, true );
+	if ( is_string( $value ) ) {
+		$decoded = base64_decode( $value, true );
 
-	if ( $decoded !== false ) {
-		$value = maybe_unserialize( $decoded );
+		if ( $decoded !== false ) {
+			$value = maybe_unserialize( $decoded );
+		}
 	}
 
 	return $value;
@@ -486,7 +514,7 @@ function wpsc_visitor_comment_count( $visitor_id ) {
 
 	$count = 0;
 
-	if ( $wp_user_id = _wpsc_get_wp_user_visitor_id( $visitor_id ) ) {
+	if ( $wp_user_id = wpsc_get_visitor_wp_user_id( $visitor_id ) ) {
 
 		global $wpdb;
 		$count = $wpdb->get_var( 'SELECT COUNT(comment_ID) FROM ' . $wpdb->comments. ' WHERE user_id = "' . $wp_user_id . '"' );
@@ -531,7 +559,7 @@ function wpsc_visitor_has_purchases( $visitor_id ) {
 	$has_purchases = false;
 
 	// If there is one, check the WordPress user id in the purchase logs
-	if ( $wp_user_id = _wpsc_get_wp_user_visitor_id( $visitor_id ) ) {
+	if ( $wp_user_id = wpsc_get_visitor_wp_user_id( $visitor_id ) ) {
 
 		global $wpdb;
 		$count = $wpdb->get_var( 'SELECT COUNT(user_ID) FROM ' . WPSC_TABLE_PURCHASE_LOGS. ' WHERE user_ID = "' . $wp_user_id . '"' );

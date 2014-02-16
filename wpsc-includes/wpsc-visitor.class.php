@@ -1,11 +1,18 @@
 <?php
 
 class WPSC_Visitor {
+
+	public $valid = true;
+
 	function __construct( $visitor_id ) {
 
 		$this->_cart = new wpsc_cart();
 
 		$visitor = _wpsc_get_visitor( $visitor_id );
+		if ( $visitor == false ) {
+			$valid = false;
+			return;
+		}
 
 		if ( $visitor ) {
 			foreach ( $visitor as $key => $value ) {
@@ -66,6 +73,7 @@ class WPSC_Visitor {
 													'expires'     => false,
 													'created'     => false,
 											);
+
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// Here are the well known attributes, functionality outside of WPEC should not
