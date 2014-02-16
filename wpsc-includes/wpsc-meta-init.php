@@ -88,7 +88,7 @@ function wpsc_get_metadata_timestamp( $meta_object_type, $meta_id, $meta_key ) {
 
 	$meta_id = intval( $meta_id );
 
-	if ( ! empty($meta_object_type) && !empty($meta_id)  && !empty($meta_key) ) {
+	if ( ! empty( $meta_object_type ) && ! empty( $meta_id )  && ! empty( $meta_key ) ) {
 		$wpdb_property = $meta_object_type.'meta';
 
 		if ( ! empty( $wpdb->$wpdb_property ) ) {
@@ -123,13 +123,13 @@ function wpsc_get_meta_by_timestamp( $meta_object_type, $timestamp = 0, $compari
 		$sql = "SELECT * FROM `{$meta_table}` WHERE 1=1 ";
 	} else {
 		// validate the comparison operator
-		if ( ! in_array( $comparison, array(
-				'=', '>=', '>', '<=', '<', '<>', '!='
-		) ) )
+		if ( ! in_array( $comparison, array( '=', '>=', '>', '<=', '<', '<>', '!=' ) ) ) {
 			return false;
+		}
 
-		if ( is_int( $timestamp ) )
+		if ( is_int( $timestamp ) ) {
 			$timestamp = date( 'Y-m-d H:i:s', $timestamp );
+		}
 
 		$sql = 'SELECT * FROM {$meta_table} where meta_timestamp {$comparison} %s';
 	}
