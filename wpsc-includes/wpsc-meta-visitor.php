@@ -1,4 +1,7 @@
 <?php
+
+require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-visitor.class.php' );
+
 /*
 ** WPEC Visitor API
 */
@@ -59,6 +62,23 @@ function wpsc_create_visitor( $args = null ) {
 	}
 
 	return $new_visitor_id;
+}
+
+/**
+ * Get the well known visitor information
+ * @access private
+ * @since 3.8.14
+ * @param unknown $visitor_id
+ * @return object with visitor properties, false on failure
+ */
+function _wpsc_get_visitor( $visitor_id ) {
+	global $wpdb;
+	$visitor_row = $wpdb->get_row( 'SELECT * FROM ' . $wpdb->wpsc_visitors . ' WHERE id = ' . $visitor_id, OBJECT );
+	if ( $visitor_row === NULL ) {
+		$visitor_row = false;
+	}
+
+	return $visitor_row;
 }
 
 /**
@@ -273,6 +293,8 @@ function wpsc_delete_visitor( $visitor_id ) {
 		wpsc_visitor_remove_expiration( $visitor_id );
 	} else {
 
+		global $wpdb;
+
 		$ok_to_delete_visitor = apply_filters( 'wpsc_before_delete_visitor', $ok_to_delete_visitor, $visitor_id );
 
 		// we explicitly empty the cart to allow WPEC hooks to run
@@ -303,13 +325,53 @@ function wpsc_delete_visitor( $visitor_id ) {
 	return $result === 1;
 }
 
+/**
+ *  Get list of visitor ids that have expired
+ *  			list will be ordered by expired date, eldest expiration first
+ *
+ * @since 3.8.14
+ * @return array of integers, each integer corresponds to a visitor id that is expired
+ */
 function wpsc_get_expired_visitor_ids() {
 	global $wpdb;
-	$sql = 'SELECT id FROM ' . $wpdb->wpsc_visitors . ' WHERE expires IS NOT NULL AND expires <  NOW()';
+	$sql = 'SELECT id FROM ' . $wpdb->wpsc_visitors . ' WHERE expires IS NOT NULL AND expires <  NOW() ORDER BY expires ASC';
 	$visitor_ids = $wpdb->get_col( $sql, 0 );
 	$visitor_ids = array_map( 'intval', $visitor_ids );
 	return $visitor_ids;
+}
 
+/**
+ *  Get list of visitor ids, list will be ordered by created date, most recent first
+ *
+ * @since 3.8.14
+ * @return array of integers, each integer corresponds to a visitor id
+ */
+function wpsc_get_visitor_ids() {
+	global $wpdb;
+	$sql = 'SELECT id FROM ' . $wpdb->wpsc_visitors . ' ORDER BY created DESC';
+	$visitor_ids = $wpdb->get_col( $sql, 0 );
+	$visitor_ids = array_map( 'intval', $visitor_ids );
+	return $visitor_ids;
+}
+
+/**
+ *  Get list of visitor ids
+ * @param boolean 	when true, include expired visitors in the list,
+ * 					list will be ordered by created date, most recent first
+ * @since 3.8.14
+ * @return array of objects, the index is the visitor id
+ */
+function wpsc_get_visitor_list( $include_expired_visitors ) {
+	global $wpdb;
+
+	if ( $include_expired_visitors ) {
+		$sql = 'SELECT * FROM ' . $wpdb->wpsc_visitors . ' ORDER BY created DESC';
+	} else {
+		$sql = 'SELECT id FROM ' . $wpdb->wpsc_visitors . ' WHERE expires IS NOT NULL AND expires >  NOW() ORDER BY created DESC';
+	}
+
+	$visitors = $wpdb->get_results( $sql, OBJECT_K );
+	return $visitors;
 }
 
 
