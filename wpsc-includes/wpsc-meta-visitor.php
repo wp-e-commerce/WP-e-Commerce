@@ -205,7 +205,7 @@ function wpsc_set_visitor_expiration( $visitor_id, $expires_in_time = null ) {
 	} else {
 		global $wpdb;
 		$expires_timestamp = $timestamp = date( 'Y-m-d H:i:s', $result = ( time() + $expires_in_time) );
-		$wpdb->query( 'UPDATE ' . $wpdb->wpsc_visitors . ' SET expires = "' . $expires_timestamp . '" WHERE id = ' . $visitor_id );
+		$wpdb->update( $wpdb->wpsc_visitors, array(	'expires' => $expires_timestamp, 'last_active' => date( 'Y-m-d H:i:s' ), ), array( 'ID' => $visitor_id ) );
 	}
 
 	return $result;
@@ -221,7 +221,7 @@ function wpsc_set_visitor_expiration( $visitor_id, $expires_in_time = null ) {
  */
 function wpsc_visitor_remove_expiration( $visitor_id ) {
 	global $wpdb;
-	$wpdb->query( 'UPDATE ' . $wpdb->wpsc_visitors . ' SET expires = NULL WHERE id = ' . $visitor_id );
+	$wpdb->update( $wpdb->wpsc_visitors, array(	'expires' => NULL, 'last_active' => date( 'Y-m-d H:i:s' ), ), array( 'ID' => $visitor_id ) );
 	return true;
 }
 
