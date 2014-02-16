@@ -392,6 +392,11 @@ function wpsc_get_visitor_cart( $visitor_id ) {
 	foreach ( $wpsc_cart as $key => $value ) {
 		$meta_value = wpsc_get_visitor_meta( $visitor_id, 'cart.' . $key, true );
 		if ( ! empty( $meta_value ) ) {
+
+			if ( is_object( $wpsc_cart->$key ) || is_array( $wpsc_cart->$key ) ) {
+				$meta_value = _wpsc_decode_meta_value( $meta_value );
+			}
+
 			$wpsc_cart->$key = $meta_value;
 		}
 	}
@@ -400,7 +405,7 @@ function wpsc_get_visitor_cart( $visitor_id ) {
 }
 
 /**
- * Return a visitor's cart
+ * Update a visitor's cart
  *
  * @access public
  * @since 3.8.9
@@ -414,6 +419,11 @@ function wpsc_update_visitor_cart( $visitor_id, $wpsc_cart ) {
 	foreach ( $wpsc_cart as $key => $value ) {
 		$cart_property_meta_key = 'cart.' . $key;
 		if ( ! empty( $value ) ) {
+
+			if ( is_object( $value ) || is_array( $value ) ) {
+				$value = _wpsc_encode_meta_value( $value );
+			}
+
 			wpsc_update_visitor_meta( $visitor_id, $cart_property_meta_key, $value );
 		} else {
 			wpsc_delete_visitor_meta( $visitor_id, $cart_property_meta_key );
@@ -421,6 +431,33 @@ function wpsc_update_visitor_cart( $visitor_id, $wpsc_cart ) {
 	}
 
 	return $wpsc_cart;
+}
+
+
+/**
+ *  If a value is an object or an array encode it so it can be stored as WordPress meta
+ * @param unknown $value
+ * @return encoded value
+ */
+function _wpsc_encode_meta_value( $value  ) {
+	$value = base64_encode( serialize( $value ) );
+	return $value;
+}
+
+/**
+ *  If a value was enocoded prior to being stored, decode it
+ * @param unknown $value
+ * @return encoded value
+ */
+function _wpsc_decode_meta_value( $value ) {
+
+	$decoded = base64_decode( $value,true );
+
+	if ( $decoded !== false ) {
+		$value = maybe_unserialize( $decoded );
+	}
+
+	return $value;
 }
 
 
