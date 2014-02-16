@@ -390,7 +390,10 @@ function wpsc_get_visitor_cart( $visitor_id ) {
 	$wpsc_cart = new wpsc_cart();
 
 	foreach ( $wpsc_cart as $key => $value ) {
-		$wpsc_cart->$key = wpsc_get_visitor_meta( $visitor_id, 'cart.' . $key, true );
+		$meta_value = wpsc_get_visitor_meta( $visitor_id, 'cart.' . $key, true );
+		if ( ! empty( $meta_value ) ) {
+			$wpsc_cart->$key = $meta_value;
+		}
 	}
 
 	return $wpsc_cart;

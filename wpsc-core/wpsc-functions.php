@@ -461,7 +461,7 @@ function wpsc_serialize_shopping_cart() {
 	$customer_id = wpsc_get_current_customer_id();
 
 	if ( $customer_id )
-		wpsc_update_customer_meta( 'cart', base64_encode( serialize( $wpsc_cart ) ) );
+		wpsc_update_customer_cart( $wpsc_cart );
 
 	return true;
 }
