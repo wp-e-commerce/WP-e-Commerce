@@ -387,13 +387,32 @@ function wpsc_get_visitor_list( $include_expired_visitors ) {
  */
 function wpsc_get_visitor_cart( $visitor_id ) {
 
-	$cart = maybe_unserialize( base64_decode( wpsc_get_visitor_meta( $visitor_id, 'cart', true ) ) );
+	$wpsc_cart = new wpsc_cart();
 
-	if ( ! ($cart instanceof wpsc_cart) ) {
-		$cart = new wpsc_cart();
+	foreach ( $wpsc_cart as $key => $value ) {
+		$wpsc_cart->$key = wpsc_get_visitor_meta( $visitor_id, 'cart.' . $key, true );
 	}
 
 	return $cart;
+}
+
+/**
+ * Return a visitor's cart
+ *
+ * @access public
+ * @since 3.8.9
+ * @param  mixed $id visitor ID. Default to the current user ID.
+ * @return WP_Error|array Return an array of metadata if no error occurs, WP_Error
+ *                        if otherwise.
+ */
+function wpsc_update_visitor_cart( $visitor_id, $wpsc_cart ) {
+
+
+	foreach ( $wpsc_cart as $key => $value ) {
+		wpsc_update_visitor_meta( $visitor_id, 'cart.' . $key, $wpsc_cart->$key );
+	}
+
+	return $wpsc_cart;
 }
 
 
