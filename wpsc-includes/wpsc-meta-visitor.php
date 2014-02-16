@@ -335,7 +335,7 @@ function wpsc_delete_visitor( $visitor_id ) {
 
 		// if a WordPress user references the visitor being deleted we need to remove the reference
 		$sql = 'SELECT user_id FROM ' . $wpdb->usermeta . ' WHERE meta_key = "_wpsc_visitor_id" AND meta_value = ' .  $visitor_id;
-		$user_id = $wpdb->get_col( $sql, 0 );
+		$user_ids = $wpdb->get_col( $sql, 0 );
 
 		foreach ( $user_ids as $user_id ) {
 			delete_user_meta( $user_id, '_wpsc_visitor_id' );
