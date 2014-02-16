@@ -23,7 +23,7 @@ class WPSC_Visitor {
 					$this->$property_name = $meta_value[0];
 				} else {
 					$cart_property_name = substr( $string, strlen( 'cart.' ) );
-					$this->_cart->$cart_property_name = $meta_value;
+					$this->_cart->$property_name = $meta_value;
 				}
 			}
 		}
