@@ -410,9 +410,14 @@ function wpsc_get_visitor_cart( $visitor_id ) {
  */
 function wpsc_update_visitor_cart( $visitor_id, $wpsc_cart ) {
 
-
+	// we don't store empty cart properties, this keeps meta table and caches neater
 	foreach ( $wpsc_cart as $key => $value ) {
-		wpsc_update_visitor_meta( $visitor_id, 'cart.' . $key, $wpsc_cart->$key );
+		$cart_property_meta_key = 'cart.' . $key;
+		if ( ! empty( $value ) ) {
+			wpsc_update_visitor_meta( $visitor_id, $cart_property_meta_key, $value );
+		} else {
+			wpsc_delete_visitor_meta( $visitor_id, $cart_property_meta_key );
+		}
 	}
 
 	return $wpsc_cart;

@@ -268,8 +268,6 @@ function wpsc_update_customer_cart( $cart, $id = false ) {
 
 	wpsc_update_visitor_cart( $id , $cart );
 
-	$wpsc_cart->clear_cache(); // do this to fire off actions that happen when a cart is changed
-
 	return true;
 }
 
