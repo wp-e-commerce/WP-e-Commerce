@@ -393,8 +393,15 @@ function wpsc_get_visitor_cart( $visitor_id ) {
 		$meta_value = wpsc_get_visitor_meta( $visitor_id, 'cart.' . $key, true );
 		if ( ! empty( $meta_value ) ) {
 
-			if ( is_object( $wpsc_cart->$key ) || is_array( $wpsc_cart->$key ) ) {
-				$meta_value = _wpsc_decode_meta_value( $meta_value );
+			switch ( $key ) {
+				case 'shipping_methods':
+				case 'shipping_quotes':
+				case 'cart_items':
+					$meta_value = _wpsc_decode_meta_value( $meta_value );
+					break;
+
+				default:
+					break;
 			}
 
 			$wpsc_cart->$key = $meta_value;
@@ -415,13 +422,20 @@ function wpsc_get_visitor_cart( $visitor_id ) {
  */
 function wpsc_update_visitor_cart( $visitor_id, $wpsc_cart ) {
 
-	// we don't store empty cart properties, this keeps meta table and caches neater
 	foreach ( $wpsc_cart as $key => $value ) {
 		$cart_property_meta_key = 'cart.' . $key;
-		if ( ! empty( $value ) ) {
 
-			if ( is_object( $value ) || is_array( $value ) ) {
-				$value = _wpsc_encode_meta_value( $value );
+		// we don't store empty cart properties, this keeps meta table and caches neater
+		if ( ! empty( $value ) ) {
+			switch ( $key ) {
+				case 'shipping_methods':
+				case 'shipping_quotes':
+				case 'cart_items':
+					$value = _wpsc_encode_meta_value( $value );
+					break;
+
+				default:
+					break;
 			}
 
 			wpsc_update_visitor_meta( $visitor_id, $cart_property_meta_key, $value );
@@ -451,7 +465,7 @@ function _wpsc_encode_meta_value( $value  ) {
  */
 function _wpsc_decode_meta_value( $value ) {
 
-	$decoded = base64_decode( $value,true );
+	$decoded = base64_decode( $value, true );
 
 	if ( $decoded !== false ) {
 		$value = maybe_unserialize( $decoded );
