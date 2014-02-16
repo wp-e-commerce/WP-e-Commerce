@@ -151,7 +151,7 @@ function wpsc_admin_category_forms_add() {
 	<h3><?php esc_html_e('Advanced Store Settings', 'wpsc'); ?></h3>
 	<h4><?php esc_html_e('Presentation Settings', 'wpsc'); ?></h4>
 	<p class='description'><?php esc_html_e( 'These settings override the general presentation settings found in Settings &gt; Store &gt; Presentation.', 'wpsc' ); ?></p>
-	<div class="form-field">
+	<div style="margin: 15px 0 15px 0">
 		<label for='image'><?php esc_html_e( 'Category Image' , 'wpsc' ); ?></label>
 		<input type='file' name='image' value='' />
 	</div>
