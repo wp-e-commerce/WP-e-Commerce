@@ -218,9 +218,7 @@ function wpsc_set_visitor_expiration( $visitor_id, $expires_in_time = null ) {
  * @return current expiration time, false on no expiration
  */
 function wpsc_visitor_remove_expiration( $visitor_id ) {
-
 	global $wpdb;
-
 	$wpdb->query( 'UPDATE ' . $wpdb->wpsc_visitors . ' SET expires = NULL WHERE id = ' . $visitor_id );
 	return true;
 }
