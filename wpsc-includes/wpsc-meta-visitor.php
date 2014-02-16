@@ -323,7 +323,7 @@ function wpsc_delete_visitor( $visitor_id ) {
 		$ok_to_delete_visitor = apply_filters( 'wpsc_before_delete_visitor', $ok_to_delete_visitor, $visitor_id );
 
 		// we explicitly empty the cart to allow WPEC hooks to run
-		$cart = wpsc_get_visitor_cart( $id );
+		$cart = wpsc_get_visitor_cart( $visitor_id );
 		$cart->empty_cart();
 
 		// Delete all of the visitor meta
