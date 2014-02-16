@@ -123,7 +123,7 @@ if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 					continue;
 
 				$short_key = str_replace( $key_pattern, '', $key );
-				if ( $short_key !== 'wpsc-cart' ) {
+				if ( $short_key !== 'cart' ) {
 					wpsc_add_visitor_meta( $user_id , $short_key, $value[0] );
 				} else {
 					$wpsc_user_cart = maybe_unserialize( base64_decode( $value[0] ) );

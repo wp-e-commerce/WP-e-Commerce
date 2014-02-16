@@ -234,16 +234,12 @@ function wpsc_get_all_customer_meta( $id = false ) {
  */
 function wpsc_get_customer_cart( $id = false  ) {
 
-	if ( ! $id )
+	if ( ! $id ) {
 		$id = wpsc_get_current_customer_id();
-
-	$cart = maybe_unserialize( base64_decode( wpsc_get_customer_meta( 'cart', $id ) ) );
-
-	if ( ! ($cart instanceof wpsc_cart) ) {
-		$cart = new wpsc_cart();
 	}
 
-	return $cart;
+
+	return wpsc_get_visitor_cart( $id );
 }
 
 
@@ -270,7 +266,7 @@ function wpsc_update_customer_cart( $cart, $id = false ) {
 		$wpsc_cart = $cart;
 	}
 
-	wpsc_update_customer_meta( 'cart', base64_encode( serialize( $cart ) ) , $id );
+	wpsc_update_visitor_cart( $id , $cart );
 
 	$wpsc_cart->clear_cache(); // do this to fire off actions that happen when a cart is changed
 
