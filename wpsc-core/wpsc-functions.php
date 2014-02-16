@@ -340,7 +340,7 @@ function wpsc_register_post_types() {
 		'all_items'     => __( 'All Product Tags'    , 'wpsc' ),
 		'edit_item'     => __( 'Edit Tag'            , 'wpsc' ),
 		'update_item'   => __( 'Update Tag'          , 'wpsc' ),
-		'add_new_item'  => __( 'Add new Product Tag' , 'wpsc' ),
+		'add_new_item'  => __( 'Add New Product Tag' , 'wpsc' ),
 		'new_item_name' => __( 'New Product Tag Name', 'wpsc' ),
 		'choose_from_most_used' => __('Choose from most used Product Tags', 'wpsc' ),
 	);
