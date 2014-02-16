@@ -2,6 +2,9 @@
 
 class WPSC_Visitor {
 	function __construct( $visitor_id ) {
+
+		$this->_cart = new wpsc_cart();
+
 		$visitor = _wpsc_get_visitor( $visitor_id );
 
 		if ( $visitor ) {
@@ -15,8 +18,13 @@ class WPSC_Visitor {
 
 		if ( ! empty( $visitor_meta ) ) {
 			foreach ( $visitor_meta as $meta_key => $meta_value ) {
-				$property_name = '_' . $meta_key;
-				$this->$property_name = $meta_value[0];
+				if ( ( $i = strpos( $meta_key, 'cart.' ) ) === false ) {
+					$property_name = '_' . $meta_key;
+					$this->$property_name = $meta_value[0];
+				} else {
+					$cart_property_name = substr( $string, strlen( 'cart.' ) );
+					$this->_cart->$cart_property_name = $meta_value;
+				}
 			}
 		}
 	}
@@ -50,7 +58,6 @@ class WPSC_Visitor {
 
 	}
 
-
 	private $visitor_table_attribute_list = array(
 													// well known attributes from the 'wpsc_visitors table', true false if change allowed
 													'id'          => false,
@@ -69,5 +76,6 @@ class WPSC_Visitor {
 	public $_last_active = false;
 	public $_expires     = false;
 	public $_created     = false;
+	public $_cart        = false;
 
 }

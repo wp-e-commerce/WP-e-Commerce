@@ -393,7 +393,7 @@ function wpsc_get_visitor_cart( $visitor_id ) {
 		$wpsc_cart->$key = wpsc_get_visitor_meta( $visitor_id, 'cart.' . $key, true );
 	}
 
-	return $cart;
+	return $wpsc_cart;
 }
 
 /**
