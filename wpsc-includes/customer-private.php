@@ -52,7 +52,7 @@ function _wpsc_action_setup_customer() {
 	// setup the cart and restore its items
 	wpsc_core_setup_cart();
 
-	do_action( 'wpsc_setup_customer' );
+	do_action( 'wpsc_setup_customer', $visitor_id );
 }
 
 
@@ -108,7 +108,7 @@ function _wpsc_create_customer_id() {
 
 	_wpsc_create_customer_id_cookie( $id );
 
-	do_action( 'wpsc_create_visitor' , $id );
+	do_action( 'wpsc_create_customer' , $id );
 
 	return $id;
 }

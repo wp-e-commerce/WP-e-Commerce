@@ -61,6 +61,8 @@ function wpsc_create_visitor( $args = null ) {
 		_wpsc_update_wp_user_visitor_id( $wp_user_id, $new_visitor_id );
 	}
 
+	do_action( 'wpsc_created_visitor', $new_visitor_id, $args );
+
 	return $new_visitor_id;
 }
 
