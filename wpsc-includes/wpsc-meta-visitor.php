@@ -55,9 +55,14 @@ function wpsc_create_visitor( $args = null ) {
 		$args = array( 'user_id' => null );
 	}
 
-	// new profiles expire in two hours
-	if ( ! isset( $args['expires'] ) ) {
+	// new visitor profiles expire in two hours
+	if ( ! isset( $args['user_id'] ) && ! isset( $args['expires'] ) ) {
 		$args['expires'] = $timestamp = date( 'Y-m-d H:i:s', time() + 2 * HOUR_IN_SECONDS );
+	}
+
+	// visitor profiles associated with wordpress user never expire
+	if ( isset( $args['user_id'] ) &&  isset( $args['expires'] ) ) {
+		unset( $args['expires'] );
 	}
 
 	// create a visitor record and get the row id
