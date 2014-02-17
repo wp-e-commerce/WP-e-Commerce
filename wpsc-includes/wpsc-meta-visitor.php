@@ -214,7 +214,8 @@ function wpsc_set_visitor_last_active( $visitor_id, $timestamp = null ) {
  */
 function wpsc_set_visitor_expiration( $visitor_id, $expires_in_time = null ) {
 
-	if ( $expires_in_time === null ){
+	// visitors associated with wordpress users never expire
+	if ( ( $expires_in_time === null ) || wpsc_get_visitor_wp_user_id( $visitor_id ) ){
 		wpsc_visitor_remove_expiration( $visitor_id );
 		$result = false;
 	} else {
@@ -430,7 +431,7 @@ function wpsc_get_visitor_cart( $visitor_id ) {
 	$wpsc_cart = new wpsc_cart();
 
 	foreach ( $wpsc_cart as $key => $value ) {
-		$meta_value = wpsc_get_visitor_meta( $visitor_id, 'cart.' . $key, true );
+		$meta_value = wpsc_get_visitor_meta( $visitor_id, _wpsc_get_visitor_meta_key( 'cart.' . $key ), true );
 		if ( ! empty( $meta_value ) ) {
 
 			switch ( $key ) {
@@ -464,7 +465,7 @@ function wpsc_get_visitor_cart( $visitor_id ) {
 function wpsc_update_visitor_cart( $visitor_id, $wpsc_cart ) {
 
 	foreach ( $wpsc_cart as $key => $value ) {
-		$cart_property_meta_key = 'cart.' . $key;
+		$cart_property_meta_key = _wpsc_get_visitor_meta_key( 'cart.' . $key );
 
 		// we don't store empty cart properties, this keeps meta table and caches neater
 		if ( ! empty( $value ) ) {

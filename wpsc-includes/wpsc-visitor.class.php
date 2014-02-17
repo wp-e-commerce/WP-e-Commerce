@@ -1,9 +1,19 @@
 <?php
 
+
+/**
+ * WPEC Visitor Class
+ * @since 3.8.14
+ */
 class WPSC_Visitor {
 
 	public $valid = true;
 
+	/**
+	 * Create visitor class from visitor id
+	 * @param  $visitor_id int unique visitor id
+	 * @since 3.8.14
+	 */
 	function __construct( $visitor_id ) {
 
 		$this->_cart = new wpsc_cart();
@@ -36,11 +46,46 @@ class WPSC_Visitor {
 		}
 	}
 
+	/**
+	 * Get visitor expiration
+	 * @param  $unix_time boolean  true rerutn time as unix time, false return time as string
+	 * @return string expiration time
+	 * @since 3.8.14
+	 */
+	function expiration( $unix_time = true ) {
+		if ( ! ($unix_time = strtotime( $this->_expires ) ) ) {
+			return false;
+		}
+
+		if ( $unix_time ) {
+			return $unix_time;
+		}
+
+		return  $this->_expires;
+	}
+
+	/**
+	 * Get visitor attribute
+	 * @param  $attribute attribute name
+	 * @return varies, attribute value
+	 * @since 3.8.14
+	 */
 	function get( $attribute = null ) {
+		if ( empty( $attribute ) ) {
+			return $this;
+		}
+
 		$property_name = '_' . $attribute;
 		return $this->$property_name;
 	}
 
+	/**
+	 * Get visitor attribute
+	 * @param  $attribute attribute name
+	 * @param  $value attribute value
+	 * @return this
+	 * @since 3.8.14
+	 */
 	function set( $attribute, $value ) {
 		if ( in_array( $attribute, $visitor_table_attribute_list ) ) {
 			// test if change of the attribute is permitted
@@ -53,6 +98,12 @@ class WPSC_Visitor {
 		}
 	}
 
+	/**
+	 * Delete visitor attribute
+	 * @param  $attribute attribute name
+	 * @return this
+	 * @since 3.8.14
+	 */
 	function delete( $attribute ) {
 		$property_name = '_' . $attribute;
 		if ( isset( $this->$property_name ) ) {
