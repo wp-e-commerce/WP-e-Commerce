@@ -1,5 +1,6 @@
 <?php
 
+require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-init.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-cart-item.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-purchase.php' );
 
