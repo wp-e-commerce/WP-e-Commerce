@@ -1,9 +1,9 @@
 <?php
 
-add_action( 'wpsc_set_cart_item'         , '_wpsc_action_update_current_customer_last_active' );
-add_action( 'wpsc_add_item'              , '_wpsc_action_update_current_customer_last_active' );
-add_action( 'wpsc_before_submit_checkout', '_wpsc_action_update_current_customer_last_active' );
-add_action( 'wp_login'                   , '_wpsc_action_setup_customer'                  	  );
+add_action( 'wpsc_set_cart_item'         , '_wpsc_action_customer_used_cart' );
+add_action( 'wpsc_add_item'              , '_wpsc_action_customer_used_cart' );
+add_action( 'wpsc_before_submit_checkout', '_wpsc_action_customer_used_cart' );
+add_action( 'wp_login'                   , '_wpsc_action_setup_customer'     );
 
 
 /**
@@ -52,7 +52,7 @@ function _wpsc_action_setup_customer() {
 	// setup the cart and restore its items
 	wpsc_core_setup_cart();
 
-	do_action( 'wpsc_setup_customer' );
+	do_action( 'wpsc_setup_customer', $visitor_id );
 }
 
 
@@ -108,7 +108,7 @@ function _wpsc_create_customer_id() {
 
 	_wpsc_create_customer_id_cookie( $id );
 
-	do_action( 'wpsc_create_visitor' , $id );
+	do_action( 'wpsc_create_customer' , $id );
 
 	return $id;
 }
@@ -226,12 +226,12 @@ function _wpsc_get_customer_meta_key( $key ) {
  * @access private
  * @since  3.8.13
  */
-function _wpsc_action_update_current_customer_last_active() {
+function _wpsc_action_customer_used_cart() {
 	// get the current users id
 	$id = wpsc_get_current_customer_id();
 
 	// go through the common update routine that allows any users last active time to be changed
-	wpsc_update_customer_last_active( $id );
+	wpsc_set_visitor_expiration( $id , DAY_IN_SECONDS * 2 );
 
 	// also extend cookie expiration
 	_wpsc_create_customer_id_cookie( $id );
@@ -321,11 +321,6 @@ function _wpsc_is_bot_user() {
 		return true;
 	}
 
-	// even web servers talk to themselves when they think no one is listening
-	if ( stripos( $_SERVER['HTTP_USER_AGENT'], 'wordpress' ) !== false ) {
-		return true;
-	}
-
 	// the user agent could be google bot, bing bot or some other bot,  one would hope real user agents do not have the
 	// string 'bot|spider|crawler|preview' in them, there are bots that don't do us the kindness of identifying themselves as such,
 	// check for the user being logged in in a real user is using a bot to access content from our site
@@ -337,6 +332,7 @@ function _wpsc_is_bot_user() {
 												'crawler',
 												'spider',
 												'preview',
+												'WordPress',
 											)
 										);
 

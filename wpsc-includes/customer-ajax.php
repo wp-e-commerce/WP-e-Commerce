@@ -199,7 +199,7 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 		die();
 	}
 
-	if ( wpsc_doing_customer_meta_ajax() ) {
+	if ( _wpsc_doing_customer_meta_ajax() ) {
 		add_action( 'wp_ajax_wpsc_validate_customer'       		, 'wpsc_validate_customer_ajax' );
 		add_action( 'wp_ajax_nopriv_wpsc_validate_customer'		, 'wpsc_validate_customer_ajax' );
 

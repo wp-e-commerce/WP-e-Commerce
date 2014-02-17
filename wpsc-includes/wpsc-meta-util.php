@@ -123,7 +123,17 @@ if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 					continue;
 
 				$short_key = str_replace( $key_pattern, '', $key );
-				wpsc_add_visitor_meta( $user_id , $short_key, $value[0] );
+				if ( $short_key !== 'cart' ) {
+					wpsc_add_visitor_meta( $user_id , $short_key, $value[0] );
+				} else {
+					$wpsc_user_cart = maybe_unserialize( base64_decode( $value[0] ) );
+
+					if ( ! ($wpsc_user_cart instanceof wpsc_cart) ) {
+						$wpsc_user_cart = new wpsc_cart();
+					}
+
+					wpsc_update_visitor_cart( $user_id , $wpsc_user_cart );
+				}
 			}
 
 			$comment_count = $wpdb->get_var( 'SELECT COUNT(comment_ID) FROM ' . $wpdb->comments. ' WHERE user_id = ' . $user_id );

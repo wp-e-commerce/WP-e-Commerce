@@ -1,5 +1,7 @@
 <?php
 
+require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-init.php' );
+
 function _wpsc_db_upgrade_9() {
 	_wpsc_maybe_create_purchase_meta_tables();
 }

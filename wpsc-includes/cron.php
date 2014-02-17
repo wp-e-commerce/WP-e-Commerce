@@ -52,6 +52,7 @@ function _wpsc_delete_expired_visitors() {
 	// want to either stop the user from being deleted, or do something with the information in the profile they
 	// have that chance.
 	foreach ( $expired_visitor_ids as $expired_visitor_id ) {
+		wpsc_delete_visitor( $expired_visitor_id );
 
 		// in case we have a lot of users to delete we do some checking to make sure we don't
 		// get caught in a loop using server resources for an extended period of time without yielding.
@@ -63,8 +64,6 @@ function _wpsc_delete_expired_visitors() {
 			wp_schedule_single_event( time() + ( 120 + 2 * WPSC_MAX_DELETE_PROFILE_TIME ), '_wpsc_delete_expired_visitors_action' );
 			break;
 		}
-
-		wpsc_delete_visitor( $expired_visitor_id );
 	}
 }
 
