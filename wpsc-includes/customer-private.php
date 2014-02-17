@@ -337,6 +337,7 @@ function _wpsc_is_bot_user() {
 												'crawler',
 												'spider',
 												'preview',
+												'WordPress',
 											)
 										);
 
