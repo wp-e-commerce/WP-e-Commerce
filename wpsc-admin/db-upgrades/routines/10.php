@@ -62,7 +62,6 @@ function _wpsc_create_visitor_table() {
 
 	dbDelta( $sql );
 
-	error_log( print_r( $wpdb, true ) );
 	_wpsc_create_well_known_visitors();
 }
 
