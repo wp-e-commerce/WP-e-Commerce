@@ -7,7 +7,22 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-visitor.class.php' );
 */
 
 /**
- * Return the internal customer meta key, which depends on the blog prefix
+ * Return the internal visitor meta key for meta values internal to WPEC
+ * This helps distinguish private meta added by WPEC from public meta or
+ * meta added by third parties
+ *
+ * @since  3.8.14
+ * @access private
+ * @param  string $key Meta key
+ * @return string      Internal meta key
+ */
+function _wpsc_get_visitor_meta_key( $key ) {
+	return "_wpsc_{$key}";
+}
+
+
+/**
+ * Return the internal user meta key, which depends on the blog prefix
  * if this is a multi-site installation.  This helps distinguish meta added
  * by WPEC fromn meta added by third parties
  *
@@ -16,12 +31,12 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-visitor.class.php' );
  * @param  string $key Meta key
  * @return string      Internal meta key
  */
-function _wpsc_get_visitor_meta_key( $key ) {
+function _wpsc_get_user_meta_key( $key ) {
 	global $wpdb;
-
 	$blog_prefix = is_multisite() ? $wpdb->get_blog_prefix() : '';
 	return "{$blog_prefix}_wpsc_{$key}";
 }
+
 
 /**
  * Creates a WPEC visitor
@@ -91,7 +106,7 @@ function _wpsc_get_visitor( $visitor_id ) {
  * @param unknown $visitor_id
  */
 function _wpsc_update_wp_user_visitor_id( $wp_user_id, $visitor_id ) {
-	return update_user_meta( $wp_user_id, _wpsc_get_visitor_meta_key( 'visitor_id' ), $visitor_id );
+	return update_user_meta( $wp_user_id, _wpsc_get_user_meta_key( 'visitor_id' ), $visitor_id );
 }
 
 
@@ -135,7 +150,7 @@ function _wpsc_get_wp_user_visitor_id( $wp_user_id = null ) {
 
 	if ( ! empty( $wp_user_id ) ) {
 
-		$visitor_id = get_user_meta( $wp_user_id, _wpsc_get_visitor_meta_key( 'visitor_id' ), true );
+		$visitor_id = get_user_meta( $wp_user_id, _wpsc_get_user_meta_key( 'visitor_id' ), true );
 
 		if ( empty ( $visitor_id ) ) {
 			$visitor_id = wpsc_create_visitor( array( 'user_id' => $wp_user_id ) );
