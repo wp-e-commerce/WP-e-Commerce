@@ -17,7 +17,7 @@ if ( ! defined( 'WPSC_BOT_VISITOR_ID' ) ) {
  * @since 3.8.9
  * @return mixed        User ID (if logged in) or customer cookie ID
  */
-function wpsc_get_current_customer_id() {
+function wpsc_get_current_customer_id( $visitor_id_to_set = false ) {
 	// once we determine the current customer id it will remain in effect for
 	// the remainder of the current request.  This helps performance, but also
 	// makes it possible to manipulate the visitor database and cookie without
@@ -25,6 +25,10 @@ function wpsc_get_current_customer_id() {
 	// also a security benefit to not allow the current user to be changed
 	// midway through the HTTP request processing
 	static $visitor_id = false;
+
+	if ( ! $visitor_id_to_set ) {
+		$visitor_id = $visitor_id_to_set;
+	}
 
 	if ( $visitor_id !== false ) {
 		return $visitor_id;
