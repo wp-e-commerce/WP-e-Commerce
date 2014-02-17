@@ -51,8 +51,19 @@ function wpsc_create_visitor( $args = null ) {
 
 	$new_visitor_id = false;
 
+	// set user id
 	if ( ! is_array( $args ) || empty( $args ) ) {
 		$args = array( 'user_id' => null );
+	}
+
+	// set last active time
+	if ( ! isset( $args['last_active'] ) ) {
+		$args['last_active'] = date( 'Y-m-d H:i:s' );
+	}
+
+	// set created time
+	if ( ! isset( $args['created'] ) ) {
+		$args['last_active'] = date( 'Y-m-d H:i:s' );
 	}
 
 	// new visitor profiles expire in two hours

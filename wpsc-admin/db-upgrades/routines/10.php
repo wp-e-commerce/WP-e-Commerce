@@ -50,7 +50,7 @@ function _wpsc_create_visitor_table() {
 	$sql = 'CREATE TABLE IF NOT EXISTS '. $wpdb->wpsc_visitors .' ('
 			.'id bigint(20) unsigned NOT NULL AUTO_INCREMENT, '
 			.'user_id bigint(20) unsigned DEFAULT NULL , '
-			.'last_active timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, '
+			.'last_active timestamp NULL DEFAULT NULL, '
 			.'expires timestamp NULL DEFAULT NULL, '
 			.'created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, '
 			.'PRIMARY KEY  ( `id` ), '
@@ -62,6 +62,7 @@ function _wpsc_create_visitor_table() {
 
 	dbDelta( $sql );
 
+	error_log( print_r( $wpdb, true ) );
 	_wpsc_create_well_known_visitors();
 }
 
