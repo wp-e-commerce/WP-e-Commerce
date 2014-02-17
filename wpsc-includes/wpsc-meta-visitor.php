@@ -422,6 +422,7 @@ function wpsc_get_visitor_cart( $visitor_id ) {
 				case 'shipping_methods':
 				case 'shipping_quotes':
 				case 'cart_items':
+				case 'cart_item':
 					$meta_value = _wpsc_decode_meta_value( $meta_value );
 					break;
 
@@ -456,6 +457,7 @@ function wpsc_update_visitor_cart( $visitor_id, $wpsc_cart ) {
 				case 'shipping_methods':
 				case 'shipping_quotes':
 				case 'cart_items':
+				case 'cart_item':
 					$value = _wpsc_encode_meta_value( $value );
 					break;
 
