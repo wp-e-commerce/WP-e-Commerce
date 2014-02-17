@@ -99,18 +99,31 @@ function _wpsc_set_customer_cookie( $cookie, $expire ) {
  */
 function _wpsc_create_customer_id() {
 
-	$args = array();
-	if ( is_user_logged_in() ) {
-		$args['user_id'] = get_current_user_id();
+	if ( _wpsc_is_bot_user() ) {
+
+		$visitor_id = WPSC_BOT_VISITOR_ID;
+		wpsc_get_current_customer_id( $visitor_id );
+		$fake_setting_cookie = true;
+
+	} else {
+
+		$args = array();
+		if ( is_user_logged_in() ) {
+			$args['user_id'] = get_current_user_id();
+		}
+
+		$visitor_id = wpsc_create_visitor( $args );
+
+		wpsc_get_current_customer_id( $visitor_id );
+
+		$fake_setting_cookie = false;
+		_wpsc_create_customer_id_cookie( $visitor_id, $fake_setting_cookie );
+
+		do_action( 'wpsc_create_customer' , $visitor_id );
+
 	}
 
-	$id = wpsc_create_visitor( $args );
-
-	_wpsc_create_customer_id_cookie( $id );
-
-	do_action( 'wpsc_create_customer' , $id );
-
-	return $id;
+	return $visitor_id;
 }
 
 /**
@@ -135,7 +148,7 @@ function _wpsc_create_customer_id_cookie( $id, $fake_it = false ) {
 	$cookie = $id . '|' . $expire . '|' . $hash;
 
 	// store ID, expire and hash to validate later
-	if ( $fake_it ) {
+	if ( headers_sent() || $fake_it ) {
 		$_COOKIE[ WPSC_CUSTOMER_COOKIE ] = $cookie;
 	} else {
 		_wpsc_set_customer_cookie( $cookie, $expire );
