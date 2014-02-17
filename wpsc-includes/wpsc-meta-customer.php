@@ -41,7 +41,7 @@ function wpsc_delete_customer_meta( $key, $id = false ) {
 		$id = wpsc_get_current_customer_id();
 	}
 
-	$success = wpsc_delete_visitor_meta( $id, _wpsc_get_customer_meta_key( $key ) );
+	$success = wpsc_delete_visitor_meta( $id, $key );
 
 	// notification after any meta item has been deleted
 	if ( $success && has_action( $action = 'wpsc_deleted_customer_meta' ) ) {
@@ -75,7 +75,7 @@ function wpsc_update_customer_meta( $key, $value, $id = false ) {
 		$id = wpsc_get_current_customer_id();
 	}
 
-	$result = wpsc_update_visitor_meta( $id, _wpsc_get_customer_meta_key( $key ), $value );
+	$result = wpsc_update_visitor_meta( $id, $key, $value );
 
 	// notification after any meta item has been updated
 	if ( $result && has_action( $action = 'wpsc_updated_customer_meta' ) ) {
@@ -136,7 +136,7 @@ function wpsc_get_customer_meta( $key = '', $id = false ) {
 		$id = wpsc_get_current_customer_id();
 	}
 
-	$meta_value = wpsc_get_visitor_meta( $id, _wpsc_get_customer_meta_key( $key ), true );
+	$meta_value = wpsc_get_visitor_meta( $id, $key, true );
 
 	// notification when any meta item is retrieved
 	if ( has_filter( $filter = 'wpsc_got_customer_meta' ) ) {

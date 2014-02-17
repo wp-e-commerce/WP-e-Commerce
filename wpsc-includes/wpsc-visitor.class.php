@@ -87,6 +87,10 @@ class WPSC_Visitor {
 	 * @since 3.8.14
 	 */
 	function set( $attribute, $value ) {
+
+		$property_name = '_' . $attribute;
+		$this->$property_name = $value;
+
 		if ( in_array( $attribute, $visitor_table_attribute_list ) ) {
 			// test if change of the attribute is permitted
 			if ( $visitor_table_attribute_list( $attribute ) ) {
@@ -124,6 +128,28 @@ class WPSC_Visitor {
 													'expires'     => false,
 													'created'     => false,
 											);
+
+
+	// helper function for well known variables
+	function id() {
+		return $this->_id;
+	}
+
+	function user_id() {
+		return $this->_user_id;
+	}
+
+	function last_active() {
+		return $this->_last_active;
+	}
+
+	function created() {
+		return $this->_created;
+	}
+
+	function cart() {
+		return $this->_cart;
+	}
 
 
 	//////////////////////////////////////////////////////////////////////////////////////////
