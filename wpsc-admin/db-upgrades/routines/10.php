@@ -52,7 +52,7 @@ function _wpsc_create_visitor_table() {
 			.'user_id bigint(20) unsigned DEFAULT NULL , '
 			.'last_active timestamp NULL DEFAULT NULL, '
 			.'expires timestamp NULL DEFAULT NULL, '
-			.'created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, '
+			.'created timestamp NULL DEFAULT NULL, '
 			.'PRIMARY KEY  ( `id` ), '
 			.'KEY user_id ( `user_id` ), '
 			.'KEY expires ( `expires` ), '
