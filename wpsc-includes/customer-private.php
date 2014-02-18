@@ -112,7 +112,7 @@ function _wpsc_create_customer_id() {
 		$fake_setting_cookie = true;
 
 	} else {
-
+		$fake_setting_cookie = false;
 		$args = array();
 		if ( is_user_logged_in() ) {
 			$args['user_id'] = get_current_user_id();
@@ -120,9 +120,15 @@ function _wpsc_create_customer_id() {
 
 		$visitor_id = wpsc_create_visitor( $args );
 
+		if ( $visitor_id === false ) {
+			// can't create a new visitor, just use the BOT visitor id
+			$visitor_id = WPSC_BOT_VISITOR_ID;
+			$fake_setting_cookie = true;
+		}
+
 		wpsc_get_current_customer_id( $visitor_id );
 
-		$fake_setting_cookie = false;
+
 		_wpsc_create_customer_id_cookie( $visitor_id, $fake_setting_cookie );
 
 		do_action( 'wpsc_create_customer' , $visitor_id );
