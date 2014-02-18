@@ -26,7 +26,7 @@ function wpsc_get_current_customer_id( $visitor_id_to_set = false ) {
 	// midway through the HTTP request processing
 	static $visitor_id = false;
 
-	if ( ! $visitor_id_to_set ) {
+	if ( $visitor_id_to_set ) {
 		$visitor_id = $visitor_id_to_set;
 	}
 
