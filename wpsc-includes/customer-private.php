@@ -62,6 +62,8 @@ function _wpsc_abandon_temporary_customer_profile( $id = false ) {
 		$id = wpsc_get_current_customer_id();
 	}
 
+	do_action( '_wpsc_abandon_temporary_customer_profile', $id );
+
 	// set the temporary profile keep until time to sometime in the past, the delete
 	// processing will take care of the cleanup on the next processing cycle
 	wpsc_set_visitor_expiration( $id, -1 );
@@ -76,6 +78,8 @@ function _wpsc_abandon_temporary_customer_profile( $id = false ) {
  * @param  int   $expire  Expiration timestamp
  */
 function _wpsc_set_customer_cookie( $cookie, $expire ) {
+
+	do_action( '_wpsc_set_customer_cookie' );
 
 	// only set the cookie if headers have not been sent, if headers have been sent
 	if ( ! headers_sent() ) {
@@ -98,6 +102,8 @@ function _wpsc_set_customer_cookie( $cookie, $expire ) {
  * @return string Customer ID
  */
 function _wpsc_create_customer_id() {
+
+	do_action( '_wpsc_create_customer_id' );
 
 	if ( _wpsc_is_bot_user() ) {
 
@@ -138,6 +144,8 @@ function _wpsc_create_customer_id() {
  */
 function _wpsc_create_customer_id_cookie( $id, $fake_it = false ) {
 
+	do_action( '_wpsc_create_customer_id_cookie', $id, $fake_it );
+
 	$expire = time() + WPSC_CUSTOMER_DATA_EXPIRATION; // valid for 48 hours
 	$data   = $id . $expire;
 
@@ -163,6 +171,8 @@ function _wpsc_create_customer_id_cookie( $id, $fake_it = false ) {
  * @return mixed Return the customer ID if the cookie is valid, false if otherwise.
  */
 function _wpsc_validate_customer_cookie() {
+
+	do_action( '_wpsc_validate_customer_cookie' );
 
 	if ( ! isset( $_COOKIE[ WPSC_CUSTOMER_COOKIE ] ) ) {
 		return false;
@@ -204,6 +214,8 @@ function _wpsc_validate_customer_cookie() {
  */
 function _wpsc_set_purchase_log_customer_id( $wpsc_purchase_log ) {
 
+	do_action( '_wpsc_set_purchase_log_customer_id', $wpsc_purchase_log );
+
 	// if there is a purchase log for this user we don't want to delete the
 	// user id, even if the transaction isn't successful.  there may be useful
 	// information in the customer profile related to the transaction
@@ -240,6 +252,9 @@ function _wpsc_get_customer_meta_key( $key ) {
  * @since  3.8.13
  */
 function _wpsc_action_customer_used_cart() {
+
+	do_action( '_wpsc_action_customer_used_cart' );
+
 	// get the current users id
 	$id = wpsc_get_current_customer_id();
 
@@ -263,6 +278,9 @@ function _wpsc_merge_cart() {
 	if ( empty( $id_from_wp_user ) ) {
 		return;
 	}
+
+	do_action( '_wpsc_merge_cart' );
+
 
 	$id_from_customer_meta = wpsc_get_customer_meta( 'merge_cart_vistor_id' );
 	wpsc_delete_customer_meta( 'merge_cart_vistor_id' );
