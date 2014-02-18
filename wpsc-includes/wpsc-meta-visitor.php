@@ -6,6 +6,11 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-visitor.class.php' );
 ** WPEC Visitor API
 */
 
+function _wpsc_visitor_database_ready() {
+	$current_db_ver = get_option( 'wpsc_db_version', 0 );
+	return ( $current_db_ver >= 10 );
+}
+
 /**
  * Return the internal visitor meta key for meta values internal to WPEC
  * This helps distinguish private meta added by WPEC from public meta or
@@ -48,6 +53,10 @@ function _wpsc_get_user_meta_key( $key ) {
  */
 function wpsc_create_visitor( $args = null ) {
 	global $wpdb;
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
 
 	$new_visitor_id = false;
 
@@ -105,6 +114,11 @@ function wpsc_create_visitor( $args = null ) {
  * @return object with visitor properties, false on failure
  */
 function _wpsc_get_visitor( $visitor_id ) {
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
 	global $wpdb;
 	$visitor_row = $wpdb->get_row( 'SELECT * FROM ' . $wpdb->wpsc_visitors . ' WHERE id = ' . $visitor_id, OBJECT );
 	if ( $visitor_row === NULL ) {
@@ -134,6 +148,11 @@ function _wpsc_update_wp_user_visitor_id( $wp_user_id, $visitor_id ) {
  * @param int $visitor_id
  */
 function wpsc_get_visitor_wp_user_id( $visitor_id ) {
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
 	global $wpdb;
 
 	$wp_user_id = false;
@@ -157,6 +176,10 @@ function wpsc_get_visitor_wp_user_id( $visitor_id ) {
  * @param unknown $wp_user
  */
 function _wpsc_get_wp_user_visitor_id( $wp_user_id = null ) {
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
 
 	$visitor_id = false;
 
@@ -184,6 +207,11 @@ function _wpsc_get_wp_user_visitor_id( $wp_user_id = null ) {
  * @return last active timestamp, or false on failure.
  */
 function wpsc_get_visitor_last_active( $visitor_id = null ) {
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
 	global $wpdb;
 
 	$last_active = false;
@@ -206,6 +234,11 @@ function wpsc_get_visitor_last_active( $visitor_id = null ) {
  * @return last active timestamp, or false on failure.
  */
 function wpsc_set_visitor_last_active( $visitor_id, $timestamp = null ) {
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
 	global $wpdb;
 
 	if ( empty( $timestamp ) ) {
@@ -230,6 +263,10 @@ function wpsc_set_visitor_last_active( $visitor_id, $timestamp = null ) {
  */
 function wpsc_set_visitor_expiration( $visitor_id, $expires_in_time = null ) {
 
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
 	// visitors associated with wordpress users never expire
 	if ( ( $expires_in_time === null ) || wpsc_get_visitor_wp_user_id( $visitor_id ) ){
 		wpsc_visitor_remove_expiration( $visitor_id );
@@ -252,6 +289,11 @@ function wpsc_set_visitor_expiration( $visitor_id, $expires_in_time = null ) {
  * @return current expiration time, false on no expiration
  */
 function wpsc_visitor_remove_expiration( $visitor_id ) {
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
 	global $wpdb;
 	$wpdb->query( 'UPDATE ' . $wpdb->wpsc_visitors . ' SET expires = NULL, last_active = "' .  date( 'Y-m-d H:i:s' ) . '" WHERE id = ' . $visitor_id );
 	return true;
@@ -265,6 +307,11 @@ function wpsc_visitor_remove_expiration( $visitor_id ) {
  * @return boolean true if visitor profile will expire, false if it is permanent
  */
 function wpsc_visitor_profile_expires( $visitor_id ) {
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
 	$expiration = $wpdb->get_var( ' SELECT expires FROM ' . $wpdb->wpsc_visitors . ' WHERE id = ' . $visitor_id );
 	return ! empty ( $expiration );
 }
@@ -277,6 +324,11 @@ function wpsc_visitor_profile_expires( $visitor_id ) {
  * @return int unix timestamp of expiration
  */
 function wpsc_get_visitor_expiration( $visitor_id ) {
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
 	$expiration = $wpdb->get_var( ' SELECT expires FROM ' . $wpdb->wpsc_visitors . ' WHERE id = ' . $visitor_id );
 
 	if ( ! empty( $expiration ) ) {
@@ -297,6 +349,11 @@ function wpsc_get_visitor_expiration( $visitor_id ) {
  * @return string security key created when the visitor was created
  */
 function _wpsc_visitor_security_key( $visitor_id ) {
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
 	return wpsc_get_visitor_meta( $visitor_id, _wpsc_get_visitor_meta_key( 'key' ), true );
 }
 
@@ -310,6 +367,10 @@ function _wpsc_visitor_security_key( $visitor_id ) {
  * @return boolean true if successful
  */
 function wpsc_update_visitor(  $visitor_id, $args ) {
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
 
 	$result = false;
 
@@ -337,6 +398,10 @@ function wpsc_update_visitor(  $visitor_id, $args ) {
  * @return boolean true if successful
  */
 function wpsc_delete_visitor( $visitor_id ) {
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
 
 	if ( empty( $visitor_id ) || ( $visitor_id == WPSC_BOT_VISITOR_ID ) ) {
 		return false;
@@ -390,6 +455,11 @@ function wpsc_delete_visitor( $visitor_id ) {
  * @return array of integers, each integer corresponds to a visitor id that is expired
  */
 function wpsc_get_expired_visitor_ids() {
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
 	global $wpdb;
 	$sql = 'SELECT id FROM ' . $wpdb->wpsc_visitors . ' WHERE expires IS NOT NULL AND expires <  NOW() AND id <> ' . WPSC_BOT_VISITOR_ID . ' ORDER BY expires ASC';
 	$visitor_ids = $wpdb->get_col( $sql, 0 );
@@ -404,6 +474,11 @@ function wpsc_get_expired_visitor_ids() {
  * @return array of integers, each integer corresponds to a visitor id
  */
 function wpsc_get_visitor_ids() {
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
 	global $wpdb;
 	$sql = 'SELECT id FROM ' . $wpdb->wpsc_visitors . ' ORDER BY created DESC';
 	$visitor_ids = $wpdb->get_col( $sql, 0 );
@@ -419,6 +494,11 @@ function wpsc_get_visitor_ids() {
  * @return array of objects, the index is the visitor id
  */
 function wpsc_get_visitor_list( $include_expired_visitors ) {
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
 	global $wpdb;
 
 	if ( $include_expired_visitors ) {
@@ -443,6 +523,10 @@ function wpsc_get_visitor_list( $include_expired_visitors ) {
  *                        if otherwise.
  */
 function wpsc_get_visitor_cart( $visitor_id ) {
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
 
 	$wpsc_cart = new wpsc_cart();
 
@@ -479,6 +563,10 @@ function wpsc_get_visitor_cart( $visitor_id ) {
  *                        if otherwise.
  */
 function wpsc_update_visitor_cart( $visitor_id, $wpsc_cart ) {
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
 
 	foreach ( $wpsc_cart as $key => $value ) {
 		$cart_property_meta_key = _wpsc_get_visitor_meta_key( 'cart.' . $key );
@@ -546,6 +634,10 @@ function _wpsc_decode_meta_value( $value ) {
  */
 function wpsc_visitor_comment_count( $visitor_id ) {
 
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
 	$count = 0;
 
 	if ( $wp_user_id = wpsc_get_visitor_wp_user_id( $visitor_id ) ) {
@@ -570,6 +662,10 @@ function wpsc_visitor_comment_count( $visitor_id ) {
  */
 function wpsc_visitor_purchase_count( $visitor_id ) {
 
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
 	$count = 0;
 
 	// Check the purchases in the visitor meta
@@ -589,6 +685,10 @@ function wpsc_visitor_purchase_count( $visitor_id ) {
  * @return int
  */
 function wpsc_visitor_has_purchases( $visitor_id ) {
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
 
 	$has_purchases = false;
 
@@ -632,6 +732,11 @@ function wpsc_visitor_has_purchases( $visitor_id ) {
  * @return bool False for failure. True for success.
  */
 function wpsc_add_visitor_meta( $visitor_id, $meta_key, $meta_value, $unique = false ) {
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
 	return add_metadata( 'wpsc_visitor' , $visitor_id, $meta_key , $meta_value, $unique );
 }
 
@@ -652,6 +757,11 @@ function wpsc_add_visitor_meta( $visitor_id, $meta_key, $meta_value, $unique = f
  * @return bool False for failure. True for success.
  */
 function wpsc_delete_visitor_meta( $visitor_id, $meta_key, $meta_value = '' ) {
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
 	return delete_metadata( 'wpsc_visitor', $visitor_id , $meta_key , $meta_value );
 }
 
@@ -667,6 +777,11 @@ function wpsc_delete_visitor_meta( $visitor_id, $meta_key, $meta_value = '' ) {
  *  is true.
  */
 function wpsc_get_visitor_meta( $visitor_id, $key = '', $single = false ) {
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
 	return get_metadata( 'wpsc_visitor' , $visitor_id , $key, $single );
 }
 
@@ -681,6 +796,11 @@ function wpsc_get_visitor_meta( $visitor_id, $key = '', $single = false ) {
  *  is true.
  */
 function wpsc_visitor_meta_exists( $visitor_id, $meta_key ) {
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
 	return metadata_exists( 'wpsc_visitor' , $visitor_id , $meta_key );
 }
 
@@ -703,6 +823,11 @@ function wpsc_visitor_meta_exists( $visitor_id, $meta_key ) {
  * @return bool False on failure, true if success.
  */
 function wpsc_update_visitor_meta( $visitor_id, $meta_key, $meta_value, $prev_value = '' ) {
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
 	return update_metadata( 'wpsc_visitor' , $visitor_id , $meta_key , $meta_value , $prev_value );
 }
 
@@ -715,6 +840,11 @@ function wpsc_update_visitor_meta( $visitor_id, $meta_key, $meta_value, $prev_va
  * @return bool Whether the visitor meta key was deleted from the database
  */
 function wpsc_delete_visitor_meta_by_key( $visitor_meta_key ) {
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
 	return delete_metadata( 'wpsc_visitor' , null , $visitor_meta_key , '' , true );
 }
 
@@ -731,6 +861,11 @@ function wpsc_delete_visitor_meta_by_key( $visitor_meta_key ) {
  * @return array
  */
 function wpsc_get_visitor_custom( $visitor_id = 0 ) {
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
 	$visitor_id = absint( $visitor_id );
 	return get_visitor_meta( $visitor_id );
 }
@@ -747,6 +882,11 @@ function wpsc_get_visitor_custom( $visitor_id = 0 ) {
  * @return array|null Either array of the keys, or null if keys could not be retrieved.
  */
 function wpsc_get_visitor_custom_keys( $visitor_id = 0 ) {
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
 	$custom = wpsc_get_visitor_custom( $visitor_id );
 
 	if ( ! is_array( $custom ) )
@@ -771,6 +911,10 @@ function wpsc_get_visitor_custom_keys( $visitor_id = 0 ) {
  */
 function wpsc_get_visitor_custom_values( $metakey = '', $visitor_id = 0 ) {
 
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
 	if ( ! $key )
 		return null;
 
@@ -792,6 +936,11 @@ function wpsc_get_visitor_custom_values( $metakey = '', $visitor_id = 0 ) {
  * @return array metadata matching the query
  */
 function wpsc_get_visitor_meta_by_timestamp( $timestamp = 0, $comparison = '>', $metakey = '' ) {
+
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
 	return wpsc_get_meta_by_timestamp( 'wpsc_visitor', $timestamp , $comparison , $metakey );
 }
 
