@@ -340,6 +340,30 @@ function _wpsc_merge_cart() {
 
 
 /**
+ * Are we currently processing a non WPEC ajax request
+ * @return boolean
+ */
+function _wpsc_doing_non_wpsc_ajax_request() {
+
+	$doing_wpsc_ajax_request = false;
+
+	if ( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+
+		// if the wpsc_ajax_action is set, it's a WPEC AJAX request
+		if ( isset( $_REQUEST['wpsc_ajax_action'] ) ) {
+			$doing_wpsc_ajax_request = true;
+		}
+
+		// if the wpsc_ajax_action is set, it's a WPEC AJAX request
+		if ( isset( $_REQUEST['action'] ) && ( strpos( $_REQUEST['action'], 'wpsc_' ) === 0 ) ) {
+			$doing_wpsc_ajax_request = true;
+		}
+	}
+
+	return $doing_wpsc_ajax_request;
+}
+
+/**
  * Is the user an automata not worthy of a WPEC profile to hold shopping cart and other info
  *
  * @access private
@@ -355,6 +379,7 @@ function _wpsc_is_bot_user() {
 			_wpsc_doing_it_wrong( __FUNCTION, __( 'Customer cannot be reliably setup until at least the "wp" hook as been fired.', 'wpsc' ), '3.8.14' );
 		}
 
+		// check for WordPress detected 404 or feed request
 		if ( did_action( 'posts_selection' ) ) {
 			if ( is_feed() ) {
 				$is_bot = true;
@@ -365,7 +390,12 @@ function _wpsc_is_bot_user() {
 			}
 		}
 
-		if ( strpos( $_SERVER['REQUEST_URI'], '?wpsc_action=rss' ) ) {
+		// check for non WPEC ajax request, no reason to create a visitor profile if this is the case
+		if ( ! $is_bot && ! _wpsc_doing_non_wpsc_ajax_request() ) {
+			$is_bot = true;
+		}
+
+		if ( ! $is_bot && ( strpos( $_SERVER['REQUEST_URI'], '?wpsc_action=rss' ) ) ) {
 			$is_bot = true;
 		}
 
