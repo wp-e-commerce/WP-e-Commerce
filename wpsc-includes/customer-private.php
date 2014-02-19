@@ -373,10 +373,7 @@ function _wpsc_is_bot_user() {
 		}
 	}
 
-	// Give the application a chance to change our decision
-	if ( has_filter(  'wpsc_is_bot_user' ) ) {
-		$is_bot = apply_filters( 'wpsc_is_bot_user', $is_bot );
-	}
+	$is_bot = apply_filters( 'wpsc_is_bot_user', $is_bot );
 
 	return $is_bot;
 }
