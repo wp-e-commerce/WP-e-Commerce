@@ -181,8 +181,14 @@ function wpsc_get_template_file_path( $file = '' ){
 
 	// No cache, so find one and set it
 	if ( false === ( $file_path = get_transient( WPEC_TRANSIENT_THEME_PATH_PREFIX . $file ) ) ) {
-		// Look for file in stylesheet
-		if ( file_exists( get_stylesheet_directory() . '/' . $file ) ) {
+
+		// Plugin may override the template file, get the file name and check to be sure file exists
+		$file_path = apply_filters( 'wpsc_get_template_file_path' , false );
+		if ( ! empty( $file_path ) && file_exists( $file_path ) ) {
+			$file_path = realpath( $file_path ); // real path just in case plugin doesn't return canonicalized path name
+
+		// Look for file in stylesheet directory
+		} elseif ( file_exists( get_stylesheet_directory() . '/' . $file ) ) {
 			$file_path = get_stylesheet_directory() . '/' . $file;
 
 		// Look for file in template

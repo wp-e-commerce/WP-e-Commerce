@@ -10,14 +10,14 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-visitor.class.php' );
 function _wpsc_visitor_database_ready() {
 	static $visitor_database_checked = false;
 	static $visitor_database_ready = false;
-
+ 
 	if ( $visitor_database_checked ) {
 		return $visitor_database_ready;
 	}
-
+	
 	if ( get_option( 'wpsc_db_version', 0 ) >= 10 ) {
 		global $wpdb;
-
+ 
 		$visitor_database_ready = ( $wpdb->get_var( "SHOW TABLES LIKE '$wpdb->wpsc_visitors'" )
 										&& $wpdb->get_var( "SHOW TABLES LIKE '$wpdb->wpsc_visitormeta'" ) );
 
