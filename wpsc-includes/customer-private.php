@@ -335,51 +335,49 @@ function _wpsc_is_bot_user() {
 
 	$is_bot = false;
 
-	if ( is_user_logged_in() ) {
-		return false;
+	if ( ! is_user_logged_in() ) {
+
+		if ( strpos( $_SERVER['REQUEST_URI'], '?wpsc_action=rss' ) ) {
+			$is_bot = true;
+		}
+
+		// Cron jobs are not flesh originated
+		if ( ! $is_bot && ( defined( 'DOING_CRON' ) && DOING_CRON ) ) {
+			$is_bot = true;
+		}
+
+		// XML RPC requests are probably from cybernetic beasts
+		if ( ! $is_bot && ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST ) ) {
+			$is_bot = true;
+		}
+
+		// coming to login first, after the user logs in we know they are a live being, until then they are something else
+		if ( ! $is_bot && ( strpos( $_SERVER['PHP_SELF'], 'wp-login' ) || strpos( $_SERVER['PHP_SELF'], 'wp-register' ) ) ) {
+			$is_bot = true;
+		}
+
+		if ( ! $is_bot && ( ! empty( $_SERVER['HTTP_USER_AGENT']) ) ) {
+
+			// the user agent could be google bot, bing bot or some other bot,  one would hope real user agents do not have the
+			// string 'bot|spider|crawler|preview' in them, there are bots that don't do us the kindness of identifying themselves as such,
+			// check for the user being logged in in a real user is using a bot to access content from our site
+			$bot_agent_strings = array( 'robot', 'bot', 'crawler', 'spider', 'preview', 'WordPress', );
+			$bot_agent_strings = apply_filters( 'wpsc_bot_user_agents', $bot_agent_strings );
+
+			foreach ( $bot_agent_strings as $bot_agent_string ) {
+				if ( stripos( $_SERVER['HTTP_USER_AGENT'], $bot_agent_string ) !== false ) {
+					$is_bot = true;
+					break;
+				}
+			}
+		}
 	}
 
-	if ( strpos( $_SERVER['REQUEST_URI'], '?wpsc_action=rss' ) ) {
-		return true;
+	// Give the application a chance to change our decision
+	if ( has_filter(  'wpsc_is_bot_user' ) ) {
+		$is_bot = apply_filters( 'wpsc_is_bot_user', $is_bot );
 	}
 
-	// Cron jobs are not flesh originated
-	if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
-		return true;
-	}
-
-	// XML RPC requests are probably from cybernetic beasts
-	if ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST ) {
-		return true;
-	}
-
-	// coming to login first, after the user logs in we know they are a live being, until then they are something else
-	if ( strpos( $_SERVER['PHP_SELF'], 'wp-login' ) || strpos( $_SERVER['PHP_SELF'], 'wp-register' ) ) {
-		return true;
-	}
-
-	// the user agent could be google bot, bing bot or some other bot,  one would hope real user agents do not have the
-	// string 'bot|spider|crawler|preview' in them, there are bots that don't do us the kindness of identifying themselves as such,
-	// check for the user being logged in in a real user is using a bot to access content from our site
-	$bot_agents_patterns = apply_filters(
-											'wpsc_bot_user_agents',
-											array(
-												'robot',
-												'bot',
-												'crawler',
-												'spider',
-												'preview',
-												'WordPress',
-											)
-										);
-
-	$pattern = '/(' . implode( '|', $bot_agents_patterns ) . ')/i';
-
-	if ( preg_match( $pattern, $_SERVER['HTTP_USER_AGENT'] ) ) {
-		return true;
-	}
-
-	// at this point we have eliminated all but the most obvious choice, a human (or cylon?)
-	return apply_filters( 'wpsc_is_bot_user', false );
+	return $is_bot;
 }
 
