@@ -207,10 +207,20 @@ function _wpsc_validate_customer_cookie() {
 	}
 
 	// if we get to here the cookie or user is not valid
-	_wpsc_set_customer_cookie( '', time() - 3600 );
-	return false;
+	return _wpsc_unset_customer_cookie();
 }
 
+/**
+ * Unsets the customer cookie
+ *
+ * @access private
+ * @since  3.8.14
+ */
+function _wpsc_unset_customer_cookie() {
+	_wpsc_set_customer_cookie( '', time() - 3600 );
+}
+
+add_action( 'clear_auth_cookie', '_wpsc_unset_customer_cookie' );
 
 /**
  * Attach a purchase log to our customer profile
