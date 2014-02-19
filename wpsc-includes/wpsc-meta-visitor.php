@@ -6,6 +6,7 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-visitor.class.php' );
 ** WPEC Visitor API
 */
 
+
 function _wpsc_visitor_database_ready() {
 	static $visitor_database_checked = false;
 	static $visitor_database_ready = false;
@@ -17,11 +18,14 @@ function _wpsc_visitor_database_ready() {
 	if ( get_option( 'wpsc_db_version', 0 ) >= 10 ) {
 		global $wpdb;
  
-		$visitor_database_ready = ( $wpdb->get_var( "SHOW TABLES LIKE '$wpdb->wpsc_visitors'" ) && $wpdb->get_var( "SHOW TABLES LIKE '$wpdb->wpsc_visitormeta'" ) );
- 
+		$visitor_database_ready = ( $wpdb->get_var( "SHOW TABLES LIKE '$wpdb->wpsc_visitors'" )
+										&& $wpdb->get_var( "SHOW TABLES LIKE '$wpdb->wpsc_visitormeta'" ) );
+
 	}
- 
+
 	$visitor_database_checked = true;
+
+	return $visitor_database_ready;
 }
 
 /**
@@ -544,7 +548,8 @@ function wpsc_get_visitor_cart( $visitor_id ) {
 	}
 
 	foreach ( $wpsc_cart as $key => $value ) {
-		$meta_value = wpsc_get_visitor_meta( $visitor_id, _wpsc_get_visitor_meta_key( 'cart.' . $key ), true );
+		$cart_property_meta_key = _wpsc_get_visitor_meta_key( 'cart.' . $key );
+		$meta_value = wpsc_get_visitor_meta( $visitor_id, $cart_property_meta_key, true );
 		if ( ! empty( $meta_value ) ) {
 
 			switch ( $key ) {

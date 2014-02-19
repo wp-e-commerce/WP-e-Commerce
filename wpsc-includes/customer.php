@@ -36,10 +36,18 @@ function wpsc_get_current_customer_id( $visitor_id_to_set = false ) {
 
 	if ( _wpsc_is_bot_user() ) {
 		$visitor_id = WPSC_BOT_VISITOR_ID;
-	} elseif ( is_user_logged_in() ) {
+	}
+
+	if ( ! $visitor_id && is_user_logged_in() ) {
 		// if the user is logged in we use the user id
 		$visitor_id = _wpsc_get_wp_user_visitor_id();
-	} elseif ( isset( $_COOKIE[WPSC_CUSTOMER_COOKIE] ) ) {
+		if ( $visitor_id == WPSC_BOT_VISITOR_ID ) {
+			// it is not allowed to have the bot visitor id
+			$visitor_id = false;
+		}
+	}
+
+	if ( ! $visitor_id && isset( $_COOKIE[WPSC_CUSTOMER_COOKIE] ) ) {
 		list( $id, $expire, $hash ) = explode( '|', $_COOKIE[WPSC_CUSTOMER_COOKIE] );
 		$visitor_id = $id;
 	}
