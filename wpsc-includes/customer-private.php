@@ -25,8 +25,14 @@ function _wpsc_action_setup_customer() {
 	// posts_selection hook is processed.  The 'wp' action is fired after
 	// the 'posts_selection' hook.
 	/////////////////////////////////////////////////////////////////////////
-	if ( ! did_action( 'wp' ) ) {
-		_wpsc_doing_it_wrong( __FUNCTION__, __( 'Customer cannot be reliably setup until at least the "wp" hook as been fired.', 'wpsc' ), '3.8.14' );
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		if ( ! did_action( 'init' ) ) {
+			_wpsc_doing_it_wrong( __FUNCTION__, __( 'Customer cannot be reliably setup until at least the "init" hook as been fired during AJAX processing.', 'wpsc' ), '3.8.14' );
+		}
+	} else {
+		if ( ! did_action( 'wp' ) ) {
+			_wpsc_doing_it_wrong( __FUNCTION__, __( 'Customer cannot be reliably setup until at least the "wp" hook as been fired.', 'wpsc' ), '3.8.14' );
+		}
 	}
 
 	// if the customer cookie is invalid, unset it
