@@ -10,14 +10,14 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-visitor.class.php' );
 function _wpsc_visitor_database_ready() {
 	static $visitor_database_checked = false;
 	static $visitor_database_ready = false;
- 
+
 	if ( $visitor_database_checked ) {
 		return $visitor_database_ready;
 	}
-	
+
 	if ( get_option( 'wpsc_db_version', 0 ) >= 10 ) {
 		global $wpdb;
- 
+
 		$visitor_database_ready = ( $wpdb->get_var( "SHOW TABLES LIKE '$wpdb->wpsc_visitors'" )
 										&& $wpdb->get_var( "SHOW TABLES LIKE '$wpdb->wpsc_visitormeta'" ) );
 
@@ -258,13 +258,22 @@ function wpsc_set_visitor_last_active( $visitor_id, $timestamp = null ) {
 
 	global $wpdb;
 
-	if ( empty( $timestamp ) ) {
-		$timestamp = date( 'Y-m-d H:i:s', $last_active = time() );
-	}
+	// if are explicitly setting the last active to a fixed time that's all we need to do,  if we are setting it to the
+	// current time also change the visitor profile expiration
+	if ( ! empty( $timestamp ) ) {
+		if ( is_numeric( $timestamp ) ) {
+			$last_active = date( 'Y-m-d H:i:s' , $timestamp );
+		} else {
+			$last_active = $timestamp;
+		}
 
-	$wpdb->query( 'UPDATE ' . $wpdb->wpsc_visitors . ' SET last_active = "' . $timestamp . '" WHERE id = ' . $visitor_id );
-	if ( $wpdb->rows_affected !== 1 ) {
-		$last_active = false;
+		$wpdb->query( 'UPDATE ' . $wpdb->wpsc_visitors . ' SET last_active = "' . $timestamp . '" WHERE id = ' . $visitor_id );
+
+		if ( $wpdb->rows_affected !== 1 ) {
+			$last_active = false;
+		}
+	} else {
+		wpsc_set_visitor_expiration( $visitor_id, 2 * DAY_IN_SECONDS );
 	}
 
 	return $last_active;
