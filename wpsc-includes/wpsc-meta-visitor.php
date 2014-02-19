@@ -6,6 +6,7 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-visitor.class.php' );
 ** WPEC Visitor API
 */
 
+
 function _wpsc_visitor_database_ready() {
 	static $visitor_database_checked = false;
 	static $visitor_database_ready = false;
@@ -14,24 +15,16 @@ function _wpsc_visitor_database_ready() {
 		return $visitor_database_ready;
 	}
 
-	$current_db_ver = get_option( 'wpsc_db_version', 0 );
-	if ( $current_db_ver >= 10 ) {
+	if ( get_option( 'wpsc_db_version', 0 ) >= 10 ) {
 		global $wpdb;
 
-		$sql = 'SHOW TABLES WHERE '
-				. ' Tables_in_' . $wpdb->dbname . ' LIKE "' . $wpdb->wpsc_visitors . '" '
-				. ' OR  Tables_in_' . $wpdb->dbname . ' LIKE "' . $wpdb->wpsc_visitormeta . '"';
+		$visitor_database_ready = ( $wpdb->get_var( "SHOW TABLES LIKE '$wpdb->wpsc_visitors'" )
+										&& $wpdb->get_var( "SHOW TABLES LIKE '$wpdb->wpsc_visitormeta'" ) );
 
-		$table_names = $wpdb->get_results( $sql );
-
-		if (  $wpdb->num_rows == 2 ) {
-			$visitor_database_ready = true;
-		}
 	}
 
 	$visitor_database_checked = true;
 }
-
 /**
  * Return the internal visitor meta key for meta values internal to WPEC
  * This helps distinguish private meta added by WPEC from public meta or
