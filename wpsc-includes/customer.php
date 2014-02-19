@@ -133,4 +133,4 @@ function wpsc_customer_has_purchases( $id = false ) {
 require_once( WPSC_FILE_PATH . '/wpsc-includes/customer-private.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/customer-ajax.php' );
 
-add_action( 'clear_auth_cookie', 'wpsc_delete_customer_meta' );
+add_action( 'clear_auth_cookie', 'wpsc_delete_all_customer_meta' );
