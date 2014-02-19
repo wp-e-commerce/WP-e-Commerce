@@ -9,17 +9,19 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-visitor.class.php' );
 function _wpsc_visitor_database_ready() {
 	static $visitor_database_checked = false;
 	static $visitor_database_ready = false;
-
+ 
 	if ( $visitor_database_checked ) {
 		return $visitor_database_ready;
 	}
-
-	$current_db_ver = get_option( 'wpsc_db_version', 0 );
-	if ( $current_db_ver >= 10 ) {
+	
+	if ( get_option( 'wpsc_db_version', 0 ) >= 10 ) {
 		global $wpdb;
-
-		$tables = $wpdb->get_results( 'SHOW TABLES LIKE "'. $wpdb. '"' );
+ 
+		$visitor_database_ready = ( $wpdb->get_var( "SHOW TABLES LIKE '$wpdb->wpsc_visitors'" ) && $wpdb->get_var( "SHOW TABLES LIKE '$wpdb->wpsc_visitormeta'" ) );
+ 
 	}
+ 
+	$visitor_database_checked = true;
 }
 
 /**
