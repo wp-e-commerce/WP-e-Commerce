@@ -14,7 +14,7 @@ $nzshpcrt_gateways[$num] = array(
 	),
 	'form'                   => 'form_paypal_pro',
 	'submit_function'        => 'submit_paypal_pro',
-	'internalname'           => 'wpsc_merchant_paypal_pro', // this may be legacy, not yet decided
+	'internalname'           => 'wpsc_merchant_paypal_pro',
 	// All array members below here are legacy, and use the code in paypal_multiple.php
 	//	'form' => 'form_paypal_multiple',
 	//	'submit_function' => 'submit_paypal_multiple',

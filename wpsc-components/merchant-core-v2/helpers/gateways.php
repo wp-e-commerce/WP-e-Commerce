@@ -69,6 +69,10 @@ function wpsc_gateway_image_url(){
  * Return the current gateway's name.
  * 
  * @return  string  The current gateway's name.
+ *
+ * @uses  $wpsc_gateway              Global array of gateways.
+ * @uses  wpsc_show_gateway_image()  Checks if gateway has an image.
+ * @uses  apply_filters()            Calls 'wpsc_gateway_name'.
  */
 function wpsc_gateway_name() {
 	global $wpsc_gateway;
@@ -94,9 +98,13 @@ function wpsc_gateway_name() {
 /**
  * WPSC Default Gateway Name Filter
  *
- * @param   string  $display_name  Gateway name.
+ * This filter overrides the display name of a gateway
+ *
+ * @param   string  $display_name  Gateway display name.
  * @param   array   $gateway       Gateway details.
  * @return  string                 Filtered gateway name.
+ *
+ * @uses  wpsc_show_gateway_image()  Checks if gateway has an image.
  */
 function _wpsc_gateway_name_filter( $display_name, $gateway ) {
 	if ( empty( $display_name ) && isset( $gateway['payment_type'] ) && ! wpsc_show_gateway_image() ) {

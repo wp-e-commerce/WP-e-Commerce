@@ -22,8 +22,6 @@ $nzshpcrt_gateways[$num] = array(
 		 /// for modules that may not be present, like curl
 		'extra_modules' => array()
 	),
-
-	// this may be legacy, not yet decided
 	'internalname' => 'wpsc_merchant_paypal_express',
 
 	// All array members below here are legacy, and use the code in paypal_multiple.php
