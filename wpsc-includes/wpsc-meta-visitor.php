@@ -18,8 +18,19 @@ function _wpsc_visitor_database_ready() {
 	if ( $current_db_ver >= 10 ) {
 		global $wpdb;
 
-		$tables = $wpdb->get_results( 'SHOW TABLES LIKE "'. $wpdb. '"' );
+
+		$sql = 'SELECT count(*) FROM information_schema.tables WHERE table_schema = "' . $wpdb->dbname . '" '
+				. ' AND ( table_name = "' . $wpdb->wpsc_visitors .'" '
+				. ' OR  table_name = "' . $wpdb->wpsc_visitormeta . '")' ;
+
+		$count = $wpdb->get_var( $sql );
+
+		if ( $count == 2 ) {
+			$visitor_database_ready = true;
+		}
 	}
+
+	$visitor_database_checked = true;
 }
 
 /**
