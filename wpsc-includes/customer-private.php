@@ -26,7 +26,7 @@ function _wpsc_action_setup_customer() {
 	// the 'posts_selection' hook.
 	/////////////////////////////////////////////////////////////////////////
 	if ( ! did_action( 'wp' ) ) {
-		_wpsc_doing_it_wrong( __FUNCTION, __( 'Customer cannot be reliably setup until at least the "wp" hook as been fired.', 'wpsc' ), '3.8.14' );
+		_wpsc_doing_it_wrong( __FUNCTION__, __( 'Customer cannot be reliably setup until at least the "wp" hook as been fired.', 'wpsc' ), '3.8.14' );
 	}
 
 	// if the customer cookie is invalid, unset it
@@ -374,10 +374,6 @@ function _wpsc_is_bot_user() {
 	$is_bot = false;
 
 	if ( ! is_user_logged_in() ) {
-
-		if ( ! did_action( 'wp' ) ) {
-			_wpsc_doing_it_wrong( __FUNCTION, __( 'Customer cannot be reliably setup until at least the "wp" hook as been fired.', 'wpsc' ), '3.8.14' );
-		}
 
 		// check for WordPress detected 404 or feed request
 		if ( did_action( 'posts_selection' ) ) {

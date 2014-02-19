@@ -242,7 +242,7 @@ class WP_eCommerce {
 			add_action( 'init', '_wpsc_action_setup_customer', 1 );
 
 			// WPEC is ready to use as soon as WordPress and customer is setup and loaded
-			add_action( 'init', 'fire_wpsc_ready_action', 1 );
+			add_action( 'init', array( &$this, '_wpsc_fire_ready_action' ), 1 );
 
 		} else {
 			// Setup the customer ID as soon as the query variables can be checked
@@ -250,7 +250,7 @@ class WP_eCommerce {
 			add_action( 'wp', '_wpsc_action_setup_customer', 1 );
 
 			// WPEC is ready to use as soon as WordPress and customer is setup and loaded
-			add_action( 'wp', 'fire_wpsc_ready_action', PHP_INT_MAX );
+			add_action( 'wp', array( &$this, '_wpsc_fire_ready_action' ), PHP_INT_MAX );
 		}
 
 		// Load the purchase log statuses
@@ -269,7 +269,7 @@ class WP_eCommerce {
 		do_action( 'wpsc_loaded' );
 	}
 
-	function fire_wpsc_ready_action() {
+	function _wpsc_fire_ready_action() {
 		// WPEC is ready to use as soon as WordPress and customer is setup and loaded
 		do_action( 'wpsc_ready' );
 	}
