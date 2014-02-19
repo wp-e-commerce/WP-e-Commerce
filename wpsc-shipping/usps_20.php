@@ -125,20 +125,25 @@ class ash_usps {
 		$services = array(
 			// "Online Only *"=>"ONLINE",
 			// "All Services"=>"ALL",
-			__( "Parcel Post", 'wpsc' ) => "PARCEL",
+			__( "Parcel Post", 'wpsc' ) => "STANDARD POST",
 			// "Media Mail"=>"MEDIA",
 			// "Library Mail"=>"LIBRARY",
 			__( "First Class", 'wpsc' ) => "FIRST CLASS",
+			// "First Class Commercial"=>"FIRST CLASS COMMERCIAL",
 			// "First Class Hold For Pickup Commercial"=>"FIRST CLASS HFP COMMERCIAL",
 			__( "Priority Mail", 'wpsc' ) => "PRIORITY",
 			// "Priority Commercial"=>"PRIORITY COMMERCIAL",
+			// "Priority CPP"=>"PRIORITY CPP",
 			// "Priority Hold For Pickup Commercial"=>"PRIORITY HFP COMMERCIAL",
-			__( "Express Mail", 'wpsc' ) => "EXPRESS",
-			// "Express Commerical"=>"EXPRESS COMMERCIAL",
-			// "Express SH"=>"EXPRESS SH",
-			// "Express SH Commercial"=> "EXPRESS SH COMMERCIAL",
-			// "Express Hold for Pickup"=> "EXPRESS HFP",
-			// "Express Hold for Pickup Commercial"=>"EXPRESS HFP COMMERCIAL"
+			// "Priority Hold For Pickup CPP"=>"PRIORITY HFP CPP",
+			__( "Express Mail", 'wpsc' ) => "PRIORITY EXPRESS",
+			// "Priority Express Commerical"=>"PRIORITY EXPRESS COMMERCIAL",
+			// "Priority Express CPP"=>"PRIORITY EXPRESS CPP",
+			// "Priority Express SH"=>"PRIORITY EXPRESS SH",
+			// "Priority Express SH Commercial"=> "PRIORITY EXPRESS SH COMMERCIAL",
+			// "Priority Express Hold for Pickup"=> "PRIORITY EXPRESS HFP",
+			// "Priority Express Hold for Pickup Commercial"=>"PRIORITY EXPRESS HFP COMMERCIAL"
+			// "Priority Express Hold for Pickup CPP"=>"PRIORITY EXPRESS HFP CPP"
 		);
 		$this->services = $services;
 
@@ -205,18 +210,18 @@ class ash_usps {
 			<td><?php _e( 'Shipping Settings', 'wpsc' ); ?></td>
 			<td>
 				<label>
-					<input type='checkbox' <?php checked( $settings['test_server'], 1 ); ?> name='wpec_usps[test_server]' value='1' />
+					<input type='checkbox' <?php checked( isset( $settings['test_server'] ) && (bool) $settings['test_server'], 1 ); ?> name='wpec_usps[test_server]' value='1' />
 					<?php _e( 'Use Test Server', 'wpsc' ); ?>
 				</label>
 				<br />
 
 				<label>
-					<input type='checkbox' <?php checked( $settings['adv_rate'], 1 ); ?> name='wpec_usps[adv_rate]' value='1' />
+					<input type='checkbox' <?php checked( isset( $settings['adv_rate'] ) && (bool) $settings['adv_rate'], 1 ); ?> name='wpec_usps[adv_rate]' value='1' />
 					<?php _e( 'Advanced Rates', 'wpsc' ); ?>
 				</label>
 				<p class='description'><?php _e( 'This setting will provide rates based on the dimensions from each item in your cart', 'wpsc' ); ?></p>
 				<label>
-					<input type='checkbox' <?php checked( $settings['intl_rate'], 1 ); ?> name='wpec_usps[intl_rate]' value='1' />
+					<input type='checkbox' <?php checked( isset( $settings['intl_rate'] ) && (bool) $settings['intl_rate'], 1 ); ?> name='wpec_usps[intl_rate]' value='1' />
 					<?php _e( 'Disable International Shipping', 'wpsc' ); ?>
 				</label>
 				<p class='description'><?php _e( 'No shipping rates will be displayed if the shipment destination country is different than your base country/region.', 'wpsc' ); ?></p>
@@ -318,10 +323,10 @@ class ash_usps {
 			case "PRIORITY":
 				$container = "VARIABLE";
 				break;
-			case "EXPRESS":
+			case "PRIORITY EXPRESS":
 				$container = "VARIABLE";
 				break;
-			case "PARCEL":
+			case "STANDARD POST":
 				$container = "VARIABLE";
 				$machinable = "true";
 				$size = "REGULAR";
@@ -360,7 +365,7 @@ class ash_usps {
 			$data["weight"] = $package->weight;
 		}
 		$pound = floor( $data["weight"] );
-		$ounce = ( $data["weight"] - $pound ) * 16;
+		$ounce = ceil( ( $data["weight"] - $pound ) * 16 ); //"Ounces field < 5 digits" See 1.2 -> http://pe.usps.com/text/dmm300/133.htm
 		$data["pound"] = $pound;
 		$data["ounce"] = $ounce;
 
@@ -411,9 +416,24 @@ class ash_usps {
 	 */
 	function _build_intl_shipment( &$request, array $data, $package ) {
 		$shipment = array();
+		$data["size"]	= "REGULAR"; //No dimensions needed, but USPS says no GXG pricing returned.
+		$data["width"]	= "";
+		$data["length"]	= "";
+		$data["height"]	= "";
+		$data["girth"]	= "";
+		
+		if ( $package ) {
+			$data["weight"]	= $package->weight;
+			$data["value"]	= $package->value;
+			$data['size']	= "LARGE";
+			$data["width"]	= $package->width;
+			$data["length"]	= $package->length;
+			$data["height"]	= $package->height;
+			$data["girth"]	= $package->girth;
+		}
 
-		$data["pounds"] = floor( $package->weight );
-		$data["ounces"] = ( $data["weight"] - $data["pounds"] ) * 16;
+		$data["pounds"] = floor( $data["weight"] );
+		$data["ounces"] = ceil( ( $data["weight"] - $data["pounds"] ) * 16 ); //"Ounces field < 5 digits" See 1.2 -> http://pe.usps.com/text/dmm300/133.htm
 
 		if ( ! array_key_exists( "mail_type", (array) $data ) ) {
 			$data["mail_type"] = array( "Package" );
@@ -431,15 +451,18 @@ class ash_usps {
 			"ValueOfContents" => $data["value"],
 			"Country"         => $data["dest_country"],
 			"Container"       => "RECTANGULAR",
-			"Size"            => "LARGE",
-			"Width"           => $package->width,
-			"Length"          => $package->length,
-			"Height"          => $package->height,
-			"Girth"           => $package->girth,
+			"Size"            => $data["size"],
+			"Width"           => $data["width"],
+			"Length"          => $data["length"],
+			"Height"          => $data["height"],
+			"Girth"           => $data["girth"],
 			"OriginZip"       => $data["base_zipcode"],
 			"CommercialFlag"  => "Y"
 		);
 
+		if ( ! $package ) {
+			unset( $base["GXG"] ); //Error returned if present and no dimensions are set.
+		}
 		$base["@attr"]["ID"] = 0;
 		array_push( $shipment, $base );
 		$request[$data["req"]]["Package"] = $shipment;
@@ -513,8 +536,8 @@ class ash_usps {
 	function _clean_response( &$response ) {
 		$response = str_replace('&amp;lt;sup&amp;gt;&amp;#174;&amp;lt;/sup&amp;gt;', '&reg;', $response);
 		$response = str_replace('&amp;lt;sup&amp;gt;&amp;#8482;&amp;lt;/sup&amp;gt;', '&trade;', $response);
+		$response = str_replace('&amp;lt;sup&amp;gt;&amp;#xAE;&amp;lt;/sup&amp;gt;', '&reg;', $response);
 		$response = html_entity_decode( html_entity_decode( $response ) );
-
 		return $response;
 	}
 
@@ -551,20 +574,24 @@ class ash_usps {
 	 */
 	function _merge_arrays( array $arrays ) {
 		$final_array = array();
-		if ( ! is_array( $arrays ) ) {
+		if ( ! is_array( $arrays ) || count( $arrays ) == 0 ) {
 			// How did that happen, I mean really, I am specifying array as the base type
 			return $final_array;
 		}
-		foreach( $arrays as $arr ) {
-			foreach( $arr as $key => $value ) {
-				if ( ! array_key_exists( $key, $final_array ) ) {
-					if ( $value ) {
+		if ( count( $arrays ) != count( $arrays, COUNT_RECURSIVE ) ) {
+			foreach( $arrays as $arr ) {
+				foreach( $arr as $key => $value ) {
+					if ( ! array_key_exists( $key, $final_array ) ) {
+						if ( $value ) {
+							$final_array[ $key ] = $value;
+						}
+					} elseif ( $final_array[ $key ] < $value ) {
 						$final_array[ $key ] = $value;
 					}
-				} elseif ( $final_array[ $key ] < $value ) {
-					$final_array[ $key ] = $value;
 				}
 			}
+		} else {
+			$final_array = $arrays;
 		}
 		return $final_array;
 	}
@@ -642,7 +669,7 @@ class ash_usps {
 	 */
 	function _combine_rates( $rate_tables ) {
 		$final_table = array();
-		if ( ! is_array( $rate_tables ) ) {
+		if ( ! is_array( $rate_tables ) || count( $rate_tables ) == 0 ) {
 			return array();
 		}
 		if ( count( $rate_tables ) < 2 ) {
@@ -651,15 +678,19 @@ class ash_usps {
 		$temp_services = call_user_func_array( 'array_intersect_key', $rate_tables );
 
 		$valid_services = array_keys( $temp_services );
-		foreach ( $rate_tables as $rate_table ) {
-			foreach ( $rate_table as $service => $rate ) {
-				if ( in_array( $service, $valid_services ) ) {
-					if ( ! array_key_exists( $service, $final_table ) ) {
-						$final_table[ $service ] = 0;
+		if ( count( $rate_tables ) != count( $rate_tables, COUNT_RECURSIVE ) ) {
+			foreach ( $rate_tables as $rate_table ) {
+				foreach ( $rate_table as $service => $rate ) {
+					if ( in_array( $service, $valid_services ) ) {
+						if ( ! array_key_exists( $service, $final_table ) ) {
+							$final_table[ $service ] = 0;
+						}
+						$final_table[ $service ] += $rate;
 					}
-					$final_table[ $service ] += $rate;
 				}
 			}
+		} else {
+			$final_table = $rate_tables;
 		}
 		return $final_table;
 	}
@@ -673,7 +704,7 @@ class ash_usps {
 	 */
 	function merge_sum_arrays( $arrays ) {
 		$temp = array();
-		if ( ! is_array( $arrays ) ) {
+		if ( ! is_array( $arrays ) || count( $arrays ) == 0 ) {
 			return array();
 		}
 		if ( count( $arrays ) > 1 ) {
@@ -694,6 +725,33 @@ class ash_usps {
 			}
 		}
 		return $temp;
+	}
+	
+	/**
+	 * Runs the quote process for a simple quote and returns the final quote table
+	 *
+	 * @since 2.0
+	 * @param array $data
+	 * @return array
+	 */
+	function _quote_simple_intl( array $data ) {
+		global $wpec_ash_xml;
+		//*** Build Request **\\
+		$request = $this->_build_request( $data );
+		if ( empty( $request ) ) {
+			return array();
+		}
+		$this->_build_intl_shipment( $request, $data, FALSE );
+		$request_xml = $wpec_ash_xml->build_message( $request );
+		//*** Make the Request ***\\
+		$response = $this->_make_request( $request_xml, TRUE );
+		if ( empty( $response ) || $response === FALSE ) {
+			return array();
+		}
+		//*** Parse the response from USPS ***\
+		$package_rate_table = $this->_parse_intl_response( $response );
+		$rate_table = $this->_merge_arrays( $package_rate_table );
+		return $rate_table;
 	}
 
 	/**
@@ -867,12 +925,17 @@ class ash_usps {
 		$quotes = array();
 		if ( $data["dest_country"] == "USA" && $data["adv_rate"] == TRUE ){
 			$quotes = $this->_quote_advanced( $data );
-		} elseif ( $data["dest_country"] != "USA") {
+		} elseif ( $data["dest_country"] != "USA" && $data["adv_rate"] == TRUE ) {
 			$quotes = $this->_quote_intl( $data );
-		} else {
+		} elseif ( $data["dest_country"] == "USA" && $data["adv_rate"] != TRUE ) {
 			$quotes = $this->_quote_simple( $data );
+		} else {
+			$quotes = $this->_quote_simple_intl( $data );
 		}
 		$rate_table = $this->_validate_services( $quotes, $data );
+		if ( ! empty( $quotes ) ) { //Don't try to sort an empty array
+			asort( $quotes, SORT_NUMERIC );
+		}
 		return $quotes;
 	}
 
@@ -891,7 +954,7 @@ class ash_usps {
 	 * @return array $rate_table List of rates in "Service"=>"Rate" format
 	 */
 	function getQuote() {
-		global $wpdb, $wpec_ash, $wpec_ash_tools;
+		global $wpdb, $wpec_ash, $wpec_ash_tools, $wpsc_cart;
 		$data = array();
 		//************** These values are common to all entry points **************
 		//*** User/Customer Entered Values ***\\
@@ -900,25 +963,29 @@ class ash_usps {
 		$settings = get_option( 'wpec_usps' );
 		//Disable International Shipping. Default: Enabled as it currently is.
 		$data['intl_rate'] = isset( $settings['intl_rate'] ) && ! empty( $settings['intl_rate'] ) ? FALSE : TRUE;
-		if( ! $data['intl_rate'] && $data['dest_country'] != get_option( 'base_country' ) )
+		if ( ! $data['intl_rate'] && $data['dest_country'] != get_option( 'base_country' ) ) {
 			return array();
-
+		}
 		// If ths zip code is provided via a form post use it!
 		$data["dest_zipcode"] = (string) wpsc_get_customer_meta( 'shipping_zip' );
-		if ( isset( $_POST['zipcode'] ) && ( $_POST['zipcode'] != __( "Your Zipcode", 'wpsc' ) && $_POST['zipcode'] != "YOURZIPCODE" ) )
+		if ( isset( $_POST['zipcode'] ) && ( $_POST['zipcode'] != __( "Your Zipcode", 'wpsc' ) && $_POST['zipcode'] != "YOURZIPCODE" ) ) {
 			$data["dest_zipcode"] = esc_attr( $_POST['zipcode'] );
-		if ( in_array( $data["dest_zipcode"], array( __( 'Your Zipcode', 'wpsc' ), 'YOURZIPCODE' ) ) )
+		}
+		if ( in_array( $data["dest_zipcode"], array( __( 'Your Zipcode', 'wpsc' ), 'YOURZIPCODE' ) ) ) {
 			$data["dest_zipcode"] = '';
-		if( ! empty( $data["dest_zipcode"] ) )
+		}
+		if ( ! empty( $data["dest_zipcode"] ) ) {
 			wpsc_update_customer_meta( 'shipping_zip', $data["dest_zipcode"] );
-		if ( empty ( $data["dest_zipcode"] ) )
+		}
+		if ( empty ( $data["dest_zipcode"] ) ) {
 			// We cannot get a quote without a zip code so might as well return!
 			return array();
+		}
 		//*** Grab Total Weight from the shipment object for simple shipping
 		$data["weight"] = wpsc_cart_weight_total();
-		if ( empty( $data["weight"] ) )
+		if ( empty( $data["weight"] ) ) {
 			return array();
-
+		}
 		// If the region code is provided via a form post use it!
 		if ( isset( $_POST['region'] ) && ! empty( $_POST['region'] ) ) {
 			$query = $wpdb->prepare( "SELECT `" . WPSC_TABLE_REGION_TAX . "`.* FROM `" . WPSC_TABLE_REGION_TAX . "` WHERE `" . WPSC_TABLE_REGION_TAX . "`.`id` = %d", $_POST['region'] );
@@ -931,24 +998,28 @@ class ash_usps {
 		} else {
 			$data['dest_state'] = "";
 		}
-		if ( ! is_object( $wpec_ash_tools ) )
+		if ( ! is_object( $wpec_ash_tools ) ) {
 			$wpec_ash_tools = new ASHTools();
-
+		}
 		$data["dest_country"] = $wpec_ash_tools->get_full_country( $data["dest_country"] );
 		$data["dest_country"] = $this->_update_country( $data["dest_country"] );
 
-		if ( ! is_object( $wpec_ash ) )
+		if ( ! is_object( $wpec_ash ) ) {
 			$wpec_ash = new ASH();
+		}
 		$shipping_cache_check['state'] = $data['dest_state'];
 		$shipping_cache_check['country'] = $data['dest_country'];
 		$shipping_cache_check['zipcode'] = $data["dest_zipcode"];
 		$this->shipment = $wpec_ash->get_shipment();
 		$this->shipment->set_destination( $this->internal_name, $shipping_cache_check );
 		$this->shipment->rates_expire = date('Y-m-d'); //Date will be checked against the cached date.
-
+		$data['shipper'] = $this->internal_name;
 		$data["adv_rate"] = (!empty($settings["adv_rate"])) ? $settings["adv_rate"] : FALSE; // Use advanced shipping for Domestic Rates ? Not available
 		if ( $data["weight"] > 70 && ! (boolean) $data["adv_rate"] ) { //USPS has a weight limit: https://www.usps.com/send/can-you-mail-it.htm?#3.
-			$over_weight_txt = __('Your order exceeds the standard shipping weight limit. Please contact us to quote other shipping alternatives.','wpsc');
+			$over_weight_txt = apply_filters( 'wpsc_shipment_over_weight',
+												__( 'Your order exceeds the standard shipping weight limit. 
+													Please contact us to quote other shipping alternatives.', 'wpsc' ),
+												$data );
 			$shipping_quotes[$over_weight_txt] = 0; // yes, a constant.
 			$wpec_ash->cache_results( $this->internal_name, array($shipping_quotes), $this->shipment );
 			return array($shipping_quotes);
@@ -958,23 +1029,27 @@ class ash_usps {
 		$cache = $wpec_ash->check_cache( $this->internal_name, $this->shipment );
 		// We do not want to spam USPS (and slow down our process) if we already
 		// have a shipping quote!
-		if ( count($cache["rate_table"] ) >= 1 ) //$cache['rate_table'] could be array(0).
+		if ( count($cache["rate_table"] ) >= 1 ) { //$cache['rate_table'] could be array(0).
 			return $cache["rate_table"];
-
+		}
 		//*** WPEC Configuration values ***\\
 		$this->use_test_env   = ( ! isset( $settings["test_server"] ) ) ? false : ( bool ) $settings['test_server'];
 		$data["fcl_type"]     = ( ! empty( $settings["fcl_type"] ) ) ? $settings["fcl_type"] : "PARCEL";
 		$data["mail_type"]    = ( ! empty( $settings["intl_pkg"] ) ) ? $settings["intl_pkg"] : "Package";
 		$data["base_zipcode"] = get_option( "base_zipcode" );
-		$data["services"]     = ( ! empty( $settings["services"] ) ) ? $settings["services"] : array( "PRIORITY", "EXPRESS", "FIRST CLASS" );
+		$data["services"]     = ( ! empty( $settings["services"] ) ) ? $settings["services"] : array( "STANDARD POST", "PRIORITY", "PRIORITY EXPRESS", "FIRST CLASS" );
 		$data["user_id"]      = $settings["id"];
-		$data['shipper']      = $this->internal_name;
+		$data["value"] 		  = $wpsc_cart->calculate_subtotal( true ); //Required by $this->_build_intl_shipment.
 		$data = apply_filters( 'wpsc_shipment_data', $data, $this->shipment );
+		if ( isset( $data['stop'] ) ) { //Do not get rates.
+			return array();
+		}
 		//************ GET THE RATE ************\\
 		$rate_table = apply_filters( 'wpsc_rates_table', $this->_run_quote( $data ), $data, $this->shipment );
 		//Avoid trying getting rates again and again when the stored zipcode is incorrect.
-		if( count( $rate_table ) == 0 )
+		if ( count( $rate_table ) == 0 ) {
 			wpsc_update_customer_meta( 'shipping_zip', '' );
+		}
 		//************ CACHE the Results ************\\
 		$wpec_ash->cache_results( $this->internal_name, $rate_table, $this->shipment );
 		return $rate_table;

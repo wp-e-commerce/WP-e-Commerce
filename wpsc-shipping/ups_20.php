@@ -196,19 +196,19 @@ class ash_ups {
 			<tr>
 				<td><?php _e( 'Shipping Settings', 'wpsc' ); ?></td>
 				<td>
-					<input type="checkbox" id="ups_env_test" name="wpsc_ups_settings[upsenvironment]" value="1" <?php checked( 1, $wpsc_ups_settings['upsenvironment'] ); ?> />
+					<input type="checkbox" id="ups_env_test" name="wpsc_ups_settings[upsenvironment]" value="1" <?php checked( 1, isset( $wpsc_ups_settings['upsenvironment'] ) && (bool) $wpsc_ups_settings['upsenvironment'] ); ?> />
 					<label for="ups_env_test" ><?php _e( 'Use Testing Environment', 'wpsc' ); ?></label>
 					<br />
-					<input type="checkbox" id="ups_negotiated_rates" name="wpsc_ups_settings[ups_negotiated_rates]" value="1" <?php checked( 1, $wpsc_ups_settings['ups_negotiated_rates'] ); ?> />
+					<input type="checkbox" id="ups_negotiated_rates" name="wpsc_ups_settings[ups_negotiated_rates]" value="1" <?php checked( 1, isset( $wpsc_ups_settings['ups_negotiated_rates'] ) && (bool) $wpsc_ups_settings['ups_negotiated_rates'] ); ?> />
 					<label for="ups_negotiated_rates" ><?php _e( 'Show UPS negotiated rates', 'wpsc' ); ?> *</label>
 					<br />
-					<input type="checkbox" id="ups_insured_shipment" name="wpsc_ups_settings[insured_shipment]" value="1" <?php checked( 1, $wpsc_ups_settings['insured_shipment'] ); ?> />
+					<input type="checkbox" id="ups_insured_shipment" name="wpsc_ups_settings[insured_shipment]" value="1" <?php checked( 1, isset( $wpsc_ups_settings['insured_shipment'] ) && (bool) $wpsc_ups_settings['insured_shipment'] ); ?> />
 					<label for="ups_insured_shipment" ><?php _e( 'Insure shipment against cart total', 'wpsc' ); ?> *</label>
 					<br />
-					<input type="checkbox" id="ups_singular_shipping" name="wpsc_ups_settings[singular_shipping]" value="1" <?php checked( 1, $wpsc_ups_settings['singular_shipping'] ); ?> />
+					<input type="checkbox" id="ups_singular_shipping" name="wpsc_ups_settings[singular_shipping]" value="1" <?php checked( 1, isset( $wpsc_ups_settings['singular_shipping'] ) && (bool) $wpsc_ups_settings['singular_shipping'] ); ?> />
 					<label for="ups_singular_shipping" ><?php _e( 'Singular Shipping', 'wpsc' ); ?> *</label>
 					<p class='description'><?php _e( 'Rate each quantity of items in a cart as its own package using dimensions on product', 'wpsc' ); ?></p>
-					<input type="checkbox" id="ups_intl_rate" name="wpsc_ups_settings[intl_rate]" value="1" <?php checked( 1, $wpsc_ups_settings['intl_rate'] ); ?> />
+					<input type="checkbox" id="ups_intl_rate" name="wpsc_ups_settings[intl_rate]" value="1" <?php checked( 1, isset( $wpsc_ups_settings['intl_rate'] ) && (bool) $wpsc_ups_settings['intl_rate'] ); ?> />
 					<label for="ups_intl_rate" ><?php _e( 'Disable International Shipping', 'wpsc' ); ?></label>
 					<p class='description'><?php _e( 'No shipping rates will be displayed if the shipment destination country is different than your base country/region.', 'wpsc' ); ?></p>
 				</td>
@@ -340,7 +340,7 @@ class ash_ups {
 	private function _declared_value( &$pack, $package, $args ){
 		$pack["PackageServiceOptions"]["DeclaredValue"] = array(
 			"CurrencyCode" => $args["currency"],
-			"MonetaryValue" => $args["cart_total"]
+			"MonetaryValue" => $package->value //Per package value, not total value
 		);
 	}
 
@@ -687,7 +687,9 @@ class ash_ups {
 			}
 		}
 		// Reverse sort the rate selection so it is cheapest first!
-		asort( $rate_table );
+		if ( ! empty( $rate_table ) ) {
+			asort( $rate_table );
+		}
 		return $rate_table;
 	}
 
@@ -724,34 +726,38 @@ class ash_ups {
 		$args = array();
 		
 		$args['dest_ccode'] = wpsc_get_customer_meta( 'shipping_country' );
-		if ( $args['dest_ccode'] == "UK" )
+		if ( $args['dest_ccode'] == "UK" ) {
 			// So, UPS is a little off the times
 			$args['dest_ccode'] = "GB";
+		}
 		// Get the ups settings from the ups account info page (Shipping tab)
 		$wpsc_ups_settings = get_option( "wpsc_ups_settings", array() );
 		//Disable International Shipping. Default: Enabled, as it currently is.
 		$args['intl_rate'] = isset( $wpsc_ups_settings['intl_rate'] ) && ! empty( $wpsc_ups_settings['intl_rate'] ) ? FALSE : TRUE;
-		if ( ! $args['intl_rate'] && $args['dest_ccode'] != get_option( 'base_country' ) )
+		if ( ! $args['intl_rate'] && $args['dest_ccode'] != get_option( 'base_country' ) ) {
 			return array();
-		
+		}
 		// Destination zip code
 		// If ths zip code is provided via a form post use it!
 		$args['dest_pcode'] = (string) wpsc_get_customer_meta( 'shipping_zip' );
-		if ( isset( $_POST['zipcode'] ) && ( $_POST['zipcode'] != __( "Your Zipcode", 'wpsc' ) && $_POST['zipcode'] != "YOURZIPCODE" ) )
+		if ( isset( $_POST['zipcode'] ) && ( $_POST['zipcode'] != __( "Your Zipcode", 'wpsc' ) && $_POST['zipcode'] != "YOURZIPCODE" ) ) {
 			$args['dest_pcode'] = esc_attr( $_POST['zipcode'] );
-		if ( in_array( $args['dest_pcode'], array( __( 'Your Zipcode', 'wpsc' ), 'YOURZIPCODE' ) ) )
+		}
+		if ( in_array( $args['dest_pcode'], array( __( 'Your Zipcode', 'wpsc' ), 'YOURZIPCODE' ) ) ) {
 			$args['dest_pcode'] = '';
-		if( ! empty ( $args['dest_pcode'] ) )
+		}
+		if ( ! empty ( $args['dest_pcode'] ) ) {
 			wpsc_update_customer_meta( 'shipping_zip', $args['dest_pcode'] );
-		if ( empty ( $args['dest_pcode'] ) )
+		}
+		if ( empty ( $args['dest_pcode'] ) ) {
 			// We cannot get a quote without a zip code so might as well return!
 			return array();
-		
+		}
 		// Get the total weight from the shopping cart
 		$args['weight'] = wpsc_cart_weight_total();
-		if ( empty( $args["weight"] ) )
+		if ( empty( $args["weight"] ) ) {
 			return array();
-		
+		}
 		// If the region code is provided via a form post use it!
 		if ( isset( $_POST['region'] ) && ! empty( $_POST['region'] ) ) {
 			$query = $wpdb->prepare( "SELECT `" . WPSC_TABLE_REGION_TAX . "`.* FROM `" . WPSC_TABLE_REGION_TAX . "` WHERE `" . WPSC_TABLE_REGION_TAX . "`.`id` = %d", $_POST['region'] );
@@ -765,19 +771,22 @@ class ash_ups {
 			$args['dest_state'] = "";
 		}
 		
-		if ( ! is_object( $wpec_ash ) )
+		if ( ! is_object( $wpec_ash ) ) {
 			$wpec_ash = new ASH();
-		
+		}
 		$shipping_cache_check['state'] = $args['dest_state']; //The destination is needed for cached shipment check.
 		$shipping_cache_check['country'] = $args['dest_ccode'];
 		$shipping_cache_check['zipcode'] = $args['dest_pcode'];
 		$this->shipment = $wpec_ash->get_shipment();
 		$this->shipment->set_destination( $this->internal_name, $shipping_cache_check ); //Set this shipment's destination.
 		$this->shipment->rates_expire = date('Y-m-d');
-
+		$args['shipper'] = $this->internal_name;
 		$args["singular_shipping"] = ( array_key_exists( "singular_shipping", $wpsc_ups_settings ) ) ? $wpsc_ups_settings["singular_shipping"]    : "0";
 		if ( $args['weight'] > 150 && ! (boolean) $args["singular_shipping"] ) { // This is where shipping breaks out of UPS if weight is higher than 150 LBS
-				$over_weight_txt = __( 'Your order exceeds the standard shipping weight limit. Please contact us to quote other shipping alternatives.', 'wpsc' );
+				$over_weight_txt = apply_filters( 'wpsc_shipment_over_weight', 
+													__( 'Your order exceeds the standard shipping weight limit. 
+														Please contact us to quote other shipping alternatives.', 'wpsc' ), 
+													$args );
 				$shipping_quotes[$over_weight_txt] = 0; // yes, a constant.
 				$wpec_ash->cache_results( $this->internal_name, array( $shipping_quotes ), $this->shipment ); //Update shipment cache.
 				return array( $shipping_quotes );
@@ -787,9 +796,9 @@ class ash_ups {
 		
 		// We do not want to spam UPS (and slow down our process) if we already
 		// have a shipping quote!
-		if ( count( $cache['rate_table'] ) >= 1 ) //$cache['rate_table'] could be array(0)..
+		if ( count( $cache['rate_table'] ) >= 1 ) { //$cache['rate_table'] could be array(0)..
 			return $cache['rate_table'];
-
+		}
 		// Final rate table
 		$rate_table = array();
 
@@ -823,10 +832,12 @@ class ash_ups {
 		$args['shipf_ccode'] = $args['shipr_ccode'];
 		$args['shipf_pcode'] = $args['shipr_pcode'];
 		$args['units'] = "LBS";
-		$args['shipper']	 = $this->internal_name;
-		$args = apply_filters( 'wpsc_shipment_data', $args, $this->shipment );
 
 		$args["cart_total"] = $wpsc_cart->calculate_subtotal( true );
+		$args = apply_filters( 'wpsc_shipment_data', $args, $this->shipment );
+		if ( isset( $args['stop'] ) ) { //Do not get rates.
+			return array();
+		}
 		// Build the XML request
 		$request = $this->_buildRateRequest( $args );
 		// Now that we have the message to send ... Send it!
@@ -838,7 +849,7 @@ class ash_ups {
 		if ( $quotes != false ) {
 			$rate_table = apply_filters( 'wpsc_rates_table', $this->_formatTable( $quotes, $args['currency'] ), $args, $this->shipment );
 		} else {
-			if ( $wpsc_ups_settings['upsenvironment'] == '1' ) {
+			if ( isset( $wpsc_ups_settings['upsenvironment'] ) ) {
 				echo "<strong>:: GetQuote ::DEBUG OUTPUT::</strong><br />";
 				echo "Arguments sent to UPS";
 				print_r( $args );
@@ -851,8 +862,9 @@ class ash_ups {
 			}
 		}
 		//Avoid trying getting rates again and again when the stored zipcode is incorrect.
-		if( count( $rate_table ) == 0 )
+		if ( count( $rate_table ) == 0 ) {
 			wpsc_update_customer_meta( 'shipping_zip', '' );
+		}
 		$wpec_ash->cache_results(
 			$this->internal_name,
 			$rate_table,
