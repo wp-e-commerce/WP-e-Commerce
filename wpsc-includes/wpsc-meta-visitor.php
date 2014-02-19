@@ -27,6 +27,7 @@ function _wpsc_visitor_database_ready() {
 
 	return $visitor_database_ready;
 }
+
 /**
  * Return the internal visitor meta key for meta values internal to WPEC
  * This helps distinguish private meta added by WPEC from public meta or
