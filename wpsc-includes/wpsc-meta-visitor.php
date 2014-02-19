@@ -274,6 +274,7 @@ function wpsc_set_visitor_last_active( $visitor_id, $timestamp = null ) {
 		}
 	} else {
 		wpsc_set_visitor_expiration( $visitor_id, 2 * DAY_IN_SECONDS );
+		$last_active = date( 'Y-m-d H:i:s' , $timestamp );
 	}
 
 	return $last_active;
