@@ -111,10 +111,6 @@ function _wpsc_gateway_name_filter( $display_name, $gateway ) {
 				$display_name =  __( 'Manual Payment', 'wpsc' );
 				break;
 
-			case 'google_checkout':
-				$display_name = __( 'Google Wallet', 'wpsc' );
-				break;
-
 			case 'credit_card':
 			default:
 				$display_name = __( 'Credit Card', 'wpsc' );
