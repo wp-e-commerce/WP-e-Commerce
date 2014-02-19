@@ -234,8 +234,12 @@ class WP_eCommerce {
 		// Setup the core WPEC globals
 		wpsc_core_setup_globals();
 
-		// Setup the customer ID just in case to make sure it's set up correctly
-		add_action( 'init', '_wpsc_action_setup_customer', 1 );
+		// Setup the customer ID as soon as the query variables can be checked
+		// to be sure we aren't handling a 404 or doing feeds
+		add_action( 'wp', '_wpsc_action_setup_customer', 1 );
+
+		// WPEC is ready to use as soon as WordPress and customer is setup and loaded
+		add_action( 'wp', 'fire_wpsc_ready_action', PHP_INT_MAX );
 
 		// Load the purchase log statuses
 		wpsc_core_load_purchase_log_statuses();
@@ -251,6 +255,11 @@ class WP_eCommerce {
 
 		// WPEC is fully loaded
 		do_action( 'wpsc_loaded' );
+	}
+
+	function fire_wpsc_ready_action() {
+		// WPEC is ready to use as soon as WordPress and customer is setup and loaded
+		do_action( 'wpsc_ready' );
 	}
 
 	/**

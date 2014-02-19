@@ -15,6 +15,20 @@ add_action( 'wp_login'                   , '_wpsc_action_setup_customer'     );
  * @since  3.8.13
  */
 function _wpsc_action_setup_customer() {
+
+	/////////////////////////////////////////////////////////////////////////
+	// Setting up the customer happens after WPEC is initialized AND after
+	// WordPress has loaded.  The reason for this is that the conditional
+	// query tags are checked to see if the request is a 404 or a feed or
+	// some other request that should not create a visitor profile.  The
+	// conditional query tags are not available until after the
+	// posts_selection hook is processed.  The 'wp' action is fired after
+	// the 'posts_selection' hook.
+	/////////////////////////////////////////////////////////////////////////
+	if ( ! did_action( 'wp' ) ) {
+		_wpsc_doing_it_wrong( __FUNCTION, __( 'Customer cannot be reliably setup until at least the "wp" hook as been fired.', 'wpsc' ), '3.8.14' );
+	}
+
 	// if the customer cookie is invalid, unset it
 	$visitor_id_from_cookie = _wpsc_validate_customer_cookie();
 
@@ -336,6 +350,20 @@ function _wpsc_is_bot_user() {
 	$is_bot = false;
 
 	if ( ! is_user_logged_in() ) {
+
+		if ( ! did_action( 'wp' ) ) {
+			_wpsc_doing_it_wrong( __FUNCTION, __( 'Customer cannot be reliably setup until at least the "wp" hook as been fired.', 'wpsc' ), '3.8.14' );
+		}
+
+		if ( did_action( 'posts_selection' ) ) {
+			if ( is_feed() ) {
+				$is_bot = true;
+			}
+
+			if ( is_404() ) {
+				$is_bot = true;
+			}
+		}
 
 		if ( strpos( $_SERVER['REQUEST_URI'], '?wpsc_action=rss' ) ) {
 			$is_bot = true;
