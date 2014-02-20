@@ -17,13 +17,42 @@
 // happens before any other processing takes place.  This request should create the unique 
 // customer identifier before it is required by other processing.
 //
-if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {	
-	var wpsc_http = new XMLHttpRequest();
-	wpsc_http.open("POST",wpsc_ajax.ajaxurl + "?action=wpsc_validate_customer", true);
-	wpsc_http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-	wpsc_http.timeout = 1000;
-	wpsc_http.send();	
+
+// a global variable used to hold the current users visitor id, 
+// if you are going to user it always check to be sure it is not false
+var wpsc_visitor_id = false;
+
+if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
+	if ( ! ( document.cookie.indexOf("wpsc_attempted_validate") >= 0 ) ) {	
+		// create a cookie to signal that we have attempted validation.  If we find the cookie is set
+		// we don't re-attempt validation.  This means will only try to validate once and not slow down
+		// subsequent page views. Because we are only going to try this once, we can use a slightly 
+		// longer timneout to give the request a higher probability to succeed on slower hosts.
+		// 
+		// The lack of expiration date means the cookie will be deleted when the browser
+		// is closed, so the next time the visitor attempts to access the site 
+		var now = new Date();
+		document.cookie="wpsc_attempted_validate="+now;
+		var wpsc_http = new XMLHttpRequest();
+		wpsc_http.overrideMimeType("application/json");  
+		wpsc_http.open("POST",wpsc_ajax.ajaxurl + "?action=wpsc_validate_customer", true);
+		wpsc_http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+		wpsc_http.timeout = 5000; // 5 seconds, it should be much faster than this
+		
+		wpsc_http.onload  = function(request, url) { 
+			if (wpsc_http.status == 200) {  
+				alert( wpsc_http.responseText );
+				 var result = JSON.parse( wpsc_http.responseText );
+				 if ( result.valid && result.id ) {
+					 wpsc_visitor_id = result.id;
+				 }
+			}
+		};  
+		
+		wpsc_http.send();
+	}
 }
+
 // end of setting up the WPEC customer identifier
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
