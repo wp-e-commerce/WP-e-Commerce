@@ -21,8 +21,6 @@ $nzshpcrt_gateways[$num] = array(
 	),
 
 	'form' => 'form_testmode',
-
-	// this may be legacy, not yet decided
 	'internalname' => 'wpsc_merchant_testmode',
 );
 

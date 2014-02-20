@@ -67,7 +67,12 @@ function wpsc_gateway_image_url(){
 
 /**
  * Return the current gateway's name.
- * @return string The current gateway's name.
+ * 
+ * @return  string  The current gateway's name.
+ *
+ * @uses  $wpsc_gateway              Global array of gateways.
+ * @uses  wpsc_show_gateway_image()  Checks if gateway has an image.
+ * @uses  apply_filters()            Calls 'wpsc_gateway_name'.
  */
 function wpsc_gateway_name() {
 	global $wpsc_gateway;
@@ -75,36 +80,55 @@ function wpsc_gateway_name() {
 
 	$payment_gateway_names = get_option( 'payment_gateway_names' );
 
-	if ( isset( $payment_gateway_names[$wpsc_gateway->gateway['internalname']] ) && ( $payment_gateway_names[$wpsc_gateway->gateway['internalname']] != '' || wpsc_show_gateway_image() ) ) {
-		$display_name = $payment_gateway_names[$wpsc_gateway->gateway['internalname']];
-	} elseif ( isset( $wpsc_gateway->gateway['payment_type'] ) ) {
-		switch ( $wpsc_gateway->gateway['payment_type'] ) {
-			case "paypal":
-			case "paypal_pro":
-			case "wpsc_merchant_paypal_pro";
+	// Use gateway internal name if set
+	if ( isset( $payment_gateway_names[ $wpsc_gateway->gateway['internalname'] ] ) && ( $payment_gateway_names[ $wpsc_gateway->gateway['internalname'] ] != '' || wpsc_show_gateway_image() ) ) {
+		$display_name = $payment_gateway_names[ $wpsc_gateway->gateway['internalname'] ];
+	}
+
+	$display_name = apply_filters( 'wpsc_gateway_name', $display_name, $wpsc_gateway->gateway );
+
+	// If no display name or image, use default
+	if ( $display_name == '' && ! wpsc_show_gateway_image() ) {
+		$display_name = __( 'Credit Card', 'wpsc' );
+	}
+
+	return $display_name;
+}
+
+/**
+ * WPSC Default Gateway Name Filter
+ *
+ * This filter overrides the display name of a gateway
+ *
+ * @param   string  $display_name  Gateway display name.
+ * @param   array   $gateway       Gateway details.
+ * @return  string                 Filtered gateway name.
+ *
+ * @uses  wpsc_show_gateway_image()  Checks if gateway has an image.
+ */
+function _wpsc_gateway_name_filter( $display_name, $gateway ) {
+	if ( empty( $display_name ) && isset( $gateway['payment_type'] ) && ! wpsc_show_gateway_image() ) {
+		switch ( $gateway['payment_type'] ) {
+			case 'paypal':
+			case 'paypal_pro':
+			case 'wpsc_merchant_paypal_pro';
 				$display_name = __( 'PayPal', 'wpsc' );
 				break;
 
-			case "manual_payment":
+			case 'manual_payment':
 				$display_name =  __( 'Manual Payment', 'wpsc' );
 				break;
 
-			case "google_checkout":
-				$display_name = __( 'Google Wallet', 'wpsc' );
-				break;
-
-			case "credit_card":
+			case 'credit_card':
 			default:
 				$display_name = __( 'Credit Card', 'wpsc' );
 				break;
 		}
 	}
-	if ( $display_name == '' && !wpsc_show_gateway_image() ) {
-		$display_name = __( 'Credit Card', 'wpsc' );
-	}
 	return $display_name;
 }
 
+add_filter( 'wpsc_gateway_name', '_wpsc_gateway_name_filter', 10, 2 );
 
 /**
  * Return the current gateway's internal name

@@ -39,8 +39,8 @@ class WPSC_Visitor {
 					$property_name = '_' . $meta_key;
 					$this->$property_name = $meta_value[0];
 				} else {
-					$property_name = substr( $meta_key, strlen( 'cart.' ) );
-					$this->_cart->$property_name = $meta_value;
+					$property_name = substr( $meta_key, strlen( '_wpsc_cart.' ) );
+					$this->_cart->$property_name = $meta_value[0];
 				}
 			}
 		}
