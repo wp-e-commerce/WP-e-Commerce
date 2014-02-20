@@ -51,7 +51,7 @@ function wpsc_install() {
 
 	// All code to add new database tables and columns must be above here
 	$wpsc_version       = get_option( 'wpsc_version', 0 );
-	$wpsc_minor_version = get_option( 'wspc_minor_version', 0 );
+	$wpsc_minor_version = get_option( 'wpsc_minor_version', 0 );
 
 	if ( $wpsc_version === false ) {
 		add_option( 'wpsc_version', WPSC_VERSION, '', 'yes' );
