@@ -44,6 +44,8 @@ class WPSC_Visitor {
 				}
 			}
 		}
+
+		$this->_cart = wpsc_get_visitor_cart( $visitor_id );
 	}
 
 	/**
