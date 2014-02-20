@@ -130,9 +130,9 @@ if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 
 					if ( ! ($wpsc_user_cart instanceof wpsc_cart) ) {
 						$wpsc_user_cart = new wpsc_cart();
+					} else {
+						continue;
 					}
-
-					wpsc_update_visitor_cart( $user_id , $wpsc_user_cart );
 				}
 			}
 
