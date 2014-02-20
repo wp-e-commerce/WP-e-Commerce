@@ -1,16 +1,21 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Setting up the WPEC customer identifier
+//
 // When WPEC generates a page it sets a 'customer cookie' into the browser.  This cookie is a 
-// persisitant identifier that connects a user's session to thier cart or other profile data a
+// persistent identifier that connects a user's session to their cart or other profile data a
 // store may need to work correctly.  
 //
-// When page caching is in place WPEC does not get the cookie because the page is served without
-// the overhead of computing the page contents. This means that the first GET/POST request, 
-// including requests using AJAX will initialize the customer identifier
+// When page caching or a CDN is in place WPEC does not get to set the cookie because 
+// the page is served without the overhead of computing the page contents. 
+// This means that the first GET/POST request, including requests using AJAX are required to
+// initialize the customer identifier
 // 
 // Because browsers may execute these requests in parallel the probability of multiple unique
-// cookies being set is very high. This means that WPEC has reserved multiple unique profiles
-// on the back-end, creating a potentially resource intensive and wasteful situation.
+// cookies being set is very high. This means that in the absence of the logic below WPEC would 
+// have to create multiple unique profiles as each of the parallel requests are executed.  This 
+// can cause data when one request uses one profile and the other request uses a different profile.
+// It could also cause performance issues on the back-end, and create a potentially resource 
+// intensive and wasteful situation.
 //
 // The mitigation for this issue is to look for the customer identifier when this script first
 // runs.  If the identifier is not found, initiate a very quick synchronous AJAX request.  This
