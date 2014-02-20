@@ -78,7 +78,7 @@ class WPSC_Country {
 
 		wp_cache_set( 'all', $list, 'wpsc_countries' );
 
-		return $list;
+		return apply_filters( 'wpsc_country_get_all_countries', $list );
 	}
 
 	public static function get_cache( $value = null, $col = 'id' ) {
