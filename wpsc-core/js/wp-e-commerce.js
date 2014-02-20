@@ -41,7 +41,6 @@ if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
 		
 		wpsc_http.onload  = function(request, url) { 
 			if (wpsc_http.status == 200) {  
-				alert( wpsc_http.responseText );
 				 var result = JSON.parse( wpsc_http.responseText );
 				 if ( result.valid && result.id ) {
 					 wpsc_visitor_id = result.id;
