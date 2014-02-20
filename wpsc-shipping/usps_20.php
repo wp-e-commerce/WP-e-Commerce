@@ -125,18 +125,18 @@ class ash_usps {
 		$services = array(
 			// "Online Only *"=>"ONLINE",
 			// "All Services"=>"ALL",
-			__( "Parcel Post", 'wpsc' ) => "STANDARD POST",
-			// "Media Mail"=>"MEDIA",
 			// "Library Mail"=>"LIBRARY",
 			__( "First Class", 'wpsc' ) => "FIRST CLASS",
+			__( "Standard Post *", 'wpsc' ) => "STANDARD POST",
+			// "First Class Metered"=>"FIRST CLASS METERED",
 			// "First Class Commercial"=>"FIRST CLASS COMMERCIAL",
 			// "First Class Hold For Pickup Commercial"=>"FIRST CLASS HFP COMMERCIAL",
-			__( "Priority Mail", 'wpsc' ) => "PRIORITY",
+			__( "Priority Mail *", 'wpsc' ) => "PRIORITY",
 			// "Priority Commercial"=>"PRIORITY COMMERCIAL",
 			// "Priority CPP"=>"PRIORITY CPP",
 			// "Priority Hold For Pickup Commercial"=>"PRIORITY HFP COMMERCIAL",
 			// "Priority Hold For Pickup CPP"=>"PRIORITY HFP CPP",
-			__( "Express Mail", 'wpsc' ) => "PRIORITY EXPRESS",
+			__( "Priority Express", 'wpsc' ) => "PRIORITY EXPRESS",
 			// "Priority Express Commerical"=>"PRIORITY EXPRESS COMMERCIAL",
 			// "Priority Express CPP"=>"PRIORITY EXPRESS CPP",
 			// "Priority Express SH"=>"PRIORITY EXPRESS SH",
@@ -144,6 +144,7 @@ class ash_usps {
 			// "Priority Express Hold for Pickup"=> "PRIORITY EXPRESS HFP",
 			// "Priority Express Hold for Pickup Commercial"=>"PRIORITY EXPRESS HFP COMMERCIAL"
 			// "Priority Express Hold for Pickup CPP"=>"PRIORITY EXPRESS HFP CPP"
+			__( "Media Mail **", 'wpsc' ) => "MEDIA" ,
 		);
 		$this->services = $services;
 
@@ -241,6 +242,8 @@ class ash_usps {
 				 		<br />
 					<?php endforeach; ?>
 				</div>
+				<p class='description'><?php _e( "* Standard Post should never be used as the sole USPS mail service provided. It's only available for destinations located far from your base zipcode. In this case, and to provide shipping coverage for locations closer to your base zipcode, the Priority Mail service must be selected too.", 'wpsc' ); ?></p>
+				<p class='description'><?php printf( __("** Media Mail must only be used for books, printed material and sound or video recordings (CDs, DVDs, Blu-rays and other, excluding games). It may be subjected to postal inspection to enforce this. For more information, please consult the <a href='%s' target='_blank'>Media Mail's Rules & Restrictions web page.</a>", 'wpsc' ), 'https://www.usps.com/ship/media-mail.htm' ); ?></p>
 			</td>
 		</tr>
 
@@ -977,7 +980,7 @@ class ash_usps {
 		if ( ! empty( $data["dest_zipcode"] ) ) {
 			wpsc_update_customer_meta( 'shipping_zip', $data["dest_zipcode"] );
 		}
-		if ( empty ( $data["dest_zipcode"] ) ) {
+		if ( empty ( $data["dest_zipcode"] ) && $data["dest_country"] == "USA" ) {
 			// We cannot get a quote without a zip code so might as well return!
 			return array();
 		}
@@ -1038,6 +1041,14 @@ class ash_usps {
 		$data["mail_type"]    = ( ! empty( $settings["intl_pkg"] ) ) ? $settings["intl_pkg"] : "Package";
 		$data["base_zipcode"] = get_option( "base_zipcode" );
 		$data["services"]     = ( ! empty( $settings["services"] ) ) ? $settings["services"] : array( "STANDARD POST", "PRIORITY", "PRIORITY EXPRESS", "FIRST CLASS" );
+		foreach( $data["services"] as $id => $service ) {
+			if ( $service == 'PARCEL' ) {
+				$data["services"][$id] = 'STANDARD POST'; 
+			}
+			if ( $service == 'EXPRESS' ) {
+				$data["services"][$id] = 'PRIORITY EXPRESS';
+			}
+		}
 		$data["user_id"]      = $settings["id"];
 		$data["value"] 		  = $wpsc_cart->calculate_subtotal( true ); //Required by $this->_build_intl_shipment.
 		$data = apply_filters( 'wpsc_shipment_data', $data, $this->shipment );

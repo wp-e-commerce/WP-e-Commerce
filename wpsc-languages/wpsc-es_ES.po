@@ -884,7 +884,7 @@ msgid "All Markets"
 msgstr "Todos los Mercados"
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:443
-msgid "I agree to The <a class='thickbox' target='_blank' href='%s' class='termsandconds'>Terms and Conditions</a>"
+msgid "I agree to the <a class='thickbox' target='_blank' href='%s' class='termsandconds'>Terms and Conditions</a>"
 msgstr "Yo acepto los <a class='thickbox' target='_blank' href='%s' class='termsandconds'>Términos y Condiciones</a>"
 
 #: wpsc-admin/display-items.page.php:143
@@ -4093,6 +4093,10 @@ msgstr "Sin Imagen"
 msgid "Enter coupon code"
 msgstr "Introduzca el código del cupón"
 
+#: wpsc-theme/wpsc-shopping_cart_page.php:159
+msgid " - Choose a Shipping Rate"
+msgstr " - Elija Tarifa de Envío"
+
 #: wpsc-theme/wpsc-shopping_cart_page.php:453
 msgid "Review and purchase"
 msgstr "Revisar y comprar"
@@ -5474,6 +5478,10 @@ msgstr "Cant."
 msgid "Postage &amp; Tax "
 msgstr "Envío &amp; Impuesto "
 
+#: wpsc-includes/display.functions.php:153
+msgid "Go to Checkout"
+msgstr "Validar y Pagar Compra"
+
 #: wpsc-theme/wpsc-cart_widget.php:76
 msgid "Your shopping cart is empty"
 msgstr "Su carro de la compra está vacío"
@@ -5605,6 +5613,11 @@ msgstr "Título:"
 #: wpsc-widgets/category_widget.php:17
 msgid "Product Grouping Widget"
 msgstr "Widget Agrupación de Productos"
+
+#: wpsc-widgets/category_widget.php:19
+#: wpsc-widgets/category_widget.php:34
+msgid "Product Categories"
+msgstr "Categorías de Producto"
 
 #: wpsc-widgets/latest_product_widget.php:16
 #: wpsc-widgets/latest_product_widget.php:31
@@ -6462,6 +6475,10 @@ msgstr "Clientes que compraron por este producto también compraron"
 #: wpsc-includes/display.functions.php:134
 msgid "Updating"
 msgstr "Actualizando"
+
+#: wpsc-includes/display.functions.php:154
+msgid "Continue Shopping"
+msgstr "Continuar Comprando"
 
 #: wpsc-admin/ajax-and-init.php:1091
 msgid "Choose a downloadable file for this product:"
@@ -7353,36 +7370,22 @@ msgstr "<strong>ERROR</strong>: No fue posible realizar el registro... por favor
 msgid "This download is no longer valid, Please contact the site administrator for more information."
 msgstr "Esta descarga ya no está disponible. Por favor pongase en contacto con el administrador del sitio para más información."
 
-#: wpsc-core/wpsc-functions:379
-msgid "Product Files"
-msgstr "Archivos de Producto"
-
-#: wpsc-core/wpsc-functions:380
+#: wpsc-core/wpsc-functions:329
 msgid "Product File"
 msgstr "Archivo de Producto"
 
-#: wpsc-core/wpsc-functions:410
+#: wpsc-core/wpsc-functions:328
+msgid "Product Files"
+msgstr "Archivos de Productos"
+
+#: wpsc-core/wpsc-functions:359
 msgctxt "taxonomy general name"
 msgid "Product Categories"
 msgstr "Categorías de Producto"
 
-#: wpsc-widgets/category_widget.php:19
-#: wpsc-widgets/category_widget.php:34
-#: wpsc-core/wpsc-functions:410
-msgid "Product Categories"
-msgstr "Categorías de Producto"
-
-#: wpsc-core/wpsc-functions:443
+#: wpsc-core/wpsc-functions:392
 msgid "Add New Variation"
 msgstr "Añadir Nueva Variante"
-
-#: wpsc-includes/display.functions.php:153
-msgid "Go to Checkout"
-msgstr "Validar y Pagar Compra"
-
-#: wpsc-includes/display.functions.php:154
-msgid "Continue Shopping"
-msgstr "Continuar Comprando"
 
 #: wpsc-includes/product-template.php:1928
 msgid "Old Price: %s"
@@ -7411,8 +7414,3 @@ msgstr "Calcular"
 #: wpsc-theme/wpsc-shopping_cart_page.php:134
 msgid "Your Zipcode"
 msgstr "Su C. Postal"
-
-#: wpsc-theme/wpsc-shopping_cart_page.php:159
-msgid " - Choose a Shipping Rate"
-msgstr " - Elija Tarifa de Envío"
-

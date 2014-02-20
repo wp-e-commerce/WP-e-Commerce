@@ -749,7 +749,7 @@ class ash_ups {
 		if ( ! empty ( $args['dest_pcode'] ) ) {
 			wpsc_update_customer_meta( 'shipping_zip', $args['dest_pcode'] );
 		}
-		if ( empty ( $args['dest_pcode'] ) ) {
+		if ( empty ( $args['dest_pcode'] ) && $args['dest_ccode'] == "US" ) {
 			// We cannot get a quote without a zip code so might as well return!
 			return array();
 		}

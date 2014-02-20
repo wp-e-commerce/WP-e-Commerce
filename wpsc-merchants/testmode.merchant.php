@@ -23,7 +23,10 @@ $nzshpcrt_gateways[$num] = array(
 	'form' => 'form_testmode',
 	'internalname' => 'wpsc_merchant_testmode',
 );
-
+$image = apply_filters( 'wpsc_merchant_image', '', $nzshpcrt_gateways[$num]['internalname'] );
+if ( ! empty( $image ) ) {
+	$nzshpcrt_gateways[$num]['image'] = $image;
+}
 class wpsc_merchant_testmode extends wpsc_merchant {
 
 	var $name = '';
