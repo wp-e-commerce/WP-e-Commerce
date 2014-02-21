@@ -236,7 +236,7 @@ class WP_eCommerce {
 
 
 		// Are we doing AJAX or processing some other transaction
-		if ( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || isset( $_REQUEST['wpsc_action'] ) ) {
+		if (  _wpsc_doing_wpsc_ajax_request() ) {
 			// Setup the customer ID as soon as WP is initialized, no reason
 			// to wait for the query to be setup becuase we are doing AJAX and
 			// it will never happen because the WPEC AJAX handlers will finish

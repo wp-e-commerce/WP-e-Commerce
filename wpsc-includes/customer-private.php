@@ -25,7 +25,7 @@ function _wpsc_action_setup_customer() {
 	// posts_selection hook is processed.  The 'wp' action is fired after
 	// the 'posts_selection' hook.
 	/////////////////////////////////////////////////////////////////////////
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+	if ( _wpsc_doing_wpsc_ajax_request() ) {
 		if ( ! did_action( 'init' ) ) {
 			_wpsc_doing_it_wrong( __FUNCTION__, __( 'Customer cannot be reliably setup until at least the "init" hook as been fired during AJAX processing.', 'wpsc' ), '3.8.14' );
 		}
@@ -359,16 +359,20 @@ function _wpsc_merge_cart() {
  * Are we currently processing a non WPEC ajax request
  * @return boolean
  */
-function _wpsc_doing_non_wpsc_ajax_request() {
+function _wpsc_doing_wpsc_ajax_request() {
 
 	$doing_wpsc_ajax_request = false;
 
-	if ( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+	// if the wpsc_ajax_action is set, it's a WPEC AJAX request
+	if ( isset( $_REQUEST['wpsc_ajax_action'] ) ) {
+		$doing_wpsc_ajax_request = true;
+	}
 
-		// if the wpsc_ajax_action is set, it's a WPEC AJAX request
-		if ( isset( $_REQUEST['wpsc_ajax_action'] ) ) {
-			$doing_wpsc_ajax_request = true;
-		}
+	if ( isset( $_REQUEST['wpsc_update_quantity'] ) ) {
+		$doing_wpsc_ajax_request = true;
+	}
+
+	if ( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 
 		// if the wpsc_ajax_action is set, it's a WPEC AJAX request
 		if ( isset( $_REQUEST['action'] ) && ( strpos( $_REQUEST['action'], 'wpsc_' ) !== false ) ) {
@@ -381,7 +385,7 @@ function _wpsc_doing_non_wpsc_ajax_request() {
 		}
 	}
 
-	return ! $doing_wpsc_ajax_request;
+	return $doing_wpsc_ajax_request;
 }
 
 /**
@@ -414,7 +418,7 @@ function _wpsc_is_bot_user() {
 		}
 
 		// check for non WPEC ajax request, no reason to create a visitor profile if this is the case
-		if ( ! $is_bot && _wpsc_doing_non_wpsc_ajax_request() ) {
+		if ( ! $is_bot && ! _wpsc_doing_wpsc_ajax_request() ) {
 			$is_bot = true;
 		}
 
