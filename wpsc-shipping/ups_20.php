@@ -746,10 +746,13 @@ class ash_ups {
 		if ( in_array( $args['dest_pcode'], array( __( 'Your Zipcode', 'wpsc' ), 'YOURZIPCODE' ) ) ) {
 			$args['dest_pcode'] = '';
 		}
-		if ( ! empty ( $args['dest_pcode'] ) ) {
+		if ( ! empty( $args['dest_pcode'] ) ) {
 			wpsc_update_customer_meta( 'shipping_zip', $args['dest_pcode'] );
 		}
-		if ( empty ( $args['dest_pcode'] ) && $args['dest_ccode'] == "US" ) {
+		if ( ! is_object( $wpec_ash_tools ) ) {
+			$wpec_ash_tools = new ASHTools();
+		}
+		if ( empty( $args['dest_pcode'] ) && $wpec_ash_tools->needs_post_code( $args['dest_ccode'] ) ) {
 			// We cannot get a quote without a zip code so might as well return!
 			return array();
 		}

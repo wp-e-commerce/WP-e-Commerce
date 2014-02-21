@@ -980,7 +980,10 @@ class ash_usps {
 		if ( ! empty( $data["dest_zipcode"] ) ) {
 			wpsc_update_customer_meta( 'shipping_zip', $data["dest_zipcode"] );
 		}
-		if ( empty ( $data["dest_zipcode"] ) && $data["dest_country"] == "USA" ) {
+		if ( ! is_object( $wpec_ash_tools ) ) {
+			$wpec_ash_tools = new ASHTools();
+		}
+		if ( empty( $data["dest_zipcode"] ) && $wpec_ash_tools->needs_post_code( $data["dest_country"] ) ) {
 			// We cannot get a quote without a zip code so might as well return!
 			return array();
 		}
@@ -1000,9 +1003,6 @@ class ash_usps {
 			$data['dest_state'] = $dest_state;
 		} else {
 			$data['dest_state'] = "";
-		}
-		if ( ! is_object( $wpec_ash_tools ) ) {
-			$wpec_ash_tools = new ASHTools();
 		}
 		$data["dest_country"] = $wpec_ash_tools->get_full_country( $data["dest_country"] );
 		$data["dest_country"] = $this->_update_country( $data["dest_country"] );

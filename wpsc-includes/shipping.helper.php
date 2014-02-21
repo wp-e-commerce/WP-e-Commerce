@@ -241,6 +241,84 @@ class ASHTools{
                         );
         return $address;
     }
+
+    /**
+     * Checks if the destination country requires a postal code
+     * 
+     *
+     * @since 2.0.0
+     * @param string $session
+     * @return bool
+     */
+    function needs_post_code( $iso_code ){
+
+    	$no_post_code['AO'] = "Angola";
+    	$no_post_code['AG'] = "Antigua and Barbuda";
+    	$no_post_code['AW'] = "Aruba";
+    	$no_post_code['BS'] = "Bahamas";
+    	$no_post_code['BZ'] = "Belize";
+    	$no_post_code['BJ'] = "Benin";
+    	$no_post_code['BQ'] = "Bonaire, Sint Eustatius and Saba";
+    	$no_post_code['BW'] = "Botswana";
+    	$no_post_code['BF'] = "Burkina Faso";
+    	$no_post_code['BI'] = "Burundi";
+    	$no_post_code['CM'] = "Cameroon";
+    	$no_post_code['CF'] = "Central African Republic";
+    	$no_post_code['KM'] = "Comoros";
+    	$no_post_code['CG'] = "Congo (Brazzaville)";
+    	$no_post_code['CD'] = "Congo, Democratic Republic";
+    	$no_post_code['CK'] = "Cook Islands";
+    	$no_post_code['CI'] = "Côte d'Ivoire (Ivory Coast)";
+    	$no_post_code['CW'] = "Curaçao";
+    	$no_post_code['DJ'] = "Djibouti";
+    	$no_post_code['DM'] = "Dominica";
+    	$no_post_code['TL'] = "East Timor";
+    	$no_post_code['GQ'] = "Equatorial Guinea";
+    	$no_post_code['ER'] = "Eritrea";
+    	$no_post_code['FJ'] = "Fiji";
+    	$no_post_code['TF'] = "French Southern and Antarctic Territories";
+    	$no_post_code['GM'] = "Gambia";
+    	$no_post_code['GH'] = "Ghana";
+    	$no_post_code['GD'] = "Grenada";
+    	$no_post_code['GN'] = "Guinea";
+    	$no_post_code['GY'] = "Guyana";
+    	$no_post_code['HK'] = "Hong Kong";
+    	$no_post_code['IE'] = "Ireland";
+    	$no_post_code['JM'] = "Jamaica";
+    	$no_post_code['KI'] = "Kiribati";
+    	$no_post_code['KP'] = "Korea, North";
+    	$no_post_code['MO'] = "Macau";
+    	$no_post_code['MW'] = "Malawi";
+    	$no_post_code['ML'] = "Mali";
+    	$no_post_code['MR'] = "Mauritania";
+    	$no_post_code['MU'] = "Mauritius";
+    	$no_post_code['MS'] = "Montserrat";
+    	$no_post_code['NR'] = "Nauru";
+    	$no_post_code['NU'] = "Niue";
+    	$no_post_code['QA'] = "Qatar";
+    	$no_post_code['KN'] = "Saint Kitts and Nevis";
+    	$no_post_code['LC'] = "Saint Lucia";
+    	$no_post_code['ST'] = "Sao Tome and Principe";
+    	$no_post_code['SC'] = "Seychelles";
+    	$no_post_code['SX'] = "Sint Maarten";
+    	$no_post_code['SL'] = "Sierra Leone";
+    	$no_post_code['SB'] = "Solomon Islands";
+    	$no_post_code['SO'] = "Somalia";
+    	$no_post_code['SR'] = "Suriname";
+    	$no_post_code['SY'] = "Syria";
+    	$no_post_code['TZ'] = "Tanzania";
+    	$no_post_code['TG'] = "Togo";
+    	$no_post_code['TK'] = "Tokelau";
+    	$no_post_code['TO'] = "Tonga";
+    	$no_post_code['TV'] = "Tuvalu";
+    	$no_post_code['UG'] = "Uganda";
+    	$no_post_code['AE'] = "United Arab Emirates";
+    	$no_post_code['VU'] = "Vanuatu";
+    	$no_post_code['YE'] = "Yemen";
+    	$no_post_code['ZW'] = "Zimbabwe";
+
+    	return ( ! isset( $no_post_code[$iso_code] ) );
+    }
 }
 
 /**
