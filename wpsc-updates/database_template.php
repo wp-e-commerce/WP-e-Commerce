@@ -244,13 +244,13 @@ $wpsc_database_template[$table_name]['actions']['after']['all'] = '_wpsc_meta_mi
 $table_name = $wpdb->wpsc_visitors;
 $wpsc_database_template[$table_name]['columns']['id'] = 'bigint(20) unsigned NOT NULL AUTO_INCREMENT ';
 $wpsc_database_template[$table_name]['columns']['user_id'] = 'bigint(20) unsigned DEFAULT NULL ';
-$wpsc_database_template[$table_name]['columns']['last_active'] = 'timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP';
-$wpsc_database_template[$table_name]['columns']['expires'] = 'DEFAULT NULL';
-$wpsc_database_template[$table_name]['columns']['created'] = 'timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP';
+$wpsc_database_template[$table_name]['columns']['last_active'] = 'timestamp NULL DEFAULT NULL ';
+$wpsc_database_template[$table_name]['columns']['expires'] = 'timestamp NULL DEFAULT NULL ';
+$wpsc_database_template[$table_name]['columns']['created'] = 'timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ';
 $wpsc_database_template[$table_name]['indexes']['PRIMARY'] = 'PRIMARY KEY  ( `id` ) ';
 $wpsc_database_template[$table_name]['indexes']['user_id'] = 'KEY `user_id` ( `user_id` ) ';
 $wpsc_database_template[$table_name]['indexes']['last_active'] = 'KEY last_active ( `last_active` ) ';
-$wpsc_database_template[$table_name]['indexes']['exipres'] = 'KEY last_active ( `last_active` ) ';
+$wpsc_database_template[$table_name]['indexes']['expires'] = 'KEY exipres ( `expires` ) ';
 $wpsc_database_template[$table_name]['indexes']['created'] = 'KEY created ( `created` ) ';
 $wpsc_database_template[$table_name]['actions']['after']['all'] = '_wpsc_create_well_known_users';
 

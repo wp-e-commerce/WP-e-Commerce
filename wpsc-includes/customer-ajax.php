@@ -14,7 +14,7 @@
 function _wpsc_doing_customer_meta_ajax( $action = '' ) {
 
 	$result = ( defined( 'DOING_AJAX' ) && DOING_AJAX  && isset( $_REQUEST['action'] )
-			&& ( strpos( $_REQUEST['action'], '_customer_meta' ) !== false ) );
+			&& ( strpos( $_REQUEST['action'], 'wpsc_' ) === 0 ) );
 
 	if ( $result && ! empty( $action ) ) {
 		$result = $_REQUEST['action'] == $action;
@@ -32,7 +32,8 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 	 */
 	function wpsc_validate_customer_ajax() {
 		// most of the validation should be done by the WPEC initialization, just return the current customer values
-		$response = array( 'valid' => _wpsc_validate_customer_cookie(), 'id' => wpsc_get_current_customer_id() );
+		$response = array( 'valid' => (_wpsc_validate_customer_cookie() !== false), 'id' => wpsc_get_current_customer_id() );
+		$response = apply_filters( '_wpsc_validate_customer_ajax', $response );
 		$response = json_encode( $response );
 		echo $response;
 		die();

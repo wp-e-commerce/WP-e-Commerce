@@ -209,7 +209,9 @@ function wpsc_get_customer_cart( $id = false  ) {
 		$id = wpsc_get_current_customer_id();
 	}
 
-	return wpsc_get_visitor_cart( $id );
+	$cart = wpsc_get_visitor_cart( $id );
+
+	return $cart;
 }
 
 

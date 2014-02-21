@@ -234,10 +234,12 @@ class WP_eCommerce {
 		// Setup the core WPEC globals
 		wpsc_core_setup_globals();
 
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+
+		// Are we doing AJAX or processing some other transaction
+		if ( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || isset( $_REQUEST['wpsc_action'] ) ) {
 			// Setup the customer ID as soon as WP is initialized, no reason
 			// to wait for the query to be setup becuase we are doing AJAX and
-			// it will nexver happen because the WPEC AJAX handlers will finish
+			// it will never happen because the WPEC AJAX handlers will finish
 			// before the WP hook could ever fire
 			add_action( 'init', '_wpsc_action_setup_customer', 1 );
 

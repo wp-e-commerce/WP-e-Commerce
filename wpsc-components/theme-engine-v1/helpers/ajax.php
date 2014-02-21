@@ -6,8 +6,9 @@ add_action( 'wp_ajax_nopriv_shipping_same_as_billing_update', 'wpsc_update_shipp
 if ( isset( $_GET['termsandconds'] ) && 'true' == $_GET['termsandconds'] )
 	add_action( 'init', 'wpsc_show_terms_and_conditions' );
 
-if ( isset( $_REQUEST['wpsc_action'] ) && ($_REQUEST['wpsc_action'] == 'submit_checkout') )
+if ( isset( $_REQUEST['wpsc_action'] ) && ($_REQUEST['wpsc_action'] == 'submit_checkout') ) {
 	add_action( 'init', 'wpsc_submit_checkout', 10, 0 );
+}
 
 if ( isset( $_REQUEST['wpsc_action'] ) && ($_REQUEST['wpsc_action'] == 'cart_html_page') )
 	add_action( 'init', 'wpsc_cart_html_page', 110 );

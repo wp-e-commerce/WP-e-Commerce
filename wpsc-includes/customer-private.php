@@ -25,8 +25,14 @@ function _wpsc_action_setup_customer() {
 	// posts_selection hook is processed.  The 'wp' action is fired after
 	// the 'posts_selection' hook.
 	/////////////////////////////////////////////////////////////////////////
-	if ( ! did_action( 'wp' ) ) {
-		_wpsc_doing_it_wrong( __FUNCTION__, __( 'Customer cannot be reliably setup until at least the "wp" hook as been fired.', 'wpsc' ), '3.8.14' );
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		if ( ! did_action( 'init' ) ) {
+			_wpsc_doing_it_wrong( __FUNCTION__, __( 'Customer cannot be reliably setup until at least the "init" hook as been fired during AJAX processing.', 'wpsc' ), '3.8.14' );
+		}
+	} else {
+		if ( ! did_action( 'wp' ) ) {
+			_wpsc_doing_it_wrong( __FUNCTION__, __( 'Customer cannot be reliably setup until at least the "wp" hook as been fired.', 'wpsc' ), '3.8.14' );
+		}
 	}
 
 	// if the customer cookie is invalid, unset it
@@ -365,12 +371,17 @@ function _wpsc_doing_non_wpsc_ajax_request() {
 		}
 
 		// if the wpsc_ajax_action is set, it's a WPEC AJAX request
-		if ( isset( $_REQUEST['action'] ) && ( strpos( $_REQUEST['action'], 'wpsc_' ) === 0 ) ) {
+		if ( isset( $_REQUEST['action'] ) && ( strpos( $_REQUEST['action'], 'wpsc_' ) !== false ) ) {
+			$doing_wpsc_ajax_request = true;
+		}
+
+		// this AJAX request is old and doesn't start with wpsc_
+		if ( isset( $_REQUEST['action'] ) && ( $_REQUEST['action'] == 'update_product_price' ) ) {
 			$doing_wpsc_ajax_request = true;
 		}
 	}
 
-	return $doing_wpsc_ajax_request;
+	return ! $doing_wpsc_ajax_request;
 }
 
 /**
@@ -382,6 +393,12 @@ function _wpsc_doing_non_wpsc_ajax_request() {
 function _wpsc_is_bot_user() {
 
 	$is_bot = false;
+
+	// if the customer cookie is invalid, unset it
+	$visitor_id_from_cookie = _wpsc_validate_customer_cookie();
+	if ( $visitor_id_from_cookie ) {
+		return $visitor_id_from_cookie === WPSC_BOT_VISITOR_ID;
+	}
 
 	if ( ! is_user_logged_in() ) {
 
@@ -397,7 +414,7 @@ function _wpsc_is_bot_user() {
 		}
 
 		// check for non WPEC ajax request, no reason to create a visitor profile if this is the case
-		if ( ! $is_bot && ! _wpsc_doing_non_wpsc_ajax_request() ) {
+		if ( ! $is_bot && _wpsc_doing_non_wpsc_ajax_request() ) {
 			$is_bot = true;
 		}
 

@@ -16,7 +16,7 @@ if ( ! function_exists( '_wpsc_create_cart_item_meta_table' ) ) {
 		global $wpdb;
 		global $charset_collate;
 
-		$sql = 'CREATE TABLE IF NOT EXISTS '. $wpdb->wpsc_cart_item_meta .' ('
+		$sql = 'CREATE TABLE IF NOT EXISTS '. $wpdb->wpsc_cart_itemmeta .' ('
 					.'meta_id bigint(20) unsigned NOT NULL AUTO_INCREMENT, '
 					.'wpsc_cart_item_id bigint(20) unsigned NOT NULL DEFAULT 0 , '
 					.'meta_key varchar(255) DEFAULT NULL, '
@@ -45,7 +45,7 @@ if ( ! function_exists( '_wpsc_create_cart_item_meta_table' ) ) {
 		global $wpdb;
 		global $charset_collate;
 
-		$sql = 'CREATE TABLE IF NOT EXISTS '. $wpdb->wpsc_purchase_meta .' ('
+		$sql = 'CREATE TABLE IF NOT EXISTS '. $wpdb->wpsc_purchasemeta .' ('
 					.'meta_id bigint(20) unsigned NOT NULL AUTO_INCREMENT, '
 					.'wpsc_purchase_id bigint(20) unsigned NOT NULL DEFAULT 0 , '
 					.'meta_key varchar(255) DEFAULT NULL, '

@@ -274,6 +274,7 @@ function wpsc_set_visitor_last_active( $visitor_id, $timestamp = null ) {
 		}
 	} else {
 		wpsc_set_visitor_expiration( $visitor_id, 2 * DAY_IN_SECONDS );
+		$last_active = date( 'Y-m-d H:i:s' , $timestamp );
 	}
 
 	return $last_active;
@@ -552,30 +553,55 @@ function wpsc_get_visitor_cart( $visitor_id ) {
 
 	$wpsc_cart = new wpsc_cart();
 
-	if ( ! _wpsc_visitor_database_ready() ) {
-		return $wpsc_cart;
-	}
+	if ( _wpsc_visitor_database_ready() ) {
 
-	foreach ( $wpsc_cart as $key => $value ) {
-		$cart_property_meta_key = _wpsc_get_visitor_meta_key( 'cart.' . $key );
-		$meta_value = wpsc_get_visitor_meta( $visitor_id, $cart_property_meta_key, true );
-		if ( ! empty( $meta_value ) ) {
+		foreach ( $wpsc_cart as $key => $value ) {
+			$cart_property_meta_key = _wpsc_get_visitor_meta_key( 'cart.' . $key );
+			$meta_value = wpsc_get_visitor_meta( $visitor_id, $cart_property_meta_key, true );
+			if ( ! empty( $meta_value ) ) {
 
-			switch ( $key ) {
-				case 'shipping_methods':
-				case 'shipping_quotes':
-				case 'cart_items':
-				case 'cart_item':
-					$meta_value = _wpsc_decode_meta_value( $meta_value );
-					break;
+				switch ( $key ) {
+					case 'shipping_methods':
+					case 'shipping_quotes':
+					case 'cart_items':
+						/////////////////////////////////////////////////////////////////////////////
+						// The type of the decoded value must be an array, we are going to check here
+						// just in case something went wrong during a data storage or perhaps the
+						// verion upgrade. If the datatype is not an array we will throw away the
+						// data to stop later functions from abending.
+						/////////////////////////////////////////////////////////////////////////////
+						$meta_value = _wpsc_decode_meta_value( $meta_value );
+						if ( ! is_array( $meta_value ) ) {
+							$meta_value = array();
+						}
 
-				default:
-					break;
+						break;
+
+
+					case 'cart_item':
+						/////////////////////////////////////////////////////////////////////////////
+						// The type of the decoded value must be an wpsc_cart_item, we are going to
+						// check here just in case something went wrong during a data storage or
+						// perhaps the verion upgrade. If the datatype is not an array we will
+						// throw away the data to stop later functions from abending.
+						/////////////////////////////////////////////////////////////////////////////
+						$meta_value = _wpsc_decode_meta_value( $meta_value );
+						if ( ! is_a( $meta_value, 'wpsc_cart_item' ) ) {
+							$meta_value = null;
+						}
+
+						break;
+
+					default:
+						break;
+				}
+
+				$wpsc_cart->$key = $meta_value;
 			}
-
-			$wpsc_cart->$key = $meta_value;
 		}
 	}
+
+	$wpsc_cart = apply_filters( 'wpsc_got_visitor_cart', $wpsc_cart, $visitor_id );
 
 	return $wpsc_cart;
 }
