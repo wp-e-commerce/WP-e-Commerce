@@ -107,6 +107,7 @@ function wpsc_purchlogitem_trackhistory() {
 function wpsc_purchlogs_get_weight( $id = '' ) {
 	global $purchlogitem;
 	$weight = 0.0;
+	$items_count = 0;
 
 	if ( empty( $id ) ) {
 		$thepurchlogitem = $purchlogitem;
@@ -114,6 +115,19 @@ function wpsc_purchlogs_get_weight( $id = '' ) {
 		$thepurchlogitem = new wpsc_purchaselogs_items( $id );
 	}
 
+	/** Filter wpsc_purchlogs_before_get_weight
+	 * Allow the weight to be overridden, can be used to persistantly save weight and recall it rather than recalculate
+	 * @param  float  $weight
+	 * @param  object wpsc_purchaselogs_items purchase log item being used
+	 * @param  int    purchase log item id
+	 * @return float  $weight                 cart weight, calculation will not continue if value is returned
+	 */
+	$weight_override = apply_filters( 'wpsc_purchlogs_before_get_weight', false, $thepurchlogitem, $thepurchlogitem->id );
+	if ( $weight_override !== false ) {
+		return $weight_override;
+	}
+
+	// if there isn't a purchase log item we are done
 	if ( empty( $thepurchlogitem ) ) {
 		return false;
 	}
@@ -122,8 +136,21 @@ function wpsc_purchlogs_get_weight( $id = '' ) {
 		$product_meta = get_product_meta( $cartitem->prodid, 'product_metadata', true );
 		if ( ! empty( $product_meta ['weight'] ) ) {
 			$weight += $product_meta ['weight'] * $cartitem->quantity;
+			$items_count += $cartitem->quantity;
 		}
 	}
+
+	/** Filter wpsc_purchlogs_get_weight
+	 * Allow the weight to be overridden,
+	 * @param  float  $weight                 calculated cart weight
+	 * @param  object wpsc_purchaselogs_items purchase log item being used
+	 * @param  int    purchase log item id
+	 * @param  int    $items_count            how many items are in the cart, useful for
+	 *                                        cases where packaging weight changes as more items are
+	 *                                        added
+	 * @return float  $weight                 changed product weight
+	 */
+	$weight = apply_filters( 'wpsc_purchlogs_get_weight', $weight, $thepurchlogitem, $thepurchlogitem->id, $items_count );
 
 	return $weight;
 }
