@@ -364,9 +364,14 @@ function _wpsc_doing_non_wpsc_ajax_request() {
 		if ( isset( $_REQUEST['action'] ) && ( strpos( $_REQUEST['action'], 'wpsc_' ) === 0 ) ) {
 			$doing_wpsc_ajax_request = true;
 		}
+
+		// this AJAX request is old and doesn't start with wpsc_
+		if ( isset( $_REQUEST['action'] ) && ( $_REQUEST['action'] == 'update_product_price' ) ) {
+			$doing_wpsc_ajax_request = true;
+		}
 	}
 
-	return $doing_wpsc_ajax_request;
+	return ! $doing_wpsc_ajax_request;
 }
 
 /**
@@ -392,8 +397,11 @@ function _wpsc_is_bot_user() {
 			}
 		}
 
+		// if the customer cookie is invalid, unset it
+		$visitor_id_from_cookie = _wpsc_validate_customer_cookie();
+
 		// check for non WPEC ajax request, no reason to create a visitor profile if this is the case
-		if ( ! $is_bot && ! _wpsc_doing_non_wpsc_ajax_request() ) {
+		if ( ! $is_bot && ! $visitor_id_from_cookie && _wpsc_doing_non_wpsc_ajax_request() ) {
 			$is_bot = true;
 		}
 
