@@ -104,9 +104,11 @@ function wpsc_purchlogitem_trackhistory() {
  *
  * @since 3.8.14
  *
+ *
  * @param string $id
  * @return float $weight in '$out_unit' of shipment
  */
+function wpsc_purchlogs_get_weight( $id = '', $out_unit = 'pound' ) {
 function wpsc_purchlogs_get_weight( $id = '', $out_unit = 'pound' ) {
 	global $purchlogitem;
 	$weight = 0.0;
@@ -143,7 +145,10 @@ function wpsc_purchlogs_get_weight( $id = '', $out_unit = 'pound' ) {
 	foreach ( ( array ) $thepurchlogitem->allcartcontent as $cartitem ) {
 		$product_meta = get_product_meta( $cartitem->prodid, 'product_metadata', true );
 		if ( ! empty( $product_meta ['weight'] ) ) {
-			$weight += $product_meta ['weight'] * $cartitem->quantity;
+
+			$converted_weight = wpsc_convert_weight( $product_meta ['weight'], $product_meta['weight_unit'], $out_unit, true );
+
+			$weight += $converted_weight * $cartitem->quantity;
 			$items_count += $cartitem->quantity;
 		}
 	}
@@ -197,12 +202,8 @@ function wpsc_purchlogs_get_weight_text( $id = '' ) {
 	 *
 	 * @since 3.8.14
 	 *
-	 * @param  float  $weight                 calculated cart weight
+	 * @param  string weight of purchase as text string with both KG and pounds/ounces
 	 * @param  object wpsc_purchaselogs_items purchase log item being used
-	 * @param  int    purchase log item id
-	 * @param  int    $items_count            how many items are in the cart, useful for
-	 *                                        cases where packaging weight changes as more items are
-	 *                                        added
 	 */
 	return apply_filters( 'wpsc_purchlogs_get_weight_text', $weight_string, $id  );
 
