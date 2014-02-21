@@ -109,7 +109,7 @@ function wpsc_purchlogs_get_weight( $id = '' ) {
 	$weight = 0.0;
 	$items_count = 0;
 
-	if ( empty( $id ) ) {
+	if ( empty( $id ) || $id == $thepurchlogitem->purchlogid ) {
 		$thepurchlogitem = $purchlogitem;
 	} else {
 		$thepurchlogitem = new wpsc_purchaselogs_items( $id );
@@ -162,6 +162,41 @@ function wpsc_purchlogs_get_weight( $id = '' ) {
 	$weight = apply_filters( 'wpsc_purchlogs_get_weight', $weight, $thepurchlogitem, $thepurchlogitem->purchlogid, $items_count );
 
 	return $weight;
+}
+
+
+
+function wpsc_purchlogs_get_weight_text( $id = '' ) {
+
+	$weight_in_pounds = wpsc_purchlogs_get_weight( $id, 'pound' );
+
+	$pound = floor( $weight_in_pounds );
+	$ounce = ( $weight_in_pounds - $pound ) * 16;
+
+	$weight_in_kg = wpsc_purchlogs_get_weight( $id, 'KG' );
+
+	$weight_string = number_format( $weight_in_kg , 2 ) . __( 'KG' , 'wpsc' ) . ' / ' .  $pound . ' ' .  __( 'lb', 'wpsc' ) . ' ' . $ounce . ' ' . __( 'oz', 'wpsc' );
+
+	if ( empty( $id ) ) {
+		$id = $purchlogitem->purchlogid;
+	}
+
+	/**
+	 * Filter wpsc_purchlogs_get_weight_text
+	 *
+	 * Format weight as text suitable to inform user of purchase shipping weight
+	 *
+	 * @since 3.8.14
+	 *
+	 * @param  float  $weight                 calculated cart weight
+	 * @param  object wpsc_purchaselogs_items purchase log item being used
+	 * @param  int    purchase log item id
+	 * @param  int    $items_count            how many items are in the cart, useful for
+	 *                                        cases where packaging weight changes as more items are
+	 *                                        added
+	 */
+	return apply_filters( 'wpsc_purchlogs_get_weight_text', $weight_string, $id  );
+
 }
 
 function wpsc_purchlogs_has_customfields( $id = '' ) {
