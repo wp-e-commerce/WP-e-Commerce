@@ -186,7 +186,7 @@ function wpsc_purchlogs_get_weight_text( $id = '' ) {
 	if ( $weight_in_pounds > 0 ) {
 
 		$pound = floor( $weight_in_pounds );
-		$ounce = ( $weight_in_pounds - $pound ) * 16;
+		$ounce = round( ( $weight_in_pounds - $pound ) * 16 );
 
 		$weight_in_kg = wpsc_purchlogs_get_weight( $id, 'KG' );
 
