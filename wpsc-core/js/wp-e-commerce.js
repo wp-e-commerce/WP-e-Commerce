@@ -31,32 +31,32 @@ if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
 	if ( ! ( document.cookie.indexOf("wpsc_attempted_validate") >= 0 ) ) {	
 		// create a cookie to signal that we have attempted validation.  If we find the cookie is set
 		// we don't re-attempt validation.  This means will only try to validate once and not slow down
-		// subsequent page views. Because we are only going to try this once, we can use a slightly 
-		// longer timneout to give the request a higher probability to succeed on slower hosts.
-		// 
+		// subsequent page views. 
+		
 		// The lack of expiration date means the cookie will be deleted when the browser
 		// is closed, so the next time the visitor attempts to access the site 
 		var now = new Date();
 		document.cookie="wpsc_attempted_validate="+now;
+
 		var wpsc_http = new XMLHttpRequest();
-		wpsc_http.overrideMimeType("application/json");  
-		wpsc_http.open("POST",wpsc_ajax.ajaxurl + "?action=wpsc_validate_customer", true);
-		wpsc_http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-		wpsc_http.timeout = 5000; // 5 seconds, it should be much faster than this
+		wpsc_http.overrideMimeType( "application/json" );
 		
-		wpsc_http.onload  = function(request, url) { 
-			if (wpsc_http.status == 200) {  
-				 var result = JSON.parse( wpsc_http.responseText );
-				 if ( result.valid && result.id ) {
-					 wpsc_visitor_id = result.id;
-				 }
-			}
-		};  
-		
+		// open setup and send the request in synchronous mode
+		wpsc_http.open( "POST",wpsc_ajax.ajaxurl + "?action=wpsc_validate_customer", false );
+		wpsc_http.setRequestHeader( "Content-type", "application/json; charset=utf-8" );
+
+		// Note that we cannot set a timeout on synchronous requests due to XMLHttpRequest limitations  
 		wpsc_http.send();
+		
+		// we did the request in synchronous mode so we don't need the on load or ready state change events	to check the result	
+		if (wpsc_http.status == 200) {  
+			 var result = JSON.parse( wpsc_http.responseText );
+			 if ( result.valid && result.id ) {
+				 wpsc_visitor_id = result.id;
+			 }
+		}
 	}
 }
-
 // end of setting up the WPEC customer identifier
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
