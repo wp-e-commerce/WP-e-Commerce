@@ -131,7 +131,7 @@ class ASHXML{
  *
  * @since 0.0.1
  */
-class ASHTools{
+class ASHTools {
     /**
      * Determines if the given zipcode is a US Military APO/AFO zip code
      *
@@ -160,12 +160,8 @@ class ASHTools{
                 "96661","96662","96663","96664","96665","96666","96667","96668","96669","96670",
                 "96671","96672","96673","96674","96675","96677","96678","96679","96681","96681",
                 "96682","96683","96684","96684","96686","96687","96698");
-
-        if (in_array($zipcode, $zips)){
-            return TRUE;
-        }else{
-            return FALSE;
-        }
+        
+        return in_array( $zipcode, $zips );
     }
 
     /**
@@ -177,12 +173,13 @@ class ASHTools{
      */
     function get_full_country($short_country){
         global $wpdb;
-        if (!isset($wpdb)){
+        
+        /* Audit why we're needing to check if $wpdb is set. */
+        if ( ! isset( $wpdb ) ) {
             return $short_country;
         }
-		$full_name = $wpdb->get_var( $wpdb->prepare( "SELECT country
-        							 FROM ".WPSC_TABLE_CURRENCY_LIST."
-    							 	 WHERE isocode = %s", $short_country ) );
+
+		$full_name = $wpdb->get_var( $wpdb->prepare( "SELECT country FROM " . WPSC_TABLE_CURRENCY_LIST . " WHERE isocode = %s", $short_country ) );
         return $full_name;
     }
 
@@ -244,13 +241,14 @@ class ASHTools{
 
     /**
      * Checks if the destination country requires a postal code
-     * 
      *
-     * @since 2.0.0
-     * @param string $session
+     * @since 3.8.14
+     * @param string $iso_code
      * @return bool
      */
-    function needs_post_code( $iso_code ){
+    function needs_post_code( $iso_code ) {
+
+        $no_post_code = array();
 
     	$no_post_code['AO'] = "Angola";
     	$no_post_code['AG'] = "Antigua and Barbuda";
@@ -317,7 +315,7 @@ class ASHTools{
     	$no_post_code['YE'] = "Yemen";
     	$no_post_code['ZW'] = "Zimbabwe";
 
-    	return ( ! isset( $no_post_code[$iso_code] ) );
+    	return apply_filters( 'wpsc_ash_tools_needs_post_code', ( ! isset( $no_post_code[ $iso_code ] ) ), $no_post_code, $iso_code );
     }
 }
 
@@ -327,7 +325,7 @@ class ASHTools{
  *
  * @since 0.0.1
  */
-class ASHPackage{
+class ASHPackage {
 	/**
 	 * Product ids included in package
 	 * @var array
