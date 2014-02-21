@@ -122,7 +122,7 @@ function wpsc_purchlogs_get_weight( $id = '' ) {
 	 * @param  int    purchase log item id
 	 * @return float  $weight                 cart weight, calculation will not continue if value is returned
 	 */
-	$weight_override = apply_filters( 'wpsc_purchlogs_before_get_weight', false, $thepurchlogitem, $thepurchlogitem->id );
+	$weight_override = apply_filters( 'wpsc_purchlogs_before_get_weight', false, $thepurchlogitem, $thepurchlogitem->purchlogid );
 	if ( $weight_override !== false ) {
 		return $weight_override;
 	}
@@ -150,7 +150,7 @@ function wpsc_purchlogs_get_weight( $id = '' ) {
 	 *                                        added
 	 * @return float  $weight                 changed product weight
 	 */
-	$weight = apply_filters( 'wpsc_purchlogs_get_weight', $weight, $thepurchlogitem, $thepurchlogitem->id, $items_count );
+	$weight = apply_filters( 'wpsc_purchlogs_get_weight', $weight, $thepurchlogitem, $thepurchlogitem->purchlogid, $items_count );
 
 	return $weight;
 }
