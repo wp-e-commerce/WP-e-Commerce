@@ -109,7 +109,6 @@ function wpsc_purchlogitem_trackhistory() {
  * @return float $weight in '$out_unit' of shipment
  */
 function wpsc_purchlogs_get_weight( $id = '', $out_unit = 'pound' ) {
-function wpsc_purchlogs_get_weight( $id = '', $out_unit = 'pound' ) {
 	global $purchlogitem;
 	$weight = 0.0;
 	$items_count = 0;
