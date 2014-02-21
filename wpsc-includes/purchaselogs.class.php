@@ -183,12 +183,18 @@ function wpsc_purchlogs_get_weight_text( $id = '' ) {
 
 	$weight_in_pounds = wpsc_purchlogs_get_weight( $id, 'pound' );
 
-	$pound = floor( $weight_in_pounds );
-	$ounce = ( $weight_in_pounds - $pound ) * 16;
+	if ( $weight_in_pounds > 0 ) {
 
-	$weight_in_kg = wpsc_purchlogs_get_weight( $id, 'KG' );
+		$pound = floor( $weight_in_pounds );
+		$ounce = ( $weight_in_pounds - $pound ) * 16;
 
-	$weight_string = number_format( $weight_in_kg , 2 ) . __( 'KG' , 'wpsc' ) . ' / ' .  $pound . ' ' .  __( 'lb', 'wpsc' ) . ' ' . $ounce . ' ' . __( 'oz', 'wpsc' );
+		$weight_in_kg = wpsc_purchlogs_get_weight( $id, 'KG' );
+
+		$weight_string = number_format( $weight_in_kg , 2 ) .' ' .  __( 'KG' , 'wpsc' ) . ' / ' .  $pound . ' ' .  __( 'LB', 'wpsc' ) . ' ' . $ounce . ' ' . __( 'OZ', 'wpsc' );
+
+	} else {
+		$weight_string = '';
+	}
 
 	if ( empty( $id ) ) {
 		$id = $purchlogitem->purchlogid;

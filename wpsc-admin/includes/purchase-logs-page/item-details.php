@@ -33,9 +33,9 @@
 				<blockquote>
 					<strong><?php esc_html_e( 'Shipping Method:', 'wpsc' ); ?></strong> <?php echo wpsc_display_purchlog_shipping_method(); ?><br />
 					<strong><?php esc_html_e( 'Shipping Option:', 'wpsc' ); ?></strong> <?php echo wpsc_display_purchlog_shipping_option(); ?><br />
-					<?php $purchase_weight = wpsc_purchlogs_get_weight(); ?>
+					<?php $purchase_weight = wpsc_purchlogs_get_weight_text(); ?>
 					<?php if ( ! empty( $purchase_weight ) ) { ?>
-						<strong><?php esc_html_e( 'Purchase Weight:', 'wpsc' ); ?></strong> <?php echo $purchase_weight; ?><br />
+						<strong><?php esc_html_e( 'Purchase Weight:', 'wpsc' ); ?></strong> <?php echo $purchase_weight(); ?><br />
 						<?php } ?>
 					<?php if ( wpsc_purchlogs_has_tracking() ) { ?>
 						<strong><?php echo esc_html_x( 'Tracking ID:', 'purchase log', 'wpsc' ); ?></strong> <?php echo wpsc_purchlogitem_trackid(); ?><br />
