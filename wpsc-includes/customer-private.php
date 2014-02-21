@@ -361,7 +361,7 @@ function _wpsc_doing_non_wpsc_ajax_request() {
 		}
 
 		// if the wpsc_ajax_action is set, it's a WPEC AJAX request
-		if ( isset( $_REQUEST['action'] ) && ( strpos( $_REQUEST['action'], 'wpsc_' ) === 0 ) ) {
+		if ( isset( $_REQUEST['action'] ) && ( strpos( $_REQUEST['action'], 'wpsc_' ) !== false ) ) {
 			$doing_wpsc_ajax_request = true;
 		}
 
@@ -384,6 +384,12 @@ function _wpsc_is_bot_user() {
 
 	$is_bot = false;
 
+	// if the customer cookie is invalid, unset it
+	$visitor_id_from_cookie = _wpsc_validate_customer_cookie();
+	if ( $visitor_id_from_cookie ) {
+		return $visitor_id_from_cookie === WPSC_BOT_VISITOR_ID;
+	}
+
 	if ( ! is_user_logged_in() ) {
 
 		// check for WordPress detected 404 or feed request
@@ -397,11 +403,8 @@ function _wpsc_is_bot_user() {
 			}
 		}
 
-		// if the customer cookie is invalid, unset it
-		$visitor_id_from_cookie = _wpsc_validate_customer_cookie();
-
 		// check for non WPEC ajax request, no reason to create a visitor profile if this is the case
-		if ( ! $is_bot && ! $visitor_id_from_cookie && _wpsc_doing_non_wpsc_ajax_request() ) {
+		if ( ! $is_bot && _wpsc_doing_non_wpsc_ajax_request() ) {
 			$is_bot = true;
 		}
 
