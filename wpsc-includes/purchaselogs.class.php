@@ -99,12 +99,15 @@ function wpsc_purchlogitem_trackhistory() {
 }
 
 
-
-/** Weight of current or specified purchase
+/**
+ * Weight of current or specified purchase
+ *
+ * @since 3.8.14
+ *
  * @param string $id
- * @return boolean|number
+ * @return float $weight in '$out_unit' of shipment
  */
-function wpsc_purchlogs_get_weight( $id = '' ) {
+function wpsc_purchlogs_get_weight( $id = '', $out_unit = 'pound' ) {
 	global $purchlogitem;
 	$weight = 0.0;
 	$items_count = 0;
@@ -164,8 +167,14 @@ function wpsc_purchlogs_get_weight( $id = '' ) {
 	return $weight;
 }
 
-
-
+/**
+ * Weight of current or specified purchase formatted as text with units
+ *
+ * @since 3.8.14
+ *
+ * @param string $id
+ * @return string $weight in KG and lbs and ounces
+ */
 function wpsc_purchlogs_get_weight_text( $id = '' ) {
 
 	$weight_in_pounds = wpsc_purchlogs_get_weight( $id, 'pound' );
