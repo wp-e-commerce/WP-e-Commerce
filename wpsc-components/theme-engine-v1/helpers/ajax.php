@@ -1031,7 +1031,6 @@ if ( isset( $_REQUEST['wpsc_action'] ) && 'wpsc_get_alternate_html' == $_REQUEST
 function _wpsc_ajax_get_cart( $die = true, $cart_messages = array() ) {
 	$return = array();
 
-	global $wpsc_cart;
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 		ob_start();
 		include_once( wpsc_get_template_file_path( 'wpsc-cart_widget.php' ) );
