@@ -32,7 +32,7 @@ if ( isset( $_REQUEST['wpsc_ajax_action'] ) && 'add_to_cart' == $_REQUEST['wpsc_
     add_action( 'init', 'wpsc_add_to_cart' );
 
 if ( isset( $_REQUEST['wpsc_update_quantity'] ) && ($_REQUEST['wpsc_update_quantity'] == 'true') )
-	add_action( 'init', 'wpsc_update_item_quantity', 9 );
+	add_action( 'init', 'wpsc_update_item_quantity' );
 
 if ( isset( $_REQUEST['wpsc_ajax_action'] ) && ($_REQUEST['wpsc_ajax_action'] == 'rate_product') )
 	add_action( 'init', 'wpsc_update_product_rating' );
