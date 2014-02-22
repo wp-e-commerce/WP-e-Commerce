@@ -25,14 +25,8 @@ function _wpsc_action_setup_customer() {
 	// posts_selection hook is processed.  The 'wp' action is fired after
 	// the 'posts_selection' hook.
 	/////////////////////////////////////////////////////////////////////////
-	if ( _wpsc_doing_wpsc_ajax_request() ) {
-		if ( ! did_action( 'init' ) ) {
-			_wpsc_doing_it_wrong( __FUNCTION__, __( 'Customer cannot be reliably setup until at least the "init" hook as been fired during AJAX processing.', 'wpsc' ), '3.8.14' );
-		}
-	} else {
-		if ( ! did_action( 'wp' ) ) {
-			_wpsc_doing_it_wrong( __FUNCTION__, __( 'Customer cannot be reliably setup until at least the "wp" hook as been fired.', 'wpsc' ), '3.8.14' );
-		}
+	if ( ! did_action( 'init' ) ) {
+		_wpsc_doing_it_wrong( __FUNCTION__, __( 'Customer cannot be reliably setup until at least the "init" hook as been fired during AJAX processing.', 'wpsc' ), '3.8.14' );
 	}
 
 	// if the customer cookie is invalid, unset it
@@ -369,6 +363,30 @@ function _wpsc_doing_wpsc_ajax_request() {
 	}
 
 	if ( isset( $_REQUEST['wpsc_update_quantity'] ) ) {
+		$doing_wpsc_ajax_request = true;
+	}
+
+	if ( isset( $_REQUEST['update_shipping_price'] ) ) {
+		$doing_wpsc_ajax_request = true;
+	}
+
+	if ( isset( $_REQUEST['get_cart'] ) ) {
+		$doing_wpsc_ajax_request = true;
+	}
+
+	if ( isset( $_REQUEST['change_tax'] ) ) {
+		$doing_wpsc_ajax_request = true;
+	}
+
+	if ( isset( $_REQUEST['change_profile_country'] ) ) {
+		$doing_wpsc_ajax_request = true;
+	}
+
+	if ( isset( $_REQUEST['update_location'] ) ) {
+		$doing_wpsc_ajax_request = true;
+	}
+
+	if ( isset( $_REQUEST['shipping_same_as_billing_update'] ) ) {
 		$doing_wpsc_ajax_request = true;
 	}
 

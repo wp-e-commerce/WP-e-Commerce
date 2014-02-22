@@ -234,26 +234,10 @@ class WP_eCommerce {
 		// Setup the core WPEC globals
 		wpsc_core_setup_globals();
 
+		add_action( 'init', '_wpsc_action_setup_customer', 1 );
 
-		// Are we doing AJAX or processing some other transaction
-		if (  _wpsc_doing_wpsc_ajax_request() ) {
-			// Setup the customer ID as soon as WP is initialized, no reason
-			// to wait for the query to be setup becuase we are doing AJAX and
-			// it will never happen because the WPEC AJAX handlers will finish
-			// before the WP hook could ever fire
-			add_action( 'init', '_wpsc_action_setup_customer', 1 );
-
-			// WPEC is ready to use as soon as WordPress and customer is setup and loaded
-			add_action( 'init', array( &$this, '_wpsc_fire_ready_action' ), 1 );
-
-		} else {
-			// Setup the customer ID as soon as the query variables can be checked
-			// to be sure we aren't handling a 404 or doing feeds
-			add_action( 'wp', '_wpsc_action_setup_customer', 1 );
-
-			// WPEC is ready to use as soon as WordPress and customer is setup and loaded
-			add_action( 'wp', array( &$this, '_wpsc_fire_ready_action' ), PHP_INT_MAX );
-		}
+		// WPEC is ready to use as soon as WordPress and customer is setup and loaded
+		add_action( 'init', array( &$this, '_wpsc_fire_ready_action' ), 100 );
 
 		// Load the purchase log statuses
 		wpsc_core_load_purchase_log_statuses();
