@@ -963,7 +963,7 @@ function wpsc_get_visitor_custom_keys( $visitor_id = 0 ) {
  * @param int $visitor_id visitor ID
  * @return array Meta field values.
  */
-function wpsc_get_visitor_custom_values( $metakey = '', $visitor_id = 0 ) {
+function wpsc_get_visitor_custom_values( $meta_key = '', $visitor_id = 0 ) {
 
 	if ( ! _wpsc_visitor_database_ready() ) {
 		return false;
@@ -974,7 +974,7 @@ function wpsc_get_visitor_custom_values( $metakey = '', $visitor_id = 0 ) {
 
 	$custom = wpsc_get_visitor_custom( $visitor_id );
 
-	return isset( $custom[$key] ) ? $custom[$key] : null;
+	return isset( $custom[$meta_key] ) ? $custom[$meta_key] : null;
 }
 
 /**
