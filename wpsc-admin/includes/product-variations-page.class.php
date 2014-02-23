@@ -46,26 +46,36 @@ class WPSC_Product_Variations_Page {
 		return $original;
 	}
 
+	/*   */
 	private function save_variation_meta( $id, $data ) {
+
 		$product_meta = get_product_meta( $id, 'product_metadata', true );
-		if ( ! is_array( $product_meta ) )
+
+		if ( ! is_array( $product_meta ) ) {
 			$product_meta = array();
+		}
+
 		$product_meta = $this->merge_meta_deep( $product_meta, $data['product_metadata'] );
 
 		// convert to pound to maintain backward compat with shipping modules
-		if ( isset( $data['product_metadata']['weight'] ) || isset( $data['product_metadata']['weight_unit'] ) )
+		if ( isset( $data['product_metadata']['weight'] ) || isset( $data['product_metadata']['weight_unit'] ) ) {
 			$product_meta['weight'] = wpsc_convert_weight( $product_meta['weight'], $product_meta['weight_unit'], 'pound', true );
+		}
 
 		update_product_meta( $id, 'product_metadata', $product_meta );
 
-		if ( isset( $data['price'] ) )
+		if ( isset( $data['price'] ) ) {
 			update_product_meta( $id, 'price', wpsc_string_to_float( $data['price'] ) );
+		}
 
-		if ( isset( $data['sale_price'] ) )
-			if ( is_numeric( $data['sale_price'] ) )
+		if ( isset( $data['sale_price'] ) ) {
+			if ( is_numeric( $data['sale_price'] ) ) {
 				update_product_meta( $id, 'special_price', wpsc_string_to_float( $data['sale_price'] ) );
-			else
+			}
+			else {
 				update_product_meta( $id, 'special_price', '' );
+			}
+		}
 
 		if ( isset( $data['sku'] ) )
 			update_product_meta( $id, 'sku', $data['sku'] );
@@ -87,7 +97,12 @@ class WPSC_Product_Variations_Page {
 		if ( ! current_user_can( $post_type_object->cap->edit_posts ) )
 			wp_die( __( 'Cheatin&#8217; uh?' ) );
 
+		/* Long-term, we should have a better saving routine here.  Can't unset these currently. *
+		/* That said, the only thing that fails hard if we can't unset it is the checkbox. */
 		foreach ( $_REQUEST['wpsc_variations'] as $id => $data ) {
+			if ( ! isset( $data['product_metadata']['no_shipping'] ) ) {
+				$data['product_metadata']['no_shipping'] = '';
+			}
 			$this->save_variation_meta( $id, $data );
 		}
 	}
