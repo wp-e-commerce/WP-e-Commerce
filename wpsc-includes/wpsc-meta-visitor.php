@@ -920,7 +920,7 @@ function wpsc_get_visitor_custom( $visitor_id = 0 ) {
 	}
 
 	$visitor_id = absint( $visitor_id );
-	return get_visitor_meta( $visitor_id );
+	return wpsc_get_visitor_meta( $visitor_id );
 }
 
 /**
@@ -945,8 +945,9 @@ function wpsc_get_visitor_custom_keys( $visitor_id = 0 ) {
 	if ( ! is_array( $custom ) )
 		return;
 
-	if ( $keys = array_keys( $custom ) )
-		return $keys;
+	$keys = array_keys( $custom );
+
+	return $keys;
 }
 
 /**
