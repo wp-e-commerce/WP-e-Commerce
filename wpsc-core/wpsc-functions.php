@@ -70,53 +70,90 @@ function wpsc_print_term_list_levels_script() {
 /**
  * wpsc_core_load_checkout_data()
  *
- *
+ * @return none
  */
-
 function wpsc_core_load_checkout_data() {
+	wpsc_checkout_form_fields();
+	wpsc_checkout_unique_names();
+}
+
+/**
+ * Get the checkout form fields and types
+ *
+ * @since 3.8.14
+ *
+ * @return array of strings     each key value being a checkout item's
+ *                          	user presentable name, the value being the
+ *                              checkout item type
+ */
+function wpsc_checkout_form_fields() {
 	$form_types = array(
-		__( 'Text', 'wpsc' )             => 'text',
-		__( 'Email Address', 'wpsc' )    => 'email',
-		__( 'Street Address', 'wpsc' )   => 'address',
-		__( 'City', 'wpsc' )             => 'city',
-		__( 'Country', 'wpsc' )          => 'country',
-		__( 'Delivery Address', 'wpsc' ) => 'delivery_address',
-		__( 'Delivery City', 'wpsc' )    => 'delivery_city',
-		__( 'Delivery Country', 'wpsc' ) => 'delivery_country',
-		__( 'Text Area', 'wpsc' )        => 'textarea',
-		__( 'Heading', 'wpsc' )          => 'heading',
-		__( 'Select', 'wpsc' )           => 'select',
-		__( 'Radio Button', 'wpsc' )     => 'radio',
-		__( 'Checkbox', 'wpsc' )         => 'checkbox'
+			__( 'Text', 'wpsc' )             => 'text',
+			__( 'Email Address', 'wpsc' )    => 'email',
+			__( 'Street Address', 'wpsc' )   => 'address',
+			__( 'City', 'wpsc' )             => 'city',
+			__( 'Country', 'wpsc' )          => 'country',
+			__( 'Delivery Address', 'wpsc' ) => 'delivery_address',
+			__( 'Delivery City', 'wpsc' )    => 'delivery_city',
+			__( 'Delivery Country', 'wpsc' ) => 'delivery_country',
+			__( 'Text Area', 'wpsc' )        => 'textarea',
+			__( 'Heading', 'wpsc' )          => 'heading',
+			__( 'Select', 'wpsc' )           => 'select',
+			__( 'Radio Button', 'wpsc' )     => 'radio',
+			__( 'Checkbox', 'wpsc' )         => 'checkbox',
 	);
 
 	$form_types = apply_filters( 'wpsc_add_form_types', $form_types );
+
+	// TODO: there really isn't a good reason to save this as an option becuase it is recomputed
+	// every time WPEC is reloaded.  Deprecate the option and replace any references to the option
+	// with a call to this function
 	update_option( 'wpsc_checkout_form_fields', $form_types );
 
+	return $form_types;
+}
+
+
+/**
+ * Get the unique names used in checkout forms
+ *
+ * @since 3.8.14
+ *
+ * @return array of strings, each string value being a checkout item's unique name
+ */
+function wpsc_checkout_unique_names() {
+
 	$unique_names = array(
-		'billingfirstname',
-		'billinglastname',
-		'billingaddress',
-		'billingcity',
-		'billingstate',
-		'billingcountry',
-		'billingemail',
-		'billingphone',
-		'billingpostcode',
-		'delivertoafriend' ,
-		'shippingfirstname' ,
-		'shippinglastname' ,
-		'shippingaddress' ,
-		'shippingcity' ,
-		'shippingstate' ,
-		'shippingcountry' ,
-		'shippingpostcode'
+			'billingfirstname',
+			'billinglastname',
+			'billingaddress',
+			'billingcity',
+			'billingstate',
+			'billingcountry',
+			'billingemail',
+			'billingphone',
+			'billingpostcode',
+			'delivertoafriend',
+			'shippingfirstname',
+			'shippinglastname',
+			'shippingaddress',
+			'shippingcity',
+			'shippingstate',
+			'shippingcountry',
+			'shippingpostcode',
 	);
 
 	$unique_names = apply_filters( 'wpsc_add_unique_names' , $unique_names );
+
+	// TODO: there really isn't a good reason to save this as an option becuase it is recomputed
+	// every time WPEC is reloaded.  Deprecate the option and replace any references to the option
+	// with a call to this function
 	update_option( 'wpsc_checkout_unique_names', $unique_names );
 
+	return $unique_names;
 }
+
+
 /**
  * wpsc_core_load_purchase_log_statuses()
  *
