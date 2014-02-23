@@ -90,26 +90,30 @@ function wpsc_meta_table_name( $meta_object_type ) {
  */
 function _wpsc_validate_visitor_meta_key( $visitor_meta_key ) {
 
-	$build_in_checkout_names = wpsc_checkout_unique_names();
+	// WPEC internal visitor meta keys are not allowed to be aliased, internal visitor meta keys
+	if ( ! ( strpos( $visitor_meta_key, _wpsc_get_visitor_meta_key( '' ) ) === 0 ) ) {
 
-	// the built in checkout names cannot be aliased to something else
-	if ( ! isset( $build_in_checkout_names[$visitor_meta_key] ) ) {
+		$build_in_checkout_names = wpsc_checkout_unique_names();
 
-		/**
-		 * Filter wpsc_visitor_meta_key_replacements
-		 *
-		 * Get an array of key/value pairs that are used to alias visitor meta keys. The
-		 * key is the old name, the value is the new name
-		 *
-		 * @since 3.8.14
-		 *
-		 * @param array of key value pairs
-		 *
-		 */
-		$aliased_meta_keys = apply_filters( 'wpsc_visitor_meta_key_replacements', array() );
+		// the built in checkout names cannot be aliased to something else
+		if ( ! isset( $build_in_checkout_names[$visitor_meta_key] ) ) {
 
-		if ( in_array( $visitor_meta_key, $aliased_meta_keys ) ) {
-			$visitor_meta_key = $aliased_meta_keys[$visitor_meta_key];
+			/**
+			 * Filter wpsc_visitor_meta_key_replacements
+			 *
+			 * Get an array of key/value pairs that are used to alias visitor meta keys. The
+			 * key is the old name, the value is the new name
+			 *
+			 * @since 3.8.14
+			 *
+			 * @param array of key value pairs
+			 *
+			 */
+			$aliased_meta_keys = apply_filters( 'wpsc_visitor_meta_key_replacements', array() );
+
+			if ( in_array( $visitor_meta_key, $aliased_meta_keys ) ) {
+				$visitor_meta_key = $aliased_meta_keys[$visitor_meta_key];
+			}
 		}
 	}
 
