@@ -80,6 +80,93 @@ function wpsc_meta_table_name( $meta_object_type ) {
 	return $wpdb->prefix . $meta_object_type . '_meta';
 }
 
+/**
+ * Check the visitor meta key to see if it has been aliased to another visitor meta key
+ *
+ * @since 3.8.14
+ *
+ * @param string $visitor_meta_key
+ * @return string valid unchanged key if original is valid, or replacement visitor meta key
+ */
+function _wpsc_validate_visitor_meta_key( $visitor_meta_key ) {
+
+	// WPEC internal visitor meta keys are not allowed to be aliased, internal visitor meta keys
+	if ( ! ( strpos( $visitor_meta_key, _wpsc_get_visitor_meta_key( '' ) ) === 0 ) ) {
+
+		$build_in_checkout_names = wpsc_checkout_unique_names();
+
+		// the built in checkout names cannot be aliased to something else
+		if ( ! isset( $build_in_checkout_names[$visitor_meta_key] ) ) {
+
+			/**
+			 * Filter wpsc_visitor_meta_key_replacements
+			 *
+			 * Get an array of key/value pairs that are used to alias visitor meta keys. The
+			 * key is the old name, the value is the new name
+			 *
+			 * @since 3.8.14
+			 *
+			 * @param array of key value pairs
+			 *
+			 */
+			$aliased_meta_keys = apply_filters( 'wpsc_visitor_meta_key_replacements', array() );
+
+			if ( in_array( $visitor_meta_key, $aliased_meta_keys ) ) {
+				$visitor_meta_key = $aliased_meta_keys[$visitor_meta_key];
+			}
+		}
+	}
+
+	return $visitor_meta_key;
+}
+
+
+
+/**
+ * Replace all of the specified meta keys in the database during an upgrade
+ *
+ * @since 3.8.14
+ *
+ * @param  array  array of string parirs old key is the index key, new key is the value
+ * @return int    count of values updated
+ */
+function _wpsc_replace_visitor_meta_keys( $replacements ) {
+
+	$build_in_checkout_names = wpsc_checkout_unique_names();
+
+	$total_count_updated = 0;
+
+	foreach ( $replacements as $old_meta_key => $new_meta_key ) {
+
+		// the built in checkout names cannot be replaced to something else
+		if ( ! isset( $build_in_checkout_names[$visitor_meta_key] ) ) {
+
+			$sql = 'UPDATE ' . $wpdb->wpsc_visitormeta . ' SET meta_key = "' . $new_meta_key .
+
+			$rows_updated = $wpdb->update(
+					$wpdb->wpsc_visitormeta,                // table
+					array( 'meta_key' => $new_meta_key,	),	// data to set
+					array( 'meta_key' => $old_meta_key,	),  // where
+					array( '%s', ),                         // format
+					array( '%s', )                          // where format
+			);
+
+			$total_count_updated += $rows_updated;
+		}
+	}
+
+	if ( $total_count_updated > 0 ) {
+		wp_cache_flush();
+	}
+
+	return $total_count_updated;
+}
+
+
+
+
+
+
 
 /** Create visitors that we expect to be in the table
  *
