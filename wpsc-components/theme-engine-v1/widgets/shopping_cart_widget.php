@@ -32,8 +32,6 @@ class WP_Widget_Shopping_Cart extends WP_Widget {
 	 */
 	function widget( $args, $instance ) {
 
-		global $cache_enabled;
-
 		extract( $args );
 
 		// Create fancy collapser
@@ -68,11 +66,11 @@ class WP_Widget_Shopping_Cart extends WP_Widget {
 		if ( ( ( isset( $_SESSION['slider_state'] ) && ( $_SESSION['slider_state'] == 0 ) ) || ( wpsc_cart_item_count() < 1 ) ) && ( get_option( 'show_sliding_cart' ) == 1 ) )
 			$display_state = 'style="display: none;"';
 
-		// Output start
+		// Output start, if we are not allowed to save results ( WPSC_DONT_CACHE ) load the cart using ajax
 		$use_object_frame = false;
-		if ( ( $cache_enabled == true ) && ( !defined( 'DONOTCACHEPAGE' ) || ( constant( 'DONOTCACHEPAGE' ) !== true ) ) ) {
+		if ( WPSC_DONT_CACHE  ) {
 			echo '<div id="sliding_cart" class="shopping-cart-wrapper">';
-			if ( ( strstr( $_SERVER['HTTP_USER_AGENT'], "MSIE" ) == false ) && ( $use_object_frame == true ) ) {
+			if ( ( strstr( $_SERVER['HTTP_USER_AGENT'], 'MSIE' ) == false ) && ( $use_object_frame == true ) ) {
 				?>
 				<object codetype="text/html" type="text/html" data="index.php?wpsc_action=cart_html_page" border="0">
 					<p><?php _e( 'Loading...', 'wpsc' ); ?></p>
