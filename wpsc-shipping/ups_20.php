@@ -721,7 +721,7 @@ class ash_ups {
 	}
 
 	function getQuote() {
-		global $wpdb, $wpec_ash, $wpsc_cart;
+		global $wpdb, $wpec_ash, $wpsc_cart, $wpec_ash_tools;
 		// Arguments array for various functions to use
 		$args = array();
 		
