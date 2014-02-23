@@ -790,7 +790,7 @@ function wpsc_add_visitor_meta( $visitor_id, $meta_key, $meta_value, $unique = f
 		return false;
 	}
 
-	// Allow central validation (and possibly transmformation) of visitor meta prior to it being saved
+	// Allow central validation (and possibly transformation) of visitor meta prior to it being saved
 	$meta_key = _wpsc_validate_visitor_meta_key( $meta_key );
 
 	return add_metadata( 'wpsc_visitor' , $visitor_id, $meta_key , $meta_value, $unique );
@@ -915,7 +915,7 @@ function wpsc_delete_visitor_meta_by_key( $visitor_meta_key ) {
 	}
 
 	// Allow central validation (and possibly transmformation) of visitor meta prior to it being saved
-	$meta_key = _wpsc_validate_visitor_meta_key( $visitor_meta_key );
+	$visitor_meta_key = _wpsc_validate_visitor_meta_key( $visitor_meta_key );
 
 	return delete_metadata( 'wpsc_visitor' , null , $visitor_meta_key , '' , true );
 }
@@ -1002,7 +1002,7 @@ function wpsc_get_visitor_custom_keys( $visitor_id = 0 ) {
  *
  * @param string $metakey Meta field key.
  * @param int $visitor_id visitor ID
- * @return array Meta field values.
+ * @return array Meta field values, false on no data
  */
 function wpsc_get_visitor_custom_values( $meta_key = '', $visitor_id = 0 ) {
 
@@ -1010,15 +1010,16 @@ function wpsc_get_visitor_custom_values( $meta_key = '', $visitor_id = 0 ) {
 		return false;
 	}
 
-	if ( ! $key )
-		return null;
+	if ( ! $key ) {
+		return false;
+	}
 
 	$custom = wpsc_get_visitor_custom( $visitor_id );
 
 	// Allow central validation (and possibly transmformation) of visitor meta prior to it being saved
-	$meta_key = _wpsc_validate_visitor_meta_key( $metakey );
+	$meta_key = _wpsc_validate_visitor_meta_key( $meta_key );
 
-	return isset( $custom[$meta_key] ) ? $custom[$meta_key] : null;
+	return isset( $custom[$meta_key] ) ? $custom[$meta_key] : false;
 }
 
 /**
@@ -1033,12 +1034,15 @@ function wpsc_get_visitor_custom_values( $meta_key = '', $visitor_id = 0 ) {
  * @param string $meta_key restrict testing of meta to the values with the specified meta key
  * @return array metadata matching the query
  */
-function wpsc_get_visitor_meta_by_timestamp( $timestamp = 0, $comparison = '>', $metakey = '' ) {
+function wpsc_get_visitor_meta_by_timestamp( $timestamp = 0, $comparison = '>', $meta_key = '' ) {
 
 	if ( ! _wpsc_visitor_database_ready() ) {
 		return false;
 	}
 
-	return wpsc_get_meta_by_timestamp( 'wpsc_visitor', $timestamp , $comparison , $metakey );
+	// Allow central validation (and possibly transmformation) of visitor meta prior to it being saved
+	$meta_key = _wpsc_validate_visitor_meta_key( $meta_key );
+
+	return wpsc_get_meta_by_timestamp( 'wpsc_visitor', $timestamp , $comparison , $meta_key );
 }
 
