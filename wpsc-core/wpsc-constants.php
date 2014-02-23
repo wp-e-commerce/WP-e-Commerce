@@ -54,11 +54,17 @@ function wpsc_core_constants() {
 	define( 'WPSC_VERSION'            , '3.8.14-dev' );
 	define( 'WPSC_MINOR_VERSION'      , 'e8a508c011' );
 	define( 'WPSC_PRESENTABLE_VERSION', '3.8.14-dev' );
+
 	define( 'WPSC_DB_VERSION'         , 10 );
 
 	// Define Debug Variables for developers
-	define( 'WPSC_DEBUG'        , false );
-	define( 'WPSC_GATEWAY_DEBUG', false );
+	if ( ! defined( 'WPSC_DEBUG' ) ) {
+		define( 'WPSC_DEBUG'        , false );
+	}
+
+	if ( ! defined( 'WPSC_GATEWAY_DEBUG' ) ) {
+		define( 'WPSC_GATEWAY_DEBUG', false );
+	}
 
 	// Images URL
 	define( 'WPSC_CORE_IMAGES_URL',  WPSC_URL . '/wpsc-core/images' );
@@ -70,14 +76,17 @@ function wpsc_core_constants() {
 
 	// Require loading of deprecated functions for now. We will ween WPEC off
 	// of this in future versions.
-	define( 'WPEC_LOAD_DEPRECATED', true );
+	if ( ! defined( 'WPEC_LOAD_DEPRECATED' ) ) {
+		define( 'WPEC_LOAD_DEPRECATED', true );
+	}
 
 	define( 'WPSC_CUSTOMER_COOKIE', 'wpsc_customer_cookie_' . COOKIEHASH );
 	if ( ! defined( 'WPSC_CUSTOMER_COOKIE_PATH' ) )
 		define( 'WPSC_CUSTOMER_COOKIE_PATH', COOKIEPATH );
 
-	if ( ! defined( 'WPSC_CUSTOMER_DATA_EXPIRATION' ) )
-    	define( 'WPSC_CUSTOMER_DATA_EXPIRATION', 48 * 3600 );
+	if ( ! defined( 'WPSC_CUSTOMER_DATA_EXPIRATION' ) ) {
+		define( 'WPSC_CUSTOMER_DATA_EXPIRATION', 48 * 3600 );
+	}
 }
 
 /**
