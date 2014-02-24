@@ -196,6 +196,9 @@ if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 
 		$sql = 'SELECT ID FROM '. $wpdb->users . ' WHERE user_login LIKE "\_%" AND user_email = "" AND user_login = user_nicename AND user_login = display_name LIMIT 100';
 		$user_ids = $wpdb->get_col( $sql, 0 );
+		
+		// Create an array to store users to be removed.
+		$bin = array();
 
 		foreach ( $user_ids as $user_id ) {
 
@@ -226,9 +229,17 @@ if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			$comment_count = $wpdb->get_var( 'SELECT COUNT(comment_ID) FROM ' . $wpdb->comments. ' WHERE user_id = ' . $user_id );
 			if ( ! count_user_posts( $user_id ) && ! $comment_count ) {
 				//wp_delete_user( $user_id );
-				$wpdb->query( 'DELETE FROM ' . $wpdb->users . ' WHERE ID = ' . $user_id  );
-				$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . ' WHERE user_id = ' . $user_id  );
+				// Add user to bin.
+				$bin[] = $user_id;
 			}
+		}
+		
+		// Remove users.
+		if ( ! empty( $bin ) ) {
+			// Convert $bin to string.
+			$bin = implode(',', $bin);
+			$wpdb->query( 'DELETE FROM ' . $wpdb->users . ' WHERE ID IN (' . $bin . ')' );
+			$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . ' WHERE user_id IN (' . $bin . ')' );
 		}
 
 		wp_suspend_cache_addition( false );
