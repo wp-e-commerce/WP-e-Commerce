@@ -11,9 +11,10 @@
  * @return  int  Stock keeping time.
  *
  * @uses  get_option()
+ * @uses  apply_filters() Filters output through wpsc_stock_keeping_time
  */
 function wpsc_get_stock_keeping_time() {
-	return (float) get_option( 'wpsc_stock_keeping_time', 1 );
+	return apply_filters( 'wpsc_stock_keeping_time', (float) get_option( 'wpsc_stock_keeping_time', 1 ) );
 }
 
 /**
@@ -28,9 +29,10 @@ function wpsc_get_stock_keeping_time() {
  * @return  int  Stock keeping interval unit.
  *
  * @uses  get_option()
+ * @uses  apply_filters() Filters output through wpsc_stock_keeping_interval
  */
 function wpsc_get_stock_keeping_interval() {
-	return get_option( 'wpsc_stock_keeping_interval', 'day' );
+	return apply_filters( 'wpsc_stock_keeping_interval', get_option( 'wpsc_stock_keeping_interval', 'day' ) );
 }
 
 /**
