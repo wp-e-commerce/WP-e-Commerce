@@ -273,16 +273,14 @@ class WPSC_Claimed_Stock {
 
 		// Accept WPSC_Purchase_Log object or ID
 		if ( is_a( $purchase_log_id, 'WPSC_Purchase_Log' ) ) {
-			$purchase_log = $purchase_log_id;
-		} else {
-			$purchase_log = new WPSC_Purchase_Log( $purchase_log_id );
+			$purchase_log_id = $purchase_log_id->get( 'id' );
 		}
 
 		$wpdb->query( $wpdb->prepare(
 			"UPDATE `" . WPSC_TABLE_CLAIMED_STOCK . "` 
 			SET `cart_id` = '%d', `cart_submitted` = '1' 
 			WHERE `cart_id` IN(%s)",
-			$purchase_log->get( 'id' ),
+			$purchase_log_id,
 			$this->cart_id
 		) );
 	}
