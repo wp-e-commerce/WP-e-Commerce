@@ -414,7 +414,11 @@ function wpsc_delete_purchlog( $purchlog_id='' ) {
 
 	$purchlog_status = $wpdb->get_var( $wpdb->prepare( "SELECT `processed` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id`= %d", $purchlog_id ) );
 	if ( $purchlog_status == 5 || $purchlog_status == 1 ) {
-		$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_CLAIMED_STOCK . "` WHERE `cart_id` = %d AND `cart_submitted` = '1'", $purchlog_id ) );
+		$claimed_query = new WPSC_Claimed_Stock( array(
+			'cart_id'        => $purchlog_id,
+			'cart_submitted' => 1
+		) );
+		$claimed_query->clear_claimed_stock( 0 );
 	}
 
 	$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid` = %d", $purchlog_id ) );

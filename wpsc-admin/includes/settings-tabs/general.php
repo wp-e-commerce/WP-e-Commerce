@@ -97,8 +97,8 @@ class WPSC_Settings_Tab_General extends WPSC_Settings_Tab {
 			</tr>
 
 			<?php
-				$stock_keeping_time = get_option( 'wpsc_stock_keeping_time', 1 );
-				$stock_keeping_interval = get_option( 'wpsc_stock_keeping_interval', 'day' );
+				$stock_keeping_time = wpsc_get_stock_keeping_time();
+				$stock_keeping_interval = wpsc_get_stock_keeping_interval();
 			?>
 			<tr>
 				<th scope="row">

@@ -747,7 +747,8 @@ function wpsc_product_has_stock( $id = null ) {
 				return true;
 		}
 	} elseif ( $stock > 0 ) {
-		$claimed_stock = $wpdb->get_var("SELECT SUM(`stock_claimed`) FROM `".WPSC_TABLE_CLAIMED_STOCK."` WHERE `product_id` IN($id)");
+		$claimed_query = new WPSC_Claimed_Stock( array( 'product_id' => $id ) );
+		$claimed_stock = $claimed_query->get_claimed_stock_count();
 		if( $stock - $claimed_stock > 0 )
 			return true;
 	}
