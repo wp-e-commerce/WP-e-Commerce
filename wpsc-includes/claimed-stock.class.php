@@ -36,6 +36,25 @@ function wpsc_get_stock_keeping_interval() {
 }
 
 /**
+ * Get Stock Keeping Seconds
+ *
+ * Gets the stock keeping time in seconds.
+ *
+ * @since   3.8.13
+ * @access  public
+ *
+ * @return  int  Stock keeping interval unit.
+ *
+ * @uses  get_option()
+ * @uses  apply_filters() Filters output through wpsc_stock_keeping_seconds
+ */
+function wpsc_get_stock_keeping_seconds() {
+	$time     = wpsc_get_stock_keeping_time();
+	$interval = wpsc_get_stock_keeping_interval();
+	return apply_filters( 'wpsc_stock_keeping_seconds', wpsc_convert_time_interval_to_seconds( $time, $interval ) );
+}
+
+/**
  * Convert time interval to seconds.
  *
  * Takes a number an unit of time (hour/day/week) and converts it to seconds.
@@ -208,21 +227,17 @@ class WPSC_Claimed_Stock {
 	 *
 	 * @param  int  $seconds  Clear stock over this number of seconds old.
 	 *
-	 * @uses  wpsc_get_stock_keeping_time()            Gets stock keeping time.
-	 * @uses  wpsc_get_stock_keeping_interval()        Gets stock leeping unit (hour/day/week).
-	 * @uses  wpsc_convert_time_interval_to_seconds()  Converts time and interval to seconds.
-	 * @uses  wpdb::query()                            Queries DB.
-	 * @uses  wpdb::prepare()                          Prepare DB query.
-	 * @uses  WPSC_Claimed_Stock::_get_where_sql()     Extends product_id/cart_id SQL WHERE clause.
+	 * @uses  wpsc_get_stock_keeping_seconds()      Gets stock keeping time in seconds.
+	 * @uses  wpdb::query()                         Queries DB.
+	 * @uses  wpdb::prepare()                       Prepare DB query.
+	 * @uses  WPSC_Claimed_Stock::_get_where_sql()  Extends product_id/cart_id SQL WHERE clause.
 	 */
 	public function clear_claimed_stock( $seconds = null ) {
 		global $wpdb;
 
 		// If seconds not set, use default settings
 		if ( ! is_int( $seconds ) ) {
-			$time     = wpsc_get_stock_keeping_time();
-			$interval = wpsc_get_stock_keeping_interval();
-			$seconds  = wpsc_convert_time_interval_to_seconds( $time, $interval );
+			$seconds  = wpsc_get_stock_keeping_seconds();
 		}
 
 		$where_clause = $wpdb->prepare( 'last_activity < UTC_TIMESTAMP() - INTERVAL %d SECOND', $seconds );
