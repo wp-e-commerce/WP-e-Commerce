@@ -45,12 +45,16 @@ function wpsc_get_stock_keeping_interval() {
  * @param   int  $time      Stock keeping time.
  * @param   int  $interval  Stock keeping interval unit (hour/day/week).
  * @return  int             Seconds.
+ *
+ * @uses  MINUTE_IN_SECONDS, HOUR_IN_SECONDS, DAY_IN_SECONDS, WEEK_IN_SECONDS, YEAR_IN_SECONDS
  */
 function wpsc_convert_time_interval_to_seconds( $time, $interval ) {
 	$convert = array(
-		'hour' => HOUR_IN_SECONDS,
-		'day'  => DAY_IN_SECONDS,
-		'week' => WEEK_IN_SECONDS,
+		'minute' => MINUTE_IN_SECONDS,
+		'hour'   => HOUR_IN_SECONDS,
+		'day'    => DAY_IN_SECONDS,
+		'week'   => WEEK_IN_SECONDS,
+		'year'   => YEAR_IN_SECONDS,
 	);
 	return floor( $time * $convert[ $interval ] );
 }
