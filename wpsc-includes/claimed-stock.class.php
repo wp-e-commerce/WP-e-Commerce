@@ -52,7 +52,7 @@ function wpsc_convert_time_interval_to_seconds( $time, $interval ) {
 		'day'  => DAY_IN_SECONDS,
 		'week' => WEEK_IN_SECONDS,
 	);
-	return floor( $time * $convert[$interval] );
+	return floor( $time * $convert[ $interval ] );
 }
 
 /**
