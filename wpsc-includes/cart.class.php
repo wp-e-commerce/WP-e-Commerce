@@ -329,10 +329,10 @@ function wpsc_get_remaining_quantity( $product_id, $variations = array(), $quant
 
 	// check to see if the product uses stock
 	if (is_numeric( $stock ) ) {
-		$priceandstock_id = 0;
 
 		if ( $stock > 0 ) {
-			$claimed_stock = $wpdb->get_var( "SELECT SUM(`stock_claimed`) FROM `" . WPSC_TABLE_CLAIMED_STOCK . "` WHERE `product_id` IN('$product_id') AND `variation_stock_id` IN('$priceandstock_id')" );
+			$claimed_query = new WPSC_Claimed_Stock( array( 'product_id' => $product_id ) );
+			$claimed_stock = $claimed_query->get_claimed_stock_count();
 			$output = $stock - $claimed_stock;
 		}
 	}
@@ -756,8 +756,8 @@ class wpsc_cart {
      $stock = apply_filters('wpsc_product_stock', $stock, $product_id);
       // check to see if the product uses stock
       if(is_numeric($stock)){
-         $priceandstock_id = 0;
-
+		$claimed_query = new WPSC_Claimed_Stock( array( 'product_id' => $product_id ) );
+		$claimed_stock = $claimed_query->get_claimed_stock_count();
          if($stock > 0) {
             $claimed_stock = $wpdb->get_var( $wpdb->prepare( "SELECT SUM(`stock_claimed`) FROM `".WPSC_TABLE_CLAIMED_STOCK."` WHERE `product_id` IN(%d) AND `variation_stock_id` IN('%d')", $product_id, $priceandstock_id  ) );
             if(($claimed_stock + $quantity) <= $stock) {
@@ -823,8 +823,8 @@ class wpsc_cart {
     * No parameters, nothing returned
    */
   function empty_cart($fromwidget = true) {
-      global $wpdb;
-      $wpdb->query($wpdb->prepare("DELETE FROM `".WPSC_TABLE_CLAIMED_STOCK."` WHERE `cart_id` IN ('%s');", $this->unique_id));
+		$claimed_query = new WPSC_Claimed_Stock( array( 'cart_id' => $this->unique_id ) );
+		$claimed_query->clear_claimed_stock( 0 );
 
       $this->cart_items = array();
       $this->cart_item = null;
@@ -864,10 +864,10 @@ class wpsc_cart {
     *
     * No parameters, nothing returned
    */
-  function submit_stock_claims($purchase_log_id) {
-    global $wpdb;
-      $wpdb->query($wpdb->prepare("UPDATE `".WPSC_TABLE_CLAIMED_STOCK."` SET `cart_id` = '%d', `cart_submitted` = '1' WHERE `cart_id` IN('%s')", $purchase_log_id, $this->unique_id));
-   }
+	function submit_stock_claims( $purchase_log_id ) {
+		$claimed_query = new WPSC_Claimed_Stock( array( 'cart_id' => $this->unique_id ) );
+		$claimed_query->submit_claimed_stock( $purchase_log_id );
+	}
 
       /**
     * cleanup method, cleans up the cart just before final destruction
@@ -875,10 +875,10 @@ class wpsc_cart {
     *
     * No parameters, nothing returned
    */
-  function cleanup() {
-    global $wpdb;
-      $wpdb->query($wpdb->prepare("DELETE FROM `".WPSC_TABLE_CLAIMED_STOCK."` WHERE `cart_id` IN ('%s')", $this->unique_id));
-   }
+	function cleanup() {
+		$claimed_query = new WPSC_Claimed_Stock( array( 'cart_id' => $this->unique_id ) );
+		$claimed_query->clear_claimed_stock( 0 );
+	}
 
   /**
     * calculate total price method

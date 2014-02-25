@@ -388,9 +388,10 @@ class WPSC_Purchase_Log_Page {
 				$ids = array_map( 'intval', $_REQUEST['post'] );
 				$in = implode( ', ', $ids );
 				$wpdb->query( "DELETE FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE id IN ($in)" );
-				$wpdb->query( "DELETE FROM " . WPSC_TABLE_CLAIMED_STOCK . " WHERE cart_id IN ($in)" );
 				$wpdb->query( "DELETE FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid IN ($in)" );
 				$wpdb->query( "DELETE FROM " . WPSC_TABLE_SUBMITTED_FORM_DATA . " WHERE log_id IN ($in)" );
+				$claimed_query = new WPSC_Claimed_Stock( array( 'cart_id' => $in ) );
+				$claimed_query->clear_claimed_stock( 0 );
 
 				$sendback = add_query_arg( array(
 					'paged'   => $_REQUEST['last_paged'],
