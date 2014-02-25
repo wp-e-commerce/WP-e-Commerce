@@ -48,9 +48,9 @@ function wpsc_get_stock_keeping_interval() {
  */
 function wpsc_convert_time_interval_to_seconds( $time, $interval ) {
 	$convert = array(
-		'hour' => 3600,
-		'day'  => 86400,
-		'week' => 604800,
+		'hour' => HOUR_IN_SECONDS,
+		'day'  => DAY_IN_SECONDS,
+		'week' => WEEK_IN_SECONDS,
 	);
 	return floor( $time * $convert[$interval] );
 }
