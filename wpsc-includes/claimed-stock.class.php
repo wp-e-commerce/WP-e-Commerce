@@ -5,7 +5,7 @@
  *
  * Defaults to day if not set.
  *
- * @since   3.8.13
+ * @since   3.8.14
  * @access  public
  *
  * @return  int  Stock keeping time.
@@ -23,7 +23,7 @@ function wpsc_get_stock_keeping_time() {
  * Gets the stock keeping interval unit - hour / day / week.
  * Defaults to day if not set.
  *
- * @since   3.8.13
+ * @since   3.8.14
  * @access  public
  *
  * @return  int  Stock keeping interval unit.
@@ -40,7 +40,7 @@ function wpsc_get_stock_keeping_interval() {
  *
  * Gets the stock keeping time in seconds.
  *
- * @since   3.8.13
+ * @since   3.8.14
  * @access  public
  *
  * @return  int  Stock keeping interval unit.
@@ -60,7 +60,7 @@ function wpsc_get_stock_keeping_seconds() {
  * The Cart class handles adding, removing and adjusting claimed stock.
  *
  * @package     wp-e-commerce
- * @since       3.8.13
+ * @since       3.8.14
  * @subpackage  wpsc-claimed-stock-class
  */
 class WPSC_Claimed_Stock {
@@ -69,7 +69,7 @@ class WPSC_Claimed_Stock {
 	 * Product ID.
 	 *
 	 * @access  private
-	 * @since  3.8.13
+	 * @since  3.8.14
 	 *
 	 * @var  int
 	 */
@@ -79,7 +79,7 @@ class WPSC_Claimed_Stock {
 	 * Cart ID.
 	 *
 	 * @access  private
-	 * @since  3.8.13
+	 * @since  3.8.14
 	 *
 	 * @var  string|array|bool
 	 */
@@ -89,7 +89,7 @@ class WPSC_Claimed_Stock {
 	 * Cart Submitted.
 	 *
 	 * @access  private
-	 * @since  3.8.13
+	 * @since  3.8.14
 	 *
 	 * @var  int
 	 */
@@ -117,7 +117,7 @@ class WPSC_Claimed_Stock {
 	 * $claimed_stock->submit_claimed_stock( 1256 );
 	 *
 	 * @access  public
-	 * @since  3.8.13
+	 * @since  3.8.14
 	 *
 	 * @param  array  $args  Optional. Array of claimed stock query parameters.
 	 */
@@ -139,7 +139,7 @@ class WPSC_Claimed_Stock {
 	 *
 	 * Gets SQL where clause based on the objects cart and product IDs.
 	 *
-	 * @since   3.8.13
+	 * @since   3.8.14
 	 * @access  public
 	 *
 	 * @param   string  $where  Optional. An already prepared where clause not prefixed by WHERE or AND.
@@ -176,7 +176,7 @@ class WPSC_Claimed_Stock {
 	 *
 	 * Gets total amount of claimed stock for the WPSC_Claimed_Stock object.
 	 *
-	 * @since   3.8.13
+	 * @since   3.8.14
 	 * @access  public
 	 *
 	 * @return  int  Amount of claimed stock.
@@ -196,7 +196,7 @@ class WPSC_Claimed_Stock {
 	 * Clear stock claims that are over a specified number of seconds old.
 	 * If no seconds sepecific the default stock keeping time settings are used.
 	 *
-	 * @since   3.8.13
+	 * @since   3.8.14
 	 * @access  public
 	 *
 	 * @param  int  $seconds  Clear stock over this number of seconds old.
@@ -225,7 +225,7 @@ class WPSC_Claimed_Stock {
 	 * Updates unclaimed product stock for a cart instance.
 	 * Will only work for instances that have a cart_id and product_id.
 	 *
-	 * @since   3.8.13
+	 * @since   3.8.14
 	 * @access  public
 	 *
 	 * @param  int  $stock_claimed  Amount of claimed stock.
@@ -256,7 +256,7 @@ class WPSC_Claimed_Stock {
 	 * Updates claimed stock when cart is submitted to associate it with a purchase log instead.
 	 * Will only work for instances that have a cart_id.
 	 *
-	 * @since   3.8.13
+	 * @since   3.8.14
 	 * @access  public
 	 *
 	 * @param  int|object  $purchase_log_id  Purchase Log object or ID.
@@ -290,7 +290,7 @@ class WPSC_Claimed_Stock {
 	 *
 	 * Gets an array of claimed stock data for purchase log (submitted cart).
 	 *
-	 * @since   3.8.13
+	 * @since   3.8.14
 	 * @access  public
 	 *
 	 * @return  array  Purchase log claimed stock results.

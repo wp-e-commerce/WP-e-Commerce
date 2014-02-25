@@ -52,7 +52,7 @@ function wpsc_country_has_state($country_code){
  * Takes a number an unit of time (hour/day/week) and converts it to seconds.
  * It allows decimal intervals like 1.5 days.
  *
- * @since   3.8.13
+ * @since   3.8.14
  * @access  public
  *
  * @param   int  $time      Stock keeping time.
