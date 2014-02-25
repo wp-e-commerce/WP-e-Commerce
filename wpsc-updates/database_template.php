@@ -250,7 +250,7 @@ $wpsc_database_template[$table_name]['columns']['created'] = 'timestamp NOT NULL
 $wpsc_database_template[$table_name]['indexes']['PRIMARY'] = 'PRIMARY KEY  ( `id` ) ';
 $wpsc_database_template[$table_name]['indexes']['user_id'] = 'KEY `user_id` ( `user_id` ) ';
 $wpsc_database_template[$table_name]['indexes']['last_active'] = 'KEY last_active ( `last_active` ) ';
-$wpsc_database_template[$table_name]['indexes']['expires'] = 'KEY exipres ( `expires` ) ';
+$wpsc_database_template[$table_name]['indexes']['expires'] = 'KEY expires ( `expires` ) ';
 $wpsc_database_template[$table_name]['indexes']['created'] = 'KEY created ( `created` ) ';
 $wpsc_database_template[$table_name]['actions']['after']['all'] = '_wpsc_create_well_known_users';
 
@@ -266,7 +266,7 @@ $wpsc_database_template[$table_name]['indexes']['meta_key'] = 'KEY `meta_key` ( 
 $wpsc_database_template[$table_name]['indexes']['meta_value'] = 'KEY `meta_value` ( `meta_value`(20) ) ';
 $wpsc_database_template[$table_name]['indexes']['meta_key_and_value'] = 'KEY `meta_key_and_value` ( `meta_key`(191), `meta_value`(32) ) ';
 $wpsc_database_template[$table_name]['indexes']['meta_timestamp_index'] = 'KEY meta_timestamp_index (meta_timestamp) ';
-$wpsc_database_template[$table_name]['indexes']['wpsc_visitor_id'] = 'KEY wpsc_purchase_id ( `wpsc_visitor_id` ) ';
+$wpsc_database_template[$table_name]['indexes']['wpsc_visitor_id'] = 'KEY wpsc_visitor_id ( `wpsc_visitor_id` ) ';
 $wpsc_database_template[$table_name]['actions']['after']['all'] = '_wpsc_meta_migrate_anonymous_users';
 
 
