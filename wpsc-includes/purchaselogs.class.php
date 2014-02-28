@@ -113,7 +113,7 @@ function wpsc_purchlogs_get_weight( $id = '', $out_unit = 'pound' ) {
 	$weight = 0.0;
 	$items_count = 0;
 
-	if ( empty( $id ) || $id == $thepurchlogitem->purchlogid ) {
+	if ( empty( $id ) || ( ! empty( $purchlogitem ) &&  ( $id == $purchlogitem->purchlogid ) ) ) {
 		$thepurchlogitem = $purchlogitem;
 	} else {
 		$thepurchlogitem = new wpsc_purchaselogs_items( $id );
