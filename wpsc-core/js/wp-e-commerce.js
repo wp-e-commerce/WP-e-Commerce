@@ -311,7 +311,7 @@ jQuery(document).ready(function ($) {
 		if(file_upload_elements.length > 0) {
 			return true;
 		} else {
-			var action_buttons = jQuery(this).children('input[name="wpsc_ajax_action"]');
+			var action_buttons = jQuery( 'input[name="wpsc_ajax_action"]', jQuery( this ) );
 			var action = action_buttons[0].value;
 			form_values = jQuery(this).serialize() + '&action=' + action;
 
