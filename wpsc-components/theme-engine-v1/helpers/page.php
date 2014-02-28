@@ -426,7 +426,8 @@ function wpsc_get_the_category_display($slug){
  * wpsc display products function
  * @return string - html displaying one or more products
  */
-function wpsc_display_products_page( $query ) {global $wpdb, $wpsc_query,$wp_query, $wp_the_query;
+function wpsc_display_products_page( $query ) {
+	global $wpdb, $wpsc_query,$wp_query, $wp_the_query;
 
 	remove_filter('the_title','wpsc_the_category_title');
 
