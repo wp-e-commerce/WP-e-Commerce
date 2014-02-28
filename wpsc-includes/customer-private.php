@@ -169,7 +169,6 @@ function _wpsc_create_customer_id_cookie( $id, $fake_it = false ) {
 	$expire = time() + WPSC_CUSTOMER_DATA_EXPIRATION; // valid for 48 hours
 	$data   = $id . $expire;
 
-	$user = get_user_by( 'id', $id );
 	$key = wp_hash( _wpsc_visitor_security_key( $id ) . '|' . $expire );
 
 	$hash   = hash_hmac( 'md5', $data, $key );
