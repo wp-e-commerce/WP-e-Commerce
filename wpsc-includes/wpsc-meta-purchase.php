@@ -93,7 +93,7 @@ function wpsc_purchase_meta_exists( $purchase_id, $meta_key ) {
  * @param mixed $prev_value Optional. Previous value to check before removing.
  * @return bool False on failure, true if success.
  */
-function wpsc_update_purchase_meta( $_id, $meta_key, $meta_value, $prev_value = '' ) {
+function wpsc_update_purchase_meta( $purchase_id, $meta_key, $meta_value, $prev_value = '' ) {
 	return update_metadata( 'wpsc_purchase' , $purchase_id , $meta_key , $meta_value , $prev_value );
 }
 
