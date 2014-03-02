@@ -17,7 +17,7 @@
 
 	<div id='post-body'>
 		<?php if ( wpsc_has_purchlog_shipping() ): ?>
-		<?php do_action( 'wpsc_shipping_details_top' ); ?>
+		<?php do_action( 'wpsc_shipping_details_top', $this->log_id ); ?>
 			<div id='wpsc_shipping_details_box'>
 				<h3><?php esc_html_e( 'Shipping Address', 'wpsc' ); ?></h3>
 				<blockquote>
@@ -52,12 +52,12 @@
 
 					<?php } ?>
 				</blockquote>
-				<?php do_action( 'wpsc_shipping_details_bottom' ); ?>
+				<?php do_action( 'wpsc_shipping_details_bottom', $this->log_id ); ?>
 			</div>
 		<?php endif ?>
 
 		<div id='wpsc_billing_details_box'>
-			<?php do_action( 'wpsc_billing_details_top' ); ?>
+			<?php do_action( 'wpsc_billing_details_top', $this->log_id ); ?>
 			<h3><?php esc_html_e( 'Billing Details', 'wpsc' ); ?></h3>
 			<blockquote>
 				<strong>
@@ -81,7 +81,7 @@
 					<strong><?php esc_html_e( 'How User Found Us:', 'wpsc' ); ?> </strong><?php echo wpsc_display_purchlog_howtheyfoundus(); ?><br />
 				<?php endif; ?>
 			</blockquote>
-			<?php do_action( 'wpsc_billing_details_bottom'); ?>
+			<?php do_action( 'wpsc_billing_details_bottom', $this->log_id ); ?>
 		</div>
 
 		<div id='wpsc_items_ordered'>
