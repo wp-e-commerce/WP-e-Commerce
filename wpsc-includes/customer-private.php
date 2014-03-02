@@ -255,11 +255,9 @@ function _wpsc_set_purchase_log_customer_id( $wpsc_purchase_log ) {
 
 	// connect the visitor to purchase
 	wpsc_add_visitor_meta( wpsc_get_current_customer_id(), 'purchase_id',  $wpsc_purchase_log->id, false );
-
-	return $data;
 }
 
-add_filter( 'wpsc_purchase_log_insert', '_wpsc_set_purchase_log_customer_id', 10, 1 );
+add_action( 'wpsc_purchase_log_insert', '_wpsc_set_purchase_log_customer_id', 10, 1 );
 
 /**
  * Return the internal customer meta key, which depends on the blog prefix
