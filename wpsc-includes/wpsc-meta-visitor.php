@@ -785,11 +785,8 @@ function wpsc_visitor_post_count( $visitor_id ) {
 		$post_count = count_user_posts( $wp_user_id );
 	}
 
-
 	return $post_count;
 }
-
-
 
 //
 // visitor meta functions
