@@ -765,7 +765,28 @@ function wpsc_visitor_has_purchases( $visitor_id ) {
 	return $has_purchases;
 }
 
+/**
+ * does the customer have posts
+ * @since 3.8.14
+ * @access public
+ * @param string $id
+ * @return int
+ */
+function wpsc_visitor_post_count( $visitor_id ) {
 
+	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
+	$post_count = 0;
+
+	// If there is one, check the WordPress user id in the purchase logs
+	if ( $wp_user_id = wpsc_get_visitor_wp_user_id( $visitor_id ) ) {
+		$post_count = count_user_posts( $wp_user_id );
+	}
+
+	return $post_count;
+}
 
 //
 // visitor meta functions
