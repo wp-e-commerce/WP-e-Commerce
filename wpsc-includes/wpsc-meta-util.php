@@ -1,10 +1,35 @@
 <?php
+
+/**
+ * Get all object ids that have the meta value
+ *
+ * @since 3.8.12
+ *
+ * @param string $meta_object_type the wordpress meta object type
+ * @param string $meta_key ids with the specified meta key
+ * @return array of int 	meta object type object ids that match have the meta key
+ */
+function wpsc_get_ids_by_meta_key( $meta_object_type, $meta_key = '' ) {
+	global $wpdb;
+
+	$meta_table = wpsc_meta_table_name( $meta_object_type );
+	$id_field_name = $meta_object_type . '_id';
+	$sql = 'SELECT ' . $id_field_name . ' FROM `' . $meta_table . '` where meta_key = "' . $meta_key . '"';
+	$meta_rows = $wpdb->get_results( $sql, OBJECT_K  );
+
+	$ids = array_keys( $meta_rows );
+
+	return $ids;
+}
+
+
 /**
  * Calls function for each meta matching the timestamp criteria.  Callback function
  * will get a single parameter that is an object representing the meta.
  *
  * @since 3.8.12
  *
+ * @param string $meta_object_type the wordpress meta object type
  * @param int|string $timestamp timestamp to compare meta items against, if int a unix timestamp is assumed,
  *								if string a mysql timestamp is assumed
  * @param string $comparison any one of the supported comparison operators,(=,>=,>,<=,<,<>,!=)
@@ -25,13 +50,13 @@ function wpsc_get_meta_by_timestamp( $meta_object_type, $timestamp = 0, $compari
 		if ( is_int( $timestamp ) )
 			$timestamp = date( 'Y-m-d H:i:s', $timestamp );
 
-		$sql = 'SELECT * FROM {$meta_table} where meta_timestamp {$comparison} %s';
+		$sql = 'SELECT * FROM {$meta_table} where meta_timestamp {$comparison} "' . $timestamp . '"';
 	}
 
-	if ( ! empty ($meta_key ) )
-		$sql .= ' AND meta_key = %s';
+	if ( ! empty ($meta_key ) ) {
+		$sql .= ' AND meta_key = "' . $meta_key . '"';
+	}
 
-	$sql = $wpdb->prepare( $sql, $timestamp, $meta_key );
 	$meta_rows = $wpdb->get_results( $sql, OBJECT  );
 
 	return $meta_rows;
@@ -196,7 +221,7 @@ if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 
 		$sql = 'SELECT ID FROM '. $wpdb->users . ' WHERE user_login LIKE "\_%" AND user_email = "" AND user_login = user_nicename AND user_login = display_name LIMIT 100';
 		$user_ids = $wpdb->get_col( $sql, 0 );
-		
+
 		// Create an array to store users to be removed.
 		$bin = array();
 
@@ -233,20 +258,18 @@ if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 				$bin[] = $user_id;
 			}
 		}
-		
+
 		// Remove users.
 		if ( ! empty( $bin ) ) {
 			// Convert $bin to string.
-			$bin = implode(',', $bin);
+			$bin = implode( ',', $bin );
 			$wpdb->query( 'DELETE FROM ' . $wpdb->users . ' WHERE ID IN (' . $bin . ')' );
 			$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . ' WHERE user_id IN (' . $bin . ')' );
 		}
 
 		wp_suspend_cache_addition( false );
 		exit( 0 );
-
 	}
-
 }
 
 add_action( 'wpsc_migrate_anonymous_user_cron', '_wpsc_meta_migrate_anonymous_user_cron' );
