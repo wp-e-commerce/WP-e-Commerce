@@ -3,7 +3,7 @@
 /**
  * Get all object ids that have the meta value
  *
- * @since 3.8.12
+ * @since 3.8.14
  *
  * @param string $meta_object_type the wordpress meta object type
  * @param string $meta_key ids with the specified meta key
