@@ -42,8 +42,10 @@ function wpsc_get_meta_by_timestamp( $meta_object_type, $timestamp = 0, $compari
 	global $wpdb;
 
 	$meta_table = wpsc_meta_table_name( $meta_object_type );
+	$id_field_name = $meta_object_type . '_id';
+
 	if ( ($timestamp == 0) || empty( $timestamp ) ) {
-		$sql = "SELECT * FROM `{$meta_table}`";
+		$sql = 'SELECT ' . $id_field_name . ' as id FROM `' . $meta_table . '` ';
 	} else {
 		// validate the comparison operator
 		if ( ! in_array( $comparison, array( '=', '>=', '>', '<=', '<', '<>', '!='	) ) )
@@ -52,7 +54,6 @@ function wpsc_get_meta_by_timestamp( $meta_object_type, $timestamp = 0, $compari
 		if ( is_int( $timestamp ) )
 			$timestamp = date( 'Y-m-d H:i:s', $timestamp );
 
-		$id_field_name = $meta_object_type . '_id';
 
 		$sql = 'SELECT ' . $id_field_name . ' as id FROM `' . $meta_table . '` where meta_timestamp ' . $comparison . ' "' . $timestamp . '"';
 	}
