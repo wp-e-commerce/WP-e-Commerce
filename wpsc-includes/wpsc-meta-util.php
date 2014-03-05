@@ -50,7 +50,7 @@ function wpsc_get_meta_by_timestamp( $meta_object_type, $timestamp = 0, $compari
 		if ( is_int( $timestamp ) )
 			$timestamp = date( 'Y-m-d H:i:s', $timestamp );
 
-		$sql = 'SELECT * FROM {$meta_table} where meta_timestamp {$comparison} "' . $timestamp . '"';
+		$sql = 'SELECT * FROM `' . $meta_table . '` where meta_timestamp ' . $comparison . ' "' . $timestamp . '"';
 	}
 
 	if ( ! empty ($meta_key ) ) {
