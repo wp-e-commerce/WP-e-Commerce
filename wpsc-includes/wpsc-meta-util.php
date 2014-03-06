@@ -14,7 +14,10 @@ function wpsc_get_ids_by_meta_key( $meta_object_type, $meta_key = '' ) {
 
 	$meta_table = wpsc_meta_table_name( $meta_object_type );
 	$id_field_name = $meta_object_type . '_id';
-	$sql = 'SELECT ' . $id_field_name . ' FROM `' . $meta_table . '` where meta_key = "' . $meta_key . '"';
+
+	$sql = 'SELECT %s FROM `%s` where meta_key = "%s"';
+	$sql = $wpdb->prepare( $sql , $id_field_name, $meta_table, $meta_key );
+
 	$meta_rows = $wpdb->get_results( $sql, OBJECT_K  );
 
 	$ids = array_keys( $meta_rows );
@@ -45,7 +48,7 @@ function wpsc_get_meta_by_timestamp( $meta_object_type, $timestamp = 0, $compari
 	$id_field_name = $meta_object_type . '_id';
 
 	if ( ($timestamp == 0) || empty( $timestamp ) ) {
-		$sql = 'SELECT ' . $id_field_name . ' as id FROM `' . $meta_table . '` ';
+		$sql = 'SELECT $id_field_name as id FROM `$meta_table` ';
 	} else {
 		// validate the comparison operator
 		if ( ! in_array( $comparison, array( '=', '>=', '>', '<=', '<', '<>', '!='	) ) )
@@ -55,11 +58,14 @@ function wpsc_get_meta_by_timestamp( $meta_object_type, $timestamp = 0, $compari
 			$timestamp = date( 'Y-m-d H:i:s', $timestamp );
 
 
-		$sql = 'SELECT ' . $id_field_name . ' as id FROM `' . $meta_table . '` where meta_timestamp ' . $comparison . ' "' . $timestamp . '"';
+		$sql = 'SELECT ' . $id_field_name . ' as id FROM `' . $meta_table. '` where meta_timestamp ' . $comparison . ' "%s"';
+		$sql = $wpdb->prepare( $sql , $timestamp );
+
 	}
 
 	if ( ! empty ($meta_key ) ) {
-		$sql .= ' AND meta_key = "' . $meta_key . '"';
+		$sql .= ' AND meta_key = %s';
+		$sql = $wpdb->prepare( $sql , $meta_key );
 	}
 
 	$meta_rows = $wpdb->get_results( $sql, OBJECT_K  );
