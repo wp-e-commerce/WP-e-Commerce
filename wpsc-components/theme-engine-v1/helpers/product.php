@@ -646,11 +646,7 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 			$src     = apply_filters( 'wpsc_buy_now_button_src', _x( 'https://www.paypal.com/en_US/i/btn/btn_buynow_LG.gif', 'PayPal Buy Now Button', 'wpsc' ) );
 			$classes = apply_filters( 'wpsc_buy_now_button_class', "wpsc-buy-now-form wpsc-buy-now-form-{$product_id}" );
 
-            $classes_array = explode( ' ', $classes );
-
-            array_walk( $classes_array, function( & $class ) {
-                $class = sanitize_html_class( $class, '' );
-            } );
+            $classes_array = array_map( 'sanitize_html_class', explode( ' ', $classes ) );
 
             $classes = implode( ' ', $classes_array );
 
