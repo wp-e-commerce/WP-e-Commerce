@@ -93,10 +93,10 @@ function _wpsc_validate_visitor_meta_key( $visitor_meta_key ) {
 	// WPEC internal visitor meta keys are not allowed to be aliased, internal visitor meta keys
 	if ( ! ( strpos( $visitor_meta_key, _wpsc_get_visitor_meta_key( '' ) ) === 0 ) ) {
 
-		$build_in_checkout_names = wpsc_checkout_unique_names();
+		$built_in_checkout_names = wpsc_checkout_unique_names();
 
 		// the built in checkout names cannot be aliased to something else
-		if ( ! isset( $build_in_checkout_names[$visitor_meta_key] ) ) {
+		if ( ! in_array( $visitor_meta_key, $built_in_checkout_names ) ) {
 
 			/**
 			 * Filter wpsc_visitor_meta_key_replacements
@@ -111,7 +111,7 @@ function _wpsc_validate_visitor_meta_key( $visitor_meta_key ) {
 			 */
 			$aliased_meta_keys = apply_filters( 'wpsc_visitor_meta_key_replacements', array() );
 
-			if ( in_array( $visitor_meta_key, $aliased_meta_keys ) ) {
+			if ( isset( $aliased_meta_keys[$visitor_meta_key] ) ) {
 				$visitor_meta_key = $aliased_meta_keys[$visitor_meta_key];
 			}
 		}
@@ -196,7 +196,7 @@ if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 
 		$sql = 'SELECT ID FROM '. $wpdb->users . ' WHERE user_login LIKE "\_%" AND user_email = "" AND user_login = user_nicename AND user_login = display_name LIMIT 100';
 		$user_ids = $wpdb->get_col( $sql, 0 );
-		
+
 		// Create an array to store users to be removed.
 		$bin = array();
 
@@ -233,7 +233,7 @@ if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 				$bin[] = $user_id;
 			}
 		}
-		
+
 		// Remove users.
 		if ( ! empty( $bin ) ) {
 			// Convert $bin to string.
