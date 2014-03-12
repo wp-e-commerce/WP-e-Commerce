@@ -339,7 +339,7 @@ endif;
                <tr class='same_as_shipping_row'>
                   <td colspan ='2'>
                   <?php $checked = '';
-                  $shipping_same_as_billing = wpsc_get_customer_meta( 'shipping_same_as_billing' );
+                  $shipping_same_as_billing = wpsc_get_customer_meta( 'shippingSameBilling' );
                   if(isset($_POST['shippingSameBilling']) && $_POST['shippingSameBilling'])
                      $shipping_same_as_billing = true;
                   elseif(isset($_POST['submit']) && !isset($_POST['shippingSameBilling']))

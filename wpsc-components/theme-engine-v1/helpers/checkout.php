@@ -133,7 +133,7 @@ function wpsc_disregard_shipping_state_fields(){
 	 		return true;
 	 	else
 	 		return false;
-	elseif ( 'billingstate' == $wpsc_checkout->checkout_item->unique_name && wpsc_has_regions( wpsc_get_customer_meta( 'billing_country' ) ) ):
+	elseif ( 'billingstate' == $wpsc_checkout->checkout_item->unique_name && wpsc_has_regions( wpsc_get_customer_meta( 'billingcountry' ) ) ):
 		return true;
 	endif;
 
@@ -142,7 +142,7 @@ function wpsc_disregard_shipping_state_fields(){
 
 function wpsc_disregard_billing_state_fields(){
 	global $wpsc_checkout;
-	if ( 'billingstate' == $wpsc_checkout->checkout_item->unique_name && wpsc_has_regions( wpsc_get_customer_meta( 'billing_country' ) ) )
+	if ( 'billingstate' == $wpsc_checkout->checkout_item->unique_name && wpsc_has_regions( wpsc_get_customer_meta( 'billingcountry' ) ) )
 		return true;
 	return false;
 }

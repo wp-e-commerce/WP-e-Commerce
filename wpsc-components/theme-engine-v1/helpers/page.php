@@ -1034,7 +1034,7 @@ function wpsc_place_shopping_cart( $content = '' ) {
 		$_SESSION['coupon_numbers'                    ] = wpsc_get_customer_meta( 'coupon'                       );
 		$_SESSION['wpsc_checkout_misc_error_messages' ] = wpsc_get_customer_meta( 'checkout_misc_error_messages' );
 		$_SESSION['categoryAndShippingCountryConflict'] = wpsc_get_customer_meta( 'category_shipping_conflict'   );
-		$_SESSION['shippingSameBilling'               ] = wpsc_get_customer_meta( 'shipping_same_as_billing'     );
+		$_SESSION['shippingSameBilling'               ] = wpsc_get_customer_meta( 'shippingSameBilling'          );
 		$_SESSION['wpsc_checkout_user_error_messages' ] = wpsc_get_customer_meta( 'registration_error_messages'  );
 		// END: compatibility fix
 		$GLOBALS['nzshpcrt_activateshpcrt'] = true;

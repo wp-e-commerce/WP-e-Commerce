@@ -474,13 +474,13 @@ function wpsc_update_location() {
 	$billing_country = '';
 	if ( ! empty( $_POST['country'] ) ) {
 		$delivery_country = $_POST['country'];
-		$billing_country  = wpsc_get_customer_meta( 'billing_country'  );
-		$delivery_region  = wpsc_get_customer_meta( 'shipping_region'  );
-		$billing_region   = wpsc_get_customer_meta( 'billing_region'   );
-		$shipping_zipcode = wpsc_get_customer_meta( 'shipping_zipcode' );
+		$billing_country  = wpsc_get_customer_meta( 'billingcountry'  );
+		$delivery_region  = wpsc_get_customer_meta( 'shippingregion'  );
+		$billing_region   = wpsc_get_customer_meta( 'billingregion'   );
+		$shipping_zipcode = wpsc_get_customer_meta( 'shippingzipcode' );
 
 		if ( ! $billing_country )
-			wpsc_update_customer_meta( 'billing_country', $_POST['country'] );
+			wpsc_update_customer_meta( 'billingcountry', $_POST['country'] );
 
 		if ( ! empty( $_POST['region'] ) ) {
 			$delivery_region = $_POST['region'];
@@ -522,8 +522,8 @@ function wpsc_update_location() {
 		$wpsc_cart->update_shipping( $wpsc_cart->selected_shipping_method, $wpsc_cart->selected_shipping_option );
 	}
 
-	if ( wpsc_get_customer_meta( 'shipping_same_as_billing' ) && ( $delivery_country != $billing_country || $delivery_region != $billing_region ) )
-		wpsc_update_customer_meta( 'shipping_same_as_billing', false );
+	if ( wpsc_get_customer_meta( 'shippingSameBilling' ) && ( $delivery_country != $billing_country || $delivery_region != $billing_region ) )
+		wpsc_update_customer_meta( 'shippingSameBilling', false );
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX && isset( $_REQUEST['action'] ) && 'update_location' == $_REQUEST['action'] )
 		exit;
@@ -906,7 +906,7 @@ function _wpsc_change_profile_country() {
 }
 
 function wpsc_shipping_same_as_billing(){
-	wpsc_update_customer_meta( 'shipping_same_as_billing', $_POST['wpsc_shipping_same_as_billing'] );
+	wpsc_update_customer_meta( 'shippingSameBilling', $_POST['wpsc_shipping_same_as_billing'] );
 }
 
 function wpsc_update_shipping_quotes_on_shipping_same_as_billing() {
