@@ -223,6 +223,15 @@ function wpsc_meta_item_change_response( response ) {
 	
 	if ( response.type == 'success' ) {		
 
+		// Whatever replacements have been sent for the checkout form can be efficiently
+		// put into view
+		if ( response.hasOwnProperty('replacements') ) {
+			jQuery.each( response.replacements, function( elementname, replacement ) {
+				jQuery( '#'+replacement.elementid ).replaceWith( replacement.element );
+			});
+		}		
+		
+
 		// Whatever has changed as far as customer meta should be processed
 		if ( response.hasOwnProperty( 'checkout_info' ) ) {
 			if ( ! wpsc_update_checkout_info( response.checkout_info ) ) { 
@@ -235,14 +244,6 @@ function wpsc_meta_item_change_response( response ) {
 			wpsc_update_customer_metas( response.customer_meta );
 		}
 
-		// Whatever replacements have been sent for the checkout form can be efficiently
-		// put into view
-		if ( response.hasOwnProperty('replacements') ) {
-			jQuery.each( response.replacements, function( elementname, replacement ) {
-				jQuery( '#'+replacement.elementid ).replaceWith( replacement.element );
-			});
-		}		
-			
 		// TODO: this is where we can rely on the PHP application to generate and format the content for the 
 		// checkout screen rather than doing lot's of work in this js.  If we update the PHP application top
 		// return the elements for the checkout screen using the same logic that is used when the checkout 
