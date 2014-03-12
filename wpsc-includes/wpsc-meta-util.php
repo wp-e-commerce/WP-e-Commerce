@@ -283,7 +283,9 @@ function _wpsc_visitor_meta_key_replacements( $meta_keys ) {
 	$meta_keys['shipping_region']          = 'shippingregion';
 	$meta_keys['shipping_country']         = 'shippingcountry';
 	$meta_keys['shipping_zip']             = 'shippingpostcode';
+	$meta_keys['shipping_zipcode']         = 'shippingpostcode';
 	$meta_keys['billing_zip']              = 'billingpostcode';
+	$meta_keys['billing_zipcode']          = 'billingpostcode';
 	$meta_keys['shippingzip']              = 'shippingpostcode';
 	$meta_keys['billingzip']               = 'billingpostcode';
 	$meta_keys['shipping_same_as_billing'] = 'shippingSameBilling';

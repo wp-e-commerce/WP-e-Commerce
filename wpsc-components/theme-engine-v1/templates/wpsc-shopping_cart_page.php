@@ -344,7 +344,7 @@ endif;
                      $shipping_same_as_billing = true;
                   elseif(isset($_POST['submit']) && !isset($_POST['shippingSameBilling']))
                   	$shipping_same_as_billing = false;
-                  wpsc_update_customer_meta( 'shipping_same_as_billing', $shipping_same_as_billing );
+                  wpsc_update_customer_meta( 'shippingSameBilling', $shipping_same_as_billing );
                   	if( $shipping_same_as_billing )
                   		$checked = 'checked="checked"';
                    ?>

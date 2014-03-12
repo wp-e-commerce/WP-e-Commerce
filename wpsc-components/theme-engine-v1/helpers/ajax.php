@@ -477,7 +477,7 @@ function wpsc_update_location() {
 		$billing_country  = wpsc_get_customer_meta( 'billingcountry'  );
 		$delivery_region  = wpsc_get_customer_meta( 'shippingregion'  );
 		$billing_region   = wpsc_get_customer_meta( 'billingregion'   );
-		$shipping_zipcode = wpsc_get_customer_meta( 'shippingzipcode' );
+		$shipping_zipcode = wpsc_get_customer_meta( 'shippingpostcode' );
 
 		if ( ! $billing_country )
 			wpsc_update_customer_meta( 'billingcountry', $_POST['country'] );
@@ -512,7 +512,7 @@ function wpsc_update_location() {
 	wpsc_update_customer_meta( 'billingregion'   , $billing_region   );
 
 	if ( isset( $shipping_zipcode ) ) {
-		wpsc_update_customer_meta( 'shippingzip'     , $shipping_zipcode );
+		wpsc_update_customer_meta( 'shippingpostcode'     , $shipping_zipcode );
 	}
 
 	$wpsc_cart->update_location();

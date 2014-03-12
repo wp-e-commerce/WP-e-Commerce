@@ -94,7 +94,7 @@ function wpsc_has_category_and_country_conflict(){
  * @return (boolean) true or false
  */
 function wpsc_have_valid_shipping_zipcode(){
-	$zip = wpsc_get_customer_meta( 'shipping_zip' );
+	$zip = wpsc_get_customer_meta( 'shippingpostcode' );
 
 	if( ! $zip || ( __( 'Your Zipcode', 'wpsc' ) == $zip ) && ( wpsc_get_customer_meta( 'update_location' ) ) )
 		return false;
