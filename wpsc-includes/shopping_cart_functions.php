@@ -129,7 +129,7 @@ function wpsc_country_region_list( $form_id = null, $ajax = false, $selected_cou
 	$region_form_id = $wpdb->get_var( $sql );
 
 	if ( $shippingfields ) {
-		$namevalue = ' name="collected_data["' . $region_form_id . ']" ';
+		$namevalue = ' name="collected_data[' . $region_form_id . ']" ';
 		$js = '';
 		$title = 'shippingregion';
 		$id = 'shippingregion';
