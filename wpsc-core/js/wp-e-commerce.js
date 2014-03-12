@@ -130,7 +130,7 @@ function wpsc_update_customer_metas( customer_metas ) {
 		
 		// if there are other fields on the current page that are used to change the same meta value then 
 		// they need to be updated
-		var selector = 'input[data-wpsc-meta-key="' + meta_key + '"]';
+		var selector = '[data-wpsc-meta-key="' + meta_key + '"]';
 		
 		jQuery( selector ).each( function( index, value ) {		
 			if ( jQuery(this).is(':checkbox') ) {
