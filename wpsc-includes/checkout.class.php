@@ -321,7 +321,11 @@ class wpsc_checkout {
 			case "delivery_address":
 			case "textarea":
 				$placeholder = apply_filters( 'wpsc_checkout_field_placeholder', apply_filters( 'wpsc_checkout_field_name', $this->checkout_item->name ), $this->checkout_item );
-				$output .= '<textarea data-wpsc-meta-key="' . $this->checkout_item->unique_name . '" title="' . $this->checkout_item->unique_name . '" class="text wpsc-visitor-meta" id="' . $this->form_element_id() . '" name="collected_data[{$this->checkout_item->id}]' . $an_array . '" placeholder="' . esc_attr( $placeholder ) . '" rows="3" cols="40" >' . esc_html( (string) $saved_form_data ) . '</textarea>';
+				$output .= '<textarea data-wpsc-meta-key="' . $this->checkout_item->unique_name . '" title="' . $this->checkout_item->unique_name
+							. '" class="text wpsc-visitor-meta" id="' . $this->form_element_id()
+								. '" name="collected_data[' . $this->checkout_item->id. ']' . $an_array . '" placeholder="'
+										. esc_attr( $placeholder ) . '" rows="3" cols="40" >'
+												. esc_html( (string) $saved_form_data ) . '</textarea>';
 				break;
 
 			case "checkbox":
