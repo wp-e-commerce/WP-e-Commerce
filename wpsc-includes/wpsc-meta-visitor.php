@@ -1200,31 +1200,3 @@ function _wpsc_updated_visitor_meta_billingcountry( $meta_value, $meta_key, $vis
 }
 
 add_action( 'wpsc_updated_visitor_meta_billingcountry', '_wpsc_updated_visitor_meta_billingcountry' , 1 , 3 );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-add_action( 'wpsc_updated_visitor_meta_shippingcountry',  '_wpsc_customer_shipping_quotes_need_recalc' , 1 , 3 );
-add_action( 'wpsc_updated_visitor_meta_shippingpostcode',  '_wpsc_customer_shipping_quotes_need_recalc' , 1 , 3 );
-add_action( 'wpsc_updated_visitor_meta_shippingstate', '_wpsc_customer_shipping_quotes_need_recalc' , 1 , 3 );
-
