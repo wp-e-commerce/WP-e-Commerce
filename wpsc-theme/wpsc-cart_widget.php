@@ -25,6 +25,7 @@
 					<input type="hidden" name="quantity" value="0" />
 					<input type="hidden" name="key" value="<?php echo wpsc_the_cart_item_key(); ?>" />
 					<input type="hidden" name="wpsc_update_quantity" value="true" />
+					<input type='hidden' name='wpsc_ajax_action' value='wpsc_update_quantity' />
 					<input class="remove_button" type="submit" />
 				</form></td>
 			</tr>

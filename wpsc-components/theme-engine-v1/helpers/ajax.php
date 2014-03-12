@@ -1,69 +1,199 @@
 <?php
-add_action('wp_ajax_wpsc_shipping_same_as_billing', 'wpsc_shipping_same_as_billing');
-add_action( 'wp_ajax_shipping_same_as_billing_update', 'wpsc_update_shipping_quotes_on_shipping_same_as_billing' );
-add_action( 'wp_ajax_nopriv_shipping_same_as_billing_update', 'wpsc_update_shipping_quotes_on_shipping_same_as_billing' );
 
-if ( isset( $_GET['termsandconds'] ) && 'true' == $_GET['termsandconds'] )
-	add_action( 'init', 'wpsc_show_terms_and_conditions' );
 
-if ( isset( $_REQUEST['wpsc_action'] ) && ($_REQUEST['wpsc_action'] == 'submit_checkout') ) {
-	add_action( 'init', 'wpsc_submit_checkout', 10, 0 );
-}
-
-if ( isset( $_REQUEST['wpsc_action'] ) && ($_REQUEST['wpsc_action'] == 'cart_html_page') )
-	add_action( 'init', 'wpsc_cart_html_page', 110 );
-
-if ( get_option( 'wpsc_also_bought' ) == 1 )
-	add_action( 'wpsc_submit_checkout', 'wpsc_populate_also_bought_list' );
-
-if ( isset( $_REQUEST['get_rating_count'] ) && ($_REQUEST['get_rating_count'] == 'true') && is_numeric( $_POST['product_id'] ) )
-	add_action( 'init', 'wpsc_get_rating_count' );
-
-if ( isset( $_REQUEST['wpsc_ajax_action'] ) && ($_REQUEST['wpsc_ajax_action'] == 'special_widget' || $_REQUEST['wpsc_ajax_action'] == 'donations_widget') )
-	add_action( 'init', 'wpsc_special_widget' );
-
-if ( isset( $_REQUEST['wpsc_ajax_action'] ) && (($_REQUEST['wpsc_ajax_action'] == 'empty_cart') || (isset($_GET['sessionid'])  && ($_GET['sessionid'] > 0))) )
-	add_action( 'init', 'wpsc_empty_cart' );
-
-if ( isset( $_POST['coupon_num'] ) )
+if ( isset( $_POST['coupon_num'] ) ) {
 	add_action( 'init', 'wpsc_coupon_price' );
-
-if ( isset( $_REQUEST['wpsc_ajax_action'] ) && 'add_to_cart' == $_REQUEST['wpsc_ajax_action'] )
-    add_action( 'init', 'wpsc_add_to_cart' );
-
-if ( isset( $_REQUEST['wpsc_update_quantity'] ) && ($_REQUEST['wpsc_update_quantity'] == 'true') )
-	add_action( 'init', 'wpsc_update_item_quantity' );
-
-if ( isset( $_REQUEST['wpsc_ajax_action'] ) && ($_REQUEST['wpsc_ajax_action'] == 'rate_product') )
-	add_action( 'init', 'wpsc_update_product_rating' );
-
-if ( isset( $_REQUEST['wpsc_ajax_actions'] ) && 'update_location' == $_REQUEST['wpsc_ajax_actions'] ) {
-	add_action( 'init', 'wpsc_update_location' );
 }
 
-if ( isset( $_REQUEST['wpsc_ajax_action'] ) && 'update_shipping_price' == $_REQUEST['wpsc_ajax_action'] ) {
-    add_action( 'init', 'wpsc_update_shipping_price' );
+if ( get_option( 'wpsc_also_bought' ) == 1 ) {
+	add_action( 'wpsc_submit_checkout', 'wpsc_populate_also_bought_list' );
 }
 
-if ( isset( $_REQUEST['update_product_price'] ) && 'true' == $_REQUEST['update_product_price'] && ! empty( $_POST['product_id'] ) && is_numeric( $_POST['product_id'] ) ) {
-    add_action( 'init', 'wpsc_update_product_price' );
+// TODO: This action isn't fired anywhere I can find, need to investigate  - JAS
+add_action( 'wp_ajax_wpsc_shipping_same_as_billing', 'wpsc_shipping_same_as_billing' );
+
+
+///////////////////////////////////////////////////////////////////////
+// Legacy WPEC AJAX Handling
+//
+// Determine which AJAX action is to run
+//
+// Note:
+//
+// Each AJAX action finishes with an exit or die, so only one of the
+// AJAX actions should be hooked and executed.  Because some legacy
+// do not use the 'wpsc_ajax_action' or 'action' $_REQUEST property
+// it is possible that action parameters used for these actions could
+// cause multiple actions to be hooked and the wrong action to be
+// initiated if a standard if (test-for-action ) add_action sequence
+// is used.
+//
+// The priority for determining the action will be as follows:
+//  (1) action ( this WordPress standard AJAX action parameter )
+//  (2) wpsc_ajax_action
+//  (3) wpsc_action
+//  (4) other cases that don't match above
+
+$wpsc_ajax_action = '';
+
+if ( ! empty( $_REQUEST['action'] ) ) {
+
+	$wpsc_ajax_action = $_REQUEST['action'];
+
+} elseif ( ! empty( $_REQUEST['wpsc_ajax_action'] ) ) {
+
+	$wpsc_ajax_action = $_REQUEST['wpsc_ajax_action'];
+
+} elseif ( ! empty( $_REQUEST['wpsc_action'] ) ) {
+
+	$wpsc_ajax_action = $_REQUEST['wpsc_action'];
+
+} elseif ( ! empty( $_REQUEST['wpsc_ajax_actions'] ) ) {
+
+	$wpsc_ajax_action = $_REQUEST['wpsc_ajax_actions'];
+
+} else {
+	// The actions ins this section should be upgraded to follow the standard
+	// WPEC AJAX action protocol
+	if ( isset( $_GET['termsandconds'] ) && 'true' == $_GET['termsandconds'] ) {
+
+		$wpsc_ajax_action = 'wpsc_show_terms_and_conditions';
+
+	} elseif ( isset( $_REQUEST['get_rating_count'] )
+						&& ($_REQUEST['get_rating_count'] == 'true')
+							&& is_numeric( $_POST['product_id'] ) ) {
+
+		$wpsc_ajax_action = 'wpsc_get_rating_count';
+
+	} elseif ( isset( $_REQUEST['wpsc_update_quantity'] ) && ($_REQUEST['wpsc_update_quantity'] == 'true') ) {
+
+		$wpsc_ajax_action = 'wpsc_update_quantity';
+
+	}
 }
 
-add_action( 'wp_ajax_add_to_cart'       , 'wpsc_add_to_cart' );
-add_action( 'wp_ajax_nopriv_add_to_cart', 'wpsc_add_to_cart' );
-add_action( 'wp_ajax_get_cart'       , 'wpsc_get_cart' );
-add_action( 'wp_ajax_nopriv_get_cart', 'wpsc_get_cart' );
-add_action( 'wp_ajax_update_shipping_price'       , 'wpsc_update_shipping_price' );
-add_action( 'wp_ajax_nopriv_update_shipping_price', 'wpsc_update_shipping_price' );
-add_action( 'wp_ajax_update_product_price'       , 'wpsc_update_product_price' );
-add_action( 'wp_ajax_nopriv_update_product_price', 'wpsc_update_product_price' );
-add_action( 'wp_ajax_update_location'       , 'wpsc_update_location' );
-add_action( 'wp_ajax_nopriv_update_location', 'wpsc_update_location' );
-add_action( 'wp_ajax_change_tax'       , 'wpsc_change_tax' );
-add_action( 'wp_ajax_nopriv_change_tax', 'wpsc_change_tax' );
-add_action( 'wp_ajax_change_profile_country'       , '_wpsc_change_profile_country' );
-add_action( 'wp_ajax_nopriv_change_profile_country', '_wpsc_change_profile_country' );
+// At this point we have one AJAX action to properly hook,
+if ( ! empty( $wpsc_ajax_action ) ) {
+	switch ( $wpsc_ajax_action ) {
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// Checkout AJAX Actions
+		case 'termsandconds':
+		case 'wpsc_termsandconds':
+			_wpsc_add_ajax_action( $wpsc_ajax_action, 'wpsc_show_terms_and_conditions', 'init' );
+			break;
 
+		case 'submit_checkout':
+		case 'wpsc_submit_checkout':
+			_wpsc_add_ajax_action( $wpsc_ajax_action, 'wpsc_submit_checkout', 'init' );
+			break;
+
+		case 'cart_html_page':
+		case 'wpsc_cart_html_page':
+			_wpsc_add_ajax_action( $wpsc_ajax_action, 'wpsc_cart_html_page', 'init', 110 );
+			break;
+
+		case 'update_location':
+		case 'wpsc_update_location':
+			_wpsc_add_ajax_action( $wpsc_ajax_action, 'wpsc_update_location', 'init' );
+			break;
+
+		case 'update_shipping_price':
+		case 'wpsc_update_shipping_price':
+			_wpsc_add_ajax_action( $wpsc_ajax_action, 'wpsc_update_shipping_price', 'init' );
+			break;
+
+		case 'update_quantity':
+		case 'wpsc_update_quantity':
+			_wpsc_add_ajax_action( $wpsc_ajax_action, 'wpsc_update_item_quantity', 'init' );
+			break;
+
+		case 'update_shipping_price':
+		case 'wpsc_update_shipping_price':
+			_wpsc_add_ajax_action( $wpsc_ajax_action, 'wpsc_update_shipping_price' );
+			break;
+
+		case 'change_tax':
+		case 'wpsc_change_tax':
+			_wpsc_add_ajax_action( $wpsc_ajax_action, 'wpsc_change_tax' );
+			break;
+
+		case 'change_profile_country':
+		case 'wpsc_change_profile_country':
+			_wpsc_add_ajax_action( $wpsc_ajax_action, '_wpsc_change_profile_country' );
+			break;
+
+		case 'shipping_same_as_billing_update':
+		case 'wpsc_shipping_same_as_billing_update':
+			_wpsc_add_ajax_action( $wpsc_ajax_action, 'wpsc_update_shipping_quotes_on_shipping_same_as_billing' );
+			break;
+
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// Product AJAX Actions
+		case 'get_rating_count':
+		case 'wpsc_get_rating_count':
+			_wpsc_add_ajax_action( $wpsc_ajax_action, 'wpsc_get_rating_count', 'init' );
+			break;
+
+		case 'update_product_rating':
+		case 'wpsc_update_product_rating':
+			_wpsc_add_ajax_action( $wpsc_ajax_action, 'wpsc_update_product_rating', 'init' );
+			break;
+
+		case 'update_product_price':
+		case 'wpsc_update_product_price':
+			_wpsc_add_ajax_action( $wpsc_ajax_action, 'wpsc_update_product_price' );
+			break;
+
+
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// Cart AJAX Actions
+		case 'empty_cart':
+		case 'wpsc_empty_cart':
+			_wpsc_add_ajax_action( $wpsc_ajax_action, 'wpsc_empty_cart', 'init' );
+			break;
+
+		case 'add_to_cart':
+		case 'wpsc_add_to_cart':
+			_wpsc_add_ajax_action( $wpsc_ajax_action, 'wpsc_add_to_cart', 'init' );
+			break;
+
+		case 'add_to_cart':
+		case 'wpsc_add_to_cart':
+			_wpsc_add_ajax_action( $wpsc_ajax_action, 'wpsc_add_to_cart' );
+			break;
+
+		case 'get_cart':
+		case 'wpsc_get_cart':
+			_wpsc_add_ajax_action( $wpsc_ajax_action, 'wpsc_get_cart' );
+			break;
+
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// Widget AJAX Actions
+		case 'special_widget':
+		case 'wpsc_special_widget':
+			_wpsc_add_ajax_action( $wpsc_ajax_action, 'wpsc_special_widget', 'init' );
+			break;
+	}
+}
+// End of action setup
+///////////////////////////////////////////////////////////////////////
+
+
+/**
+ * Helper function to setup ajax ction on both priv and no-priv
+ * @since 3.8.14
+ * @param string $action
+ * @param string|array $function
+ * @param string $hook wordpress hook where action should be executed, default executes on standard WP hooks
+ */
+function _wpsc_add_ajax_action( $action, $function, $hook = null, $priority = 10 ) {
+	if ( empty( $hook  ) ) {
+		add_action( 'wp_ajax_' . $action, $function, $priority );
+		add_action( 'wp_ajax_nopriv_'  . $action, $function, $priority );
+	} else {
+		add_action( $hook, $function, $priority );
+	}
+}
 
 /**
  * WP eCommerce AJAX and Init functions
