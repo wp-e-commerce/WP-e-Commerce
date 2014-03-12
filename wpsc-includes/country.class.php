@@ -180,7 +180,7 @@ class WPSC_Country {
 
 		return null;
 	}
-	
+
 	/**
 	 * Returns the whole database row in the form of an associative array
 	 *
@@ -289,7 +289,7 @@ function _wpsc_country_dropdown_options( $args = '' ) {
 	$output = '';
 
 	if ( $args['placeholder'] )
-		$output .= "<option value=''>" . esc_html( $args['placeholder'] ) . "</option>";
+		$output .= "<option value=''>" . esc_html( $args['placeholder'] ) . "</option>\n\r";
 
 	$countries = WPSC_Country::get_all( $args['include_invisible'] );
 	$base_country = get_option( 'base_country' );
@@ -311,7 +311,7 @@ function _wpsc_country_dropdown_options( $args = '' ) {
 		}
 
 		$output .= sprintf(
-			'<option value="%1$s" %2$s %3$s>%4$s</option>',
+			'<option value="%1$s" %2$s %3$s>%4$s</option>' . "\n\r",
 			/* %1$s */ esc_attr( $isocode ),
 			/* %2$s */ selected( $args['selected'], $isocode, false ),
 			/* %3$s */ disabled( _wpsc_is_country_disabled( $country, $args ), true, false ),

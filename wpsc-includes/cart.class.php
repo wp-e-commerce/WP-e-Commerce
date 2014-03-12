@@ -10,9 +10,44 @@
  * @since 3.7
  * @subpackage wpsc-cart-classes
 */
+
 /**
  * The WPSC Cart API for templates
  */
+
+
+
+/**
+ * Does shipping information need to be recalculated for the current customer cart
+ *
+ * @since 3.8.14
+ *
+ */
+function wpsc_need_to_recompute_shipping_quotes() {
+	global $wpsc_cart;
+
+	if ( empty( $wpsc_cart ) ) {
+		$wpsc_cart = wpsc_get_customer_cart();
+	}
+
+	return $wpsc_cart->needs_shipping_recalc();
+}
+
+/**
+ * Clear all shipping method information for the current customer cart
+ *
+ * @since 3.8.14
+ *
+ */
+function wpsc_clear_cart_shipping_info() {
+	global $wpsc_cart;
+
+	if ( empty( $wpsc_cart ) ) {
+		$wpsc_cart = wpsc_get_customer_cart();
+	}
+
+	return $wpsc_cart->clear_shipping_info();
+}
 
 /**
 * tax is included function, no parameters
@@ -409,35 +444,34 @@ class wpsc_cart {
    */
    function update_location() {
 
-      $delivery_country = wpsc_get_customer_meta( 'shipping_country' );
-      $billing_country  = wpsc_get_customer_meta( 'billing_country'  );
-      $delivery_region  = wpsc_get_customer_meta( 'shipping_region'  );
-      $billing_region   = wpsc_get_customer_meta( 'billing_region'   );
+	  	$delivery_country = wpsc_get_customer_meta( 'shippingcountry' );
+	  	$billing_country  = wpsc_get_customer_meta( 'billingcountry'  );
+	  	$delivery_region  = wpsc_get_customer_meta( 'shippingregion'  );
+	  	$billing_region   = wpsc_get_customer_meta( 'billingregion'   );
 
-      if( ! $billing_country && ! $delivery_country )
-         $billing_country = $delivery_country = get_option( 'base_country' );
-      elseif ( ! $billing_country )
-         $billing_country = $delivery_country;
-      elseif ( ! $delivery_country )
-         $delivery_country = $billing_country;
+	  	if ( ! $billing_country && ! $delivery_country ) {
+	  		$billing_country = $delivery_country = get_option( 'base_country' );
+	  		wpsc_update_customer_meta( 'billingcountry' , $billing_country  );
+	  	} elseif ( ! $billing_country ) {
+	  		$billing_country = $delivery_country;
+	  		wpsc_update_customer_meta( 'billingcountry' , $billing_country  );
+	  	} elseif ( ! $delivery_country ) {
+	  		$delivery_country = $billing_country;
+	  		wpsc_update_customer_meta( 'shippingcountry', $delivery_country );
+	  	}
 
-      if( ! $billing_region && ! $delivery_region ) {
-         $billing_region = $delivery_region = get_option('base_region');
-      }
+	  	if ( ! $billing_region && ! $delivery_region ) {
+	  		$billing_region = $delivery_region = get_option('base_region');
+	  		wpsc_update_customer_meta( 'billingregion'  , $billing_region   );
+	  	}
 
-      wpsc_update_customer_meta( 'shipping_country', $delivery_country );
-      wpsc_update_customer_meta( 'billing_country' , $billing_country  );
-      wpsc_update_customer_meta( 'shipping_region' , $delivery_region  );
-      wpsc_update_customer_meta( 'billing_region'  , $billing_region   );
+	  	$this->delivery_country = $delivery_country;
+	  	$this->selected_country = $billing_country ;
+	    $this->delivery_region  = $delivery_region ;
+	    $this->selected_region  = $billing_region;
 
-      $this->delivery_country = $delivery_country;
-      $this->selected_country = $billing_country ;
-      $this->delivery_region  = $delivery_region ;
-      $this->selected_region  = $billing_region;
-
-      //adding refresh item
-      $this->wpsc_refresh_cart_items();
-
+	    //adding refresh item
+	    $this->wpsc_refresh_cart_items();
    }
 
    /**
@@ -456,6 +490,65 @@ class wpsc_cart {
       }
 
    }
+
+	/**
+	 * Clear all shipping method information for this cart
+	 *
+	 * @since 3.8.14
+	 *
+	 */
+	function clear_shipping_info() {
+		$this->selected_shipping_method = null;
+		$this->selected_shipping_option = null;
+		$this->shipping_option = null;
+		$this->shipping_method = null;
+		$this->shipping_methods = array();
+		$this->shipping_quotes = array();
+		$this->shipping_quote = null;
+		$this->shipping_method_count = 0;
+		$this->base_shipping = null;
+		$this->total_item_shipping = null;
+		$this->total_shipping = null;
+	}
+
+
+	/**
+	 * Is all shipping method information for this cart empty
+	 *
+	 * @since 3.8.14
+	 * @return boolean true if all the shipping fields in the cart are empty
+	 */
+	function shipping_info_empty() {
+		return empty( $this->selected_shipping_method )
+					&& empty( $this->selected_shipping_option )
+						&& empty( $this->shipping_option )
+							&& empty( $this->shipping_method )
+								&& empty( $this->shipping_methods )
+									&& empty( $this->shipping_quotes )
+										&& empty( $this->shipping_quote )
+											&& empty( $this->shipping_method_count )
+												&& empty( $this->base_shipping )
+													&& empty( $this->total_item_shipping )
+														&& empty( $this->total_shipping );
+	}
+
+	/**
+	 * Is shipping information calculated and ready to use
+	 *
+	 * @since 3.8.14
+	 * @return boolean true if a recalc is necessary
+	 */
+	function needs_shipping_recalc() {
+		if ( $this->shipping_info_empty() && $this->uses_shipping() ) {
+			return true;
+		}
+
+		// TODO: this is where we will check the available shipping methods and see if
+		// the parameters used to create the quotes have changes since the quotes where
+		// created.  A function of the future shipping component
+
+		return false;
+	}
 
   /**
    * get_shipping_rates method, gets the shipping rates

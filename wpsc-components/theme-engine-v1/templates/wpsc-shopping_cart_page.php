@@ -330,7 +330,7 @@ endif;
                   <table class='wpsc_checkout_table table-<?php echo $i; ?>'>
                <?php endif; ?>
 
-               <tr <?php echo wpsc_the_checkout_item_error_class();?>>
+               <tr class="checkout-heading-row <?php echo wpsc_the_checkout_item_error_class();?>">
                   <td <?php wpsc_the_checkout_details_class(); ?> colspan='2'>
                      <h4><?php echo wpsc_checkout_form_name();?></h4>
                   </td>
@@ -349,7 +349,7 @@ endif;
                   		$checked = 'checked="checked"';
                    ?>
 					<label for='shippingSameBilling'><?php _e('Same as billing address:','wpsc'); ?></label>
-					<input type='checkbox' value='true' name='shippingSameBilling' id='shippingSameBilling' <?php echo $checked; ?> />
+					<input type='checkbox' value='true'  data-wpsc-meta-key="shippingSameBilling" class= "wpsc-visitor-meta"  name='shippingSameBilling' id='shippingSameBilling' <?php echo $checked; ?> />
 					<br/><span id="shippingsameasbillingmessage"><?php _e('Your order will be shipped to the billing address', 'wpsc'); ?></span>
                   </td>
                </tr>

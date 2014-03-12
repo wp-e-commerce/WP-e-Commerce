@@ -169,7 +169,6 @@ function wpsc_get_all_customer_meta( $id = false ) {
 		$id = wpsc_get_current_customer_id();
 	}
 
-
 	$meta        = wpsc_get_visitor_meta( $id );
 	$blog_prefix = is_multisite() ? $wpdb->get_blog_prefix() : '';
 	$key_pattern = "{$blog_prefix}_wpsc_";
