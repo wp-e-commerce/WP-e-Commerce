@@ -331,7 +331,7 @@ function wpsc_adjust_checkout_form_element_visibility(){
 	var shipping_country = jQuery( "#shippingcountry" ).val();
 	var shipping_state_element = jQuery( "input[data-wpsc-meta-key='shippingstate']" ) ;
 	
-	if ( 'US' === shipping_country || 'CA' === shipping_country ) {
+	if ( jQuery("#shippingSameBilling").is(":checked") || ('US' === shipping_country) || ('CA' === shipping_country) ) {
 		shipping_state_element.closest( "tr" ).hide();
 		shipping_state_element.val( '' ).attr( 'disabled', 'disabled' );
 	} else {			
@@ -343,7 +343,7 @@ function wpsc_adjust_checkout_form_element_visibility(){
 	var billing_country = jQuery( "#billingcountry" ).val();
 	var billing_state_element = jQuery( "input[data-wpsc-meta-key='billingstate']" ) ;
 	
-	if ( jQuery("#shippingSameBilling").is(":checked") || ( 'US' === billing_country || 'CA' === billing_country ) ) {
+	if ( 'US' === billing_country || 'CA' === billing_country ) {
 		billing_state_element.closest( "tr" ).hide();
 		billing_state_element.val( '' ).attr( 'disabled', 'disabled' );
 	} else {			
