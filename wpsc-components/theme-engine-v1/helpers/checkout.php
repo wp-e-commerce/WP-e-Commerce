@@ -300,7 +300,7 @@ function wpsc_shipping_region_list( $selected_country, $selected_region, $shippi
 				);
 
 	if ( count( $region_data ) > 0 ) {
-		$output .= '<select class="wpsc-visitor-meta" data-wpsc-meta-key="shippingregion" name="region"  id="region" ' . $js . ">\n\r";
+		$output .= "<select class=\"wpsc-visitor-meta\" data-wpsc-meta-key=\"shippingregion\" name=\"region\"  id=\"region\" >\n\r";
 		foreach ( $region_data as $region ) {
 			$selected = '';
 			if ( $selected_region == $region['id'] ) {
