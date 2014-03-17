@@ -39,7 +39,7 @@ function wpsc_need_to_recompute_shipping_quotes() {
  * @since 3.8.14
  *
  */
-function wpsc_clear_cart_shipping_info() {
+function wpsc_cart_clear_shipping_info() {
 	global $wpsc_cart;
 
 	if ( empty( $wpsc_cart ) ) {

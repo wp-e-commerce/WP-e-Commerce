@@ -553,7 +553,7 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 
 
 	function _wpsc_customer_shipping_quotes_need_recalc( $meta_value, $meta_key, $customer_id ) {
-		wpsc_clear_cart_shipping_info();
+		wpsc_cart_clear_shipping_info();
 	}
 
 	add_action( 'wpsc_updated_customer_meta_shippinggregion', '_wpsc_customer_shipping_quotes_need_recalc' , 10 , 3 );
