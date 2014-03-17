@@ -637,7 +637,7 @@ function _wpsc_get_checkout_info() {
 	$checkout_info['country_name']     = wpsc_get_country( $checkout_info['delivery_country'] );
 	$checkout_info['lock_tax']         = get_option( 'lock_tax' );  // TODO:this is set anywhere, probably deprecated
 
-	$checkout_info['needs_shipping_recalc'] = wpsc_need_to_recompute_shipping_quotes();
+	$checkout_info['needs_shipping_recalc'] = wpsc_cart_need_to_recompute_shipping_quotes();
 
 	$checkout_info['shipping_keys']    = array();
 

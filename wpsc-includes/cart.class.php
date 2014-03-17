@@ -23,7 +23,7 @@
  * @since 3.8.14
  *
  */
-function wpsc_need_to_recompute_shipping_quotes() {
+function wpsc_cart_need_to_recompute_shipping_quotes() {
 	global $wpsc_cart;
 
 	if ( empty( $wpsc_cart ) ) {
