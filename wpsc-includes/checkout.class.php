@@ -298,11 +298,6 @@ class wpsc_checkout {
 
 		global $wpdb, $user_ID, $wpsc_customer_checkout_details;
 
-// 		if ( ( $user_ID > 0 ) ) {
-// 			$delivery_country_id = wpsc_get_country_form_id_by_type( 'delivery_country' );
-// 			$billing_country_id = wpsc_get_country_form_id_by_type( 'country' );
-// 		}
-
 		$saved_form_data = empty( $wpsc_customer_checkout_details[$this->checkout_item->id] ) ? null : $wpsc_customer_checkout_details[$this->checkout_item->id];
 		$an_array = '';
 		if ( function_exists( 'wpsc_get_ticket_checkout_set' ) ) {
