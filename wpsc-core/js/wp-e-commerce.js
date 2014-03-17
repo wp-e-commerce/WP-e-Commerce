@@ -202,7 +202,7 @@ function wpsc_update_checkout_info( checkout_info ) {
 		jQuery( '#checkout_total' ).html( checkout_info.total + "<input id='shopping_cart_total_price' type='hidden' value='" + checkout_info.total_input + "' />" );
 	}
 
-	jQuery( ".wpsc-visitor-meta").bind( "change", wpsc_meta_item_change );
+	jQuery( ".wpsc-visitor-meta").on( "change", wpsc_meta_item_change );
 	
 	wpsc_adjust_checkout_form_element_visibility();
 	
@@ -219,7 +219,7 @@ function wpsc_update_checkout_info( checkout_info ) {
  */
 function wpsc_meta_item_change_response( response ) {
 	
-	jQuery( ".wpsc-visitor-meta").unbind( "change", wpsc_meta_item_change );
+	jQuery( ".wpsc-visitor-meta").off( "change", wpsc_meta_item_change );
 	
 	if ( response.type == 'success' ) {		
 
@@ -256,7 +256,7 @@ function wpsc_meta_item_change_response( response ) {
 
 	}
 	
-	jQuery( ".wpsc-visitor-meta" ).bind( "change", wpsc_meta_item_change );
+	jQuery( ".wpsc-visitor-meta" ).on( "change", wpsc_meta_item_change );
 	
 	wpsc_adjust_checkout_form_element_visibility();
 }
@@ -353,7 +353,7 @@ function wpsc_adjust_checkout_form_element_visibility(){
 	}	
 
 	// maek sure any item that changes checkout data is bound to the proper event handler
-	jQuery( ".wpsc-visitor-meta" ).bind( "change", wpsc_meta_item_change );
+	jQuery( ".wpsc-visitor-meta" ).on( "change", wpsc_meta_item_change );
 }
 
 /**
