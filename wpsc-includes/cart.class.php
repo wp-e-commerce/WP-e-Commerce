@@ -500,15 +500,15 @@ class wpsc_cart {
 	function clear_shipping_info() {
 		$this->selected_shipping_method = null;
 		$this->selected_shipping_option = null;
-		$this->shipping_option = null;
-		$this->shipping_method = null;
-		$this->shipping_methods = array();
-		$this->shipping_quotes = array();
-		$this->shipping_quote = null;
-		$this->shipping_method_count = 0;
-		$this->base_shipping = null;
-		$this->total_item_shipping = null;
-		$this->total_shipping = null;
+		$this->shipping_option          = null;
+		$this->shipping_method          = null;
+		$this->shipping_methods         = array();
+		$this->shipping_quotes          = array();
+		$this->shipping_quote           = null;
+		$this->shipping_method_count    = 0;
+		$this->base_shipping            = null;
+		$this->total_item_shipping      = null;
+		$this->total_shipping           = null;
 	}
 
 
