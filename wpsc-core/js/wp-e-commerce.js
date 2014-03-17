@@ -413,7 +413,9 @@ jQuery(document).ready(function ($) {
 	 * @since 3.8.8
 	 */
 	function wpsc_update_shipping_quotes() {
-		console.log( "WPEC javascript function 'set_billing_country' is deprecated as of version 3.8.14, please update your code." );
+		if ( window.console && window.console.log ) {
+			console.log( "WPEC javascript function 'set_billing_country' is deprecated as of version 3.8.14, please update your code." );
+		}
 	}
 
 	// Submit the product form using AJAX
@@ -691,7 +693,9 @@ if ( ! window.console ){ window.console = {log: function(){} }; }
  *  use it 
  ****************************************************************/
 function set_billing_country(html_form_id, form){
-	console.log( "WPEC javascript function 'set_billing_country' is deprecated as of version 3.8.14, please update your code." );
+	if ( window.console && window.console.log ) {
+		console.log( "WPEC javascript function 'set_billing_country' is deprecated as of version 3.8.14, please update your code." );
+	}
 }
 
 
@@ -701,8 +705,10 @@ function set_billing_country(html_form_id, form){
  *  It remains here as a stub in case third party scripts 
  *  are trying to use it 
  ****************************************************************/
-function set_shipping_country(html_form_id, form){	
-	console.log( "WPEC javascript function 'set_billing_country' is deprecated as of version 3.8.14, please update your code." );
+function set_shipping_country(html_form_id, form){
+	if ( window.console && window.console.log ) {
+		console.log( "WPEC javascript function 'set_billing_country' is deprecated as of version 3.8.14, please update your code." );
+	}
 }
 
 /*****************************************************************
@@ -712,7 +718,9 @@ function set_shipping_country(html_form_id, form){
  *  are trying to use it 
  ****************************************************************/
 function wpsc_shipping_same_as_billing(){
-	console.log( "WPEC javascript function 'wpsc_shipping_same_as_billing' is deprecated as of version 3.8.14, please update your code." );
+	if ( window.console && window.console.log ) {
+		console.log( "WPEC javascript function 'wpsc_shipping_same_as_billing' is deprecated as of version 3.8.14, please update your code." );
+	}
 }
 
 /*****************************************************************
@@ -722,7 +730,9 @@ function wpsc_shipping_same_as_billing(){
  *  are trying to use it 
  *****************************************************************/
 function wpsc_handle_country_change( response ) {
-	console.log( "WPEC javascript function 'wpsc_handle_country_change' is deprecated as of version 3.8.14, please update your code." );
+	if ( window.console && window.console.log ) {
+		console.log( "WPEC javascript function 'wpsc_handle_country_change' is deprecated as of version 3.8.14, please update your code." );
+	}
 }
 
 function wpsc_set_profile_country(html_form_id, form_id) {
