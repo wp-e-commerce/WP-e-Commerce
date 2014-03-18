@@ -712,6 +712,7 @@ class wpsc_checkout {
 		$this->checkout_item = $this->next_checkout_item();
 		if ( $this->current_checkout_item == 0 ) // loop has just started
 			do_action( 'wpsc_checkout_loop_start' );
+		return $this->checkout_item;
 	}
 
 	function have_checkout_items() {
