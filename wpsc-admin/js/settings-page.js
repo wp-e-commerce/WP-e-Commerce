@@ -968,6 +968,7 @@
 			}
 			$('#wpsc_shipping_settings_' + shipping_module_id + '_form').remove();
 			$('#wpsc_shipping_settings_' + shipping_module_id).hide( 400 );
+			
 			return false;
 		},
 
