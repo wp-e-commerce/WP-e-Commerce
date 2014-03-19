@@ -92,7 +92,7 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 
 		$response = array( 'request' => $_REQUEST );
 
-		if ( ! emtpy( $customer_meta ) ) {
+		if ( ! empty( $customer_meta ) ) {
 
 			foreach ( $customer_meta as $meta_key => $meta_value ) {
 
