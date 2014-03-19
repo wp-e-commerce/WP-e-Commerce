@@ -920,7 +920,7 @@
 		event_edit_shipping_module : function() {
 			var element = $(this),
 				shipping_module_id = element.closest('.wpsc-select-shipping').data('shipping-id'),
-				spinner = element.siblings('.ajax-feedback'),
+				spinner = element.children('.ajax-feedback'),
 				post_data = {
 					action : 'shipping_module_settings_form',
 					'shipping_module_id' : shipping_module_id,
