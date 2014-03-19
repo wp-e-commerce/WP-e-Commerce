@@ -72,20 +72,29 @@ if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
  */
 function wpsc_update_customer_data( meta_key, meta_value, response_callback ) {
 	
-	jQuery.ajax({
-		type : "post",
-		dataType : "json",
-		url : wpsc_ajax.ajaxurl,
-		data : {action: 'wpsc_update_customer_meta', meta_key : meta_key, meta_value : meta_value },
-		success: function (response) {
-			if ( response_callback ) {
-				response_callback( response );
-			}
-		},
-		error: function (response) { 
-			; // this is a place to set a breakpoint if you are concerned that meta item update ajax call is not functioning as designed 
-		},
-	});			
+//	jQuery.ajax({
+//		type : "post",
+//		dataType : "json",
+//		url : wpsc_ajax.ajaxurl,
+//		data : {action: 'wpsc_update_customer_meta', meta_key : meta_key, meta_value : meta_value },
+//		success: function (response) {
+//			if ( response_callback ) {
+//				response_callback( response );
+//			}
+//		},
+//		error: function (response) { 
+//			; // this is a place to set a breakpoint if you are concerned that meta item update ajax call is not functioning as designed 
+//		},
+//	});	
+	
+	// wrap our ajax request in a try/catch so that an error doesn't stop the script from running
+	try { 	
+		var ajax_data = {action: 'wpsc_update_customer_meta', meta_key : meta_key, meta_value : meta_value };	
+		jQuery.post( wpsc_ajax.ajaxurl, ajax_data, response_callback,  "json" );
+	} catch ( err ) {
+		; // we could handle the error here, or use it as a convenient place to set a breakpoint when debugging/testing
+	}
+	
 }		
 
 /**
@@ -96,37 +105,29 @@ function wpsc_update_customer_data( meta_key, meta_value, response_callback ) {
  * @param meta_value string
  * @param response_callback function
  */
-function wpsc_get_customer_data( response_callback ) {
-	
-	jQuery.ajax({
-		type : "post",
-		dataType : "json",
-		url : wpsc_ajax.ajaxurl,
-		data : {action: 'wpsc_get_customer_metas' },
-		success: function (response) {
-			if ( response_callback ) {
-				response_callback( response );
-			}
-		},
-		error: function (response) { 
-			; // this is a place to set a breakpoint if you are concerned that meta item update ajax call is not functioning as designed 
-		},
-	});			
+function wpsc_get_customer_data( response_callback ) {	
+	// wrap our ajax request in a try/catch so that an error doesn't stop the script from running
+	try { 	
+		var ajax_data = {action: 'wpsc_get_customer_meta' };	
+		jQuery.post( wpsc_ajax.ajaxurl, ajax_data, response_callback,  "json" );
+	} catch ( err ) {
+		; // we could handle the error here, or use it as a convenient place to set a breakpoint when debugging/testing
+	}
 }		
 
-
 /**
- * common callback to update checkout fields based on response from ajax processing.  All fields that set 
- * are present to make it easier to see where the plugin can be extended 
+ * common callback to update fields based on response from ajax processing.  
  * 
  * @since 3.8.14
  * @param response object returned from ajax request
  */
-function wpsc_update_customer_metas( customer_metas ) {
+function wpsc_update_customer_meta( response ) {
+	
+	var customer_meta = response.data.customer_meta;
 	
 	// if the response includes customer meta values find out where the value 
 	// belongs and then put it there 
-	jQuery.each( customer_metas,  function( meta_key, meta_value ) {
+	jQuery.each( customer_meta,  function( meta_key, meta_value ) {
 		
 		// if there are other fields on the current page that are used to change the same meta value then 
 		// they need to be updated
@@ -142,7 +143,9 @@ function wpsc_update_customer_metas( customer_metas ) {
 				}
 				
 			} else {
-				jQuery( this ).val( meta_value );
+				if ( jQuery( this ).val() != meta_value ) {
+					jQuery( this ).val( meta_value );
+				}
 			}
 		});
 	});
@@ -225,7 +228,7 @@ function wpsc_meta_item_change_response( response ) {
 
 		// Whatever replacements have been sent for the checkout form can be efficiently
 		// put into view
-		if ( response.hasOwnProperty('replacements') ) {
+		if ( response.data.hasOwnProperty('replacements') ) {
 			jQuery.each( response.replacements, function( elementname, replacement ) {
 				jQuery( '#'+replacement.elementid ).replaceWith( replacement.element );
 			});
@@ -233,15 +236,15 @@ function wpsc_meta_item_change_response( response ) {
 		
 
 		// Whatever has changed as far as customer meta should be processed
-		if ( response.hasOwnProperty( 'checkout_info' ) ) {
-			if ( ! wpsc_update_checkout_info( response.checkout_info ) ) { 
+		if ( response.data.hasOwnProperty( 'checkout_info' ) ) {
+			if ( ! wpsc_update_checkout_info( response.data.checkout_info ) ) { 
 				return false;
 			}
 		}
 
 		// Whatever has changed as far as customer meta should be processed
-		if ( response.hasOwnProperty( 'customer_meta' ) ) {
-			wpsc_update_customer_metas( response.customer_meta );
+		if ( response.data.hasOwnProperty( 'customer_meta' ) ) {
+			wpsc_update_customer_meta( response.data.customer_meta );
 		}
 
 		// TODO: this is where we can rely on the PHP application to generate and format the content for the 
@@ -363,7 +366,7 @@ function wpsc_adjust_checkout_form_element_visibility(){
  */
 jQuery(document).ready(function ($) {
 	// get the current value for all customer meta and display the values in available elements
-	wpsc_get_customer_data( wpsc_update_customer_metas );
+	wpsc_get_customer_data( wpsc_update_customer_meta );
 	
 	// make sure that if the shopper clicks shipping same as billing the checkout form adjusts itself
 	jQuery( "#shippingSameBilling" ).change( wpsc_adjust_checkout_form_element_visibility );

@@ -34,8 +34,7 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 		// most of the validation should be done by the WPEC initialization, just return the current customer values
 		$response = array( 'valid' => (_wpsc_validate_customer_cookie() !== false), 'id' => wpsc_get_current_customer_id() );
 		$response = apply_filters( '_wpsc_validate_customer_ajax', $response );
-		$response = json_encode( $response );
-		echo $response;
+		wp_send_json_success( $response );
 		die();
 	}
 
@@ -52,7 +51,7 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 		$response = array( 'request' => $_REQUEST );
 
 		if ( ! empty( $meta_key ) ) {
-			$response['value'] = wpsc_get_customer_meta( $meta_key );
+			$response = _wpsc_add_customer_meta_to_response( $response, array( $meta_key ) );
 			$response['type'] = __( 'success', 'wpsc' );
 			$response['error'] = '';
 		} else {
@@ -62,10 +61,8 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 			_wpsc_doing_it_wrong( __FUNCTION__, __( 'missing meta key', 'wpsc' ), '3.8.14' );
 		}
 
-		$response = json_encode( $response );
-		echo $response;
+		wp_send_json_success( $response );
 		die();
-
 	}
 
 	/**
@@ -74,92 +71,53 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 	 * @return JSON encoded array with results, results include original request parameters
 	 * @since 3.8.14
 	 */
-	function wpsc_update_customer_metas_ajax() {
+	function wpsc_update_customer_meta_ajax() {
 
 		$success = true;
 
-		$metas = isset( $_REQUEST['meta_data'] ) ?  $_REQUEST['meta_data'] : array();
+		// update can be a single key/value pair or an array of key value pairs
 
-		$response = array( 'request' => $_REQUEST );
-
-		foreach ( $metas as $meta_key => $meta_value ) {
-
-			// this will echo back any fields to the requester. It's a
-			// means for the requester to maintain some state during
-			// asynchronous requests
-
-			if ( ! empty( $meta_key ) ) {
-				$updated = wpsc_update_customer_meta( $meta_key, $meta_value  );
-				$success = $success & $updated;
-			}
-		}
-
-		if ( $success ) {
-			$response['type']          = __( 'success', 'wpsc' );
-			$response['error']         = '';
+		if ( ! empty ( $_REQUEST['meta_data'] ) ) {
+			$customer_meta = isset( $_REQUEST['meta_data'] ) ?  $_REQUEST['meta_data'] : array();
+		} elseif ( ! empty( $_REQUEST['meta_key'] ) && isset( $_REQUEST['meta_value'] ) ) {
+			$customer_meta = array( $_REQUEST['meta_key'] => $_REQUEST['meta_value'] );
 		} else {
-			$response['type']       = __( 'error', 'wpsc' );
-			$response['error']      = __( 'meta values may not have been updated', 'wpsc' );
-		}
-
-		$response['elapsed'] = microtime( true ) - $start;
-
-		echo json_encode( $response );
-		die();
-	}
-
-	/**
-	 * Update a single customer meta
-	 * @param string
-	 * @return JSON encoded array with results, results include original request parameters
-	 * @since 3.8.14
-	 */
-	function wpsc_update_customer_meta_ajax() {
-
-		$success = false;
-
-		$meta_key = isset( $_REQUEST['meta_key'] ) ?  $_REQUEST['meta_key'] : '';
-		$meta_value = isset( $_REQUEST['meta_value'] ) ?  $_REQUEST['meta_value'] : '';
-
-		// this will echo back any fields to the requester. It's a
-		// means for the requester to maintain some state during
-		// asynchronous requests
-		$response = array( 'request' => $_REQUEST );
-
-		if ( ! empty( $meta_key ) ) {
-			$success = wpsc_update_customer_meta( $meta_key, $meta_value  );
-		} else {
-			_wpsc_doing_it_wrong( __FUNCTION__, __( 'missing meta key', 'wpsc' ), '3.8.14' );
-		}
-
-		$response['meta_key'] = $meta_key;
-
-		if ( ! empty( $meta_key ) && $success ) {
-			$response['meta_value']    = $meta_value;
-			$response['type']          = __( 'success', 'wpsc' );
-			$response['error']         = '';
-
-			$all_meta_keys = wpsc_checkout_unique_names();
-
+			_wpsc_doing_it_wrong( __FUNCTION__, __( 'missing meta key or meta array', 'wpsc' ), '3.8.14' );
 			$customer_meta = array();
-
-			foreach ( $all_meta_keys as $a_meta_key ) {
-				$customer_meta[$a_meta_key] = wpsc_get_customer_meta( $a_meta_key );
-			}
-
-			$response['customer_meta'] = $customer_meta;
-			$response = apply_filters( 'wpsc_customer_meta_response_' . $meta_key, $response, $meta_key, $meta_value );
-
-		} else {
-			$response['meta_value']      = wpsc_get_customer_meta( $meta_key );
-			$response['type']       = __( 'error', 'wpsc' );
-			$response['error']      = __( 'meta value was not updated', 'wpsc' );
 		}
 
-		echo json_encode( $response );
+		$response = array( 'request' => $_REQUEST );
+
+		if ( ! emtpy( $customer_meta ) ) {
+
+			foreach ( $customer_meta as $meta_key => $meta_value ) {
+
+				// this will echo back any fields to the requester. It's a
+				// means for the requester to maintain some state during
+				// asynchronous requests
+
+				if ( ! empty( $meta_key ) ) {
+					$updated = wpsc_update_customer_meta( $meta_key, $meta_value  );
+					$success = $success & $updated;
+				}
+			}
+
+			if ( $success ) {
+				$response['type']          = __( 'success', 'wpsc' );
+				$response['error']         = '';
+			} else {
+				$response['type']       = __( 'error', 'wpsc' );
+				$response['error']      = __( 'meta values may not have been updated', 'wpsc' );
+			}
+		} else {
+				$response['type']       = __( 'error', 'wpsc' );
+				$response['error']      = __( 'invalid paramters, meta array or meta key value pair required', 'wpsc' );
+		}
+
+		$response = _wpsc_add_customer_meta_to_response( $response );
+		wp_send_json_success( $response );
 		die();
 	}
-
 
 
 	/**
@@ -175,46 +133,79 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 		$response = array( 'request' => $_REQUEST );
 
 		if ( ! empty( $meta_key ) ) {
-			$response['value'] = wpsc_get_customer_meta( $meta_key );
+			$response['old_value'] = wpsc_get_customer_meta( $meta_key );
 			$response['type'] = __( 'success', 'wpsc' );
 			$response['error'] = '';
 			wpsc_delete_customer_meta( $meta_key );
 		} else {
-			$response['value'] = '';
+			$response['old_value'] = '';
 			$response['type']  = __( 'error', 'wpsc' );
 			$response['error'] = __( 'no meta key', 'wpsc' );
 			_wpsc_doing_it_wrong( __FUNCTION__, __( 'missing meta key', 'wpsc' ), '3.8.14' );
 		}
 
-		$response = json_encode( $response );
-		echo $response;
+		$response = _wpsc_add_customer_meta_to_response( $response );
+		wp_send_json_success( $response );
 		die();
 	}
 
 	/**
-	 * Get all customer metas
-	 * @param string
+	 * Get customer meta values
+	 * @uses$_POST[meta_keys] array of meta keys to retrive, if not present all
+	 * 'registered' meta keys are returned.  See wpsc_checkout_unique_names() for the list
+	 *  of registered meta keys.
+	 *
 	 * @return JSON encoded array with results, results include original request parameters
 	 * @since 3.8.14
 	 */
-	function wpsc_get_customer_metas_ajax() {
+	function wpsc_get_customer_meta_ajax() {
 		$response = array( 'request' => $_REQUEST );
 
 		if ( isset( $_POST['meta_keys'] ) && ! empty( $_POST['meta_keys']) ) {
 			$meta_keys = $_POST['meta_keys'];
 		} else {
+			$meta_keys = null;
+		}
+
+		$response = _wpsc_add_customer_meta_to_response( $response, $meta_keys );
+		wp_send_json_success( $response );
+		die();
+	}
+
+	/**
+	 * Common routine to put the current customer meta values into an jax
+	 * response in a format to be consumed by the wp-e-commerce.js ajax processings
+	 *
+	 * @since 3.8.14
+	 * @access private
+	 *
+	 * @param array values being readied to send back to javascript in the json encoded AJAX response
+	 * @param string|array|null meta keys to retrieve, if not specified all meta keys are retrieved
+	 * @return JSON encoded array with results, results include original request parameters
+	 */
+	function _wpsc_add_customer_meta_to_response( $response, $meta_keys = null ) {
+
+		if ( ! empty( $meta_keys ) ) {
+			if ( ! is_array( $meta_keys ) ) {
+				$meta_keys = array( $meta_keys );
+			}
+		} else {
 			$meta_keys = wpsc_checkout_unique_names();
 		}
 
-		foreach ( $meta_keys as $meta_key ) {
-			$response[$meta_key] = wpsc_get_customer_meta( $meta_key );
+		$customer_meta = array();
+
+		foreach ( $meta_keys as $a_meta_key ) {
+			$customer_meta[$a_meta_key] = wpsc_get_customer_meta( $a_meta_key );
 		}
 
-		$response['type'] = 'success';
+		$response['customer_meta'] = $customer_meta;
+		$response = apply_filters( 'wpsc_ajax_response_customer_meta' , $response );
 
-		echo json_encode( $response );
-		die();
+		return $response;
 	}
+
+
 
 	if ( _wpsc_doing_customer_meta_ajax() ) {
 		add_action( 'wp_ajax_wpsc_validate_customer'       		, 'wpsc_validate_customer_ajax' );
@@ -223,17 +214,14 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 		add_action( 'wp_ajax_wpsc_get_customer_meta'       		, 'wpsc_get_customer_meta_ajax' );
 		add_action( 'wp_ajax_nopriv_wpsc_get_customer_meta'		, 'wpsc_get_customer_meta_ajax' );
 
-		add_action( 'wp_ajax_wpsc_get_customer_metas'       	, 'wpsc_get_customer_metas_ajax' );
-		add_action( 'wp_ajax_nopriv_wpsc_get_customer_metas'	, 'wpsc_get_customer_metas_ajax' );
+		add_action( 'wp_ajax_wpsc_get_customer_meta'       		, 'wpsc_get_customer_meta_ajax' );
+		add_action( 'wp_ajax_nopriv_wpsc_get_customer_meta'		, 'wpsc_get_customer_meta_ajax' );
 
 		add_action( 'wp_ajax_wpsc_delete_customer_meta'       	, 'wpsc_delete_customer_meta_ajax' );
 		add_action( 'wp_ajax_nopriv_wpsc_delete_customer_meta'	, 'wpsc_delete_customer_meta_ajax' );
 
 		add_action( 'wp_ajax_wpsc_update_customer_meta'       	, 'wpsc_update_customer_meta_ajax' );
 		add_action( 'wp_ajax_nopriv_wpsc_update_customer_meta'	, 'wpsc_update_customer_meta_ajax' );
-
-		add_action( 'wp_ajax_wpsc_update_customer_metas'       	, 'wpsc_update_customer_metas_ajax' );
-		add_action( 'wp_ajax_nopriv_wpsc_update_customer_metas'	, 'wpsc_update_customer_metas_ajax' );
 	}
 
 
