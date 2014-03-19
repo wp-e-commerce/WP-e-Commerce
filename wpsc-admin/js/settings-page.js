@@ -968,7 +968,7 @@
 			}
 			$('#wpsc_shipping_settings_' + shipping_module_id + '_form').remove();
 			$('#wpsc_shipping_settings_' + shipping_module_id).hide( 400 );
-			
+
 			return false;
 		},
 
@@ -1031,9 +1031,9 @@
 					nonce                : WPSC_Settings_Page.payment_gateway_settings_form_nonce
 				},
 				ajax_callback = function(response) {
-					if (! response.is_successful) {
+					if ( ! response.is_successful ) {
 						alert(response.error.messages.join("\n"));
-						return;
+						return false;
 					}
 
 					if (history.pushState) {
@@ -1042,9 +1042,13 @@
 					}
 					spinner.toggleClass('ajax-feedback-active');
 					$('#gateway_settings_' + payment_gateway_id + '_form').remove();
-					$('#wpsc_gateway_settings_'+ payment_gateway_id).show();
+					$('#wpsc_gateway_settings_'+ payment_gateway_id).show( 400 );
 					$('#wpsc_gateway_settings_'+ payment_gateway_id + '_container').append(response.obj.content);
 				};
+			
+			if ( $( '#gateway_settings_' + payment_gateway_id + '_form' ).is( ':visible' ) ) {
+				return false;
+			}
 
 			spinner.toggleClass('ajax-feedback-active');
 			$.wpsc_post(post_data, ajax_callback);
@@ -1058,7 +1062,7 @@
 				history.pushState({'url' : new_url}, '', new_url);
 			}
 			$('#gateway_settings_' + payment_gateway_id + '_form').remove();
-			$('#wpsc_gateway_settings_' + payment_gateway_id).hide();
+			$('#wpsc_gateway_settings_' + payment_gateway_id).hide( 400 );
 			return false;
 		}
 	};
