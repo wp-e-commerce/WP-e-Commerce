@@ -929,7 +929,7 @@
 				ajax_callback = function(response) {
 					if (! response.is_successful) {
 						alert(response.error.messages.join("\n"));
-						return;
+						return false;
 					}
 
 					if (history.pushState) {
@@ -937,14 +937,20 @@
 						history.pushState({url : new_url}, '', new_url);
 					}
 					spinner.toggleClass('ajax-feedback-active');
+
 					$('#wpsc_shipping_settings_' + shipping_module_id + '_form').remove();
-					$('#wpsc_shipping_settings_'+ shipping_module_id).show();
+					$('#wpsc_shipping_settings_'+ shipping_module_id).show( 400 );
 					$('#wpsc_shipping_settings_'+ shipping_module_id + '_container').append(response.obj.content);
 
 				};
-
+		
+			if ( $( '#wpsc_shipping_settings_' + shipping_module_id + '_form' ).is( ':visible' ) ) {
+				return false;
+			}
+		
 			spinner.toggleClass('ajax-feedback-active');
 			$.wpsc_post(post_data, ajax_callback);
+
 			return false;
 		},
 
@@ -955,13 +961,13 @@
 		event_edit_shipping_module_cancel : function() {
 			var element = $(this),
 				shipping_module_id = element.closest('.wpsc-select-shipping').data('shipping-id');
-			console.log('cancel', shipping_module_id);
+
 			if (history.pushState) {
 				var new_url = '?page=wpsc-settings&tab=' + WPSC_Settings_Page.current_tab;
 				history.pushState({'url' : new_url}, '', new_url);
 			}
 			$('#wpsc_shipping_settings_' + shipping_module_id + '_form').remove();
-			$('#wpsc_shipping_settings_' + shipping_module_id).hide();
+			$('#wpsc_shipping_settings_' + shipping_module_id).hide( 400 );
 			return false;
 		},
 
