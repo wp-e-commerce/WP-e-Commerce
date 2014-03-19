@@ -342,6 +342,9 @@ class ash_usps {
 				break;
 		}
 		$base["Container"] = $container;
+		if ( $package && ( (float)$package->width > 12 || (float)$package->length > 12 || (float)$package->height > 12  ) ) {
+			$size = "LARGE";
+		}
 		$base["Size"] = $size;
 		if ( $package ) {
 			$base["Width"] = $package->width;
@@ -428,7 +431,9 @@ class ash_usps {
 		if ( $package ) {
 			$data["weight"]	= $package->weight;
 			$data["value"]	= $package->value;
-			$data['size']	= "LARGE";
+			if ( (float)$package->width > 12 || (float)$package->length > 12 || (float)$package->height > 12 ) {
+				$data['size']	= "LARGE";
+			}
 			$data["width"]	= $package->width;
 			$data["length"]	= $package->length;
 			$data["height"]	= $package->height;
