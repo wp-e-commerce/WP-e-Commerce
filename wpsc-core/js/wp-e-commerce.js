@@ -210,12 +210,12 @@ function wpsc_meta_item_change_response( response ) {
 	
 	jQuery( ".wpsc-visitor-meta").off( "change", wpsc_meta_item_change );
 	
-	if ( response.type == 'success' ) {		
+	if ( response.hasOwnProperty('success') && response.success && response.hasOwnProperty('data') ) {		
 
 		// Whatever replacements have been sent for the checkout form can be efficiently
 		// put into view
 		if ( response.data.hasOwnProperty('replacements') ) {
-			jQuery.each( response.replacements, function( elementname, replacement ) {
+			jQuery.each( response.data.replacements, function( elementname, replacement ) {
 				jQuery( '#'+replacement.elementid ).replaceWith( replacement.element );
 			});
 		}		
@@ -230,7 +230,7 @@ function wpsc_meta_item_change_response( response ) {
 
 		// Whatever has changed as far as customer meta should be processed
 		if ( response.data.hasOwnProperty( 'customer_meta' ) ) {
-			wpsc_update_customer_meta( response.data.customer_meta );
+			wpsc_update_customer_meta( response );
 		}
 
 		// TODO: this is where we can rely on the PHP application to generate and format the content for the 
@@ -351,11 +351,6 @@ function wpsc_adjust_checkout_form_element_visibility(){
  * @since 3.8.14
  */
 jQuery(document).ready(function ($) {
-	
-	if ( jQuery( ".wpsc-visitor-meta" ).length ) {
-		// get the current value for all customer meta and display the values in available elements
-		wpsc_get_customer_data( wpsc_update_customer_meta );
-	}	
 
 	// make sure that if the shopper clicks shipping same as billing the checkout form adjusts itself
 	jQuery( "#shippingSameBilling" ).change( wpsc_adjust_checkout_form_element_visibility );
@@ -363,13 +358,18 @@ jQuery(document).ready(function ($) {
 	// if the shopper changes a form value that is holding customer meta we should update 
 	// the persistant customer meta
 	jQuery( ".wpsc-visitor-meta").change( wpsc_meta_item_change );
+
+	if ( jQuery( ".wpsc-visitor-meta" ).length ) {
+		// get the current value for all customer meta and display the values in available elements
+		wpsc_get_customer_data( wpsc_update_customer_meta );
+	}	
 	
-	// make sure visibility of form elements is what it should be
-	wpsc_adjust_checkout_form_element_visibility();
+	if ( jQuery( "#shippingSameBilling" ).length ) {
+		// make sure visibility of form elements is what it should be
+		wpsc_adjust_checkout_form_element_visibility();
+	}
+	
 });
-
-
-
 
 
 // this function is for binding actions to events and rebinding them after they are replaced by AJAX
