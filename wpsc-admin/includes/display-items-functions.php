@@ -168,7 +168,7 @@ function wpsc_price_control_forms() {
 
     	<div class='wpsc_floatleft' style="width:85px;">
     		<label><?php esc_html_e( 'Price '. $ct_code .' ' . $ct_symb, 'wpsc' ); ?></label>
-			<input 	id = "wpsc_price"
+			<input id = "wpsc_price"
 					type="number" size='10'
 					min="0" step="0.01"
 					name="meta[_wpsc_price]"
@@ -177,11 +177,11 @@ function wpsc_price_control_forms() {
 					onChange="wpsc_update_price_live_preview()" />
 		</div>
 
-		<div 	class='wpsc_floatleft'
+		<div class='wpsc_floatleft'
 				style='display:<?php if ( ( $product_data['special'] == 1 ) ? 'block' : 'none'
 	); ?>; width:85px; margin-left:30px;'>
 			<label for='add_form_special'><?php esc_html_e( 'Sale Price '.$ct_code.' '.$ct_symb, 'wpsc' ); ?></label>
-			<input 	id = "wpsc_sale_price"
+			<input id = "wpsc_sale_price"
 					type="number" size='10'
 					min="0" step="0.01"
 					style="width:80px;"
@@ -447,9 +447,9 @@ function wpsc_product_taxes_forms() {
 	//add taxable amount only for exclusive tax
 	if ( !$wpec_taxes_controller->wpec_taxes_isincluded() ) {
 		$taxable_amount_input_settings = array(
-			'id' => 'wpec_taxes_taxable_amount',
-			'name' => 'meta[_wpsc_product_metadata][wpec_taxes_taxable_amount]',
-			'label' => __( 'Taxable Amount', 'wpsc' ),
+			'id'          =>  'wpec_taxes_taxable_amount',
+			'name'        => 'meta[_wpsc_product_metadata][wpec_taxes_taxable_amount]',
+			'label'       => __( 'Taxable Amount', 'wpsc' ),
 			'description' => __( 'Taxable amount in your currency, not percentage of price.', 'wpsc' ),
 		);
 
