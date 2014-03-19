@@ -71,22 +71,7 @@ if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
  * @param response_callback function
  */
 function wpsc_update_customer_data( meta_key, meta_value, response_callback ) {
-	
-//	jQuery.ajax({
-//		type : "post",
-//		dataType : "json",
-//		url : wpsc_ajax.ajaxurl,
-//		data : {action: 'wpsc_update_customer_meta', meta_key : meta_key, meta_value : meta_value },
-//		success: function (response) {
-//			if ( response_callback ) {
-//				response_callback( response );
-//			}
-//		},
-//		error: function (response) { 
-//			; // this is a place to set a breakpoint if you are concerned that meta item update ajax call is not functioning as designed 
-//		},
-//	});	
-	
+		
 	// wrap our ajax request in a try/catch so that an error doesn't stop the script from running
 	try { 	
 		var ajax_data = {action: 'wpsc_update_customer_meta', meta_key : meta_key, meta_value : meta_value };	
@@ -123,33 +108,34 @@ function wpsc_get_customer_data( response_callback ) {
  */
 function wpsc_update_customer_meta( response ) {
 	
-	var customer_meta = response.data.customer_meta;
-	
-	// if the response includes customer meta values find out where the value 
-	// belongs and then put it there 
-	jQuery.each( customer_meta,  function( meta_key, meta_value ) {
+	if ( response.hasOwnProperty( 'data' ) && response.data.hasOwnProperty( 'customer_meta' )) {
+		var customer_meta = response.data.customer_meta;
 		
-		// if there are other fields on the current page that are used to change the same meta value then 
-		// they need to be updated
-		var selector = '[data-wpsc-meta-key="' + meta_key + '"]';
-		
-		jQuery( selector ).each( function( index, value ) {		
-			if ( jQuery(this).is(':checkbox') ) {
-				var boolean_meta_value = meta_value == "1"; 
-				if ( boolean_meta_value ) {
-					jQuery( this ).attr( 'checked', 'checked' );
+		// if the response includes customer meta values find out where the value 
+		// belongs and then put it there 
+		jQuery.each( customer_meta,  function( meta_key, meta_value ) {
+			
+			// if there are other fields on the current page that are used to change the same meta value then 
+			// they need to be updated
+			var selector = '[data-wpsc-meta-key="' + meta_key + '"]';
+			
+			jQuery( selector ).each( function( index, value ) {		
+				if ( jQuery(this).is(':checkbox') ) {
+					var boolean_meta_value = meta_value == "1"; 
+					if ( boolean_meta_value ) {
+						jQuery( this ).attr( 'checked', 'checked' );
+					} else {
+						jQuery( this ).removeAttr( 'checked' );
+					}
+					
 				} else {
-					jQuery( this ).removeAttr( 'checked' );
+					if ( jQuery( this ).val() != meta_value ) {
+						jQuery( this ).val( meta_value );
+					}
 				}
-				
-			} else {
-				if ( jQuery( this ).val() != meta_value ) {
-					jQuery( this ).val( meta_value );
-				}
-			}
+			});
 		});
-	});
-
+	}
 }
 
 
@@ -365,9 +351,12 @@ function wpsc_adjust_checkout_form_element_visibility(){
  * @since 3.8.14
  */
 jQuery(document).ready(function ($) {
-	// get the current value for all customer meta and display the values in available elements
-	wpsc_get_customer_data( wpsc_update_customer_meta );
 	
+	if ( jQuery( ".wpsc-visitor-meta" ).length ) {
+		// get the current value for all customer meta and display the values in available elements
+		wpsc_get_customer_data( wpsc_update_customer_meta );
+	}	
+
 	// make sure that if the shopper clicks shipping same as billing the checkout form adjusts itself
 	jQuery( "#shippingSameBilling" ).change( wpsc_adjust_checkout_form_element_visibility );
 	
