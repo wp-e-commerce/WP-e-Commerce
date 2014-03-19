@@ -597,8 +597,9 @@ class WPSC_Purchase_Log {
 	public function get_cart_contents() {
 		global $wpdb;
 
-		if ( $this->fetched )
+		if ( ! empty( $this->cart_contents ) && $this->fetched ) {
 			return $this->cart_contents;
+		}
 
 		$id = $this->get( 'id' );
 
