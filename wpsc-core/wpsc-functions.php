@@ -133,7 +133,8 @@ function wpsc_checkout_unique_names() {
 			'billingemail',
 			'billingphone',
 			'billingpostcode',
-			'delivertoafriend',
+			'billingregion',
+			'shippingSameBilling',
 			'shippingfirstname',
 			'shippinglastname',
 			'shippingaddress',
@@ -141,6 +142,7 @@ function wpsc_checkout_unique_names() {
 			'shippingstate',
 			'shippingcountry',
 			'shippingpostcode',
+			'shippingregion',
 	);
 
 	$unique_names = apply_filters( 'wpsc_add_unique_names' , $unique_names );

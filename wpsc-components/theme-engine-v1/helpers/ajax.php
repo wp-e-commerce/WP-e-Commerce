@@ -474,13 +474,13 @@ function wpsc_update_location() {
 	$billing_country = '';
 	if ( ! empty( $_POST['country'] ) ) {
 		$delivery_country = $_POST['country'];
-		$billing_country  = wpsc_get_customer_meta( 'billing_country'  );
-		$delivery_region  = wpsc_get_customer_meta( 'shipping_region'  );
-		$billing_region   = wpsc_get_customer_meta( 'billing_region'   );
-		$shipping_zipcode = wpsc_get_customer_meta( 'shipping_zipcode' );
+		$billing_country  = wpsc_get_customer_meta( 'billingcountry'  );
+		$delivery_region  = wpsc_get_customer_meta( 'shippingregion'  );
+		$billing_region   = wpsc_get_customer_meta( 'billingregion'   );
+		$shipping_zipcode = wpsc_get_customer_meta( 'shippingpostcode' );
 
 		if ( ! $billing_country )
-			wpsc_update_customer_meta( 'billing_country', $_POST['country'] );
+			wpsc_update_customer_meta( 'billingcountry', $_POST['country'] );
 
 		if ( ! empty( $_POST['region'] ) ) {
 			$delivery_region = $_POST['region'];
@@ -494,8 +494,9 @@ function wpsc_update_location() {
 			$delivery_region = $billing_region;
 	}
 
-	if ( ! empty( $_POST['zipcode'] ) )
+	if ( ! empty( $_POST['zipcode'] ) ) {
 		$shipping_zipcode = $_POST['zipcode'];
+	}
 
 	$delivery_region_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(`regions`.`id`) FROM `" . WPSC_TABLE_REGION_TAX . "` AS `regions` INNER JOIN `" . WPSC_TABLE_CURRENCY_LIST . "` AS `country` ON `country`.`id` = `regions`.`country_id` WHERE `country`.`isocode` IN('%s')",  $delivery_country ) );
 	if ( $delivery_region_count < 1 )
@@ -505,11 +506,14 @@ function wpsc_update_location() {
 	if ( $selected_region_count < 1 )
 		$billing_region = '';
 
-	wpsc_update_customer_meta( 'shipping_country' , $delivery_country );
-	wpsc_update_customer_meta( 'shipping_region'  , $delivery_region  );
-	wpsc_update_customer_meta( 'billing_country'  , $billing_country  );
-	wpsc_update_customer_meta( 'billing_region'   , $billing_region   );
-	wpsc_update_customer_meta( 'shipping_zip'     , $shipping_zipcode );
+	wpsc_update_customer_meta( 'shippingcountry' , $delivery_country );
+	wpsc_update_customer_meta( 'shippingregion'  , $delivery_region  );
+	wpsc_update_customer_meta( 'billingcountry'  , $billing_country  );
+	wpsc_update_customer_meta( 'billingregion'   , $billing_region   );
+
+	if ( isset( $shipping_zipcode ) ) {
+		wpsc_update_customer_meta( 'shippingpostcode'     , $shipping_zipcode );
+	}
 
 	$wpsc_cart->update_location();
 	$wpsc_cart->get_shipping_method();
@@ -518,8 +522,8 @@ function wpsc_update_location() {
 		$wpsc_cart->update_shipping( $wpsc_cart->selected_shipping_method, $wpsc_cart->selected_shipping_option );
 	}
 
-	if ( wpsc_get_customer_meta( 'shipping_same_as_billing' ) && ( $delivery_country != $billing_country || $delivery_region != $billing_region ) )
-		wpsc_update_customer_meta( 'shipping_same_as_billing', false );
+	if ( wpsc_get_customer_meta( 'shippingSameBilling' ) && ( $delivery_country != $billing_country || $delivery_region != $billing_region ) )
+		wpsc_update_customer_meta( 'shippingSameBilling', false );
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX && isset( $_REQUEST['action'] ) && 'update_location' == $_REQUEST['action'] )
 		exit;
@@ -739,6 +743,7 @@ function wpsc_submit_checkout( $collected_data = true ) {
 function wpsc_change_tax() {
 	global $wpdb, $wpsc_cart;
 
+
 	$form_id = absint( $_POST['form_id'] );
 
 	$wpsc_selected_country = $wpsc_cart->selected_country;
@@ -747,31 +752,34 @@ function wpsc_change_tax() {
 	$wpsc_delivery_country = $wpsc_cart->delivery_country;
 	$wpsc_delivery_region  = $wpsc_cart->delivery_region;
 
-	$previous_country = wpsc_get_customer_meta( 'billing_country' );
+	$previous_country = wpsc_get_customer_meta( 'billingcountry' );
+
+	global $wpdb, $user_ID, $wpsc_customer_checkout_details;
 
 	if ( isset( $_POST['billing_country'] ) ) {
 		$wpsc_selected_country = $_POST['billing_country'];
-		wpsc_update_customer_meta( 'billing_country', $wpsc_selected_country );
+		wpsc_update_customer_meta( 'billingcountry', $wpsc_selected_country );
 	}
 
 	if ( isset( $_POST['billing_region'] ) ) {
 		$wpsc_selected_region = absint( $_POST['billing_region'] );
-		wpsc_update_customer_meta( 'billing_region', $wpsc_selected_region );
+		wpsc_update_customer_meta( 'billingregion', $wpsc_selected_region );
 	}
+
 
 	$check_country_code = $wpdb->get_var( $wpdb->prepare( "SELECT `country`.`isocode` FROM `" . WPSC_TABLE_REGION_TAX . "` AS `region` INNER JOIN `" . WPSC_TABLE_CURRENCY_LIST . "` AS `country` ON `region`.`country_id` = `country`.`id` WHERE `region`.`id` = %d LIMIT 1", wpsc_get_customer_meta( 'billing_region' ) ) );
 
-	if ( wpsc_get_customer_meta( 'billing_country' ) != $check_country_code ) {
+	if ( wpsc_get_customer_meta( 'billingcountry' ) != $check_country_code ) {
 		$wpsc_selected_region = null;
 	}
 
 	if ( isset( $_POST['shipping_country'] ) ) {
 		$wpsc_delivery_country = $_POST['shipping_country'];
-		wpsc_update_customer_meta( 'shipping_country', $wpsc_delivery_country );
+		wpsc_update_customer_meta( 'shippingcountry', $wpsc_delivery_country );
 	}
 	if ( isset( $_POST['shipping_region'] ) ) {
 		$wpsc_delivery_region = absint( $_POST['shipping_region'] );
-		wpsc_update_customer_meta( 'shipping_region', $wpsc_delivery_region );
+		wpsc_update_customer_meta( 'shippingregion', $wpsc_delivery_region );
 	}
 
 	$check_country_code = $wpdb->get_var( $wpdb->prepare( "SELECT `country`.`isocode` FROM `" . WPSC_TABLE_REGION_TAX . "` AS `region` INNER JOIN `" . WPSC_TABLE_CURRENCY_LIST . "` AS `country` ON `region`.`country_id` = `country`.`id` WHERE `region`.`id` = %d LIMIT 1", $wpsc_delivery_region ) );
@@ -808,6 +816,16 @@ function wpsc_change_tax() {
 
 	$json_response = array();
 
+	global $wpsc_checkout;
+	if ( empty( $wpsc_checkout ) ) {
+		$wpsc_checkout = new WPSC_Checkout();
+	}
+
+	$replacements = array();
+
+	$replacements = _wpsc_get_country_and_region_replacements( $replacements, true, true );
+
+	$json_response['replacements']     = $replacements;
 	$json_response['delivery_country'] = esc_js( $delivery_country );
 	$json_response['billing_country']  = esc_js( $wpsc_selected_country );
 	$json_response['widget_output']    = $output;
@@ -819,16 +837,14 @@ function wpsc_change_tax() {
 	$json_response['total']            = $total;
 	$json_response['total_input']      = $total_input;
 
-	if ( get_option( 'lock_tax' ) == 1 ) {
 
-		$json_response['lock_tax']     = get_option( 'lock_tax' );
-		$json_response['country_name'] = wpsc_get_country( $delivery_country );
+	$json_response['lock_tax']     = get_option( 'lock_tax' );
+	$json_response['country_name'] = wpsc_get_country( $delivery_country );
 
-		if ( 'US' == $delivery_country || 'CA' == $delivery_country ) {
-			$output = wpsc_shipping_region_list( $delivery_country, wpsc_get_customer_meta( 'shipping_region' ) );
-			$output = str_replace( array( "\n", "\r" ), '', $output );
-			$json_response['shipping_region_list'] = $output;
-		}
+	if ( 'US' == $delivery_country || 'CA' == $delivery_country ) {
+		$output = wpsc_shipping_region_list( $delivery_country, wpsc_get_customer_meta( 'shipping_region' ) );
+		$output = str_replace( array( "\n", "\r" ), '', $output );
+		$json_response['shipping_region_list'] = $output;
 	}
 
 	foreach ( $wpsc_cart->cart_items as $key => $cart_item ) {
@@ -890,7 +906,7 @@ function _wpsc_change_profile_country() {
 }
 
 function wpsc_shipping_same_as_billing(){
-	wpsc_update_customer_meta( 'shipping_same_as_billing', $_POST['wpsc_shipping_same_as_billing'] );
+	wpsc_update_customer_meta( 'shippingSameBilling', $_POST['wpsc_shipping_same_as_billing'] );
 }
 
 function wpsc_update_shipping_quotes_on_shipping_same_as_billing() {

@@ -107,7 +107,7 @@ class wpec_taxes_controller {
 
 				$returnable = array( 'total' => $total_tax );
 
-				if ( !$this->wpec_taxes_isincluded() ) {
+				if ( !$this->wpec_taxes_isincluded() && isset( $tax_rate['rate'] ) ) {
 					$returnable['rate'] = $tax_rate['rate'];
 				}// if
 			}// if

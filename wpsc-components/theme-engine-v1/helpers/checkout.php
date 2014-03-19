@@ -94,7 +94,7 @@ function wpsc_has_category_and_country_conflict(){
  * @return (boolean) true or false
  */
 function wpsc_have_valid_shipping_zipcode(){
-	$zip = wpsc_get_customer_meta( 'shipping_zip' );
+	$zip = wpsc_get_customer_meta( 'shippingpostcode' );
 
 	if( ! $zip || ( __( 'Your Zipcode', 'wpsc' ) == $zip ) && ( wpsc_get_customer_meta( 'update_location' ) ) )
 		return false;
@@ -133,7 +133,7 @@ function wpsc_disregard_shipping_state_fields(){
 	 		return true;
 	 	else
 	 		return false;
-	elseif ( 'billingstate' == $wpsc_checkout->checkout_item->unique_name && wpsc_has_regions( wpsc_get_customer_meta( 'billing_country' ) ) ):
+	elseif ( 'billingstate' == $wpsc_checkout->checkout_item->unique_name && wpsc_has_regions( wpsc_get_customer_meta( 'billingcountry' ) ) ):
 		return true;
 	endif;
 
@@ -142,7 +142,7 @@ function wpsc_disregard_shipping_state_fields(){
 
 function wpsc_disregard_billing_state_fields(){
 	global $wpsc_checkout;
-	if ( 'billingstate' == $wpsc_checkout->checkout_item->unique_name && wpsc_has_regions( wpsc_get_customer_meta( 'billing_country' ) ) )
+	if ( 'billingstate' == $wpsc_checkout->checkout_item->unique_name && wpsc_has_regions( wpsc_get_customer_meta( 'billingcountry' ) ) )
 		return true;
 	return false;
 }
@@ -169,7 +169,7 @@ function wpsc_the_checkout_item_error_class( $as_attribute = true ) {
 	if ( ($as_attribute == true ) ) {
 		$output = "class='" . $class_name . wpsc_shipping_details() . "'";
 	} else {
-		$output = $class_name;
+		$output = $class_name . wpsc_shipping_details();
 	}
 	return $output;
 }
@@ -276,6 +276,11 @@ function wpsc_checkout_form_element_id() {
 	return $wpsc_checkout->form_element_id();
 }
 
+function wpsc_checkout_form_item_id() {
+	global $wpsc_checkout;
+	return $wpsc_checkout->form_item_id();
+}
+
 function wpsc_checkout_form_field() {
 	global $wpsc_checkout;
 	return $wpsc_checkout->form_field();
@@ -284,25 +289,30 @@ function wpsc_checkout_form_field() {
 function wpsc_shipping_region_list( $selected_country, $selected_region, $shippingdetails = false ) {
 	global $wpdb;
 	$output = '';
-	$region_data = $wpdb->get_results( $wpdb->prepare( "SELECT `regions`.* FROM `" . WPSC_TABLE_REGION_TAX . "` AS `regions` INNER JOIN `" . WPSC_TABLE_CURRENCY_LIST . "` AS `country` ON `country`.`id` = `regions`.`country_id` WHERE `country`.`isocode` IN(%s) ORDER BY name ASC", $selected_country ), ARRAY_A );
-	$js = '';
-	if ( !$shippingdetails ) {
-		$js = "onchange='submit_change_country();'";
-	}
+
+	$region_data = $wpdb->get_results(
+					$wpdb->prepare(
+										'SELECT `regions`.* FROM `' . WPSC_TABLE_REGION_TAX . '` AS `regions` INNER JOIN `'
+										. WPSC_TABLE_CURRENCY_LIST . '` AS `country` ON `country`.`id` = `regions`.`country_id` '
+										. 'WHERE `country`.`isocode` IN(%s) ORDER BY name ASC', $selected_country
+								),
+					ARRAY_A
+				);
+
 	if ( count( $region_data ) > 0 ) {
-		$output .= "<select name='region'  id='region' " . $js . " >";
+		$output .= "<select class=\"wpsc-visitor-meta\" data-wpsc-meta-key=\"shippingregion\" name=\"region\"  id=\"region\" >\n\r";
 		foreach ( $region_data as $region ) {
 			$selected = '';
 			if ( $selected_region == $region['id'] ) {
 				$selected = "selected='selected'";
 			}
-			$output .= "<option $selected value='{$region['id']}'>" . esc_attr( htmlspecialchars( $region['name'] ) ). "</option>";
+			$output .= "<option $selected value='{$region['id']}'>" . esc_attr( htmlspecialchars( $region['name'] ) ). "</option>\n\r";
 		}
-		$output .= "";
+		$output .= '';
 
-		$output .= "</select>";
+		$output .= '</select>';
 	} else {
-		$output .= " ";
+		$output .= ' ';
 	}
 	return $output;
 }
@@ -311,12 +321,13 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 	global $wpdb, $wpsc_shipping_modules, $wpsc_country_data;
 	$js = '';
 	$output = '';
-	if ( !$shippingdetails ) {
+	if ( ! $shippingdetails ) {
 		$output = "<input type='hidden' name='wpsc_ajax_actions' value='update_location' />";
-		$js = "  onchange='submit_change_country();'";
+		$js = '';
 	}
-	$selected_country = (string) wpsc_get_customer_meta( 'shipping_country' );
-	$selected_region  = (string) wpsc_get_customer_meta( 'shipping_region'  );
+
+	$selected_country = (string) wpsc_get_customer_meta( 'shippingcountry' );
+	$selected_region  = (string) wpsc_get_customer_meta( 'shippingregion'  );
 
 	if ( empty( $selected_country ) )
 		$selected_country = esc_attr( get_option( 'base_country' ) );
@@ -331,14 +342,19 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 
 	$acceptable_countries = wpsc_get_acceptable_countries();
 
-	$output .= wpsc_get_country_dropdown( array(
-		'name'                  => 'country',
-		'id'                    => 'current_country',
-		'additional_attributes' => $js,
-		'acceptable_ids'        => $acceptable_countries,
-		'selected'              => $selected_country,
-		'placeholder'           => '',
-	) );
+	$additional_attributes = 'data-wpsc-meta-key="shippingcountry" ' . $js;
+
+	$output .= wpsc_get_country_dropdown(
+											array(
+												'name'                  => 'country',
+												'id'                    => 'current_country',
+												'additional_attributes' => $additional_attributes,
+												'acceptable_ids'        => $acceptable_countries,
+												'selected'              => $selected_country,
+												'class'                 => 'wpsc-visitor-meta',
+												'placeholder'           => '',
+											)
+									);
 
 	$output .= wpsc_shipping_region_list( $selected_country, $selected_region, $shippingdetails );
 

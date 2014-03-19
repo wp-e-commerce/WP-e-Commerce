@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Get all object ids that have the meta value
  *
@@ -15,8 +14,8 @@ function wpsc_get_ids_by_meta_key( $meta_object_type, $meta_key = '' ) {
 	$meta_table = wpsc_meta_table_name( $meta_object_type );
 	$id_field_name = $meta_object_type . '_id';
 
-	$sql = 'SELECT %s FROM `%s` where meta_key = "%s"';
-	$sql = $wpdb->prepare( $sql , $id_field_name, $meta_table, $meta_key );
+	$sql = 'SELECT '. $id_field_name . ' FROM `' . $meta_table . '` where meta_key = "%s"';
+	$sql = $wpdb->prepare( $sql , $meta_key );
 
 	$meta_rows = $wpdb->get_results( $sql, OBJECT_K  );
 
@@ -26,7 +25,6 @@ function wpsc_get_ids_by_meta_key( $meta_object_type, $meta_key = '' ) {
 
 	return $ids;
 }
-
 
 /**
  * Calls function for each meta matching the timestamp criteria.  Callback function
@@ -48,19 +46,19 @@ function wpsc_get_meta_by_timestamp( $meta_object_type, $timestamp = 0, $compari
 	$id_field_name = $meta_object_type . '_id';
 
 	if ( ($timestamp == 0) || empty( $timestamp ) ) {
-		$sql = 'SELECT $id_field_name as id FROM `$meta_table` ';
+		$sql = 'SELECT ' . $id_field_name . ' AS id FROM ` ' . $meta_table . '` ';
 	} else {
 		// validate the comparison operator
-		if ( ! in_array( $comparison, array( '=', '>=', '>', '<=', '<', '<>', '!='	) ) )
+		if ( ! in_array( $comparison, array( '=', '>=', '>', '<=', '<', '<>', '!='	) ) ) {
 			return false;
+		}
 
-		if ( is_int( $timestamp ) )
+		if ( is_int( $timestamp ) ) {
 			$timestamp = date( 'Y-m-d H:i:s', $timestamp );
-
+		}
 
 		$sql = 'SELECT ' . $id_field_name . ' as id FROM `' . $meta_table. '` where meta_timestamp ' . $comparison . ' "%s"';
 		$sql = $wpdb->prepare( $sql , $timestamp );
-
 	}
 
 	if ( ! empty ($meta_key ) ) {
@@ -139,10 +137,10 @@ function _wpsc_validate_visitor_meta_key( $visitor_meta_key ) {
 	// WPEC internal visitor meta keys are not allowed to be aliased, internal visitor meta keys
 	if ( ! ( strpos( $visitor_meta_key, _wpsc_get_visitor_meta_key( '' ) ) === 0 ) ) {
 
-		$built_in_checkout_names = wpsc_checkout_unique_names();
+		$build_in_checkout_names = wpsc_checkout_unique_names();
 
 		// the built in checkout names cannot be aliased to something else
-		if ( ! in_array( $visitor_meta_key, $built_in_checkout_names ) ) {
+		if ( ! in_array( $visitor_meta_key, $build_in_checkout_names ) ) {
 
 			/**
 			 * Filter wpsc_visitor_meta_key_replacements
@@ -207,11 +205,6 @@ function _wpsc_replace_visitor_meta_keys( $replacements ) {
 
 	return $total_count_updated;
 }
-
-
-
-
-
 
 
 /** Create visitors that we expect to be in the table
@@ -291,6 +284,7 @@ if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 		wp_suspend_cache_addition( false );
 		exit( 0 );
 	}
+
 }
 
 add_action( 'wpsc_migrate_anonymous_user_cron', '_wpsc_meta_migrate_anonymous_user_cron' );
@@ -314,3 +308,32 @@ function _wpsc_meta_migrate_anonymous_user_cron() {
 	}
 }
 
+
+/**
+ * custmer/visitor/user meta has been known by different identifiers. we are trying to standardize on using
+ * the uniquename value in the form definition for well known shopper meta.  this function allows
+ * old meta keys to return the proper meta value from the database
+ *
+ * @since 3.8.14
+ * @access private
+ * @param unknown $meta_keys
+ * @return string
+ */
+function _wpsc_visitor_meta_key_replacements( $meta_keys ) {
+
+	$meta_keys['billing_region']           = 'billingregion';
+	$meta_keys['billing_country']          = 'billingcountry';
+	$meta_keys['shipping_region']          = 'shippingregion';
+	$meta_keys['shipping_country']         = 'shippingcountry';
+	$meta_keys['shipping_zip']             = 'shippingpostcode';
+	$meta_keys['shipping_zipcode']         = 'shippingpostcode';
+	$meta_keys['billing_zip']              = 'billingpostcode';
+	$meta_keys['billing_zipcode']          = 'billingpostcode';
+	$meta_keys['shippingzip']              = 'shippingpostcode';
+	$meta_keys['billingzip']               = 'billingpostcode';
+	$meta_keys['shipping_same_as_billing'] = 'shippingSameBilling';
+	$meta_keys['delivertoafriend']         = 'shippingSameBilling';
+	return $meta_keys;
+}
+
+add_filter( 'wpsc_visitor_meta_key_replacements', '_wpsc_visitor_meta_key_replacements' );

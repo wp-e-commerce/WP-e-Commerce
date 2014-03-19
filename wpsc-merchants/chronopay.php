@@ -49,8 +49,8 @@ function gateway_chronopay($separator, $sessionid)
     {
     	$data['city'] = $_POST['collected_data'][get_option('chronopay_form_city')];
     }
-    
-    	$data['country'] = (string) wpsc_get_customer_meta( 'billing_country' );
+
+    	$data['country'] = (string) wpsc_get_customer_meta( 'billingcountry' );
 
   	// Change suggested by waxfeet@gmail.com, if email to be sent is not there, dont send an email address
   	$email_data = $wpdb->get_results("SELECT `id`,`type` FROM `".WPSC_TABLE_CHECKOUT_FORMS."` WHERE `type` IN ('email') AND `active` = '1'",ARRAY_A);

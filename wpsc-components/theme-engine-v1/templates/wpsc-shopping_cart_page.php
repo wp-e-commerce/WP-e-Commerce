@@ -330,7 +330,7 @@ endif;
                   <table class='wpsc_checkout_table table-<?php echo $i; ?>'>
                <?php endif; ?>
 
-               <tr <?php echo wpsc_the_checkout_item_error_class();?>>
+               <tr class="checkout-heading-row <?php echo wpsc_the_checkout_item_error_class();?>">
                   <td <?php wpsc_the_checkout_details_class(); ?> colspan='2'>
                      <h4><?php echo wpsc_checkout_form_name();?></h4>
                   </td>
@@ -339,17 +339,17 @@ endif;
                <tr class='same_as_shipping_row'>
                   <td colspan ='2'>
                   <?php $checked = '';
-                  $shipping_same_as_billing = wpsc_get_customer_meta( 'shipping_same_as_billing' );
+                  $shipping_same_as_billing = wpsc_get_customer_meta( 'shippingSameBilling' );
                   if(isset($_POST['shippingSameBilling']) && $_POST['shippingSameBilling'])
                      $shipping_same_as_billing = true;
                   elseif(isset($_POST['submit']) && !isset($_POST['shippingSameBilling']))
                   	$shipping_same_as_billing = false;
-                  wpsc_update_customer_meta( 'shipping_same_as_billing', $shipping_same_as_billing );
+                  wpsc_update_customer_meta( 'shippingSameBilling', $shipping_same_as_billing );
                   	if( $shipping_same_as_billing )
                   		$checked = 'checked="checked"';
                    ?>
 					<label for='shippingSameBilling'><?php _e('Same as billing address:','wpsc'); ?></label>
-					<input type='checkbox' value='true' name='shippingSameBilling' id='shippingSameBilling' <?php echo $checked; ?> />
+					<input type='checkbox' value='true'  data-wpsc-meta-key="shippingSameBilling" class= "wpsc-visitor-meta"  name='shippingSameBilling' id='shippingSameBilling' <?php echo $checked; ?> />
 					<br/><span id="shippingsameasbillingmessage"><?php _e('Your order will be shipped to the billing address', 'wpsc'); ?></span>
                   </td>
                </tr>
