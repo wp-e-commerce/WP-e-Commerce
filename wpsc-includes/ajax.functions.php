@@ -79,7 +79,7 @@ function wpsc_scale_image() {
 			$intermediate_image_data = image_get_intermediate_size( $attachment_id, $intermediate_size );
 		}
 
-		wp_redirect( set_url_scheme( $output_url ) );
+		wp_redirect( set_url_scheme( $intermediate_image_data['url'] ) );
 	} else {
 		_e( 'Invalid Image parameters', 'wpsc' );
 	}
