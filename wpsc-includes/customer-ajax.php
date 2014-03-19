@@ -60,17 +60,10 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 		}
 
 		$response = array( 'request' => $_REQUEST );
+		$response = _wpsc_add_customer_meta_to_response( $response, $meta );
 
-		if ( ! empty( $meta ) ) {
-			$response = _wpsc_add_customer_meta_to_response( $response, $meta );
-			$response['type'] = __( 'success', 'wpsc' );
-			$response['error'] = '';
-		} else {
-			$response['value'] = '';
-			$response['type']  = __( 'error', 'wpsc' );
-			$response['error'] = __( 'no meta key', 'wpsc' );
-			_wpsc_doing_it_wrong( __FUNCTION__, __( 'missing meta key', 'wpsc' ), '3.8.14' );
-		}
+		$response['type'] = __( 'success', 'wpsc' );
+		$response['error'] = '';
 
 		wp_send_json_success( $response );
 		die();
