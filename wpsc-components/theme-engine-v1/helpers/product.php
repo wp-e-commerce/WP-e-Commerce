@@ -646,6 +646,10 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 			$src     = apply_filters( 'wpsc_buy_now_button_src', _x( 'https://www.paypal.com/en_US/i/btn/btn_buynow_LG.gif', 'PayPal Buy Now Button', 'wpsc' ) );
 			$classes = apply_filters( 'wpsc_buy_now_button_class', "wpsc-buy-now-form wpsc-buy-now-form-{$product_id}" );
 
+            $classes_array = array_map( 'sanitize_html_class', explode( ' ', $classes ) );
+
+            $classes = implode( ' ', $classes_array );
+
 			$button_html = sprintf( '<input%1$s class="wpsc-buy-now-button wpsc-buy-now-button-%2$s" type="image" name="submit" border="0" src="%3$s" alt="%4$s" />',
 				disabled( $has_variants, true, false ),
 				esc_attr( $product_id ),
@@ -655,7 +659,7 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 
 			$button_html = apply_filters( 'wpsc_buy_now_button_html', $button_html, $product_id );
 ?>
-			<form class="<?php echo esc_attr( sanitize_html_class( $classes, '' ) ); ?>" id="buy-now-product_<?php echo $product_id; ?>" target="paypal" action="<?php echo esc_url( home_url() ); ?>" method="post">
+			<form class="<?php echo( $classes ); ?>" id="buy-now-product_<?php echo $product_id; ?>" target="paypal" action="<?php echo esc_url( home_url() ); ?>" method="post">
 				<input type="hidden" name="wpsc_buy_now_callback" value="1" />
 				<input type="hidden" name="product_id" value="<?php echo esc_attr( $product_id ); ?>" />
 <?php
