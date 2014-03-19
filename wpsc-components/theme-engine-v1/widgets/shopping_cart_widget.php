@@ -73,12 +73,19 @@ class WP_Widget_Shopping_Cart extends WP_Widget {
 			if ( ( strstr( $_SERVER['HTTP_USER_AGENT'], 'MSIE' ) == false ) && ( $use_object_frame == true ) ) {
 				?>
 				<object codetype="text/html" type="text/html" data="index.php?wpsc_action=cart_html_page" border="0">
-					<p><?php _e( 'Loading...', 'wpsc' ); ?></p>
+					<div class="wpsc_loading_animation">
+						<img title="<?php esc_attr_e( 'Loading', 'wpsc' ); ?>" alt="<?php esc_attr_e( 'Loading', 'wpsc' ); ?>" src="<?php echo wpsc_loading_animation_url(); ?>" />
+						<?php _e( 'Loading cart...', 'wpsc' ); ?>
+					</div><!--close wpsc_loading_animation-->
 				</object>
 				<?php
 			} else {
 				?>
 				<div class="wpsc_cart_loading"><p><?php _e( 'Loading...', 'wpsc' ); ?></p></div>
+				<div class="wpsc_loading_animation">
+					<img title="<?php esc_attr_e( 'Loading', 'wpsc' ); ?>" alt="<?php esc_attr_e( 'Loading', 'wpsc' ); ?>" src="<?php echo wpsc_loading_animation_url(); ?>" />
+					<?php _e( 'Loading cart...', 'wpsc' ); ?>
+				</div><!--close wpsc_loading_animation-->
 				<?php
 			}
 			echo '</div>';

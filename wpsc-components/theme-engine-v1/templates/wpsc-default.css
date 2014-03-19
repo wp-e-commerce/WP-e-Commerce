@@ -696,6 +696,13 @@ span.rating_saved{
 	position:relative;
 }
 
+.shopping-cart-wrapper div.wpsc_cart_loading {
+	background-image:url(wpsc-images/indicator.gif);
+	background-repeat: no-repeat;
+	background-position:left; 
+	padding-left: 20px;		
+}
+
 .shopping-cart-wrapper span.cart_message {
 	display:block;
 	padding:5px;
