@@ -210,12 +210,12 @@ function wpsc_meta_item_change_response( response ) {
 	
 	jQuery( ".wpsc-visitor-meta").off( "change", wpsc_meta_item_change );
 	
-	if ( response.type == 'success' ) {		
+	if ( response.hasOwnProperty('success') && response.success && response.hasOwnProperty('data') ) {		
 
 		// Whatever replacements have been sent for the checkout form can be efficiently
 		// put into view
 		if ( response.data.hasOwnProperty('replacements') ) {
-			jQuery.each( response.replacements, function( elementname, replacement ) {
+			jQuery.each( response.data.replacements, function( elementname, replacement ) {
 				jQuery( '#'+replacement.elementid ).replaceWith( replacement.element );
 			});
 		}		
