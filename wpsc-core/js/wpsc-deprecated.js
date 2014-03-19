@@ -16,7 +16,7 @@ if ( ! window.console ){ window.console = {log: function(){} }; }
  ****************************************************************/
 function set_billing_country(html_form_id, form){
 	if ( window.console && window.console.log ) {
-		console.log( "WPEC javascript function 'set_billing_country' is deprecated as of version 3.8.14, please update your code." );
+		console.log( "WPEC javascript function 'set_billing_country' is deprecated as of version 3.8.14. The meta values are automatically updated when the HTML element changes by the javascript function wpsc_update_customer_meta" );
 	}
 }
 
@@ -29,7 +29,7 @@ function set_billing_country(html_form_id, form){
  ****************************************************************/
 function set_shipping_country(html_form_id, form){
 	if ( window.console && window.console.log ) {
-		console.log( "WPEC javascript function 'set_billing_country' is deprecated as of version 3.8.14, please update your code." );
+		console.log( "WPEC javascript function 'set_billing_country' is deprecated as of version 3.8.14, please update your code. The meta values are automatically updated when the HTML element changes by the javascript function wpsc_update_customer_meta" );
 	}
 }
 
@@ -41,7 +41,7 @@ function set_shipping_country(html_form_id, form){
  ****************************************************************/
 function wpsc_shipping_same_as_billing(){
 	if ( window.console && window.console.log ) {
-		console.log( "WPEC javascript function 'wpsc_shipping_same_as_billing' is deprecated as of version 3.8.14, please update your code." );
+		console.log( "WPEC javascript function 'wpsc_shipping_same_as_billing' is deprecated as of version 3.8.14. The meta values are automatically updated when the HTML element changes by the javascript function wpsc_update_customer_meta" );
 	}
 }
 
@@ -53,7 +53,7 @@ function wpsc_shipping_same_as_billing(){
  *****************************************************************/
 function wpsc_handle_country_change( response ) {
 	if ( window.console && window.console.log ) {
-		console.log( "WPEC javascript function 'wpsc_handle_country_change' is deprecated as of version 3.8.14, please update your code." );
+		console.log( "WPEC javascript function 'wpsc_handle_country_change' is deprecated as of version 3.8.14. The meta values are automatically updated when the HTML element changes by the javascript function wpsc_update_customer_meta" );
 	}
 }
 
