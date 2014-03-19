@@ -1144,36 +1144,48 @@ function wpec_remap_shop_subpages( $vars ) {
 	return $vars;
 }
 
-function wpsc_remove_page_from_query_string($query_string)
-{
+function wpsc_remove_page_from_query_string( $query_string ) {
 
-	if ( isset($query_string['name']) && $query_string['name'] == 'page' && isset($query_string['page']) ) {
-		unset($query_string['name']);
-		list($delim, $page_index) = explode( '/', $query_string['page'] );
+	if ( false === strpos( implode( ' ', $query_string ), 'wpsc' ) ) {
+		return $query_string;
+	}	
+
+	if ( isset( $query_string['name'] ) && $query_string['name'] == 'page' && isset( $query_string['page'] ) ) {
+		unset( $query_string['name'] );
+
+		list( $delim, $page_index ) = explode( '/', $query_string['page'] );
 
 		$query_string['paged'] = $page_index;
 	}
 
-	if ( isset($query_string['wpsc-product']) && 'page' == $query_string['wpsc-product'] )
+	if ( isset( $query_string['wpsc-product'] ) && 'page' == $query_string['wpsc-product'] ) {
 		$query_string['wpsc-product'] = '';
+	}
 
-	if ( isset($query_string['name']) && is_numeric($query_string['name']) ) {
+	if ( isset( $query_string['name'] ) && is_numeric( $query_string['name'] ) ) {
 		$query_string['paged'] = $query_string['name'];
-		$query_string['page'] = '/'.$query_string['name'];
+		$query_string['page']  = '/'.$query_string['name'];
 
 		$query_string['posts_per_page'] = get_option('wpsc_products_per_page');
 	}
-	if ( isset($query_string['wpsc-product']) && is_numeric($query_string['wpsc-product']) )
-		unset( $query_string['wpsc-product'] );
 
-	if ( isset($query_string['wpsc_product_category']) && 'page' == $query_string['wpsc_product_category'] )
+	if ( isset( $query_string['wpsc-product'] ) && is_numeric( $query_string['wpsc-product'] ) ) {
+		unset( $query_string['wpsc-product'] );
+	}
+
+	if ( isset( $query_string['wpsc_product_category'] ) && 'page' == $query_string['wpsc_product_category'] ) {
 		unset( $query_string['wpsc_product_category'] );
-	if ( isset($query_string['name']) && is_numeric($query_string['name']) )
+	}
+
+	if ( isset( $query_string['name'] ) && is_numeric( $query_string['name'] ) ) {
 		unset( $query_string['name'] );
+	}
+
 	if ( isset($query_string['term']) && 'page' == $query_string['term'] )	{
 		unset( $query_string['term'] );
 		unset( $query_string['taxonomy'] );
 	}
+	
 	return $query_string;
 }
 

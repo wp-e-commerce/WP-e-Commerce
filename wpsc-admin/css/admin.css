@@ -1,5 +1,3 @@
-
-
 /**
  * WPSC Admin CSS file
  */
@@ -1948,6 +1946,7 @@ table.purchase-logs tr:hover .column-id .delete {
 .wpsc-product-variation-iframe {
 	min-width: 400px;
 	padding: 6px 0 12px 0;
+	overflow:hidden;
 }
 
 #wpsc-product-variations-wrapper .tablenav.top {

@@ -498,13 +498,13 @@ class ash_ups {
 		// If there is a specific service being requested then
 		// we want to pass the service into the XML
 		if ( isset( $args["service"] ) ) {
-		   $Shipment .=  array( "Service" => array( "Code" => $args['service'] ) );
+		   $Shipment .= $this->array2xml( array( "Service" => array( "Code" => $args['service'] ) ) );
 		}
 
 		// Include this only if you want negotiated rates
 		if ( array_key_exists( 'negotiated_rates', $args ) ){
 			if ( $args['negotiated_rates'] == "1" ) {
-				$Shipment .= array( "RateInformation" => array( "NegotiatedRatesIndicator" => "" ) );
+				$Shipment .= $this->array2xml( array( "RateInformation" => array( "NegotiatedRatesIndicator" => "" ) ) );
 			}
 		}
 
@@ -541,7 +541,7 @@ class ash_ups {
 
 		$REQUEST .= $this->array2xml( $RatingServiceRequest );
 		$REQUEST .= "</RatingServiceSelectionRequest>";
-
+   		
 		// Return the final XML document as a string to be used by _makeRateRequest
 		return $REQUEST;
 	}

@@ -611,7 +611,8 @@ class ASH{
             $dim_array["width"]  = ( !empty( $dimensions["width"]  ) && is_numeric( $dimensions["width"]  ) ) ? $dimensions["width"]  : 1;
             $dim_array["length"] = ( !empty( $dimensions["length"] ) && is_numeric( $dimensions["length"] ) ) ? $dimensions["length"] : 1;
             $package->set_dimensions($dim_array);
-            //*** Set other meta ***\\
+           
+            /* Set other meta */
             $package->hazard = ( get_product_meta( $cart_item->product_id, "ship_hazard", TRUE ) === TRUE) ? TRUE : FALSE;			//Fixed ternary evaluation.
             $package->insurance = ( get_product_meta( $cart_item->product_id, "ship_insurance", TRUE ) === TRUE) ? TRUE : FALSE;	//Fixed ternary evaluation.
             $package->insured_amount = get_product_meta( $cart_item->product_id,"ship_insured_amount", TRUE );						//Fixed ternary evaluation.
