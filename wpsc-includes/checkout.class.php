@@ -722,7 +722,7 @@ class wpsc_checkout {
 		$this->checkout_item = $this->next_checkout_item();
 		if ( $this->current_checkout_item == 0 ) {
 			// loop has just started
-			do_action( 'wpsc_checkout_loop_start' );
+			do_action( 'wpsc_checkout_loop_start', $this );
 		}
 		return $this->checkout_item;
 	}
@@ -731,7 +731,7 @@ class wpsc_checkout {
 		if ( $this->current_checkout_item + 1 < $this->checkout_item_count ) {
 			return true;
 		} else if ( $this->current_checkout_item + 1 == $this->checkout_item_count && $this->checkout_item_count > 0 ) {
-			do_action( 'wpsc_checkout_loop_end' );
+			do_action( 'wpsc_checkout_loop_end', $this );
 			// Do some cleaning up after the loop,
 			$this->rewind_checkout_items();
 		}
