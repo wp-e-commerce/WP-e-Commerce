@@ -341,10 +341,13 @@ class ash_usps {
 				$machinable = "true";
 				break;
 		}
-		$base["Container"] = $container;
 		if ( $package && ( (float)$package->width > 12 || (float)$package->length > 12 || (float)$package->height > 12  ) ) {
+			if ( $container == "VARIABLE") {
+				$container = "RECTANGULAR";
+			}
 			$size = "LARGE";
 		}
+		$base["Container"] = apply_filters( 'wpsc_usps_container', $container );
 		$base["Size"] = $size;
 		if ( $package ) {
 			$base["Width"] = $package->width;
@@ -458,7 +461,7 @@ class ash_usps {
 			),
 			"ValueOfContents" => $data["value"],
 			"Country"         => $data["dest_country"],
-			"Container"       => "RECTANGULAR",
+			"Container"       => apply_filters( 'wpsc_usps_container', "RECTANGULAR" ),
 			"Size"            => $data["size"],
 			"Width"           => $data["width"],
 			"Length"          => $data["length"],
