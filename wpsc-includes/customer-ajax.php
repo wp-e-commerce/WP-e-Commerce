@@ -38,20 +38,31 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 		die();
 	}
 
+
 	/**
-	 * Get a customer meta values
-	 * @param string
+	 * Get customer meta values
+	 * @uses$_POST[meta] array of meta keys to retrieve, if not present all
+	 * 'registered' meta keys are returned.  See wpsc_checkout_unique_names() for the list
+	 *  of registered meta keys.
+	 *
 	 * @return JSON encoded array with results, results include original request parameters
 	 * @since 3.8.14
 	 */
+
 	function wpsc_get_customer_meta_ajax() {
 
-		$meta_key = isset( $_POST['meta_key'] ) ?  $_REQUEST['meta_key'] : '';
+		if ( empty( $_POST['meta']  ) ) {
+			$meta = null;
+		} elseif ( ! is_array( $meta ) ) {
+			$meta = array( $meta );
+		} else {
+			$meta = $_POST['meta'];
+		}
 
 		$response = array( 'request' => $_REQUEST );
 
-		if ( ! empty( $meta_key ) ) {
-			$response = _wpsc_add_customer_meta_to_response( $response, array( $meta_key ) );
+		if ( ! empty( $meta ) ) {
+			$response = _wpsc_add_customer_meta_to_response( $response, $meta );
 			$response['type'] = __( 'success', 'wpsc' );
 			$response['error'] = '';
 		} else {
@@ -150,29 +161,6 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 	}
 
 	/**
-	 * Get customer meta values
-	 * @uses$_POST[meta_keys] array of meta keys to retrive, if not present all
-	 * 'registered' meta keys are returned.  See wpsc_checkout_unique_names() for the list
-	 *  of registered meta keys.
-	 *
-	 * @return JSON encoded array with results, results include original request parameters
-	 * @since 3.8.14
-	 */
-	function wpsc_get_customer_meta_ajax() {
-		$response = array( 'request' => $_REQUEST );
-
-		if ( isset( $_POST['meta_keys'] ) && ! empty( $_POST['meta_keys']) ) {
-			$meta_keys = $_POST['meta_keys'];
-		} else {
-			$meta_keys = null;
-		}
-
-		$response = _wpsc_add_customer_meta_to_response( $response, $meta_keys );
-		wp_send_json_success( $response );
-		die();
-	}
-
-	/**
 	 * Common routine to put the current customer meta values into an jax
 	 * response in a format to be consumed by the wp-e-commerce.js ajax processings
 	 *
@@ -210,9 +198,6 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 	if ( _wpsc_doing_customer_meta_ajax() ) {
 		add_action( 'wp_ajax_wpsc_validate_customer'       		, 'wpsc_validate_customer_ajax' );
 		add_action( 'wp_ajax_nopriv_wpsc_validate_customer'		, 'wpsc_validate_customer_ajax' );
-
-		add_action( 'wp_ajax_wpsc_get_customer_meta'       		, 'wpsc_get_customer_meta_ajax' );
-		add_action( 'wp_ajax_nopriv_wpsc_get_customer_meta'		, 'wpsc_get_customer_meta_ajax' );
 
 		add_action( 'wp_ajax_wpsc_get_customer_meta'       		, 'wpsc_get_customer_meta_ajax' );
 		add_action( 'wp_ajax_nopriv_wpsc_get_customer_meta'		, 'wpsc_get_customer_meta_ajax' );
