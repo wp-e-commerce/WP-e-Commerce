@@ -305,6 +305,9 @@ function wpsc_meta_item_change() {
 
 function wpsc_adjust_checkout_form_element_visibility(){
 
+	// make sure any item that changes checkout data is bound to the proper event handler
+	jQuery( ".wpsc-visitor-meta" ).off( "change", wpsc_meta_item_change );
+
 	var shipping_row = jQuery( "#shippingSameBilling" ).closest( "tr" );
 	
 	if( jQuery("#shippingSameBilling").is(":checked") ) { 
@@ -339,7 +342,7 @@ function wpsc_adjust_checkout_form_element_visibility(){
 		billing_state_element.val( '' ).removeAttr( 'disabled' );
 	}	
 
-	// maek sure any item that changes checkout data is bound to the proper event handler
+	// make sure any item that changes checkout data is bound to the proper event handler
 	jQuery( ".wpsc-visitor-meta" ).on( "change", wpsc_meta_item_change );
 }
 
@@ -349,13 +352,6 @@ function wpsc_adjust_checkout_form_element_visibility(){
  * @since 3.8.14
  */
 jQuery(document).ready(function ($) {
-
-	// make sure that if the shopper clicks shipping same as billing the checkout form adjusts itself
-	jQuery( "#shippingSameBilling" ).change( wpsc_adjust_checkout_form_element_visibility );
-	
-	// if the shopper changes a form value that is holding customer meta we should update 
-	// the persistant customer meta
-	jQuery( ".wpsc-visitor-meta").change( wpsc_meta_item_change );
 
 	if ( jQuery( ".wpsc-visitor-meta" ).length ) {
 		// get the current value for all customer meta and display the values in available elements
