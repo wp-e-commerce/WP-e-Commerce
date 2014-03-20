@@ -308,14 +308,12 @@ function wpsc_adjust_checkout_form_element_visibility(){
 	var shipping_row = jQuery( "#shippingSameBilling" ).closest( "tr" );
 	
 	if( jQuery("#shippingSameBilling").is(":checked") ) { 
-		jQuery( shipping_row ).siblings().hide();
+		jQuery( shipping_row ).siblings( ":not( .checkout-heading-row , :has( .custom_gateway ) ) ").hide();
 		jQuery( "#shippingsameasbillingmessage" ).show();
 	} else {
 		jQuery( shipping_row ).siblings().show();
 		jQuery( "#shippingsameasbillingmessage" ).hide();		
 	} 
-		
-	jQuery( ".checkout-heading-row" ).show();
 	
 	// set the visibility of the shipping state input fields
 	var shipping_country = jQuery( "#shippingcountry" ).val();
