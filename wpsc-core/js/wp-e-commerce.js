@@ -418,7 +418,11 @@ jQuery(document).ready(function ($) {
 			return true;
 		} else {
 			var action_buttons = jQuery( 'input[name="wpsc_ajax_action"]', jQuery( this ) );
-			var action = action_buttons[0].value;
+			if(action_buttons.length > 0){
+				var action = action_buttons[0].value;	
+			} else {
+				var action = action_buttons.value;
+			}
 			form_values = jQuery(this).serialize() + '&action=' + action;
 
 			// Sometimes jQuery returns an object instead of null, using length tells us how many elements are in the object, which is more reliable than comparing the object to null
