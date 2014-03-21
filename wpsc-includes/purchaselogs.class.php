@@ -466,7 +466,7 @@ function wpsc_display_purchlog_buyers_name() {
 
 function wpsc_display_purchlog_buyers_city() {
    global $purchlogitem;
-   return esc_html( $purchlogitem->userinfo['billingcity']['value'] );
+   return isset( $purchlogitem->userinfo['billingcity'] ) ? esc_html( $purchlogitem->userinfo['billingcity']['value'] ) : '';
 }
 
 function wpsc_display_purchlog_buyers_email() {
@@ -476,7 +476,7 @@ function wpsc_display_purchlog_buyers_email() {
 
 function wpsc_display_purchlog_buyers_address() {
    global $purchlogitem;
-   return nl2br( esc_html( $purchlogitem->userinfo['billingaddress']['value'] ) );
+   return isset( $purchlogitem->userinfo['billingaddress'] ) ? nl2br( esc_html( $purchlogitem->userinfo['billingaddress']['value'] ) ) : '';
 }
 
 function wpsc_display_purchlog_buyers_state_and_postcode() {
@@ -594,7 +594,7 @@ function wpsc_purchaselog_order_summary() {
 
 function wpsc_has_purchlog_shipping() {
    global $purchlogitem;
-   if ( $purchlogitem->shippinginfo['shippingfirstname']['value'] != '' ) {
+   if ( isset( $purchlogitem->shippinginfo['shippingfirstname'] ) && $purchlogitem->shippinginfo['shippingfirstname']['value'] != '' ) {
 	  return true;
    } else {
 	  return false;
