@@ -181,6 +181,11 @@ function wpsc_purchlogs_get_weight( $id = '', $out_unit = 'pound' ) {
  * @return string $weight in KG and lbs and ounces
  */
 function wpsc_purchlogs_get_weight_text( $id = '' ) {
+	global $purchlogitem;
+
+	if ( empty( $id ) ) {
+		$id = $purchlogitem->purchlogid;
+	}
 
 	$weight_in_pounds = wpsc_purchlogs_get_weight( $id, 'pound' );
 
@@ -195,10 +200,6 @@ function wpsc_purchlogs_get_weight_text( $id = '' ) {
 
 	} else {
 		$weight_string = '';
-	}
-
-	if ( empty( $id ) ) {
-		$id = $purchlogitem->purchlogid;
 	}
 
 	/**
