@@ -42,7 +42,7 @@ if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
 		wpsc_http.overrideMimeType( "application/json" );
 		
 		// open setup and send the request in synchronous mode
-		wpsc_http.open( "POST",wpsc_ajax.ajaxurl + "?action=wpsc_validate_customer", false );
+		wpsc_http.open( "POST", wpsc_ajax.ajaxurl + "?action=wpsc_validate_customer", false );
 		wpsc_http.setRequestHeader( "Content-type", "application/json; charset=utf-8" );
 
 		// Note that we cannot set a timeout on synchronous requests due to XMLHttpRequest limitations  
@@ -137,8 +137,6 @@ function wpsc_update_customer_meta( response ) {
 		});
 	}
 }
-
-
 
 /**
  * Take data from checkout data array and put it where it belongs
@@ -411,12 +409,15 @@ jQuery(document).ready(function ($) {
 		if(file_upload_elements.length > 0) {
 			return true;
 		} else {
+
 			var action_buttons = jQuery( 'input[name="wpsc_ajax_action"]', jQuery( this ) );
-			if(action_buttons.length > 0){
-				var action = action_buttons[0].value;	
+
+			if ( action_buttons.length > 0 ) {
+				var action = action_buttons.val();
 			} else {
-				var action = action_buttons.value;
+				var action = 'add_to_cart';
 			}
+
 			form_values = jQuery(this).serialize() + '&action=' + action;
 
 			// Sometimes jQuery returns an object instead of null, using length tells us how many elements are in the object, which is more reliable than comparing the object to null
