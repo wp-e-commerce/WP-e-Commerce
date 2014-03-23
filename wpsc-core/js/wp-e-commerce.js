@@ -1,4 +1,27 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
+// These are globals that were originally defined in the dynamic js file, they also exist in the 
+// "wpsc_ajax" structure.
+
+/* base url */
+var base_url = wpsc_ajax.base_url;
+var WPSC_URL = wpsc_ajax.WPSC_URL;
+var WPSC_IMAGE_URL = wpsc_ajax.WPSC_IMAGE_URL;
+var WPSC_DIR_NAME = wpsc_ajax.WPSC_DIR_NAME;
+var WPSC_CORE_IMAGES_URL = wpsc_ajax.WPSC_CORE_IMAGES_URL;
+
+/* LightBox Configuration start*/
+var fileLoadingImage = wpsc_ajax.fileLoadingImage;
+var fileBottomNavCloseImage = wpsc_ajax.fileBottomNavCloseImage;
+var fileThickboxLoadingImage = wpsc_ajax.fileThickboxLoadingImage;
+var resizeSpeed = wpsc_ajax.resizeSpeed;  
+var borderSize = wpsc_ajax.borderSize;    
+//
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
 // Setting up the WPEC customer identifier
 //
 // When WPEC generates a page it sets a 'customer cookie' into the browser.  This cookie is a 
