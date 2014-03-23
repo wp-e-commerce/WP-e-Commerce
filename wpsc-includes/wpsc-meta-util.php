@@ -548,3 +548,139 @@ function _wpsc_visitor_meta_key_replacements( $meta_keys ) {
 }
 
 add_filter( 'wpsc_visitor_meta_key_replacements', '_wpsc_visitor_meta_key_replacements' );
+
+
+/**
+ * custmer/visitor/user meta has been known by different identifiers. we are trying to standardize on using
+ * the uniquename value in the form definition for well known shopper meta.  this function allows
+ * old meta keys to return the proper meta value from the database
+ *
+ * @since 3.8.14
+ * @access private
+ * @param unknown $meta_keys
+ * @return string
+ */
+function _wpsc_visitor_location_changed( $meta_keys ) {
+
+	$meta_keys['billing_region']           = 'billingregion';
+	$meta_keys['billing_country']          = 'billingcountry';
+	$meta_keys['shipping_region']          = 'shippingregion';
+	$meta_keys['shipping_country']         = 'shippingcountry';
+	$meta_keys['shipping_zip']             = 'shippingpostcode';
+	$meta_keys['shipping_zipcode']         = 'shippingpostcode';
+	$meta_keys['billing_zip']              = 'billingpostcode';
+	$meta_keys['billing_zipcode']          = 'billingpostcode';
+	$meta_keys['shippingzip']              = 'shippingpostcode';
+	$meta_keys['billingzip']               = 'billingpostcode';
+	$meta_keys['shipping_same_as_billing'] = 'shippingSameBilling';
+	$meta_keys['delivertoafriend']         = 'shippingSameBilling';
+	return $meta_keys;
+}
+
+
+/*
+ * Keep track of which visitor location attributes are changing,  when the attributes are done changing
+ * at an apprpriate place in the flow there will be a call to _wpsc_has_visitor_location changed.  When
+ * that function runs it will check if there has been a change and will fire an action to whomever has
+ * hooked it to tell them it's time to do what ever they need to do with the changed location.
+ *
+ * By keeping track of which attributes have changed on the location different modules can decide what
+ * they might need to recalculate.  An example.  USPS rates are dependant on origin and destination
+ * zip codes, UPS rates use origin and destination zip codes and destination street address to calculate
+ * shipment costs.
+ */
+
+/*
+ * Record what is changing about the visitors location
+ *
+ * @since 3.8.14
+ * @access private
+ *
+ * @param string location value being set
+ * @param string location attribute name ( see unique_name field checkout definitions)
+ * @param int    the visitor/customer unique id
+ *
+ * @return true if this is a location change, false if we already new that the specified part of the location changed
+ *
+ */
+function _wpsc_visitor_location_is_changing( $meta_value, $meta_key, $visitor_id ) {
+	$what_about_the_visitor_location_changed = wpsc_get_visitor_meta( $visitor_id, 'location_attributes_changed', true );
+	$location_change_updated = false;
+
+	if ( ! is_array( $what_about_the_visitor_location_changed ) ) {
+		if ( ! in_array( $meta_key, $what_about_the_visitor_location_changed ) ) {
+			$what_about_the_visitor_location_changed[] = $meta_key;
+			$location_change_updated = wpsc_update_visitor_meta( $visitor_id, $meta_key, $meta_value );
+		}
+	}
+
+	return $location_change_updated;
+}
+
+
+/*
+ * It might seem a tad veerbose to attach a seperate hook to each meta item but doing it this
+ * way as several advantages.
+ *
+ * 	1) If a developer wants to change the fact that changing the shipping city changes the users location
+ * all they have to do is remove the action.
+ *
+ *  2) Conversely, if someone wants to define an arbitrary attribute to cause the user's location as changing.
+ *  For example if the shopper was an interplanetary space traveler and they were moving to Titan, the dev
+ *  could add a planet field to checkout shipping information and all the heavy lifting would be taken care
+ *  of for them.
+ *
+ */
+add_action( 'wpsc_updated_visitor_meta_shippingregion', '_wpsc_visitor_location_is_changing', 10 , 3 );
+add_action( 'wpsc_updated_visitor_meta_shippingaddress', '_wpsc_visitor_location_is_changing', 10 , 3 );
+add_action( 'wpsc_updated_visitor_meta_shippingcity', '_wpsc_visitor_location_is_changing', 10 , 3 );
+add_action( 'wpsc_updated_visitor_meta_shippingstate', '_wpsc_visitor_location_is_changing', 10 , 3 );
+add_action( 'wpsc_updated_visitor_meta_shippingcountry', '_wpsc_visitor_location_is_changing', 10 , 3 );
+add_action( 'wpsc_updated_visitor_meta_shippingpostcode', '_wpsc_visitor_location_is_changing', 10 , 3 );
+
+
+/*
+ * Check if the visitor location has changed, if it has inform those who have requested notification
+ *
+ * Note that there are two actions fired when location has been found to have changed.
+ * The first action tells those who are listening for its broadcast that the vistor
+ * location has changed, which elements are changed, and that it is time to do any
+ * calculations that may alter any customer meta, and most importantly the
+ * meta that is related to a persons address.
+ *
+ * The second action contains the parameters that have changed, and it's a signal to the code
+ * that it's safe to consume the customer meta.
+ *
+ * Developers have the choice of using both hooks, or either one based on what is appropriate
+ * to the circumstance.
+ *
+ * An example where a well behaved and cooperative shipping plugin would shoose to implement both hooks
+ * would be a full implementation of a USPS shipping validation and indicia generation.  The first hook
+ * would be used to request the postal service validate and cleanse the desitination shipping address. The
+ * cleansed address elements would be stored into customer meta for other plugins and other part of WPEC
+ * to take advantage of.
+ *
+ * The second hook would be use to generate the shipping quotes after other code that may adjust the destination
+ * address recorded thier inputs.
+ *
+ * @param int | boolean visitor id if knowm, false or empty for the current customer
+ * @since 3.8.14
+ *
+ * @access private
+ *
+ *
+ */
+function _wpsc_has_visitor_location_changed( $visitor_id = false ) {
+
+	$what_about_the_visitor_location_changed = wpsc_get_visitor_meta( $visitor_id, 'location_attributes_changed', true );
+
+	if ( ! is_array( $what_about_the_visitor_location_changed ) && ! empty( $what_about_the_visitor_location_changed ) ) {
+		do_action( 'wpsc_visitor_location_changing', $what_about_the_visitor_location_changed, $visitor_id );
+	}
+
+	$what_about_the_visitor_location_changed = wpsc_get_visitor_meta( $visitor_id, 'location_attributes_changed', true );
+
+	if ( ! is_array( $what_about_the_visitor_location_changed ) && ! empty( $what_about_the_visitor_location_changed ) ) {
+		do_action( 'wpsc_visitor_location_changed', $what_about_the_visitor_location_changed, $visitor_id );
+	}
+}

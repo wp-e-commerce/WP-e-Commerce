@@ -721,17 +721,24 @@ function wpsc_submit_checkout( $collected_data = true ) {
 			'wpec_taxes_total' => $tax,
 			'wpec_taxes_rate'  => $tax_percentage,
 		);
+
 		$purchase_log = new WPSC_Purchase_Log( $args );
 		$purchase_log->save();
 		$purchase_log_id = $purchase_log->get( 'id' );
-		if ( $collected_data )
+
+		if ( $collected_data ) {
 			$wpsc_checkout->save_forms_to_db( $purchase_log_id );
+		}
+
 		$wpsc_cart->save_to_db( $purchase_log_id );
 		$wpsc_cart->submit_stock_claims( $purchase_log_id );
-		if( !isset( $our_user_id ) && isset( $user_ID ))
+
+		if ( ! isset( $our_user_id ) && isset( $user_ID ) ) {
 			$our_user_id = $user_ID;
+		}
+
 		$wpsc_cart->log_id = $purchase_log_id;
-		do_action( 'wpsc_submit_checkout', array( "purchase_log_id" => $purchase_log_id, "our_user_id" => $our_user_id ) );
+		do_action( 'wpsc_submit_checkout', array( 'purchase_log_id' => $purchase_log_id, 'our_user_id' => $our_user_id ) );
 		do_action( 'wpsc_submit_checkout_gateway', $submitted_gateway, $purchase_log );
 	}
 }

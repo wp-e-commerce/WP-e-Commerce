@@ -266,3 +266,5 @@ function wpsc_update_customer_last_active( $id = false ) {
 }
 
 
+
+

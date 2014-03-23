@@ -167,7 +167,7 @@ if ( _wpsc_depcrecate_customer_checkout_details ) {
 		$form_sql = 'SELECT * FROM `' . WPSC_TABLE_CHECKOUT_FORMS . '` WHERE `active` = "1" ORDER BY `checkout_set`, `checkout_order`;';
 		$form_data = $wpdb->get_results( $form_sql, ARRAY_A );
 
-		foreach ( $form_data as $form_field ) {
+		foreach ( $form_data as $index => $form_field ) {
 			if (  isset( $meta_data_in_old_format[$form_field['id']] ) ) {
 
 				$meta_key = $form_field['unique_name'];
@@ -175,10 +175,13 @@ if ( _wpsc_depcrecate_customer_checkout_details ) {
 
 				switch ( $form_field['type'] ) {
 					case 'delivery_country':
-						if ( is_array( $meta_value ) ) {
+						if ( is_array( $meta_value ) && count( $meta_value ) == 2 ) {
 							wpsc_update_visitor_meta( 'shippingcountry', $meta_value[0], $id );
 							wpsc_update_visitor_meta( 'shippingregion', $meta_value[1], $id );
 						} else {
+							if ( is_array( $meta_value ) ) {
+								$meta_value = $meta_value[0];
+							}
 							wpsc_update_visitor_meta( 'shippingcountry', $meta_value, $id );
 							wpsc_update_visitor_meta( 'shippingregion', $id );
 						}
@@ -186,10 +189,14 @@ if ( _wpsc_depcrecate_customer_checkout_details ) {
 						break;
 
 					case 'country':
-						if ( is_array( $meta_value ) ) {
+						if ( is_array( $meta_value ) && count( $meta_value ) == 2 ) {
 							wpsc_update_visitor_meta( 'billingcountry', $meta_value[0], $id );
 							wpsc_update_visitor_meta( 'billingregion', $meta_value[1], $id );
 						} else {
+							if ( is_array( $meta_value ) ) {
+								$meta_value = $meta_value[0];
+							}
+
 							wpsc_update_visitor_meta( 'billingcountry', $meta_value, $id );
 							wpsc_update_visitor_meta( 'billingregion', $id );
 						}

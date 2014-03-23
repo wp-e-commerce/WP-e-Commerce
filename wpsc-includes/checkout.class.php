@@ -467,7 +467,7 @@ class wpsc_checkout {
 		}
 		if ( isset( $_POST['log'] ) || isset( $_POST['pwd'] ) || isset( $_POST['user_email'] ) ) {
 			$results = wpsc_add_new_user( $_POST['log'], $_POST['pwd'], $_POST['user_email'] );
-			if ( is_callable( array( $results, "get_error_code" ) ) && $results->get_error_code() ) {
+			if ( is_callable( array( $results, 'get_error_code' ) ) && $results->get_error_code() ) {
 				foreach ( $results->get_error_codes() as $code ) {
 					foreach ( $results->get_error_messages( $code ) as $error ) {
 						$wpsc_registration_error_messages[] = $error;
@@ -476,7 +476,7 @@ class wpsc_checkout {
 					$any_bad_inputs = true;
 				}
 			}
-			if ( $results->ID > 0 ) {
+			if ( property_exists( $results, 'ID' ) && ( $results->ID > 0 ) ) {
 				$our_user_id = $results->ID;
 			} else {
 				$any_bad_inputs = true;
@@ -491,76 +491,58 @@ class wpsc_checkout {
 			$user_ID = $our_user_id;
 		}
 
-		$location_changed = false;
 		//Basic Form field validation for billing and shipping details
 		foreach ( $this->checkout_items as $form_data ) {
-			$value = '';
 
-			if( isset( $_POST['collected_data'][$form_data->id] ) )
-				$value = stripslashes_deep( $_POST['collected_data'][$form_data->id] );
+			$value = wpsc_get_customer_meta( $form_data->unique_name );
 
 			$wpsc_customer_checkout_details[$form_data->id] = $value;
+
 			$bad_input = false;
-			if ( ($form_data->mandatory == 1) || ($form_data->type == "coupon") ) {
+			if ( ( $form_data->mandatory == 1 ) || ( $form_data->type == 'coupon' ) ) {
 				// dirty hack
 				if ( $form_data->unique_name == 'billingstate' && empty( $value ) ) {
-					$billing_country_id = $wpdb->get_var( "SELECT `" . WPSC_TABLE_CHECKOUT_FORMS . "`.`id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `unique_name` = 'billingcountry' AND active = '1' " );
 
-					if ( isset( $_POST['collected_data'][ $billing_country_id ][1] ) ) {
-						$value = $_POST['collected_data'][ $billing_country_id ][1];
-					} else {
+					$value = wpsc_get_customer_meta( 'billingcountry' );
+					if ( empty( $value ) ) {
 						$any_bad_inputs = true;
 						$bad_input      = true;
 					}
 				}
 
 				switch ( $form_data->type ) {
-					case "email":
-						if ( !preg_match( "/^[a-zA-Z0-9._-]+@[a-zA-Z0-9-.]+\.[a-zA-Z]{2,5}$/", $value ) ) {
+					case 'email':
+
+						if ( ! preg_match( '/^[a-zA-Z0-9._-]+@[a-zA-Z0-9-.]+\.[a-zA-Z]{2,5}$/', $value ) ) {
 							$any_bad_inputs = true;
 							$bad_input = true;
 						}
 						break;
 
-					case "delivery_country":
-					case "country":
-					case "heading":
+					case 'delivery_country':
+					case 'country':
+					case 'heading':
 						break;
-					case "select":
+
+					case 'select':
 						if ( $value == '-1' ) {
 							$any_bad_inputs = true;
 							$bad_input = true;
 						}
 						break;
+
 					default:
-						if ( $value == null ) {
+						if ( empty( $value ) ) {
 							$any_bad_inputs = true;
 							$bad_input = true;
 						}
+
 						break;
 				}
 
 				if ( $bad_input === true ) {
-					$wpsc_checkout_error_messages[$form_data->id] = sprintf(__( 'Please enter a valid <span class="wpsc_error_msg_field_name">%s</span>.', 'wpsc' ), esc_attr($form_data->name) );
+					$wpsc_checkout_error_messages[$form_data->id] = sprintf( __( 'Please enter a valid <span class="wpsc_error_msg_field_name">%s</span>.', 'wpsc' ), esc_attr( $form_data->name ) );
 					$wpsc_customer_checkout_details[$form_data->id] = '';
-				}
-			}
-
-			if ( ! $bad_input ) {
-				if ( $form_data->unique_name == 'shippingstate' ) {
-					$shipping_country_field_id = wpsc_get_country_form_id_by_type( 'delivery_country' );
-					$shipping_country = $_POST['collected_data'][$shipping_country_field_id];
-					if ( ! is_array( $shipping_country ) || ! isset( $shipping_country[1] ) ) {
-						wpsc_update_customer_meta( 'shipping_region', $value );
-						$location_changed = true;
-					}
-				} elseif ( $form_data->unique_name == 'billingstate' ) {
-					$billing_country_field_id = wpsc_get_country_form_id_by_type( 'country' );
-					$billing_country = $_POST['collected_data'][$billing_country_field_id];
-					if ( ! is_array( $billing_country ) || ! isset( $billing_country[1] ) ) {
-						wpsc_update_customer_meta( 'billing_region', $value );
-						$location_changed = true;
-					}
 				}
 			}
 		}
@@ -570,16 +552,17 @@ class wpsc_checkout {
 		wpsc_update_customer_meta( 'registration_error_messages' , $wpsc_registration_error_messages );
 
 		$filtered_checkout_details = apply_filters( 'wpsc_update_customer_checkout_details', $wpsc_customer_checkout_details );
+
 		// legacy filter
-		if ( is_user_logged_in() )
+		if ( is_user_logged_in() ) {
 			$filtered_checkout_details = apply_filters( 'wpsc_checkout_user_profile_update', $wpsc_customer_checkout_details, get_current_user_id() );
-		wpsc_update_customer_meta( 'checkout_details', $filtered_checkout_details );
+		}
 
-		if ( $location_changed )
-			$wpsc_cart->update_location();
+		// Check if the shoppers location has changed
+		_wpsc_has_visitor_location_changed();
 
-		$states = array( 'is_valid' => !$any_bad_inputs, 'error_messages' => $bad_input_message );
-		$states = apply_filters('wpsc_checkout_form_validation', $states);
+		$states = array( 'is_valid' => ! $any_bad_inputs, 'error_messages' => $bad_input_message );
+		$states = apply_filters( 'wpsc_checkout_form_validation', $states );
 		return $states;
 	}
 

@@ -430,13 +430,28 @@ class wpsc_cart {
    var $coupons_name = '';
    var $coupons_amount = 0;
 
-  function wpsc_cart() {
-    global $wpdb, $wpsc_shipping_modules;
-    $coupon = 'percentage';
-     $this->update_location();
-     $this->wpsc_refresh_cart_items();
-     $this->unique_id = sha1(uniqid(rand(), true));
-  }
+
+    function wpsc_cart() {
+    	$this->coupon = 'percentage';
+
+   		$this->update_location();
+   		$this->wpsc_refresh_cart_items();
+   		$this->unique_id = sha1( uniqid( rand(), true ) );
+
+   		add_action( 'wpsc_visitor_location_changing', array( &$this, 'shopper_location_changing' ), 10, 2);
+    }
+
+    /*
+     * Action routine to start the processing that has to happen when the customer changes
+     * location.
+     *
+     * @since 3.8.14
+     * @param array names of checnout items that hav changed since the last time the location for this customer was changed
+     *
+     */
+  	function shopper_location_changing( $what_changed, $visitor_id ) {
+  		$this->update_location();
+  	}
 
   /**
    * update_location method, updates the location
