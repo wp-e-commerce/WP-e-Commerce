@@ -2,6 +2,7 @@
 
 function _wpsc_db_upgrade_10() {
 	_wpsc_maybe_create_visitor_tables();
+	_wpsc_cleanup_customer_meta_checkout_details();
 }
 
 function _wpsc_maybe_create_visitor_tables() {
