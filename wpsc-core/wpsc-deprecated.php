@@ -1772,3 +1772,17 @@ function wpsc_the_featured_image_fix( $stuff, $post_ID ){
 
 	return $stuff;
 }
+
+/**
+ * @access public
+ * @param string $meta_object_type Type of object metadata is for (e.g., variation. cart, etc)
+ * @return string Name of the custom meta table defined in $wpdb, or the name as it would be defined
+ * @deprecated since 3.8.13.4
+ */
+function wpsc_meta_table_name( $meta_object_type ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.14', '_wpsc_meta_table_name' );
+	return _wpsc_meta_table_name( $meta_object_type );
+}
+
+
+
