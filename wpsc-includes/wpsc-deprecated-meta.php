@@ -36,9 +36,6 @@
  *
  */
 
-add_action( 'wpsc_ready', '_wpsc_cleanup_visitor_meta_checkout_details' );
-
-
 //////////////////// Deprecation Handling Control //////////////////////////
 
 // meta deprecations for 3.8.14
