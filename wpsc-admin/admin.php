@@ -637,20 +637,6 @@ function wpsc_admin_dynamic_js() {
 	}
 
 	$hidden_boxes = implode( ',', (array)$hidden_boxes );
-	echo "var base_url = '" . esc_js( site_url() ) . "';\n\r";
-	echo "var WPSC_URL = '" . esc_js( WPSC_URL ) . "';\n\r";
-	echo "var WPSC_IMAGE_URL = '" . esc_js( WPSC_IMAGE_URL ) . "';\n\r";
-	echo "var WPSC_DIR_NAME = '" . esc_js( WPSC_DIR_NAME ) . "';\n\r";
-	echo "var WPSC_IMAGE_URL = '" . esc_js( WPSC_IMAGE_URL ) . "';\n\r";
-
-	// LightBox Configuration start
-	echo "var fileLoadingImage = '" . esc_js( WPSC_CORE_IMAGES_URL ) . "/loading.gif';\n\r";
-	echo "var fileBottomNavCloseImage = '" . esc_js( WPSC_CORE_IMAGES_URL ) . "/closelabel.gif';\n\r";
-	echo "var fileThickboxLoadingImage = '" . esc_js( WPSC_CORE_IMAGES_URL ) . "/loadingAnimation.gif';\n\r";
-
-	echo "var resizeSpeed = 9;\n\r";
-
-	echo "var borderSize = 10;\n\r";
 
 	echo "var hidden_boxes = '" . esc_js( $hidden_boxes ) . "';\n\r";
 	echo "var IS_WP27 = '" . esc_js( IS_WP27 ) . "';\n\r";
@@ -1140,13 +1126,15 @@ function wpsc_fav_action( $actions ) {
 add_filter( 'favorite_actions', 'wpsc_fav_action' );
 
 /**
- * Prits out the admin scripts
+ * Enqueue the admin scripts
  *
  * @uses wp_enqueue_script()      Enqueues scripts
  * @uses home_url()               Returns the base url for the site
  */
 function wpsc_print_admin_scripts() {
-	wp_enqueue_script( 'wp-e-commerce-dynamic', home_url( '/index.php?wpsc_user_dynamic_js=true' ) );
+	$version_identifier = WPSC_VERSION . '.' . WPSC_MINOR_VERSION;
+	wp_enqueue_script( 'wp-e-commerce-admin', WPSC_CORE_JS_URL . '/wp-e-commerce.js', array( 'jquery' ), $version_identifier );
+	wp_localize_script( 'wp-e-commerce-admin', 'wpsc_ajax', _wpsc_javascript_localizations() );
 }
 
 /**

@@ -1772,3 +1772,13 @@ function wpsc_the_featured_image_fix( $stuff, $post_ID ){
 
 	return $stuff;
 }
+
+/**
+ * @access public
+ * @deprecated since 3.8.13.3
+ */
+function wpsc_user_dynamic_js() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.14', '_wpsc_javascript_localizations' );
+}
+
+
