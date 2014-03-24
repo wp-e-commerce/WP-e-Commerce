@@ -10,6 +10,7 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-customer.php'          
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-visitor.php'               );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-cart-item.php'             );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-purchase.php'              );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/country-region-currency-util.php'    );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/product-template.php'                );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/variations.class.php'                );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/ajax.functions.php'                  );
