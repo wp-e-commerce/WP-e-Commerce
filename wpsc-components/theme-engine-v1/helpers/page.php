@@ -345,7 +345,7 @@ function wpsc_enqueue_user_script_and_css() {
 		wp_enqueue_script( 'jQuery' );
 		wp_enqueue_script( 'wp-e-commerce', WPSC_CORE_JS_URL . '/wp-e-commerce.js', array( 'jquery' ), $version_identifier );
 
-		if ( defined( WPEC_LOAD_DEPRECATED ) && WPEC_LOAD_DEPRECATED ) {
+		if ( defined( 'WPEC_LOAD_DEPRECATED' ) && WPEC_LOAD_DEPRECATED ) {
 			wp_enqueue_script( 'wpsc-deprecated', WPSC_CORE_JS_URL . '/wpsc-deprecated.js', false, $version_identifier );
 		}
 
@@ -1148,7 +1148,7 @@ function wpsc_remove_page_from_query_string( $query_string ) {
 
 	if ( false === strpos( implode( ' ', $query_string ), 'wpsc' ) ) {
 		return $query_string;
-	}	
+	}
 
 	if ( isset( $query_string['name'] ) && $query_string['name'] == 'page' && isset( $query_string['page'] ) ) {
 		unset( $query_string['name'] );
@@ -1185,7 +1185,7 @@ function wpsc_remove_page_from_query_string( $query_string ) {
 		unset( $query_string['term'] );
 		unset( $query_string['taxonomy'] );
 	}
-	
+
 	return $query_string;
 }
 
