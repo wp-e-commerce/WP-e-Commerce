@@ -1768,7 +1768,7 @@ function wpsc_the_featured_image_fix( $stuff, $post_ID ){
 			$stuff = '<img src="' . esc_url( $header_image ) . '" width="' . HEADER_IMAGE_WIDTH . '" height="' . HEADER_IMAGE_HEIGHT . '" alt="" />';
 	}
 
-	remove_action('post_thumbnail_html','wpsc_the_featured_image_fix');
+	remove_action( 'post_thumbnail_html', 'wpsc_the_featured_image_fix' );
 
 	return $stuff;
 }
@@ -1784,5 +1784,41 @@ function wpsc_meta_table_name( $meta_object_type ) {
 	return _wpsc_meta_table_name( $meta_object_type );
 }
 
+
+/**
+ * Google checkout not longer available or supported, so we are deprecating this function
+ *
+ * @access public
+
+ * @deprecated since 3.8.14
+ */
+function wpsc_google_checkout(){
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.14', 'wpsc_google_checkout' );
+	$currpage = wpsc_selfURL();
+	if (array_search("google",(array)get_option('custom_gateway_options')) !== false && $currpage != get_option('shopping_cart_url')) {
+		global $nzshpcrt_gateways;
+		foreach($nzshpcrt_gateways as $gateway) {
+			if($gateway['internalname'] == 'google' ) {
+				$gateway_used = $gateway['internalname'];
+				$gateway['function'](true);
+			}
+		}
+	}
+}
+
+/**
+ * Google checkout not longer available or supported, so we are deprecating this function
+ *
+ * @access public
+
+ * @deprecated since 3.8.14
+ */
+function wpsc_empty_google_logs(){
+	global $wpdb;
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.14', 'wpsc_empty_google_logs' );
+	$sql = $wpdb->prepare( "DELETE FROM  `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `sessionid` = '%s'", wpsc_get_customer_meta( 'checkout_session_id' ) );
+	$wpdb->query( $sql );
+	wpsc_delete_customer_meta( 'checkout_session_id' );
+}
 
 
