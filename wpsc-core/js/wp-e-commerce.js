@@ -208,11 +208,7 @@ function wpsc_meta_item_change_response( response ) {
 	
 	jQuery( ".wpsc-visitor-meta").off( "change", wpsc_meta_item_change );
 	
-<<<<<<< Updated upstream
 	if ( response.hasOwnProperty('success') && response.success && response.hasOwnProperty('data') ) {		
-=======
-	if ( response.hasOwnProperty('success') && response.success ) {		
->>>>>>> Stashed changes
 
 		// Whatever replacements have been sent for the checkout form can be efficiently
 		// put into view
@@ -222,6 +218,7 @@ function wpsc_meta_item_change_response( response ) {
 			});
 		}		
 		
+
 		// Whatever has changed as far as customer meta should be processed
 		if ( response.data.hasOwnProperty( 'checkout_info' ) ) {
 			if ( ! wpsc_update_checkout_info( response.data.checkout_info ) ) { 
