@@ -506,6 +506,50 @@ class wpsc_cart {
 
    }
 
+   /*
+    * It os time to checkout, or at other points in the workflow and it's time to validate the shopping cart
+    * call this function.
+    *
+    * The function will in turn execute all of the hooks that are built into WPEC, then any hooks added by
+    * themes and plugins.  This means that validation rules beyond what WPEC has internally can be added as needed.
+    */
+   function validate_cart() {
+
+   		/*
+   		 * action: wpsc_pre_validate_cart
+   		 *
+   		 * Prior to validating the cart we give anyone whoe is interested a chance to do a little setup with this
+   		 * wpsc_pre_validate_cart.
+   		 *
+   		 * This action can be used as a convenient point to change the logic that is esecuted when the 'wpsc_validate_cart'
+   		 * action is fired.  For example, if you want to do different address checks based on which country is being shipped
+   		 * to you can call add_action with different function paramters.  Or if you wnated to some extra validation when shipping
+   		 * address is differnet than billing, perhaps a quick SOAP call to a fraud check service, you can conditionally do an
+   		 * add action to your function that does the fraud check.
+   		 *
+   		 * @param wpsc_cart the cart object
+   		 * @param current visitor id (use this to get customer meta for the current user
+   		 */
+   		do_action( 'wpsc_pre_validate_cart', $this, wpsc_get_current_customer_id() );
+
+   		/*
+ 		 * action: wpsc_validate_cart
+   		 *
+   		 * Validate that the cart contents is valid.  Typically done just prior to checkout.  Most often error conditions
+   		 * will be recorded to special customer meta values, but other processing can be implemented based on specific needs
+   		 *
+   		 * These are the customer/visitor meta values that are typically added to when errors are found:
+   		 * 			checkout_error_messages
+   		 * 			gateway_error_messages
+   		 * 			registration_error_messages
+   		 *
+   		 * @param wpsc_cart the cart object
+   		 * @param current visitor id (use this to get customer meta for the current user
+   		 */
+   		do_action( 'wpsc_validate_cart', $this, wpsc_get_current_customer_id() );
+
+   }
+
 	/**
 	 * Clear all shipping method information for this cart
 	 *

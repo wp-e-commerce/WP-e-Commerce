@@ -571,124 +571,45 @@ class wpsc_checkout {
 	 * @access public
 	 */
 	function save_forms_to_db( $purchase_id ) {
-		global $wpdb;
-
-		// needs refactoring badly
-		$shipping_state_id = $wpdb->get_var( "SELECT `" . WPSC_TABLE_CHECKOUT_FORMS . "`.`id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `unique_name` = 'shippingstate' " );
-		$billing_state_id = $wpdb->get_var( "SELECT `" . WPSC_TABLE_CHECKOUT_FORMS . "`.`id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `unique_name` = 'billingstate' " );
-		$shipping_state = $billing_state = '';
-
-		$_POST['collected_data'] = stripslashes_deep( $_POST['collected_data'] );
 
 		foreach ( $this->checkout_items as $form_data ) {
-			if ( $form_data->type == 'heading' )
-				continue;
 
-			$value = '';
-			if( isset( $_POST['collected_data'][$form_data->id] ) )
-				$value = $_POST['collected_data'][$form_data->id];
-			if ( empty( $value ) && isset( $form_data->value ) )
-				$value = $form_data->value;
-			if ( $form_data->unique_name == 'billingstate' ) {
-				$billing_state = $value;
+			if ( $form_data->type == 'heading' ) {
 				continue;
-			} elseif( $form_data->unique_name == 'shippingstate' ) {
-				$shipping_state = $value;
-				continue;
-			} elseif ( is_array( $value ) ) {
-				if ( in_array( $form_data->unique_name, array( 'billingcountry' , 'shippingcountry' ) ) ) {
-					if ( isset( $value[1] ) )
-						if ( $form_data->unique_name == 'billingcountry' )
-							$billing_state = $value[1];
-						else
-							$shipping_state = $value[1];
+			}
 
-					$value = $value[0];
-					$prepared_query = $wpdb->insert(
-								    WPSC_TABLE_SUBMITTED_FORM_DATA,
-								    array(
-									'log_id' => $purchase_id,
-									'form_id' => $form_data->id,
-									'value' => $value
-								    ),
-								    array(
-									'%d',
-									'%d',
-									'%s'
-								    )
-								);
-				} else {
-					foreach ( (array)$value as $v ) {
-					    $prepared_query = $wpdb->insert(
-								    WPSC_TABLE_SUBMITTED_FORM_DATA,
-								    array(
-									'log_id' => $purchase_id,
-									'form_id' => $form_data->id,
-									'value' => $v
-								    ),
-								    array(
-									'%d',
-									'%d',
-									'%s'
-								    )
-								);
-					}
-				}
-			} else {
-			    $prepared_query = $wpdb->insert(
-							WPSC_TABLE_SUBMITTED_FORM_DATA,
-							array(
-							    'log_id' => $purchase_id,
-							    'form_id' => $form_data->id,
-							    'value' => $value
-							),
-							array(
-							    '%d',
-							    '%d',
-							    '%s'
-							)
-						    );
+			$customer_meta_key = $form_data->unique_name;
+			$checkout_item_values = wpsc_get_customer_meta( $customer_meta_key );
+
+			if ( ! is_array( $checkout_item_value ) ) {
+				$checkout_item_values = array( $checkout_item_value );
+			}
+
+			foreach ( $checkout_item_values as $checkout_item_value ) {
+				$prepared_query = $wpdb->insert(
+													WPSC_TABLE_SUBMITTED_FORM_DATA,
+													array(
+															'log_id'  => $purchase_id,
+															'form_id' => $form_data->id,
+															'value'   => $checkout_item_value,
+													),
+													array(
+															'%d',
+															'%d',
+															'%s',
+													)
+											);
 			}
 		}
-
-		// update the states
-		$wpdb->insert(
-			    WPSC_TABLE_SUBMITTED_FORM_DATA,
-			    array(
-				'log_id' => $purchase_id,
-				'form_id' => $shipping_state_id,
-				'value' => $shipping_state
-			    ),
-			    array(
-				'%d',
-				'%d',
-				'%s'
-			    )
-			);
-		$wpdb->insert(
-			    WPSC_TABLE_SUBMITTED_FORM_DATA,
-			    array(
-				'log_id' => $purchase_id,
-				'form_id' => $billing_state_id,
-				'value' => $billing_state
-			    ),
-			    array(
-				'%d',
-				'%d',
-				'%s'
-			    )
-			);
-
-	    }
+	}
 
 	/**
 	 * Function that checks how many checkout fields are stored in checkout form fields table
 	 */
 	function get_count_checkout_fields() {
-		global $wpdb;
-		$sql = "SELECT COUNT(*) FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `type` !='heading' AND `active`='1'";
-		$count = $wpdb->get_var( $sql );
-		return (int) $count;
+		$checkout = new WPSC_Checkout_Form();
+		$count = $checkout->get_field_count();
+		return $count;
 	}
 
 	/**
