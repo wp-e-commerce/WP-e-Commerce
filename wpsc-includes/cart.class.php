@@ -12,6 +12,26 @@
 */
 
 
+/*
+ * @since 3.8.14
+ *
+ * We are going to do a check to see if the cart template API include file has no been included. Pre 3.8.14 the
+ * template API functions were in the cart.class.php file before the class definition.  In 3.8.14 the functions
+ * are in a separate that is included immediately before this file.  In the future we will want to have the option
+ * of changing the order and classes may be included at a different point in the init sequence.
+ *
+ * If we find that a key function we expect to be present does not exist it tells is that this file has been
+ * improperly included directly in outside code. We will give a doing it wrong message.
+ *
+ * So that backwards compatibility is preserved for 3.8.14 we also require_once the cart template API file.
+ *
+ */
+if ( ! function_exists( 'wpsc_cart_need_to_recompute_shipping_quotes' ) ) {
+	_wpsc_doing_it_wrong( 'cart.class.php', __( 'As of WPeC 3.8.14, A check is made to be sure that wpsc-includes\cart.class.php is not loaded directly by outside code. WPeC internals are likely to be re-organized going forward.  When this happens code that directly includes WPeC internal modules may fail.', 'wpsc' ), '3.8.14' );
+}
+
+require_once( WPSC_FILE_PATH . '/wpsc-includes/cart-template-api.php' );
+
 /**
  * The WPSC Cart class
  */
@@ -1091,6 +1111,7 @@ class wpsc_cart {
 
 
   function google_shipping_quotes(){
+  	if ( defined( 'WPEC_LOAD_DEPRECATED' ) && WPEC_LOAD_DEPRECATED ) {
   	/*
   	 * Couldn't find an easy way to deprecate this function without creating a new class, so
   	 * it is being deprecated in place.  Google checkout is gone, so this function should not have
@@ -1126,6 +1147,7 @@ class wpsc_cart {
             }
 
          }
+  	} // end load deprecated
   }
 
    function next_shipping_quote() {

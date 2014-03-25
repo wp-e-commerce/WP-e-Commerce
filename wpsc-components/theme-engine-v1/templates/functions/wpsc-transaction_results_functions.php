@@ -47,11 +47,6 @@ function wpsc_transaction_theme() {
 	if ( !isset( $_GET['sessionid'] ) && isset( $_GET['ms'] ) )
 		$sessionid = $_GET['ms'];
 
-	if ( isset( $_GET['gateway'] ) && 'google' == $_GET['gateway'] ) {
-		wpsc_google_checkout_submit();
-		wpsc_delete_customer_meta( 'checkout_session_id' );
-	}
-
 	$selected_gateway = wpsc_get_customer_meta( 'selected_gateway' );
 	if ( $selected_gateway && in_array( $selected_gateway, array( 'paypal_certified', 'wpsc_merchant_paypal_express' ) ) )
 		$sessionid = wpsc_get_customer_meta( 'paypal_express_sessionid' );
