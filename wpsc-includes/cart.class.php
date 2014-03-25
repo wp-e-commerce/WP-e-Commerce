@@ -547,7 +547,6 @@ class wpsc_cart {
    		 * @param current visitor id (use this to get customer meta for the current user
    		 */
    		do_action( 'wpsc_validate_cart', $this, wpsc_get_current_customer_id() );
-
    }
 
 	/**
