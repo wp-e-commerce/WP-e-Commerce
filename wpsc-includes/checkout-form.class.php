@@ -6,7 +6,7 @@ class WPSC_Checkout_Form {
 	 *
 	 * @access private
 	 * @static
-	 * @since 3.8.14
+	 * @since 3.8.10
 	 *
 	 * @var array
 	 */
@@ -17,7 +17,7 @@ class WPSC_Checkout_Form {
 	 *
 	 * @access private
 	 * @static
-	 * @since 3.8.14
+	 * @since 3.8.10
 	 *
 	 * @var array
 	 */
@@ -27,7 +27,7 @@ class WPSC_Checkout_Form {
 	 * ID of the form instance
 	 *
 	 * @access private
-	 * @since 3.8.14
+	 * @since 3.8.10
 	 *
 	 * @var int
 	 */
@@ -37,7 +37,7 @@ class WPSC_Checkout_Form {
 	 * Contains an array of form fields
 	 *
 	 * @access private
-	 * @since 3.8.14
+	 * @since 3.8.10
 	 *
 	 * @var array
 	 */
@@ -47,7 +47,7 @@ class WPSC_Checkout_Form {
 	 * Contains an array of field_id => field_unique_name
 	 *
 	 * @access private
-	 * @since 3.8.14
+	 * @since 3.8.10
 	 *
 	 * @var array
 	 */
@@ -58,7 +58,7 @@ class WPSC_Checkout_Form {
 	 *
 	 * @access public
 	 * @static
-	 * @since 3.8.14
+	 * @since 3.8.10
 	 *
 	 * @param int $id Optional. Defaults to 0. The ID of the form
 	 * @return WPSC_Checkout_Form
@@ -76,11 +76,11 @@ class WPSC_Checkout_Form {
 	 * Constructor of an WPSC_Checkout_Form instance. Cannot be called publicly
 	 *
 	 * @access private
-	 * @since 3.8.14
+	 * @since 3.8.10
 	 *
 	 * @param string $id Optional. Defaults to 0.
 	 */
-	function __construct( $id = 0 ) {
+	public function __construct( $id = 0 ) {
 		$this->id = $id;
 		$this->get_fields();
 	}
@@ -89,7 +89,7 @@ class WPSC_Checkout_Form {
 	 * Outputs the list of form field options
 	 *
 	 * @access public
-	 * @since 3.8.14
+	 * @since 3.8.10
 	 *
 	 * @param string $selected_id Optional. Defaults to false. The ID of the field
 	 *                            currently being selected
@@ -111,7 +111,7 @@ class WPSC_Checkout_Form {
 	 * Returns the field ID based on unique name
 	 *
 	 * @access public
-	 * @since 3.8.14
+	 * @since 3.8.10
 	 *
 	 * @param string $unique_name Unique name of the field
 	 * @return mixed False if not found, (int) ID if found.
@@ -160,7 +160,7 @@ class WPSC_Checkout_Form {
 	 * Returns a count of how many fields are in the checkout form
 	 *
 	 * @access public
-	 * @since 3.8.14
+	 * @since 3.8.10
 	 *
 	 * @param bool $exclude_heading Optional. Defaults to false. Whether to exclude heading
 	 *                                        fields from the output
@@ -174,7 +174,7 @@ class WPSC_Checkout_Form {
 	 * Returns the title of the form
 	 *
 	 * @access public
-	 * @since 3.8.14
+	 * @since 3.8.10
 	 *
 	 * @return string
 	 */

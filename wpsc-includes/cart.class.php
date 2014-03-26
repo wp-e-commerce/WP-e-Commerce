@@ -548,40 +548,33 @@ class wpsc_cart {
     }
   }
 
-   /**
-    * check remaining quantity method
-    * currently only checks remaining stock, in future will do claimed stock and quantity limits
-    * will need to return errors, then, rather than true/false, maybe use the wp_error object?
-    * @access public
-    *
-    * @param integer a product ID key
-    * @param array  variations on the product
-    * @return boolean true on sucess, false on failure
-   */
-   function check_remaining_quantity($product_id, $variations = array(), $quantity = 1) {
-       global $wpdb;
-      $stock = get_post_meta($product_id, '_wpsc_stock', true);
-     $stock = apply_filters('wpsc_product_stock', $stock, $product_id);
-      // check to see if the product uses stock
-      if(is_numeric($stock)){
-		$claimed_query = new WPSC_Claimed_Stock( array( 'product_id' => $product_id ) );
-		$claimed_stock = $claimed_query->get_claimed_stock_count();
-         if($stock > 0) {
-            $claimed_stock = $wpdb->get_var( $wpdb->prepare( "SELECT SUM(`stock_claimed`) FROM `".WPSC_TABLE_CLAIMED_STOCK."` WHERE `product_id` IN(%d) AND `variation_stock_id` IN('%d')", $product_id, $priceandstock_id  ) );
-            if(($claimed_stock + $quantity) <= $stock) {
-               $output = true;
-            } else {
-               $output = false;
-            }
-         } else {
-            $output = false;
-         }
+	/**
+	 * check remaining quantity method
+	 * currently only checks remaining stock, in future will do claimed stock and quantity limits
+	 * will need to return errors, then, rather than true/false, maybe use the wp_error object?
+	 *
+	 * @access public
+	 *
+	 * @param integer a product ID key
+	 * @param array variations on the product
+	 * @return boolean true on sucess, false on failure
+	 */
+	function check_remaining_quantity( $product_id, $variations = array(), $quantity = 1 ) {
 
-      } else {
-         $output = true;
-      }
-      return $output;
-   }
+		$stock = get_post_meta( $product_id, '_wpsc_stock', true );
+		$stock = apply_filters( 'wpsc_product_stock', $stock, $product_id );
+
+		$result = true;
+
+		if ( is_numeric( $stock ) ) {
+			$remaining_quantity = wpsc_get_remaining_quantity( $product_id, $variations, $quantity );
+			if ( $remaining_quantity < $quantity ) {
+				$result = false;
+			}
+		}
+
+		return $result;
+	}
 
    /**
     * get remaining quantity method
