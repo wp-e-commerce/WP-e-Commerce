@@ -238,8 +238,8 @@ function wpsc_admin_category_forms_add() {
 	<?php $uses_billing_address = (bool)wpsc_get_categorymeta( $category['term_id'], 'uses_billing_address' ); ?>
 	<div>
 		<label><?php esc_html_e( 'Address to calculate shipping with', 'wpsc' ); ?></label>
-		<label><input type='radio' value='1' name='uses_billing_address' <?php echo ( ( $uses_billing_address == true ) ? "checked='checked'" : "" ); ?> /> <?php esc_html_e( 'Billing Address', 'wpsc' ); ?></label>
-		<label><input type='radio' value='0' name='uses_billing_address' <?php echo ( ( $uses_billing_address != true ) ? "checked='checked'" : "" ); ?> /> <?php esc_html_e( 'Default Setting', 'wpsc' ); ?></label>
+		<label><input type="radio" value="0" name="uses_billing_address" <?php checked( $uses_billing_address, 0 ); ?> /> <?php esc_html_e( 'Shipping Address (default)', 'wpsc' ); ?></label>
+		<label><input type="radio" value="1" name="uses_billing_address" <?php checked( $uses_billing_address, 1 ); ?> /> <?php esc_html_e( 'Billing Address', 'wpsc' ); ?></label>
 		<p class='description'><?php esc_html_e( 'Products in this category will use the address specified to calculate shipping costs.', 'wpsc' ); ?></p>
 	</div>
 
@@ -448,8 +448,8 @@ function wpsc_admin_category_forms_edit() {
 			<label><?php esc_html_e( 'Address to calculate shipping with', 'wpsc' ); ?></label>
 		</th>
 		<td>
-			<label><input type='radio' class='wpsc_cat_box'  value='0' name='uses_billing_address' <?php echo ( ( $uses_billing_address != true ) ? "checked='checked'" : "" ); ?> /> <?php esc_html_e( 'Default Setting', 'wpsc' ); ?></label>
-			<label><input type='radio' class='wpsc_cat_box' value='1' name='uses_billing_address' <?php echo ( ( $uses_billing_address == true ) ? "checked='checked'" : "" ); ?> /> <?php esc_html_e( 'Billing Address', 'wpsc' ); ?></label>
+			<label><input type="radio" class="wpsc_cat_box" value="0" name="uses_billing_address" <?php echo ( ( $uses_billing_address != true ) ? 'checked="checked"' : '' ); ?> /> <?php esc_html_e( 'Shipping Address (default)', 'wpsc' ); ?></label><br />
+			<label><input type="radio" class="wpsc_cat_box" value="1" name="uses_billing_address" <?php echo ( ( $uses_billing_address == true ) ? 'checked="checked"' : '' ); ?> /> <?php esc_html_e( 'Billing Address', 'wpsc' ); ?></label>
 			<p class='description'><?php esc_html_e( 'Products in this category will use the address specified to calculate shipping costs.', 'wpsc' ); ?></p>
 		</td>
 	</tr>

@@ -330,7 +330,7 @@ endif;
                   <table class='wpsc_checkout_table table-<?php echo $i; ?>'>
                <?php endif; ?>
 
-               <tr class="checkout-heading-row <?php echo wpsc_the_checkout_item_error_class();?>">
+               <tr class="checkout-heading-row <?php echo wpsc_the_checkout_item_error_class( false );?>">
                   <td <?php wpsc_the_checkout_details_class(); ?> colspan='2'>
                      <h4><?php echo wpsc_checkout_form_name();?></h4>
                   </td>

@@ -64,7 +64,7 @@ if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
 		wpsc_http.overrideMimeType( "application/json" );
 		
 		// open setup and send the request in synchronous mode
-		wpsc_http.open( "POST",wpsc_ajax.ajaxurl + "?action=wpsc_validate_customer", false );
+		wpsc_http.open( "POST", wpsc_ajax.ajaxurl + "?action=wpsc_validate_customer", false );
 		wpsc_http.setRequestHeader( "Content-type", "application/json; charset=utf-8" );
 
 		// Note that we cannot set a timeout on synchronous requests due to XMLHttpRequest limitations  
@@ -159,8 +159,6 @@ function wpsc_update_customer_meta( response ) {
 		});
 	}
 }
-
-
 
 /**
  * Take data from checkout data array and put it where it belongs
@@ -327,17 +325,18 @@ function wpsc_meta_item_change() {
 
 function wpsc_adjust_checkout_form_element_visibility(){
 
+	// make sure any item that changes checkout data is bound to the proper event handler
+	jQuery( ".wpsc-visitor-meta" ).off( "change", wpsc_meta_item_change );
+
 	var shipping_row = jQuery( "#shippingSameBilling" ).closest( "tr" );
 	
 	if( jQuery("#shippingSameBilling").is(":checked") ) { 
-		jQuery( shipping_row ).siblings().hide();
+		jQuery( shipping_row ).siblings( ":not( .checkout-heading-row , :has( .custom_gateway ) ) ").hide();
 		jQuery( "#shippingsameasbillingmessage" ).show();
 	} else {
 		jQuery( shipping_row ).siblings().show();
 		jQuery( "#shippingsameasbillingmessage" ).hide();		
 	} 
-		
-	jQuery( ".checkout-heading-row" ).show();
 	
 	// set the visibility of the shipping state input fields
 	var shipping_country = jQuery( "#shippingcountry" ).val();
@@ -363,7 +362,7 @@ function wpsc_adjust_checkout_form_element_visibility(){
 		billing_state_element.val( '' ).removeAttr( 'disabled' );
 	}	
 
-	// maek sure any item that changes checkout data is bound to the proper event handler
+	// make sure any item that changes checkout data is bound to the proper event handler
 	jQuery( ".wpsc-visitor-meta" ).on( "change", wpsc_meta_item_change );
 }
 
@@ -373,13 +372,6 @@ function wpsc_adjust_checkout_form_element_visibility(){
  * @since 3.8.14
  */
 jQuery(document).ready(function ($) {
-
-	// make sure that if the shopper clicks shipping same as billing the checkout form adjusts itself
-	jQuery( "#shippingSameBilling" ).change( wpsc_adjust_checkout_form_element_visibility );
-	
-	// if the shopper changes a form value that is holding customer meta we should update 
-	// the persistant customer meta
-	jQuery( ".wpsc-visitor-meta").change( wpsc_meta_item_change );
 
 	if ( jQuery( ".wpsc-visitor-meta" ).length ) {
 		// get the current value for all customer meta and display the values in available elements
@@ -439,12 +431,19 @@ jQuery(document).ready(function ($) {
 		if(file_upload_elements.length > 0) {
 			return true;
 		} else {
+
 			var action_buttons = jQuery( 'input[name="wpsc_ajax_action"]', jQuery( this ) );
-			var action = action_buttons[0].value;
+
+			if ( action_buttons.length > 0 ) {
+				var action = action_buttons.val();
+			} else {
+				var action = 'add_to_cart';
+			}
+
 			form_values = jQuery(this).serialize() + '&action=' + action;
 
 			// Sometimes jQuery returns an object instead of null, using length tells us how many elements are in the object, which is more reliable than comparing the object to null
-			if( jQuery( '#fancy_notification' ).length === 0 ) {
+			if ( jQuery( '#fancy_notification' ).length === 0 ) {
 				jQuery( 'div.wpsc_loading_animation', this ).css( 'visibility', 'visible' );
 			}
 

@@ -344,7 +344,7 @@ function wpsc_enqueue_user_script_and_css() {
 
 		wp_enqueue_script( 'jQuery' );
 
-		if ( defined( WPEC_LOAD_DEPRECATED ) && WPEC_LOAD_DEPRECATED ) {
+		if ( defined( 'WPEC_LOAD_DEPRECATED' ) && WPEC_LOAD_DEPRECATED ) {
 			wp_enqueue_script( 'wpsc-deprecated', WPSC_CORE_JS_URL . '/wpsc-deprecated.js', false, $version_identifier );
 		}
 

@@ -6,7 +6,7 @@ class WPSC_Checkout_Form {
 	 *
 	 * @access private
 	 * @static
-	 * @since 3.9
+	 * @since 3.8.10
 	 *
 	 * @var array
 	 */
@@ -17,7 +17,7 @@ class WPSC_Checkout_Form {
 	 *
 	 * @access private
 	 * @static
-	 * @since 3.9
+	 * @since 3.8.10
 	 *
 	 * @var array
 	 */
@@ -27,7 +27,7 @@ class WPSC_Checkout_Form {
 	 * ID of the form instance
 	 *
 	 * @access private
-	 * @since 3.9
+	 * @since 3.8.10
 	 *
 	 * @var int
 	 */
@@ -37,7 +37,7 @@ class WPSC_Checkout_Form {
 	 * Contains an array of form fields
 	 *
 	 * @access private
-	 * @since 3.9
+	 * @since 3.8.10
 	 *
 	 * @var array
 	 */
@@ -47,7 +47,7 @@ class WPSC_Checkout_Form {
 	 * Contains an array of field_id => field_unique_name
 	 *
 	 * @access private
-	 * @since 3.9
+	 * @since 3.8.10
 	 *
 	 * @var array
 	 */
@@ -58,7 +58,7 @@ class WPSC_Checkout_Form {
 	 *
 	 * @access public
 	 * @static
-	 * @since 3.9
+	 * @since 3.8.10
 	 *
 	 * @param int $id Optional. Defaults to 0. The ID of the form
 	 * @return WPSC_Checkout_Form
@@ -76,11 +76,11 @@ class WPSC_Checkout_Form {
 	 * Constructor of an WPSC_Checkout_Form instance. Cannot be called publicly
 	 *
 	 * @access private
-	 * @since 3.9
+	 * @since 3.8.10
 	 *
 	 * @param string $id Optional. Defaults to 0.
 	 */
-	private function __construct( $id = 0 ) {
+	public function __construct( $id = 0 ) {
 		$this->id = $id;
 		$this->get_fields();
 	}
@@ -89,7 +89,7 @@ class WPSC_Checkout_Form {
 	 * Outputs the list of form field options
 	 *
 	 * @access public
-	 * @since 3.9
+	 * @since 3.8.10
 	 *
 	 * @param string $selected_id Optional. Defaults to false. The ID of the field
 	 *                            currently being selected
@@ -111,7 +111,7 @@ class WPSC_Checkout_Form {
 	 * Returns the field ID based on unique name
 	 *
 	 * @access public
-	 * @since 3.9
+	 * @since 3.8.10
 	 *
 	 * @param string $unique_name Unique name of the field
 	 * @return mixed False if not found, (int) ID if found.
@@ -136,21 +136,45 @@ class WPSC_Checkout_Form {
 	 *                              fields from the output
 	 * @return array
 	 */
-	public function get_fields( $exclude_heading = false) {
+	public function get_fields( $exclude_heading = false ) {
 		if ( is_null( $this->fields ) ) {
 			global $wpdb;
-	 		$sql = "SELECT * FROM " . WPSC_TABLE_CHECKOUT_FORMS . " WHERE checkout_set = %d AND active = 1 " . ( $exclude_heading ? "AND type != 'heading' " : '' ) . "ORDER BY checkout_order ASC";
+			$sql = 'SELECT * FROM ' . WPSC_TABLE_CHECKOUT_FORMS . ' WHERE checkout_set = %d AND active = 1 ORDER BY checkout_order ASC';
 			$this->fields = $wpdb->get_results( $wpdb->prepare( $sql, $this->id ) );
 			$this->field_unique_name_id = null;
 		}
-		return $this->fields;
+
+		$fields_to_return = $this->fields;
+
+		if ( $exclude_heading ) {
+			foreach ( $fields_to_return as $index => $field ) {
+				if ( $field->type == 'heading' ) {
+					unset( $fields_to_return[$index] );
+				}
+			}
+		}
+		return $fields_to_return;
+	}
+
+	/**
+	 * Returns a count of how many fields are in the checkout form
+	 *
+	 * @access public
+	 * @since 3.8.10
+	 *
+	 * @param bool $exclude_heading Optional. Defaults to false. Whether to exclude heading
+	 *                                        fields from the output
+	 * @return array
+	 */
+	public function get_field_count( $exclude_heading = false ) {
+		return count( $this->get_fields( $exclude_heading ) );
 	}
 
 	/**
 	 * Returns the title of the form
 	 *
 	 * @access public
-	 * @since 3.9
+	 * @since 3.8.10
 	 *
 	 * @return string
 	 */

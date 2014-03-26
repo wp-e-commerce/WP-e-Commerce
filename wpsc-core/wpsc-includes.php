@@ -16,6 +16,7 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/ajax.functions.php'              
 require_once( WPSC_FILE_PATH . '/wpsc-includes/misc.functions.php'                  );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/mimetype.php'                        );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/claimed-stock.class.php'             );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/cart-template-api.php'               );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/cart.class.php'                      );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/cart-item.class.php'                 );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/checkout.class.php'                  );

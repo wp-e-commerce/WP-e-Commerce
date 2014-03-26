@@ -58,9 +58,3 @@
 		<a target="_parent" href="<?php echo esc_url( get_option( 'product_list_url' ) ); ?>" class="visitshop" title="<?php esc_html_e('Visit Shop', 'wpsc'); ?>"><?php esc_html_e('Visit the shop', 'wpsc'); ?></a>
 	</p>
 <?php endif; ?>
-
-<?php
-wpsc_google_checkout();
-
-
-?>
