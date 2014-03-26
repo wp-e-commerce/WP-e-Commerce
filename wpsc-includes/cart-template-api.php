@@ -3,6 +3,18 @@
  * The WPSC Cart API for templates
  */
 
+/**
+ * Contains an array of created instances of type WPSC_Checkout_Form
+ *
+ * @access private
+ * @static
+ * @since 3.9
+ *
+ * @var array
+ */
+function _wpsc_verify_global_cart_has_been_initialized() {
+
+}
 
 /**
  * Does shipping information need to be recalculated for the current customer cart
@@ -53,7 +65,7 @@ function wpsc_tax_isincluded() {
 function wpsc_cart_item_count() {
 	global $wpsc_cart;
 	$count = 0;
-	foreach((array)$wpsc_cart->cart_items as $cart_item) {
+	foreach ( (array)$wpsc_cart->cart_items as $cart_item ) {
 		$count += $cart_item->quantity;
 	}
 	return $count;
@@ -63,11 +75,11 @@ function wpsc_cart_item_count() {
  * coupon amount function, no parameters
  * * @return integer the item count
  */
-function wpsc_coupon_amount($forDisplay=true) {
+function wpsc_coupon_amount( $format_for_display = true ) {
 	global $wpsc_cart;
 
-	if($forDisplay == true) {
-		$output = wpsc_currency_display($wpsc_cart->coupons_amount);
+	if ( $format_for_display ) {
+		$output = wpsc_currency_display( $wpsc_cart->coupons_amount );
 	} else {
 		$output = $wpsc_cart->coupons_amount;
 	}
@@ -78,15 +90,16 @@ function wpsc_coupon_amount($forDisplay=true) {
  * cart total function, no parameters
  * @return string the total price of the cart, with a currency sign
  */
-function wpsc_cart_total( $forDisplay = true ) {
+function wpsc_cart_total( $format_for_display = true ) {
 	global $wpsc_cart;
 
 	$total = $wpsc_cart->calculate_total_price();
 
-	if( $forDisplay )
+	if ( $format_for_display ) {
 		return wpsc_currency_display( $total );
-	else
+	} else {
 		return $total;
+	}
 
 }
 
@@ -97,7 +110,6 @@ function wpsc_cart_total( $forDisplay = true ) {
 function nzshpcrt_overall_total_price() {
 
 	global $wpsc_cart;
-
 	return  $wpsc_cart->calculate_total_price();
 
 }
@@ -108,8 +120,9 @@ function nzshpcrt_overall_total_price() {
  */
 function wpsc_cart_weight_total() {
 	global $wpsc_cart;
-	if(is_object($wpsc_cart)) {
-		return $wpsc_cart->calculate_total_weight(true);
+
+	if ( is_object( $wpsc_cart ) ) {
+		return $wpsc_cart->calculate_total_weight( true );
 	} else {
 		return 0;
 	}
@@ -117,18 +130,19 @@ function wpsc_cart_weight_total() {
 
 /**
  * tax total function, no parameters
+ *
  * @return float the total weight of the cart
  */
-function wpsc_cart_tax($forDisplay = true) {
+function wpsc_cart_tax( $format_for_display = true ) {
 	global $wpsc_cart;
-	if($forDisplay){
-		if(wpsc_tax_isincluded() == false){
-			return wpsc_currency_display($wpsc_cart->calculate_total_tax());
-		}else{
-			return '(' . wpsc_currency_display($wpsc_cart->calculate_total_tax()) . ')';
-		}
 
-	}else{
+	if ( $format_for_display ) {
+		if ( ! wpsc_tax_isincluded() ) {
+			return wpsc_currency_display( $wpsc_cart->calculate_total_tax() );
+		} else {
+			return '(' . wpsc_currency_display( $wpsc_cart->calculate_total_tax() ) . ')';
+		}
+	} else {
 		return $wpsc_cart->calculate_total_tax();
 	}
 }
@@ -141,7 +155,12 @@ function wpsc_cart_tax($forDisplay = true) {
  */
 function wpsc_cart_show_plus_postage() {
 	global $wpsc_cart;
-	if(isset($_SESSION['wpsc_has_been_to_checkout']) && ($_SESSION['wpsc_has_been_to_checkout'] == null ) && (get_option('add_plustax') == 1)) {
+
+	if (
+		isset( $_SESSION['wpsc_has_been_to_checkout'] )
+			&& ($_SESSION['wpsc_has_been_to_checkout'] == null )
+				&& (get_option( 'add_plustax' ) == 1
+		) ) {
 
 		return true;
 
@@ -155,17 +174,24 @@ function wpsc_cart_show_plus_postage() {
  * @return boolean if true, all items in the cart do use shipping
  */
 function wpsc_uses_shipping() {
+
 	//This currently requires
 	global $wpsc_cart;
+
 	$shippingoptions = get_option( 'custom_shipping_options' );
-	if(get_option('do_not_use_shipping')){
+
+	if ( get_option( 'do_not_use_shipping' ) ) {
 		return false;
 	}
-	if( ( ! ( ( get_option( 'shipping_discount' )== 1 ) && (get_option('shipping_discount_value') <= $wpsc_cart->calculate_subtotal()))) || ( count($shippingoptions) >= 1 && $shippingoptions[0] != '') ) {
+
+	if ( ( ! ( ( get_option( 'shipping_discount' ) == 1 ) && ( get_option( 'shipping_discount_value' ) <= $wpsc_cart->calculate_subtotal() ) ) )
+				|| ( count( $shippingoptions ) >= 1 && $shippingoptions[0] != '')
+	) {
 		$status = (bool) $wpsc_cart->uses_shipping();
 	} else {
 		$status = false;
 	}
+
 	return $status;
 }
 
@@ -175,11 +201,13 @@ function wpsc_uses_shipping() {
  */
 function wpsc_cart_has_shipping() {
 	global $wpsc_cart;
-	if($wpsc_cart->calculate_total_shipping() > 0) {
+
+	if ( $wpsc_cart->calculate_total_shipping() > 0 ) {
 		$output = true;
 	} else {
 		$output = false;
 	}
+
 	return $output;
 }
 
@@ -197,10 +225,11 @@ function wpsc_cart_shipping() {
  * cart item categories function, no parameters
  * @return array array of the categories
  */
-function wpsc_cart_item_categories($get_ids = false) {
+function wpsc_cart_item_categories( $get_ids = false ) {
 	global $wpsc_cart;
-	if(is_object($wpsc_cart)) {
-		if($get_ids == true) {
+
+	if ( is_object( $wpsc_cart ) ) {
+		if ( $get_ids ) {
 			return $wpsc_cart->get_item_category_ids();
 		} else {
 			return $wpsc_cart->get_item_categories();
@@ -257,12 +286,18 @@ function wpsc_product_min_cart_quantity( $product_id = 0 ) {
  * @uses   wpsc_product_min_cart_quantity    Gets the minimum product cart quantity.
  */
 function wpsc_validate_product_cart_quantity( $quantity, $product_id = 0 ) {
+
 	$max_quantity = wpsc_product_max_cart_quantity( $product_id );
 	$min_quantity = wpsc_product_min_cart_quantity( $product_id );
-	if ( $quantity > $max_quantity )
+
+	if ( $quantity > $max_quantity ) {
 		return $max_quantity;
-	if ( $quantity < $min_quantity )
+	}
+
+	if ( $quantity < $min_quantity ) {
 		return $min_quantity;
+	}
+
 	return $quantity;
 }
 
@@ -298,40 +333,38 @@ add_action( 'wpsc_edit_item', '_wpsc_validate_cart_product_quantity', 10, 3 );
  * @return array of shipping options
 */
 function wpsc_selfURL() {
-	$s = empty($_SERVER["HTTPS"]) ? "" : ($_SERVER["HTTPS"] == "on") ? "s" : "";
-	$protocol = wpsc_strleft(strtolower($_SERVER["SERVER_PROTOCOL"]), "/").$s;
-	$port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]);
-	return $protocol."://".$_SERVER['SERVER_NAME'].$port.$_SERVER['REQUEST_URI'];
+	$s = empty( $_SERVER ['HTTPS'] ) ? '' : ( $_SERVER ['HTTPS'] == 'on' ) ? 's' : '';
+	$protocol = wpsc_strleft( strtolower( $_SERVER ['SERVER_PROTOCOL'] ), '/' ) . $s;
+	$port = ( $_SERVER ['SERVER_PORT'] == '80' ) ? '' : ( ':' . $_SERVER ['SERVER_PORT'] );
+	return $protocol . '://' . $_SERVER ['SERVER_NAME'] . $port . $_SERVER ['REQUEST_URI'];
 }
 
-function wpsc_strleft($s1, $s2) {
-	$values = substr($s1, 0, strpos($s1, $s2));
+function wpsc_strleft( $s1, $s2 ) {
+	$values = substr( $s1, 0, strpos( $s1, $s2 ) );
 	return  $values;
 }
 
 function wpsc_update_shipping_single_method(){
 	global $wpsc_cart;
-	if(!empty($wpsc_cart->shipping_method)) {
-		$wpsc_cart->update_shipping($wpsc_cart->shipping_method, $wpsc_cart->selected_shipping_option);
+	if ( ! empty( $wpsc_cart->shipping_method ) ) {
+		$wpsc_cart->update_shipping( $wpsc_cart->shipping_method, $wpsc_cart->selected_shipping_option );
 	}
 }
 function wpsc_update_shipping_multiple_methods(){
 	global $wpsc_cart;
-	if(!empty($wpsc_cart->selected_shipping_method)) {
-		$wpsc_cart->update_shipping($wpsc_cart->selected_shipping_method, $wpsc_cart->selected_shipping_option);
+	if ( ! empty( $wpsc_cart->selected_shipping_method ) ) {
+		$wpsc_cart->update_shipping( $wpsc_cart->selected_shipping_method, $wpsc_cart->selected_shipping_option );
 	}
 }
 
 function wpsc_get_remaining_quantity( $product_id, $variations = array(), $quantity = 1 ) {
 
-	global $wpdb;
-
-	$stock = get_post_meta($product_id, '_wpsc_stock', true);
-	$stock = apply_filters('wpsc_product_stock', $stock, $product_id);
+	$stock = get_post_meta( $product_id, '_wpsc_stock', true );
+	$stock = apply_filters( 'wpsc_product_stock', $stock, $product_id );
 	$output = 0;
 
 	// check to see if the product uses stock
-	if (is_numeric( $stock ) ) {
+	if ( is_numeric( $stock ) ) {
 
 		if ( $stock > 0 ) {
 			$claimed_query = new WPSC_Claimed_Stock( array( 'product_id' => $product_id ) );
