@@ -309,6 +309,7 @@
 			wrapper.on( 'click', '.field-option-cell-wrapper .wpsc-button-minus', WPSC_Settings_Page.Checkout.event_delete_field_option);
 			wrapper.on( 'click', '#wpsc-delete-checkout-set', WPSC_Settings_Page.Checkout.event_delete_checkout_set);
 			wrapper.on( 'change', '#wpsc_form_set', WPSC_Settings_Page.Checkout.event_select_form_set);
+            wrapper.on( 'click', '.mandatorycol input[type="checkbox"]', WPSC_Settings_Page.Checkout.event_disabled_toggled);
 			$('#wpsc-settings-form').on( 'submit', WPSC_Settings_Page.Checkout.event_form_submit);
 
 			wrapper.find('#wpsc_checkout_list').
@@ -326,6 +327,21 @@
 				});
 
 			WPSC_Settings_Page.Checkout.new_field_count = $('.new-field').length;
+
+			/**
+			 * Finding checkboxes that are mandatory and disabling the display option.
+			 * If it's mandatory you no have choice for display.
+			 */
+			wrapper.find( '.mandatorycol input[type="checkbox"]').each( function(){
+				var displaycol = $( this ).parents( '.mandatorycol' ).siblings( '.displaycol' );
+
+				if ( $( this ).is( ':checked' ) ) {
+					$( displaycol ).find( 'input[type="checkbox"]' ).prop( 'checked', true ).prop( 'readonly', true );
+				} else {
+					$( displaycol ).find( 'input[type="checkbox"]' ).prop( 'readonly', this.checked );
+				}
+			});
+
 		},
 
 		event_add_field_option : function() {
@@ -377,6 +393,7 @@
 			var t = $(this),
 				target_row = t.closest('tr'),
 				id = target_row.data('field-id'),
+				type = target_row.data('field-type'),
 				link = target_row.find('.edit-options'),
 				options_row_id = 'wpsc-field-edit-options-' + id;
 
@@ -384,7 +401,11 @@
 				id = target_row.data('new-field-id');
 				options_row_id = 'wpsc-new-field-edit-options-' + id;
 			}
-
+			target_row
+				.removeClass('field_type_'+type)
+				.addClass('field_type_'+t.val())
+				.data('field-type', t.val());
+			type = t.val();
 			if ($.inArray(t.val(), ['select', 'radio', 'checkbox']) !== -1) {
 				link.show();
 			} else {
@@ -552,6 +573,21 @@
 		},
 
 		/**
+		 * Disables and checks the display option if you make a field mandatory. If you uncheck
+		 * mandatory then it just enables you to uncheck the display box.
+		 */
+		event_disabled_toggled : function() {
+
+			var displaycol = $( this ).parents( '.mandatorycol' ).siblings( '.displaycol' );
+
+			if ( $( this ).is( ':checked' ) ) {
+				$( displaycol ).find( 'input[type="checkbox"]' ).prop( 'checked', true ).prop( 'readonly', true );
+			} else {
+				 $( displaycol ).find( 'input[type="checkbox"]' ).prop( 'readonly', this.checked );
+			}
+		},
+
+		/**
 		 * This hack is to make sure the dragged row has 100% width
 		 *
 		 * @param  {Object} e Event object
@@ -694,9 +730,10 @@
 		event_init : function() {
 			var wrapper = $('#options_taxes');
 
-			wrapper.on( 'click' , '#wpsc-add-tax-rates a'        , WPSC_Settings_Page.Taxes.event_add_tax_rate);
+			wrapper.on( 'click' , '.wpsc-button-minus'           , function () { return false; } );
+			wrapper.on( 'click' , '.wpsc-taxes-rates-add'        , WPSC_Settings_Page.Taxes.event_add_tax_rate);
 			wrapper.on( 'click' , '.wpsc-taxes-rates-delete'     , WPSC_Settings_Page.Taxes.event_delete_tax_rate);
-			wrapper.on( 'click' , '#wpsc-add-tax-bands a'        , WPSC_Settings_Page.Taxes.event_add_tax_band);
+			wrapper.on( 'click' , '.wpsc-taxes-bands-add'        , WPSC_Settings_Page.Taxes.event_add_tax_band);
 			wrapper.on( 'click' , '.wpsc-taxes-bands-delete'     , WPSC_Settings_Page.Taxes.event_delete_tax_band);
 			wrapper.on( 'change', '.wpsc-taxes-country-drop-down', WPSC_Settings_Page.Taxes.event_country_drop_down_changed);
 		},
@@ -710,8 +747,8 @@
 				post_data = {
 					action            : 'add_tax_rate',
 					wpec_taxes_action : 'wpec_taxes_get_regions',
-					current_key       : c.data('key'),
-					taxes_type        : c.data('type'),
+					current_key       : c.data('row-key'),
+					taxes_type        : c.data('row-mode'),
 					country_code      : c.val(),
 					nonce             : WPSC_Settings_Page.add_tax_rate_nonce
 				},
@@ -744,6 +781,9 @@
 		 */
 		event_delete_tax_rate : function() {
 			$(this).parents('.wpsc-tax-rates-row').remove();
+			if ($('.wpsc-tax-rates-row').size() === 1) {
+				WPSC_Settings_Page.Taxes.add_field('rates');
+			}
 			return false;
 		},
 
@@ -762,6 +802,9 @@
 		 */
 		event_delete_tax_band : function() {
 			$(this).parents('.wpsc-tax-bands-row').remove();
+			if ($('.wpsc-tax-bands-row').size() === 1) {
+				WPSC_Settings_Page.Taxes.add_field('bands');
+			}
 			return false;
 		},
 
@@ -771,24 +814,14 @@
 		 * @since 3.8.8
 		 */
 		add_field : function(type) {
-			var button_wrapper = $('#wpsc-add-tax-' + type),
+			var tbody = $('#wpec-taxes-' + type + ' tbody'),
 				count = $('.wpsc-tax-' + type + '-row').size(),
-				post_data = {
-					action            : 'add_tax_rate',
-					wpec_taxes_action : 'wpec_taxes_build_' + type + '_form',
-					current_key       : count,
-					nonce             : WPSC_Settings_Page.add_tax_rate_nonce
-				},
-				ajax_callback = function(response) {
-					if (! response.is_successful) {
-						alert(response.error.messages.join("\n"));
-						return;
-					}
-					button_wrapper.before(response.obj.content).find('img').toggleClass('ajax-feedback-active');
-				};
-
-			button_wrapper.find('img').toggleClass('ajax-feedback-active');
-			$.wpsc_post(post_data, ajax_callback);
+				new_prototype_row = $('#wpsc-taxes-' + type + '-row-prototype').clone();
+			new_prototype_row.removeClass('prototype');
+			new_prototype_row.attr('id', new_prototype_row.attr('id').replace(/prototype/g, count));
+			new_prototype_row.attr('data-row-key', new_prototype_row.attr('data-row-key').replace(/prototype/g, count));
+			new_prototype_row.html( new_prototype_row.html().replace(/prototype/g, count) );
+			tbody.append(new_prototype_row);
 		}
 	};
 	$(WPSC_Settings_Page).on('wpsc_settings_tab_loaded_taxes', WPSC_Settings_Page.Taxes.event_init);
@@ -812,6 +845,7 @@
 			WPSC_Settings_Page.Shipping.wrapper.on( 'click'   , '.table-rate .wpsc-button-minus', WPSC_Settings_Page.Shipping.event_delete_table_rate_layer);
 			WPSC_Settings_Page.Shipping.wrapper.on( 'keypress', '.table-rate input[type="text"]', WPSC_Settings_Page.Shipping.event_enter_key_pressed);
 			WPSC_Settings_Page.Shipping.wrapper.on( 'click'   , 'a.shipwire_sync'               , WPSC_Settings_Page.Shipping.event_sync_shipwire);
+			WPSC_Settings_Page.Shipping.wrapper.on( 'click'   , '.edit-shipping-module-cancel'  , WPSC_Settings_Page.Shipping.event_edit_shipping_module_cancel);
 		},
 
 		/**
@@ -885,8 +919,8 @@
 		 */
 		event_edit_shipping_module : function() {
 			var element = $(this),
-				shipping_module_id = element.data('module-id'),
-				spinner = element.siblings('.ajax-feedback'),
+				shipping_module_id = element.closest('.wpsc-select-shipping').data('shipping-id'),
+				spinner = element.children('.ajax-feedback'),
 				post_data = {
 					action : 'shipping_module_settings_form',
 					'shipping_module_id' : shipping_module_id,
@@ -895,7 +929,7 @@
 				ajax_callback = function(response) {
 					if (! response.is_successful) {
 						alert(response.error.messages.join("\n"));
-						return;
+						return false;
 					}
 
 					if (history.pushState) {
@@ -903,11 +937,38 @@
 						history.pushState({url : new_url}, '', new_url);
 					}
 					spinner.toggleClass('ajax-feedback-active');
-					$('#wpsc-shipping-module-settings').replaceWith(response.obj.content);
-				};
 
+					$('#wpsc_shipping_settings_' + shipping_module_id + '_form').remove();
+					$('#wpsc_shipping_settings_'+ shipping_module_id).show( 400 );
+					$('#wpsc_shipping_settings_'+ shipping_module_id + '_container').append(response.obj.content);
+
+				};
+		
+			if ( $( '#wpsc_shipping_settings_' + shipping_module_id + '_form' ).is( ':visible' ) ) {
+				return false;
+			}
+		
 			spinner.toggleClass('ajax-feedback-active');
 			$.wpsc_post(post_data, ajax_callback);
+
+			return false;
+		},
+
+		/**
+		 * Remove Shipping Module settings from from page when "Cancel" is clicked.
+		 * @since 3.8.11
+		 */
+		event_edit_shipping_module_cancel : function() {
+			var element = $(this),
+				shipping_module_id = element.closest('.wpsc-select-shipping').data('shipping-id');
+
+			if (history.pushState) {
+				var new_url = '?page=wpsc-settings&tab=' + WPSC_Settings_Page.current_tab;
+				history.pushState({'url' : new_url}, '', new_url);
+			}
+			$('#wpsc_shipping_settings_' + shipping_module_id + '_form').remove();
+			$('#wpsc_shipping_settings_' + shipping_module_id).hide( 400 );
+
 			return false;
 		},
 
@@ -919,8 +980,11 @@
 			var element = $(this),
 				spinner = element.siblings('.ajax-feedback'),
 				post_data = {
-					action : 'sync_shipwire_products',
-					nonce  : WPSC_Settings_Page.shipping_module_settings_form_nonce
+					action    : 'sync_shipwire_products',
+					email     : $('input[name="wpsc_options[shipwireemail]"]').val(),
+					password  : $('input[name="wpsc_options[shipwirepassword]"]').val(),
+					server    : $('input[name="wpsc_options[shipwire_test_server]"]').val(),
+					nonce     : WPSC_Settings_Page.shipping_module_settings_form_nonce
 				},
 				ajax_callback = function(response) {
 					$('<div class="updated shipwire-update"><p><strong>' + response.tracking + '<br />' + response.inventory + '</strong></p></div>').
@@ -967,9 +1031,9 @@
 					nonce                : WPSC_Settings_Page.payment_gateway_settings_form_nonce
 				},
 				ajax_callback = function(response) {
-					if (! response.is_successful) {
+					if ( ! response.is_successful ) {
 						alert(response.error.messages.join("\n"));
-						return;
+						return false;
 					}
 
 					if (history.pushState) {
@@ -978,9 +1042,13 @@
 					}
 					spinner.toggleClass('ajax-feedback-active');
 					$('#gateway_settings_' + payment_gateway_id + '_form').remove();
-					$('#wpsc_gateway_settings_'+ payment_gateway_id).show();
+					$('#wpsc_gateway_settings_'+ payment_gateway_id).show( 400 );
 					$('#wpsc_gateway_settings_'+ payment_gateway_id + '_container').append(response.obj.content);
 				};
+			
+			if ( $( '#gateway_settings_' + payment_gateway_id + '_form' ).is( ':visible' ) ) {
+				return false;
+			}
 
 			spinner.toggleClass('ajax-feedback-active');
 			$.wpsc_post(post_data, ajax_callback);
@@ -994,7 +1062,7 @@
 				history.pushState({'url' : new_url}, '', new_url);
 			}
 			$('#gateway_settings_' + payment_gateway_id + '_form').remove();
-			$('#wpsc_gateway_settings_'+ payment_gateway_id).hide();
+			$('#wpsc_gateway_settings_' + payment_gateway_id).hide( 400 );
 			return false;
 		}
 	};

@@ -62,9 +62,9 @@ abstract class WPSC_Purchase_Log_Notification {
 	}
 
 	private function get_table_args() {
-		$log_id = $this->purchase_log->get( 'id' );
+		$log_id   = $this->purchase_log->get( 'id' );
 		$log_data = $this->purchase_log->get_data();
-		$rows   = array();
+		$rows     = array();
 
 		$headings = array(
 			_x( 'Name'       , 'purchase log notification table heading', 'wpsc' ) => 'left',
@@ -74,9 +74,9 @@ abstract class WPSC_Purchase_Log_Notification {
 		);
 
 		$has_additional_details = false;
-		$additional_details = array();
+		$additional_details     = array();
 
-		foreach( $this->purchase_log->get_cart_contents() as $item ) {
+		foreach ( $this->purchase_log->get_cart_contents() as $item ) {
 			$cart_item_array = array(
 				'purchase_id'  => $log_id,
 				'cart_item'    => (array) $item,
@@ -91,24 +91,27 @@ abstract class WPSC_Purchase_Log_Notification {
 			// then there's also this annoying apply_filters call, which is apparently not the best example
 			// of how to use it, but we have to preserve them anyways
 			$additional_content = apply_filters( 'wpsc_transaction_result_content', $cart_item_array );
-			if ( ! is_string( $additional_content ) )
+
+			if ( ! is_string( $additional_content ) ) {
 				$additional_content = '';
-			else
+			} else {
 				$has_additional_details = true;
+			}
+
 			$additional_details[] = $additional_content;
 
 			$item_total = $item->quantity * $item->price;
 			$item_total = wpsc_currency_display( $item_total , array( 'display_as_html' => false ) );
 			$item_price = wpsc_currency_display( $item->price, array( 'display_as_html' => false ) );
-			$item_name = apply_filters( 'the_title', $item->name );
-			$rows[] = array( $item->name, $item_price, $item->quantity, $item_total );
+			$item_name  = apply_filters( 'the_title', $item->name );
+			$rows[]     = array( $item->name, $item_price, $item->quantity, $item_total );
 		}
 
 		// Preserve the 'wpsc_transaction_result_content' filter for backward compat
 		if ( $has_additional_details ) {
 			$headings[] = __( 'Additional Details', 'wpsc' );
 			foreach ( $rows as $index => $row ) {
-				$rows[] = $additional_details[$index];
+				$rows[] = $additional_details[ $index ];
 			}
 		}
 

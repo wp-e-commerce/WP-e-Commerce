@@ -77,7 +77,7 @@ function ie_rating_rollover(id,state)
 			break;
 
 		default:
-			if(target_element.style.background != "url(" + WPSC_CORE_IMAGES_URL + "/gold-star.gif)")
+			if(target_element.style.background != "url(" + WPSC_CORE_IMAGES_URL + "/gold-star.png)")
 			{
 				target_element.style.background = previous_rating;
 			}
@@ -92,7 +92,7 @@ var apply_rating=function(results)
 	for(i=1;i<=outarr[1];i++)
 	{
 		id = "star"+outarr[0]+"and"+i+"_link";
-		document.getElementById(id).style.background = "url(" + WPSC_CORE_IMAGES_URL + "/gold-star.gif)";
+		document.getElementById(id).style.background = "url(" + WPSC_CORE_IMAGES_URL + "/gold-star.png)";
 	}
 
 	for(i=5;i>outarr[1];i--)

@@ -21,22 +21,19 @@ function wpsc_generate_product_feed() {
 	global $wpdb, $wp_query, $post;
 
     set_time_limit(0);
-    
+
     $xmlformat = '';
     if ( isset( $_GET['xmlformat'] ) ) {
     	$xmlformat = $_GET['xmlformat'];
     }
-	
+
 	// Don't build up a huge posts cache for the whole store - http://code.google.com/p/wp-e-commerce/issues/detail?id=885
-	// WP 3.3+ only
-	if ( function_exists ( 'wp_suspend_cache_addition' ) ) {
-		wp_suspend_cache_addition(true);
-	}
-	
+	wp_suspend_cache_addition(true);
+
     $chunk_size = apply_filters ( 'wpsc_productfeed_chunk_size', 50 );
 
     // Don't cache feed under WP Super-Cache
-    define( 'DONOTCACHEPAGE',TRUE );
+    define( 'DONOTCACHEPAGE', true );
 
 	$selected_category = '';
 	$selected_product = '';
@@ -87,7 +84,7 @@ function wpsc_generate_product_feed() {
 
 			setup_postdata($post);
 
-			$purchase_link = wpsc_product_url($post->ID);
+			$purchase_link = get_permalink($post->ID);
 
 			echo "    <item>\n\r";
 			if ($google_checkout_note) {
@@ -96,7 +93,6 @@ function wpsc_generate_product_feed() {
 			echo "      <title><![CDATA[".get_the_title()."]]></title>\n\r";
 			echo "      <link>$purchase_link</link>\n\r";
 			echo "      <description><![CDATA[".apply_filters ('the_content', get_the_content())."]]></description>\n\r";
-			echo "      <pubDate>".$post->post_modified_gmt."</pubDate>\n\r";
 			echo "      <guid>$purchase_link</guid>\n\r";
 
 			$image_link = wpsc_the_product_thumbnail() ;
@@ -137,18 +133,18 @@ function wpsc_generate_product_feed() {
 
 				echo "      <g:price>".$price."</g:price>\n\r";
 
-				$google_elements = Array ();
+				$google_elements = array();
 
 				$product_meta = get_post_custom ( $post->ID );
 
                 if ( is_array ( $product_meta ) ) {
 				    foreach ( $product_meta as $meta_key => $meta_value ) {
-					    if ( stripos($meta_key,'g:') === 0 )
-						    $google_elements[$meta_key] = $meta_value;
+					    if ( stripos( $meta_key, 'g:' ) === 0 )
+						    $google_elements[ $meta_key ] = $meta_value;
 				    }
                 }
 
-				$google_elements = apply_filters( 'wpsc_google_elements', array ( 'product_id' => $post->ID, 'elements' => $google_elements ) );
+				$google_elements = apply_filters( 'wpsc_google_elements', array( 'product_id' => $post->ID, 'elements' => $google_elements ) );
 				$google_elements = $google_elements['elements'];
 
 	            $done_condition = FALSE;

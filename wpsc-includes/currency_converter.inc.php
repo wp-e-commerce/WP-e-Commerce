@@ -15,20 +15,21 @@
 		had no such restriction
 	*/
 
-	Class CURRENCYCONVERTER
-	{
-		var $_amt=1;
-		var $_to="";
-		var $_from="";
-		var $_error="";
-		function CURRENCYCONVERTER($amt=1,$to="",$from="")
-		{
-			$this->_amt=$amt;
-			$this->_to=$to;
-			$this->_from=$from;
+	class CURRENCYCONVERTER {
+		public $_amt   = 1;
+		public $_to    = '';
+		public $_from  = '';
+		public $_error = '';
+
+		function __construct( $amt = 1, $to = '', $from = '' ) {
+			$this->_amt  = $amt;
+			$this->_to   = $to;
+			$this->_from = $from;
+
+			return wpsc_convert_currency( $amt, $from, $to );
 		}
-		function error()
-		{
+
+		function error() {
 			return $this->_error;
 		}
 
@@ -44,39 +45,13 @@
 		 * @param $from string
 		 *   The currency you are converting from.
 		 */
-		function convert($amt = NULL, $to = "", $from = ""){
+		function convert( $amt = NULL, $to = '', $from = '' ) {
 
-			$amount = urlencode(round($amt,2));
-			$from_Currency = urlencode($from);
-			$to_Currency = urlencode($to);
+			$amount = urlencode( round( $amt, 2 ) );
+			$from   = urlencode( $from );
+			$to     = urlencode( $to );
 
-			$url = "http://www.google.com/ig/calculator?hl=en&q=$amount$from_Currency=?$to_Currency";
-
-			$ch = curl_init();
-			$timeout = 20;
-			curl_setopt ($ch, CURLOPT_URL, $url);
-			curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-			$rawdata = curl_exec($ch);
-			curl_close($ch);
-			if(empty($rawdata)){
-				throw new Exception( __( 'unable to connect to currency conversion service', 'wpsc' ) );
-			}
-
-			// google doesn't return a valid JSON response, so we have to
-			// parse that.
-			// attempt to use regexp to parse the converted amount. if that fails,
-			// fall back to using json_decode().
-			preg_match( '/rhs[^"]+"([\d\s.,]+)/', $rawdata, $matches );
-			if ( isset( $matches[1] ) ) {
-				$to_amount = (float) str_replace( array( ',', ' ' ), '', $matches[1] );
-			} else {
-				$rawdata = preg_replace( '/(\{|,\s*)([^\s:]+)(\s*:)/', '$1"$2"$3', $rawdata );
-				$data = json_decode( $rawdata );
-			}
-			$to_amount = round( $to_amount, 2 );
-
-			return $to_amount;
+			return wpsc_convert_currency( $amt, $from, $to );
 		}
 	}
 ?>

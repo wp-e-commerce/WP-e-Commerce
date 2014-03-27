@@ -24,6 +24,7 @@ class WPSC_Google_Analytics {
 			   (bool) get_option( 'wpsc_ga_disable_tracking' )
 			|| ( ! $this->is_theme_tracking && empty( $this->tracking_id ) );
 
+		// TODO: make it work with new theme engine as well
 		if ( ! $this->is_analytics_disabled )
 			add_action( 'wpsc_transaction_results_shutdown', array( $this, 'print_script' ), 10, 3 );
 	}
@@ -51,7 +52,7 @@ class WPSC_Google_Analytics {
 	 * @param $purchase_log      Purchase Log object
 	 * @param $session_id        Session ID
 	 * @param $display_to_screen Whether or not the output is displayed to the screen
-	 * 
+	 *
 	 * @since 3.8.9
 	 * @return javascript
 	 */

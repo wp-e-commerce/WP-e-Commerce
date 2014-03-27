@@ -31,32 +31,32 @@ endif;
        ?>
       <?php  //this displays the confirm your order html ?>
 
-	  <?php do_action ( "wpsc_before_checkout_cart_row" ); ?>
+     <?php do_action ( "wpsc_before_checkout_cart_row" ); ?>
       <tr class="product_row product_row_<?php echo wpsc_the_cart_item_key(); ?> <?php echo $alt_class;?>">
 
          <td class="firstcol wpsc_product_image wpsc_product_image_<?php echo wpsc_the_cart_item_key(); ?>">
          <?php if('' != wpsc_cart_item_image()): ?>
-			<?php do_action ( "wpsc_before_checkout_cart_item_image" ); ?>
+         <?php do_action ( "wpsc_before_checkout_cart_item_image" ); ?>
             <img src="<?php echo wpsc_cart_item_image(); ?>" alt="<?php echo wpsc_cart_item_name(); ?>" title="<?php echo wpsc_cart_item_name(); ?>" class="product_image" />
-			<?php do_action ( "wpsc_after_checkout_cart_item_image" ); ?>
+         <?php do_action ( "wpsc_after_checkout_cart_item_image" ); ?>
          <?php else:
          /* I dont think this gets used anymore,, but left in for backwards compatibility */
          ?>
             <div class="item_no_image">
-				<?php do_action ( "wpsc_before_checkout_cart_item_image" ); ?>
+            <?php do_action ( "wpsc_before_checkout_cart_item_image" ); ?>
                <a href="<?php echo esc_url( wpsc_the_product_permalink() ); ?>">
                <span><?php _e('No Image','wpsc'); ?></span>
 
                </a>
-				<?php do_action ( "wpsc_after_checkout_cart_item_image" ); ?>
+            <?php do_action ( "wpsc_after_checkout_cart_item_image" ); ?>
             </div>
          <?php endif; ?>
          </td>
 
          <td class="wpsc_product_name wpsc_product_name_<?php echo wpsc_the_cart_item_key(); ?>">
-			<?php do_action ( "wpsc_before_checkout_cart_item_name" ); ?>
+         <?php do_action ( "wpsc_before_checkout_cart_item_name" ); ?>
             <a href="<?php echo esc_url( wpsc_cart_item_url() );?>"><?php echo wpsc_cart_item_name(); ?></a>
-			<?php do_action ( "wpsc_after_checkout_cart_item_name" ); ?>
+         <?php do_action ( "wpsc_after_checkout_cart_item_name" ); ?>
          </td>
 
          <td class="wpsc_product_quantity wpsc_product_quantity_<?php echo wpsc_the_cart_item_key(); ?>">
@@ -84,6 +84,8 @@ endif;
 	  <?php do_action ( "wpsc_after_checkout_cart_row" ); ?>
    <?php endwhile; ?>
    <?php //this HTML displays coupons if there are any active coupons to use ?>
+
+	<?php do_action ( 'wpsc_after_checkout_cart_rows' ); ?>
 
    <?php
 
@@ -135,8 +137,8 @@ endif;
             </td>
          </tr>
 
-         <?php if (!wpsc_have_shipping_quote()) : // No valid shipping quotes ?>
-            <?php if (wpsc_have_valid_shipping_zipcode()) : ?>
+         <?php if ( ! wpsc_have_shipping_quote() ) : // No valid shipping quotes ?>
+            <?php if ( ! wpsc_have_valid_shipping_zipcode() ) : ?>
                   <tr class='wpsc_update_location'>
                      <td colspan='5' class='shipping_error' >
                         <?php _e('Please provide a Zipcode and click Calculate in order to continue.', 'wpsc'); ?>
@@ -347,7 +349,7 @@ endif;
                   		$checked = 'checked="checked"';
                    ?>
 					<label for='shippingSameBilling'><?php _e('Same as billing address:','wpsc'); ?></label>
-					<input type='checkbox' value='true' name='shippingSameBilling' id='shippingSameBilling' <?php echo $checked; ?> />
+					<input type='checkbox'  data-wpsc-meta-key="shippingSameBilling" value='true' class= "wpsc-visitor-meta" name='shippingSameBilling' id='shippingSameBilling' <?php echo $checked; ?> />
 					<br/><span id="shippingsameasbillingmessage"><?php _e('Your order will be shipped to the billing address', 'wpsc'); ?></span>
                   </td>
                </tr>

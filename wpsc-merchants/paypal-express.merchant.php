@@ -22,8 +22,6 @@ $nzshpcrt_gateways[$num] = array(
 		 /// for modules that may not be present, like curl
 		'extra_modules' => array()
 	),
-
-	// this may be legacy, not yet decided
 	'internalname' => 'wpsc_merchant_paypal_express',
 
 	// All array members below here are legacy, and use the code in paypal_multiple.php
@@ -123,6 +121,7 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 		$options = array(
 			'timeout' => 20,
 			'body' => $received_values,
+			'httpversion' => '1.1',
 			'user-agent' => ('WP e-Commerce/'.WPSC_PRESENTABLE_VERSION)
 		);
 
@@ -262,10 +261,10 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 
 		//if we have a discount then include a negative amount with that discount
 		// in php 0.00 = true so we will change that here
-		if($this->cart_data['cart_discount_value'] == 0.00)
+		if ($this->cart_data['cart_discount_value'] == 0.00)
 			$this->cart_data['cart_discount_value'] = 0;
 
-		$discount_value = $this->convert( $this->cart_data['cart_discount_value']);
+		$discount_value = $this->convert( $this->cart_data['cart_discount_value'] );
 
 		if ( $this->cart_data['cart_discount_value'] && ! $is_free_shipping ){
 			// if item total < discount amount, leave at least 0.01 unit in item total, then subtract
@@ -699,8 +698,9 @@ function paypal_processingfunctions(){
 			$shipping_total += wpsc_paypal_express_convert( $cart_item['pnp'] );
 			$i ++;
 		}
+
 		//if we have a discount then include a negative amount with that discount
-		if ( $purchase_log['discount_value'] ){
+		if ( $purchase_log['discount_value'] && 0.00 != $purchase_log['discount_value'] ) {
 			$discount_value = wpsc_paypal_express_convert( $purchase_log['discount_value'] );
 
 			// if item total < discount amount, leave at least 0.01 unit in item total, then subtract
@@ -987,11 +987,12 @@ function paypal_hash_call( $methodName, $nvpStr ) {
 			define( 'WP_PROXY_PORT', $PROXY_PORT );
 		}
 	}
-	add_filter( 'http_api_curl', 'wpsc_curl_ssl' );
+	add_filter( 'https_ssl_verify', '__return_false' );
 
 	$options = array(
 		'timeout' => 20,
 		'body' => $nvpreq,
+		'httpversion' => '1.1',
 		'sslverify' => false,
 	);
 

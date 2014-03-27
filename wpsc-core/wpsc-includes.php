@@ -4,22 +4,31 @@ if ( defined( 'WPEC_LOAD_DEPRECATED' ) )
 	require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-deprecated.php' );
 
 // Start including the rest of the plugin here
+require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-util.php'                  );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/customer.php'                        );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-customer.php'              );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-visitor.php'               );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-cart-item.php'             );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-purchase.php'              );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/product-template.php'                );
-require_once( WPSC_FILE_PATH . '/wpsc-includes/breadcrumbs.class.php'               );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/variations.class.php'                );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/ajax.functions.php'                  );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/misc.functions.php'                  );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/mimetype.php'                        );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/claimed-stock.class.php'             );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/cart-template-api.php'               );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/cart.class.php'                      );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/cart-item.class.php'                 );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/checkout.class.php'                  );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/display.functions.php'               );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/theme.functions.php'                 );
-require_once( WPSC_FILE_PATH . '/wpsc-includes/shortcode.functions.php'             );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/coupons.class.php'                   );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/category.functions.php'              );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/processing.functions.php'            );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/form-display.functions.php'          );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/merchant.class.php'                  );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/product.class.php'                   );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/stats.functions.php'                 );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/meta.functions.php'                  );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/productfeed.php'                     );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/image_processing.php'                );
@@ -42,22 +51,13 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/currency_converter.inc.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/shopping_cart_functions.php' );
 
 // Themes
-require_once( WPSC_CORE_THEME_PATH . 'functions/wpsc-transaction_results_functions.php' );
-require_once( WPSC_CORE_THEME_PATH . 'functions/wpsc-user_log_functions.php' );
 require_once( WPSC_FILE_PATH       . '/wpsc-includes/google-analytics.class.php' );
 
 require_once( WPSC_FILE_PATH . '/wpsc-admin/admin-form-functions.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-shipping/library/shipwire_functions.php' );
 
 // Widgets
-include_once( WPSC_FILE_PATH . '/wpsc-widgets/product_tag_widget.php' );
-include_once( WPSC_FILE_PATH . '/wpsc-widgets/shopping_cart_widget.php' );
-include_once( WPSC_FILE_PATH . '/wpsc-widgets/donations_widget.php' );
-include_once( WPSC_FILE_PATH . '/wpsc-widgets/specials_widget.php' );
-include_once( WPSC_FILE_PATH . '/wpsc-widgets/latest_product_widget.php' );
-include_once( WPSC_FILE_PATH . '/wpsc-widgets/price_range_widget.php' );
 include_once( WPSC_FILE_PATH . '/wpsc-widgets/admin_menu_widget.php' );
-include_once( WPSC_FILE_PATH . '/wpsc-widgets/category_widget.php' );
 
 // Gregs ASH Shipping
 require_once( WPSC_FILE_PATH . '/wpsc-includes/shipping.helper.php' );

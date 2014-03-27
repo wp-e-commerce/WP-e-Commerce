@@ -1,0 +1,491 @@
+#screen-options-link-wrap, #contextual-help-link-wrap {
+}
+	#screen-meta a.show-settings {
+
+	}
+
+/*#sputnik-footer {
+	background: url("header.png") repeat scroll 0 0 #AB0108;
+	background: rgba(0, 0, 255, 0.1);
+	height: 50px;
+	margin: 25px -15px 10px 0;
+	padding: 0 24px 0 10px;
+
+	color: rgba(255, 255, 255, 0.49);
+	font-size: 13px;
+	line-height: 50px;
+
+	border-radius:         8px 0 0 8px;
+	-moz-border-radius:    8px 0 0 8px;
+	-webkit-border-radius: 8px 0 0 8px;
+}*/
+
+	#sputnik-page .sep {
+		margin: 0 12px 0 0;
+		font-size: 23px;
+	}
+
+	#sputnik-page h3 {
+		color: #999;
+		font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", sans-serif;
+		font-size: 23px;
+		line-height: 29px;
+		font-weight: normal;
+		margin: 0 0 0 40px;
+		padding: 9px 15px 4px 0;
+	}
+
+	#sputnik-page .account-link {
+		margin-right: 8px;
+	}
+
+	#sputnik-page .aux-links {
+		float: right;
+		clear: both;
+		margin: 10px;
+	}
+		#sputnik-header p {
+			margin-top: 0;
+			margin-bottom: 0;
+		}
+
+	#sputnik-header a, #sputnik-footer a {
+		/*color: rgba(255, 255, 255, 0.78);*/
+		text-decoration: none;
+	}
+		#sputnik-header a:hover, #sputnik-footer a:hover {
+			color: #f00;
+		}
+
+	#sputnik-footer {
+		margin-top: 10px;
+		text-align: center;
+		border-top: 1px solid #DFDFDF;
+
+		overflow: auto;
+		padding: 10px 20px;
+
+		background: #fcfcfc;
+		background: -moz-radial-gradient(top, #F0F0F0, #FFFFFF 80%);
+		background: -webkit-radial-gradient(top, #F0F0F0, #FFFFFF 80%);
+		background: -ms-radial-gradient(top, #F0F0F0, #FFFFFF 80%);
+		background: -o-radial-gradient(top, #F0F0F0, #FFFFFF 80%);
+		background: radial-gradient(top, #F0F0F0, #FFFFFF 80%);
+	}
+		#sputnik-footer .logo-holder {
+			float: left;
+		}
+		#sputnik-footer .renku-logo {
+			background: url("logo.png") no-repeat scroll center center transparent;
+			text-indent: -9999px;
+			width: 47px;
+			height: 22px;
+			display: block;
+		}
+		#sputnik-footer nav {
+			float: right;
+		}
+
+#sputnik-auth, #sputnik-page .connect-error {
+	font-size: 20px;
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", sans-serif;
+	line-height: 1.6em;
+	color: #777;
+	max-width: 500px;
+}
+	#sputnik-auth .buttons {
+		text-align: right;
+	}
+	#sputnik-auth .button {
+		font-size: 15px !important;
+	}
+
+	#sputnik-page .connect-error {
+		clear: both;
+	}
+#sputnik-page a.view-as-list,
+#sputnik-page a.view-as-grid {
+	background-image: url('icons.png'), linear-gradient(bottom, rgb(237,237,237) 38%, rgb(255,255,255) 85%);
+	background-image: url('icons.png'), -o-linear-gradient(bottom, rgb(237,237,237) 38%, rgb(255,255,255) 85%);
+	background-image: url('icons.png'), -moz-linear-gradient(bottom, rgb(237,237,237) 38%, rgb(255,255,255) 85%);
+	background-image: url('icons.png'), -webkit-linear-gradient(bottom, rgb(237,237,237) 38%, rgb(255,255,255) 85%);
+	background-image: url('icons.png'), -ms-linear-gradient(bottom, rgb(237,237,237) 38%, rgb(255,255,255) 85%);
+	background-repeat: no-repeat, repeat-x, repeat-x, repeat-x, repeat-x;
+}
+#sputnik-page a.view-as-list {
+	background-position: right 2px, left top;
+	padding: 6px 32px 6px 6px;
+}
+#sputnik-page a.view-as-grid {
+	background-position: 31px -69px, left top;
+	padding: 7px 32px 6px 7px;
+}
+#sputnik-page .tablenav-pages {
+	display: none;
+}
+#sputnik-page .tablenav {
+	margin-top: 0;
+	height: auto;
+	position: relative;
+}
+.grid-view {
+	margin: 0 0 15px;
+	clear: both;
+	overflow: auto;
+}
+
+/* Buy buttons */
+.button.buy span {
+	border-right: 1px solid #C6C6C6;
+	border-right: 1px solid rgba(0, 0, 0, 0.2);
+	padding-right: 5px;
+}
+.button-primary.buy span {
+	border-right: 1px solid #529DC0;
+	border-right: 1px solid rgba(255, 255, 255, 0.2);
+	padding-right: 5px;
+}
+.action-button .buy span {
+	padding-right: 7px;
+	margin-right: 2px;
+}
+
+.sputnik-plugin {
+	width: 200px;
+	padding: 0;
+	margin: 10px 25px 5px 0;
+	float: left;
+	height: 244px;
+}
+	.sputnik-card {
+		width: 200px;
+		height: 234px;
+		border: 1px solid #cfcfcf;
+		box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.22);
+
+		position: relative;
+		overflow: hidden;
+	}
+		.sputnik-plugin-details {
+			height: 214px;
+			width: 176px;
+			background: #F9F9F9;
+			padding: 10px 12px;
+			overflow: hidden;
+			position: absolute;
+		}
+			.sputnik-plugin-details h4 {
+				margin: 0 0 14px;
+				width: 75%;
+			}
+			.sputnik-plugin-details .footer {
+				position: absolute;
+				width: 176px;
+				bottom: 0;
+				right: 12px;
+				height: 20px;
+				padding: 8px 0;
+				background: #F9F9F9;
+				line-height: 19px;
+			}
+				.sputnik-plugin-details .price {
+					position: absolute;
+					right: 12px;
+					top: 10px;
+				}
+				.sputnik-plugin-details .footer .star-holder {
+					position: absolute;
+					right: 0;
+				}
+		.sputnik-plugin-actions {
+			width: 200px;
+			margin: 10px 2px;
+			line-height: 22px;
+		}
+			.sputnik-plugin-actions .button {
+				display: inline-block;
+			}
+			.sputnik-plugin-actions .status {
+				float: right;
+			}
+
+	.sputnik-plugin .sputnik-card {
+		-o-transition: 0.4s;
+		-moz-transition: 0.4s;
+		-webkit-transition: 0.4s;
+	}
+		.sputnik-plugin .sputnik-plugin-thumb {
+			display: table-cell;
+			text-align: center;
+			vertical-align: middle;
+			width: 200px;
+			height: 200px;
+			margin-top: 25px;
+		}
+		.sputnik-plugin.has-thumb .sputnik-plugin-thumb {
+			margin-top: 0;
+		}
+		.sputnik-plugin .sputnik-plugin-thumb img {
+			max-width: 100%;
+			max-height: 100%;
+		}
+		.sputnik-plugin .sputnik-plugin-details {
+			top: 200px;
+			background: rgba(250,250,250,0.7);
+			-o-transition: 0.4s;
+			-moz-transition: 0.4s;
+			-webkit-transition: 0.4s;
+		}
+		.sputnik-plugin:hover .sputnik-plugin-details {
+			top: 0;
+			background: #F9F9F9;
+		}
+
+	.sputnik-button {
+		background: rgb(215, 215, 215);
+		background: rgba(255, 255, 255, 0.5);
+		background: -moz-linear-gradient(
+			center top, rgba(255, 255, 255, 0.5) 0pt,
+			rgba(235, 235, 235, 0.5) 50%,
+			rgba(215, 215, 215, 0.5) 52%,
+			rgba(240, 240, 240, 0.5) 100%)
+			repeat scroll 0 0 transparent;
+		background: -webkit-gradient(
+			linear, left top, left bottom,
+			color-stop(0, rgba(255, 255, 255, 0.5)),
+			color-stop(0.5, rgba(235, 235, 235, 0.5)),
+			color-stop(0.52, rgba(215, 215, 215, 0.5)),
+			color-stop(1, rgba(240, 240, 240, 0.5)))
+			repeat scroll 0 0 transparent;
+
+		border: 1px solid rgba(165, 175, 185, 0.75);
+		box-shadow: 0 0 2px rgba(255, 255, 255, 0.65) inset;
+		color: #000;
+		text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+		padding: 4px 12px;
+		border-radius: 3px;
+		margin-bottom: 1.3em;
+		cursor: pointer;
+		display: inline-block;
+		text-decoration: none;
+	}
+		.sputnik-button:hover {
+			color: #000;
+		}
+		.sputnik-button.buy, .sputnik-button.install {
+			background: #55a802 55%;
+			background: -moz-linear-gradient(center top, #93c85e 30%, #55a802 55%) repeat scroll 0 0 transparent;
+			background: -webkit-gradient(linear, left top, left bottom, color-stop(0.3, #93c85e), color-stop(0.55, #55a802)) repeat scroll 0 0 transparent;
+			border-color: #3A7404;
+			color: #fff;
+			text-shadow: 0 -1px 0 #3a7404;
+		}
+		.sputnik-button.disabled {
+			border: 1px solid rgba(165, 175, 185, 0.5);
+			cursor: default;
+			color: #888;
+		}
+		.sputnik-button span {
+			border-right: 1px solid rgba(255, 255, 255, 0.3);
+			padding-right: 6px;
+			margin-right: 5px;
+			display: inline-block;
+		}
+
+/* iframed windows */
+.toplevel_page_sputnik #TB_iframeContent {
+	margin-bottom: -3px;
+}
+#sputnik-install, #sputnik-upgrade {
+	padding: 0 20px;
+}
+
+#sputnik-plugin-information {
+	background: url('fyi-back.png') repeat-y #fff;
+	min-height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+	#sputnik-plugin-information #plugin-information-header {
+		margin: 0;
+		padding: 0 5px;
+		font-weight: bold;
+		position: relative;
+		height: auto;
+		border: 0;
+		background: transparent;
+	}
+		#sputnik-plugin-information ul#sidemenu {
+			font-weight: normal;
+			margin: 0;
+			padding: 0;
+			float: none;
+		}
+			#sputnik-plugin-information #sidemenu li {
+				display: block;
+				text-align: left;
+			}
+				#sputnik-plugin-information #sidemenu a {
+					color: #ddd;
+					background: transparent;
+					border: none;
+					float: none;
+					padding: 0;
+				}
+				#sputnik-plugin-information #sidemenu a.current {
+					color: #fff;
+					font-weight: bold;
+				}
+
+	#sputnik-plugin-information .mainheader {
+	}
+
+	/* Install sidemenu */
+	#sputnik-plugin-information p.action-button {
+		width: 100%;
+		padding-bottom: 0;
+		margin-bottom: 10px;
+		margin-top: 10px;
+		-webkit-border-top-left-radius: 3px;
+		-webkit-border-bottom-left-radius: 3px;
+		border-top-left-radius: 3px;
+		border-bottom-left-radius: 3px;
+	}
+
+		#sputnik-plugin-information .action-button a {
+			text-align: center;
+			font-weight: bold;
+			text-decoration: none;
+			display: block;
+			line-height: 2em;
+		}
+
+	#sputnik-plugin-information #section-header h2 {
+		clear: none !important;
+		margin-right: 200px;
+	}
+
+	#sputnik-plugin-information .fyi {
+		position: fixed;
+		margin: 0;
+		padding: 0 10px;
+		width: 225px;
+		height: 100%;
+		background-color: #333;
+		color: #aaa;
+	}
+
+		#sputnik-plugin-information .fyi a {
+			color: #fff;
+		}
+
+		#sputnik-plugin-information .fyi h1 {
+			font-size: 1.6em;
+			margin-bottom: 0;
+			margin-right: 0;
+			padding: 10px 0;
+		}
+
+		#sputnik-plugin-information .fyi h2.mainheader {
+			display: none;
+		}
+
+		#sputnik-plugin-information .fyi ul {
+			padding: 10px 5px 10px 7px;
+			margin: 0;
+			list-style: none;
+			-webkit-border-bottom-left-radius: 3px;
+			border-bottom-left-radius: 3px;
+		}
+
+			#sputnik-plugin-information .fyi li {
+				margin-right: 0;
+			}
+
+		#sputnik-plugin-information .fyi strong {
+			color: #bbb;
+		}
+
+	#sputnik-plugin-information #section-holder {
+		padding: 10px;
+		margin-left: 260px;
+		margin-top: 0;
+	}
+
+	#sputnik-plugin-information .section ul,
+	#sputnik-plugin-information .section ol {
+		margin-left: 16px;
+		list-style-type: square;
+		list-style-image: none;
+	}
+
+		#sputnik-plugin-information #section-screenshots ol {
+			list-style: none;
+			margin: 0;
+			text-align: center;
+		}
+
+			#sputnik-plugin-information #section-screenshots li {
+				margin-bottom: 18px;
+			}
+
+			#sputnik-plugin-information #section-screenshots li img {
+				vertical-align: text-top;
+				max-width: 100%;
+				width: auto;
+				height: auto;
+				border: 1px solid #ccc;
+				padding: 7px;
+			}
+
+			#sputnik-plugin-information #section-screenshots li p {
+				font-style: italic;
+				padding-left: 20px;
+				padding-bottom: 2em;
+			}
+
+		#sputnik-plugin-information #section-screenshots ol,
+		#sputnik-plugin-information .updated,
+		#sputnik-plugin-information pre {
+			margin-right: 0;
+		}
+
+	#sputnik-plugin-information pre {
+		padding: 7px;
+		overflow: auto;
+	}
+
+/* Account page */
+#sputnik-page .account-card {
+	max-width: 800px;
+	overflow: hidden;
+	background: #fafafa;
+	border: 1px solid #ccc;
+	padding: 10px;
+	margin-top: 20px;
+}
+	#sputnik-page .account-card .block {
+		width: 50%;
+		max-width: 400px;
+		float: left;
+	}
+		#sputnik-page .account-card img {
+			float: left;
+			background: #fff;
+			padding: 5px;
+			border: 1px solid #ddd;
+		}
+		#sputnik-page .account-card h3, #sputnik-page .account-card p {
+			margin-left: 130px;
+		}
+			#sputnik-page .account-card .lead-in {
+				margin-top: 0.5em;
+				margin-bottom: 0;
+			}
+			#sputnik-page .account-card .stat strong {
+				font-size: 16px;
+			}
+#sputnik-page table.widefat tr td {
+	vertical-align: middle;
+}

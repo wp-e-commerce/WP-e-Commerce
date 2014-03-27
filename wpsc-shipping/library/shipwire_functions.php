@@ -53,22 +53,36 @@ class WPSC_Shipwire {
 
 		self::$email     = get_option( 'shipwireemail' );
 		self::$passwd    = get_option( 'shipwirepassword' );
-		self::$server    = 'Production';
-		self::$warehouse = '00';
-		self::$endpoint  = 'https://api.shipwire.com/exec/'; //For testing, change to api.beta.shipwire
+		self::$server    = apply_filters( 'wpsc_shipwire_server'   , 'Production' );
+		self::$warehouse = apply_filters( 'wpsc_shipwire_warehouse', '00' );;
+		self::$endpoint  = ( bool ) get_option( 'shipwire_test_server' ) ? 'https://api.beta.shipwire.com/exec/' : 'https://api.shipwire.com/exec/';
 
 		if ( ! self::is_active() )
 			return;
 
-		//Hooks into transaction results for Order Fulfillment API.  wpsc_confirm_checkout would be logical - but it is run for each cart item.
-		//In fact, the only two current transaction page actions happen within the cart loop.  Not great.
-		//I believe there is a patch on Issue 490 that proposes a 'wpsc_transaction_results_shutdown' action.  It doesn't pass a $log_id, but it does pass a sessionid, which is fine.
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX )
+			self::set_posted_properties();
+
 		add_action( 'wpsc_transaction_results_shutdown', array( $this, 'shipwire_on_checkout' ), 10, 3 );
 
 		//Hooks into ajax handler for Inventory Sync and Tracking API.  Handler is run upon clicking "Update Tracking and Inventory" in Shipping Settings
 		add_action( 'wp_ajax_sync_shipwire_products', array( $this, 'sync_products' ) );
 
 	}
+
+	private static function set_posted_properties() {
+		if ( isset( $_POST['email'] ) )
+			self::$email = $_POST['email'];
+
+		if ( isset( $_POST['password'] ) )
+			self::$passwd = $_POST['password'];
+
+		if ( isset( $_POST['server'] ) ) {
+			self::$endpoint = ( bool ) $_POST['server'] ? 'https://api.beta.shipwire.com/exec/' : 'https://api.shipwire.com/exec/';
+		}
+
+	}
+
 	/**
 	 * Checks if Shipwire option is set and SimpleXML is present.  We'll use SimpleXML to parse responses from the server.
 	 *
@@ -76,7 +90,7 @@ class WPSC_Shipwire {
 	 * @return boolean
 	 */
 	public static function is_active() {
-		return (bool) get_option( 'shipwire' ) && function_exists( 'simplexml_load_string' );
+		return ( (bool) get_option( 'shipwire' ) && function_exists( 'simplexml_load_string' ) ) || isset( $_POST['server'] );
 	}
 
 	/**
@@ -87,6 +101,7 @@ class WPSC_Shipwire {
 	 * @uses apply_filters() Switch for 'wpsc_shipwire_show_affiliate' to send referring affiliate to Shipwire. Defaults to false
 	 * @uses apply_filters() Switch for 'wpsc_shipwire_show_dimensions' to send dimensions to Shipwire. Defaults to false
 	 * @uses apply_filters() 'get_order_xml' filters final XML
+	 *
 	 * @param int $log_id
 	 * @since 3.8.9
 	 * @return string $xml
@@ -244,7 +259,7 @@ class WPSC_Shipwire {
 
 		$dimensions['weight'] = ( 'pound' == $original_dimensions['weight_unit'] ) ? $original_dimensions['weight'] : wpsc_convert_weight( $original_dimensions['weight'], $original_dimensions['weight_unit'] );
 		$dimensions['length'] = ( 'in' == $original_dimensions['length_unit'] ) ? $original_dimensions['length'] : $this->convert_dimensions( $original_dimensions['length'], $original_dimensions['length_unit'] );
-		$dimensions['width'] = ( 'in' == $original_dimensions['width_unit'] ) ? $original_dimensions['width'] : $this->convert_dimensions( $original_dimensions['width'], $original_dimensions['width_unit'] );
+		$dimensions['width']  = ( 'in' == $original_dimensions['width_unit'] ) ? $original_dimensions['width'] : $this->convert_dimensions( $original_dimensions['width'], $original_dimensions['width_unit'] );
 		$dimensions['height'] = ( 'in' == $original_dimensions['height_unit'] ) ? $original_dimensions['height'] : $this->convert_dimensions( $original_dimensions['height'], $original_dimensions['height_unit'] );
 
 		return $dimensions;
@@ -539,10 +554,14 @@ class WPSC_Shipwire {
 	 * @return array
 	 */
 	public static function fetch_fresh_quotes() {
-		$quotes = simplexml_load_string( self::send_shipping_request( self::get_shipping_xml() ) );
+		$quotes = self::send_shipping_request( self::get_shipping_xml() );
+
+		$quotes  = $quotes ? simplexml_load_string( $quotes ) : false;
 		$methods = array();
 
-		$quotes = is_object( $quotes ) ? $quotes->Order->Quotes->Quote : $methods;
+		$quotes = is_object( $quotes ) && isset( $quotes->Order )  ? $quotes->Order  : $methods;
+		$quotes = is_object( $quotes ) && isset( $quotes->Quotes ) ? $quotes->Quotes : $methods;
+		$quotes = is_object( $quotes ) && isset( $quotes->Quote )  ? $quotes->Quote  : $methods;
 
 		if ( ! is_object( $quotes ) )
 			return $methods;
@@ -582,8 +601,10 @@ class WPSC_Shipwire {
 	 */
 	public static function sync_products( $product_code = '' ) {
 		global $wpdb;
+
 		if ( defined ( 'DOING_AJAX' ) && DOING_AJAX ) {
 
+			self::set_posted_properties();
 			if ( ! _wpsc_ajax_verify_nonce( 'shipping_module_settings_form' ) ) {
 				die( __( 'Session expired. Try refreshing your Shipping Settings page.', 'wpsc' ) );
 			}
@@ -853,7 +874,7 @@ function convert_code_to_service( $service ) {
 			break;
 		case 'PM-INTL' :
 			$service = _x( 'Premium Shipping', 'shipwire shipping method', 'wpsc' );
-			break;	 
+			break;
 		endswitch;
 
 	return $service;
@@ -866,7 +887,7 @@ function convert_code_to_service( $service ) {
  * @return string
  */
 function convert_service_to_code( $service ) {
-	
+
 	switch ( $service ) :
 		case _x( 'Ground', 'shipwire shipping method', 'wpsc' ) :
 			$service = 'GD';
@@ -888,10 +909,10 @@ function convert_service_to_code( $service ) {
 			break;
 		case _x( 'Plus Shipping', 'shipwire shipping method', 'wpsc' ) :
 			$service = 'PL-INTL';
-			break;						
+			break;
 		case _x( 'Premium Shipping', 'shipwire shipping method', 'wpsc' ) :
 			$service = 'PM-INTL';
-			break;			 
+			break;
 		endswitch;
 
 	return $service;

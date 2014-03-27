@@ -22,8 +22,6 @@ $nzshpcrt_gateways[$num] = array(
 		 /// for modules that may not be present, like curl
 		'extra_modules' => array()
 	),
-
-	// this may be legacy, not yet decided
 	'internalname' => 'wpsc_merchant_paypal_standard',
 
 	// All array members below here are legacy, and use the code in paypal_multiple.php
@@ -31,7 +29,7 @@ $nzshpcrt_gateways[$num] = array(
 	'submit_function' => 'submit_paypal_multiple',
 	'payment_type' => 'paypal',
 	'supported_currencies' => array(
-		'currency_list' =>  array('AUD', 'BRL', 'CAD', 'CHF', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'ILS', 'JPY', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'SEK', 'SGD', 'THB', 'TWD', 'USD'),
+		'currency_list' =>  array('AUD', 'BRL', 'CAD', 'CZK', 'DKK', 'EUR', 'HKD', 'HUF', 'ILS', 'JPY', 'MYR', 'MXN', 'NOK', 'NZD', 'PHP', 'PLN', 'GBP', 'RUB', 'SGD', 'SEK', 'CHF', 'TWD', 'THB', 'TRY', 'USD'),
 		'option_name' => 'paypal_curcode'
 	)
 );
@@ -393,6 +391,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 		$options = array(
 			'timeout' => 20,
 			'body' => $received_values,
+			'httpversion' => '1.1',
 			'user-agent' => ( 'WP e-Commerce/' . WPSC_PRESENTABLE_VERSION )
 		);
 
@@ -532,7 +531,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 						$altered_count = 0;
 						if ( (bool)$cart_row['is_recurring'] == true ) {
 							$altered_count++;
-							wpsc_update_cartmeta( $cart_row['cart_item_id'], 'is_subscribed', 0 );
+							wpsc_update_cart_item_meta( $cart_row['cart_item_id'], 'is_subscribed', 0 );
 						}
 					}
 					break;

@@ -15,10 +15,10 @@ If you're looking for general user support, please submit your support request o
 Development status
 -------------------------
 
-* The latest stable version is [3.8.11](http://wordpress.org/extend/plugins/wp-e-commerce).
-* Active development version: 3.8.12-dev (branch [master](https://github.com/wp-e-commerce/WP-e-Commerce))
-* [Roadmap for 3.8.12](https://github.com/wp-e-commerce/wp-e-commerce/wiki/Roadmap)
-* [3.8.12 tickets](https://github.com/wp-e-commerce/wp-e-commerce/issues?labels=&milestone=10&page=1&sort=updated&state=open)
+* The latest stable version is [3.8.13.3](http://wordpress.org/extend/plugins/wp-e-commerce).
+* Active development version: 3.8.14-dev (branch [master](https://github.com/wp-e-commerce/WP-e-Commerce))
+* [Roadmap for 3.8.14](https://github.com/wp-e-commerce/wp-e-commerce/wiki/Roadmap)
+* [3.8.14 tickets](https://github.com/wp-e-commerce/wp-e-commerce/issues?milestone=12&sort=updated&state=open)
 
 How to contribute code
 -----------------------------

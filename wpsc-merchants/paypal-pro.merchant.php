@@ -14,7 +14,7 @@ $nzshpcrt_gateways[$num] = array(
 	),
 	'form'                   => 'form_paypal_pro',
 	'submit_function'        => 'submit_paypal_pro',
-	'internalname'           => 'wpsc_merchant_paypal_pro', // this may be legacy, not yet decided
+	'internalname'           => 'wpsc_merchant_paypal_pro',
 	// All array members below here are legacy, and use the code in paypal_multiple.php
 	//	'form' => 'form_paypal_multiple',
 	//	'submit_function' => 'submit_paypal_multiple',
@@ -187,6 +187,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 		$options = array(
 			'timeout' => 20,
 			'body' => $this->collected_gateway_data,
+			'httpversion' => '1.1',
 			'user-agent' => $this->cart_data['software_name'] . " " . get_bloginfo( 'url' ),
 			'sslverify' => false,
 		);
@@ -260,6 +261,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 		$options = array(
 			'timeout'    => 20,
 			'body'       => $received_values,
+			'httpversion' => '1.1',
 			'user-agent' => ('WP e-Commerce/' . WPSC_PRESENTABLE_VERSION)
 		);
 
@@ -324,7 +326,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 						$altered_count = 0;
 						if ( (bool)$cart_row['is_recurring'] == true ) {
 							$altered_count++;
-							wpsc_update_cartmeta( $cart_row['cart_item_id'], 'is_subscribed', 0 );
+							wpsc_update_cart_item_meta( $cart_row['cart_item_id'], 'is_subscribed', 0 );
 						}
 					}
 					break;

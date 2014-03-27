@@ -71,12 +71,9 @@ Author URI: http://instinct.co.nz
 	color:#000;
 }
 
-
 #default_products_page_container .wpsc_page_numbers_top a:link, #default_products_page_container .wpsc_page_numbers_top a:visited, #default_products_page_container .wpsc_page_numbers_bottom a:link, #default_products_page_container .wpsc_page_numbers_bottom a:visited {
 	padding:5px 4px;
-
 }
-
 
 #default_products_page_container .wpsc_page_numbers_top a:hover, #default_products_page_container .wpsc_page_numbers_top a:active, #default_products_page_container .wpsc_page_numbers_bottom a:hover, #default_products_page_container .wpsc_page_numbers_bottom a:active {
 
@@ -93,14 +90,12 @@ Author URI: http://instinct.co.nz
 }
 
 .default_product_display .imagecol {
-
 	text-align: right;
 	display: table-cell;
 	vertical-align: middle;
 	min-height: 50px;
 	height: 100%;
 	overflow: auto;
-
 }
 
 .default_product_display .imagecol img.product_image {
@@ -241,6 +236,11 @@ Author URI: http://instinct.co.nz
 	*zoom:1;
 }
 
+.default_product_display .is_variation,
+.single_product_display .is_variation {
+	display: none;
+}
+
 .default_product_display .in_stock,
 .single_product_display .in_stock {
 	position: relative;
@@ -250,6 +250,8 @@ Author URI: http://instinct.co.nz
 	left:-5px;
 }
 
+.default_product_display .no_variation,
+.single_product_display .no_variation,
 .default_product_display .out_of_stock,
 .single_product_display .out_of_stock {
 	position: relative;
@@ -325,7 +327,6 @@ Author URI: http://instinct.co.nz
 
 /*-----LIST VIEW PRODUCT DISPLAY-----*/
 #list_view_products_page_container {
-/* 	width:650px;	 */
 	position:relative;
 }
 
@@ -426,7 +427,6 @@ table.list_productdisplay p.soldout {
 
 /*-----SINGLE PRODUCTS PAGE-----*/
 #single_product_page_container {
-	width:650px;	
 	position:relative;	
 }
 
@@ -592,24 +592,29 @@ table.list_productdisplay p.soldout {
 	width: 17px;
 	float: left;
 }
+
 .wpsc_product_rating .star a {
 	background-position:0 0;
 	display:block;
 	height:100%;
-	background:transparent url(wpsc-images/grey-star.gif) no-repeat scroll 0 0;
+	background:transparent url(wpsc-images/grey-star.png) no-repeat scroll 0 0;
 	outline: none;
 }
+
 .wpsc_product_rating .star a:hover {
 	background-position:0 0;
-	background:transparent url(wpsc-images/gold-star.gif) no-repeat scroll 0 0;
+	background:transparent url(wpsc-images/gold-star.png) no-repeat scroll 0 0;
 }
+
 .wpsc_product_rating .star a.selected {
 	background-position:0 0;
-	background:transparent url(wpsc-images/gold-star.gif) no-repeat scroll 0 0;
+	background:transparent url(wpsc-images/gold-star.png) no-repeat scroll 0 0;
 }
+
 .wpsc_product_rating .star a, .wpsc_product_rating .star a:focus {
 	outline: none;
 }
+
 div.product_footer{
 	position: relative;
 	clear: both;
@@ -619,11 +624,13 @@ div.product_footer{
 	height: 35px;
 	margin-top: 1em;
 }
+
 div.product_footer strong{
 	display: block;
 	font-size: 7pt;
 	font-weight: normal;
 }
+
 div.product_average_vote{
 	position: absolute;
 	top: 0;
@@ -633,6 +640,7 @@ div.product_average_vote{
 	margin: 0 !important;
 	height: inherit;
 }
+
 div.product_user_vote{
 	position: absolute;
 	top: 0;
@@ -641,16 +649,19 @@ div.product_user_vote{
 	margin: 0 !important;
 	height: inherit;
 }
+
 span.vote_total{
 	position: relative;
 	top: -3px;
 	left: 2px;
 	font-size: 7pt;
 }
+
 span.rating_saved{
 	color: #990000;
 	display: none;
 } 
+
 /*-----FANCY NOTIFICATION STYLING-----*/
 #fancy_notification{
 	position: absolute;
@@ -662,9 +673,11 @@ span.rating_saved{
 	height: auto;
 	z-index: 9;
 }
+
 #fancy_notification #loading_animation{
 	display: none;
 }
+
 #fancy_notification #fancy_notification_content{
 	display: none;
 	width: 300px;
@@ -673,11 +686,13 @@ span.rating_saved{
 	text-align: left;
 	margin: 0 !important;
 }
+
 #fancy_notification #fancy_notification_content span{
 	margin: 0 0 6px 0;
 	display: block;
 	font-weight: normal;
 }
+
 #fancy_notification #fancy_notification_content a{
 	display: block;
 	float: left;
@@ -815,7 +830,6 @@ span.rating_saved{
 
 /*-----CHECKOUT PAGE-----*/
 #checkout_page_container {
-	width:650px;
 	position:relative;
 	clear:both;
 }
@@ -1053,6 +1067,11 @@ background-color: #f5f5f5;
 
 #shippingsameasbillingmessage{
 	display:none;
+}
+
+.wpsc_gateway_container .custom_gateway_image {
+	position: relative;
+	top: 5px;
 }
 
 .wpsc_no_image{

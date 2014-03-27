@@ -2,8 +2,8 @@
 /**
   * Plugin Name: WP e-Commerce
   * Plugin URI: http://getshopped.org/
-  * Description: A plugin that provides a WordPress Shopping Cart. See also: <a href="http://getshopped.org" target="_blank">GetShopped.org</a> | <a href="http://getshopped.org/forums/" target="_blank">Support Forum</a> | <a href="http://docs.getshopped.org/" target="_blank">Documentation</a>
-  * Version: 3.8.11
+  * Description: A plugin that provides a WordPress Shopping Cart. See also: <a href="http://getshopped.org" target="_blank">GetShopped.org</a> | <a href="https://wordpress.org/support/plugin/wp-e-commerce/" target="_blank">Support Forum</a> | <a href="http://docs.getshopped.org/" target="_blank">Documentation</a>
+  * Version: 3.8.14-dev
   * Author: Instinct Entertainment
   * Author URI: http://getshopped.org/
   **/
@@ -17,7 +17,8 @@
  */
 class WP_eCommerce {
 	private $components = array(
-		'merchant' => array(),
+		'merchant'    => array(),
+		'marketplace' => array(),
 	);
 
 	/**
@@ -26,9 +27,9 @@ class WP_eCommerce {
 	 * @uses add_action()   Attaches to 'plugins_loaded' hook
 	 * @uses add_action()   Attaches to 'wpsc_components' hook
 	 */
-	function WP_eCommerce() {
+	function __construct() {
 		add_action( 'plugins_loaded' , array( $this, 'init' ), 8 );
-		add_action( 'wpsc_components', array( $this, '_register_core_components' ) );
+		add_filter( 'wpsc_components', array( $this, '_register_core_components' ) );
 	}
 
 	/**
@@ -56,17 +57,33 @@ class WP_eCommerce {
 	}
 
 	/**
-	 * @todo we need documentation finished here
+	 * New WPSC components API.
 	 *
-	 * @param   array   $components
+	 * Allows for modular coupling of different functionalities within WPSC.
+	 * This is the way we'll be introducing cutting-edge APIs
 	 *
-	 * @return  array
+	 * @since 3.8.9.5
+	 *
+	 * @param   array $components
+	 * @return  array $components
 	 */
 	public function _register_core_components( $components ) {
 		$components['merchant']['core-v2'] = array(
-			'title' => __( 'WP e-Commerce Merchant API v2', 'wpsc' ),
+			'title'    => __( 'WP e-Commerce Merchant API v2', 'wpsc' ),
 			'includes' =>
 				WPSC_FILE_PATH . '/wpsc-components/merchant-core-v2/merchant-core-v2.php'
+		);
+
+		$components['theme-engine']['core-v1'] = array(
+			'title'    => __( 'WP e-Commerce Theme Engine v1', 'wpsc' ),
+			'includes' =>
+				WPSC_FILE_PATH . '/wpsc-components/theme-engine-v1/theme-engine-v1.php'
+		);
+
+		$components['marketplace']['core-v1'] = array(
+			'title'    => __( 'WP e-Commerce Marketplace API v1', 'wpsc' ),
+			'includes' =>
+				WPSC_FILE_PATH . '/wpsc-components/marketplace-core-v1/marketplace-core-v1.php'
 		);
 
 		return $components;
@@ -92,11 +109,31 @@ class WP_eCommerce {
 		define( 'WPSC_URL',       plugins_url( '', __FILE__ ) );
 
 		//load text domain
-		if( !load_plugin_textdomain( 'wpsc', false, '../languages/' ) )
+		if ( ! load_plugin_textdomain( 'wpsc', false, '../languages/' ) )
 			load_plugin_textdomain( 'wpsc', false, dirname( plugin_basename( __FILE__ ) ) . '/wpsc-languages/' );
 
 		// Finished starting
 		do_action( 'wpsc_started' );
+	}
+
+	function setup_table_names() {
+		global $wpdb;
+		$wpdb->wpsc_meta                = WPSC_TABLE_META;
+		$wpdb->wpsc_also_bought         = WPSC_TABLE_ALSO_BOUGHT;
+		$wpdb->wpsc_region_tax          = WPSC_TABLE_REGION_TAX;
+		$wpdb->wpsc_coupon_codes        = WPSC_TABLE_COUPON_CODES;
+		$wpdb->wpsc_cart_contents       = WPSC_TABLE_CART_CONTENTS;
+		$wpdb->wpsc_claimed_stock       = WPSC_TABLE_CLAIMED_STOCK;
+		$wpdb->wpsc_currency_list       = WPSC_TABLE_CURRENCY_LIST;
+		$wpdb->wpsc_purchase_logs       = WPSC_TABLE_PURCHASE_LOGS;
+		$wpdb->wpsc_checkout_forms      = WPSC_TABLE_CHECKOUT_FORMS;
+		$wpdb->wpsc_product_rating      = WPSC_TABLE_PRODUCT_RATING;
+		$wpdb->wpsc_download_status     = WPSC_TABLE_DOWNLOAD_STATUS;
+		$wpdb->wpsc_submitted_form_data = WPSC_TABLE_SUBMITTED_FORM_DATA;
+		$wpdb->wpsc_cart_itemmeta       = WPSC_TABLE_CART_ITEM_META;
+		$wpdb->wpsc_purchasemeta        = WPSC_TABLE_PURCHASE_META;
+		$wpdb->wpsc_visitors            = WPSC_TABLE_VISITORS;
+		$wpdb->wpsc_visitormeta         = WPSC_TABLE_VISITOR_META;
 	}
 
 	/**
@@ -129,6 +166,9 @@ class WP_eCommerce {
 		// WPEC Table names and related constants
 		wpsc_core_constants_table_names();
 
+		// setup wpdb table name attributes
+		$this->setup_table_names();
+
 		// Uploads directory info
 		wpsc_core_constants_uploads();
 
@@ -143,6 +183,11 @@ class WP_eCommerce {
 	 * @uses do_action()        Calls 'wpsc_includes' which runs after WPEC files have been included
 	 */
 	function includes() {
+		require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-util.php'                  );
+		require_once( WPSC_FILE_PATH . '/wpsc-includes/customer.php'                        );
+		require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-customer.php'              );
+		require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-visitor.php'               );
+		require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-cart-item.php'             );
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-functions.php' );
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-installer.php' );
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-includes.php' );
@@ -186,17 +231,13 @@ class WP_eCommerce {
 		// Legacy action
 		do_action( 'wpsc_before_init' );
 
-		// Setup the customer ID just in case to make sure it's set up correctly
-		_wpsc_action_create_customer_id( 'create' );
-
 		// Setup the core WPEC globals
 		wpsc_core_setup_globals();
 
-		// Setup the core WPEC cart
-		wpsc_core_setup_cart();
+		add_action( 'init', '_wpsc_action_setup_customer', 1 );
 
-		// Load the thumbnail sizes
-		wpsc_core_load_thumbnail_sizes();
+		// WPEC is ready to use as soon as WordPress and customer is setup and loaded
+		add_action( 'init', array( &$this, '_wpsc_fire_ready_action' ), 100 );
 
 		// Load the purchase log statuses
 		wpsc_core_load_purchase_log_statuses();
@@ -210,11 +251,13 @@ class WP_eCommerce {
 		// Load the shipping modules
 		wpsc_core_load_shipping_modules();
 
-		// Set page title array for important WPSC pages
-		wpsc_core_load_page_titles();
-
 		// WPEC is fully loaded
 		do_action( 'wpsc_loaded' );
+	}
+
+	function _wpsc_fire_ready_action() {
+		// WPEC is ready to use as soon as WordPress and customer is setup and loaded
+		do_action( 'wpsc_ready' );
 	}
 
 	/**
@@ -226,10 +269,10 @@ class WP_eCommerce {
 	 */
 	function install() {
 		global $wp_version;
-		if((float)$wp_version < 3.0){
-			 deactivate_plugins(plugin_basename(__FILE__)); // Deactivate ourselves
-			 wp_die( __('Looks like you\'re running an older version of WordPress, you need to be running at least WordPress 3.0 to use WP e-Commerce 3.8', 'wpsc'), __('WP e-Commerce 3.8 not compatible', 'wpsc'), array('back_link' => true));
-			return;
+
+		if ( ( float ) $wp_version < 3.0 ) {
+			 deactivate_plugins( plugin_basename( __FILE__ ) ); // Deactivate ourselves
+			 wp_die( __( 'Looks like you\'re running an older version of WordPress, you need to be running at least WordPress 3.0 to use WP e-Commerce 3.8', 'wpsc' ), __( 'WP e-Commerce 3.8 not compatible', 'wpsc' ), array( 'back_link' => true ) );
 		}
 		define( 'WPSC_FILE_PATH', dirname( __FILE__ ) );
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-installer.php' );
@@ -256,5 +299,5 @@ class WP_eCommerce {
 $wpec = new WP_eCommerce();
 
 // Activation
-register_activation_hook( __FILE__, array( $wpec, 'install' ) );
+register_activation_hook( __FILE__  , array( $wpec, 'install' ) );
 register_deactivation_hook( __FILE__, array( $wpec, 'deactivate' ) );

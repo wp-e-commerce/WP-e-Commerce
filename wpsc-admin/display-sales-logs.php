@@ -47,7 +47,7 @@ class WPSC_Purchase_Log_Page {
 	private function purchase_logs_fix_options( $id ) {
 		?>
 		<select name='<?php echo $id; ?>'>
-			<option value='-1'><?php echo esc_html_x( 'Select an Option', 'Dropdown default when called in uniquename dropdown', 'wpsc' ); ?>'</option>
+			<option value='-1'><?php echo esc_html_x( 'Select an Option', 'Dropdown default when called in uniquename dropdown', 'wpsc' ); ?></option>
 			<option value='billingfirstname'><?php esc_html_e( 'Billing First Name', 'wpsc' ); ?></option>
 			<option value='billinglastname'><?php esc_html_e( 'Billing Last Name', 'wpsc' ); ?></option>
 			<option value='billingaddress'><?php esc_html_e( 'Billing Address', 'wpsc' ); ?></option>
@@ -240,6 +240,7 @@ class WPSC_Purchase_Log_Page {
 			<td class="amount"><?php echo wpsc_currency_display( wpsc_purchaselog_details_total() ); ?></td> <!-- TOTAL! -->
 		</tr>
 		<?php
+		do_action( 'wpsc_additional_sales_item_info', wpsc_purchaselog_details_id() );
 		endwhile;
 	}
 
@@ -284,11 +285,11 @@ class WPSC_Purchase_Log_Page {
 		$purchlogitem = new wpsc_purchaselogs_items( $this->log_id );
 
 		$columns = array(
-			'title'    => __( 'Item Name','wpsc' ),
-			'sku'      => __( 'SKU','wpsc' ),
-			'quantity' => __( 'Quantity','wpsc' ),
-			'price'    => __( 'Price','wpsc' ),
-			'shipping' => __( 'Item Shipping','wpsc'),
+			'title'    => __( 'Item Name', 'wpsc' ),
+			'sku'      => __( 'SKU', 'wpsc' ),
+			'quantity' => __( 'Quantity', 'wpsc' ),
+			'price'    => __( 'Price', 'wpsc' ),
+			'shipping' => __( 'Item Shipping','wpsc' ),
 		);
 
 		if ( wpec_display_product_tax() ) {
@@ -301,7 +302,16 @@ class WPSC_Purchase_Log_Page {
 
 		register_column_headers( 'wpsc_purchase_log_item_details', $columns );
 
-		include( 'includes/purchase-logs-page/packing-slip.php' );
+		if ( file_exists( get_stylesheet_directory() . '/wpsc-packing-slip.php' ) ) {
+			$packing_slip_file = get_stylesheet_directory() . '/wpsc-packing-slip.php';
+		} else {
+			$packing_slip_file = 'includes/purchase-logs-page/packing-slip.php';
+		}
+
+		$packing_slip_file = apply_filters( 'wpsc_packing_packing_slip_path', $packing_slip_file );
+
+		include( $packing_slip_file );
+
 		exit;
 	}
 
@@ -378,9 +388,10 @@ class WPSC_Purchase_Log_Page {
 				$ids = array_map( 'intval', $_REQUEST['post'] );
 				$in = implode( ', ', $ids );
 				$wpdb->query( "DELETE FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE id IN ($in)" );
-				$wpdb->query( "DELETE FROM " . WPSC_TABLE_CLAIMED_STOCK . " WHERE cart_id IN ($in)" );
 				$wpdb->query( "DELETE FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid IN ($in)" );
 				$wpdb->query( "DELETE FROM " . WPSC_TABLE_SUBMITTED_FORM_DATA . " WHERE log_id IN ($in)" );
+				$claimed_query = new WPSC_Claimed_Stock( array( 'cart_id' => $in ) );
+				$claimed_query->clear_claimed_stock( 0 );
 
 				$sendback = add_query_arg( array(
 					'paged'   => $_REQUEST['last_paged'],

@@ -13,26 +13,6 @@ function wpsc_cart_item_custom_message(){
 }
 
 /**
- * nzshpcrt_get_gateways()
- *
- * Deprecated function for returning the merchants global
- *
- * @global array $nzshpcrt_gateways
- * @return array
- */
-function nzshpcrt_get_gateways() {
-	_wpsc_deprecated_function( __FUNCTION__, '3.8' );
-
-	global $nzshpcrt_gateways;
-
-	if ( !is_array( $nzshpcrt_gateways ) )
-		wpsc_core_load_gateways();
-
-	return $nzshpcrt_gateways;
-
-}
-
-/**
  * wpsc_merchants_modules_deprecated()
  *
  * Deprecated function for merchants modules
@@ -525,7 +505,7 @@ function wpec_get_the_post_id_by_shortcode( $shortcode ) {
  * @3.8
  * @returns nothing
  */
-function wpsc_update_permalinks(  $return = '' ) {
+function wpsc_update_permalinks( $return = '' ) {
 	_wpsc_deprecated_function( __FUNCTION__, '3.8.9', '_wpsc_action_permalink_structure_changed' );
 	_wpsc_action_permalink_structure_changed();
 }
@@ -1341,3 +1321,492 @@ function wpsc_product_variation_price_available( $product_id, $from_text = false
 	);
 	return wpsc_product_variation_price_from( $product_id, $args );
 }
+
+/**
+ * Deprecated function
+ *
+ * @deprecated 3.8.9
+ */
+function wpsc_post_title_seo( $title ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.9' );
+	global $wpdb, $page_id, $wp_query;
+	$new_title = wpsc_obtain_the_title();
+	if ( $new_title != '' ) {
+		$title = $new_title;
+	}
+	return esc_html( $title );
+}
+
+function wpsc_product_image_forms() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.13' );
+
+	global $post;
+
+	edit_multiple_image_gallery( $post );
+
+?>
+
+    <p><strong <?php if ( isset( $display ) ) echo $display; ?>><a href="media-upload.php?parent_page=wpsc-edit-products&amp;post_id=<?php echo $post->ID; ?>&amp;type=image&amp;tab=gallery&amp;TB_iframe=1&amp;width=640&amp;height=566" class="thickbox" title="<?php esc_attr_e( 'Manage Product Images', 'wpsc' ); ?>"><?php esc_html_e( 'Manage Product Images', 'wpsc' ); ?></a></strong></p>
+<?php
+}
+
+function edit_multiple_image_gallery( $post ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.13' );
+
+	global $wpdb;
+
+	// Make sure thumbnail isn't duplicated
+	if ( $post->ID > 0 ) {
+		if ( has_post_thumbnail( $post->ID ) )
+			echo get_the_post_thumbnail( $post->ID, 'admin-product-thumbnails' );
+
+		$args = array(
+			'post_type' => 'attachment',
+			'numberposts' => -1,
+			'post_status' => null,
+			'post_parent' => $post->ID,
+			'orderby' => 'menu_order',
+			'order' => 'ASC'
+		);
+
+		$attached_images = (array)get_posts( $args );
+
+		if ( count( $attached_images ) > 0 ) {
+			foreach ( $attached_images as $images ) {
+				$attached_image = wp_get_attachment_image( $images->ID, 'admin-product-thumbnails' );
+				echo $attached_image. '&nbsp;';
+			}
+		}
+
+	}
+}
+
+function wpsc_media_upload_tab_gallery( $tabs ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.13' );
+
+	unset( $tabs['gallery'] );
+	$tabs['gallery'] = __( 'Product Image Gallery', 'wpsc' );
+
+	return $tabs;
+}
+
+function wpsc_media_upload_url( $form_action_url ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.13' );
+
+	$form_action_url = esc_url( add_query_arg( array( 'parent_page'=>'wpsc-edit-products' ) ) );
+
+	return $form_action_url;
+
+}
+
+function wpsc_gallery_css_mods() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.13' );
+
+	print '<style type="text/css">
+			#gallery-settings *{
+			display:none;
+			}
+			a.wp-post-thumbnail {
+					color:green;
+			}
+			#media-upload a.del-link {
+				color:red;
+			}
+			#media-upload a.wp-post-thumbnail {
+				margin-left:0px;
+			}
+			td.savesend input.button {
+				display:none;
+			}
+	</style>';
+	print '
+	<script type="text/javascript">
+	jQuery(function(){
+		jQuery("td.A1B1").each(function(){
+
+			var target = jQuery(this).next();
+				jQuery("p > input.button", this).appendTo(target);
+
+		});
+
+		jQuery("a.wp-post-thumbnail").each(function(){
+			var product_image = jQuery(this).text();
+			if (product_image == "' . __( 'Use as featured image' ) . '") {
+				jQuery(this).text("' . __( 'Use as Product Thumbnail', 'wpsc' ) . '");
+			}
+		});
+	});
+
+	</script>';
+}
+
+function wpsc_filter_delete_text( $translation, $text, $domain ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.13' );
+
+	if ( 'Delete' == $text && isset( $_REQUEST['post_id'] ) && isset( $_REQUEST['parent_page'] ) ) {
+		$translations = &get_translations_for_domain( $domain );
+		return $translations->translate( 'Trash' ) ;
+	}
+	return $translation;
+}
+
+/*
+ * This filter translates string before it is displayed
+ * specifically for the words 'Use as featured image' with 'Use as Product Thumbnail' when the user is selecting a Product Thumbnail
+ * using media gallery.
+ *
+ * @todo As this feature is entirely cosmetic and breaks with WP_DEBUG on in WP 3.5+, we've removed the filter for it.  Will revisit the functionality in 3.9 when we look at new media workflows.
+ * @param $translation The current translation
+ * @param $text The text being translated
+ * @param $domain The domain for the translation
+ * @return string The translated / filtered text.
+ */
+function wpsc_filter_feature_image_text( $translation, $text, $domain ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.13' );
+	if ( 'Use as featured image' == $text && isset( $_REQUEST['post_id'] ) ) {
+		$post = get_post( $_REQUEST['post_id'] );
+		if ( $post->post_type != 'wpsc-product' ) return $translation;
+		$translations = &get_translations_for_domain( $domain );
+		return $translations->translate( 'Use as Product Thumbnail', 'wpsc' );
+		//this will never happen, this is here only for gettexr to pick up the translation
+		return __( 'Use as Product Thumbnail', 'wpsc' );
+	}
+
+	return $translation;
+}
+
+function wpsc_display_invoice() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.13' );
+	$purchase_id = (int)$_REQUEST['purchaselog_id'];
+	add_action('wpsc_packing_slip', 'wpsc_packing_slip');
+	do_action('wpsc_before_packing_slip', $purchase_id);
+	do_action('wpsc_packing_slip', $purchase_id);
+	exit();
+}
+
+function wpsc_packing_slip( $purchase_id ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.13' );
+	echo "<!DOCTYPE html><html><meta http-equiv=\"content-type\" content=\"text-html; charset=utf-8\"><head><title>" . __( 'Packing Slip', 'wpsc' ) . "</title></head><body id='wpsc-packing-slip'>";
+	global $wpdb;
+	$purch_sql = $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `id`=%d", $purchase_id );
+	$purch_data = $wpdb->get_row( $purch_sql, ARRAY_A ) ;
+
+	$cartsql = $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_CART_CONTENTS."` WHERE `purchaseid`=%d", $purchase_id );
+	$cart_log = $wpdb->get_results($cartsql,ARRAY_A) ;
+	$j = 0;
+
+	if($cart_log != null) {
+		echo "<div class='packing_slip'>\n\r";
+		echo apply_filters( 'wpsc_packing_slip_header', '<h2>' . esc_html__( 'Packing Slip', 'wpsc' ) . "</h2>\n\r" );
+		echo "<strong>". esc_html__( 'Order', 'wpsc' )." #</strong> ".$purchase_id."<br /><br />\n\r";
+
+		echo "<table>\n\r";
+
+		$form_sql = $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_SUBMITTED_FORM_DATA."` WHERE `log_id` = %d", $purchase_id );
+		$input_data = $wpdb->get_results($form_sql,ARRAY_A);
+
+		foreach($input_data as $input_row) {
+			$rekeyed_input[$input_row['form_id']] = $input_row;
+		}
+
+
+		if($input_data != null) {
+			$form_data = $wpdb->get_results( "SELECT * FROM `".WPSC_TABLE_CHECKOUT_FORMS."` WHERE `active` = '1' ORDER BY `checkout_order`" , ARRAY_A );
+
+			foreach($form_data as $form_field) {
+
+				switch($form_field['type']) {
+					case 'country':
+						$region_count_sql = $wpdb->prepare( "SELECT COUNT(`regions`.`id`) FROM `".WPSC_TABLE_REGION_TAX."` AS `regions` INNER JOIN `".WPSC_TABLE_CURRENCY_LIST."` AS `country` ON `country`.`id` = `regions`.`country_id` WHERE `country`.`isocode` IN('%s')", $purch_data['billing_country'] );
+						$delivery_region_count = $wpdb->get_var( $region_count_sql );
+
+						if(is_numeric($purch_data['billing_region']) && ($delivery_region_count > 0))
+							echo "	<tr><td>".esc_html__('State', 'wpsc').":</td><td>".wpsc_get_region($purch_data['billing_region'])."</td></tr>\n\r";
+
+						 echo "	<tr><td>" . esc_html( $form_field['name'] ) . ":</td><td>" . esc_html(  $rekeyed_input[$form_field['id']]['value'] ) . "</td></tr>\n\r";
+					break;
+
+					case 'delivery_country':
+
+						if(is_numeric($purch_data['shipping_region']) && ($delivery_region_count > 0))
+							echo "	<tr><td>".esc_html__('State', 'wpsc').":</td><td>".wpsc_get_region($purch_data['shipping_region'])."</td></tr>\n\r";
+
+						 echo "	<tr><td>" . esc_html( $form_field['name'] ) . ":</td><td>" . esc_html( $rekeyed_input[ $form_field['id']]['value'] ) . "</td></tr>\n\r";
+					break;
+
+					case 'heading':
+
+                        if($form_field['name'] == "Hidden Fields")
+                          continue;
+                        else
+                          echo "	<tr class='heading'><td colspan='2'><strong>" . esc_html( $form_field['name'] ) . ":</strong></td></tr>\n\r";
+					break;
+
+					default:
+						if ($form_field['name']=="State" && !empty($purch_data['billing_region']) || $form_field['name']=="State" && !empty($purch_data['billing_region']))
+							echo "";
+						else
+							echo "	<tr><td>" . esc_html( $form_field['name'] ) . ":</td><td>".
+								( isset( $rekeyed_input[$form_field['id']] ) ? esc_html( $rekeyed_input[$form_field['id']]['value'] ) : '' ) .
+								"</td></tr>\n\r";
+					break;
+				}
+
+			}
+		} else {
+			echo "	<tr><td>".esc_html__('Name', 'wpsc').":</td><td>".$purch_data['firstname']." ".$purch_data['lastname']."</td></tr>\n\r";
+			echo "	<tr><td>".esc_html__('Address', 'wpsc').":</td><td>".$purch_data['address']."</td></tr>\n\r";
+			echo "	<tr><td>".esc_html__('Phone', 'wpsc').":</td><td>".$purch_data['phone']."</td></tr>\n\r";
+			echo "	<tr><td>".esc_html__('Email', 'wpsc').":</td><td>".$purch_data['email']."</td></tr>\n\r";
+		}
+
+		if ( 2 == get_option( 'payment_method' ) ) {
+			$gateway_name = '';
+			global $nzshpcrt_gateways;
+
+			foreach( $nzshpcrt_gateways as $gateway ) {
+				if ( $purch_data['gateway'] != 'testmode' ) {
+					if ( $gateway['internalname'] == $purch_data['gateway'] ) {
+						$gateway_name = $gateway['name'];
+					}
+				} else {
+					$gateway_name = esc_html__('Manual Payment', 'wpsc');
+				}
+			}
+		}
+
+		echo "</table>\n\r";
+
+
+		do_action ('wpsc_packing_slip_extra_info',$purchase_id);
+
+
+		echo "<table class='packing_slip'>";
+
+		echo "<tr>";
+		echo " <th>".esc_html__('Quantity', 'wpsc')." </th>";
+
+		echo " <th>".esc_html__('Name', 'wpsc')."</th>";
+
+
+		echo " <th>".esc_html__('Price', 'wpsc')." </th>";
+
+		echo " <th>".esc_html__('Shipping', 'wpsc')." </th>";
+		echo '<th>' . esc_html__('Tax', 'wpsc') . '</th>';
+		echo '</tr>';
+		$endtotal = 0;
+		$all_donations = true;
+		$all_no_shipping = true;
+		$file_link_list = array();
+		$total_shipping = 0;
+		foreach($cart_log as $cart_row) {
+			$alternate = "";
+			$j++;
+			if(($j % 2) != 0) {
+				$alternate = "class='alt'";
+			}
+			// product ID will be $cart_row['prodid']. need to fetch name and stuff
+
+			$variation_list = '';
+
+			if($cart_row['donation'] != 1) {
+				$all_donations = false;
+			}
+
+			if($cart_row['no_shipping'] != 1) {
+				$shipping = $cart_row['pnp'];
+				$total_shipping += $shipping;
+				$all_no_shipping = false;
+			} else {
+				$shipping = 0;
+			}
+
+			$price = $cart_row['price'] * $cart_row['quantity'];
+			$gst = $price - ($price	/ (1+($cart_row['gst'] / 100)));
+
+			if($gst > 0) {
+				$tax_per_item = $gst / $cart_row['quantity'];
+			}
+
+
+			echo "<tr $alternate>";
+
+
+			echo " <td>";
+			echo $cart_row['quantity'];
+			echo " </td>";
+
+			echo " <td>";
+			echo apply_filters( 'the_title', $cart_row['name'] );
+			echo $variation_list;
+			echo " </td>";
+
+
+			echo " <td>";
+			echo wpsc_currency_display( $price );
+			echo " </td>";
+
+			echo " <td>";
+			echo wpsc_currency_display($shipping );
+			echo " </td>";
+
+
+
+			echo '<td>';
+			echo wpsc_currency_display( $cart_row['tax_charged'] );
+			echo '</td>';
+			echo '</tr>';
+		}
+
+		echo "</table>";
+		echo '<table class="packing-slip-totals">';
+		if ( floatval( $purch_data['discount_value'] ) )
+			echo '<tr><th>'.esc_html__('Discount', 'wpsc').'</th><td>(' . wpsc_currency_display( $purch_data['discount_value'] ) . ')</td></tr>';
+
+		echo '<tr><th>'.esc_html__('Base Shipping','wpsc').'</th><td>' . wpsc_currency_display( $purch_data['base_shipping'] ) . '</td></tr>';
+		echo '<tr><th>'.esc_html__('Total Shipping','wpsc').'</th><td>' . wpsc_currency_display( $purch_data['base_shipping'] + $total_shipping ) . '</td></tr>';
+        //wpec_taxes
+        if($purch_data['wpec_taxes_total'] != 0.00)
+        {
+           echo '<tr><th>'.esc_html__('Taxes','wpsc').'</th><td>' . wpsc_currency_display( $purch_data['wpec_taxes_total'] ) . '</td></tr>';
+        }
+		echo '<tr><th>'.esc_html__('Total Price','wpsc').'</th><td>' . wpsc_currency_display( $purch_data['totalprice'] ) . '</td></tr>';
+		echo '</table>';
+
+		echo "</div>\n\r";
+	} else {
+		echo "<br />".esc_html__('This users cart was empty', 'wpsc');
+	}
+}
+
+//other actions are here
+if ( isset( $_GET['display_invoice'] ) && ( 'true' == $_GET['display_invoice'] ) )
+	add_action( 'admin_init', 'wpsc_display_invoice', 0 );
+
+if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( 'wpsc_display_invoice' == $_REQUEST['wpsc_admin_action'] ) )
+	add_action( 'admin_init', 'wpsc_display_invoice' );
+
+
+/**
+ * Disable SSL validation for Curl. Added/removed on a per need basis, like so:
+ *
+ * add_filter('http_api_curl', 'wpsc_curl_ssl');
+ * remove_filter('http_api_curl', 'wpsc_curl_ssl');
+ *
+ * @param resource $ch
+ * @return resource $ch
+ **/
+function wpsc_curl_ssl( $ch ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.13', "add_filter( 'https_ssl_verify', '__return_false' )" );
+
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+	return $ch;
+}
+
+
+/**
+ * Get cart item meta
+ * @access public
+ *
+ * @deprecated since 3.8.13
+ */
+function wpsc_get_cartmeta( $cart_item_id, $meta_key ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.13', 'wpsc_get_cart_item_meta');
+	return wpsc_get_cart_item_meta( $cart_item_id, $meta_key, true );
+}
+
+/**
+ * Update cart item meta
+ * @access public
+ *
+ * @deprecated since 3.8.13
+ */
+function wpsc_update_cartmeta( $cart_item_id, $meta_key, $meta_value ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.13', 'wpsc_update_cart_item_meta');
+	return wpsc_update_cart_item_meta( $cart_item_id, $meta_key, $meta_value );
+}
+
+/**
+ * Delete cart item meta
+ * @access public
+ *
+ * @deprecated since 3.8.13
+ */
+function wpsc_delete_cartmeta( $cart_item_id, $meta_key, $meta_value = '' ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.13', 'wpsc_delete_cart_item_meta');
+	return wpsc_delete_cart_item_meta( $cart_item_id, $meta_key, $meta_value );
+}
+
+function wpsc_get_exchange_rate( $from, $to ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.13' );
+	return _wpsc_get_exchange_rate( $from, $to );
+}
+
+
+/**
+ * @access public
+ * @param unknown $stuff
+ * @param unknown $post_ID
+ * @return string
+ * @deprecated since 3.8.13.3
+ */
+function wpsc_the_featured_image_fix( $stuff, $post_ID ){
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.13.2', 'wpsc_the_featured_image_fix');
+	global $wp_query;
+
+	$is_tax = is_tax( 'wpsc_product_category' );
+
+	$queried_object = get_queried_object();
+	$is_single = is_single() && $queried_object->ID == $post_ID && get_post_type() == 'wpsc-product';
+
+	if ( $is_tax || $is_single ) {
+		$header_image = get_header_image();
+		$stuff = '';
+
+		if ( $header_image )
+			$stuff = '<img src="' . esc_url( $header_image ) . '" width="' . HEADER_IMAGE_WIDTH . '" height="' . HEADER_IMAGE_HEIGHT . '" alt="" />';
+	}
+
+	remove_action( 'post_thumbnail_html', 'wpsc_the_featured_image_fix' );
+
+	return $stuff;
+}
+
+
+/**
+ * Google checkout not longer available or supported, so we are deprecating this function
+ *
+ * @access public
+
+ * @deprecated since 3.8.14
+ */
+function wpsc_google_checkout(){
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.14', 'wpsc_google_checkout' );
+	$currpage = wpsc_selfURL();
+	if (array_search("google",(array)get_option('custom_gateway_options')) !== false && $currpage != get_option('shopping_cart_url')) {
+		global $nzshpcrt_gateways;
+		foreach($nzshpcrt_gateways as $gateway) {
+			if($gateway['internalname'] == 'google' ) {
+				$gateway_used = $gateway['internalname'];
+				$gateway['function'](true);
+			}
+		}
+	}
+}
+
+/**
+ * Google checkout not longer available or supported, so we are deprecating this function
+ *
+ * @access public
+
+ * @deprecated since 3.8.14
+ */
+function wpsc_empty_google_logs(){
+	global $wpdb;
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.14', 'wpsc_empty_google_logs' );
+	$sql = $wpdb->prepare( "DELETE FROM  `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `sessionid` = '%s'", wpsc_get_customer_meta( 'checkout_session_id' ) );
+	$wpdb->query( $sql );
+	wpsc_delete_customer_meta( 'checkout_session_id' );
+}
+

@@ -7,7 +7,7 @@ if( !defined( 'ABSPATH' ) )
 $coupon_id = absint( $_GET['coupon'] );
 $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUPON_CODES . "` WHERE `id` = %d", $coupon_id ), ARRAY_A );
 ?>
-<div class="wrap" id+"coupon_data">
+<div class="wrap" id="coupon_data">
 	<div id="edit_coupon_box">
 		<h2><?php _e( 'Edit Coupon', 'wpsc' ); ?></h2>
 
@@ -37,7 +37,7 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 							<label for="edit_coupon_amount"><?php _e( 'Discount', 'wpsc' ); ?></label>
 						</th>
 						<td>
-							<input name="edit_coupon_amount" id="edit_coupon_amount" type="number" value="<?php esc_attr_e( $coupon['value'] ); ?>" class="small-text"/>
+							<input name="edit_coupon_amount" id="edit_coupon_amount" type="number" value="<?php esc_attr_e( $coupon['value'] ); ?>" class="small-text" min="0" />
 							<span class="description"><?php _e( 'The discount amount', 'wpsc' ); ?></span>
 						</td>
 					</tr>
@@ -48,7 +48,7 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 						</th>
 						<td>
 							<?php $type = absint( $coupon['is-percentage'] ); ?>
-							<select name='edit_discount_type' id='edit_discount_type' onchange='show_shipping_options();'>
+							<select name='edit_discount_type' id='edit_discount_type'>
 								<option value='0'<?php selected( 0, $type ); ?>><?php _e( 'Fixed Amount', 'wpsc' ); ?></option>
 								<option value='1'<?php selected( 1, $type ); ?>><?php _e( 'Percentage', 'wpsc' ); ?></option>
 								<option value='2'<?php selected( 2, $type ); ?>><?php _e( 'Free shipping', 'wpsc' ); ?></option>

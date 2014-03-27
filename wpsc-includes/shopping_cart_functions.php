@@ -78,74 +78,83 @@ function wpsc_shopping_basket_internals( $deprecated = false, $quantity_limit = 
 
 	include_once( wpsc_get_template_file_path( 'wpsc-cart_widget.php' ) );
 
-	echo "    </div>";
+	echo '    </div>';
 }
 
-function wpsc_country_region_list( $form_id = null, $ajax = false, $selected_country = null, $selected_region = null, $supplied_form_id = null, $checkoutfields = false ) {
+function wpsc_country_region_list( $form_id = null, $ajax = false, $selected_country = null, $selected_region = null, $supplied_form_id = null, $shippingfields = false ) {
 	global $wpdb;
 
 	$output = '';
 
-	if ( $selected_country == null )
+	if ( $selected_country == null ) {
 		$selected_country = get_option( 'base_country' );
-
-	if ( $selected_region == null )
-		$selected_region = get_option( 'base_region' );
-
-	if ( $form_id != null )
-		$html_form_id = "region_country_form_$form_id";
-	else
-		$html_form_id = 'region_country_form';
-
-	if ( $checkoutfields ) {
-		$js = "onchange='set_shipping_country(\"$html_form_id\", \"$form_id\");'";
-		$title = 'shippingcountry';
-	} else {
-		$js = "onchange='set_billing_country(\"$html_form_id\", \"$form_id\");'";
-		$title = 'billingcountry';
 	}
 
-	$country_data = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_CURRENCY_LIST . "` ORDER BY `country` ASC", ARRAY_A );
-	$additional_attributes = "title='{$title}' {$js}";
+	if ( $selected_region == null ) {
+		//$selected_region = get_option( 'base_region' );
+	}
+
+	if ( $form_id != null ) {
+		$html_form_id = "region_country_form_$form_id";
+	} else {
+		$html_form_id = 'region_country_form';
+	}
+
+	if ( $shippingfields ) {
+		$js = '';
+		$title = 'shippingcountry';
+		$id = 'shippingcountry';
+	} else {
+		$js = '';
+		$title = 'billingcountry';
+		$id = 'billingcountry';
+	}
+
+	//$country_data = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_CURRENCY_LIST . "` ORDER BY `country` ASC", ARRAY_A );
+	$additional_attributes = 'data-wpsc-meta-key="' . $title . '" title="' . $title . '" ' . $js;
 	$output .= "<div id='$html_form_id'>\n\r";
-	$output .= wpsc_get_country_dropdown( array(
-		'id'                    => $supplied_form_id,
-		'name'                  => "collected_data[{$form_id}][0]",
-		'class'                 => 'current_country',
-		'selected'              => $selected_country,
-		'additional_attributes' => $additional_attributes,
-		'placeholder'           => '',
-	) );
+	$output .= wpsc_get_country_dropdown(
+		array(
+				'id'                    => $id,
+				'name'                  => "collected_data[{$form_id}][0]",
+				'class'                 => 'current_country wpsc-visitor-meta',
+				'selected'              => $selected_country,
+				'additional_attributes' => $additional_attributes,
+				'placeholder'           => '',
+		)
+	);
 
 	$region_list    = $wpdb->get_results( $wpdb->prepare( "SELECT `" . WPSC_TABLE_REGION_TAX . "`.* FROM `" . WPSC_TABLE_REGION_TAX . "`, `" . WPSC_TABLE_CURRENCY_LIST . "`  WHERE `" . WPSC_TABLE_CURRENCY_LIST . "`.`isocode` IN(%s) AND `" . WPSC_TABLE_CURRENCY_LIST . "`.`id` = `" . WPSC_TABLE_REGION_TAX . "`.`country_id` ORDER BY name ASC", $selected_country ), ARRAY_A );
 	$sql            = "SELECT `" . WPSC_TABLE_CHECKOUT_FORMS . "`.`id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `unique_name` = 'shippingstate' ";
 	$region_form_id = $wpdb->get_var( $sql );
 
-	if ( $checkoutfields ) {
-		$namevalue = "name='collected_data[" . $region_form_id . "]'";
-		$js = "onchange='set_shipping_country(\"$html_form_id\", \"$form_id\");'";
-		$title = 'shippingstate';
+	if ( $shippingfields ) {
+		$namevalue = ' name="collected_data[' . $region_form_id . ']" ';
+		$js = '';
+		$title = 'shippingregion';
+		$id = 'shippingregion';
 	} else {
-		$namevalue = "name='collected_data[" . $form_id . "][1]'";
-		$js = "onchange='set_billing_country(\"$html_form_id\", \"$form_id\");'";
-		$title = 'billingstate';
+		$namevalue = ' name="collected_data[' . $form_id . '][1]" ';
+		$js = '';
+		$title = 'billingregion';
+		$id = 'billingregion';
 	}
 
 	$output .= "<div id='region_select_$form_id'>";
 	if ( $region_list != null ) {
-		$output .= "<select title='$title' " . $namevalue . " class='current_region' " . $js . ">\n\r";
+		$output .= '<select id="' . $id . '" class="current_region wpsc-visitor-meta" data-wpsc-meta-key="' . $title . '"  title="' . $title . '" ' . $namevalue . '" ' . $js . ">\n\r";
 		foreach ( $region_list as $region ) {
 			if ( $selected_region == $region['id'] ) {
 				$selected = "selected='selected'";
 			} else {
-				$selected = "";
+				$selected = '';
 			}
 			$output .= "<option value='" . $region['id'] . "' $selected>" . esc_html( $region['name'] ) . "</option>\n\r";
 		}
 		$output .= "</select>\n\r";
 	}
 
-	$output .= "</div>";
+	$output .= '</div>';
 	$output .= "</div>\n\r";
 
 	return $output;

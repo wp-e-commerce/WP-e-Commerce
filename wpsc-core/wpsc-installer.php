@@ -11,7 +11,7 @@ function wpsc_auto_update() {
 	wpsc_check_and_copy_files();
 
 	$wpsc_version = get_option( 'wpsc_version' );
-	$wpsc_minor_version = get_option( 'wspc_minor_version' );
+	$wpsc_minor_version = get_option( 'wpsc_minor_version' );
 
 	if ( $wpsc_version === false )
 		add_option( 'wpsc_version', WPSC_VERSION, '', 'yes' );
@@ -50,8 +50,8 @@ function wpsc_install() {
 	wpsc_create_upload_directories();
 
 	// All code to add new database tables and columns must be above here
-	$wpsc_version = get_option( 'wpsc_version', 0 );
-	$wpsc_minor_version = get_option( 'wspc_minor_version', 0 );
+	$wpsc_version       = get_option( 'wpsc_version', 0 );
+	$wpsc_minor_version = get_option( 'wpsc_minor_version', 0 );
 
 	if ( $wpsc_version === false ) {
 		add_option( 'wpsc_version', WPSC_VERSION, '', 'yes' );
@@ -143,6 +143,7 @@ function wpsc_install() {
 
 	add_option( 'postage_and_packaging', '0','', 'yes' );
     add_option( 'shipwire', '0', '', 'yes' );
+    add_option( 'shipwire_test_server', '0', '', 'yes' );
 
 	add_option( 'purch_log_email', '', '', 'yes' );
 	add_option( 'return_email', '', '', 'yes' );
@@ -397,7 +398,7 @@ function wpsc_create_upload_directories() {
 		WPSC_USER_UPLOADS_DIR,
 		WPSC_CACHE_DIR,
 		WPSC_UPGRADES_DIR,
-		WPSC_THEMES_PATH
+		// WPSC_THEMES_PATH
 	);
 	foreach ( $folders as $folder ) {
 		wp_mkdir_p( $folder );
@@ -587,7 +588,7 @@ function wpsc_create_or_update_tables( $debug = false ) {
 		update_option( 'wpsc_database_check', $template_hash );
 		return true;
 	} else {
-		return false;
+		return $failure_reasons;
 	}
 }
 
@@ -731,7 +732,7 @@ function wpsc_add_checkout_fields() {
 	( '" . __( 'Postal Code', 'wpsc' ) . "', 'text', '0', '0', '1', '1', 17,'shippingpostcode');";
 
 		$wpdb->query( $sql );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_CHECKOUT_FORMS . "` ( `name`, `type`, `mandatory`, `display_log`, `default`, `active`, `checkout_order`, `unique_name` ) VALUES ( '" . __( 'Phone', 'wpsc' ) . "', 'text', '1', '0', '', '1', '8','billingphone');" );
+		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_CHECKOUT_FORMS . "` ( `name`, `type`, `mandatory`, `display_log`, `default`, `active`, `checkout_order`, `unique_name` ) VALUES ( '" . __( 'Phone', 'wpsc' ) . "', 'text', '0', '0', '', '1', '8','billingphone');" );
 	}
 }
 function wpsc_rename_checkout_column(){

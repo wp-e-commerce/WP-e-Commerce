@@ -3,22 +3,42 @@
 $wpsc_currency_data = array();
 $wpsc_title_data    = array();
 
+
+/**
+ * _wpsc_is_session_started()
+ *
+ * Check if PHP session is started using method suggested on php.net
+ * @since 3.8.14
+ * @return boolean
+ */
+function _wpsc_is_session_started() {
+
+	if ( version_compare( phpversion(), '5.4.0', '>=' ) ) {
+		return session_status() === PHP_SESSION_ACTIVE;
+	} else {
+		if ( ! isset( $_SESSION ) ) {
+			$_SESSION = null;
+		}
+
+		return session_id() !== '';
+	}
+
+	return false;
+}
+
 /**
  * wpsc_core_load_session()
  *
  * Load up the WPEC session
- *
- * Pending Gary's feedback, I think we can actually get rid of this.
+ * @return boolean
  */
 function wpsc_core_load_session() {
 
-	if ( ! isset( $_SESSION ) )
-		$_SESSION = null;
-
-	if ( ( !is_array( $_SESSION ) ) xor ( ! isset( $_SESSION['nzshpcrt_cart'] ) ) xor ( !$_SESSION ) )
+	if ( ! _wpsc_is_session_started() ) {
 		session_start();
+	}
 
-	return;
+	return _wpsc_is_session_started();
 }
 
 /**
@@ -27,17 +47,24 @@ function wpsc_core_load_session() {
  * The core WPEC constants necessary to start loading
  */
 function wpsc_core_constants() {
-	if(!defined('WPSC_URL'))
-		define( 'WPSC_URL',       plugins_url( '', __FILE__ ) );
-	// Define Plugin version
-	define( 'WPSC_VERSION', '3.8.11' );
-	define( 'WPSC_MINOR_VERSION', '9a0e98132c' );
-	define( 'WPSC_PRESENTABLE_VERSION', '3.8.11' );
-	define( 'WPSC_DB_VERSION', 4 );
+	if ( ! defined( 'WPSC_URL' ) )
+		define( 'WPSC_URL', plugins_url( '', __FILE__ ) );
 
-	// Define Debug Variables for developers
-	define( 'WPSC_DEBUG', false );
-	define( 'WPSC_GATEWAY_DEBUG', false );
+	// Define Plugin version
+	define( 'WPSC_VERSION'            , '3.8.14-dev' );
+	define( 'WPSC_MINOR_VERSION'      , 'e8a508c011' );
+	define( 'WPSC_PRESENTABLE_VERSION', '3.8.14-dev' );
+
+	define( 'WPSC_DB_VERSION'         , 10 );
+
+	// Define Debug Variables for developers, if they haven't already been defined
+	if ( ! defined( 'WPSC_DEBUG' ) ) {
+		define( 'WPSC_DEBUG'        , false );
+	}
+
+	if ( ! defined( 'WPSC_GATEWAY_DEBUG' ) ) {
+		define( 'WPSC_GATEWAY_DEBUG', false );
+	}
 
 	// Images URL
 	define( 'WPSC_CORE_IMAGES_URL',  WPSC_URL . '/wpsc-core/images' );
@@ -49,14 +76,40 @@ function wpsc_core_constants() {
 
 	// Require loading of deprecated functions for now. We will ween WPEC off
 	// of this in future versions.
-	define( 'WPEC_LOAD_DEPRECATED', true );
+	if ( ! defined( 'WPEC_LOAD_DEPRECATED' ) ) {
+		define( 'WPEC_LOAD_DEPRECATED', true );
+	}
 
 	define( 'WPSC_CUSTOMER_COOKIE', 'wpsc_customer_cookie_' . COOKIEHASH );
 	if ( ! defined( 'WPSC_CUSTOMER_COOKIE_PATH' ) )
 		define( 'WPSC_CUSTOMER_COOKIE_PATH', COOKIEPATH );
 
-	if ( ! defined( 'WPSC_CUSTOMER_DATA_EXPIRATION' ) )
-    	define( 'WPSC_CUSTOMER_DATA_EXPIRATION', 48 * 3600 );
+	if ( ! defined( 'WPSC_CUSTOMER_DATA_EXPIRATION' ) ) {
+		define( 'WPSC_CUSTOMER_DATA_EXPIRATION', 48 * 3600 );
+	}
+
+	/*
+	 * When caching is true, the cart needs to be loaded using AJAX.
+	 * Caching is false then the cart can be generated in-line with the page.content.
+	 *
+	 * In the case of the cart widget, true would always load the widget using AJAX
+	 * That would mean that one user would not see another users cart because the
+	 * other user's request filled the page cache.
+	 */
+	if ( ! defined( 'WPSC_PAGE_CACHE_IN_USE' ) ) {
+		// if the do not cache constant is set behave as if there was a page cache in place and
+		// don't cache generated results
+		if ( defined( 'DONOTCACHEPAGE' ) && DONOTCACHEPAGE ) {
+			define( 'WPSC_PAGE_CACHE_IN_USE', true );
+		} elseif ( defined( 'WP_CACHE' ) ) {
+			define( 'WPSC_PAGE_CACHE_IN_USE', WP_CACHE );
+		} else {
+			// default to assuming a cache is there if we don't know otherwise,
+			// this should prevent one user's data from being used to generate pages
+			// that other user may see, for example cat contents.
+			define( 'WPSC_PAGE_CACHE_IN_USE', true );
+		}
+	}
 }
 
 /**
@@ -162,8 +215,12 @@ function wpsc_core_constants_table_names() {
 	define( 'WPSC_TABLE_VARIATION_VALUES_ASSOC', "{$wp_table_prefix}wpsc_variation_values_assoc" );
 	define( 'WPSC_TABLE_VARIATION_COMBINATIONS', "{$wp_table_prefix}wpsc_variation_combinations" );
 	define( 'WPSC_TABLE_REGION_TAX',             "{$wp_table_prefix}wpsc_region_tax" );
-	define( 'WPEC_TRANSIENT_THEME_PATH_PREFIX', 'wpsc_path_' );
-	define( 'WPEC_TRANSIENT_THEME_URL_PREFIX', 'wpsc_url_' );
+
+	define( 'WPSC_TABLE_CART_ITEM_META',         "{$wp_table_prefix}wpsc_cart_item_meta" );
+	define( 'WPSC_TABLE_PURCHASE_META',          "{$wp_table_prefix}wpsc_purchase_meta" );
+
+	define( 'WPSC_TABLE_VISITORS',         		 "{$wp_table_prefix}wpsc_visitors" );
+	define( 'WPSC_TABLE_VISITOR_META',           "{$wp_table_prefix}wpsc_visitor_meta" );
 
 }
 
@@ -187,11 +244,7 @@ function wpsc_core_constants_uploads() {
 
 	// Upload DIR
 	if ( isset( $wp_upload_dir_data['baseurl'] ) )
-		$upload_url = $wp_upload_dir_data['baseurl'];
-
-	// SSL Check for URL
-	if ( is_ssl() )
-		$upload_url = str_replace( 'http://', 'https://', $upload_url );
+		$upload_url = set_url_scheme( $wp_upload_dir_data['baseurl'] );
 
 	// Set DIR and URL strings
 	$wpsc_upload_sub_dir = '/wpsc/';
@@ -247,28 +300,6 @@ function wpsc_core_constants_uploads() {
 	define( 'WPSC_THEME_BACKUP_URL', $wpsc_urls[8] );
 	define( 'WPSC_OLD_THEMES_URL',   $wpsc_urls[9] );
 
-	// Themes folder locations
-	define( 'WPSC_CORE_THEME_PATH', WPSC_FILE_PATH . '/wpsc-theme/' );
-	define( 'WPSC_CORE_THEME_URL' , WPSC_URL       . '/wpsc-theme/' );
-
-	// No transient so look for the themes directory
-	if ( false === ( $theme_path = get_transient( 'wpsc_theme_path' ) ) ) {
-
-		// Use the old path if it exists
-		if ( file_exists( WPSC_OLD_THEMES_PATH.get_option('wpsc_selected_theme') ) )
-			define( 'WPSC_THEMES_PATH', WPSC_OLD_THEMES_PATH );
-
-		// Use the built in theme files
-		else
-			define( 'WPSC_THEMES_PATH', WPSC_CORE_THEME_PATH );
-
-		// Store the theme directory in a transient for safe keeping
-		set_transient( 'wpsc_theme_path', WPSC_THEMES_PATH, 60 * 60 * 12 );
-
-	// Transient exists, so use that
-	} else {
-		define( 'WPSC_THEMES_PATH', $theme_path );
-	}
 }
 
 /**
@@ -280,13 +311,30 @@ function wpsc_core_setup_cart() {
 	if ( 2 == get_option( 'cart_location' ) )
 		add_filter( 'the_content', 'wpsc_shopping_cart', 14 );
 
-	$cart = maybe_unserialize( wpsc_get_customer_meta( 'cart' ) );
-
-	if ( is_object( $cart ) && ! is_wp_error( $cart ) )
-		$GLOBALS['wpsc_cart'] = $cart;
-	else
-		$GLOBALS['wpsc_cart'] = new wpsc_cart();
+	$GLOBALS['wpsc_cart'] = wpsc_get_customer_cart();
 }
+
+/**
+ * _wpsc_action_init_shipping_method()
+ *
+ * The cart was setup at the beginning of the init sequence, and that's
+ * too early to do shipping calculations because custom taxonomies, types
+ * and other plugins may not have been initialized.  So we save the shipping
+ * method initialization for the end of the init sequence.
+ */
+function _wpsc_action_init_shipping_method() {
+	global $wpsc_cart;
+
+	if ( ! is_object( $wpsc_cart ) ) {
+		wpsc_core_setup_cart();
+	}
+
+	if ( empty( $wpsc_cart->selected_shipping_method ) ) {
+		$wpsc_cart->get_shipping_method();
+	}
+}
+
+add_action( 'wpsc_setup_customer', '_wpsc_action_init_shipping_method' );
 
 /***
  * wpsc_core_setup_globals()
@@ -300,17 +348,6 @@ function wpsc_core_setup_globals() {
 
 	// Setup some globals
 	$wpsc_query_vars = array();
-	$selected_theme  = get_option( 'wpsc_selected_theme' );
-
-	// Pick selected theme or fallback to default
-	if ( empty( $selected_theme ) || !file_exists( WPSC_THEMES_PATH ) )
-		define( 'WPSC_THEME_DIR', 'default' );
-	else
-		define( 'WPSC_THEME_DIR', $selected_theme );
-
-	// Include a file named after the current theme, if one exists
-	if ( !empty( $selected_theme ) && file_exists( WPSC_THEMES_PATH . $selected_theme . '/' . $selected_theme . '.php' ) )
-		include_once( WPSC_THEMES_PATH . $selected_theme . '/' . $selected_theme . '.php' );
     require_once( WPSC_FILE_PATH . '/wpsc-includes/shipping.helper.php');
     $wpec_ash = new ASH();
 }

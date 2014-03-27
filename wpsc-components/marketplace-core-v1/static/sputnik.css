@@ -1,0 +1,63 @@
+div.sputnik-message {
+	margin: 5px 0 15px;
+	background-color: rgb( 237, 249, 255 );
+	border-style: solid;
+	border-width: 1px 1px 1px 4px;
+	border-color: rgb(204, 222, 230) rgb(204, 222, 230) rgb(204, 222, 230) rgb(33, 117, 155) ;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+	padding: 1px 12px;
+	position: relative;
+}
+	div.sputnik-message p {
+		padding: 2px;
+		margin: 0.5em 0px;
+		font-size: 14px;
+		line-height: 1.5em;
+	}
+	div.sputnik-message .button {
+		position: absolute;
+		right: 12px;
+		top: 10px;
+		font-size: 20px;
+		padding: 0px 15px 2px;
+		line-height: 41px;
+		height: 43px;
+	}
+
+
+.sputnik-plugin-row-note {
+	display: block;
+	float: right;
+	height: 30px;
+	width: 200px;
+	line-height: 30px;
+	margin-right: -7px;
+	margin-top: -7px;
+}
+	.sputnik-plugin-row-note:hover {
+		background: #D94C45;
+	}
+		.sputnik-plugin-row-note:hover .powered {
+			display: block;
+		}
+		.sputnik-plugin-row-note:hover .corner {
+			display: none;
+		}
+
+	.sputnik-plugin-row-note .powered {
+		display: none;
+		text-align: center;
+		color: #fff;
+	}
+
+	.sputnik-plugin-row-note .corner {
+		border-left: 15px solid transparent;
+		border-top: 15px solid transparent;
+		border-right: 15px solid #D94C45;
+		border-bottom: 15px solid #D94C45;
+
+		display: block;
+		float: right;
+		height: 0;
+		width: 0;
+	}

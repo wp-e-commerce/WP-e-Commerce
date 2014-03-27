@@ -17,8 +17,9 @@
 
 	<div id='post-body'>
 		<?php if ( wpsc_has_purchlog_shipping() ): ?>
+		<?php do_action( 'wpsc_shipping_details_top', $this->log_id ); ?>
 			<div id='wpsc_shipping_details_box'>
-				<h3><?php esc_html_e( 'Shipping Details', 'wpsc' ); ?></h3>
+				<h3><?php esc_html_e( 'Shipping Address', 'wpsc' ); ?></h3>
 				<blockquote>
 					<strong>
 						<?php echo ( wpsc_display_purchlog_shipping_name() != ""           ) ? wpsc_display_purchlog_shipping_name() . "<br />"               : '<span class="field-blank">' . __( 'Anonymous', 'wpsc' ) . '</span>' ; ?>
@@ -29,24 +30,34 @@
 					<?php echo ( wpsc_display_purchlog_shipping_country() != ""            ) ? wpsc_display_purchlog_shipping_country() . "<br />"            : '<span class="field-blank">' . __( 'Country not specified', 'wpsc' ) . '</span>' ; ?>
 				</blockquote>
 				<h4><?php esc_html_e( 'Shipping Details', 'wpsc' ); ?></h4>
-				<p>
-					<?php esc_html_e( 'Shipping Method:', 'wpsc' ); ?> <?php echo wpsc_display_purchlog_shipping_method(); ?>
-				</p>
-				<p>
-					<?php esc_html_e( 'Shipping Option:', 'wpsc' ); ?> <?php echo wpsc_display_purchlog_shipping_option(); ?>
-				</p>
-				<?php if( wpsc_purchlogs_has_tracking() ) : ?>
-					<p>
-						<?php echo esc_html_x( 'Tracking ID:', 'purchase log', 'wpsc' ); ?> <?php echo wpsc_purchlogitem_trackid(); ?><br />
-						<?php esc_html_e( 'Shipping Status:', 'wpsc' ); ?> <?php echo wpsc_purchlogitem_trackstatus(); ?><br />
-						<?php esc_html_e( 'Track History:', 'wpsc' ); ?> <?php echo wpsc_purchlogitem_trackhistory(); ?>
-					</p>
-				<?php endif; ?>
+				<blockquote>
+					<strong><?php esc_html_e( 'Shipping Method:', 'wpsc' ); ?></strong> <?php echo wpsc_display_purchlog_shipping_method(); ?><br />
+					<strong><?php esc_html_e( 'Shipping Option:', 'wpsc' ); ?></strong> <?php echo wpsc_display_purchlog_shipping_option(); ?><br />
+					<?php $purchase_weight = wpsc_purchlogs_get_weight_text(); ?>
+					<?php if ( ! empty( $purchase_weight ) ) { ?>
+						<strong><?php esc_html_e( 'Purchase Weight:', 'wpsc' ); ?></strong> <?php echo $purchase_weight; ?><br />
+						<?php } ?>
+					<?php if ( wpsc_purchlogs_has_tracking() ) { ?>
+						<strong><?php echo esc_html_x( 'Tracking ID:', 'purchase log', 'wpsc' ); ?></strong> <?php echo wpsc_purchlogitem_trackid(); ?><br />
+
+						<?php $tracking_status = wpsc_purchlogitem_trackstatus(); ?>
+						<?php if ( ! empty ( $tracking_status ) ) { ?>
+							<strong><?php esc_html_e( 'Shipping Status:', 'wpsc' ); ?></strong> <?php echo $tracking_status ?><br />
+						<?php  } ?>
+
+						<?php $tracking_history = wpsc_purchlogitem_trackhistory(); ?>
+						<?php if ( ! empty ( $tracking_history ) ) { ?>
+							<strong><?php esc_html_e( 'Track History:', 'wpsc' ); ?></strong> <?php echo $tracking_history; ?><br />
+						<?php } ?>
+
+					<?php } ?>
+				</blockquote>
+				<?php do_action( 'wpsc_shipping_details_bottom', $this->log_id ); ?>
 			</div>
 		<?php endif ?>
 
 		<div id='wpsc_billing_details_box'>
-			<?php do_action( 'wpsc_billing_details_top' ); ?>
+			<?php do_action( 'wpsc_billing_details_top', $this->log_id ); ?>
 			<h3><?php esc_html_e( 'Billing Details', 'wpsc' ); ?></h3>
 			<blockquote>
 				<strong>
@@ -58,18 +69,19 @@
 				<?php echo ( wpsc_display_purchlog_buyers_country() != ""            ) ? wpsc_display_purchlog_buyers_country() . "<br />"            : '<span class="field-blank">' . __( 'Country not specified', 'wpsc' ) . '</span>' ; ?>
 			</blockquote>
 			<h4><?php esc_html_e( 'Payment Details', 'wpsc' ); ?></h4>
-			<p><strong><?php esc_html_e( 'Phone:', 'wpsc' ); ?> </strong><?php echo ( wpsc_display_purchlog_buyers_phone() != "" ) ? wpsc_display_purchlog_buyers_phone() : __( '<em class="field-blank">not provided</em>', 'wpsc' ); ?></p>
-			<p>
+			<blockquote>
+				<strong><?php esc_html_e( 'Phone:', 'wpsc' ); ?> </strong><?php echo ( wpsc_display_purchlog_buyers_phone() != "" ) ? wpsc_display_purchlog_buyers_phone() : __( '<em class="field-blank">not provided</em>', 'wpsc' ); ?><br />
 				<strong><?php esc_html_e( 'Email:', 'wpsc' ); ?> </strong>
-				<a href="mailto:<?php echo wpsc_display_purchlog_buyers_email(); ?>?subject=<?php echo rawurlencode( sprintf( __( 'Message from %s', 'wpsc' ), site_url() ) ); ?>">
-					<?php echo ( wpsc_display_purchlog_buyers_email() != "" ) ? wpsc_display_purchlog_buyers_email() : __( '<em class="field-blank">not provided</em>', 'wpsc' ); ?>
-				</a>
-			</p>
-			<p><strong><?php esc_html_e( 'Payment Method:', 'wpsc' ); ?> </strong><?php echo wpsc_display_purchlog_paymentmethod(); ?></p>
-			<?php if(wpsc_display_purchlog_display_howtheyfoundus()) : ?>
-				<p><strong><?php esc_html_e( 'How User Found Us:', 'wpsc' ); ?> </strong><?php echo wpsc_display_purchlog_howtheyfoundus(); ?></p>
-			<?php endif; ?>
-			<?php do_action( 'wpsc_billing_details_bottom'); ?>
+					<a href="mailto:<?php echo wpsc_display_purchlog_buyers_email(); ?>?subject=<?php echo rawurlencode( sprintf( __( 'Message from %s', 'wpsc' ), site_url() ) ); ?>">
+						<?php echo ( wpsc_display_purchlog_buyers_email() != "" ) ? wpsc_display_purchlog_buyers_email() : __( '<em class="field-blank">not provided</em>', 'wpsc' ); ?>
+					</a>
+				<br />
+				<strong><?php esc_html_e( 'Payment Method:', 'wpsc' ); ?> </strong><?php echo wpsc_display_purchlog_paymentmethod(); ?><br />
+				<?php if ( wpsc_display_purchlog_display_howtheyfoundus() ) : ?>
+					<strong><?php esc_html_e( 'How User Found Us:', 'wpsc' ); ?> </strong><?php echo wpsc_display_purchlog_howtheyfoundus(); ?><br />
+				<?php endif; ?>
+			</blockquote>
+			<?php do_action( 'wpsc_billing_details_bottom', $this->log_id ); ?>
 		</div>
 
 		<div id='wpsc_items_ordered'>
@@ -151,7 +163,7 @@
 		<h3><?php esc_html_e( 'Actions', 'wpsc' ); ?></h3>
 		<?php do_action( 'wpsc_purchlogitem_links_start' ); ?>
 		<?php if ( wpsc_purchlogs_have_downloads_locked() != false ): ?>
-			<img src='<?php echo WPSC_CORE_IMAGES_URL; ?>/lock_open.png' alt='<?php _e( 'clear lock icon', 'wpsc' ); ?>' />&ensp;<a href='<?php echo $_SERVER['REQUEST_URI'].'&amp;wpsc_admin_action=clear_locks'; ?>'><?php echo wpsc_purchlogs_have_downloads_locked(); ?></a><br /><br class='small' />
+			<img src='<?php echo WPSC_CORE_IMAGES_URL; ?>/lock_open.png' alt='<?php _e( 'clear lock icon', 'wpsc' ); ?>' />&ensp;<a href='<?php echo esc_url( add_query_arg( 'wpsc_admin_action', 'clear_locks' ) ); ?>'><?php echo wpsc_purchlogs_have_downloads_locked(); ?></a><br /><br class='small' />
 		<?php endif; ?>
 		<img src='<?php echo WPSC_CORE_IMAGES_URL; ?>/printer.png' alt='<?php _e( 'printer icon', 'wpsc' ); ?>' />&ensp;<a target="_blank" href='<?php echo add_query_arg( 'c', 'packing_slip' ); ?>'><?php esc_html_e( 'View Packing Slip', 'wpsc' ); ?></a>
 		<br /><br class='small' />

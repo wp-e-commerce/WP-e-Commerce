@@ -57,7 +57,6 @@ class wpec_taxes {
 	}
 
 	/**
-	 * @author: Jeremy Smith - www.dnawebagency.com
 	 * @description: wpec_taxes_set_options - retrieves option information
 	 *                   from the database.
 	 * @param: void
@@ -75,7 +74,6 @@ class wpec_taxes {
 	} // wpec_taxes_set_options
 
 	/**
-	 * @author: Jeremy Smith - www.dnawebagency.com
 	 * @description: wpec_taxes_get_rate - retrieves the tax rate for the given country
 	 *                                     and, if specified, region.
 	 *
@@ -130,7 +128,6 @@ class wpec_taxes {
 	} // wpec_taxes_get_rate
 
 	/**
-	 * @author: Jeremy Smith - www.dnawebagency.com
 	 * @description: wpec_taxes_get_band_from_name - retrieves the tax band for the given name
 	 *
 	 * @param: name - the name of the tax band you wish to retrieve.
@@ -154,7 +151,6 @@ class wpec_taxes {
 	} // wpec_taxes_get_band_from_name
 
 	/**
-	 * @author: Jeremy Smith
 	 * @description: wpec_taxes_get_band_from_index - retrieves the tax band for the given name
 	 *
 	 * @param: index - the index of the tax band you wish to retrieve.
@@ -210,7 +206,6 @@ class wpec_taxes {
 	} // wpec_taxes_get_included_rate
 
 	/**
-	 * @author: Jeremy Smith - www.dnawebagency.com
 	 * @description: wpec_taxes_get_countries - retrieves an array of countries
 	 *
 	 * @param: visibility (optional) - set to 'visible' or 'hidden' to retrieve
@@ -236,7 +231,6 @@ class wpec_taxes {
 	} // wpec_taxes_get_countries
 
 	/**
-	 * @author: Jeremy Smith - www.dnawebagency.com
 	 * @description: wpec_get_country_information - retrieves information about a country.
 	 *               Note: If only one column is specified this function will return the value
 	 *                     of that column. If two or more columns are specified the results are
@@ -269,7 +263,7 @@ class wpec_taxes {
 			//change columns to array if not an array
 			if ( ! is_array( $columns ) )
 				$columns = array( $columns );
-			
+
 			$columns = array_map( 'esc_sql', $columns );
 
 			//if where is set then formulate conditions
@@ -303,7 +297,6 @@ class wpec_taxes {
 	} // wpec_taxes_get_country_information
 
 	/**
-	 * @author: Jeremy Smith - www.dnawebagency.com
 	 * @description: wpec_taxes_get_region_information - given a region code and column
 	 *                   this function will return the resulting value.
 	 * @param: region_code - code for this region
@@ -328,7 +321,6 @@ class wpec_taxes {
 	} // wpec_taxes_get_region_information
 
 	/**
-	 * @author: Jeremy Smith - www.dnawebagency.com
 	 * @description: wpec_taxes_get_regions - given a isocode, such as CA, this function
 	 *               will return an array of regions within that country.
 	 * @param: country - string variable containing isocode
@@ -354,7 +346,6 @@ class wpec_taxes {
 	} // wpec_taxes_get_regions
 
 	/**
-	 * @author: Jeremy Smith - www.dnawebagency.com
 	 * @description: wpec_taxes_get_region_code_by_id - given an id this funciton will
 	 * return the region code.
 	 * @param: id - a region id

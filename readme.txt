@@ -1,16 +1,16 @@
 === WP e-Commerce ===
-Contributors: mufasa, garyc40, JustinSainton, mychelle
+Contributors: mufasa, garyc40, JustinSainton
 Donate link: http://getshopped.org
 Tags: e-commerce, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
-Requires at least: 3.4
-Tested up to: 3.6
-Stable tag: 3.8.11
+Requires at least: 3.7
+Tested up to: 3.8
+Stable tag: 3.8.13.3
 
 WP e-Commerce is a free WordPress Shopping Cart Plugin that lets customers buy your products, services and digital downloads online.
 
 == Description ==
 
-We make setting up an ecommerce shop easy, and with over 2.3 Million downloads, we have unparalleled experience.
+We make setting up an ecommerce shop easy, and with over 2.7 Million downloads, we have unparalleled experience.
 
 Features:
 
@@ -36,7 +36,6 @@ Features:
 * PayPal Payments Standard
 * PayPal Payments Pro
 * PayPal Express Checkout
-* Google Wallet (Level 2)
 * Chronopay
 * PayPal Payflow Pro (available with Gold Cart)
 * Authorize.net (available with Gold Cart)
@@ -59,7 +58,7 @@ Features:
 * New Products widget
 * Cross-sells on product pages
 * Google Sitemap and Google Analytics
-* Uses the popular “Share This” button for easily promoting your products on popular social networking sites
+* Uses the popular â€œShare Thisâ€� button for easily promoting your products on popular social networking sites
 * Integrates with Google Base
 
 = Search Engine Optimization =
@@ -125,12 +124,12 @@ Features:
 * Live updating shopping cart (put it wherever you want)
 
 = Additional Modules =
-* Gold Cart & Grid Module – adds more options and functionality to your store
-* Drop Shop – an incredibly snazzy way for buyers to add products to their cart, via a simple drag n drop process.
-* Mp3 Audio Player – Preview audio clips on your website
-* NextGen Gallery Buy Now Buttons – turns your NextGen gallery into an ecommerce solution
-* Product Slider – Display your products in a new and fancy way
-* Members Only Module – Create pay to view subscription sites
+* Gold Cart & Grid Module â€“ adds more options and functionality to your store
+* Drop Shop â€“ an incredibly snazzy way for buyers to add products to their cart, via a simple drag n drop process.
+* Mp3 Audio Player â€“ Preview audio clips on your website
+* NextGen Gallery Buy Now Buttons â€“ turns your NextGen gallery into an ecommerce solution
+* Product Slider â€“ Display your products in a new and fancy way
+* Members Only Module â€“ Create pay to view subscription sites
 
 For more information visit [http://getshopped.org](http://getshopped.org "http://getshopped.org")
 
@@ -145,7 +144,94 @@ Before updating please make a backup of your existing files and database. Just i
 After upgrading from earlier versions look for link "Update Store". This will update your database structure to work with new version.
 
 == Changelog ==
-= 3.8.11 = 
+
+= 3.8.14 =
+* Fix: Improved visitor profiles performance, new infrastructure does not use WordPress Users
+* New: AJAX API to get and set information about customers
+* New: Visitor API to get and set information about current and past visits
+* Fix: When page caching is being used, probability of empty or superfluous visitor profiles being created drastically diminished    
+
+= 3.8.13.3 =
+* Fix: Users disappear in Network Admin -> Users page (for multisite)
+* Fix: User counts are incorrect when there are thousands separators.
+* Fix: "Save Product Files" button doesn't like being clicked on.
+
+
+= 3.8.13.2 =
+* Fix: Anonymous customers should not be visible in admin UI.
+* Fix: Cronjob to purge anonymous customers doesn't work due to memory issues.
+* Fix: Anonymous cart items will be lost after signing in.
+
+= 3.8.13.1 =
+* Security and maintenance release
+
+= 3.8.13 =
+
+* New: Product Media UI.
+* New: Cart Item Meta API
+* New: 'wpsc_after_checkout_cart_rows' action.
+* New: Add 'wpsc_default_dimension_unit' and 'wpsc_default_weight_unit' filters.
+* New: Add 'wpsc_save_product_order' action and use it to save category product order in the term_relationships table.
+* New: Add logic filter for coupons.  We currently have one for properties, this should sufficiently round out the extensibility for the UI.
+* New: Allow gateway images to be filtered.
+* New: Allow multiple comma-separated categories in coupon conditions.
+* New: Product Gallery metabox.
+* Change: Better Customer API.
+* Change: Prepend (WPEC) to widget names in wp-admin
+* Change: Replace default noimage.png with a better image.
+* Change: Updated NL language
+* Change: Updated german language strings
+* Change: Use new spinner image in WordPress 3.8
+* Fix: Add preg_quote() to coupon regexes that intend to parse strings. Fixes issue where unexpected results occur when strings contain slashes, or really, any regex-oriented characters.
+* Fix: Change wpsc_get_remaining_quantity() to call the method dynamically, rather than statically.  The previous behaviour caused a strict standards warning.
+* Fix: Database Upgrade Routine to rename old _wpsc_* product metadata array keys so they no longer include the '_wpsc_' prefix
+* Fix: In Purchase log admin screen, item count is sum of quantity field rather than count of rows
+* Fix: Invert logic on shipping ZIP code check in core theme files.
+* Fix: Modify behavior in Download CSV functionality to properly convert region IDs to regions.
+* Fix: Modify wpsc_update_item_quantity() to listen for wpsc_quantity_update, reverting to $_POST['quantity'] only if it exists.
+* Fix: PHP strict warnings.
+* Fix: Properly quote SKUs in CSV file.
+* Fix: Rename generically named function.
+* Fix: Stock and sale price empty values should be preserved.
+* Fix: Variation thumbnail size in admin screen.
+* Fix: cart is not initialized when some shipping modules are triggered
+* Fix: redundant product thumbnail is displayed on category / single product list.
+* Fix: variation checkbox column width in WP 3.7.
+* Fix: Out of stock message for variations now correctly shows variation of product for the title, rather than main product.
+* Fix: Use proper link in checkout for variation products.
+* Fix: Return tax information in switchmethod() JS function.
+* Fix: Resolve conflict with Advanced Custom Fields on save_post hook for products.
+* Fix: Update Bulgarian Currency symbol.
+* Fix: Resolve issue where updating pages causes rewrite rule conflicts when pretty permalinks are enabled.
+
+= 3.8.12.1 =
+* Fix: Fatal error in wpsc_product_list_exclude_child_categories() due to other themes
+       or plugins calling get_posts() before the main query is set up
+
+= 3.8.12 =
+* New: Filter to hide drafts on the front-end: "wpsc_product_display_status"
+* New: Shipwire staging / production option
+* Change: Remove deprecated and unused javascript (and by extension, CSS) from core
+* Change: Remove nusoap
+* Change: Improvements to Marketing admin panel
+* Change: Improvements to Products List Admin Page
+* Fix: WP e-Commerce pagination breaks WordPress pagination
+* Fix: Wrong thumbnail size in Product Specials widget
+* Fix: Filtering by a category also shows all products in subcategories
+* Fix: admin.js throwing a Parse Error in Safari
+* Fix: Product Image Links not working when over HTTPS
+* Fix: If AJAX_URL returns HTTPS and Add to Cart is on HTTP, errors
+* Fix: Add to Cart button doesn't work
+* Fix: Can no longer upload customer attachments
+* Fix: Deprecated warning for wp_convert_bytes_to_hr() function in WordPress 3.6
+
+
+= 3.8.11.1 =
+* Fix: Some users had theme compatibilities and other configurations that caused "Add to Cart" to no longer function as expected.
+* Fix: Customer uploads for products broke with JS overhaul
+* Fix: Product image links broke.
+
+= 3.8.11 =
 * New: Payment Gateway UI is revamped.
 * New: Sales Log UI is revamped.
 * New: wpsc_single_purchase_log_date_time_format and wpsc_single_purchase_log_date_format (Used in new Sales Log UI).
@@ -640,37 +726,6 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * Fix: Incompatibility with Prototype JS library.
 * Fix: Checking (or unchecking) Stock checkbox when editing product causes variation table columns to break.
 * Fix: jQuery 1.6 incompatibility with attr( 'className' ).
-
-
-= 3.8.5 =
-* New: Added hooks to support WPML.
-* New: Links to WP e-Commerce documentation for individual payment gateways.
-* Change: User can specify 0 in thumbnail width or height to make it scale proportional.
-* Change: Show display name, not internal name for shipping method on purchase log view.
-* Change: Presentation settings page is restored to WPEC Settings page when WooTheme is activated.
-* Fix: Add to cart using Donation widget causes the page to reload and the item is added twice.
-* Fix: Free-shipping discount causes tax to be calculated incorrectly.
-* Fix: Paypal Buy Now button passes the wrong price to Paypal if product is on sale.
-* Fix: Thumbnail sizes are not generated correctly.
-* Fix: Broken output buffering rendering wpsc_add_advanced_options hook useless.
-* Fix: Paypal Pro doesn't properly account for discount and coupon.
-* Fix: IPN doesn't work on Paypal Standard.
-* Fix: IPN doesn't work on Paypal Pro gateway.
-* Fix: Paypal Express doesn't handle discounts.
-* Fix: Paypal Express doesn't handle IPN.
-* Fix: Paypal Express doesn't send purchase receipt after a payment is accepted on Paypal.
-* Fix: Paypal Express doesn't include item description, quantity, tax etc. in email receipts.
-* Fix: Invalid country code in Paypal Pro and Express, should be GB instead of UK
-* Fix: Take Discount into account when DoExpressCheckout in Paypal Express gateway.
-* Fix: Category checkout form sets don't work.
-* Fix: Incorrect Product display mode selected when ['view_type'] is set and 'show_advanced_search' is disabled.
-* Fix: PHP notice in wpsc-transaction_results_functions.php.
-* Fix: attr('checked') == true always evaluates to false. Use is(':checked') instead.
-* Fix: jQuery 1.6 select by attribute incompatibility.
-* Fix: Price tag is added to RSS even when there is no price.
-* Fix: Span tag is not closed in issue 598.
-* Fix: Faulty php tag in template (issue 589).
-* Fix: PHP Notices when checking out with shipping disabled.
 
 == Frequently Asked Questions ==
 

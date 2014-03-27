@@ -15,18 +15,23 @@
 function _wpsc_ajax_verify_nonce( $ajax_action ) {
 	// nonce can be passed with name wpsc_nonce or _wpnonce
 	$nonce = '';
+	
 	if ( isset( $_REQUEST['nonce'] ) )
 		$nonce = $_REQUEST['nonce'];
 	elseif ( isset( $_REQUEST['_wpnonce'] ) )
 		$nonce = $_REQUEST['_wpnonce'];
 	else
-		return new WP_Error( 'wpsc_ajax_invalid_nonce', __( 'Your session has expired. Please refresh the page and try again.', 'wpsc' ) );
+		return _wpsc_error_invalid_nonce();
 
 	// validate nonce
 	if ( ! wp_verify_nonce( $nonce, 'wpsc_ajax_' . $ajax_action ) )
-		return new WP_Error( 'wpsc_ajax_invalid_nonce', __( 'Your session has expired. Please refresh the page and try again.', 'wpsc' ) );
+		return _wpsc_error_invalid_nonce();
 
 	return true;
+}
+
+function _wpsc_error_invalid_nonce() {
+	return new WP_Error( 'wpsc_ajax_invalid_nonce', __( 'Your session has expired. Please refresh the page and try again.', 'wpsc' ) );
 }
 
 /**
@@ -68,7 +73,11 @@ function _wpsc_ajax_fire_callback( $ajax_action ) {
  */
 function _wpsc_ajax_handler() {
 	$ajax_action = str_replace( '-', '_', $_REQUEST['wpsc_action'] );
-	$result = _wpsc_ajax_verify_nonce( $ajax_action );
+
+	if ( is_callable( '_wpsc_ajax_verify_' . $ajax_action ) )
+		$result = call_user_func( '_wpsc_ajax_verify_' . $ajax_action );
+	else
+		$result = _wpsc_ajax_verify_nonce( $ajax_action );
 
 	if ( ! is_wp_error( $result ) )
 		$result = _wpsc_ajax_fire_callback( $ajax_action );
@@ -372,8 +381,7 @@ function _wpsc_ajax_purchase_log_send_tracking_email() {
 	$message = str_replace( '%trackid%', $trackingid, $message );
 	$message = str_replace( '%shop_name%', get_option( 'blogname' ), $message );
 
-	$email_form_field = $wpdb->get_var( "SELECT `id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `type` IN ('email') AND `active` = '1' ORDER BY `checkout_order` ASC LIMIT 1" );
-	$email = $wpdb->get_var( $wpdb->prepare( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` WHERE `log_id`=%d AND `form_id` = '$email_form_field' LIMIT 1", $id ) );
+	$email = wpsc_get_buyers_email( $id );
 
 	$subject = get_option( 'wpsc_trackingid_subject' );
 	$subject = str_replace( '%shop_name%', get_option( 'blogname' ), $subject );
@@ -530,6 +538,10 @@ function _wpsc_ajax_save_product_order() {
 			$failed[] = $product_id;
 	}
 
+	// Validate data before exposing to action
+	$category = isset( $_POST['category_id'] ) ? get_term_by( 'slug', $_POST['category_id'], 'wpsc_product_category' ) : false;
+	do_action( 'wpsc_save_product_order', $products, $category );
+
 	if ( ! empty( $failed ) ) {
 		$error_data = array(
 			'failed_ids' => $failed,
@@ -542,6 +554,39 @@ function _wpsc_ajax_save_product_order() {
 		'ids' => $products,
 	);
 }
+
+/**
+ * Save Category Product Order
+ *
+ * Note that this uses the 'term_order' field in the 'term_relationships' table to store
+ * the order. Although this column presently seems to be unused by WordPress, the intention
+ * is it should be used to store the order of terms associates to a post, not the order
+ * of posts as we are doing. This shouldn't be an issue for WPEC unless WordPress adds a UI
+ * for this. More info at http://core.trac.wordpress.org/ticket/9547
+ *
+ * @since 3.9
+ * @access private
+ *
+ * @uses $wpdb   WordPress database object used for queries
+ */
+function _wpsc_save_category_product_order( $products, $category ) {
+	global $wpdb;
+
+	// Only save category product order if in category
+	if ( ! $category )
+		return;
+
+	// Save product order in term_relationships table
+	foreach ( $products as $order => $product_id ) {
+		$wpdb->update( $wpdb->term_relationships,
+			array( 'term_order' => $order ),
+			array( 'object_id' => $product_id, 'term_taxonomy_id' => $category->term_taxonomy_id ),
+			array( '%d' ),
+			array( '%d', '%d' )
+		);
+	}
+}
+add_action( 'wpsc_save_product_order', '_wpsc_save_category_product_order', 10, 2 );
 
 /**
  * Update Checkout fields order
@@ -736,19 +781,6 @@ function _wpsc_ajax_add_tax_rate() {
 			);
 			$returnable = $wpec_taxes_controller->wpec_taxes_build_select_options( $regions, 'region_code', 'name', $default_option, $select_settings );
 			break;
-		case 'wpec_taxes_build_rates_form':
-			$key = $_REQUEST['current_key'];
-			$returnable = $wpec_taxes_controller->wpec_taxes_build_form( $key );
-			break;
-		case 'wpec_taxes_build_bands_form':
-			$key = $_REQUEST['current_key'];
-			//get a new key if a band is already defined for this key
-			while($wpec_taxes_controller->wpec_taxes->wpec_taxes_get_band_from_index($key))
-			{
-				$key++;
-			}
-			$returnable = $wpec_taxes_controller->wpec_taxes_build_form( $key, false, 'bands' );
-			break;
 	}// switch
 
 	return array(
@@ -765,6 +797,7 @@ function _wpsc_ajax_add_tax_rate() {
  */
 function wpsc_product_variations_table() {
 	check_admin_referer( 'wpsc_product_variations_table' );
+	set_current_screen( 'wpsc-product' );
 	require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/product-variations-page.class.php' );
 	$page = new WPSC_Product_Variations_Page();
 	$page->display();

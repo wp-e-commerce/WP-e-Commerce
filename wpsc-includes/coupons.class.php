@@ -155,7 +155,7 @@ class wpsc_coupons {
 			break;
 
 			case 'contains'://Checks if the product name contains the condition value
-				return preg_match( "/(.*)".$condition['value']."(.*)/", $product_data->post_title );
+				return preg_match( "/(.*)" . preg_quote( $condition['value'], '/' ) . "(.*)/", $product_data->post_title );
 			break;
 
 			case 'category'://Checks if the product category is the condition value
@@ -163,19 +163,24 @@ class wpsc_coupons {
 				if ( $product_data->post_parent )
 					$id = $product_data->post_parent;
 
-				return has_term( $condition['value'], 'wpsc_product_category', $id );
+				$category_condition = $condition['value'];
+				if ( false !== strpos( $category_condition, ',' ) ) {
+					$category_condition = explode( ',', $condition['value'] );
+					$category_condition = array_map( 'trim', $cond );
+				}
+				return has_term( $category_condition, 'wpsc_product_category', $id );
 			break;
 
 			case 'not_contain'://Checks if the product name contains the condition value
-				return ! preg_match( "/(.*)".$condition['value']."(.*)/", $product_data->post_title );
+				return ! preg_match( "/(.*)" . preg_quote( $condition['value'], '/' ) . "(.*)/", $product_data->post_title );
 			break;
 
 			case 'begins'://Checks if the product name begins with condition value
-				return preg_match( "/^".$condition['value']."/", $product_data->post_title );
+				return preg_match( "/^" . preg_quote( $condition['value'], '/' ) . "/", $product_data->post_title );
 			break;
 
 			case 'ends'://Checks if the product name ends with condition value
-				return preg_match( "/".$c['value']."$/", $product_data->post_title );
+				return preg_match( "/" . preg_quote( $c['value'], '/' ) . "$/", $product_data->post_title );
 			break;
 		}
 
@@ -329,7 +334,7 @@ class wpsc_coupons {
 			}
 		}
 
-		return true;
+		return $compare_logic;
 	}
 
 	/**
@@ -568,110 +573,110 @@ class wpsc_coupons {
 	function compare_logic($c, $product_obj) {
 		global $wpdb;
 
-		if ($c['property'] == 'item_name') {
-			$product_data = $wpdb->get_results("SELECT * FROM " . $wpdb->posts . " WHERE id='{$product_obj->product_id}'");
+		if ( 'item_name' == $c['property'] ) {
+			$product_data = $wpdb->get_results( "SELECT * FROM " . $wpdb->posts . " WHERE id='{$product_obj->product_id}'" );
 			$product_data = $product_data[0];
 
-			switch($c['logic']) {
+			switch( $c['logic'] ) {
 				case 'equal': //Checks if the product name is exactly the same as the condition value
-				if ($product_data->post_title == $c['value']) {
-
-					return true;
-				}
+					if ( $product_data->post_title == $c['value'] )
+						return true;
 				break;
 
 				case 'greater'://Checks if the product name is not the same as the condition value
-				if ($product_data->post_title > $c['value'])
-					return true;
+					if ( $product_data->post_title > $c['value'] )
+						return true;
 				break;
 
 				case 'less'://Checks if the product name is not the same as the condition value
-				if ($product_data->post_title < $c['value'])
-					return true;
+					if ( $product_data->post_title < $c['value'] )
+						return true;
 				break;
 
 				case 'contains'://Checks if the product name contains the condition value
-				preg_match("/(.*)".$c['value']."(.*)/", $product_data->post_title, $match);
-				if (!empty($match))
-					return true;
+					preg_match( "/(.*)" . preg_quote( $c['value'], '/' ) . "(.*)/", $product_data->post_title, $match );
+
+					if ( ! empty( $match ) )
+						return true;
 				break;
 
 				case 'category'://Checks if the product category is the condition value
-				if ( $product_data->post_parent ) {
-					$categories = wpsc_get_product_terms( $product_data->post_parent, 'wpsc_product_category' );
-				} else {
-					$categories = wpsc_get_product_terms( $product_data->ID, 'wpsc_product_category' );
-				}
-				foreach ( $categories as $cat ) {
-					if ( strtolower( $cat->name ) == strtolower( $c['value'] ) )
-						return true;
-				}
+					if ( $product_data->post_parent ) {
+						$categories = wpsc_get_product_terms( $product_data->post_parent, 'wpsc_product_category' );
+					} else {
+						$categories = wpsc_get_product_terms( $product_data->ID, 'wpsc_product_category' );
+					}
+					foreach ( $categories as $cat ) {
+						if ( strtolower( $cat->name ) == strtolower( $c['value'] ) )
+							return true;
+					}
 				break;
 
 				case 'not_contain'://Checks if the product name contains the condition value
-				preg_match("/(.*)".$c['value']."(.*)/", $product_data->post_title, $match);
-				if (empty($match))
-					return true;
+					preg_match( "/(.*)" . preg_quote( $c['value'], '/' ) . "(.*)/", $product_data->post_title, $match );
+
+					if ( empty( $match ) )
+						return true;
 				break;
 
 				case 'begins'://Checks if the product name begins with condition value
-				preg_match("/^".$c['value']."/", $product_data->post_title, $match);
-				if (!empty($match))
-					return true;
+					preg_match( "/^" . preg_quote( $c['value'], '/' ) . "/", $product_data->post_title, $match );
+					if ( ! empty( $match ) )
+						return true;
 				break;
 
 				case 'ends'://Checks if the product name ends with condition value
-				preg_match("/".$c['value']."$/", $product_data->post_title, $match);
-				if (!empty($match))
-					return true;
+					preg_match( "/" . preg_quote( $c['value'], '/' ) . "$/", $product_data->post_title, $match );
+					if ( ! empty( $match ) )
+						return true;
 				break;
 
 				default:
 				return false;
 			}
-		} else if ($c['property'] == 'item_quantity'){
+		} else if ( 'item_quantity' == $c['property'] ) {
 
-			switch($c['logic']) {
+			switch( $c['logic'] ) {
 				case 'equal'://Checks if the quantity of a product in the cart equals condition value
-				if ($product_obj->quantity == (int)$c['value'])
-					return true;
+					if ( $product_obj->quantity == (int) $c['value'] )
+						return true;
 				break;
 
 				case 'greater'://Checks if the quantity of a product is greater than the condition value
-				if ($product_obj->quantity > $c['value'])
-					return true;
+					if ( $product_obj->quantity > $c['value'] )
+						return true;
 				break;
 
 				case 'less'://Checks if the quantity of a product is less than the condition value
-				if ($product_obj->quantity < $c['value'])
-					return true;
+					if ( $product_obj->quantity < $c['value'] )
+						return true;
 				break;
 
 				case 'contains'://Checks if the product name contains the condition value
-				preg_match("/(.*)".$c['value']."(.*)/", $product_obj->quantity, $match);
-				if (!empty($match))
-					return true;
+					preg_match( "/(.*)" . $c['value'] . "(.*)/", $product_obj->quantity, $match );
+					if ( ! empty( $match ) )
+						return true;
 				break;
 
 				case 'not_contain'://Checks if the product name contains the condition value
-				preg_match("/(.*)".$c['value']."(.*)/",$product_obj->quantity, $match);
-				if (empty($match))
-					return true;
+					preg_match("/(.*)".$c['value']."(.*)/",$product_obj->quantity, $match );
+					if ( empty( $match ) )
+						return true;
 				break;
 
 				case 'begins'://Checks if the product name begins with condition value
-				preg_match("/^".$c['value']."/", $product_obj->quantity, $match);
-				if (!empty($match))
-					return true;
+					preg_match("/^".$c['value']."/", $product_obj->quantity, $match );
+					if ( ! empty( $match ) )
+						return true;
 				break;
 
 				case 'ends'://Checks if the product name ends with condition value
-				preg_match("/".$c['value']."$/",$product_obj->quantity, $match);
-				if (!empty($match))
-					return true;
-				break;
+					preg_match( "/" . $c['value'] . "$/", $product_obj->quantity, $match );
+					if ( ! empty( $match ) )
+						return true;
+					break;
 				default:
-				return false;
+					return false;
 			}
 		} else if ($c['property'] == 'total_quantity'){
 			$total_quantity = wpsc_cart_item_count();

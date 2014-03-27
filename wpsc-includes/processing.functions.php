@@ -108,8 +108,9 @@ function wpsc_currency_display( $price_in, $args = null ) {
 function wpsc_decrement_claimed_stock($purchase_log_id) {
 	global $wpdb;
 
-	//processed
-	$all_claimed_stock = $wpdb->get_results( $wpdb->prepare( "SELECT `cs`.`product_id`, `cs`.`stock_claimed`, `pl`.`id`, `pl`.`processed` FROM `" . WPSC_TABLE_CLAIMED_STOCK . "` `cs` JOIN `" . WPSC_TABLE_PURCHASE_LOGS . "` `pl` ON `cs`.`cart_id` = `pl`.`id` WHERE `cs`.`cart_id` = '%s'", $purchase_log_id ) );
+	// Processed
+	$claimed_query = new WPSC_Claimed_Stock( array( 'cart_id' => $purchase_log_id ) );
+	$all_claimed_stock = $claimed_query->get_purchase_log_claimed_stock();
 
 	if( !empty( $all_claimed_stock ) ){
 		switch($all_claimed_stock[0]->processed){
@@ -151,7 +152,8 @@ function wpsc_decrement_claimed_stock($purchase_log_id) {
 					}
 				}
 			case 6:
-				$wpdb->query( $wpdb->prepare( "DELETE FROM `".WPSC_TABLE_CLAIMED_STOCK."` WHERE `cart_id` IN (%s)", $purchase_log_id ) );
+				$claimed_query = new WPSC_Claimed_Stock( array( 'cart_id' => $purchase_log_id ) );
+				$claimed_query->clear_claimed_stock( 0 );
 				break;
 		}
 	}
@@ -203,49 +205,78 @@ function wpsc_get_mimetype($file, $check_reliability = false) {
 	}
 }
 
-function wpsc_convert_weight($in_weight, $in_unit, $out_unit = 'pound', $raw = false) {
-	switch($in_unit) {
+function wpsc_convert_weight( $in_weight, $in_unit, $out_unit = 'pound', $raw = false ) {
+
+	// first unit in each case block is the definitive unit name
+	// other unit names are used when doing imports from CSV
+
+	// convert $in_weight to grams, then convert that to whatever else.
+
+	switch( strtolower( $in_unit ) ) {
 		case "kilogram":
-		$intermediate_weight = $in_weight * 1000;
-		break;
+		case "kilograms":
+		case "kg":
+		case "kgs":
+			$intermediate_weight = $in_weight * 1000;
+			break;
 
 		case "gram":
-		$intermediate_weight = $in_weight;
-		break;
+		case "grams":
+		case "g":
+		case "gs":
+			$intermediate_weight = $in_weight;
+			break;
 
-		case "once":
 		case "ounce":
-		$intermediate_weight = ($in_weight / 16) * 453.59237;
-		break;
+		case "once":
+		case "ounces":
+		case "oz":
+			$intermediate_weight = ( $in_weight / 16 ) * 453.59237;
+			break;
 
 		case "pound":
+		case "pounds":
+		case "lb":
+		case "lbs":
 		default:
-		$intermediate_weight = $in_weight * 453.59237;
-		break;
+			$intermediate_weight = $in_weight * 453.59237;
+			break;
 	}
 
-	switch($out_unit) {
+	switch( strtolower( $out_unit ) ) {
 		case "kilogram":
-		$weight = $intermediate_weight / 1000;
-		break;
+		case "kilograms":
+		case "kg":
+		case "kgs":
+			$weight = $intermediate_weight / 1000;
+			break;
 
 		case "gram":
-		$weight = $intermediate_weight;
-		break;
+		case "grams":
+		case "g":
+		case "gs":
+			$weight = $intermediate_weight;
+			break;
 
-		case "once":
 		case "ounce":
-		$weight = ($intermediate_weight / 453.59237) * 16;
-		break;
+		case "once":
+		case "ounces":
+		case "oz":
+			$weight = ( $intermediate_weight / 453.59237 ) * 16;
+			break;
 
 		case "pound":
+		case "pounds":
+		case "lb":
+		case "lbs":
 		default:
-		$weight = $intermediate_weight / 453.59237;
-		break;
+			$weight = $intermediate_weight / 453.59237;
+			break;
 	}
-	if($raw)
+	if ( $raw )
 		return $weight;
-	return round($weight, 2);
+
+	return round( $weight, 2 );
 }
 
 function wpsc_ping_services( $post_id ) {

@@ -20,7 +20,7 @@
 							<label for="add-coupon-code"><?php _e( 'Discount', 'wpsc' ); ?></label>
 						</th>
 						<td>
-							<input name="add_discount" id="add-coupon-code" type="number" class="small-text"/>
+							<input name="add_discount" id="add-coupon-code" type="number" class="small-text" min="0" />
 							<span class="description"><?php _e( 'The discount amount', 'wpsc' ); ?></span>
 						</td>
 					</tr>
@@ -30,7 +30,7 @@
 							<label for="add_discount_type"><?php _e( 'Discount Type', 'wpsc' ); ?></label>
 						</th>
 						<td>
-							<select name='add_discount_type' id='add_discount_type' onchange = 'show_shipping_options();'>
+							<select name='add_discount_type' id='add_discount_type'>
 								<option value='0'><?php _e( 'Fixed Amount', 'wpsc' ); ?></option>
 								<option value='1'><?php _e( 'Percentage', 'wpsc' ); ?></option>
 								<option value='2'><?php _e( 'Free shipping', 'wpsc' ); ?></option>
@@ -90,7 +90,7 @@
 						</th>
 						<td>
 							<input type="hidden" name="rules[operator][]" value="" />
-							<div class='coupon-condition' >
+							<div class='coupon-condition'>
 								<select class="ruleprops" name="rules[property][]">
 									<option value="item_name" rel="order"><?php _e( 'Item name', 'wpsc' ); ?></option>
 									<option value="item_quantity" rel="order"><?php _e( 'Item quantity', 'wpsc' ); ?></option>
@@ -108,6 +108,7 @@
 									<option value="begins"><?php _e( 'Begins with', 'wpsc' ); ?></option>
 									<option value="ends"><?php _e( 'Ends with', 'wpsc' ); ?></option>
 									<option value="category"><?php _e( 'In Category', 'wpsc' ); ?></option>
+									<?php echo apply_filters( 'wpsc_coupon_rule_logic_options', '' ); ?>
 								</select>
 
 								<input type="text" name="rules[value][]" style="width: 150px;"/>

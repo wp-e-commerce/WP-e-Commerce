@@ -78,7 +78,7 @@ function _wpsc_filter_merchant_v2_gateway_form( $form, $selected_gateway ) {
 		$output = ob_get_clean();
 		$return = array(
 			'name'              => $selected_gateway_data['name'],
-			'form_fields'       => $output . $selected_gateway_data['form'](),
+			'form_fields'       => $output . call_user_func( $selected_gateway_data['form'] ),
 			'has_submit_button' => 0,
 		);
 	}

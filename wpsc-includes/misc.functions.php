@@ -47,6 +47,32 @@ function wpsc_country_has_state($country_code){
 }
 
 /**
+ * Convert time interval to seconds.
+ *
+ * Takes a number an unit of time (hour/day/week) and converts it to seconds.
+ * It allows decimal intervals like 1.5 days.
+ *
+ * @since   3.8.14
+ * @access  public
+ *
+ * @param   int  $time      Stock keeping time.
+ * @param   int  $interval  Stock keeping interval unit (hour/day/week).
+ * @return  int             Seconds.
+ *
+ * @uses  MINUTE_IN_SECONDS, HOUR_IN_SECONDS, DAY_IN_SECONDS, WEEK_IN_SECONDS, YEAR_IN_SECONDS
+ */
+function wpsc_convert_time_interval_to_seconds( $time, $interval ) {
+	$convert = array(
+		'minute' => MINUTE_IN_SECONDS,
+		'hour'   => HOUR_IN_SECONDS,
+		'day'    => DAY_IN_SECONDS,
+		'week'   => WEEK_IN_SECONDS,
+		'year'   => YEAR_IN_SECONDS,
+	);
+	return floor( $time * $convert[ $interval ] );
+}
+
+/**
  * WPSC add new user function, validates and adds a new user, for the
  *
  * @since 3.7
@@ -96,81 +122,6 @@ function wpsc_add_new_user( $user_login, $user_pass, $user_email ) {
 	return $user;
 }
 
-/**
- * Deprecated function
- *
- * @deprecated 3.8.9
- */
-function wpsc_post_title_seo( $title ) {
-	global $wpdb, $page_id, $wp_query;
-	$new_title = wpsc_obtain_the_title();
-	if ( $new_title != '' ) {
-		$title = $new_title;
-	}
-	return esc_html( $title );
-}
-
-//add_filter( 'single_post_title', 'wpsc_post_title_seo' );
-
-/**
- * WPSC canonical URL function
- * Needs a recent version
- * @since 3.7
- * @param int product id
- * @return bool true or false
- */
-function wpsc_change_canonical_url( $url = '' ) {
-	global $wpdb, $wp_query, $wpsc_page_titles;
-
-	if ( $wp_query->is_single == true && 'wpsc-product' == $wp_query->query_vars['post_type']) {
-		$url = get_permalink( $wp_query->get_queried_object()->ID );
-	}
-	return apply_filters( 'wpsc_change_canonical_url', $url );
-}
-
-add_filter( 'aioseop_canonical_url', 'wpsc_change_canonical_url' );
-
-function wpsc_insert_canonical_url() {
-	$wpsc_url = wpsc_change_canonical_url( null );
-	echo "<link rel='canonical' href='$wpsc_url' />\n";
-}
-
-function wpsc_canonical_url() {
-	$wpsc_url = wpsc_change_canonical_url( null );
-	if ( $wpsc_url != null ) {
-		remove_action( 'wp_head', 'rel_canonical' );
-		add_action( 'wp_head', 'wpsc_insert_canonical_url' );
-	}
-}
-add_action( 'template_redirect', 'wpsc_canonical_url' );
-// check for all in one SEO pack and the is_static_front_page function
-if ( is_callable( array( "All_in_One_SEO_Pack", 'is_static_front_page' ) ) ) {
-
-	function wpsc_change_aioseop_home_title( $title ) {
-		global $aiosp, $aioseop_options;
-
-		if ( (get_class( $aiosp ) == 'All_in_One_SEO_Pack') && $aiosp->is_static_front_page() ) {
-			$aiosp_home_title = $aiosp->internationalize( $aioseop_options['aiosp_home_title'] );
-			$new_title = wpsc_obtain_the_title();
-			if ( $new_title != '' ) {
-				$title = str_replace( $aiosp_home_title, $new_title, $title );
-			}
-		}
-		return $title;
-	}
-
-	add_filter( 'aioseop_home_page_title', 'wpsc_change_aioseop_home_title' );
-}
-
-function wpsc_set_aioseop_description( $data ) {
-	$replacement_data = wpsc_obtain_the_description();
-	if ( $replacement_data != '' ) {
-		$data = $replacement_data;
-	}
-	return $data;
-}
-
-add_filter( 'aioseop_description', 'wpsc_set_aioseop_description' );
 
 function wpsc_set_aioseop_keywords( $data ) {
 	global $wpdb, $wp_query, $wpsc_title_data, $aioseop_options;
@@ -196,61 +147,6 @@ function wpsc_set_aioseop_keywords( $data ) {
 }
 
 add_filter( 'aioseop_keywords', 'wpsc_set_aioseop_keywords' );
-
-/**
- * Populate Also Bought List
- * Runs on checking out and populates the also bought list.
- */
-function wpsc_populate_also_bought_list() {
-	global $wpdb, $wpsc_cart, $wpsc_coupons;
-
-	$new_also_bought_data = array();
-	foreach ( $wpsc_cart->cart_items as $outer_cart_item ) {
-		$new_also_bought_data[$outer_cart_item->product_id] = array();
-		foreach ( $wpsc_cart->cart_items as $inner_cart_item ) {
-			if ( $outer_cart_item->product_id != $inner_cart_item->product_id ) {
-				$new_also_bought_data[$outer_cart_item->product_id][$inner_cart_item->product_id] = $inner_cart_item->quantity;
-			} else {
-				continue;
-			}
-		}
-	}
-
-	$insert_statement_parts = array();
-	foreach ( $new_also_bought_data as $new_also_bought_id => $new_also_bought_row ) {
-		$new_other_ids = array_keys( $new_also_bought_row );
-		$also_bought_data = $wpdb->get_results( $wpdb->prepare( "SELECT `id`, `associated_product`, `quantity` FROM `" . WPSC_TABLE_ALSO_BOUGHT . "` WHERE `selected_product` IN(%d) AND `associated_product` IN('" . implode( "','", $new_other_ids ) . "')", $new_also_bought_id ), ARRAY_A );
-		$altered_new_also_bought_row = $new_also_bought_row;
-
-		foreach ( (array)$also_bought_data as $also_bought_row ) {
-			$quantity = $new_also_bought_row[$also_bought_row['associated_product']] + $also_bought_row['quantity'];
-
-			unset( $altered_new_also_bought_row[$also_bought_row['associated_product']] );
-			$wpdb->update(
-				WPSC_TABLE_ALSO_BOUGHT,
-				array(
-				    'quantity' => $quantity
-				),
-				array(
-				    'id' => $also_bought_row['id']
-				),
-				'%d',
-				'%d'
-			);
-	    }
-
-		if ( count( $altered_new_also_bought_row ) > 0 ) {
-			foreach ( $altered_new_also_bought_row as $associated_product => $quantity ) {
-				$insert_statement_parts[] = "(" . absint( esc_sql( $new_also_bought_id ) ) . "," . absint( esc_sql( $associated_product ) ) . "," . absint( esc_sql( $quantity ) ) . ")";
-			}
-		}
-	}
-
-	if ( count( $insert_statement_parts ) > 0 ) {
-		$insert_statement = "INSERT INTO `" . WPSC_TABLE_ALSO_BOUGHT . "` (`selected_product`, `associated_product`, `quantity`) VALUES " . implode( ",\n ", $insert_statement_parts );
-		$wpdb->query( $insert_statement );
-	}
-}
 
 function wpsc_get_country_form_id_by_type($type){
 	global $wpdb;
@@ -336,10 +232,7 @@ function nzshpcrt_display_preview_image() {
 			}
 
 			if ( $use_cache === true ) {
-				$cache_url = WPSC_CACHE_URL;
-				if ( is_ssl ( ) ) {
-					$cache_url = str_replace( "http://", "https://", $cache_url );
-				}
+				$cache_url = set_url_scheme( WPSC_CACHE_URL );
 				header( "Location: " . $cache_url . $cache_filename . $extension );
 				exit( '' );
 			} else {
@@ -798,7 +691,7 @@ function _wpsc_deprecated_function( $function, $version, $replacement = null ) {
 
 	// Allow plugin to filter the output error trigger
 	if ( WP_DEBUG && apply_filters( 'wpsc_deprecated_function_trigger_error', true ) ) {
-		if ( ! is_null($replacement) )
+		if ( ! is_null( $replacement ) )
 			trigger_error(
 				sprintf( __( '%1$s is <strong>deprecated</strong> since WP e-Commerce version %2$s! Use %3$s instead.', 'wpsc' ),
 					$function,
@@ -999,3 +892,66 @@ function wpsc_invalidate_max_purchase_id_transient () {
 
 add_action( 'wpsc_purchase_log_insert', 'wpsc_invalidate_max_purchase_id_transient' );
 add_action( 'wpsc_purchase_log_delete', 'wpsc_invalidate_max_purchase_id_transient' );
+
+/** Checks to see whether terms and conditions are empty
+ * @access public
+ *
+ * @since 3.8
+ * @return (boolean) true or false
+ */
+function wpsc_has_tnc(){
+	if('' == get_option('terms_and_conditions'))
+		return false;
+	else
+		return true;
+}
+
+if ( isset( $_GET['termsandconds'] ) && 'true' == $_GET['termsandconds'] )
+	add_action( 'init', 'wpsc_show_terms_and_conditions' );
+
+function wpsc_show_terms_and_conditions() {
+	echo wpautop( wp_kses_post( get_option( 'terms_and_conditions' ) ) );
+	die();
+}
+
+/**
+ * Helper function to display proper spinner icon, depending on WP version used.
+ * This way, WP 3.8+ users will not feel like they are in a time-warp.
+ *
+ * @since 3.8.13
+ *
+ * @return void
+ */
+function wpsc_get_ajax_spinner() {
+	global $wp_version;
+
+	if ( version_compare( $wp_version, '3.8', '<' ) ) {
+		$url = admin_url( 'images/wpspin_light.gif' );
+	} else {
+		$url = admin_url( 'images/spinner.gif' );
+	}
+
+	return apply_filters( 'wpsc_get_ajax_spinner', $url );
+}
+
+function _wpsc_remove_erroneous_files() {
+	$files = array(
+		 WPSC_FILE_PATH . '/wpsc-components/marketplace-core-v1/library/Sputnik/.htaccess',
+		 WPSC_FILE_PATH . '/wpsc-components/marketplace-core-v1/library/Sputnik/error_log',
+		 WPSC_FILE_PATH . '/wpsc-components/marketplace-core-v1/library/Sputnik/functions.php',
+		 WPSC_FILE_PATH . '/wpsc-components/marketplace-core-v1/library/Sputnik/admin-functions.php',
+		 WPSC_FILE_PATH . '/wpsc-components/marketplace-core-v1/library/Sputnik/advanced-cache.php'
+	);
+
+	foreach ( $files as $file ) {
+		if ( is_file( $file ) ) {
+			@unlink( $file );
+		}
+	}
+
+	update_option( 'wpsc_38131_file_check', false );
+}
+
+if ( get_option( 'wpsc_38131_file_check', true ) ) {
+	add_action( 'admin_init', '_wpsc_remove_erroneous_files' );
+}

@@ -24,6 +24,8 @@ require_once( WPSC_FILE_PATH . '/wpsc-admin/init.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/ajax-and-init.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/display-options-settings.page.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/db-upgrades/upgrade.php' );
+require_once( WPSC_FILE_PATH . '/wpsc-admin/media.php' );
+require_once( WPSC_FILE_PATH . '/wpsc-admin/users.php' );
 
 if ( ( isset( $_SESSION['wpsc_activate_debug_page'] ) && ( $_SESSION['wpsc_activate_debug_page'] == true ) ) || ( defined( 'WPSC_ADD_DEBUG_PAGE' ) && ( constant( 'WPSC_ADD_DEBUG_PAGE' ) == true ) ) )
 	require_once( WPSC_FILE_PATH . '/wpsc-admin/display-debug.page.php' );
@@ -58,6 +60,29 @@ function wpsc_query_vars_product_list( $vars ){
 
     return $vars;
 }
+
+/**
+ * Admin Edit Posts Order
+ *
+ * @since 3.8.12
+ * @access public
+ *
+ * @param   string  $orderby_sql  Order by SQL.
+ * @return  string  Filtered order by SQL.
+ */
+function wpsc_admin_edit_posts_orderby( $orderby_sql ) {
+	global $wp_query, $wpdb;
+	if ( 'dragndrop' == get_option( 'wpsc_sort_by' ) ) {
+		if ( function_exists( 'is_main_query' ) && is_main_query() && 'wpsc-product' == get_query_var( 'post_type' ) && is_tax( 'wpsc_product_category' ) ) {
+			if ( ! empty( $orderby_sql ) )
+				$orderby_sql = ', ' . $orderby_sql;
+			$orderby_sql = " {$wpdb->term_relationships}.term_order ASC" . $orderby_sql;
+			remove_filter( 'posts_orderby', 'wpsc_admin_edit_posts_orderby' );
+		}
+	}
+	return $orderby_sql;
+}
+add_filter( 'posts_orderby', 'wpsc_admin_edit_posts_orderby' );
 
 /**
  * setting the screen option to between 1 and 999
@@ -418,7 +443,7 @@ function wpsc_admin_include_coupon_js() {
 	wp_enqueue_style( 'wp-e-commerce-admin',            WPSC_URL         . '/wpsc-admin/css/admin.css',        false, $version_identifier, 'all' );
 
 	// Coupon JS
-	wp_enqueue_script( 'wp-e-commerce-admin-parameters', admin_url( '/wp-admin/admin.php?wpsc_admin_dynamic_js=true' ), false,                     $version_identifier );
+	wp_enqueue_script( 'wp-e-commerce-admin-parameters', admin_url( 'admin.php?wpsc_admin_dynamic_js=true' ), false,                     $version_identifier );
 	wp_enqueue_script( 'livequery',                     WPSC_URL         . '/wpsc-admin/js/jquery.livequery.js',             array( 'jquery' ),         '1.0.3' );
 	wp_enqueue_script( 'jquery-ui-datepicker' );
 	wp_enqueue_script( 'wp-e-commerce-admin_legacy',    WPSC_URL         . '/wpsc-admin/js/admin-legacy.js',                 array( 'jquery', 'jquery-ui-core', 'jquery-ui-sortable', 'jquery-ui-datepicker' ), $version_identifier );
@@ -437,7 +462,6 @@ function wpsc_admin_include_coupon_js() {
  */
 function wpsc_admin_include_optionspage_css_and_js() {
 	$version_identifier = WPSC_VERSION . "." . WPSC_MINOR_VERSION;
-	wp_enqueue_script( 'wp-e-commerce-js-ajax', WPSC_URL . '/wpsc-core/js/ajax.js', false, $version_identifier );
 	wp_enqueue_script( 'wp-e-commerce-admin-settings-page', WPSC_URL . '/wpsc-admin/js/settings-page.js', array( 'jquery-query' ), $version_identifier );
 
 	wp_localize_script( 'wp-e-commerce-admin-settings-page', 'WPSC_Settings_Page', array(
@@ -473,23 +497,18 @@ function wpsc_meta_boxes() {
 	//if a variation page do not show these metaboxes
 	if ( is_object( $post ) && $post->post_parent == 0 ) {
 		add_meta_box( 'wpsc_product_variation_forms'    , __( 'Variations', 'wpsc' )           , 'wpsc_product_variation_forms'    , $pagename, 'normal', 'high' );
-		add_meta_box( 'wpsc_product_external_link_forms', __( 'Off Site Product link', 'wpsc' ), 'wpsc_product_external_link_forms', $pagename, 'normal', 'high' );
 	} else if( is_object( $post ) && $post->post_status == "inherit" ) {
 		remove_meta_box( 'tagsdiv-product_tag'             , 'wpsc-product', 'core' );
-		remove_meta_box( 'wpsc_product_external_link_forms', 'wpsc-product', 'core' );
 		remove_meta_box( 'wpsc_product_categorydiv'        , 'wpsc-product', 'core' );
 	}
 
-	add_meta_box( 'wpsc_price_control_forms', __('Price Control', 'wpsc'), 'wpsc_price_control_forms', $pagename, 'side', 'low' );
-	add_meta_box( 'wpsc_stock_control_forms', __('Stock Control', 'wpsc'), 'wpsc_stock_control_forms', $pagename, 'side', 'low' );
+	add_meta_box( 'wpsc_price_control_forms', __('Product Pricing', 'wpsc'), 'wpsc_price_control_forms', $pagename, 'side', 'low' );
+	add_meta_box( 'wpsc_stock_control_forms', __('Stock Inventory', 'wpsc'), 'wpsc_stock_control_forms', $pagename, 'side', 'low' );
 	add_meta_box( 'wpsc_product_taxes_forms', __('Taxes', 'wpsc'), 'wpsc_product_taxes_forms', $pagename, 'side', 'low' );
-	add_meta_box( 'wpsc_additional_desc', __('Additional Description', 'wpsc'), 'wpsc_additional_desc', $pagename, 'normal', 'high' );
-	add_meta_box( 'wpsc_product_download_forms', __('Product Download', 'wpsc'), 'wpsc_product_download_forms', $pagename, 'normal', 'high' );
-	add_meta_box( 'wpsc_product_image_forms', __('Product Images', 'wpsc'), 'wpsc_product_image_forms', $pagename, 'normal', 'high' );
-	if ( ! empty( $post->ID ) && ! wpsc_product_has_variations( $post->ID ) )
-		add_meta_box( 'wpsc_product_shipping_forms', __('Shipping', 'wpsc'), 'wpsc_product_shipping_forms_metabox', $pagename, 'normal', 'high' );
-	add_meta_box( 'wpsc_product_advanced_forms', __('Advanced Settings', 'wpsc'), 'wpsc_product_advanced_forms', $pagename, 'normal', 'high' );
+	add_meta_box( 'wpsc_product_delivery_forms', __('Product Delivery', 'wpsc'), 'wpsc_product_delivery_forms', $pagename, 'normal', 'high' );
+	add_meta_box( 'wpsc_product_details_forms', __('Product Details', 'wpsc'), 'wpsc_product_details_forms', $pagename, 'normal', 'high' );
 }
+
 add_action( 'admin_footer', 'wpsc_meta_boxes' );
 add_action( 'admin_enqueue_scripts', 'wpsc_admin_include_css_and_js_refac' );
 
@@ -531,10 +550,8 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 
 	if ( ( in_array( $pagehook, $pages ) && $post_type == 'wpsc-product' )  || $current_screen->id == 'edit-wpsc_product_category' || $current_screen->id == 'dashboard_page_wpsc-sales-logs' || $current_screen->id == 'dashboard_page_wpsc-purchase-logs' || $current_screen->id == 'settings_page_wpsc-settings' || $current_screen->id == 'wpsc-product_page_wpsc-edit-coupons' || $current_screen->id == 'edit-wpsc-variation' || $current_screen->id == 'wpsc-product-variations-iframe' || ( $pagehook == 'media-upload-popup' && get_post_type( $_REQUEST['post_id'] ) == 'wpsc-product' ) ) {
 		wp_enqueue_script( 'livequery',                      WPSC_URL . '/wpsc-admin/js/jquery.livequery.js',             array( 'jquery' ), '1.0.3' );
-		wp_enqueue_script( 'wp-e-commerce-admin-parameters', admin_url( 'admin.php?wpsc_admin_dynamic_js=true' ), false,             $version_identifier );
+		wp_enqueue_script( 'wp-e-commerce-admin-parameters', admin_url( '/?wpsc_admin_dynamic_js=true' ), false,             $version_identifier );
 		wp_enqueue_script( 'wp-e-commerce-admin',            WPSC_URL . '/wpsc-admin/js/admin.js',                        array( 'jquery', 'jquery-ui-core', 'jquery-ui-sortable' ), $version_identifier, false );
-		wp_enqueue_script( 'wp-e-commerce-legacy-ajax',      WPSC_URL . '/wpsc-admin/js/ajax.js',                         false,             $version_identifier ); // needs removing
-
 		wp_enqueue_script( 'wpsc-sortable-table', WPSC_URL . '/wpsc-admin/js/sortable-table.js', array( 'jquery' ) );
 
 		if ( in_array( $current_screen->id, array( 'wpsc-product', 'edit-wpsc-variation', 'wpsc-product' ) ) ) {
@@ -1043,7 +1060,7 @@ function wpsc_dashboard_4months_widget() {
 	$timeranges[2]["start"] = mktime( 0, 0, 0, $this_month - 1, 1, $this_year );
 	$timeranges[2]["end"] = mktime( 0, 0, 0, $this_month, 1, $this_year );
 	$timeranges[3]["start"] = mktime( 0, 0, 0, $this_month, 1, $this_year );
-	$timeranges[3]["end"] = mktime();
+	$timeranges[3]["end"] = time(); // using mktime here can generate a php runtime warning
 
 	$prod_data = array( );
 	foreach ( (array)$products as $product ) { //run through products and get each product income amounts and name
@@ -1125,13 +1142,11 @@ add_filter( 'favorite_actions', 'wpsc_fav_action' );
 /**
  * Prits out the admin scripts
  *
- * @uses is_ssl()                 Defines if SSL is true
  * @uses wp_enqueue_script()      Enqueues scripts
  * @uses home_url()               Returns the base url for the site
  */
 function wpsc_print_admin_scripts() {
-	$scheme = is_ssl() ? 'https' : 'http';
-	wp_enqueue_script( 'wp-e-commerce-dynamic', home_url( "/index.php?wpsc_user_dynamic_js=true", $scheme ) );
+	wp_enqueue_script( 'wp-e-commerce-dynamic', home_url( '/index.php?wpsc_user_dynamic_js=true' ) );
 }
 
 /**
@@ -1509,10 +1524,11 @@ if ( ! get_option( 'wpsc_hide_3.8.9_notices' ) )
  * @uses get_option()         Gets option from the database given string
  */
 function _wpsc_admin_notices_3dot8dot11() {
-	$message = '<p>' . __( 'You are currently using WPeC 3.8.11.  We have included a fix for a <a href="%1$s">bug on the User Account management page</a>. We are able to fix this automatically on most sites, but it appears that you have made changes to your wpsc-user-log.php page.  For that reason, we have some <a href="%2$s">simple instructions for you to follow</a> to resolve the issue.  We are sorry for the inconvenience.' , 'wpsc' ) . '</p>';
-	$message .= "\n<p>" . __( '<a href="%3$s">Hide this warning</a>', 'wpsc' ) . '</p>';
-	$message = sprintf(
+	$message  = '<p>' . __( 'You are currently using WPeC %1$s.  We introduced a regression in WPeC 3.8.10 which affects your customer user account page. We have included a fix for a <a href="%2$s">bug on the User Account management page</a>. We are able to fix this automatically on most sites, but it appears that you have made changes to your wpsc-user-log.php page.  For that reason, we have some <a href="%3$s">simple instructions for you to follow</a> to resolve the issue.  We are sorry for the inconvenience.' , 'wpsc' ) . '</p>';
+	$message .= "\n<p>" . __( '<a href="%4$s">Hide this warning</a>', 'wpsc' ) . '</p>';
+	$message  = sprintf(
 		$message,
+		WPSC_VERSION,
 		'https://github.com/wp-e-commerce/WP-e-Commerce/issues/359',
 		'http://docs.getshopped.org/documentation/3-8-11-user-logs',
 		add_query_arg( 'dismiss_3811_upgrade_notice', 1 )
@@ -1526,3 +1542,25 @@ if ( isset( $_REQUEST['dismiss_3811_upgrade_notice'] ) )
 
 if ( get_option( '_wpsc_3811_user_log_notice' ) )
 	add_action( 'admin_notices', '_wpsc_admin_notices_3dot8dot11' );
+
+function _wpsc_notify_google_checkout_deprecation() {
+	$gateways = get_option( 'custom_gateway_options', array() );
+
+	if ( false !== ( $key = array_search( 'google', $gateways ) ) ) {
+		unset( $gateways[ $key ] );
+	}
+
+	if ( empty( $gateways ) ) {
+		$gateways[] = 'wpsc_merchant_testmode';
+	}
+
+	update_option( 'custom_gateway_options', $gateways );
+
+	$message  = '<p>' . __( 'Effective November 20th, 2013, Google Checkout was shut down and is no longer processing payments.  You are seeing this warning because it appears that Google Checkout was your payment gateway processor.  If it was your sole processor, we have enabled the Test Gateway to ensure that orders are coming through on your site, but we highly recommend enabling a proper gateway.  If you have no preference, we highly recommend Stripe.' , 'wpsc' ) . '</p>';
+
+	echo '<div id="wpsc-3.8.11-notice" class="error">' . $message . '</div>';
+}
+
+if ( in_array( 'google', get_option( 'custom_gateway_options', array() ) ) ) {
+	add_action( 'admin_notices', '_wpsc_notify_google_checkout_deprecation' );
+}

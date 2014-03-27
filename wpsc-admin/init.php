@@ -1,7 +1,7 @@
 <?php
 
 function wpsc_ajax_sales_quarterly() {
-	$lastdate = $_POST['add_start'];
+	$lastdate = sanitize_text_field( $_POST['add_start'] );
 	$date = preg_split( '/-/', $lastdate );
 	if ( !isset( $date[0] ) )
 		$date[0] = 0;
@@ -29,7 +29,7 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
 
 function wpsc_delete_file() {
 	$product_id = absint( $_REQUEST['product_id'] );
-	$file_name = basename( $_REQUEST['file_name'] );
+	$file_name  = basename( $_REQUEST['file_name'] );
 	check_admin_referer( 'delete_file_' . $file_name );
 
 	_wpsc_delete_file( $product_id, $file_name );
@@ -95,7 +95,7 @@ function wpsc_purchase_log_csv() {
 	if ( 'key' == $_REQUEST['rss_key'] && current_user_can( 'manage_options' ) ) {
 		if ( isset( $_REQUEST['start_timestamp'] ) && isset( $_REQUEST['end_timestamp'] ) ) {
 			$start_timestamp = $_REQUEST['start_timestamp'];
-			$end_timestamp = $_REQUEST['end_timestamp'];
+			$end_timestamp   = $_REQUEST['end_timestamp'];
 			$start_end_sql = "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `date` BETWEEN '%d' AND '%d' ORDER BY `date` DESC";
 			$start_end_sql = apply_filters( 'wpsc_purchase_log_start_end_csv', $start_end_sql );
 			$data = $wpdb->get_results( $wpdb->prepare( $start_end_sql, $start_timestamp, $end_timestamp ), ARRAY_A );
@@ -124,39 +124,42 @@ function wpsc_purchase_log_csv() {
 
 		$form_sql = "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `active` = '1' AND `type` != 'heading' ORDER BY `checkout_order` DESC;";
 		$form_data = $wpdb->get_results( $form_sql, ARRAY_A );
-		$csv = 'Purchase ID, Price, Firstname, Lastname, Email, Order Status, Data, ';
 
 		$headers_array = array(
-			_x( 'Purchase ID', 'purchase log csv headers', 'wpsc' ),
+			_x( 'Purchase ID'   , 'purchase log csv headers', 'wpsc' ),
 			_x( 'Purchase Total', 'purchase log csv headers', 'wpsc' ),
 		);
 		$headers2_array = array(
 			_x( 'Payment Gateway', 'purchase log csv headers', 'wpsc' ),
-			_x( 'Payment Status', 'purchase log csv headers', 'wpsc' ),
-			_x( 'Purchase Date', 'purchase log csv headers', 'wpsc' ),
+			_x( 'Payment Status' , 'purchase log csv headers', 'wpsc' ),
+			_x( 'Purchase Date'  , 'purchase log csv headers', 'wpsc' ),
 		);
 		$form_headers_array = array();
-		$headers3_array = array();
 
 		$output = '';
 
-		foreach ( (array)$form_data as $form_field ) {
+		foreach ( (array) $form_data as $form_field ) {
 			if ( empty ( $form_field['unique_name'] ) ) {
 				$form_headers_array[] = $form_field['name'];
 			} else {
-				$form_headers_array[] = $form_field['unique_name'];
+				$prefix = false === strstr( $form_field['unique_name'], 'billing' ) ? _x( 'Shipping ', 'purchase log csv header field prefix', 'wpsc' ) : _x( 'Billing ', 'purchase log csv header field prefix', 'wpsc' );
+				$form_headers_array[] = $prefix . $form_field['name'];
 			}
 		}
 
-		foreach ( (array)$data as $purchase ) {
+		foreach ( (array) $data as $purchase ) {
 			$form_headers = '';
 			$output .= "\"" . $purchase['id'] . "\","; //Purchase ID
 			$output .= "\"" . $purchase['totalprice'] . "\","; //Purchase Total
-			foreach ( (array)$form_data as $form_field ) {
+			foreach ( (array) $form_data as $form_field ) {
 				$collected_data_sql = "SELECT * FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` WHERE `log_id` = '" . $purchase['id'] . "' AND `form_id` = '" . $form_field['id'] . "' LIMIT 1";
 				$collected_data = $wpdb->get_results( $collected_data_sql, ARRAY_A );
 				$collected_data = $collected_data[0];
-				$output .= "\"" . $collected_data['value'] . "\","; // get form fields
+
+				if (  ( 'billingstate' == $form_field['unique_name'] || 'shippingstate' == $form_field['unique_name'] ) && is_numeric( $collected_data['value'] ) )
+					$output .= "\"" . wpsc_get_state_by_id( $collected_data['value'], 'code' ) . "\","; // get form fields
+				else
+					$output .= "\"" . str_replace( array( "\r", "\r\n", "\n" ), ' ', $collected_data['value'] ) . "\","; // get form fields
 			}
 
 			if ( isset( $wpsc_gateways[$purchase['gateway']] ) && isset( $wpsc_gateways[$purchase['gateway']]['display_name'] ) )
@@ -173,21 +176,34 @@ function wpsc_purchase_log_csv() {
 			$cartsql = "SELECT `prodid`, `quantity`, `name` FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid`=" . $purchase['id'] . "";
 			$cart = $wpdb->get_results( $cartsql, ARRAY_A );
 
-			if( $count < count( $cart ) )
+			if ( $count < count( $cart ) )
 			    $count = count( $cart );
+
+			$items = count( $cart );
+			$i     = 1;
+
 			// Go through all products in cart and display quantity and sku
-			foreach ( (array)$cart as $item ) {
+			foreach ( (array) $cart as $item ) {
 				$skuvalue = get_product_meta( $item['prodid'], 'sku', true );
 				if( empty( $skuvalue ) )
 				    $skuvalue = __( 'N/A', 'wpsc' );
 				$output .= "\"" . $item['quantity'] . "\",";
-				$output .= "\"" . str_replace( '"', '\"', $item['name'] ) . "\"";
-				$output .= "," . $skuvalue."," ;
+				$output .= "\"" . str_replace( '"', '\"', $item['name'] ) . "\",";
+
+				if ( $items <= 1 )
+					$output .= "\"" . $skuvalue . "\"" ;
+				elseif ( $items > 1 && $i != $items  )
+					$output .= "\"" . $skuvalue . "\"," ;
+				else
+					$output .= "\"" . $skuvalue . "\"" ;
+
+				$i++;
 			}
+
 			$output .= "\n"; // terminates the row/line in the CSV file
 		}
 		// Get the most number of products and create a header for them
-		$headers3 = "";
+		$headers3 = array();
 		for( $i = 0; $i < $count; $i++ ){
 			$headers3[] = _x( 'Quantity', 'purchase log csv headers', 'wpsc' );
 			$headers3[] = _x( 'Product Name', 'purchase log csv headers', 'wpsc' );
@@ -200,7 +216,10 @@ function wpsc_purchase_log_csv() {
 		$headers3     = '"' . implode( '","', $headers3 ) . '"';
 
 		$headers      = apply_filters( 'wpsc_purchase_log_csv_headers', $headers . $form_headers . $headers2 . $headers3, $data, $form_data );
-		$output       = apply_filters( 'wpsc_purchase_log_csv_output', $output, $data, $form_data );
+		$output       = apply_filters( 'wpsc_purchase_log_csv_output' , $output, $data, $form_data );
+
+		do_action( 'wpsc_purchase_log_csv' );
+
 		header( 'Content-Type: text/csv' );
 		header( 'Content-Disposition: inline; filename="' . $csv_name . '"' );
 		echo $headers . "\n". $output;
@@ -253,20 +272,6 @@ function wpsc_admin_sale_rss() {
 if ( isset( $_GET['action'] ) && ( 'purchase_log' == $_GET['action'] ) )
 	add_action( 'admin_init', 'wpsc_admin_sale_rss' );
 
-function wpsc_display_invoice() {
-	$purchase_id = (int)$_REQUEST['purchaselog_id'];
-	add_action('wpsc_packing_slip', 'wpsc_packing_slip');
-	do_action('wpsc_before_packing_slip', $purchase_id);
-	do_action('wpsc_packing_slip', $purchase_id);
-	exit();
-}
-//other actions are here
-if ( isset( $_GET['display_invoice'] ) && ( 'true' == $_GET['display_invoice'] ) )
-	add_action( 'admin_init', 'wpsc_display_invoice', 0 );
-
-if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( 'wpsc_display_invoice' == $_REQUEST['wpsc_admin_action'] ) )
-	add_action( 'admin_init', 'wpsc_display_invoice' );
-
 /**
  * Purchase log ajax code starts here
  */
@@ -296,16 +301,15 @@ function wpsc_purchlog_clear_download_items() {
 	global $wpdb;
 	if ( is_numeric( $_GET['purchaselog_id'] ) ) {
 		$purchase_id = (int)$_GET['purchaselog_id'];
-		$downloadable_items = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_DOWNLOAD_STATUS . "` WHERE `purchid` IN ('$purchase_id')", ARRAY_A );
+		$downloadable_items = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_DOWNLOAD_STATUS . "` WHERE `purchid` = %d", $purchase_id ), ARRAY_A );
 
-		$clear_locks_sql = "UPDATE`" . WPSC_TABLE_DOWNLOAD_STATUS . "` SET `ip_number` = '' WHERE `purchid` IN ('$purchase_id')";
-		$wpdb->query( $clear_locks_sql );
+		$wpdb->update( WPSC_TABLE_DOWNLOAD_STATUS, array( 'ip_number' => '' ), array( 'purchid' => $purchase_id ), '%s', '%d' );
 		$cleared = true;
 
 		$email_form_field = $wpdb->get_var( "SELECT `id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `type` IN ('email') AND `active` = '1' ORDER BY `checkout_order` ASC LIMIT 1" );
-		$email_address = $wpdb->get_var( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` WHERE `log_id`='{$purchase_id}' AND `form_id` = '{$email_form_field}' LIMIT 1" );
+		$email_address = $wpdb->get_var( $wpdb->prepare( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` WHERE `log_id` = %d AND `form_id` = '{$email_form_field}' LIMIT 1", $purchase_id ) );
 
-		foreach ( (array)$downloadable_items as $downloadable_item ) {
+		foreach ( (array) $downloadable_items as $downloadable_item ) {
 			$download_links .= add_query_arg(
 				'downloadid',
 				$downloadable_item['uniqueid'],
@@ -314,14 +318,14 @@ function wpsc_purchlog_clear_download_items() {
 		}
 
 
-		wp_mail( $email_address, __( 'The administrator has unlocked your file', 'wpsc' ), str_replace( "[download_links]", $download_links, __( 'Dear CustomerWe are pleased to advise you that your order has been updated and your downloads are now active.Please download your purchase using the links provided below.[download_links]Thank you for your custom.', 'wpsc' ) ), "From: " . get_option( 'return_email' ) . "" );
-
+		wp_mail( $email_address, __( 'The administrator has unlocked your file', 'wpsc' ), str_replace( "[download_links]", $download_links, __( 'Dear CustomerWe are pleased to advise you that your order has been updated and your downloads are now active.Please download your purchase using the links provided below.[download_links]Thank you for your custom.', 'wpsc' ) ), "From: " . get_option( 'return_email' )  );
 
 		$sendback = wp_get_referer();
 
 		if ( isset( $cleared ) ) {
 			$sendback = add_query_arg( 'cleared', $cleared, $sendback );
 		}
+
 		wp_redirect( $sendback );
 		exit();
 	}
@@ -402,19 +406,19 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
 function wpsc_delete_purchlog( $purchlog_id='' ) {
 	global $wpdb;
 	$deleted = 0;
+
 	if ( $purchlog_id == '' ) {
 		$purchlog_id = absint( $_GET['purchlog_id'] );
 		check_admin_referer( 'delete_purchlog_' . $purchlog_id );
 	}
 
-	if ( is_numeric( $purchlog_id ) ) {
-		$delete_log_form_sql = "SELECT * FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid`='$purchlog_id'";
-		$cart_content = $wpdb->get_results( $delete_log_form_sql, ARRAY_A );
-	}
-
 	$purchlog_status = $wpdb->get_var( $wpdb->prepare( "SELECT `processed` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id`= %d", $purchlog_id ) );
 	if ( $purchlog_status == 5 || $purchlog_status == 1 ) {
-		$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_CLAIMED_STOCK . "` WHERE `cart_id` = %d AND `cart_submitted` = '1'", $purchlog_id ) );
+		$claimed_query = new WPSC_Claimed_Stock( array(
+			'cart_id'        => $purchlog_id,
+			'cart_submitted' => 1
+		) );
+		$claimed_query->clear_claimed_stock( 0 );
 	}
 
 	$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid` = %d", $purchlog_id ) );
@@ -505,7 +509,7 @@ function wpsc_update_page_urls( $auto = false ) {
 	wpsc_core_load_page_titles();
 	wpsc_register_post_types();
 
-	if( ! $auto ){
+	if ( ! $auto ) {
 		$sendback = wp_get_referer();
 		if ( isset( $updated ) )
 			$sendback = add_query_arg( 'updated', $updated, $sendback );
@@ -570,7 +574,7 @@ function wpsc_product_files_existing() {
 
 	$output = "<span class='admin_product_notes select_product_note '>" . esc_html__( 'Choose a downloadable file for this product:', 'wpsc' ) . "</span><br>";
 	$output .= "<form method='post' class='product_upload'>";
-	$output .= "<div class='ui-widget-content multiple-select select_product_file'>";
+	$output .= '<div class="ui-widget-content multiple-select select_product_file" style="width:100%">';
 	$num = 0;
 	foreach ( (array)$file_list as $file ) {
 		$num++;
@@ -682,19 +686,6 @@ function wpsc_delete_variation_set() {
 
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( 'wpsc-delete-variation-set' == $_REQUEST['wpsc_admin_action'] ) )
 	add_action( 'admin_init', 'wpsc_delete_variation_set' );
-
-function wpsc_force_flush_theme_transients() {
-	// Flush transients
-	wpsc_flush_theme_transients( true );
-
-	// Bounce back
-	$sendback = wp_get_referer();
-	wp_redirect( $sendback );
-
-	exit();
-}
-if ( isset( $_REQUEST['wpsc_flush_theme_transients'] ) && ( $_REQUEST['wpsc_flush_theme_transients'] == 'true' ) )
-	add_action( 'admin_init', 'wpsc_force_flush_theme_transients' );
 
 function wpsc_backup_theme() {
 	$wp_theme_path = get_stylesheet_directory();

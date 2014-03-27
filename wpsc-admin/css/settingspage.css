@@ -12,9 +12,6 @@ th#actions{
 th#drag{
 	width:50px;
 }
-th#name {
-	width:205px;
-}
 tr.wpsc_grey{
 	background-color: #ededed;
 }
@@ -22,12 +19,35 @@ td.drag a:hover{
 	cursor: move;
 }
 
-th.column-type{
-	width:150px;
+th.column-type {
+	width: 9em;
+}
+#wpsc_checkout_list th.column-type {
+	width: 9em;
 }
 
 th.column-unique_name {
-	width:150px;
+	width: 9em;
+}
+
+th.column-mandatory, th.column-display {
+	width: 6em;
+}
+
+.widefat th.column-mandatory, td.mandatorycol, .widefat th.column-display, td.displaycol, .widefat th.column-trash, td.trashcol {
+	text-align:center;
+	vertical-align: top
+}
+
+#wpsc_checkout_list td.typecol select {
+	width: 100%;
+}
+
+#wpsc_imported_columns ol {
+	margin-top: 0;
+}
+#wpsc_imported_columns .empty {
+	color: #999;
 }
 
 #checkout_message{
@@ -55,16 +75,12 @@ td.drag a img {
 	margin-left:4px;
 }
 
-th.column-mandatory, th.column-display {
-	width: 101px;
-}
-
-.widefat th.column-mandatory, td.mandatorycol, .widefat th.column-display, td.displaycol, .widefat th.column-trash, td.trashcol {
-	text-align:center;
-}
-
 #wpsc_checkout_list .ui-sortable-helper {
 	margin-left:0;
+}
+
+#wpsc_checkout_list .namecol input {
+	width: 98%;
 }
 
 #wpsc_checkout_list .actionscol .cell-wrapper {
@@ -97,7 +113,7 @@ tr.checkout-placeholder td {
 }
 
 #options_presentation{
-	min-width:850px;
+	margin-right: 370px;
 }
 
 table.wpsc-edit-module-options tr td {
@@ -108,12 +124,18 @@ table.wpsc-edit-module-options tr td {
 	padding: 0 0 8px 8px;
 	width:394px;
 }
-.gateway_settings_form {
+.gateway_settings_form,
+.shipping-module-settings-form {
 	padding: .5em;
 }
-.widefat .gateway_settings_form td {
+.widefat .gateway_settings_form td,
+.widefat .shipping-module-settings-form td {
 	border: none;
 	overflow: initial;
+}
+.widefat .shipping-module-settings-form th {
+	font-family: inherit;
+	font-size: 12px;
 }
 .widefat p.description {
 	color: #666;
@@ -121,14 +143,16 @@ table.wpsc-edit-module-options tr td {
 .widefat .inactive p.description {
 	margin-left: 0;
 }
-.gateway_settings_form p.submit {
+.gateway_settings_form p.submit,
+.shipping-module-settings-form p.submit {
 	margin-top: 2em;
 }
 
 .gateway_settings input[type=text]{
 	width: 200px;
 }
-.edit-payment-module-update {
+.edit-payment-module-update,
+.edit-shipping-module-update {
 	float: right;
 }
 
@@ -161,6 +185,9 @@ table#form_field_table tr td.namecol{ }
 
 table#form_field_table tr *.namecol{ width: 170px; padding-right: 8px; }
 table#form_field_table tr *.namecol input{ width: 160px; }
+
+tr td.namecol{ padding-left: 2em; }
+tr.field_type_heading td.namecol { padding-left: 0; }
 
 table#form_field_table tr *.typecol{ width: 120px; }
 table#form_field_table tr *.typecol select{ width: 115px; }
@@ -209,21 +236,20 @@ table#form_field_table tr th{ padding-left: 0px; padding-right: 0px;  }
 }
 
 h3.form_group {
-	clear: both;
+	clear: left;
 }
 h3.form_group a{
 	color: #000;
 }
 div.product_and_button_settings {
-	width: 450px;
-	float: left;
-
+	position: relative;
 }
 
 div#themes_and_appearance {
 	border: 1px solid #DFDFDF;
 	width: 360px;
-	float: left;
+	position: absolute;
+	left: 45em;
 }
 
 div#themes_and_appearance p {
@@ -364,7 +390,7 @@ a.nav-tab-loading {
 }
 
 .js #wpsc_checkout_list .edit-options {
-	display:none;
+	display: none;
 }
 
 .js .form-field-options {
@@ -380,7 +406,7 @@ a.nav-tab-loading {
 }
 
 #wpsc_checkout_list .wpsc-field-options-table td .field-option-cell-wrapper {
-	padding:7px 0;
+	padding: 2px 0;
 }
 
 #wpsc_checkout_list .wpsc-field-options-table .column-actions {
@@ -421,4 +447,16 @@ table.form-table td .updated.shipwire-update {
 	display : none;
 	font-size : 12px;
 	line-height : 1.6em;
+}
+
+/* tax */
+
+
+.wpsc-tax-bands-row, .wpsc-tax-rates-row {
+	line-height: 3.2;
+}
+
+.wpsc-tax-bands-row.prototype,
+.wpsc-tax-rates-row.prototype {
+	display: none;
 }

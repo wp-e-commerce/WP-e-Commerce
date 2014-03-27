@@ -1,4 +1,23 @@
 <?php
+/**
+ * nzshpcrt_get_gateways()
+ *
+ * Deprecated function for returning the merchants global
+ *
+ * @global array $nzshpcrt_gateways
+ * @return array
+ */
+function nzshpcrt_get_gateways() {
+
+	global $nzshpcrt_gateways;
+
+	if ( !is_array( $nzshpcrt_gateways ) )
+		wpsc_core_load_gateways();
+
+	return $nzshpcrt_gateways;
+
+}
+
 
 /**
  * The WPSC Gateway functions
@@ -48,7 +67,12 @@ function wpsc_gateway_image_url(){
 
 /**
  * Return the current gateway's name.
- * @return string The current gateway's name.
+ * 
+ * @return  string  The current gateway's name.
+ *
+ * @uses  $wpsc_gateway              Global array of gateways.
+ * @uses  wpsc_show_gateway_image()  Checks if gateway has an image.
+ * @uses  apply_filters()            Calls 'wpsc_gateway_name'.
  */
 function wpsc_gateway_name() {
 	global $wpsc_gateway;
@@ -56,36 +80,55 @@ function wpsc_gateway_name() {
 
 	$payment_gateway_names = get_option( 'payment_gateway_names' );
 
-	if ( isset( $payment_gateway_names[$wpsc_gateway->gateway['internalname']] ) && ( $payment_gateway_names[$wpsc_gateway->gateway['internalname']] != '' || wpsc_show_gateway_image() ) ) {
-		$display_name = $payment_gateway_names[$wpsc_gateway->gateway['internalname']];
-	} elseif ( isset( $wpsc_gateway->gateway['payment_type'] ) ) {
-		switch ( $wpsc_gateway->gateway['payment_type'] ) {
-			case "paypal":
-			case "paypal_pro":
-			case "wpsc_merchant_paypal_pro";
+	// Use gateway internal name if set
+	if ( isset( $payment_gateway_names[ $wpsc_gateway->gateway['internalname'] ] ) && ( $payment_gateway_names[ $wpsc_gateway->gateway['internalname'] ] != '' || wpsc_show_gateway_image() ) ) {
+		$display_name = $payment_gateway_names[ $wpsc_gateway->gateway['internalname'] ];
+	}
+
+	$display_name = apply_filters( 'wpsc_gateway_name', $display_name, $wpsc_gateway->gateway );
+
+	// If no display name or image, use default
+	if ( $display_name == '' && ! wpsc_show_gateway_image() ) {
+		$display_name = __( 'Credit Card', 'wpsc' );
+	}
+
+	return $display_name;
+}
+
+/**
+ * WPSC Default Gateway Name Filter
+ *
+ * This filter overrides the display name of a gateway
+ *
+ * @param   string  $display_name  Gateway display name.
+ * @param   array   $gateway       Gateway details.
+ * @return  string                 Filtered gateway name.
+ *
+ * @uses  wpsc_show_gateway_image()  Checks if gateway has an image.
+ */
+function _wpsc_gateway_name_filter( $display_name, $gateway ) {
+	if ( empty( $display_name ) && isset( $gateway['payment_type'] ) && ! wpsc_show_gateway_image() ) {
+		switch ( $gateway['payment_type'] ) {
+			case 'paypal':
+			case 'paypal_pro':
+			case 'wpsc_merchant_paypal_pro';
 				$display_name = __( 'PayPal', 'wpsc' );
 				break;
 
-			case "manual_payment":
+			case 'manual_payment':
 				$display_name =  __( 'Manual Payment', 'wpsc' );
 				break;
 
-			case "google_checkout":
-				$display_name = __( 'Google Wallet', 'wpsc' );
-				break;
-
-			case "credit_card":
+			case 'credit_card':
 			default:
 				$display_name = __( 'Credit Card', 'wpsc' );
 				break;
 		}
 	}
-	if ( $display_name == '' && !wpsc_show_gateway_image() ) {
-		$display_name = __( 'Credit Card', 'wpsc' );
-	}
 	return $display_name;
 }
 
+add_filter( 'wpsc_gateway_name', '_wpsc_gateway_name_filter', 10, 2 );
 
 /**
  * Return the current gateway's internal name
@@ -219,4 +262,81 @@ add_action(
  */
 function _wpsc_merchant_v2_before_shopping_cart() {
 	$GLOBALS['wpsc_gateway'] = new wpsc_gateways();
+}
+
+add_filter(
+	'_wpsc_merchant_v2_validate_payment_method',
+	'_wpsc_action_merchant_v2_validate_payment_method',
+	10,
+	2
+);
+
+function _wpsc_action_merchant_v2_validate_payment_method( $valid, $controller ) {
+	$fields = array(
+		'card_number',
+		'card_number1',
+		'card_number2',
+		'card_number3',
+		'card_number4',
+		'card_code',
+		'cctype',
+	);
+
+	$selected_gateway = $_POST['wpsc_payment_method'];
+	if (
+		   ! isset( $_POST['extra_form'] )
+		|| ! isset( $_POST['extra_form'][$selected_gateway] )
+	)
+		return $valid;
+
+	$extra = $_POST['extra_form'][$selected_gateway];
+	$card_number_error = false;
+	$messages = array();
+	foreach ( $fields as $field ) {
+		if ( isset( $extra[$field] ) && trim( $extra[$field] ) == '' ) {
+			switch ( $field ) {
+				case 'card_number':
+				case 'card_number1':
+				case 'card_number2':
+				case 'card_number3':
+				case 'card_number4':
+					if ( $card_number_error )
+						continue;
+
+					$messages['card_number'] = __( 'Please enter a valid credit card number', 'wpsc' );
+					$card_number_error = true;
+					break;
+				case 'card_code':
+					$messages[$field] = __( 'Please enter a valid CVV', 'wpsc' );
+					break;
+				case 'cctype':
+					$messages[$field] = __( 'Please select a valid credit card type', 'wpsc' );
+					break;
+			}
+		}
+	}
+
+	if ( ! empty( $extra['expiry'] ) )
+		foreach ( array( 'month', 'year' ) as $element ) {
+			if (
+				   empty( $extra['expiry'][$element] )
+				|| ! is_numeric( $extra['expiry'][$element] )
+			) {
+				$messages['expdate'] = __( 'Please specify a valid expiration date.', 'wpsc' );
+				break;
+			}
+		}
+
+	if ( ! empty( $messages ) ) {
+		foreach ( $messages as $field => $message ) {
+			$controller->message_collection->add( $message, 'validation' );
+		}
+		$GLOBALS['wpsc_gateway_error_messages'] = $messages;
+		return false;
+	}
+
+	foreach ( $extra as $key => $value ) {
+		$_POST[$key] = $value;
+	}
+	return true;
 }

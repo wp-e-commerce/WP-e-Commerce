@@ -64,14 +64,16 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		$joins = array();
 		$where = array( '1 = 1' );
 
-		if ( isset( $_REQUEST['post'] ) )
-			$where[] = 'p.id IN (' . implode( ', ', $_REQUEST['post'] ) . ')';
+		if ( isset( $_REQUEST['post'] ) ) {
+			$posts   = array_map( 'absint', $_REQUEST['post'] );
+			$where[] = 'p.id IN (' . implode( ', ', $posts ) . ')';
+		}
 
 		$i = 1;
 		$selects = array( 'p.id', 'p.totalprice AS amount', 'p.processed AS status', 'p.track_id', 'p.date' );
 		$selects[] = '
 			(
-				SELECT COUNT(*) FROM ' . WPSC_TABLE_CART_CONTENTS . ' AS c
+				SELECT SUM(quantity) FROM ' . WPSC_TABLE_CART_CONTENTS . ' AS c
 				WHERE c.purchaseid = p.id
 			) AS item_count';
 
@@ -125,19 +127,19 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		}
 
 		$selects     = apply_filters( 'wpsc_manage_purchase_logs_selects', implode( ', ', $selects ) );
-		$this->joins = apply_filters( 'wpsc_manage_purchase_logs_joins', implode( ' ', $joins ) );
-		$this->where = apply_filters( 'wpsc_manage_purchase_logs_where', implode( ' AND ', $where ) );
-		
+		$this->joins = apply_filters( 'wpsc_manage_purchase_logs_joins'  , implode( ' ', $joins ) );
+		$this->where = apply_filters( 'wpsc_manage_purchase_logs_where'  , implode( ' AND ', $where ) );
+
 		$limit = ( $this->per_page !== 0 ) ? "LIMIT {$offset}, {$this->per_page}" : '';
 
 		$orderby = empty( $_REQUEST['orderby'] ) ? 'p.id' : 'p.' . $_REQUEST['orderby'];
-		$order = empty( $_REQUEST['order'] ) ? 'DESC' : $_REQUEST['order'];
+		$order   = empty( $_REQUEST['order'] ) ? 'DESC' : $_REQUEST['order'];
 
 		$orderby = esc_sql( apply_filters( 'wpsc_manage_purchase_logs_orderby', $orderby ) );
-		$order = esc_sql( $order );
+		$order   = esc_sql( $order );
 
 		$submitted_data_log = WPSC_TABLE_SUBMITTED_FORM_DATA;
-		$purchase_log_sql = apply_filters( 'wpsc_manage_purchase_logs_sql', "
+		$purchase_log_sql   = apply_filters( 'wpsc_manage_purchase_logs_sql', "
 			SELECT SQL_CALC_FOUND_ROWS {$selects}
 			FROM " . WPSC_TABLE_PURCHASE_LOGS . " AS p
 			{$this->joins}
@@ -164,6 +166,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		$total_sql = "
 			SELECT SUM(totalprice)
 			FROM " . WPSC_TABLE_PURCHASE_LOGS . " AS p
+			{$this->joins}
 			WHERE {$total_where}
 		";
 
@@ -236,6 +239,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		$sql = "
 			SELECT DISTINCT YEAR(FROM_UNIXTIME(date)) AS year, MONTH(FROM_UNIXTIME(date)) AS month
 			FROM " . WPSC_TABLE_PURCHASE_LOGS . " AS p
+			{$this->joins}
 			WHERE {$this->where_no_filter}
 			ORDER BY date DESC
 		";
@@ -325,7 +329,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		return $views;
 	}
 
-	public function months_dropdown() {
+	public function months_dropdown( $post_type = '' ) {
 		global $wp_locale;
 
 		$m = isset( $_REQUEST['m'] ) ? $_REQUEST['m'] : 0;
@@ -486,7 +490,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		echo '<select class="wpsc-purchase-log-status" data-log-id="' . $item->id . '">';
 		echo $dropdown_options;
 		echo '</select>';
-		echo '<img src="' . esc_url( admin_url( 'images/wpspin_light.gif' ) ) . '" class="ajax-feedback" title="" alt="" />';
+		echo '<img src="' . esc_url( wpsc_get_ajax_spinner() ) . '" class="ajax-feedback" title="" alt="" />';
 	}
 
 	public function column_tracking( $item ) {
@@ -497,7 +501,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 				<a class="add" href="#"><?php echo esc_html_x( 'Add Tracking ID', 'add purchase log tracking id', 'wpsc' ); ?></a>
 				<input type="text" class="wpsc-purchase-log-tracking-id" value="<?php echo esc_attr( $item->track_id ); ?>" />
 				<a class="button save" href="#"><?php echo esc_html_x( 'Save', 'save sales log tracking id', 'wpsc' ); ?></a>
-				<img src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" class="ajax-feedback" title="" alt="" /><br class="clear" />
+				<img src="<?php echo esc_url( wpsc_get_ajax_spinner() ); ?>" class="ajax-feedback" title="" alt="" /><br class="clear" />
 				<small class="send-email"><a href="#"><?php echo esc_html_x( 'Send Email', 'sales log', 'wpsc' ); ?></a></small>
 			</div>
 		<?php

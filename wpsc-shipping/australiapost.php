@@ -35,11 +35,16 @@ class australiapost {
 		$this->debug = false; // change to true to log (to the PHP error log) the API URLs and responses for each active service
 
 		// Initialise the list of available postage services
+		
+		// DOMESTIC (Australia only)
 		$this->services['STANDARD'] = __('Standard Parcel Post', 'wpsc');
-		$this->services['EXPRESS'] = __('Express Post', 'wpsc');
-		$this->services['AIR'] = __('Air Mail', 'wpsc');
-		$this->services['SEA'] = __('Sea Mail', 'wpsc');
-		$this->services['EPI'] = __('Express Post International', 'wpsc');
+		$this->services['EXPRESS']  = __('Express Post', 'wpsc');
+
+		// INTERNATIONAL
+		$this->services['AIR']   = __('Air Mail', 'wpsc');
+		$this->services['SEA']   = __('Sea Mail', 'wpsc');
+		$this->services['ECI_M'] = __('Express Courier International', 'wpsc'); // Express Courier International Merchandise
+		$this->services['EPI']   = __('Express Post International', 'wpsc');
 
 		// Attempt to load the existing settings
 		$this->settings = get_option("wpsc_australiapost_settings");
@@ -77,19 +82,22 @@ class australiapost {
 		$output = '';
 		// Only for Australian merchants
 		if ($this->base_country != 'AU') {
-			return __('This shipping module only works if the base country in settings, region is set to Australia.', 'wpsc');
+			return "<tr><td colspan='2'>" . __('This shipping module only works if the base country in settings, region is set to Australia.', 'wpsc') . "</td></tr>";
 		}
 
 		// Base postcode must be set
 		if (strlen($this->base_zipcode) != 4) {
-			return __('You must set your base postcode above before this shipping module will work.', 'wpsc');
+			return "<tr><td colspan='2'>" .__('You must set your base postcode above before this shipping module will work.', 'wpsc') . "</td></tr>";
 		}
 
-		$output .= "<tr><td>" . __('Select the Australia Post services that you want to offer during checkout:', 'wpsc') . "</td></tr>\n\r";
-		$output .= "<tr><td>\n\r";
+		$output .= "<tr><td>" . __('Select the Australia Post services that you want to offer during checkout:', 'wpsc') . "</td></tr>";
+		$output .= "<tr><td>";
 		foreach ($this->services as $code => $value) {
 			$checked = $this->settings['services'][$code] ? "checked='checked'" : '';
-			$output .= "		<label style=\"margin-left: 50px;\"><input type='checkbox' {$checked} name='wpsc_australiapost_settings[services][{$code}]'/>{$this->services[$code]}</label><br />\n\r";
+			$output .= "<label style=\"margin-left: 50px;\">";
+			$output .= "<input type='checkbox' {$checked} name='wpsc_australiapost_settings[services][{$code}]'/> ";
+			$output .= $this->services[$code];
+			$output .= "</label><br />";
 		}
 		$output .= "<input type='hidden' name='{$this->internal_name}_updateoptions' value='true'>";
 		$output .= "</td></tr>";
@@ -165,6 +173,7 @@ class australiapost {
 		*/
 
 
+		// Obtain the total combined weight for all items(s) in the cart (excluding items that have the "Disregard Shipping for this product" option ticked)
 		// Weight is in grams
 		$weight = wpsc_convert_weight($wpsc_cart->calculate_total_weight(true), 'pound', 'gram');
 

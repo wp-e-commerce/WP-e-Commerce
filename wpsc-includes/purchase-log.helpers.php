@@ -1,19 +1,4 @@
 <?php
-function wpsc_format_price( $amt, $currency = false ) {
-	$currencies_without_fractions = array( 'JPY', 'HUF' );
-	if ( ! $currency ) {
-		$country = new WPSC_Country( get_option( 'currency_type' ) );
-		$currency = $country->get( 'code' );
-	}
-
-	$dec = in_array( $currency, $currencies_without_fractions ) ? 0 : 2;
-	return number_format( $amt, $dec );
-}
-
-function wpsc_format_convert_price( $amt, $from_currency = false, $to_currency = false ) {
-	return wpsc_format_price( wpsc_convert_currency( $amt, $from_currency, $to_currency ), $to_currency );
-}
-
 function wpsc_get_plaintext_table( $headings, $rows ) {
 	$colwidths = array();
 	$output = array();
@@ -253,9 +238,19 @@ function wpsc_get_transaction_html_output( $purchase_log ) {
 	if ( ! is_object( $purchase_log ) )
 		$purchase_log = new WPSC_Purchase_Log( $purchase_log );
 
+
 	$notification = new WPSC_Purchase_Log_Customer_HTML_Notification( $purchase_log );
 	$output = $notification->get_html_message();
 
-	$output = apply_filters( 'wpsc_get_transaction_html_output', $output, $notification );
+	// see if the customer trying to view this transaction output is the person
+	// who made the purchase.
+	$checkout_session_id = wpsc_get_customer_meta( 'checkout_session_id' );
+
+    if ( $checkout_session_id == $purchase_log->get( 'sessionid' ) ) {
+    	$output = apply_filters( 'wpsc_get_transaction_html_output', $output, $notification );
+	} else {
+		$output = apply_filters( 'wpsc_get_transaction_unauthorized_view', __( "You don't have the permission to view this page", 'wpsc' ), $output, $notification );
+	}
+
 	return $output;
 }

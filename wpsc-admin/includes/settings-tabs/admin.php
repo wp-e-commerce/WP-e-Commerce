@@ -8,7 +8,7 @@ class WPSC_Settings_Tab_Admin extends WPSC_Settings_Tab {
 				<tr>
 					<th scope="row"><?php esc_html_e( 'Max downloads per file', 'wpsc' ); ?>:	</th>
 					<td>
-						<input type='text' size='10' value='<?php echo esc_attr( get_option('max_downloads') ); ?>' name='wpsc_options[max_downloads]' />
+						<input type="number" size="10" value="<?php echo esc_attr( get_option('max_downloads') ); ?>" name="wpsc_options[max_downloads]" />
 					</td>
 				</tr>
 				<?php
@@ -61,7 +61,7 @@ class WPSC_Settings_Tab_Admin extends WPSC_Settings_Tab {
 						<input type='radio' value='1' name='wpsc_options[wpsc_check_mime_types]' id='wpsc_check_mime_types1' <?php echo $wpsc_check_mime_types2; ?> /> <label for='wpsc_check_mime_types1'><?php _e('No', 'wpsc');?></label><br />
 
 						<span class="wpscsmall description">
-							<?php esc_html_e( 'Warning: Disabling this exposes your site to greater possibility of malicious files being uploaded, we recommend installing the Fileinfo extention for PHP rather than disabling this.', 'wpsc' ); ?>
+							<?php esc_html_e( 'Warning: Disabling this exposes your site to greater possibility of malicious files being uploaded, we recommend installing the Fileinfo extension for PHP rather than disabling this.', 'wpsc' ); ?>
 						</span>
 					</td>
 				</tr>
