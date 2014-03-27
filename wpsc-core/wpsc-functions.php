@@ -173,7 +173,7 @@ function _wpsc_javascript_localizations( $localizations = false ) {
 	// defined more than once in the javascript.
 	static $already_added_default_localizations = false;
 
-	if ( $already_added_default_localizations ) {
+	if ( ! $already_added_default_localizations ) {
 		$defaults = array(
 				'ajaxurl'              => admin_url( 'admin-ajax.php', 'relative' ),
 				'spinner'              => esc_url( wpsc_get_ajax_spinner() ),
