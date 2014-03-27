@@ -163,30 +163,43 @@ function wpsc_checkout_unique_names() {
  *
  * @return array  local variables to add to both admin and front end WPEC javascript
  */
-function _wpsc_javascript_localizations() {
+function _wpsc_javascript_localizations( $localizations = false ) {
 
-	$localizations = array(
-			'ajaxurl'              => admin_url( 'admin-ajax.php', 'relative' ),
-			'spinner'              => esc_url( wpsc_get_ajax_spinner() ),
-			'no_quotes'            => __( 'It appears that there are no shipping quotes for the shipping information provided.  Please check the information and try again.', 'wpsc' ),
-			'ajax_get_cart_error'  => __( 'There was a problem getting the current contents of the shopping cart.', 'wpsc' ),
+	if ( ! is_array( $localizations ) ) {
+		$localizations = array();
+	}
 
-			/* base url */
-			'base_url'             => site_url(),
-			'WPSC_URL'             => WPSC_URL,
-			'WPSC_IMAGE_URL'       => WPSC_IMAGE_URL,
-			'WPSC_DIR_NAME'        => WPSC_DIR_NAME,
-			'WPSC_CORE_IMAGES_URL' => WPSC_CORE_IMAGES_URL,
+	// The default localizations should only be added once per page as we don't wnat them to be
+	// defined more than once in the javascript.
+	static $already_added_default_localizations = false;
 
-			/* LightBox Configuration start*/
-			'fileLoadingImage'         => WPSC_CORE_IMAGES_URL . '/loading.gif',
-			'fileBottomNavCloseImage'  => WPSC_CORE_IMAGES_URL . '/closelabel.gif',
-			'fileThickboxLoadingImage' => WPSC_CORE_IMAGES_URL . '/loadingAnimation.gif',
-			'resizeSpeed'              => 9,  // controls the speed of the image resizing (1=slowest and 10=fastest)
-			'borderSize'               => 10, //if you adjust the padding in the CSS, you will need to update this variable
-	);
+	if ( $already_added_default_localizations ) {
+		$defaults = array(
+				'ajaxurl'              => admin_url( 'admin-ajax.php', 'relative' ),
+				'spinner'              => esc_url( wpsc_get_ajax_spinner() ),
+				'no_quotes'            => __( 'It appears that there are no shipping quotes for the shipping information provided.  Please check the information and try again.', 'wpsc' ),
+				'ajax_get_cart_error'  => __( 'There was a problem getting the current contents of the shopping cart.', 'wpsc' ),
 
-	return apply_filters( 'wpsc_javascript_localizations' , $localizations );
+				/* base url */
+				'base_url'             => site_url(),
+				'WPSC_URL'             => WPSC_URL,
+				'WPSC_IMAGE_URL'       => WPSC_IMAGE_URL,
+				'WPSC_DIR_NAME'        => WPSC_DIR_NAME,
+				'WPSC_CORE_IMAGES_URL' => WPSC_CORE_IMAGES_URL,
+
+				/* LightBox Configuration start*/
+				'fileLoadingImage'         => WPSC_CORE_IMAGES_URL . '/loading.gif',
+				'fileBottomNavCloseImage'  => WPSC_CORE_IMAGES_URL . '/closelabel.gif',
+				'fileThickboxLoadingImage' => WPSC_CORE_IMAGES_URL . '/loadingAnimation.gif',
+				'resizeSpeed'              => 9,  // controls the speed of the image resizing (1=slowest and 10=fastest)
+				'borderSize'               => 10, //if you adjust the padding in the CSS, you will need to update this variable
+		);
+
+		$localizations = array_merge( $defaults, $localizations );
+		$already_added_default_localizations = true;
+	}
+
+	return apply_filters( '_wpsc_javascript_localizations' , $localizations );
 }
 
 /**
