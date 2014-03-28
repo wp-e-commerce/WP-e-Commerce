@@ -64,7 +64,7 @@ if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
 		wpsc_http.overrideMimeType( "application/json" );
 		
 		// open setup and send the request in synchronous mode
-		wpsc_http.open( "POST", wpsc_ajax.ajaxurl + "?action=wpsc_validate_customer", false );
+		wpsc_http.open( "POST", wpsc_ajax_url() + "?action=wpsc_validate_customer", false );
 		wpsc_http.setRequestHeader( "Content-type", "application/json; charset=utf-8" );
 
 		// Note that we cannot set a timeout on synchronous requests due to XMLHttpRequest limitations  
@@ -126,7 +126,7 @@ function wpsc_get_customer_data( response_callback ) {
 	// wrap our ajax request in a try/catch so that an error doesn't stop the script from running
 	try { 	
 		var ajax_data = {action: 'wpsc_get_customer_meta' };	
-		jQuery.post( wpsc_ajax.ajaxurl, ajax_data, response_callback,  "json" );
+		jQuery.post( wpsc_ajax_url(), ajax_data, response_callback,  "json" );
 	} catch ( err ) {
 		; // we could handle the error here, or use it as a convenient place to set a breakpoint when debugging/testing
 	}
@@ -457,7 +457,7 @@ jQuery(document).ready(function ($) {
 				}
 			};
 
-			jQuery.post( wpsc_ajax.ajaxurl, form_values, success, 'json' );
+			jQuery.post( wpsc_ajax_url(), form_values, success, 'json' );
 
 			wpsc_fancy_notification(this);
 			return false;
@@ -490,7 +490,7 @@ jQuery(document).ready(function ($) {
 		var prod_id = jQuery("input[name='product_id']",parent_form).val();
 		var form_values = jQuery("input[name='product_id'], .wpsc_select_variation",parent_form).serialize() + '&action=update_product_price';
 
-		jQuery.post( wpsc_ajax.ajaxurl, form_values, function(response) {
+		jQuery.post( wpsc_ajax_url(), form_values, function(response) {
 			var variation_display = jQuery('div#variation_display_' + prod_id );
 			var stock_display = jQuery('div#stock_display_' + prod_id),
 				price_field = jQuery('input#product_price_' + prod_id),
@@ -562,7 +562,7 @@ jQuery(document).ready(function ($) {
 				jQuery.ajax({
 					type : "post",
 					dataType : "html",
-					url : wpsc_ajax.ajaxurl,
+					url : wpsc_ajax_url(),
 					data : {action : 'get_cart'},
 					success: function (response) {
 						jQuery( 'div.shopping-cart-wrapper' ).html( response );
@@ -591,7 +591,7 @@ jQuery(document).ready(function ($) {
 		parent_form = jQuery(this).parents( 'form' );
 		form_values = jQuery(parent_form).serialize() + '&action=' + jQuery( 'input[name="wpsc_ajax_action"]', parent_form ).val();
 
-		jQuery.post( wpsc_ajax.ajaxurl, form_values, function(response) {
+		jQuery.post( wpsc_ajax_url(), form_values, function(response) {
 			jQuery('div.shopping-cart-wrapper').html( response.widget_output );
 			jQuery( document ).trigger( { type : 'wpsc_empty_cart', response : response } );
 		}, 'json');
@@ -607,7 +607,7 @@ function switchmethod( key, key1 ) {
 		option : key,
 		method : key1
 	};
-	jQuery.post( wpsc_ajax.ajaxurl, data, function( response ) {
+	jQuery.post( wpsc_ajax_url(), data, function( response ) {
 
 		jQuery( document ).trigger( { type : 'switchmethod', response : response } );
 
@@ -663,7 +663,7 @@ function shopping_cart_collapser() {
 		case 'none':
 			form_values.state = '1';
 			jQuery("#sliding_cart").slideToggle("fast",function(){
-				jQuery.post( wpsc_ajax.ajaxurl, form_values, function(returned_data) { });
+				jQuery.post( wpsc_ajax_url(), form_values, function(returned_data) { });
 				jQuery("#fancy_collapser").attr("src", (WPSC_CORE_IMAGES_URL + "/minus.png"));
 			});
 			break;
@@ -671,7 +671,7 @@ function shopping_cart_collapser() {
 		default:
 			form_values.state = '0';
 			jQuery("#sliding_cart").slideToggle("fast",function(){
-				jQuery.post( wpsc_ajax.ajaxurl, form_values, function(returned_data) { });
+				jQuery.post( wpsc_ajax_url(), form_values, function(returned_data) { });
 				jQuery("#fancy_collapser").attr("src", (WPSC_CORE_IMAGES_URL + "/plus.png"));
 			});
 			break;
@@ -687,7 +687,7 @@ function wpsc_set_profile_country(html_form_id, form_id) {
 		country : country_field.val()
 	};
 
-	jQuery.post( wpsc_ajax.ajaxurl, form_values, function(response) {
+	jQuery.post( wpsc_ajax_url(), form_values, function(response) {
 		country_field.siblings('select').remove();
 		if (response.has_regions) {
 			country_field.after('<br />' + response.html);
