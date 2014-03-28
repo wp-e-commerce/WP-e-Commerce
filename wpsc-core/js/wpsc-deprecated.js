@@ -20,7 +20,6 @@ function set_billing_country(html_form_id, form){
 	}
 }
 
-
 /*****************************************************************
  *  FUNCTION set_shipping_country DEPRECATED AS OF 3.8.14
  *  
@@ -56,4 +55,19 @@ function wpsc_handle_country_change( response ) {
 		console.log( "WPEC javascript function 'wpsc_handle_country_change' is deprecated as of version 3.8.14. The meta values are automatically updated when the HTML element changes by the javascript function wpsc_update_customer_meta" );
 	}
 }
+
+/*****************************************************************
+ *  FUNCTION wpsc_update_shipping_quotes DEPRECATED AS OF 3.8.14
+ *  
+ *  It remains here as a stub in case third party scripts 
+ *  are trying to use it 
+ ****************************************************************/
+function wpsc_update_shipping_quotes() {
+	if ( window.console && window.console.log ) {
+		console.log( "WPEC javascript function 'wpsc_update_shipping_quotes' is deprecated as of version 3.8.14, Visibility should be automatically controlled, but you cann call wpsc_adjust_checkout_form_element_visibility if needed" );
+	}
+	wpsc_adjust_checkout_form_element_visibility();
+}
+
+
 

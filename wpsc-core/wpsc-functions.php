@@ -196,6 +196,11 @@ function _wpsc_javascript_localizations( $localizations = false ) {
 		);
 
 		$localizations = array_merge( $defaults, $localizations );
+
+		if ( defined( 'WPEC_LOAD_DEPRECATED' ) && WPEC_LOAD_DEPRECATED ) {
+			$localizations = _wpsc_deprecated_javascript_localization_vars( $localizations );
+		}
+
 		$already_added_default_localizations = true;
 	}
 

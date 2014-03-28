@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
-// This section is used to create the globals that were originally defined in the 
+// This logic is used to create the globals that were originally defined in the 
 // dynamic-js file pre 3.8.14.  Note that variables also also exist in the "wpsc_ajax" structure.
 
 // iterate over the object and explicitly make each property a new global variable.  Because
@@ -10,9 +10,9 @@
 // To add a new global property that can be referenced in the script see the hook 
 // wpsc_javascript_localizations in wpsc-core/wpsc-functions.php
 //
-for (var a_name in wpsc_ajax) {
-  if (wpsc_ajax.hasOwnProperty(a_name)) {
-	  a_value = wpsc_ajax[a_name];
+for ( var a_name in wpsc_vars ) {
+  if ( wpsc_vars.hasOwnProperty( a_name ) ) {
+	  a_value = wpsc_vars[a_name];
 	  this[a_name] = a_value;
   }
 }
@@ -323,7 +323,7 @@ function wpsc_meta_item_change() {
 	wpsc_update_customer_data( meta_key, meta_value, wpsc_meta_item_change_response );
 } 
 
-function wpsc_adjust_checkout_form_element_visibility(){
+function wpsc_adjust_checkout_form_element_visibility() {
 
 	// make sure any item that changes checkout data is bound to the proper event handler
 	jQuery( ".wpsc-visitor-meta" ).off( "change", wpsc_meta_item_change );
@@ -373,22 +373,11 @@ function wpsc_adjust_checkout_form_element_visibility(){
  */
 jQuery(document).ready(function ($) {
 
-	if ( jQuery( ".wpsc-visitor-meta" ).length ) {
-		// get the current value for all customer meta and display the values in available elements
-		wpsc_get_customer_data( wpsc_update_customer_meta );
-	}	
-	
 	if ( jQuery( "#shippingSameBilling" ).length ) {
 		// make sure visibility of form elements is what it should be
 		wpsc_adjust_checkout_form_element_visibility();
 	}
 	
-});
-
-
-// this function is for binding actions to events and rebinding them after they are replaced by AJAX
-// these functions are bound to events on elements when the page is fully loaded.
-jQuery(document).ready(function ($) {
 	if(jQuery('#checkout_page_container .wpsc_email_address input').val())
 		jQuery('#wpsc_checkout_gravatar').attr('src', 'https://secure.gravatar.com/avatar/'+MD5(jQuery('#checkout_page_container .wpsc_email_address input').val().split(' ').join(''))+'?s=60&d=mm');
 	jQuery('#checkout_page_container .wpsc_email_address input').keyup(function(){
@@ -407,23 +396,6 @@ jQuery(document).ready(function ($) {
 
 	});
 
-
-	/*****************************************************************
-	 *  FUNCTION wpsc_update_shipping_quotes DEPRECATED AS OF 3.8.14
-	 *  
-	 *  It remains here as a stub in case third party scripts 
-	 *  are trying to use it 
-	 ****************************************************************/
-	/**
-	 * Update shipping quotes when "Shipping same as Billing" is checked or unchecked.
-	 * @since 3.8.8
-	 */
-	function wpsc_update_shipping_quotes() {
-		if ( window.console && window.console.log ) {
-			console.log( "WPEC javascript function 'set_billing_country' is deprecated as of version 3.8.14, please update your code." );
-		}
-	}
-
 	// Submit the product form using AJAX
 	jQuery( 'form.product_form, .wpsc-add-to-cart-button-form' ).on( 'submit', function() {
 		// we cannot submit a file through AJAX, so this needs to return true to submit the form normally if a file formfield is present
@@ -434,10 +406,11 @@ jQuery(document).ready(function ($) {
 
 			var action_buttons = jQuery( 'input[name="wpsc_ajax_action"]', jQuery( this ) );
 
+			var action;
 			if ( action_buttons.length > 0 ) {
-				var action = action_buttons.val();
+				action = action_buttons.val();
 			} else {
-				var action = 'add_to_cart';
+				action = 'add_to_cart';
 			}
 
 			form_values = jQuery(this).serialize() + '&action=' + action;
@@ -566,24 +539,33 @@ jQuery(document).ready(function ($) {
 		});
 
 
-		// Ajax cart loading code.
-	jQuery( 'div.wpsc_cart_loading' ).ready( function(){
-			form_values = { action : 'get_cart' };
-		jQuery.ajax({
-			type : "post",
-			dataType : "html",
-			url : wpsc_ajax.ajaxurl,
-			data : {action : 'get_cart'},
-			success: function (response) {
-				jQuery( 'div.shopping-cart-wrapper' ).html( response );
-				jQuery('div.wpsc_loading_animation').css('visibility', 'hidden');
-				},
-			error: function (result) {
-				jQuery( 'div.shopping-cart-wrapper' ).html( wpsc_ajax.ajax_get_cart_error );
-				jQuery('div.wpsc_loading_animation').css('visibility', 'hidden');
-			}
-		});   					
-		});
+	// Ajax cart loading code.
+	// if we have a cart widhet on our page we need to load it via AJAX jsut in case there is a page cache or
+	// content delivery network being used to help deliver pages.  
+	// If we are on the checkout page, we don't need to make the AJAX call because checkout pages
+	// are never, and can never be, cached.
+	// If we are on a checkout page then we know the page is not cached
+	if ( jQuery( 'div.wpsc_cart_loading' ).length  ) {
+		if ( ! ( jQuery( 'table.wpsc_checkout_table' ).length && jQuery( '.wpsc_buy_button' ).length) ) {
+			jQuery( 'div.wpsc_cart_loading' ).ready( function(){
+					form_values = { action : 'get_cart' };
+				jQuery.ajax({
+					type : "post",
+					dataType : "html",
+					url : wpsc_ajax.ajaxurl,
+					data : {action : 'get_cart'},
+					success: function (response) {
+						jQuery( 'div.shopping-cart-wrapper' ).html( response );
+						jQuery('div.wpsc_loading_animation').css('visibility', 'hidden');
+						},
+					error: function (result) {
+						jQuery( 'div.shopping-cart-wrapper' ).html( wpsc_ajax.ajax_get_cart_error );
+						jQuery('div.wpsc_loading_animation').css('visibility', 'hidden');
+					}
+				});   					
+			});
+		}
+	}
 
 		// Object frame destroying code.
 	jQuery( 'div.shopping_cart_container' ).ready( function(){
@@ -606,15 +588,6 @@ jQuery(document).ready(function ($) {
 
 		return false;
 	});
-
-	var radios = jQuery(".productcart input:radio[name='shipping_method']");
-	if (radios.length == 1) {
-		// If there is only 1 shipping quote available during checkout, automatically select it
-		jQuery(radios).click();
-	} else if (radios.length > 1) {
-		// There are multiple shipping quotes, simulate a click on the checked one
-		jQuery(".productcart input:radio[name='shipping_method']:checked").click();
-	}
 });
 
 // update the totals when shipping methods are changed.
