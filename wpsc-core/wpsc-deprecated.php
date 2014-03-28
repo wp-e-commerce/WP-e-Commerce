@@ -1837,7 +1837,7 @@ function _wpsc_deprecated_javascript_localization_vars( $localizations = array()
 				'ajax_get_cart_error'  => __( 'There was a problem getting the current contents of the shopping cart.', 'wpsc' ),
 
 				/* base url */
-				'base_url'             => site_url(),
+				'base_url'             => site_url(), //admin-legacy.js
 				'WPSC_URL'             => WPSC_URL,
 				'WPSC_IMAGE_URL'       => WPSC_IMAGE_URL,
 				'WPSC_DIR_NAME'        => WPSC_DIR_NAME,

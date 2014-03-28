@@ -175,24 +175,7 @@ function _wpsc_javascript_localizations( $localizations = false ) {
 
 	if ( ! $already_added_default_localizations ) {
 		$defaults = array(
-				'ajaxurl'              => admin_url( 'admin-ajax.php', 'relative' ),
-				'spinner'              => esc_url( wpsc_get_ajax_spinner() ),
-				'no_quotes'            => __( 'It appears that there are no shipping quotes for the shipping information provided.  Please check the information and try again.', 'wpsc' ),
-				'ajax_get_cart_error'  => __( 'There was a problem getting the current contents of the shopping cart.', 'wpsc' ),
-
-				/* base url */
-				'base_url'             => site_url(),
-				'WPSC_URL'             => WPSC_URL,
-				'WPSC_IMAGE_URL'       => WPSC_IMAGE_URL,
-				'WPSC_DIR_NAME'        => WPSC_DIR_NAME,
-				'WPSC_CORE_IMAGES_URL' => WPSC_CORE_IMAGES_URL,
-
-				/* LightBox Configuration start*/
-				'fileLoadingImage'         => WPSC_CORE_IMAGES_URL . '/loading.gif',
-				'fileBottomNavCloseImage'  => WPSC_CORE_IMAGES_URL . '/closelabel.gif',
-				'fileThickboxLoadingImage' => WPSC_CORE_IMAGES_URL . '/loadingAnimation.gif',
-				'resizeSpeed'              => 9,  // controls the speed of the image resizing (1=slowest and 10=fastest)
-				'borderSize'               => 10, //if you adjust the padding in the CSS, you will need to update this variable
+				'_wpsc_admin_ajax_url' => admin_url( 'admin-ajax.php', 'relative' ),
 		);
 
 		$localizations = array_merge( $defaults, $localizations );

@@ -82,7 +82,17 @@ if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
 // end of setting up the WPEC customer identifier
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-
+/**
+ * Get the URL that should be used when this script initiates AJAX requests to the server
+ * 
+ * @since 3.8.14
+ * @access global
+ * @param url to receive AJAX requests
+ */
+// a convenient function that will return the url to which ajax requests are sent
+function wpsc_ajax_url() {
+	return _wpsc_admin_ajax_url;
+}
 
 /**
  * update a customer meta value 
@@ -97,7 +107,7 @@ function wpsc_update_customer_data( meta_key, meta_value, response_callback ) {
 	// wrap our ajax request in a try/catch so that an error doesn't stop the script from running
 	try { 	
 		var ajax_data = {action: 'wpsc_update_customer_meta', meta_key : meta_key, meta_value : meta_value };	
-		jQuery.post( wpsc_ajax.ajaxurl, ajax_data, response_callback,  "json" );
+		jQuery.post( wpsc_ajax_url(), ajax_data, response_callback,  "json" );
 	} catch ( err ) {
 		; // we could handle the error here, or use it as a convenient place to set a breakpoint when debugging/testing
 	}

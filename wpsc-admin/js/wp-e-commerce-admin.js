@@ -49,6 +49,19 @@ for (var a_name in wpsc_admin_vars) {
 // if you are going to user it always check to be sure it is not false
 var wpsc_visitor_id = false;
 
+/**
+ * Get the URL that should be used when this script initiates AJAX requests to the server
+ * 
+ * @since 3.8.14
+ * @access global
+ * @param url to receive AJAX requests
+ */
+// a convenient function that will return the url to which ajax requests are sent
+function wpsc_admin_ajax_url() {
+	return _wpsc_admin_ajax_url;
+}
+
+
 if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
 	if ( ! ( document.cookie.indexOf("wpsc_attempted_validate") >= 0 ) ) {	
 		// create a cookie to signal that we have attempted validation.  If we find the cookie is set
@@ -64,7 +77,7 @@ if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
 		wpsc_http.overrideMimeType( "application/json" );
 		
 		// open setup and send the request in synchronous mode
-		wpsc_http.open( "POST", wpsc_ajax.ajaxurl + "?action=wpsc_validate_customer", false );
+		wpsc_http.open( "POST", wpsc_admin_ajax_url() + "?action=wpsc_validate_customer", false );
 		wpsc_http.setRequestHeader( "Content-type", "application/json; charset=utf-8" );
 
 		// Note that we cannot set a timeout on synchronous requests due to XMLHttpRequest limitations  
@@ -81,3 +94,4 @@ if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
 }
 // end of setting up the WPEC customer identifier
 ///////////////////////////////////////////////////////////////////////////////////////////////
+
