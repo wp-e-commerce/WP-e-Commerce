@@ -949,7 +949,7 @@ function wpsc_the_product_image( $width = '', $height = '', $product_id = '' ) {
 	// Ref: http://core.trac.wordpress.org/ticket/23605
 	$src = str_replace( ' ', '%20', $src );
 
-	return apply_filters( 'wpsc_product_image', set_url_scheme( $src ) );
+	return apply_filters( 'wpsc_product_image', set_url_scheme( $src ), $product_id, $product );
 }
 
 /**
