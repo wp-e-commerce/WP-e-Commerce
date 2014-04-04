@@ -75,7 +75,7 @@ jQuery.fn.rating = function(){
         function drainAdd(){ drain(); jQuery(this).addClass('on'); }
 
         function click(){
-        		//console.log(jQuery(this));
+
         		product_id = jQuery('a',this).attr('rel');
         		rating = jQuery('a',this).html();
 

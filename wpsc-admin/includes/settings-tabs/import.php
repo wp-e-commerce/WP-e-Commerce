@@ -225,12 +225,12 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 							</td>
 							<td>
 								<p>
-									<select name='value_name[ <?php echo $key; ?> ]'>
+									<select name='value_name[<?php echo $key; ?>]'>
 										<?php
 											$i = 0;
 											foreach ( $this->default_fields as $value => $label ) :
 										?>
-											<option <?php selected( $key, $i ); ?> value='<?php echo esc_attr( $name ); ?>'><?php echo esc_html( $label ); ?></option>
+											<option <?php selected( $key, $i ); ?> value='<?php echo esc_attr( $value ); ?>'><?php echo esc_html( $label ); ?></option>
 										<?php 
 											$i++;
 											endforeach; 
