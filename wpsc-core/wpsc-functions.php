@@ -155,6 +155,40 @@ function wpsc_checkout_unique_names() {
 	return $unique_names;
 }
 
+/**
+ * Get the unique names used in checkout forms
+ *
+ * @since 3.8.14
+ * @access private
+ *
+ * @return array  local variables to add to both admin and front end WPEC javascript
+ */
+function _wpsc_javascript_localizations( $localizations = false ) {
+
+	if ( ! is_array( $localizations ) ) {
+		$localizations = array();
+	}
+
+	// The default localizations should only be added once per page as we don't wnat them to be
+	// defined more than once in the javascript.
+	static $already_added_default_localizations = false;
+
+	if ( ! $already_added_default_localizations ) {
+		$defaults = array(
+				'_wpsc_admin_ajax_url' => admin_url( 'admin-ajax.php', 'relative' ),
+		);
+
+		$localizations = array_merge( $defaults, $localizations );
+
+		if ( defined( 'WPEC_LOAD_DEPRECATED' ) && WPEC_LOAD_DEPRECATED ) {
+			$localizations = _wpsc_deprecated_javascript_localization_vars( $localizations );
+		}
+
+		$already_added_default_localizations = true;
+	}
+
+	return apply_filters( '_wpsc_javascript_localizations' , $localizations );
+}
 
 /**
  * wpsc_core_load_purchase_log_statuses()
