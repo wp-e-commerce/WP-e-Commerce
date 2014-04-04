@@ -43,9 +43,7 @@
 
 		var disable_ajax_submit = function() {
 			var t = $('#submit');
-			console.log(t);
-			console.log(t.data('events'));
-			console.log(t.data('events').click);
+			
 			if (t.data('events'))
 				submit_handlers = t.data('events').click;
 			t.off('click');

@@ -510,10 +510,12 @@ class wpsc_cart {
 	 * @return boolean true on sucess, false on failure
 	 */
 	function check_remaining_quantity( $product_id, $variations = array(), $quantity = 1 ) {
-		global $wpdb;
+
 		$stock = get_post_meta( $product_id, '_wpsc_stock', true );
 		$stock = apply_filters( 'wpsc_product_stock', $stock, $product_id );
 		// check to see if the product uses stock
+		$result = true;
+
 		if ( is_numeric( $stock ) ) {
 			$claimed_query = new WPSC_Claimed_Stock( array( 'product_id' => $product_id ) );
 			$claimed_stock = $claimed_query->get_claimed_stock_count();
