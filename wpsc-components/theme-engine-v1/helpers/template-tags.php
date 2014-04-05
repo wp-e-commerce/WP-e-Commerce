@@ -527,6 +527,7 @@ function wpsc_show_stock_availability(){
  * @return string - the product image URL, or the URL of the resized version
  */
 function wpsc_product_image( $attachment_id = 0, $width = null, $height = null ) {
+
 	// Do some dancing around the image size
 	if ( ( ( $width >= 10 ) && ( $height >= 10 ) ) && ( ( $width <= 1024 ) && ( $height <= 1024 ) ) )
 		$intermediate_size = "wpsc-{$width}x{$height}";
@@ -568,7 +569,14 @@ function wpsc_product_image( $attachment_id = 0, $width = null, $height = null )
 			$image_url = $uploads['baseurl'].'/'.$image_meta[0];
 	}
 
-	return apply_filters( 'wpsc_product_image', set_url_scheme( $image_url ), $product_id, $product );
+	/**
+	 * The filter here and in wpsc_the_product_image() were unfortunately named, as were the functions.
+	 * They do very different things but are named as if they do not.  The onus will be on the
+	 * plugin developer to check if the second parameter is an attachment ID or a product ID.
+	 * 
+	 * @since 3.8
+	 */
+	return apply_filters( 'wpsc_product_image', set_url_scheme( $image_url ), $attachment_id );
 }
 
 function wpsc_product_no_image_fallback( $image_url = '' ) {
