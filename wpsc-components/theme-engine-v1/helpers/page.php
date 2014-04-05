@@ -343,24 +343,16 @@ function wpsc_enqueue_user_script_and_css() {
 		}
 
 		wp_enqueue_script( 'jQuery' );
-		wp_enqueue_script( 'wp-e-commerce', WPSC_CORE_JS_URL . '/wp-e-commerce.js', array( 'jquery' ), $version_identifier );
 
 		if ( defined( 'WPEC_LOAD_DEPRECATED' ) && WPEC_LOAD_DEPRECATED ) {
 			wp_enqueue_script( 'wpsc-deprecated', WPSC_CORE_JS_URL . '/wpsc-deprecated.js', false, $version_identifier );
 		}
 
-		wp_enqueue_script( 'wp-e-commerce-dynamic', home_url( '/index.php?wpsc_user_dynamic_js=true' ), false, $version_identifier );
-
-		wp_localize_script( 'wp-e-commerce', 'wpsc_ajax', array(
-			'ajaxurl'   => admin_url( 'admin-ajax.php', 'relative' ),
-			'spinner'   => esc_url( wpsc_get_ajax_spinner() ),
-			'no_quotes' => __( 'It appears that there are no shipping quotes for the shipping information provided.  Please check the information and try again.', 'wpsc' ),
-			'ajax_get_cart_error' => __( 'There was a problem getting the current contents of the shopping cart.', 'wpsc' ),
-			)
-		);
+		wp_enqueue_script( 'wp-e-commerce', WPSC_CORE_JS_URL . '/wp-e-commerce.js', array( 'jquery' ), $version_identifier );
+		wp_localize_script( 'wp-e-commerce', 'wpsc_vars', _wpsc_javascript_localizations() );
 
 		wp_enqueue_script( 'livequery',                   WPSC_URL 			. '/wpsc-admin/js/jquery.livequery.js',   array( 'jquery' ), '1.0.3' );
-		if( get_option( 'product_ratings' ) == 1 )
+		if ( get_option( 'product_ratings' ) == 1 )
 			wp_enqueue_script( 'jquery-rating',               WPSC_CORE_JS_URL 	. '/jquery.rating.js',                 array( 'jquery' ), $version_identifier );
 		wp_enqueue_script( 'wp-e-commerce-legacy',        WPSC_CORE_JS_URL 	. '/user.js',                          array( 'jquery' ), WPSC_VERSION . WPSC_MINOR_VERSION );
 		if ( get_option( 'show_thumbnails_thickbox' ) == 1 ){

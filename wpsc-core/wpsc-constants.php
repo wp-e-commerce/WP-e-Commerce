@@ -334,7 +334,7 @@ function _wpsc_action_init_shipping_method() {
 	}
 }
 
-add_action( 'wpsc_setup_customer', '_wpsc_action_init_shipping_method' );
+// add_action( 'wpsc_setup_customer', '_wpsc_action_init_shipping_method' );
 
 /***
  * wpsc_core_setup_globals()

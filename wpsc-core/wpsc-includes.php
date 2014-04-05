@@ -5,11 +5,13 @@ if ( defined( 'WPEC_LOAD_DEPRECATED' ) )
 
 // Start including the rest of the plugin here
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-util.php'                  );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-deprecated-meta.php'            );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/customer.php'                        );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-customer.php'              );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-visitor.php'               );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-cart-item.php'             );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-purchase.php'              );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/country-region-currency-util.php'    );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/product-template.php'                );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/variations.class.php'                );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/ajax.functions.php'                  );

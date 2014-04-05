@@ -1,4 +1,26 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
+// This logic is used to create the globals that were originally defined in the 
+// dynamic-js file pre 3.8.14.  Note that variables also also exist in the "wpsc_ajax" structure.
+
+// iterate over the object and explicitly make each property a new global variable.  Because
+// we are doing the operation in the global context the 'this' is the same as 'window' and 
+// is the same functionally as do a 'var objectname' statement. Creating 'global variables' 
+// in this manner the new "variable" is enumerable and can be deleted.  
+// 
+// To add a new global property that can be referenced in the script see the hook 
+// wpsc_javascript_localizations in wpsc-core/wpsc-functions.php
+//
+for ( var a_name in wpsc_vars ) {
+  if ( wpsc_vars.hasOwnProperty( a_name ) ) {
+	  a_value = wpsc_vars[a_name];
+	  this[a_name] = a_value;
+  }
+}
+//
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
 // Setting up the WPEC customer identifier
 //
 // When WPEC generates a page it sets a 'customer cookie' into the browser.  This cookie is a 
@@ -42,7 +64,7 @@ if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
 		wpsc_http.overrideMimeType( "application/json" );
 		
 		// open setup and send the request in synchronous mode
-		wpsc_http.open( "POST", wpsc_ajax.ajaxurl + "?action=wpsc_validate_customer", false );
+		wpsc_http.open( "POST", wpsc_ajax_url() + "?action=wpsc_validate_customer", false );
 		wpsc_http.setRequestHeader( "Content-type", "application/json; charset=utf-8" );
 
 		// Note that we cannot set a timeout on synchronous requests due to XMLHttpRequest limitations  
@@ -60,7 +82,17 @@ if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
 // end of setting up the WPEC customer identifier
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-
+/**
+ * Get the URL that should be used when this script initiates AJAX requests to the server
+ * 
+ * @since 3.8.14
+ * @access global
+ * @param url to receive AJAX requests
+ */
+// a convenient function that will return the url to which ajax requests are sent
+function wpsc_ajax_url() {
+	return _wpsc_admin_ajax_url;
+}
 
 /**
  * update a customer meta value 
@@ -75,7 +107,7 @@ function wpsc_update_customer_data( meta_key, meta_value, response_callback ) {
 	// wrap our ajax request in a try/catch so that an error doesn't stop the script from running
 	try { 	
 		var ajax_data = {action: 'wpsc_update_customer_meta', meta_key : meta_key, meta_value : meta_value };	
-		jQuery.post( wpsc_ajax.ajaxurl, ajax_data, response_callback,  "json" );
+		jQuery.post( wpsc_ajax_url(), ajax_data, response_callback,  "json" );
 	} catch ( err ) {
 		; // we could handle the error here, or use it as a convenient place to set a breakpoint when debugging/testing
 	}
@@ -94,7 +126,7 @@ function wpsc_get_customer_data( response_callback ) {
 	// wrap our ajax request in a try/catch so that an error doesn't stop the script from running
 	try { 	
 		var ajax_data = {action: 'wpsc_get_customer_meta' };	
-		jQuery.post( wpsc_ajax.ajaxurl, ajax_data, response_callback,  "json" );
+		jQuery.post( wpsc_ajax_url(), ajax_data, response_callback,  "json" );
 	} catch ( err ) {
 		; // we could handle the error here, or use it as a convenient place to set a breakpoint when debugging/testing
 	}
@@ -301,7 +333,7 @@ function wpsc_meta_item_change() {
 	wpsc_update_customer_data( meta_key, meta_value, wpsc_meta_item_change_response );
 } 
 
-function wpsc_adjust_checkout_form_element_visibility(){
+function wpsc_adjust_checkout_form_element_visibility() {
 
 	// make sure any item that changes checkout data is bound to the proper event handler
 	jQuery( ".wpsc-visitor-meta" ).off( "change", wpsc_meta_item_change );
@@ -351,22 +383,11 @@ function wpsc_adjust_checkout_form_element_visibility(){
  */
 jQuery(document).ready(function ($) {
 
-	if ( jQuery( ".wpsc-visitor-meta" ).length ) {
-		// get the current value for all customer meta and display the values in available elements
-		wpsc_get_customer_data( wpsc_update_customer_meta );
-	}	
-	
 	if ( jQuery( "#shippingSameBilling" ).length ) {
 		// make sure visibility of form elements is what it should be
 		wpsc_adjust_checkout_form_element_visibility();
 	}
 	
-});
-
-
-// this function is for binding actions to events and rebinding them after they are replaced by AJAX
-// these functions are bound to events on elements when the page is fully loaded.
-jQuery(document).ready(function ($) {
 	if(jQuery('#checkout_page_container .wpsc_email_address input').val())
 		jQuery('#wpsc_checkout_gravatar').attr('src', 'https://secure.gravatar.com/avatar/'+MD5(jQuery('#checkout_page_container .wpsc_email_address input').val().split(' ').join(''))+'?s=60&d=mm');
 	jQuery('#checkout_page_container .wpsc_email_address input').keyup(function(){
@@ -385,23 +406,6 @@ jQuery(document).ready(function ($) {
 
 	});
 
-
-	/*****************************************************************
-	 *  FUNCTION wpsc_update_shipping_quotes DEPRECATED AS OF 3.8.14
-	 *  
-	 *  It remains here as a stub in case third party scripts 
-	 *  are trying to use it 
-	 ****************************************************************/
-	/**
-	 * Update shipping quotes when "Shipping same as Billing" is checked or unchecked.
-	 * @since 3.8.8
-	 */
-	function wpsc_update_shipping_quotes() {
-		if ( window.console && window.console.log ) {
-			console.log( "WPEC javascript function 'set_billing_country' is deprecated as of version 3.8.14, please update your code." );
-		}
-	}
-
 	// Submit the product form using AJAX
 	jQuery( 'form.product_form, .wpsc-add-to-cart-button-form' ).on( 'submit', function() {
 		// we cannot submit a file through AJAX, so this needs to return true to submit the form normally if a file formfield is present
@@ -412,10 +416,11 @@ jQuery(document).ready(function ($) {
 
 			var action_buttons = jQuery( 'input[name="wpsc_ajax_action"]', jQuery( this ) );
 
+			var action;
 			if ( action_buttons.length > 0 ) {
-				var action = action_buttons.val();
+				action = action_buttons.val();
 			} else {
-				var action = 'add_to_cart';
+				action = 'add_to_cart';
 			}
 
 			form_values = jQuery(this).serialize() + '&action=' + action;
@@ -452,7 +457,7 @@ jQuery(document).ready(function ($) {
 				}
 			};
 
-			jQuery.post( wpsc_ajax.ajaxurl, form_values, success, 'json' );
+			jQuery.post( wpsc_ajax_url(), form_values, success, 'json' );
 
 			wpsc_fancy_notification(this);
 			return false;
@@ -485,7 +490,7 @@ jQuery(document).ready(function ($) {
 		var prod_id = jQuery("input[name='product_id']",parent_form).val();
 		var form_values = jQuery("input[name='product_id'], .wpsc_select_variation",parent_form).serialize() + '&action=update_product_price';
 
-		jQuery.post( wpsc_ajax.ajaxurl, form_values, function(response) {
+		jQuery.post( wpsc_ajax_url(), form_values, function(response) {
 			var variation_display = jQuery('div#variation_display_' + prod_id );
 			var stock_display = jQuery('div#stock_display_' + prod_id),
 				price_field = jQuery('input#product_price_' + prod_id),
@@ -544,24 +549,33 @@ jQuery(document).ready(function ($) {
 		});
 
 
-		// Ajax cart loading code.
-	jQuery( 'div.wpsc_cart_loading' ).ready( function(){
-			form_values = { action : 'get_cart' };
-		jQuery.ajax({
-			type : "post",
-			dataType : "html",
-			url : wpsc_ajax.ajaxurl,
-			data : {action : 'get_cart'},
-			success: function (response) {
-				jQuery( 'div.shopping-cart-wrapper' ).html( response );
-				jQuery('div.wpsc_loading_animation').css('visibility', 'hidden');
-				},
-			error: function (result) {
-				jQuery( 'div.shopping-cart-wrapper' ).html( wpsc_ajax.ajax_get_cart_error );
-				jQuery('div.wpsc_loading_animation').css('visibility', 'hidden');
-			}
-		});   					
-		});
+	// Ajax cart loading code.
+	// if we have a cart widhet on our page we need to load it via AJAX jsut in case there is a page cache or
+	// content delivery network being used to help deliver pages.  
+	// If we are on the checkout page, we don't need to make the AJAX call because checkout pages
+	// are never, and can never be, cached.
+	// If we are on a checkout page then we know the page is not cached
+	if ( jQuery( 'div.wpsc_cart_loading' ).length  ) {
+		if ( ! ( jQuery( 'table.wpsc_checkout_table' ).length && jQuery( '.wpsc_buy_button' ).length) ) {
+			jQuery( 'div.wpsc_cart_loading' ).ready( function(){
+					form_values = { action : 'get_cart' };
+				jQuery.ajax({
+					type : "post",
+					dataType : "html",
+					url : wpsc_ajax_url(),
+					data : {action : 'get_cart'},
+					success: function (response) {
+						jQuery( 'div.shopping-cart-wrapper' ).html( response );
+						jQuery('div.wpsc_loading_animation').css('visibility', 'hidden');
+						},
+					error: function (result) {
+						jQuery( 'div.shopping-cart-wrapper' ).html( wpsc_ajax.ajax_get_cart_error );
+						jQuery('div.wpsc_loading_animation').css('visibility', 'hidden');
+					}
+				});   					
+			});
+		}
+	}
 
 		// Object frame destroying code.
 	jQuery( 'div.shopping_cart_container' ).ready( function(){
@@ -577,22 +591,13 @@ jQuery(document).ready(function ($) {
 		parent_form = jQuery(this).parents( 'form' );
 		form_values = jQuery(parent_form).serialize() + '&action=' + jQuery( 'input[name="wpsc_ajax_action"]', parent_form ).val();
 
-		jQuery.post( wpsc_ajax.ajaxurl, form_values, function(response) {
+		jQuery.post( wpsc_ajax_url(), form_values, function(response) {
 			jQuery('div.shopping-cart-wrapper').html( response.widget_output );
 			jQuery( document ).trigger( { type : 'wpsc_empty_cart', response : response } );
 		}, 'json');
 
 		return false;
 	});
-
-	var radios = jQuery(".productcart input:radio[name='shipping_method']");
-	if (radios.length == 1) {
-		// If there is only 1 shipping quote available during checkout, automatically select it
-		jQuery(radios).click();
-	} else if (radios.length > 1) {
-		// There are multiple shipping quotes, simulate a click on the checked one
-		jQuery(".productcart input:radio[name='shipping_method']:checked").click();
-	}
 });
 
 // update the totals when shipping methods are changed.
@@ -602,7 +607,7 @@ function switchmethod( key, key1 ) {
 		option : key,
 		method : key1
 	};
-	jQuery.post( wpsc_ajax.ajaxurl, data, function( response ) {
+	jQuery.post( wpsc_ajax_url(), data, function( response ) {
 
 		jQuery( document ).trigger( { type : 'switchmethod', response : response } );
 
@@ -658,7 +663,7 @@ function shopping_cart_collapser() {
 		case 'none':
 			form_values.state = '1';
 			jQuery("#sliding_cart").slideToggle("fast",function(){
-				jQuery.post( wpsc_ajax.ajaxurl, form_values, function(returned_data) { });
+				jQuery.post( wpsc_ajax_url(), form_values, function(returned_data) { });
 				jQuery("#fancy_collapser").attr("src", (WPSC_CORE_IMAGES_URL + "/minus.png"));
 			});
 			break;
@@ -666,7 +671,7 @@ function shopping_cart_collapser() {
 		default:
 			form_values.state = '0';
 			jQuery("#sliding_cart").slideToggle("fast",function(){
-				jQuery.post( wpsc_ajax.ajaxurl, form_values, function(returned_data) { });
+				jQuery.post( wpsc_ajax_url(), form_values, function(returned_data) { });
 				jQuery("#fancy_collapser").attr("src", (WPSC_CORE_IMAGES_URL + "/plus.png"));
 			});
 			break;
@@ -682,7 +687,7 @@ function wpsc_set_profile_country(html_form_id, form_id) {
 		country : country_field.val()
 	};
 
-	jQuery.post( wpsc_ajax.ajaxurl, form_values, function(response) {
+	jQuery.post( wpsc_ajax_url(), form_values, function(response) {
 		country_field.siblings('select').remove();
 		if (response.has_regions) {
 			country_field.after('<br />' + response.html);

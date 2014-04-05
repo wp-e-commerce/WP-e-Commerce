@@ -34,6 +34,10 @@ if ( ! get_option( 'wpsc_checkout_form_sets' ) ) {
 	$form_sets = array( __( 'Default Checkout Forms', 'wpsc' ) );
 	update_option( 'wpsc_checkout_form_sets', $form_sets );
 }
+
+// if we add and wpec admin javascript will add the localizations
+add_filter( '_wpsc_javascript_localizations', '_wpsc_admin_localizations', 1 );
+
 /**
  * wpsc_query_vars_product_list sets the ordering for the edit-products page list
  *
@@ -259,6 +263,7 @@ function wpsc_admin_pages() {
 	add_action( 'load-post.php'              , 'wpsc_add_help_tabs' );
 	add_action( 'load-post-new.php'          , 'wpsc_add_help_tabs' );
 	add_action( 'load-edit-tags.php'         , 'wpsc_add_help_tabs' );
+
 }
 
 /**
@@ -371,6 +376,9 @@ function wpsc_add_help_tabs() {
  * @uses wp_localize_script()   Adds noncing and other data to the logs script
  */
 function wpsc_admin_include_purchase_logs_css_and_js() {
+
+	_wpsc_enqueue_wp_e_commerce_admin();
+
 	wp_enqueue_script( 'wp-e-commerce-purchase-logs', WPSC_URL . '/wpsc-admin/js/purchase-logs.js', array( 'jquery' ), WPSC_VERSION . '.' . WPSC_MINOR_VERSION );
 	wp_localize_script( 'wp-e-commerce-purchase-logs', 'WPSC_Purchase_Logs_Admin', array(
 		'nonce'                                  => wp_create_nonce( 'wpsc_purchase_logs' ),
@@ -436,19 +444,21 @@ function wpsc_product_log_rss_feed() {
 function wpsc_admin_include_coupon_js() {
 
 	// Variables
-	$version_identifier = WPSC_VERSION . "." . WPSC_MINOR_VERSION;
+	$version_identifier = WPSC_VERSION . '.' . WPSC_MINOR_VERSION;
+
+	// global js
+	_wpsc_enqueue_wp_e_commerce_admin();
 
 	// Coupon CSS
 	wp_enqueue_style( 'wp-e-commerce-admin_2.7',        WPSC_URL         . '/wpsc-admin/css/settingspage.css', false, false,               'all' );
 	wp_enqueue_style( 'wp-e-commerce-admin',            WPSC_URL         . '/wpsc-admin/css/admin.css',        false, $version_identifier, 'all' );
 
 	// Coupon JS
-	wp_enqueue_script( 'wp-e-commerce-admin-parameters', admin_url( 'admin.php?wpsc_admin_dynamic_js=true' ), false,                     $version_identifier );
 	wp_enqueue_script( 'livequery',                     WPSC_URL         . '/wpsc-admin/js/jquery.livequery.js',             array( 'jquery' ),         '1.0.3' );
 	wp_enqueue_script( 'jquery-ui-datepicker' );
 	wp_enqueue_script( 'wp-e-commerce-admin_legacy',    WPSC_URL         . '/wpsc-admin/js/admin-legacy.js',                 array( 'jquery', 'jquery-ui-core', 'jquery-ui-sortable', 'jquery-ui-datepicker' ), $version_identifier );
 
-	wp_enqueue_style ( 'wpsc-jquery-ui-datepicker', WPSC_URL . '/wpsc-admin/css/jquery.ui.datepicker-' . get_user_option( 'admin_color' ) . '.css', false, $version_identifier );
+	wp_enqueue_style( 'wpsc-jquery-ui-datepicker', WPSC_URL . '/wpsc-admin/css/jquery.ui.datepicker-' . get_user_option( 'admin_color' ) . '.css', false, $version_identifier );
 }
 
 /**
@@ -461,6 +471,9 @@ function wpsc_admin_include_coupon_js() {
  * @uses wp_enqueue_style()           Includes and prints out the CSS for the WPEC options page
  */
 function wpsc_admin_include_optionspage_css_and_js() {
+
+	_wpsc_enqueue_wp_e_commerce_admin();
+
 	$version_identifier = WPSC_VERSION . "." . WPSC_MINOR_VERSION;
 	wp_enqueue_script( 'wp-e-commerce-admin-settings-page', WPSC_URL . '/wpsc-admin/js/settings-page.js', array( 'jquery-query' ), $version_identifier );
 
@@ -549,8 +562,10 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 	$pages = array( 'index.php', 'options-general.php', 'edit.php', 'post.php', 'post-new.php' );
 
 	if ( ( in_array( $pagehook, $pages ) && $post_type == 'wpsc-product' )  || $current_screen->id == 'edit-wpsc_product_category' || $current_screen->id == 'dashboard_page_wpsc-sales-logs' || $current_screen->id == 'dashboard_page_wpsc-purchase-logs' || $current_screen->id == 'settings_page_wpsc-settings' || $current_screen->id == 'wpsc-product_page_wpsc-edit-coupons' || $current_screen->id == 'edit-wpsc-variation' || $current_screen->id == 'wpsc-product-variations-iframe' || ( $pagehook == 'media-upload-popup' && get_post_type( $_REQUEST['post_id'] ) == 'wpsc-product' ) ) {
+
+		_wpsc_enqueue_wp_e_commerce_admin();
+
 		wp_enqueue_script( 'livequery',                      WPSC_URL . '/wpsc-admin/js/jquery.livequery.js',             array( 'jquery' ), '1.0.3' );
-		wp_enqueue_script( 'wp-e-commerce-admin-parameters', admin_url( '/?wpsc_admin_dynamic_js=true' ), false,             $version_identifier );
 		wp_enqueue_script( 'wp-e-commerce-admin',            WPSC_URL . '/wpsc-admin/js/admin.js',                        array( 'jquery', 'jquery-ui-core', 'jquery-ui-sortable' ), $version_identifier, false );
 		wp_enqueue_script( 'wpsc-sortable-table', WPSC_URL . '/wpsc-admin/js/sortable-table.js', array( 'jquery' ) );
 
@@ -584,6 +599,8 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 		) );
 	}
 	if ( $pagehook == 'wpsc-product-variations-iframe' ) {
+		_wpsc_enqueue_wp_e_commerce_admin();
+
 		wp_enqueue_script( 'wp-e-commerce-product-variations', WPSC_URL . '/wpsc-admin/js/product-variations.js', array( 'jquery' ), $version_identifier );
 		wp_localize_script( 'wp-e-commerce-product-variations', 'WPSC_Product_Variations', array(
 			'product_id'              => $_REQUEST['product_id'],
@@ -592,8 +609,11 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 	}
 
 	if ( $pagehook == 'media-upload-popup' ) {
+
 		$post = get_post( $_REQUEST['post_id'] );
 		if ( $post->post_type == 'wpsc-product' && $post->post_parent ) {
+			_wpsc_enqueue_wp_e_commerce_admin();
+
 			wp_dequeue_script( 'set-post-thumbnail' );
 			wp_enqueue_script( 'wpsc-set-post-thumbnail', WPSC_URL . '/wpsc-admin/js/set-post-thumbnail.js', array( 'jquery', 'wp-e-commerce-admin' ), $version_identifier );
 			wp_localize_script( 'wpsc-set-post-thumbnail', 'WPSC_Set_Post_Thumbnail', array(
@@ -610,77 +630,68 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 		wp_enqueue_style( 'wp-e-commerce-admin', WPSC_URL . '/wpsc-admin/css/admin.css', false, $version_identifier, 'all' );
 }
 
+
 /**
- * @todo docs
+ * Adds admin javascript to the wp-e-commerce-admin javascript
  *
- * @uses get_option()     Gets an option by name from the WordPress database
+ * @since 3.8.14
+ *
+ * @param array  	array containing key value pairs, keys are turned into javascript globals with thier associated values
+ *
  */
-function wpsc_admin_dynamic_js() {
-	header( 'Content-Type: text/javascript' );
-	header( 'Expires: ' . gmdate( 'r', mktime( 0, 0, 0, date( 'm' ), ( date( 'd' ) + 12 ), date( 'Y' ) ) ) . '' );
-	header( 'Cache-Control: public, must-revalidate, max-age=86400' );
-	header( 'Pragma: public' );
+function _wpsc_admin_localizations( $localizations ) {
 
-	$hidden_boxes = get_option( 'wpsc_hidden_box' );
+	$hidden_boxes  = get_option( 'wpsc_hidden_box' );
+	$hidden_boxes  = implode( ',', (array)$hidden_boxes );
 
-	$form_types1 = get_option( 'wpsc_checkout_form_fields' );
-	$unique_names1 = get_option( 'wpsc_checkout_unique_names' );
+	$form_types_option   = get_option( 'wpsc_checkout_form_fields' );
+	if ( ! $form_types_option || ! is_array( $form_types_option ) ) {
+		$form_types_option = array();
+	}
+
+	$unique_names_option = get_option( 'wpsc_checkout_unique_names' );
+	if ( ! $unique_names_option || ! is_array( $unique_names_option ) ) {
+		$unique_names_option = array();
+	}
 
 	$form_types = '';
-	foreach ( (array)$form_types1 as $form_type ) {
-		$form_types .= "<option value='" . $form_type . "'>" . $form_type . "</option>";
+	foreach ( $form_types_option as $form_type ) {
+		$form_types .= '<option value="' . $form_type . '">' . $form_type . '</option>';
 	}
 
-	$unique_names = "<option value='-1'>" . __('Select a Unique Name', 'wpsc') . "</option>";
-	foreach ( (array)$unique_names1 as $unique_name ) {
-		$unique_names.= "<option value='" . $unique_name . "'>" . $unique_name . "</option>";
+	$unique_names = '<option value="-1">' . __( 'Select a Unique Name', 'wpsc' ) . '</option>';
+	foreach ( $unique_names_option as $unique_name ) {
+		$unique_names .= '<option value="' . $unique_name . '">' . $unique_name . '</option>';
 	}
 
-	$hidden_boxes = implode( ',', (array)$hidden_boxes );
-	echo "var base_url = '" . esc_js( site_url() ) . "';\n\r";
-	echo "var WPSC_URL = '" . esc_js( WPSC_URL ) . "';\n\r";
-	echo "var WPSC_IMAGE_URL = '" . esc_js( WPSC_IMAGE_URL ) . "';\n\r";
-	echo "var WPSC_DIR_NAME = '" . esc_js( WPSC_DIR_NAME ) . "';\n\r";
-	echo "var WPSC_IMAGE_URL = '" . esc_js( WPSC_IMAGE_URL ) . "';\n\r";
+	$localizations['hidden_boxes']      = '"' . esc_js( $hidden_boxes ) . '"';
+	$localizations['IS_WP27']           = '"' . esc_js( IS_WP27 ) . '"';
+	$localizations['TXT_WPSC_DELETE']   = '"' . esc_js( __( 'Delete', 'wpsc' ) ) . '"';
+	$localizations['TXT_WPSC_TEXT']     = '"' . esc_js( __( 'Text', 'wpsc' ) ) . '"';
+	$localizations['TXT_WPSC_EMAIL']    = '"' . esc_js( __( 'Email', 'wpsc' ) ) . '"';
+	$localizations['TXT_WPSC_COUNTRY']  = '"' . esc_js( __( 'Country', 'wpsc' ) ) . '"';
+	$localizations['TXT_WPSC_TEXTAREA'] = '"' . esc_js( __( 'Textarea', 'wpsc' ) ) . '"';
+	$localizations['TXT_WPSC_HEADING']  = '"' . esc_js( __( 'Heading', 'wpsc' ) ) . '"';
+	$localizations['TXT_WPSC_COUPON']   = '"' . esc_js( __( 'Coupon', 'wpsc' ) ) . '"';
 
-	// LightBox Configuration start
-	echo "var fileLoadingImage = '" . esc_js( WPSC_CORE_IMAGES_URL ) . "/loading.gif';\n\r";
-	echo "var fileBottomNavCloseImage = '" . esc_js( WPSC_CORE_IMAGES_URL ) . "/closelabel.gif';\n\r";
-	echo "var fileThickboxLoadingImage = '" . esc_js( WPSC_CORE_IMAGES_URL ) . "/loadingAnimation.gif';\n\r";
+	$localizations['HTML_FORM_FIELD_TYPES']        = '"' . esc_js( $form_types ) . '"';
+	$localizations['HTML_FORM_FIELD_UNIQUE_NAMES'] = '"' . esc_js( $unique_names ) . '"';
 
-	echo "var resizeSpeed = 9;\n\r";
+	$localizations['TXT_WPSC_LABEL']        = '"' . esc_js( __( 'Label', 'wpsc' ) ) . '"';
+	$localizations['TXT_WPSC_LABEL_DESC']   = '"' . esc_js( __( 'Label Description', 'wpsc' ) ) . '"';
+	$localizations['TXT_WPSC_ITEM_NUMBER']  = '"' . esc_js( __( 'Item Number', 'wpsc' ) ) . '"';
+	$localizations['TXT_WPSC_LIFE_NUMBER']  = '"' . esc_js( __( 'Life Number', 'wpsc' ) ) . '"';
+	$localizations['TXT_WPSC_PRODUCT_CODE'] = '"' . esc_js( __( 'Product Code', 'wpsc' ) ) . '"';
+	$localizations['TXT_WPSC_PDF']          = '"' . esc_js( __( 'PDF', 'wpsc' ) ) . '"';
 
-	echo "var borderSize = 10;\n\r";
+	$localizations['TXT_WPSC_AND_ABOVE']    = '"' . esc_js( __( ' and above', 'wpsc' ) ) . '"';
+	$localizations['TXT_WPSC_IF_PRICE_IS']  = '"' . esc_js( __( 'If price is ', 'wpsc' ) ) . '"';
+	$localizations['TXT_WPSC_IF_WEIGHT_IS'] = '"' . esc_js( __( 'If weight is ', 'wpsc' ) ) . '"';
 
-	echo "var hidden_boxes = '" . esc_js( $hidden_boxes ) . "';\n\r";
-	echo "var IS_WP27 = '" . esc_js( IS_WP27 ) . "';\n\r";
-	echo "var TXT_WPSC_DELETE = '" . esc_js( __( 'Delete', 'wpsc' ) ) . "';\n\r";
-	echo "var TXT_WPSC_TEXT = '" . esc_js( __( 'Text', 'wpsc' ) ) . "';\n\r";
-	echo "var TXT_WPSC_EMAIL = '" . esc_js( __( 'Email', 'wpsc' ) ) . "';\n\r";
-	echo "var TXT_WPSC_COUNTRY = '" . esc_js( __( 'Country', 'wpsc' ) ) . "';\n\r";
-	echo "var TXT_WPSC_TEXTAREA = '" . esc_js( __( 'Textarea', 'wpsc' ) ) . "';\n\r";
-	echo "var TXT_WPSC_HEADING = '" . esc_js( __( 'Heading', 'wpsc' ) ) . "';\n\r";
-	echo "var TXT_WPSC_COUPON = '" . esc_js( __( 'Coupon', 'wpsc' ) ) . "';\n\r";
+	// we only want to add these localizations once, it should happen on the first admin script load
+	remove_filter( '_wpsc_javascript_localizations', '_wpsc_admin_localizations', 1 );
 
-	echo "var HTML_FORM_FIELD_TYPES =\" " . esc_js( $form_types ) . "; \" \n\r";
-	echo "var HTML_FORM_FIELD_UNIQUE_NAMES = \" " . esc_js( $unique_names ) . "; \" \n\r";
-
-	echo "var TXT_WPSC_LABEL = '" . esc_js( __( 'Label', 'wpsc' ) ) . "';\n\r";
-	echo "var TXT_WPSC_LABEL_DESC = '" . esc_js( __( 'Label Description', 'wpsc' ) ) . "';\n\r";
-	echo "var TXT_WPSC_ITEM_NUMBER = '" . esc_js( __( 'Item Number', 'wpsc' ) ) . "';\n\r";
-	echo "var TXT_WPSC_LIFE_NUMBER = '" . esc_js( __( 'Life Number', 'wpsc' ) ) . "';\n\r";
-	echo "var TXT_WPSC_PRODUCT_CODE = '" . esc_js( __( 'Product Code', 'wpsc' ) ) . "';\n\r";
-	echo "var TXT_WPSC_PDF = '" . esc_js( __( 'PDF', 'wpsc' ) ) . "';\n\r";
-
-	echo "var TXT_WPSC_AND_ABOVE = '" . esc_js( __( ' and above', 'wpsc' ) ) . "';\n\r";
-	echo "var TXT_WPSC_IF_PRICE_IS = '" . esc_js( __( 'If price is ', 'wpsc' ) ) . "';\n\r";
-	echo "var TXT_WPSC_IF_WEIGHT_IS = '" . esc_js( __( 'If weight is ', 'wpsc' ) ) . "';\n\r";
-
-	exit();
-}
-
-if ( isset( $_GET['wpsc_admin_dynamic_js'] ) && ( $_GET['wpsc_admin_dynamic_js'] == 'true' ) ) {
-	add_action( "admin_init", 'wpsc_admin_dynamic_js' );
+	return $localizations;
 }
 
 /**
@@ -722,6 +733,19 @@ function wpsc_admin_dynamic_css() {
 
 if ( isset( $_GET['wpsc_admin_dynamic_css'] ) && ( $_GET['wpsc_admin_dynamic_css'] == 'true' ) ) {
 	add_action( "admin_init", 'wpsc_admin_dynamic_css' );
+}
+
+/*
+ * Enqueue the admin script that applies to applies to all wpsc admin pages
+ */
+function _wpsc_enqueue_wp_e_commerce_admin( ) {
+	static $already_enqueued = false;
+	if ( ! $already_enqueued ) {
+		$version_identifier = WPSC_VERSION . '.' . WPSC_MINOR_VERSION;
+		wp_enqueue_script( 'wp-e-commerce-admin-js',  WPSC_URL . '/wpsc-admin/js/wp-e-commerce-admin.js', false, false, $version_identifier );
+		wp_localize_script( 'wp-e-commerce-admin-js', 'wpsc_admin_vars', _wpsc_javascript_localizations() );
+		$already_enqueued = true;
+	}
 }
 
 add_action( 'admin_menu', 'wpsc_admin_pages' );
@@ -1140,13 +1164,15 @@ function wpsc_fav_action( $actions ) {
 add_filter( 'favorite_actions', 'wpsc_fav_action' );
 
 /**
- * Prits out the admin scripts
+ * Enqueue the admin scripts
  *
  * @uses wp_enqueue_script()      Enqueues scripts
  * @uses home_url()               Returns the base url for the site
  */
 function wpsc_print_admin_scripts() {
-	wp_enqueue_script( 'wp-e-commerce-dynamic', home_url( '/index.php?wpsc_user_dynamic_js=true' ) );
+	$version_identifier = WPSC_VERSION . '.' . WPSC_MINOR_VERSION;
+	wp_enqueue_script( 'wp-e-commerce-admin', WPSC_CORE_JS_URL . '/wp-e-commerce.js', array( 'jquery' ), $version_identifier );
+	wp_localize_script( 'wp-e-commerce-admin', 'wpsc_vars', _wpsc_javascript_localizations() );
 }
 
 /**
