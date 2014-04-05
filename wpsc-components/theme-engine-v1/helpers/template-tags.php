@@ -568,7 +568,11 @@ function wpsc_product_image( $attachment_id = 0, $width = null, $height = null )
 			$image_url = $uploads['baseurl'].'/'.$image_meta[0];
 	}
 
-	return apply_filters( 'wpsc_product_image', set_url_scheme( $image_url ), $product_id, $product );
+	if ( $image_url ) {
+		$image_url = set_url_scheme( $image_url );
+	}
+
+	return apply_filters( 'wpsc_product_image', $image_url );
 }
 
 function wpsc_product_no_image_fallback( $image_url = '' ) {

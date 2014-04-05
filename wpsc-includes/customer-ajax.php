@@ -362,10 +362,11 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 	 * @return response array   val;ues to be encoded in JSON response to browser
 	 */
 	function _wpsc_update_customer_shippingregion( $response, $meta_key, $meta_value ) {
-		global $wpdb;
-		$region_name = $wpdb->get_var( $wpdb->prepare( 'SELECT `name` FROM `' . WPSC_TABLE_REGION_TAX . '` WHERE `id`= %d LIMIT 1', $meta_value ) );
-		wpsc_update_customer_meta( 'shippingstate', $region_name );
 
+		$region = new WPSC_Region( wpsc_get_customer_meta( 'shippingcountry' ), $meta_value );
+		if ( $region ) {
+			wpsc_update_customer_meta( 'shippingstate', $region->name() );
+		}
 
 		if ( ! isset( $response['replacements'] ) ) {
 			$replacements = array();

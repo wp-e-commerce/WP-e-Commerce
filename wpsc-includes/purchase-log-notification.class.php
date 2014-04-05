@@ -393,8 +393,7 @@ class WPSC_Purchase_Log_Admin_Notification extends WPSC_Purchase_Log_Notificatio
 			$message .= "<strong>{$section['title']}</strong>\r\n";
 			foreach ( $section['fields'] as $field ) {
 				if ( strpos( $field->unique_name, 'state' ) && is_numeric( $field->value ) ) {
-					$sql = $wpdb->prepare( "SELECT name FROM " . WPSC_TABLE_REGION_TAX . " WHERE id = %d", $field->value );
-					$field->value = $wpdb->get_var( $sql );
+					$field->value = wpsc_get_region( $field->value );
 				}
 				$message .= $field->name . ' : ' . $field->value . "\r\n";
 			}

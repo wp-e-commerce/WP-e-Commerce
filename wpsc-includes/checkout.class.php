@@ -18,14 +18,8 @@
  * @param $country (string) isocode for a country
  * @return (boolean) true is country has regions else false
  */
-function wpsc_has_regions($country){
-	global $wpdb;
-	$country_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `isocode` IN(%s) LIMIT 1", $country ), ARRAY_A );
-	if ($country_data['has_regions'] == 1)
-		return true;
-	else
-		return false;
-
+function wpsc_has_regions( $country ){
+	return WPSC_Countries::country_has_regions( $country );
 }
 
 /**
@@ -147,9 +141,10 @@ function wpsc_get_acceptable_countries() {
 		$target_market_ids = $target_market_ids[0];
 	}
 
-	$country_data = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `visible`= '1' ORDER BY `country` ASC", ARRAY_A );
+	$country_data = WPSC_Countries::countries_array();
+
 	$have_target_market = $have_target_market && count( $country_data ) != count( $target_market_ids );
-	$GLOBALS['wpsc_country_data'] = $country_data;
+	$GLOBALS['wpsc_country_data'] = $country_data; // TODO Is this ever used?
 
 	$conflict_error = wpsc_get_customer_meta( 'category_shipping_conflict' );
 	$target_conflict = wpsc_get_customer_meta( 'category_shipping_target_market_conflict' );
@@ -339,12 +334,12 @@ class wpsc_checkout {
 				break;
 
 			case "country":
-				$output = wpsc_country_region_list( $this->checkout_item->id, false, $billing_country, $billing_region, $this->form_element_id() );
+				$output = WPSC_Countries_list( $this->checkout_item->id, false, $billing_country, $billing_region, $this->form_element_id() );
 				break;
 
 			case "delivery_country":
 				$checkoutfields = true;
-				$output = wpsc_country_region_list( $this->checkout_item->id, false, $delivery_country, $delivery_region, $this->form_element_id(), $checkoutfields );
+				$output = WPSC_Countries_list( $this->checkout_item->id, false, $delivery_country, $delivery_region, $this->form_element_id(), $checkoutfields );
 				break;
 
 			case "select":
@@ -382,7 +377,6 @@ class wpsc_checkout {
 				$placeholder = apply_filters( 'wpsc_checkout_field_placeholder', apply_filters( 'wpsc_checkout_field_name', $this->checkout_item->name ), $this->checkout_item );
 				if ( $this->checkout_item->unique_name == 'shippingstate' ) {
 					if ( wpsc_uses_shipping() && wpsc_has_regions( $delivery_country ) ) {
-						$region_name = $wpdb->get_var( $wpdb->prepare( 'SELECT `name` FROM `' . WPSC_TABLE_REGION_TAX . '` WHERE `id`= %d LIMIT 1', $delivery_region ) );
 						$output = '<input data-wpsc-meta-key="' . $this->checkout_item->unique_name. '" title="' . $this->checkout_item->unique_name . '" type="hidden" id="' . $this->form_element_id() . '" class="shipping_region wpsc-visitor-meta" name="collected_data[' . $this->checkout_item->id . ']" placeholder="' . esc_attr( $placeholder ) . '" value="' . esc_attr( $delivery_region ) . '" size="4" />';
 					} else {
 						$disabled = '';

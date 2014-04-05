@@ -1147,14 +1147,25 @@ add_action( 'wpsc_updated_visitor_meta_shippingregion', '_wpsc_updated_visitor_m
  */
 function _wpsc_updated_visitor_meta_shippingcountry( $meta_value, $meta_key, $visitor_id ) {
 
-	if ( ! empty( $meta_value ) ) {
-		$shippingstate = wpsc_get_state_by_id( $meta_value, 'name' );
-	} else {
-		$shippingstate = '';
-	}
+	$old_shipping_state = wpsc_get_visitor_meta( $visitor_id, 'shippingstate' , true );
+	$old_shipping_region = wpsc_get_visitor_meta( $visitor_id, 'shippingregion' , true );
 
-	wpsc_update_visitor_meta( $visitor_id, 'shippingregion', '' );
-	wpsc_update_visitor_meta( $visitor_id, 'shippingstate', '' );
+	if ( ! empty( $meta_value ) ) {
+
+		// check the current state and region values, if either isn't valid for the new country delete them
+		$wpsc_country = new WPSC_Country( $meta_value );
+
+		if ( ! empty ( $old_shipping_state ) && ! $wpsc_country->has_region( $old_shipping_state ) ) {
+			wpsc_delete_visitor_meta( $visitor_id, 'shippingstate' );
+		}
+
+		if ( ! empty ( $old_shipping_region ) && ! $wpsc_country->has_region( $old_shipping_region ) ) {
+			wpsc_delete_visitor_meta( $visitor_id, 'shippingregion' );
+		}
+	} else {
+		wpsc_delete_visitor_meta( $visitor_id, 'shippingstate' );
+		wpsc_delete_visitor_meta( $visitor_id, 'shippingregion' );
+	}
 }
 
 add_action( 'wpsc_updated_visitor_meta_shippingcountry', '_wpsc_updated_visitor_meta_shippingcountry' , 1 , 3 );
@@ -1195,8 +1206,27 @@ add_action( 'wpsc_updated_visitor_meta_billingregion', '_wpsc_updated_visitor_me
  * @return none
 */
 function _wpsc_updated_visitor_meta_billingcountry( $meta_value, $meta_key, $visitor_id ) {
-	wpsc_update_visitor_meta( $visitor_id, 'billingregion', '' );
-	wpsc_update_visitor_meta( $visitor_id, 'billingstate', '' );
+
+	$old_billing_state = wpsc_get_visitor_meta( $visitor_id, 'billingstate' , true );
+	$old_billing_region = wpsc_get_visitor_meta( $visitor_id, 'billingregion' , true );
+
+	if ( ! empty( $meta_value ) ) {
+
+		// check the current state and region values, if either isn't valid for the new country delete them
+		$wpsc_country = new WPSC_Country( $meta_value );
+
+		if ( ! empty ( $old_billing_state ) && ! $wpsc_country->has_region( $old_billing_state ) ) {
+			wpsc_delete_visitor_meta( $visitor_id, 'billingstate' );
+		}
+
+		if ( ! empty ( $old_billing_region ) && ! $wpsc_country->has_region( $old_billing_region ) ) {
+			wpsc_delete_visitor_meta( $visitor_id, 'billingregion' );
+		}
+	} else {
+		wpsc_delete_visitor_meta( $visitor_id, 'billingstate' );
+		wpsc_delete_visitor_meta( $visitor_id, 'billingregion' );
+	}
+
 }
 
 add_action( 'wpsc_updated_visitor_meta_billingcountry', '_wpsc_updated_visitor_meta_billingcountry' , 1 , 3 );
