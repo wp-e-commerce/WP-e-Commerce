@@ -1,21 +1,43 @@
 <?php
 
+ini_set( 'display_errors', '1' );
+error_reporting( E_ALL );
+
 class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
-	private $file = false;
-	private $step = 1;
-	private $display_data = array();
-	private $completed = false;
+
+	private $file           = false;
+	private $step           = 1;
+	private $display_data   = array();
+	private $completed      = false;
+	private $default_fields = array();
 
 	public function __construct() {
+
 		parent::__construct();
 
 		$file = get_transient( 'wpsc_settings_tab_import_file' );
-		if ( $file )
+
+		if ( $file ) {
 			$this->file = $file;
+		}
 
 		$this->step = empty( $_REQUEST['step'] ) ? 1 : (int) $_REQUEST['step'];
-		if ( $this->step < 1 || $this->step > 3 )
+
+		if ( $this->step < 1 || $this->step > 3 ) {
 			$this->step = 1;
+		}
+
+		$this->default_fields = apply_filters( 'wpsc_product_import_default_fields', array(
+			'column_name'                   => __( 'Product Name'          , 'wpsc' ),       
+			'column_description'            => __( 'Description'           , 'wpsc' ),        
+			'column_additional_description' => __( 'Additional Description', 'wpsc' ), 
+			'column_price'                  => __( 'Price'                 , 'wpsc' ),              
+			'column_sku'                    => __( 'SKU'                   , 'wpsc' ),                
+			'column_weight'                 => __( 'Weight'                , 'wpsc' ),            
+			'column_weight_unit'            => __( 'Weight Unit'           , 'wpsc' ),        
+			'column_quantity'               => __( 'Stock Quantity'        , 'wpsc' ),     
+			'column_quantity_limited'       => __( 'Stock Quantity Limit'  , 'wpsc' )
+		) );
 
 		switch ( $this->step ) {
 			case 2:
@@ -31,6 +53,7 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 
 	private function prepare_import_columns() {
 		$this->hide_update_message();
+
 		ini_set( 'auto_detect_line_endings', 1 );
 		$handle = @fopen( $this->file, 'r' );
 
@@ -38,64 +61,73 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 			$this->reset_state();
 			return;
 		}
+
 		$rows = array();
-		while ( count($rows) < 5 && ( $data = fgetcsv($handle) ) !== FALSE ) {
+
+		while ( count( $rows ) < 5 && ( false !== ( $data = fgetcsv( $handle ) ) ) ) {
         	array_push( $rows, $data );
 		}
 
 		$sample_row_data = array();
+
 		foreach ( $rows as $row => $columns ) {
 			foreach ( $columns as $column => $data ) {
-				if ( ! isset( $sample_row_data[$column] ) )
-					$sample_row_data[$column] = array();
-				array_push( $sample_row_data[$column], $data );
+
+				if ( ! isset( $sample_row_data[ $column ] ) ) {
+					$sample_row_data[ $column ] = array();
+				}
+
+				array_push( $sample_row_data[ $column ], $data );
 			}
 		}
 
 		$categories = get_terms( 'wpsc_product_category', 'hide_empty=0' );
 
 		$this->display_data = array(
-			'sample_row_data'    => $sample_row_data,
-			'categories'         => $categories,
+			'sample_row_data' => $sample_row_data,
+			'categories'      => $categories,
 		);
 	}
 
 	private function reset_state() {
 		delete_transient( 'wpsc_settings_tab_import_file' );
-		$this->file = false;
-		$this->completed = false;
+		$this->file         = false;
+		$this->completed    = false;
 		$this->display_data = array();
 	}
 
 	private function import_data() {
 		ini_set( 'auto_detect_line_endings', 1 );
-		$handle     = @fopen( $this->file, 'r' );
+
+		$handle = @fopen( $this->file, 'r' );
+
 		if ( ! $handle ) {
 			$this->reset_state();
 			return;
 		}
 
-		$length     = filesize( $this->file );
+		$length = filesize( $this->file );
 
 		$column_map = array_flip( $_POST['value_name'] );
+
 		extract( $column_map, EXTR_SKIP );
 
 		$record_count = 0;
 
 		while ( $row = @fgetcsv( $handle, $length, ',' ) ) {
 			$product = array(
-				'post_title'             => isset( $row[$column_name] ) ? $row[$column_name] : '',
-				'content'                => isset( $row[$column_description] ) ? $row[$column_description] : '',
-				'additional_description' => isset( $row[$column_additional_description] ) ? $row[$column_additional_description] : '',
-				'price'                  => isset( $row[$column_price] ) ? str_replace( '$', '', $row[$column_price] ) : 0,
-				'weight'                 => isset( $row[$column_weight] ) ? $row[$column_weight] : '',
-				'weight_unit'            => isset( $row[$column_weight_unit] ) ? $row[$column_weight_unit] : '',
+				'post_title'             => isset( $row[ $column_name ] )        ? $row[ $column_name ] : '',
+				'content'                => isset( $row[ $column_description ] ) ? $row[ $column_description ] : '',
+				'price'                  => isset( $row[ $column_price ] )       ? str_replace( '$', '', $row[ $column_price ] ) : 0,
+				'weight'                 => isset( $row[ $column_weight ] )      ? $row[ $column_weight] : '',
+				'weight_unit'            => isset( $row[ $column_weight_unit ] ) ? $row[ $column_weight_unit ] : '',
+				'additional_description' => isset( $row[ $column_additional_description ] ) ? $row[ $column_additional_description ] : '',
 				'pnp'                    => null,
 				'international_pnp'      => null,
 				'file'                   => null,
 				'image'                  => '0',
-				'quantity_limited'       => isset( $row[$column_quantity_limited] ) ? $row[$column_quantity_limited] : '',
-				'quantity'               => isset( $row[$column_quantity] ) ? $row[$column_quantity] : null,
+				'quantity_limited'       => isset( $row[ $column_quantity_limited ] ) ? $row[ $column_quantity_limited ] : '',
+				'quantity'               => isset( $row[ $column_quantity ] )         ? $row[ $column_quantity ] : null,
 				'special'                => null,
 				'special_price'          => null,
 				'display_frontpage'      => null,
@@ -117,14 +149,20 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 					)
 				)
 			);
+			
+			$product = apply_filters( 'wpsc_product_import_row', $product, $row, $this );
 
 			$product = wpsc_sanitise_product_forms( $product );
+
 			// status needs to be set here because wpsc_sanitise_product_forms overwrites it :/
 			$product['post_status'] = $_POST['post_status'];
+
 			$product_id = wpsc_insert_product( $product );
-			if ( (int)$_POST['category'] > 0 ) {
-				wp_set_object_terms( $product_id , array( (int)$_POST['category'] ) , 'wpsc_product_category' );
+
+			if ( (int) $_POST['category'] > 0 ) {
+				wp_set_object_terms( $product_id , array( (int) $_POST['category'] ) , 'wpsc_product_category' );
 			}
+
 			$record_count += 1;
 		}
 
@@ -145,8 +183,9 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 			}
 		}
 
-		if ( $this->completed )
+		if ( $this->completed ) {
 			return array( 'step' => 1 );
+		}
 
 		return array( 'step' => $this->step + 1 );
 	}
@@ -166,7 +205,7 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 					</tr>
 				</thead>
 				<tbody>
-					<?php foreach ( $sample_row_data as $key => $sample_data ): ?>
+					<?php foreach ( $sample_row_data as $key => $sample_data ) : ?>
 						<tr>
 							<td>
 								<p><?php printf( __('Column %s', 'wpsc' ), $this->num_to_alphacolumn( $key ) ); ?></p>
@@ -186,16 +225,16 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 							</td>
 							<td>
 								<p>
-									<select  name='value_name[<?php echo $key; ?>]'>
-										<option <?php selected( $key, 0 ); ?> value='column_name'                  ><?php esc_html_e( 'Product Name'          , 'wpsc' ); ?></option>
-										<option <?php selected( $key, 1 ); ?> value='column_description'           ><?php esc_html_e( 'Description'           , 'wpsc' ); ?></option>
-										<option <?php selected( $key, 2 ); ?> value='column_additional_description'><?php esc_html_e( 'Additional Description', 'wpsc' ); ?></option>
-										<option <?php selected( $key, 3 ); ?> value='column_price'                 ><?php esc_html_e( 'Price'                 , 'wpsc' ); ?></option>
-										<option <?php selected( $key, 4 ); ?> value='column_sku'                   ><?php esc_html_e( 'SKU'                   , 'wpsc' ); ?></option>
-										<option <?php selected( $key, 5 ); ?> value='column_weight'                ><?php esc_html_e( 'Weight'                , 'wpsc' ); ?></option>
-										<option <?php selected( $key, 6 ); ?> value='column_weight_unit'           ><?php esc_html_e( 'Weight Unit'           , 'wpsc' ); ?></option>
-										<option <?php selected( $key, 7 ); ?> value='column_quantity'              ><?php esc_html_e( 'Stock Quantity'        , 'wpsc' ); ?></option>
-										<option <?php selected( $key, 8 ); ?> value='column_quantity_limited'      ><?php esc_html_e( 'Stock Quantity Limit'  , 'wpsc' ); ?></option>
+									<select name='value_name[<?php echo $key; ?>]'>
+										<?php
+											$i = 0;
+											foreach ( $this->default_fields as $value => $label ) :
+										?>
+											<option <?php selected( $key, $i ); ?> value='<?php echo esc_attr( $value ); ?>'><?php echo esc_html( $label ); ?></option>
+										<?php 
+											$i++;
+											endforeach; 
+										?>
 									</select>
 								</p>
 							</td>
@@ -236,14 +275,16 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 			</table>
 			<input type="hidden" name="step" value="3" />
 			<input type='submit' value='<?php echo esc_html_x( 'Import Products', 'import csv', 'wpsc' ); ?>' class='button-primary'>
-
 		<?php
 	}
 
 	private function num_to_alphacolumn($n) {
 		// from http://stackoverflow.com/questions/3302857/algorithm-to-get-the-excel-like-column-name-of-a-number
-    	for( $r = ""; $n >= 0; $n = intval( $n / 26 ) - 1 )
+    	
+    	for( $r = ""; $n >= 0; $n = intval( $n / 26 ) - 1 ) {
         	$r = chr( $n % 26 + 0x41) . $r;
+    	}
+
     	return $r;
 	}
 
@@ -262,6 +303,7 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 					</td>
 				</tr>
 			</table>
+
 			<?php submit_button( esc_html_x( 'Upload', 'import csv', 'wpsc' ) ); ?>
 
 			<h4><?php _e( 'Useful Information', 'wpsc' ); ?></h4>
@@ -271,7 +313,7 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 					<td>
 						<?php _e( 'Columns supported are, in their default order:', 'wpsc'); ?><br />
 						<code>
-							<?php _e( 'Product Name, Description, Additional Description, Price, SKU, Weight, Weight Unit, Stock Quantity, Stock Quantity Limited', 'wpsc' ); ?>
+							<?php echo implode( ', ', $this->default_fields ); ?>
 						</code>
 					</td>
 				</tr>
@@ -279,7 +321,7 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 					<th><?php _e( 'Understood Weight Units', 'wpsc' ); ?></th>
 					<td>
 						<?php _e( 'Metric', 'wpsc' ); ?>: <code>kilogram</code>,<code>kilograms</code>,<code>kg</code>,<code>kgs</code>,<code>gram</code>,<code>grams</code>,<code>g</code>,<code>gs</code><br />
-						<?php _e( 'Imperial', 'wpsc' ); ?>: <code>ounce</code>,<code>once</code>,<code>ounces</code>,<code>oz</code>,<code>pound</code>,<code>pounds</code>,<code>lb</code>,<code>lbs</code>
+						<?php _e( 'Imperial', 'wpsc' ); ?>: <code>ounce</code>,<code>ounces</code>,<code>oz</code>,<code>pound</code>,<code>pounds</code>,<code>lb</code>,<code>lbs</code>
 					</td>
 				</tr>
 				<tr>

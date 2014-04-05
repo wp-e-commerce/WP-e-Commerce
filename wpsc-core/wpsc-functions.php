@@ -155,6 +155,40 @@ function wpsc_checkout_unique_names() {
 	return $unique_names;
 }
 
+/**
+ * Get the unique names used in checkout forms
+ *
+ * @since 3.8.14
+ * @access private
+ *
+ * @return array  local variables to add to both admin and front end WPEC javascript
+ */
+function _wpsc_javascript_localizations( $localizations = false ) {
+
+	if ( ! is_array( $localizations ) ) {
+		$localizations = array();
+	}
+
+	// The default localizations should only be added once per page as we don't wnat them to be
+	// defined more than once in the javascript.
+	static $already_added_default_localizations = false;
+
+	if ( ! $already_added_default_localizations ) {
+		$defaults = array(
+				'_wpsc_admin_ajax_url' => admin_url( 'admin-ajax.php', 'relative' ),
+		);
+
+		$localizations = array_merge( $defaults, $localizations );
+
+		if ( defined( 'WPEC_LOAD_DEPRECATED' ) && WPEC_LOAD_DEPRECATED ) {
+			$localizations = _wpsc_deprecated_javascript_localization_vars( $localizations );
+		}
+
+		$already_added_default_localizations = true;
+	}
+
+	return apply_filters( '_wpsc_javascript_localizations' , $localizations );
+}
 
 /**
  * wpsc_core_load_purchase_log_statuses()
@@ -527,10 +561,30 @@ function wpsc_get_page_post_names() {
 	return $wpsc_page;
 }
 
+
+/**
+ * wpsc_cron()
+ *
+ * Schedules wpsc worpress cron tasks
+ *
+ * @param none
+ * @return void
+ */
 function wpsc_cron() {
+	$default_schedules = array( 'hourly', 'twicedaily', 'daily');
+	
+	/*
+	 * Create a cron event for each likely cron schedule.  The likely cron schedules 
+	 * are the default WordPress cron intervals (hourly, twicedaily and daily are 
+	 * defined in wordpress 3.5.1) and any cron schedules added by our plugin or 
+	 * it's related plugins.  We recognize these by checking if the schedule 
+	 * name is prefixed by 'wpsc_'.
+	 */
 	foreach ( wp_get_schedules() as $cron => $schedule ) {
-		if ( ! wp_next_scheduled( "wpsc_{$cron}_cron_task" ) )
-			wp_schedule_event( time(), $cron, "wpsc_{$cron}_cron_task" );
+		if ( in_array($cron, $default_schedules) || ( stripos($cron, 'wpsc_', 0) === 0 ) ) {
+			if ( ! wp_next_scheduled( "wpsc_{$cron}_cron_task" ) )
+				wp_schedule_event( time(), $cron, "wpsc_{$cron}_cron_task" );
+		}
 	}
 }
 add_action( 'init', 'wpsc_cron' );

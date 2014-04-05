@@ -724,6 +724,8 @@ class ash_usps {
 		} else {
 			$intersect_keys = array_keys( $arrays[0] );
 		}
+		
+
 
 		foreach ( $arrays as $arr ) {
 			foreach ( $arr as $key => $value ) {

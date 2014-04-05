@@ -8,8 +8,6 @@
  * @since 3.8.8
  */
 
-
-
 class WPSC_Purchase_Log_Page {
 	private $list_table;
 	private $output;

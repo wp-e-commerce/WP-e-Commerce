@@ -31,7 +31,7 @@ jQuery.fn.rating = function(){
         jQuery("select option", this).each(function(){
         		
 						className = '';
-						//console.log(jQuery(this).attr('selected'));
+
 						if(this.value <= selected_rating) {
 							className = 'selected';
 						}
@@ -59,9 +59,9 @@ jQuery.fn.rating = function(){
 
         
         div.mouseout(function(){
-           //console.log(this);
+
 						selected_element = jQuery("div.star a:contains("+selected_rating+")", this).parent("div.star");
-           //console.log(selected_element);
+
 						previous_elements = jQuery(selected_element, this).prevAll();
 						next_elements = jQuery(selected_element, this).nextAll();
 						jQuery('a',previous_elements).addClass('selected');
@@ -75,7 +75,7 @@ jQuery.fn.rating = function(){
         function drainAdd(){ drain(); jQuery(this).addClass('on'); }
 
         function click(){
-        		//console.log(jQuery(this));
+
         		product_id = jQuery('a',this).attr('rel');
         		rating = jQuery('a',this).html();
 

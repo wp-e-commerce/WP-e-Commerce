@@ -18,7 +18,7 @@
 
 			ed.addCommand('WPSC', function() {
 				ed.windowManager.open({
-					file : ajaxurl + '?action=wpsc_tinymce_window',
+					file : wpsc_ajax_url() + '?action=wpsc_tinymce_window',
 					width : 360 + ed.getLang('WPSC.delta_width', 0),
 					height : 210 + ed.getLang('WPSC.delta_height', 0),
 					inline : 1

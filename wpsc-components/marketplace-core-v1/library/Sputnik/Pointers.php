@@ -34,7 +34,7 @@ class Sputnik_Pointers {
 		var wpsc_target;
 
 		$('#menu-posts-wpsc-product div ul li a[href$="page=sputnik"]').attr( 'id', 'marketplace-link' );
-		
+
 		wpsc_target = $('#menu-posts-wpsc-product').hasClass('wp-has-current-submenu') ? $('#marketplace-link') : $('#menu-posts-wpsc-product');
 
 	   	wpsc_target.pointer({
@@ -44,7 +44,7 @@ class Sputnik_Pointers {
 	            align: 'center'
 	        },
 	        close: function() {
-	            $.post( ajaxurl, {
+	            $.post( wpsc_ajax_url(), {
 	                pointer: 'wpsc_marketplace_pointer',
 	                action: 'dismiss-wp-pointer'
 	            });

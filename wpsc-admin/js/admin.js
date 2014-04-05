@@ -10,7 +10,7 @@
 		data['wpsc_action'] = data['action'];
 		data['action'] = 'wpsc_ajax';
 
-		return $.post(ajaxurl, data, handler, 'json');
+		return $.post(wpsc_admin_ajax_url(), data, handler, 'json');
 	};
 
 	/**
@@ -24,7 +24,7 @@
 		data['wpsc_action'] = data['action'];
 		data['action'] = 'wpsc_ajax';
 
-		return $.get(ajaxurl, data, handler, 'json');
+		return $.get(wpsc_admin_ajax_url(), data, handler, 'json');
 	};
 
 	if( pagenow == 'edit-wpsc_product_category' ) {
@@ -36,16 +36,14 @@
 				parent_id: 0
 			};
 
-			jQuery.post(ajaxurl, data);
+			jQuery.post(wpsc_admin_ajax_url(), data);
 		}
 
 		var submit_handlers = [];
 
 		var disable_ajax_submit = function() {
 			var t = $('#submit');
-			console.log(t);
-			console.log(t.data('events'));
-			console.log(t.data('events').click);
+			
 			if (t.data('events'))
 				submit_handlers = t.data('events').click;
 			t.off('click');
@@ -320,7 +318,7 @@ jQuery(document).ready(function(){
 			action : 'update_featured_product'
 		};
 
-		jQuery.post( ajaxurl, post_values, function( response ) {
+		jQuery.post( wpsc_admin_ajax_url(), post_values, function( response ) {
 			jQuery( '.featured_toggle_' + response.product_id ).html( "<img class='" + response.color + "' src='" + response.image + "' alt='" + response.text + "' title='" + response.text + "' />" );
 		}, 'json' );
 
