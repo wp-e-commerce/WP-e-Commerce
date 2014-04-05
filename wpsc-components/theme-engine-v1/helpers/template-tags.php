@@ -585,8 +585,8 @@ function wpsc_product_no_image_fallback( $image_url = '' ) {
 	else
 		return apply_filters( 'wpsc_product_noimage', WPSC_CORE_THEME_URL . 'wpsc-images/noimage.png' );
 }
-add_filter( 'wpsc_product_image', 'wpsc_product_no_image_fallback' );
 
+add_filter( 'wpsc_product_image', 'wpsc_product_no_image_fallback' );
 
 /**
  * wpsc show pnp function
