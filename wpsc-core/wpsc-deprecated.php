@@ -1775,10 +1775,13 @@ function wpsc_the_featured_image_fix( $stuff, $post_ID ){
 
 /**
  * @access public
- * @deprecated since 3.8.13.3
+ * @param string $meta_object_type Type of object metadata is for (e.g., variation. cart, etc)
+ * @return string Name of the custom meta table defined in $wpdb, or the name as it would be defined
+ * @deprecated since 3.8.13.4
  */
-function wpsc_user_dynamic_js() {
-	_wpsc_deprecated_function( __FUNCTION__, '3.8.14', '_wpsc_javascript_localizations' );
+function wpsc_meta_table_name( $meta_object_type ) {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.14', '_wpsc_meta_table_name' );
+	return _wpsc_meta_table_name( $meta_object_type );
 }
 
 /**
@@ -1815,6 +1818,14 @@ function wpsc_empty_google_logs(){
 	$sql = $wpdb->prepare( "DELETE FROM  `".WPSC_TABLE_PURCHASE_LOGS."` WHERE `sessionid` = '%s'", wpsc_get_customer_meta( 'checkout_session_id' ) );
 	$wpdb->query( $sql );
 	wpsc_delete_customer_meta( 'checkout_session_id' );
+}
+
+/**
+ * @access public
+ * @deprecated since 3.8.13.4
+ */
+function wpsc_user_dynamic_js() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.14', '_wpsc_javascript_localizations' );
 }
 
 

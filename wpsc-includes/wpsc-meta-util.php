@@ -1,6 +1,6 @@
 <?php
 /**
- * Get all object ids that have the meta value
+ * Get all meta ids that have the meta value
  *
  * @since 3.8.14
  *
@@ -8,22 +8,21 @@
  * @param string $meta_key ids with the specified meta key
  * @return array of int 	meta object type object ids that match have the meta key
  */
-function wpsc_get_ids_by_meta_key( $meta_object_type, $meta_key = '' ) {
+function wpsc_get_meta_ids_by_meta_key( $meta_object_type, $meta_key = '' ) {
 	global $wpdb;
 
-	$meta_table = wpsc_meta_table_name( $meta_object_type );
-	$id_field_name = $meta_object_type . '_id';
+	$meta_table    = _wpsc_meta_table_name( 'visitor' );
+	$id_field_name = _wpsc_meta_key_name( 'visitor' );
 
-	$sql = 'SELECT '. $id_field_name . ' FROM `' . $meta_table . '` where meta_key = "%s"';
+	$sql = 'SELECT meta_id FROM `' . $meta_table . '` where meta_key = "%s"';
 	$sql = $wpdb->prepare( $sql , $meta_key );
 
-	$meta_rows = $wpdb->get_results( $sql, OBJECT_K  );
+	$meta_item_ids = $wpdb->get_col( $sql, 0  );
+	$meta_item_ids = array_map( 'intval', $meta_item_ids );
 
-	$ids = array_keys( $meta_rows );
+	$ids = apply_filters( 'wpsc_get_ids_by_meta_key', $meta_item_ids, $meta_object_type, $meta_key );
 
-	$ids = apply_filters( 'wpsc_get_ids_by_meta_key', $ids, $meta_object_type, $meta_key );
-
-	return $ids;
+	return $meta_item_ids;
 }
 
 /**
@@ -42,8 +41,8 @@ function wpsc_get_ids_by_meta_key( $meta_object_type, $meta_key = '' ) {
 function wpsc_get_meta_by_timestamp( $meta_object_type, $timestamp = 0, $comparison = '>', $meta_key = '' ) {
 	global $wpdb;
 
-	$meta_table = wpsc_meta_table_name( $meta_object_type );
-	$id_field_name = $meta_object_type . '_id';
+	$meta_table    = _wpsc_meta_table_name( $meta_object_type );
+	$id_field_name = _wpsc_meta_key_name( 'visitor' );
 
 	if ( ($timestamp == 0) || empty( $timestamp ) ) {
 		$sql = 'SELECT ' . $id_field_name . ' AS id FROM ` ' . $meta_table . '` ';
@@ -66,15 +65,14 @@ function wpsc_get_meta_by_timestamp( $meta_object_type, $timestamp = 0, $compari
 		$sql = $wpdb->prepare( $sql , $meta_key );
 	}
 
-	$meta_rows = $wpdb->get_results( $sql, OBJECT_K  );
+	$meta_item_ids = $wpdb->get_col( $sql, 0  );
+	$meta_item_ids = array_map( 'intval', $meta_item_ids );
 
-	$ids = array_keys( $meta_rows );
-
-	$ids = apply_filters( 'wpsc_get_meta_by_timestamp', $ids, $meta_object_type, $meta_key, $timestamp, $comparison );
+	$ids = apply_filters( 'wpsc_get_meta_by_timestamp', $meta_item_ids, $meta_object_type, $meta_key, $timestamp, $comparison );
 
 	$metas = array();
 
-	foreach ( $ids as $id ) {
+	foreach ( $meta_item_ids as $id ) {
 		$metas[$id] = get_metadata( $meta_object_type , $id , $meta_key );
 	}
 
@@ -84,44 +82,257 @@ function wpsc_get_meta_by_timestamp( $meta_object_type, $timestamp = 0, $compari
 
 /**
  * Get meta timestamp of the by object type, meta id and key, if multiple records exist
- * the timestamp of the newest record is returned
+ * the timestamp of the most recently updated record is returned
  * @since 3.8.12
+ *
+ * @param string $meta_object_type Type of object metadata is for (e.g., variation. cart, etc)
+ * @param int $object_id ID for a specific meta item
+ * @return object Meta object timestamp or false.
+ */
+function wpsc_get_metadata_timestamp( $meta_object_type, $object_id, $meta_key = '' ) {
+	global $wpdb;
+
+	$object_id = intval( $object_id );
+
+	if ( ! empty($meta_object_type) && ! empty( $meta_id )  && ! empty( $meta_key ) ) {
+		$meta_table_name = _wpsc_meta_table_name( $meta_object_type );
+		$id_field_name = _wpsc_meta_key_name( 'visitor' );
+		if ( ! empty( $meta_table_name ) ) {
+			if ( ! empty ( $meta_key ) ) {
+				$sql = 'SELECT meta_timestamp '
+						. ' FROM '. $meta_table_name
+						. ' WHERE meta_key = %s AND `' . $id_field_name . '` = %d '
+						. ' ORDER BY meta_timestamp DESC LIMIT 1';
+
+				$wpdb->prepare( $sql , $meta_key, $object_id );
+			} else {
+				$sql = 'SELECT meta_timestamp '
+						. ' FROM '. $meta_table_name
+						. ' WHERE ' . $id_field_name . '` = %d '
+						. ' ORDER BY meta_timestamp DESC LIMIT 1';
+
+				$wpdb->prepare( $sql , $meta_key, $object_id );
+			}
+
+			$timestamp = $wpdb->get_row( $sql );
+		}
+	}
+
+	if ( empty( $timestamp ) ) {
+		$timestamp = false;
+	}
+
+	return $timestamp;
+}
+
+
+/**
+ * Get meta timestamp of the by meta object id
+ *
+ * @since 3.8.14
+ *
+ * @param string $meta_object_type Type of object metadata is for (e.g., variation. cart, etc)
+ * @param int $meta_id ID for a specific meta row
+ * @return object Meta object timestamp or false.
+ */
+function wpsc_get_meta_id_timestamp( $meta_object_type, $meta_id ) {
+	global $wpdb;
+
+	$meta_id = intval( $meta_id );
+
+	if ( ! empty($meta_object_type) && ! empty( $meta_id ) ) {
+		$meta_table_name = _wpsc_meta_table_name( $meta_object_type );
+		if ( ! empty( $meta_table_name ) ) {
+			$sql = 'SELECT meta_timestamp FROM '. $meta_table_name .' WHERE meta_id = %d';
+			$timestamp = $wpdb->get_var( $wpdb->prepare( $sql , $meta_id ), 0 );
+		}
+	}
+
+	if ( empty( $timestamp ) ) {
+		$timestamp = false;
+	}
+
+	return $timestamp;
+}
+
+
+/**
+ * Get the meta associated with a specific meta type and meta id
+ * the timestamp of the newest record is returned
+ * @since 3.8.14
  *
  * @param string $meta_object_type Type of object metadata is for (e.g., variation. cart, etc)
  	* @param int $meta_id ID for a specific meta row
  * @return object Meta object or false.
  */
-function wpsc_get_metadata_timestamp( $meta_object_type, $meta_id, $meta_key ) {
+function _wpsc_get_meta_by_meta_id( $meta_object_type, $meta_id  ) {
 	global $wpdb;
+	$meta_item = false;
 
 	$meta_id = intval( $meta_id );
 
-	if ( ! empty($meta_object_type) && ! empty( $meta_id )  && ! empty( $meta_key ) ) {
-		$wpdb_property = $meta_object_type.'meta';
+	if ( ! empty($meta_object_type) && ! empty( $meta_id ) ) {
+		$meta_table_name = _wpsc_meta_table_name( $meta_object_type );
 
-		if ( ! empty( $wpdb->$wpdb_property ) ) {
-			$sql = 'SELECT meta_timestamp FROM '.wpsc_meta_table_name( $meta_object_type ).' WHERE meta_id = %d ORDER BY meta_timestamp DESC LIMIT 1';
-			$timestamp = $wpdb->get_row( $wpdb->prepare( $sql , $meta_id ) );
+		if ( ! empty( $meta_table_name ) ) {
+			$sql = 'SELECT * FROM ' . $meta_table_name . ' WHERE meta_id = %d';
+			$sql = $wpdb->prepare( $sql , $meta_id );
+
+			$meta_item = $wpdb->get_row( $sql, OBJECT );
+
+			$meta_item->meta_value = maybe_unserialize( $meta_item->meta_value );
+
+			if ( $meta_item === null ) {
+				$meta_item = false;
+			}
 		}
 	}
 
-	if ( empty( $timestamp ) )
-		$timestamp = false;
+	return $meta_item;
+}
 
-	return $timestamp;
+
+/**
+ * Get the meta ids associated with a specific meta type, object id and meta key
+ * the timestamp of the newest record is returned
+ *
+ * @acess private
+ * @since 3.8.14
+ *
+ * @param string $meta_object_type Type of object metadata is for (e.g., variation. cart, etc)
+ * @param int $meta_id ID for a specific meta row
+ * @return array array of meta ids
+ */
+function _wpsc_get_meta_ids( $meta_object_type, $object_id, $meta_key  ) {
+	global $wpdb;
+	$meta_item_ids = array();
+
+	$object_id = intval( $object_id );
+
+	if ( ! empty($meta_object_type) && ! empty( $object_id )  && ! empty( $meta_key ) ) {
+		$meta_table_name = _wpsc_meta_table_name( $meta_object_type );
+
+		if ( ! empty( $meta_table_name ) ) {
+			$sql = 'SELECT meta_id '
+					. ' FROM '. $meta_table_name
+					. ' WHERE `' . _wpsc_meta_key_name( $meta_object_type )  . '` = %d '
+					. ' AND meta_key = %s';
+
+			$sql = $wpdb->prepare( $sql , $object_id, $meta_key );
+
+			$meta_item_ids = $wpdb->get_col( $sql, 0 );
+
+			if ( ! empty( $meta_item_ids ) ) {
+				$meta_item_ids = array_map( 'intval', $meta_item_ids );
+			}
+		}
+	}
+
+	return $meta_item_ids;
+}
+
+
+/**
+ * Validate the custom meta object type
+ *
+ * @since 3.8.14
+ * @access private
+ * @param string $meta_object_type Type of object metadata is for (e.g., variation. cart, etc)
+ * @return validated string, or empty string if it isn't a valid object type
+ */
+function _wpsc_validate_meta_object_type( $meta_object_type ) {
+
+	// This is a name translation that should stay very small and only be added to
+	// in the case where we change a meta object name, or are storing multiple meta
+	// types in the same table.
+	//
+	// TODO: post 3.8.14 enhance by adding the general meta table to this array and validate the the
+	// WPEC built in meta infrastructure, with its nifty caching capabilities can be used to access
+	// the legacy catch-all meta table
+	//
+	$valid_meta_object_types = array(
+			'visitor'   => 'visitor',    // valid customer meta table
+			'purchase'  => 'purchase',   // valid customer meta table
+			'cart_item' => 'cart_item',  // valid customer meta table
+			'customer'  => 'visitor',    // customer changed to visitor in release 3.8.14
+	);
+
+
+	if ( in_array( $meta_object_type, $valid_meta_object_types ) ) {
+		$object_type = $valid_meta_object_types[$meta_object_type];
+	} else {
+		$object_type = '';
+	}
+
+	return $object_type;
 }
 
 /**
  * The name of the meta table for a specific meta object type.
  *
+ *  if it hasn't been defined in $wpdb the name as it would be defined is returned. The
+ *  likely cases where it would not be defined would be during an initialization or
+ *  upgrade process. Because it is possible that the meta table name has been overridden
+ *  we will check to see if it exists in the $wpdb object before trying to crate it anew.
+ *  Note: that function call does not check if the table exits, it only give back the name,
+ *
  * @since 3.8.12
+ * @access private
+ * @param string $meta_object_type Type of object metadata is for (e.g., variation. cart, etc)
+ * @return string Name of the custom meta table defined in $wpdb, or the name as it would be defined
+ */
+function _wpsc_meta_table_name( $meta_object_type ) {
+	global $wpdb;
+
+	$meta_table_name_property = _wpsc_wpdb_meta_table( $meta_object_type );
+
+	if ( property_exists( $wpdb, $meta_table_name_property ) ) {
+		return $wpdb->$meta_table_name_property;
+	} else {
+		return $wpdb->prefix . $meta_object_type . '_meta';
+	}
+}
+
+
+/**
+ * The name of the meta table property for a specific meta object type, this name should be the name
+ * found in the $wpdb class for the specified meta type
+ *
+ * @since 3.8.14
  *
  * @param string $meta_object_type Type of object metadata is for (e.g., variation. cart, etc)
- 	* @return string Name of the custom meta table
+ * @return string Name of the applicable WPEC custom meta table, empty string if the meta type is not valid
  */
-function wpsc_meta_table_name( $meta_object_type ) {
+function _wpsc_wpdb_meta_table( $meta_object_type ) {
 	global $wpdb;
-	return $wpdb->prefix . $meta_object_type . '_meta';
+
+	if ( $meta_object_type = _wpsc_validate_meta_object_type( $meta_object_type ) ) {
+		$table_name_property = 'wpsc_'. $meta_object_type . 'meta';
+	} else {
+		$table_name_property = '';
+	}
+
+	return $table_name_property;
+}
+
+/**
+ * The name of the column in the meta table that contains the key of the target object
+ *
+ * @since 3.8.14
+ *
+ * @param string $meta_object_type Type of object metadata is for (e.g., variation. cart, etc)
+ * @return string column name of the applicable WPEC custom meta table index field, empty string if the meta type is not valid
+ */
+function _wpsc_meta_key_name( $meta_object_type ) {
+	global $wpdb;
+
+	if ( $meta_object_type = _wpsc_validate_meta_object_type( $meta_object_type ) ) {
+		$id_field_name = 'wpsc_' . $meta_object_type . '_id';
+	} else {
+		$id_field_name = '';
+	}
+
+	return $id_field_name;
 }
 
 /**
@@ -337,3 +548,139 @@ function _wpsc_visitor_meta_key_replacements( $meta_keys ) {
 }
 
 add_filter( 'wpsc_visitor_meta_key_replacements', '_wpsc_visitor_meta_key_replacements' );
+
+
+/**
+ * custmer/visitor/user meta has been known by different identifiers. we are trying to standardize on using
+ * the uniquename value in the form definition for well known shopper meta.  this function allows
+ * old meta keys to return the proper meta value from the database
+ *
+ * @since 3.8.14
+ * @access private
+ * @param unknown $meta_keys
+ * @return string
+ */
+function _wpsc_visitor_location_changed( $meta_keys ) {
+
+	$meta_keys['billing_region']           = 'billingregion';
+	$meta_keys['billing_country']          = 'billingcountry';
+	$meta_keys['shipping_region']          = 'shippingregion';
+	$meta_keys['shipping_country']         = 'shippingcountry';
+	$meta_keys['shipping_zip']             = 'shippingpostcode';
+	$meta_keys['shipping_zipcode']         = 'shippingpostcode';
+	$meta_keys['billing_zip']              = 'billingpostcode';
+	$meta_keys['billing_zipcode']          = 'billingpostcode';
+	$meta_keys['shippingzip']              = 'shippingpostcode';
+	$meta_keys['billingzip']               = 'billingpostcode';
+	$meta_keys['shipping_same_as_billing'] = 'shippingSameBilling';
+	$meta_keys['delivertoafriend']         = 'shippingSameBilling';
+	return $meta_keys;
+}
+
+
+/*
+ * Keep track of which visitor location attributes are changing,  when the attributes are done changing
+ * at an apprpriate place in the flow there will be a call to _wpsc_has_visitor_location changed.  When
+ * that function runs it will check if there has been a change and will fire an action to whomever has
+ * hooked it to tell them it's time to do what ever they need to do with the changed location.
+ *
+ * By keeping track of which attributes have changed on the location different modules can decide what
+ * they might need to recalculate.  An example.  USPS rates are dependant on origin and destination
+ * zip codes, UPS rates use origin and destination zip codes and destination street address to calculate
+ * shipment costs.
+ */
+
+/*
+ * Record what is changing about the visitors location
+ *
+ * @since 3.8.14
+ * @access private
+ *
+ * @param string location value being set
+ * @param string location attribute name ( see unique_name field checkout definitions)
+ * @param int    the visitor/customer unique id
+ *
+ * @return true if this is a location change, false if we already new that the specified part of the location changed
+ *
+ */
+function _wpsc_visitor_location_is_changing( $meta_value, $meta_key, $visitor_id ) {
+	$what_about_the_visitor_location_changed = wpsc_get_visitor_meta( $visitor_id, 'location_attributes_changed', true );
+	$location_change_updated = false;
+
+	if ( ! is_array( $what_about_the_visitor_location_changed ) ) {
+		if ( ! in_array( $meta_key, $what_about_the_visitor_location_changed ) ) {
+			$what_about_the_visitor_location_changed[] = $meta_key;
+			$location_change_updated = wpsc_update_visitor_meta( $visitor_id, $meta_key, $meta_value );
+		}
+	}
+
+	return $location_change_updated;
+}
+
+
+/*
+ * It might seem a tad veerbose to attach a seperate hook to each meta item but doing it this
+ * way as several advantages.
+ *
+ * 	1) If a developer wants to change the fact that changing the shipping city changes the users location
+ * all they have to do is remove the action.
+ *
+ *  2) Conversely, if someone wants to define an arbitrary attribute to cause the user's location as changing.
+ *  For example if the shopper was an interplanetary space traveler and they were moving to Titan, the dev
+ *  could add a planet field to checkout shipping information and all the heavy lifting would be taken care
+ *  of for them.
+ *
+ */
+add_action( 'wpsc_updated_visitor_meta_shippingregion', '_wpsc_visitor_location_is_changing', 10 , 3 );
+add_action( 'wpsc_updated_visitor_meta_shippingaddress', '_wpsc_visitor_location_is_changing', 10 , 3 );
+add_action( 'wpsc_updated_visitor_meta_shippingcity', '_wpsc_visitor_location_is_changing', 10 , 3 );
+add_action( 'wpsc_updated_visitor_meta_shippingstate', '_wpsc_visitor_location_is_changing', 10 , 3 );
+add_action( 'wpsc_updated_visitor_meta_shippingcountry', '_wpsc_visitor_location_is_changing', 10 , 3 );
+add_action( 'wpsc_updated_visitor_meta_shippingpostcode', '_wpsc_visitor_location_is_changing', 10 , 3 );
+
+
+/*
+ * Check if the visitor location has changed, if it has inform those who have requested notification
+ *
+ * Note that there are two actions fired when location has been found to have changed.
+ * The first action tells those who are listening for its broadcast that the vistor
+ * location has changed, which elements are changed, and that it is time to do any
+ * calculations that may alter any customer meta, and most importantly the
+ * meta that is related to a persons address.
+ *
+ * The second action contains the parameters that have changed, and it's a signal to the code
+ * that it's safe to consume the customer meta.
+ *
+ * Developers have the choice of using both hooks, or either one based on what is appropriate
+ * to the circumstance.
+ *
+ * An example where a well behaved and cooperative shipping plugin would shoose to implement both hooks
+ * would be a full implementation of a USPS shipping validation and indicia generation.  The first hook
+ * would be used to request the postal service validate and cleanse the desitination shipping address. The
+ * cleansed address elements would be stored into customer meta for other plugins and other part of WPEC
+ * to take advantage of.
+ *
+ * The second hook would be use to generate the shipping quotes after other code that may adjust the destination
+ * address recorded thier inputs.
+ *
+ * @param int | boolean visitor id if knowm, false or empty for the current customer
+ * @since 3.8.14
+ *
+ * @access private
+ *
+ *
+ */
+function _wpsc_has_visitor_location_changed( $visitor_id = false ) {
+
+	$what_about_the_visitor_location_changed = wpsc_get_visitor_meta( $visitor_id, 'location_attributes_changed', true );
+
+	if ( ! is_array( $what_about_the_visitor_location_changed ) && ! empty( $what_about_the_visitor_location_changed ) ) {
+		do_action( 'wpsc_visitor_location_changing', $what_about_the_visitor_location_changed, $visitor_id );
+	}
+
+	$what_about_the_visitor_location_changed = wpsc_get_visitor_meta( $visitor_id, 'location_attributes_changed', true );
+
+	if ( ! is_array( $what_about_the_visitor_location_changed ) && ! empty( $what_about_the_visitor_location_changed ) ) {
+		do_action( 'wpsc_visitor_location_changed', $what_about_the_visitor_location_changed, $visitor_id );
+	}
+}

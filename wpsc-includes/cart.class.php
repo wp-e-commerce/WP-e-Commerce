@@ -86,12 +86,27 @@ class wpsc_cart {
 	public $coupons_name   = '';
 	public $coupons_amount = 0;
 
-	function __construct() {
+
+    function wpsc_cart() {
 		$coupon = 'percentage';
 		$this->update_location();
 		$this->wpsc_refresh_cart_items();
 		$this->unique_id = sha1( uniqid( rand(), true ) );
-	}
+
+   		add_action( 'wpsc_visitor_location_changing', array( &$this, 'shopper_location_changing' ), 10, 2);
+    }
+
+    /*
+     * Action routine to start the processing that has to happen when the customer changes
+     * location.
+     *
+     * @since 3.8.14
+     * @param array names of checnout items that hav changed since the last time the location for this customer was changed
+     *
+     */
+  	function shopper_location_changing( $what_changed, $visitor_id ) {
+  		$this->update_location();
+  	}
 
 	/**
 	 * update_location method, updates the location
@@ -144,6 +159,49 @@ class wpsc_cart {
 				$cart_item->refresh_item();
 			}
 		}
+   }
+
+   /*
+    * It os time to checkout, or at other points in the workflow and it's time to validate the shopping cart
+    * call this function.
+    *
+    * The function will in turn execute all of the hooks that are built into WPEC, then any hooks added by
+    * themes and plugins.  This means that validation rules beyond what WPEC has internally can be added as needed.
+    */
+   function validate_cart() {
+
+   		/*
+   		 * action: wpsc_pre_validate_cart
+   		 *
+   		 * Prior to validating the cart we give anyone whoe is interested a chance to do a little setup with this
+   		 * wpsc_pre_validate_cart.
+   		 *
+   		 * This action can be used as a convenient point to change the logic that is esecuted when the 'wpsc_validate_cart'
+   		 * action is fired.  For example, if you want to do different address checks based on which country is being shipped
+   		 * to you can call add_action with different function paramters.  Or if you wnated to some extra validation when shipping
+   		 * address is differnet than billing, perhaps a quick SOAP call to a fraud check service, you can conditionally do an
+   		 * add action to your function that does the fraud check.
+   		 *
+   		 * @param wpsc_cart the cart object
+   		 * @param current visitor id (use this to get customer meta for the current user
+   		 */
+   		do_action( 'wpsc_pre_validate_cart', $this, wpsc_get_current_customer_id() );
+
+   		/*
+ 		 * action: wpsc_validate_cart
+   		 *
+   		 * Validate that the cart contents is valid.  Typically done just prior to checkout.  Most often error conditions
+   		 * will be recorded to special customer meta values, but other processing can be implemented based on specific needs
+   		 *
+   		 * These are the customer/visitor meta values that are typically added to when errors are found:
+   		 * 			checkout_error_messages
+   		 * 			gateway_error_messages
+   		 * 			registration_error_messages
+   		 *
+   		 * @param wpsc_cart the cart object
+   		 * @param current visitor id (use this to get customer meta for the current user
+   		 */
+   		do_action( 'wpsc_validate_cart', $this, wpsc_get_current_customer_id() );
 	}
 
 	/**
@@ -333,21 +391,22 @@ class wpsc_cart {
 
 	/**
 	 * get_tax_rate method, gets the tax rate as a percentage, based on the selected country and region
-	 * EDIT: Replaced with WPEC Taxes - this function should probably be deprecated
-     *         Note: to refresh cart items use wpsc_refresh_cart_items
-     * @access public
-     */
+	 * * EDIT: Replaced with WPEC Taxes - this function should probably be deprecated
+	 * Note: to refresh cart items use wpsc_refresh_cart_items
+	 *
+	 * @access public
+	 */
 	function get_tax_rate() {
-		global $wpdb;
+		$country = new WPSC_Country( get_option( 'base_country' ) );
 
-		$country_data = $wpdb->get_row( 'SELECT * FROM `' . WPSC_TABLE_CURRENCY_LIST . '` WHERE `isocode` IN("' . get_option( 'base_country' ).'") LIMIT 1', ARRAY_A );
+		$country_data = WPSC_Countries::country( get_option( 'base_country' ), true );
 		$add_tax = false;
 
-
 		if ( $this->selected_country == get_option( 'base_country' ) ) {
-			// Tax rules for various countries go here, if your countries tax rules deviate from this, please supply code to add your region
+			// Tax rules for various countries go here, if your countries tax rules
+			// deviate from this, please supply code to add your region
 			switch ( $this->selected_country ) {
-				case 'US': // USA!
+				case 'US' : // USA!
 					$tax_region = get_option( 'base_region' );
 					if ( $this->selected_region == get_option( 'base_region' ) && ( get_option( 'lock_tax_to_shipping' ) != '1' ) ) {
 						// if they in the state, they pay tax
@@ -359,8 +418,7 @@ class wpsc_cart {
 					}
 					break;
 
-				case 'CA': // Canada!
-					// apparently in canada, the region that you are in is used for tax purposes
+				case 'CA' : // Canada! apparently in canada, the region that you are in is used for tax purposes
 					if ( $this->selected_region != null ) {
 						$tax_region = $this->selected_region;
 					} else {
@@ -370,9 +428,9 @@ class wpsc_cart {
 					$add_tax = true;
 					break;
 
-				default: // Everywhere else!
+				default : // Everywhere else!
 					$tax_region = get_option( 'base_region' );
-					if ( $country_data['has_regions'] == 1 ) {
+					if ( $country->has_regions() ) {
 						if ( get_option( 'base_region' ) == $region ) {
 							$add_tax = true;
 						}
@@ -383,19 +441,19 @@ class wpsc_cart {
 			}
 		}
 
-		if ( $add_tax ) {
-			if ( ( $country_data['has_regions'] == 1 ) ) {
-				$region_data = $wpdb->get_row( $wpdb->prepare( 'SELECT `' . WPSC_TABLE_REGION_TAX . '`.* FROM `' . WPSC_TABLE_REGION_TAX . '` WHERE `' . WPSC_TABLE_REGION_TAX . "`.`country_id` IN('%s') AND `" . WPSC_TABLE_REGION_TAX . '`.`id` IN("%s") ', $country_data['id'], $tax_region ), ARRAY_A );
-				$tax_percentage = $region_data['tax'];
+		if ( $add_tax == true ) {
+			if ( $country->has_regions() ) {
+				$region = $country->region( $tax_region );
+				$tax_percentage = $region->tax();
 			} else {
-				$tax_percentage = $country_data['tax'];
+				$tax_percentage = $country->tax();
 			}
 		} else {
 			// no tax charged = tax equal to 0%
 			$tax_percentage = 0;
 		}
 
-		if	( $this->tax_percentage != $tax_percentage ) {
+		if ( $this->tax_percentage != $tax_percentage ) {
 			$this->clear_cache();
 			$this->tax_percentage = $tax_percentage;
 			$this->wpsc_refresh_cart_items();
@@ -513,26 +571,16 @@ class wpsc_cart {
 
 		$stock = get_post_meta( $product_id, '_wpsc_stock', true );
 		$stock = apply_filters( 'wpsc_product_stock', $stock, $product_id );
-		// check to see if the product uses stock
+
 		$result = true;
 
 		if ( is_numeric( $stock ) ) {
-			$claimed_query = new WPSC_Claimed_Stock( array( 'product_id' => $product_id ) );
-			$claimed_stock = $claimed_query->get_claimed_stock_count();
-			if ( $stock > 0 ) {
-				$claimed_stock = $wpdb->get_var( $wpdb->prepare( 'SELECT SUM(`stock_claimed`) FROM `' . WPSC_TABLE_CLAIMED_STOCK . '` WHERE `product_id` IN(%d) AND `variation_stock_id` IN("%d")', $product_id, $priceandstock_id ) );
-				if ( ( $claimed_stock + $quantity ) <= $stock ) {
-					$output = true;
-				} else {
-					$output = false;
-				}
-			} else {
-				$output = false;
+			$remaining_quantity = wpsc_get_remaining_quantity( $product_id, $variations, $quantity );
+			if ( $remaining_quantity < $quantity ) {
+				$result = false;
 			}
-		} else {
-			$output = true;
 		}
-		return $output;
+		return $result;
 	}
 
 	/**
