@@ -137,7 +137,7 @@ function wpsc_decrement_claimed_stock($purchase_log_id) {
 
 						$email_message = sprintf( __( 'The product "%s" is out of stock.', 'wpsc' ), $product->post_title );
 
-						if ( ! empty( $product_meta["unpublish_when_none_left"] ) ) {
+						if ( ! empty( $product_meta["unpublish_when_none_left"] ) || apply_filters( 'wpsc_force_unpublish_when_out_of_stock', false, $product ) ) {
 							$result = wp_update_post( array(
 								'ID'          => $product->ID,
 								'post_status' => 'draft',
@@ -147,7 +147,7 @@ function wpsc_decrement_claimed_stock($purchase_log_id) {
 								$email_message = sprintf( __( 'The product "%s" is out of stock and has been unpublished.', 'wpsc' ), $product->post_title );
 						}
 
-						if ( $product_meta["notify_when_none_left"] == 1 )
+						if ( $product_meta["notify_when_none_left"] == 1 || apply_filters( 'wpsc_force_email_when_out_of_stock', false, $product ) )
 							wp_mail(get_option('purch_log_email'), sprintf(__('%s is out of stock', 'wpsc'), $product->post_title), $email_message );
 					}
 				}
