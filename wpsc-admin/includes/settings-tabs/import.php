@@ -115,6 +115,7 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 		$record_count = 0;
 
 		while ( $row = @fgetcsv( $handle, $length, ',' ) ) {
+
 			$product = array(
 				'post_title'             => isset( $row[ $column_name ] )        ? $row[ $column_name ] : '',
 				'content'                => isset( $row[ $column_description ] ) ? $row[ $column_description ] : '',
@@ -151,6 +152,10 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 			);
 			
 			$product = apply_filters( 'wpsc_product_import_row', $product, $row, $this );
+
+			if ( empty( $product['post_title'] ) && apply_filters( 'wpsc_product_import_require_title', true, $product, $row, $this ) ) {
+				continue;
+			}
 
 			$product = wpsc_sanitise_product_forms( $product );
 
