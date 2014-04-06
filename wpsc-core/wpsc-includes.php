@@ -11,7 +11,6 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-customer.php'          
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-visitor.php'               );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-cart-item.php'             );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-purchase.php'              );
-require_once( WPSC_FILE_PATH . '/wpsc-includes/country-region-currency-util.php'    );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/product-template.php'                );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/variations.class.php'                );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/ajax.functions.php'                  );
@@ -34,7 +33,12 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/stats.functions.php'             
 require_once( WPSC_FILE_PATH . '/wpsc-includes/meta.functions.php'                  );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/productfeed.php'                     );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/image_processing.php'                );
-require_once( WPSC_FILE_PATH . '/wpsc-includes/country.class.php'                   );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-country.class.php'              );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-countries.class.php'            );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-region.class.php'               );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-currency.class.php'             );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-data-map.class.php'             );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/country-region-tax-util.php'         );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/currency.helpers.php'                );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/purchase-log.helpers.php'            );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/purchase-log-notification.class.php' );
