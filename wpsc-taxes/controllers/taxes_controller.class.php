@@ -600,13 +600,20 @@ class wpec_taxes_controller {
 
 						if ( ! empty( $regions ) ) {
 
+							if ( $tax_rate['region_code'] == 'all-markets' ) {
+								$region_name = 'All Markets';
+							} else {
+								$region = new WPSC_Region( $tax_rate['country_code'], $tax_rate['region_code'] );
+								$region_name = $region->name();
+							}
+
 							echo $this->wpec_taxes_build_select_options(
 								$regions,
 								'region_code',
 								'name',
 								array( // selected region
 									'region_code' => $tax_rate['region_code'],
-									'name' => $this->wpec_taxes->wpec_taxes_get_region_information( $tax_rate['region_code'], 'name' )
+									'name' => $region_name,
 								),
 								array( // select settings
 									'id' => $row_mode . "-region-" . $row_key,

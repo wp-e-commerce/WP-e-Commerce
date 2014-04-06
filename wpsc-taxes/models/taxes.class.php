@@ -81,7 +81,7 @@ class wpec_taxes {
 	 * @param: region_code (optional) - the region code for the region tax rate you wish to retrieve.
 	 * @return: array or false
 	 * */
-	function wpec_taxes_get_rate( $country_code, $region_code='' ) {
+	function wpec_taxes_get_rate( $country_code, $region_code = '' ) {
 		//initialize return variable
 		// use wpsc_tax_rate hook to provide your own tax solution
 		$returnable = apply_filters( 'wpsc_tax_rate', false, $this, $country_code, $region_code );
@@ -89,34 +89,33 @@ class wpec_taxes {
 		if ( $returnable !== false )
 			return $returnable;
 
+		$country = new WPSC_Country( $country_code );
+
 		//first check if the region given is part of the country
-		if ( !empty( $region_code ) ) {
-			$region_country_id = $this->wpec_taxes_get_region_information( $region_code, 'country_id' );
-			$region_country_code = $this->wpec_taxes_get_country_information( 'isocode', array( 'id' => $region_country_id ) );
-			if ( $region_country_code != $country_code ) {
+		if ( ! empty( $region_code ) ) {
+			$region = $country->region( $region_code );
+			if ( ! $region ) {
 				//reset region code if region provided not in country provided
 				$region_code = '';
 			}// if
 		}// if
 
-		if ( !empty( $this->taxes_options['wpec_taxes_rates'] ) ) {
+		if ( ! empty( $this->taxes_options['wpec_taxes_rates'] ) ) {
 			foreach ( $this->taxes_options['wpec_taxes_rates'] as $tax_rate ) {
 				//if there is a tax rate defined for all markets use this one unless it's overwritten
-				if('all-markets' == $tax_rate['country_code'])
-				{
+				if ( 'all-markets' == $tax_rate['country_code'] ) {
 					$returnable = $tax_rate;
 				}// if
 
 				//if there is a specific tax rate for the given country use it
 				if ( $tax_rate['country_code'] == $country_code ) {
 					//if there is a tax rate defined for all regions use it, unless it's overwritten
-					if('all-markets' == $tax_rate['region_code'])
-					{
+					if ( 'all-markets' == $tax_rate['region_code'] ) {
 						$returnable = $tax_rate;
 					}
 
 					//if there is a specific tax rate for the given region then use it.
-					if ( ($region_code == '' && !isset( $tax_rate['region_code'] )) || $region_code == $tax_rate['region_code'] ) {
+					if ( ($region_code == '' && ! isset( $tax_rate['region_code'] )) || $region_code == $tax_rate['region_code'] ) {
 						$returnable = $tax_rate;
 						break;
 					}// if
@@ -304,18 +303,15 @@ class wpec_taxes {
 	 *                            Default action is to retrieve the id column.
 	 * @return: int, string, or false
 	 * */
-	function wpec_taxes_get_region_information( $region_code, $column='id' ) {
+	function wpec_taxes_get_region_information( $region_code, $column = 'id' ) {
 		//check for all markets ifset return the string 'All Markets'
-		if('all-markets' == $region_code)
-		{
+		if ( 'all-markets' == $region_code ) {
 			$returnable = __( 'All Markets', 'wpsc' );
-		}
-		else
-		{
+		} else {
 			global $wpdb;
 			$query = $wpdb->prepare( "SELECT " . esc_sql( $column ) . " FROM " . WPSC_TABLE_REGION_TAX . " WHERE code = %s", $region_code );
 			$returnable = $wpdb->get_var( $query );
-		}// if
+		} // if
 
 		return $returnable;
 	} // wpec_taxes_get_region_information
@@ -330,19 +326,20 @@ class wpec_taxes {
 		//database connection
 		global $wpdb;
 
-		if( isset( $country ) && 'all-markets' == $country ) return;
-		//get the id for the given country code
-		$country_id = $this->wpec_taxes_get_country_information( 'id', array( 'isocode' => $country ) );
+		$wpsc_country = new WPSC_Country( $country );
 
-		//get a list of regions for the country id
-		$query = 'SELECT name, code AS region_code FROM ' . WPSC_TABLE_REGION_TAX . " WHERE country_id=$country_id";
-		$result = $wpdb->get_results( $query, ARRAY_A );
+		$regions = $wpsc_country->regions_array();
+
+		if ( isset( $country ) && 'all-markets' == $country ) {
+			return;
+		}
 
 		//add the all markets option to the list
-		if ( ! empty( $result ) )
-			array_unshift($result, array('region_code'=>'all-markets', 'name' => __( 'All Markets', 'wpsc' ) ) );
+		if ( ! empty( $regions ) ) {
+			array_unshift( $regions , array( 'region_code' => 'all-markets', 'name' => __( 'All Markets', 'wpsc' ), ) );
+		}
 
-		return $result;
+		return $regions;
 	} // wpec_taxes_get_regions
 
 	/**

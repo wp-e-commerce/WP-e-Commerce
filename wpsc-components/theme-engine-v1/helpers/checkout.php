@@ -287,26 +287,19 @@ function wpsc_checkout_form_field() {
 }
 
 function wpsc_shipping_region_list( $selected_country, $selected_region, $shippingdetails = false ) {
-	global $wpdb;
 	$output = '';
 
-	$region_data = $wpdb->get_results(
-					$wpdb->prepare(
-										'SELECT `regions`.* FROM `' . WPSC_TABLE_REGION_TAX . '` AS `regions` INNER JOIN `'
-										. WPSC_TABLE_CURRENCY_LIST . '` AS `country` ON `country`.`id` = `regions`.`country_id` '
-										. 'WHERE `country`.`isocode` IN(%s) ORDER BY name ASC', $selected_country
-								),
-					ARRAY_A
-				);
+	$country = new WPSC_Country( $selected_country );
+	$regions = $country->regions();
 
-	if ( count( $region_data ) > 0 ) {
+	if ( count( $regions ) > 0 ) {
 		$output .= "<select class=\"wpsc-visitor-meta\" data-wpsc-meta-key=\"shippingregion\" name=\"region\"  id=\"region\" >\n\r";
-		foreach ( $region_data as $region ) {
+		foreach ( $regions as $region_id => $region ) {
 			$selected = '';
-			if ( $selected_region == $region['id'] ) {
+			if ( $selected_region == $region_id ) {
 				$selected = "selected='selected'";
 			}
-			$output .= "<option $selected value='{$region['id']}'>" . esc_attr( htmlspecialchars( $region['name'] ) ). "</option>\n\r";
+			$output .= "<option $selected value='{$region_id}'>" . esc_attr( htmlspecialchars( $region->name() ) ). "</option>\n\r";
 		}
 		$output .= '';
 
@@ -335,10 +328,11 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 	if ( empty( $selected_region ) )
 		$selected_region = esc_attr( get_option( 'base_region' ) );
 
-	if ( empty( $wpsc_country_data ) )
-		$country_data = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `visible`= '1' ORDER BY `country` ASC", ARRAY_A );
-	else
+	if ( empty( $wpsc_country_data ) ) {
+		$country_data = WPSC_Countries::countries_array();
+	} else {
 		$country_data = $wpsc_country_data;
+	}
 
 	$acceptable_countries = wpsc_get_acceptable_countries();
 

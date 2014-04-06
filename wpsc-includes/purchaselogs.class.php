@@ -952,8 +952,7 @@ class wpsc_purchaselogs_items {
    function shippingstate( $id ) {
 	  global $wpdb;
 	  if ( is_numeric( $id ) ) {
-		 $sql = "SELECT `name` FROM `" . WPSC_TABLE_REGION_TAX . "` WHERE id=" . $id;
-		 $name = $wpdb->get_var( $sql );
+		 $name = wpsc_get_region( $id );
 		 return $name;
 	  } else {
 		 return $id;
