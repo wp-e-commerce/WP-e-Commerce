@@ -315,7 +315,7 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 	$js = '';
 	$output = '';
 	if ( ! $shippingdetails ) {
-		$output = "<input type='hidden' name='wpsc_ajax_actions' value='update_location' />";
+		$output = "<input type='hidden' name='wpsc_ajax_action' value='update_location' />";
 		$js = '';
 	}
 
