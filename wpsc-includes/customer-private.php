@@ -254,7 +254,7 @@ function _wpsc_set_purchase_log_customer_id( $wpsc_purchase_log ) {
 	wpsc_update_purchase_meta( $wpsc_purchase_log->get( 'id' ), 'visitor_id', wpsc_get_current_customer_id(), true );
 
 	// connect the visitor to purchase
-	wpsc_add_visitor_meta( wpsc_get_current_customer_id(), 'purchase_id',  $wpsc_purchase_log->get( 'id' ), false );
+	wpsc_add_visitor_meta( wpsc_get_current_customer_id(), 'purchase_id',  $wpsc_purchase_log->get( id ), false );
 }
 
 add_action( 'wpsc_purchase_log_insert', '_wpsc_set_purchase_log_customer_id', 10, 1 );
