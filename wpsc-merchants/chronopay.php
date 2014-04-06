@@ -63,9 +63,8 @@ function gateway_chronopay($separator, $sessionid)
     	$data['email'] = $_POST['collected_data'][get_option('email_form_field')];
     }
 
-
 	// Get Currency details abd price
-	$currency_code = $wpdb->get_results("SELECT `code` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id`='".get_option('currency_type')."' LIMIT 1",ARRAY_A);
+	$currency_code = WPSC_Countries::currency_code( get_option( 'currency_type' ) );
 	$local_currency_code = $currency_code[0]['code'];
 	$chronopay_currency_code = get_option('chronopay_curcode');
 
