@@ -294,7 +294,8 @@ class WPSC_Countries {
 		$currency_symbol = '';
 
 		if ( $country_id ) {
-			$currency_symbol = self::$all_wpsc_country_from_country_id[$country_id]->symbol;
+			$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id );
+			$currency_symbol = $wpsc_country->currency_symbol();
 		}
 
 		return $currency_symbol;
@@ -321,7 +322,8 @@ class WPSC_Countries {
 		$continent = '';
 
 		if ( $continent ) {
-			$continent = self::$all_wpsc_country_from_country_id[$country_id]->continent();
+			$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id );
+			$continent = $wpsc_country->continent();
 		}
 
 		return $continent;
@@ -348,7 +350,8 @@ class WPSC_Countries {
 		$currency_symbol = '';
 
 		if ( $country_id ) {
-			$currency_symbol = self::$all_wpsc_country_from_country_id[$country_id]->symbol_html;
+			$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id );
+			$currency_symbol = $wpsc_country->symbol_html;
 		}
 
 		return $currency_symbol;
@@ -862,7 +865,8 @@ class WPSC_Countries {
 			$country->visible = $countries_array[$country_id]->visible == '1';
 
 			if ( ! empty( $country->tax ) && ( is_int( $country->tax ) ) || is_float( $country->tax ) ) {
-				$country->tax = floatval( self::$all_wpsc_country_from_country_id[$country_id]->tax );
+				$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id );
+				$country->tax = floatval( $wpsc_country->tax );
 			}
 
 			self::$country_code_from_iso_code->map( $country->isocode, $country->id );
