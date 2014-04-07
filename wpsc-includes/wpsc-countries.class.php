@@ -205,7 +205,7 @@ class WPSC_Countries {
 
 		if ( $country_id && $region_id ) {
 			$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id );
-			$wpsc_region = &$wpsc_country->region( $region_id );
+			$wpsc_region = $wpsc_country->region( $region_id );
 		} else {
 			$wpsc_region = false;
 		}

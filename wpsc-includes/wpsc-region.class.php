@@ -55,7 +55,13 @@ class WPSC_Region {
 
 			if ( $country_id && $region_id ) {
 				$wpsc_country = new WPSC_country( $country_id );
-				$region = $wpsc_country( $region_id );
+				$wpsc_region = WPSC_Countries::region( $country_id, $region_id );
+
+				$this->_code       = $wpsc_region->_code;
+				$this->_id         = $wpsc_region->_id;
+				$this->_country_id = $wpsc_region->_country_id;
+				$this->_name       = $wpsc_region->_name;
+				$this->_tax        = $wpsc_region->_tax;
 			}
 		}
 	}

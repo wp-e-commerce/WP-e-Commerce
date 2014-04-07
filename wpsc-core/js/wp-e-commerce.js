@@ -159,7 +159,6 @@ function wpsc_update_customer_meta( response ) {
 					} else {
 						jQuery( this ).removeAttr( 'checked' );
 					}
-					
 				} else {
 					if ( jQuery( this ).val() != meta_value ) {
 						jQuery( this ).val( meta_value );
@@ -289,12 +288,15 @@ function wpsc_meta_item_change() {
 
 	var meta_value;
 	
-	if ( jQuery(this).is(':checkbox') ) {
-		if ( jQuery( this ).is(':checked') )
+	if ( jQuery(this).is('checkbox') ) {
+		if ( jQuery( this ).is(':checked') ) {
 			meta_value = 1;
-		else 
+		} else { 
 			meta_value = 0;
-	} else {
+		}
+	} else if ( jQuery(this).is('select') ) {
+		meta_value = jQuery( this ).find( 'option:selected' ).val();		
+	} else 	{
 		meta_value = jQuery( this ).val();	
 	}
 	
