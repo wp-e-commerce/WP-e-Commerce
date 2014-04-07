@@ -566,6 +566,8 @@ class wpsc_checkout {
 	 */
 	function save_forms_to_db( $purchase_id ) {
 
+		global $wpdb;
+
 		foreach ( $this->checkout_items as $form_data ) {
 
 			if ( $form_data->type == 'heading' ) {
@@ -575,8 +577,8 @@ class wpsc_checkout {
 			$customer_meta_key = $form_data->unique_name;
 			$checkout_item_values = wpsc_get_customer_meta( $customer_meta_key );
 
-			if ( ! is_array( $checkout_item_value ) ) {
-				$checkout_item_values = array( $checkout_item_value );
+			if ( ! is_array( $checkout_item_values ) ) {
+				$checkout_item_values = array( $checkout_item_values );
 			}
 
 			foreach ( $checkout_item_values as $checkout_item_value ) {
