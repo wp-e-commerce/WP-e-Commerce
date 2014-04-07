@@ -1,5 +1,5 @@
 <?php
-add_action('wp_ajax_wpsc_shipping_same_as_billing', 'wpsc_shipping_same_as_billing');
+add_action( 'wp_ajax_wpsc_shipping_same_as_billing', 'wpsc_shipping_same_as_billing' );
 add_action( 'wp_ajax_shipping_same_as_billing_update', 'wpsc_update_shipping_quotes_on_shipping_same_as_billing' );
 add_action( 'wp_ajax_nopriv_shipping_same_as_billing_update', 'wpsc_update_shipping_quotes_on_shipping_same_as_billing' );
 
@@ -622,8 +622,9 @@ function wpsc_submit_checkout( $collected_data = true ) {
 		$error_messages = array();
 	}
 
-	$country_id = WPSC_Countries::country_id( wpsc_get_customer_meta( 'shipping_country' ) );
-	$country_name = WPSC_Countries::country_name( $country_id );
+	$wpsc_country = new WPSC_Country( wpsc_get_customer_meta( 'shippingcountry' ) );
+	$country_id = $wpsc_country->id();
+	$country_name = $wpsc_country->name();
 
 	foreach ( $wpsc_cart->cart_items as $cartitem ) {
 		if ( ! empty( $cartitem->meta[0]['no_shipping'] ) ) continue;

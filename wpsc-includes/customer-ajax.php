@@ -22,6 +22,11 @@ function _wpsc_doing_customer_meta_ajax( $action = '' ) {
 	return $result;
 }
 
+
+if ( ! defined( '_WPSC_USER_META_HOOK_PRIORITY' ) ) {
+	define( '_WPSC_USER_META_HOOK_PRIORITY' , 2 );
+}
+
 if ( _wpsc_doing_customer_meta_ajax() ) {
 
 	/**
@@ -228,10 +233,6 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 	 *
 	 *
 	 *************************************************************************************************/
-	if ( ! defined( '_WPSC_USER_META_HOOK_PRIORITY' ) ) {
-		define( '_WPSC_USER_META_HOOK_PRIORITY' , 2 );
-	}
-
 
 	/**
 	 * Update the shipping same as billing meta value, return updated content to the user via the filter response
@@ -419,81 +420,6 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 
 
 
-	/***************************************************************************************************************************************
-	 * Customer meta is built on a lower level API, Visitor meta.  Some visitor meta values are dependant on each other and need to
-	 * be changed when other visitor meta values change.  For example, shipping same as billing.  Below is the built in functionality
-	 * that enforces those changes.  Developers are free to add additional relationships as needed in plugins
-	 ***************************************************************************************************************************************/
-
-	/**
-	 * when visitor meta is updated we need to check if the shipping same as billing
-	 * option is selected.  If so we need to update the corresponding meta value.
-	 *
-	 * @since 3.8.14
-	 * @access private
-	 * @param $meta_value any value being stored
-	 * @param $meta_key string name of the attribute being stored
-	 * @param $visitor_id int id of the visitor to which the attribute applies
-	 * @return n/a
-	 */
-	function _wpsc_vistor_shipping_same_as_billing_meta_update( $meta_value, $meta_key, $visitor_id ) {
-
-		// remove the action so we don't cause an infinite loop
-		remove_action( 'wpsc_updated_visitor_meta', '_wpsc_vistor_shipping_same_as_billing_meta_update', _WPSC_USER_META_HOOK_PRIORITY );
-
-		// if the shipping same as billing option is being checked then copy meta from billing to shipping
-		if ( $meta_key == 'shippingSameBilling' ) {
-			if ( $meta_value == 1 ) {
-
-				$checkout_names = wpsc_checkout_unique_names();
-
-				foreach ( $checkout_names as $meta_key ) {
-					$meta_key_starts_with_billing = strpos( $meta_key, 'billing', 0 ) === 0;
-
-					if ( $meta_key_starts_with_billing ) {
-						$other_meta_key_name = 'shipping' . substr( $meta_key, strlen( 'billing' ) );
-						if ( in_array( $other_meta_key_name, $checkout_names ) ) {
-							$billing_meta_value = wpsc_get_customer_meta( $meta_key );
-							wpsc_update_customer_meta( $other_meta_key_name, $billing_meta_value );
-						}
-					}
-				}
-			}
-		} else {
-			$shipping_same_as_billing = wpsc_get_customer_meta( 'shippingSameBilling' );
-
-			if ( $shipping_same_as_billing ) {
-
-				$meta_key_starts_with_billing = strpos( $meta_key, 'billing', 0 ) === 0;
-				$meta_key_starts_with_shipping = strpos( $meta_key, 'shipping', 0 ) === 0;
-
-				if ( $meta_key_starts_with_billing ) {
-					$checkout_names = wpsc_checkout_unique_names();
-
-					$other_meta_key_name = 'shipping' . substr( $meta_key, strlen( 'billing' ) );
-
-					if ( in_array( $other_meta_key_name, $checkout_names ) ) {
-						wpsc_update_customer_meta( $other_meta_key_name, $meta_value );
-					}
-				} elseif ( $meta_key_starts_with_shipping ) {
-					$checkout_names = wpsc_checkout_unique_names();
-
-					$other_meta_key_name = 'billing' . substr( $meta_key, strlen( 'shipping' ) );
-
-					if ( in_array( $other_meta_key_name, $checkout_names ) ) {
-						wpsc_update_customer_meta( $other_meta_key_name, $meta_value );
-					}
-				}
-			}
-		}
-
-		// restore the action we removed at the start
-		add_action( 'wpsc_updated_visitor_meta', '_wpsc_vistor_shipping_same_as_billing_meta_update', _WPSC_USER_META_HOOK_PRIORITY, 3 );
-	}
-
-	add_action( 'wpsc_updated_visitor_meta', '_wpsc_vistor_shipping_same_as_billing_meta_update', _WPSC_USER_META_HOOK_PRIORITY, 3 );
-
-
 	/**
 	 * Values to change in response to the shopper updating shipping same as billing
 	 *
@@ -536,6 +462,81 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 	add_action( 'wpsc_updated_customer_meta_shippingpostcode',  '_wpsc_customer_shipping_quotes_need_recalc' , 10 , 3 );
 	add_action( 'wpsc_updated_customer_meta_shippingstate', '_wpsc_customer_shipping_quotes_need_recalc' , 10 , 3 );
 } // end if doing customer meta ajax
+
+
+/***************************************************************************************************************************************
+ * Customer meta is built on a lower level API, Visitor meta.  Some visitor meta values are dependant on each other and need to
+* be changed when other visitor meta values change.  For example, shipping same as billing.  Below is the built in functionality
+* that enforces those changes.  Developers are free to add additional relationships as needed in plugins
+***************************************************************************************************************************************/
+
+/**
+ * when visitor meta is updated we need to check if the shipping same as billing
+ * option is selected.  If so we need to update the corresponding meta value.
+ *
+ * @since 3.8.14
+ * @access private
+ * @param $meta_value any value being stored
+ * @param $meta_key string name of the attribute being stored
+ * @param $visitor_id int id of the visitor to which the attribute applies
+* @return n/a
+*/
+function _wpsc_vistor_shipping_same_as_billing_meta_update( $meta_value, $meta_key, $visitor_id ) {
+
+	// remove the action so we don't cause an infinite loop
+	remove_action( 'wpsc_updated_visitor_meta', '_wpsc_vistor_shipping_same_as_billing_meta_update', _WPSC_USER_META_HOOK_PRIORITY );
+
+	// if the shipping same as billing option is being checked then copy meta from billing to shipping
+	if ( $meta_key == 'shippingSameBilling' ) {
+		if ( $meta_value == 1 ) {
+
+			$checkout_names = wpsc_checkout_unique_names();
+
+			foreach ( $checkout_names as $meta_key ) {
+				$meta_key_starts_with_billing = strpos( $meta_key, 'billing', 0 ) === 0;
+
+				if ( $meta_key_starts_with_billing ) {
+					$other_meta_key_name = 'shipping' . substr( $meta_key, strlen( 'billing' ) );
+					if ( in_array( $other_meta_key_name, $checkout_names ) ) {
+						$billing_meta_value = wpsc_get_customer_meta( $meta_key );
+						wpsc_update_customer_meta( $other_meta_key_name, $billing_meta_value );
+					}
+				}
+			}
+		}
+	} else {
+		$shipping_same_as_billing = wpsc_get_customer_meta( 'shippingSameBilling' );
+
+		if ( $shipping_same_as_billing ) {
+
+			$meta_key_starts_with_billing = strpos( $meta_key, 'billing', 0 ) === 0;
+			$meta_key_starts_with_shipping = strpos( $meta_key, 'shipping', 0 ) === 0;
+
+			if ( $meta_key_starts_with_billing ) {
+				$checkout_names = wpsc_checkout_unique_names();
+
+				$other_meta_key_name = 'shipping' . substr( $meta_key, strlen( 'billing' ) );
+
+				if ( in_array( $other_meta_key_name, $checkout_names ) ) {
+					wpsc_update_customer_meta( $other_meta_key_name, $meta_value );
+				}
+			} elseif ( $meta_key_starts_with_shipping ) {
+				$checkout_names = wpsc_checkout_unique_names();
+
+				$other_meta_key_name = 'billing' . substr( $meta_key, strlen( 'shipping' ) );
+
+				if ( in_array( $other_meta_key_name, $checkout_names ) ) {
+					wpsc_update_customer_meta( $other_meta_key_name, $meta_value );
+				}
+			}
+		}
+	}
+
+	// restore the action we removed at the start
+	add_action( 'wpsc_updated_visitor_meta', '_wpsc_vistor_shipping_same_as_billing_meta_update', _WPSC_USER_META_HOOK_PRIORITY, 3 );
+}
+
+add_action( 'wpsc_updated_visitor_meta', '_wpsc_vistor_shipping_same_as_billing_meta_update', _WPSC_USER_META_HOOK_PRIORITY, 3 );
 
 
 
