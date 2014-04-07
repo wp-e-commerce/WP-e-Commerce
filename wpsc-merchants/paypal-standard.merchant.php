@@ -731,7 +731,7 @@ function form_paypal_multiple() {
 		</td>
 	</tr>\n";
 
-	$store_currency_data = WPSC_Countries::currency_data( get_option( 'currency_type' ) );
+	$store_currency_data = WPSC_Countries::currency_data( get_option( 'currency_type' ), true );
 	$current_currency = get_option('paypal_curcode');
 	if ( ( $current_currency == '' ) && in_array( $store_currency_data['code'], $wpsc_gateways['wpsc_merchant_paypal_standard']['supported_currencies']['currency_list'] ) ) {
 		update_option( 'paypal_curcode', $store_currency_data['code'] );
