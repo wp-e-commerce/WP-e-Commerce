@@ -304,16 +304,23 @@ class wpsc_coupons {
 		global $wpsc_cart;
 
 		$compare_logic = false;
+
 		foreach ( $this->conditions as $condition ) {
+
 			$callback = '_callback_condition_' . $condition['property'];
-			if ( ! is_callable( array( $this, $callback ) ) ) {
-				if( function_exists($callback) ) {
+
+			if ( is_callable( array( $this, $callback ) ) ) {
+
+				$result = $this->$callback( $condition, $cart_item );
+
+			} else {
+
+				if ( function_exists( $callback ) ) {
 					$result = $callback( $condition, $cart_item );
 				} else {
-					return false;
+					$result = apply_filters( 'wpsc_coupon_default_callback', false, $callback, $cart_item );
 				}
-			} else {
-				$result = $this->$callback( $condition, $cart_item );
+
 			}
 			
 			if ( ! $result ) {
