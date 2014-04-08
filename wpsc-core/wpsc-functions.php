@@ -123,34 +123,38 @@ function wpsc_checkout_form_fields() {
  */
 function wpsc_checkout_unique_names() {
 
-	$unique_names = array(
-			'billingfirstname',
-			'billinglastname',
-			'billingaddress',
-			'billingcity',
-			'billingstate',
-			'billingcountry',
-			'billingemail',
-			'billingphone',
-			'billingpostcode',
-			'billingregion',
-			'shippingSameBilling',
-			'shippingfirstname',
-			'shippinglastname',
-			'shippingaddress',
-			'shippingcity',
-			'shippingstate',
-			'shippingcountry',
-			'shippingpostcode',
-			'shippingregion',
-	);
+	static $unique_names = null;
 
-	$unique_names = apply_filters( 'wpsc_add_unique_names' , $unique_names );
+	if ( empty( $unique_names ) ) {
+		$unique_names = array(
+				'billingfirstname',
+				'billinglastname',
+				'billingaddress',
+				'billingcity',
+				'billingstate',
+				'billingcountry',
+				'billingemail',
+				'billingphone',
+				'billingpostcode',
+				'billingregion',
+				'shippingSameBilling',
+				'shippingfirstname',
+				'shippinglastname',
+				'shippingaddress',
+				'shippingcity',
+				'shippingstate',
+				'shippingcountry',
+				'shippingpostcode',
+				'shippingregion',
+		);
 
-	// TODO: there really isn't a good reason to save this as an option becuase it is recomputed
-	// every time WPEC is reloaded.  Deprecate the option and replace any references to the option
-	// with a call to this function
-	update_option( 'wpsc_checkout_unique_names', $unique_names );
+		$unique_names = apply_filters( 'wpsc_add_unique_names' , $unique_names );
+
+		// TODO: there really isn't a good reason to save this as an option becuase it is recomputed
+		// every time WPEC is reloaded.  Deprecate the option and replace any references to the option
+		// with a call to this function
+		update_option( 'wpsc_checkout_unique_names', $unique_names );
+	}
 
 	return $unique_names;
 }
@@ -572,12 +576,12 @@ function wpsc_get_page_post_names() {
  */
 function wpsc_cron() {
 	$default_schedules = array( 'hourly', 'twicedaily', 'daily');
-	
+
 	/*
-	 * Create a cron event for each likely cron schedule.  The likely cron schedules 
-	 * are the default WordPress cron intervals (hourly, twicedaily and daily are 
-	 * defined in wordpress 3.5.1) and any cron schedules added by our plugin or 
-	 * it's related plugins.  We recognize these by checking if the schedule 
+	 * Create a cron event for each likely cron schedule.  The likely cron schedules
+	 * are the default WordPress cron intervals (hourly, twicedaily and daily are
+	 * defined in wordpress 3.5.1) and any cron schedules added by our plugin or
+	 * it's related plugins.  We recognize these by checking if the schedule
 	 * name is prefixed by 'wpsc_'.
 	 */
 	foreach ( wp_get_schedules() as $cron => $schedule ) {
