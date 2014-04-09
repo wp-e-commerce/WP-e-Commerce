@@ -542,7 +542,7 @@ function form_paypal_express() {
 
 		$paypal_currency_list = array_map( 'esc_sql', $wpsc_gateways['wpsc_merchant_paypal_express']['supported_currencies']['currency_list'] );
 
-		$currency_list = $wpdb->get_results( "SELECT DISTINCT `code`, `currency` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `code` IN ('" . implode( "','", $paypal_currency_list ) . "')", ARRAY_A );
+		$currency_list = $wpdb->get_results( "SELECT DISTINCT `code`, `currency` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `visible` = 1 AND `code` IN ('" . implode( "','", $paypal_currency_list ) . "')", ARRAY_A );
 		foreach ( $currency_list as $currency_item ) {
 			$selected_currency = '';
 			if( $current_currency == $currency_item['code'] ) {
