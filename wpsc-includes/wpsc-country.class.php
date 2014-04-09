@@ -790,8 +790,8 @@ class WPSC_Country {
 		$message = sprintf(
 							__( 'As of version 3.8.14 the function "%s" is no longer available in class %s. Use %s instead', 'wpsc' ),
 							$function,
-							$replacement,
-							__CLASS__
+							__CLASS__,
+							$replacement
 						);
 
 		return $message;
