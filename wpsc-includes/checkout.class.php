@@ -585,6 +585,8 @@ class wpsc_checkout {
 				$checkout_item_values = array( $checkout_item_value );
 			}
 
+			global $wpdb;
+
 			foreach ( $checkout_item_values as $checkout_item_value ) {
 				$prepared_query = $wpdb->insert(
 													WPSC_TABLE_SUBMITTED_FORM_DATA,
