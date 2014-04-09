@@ -23,7 +23,7 @@
  * For each deprecated meta value there is a 'define' near the top of the file that controls if the
  * deprecation routines for any specific value should be enabled. create a control value for any
  * meta value you are deprecating using this format:
- *     define ( '_wpsc_deprecate_[META TYPE]_[META_KEY_NAME]', true|false );
+ *     define ( 'WPSC_DEPRECATE_[META TYPE]_[META_KEY_NAME]', true|false );
  *
  * If you want to deprecate meta conditionally based on the current WPEC version number replace
  * the true or false with an appropriate expression.
@@ -41,14 +41,14 @@
 // meta deprecations for 3.8.14
 
 // enable deprecation handling for customer meta with key 'checkout_details'
-define( '_wpsc_depcrecate_customer_checkout_details', true );
+define( 'WPSC_DEPRECATE_CUSTOMER_CHECKOUT_DETAILS', true );
 
 //
 //////////////////// End deprecation Handling Control //////////////////////////
 
 
 // manage deprecation of customer meta with key 'checkout_details'
-if ( _wpsc_depcrecate_customer_checkout_details ) {
+if ( WPSC_DEPRECATE_CUSTOMER_CHECKOUT_DETAILS ) {
 
 	/**
 	 * Function to call to convert/delete/translate the customer meta value checkout_details
