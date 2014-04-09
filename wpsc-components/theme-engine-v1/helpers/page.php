@@ -240,8 +240,8 @@ function wpsc_database_update_notice() { ?>
 
 function wpsc_theme_admin_notices() {
 	
-	// Check to see if WPEC is installed before showing upgrade notices.
-	if( false !== get_option( 'wpsc_version' ) ) {
+	// Check to see if WP eCommerce is installed before showing upgrade notices.
+	if ( false !== get_option( 'wpsc_version' ) ) {
 
 		// Database update notice is most important
 		if ( get_option ( 'wpsc_version' ) < 3.8 ) {
@@ -251,10 +251,11 @@ function wpsc_theme_admin_notices() {
 		// If that's not an issue check if theme updates required
 		} else {
 
-			if ( get_option('wpsc_ignore_theme','') == '' ) {
-				add_option('wpsc_ignore_theme',false);
+			if ( '' === get_option( 'wpsc_ignore_theme', '' ) ) ) {
+				add_option( 'wpsc_ignore_theme',false );
 			}
-			if (!get_option('wpsc_ignore_theme')) {
+
+			if ( ! get_option( 'wpsc_ignore_theme' ) ) {
 				add_action( 'admin_notices', 'wpsc_theme_upgrade_notice' );
 			}
 
@@ -263,7 +264,7 @@ function wpsc_theme_admin_notices() {
 	}
 
 	// Flag config inconsistencies
-	if ( 1 == get_option( 'require_register' ) && 1 != get_option( 'users_can_register' )) {
+	if ( 1 == get_option( 'require_register' ) && 1 != get_option( 'users_can_register' ) ) {
 		add_action( 'admin_notices', 'wpsc_turn_on_wp_register' );
 	}
 
