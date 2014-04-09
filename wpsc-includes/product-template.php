@@ -243,7 +243,7 @@ function wpsc_product_has_variations( $id = 0 ) {
 	if ( ! $id )
 		$id = get_the_ID();
 
-	if ( ! isset( $has_variations[$id] ) ) {
+	if ( ! isset( $has_variations[ $id ] ) ) {
 		$args = array(
 			'post_parent' => $id,
 			'post_type'   => 'wpsc-product',
