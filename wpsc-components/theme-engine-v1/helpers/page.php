@@ -251,7 +251,7 @@ function wpsc_theme_admin_notices() {
 		// If that's not an issue check if theme updates required
 		} else {
 
-			if ( '' === get_option( 'wpsc_ignore_theme', '' ) ) ) {
+			if ( '' === get_option( 'wpsc_ignore_theme', '' ) ) {
 				add_option( 'wpsc_ignore_theme',false );
 			}
 
