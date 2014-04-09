@@ -114,7 +114,6 @@ function wpsc_install() {
 
 	$default_payment_gateways_names = array(
 		'chronopay'						=> '',
-		'google'						=> '',
 		'wpsc_merchant_paypal_express'	=> '',
 		'wpsc_merchant_paypal_pro'		=> '',
 		'wpsc_merchant_paypal_standard'	=> ''
@@ -148,9 +147,6 @@ function wpsc_install() {
 	add_option( 'purch_log_email', '', '', 'yes' );
 	add_option( 'return_email', '', '', 'yes' );
 	add_option( 'terms_and_conditions', '', '', 'yes' );
-
-	add_option( 'google_key', 'none', '', 'yes' );
-	add_option( 'google_id', 'none', '', 'yes' );
 
 	add_option( 'default_brand', 'none', '', 'yes' );
 	add_option( 'wpsc_default_category', 'all', '', 'yes' );
