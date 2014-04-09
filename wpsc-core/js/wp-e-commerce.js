@@ -94,6 +94,23 @@ function wpsc_ajax_url() {
 	return _wpsc_admin_ajax_url;
 }
 
+var ajax_via_jquery_post = false;
+
+function wpsc_do_ajax_request( ajax_url, data, success_callback ) {
+	
+	if ( ajax_via_jquery_post ) {
+		jQuery.post( wpsc_ajax_url(), form_values, success, 'json' );
+	} else {
+		jQuery.ajax({
+			type      : "post",
+			dataType  : "json",
+			url       : ajax_url,
+			data      : data,
+			success   : success_callback,
+		});   					
+	}
+}
+
 /**
  * update a customer meta value 
  * 
@@ -140,6 +157,8 @@ function wpsc_get_customer_data( response_callback ) {
  */
 function wpsc_update_customer_meta( response ) {
 	
+	var element_that_caused_change_event = response.data.request.meta_key; 
+	
 	if ( response.hasOwnProperty( 'data' ) && response.data.hasOwnProperty( 'customer_meta' )) {
 		var customer_meta = response.data.customer_meta;
 		
@@ -152,17 +171,22 @@ function wpsc_update_customer_meta( response ) {
 			var selector = '[data-wpsc-meta-key="' + meta_key + '"]';
 			
 			jQuery( selector ).each( function( index, value ) {		
-				if ( jQuery(this).is(':checkbox') ) {
-					var boolean_meta_value = meta_value == "1"; 
-					if ( boolean_meta_value ) {
-						jQuery( this ).attr( 'checked', 'checked' );
+				var element_meta_key = get_element_meta_key( this );
+				
+				if ( element_meta_key != element_that_caused_change_event ) {
+					if ( jQuery(this).is(':checkbox') ) {
+						var boolean_meta_value = meta_value == "1"; 
+						if ( boolean_meta_value ) {
+							jQuery( this ).attr( 'checked', 'checked' );
+						} else {
+							jQuery( this ).removeAttr( 'checked' );
+						}
 					} else {
-						jQuery( this ).removeAttr( 'checked' );
-					}
-					
-				} else {
-					if ( jQuery( this ).val() != meta_value ) {
-						jQuery( this ).val( meta_value );
+						var current_value = jQuery( this ).val();
+						var new_value = meta_value;
+						if ( jQuery( this ).val() != meta_value ) {
+							jQuery( this ).val( meta_value );
+						}
 					}
 				}
 			});
@@ -181,7 +205,7 @@ function wpsc_update_customer_meta( response ) {
  */
 function wpsc_update_checkout_info( checkout_info ) {
 	
-	// TODO: if shipping needs to be re-calccualted we need to refresh the page.  This is the pnly option
+	// TODO: if shipping needs to be re-calculated we need to refresh the page.  This is the pnly option
 	// in version 3.8.14 and earlier.  Future versions should support replacing the shipping quote elements
 	// via AJAX
 	if ( checkout_info.hasOwnProperty( 'needs_shipping_recalc' ) ) {
@@ -222,9 +246,7 @@ function wpsc_update_checkout_info( checkout_info ) {
 	}
 
 	jQuery( ".wpsc-visitor-meta").on( "change", wpsc_meta_item_change );
-	
-	wpsc_adjust_checkout_form_element_visibility();
-	
+		
 	return true;
 }
 
@@ -281,6 +303,25 @@ function wpsc_meta_item_change_response( response ) {
 }
 
 /**
+ * 
+ * @param element  the lement to extract the meta key from
+ * @returns string meta_key
+ */
+function get_element_meta_key ( element ) {
+	
+	var meta_key = jQuery( element ).attr( "data-wpsc-meta-key" );
+	
+	if ( meta_key == undefined ) {
+		meta_key = jQuery( element ).attr( "title" );
+		
+		if ( meta_key == undefined ) {
+			meta_key = jQuery( element ).attr( "id" );
+		}
+	}
+
+	return meta_key;
+}
+/**
  * common callback triggered whenever a WPEC meta value is changed 
  * 
  * @since 3.8.14
@@ -290,23 +331,18 @@ function wpsc_meta_item_change() {
 	var meta_value;
 	
 	if ( jQuery(this).is(':checkbox') ) {
-		if ( jQuery( this ).is(':checked') )
+		if ( jQuery( this ).is(':checked') ) {
 			meta_value = 1;
-		else 
+		} else { 
 			meta_value = 0;
-	} else {
+		}
+	} else if ( jQuery(this).is('select') ) {
+		meta_value = jQuery( this ).find( 'option:selected' ).val();		
+	} else 	{
 		meta_value = jQuery( this ).val();	
 	}
 	
-	var meta_key = jQuery( this ).attr( "data-wpsc-meta-key" );
-	
-	if ( meta_key == undefined ) {
-		meta_key = jQuery( this ).attr( "title" );
-		
-		if ( meta_key == undefined ) {
-			meta_key = jQuery( this ).attr( "id" );
-		}
-	}	
+	var meta_key = get_element_meta_key( this );
 	
 	// if there are other fields on the current page that are used to change the same meta value then 
 	// they need to be updated
@@ -386,7 +422,9 @@ jQuery(document).ready(function ($) {
 	if ( jQuery( "#shippingSameBilling" ).length ) {
 		// make sure visibility of form elements is what it should be
 		wpsc_adjust_checkout_form_element_visibility();
+		jQuery( "#shippingSameBilling"  ).on( 'change', wpsc_adjust_checkout_form_element_visibility() );
 	}
+	
 	
 	if(jQuery('#checkout_page_container .wpsc_email_address input').val())
 		jQuery('#wpsc_checkout_gravatar').attr('src', 'https://secure.gravatar.com/avatar/'+MD5(jQuery('#checkout_page_container .wpsc_email_address input').val().split(' ').join(''))+'?s=60&d=mm');

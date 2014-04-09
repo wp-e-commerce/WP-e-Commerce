@@ -541,7 +541,7 @@ class ash_ups {
 
 		$REQUEST .= $this->array2xml( $RatingServiceRequest );
 		$REQUEST .= "</RatingServiceSelectionRequest>";
-   		
+
 		// Return the final XML document as a string to be used by _makeRateRequest
 		return $REQUEST;
 	}
@@ -724,7 +724,7 @@ class ash_ups {
 		global $wpdb, $wpec_ash, $wpsc_cart, $wpec_ash_tools;
 		// Arguments array for various functions to use
 		$args = array();
-		
+
 		$args['dest_ccode'] = wpsc_get_customer_meta( 'shipping_country' );
 		if ( $args['dest_ccode'] == "UK" ) {
 			// So, UPS is a little off the times
@@ -763,17 +763,24 @@ class ash_ups {
 		}
 		// If the region code is provided via a form post use it!
 		if ( isset( $_POST['region'] ) && ! empty( $_POST['region'] ) ) {
-			$query = $wpdb->prepare( "SELECT `" . WPSC_TABLE_REGION_TAX . "`.* FROM `" . WPSC_TABLE_REGION_TAX . "` WHERE `" . WPSC_TABLE_REGION_TAX . "`.`id` = %d", $_POST['region'] );
-			$dest_region_data = $wpdb->get_results( $query, ARRAY_A );
-			$args['dest_state'] = ( is_array( $dest_region_data ) ) ? $dest_region_data[0]['code'] : "";
+
+			$country_id = WPSC_Countries::country_id_from_region_id( $region_id );
+
+			if ( $country_id ) {
+				$region = new WPSC_Region( $country_id, $region_id );
+				$args['dest_state'] = $region->name();
+			} else {
+				$args['dest_state'] = '';
+			}
+
 			wpsc_update_customer_meta( 'shipping_state', $args['dest_state'] ); //Unify state meta.
 		} else if ( $dest_state = wpsc_get_customer_meta( 'shipping_state' ) ) {
 			// Well, we have a zip code in the session and no new one provided
 			$args['dest_state'] = $dest_state;
 		} else {
-			$args['dest_state'] = "";
+			$args['dest_state'] = '';
 		}
-		
+
 		if ( ! is_object( $wpec_ash ) ) {
 			$wpec_ash = new ASH();
 		}
@@ -786,17 +793,17 @@ class ash_ups {
 		$args['shipper'] = $this->internal_name;
 		$args["singular_shipping"] = ( array_key_exists( "singular_shipping", $wpsc_ups_settings ) ) ? $wpsc_ups_settings["singular_shipping"]    : "0";
 		if ( $args['weight'] > 150 && ! (boolean) $args["singular_shipping"] ) { // This is where shipping breaks out of UPS if weight is higher than 150 LBS
-				$over_weight_txt = apply_filters( 'wpsc_shipment_over_weight', 
-													__( 'Your order exceeds the standard shipping weight limit. 
-														Please contact us to quote other shipping alternatives.', 'wpsc' ), 
+				$over_weight_txt = apply_filters( 'wpsc_shipment_over_weight',
+													__( 'Your order exceeds the standard shipping weight limit.
+														Please contact us to quote other shipping alternatives.', 'wpsc' ),
 													$args );
 				$shipping_quotes[$over_weight_txt] = 0; // yes, a constant.
 				$wpec_ash->cache_results( $this->internal_name, array( $shipping_quotes ), $this->shipment ); //Update shipment cache.
 				return array( $shipping_quotes );
 		}
-		
+
 		$cache = $wpec_ash->check_cache( $this->internal_name, $this->shipment ); //And now, we're ready to check cache.
-		
+
 		// We do not want to spam UPS (and slow down our process) if we already
 		// have a shipping quote!
 		if ( count( $cache['rate_table'] ) >= 1 ) { //$cache['rate_table'] could be array(0)..
@@ -817,15 +824,16 @@ class ash_ups {
 		$args['DropoffType']       = $wpsc_ups_settings['DropoffType'];
 		$args['packaging']         = $wpsc_ups_settings['48_container'];
 		// Preferred Currency to display
-		$currency_data = $wpdb->get_row( $wpdb->prepare( "SELECT `code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `isocode`= %s LIMIT 1", get_option( 'currency_type' ) ), ARRAY_A );
-		if ( $currency_data ) {
-			$args['currency'] = $currency_data['code'];
+		$currency_data = WPSC_Countries::currency_code( get_option( 'currency_type' ) );
+		if ( ! empty( $currency_data ) ) {
+			$args['currency'] = $currency_data;
 		} else {
-			$args['currency'] = "USD";
+			$args['currency'] = 'USD';
 		}
 		// Shipping billing / account address
-		$origin_region_data = $wpdb->get_results( $wpdb->prepare( "SELECT `" . WPSC_TABLE_REGION_TAX . "`.* FROM `" . WPSC_TABLE_REGION_TAX . "` WHERE `" . WPSC_TABLE_REGION_TAX . "`.`id` = %d", get_option( 'base_region' ) ), ARRAY_A );
-		$args['shipr_state'] = ( is_array( $origin_region_data ) ) ? $origin_region_data[0]['code'] : "";
+		$region = new WPSC_Region( get_option( 'base_country' ), get_option( 'base_region' ) );
+
+		$args['shipr_state'] = $region->code();
 		$args['shipr_city']  = get_option( 'base_city' );
 		$args['shipr_ccode'] = get_option( 'base_country' );
 		$args['shipr_pcode'] = get_option( 'base_zipcode' );
@@ -852,15 +860,15 @@ class ash_ups {
 		if ( $quotes != false ) {
 			$rate_table = apply_filters( 'wpsc_rates_table', $this->_formatTable( $quotes, $args['currency'] ), $args, $this->shipment );
 		} else {
-			if ( isset( $wpsc_ups_settings['upsenvironment'] ) && current_user_can( 'manage_options' ) && ( defined( 'WP_DEBUG' ) && WP_DEBUG ) ) {
+			if ( isset( $wpsc_ups_settings['upsenvironment'] ) ) {
 				echo "<strong>:: GetQuote ::DEBUG OUTPUT::</strong><br />";
 				echo "Arguments sent to UPS";
 				print_r( $args );
 				echo "<hr />";
-				print esc_html( $request );
+				print $request;
 				echo "<hr />";
 				echo "Response from UPS";
-				echo esc_html( $raw_quote );
+				echo $raw_quote;
 				echo "</strong>:: GetQuote ::End DEBUG OUTPUT::";
 			}
 		}

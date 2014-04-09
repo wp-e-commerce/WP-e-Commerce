@@ -430,7 +430,7 @@ class ash_usps {
 		$data["length"]	= "";
 		$data["height"]	= "";
 		$data["girth"]	= "";
-		
+
 		if ( $package ) {
 			$data["weight"]	= $package->weight;
 			$data["value"]	= $package->value;
@@ -739,7 +739,7 @@ class ash_usps {
 		}
 		return $temp;
 	}
-	
+
 	/**
 	 * Runs the quote process for a simple quote and returns the final quote table
 	 *
@@ -1004,9 +1004,7 @@ class ash_usps {
 		}
 		// If the region code is provided via a form post use it!
 		if ( isset( $_POST['region'] ) && ! empty( $_POST['region'] ) ) {
-			$query = $wpdb->prepare( "SELECT `" . WPSC_TABLE_REGION_TAX . "`.* FROM `" . WPSC_TABLE_REGION_TAX . "` WHERE `" . WPSC_TABLE_REGION_TAX . "`.`id` = %d", $_POST['region'] );
-			$dest_region_data = $wpdb->get_results( $query, ARRAY_A );
-			$data['dest_state'] = ( is_array( $dest_region_data ) ) ? $dest_region_data[0]['code'] : "";
+			$data['dest_state'] = wpsc_get_region( $region_id );
 			wpsc_update_customer_meta( 'shipping_state', $data['dest_state'] ); //Unify state meta.
 		} else if ( $dest_state = wpsc_get_customer_meta( 'shipping_state' ) ) {
 			// Well, we have a zip code in the session and no new one provided
@@ -1030,7 +1028,7 @@ class ash_usps {
 		$data["adv_rate"] = (!empty($settings["adv_rate"])) ? $settings["adv_rate"] : FALSE; // Use advanced shipping for Domestic Rates ? Not available
 		if ( $data["weight"] > 70 && ! (boolean) $data["adv_rate"] ) { //USPS has a weight limit: https://www.usps.com/send/can-you-mail-it.htm?#3.
 			$over_weight_txt = apply_filters( 'wpsc_shipment_over_weight',
-												__( 'Your order exceeds the standard shipping weight limit. 
+												__( 'Your order exceeds the standard shipping weight limit.
 													Please contact us to quote other shipping alternatives.', 'wpsc' ),
 												$data );
 			$shipping_quotes[$over_weight_txt] = 0; // yes, a constant.
@@ -1053,7 +1051,7 @@ class ash_usps {
 		$data["services"]     = ( ! empty( $settings["services"] ) ) ? $settings["services"] : array( "STANDARD POST", "PRIORITY", "PRIORITY EXPRESS", "FIRST CLASS" );
 		foreach( $data["services"] as $id => $service ) {
 			if ( $service == 'PARCEL' ) {
-				$data["services"][$id] = 'STANDARD POST'; 
+				$data["services"][$id] = 'STANDARD POST';
 			}
 			if ( $service == 'EXPRESS' ) {
 				$data["services"][$id] = 'PRIORITY EXPRESS';

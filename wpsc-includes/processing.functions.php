@@ -36,12 +36,13 @@ function wpsc_currency_display( $price_in, $args = null ) {
 		// Get currency settings
 		$currency_type = get_option( 'currency_type' );
 
+		// TODO can deprecate this caching because the WPSC_Countries class already caches the data
 		if ( ! $wpsc_currency_data = wp_cache_get( $currency_type, 'wpsc_currency_id' ) ) {
-			$wpsc_currency_data = $wpdb->get_row( $wpdb->prepare( "SELECT `symbol`, `symbol_html`, `code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id` = %d LIMIT 1", $currency_type ), ARRAY_A );
+			$wpsc_currency_data = WPSC_Countries::currency_data( $currency_type, true );
 			wp_cache_set( $currency_type, $wpsc_currency_data, 'wpsc_currency_id' );
 		}
 	} elseif ( ! $wpsc_currency_data = wp_cache_get( $query['isocode'], 'wpsc_currency_isocode' ) ) {
-		$wpsc_currency_data = $wpdb->get_row( $wpdb->prepare( "SELECT `symbol`, `symbol_html`, `code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `isocode` = %s LIMIT 1", $query['isocode'] ), ARRAY_A );
+		$wpsc_currency_data = WPSC_Countries::currency_data( $currency_type, true );
 		wp_cache_set( $query['isocode'], $wpsc_currency_data, 'wpsc_currency_isocode' );
 	}
 
@@ -137,7 +138,7 @@ function wpsc_decrement_claimed_stock($purchase_log_id) {
 
 						$email_message = sprintf( __( 'The product "%s" is out of stock.', 'wpsc' ), $product->post_title );
 
-						if ( ! empty( $product_meta["unpublish_when_none_left"] ) || apply_filters( 'wpsc_force_unpublish_when_out_of_stock', false, $product ) ) {
+						if ( ! empty( $product_meta["unpublish_when_none_left"] ) ) {
 							$result = wp_update_post( array(
 								'ID'          => $product->ID,
 								'post_status' => 'draft',
@@ -147,7 +148,7 @@ function wpsc_decrement_claimed_stock($purchase_log_id) {
 								$email_message = sprintf( __( 'The product "%s" is out of stock and has been unpublished.', 'wpsc' ), $product->post_title );
 						}
 
-						if ( $product_meta["notify_when_none_left"] == 1 || apply_filters( 'wpsc_force_email_when_out_of_stock', false, $product ) )
+						if ( $product_meta["notify_when_none_left"] == 1 )
 							wp_mail(get_option('purch_log_email'), sprintf(__('%s is out of stock', 'wpsc'), $product->post_title), $email_message );
 					}
 				}
@@ -165,9 +166,8 @@ function wpsc_decrement_claimed_stock($purchase_log_id) {
  *  @return returns the currency symbol used for the shop
 */
 function wpsc_get_currency_symbol(){
-	global $wpdb;
-	$currency_type = get_option('currency_type');
-	$wpsc_currency_data = $wpdb->get_var( $wpdb->prepare( "SELECT `symbol` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id` = %d LIMIT 1", $currency_type ) );
+	$currency_type = get_option( 'currency_type' );
+	$wpsc_currency_data = WPSC_Countries::currency_symbol( $currency_type );
 	return $wpsc_currency_data;
 }
 

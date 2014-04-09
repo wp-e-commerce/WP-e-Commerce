@@ -155,7 +155,7 @@ class flatrate {
 
 		if (get_option('base_country') != $country) {
 
-			$results = $wpdb->get_var($wpdb->prepare("SELECT `continent` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `isocode` IN(%s) LIMIT 1",$country));
+			$results = WPSC_Countries::continent( $country );
 
 			$flatrates = get_option('flat_rates');
 

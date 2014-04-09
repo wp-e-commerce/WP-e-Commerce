@@ -1,5 +1,5 @@
 <?php
-add_action('wp_ajax_wpsc_shipping_same_as_billing', 'wpsc_shipping_same_as_billing');
+add_action( 'wp_ajax_wpsc_shipping_same_as_billing', 'wpsc_shipping_same_as_billing' );
 add_action( 'wp_ajax_shipping_same_as_billing_update', 'wpsc_update_shipping_quotes_on_shipping_same_as_billing' );
 add_action( 'wp_ajax_nopriv_shipping_same_as_billing_update', 'wpsc_update_shipping_quotes_on_shipping_same_as_billing' );
 
@@ -498,11 +498,11 @@ function wpsc_update_location() {
 		$shipping_zipcode = $_POST['zipcode'];
 	}
 
-	$delivery_region_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(`regions`.`id`) FROM `" . WPSC_TABLE_REGION_TAX . "` AS `regions` INNER JOIN `" . WPSC_TABLE_CURRENCY_LIST . "` AS `country` ON `country`.`id` = `regions`.`country_id` WHERE `country`.`isocode` IN('%s')",  $delivery_country ) );
+	$delivery_region_count = WPSC_Countries::region_count( $delivery_country );
 	if ( $delivery_region_count < 1 )
 		$delivery_region = '';
 
-	$selected_region_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(`regions`.`id`) FROM `" . WPSC_TABLE_REGION_TAX . "` AS `regions` INNER JOIN `" . WPSC_TABLE_CURRENCY_LIST . "` AS `country` ON `country`.`id` = `regions`.`country_id` WHERE `country`.`isocode` IN('%s')", $billing_country ) );
+	$selected_region_count = WPSC_Countries::region_count( $billing_country );
 	if ( $selected_region_count < 1 )
 		$billing_region = '';
 
@@ -622,7 +622,10 @@ function wpsc_submit_checkout( $collected_data = true ) {
 		$error_messages = array();
 	}
 
-	$selectedCountry = $wpdb->get_results( $wpdb->prepare( "SELECT id, country FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE isocode = '%s' ", wpsc_get_customer_meta( 'shipping_country' ) ), ARRAY_A );
+	$wpsc_country = new WPSC_Country( wpsc_get_customer_meta( 'shippingcountry' ) );
+	$country_id = $wpsc_country->id();
+	$country_name = $wpsc_country->name();
+
 	foreach ( $wpsc_cart->cart_items as $cartitem ) {
 		if ( ! empty( $cartitem->meta[0]['no_shipping'] ) ) continue;
 		$categoriesIDs = $cartitem->category_id_list;
@@ -632,8 +635,8 @@ function wpsc_submit_checkout( $collected_data = true ) {
 			else
 				$countries = wpsc_get_meta( $catid, 'target_market', 'wpsc_category' );
 
-			if ( ! empty($countries) && !in_array( $selectedCountry[0]['id'], (array)$countries ) ) {
-				$errormessage = sprintf( __( '%s cannot be shipped to %s. To continue with your transaction please remove this product from the list below.', 'wpsc' ), $cartitem->get_title(), $selectedCountry[0]['country'] );
+			if ( ! empty($countries) && ! in_array( $country_id, (array)$countries ) ) {
+				$errormessage = sprintf( __( '%s cannot be shipped to %s. To continue with your transaction please remove this product from the list below.', 'wpsc' ), $cartitem->get_title(), $country_name );
 				wpsc_update_customer_meta( 'category_shipping_conflict', $errormessage );
 				$is_valid = false;
 			}
@@ -775,8 +778,7 @@ function wpsc_change_tax() {
 		wpsc_update_customer_meta( 'billingregion', $wpsc_selected_region );
 	}
 
-
-	$check_country_code = $wpdb->get_var( $wpdb->prepare( "SELECT `country`.`isocode` FROM `" . WPSC_TABLE_REGION_TAX . "` AS `region` INNER JOIN `" . WPSC_TABLE_CURRENCY_LIST . "` AS `country` ON `region`.`country_id` = `country`.`id` WHERE `region`.`id` = %d LIMIT 1", wpsc_get_customer_meta( 'billing_region' ) ) );
+	$check_country_code = WPSC_Countries::country_id( wpsc_get_customer_meta( 'billing_region' ) );
 
 	if ( wpsc_get_customer_meta( 'billingcountry' ) != $check_country_code ) {
 		$wpsc_selected_region = null;
@@ -791,8 +793,7 @@ function wpsc_change_tax() {
 		wpsc_update_customer_meta( 'shippingregion', $wpsc_delivery_region );
 	}
 
-	$check_country_code = $wpdb->get_var( $wpdb->prepare( "SELECT `country`.`isocode` FROM `" . WPSC_TABLE_REGION_TAX . "` AS `region` INNER JOIN `" . WPSC_TABLE_CURRENCY_LIST . "` AS `country` ON `region`.`country_id` = `country`.`id` WHERE `region`.`id` = %d LIMIT 1", $wpsc_delivery_region ) );
-
+	$check_country_code = WPSC_Countries::country_id( $wpsc_delivery_region );
 	if ( $wpsc_delivery_country != $check_country_code ) {
 		$wpsc_delivery_region = null;
 	}
@@ -877,7 +878,7 @@ function wpsc_change_tax() {
 	if ( $form_selected_country != null && $onchange_function != null ) {
 
 		$checkoutfields = 'set_shipping_country' == $onchange_function;
-		$region_list = wpsc_country_region_list( $form_id, false, $form_selected_country, $form_selected_region, $form_id, $checkoutfields );
+		$region_list = WPSC_Countries_list( $form_id, false, $form_selected_country, $form_selected_region, $form_id, $checkoutfields );
 
 		if ( $region_list != null ) {
 			$json_response['region_list'] = str_replace( array( "\n", "\r" ), '', $region_list );

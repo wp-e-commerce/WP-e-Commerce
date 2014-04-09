@@ -45,12 +45,12 @@ abstract class WPSC_Purchase_Log_Notification {
 			'discount'        => sprintf( __( 'Discount Amount: %s (%s)', 'wpsc' ), $discount, $this->purchase_log->get( 'discount_data' ) ) . "\r\n",
 
 			// New tags
-			'coupon_code'     => $this->purchase_log->get( 'discount_data'        ),
-			'transaction_id'  => $this->purchase_log->get( 'transactid'           ),
-			'purchase_log_id' => $this->purchase_log->get( 'id'                   ),
-			'payment_method'  => $this->purchase_log->get( 'gateway_name'         ),
-			'shipping_method' => $this->purchase_log->get( 'shipping_method_name' ),
-			'shipping_option' => $this->purchase_log->get( 'shipping_option_name' ),
+			'coupon_code'     => $this->purchase_log->get( 'discount_data'   ),
+			'transaction_id'  => $this->purchase_log->get( 'transactid'      ),
+			'purchase_log_id' => $this->purchase_log->get( 'id'              ),
+			'payment_method'  => $this->purchase_log->get( 'gateway'         ),
+			'shipping_method' => $this->purchase_log->get( 'shipping_method' ),
+			'shipping_option' => $this->purchase_log->get( 'shipping_option' ),
 			'discount_amount' => $discount,
 			'tax'             => $tax,
 			'shipping'        => $shipping,
@@ -393,8 +393,7 @@ class WPSC_Purchase_Log_Admin_Notification extends WPSC_Purchase_Log_Notificatio
 			$message .= "<strong>{$section['title']}</strong>\r\n";
 			foreach ( $section['fields'] as $field ) {
 				if ( strpos( $field->unique_name, 'state' ) && is_numeric( $field->value ) ) {
-					$sql = $wpdb->prepare( "SELECT name FROM " . WPSC_TABLE_REGION_TAX . " WHERE id = %d", $field->value );
-					$field->value = $wpdb->get_var( $sql );
+					$field->value = wpsc_get_region( $field->value );
 				}
 				$message .= $field->name . ' : ' . $field->value . "\r\n";
 			}

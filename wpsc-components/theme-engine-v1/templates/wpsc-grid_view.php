@@ -131,6 +131,7 @@ $image_height = get_option('product_image_height');
 										<input type="text" id="wpsc_quantity_update_<?php echo wpsc_the_product_id(); ?>" name="wpsc_quantity_update" size="2" value="1" />
 										<input type="hidden" name="key" value="<?php echo wpsc_the_cart_item_key(); ?>"/>
 										<input type="hidden" name="wpsc_update_quantity" value="true" />
+										<input type='hidden' name='wpsc_ajax_action' value='wpsc_update_quantity' />
 									</div><!--close quantity_container-->
 									<?php endif ;?>
 									<input type="submit" value="<?php _e('Add To Cart', 'wpsc'); ?>" name="Buy" class="wpsc_buy_button" id="product_<?php echo wpsc_the_product_id(); ?>_submit_button"/>

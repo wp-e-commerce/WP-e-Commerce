@@ -34,15 +34,23 @@ function wpsc_find_purchlog_status_name( $purchlog_status ) {
  * @param string $return_value either 'name' or 'code' depending on what you want returned
  */
 function wpsc_get_state_by_id( $id, $return_value ) {
-	global $wpdb;
-	$sql = $wpdb->prepare( "SELECT " . esc_sql( $return_value ) . " FROM `" . WPSC_TABLE_REGION_TAX . "` WHERE `id`= %d", $id );
-	$value = $wpdb->get_var( $sql );
+
+	$region = new WPSC_Region( WPSC_Countries::country_id_from_region_id( $id ), $id );
+
+	$value = '';
+
+	if ( $return_value == 'name' ) {
+		$value = $region->name();
+	} elseif ( $return_value == 'code' ) {
+		$value = $region->code();
+	}
+
 	return $value;
 }
 
-function wpsc_country_has_state($country_code){
+function wpsc_country_has_state( $country_code ){
 	global $wpdb;
-	$country_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `isocode`= %s LIMIT 1", $country_code ), ARRAY_A );
+	$country_data = WPSC_Countries::country( $country_code, true ); // TODO this function does not seem to do what it's name indicates? What's up with that.
 	return $country_data;
 }
 
@@ -156,14 +164,14 @@ function wpsc_get_country_form_id_by_type($type){
 }
 
 function wpsc_get_country( $country_code ) {
-	$country = new WPSC_Country( $country_code, 'isocode' );
-	return $country->get( 'country' );
+	$wpsc_country = new WPSC_Country( $country_code );
+	return $wpsc_country->name();
 }
 
 function wpsc_get_region( $region_id ) {
-	global $wpdb;
-	$region = $wpdb->get_var( $wpdb->prepare( "SELECT `name` FROM `" . WPSC_TABLE_REGION_TAX . "` WHERE `id` IN(%d)", $region_id ) );
-	return $region;
+	$country_id = WPSC_Countries::country_id_from_region_id( $region_id );
+	$wpsc_region = new WPSC_Region( $country_id, $region_id );
+	return $wpsc_region->name();
 }
 
 function nzshpcrt_display_preview_image() {

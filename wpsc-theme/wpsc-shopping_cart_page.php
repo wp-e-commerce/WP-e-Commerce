@@ -64,6 +64,7 @@ endif;
                <input type="text" name="quantity" size="2" value="<?php echo wpsc_cart_item_quantity(); ?>" />
                <input type="hidden" name="key" value="<?php echo wpsc_the_cart_item_key(); ?>" />
                <input type="hidden" name="wpsc_update_quantity" value="true" />
+               <input type='hidden' name='wpsc_ajax_action' value='wpsc_update_quantity' />
                <input type="submit" value="<?php _e('Update', 'wpsc'); ?>" />
             </form>
          </td>
@@ -77,6 +78,7 @@ endif;
                <input type="hidden" name="quantity" value="0" />
                <input type="hidden" name="key" value="<?php echo wpsc_the_cart_item_key(); ?>" />
                <input type="hidden" name="wpsc_update_quantity" value="true" />
+               <input type='hidden' name='wpsc_ajax_action' value='wpsc_update_quantity' />
                <input type="submit" value="<?php _e('Remove', 'wpsc'); ?>" />
             </form>
          </td>
