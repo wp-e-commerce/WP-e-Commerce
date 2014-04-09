@@ -304,12 +304,28 @@ class wpsc_coupons {
 		global $wpsc_cart;
 
 		$compare_logic = false;
-		foreach ( $this->conditions as $condition ) {
-			$callback = '_callback_condition_' . $condition['property'];
-			if ( ! is_callable( array( $this, $callback ) ) )
-				return false;
 
-			if ( ! $this->$callback( $condition, $cart_item ) ) {
+		foreach ( $this->conditions as $condition ) {
+
+			$callback = '_callback_condition_' . $condition['property'];
+
+			if ( is_callable( array( $this, $callback ) ) ) {
+
+				$result = $this->$callback( $condition, $cart_item );
+
+			} else {
+
+				/* This allows for a function outside of this class to override a custom condition. */
+				if ( function_exists( $callback ) ) {
+					$result = $callback( $condition, $cart_item );
+				} else {
+					/* This allows for a plugin to create a condition callback for the condition. Perk: doesn't have to follow $callback nomenclature. */
+					$result = apply_filters( 'wpsc_coupon_conditions_default_callback', false, $callback, $condition, $cart_item );
+				}
+
+			}
+			
+			if ( ! $result ) {
 				switch ( $condition['operator'] ) {
 					case 'or':
 						$compare_logic = $compare_logic || apply_filters( 'wpsc_coupon_compare_logic', false, $condition, $cart_item );
@@ -323,13 +339,13 @@ class wpsc_coupons {
 			} else {
 				switch ( $condition['operator'] ) {
 					case 'or':
-						$compare_logic = $compare_logic || $this->$callback( $condition, $cart_item );
+						$compare_logic = $compare_logic || $result;
 					break;
 					case 'and':
-						$compare_logic = $compare_logic && $this->$callback( $condition, $cart_item );
+						$compare_logic = $compare_logic && $result;
 					break;
 					default:
-						$compare_logic = $this->$callback( $condition, $cart_item );
+						$compare_logic = $result;
 				}
 			}
 		}

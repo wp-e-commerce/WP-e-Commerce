@@ -141,7 +141,7 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 										<option value="item_quantity"<?php selected( 'item_quantity', $condition['property'] ); ?> rel="order"><?php _e( 'Item quantity', 'wpsc' ); ?></option>
 										<option value="total_quantity"<?php selected( 'total_quantity', $condition['property'] ); ?> rel="order"><?php _e( 'Total quantity', 'wpsc' ); ?></option>
 										<option value="subtotal_amount"<?php selected( 'subtotal_amount', $condition['property'] ); ?> rel="order"><?php _e( 'Subtotal amount', 'wpsc' ); ?></option>
-										<?php do_action( 'wpsc_coupon_rule_property_options' ); ?>
+										<?php do_action( 'wpsc_coupon_rule_property_options', $condition['property']  ); ?>
 									</select>
 
 									<select name="rules[logic][]">

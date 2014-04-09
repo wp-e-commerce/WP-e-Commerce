@@ -323,7 +323,8 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 					$paypal_vars['handling_'.$i] = 0;
 				}
 
-				$paypal_vars['tax_cart'] = $this->convert( $tax_total );
+				$paypal_vars['tax_cart'] = $aggregate ? 0 : $this->convert( $tax_total );
+
 			} else {
 				$cart_row = $this->cart_items[0];
 				$item_number = get_post_meta( $cart_row['product_id'], '_wpsc_sku', true );
