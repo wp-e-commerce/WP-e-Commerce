@@ -70,6 +70,11 @@ class WPSC_Country {
 			$this->_region_id_from_region_code = new WPSC_Data_Map();
 		}
 
+		if ( empty( $this->_region_id_from_region_name ) ){
+			$this->_region_id_from_region_name = new WPSC_Data_Map();
+		}
+
+
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// As a result of merging the legacy WPSC_Country class we no longer need the "col" constructor parameter
 		// that was in the prior version of this class.
@@ -210,18 +215,18 @@ class WPSC_Country {
 	}
 
 	/**
-	 * does the nation use a region list
+	 * Is the region valid for this country
 	 *
 	 * @access public
 	 *
 	 * @since 3.8.14
 	 *
-	 * @param
+	 * @param int|string 		$region_id_or_region_name 		region id, or string region name.  If string is used comparison is case insensitive
 	 *
-	 * @return boolean	true if we have a region lsit for the nation, false otherwise
+	 * @return boolean	true if the region is valid for the country, false otherwise
 	 */
-	public function has_region( $region_id_or_code ) {
-		$region = $this->region( $region_id_or_code );
+	public function has_region( $region_id_or_region_name ) {
+		$region = $this->region( $region_id_or_region_name );
 		return $region != false;
 	}
 
@@ -277,14 +282,28 @@ class WPSC_Country {
 	 *
 	 * @return WPSC_Region|false 				The region, or false if the region code is not valid for the country
 	 */
-	public function region( $region_id_or_code ) {
+	public function region( $region_id_or_region_code_or_region_name ) {
 
 		$wpsc_region = false;
 
-		if ( $region_id_or_code ) {
+		if ( $region_id_or_region_code_or_region_name ) {
 			if ( $this->_id ) {
-				if ( $region_id = WPSC_Countries::region_id( $this->_id, $region_id_or_code ) ) {
-					$wpsc_region = $this->_regions->value( $region_id );
+				if ( $region_id = WPSC_Countries::region_id( $this->_id, $region_id_or_region_code_or_region_name ) ) {
+
+					if ( ctype_digit( $region_id_or_region_code_or_region_name ) ) {
+						$region_id = intval( $region_id_or_region_code_or_region_name );
+						$wpsc_region = $this->_regions->value( $region_id );
+					} else {
+						// check to see if it is a valid region code
+						if ( $region_id = $this->_region_id_from_region_code->value( $region_id_or_region_code_or_region_name ) ) {
+							$wpsc_region = $this->_regions->value( $region_id );
+						} else {
+							// check to see if we have a valid region name
+							if ( $region_id = $this->_region_id_from_region_name->value( strtolower( $region_id_or_region_code_or_region_name ) ) ) {
+								$wpsc_region = $this->_regions->value( $region_id );
+							}
+						}
+					}
 				}
 			}
 		}
@@ -369,6 +388,7 @@ class WPSC_Country {
 	 *
 	 * @since 3.8.14
 	 *
+	 * @param string 	$region_name	the name of the region for which we are looking for an id, case insensitive!
 	 *
 	 * @return int region id
 	 */
@@ -377,6 +397,27 @@ class WPSC_Country {
 
 		if ( $region_code ) {
 			$region_id = $this->_region_id_from_region_code->value( $region_code );
+		}
+
+		return $region_id;
+	}
+
+	/**
+	 * get a region code from a region name
+	 *
+	 * @access public
+	 *
+	 * @since 3.8.14
+	 *
+	 * @param string 	$region_name	the name of the region for which we are looking for an id, case insensitive!
+	 *
+	 * @return int region id
+	 */
+	public function region_id_from_region_name( $region_name ) {
+		$region_id = false;
+
+		if ( $region_name ) {
+			$region_id = $this->_region_id_from_region_name->value( strtolower( $region_name ) );
 		}
 
 		return $region_id;
@@ -545,6 +586,7 @@ class WPSC_Country {
 	public $_continent 					= '';
 	public $_visible 						= true;
 	public $_region_id_from_region_code 	= null;
+	public $_region_id_from_region_name		= null;
 	public $_regions 	                    = null;
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////

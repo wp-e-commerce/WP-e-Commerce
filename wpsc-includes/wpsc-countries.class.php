@@ -896,6 +896,7 @@ class WPSC_Countries {
 					$wpsc_region->_copy_properties_from_stdclass( $region );
 					$wpsc_country->_regions->map( $region->id, $wpsc_region );
 					$wpsc_country->_region_id_from_region_code->map( $region->code, $region->id );
+					$wpsc_country->_region_id_from_region_name->map( strtolower( $region->name ), $region->id );
 
 					self::$country_id_from_region_id->map( $region->id, $region->country_id );
 					self::$region_from_region_id->map( $region->id, $wpsc_region );

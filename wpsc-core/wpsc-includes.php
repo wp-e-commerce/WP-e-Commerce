@@ -46,6 +46,8 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/purchase-log.class.php'          
 require_once( WPSC_FILE_PATH . '/wpsc-includes/checkout-form.class.php'             );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/checkout-form-data.class.php'        );
 
+do_action( 'wpsc_loaded_module_'. basename( __FILE__ ) );
+
 // Taxes
 require_once( WPSC_FILE_PATH . '/wpsc-taxes/taxes_module.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/upgrades.php' );
