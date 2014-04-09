@@ -19,6 +19,9 @@ function _wpsc_maybe_upgrade() {
 	if ( ! _wpsc_needs_upgrade() )
 		return;
 
+	if ( ! defined( 'WPSC_LOAD_DEPRECATED' ) )
+		define( 'WPSC_LOAD_DEPRECATED', true );
+
 	for ( $i = $current_db_ver + 1; $i <= WPSC_DB_VERSION; $i ++ ) {
 		$file_path = WPSC_FILE_PATH . '/wpsc-admin/db-upgrades/routines/' . $i . '.php';
 
