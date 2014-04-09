@@ -315,10 +315,12 @@ class wpsc_coupons {
 
 			} else {
 
+				/* This allows for a function outside of this class to override a custom condition. */
 				if ( function_exists( $callback ) ) {
 					$result = $callback( $condition, $cart_item );
 				} else {
-					$result = apply_filters( 'wpsc_coupon_default_callback', false, $callback, $cart_item );
+					/* This allows for a plugin to create a condition callback for the condition. Perk: doesn't have to follow $callback nomenclature. */
+					$result = apply_filters( 'wpsc_coupon_conditions_default_callback', false, $callback, $condition, $cart_item );
 				}
 
 			}
