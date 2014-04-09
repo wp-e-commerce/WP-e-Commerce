@@ -5,7 +5,7 @@ function _wpsc_db_upgrade_3() {
 }
 
 function _wpsc_maybe_create_UK() {
-	$country = new WPSC_Country( 'GB', 'isocode' );
+	$country = new WPSC_Country( 'GB' );
 	if ( ! $country->exists() ) {
 		$country->set( array(
 			'id'          => 138,

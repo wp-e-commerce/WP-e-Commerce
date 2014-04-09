@@ -21,7 +21,7 @@ function _wpsc_fix_checkout_field_limitation() {
 }
 
 function _wpsc_fix_mexico_currency_sign() {
-	$country = new WPSC_Country( 'MX', 'isocode' );
+	$country = new WPSC_Country( 'MX' );
 	$country->set( array(
 		'currency'    => __( 'Mexican Peso', 'wpsc' ),
 		'symbol'      => __( '$', 'wpsc' ),
@@ -72,7 +72,7 @@ function _wpsc_fix_canadian_province_codes() {
 }
 
 function _wpsc_fix_colombia_currency() {
-	$country = new WPSC_Country( 'CO', 'isocode' );
+	$country = new WPSC_Country( 'CO' );
 	$country->set( array(
 		'symbol'      => __( '$', 'wpsc' ),
 		'symbol_html' => __( '&#036;', 'wpsc' ),
@@ -81,7 +81,7 @@ function _wpsc_fix_colombia_currency() {
 }
 
 function _wpsc_fix_ukraine_currency() {
-	$country = new WPSC_Country( 'UA', 'isocode' );
+	$country = new WPSC_Country( 'UA' );
 	$country->set( array(
 		'code'        => __( 'UAH', 'wpsc' ),
 		'symbol'      => __( '₴', 'wpsc' ),
@@ -91,19 +91,19 @@ function _wpsc_fix_ukraine_currency() {
 }
 
 function _wpsc_fix_russia_currency() {
-	$country = new WPSC_Country( 'RU', 'isocode' );
+	$country = new WPSC_Country( 'RU' );
 	$country->set( 'code', __( 'RUB', 'wpsc' ) );
 	$country->save();
 }
 
 function _wpsc_fix_belarus_currency() {
-	$country = new WPSC_Country( 'BY', 'isocode' );
+	$country = new WPSC_Country( 'BY' );
 	$country->set( 'code', __( 'BYR', 'wpsc' ) );
 	$country->save();
 }
 
 function _wpsc_fix_estonia_currency() {
-	$country = new WPSC_Country( 'EE', 'isocode' );
+	$country = new WPSC_Country( 'EE' );
 	$country->set( array(
 		'currency'    => __( 'Euro', 'wpsc' ),
 		'symbol'      => __( '€', 'wpsc' ),
@@ -114,7 +114,7 @@ function _wpsc_fix_estonia_currency() {
 }
 
 function _wpsc_fix_slovenia_currency() {
-	$country = new WPSC_Country( 'SI', 'isocode' );
+	$country = new WPSC_Country( 'SI' );
 	$country->set( array(
 		'currency'    => __( 'Euro', 'wpsc' ),
 		'symbol'      => __( '€', 'wpsc' ),
@@ -125,7 +125,7 @@ function _wpsc_fix_slovenia_currency() {
 }
 
 function _wpsc_fix_sudan_currency() {
-	$country = new WPSC_Country( 'SD', 'isocode' );
+	$country = new WPSC_Country( 'SD' );
 	$country->set( array(
 		'currency' => __( 'Sudanese Pound', 'wpsc' ),
 		'code'     => __( 'SDG', 'wpsc' )
