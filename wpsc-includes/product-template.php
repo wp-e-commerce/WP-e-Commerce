@@ -189,22 +189,33 @@ function wpsc_the_product_thumbnail_id( $product_id ) {
 function _wpsc_regenerate_thumbnail_size( $thumbnail_id, $size ) {
 	// regenerate size metadata in case it's missing
 	require_once( ABSPATH . 'wp-admin/includes/image.php' );
-	if ( ! $metadata = wp_get_attachment_metadata( $thumbnail_id ) )
-		$metadata = array();
-	if ( empty( $metadata['sizes'] ) )
-		$metadata['sizes'] = array();
 
-	$file = get_attached_file( $thumbnail_id );
+	if ( ! $metadata = wp_get_attachment_metadata( $thumbnail_id ) ) {
+		$metadata = array();
+	}
+
+	if ( empty( $metadata['sizes'] ) ) {
+		$metadata['sizes'] = array();
+	}
+
+	$file      = get_attached_file( $thumbnail_id );
 	$generated = wp_generate_attachment_metadata( $thumbnail_id, $file );
 
-	if ( empty( $generated ) )
+	if ( empty( $generated ) ) {
 		return false;
+	}
+
+	if ( empty( $generated['sizes'] ) ) {
+		$generated['sizes'] = array();
+	}
+
 	$metadata['sizes'] = array_merge( $metadata['sizes'], $generated['sizes'] );
 	wp_update_attachment_metadata( $thumbnail_id, $metadata );
+
 	return true;
 }
 
-function wpsc_get_downloadable_file($file_id){
+function wpsc_get_downloadable_file( $file_id ) {
 	return get_post( $file_id );
 }
 
@@ -232,7 +243,7 @@ function wpsc_product_has_variations( $id = 0 ) {
 	if ( ! $id )
 		$id = get_the_ID();
 
-	if ( ! isset( $has_variations[$id] ) ) {
+	if ( ! isset( $has_variations[ $id ] ) ) {
 		$args = array(
 			'post_parent' => $id,
 			'post_type'   => 'wpsc-product',

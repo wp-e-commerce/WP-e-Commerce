@@ -68,23 +68,27 @@ class WPSC_Product_Variations_Page {
 			update_product_meta( $id, 'price', wpsc_string_to_float( $data['price'] ) );
 		}
 
-		if ( isset( $data['sale_price'] ) ) {
-			if ( is_numeric( $data['sale_price'] ) ) {
+		if ( isset( $data['sale_price'] ) ) { 
+
+			$sale_price = wpsc_string_to_float( $data['sale_price'] );
+
+			if ( is_numeric( $sale_price ) ) {
 				update_product_meta( $id, 'special_price', wpsc_string_to_float( $data['sale_price'] ) );
-			}
-			else {
+			} else {
 				update_product_meta( $id, 'special_price', '' );
 			}
 		}
 
-		if ( isset( $data['sku'] ) )
+		if ( isset( $data['sku'] ) ) {
 			update_product_meta( $id, 'sku', $data['sku'] );
+		}
 
 		if ( isset( $data['stock'] ) ) {
-			if ( is_numeric( $data['stock'] ) )
-				update_product_meta( $id, 'stock', absint( $data['stock'] ) );
-			else
+			if ( is_numeric( $data['stock'] ) ) {
+				update_product_meta( $id, 'stock', (int) $data['stock'] );
+			} else {
 				update_product_meta( $id, 'stock', '' );
+			}
 		}
 	}
 
