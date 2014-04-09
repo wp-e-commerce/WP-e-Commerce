@@ -518,13 +518,24 @@ function wpsc_display_purchlog_shipping_name() {
 }
 
 function wpsc_display_purchlog_shipping_address() {
-   global $purchlogitem;
-   return nl2br( esc_html( $purchlogitem->shippinginfo['shippingaddress']['value'] ) );
+	global $purchlogitem;
+
+	if ( isset( $purchlogitem->shippinginfo['shippingaddress'] ) ) {
+		return nl2br( esc_html( $purchlogitem->shippinginfo['shippingaddress']['value'] ) );
+	} else {
+		return '';
+	}
+
 }
 
 function wpsc_display_purchlog_shipping_city() {
    global $purchlogitem;
-   return esc_html( $purchlogitem->shippinginfo['shippingcity']['value'] );
+
+	if ( isset( $purchlogitem->shippinginfo['shippingcity'] ) ) {
+		return esc_html( $purchlogitem->shippinginfo['shippingcity']['value'] );
+	} else {
+		return '';
+	}
 }
 
 function wpsc_display_purchlog_shipping_state_and_postcode() {
@@ -547,7 +558,12 @@ function wpsc_display_purchlog_shipping_state_and_postcode() {
 
 function wpsc_display_purchlog_shipping_country() {
    global $purchlogitem;
-   return esc_html( wpsc_get_country( $purchlogitem->shippinginfo['shippingcountry']['value'] ) );
+
+	if ( isset( $purchlogitem->shippinginfo['shippingcountry'] ) ) {
+		return esc_html( wpsc_get_country( $purchlogitem->shippinginfo['shippingcountry']['value'] ) );
+	} else {
+		return '';
+	}
 }
 
 function wpsc_display_purchlog_shipping_method() {
