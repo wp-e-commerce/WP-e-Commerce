@@ -453,7 +453,6 @@ jQuery(document).ready(function ($) {
 	
 	jQuery( 'form.wpsc_checkout_forms' ).on( 'submit', function( evt ) {
 		jQuery( 'input[type="submit"]', this ).prop( { 'disabled': true } );
-		evt.preventDefault();
 	});
 	// Finished with disabling the checkout submit button.
 
