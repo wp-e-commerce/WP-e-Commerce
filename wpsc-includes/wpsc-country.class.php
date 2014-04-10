@@ -764,7 +764,7 @@ class WPSC_Country {
 	*/
 	public function save() {
 		if ( defined( 'WPSC_LOAD_DEPRECATED' ) && WPSC_LOAD_DEPRECATED ) {
-			_wpsc_deprecated_function( __FUNCTION__, '3.8.14', self::_function_not_available_message( __FUNCTION__ ) );
+			_wpsc_doing_it_wrong( __FUNCTION__, __( 'As of version 3.8.14 calling WPSC_Country class method "save" is not required. Changes to WPSC_Country properties are saved automatically.', 'wpsc' ), '3.8.14'  );
 		} else {
 			wp_die( self::_function_not_available_message( __FUNCTION__ ) );
 		}
