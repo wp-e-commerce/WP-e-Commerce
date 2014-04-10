@@ -737,7 +737,7 @@ class WPSC_Country {
 	*/
 	public function set( $key, $value = '' ) {
 		$function = __CLASS__ . '::' . __FUNCTION__ . '()';
-		$replacement = 'WPSC_Countries::__construct()';
+		$replacement = 'WPSC_Country:__construct()';
 
 		if ( defined( 'WPSC_LOAD_DEPRECATED' ) && WPSC_LOAD_DEPRECATED ) {
 			_wpsc_deprecated_function( $function, '3.8.14', $replacement );
