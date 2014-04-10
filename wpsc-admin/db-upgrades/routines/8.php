@@ -5,9 +5,8 @@ function _wpsc_db_upgrade_8() {
 }
 
 function _wpsc_fix_bulgaria_currency() {
-	$country = new WPSC_Country( 'BG' );
-	$country->set( array(
+	$country = new WPSC_Country( array(
+		'isocode' => 'BG',
 		'code' => __( 'BGN', 'wpsc' ),
 	) );
-	$country->save();
 }

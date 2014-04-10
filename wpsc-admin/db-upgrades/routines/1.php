@@ -21,14 +21,13 @@ function _wpsc_fix_checkout_field_limitation() {
 }
 
 function _wpsc_fix_mexico_currency_sign() {
-	$country = new WPSC_Country( 'MX' );
-	$country->set( array(
+	$country = new WPSC_Country( array(
+		'isocode'     => 'MX',
 		'currency'    => __( 'Mexican Peso', 'wpsc' ),
 		'symbol'      => __( '$', 'wpsc' ),
 		'symbol_html' => __( '&#036;', 'wpsc' ),
 		'has_regions' => '1'
 	) );
-	$country->save();
 }
 
 function _wpsc_fix_canadian_province_codes() {
@@ -72,65 +71,62 @@ function _wpsc_fix_canadian_province_codes() {
 }
 
 function _wpsc_fix_colombia_currency() {
-	$country = new WPSC_Country( 'CO' );
-	$country->set( array(
+	$country = new WPSC_Country( array(
+		'isocode'     => 'CO',
 		'symbol'      => __( '$', 'wpsc' ),
 		'symbol_html' => __( '&#036;', 'wpsc' ),
 	) );
-	$country->save();
 }
 
 function _wpsc_fix_ukraine_currency() {
-	$country = new WPSC_Country( 'UA' );
-	$country->set( array(
+	$country = new WPSC_Country( array(
+		'isocode'     => 'UA',
 		'code'        => __( 'UAH', 'wpsc' ),
 		'symbol'      => __( '₴', 'wpsc' ),
 		'symbol_html' => __( '&#8372;', 'wpsc' ),
 	) );
-	$country->save();
 }
 
 function _wpsc_fix_russia_currency() {
-	$country = new WPSC_Country( 'RU' );
-	$country->set( 'code', __( 'RUB', 'wpsc' ) );
-	$country->save();
+	$country = new WPSC_Country( array(
+		'isocode'     => 'RU',
+		'code'        => __( 'RUB', 'wpsc' )
+	) );
 }
 
 function _wpsc_fix_belarus_currency() {
-	$country = new WPSC_Country( 'BY' );
-	$country->set( 'code', __( 'BYR', 'wpsc' ) );
-	$country->save();
+	$country = new WPSC_Country( array( 
+		'isocode'     => 'BY',
+		'code'        => __( 'BYR', 'wpsc' )
+	) );
 }
 
 function _wpsc_fix_estonia_currency() {
-	$country = new WPSC_Country( 'EE' );
-	$country->set( array(
+	$country = new WPSC_Country( array(
+		'isocode'     => 'EE',
 		'currency'    => __( 'Euro', 'wpsc' ),
 		'symbol'      => __( '€', 'wpsc' ),
 		'symbol_html' => __( '&#8364;', 'wpsc' ),
 		'code'        => __( 'EUR', 'wpsc' )
 	) );
-	$country->save();
 }
 
 function _wpsc_fix_slovenia_currency() {
-	$country = new WPSC_Country( 'SI' );
-	$country->set( array(
+	$country = new WPSC_Country( array(
+		'isocode'     => 'SI',
 		'currency'    => __( 'Euro', 'wpsc' ),
 		'symbol'      => __( '€', 'wpsc' ),
 		'symbol_html' => __( '&#8364;', 'wpsc' ),
 		'code'        => __( 'EUR', 'wpsc' )
 	) );
-	$country->save();
 }
 
 function _wpsc_fix_sudan_currency() {
-	$country = new WPSC_Country( 'SD' );
-	$country->set( array(
+	$country = new WPSC_Country( array(
+		'isocode'  => 'SD',
 		'currency' => __( 'Sudanese Pound', 'wpsc' ),
 		'code'     => __( 'SDG', 'wpsc' )
 	) );
-	$country->save();
 }
 
 function _wpsc_create_south_sudan() {
@@ -143,5 +139,4 @@ function _wpsc_create_south_sudan() {
 		'continent' => 'africa',
 		'visible'   => 0,
 	) );
-	$country->save();
 }
