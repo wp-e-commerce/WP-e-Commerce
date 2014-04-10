@@ -20,6 +20,8 @@ function wpsc_cart_need_to_recompute_shipping_quotes() {
 	if ( _wpsc_verify_global_cart_has_been_initialized( __FUNCTION__ ) ) {
 		$result = $wpsc_cart->needs_shipping_recalc();
 	}
+
+	return $result;
 }
 
 /**
@@ -183,6 +185,8 @@ function wpsc_cart_tax( $format_for_display = true ) {
 			$cart_tax = $wpsc_cart->calculate_total_tax();
 		}
 	}
+
+	return $cart_tax;
 }
 
 
@@ -399,6 +403,7 @@ function _wpsc_validate_cart_product_quantity( $product_id, $parameters, $cart )
 		}
 	}
 }
+
 add_action( 'wpsc_add_item' , '_wpsc_validate_cart_product_quantity', 10, 3 );
 add_action( 'wpsc_edit_item', '_wpsc_validate_cart_product_quantity', 10, 3 );
 
