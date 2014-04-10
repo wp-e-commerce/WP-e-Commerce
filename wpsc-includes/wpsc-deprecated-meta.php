@@ -41,7 +41,8 @@
 // meta deprecations for 3.8.14
 
 // enable deprecation handling for customer meta with key 'checkout_details'
-define( 'WPSC_DEPRECATE_CUSTOMER_CHECKOUT_DETAILS', true );
+if ( ! defined( 'WPSC_DEPRECATE_CUSTOMER_CHECKOUT_DETAILS') )
+	define( 'WPSC_DEPRECATE_CUSTOMER_CHECKOUT_DETAILS', true );
 
 //
 //////////////////// End deprecation Handling Control //////////////////////////
