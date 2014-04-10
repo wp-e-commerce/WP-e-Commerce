@@ -7,7 +7,8 @@ function _wpsc_db_upgrade_3() {
 function _wpsc_maybe_create_UK() {
 	$country = new WPSC_Country( 'GB' );
 	if ( ! $country->exists() ) {
-		$country->set( array(
+		$country = new WPSC_Country( array(
+			'isocode'     => 'GB',
 			'id'          => 138,
 			'country'     => __( 'United Kingdom', 'wpsc' ),
 			'currency'    => __( 'Pound Sterling', 'wpsc' ),
