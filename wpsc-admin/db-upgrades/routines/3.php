@@ -17,7 +17,5 @@ function _wpsc_maybe_create_UK() {
 			'code'        => __( 'GBP', 'wpsc' ),
 			'continent'   => 'europe',
 		) );
-
-		$country->save();
 	}
 }

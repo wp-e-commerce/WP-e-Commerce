@@ -9,5 +9,4 @@ function _wpsc_fix_bulgaria_currency() {
 		'isocode' => 'BG',
 		'code' => __( 'BGN', 'wpsc' ),
 	) );
-	$country->save();
 }

@@ -28,7 +28,6 @@ function _wpsc_fix_mexico_currency_sign() {
 		'symbol_html' => __( '&#036;', 'wpsc' ),
 		'has_regions' => '1'
 	) );
-	$country->save();
 }
 
 function _wpsc_fix_canadian_province_codes() {
@@ -77,7 +76,6 @@ function _wpsc_fix_colombia_currency() {
 		'symbol'      => __( '$', 'wpsc' ),
 		'symbol_html' => __( '&#036;', 'wpsc' ),
 	) );
-	$country->save();
 }
 
 function _wpsc_fix_ukraine_currency() {
@@ -87,7 +85,6 @@ function _wpsc_fix_ukraine_currency() {
 		'symbol'      => __( '₴', 'wpsc' ),
 		'symbol_html' => __( '&#8372;', 'wpsc' ),
 	) );
-	$country->save();
 }
 
 function _wpsc_fix_russia_currency() {
@@ -95,7 +92,6 @@ function _wpsc_fix_russia_currency() {
 		'isocode'     => 'RU',
 		'code'        => __( 'RUB', 'wpsc' )
 	) );
-	$country->save();
 }
 
 function _wpsc_fix_belarus_currency() {
@@ -103,7 +99,6 @@ function _wpsc_fix_belarus_currency() {
 		'isocode'     => 'BY',
 		'code'        => __( 'BYR', 'wpsc' )
 	) );
-	$country->save();
 }
 
 function _wpsc_fix_estonia_currency() {
@@ -114,7 +109,6 @@ function _wpsc_fix_estonia_currency() {
 		'symbol_html' => __( '&#8364;', 'wpsc' ),
 		'code'        => __( 'EUR', 'wpsc' )
 	) );
-	$country->save();
 }
 
 function _wpsc_fix_slovenia_currency() {
@@ -125,7 +119,6 @@ function _wpsc_fix_slovenia_currency() {
 		'symbol_html' => __( '&#8364;', 'wpsc' ),
 		'code'        => __( 'EUR', 'wpsc' )
 	) );
-	$country->save();
 }
 
 function _wpsc_fix_sudan_currency() {
@@ -134,7 +127,6 @@ function _wpsc_fix_sudan_currency() {
 		'currency' => __( 'Sudanese Pound', 'wpsc' ),
 		'code'     => __( 'SDG', 'wpsc' )
 	) );
-	$country->save();
 }
 
 function _wpsc_create_south_sudan() {
@@ -147,5 +139,4 @@ function _wpsc_create_south_sudan() {
 		'continent' => 'africa',
 		'visible'   => 0,
 	) );
-	$country->save();
 }
