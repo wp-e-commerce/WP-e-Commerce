@@ -50,10 +50,12 @@ class WPSC_Data_Map {
 	 * @return int
 	 */
 	public function data() {
-		if ( is_array( $this->_map_data ) ) {
-			return array_values( $this->_map_data );
-		} else {
-			return array();
+		if ( $this->_confirm_data_ready() ) {
+			if ( is_array( $this->_map_data ) ) {
+				return $this->_map_data;
+			} else {
+				return array();
+			}
 		}
 	}
 
@@ -69,8 +71,10 @@ class WPSC_Data_Map {
 	public function count() {
 		$count = 0;
 
-		if ( is_array( $this->_map_data ) ) {
-			$count = count( $this->_map_data );
+		if ( $this->_confirm_data_ready() ) {
+			if ( is_array( $this->_map_data ) ) {
+				$count = count( $this->_map_data );
+			}
 		}
 
 		return $count;
