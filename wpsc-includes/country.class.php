@@ -13,9 +13,10 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 if ( defined( 'WPSC_LOAD_DEPRECATED' ) && WPSC_LOAD_DEPRECATED ) {
-	_wpsc_doing_it_wrong( 'country.class.php', __( 'You should not be including the country.class.php (or any WPeC) file directly. The WPSC_Country class as been moved to wpsc-country.class.php', 'wpsc' ), '3.8.14' );
-	require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-country.class.php'              );
-} else {
-	wp_die(  __( 'You should not be including the country.class.php (or any WPeC) file directly. The WPSC_Country class been moved to wpsc-country.class.php', 'wpsc' ) );
+	_wpsc_deprecated_file(
+							__FILE__,
+							'3.8.14',
+							__( 'You should not be including the country.class.php (or any WPeC) file directly. The WPSC_Country class as been moved to wpsc-country.class.php', 'wpsc' )
+						);
+	require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-country.class.php' );
 }
-
