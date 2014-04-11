@@ -28,29 +28,31 @@ class WPSC_Region {
 	 *
 	 * @since 3.8.14
 	 *
-	 * @param int|string|null		required 	the country identifier, can be the string ISO code, or the numeric wpec country id
+	 * @param int|string|null		required 	$country_identifier 	The country identifier, can be the string ISO code,
+	 * 																	or the numeric wpec country id
 	 *
-	 * @param int|string|null|array	required 	the region identifier, can be the text region code, or the numeric region id,
-	 * 											if an array is passed a new region will be created and saved in the permanent data store
-	 *
+	 * @param int|string|null|array	required 	$region_identifier		The region identifier, can be the text region code,
+	 *																	or the numeric region id, if an array is passed a
+	 *																	new region will be created and saved in the permanent
+	 *																	data store
 	 */
-	public function __construct( $country_id_or_isocode, $region_id_or_code_or_new_region_data ) {
+	public function __construct( $country_identifier, $region_identifier ) {
 
 		// if a country id or code is passed make sure we have a valid coutnry_id
-		if ( $country_id_or_isocode ) {
-			$country_id = WPSC_Countries::country_id( $country_id_or_isocode );
+		if ( $country_identifier ) {
+			$country_id = WPSC_Countries::country_id( $country_identifier );
 		}
 
 		// if we are creating a region use the country_id we just validated and get the region code
-		if ( is_array( $region_id_or_code_or_new_region_data ) ) {
-			$region_id_or_code_or_new_region_data['country_id'] = $country_id;
-			$region_id_or_code = $this->_save_region_data( $region_id_or_code_or_new_region_data );
+		if ( is_array( $region_identifier ) ) {
+			$region_identifier['country_id'] = $country_id;
+			$region_id_or_code = $this->_save_region_data( $region_identifier );
 		} else {
-			$region_id_or_code = $region_id_or_code_or_new_region_data;
+			$region_id_or_code = $region_identifier;
 		}
 
 		// if we have both a country country id and a region id/code we can construct this object
-		if ( $country_id_or_isocode && $region_id_or_code ) {
+		if ( $country_identifier && $region_id_or_code ) {
 			$region_id = WPSC_Countries::region_id( $country_id, $region_id_or_code );
 
 			if ( $country_id && $region_id ) {
