@@ -827,7 +827,7 @@ class WPSC_Countries {
 		// now countries is a list with the key being the integer country id, the value is the country data
 		$sql = 'SELECT id,
 						country, isocode, currency, symbol, symbol_html, code, has_regions, tax, continent, visible
-					FROM `' . WPSC_TABLE_CURRENCY_LIST . '` WHERE `visible`= "1" ORDER BY id ASC';
+					FROM `' . WPSC_TABLE_CURRENCY_LIST . '` WHERE `visible`= "1" ORDER BY country ASC';
 
 		$countries_array = $wpdb->get_results( $sql, OBJECT_K );
 		self::_add_country_arrays_to_wpsc_country_map( $countries_array, self::$active_wpsc_country_from_country_id );
@@ -835,7 +835,7 @@ class WPSC_Countries {
 		// there are also invisible countries
 		$sql = 'SELECT id,
 						country, isocode, currency, symbol, symbol_html, code, has_regions, tax, continent, visible
-					FROM `' . WPSC_TABLE_CURRENCY_LIST . '` ORDER BY id ASC';
+					FROM `' . WPSC_TABLE_CURRENCY_LIST . '` ORDER BY country ASC';
 
 		$countries_array = $wpdb->get_results( $sql, OBJECT_K );
 		self::_add_country_arrays_to_wpsc_country_map( $countries_array, self::$all_wpsc_country_from_country_id );
