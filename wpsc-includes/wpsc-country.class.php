@@ -38,23 +38,23 @@ class WPSC_Country {
 	 *
 	 * @return object WPSC_Country
 	 */
-	public function __construct( $country_id_or_isocode_or_new_country_data, $deprecated_paramater_col = null ) {
+	public function __construct( $country, $deprecated_paramater_col = null ) {
 
-		if ( $country_id_or_isocode_or_new_country_data ) {
+		if ( $country ) {
 
-			if ( is_array( $country_id_or_isocode_or_new_country_data ) ) {
+			if ( is_array( $country ) ) {
 				// if we get an array as an argument we are making a new country
-				$country_id_or_isocode = $this->_save_country_data( $country_id_or_isocode_or_new_country_data );
+				$country_id_or_isocode = $this->_save_country_data( $country );
 			}  else {
 				// we are constructing a country using a numeric id or ISO code
-				$country_id_or_isocode = $country_id_or_isocode_or_new_country_data;
+				$country_id_or_isocode = $country;
 			}
 
 			// make sure we have a valid country id
 			$country_id = WPSC_Countries::country_id( $country_id_or_isocode );
 			if ( $country_id ) {
-				$country = WPSC_Countries::country( $country_id );
-				foreach ( $country as $property => $value ) {
+				$wpsc_country = WPSC_Countries::country( $country_id );
+				foreach ( $wpsc_country as $property => $value ) {
 					// copy the properties in this copy of the country
 					$this->$property = $value;
 				}
@@ -221,12 +221,12 @@ class WPSC_Country {
 	 *
 	 * @since 3.8.14
 	 *
-	 * @param int|string 		$region_id_or_region_name 		region id, or string region name.  If string is used comparison is case insensitive
+	 * @param int|string 		$region 		region id, or string region name.  If string is used comparison is case insensitive
 	 *
 	 * @return boolean	true if the region is valid for the country, false otherwise
 	 */
-	public function has_region( $region_id_or_region_name ) {
-		$region = $this->region( $region_id_or_region_name );
+	public function has_region( $region ) {
+		$region = $this->region( $region );
 		return $region != false;
 	}
 
