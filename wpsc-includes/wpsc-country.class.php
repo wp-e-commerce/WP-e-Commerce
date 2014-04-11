@@ -347,14 +347,14 @@ class WPSC_Country {
 	 *
 	 * @param int|string	required	$region_identifier 	The region identifier, can be the text region code, or the numeric region id
 	 *
-	 * @return WPSC_Region|false 							The region, or false if the region code is not valid for the country
+	 * @return WPSC_Region|false The region, or false if the region code is not valid for the country
 	 */
 	public function region( $region ) {
 
 		$wpsc_region = false;
 
 		if ( $region ) {
-			if ( $this->_id ) {
+			if ( is_numeric( $region ) ) {
 				if ( self::_could_be_a_valid_id( $region ) ) {
 					$region_id = intval( $region );
 					$wpsc_region = $this->_regions->value( $region_id );
@@ -371,7 +371,7 @@ class WPSC_Country {
 				}
 			}
 		}
-
+		
 		return $wpsc_region;
 	}
 
@@ -491,7 +491,7 @@ class WPSC_Country {
 	 * Copy the country properties from a stdClass object to this class object.  Needed when retrieving
 	 * objects from the database, but could be useful elsewhere in WPeC?
 	 *
-	 * @access static but private to WPeC
+	 * @access private
 	 *
 	 * @since 3.8.14
 	 *
