@@ -353,22 +353,19 @@ class WPSC_Country {
 
 		$wpsc_region = false;
 
-		if ( $region_identifier ) {
+		if ( $region ) {
 			if ( $this->_id ) {
-				if ( $region_id = WPSC_Countries::region_id( $this->_id, $region ) ) {
-
-					if ( ctype_digit( $region ) ) {
-						$region_id = intval( $region );
+				if ( self::_could_be_a_valid_id( $region ) ) {
+					$region_id = intval( $region );
+					$wpsc_region = $this->_regions->value( $region_id );
+				} else {
+					// check to see if it is a valid region code
+					if ( $region_id = $this->_region_id_from_region_code->value( $region ) ) {
 						$wpsc_region = $this->_regions->value( $region_id );
 					} else {
-						// check to see if it is a valid region code
-						if ( $region_id = $this->_region_id_from_region_code->value( $region ) ) {
+						// check to see if we have a valid region name
+						if ( $region_id = $this->_region_id_from_region_name->value( strtolower( $region ) ) ) {
 							$wpsc_region = $this->_regions->value( $region_id );
-						} else {
-							// check to see if we have a valid region name
-							if ( $region_id = $this->_region_id_from_region_name->value( strtolower( $region ) ) ) {
-								$wpsc_region = $this->_regions->value( $region_id );
-							}
 						}
 					}
 				}
@@ -627,6 +624,44 @@ class WPSC_Country {
 		WPSC_Countries::clear_cache();
 
 		return $country_id_from_db;
+	}
+
+
+
+	/**
+	 * checks a value to see if it could be a valid country id, use
+	 * prior to searching for a item with the id in an array, map or
+	 * database.
+	 *
+	 * Note: 	can't use ctype to check for integar values because it may not be enabled on server,
+	 * 			can't use is_number because is allows floats
+	 *
+	 * @access private
+	 *
+	 * @since 3.8.14
+	 *
+	 * @param string | number
+	 *
+	 * @return void
+	 */
+	private static function _could_be_a_valid_id( $id ) {
+
+		if ( is_int( $id ) ) {
+			return true;
+		}
+
+		if ( ! is_string( $id ) ) {
+			return false;
+		}
+
+		$id = str_split( $id );
+		foreach ( $id as $c ) {
+			if ( ! ( ( $c >= '0' ) && ( $c <= '9' ) ) ) {
+				return false;
+			}
+		}
+
+		return $true;
 	}
 
 	/**
