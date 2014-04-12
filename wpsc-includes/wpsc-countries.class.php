@@ -92,10 +92,13 @@ class WPSC_Countries {
 	 *
 	 * @since 3.8.14
 	 *
-	 * @param int | string country being check, if noon-numeric country is treated as an isocode, number is the country
-	 *        	id
+	 * @param int | string country being check, if noon-numeric country is treated as an isocode, number is the country id
+	 *
+	 * @return int | boolean 			integer country id on success, false on failure
 	 */
 	public static function country_id( $country ) {
+
+		// set default return value
 		$country_id = false;
 
 		if ( ! self::confirmed_initialization() ) {
@@ -106,7 +109,7 @@ class WPSC_Countries {
 			if ( is_numeric( $country ) ) {
 				$country_id = intval( $country );
 			} elseif ( is_string( $country ) ) {
-				$country_id = self::$country_code_from_iso_code->value( $country );
+				$country_id = self::$country_code_from_iso_code->value( $country, $country_id );
 			} else {
 				_wpsc_doing_it_wrong( 'WPSC_Countries::country_id', __( 'Function "country_id" requires an integer country code or a string ISO code ', 'wpsc' ), '3.8.14' );
 			}
@@ -123,8 +126,9 @@ class WPSC_Countries {
 	 *
 	 * @since 3.8.14
 	 *
-	 * @param int | string country being check, if noon-numeric country is treated as an isocode, number is the country
-	 *        	id
+	 * @param int|string		$country	country being checked, if noon-numeric country is treated as an isocode, number is the country id
+	 *
+	 * @return int|boolean 					integer country id on success, false on failure
 	 */
 	public static function country_isocode( $country ) {
 		$country_id = false;
@@ -150,10 +154,14 @@ class WPSC_Countries {
 	 *
 	 * @since 3.8.14
 	 *
-	 * @param int | string country being check, if noon-numeric country is treated as an isocode, number is the country
-	 *        	id
+	 * @param int|string 	country being checked, if non-numeric country is treated as an isocode, number is the country id
+	 * @param int|string 	region being checked, if non-numeric region is treated as an code, number is the region id
+	 *
+	 * @return int|boolean 					integer country id on success, false on failure
 	 */
 	public static function region_id( $country, $region ) {
+
+		// set default return value
 		$region_id = false;
 
 		if ( ! self::confirmed_initialization() ) {
@@ -165,8 +173,8 @@ class WPSC_Countries {
 		if ( is_numeric( $region ) ) {
 			$region_id = intval( $region );
 		} else {
-			$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id );
-			if ( $wpsc_country->has_regions() ) {
+			$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id, false );
+			if ( $wpsc_country && $wpsc_country->has_regions() ) {
 				$region_id = $wpsc_country->region_id_from_region_code( $region );
 			}
 		}
@@ -189,25 +197,29 @@ class WPSC_Countries {
 	 *
 	 */
 	public static function region( $country, $region ) {
+
 		if ( ! self::confirmed_initialization() ) {
-			return null;
+			return false;
 		}
+
+		// set default return value
+		$wpsc_region = false;
 
 		// we want to get to the unique region id to retrieve the region object, it might have been passed, or we
 		// will have to figure it out from the country and the region
 		if ( is_int( $region ) ) {
 			$region_id = $region;
-			$country_id = self::$country_id_from_region_id->value( $region_id );
+			$country_id = self::$country_id_from_region_id->value( $region_id, false );
 		} else {
 			$country_id = self::country_id( $country );
 			$region_id = self::region_id( $country_id, $region );
 		}
 
 		if ( $country_id && $region_id ) {
-			$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id );
-			$wpsc_region = $wpsc_country->region( $region_id );
-		} else {
-			$wpsc_region = false;
+			$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id, false );
+			if ( $wpsc_country ) {
+				$wpsc_region = $wpsc_country->region( $region_id );
+			}
 		}
 
 		return $wpsc_region;
@@ -219,11 +231,12 @@ class WPSC_Countries {
 	 * @access public
 	 * @since 3.8.14
 	 *
-	 * @param int | string $country country being check, if non-numeric country is treated as an isocode,
-	 *        	number is the country id
-	 * @param boolean return the result as an array, default is to return the result as an object
+	 * @param int|string 				$country 	country being check, if non-numeric country is treated as an isocode,
+	 *        										number is the country id
 	 *
-	 * @return object array information
+	 * @param boolean 					$as_array	return the result as an array, default is to return the result as an object
+	 *
+	 * @return object|array|boolean 				country information, false on failure
 	 */
 	public static function country( $country, $as_array = false ) {
 		if ( ! self::confirmed_initialization() ) {
@@ -232,10 +245,11 @@ class WPSC_Countries {
 
 		$country_id = self::country_id( $country );
 
+		// set default return value
 		$wpsc_country = false;
 
 		if ( $country_id ) {
-			$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id );
+			$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id, $wpsc_country );
 		}
 
 		if ( $as_array && $wpsc_country ) {
@@ -254,20 +268,23 @@ class WPSC_Countries {
 	 * @param int | string $country country being check, if non-numeric country is treated as an isocode,
 	 *        	number is the country id
 	 *
-	 * @return string currency code for the specified country
+	 * @return string currency code for the specified country, or empty string if it is not defined
 	 */
 	public static function currency_code( $country ) {
 		if ( ! self::confirmed_initialization() ) {
-			return 0;
+			return '';
 		}
 
 		$country_id = self::country_id( $country );
 
+		// set default return value
 		$currency_code = '';
 
 		if ( $country_id ) {
-			$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id );
-			$currency_code = $wpsc_country->currency_code();
+			$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id, false );
+			if ( $wpsc_country ) {
+				$currency_code = $wpsc_country->currency_code();
+			}
 		}
 
 		return $currency_code;
@@ -282,20 +299,23 @@ class WPSC_Countries {
 	 * @param int | string $country country being check, if non-numeric country is treated as an isocode,
 	 *        	number is the country id
 	 *
-	 * @return string currency symbol for the specified country
+	 * @return string currency symbol for the specified country, or empty string if it is not defined
 	 */
 	public static function currency_symbol( $country ) {
 		if ( ! self::confirmed_initialization() ) {
-			return 0;
+			return '';
 		}
 
 		$country_id = self::country_id( $country );
 
+		// set default return value
 		$currency_symbol = '';
 
 		if ( $country_id ) {
-			$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id );
-			$currency_symbol = $wpsc_country->currency_symbol();
+			$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id, false );
+			if ( $wpsc_country ) {
+				$currency_symbol = $wpsc_country->currency_symbol();
+			}
 		}
 
 		return $currency_symbol;
@@ -319,11 +339,14 @@ class WPSC_Countries {
 
 		$country_id = self::country_id( $country );
 
+		// set default return value
 		$continent = '';
 
 		if ( $continent ) {
-			$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id );
-			$continent = $wpsc_country->continent();
+			$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id, false );
+			if ( $wpsc_country ) {
+				$continent = $wpsc_country->continent();
+			}
 		}
 
 		return $continent;
@@ -338,7 +361,7 @@ class WPSC_Countries {
 	 * @param int | string $country country being check, if non-numeric country is treated as an isocode,
 	 *        	number is the country id
 	 *
-	 * @return string currency symbol html for the specified country
+	 * @return string currency symbol HTML for the specified country, or empty string if it is not defined
 	 */
 	public static function currency_symbol_html( $country ) {
 		if ( ! self::confirmed_initialization() ) {
@@ -350,8 +373,10 @@ class WPSC_Countries {
 		$currency_symbol = '';
 
 		if ( $country_id ) {
-			$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id );
-			$currency_symbol = $wpsc_country->symbol_html;
+			$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id, false );
+			if ( $wpsc_country ) {
+				$currency_symbol = $wpsc_country->symbol_html;
+			}
 		}
 
 		return $currency_symbol;
@@ -367,7 +392,7 @@ class WPSC_Countries {
 	 *        	number is the country id
 	 * @param boolean return the result as an array, default is to return the result as an object
 	 *
-	 * @return string currency symbol html for the specified country
+	 * @return string currency symbol HTML for the specified country, empty stdClass on failure
 	 */
 	public static function currency_data( $country, $as_array = false ) {
 		if ( ! self::confirmed_initialization() ) {
@@ -379,10 +404,12 @@ class WPSC_Countries {
 		$currency_data = new stdClass();
 
 		if ( $country_id ) {
-			$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id );
-			$currency_data->code = $wpsc_country->currency_code();
-			$currency_data->symbol = $wpsc_country->currency_symbol();
-			$currency_data->symbol_html = $wpsc_country->currency_symbol_html();
+			$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id, false );
+			if ( $wpsc_country ) {
+				$currency_data->code = $wpsc_country->currency_code();
+				$currency_data->symbol = $wpsc_country->currency_symbol();
+				$currency_data->symbol_html = $wpsc_country->currency_symbol_html();
+			}
 		}
 
 		if ( $as_array ) {
@@ -404,7 +431,7 @@ class WPSC_Countries {
 	 *
 	 * @param boolean $as_array the result as an array, default is to return the result as an object
 	 *
-	 * @return array of region objects index by region id
+	 * @return array of region objects index by region id, empty array if no regions
 	 */
 	public static function regions( $country, $as_array = false ) {
 		if ( ! self::confirmed_initialization() ) {
@@ -437,11 +464,12 @@ class WPSC_Countries {
 	 * @access public
 	 * @since 3.8.14
 	 *
-	 * @param boolean return countries that are set to invisible
+	 * @param boolean 	$include_invisible	return countries that are set to invisible
+	 * @param boolean 	$sortbyname			return countries ordered by name
 	 *
-	 * @return array of region objects index by region id
+	 * @return array of region objects index by region idm sorted by country name
 	 */
-	public static function countries( $include_invisible = false ) {
+	public static function countries( $include_invisible = false, $sortbyname = true ) {
 		if ( ! self::confirmed_initialization() ) {
 			return array();
 		}
@@ -450,6 +478,14 @@ class WPSC_Countries {
 			$countries = self::$all_wpsc_country_from_country_id->data();
 		} else {
 			$countries = self::$active_wpsc_country_from_country_id->data();
+		}
+
+		if ( $sortbyname && ! empty( $countries ) ) {
+			function cmpname( $a, $b ) {
+				return strcmp( $a->name(), $b->name() );
+			}
+
+			usort( $countries, 'cmpname' );
 		}
 
 		return $countries;
@@ -491,8 +527,11 @@ class WPSC_Countries {
 		$region_count = 0;
 
 		if ( $country_id = self::country_id( $country ) ) {
-			$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id );
-			$region_count = $wpsc_country->region_count();
+			$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id, false );
+
+			if ( $wpsc_country ) {
+				$region_count = $wpsc_country->region_count();
+			}
 		}
 
 		return $region_count;
@@ -504,21 +543,25 @@ class WPSC_Countries {
 	 * @access public
 	 * @since 3.8.14
 	 *
-	 * @param int | string country being check, if noon-numeric country is treated as an isocode, number is the country
-	 *        	id
+	 * @param int|string 		$country		country being check, if noon-numeric country is treated as an isocode,
+	 * 											number is the country
 	 *
-	 * @return true if th country has regions, false otherwise
+	 * @return true if the country has regions, false otherwise
 	 */
 	public static function country_has_regions( $country ) {
 		if ( ! self::confirmed_initialization() ) {
-			return 0;
+			return false;
 		}
 
+		// set default return value
 		$has_regions = false;
 
 		if ( $country_id = self::country_id( $country ) ) {
-			$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id );
-			$has_regions = $wpsc_country->has_regions();
+			$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id, false );
+
+			if ( $wpsc_country ) {
+				$has_regions = $wpsc_country->has_regions();
+			}
 		}
 
 		return $has_regions;
@@ -539,8 +582,10 @@ class WPSC_Countries {
 			return array();
 		}
 
+		$country_names = array_flip( self::$country_id_from_country_name->data() );
+
 		// we have the return value in our country name to id map, all we have to do is swap the keys with the values
-		return array_flip( self::$country_id_from_country_name );
+		return $country_names;
 	}
 
 	/**
@@ -560,7 +605,7 @@ class WPSC_Countries {
 			return 0;
 		}
 
-		$wpsc_currency = self::$currencies->value( $code );
+		$wpsc_currency = self::$currencies->value( $code, false );
 
 		if ( $as_array && $wpsc_currency ) {
 			$wpsc_currency = $wpsc_currency->as_array();
@@ -610,7 +655,7 @@ class WPSC_Countries {
 	 *
 	 * @param int $region_id region idnetifier
 	 *
-	 * @return int country identifier
+	 * @return int|boolean country identifier, false on failure
 	 */
 	public static function country_id_from_region_id( $region_id ) {
 		if ( ! self::confirmed_initialization() ) {
@@ -628,7 +673,7 @@ class WPSC_Countries {
 			return false;
 		}
 
-		return self::$country_id_from_region_id->value( $region_id );
+		return self::$country_id_from_region_id->value( $region_id, false );
 	}
 
 	/**
@@ -646,7 +691,7 @@ class WPSC_Countries {
 			return false;
 		}
 
-		return self::$country_code_from_country_id->value( $country_code );
+		return self::$country_code_from_country_id->value( $country_code, false );
 	}
 
 	/**
@@ -827,7 +872,7 @@ class WPSC_Countries {
 		// now countries is a list with the key being the integer country id, the value is the country data
 		$sql = 'SELECT id,
 						country, isocode, currency, symbol, symbol_html, code, has_regions, tax, continent, visible
-					FROM `' . WPSC_TABLE_CURRENCY_LIST . '` WHERE `visible`= "1" ORDER BY country ASC';
+					FROM `' . WPSC_TABLE_CURRENCY_LIST . '` WHERE `visible`= "1" ORDER BY id ASC';
 
 		$countries_array = $wpdb->get_results( $sql, OBJECT_K );
 		self::_add_country_arrays_to_wpsc_country_map( $countries_array, self::$active_wpsc_country_from_country_id );
@@ -835,7 +880,7 @@ class WPSC_Countries {
 		// there are also invisible countries
 		$sql = 'SELECT id,
 						country, isocode, currency, symbol, symbol_html, code, has_regions, tax, continent, visible
-					FROM `' . WPSC_TABLE_CURRENCY_LIST . '` ORDER BY country ASC';
+					FROM `' . WPSC_TABLE_CURRENCY_LIST . '` ORDER BY id ASC';
 
 		$countries_array = $wpdb->get_results( $sql, OBJECT_K );
 		self::_add_country_arrays_to_wpsc_country_map( $countries_array, self::$all_wpsc_country_from_country_id );
@@ -865,7 +910,7 @@ class WPSC_Countries {
 			$country->visible = $countries_array[$country_id]->visible == '1';
 
 			if ( ! empty( $country->tax ) && ( is_int( $country->tax ) ) || is_float( $country->tax ) ) {
-				$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id );
+				$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id, false );
 				$country->tax = floatval( $wpsc_country->tax );
 			}
 
