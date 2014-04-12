@@ -464,11 +464,12 @@ class WPSC_Countries {
 	 * @access public
 	 * @since 3.8.14
 	 *
-	 * @param boolean return countries that are set to invisible
+	 * @param boolean 	$include_invisible	return countries that are set to invisible
+	 * @param boolean 	$sortbyname			return countries ordered by name
 	 *
-	 * @return array of region objects index by region id
+	 * @return array of region objects index by region idm sorted by country name
 	 */
-	public static function countries( $include_invisible = false ) {
+	public static function countries( $include_invisible = false, $sortbyname = true ) {
 		if ( ! self::confirmed_initialization() ) {
 			return array();
 		}
@@ -477,6 +478,14 @@ class WPSC_Countries {
 			$countries = self::$all_wpsc_country_from_country_id->data();
 		} else {
 			$countries = self::$active_wpsc_country_from_country_id->data();
+		}
+
+		if ( $sortbyname && ! empty( $countries ) ) {
+			function cmpname( $a, $b ) {
+				return strcmp( $a->name(), $b->name() );
+			}
+
+			usort( $countries, 'cmpname' );
 		}
 
 		return $countries;
