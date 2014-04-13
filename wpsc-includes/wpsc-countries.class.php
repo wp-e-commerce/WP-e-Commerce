@@ -446,7 +446,7 @@ class WPSC_Countries {
 			$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id );
 
 			if ( $wpsc_country->has_regions() ) {
-				$regions = $wpsc_country->regions();
+				$regions = $wpsc_country->regions( $as_array );
 			}
 		}
 

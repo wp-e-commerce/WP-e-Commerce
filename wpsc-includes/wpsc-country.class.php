@@ -397,10 +397,32 @@ class WPSC_Country {
 	 *
 	 * @param boolean return the result as an array, default is to return the result as an object
 	 *
-	 * @return array of WPSC_Region objects, indexed by region id
+	 * @return array of WPSC_Region objects, indexed by region id, sorted by region
 	 */
-	public function regions() {
-		return $this->_regions->data();
+	public function regions( $as_array = false ) {
+		$regions_list = $this->_regions->data();
+
+		usort( $regions_list, array( __CLASS__, '_compare_regions_by_name' ) );
+
+		if ( $as_array ) {
+
+			foreach ( $regions_list as $region_key => $wpsc_region ) {
+				$region = get_object_vars( $wpsc_region );
+
+				$keys = array_keys( $region );
+				foreach ( $keys as $index => $key ) {
+					if ( substr( $key, 0, 1 ) == '_' ) {
+						$keys[$index] = substr( $key, 1 );
+					}
+				}
+
+				$region = array_combine( $keys, array_values( $region ) );
+
+				$regions_list[$region_key] = $region;
+			}
+		}
+
+		return $regions_list;
 	}
 
 	/**
@@ -622,6 +644,19 @@ class WPSC_Country {
 		WPSC_Countries::clear_cache();
 
 		return $country_id_from_db;
+	}
+
+
+	/**
+	 * Comapre regions using regions's name
+	 *
+	 * @param unknown $a instance of WPSC_Country class
+	 * @param unknown $b instance of WPSC_Country class
+	 *
+	 * @return 0 if country names are the same, -1 if country name of a comes before country b, 1 otherwise
+	 */
+	private static function _compare_regions_by_name( $a, $b ) {
+		return strcmp( $a->name(), $b->name() );
 	}
 
 	/**

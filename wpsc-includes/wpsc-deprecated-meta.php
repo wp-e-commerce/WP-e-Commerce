@@ -177,35 +177,35 @@ if ( WPSC_DEPRECATE_CUSTOMER_CHECKOUT_DETAILS ) {
 				switch ( $form_field['type'] ) {
 					case 'delivery_country':
 						if ( is_array( $meta_value ) && count( $meta_value ) == 2 ) {
-							wpsc_update_visitor_meta( 'shippingcountry', $meta_value[0], $id );
-							wpsc_update_visitor_meta( 'shippingregion', $meta_value[1], $id );
+							wpsc_update_visitor_meta( $id , 'shippingcountry', $meta_value[0] );
+							wpsc_update_visitor_meta( $id, 'shippingregion', $meta_value[1] );
 						} else {
 							if ( is_array( $meta_value ) ) {
 								$meta_value = $meta_value[0];
 							}
-							wpsc_update_visitor_meta( 'shippingcountry', $meta_value, $id );
-							wpsc_update_visitor_meta( 'shippingregion', $id );
+							wpsc_update_visitor_meta( $id, 'shippingcountry', $meta_value );
+							wpsc_update_visitor_meta( $id , 'shippingregion' );
 						}
 
 						break;
 
 					case 'country':
 						if ( is_array( $meta_value ) && count( $meta_value ) == 2 ) {
-							wpsc_update_visitor_meta( 'billingcountry', $meta_value[0], $id );
-							wpsc_update_visitor_meta( 'billingregion', $meta_value[1], $id );
+							wpsc_update_visitor_meta( $id, 'billingcountry', $meta_value[0] );
+							wpsc_update_visitor_meta( $id, 'billingregion', $meta_value[1] );
 						} else {
 							if ( is_array( $meta_value ) ) {
 								$meta_value = $meta_value[0];
 							}
 
-							wpsc_update_visitor_meta( 'billingcountry', $meta_value, $id );
-							wpsc_update_visitor_meta( 'billingregion', $id );
+							wpsc_update_visitor_meta( $id, 'billingcountry', $meta_value );
+							wpsc_update_visitor_meta( $id, 'billingregion' );
 						}
 
 						break;
 
 					default:
-						wpsc_update_visitor_meta( $meta_key, $meta_value, $id );
+						wpsc_update_visitor_meta( $id, $meta_key, $meta_value );
 						break;
 				}
 			}
