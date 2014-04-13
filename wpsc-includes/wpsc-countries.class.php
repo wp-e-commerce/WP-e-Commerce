@@ -481,11 +481,10 @@ class WPSC_Countries {
 		}
 
 		if ( $sortbyname && ! empty( $countries ) ) {
-			function cmpname( $a, $b ) {
-				return strcmp( $a->name(), $b->name() );
-			}
-
-			usort( $countries, 'cmpname' );
+			usort( $countries, array( __CLASS__, '_compare_countries_by_name' ) );
+		} else {
+			// countries should be sorted internally by id, but hust in case data was changed since the last data load
+			usort( $countries, array( __CLASS__, '_compare_countries_by_id' ) );
 		}
 
 		return $countries;
@@ -1213,6 +1212,36 @@ class WPSC_Countries {
 
 		return $dirty;
 	}
+
+	/**
+	 * Comapre countries using country's name
+	 *
+	 * @param unknown $a instance of WPSC_Country class
+	 * @param unknown $b instance of WPSC_Country class
+	 *
+	 * @return 0 if country names are the same, -1 if country name of a comes before country b, 1 otherwise
+	 */
+	private static function _compare_countries_by_name( $a, $b ) {
+		return strcmp( $a->name(), $b->name() );
+	}
+
+
+	/**
+	 * Comapre countries using country's id
+	 *
+	 * @param unknown $a instance of WPSC_Country class
+	 * @param unknown $b instance of WPSC_Country class
+	 *
+	 * @return 0 if country id's are the same, -1 if country id of a comes before country b, 1 otherwise
+	 */
+	private static function _compare_countries_by_id( $a, $b ) {
+		if ( $a->id() == $b->id() ) {
+			return 0;
+		}
+
+		return ($a->id() < $b->id() ) ? -1 : 1;
+	}
+
 
 	/**
 	 * the identifier for the tranient used to cache country data
