@@ -35,24 +35,53 @@ function validate_form_data() {
 			$bad_input = false;
 			if ( $form_data['mandatory'] == 1 ) {
 				switch ( $form_data['type'] ) {
-					case "email":
-						if ( !preg_match( "/^[a-zA-Z0-9._-]+@[a-zA-Z0-9-.]+\.[a-zA-Z]{2,5}$/", $value ) ) {
+					case 'email':
+						if ( ! preg_match( "/^[a-zA-Z0-9._-]+@[a-zA-Z0-9-.]+\.[a-zA-Z]{2,5}$/", $value ) ) {
 							$any_bad_inputs = true;
 							$bad_input = true;
 						}
+
 						break;
 
-					case "delivery_country":
-						if ( ($value != null ) ) {
-							wpsc_update_customer_meta( 'shipping_country', $value );
+						$delivery_country = wpsc_get_customer_meta( 'shippingcountry' );
+						$billing_country  = wpsc_get_customer_meta( 'billingcountry'  );
+						$delivery_region  = wpsc_get_customer_meta( 'shippingregion'  );
+						$billing_region   = wpsc_get_customer_meta( 'billingregion'   );
+
+					case 'country':
+						// if it is an array then the firs element is the country, second is the region id
+						if ( is_array( $value ) ) {
+							wpsc_update_customer_meta(  'billingcountry' , $value[0] );
+							wpsc_update_customer_meta(  'billingregion' , $value[1] );
+						} else if ( is_string( $value ) ) {
+							wpsc_update_customer_meta(  'billingcountry' , $value );
+						} else {
+							$bad_input = true;
 						}
+
+						break;
+
+					case 'delivery_country':
+						// if it is an array then the firs element is the country, second is the region id
+						if ( is_array( $value ) ) {
+							wpsc_update_customer_meta(  'shippingcountry' , $value[0] );
+							wpsc_update_customer_meta(  'shippingregion' , $value[1] );
+						} else if ( is_string( $value ) ) {
+							wpsc_update_customer_meta(  'shippingcountry' , $value );
+						} else {
+							$bad_input = true;
+						}
+
 						break;
 
 					default:
-						if ( empty( $value ) )
+						if ( empty( $value ) ) {
 							$bad_input = true;
+						}
+
 						break;
 				}
+
 				if ( $bad_input === true ) {
 
 					switch ( $form_data['name'] ) {
@@ -230,6 +259,7 @@ function wpsc_display_form_fields() {
 						echo "<br /><select name='collected_data[" . $form_field['id'] . "][1]'>" . nzshpcrt_region_list( $country_code, $region ) . "</select>";
 					}
 					break;
+
 				case "email":
 					echo "<input type='text' value='" . $meta_data[$form_field['id']] . "' name='collected_data[" . $form_field['id'] . "]' />";
 					break;
