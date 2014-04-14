@@ -292,7 +292,7 @@ class WPSC_Country {
 			$value = wpsc_get_meta( $this->_id, $key, __CLASS__ );
 		}
 
-		return apply_filters( 'wpsc_country_get_property', $this->$property_name, $key, $this );
+		return apply_filters( 'wpsc_country_get_property', $value, $key, $this );
 	}
 
 
