@@ -99,8 +99,7 @@ function _wpsc_delete_expired_visitors() {
  */
 function wpsc_do_delete_visitor_ajax( $visitor_id ) {
 
-	$security_nonce 	  = $_POST['wpsc_security'];
-	$delete_visitor_nonce_action = 'wpsc_delete_visitor_id_' .  $visitor_id_to_delete;
+	$delete_visitor_nonce_action = 'wpsc_delete_visitor_id_' .  $visitor_id;
 
 	$wpsc_security = wp_create_nonce( $delete_visitor_nonce_action );
 
