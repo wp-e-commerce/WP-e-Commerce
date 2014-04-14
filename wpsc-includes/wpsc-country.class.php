@@ -307,15 +307,15 @@ class WPSC_Country {
 	 *
 	 * @return self, to support method chaining
 	 */
-	public function set( $key_or_array_of_key_values, $value = '' ) {
+	public function set( $property, $value = '' ) {
 
-		if ( is_array( $key_or_array_of_key_values ) ) {
-			foreach ( $key_or_array_of_key_values as $key => $value ) {
+		if ( is_array( $property ) ) {
+			foreach ( $property as $key => $value ) {
 				$this->set( $key, $value );
 			}
 		} else {
 
-			$key = $key_or_array_of_key_values;
+			$key = $property;
 
 			$property_name = '_' . $key;
 
@@ -353,22 +353,23 @@ class WPSC_Country {
 
 		$wpsc_region = false;
 
-		if ( $region && $this->_id && ( $region_id = WPSC_Countries::region_id( $this->_id, $region ) ) ) {
+		if ( $region ) {
 			if ( is_numeric( $region ) ) {
-				$wpsc_region = $this->_regions->value( intval( $region_id ) );
+				$region_id = intval( $region );
+				$wpsc_region = $this->_regions->value( $region_id, $wpsc_region );
 			} else {
 				// check to see if it is a valid region code
 				if ( $region_id = $this->_region_id_from_region_code->value( $region ) ) {
-					$wpsc_region = $this->_regions->value( $region_id );
+					$wpsc_region = $this->_regions->value( $region_id, $wpsc_region );
 				} else {
 					// check to see if we have a valid region name
 					if ( $region_id = $this->_region_id_from_region_name->value( strtolower( $region ) ) ) {
-						$wpsc_region = $this->_regions->value( $region_id );
+						$wpsc_region = $this->_regions->value( $region_id, $wpsc_region );
 					}
 				}
 			}
 		}
-		
+
 		return $wpsc_region;
 	}
 
@@ -479,7 +480,7 @@ class WPSC_Country {
 		$region_id = false;
 
 		if ( $region_code ) {
-			$region_id = $this->_region_id_from_region_code->value( $region_code );
+			$region_id = $this->_region_id_from_region_code->value( $region_code, $region_id );
 		}
 
 		return $region_id;
