@@ -47,14 +47,25 @@ function wpsc_core_load_session() {
  * The core WPEC constants necessary to start loading
  */
 function wpsc_core_constants() {
-	if ( ! defined( 'WPSC_URL' ) )
+	if ( ! defined( 'WPSC_URL' ) ) {
 		define( 'WPSC_URL', plugins_url( '', __FILE__ ) );
+	}
 
 	// Define Plugin version
 	define( 'WPSC_VERSION'            , '3.8.14-dev' );
 	define( 'WPSC_MINOR_VERSION'      , 'e8a508c011' );
 	define( 'WPSC_PRESENTABLE_VERSION', '3.8.14-dev' );
 
+	// Define a salt to use when we hash, WPSC_SALT may be defined for us in our config file, so check first
+	if ( ! defined( 'WPSC_SALT' ) ) {
+		if ( defined( 'AUTH_SALT' ) ) {
+			define( 'WPSC_SALT', AUTH_SALT );
+		} else {
+			define( 'WPSC_SALT', hash_hmac( 'md5', __FUNCTION__, __FILE__ ) );
+		}
+	}
+
+	// Define the current databse version
 	define( 'WPSC_DB_VERSION'         , 10 );
 
 	// Define Debug Variables for developers, if they haven't already been defined
