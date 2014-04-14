@@ -566,15 +566,13 @@ class wpsc_checkout {
 	 */
 	function save_forms_to_db( $purchase_id ) {
 
-		global $wpdb;
-
 		foreach ( $this->checkout_items as $form_data ) {
 
 			if ( $form_data->type == 'heading' ) {
 				continue;
 			}
 
-			$customer_meta_key = $form_data->unique_name;
+			$customer_meta_key    = $form_data->unique_name;
 			$checkout_item_values = wpsc_get_customer_meta( $customer_meta_key );
 
 			if ( ! is_array( $checkout_item_values ) ) {
@@ -606,7 +604,7 @@ class wpsc_checkout {
 	 */
 	function get_count_checkout_fields() {
 		$checkout = new WPSC_Checkout_Form();
-		$count = $checkout->get_field_count();
+		$count    = $checkout->get_field_count();
 		return $count;
 	}
 

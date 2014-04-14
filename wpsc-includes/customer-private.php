@@ -213,7 +213,7 @@ function _wpsc_validate_customer_cookie() {
 			$hmac = hash_hmac( 'md5', $data, $key );
 
 			// integrity check
-			if ( $hmac == $hash ) {
+			if ( $hmac === $hash ) {
 				return $id;
 			}
 		}
