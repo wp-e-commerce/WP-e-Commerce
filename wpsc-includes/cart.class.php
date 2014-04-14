@@ -357,7 +357,11 @@ class wpsc_cart {
 		}
 
 		if ( ( $this->shipping_quotes != null ) && ( array_search( $this->selected_shipping_option, array_keys( $this->shipping_quotes ) ) === false ) ) {
-			$this->selected_shipping_option = apply_filters( 'wpsc_default_shipping_quote', array_pop( array_keys( array_slice( $this->shipping_quotes, 0, 1 ) ) ), $this->shipping_quotes );
+			
+			$slice    = array_keys( array_slice( $this->shipping_quotes, 0, 1 ) );
+			$selected = array_pop( $slice );
+			
+			$this->selected_shipping_option = apply_filters( 'wpsc_default_shipping_quote', $selected, $this->shipping_quotes )
 		}
 	}
 
