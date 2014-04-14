@@ -342,7 +342,7 @@ class WPSC_Countries {
 		// set default return value
 		$continent = '';
 
-		if ( $continent ) {
+		if ( $country_id ) {
 			$wpsc_country = self::$all_wpsc_country_from_country_id->value( $country_id, false );
 			if ( $wpsc_country ) {
 				$continent = $wpsc_country->continent();

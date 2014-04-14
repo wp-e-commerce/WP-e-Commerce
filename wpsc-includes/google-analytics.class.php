@@ -156,7 +156,7 @@ class WPSC_Google_Analytics {
 		$total_tax = $total_price = 0;
 
 		foreach ( $cart_items as $item ) {
-			$total_tax	+=  $item['tax_charged'];
+			$total_tax	 += $item['tax_charged'];
 			$total_price += $item['price'];
 		}
 
@@ -215,7 +215,6 @@ class WPSC_Google_Analytics {
 
 $GLOBALS['wpsc_google_analytics'] = new WPSC_Google_Analytics();
 
-//For some reason, this function exists in the 3.8 branch on GC, but not in WP Extend.
 if ( ! function_exists( 'wpsc_get_total_shipping' ) ) :
 
 	/**
