@@ -192,26 +192,32 @@ function _wpsc_ajax_add_variation_set() {
 
 	require_once( 'includes/walker-variation-checklist.php' );
 
-	/* --- DIRTY HACK START --- */
-	/*
-	There's a bug with term cache in WordPress core. See http://core.trac.wordpress.org/ticket/14485.
-	The next 3 lines will delete children term cache for wpsc-variation.
-	Without this hack, the new child variations won't be displayed on "Variations" page and
-	also won't be displayed in wp_terms_checklist() call below.
-	*/
-	clean_term_cache( $variation_set_id, 'wpsc-variation' );
-	delete_option('wpsc-variation_children');
-	wp_cache_set( 'last_changed', 1, 'terms' );
-	_get_term_hierarchy('wpsc-variation');
-	/* --- DIRTY HACK END --- */
+	if ( ! version_compare( $GLOBALS['wp_version'], '3.8.3', '>' ) ) {
+
+		/* --- DIRTY HACK START --- */
+		/*
+		There's a bug with term cache in WordPress core. See http://core.trac.wordpress.org/ticket/14485. Fixed in 3.9.
+		The next 3 lines will delete children term cache for wpsc-variation.
+		Without this hack, the new child variations won't be displayed on "Variations" page and
+		also won't be displayed in wp_terms_checklist() call below.
+		*/
+		clean_term_cache( $variation_set_id, 'wpsc-variation' );
+		delete_option('wpsc-variation_children');
+		wp_cache_set( 'last_changed', 1, 'terms' );
+		_get_term_hierarchy('wpsc-variation');
+		/* --- DIRTY HACK END --- */
+
+	}
 
 	ob_start();
+	
 	wp_terms_checklist( (int) $_POST['post_id'], array(
 		'taxonomy'      => 'wpsc-variation',
 		'descendants_and_self' => $variation_set_id,
 		'walker'        => new WPSC_Walker_Variation_Checklist( $inserted_variants ),
 		'checked_ontop' => false,
 	) );
+
 	$content = ob_get_clean();
 
 	$return = array(
