@@ -361,7 +361,7 @@ class wpsc_cart {
 			$slice    = array_keys( array_slice( $this->shipping_quotes, 0, 1 ) );
 			$selected = array_pop( $slice );
 			
-			$this->selected_shipping_option = apply_filters( 'wpsc_default_shipping_quote', $selected, $this->shipping_quotes )
+			$this->selected_shipping_option = apply_filters( 'wpsc_default_shipping_quote', $selected, $this->shipping_quotes );
 		}
 	}
 
