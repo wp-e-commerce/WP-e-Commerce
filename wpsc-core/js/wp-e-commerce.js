@@ -205,7 +205,7 @@ function wpsc_update_customer_meta( response ) {
  */
 function wpsc_update_checkout_info( checkout_info ) {
 	
-	// TODO: if shipping needs to be re-calculated we need to refresh the page.  This is the pnly option
+	// TODO: if shipping needs to be re-calculated we need to refresh the page.  This is the only option
 	// in version 3.8.14 and earlier.  Future versions should support replacing the shipping quote elements
 	// via AJAX
 	if ( checkout_info.hasOwnProperty( 'needs_shipping_recalc' ) ) {
