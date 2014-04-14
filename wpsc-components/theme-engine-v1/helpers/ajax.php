@@ -705,6 +705,7 @@ function wpsc_submit_checkout( $collected_data = true ) {
 			$tax_percentage = 0.00;
 		}
 		$total = $wpsc_cart->calculate_total_price();
+		
 		$args = array(
 			'totalprice'       => $total,
 			'statusno'         => '0',

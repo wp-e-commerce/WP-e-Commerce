@@ -243,8 +243,10 @@ class WPSC_Purchase_Log_Page {
 	}
 
 	public function controller_item_details() {
-		if ( ! isset( $_REQUEST['id'] ) )
-			die( __( 'Invalid sales log ID', 'wpsc' ) );
+
+		if ( ! isset( $_REQUEST['id'] ) || ( isset( $_REQUEST['id'] ) && ! is_numeric( $_REQUEST['id'] ) ) ) {
+			wp_die( __( 'Invalid sales log ID', 'wpsc'  ) );
+		}
 
 		global $purchlogitem;
 
@@ -273,8 +275,10 @@ class WPSC_Purchase_Log_Page {
 	}
 
 	public function controller_packing_slip() {
-		if ( ! isset( $_REQUEST['id'] ) )
-			die( __( 'Invalid sales log ID', 'wpsc' ) );
+		
+		if ( ! isset( $_REQUEST['id'] ) || ( isset( $_REQUEST['id'] ) && ! is_numeric( $_REQUEST['id'] ) ) ) {
+			wp_die( __( 'Invalid sales log ID', 'wpsc'  ) );
+		}
 
 		global $purchlogitem;
 
