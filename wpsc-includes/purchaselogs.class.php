@@ -465,11 +465,11 @@ function wpsc_display_purchlog_buyers_name() {
 
    $first_name = $last_name = '';
 
-   if ( isset( $purchlogitem->userinfo['billingfirstname'] ) {
+   if ( isset( $purchlogitem->userinfo['billingfirstname'] ) ) {
    		$first_name = $purchlogitem->userinfo['billingfirstname']['value'];
    }
 
-   if ( isset( $purchlogitem->userinfo['billinglastname'] ) {
+   if ( isset( $purchlogitem->userinfo['billinglastname'] ) ) {
    		$last_name = ' ' . $purchlogitem->userinfo['billinglastname']['value'];
    }
 
