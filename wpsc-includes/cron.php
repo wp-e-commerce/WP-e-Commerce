@@ -31,6 +31,8 @@ function wpsc_clear_stock_claims() {
  * delete logic that is admin only.  It is also possible that a plugin may have filters that need to run when users are deleted.
  * @access private
  * @since 3.8.14
+ *
+ * @return how many expired visitors remain to be deleted, 0 if all done
  */
 function _wpsc_delete_expired_visitors() {
 
@@ -42,6 +44,9 @@ function _wpsc_delete_expired_visitors() {
 		define( 'WPSC_MAX_DELETE_MEMORY_USAGE',  20 * 1024 * 1024 ); // allow up to 20 megabytes to be consumed by the delete processing
 	}
 
+	// We are going to record a little option so that support can confirm that the delete users cron is running
+	add_option( '_wpsc_last_delete_expired_visitors_cron', date( 'Y-m-d H:i:s' ), null, 'no' );
+
 	$expired_visitor_ids = wpsc_get_expired_visitor_ids();
 
 	$a_little_bit_of_time_after_start = time() + WPSC_MAX_DELETE_PROFILE_TIME;
@@ -51,8 +56,10 @@ function _wpsc_delete_expired_visitors() {
 	// If important data is found the user is no longer temporary. We also use a filter so that if other plug-ins
 	// want to either stop the user from being deleted, or do something with the information in the profile they
 	// have that chance.
-	foreach ( $expired_visitor_ids as $expired_visitor_id ) {
-		wpsc_delete_visitor( $expired_visitor_id );
+	foreach ( $expired_visitor_ids as $index => $expired_visitor_id ) {
+		wpsc_do_delete_visitor_ajax( $expired_visitor_id );
+
+		unset( $expired_visitor_ids[$index] );
 
 		// in case we have a lot of users to delete we do some checking to make sure we don't
 		// get caught in a loop using server resources for an extended period of time without yielding.
@@ -65,7 +72,61 @@ function _wpsc_delete_expired_visitors() {
 			break;
 		}
 	}
+
+	// Since there are no visitors to delete this is a good time to cleanup the visitors meta table
+	// eliminating any orphaned meta data, asingle SQL query will do it!
+	if ( ! count( $expired_visitor_ids ) ) {
+		global $wpdb;
+		$sql = 'DELETE vm FROM ' . $wpdb->wpsc_visitormeta . ' vm LEFT JOIN ' . $wpdb->wpsc_visitors . ' v  on v.id = vm.wpsc_visitor_id WHERE v.id IS NULL';
+		$wpdb->query( $sql );
+	}
+
+	return count( $expired_visitor_ids );
 }
+
+
+/**
+ * Request a visitor be deleted via the WordPRess admin ajax path
+ *
+ * @access private
+
+ * @since 3.8.14
+ *
+ * @param int $visitor_id
+ *
+ * @return boolean, true on success, false on failure
+ *
+ */
+function wpsc_do_delete_visitor_ajax( $visitor_id ) {
+
+	$security_nonce 	  = $_POST['wpsc_security'];
+	$delete_visitor_nonce_action = 'wpsc_delete_visitor_id_' .  $visitor_id_to_delete;
+
+	$wpsc_security = wp_create_nonce( $delete_visitor_nonce_action );
+
+	$response = wp_remote_post(
+									admin_url( 'admin-ajax.php' ),
+									array(
+										'method'      => 'POST',
+										'timeout'     => 15,
+										'redirection' => 5,
+										'httpversion' => '1.0',
+										'blocking'    => true,
+										'headers'     => array(),
+										'body'        => array( 'action' => 'wpsc_delete_visitor', 'wpsc_visitor_id' => $visitor_id, 'wpsc_security' => $wpsc_security, ),
+										'cookies'     => array(),
+									)
+								);
+
+	if ( is_wp_error( $response ) ) {
+		$result = false;
+	} else {
+		$result = true;
+	}
+
+	return $result;
+}
+
 
 if ( is_admin() ) {
 	// add admin action for convenience

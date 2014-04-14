@@ -484,7 +484,7 @@ function wpsc_delete_visitor( $visitor_id ) {
 function wpsc_get_expired_visitor_ids() {
 
 	if ( ! _wpsc_visitor_database_ready() ) {
-		return false;
+		return array();
 	}
 
 	global $wpdb;
@@ -1230,3 +1230,34 @@ function _wpsc_updated_visitor_meta_billingcountry( $meta_value, $meta_key, $vis
 }
 
 add_action( 'wpsc_updated_visitor_meta_billingcountry', '_wpsc_updated_visitor_meta_billingcountry' , 1 , 3 );
+
+
+/**
+ * delete a visitor via ajax
+ *
+ * @since 3.8.14
+ *
+ * @access private
+ * @var  mixed $meta_value Optional. Metadata value.
+ * @return none
+ */
+function wpsc_delete_visitor_ajax() {
+
+	$visitor_id_to_delete = $_POST['wpsc_visitor_id'];
+	$security_nonce 	  = $_POST['wpsc_security'];
+
+	$delete_visitor_nonce_action = 'wpsc_delete_visitor_id_' .  $visitor_id_to_delete;
+
+	if ( ! wp_verify_nonce( $security_nonce, $delete_visitor_nonce_action ) ) {
+		// This nonce is not valid.
+		die( 'Security check' );
+	} else {
+		wpsc_delete_visitor( $visitor_id );
+	}
+
+	exit( 0 );
+}
+
+
+add_action( 'wp_ajax_wpsc_delete_visitor'       		, 'wpsc_delete_visitor_ajax' );
+add_action( 'wp_ajax_nopriv_wpsc_validate_customer'		, 'wpsc_delete_visitor_ajax' );
