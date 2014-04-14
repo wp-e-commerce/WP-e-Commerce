@@ -462,7 +462,20 @@ function wpsc_display_purchlog_totalprice() {
 
 function wpsc_display_purchlog_buyers_name() {
    global $purchlogitem;
-   return esc_html( $purchlogitem->userinfo['billingfirstname']['value'] ) . ' ' . esc_html( $purchlogitem->userinfo['billinglastname']['value'] );
+
+   $first_name = $last_name = '';
+
+   if ( isset( $purchlogitem->userinfo['billingfirstname'] ) {
+   		$first_name = $purchlogitem->userinfo['billingfirstname']['value'];
+   }
+
+   if ( isset( $purchlogitem->userinfo['billinglastname'] ) {
+   		$last_name = ' ' . $purchlogitem->userinfo['billinglastname']['value'];
+   }
+
+   $name = trim( $first_name . $last_name );
+
+   return esc_html( $name );
 }
 
 function wpsc_display_purchlog_buyers_city() {
@@ -993,19 +1006,22 @@ class wpsc_purchaselogs_items {
       // overwrite each other.
       // $additional_fields is introduced to fix this. However, the $additionaldetails array as well
       // as $this->customcheckoutfields needs to be kept for compatibility purposes.
-      $additional_fields = array();
-      foreach ( (array)$userinfo as $input_row ) {
+      
+      $additional_fields = $billingdetails = $shippinginfo = array();
+
+      foreach ( (array) $userinfo as $input_row ) {
          if ( stristr( $input_row['unique_name'], 'shipping' ) ) {
             $shippinginfo[$input_row['unique_name']] = $input_row;
          } elseif ( stristr( $input_row['unique_name'], 'billing' ) ) {
-            $billingdetails[$input_row['unique_name']] = $input_row;
+            $billingdetails[ $input_row['unique_name'] ] = $input_row;
          } else {
-            $additionaldetails[$input_row['name']] = $input_row;
+            $additionaldetails[ $input_row['name'] ] = $input_row;
             $additional_fields[] = $input_row;
          }
       }
-      $this->userinfo = $billingdetails;
+      $this->userinfo     = $billingdetails;
       $this->shippinginfo = $shippinginfo;
+
       if ( isset( $additionaldetails ) ) {
          $this->customcheckoutfields = $additionaldetails;
       }
