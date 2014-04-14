@@ -153,10 +153,12 @@ class WPSC_Google_Analytics {
 		$cart_items = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid = %d", $purchase_id ), ARRAY_A );
 
 		$total_shipping = wpsc_get_total_shipping( $purchase_id );
-		$total_tax 		= 0;
+		$total_tax = $total_price = 0;
 
-		foreach ( $cart_items as $item )
+		foreach ( $cart_items as $item ) {
 			$total_tax	+=  $item['tax_charged'];
+			$total_price += $item['price'];
+		}
 
 		if ( $this->is_theme_tracking || $this->advanced_code )
 			$output .= "<script type='text/javascript'>\n\r";
@@ -167,7 +169,7 @@ class WPSC_Google_Analytics {
 			_gaq.push(['_addTrans',
 			'" . $purchase_id . "',                                     // order ID - required
 			'" . wp_specialchars_decode( $this->get_site_name() ) . "', // affiliation or store name
-			'" . wpsc_currency_display( $purchase->totalprice ) . "',   // total - required
+			'" . number_format( $total_price, 2, '.', '' ) . "',   // total - required
 			'" . wpsc_currency_display( $total_tax ) . "',              // tax
 			'" . wpsc_currency_display( $total_shipping ) . "',         // shipping
 			'" . wp_specialchars_decode( $city ) . "',                  // city
