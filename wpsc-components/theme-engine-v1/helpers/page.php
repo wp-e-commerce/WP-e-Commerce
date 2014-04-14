@@ -1072,7 +1072,11 @@ function wpsc_transaction_results( $content = '' ) {
 		return $content;
 
 	if ( preg_match( "/\[transactionresults\]/", $content ) ) {
-		define( 'DONOTCACHEPAGE', true );
+
+		if ( ! defined( 'DONOTCACHEPAGE' ) || ( defined( 'DONOTCACHEPAGE' ) && ! DONOTCACHEPAGE ) ) {
+			define( 'DONOTCACHEPAGE', true );
+		}
+		
 		ob_start();
 		include( wpsc_get_template_file_path( 'wpsc-transaction_results.php' ) );
 		$output = ob_get_contents();
