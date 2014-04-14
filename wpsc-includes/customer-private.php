@@ -169,7 +169,7 @@ function _wpsc_create_customer_id_cookie( $id, $fake_it = false ) {
 	$expire = time() + WPSC_CUSTOMER_DATA_EXPIRATION; // valid for 48 hours
 	$data   = $id . $expire;
 
-	$key = wp_hash( _wpsc_visitor_security_key( $id ) . '|' . $expire );
+	$key = hash_hmac( 'md5', _wpsc_visitor_security_key( $id ) . '|' . $expire, WPSC_SALT );
 
 	$hash   = hash_hmac( 'md5', $data, $key );
 	$cookie = $id . '|' . $expire . '|' . $hash;
@@ -203,13 +203,13 @@ function _wpsc_validate_customer_cookie() {
 
 	// check to see if the ID is valid, it must be an integer, empty test is because old versions of php
 	// can return true on empty string
-	if ( ! empty( $id ) &&  ctype_digit( $id ) ) {
+	if ( ! empty( $id ) &&  is_numeric( $id ) ) {
 		$id = intval( $id );
 		$security_key = _wpsc_visitor_security_key( $id );
 
 		// if a user is found keep checking, user not found clear the cookie and return invalid
 		if ( ! empty( $security_key ) ) {
-			$key = wp_hash( $security_key . '|' . $expire );
+			$key = hash_hmac( 'md5', $security_key, WPSC_SALT );
 			$hmac = hash_hmac( 'md5', $data, $key );
 
 			// integrity check
