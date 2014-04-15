@@ -638,7 +638,7 @@ class WPSC_Country {
 	 * @return 0 if country names are the same, -1 if country name of a comes before country b, 1 otherwise
 	 */
 	private static function _compare_regions_by_name( $a, $b ) {
-		return strcmp( $a->get_name(), $b->name() );
+		return strcmp( $a->get_name(), $b->get_name() );
 	}
 
 	/**
