@@ -77,7 +77,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 
 	function get_local_currency_code() {
 		if ( empty( $this->local_currency_code ) ) {
-			$this->local_currency_code = WPSC_Countries::currency_code( get_option( 'currency_type' ) );
+			$this->local_currency_code = WPSC_Countries::get_currency_code( get_option( 'currency_type' ) );
 		}
 
 		return $this->local_currency_code;
