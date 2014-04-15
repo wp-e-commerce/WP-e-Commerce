@@ -183,8 +183,7 @@ function wpsc_update_customer_meta( response ) {
 						}
 					} else {
 						var current_value = jQuery( this ).val();
-						var new_value = meta_value;
-						if ( jQuery( this ).val() != meta_value ) {
+						if ( current_value != meta_value ) {
 							jQuery( this ).val( meta_value );
 						}
 					}
@@ -377,13 +376,22 @@ function wpsc_adjust_checkout_form_element_visibility() {
 	var shipping_row = jQuery( "#shippingSameBilling" ).closest( "tr" );
 	
 	if( jQuery("#shippingSameBilling").is(":checked") ) { 
-		jQuery( shipping_row ).siblings( ":not( .checkout-heading-row , :has( .custom_gateway ) ) ").hide();
+		jQuery( shipping_row ).siblings( ":not( .checkout-heading-row ,  :has( #agree ), :has( .custom_gateway ) ) ").hide();
 		jQuery( "#shippingsameasbillingmessage" ).show();
 	} else {
 		jQuery( shipping_row ).siblings().show();
 		jQuery( "#shippingsameasbillingmessage" ).hide();		
 	} 
 	
+	if( jQuery("#shippingSameBilling").is(":checked") ) { 
+		jQuery( shipping_row ).siblings( ":not( .checkout-heading-row , :has( #agree ), :has( .custom_gateway ) ) ").hide();
+		jQuery( "#shippingsameasbillingmessage" ).show();
+	} else {
+		jQuery( shipping_row ).siblings().show();
+		jQuery( "#shippingsameasbillingmessage" ).hide();		
+	} 
+	
+
 	// set the visibility of the shipping state input fields
 	var shipping_country = jQuery( "#shippingcountry" ).val();
 	var shipping_state_element = jQuery( "input[data-wpsc-meta-key='shippingstate']" ) ;
