@@ -582,7 +582,7 @@ class WPSC_Countries {
 			return array();
 		}
 
-		$country_names = array_flip( self::$country_code_by_iso_code->data() );
+		$country_names = array_flip( self::$country_id_by_country_name->data() );
 
 		// we have the return value in our country name to id map, all we have to do is swap the keys with the values
 		return $country_names;
@@ -704,7 +704,7 @@ class WPSC_Countries {
 	 *
 	 * @var array
 	 */
-	private static $country_code_by_iso_code = null;
+	private static $country_id_by_country_name = null;
 
 	/**
 	 * Array of unique known currencies, indexed by corrency code
@@ -915,7 +915,7 @@ class WPSC_Countries {
 			}
 
 			self::$country_code_by_iso_code->map( $country->isocode, $country->id );
-			self::$country_code_by_iso_code->map( $country->country, $country->id );
+			self::$country_id_by_country_name->map( $country->country, $country->id );
 			self::$country_code_by_country_id->map( $country->code, $country->id );
 
 			// create a new empty country object, add the properties we know about, then we add our region info
@@ -1072,12 +1072,12 @@ class WPSC_Countries {
 
 		// at 3.14 checked and this is about 3KB of data, this map isn't as frequently used so we will load it if it
 		// needed
-		if ( is_a( self::$country_code_by_iso_code, 'WPSC_Data_Map' ) ) {
-			self::$country_code_by_iso_code->clear();
+		if ( is_a( self::$country_id_by_country_name, 'WPSC_Data_Map' ) ) {
+			self::$country_id_by_country_name->clear();
 		} else {
-			self::$country_code_by_iso_code = new WPSC_Data_Map( '$country_code_by_iso_code', $default_rebuild_callback );
+			self::$country_id_by_country_name = new WPSC_Data_Map( '$country_id_by_country_name', $default_rebuild_callback );
 		}
-		self::$_maps_to_save_with_core_class['country_code_by_iso_code'] = false;
+		self::$_maps_to_save_with_core_class['country_id_by_country_name'] = false;
 
 		// at 3.14 checked and this is about 23KB of data, not a big hit if there is a memory based object cache
 		// but impacts perfomance on lower end (default) configurations that use the database to store transients
