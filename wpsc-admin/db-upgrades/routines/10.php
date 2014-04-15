@@ -23,10 +23,10 @@ function _wpsc_db_upgrade_10() {
  */
 function _wpsc_add_region_name_meta() {
 	$wpsc_country = new WPSC_Country( 'US' );
-	$wpsc_country->set( 'region_is_called', __( 'state', 'wpsc' ) );
+	$wpsc_country->set( 'region_label', __( 'state', 'wpsc' ) );
 
 	$wpsc_country = new WPSC_Country( 'CA' );
-	$wpsc_country->set( 'region_is_called', __( 'province', 'wpsc' ) );
+	$wpsc_country->set( 'region_label', __( 'province', 'wpsc' ) );
 }
 
 /**
