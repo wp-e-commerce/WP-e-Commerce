@@ -130,6 +130,7 @@ endif;
    <?php do_action('wpsc_before_shipping_of_shopping_cart'); ?>
 
    <div id="wpsc_shopping_cart_container">
+
    <?php if(wpsc_uses_shipping()) : ?>
       <h2><?php _e('Calculate Shipping Price', 'wpsc'); ?></h2>
       <table class="productcart">
@@ -350,8 +351,7 @@ endif;
                   	if( $shipping_same_as_billing )
                   		$checked = 'checked="checked"';
                    ?>
-					<label for='shippingSameBilling'><?php _e('Same as billing address:','wpsc'); ?></label>
-					<input type='checkbox' value='true'  data-wpsc-meta-key="shippingSameBilling" class= "wpsc-visitor-meta"  name='shippingSameBilling' id='shippingSameBilling' <?php echo $checked; ?> />
+					<label for='shippingSameBilling'><input type='checkbox' value='true'  data-wpsc-meta-key="shippingSameBilling" class= "wpsc-visitor-meta"  name='shippingSameBilling' id='shippingSameBilling' <?php echo $checked; ?> /><?php _e('Same as billing address:','wpsc'); ?></label>
 					<br/><span id="shippingsameasbillingmessage"><?php _e('Your order will be shipped to the billing address', 'wpsc'); ?></span>
                   </td>
                </tr>

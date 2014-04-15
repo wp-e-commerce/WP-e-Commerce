@@ -21,6 +21,13 @@ function _wpsc_is_country_disabled( $country, $args ) {
 	return false;
 }
 
+/**
+ * Get the country dropdown options, presumably for the checkout or customer profile pages
+ *
+ * @param 	string|array  	$args
+ *
+ * @return 	string			HTML representation of the dropdown
+ */
 function _wpsc_country_dropdown_options( $args = '' ) {
 	$defaults = array(
 			'acceptable'        => null,
@@ -28,7 +35,7 @@ function _wpsc_country_dropdown_options( $args = '' ) {
 			'selected'          => '',
 			'disabled'          => null,
 			'disabled_ids'      => null,
-			'placeholder'       => __( 'Please select', 'wpsc' ),
+			'placeholder'       => __( 'Please select a country', 'wpsc' ),
 			'include_invisible' => false,
 	);
 
@@ -36,14 +43,22 @@ function _wpsc_country_dropdown_options( $args = '' ) {
 
 	$output = '';
 
-	if ( $args['placeholder'] )
-		$output .= "<option value=''>" . esc_html( $args['placeholder'] ) . "</option>\n\r";
-
 	$countries = WPSC_Countries::get_countries( $args['include_invisible'] );
 
+	// if the user has a choice of countries the
+	if ( ( count( $countries ) > 1 ) && ! empty( $args['placeholder'] ) ) {
+		$output .= "<option value=''>" . esc_html( $args['placeholder'] ) . "</option>\n\r";
+	}
+
 	foreach ( $countries as $country ) {
+
 		$isocode = $country->get_isocode();
 		$name    = $country->get_name();
+
+		// if there is only one country in the list select it
+		if ( count( $countries ) == 1 ) {
+			$args['selected'] = $isocode;
+		}
 
 		// if we're in admin area, and the legacy country code "UK" or "TP" is selected as the
 		// base country, we should display both this and the more proper "GB" or "TL" options
@@ -69,21 +84,37 @@ function _wpsc_country_dropdown_options( $args = '' ) {
 	return $output;
 }
 
+/**
+ * Get the country dropdown HTML, presumably for the checkout or customer profile pages
+ *
+ * @param 	string|array  	$args
+ *
+ * @return 	string			HTML representation of the dropdown
+ */
 function wpsc_get_country_dropdown( $args = '' ) {
-	static $count = 0;
-	$count ++;
 
 	$defaults = array(
 			'name'                  => 'wpsc_countries',
-			'id'                    => "wpsc-country-dropdown-{$count}",
-			'class'                 => 'wpsc_country_dropdown',
+			'id'                    => 'wpsc-country-dropdown',
+			'class'                 => '',
 			'additional_attributes' => '',
 	);
 
 	$args = wp_parse_args( $args, $defaults );
 
+	// we are going to remember everytime we create a country dropdown so that we can put a unique id
+	// on each HTML element
+	static $country_dropdown_counts = array();
+
+	if ( ! isset( $country_dropdown_counts[ $args['id'] ] ) ) {
+		$country_dropdown_counts[ $args['id'] ] = 1;
+	} else {
+		$country_dropdown_counts[ $args['id'] ] = $country_dropdown_counts[ $args['id'] ] + 1;
+		$args['id'] = $args['id']  . '-' . $country_dropdown_counts[ $args['id'] ];
+	}
+
 	$output = sprintf(
-			'<select name="%1$s" id="%2$s" class="%3$s" %4$s>',
+			'<select name="%1$s" id="%2$s" class="%3$s wpsc-country-dropdown" %4$s>',
 			/* %1$s */ esc_attr( $args['name'] ),
 			/* %2$s */ esc_attr( $args['id'] ),
 			/* %3$s */ esc_attr( $args['class'] ),
@@ -97,6 +128,13 @@ function wpsc_get_country_dropdown( $args = '' ) {
 	return $output;
 }
 
+/**
+ * Echo the country dropdown HTML, presumably for the checkout or customer profile pages
+ *
+ * @param 	string|array  	$args
+ *
+ * @return 	string			HTML representation of the dropdown
+ */
 function wpsc_country_dropdown( $args = '' ) {
 	echo wpsc_get_country_dropdown( $args );
 }

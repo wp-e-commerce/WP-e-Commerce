@@ -120,22 +120,6 @@ class wpsc_cart {
 		$delivery_region  = wpsc_get_customer_meta( 'shippingregion'  );
 		$billing_region   = wpsc_get_customer_meta( 'billingregion'   );
 
-		if ( ! $billing_country && ! $delivery_country ) {
-			$billing_country = $delivery_country = get_option( 'base_country' );
-			wpsc_update_customer_meta( 'billingcountry' , $billing_country  );
-		} elseif ( ! $billing_country ) {
-			$billing_country = $delivery_country;
-			wpsc_update_customer_meta( 'billingcountry' , $billing_country  );
-		} elseif ( ! $delivery_country ) {
-			$delivery_country = $billing_country;
-			wpsc_update_customer_meta( 'shippingcountry', $delivery_country );
-		}
-
-		if ( ! $billing_region && ! $delivery_region ) {
-			$billing_region = $delivery_region = get_option( 'base_region' );
-			wpsc_update_customer_meta( 'billingregion'  , $billing_region   );
-		}
-
 		$this->delivery_country = $delivery_country;
 		$this->selected_country = $billing_country ;
 		$this->delivery_region  = $delivery_region ;
@@ -359,10 +343,10 @@ class wpsc_cart {
 		}
 
 		if ( ( $this->shipping_quotes != null ) && ( array_search( $this->selected_shipping_option, array_keys( $this->shipping_quotes ) ) === false ) ) {
-			
+
 			$slice    = array_keys( array_slice( $this->shipping_quotes, 0, 1 ) );
 			$selected = array_pop( $slice );
-			
+
 			$this->selected_shipping_option = apply_filters( 'wpsc_default_shipping_quote', $selected, $this->shipping_quotes );
 		}
 	}

@@ -1,16 +1,55 @@
 <?php
 
+/**
+ * Control database upgrade to version 10
+ *
+ * @access private
+ * @since 3.8.14
+ *
+ */
 function _wpsc_db_upgrade_10() {
+	_wpsc_add_region_name_meta();
 	_wpsc_maybe_create_visitor_tables();
 	_wpsc_cleanup_visitor_meta_checkout_details();
 }
 
+/**
+ * 3.8.14 supports country meta and a feature that let's a countries regions be called by the
+ * proper name.  Here we initialize the values.
+ *
+ * @access private
+ * @since 3.8.14
+ *
+ */
+function _wpsc_add_region_name_meta() {
+	$wpsc_country = new WPSC_Country( 'US' );
+	$wpsc_country->set( 'region_is_called', __( 'state', 'wpsc' ) );
+
+	$wpsc_country = new WPSC_Country( 'CA' );
+	$wpsc_country->set( 'region_is_called', __( 'province', 'wpsc' ) );
+}
+
+/**
+ * 3.8.14 maintains visitor information in a visitors table, create it
+ *
+ * @access private
+ * @since 3.8.14
+ *
+ */
 function _wpsc_maybe_create_visitor_tables() {
 	_wpsc_create_visitor_table();
 	_wpsc_create_visitor_meta_table();
 	_wpsc_meta_migrate_anonymous_users();
 }
 
+/**
+ * starting in 3.8.14 visitors information belongs in the vistor table, not the users table, start
+ * the migration.  This migration could take a very long time so it's done as a cron
+ *
+ * @access private
+ * @since 3.8.14
+ *
+ */
 function _wpsc_meta_migrate_anonymous_users() {
 	global $wpdb;
 

@@ -1844,7 +1844,6 @@ function _wpsc_deprecated_javascript_localization_vars() {
 
 	$wpsc_deprecated_js_vars = array();
 
-	$wpsc_deprecated_js_vars['base_url'] 				= site_url(); //admin-legacy.js
 	$wpsc_deprecated_js_vars['WPSC_DIR_NAME'] 			= WPSC_DIR_NAME;
 	$wpsc_deprecated_js_vars['fileLoadingImage'] 		= WPSC_CORE_IMAGES_URL . '/loading.gif';
 	$wpsc_deprecated_js_vars['fileBottomNavCloseImage'] = WPSC_CORE_IMAGES_URL . '/closelabel.gif';
@@ -1926,6 +1925,16 @@ function wpsc_admin_dynamic_css() {
 <?php
 	}
 	exit();
+}
+
+/**
+ * everywhere else in the code we use "wpsc_ajax_action", not the plural, deprecate this version
+ * @deprecated 3.8.14
+ *
+ */
+if ( isset( $_REQUEST['wpsc_ajax_actions'] ) && 'update_location' == $_REQUEST['wpsc_ajax_actions'] ) {
+	_wpsc_deprecated_function( 'wpsc_ajax_actions', '3.8.14', 'wpsc_ajax_action' );
+	add_action( 'init', 'wpsc_update_location' );
 }
 
 if ( isset( $_REQUEST['wpsc_ajax_actions'] ) && 'update_location' == $_REQUEST['wpsc_ajax_actions'] ) {

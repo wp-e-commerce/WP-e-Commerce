@@ -41,6 +41,61 @@ function wpsc_is_shipping_details() {
 }
 
 /**
+ * Creates an array mapping from checkout item id to the item name in the field.  array is
+ * localized into the user javascript so that the javascript can find items using the well known names.
+ *
+ * In release 3.8.14 the unique key for a field is available in an element attribute
+ * called 'data-wpsc-meta-key'. Just in case someone out there has a highly customized
+ * checkout experience that doesn't use the WPeC core functions to create the controls
+ * using this map will maintain backwards compatibility.
+ *
+ * @access public
+ *
+ * @since 3.8.14
+ * @return (boolean)
+ */
+function _wpsc_create_checkout_unique_name_to_form_id_map() {
+	global $wpsc_checkout;
+
+	if ( empty( $wpsc_checkout ) ) {
+		$wpsc_checkout = new wpsc_checkout();
+	} else {
+		$wpsc_checkout->rewind_checkout_items();
+	}
+
+	$checkout_item_map = array();
+	while ( wpsc_have_checkout_items() ) {
+		$checkout_item = wpsc_the_checkout_item();
+
+		if ( ! empty( $checkout_item->unique_name ) ) {
+			$checkout_item_map[$wpsc_checkout->form_item_unique_name()] = $wpsc_checkout->form_element_id();
+		}
+	}
+
+	$wpsc_checkout->rewind_checkout_items();
+
+	return $checkout_item_map;
+
+}
+
+/**
+ * add checkout unique name to form id map to user javascript localizations
+ *
+ * @param array $localizations
+ *
+ * @since 3.8.14
+ *
+ * @return array $localizations
+ */
+function _wpsc_localize_checkout_item_name_to_from_id( $localizations ) {
+	$localizations['wpsc_checkout_unique_name_to_form_id_map'] = _wpsc_create_checkout_unique_name_to_form_id_map();
+	return $localizations;
+}
+
+add_filter( '_wpsc_javascript_localizations', '_wpsc_localize_checkout_item_name_to_from_id' );
+
+
+/**
  * returns the class for shipping and billing forms
  * @access public
  *
@@ -286,14 +341,15 @@ function wpsc_checkout_form_field() {
 	return $wpsc_checkout->form_field();
 }
 
-function wpsc_shipping_region_list( $selected_country, $selected_region, $shippingdetails = false ) {
+function wpsc_shipping_region_list( $selected_country, $selected_region, $shippingdetails = false, $id = 'region' ) {
 	$output = '';
 
 	$country = new WPSC_Country( $selected_country );
 	$regions = $country->get_regions();
 
+	$output .= "<select class=\"wpsc-visitor-meta\" data-wpsc-meta-key=\"shippingregion\" name=\"region\"  id=\"{$id}\" >\n\r";
+
 	if ( count( $regions ) > 0 ) {
-		$output .= "<select class=\"wpsc-visitor-meta\" data-wpsc-meta-key=\"shippingregion\" name=\"region\"  id=\"region\" >\n\r";
 		foreach ( $regions as $region_id => $region ) {
 			$selected = '';
 			if ( $selected_region == $region_id ) {
@@ -303,10 +359,10 @@ function wpsc_shipping_region_list( $selected_country, $selected_region, $shippi
 		}
 		$output .= '';
 
-		$output .= '</select>';
-	} else {
-		$output .= ' ';
 	}
+
+	$output .= '</select>';
+
 	return $output;
 }
 
@@ -324,14 +380,6 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 	$selected_country = wpsc_get_customer_meta( 'shippingcountry' );
 	$selected_region  = wpsc_get_customer_meta( 'shippingregion'  );
 
-	if ( empty( $selected_country ) )
-		$selected_country = esc_attr( get_option( 'base_country' ) );
-
-	if ( empty( $selected_region ) )
-		$selected_region = esc_attr( get_option( 'base_region' ) );
-
-	$country_data = WPSC_Countries::get_countries_array();
-
 	$acceptable_countries = wpsc_get_acceptable_countries();
 
 	$additional_attributes = 'data-wpsc-meta-key="shippingcountry" ' . $js;
@@ -344,11 +392,10 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 												'acceptable_ids'        => $acceptable_countries,
 												'selected'              => $selected_country,
 												'class'                 => 'wpsc-visitor-meta',
-												'placeholder'           => '',
 											)
 									);
 
-	$output .= wpsc_shipping_region_list( $selected_country, $selected_region, $shippingdetails );
+	$output .= wpsc_shipping_region_list( $selected_country, $selected_region, $shippingdetails, 'current_country_region' );
 
 	if ( isset( $_POST['wpsc_update_location'] ) && $_POST['wpsc_update_location'] == 'true' ) {
 		wpsc_update_customer_meta( 'update_location', true );
