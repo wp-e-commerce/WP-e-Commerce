@@ -7,7 +7,7 @@ if ( isset( $_GET['termsandconds'] ) && 'true' == $_GET['termsandconds'] )
 	add_action( 'init', 'wpsc_show_terms_and_conditions' );
 
 if ( isset( $_REQUEST['wpsc_action'] ) && ($_REQUEST['wpsc_action'] == 'submit_checkout') ) {
-	add_action( 'init', 'wpsc_submit_checkout', 10 );
+	add_action( 'init', 'wpsc_submit_checkout', 10, 0 );
 }
 
 if ( isset( $_REQUEST['wpsc_action'] ) && ($_REQUEST['wpsc_action'] == 'cart_html_page') )
