@@ -311,16 +311,18 @@ function wpsc_shipping_region_list( $selected_country, $selected_region, $shippi
 }
 
 function wpsc_shipping_country_list( $shippingdetails = false ) {
-	global $wpdb, $wpsc_shipping_modules, $wpsc_country_data;
+	global $wpsc_shipping_modules;
+
 	$js = '';
 	$output = '';
+
 	if ( ! $shippingdetails ) {
 		$output = "<input type='hidden' name='wpsc_ajax_action' value='update_location' />";
 		$js = '';
 	}
 
-	$selected_country = (string) wpsc_get_customer_meta( 'shippingcountry' );
-	$selected_region  = (string) wpsc_get_customer_meta( 'shippingregion'  );
+	$selected_country = wpsc_get_customer_meta( 'shippingcountry' );
+	$selected_region  = wpsc_get_customer_meta( 'shippingregion'  );
 
 	if ( empty( $selected_country ) )
 		$selected_country = esc_attr( get_option( 'base_country' ) );
@@ -328,11 +330,7 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 	if ( empty( $selected_region ) )
 		$selected_region = esc_attr( get_option( 'base_region' ) );
 
-	if ( empty( $wpsc_country_data ) ) {
-		$country_data = WPSC_Countries::get_countries_array();
-	} else {
-		$country_data = $wpsc_country_data;
-	}
+	$country_data = WPSC_Countries::get_countries_array();
 
 	$acceptable_countries = wpsc_get_acceptable_countries();
 

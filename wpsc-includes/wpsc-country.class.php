@@ -384,7 +384,7 @@ class WPSC_Country {
 	public function get_regions( $as_array = false ) {
 		$regions_list = $this->_regions->data();
 
-		usort( $regions_list, array( __CLASS__, '_compare_regions_by_name' ) );
+		uasort( $regions_list, array( __CLASS__, '_compare_regions_by_name' ) );
 
 		if ( $as_array ) {
 
@@ -420,10 +420,7 @@ class WPSC_Country {
 	 */
 	public function get_regions_array() {
 
-		$regions = $this->get_regions();
-		$json    = json_encode( $regions );
-		$regions = json_decode( $json, true );
-
+		$regions = $this->get_regions( true );
 		return $regions;
 	}
 

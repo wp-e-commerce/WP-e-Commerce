@@ -69,7 +69,7 @@
  */
 
 /**
- * description
+ * Our geography data class that handles access to the countries, regions and currency information
  *
  * @access public
  *
@@ -482,10 +482,10 @@ class WPSC_Countries {
 		}
 
 		if ( $sortbyname && ! empty( $countries ) ) {
-			usort( $countries, array( __CLASS__, '_compare_countries_by_name' ) );
+			uasort( $countries, array( __CLASS__, '_compare_countries_by_name' ) );
 		} else {
 			// countries should be sorted internally by id, but hust in case data was changed since the last data load
-			usort( $countries, array( __CLASS__, '_compare_countries_by_id' ) );
+			uasort( $countries, array( __CLASS__, '_compare_countries_by_id' ) );
 		}
 
 		return $countries;
