@@ -40,7 +40,7 @@ class WPSC_Region {
 
 		// if a country id or code is passed make sure we have a valid coutnry_id
 		if ( $country ) {
-			$country_id = WPSC_Countries::country_id( $country );
+			$country_id = WPSC_Countries::get_country_id( $country );
 		}
 
 		// if we are creating a region use the country_id we just validated and get the region code
@@ -53,11 +53,11 @@ class WPSC_Region {
 
 		// if we have both a country country id and a region id/code we can construct this object
 		if ( $country && $region_id_or_code ) {
-			$region_id = WPSC_Countries::region_id( $country_id, $region_id_or_code );
+			$region_id = WPSC_Countries::get_region_id( $country_id, $region_id_or_code );
 
 			if ( $country_id && $region_id ) {
-				$wpsc_country = new WPSC_country( $country_id );
-				$wpsc_region = WPSC_Countries::region( $country_id, $region_id );
+				$wpsc_country = new WPSC_Country( $country_id );
+				$wpsc_region  = WPSC_Countries::get_region( $country_id, $region_id );
 
 				if ( $wpsc_region ) {
 					$this->_code       = $wpsc_region->_code;
@@ -79,7 +79,7 @@ class WPSC_Region {
 	 *
 	 * @return string region name
 	 */
-	public function name() {
+	public function get_name() {
 		return $this->_name;
 	}
 
@@ -92,7 +92,7 @@ class WPSC_Region {
 	 *
 	 * @return int region id
 	 */
-	public function id() {
+	public function get_id() {
 		return $this->_id;
 	}
 
@@ -105,7 +105,7 @@ class WPSC_Region {
 	 *
 	 * @return string region code
 	 */
-	public function code() {
+	public function get_code() {
 		return $this->_code;
 	}
 
@@ -118,7 +118,7 @@ class WPSC_Region {
 	 *
 	 * @return float tax percentage
 	 */
-	public function tax() {
+	public function get_tax() {
 		return $this->_tax;
 	}
 
@@ -131,7 +131,7 @@ class WPSC_Region {
 	 *
 	 * @return void
 	 */
-	public function country_id() {
+	public function get_country_id() {
 		return $this->_country_id;
 	}
 

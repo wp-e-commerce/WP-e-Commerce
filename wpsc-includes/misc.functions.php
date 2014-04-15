@@ -35,22 +35,22 @@ function wpsc_find_purchlog_status_name( $purchlog_status ) {
  */
 function wpsc_get_state_by_id( $id, $return_value ) {
 
-	$region = new WPSC_Region( WPSC_Countries::country_id_from_region_id( $id ), $id );
+	$region = new WPSC_Region( WPSC_Countries::get_country_id_by_region_id( $id ), $id );
 
 	$value = '';
 
 	if ( $return_value == 'name' ) {
-		$value = $region->name();
+		$value = $region->get_name();
 	} elseif ( $return_value == 'code' ) {
-		$value = $region->code();
+		$value = $region->get_code();
 	}
 
 	return $value;
 }
 
 function wpsc_country_has_state( $country_code ){
-	global $wpdb;
-	$country_data = WPSC_Countries::country( $country_code, true ); // TODO this function does not seem to do what it's name indicates? What's up with that.
+
+	$country_data = WPSC_Countries::get_country( $country_code, true ); // TODO this function does not seem to do what it's name indicates? What's up with that.
 	return $country_data;
 }
 
@@ -165,11 +165,11 @@ function wpsc_get_country_form_id_by_type($type){
 
 function wpsc_get_country( $country_code ) {
 	$wpsc_country = new WPSC_Country( $country_code );
-	return $wpsc_country->name();
+	return $wpsc_country->get_name();
 }
 
 function wpsc_get_region( $region_id ) {
-	$country_id = WPSC_Countries::country_id_from_region_id( $region_id );
+	$country_id = WPSC_Countries::get_country_id_by_region_id( $region_id );
 	$wpsc_region = new WPSC_Region( $country_id, $region_id );
 	return $wpsc_region->name();
 }

@@ -290,7 +290,7 @@ function wpsc_shipping_region_list( $selected_country, $selected_region, $shippi
 	$output = '';
 
 	$country = new WPSC_Country( $selected_country );
-	$regions = $country->regions();
+	$regions = $country->get_regions();
 
 	if ( count( $regions ) > 0 ) {
 		$output .= "<select class=\"wpsc-visitor-meta\" data-wpsc-meta-key=\"shippingregion\" name=\"region\"  id=\"region\" >\n\r";
@@ -299,7 +299,7 @@ function wpsc_shipping_region_list( $selected_country, $selected_region, $shippi
 			if ( $selected_region == $region_id ) {
 				$selected = "selected='selected'";
 			}
-			$output .= "<option $selected value='{$region_id}'>" . esc_attr( htmlspecialchars( $region->name() ) ). "</option>\n\r";
+			$output .= "<option $selected value='{$region_id}'>" . esc_attr( htmlspecialchars( $region->get_name() ) ). "</option>\n\r";
 		}
 		$output .= '';
 
@@ -329,7 +329,7 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 		$selected_region = esc_attr( get_option( 'base_region' ) );
 
 	if ( empty( $wpsc_country_data ) ) {
-		$country_data = WPSC_Countries::countries_array();
+		$country_data = WPSC_Countries::get_countries_array();
 	} else {
 		$country_data = $wpsc_country_data;
 	}

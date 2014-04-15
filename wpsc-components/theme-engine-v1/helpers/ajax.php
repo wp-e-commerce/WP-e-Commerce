@@ -7,7 +7,7 @@ if ( isset( $_GET['termsandconds'] ) && 'true' == $_GET['termsandconds'] )
 	add_action( 'init', 'wpsc_show_terms_and_conditions' );
 
 if ( isset( $_REQUEST['wpsc_action'] ) && ($_REQUEST['wpsc_action'] == 'submit_checkout') ) {
-	add_action( 'init', 'wpsc_submit_checkout', 10, 0 );
+	add_action( 'init', 'wpsc_submit_checkout', 10 );
 }
 
 if ( isset( $_REQUEST['wpsc_action'] ) && ($_REQUEST['wpsc_action'] == 'cart_html_page') )
@@ -498,11 +498,11 @@ function wpsc_update_location() {
 		$shipping_zipcode = $_POST['zipcode'];
 	}
 
-	$delivery_region_count = WPSC_Countries::region_count( $delivery_country );
+	$delivery_region_count = WPSC_Countries::get_region_count( $delivery_country );
 	if ( $delivery_region_count < 1 )
 		$delivery_region = '';
 
-	$selected_region_count = WPSC_Countries::region_count( $billing_country );
+	$selected_region_count = WPSC_Countries::get_region_count( $billing_country );
 	if ( $selected_region_count < 1 )
 		$billing_region = '';
 
@@ -623,8 +623,8 @@ function wpsc_submit_checkout( $collected_data = true ) {
 	}
 
 	$wpsc_country = new WPSC_Country( wpsc_get_customer_meta( 'shippingcountry' ) );
-	$country_id = $wpsc_country->id();
-	$country_name = $wpsc_country->name();
+	$country_id   = $wpsc_country->get_id();
+	$country_name = $wpsc_country->get_name();
 
 	foreach ( $wpsc_cart->cart_items as $cartitem ) {
 		if ( ! empty( $cartitem->meta[0]['no_shipping'] ) ) continue;
@@ -879,7 +879,7 @@ function wpsc_change_tax() {
 	if ( $form_selected_country != null && $onchange_function != null ) {
 
 		$checkoutfields = 'set_shipping_country' == $onchange_function;
-		$region_list = WPSC_Countries_list( $form_id, false, $form_selected_country, $form_selected_region, $form_id, $checkoutfields );
+		$region_list = wpsc_country_region_list( $form_id, false, $form_selected_country, $form_selected_region, $form_id, $checkoutfields );
 
 		if ( $region_list != null ) {
 			$json_response['region_list'] = str_replace( array( "\n", "\r" ), '', $region_list );

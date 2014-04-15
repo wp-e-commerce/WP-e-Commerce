@@ -155,7 +155,7 @@ class flatrate {
 
 		if (get_option('base_country') != $country) {
 
-			$results = WPSC_Countries::continent( $country );
+			$results = WPSC_Countries::get_continent( $country );
 
 			$flatrates = get_option('flat_rates');
 

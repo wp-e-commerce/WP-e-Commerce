@@ -141,7 +141,7 @@ function wpsc_get_acceptable_countries() {
 		$target_market_ids = $target_market_ids[0];
 	}
 
-	$country_data = WPSC_Countries::countries_array();
+	$country_data = WPSC_Countries::get_countries_array();
 
 	$have_target_market = $have_target_market && count( $country_data ) != count( $target_market_ids );
 	$GLOBALS['wpsc_country_data'] = $country_data; // TODO Is this ever used?
@@ -334,12 +334,12 @@ class wpsc_checkout {
 				break;
 
 			case "country":
-				$output = WPSC_Countries_list( $this->checkout_item->id, false, $billing_country, $billing_region, $this->form_element_id() );
+				$output = wpsc_country_region_list( $this->checkout_item->id, false, $billing_country, $billing_region, $this->form_element_id() );
 				break;
 
 			case "delivery_country":
 				$checkoutfields = true;
-				$output = WPSC_Countries_list( $this->checkout_item->id, false, $delivery_country, $delivery_region, $this->form_element_id(), $checkoutfields );
+				$output = wpsc_country_region_list( $this->checkout_item->id, false, $delivery_country, $delivery_region, $this->form_element_id(), $checkoutfields );
 				break;
 
 			case "select":

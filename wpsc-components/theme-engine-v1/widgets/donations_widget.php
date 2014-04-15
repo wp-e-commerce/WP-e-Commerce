@@ -152,7 +152,7 @@ function wpsc_donations( $args = null ) {
 			// Get currency options
 			$currency_sign_location = get_option( 'currency_sign_location' );
 			$currency_type = get_option( 'currency_type' );
-			WPSC_Countries::currency_symbol( $currency_type );
+			WPSC_Countries::get_currency_symbol( $currency_type );
 			$price = get_post_meta(  $product['ID'] , '_wpsc_price', true );
 			// Output
 			$output .= "<strong>" . $product['post_title'] . "</strong><br />";

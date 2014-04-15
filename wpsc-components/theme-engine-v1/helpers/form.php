@@ -13,7 +13,7 @@ function nzshpcrt_region_list( $selected_country = null, $selected_region = null
 		$selected_region = get_option( 'base_region' );
 
 	$output = "";
-	$region_list = WPSC_Countries::regions( $selected_country, true );
+	$region_list = WPSC_Countries::get_regions( $selected_country, true );
 
 	if ( $region_list != null ) {
 		foreach ( $region_list as $region ) {

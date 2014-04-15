@@ -38,11 +38,11 @@ function wpsc_currency_display( $price_in, $args = null ) {
 
 		// TODO can deprecate this caching because the WPSC_Countries class already caches the data
 		if ( ! $wpsc_currency_data = wp_cache_get( $currency_type, 'wpsc_currency_id' ) ) {
-			$wpsc_currency_data = WPSC_Countries::currency_data( $currency_type, true );
+			$wpsc_currency_data = WPSC_Countries::get_currency_data( $currency_type, true );
 			wp_cache_set( $currency_type, $wpsc_currency_data, 'wpsc_currency_id' );
 		}
 	} elseif ( ! $wpsc_currency_data = wp_cache_get( $query['isocode'], 'wpsc_currency_isocode' ) ) {
-		$wpsc_currency_data = WPSC_Countries::currency_data( $currency_type, true );
+		$wpsc_currency_data = WPSC_Countries::get_currency_data( $currency_type, true );
 		wp_cache_set( $query['isocode'], $wpsc_currency_data, 'wpsc_currency_isocode' );
 	}
 
@@ -167,7 +167,7 @@ function wpsc_decrement_claimed_stock($purchase_log_id) {
 */
 function wpsc_get_currency_symbol(){
 	$currency_type = get_option( 'currency_type' );
-	$wpsc_currency_data = WPSC_Countries::currency_symbol( $currency_type );
+	$wpsc_currency_data = WPSC_Countries::get_currency_symbol( $currency_type );
 	return $wpsc_currency_data;
 }
 

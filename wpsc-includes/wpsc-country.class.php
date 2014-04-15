@@ -10,23 +10,6 @@
 class WPSC_Country {
 
 	/**
-	 * A country's public properties
-	 *
-	 * @access public
-	 *
-	 * @since 3.8.14
-	 *
-	 */
-
-	/*****
-	 * No public properties, so you can stop looking for them now :)
-	 * Access information about the country through the methods provided.
-	 *
-	 * If your code desires to use the individual properties get all of the properties using the as_array()
-	 * method, maybe even 'explode' it to get individual variables each with the property value
-	 *****/
-
-	/**
 	 * a country's constructor
 	 *
 	 * @access public
@@ -39,7 +22,7 @@ class WPSC_Country {
 	 *
 	 * @return object WPSC_Country
 	 */
-	public function __construct( $country, $deprecated_paramater_col = null ) {
+	public function __construct( $country, $deprecated = null ) {
 
 		if ( $country ) {
 
@@ -52,9 +35,9 @@ class WPSC_Country {
 			}
 
 			// make sure we have a valid country id
-			$country_id = WPSC_Countries::country_id( $country_id_or_isocode );
+			$country_id = WPSC_Countries::get_country_id( $country_id_or_isocode );
 			if ( $country_id ) {
-				$wpsc_country = WPSC_Countries::country( $country_id );
+				$wpsc_country = WPSC_Countries::get_country( $country_id );
 				foreach ( $wpsc_country as $property => $value ) {
 					// copy the properties in this copy of the country
 					$this->$property = $value;
@@ -67,12 +50,12 @@ class WPSC_Country {
 			$this->_regions = new WPSC_Data_Map();
 		}
 
-		if ( empty( $this->_region_id_from_region_code ) ){
-			$this->_region_id_from_region_code = new WPSC_Data_Map();
+		if ( empty( $this->_region_id_by_region_code ) ){
+			$this->_region_id_by_region_code = new WPSC_Data_Map();
 		}
 
-		if ( empty( $this->_region_id_from_region_name ) ){
-			$this->_region_id_from_region_name = new WPSC_Data_Map();
+		if ( empty( $this->_region_id_by_region_name ) ){
+			$this->_region_id_by_region_name = new WPSC_Data_Map();
 		}
 
 
@@ -87,9 +70,9 @@ class WPSC_Country {
 		// TODO: This processing is added at version 3.8.14 and intended to be removed after a reasonable number
 		// of interim releases. See GitHub Issue https://github.com/wp-e-commerce/WP-e-Commerce/issues/1016
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////
-		if ( ! empty ( $deprecated_paramater_col) ) {
+		if ( ! empty ( $deprecated ) ) {
 			if ( defined( 'WPSC_LOAD_DEPRECATED' ) && WPSC_LOAD_DEPRECATED ) {
-				_wpsc_deprecated_argument( __FUNCTION__, '3.8.14',$this->_parameter_no_longer_used_message( 'col', __FUNCTION__ ) );
+				_wpsc_deprecated_argument( __FUNCTION__, '3.8.14', $this->_parameter_no_longer_used_message( 'col', __FUNCTION__ ) );
 			}
 		}
 	}
@@ -103,7 +86,7 @@ class WPSC_Country {
 	 *
 	 * @return string 	nation name
 	 */
-	public function name() {
+	public function get_name() {
 		return $this->_name;
 	}
 
@@ -116,7 +99,7 @@ class WPSC_Country {
 	 *
 	 * @return void
 	 */
-	public function id() {
+	public function get_id() {
 		return $this->_id;
 	}
 
@@ -129,7 +112,7 @@ class WPSC_Country {
 	 *
 	 * @return string country ISO code
 	 */
-	public function isocode() {
+	public function get_isocode() {
 		return $this->_isocode;
 	}
 
@@ -142,7 +125,7 @@ class WPSC_Country {
 	 *
 	 * @return WPSC_Currency 		country's currency
 	 */
-	public function currency() {
+	public function get_currency() {
 		return new WPSC_Currency( $this->_currency_name );
 	}
 
@@ -155,7 +138,7 @@ class WPSC_Country {
 	 *
 	 * @return string 	nation's (country's) currency name
 	 */
-	public function currency_name() {
+	public function get_currency_name() {
 		return $this->_currency_name;
 	}
 
@@ -168,7 +151,7 @@ class WPSC_Country {
 	 *
 	 * @return string	currency symbol
 	 */
-	public function currency_symbol() {
+	public function get_currency_symbol() {
 		return $this->_currency_symbol;
 	}
 
@@ -181,7 +164,7 @@ class WPSC_Country {
 	 *
 	 * @return string 	nation's (country's) currency symbol HTML
 	 */
-	public function currency_symbol_html() {
+	public function get_currency_symbol_html() {
 		return $this->_currency_symbol_html;
 	}
 
@@ -194,7 +177,7 @@ class WPSC_Country {
 	 *
 	 * @return string 	nation's (country's) currency code
 	 */
-	public function currency_code() {
+	public function get_currency_code() {
 		return $this->_currency_code;
 	}
 
@@ -225,8 +208,7 @@ class WPSC_Country {
 	 * @return boolean	true if the region is valid for the country, false otherwise
 	 */
 	public function has_region( $region ) {
-		$region = $this->region( $region );
-		return $region != false;
+		return false !== $this->get_region( $region );
 	}
 
 	/**
@@ -238,7 +220,7 @@ class WPSC_Country {
 	 *
 	 * @return float	nations tax rate
 	 */
-	public function tax() {
+	public function get_tax() {
 		return $this->_tax;
 	}
 
@@ -253,7 +235,7 @@ class WPSC_Country {
 	 *
 	 * @return string	nation's continent
 	 */
-	public function continent() {
+	public function get_continent() {
 		return $this->_continent;
 	}
 
@@ -266,7 +248,7 @@ class WPSC_Country {
 	 *
 	 * @return boolean true if the country should be displayed, false otherwise
 	 */
-	public function visible() {
+	public function is_visible() {
 		return $this->_visible;
 	}
 
@@ -349,7 +331,7 @@ class WPSC_Country {
 	 *
 	 * @return WPSC_Region|false The region, or false if the region code is not valid for the country
 	 */
-	public function region( $region ) {
+	public function get_region( $region ) {
 
 		$wpsc_region = false;
 
@@ -359,11 +341,11 @@ class WPSC_Country {
 				$wpsc_region = $this->_regions->value( $region_id, $wpsc_region );
 			} else {
 				// check to see if it is a valid region code
-				if ( $region_id = $this->_region_id_from_region_code->value( $region ) ) {
+				if ( $region_id = $this->_region_id_by_region_code->value( $region ) ) {
 					$wpsc_region = $this->_regions->value( $region_id, $wpsc_region );
 				} else {
 					// check to see if we have a valid region name
-					if ( $region_id = $this->_region_id_from_region_name->value( strtolower( $region ) ) ) {
+					if ( $region_id = $this->_region_id_by_region_name->value( strtolower( $region ) ) ) {
 						$wpsc_region = $this->_regions->value( $region_id, $wpsc_region );
 					}
 				}
@@ -384,7 +366,7 @@ class WPSC_Country {
 	 *
 	 * @return WPSC_Region
 	 */
-	public function region_count() {
+	public function get_region_count() {
 		return $this->_regions->count();
 	}
 
@@ -399,7 +381,7 @@ class WPSC_Country {
 	 *
 	 * @return array of WPSC_Region objects, indexed by region id, sorted by region
 	 */
-	public function regions( $as_array = false ) {
+	public function get_regions( $as_array = false ) {
 		$regions_list = $this->_regions->data();
 
 		usort( $regions_list, array( __CLASS__, '_compare_regions_by_name' ) );
@@ -436,10 +418,10 @@ class WPSC_Country {
 	 *
 	 * @return array of WPSC_Region
 	 */
-	public function regions_array() {
+	public function get_regions_array() {
 
-		$regions = $this->regions();
-		$json  = json_encode( $regions );
+		$regions = $this->get_regions();
+		$json    = json_encode( $regions );
 		$regions = json_decode( $json, true );
 
 		return $regions;
@@ -455,7 +437,7 @@ class WPSC_Country {
 	 *
 	 * @return string region code
 	 */
-	public function region_code_from_region_id( $region_id ) {
+	public function get_region_code_by_region_id( $region_id ) {
 		$region_code = false;
 
 		if ( isset( $this->_regions[$region_id] ) ) {
@@ -476,11 +458,11 @@ class WPSC_Country {
 	 *
 	 * @return int region id
 	 */
-	public function region_id_from_region_code( $region_code ) {
+	public function get_region_id_by_region_code( $region_code ) {
 		$region_id = false;
 
 		if ( $region_code ) {
-			$region_id = $this->_region_id_from_region_code->value( $region_code, $region_id );
+			$region_id = $this->_region_id_by_region_code->value( $region_code, $region_id );
 		}
 
 		return $region_id;
@@ -497,11 +479,11 @@ class WPSC_Country {
 	 *
 	 * @return int region id
 	 */
-	public function region_id_from_region_name( $region_name ) {
+	public function get_region_id_by_region_name( $region_name ) {
 		$region_id = false;
 
 		if ( $region_name ) {
-			$region_id = $this->_region_id_from_region_name->value( strtolower( $region_name ) );
+			$region_id = $this->_region_id_by_region_name->value( strtolower( $region_name ) );
 		}
 
 		return $region_id;
@@ -521,19 +503,19 @@ class WPSC_Country {
 	 */
 	public function _copy_properties_from_stdclass( $country ) {
 
-		$this->_id 								= $country->id;
-		$this->_name 							= $country->country;
-		$this->_isocode 						= $country->isocode;
-		$this->_currency_name					= $country->currency;
-		$this->_has_regions 					= $country->has_regions;
-		$this->_tax 							= $country->tax;
-		$this->_continent 						= $country->continent;
-		$this->_visible 						= $country->visible;
+		$this->_id 			   = $country->id;
+		$this->_name 		   = $country->country;
+		$this->_isocode 	   = $country->isocode;
+		$this->_currency_name  = $country->currency;
+		$this->_has_regions    = $country->has_regions;
+		$this->_tax 		   = $country->tax;
+		$this->_continent 	   = $country->continent;
+		$this->_visible        = $country->visible;
 
 		// TODO: perhaps the currency information embedded in a country should reference a WPSC_Currency object by code?
-		$this->_currency_symbol 				= $country->symbol;
-		$this->_currency_symbol_html			= $country->symbol_html;
-		$this->_currency_code					= $country->code;
+		$this->_currency_symbol 	 = $country->symbol;
+		$this->_currency_symbol_html = $country->symbol_html;
+		$this->_currency_code		 = $country->code;
 
 		if ( property_exists( $country, 'region_id_to_region_code_map' ) ) {
 			$this->_region_id_to_region_code_map 	= $country->region_id_to_region_code_map;
@@ -656,7 +638,7 @@ class WPSC_Country {
 	 * @return 0 if country names are the same, -1 if country name of a comes before country b, 1 otherwise
 	 */
 	private static function _compare_regions_by_name( $a, $b ) {
-		return strcmp( $a->name(), $b->name() );
+		return strcmp( $a->get_name(), $b->name() );
 	}
 
 	/**
@@ -671,20 +653,20 @@ class WPSC_Country {
 	 *
 	 * @return void
 	 */
-	public $_id 							= null;
-	public $_name 							= null;
-	public $_isocode 						= null;
-	public $_currency_name 				= '';
-	public $_currency_symbol 				= '';
-	public $_currency_symbol_html 			= '';
-	public $_code 							= '';
-	public $_has_regions 					= false;
-	public $_tax 							= '';
-	public $_continent 					= '';
-	public $_visible 						= true;
-	public $_region_id_from_region_code 	= null;
-	public $_region_id_from_region_name		= null;
-	public $_regions 	                    = null;
+	public $_id = null;
+	public $_name      = null;
+	public $_isocode = null;
+	public $_currency_name = '';
+	public $_currency_symbol = '';
+	public $_currency_symbol_html = '';
+	public $_code = '';
+	public $_has_regions = false;
+	public $_tax = '';
+	public $_continent = '';
+	public $_visible = true;
+	public $_region_id_by_region_code  = null;
+	public $_region_id_by_region_name	 = null;
+	public $_regions 	                  = null;
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// As a result of merging the legacy WPSC_Country class we no longer need several of the public class
@@ -719,11 +701,11 @@ class WPSC_Country {
 	public static function get_all( $include_invisible = false ) {
 
 		$function = __CLASS__ . '::' . __FUNCTION__ . '()';
-		$replacement = 'WPSC_Countries::country()';
+		$replacement = 'WPSC_Countries::get_country()';
 		_wpsc_deprecated_function( $function, '3.8.14', $replacement );
 
 		if ( defined( 'WPSC_LOAD_DEPRECATED' ) && WPSC_LOAD_DEPRECATED ) {
-			$list = WPSC_Countries::countries_array( WPSC_Countries::INCLUDE_INVISIBLE );
+			$list = WPSC_Countries::get_countries_array( WPSC_Countries::INCLUDE_INVISIBLE );
 			return apply_filters( 'wpsc_country_get_all_countries', $list );
 		}
 	}
@@ -734,7 +716,7 @@ class WPSC_Country {
 	public static function get_cache( $value = null, $col = 'id' ) {
 
 		$function = __CLASS__ . '::' . __FUNCTION__ . '()';
-		$replacement = 'WPSC_Countries::country()';
+		$replacement = 'WPSC_Countries::get_country()';
 		_wpsc_deprecated_function( $function, '3.8.14', $replacement );
 
 		if ( defined( 'WPSC_LOAD_DEPRECATED' ) && WPSC_LOAD_DEPRECATED ) {
@@ -747,7 +729,7 @@ class WPSC_Country {
 				return false;
 			}
 
-			return WPSC_Countries::country( $value, WPSC_Countries::RETURN_AN_ARRAY );
+			return WPSC_Countries::get_country( $value, WPSC_Countries::RETURN_AN_ARRAY );
 		}
 	}
 

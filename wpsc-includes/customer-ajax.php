@@ -395,7 +395,7 @@ function _wpsc_update_customer_shippingregion( $response, $meta_key, $meta_value
 
 	$region = new WPSC_Region( wpsc_get_customer_meta( 'shippingcountry' ), $meta_value );
 	if ( $region ) {
-		wpsc_update_customer_meta( 'shippingstate', $region->name() );
+		wpsc_update_customer_meta( 'shippingstate', $region->get_name() );
 	}
 
 	if ( ! isset( $response['replacements'] ) ) {

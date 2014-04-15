@@ -93,7 +93,7 @@ class wpec_taxes {
 
 		//first check if the region given is part of the country
 		if ( ! empty( $region_code ) ) {
-			$region = $country->region( $region_code );
+			$region = $country->get_region( $region_code );
 			if ( ! $region ) {
 				//reset region code if region provided not in country provided
 				$region_code = '';
@@ -328,7 +328,7 @@ class wpec_taxes {
 
 		$wpsc_country = new WPSC_Country( $country );
 
-		$regions = $wpsc_country->regions_array();
+		$regions = $wpsc_country->get_regions_array();
 
 		if ( isset( $country ) && 'all-markets' == $country ) {
 			return;

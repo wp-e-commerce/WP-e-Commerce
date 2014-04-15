@@ -764,11 +764,11 @@ class ash_ups {
 		// If the region code is provided via a form post use it!
 		if ( isset( $_POST['region'] ) && ! empty( $_POST['region'] ) ) {
 
-			$country_id = WPSC_Countries::country_id_from_region_id( $region_id );
+			$country_id = WPSC_Countries::get_country_id_by_region_id( $region_id );
 
 			if ( $country_id ) {
 				$region = new WPSC_Region( $country_id, $region_id );
-				$args['dest_state'] = $region->name();
+				$args['dest_state'] = $region->get_name();
 			} else {
 				$args['dest_state'] = '';
 			}
@@ -824,7 +824,7 @@ class ash_ups {
 		$args['DropoffType']       = $wpsc_ups_settings['DropoffType'];
 		$args['packaging']         = $wpsc_ups_settings['48_container'];
 		// Preferred Currency to display
-		$currency_data = WPSC_Countries::currency_code( get_option( 'currency_type' ) );
+		$currency_data = WPSC_Countries::get_currency_code( get_option( 'currency_type' ) );
 		if ( ! empty( $currency_data ) ) {
 			$args['currency'] = $currency_data;
 		} else {

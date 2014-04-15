@@ -347,7 +347,7 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 	function get_local_currency_code() {
 		if ( empty( $this->local_currency_code ) ) {
 			global $wpdb;
-			$this->local_currency_code = WPSC_Countries::currency_code( get_option( 'currency_type' ) );
+			$this->local_currency_code = WPSC_Countries::get_currency_code( get_option( 'currency_type' ) );
 		}
 
 		return $this->local_currency_code;
@@ -379,7 +379,7 @@ function wpsc_paypal_express_convert( $amt ) {
 	if ( empty( $rate ) ) {
 		$rate = 1;
 		if ( empty( $local_currency_code ) ) {
-			$local_currency_code = WPSC_Countries::currency_code( get_option( 'currency_type' ) );
+			$local_currency_code = WPSC_Countries::get_currency_code( get_option( 'currency_type' ) );
 		}
 		if ( empty( $paypal_currency_code ) ) {
 			global $wpsc_gateways;
@@ -514,7 +514,7 @@ function form_paypal_express() {
   	</tr>\n";
 
 	$paypal_ipn = get_option( 'paypal_ipn' );
-	$store_currency_code = WPSC_Countries::currency_code( absint( get_option( 'currency_type' ) ) );
+	$store_currency_code = WPSC_Countries::get_currency_code( absint( get_option( 'currency_type' ) ) );
 
 	$current_currency = get_option( 'paypal_curcode' );
 
@@ -546,7 +546,7 @@ function form_paypal_express() {
 		// why are currecies of inactive countries being returned??
 		//$old_currency_list = $wpdb->get_results( "SELECT DISTINCT `code`, `currency` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `code` IN ('" . implode( "','", $paypal_currency_list ) . "')", ARRAY_A );
 		$paypal_currency_list = array_map( 'esc_sql', $wpsc_gateways['wpsc_merchant_paypal_express']['supported_currencies']['currency_list'] );
-		$currency_list = WPSC_Countries::currencies( true );
+		$currency_list = WPSC_Countries::get_currencies( true );
 		$currency_codes_in_commmon = array_intersect( array_keys( $currency_list ), $paypal_currency_list );
 
 		foreach ( $currency_codes_in_commmon as $currency_code ) {
@@ -584,7 +584,7 @@ function form_paypal_express() {
 
 function wpsc_get_paypal_currency_code() {
 	global $wpdb, $wpsc_gateways;
-	$paypal_currency_code = WPSC_Countries::currency_code( get_option( 'currency_type' ) );
+	$paypal_currency_code = WPSC_Countries::get_currency_code( get_option( 'currency_type' ) );
 	if ( ! in_array( $paypal_currency_code, $wpsc_gateways['wpsc_merchant_paypal_express']['supported_currencies']['currency_list'] ) )
 		$paypal_currency_code = get_option( 'paypal_curcode', 'USD' );
 

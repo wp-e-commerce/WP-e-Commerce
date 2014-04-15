@@ -405,7 +405,7 @@ class wpsc_cart {
 	function get_tax_rate() {
 		$country = new WPSC_Country( get_option( 'base_country' ) );
 
-		$country_data = WPSC_Countries::country( get_option( 'base_country' ), true );
+		$country_data = WPSC_Countries::get_country( get_option( 'base_country' ), true );
 		$add_tax = false;
 
 		if ( $this->selected_country == get_option( 'base_country' ) ) {
@@ -449,10 +449,10 @@ class wpsc_cart {
 
 		if ( $add_tax == true ) {
 			if ( $country->has_regions() ) {
-				$region = $country->region( $tax_region );
-				$tax_percentage = $region->tax();
+				$region = $country->get_region( $tax_region );
+				$tax_percentage = $region->get_tax();
 			} else {
-				$tax_percentage = $country->tax();
+				$tax_percentage = $country->get_tax();
 			}
 		} else {
 			// no tax charged = tax equal to 0%

@@ -206,7 +206,7 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 				</td>
 			</tr>
 			<?php
-				$currency_data = WPSC_Countries::currency_data( get_option( 'currency_type' ), true );
+				$currency_data = WPSC_Countries::get_currency_data( get_option( 'currency_type' ), true );
 				if ( $currency_data['symbol'] != '' ) {
 					$currency_sign = $currency_data['symbol_html'];
 				} else {

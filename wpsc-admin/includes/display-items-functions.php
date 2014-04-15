@@ -140,8 +140,8 @@ function wpsc_price_control_forms() {
 	$currency_type = get_option( 'currency_type' );
 	$country = new WPSC_Country( $currency_type );
 
-	$ct_code = $country->currency_code();		// Country name
-	$ct_symb = $country->currency_symbol();	// Country symbol
+	$ct_code = $country->get_currency_code();	// Country name
+	$ct_symb = $country->get_currency_symbol();	// Country symbol
 
 	$price 		= $product_data['meta']['_wpsc_price'];
 	$sale_price = $product_data['meta']['_wpsc_special_price'];
@@ -694,7 +694,7 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 			$currency_type = get_option( 'currency_type' );
 			$country = new WPSC_Country( $currency_type );
 
-			$ct_symb = $country->currency_symbol_html();
+			$ct_symb = $country->get_currency_symbol_html();
 		?>
 
 		<div class="wpsc-product-shipping-section wpsc-product-shipping-flat-rate">

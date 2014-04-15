@@ -32,7 +32,7 @@ class WPSC_Currency {
 	public function __construct( $code, $symbol = null, $symbol_html = null, $name = null ) {
 
 		// if all parameters are specified we are trying to make a new currency object
-		if ( ! empty ( $code ) && ( ( $symbol != null ) || ( $symbol_html != null ) || ( $name != null ) ) ) {
+		if ( ! empty( $code ) && ( ( $symbol != null ) || ( $symbol_html != null ) || ( $name != null ) ) ) {
 			// Create a new currency object
 			$this->code        = $code;
 			$this->symbol      = $symbol;
@@ -40,7 +40,7 @@ class WPSC_Currency {
 			$this->name        = $name;
 		} else {
 			// if only code is specified the constructor is typing to get the information about an existing currency
-			$wpsc_currency = WPSC_Countries::currency( $code );
+			$wpsc_currency = WPSC_Countries::get_currency( $code );
 
 			$this->code        = $wpsc_currency->code;
 			$this->symbol      = $wpsc_currency->symbol;

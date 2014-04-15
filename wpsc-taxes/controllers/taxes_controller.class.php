@@ -604,7 +604,7 @@ class wpec_taxes_controller {
 								$region_name = 'All Markets';
 							} else {
 								$region = new WPSC_Region( $tax_rate['country_code'], $tax_rate['region_code'] );
-								$region_name = $region->name();
+								$region_name = $region->get_name();
 							}
 
 							echo $this->wpec_taxes_build_select_options(
