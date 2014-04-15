@@ -17,12 +17,16 @@ function _wpsc_action_update_product_stats( $log_id, $new_status, $old_status, $
 	$new_status_completed = $log->is_transaction_completed();
 	$old_status_completed = WPSC_Purchase_Log::is_order_status_completed( $old_status );
 
-	// if the order went through without any trouble, then it's a positive thing!
-	if ( $new_status_completed && ! $old_status_completed )
+	if ( $new_status_completed && ! $old_status_completed ) {
+		// if the order went through without any trouble, then it's a positive thing!
 		$yay_or_boo = 1;
-	// if the order is declined or invalid, sad face :(
-	elseif ( ! $new_status_completed && $old_status_completed )
+	} elseif ( ! $new_status_completed && $old_status_completed ) {
+		// if the order is declined or invalid, sad face :(
 		$yay_or_boo = -1;
+	} else {
+		// Not one of the above options then we will be indifferent
+		$yay_or_boo = 0;
+	}
 
 	// this dramatic mood swing affects the stats of each products in the cart
 	foreach ( $cart_contents as $cart_item ) {
