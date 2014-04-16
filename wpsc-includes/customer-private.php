@@ -167,19 +167,39 @@ function _wpsc_create_customer_id_cookie( $id, $fake_it = false ) {
 	do_action( '_wpsc_create_customer_id_cookie', $id, $fake_it );
 
 	$expire = time() + WPSC_CUSTOMER_DATA_EXPIRATION; // valid for 48 hours
-	$data   = $id . $expire;
 
-	$key = hash_hmac( 'md5', _wpsc_visitor_security_key( $id ) . '|' . $expire, WPSC_SALT );
+	$security_key = _wpsc_visitor_security_key( $id );
 
-	$hash   = hash_hmac( 'md5', $data, $key );
-	$cookie = $id . '|' . $expire . '|' . $hash;
+	$visitor_hash = _wpsc_get_visitor_hash( $id, $expire, $security_key );
+
+	$cookie = $id . '|' . $expire . '|' . $visitor_hash;
 
 	// store ID, expire and hash to validate later
 	if ( headers_sent() || $fake_it ) {
 		$_COOKIE[ WPSC_CUSTOMER_COOKIE ] = $cookie;
 	} else {
 		_wpsc_set_customer_cookie( $cookie, $expire );
+		$_COOKIE[ WPSC_CUSTOMER_COOKIE ] = $cookie;
 	}
+}
+
+/**
+ * Compute the security hash for a WPeC visitor based on the given parameters
+ *
+ * @access private
+ *
+ * @since 3.8.14
+ *
+ * @param int		$visitor_id 			id of the visitor
+ * @param int		$exirpation				unix timestamp being attached to the visitor
+ * @param string	$visitor_security_key	random string generated at the time the vistior was created, and stored with the visitor profile
+ *
+ * @return string  					security hash
+ */
+function _wpsc_get_visitor_hash( $visitor_id, $expiration, $visitor_security_key ) {
+	$second_hash_op_key = hash_hmac( 'md5', $visitor_security_key, WPSC_SALT );
+	$visitor_hash = hash_hmac( 'md5', $visitor_id . $expiration , $second_hash_op_key );
+	return $visitor_hash;
 }
 
 /**
@@ -198,7 +218,8 @@ function _wpsc_validate_customer_cookie() {
 	}
 
 	$cookie = $_COOKIE[ WPSC_CUSTOMER_COOKIE ];
-	list( $id, $expire, $hash ) = $x = explode( '|', $cookie );
+
+	list( $id, $expire, $visitor_hash_from_cookie ) = $x = explode( '|', $cookie );
 	$data = $id . $expire;
 
 	// check to see if the ID is valid, it must be an integer, empty test is because old versions of php
@@ -209,17 +230,17 @@ function _wpsc_validate_customer_cookie() {
 
 		// if a user is found keep checking, user not found clear the cookie and return invalid
 		if ( ! empty( $security_key ) ) {
-			$key = hash_hmac( 'md5', $security_key, WPSC_SALT );
-			$hmac = hash_hmac( 'md5', $data, $key );
+			$recomputed_visitor_hash = _wpsc_get_visitor_hash( $id, $expire, $security_key );
 
 			// integrity check
-			if ( $hmac === $hash ) {
+			if ( $visitor_hash_from_cookie === $recomputed_visitor_hash ) {
 				return $id;
 			}
 		}
 	}
 
 	// if we get to here the cookie or user is not valid
+	error_log( __( 'An invalid WPeC visitor cookie was presented, it is being cleared.', 'wpsc' ) );
 	return _wpsc_unset_customer_cookie();
 }
 
