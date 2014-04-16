@@ -35,7 +35,7 @@ function _wpsc_is_session_started() {
 function wpsc_core_load_session() {
 
 	if ( ! _wpsc_is_session_started() ) {
-		session_start();
+		@ session_start();
 	}
 
 	return _wpsc_is_session_started();
