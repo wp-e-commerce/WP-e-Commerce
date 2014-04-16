@@ -44,7 +44,7 @@ class Sputnik_Pointers {
 	            align: 'center'
 	        },
 	        close: function() {
-	            $.post( wpsc_ajax_url(), {
+	            $.post( ajaxurl, {
 	                pointer: 'wpsc_marketplace_pointer',
 	                action: 'dismiss-wp-pointer'
 	            });

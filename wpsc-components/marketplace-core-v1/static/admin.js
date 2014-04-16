@@ -21,7 +21,7 @@ jQuery(document).ready(function($) {
 		$('#rateme .star-rating').width($(this).data('rating') * 20);
 	}).click(function (event) {
 		var score = Sputnik.rating_from_event(event);
-		jQuery.post(wpsc_ajax_url(), {
+		jQuery.post( ajaxurl, {
 			action: 'sputnik_rate',
 			rating: score,
 			product: $(this).data('productid')
