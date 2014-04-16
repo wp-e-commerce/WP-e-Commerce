@@ -240,7 +240,6 @@ function _wpsc_validate_customer_cookie() {
 	}
 
 	// if we get to here the cookie or user is not valid
-	error_log( __( 'An invalid WPeC visitor cookie was presented, it is being cleared.', 'wpsc' ) );
 	return _wpsc_unset_customer_cookie();
 }
 
