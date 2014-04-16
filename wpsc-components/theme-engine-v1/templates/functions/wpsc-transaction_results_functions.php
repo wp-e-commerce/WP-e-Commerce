@@ -119,7 +119,8 @@ function wpsc_transaction_theme() {
 		if ( !empty($sessionid) ){
 			$cart_log_id = $wpdb->get_var( $wpdb->prepare( "SELECT `id` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `sessionid`= %s LIMIT 1", $sessionid ) );
 			return transaction_results( $sessionid, true );
-		}else
-		printf( __( 'Sorry your transaction was not accepted.<br /><a href="%1$s">Click here to go back to checkout page</a>.', 'wpsc' ), get_option( "shopping_cart_url" ) );
+		} else {
+			printf( __( 'There have not been any purchases yet.<br /><a href="%1$s">Click here to go back to checkout page</a>.', 'wpsc' ), get_option( "shopping_cart_url" ) );
+		}
 	}
 }
