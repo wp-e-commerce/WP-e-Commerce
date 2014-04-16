@@ -357,7 +357,7 @@ function wpsc_enqueue_user_script_and_css() {
 		}
 
 		wp_enqueue_script( 'wp-e-commerce', WPSC_CORE_JS_URL . '/wp-e-commerce.js', array( 'jquery' ), $version_identifier );
-		wp_localize_script( 'wp-e-commerce', 'wpsc_vars', _wpsc_javascript_localizations() );
+		wp_localize_script( 'wp-e-commerce', 'wpsc_ajax', _wpsc_javascript_localizations() );
 
 		wp_enqueue_script( 'livequery',                   WPSC_URL 			. '/wpsc-admin/js/jquery.livequery.js',   array( 'jquery' ), '1.0.3' );
 		if ( get_option( 'product_ratings' ) == 1 )

@@ -1172,7 +1172,7 @@ add_filter( 'favorite_actions', 'wpsc_fav_action' );
 function wpsc_print_admin_scripts() {
 	$version_identifier = WPSC_VERSION . '.' . WPSC_MINOR_VERSION;
 	wp_enqueue_script( 'wp-e-commerce-admin', WPSC_CORE_JS_URL . '/wp-e-commerce.js', array( 'jquery' ), $version_identifier );
-	wp_localize_script( 'wp-e-commerce-admin', 'wpsc_vars', _wpsc_javascript_localizations() );
+	wp_localize_script( 'wp-e-commerce-admin', 'wpsc_ajax', _wpsc_javascript_localizations() );
 }
 
 /**

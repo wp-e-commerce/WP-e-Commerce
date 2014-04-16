@@ -10,10 +10,10 @@
 // To add a new global property that can be referenced in the script see the hook 
 // wpsc_javascript_localizations in wpsc-core/wpsc-functions.php
 //
-for (var a_name in wpsc_admin_vars) {
-  if (wpsc_admin_vars.hasOwnProperty(a_name)) {
-	  a_value = wpsc_admin_vars[a_name];
-	  this[a_name] = a_value;
+for ( var key in wpsc_admin_vars ) {
+  if ( wpsc_admin_vars.hasOwnProperty( key ) ) {
+	  value = wpsc_admin_vars[ key ];
+	  this[ key ] = value;
   }
 }
 //

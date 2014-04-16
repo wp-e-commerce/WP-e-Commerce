@@ -11,10 +11,10 @@
 // wpsc_javascript_localizations in wpsc-core/wpsc-functions.php
 //
 
-if ( 'object' === typeof wpsc_vars.wpsc_ajax ) {
-	for ( var key in wpsc_vars.wpsc_ajax ) {
-	  if ( wpsc_vars.wpsc_ajax.hasOwnProperty( key ) ) {
-		  value = wpsc_vars[ key ];
+if ( 'object' === typeof wpsc_ajax.wpsc_deprecated_vars ) {
+	for ( var key in wpsc_ajax.wpsc_deprecated_vars ) {
+	  if ( wpsc_ajax.wpsc_deprecated_vars.hasOwnProperty( key ) ) {
+		  value = wpsc_ajax.wpsc_deprecated_vars[ key ];
 		  this[ key ] = value;
 	  }
 	}

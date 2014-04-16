@@ -1835,38 +1835,32 @@ function wpsc_user_dynamic_js() {
  */
 function _wpsc_deprecated_javascript_localization_vars( $localizations = array() ) {
 
-		/**
-		 * @deprecated since 3.8.14
-		 * wpsc_ajax as an object with the properties below has been replaced and each of the properties
-		 * is available as it's own variable, that means devs isntead of referencing "wpsc_ajax.base_url" do
-		 * "base_url"
-		 */
-		$wpsc_ajax = array(
-				'ajaxurl'              => admin_url( 'admin-ajax.php', 'relative' ),
-				'spinner'              => esc_url( wpsc_get_ajax_spinner() ),
-				'no_quotes'            => __( 'It appears that there are no shipping quotes for the shipping information provided.  Please check the information and try again.', 'wpsc' ),
-				'ajax_get_cart_error'  => __( 'There was a problem getting the current contents of the shopping cart.', 'wpsc' ),
+	/**
+	 * @deprecated since 3.8.14
+	 * 
+	 * wpsc_deprecated_vars as an object with the properties below has been replaced and each of the properties
+	 * is available as it's own variable, that means devs isntead of referencing "wpsc_ajax.base_url" do
+	 * "base_url"
+	 */
+	$wpsc_ajax = array(
+		/* base url */
+		'base_url'             => site_url(), //admin-legacy.js
+		'WPSC_URL'             => WPSC_URL,
+		'WPSC_IMAGE_URL'       => WPSC_IMAGE_URL,
+		'WPSC_DIR_NAME'        => WPSC_DIR_NAME,
+		'WPSC_CORE_IMAGES_URL' => WPSC_CORE_IMAGES_URL,
 
-				/* base url */
-				'base_url'             => site_url(), //admin-legacy.js
-				'WPSC_URL'             => WPSC_URL,
-				'WPSC_IMAGE_URL'       => WPSC_IMAGE_URL,
-				'WPSC_DIR_NAME'        => WPSC_DIR_NAME,
-				'WPSC_CORE_IMAGES_URL' => WPSC_CORE_IMAGES_URL,
+		/* LightBox Configuration start*/
+		'fileLoadingImage'         => WPSC_CORE_IMAGES_URL . '/loading.gif',
+		'fileBottomNavCloseImage'  => WPSC_CORE_IMAGES_URL . '/closelabel.gif',
+		'fileThickboxLoadingImage' => WPSC_CORE_IMAGES_URL . '/loadingAnimation.gif',
+		'resizeSpeed'              => 9,  // controls the speed of the image resizing (1=slowest and 10=fastest)
+		'borderSize'               => 10, //if you adjust the padding in the CSS, you will need to update this variable
+	);
 
-				/* LightBox Configuration start*/
-				'fileLoadingImage'         => WPSC_CORE_IMAGES_URL . '/loading.gif',
-				'fileBottomNavCloseImage'  => WPSC_CORE_IMAGES_URL . '/closelabel.gif',
-				'fileThickboxLoadingImage' => WPSC_CORE_IMAGES_URL . '/loadingAnimation.gif',
-				'resizeSpeed'              => 9,  // controls the speed of the image resizing (1=slowest and 10=fastest)
-				'borderSize'               => 10, //if you adjust the padding in the CSS, you will need to update this variable
-		);
+	$localizations['wpsc_deprecated_vars'] = $wpsc_ajax;
 
-		$localizations['wpsc_ajax'] = $wpsc_ajax;
-
-
-
-		return $localizations;
+	return $localizations;
 
 }
 
