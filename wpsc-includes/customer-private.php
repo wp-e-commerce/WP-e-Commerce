@@ -191,8 +191,8 @@ function _wpsc_create_customer_id_cookie( $id, $fake_it = false ) {
  * @since 3.8.14
  *
  * @param int		$visitor_id 			id of the visitor
- * @param int		$exirpation				unix timestamp being attached to the visitor
- * @param string	$visitor_security_key	random string generated at the time the vistior was created, and stored with the visitor profile
+ * @param int		$expiration				Unix timestamp being attached to the visitor
+ * @param string	$visitor_security_key	random string generated at the time the visitor was created, and stored with the visitor profile
  *
  * @return string  					security hash
  */
