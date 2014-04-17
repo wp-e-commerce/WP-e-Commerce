@@ -1,4 +1,4 @@
-<div class="wrap" id+"coupon_data">
+<div class="wrap" id="coupon_data">
 	<div id="add_coupon_box">
 		<h2><?php _e( 'Add Coupon', 'wpsc' ); ?></h2>
 		<form name='add_coupon' method="post" action="<?php echo admin_url( 'edit.php?post_type=wpsc-product&page=wpsc-edit-coupons' ); ?>">
