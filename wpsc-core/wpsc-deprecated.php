@@ -1844,6 +1844,8 @@ function _wpsc_deprecated_javascript_localization_vars() {
 
 	$wpsc_deprecated_js_vars = array();
 
+}
+
 	$wpsc_deprecated_js_vars['base_url'] 				= site_url(); //admin-legacy.js
 	$wpsc_deprecated_js_vars['WPSC_DIR_NAME'] 			= WPSC_DIR_NAME;
 	$wpsc_deprecated_js_vars['fileLoadingImage'] 		= WPSC_CORE_IMAGES_URL . '/loading.gif';
@@ -1853,15 +1855,81 @@ function _wpsc_deprecated_javascript_localization_vars() {
 
 	return $wpsc_deprecated_js_vars;
 
-}
+/**
+ * wpsc google checkout submit used for google checkout (unsure whether necessary in 3.8)
+ * @access public
+ *
+ * @deprecated since 3.8.14
+ */
+function wpsc_google_checkout_submit() {
 
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.14' );
+
+	global $wpdb, $wpsc_cart, $current_user;
+	$wpsc_checkout = new wpsc_checkout();
+	$purchase_log_id = $wpdb->get_var( "SELECT `id` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `sessionid` IN(%s) LIMIT 1", wpsc_get_customer_meta( 'checkout_session_id' ) );
+	get_currentuserinfo();
+	if ( $current_user->display_name != '' ) {
+		foreach ( $wpsc_checkout->checkout_items as $checkoutfield ) {
+			if ( $checkoutfield->unique_name == 'billingfirstname' ) {
+				$checkoutfield->value = $current_user->display_name;
+			}
+		}
+	}
+	if ( $current_user->user_email != '' ) {
+		foreach ( $wpsc_checkout->checkout_items as $checkoutfield ) {
+			if ( $checkoutfield->unique_name == 'billingemail' ) {
+				$checkoutfield->value = $current_user->user_email;
+			}
+		}
+	}
+
+}
+	$wpsc_cart->save_to_db( $purchase_log_id );
+	$wpsc_cart->submit_stock_claims( $purchase_log_id );
 }
 
 /**
- * everywhere else in the code we use "wpsc_ajax_action", not the plural, deprecate this version
- * @deprecated 3.8.14
  *
+ * @deprecated 3.8.14
+ * @uses apply_filters()      Allows manipulation of the flash upload params.
  */
+function wpsc_admin_dynamic_css() {
+
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.14' );
+
+	header( 'Content-Type: text/css' );
+	header( 'Expires: ' . gmdate( 'r', mktime( 0, 0, 0, date( 'm' ), ( date( 'd' ) + 12 ), date( 'Y' ) ) ) . '' );
+	header( 'Cache-Control: public, must-revalidate, max-age=86400' );
+	header( 'Pragma: public' );
+	$flash = 0;
+	$flash = apply_filters( 'flash_uploader', $flash );
+
+	if ( $flash = 1 ) {
+?>
+		div.flash-image-uploader {
+			display: block;
+		}
+
+		div.browser-image-uploader {
+			display: none;
+		}
+<?php
+	} else {
+?>
+		div.flash-image-uploader {
+			display: none;
+		}
+
+		div.browser-image-uploader {
+			display: block;
+		}
+<?php
+	}
+	exit();
+}
+
 if ( isset( $_REQUEST['wpsc_ajax_actions'] ) && 'update_location' == $_REQUEST['wpsc_ajax_actions'] ) {
-	_wpsc_deprecated_function( 'wpsc_ajax_actions', '3.8.14', 'wpsc_ajax_action' );
+	_wpsc_doing_it_wrong( 'wpsc_ajax_actions', __( 'wpsc_ajax_actions is not the proper parameter to pass AJAX handlers to WPeC.  Use wpsc_ajax_action instead.', 'wpsc' ) );
 	add_action( 'init', 'wpsc_update_location' );
+}

@@ -580,7 +580,7 @@ add_action( 'wpsc_updated_visitor_meta', '_wpsc_vistor_shipping_same_as_billing_
 function _wpsc_get_country_and_region_replacements( $replacements = null, $replacebilling = true, $replaceshipping = true ) {
 	global $wpsc_checkout;
 	if ( empty( $wpsc_checkout ) ) {
-		$wpsc_checkout = new WPSC_Checkout();
+		$wpsc_checkout = new wpsc_checkout();
 	}
 
 	if ( empty( $replacements ) ) {
@@ -628,8 +628,7 @@ function _wpsc_get_country_and_region_replacements( $replacements = null, $repla
  * @return array  checkout information
  */
 function _wpsc_get_checkout_info() {
-	global $wpdb, $wpsc_cart;
-	global $wpdb, $user_ID, $wpsc_customer_checkout_details;
+	global $wpsc_cart;
 
 	// Checkout info is what we will return to the AJAX client
 	$checkout_info = array();
@@ -675,9 +674,10 @@ function _wpsc_get_checkout_info() {
 		}
 
 		$cart_widget         = _wpsc_ajax_get_cart( false );
-		$cart_widget_output  = $cart_widget['widget_output'];
+		if ( isset( $cart_widget['widget_output'] ) && ! empty ( $cart_widget['widget_output'] ) ) {
+			$checkout_info['widget_output'] = $cart_widget['widget_output'];
+		}
 
-		$checkout_info['widget_output']    = $cart_widget_output;
 		$checkout_info['cart_shipping']    = wpsc_cart_shipping();
 		$checkout_info['tax']              = $tax;
 		$checkout_info['display_tax']      = wpsc_cart_tax();

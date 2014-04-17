@@ -7,7 +7,7 @@ if ( isset( $_GET['termsandconds'] ) && 'true' == $_GET['termsandconds'] )
 	add_action( 'init', 'wpsc_show_terms_and_conditions' );
 
 if ( isset( $_REQUEST['wpsc_action'] ) && ($_REQUEST['wpsc_action'] == 'submit_checkout') ) {
-	add_action( 'init', 'wpsc_submit_checkout', 10 );
+	add_action( 'init', 'wpsc_submit_checkout', 10, 0 );
 }
 
 if ( isset( $_REQUEST['wpsc_action'] ) && ($_REQUEST['wpsc_action'] == 'cart_html_page') )
@@ -37,7 +37,7 @@ if ( isset( $_REQUEST['wpsc_update_quantity'] ) && ($_REQUEST['wpsc_update_quant
 if ( isset( $_REQUEST['wpsc_ajax_action'] ) && ($_REQUEST['wpsc_ajax_action'] == 'rate_product') )
 	add_action( 'init', 'wpsc_update_product_rating' );
 
-if ( isset( $_REQUEST['wpsc_ajax_actions'] ) && 'update_location' == $_REQUEST['wpsc_ajax_actions'] ) {
+if ( isset( $_REQUEST['wpsc_ajax_action'] ) && 'update_location' == $_REQUEST['wpsc_ajax_action'] ) {
 	add_action( 'init', 'wpsc_update_location' );
 }
 
@@ -705,7 +705,7 @@ function wpsc_submit_checkout( $collected_data = true ) {
 			$tax_percentage = 0.00;
 		}
 		$total = $wpsc_cart->calculate_total_price();
-		
+
 		$args = array(
 			'totalprice'       => $total,
 			'statusno'         => '0',
@@ -829,7 +829,7 @@ function wpsc_change_tax() {
 
 	global $wpsc_checkout;
 	if ( empty( $wpsc_checkout ) ) {
-		$wpsc_checkout = new WPSC_Checkout();
+		$wpsc_checkout = new wpsc_checkout();
 	}
 
 	$replacements = array();

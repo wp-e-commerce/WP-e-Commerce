@@ -833,7 +833,7 @@ class ash_ups {
 		// Shipping billing / account address
 		$region = new WPSC_Region( get_option( 'base_country' ), get_option( 'base_region' ) );
 
-		$args['shipr_state'] = $region->code();
+		$args['shipr_state'] = $region->get_code();
 		$args['shipr_city']  = get_option( 'base_city' );
 		$args['shipr_ccode'] = get_option( 'base_country' );
 		$args['shipr_pcode'] = get_option( 'base_zipcode' );

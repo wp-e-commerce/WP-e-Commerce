@@ -69,7 +69,7 @@
  */
 
 /**
- * description
+ * Our geography data class that handles access to the countries, regions and currency information
  *
  * @access public
  *
@@ -482,10 +482,10 @@ class WPSC_Countries {
 		}
 
 		if ( $sortbyname && ! empty( $countries ) ) {
-			usort( $countries, array( __CLASS__, '_compare_countries_by_name' ) );
+			uasort( $countries, array( __CLASS__, '_compare_countries_by_name' ) );
 		} else {
 			// countries should be sorted internally by id, but hust in case data was changed since the last data load
-			usort( $countries, array( __CLASS__, '_compare_countries_by_id' ) );
+			uasort( $countries, array( __CLASS__, '_compare_countries_by_id' ) );
 		}
 
 		return $countries;
@@ -1181,13 +1181,23 @@ class WPSC_Countries {
 	 * @return none
 	 */
 	public static function clear_cache() {
+
+		// delete anthing that is stored in the transient cache
 		delete_transient( self::transient_name() );
 
-		$mydata['countries'] = array();
+		// Clear any data maps that restore on thier own
+		if ( is_a( self::$country_id_by_country_name, 'WPSC_Data_Map' ) ) {
+			self::$country_id_by_country_name->clear();
+		}
+
+		if ( is_a( self::$all_wpsc_country_by_country_id, 'WPSC_Data_Map' ) ) {
+			self::$all_wpsc_country_by_country_id->clear();
+		}
 
 		// when we clear the cached copy of the sdata, we also clear the resident copy of the data
 		// so it is rebuilt and stays in sync
 		self::_clean_data_maps();
+
 		self::$_initialized = false;
 		self::$_dirty = false;
 	}

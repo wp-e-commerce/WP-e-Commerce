@@ -10,12 +10,16 @@
 // To add a new global property that can be referenced in the script see the hook 
 // wpsc_javascript_localizations in wpsc-core/wpsc-functions.php
 //
-for ( var a_name in wpsc_vars ) {
-  if ( wpsc_vars.hasOwnProperty( a_name ) ) {
-	  a_value = wpsc_vars[a_name];
-	  this[a_name] = a_value;
-  }
+
+if ( 'object' === typeof wpsc_ajax.wpsc_deprecated_vars ) {
+	for ( var key in wpsc_ajax.wpsc_deprecated_vars ) {
+	  if ( wpsc_ajax.wpsc_deprecated_vars.hasOwnProperty( key ) ) {
+		  value = wpsc_ajax.wpsc_deprecated_vars[ key ];
+		  this[ key ] = value;
+	  }
+	}
 }
+
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -64,7 +68,7 @@ if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
 		wpsc_http.overrideMimeType( "application/json" );
 		
 		// open setup and send the request in synchronous mode
-		wpsc_http.open( "POST", wpsc_ajax_url() + "?action=wpsc_validate_customer", false );
+		wpsc_http.open( "POST", wpsc_ajax.ajaxurl + "?action=wpsc_validate_customer", false );
 		wpsc_http.setRequestHeader( "Content-type", "application/json; charset=utf-8" );
 
 		// Note that we cannot set a timeout on synchronous requests due to XMLHttpRequest limitations  
@@ -82,24 +86,12 @@ if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
 // end of setting up the WPEC customer identifier
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * Get the URL that should be used when this script initiates AJAX requests to the server
- * 
- * @since 3.8.14
- * @access global
- * @param url to receive AJAX requests
- */
-// a convenient function that will return the url to which ajax requests are sent
-function wpsc_ajax_url() {
-	return _wpsc_admin_ajax_url;
-}
-
 var ajax_via_jquery_post = false;
 
 function wpsc_do_ajax_request( ajax_url, data, success_callback ) {
 	
 	if ( ajax_via_jquery_post ) {
-		jQuery.post( wpsc_ajax_url(), form_values, success, 'json' );
+		jQuery.post( wpsc_ajax.ajaxurl, form_values, success, 'json' );
 	} else {
 		jQuery.ajax({
 			type      : "post",
@@ -124,7 +116,7 @@ function wpsc_update_customer_data( meta_key, meta_value, response_callback ) {
 	// wrap our ajax request in a try/catch so that an error doesn't stop the script from running
 	try { 	
 		var ajax_data = {action: 'wpsc_update_customer_meta', meta_key : meta_key, meta_value : meta_value };	
-		jQuery.post( wpsc_ajax_url(), ajax_data, response_callback,  "json" );
+		jQuery.post( wpsc_ajax.ajaxurl, ajax_data, response_callback,  "json" );
 	} catch ( err ) {
 		; // we could handle the error here, or use it as a convenient place to set a breakpoint when debugging/testing
 	}
@@ -143,7 +135,7 @@ function wpsc_get_customer_data( response_callback ) {
 	// wrap our ajax request in a try/catch so that an error doesn't stop the script from running
 	try { 	
 		var ajax_data = {action: 'wpsc_get_customer_meta' };	
-		jQuery.post( wpsc_ajax_url(), ajax_data, response_callback,  "json" );
+		jQuery.post( wpsc_ajax.ajaxurl, ajax_data, response_callback,  "json" );
 	} catch ( err ) {
 		; // we could handle the error here, or use it as a convenient place to set a breakpoint when debugging/testing
 	}
@@ -183,8 +175,7 @@ function wpsc_update_customer_meta( response ) {
 						}
 					} else {
 						var current_value = jQuery( this ).val();
-						var new_value = meta_value;
-						if ( jQuery( this ).val() != meta_value ) {
+						if ( current_value != meta_value ) {
 							jQuery( this ).val( meta_value );
 						}
 					}
@@ -377,7 +368,7 @@ function wpsc_adjust_checkout_form_element_visibility() {
 	var shipping_row = jQuery( "#shippingSameBilling" ).closest( "tr" );
 	
 	if( jQuery("#shippingSameBilling").is(":checked") ) { 
-		jQuery( shipping_row ).siblings( ":not( .checkout-heading-row , :has( .custom_gateway ) ) ").hide();
+		jQuery( shipping_row ).siblings( ":not( .checkout-heading-row ,  :has( #agree ), :has( .custom_gateway ) ) ").hide();
 		jQuery( "#shippingsameasbillingmessage" ).show();
 	} else {
 		jQuery( shipping_row ).siblings().show();
@@ -495,7 +486,7 @@ jQuery(document).ready(function ($) {
 				}
 			};
 
-			jQuery.post( wpsc_ajax_url(), form_values, success, 'json' );
+			jQuery.post( wpsc_ajax.ajaxurl, form_values, success, 'json' );
 
 			wpsc_fancy_notification(this);
 			return false;
@@ -528,7 +519,7 @@ jQuery(document).ready(function ($) {
 		var prod_id = jQuery("input[name='product_id']",parent_form).val();
 		var form_values = jQuery("input[name='product_id'], .wpsc_select_variation",parent_form).serialize() + '&action=update_product_price';
 
-		jQuery.post( wpsc_ajax_url(), form_values, function(response) {
+		jQuery.post( wpsc_ajax.ajaxurl, form_values, function(response) {
 			var variation_display = jQuery('div#variation_display_' + prod_id );
 			var stock_display = jQuery('div#stock_display_' + prod_id),
 				price_field = jQuery('input#product_price_' + prod_id),
@@ -600,7 +591,7 @@ jQuery(document).ready(function ($) {
 				jQuery.ajax({
 					type : "post",
 					dataType : "html",
-					url : wpsc_ajax_url(),
+					url : wpsc_ajax.ajaxurl,
 					data : {action : 'get_cart'},
 					success: function (response) {
 						jQuery( 'div.shopping-cart-wrapper' ).html( response );
@@ -629,7 +620,7 @@ jQuery(document).ready(function ($) {
 		parent_form = jQuery(this).parents( 'form' );
 		form_values = jQuery(parent_form).serialize() + '&action=' + jQuery( 'input[name="wpsc_ajax_action"]', parent_form ).val();
 
-		jQuery.post( wpsc_ajax_url(), form_values, function(response) {
+		jQuery.post( wpsc_ajax.ajaxurl, form_values, function(response) {
 			jQuery('div.shopping-cart-wrapper').html( response.widget_output );
 			jQuery( document ).trigger( { type : 'wpsc_empty_cart', response : response } );
 		}, 'json');
@@ -645,7 +636,7 @@ function switchmethod( key, key1 ) {
 		option : key,
 		method : key1
 	};
-	jQuery.post( wpsc_ajax_url(), data, function( response ) {
+	jQuery.post( wpsc_ajax.ajaxurl, data, function( response ) {
 
 		jQuery( document ).trigger( { type : 'switchmethod', response : response } );
 
@@ -701,7 +692,7 @@ function shopping_cart_collapser() {
 		case 'none':
 			form_values.state = '1';
 			jQuery("#sliding_cart").slideToggle("fast",function(){
-				jQuery.post( wpsc_ajax_url(), form_values, function(returned_data) { });
+				jQuery.post( wpsc_ajax.ajaxurl, form_values, function(returned_data) { });
 				jQuery("#fancy_collapser").attr("src", (WPSC_CORE_IMAGES_URL + "/minus.png"));
 			});
 			break;
@@ -709,7 +700,7 @@ function shopping_cart_collapser() {
 		default:
 			form_values.state = '0';
 			jQuery("#sliding_cart").slideToggle("fast",function(){
-				jQuery.post( wpsc_ajax_url(), form_values, function(returned_data) { });
+				jQuery.post( wpsc_ajax.ajaxurl, form_values, function(returned_data) { });
 				jQuery("#fancy_collapser").attr("src", (WPSC_CORE_IMAGES_URL + "/plus.png"));
 			});
 			break;
@@ -725,7 +716,7 @@ function wpsc_set_profile_country(html_form_id, form_id) {
 		country : country_field.val()
 	};
 
-	jQuery.post( wpsc_ajax_url(), form_values, function(response) {
+	jQuery.post( wpsc_ajax.ajaxurl, form_values, function(response) {
 		country_field.siblings('select').remove();
 		if (response.has_regions) {
 			country_field.after('<br />' + response.html);

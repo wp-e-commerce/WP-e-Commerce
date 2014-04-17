@@ -470,6 +470,10 @@ function wpsc_product_taxes_forms() {
 		$output .= 	( !$wpec_taxes_controller->wpec_taxes_isincluded() ) ? $wpec_taxes_controller->wpec_taxes_build_input( $taxable_amount_input_settings ) : '';
 	$output .= '</p>';
 
+	if ( ! $wpec_taxes_controller->wpec_taxes->wpec_taxes_get_enabled() ) {
+		$output = '<p>' . sprintf( __( 'Taxes are not enabled. See <a href="%s">Settings &gt; Taxes</a>', 'wpsc' ), admin_url( 'options-general.php?page=wpsc-settings&tab=taxes' ) ) . '</p>';
+	}
+
 	echo $output;
 }
 

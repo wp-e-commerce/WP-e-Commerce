@@ -87,6 +87,6 @@ var wpsc_refresh_variation_iframe = function() {
 			sort_order: order,
 			parent_id: 0
 		};
-		jQuery.post(wpsc_admin_ajax_url(), data);
+		jQuery.post( ajaxurl, data );
 	};
 })(jQuery);

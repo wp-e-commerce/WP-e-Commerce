@@ -126,7 +126,7 @@ function wpsc_display_form_fields() {
 	global $wpdb, $user_ID, $wpsc_purchlog_statuses, $gateway_checkout_form_fields, $wpsc_checkout;
 
 	if ( empty( $wpsc_checkout ) )
-		$wpsc_checkout = new WPSC_Checkout();
+		$wpsc_checkout = new wpsc_checout();
 
 	$meta_data = wpsc_get_customer_meta( 'checkout_details' );
 	$meta_data = apply_filters( 'wpsc_user_log_get', $meta_data, $user_ID );

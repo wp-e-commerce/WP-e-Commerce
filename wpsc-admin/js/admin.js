@@ -10,7 +10,7 @@
 		data['wpsc_action'] = data['action'];
 		data['action'] = 'wpsc_ajax';
 
-		return $.post(wpsc_admin_ajax_url(), data, handler, 'json');
+		return $.post( ajaxurl, data, handler, 'json' );
 	};
 
 	/**
@@ -24,7 +24,7 @@
 		data['wpsc_action'] = data['action'];
 		data['action'] = 'wpsc_ajax';
 
-		return $.get(wpsc_admin_ajax_url(), data, handler, 'json');
+		return $.get( ajaxurl, data, handler, 'json' );
 	};
 
 	if( pagenow == 'edit-wpsc_product_category' ) {
@@ -36,7 +36,7 @@
 				parent_id: 0
 			};
 
-			jQuery.post(wpsc_admin_ajax_url(), data);
+			jQuery.post( ajaxurl, data );
 		}
 
 		var submit_handlers = [];
@@ -318,7 +318,7 @@ jQuery(document).ready(function(){
 			action : 'update_featured_product'
 		};
 
-		jQuery.post( wpsc_admin_ajax_url(), post_values, function( response ) {
+		jQuery.post( ajaxurl, post_values, function( response ) {
 			jQuery( '.featured_toggle_' + response.product_id ).html( "<img class='" + response.color + "' src='" + response.image + "' alt='" + response.text + "' title='" + response.text + "' />" );
 		}, 'json' );
 
@@ -368,7 +368,6 @@ jQuery(document).ready(function(){
 				operator_box.append("<option value='or'>" + wpsc_adminL10n.coupons_compare_or + "</option>");
 			}
 
-
 		prototype.find('select').val('');
 		prototype.find('input').val('');
 		prototype.css( { 'opacity' : '0' } );
@@ -412,7 +411,7 @@ jQuery(document).ready(function(){
 		return false;
 	});
 
-	jQuery('.wpsc-categorydiv .category-tabs a').click(function(){
+	jQuery('#wpsc_product_details_forms .category-tabs a').click(function(){
 		var href = jQuery(this).attr('href');
 
 		jQuery(this).closest('ul').find('li').removeClass('tabs');
