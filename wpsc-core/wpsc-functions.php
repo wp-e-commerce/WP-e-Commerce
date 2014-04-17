@@ -179,7 +179,6 @@ function _wpsc_javascript_localizations( $localizations = false ) {
 
 	if ( ! $already_added_default_localizations ) {
 
-		
 		$localizations = array(
 			'ajaxurl'              => admin_url( 'admin-ajax.php', 'relative' ),
 			'spinner'              => esc_url( wpsc_get_ajax_spinner() ),
