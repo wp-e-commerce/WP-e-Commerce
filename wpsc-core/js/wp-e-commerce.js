@@ -410,12 +410,11 @@ function wpsc_adjust_checkout_form_element_visibility() {
  */
 jQuery(document).ready(function ($) {
 
-	if ( jQuery( "#shippingSameBilling" ).length ) {
+	if ( $( 'body' ).hasClass( 'wpsc-shopping-cart' ) ) {
 		// make sure visibility of form elements is what it should be
 		wpsc_adjust_checkout_form_element_visibility();
 		jQuery( "#shippingSameBilling"  ).on( 'change', wpsc_adjust_checkout_form_element_visibility() );
 	}
-	
 	
 	if(jQuery('#checkout_page_container .wpsc_email_address input').val())
 		jQuery('#wpsc_checkout_gravatar').attr('src', 'https://secure.gravatar.com/avatar/'+MD5(jQuery('#checkout_page_container .wpsc_email_address input').val().split(' ').join(''))+'?s=60&d=mm');
