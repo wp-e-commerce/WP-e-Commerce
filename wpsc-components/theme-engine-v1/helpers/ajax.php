@@ -705,7 +705,7 @@ function wpsc_submit_checkout( $collected_data = true ) {
 			$tax_percentage = 0.00;
 		}
 		$total = $wpsc_cart->calculate_total_price();
-		
+
 		$args = array(
 			'totalprice'       => $total,
 			'statusno'         => '0',
@@ -829,7 +829,7 @@ function wpsc_change_tax() {
 
 	global $wpsc_checkout;
 	if ( empty( $wpsc_checkout ) ) {
-		$wpsc_checkout = new WPSC_Checkout();
+		$wpsc_checkout = new wpsc_checkout();
 	}
 
 	$replacements = array();
