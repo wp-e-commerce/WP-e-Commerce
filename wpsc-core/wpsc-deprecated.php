@@ -1900,3 +1900,42 @@ function wpsc_google_checkout_submit() {
 	$wpsc_cart->submit_stock_claims( $purchase_log_id );
 }
 
+/**
+ *
+ * @deprecated 3.8.14
+ * @uses apply_filters()      Allows manipulation of the flash upload params.
+ */
+function wpsc_admin_dynamic_css() {
+
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.14' );
+
+	header( 'Content-Type: text/css' );
+	header( 'Expires: ' . gmdate( 'r', mktime( 0, 0, 0, date( 'm' ), ( date( 'd' ) + 12 ), date( 'Y' ) ) ) . '' );
+	header( 'Cache-Control: public, must-revalidate, max-age=86400' );
+	header( 'Pragma: public' );
+	$flash = 0;
+	$flash = apply_filters( 'flash_uploader', $flash );
+
+	if ( $flash = 1 ) {
+?>
+		div.flash-image-uploader {
+			display: block;
+		}
+
+		div.browser-image-uploader {
+			display: none;
+		}
+<?php
+	} else {
+?>
+		div.flash-image-uploader {
+			display: none;
+		}
+
+		div.browser-image-uploader {
+			display: block;
+		}
+<?php
+	}
+	exit();
+}
