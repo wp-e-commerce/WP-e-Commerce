@@ -349,7 +349,7 @@
 	// hack the Remove thumbnail link so that it refreshes the variation iframe
 	// after the AJAX request is processed
 	WPRemoveThumbnail = function(nonce){
-		$.post(wpsc_admin_ajax_url(), {
+		$.post( ajaxurl, {
 			action:"set-post-thumbnail", post_id: $('#post_ID').val(), thumbnail_id: -1, _ajax_nonce: nonce, cookie: encodeURIComponent(document.cookie)
 		}, function(str){
 			if ( str == '0' ) {

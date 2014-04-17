@@ -995,7 +995,7 @@
 					spinner.toggleClass('ajax-feedback-active');
 				};
 			spinner.toggleClass('ajax-feedback-active');
-			$.post(wpsc_admin_ajax_url(), post_data, ajax_callback, 'json');
+			$.post( ajaxurl, post_data, ajax_callback, 'json' );
 			return false;
 		},
 

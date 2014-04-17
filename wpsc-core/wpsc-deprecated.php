@@ -1835,38 +1835,32 @@ function wpsc_user_dynamic_js() {
  */
 function _wpsc_deprecated_javascript_localization_vars( $localizations = array() ) {
 
-		/**
-		 * @deprecated since 3.8.14
-		 * wpsc_ajax as an object with the properties below has been replaced and each of the properties
-		 * is available as it's own variable, that means devs isntead of referencing "wpsc_ajax.base_url" do
-		 * "base_url"
-		 */
-		$wpsc_ajax = array(
-				'ajaxurl'              => admin_url( 'admin-ajax.php', 'relative' ),
-				'spinner'              => esc_url( wpsc_get_ajax_spinner() ),
-				'no_quotes'            => __( 'It appears that there are no shipping quotes for the shipping information provided.  Please check the information and try again.', 'wpsc' ),
-				'ajax_get_cart_error'  => __( 'There was a problem getting the current contents of the shopping cart.', 'wpsc' ),
+	/**
+	 * @deprecated since 3.8.14
+	 * 
+	 * wpsc_deprecated_vars as an object with the properties below has been replaced and each of the properties
+	 * is available as it's own variable, that means devs isntead of referencing "wpsc_ajax.base_url" do
+	 * "base_url"
+	 */
+	$wpsc_ajax = array(
+		/* base url */
+		'base_url'             => site_url(), //admin-legacy.js
+		'WPSC_URL'             => WPSC_URL,
+		'WPSC_IMAGE_URL'       => WPSC_IMAGE_URL,
+		'WPSC_DIR_NAME'        => WPSC_DIR_NAME,
+		'WPSC_CORE_IMAGES_URL' => WPSC_CORE_IMAGES_URL,
 
-				/* base url */
-				'base_url'             => site_url(), //admin-legacy.js
-				'WPSC_URL'             => WPSC_URL,
-				'WPSC_IMAGE_URL'       => WPSC_IMAGE_URL,
-				'WPSC_DIR_NAME'        => WPSC_DIR_NAME,
-				'WPSC_CORE_IMAGES_URL' => WPSC_CORE_IMAGES_URL,
+		/* LightBox Configuration start*/
+		'fileLoadingImage'         => WPSC_CORE_IMAGES_URL . '/loading.gif',
+		'fileBottomNavCloseImage'  => WPSC_CORE_IMAGES_URL . '/closelabel.gif',
+		'fileThickboxLoadingImage' => WPSC_CORE_IMAGES_URL . '/loadingAnimation.gif',
+		'resizeSpeed'              => 9,  // controls the speed of the image resizing (1=slowest and 10=fastest)
+		'borderSize'               => 10, //if you adjust the padding in the CSS, you will need to update this variable
+	);
 
-				/* LightBox Configuration start*/
-				'fileLoadingImage'         => WPSC_CORE_IMAGES_URL . '/loading.gif',
-				'fileBottomNavCloseImage'  => WPSC_CORE_IMAGES_URL . '/closelabel.gif',
-				'fileThickboxLoadingImage' => WPSC_CORE_IMAGES_URL . '/loadingAnimation.gif',
-				'resizeSpeed'              => 9,  // controls the speed of the image resizing (1=slowest and 10=fastest)
-				'borderSize'               => 10, //if you adjust the padding in the CSS, you will need to update this variable
-		);
+	$localizations['wpsc_deprecated_vars'] = $wpsc_ajax;
 
-		$localizations['wpsc_ajax'] = $wpsc_ajax;
-
-
-
-		return $localizations;
+	return $localizations;
 
 }
 
@@ -1906,3 +1900,42 @@ function wpsc_google_checkout_submit() {
 	$wpsc_cart->submit_stock_claims( $purchase_log_id );
 }
 
+/**
+ *
+ * @deprecated 3.8.14
+ * @uses apply_filters()      Allows manipulation of the flash upload params.
+ */
+function wpsc_admin_dynamic_css() {
+
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.14' );
+
+	header( 'Content-Type: text/css' );
+	header( 'Expires: ' . gmdate( 'r', mktime( 0, 0, 0, date( 'm' ), ( date( 'd' ) + 12 ), date( 'Y' ) ) ) . '' );
+	header( 'Cache-Control: public, must-revalidate, max-age=86400' );
+	header( 'Pragma: public' );
+	$flash = 0;
+	$flash = apply_filters( 'flash_uploader', $flash );
+
+	if ( $flash = 1 ) {
+?>
+		div.flash-image-uploader {
+			display: block;
+		}
+
+		div.browser-image-uploader {
+			display: none;
+		}
+<?php
+	} else {
+?>
+		div.flash-image-uploader {
+			display: none;
+		}
+
+		div.browser-image-uploader {
+			display: block;
+		}
+<?php
+	}
+	exit();
+}

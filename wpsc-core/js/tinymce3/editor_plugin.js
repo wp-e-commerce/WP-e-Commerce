@@ -16,9 +16,9 @@
 		init : function(ed, url) {
 			// Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceExample');
 
-			ed.addCommand('WPSC', function() {
+			ed.addCommand( 'WPSC', function() {
 				ed.windowManager.open({
-					file : wpsc_ajax_url() + '?action=wpsc_tinymce_window',
+					file : ajaxurl + '?action=wpsc_tinymce_window',
 					width : 360 + ed.getLang('WPSC.delta_width', 0),
 					height : 210 + ed.getLang('WPSC.delta_height', 0),
 					inline : 1

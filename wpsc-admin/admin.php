@@ -580,7 +580,7 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 			);
 		}
 		wp_enqueue_style( 'wp-e-commerce-admin', WPSC_URL . '/wpsc-admin/css/admin.css', false, $version_identifier, 'all' );
-		wp_enqueue_style( 'wp-e-commerce-admin-dynamic', admin_url( "admin.php?wpsc_admin_dynamic_css=true" ), false, $version_identifier, 'all' );
+
 		// Localize scripts
 		wp_localize_script( 'wp-e-commerce-admin', 'wpsc_adminL10n', array(
 			'dragndrop_set'            => ( get_option( 'wpsc_sort_by' ) == 'dragndrop' ? 'true' : 'false' ),
@@ -692,47 +692,6 @@ function _wpsc_admin_localizations( $localizations ) {
 	remove_filter( '_wpsc_javascript_localizations', '_wpsc_admin_localizations', 1 );
 
 	return $localizations;
-}
-
-/**
- * @todo finish docs
- *
- * @uses apply_filters()      Allows manipulation of the flash upload params.
- */
-function wpsc_admin_dynamic_css() {
-	header( 'Content-Type: text/css' );
-	header( 'Expires: ' . gmdate( 'r', mktime( 0, 0, 0, date( 'm' ), ( date( 'd' ) + 12 ), date( 'Y' ) ) ) . '' );
-	header( 'Cache-Control: public, must-revalidate, max-age=86400' );
-	header( 'Pragma: public' );
-	$flash = 0;
-	$flash = apply_filters( 'flash_uploader', $flash );
-
-	if ( $flash = 1 ) {
-?>
-		div.flash-image-uploader {
-			display: block;
-		}
-
-		div.browser-image-uploader {
-			display: none;
-		}
-<?php
-	} else {
-?>
-		div.flash-image-uploader {
-			display: none;
-		}
-
-		div.browser-image-uploader {
-			display: block;
-		}
-<?php
-	}
-	exit();
-}
-
-if ( isset( $_GET['wpsc_admin_dynamic_css'] ) && ( $_GET['wpsc_admin_dynamic_css'] == 'true' ) ) {
-	add_action( "admin_init", 'wpsc_admin_dynamic_css' );
 }
 
 /*
@@ -1172,7 +1131,7 @@ add_filter( 'favorite_actions', 'wpsc_fav_action' );
 function wpsc_print_admin_scripts() {
 	$version_identifier = WPSC_VERSION . '.' . WPSC_MINOR_VERSION;
 	wp_enqueue_script( 'wp-e-commerce-admin', WPSC_CORE_JS_URL . '/wp-e-commerce.js', array( 'jquery' ), $version_identifier );
-	wp_localize_script( 'wp-e-commerce-admin', 'wpsc_vars', _wpsc_javascript_localizations() );
+	wp_localize_script( 'wp-e-commerce-admin', 'wpsc_ajax', _wpsc_javascript_localizations() );
 }
 
 /**
