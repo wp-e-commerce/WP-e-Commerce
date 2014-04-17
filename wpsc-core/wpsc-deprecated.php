@@ -1844,8 +1844,6 @@ function _wpsc_deprecated_javascript_localization_vars() {
 
 	$wpsc_deprecated_js_vars = array();
 
-}
-
 	$wpsc_deprecated_js_vars['base_url'] 				= site_url(); //admin-legacy.js
 	$wpsc_deprecated_js_vars['WPSC_DIR_NAME'] 			= WPSC_DIR_NAME;
 	$wpsc_deprecated_js_vars['fileLoadingImage'] 		= WPSC_CORE_IMAGES_URL . '/loading.gif';
@@ -1854,6 +1852,7 @@ function _wpsc_deprecated_javascript_localization_vars() {
 	$wpsc_deprecated_js_vars['borderSize'] 				= 10; //if you adjust the padding in the CSS, you will need to update this variable
 
 	return $wpsc_deprecated_js_vars;
+}
 
 /**
  * wpsc google checkout submit used for google checkout (unsure whether necessary in 3.8)
@@ -1884,7 +1883,7 @@ function wpsc_google_checkout_submit() {
 		}
 	}
 
-}
+	$wpsc_checkout->save_forms_to_db( $purchase_log_id );
 	$wpsc_cart->save_to_db( $purchase_log_id );
 	$wpsc_cart->submit_stock_claims( $purchase_log_id );
 }
