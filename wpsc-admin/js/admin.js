@@ -368,7 +368,6 @@ jQuery(document).ready(function(){
 				operator_box.append("<option value='or'>" + wpsc_adminL10n.coupons_compare_or + "</option>");
 			}
 
-
 		prototype.find('select').val('');
 		prototype.find('input').val('');
 		prototype.css( { 'opacity' : '0' } );
@@ -412,7 +411,7 @@ jQuery(document).ready(function(){
 		return false;
 	});
 
-	jQuery('.wpsc-categorydiv .category-tabs a').click(function(){
+	jQuery('#wpsc_product_details_forms .category-tabs a').click(function(){
 		var href = jQuery(this).attr('href');
 
 		jQuery(this).closest('ul').find('li').removeClass('tabs');
