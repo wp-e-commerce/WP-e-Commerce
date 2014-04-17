@@ -1,3 +1,23 @@
+
+/**
+ * Deprecated javascript variables for WP-e-Commerce
+ * 
+ * conditionally loaded based upon the value of WPEC_LOAD_DEPRECATED
+ */
+
+if ( typeof wpsc_deprecated_js_vars !== undefined ) {
+	
+	/*
+	 * Deprecated in 3.8.14
+	 */
+	var base_url 					= wpsc_deprecated_js_vars['base_url'];
+	var WPSC_DIR_NAME				= wpsc_deprecated_js_vars['WPSC_DIR_NAME'];
+	var fileLoadingImage			= wpsc_deprecated_js_vars['fileLoadingImage'];	
+	var fileBottomNavCloseImage		= wpsc_deprecated_js_vars['fileBottomNavCloseImage'];
+	var resizeSpeed					= wpsc_deprecated_js_vars['resizeSpeed'];	
+	var borderSize					= wpsc_deprecated_js_vars['borderSize'];
+}
+
 /**
  * Deprecated javascript functions for WP-e-Commerce
  * 
