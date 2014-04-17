@@ -1828,46 +1828,40 @@ function wpsc_user_dynamic_js() {
 	_wpsc_deprecated_function( __FUNCTION__, '3.8.14', '_wpsc_javascript_localizations' );
 }
 
-
 /*
  * Over time certain javascript variables that were once localized into scripts will become obsolete
  * When they do moving them here will continue to create the variables for older javascript to use.
  */
-function _wpsc_deprecated_javascript_localization_vars( $localizations = array() ) {
+function _wpsc_deprecated_javascript_localization_vars() {
 
-		/**
-		 * @deprecated since 3.8.14
-		 * wpsc_ajax as an object with the properties below has been replaced and each of the properties
-		 * is available as it's own variable, that means devs isntead of referencing "wpsc_ajax.base_url" do
-		 * "base_url"
-		 */
-		$wpsc_ajax = array(
-				'ajaxurl'              => admin_url( 'admin-ajax.php', 'relative' ),
-				'spinner'              => esc_url( wpsc_get_ajax_spinner() ),
-				'no_quotes'            => __( 'It appears that there are no shipping quotes for the shipping information provided.  Please check the information and try again.', 'wpsc' ),
-				'ajax_get_cart_error'  => __( 'There was a problem getting the current contents of the shopping cart.', 'wpsc' ),
+	/**
+	 * @deprecated since 3.8.14
+	 *
+	 * wpsc_deprecated_vars as an object with the properties below has been replaced and each of the properties
+	 * is available as it's own variable, that means devs instead of referencing "wpsc_ajax.base_url" do
+	 * "base_url"
+	 */
 
-				/* base url */
-				'base_url'             => site_url(), //admin-legacy.js
-				'WPSC_URL'             => WPSC_URL,
-				'WPSC_IMAGE_URL'       => WPSC_IMAGE_URL,
-				'WPSC_DIR_NAME'        => WPSC_DIR_NAME,
-				'WPSC_CORE_IMAGES_URL' => WPSC_CORE_IMAGES_URL,
+	$wpsc_deprecated_js_vars = array();
 
-				/* LightBox Configuration start*/
-				'fileLoadingImage'         => WPSC_CORE_IMAGES_URL . '/loading.gif',
-				'fileBottomNavCloseImage'  => WPSC_CORE_IMAGES_URL . '/closelabel.gif',
-				'fileThickboxLoadingImage' => WPSC_CORE_IMAGES_URL . '/loadingAnimation.gif',
-				'resizeSpeed'              => 9,  // controls the speed of the image resizing (1=slowest and 10=fastest)
-				'borderSize'               => 10, //if you adjust the padding in the CSS, you will need to update this variable
-		);
+	$wpsc_deprecated_js_vars['base_url'] 				= site_url(); //admin-legacy.js
+	$wpsc_deprecated_js_vars['WPSC_DIR_NAME'] 			= WPSC_DIR_NAME;
+	$wpsc_deprecated_js_vars['fileLoadingImage'] 		= WPSC_CORE_IMAGES_URL . '/loading.gif';
+	$wpsc_deprecated_js_vars['fileBottomNavCloseImage'] = WPSC_CORE_IMAGES_URL . '/closelabel.gif';
+	$wpsc_deprecated_js_vars['resizeSpeed'] 			= 9;  // controls the speed of the image resizing (1=slowest and 10=fastest)
+	$wpsc_deprecated_js_vars['borderSize'] 				= 10; //if you adjust the padding in the CSS, you will need to update this variable
 
-		$localizations['wpsc_ajax'] = $wpsc_ajax;
-
-
-
-		return $localizations;
+	return $wpsc_deprecated_js_vars;
 
 }
 
+}
 
+/**
+ * everywhere else in the code we use "wpsc_ajax_action", not the plural, deprecate this version
+ * @deprecated 3.8.14
+ *
+ */
+if ( isset( $_REQUEST['wpsc_ajax_actions'] ) && 'update_location' == $_REQUEST['wpsc_ajax_actions'] ) {
+	_wpsc_deprecated_function( 'wpsc_ajax_actions', '3.8.14', 'wpsc_ajax_action' );
+	add_action( 'init', 'wpsc_update_location' );
