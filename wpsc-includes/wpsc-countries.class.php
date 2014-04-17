@@ -848,7 +848,6 @@ class WPSC_Countries {
 	 * @access private
 	 * @since 3.8.14
 	 *
-	 * @param string $id Optional. Defaults to 0.
 	 */
 	public function __construct() {
 		if ( self::$active_wpsc_country_by_country_id == null ) {
@@ -860,10 +859,74 @@ class WPSC_Countries {
 			self::_create_country_maps();
 		}
 
+		add_filter( '_wpsc_javascript_localizations', array( __CLASS__, '_wpsc_countries_localizations' ) );
 		add_action( 'shutdown', array( __CLASS__, 'save_myself' ) );
 		self::$_initialized = true;
 	}
 
+
+	/**
+	 * add countries data to the wpec javascript localizations
+	 *
+	 * @access private
+	 * @since 3.8.14
+	 *
+	 * @param string $id Optional. Defaults to 0.
+	 */
+	public static function _wpsc_countries_localizations( $localizations_array ) {
+
+		$localizations_array['no_country_selected']       = __( 'Please select a country', 'wpsc' );
+		$localizations_array['no_region_selected_format'] = __( 'Please select a %s', 'wpsc' );
+
+		$wpsc_checkout = new wpsc_checkout();
+		$localizations_array['no_region_label']           = __( 'State/Province', 'wpsc' );
+
+		$checkout_form    = new WPSC_Checkout_Form();
+		$billing_state_id = $checkout_form->get_field_id_by_unique_name( 'billingstate' );
+		$fields           = $checkout_form->get_fields();
+
+		$in_this_country_a_region_is_called_a = $checkout_form->get( $billing_state_id );
+
+		$country_list = array();
+
+		foreach ( self::get_countries() as $country_id => $wpsc_country ) {
+			if ( $wpsc_country->is_visible() ) {
+				$country_list[$wpsc_country->get_isocode()] = $wpsc_country->get_name();
+
+				if ( $wpsc_country->has_regions() ) {
+					$regions = $wpsc_country->get_regions();
+					$region_list = array();
+					foreach ( $regions as $region_id => $wpsc_region ) {
+						$region_list[$region_id] = $wpsc_region->get_name();
+					}
+
+					if ( ! empty ( $region_list ) ) {
+						$localizations_array[ 'wpsc_country_'.$wpsc_country->get_isocode() . '_regions' ] = $region_list;
+					}
+				}
+
+				$region_label = $wpsc_country->get( 'region_label' );
+				if ( ! empty( $region_label ) ) {
+					$localizations_array['wpsc_country_' . $wpsc_country->get_isocode() . '_region_label' ] = $region_label;
+				}
+			}
+		}
+
+		if ( ! empty( $country_list ) ) {
+			$localizations_array['wpsc_countries'] = $country_list;
+		}
+
+		return $localizations_array;
+	}
+
+	/**
+	 * creates the data maps used internally by this class to service requests
+	 *
+	 * @access private
+	 * @since 3.8.14
+	 *
+	 * @param string $id Optional. Defaults to 0.
+	 */
 	public static function _create_country_maps() {
 		self::clear_cache();
 
@@ -1064,6 +1127,7 @@ class WPSC_Countries {
 			self::$currencies = new WPSC_Data_Map( null, $default_rebuild_callback );
 		}
 		self::$_maps_to_save_with_core_class['currencies'] = true;
+
 
 		/*
 		 * maps with names can optionally reload thier data themselves when the first request is processed, this class
@@ -1282,5 +1346,15 @@ class WPSC_Countries {
 		}
 
 		return self::$_initialized;
+	}
+}
+
+
+add_action( 'init', '_wpsc_make_countries_data_available' );
+
+function _wpsc_make_countries_data_available() {
+	static $wpsc_countries = null;
+	if ( $wpsc_countries == null ) {
+		$wpsc_countries = new WPSC_Countries();
 	}
 }

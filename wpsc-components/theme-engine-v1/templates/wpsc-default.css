@@ -830,6 +830,10 @@ span.rating_saved{
 	margin:0;
 }
 
+#content #checkout_page_container input[type="submit"] {
+	float:right;
+}
+
 #checkout_page_container table.checkout_cart tr.header th{
 	text-align: center;
 }

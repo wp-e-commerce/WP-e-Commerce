@@ -92,11 +92,21 @@ function _wpsc_country_dropdown_options( $args = '' ) {
  * @return 	string			HTML representation of the dropdown
  */
 function wpsc_get_country_dropdown( $args = '' ) {
+<<<<<<< Updated upstream
+	static $count = 0;
+	$count ++;
+
+	$defaults = array(
+			'name'                  => 'wpsc_countries',
+			'id'                    => "wpsc-country-dropdown-{$count}",
+			'class'                 => 'wpsc_country_dropdown',
+=======
 
 	$defaults = array(
 			'name'                  => 'wpsc_countries',
 			'id'                    => 'wpsc-country-dropdown',
-			'class'                 => 'wpsc_country_dropdown',
+			'class'                 => '',
+>>>>>>> Stashed changes
 			'additional_attributes' => '',
 	);
 

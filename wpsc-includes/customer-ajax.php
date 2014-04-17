@@ -580,7 +580,7 @@ add_action( 'wpsc_updated_visitor_meta', '_wpsc_vistor_shipping_same_as_billing_
 function _wpsc_get_country_and_region_replacements( $replacements = null, $replacebilling = true, $replaceshipping = true ) {
 	global $wpsc_checkout;
 	if ( empty( $wpsc_checkout ) ) {
-		$wpsc_checkout = new WPSC_Checkout();
+		$wpsc_checkout = new wpsc_checkout();
 	}
 
 	if ( empty( $replacements ) ) {
