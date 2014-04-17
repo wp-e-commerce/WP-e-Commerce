@@ -1939,3 +1939,8 @@ function wpsc_admin_dynamic_css() {
 	}
 	exit();
 }
+
+if ( isset( $_REQUEST['wpsc_ajax_actions'] ) && 'update_location' == $_REQUEST['wpsc_ajax_actions'] ) {
+	_wpsc_doing_it_wrong( 'wpsc_ajax_actions', __( 'wpsc_ajax_actions is not the proper parameter to pass AJAX handlers to WPeC.  Use wpsc_ajax_action instead.', 'wpsc' ) );
+	add_action( 'init', 'wpsc_update_location' );
+}
