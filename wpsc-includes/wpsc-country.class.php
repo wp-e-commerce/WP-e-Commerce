@@ -77,7 +77,7 @@ class WPSC_Country {
 		}
 
 		// setup default properties filter
-		add_filter( 'wpsc_country_get_property', array( __CLASS__, '_wpsc_country_default_properties' ), 10, 3 );
+		add_filter( 'wpsc_country_get_property', array( __CLASS__, '_wpsc_country_default_properties' ), 10, 2 );
 	}
 
 	/**
