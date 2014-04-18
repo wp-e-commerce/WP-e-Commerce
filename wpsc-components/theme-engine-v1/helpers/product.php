@@ -18,6 +18,7 @@ add_filter( 'post_type_link', 'wpsc_product_link', 10, 3 );
  */
 function wpsc_product_link( $permalink, $post, $leavename ) {
 	global $wp_query, $wpsc_page_titles, $wpsc_query, $wp_current_filter;
+
 	$rewritecode = array(
 		'%wpsc_product_category%',
 		$leavename ? '' : '%postname%',
@@ -42,13 +43,16 @@ function wpsc_product_link( $permalink, $post, $leavename ) {
 		$post    = get_post( $post_id );
 	}
 
-	$permalink_structure = get_option( 'permalink_structure' );
+	global $wp_rewrite;
+
+	$our_permalink_structure = $wp_rewrite->root;
 
 	// This may become customiseable later
-	$our_permalink_structure = str_replace( basename( home_url() ), '', $wpsc_page_titles['products'] ) . "/%wpsc_product_category%/%postname%/";
-	// Mostly the same conditions used for posts, but restricted to items with a post type of "wpsc-product "
+	$our_permalink_structure .= str_replace( basename( home_url() ), '', $wpsc_page_titles['products'] ) . "/%wpsc_product_category%/%postname%/";
 
-	if ( '' != $permalink_structure && !in_array( $post->post_status, array( 'draft', 'pending' ) ) ) {
+	// Mostly the same conditions used for posts, but restricted to items with a post type of "wpsc-product "
+	if ( $wp_rewrite->using_permalinks() && ! in_array( $post->post_status, array( 'draft', 'pending' ) ) ) {
+		
 		$product_categories = wpsc_get_product_terms( $post_id, 'wpsc_product_category' );
 		$product_category_slugs = array( );
 		foreach ( $product_categories as $product_category ) {
@@ -116,6 +120,7 @@ function wpsc_product_link( $permalink, $post, $leavename ) {
 
 		$permalink = home_url( $permalink );
 	}
+
 	return apply_filters( 'wpsc_product_permalink', $permalink, $post->ID );
 }
 

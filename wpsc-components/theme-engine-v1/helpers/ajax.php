@@ -37,7 +37,7 @@ if ( isset( $_REQUEST['wpsc_update_quantity'] ) && ($_REQUEST['wpsc_update_quant
 if ( isset( $_REQUEST['wpsc_ajax_action'] ) && ($_REQUEST['wpsc_ajax_action'] == 'rate_product') )
 	add_action( 'init', 'wpsc_update_product_rating' );
 
-if ( isset( $_REQUEST['wpsc_ajax_actions'] ) && 'update_location' == $_REQUEST['wpsc_ajax_actions'] ) {
+if ( isset( $_REQUEST['wpsc_ajax_action'] ) && 'update_location' == $_REQUEST['wpsc_ajax_action'] ) {
 	add_action( 'init', 'wpsc_update_location' );
 }
 

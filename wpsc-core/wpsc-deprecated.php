@@ -1828,43 +1828,31 @@ function wpsc_user_dynamic_js() {
 	_wpsc_deprecated_function( __FUNCTION__, '3.8.14', '_wpsc_javascript_localizations' );
 }
 
-
 /*
  * Over time certain javascript variables that were once localized into scripts will become obsolete
  * When they do moving them here will continue to create the variables for older javascript to use.
  */
-function _wpsc_deprecated_javascript_localization_vars( $localizations = array() ) {
+function _wpsc_deprecated_javascript_localization_vars() {
 
 	/**
 	 * @deprecated since 3.8.14
-	 * 
+	 *
 	 * wpsc_deprecated_vars as an object with the properties below has been replaced and each of the properties
-	 * is available as it's own variable, that means devs isntead of referencing "wpsc_ajax.base_url" do
+	 * is available as it's own variable, that means devs instead of referencing "wpsc_ajax.base_url" do
 	 * "base_url"
 	 */
-	$wpsc_ajax = array(
-		/* base url */
-		'base_url'             => site_url(), //admin-legacy.js
-		'WPSC_URL'             => WPSC_URL,
-		'WPSC_IMAGE_URL'       => WPSC_IMAGE_URL,
-		'WPSC_DIR_NAME'        => WPSC_DIR_NAME,
-		'WPSC_CORE_IMAGES_URL' => WPSC_CORE_IMAGES_URL,
 
-		/* LightBox Configuration start*/
-		'fileLoadingImage'         => WPSC_CORE_IMAGES_URL . '/loading.gif',
-		'fileBottomNavCloseImage'  => WPSC_CORE_IMAGES_URL . '/closelabel.gif',
-		'fileThickboxLoadingImage' => WPSC_CORE_IMAGES_URL . '/loadingAnimation.gif',
-		'resizeSpeed'              => 9,  // controls the speed of the image resizing (1=slowest and 10=fastest)
-		'borderSize'               => 10, //if you adjust the padding in the CSS, you will need to update this variable
-	);
+	$wpsc_deprecated_js_vars = array();
 
-	$localizations['wpsc_deprecated_vars'] = $wpsc_ajax;
+	$wpsc_deprecated_js_vars['base_url'] 				= site_url(); //admin-legacy.js
+	$wpsc_deprecated_js_vars['WPSC_DIR_NAME'] 			= WPSC_DIR_NAME;
+	$wpsc_deprecated_js_vars['fileLoadingImage'] 		= WPSC_CORE_IMAGES_URL . '/loading.gif';
+	$wpsc_deprecated_js_vars['fileBottomNavCloseImage'] = WPSC_CORE_IMAGES_URL . '/closelabel.gif';
+	$wpsc_deprecated_js_vars['resizeSpeed'] 			= 9;  // controls the speed of the image resizing (1=slowest and 10=fastest)
+	$wpsc_deprecated_js_vars['borderSize'] 				= 10; //if you adjust the padding in the CSS, you will need to update this variable
 
-	return $localizations;
-
+	return $wpsc_deprecated_js_vars;
 }
-
-
 
 /**
  * wpsc google checkout submit used for google checkout (unsure whether necessary in 3.8)
@@ -1938,4 +1926,76 @@ function wpsc_admin_dynamic_css() {
 <?php
 	}
 	exit();
+}
+
+if ( isset( $_REQUEST['wpsc_ajax_actions'] ) && 'update_location' == $_REQUEST['wpsc_ajax_actions'] ) {
+	_wpsc_doing_it_wrong( 'wpsc_ajax_actions', __( 'wpsc_ajax_actions is not the proper parameter to pass AJAX handlers to WPeC.  Use wpsc_ajax_action instead.', 'wpsc' ) );
+	add_action( 'init', 'wpsc_update_location' );
+}
+
+/**
+ * Update products page URL options when permalink scheme changes.
+ *
+ * @since  3.8.9
+ * @access private
+ *
+ * @uses wpsc_update_page_urls() Gets the premalinks for product pages and stores for quick reference
+ */
+function _wpsc_action_permalink_structure_changed() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.14' );
+
+	add_action( 'admin_notices', 'wpsc_check_permalink_notice' );
+
+	wpsc_update_page_urls( true );
+}
+
+/**
+ * Display warning if the user is using WordPress prior to 3.3 because there is a bug with custom
+ * post type and taxonomy permalink generation.
+ *
+ * @since 3.8.9
+ * @access private
+ */
+function _wpsc_display_permalink_refresh_notice() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.14' );
+	?>
+	<div id="notice" class="error fade">
+		<p>
+			<?php printf( __( 'Due to <a href="%1$s">a bug in WordPress prior to version 3.3</a>, you might run into 404 errors when viewing your products. To work around this, <a href="%2$s">upgrade to WordPress 3.3 or later</a>, or simply click "Save Changes" below a second time.' , 'wpsc' ), 'http://core.trac.wordpress.org/ticket/16736', 'http://codex.wordpress.org/Updating_WordPress' ); ?>
+		</p>
+	</div>
+	<?php
+}
+
+/* These deprecated functions were quite horribly named, begging for namespace colliding. */
+if ( ! function_exists( 'change_context' ) )  {
+	/**
+	 * Adding function to change text for media buttons
+	 */
+	function change_context( $context ) {
+		_wpsc_deprecated_function( __FUNCTION__, '3.8.14' );
+
+		$current_screen = get_current_screen();
+
+		if ( $current_screen->id != 'wpsc-product' )
+			return $context;
+		return __( 'Upload Image%s', 'wpsc' );
+
+	}
+}
+
+if ( ! function_exists( 'change_link' ) ) {
+	function change_link( $link ) {
+		_wpsc_deprecated_function( __FUNCTION__, '3.8.14' );
+
+		global $post_ID;
+		$current_screen = get_current_screen();
+		if ( $current_screen && $current_screen->id != 'wpsc-product' )
+			return $link;
+
+		$uploading_iframe_ID = $post_ID;
+		$media_upload_iframe_src = "media-upload.php?post_id=$uploading_iframe_ID";
+
+		return $media_upload_iframe_src . "&amp;type=image&parent_page=wpsc-edit-products";
+	}
 }

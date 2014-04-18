@@ -378,9 +378,6 @@ function wpsc_pagination( $totalpages = '', $per_page = '', $current_page = '', 
 			$page_link = trailingslashit( get_option( 'product_list_url' ) );
 			$separator = '';
 		}
-
-		if ( version_compare( get_bloginfo( 'version' ), '3.4', '<' ) )
-			$separator = 'page/';
 	}
 
 	// If there's only one page, return now and don't bother

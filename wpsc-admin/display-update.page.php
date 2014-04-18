@@ -48,10 +48,6 @@ if ( ! get_option( 'wpsc_needs_update', false ) ) {
 	}
 }
 
-if ( version_compare( PHP_VERSION, '5.0.0', '<' ) ) {
-	add_action( 'admin_notices', 'wpsc_display_php_version_notice' );
-}
-
 function wpsc_display_php_version_notice() {
 ?>
 	<div id='wpsc-warning' class='error fade'><p><?php printf( __( 'You are using PHP %s. WP e-Commerce %s requires PHP 5.0 or above. Please contact your hosting provider for further assistance.', 'wpsc' ), PHP_VERSION, WPSC_VERSION ); ?></p></div>

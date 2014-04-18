@@ -178,17 +178,13 @@ function _wpsc_javascript_localizations( $localizations = false ) {
 	static $already_added_default_localizations = false;
 
 	if ( ! $already_added_default_localizations ) {
-		
+
 		$localizations = array(
 			'ajaxurl'              => admin_url( 'admin-ajax.php', 'relative' ),
 			'spinner'              => esc_url( wpsc_get_ajax_spinner() ),
 			'no_quotes'            => __( 'It appears that there are no shipping quotes for the shipping information provided.  Please check the information and try again.', 'wpsc' ),
 			'ajax_get_cart_error'  => __( 'There was a problem getting the current contents of the shopping cart.', 'wpsc' ),
 		);
-
-		if ( defined( 'WPEC_LOAD_DEPRECATED' ) && WPEC_LOAD_DEPRECATED ) {
-			$localizations = _wpsc_deprecated_javascript_localization_vars( $localizations );
-		}
 
 		$already_added_default_localizations = true;
 	}

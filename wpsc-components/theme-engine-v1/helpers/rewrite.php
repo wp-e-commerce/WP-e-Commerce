@@ -58,14 +58,13 @@ function wpsc_taxonomy_rewrite_rules( $rewrite_rules ) {
 	}
 
 	// fix pagination in WordPress 3.4
-	if ( version_compare( get_bloginfo( 'version' ), '3.4', '>=' ) ) {
-		$rebuilt_rewrite_rules = array_merge(
-			array(
-				'(' . $products_page . ')/([0-9]+)/?$' => 'index.php?pagename=$matches[1]&page=$matches[2]',
-			),
-			$rebuilt_rewrite_rules
-		);
-	}
+	$rebuilt_rewrite_rules = array_merge(
+		array(
+			'(' . $products_page . ')/([0-9]+)/?$' => 'index.php?pagename=$matches[1]&page=$matches[2]',
+		),
+		$rebuilt_rewrite_rules
+	);
+
 	return $rebuilt_rewrite_rules;
 }
 
