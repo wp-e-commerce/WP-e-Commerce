@@ -130,14 +130,10 @@ function wpsc_country_region_list( $form_id = null, $ajax = false, $selected_cou
 
 	if ( $shippingfields ) {
 		$namevalue = ' name="collected_data[' . $region_form_id . ']" ';
-		$js = '';
 		$title = 'shippingregion';
-		$id = 'shippingregion';
 	} else {
 		$namevalue = ' name="collected_data[' . $form_id . '][1]" ';
-		$js = '';
 		$title = 'billingregion';
-		$id = 'billingregion';
 	}
 
 	$region_form_id = $supplied_form_id . '_region';
