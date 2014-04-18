@@ -242,6 +242,19 @@ class wpsc_checkout {
 	}
 
 	/**
+	 * returns the unqiue name for the current checkout item
+	 *
+	 * @since 3.8.14
+	 *
+	 * @access public
+	 *
+	 * @return string	unqiue name associated with the current checkout item
+	 */
+	function form_item_unique_name() {
+		return $this->checkout_item->unique_name;
+	}
+
+	/**
 	 * get_checkout_options, returns the form field options
 	 * @access public
 	 */
@@ -345,7 +358,7 @@ class wpsc_checkout {
 				$placeholder = apply_filters( 'wpsc_checkout_field_placeholder', apply_filters( 'wpsc_checkout_field_name', $this->checkout_item->name ), $this->checkout_item );
 				if ( $this->checkout_item->unique_name == 'shippingstate' ) {
 					if ( wpsc_uses_shipping() && wpsc_has_regions( $delivery_country ) ) {
-						$output = '<input data-wpsc-meta-key="' . $this->checkout_item->unique_name. '" title="' . $this->checkout_item->unique_name . '" type="hidden" id="' . $this->form_element_id() . '" class="shipping_region wpsc-visitor-meta" name="collected_data[' . $this->checkout_item->id . ']" placeholder="' . esc_attr( $placeholder ) . '" value="' . esc_attr( $delivery_region ) . '" size="4" />';
+						$output = '<input data-wpsc-meta-key="' . $this->checkout_item->unique_name. '" title="' . $this->checkout_item->unique_name . '" id="' . $this->form_element_id() . '" class="shipping_region wpsc-visitor-meta" name="collected_data[' . $this->checkout_item->id . ']" placeholder="' . esc_attr( $placeholder ) . '" value="' . esc_attr( $delivery_region ) . '" />';
 					} else {
 						$disabled = '';
 						if ( wpsc_disregard_shipping_state_fields() ) {

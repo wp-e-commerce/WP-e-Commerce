@@ -967,9 +967,9 @@ function wpsc_product_delivery_forms(){
 		</ul>
 
 		<div id="wpsc_product_delivery-shipping" class="tabs-panel" style="display:block;">
-			<?php 
+			<?php
 				if ( ! $has_variations ) {
-					wpsc_product_shipping_forms(); 
+					wpsc_product_shipping_forms();
 				} else {
  					echo '<p>' . sprintf( __( 'This product has variations. To edit the shipping, please use the <a href="%s">Variation Controls</a>.' , 'wpsc'  ), '#wpsc_product_variation_forms' ) . '</p>';
  				}

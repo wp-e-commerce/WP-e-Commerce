@@ -13,8 +13,9 @@
  */
 function _wpsc_doing_customer_meta_ajax( $action = '' ) {
 
-	$result = ( defined( 'DOING_AJAX' ) && DOING_AJAX  && isset( $_REQUEST['action'] )
-			&& ( strpos( $_REQUEST['action'], 'wpsc_' ) === 0 ) );
+	$doing_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
+
+	$result = $doing_ajax && ( strpos( $_REQUEST['action'], 'wpsc_' ) === 0  );
 
 	if ( $result && ! empty( $action ) ) {
 		$result = $_REQUEST['action'] == $action;
@@ -102,6 +103,9 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 			$customer_meta = array();
 		}
 
+		// We will want to know which, if any, checkout data changed, so grab the current checkout data so we can compare later
+		$old_checkout_info = _wpsc_get_checkout_info();
+
 		// We will also want to keep track of the values that are being set
 		$response['changed_customer_meta'] = $customer_meta;
 
@@ -142,8 +146,9 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 		foreach ( $response['customer_meta'] as $current_meta_key => $current_meta_value ) {
 
 			// if the meta key and value are the same as what was sent in the request we don't need to
-			// send them back because the client already knows about this.  But we have to check in case
-			// a data rule or a plugin that used our hooks made some adjustments
+			// send them back because the client already knows about this.
+			//
+			// But we have to check just in case a data rule or a plugin that used our hooks made some adjustments
 			if ( isset( $response['old_customer_meta'][$current_meta_key] ) && ( $response['old_customer_meta'][$current_meta_key] == $current_meta_value ) ) {
 				// new value s the same as the old value, why send it?
 				unset( $response['customer_meta'][$current_meta_key] );
@@ -152,12 +157,27 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 			}
 
 			// if the meta value we are considering sending back is one of the values the client gave, we don't send it
-			// becuase the client already knows the meta value and it is probably already visible in the user interface
+			// because the client already knows the meta value and it is probably already visible in the user interface
 			if ( isset( $customer_meta[$current_meta_key] ) && ( $customer_meta[$current_meta_key] == $current_meta_value ) ) {
 				// new value s the same as the old value, why send it?
 				unset( $response['customer_meta'][$current_meta_key] );
 				continue;
 			}
+		}
+
+		// Get the checkout information and if something has changed send it to the client
+		$new_checkout_info = _wpsc_wpsc_remove_unchanged_checkout_info( $old_checkout_info, _wpsc_get_checkout_info() );
+		if ( ! empty( $new_checkout_info ) ) {
+			$response['checkout_info'] = $new_checkout_info;
+		} else {
+			if ( isset( $response['checkout_info'] ) ) {
+				unset( $response['checkout_info'] );
+			}
+		}
+
+		// We don't need to send the old customer meta values to the client, so we will remove them
+		if ( isset( $response['old_customer_meta'] ) ) {
+			unset( $response['old_customer_meta'] );
 		}
 
 		wp_send_json_success( $response );
@@ -227,8 +247,6 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 		return $response;
 	}
 
-
-
 	if ( _wpsc_doing_customer_meta_ajax() ) {
 		add_action( 'wp_ajax_wpsc_validate_customer'       		, 'wpsc_validate_customer_ajax' );
 		add_action( 'wp_ajax_nopriv_wpsc_validate_customer'		, 'wpsc_validate_customer_ajax' );
@@ -242,7 +260,6 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 		add_action( 'wp_ajax_wpsc_update_customer_meta'       	, 'wpsc_update_customer_meta_ajax' );
 		add_action( 'wp_ajax_nopriv_wpsc_update_customer_meta'	, 'wpsc_update_customer_meta_ajax' );
 	}
-
 } // end if doing customer meta ajax
 
 /*************************************************************************************************
@@ -262,225 +279,6 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
  *
  *
  *************************************************************************************************/
-
-/**
- * Update the shipping same as billing meta value, return updated content to the user via the filter response
- *
- * @since 3.8.14
- * @param unknown $response
- * @param unknown $meta_key
- * @param unknown $meta_value
- * @return response array   val;ues to be encoded in JSON response to browser
- */
-function _wpsc_shipping_same_as_billing_ajax_response( $response, $meta_key, $meta_value ) {
-
-	if ( ! isset( $response['replacements'] ) ) {
-		$replacements = array();
-	} else {
-		$replacements = $response['replacements'];
-	}
-
-	if ( $meta_value == 1 ) {
-		_wpsc_get_country_and_region_replacements( $replacements );
-	}
-
-	$replacement = array( 'elementid' => 'change_country', 'element' => _wpsc_calculate_shipping_price_form() );
-	$replacements['change_country'] = $replacement;
-
-	$response['replacements']  = $replacements;
-
-	return $response;
-}
-
-add_filter( 'wpsc_customer_meta_response_shippingSameBilling', '_wpsc_shipping_same_as_billing_ajax_response', _WPSC_USER_META_HOOK_PRIORITY, 3 );
-
-
-/**
- * The html used on the default checkout for to create the select shipping desination selector,code lifted from the default
- * checkout form in version 3.8.14
- *
- * @since 3.8.14
- *
- * @return string
- */
-function _wpsc_calculate_shipping_price_form() {
-	ob_start();
-	?>
-	<form name='change_country' id='change_country' action='' method='post'>
-		<?php echo wpsc_shipping_country_list();?>
-	    <input type='hidden' name='wpsc_update_location' value='true' />
-	    <input type='submit' name='wpsc_submit_zipcode' value='<?php esc_attr_e( 'Calculate', 'wpsc' ); ?>' />
-	</form>
-	<?php
-	$result = ob_get_clean();
-
-	return $result;
-}
-
-
-/**
- * when the billing region is updated set the billing state meta value to the plain text version of the region
- *
- * @since 3.8.14
- * @param unknown $response
- * @param unknown $meta_key
- * @param unknown $meta_value
- * @return response array   val;ues to be encoded in JSON response to browser
- */
-function _wpsc_update_customer_billingregion( $response, $meta_key, $meta_value ) {
-
-	if ( ! isset( $response['replacements'] ) ) {
-		$replacements = array();
-	} else {
-		$replacements = $response['replacements'];
-	}
-
-	if ( wpsc_get_customer_meta( 'shippingSameBilling' ) == '1' ) {
-		$replacement = array( 'elementid' => 'change_country', 'element' => _wpsc_calculate_shipping_price_form() );
-		$replacements['change_country'] = $replacement;
-		$response['replacements']  = $replacements;
-	}
-
-	$response['checkout_info'] = _wpsc_get_checkout_info();
-
-	return $response;
-}
-
-add_action( 'wpsc_customer_meta_response_billingregion', '_wpsc_update_customer_billingregion', _WPSC_USER_META_HOOK_PRIORITY, 3 );
-
-/**
- * Update the shipping same as billing meta value, return updated content to the user
- *
- * @since 3.8.14
- * @param unknown $response
- * @param unknown $meta_key
- * @param unknown $meta_value
- * @return response array   val;ues to be encoded in JSON response to browser
- */
-function _wpsc_update_customer_billingcountry( $response, $meta_key, $meta_value ) {
-
-	if ( ! isset( $response['replacements'] ) ) {
-		$replacements = array();
-	} else {
-		$replacements = $response['replacements'];
-	}
-
-	$replacements = _wpsc_get_country_and_region_replacements( $replacements, true, false );
-
-	if ( wpsc_get_customer_meta( 'shippingSameBilling' ) == '1' ) {
-		$replacement = array( 'elementid' => 'change_country', 'element' => _wpsc_calculate_shipping_price_form() );
-		$replacements['change_country'] = $replacement;
-	}
-
-	$response['replacements']  = $replacements;
-
-	$response['checkout_info'] = _wpsc_get_checkout_info();
-
-	return $response;
-}
-
-add_action( 'wpsc_customer_meta_response_billingcountry', '_wpsc_update_customer_billingcountry', _WPSC_USER_META_HOOK_PRIORITY, 3 );
-
-
-/**
- * when the shipping region is updated set the shipping state meta value to the plain text version of the region
- *
- * @since 3.8.14
- * @param unknown $response
- * @param unknown $meta_key
- * @param unknown $meta_value
- * @return response array   val;ues to be encoded in JSON response to browser
- */
-function _wpsc_update_customer_shippingregion( $response, $meta_key, $meta_value ) {
-
-	$region = new WPSC_Region( wpsc_get_customer_meta( 'shippingcountry' ), $meta_value );
-	if ( $region ) {
-		wpsc_update_customer_meta( 'shippingstate', $region->get_name() );
-	}
-
-	if ( ! isset( $response['replacements'] ) ) {
-		$replacements = array();
-	} else {
-		$replacements = $response['replacements'];
-	}
-
-	$replacement = array( 'elementid' => 'change_country', 'element' => _wpsc_calculate_shipping_price_form() );
-	$replacements['change_country'] = $replacement;
-	$response['replacements']  = $replacements;
-
-	$response['checkout_info'] = _wpsc_get_checkout_info();
-
-	return $response;
-}
-
-add_action( 'wpsc_customer_meta_response_shippingregion', '_wpsc_update_customer_shippingregion', _WPSC_USER_META_HOOK_PRIORITY, 3 );
-
-
-/**
- * when the shipping region is updated set the shipping state meta value to the plain text version of the region
- *
- * @since 3.8.14
- * @param unknown $response
- * @param unknown $meta_key
- * @param unknown $meta_value
- * @return response array   val;ues to be encoded in JSON response to browser
- */
-function _wpsc_update_customer_shippingcountry( $response, $meta_key, $meta_value ) {
-
-	if ( ! isset( $response['replacements'] ) ) {
-		$replacements = array();
-	} else {
-		$replacements = $response['replacements'];
-	}
-
-	$replacements = _wpsc_get_country_and_region_replacements( $replacements, false, true );
-
-	$replacement = array( 'elementid' => 'change_country', 'element' => _wpsc_calculate_shipping_price_form() );
-	$replacements['change_country'] = $replacement;
-	$response['replacements']  = $replacements;
-
-	$response['checkout_info'] = _wpsc_get_checkout_info();
-
-	return $response;
-}
-
-add_action( 'wpsc_customer_meta_response_shippingcountry', '_wpsc_update_customer_shippingcountry', _WPSC_USER_META_HOOK_PRIORITY, 3 );
-
-
-
-
-/**
- * Values to change in response to the shopper updating shipping same as billing
- *
- * @since 3.8.14
- * @access private
- * @param unknown $response
- * @param unknown $meta_key
- * @param unknown $meta_value
- * @return AJAX response to be pass to client via JSON encode
- */
-function _wpsc_customer_meta_response_shippingSameBilling( $response, $meta_key, $meta_value ) {
-
-	if ( ! isset( $response['replacements'] ) ) {
-		$replacements = array();
-	} else {
-		$replacements = $response['replacements'];
-	}
-
-	$replacements = _wpsc_get_country_and_region_replacements( $replacements, true, true );
-
-	$replacement = array( 'elementid' => 'change_country', 'element' => _wpsc_calculate_shipping_price_form() );
-	$replacements['change_country'] = $replacement;
-	$response['replacements']  = $replacements;
-
-	$response['checkout_info'] = _wpsc_get_checkout_info();
-
-	return $response;
-}
-
-
-add_filter( 'wpsc_customer_meta_response_shippingSameBilling', '_wpsc_customer_meta_response_shippingSameBilling', _WPSC_USER_META_HOOK_PRIORITY, 3 );
-
 
 function _wpsc_customer_shipping_quotes_need_recalc( $meta_value, $meta_key, $customer_id ) {
 	wpsc_cart_clear_shipping_info();
@@ -689,4 +487,29 @@ function _wpsc_get_checkout_info() {
 
 	return $checkout_info;
 }
+
+
+/**
+ * remove checkout info that has not changed
+ *
+ * @since 3.8.14
+ * @access private
+ * @return array  checkout information
+ */
+function _wpsc_wpsc_remove_unchanged_checkout_info( $old_checkout_info, $new_checkout_info ) {
+
+	foreach ( $new_checkout_info as $new_checkout_info_key => $new_checkout_info_value ) {
+		if ( isset( $old_checkout_info[$new_checkout_info_key] ) ) {
+			$old_checkout_info_crc = crc32( json_encode( $old_checkout_info[$new_checkout_info_key] ) );
+			$new_checkout_info_crc = crc32( json_encode( $new_checkout_info_value ) );
+
+			if ( $old_checkout_info_crc == $new_checkout_info_crc ) {
+				unset( $new_checkout_info[$new_checkout_info_key] );
+			}
+		}
+	}
+
+	return $new_checkout_info;
+}
+
 

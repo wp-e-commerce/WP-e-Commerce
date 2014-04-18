@@ -1,19 +1,48 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
+// This logic is used to create the global that were originally defined in the 
 // This logic is used to create the globals that were originally defined in the 
 // dynamic-js file pre 3.8.14.  Note that variables also also exist in the "wpsc_ajax" structure.
-
-// iterate over the object and explicitly make each property a new global variable.  Because
-// we are doing the operation in the global context the 'this' is the same as 'window' and 
 // To add a new global property that can be referenced in the script see the hook 
 // wpsc_javascript_localizations in wpsc-core/wpsc-functions.php
 //
-if ( wpsc_vars.hasOwnProperty( "wpsc_ajax" ) ) {
-  this["wpsc_ajax"] = wpsc_vars["wpsc_ajax"];
-}
 
 /**
- * Javascript variables for WP-e-Commerce
+ * Legacy javascript variables for WP-e-Commerce
  * 
+ * These WPeC WordPress localized variables were in use prior to release 3.8.14, and are explicitly 
+ * declared here for maximum backwards compatibility.  
+ * 
+ * In releases prior to 3.8.14 these legacy variables may have been declared in the dynamically 
+ * created javascript, or in the HTML as a localized variable. 
+ * 
+ * For javascript variables added after version 3.8.14  use the following utility function to access the 
+ * localized variables.
+ * 
+ * wpsc_var_get ( name )
+ * wpsc_var_set ( name, value )
+ * wpsc_var_isset ( name, value );
+ * 
+ */
+if ( typeof wpsc_vars !== undefined ) {
+	var wpsc_ajax 						= wpsc_vars['wpsc_ajax'];
+	var base_url 						= wpsc_vars['base_url'];
+	var WPSC_URL 						= wpsc_vars['WPSC_URL'];
+	var WPSC_IMAGE_URL 					= wpsc_vars['WPSC_IMAGE_URL'];
+	var WPSC_IMAGE_URL 					= wpsc_vars['WPSC_IMAGE_URL'];
+	var WPSC_CORE_IMAGES_URL			= wpsc_vars['WPSC_CORE_IMAGES_URL'];
+	var fileThickboxLoadingImage 		= wpsc_vars['fileThickboxLoadingImage'];
+}
+// end of variable definitions
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * check if a localized WPeC value is set
+ * 
+ * @since 3.8.14
+ * 
+ * @param string 	name 		name of localized variable
+ * 
+ * @returns boolean		true if the variable is set, false otherwise
  * These WPeC WordPress localized variables were in use prior to release 3.8.14, and are explicitly 
  * declared here for maximum backwards compatibility.  
  * 
@@ -56,9 +85,21 @@ function wpsc_var_isset( name ) {
 	}
 
 	return false;	
+ * get the value of a localized WPeC value if it is set
+ * 
+ * @since 3.8.14
+ * 
+ * @param string 	name 		name of localized variable
+ * 
+ * @returns varies				value of the var set
+ * 
+ */
+function wpsc_var_get( name ) {
+	if ( typeof wpsc_vars !== undefined ) {
+		return  wpsc_vars[name]; 
 }
 
-/**
+	return undefined;		
  * get the value of a localized WPeC value if it is set
  * 
  * @since 3.8.14
@@ -95,8 +136,9 @@ function wpsc_var_set( name, value ) {
 
 	return undefined;			
 }
-///////////////////////////////////////////////////////////////////////////////////////////////
 
+	return undefined;			
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Setting up the WPEC customer identifier
@@ -128,7 +170,7 @@ function wpsc_var_set( name, value ) {
 var wpsc_visitor_id = false;
 
 if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
-	if ( ! ( document.cookie.indexOf("wpsc_attempted_validate") >= 0 ) ) {	
+	if ( true || ! ( document.cookie.indexOf("wpsc_attempted_validate") >= 0 ) ) {	
 		// create a cookie to signal that we have attempted validation.  If we find the cookie is set
 		// we don't re-attempt validation.  This means will only try to validate once and not slow down
 		// subsequent page views. 
@@ -160,15 +202,14 @@ if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
 }
 // end of setting up the WPEC customer identifier
 ///////////////////////////////////////////////////////////////////////////////////////////////
-
 function wpsc_do_ajax_request( data, success_callback ) {	
-		jQuery.ajax({
-			type      : "post",
-			dataType  : "json",
-			url       : wpsc_ajax.ajaxurl,
-			data      : data,
-			success   : success_callback,
-		});   					
+	jQuery.ajax({
+		type      : "post",
+		dataType  : "json",
+		url       : wpsc_ajax.ajaxurl,
+		data      : data,
+		success   : success_callback,
+	});   					
 }
 
 /**
@@ -184,7 +225,7 @@ function wpsc_update_customer_data( meta_key, meta_value, response_callback ) {
 	// wrap our ajax request in a try/catch so that an error doesn't stop the script from running
 	try { 	
 		var ajax_data = {action: 'wpsc_update_customer_meta', meta_key : meta_key, meta_value : meta_value };	
-		wpsc_do_ajax_request( ajax_data, response_callback );  
+		wpsc_do_ajax_request( ajax_data, response_callback ); 
 	} catch ( err ) {
 		; // we could handle the error here, or use it as a convenient place to set a breakpoint when debugging/testing
 	}
@@ -309,7 +350,6 @@ function wpsc_update_checkout_info( checkout_info ) {
 	return true;
 }
 
-
 /**
  * common callback to update checkout fields based on response from ajax processing.  All fields that set 
  * are present to make it easier to see where the plugin can be extended 
@@ -362,24 +402,37 @@ function wpsc_meta_item_change_response( response ) {
 }
 
 /**
+ * find the WPeC meta key associated with an element, if there is one
  * 
  * @param element  the lement to extract the meta key from
+ * 
  * @returns string meta_key
  */
 function wpsc_get_element_meta_key ( element ) {
 	
-	var meta_key = jQuery( element ).attr( "data-wpsc-meta-key" );
+	if ( element instanceof jQuery ) {
+		;
+	} else if ( typeof input == "string" ) {
+		element = wpsc_get_wpsc_meta_element( element );
+	} else if ( typeof input == "object" ){
+		element = jQuery( element );
+	} else {
+		return null;
+	}
+	
+	var meta_key = element.attr( "data-wpsc-meta-key" );
 	
 	if ( meta_key == undefined ) {
-		meta_key = jQuery( element ).attr( "title" );
+		meta_key = element.attr( "title" );
 		
 		if ( meta_key == undefined ) {
-			meta_key = jQuery( element ).attr( "id" );
+			meta_key = element.attr( "id" );
 		}
 	}
 
 	return meta_key;
 }
+
 /**
  * common callback triggered whenever a WPEC meta value is changed 
  * 
@@ -420,42 +473,21 @@ function wpsc_adjust_checkout_form_element_visibility() {
 	// make sure any item that changes checkout data is bound to the proper event handler
 	jQuery( ".wpsc-visitor-meta" ).off( "change", wpsc_meta_item_change );
 
-	var shipping_row = jQuery( "#shippingSameBilling" ).closest( "tr" );
+	if ( jQuery( "#shippingSameBilling" ).length ) {
 	
-	if( jQuery("#shippingSameBilling").is(":checked") ) { 
-		jQuery( shipping_row ).siblings( ":not( .checkout-heading-row ,  :has( #agree ), :has( .custom_gateway ) ) ").hide();
-		jQuery( "#shippingsameasbillingmessage" ).show();
-	} else {
-		jQuery( shipping_row ).siblings().show();
-		jQuery( "#shippingsameasbillingmessage" ).hide();		
-	} 
-
-	// set the visibility of the shipping state input fields
-	var shipping_country = wpsc_get_value_from_wpsc_meta_element( 'shippingcountry' );
-	var shipping_state_element = wpsc_get_wpsc_meta_element( 'shippingstate' ) ;
-	
-	
-	if ( jQuery("#shippingSameBilling").is(":checked") || ('US' === shipping_country) || ('CA' === shipping_country) ) {
-		shipping_state_element.closest( "tr" ).hide();
-		shipping_state_element.val( '' ).prop( 'disabled', true );
-	} else {			
-		shipping_state_element.closest( "tr" ).show();
-		shipping_state_element.val( '' ).prop( 'disabled', false );
+		var shipping_row = jQuery( "#shippingSameBilling" ).closest( "tr" );
+		
+		if( ! wpsc_show_checkout_shipping_fields() ) { 
+			jQuery( shipping_row ).siblings( ":not( .checkout-heading-row ,  :has( #agree ), :has( .custom_gateway ) ) ").hide();
+			jQuery( "#shippingsameasbillingmessage" ).show();
+		} else {
+			jQuery( shipping_row ).siblings().show();
+			jQuery( "#shippingsameasbillingmessage" ).hide();		
+		} 
 	}
 	
-	// set the visibility of the shipping state input fields
-	var billing_country = wpsc_get_value_from_wpsc_meta_element( 'billingcountry' );
-	var billing_state_element = wpsc_get_wpsc_meta_element( 'billingstate' ) ;
+	wpsc_update_location_elements_visibility();
 	
-	// are there any regions for the currently selected billing country
-	if ( wpsc_country_has_regions( billing_country ) ) {
-		billing_state_element.closest( "tr" ).hide();
-		billing_state_element.val( '' ).prop( 'disabled', true );
-	} else {			
-		billing_state_element.closest( "tr" ).show();
-		billing_state_element.val( '' ).prop( 'disabled', false );
-	}	
-
 	// make sure any item that changes checkout data is bound to the proper event handler
 	jQuery( ".wpsc-visitor-meta" ).on( "change", wpsc_meta_item_change );
 }
@@ -501,30 +533,27 @@ function wpsc_update_location_labels( country_select ) {
 	return true;	
 }
 
-
-/*
- * Load the region dropdowns based on changes to the country dropdowns
+/**
+ * Fill the associated regions drop down based on the value in the country drop down
  * 
- * since 3.8.14
- * 
+ * @param country_select jQuery Object  	Country drop down to work with
  */
-function wpsc_change_regions_when_country_changes() {
-	
-	var country_select = jQuery( this );
-	
-	var region_select = wpsc_country_region_element( country_select );
-	
-	var country_code = wpsc_get_value_from_wpsc_meta_element( country_select );
+function wpsc_update_regions_list_to_match_country( country_select ) {
+	var country_meta_key   = wpsc_get_element_meta_key( country_select );	
+	var region_select      = wpsc_country_region_element( country_select );
+	var region_meta_key    = wpsc_get_element_meta_key( region_select );
+	var all_region_selects = wpsc_get_wpsc_meta_elements( region_meta_key );
+	var country_code       = wpsc_get_value_from_wpsc_meta_element( country_select );
 	
 	if ( wpsc_country_has_regions( country_code ) ) {
 		var select_a_region_message = wpsc_no_region_selected_message( country_code );		
-		region_select.append( new Option( select_a_region_message, '' ) );
 		var regions = wpsc_country_regions( country_code )
-		region_select.empty();
+		all_region_selects.empty();
+		all_region_selects.append( new Option( select_a_region_message, '' ) );
 		for ( var region_code in regions ) {
 		  if ( regions.hasOwnProperty( region_code ) ) {
 			  var region_name = regions[region_code];
-			  region_select.append( new Option( region_name, region_code ) );
+			  all_region_selects.append( new Option( region_name, region_code ) );
 		  }
 		}
 		
@@ -535,10 +564,20 @@ function wpsc_change_regions_when_country_changes() {
 	}
 	
 	wpsc_update_location_labels( country_select );
-	wpsc_update_state_edit_text_visibility();
-	
+	wpsc_update_location_elements_visibility();	
 	wpsc_copy_meta_value_to_similiar( country_select );
 	
+}
+
+/*
+ * Load the region dropdowns based on changes to the country dropdowns
+ * 
+ * since 3.8.14
+ * 
+ */
+function wpsc_change_regions_when_country_changes() {
+	wpsc_copy_meta_value_to_similiar( jQuery( this ) );
+	wpsc_update_regions_list_to_match_country( jQuery( this ) )
 	return true;
 }
 
@@ -546,6 +585,7 @@ function wpsc_copy_meta_value_to_similiar( element ) {
 
 	var element_meta_key = wpsc_get_element_meta_key( element );
 	var meta_value = element.val();
+	var element_html = element.html();
 		
 	// if there are other fields on the current page that are used to change the same meta value then 
 	// they need to be updated
@@ -561,6 +601,10 @@ function wpsc_copy_meta_value_to_similiar( element ) {
 				} else {
 					jQuery( this ).removeAttr( 'checked' );
 				}
+			} if ( jQuery(this).is('select') ) {
+				var current_value = jQuery( this ).val();
+				jQuery( this ).html( element_html );
+				jQuery( this ).val( meta_value );
 			} else {
 				var current_value = jQuery( this ).val();
 				if ( current_value != meta_value ) {
@@ -571,57 +615,161 @@ function wpsc_copy_meta_value_to_similiar( element ) {
 	});
 }
 
-function wpsc_update_state_edit_text_visibility() {
-
-	var billing_state_element = wpsc_get_wpsc_meta_element( 'billingstate' ) ;
+/*
+ * returns the element id for the cehckout item if it is in the checkout form
+ * 
+ * @since 3.8.14
+ * 
+ * @param string 	name		unqiue name of the checkout item
+ * 
+ * @return int|boolean			element id if it is in the checkout form, false if the element is not in the checkout form
+ */
+function wpsc_checkout_item_form_id( name ) {
 	
-	if ( billing_state_element ) {
+	var map_from_name_to_id = wpsc_var_get( 'wpsc_checkout_unique_name_to_form_id_map' );
 	
-		// set the visibility of the shipping state input fields
-		var billing_country_code = wpsc_get_value_from_wpsc_meta_element( 'billingcountry' );
-
-		var billing_region_elements = wpsc_get_wpsc_meta_elements( 'billingregion' );
-		if ( billing_region_elements.length ) {
-			if ( wpsc_country_has_regions( billing_country_code ) ) {
-				billing_region_elements.show();
-			} else {
-				billing_region_elements.hide();
-			}
-		}
-
-		// are there any regions for the currently selected billing country
-		if ( wpsc_country_has_regions( billing_country_code ) ) {
-			billing_state_element.closest( "tr" ).hide();
-			billing_state_element.val( '' ).attr( 'disabled', 'disabled' );
-		} else {			
-			billing_state_element.closest( "tr" ).show();
-			billing_state_element.val( '' ).removeAttr( 'disabled' );
-		}
-	}	
+	var checkout_item_form_id = false;
 	
-	var shipping_country_code    = wpsc_get_value_from_wpsc_meta_element( 'shippingcountry' );
-	var shipping_state_element   = wpsc_get_wpsc_meta_element( 'shippingstate' );					
-	var shipping_region_elements = wpsc_get_wpsc_meta_elements( 'shippingregion' );
-	
-	if ( shipping_region_elements.length ) {
-		if ( wpsc_country_has_regions( shipping_country_code ) ) {
-			shipping_region_elements.show();
-		} else {
-			shipping_region_elements.hide();
+	if ( map_from_name_to_id )  {
+		if ( map_from_name_to_id.hasOwnProperty( name ) ) {
+			checkout_item_form_id = map_from_name_to_id[name];
 		}
 	}
+	
+	return checkout_item_form_id;
+}
 
-	if ( shipping_state_element ) {
-		// set the visibility of the shipping state input fields				
-		if ( wpsc_country_has_regions( shipping_country_code ) ) {
-			shipping_state_element.closest( "tr" ).hide();
-			shipping_state_element.val( '' ).attr( 'disabled', 'disabled' );
-		} else {			
-			if( ! jQuery("#shippingSameBilling").is(":checked") ) { 
-				shipping_state_element.closest( "tr" ).show();
-				shipping_state_element.val( '' ).removeAttr( 'disabled' );
-			}
+/*
+ * decide if shipping fields should be show or not
+ */
+function wpsc_show_checkout_shipping_fields() {
+	// we will need to know if shipping fields should be show or not, if there
+	// isn't a shipping same as billing element, then we show by default, if there
+	// is a shipping same as billing we show if the element is not checked
+	var show_shipping_field = true;
+	if( jQuery("#shippingSameBilling").length ) {
+		show_shipping_field = ! jQuery("#shippingSameBilling").is(":checked");
+	} 	
+	
+	return show_shipping_field;
+}
+
+function wpsc_setup_region_dropdowns() {
+	
+	var country_elements = wpsc_get_wpsc_meta_elements( 'billingcountry' ) ;
+	
+	wpsc_get_wpsc_meta_elements( 'billingcountry' ).each( function( index, value ){
+		 wpsc_update_regions_list_to_match_country( jQuery( this ) );	
+	});
+
+	wpsc_get_wpsc_meta_elements( 'shippingcountry' ).each( function( index, value ){
+		 wpsc_update_regions_list_to_match_country( jQuery( this ) );	
+	});
+}
+
+
+/**
+ * changes the visibility of the  region edit element and the region drop down element based on
+ *  on the state and contents of the coutnry drop down
+ *  
+ *  @since 3.8.14 
+ *  
+ *  @returns {Boolean}
+ */
+function wpsc_update_location_elements_visibility() {
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	// first and foremost, if there isn't a country dropdown then the region dropdown should
+	// not be visible, and if the region edit exists it should be visible. If the coutnry does exist
+	// we look at the region list to decide if region edit element should bw shown.
+	//
+	// Do the process trwice, once for bolling and then once for shipping
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+
+	// for convenience, get the jQuery objects for each of the billing elements we want to manipulate up front
+	var billing_state_elements = wpsc_get_wpsc_meta_elements( 'billingstate' ) ;
+	var billing_region_elements = wpsc_get_wpsc_meta_elements( 'billingregion' );
+	var billing_state_elements = wpsc_get_wpsc_meta_elements( 'billingstate' );
+	
+	if ( ! wpsc_checkout_item_form_id( 'billingcountry' ) ) {
+		if ( billing_region_elements.length ) {
+				billing_region_elements.hide();
 		}
+	
+		if ( billing_state_elements.length ) {
+			billing_state_elements.show();
+		}
+	} else {
+		
+		if ( billing_state_elements.length ) {
+		
+			// set the visibility of the shipping state input fields
+			var billing_country_code = wpsc_get_value_from_wpsc_meta_element( 'billingcountry' );
+
+			if ( billing_region_elements.length ) {
+				if ( wpsc_country_has_regions( billing_country_code ) ) {
+					billing_region_elements.show();
+				} else {
+					billing_region_elements.hide();
+				}
+			}
+
+			// are there any regions for the currently selected billing country
+			if ( wpsc_country_has_regions( billing_country_code ) ) {
+				billing_state_elements.closest( "tr" ).hide();
+				billing_state_elements.val( '' ).prop( 'disabled', true );
+			} else {			
+				billing_state_elements.closest( "tr" ).show();
+				billing_state_elements.val( '' ).prop( 'disabled', false );
+			}
+		}	
+	}
+	
+	// for convenience, get the jQuery objects for each of the billing elements we want to manipulate up front	
+	var shipping_state_elements  = wpsc_get_wpsc_meta_elements( 'shippingstate' );					
+	var shipping_region_elements = wpsc_get_wpsc_meta_elements( 'shippingregion' );	
+	
+	if ( ! wpsc_checkout_item_form_id( 'shippingcountry' ) ) {
+		if ( billing_region_elements.length ) {
+				billing_region_elements.hide();
+		}
+	
+		if ( billing_state_elements.length && wpsc_show_checkout_shipping_fields() ) {
+			billing_state_elements.show();
+		}
+	} else {
+				
+		if ( shipping_state_elements.length ) {
+		
+			// set the visibility of the shipping state input fields
+			var shipping_country_code = wpsc_get_value_from_wpsc_meta_element( 'shippingcountry' );
+
+			if ( shipping_region_elements.length ) {
+				if ( wpsc_country_has_regions( shipping_country_code ) ) {
+					shipping_region_elements.show();
+				} else {
+					shipping_region_elements.hide();
+				}
+			}
+
+			shipping_state_elements.each( function( index, value ){
+				var shipping_state_element = jQuery( this );
+				// are there any regions for the currently selected billing country
+				var tr = shipping_state_element.closest( "tr" );
+				
+				var hide_region_edit_row = wpsc_country_has_regions( shipping_country_code ) || ! tr.is(":visible") ;
+				if ( ! tr.hasClass( 'wpsc_change_country' ) ) {
+					if ( hide_region_edit_row ) {
+						tr.hide();
+						shipping_state_element.prop( 'disabled', true );
+					} else {			
+						tr.show();
+						shipping_state_element.prop( 'disabled', false );
+					}
+				}
+			});
+		}	
 	}
 
 	return true;
@@ -673,56 +821,6 @@ function wpsc_get_label_element( input ) {
 }
 
 
-/*
- * check if a variable is set, kind of like the php isset function, but only 
- * for our localizaed data
- * 
- * @since 3.8.14
- * 
- * @return true if set, false otherwise
- */
-function wpsc_var_isset( name ) {
-	var exists = wpsc_vars.hasOwnProperty ( name );
-	return exists;
-}
-
-/*
- * get a wpsc ajax variable, kind of like the php get method, but only 
- * for our localizaed data
- *
- * @since 3.8.14
- * 
- * @return variable if set, null otherwise
- * 
- */
-function wpsc_var_get( name ) {
-	var value = null;
-	
-	if ( wpsc_var_isset( name ) ) {
-		value = wpsc_vars[name];
-	}
-	
-	return value;
-}
-
-/*
- * get a wpsc ajax variable, kind of like the php get method, but only 
- * for our localizaed data
- *
- * @since 3.8.14
- * 
- * @return variable if set, null otherwise
- * 
- */
-function wpsc_var_set( name, value ) {
-	if ( wpsc_is_var_set( name ) ) {
-		wpsc_vars.name = value;
-	}
-	
-	return value;
-}
-
-
 function wpsc_get_wpsc_meta_element( meta_key ) {
 	var elements = wpsc_get_wpsc_meta_elements( meta_key );
 	return elements.first();
@@ -759,6 +857,7 @@ function wpsc_get_value_from_wpsc_meta_element( meta ) {
 		}
 	} else if ( element.is('select') ) {
 		meta_value = element.find( 'option:selected' ).val();		
+		var select_meta_value = element.val();
 	} else 	{
 		meta_value = element.val();	
 	}
@@ -780,19 +879,20 @@ function wpsc_country_region_element( country ) {
 	}
 	
 	var country_id = country.attr('id')	
-	var region_id = country_id + "_region";
-	
+	var region_id = country_id + "_region";	
 	var region_select = jQuery( "#" + region_id );
 	
-	return region_select;
-	
+	return region_select;	
 }
 
-
+/**
+ * process region drop down change event
+ * 
+ * @since 3.8.14
+ */
 function wpsc_region_change() {
 	wpsc_copy_meta_value_to_similiar( jQuery( this ) );
 }
-
 
 /**
  * ready to setup the events for user actions that casuse meta item changes 
@@ -800,7 +900,7 @@ function wpsc_region_change() {
  * @since 3.8.14
  */
 jQuery(document).ready(function ($) {
-
+		
 	if ( jQuery( ".wpsc-country-dropdown" ).length ) {
 		jQuery( ".wpsc-country-dropdown"   ).on( 'change', wpsc_change_regions_when_country_changes );
 	}
@@ -809,18 +909,17 @@ jQuery(document).ready(function ($) {
 		jQuery( ".wpsc-region-dropdown"   ).on( 'change', wpsc_region_change );
 	}
 
-	if ( jQuery( ".wpsc-country-dropdown" ).length ) {
+	if ( jQuery( ".wpsc-visitor-meta" ).length ) {
 		jQuery( ".wpsc-visitor-meta").on( "change", wpsc_meta_item_change );
 	}
-	
-	wpsc_update_state_edit_text_visibility();
-	
+			
+	// setup checkout form and make sure visibility of form elements is what it should be
+	wpsc_setup_region_dropdowns();
 	if ( $( 'body' ).hasClass( 'wpsc-shopping-cart' ) ) {
-		// make sure visibility of form elements is what it should be
-		wpsc_adjust_checkout_form_element_visibility();
-		jQuery( "#shippingSameBilling"  ).on( 'change', wpsc_adjust_checkout_form_element_visibility );
-	}
-		
+	wpsc_adjust_checkout_form_element_visibility();
+	wpsc_update_location_elements_visibility();
+	jQuery( "#shippingSameBilling"  ).on( 'change', wpsc_adjust_checkout_form_element_visibility );
+
 	if(jQuery('#checkout_page_container .wpsc_email_address input').val())
 		jQuery('#wpsc_checkout_gravatar').attr('src', 'https://secure.gravatar.com/avatar/'+MD5(jQuery('#checkout_page_container .wpsc_email_address input').val().split(' ').join(''))+'?s=60&d=mm');
 	jQuery('#checkout_page_container .wpsc_email_address input').keyup(function(){

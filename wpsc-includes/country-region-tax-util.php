@@ -96,7 +96,7 @@ function wpsc_get_country_dropdown( $args = '' ) {
 	$defaults = array(
 			'name'                  => 'wpsc_countries',
 			'id'                    => 'wpsc-country-dropdown',
-			'class'                 => 'wpsc_country_dropdown',
+			'class'                 => '',
 			'additional_attributes' => '',
 	);
 
@@ -114,7 +114,7 @@ function wpsc_get_country_dropdown( $args = '' ) {
 	}
 
 	$output = sprintf(
-			'<select name="%1$s" id="%2$s" class="%3$s" %4$s>',
+			'<select name="%1$s" id="%2$s" class="%3$s wpsc-country-dropdown" %4$s>',
 			/* %1$s */ esc_attr( $args['name'] ),
 			/* %2$s */ esc_attr( $args['id'] ),
 			/* %3$s */ esc_attr( $args['class'] ),
