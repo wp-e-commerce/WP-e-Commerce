@@ -304,7 +304,7 @@ class wpec_taxes {
 	 *                            Default action is to retrieve the id column.
 	 * @return: int, string, or false
 	 * */
-	function wpec_taxes_get_region_information(  $country = null, $region = null, $attribute = 'id' ) {
+	function wpec_taxes_get_region_information( $region, $attribute = 'id', $country = null ) {
 
 		$returnable = false;
 
@@ -317,7 +317,7 @@ class wpec_taxes {
 			// at the time of this change this function was not called with WPeC, but just in case we have a
 			// little logic here to try to catch an improper call, but it isn't perfect.
 
-			if ( ( $country == null ) || ( $region === null ) ) {
+			if ( ( $country == null ) ) {
 				_wpsc_doing_it_wrong( __FUNCTION__, __( 'Prior to version 3.8.14 this function was made available without the country parameter, because there is no assurance that region code ar unique across the globe we need to specify a country.', 'wpsc' ), '3.8.14' );
 			}
 
@@ -327,7 +327,7 @@ class wpec_taxes {
 				if ( $wpsc_country ) {
 					$wpsc_region = $wpsc_country->get_region( $region );
 					if ( $wpsc_region ) {
-						$returnable = $wpsc_region->get( $column );
+						$returnable = $wpsc_region->get( $attribute );
 					}
 				}
 			}
