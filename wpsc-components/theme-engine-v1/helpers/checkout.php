@@ -328,14 +328,6 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 	$selected_country = wpsc_get_customer_meta( 'shippingcountry' );
 	$selected_region  = wpsc_get_customer_meta( 'shippingregion'  );
 
-	if ( empty( $selected_country ) ) {
-		$selected_country = esc_attr( get_option( 'base_country' ) );
-	}
-
-	if ( empty( $selected_region ) ) {
-		$selected_region = esc_attr( get_option( 'base_region' ) );
-	}
-
 	$acceptable_countries = wpsc_get_acceptable_countries();
 
 	$additional_attributes = 'data-wpsc-meta-key="shippingcountry" ' . $js;

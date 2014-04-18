@@ -86,14 +86,6 @@ function wpsc_country_region_list( $form_id = null, $ajax = false, $selected_cou
 
 	$output = '';
 
-	if ( $selected_country == null ) {
-		$selected_country = get_option( 'base_country' );
-	}
-
-	if ( $selected_region == null ) {
-		//$selected_region = get_option( 'base_region' );
-	}
-
 	$selected_country = new WPSC_Country( $selected_country );
 	$selected_region = $selected_country->get_region( $selected_region );
 
@@ -122,7 +114,7 @@ function wpsc_country_region_list( $form_id = null, $ajax = false, $selected_cou
 				'class'                 => 'current_country wpsc-visitor-meta',
 				'selected'              => $selected_country->get_isocode(),
 				'additional_attributes' => $additional_attributes,
-				'placeholder'           => '',
+				'placeholder'           => __( 'Please select a country', 'wpsc' ),
 		)
 	);
 
@@ -144,8 +136,16 @@ function wpsc_country_region_list( $form_id = null, $ajax = false, $selected_cou
 	}
 
 	$output .= "<div id='region_select_$form_id'>";
+	$output .= '<select id="' . $id . '" class="current_region wpsc-visitor-meta" data-wpsc-meta-key="' . $title . '"  title="' . $title . '" ' . $namevalue . '" ' . $js . ">\n\r";
+
 	if ( $region_list != null ) {
-		$output .= '<select id="' . $id . '" class="current_region wpsc-visitor-meta" data-wpsc-meta-key="' . $title . '"  title="' . $title . '" ' . $namevalue . '" ' . $js . ">\n\r";
+
+		if ( count( $region_list ) > 1 ) {
+			$label = $selected_country->get( 'region_label' );
+			$please_select_message = sprintf( __( 'Please select a %s', 'wpsc' ), $label );
+			$output .= '<option value="">'  . $please_select_message. "</option>\n\r";
+		}
+
 		foreach ( $region_list as $region ) {
 			if ( $selected_region && $selected_region->get_id() == $region->get_id() ) {
 				$selected = "selected='selected'";
@@ -154,8 +154,9 @@ function wpsc_country_region_list( $form_id = null, $ajax = false, $selected_cou
 			}
 			$output .= "<option value='" . $region->get_id() . "' $selected>" . esc_html( $region->get_name() ) . "</option>\n\r";
 		}
-		$output .= "</select>\n\r";
 	}
+
+	$output .= "</select>\n\r";
 
 	$output .= '</div>';
 	$output .= "</div>\n\r";
