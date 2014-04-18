@@ -59,7 +59,7 @@ if ( 'object' === typeof wpsc_vars.wpsc_ajax ) {
 var wpsc_visitor_id = false;
 
 if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
-	if ( true || ! ( document.cookie.indexOf("wpsc_attempted_validate") >= 0 ) ) {	
+	if ( ! ( document.cookie.indexOf("wpsc_attempted_validate") >= 0 ) ) {	
 		// create a cookie to signal that we have attempted validation.  If we find the cookie is set
 		// we don't re-attempt validation.  This means will only try to validate once and not slow down
 		// subsequent page views. 
