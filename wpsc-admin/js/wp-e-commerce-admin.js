@@ -22,13 +22,7 @@ if ( typeof wpsc_admin_vars !== undefined ) {
 	var base_url 						= wpsc_admin_vars['base_url'];
 	var WPSC_URL 						= wpsc_admin_vars['WPSC_URL'];
 	var WPSC_IMAGE_URL 					= wpsc_admin_vars['WPSC_IMAGE_URL'];
-	var WPSC_DIR_NAME 					= wpsc_admin_vars['WPSC_DIR_NAME'];
-	var WPSC_IMAGE_URL 					= wpsc_admin_vars['WPSC_IMAGE_URL'];
-	var fileLoadingImage 				= wpsc_admin_vars['fileLoadingImage'];
-	var fileBottomNavCloseImage 		= wpsc_admin_vars['fileBottomNavCloseImage'];
 	var fileThickboxLoadingImage 		= wpsc_admin_vars['fileThickboxLoadingImage'];
-	var resizeSpeed 					= wpsc_admin_vars['resizeSpeed'];
-	var borderSize 						= wpsc_admin_vars['borderSize'];
 	var hidden_boxes 					= wpsc_admin_vars['hidden_boxes'];
 	var IS_WP27 						= wpsc_admin_vars['IS_WP27'];
 	var TXT_WPSC_DELETE 				= wpsc_admin_vars['TXT_WPSC_DELETE'];
