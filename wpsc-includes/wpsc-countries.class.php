@@ -877,8 +877,6 @@ class WPSC_Countries {
 
 		$localizations_array['no_country_selected']       = __( 'Please select a country', 'wpsc' );
 		$localizations_array['no_region_selected_format'] = __( 'Please select a %s', 'wpsc' );
-
-		$wpsc_checkout = new wpsc_checkout();
 		$localizations_array['no_region_label']           = __( 'State/Province', 'wpsc' );
 
 		$checkout_form    = new WPSC_Checkout_Form();
