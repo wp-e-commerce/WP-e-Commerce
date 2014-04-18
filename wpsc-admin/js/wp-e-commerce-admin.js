@@ -16,7 +16,6 @@
  * wpsc_admin_var_set ( name, value )
  * wpsc_admin_var_isset ( name, value );
  * 
- * conditionally loaded based upon the value of WPEC_LOAD_DEPRECATED
  */
 
 if ( typeof wpsc_admin_vars !== undefined ) {
