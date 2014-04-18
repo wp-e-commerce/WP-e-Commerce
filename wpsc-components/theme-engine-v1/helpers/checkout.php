@@ -286,8 +286,12 @@ function wpsc_checkout_form_field() {
 	return $wpsc_checkout->form_field();
 }
 
-function wpsc_shipping_region_list( $selected_country, $selected_region, $shippingdetails = false ) {
+function wpsc_shipping_region_list( $selected_country, $selected_region, $deprecated = false ) {
 	$output = '';
+
+	if ( false !== $deprecated ) {
+		_wpsc_deprecated_argument( __FUNCTION, '3.8.14' );
+	}
 
 	$country = new WPSC_Country( $selected_country );
 	$regions = $country->get_regions();
