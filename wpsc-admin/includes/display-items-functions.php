@@ -169,8 +169,7 @@ function wpsc_price_control_forms() {
     	<div class='wpsc_floatleft' style="width:85px;">
     		<label><?php esc_html_e( 'Price '. $ct_code .' ' . $ct_symb, 'wpsc' ); ?></label>
 			<input id = "wpsc_price"
-					type="number" size='10'
-					min="0" step="0.01"
+					type="text"
 					name="meta[_wpsc_price]"
 					style="width:80px;"
 					value="<?php echo esc_attr( $price );  ?>"
@@ -182,8 +181,6 @@ function wpsc_price_control_forms() {
 	); ?>; width:85px; margin-left:30px;'>
 			<label for='add_form_special'><?php esc_html_e( 'Sale Price '.$ct_code.' '.$ct_symb, 'wpsc' ); ?></label>
 			<input id = "wpsc_sale_price"
-					type="number" size='10'
-					min="0" step="0.01"
 					style="width:80px;"
 					value="<?php echo esc_attr( $sale_price ); ?>"
 					name='meta[_wpsc_special_price]'
@@ -216,7 +213,7 @@ function wpsc_price_control_forms() {
 										<?php endforeach; ?>
 									</select>
 								</td>
-								<td><input type="number" min="0" step="0.01" class="newCurrPrice text" size="8" name="newCurrPrice[]" value="<?php echo $alt_price; ?>" /></td>
+								<td><input class="newCurrPrice text" size="8" name="newCurrPrice[]" value="<?php echo $alt_price; ?>" /></td>
 							</tr>
 							<?php
 						endforeach;
@@ -233,7 +230,7 @@ function wpsc_price_control_forms() {
 								<?php } ?>
 							</select>
 						</td>
-						<td><input type="number" min="0" step="0.1" class="newCurrPrice text" size="8" name="newCurrPrice[]" value="0.00" /></td>
+						<td><input class="newCurrPrice text" size="8" name="newCurrPrice[]" value="0.00" /></td>
 					</tr>
 				</tbody>
 			</table>
@@ -264,7 +261,7 @@ function wpsc_price_control_forms() {
 										<?php esc_html_e( '+', 'wpsc' ); ?>
 									</td>
 									<td class="curr"><?php echo $ct_code . ' ' . $ct_symb; ?></td>
-									<td><input type="number" size="10" min="0" step="0.01" class="newCurrPrice text" value="<?php echo $table_price; ?>" name="table_rate_price[table_price][]" /></td>
+									<td><input class="newCurrPrice text" value="<?php echo $table_price; ?>" name="table_rate_price[table_price][]" /></td>
 								</tr>
 								<?php
 							}
@@ -274,11 +271,11 @@ function wpsc_price_control_forms() {
 					<tr id="wpsc_quantity_discount_row_template" class="template hidden">
 						<td class="remove"><a href="#" class="remove_line<?php echo $currency_delete_class; ?>"><?php echo $currency_delete_text; ?></a></td>
 						<td class="qty">
-							<input type="number" size="5" min="0" step="1" value="0" name="table_rate_price[quantity][]" />
+							<input size="5" value="0" name="table_rate_price[quantity][]" />
 							<?php esc_html_e( '+', 'wpsc' ); ?>
 						</td>
 						<td class="curr"><?php echo $ct_code . ' ' . $ct_symb; ?></td>
-						<td><input type="number" size="10" min="0" step="0.01" class="newCurrPrice text" value="0" name="table_rate_price[table_price][]" /></td>
+						<td><input size="10"class="newCurrPrice text" value="0" name="table_rate_price[table_price][]" /></td>
 					</tr>
 				</tbody>
 			</table>
@@ -680,9 +677,9 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 				<?php endif; ?>
 				<label for="wpsc-product-shipping-weight"><?php echo esc_html_e( 'Dimensions', 'wpsc' ); ?></label>
 				<span class="wpsc-product-shipping-input">
-					<input type="number" min="0" step="0.01" placeholder="L" id="wpsc-product-shipping-length" name="<?php echo $field_name_prefix; ?>[dimensions][length]" value="<?php if ( !$bulk && $dimensions['length']>0 ) echo esc_attr( wpsc_format_number( $dimensions['length'] ) ); ?>" />&nbsp;&times;&nbsp;
-					<input type="number" min="0" step="0.01" placeholder="W" id="wpsc-product-shipping-width" name="<?php echo $field_name_prefix; ?>[dimensions][width]" value="<?php if ( !$bulk && $dimensions['width']>0 ) echo esc_attr( wpsc_format_number( $dimensions['width'] ) ); ?>" />&nbsp;&times;&nbsp;
-					<input type="number" min="0" step="0.01" placeholder="H" id="wpsc-product-shipping-height" name="<?php echo $field_name_prefix; ?>[dimensions][height]" value="<?php if ( !$bulk && $dimensions['height']>0 ) echo esc_attr( wpsc_format_number( $dimensions['height'] ) ); ?>" />
+					<input placeholder="L" id="wpsc-product-shipping-length" name="<?php echo $field_name_prefix; ?>[dimensions][length]" value="<?php if ( !$bulk && $dimensions['length']>0 ) echo esc_attr( wpsc_format_number( $dimensions['length'] ) ); ?>" />&nbsp;&times;&nbsp;
+					<input placeholder="W" id="wpsc-product-shipping-width" name="<?php echo $field_name_prefix; ?>[dimensions][width]" value="<?php if ( !$bulk && $dimensions['width']>0 ) echo esc_attr( wpsc_format_number( $dimensions['width'] ) ); ?>" />&nbsp;&times;&nbsp;
+					<input placeholder="H" id="wpsc-product-shipping-height" name="<?php echo $field_name_prefix; ?>[dimensions][height]" value="<?php if ( !$bulk && $dimensions['height']>0 ) echo esc_attr( wpsc_format_number( $dimensions['height'] ) ); ?>" />
 					<select id="wpsc-product-shipping-dimensions-unit" name="<?php echo $field_name_prefix; ?>[dimension_unit]">
 						<?php foreach ( $dimension_units as $unit => $unit_label ): ?>
 							<option value="<?php echo $unit; ?>" <?php if ( ! $bulk && isset( $meta['dimension_unit'] ) ) selected( $unit, $meta['dimension_unit'] ); // Dirty code ?>><?php echo esc_html( $unit_label ); ?></option>
@@ -710,7 +707,7 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 				<label for="wpsc-product-shipping-flatrate-local"><?php esc_html_e( 'Local Shipping Fee', 'wpsc' ); ?></label>
 				<span>
 					<?php echo $ct_symb; ?>
-					<input type="number" min="0" step="0.01" id="wpsc-product-shipping-flatrate-local" name="<?php echo $field_name_prefix; ?>[shipping][local]" value="<?php if ( ! $bulk ) echo $shipping['local']; ?>"  />
+					<input id="wpsc-product-shipping-flatrate-local" name="<?php echo $field_name_prefix; ?>[shipping][local]" value="<?php if ( ! $bulk ) echo $shipping['local']; ?>"  />
 				</span>
 			</p>
 			<p class="wpsc-form-field">
@@ -720,7 +717,7 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 				<label for="wpsc-product-shipping-flatrate-international"><?php esc_html_e( 'International Shipping Fee', 'wpsc' ); ?></label>
 				<span>
 					<?php echo $ct_symb; ?>
-					<input type="number" min="0" step="0.01" id="wpsc-product-shipping-flatrate-international" name="<?php echo $field_name_prefix; ?>[shipping][international]" value="<?php if ( ! $bulk ) echo $shipping['international']; ?>"  />
+					<input id="wpsc-product-shipping-flatrate-international" name="<?php echo $field_name_prefix; ?>[shipping][international]" value="<?php if ( ! $bulk ) echo $shipping['international']; ?>"  />
 				</span>
 			</p>
 		</div>
@@ -1468,16 +1465,6 @@ function save_term_prices( $term_id ) {
 
 	// Second - If box was checked, let's then check whether or not it was flat, differential, or percentile, then let's apply the pricing to every product appropriately
 	if ( isset( $_POST["apply_to_current"] ) ) {
-
-		//Check for flat, percentile or differential
-		$var_price_type = '';
-
-		if ( flat_price( $_POST["variation_price"] ) )
-			$var_price_type = 'flat';
-		elseif ( differential_price( $_POST["variation_price"] ) )
-			$var_price_type = 'differential';
-		elseif ( percentile_price( $_POST["variation_price"] ) )
-			$var_price_type = 'percentile';
 
 		//Now, find all products with this term_id, update their pricing structure (terms returned include only parents at this point, we'll grab relevent children soon)
 		$products_to_mod = get_objects_in_term( $term_id, "wpsc-variation" );
