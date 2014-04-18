@@ -342,8 +342,12 @@ function wpsc_checkout_form_field() {
 }
 
 
-function wpsc_shipping_region_list( $selected_country, $selected_region, $shippingdetails = false, $id = 'region' ) {
+function wpsc_shipping_region_list( $selected_country, $selected_region, $deprecated = false, $id = 'region' ) {
 	$output = '';
+
+	if ( false !== $deprecated ) {
+		_wpsc_deprecated_argument( __FUNCTION, '3.8.14' );
+	}
 
 	$country = new WPSC_Country( $selected_country );
 	$regions = $country->get_regions();
