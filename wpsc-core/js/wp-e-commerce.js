@@ -6,12 +6,12 @@
 //
 
 /**
- * Legacy javascript variables for WP-e-Commerce
+ * Javascript variables for WP-e-Commerce
  * 
  * These WPeC WordPress localized variables were in use prior to release 3.8.14, and are explicitly 
  * declared here for maximum backwards compatibility.  
  * 
- * In releases prior to 3.8.14 these legacy variables may have been declared in the dynamically 
+ * In releases prior to 3.8.14 these  variables may have been declared in the dynamically 
  * created javascript, or in the HTML as a localized variable. 
  * 
  * For javascript variables added after version 3.8.14  use the following utility function to access the 
