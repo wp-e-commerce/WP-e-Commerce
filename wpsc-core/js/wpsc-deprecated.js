@@ -10,7 +10,6 @@ if ( typeof wpsc_deprecated_js_vars !== undefined ) {
 	/*
 	 * Deprecated in 3.8.14
 	 */
-	var base_url 					= wpsc_deprecated_js_vars['base_url'];
 	var WPSC_DIR_NAME				= wpsc_deprecated_js_vars['WPSC_DIR_NAME'];
 	var fileLoadingImage			= wpsc_deprecated_js_vars['fileLoadingImage'];	
 	var fileBottomNavCloseImage		= wpsc_deprecated_js_vars['fileBottomNavCloseImage'];
