@@ -168,8 +168,6 @@ function wpsc_country_region_list( $form_id = null, $ajax = false, $selected_cou
 
 	$output .= '</div>';
 	$output .= "</div>\n\r";
-
-	error_log( $output );
 	return $output;
 }
 
