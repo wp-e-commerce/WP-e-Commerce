@@ -542,9 +542,6 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 
 	$current_screen = get_current_screen();
 
-	if ( version_compare( get_bloginfo( 'version' ), '3.3', '<' ) )
-		wp_admin_css( 'dashboard' );
-
 	if ( 'dashboard_page_wpsc-sales-logs' == $current_screen->id ) {
 		// jQuery
 		wp_enqueue_script( 'jquery' );
@@ -1133,48 +1130,6 @@ function wpsc_print_admin_scripts() {
 	wp_enqueue_script( 'wp-e-commerce-admin', WPSC_CORE_JS_URL . '/wp-e-commerce.js', array( 'jquery' ), $version_identifier );
 	wp_localize_script( 'wp-e-commerce-admin', 'wpsc_ajax', _wpsc_javascript_localizations() );
 }
-
-/**
- * Update products page URL options when permalink scheme changes.
- *
- * @since  3.8.9
- * @access private
- *
- * @uses get_bloginfo()                               Returns information about your site to be used elsewhere
- * @uses version_compare()                            Compares two "PHP-standardized" version number strings
- * @uses _wpsc_display_permalink_refresh_notice()     Display warning on older WordPress versions
- * @uses wpsc_update_page_urls()                      Gets the premalinks for product pages and stores for quick reference
- */
-function _wpsc_action_permalink_structure_changed() {
-	$wp_version = get_bloginfo( 'version' );
-
-	// see WordPress core trac ticket:
-	// http://core.trac.wordpress.org/ticket/16736
-	// this has been fixed in WordPress 3.3
-	if ( version_compare( $wp_version, '3.3', '<' ) )
-		_wpsc_display_permalink_refresh_notice();
-		add_action( 'admin_notices', 'wpsc_check_permalink_notice' );
-
-	wpsc_update_page_urls( true );
-}
-
-/**
- * Display warning if the user is using WordPress prior to 3.3 because there is a bug with custom
- * post type and taxonomy permalink generation.
- *
- * @since 3.8.9
- * @access private
- */
-function _wpsc_display_permalink_refresh_notice(){
-	?>
-	<div id="notice" class="error fade">
-		<p>
-			<?php printf( __( 'Due to <a href="%1$s">a bug in WordPress prior to version 3.3</a>, you might run into 404 errors when viewing your products. To work around this, <a href="%2$s">upgrade to WordPress 3.3 or later</a>, or simply click "Save Changes" below a second time.' , 'wpsc' ), 'http://core.trac.wordpress.org/ticket/16736', 'http://codex.wordpress.org/Updating_WordPress' ); ?>
-		</p>
-	</div>
-	<?php
-}
-
 
 /**
  * wpsc_ajax_ie_save save changes made using inline edit

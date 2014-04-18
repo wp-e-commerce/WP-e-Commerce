@@ -1024,37 +1024,11 @@ function wpsc_product_details_forms(){
 <?php
 }
 
-/**
- * Adding function to change text for media buttons
- */
-function change_context( $context ) {
-	$current_screen = get_current_screen();
-
-	if ( $current_screen->id != 'wpsc-product' )
-		return $context;
-	return __( 'Upload Image%s', 'wpsc' );
-}
-function change_link( $link ) {
-	global $post_ID;
-	$current_screen = get_current_screen();
-	if ( $current_screen && $current_screen->id != 'wpsc-product' )
-		return $link;
-
-	$uploading_iframe_ID = $post_ID;
-	$media_upload_iframe_src = "media-upload.php?post_id=$uploading_iframe_ID";
-
-	return $media_upload_iframe_src . "&amp;type=image&parent_page=wpsc-edit-products";
-}
 function wpsc_form_multipart_encoding() {
 	echo ' enctype="multipart/form-data"';
 }
 
 add_action( 'post_edit_form_tag', 'wpsc_form_multipart_encoding' );
-
-if ( version_compare( get_bloginfo( 'version' ), '3.5', '<' ) ) {
-	add_filter( 'media_buttons_context', 'change_context' );
-	add_filter( 'image_upload_iframe_src', "change_link" );
-}
 
 /*
 * Modifications to Media Gallery
