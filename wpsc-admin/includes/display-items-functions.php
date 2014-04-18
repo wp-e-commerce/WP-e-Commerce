@@ -1466,16 +1466,6 @@ function save_term_prices( $term_id ) {
 	// Second - If box was checked, let's then check whether or not it was flat, differential, or percentile, then let's apply the pricing to every product appropriately
 	if ( isset( $_POST["apply_to_current"] ) ) {
 
-		//Check for flat, percentile or differential
-		$var_price_type = '';
-
-		if ( flat_price( $_POST["variation_price"] ) )
-			$var_price_type = 'flat';
-		elseif ( differential_price( $_POST["variation_price"] ) )
-			$var_price_type = 'differential';
-		elseif ( percentile_price( $_POST["variation_price"] ) )
-			$var_price_type = 'percentile';
-
 		//Now, find all products with this term_id, update their pricing structure (terms returned include only parents at this point, we'll grab relevent children soon)
 		$products_to_mod = get_objects_in_term( $term_id, "wpsc-variation" );
 		$product_parents = array( );
