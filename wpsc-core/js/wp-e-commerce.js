@@ -743,7 +743,7 @@ function wpsc_get_value_from_wpsc_meta_element( meta ) {
 		element = meta;
 	} else if ( typeof meta == "string" ) {
 		element = wpsc_get_wpsc_meta_element( meta );
-	} else if ( typeof meta == "object" ){
+	} else if ( typeof meta == "object" ) {
 		element = jQuery( meta );
 	} else {
 		return null;
