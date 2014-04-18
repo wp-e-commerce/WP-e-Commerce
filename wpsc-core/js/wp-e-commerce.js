@@ -91,22 +91,14 @@ if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
 // end of setting up the WPEC customer identifier
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-	return wpsc_var_get( '_wpsc_admin_ajax_url' );
-var ajax_via_jquery_post = false;
-
-function wpsc_do_ajax_request( ajax_url, data, success_callback ) {
-	
-	if ( ajax_via_jquery_post ) {
-		jQuery.post( wpsc_ajax.ajaxurl, form_values, success, 'json' );
-	} else {
+function wpsc_do_ajax_request( data, success_callback ) {	
 		jQuery.ajax({
 			type      : "post",
 			dataType  : "json",
-			url       : ajax_url,
+			url       : wpsc_ajax.ajaxurl,
 			data      : data,
 			success   : success_callback,
 		});   					
-	}
 }
 
 /**
@@ -122,7 +114,7 @@ function wpsc_update_customer_data( meta_key, meta_value, response_callback ) {
 	// wrap our ajax request in a try/catch so that an error doesn't stop the script from running
 	try { 	
 		var ajax_data = {action: 'wpsc_update_customer_meta', meta_key : meta_key, meta_value : meta_value };	
-		wpsc_do_ajax_request( wpsc_ajax_url(), ajax_data, response_callback ); 
+		wpsc_do_ajax_request( ajax_data, response_callback );  
 	} catch ( err ) {
 		; // we could handle the error here, or use it as a convenient place to set a breakpoint when debugging/testing
 	}
@@ -141,7 +133,7 @@ function wpsc_get_customer_data( response_callback ) {
 	// wrap our ajax request in a try/catch so that an error doesn't stop the script from running
 	try { 	
 		var ajax_data = {action: 'wpsc_get_customer_meta' };	
-		wpsc_do_ajax_request( wpsc_ajax_url(), ajax_data, response_callback );
+		wpsc_do_ajax_request( ajax_data, response_callback );
 	} catch ( err ) {
 		; // we could handle the error here, or use it as a convenient place to set a breakpoint when debugging/testing
 	}
