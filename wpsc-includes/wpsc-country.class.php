@@ -87,10 +87,10 @@ class WPSC_Country {
 	 *
 	 * @param 	mixed 					$property_value
 	 * @param 	string 					$property_name
-	 * @param 	WPSC_Country object		$wpsc_country
+	 * 
 	 * @return	mixed 					the new proprty value
 	*/
-	public static function _wpsc_country_default_properties( $property_value, $property_name, $wpsc_country ) {
+	public static function _wpsc_country_default_properties( $property_value, $property_name ) {
 
 		switch ( $property_name ) {
 			case 'region_label':
