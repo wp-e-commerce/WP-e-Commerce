@@ -1,6 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
-// This logic is used to create the global that were originally defined in the 
-// This logic is used to create the globals that were originally defined in the 
+// This section is used to create the globals that were originally defined in the 
 // dynamic-js file pre 3.8.14.  Note that variables also also exist in the "wpsc_ajax" structure.
 // To add a new global property that can be referenced in the script see the hook 
 // wpsc_javascript_localizations in wpsc-core/wpsc-functions.php
@@ -43,40 +42,6 @@ if ( typeof wpsc_vars !== undefined ) {
  * @param string 	name 		name of localized variable
  * 
  * @returns boolean		true if the variable is set, false otherwise
- * These WPeC WordPress localized variables were in use prior to release 3.8.14, and are explicitly 
- * declared here for maximum backwards compatibility.  
- * 
- * In releases prior to 3.8.14 these  variables may have been declared in the dynamically 
- * created javascript, or in the HTML as a localized variable. 
- * 
- * For javascript variables added after version 3.8.14  use the following utility function to access the 
- * localized variables.
- * 
- * wpsc_var_get ( name )
- * wpsc_var_set ( name, value )
- * wpsc_var_isset ( name, value );
- * 
- */
-if ( typeof wpsc_vars !== undefined ) {
-	var wpsc_ajax 						= wpsc_vars['wpsc_ajax'];
-	var base_url 						= wpsc_vars['base_url'];
-	var WPSC_URL 						= wpsc_vars['WPSC_URL'];
-	var WPSC_IMAGE_URL 					= wpsc_vars['WPSC_IMAGE_URL'];
-	var WPSC_IMAGE_URL 					= wpsc_vars['WPSC_IMAGE_URL'];
-	var WPSC_CORE_IMAGES_URL			= wpsc_vars['WPSC_CORE_IMAGES_URL'];
-	var fileThickboxLoadingImage 		= wpsc_vars['fileThickboxLoadingImage'];
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * check if a localized WPeC value is set
- * 
- * @since 3.8.14
- * 
- * @param string 	name 		name of localized variable
- * 
- * @returns boolean		true if the variable is set, false otherwise
  * 
  */
 function wpsc_var_isset( name ) {
@@ -85,21 +50,9 @@ function wpsc_var_isset( name ) {
 	}
 
 	return false;	
- * get the value of a localized WPeC value if it is set
- * 
- * @since 3.8.14
- * 
- * @param string 	name 		name of localized variable
- * 
- * @returns varies				value of the var set
- * 
- */
-function wpsc_var_get( name ) {
-	if ( typeof wpsc_vars !== undefined ) {
-		return  wpsc_vars[name]; 
 }
 
-	return undefined;		
+/**
  * get the value of a localized WPeC value if it is set
  * 
  * @since 3.8.14
@@ -133,9 +86,6 @@ function wpsc_var_set( name, value ) {
 		wpsc_vars[name] = value;
 		return value;
 	}
-
-	return undefined;			
-}
 
 	return undefined;			
 }
@@ -841,7 +791,7 @@ function wpsc_get_value_from_wpsc_meta_element( meta ) {
 		element = meta;
 	} else if ( typeof meta == "string" ) {
 		element = wpsc_get_wpsc_meta_element( meta );
-	} else if ( typeof meta == "object" ) {
+	} else if ( typeof meta == "object" ){
 		element = jQuery( meta );
 	} else {
 		return null;
@@ -915,7 +865,6 @@ jQuery(document).ready(function ($) {
 			
 	// setup checkout form and make sure visibility of form elements is what it should be
 	wpsc_setup_region_dropdowns();
-	if ( $( 'body' ).hasClass( 'wpsc-shopping-cart' ) ) {
 	wpsc_adjust_checkout_form_element_visibility();
 	wpsc_update_location_elements_visibility();
 	jQuery( "#shippingSameBilling"  ).on( 'change', wpsc_adjust_checkout_form_element_visibility );
