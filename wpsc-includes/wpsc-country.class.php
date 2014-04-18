@@ -75,7 +75,36 @@ class WPSC_Country {
 				_wpsc_deprecated_argument( __FUNCTION__, '3.8.14', $this->_parameter_no_longer_used_message( 'col', __FUNCTION__ ) );
 			}
 		}
+
+		// setup default properties filter
+		add_filter( 'wpsc_country_get_property', array( __CLASS__, '_wpsc_country_default_properties' ), 10, 2 );
 	}
+
+	/**
+	 * sets the default global values for any custom properties when they are retrieved
+	 *
+	 * @since 3.8.14
+	 *
+	 * @param 	mixed 					$property_value
+	 * @param 	string 					$property_name
+	 * 
+	 * @return	mixed 					the new proprty value
+	*/
+	public static function _wpsc_country_default_properties( $property_value, $property_name ) {
+
+		switch ( $property_name ) {
+			case 'region_label':
+				if ( empty( $property_value ) ) {
+					$property_value = __( 'State/Province', 'wpsc' );
+				}
+
+				break;
+		}
+
+		return $property_value;
+	}
+
+
 
 	/**
 	 * get nation's(country's) name
@@ -263,9 +292,6 @@ class WPSC_Country {
 	 */
 	public function get( $key ) {
 
-		$function = __CLASS__ . '::' . __FUNCTION__ . '( "' . $key . '" )';
-		$replacement = __CLASS__ . '::' . $key . '()';
-
 		$property_name = '_' . $key;
 
 		if ( property_exists( $this, $property_name ) ) {
@@ -312,8 +338,6 @@ class WPSC_Country {
 			} else {
 				wpsc_update_meta( $this->_id, $key, $value, __CLASS__  );
 			}
-
-			$this->data[$key] = $value;
 		}
 
 		return $this;

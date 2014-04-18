@@ -564,7 +564,7 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 	if (!isset($post_data['edit_var_val']))
 		$post_data['edit_var_val'] = '';
 
-	$variations = (array)$post_data['edit_var_val'];
+	$variations = (array) $post_data['edit_var_val'];
 
 	// Generate the arrays for variation sets, values and combinations
     $wpsc_combinator = new wpsc_variation_combinator($variations);
@@ -582,6 +582,7 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 
 	$variation_sets_and_values = array_merge($variation_sets, $variation_values);
 	$variation_sets_and_values = apply_filters('wpsc_edit_product_variation_sets_and_values', $variation_sets_and_values, $product_id);
+	
 	wp_set_object_terms($product_id, $variation_sets_and_values, 'wpsc-variation');
 
 	$parent_id = $_REQUEST['product_id'];
@@ -725,6 +726,8 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 			}
 		}
 	}
+	_wpsc_refresh_parent_product_terms( $parent_id );
+
 }
 
 function wpsc_update_alt_product_currency($product_id, $newCurrency, $newPrice){
