@@ -1843,7 +1843,6 @@ function _wpsc_deprecated_javascript_localization_vars() {
 
 	$wpsc_deprecated_js_vars = array();
 
-	$wpsc_deprecated_js_vars['base_url'] 				= site_url(); //admin-legacy.js
 	$wpsc_deprecated_js_vars['WPSC_DIR_NAME'] 			= WPSC_DIR_NAME;
 	$wpsc_deprecated_js_vars['fileLoadingImage'] 		= WPSC_CORE_IMAGES_URL . '/loading.gif';
 	$wpsc_deprecated_js_vars['fileBottomNavCloseImage'] = WPSC_CORE_IMAGES_URL . '/closelabel.gif';

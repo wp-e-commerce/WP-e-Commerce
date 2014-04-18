@@ -1,23 +1,106 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // This section is used to create the globals that were originally defined in the 
 // dynamic-js file pre 3.8.14.  Note that variables also also exist in the "wpsc_ajax" structure.
-
-// iterate over the object and explicitly make each property a new global variable.  Because
-// we are doing the operation in the global context the 'this' is the same as 'window' and 
-// is the same functionally as do a 'var objectname' statement. Creating 'global variables' 
-// in this manner the new "variable" is enumerable and can be deleted.  
-// 
 // To add a new global property that can be referenced in the script see the hook 
 // wpsc_javascript_localizations in wpsc-core/wpsc-functions.php
 //
-for ( var key in wpsc_admin_vars ) {
-  if ( wpsc_admin_vars.hasOwnProperty( key ) ) {
-	  value = wpsc_admin_vars[ key ];
-	  this[ key ] = value;
-  }
+
+/**
+ * Legacy javascript variables for WP-e-Commerce
+ * 
+ * These WPeC WordPress localized vars were in use prior to release 3.8.14, and are explicitly 
+ * declared here for maximum backwards compatibility.  For admin related js vars added after 
+ * version 3.8.14  use the following utility function to access the localized variables.
+ * 
+ * wpsc_admin_var_get ( name )
+ * wpsc_admin_var_set ( name, value )
+ * wpsc_admin_var_isset ( name, value );
+ * 
+ */
+
+if ( typeof wpsc_admin_vars !== undefined ) {
+	var base_url 						= wpsc_admin_vars['base_url'];
+	var WPSC_URL 						= wpsc_admin_vars['WPSC_URL'];
+	var WPSC_IMAGE_URL 					= wpsc_admin_vars['WPSC_IMAGE_URL'];
+	var fileThickboxLoadingImage 		= wpsc_admin_vars['fileThickboxLoadingImage'];
+	var hidden_boxes 					= wpsc_admin_vars['hidden_boxes'];
+	var IS_WP27 						= wpsc_admin_vars['IS_WP27'];
+	var TXT_WPSC_DELETE 				= wpsc_admin_vars['TXT_WPSC_DELETE'];
+	var TXT_WPSC_TEXT 					= wpsc_admin_vars['TXT_WPSC_TEXT'];
+	var TXT_WPSC_EMAIL 					= wpsc_admin_vars['TXT_WPSC_EMAIL'];
+	var TXT_WPSC_COUNTRY 				= wpsc_admin_vars['TXT_WPSC_COUNTRY'];
+	var TXT_WPSC_TEXTAREA 				= wpsc_admin_vars['TXT_WPSC_TEXTAREA'];
+	var TXT_WPSC_HEADING 				= wpsc_admin_vars['TXT_WPSC_HEADING'];
+	var TXT_WPSC_COUPON 				= wpsc_admin_vars['TXT_WPSC_COUPON'];
+	var HTML_FORM_FIELD_TYPES 			= wpsc_admin_vars['HTML_FORM_FIELD_TYPES'];
+	var HTML_FORM_FIELD_UNIQUE_NAMES 	= wpsc_admin_vars['HTML_FORM_FIELD_UNIQUE_NAMES'];
+	var TXT_WPSC_LABEL 					= wpsc_admin_vars['TXT_WPSC_LABEL'];
+	var TXT_WPSC_LABEL_DESC 			= wpsc_admin_vars['TXT_WPSC_LABEL_DESC'];
+	var TXT_WPSC_ITEM_NUMBER 			= wpsc_admin_vars['TXT_WPSC_ITEM_NUMBER'];
+	var TXT_WPSC_LIFE_NUMBER 			= wpsc_admin_vars['TXT_WPSC_LIFE_NUMBER'];
+	var TXT_WPSC_PRODUCT_CODE 			= wpsc_admin_vars['TXT_WPSC_PRODUCT_CODE'];
+	var TXT_WPSC_PDF 					= wpsc_admin_vars['TXT_WPSC_PDF'];
+	var TXT_WPSC_AND_ABOVE 				= wpsc_admin_vars['TXT_WPSC_AND_ABOVE'];
+	var TXT_WPSC_IF_PRICE_IS 			= wpsc_admin_vars['TXT_WPSC_IF_PRICE_IS'];
+	var TXT_WPSC_IF_WEIGHT_IS 			= wpsc_admin_vars['TXT_WPSC_IF_WEIGHT_IS'];
 }
-//
 ///////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * check if a localized WPeC value is set
+ * 
+ * @since 3.8.14
+ * 
+ * @param string 	name 		name of localized variable
+ * 
+ * @returns boolean		true if the var is set, false otherwise
+ * 
+ */
+function wpsc_admin_var_isset( name ) {
+	if ( typeof wpsc_admin_vars !== undefined ) {
+		return  wpsc_admin_vars[name] !== undefined; 
+	}
+	
+	return false;	
+}
+
+/**
+ * get the value of a localized WPeC value if it is set
+ * 
+ * @since 3.8.14
+ * 
+ * @param string 	name 		name of localized variable
+ * 
+ * @returns varies				value of the var set
+ * 
+ */
+function wpsc_admin_var_get( name ) {
+	if ( typeof wpsc_admin_vars !== undefined ) {
+		return  wpsc_admin_vars[name]; 
+	}
+	
+	return undefined;		
+}
+
+/**
+ * change the value of a localized WPeC var
+ * 
+ * @since 3.8.14
+ * 
+ * @param string 	name 		name of localized variable
+ * @param varies 	value 		value of the var being set
+ * 
+ * @returns varies		value of the var being set
+ * 
+ */
+function wpsc_admin_var_set( name, value ) {
+	if ( typeof wpsc_admin_vars !== undefined ) {
+		wpsc_admin_vars[name] = value;
+		return value;
+	}
+	
+	return undefined;			
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,7 +139,8 @@ if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
 		// subsequent page views. 
 		
 		// The lack of expiration date means the cookie will be deleted when the browser
-		// is closed, so the next time the visitor attempts to access the site 
+		// is closed, so the next time the visitor attempts to access the site they will
+		// attempt to revalidate
 		var now = new Date();
 		document.cookie="wpsc_attempted_validate="+now;
 
