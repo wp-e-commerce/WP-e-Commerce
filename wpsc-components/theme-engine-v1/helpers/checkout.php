@@ -286,8 +286,12 @@ function wpsc_checkout_form_field() {
 	return $wpsc_checkout->form_field();
 }
 
-function wpsc_shipping_region_list( $selected_country, $selected_region, $shippingdetails = false ) {
+function wpsc_shipping_region_list( $selected_country, $selected_region, $deprecated = false ) {
 	$output = '';
+
+	if ( false !== $deprecated ) {
+		_wpsc_deprecated_argument( __FUNCTION, '3.8.14' );
+	}
 
 	$country = new WPSC_Country( $selected_country );
 	$regions = $country->get_regions();
@@ -324,22 +328,26 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 	$selected_country = wpsc_get_customer_meta( 'shippingcountry' );
 	$selected_region  = wpsc_get_customer_meta( 'shippingregion'  );
 
-	$country_data = WPSC_Countries::get_countries_array();
+	if ( empty( $selected_country ) ) {
+	}
+	if ( empty( $selected_region ) ) {
+	}
 
 	$acceptable_countries = wpsc_get_acceptable_countries();
 
 	$additional_attributes = 'data-wpsc-meta-key="shippingcountry" ' . $js;
 
 	$output .= wpsc_get_country_dropdown(
-											array(
-												'name'                  => 'country',
-												'id'                    => 'current_country',
-												'additional_attributes' => $additional_attributes,
-												'acceptable_ids'        => $acceptable_countries,
-												'selected'              => $selected_country,
-												'class'                 => 'wpsc-visitor-meta',
-											)
-									);
+		array(
+			'name'                  => 'country',
+			'id'                    => 'current_country',
+			'additional_attributes' => $additional_attributes,
+			'acceptable_ids'        => $acceptable_countries,
+			'selected'              => $selected_country,
+			'class'                 => 'wpsc-visitor-meta',
+			'placeholder'           => '',
+		)
+	);
 
 	$output .= wpsc_shipping_region_list( $selected_country, $selected_region, $shippingdetails );
 
@@ -350,8 +358,10 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 	}
 
 	$zipvalue = (string) wpsc_get_customer_meta( 'shipping_zip' );
-	if ( ! empty( $_POST['zipcode'] ) )
+
+	if ( ! empty( $_POST['zipcode'] ) ) {
 		$zipvalue = $_POST['zipcode'];
+	}
 
 	$zip_code_text = __( 'Your Zipcode', 'wpsc' );
 
