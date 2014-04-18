@@ -726,6 +726,8 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 			}
 		}
 	}
+	_wpsc_refresh_parent_product_terms( $parent_id );
+
 }
 
 function wpsc_update_alt_product_currency($product_id, $newCurrency, $newPrice){

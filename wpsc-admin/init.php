@@ -612,10 +612,8 @@ function wpsc_update_variations() {
 		return;
 
 	//Setup postdata
-	$post_data = array( );
+	$post_data = array();
 	$post_data['edit_var_val'] = isset( $_POST['edit_var_val'] ) ? $_POST["edit_var_val"] : '';
-
-
 
 	//Add or delete variations
 	wpsc_edit_product_variations( $product_id, $post_data );
