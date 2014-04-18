@@ -1261,7 +1261,7 @@ add_action( 'permalink_structure_changed' , '_wpsc_action_permalink_structure_ch
 add_action( 'wp_ajax_category_sort_order', 'wpsc_ajax_set_category_order' );
 add_action( 'wp_ajax_variation_sort_order', 'wpsc_ajax_set_variation_order' );
 add_action( 'wp_ajax_wpsc_ie_save', 'wpsc_ajax_ie_save' );
-add_action('in_admin_header', 'wpsc_add_meta_boxes');
+add_action( 'in_admin_header', 'wpsc_add_meta_boxes' );
 
 /**
  * Deletes file associated with a product.

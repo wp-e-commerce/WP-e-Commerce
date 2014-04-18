@@ -341,8 +341,12 @@ function wpsc_checkout_form_field() {
 	return $wpsc_checkout->form_field();
 }
 
-function wpsc_shipping_region_list( $selected_country, $selected_region, $shippingdetails = false, $id = 'region' ) {
+function wpsc_shipping_region_list( $selected_country, $selected_region, $deprecated = false ) {
 	$output = '';
+
+	if ( false !== $deprecated ) {
+		_wpsc_deprecated_argument( __FUNCTION, '3.8.14' );
+	}
 
 	$country = new WPSC_Country( $selected_country );
 	$regions = $country->get_regions();
@@ -385,15 +389,16 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 	$additional_attributes = 'data-wpsc-meta-key="shippingcountry" ' . $js;
 
 	$output .= wpsc_get_country_dropdown(
-											array(
-												'name'                  => 'country',
-												'id'                    => 'current_country',
-												'additional_attributes' => $additional_attributes,
-												'acceptable_ids'        => $acceptable_countries,
-												'selected'              => $selected_country,
-												'class'                 => 'wpsc-visitor-meta',
-											)
-									);
+		array(
+			'name'                  => 'country',
+			'id'                    => 'current_country',
+			'additional_attributes' => $additional_attributes,
+			'acceptable_ids'        => $acceptable_countries,
+			'selected'              => $selected_country,
+			'class'                 => 'wpsc-visitor-meta',
+			'placeholder'           => '',
+		)
+	);
 
 	$output .= wpsc_shipping_region_list( $selected_country, $selected_region, $shippingdetails, 'current_country_region' );
 
@@ -404,8 +409,10 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 	}
 
 	$zipvalue = (string) wpsc_get_customer_meta( 'shipping_zip' );
-	if ( ! empty( $_POST['zipcode'] ) )
+
+	if ( ! empty( $_POST['zipcode'] ) ) {
 		$zipvalue = $_POST['zipcode'];
+	}
 
 	$zip_code_text = __( 'Your Zipcode', 'wpsc' );
 

@@ -84,6 +84,8 @@ function wpsc_special_widget() {
 function wpsc_add_to_cart() {
 	global $wpsc_cart;
 
+	$default_parameters = $cart_messages = $provided_parameters = array();
+	
 	/// default values
 	$default_parameters['variation_values'] = null;
 	$default_parameters['quantity'] = 1;
@@ -95,7 +97,6 @@ function wpsc_add_to_cart() {
 	$default_parameters['is_customisable'] = false;
 	$default_parameters['meta'] = null;
 
-	$provided_parameters = array();
 	$post_type_object = get_post_type_object( 'wpsc-product' );
 	$permitted_post_statuses = current_user_can( $post_type_object->cap->edit_posts ) ? array( 'private', 'draft', 'pending', 'publish' ) : array( 'publish' );
 

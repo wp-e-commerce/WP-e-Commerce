@@ -1809,7 +1809,6 @@ function wpsc_google_checkout(){
  * Google checkout not longer available or supported, so we are deprecating this function
  *
  * @access public
-
  * @deprecated since 3.8.14
  */
 function wpsc_empty_google_logs(){
@@ -2007,4 +2006,30 @@ if ( ! function_exists( 'change_link' ) ) {
 
 		return $media_upload_iframe_src . "&amp;type=image&parent_page=wpsc-edit-products";
 	}
+}
+
+function wpsc_google_shipping_settings() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.14' );
+	if ( isset( $_POST['submit'] ) ) {
+		foreach ( (array)$_POST['google_shipping'] as $key => $country ) {
+			if ( $country == 'on' ) {
+				$google_shipping_country[] = $key;
+				$updated++;
+			}
+		}
+		update_option( 'google_shipping_country', $google_shipping_country );
+		$sendback = wp_get_referer();
+		$sendback = remove_query_arg( 'googlecheckoutshipping', $sendback );
+
+		if ( isset( $updated ) ) {
+			$sendback = add_query_arg( 'updated', $updated, $sendback );
+		}
+
+		wp_redirect( $sendback );
+		exit();
+	}
+}
+
+if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'google_shipping_settings') ) {
+	add_action( 'admin_init', 'wpsc_google_shipping_settings' );
 }

@@ -605,31 +605,6 @@ function wpsc_product_files_existing() {
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'product_files_existing') )
 	add_action( 'admin_init', 'wpsc_product_files_existing' );
 
-function wpsc_google_shipping_settings() {
-	if ( isset( $_POST['submit'] ) ) {
-		foreach ( (array)$_POST['google_shipping'] as $key => $country ) {
-			if ( $country == 'on' ) {
-				$google_shipping_country[] = $key;
-				$updated++;
-			}
-		}
-		update_option( 'google_shipping_country', $google_shipping_country );
-		$sendback = wp_get_referer();
-		$sendback = remove_query_arg( 'googlecheckoutshipping', $sendback );
-
-		if ( isset( $updated ) ) {
-			$sendback = add_query_arg( 'updated', $updated, $sendback );
-		}
-
-		wp_redirect( $sendback );
-		exit();
-	}
-}
-
-if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'google_shipping_settings') ) {
-	add_action( 'admin_init', 'wpsc_google_shipping_settings' );
-}
-
 function wpsc_update_variations() {
 	$product_id = absint( $_POST["product_id"] );
 	$product_type_object = get_post_type_object('wpsc-product');
@@ -637,7 +612,7 @@ function wpsc_update_variations() {
 		return;
 
 	//Setup postdata
-	$post_data = array( );
+	$post_data = array();
 	$post_data['edit_var_val'] = isset( $_POST['edit_var_val'] ) ? $_POST["edit_var_val"] : '';
 
 	//Add or delete variations
