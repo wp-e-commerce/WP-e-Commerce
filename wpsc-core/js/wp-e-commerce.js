@@ -1,12 +1,9 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
-// This logic is used to create the global that were originally defined in the 
+// This logic is used to create the globals that were originally defined in the 
 // dynamic-js file pre 3.8.14.  Note that variables also also exist in the "wpsc_ajax" structure.
 
-// From our localization object and explicitly make the legacy wpsc_ajax property a new global variable.  
-// Because we are doing the operation in the global context the 'this' is the same as 'window' and 
-// is the same functionally as do a 'var objectname' statement. Creating 'global variables' 
-// in this manner the new "variable" is enumerable and can be deleted.  
-// 
+// iterate over the object and explicitly make each property a new global variable.  Because
+// we are doing the operation in the global context the 'this' is the same as 'window' and 
 // To add a new global property that can be referenced in the script see the hook 
 // wpsc_javascript_localizations in wpsc-core/wpsc-functions.php
 //
@@ -14,18 +11,90 @@ if ( wpsc_vars.hasOwnProperty( "wpsc_ajax" ) ) {
   this["wpsc_ajax"] = wpsc_vars["wpsc_ajax"];
 }
 
-
-// this is justin's code that will be updated in a forthcoming PR addressing issue #1110 
-if ( 'object' === typeof wpsc_vars.wpsc_ajax ) {
-	for ( var key in wpsc_vars.wpsc_ajax ) {
-	  if ( wpsc_vars.wpsc_ajax.hasOwnProperty( key ) ) {
-		  var value = wpsc_vars[ key ];
-		  this[ key ] = value;
-	  }
-	}
+/**
+ * Javascript variables for WP-e-Commerce
+ * 
+ * These WPeC WordPress localized variables were in use prior to release 3.8.14, and are explicitly 
+ * declared here for maximum backwards compatibility.  
+ * 
+ * In releases prior to 3.8.14 these  variables may have been declared in the dynamically 
+ * created javascript, or in the HTML as a localized variable. 
+ * 
+ * For javascript variables added after version 3.8.14  use the following utility function to access the 
+ * localized variables.
+ * 
+ * wpsc_var_get ( name )
+ * wpsc_var_set ( name, value )
+ * wpsc_var_isset ( name, value );
+ * 
+ */
+if ( typeof wpsc_vars !== undefined ) {
+	var wpsc_ajax 						= wpsc_vars['wpsc_ajax'];
+	var base_url 						= wpsc_vars['base_url'];
+	var WPSC_URL 						= wpsc_vars['WPSC_URL'];
+	var WPSC_IMAGE_URL 					= wpsc_vars['WPSC_IMAGE_URL'];
+	var WPSC_IMAGE_URL 					= wpsc_vars['WPSC_IMAGE_URL'];
+	var WPSC_CORE_IMAGES_URL			= wpsc_vars['WPSC_CORE_IMAGES_URL'];
+	var fileThickboxLoadingImage 		= wpsc_vars['fileThickboxLoadingImage'];
 }
 
-//
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * check if a localized WPeC value is set
+ * 
+ * @since 3.8.14
+ * 
+ * @param string 	name 		name of localized variable
+ * 
+ * @returns boolean		true if the variable is set, false otherwise
+ * 
+ */
+function wpsc_var_isset( name ) {
+	if ( typeof wpsc_vars !== undefined ) {
+		return  wpsc_vars[name] !== undefined; 
+	}
+
+	return false;	
+}
+
+/**
+ * get the value of a localized WPeC value if it is set
+ * 
+ * @since 3.8.14
+ * 
+ * @param string 	name 		name of localized variable
+ * 
+ * @returns varies				value of the var set
+ * 
+ */
+function wpsc_var_get( name ) {
+	if ( typeof wpsc_vars !== undefined ) {
+		return  wpsc_vars[name]; 
+	}
+
+	return undefined;		
+}
+
+/**
+ * change the value of a localized WPeC var
+ * 
+ * @since 3.8.14
+ * 
+ * @param string 	name 		name of localized variable
+ * @param varies 	value 		value of the var being set
+ * 
+ * @returns varies		value of the var being set
+ * 
+ */
+function wpsc_var_set( name, value ) {
+	if ( typeof wpsc_vars !== undefined ) {
+		wpsc_vars[name] = value;
+		return value;
+	}
+
+	return undefined;			
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -65,7 +134,8 @@ if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
 		// subsequent page views. 
 		
 		// The lack of expiration date means the cookie will be deleted when the browser
-		// is closed, so the next time the visitor attempts to access the site 
+		// is closed, so the next time the visitor attempts to access the site after closing the browser 
+		// they will revalidate. 
 		var now = new Date();
 		document.cookie="wpsc_attempted_validate="+now;
 
@@ -745,6 +815,7 @@ jQuery(document).ready(function ($) {
 	
 	wpsc_update_state_edit_text_visibility();
 	
+	if ( $( 'body' ).hasClass( 'wpsc-shopping-cart' ) ) {
 		// make sure visibility of form elements is what it should be
 		wpsc_adjust_checkout_form_element_visibility();
 		jQuery( "#shippingSameBilling"  ).on( 'change', wpsc_adjust_checkout_form_element_visibility );
