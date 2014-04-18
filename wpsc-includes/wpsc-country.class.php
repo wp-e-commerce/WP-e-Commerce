@@ -309,8 +309,6 @@ class WPSC_Country {
 			} else {
 				wpsc_update_meta( $this->_id, $key, $value, __CLASS__  );
 			}
-
-			$this->data[$key] = $value;
 		}
 
 		return $this;
