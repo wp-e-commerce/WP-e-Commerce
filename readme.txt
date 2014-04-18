@@ -1,9 +1,9 @@
 === WP e-Commerce ===
-Contributors: mufasa, garyc40, JustinSainton
+Contributors: JustinSainton, mufasa, garyc40
 Donate link: http://getshopped.org
 Tags: e-commerce, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
 Requires at least: 3.7
-Tested up to: 3.8
+Tested up to: 3.9
 Stable tag: 3.8.13.3
 
 WP e-Commerce is a free WordPress Shopping Cart Plugin that lets customers buy your products, services and digital downloads online.
