@@ -45,10 +45,10 @@ function wpsc_product_link( $permalink, $post, $leavename ) {
 
 	global $wp_rewrite;
 
-	$our_permalink_structure = $wp_rewrite->using_index_permalinks() ? trailingslashit( $wp_rewrite->index ) : '';
+	$our_permalink_structure = $wp_rewrite->root;
 
 	// This may become customiseable later
-	$our_permalink_structure .= str_replace( basename( home_url() ), $base_replacement, $wpsc_page_titles['products'] ) . "/%wpsc_product_category%/%postname%/";
+	$our_permalink_structure .= str_replace( basename( home_url() ), '', $wpsc_page_titles['products'] ) . "/%wpsc_product_category%/%postname%/";
 
 	// Mostly the same conditions used for posts, but restricted to items with a post type of "wpsc-product "
 	if ( $wp_rewrite->using_permalinks() && ! in_array( $post->post_status, array( 'draft', 'pending' ) ) ) {
