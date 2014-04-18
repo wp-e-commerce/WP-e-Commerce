@@ -263,9 +263,6 @@ class WPSC_Country {
 	 */
 	public function get( $key ) {
 
-		$function = __CLASS__ . '::' . __FUNCTION__ . '( "' . $key . '" )';
-		$replacement = __CLASS__ . '::' . $key . '()';
-
 		$property_name = '_' . $key;
 
 		if ( property_exists( $this, $property_name ) ) {
@@ -312,8 +309,6 @@ class WPSC_Country {
 			} else {
 				wpsc_update_meta( $this->_id, $key, $value, __CLASS__  );
 			}
-
-			$this->data[$key] = $value;
 		}
 
 		return $this;
