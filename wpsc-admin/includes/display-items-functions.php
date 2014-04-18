@@ -173,7 +173,7 @@ function wpsc_price_control_forms() {
 					min="0" step="0.01"
 					name="meta[_wpsc_price]"
 					style="width:80px;"
-					value="<?php echo esc_attr( $product_data['meta']['_wpsc_price'] );  ?>"
+					value="<?php echo esc_attr( $price );  ?>"
 					onChange="wpsc_update_price_live_preview()" />
 		</div>
 
@@ -185,7 +185,7 @@ function wpsc_price_control_forms() {
 					type="number" size='10'
 					min="0" step="0.01"
 					style="width:80px;"
-					value="<?php echo esc_attr( $product_data['meta']['_wpsc_special_price'] ); ?>"
+					value="<?php echo esc_attr( $sale_price ); ?>"
 					name='meta[_wpsc_special_price]'
 					onChange="wpsc_update_price_live_preview()" />
 		</div>

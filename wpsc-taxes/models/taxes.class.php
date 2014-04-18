@@ -369,13 +369,13 @@ class wpec_taxes {
 	function wpec_taxes_get_region_code_by_id( $region ) {
 		$region_code = false;
 
-		if ( ! empty( $region ) ){
+		if ( ! empty( $region ) ) {
 			$country_id = WPSC_Countries::get_country_id_by_region_id( $region );
 			if ( $country_id ) {
 				$wpsc_country = new WPSC_Country( $country_id );
 			}
 
-			if ( $wpsc_country ) {
+			if ( isset( $wpsc_country ) ) {
 				$wpsc_region = $wpsc_country->get_region( $region );
 				if ( $wpsc_region ) {
 					$region_code = $wpsc_region->get_code();

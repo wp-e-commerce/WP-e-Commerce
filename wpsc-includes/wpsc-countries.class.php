@@ -877,15 +877,10 @@ class WPSC_Countries {
 
 		$localizations_array['no_country_selected']       = __( 'Please select a country', 'wpsc' );
 		$localizations_array['no_region_selected_format'] = __( 'Please select a %s', 'wpsc' );
-
-		$wpsc_checkout = new wpsc_checkout();
 		$localizations_array['no_region_label']           = __( 'State/Province', 'wpsc' );
 
 		$checkout_form    = new WPSC_Checkout_Form();
 		$billing_state_id = $checkout_form->get_field_id_by_unique_name( 'billingstate' );
-		$fields           = $checkout_form->get_fields();
-
-		$in_this_country_a_region_is_called_a = $checkout_form->get( $billing_state_id );
 
 		$country_list = array();
 
