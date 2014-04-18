@@ -881,7 +881,6 @@ class WPSC_Countries {
 
 		$checkout_form    = new WPSC_Checkout_Form();
 		$billing_state_id = $checkout_form->get_field_id_by_unique_name( 'billingstate' );
-		$fields           = $checkout_form->get_fields();
 
 		$in_this_country_a_region_is_called_a = $checkout_form->get( $billing_state_id );
 
