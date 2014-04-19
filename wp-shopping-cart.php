@@ -270,11 +270,10 @@ class WP_eCommerce {
 	function install() {
 		global $wp_version;
 
-		if ( ( float ) $wp_version < 3.0 ) {
-			 deactivate_plugins( plugin_basename( __FILE__ ) ); // Deactivate ourselves
-			 wp_die( __( 'Looks like you\'re running an older version of WordPress, you need to be running at least WordPress 3.0 to use WP e-Commerce 3.8', 'wpsc' ), __( 'WP e-Commerce 3.8 not compatible', 'wpsc' ), array( 'back_link' => true ) );
+		if ( ! defined( 'WPSC_FILE_PATH' ) ) {
+			define( 'WPSC_FILE_PATH', dirname( __FILE__ ) );
 		}
-		define( 'WPSC_FILE_PATH', dirname( __FILE__ ) );
+
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-installer.php' );
 		$this->constants();
 		wpsc_install();
