@@ -260,8 +260,19 @@ function wpsc_update_checkout_info( checkout_info ) {
 	// via AJAX
 	if ( checkout_info.hasOwnProperty( 'needs_shipping_recalc' ) ) {
 		if ( checkout_info.needs_shipping_recalc ) {
-			location.reload();
-			return false;
+			// Instead of reloading how about doing something like this when shipping quotes need to re-calculate
+			
+			var checkout_form =  jQuery('.wpsc_checkout_forms' ).first();
+			var msg = wpsc_var_get( 'msg_shipping_need_recalc' );
+			if ( ! jQuery( '#shipping_quotes_need_recalc').length ) {
+				checkout_form.before( '<div id="shipping_quotes_need_recalc">' + msg + '</div>' );
+			}
+			
+			jQuery( 'input:radio[name=shipping_method]' ).prop('checked', false).attr('disabled',true);
+			jQuery( 'input:radio[name=shipping_method]' ).closest( 'tr' ).hide();
+			jQuery( 'tr.wpsc_shipping_header' ).hide();
+			jQuery( '.wpsc_checkout_table_totals' ).hide();
+			jQuery( '.total_tax' ).closest( 'table' ).hide();
 		}
 	}
 
@@ -864,7 +875,6 @@ jQuery(document).ready(function ($) {
 	}
 			
 	// setup checkout form and make sure visibility of form elements is what it should be
-	wpsc_setup_region_dropdowns();
 	wpsc_adjust_checkout_form_element_visibility();
 	wpsc_update_location_elements_visibility();
 	jQuery( "#shippingSameBilling"  ).on( 'change', wpsc_adjust_checkout_form_element_visibility );
