@@ -191,6 +191,9 @@ function _wpsc_javascript_localizations( $localizations = false ) {
 		$localizations['WPSC_IMAGE_URL']           = WPSC_IMAGE_URL;
 		$localizations['WPSC_CORE_IMAGES_URL']     = WPSC_CORE_IMAGES_URL;
 		$localizations['fileThickboxLoadingImage'] = WPSC_CORE_IMAGES_URL . '/loadingAnimation.gif';
+
+		$localizations['msg_shipping_need_recalc'] = __( 'Shipping Quotes Need to be Recalculated!', 'wpsc' );
+
 	}
 
 	return apply_filters( '_wpsc_javascript_localizations', $localizations );
@@ -297,8 +300,6 @@ function wpsc_core_load_shipping_modules() {
 
 	$wpsc_shipping_modules = apply_filters( 'wpsc_shipping_modules', $wpsc_shipping_modules );
 
-	if ( ! get_option( 'do_not_use_shipping' ) )
-		add_action( 'wpsc_setup_customer', '_wpsc_action_get_shipping_method' );
 }
 
 /**

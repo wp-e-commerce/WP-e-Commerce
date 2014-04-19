@@ -345,7 +345,8 @@ function _wpsc_action_init_shipping_method() {
 	}
 }
 
-// add_action( 'wpsc_setup_customer', '_wpsc_action_init_shipping_method' );
+// make sure that when we display the shopping cart page shipping quotes have been calculated
+add_action( 'wpsc_before_shipping_of_shopping_cart', '_wpsc_action_init_shipping_method' );
 
 /***
  * wpsc_core_setup_globals()
