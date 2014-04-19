@@ -265,7 +265,7 @@ function wpsc_update_checkout_info( checkout_info ) {
 			var checkout_form =  jQuery('.wpsc_checkout_forms' ).first();
 			var msg = wpsc_var_get( 'msg_shipping_need_recalc' );
 			if ( ! jQuery( '#shipping_quotes_need_recalc').length ) {
-				checkout_form.before( '<div id="shipping_quotes_need_recalc" style="color:red;font-weight:bold;">' + msg + '</div>' );
+				checkout_form.before( '<div id="shipping_quotes_need_recalc">' + msg + '</div>' );
 			}
 			
 			jQuery( 'input:radio[name=shipping_method]' ).prop('checked', false).attr('disabled',true);
