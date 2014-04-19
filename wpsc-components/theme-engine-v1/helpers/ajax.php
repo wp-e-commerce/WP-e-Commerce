@@ -85,7 +85,7 @@ function wpsc_add_to_cart() {
 	global $wpsc_cart;
 
 	$default_parameters = $cart_messages = $provided_parameters = array();
-	
+
 	/// default values
 	$default_parameters['variation_values'] = null;
 	$default_parameters['quantity'] = 1;
@@ -659,7 +659,7 @@ function wpsc_submit_checkout( $collected_data = true ) {
 
 	if ( $collected_data ) {
 		if ( get_option( 'do_not_use_shipping' ) == 0 && ($wpsc_cart->selected_shipping_method == null || $wpsc_cart->selected_shipping_option == null) && ( $num_items != $disregard_shipping ) ) {
-			$error_messages[] = __( 'You must select a shipping method, otherwise we cannot process your order.', 'wpsc' );
+			$error_messages[] = __( 'Please confirm the shipping method selection, then we can process your order.', 'wpsc' );
 			$is_valid = false;
 		}
 		if ( (get_option( 'do_not_use_shipping' ) != 1) && (in_array( 'ups', (array)$options )) && ! wpsc_get_customer_meta( 'shipping_zip' ) && ( $num_items != $disregard_shipping ) ) {
