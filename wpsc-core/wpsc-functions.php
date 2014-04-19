@@ -192,7 +192,7 @@ function _wpsc_javascript_localizations( $localizations = false ) {
 		$localizations['WPSC_CORE_IMAGES_URL']     = WPSC_CORE_IMAGES_URL;
 		$localizations['fileThickboxLoadingImage'] = WPSC_CORE_IMAGES_URL . '/loadingAnimation.gif';
 
-		$localizations['msg_shipping_need_recalc'] = __( 'Shipping Quotes Need to be Recalculated!', 'wpsc' );
+		$localizations['msg_shipping_need_recalc'] = __( 'Please click the <i>Calculate</i> button to refresh your shipping quotes, as your shipping information has been modified.', 'wpsc' );
 
 	}
 
