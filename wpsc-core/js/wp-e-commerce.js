@@ -718,10 +718,10 @@ function wpsc_update_location_elements_visibility() {
 			// are there any regions for the currently selected billing country
 			if ( wpsc_country_has_regions( billing_country_code ) ) {
 				billing_state_elements.closest( "tr" ).hide();
-				billing_state_elements.val( '' ).prop( 'disabled', true );
+				billing_state_elements.prop( 'disabled', true );
 			} else {			
 				billing_state_elements.closest( "tr" ).show();
-				billing_state_elements.val( '' ).prop( 'disabled', false );
+				billing_state_elements.prop( 'disabled', false );
 			}
 		}	
 	}
