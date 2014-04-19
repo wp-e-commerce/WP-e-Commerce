@@ -1,4 +1,4 @@
-WP e-Commerce
+WP e-Commerce [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/wp-e-commerce/WP-e-Commerce/badges/quality-score.png?s=155ede743c82bcf5116904bf155dcf215da820b0)](https://scrutinizer-ci.com/g/wp-e-commerce/WP-e-Commerce/)
 ============
 
 About
