@@ -225,6 +225,14 @@ class wpsc_checkout {
 		}
 	}
 
+	function form_element_active() {
+		if ( $this->checkout_item->active != 0 ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	/**
 	 * form_element_id method, returns the form html ID
 	 * @access public
