@@ -60,12 +60,12 @@ class WP_eCommerce {
 	 * New WPSC components API.
 	 *
 	 * Allows for modular coupling of different functionalities within WPSC.
-	 * This is the way we'll be introducing cutting-edge APIs
+	 * This is the way we'll be introducing cutting-edge APIs.
 	 *
 	 * @since 3.8.9.5
 	 *
-	 * @param   array $components
-	 * @return  array $components
+	 * @param  array $components
+	 * @return array $components
 	 */
 	public function _register_core_components( $components ) {
 		$components['merchant']['core-v2'] = array(
