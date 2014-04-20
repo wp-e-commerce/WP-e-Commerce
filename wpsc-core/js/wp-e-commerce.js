@@ -260,7 +260,6 @@ function wpsc_update_checkout_info( checkout_info ) {
 	// via AJAX
 	if ( checkout_info.hasOwnProperty( 'needs_shipping_recalc' ) ) {
 		if ( checkout_info.needs_shipping_recalc ) {
-			// Instead of reloading how about doing something like this when shipping quotes need to re-calculate
 			
 			var form = jQuery('table.productcart' ).first();
 			var msg  = wpsc_var_get( 'msg_shipping_need_recalc' );
@@ -339,7 +338,7 @@ function wpsc_meta_item_change_response( response ) {
 		// put into view
 		if ( response.data.hasOwnProperty('replacements') ) {
 			jQuery.each( response.data.replacements, function( elementname, replacement ) {
-				jQuery( '#'+replacement.elementid ).replaceWith( replacement.element );
+				jQuery( '#' + replacement.elementid ).replaceWith( replacement.element );
 			});
 		}		
 		
