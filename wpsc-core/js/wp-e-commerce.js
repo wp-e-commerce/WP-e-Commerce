@@ -254,7 +254,7 @@ function wpsc_update_customer_meta( response ) {
  * @return true if execution should continue, false if it should stop
  */
 function wpsc_update_checkout_info( checkout_info ) {
-	
+
 	// TODO: if shipping needs to be re-calculated we need to refresh the page.  This is the only option
 	// in version 3.8.14 and earlier.  Future versions should support replacing the shipping quote elements
 	// via AJAX
@@ -319,7 +319,7 @@ function wpsc_update_checkout_info( checkout_info ) {
  * @param response object returned from ajax request
  */
 function wpsc_meta_item_change_response( response ) {
-	
+
 	jQuery( ".wpsc-visitor-meta").off( "change", wpsc_meta_item_change );
 	
 	if ( response.hasOwnProperty('success') && response.success && response.hasOwnProperty('data') ) {		
@@ -353,7 +353,7 @@ function wpsc_meta_item_change_response( response ) {
 		// that may not have the necessary computing power to use js to do the work we are asking.
 		var event = jQuery.Event( "wpsc-visitor-meta-change" );
 		event.response = response;				
-		jQuery( "wpsc-visitor-meta:first" ).trigger( event  );
+		jQuery( "wpsc-visitor-meta:first" ).trigger( event );
 
 	}
 	
@@ -365,11 +365,11 @@ function wpsc_meta_item_change_response( response ) {
 /**
  * find the WPeC meta key associated with an element, if there is one
  * 
- * @param element  the lement to extract the meta key from
+ * @param The element to extract the meta key from
  * 
  * @returns string meta_key
  */
-function wpsc_get_element_meta_key ( element ) {
+function wpsc_get_element_meta_key( element ) {
 	
 	if ( element instanceof jQuery ) {
 		;
