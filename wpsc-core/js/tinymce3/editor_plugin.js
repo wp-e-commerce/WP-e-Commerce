@@ -91,7 +91,7 @@
 			ed.addCommand('productspage_image', function() {
 				ed.execCommand('mceInsertContent', 0, pb);
 			});
-
+			
 			ed.onInit.add(function() {
 				//ed.dom.loadCSS(url + "/css/content.css");
 				if (ed.theme.onResolveName) {

@@ -41,7 +41,6 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 		$response = array( 'valid' => (_wpsc_validate_customer_cookie() !== false), 'id' => wpsc_get_current_customer_id() );
 		$response = apply_filters( '_wpsc_validate_customer_ajax', $response );
 		wp_send_json_success( $response );
-		die();
 	}
 
 
@@ -59,7 +58,7 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 
 		if ( empty( $_POST['meta']  ) ) {
 			$meta = null;
-		} elseif ( ! is_array( $meta ) ) {
+		} elseif ( ! is_array( $_POST['meta'] ) ) {
 			$meta = array( $meta );
 		} else {
 			$meta = $_POST['meta'];
@@ -72,7 +71,6 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 		$response['error'] = '';
 
 		wp_send_json_success( $response );
-		die();
 	}
 
 	/**
@@ -166,7 +164,8 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 		}
 
 		// Get the checkout information and if something has changed send it to the client
-		$new_checkout_info = _wpsc_wpsc_remove_unchanged_checkout_info( $old_checkout_info, _wpsc_get_checkout_info() );
+		$new_checkout_info = _wpsc_remove_unchanged_checkout_info( $old_checkout_info, _wpsc_get_checkout_info() );
+				
 		if ( ! empty( $new_checkout_info ) ) {
 			$response['checkout_info'] = $new_checkout_info;
 		} else {
@@ -181,7 +180,6 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 		}
 
 		wp_send_json_success( $response );
-		die();
 	}
 
 
@@ -211,7 +209,6 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 
 		$response = _wpsc_add_customer_meta_to_response( $response );
 		wp_send_json_success( $response );
-		die();
 	}
 
 	/**
@@ -248,17 +245,17 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 	}
 
 	if ( _wpsc_doing_customer_meta_ajax() ) {
-		add_action( 'wp_ajax_wpsc_validate_customer'       		, 'wpsc_validate_customer_ajax' );
-		add_action( 'wp_ajax_nopriv_wpsc_validate_customer'		, 'wpsc_validate_customer_ajax' );
+		add_action( 'wp_ajax_wpsc_validate_customer'        , 'wpsc_validate_customer_ajax' );
+		add_action( 'wp_ajax_nopriv_wpsc_validate_customer'	, 'wpsc_validate_customer_ajax' );
 
-		add_action( 'wp_ajax_wpsc_get_customer_meta'       		, 'wpsc_get_customer_meta_ajax' );
-		add_action( 'wp_ajax_nopriv_wpsc_get_customer_meta'		, 'wpsc_get_customer_meta_ajax' );
+		add_action( 'wp_ajax_wpsc_get_customer_meta'       	, 'wpsc_get_customer_meta_ajax' );
+		add_action( 'wp_ajax_nopriv_wpsc_get_customer_meta'	, 'wpsc_get_customer_meta_ajax' );
 
-		add_action( 'wp_ajax_wpsc_delete_customer_meta'       	, 'wpsc_delete_customer_meta_ajax' );
-		add_action( 'wp_ajax_nopriv_wpsc_delete_customer_meta'	, 'wpsc_delete_customer_meta_ajax' );
+		add_action( 'wp_ajax_wpsc_delete_customer_meta'       , 'wpsc_delete_customer_meta_ajax' );
+		add_action( 'wp_ajax_nopriv_wpsc_delete_customer_meta', 'wpsc_delete_customer_meta_ajax' );
 
-		add_action( 'wp_ajax_wpsc_update_customer_meta'       	, 'wpsc_update_customer_meta_ajax' );
-		add_action( 'wp_ajax_nopriv_wpsc_update_customer_meta'	, 'wpsc_update_customer_meta_ajax' );
+		add_action( 'wp_ajax_wpsc_update_customer_meta'       , 'wpsc_update_customer_meta_ajax' );
+		add_action( 'wp_ajax_nopriv_wpsc_update_customer_meta', 'wpsc_update_customer_meta_ajax' );
 	}
 } // end if doing customer meta ajax
 
@@ -431,21 +428,19 @@ function _wpsc_get_checkout_info() {
 	// Checkout info is what we will return to the AJAX client
 	$checkout_info = array();
 
-	// start with items that have no dependancies
+	// start with items that have no dependencies
 
 	$checkout_info['delivery_country'] = wpsc_get_customer_meta( 'shippingcountry' );
 	$checkout_info['billing_country']  = wpsc_get_customer_meta( 'billingcountry' );
 	$checkout_info['country_name']     = wpsc_get_country( $checkout_info['delivery_country'] );
-	$checkout_info['lock_tax']         = get_option( 'lock_tax' );  // TODO:this is set anywhere, probably deprecated
+	$checkout_info['lock_tax']         = get_option( 'lock_tax' );  // TODO: this is set anywhere, probably deprecated
 
 	$checkout_info['needs_shipping_recalc'] = wpsc_cart_need_to_recompute_shipping_quotes();
-
-	$checkout_info['shipping_keys']    = array();
+	$checkout_info['shipping_keys']         = array();
 
 	foreach ( $wpsc_cart->cart_items as $key => $cart_item ) {
 		$checkout_info['shipping_keys'][ $key ] = wpsc_currency_display( $cart_item->shipping );
 	}
-
 
 	if ( ! $checkout_info['needs_shipping_recalc'] ) {
 
@@ -471,21 +466,20 @@ function _wpsc_get_checkout_info() {
 			$wpsc_cart->calculate_total_price();
 		}
 
-		$cart_widget         = _wpsc_ajax_get_cart( false );
+		$cart_widget = _wpsc_ajax_get_cart( false );
+
 		if ( isset( $cart_widget['widget_output'] ) && ! empty ( $cart_widget['widget_output'] ) ) {
 			$checkout_info['widget_output'] = $cart_widget['widget_output'];
 		}
 
-		$checkout_info['cart_shipping']    = wpsc_cart_shipping();
-		$checkout_info['tax']              = $tax;
-		$checkout_info['display_tax']      = wpsc_cart_tax();
-		$checkout_info['total']            = $total;
-		$checkout_info['total_input']      = $total_input;
+		$checkout_info['cart_shipping'] = wpsc_cart_shipping();
+		$checkout_info['tax']           = $tax;
+		$checkout_info['display_tax']   = wpsc_cart_tax();
+		$checkout_info['total']         = $total;
+		$checkout_info['total_input']   = $total_input;
 	}
 
-	$checkout_info = apply_filters( 'wpsc_ajax_checkout_info', $checkout_info );
-
-	return $checkout_info;
+	return apply_filters( 'wpsc_ajax_checkout_info', $checkout_info );;
 }
 
 
@@ -496,15 +490,15 @@ function _wpsc_get_checkout_info() {
  * @access private
  * @return array  checkout information
  */
-function _wpsc_wpsc_remove_unchanged_checkout_info( $old_checkout_info, $new_checkout_info ) {
+function _wpsc_remove_unchanged_checkout_info( $old_checkout_info, $new_checkout_info ) {
 
-	foreach ( $new_checkout_info as $new_checkout_info_key => $new_checkout_info_value ) {
-		if ( isset( $old_checkout_info[$new_checkout_info_key] ) ) {
-			$old_checkout_info_crc = crc32( json_encode( $old_checkout_info[$new_checkout_info_key] ) );
-			$new_checkout_info_crc = crc32( json_encode( $new_checkout_info_value ) );
+	foreach ( $new_checkout_info as $key => $value ) {
+		if ( isset( $old_checkout_info[ $key ] ) ) {
+			$old_checkout_info_crc = crc32( json_encode( $old_checkout_info[ $key ] ) );
+			$new_checkout_info_crc = crc32( json_encode( $value ) );
 
 			if ( $old_checkout_info_crc == $new_checkout_info_crc ) {
-				unset( $new_checkout_info[$new_checkout_info_key] );
+				unset( $new_checkout_info[ $key ] );
 			}
 		}
 	}

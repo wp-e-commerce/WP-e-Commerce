@@ -57,6 +57,7 @@ function wpsc_product_variation_price_from( $product_id, $args = null ) {
 
 	static $price_data = array();
 
+	/* @todo: Rewrite using proper WP_Query */
 	if ( isset( $price_data[$product_id] ) ) {
 		$results = $price_data[$product_id];
 	} else {
@@ -69,8 +70,7 @@ function wpsc_product_variation_price_from( $product_id, $args = null ) {
 			INNER JOIN {$wpdb->postmeta} AS pm ON pm.post_id = p.id AND pm.meta_key = '_wpsc_price'
 			LEFT JOIN {$wpdb->postmeta} AS pm2 ON pm2.post_id = p.id AND pm2.meta_key = '_wpsc_special_price'
 			$stock_sql
-			WHERE p.post_type = 'wpsc-product'
-				AND p.post_parent = %d
+			WHERE p.post_type = 'wpsc-product' AND p.post_parent = %d AND p.post_status IN ( 'publish', 'inherit' )
 		", $product_id );
 
 		$results = $wpdb->get_results( $sql );

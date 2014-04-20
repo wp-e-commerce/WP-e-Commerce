@@ -98,11 +98,7 @@ class wpsc_merchant {
 		$this->collate_data();
 		$this->collate_cart();
 	}
-
-	function wpsc_merchant( $purchase_id = null, $is_receiving = false ) {
-		$this->__construct( $purchase_id, $is_receiving );
-	}
-
+	
 	/**
 	 * collate_data method, collate purchase data, like addresses, like country
 	 * @access public
