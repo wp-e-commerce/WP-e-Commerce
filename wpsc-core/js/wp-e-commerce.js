@@ -262,10 +262,19 @@ function wpsc_update_checkout_info( checkout_info ) {
 		if ( checkout_info.needs_shipping_recalc ) {
 			// Instead of reloading how about doing something like this when shipping quotes need to re-calculate
 			
-			var checkout_form =  jQuery('.wpsc_checkout_forms' ).first();
-			var msg = wpsc_var_get( 'msg_shipping_need_recalc' );
+			var form = jQuery('table.productcart' ).first();
+			var msg  = wpsc_var_get( 'msg_shipping_need_recalc' );
+
 			if ( ! jQuery( '#shipping_quotes_need_recalc').length ) {
-				checkout_form.before( '<div id="shipping_quotes_need_recalc">' + msg + '</div>' );
+
+				form.before( '<div id="shipping_quotes_need_recalc">' + msg + '</div>' );
+
+				if ( wpsc_ajax.hasOwnProperty( 'slide_to_shipping_error' ) && wpsc_ajax.slide_to_shipping_error ) {
+					jQuery( 'html, body' ).animate({
+						scrollTop : jQuery( '#checkout_page_container' ).offset().top
+					}, 600 );
+				}
+
 			}
 			
 			jQuery( 'input:radio[name=shipping_method]' ).prop('checked', false).attr('disabled',true);
@@ -273,6 +282,8 @@ function wpsc_update_checkout_info( checkout_info ) {
 			jQuery( 'tr.wpsc_shipping_header' ).hide();
 			jQuery( '.wpsc_checkout_table_totals' ).hide();
 			jQuery( '.total_tax' ).closest( 'table' ).hide();
+
+			jQuery( document ).trigger( { type : 'wpsc_update_checkout_info', info : checkout_info } );
 		}
 	}
 

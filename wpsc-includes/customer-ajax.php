@@ -164,7 +164,8 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 		}
 
 		// Get the checkout information and if something has changed send it to the client
-		$new_checkout_info = _wpsc_wpsc_remove_unchanged_checkout_info( $old_checkout_info, _wpsc_get_checkout_info() );
+		$new_checkout_info = _wpsc_remove_unchanged_checkout_info( $old_checkout_info, _wpsc_get_checkout_info() );
+				
 		if ( ! empty( $new_checkout_info ) ) {
 			$response['checkout_info'] = $new_checkout_info;
 		} else {
