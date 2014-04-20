@@ -2,5 +2,5 @@
 
 tinyMCE.addI18n({en:{
 WPSC:{	
-desc : 'Add a Category to your Page or Post'
+desc : 'Add a product shortcode'
 }}});
