@@ -172,8 +172,8 @@ class ASHTools {
      * @return string
      */
     function get_full_country( $short_country ){
-		$full_name = WPSC_Countries::country_name( $short_country );
-		return $full_name;
+		$country = new WPSC_Country( $short_country );
+		return $country->get_name();
     }
 
     /**

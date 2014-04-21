@@ -158,7 +158,7 @@ if ( WPSC_DEPRECATE_CUSTOMER_CHECKOUT_DETAILS ) {
 	 * @param  string|int $id Customer ID. Optional. Defaults to current customer
 	 * @return array        checkout details array
 	 */
-	function _wpsc_update_deprecated_visitor_meta_checkout_details(  $meta_data_in_old_format, $key = 'checkout_details', $id = null ) {
+	function _wpsc_update_deprecated_visitor_meta_checkout_details( $meta_data_in_old_format, $key = 'checkout_details', $id = null ) {
 		global $wpdb;
 
 		if ( ! $id ) {
