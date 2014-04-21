@@ -1320,7 +1320,8 @@ class WPSC_Countries {
 	private static function confirmed_initialization() {
 		
 		if ( ! self::$_initialized ) {
-			self::$_initialized = (bool) new WPSC_Countries();
+			$countries = new WPSC_Countries();
+			self::$_initialized = (bool) $countries;
 		}
 
 		return self::$_initialized;
