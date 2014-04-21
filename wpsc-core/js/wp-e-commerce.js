@@ -474,7 +474,8 @@ function wpsc_adjust_checkout_form_element_visibility() {
  */
 function wpsc_update_location_labels( country_select ) {
 	
-	var country_meta_key = wpsc_get_element_meta_key( country_select );
+	var country_meta_key = wpsc_get_element_meta_key( country_select ),
+		label, country_code;
 	
 	if ( country_meta_key == 'billingcountry' ) {
 		
@@ -482,9 +483,9 @@ function wpsc_update_location_labels( country_select ) {
 		
 		if ( billing_state_element ) {	
 			var billing_state_label = wpsc_get_label_element( billing_state_element );
-			var country_code = wpsc_get_value_from_wpsc_meta_element( 'billingcountry' );
+			country_code = wpsc_get_value_from_wpsc_meta_element( 'billingcountry' );
 			billing_state_label.text( wpsc_country_region_label( country_code ) );
-			var label = wpsc_country_region_label( country_code ); 
+			label = wpsc_country_region_label( country_code ); 
 			billing_state_label.text( label );
 			billing_state_element.attr( 'placeholder', label );
 		}
@@ -494,8 +495,8 @@ function wpsc_update_location_labels( country_select ) {
 	
 		if ( shipping_state_element ) {
 			var shipping_state_label = wpsc_get_label_element( shipping_state_element );
-			var country_code = wpsc_get_value_from_wpsc_meta_element( 'shippingcountry' );
-			var label = wpsc_country_region_label( country_code ); 
+			country_code = wpsc_get_value_from_wpsc_meta_element( 'shippingcountry' );
+			label = wpsc_country_region_label( country_code ); 
 			shipping_state_label.text( label );
 			shipping_state_element.attr( 'placeholder', label );
 		}
