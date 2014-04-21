@@ -252,7 +252,6 @@ class WPSC_Region {
 		$country_id     = isset( $region_data['country_id'] ) ? intval( $region_data['country_id'] ) : 0;
 		$region_code    = isset( $region_data['code'] ) ? $region_data['code'] : '';
 		$region_name    = isset( $region_data['code'] ) ? $region_data['code'] : '';
-		$tax			= isset( $region_data['tax'] ) ? $region_data['tax'] : 0;
 
 		/*
 		 *  If at least one of the key feilds ins't present we aren'y going to continue, we can't reliably update
