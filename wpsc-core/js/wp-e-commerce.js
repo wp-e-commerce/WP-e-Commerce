@@ -1071,12 +1071,12 @@ jQuery(document).ready(function ($) {
 					success: function (response) {
 						jQuery( 'div.shopping-cart-wrapper' ).html( response );
 						jQuery('div.wpsc_loading_animation').css('visibility', 'hidden');
-						},
+					},
 					error: function (result) {
 						jQuery( 'div.shopping-cart-wrapper' ).html( wpsc_ajax.ajax_get_cart_error );
 						jQuery('div.wpsc_loading_animation').css('visibility', 'hidden');
 					}
-				});   					
+				});
 			});
 		}
 	}
@@ -1147,7 +1147,7 @@ function wpsc_fancy_notification(parent_form){
 	if(typeof(WPSC_SHOW_FANCY_NOTIFICATION) == 'undefined'){
 		WPSC_SHOW_FANCY_NOTIFICATION = true;
 	}
-	if((WPSC_SHOW_FANCY_NOTIFICATION == true) && (jQuery('#fancy_notification') != null)){
+	if((WPSC_SHOW_FANCY_NOTIFICATION === true) && (jQuery('#fancy_notification') !== null)){
 		jQuery('#fancy_notification').css({
 		        position:'fixed',
 		        left: (jQuery(window).width() - jQuery('#fancy_notification').outerWidth())/2,
