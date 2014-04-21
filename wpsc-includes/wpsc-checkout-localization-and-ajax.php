@@ -152,8 +152,6 @@ function _wpsc_create_checkout_item_required_map() {
 
 	if ( empty( $wpsc_checkout ) ) {
 		$wpsc_checkout = new wpsc_checkout();
-	} else {
-		$wpsc_checkout->rewind_checkout_items();
 	}
 
 	$checkout_item_map = array();
