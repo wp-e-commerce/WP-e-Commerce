@@ -555,9 +555,10 @@ function wpsc_change_regions_when_country_changes() {
 
 function wpsc_copy_meta_value_to_similiar( element ) {
 
-	var element_meta_key = wpsc_get_element_meta_key( element );
-	var meta_value = element.val();
-	var element_html = element.html();
+	var element_meta_key = wpsc_get_element_meta_key( element ),
+		meta_value = element.val(),
+		element_html = element.html(),
+		current_value;
 		
 	// if there are other fields on the current page that are used to change the same meta value then 
 	// they need to be updated
@@ -574,11 +575,11 @@ function wpsc_copy_meta_value_to_similiar( element ) {
 					jQuery( this ).removeAttr( 'checked' );
 				}
 			} if ( jQuery(this).is('select') ) {
-				var current_value = jQuery( this ).val();
+				current_value = jQuery( this ).val();
 				jQuery( this ).html( element_html );
 				jQuery( this ).val( meta_value );
 			} else {
-				var current_value = jQuery( this ).val();
+				current_value = jQuery( this ).val();
 				if ( current_value != meta_value ) {
 					jQuery( this ).val( meta_value );
 				}
@@ -660,9 +661,8 @@ function wpsc_update_location_elements_visibility() {
 	
 
 	// for convenience, get the jQuery objects for each of the billing elements we want to manipulate up front
-	var billing_state_elements = wpsc_get_wpsc_meta_elements( 'billingstate' ) ;
-	var billing_region_elements = wpsc_get_wpsc_meta_elements( 'billingregion' );
 	var billing_state_elements = wpsc_get_wpsc_meta_elements( 'billingstate' );
+	var billing_region_elements = wpsc_get_wpsc_meta_elements( 'billingregion' );
 	
 	if ( ! wpsc_checkout_item_form_id( 'billingcountry' ) ) {
 		if ( billing_region_elements.length ) {
