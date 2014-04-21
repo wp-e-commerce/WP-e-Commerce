@@ -252,7 +252,7 @@ class wpec_taxes {
 	 *                              Default action is to not include an order by statement.
 	 * @return: array, int, string or false
 	 * */
-	function wpec_taxes_get_country_information( $columns = false, $where = false, $order_by = false ) {
+	function wpec_taxes_get_country_information( $columns = false, $where = array(), $order_by = false ) {
 		//check for all-markets
 		if ( 'country' == $columns && 1 == count( $where ) && 'all-markets' == $where['isocode'] ) {
 			$returnable = 'All Markets';
@@ -270,7 +270,7 @@ class wpec_taxes {
 			$columns = array_map( 'esc_sql', $columns );
 
 			//if where is set then formulate conditions
-			if ( $where ) {
+			if ( ! empty( $where ) ) {
 				foreach ( $where as $column => $condition ) {
 					$condition = esc_sql( $condition );
 					$where_query[] = ( is_numeric( $condition ) ) ? "{$column}={$condition}" : "{$column}='{$condition}'";
