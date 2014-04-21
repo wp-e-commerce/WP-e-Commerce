@@ -225,13 +225,13 @@ class wpec_taxes {
 				break;
 			case 'hidden': $where = array( 'visible' => 0 );
 				break;
-			default: $where = false;
+			default: $where = array();
 		}// switch
 
 		$returnable = $this->wpec_taxes_get_country_information( array( 'country', 'isocode' ), $where, 'country' );
 
 		//add all markets
-		array_unshift( $returnable, array( 'isocode' => 'all-markets', 'country' => 'All Markets' ) );
+		array_unshift( $returnable, array( 'isocode' => 'all-markets', 'country' => __( 'All Markets', 'wpsc' ) ) );
 
 		return $returnable;
 	} // wpec_taxes_get_countries
