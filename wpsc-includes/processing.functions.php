@@ -31,10 +31,11 @@ function wpsc_currency_display( $price_in, $args = null ) {
 
 	// Format the price for output
 	$price_out = wpsc_format_number( $price_in, $decimals );
+	
+	// Get currency settings
+	$currency_type = get_option( 'currency_type' );
 
 	if ( ! $query['isocode'] ) {
-		// Get currency settings
-		$currency_type = get_option( 'currency_type' );
 
 		// TODO can deprecate this caching because the WPSC_Countries class already caches the data
 		if ( ! $wpsc_currency_data = wp_cache_get( $currency_type, 'wpsc_currency_id' ) ) {
