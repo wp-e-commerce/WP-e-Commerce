@@ -10,9 +10,10 @@ add_action( 'wp_login'                   , '_wpsc_action_setup_customer'     );
  * Setup current user object and customer ID as well as cart.
  *
  * @uses  do_action() Calls 'wpsc_setup_customer' after customer data is ready
- * @returns int visitor id
  * @access private
  * @since  3.8.13
+ * @return int visitor id
+ *
  */
 function _wpsc_action_setup_customer() {
 
@@ -51,8 +52,6 @@ function _wpsc_action_setup_customer() {
 				add_action( 'wpsc_register_taxonomies_after', '_wpsc_merge_cart', 1 );
 			}
 		}
-	} else {
-		$id_from_wp_user = '';
 	}
 
 	// initialize customer ID if it's not already there
