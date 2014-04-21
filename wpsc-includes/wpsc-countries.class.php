@@ -830,7 +830,7 @@ class WPSC_Countries {
 	public function __construct() {
 		if ( self::$active_wpsc_country_by_country_id == null ) {
 			self::_clean_data_maps();
-			self::restore_myself();
+			self::restore();
 		}
 
 		if ( ! self::$active_wpsc_country_by_country_id->count() ) {
@@ -838,7 +838,7 @@ class WPSC_Countries {
 		}
 
 		add_filter( '_wpsc_javascript_localizations', array( __CLASS__, '_wpsc_countries_localizations' ) );
-		add_action( 'shutdown', array( __CLASS__, 'save_myself' ) );
+		add_action( 'shutdown'                      , array( __CLASS__, 'save' ) );
 		self::$_initialized = true;
 	}
 
@@ -1149,7 +1149,7 @@ class WPSC_Countries {
 	 *
 	 * @return none
 	 */
-	public static function save_myself() {
+	public static function save() {
 		if ( self::_dirty() ) {
 			$mydata = array();
 
@@ -1180,13 +1180,13 @@ class WPSC_Countries {
 	 *
 	 * @return none
 	 */
-	private function restore_myself() {
-		$mydata = get_transient( self::transient_name() );
+	private function restore() {
+		$data = get_transient( self::transient_name() );
 
-		$have_data = false;
+		$has_data = false;
 
-		if ( is_array( $mydata ) ) {
-			foreach ( $mydata as $variable => $value ) {
+		if ( is_array( $data ) ) {
+			foreach ( $data as $variable => $value ) {
 				if ( property_exists( $this, $variable ) ) {
 
 					if ( is_a( $value, 'WPSC_Data_Map' ) ) {
@@ -1194,16 +1194,16 @@ class WPSC_Countries {
 					}
 
 					self::$$variable = $value;
-					$have_data = true;
+					$has_data = true;
 				} else {
 					// something went wrong with save / restore
-					$have_data = false;
+					$has_data = false;
 					break;
 				}
 			}
 		}
 
-		if ( ! $have_data && ( $mydata !== false ) ) {
+		if ( ! $has_data && ( $data !== false ) ) {
 			self::clear_cache();
 		}
 
@@ -1318,8 +1318,9 @@ class WPSC_Countries {
 	 * @return none
 	 */
 	private static function confirmed_initialization() {
+		
 		if ( ! self::$_initialized ) {
-			$an_instance = new WPSC_Countries();
+			self::$_initialized = (bool) new WPSC_Countries();
 		}
 
 		return self::$_initialized;
