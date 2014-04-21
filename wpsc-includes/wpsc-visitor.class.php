@@ -121,7 +121,7 @@ class WPSC_Visitor {
 			unset( $a->$property_name ) ;
 		}
 
-		wpsc_delete_visitor_meta( $this->id, $attribute );
+		wpsc_delete_visitor_meta( $this->_id, $attribute );
 
 		return $this;
 
