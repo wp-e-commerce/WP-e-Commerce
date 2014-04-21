@@ -38,10 +38,8 @@ class WPSC_Region {
 	 */
 	public function __construct( $country, $region ) {
 
-		// if a country id or code is passed make sure we have a valid coutnry_id
-		if ( $country ) {
-			$country_id = WPSC_Countries::get_country_id( $country );
-		}
+		// if a country id or code is passed make sure we have a valid country_id
+		$country_id = $country ? WPSC_Countries::get_country_id( $country ) : 0;
 
 		// if we are creating a region use the country_id we just validated and get the region code
 		if ( is_array( $region ) ) {
@@ -56,7 +54,6 @@ class WPSC_Region {
 			$region_id = WPSC_Countries::get_region_id( $country_id, $region_id_or_code );
 
 			if ( $country_id && $region_id ) {
-				$wpsc_country = new WPSC_Country( $country_id );
 				$wpsc_region  = WPSC_Countries::get_region( $country_id, $region_id );
 
 				if ( $wpsc_region ) {

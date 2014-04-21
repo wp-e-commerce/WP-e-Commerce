@@ -31,13 +31,12 @@ function wpsc_currency_display( $price_in, $args = null ) {
 
 	// Format the price for output
 	$price_out = wpsc_format_number( $price_in, $decimals );
-	
+
 	// Get currency settings
 	$currency_type = get_option( 'currency_type' );
 
 	if ( ! $query['isocode'] ) {
-
-		// TODO can deprecate this caching because the WPSC_Countries class already caches the data
+		// @todo: can deprecate this caching because the WPSC_Countries class already caches the data
 		if ( ! $wpsc_currency_data = wp_cache_get( $currency_type, 'wpsc_currency_id' ) ) {
 			$wpsc_currency_data = WPSC_Countries::get_currency_data( $currency_type, true );
 			wp_cache_set( $currency_type, $wpsc_currency_data, 'wpsc_currency_id' );
@@ -48,13 +47,15 @@ function wpsc_currency_display( $price_in, $args = null ) {
 	}
 
 	// Figure out the currency code
-	if ( $query['display_currency_code'] )
+	if ( $query['display_currency_code'] ) {
 		$currency_code = $wpsc_currency_data['code'];
+	}
 
 	// Figure out the currency sign
 	$currency_sign = '';
+
 	if ( $query['display_currency_symbol'] ) {
-		if ( !empty( $wpsc_currency_data['symbol'] ) ) {
+		if ( ! empty( $wpsc_currency_data['symbol'] ) ) {
 			if ( $query['display_as_html'] && !empty($wpsc_currency_data['symbol_html']) ) {
 				$currency_sign = $wpsc_currency_data['symbol_html'];
 			} else {
