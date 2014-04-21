@@ -21,7 +21,7 @@ class WPSC_Visitor {
 
 		$visitor = _wpsc_get_visitor( $visitor_id );
 		if ( $visitor == false ) {
-			$valid = false;
+			self::$valid = false;
 			return;
 		}
 
@@ -98,13 +98,13 @@ class WPSC_Visitor {
 		$property_name = '_' . $attribute;
 		$this->$property_name = $value;
 
-		if ( in_array( $attribute, $visitor_table_attribute_list ) ) {
+		if ( in_array( $attribute, self::$visitor_table_attribute_list ) ) {
 			// test if change of the attribute is permitted
-			if ( $visitor_table_attribute_list( $attribute ) ) {
+			if ( self::$visitor_table_attribute_list( $attribute ) ) {
 				wpsc_update_visitor( $this->_id, array( $attribute => $value ) );
 			}
 		} else {
-			wpsc_update_visitor_meta( $this->id, $attribute, $value );
+			wpsc_update_visitor_meta( $this->_id, $attribute, $value );
 			return $this;
 		}
 	}
