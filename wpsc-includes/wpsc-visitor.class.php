@@ -8,7 +8,7 @@
 
 class WPSC_Visitor {
 
-	public $valid = true;
+	public static $valid = true;
 
 	/**
 	 * Create visitor class from visitor id
@@ -127,16 +127,6 @@ class WPSC_Visitor {
 
 	}
 
-	private $visitor_table_attribute_list = array(
-		// well known attributes from the 'wpsc_visitors table', true false if change allowed
-		'id'          => false,
-		'user_id'     => true,
-		'last_active' => false,
-		'expires'     => false,
-		'created'     => false,
-	);
-
-
 	// helper function for well known variables
 	function id() {
 		return $this->_id;
@@ -169,5 +159,14 @@ class WPSC_Visitor {
 	public $_expires     = false;
 	public $_created     = false;
 	public $_cart        = false;
+
+	public static $visitor_table_attribute_list = array(
+		// well known attributes from the 'wpsc_visitors table', true false if change allowed
+		'id'          => false,
+		'user_id'     => true,
+		'last_active' => false,
+		'expires'     => false,
+		'created'     => false,
+	);
 
 }
