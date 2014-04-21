@@ -190,7 +190,7 @@ class WPSC_Region {
 
 
 	/**
-	 * sets a property for a region, well know properties are not allowed to be set using this function,
+	 * sets a property for a region, well-known properties are not allowed to be set using this function,
 	 * but arbitrary properties can be set (and accessed later with get)
 	 *
 	 *
@@ -214,11 +214,11 @@ class WPSC_Region {
 
 			if ( property_exists( $this, $property_name ) ) {
 				$value = $this->$property_name;
-				_wpsc_doing_it_wrong( __FUNCTION__, __( 'Using set to change a well-known WPSC_REgion property is deprecated as of version 3.8.14.  Use the class constructor and specify all properties together to perform and insert or an update.', 'wpsc' ), '3.8.14' );
+				_wpsc_doing_it_wrong( __FUNCTION__, __( 'Using set to change a well-known WPSC_Region property is deprecated as of version 3.8.14.  Use the class constructor and specify all properties together to perform and insert or an update.', 'wpsc' ), '3.8.14' );
 				if ( defined( 'WPSC_LOAD_DEPRECATED' ) && WPSC_LOAD_DEPRECATED ) {
-					$country_array = $this->as_array();
-					$country_array[$key] = $value;
-					$this->_save_country_data( $country_array );
+					$country_array         = $this->as_array();
+					$country_array[ $key ] = $value;
+					$this->_save_region_data( $country_array );
 				}
 			} else {
 				wpsc_update_meta( $this->_id, $key, $value, __CLASS__  );
@@ -230,7 +230,7 @@ class WPSC_Region {
 
 
 	/**
-	 * saves country data to the database
+	 * saves region data to the database
 	 *
 	 * @access private
 	 *
