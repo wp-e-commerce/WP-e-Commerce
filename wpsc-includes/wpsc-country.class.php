@@ -538,12 +538,12 @@ class WPSC_Country {
 		$this->_currency_symbol_html = $country->symbol_html;
 		$this->_currency_code		 = $country->code;
 
-		if ( property_exists( $country, 'region_id_to_region_code_map' ) ) {
-			$this->_region_id_to_region_code_map 	= $country->region_id_to_region_code_map;
+		if ( property_exists( $country, '_region_id_to_region_code_map' ) ) {
+			$this->_region_id_to_region_code_map = $country->_region_id_to_region_code_map;
 		}
 
 		if ( property_exists( $country, 'regions' ) ) {
-			$this->_regions 						= $country->regions;
+			$this->_regions = $country->regions;
 		}
 	}
 
