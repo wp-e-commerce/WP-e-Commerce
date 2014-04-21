@@ -289,25 +289,25 @@ function _wpsc_get_country_and_region_replacements( $replacements = null, $repla
 	while ( wpsc_have_checkout_items() ) {
 		$checkoutitem = wpsc_the_checkout_item();
 
-		if ( $replaceshipping && ( $checkoutitem->unique_name == 'shippingcountry' ) ) {
+		if ( $replaceshipping && 'shippingcountry' == $checkoutitem->unique_name ) {
 			$element_id = 'region_country_form_' . wpsc_checkout_form_item_id();
 			$replacement = array( 'elementid' => $element_id, 'element' => wpsc_checkout_form_field() );
 			$replacements['shippingcountry'] = $replacement;
 		}
 
-		if ( $replaceshipping && ( $checkoutitem->unique_name == 'shippingstate' ) ) {
+		if ( $replaceshipping && 'shippingstate' == $checkoutitem->unique_name ) {
 			$element_id = wpsc_checkout_form_element_id();
 			$replacement = array( 'elementid' => $element_id, 'element' => wpsc_checkout_form_field() );
 			$replacements['shippingstate'] = $replacement;
 		}
 
-		if ( $replacebilling && ( $checkoutitem->unique_name == 'billingcountry' ) ) {
+		if ( $replacebilling && 'billingcountry' == $checkoutitem->unique_name  ) {
 			$element_id = 'region_country_form_' . wpsc_checkout_form_item_id();
 			$replacement = array( 'elementid' => $element_id, 'element' => wpsc_checkout_form_field() );
 			$replacements['billingcountry'] = $replacement;
 		}
 
-		if ( $replacebilling && ( $checkoutitem->unique_name == 'billingstate' ) ) {
+		if ( $replacebilling && 'billingstate' == $checkoutitem->unique_name ) {
 			$element_id = wpsc_checkout_form_item_id();
 			$replacement = array( 'elementid' => $element_id, 'element' => wpsc_checkout_form_field() );
 			$replacements['billingstate'] = $replacement;
