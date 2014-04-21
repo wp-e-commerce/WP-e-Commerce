@@ -54,7 +54,8 @@ class WPSC_Region {
 			$region_id = WPSC_Countries::get_region_id( $country_id, $region_id_or_code );
 
 			if ( $country_id && $region_id ) {
-				$wpsc_region  = WPSC_Countries::get_region( $country_id, $region_id );
+				$wpsc_country = new WPSC_Country( $country_id );
+				$wpsc_region  = $wpsc_country->get_region( $region_id );
 
 				if ( $wpsc_region ) {
 					$this->_code       = $wpsc_region->_code;
