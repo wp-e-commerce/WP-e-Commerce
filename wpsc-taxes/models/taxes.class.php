@@ -64,15 +64,18 @@ class wpec_taxes {
 	 * @return: null
 	 * */
 	function wpec_taxes_set_options() {
-		foreach ( array_keys( $this->taxes_options ) as $key ) {
-			$options[$key] = get_option( $key );
-		}// foreach
+
+		$options = array();
+
+		foreach ($this->taxes_options as $key => $value ) {
+			$options[ $key ] = get_option( $key );
+		}
 
 		$returnable = wp_parse_args( $options, $this->taxes_options );
 		extract( $returnable, EXTR_SKIP );
 
 		$this->taxes_options = $returnable;
-	} // wpec_taxes_set_options
+	}
 
 	/**
 	 * @description: wpec_taxes_get_rate - retrieves the tax rate for the given country
