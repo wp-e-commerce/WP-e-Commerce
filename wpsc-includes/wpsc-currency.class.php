@@ -53,7 +53,7 @@ class WPSC_Currency {
 	 *
 	 * @since 3.8.14
 	 *
-	 * @return array
+	 * @return array $result Array of currency data
 	 */
 	public function as_array() {
 		$result = array(
