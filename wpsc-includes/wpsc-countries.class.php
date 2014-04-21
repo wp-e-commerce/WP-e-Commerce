@@ -1042,7 +1042,7 @@ class WPSC_Countries {
 		// to hafve more targetted rebuild functions. But since rebuild of alomst all of the lists
 		// requires touching the bulk of the country data we might as well do everything at the same
 		// time
-		$default_rebuild_callback = array( &$this, '_create_country_maps()' );
+		$default_rebuild_callback = array( __CLASS__, '_create_country_maps' );
 
 		/*
 		 * maps without names will be loaded with the core class
