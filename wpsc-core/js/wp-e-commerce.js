@@ -890,8 +890,10 @@ jQuery(document).ready(function ($) {
 	wpsc_update_location_elements_visibility();
 	jQuery( "#shippingSameBilling"  ).on( 'change', wpsc_adjust_checkout_form_element_visibility );
 
-	if(jQuery('#checkout_page_container .wpsc_email_address input').val())
+	if ( jQuery('#checkout_page_container .wpsc_email_address input').val() ) {
 		jQuery('#wpsc_checkout_gravatar').attr('src', 'https://secure.gravatar.com/avatar/'+MD5(jQuery('#checkout_page_container .wpsc_email_address input').val().split(' ').join(''))+'?s=60&d=mm');
+	}
+	
 	jQuery('#checkout_page_container .wpsc_email_address input').keyup(function(){
 		jQuery('#wpsc_checkout_gravatar').attr('src', 'https://secure.gravatar.com/avatar/'+MD5(jQuery(this).val().split(' ').join(''))+'?s=60&d=mm');
 	});

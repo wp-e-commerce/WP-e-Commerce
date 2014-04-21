@@ -184,7 +184,7 @@ if ( WPSC_DEPRECATE_CUSTOMER_CHECKOUT_DETAILS ) {
 								$meta_value = $meta_value[0];
 							}
 							wpsc_update_visitor_meta( $id, 'shippingcountry', $meta_value );
-							wpsc_update_visitor_meta( $id , 'shippingregion' );
+							wpsc_update_visitor_meta( $id, 'shippingregion', '' );
 						}
 
 						break;
@@ -199,7 +199,7 @@ if ( WPSC_DEPRECATE_CUSTOMER_CHECKOUT_DETAILS ) {
 							}
 
 							wpsc_update_visitor_meta( $id, 'billingcountry', $meta_value );
-							wpsc_update_visitor_meta( $id, 'billingregion' );
+							wpsc_update_visitor_meta( $id, 'billingregion', '' );
 						}
 
 						break;
