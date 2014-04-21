@@ -1,6 +1,6 @@
 <?php
 /**
- * a country
+ * WPSC_Country class
  *
  * @access public
  *
@@ -462,7 +462,7 @@ class WPSC_Country {
 		$region_code = false;
 
 		if ( isset( $this->_regions[$region_id] ) ) {
-			$region_code = $this->region_id_to_region_code_map[$region_id];
+			$region_code = $this->_region_id_to_region_code_map[$region_id];
 		}
 
 		return $region_code;
@@ -678,6 +678,7 @@ class WPSC_Country {
 	public $_name      = null;
 	public $_isocode = null;
 	public $_currency_name = '';
+	public $_currency_code = '';
 	public $_currency_symbol = '';
 	public $_currency_symbol_html = '';
 	public $_code = '';
@@ -687,6 +688,7 @@ class WPSC_Country {
 	public $_visible = true;
 	public $_region_id_by_region_code  = null;
 	public $_region_id_by_region_name	 = null;
+	public $_region_id_to_region_code_map = null;
 	public $_regions 	                  = null;
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -717,7 +719,7 @@ class WPSC_Country {
 
 
 	/*
-	 * deprected since 3.8.14
+	 * deprecated since 3.8.14
 	*/
 	public static function get_all( $include_invisible = false ) {
 
@@ -732,7 +734,7 @@ class WPSC_Country {
 	}
 
 	/*
-	 * deprected since 3.8.14
+	 * deprecated since 3.8.14
 	*/
 	public static function get_cache( $value = null, $col = 'id' ) {
 
@@ -755,14 +757,14 @@ class WPSC_Country {
 	}
 
 	/*
-	 * deprected since 3.8.14
+	 * @deprecated since 3.8.14
 	*/
 	public static function update_cache( $data ) {
 		_wpsc_deprecated_function( __FUNCTION__, '3.8.14', self::_function_not_available_message( __FUNCTION__ ) );
 	}
 
 	/*
-	 * deprected since 3.8.14
+	 * @deprecated since 3.8.14
 	*/
 	public static function delete_cache( $value = null, $col = 'id' ) {
 		if ( defined( 'WPSC_LOAD_DEPRECATED' ) && WPSC_LOAD_DEPRECATED ) {
@@ -770,11 +772,8 @@ class WPSC_Country {
 		}
 	}
 
-
 	/**
 	 * Returns the whole database row in the form of an associative array
-	 *
-	 * @deprectated since 3.8.14
 	 *
 	 * @access public
 	 * @since 3.8.11
@@ -783,16 +782,7 @@ class WPSC_Country {
 	 */
 	public function get_data() {
 
-		$function = __CLASS__ . '::' . __FUNCTION__ . '()';
-		$replacement = 'WPSC_Country::as_array()';
-
-		if ( defined( 'WPSC_LOAD_DEPRECATED' ) && WPSC_LOAD_DEPRECATED ) {
-			_wpsc_deprecated_function( $function, '3.8.14', $replacement );
-		}
-
-		$data = $this->as_array();
-
-		return apply_filters( 'wpsc_country_get_data', $data, $this );
+		return apply_filters( 'wpsc_country_get_data', $this->as_array(), $this );
 	}
 
 
