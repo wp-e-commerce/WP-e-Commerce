@@ -4,7 +4,7 @@
  * WP eCommerce checkout class
  *
  * These are the class for the WP eCommerce checkout
- * The checkout class handles dispaying the checkout form fields
+ * The checkout class handles displaying the checkout form fields
  *
  * @package wp-e-commerce
  * @subpackage wpsc-checkout-classes
@@ -15,7 +15,7 @@
  * @access public
  *
  * @since 3.8
- * @param $country (string) isocode for a country
+ * @param $country (string) ISO code for a country
  * @return (boolean) true is country has regions else false
  */
 function wpsc_has_regions( $country ){
@@ -218,13 +218,13 @@ class wpsc_checkout {
 	}
 
 	function form_name_is_required() {
-		if ( $this->checkout_item->mandatory == 0 ) {
-			return false;
-		} else {
-			return true;
-		}
+		return ! $this->checkout_item->mandatory == 0;
 	}
 
+	function form_element_active() {
+		return $this->checkout_item->active != 0;
+	}
+	
 	/**
 	 * form_element_id method, returns the form html ID
 	 * @access public

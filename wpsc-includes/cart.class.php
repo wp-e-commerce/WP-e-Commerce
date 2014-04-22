@@ -313,7 +313,7 @@ class wpsc_cart {
 					}
 				}
 
-				if ( count( $raw_quotes ) == 1 ) {
+				if ( is_array( $raw_quotes ) && 1 == count( $raw_quotes ) ) {
 					$this->selected_shipping_method = $min_method;
 					$this->shipping_quotes          = $wpsc_shipping_modules[$this->selected_shipping_method]->getQuote();
 					$this->selected_shipping_option = $min_quote;

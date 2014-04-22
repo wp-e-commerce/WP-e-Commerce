@@ -174,7 +174,7 @@ function wpsc_update_customer_data( meta_key, meta_value, response_callback ) {
 
 	// wrap our ajax request in a try/catch so that an error doesn't stop the script from running
 	try {
-		var ajax_data = {action: 'wpsc_update_customer_meta', meta_key : meta_key, meta_value : meta_value };
+		var ajax_data = {action: 'wpsc_customer_updated_data', meta_key : meta_key, meta_value : meta_value };	
 		wpsc_do_ajax_request( ajax_data, response_callback );
 	} catch ( err ) {
 		; // we could handle the error here, or use it as a convenient place to set a breakpoint when debugging/testing

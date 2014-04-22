@@ -837,64 +837,16 @@ class WPSC_Countries {
 			self::_create_country_maps();
 		}
 
-		add_filter( '_wpsc_javascript_localizations', array( __CLASS__, '_wpsc_countries_localizations' ) );
 		add_action( 'shutdown'                      , array( __CLASS__, 'save' ) );
 		self::$_initialized = true;
 	}
 
 
-	/**
-	 * add countries data to the wpec javascript localizations
-	 *
-	 * @access private
-	 * @since 3.8.14
-	 *
-	 * @param string $id Optional. Defaults to 0.
-	 */
-	public static function _wpsc_countries_localizations( $localizations_array ) {
 
-		$localizations_array['no_country_selected']       = __( 'Please select a country', 'wpsc' );
-		$localizations_array['no_region_selected_format'] = __( 'Please select a %s', 'wpsc' );
-		$localizations_array['no_region_label']           = __( 'State/Province', 'wpsc' );
 
-		$country_list = array();
 
-		foreach ( self::get_countries() as $country_id => $wpsc_country ) {
 
-			if ( $wpsc_country->is_visible() ) {
 
-				$country_list[ $wpsc_country->get_isocode() ] = $wpsc_country->get_name();
-
-				if ( $wpsc_country->has_regions() ) {
-
-					$regions     = $wpsc_country->get_regions();
-					$region_list = array();
-
-					foreach ( $regions as $region_id => $wpsc_region ) {
-						$region_list[ $region_id ] = $wpsc_region->get_name();
-					}
-
-					if ( ! empty ( $region_list ) ) {
-						$localizations_array[ 'wpsc_country_' . $wpsc_country->get_isocode() . '_regions' ] = $region_list;
-					}
-
-				}
-
-				$region_label = $wpsc_country->get( 'region_label' );
-
-				if ( ! empty( $region_label ) ) {
-					$localizations_array['wpsc_country_' . $wpsc_country->get_isocode() . '_region_label' ] = $region_label;
-				}
-			}
-
-		}
-
-		if ( ! empty( $country_list ) ) {
-			$localizations_array['wpsc_countries'] = $country_list;
-		}
-
-		return $localizations_array;
-	}
 
 	/**
 	 * creates the data maps used internally by this class to service requests

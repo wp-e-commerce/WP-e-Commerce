@@ -40,59 +40,6 @@ function wpsc_is_shipping_details() {
 	}
 }
 
-/**
- * Creates an array mapping from checkout item id to the item name in the field.  array is
- * localized into the user javascript so that the javascript can find items using the well known names.
- *
- * In release 3.8.14 the unique key for a field is available in an element attribute
- * called 'data-wpsc-meta-key'. Just in case someone out there has a highly customized
- * checkout experience that doesn't use the WPeC core functions to create the controls
- * using this map will maintain backwards compatibility.
- *
- * @access public
- *
- * @since 3.8.14
- * @return (boolean)
- */
-function _wpsc_create_checkout_unique_name_to_form_id_map() {
-	global $wpsc_checkout;
-
-	if ( empty( $wpsc_checkout ) ) {
-		$wpsc_checkout = new wpsc_checkout();
-	} else {
-		$wpsc_checkout->rewind_checkout_items();
-	}
-
-	$checkout_item_map = array();
-	while ( wpsc_have_checkout_items() ) {
-		$checkout_item = wpsc_the_checkout_item();
-
-		if ( ! empty( $checkout_item->unique_name ) ) {
-			$checkout_item_map[$wpsc_checkout->form_item_unique_name()] = $wpsc_checkout->form_element_id();
-		}
-	}
-
-	$wpsc_checkout->rewind_checkout_items();
-
-	return $checkout_item_map;
-
-}
-
-/**
- * add checkout unique name to form id map to user javascript localizations
- *
- * @param array $localizations
- *
- * @since 3.8.14
- *
- * @return array $localizations
- */
-function _wpsc_localize_checkout_item_name_to_from_id( $localizations ) {
-	$localizations['wpsc_checkout_unique_name_to_form_id_map'] = _wpsc_create_checkout_unique_name_to_form_id_map();
-	return $localizations;
-}
-
-add_filter( '_wpsc_javascript_localizations', '_wpsc_localize_checkout_item_name_to_from_id' );
 
 
 /**
