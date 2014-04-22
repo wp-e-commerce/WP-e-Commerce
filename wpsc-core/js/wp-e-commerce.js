@@ -174,7 +174,7 @@ function wpsc_update_customer_data( meta_key, meta_value, response_callback ) {
 
 	// wrap our ajax request in a try/catch so that an error doesn't stop the script from running
 	try {
-		var ajax_data = {action: 'wpsc_customer_updated_data', meta_key : meta_key, meta_value : meta_value };	
+		var ajax_data = {action: 'wpsc_customer_updated_data', meta_key : meta_key, meta_value : meta_value };
 		wpsc_do_ajax_request( ajax_data, response_callback );
 	} catch ( err ) {
 		; // we could handle the error here, or use it as a convenient place to set a breakpoint when debugging/testing
@@ -449,7 +449,7 @@ function wpsc_adjust_checkout_form_element_visibility() {
 		var shipping_row = jQuery( "#shippingSameBilling" ).closest( "tr" );
 
 		if( ! wpsc_show_checkout_shipping_fields() ) {
-			jQuery( shipping_row ).siblings( ":not( .checkout-heading-row ,  :has( #agree ), :has( .custom_gateway ) ) ").hide();
+			jQuery( shipping_row ).siblings( ":not( .checkout-heading-row, :has( #agree ), :has( .wpsc_gateway_container ) ) ").hide();
 			jQuery( "#shippingsameasbillingmessage" ).show();
 		} else {
 			jQuery( shipping_row ).siblings().show();
