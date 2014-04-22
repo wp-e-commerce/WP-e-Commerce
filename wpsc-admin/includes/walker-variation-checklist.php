@@ -12,8 +12,13 @@ class WPSC_Walker_Variation_Checklist extends Walker_Category_Checklist {
 
 	public function start_el( &$output, $category, $depth = 0, $args = array(), $current_object_id = 0 ) {
 		extract( $args );
+
 		if ( empty( $taxonomy ) ) {
 			$taxonomy = 'category';
+		}
+
+		if ( empty( $selected_cats ) ) {
+			$selected_cats = array();
 		}
 
 		$checked     = in_array( $category->term_id, $selected_cats );
