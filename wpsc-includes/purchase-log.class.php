@@ -105,7 +105,7 @@ class WPSC_Purchase_Log {
 	 *            Has no effect if per_page is set to 0.
 	 *
 	 * @since 3.8.14
-	 * @param  array $args Arguments
+	 * @param  array|string $args Arguments
 	 * @return array       Array containing 'sales' and 'earnings' stats
 	 */
 	public static function fetch_stats( $args ) {
