@@ -207,11 +207,7 @@ function wpsc_customer_updated_data_ajax() {
 	// which transaction the response matches
 	$response = array( 'request' => $_REQUEST );
 
-	// grab a copy of the current meta values so we can send back only items that have changed
-	$checkout_meta_values_before_update = _wpsc_get_checkout_meta();
-
 	// update can be a single key/value pair or an array of key value pairs
-
 	if ( ! empty ( $_REQUEST['meta_data'] ) ) {
 		$customer_meta = isset( $_REQUEST['meta_data'] ) ?  $_REQUEST['meta_data'] : array();
 	} elseif ( ! empty( $_REQUEST['meta_key'] ) && isset( $_REQUEST['meta_value'] ) ) {
@@ -224,6 +220,10 @@ function wpsc_customer_updated_data_ajax() {
 	// We will want to know which interface elements have changed as a result of this meta update,
 	// capture the current state of the elements
 	$checkout_info_before_updates = _wpsc_get_checkout_info();
+
+	// We will want to know which, if any, checkout meta changes as a result of hooks and filters
+	// that may fire as we update each meta item
+	$all_checkout_meta_before_updates = _wpsc_get_checkout_meta();
 
 	if ( ! empty( $customer_meta ) ) {
 
@@ -258,18 +258,18 @@ function wpsc_customer_updated_data_ajax() {
 	}
 
 	// Let's see what the current state of the customer meta set is after we applied the requested updates
-	$all_checkout_meta_before_after_update = _wpsc_get_checkout_info();
+	$all_checkout_meta_after_updates = _wpsc_get_checkout_meta();
 
-	foreach ( $all_checkout_meta_before_after_update as $current_meta_key => $current_meta_value ) {
+	foreach ( $all_checkout_meta_after_updates as $current_meta_key => $current_meta_value ) {
 
 		// if the meta key and value are the same as what was sent in the request we don't need to
 		// send them back because the client already knows about this.
 		//
 		// But we have to check just in case a data rule or a plugin that used our hooks made some adjustments
-		if ( isset( $checkout_meta_values_before_update[$current_meta_key] ) && ( $checkout_meta_values_before_update == $current_meta_value ) ) {
+		if ( isset( $all_checkout_meta_before_updates[$current_meta_key] ) && ( $all_checkout_meta_before_updates[$current_meta_key]  == $current_meta_value ) ) {
 			// new value s the same as the old value, why send it?
-			unset( $all_checkout_meta_before_after_update[$current_meta_key] );
-			unset( $checkout_meta_values_before_update[$current_meta_key] );
+			unset( $all_checkout_meta_after_updates[$current_meta_key] );
+			unset( $all_checkout_meta_before_updates[$current_meta_key] );
 			continue;
 		}
 
@@ -277,14 +277,14 @@ function wpsc_customer_updated_data_ajax() {
 		// because the client already knows the meta value and it is probably already visible in the user interface
 		if ( isset( $customer_meta[$current_meta_key] ) && ( $customer_meta[$current_meta_key] == $current_meta_value ) ) {
 			// new value s the same as the old value, why send it?
-			unset( $all_checkout_meta_before_after_update[$current_meta_key] );
+			unset( $all_checkout_meta_after_updates[$current_meta_key] );
 			continue;
 		}
 	}
 
 	// Any checkout meta that has changed as a result of the requeeted updates remains
 	// in our array, add it to the response
-	$response['customer_meta'] = $all_checkout_meta_before_after_update;
+	$response['customer_meta'] = $all_checkout_meta_after_updates;
 
 	// Get the changed checkout information and if something has changed add it to the repsonse
 	$new_checkout_info = _wpsc_remove_unchanged_checkout_info( $checkout_info_before_updates, _wpsc_get_checkout_info() );
