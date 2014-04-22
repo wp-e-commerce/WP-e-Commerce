@@ -477,7 +477,7 @@ class WPSC_Purchase_Log {
 		$item_shipping  = wp_list_pluck( $this->get_cart_contents(), 'pnp' );
 
 		$this->meta_data['total_shipping'] = $base_shipping + array_sum( $item_shipping );
-		
+
 		return $this->meta_data['total_shipping'];
 	}
 
@@ -780,7 +780,7 @@ class WPSC_Purchase_Log {
 			if ( $this->is_transaction_completed() ) {
 				$this->update_downloadable_status();
 			}
-			
+
 			$current_status = $this->get( 'processed' );
 			$previous_status = $this->previous_status;
 			$this->previous_status = $current_status;

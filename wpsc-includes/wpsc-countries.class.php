@@ -11,7 +11,7 @@
  *
  *
  * About WPSC_Countries:
- * 
+ *
  * WPSC_Countries is a WPeC class used to provide easy access to country, region
  * and currency information for all of WPeC an any extensions. Because this data is
  * accessed a lot throughout WPeC it is designed to be quick and avoid accessing the database.
@@ -25,13 +25,13 @@
  * work with country/region/currency data.
  *
  * How does it work?
- * 
+ *
  *  This class uses the static currency and region information distributed with WPeC to create an
  *  object that is optimized for access.  A copy of this object is cached.  When WPeC initialized
  *  this cached object is retrieved and used to service any request for geographical data.
  *
  * How is this data refreshed if it is cached?
- * 
+ *
  *  If an administrator changes country data in the WPeC admin tool the object will be rebuilt. If
  *  WPeC is upgraded the object will be rebuilt. And, because the object is stored as a transient, any
  *  action that would refresh the WordPress object cache would cause the object
@@ -39,7 +39,7 @@
  *
  * The implementation consists of three class
  *
- * WPSC_Country     Retrieves the data model for single countries. 
+ * WPSC_Country     Retrieves the data model for single countries.
  * WPSC_Region      Retrieves the data model for single regions.
  * WPSC_Countries   Get lists of countries, convert key fields to unique ids, and other useful functions,
  * 					Also abstracts data storage mechanism from database.
@@ -1318,7 +1318,7 @@ class WPSC_Countries {
 	 * @return none
 	 */
 	private static function confirmed_initialization() {
-		
+
 		if ( ! self::$_initialized ) {
 			$countries = new WPSC_Countries();
 			self::$_initialized = (bool) $countries;

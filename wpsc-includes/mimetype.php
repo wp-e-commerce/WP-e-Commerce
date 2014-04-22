@@ -10,11 +10,11 @@ are met:
 
 1. Redistributions of source code must retain the above copyright
    notice, this list of conditions and the following disclaimer.
-   
+
 2. Redistributions in binary form must reproduce the above copyright
    notice, this list of conditions and the following disclaimer in the
    documentation and/or other materials provided with the distribution.
-   
+
 3. Neither the name of the project nor the names of its contributors
    may be used to endorse or promote products derived from this software
    without specific prior written permission.
@@ -32,7 +32,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 **/
 
-/** 
+/**
    Name: PHP MimeType Class
 
    Version: 1.0
@@ -54,7 +54,7 @@ SUCH DAMAGE.
    	First an instance of the mimetype class must be created, then the
 	getType method should be called with the filename.  It will return
 	the mime type, an example follows.
-	
+
    Example:
 
       $mimetype = new mimetype();
@@ -64,7 +64,7 @@ SUCH DAMAGE.
 
    License: This script is distributed under the BSD License, you are free
    to use, or modify it however you like.  If you find this script useful please
-   e-mail me.   
+   e-mail me.
 **/
 
 class mimetype {
@@ -76,7 +76,7 @@ class mimetype {
       $filename = explode('.', $filename);
 
       // take the last part of the file to get the file extension
-      $filename = $filename[count($filename)-1];   
+      $filename = $filename[count($filename)-1];
 
       // find mime type
       return $this->privFindType($filename);
@@ -85,15 +85,15 @@ class mimetype {
    function privFindType($ext) {
       // create mimetypes array
       $mimetypes = $this->privBuildMimeArray();
-      
+
       // return mime type for extension
       if (isset($mimetypes[$ext])) {
          return $mimetypes[$ext];
-      // if the extension wasn't found return octet-stream         
+      // if the extension wasn't found return octet-stream
       } else {
          return 'application/octet-stream';
       }
-         
+
    }
 
    function privBuildMimeArray() {

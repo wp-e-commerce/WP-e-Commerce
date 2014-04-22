@@ -1006,7 +1006,7 @@ class wpsc_purchaselogs_items {
       // overwrite each other.
       // $additional_fields is introduced to fix this. However, the $additionaldetails array as well
       // as $this->customcheckoutfields needs to be kept for compatibility purposes.
-      
+
       $additional_fields = $billingdetails = $shippinginfo = array();
 
       foreach ( (array) $userinfo as $input_row ) {

@@ -279,8 +279,8 @@ class WPSC_Claimed_Stock {
 		}
 
 		$wpdb->query( $wpdb->prepare(
-			"UPDATE `" . WPSC_TABLE_CLAIMED_STOCK . "` 
-			SET `cart_id` = '%d', `cart_submitted` = '1' 
+			"UPDATE `" . WPSC_TABLE_CLAIMED_STOCK . "`
+			SET `cart_id` = '%d', `cart_submitted` = '1'
 			WHERE `cart_id` IN(%s)",
 			$purchase_log_id,
 			$this->cart_id

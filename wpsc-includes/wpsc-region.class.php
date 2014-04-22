@@ -253,9 +253,9 @@ class WPSC_Region {
 		$country_id     = isset( $region_data['country_id'] ) ? intval( $region_data['country_id'] ) : 0;
 		$region_code    = isset( $region_data['code'] ) ? $region_data['code'] : '';
 		$region_name    = isset( $region_data['code'] ) ? $region_data['code'] : '';
-		
+
 		$region_id_from_db = false;
-		
+
 		/*
 		 *  If at least one of the key feilds ins't present we aren'y going to continue, we can't reliably update
 		 *  a row in the table, nor could we insrt a row that could reliably be updated.

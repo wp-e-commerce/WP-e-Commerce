@@ -324,7 +324,7 @@ class wpsc_coupons {
 				}
 
 			}
-			
+
 			if ( ! $result ) {
 				switch ( $condition['operator'] ) {
 					case 'or':

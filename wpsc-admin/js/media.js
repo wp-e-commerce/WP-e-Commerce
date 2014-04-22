@@ -152,7 +152,7 @@
 						} else {
 							this.set( resp.obj, { parse: true } );
 						}
-						
+
 						wpsc_update_product_gallery_tab(resp.obj);
 					},
 					error: function( resp ) {

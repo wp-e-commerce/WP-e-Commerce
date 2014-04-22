@@ -2,7 +2,7 @@
 
 /**
  * WPeC Visitor Class
- * 
+ *
  * @since 3.8.14
  */
 
@@ -51,7 +51,7 @@ class WPSC_Visitor {
 
 	/**
 	 * Get visitor expiration
-	 * 
+	 *
 	 * @param  $unix_time boolean  true returns time as unix time, false returns time as string
 	 * @return string expiration time
 	 * @since 3.8.14
@@ -70,7 +70,7 @@ class WPSC_Visitor {
 
 	/**
 	 * Get visitor attribute
-	 * 
+	 *
 	 * @param  $attribute attribute name
 	 * @return varies, attribute value
 	 * @since 3.8.14
@@ -87,7 +87,7 @@ class WPSC_Visitor {
 
 	/**
 	 * Get visitor attribute
-	 * 
+	 *
 	 * @param  $attribute attribute name
 	 * @param  $value attribute value
 	 * @return this

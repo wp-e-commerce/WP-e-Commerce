@@ -1,26 +1,26 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
-// This section is used to create the globals that were originally defined in the 
+// This section is used to create the globals that were originally defined in the
 // dynamic-js file pre 3.8.14.  Note that variables also also exist in the "wpsc_ajax" structure.
-// To add a new global property that can be referenced in the script see the hook 
+// To add a new global property that can be referenced in the script see the hook
 // wpsc_javascript_localizations in wpsc-core/wpsc-functions.php
 //
 
 /**
  * javascript variables for WP-e-Commerce
- * 
- * These WPeC WordPress localized variables were in use prior to release 3.8.14, and are explicitly 
- * declared here for maximum backwards compatibility.  
- * 
- * In releases prior to 3.8.14 these legacy variables may have been declared in the dynamically 
- * created javascript, or in the HTML as a localized variable. 
- * 
- * For javascript variables added after version 3.8.14  use the following utility function to access the 
+ *
+ * These WPeC WordPress localized variables were in use prior to release 3.8.14, and are explicitly
+ * declared here for maximum backwards compatibility.
+ *
+ * In releases prior to 3.8.14 these legacy variables may have been declared in the dynamically
+ * created javascript, or in the HTML as a localized variable.
+ *
+ * For javascript variables added after version 3.8.14  use the following utility function to access the
  * localized variables.
- * 
+ *
  * wpsc_var_get ( name )
  * wpsc_var_set ( name, value )
  * wpsc_var_isset ( name, value );
- * 
+ *
  */
 if ( typeof wpsc_vars !== undefined ) {
 	var wpsc_ajax 						= wpsc_vars['wpsc_ajax'];
@@ -36,50 +36,50 @@ if ( typeof wpsc_vars !== undefined ) {
 
 /**
  * check if a localized WPeC value is set
- * 
+ *
  * @since 3.8.14
- * 
+ *
  * @param string 	name 		name of localized variable
- * 
+ *
  * @returns boolean		true if the variable is set, false otherwise
- * 
+ *
  */
 function wpsc_var_isset( name ) {
 	if ( typeof wpsc_vars !== undefined ) {
-		return  wpsc_vars[name] !== undefined; 
+		return  wpsc_vars[name] !== undefined;
 	}
 
-	return false;	
+	return false;
 }
 
 /**
  * get the value of a localized WPeC value if it is set
- * 
+ *
  * @since 3.8.14
- * 
+ *
  * @param string 	name 		name of localized variable
- * 
+ *
  * @returns varies				value of the var set
- * 
+ *
  */
 function wpsc_var_get( name ) {
 	if ( typeof wpsc_vars !== undefined ) {
-		return  wpsc_vars[name]; 
+		return  wpsc_vars[name];
 	}
 
-	return undefined;		
+	return undefined;
 }
 
 /**
  * change the value of a localized WPeC var
- * 
+ *
  * @since 3.8.14
- * 
+ *
  * @param string 	name 		name of localized variable
  * @param varies 	value 		value of the var being set
- * 
+ *
  * @returns varies		value of the var being set
- * 
+ *
  */
 function wpsc_var_set( name, value ) {
 	if ( typeof wpsc_vars !== undefined ) {
@@ -87,62 +87,62 @@ function wpsc_var_set( name, value ) {
 		return value;
 	}
 
-	return undefined;			
+	return undefined;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Setting up the WPEC customer identifier
 //
-// When WPEC generates a page it sets a 'customer cookie' into the browser.  This cookie is a 
+// When WPEC generates a page it sets a 'customer cookie' into the browser.  This cookie is a
 // persistent identifier that connects a user's session to their cart or other profile data a
-// store may need to work correctly.  
+// store may need to work correctly.
 //
-// When page caching or a CDN is in place WPEC does not get to set the cookie because 
-// the page is served without the overhead of computing the page contents. 
+// When page caching or a CDN is in place WPEC does not get to set the cookie because
+// the page is served without the overhead of computing the page contents.
 // This means that the first GET/POST request, including requests using AJAX are required to
 // initialize the customer identifier
-// 
+//
 // Because browsers may execute these requests in parallel the probability of multiple unique
-// cookies being set is very high. This means that in the absence of the logic below WPEC would 
-// have to create multiple unique profiles as each of the parallel requests are executed.  This 
+// cookies being set is very high. This means that in the absence of the logic below WPEC would
+// have to create multiple unique profiles as each of the parallel requests are executed.  This
 // can cause data when one request uses one profile and the other request uses a different profile.
-// It could also cause performance issues on the back-end, and create a potentially resource 
+// It could also cause performance issues on the back-end, and create a potentially resource
 // intensive and wasteful situation.
 //
 // The mitigation for this issue is to look for the customer identifier when this script first
 // runs.  If the identifier is not found, initiate a very quick synchronous AJAX request.  This
-// happens before any other processing takes place.  This request should create the unique 
+// happens before any other processing takes place.  This request should create the unique
 // customer identifier before it is required by other processing.
 //
 
-// a global variable used to hold the current users visitor id, 
+// a global variable used to hold the current users visitor id,
 // if you are going to user it always check to be sure it is not false
 var wpsc_visitor_id = false;
 
 if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
-	if ( true || ! ( document.cookie.indexOf("wpsc_attempted_validate") >= 0 ) ) {	
+	if ( true || ! ( document.cookie.indexOf("wpsc_attempted_validate") >= 0 ) ) {
 		// create a cookie to signal that we have attempted validation.  If we find the cookie is set
 		// we don't re-attempt validation.  This means will only try to validate once and not slow down
-		// subsequent page views. 
-		
+		// subsequent page views.
+
 		// The lack of expiration date means the cookie will be deleted when the browser
-		// is closed, so the next time the visitor attempts to access the site after closing the browser 
-		// they will revalidate. 
+		// is closed, so the next time the visitor attempts to access the site after closing the browser
+		// they will revalidate.
 		var now = new Date();
 		document.cookie="wpsc_attempted_validate="+now;
 
 		var wpsc_http = new XMLHttpRequest();
 		wpsc_http.overrideMimeType( "application/json" );
-		
+
 		// open setup and send the request in synchronous mode
 		wpsc_http.open( "POST", wpsc_ajax.ajaxurl + "?action=wpsc_validate_customer", false );
 		wpsc_http.setRequestHeader( "Content-type", "application/json; charset=utf-8" );
 
-		// Note that we cannot set a timeout on synchronous requests due to XMLHttpRequest limitations  
+		// Note that we cannot set a timeout on synchronous requests due to XMLHttpRequest limitations
 		wpsc_http.send();
-		
-		// we did the request in synchronous mode so we don't need the on load or ready state change events	to check the result	
-		if (wpsc_http.status == 200) {  
+
+		// we did the request in synchronous mode so we don't need the on load or ready state change events	to check the result
+		if (wpsc_http.status == 200) {
 			 var result = JSON.parse( wpsc_http.responseText );
 			 if ( result.valid && result.id ) {
 				 wpsc_visitor_id = result.id;
@@ -152,81 +152,81 @@ if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
 }
 // end of setting up the WPEC customer identifier
 ///////////////////////////////////////////////////////////////////////////////////////////////
-function wpsc_do_ajax_request( data, success_callback ) {	
+function wpsc_do_ajax_request( data, success_callback ) {
 	jQuery.ajax({
 		type      : "post",
 		dataType  : "json",
 		url       : wpsc_ajax.ajaxurl,
 		data      : data,
 		success   : success_callback,
-	});   					
+	});
 }
 
 /**
- * update a customer meta value 
- * 
+ * update a customer meta value
+ *
  * @since 3.8.14
  * @param meta_key string
  * @param meta_value string
  * @param response_callback function
  */
 function wpsc_update_customer_data( meta_key, meta_value, response_callback ) {
-		
+
 	// wrap our ajax request in a try/catch so that an error doesn't stop the script from running
-	try { 	
-		var ajax_data = {action: 'wpsc_update_customer_meta', meta_key : meta_key, meta_value : meta_value };	
-		wpsc_do_ajax_request( ajax_data, response_callback ); 
+	try {
+		var ajax_data = {action: 'wpsc_update_customer_meta', meta_key : meta_key, meta_value : meta_value };
+		wpsc_do_ajax_request( ajax_data, response_callback );
 	} catch ( err ) {
 		; // we could handle the error here, or use it as a convenient place to set a breakpoint when debugging/testing
 	}
-	
-}		
+
+}
 
 /**
- * get all customer data 
- * 
+ * get all customer data
+ *
  * @since 3.8.14
  * @param meta_key string
  * @param meta_value string
  * @param response_callback function
  */
-function wpsc_get_customer_data( response_callback ) {	
+function wpsc_get_customer_data( response_callback ) {
 	// wrap our ajax request in a try/catch so that an error doesn't stop the script from running
-	try { 	
-		var ajax_data = {action: 'wpsc_get_customer_meta' };	
+	try {
+		var ajax_data = {action: 'wpsc_get_customer_meta' };
 		wpsc_do_ajax_request( ajax_data, response_callback );
 	} catch ( err ) {
 		; // we could handle the error here, or use it as a convenient place to set a breakpoint when debugging/testing
 	}
-}		
+}
 
 /**
- * common callback to update fields based on response from ajax processing.  
- * 
+ * common callback to update fields based on response from ajax processing.
+ *
  * @since 3.8.14
  * @param response object returned from ajax request
  */
 function wpsc_update_customer_meta( response ) {
-	
-	var element_that_caused_change_event = response.data.request.meta_key; 
-	
+
+	var element_that_caused_change_event = response.data.request.meta_key;
+
 	if ( response.hasOwnProperty( 'data' ) && response.data.hasOwnProperty( 'customer_meta' )) {
 		var customer_meta = response.data.customer_meta;
-		
-		// if the response includes customer meta values find out where the value 
-		// belongs and then put it there 
+
+		// if the response includes customer meta values find out where the value
+		// belongs and then put it there
 		jQuery.each( customer_meta,  function( meta_key, meta_value ) {
-			
-			// if there are other fields on the current page that are used to change the same meta value then 
+
+			// if there are other fields on the current page that are used to change the same meta value then
 			// they need to be updated
 			var selector = '[data-wpsc-meta-key="' + meta_key + '"]';
-			
-			jQuery( selector ).each( function( index, value ) {		
+
+			jQuery( selector ).each( function( index, value ) {
 				var element_meta_key = wpsc_get_element_meta_key( this );
-				
+
 				if ( element_meta_key != element_that_caused_change_event ) {
 					if ( jQuery(this).is(':checkbox') ) {
-						var boolean_meta_value = meta_value == "1"; 
+						var boolean_meta_value = meta_value == "1";
 						if ( boolean_meta_value ) {
 							jQuery( this ).attr( 'checked', 'checked' );
 						} else {
@@ -246,9 +246,9 @@ function wpsc_update_customer_meta( response ) {
 
 /**
  * Take data from checkout data array and put it where it belongs
- * 
+ *
  * Note: logic extracted from pre 3.8.14 wpsc_handle_country_change function
- * 
+ *
  * @since 3.8.14
  * @param checkout_info
  * @return true if execution should continue, false if it should stop
@@ -260,7 +260,7 @@ function wpsc_update_checkout_info( checkout_info ) {
 	// via AJAX
 	if ( checkout_info.hasOwnProperty( 'needs_shipping_recalc' ) ) {
 		if ( checkout_info.needs_shipping_recalc ) {
-			
+
 			var form = jQuery('table.productcart' ).first();
 			var msg  = wpsc_var_get( 'msg_shipping_need_recalc' );
 
@@ -275,7 +275,7 @@ function wpsc_update_checkout_info( checkout_info ) {
 				}
 
 			}
-			
+
 			jQuery( 'input:radio[name=shipping_method]' ).prop('checked', false).attr('disabled',true);
 			jQuery( 'input:radio[name=shipping_method]' ).closest( 'tr' ).hide();
 			jQuery( 'tr.wpsc_shipping_header' ).hide();
@@ -299,40 +299,40 @@ function wpsc_update_checkout_info( checkout_info ) {
 			jQuery( 'tr.total_tax' ).hide();
 		}
 	}
-	
+
 	if ( checkout_info.hasOwnProperty( 'cart_shipping' ) ) {
 		jQuery( '#checkout_shipping' ).html( checkout_info.cart_shipping );
 	}
-	
+
 	if ( checkout_info.hasOwnProperty( 'widget_output' ) ) {
 		jQuery( 'div.shopping-cart-wrapper' ).html( checkout_info.widget_output );
 	}
-	
+
 	if ( checkout_info.hasOwnProperty( 'display_tax' ) ) {
 		jQuery( '#checkout_tax' ).html( "<span class='pricedisplay'>" + checkout_info.display_tax + "</span>" );
 	}
-	
+
 	if ( checkout_info.hasOwnProperty( 'total_input' ) ) {
 		jQuery( '#checkout_total' ).html( checkout_info.total + "<input id='shopping_cart_total_price' type='hidden' value='" + checkout_info.total_input + "' />" );
 	}
 
 	jQuery( ".wpsc-visitor-meta").on( "change", wpsc_meta_item_change );
-		
+
 	return true;
 }
 
 /**
- * common callback to update checkout fields based on response from ajax processing.  All fields that set 
- * are present to make it easier to see where the plugin can be extended 
- * 
+ * common callback to update checkout fields based on response from ajax processing.  All fields that set
+ * are present to make it easier to see where the plugin can be extended
+ *
  * @since 3.8.14
  * @param response object returned from ajax request
  */
 function wpsc_meta_item_change_response( response ) {
 
 	jQuery( ".wpsc-visitor-meta").off( "change", wpsc_meta_item_change );
-	
-	if ( response.hasOwnProperty('success') && response.success && response.hasOwnProperty('data') ) {		
+
+	if ( response.hasOwnProperty('success') && response.success && response.hasOwnProperty('data') ) {
 
 		// Whatever replacements have been sent for the checkout form can be efficiently
 		// put into view
@@ -340,12 +340,12 @@ function wpsc_meta_item_change_response( response ) {
 			jQuery.each( response.data.replacements, function( elementname, replacement ) {
 				jQuery( '#' + replacement.elementid ).replaceWith( replacement.element );
 			});
-		}		
-		
+		}
+
 
 		// Whatever has changed as far as customer meta should be processed
 		if ( response.data.hasOwnProperty( 'checkout_info' ) ) {
-			if ( ! wpsc_update_checkout_info( response.data.checkout_info ) ) { 
+			if ( ! wpsc_update_checkout_info( response.data.checkout_info ) ) {
 				return false;
 			}
 		}
@@ -355,32 +355,32 @@ function wpsc_meta_item_change_response( response ) {
 			wpsc_update_customer_meta( response );
 		}
 
-		// TODO: this is where we can rely on the PHP application to generate and format the content for the 
+		// TODO: this is where we can rely on the PHP application to generate and format the content for the
 		// checkout screen rather than doing lot's of work in this js.  If we update the PHP application top
-		// return the elements for the checkout screen using the same logic that is used when the checkout 
+		// return the elements for the checkout screen using the same logic that is used when the checkout
 		// page is originally created we simplify this script, maintain consistency, allow WordPress and WPEC
 		// hooks to be used to change checkout and make chckout display better for those client paltforms
 		// that may not have the necessary computing power to use js to do the work we are asking.
 		var event = jQuery.Event( "wpsc-visitor-meta-change" );
-		event.response = response;				
+		event.response = response;
 		jQuery( "wpsc-visitor-meta:first" ).trigger( event );
 
 	}
-	
+
 	jQuery( ".wpsc-visitor-meta" ).on( "change", wpsc_meta_item_change );
-	
+
 	wpsc_adjust_checkout_form_element_visibility();
 }
 
 /**
  * find the WPeC meta key associated with an element, if there is one
- * 
+ *
  * @param The element to extract the meta key from
- * 
+ *
  * @returns string meta_key
  */
 function wpsc_get_element_meta_key( element ) {
-	
+
 	if ( element instanceof jQuery ) {
 		;
 	} else if ( typeof input == "string" ) {
@@ -390,12 +390,12 @@ function wpsc_get_element_meta_key( element ) {
 	} else {
 		return null;
 	}
-	
+
 	var meta_key = element.attr( "data-wpsc-meta-key" );
-	
+
 	if ( meta_key == undefined ) {
 		meta_key = element.attr( "title" );
-		
+
 		if ( meta_key == undefined ) {
 			meta_key = element.attr( "id" );
 		}
@@ -405,39 +405,39 @@ function wpsc_get_element_meta_key( element ) {
 }
 
 /**
- * common callback triggered whenever a WPEC meta value is changed 
- * 
+ * common callback triggered whenever a WPEC meta value is changed
+ *
  * @since 3.8.14
  */
 function wpsc_meta_item_change() {
 
-	var meta_value = wpsc_get_value_from_wpsc_meta_element( this );	
+	var meta_value = wpsc_get_value_from_wpsc_meta_element( this );
 	var meta_key   = wpsc_get_element_meta_key( jQuery( this ) );
-	
-	// if there are other fields on the current page that are used to change the same meta value then 
+
+	// if there are other fields on the current page that are used to change the same meta value then
 	// they need to be updated
 	var selector = 'input[data-wpsc-meta-key="' + meta_key + '"]';
-	
+
 	var element_that_changed_meta_value = this;
-	
-	jQuery( selector ).each( function( index, value ) {		
-		if ( element_that_changed_meta_value != this ) {			
+
+	jQuery( selector ).each( function( index, value ) {
+		if ( element_that_changed_meta_value != this ) {
 			if ( jQuery(this).is(':checkbox') ) {
-				var boolean_meta_value = meta_value == "1";  
+				var boolean_meta_value = meta_value == "1";
 				if ( boolean_meta_value ) {
 					jQuery( this ).attr( 'checked', 'checked' );
 				} else {
 					jQuery( this ).removeAttr( 'checked' );
 				}
-				
+
 			} else {
 				jQuery( this ).val( meta_value );
 			}
 		}
 	});
-	
+
 	wpsc_update_customer_data( meta_key, meta_value, wpsc_meta_item_change_response );
-} 
+}
 
 function wpsc_adjust_checkout_form_element_visibility() {
 
@@ -445,80 +445,80 @@ function wpsc_adjust_checkout_form_element_visibility() {
 	jQuery( ".wpsc-visitor-meta" ).off( "change", wpsc_meta_item_change );
 
 	if ( jQuery( "#shippingSameBilling" ).length ) {
-	
+
 		var shipping_row = jQuery( "#shippingSameBilling" ).closest( "tr" );
-		
-		if( ! wpsc_show_checkout_shipping_fields() ) { 
+
+		if( ! wpsc_show_checkout_shipping_fields() ) {
 			jQuery( shipping_row ).siblings( ":not( .checkout-heading-row ,  :has( #agree ), :has( .custom_gateway ) ) ").hide();
 			jQuery( "#shippingsameasbillingmessage" ).show();
 		} else {
 			jQuery( shipping_row ).siblings().show();
-			jQuery( "#shippingsameasbillingmessage" ).hide();		
-		} 
+			jQuery( "#shippingsameasbillingmessage" ).hide();
+		}
 	}
-	
+
 	wpsc_update_location_elements_visibility();
-	
+
 	// make sure any item that changes checkout data is bound to the proper event handler
 	jQuery( ".wpsc-visitor-meta" ).on( "change", wpsc_meta_item_change );
 }
 
 
 /*
- * Change the labels assicated with country and region fields to match the 
+ * Change the labels assicated with country and region fields to match the
  * terminology for the selected location.  For example, regions in the USA are
  * called states, regions in Canada are called provinces
- * 
+ *
  * since 3.8.14
- * 
+ *
  */
 function wpsc_update_location_labels( country_select ) {
-	
+
 	var country_meta_key = wpsc_get_element_meta_key( country_select ),
 		label, country_code;
-	
+
 	if ( country_meta_key == 'billingcountry' ) {
-		
+
 		var billing_state_element = wpsc_get_wpsc_meta_element( 'billingstate' ) ;
-		
-		if ( billing_state_element ) {	
+
+		if ( billing_state_element ) {
 			var billing_state_label = wpsc_get_label_element( billing_state_element );
 			country_code = wpsc_get_value_from_wpsc_meta_element( 'billingcountry' );
 			billing_state_label.text( wpsc_country_region_label( country_code ) );
-			label = wpsc_country_region_label( country_code ); 
+			label = wpsc_country_region_label( country_code );
 			billing_state_label.text( label );
 			billing_state_element.attr( 'placeholder', label );
 		}
-	} else if ( country_meta_key == 'shippingcountry' ) { 
+	} else if ( country_meta_key == 'shippingcountry' ) {
 
 		var shipping_state_element = wpsc_get_wpsc_meta_element( 'shippingstate' );
-	
+
 		if ( shipping_state_element ) {
 			var shipping_state_label = wpsc_get_label_element( shipping_state_element );
 			country_code = wpsc_get_value_from_wpsc_meta_element( 'shippingcountry' );
-			label = wpsc_country_region_label( country_code ); 
+			label = wpsc_country_region_label( country_code );
 			shipping_state_label.text( label );
 			shipping_state_element.attr( 'placeholder', label );
 		}
 	}
 
-	return true;	
+	return true;
 }
 
 /**
  * Fill the associated regions drop down based on the value in the country drop down
- * 
+ *
  * @param country_select jQuery Object  	Country drop down to work with
  */
 function wpsc_update_regions_list_to_match_country( country_select ) {
-	var country_meta_key   = wpsc_get_element_meta_key( country_select );	
+	var country_meta_key   = wpsc_get_element_meta_key( country_select );
 	var region_select      = wpsc_country_region_element( country_select );
 	var region_meta_key    = wpsc_get_element_meta_key( region_select );
 	var all_region_selects = wpsc_get_wpsc_meta_elements( region_meta_key );
 	var country_code       = wpsc_get_value_from_wpsc_meta_element( country_select );
-	
+
 	if ( wpsc_country_has_regions( country_code ) ) {
-		var select_a_region_message = wpsc_no_region_selected_message( country_code );		
+		var select_a_region_message = wpsc_no_region_selected_message( country_code );
 		var regions = wpsc_country_regions( country_code )
 		all_region_selects.empty();
 		all_region_selects.append( new Option( select_a_region_message, '' ) );
@@ -528,24 +528,24 @@ function wpsc_update_regions_list_to_match_country( country_select ) {
 			  all_region_selects.append( new Option( region_name, region_code ) );
 		  }
 		}
-		
+
 		region_select.show();
 	} else {
 		region_select.hide();
-		region_select.empty();		
+		region_select.empty();
 	}
-	
+
 	wpsc_update_location_labels( country_select );
-	wpsc_update_location_elements_visibility();	
+	wpsc_update_location_elements_visibility();
 	wpsc_copy_meta_value_to_similiar( country_select );
-	
+
 }
 
 /*
  * Load the region dropdowns based on changes to the country dropdowns
- * 
+ *
  * since 3.8.14
- * 
+ *
  */
 function wpsc_change_regions_when_country_changes() {
 	wpsc_copy_meta_value_to_similiar( jQuery( this ) );
@@ -559,16 +559,16 @@ function wpsc_copy_meta_value_to_similiar( element ) {
 		meta_value = element.val(),
 		element_html = element.html(),
 		current_value;
-		
-	// if there are other fields on the current page that are used to change the same meta value then 
+
+	// if there are other fields on the current page that are used to change the same meta value then
 	// they need to be updated
 	var selector = '[data-wpsc-meta-key="' + element_meta_key + '"]';
-	
-	jQuery( selector ).each( function( index, value ) {		
+
+	jQuery( selector ).each( function( index, value ) {
 		if ( this != element) {
-			
+
 			if ( jQuery(this).is(':checkbox') ) {
-				var boolean_meta_value = meta_value == "1"; 
+				var boolean_meta_value = meta_value == "1";
 				if ( boolean_meta_value ) {
 					jQuery( this ).attr( 'checked', 'checked' );
 				} else {
@@ -590,25 +590,25 @@ function wpsc_copy_meta_value_to_similiar( element ) {
 
 /*
  * returns the element id for the cehckout item if it is in the checkout form
- * 
+ *
  * @since 3.8.14
- * 
+ *
  * @param string 	name		unqiue name of the checkout item
- * 
+ *
  * @return int|boolean			element id if it is in the checkout form, false if the element is not in the checkout form
  */
 function wpsc_checkout_item_form_id( name ) {
-	
+
 	var map_from_name_to_id = wpsc_var_get( 'wpsc_checkout_unique_name_to_form_id_map' );
-	
+
 	var checkout_item_form_id = false;
-	
+
 	if ( map_from_name_to_id )  {
 		if ( map_from_name_to_id.hasOwnProperty( name ) ) {
 			checkout_item_form_id = map_from_name_to_id[name];
 		}
 	}
-	
+
 	return checkout_item_form_id;
 }
 
@@ -622,21 +622,21 @@ function wpsc_show_checkout_shipping_fields() {
 	var show_shipping_field = true;
 	if( jQuery("#shippingSameBilling").length ) {
 		show_shipping_field = ! jQuery("#shippingSameBilling").is(":checked");
-	} 	
-	
+	}
+
 	return show_shipping_field;
 }
 
 function wpsc_setup_region_dropdowns() {
-	
+
 	var country_elements = wpsc_get_wpsc_meta_elements( 'billingcountry' ) ;
-	
+
 	wpsc_get_wpsc_meta_elements( 'billingcountry' ).each( function( index, value ){
-		 wpsc_update_regions_list_to_match_country( jQuery( this ) );	
+		 wpsc_update_regions_list_to_match_country( jQuery( this ) );
 	});
 
 	wpsc_get_wpsc_meta_elements( 'shippingcountry' ).each( function( index, value ){
-		 wpsc_update_regions_list_to_match_country( jQuery( this ) );	
+		 wpsc_update_regions_list_to_match_country( jQuery( this ) );
 	});
 }
 
@@ -644,9 +644,9 @@ function wpsc_setup_region_dropdowns() {
 /**
  * changes the visibility of the  region edit element and the region drop down element based on
  *  on the state and contents of the coutnry drop down
- *  
- *  @since 3.8.14 
- *  
+ *
+ *  @since 3.8.14
+ *
  *  @returns {Boolean}
  */
 function wpsc_update_location_elements_visibility() {
@@ -658,24 +658,24 @@ function wpsc_update_location_elements_visibility() {
 	//
 	// Do the process trwice, once for bolling and then once for shipping
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+
 
 	// for convenience, get the jQuery objects for each of the billing elements we want to manipulate up front
 	var billing_state_elements = wpsc_get_wpsc_meta_elements( 'billingstate' );
 	var billing_region_elements = wpsc_get_wpsc_meta_elements( 'billingregion' );
-	
+
 	if ( ! wpsc_checkout_item_form_id( 'billingcountry' ) ) {
 		if ( billing_region_elements.length ) {
 				billing_region_elements.hide();
 		}
-	
+
 		if ( billing_state_elements.length ) {
 			billing_state_elements.show();
 		}
 	} else {
-		
+
 		if ( billing_state_elements.length ) {
-		
+
 			// set the visibility of the shipping state input fields
 			var billing_country_code = wpsc_get_value_from_wpsc_meta_element( 'billingcountry' );
 
@@ -691,29 +691,29 @@ function wpsc_update_location_elements_visibility() {
 			if ( wpsc_country_has_regions( billing_country_code ) ) {
 				billing_state_elements.closest( "tr" ).hide();
 				billing_state_elements.prop( 'disabled', true );
-			} else {			
+			} else {
 				billing_state_elements.closest( "tr" ).show();
 				billing_state_elements.prop( 'disabled', false );
 			}
-		}	
+		}
 	}
-	
-	// for convenience, get the jQuery objects for each of the billing elements we want to manipulate up front	
-	var shipping_state_elements  = wpsc_get_wpsc_meta_elements( 'shippingstate' );					
-	var shipping_region_elements = wpsc_get_wpsc_meta_elements( 'shippingregion' );	
-	
+
+	// for convenience, get the jQuery objects for each of the billing elements we want to manipulate up front
+	var shipping_state_elements  = wpsc_get_wpsc_meta_elements( 'shippingstate' );
+	var shipping_region_elements = wpsc_get_wpsc_meta_elements( 'shippingregion' );
+
 	if ( ! wpsc_checkout_item_form_id( 'shippingcountry' ) ) {
 		if ( billing_region_elements.length ) {
 				billing_region_elements.hide();
 		}
-	
+
 		if ( billing_state_elements.length && wpsc_show_checkout_shipping_fields() ) {
 			billing_state_elements.show();
 		}
 	} else {
-				
+
 		if ( shipping_state_elements.length ) {
-		
+
 			// set the visibility of the shipping state input fields
 			var shipping_country_code = wpsc_get_value_from_wpsc_meta_element( 'shippingcountry' );
 
@@ -729,19 +729,19 @@ function wpsc_update_location_elements_visibility() {
 				var shipping_state_element = jQuery( this );
 				// are there any regions for the currently selected billing country
 				var tr = shipping_state_element.closest( "tr" );
-				
+
 				var hide_region_edit_row = wpsc_country_has_regions( shipping_country_code ) || ! tr.is(":visible") ;
 				if ( ! tr.hasClass( 'wpsc_change_country' ) ) {
 					if ( hide_region_edit_row ) {
 						tr.hide();
 						shipping_state_element.prop( 'disabled', true );
-					} else {			
+					} else {
 						tr.show();
 						shipping_state_element.prop( 'disabled', false );
 					}
 				}
 			});
-		}	
+		}
 	}
 
 	return true;
@@ -749,12 +749,12 @@ function wpsc_update_location_elements_visibility() {
 
 function wpsc_country_has_regions( country_code ) {
 	var regions_object_name = "wpsc_country_" + country_code + "_regions";
-	return wpsc_var_isset( regions_object_name );	
+	return wpsc_var_isset( regions_object_name );
 }
 
 function wpsc_country_regions( country_code ) {
 	var regions_object_name = "wpsc_country_" + country_code + "_regions";
-	return wpsc_var_get( regions_object_name );	
+	return wpsc_var_get( regions_object_name );
 }
 
 function wpsc_country_region_label( country_code ) {
@@ -763,19 +763,19 @@ function wpsc_country_region_label( country_code ) {
 	if ( ! label ) {
 		label = wpsc_var_get( 'no_region_label' );
 	}
-	
+
 	return label;
 }
 
 function wpsc_no_region_selected_message( country_code ) {
-	var label = wpsc_country_region_label( country_code )	
-	var format = wpsc_var_get( 'no_region_selected_format' );	
-	var message = format.replace("%s",label);	
-	return message;	
+	var label = wpsc_country_region_label( country_code )
+	var format = wpsc_var_get( 'no_region_selected_format' );
+	var message = format.replace("%s",label);
+	return message;
 }
 
 function wpsc_get_label_element( input ) {
-	
+
 	if ( input instanceof jQuery ) {
 		input_element = input;
 	} else if ( typeof input == "string" ) {
@@ -785,9 +785,9 @@ function wpsc_get_label_element( input ) {
 	} else {
 		return null;
 	}
-	
+
 	var input_id = input_element.attr('id');
-	
+
 	var label_element = jQuery( "label[for='" + input_id + "']" );
 	return label_element;
 }
@@ -808,7 +808,7 @@ function wpsc_get_wpsc_meta_elements( meta_key ) {
 
 function wpsc_get_value_from_wpsc_meta_element( meta ) {
 	var element;
-	
+
 	if ( meta instanceof jQuery ) {
 		element = meta;
 	} else if ( typeof meta == "string" ) {
@@ -818,20 +818,20 @@ function wpsc_get_value_from_wpsc_meta_element( meta ) {
 	} else {
 		return null;
 	}
-	
+
 	var meta_value = false;
-	
+
 	if ( element.is(':checkbox') ) {
 		if ( element.is(':checked') ) {
 			meta_value = 1;
-		} else { 
+		} else {
 			meta_value = 0;
 		}
 	} else if ( element.is('select') ) {
-		meta_value = element.find( 'option:selected' ).val();		
+		meta_value = element.find( 'option:selected' ).val();
 		var select_meta_value = element.val();
 	} else 	{
-		meta_value = element.val();	
+		meta_value = element.val();
 	}
 
 	return meta_value;
@@ -839,27 +839,27 @@ function wpsc_get_value_from_wpsc_meta_element( meta ) {
 
 /*
  * find the region dropdown that goes with the country dropdown
- * 
+ *
  * since 3.8.14
- * 
+ *
  */
-function wpsc_country_region_element( country ) {	
-	
+function wpsc_country_region_element( country ) {
+
 	// if the meta key was was given as the arument we can find the element easy enough
 	if ( typeof country == "string" ) {
 		country = wpsc_get_wpsc_meta_element( country );
 	}
-	
-	var country_id = country.attr('id')	
-	var region_id = country_id + "_region";	
+
+	var country_id = country.attr('id')
+	var region_id = country_id + "_region";
 	var region_select = jQuery( "#" + region_id );
-	
-	return region_select;	
+
+	return region_select;
 }
 
 /**
  * process region drop down change event
- * 
+ *
  * @since 3.8.14
  */
 function wpsc_region_change() {
@@ -867,12 +867,12 @@ function wpsc_region_change() {
 }
 
 /**
- * ready to setup the events for user actions that casuse meta item changes 
- * 
+ * ready to setup the events for user actions that casuse meta item changes
+ *
  * @since 3.8.14
  */
 jQuery(document).ready(function ($) {
-		
+
 	if ( jQuery( ".wpsc-country-dropdown" ).length ) {
 		jQuery( ".wpsc-country-dropdown"   ).on( 'change', wpsc_change_regions_when_country_changes );
 	}
@@ -884,7 +884,7 @@ jQuery(document).ready(function ($) {
 	if ( jQuery( ".wpsc-visitor-meta" ).length ) {
 		jQuery( ".wpsc-visitor-meta").on( "change", wpsc_meta_item_change );
 	}
-			
+
 	// setup checkout form and make sure visibility of form elements is what it should be
 	wpsc_adjust_checkout_form_element_visibility();
 	wpsc_update_location_elements_visibility();
@@ -893,7 +893,7 @@ jQuery(document).ready(function ($) {
 	if ( jQuery('#checkout_page_container .wpsc_email_address input').val() ) {
 		jQuery('#wpsc_checkout_gravatar').attr('src', 'https://secure.gravatar.com/avatar/'+MD5(jQuery('#checkout_page_container .wpsc_email_address input').val().split(' ').join(''))+'?s=60&d=mm');
 	}
-	
+
 	jQuery('#checkout_page_container .wpsc_email_address input').keyup(function(){
 		jQuery('#wpsc_checkout_gravatar').attr('src', 'https://secure.gravatar.com/avatar/'+MD5(jQuery(this).val().split(' ').join(''))+'?s=60&d=mm');
 	});
@@ -945,14 +945,14 @@ jQuery(document).ready(function ($) {
 					}
 					jQuery('div.shopping-cart-wrapper').html( response.widget_output );
 					jQuery('div.wpsc_loading_animation').css('visibility', 'hidden');
-	
+
 					jQuery( '.cart_message' ).delay( 3000 ).slideUp( 500 );
 
 					//Until we get to an acceptable level of education on the new custom event - this is probably necessary for plugins.
 					if ( response.wpsc_alternate_cart_html ) {
 						eval( response.wpsc_alternate_cart_html );
 					}
-	
+
 					jQuery( document ).trigger( { type : 'wpsc_fancy_notification', response : response } );
 				}
 
@@ -1055,7 +1055,7 @@ jQuery(document).ready(function ($) {
 
 	// Ajax cart loading code.
 	// if we have a cart widhet on our page we need to load it via AJAX jsut in case there is a page cache or
-	// content delivery network being used to help deliver pages.  
+	// content delivery network being used to help deliver pages.
 	// If we are on the checkout page, we don't need to make the AJAX call because checkout pages
 	// are never, and can never be, cached.
 	// If we are on a checkout page then we know the page is not cached

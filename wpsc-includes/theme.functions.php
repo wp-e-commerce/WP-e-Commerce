@@ -33,5 +33,3 @@ function wpsc_get_the_category_id($slug, $type = 'name'){
 	$category = get_term_by($type,$slug,$taxonomy);
 	return empty( $category ) ? false : $category->term_id;
 }
-
-
