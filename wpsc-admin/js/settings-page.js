@@ -943,11 +943,11 @@
 					$('#wpsc_shipping_settings_'+ shipping_module_id + '_container').append(response.obj.content);
 
 				};
-		
+
 			if ( $( '#wpsc_shipping_settings_' + shipping_module_id + '_form' ).is( ':visible' ) ) {
 				return false;
 			}
-		
+
 			spinner.toggleClass('ajax-feedback-active');
 			$.wpsc_post(post_data, ajax_callback);
 
@@ -1045,7 +1045,7 @@
 					$('#wpsc_gateway_settings_'+ payment_gateway_id).show( 400 );
 					$('#wpsc_gateway_settings_'+ payment_gateway_id + '_container').append(response.obj.content);
 				};
-			
+
 			if ( $( '#gateway_settings_' + payment_gateway_id + '_form' ).is( ':visible' ) ) {
 				return false;
 			}

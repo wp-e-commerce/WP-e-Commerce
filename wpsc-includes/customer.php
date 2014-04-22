@@ -4,7 +4,6 @@ if ( ! defined( 'WPSC_BOT_VISITOR_ID' ) ) {
 	define( 'WPSC_BOT_VISITOR_ID', 1 );
 }
 
-
 /**
  * Get current customer ID.
  *
@@ -102,8 +101,6 @@ function wpsc_customer_comment_count( $id = false ) {
  */
 function wpsc_customer_purchase_count( $id = false ) {
 
-	$count = 0;
-
 	if ( ! $id ) {
 		$id = wpsc_get_current_customer_id();
 	}
@@ -119,8 +116,6 @@ function wpsc_customer_purchase_count( $id = false ) {
  * @return int
  */
 function wpsc_customer_has_purchases( $id = false ) {
-
-	$has_purchases = false;
 
 	if ( ! $id ) {
 		$id = wpsc_get_current_customer_id();

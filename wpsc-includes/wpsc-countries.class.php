@@ -2,7 +2,7 @@
 /*
  * WPSC_Countries
  *
- * Before your read to much farther , if you want to do things with countries, regions or currencies
+ * Before your read too much further , if you want to do things with countries, regions or currencies
  * you want to take a look at these classes:
  *
  *     WPSC_Countires  - found in file wpsc-countries.class.php
@@ -11,6 +11,7 @@
  *
  *
  * About WPSC_Countries:
+ *
  * WPSC_Countries is a WPeC class used to provide easy access to country, region
  * and currency information for all of WPeC an any extensions. Because this data is
  * accessed a lot throughout WPeC it is designed to be quick and avoid accessing the database.
@@ -24,47 +25,24 @@
  * work with country/region/currency data.
  *
  * How does it work?
+ *
  *  This class uses the static currency and region information distributed with WPeC to create an
  *  object that is optimized for access.  A copy of this object is cached.  When WPeC initialized
  *  this cached object is retrieved and used to service any request for geographical data.
  *
  * How is this data refreshed if it is cached?
+ *
  *  If an administrator changes country data in the WPeC admin tool the object will be rebuilt. If
  *  WPeC is upgraded the object will be rebuilt. And, because the object is stored as a transient, any
  *  action that would refresh the WordPress object cache would cause the object
  *
- * Where is the global so I can access this data?
- *  I'm not telling! (just kidding) ... There isn't one because I hate globals (and I want you to hate globals also).
- *  You access geography data through the static methods available in WPSC_Countries, or by instantiating
- *  objects of type WPSC_Country and WPSC_Region.
- *
- * What about the database?
- *  Can you identify the film this quote comes from? ... Forget about Dave. For our immediate purposes,
- *  there is no Dave. Dave does not exist.
- *
- * Why is that important?
- *  Forget about database. For our immediate purposes, there is no database. database does not exist.
- *  If you use the functionality in this module it is unlikely you will need to find the data storage for the raw
- *  geography data.
- *
- * Before this class existed the direct queries to the database where really simple. Did creating this
- * module really help?
- *  uhhh, Yes. The checkout page was used as a benchmark.  When this class was there were almost 200 fewer queries
- *  to the database on just that page. Besides that there was a lot of duplicated code scattered about WPeC do get
- *  the data from the database. Much of that code had subtle variations that made it hard to maintain.
- *
- * Any other benefits to this module over direct to database
- *  Going direct the database prevented us from improving the mechanism used to store and distribute country data and
- *  updates without changing a lot of code.  Now all the database access is centralized we can make some improvements
- *  when we have time
- *
  *
  * The implementation consists of three class
  *
- * WPSC_Country      Get anything about a single country you might want to know
- * WPSC_Region      Get anything about a single region you might want to know
+ * WPSC_Country     Retrieves the data model for single countries.
+ * WPSC_Region      Retrieves the data model for single regions.
  * WPSC_Countries   Get lists of countries, convert key fields to unique ids, and other useful functions,
- * 						Also abstracts data storage mechanism from
+ * 					Also abstracts data storage mechanism from database.
  *
  */
 
@@ -112,7 +90,7 @@ class WPSC_Countries {
 			} elseif ( is_string( $country ) ) {
 				$country_id = self::$country_code_by_iso_code->value( $country, $country_id );
 			} else {
-				_wpsc_doing_it_wrong( 'WPSC_Countries::country_id', __( 'Function "country_id" requires an integer country code or a string ISO code ', 'wpsc' ), '3.8.14' );
+				_wpsc_doing_it_wrong( 'WPSC_Countries::country_id', __( 'Method "get_country_id" of WPSC_Countries requires an integer country code or a string ISO code ', 'wpsc' ), '3.8.14' );
 			}
 		}
 
@@ -141,7 +119,7 @@ class WPSC_Countries {
 		if ( is_numeric( $country ) ) {
 			$country_id = intval( $country );
 		} else {
-			$country_id = self::$country_code_by_iso_code->get( $country );
+			$country_id = self::$country_code_by_iso_code->value( $country );
 		}
 
 		return $country_id;
@@ -158,7 +136,7 @@ class WPSC_Countries {
 	 * @param int|string 	country being checked, if non-numeric country is treated as an isocode, number is the country id
 	 * @param int|string 	region being checked, if non-numeric region is treated as an code, number is the region id
 	 *
-	 * @return int|boolean 					integer country id on success, false on failure
+	 * @return int|boolean 	integer country id on success, false on failure
 	 */
 	public static function get_region_id( $country, $region ) {
 
@@ -852,16 +830,23 @@ class WPSC_Countries {
 	public function __construct() {
 		if ( self::$active_wpsc_country_by_country_id == null ) {
 			self::_clean_data_maps();
-			self::restore_myself();
+			self::restore();
 		}
 
 		if ( ! self::$active_wpsc_country_by_country_id->count() ) {
 			self::_create_country_maps();
 		}
 
-		add_action( 'shutdown', array( __CLASS__, 'save_myself' ) );
+		add_action( 'shutdown'                      , array( __CLASS__, 'save' ) );
 		self::$_initialized = true;
 	}
+
+
+
+
+
+
+
 
 	/**
 	 * creates the data maps used internally by this class to service requests
@@ -1009,7 +994,7 @@ class WPSC_Countries {
 		// to hafve more targetted rebuild functions. But since rebuild of alomst all of the lists
 		// requires touching the bulk of the country data we might as well do everything at the same
 		// time
-		$default_rebuild_callback = array( &$this, '_create_country_maps()' );
+		$default_rebuild_callback = array( __CLASS__, '_create_country_maps' );
 
 		/*
 		 * maps without names will be loaded with the core class
@@ -1116,7 +1101,7 @@ class WPSC_Countries {
 	 *
 	 * @return none
 	 */
-	public static function save_myself() {
+	public static function save() {
 		if ( self::_dirty() ) {
 			$mydata = array();
 
@@ -1147,13 +1132,13 @@ class WPSC_Countries {
 	 *
 	 * @return none
 	 */
-	private function restore_myself() {
-		$mydata = get_transient( self::transient_name() );
+	private function restore() {
+		$data = get_transient( self::transient_name() );
 
-		$have_data = false;
+		$has_data = false;
 
-		if ( is_array( $mydata ) ) {
-			foreach ( $mydata as $variable => $value ) {
+		if ( is_array( $data ) ) {
+			foreach ( $data as $variable => $value ) {
 				if ( property_exists( $this, $variable ) ) {
 
 					if ( is_a( $value, 'WPSC_Data_Map' ) ) {
@@ -1161,16 +1146,16 @@ class WPSC_Countries {
 					}
 
 					self::$$variable = $value;
-					$have_data = true;
+					$has_data = true;
 				} else {
 					// something went wrong with save / restore
-					$have_data = false;
+					$has_data = false;
 					break;
 				}
 			}
 		}
 
-		if ( ! $have_data && ( $mydata !== false ) ) {
+		if ( ! $has_data && ( $data !== false ) ) {
 			self::clear_cache();
 		}
 
@@ -1285,8 +1270,10 @@ class WPSC_Countries {
 	 * @return none
 	 */
 	private static function confirmed_initialization() {
+
 		if ( ! self::$_initialized ) {
-			$an_instance = new WPSC_Countries();
+			$countries = new WPSC_Countries();
+			self::$_initialized = (bool) $countries;
 		}
 
 		return self::$_initialized;

@@ -10,9 +10,10 @@ add_action( 'wp_login'                   , '_wpsc_action_setup_customer'     );
  * Setup current user object and customer ID as well as cart.
  *
  * @uses  do_action() Calls 'wpsc_setup_customer' after customer data is ready
- * @returns int visitor id
  * @access private
  * @since  3.8.13
+ * @return int visitor id
+ *
  */
 function _wpsc_action_setup_customer() {
 
@@ -51,8 +52,6 @@ function _wpsc_action_setup_customer() {
 				add_action( 'wpsc_register_taxonomies_after', '_wpsc_merge_cart', 1 );
 			}
 		}
-	} else {
-		$id_from_wp_user = '';
 	}
 
 	// initialize customer ID if it's not already there
@@ -142,7 +141,6 @@ function _wpsc_create_customer_id() {
 
 		wpsc_get_current_customer_id( $visitor_id );
 
-
 		_wpsc_create_customer_id_cookie( $visitor_id, $fake_setting_cookie );
 
 		do_action( 'wpsc_create_customer' , $visitor_id );
@@ -198,7 +196,7 @@ function _wpsc_create_customer_id_cookie( $id, $fake_it = false ) {
  */
 function _wpsc_get_visitor_hash( $visitor_id, $expiration, $visitor_security_key ) {
 	$second_hash_op_key = hash_hmac( 'md5', $visitor_security_key, WPSC_SALT );
-	$visitor_hash = hash_hmac( 'md5', $visitor_id . $expiration , $second_hash_op_key );
+	$visitor_hash       = hash_hmac( 'md5', $visitor_id . $expiration , $second_hash_op_key );
 	return $visitor_hash;
 }
 
@@ -220,7 +218,6 @@ function _wpsc_validate_customer_cookie() {
 	$cookie = $_COOKIE[ WPSC_CUSTOMER_COOKIE ];
 
 	list( $id, $expire, $visitor_hash_from_cookie ) = $x = explode( '|', $cookie );
-	$data = $id . $expire;
 
 	// check to see if the ID is valid, it must be an integer, empty test is because old versions of php
 	// can return true on empty string

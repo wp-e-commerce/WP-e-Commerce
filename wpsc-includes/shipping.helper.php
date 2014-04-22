@@ -172,8 +172,8 @@ class ASHTools {
      * @return string
      */
     function get_full_country( $short_country ){
-		$full_name = WPSC_Countries::country_name( $short_country );
-		return $full_name;
+		$country = new WPSC_Country( $short_country );
+		return $country->get_name();
     }
 
     /**
@@ -651,9 +651,13 @@ class ASH{
         if ( ! $wpec_ash || ! is_array( $wpec_ash ) ) { //Avoids: Warning: 'array_key_exists' expects array.
             return false;
         }
+
         if ( ! array_key_exists( $internal_name, $wpec_ash ) ) {
             return false;
         }
+
+        $cached_shipment = array();
+
         if ( is_object( $wpec_ash[$internal_name]["shipment"] ) ){
             $cached_shipment = $wpec_ash[$internal_name]["shipment"];
         } else {

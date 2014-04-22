@@ -104,7 +104,8 @@ abstract class WPSC_Purchase_Log_Notification {
 			$item_total = wpsc_currency_display( $item_total , array( 'display_as_html' => false ) );
 			$item_price = wpsc_currency_display( $item->price, array( 'display_as_html' => false ) );
 			$item_name  = apply_filters( 'the_title', $item->name );
-			$rows[]     = array( $item->name, $item_price, $item->quantity, $item_total );
+
+			$rows[]     = array( $item_name, $item_price, $item->quantity, $item_total );
 		}
 
 		// Preserve the 'wpsc_transaction_result_content' filter for backward compat
@@ -351,8 +352,6 @@ class WPSC_Purchase_Log_Admin_Notification extends WPSC_Purchase_Log_Notificatio
 				$type = 'misc';
 			$data[$type]['fields'][] = $field;
 		}
-
-		$message = '';
 
 		// Transaction details
 		$message = '<strong>' . __( 'Transaction Details', 'wpsc' ) . "</strong>\r\n";

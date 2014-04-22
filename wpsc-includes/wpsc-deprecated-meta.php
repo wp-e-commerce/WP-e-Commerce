@@ -158,7 +158,7 @@ if ( WPSC_DEPRECATE_CUSTOMER_CHECKOUT_DETAILS ) {
 	 * @param  string|int $id Customer ID. Optional. Defaults to current customer
 	 * @return array        checkout details array
 	 */
-	function _wpsc_update_deprecated_visitor_meta_checkout_details(  $meta_data_in_old_format, $key = 'checkout_details', $id = null ) {
+	function _wpsc_update_deprecated_visitor_meta_checkout_details( $meta_data_in_old_format, $key = 'checkout_details', $id = null ) {
 		global $wpdb;
 
 		if ( ! $id ) {
@@ -184,7 +184,7 @@ if ( WPSC_DEPRECATE_CUSTOMER_CHECKOUT_DETAILS ) {
 								$meta_value = $meta_value[0];
 							}
 							wpsc_update_visitor_meta( $id, 'shippingcountry', $meta_value );
-							wpsc_update_visitor_meta( $id , 'shippingregion' );
+							wpsc_update_visitor_meta( $id, 'shippingregion', '' );
 						}
 
 						break;
@@ -199,7 +199,7 @@ if ( WPSC_DEPRECATE_CUSTOMER_CHECKOUT_DETAILS ) {
 							}
 
 							wpsc_update_visitor_meta( $id, 'billingcountry', $meta_value );
-							wpsc_update_visitor_meta( $id, 'billingregion' );
+							wpsc_update_visitor_meta( $id, 'billingregion', '' );
 						}
 
 						break;

@@ -46,11 +46,11 @@ function wpsc_debug_page() {
 				<a href='<?php echo $fixpage; ?>'>Fix Purchaselogs</a>
 			</li>
 			<li>
-				<a href='<?php echo wp_nonce_url("?wpsc_admin_action=update_page_urls"); ?>' ><?php _e('Update Page URLs', 'wpsc'); ?></a> 
+				<a href='<?php echo wp_nonce_url("?wpsc_admin_action=update_page_urls"); ?>' ><?php _e('Update Page URLs', 'wpsc'); ?></a>
 			</li>
 			<li>
 					<a href='<?php echo wp_nonce_url("?wpsc_admin_action=clean_categories"); ?>'><?php _e('Fix Product Group Permalinks', 'wpsc'); ?></a>
-			</li>		
+			</li>
 	</ul>
 	<?php
 		if ( defined( 'WPSC_ADD_DEBUG_PAGE' ) && (constant( 'WPSC_ADD_DEBUG_PAGE' ) == true) ) {

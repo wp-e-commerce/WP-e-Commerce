@@ -98,7 +98,7 @@ class WPSC_Data_Map {
 	}
 
 	/**
-	 * Get the value associated wit ha key from the map, or null on failure
+	 * Get the value associated with a key from the map, or null on failure
 	 *
 	 * @access public
 	 *

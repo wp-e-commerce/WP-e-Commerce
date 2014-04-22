@@ -275,7 +275,7 @@ class WPSC_Purchase_Log_Page {
 	}
 
 	public function controller_packing_slip() {
-		
+
 		if ( ! isset( $_REQUEST['id'] ) || ( isset( $_REQUEST['id'] ) && ! is_numeric( $_REQUEST['id'] ) ) ) {
 			wp_die( __( 'Invalid sales log ID', 'wpsc'  ) );
 		}

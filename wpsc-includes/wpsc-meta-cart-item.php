@@ -1,13 +1,4 @@
 <?php
-/*
-** NOTICE:
-** This file was automatically created, strongly suggest that it not be edited directly.
-** See the code in the file wpsc-meta-init.php near line 320 for more details.
-*/
-
-//
-// cart_item meta functions
-//
 
 /**
  * Add meta data field to a cart_item.
@@ -156,11 +147,11 @@ function wpsc_get_cart_item_custom_keys( $cart_item_id = 0 ) {
  *
  * @since 3.8.12
  *
- * @param string $metakey Meta field key.
+ * @param string $key Meta field key.
  * @param int $cart_item_id cart_item ID
  * @return array Meta field values.
  */
-function wpsc_get_cart_item_custom_values( $metakey = '', $cart_item_id = 0 ) {
+function wpsc_get_cart_item_custom_values( $key = '', $cart_item_id = 0 ) {
 
 	if ( ! $key )
 		return null;

@@ -64,15 +64,18 @@ class wpec_taxes {
 	 * @return: null
 	 * */
 	function wpec_taxes_set_options() {
-		foreach ( array_keys( $this->taxes_options ) as $key ) {
-			$options[$key] = get_option( $key );
-		}// foreach
+
+		$options = array();
+
+		foreach ($this->taxes_options as $key => $value ) {
+			$options[ $key ] = get_option( $key );
+		}
 
 		$returnable = wp_parse_args( $options, $this->taxes_options );
 		extract( $returnable, EXTR_SKIP );
 
 		$this->taxes_options = $returnable;
-	} // wpec_taxes_set_options
+	}
 
 	/**
 	 * @description: wpec_taxes_get_rate - retrieves the tax rate for the given country
@@ -222,13 +225,13 @@ class wpec_taxes {
 				break;
 			case 'hidden': $where = array( 'visible' => 0 );
 				break;
-			default: $where = false;
+			default: $where = array();
 		}// switch
 
 		$returnable = $this->wpec_taxes_get_country_information( array( 'country', 'isocode' ), $where, 'country' );
 
 		//add all markets
-		array_unshift( $returnable, array( 'isocode' => 'all-markets', 'country' => 'All Markets' ) );
+		array_unshift( $returnable, array( 'isocode' => 'all-markets', 'country' => __( 'All Markets', 'wpsc' ) ) );
 
 		return $returnable;
 	} // wpec_taxes_get_countries
@@ -249,7 +252,7 @@ class wpec_taxes {
 	 *                              Default action is to not include an order by statement.
 	 * @return: array, int, string or false
 	 * */
-	function wpec_taxes_get_country_information( $columns = false, $where = false, $order_by = false ) {
+	function wpec_taxes_get_country_information( $columns = false, $where = array(), $order_by = false ) {
 		//check for all-markets
 		if ( 'country' == $columns && 1 == count( $where ) && 'all-markets' == $where['isocode'] ) {
 			$returnable = 'All Markets';
@@ -267,7 +270,7 @@ class wpec_taxes {
 			$columns = array_map( 'esc_sql', $columns );
 
 			//if where is set then formulate conditions
-			if ( $where ) {
+			if ( ! empty( $where ) ) {
 				foreach ( $where as $column => $condition ) {
 					$condition = esc_sql( $condition );
 					$where_query[] = ( is_numeric( $condition ) ) ? "{$column}={$condition}" : "{$column}='{$condition}'";

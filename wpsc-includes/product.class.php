@@ -632,7 +632,7 @@ class WPSC_Product {
 	 * Get more specific stats by providing an array of arguments
 	 *
 	 * @since 3.8.14
-	 * @param  array $args Arguments. See {@link WPSC_Purchase_Log::fetch_stats()}
+	 * @param  array|string $args Arguments. See {@link WPSC_Purchase_Log::fetch_stats()}
 	 * @return array       'sales' and 'earnings' stats
 	 */
 	public function get_stats( $args = '' ) {
@@ -750,7 +750,7 @@ class WPSC_Products {
 
 		$args['products'] = $this->products;
 
-		$this->stats = WPSC_Purchase_Log::fetch_stats();
+		$this->stats = WPSC_Purchase_Log::fetch_stats( $args );
 	}
 
 	/**

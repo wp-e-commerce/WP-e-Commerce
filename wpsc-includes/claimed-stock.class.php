@@ -259,12 +259,12 @@ class WPSC_Claimed_Stock {
 	 * @since   3.8.14
 	 * @access  public
 	 *
-	 * @param  int|object  $purchase_log_id  Purchase Log object or ID.
+	 * @param  int|object  $log  Purchase Log object or ID.
 	 *
 	 * @uses  wpdb::query()    Queries DB.
 	 * @uses  wpdb::prepare()  Prepare DB query.
 	 */
-	public function submit_claimed_stock( $purchase_log_id ) {
+	public function submit_claimed_stock( $log ) {
 		global $wpdb;
 
 		// Only process if query include cart ID
@@ -272,13 +272,15 @@ class WPSC_Claimed_Stock {
 			return;
 
 		// Accept WPSC_Purchase_Log object or ID
-		if ( is_a( $purchase_log_id, 'WPSC_Purchase_Log' ) ) {
-			$purchase_log_id = $purchase_log_id->get( 'id' );
+		if ( is_a( $log, 'WPSC_Purchase_Log' ) ) {
+			$purchase_log_id = $log->get( 'id' );
+		} else {
+			$purchase_log_id = $log;
 		}
 
 		$wpdb->query( $wpdb->prepare(
-			"UPDATE `" . WPSC_TABLE_CLAIMED_STOCK . "` 
-			SET `cart_id` = '%d', `cart_submitted` = '1' 
+			"UPDATE `" . WPSC_TABLE_CLAIMED_STOCK . "`
+			SET `cart_id` = '%d', `cart_submitted` = '1'
 			WHERE `cart_id` IN(%s)",
 			$purchase_log_id,
 			$this->cart_id

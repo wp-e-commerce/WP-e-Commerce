@@ -35,7 +35,7 @@ class australiapost {
 		$this->debug = false; // change to true to log (to the PHP error log) the API URLs and responses for each active service
 
 		// Initialise the list of available postage services
-		
+
 		// DOMESTIC (Australia only)
 		$this->services['STANDARD'] = __('Standard Parcel Post', 'wpsc');
 		$this->services['EXPRESS']  = __('Express Post', 'wpsc');

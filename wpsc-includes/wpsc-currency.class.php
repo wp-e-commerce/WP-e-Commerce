@@ -2,10 +2,7 @@
 /**
  * WPeC Currency Class
  *
- * A Currency
- *
- *
- * @since: 3.8.14
+ * @since 3.8.14
  *
  */
 class WPSC_Currency {
@@ -56,15 +53,15 @@ class WPSC_Currency {
 	 *
 	 * @since 3.8.14
 	 *
-	 * @return array
+	 * @return array $result Array of currency data
 	 */
 	public function as_array() {
 		$result = array(
-							'code'        => $wpsc_currency->code,
-							'symbol'      => $wpsc_currency->symbol,
-							'symbol_html' => $wpsc_currency->symbol_html,
-							'name'        => $wpsc_currency->name,  // name is included for consistency with other classes
-							'currency'    => $wpsc_currency->name,  // currency included for backwards compatibility
+							'code'        => $this->code,
+							'symbol'      => $this->symbol,
+							'symbol_html' => $this->symbol_html,
+							'name'        => $this->name,  // name is included for consistency with other classes
+							'currency'    => $this->name,  // currency included for backwards compatibility
 						);
 
 		return $result;

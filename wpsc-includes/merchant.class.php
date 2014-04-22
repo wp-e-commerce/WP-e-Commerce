@@ -98,7 +98,7 @@ class wpsc_merchant {
 		$this->collate_data();
 		$this->collate_cart();
 	}
-	
+
 	/**
 	 * collate_data method, collate purchase data, like addresses, like country
 	 * @access public

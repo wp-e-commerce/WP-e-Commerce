@@ -48,7 +48,7 @@ function submitform(frm, show_notification)
 		document.getElementById('alt_loadingimage').src = WPSC_CORE_IMAGES_URL + '/indicator.gif';
 		document.getElementById('alt_loadingindicator').style.visibility = 'visible';
 	}
-	
+
 	return false;
 }
 
@@ -463,7 +463,7 @@ jQuery(document).ready(
 				}
 			}
 			);
-		
+
 		function selectCustomGateway() {
 			var parent_div = jQuery(this).parents("div.custom_gateway");
 
@@ -472,7 +472,7 @@ jQuery(document).ready(
 			jQuery("div.custom_gateway table").not(jQuery('table',parent_div)).hide();
 			jQuery("div.custom_gateway table input").not(jQuery('table input',parent_div)).attr( 'disabled', true);
 		}
-		
+
 		jQuery("input.custom_gateway").change(
 			function() {
 				if(jQuery(this).is(':checked') == true) {
@@ -480,7 +480,7 @@ jQuery(document).ready(
 				}
 			}
 			);
-			
+
 		selectCustomGateway.call(jQuery('input.custom_gateway:checked'));
 	}
 	);

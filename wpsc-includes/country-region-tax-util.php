@@ -1,6 +1,17 @@
 <?php
 
 function _wpsc_is_country_disabled( $country, $args ) {
+	$defaults = array(
+			'acceptable'        => null,
+			'acceptable_ids'    => null,
+			'selected'          => '',
+			'disabled'          => null,
+			'disabled_ids'      => null,
+			'placeholder'       => __( 'Please select a country', 'wpsc' ),
+			'include_invisible' => false,
+	);
+
+	$args = wp_parse_args( $args, $defaults );
 	extract( $args, EXTR_SKIP );
 
 	$isocode = $country->get_isocode();
@@ -39,8 +50,7 @@ function _wpsc_country_dropdown_options( $args = '' ) {
 			'include_invisible' => false,
 	);
 
-	$args = wp_parse_args( $args, $defaults );
-
+	$args   = wp_parse_args( $args, $defaults );
 	$output = '';
 
 	$countries = WPSC_Countries::get_countries( $args['include_invisible'] );

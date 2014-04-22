@@ -1,10 +1,11 @@
 <?php
 
-
 /**
- * WPEC Visitor Class
+ * WPeC Visitor Class
+ *
  * @since 3.8.14
  */
+
 class WPSC_Visitor {
 
 	public $valid = true;
@@ -20,7 +21,7 @@ class WPSC_Visitor {
 
 		$visitor = _wpsc_get_visitor( $visitor_id );
 		if ( $visitor == false ) {
-			$valid = false;
+			$this->valid = false;
 			return;
 		}
 
@@ -50,7 +51,8 @@ class WPSC_Visitor {
 
 	/**
 	 * Get visitor expiration
-	 * @param  $unix_time boolean  true rerutn time as unix time, false return time as string
+	 *
+	 * @param  $unix_time boolean  true returns time as unix time, false returns time as string
 	 * @return string expiration time
 	 * @since 3.8.14
 	 */
@@ -68,11 +70,13 @@ class WPSC_Visitor {
 
 	/**
 	 * Get visitor attribute
+	 *
 	 * @param  $attribute attribute name
 	 * @return varies, attribute value
 	 * @since 3.8.14
 	 */
 	function get( $attribute = null ) {
+
 		if ( empty( $attribute ) ) {
 			return $this;
 		}
@@ -83,6 +87,7 @@ class WPSC_Visitor {
 
 	/**
 	 * Get visitor attribute
+	 *
 	 * @param  $attribute attribute name
 	 * @param  $value attribute value
 	 * @return this
@@ -93,13 +98,13 @@ class WPSC_Visitor {
 		$property_name = '_' . $attribute;
 		$this->$property_name = $value;
 
-		if ( in_array( $attribute, $visitor_table_attribute_list ) ) {
+		if ( in_array( $attribute, self::$visitor_table_attribute_list ) ) {
 			// test if change of the attribute is permitted
-			if ( $visitor_table_attribute_list( $attribute ) ) {
+			if ( self::$visitor_table_attribute_list( $attribute ) ) {
 				wpsc_update_visitor( $this->_id, array( $attribute => $value ) );
 			}
 		} else {
-			wpsc_update_visitor_meta( $this->id, $attribute, $value );
+			wpsc_update_visitor_meta( $this->_id, $attribute, $value );
 			return $this;
 		}
 	}
@@ -113,24 +118,14 @@ class WPSC_Visitor {
 	function delete( $attribute ) {
 		$property_name = '_' . $attribute;
 		if ( isset( $this->$property_name ) ) {
-			unset($a->$property_name ) ;
+			unset( $a->$property_name ) ;
 		}
 
-		wpsc_delete_visitor_meta( $this->id, $attribute );
+		wpsc_delete_visitor_meta( $this->_id, $attribute );
 
 		return $this;
 
 	}
-
-	private $visitor_table_attribute_list = array(
-													// well known attributes from the 'wpsc_visitors table', true false if change allowed
-													'id'          => false,
-													'user_id'     => true,
-													'last_active' => false,
-													'expires'     => false,
-													'created'     => false,
-											);
-
 
 	// helper function for well known variables
 	function id() {
@@ -164,5 +159,14 @@ class WPSC_Visitor {
 	public $_expires     = false;
 	public $_created     = false;
 	public $_cart        = false;
+
+	public static $visitor_table_attribute_list = array(
+		// well known attributes from the 'wpsc_visitors table', true false if change allowed
+		'id'          => false,
+		'user_id'     => true,
+		'last_active' => false,
+		'expires'     => false,
+		'created'     => false,
+	);
 
 }
