@@ -270,13 +270,18 @@ function wpsc_product_has_variations( $id = 0 ) {
  * @uses   wpsc_the_product_thumbnail_id()  Get the product thumbnail ID
  */
 function wpsc_maybe_get_the_parent_product_thumbnail_id( $thumbnail_id, $product_id ) {
+
 	if ( ! $thumbnail_id ) {
 		$product = get_post( $product_id );
-		if ( $product->post_parent > 0 )
+
+		if ( is_a( $product, 'WP_Post' ) && $product->post_parent > 0 ) {
 			$thumbnail_id = wpsc_the_product_thumbnail_id( $product->post_parent );
+		}
 	}
+
 	return $thumbnail_id;
 }
+
 add_filter( 'wpsc_the_product_thumbnail_id', 'wpsc_maybe_get_the_parent_product_thumbnail_id', 10, 2 );
 
 function wpsc_get_product_gallery( $id ) {

@@ -544,7 +544,7 @@ function wpsc_product_image( $attachment_id = 0, $width = null, $height = null )
 		}
 
 		$attachment_metadata = isset( $image_meta['_wp_attachment_metadata'] ) ? $image_meta['_wp_attachment_metadata'] : null;
-		
+
 		// Determine if we already have an image of this size
 		if ( isset( $attachment_metadata['sizes'] ) && count( $attachment_metadata['sizes'] ) && ( isset( $attachment_metadata['sizes'][ $intermediate_size ] ) ) ) {
 			$intermediate_image_data = image_get_intermediate_size( $attachment_id, $intermediate_size );
@@ -576,7 +576,7 @@ function wpsc_product_image( $attachment_id = 0, $width = null, $height = null )
 	 * The filter here and in wpsc_the_product_image() were unfortunately named, as were the functions.
 	 * They do very different things but are named as if they do not.  The onus will be on the
 	 * plugin developer to check if the second parameter is an attachment ID or a product ID.
-	 * 
+	 *
 	 * @since 3.8
 	 */
 	return apply_filters( 'wpsc_product_image', set_url_scheme( $image_url ), $attachment_id );
@@ -1000,19 +1000,18 @@ function wpsc_the_product_thumbnail( $width = null, $height = null, $product_id 
 
 	$thumbnail_id = wpsc_the_product_thumbnail_id( $product_id );
 
-	// If no thumbnail found for item, get it's parent image (props. TJM)
-	if ( ! $thumbnail_id && $product->post_parent )
+	// If no thumbnail found for item, get its parent image
+	if ( ! $thumbnail_id && ( is_a( $product, 'WP_Post' ) && $product->post_parent ) ) {
 		$thumbnail_id = wpsc_the_product_thumbnail_id( $product->post_parent );
+	}
 
 	// if still no thumbnail ID is found, return our fallback function
-	if ( ! $thumbnail_id )
+	if ( ! $thumbnail_id ) {
 		return wpsc_product_image();
+	}
 
 	if ( ! $page ) {
-		if ( is_single() )
-			$page = 'single';
-		else
-			$page = 'products-page';
+		$page = is_single() ? 'single' : 'products-page';
 	}
 
 	if ( ! $width && ! $height ) {
