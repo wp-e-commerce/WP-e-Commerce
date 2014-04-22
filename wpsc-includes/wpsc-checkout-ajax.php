@@ -225,6 +225,10 @@ function wpsc_customer_updated_data_ajax() {
 	// capture the current state of the elements
 	$checkout_info_before_updates = _wpsc_get_checkout_info();
 
+	// We will want to know which, if any, checkout meta changes as a result of hooks and filters
+	// that may fire as we update each meta item
+	$all_checkout_meta_before_updates = _wpsc_get_checkout_info();
+
 	if ( ! empty( $customer_meta ) ) {
 
 		foreach ( $customer_meta as $meta_key => $meta_value ) {
