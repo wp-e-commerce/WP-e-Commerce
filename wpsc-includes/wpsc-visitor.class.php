@@ -8,7 +8,7 @@
 
 class WPSC_Visitor {
 
-	public static $valid = true;
+	public $valid = true;
 
 	/**
 	 * Create visitor class from visitor id
@@ -21,7 +21,7 @@ class WPSC_Visitor {
 
 		$visitor = _wpsc_get_visitor( $visitor_id );
 		if ( $visitor == false ) {
-			self::$valid = false;
+			$this->valid = false;
 			return;
 		}
 
