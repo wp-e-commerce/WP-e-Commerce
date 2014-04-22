@@ -207,11 +207,7 @@ function wpsc_customer_updated_data_ajax() {
 	// which transaction the response matches
 	$response = array( 'request' => $_REQUEST );
 
-	// grab a copy of the current meta values so we can send back only items that have changed
-	$checkout_meta_values_before_update = _wpsc_get_checkout_meta();
-
 	// update can be a single key/value pair or an array of key value pairs
-
 	if ( ! empty ( $_REQUEST['meta_data'] ) ) {
 		$customer_meta = isset( $_REQUEST['meta_data'] ) ?  $_REQUEST['meta_data'] : array();
 	} elseif ( ! empty( $_REQUEST['meta_key'] ) && isset( $_REQUEST['meta_value'] ) ) {
