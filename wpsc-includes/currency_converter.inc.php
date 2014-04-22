@@ -51,7 +51,7 @@
 			$from   = urlencode( $from );
 			$to     = urlencode( $to );
 
-			return wpsc_convert_currency( $amt, $from, $to );
+			return wpsc_convert_currency( $amount, $from, $to );
 		}
 	}
 ?>
