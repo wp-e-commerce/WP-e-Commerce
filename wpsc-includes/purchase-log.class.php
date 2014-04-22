@@ -140,7 +140,7 @@ class WPSC_Purchase_Log {
 			return null;
 		}
 
-		$need_fetching = array();
+		$needs_fetching = array();
 
 		$stats = array(
 			'sales'    => 0,
@@ -472,11 +472,12 @@ class WPSC_Purchase_Log {
 	}
 
 	private function set_total_shipping() {
-		$total_shipping = 0;
+
 		$base_shipping  = $this->get( 'base_shipping' );
 		$item_shipping  = wp_list_pluck( $this->get_cart_contents(), 'pnp' );
 
 		$this->meta_data['total_shipping'] = $base_shipping + array_sum( $item_shipping );
+		
 		return $this->meta_data['total_shipping'];
 	}
 
@@ -539,7 +540,7 @@ class WPSC_Purchase_Log {
 		extract( $this->args );
 
 		$format = self::get_column_format( $col );
-		$sql = $wpdb->prepare( "SELECT * FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE {$col} = {$format}", $value );
+		$sql    = $wpdb->prepare( "SELECT * FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE {$col} = {$format}", $value );
 
 		$this->exists = false;
 
@@ -630,8 +631,7 @@ class WPSC_Purchase_Log {
 
 		$subtotal = 0;
 		$shipping = wpsc_convert_currency( (float) $this->get( 'base_shipping' ), $from_currency, $to_currency );
-		$tax = 0;
-		$items = array();
+		$items    = array();
 
 		$this->gateway_data = array(
 			'amount'  => wpsc_convert_currency( $this->get( 'totalprice' ), $from_currency, $to_currency ),
@@ -776,8 +776,11 @@ class WPSC_Purchase_Log {
 		}
 
 		if ( $this->is_status_changed ) {
-			if ( $this->is_transaction_completed() )
+
+			if ( $this->is_transaction_completed() ) {
 				$this->update_downloadable_status();
+			}
+			
 			$current_status = $this->get( 'processed' );
 			$previous_status = $this->previous_status;
 			$this->previous_status = $current_status;
