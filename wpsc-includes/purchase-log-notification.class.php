@@ -353,8 +353,6 @@ class WPSC_Purchase_Log_Admin_Notification extends WPSC_Purchase_Log_Notificatio
 			$data[$type]['fields'][] = $field;
 		}
 
-		$message = '';
-
 		// Transaction details
 		$message = '<strong>' . __( 'Transaction Details', 'wpsc' ) . "</strong>\r\n";
 		$message .= __( 'Sale Log ID', 'wpsc' ) . ': %purchase_id%' . "\r\n";
