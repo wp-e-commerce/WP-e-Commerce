@@ -7,14 +7,16 @@
  * clear method.
  *
  * This class has these advantages over using an array in the implementation of business logic:
- *  - caching is completely transparent you don't need to
+ *  - caching is completely transparent
  *
- * @access public
+ * Note: This class should be considered experimental and subject to change.
+ *
+ * @access private
  *
  * @since 3.8.14
  *
  */
-class WPSC_Data_Map {
+final class WPSC_Data_Map {
 
 	/**
 	 * Create the map
@@ -202,6 +204,7 @@ class WPSC_Data_Map {
 	 * @return string  a map name to uniquely identify this map so it can be saved and restored
 	 */
 	private function _confirm_data_ready() {
+
 		if ( ! is_array( $this->_map_data ) ) {
 
 			// if this is a named map we can try to restore it from the transient store
@@ -213,7 +216,9 @@ class WPSC_Data_Map {
 			if ( ! is_array( $this->_map_data ) && ! empty( $this->_map_callback ) && is_callable( $this->_map_callback ) ) {
 
 				$this->_map_data = array();
-				call_user_func( $this->_map_callback , $this );
+
+				/* call_user_func( $this->_map_callback ); */
+
 				if ( ! is_array( $this->_map_data ) ) {
 					$this->_map_data = array();
 					$this->_dirty = true;
@@ -229,7 +234,7 @@ class WPSC_Data_Map {
 			$this->_dirty = false;
 		}
 
-		return (  is_array( $this->_map_data ) );
+		return is_array( $this->_map_data );
 
 	}
 
@@ -268,8 +273,8 @@ class WPSC_Data_Map {
 	 * @since 3.8.14
 	 *
 	 */
-	public $_map_name 		= null;
-	public $_map_callback 	= null;
-	public $_map_data 		= null;
-	private $_dirty    		= false;
+	public $_map_name     = null;
+	public $_map_callback = null;
+	public $_map_data     = null;
+	private $_dirty       = false;
 }
