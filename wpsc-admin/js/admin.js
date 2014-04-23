@@ -369,6 +369,7 @@ jQuery(document).ready(function($){
 			if ( jQuery( 'select[name="rules[operator][]"]', prototype ).length === 0 ) {
 				operator_box.append("<option value='and'>" + wpsc_adminL10n.coupons_compare_and +  "</option>");
 				operator_box.append("<option value='or'>" + wpsc_adminL10n.coupons_compare_or + "</option>");
+				prototype.prepend(operator_box);
 			}
 
 		prototype.find('select').val('');
