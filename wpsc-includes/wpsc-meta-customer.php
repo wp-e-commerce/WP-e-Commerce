@@ -87,8 +87,6 @@ function wpsc_update_customer_meta( $key, $value, $id = false ) {
 		$id = wpsc_get_current_customer_id();
 	}
 
-	$id = wpsc_get_current_customer_id();
-
 	$result = apply_filters( 'wpsc_update_customer_meta', null, $key, $value, $id );
 
 	if ( $result ) {
