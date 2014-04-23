@@ -25,22 +25,24 @@ final class WPSC_Data_Map {
 	 *
 	 * @since 3.8.14
 	 *
-	 * @param string  		a map name to uniquely identify this map so it can be saved and restored
-	 * @param string|array  a callback function to re-generate the map if it can't be reloaded when it is neaded
+	 * @param string         $map_name       a map name to uniquely identify this map so it can be
+	 *                                       saved and restored
+	 *
+	 * @param string|array   $map_callback   a callback function to re-generate the map if it can't be
+	 *                                       reloaded when it is needed. The data map callback function will
+	 *                                       be called with a single parameter, the data map
 	 *
 	 */
 	public function __construct( $map_name = '', $map_callback = null ) {
 
-		$this->_map_name 		= $map_name;
-		$this->_map_callback 	= $map_callback;
+		$this->_map_name     = $map_name;
+		$this->_map_callback = $map_callback;
 
 		// if our map is names it means we want to save the map for use some time in the future
 		if ( ! empty( $this->_map_name ) ) {
 			add_action( 'shutdown', array( &$this, '_save_map' ) );
 		}
 	}
-
-
 
 	/**
 	 * Count of items in the map
@@ -214,15 +216,30 @@ final class WPSC_Data_Map {
 
 			// if we still don't have a valid map and there is a constructor callback use it
 			if ( ! is_array( $this->_map_data ) && ! empty( $this->_map_callback ) && is_callable( $this->_map_callback ) ) {
+				static $already_invoking_callback = false;
 
-				$this->_map_data = array();
-
-				/* call_user_func( $this->_map_callback ); */
-
-				if ( ! is_array( $this->_map_data ) ) {
+				if ( ! $already_invoking_callback ) {
+					$already_invoking_callback = true;
 					$this->_map_data = array();
-					$this->_dirty = true;
+
+					// callback has a single parameter, the data map
+					call_user_func( $this->_map_callback, $this );
+
+					if ( ! is_array( $this->_map_data ) ) {
+						$this->_map_data = array();
+						$this->_dirty    = true;
+					}
+				} else {
+					if ( is_array( $this->_map_callback ) )  {
+						$function = $this->_map_callback[0] . '::'. $this->_map_callback[1];
+					} else {
+						$function = $this->_map_callback;
+					}
+					_wpsc_doing_it_wrong( $function , __( 'WPSC_Data_Map map creation callback is recursively calling itself.', 'wpsc' ), '3.8.14' );
 				}
+
+				$already_invoking_callback = false;
+
 			}
 
 			// if we still don't have valid map data create an empty array
@@ -235,7 +252,19 @@ final class WPSC_Data_Map {
 		}
 
 		return is_array( $this->_map_data );
+	}
 
+	/**
+	 * is the data map initialized
+	 *
+	 * @access public
+	 *
+	 * @since 3.8.14
+	 *
+	 * @return boolean 	true if the data in the map has been initialized and the map is ready to use, false otherwise
+	 */
+	public function initialized() {
+		return is_array( $this->_map_data );
 	}
 
 	/**
@@ -273,8 +302,8 @@ final class WPSC_Data_Map {
 	 * @since 3.8.14
 	 *
 	 */
-	public $_map_name     = null;
-	public $_map_callback = null;
-	public $_map_data     = null;
+	public  $_map_name     = null;
+	public  $_map_callback = null;
+	public  $_map_data     = null;
 	private $_dirty       = false;
 }
