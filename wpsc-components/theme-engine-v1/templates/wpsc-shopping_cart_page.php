@@ -191,14 +191,6 @@ endif;
          <?php endif; ?>
 
          <?php wpsc_update_shipping_multiple_methods(); ?>
-
-
-         <?php if (!wpsc_have_shipping_quote()) : // No valid shipping quotes ?>
-               </table>
-               </div>
-			</div>
-            <?php return; ?>
-         <?php endif; ?>
       </table>
    <?php endif;  ?>
 
