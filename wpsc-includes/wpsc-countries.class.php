@@ -1289,7 +1289,6 @@ class WPSC_Countries {
 	 *
 	 */
 	static function _create_region_code_by_region_id_map( $data_map ) {
-		$all_regions_data = self::$region_by_region_id->data();
 
 		$all_countries_data = self::$all_wpsc_country_by_country_id->data();
 
