@@ -10,8 +10,9 @@
  * @since 3.8
  */
 
-if ( is_admin() )
+if ( is_admin() ) {
 	add_filter( 'term_name', 'wpsc_term_list_levels', 10, 2 );
+}
 
 /**
  * When doing variation and product category drag&drop sort, we want to restrict
@@ -192,10 +193,7 @@ function wpsc_javascript_localizations( $localizations = false ) {
 		$localizations['WPSC_IMAGE_URL']           = WPSC_IMAGE_URL;
 		$localizations['WPSC_CORE_IMAGES_URL']     = WPSC_CORE_IMAGES_URL;
 		$localizations['fileThickboxLoadingImage'] = WPSC_CORE_IMAGES_URL . '/loadingAnimation.gif';
-
 		$localizations['msg_shipping_need_recalc'] = __( 'Please click the <em>Calculate</em> button to refresh your shipping quotes, as your shipping information has been modified.', 'wpsc' );
-
-		$localizations['msg_shipping_need_recalc'] = apply_filters( 'wpsc_msg_shipping_need_recalc', $localizations['msg_shipping_need_recalc'] );
 	}
 
 	/**
