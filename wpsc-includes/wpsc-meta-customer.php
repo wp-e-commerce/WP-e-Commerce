@@ -16,6 +16,12 @@ function wpsc_delete_all_customer_meta( $id = false ) {
 		$id = wpsc_get_current_customer_id();
 	}
 
+	$result = apply_filters( 'wpsc_delete_all_customer_meta', null, $id );
+
+	if ( $result ) {
+		return $result;
+	}
+
 	foreach ( $meta as $key => $value ) {
 		if ( strpos( $key, $key_pattern ) === 0 )
 			$success = $success && wpsc_delete_visitor_meta( $id, $key );
@@ -39,6 +45,12 @@ function wpsc_delete_all_customer_meta( $id = false ) {
 function wpsc_delete_customer_meta( $key, $id = false ) {
 	if ( ! $id ) {
 		$id = wpsc_get_current_customer_id();
+	}
+
+	$result = apply_filters( 'wpsc_delete_customer_meta', null, $key, $id );
+
+	if ( $result ) {
+		return $result;
 	}
 
 	$success = wpsc_delete_visitor_meta( $id, $key );
@@ -75,6 +87,14 @@ function wpsc_update_customer_meta( $key, $value, $id = false ) {
 		$id = wpsc_get_current_customer_id();
 	}
 
+	$id = wpsc_get_current_customer_id();
+
+	$result = apply_filters( 'wpsc_update_customer_meta', null, $key, $value, $id );
+
+	if ( $result ) {
+		return $result;
+	}
+
 	$result = wpsc_update_visitor_meta( $id, $key, $value );
 
 	// notification after any meta item has been updated
@@ -108,6 +128,12 @@ function wpsc_update_all_customer_meta( $profile, $id = false ) {
 		$id = wpsc_get_current_customer_id();
 	}
 
+	$result = apply_filters( 'wpsc_update_all_customer_meta', null, $profile, $id );
+
+	if ( $result ) {
+		return $result;
+	}
+
 	wpsc_delete_all_customer_meta( $id );
 	$result = true;
 
@@ -134,6 +160,12 @@ function wpsc_get_customer_meta( $key = '', $id = false ) {
 
 	if ( ! $id ) {
 		$id = wpsc_get_current_customer_id();
+	}
+
+	// a filter to override meta get prior to retrieving the value
+	$meta_value = apply_filters( 'wpsc_get_customer_meta', null, $key, $id );
+	if ( $meta_value ) {
+		return $meta_value;
 	}
 
 	$meta_value = wpsc_get_visitor_meta( $id, $key, true );
@@ -167,6 +199,12 @@ function wpsc_get_all_customer_meta( $id = false ) {
 
 	if ( ! $id ) {
 		$id = wpsc_get_current_customer_id();
+	}
+
+	$result = apply_filters( 'wpsc_get_all_customer_meta', null, $id );
+
+	if ( $result ) {
+		return $result;
 	}
 
 	$meta        = wpsc_get_visitor_meta( $id );
