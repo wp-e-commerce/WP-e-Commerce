@@ -239,11 +239,40 @@ class wpsc_cart {
 			return true;
 		}
 
+		$needs_shipping_recalc = false;
+
+		$what_changed = _wpsc_visitor_location_what_changed();
+
 		// TODO: this is where we will check the available shipping methods and see if
 		// the parameters used to create the quotes have changes since the quotes where
 		// created.  A function of the future shipping component
 
-		return false;
+		if ( array_key_exists( 'shippingpostcode', $what_changed ) ) {
+			$custom_shipping = get_option( 'custom_shipping_options' );
+			foreach ( (array)$custom_shipping as $shipping ) {
+				if ( isset( $wpsc_shipping_modules[$shipping]->needs_zipcode ) && $wpsc_shipping_modules[$shipping]->needs_zipcode == true ) {
+					$needs_shipping_recalc = true;
+					break;
+				}
+			}
+		}
+
+		// recalculate shipping if country changes
+		if ( array_key_exists( 'shippingcountry', $what_changed ) ) {
+			$needs_shipping_recalc = true;
+		}
+
+		// recalculate shipping if region changes
+		if ( array_key_exists( 'shippingregion', $what_changed ) ) {
+			$needs_shipping_recalc = true;
+		}
+
+		// recalculate shipping if state
+		if ( array_key_exists( 'shippingstate', $what_changed ) ) {
+			$needs_shipping_recalc = true;
+		}
+
+		return $needs_shipping_recalc;
 	}
 
 	/**

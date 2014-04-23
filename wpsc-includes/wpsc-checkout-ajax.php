@@ -246,15 +246,15 @@ function wpsc_customer_updated_data_ajax() {
 		}
 
 		if ( $success ) {
-			$response['type']          = __( 'success', 'wpsc' );
-			$response['error']         = '';
+			$response['type']  = __( 'success', 'wpsc' );
+			$response['error'] = '';
 		} else {
-			$response['type']       = __( 'error', 'wpsc' );
-			$response['error']      = __( 'meta values may not have been updated', 'wpsc' );
+			$response['type']  = __( 'error', 'wpsc' );
+			$response['error'] = __( 'meta values may not have been updated', 'wpsc' );
 		}
 	} else {
-		$response['type']       = __( 'error', 'wpsc' );
-		$response['error']      = __( 'invalid parameters, meta array or meta key value pair required', 'wpsc' );
+		$response['type']  = __( 'error', 'wpsc' );
+		$response['error'] = __( 'invalid parameters, meta array or meta key value pair required', 'wpsc' );
 	}
 
 	// Let's see what the current state of the customer meta set is after we applied the requested updates
@@ -266,7 +266,7 @@ function wpsc_customer_updated_data_ajax() {
 		// send them back because the client already knows about this.
 		//
 		// But we have to check just in case a data rule or a plugin that used our hooks made some adjustments
-		if ( isset( $all_checkout_meta_before_updates[$current_meta_key] ) && ( $all_checkout_meta_before_updates[$current_meta_key]  == $current_meta_value ) ) {
+		if ( isset( $all_checkout_meta_before_updates[$current_meta_key] ) && ( $all_checkout_meta_before_updates[$current_meta_key] == $current_meta_value ) ) {
 			// new value s the same as the old value, why send it?
 			unset( $all_checkout_meta_after_updates[$current_meta_key] );
 			unset( $all_checkout_meta_before_updates[$current_meta_key] );
@@ -296,6 +296,9 @@ function wpsc_customer_updated_data_ajax() {
 			unset( $response['checkout_info'] );
 		}
 	}
+
+	// do the shipping quotes need to be recalcualted?
+	$response['needs_shipping_recalc'] = wpsc_cart_need_to_recompute_shipping_quotes();
 
 	wp_send_json_success( $response );
 }

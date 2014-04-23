@@ -18,8 +18,9 @@ function _wpsc_countries_localizations( $localizations_array ) {
 	$localizations_array['no_country_selected']       = __( 'Please select a country', 'wpsc' );
 	$localizations_array['no_region_selected_format'] = __( 'Please select a %s', 'wpsc' );
 	$localizations_array['no_region_label']           = __( 'State/Province', 'wpsc' );
+	$localizations_array['base_country']              = get_option( 'base_country' );
 
-	$country_list  = array();
+	$country_list = array();
 
 	foreach ( WPSC_Countries::get_countries() as $country_id => $wpsc_country ) {
 		if ( $wpsc_country->is_visible() ) {
@@ -27,6 +28,7 @@ function _wpsc_countries_localizations( $localizations_array ) {
 
 			if ( $wpsc_country->has_regions() ) {
 				$regions = $wpsc_country->get_regions();
+
 				$region_list = array();
 				foreach ( $regions as $region_id => $wpsc_region ) {
 					$region_list[$region_id] = $wpsc_region->get_name();
@@ -57,14 +59,14 @@ function _wpsc_countries_localizations( $localizations_array ) {
  * @access private
  * @since 3.8.14
  *
- * @param array 	localizations  other localizations that can be added to
+ * @param array     $localizations    other localizations that can be added to
  *
- * @return array	localizations array with checkout information added
+ * @return array                      localizations array with checkout information added
  */
 function _wpsc_localize_checkout_item_name_to_from_id( $localizations ) {
 	$localizations['wpsc_checkout_unique_name_to_form_id_map'] = _wpsc_create_checkout_unique_name_to_form_id_map();
-	$localizations['wpsc_checkout_item_active'] = _wpsc_create_checkout_item_active_map();
-	$localizations['wpsc_checkout_item_required'] = _wpsc_create_checkout_item_required_map();
+	$localizations['wpsc_checkout_item_active']                = _wpsc_create_checkout_item_active_map();
+	$localizations['wpsc_checkout_item_required']              = _wpsc_create_checkout_item_required_map();
 	return $localizations;
 }
 
@@ -106,7 +108,6 @@ function _wpsc_create_checkout_unique_name_to_form_id_map() {
 	$wpsc_checkout->rewind_checkout_items();
 
 	return $checkout_item_map;
-
 }
 
 /**
@@ -168,3 +169,31 @@ function _wpsc_create_checkout_item_required_map() {
 	return $checkout_item_map;
 
 }
+
+
+/**
+ * On the checkout page create a hidden elements holding current customer meta values
+ *
+ * This let's the wp-e-commerce javascript process any dependency rules even if the store has configured
+ * the checkout forms so that some fields are hidden.  The most important of these fields are the
+ * country, region and state fields. But it's just as easy to include all of them and not worry about
+ * what various parts of WPeC, themes or plugs may be doing.
+ *
+ * @since 3.8.14
+ *
+ * @access private
+ */
+function _wpsc_customer_meta_into_checkout_page() {
+
+	$checkout_metas = _wpsc_get_checkout_meta();
+
+	foreach ( $checkout_metas as $key => $value ) {
+		?>
+		<input class="wpsc-meta-value" type="hidden" value="<?php echo esc_attr( $value );?>" data-wpsc-meta-key="<?php echo esc_attr( $key );?>" />
+		<?php
+	}
+
+}
+
+add_action( 'wpsc_before_shopping_cart_page', '_wpsc_customer_meta_into_checkout_page' );
+

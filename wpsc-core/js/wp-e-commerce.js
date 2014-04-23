@@ -23,13 +23,13 @@
  *
  */
 if ( typeof wpsc_vars !== undefined ) {
-	var wpsc_ajax 						= wpsc_vars['wpsc_ajax'];
-	var base_url 						= wpsc_vars['base_url'];
-	var WPSC_URL 						= wpsc_vars['WPSC_URL'];
-	var WPSC_IMAGE_URL 					= wpsc_vars['WPSC_IMAGE_URL'];
-	var WPSC_IMAGE_URL 					= wpsc_vars['WPSC_IMAGE_URL'];
-	var WPSC_CORE_IMAGES_URL			= wpsc_vars['WPSC_CORE_IMAGES_URL'];
-	var fileThickboxLoadingImage 		= wpsc_vars['fileThickboxLoadingImage'];
+	var wpsc_ajax                = wpsc_vars['wpsc_ajax'];
+	var base_url                 = wpsc_vars['base_url'];
+	var WPSC_URL                 = wpsc_vars['WPSC_URL'];
+	var WPSC_IMAGE_URL           = wpsc_vars['WPSC_IMAGE_URL'];
+	var WPSC_IMAGE_URL           = wpsc_vars['WPSC_IMAGE_URL'];
+	var WPSC_CORE_IMAGES_URL     = wpsc_vars['WPSC_CORE_IMAGES_URL'];
+	var fileThickboxLoadingImage = wpsc_vars['fileThickboxLoadingImage'];
 }
 // end of variable definitions
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -245,21 +245,16 @@ function wpsc_update_customer_meta( response ) {
 }
 
 /**
- * Take data from checkout data array and put it where it belongs
+ * If shipping quotes need to be recalcualted adjust the checkout form and notify the user
  *
- * Note: logic extracted from pre 3.8.14 wpsc_handle_country_change function
- *
- * @since 3.8.14
- * @param checkout_info
- * @return true if execution should continue, false if it should stop
+ * @param response  data from AJAX request
  */
-function wpsc_update_checkout_info( checkout_info ) {
-
+function wpsc_check_for_shipping_recalc_needed( response ) {
 	// TODO: if shipping needs to be re-calculated we need to refresh the page.  This is the only option
 	// in version 3.8.14 and earlier.  Future versions should support replacing the shipping quote elements
 	// via AJAX
-	if ( checkout_info.hasOwnProperty( 'needs_shipping_recalc' ) ) {
-		if ( checkout_info.needs_shipping_recalc ) {
+	if ( response.hasOwnProperty( 'needs_shipping_recalc' ) ) {
+		if ( response.needs_shipping_recalc ) {
 
 			var form = jQuery('table.productcart' ).first();
 			var msg  = wpsc_var_get( 'msg_shipping_need_recalc' );
@@ -281,10 +276,21 @@ function wpsc_update_checkout_info( checkout_info ) {
 			jQuery( 'tr.wpsc_shipping_header' ).hide();
 			jQuery( '.wpsc_checkout_table_totals' ).hide();
 			jQuery( '.total_tax' ).closest( 'table' ).hide();
-
-			jQuery( document ).trigger( { type : 'wpsc_update_checkout_info', info : checkout_info } );
 		}
 	}
+
+}
+
+/**
+ * Take data from checkout data array and put it where it belongs
+ *
+ * Note: logic extracted from pre 3.8.14 wpsc_handle_country_change function
+ *
+ * @since 3.8.14
+ * @param checkout_info
+ * @return true if execution should continue, false if it should stop
+ */
+function wpsc_update_checkout_info( checkout_info ) {
 
 	if ( checkout_info.hasOwnProperty( 'shipping_keys' ) ) {
 		jQuery.each( checkout_info.shipping_keys, function( key, shipping ) {
@@ -365,6 +371,9 @@ function wpsc_meta_item_change_response( response ) {
 		event.response = response;
 		jQuery( "wpsc-visitor-meta:first" ).trigger( event );
 
+		// Check if shipping quotes need to be updated 
+		wpsc_check_for_shipping_recalc_needed( response.data );
+
 	}
 
 	jQuery( ".wpsc-visitor-meta" ).on( "change", wpsc_meta_item_change );
@@ -416,7 +425,7 @@ function wpsc_meta_item_change() {
 
 	// if there are other fields on the current page that are used to change the same meta value then
 	// they need to be updated
-	var selector = 'input[data-wpsc-meta-key="' + meta_key + '"]';
+	var selector = '[data-wpsc-meta-key="' + meta_key + '"]';
 
 	var element_that_changed_meta_value = this;
 
@@ -482,23 +491,20 @@ function wpsc_update_location_labels( country_select ) {
 		var billing_state_element = wpsc_get_wpsc_meta_element( 'billingstate' ) ;
 
 		if ( billing_state_element ) {
-			var billing_state_label = wpsc_get_label_element( billing_state_element );
 			country_code = wpsc_get_value_from_wpsc_meta_element( 'billingcountry' );
-			billing_state_label.text( wpsc_country_region_label( country_code ) );
 			label = wpsc_country_region_label( country_code );
-			billing_state_label.text( label );
 			billing_state_element.attr( 'placeholder', label );
+			wpsc_update_labels( wpsc_get_wpsc_meta_elements( 'billingstate' ), label );
 		}
 	} else if ( country_meta_key == 'shippingcountry' ) {
 
 		var shipping_state_element = wpsc_get_wpsc_meta_element( 'shippingstate' );
 
 		if ( shipping_state_element ) {
-			var shipping_state_label = wpsc_get_label_element( shipping_state_element );
 			country_code = wpsc_get_value_from_wpsc_meta_element( 'shippingcountry' );
 			label = wpsc_country_region_label( country_code );
-			shipping_state_label.text( label );
 			shipping_state_element.attr( 'placeholder', label );
+			wpsc_update_labels( wpsc_get_wpsc_meta_elements( 'shippingstate' ), label );
 		}
 	}
 
@@ -512,8 +518,15 @@ function wpsc_update_location_labels( country_select ) {
  */
 function wpsc_update_regions_list_to_match_country( country_select ) {
 	var country_meta_key   = wpsc_get_element_meta_key( country_select );
+	var region_meta_key;
+
+	if ( country_meta_key.indexOf( "shipping" ) == 0 ) {
+		region_meta_key = 'shippingregion';
+	} else {
+		region_meta_key = 'billingregion';
+	}
+
 	var region_select      = wpsc_country_region_element( country_select );
-	var region_meta_key    = wpsc_get_element_meta_key( region_select );
 	var all_region_selects = wpsc_get_wpsc_meta_elements( region_meta_key );
 	var country_code       = wpsc_get_value_from_wpsc_meta_element( country_select );
 
@@ -538,7 +551,6 @@ function wpsc_update_regions_list_to_match_country( country_select ) {
 	wpsc_update_location_labels( country_select );
 	wpsc_update_location_elements_visibility();
 	wpsc_copy_meta_value_to_similiar( country_select );
-
 }
 
 /*
@@ -660,10 +672,20 @@ function wpsc_update_location_elements_visibility() {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-	// for convenience, get the jQuery objects for each of the billing elements we want to manipulate up front
-	var billing_state_elements = wpsc_get_wpsc_meta_elements( 'billingstate' );
-	var billing_region_elements = wpsc_get_wpsc_meta_elements( 'billingregion' );
-
+	if ( wpsc_checkout_item_active( 'billingstate' ) ) {
+		// for convenience, get the jQuery objects for each of the billing elements we want to manipulate up front
+		var billing_state_elements = wpsc_get_wpsc_meta_elements( 'billingstate' );
+		var billing_region_elements = wpsc_get_wpsc_meta_elements( 'billingregion' );
+	
+		if ( wpsc_billing_country_has_regions() ) {
+			billing_region_elements.show();
+			billing_state_elements.hide();
+		} else {
+			billing_region_elements.hide();
+			billing_state_elements.show();
+		}
+	}
+/*	
 	if ( ! wpsc_checkout_item_form_id( 'billingcountry' ) ) {
 		if ( billing_region_elements.length ) {
 				billing_region_elements.hide();
@@ -689,27 +711,25 @@ function wpsc_update_location_elements_visibility() {
 
 			// are there any regions for the currently selected billing country
 			if ( wpsc_country_has_regions( billing_country_code ) ) {
-				billing_state_elements.closest( "tr" ).hide();
+				//billing_state_elements.closest( "tr" ).hide();
+				billing_state_elements.hide();
+				billing_region_elements.show();
 				billing_state_elements.prop( 'disabled', true );
 			} else {
-				billing_state_elements.closest( "tr" ).show();
+				//billing_state_elements.closest( "tr" ).show();
+				billing_state_elements.show();
+				billing_region_elements.hide();
 				billing_state_elements.prop( 'disabled', false );
 			}
 		}
 	}
-
+*/
 	// for convenience, get the jQuery objects for each of the billing elements we want to manipulate up front
 	var shipping_state_elements  = wpsc_get_wpsc_meta_elements( 'shippingstate' );
 	var shipping_region_elements = wpsc_get_wpsc_meta_elements( 'shippingregion' );
 
 	if ( ! wpsc_checkout_item_form_id( 'shippingcountry' ) ) {
-		if ( billing_region_elements.length ) {
-				billing_region_elements.hide();
-		}
-
-		if ( billing_state_elements.length && wpsc_show_checkout_shipping_fields() ) {
-			billing_state_elements.show();
-		}
+		;
 	} else {
 
 		if ( shipping_state_elements.length ) {
@@ -730,19 +750,21 @@ function wpsc_update_location_elements_visibility() {
 				// are there any regions for the currently selected billing country
 				var tr = shipping_state_element.closest( "tr" );
 
-				var hide_region_edit_row = wpsc_country_has_regions( shipping_country_code ) || ! tr.is(":visible") ;
-				if ( ! tr.hasClass( 'wpsc_change_country' ) ) {
-					if ( hide_region_edit_row ) {
-						tr.hide();
-						shipping_state_element.prop( 'disabled', true );
-					} else {
-						tr.show();
-						shipping_state_element.prop( 'disabled', false );
-					}
+				var hide_state_edit = wpsc_country_has_regions( shipping_country_code );
+				if ( hide_state_edit ) {
+					shipping_state_elements.prop( 'disabled', true );
+					shipping_state_elements.hide();
+					shipping_region_elements.show();
+				} else {
+					shipping_state_elements.prop( 'disabled', false );
+					shipping_state_elements.show();
+					shipping_region_elements.hide();
 				}
 			});
 		}
 	}
+
+	var label = wpsc_get_label_element( 'shippingstate' );
 
 	return true;
 }
@@ -767,6 +789,10 @@ function wpsc_country_region_label( country_code ) {
 	return label;
 }
 
+function wpsc_current_destination_country() {
+	return wpsc_get_value_from_wpsc_meta_element( 'shippingcountry' );
+}
+
 function wpsc_no_region_selected_message( country_code ) {
 	var label = wpsc_country_region_label( country_code )
 	var format = wpsc_var_get( 'no_region_selected_format' );
@@ -776,6 +802,8 @@ function wpsc_no_region_selected_message( country_code ) {
 
 function wpsc_get_label_element( input ) {
 
+	var input_element;
+	
 	if ( input instanceof jQuery ) {
 		input_element = input;
 	} else if ( typeof input == "string" ) {
@@ -786,25 +814,42 @@ function wpsc_get_label_element( input ) {
 		return null;
 	}
 
-	var input_id = input_element.attr('id');
-
-	var label_element = jQuery( "label[for='" + input_id + "']" );
+	var label_element = undefined;
+	
+	if ( input_element ) {
+		var element_id = input_element.attr('id');
+		if ( element_id ) {
+			label_element = jQuery( "label[for='" + element_id + "']" ).first();
+		}
+	}
+	
 	return label_element;
 }
 
+function wpsc_update_labels( elements, label ) {
+	elements.each( function( index, value ){
+		var label_element = wpsc_get_label_element( jQuery( this ) );
+		if ( label_element != undefined ) {
+
+			if ( label_element.find('.asterix') ) {
+				label = label + '<span class="asterix">*</span>';
+			}
+
+			label_element.html( label );
+		}
+	});
+}
 
 function wpsc_get_wpsc_meta_element( meta_key ) {
 	var elements = wpsc_get_wpsc_meta_elements( meta_key );
 	return elements.first();
 }
 
-
 function wpsc_get_wpsc_meta_elements( meta_key ) {
 	var selector = '[data-wpsc-meta-key="' + meta_key + '"]';
 	var elements = jQuery( selector );
 	return elements;
 }
-
 
 function wpsc_get_value_from_wpsc_meta_element( meta ) {
 	var element;
@@ -864,6 +909,43 @@ function wpsc_country_region_element( country ) {
  */
 function wpsc_region_change() {
 	wpsc_copy_meta_value_to_similiar( jQuery( this ) );
+}
+
+function wpsc_checkout_item_active( $checkout_item ) {
+	var active_items = wpsc_var_get( "wpsc_checkout_item_active" );
+
+	var is_active = active_items.hasOwnProperty( $checkout_item ) && active_items[$checkout_item];
+
+	return is_active;
+}
+
+
+function wpsc_billing_country_has_regions() {
+	var billing_country_active = wpsc_checkout_item_active( 'billingcountry' );
+	var has_regions = false;
+
+	var country_code = wpsc_billing_country();
+
+	if ( country_code ) {
+		has_regions = wpsc_country_has_regions( country_code )
+	}
+
+	return has_regions;
+}
+
+function wpsc_billing_country() {
+	var billing_country_active = wpsc_checkout_item_active( 'billingcountry' );
+	var has_regions = false;
+
+	var country_code;
+
+	if ( billing_country_active ) {
+		country_code = wpsc_get_value_from_wpsc_meta_element( 'billingcountry' );
+	} else {
+		country_code = wpsc_var_get( "base_country" );
+	}
+
+	return country_code;
 }
 
 /**

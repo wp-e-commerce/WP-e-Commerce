@@ -558,34 +558,6 @@ function _wpsc_visitor_meta_key_replacements( $meta_keys ) {
 add_filter( 'wpsc_visitor_meta_key_replacements', '_wpsc_visitor_meta_key_replacements' );
 
 
-/**
- * custmer/visitor/user meta has been known by different identifiers. we are trying to standardize on using
- * the uniquename value in the form definition for well known shopper meta.  this function allows
- * old meta keys to return the proper meta value from the database
- *
- * @since 3.8.14
- * @access private
- * @param unknown $meta_keys
- * @return string
- */
-function _wpsc_visitor_location_changed( $meta_keys ) {
-
-	$meta_keys['billing_region']           = 'billingregion';
-	$meta_keys['billing_country']          = 'billingcountry';
-	$meta_keys['shipping_region']          = 'shippingregion';
-	$meta_keys['shipping_country']         = 'shippingcountry';
-	$meta_keys['shipping_zip']             = 'shippingpostcode';
-	$meta_keys['shipping_zipcode']         = 'shippingpostcode';
-	$meta_keys['billing_zip']              = 'billingpostcode';
-	$meta_keys['billing_zipcode']          = 'billingpostcode';
-	$meta_keys['shippingzip']              = 'shippingpostcode';
-	$meta_keys['billingzip']               = 'billingpostcode';
-	$meta_keys['shipping_same_as_billing'] = 'shippingSameBilling';
-	$meta_keys['delivertoafriend']         = 'shippingSameBilling';
-	return $meta_keys;
-}
-
-
 /*
  * Keep track of which visitor location attributes are changing,  when the attributes are done changing
  * at an apprpriate place in the flow there will be a call to _wpsc_has_visitor_location changed.  When
@@ -619,8 +591,8 @@ function _wpsc_visitor_location_is_changing( $meta_value, $meta_key, $visitor_id
 		$what_about_the_visitor_location_changed = array();
 	}
 
-	if ( ! in_array( $meta_key, $what_about_the_visitor_location_changed ) ) {
-		$what_about_the_visitor_location_changed[] = $meta_key;
+	if ( ! array_key_exists( $meta_key, $what_about_the_visitor_location_changed ) ) {
+		$what_about_the_visitor_location_changed[$meta_key] = $meta_value;
 		wpsc_update_visitor_meta( $visitor_id, 'location_attributes_changed', $what_about_the_visitor_location_changed );
 		$location_change_updated = true;
 	}
@@ -628,6 +600,57 @@ function _wpsc_visitor_location_is_changing( $meta_value, $meta_key, $visitor_id
 	return $location_change_updated;
 }
 
+/*
+ * find out what has changed with visitor location
+*
+* @since 3.8.14
+* @access private
+*
+* @param int   $visitor_id the visitor/customer unique id
+*
+* @return array          key value pairs, the key is the unique name of the location element
+*                        that changed, the value is the new value assigned to the location attribute
+*
+*/
+function _wpsc_visitor_location_what_changed( $visitor_id = false ) {
+
+	if ( ! $visitor_id ) {
+		$visitor_id = wpsc_get_current_customer_id();
+	}
+
+	$what_about_the_visitor_location_changed = wpsc_get_visitor_meta( $visitor_id, 'location_attributes_changed', true );
+	if ( ! $what_about_the_visitor_location_changed ) {
+		$what_about_the_visitor_location_changed = array();
+	}
+
+	return $what_about_the_visitor_location_changed;
+}
+
+/*
+ * clear any tracked changes in shipping location, presumable when shipping quotes are recalculated
+*
+* @since 3.8.14
+* @access private
+*
+* @param int   $visitor_id the visitor/customer unique id
+*
+* @return array          key value pairs, the key is the unique name of the location element
+*                        that changed, the value is the new value assigned to the location attribute
+*
+*/
+function _wpsc_visitor_location_clear_tracked_changes( $visitor_id = false ) {
+
+	if ( ! $visitor_id ) {
+		$visitor_id = wpsc_get_current_customer_id();
+	}
+
+	wpsc_delete_visitor_meta( $visitor_id, 'location_attributes_changed' );
+
+	return true;
+}
+
+add_action( 'wpsc_before_get_shipping_method', '_wpsc_visitor_location_clear_tracked_changes', 10, 0 );
+add_action( 'wpsc_before_shopping_cart_page', '_wpsc_visitor_location_clear_tracked_changes', 10, 0 );
 
 /*
  * It might seem a tad verbose to attach a seperate hook to each meta item but doing it this
