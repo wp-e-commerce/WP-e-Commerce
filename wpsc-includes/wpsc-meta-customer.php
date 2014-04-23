@@ -53,19 +53,7 @@ function wpsc_delete_customer_meta( $key, $id = false ) {
 		return $result;
 	}
 
-	$success = wpsc_delete_visitor_meta( $id, $key );
-
-	// notification after any meta item has been deleted
-	if ( $success && has_action( $action = 'wpsc_deleted_customer_meta' ) ) {
-		do_action( $action, $key, $id );
-	}
-
-	// notification after a specific meta item has been deleted
-	if ( $success && has_action( $action = 'wpsc_deleted_customer_meta_' . $key  ) ) {
-		do_action( $action, $key, $id );
-	}
-
-	return $success;
+	return wpsc_delete_visitor_meta( $id, $key );
 }
 
 /**
@@ -95,19 +83,7 @@ function wpsc_update_customer_meta( $key, $value, $id = false ) {
 		return $result;
 	}
 
-	$result = wpsc_update_visitor_meta( $id, $key, $value );
-
-	// notification after any meta item has been updated
-	if ( $result && has_action( $action = 'wpsc_updated_customer_meta' ) ) {
-		do_action( $action, $value, $key, $id );
-	}
-
-	// notification after a specific meta item has been updated
-	if ( $result && has_action( $action = 'wpsc_updated_customer_meta_' . $key  ) ) {
-		do_action( $action, $value, $key, $id );
-	}
-
-	return $result;
+	return wpsc_update_visitor_meta( $id, $key, $value );
 }
 
 /**
@@ -168,19 +144,7 @@ function wpsc_get_customer_meta( $key = '', $id = false ) {
 		return $meta_value;
 	}
 
-	$meta_value = wpsc_get_visitor_meta( $id, $key, true );
-
-	// notification when any meta item is retrieved
-	if ( has_filter( $filter = 'wpsc_got_customer_meta' ) ) {
-		$meta_value = apply_filters( $filter,  $meta_value, $key, $id );
-	}
-
-	// notification when a specific meta item is retrieved
-	if ( has_filter( $filter = 'wpsc_got_customer_meta_' . $key  ) ) {
-		$meta_value = apply_filters( $filter,  $meta_value, $key, $id );
-	}
-
-	return $meta_value;
+	return wpsc_get_visitor_meta( $id, $key, true );
 }
 
 /**
@@ -219,11 +183,6 @@ function wpsc_get_all_customer_meta( $id = false ) {
 
 		$short_key = str_replace( $key_pattern, '', $key );
 		$return[$short_key] = $value[0];
-
-		// notification when a specific meta item has changed
-		if ( has_filter( $filter = 'wpsc_got_customer_meta_' . $short_key  ) ) {
-			$return[$short_key] = apply_filters( $filter,  $return[$short_key], $short_key, $id );
-		}
 	}
 
 	return $return;
@@ -246,9 +205,7 @@ function wpsc_get_customer_cart( $id = false  ) {
 		$id = wpsc_get_current_customer_id();
 	}
 
-	$cart = wpsc_get_visitor_cart( $id );
-
-	return $cart;
+	return wpsc_get_visitor_cart( $id );
 }
 
 
