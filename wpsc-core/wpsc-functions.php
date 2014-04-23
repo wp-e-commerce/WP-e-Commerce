@@ -184,7 +184,7 @@ function _wpsc_javascript_localizations( $localizations = false ) {
 			'spinner'                 => esc_url( wpsc_get_ajax_spinner() ),
 			'no_quotes'               => __( 'It appears that there are no shipping quotes for the shipping information provided.  Please check the information and try again.', 'wpsc' ),
 			'ajax_get_cart_error'     => __( 'There was a problem getting the current contents of the shopping cart.', 'wpsc' ),
-			'slide_to_shipping_error' => true
+			'slide_to_shipping_error' => true,
 		);
 
 		$localizations['base_url']  	 	       = site_url();
@@ -195,6 +195,17 @@ function _wpsc_javascript_localizations( $localizations = false ) {
 
 		$localizations['msg_shipping_need_recalc'] = __( 'Please click the <em>Calculate</em> button to refresh your shipping quotes, as your shipping information has been modified.', 'wpsc' );
 
+		/**
+		 * Change message theme presents to use when shipping quotes need to be recalcaulted.
+		 *
+		 * Useful in cases such as when a theme does not incldue the WPeC shipping calculator.
+		 *
+		 * @since 3.8.14
+		 *
+		 * @param string $msg Text of message to display when checkout page detects that the shipping quotes need to be recalculated.
+		 *
+		 */
+		$localizations['msg_shipping_need_recalc'] = apply_filters( 'wpsc_msg_shipping_need_recalc', $localizations['msg_shipping_need_recalc'] );
 	}
 
 	return apply_filters( '_wpsc_javascript_localizations', $localizations );
