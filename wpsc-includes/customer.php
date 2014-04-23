@@ -17,6 +17,12 @@ if ( ! defined( 'WPSC_BOT_VISITOR_ID' ) ) {
  * @return mixed        User ID (if logged in) or customer cookie ID
  */
 function wpsc_get_current_customer_id( $visitor_id_to_set = false ) {
+	$id = apply_filters( 'wpsc_get_current_customer_id', null );
+
+	if ( ! empty( $id ) ) {
+		return $id;
+	}
+
 	// once we determine the current customer id it will remain in effect for
 	// the remainder of the current request.  This helps performance, but also
 	// makes it possible to manipulate the visitor database and cookie without
