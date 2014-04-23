@@ -5,7 +5,7 @@
  * Before your read too much further , if you want to do things with countries, regions or currencies
  * you want to take a look at these classes:
  *
- *     WPSC_Countires  - found in file wpsc-countries.class.php
+ *     WPSC_Countries  - found in file wpsc-countries.class.php
  *     WPSC_Regions - found in file wpsc-regions.class.php
  *     WPSC_Currency - found in file wpsc-currency.class.php
  *
@@ -842,14 +842,8 @@ class WPSC_Countries {
 	}
 
 
-
-
-
-
-
-
 	/**
-	 * creates the data maps used internally by this class to service requests
+	 * Creates the data maps used internally by this class to service requests
 	 *
 	 * @access private
 	 * @since 3.8.14
@@ -1248,7 +1242,7 @@ class WPSC_Countries {
 
 
 	/**
-	 * the identifier for the tranient used to cache country data
+	 * the identifier for the transient used to cache country data
 	 *
 	 * @access private
 	 *
@@ -1272,14 +1266,13 @@ class WPSC_Countries {
 	private static function confirmed_initialization() {
 
 		if ( ! self::$_initialized ) {
-			$countries = new WPSC_Countries();
+			$countries          = new WPSC_Countries();
 			self::$_initialized = (bool) $countries;
 		}
 
 		return self::$_initialized;
 	}
 }
-
 
 add_action( 'init', '_wpsc_make_countries_data_available' );
 

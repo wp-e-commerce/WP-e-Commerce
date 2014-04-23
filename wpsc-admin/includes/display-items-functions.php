@@ -7,6 +7,7 @@
  */
 
 global $wpsc_product_defaults;
+
 $wpsc_product_defaults = array(
 	'id' => '0',
 	'name' => '',
@@ -55,7 +56,6 @@ $wpsc_product_defaults = array(
 		),
 	),
 );
-add_action( 'admin_head', 'wpsc_css_header' );
 
 function wpsc_redirect_variation_update( $location, $post_id ) {
 	global $post;
@@ -67,78 +67,75 @@ function wpsc_redirect_variation_update( $location, $post_id ) {
 }
 
 add_filter( 'redirect_post_location', 'wpsc_redirect_variation_update', 10, 2 );
-function wpsc_css_header() {
-	global $post_type;
-?>
-	<style type="text/css">
-	<?php if ( isset( $_GET['post_type'] ) && ( 'wpsc-product' == $_GET['post_type'] ) || ( !empty( $post_type ) && 'wpsc-product' == $post_type ) ) : ?>
-	#icon-edit { background:transparent url('<?php echo WPSC_CORE_IMAGES_URL.'/icon32.png';?>') no-repeat; }
-	<?php endif; ?>
-        </style>
-        <?php
-}
 
 function wpsc_price_control_forms() {
 	global $post, $wpdb, $variations_processor, $wpsc_product_defaults;
-	$product_data = get_post_custom( $post->ID );
+
+	$product_data         = get_post_custom( $post->ID );
 	$product_data['meta'] = maybe_unserialize( $product_data );
 
-	foreach ( $product_data['meta'] as $meta_key => $meta_value )
+	foreach ( $product_data['meta'] as $meta_key => $meta_value ) {
 		$product_data['meta'][$meta_key] = $meta_value[0];
-
-
+	}
 
 	$product_meta = array();
-	if ( !empty( $product_data["_wpsc_product_metadata"] ) )
-		$product_meta = maybe_unserialize( $product_data["_wpsc_product_metadata"][0] );
 
-	if ( isset( $product_data['meta']['_wpsc_currency'] ) )
+	if ( ! empty( $product_data['_wpsc_product_metadata'] ) ) {
+		$product_meta = maybe_unserialize( $product_data['_wpsc_product_metadata'][0] );
+	}
+
+	if ( isset( $product_data['meta']['_wpsc_currency'] ) ) {
 		$product_alt_currency = maybe_unserialize( $product_data['meta']['_wpsc_currency'] );
+	}
 
-	if ( !isset( $product_data['meta']['_wpsc_table_rate_price'] ) ) {
+	if ( ! isset( $product_data['meta']['_wpsc_table_rate_price'] ) ) {
 		$product_data['meta']['_wpsc_table_rate_price'] = $wpsc_product_defaults['meta']['table_rate_price'];
 	}
+
 	if ( isset( $product_meta['_wpsc_table_rate_price'] ) ) {
-		$product_meta['table_rate_price']['state'] = 1;
-		$product_meta['table_rate_price'] += $product_meta['_wpsc_table_rate_price'];
+		$product_meta['table_rate_price']['state']      = 1;
+		$product_meta['table_rate_price']              += $product_meta['_wpsc_table_rate_price'];
 		$product_data['meta']['_wpsc_table_rate_price'] = $product_meta['_wpsc_table_rate_price'];
 	}
 
 
-	if ( !isset( $product_data['meta']['_wpsc_is_donation'] ) )
+	if ( ! isset( $product_data['meta']['_wpsc_is_donation'] ) ) {
 		$product_data['meta']['_wpsc_is_donation'] = $wpsc_product_defaults['donation'];
+	}
 
-	if ( !isset( $product_meta['table_rate_price']['state'] ) )
+	if ( ! isset( $product_meta['table_rate_price']['state'] ) ) {
 		$product_meta['table_rate_price']['state'] = null;
+	}
 
-	if ( !isset( $product_meta['table_rate_price']['quantity'] ) )
+	if ( ! isset( $product_meta['table_rate_price']['quantity'] ) ) {
 		$product_meta['table_rate_price']['quantity'] = $wpsc_product_defaults['meta']['table_rate_price']['quantity'][0];
+	}
 
-	if ( !isset( $product_data['meta']['_wpsc_price'] ) )
+	if ( ! isset( $product_data['meta']['_wpsc_price'] ) ) {
 		$product_data['meta']['_wpsc_price'] = $wpsc_product_defaults['price'];
+	}
 
-	if ( !isset( $product_data['special'] ) )
+	if ( ! isset( $product_data['special'] ) ) {
 		$product_data['special'] = $wpsc_product_defaults['special'];
+	}
 
-	if ( !isset( $product_data['meta']['_wpsc_special_price'] ) )
+	if ( ! isset( $product_data['meta']['_wpsc_special_price'] ) ) {
 		$product_data['meta']['_wpsc_special_price'] = $wpsc_product_defaults['special_price'];
+	}
 
-	$product_data['meta']['_wpsc_special_price'] = wpsc_format_number(
-		$product_data['meta']['_wpsc_special_price']
-	);
+	$product_data['meta']['_wpsc_special_price'] = wpsc_format_number( $product_data['meta']['_wpsc_special_price'] );
 
-	if ( ! isset( $product_data['meta']['_wpsc_price'] ) )
+	if ( ! isset( $product_data['meta']['_wpsc_price'] ) ) {
 		$product_data['meta']['_wpsc_price'] = 0;
+	}
 
-	$product_data['meta']['_wpsc_price'] = wpsc_format_number(
-		$product_data['meta']['_wpsc_price']
-	);
+	$product_data['meta']['_wpsc_price'] = wpsc_format_number( $product_data['meta']['_wpsc_price'] );
 
 	$currency_data = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_CURRENCY_LIST . "` ORDER BY `country` ASC", ARRAY_A );
 
 	/* Get country name and symbol */
 	$currency_type = get_option( 'currency_type' );
-	$country = new WPSC_Country( $currency_type );
+	$country       = new WPSC_Country( $currency_type );
 
 	$ct_code = $country->get_currency_code();	// Country name
 	$ct_symb = $country->get_currency_symbol();	// Country symbol
@@ -152,7 +149,7 @@ function wpsc_price_control_forms() {
 	$currency_delete_text  = $wp_38 ? '' : 'x';
 ?>
 		<em id="wpsc_product_price_metabox_live_title" class="wpsc_metabox_live_title">
-			<p>&nbsp;<?php esc_html_e($ct_symb); ?><span><?php esc_html_e($sale_price) ?></span></p>
+			<p>&nbsp;<?php echo esc_html( $ct_symb ); ?><span><?php echo esc_html( $sale_price ); ?></span></p>
 			<del><?php esc_html_e($ct_symb); ?><span><?php esc_html_e($price) ?></span></del>
 		</em>
         <input type="hidden" id="parent_post" name="parent_post" value="<?php echo $post->post_parent; ?>" />
@@ -163,28 +160,26 @@ function wpsc_price_control_forms() {
     	<?php if ( wpsc_product_has_children( $post->ID ) ) : ?>
     		<?php $price = wpsc_product_variation_price_from( $post->ID ); ?>
 			<p style="margin-top: 6px;"><?php echo sprintf( __( 'This product has variations. To edit the price, please use the <a href="%s">Variation Controls</a>.' , 'wpsc'  ), '#wpsc_product_variation_forms' ); ?></p>
-			<p><?php printf( __( 'Price: %s and above.' , 'wpsc' ) , $price ); ?></p>
+			<p><?php printf( __( 'Price: %s and above.' , 'wpsc' ), $price ); ?></p>
 		<?php else: ?>
 
     	<div class='wpsc_floatleft' style="width:85px;">
-    		<label><?php esc_html_e( 'Price '. $ct_code .' ' . $ct_symb, 'wpsc' ); ?></label>
+    		<label><?php printf( _x( 'Price %s %s', 'admin price input label', 'wpsc' ), $ct_code, $ct_symb ); ?></label>
 			<input id = "wpsc_price"
 					type="text"
 					name="meta[_wpsc_price]"
 					style="width:80px;"
-					value="<?php echo esc_attr( $price );  ?>"
-					onChange="wpsc_update_price_live_preview()" />
+					value="<?php echo esc_attr( $price );  ?>" />
 		</div>
 
 		<div class='wpsc_floatleft'
 				style='display:<?php if ( ( $product_data['special'] == 1 ) ? 'block' : 'none'
 	); ?>; width:85px; margin-left:30px;'>
-			<label for='add_form_special'><?php esc_html_e( 'Sale Price '.$ct_code.' '.$ct_symb, 'wpsc' ); ?></label>
+			<label for='add_form_special'><?php printf( _x( 'Sale Price %s %s', 'admin sales price input label', 'wpsc' ), $ct_code, $ct_symb ); ?></label>
 			<input id = "wpsc_sale_price"
 					style="width:80px;"
 					value="<?php echo esc_attr( $sale_price ); ?>"
-					name='meta[_wpsc_special_price]'
-					onChange="wpsc_update_price_live_preview()" />
+					name='meta[_wpsc_special_price]' />
 		</div>
 
 		<div class="wpsc-currency-layers">
@@ -292,32 +287,39 @@ function wpsc_price_control_forms() {
 function wpsc_stock_control_forms() {
 	global $post, $wpdb, $variations_processor, $wpsc_product_defaults;
 
-	$product_data = get_post_custom( $post->ID );
+	$product_data         = get_post_custom( $post->ID );
 	$product_data['meta'] = maybe_unserialize( $product_data );
 
-	foreach ( $product_data['meta'] as $meta_key => $meta_value )
+	foreach ( $product_data['meta'] as $meta_key => $meta_value ) {
 		$product_data['meta'][$meta_key] = $meta_value[0];
+	}
 
 	$product_meta = array();
-	if ( !empty( $product_data["_wpsc_product_metadata"] ) )
+
+	if ( ! empty( $product_data['_wpsc_product_metadata'] ) ) {
 		$product_meta = maybe_unserialize( $product_data["_wpsc_product_metadata"][0] );
+	}
 
 	// this is to make sure after upgrading to 3.8.9, products will have
 	// "notify_when_none_left" enabled by default if "unpublish_when_none_left"
 	// is enabled.
-	if ( !isset( $product_meta['notify_when_none_left'] ) ) {
+	if ( ! isset( $product_meta['notify_when_none_left'] ) ) {
 		$product_meta['notify_when_none_left'] = 0;
-		if ( ! empty( $product_meta['unpublish_when_none_left'] ) )
+
+		if ( ! empty( $product_meta['unpublish_when_none_left'] ) ) {
 			$product_meta['notify_when_none_left'] = 1;
+		}
 	}
 
-	if ( !isset( $product_meta['unpublish_when_none_left'] ) )
+	if ( ! isset( $product_meta['unpublish_when_none_left'] ) ) {
 		$product_meta['unpublish_when_none_left'] = '';
+	}
 
 	// Display live title if stock is set
-	if ( isset( $product_data['meta']['_wpsc_stock'] ) && is_numeric( $product_data['meta']['_wpsc_stock'] )){
+	if ( isset( $product_data['meta']['_wpsc_stock'] ) && is_numeric( $product_data['meta']['_wpsc_stock'] ) ) {
+
 		$live_title = '<em id="wpsc_product_stock_metabox_live_title" class="wpsc_metabox_live_title">';
-			$live_title .= '<p><span>'.$product_data['meta']['_wpsc_stock'].'</span> in stock</p>';
+		$live_title .= sprintf( '<p><span>%d</span> %s</p>', wpsc_format_number( $product_data['meta']['_wpsc_stock'], 0 ), _x( 'left in stock', 'live preview of stock remaining in admin', 'wpsc' ) );
 		$live_title .= '</em>';
 
 		echo $live_title;
@@ -481,8 +483,10 @@ function wpsc_product_variation_forms() {
 }
 
 function _wpsc_get_product_variation_form_url( $id = false ) {
-	if ( ! $id )
+	if ( ! $id ) {
 		$id = get_the_ID();
+	}
+
 	return admin_url( 'admin-ajax.php?action=wpsc_product_variations_table&product_id=' . $id . '&_wpnonce=' . wp_create_nonce( 'wpsc_product_variations_table' ) );
 }
 
@@ -748,11 +752,14 @@ function wpsc_product_advanced_forms() {
 		ORDER BY
 			LOWER(meta_key)", ARRAY_A
 	);
-	if( !isset( $product_meta['engraved'] ) )
-		$product_meta['engraved'] = '';
 
-	if( !isset( $product_meta['can_have_uploaded_image'] ) )
+	if ( ! isset( $product_meta['engraved'] ) ) {
+		$product_meta['engraved'] = '';
+	}
+
+	if ( ! isset( $product_meta['can_have_uploaded_image'] ) ) {
 		$product_meta['can_have_uploaded_image'] = '';
+	}
 
 	$output = '<table id="wpsc_product_meta_table" class="wp-list-table widefat posts">';
 		$output .= '<thead>';
@@ -817,8 +824,8 @@ function wpsc_product_external_link_forms() {
 	$external_link_text_value   = isset( $product_meta['external_link_text'] ) ? $product_meta['external_link_text'] : '';
 	$external_link_target_value = isset( $product_meta['external_link_target'] ) ? $product_meta['external_link_target'] : '';
 	$external_link_target_value_selected[$external_link_target_value] = ' selected="selected"';
-	if ( !isset( $external_link_target_value_selected['_self'] ) ) $external_link_target_value_selected['_self'] = '';
-	if ( !isset( $external_link_target_value_selected['_blank'] ) ) $external_link_target_value_selected['_blank'] = '';
+	if ( ! isset( $external_link_target_value_selected['_self'] ) ) $external_link_target_value_selected['_self'] = '';
+	if ( ! isset( $external_link_target_value_selected['_blank'] ) ) $external_link_target_value_selected['_blank'] = '';
 
 ?>
         <table class="form-table" style="width: 100%;" cellspacing="2" cellpadding="5">
@@ -829,7 +836,7 @@ function wpsc_product_external_link_forms() {
                 </tr>
                 <tr class="form-field">
                     <th valign="top" scope="row"><label for="external_link_text"><?php esc_html_e( 'Label', 'wpsc' ); ?></label></th>
-                    <td><input type="text" name="meta[_wpsc_product_metadata][external_link_text]" id="external_link_text" value="<?php esc_attr_e( $external_link_text_value ); ?>" size="50" style="width: 95%" placeholder="Buy Now"></td>
+                    <td><input type="text" name="meta[_wpsc_product_metadata][external_link_text]" id="external_link_text" value="<?php esc_attr_e( $external_link_text_value ); ?>" size="50" style="width: 95%" placeholder="<?php _e( 'Buy Now', 'wpsc' ); ?>"></td>
                 </tr>
                 <tr class="form-field">
                      <th valign="top" scope="row"><label for="external_link_target"><?php esc_html_e( 'Target', 'wpsc' ); ?></label></th>
@@ -852,11 +859,18 @@ function wpsc_product_external_link_forms() {
 function wpsc_additional_desc() {
 ?>
     <textarea name='additional_description' id='additional_description' cols='40' rows='5' ><?php echo esc_textarea( get_post_field( 'post_excerpt', get_the_ID() ) ); ?></textarea>
-    <em>Short Descriptions are optional hand-crafted summaries of your content that can be used in your theme.</em>
+    <em><?php _e( 'Short Descriptions are optional hand-crafted summaries of your content that can be used in your theme.', 'wpsc' ); ?></em>
 <?php
 
 }
 
+/**
+ * We really need to either bake this functionality in for 3.9.0 or rip it out into Gold Cart or something else.
+ * So not awesome to have this exposed and unusable.
+ *
+ * @param  WP_Post $post Product
+ * @return void
+ */
 function wpsc_product_gallery( $post ) {
 	$upload_iframe_src = esc_url( get_upload_iframe_src( 'image', $post->ID ) );
 
@@ -876,8 +890,8 @@ function wpsc_product_gallery( $post ) {
 	$output .= '</div>';
 
 	$output .= '<p class="hide-if-no-js">';
-		$output .= '<a class="button button-small thickbox" title="'.esc_attr('Manage Product Image Gallery...', 'wpsc').'" href="'.$upload_iframe_src.'" id="wpsc-manage-product-gallery">';
-			$output .= esc_html('Manage Product Image Gallery...', 'wpsc');
+		$output .= '<a class="button button-small thickbox" title="' . esc_attr__( 'Manage Product Image Gallery...', 'wpsc' ).'" href="' . $upload_iframe_src . '" id="wpsc-manage-product-gallery">';
+			$output .= esc_html__( 'Manage Product Image Gallery...', 'wpsc' );
 		$output .= '</a>';
 	$output .= '</p>';
 
@@ -921,14 +935,17 @@ function wpsc_product_download_forms() {
 					'post_status' => 'all'
 				);
 
-			$preview_files = (array)get_posts( $args );
+			$preview_files = (array) get_posts( $args );
 
-			foreach ($preview_files as $preview)
+			foreach ( $preview_files as $preview ) {
 				echo $preview->post_title . '<br />';
+			}
+
 			?>
             <br />
         <?php
 	}
+
 	$output = apply_filters( 'wpsc_downloads_metabox', $output );
 }
 
@@ -961,9 +978,9 @@ function wpsc_product_delivery_forms(){
 
 	<div id="wpsc_product_delivery_forms" class="categorydiv wpsc-categorydiv">
 		<ul id="wpsc_product_delivery_tabs" class="category-tabs">
-			<li class="tabs"><a href="#wpsc_product_delivery-shipping">Shipping</a></li>
-			<li><a href="#wpsc_product_delivery-download">Download</a></li>
-			<li><a href="#wpsc_product_delivery-external_link">External Link</a></li>
+			<li class="tabs"><a href="#wpsc_product_delivery-shipping"><?php _e( 'Shipping', 'wpsc' ); ?></a></li>
+			<li><a href="#wpsc_product_delivery-download"><?php _e( 'Download', 'wpsc' ); ?></a></li>
+			<li><a href="#wpsc_product_delivery-external_link"><?php _e( 'External Link', 'wpsc' ); ?></a></li>
 		</ul>
 
 		<div id="wpsc_product_delivery-shipping" class="tabs-panel" style="display:block;">
@@ -971,7 +988,7 @@ function wpsc_product_delivery_forms(){
 				if ( ! $has_variations ) {
 					wpsc_product_shipping_forms();
 				} else {
- 					echo '<p>' . sprintf( __( 'This product has variations. To edit the shipping, please use the <a href="%s">Variation Controls</a>.' , 'wpsc'  ), '#wpsc_product_variation_forms' ) . '</p>';
+ 					echo '<p>' . sprintf( __( 'This product has variations. To edit the shipping, please use the <a href="%s">Variation Controls</a>.', 'wpsc'  ), '#wpsc_product_variation_forms' ) . '</p>';
  				}
 			?>
 		</div>
@@ -995,15 +1012,14 @@ function wpsc_product_details_forms(){
 
 	<div id="wpsc_product_details_forms" class="categorydiv wpsc-categorydiv">
 		<ul id="wpsc_product_details_tabs"  class="category-tabs">
-			<li class="tabs"><a href="#wpsc_product_details-image">Image Gallery</a></li>
-			<li><a href="#wpsc_product_details-desc">Short Description</a></li>
-			<li><a href="#wpsc_product_details-personalization">Personalization</a></li>
-			<li><a href="#wpsc_product_details-meta">Metadata</a></li>
+			<li class="tabs"><a href="#wpsc_product_details-image"><?php _e( 'Image Gallery', 'wpsc' ); ?></a></li>
+			<li><a href="#wpsc_product_details-desc"><?php _e( 'Short Description', 'wpsc' ); ?></a></li>
+			<li><a href="#wpsc_product_details-personalization"><?php _e( 'Personalization', 'wpsc' ); ?></a></li>
+			<li><a href="#wpsc_product_details-meta"><?php _e( 'Metadata', 'wpsc' ); ?></a></li>
 		</ul>
 
 		<div id="wpsc_product_details-image" class="tabs-panel" style="display: block;">
-			<?php global $post; ?>
-			<?php wpsc_product_gallery($post); ?>
+			<?php wpsc_product_gallery( get_post() ); ?>
 		</div>
 
 		<div id="wpsc_product_details-desc" class="tabs-panel" style="display: none;">
@@ -1157,14 +1173,18 @@ function wpsc_attachment_fields( $form_fields, $post ) {
 
 }
 function wpsc_save_attachment_fields( $post, $attachment ) {
-	if ( isset  ( $attachment['wpsc_custom_thumb_w'] ) )
+
+	if ( isset( $attachment['wpsc_custom_thumb_w'] ) ) {
 		update_post_meta( $post['ID'], '_wpsc_custom_thumb_w', $attachment['wpsc_custom_thumb_w'] );
+	}
 
-	if ( isset  ( $attachment['wpsc_custom_thumb_h'] ) )
+	if ( isset( $attachment['wpsc_custom_thumb_h'] ) ) {
 		update_post_meta( $post['ID'], '_wpsc_custom_thumb_h', $attachment['wpsc_custom_thumb_h'] );
+	}
 
-	if ( isset  ( $attachment['wpsc_image_size'] ) )
+	if ( isset( $attachment['wpsc_image_size'] ) ) {
 		update_post_meta( $post['ID'], '_wpsc_selected_image_size', $attachment['wpsc_image_size'] );
+	}
 
 	return $post;
 }

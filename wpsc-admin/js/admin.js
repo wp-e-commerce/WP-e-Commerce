@@ -155,7 +155,10 @@
 
 }(jQuery));
 
-jQuery(document).ready(function(){
+jQuery(document).ready(function($){
+	$( '#wpsc_price' ).on( 'change', wpsc_update_price_live_preview );
+	$( '#wpsc_sale_price' ).on( 'change', wpsc_update_price_live_preview );
+
 	jQuery('td.hidden_alerts img').each(function(){
 		var t = jQuery(this);
 		t.appendTo(t.parents('tr').find('td.column-title strong'));

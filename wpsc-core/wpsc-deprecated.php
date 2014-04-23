@@ -2033,3 +2033,7 @@ function wpsc_google_shipping_settings() {
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'google_shipping_settings') ) {
 	add_action( 'admin_init', 'wpsc_google_shipping_settings' );
 }
+
+function wpsc_css_header() {
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.14' );
+}
