@@ -10,8 +10,9 @@
  * @since 3.8
  */
 
-if ( is_admin() )
+if ( is_admin() ) {
 	add_filter( 'term_name', 'wpsc_term_list_levels', 10, 2 );
+}
 
 /**
  * When doing variation and product category drag&drop sort, we want to restrict
@@ -167,7 +168,7 @@ function wpsc_checkout_unique_names() {
  *
  * @return array  local variables to add to both admin and front end WPEC javascript
  */
-function _wpsc_javascript_localizations( $localizations = false ) {
+function wpsc_javascript_localizations( $localizations = false ) {
 
 	if ( ! is_array( $localizations ) ) {
 		$localizations = array();
@@ -184,7 +185,7 @@ function _wpsc_javascript_localizations( $localizations = false ) {
 			'spinner'                 => esc_url( wpsc_get_ajax_spinner() ),
 			'no_quotes'               => __( 'It appears that there are no shipping quotes for the shipping information provided.  Please check the information and try again.', 'wpsc' ),
 			'ajax_get_cart_error'     => __( 'There was a problem getting the current contents of the shopping cart.', 'wpsc' ),
-			'slide_to_shipping_error' => true
+			'slide_to_shipping_error' => true,
 		);
 
 		$localizations['base_url']  	 	       = site_url();
@@ -192,12 +193,20 @@ function _wpsc_javascript_localizations( $localizations = false ) {
 		$localizations['WPSC_IMAGE_URL']           = WPSC_IMAGE_URL;
 		$localizations['WPSC_CORE_IMAGES_URL']     = WPSC_CORE_IMAGES_URL;
 		$localizations['fileThickboxLoadingImage'] = WPSC_CORE_IMAGES_URL . '/loadingAnimation.gif';
-
 		$localizations['msg_shipping_need_recalc'] = __( 'Please click the <em>Calculate</em> button to refresh your shipping quotes, as your shipping information has been modified.', 'wpsc' );
-
 	}
 
-	return apply_filters( '_wpsc_javascript_localizations', $localizations );
+	/**
+	 * a filter for WPeC components, plugins and themes to alter or add to what is localized into the WPeC javascript.
+	 *
+	 * @since 3.8.14
+	 *
+	 * @access public
+	 *
+	 * @param array $localizations array of localizations being sent to the javascript
+	 *
+	 */
+	return apply_filters( 'wpsc_javascript_localizations', $localizations );
 }
 
 /**
