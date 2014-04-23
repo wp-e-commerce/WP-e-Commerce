@@ -36,7 +36,7 @@ if ( ! get_option( 'wpsc_checkout_form_sets' ) ) {
 }
 
 // if we add and wpec admin javascript will add the localizations
-add_filter( '_wpsc_javascript_localizations', '_wpsc_admin_localizations', 1 );
+add_filter( 'wpsc_javascript_localizations', '_wpsc_admin_localizations', 1 );
 
 /**
  * wpsc_query_vars_product_list sets the ordering for the edit-products page list
@@ -686,7 +686,7 @@ function _wpsc_admin_localizations( $localizations ) {
 	$localizations['TXT_WPSC_IF_WEIGHT_IS'] = '"' . esc_js( __( 'If weight is ', 'wpsc' ) ) . '"';
 
 	// we only want to add these localizations once, it should happen on the first admin script load
-	remove_filter( '_wpsc_javascript_localizations', '_wpsc_admin_localizations', 1 );
+	remove_filter( 'wpsc_javascript_localizations', '_wpsc_admin_localizations', 1 );
 
 	return $localizations;
 }
@@ -699,7 +699,7 @@ function _wpsc_enqueue_wp_e_commerce_admin( ) {
 	if ( ! $already_enqueued ) {
 		$version_identifier = WPSC_VERSION . '.' . WPSC_MINOR_VERSION;
 		wp_enqueue_script( 'wp-e-commerce-admin-js',  WPSC_URL . '/wpsc-admin/js/wp-e-commerce-admin.js', false, false, $version_identifier );
-		wp_localize_script( 'wp-e-commerce-admin-js', 'wpsc_admin_vars', _wpsc_javascript_localizations() );
+		wp_localize_script( 'wp-e-commerce-admin-js', 'wpsc_admin_vars', wpsc_javascript_localizations() );
 		$already_enqueued = true;
 	}
 }
@@ -1128,7 +1128,7 @@ add_filter( 'favorite_actions', 'wpsc_fav_action' );
 function wpsc_print_admin_scripts() {
 	$version_identifier = WPSC_VERSION . '.' . WPSC_MINOR_VERSION;
 	wp_enqueue_script( 'wp-e-commerce-admin', WPSC_CORE_JS_URL . '/wp-e-commerce.js', array( 'jquery' ), $version_identifier );
-	wp_localize_script( 'wp-e-commerce-admin', 'wpsc_ajax', _wpsc_javascript_localizations() );
+	wp_localize_script( 'wp-e-commerce-admin', 'wpsc_ajax', wpsc_javascript_localizations() );
 }
 
 /**

@@ -1,7 +1,7 @@
 <?php
 
 // make the countries and regions information available to our javascript
-add_filter( '_wpsc_javascript_localizations', '_wpsc_countries_localizations', 10, 1 );
+add_filter( 'wpsc_javascript_localizations', '_wpsc_countries_localizations', 10, 1 );
 
 /**
  * add countries data to the wpec javascript localizations
@@ -68,7 +68,7 @@ function _wpsc_localize_checkout_item_name_to_from_id( $localizations ) {
 	return $localizations;
 }
 
-add_filter( '_wpsc_javascript_localizations', '_wpsc_localize_checkout_item_name_to_from_id', 10, 1 );
+add_filter( 'wpsc_javascript_localizations', '_wpsc_localize_checkout_item_name_to_from_id', 10, 1 );
 
 
 /**

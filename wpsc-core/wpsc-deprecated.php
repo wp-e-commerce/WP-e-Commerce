@@ -1824,7 +1824,7 @@ function wpsc_empty_google_logs(){
  * @deprecated since 3.8.13.4
  */
 function wpsc_user_dynamic_js() {
-	_wpsc_deprecated_function( __FUNCTION__, '3.8.14', '_wpsc_javascript_localizations' );
+	_wpsc_deprecated_function( __FUNCTION__, '3.8.14', 'wpsc_javascript_localizations' );
 }
 
 /*

@@ -167,7 +167,7 @@ function wpsc_checkout_unique_names() {
  *
  * @return array  local variables to add to both admin and front end WPEC javascript
  */
-function _wpsc_javascript_localizations( $localizations = false ) {
+function wpsc_javascript_localizations( $localizations = false ) {
 
 	if ( ! is_array( $localizations ) ) {
 		$localizations = array();
@@ -195,20 +195,20 @@ function _wpsc_javascript_localizations( $localizations = false ) {
 
 		$localizations['msg_shipping_need_recalc'] = __( 'Please click the <em>Calculate</em> button to refresh your shipping quotes, as your shipping information has been modified.', 'wpsc' );
 
-		/**
-		 * Change message theme presents to use when shipping quotes need to be recalcaulted.
-		 *
-		 * Useful in cases such as when a theme does not incldue the WPeC shipping calculator.
-		 *
-		 * @since 3.8.14
-		 *
-		 * @param string $msg Text of message to display when checkout page detects that the shipping quotes need to be recalculated.
-		 *
-		 */
 		$localizations['msg_shipping_need_recalc'] = apply_filters( 'wpsc_msg_shipping_need_recalc', $localizations['msg_shipping_need_recalc'] );
 	}
 
-	return apply_filters( '_wpsc_javascript_localizations', $localizations );
+	/**
+	 * a filter for WPeC components, plugins and themes to alter or add to what is localized into the WPeC javascript.
+	 *
+	 * @since 3.8.14
+	 *
+	 * @access public
+	 *
+	 * @param array $localizations array of localizations being sent to the javascript
+	 *
+	 */
+	return apply_filters( 'wpsc_javascript_localizations', $localizations );
 }
 
 /**
