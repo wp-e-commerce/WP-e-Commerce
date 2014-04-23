@@ -99,6 +99,7 @@ final class WPSC_Data_Map {
 		}
 
 		$this->_map_data = null;
+		$this->_dirty    = false;
 	}
 
 	/**
@@ -216,10 +217,15 @@ final class WPSC_Data_Map {
 
 			// if we still don't have a valid map and there is a constructor callback use it
 			if ( ! is_array( $this->_map_data ) && ! empty( $this->_map_callback ) && is_callable( $this->_map_callback ) ) {
-				static $already_invoking_callback = false;
+				static $already_invoking_callback = array();
 
-				if ( ! $already_invoking_callback ) {
-					$already_invoking_callback = true;
+				// the callback could be a string or an array, we can keep track of
+				// who's call we are processing tp avoid a recursion problem, just in case!
+				$callback_unqiue_key = md5( json_encode( $this->_map_callback ) );
+
+				if ( ! in_array( $callback_unqiue_key, $already_invoking_callback ) ) {
+					$already_invoking_callback[] = $callback_unqiue_key;
+
 					$this->_map_data = array();
 
 					// callback has a single parameter, the data map
@@ -238,7 +244,7 @@ final class WPSC_Data_Map {
 					_wpsc_doing_it_wrong( $function , __( 'WPSC_Data_Map map creation callback is recursively calling itself.', 'wpsc' ), '3.8.14' );
 				}
 
-				$already_invoking_callback = false;
+				unset( $already_invoking_callback[$callback_unqiue_key] );
 
 			}
 
