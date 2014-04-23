@@ -136,7 +136,7 @@ function wpsc_get_customer_meta( $key = '', $id = false ) {
 		$id = wpsc_get_current_customer_id();
 	}
 
-	// TODO: a filter to override meta get from 3.8.9, maybe deprecate
+	// a filter to override meta get prior to retrieving the value
 	$meta_value = apply_filters( 'wpsc_get_customer_meta', null, $key, $id );
 	if ( $meta_value ) {
 		return $meta_value;
