@@ -2202,7 +2202,6 @@ body.edit-tags-php img.wpsc_category_image {
 .wpsc_metabox_live_title {
 	position: absolute;
 	right: 30px;
-	top: -30px;
 }
 
 .wpsc_metabox_live_title > * {
@@ -2217,15 +2216,9 @@ body.edit-tags-php img.wpsc_category_image {
 
 #wpsc_product_delivery_metabox_live_title,
 #wpsc_product_details_metabox_live_title {
-	top: -42px;
 	left: 170px;
 	right: auto;
 }
-
-#wpsc_product_details_metabox_live_title {
-	top: -39px;
-}
-
 
 /**
  * Product Price Meta Box
@@ -2354,30 +2347,12 @@ a.wpsc_remove_meta {
 	width: 100%;
 }
 
-#wpsc_product_price_metabox_live_title {
-	top: -34px;
-}
-
-#wpsc_product_stock_metabox_live_title {
-	top: -33px;
-}
-
 
 /**
  * WordPress 3.8 Responsiveness
  */
 
 @media screen and ( max-width: 782px ) {
-
-
-	/**
-	 * Live Title Meta Box
-	 */
-	#wpsc_product_delivery_metabox_live_title,
-	#wpsc_product_details_metabox_live_title {
-		top: -64px;
-	}
-
 
 	/**
 	 * Override responsiveness in variations iframe
@@ -2459,20 +2434,6 @@ a.wpsc_remove_meta {
  * Pre WordPress 3.8 Compatibility
  */
 
-.branch-3-7 #wpsc_product_price_metabox_live_title,
-.branch-3-6 #wpsc_product_price_metabox_live_title {
-	top: -28px;
-}
-
-.branch-3-7 #wpsc_product_delivery_metabox_live_title,
-.branch-3-6 #wpsc_product_delivery_metabox_live_title {
-	top: -38px;
-}
-
-.branch-3-7 #wpsc_product_details_metabox_live_title,
-.branch-3-6 #wpsc_product_details_metabox_live_title {
-	top: -34px;
-}
 
 .branch-3-7.wpsc-product-variation-iframe #post-body,
 .branch-3-6.wpsc-product-variation-iframe #post-body {

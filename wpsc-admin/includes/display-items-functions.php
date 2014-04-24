@@ -314,9 +314,8 @@ function wpsc_stock_control_forms() {
 
 	// Display live title if stock is set
 	if ( isset( $product_data['meta']['_wpsc_stock'] ) && is_numeric( $product_data['meta']['_wpsc_stock'] ) ) {
-
 		$live_title = '<em id="wpsc_product_stock_metabox_live_title" class="wpsc_metabox_live_title">';
-		$live_title .= sprintf( '<p><span>%d</span> %s</p>', wpsc_format_number( $product_data['meta']['_wpsc_stock'], 0 ), _x( 'left in stock', 'live preview of stock remaining in admin', 'wpsc' ) );
+		$live_title .= sprintf( '<p><span>%s</span> %s</p>', wpsc_format_number( $product_data['meta']['_wpsc_stock'], 0 ), _x( 'left in stock', 'live preview of stock remaining in admin', 'wpsc' ) );
 		$live_title .= '</em>';
 
 		echo $live_title;
@@ -349,11 +348,10 @@ function wpsc_stock_control_forms() {
 					<?php else: ?>
 						<div style="margin-bottom:20px;">
 							<label for="stock_limit_quantity"><?php esc_html_e( 'Quantity in stock', 'wpsc' ); ?></label>
-							<input 	type='number' min="0" step="1" style="width:80px; margin-left:50px;"
+							<input type='number' min="0" step="1" style="width:80px; margin-left:50px;"
 									id="stock_limit_quantity" name='meta[_wpsc_stock]'
-									size='3' value='<?php echo $product_data['meta']['_wpsc_stock']; ?>'
-									class='stock_limit_quantity'
-									onChange="wpsc_push_v2t(this, '#wpsc_product_stock_metabox_live_title > p > span')" />
+									size='3' value='<?php echo absint( $product_data['meta']['_wpsc_stock'] ); ?>'
+									class='stock_limit_quantity' />
 						</div>
 
 						<?php

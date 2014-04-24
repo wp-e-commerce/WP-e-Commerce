@@ -164,6 +164,17 @@ jQuery(document).ready(function($){
 		t.appendTo(t.parents('tr').find('td.column-title strong'));
 	});
 
+
+	jQuery( '#stock_limit_quantity' ).change( function(){
+		wpsc_push_v2t( '#stock_limit_quantity', '#wpsc_product_stock_metabox_live_title > p > span' );
+	});
+
+	jQuery( 'em.wpsc_metabox_live_title' ).each( function( i, v ) {
+		var $em = jQuery( this ), $parent = $em.parents( 'div.postbox' ), $h3 = $parent.find( 'h3' );
+		$em.appendTo( $h3 );
+
+	});
+
 	/* 	Coupon edit functionality */
 	jQuery('.modify_coupon').hide();
 	jQuery('.wpsc_edit_coupon').click(function(){
@@ -458,18 +469,18 @@ function wpsc_remove_empty_meta(caller){
 // function for removing custom meta
 function wpsc_remove_custom_meta(caller, meta_id) {
 	var post_data = {
-			action    : 'remove_product_meta',
-			'meta_id' : meta_id,
-			nonce     : jQuery(caller).data('nonce')
-		};
+		action    : 'remove_product_meta',
+		'meta_id' : meta_id,
+		nonce     : jQuery(caller).data('nonce')
+	};
 
 	var response_handler = function(response) {
-			if (! response.is_successful) {
-				alert(response.error.messages.join("\n"));
-				return;
-			}
-			jQuery(caller).closest('tr').remove();
-		};
+		if (! response.is_successful) {
+			alert(response.error.messages.join("\n"));
+			return;
+		}
+		jQuery(caller).closest('tr').remove();
+	};
 
 	jQuery.wpsc_post(post_data, response_handler);
 	wpsc_update_product_details_metabox_live_title();
