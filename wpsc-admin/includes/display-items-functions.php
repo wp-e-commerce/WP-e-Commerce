@@ -714,7 +714,7 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 				<label for="wpsc-product-shipping-flatrate-local"><?php esc_html_e( 'Local Shipping Fee', 'wpsc' ); ?></label>
 				<span>
 					<?php echo esc_html( $ct_symb ); ?>
-					<input id="wpsc-product-shipping-flatrate-local" name="<?php echo esc_html( $field_name_prefix ); ?>[shipping][local]" value="<?php if ( ! $bulk ) echo $shipping['local']; ?>"  />
+					<input type="text" id="wpsc-product-shipping-flatrate-local" name="<?php echo esc_html( $field_name_prefix ); ?>[shipping][local]" value="<?php if ( ! $bulk ) echo $shipping['local']; ?>"  />
 				</span>
 			</p>
 			<p class="wpsc-form-field">
@@ -724,7 +724,7 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 				<label for="wpsc-product-shipping-flatrate-international"><?php esc_html_e( 'International Shipping Fee', 'wpsc' ); ?></label>
 				<span>
 					<?php echo esc_html( $ct_symb ); ?>
-					<input id="wpsc-product-shipping-flatrate-international" name="<?php echo esc_html( $field_name_prefix ); ?>[shipping][international]" value="<?php if ( ! $bulk ) echo $shipping['international']; ?>"  />
+					<input type="text" id="wpsc-product-shipping-flatrate-international" name="<?php echo esc_html( $field_name_prefix ); ?>[shipping][international]" value="<?php if ( ! $bulk ) echo $shipping['international']; ?>"  />
 				</span>
 			</p>
 		</div>
