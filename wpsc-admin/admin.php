@@ -593,6 +593,8 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 			/* translators             : These strings are dynamically inserted as a drop-down for the Coupon comparison conditions */
 			'coupons_compare_or'       => esc_html_x( 'OR'  , 'Coupon comparison logic', 'wpsc' ),
 			'coupons_compare_and'      => esc_html_x( 'AND' , 'Coupon comparison logic', 'wpsc' ),
+			'meta_downloads_plural'    => __( ' downloads', 'live preview for downloads metabox', 'wpsc' ),
+			'meta_downloads_singular'  => __( ' download' , 'live preview for downloads metabox', 'wpsc' ),
 		) );
 	}
 	if ( $pagehook == 'wpsc-product-variations-iframe' ) {

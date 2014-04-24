@@ -524,24 +524,30 @@ function wpsc_update_price_live_preview(){
 
 // Compose and update live title for shipping metabox
 function wpsc_update_delivery_metabox_live_title(){
-	if (jQuery('#wpsc_product_delivery_forms').length <= 0) return;
 
-	var weight             = jQuery('#wpsc-product-shipping-weight').val();
-	var weight_unit        = jQuery('#wpsc-product-shipping-weight-unit').val();
-	var length             = jQuery('#wpsc-product-shipping-length').val();
-	var width              = jQuery('#wpsc-product-shipping-width').val();
-	var height             = jQuery('#wpsc-product-shipping-height').val();
-	var dimensions_unit    = jQuery('#wpsc-product-shipping-dimensions-unit').val();
-	var number_of_download = jQuery('.wpsc_product_download_row').length;
+	if ( ! jQuery('#wpsc_product_delivery_forms').length )  {
+		return;
+	}
 
-	var vol = length * width * height;
-		vol = Math.round(vol * 100) / 100; // Round up to two decimal
+	var weight              = jQuery('#wpsc-product-shipping-weight').val();
+	var weight_unit         = jQuery('#wpsc-product-shipping-weight-unit').val();
+	var length              = jQuery('#wpsc-product-shipping-length').val();
+	var width               = jQuery('#wpsc-product-shipping-width').val();
+	var height              = jQuery('#wpsc-product-shipping-height').val();
+	var dimensions_unit     = jQuery('#wpsc-product-shipping-dimensions-unit').val();
+	var number_of_downloads = jQuery('.wpsc_product_download_row').length;
 
-	var output = weight + ' ' + weight_unit + ', ';
-		output += vol + ' ' + dimensions_unit + '<sup>3</sup>, ';
-		output += number_of_download + ' downloads';
+	var vol = Math.round( ( length * width * height ) * 100) / 100; // Round up to two decimal
+	var downloads_name = ( number_of_downloads !== 1 ) ? wpsc_adminL10n.meta_downloads_plural : wpsc_adminL10n.meta_downloads_singular;
+	var output = '';
 
-	jQuery('#wpsc_product_delivery_metabox_live_title>p').html(output);
+	if ( jQuery( '.wpsc-product-shipping-section' ).length ) {
+		output += weight + ' ' + weight_unit + ', ' + vol + ' ' + dimensions_unit + '<sup>3</sup>, ';
+	}
+
+	output += number_of_downloads + downloads_name;
+
+	jQuery( '#wpsc_product_delivery_metabox_live_title > p' ).html( output );
 }
 
 function wpsc_update_product_details_metabox_live_title(){
