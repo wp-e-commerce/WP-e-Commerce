@@ -661,6 +661,7 @@ function _wpsc_admin_localizations( $localizations ) {
 		$unique_names .= '<option value="' . $unique_name . '">' . $unique_name . '</option>';
 	}
 
+	$localizations['ajaxurl']           = admin_url( 'admin-ajax.php', 'relative' );
 	$localizations['hidden_boxes']      = '"' . esc_js( $hidden_boxes ) . '"';
 	$localizations['IS_WP27']           = '"' . esc_js( IS_WP27 ) . '"';
 	$localizations['TXT_WPSC_DELETE']   = '"' . esc_js( __( 'Delete', 'wpsc' ) ) . '"';

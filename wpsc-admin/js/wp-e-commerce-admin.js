@@ -19,30 +19,31 @@
  */
 
 if ( typeof wpsc_admin_vars !== undefined ) {
-	var base_url 						= wpsc_admin_vars['base_url'];
-	var WPSC_URL 						= wpsc_admin_vars['WPSC_URL'];
-	var WPSC_IMAGE_URL 					= wpsc_admin_vars['WPSC_IMAGE_URL'];
-	var fileThickboxLoadingImage 		= wpsc_admin_vars['fileThickboxLoadingImage'];
-	var hidden_boxes 					= wpsc_admin_vars['hidden_boxes'];
-	var IS_WP27 						= wpsc_admin_vars['IS_WP27'];
-	var TXT_WPSC_DELETE 				= wpsc_admin_vars['TXT_WPSC_DELETE'];
-	var TXT_WPSC_TEXT 					= wpsc_admin_vars['TXT_WPSC_TEXT'];
-	var TXT_WPSC_EMAIL 					= wpsc_admin_vars['TXT_WPSC_EMAIL'];
-	var TXT_WPSC_COUNTRY 				= wpsc_admin_vars['TXT_WPSC_COUNTRY'];
-	var TXT_WPSC_TEXTAREA 				= wpsc_admin_vars['TXT_WPSC_TEXTAREA'];
-	var TXT_WPSC_HEADING 				= wpsc_admin_vars['TXT_WPSC_HEADING'];
-	var TXT_WPSC_COUPON 				= wpsc_admin_vars['TXT_WPSC_COUPON'];
-	var HTML_FORM_FIELD_TYPES 			= wpsc_admin_vars['HTML_FORM_FIELD_TYPES'];
-	var HTML_FORM_FIELD_UNIQUE_NAMES 	= wpsc_admin_vars['HTML_FORM_FIELD_UNIQUE_NAMES'];
-	var TXT_WPSC_LABEL 					= wpsc_admin_vars['TXT_WPSC_LABEL'];
-	var TXT_WPSC_LABEL_DESC 			= wpsc_admin_vars['TXT_WPSC_LABEL_DESC'];
-	var TXT_WPSC_ITEM_NUMBER 			= wpsc_admin_vars['TXT_WPSC_ITEM_NUMBER'];
-	var TXT_WPSC_LIFE_NUMBER 			= wpsc_admin_vars['TXT_WPSC_LIFE_NUMBER'];
-	var TXT_WPSC_PRODUCT_CODE 			= wpsc_admin_vars['TXT_WPSC_PRODUCT_CODE'];
-	var TXT_WPSC_PDF 					= wpsc_admin_vars['TXT_WPSC_PDF'];
-	var TXT_WPSC_AND_ABOVE 				= wpsc_admin_vars['TXT_WPSC_AND_ABOVE'];
-	var TXT_WPSC_IF_PRICE_IS 			= wpsc_admin_vars['TXT_WPSC_IF_PRICE_IS'];
-	var TXT_WPSC_IF_WEIGHT_IS 			= wpsc_admin_vars['TXT_WPSC_IF_WEIGHT_IS'];
+	var ajaxurl                      = wpsc_admin_vars['ajaxurl'];
+	var base_url                     = wpsc_admin_vars['base_url'];
+	var WPSC_URL                     = wpsc_admin_vars['WPSC_URL'];
+	var WPSC_IMAGE_URL               = wpsc_admin_vars['WPSC_IMAGE_URL'];
+	var fileThickboxLoadingImage     = wpsc_admin_vars['fileThickboxLoadingImage'];
+    var hidden_boxes                 = wpsc_admin_vars['hidden_boxes'];
+    var IS_WP27                      = wpsc_admin_vars['IS_WP27'];
+    var TXT_WPSC_DELETE              = wpsc_admin_vars['TXT_WPSC_DELETE'];
+    var TXT_WPSC_TEXT                = wpsc_admin_vars['TXT_WPSC_TEXT'];
+    var TXT_WPSC_EMAIL               = wpsc_admin_vars['TXT_WPSC_EMAIL'];
+    var TXT_WPSC_COUNTRY             = wpsc_admin_vars['TXT_WPSC_COUNTRY'];
+    var TXT_WPSC_TEXTAREA            = wpsc_admin_vars['TXT_WPSC_TEXTAREA'];
+    var TXT_WPSC_HEADING             = wpsc_admin_vars['TXT_WPSC_HEADING'];
+    var TXT_WPSC_COUPON              = wpsc_admin_vars['TXT_WPSC_COUPON'];
+    var HTML_FORM_FIELD_TYPES        = wpsc_admin_vars['HTML_FORM_FIELD_TYPES'];
+    var HTML_FORM_FIELD_UNIQUE_NAMES = wpsc_admin_vars['HTML_FORM_FIELD_UNIQUE_NAMES'];
+    var TXT_WPSC_LABEL               = wpsc_admin_vars['TXT_WPSC_LABEL'];
+    var TXT_WPSC_LABEL_DESC          = wpsc_admin_vars['TXT_WPSC_LABEL_DESC'];
+    var TXT_WPSC_ITEM_NUMBER         = wpsc_admin_vars['TXT_WPSC_ITEM_NUMBER'];
+    var TXT_WPSC_LIFE_NUMBER         = wpsc_admin_vars['TXT_WPSC_LIFE_NUMBER'];
+    var TXT_WPSC_PRODUCT_CODE        = wpsc_admin_vars['TXT_WPSC_PRODUCT_CODE'];
+    var TXT_WPSC_PDF                 = wpsc_admin_vars['TXT_WPSC_PDF'];
+    var TXT_WPSC_AND_ABOVE           = wpsc_admin_vars['TXT_WPSC_AND_ABOVE'];
+    var TXT_WPSC_IF_PRICE_IS         = wpsc_admin_vars['TXT_WPSC_IF_PRICE_IS'];
+    var TXT_WPSC_IF_WEIGHT_IS        = wpsc_admin_vars['TXT_WPSC_IF_WEIGHT_IS'];
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
