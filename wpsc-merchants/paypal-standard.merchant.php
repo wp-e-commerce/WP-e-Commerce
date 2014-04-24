@@ -136,29 +136,33 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 				'notify_url' => $notify_url,
 			);
 		}
+		// Customer details
+		$paypal_vars += array(
+			'email'      => $this->cart_data['email_address'],
+			'first_name' => $this->cart_data['billing_address']['first_name'],
+			'last_name'  => $this->cart_data['billing_address']['last_name'],
+			'address1'   => $this->cart_data['billing_address']['address'],
+			'city'       => $this->cart_data['billing_address']['city'],
+			'state'      => $this->cart_data['billing_address']['state'],
+			'zip'        => $this->cart_data['billing_address']['post_code'],
+			'country'    => $this->cart_data['billing_address']['country'],
+		);
 
 		// Shipping
 		if ( (bool) get_option( 'paypal_ship' ) && ! $buy_now ) {
-			$paypal_vars += array(
-				'address_override' => '1',
-				'no_shipping' => '0',
-			);
 
-			// Customer details
 			$paypal_vars += array(
-				'email' => $this->cart_data['email_address'],
-				'first_name' => $this->cart_data['shipping_address']['first_name'],
-				'last_name' => $this->cart_data['shipping_address']['last_name'],
-				'address1' => $this->cart_data['shipping_address']['address'],
-				'city' => $this->cart_data['shipping_address']['city'],
-				'country' => $this->cart_data['shipping_address']['country'],
-				'zip' => $this->cart_data['shipping_address']['post_code'],
-				'state' => $this->cart_data['shipping_address']['state'],
+				'address_override' => get_option( 'address_override' ),
+				'no_shipping'      => '0',
 			);
 
 			if ( $paypal_vars['country'] == 'UK' ) {
 				$paypal_vars['country'] = 'GB';
 			}
+		} else {
+			$paypal_vars += array(
+				'no_shipping' => '1',
+			);
 		}
 
 		// Order settings to be sent to paypal
@@ -166,8 +170,9 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 			'invoice' => $this->cart_data['session_id']
 		);
 
-		if ( $buy_now )
+		if ( $buy_now ) {
 			$paypal_vars['custom'] = 'buy_now';
+		}
 
 		// Two cases:
 		// - We're dealing with a subscription
