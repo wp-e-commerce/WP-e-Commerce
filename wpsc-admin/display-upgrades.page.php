@@ -6,6 +6,35 @@ function wpsc_display_upgrades_page() {
 
 	<div class='wrap'>
 		<div class='metabox-holder wpsc_gold_side'>
+		
+			<h2><?php esc_html_e( 'Upgrades', 'wpsc' ); ?></h2>
+			<div>
+				<?php if ( defined( 'WPSC_GOLD_MODULE_PRESENT' ) && ( true == WPSC_GOLD_MODULE_PRESENT ) ) {?>
+				<p><?php esc_html_e( 'Enter your API Username and API Key below.', 'wpsc' ); ?></p>
+				<p><a href="http://docs.getshopped.org/category/extending-your-store/premium-plugins/gold-cart/"><?php esc_html_e( 'For more information visit our documentation page.', 'wpsc' ); ?></a></p>
+				<?php } ?>
+				<div class='metabox-holder'>
+					<form method='post' id='gold_cart_form' action=''>
+
+						<?php
+						if ( defined( 'WPSC_GOLD_MODULE_PRESENT' ) && ( true == WPSC_GOLD_MODULE_PRESENT ) ) {
+							do_action( 'wpsc_gold_module_activation_forms' );
+						} else {
+						?>
+
+							<div id='wpsc_gold_options_outside'>
+								<div  class='form-wrap' >
+									<p>
+										<?php esc_html_e( "You don't have any Upgrades yet!", 'wpsc' ); ?>
+									</p>
+								</div>
+							</div>
+						<?php } ?>
+					</form>
+				<?php do_meta_boxes('wpsc_upgrade_page', 'top', true); ?>
+				</div>
+			</div>
+
 			<strong><?php esc_html_e( 'WP e-Commerce Upgrades', 'wpsc' ); ?></strong><br />
 			<span><?php esc_html_e( 'Add more functionality to your e-Commerce site. Prices may be subject to change.', 'wpsc' ); ?><input type='button' class='button-primary' onclick='window.open ("http://getshopped.org/extend/premium-upgrades/","mywindow");' value='<?php esc_html_e( 'Buy Now', 'wpsc' ); ?>' id='visitInstinct' name='visitInstinct' /></span>
 
@@ -52,33 +81,6 @@ function wpsc_display_upgrades_page() {
 			</div>
 		</div>
 
-		<h2><?php esc_html_e( 'Upgrades', 'wpsc' ); ?></h2>
-		<div class='wpsc_gold_float'>
-			<?php if ( defined( 'WPSC_GOLD_MODULE_PRESENT' ) && ( true == WPSC_GOLD_MODULE_PRESENT ) ) {?>
-			<p><?php esc_html_e( 'Enter your API Username and API Key below.', 'wpsc' ); ?></p>
-			<p><a href="http://docs.getshopped.org/category/extending-your-store/premium-plugins/gold-cart/"><?php esc_html_e( 'For more information visit our documentation page.', 'wpsc' ); ?></a></p>
-			<?php } ?>
-			<div class='metabox-holder'>
-				<form method='post' id='gold_cart_form' action=''>
-
-					<?php
-					if ( defined( 'WPSC_GOLD_MODULE_PRESENT' ) && ( true == WPSC_GOLD_MODULE_PRESENT ) ) {
-						do_action( 'wpsc_gold_module_activation_forms' );
-					} else {
-					?>
-
-						<div id='wpsc_gold_options_outside'>
-							<div  class='form-wrap' >
-								<p>
-									<?php esc_html_e( "You don't have any Upgrades yet!", 'wpsc' ); ?>
-								</p>
-							</div>
-						</div>
-					<?php } ?>
-				</form>
-			<?php do_meta_boxes('wpsc_upgrade_page', 'top', true); ?>
-			</div>
-		</div>
 	</div>
 
 <?php
