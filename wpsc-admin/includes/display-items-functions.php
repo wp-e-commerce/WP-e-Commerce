@@ -905,9 +905,10 @@ function wpsc_product_download_forms() {
 	global $post, $wpdb, $wpsc_product_defaults;
 	$product_data = get_post_custom( $post->ID );
 	$output = '';
-	$product_data['meta'] = $product_meta = array();
+	$product_data['meta'] = array();
+
 	if ( !empty( $product_data['_wpsc_product_metadata'] ) )
-		$product_data['meta'] = $product_meta = maybe_unserialize( $product_data['_wpsc_product_metadata'][0] );
+		$product_data['meta'] = maybe_unserialize( $product_data['_wpsc_product_metadata'][0] );
 
 	$upload_max = wpsc_get_max_upload_size();
 ?>
