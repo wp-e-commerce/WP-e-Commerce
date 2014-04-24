@@ -463,6 +463,9 @@ jQuery(document).ready(function($){
 // Remove new/empty custom meta input row
 function wpsc_remove_empty_meta(caller){
 	jQuery(caller).closest('tr').remove();
+
+	wpsc_update_product_details_metabox_live_title();
+
 	event.preventDefault();
 }
 
