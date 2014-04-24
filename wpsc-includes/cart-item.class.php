@@ -649,3 +649,22 @@ class _WPSC_Comparison {
 		return $diff;
 	}
 }
+
+/**
+ * Refreshes discount for coupons when a new product is added to the cart.
+ *
+ * This is a fairly generally expected workflow, though there are some instances wherein
+ * one might prefer to force the customer to "Update".  In those instances, this can be unhooked.
+ *
+ * @since  3.8.14
+ * @return void
+ */
+function wpsc_cart_item_refresh_coupon() {
+	$coupon = wpsc_get_customer_meta( 'coupon' );
+
+	if ( ! empty( $coupon ) ) {
+		wpsc_coupon_price( $coupon );
+	}
+}
+
+add_action( 'wpsc_refresh_item', 'wpsc_cart_item_refresh_coupon' );

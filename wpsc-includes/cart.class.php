@@ -485,12 +485,12 @@ class wpsc_cart {
 
 						// if they are the same, increment the count, and break out;
 						if ( ! $updater ) {
-							$this->cart_items [$key]->quantity += $new_cart_item->quantity;
+							$this->cart_items[$key]->quantity += $new_cart_item->quantity;
 						} else {
-							$this->cart_items [$key]->quantity = $new_cart_item->quantity;
+							$this->cart_items[$key]->quantity = $new_cart_item->quantity;
 						}
 
-						$this->cart_items [$key]->refresh_item();
+						$this->cart_items[$key]->refresh_item();
 
 						$add_item = false;
 						$edit_item = true;
@@ -502,7 +502,7 @@ class wpsc_cart {
 
 			// if we are still adding the item, add it
 			if ( $add_item ) {
-				$this->cart_items [] = $new_cart_item;
+				$this->cart_items[] = $new_cart_item;
 				do_action( 'wpsc_add_item', $product_id, $parameters, $this );
 			}
 		}
@@ -529,14 +529,14 @@ class wpsc_cart {
 	 * @return boolean true on sucess, false on failure
 	 */
 	function edit_item( $key, $parameters ) {
-		if ( isset( $this->cart_items [$key] ) ) {
-			$product_id = $this->cart_items [$key]->product_id;
-			$quantity = $parameters ['quantity'] - $this->cart_items [$key]->quantity;
-			if ( $this->check_remaining_quantity( $product_id, $this->cart_items [$key]->variation_values, $quantity ) == true ) {
+		if ( isset( $this->cart_items[$key] ) ) {
+			$product_id = $this->cart_items[$key]->product_id;
+			$quantity = $parameters ['quantity'] - $this->cart_items[$key]->quantity;
+			if ( $this->check_remaining_quantity( $product_id, $this->cart_items[$key]->variation_values, $quantity ) == true ) {
 				foreach ( $parameters as $name => $value ) {
-					$this->cart_items [$key]->$name = $value;
+					$this->cart_items[$key]->$name = $value;
 				}
-				$this->cart_items [$key]->refresh_item();
+				$this->cart_items[$key]->refresh_item();
 				do_action( 'wpsc_edit_item', $product_id, $parameters, $this, $key );
 				$this->clear_cache();
 			}
@@ -597,10 +597,10 @@ class wpsc_cart {
 	 * @return boolean true on sucess, false on failure
 	 */
 	function remove_item( $key ) {
-		if ( isset( $this->cart_items [$key] ) ) {
-			$cart_item = & $this->cart_items [$key];
+		if ( isset( $this->cart_items[$key] ) ) {
+			$cart_item = & $this->cart_items[$key];
 			$cart_item->update_item( 0 );
-			unset( $this->cart_items [$key] );
+			unset( $this->cart_items[$key] );
 			$this->cart_items = array_values( $this->cart_items );
 			$this->cart_item_count = count( $this->cart_items );
 			$this->current_cart_item = - 1;
@@ -1021,7 +1021,7 @@ class wpsc_cart {
 	 */
 	function next_cart_item() {
 		$this->current_cart_item ++;
-		$this->cart_item = $this->cart_items [$this->current_cart_item];
+		$this->cart_item = $this->cart_items[$this->current_cart_item];
 		return $this->cart_item;
 	}
 
@@ -1048,7 +1048,7 @@ class wpsc_cart {
 	function rewind_cart_items() {
 		$this->current_cart_item = - 1;
 		if ( $this->cart_item_count > 0 ) {
-			$this->cart_item = $this->cart_items [0];
+			$this->cart_item = $this->cart_items[0];
 		}
 	}
 

@@ -323,8 +323,7 @@ function _wpsc_merge_cart() {
 		return;
 	}
 
-	do_action( '_wpsc_merge_cart' );
-
+	do_action( '_wpsc_merge_cart', $id_from_wp_user );
 
 	$id_from_customer_meta = wpsc_get_customer_meta( 'merge_cart_vistor_id' );
 	wpsc_delete_customer_meta( 'merge_cart_vistor_id' );
@@ -359,7 +358,6 @@ function _wpsc_merge_cart() {
 
 	// The old profile is no longer needed
 	_wpsc_abandon_temporary_customer_profile( $id_from_customer_meta );
-
 }
 
 
