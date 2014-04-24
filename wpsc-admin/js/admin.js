@@ -440,6 +440,10 @@ jQuery(document).ready(function($){
 	var meta_inp_tem = jQuery('#wpsc_new_meta_template').remove().removeAttr('id');
 
 	jQuery('#wpsc_add_custom_meta').click(function(){
+		if ( jQuery( 'tr.no-meta' ).is( ':visible' ) ) {
+			 jQuery( 'tr.no-meta' ).hide();
+		}
+
 		jQuery('#wpsc_product_meta_table tbody').append(meta_inp_tem.clone());
 		event.preventDefault();
 	});
@@ -466,6 +470,10 @@ function wpsc_remove_empty_meta(caller){
 
 	wpsc_update_product_details_metabox_live_title();
 
+	if ( ! jQuery( '#wpsc_product_meta_table tbody tr' ).not( '.no-meta' ).length ) {
+		jQuery( 'tr.no-meta' ).show();
+	}
+
 	event.preventDefault();
 }
 
@@ -487,6 +495,10 @@ function wpsc_remove_custom_meta(caller, meta_id) {
 
 	jQuery.wpsc_post(post_data, response_handler);
 	wpsc_update_product_details_metabox_live_title();
+
+	if ( ! jQuery( '#wpsc_product_meta_table tbody tr' ).not( '.no-meta' ).length ) {
+		jQuery( 'tr.no-meta' ).show();
+	}
 
 	event.preventDefault();
 }
@@ -536,7 +548,7 @@ function wpsc_update_product_details_metabox_live_title(){
 	if (jQuery('#wpsc_product_details_forms').length <= 0) return;
 
 	var number_of_photos = jQuery('#wpsc_product_gallery img').length;
-	var number_of_meta   = jQuery('#wpsc_product_meta_table tbody tr').length;
+	var number_of_meta   = jQuery('#wpsc_product_meta_table tbody tr').not('.no-meta').length;
 
 	var output = number_of_photos + ' images, ';
 		output += number_of_meta + ' metadata';

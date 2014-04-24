@@ -782,17 +782,21 @@ function wpsc_product_advanced_forms() {
 
 		$output .= '<tbody>';
 
-		// Display all available metadata
-		$alternate = false;
-		foreach ( (array)$custom_fields as $custom_field ) {
-			$i = $custom_field['meta_id'];
-			$alternate = !$alternate;
+		if ( empty( $custom_fields ) ) {
+			$output .= '<tr class="no-meta"><td colspan="3"><p>' . sprintf( __( 'You have no custom metadata. You can set any arbitrary meta you like and access it programatically via the <a href="">Post Meta API</a>.', 'wpsc' ), esc_url( 'https://codex.wordpress.org/Function_Reference/get_post_meta' ) ) . '</p></td></tr>';
+		} else {
+			// Display all available metadata
+			$alternate = false;
+			foreach ( (array) $custom_fields as $custom_field ) {
+				$i = $custom_field['meta_id'];
+				$alternate = ! $alternate;
 
-			$output .= '<tr'. ($alternate ? ' class="alternate"' : '') .'>';
-				$output .= '<td><input type="text" value="'.esc_attr( $custom_field['meta_key'] ).'" name="custom_meta['.$i.'][name]" id="custom_meta_name_'.$i.'"></input></td>';
-				$output .= '<td><input type="text" value="'.esc_attr( $custom_field['meta_value'] ).'" name="custom_meta['.$i.'][value]" id="custom_meta_value_'.$i.'"></input></td>';
-				$output .= '<td><a href="#" data-nonce="'.esc_attr( $delete_nonce ).'" class="wpsc_remove_meta" onclick="wpsc_remove_custom_meta(this,'.$i.')">'.esc_html( 'Delete', 'wpsc' ).'</a></td>';
-			$output .= '</tr>';
+				$output .= '<tr'. ($alternate ? ' class="alternate"' : '') .'>';
+					$output .= '<td><input type="text" value="'.esc_attr( $custom_field['meta_key'] ).'" name="custom_meta['.$i.'][name]" id="custom_meta_name_'.$i.'"></input></td>';
+					$output .= '<td><input type="text" value="'.esc_attr( $custom_field['meta_value'] ).'" name="custom_meta['.$i.'][value]" id="custom_meta_value_'.$i.'"></input></td>';
+					$output .= '<td><a href="#" data-nonce="'.esc_attr( $delete_nonce ).'" class="wpsc_remove_meta" onclick="wpsc_remove_custom_meta(this,'.$i.')">'.esc_html( 'Delete', 'wpsc' ).'</a></td>';
+				$output .= '</tr>';
+			}
 		}
 
 			// Template for new metadata input
