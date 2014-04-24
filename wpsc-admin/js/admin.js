@@ -415,12 +415,12 @@ jQuery(document).ready(function($){
 		return false;
 	});
 
-	jQuery('#wpsc_product_details_forms .category-tabs a').click(function(){
-		var href = jQuery(this).attr('href');
+	jQuery( '#wpsc_product_details_forms .category-tabs a, #wpsc_product_delivery_forms .category-tabs a' ).click(function(event){
+		var $this = jQuery(this), href = $this.attr('href');
 
-		jQuery(this).closest('ul').find('li').removeClass('tabs');
-		jQuery(this).closest('li').addClass('tabs');
-		jQuery(this).closest('div').find('.tabs-panel').hide();
+		$this.closest('ul').find('li').removeClass('tabs');
+		$this.closest('li').addClass('tabs');
+		$this.closest('div').find('.tabs-panel').hide();
 		jQuery(href).show();
 		event.preventDefault();
 	});
