@@ -47,13 +47,7 @@ function wpsc_display_upgrades_page() {
 
 			<div class='wpsc_gold_module'>
 				<br />
-				<a href="http://getshopped.org/extend/premium-upgrades/premium-upgrades/dropshop-2010/" target="_blank"><strong><?php esc_html_e( 'DropShop', 'wpsc' ); ?></strong></a>
-				<p class='wpsc_gold_text'><?php esc_html_e( 'Impress your customers with our AJAX powered DropShop that lets your customers drag and drop products into their shopping cart', 'wpsc' ); ?></p>
-			</div>
-
-			<div class='wpsc_gold_module'>
-				<br />
-				<a href="http://getshopped.org/extend/premium-upgrades/premium-upgrades/member-access-plugin/" target="_blank"><strong><?php esc_html_e( 'Members Access Plugin', 'wpsc' ); ?></strong></a>
+				<a href="http://getshopped.org/premium-upgrades/premium-plugin/members-membership-subscription-plugin-wordpress/" target="_blank"><strong><?php esc_html_e( 'Members Access Plugin', 'wpsc' ); ?></strong></a>
 				<p class='wpsc_gold_text'><?php esc_html_e( 'Create product memberships and sell them in your store. Use these memberships to restrict premium content on your posts and pages creating a "members only" area perfect for: Forums, Images and Movies and Podcasts', 'wpsc' ); ?></p>
 			</div>
 
@@ -65,18 +59,18 @@ function wpsc_display_upgrades_page() {
 
 			<div class='wpsc_gold_module'>
 				<br />
-				<a href="http://getshopped.org/extend/premium-upgrades/premium-upgrades/nextgen-gallery-buy-now1/" target="_blank"><strong><?php esc_html_e( 'NextGen Gallery Buy Now Buttons', 'wpsc' ); ?> </strong></a>
+				<a href="http://getshopped.org/premium-upgrades/premium-plugin/nextgen-gallery-buy-now-buttons-wordpress-stores/" target="_blank"><strong><?php esc_html_e( 'NextGen Gallery Buy Now Buttons', 'wpsc' ); ?> </strong></a>
 				<p class='wpsc_gold_text'><?php esc_html_e( 'Make your Online photo gallery into an e-Commerce solution.', 'wpsc' ); ?></p>
 			</div>
 
 			<div class='wpsc_gold_module'>
 				<br />
-				<a href="http://getshopped.org/extend/premium-upgrades/premium-upgrades/jplayer-mp3-player/" target="_blank"><strong><?php esc_html_e( 'JPlayer - MP3 Plugin', 'wpsc' ); ?> </strong></a>
-				<p class='wpsc_gold_text'><?php esc_html_e( 'JPlayer is a Plugin that provides a Javascript powered MP3 player to each product. This is very similar to our alternative MP3 Player except that it uses CSS and Javascript to customize the look and feel of the player making it much easier for you to style it also comes with a range of skins.', 'wpsc' ); ?></p>
+				<a href="http://getshopped.org/premium-upgrades/premium-plugin/mp3-player-plugin-wordpress/" target="_blank"><strong><?php esc_html_e( 'JPlayer - MP3 Plugin', 'wpsc' ); ?> </strong></a>
+				<p class='wpsc_gold_text'><?php esc_html_e( 'MP3 Player Plugin for WordPress', 'wpsc' ); ?></p>
 			</div>
 			<div class='wpsc_gold_module'>
 				<br />
-				<a href="http://getshopped.org/extend/premium-upgrades/premium-upgrades/fedex-shipping-module/" target="_blank"><strong><?php esc_html_e( 'FedEx Plugin', 'wpsc' ); ?> </strong></a>
+				<a href="http://getshopped.org/premium-upgrades/premium-plugin/fedex-shipping-plugin-wordpress/" target="_blank"><strong><?php esc_html_e( 'FedEx Plugin', 'wpsc' ); ?> </strong></a>
 				<p class='wpsc_gold_text'><?php esc_html_e( 'This plugin offers shop owners the ability to provide Fedex Shipping Quotes for products with weights.', 'wpsc' ); ?></p>
 			</div>
 		</div>
