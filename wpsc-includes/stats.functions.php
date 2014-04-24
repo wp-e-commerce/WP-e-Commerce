@@ -13,7 +13,7 @@ add_action( 'wpsc_update_purchase_log_status', '_wpsc_action_update_product_stat
  * @param WPSC_Purchase_Log $log        Purchase Log
  */
 function _wpsc_action_update_product_stats( $log_id, $new_status, $old_status, $log ) {
-	$cart_contents = $log->get_cart_contents();
+	$cart_contents        = $log->get_cart_contents();
 	$new_status_completed = $log->is_transaction_completed();
 	$old_status_completed = WPSC_Purchase_Log::is_order_status_completed( $old_status );
 

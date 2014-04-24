@@ -307,7 +307,6 @@ class WPSC_Product {
 				'earnings',
 			) ) ) {
 				$this->process_stats();
-				return $this->stats[ $name ];
 			}
 		}
 
