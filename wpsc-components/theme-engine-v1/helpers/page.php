@@ -352,7 +352,7 @@ function wpsc_enqueue_user_script_and_css() {
 		wp_enqueue_script( 'jQuery' );
 		wp_enqueue_script( 'wp-e-commerce', WPSC_CORE_JS_URL . '/wp-e-commerce.js', array( 'jquery' ), $version_identifier );
 
-		if ( defined( 'WPEC_LOAD_DEPRECATED' ) && WPEC_LOAD_DEPRECATED ) {
+		if ( defined( 'WPEC_LOAD_DEPRECATED_JS' ) && WPEC_LOAD_DEPRECATED_JS ) {
 			wp_enqueue_script( 'wpsc-deprecated', WPSC_CORE_JS_URL . '/wpsc-deprecated.js', 'wp-e-commerce', $version_identifier );
 			wp_localize_script( 'wpsc-deprecated', 'wpsc_deprecated_js_vars', _wpsc_deprecated_javascript_localization_vars() );
 		}
