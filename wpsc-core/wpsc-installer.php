@@ -94,7 +94,7 @@ function wpsc_install() {
 		update_option('wpsc_enable_comments',0);
 
 	if('' == get_option('multi_add'))
-		update_option('multi_add',0);
+		update_option('multi_add',1);
 
 	if('' == get_option('hide_addtocart_button'))
 		update_option('hide_addtocart_button',0);
