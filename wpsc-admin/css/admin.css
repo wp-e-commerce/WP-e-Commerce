@@ -437,6 +437,7 @@ div.wpsc_floatleft {
 div.wpsc_floatleft label {
 	line-height: 18px;
 	white-space: nowrap;
+	display: block
 }
 
 

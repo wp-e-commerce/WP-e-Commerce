@@ -134,7 +134,7 @@ function wpsc_price_control_forms() {
 	$currency_type = get_option( 'currency_type' );
 	$country       = new WPSC_Country( $currency_type );
 
-	$ct_code = $country->get_currency_code();	// Country name
+	$ct_code = $country->get_currency_code();	// Country currency code
 	$ct_symb = $country->get_currency_symbol();	// Country symbol
 
 	$price 		= $product_data['meta']['_wpsc_price'];
@@ -160,21 +160,20 @@ function wpsc_price_control_forms() {
 			<p><?php printf( __( 'Price: %s and above.' , 'wpsc' ), $price ); ?></p>
 		<?php else: ?>
 
-    	<div class='wpsc_floatleft' style="width:85px;">
-    		<label><?php printf( _x( 'Price %s %s', 'admin price input label', 'wpsc' ), $ct_code, $ct_symb ); ?></label>
-			<input id = "wpsc_price"
+    	<div class='wpsc_floatleft' style="width:100px;">
+    		<label for="wpsc_price"><?php _e( 'Price', 'wpsc' ); ?></label>
+			<?php echo esc_html( $ct_symb ); ?> <input id="wpsc_price"
 					type="text"
+					style="width: 70px;"
 					name="meta[_wpsc_price]"
-					style="width:80px;"
 					value="<?php echo esc_attr( $price );  ?>" />
 		</div>
 
-		<div class='wpsc_floatleft'
-				style='display:<?php if ( ( $product_data['special'] == 1 ) ? 'block' : 'none'
-	); ?>; width:85px; margin-left:30px;'>
-			<label for='add_form_special'><?php printf( _x( 'Sale Price %s %s', 'admin sales price input label', 'wpsc' ), $ct_code, $ct_symb ); ?></label>
-			<input id = "wpsc_sale_price"
-					style="width:80px;"
+		<div class='wpsc_floatleft' style='width:95px; margin-left:30px;'>
+			<label for='wpsc_sale_price'><?php _e( 'Sale Price', 'wpsc' ); ?></label>
+			<?php echo esc_html( $ct_symb ); ?> <input id = "wpsc_sale_price"
+					type="text"
+					style="width: 70px;"
 					value="<?php echo esc_attr( $sale_price ); ?>"
 					name='meta[_wpsc_special_price]' />
 		</div>
