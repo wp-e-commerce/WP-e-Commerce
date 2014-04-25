@@ -520,7 +520,7 @@ function wpsc_update_regions_list_to_match_country( country_select ) {
 	var country_meta_key   = wpsc_get_element_meta_key( country_select );
 	var region_meta_key;
 
-	if ( country_meta_key.indexOf( "shipping" ) == 0 ) {
+	if ( country_meta_key.indexOf( "shipping" ) === 0 ) {
 		region_meta_key = 'shippingregion';
 	} else {
 		region_meta_key = 'billingregion';
@@ -685,45 +685,7 @@ function wpsc_update_location_elements_visibility() {
 			billing_state_elements.show();
 		}
 	}
-/*	
-	if ( ! wpsc_checkout_item_form_id( 'billingcountry' ) ) {
-		if ( billing_region_elements.length ) {
-				billing_region_elements.hide();
-		}
 
-		if ( billing_state_elements.length ) {
-			billing_state_elements.show();
-		}
-	} else {
-
-		if ( billing_state_elements.length ) {
-
-			// set the visibility of the shipping state input fields
-			var billing_country_code = wpsc_get_value_from_wpsc_meta_element( 'billingcountry' );
-
-			if ( billing_region_elements.length ) {
-				if ( wpsc_country_has_regions( billing_country_code ) ) {
-					billing_region_elements.show();
-				} else {
-					billing_region_elements.hide();
-				}
-			}
-
-			// are there any regions for the currently selected billing country
-			if ( wpsc_country_has_regions( billing_country_code ) ) {
-				//billing_state_elements.closest( "tr" ).hide();
-				billing_state_elements.hide();
-				billing_region_elements.show();
-				billing_state_elements.prop( 'disabled', true );
-			} else {
-				//billing_state_elements.closest( "tr" ).show();
-				billing_state_elements.show();
-				billing_region_elements.hide();
-				billing_state_elements.prop( 'disabled', false );
-			}
-		}
-	}
-*/
 	// for convenience, get the jQuery objects for each of the billing elements we want to manipulate up front
 	var shipping_state_elements  = wpsc_get_wpsc_meta_elements( 'shippingstate' );
 	var shipping_region_elements = wpsc_get_wpsc_meta_elements( 'shippingregion' );
@@ -814,7 +776,7 @@ function wpsc_get_label_element( input ) {
 		return null;
 	}
 
-	var label_element = undefined;
+	var label_element;
 	
 	if ( input_element ) {
 		var element_id = input_element.attr('id');
@@ -829,7 +791,7 @@ function wpsc_get_label_element( input ) {
 function wpsc_update_labels( elements, label ) {
 	elements.each( function( index, value ){
 		var label_element = wpsc_get_label_element( jQuery( this ) );
-		if ( label_element != undefined ) {
+		if ( label_element !== undefined ) {
 
 			if ( label_element.find('.asterix') ) {
 				label = label + '<span class="asterix">*</span>';
@@ -927,7 +889,7 @@ function wpsc_billing_country_has_regions() {
 	var country_code = wpsc_billing_country();
 
 	if ( country_code ) {
-		has_regions = wpsc_country_has_regions( country_code )
+		has_regions = wpsc_country_has_regions( country_code );
 	}
 
 	return has_regions;
