@@ -440,7 +440,7 @@ class WPSC_Country {
 	 *
 	 * @param boolean return the result as an array, default is to return the result as an object
 	 *
-	 * @return array of WPSC_Region
+	 * @return array[]   array of arrays containing region attributes
 	 */
 	public function get_regions_array() {
 
