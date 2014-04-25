@@ -25,26 +25,6 @@ function wpsc_the_checkout_item() {
 }
 
 /**
- * The checkout item sets the checkout item to the next one in the loop
- * @access public
- *
- * @since 3.7
- * @return the checkout item array
- */
-function wpsc_select_checkout_item( $item ) {
-	global $wpsc_checkout;
-
-	if ( is_numeric( $item ) ) {
-		// we are looking for the checkout item id
-	} else {
-		// we are looking for the cehckout item unique name
-	}
-	return $wpsc_checkout->the_checkout_item();
-}
-
-
-
-/**
  * Checks shipping details
  * @access public
  *
@@ -59,8 +39,6 @@ function wpsc_is_shipping_details() {
 		return false;
 	}
 }
-
-
 
 /**
  * returns the class for shipping and billing forms
@@ -353,7 +331,6 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 		}
 
 		$selected_country = wpsc_get_customer_meta( 'shippingcountry' );
-		$selected_region  = wpsc_get_customer_meta( 'shippingregion'  );
 
 		$acceptable_countries = wpsc_get_acceptable_countries();
 
