@@ -323,6 +323,8 @@ function wpsc_update_checkout_info( checkout_info ) {
 	}
 
 	jQuery( ".wpsc-visitor-meta").on( "change", wpsc_meta_item_change );
+	
+	jQuery( document ).trigger( { type : 'wpsc_update_checkout_info', info : checkout_info } );
 
 	return true;
 }
