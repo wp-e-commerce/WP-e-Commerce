@@ -663,20 +663,11 @@ function wpsc_setup_region_dropdowns() {
  */
 function wpsc_update_location_elements_visibility() {
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	// first and foremost, if there isn't a country dropdown then the region dropdown should
-	// not be visible, and if the region edit exists it should be visible. If the coutnry does exist
-	// we look at the region list to decide if region edit element should bw shown.
-	//
-	// Do the process trwice, once for bolling and then once for shipping
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 	if ( wpsc_checkout_item_active( 'billingstate' ) ) {
 		// for convenience, get the jQuery objects for each of the billing elements we want to manipulate up front
 		var billing_state_elements = wpsc_get_wpsc_meta_elements( 'billingstate' );
 		var billing_region_elements = wpsc_get_wpsc_meta_elements( 'billingregion' );
-	
+
 		if ( wpsc_billing_country_has_regions() ) {
 			billing_region_elements.show();
 			billing_state_elements.hide();
@@ -686,47 +677,19 @@ function wpsc_update_location_elements_visibility() {
 		}
 	}
 
-	// for convenience, get the jQuery objects for each of the billing elements we want to manipulate up front
-	var shipping_state_elements  = wpsc_get_wpsc_meta_elements( 'shippingstate' );
-	var shipping_region_elements = wpsc_get_wpsc_meta_elements( 'shippingregion' );
+	if ( wpsc_checkout_item_active( 'shippingstate' ) ) {
+		// for convenience, get the jQuery objects for each of the billing elements we want to manipulate up front
+		var shipping_state_elements  = wpsc_get_wpsc_meta_elements( 'shippingstate' );
+		var shipping_region_elements = wpsc_get_wpsc_meta_elements( 'shippingregion' );
 
-	if ( ! wpsc_checkout_item_form_id( 'shippingcountry' ) ) {
-		;
-	} else {
-
-		if ( shipping_state_elements.length ) {
-
-			// set the visibility of the shipping state input fields
-			var shipping_country_code = wpsc_get_value_from_wpsc_meta_element( 'shippingcountry' );
-
-			if ( shipping_region_elements.length ) {
-				if ( wpsc_country_has_regions( shipping_country_code ) ) {
-					shipping_region_elements.show();
-				} else {
-					shipping_region_elements.hide();
-				}
-			}
-
-			shipping_state_elements.each( function( index, value ){
-				var shipping_state_element = jQuery( this );
-				// are there any regions for the currently selected billing country
-				var tr = shipping_state_element.closest( "tr" );
-
-				var hide_state_edit = wpsc_country_has_regions( shipping_country_code );
-				if ( hide_state_edit ) {
-					shipping_state_elements.prop( 'disabled', true );
-					shipping_state_elements.hide();
-					shipping_region_elements.show();
-				} else {
-					shipping_state_elements.prop( 'disabled', false );
-					shipping_state_elements.show();
-					shipping_region_elements.hide();
-				}
-			});
+		if ( wpsc_shipping_country_has_regions() ) {
+			shipping_region_elements.show();
+			shipping_state_elements.hide();
+		} else {
+			shipping_region_elements.hide();
+			shipping_state_elements.show();
 		}
 	}
-
-	var label = wpsc_get_label_element( 'shippingstate' );
 
 	return true;
 }
@@ -909,6 +872,37 @@ function wpsc_billing_country() {
 
 	return country_code;
 }
+
+
+function wpsc_shipping_country() {
+	var shipping_country_active = wpsc_checkout_item_active( 'shippingcountry' );
+	var has_regions = false;
+
+	var country_code;
+
+	if ( shipping_country_active ) {
+		country_code = wpsc_get_value_from_wpsc_meta_element( 'shippingcountry' );
+	} else {
+		country_code = wpsc_var_get( "base_country" );
+	}
+
+	return country_code;
+}
+
+
+function wpsc_shipping_country_has_regions() {
+	var shipping_country_active = wpsc_checkout_item_active( 'shippingcountry' );
+	var has_regions = false;
+
+	var country_code = wpsc_shipping_country();
+
+	if ( country_code ) {
+		has_regions = wpsc_country_has_regions( country_code );
+	}
+
+	return has_regions;
+}
+
 
 /**
  * ready to setup the events for user actions that casuse meta item changes
