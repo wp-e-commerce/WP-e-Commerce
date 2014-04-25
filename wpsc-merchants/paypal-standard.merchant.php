@@ -62,16 +62,17 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 		$this->collected_gateway_data = $this->_construct_value_array();
 	}
 
-	function convert( $amt ){
+	function convert( $amt ) {
 		if ( empty( $this->rate ) ) {
 			$this->rate = 1;
 			$paypal_currency_code = $this->get_paypal_currency_code();
 			$local_currency_code = $this->get_local_currency_code();
 			if ( $local_currency_code != $paypal_currency_code ) {
-				$curr=new CURRENCYCONVERTER();
+				$curr = new CURRENCYCONVERTER();
 				$this->rate = $curr->convert( 1, $paypal_currency_code, $local_currency_code );
 			}
 		}
+
 		return $this->format_price( $amt * $this->rate );
 	}
 
@@ -115,16 +116,15 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 
 		// Store settings to be sent to paypal
 		$paypal_vars += array(
-			'business' => get_option( 'paypal_multiple_business' ),
-			'return' => $return_url,
+			'business'      => get_option( 'paypal_multiple_business' ),
+			'return'        => $return_url,
 			'cancel_return' => $this->cart_data['transaction_results_url'],
-			'rm' => '2',
+			'rm'            => '2',
 			'currency_code' => $this->get_paypal_currency_code(),
-			'lc' => $this->cart_data['store_currency'],
-			'bn' => $this->cart_data['software_name'],
-
-			'no_note' => '1',
-			'charset' => 'utf-8',
+			'lc'            => $this->cart_data['store_currency'],
+			'bn'            => $this->cart_data['software_name'],
+			'no_note'       => '1',
+			'charset'       => 'utf-8',
 		);
 
 		// IPN data
@@ -382,7 +382,6 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 		}
 	}
 
-
 	/**
 	* parse_gateway_notification method, receives data from the payment gateway
 	* @access private
@@ -394,10 +393,10 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 		$received_values['cmd'] = '_notify-validate';
 		$received_values += stripslashes_deep( $_REQUEST );
 		$options = array(
-			'timeout' => 20,
-			'body' => $received_values,
+			'timeout'     => 20,
+			'body'        => $received_values,
 			'httpversion' => '1.1',
-			'user-agent' => ( 'WP e-Commerce/' . WPSC_PRESENTABLE_VERSION )
+			'user-agent'  => ( 'WP e-Commerce/' . WPSC_PRESENTABLE_VERSION )
 		);
 
 		$response = wp_remote_post( $paypal_url, $options );
@@ -413,8 +412,10 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 		global $wpdb;
 
 		$purchase_log = new WPSC_Purchase_Log( $this->cart_data['session_id'], 'sessionid' );
-		if ( ! $purchase_log->exists() )
+
+		if ( ! $purchase_log->exists() ) {
 			return;
+		}
 
 		// get all active form fields and organize them based on id and unique_name, because we're only
 		// importing fields relevant to checkout fields that have unique name
@@ -495,11 +496,28 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 		}
 
 		do_action( 'wpsc_paypal_standard_ipn', $this->paypal_ipn_values, $this );
+
 		$paypal_email = strtolower( get_option( 'paypal_multiple_business' ) );
 
-	  // Compare the received store owner email address to the set one
+		// Validate Currency
+		if ( $this->paypal_ipn_values['mc_currency'] !== $this->get_paypal_currency_code() ) {
+			return;
+		}
+
+		$purchase_log = new WPSC_Purchase_Log( $this->cart_data['session_id'], 'sessionid' );
+
+		if ( ! $purchase_log->exists() ) {
+			return;
+		}
+
+		// Validate amount
+		if ( $this->paypal_ipn_values['mc_gross'] != $purchase_log->get( 'totalprice' ) ) {
+			return;
+		}
+
+		// Compare the received store owner email address to the set one
 		if ( strtolower( $this->paypal_ipn_values['receiver_email'] ) == $paypal_email || strtolower( $this->paypal_ipn_values['business'] ) == $paypal_email ) {
-			switch ($this->paypal_ipn_values['txn_type']) {
+			switch ( $this->paypal_ipn_values['txn_type'] ) {
 				case 'cart':
 				case 'express_checkout':
 				case 'web_accept':
