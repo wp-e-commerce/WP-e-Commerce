@@ -167,13 +167,23 @@ function wpsc_country_region_list( $form_id = null, $ajax = false, $selected_cou
 	return $output;
 }
 
+/**
+ * get a contry list for cehckout
+ *
+ * @param string $form_id
+ * @param string $ajax
+ * @param string $selected_country
+ * @param string $selected_region
+ * @param string $supplied_form_id
+ * @param string $shippingfields
+ * @return string
+ */
 function wpsc_country_list( $form_id = null, $ajax = false, $selected_country = null, $selected_region = null, $supplied_form_id = null, $shippingfields = false ) {
 	global $wpdb;
 
 	$output = '';
 
 	$selected_country = new WPSC_Country( $selected_country );
-	$selected_region = $selected_country->get_region( $selected_region );
 
 	if ( $form_id != null ) {
 		$html_form_id = "region_country_form_$form_id";
@@ -215,6 +225,14 @@ function wpsc_country_list( $form_id = null, $ajax = false, $selected_country = 
 
 
 
+/**
+ * get the output used to show a shipping state and region select drop down
+ *
+ * @since 3.8.14
+ *
+ * @param string $wpsc_checkout
+ * @return string
+ */
 function wpsc_checkout_billing_state_and_region( $wpsc_checkout = null ) {
 
 	// just in case the checkout form was not presented, like when we are doing the shipping calculator
@@ -227,7 +245,7 @@ function wpsc_checkout_billing_state_and_region( $wpsc_checkout = null ) {
 
 	// if we aren't showing the billing state on the cor we have no work to do
 	if ( ! $wpsc_checkout->get_checkout_item( 'billingstate' ) ) {
-		return;
+		return '';
 	}
 
 	// save the current checkout item in case we adjust it in the routine, we'll put it back before return
@@ -296,8 +314,7 @@ function wpsc_checkout_billing_state_and_region( $wpsc_checkout = null ) {
 	// setup the drop down field, aka 'billingregion'
 	$region_form_id = $checkout_form->get_field_id_by_unique_name( 'billingcountry' );
 
-	$namevalue = ' name="collected_data[' . $region_form_id . ']" ';
-	$title     = 'billingregion';
+	$title = 'billingregion';
 
 	// if there aren't any regions for the current country we are going to
 	// create the empty region select, but hide it
@@ -345,7 +362,16 @@ function wpsc_checkout_billing_state_and_region( $wpsc_checkout = null ) {
 	return $output;
 }
 
-function wpsc_checkout_shipping_state_and_region( $wpsc_checkout = null ) {
+
+/**
+ * get the output used to show a shipping state and region select drop down
+ *
+ * @since 3.8.14
+ *
+ * @param string $wpsc_checkout
+ * @return string
+ */
+ function wpsc_checkout_shipping_state_and_region( $wpsc_checkout = null ) {
 
 	// just in case the checkout form was not presented, like when we are doing the shipping calculator
 	if ( empty( $wpsc_checkout ) ) {
@@ -357,7 +383,7 @@ function wpsc_checkout_shipping_state_and_region( $wpsc_checkout = null ) {
 
 	// if we aren't showing the shipping state on the cor we have no work to do
 	if ( ! $wpsc_checkout->get_checkout_item( 'shippingstate' ) ) {
-		return;
+		return '';
 	}
 
 	// save the current checkout item in case we adjust it in the routine, we'll put it back before return
@@ -436,7 +462,6 @@ function wpsc_checkout_shipping_state_and_region( $wpsc_checkout = null ) {
 		$style = 'style="display: none;"';
 	}
 
-	$namevalue = ' name="collected_data[' . $region_form_id . ']" ';
 	$title     = 'shippingregion';
 
 	$region_form_id = $wpsc_checkout->form_element_id() . '_region';
@@ -462,7 +487,7 @@ function wpsc_checkout_shipping_state_and_region( $wpsc_checkout = null ) {
 		}
 
 		foreach ( $region_list as $wpsc_region ) {
-			if ( $wpsc_current_region && $wpsc_current_region->get_id() == $wpsc_region->get_id() ) {
+			if ( (bool)$wpsc_current_region && $wpsc_current_region->get_id() == $wpsc_region->get_id() ) {
 				$selected = "selected='selected'";
 			} else {
 				$selected = '';
@@ -481,6 +506,8 @@ function wpsc_checkout_shipping_state_and_region( $wpsc_checkout = null ) {
 
 /**
  * get the WPeC base country as configured in store admin
+ *
+ * @return string   current base country
  */
 function wpsc_get_base_country() {
 	return get_option( 'base_country' );
