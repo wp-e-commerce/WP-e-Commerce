@@ -235,6 +235,8 @@ class wpsc_cart {
 	 * @return boolean true if a recalc is necessary
 	 */
 	function needs_shipping_recalc() {
+		global $wpsc_shipping_modules;
+
 		if ( $this->shipping_info_empty() && $this->uses_shipping() ) {
 			return true;
 		}
