@@ -802,87 +802,89 @@ function form_paypal_multiple() {
 		</tr>\n";
 	}
 
+	if ( get_option( 'paypal_form_first_name', false ) ) {
 
-$output .= "
-	<tr>
-		<td colspan='2'>
-			<strong class='form_group'>" . __( 'Forms Sent to Gateway', 'wpsc' ) . "</strong>
-		</td>
-	</tr>
+		$output .= "
+		<tr>
+			<td colspan='2'>
+				<strong class='form_group'>" . __( 'Forms Sent to Gateway', 'wpsc' ) . "</strong>
+			</td>
+		</tr>
 
-	<tr>
-		<td>" . __( 'First Name Field', 'wpsc' ) . "</td>
-		<td>
-			<select name='paypal_form[first_name]'>
-			" . nzshpcrt_form_field_list( get_option( 'paypal_form_first_name' ) ) . "
-			</select>
-		</td>
-	</tr>
-	<tr>
-		<td>" . __( 'Last Name Field', 'wpsc' ) . "</td>
-		<td>
-			<select name='paypal_form[last_name]'>
-			" . nzshpcrt_form_field_list( get_option( 'paypal_form_last_name' ) ) . "
-			</select>
-		</td>
-	</tr>
-	<tr>
-		<td>
-		" . __( 'Address Field', 'wpsc' ) . "
-		</td>
-		<td>
-			<select name='paypal_form[address]'>
-			" . nzshpcrt_form_field_list( get_option( 'paypal_form_address' ) ) . "
-			</select>
-		</td>
-	</tr>
-	<tr>
-		<td>
-		" . __( 'City Field', 'wpsc' ) . "
-		</td>
-		<td>
-			<select name='paypal_form[city]'>
-			" . nzshpcrt_form_field_list( get_option( 'paypal_form_city' ) ) . "
-			</select>
-		</td>
-	</tr>
-	<tr>
-		<td>
-		" . __( 'State Field', 'wpsc' ) . "
-		</td>
-		<td>
-			<select name='paypal_form[state]'>
-			" . nzshpcrt_form_field_list( get_option( 'paypal_form_state' ) ) . "
-			</select>
-		</td>
-	</tr>
-	<tr>
-		<td>
-		" . __( 'Postal / ZIP Code Field', 'wpsc' ) . "
-		</td>
-		<td>
-			<select name='paypal_form[post_code]'>
-			".nzshpcrt_form_field_list(get_option('paypal_form_post_code'))."
-			</select>
-		</td>
-	</tr>
-	<tr>
-		<td>
-		" . __( 'Country Field', 'wpsc' ) . "
-		</td>
-		<td>
-			<select name='paypal_form[country]'>
-			" . nzshpcrt_form_field_list( get_option( 'paypal_form_country' ) ) . "
-			</select>
-		</td>
-	</tr>
-	<tr>
-		<td colspan='2'>
-			<p class='description'>
-			" . sprintf( __( "For more help configuring Paypal Standard, please read our documentation <a href='%s'>here</a>", 'wpsc' ), esc_url( 'http://docs.getshopped.org/documentation/paypal-payments-standard/' ) ) . "
-			</p>
-		</td>
-	</tr>\n";
+		<tr>
+			<td>" . __( 'First Name Field', 'wpsc' ) . "</td>
+			<td>
+				<select name='paypal_form[first_name]'>
+				" . nzshpcrt_form_field_list( get_option( 'paypal_form_first_name' ) ) . "
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>" . __( 'Last Name Field', 'wpsc' ) . "</td>
+			<td>
+				<select name='paypal_form[last_name]'>
+				" . nzshpcrt_form_field_list( get_option( 'paypal_form_last_name' ) ) . "
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			" . __( 'Address Field', 'wpsc' ) . "
+			</td>
+			<td>
+				<select name='paypal_form[address]'>
+				" . nzshpcrt_form_field_list( get_option( 'paypal_form_address' ) ) . "
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			" . __( 'City Field', 'wpsc' ) . "
+			</td>
+			<td>
+				<select name='paypal_form[city]'>
+				" . nzshpcrt_form_field_list( get_option( 'paypal_form_city' ) ) . "
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			" . __( 'State Field', 'wpsc' ) . "
+			</td>
+			<td>
+				<select name='paypal_form[state]'>
+				" . nzshpcrt_form_field_list( get_option( 'paypal_form_state' ) ) . "
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			" . __( 'Postal / ZIP Code Field', 'wpsc' ) . "
+			</td>
+			<td>
+				<select name='paypal_form[post_code]'>
+				".nzshpcrt_form_field_list(get_option('paypal_form_post_code'))."
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			" . __( 'Country Field', 'wpsc' ) . "
+			</td>
+			<td>
+				<select name='paypal_form[country]'>
+				" . nzshpcrt_form_field_list( get_option( 'paypal_form_country' ) ) . "
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td colspan='2'>
+				<p class='description'>
+				" . sprintf( __( "For more help configuring Paypal Standard, please read our documentation <a href='%s'>here</a>", 'wpsc' ), esc_url( 'http://docs.getshopped.org/documentation/paypal-payments-standard/' ) ) . "
+				</p>
+			</td>
+		</tr>\n";
+	}
 
 	return $output;
 }
