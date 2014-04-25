@@ -59,7 +59,7 @@ function _wpsc_countries_localizations( $localizations_array ) {
  * @access private
  * @since 3.8.14
  *
- * @param array     $localizations    other localizations that can be added to
+ * @param array[string]     $localizations    other localizations that can be added to
  *
  * @return array                      localizations array with checkout information added
  */
