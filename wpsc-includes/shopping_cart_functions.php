@@ -168,14 +168,14 @@ function wpsc_country_region_list( $form_id = null, $ajax = false, $selected_cou
 }
 
 /**
- * get a contry list for cehckout
+ * get a country list for checkout
  *
- * @param string $form_id
- * @param string $ajax
- * @param string $selected_country
- * @param string $selected_region
- * @param string $supplied_form_id
- * @param string $shippingfields
+ * @param string|null $form_id
+ * @param string|boolean $ajax
+ * @param string|null $selected_country
+ * @param string|null $selected_region
+ * @param string|null $supplied_form_id
+ * @param boolean $shippingfields
  * @return string
  */
 function wpsc_country_list( $form_id = null, $ajax = false, $selected_country = null, $selected_region = null, $supplied_form_id = null, $shippingfields = false ) {
@@ -230,7 +230,7 @@ function wpsc_country_list( $form_id = null, $ajax = false, $selected_country = 
  *
  * @since 3.8.14
  *
- * @param string $wpsc_checkout
+ * @param object|null of type wpsc_checkout $wpsc_checkout
  * @return string
  */
 function wpsc_checkout_billing_state_and_region( $wpsc_checkout = null ) {
@@ -308,11 +308,11 @@ function wpsc_checkout_billing_state_and_region( $wpsc_checkout = null ) {
 										. $style
 											. '" />';
 
-	// move the checkout item pointer to the billing country, so we can generate form element ids, highly lame
+	// setup the drop down field, aka 'billingregion'
+	// move the checkout item pointer to the billing country, so we
+	// can generate form element ids, highly lame
 	$wpsc_checkout->checkout_item = $checkout_form->get_field_by_unique_name( 'billingcountry' );
 
-	// setup the drop down field, aka 'billingregion'
-	$region_form_id = $checkout_form->get_field_id_by_unique_name( 'billingcountry' );
 
 	$title = 'billingregion';
 
@@ -368,10 +368,10 @@ function wpsc_checkout_billing_state_and_region( $wpsc_checkout = null ) {
  *
  * @since 3.8.14
  *
- * @param string $wpsc_checkout
+ * @param object|null wpsc_checkout $wpsc_checkout
  * @return string
  */
- function wpsc_checkout_shipping_state_and_region( $wpsc_checkout = null ) {
+function wpsc_checkout_shipping_state_and_region( $wpsc_checkout = null ) {
 
 	// just in case the checkout form was not presented, like when we are doing the shipping calculator
 	if ( empty( $wpsc_checkout ) ) {
@@ -462,7 +462,7 @@ function wpsc_checkout_billing_state_and_region( $wpsc_checkout = null ) {
 		$style = 'style="display: none;"';
 	}
 
-	$title     = 'shippingregion';
+	$title = 'shippingregion';
 
 	$region_form_id = $wpsc_checkout->form_element_id() . '_region';
 
