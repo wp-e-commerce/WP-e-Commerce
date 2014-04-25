@@ -132,15 +132,24 @@ $image_height = get_option('product_image_height');
 										<input type="hidden" name="wpsc_update_quantity" value="true" />
 										<input type='hidden' name='wpsc_ajax_action' value='wpsc_update_quantity' />
 									</div><!--close quantity_container-->
-									<?php endif ;?>
-									
+									<?php
+										endif;
+										if ( get_option( 'display_variations' ) != 1 && wpsc_product_has_variations( wpsc_the_product_id() ) ) :
+									?>
+										<a href="<?php echo esc_url( wpsc_the_product_permalink() ); ?>" class="wpsc_buy_button"><?php _e( 'View Product', 'wpsc' )?></a>
+									<?php
+										else :
+									?>
 									<input type="hidden" value="add_to_cart" name="wpsc_ajax_action"/>
 									<input type="submit" value="<?php _e('Add To Cart', 'wpsc'); ?>" name="Buy" class="wpsc_buy_button" id="product_<?php echo wpsc_the_product_id(); ?>_submit_button"/>
-								<?php else : ?>
+
+									<?php
+											endif;
+										else :
+									?>
 									<p class="soldout"><?php _e('Sorry, sold out!', 'wpsc'); ?></p>
 								<?php endif ; ?>
 							<?php endif; ?>
-
 
 										<div class="wpsc_loading_animation">
 											<img title="<?php esc_attr_e( 'Loading', 'wpsc' ); ?>" alt="<?php esc_attr_e( 'Loading', 'wpsc' ); ?>" src="<?php echo wpsc_loading_animation_url(); ?>" />

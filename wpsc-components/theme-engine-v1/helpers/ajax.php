@@ -112,7 +112,8 @@ function wpsc_add_to_cart() {
 		$_POST['wpsc_quantity_update'] = $_POST['wpsc_quantity_update'][$product_id];
 	}
 
-	if(isset($_POST['variation'])){
+	if ( isset($_POST['variation'] ) ) {
+
 		foreach ( (array) $_POST['variation'] as $key => $variation ) {
 			$provided_parameters['variation_values'][ (int) $key ] = (int) $variation;
 		}
@@ -123,7 +124,6 @@ function wpsc_add_to_cart() {
 				$product_id = $variation_product_id;
 			}
 		}
-
 	}
 
 	if ( (isset( $_POST['quantity'] ) && $_POST['quantity'] > 0) && (!isset( $_POST['wpsc_quantity_update'] )) ) {
