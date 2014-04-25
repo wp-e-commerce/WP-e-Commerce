@@ -246,14 +246,14 @@ function wpsc_customer_updated_data_ajax() {
 		}
 
 		if ( $success ) {
-			$response['type']  = __( 'success', 'wpsc' );
+			$response['type']  = 'success';
 			$response['error'] = '';
 		} else {
-			$response['type']  = __( 'error', 'wpsc' );
+			$response['type']  = 'error';
 			$response['error'] = __( 'meta values may not have been updated', 'wpsc' );
 		}
 	} else {
-		$response['type']  = __( 'error', 'wpsc' );
+		$response['type']  = 'error';
 		$response['error'] = __( 'invalid parameters, meta array or meta key value pair required', 'wpsc' );
 	}
 
