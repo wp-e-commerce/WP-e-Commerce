@@ -482,7 +482,8 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 	function process_gateway_notification() {
 		global $wpdb;
 
-		$status = false;
+		$status = 1;
+
 		switch ( strtolower( $this->paypal_ipn_values['payment_status'] ) ) {
 			case 'pending':
 				$status = 2;
@@ -526,10 +527,14 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 						$this->import_ipn_data();
 					}
 
-					if ( $status )
+					if ( $status > 1 ) {
 						$this->set_transaction_details( $this->paypal_ipn_values['txn_id'], $status );
-					if ( in_array( $status, array( 2, 3 ) ) )
+					}
+
+					if ( in_array( $status, array( 2, 3 ) ) ) {
 						transaction_results( $this->cart_data['session_id'], false );
+					}
+
 					break;
 
 				case 'subscr_signup':
