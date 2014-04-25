@@ -23,13 +23,13 @@
  *
  */
 if ( typeof wpsc_vars !== undefined ) {
-	var wpsc_ajax 						= wpsc_vars['wpsc_ajax'];
-	var base_url 						= wpsc_vars['base_url'];
-	var WPSC_URL 						= wpsc_vars['WPSC_URL'];
-	var WPSC_IMAGE_URL 					= wpsc_vars['WPSC_IMAGE_URL'];
-	var WPSC_IMAGE_URL 					= wpsc_vars['WPSC_IMAGE_URL'];
-	var WPSC_CORE_IMAGES_URL			= wpsc_vars['WPSC_CORE_IMAGES_URL'];
-	var fileThickboxLoadingImage 		= wpsc_vars['fileThickboxLoadingImage'];
+	var wpsc_ajax                = wpsc_vars['wpsc_ajax'];
+	var base_url                 = wpsc_vars['base_url'];
+	var WPSC_URL                 = wpsc_vars['WPSC_URL'];
+	var WPSC_IMAGE_URL           = wpsc_vars['WPSC_IMAGE_URL'];
+	var WPSC_IMAGE_URL           = wpsc_vars['WPSC_IMAGE_URL'];
+	var WPSC_CORE_IMAGES_URL     = wpsc_vars['WPSC_CORE_IMAGES_URL'];
+	var fileThickboxLoadingImage = wpsc_vars['fileThickboxLoadingImage'];
 }
 // end of variable definitions
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -416,7 +416,7 @@ function wpsc_meta_item_change() {
 
 	// if there are other fields on the current page that are used to change the same meta value then
 	// they need to be updated
-	var selector = 'input[data-wpsc-meta-key="' + meta_key + '"]';
+	var selector = '[data-wpsc-meta-key="' + meta_key + '"]';
 
 	var element_that_changed_meta_value = this;
 
@@ -703,12 +703,12 @@ function wpsc_update_location_elements_visibility() {
 	var shipping_region_elements = wpsc_get_wpsc_meta_elements( 'shippingregion' );
 
 	if ( ! wpsc_checkout_item_form_id( 'shippingcountry' ) ) {
-		if ( billing_region_elements.length ) {
-				billing_region_elements.hide();
+		if ( shipping_region_elements.length ) {
+			shipping_region_elements.hide();
 		}
 
-		if ( billing_state_elements.length && wpsc_show_checkout_shipping_fields() ) {
-			billing_state_elements.show();
+		if ( shipping_state_elements.length && wpsc_show_checkout_shipping_fields() ) {
+			shipping_state_elements.show();
 		}
 	} else {
 
