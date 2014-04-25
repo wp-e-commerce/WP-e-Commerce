@@ -150,7 +150,7 @@ endif;
             <?php else: ?>
                <tr class='wpsc_update_location_error'>
                   <td colspan='5' class='shipping_error' >
-                     <?php _e('Sorry, shipping quotes could not be calculated with the details provided. Please double check your Shipping Address details.', 'wpsc'); ?>
+                     <?php _e('Sorry, shipping quotes could not be calculated with the details provided. Please double check your shipping address details.', 'wpsc'); ?>
                   </td>
                </tr>
             <?php endif; ?>
