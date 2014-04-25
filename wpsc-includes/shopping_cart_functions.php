@@ -171,14 +171,14 @@ function wpsc_country_region_list( $form_id = null, $ajax = false, $selected_cou
  * get a country list for checkout
  *
  * @param string|null $form_id
- * @param deprecated $ajax
+ * @param deprecated|null $ajax
  * @param string|null $selected_country
- * @param deprecated $selected_region
+ * @param deprecated|null $selected_region
  * @param string|null $supplied_form_id
  * @param boolean $shippingfields
  * @return string
  */
-function wpsc_country_list( $form_id = null, $ajax = false, $selected_country = null, $selected_region = null, $supplied_form_id = null, $shippingfields = false ) {
+function wpsc_country_list( $form_id = null, $ajax = null, $selected_country = null, $selected_region = null, $supplied_form_id = null, $shippingfields = false ) {
 	global $wpdb;
 
 	$output = '';

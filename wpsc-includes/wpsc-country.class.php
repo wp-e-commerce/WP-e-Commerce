@@ -351,7 +351,7 @@ class WPSC_Country {
 	 *
 	 * @since 3.8.14
 	 *
-	 * @param int|string	required	$region_identifier 	The region identifier, can be the text region code, or the numeric region id
+	 * @param int|string     required      $region_identifier 	The region identifier, can be the text region code, or the numeric region id
 	 *
 	 * @return WPSC_Region|boolean The region, or false if the region code is not valid for the country
 	 */
@@ -388,7 +388,7 @@ class WPSC_Country {
 	 *
 	 * @param int|string	required	the region identifier, can be the text region code, or the numeric region id
 	 *
-	 * @return WPSC_Region
+	 * @return int
 	 */
 	public function get_region_count() {
 		return $this->_regions->count();
@@ -403,7 +403,7 @@ class WPSC_Country {
 	 *
 	 * @param boolean return the result as an array, default is to return the result as an object
 	 *
-	 * @return array of WPSC_Region objects, indexed by region id, sorted by region
+	 * @return WPSC_Region[] objects, indexed by region id, sorted by region
 	 */
 	public function get_regions( $as_array = false ) {
 		$regions_list = $this->_regions->data();
