@@ -553,6 +553,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 
 				case 'subscr_cancel':
 					do_action( 'wpsc_paypal_standard_deactivate_subscription', $this->paypal_ipn_values['subscr_id'], $this );
+					break;
 				case 'subscr_eot':
 				case 'subscr_failed':
 					foreach ( $this->cart_items as $cart_row ) {
