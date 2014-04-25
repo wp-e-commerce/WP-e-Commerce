@@ -15,318 +15,144 @@ if ( get_option( 'permalink_structure' ) != '' )
 else
 	$separator = "&amp;";
 
-function validate_form_data() {
-
-	global $wpdb, $user_ID, $wpsc_purchlog_statuses;
-
-	$any_bad_inputs = false;
-	$changes_saved = false;
-	$bad_input_message = '';
-	$_SESSION['collected_data'] = null;
-
-	if ( ! empty($_POST['collected_data']) ) {
-
-		if( ! wp_verify_nonce( $_POST['_wpsc_user_profile'], 'wpsc_user_profile') )
-			die( __( 'It would appear either you are trying to hack into this account, or your session has expired.  Hoping for the latter.', 'wpsc' ) );
-
-		foreach ( (array)$_POST['collected_data'] as $value_id => $value ) {
-			$form_sql = $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `id` = %d LIMIT 1", $value_id );
-			$form_data = $wpdb->get_row( $form_sql, ARRAY_A );
-			$bad_input = false;
-			if ( $form_data['mandatory'] == 1 ) {
-				switch ( $form_data['type'] ) {
-					case 'email':
-						if ( ! preg_match( "/^[a-zA-Z0-9._-]+@[a-zA-Z0-9-.]+\.[a-zA-Z]{2,5}$/", $value ) ) {
-							$any_bad_inputs = true;
-							$bad_input = true;
-						}
-
-						break;
-
-						$delivery_country = wpsc_get_customer_meta( 'shippingcountry' );
-						$billing_country  = wpsc_get_customer_meta( 'billingcountry'  );
-						$delivery_region  = wpsc_get_customer_meta( 'shippingregion'  );
-						$billing_region   = wpsc_get_customer_meta( 'billingregion'   );
-
-					case 'country':
-						// if it is an array then the firs element is the country, second is the region id
-						if ( is_array( $value ) ) {
-							wpsc_update_customer_meta(  'billingcountry' , $value[0] );
-							wpsc_update_customer_meta(  'billingregion' , $value[1] );
-						} else if ( is_string( $value ) ) {
-							wpsc_update_customer_meta(  'billingcountry' , $value );
-						} else {
-							$bad_input = true;
-						}
-
-						break;
-
-					case 'delivery_country':
-						// if it is an array then the firs element is the country, second is the region id
-						if ( is_array( $value ) ) {
-							wpsc_update_customer_meta(  'shippingcountry' , $value[0] );
-							wpsc_update_customer_meta(  'shippingregion' , $value[1] );
-						} else if ( is_string( $value ) ) {
-							wpsc_update_customer_meta(  'shippingcountry' , $value );
-						} else {
-							$bad_input = true;
-						}
-
-						break;
-
-					default:
-						if ( empty( $value ) ) {
-							$bad_input = true;
-						}
-
-						break;
-				}
-
-				if ( $bad_input === true ) {
-
-					switch ( $form_data['name'] ) {
-						case __( 'First Name', 'wpsc' ):
-							$bad_input_message .= __( 'Please enter a valid name', 'wpsc' ) . "";
-							break;
-
-						case __( 'Last Name', 'wpsc' ):
-							$bad_input_message .= __( 'Please enter a valid surname', 'wpsc' ) . "";
-							break;
-
-						case __( 'Email', 'wpsc' ):
-							$bad_input_message .= __( 'Please enter a valid email address', 'wpsc' ) . "";
-							break;
-
-						case __( 'Address 1', 'wpsc' ):
-						case __( 'Address 2', 'wpsc' ):
-							$bad_input_message .= __( 'Please enter a valid address', 'wpsc' ) . "";
-							break;
-
-						case __( 'City', 'wpsc' ):
-							$bad_input_message .= __( 'Please enter your town or city.', 'wpsc' ) . "";
-							break;
-
-						case __( 'Phone', 'wpsc' ):
-							$bad_input_message .= __( 'Please enter a valid phone number', 'wpsc' ) . "";
-							break;
-
-						case __( 'Country', 'wpsc' ):
-							$bad_input_message .= __( 'Please select your country from the list.', 'wpsc' ) . "";
-							break;
-
-						default:
-							$bad_input_message .= sprintf(__( 'Please enter a valid <span class="wpsc_error_msg_field_name">%s</span>.', 'wpsc' ), esc_html($form_data['name']) );
-							break;
-					}
-					$bad_input_message .= "<br />";
-				} else {
-					$meta_data[$value_id] = $value;
-				}
-			} else {
-				$meta_data[$value_id] = $value;
-			}
-		}
-		$meta_data = apply_filters( 'wpsc_user_log_update', $meta_data, $user_ID );
-		wpsc_update_customer_meta( 'checkout_details', $meta_data );
-	}
-	if ( $changes_saved ) {
-		$message = __( 'Thanks, your changes have been saved.', 'wpsc' );
-	} else {
-		$message = $bad_input_message;
-	}
-	return apply_filters( 'wpsc_profile_message', $message );
-}
 
 /**
  * wpsc_display_form_fields()
  *
- * This function displays each of the form fields.  Each of them are filterable via 'wpsc_account_form_field_$tag' where tag is permalink-styled name or uniquename.
- * i.e. First Name under Shipping would be 'wpsc_account_form_field_shippingfirstname' - while Your Billing Details would be filtered
- * via 'wpsc_account_form_field_your-billing-details'.
+ * This function displays each of the form fields.
  *
- * @global <type> $wpdb
- * @global <type> $user_ID
- * @global <type> $wpsc_purchlog_statuses
- * @global <type> $gateway_checkout_form_fields
  */
 function wpsc_display_form_fields() {
-// Field display and Data saving function
 
-	global $wpdb, $user_ID, $wpsc_purchlog_statuses, $gateway_checkout_form_fields, $wpsc_checkout;
+	do_action( 'wpsc_start_display_user_log_form_fields' );
 
-	if ( empty( $wpsc_checkout ) )
-		$wpsc_checkout = new wpsc_checkout();
+	$wpsc_checkout = wpsc_core_get_checkout();
 
-	$meta_data = wpsc_get_customer_meta( 'checkout_details' );
-	$meta_data = apply_filters( 'wpsc_user_log_get', $meta_data, $user_ID );
+	$i = 0;
+	while ( wpsc_have_checkout_items() ) {
+		wpsc_the_checkout_item();
 
-	$form_sql = "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `active` = '1' ORDER BY `checkout_set`, `checkout_order`;";
-	$form_data = $wpdb->get_results( $form_sql, ARRAY_A );
-	foreach ( $form_data as $form_field ) {
-		if ( !empty( $form_field['unique_name'] ) ) {
-			$ff_tag = $form_field['unique_name'];
-		} else {
-			$ff_tag = esc_html( strtolower( str_replace( ' ', '-', $form_field['name'] ) ) );
-		}
+		if ( wpsc_checkout_form_is_header() ) {
+			$i ++;
 
-		if(!empty($meta_data[$form_field['id']]) && !is_array($meta_data[$form_field['id']]))
-			$meta_data[$form_field['id']] = esc_html( $meta_data[$form_field['id']] );
+			// display headers for form fields
+			?>
 
-		if ( $form_field['type'] == 'heading' ) {
-			echo "
-    <tr>
-      <td colspan='2'>\n\r";
-			echo "<strong>" . apply_filters( 'wpsc_account_form_field_' . $ff_tag, esc_html( $form_field['name'] ) ) . "</strong>";
-			echo "
-      </td>
-    </tr>\n\r";
-		} else {
+            <?php if ( $i > 1 ) {?>
+            	</table>
+            	<table>
+            <?php } ?>
 
-			$display = '';
-			if ( in_array( $form_field['unique_name'], array( 'shippingstate', 'billingstate' ) ) ) {
-				if ( $form_field['unique_name'] == 'shippingstate' )
-					$country_field_id = wpsc_get_country_form_id_by_type( 'delivery_country' );
-				else
-					$country_field_id = wpsc_get_country_form_id_by_type( 'country' );
-
-				$country = is_array( $meta_data[$country_field_id] ) ? $meta_data[$country_field_id][0] : $meta_data[$country_field_id];
-				if ( wpsc_has_regions( $country ) )
-					$display = ' style="display:none;"';
-			}
-
-			echo "
-		      <tr{$display}>
-    		    <td align='left'>\n\r";
-					echo apply_filters( 'wpsc_account_form_field_' . $ff_tag, $form_field['name'] );
-					if ( $form_field['mandatory'] == 1 )
-					echo " *";
-					echo "
-        		</td>\n\r
-        		<td  align='left'>\n\r";
-
-			switch ( $form_field['type'] ) {
-				case "city":
-				case "delivery_city":
-				echo "<input type='text' value='" . $meta_data[$form_field['id']] . "' name='collected_data[" . $form_field['id'] . "]' />";
-					break;
-
-				case "address":
-				case "delivery_address":
-				case "textarea":
-					echo "<textarea name='collected_data[" . $form_field['id'] . "]'>" . $meta_data[$form_field['id']] . "</textarea>";
-					break;
-
-				case "text":
-					$value = isset( $meta_data[$form_field['id']] ) ? $meta_data[$form_field['id']] : '';
-					echo "<input type='text' value='" . $value . "' name='collected_data[" . $form_field['id'] . "]' />";
-					break;
-
-				case "region":
-				case "delivery_region":
-					echo "<select name='collected_data[" . $form_field['id'] . "]'>" . nzshpcrt_region_list( $_SESSION['collected_data'][$form_field['id']] ) . "</select>";
-					break;
-
-
-				case "country":
-					if (is_array($meta_data[$form_field['id']]))
-						$country_code = ($meta_data[$form_field['id']][0]);
-					else
-						$country_code = ($meta_data[$form_field['id']]);
-					$html_id = 'wpsc-profile-billing-country';
-					$js = "onchange=\"wpsc_set_profile_country('{$html_id}', '" . $form_field['id'] . "');\"";
-
-					echo "<select id='{$html_id}' {$js} name='collected_data[" . $form_field['id'] . "][0]' >" . nzshpcrt_country_list( $country_code ) . "</select>";
-
-					if ( wpsc_has_regions( $country_code ) ) {
-						$region = isset( $meta_data[$form_field['id']][1] ) ? $meta_data[$form_field['id']][1] : '';
-						echo "<br /><select name='collected_data[" . $form_field['id'] . "][1]'>" . nzshpcrt_region_list( $country_code, $region ) . "</select>";
-					}
-
-
-					break;
-
-				case "delivery_country":
-					if (is_array($meta_data[$form_field['id']]))
-						$country_code = ($meta_data[$form_field['id']][0]);
-					else
-						$country_code = ($meta_data[$form_field['id']]);
-					$html_id = 'wpsc-profile-shipping-country';
-					$js = "onchange=\"wpsc_set_profile_country('{$html_id}', '" . $form_field['id'] . "');\"";
-
-					echo "<select id='{$html_id}' {$js} name='collected_data[" . $form_field['id'] . "][0]' >" . nzshpcrt_country_list( $country_code ) . "</select>";
-					if( wpsc_has_regions( $country_code ) ) {
-						$region = isset( $meta_data[$form_field['id']][1] ) ? $meta_data[$form_field['id']][1] : '';
-						echo "<br /><select name='collected_data[" . $form_field['id'] . "][1]'>" . nzshpcrt_region_list( $country_code, $region ) . "</select>";
-					}
-					break;
-
-				case "email":
-					echo "<input type='text' value='" . $meta_data[$form_field['id']] . "' name='collected_data[" . $form_field['id'] . "]' />";
-					break;
-
-				case "select":
-					$options = $wpsc_checkout->get_checkout_options( $form_field['id'] );
-					$selected = isset( $meta_data[$form_field['id']] ) ? $meta_data[$form_field['id']] : null;
-
-					?>
-						<select name='collected_data[<?php echo esc_attr( $form_field['id'] ); ?>]'>
-							<option value="-1"><?php _ex( 'Select an Option', 'Dropdown default on user log page', 'wpsc' ); ?></option>
-							<?php foreach ( $options as $label => $value ): ?>
-								<option <?php selected( $value, $selected ); ?> value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $label ); ?></option>
-							<?php endforeach ?>
-						</select>
-					<?php
-					break;
-
-				case 'checkbox':
-				case 'radio':
-					$checked_values = isset( $meta_data[$form_field['id']] ) ? (array) $meta_data[$form_field['id']] : array();
-					$options = $wpsc_checkout->get_checkout_options( $form_field['id'] );
-					$field_name = "collected_data[{$form_field['id']}]";
-					if ( $form_field['type'] == 'checkbox' )
-						$field_name .= '[]';
-					foreach ( $options as $label => $value ) {
+               <tr class="checkout-heading-row <?php echo esc_attr( wpsc_the_checkout_item_error_class( false ) );?>">
+	               <td <?php wpsc_the_checkout_details_class(); ?> colspan='2'>
+	               		<h4><?php echo esc_html( wpsc_checkout_form_name() );?></h4>
+	               </td>
+               </tr>
+               <?php if ( wpsc_is_shipping_details() ) {?>
+               <tr class='same_as_shipping_row'>
+		            <td colspan='2'>
+		               	<?php
+		               	$checked = '';
+		               	$shipping_same_as_billing = wpsc_get_customer_meta( 'shippingSameBilling' );
+		               	if ( $shipping_same_as_billing ) {
+							$checked = 'checked="checked"';
+						}
 						?>
-							<label>
-								<input <?php checked( in_array( $value, $checked_values ) ); ?> type="<?php echo $form_field['type']; ?>" id="" name="collected_data[<?php echo esc_attr( $form_field['id'] ); ?>][]" value="<?php echo esc_attr( $value ); ?>"  />
-								<?php echo esc_html( $label ); ?>
-							</label><br />
-						<?php
-					}
-					break;
+						<label for='shippingSameBilling'>
+							<input type='checkbox'
+								value='true'
+								data-wpsc-meta-key="shippingSameBilling"
+								class="wpsc-visitor-meta"
+								name='shippingSameBilling'
+								id='shippingSameBilling' <?php echo $checked; ?> />
+							<?php _e( 'Same as billing address:', 'wpsc' ); ?>
+						</label>
+						<br>
+						<span id="shippingsameasbillingmessage"><?php _e('Your orders will be shipped to the billing address', 'wpsc'); ?></span>
+					</td>
+			</tr>
+			<?php }
 
-				default:
-					$value = isset( $meta_data[$form_field['id']] ) ? $meta_data[$form_field['id']] : '';
-					echo "<input type='text' value='" . $value . "' name='collected_data[" . $form_field['id'] . "]' />";
-					break;
-			}
-			echo wp_nonce_field( 'wpsc_user_profile', '_wpsc_user_profile' );
-			echo "
+			// Not a header so start display form fields
+		} elseif ( wpsc_disregard_shipping_state_fields() ) {
+			?>
+            <tr class='wpsc_hidden'>
+		<td class='<?php echo wpsc_checkout_form_element_id(); ?>'><label
+			for='<?php echo wpsc_checkout_form_element_id(); ?>'>
+                     <?php echo wpsc_checkout_form_name();?>
+            </label>
         </td>
-      </tr>\n\r";
+		<td>
+			<?php echo wpsc_checkout_form_field();?>
+			<?php if ( wpsc_the_checkout_item_error() != '' ) { ?>
+				<p class='validation-error'><?php echo wpsc_the_checkout_item_error(); ?></p>
+			<?php } ?>
+        </td>
+	</tr>
+        <?php
+		} elseif ( wpsc_disregard_billing_state_fields() ) {
+			?>
+            <tr class='wpsc_hidden'>
+            	<td class='<?php echo wpsc_checkout_form_element_id(); ?>'><label
+            		for='<?php echo wpsc_checkout_form_element_id(); ?>'>
+                     <?php echo wpsc_checkout_form_name();?>
+                     </label>
+                </td>
+                <td>
+                     <?php echo wpsc_checkout_form_field();?>
+                      <?php if(wpsc_the_checkout_item_error() != ''): ?>
+                             <p class='validation-error'><?php echo wpsc_the_checkout_item_error(); ?></p>
+                     <?php endif; ?>
+                </td>
+            </tr>
+            <?php
+		} elseif ( $wpsc_checkout->checkout_item->unique_name == 'billingemail' ) {
+			?>
+               <?php
 
-		}
-	}
-	/* Returns an empty array at this point, empty in regards to fields, does show the internalname though.  Needs to be reconsidered, even if it did work, need to check
-	 * functionality and PCI_DSS compliance
+               	$email_markup = "<div class='wpsc_email_address'>
+                  <p class='" . wpsc_checkout_form_element_id() . "'>
+                     <label class='wpsc_email_address' for='" . wpsc_checkout_form_element_id() . "'>
+                     " . __( 'Enter your email address', 'wpsc' ) . "
+                     </label>
+                  <p class='wpsc_email_address_p'>
+                  <img src='https://secure.gravatar.com/avatar/empty?s=60&amp;d=mm' id='wpsc_checkout_gravatar' />
+                  " . wpsc_checkout_form_field();
 
-	  if ( isset( $gateway_checkout_form_fields ) )
-	  {
-	  echo $gateway_checkout_form_fields;
-	  }
-	 */
+			if ( wpsc_the_checkout_item_error() != '' )
+				$email_markup .= "<p class='validation-error'>" . wpsc_the_checkout_item_error() . "</p>";
+			$email_markup .= "</div>";
+		} else {
+			?>
+			<tr>
+				<td class='<?php echo wpsc_checkout_form_element_id(); ?>'>
+					<label
+						for='<?php echo esc_attr( wpsc_checkout_form_element_id() ); ?>'>
+		                <?php echo wpsc_checkout_form_name();?>
+		            </label>
+                </td>
+                <td>
+                  <?php echo wpsc_checkout_form_field();?>
+                   <?php if ( wpsc_the_checkout_item_error() != '' ) { ?>
+                          <p class='validation-error'><?php echo wpsc_the_checkout_item_error(); ?></p>
+                  <?php } ?>
+               </td>
+            </tr>
+         <?php }//endif; ?>
+      <?php } // end while ?>
+      <?php
 }
 
 function wpsc_has_downloads() {
 	global $wpdb, $user_ID, $files, $links, $products;
 
-	$purchases = $wpdb->get_results( "SELECT `id`, `processed` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE user_ID = " . (int)$user_ID . "" );
+	$purchases = $wpdb->get_results( "SELECT `id`, `processed` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE user_ID = " . ( int ) $user_ID . "" );
 	$rowcount = count( $purchases );
 
 	if ( $rowcount >= 1 ) {
 		$perchidstr = "(";
 		$perchids = array();
-		foreach( (array)$purchases as $purchase ) {
+		foreach ( ( array ) $purchases as $purchase ) {
 			$is_transaction = wpsc_check_purchase_processed( $purchase->processed );
 			if( $is_transaction ) {
 				$perchids[] = $purchase->id;

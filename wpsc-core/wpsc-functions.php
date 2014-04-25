@@ -702,3 +702,20 @@ function wpsc_core_load_page_titles() {
 		$wpsc_page_titles = wpsc_get_page_post_names();
 }
 
+/**
+ * get the global checkout object, will create it
+ *
+ * @return wpsc_checkout       the global checkout object
+ */
+function wpsc_core_get_checkout() {
+	global $wpsc_checkout;
+
+	if ( empty( $wpsc_checkout ) || ! is_a( $wpsc_checkout, 'wpsc_checkout' ) ) {
+		$wpsc_checkout = new wpsc_checkout();
+	}
+
+	$wpsc_checkout->rewind_checkout_items();
+
+	return $wpsc_checkout;
+
+}

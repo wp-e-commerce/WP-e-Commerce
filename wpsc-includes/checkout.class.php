@@ -315,12 +315,12 @@ class wpsc_checkout {
 				break;
 
 			case "country":
-				$output = wpsc_country_list( $this->checkout_item->id, false, $billing_country, $billing_region, $this->form_element_id() );
+				$output = wpsc_country_list( $this->checkout_item->id, null, $billing_country, $billing_region, $this->form_element_id() );
 				break;
 
 			case "delivery_country":
 				$checkoutfields = true;
-				$output = wpsc_country_list( $this->checkout_item->id, false, $delivery_country, $delivery_region, $this->form_element_id(), $checkoutfields );
+				$output = wpsc_country_list( $this->checkout_item->id, null, $delivery_country, $delivery_region, $this->form_element_id(), $checkoutfields );
 				break;
 
 			case "select":
