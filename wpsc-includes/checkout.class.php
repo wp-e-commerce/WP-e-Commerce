@@ -224,7 +224,7 @@ class wpsc_checkout {
 	function form_element_active() {
 		return $this->checkout_item->active != 0;
 	}
-	
+
 	/**
 	 * form_element_id method, returns the form html ID
 	 * @access public
@@ -315,12 +315,12 @@ class wpsc_checkout {
 				break;
 
 			case "country":
-				$output = wpsc_country_region_list( $this->checkout_item->id, false, $billing_country, $billing_region, $this->form_element_id() );
+				$output = wpsc_country_list( $this->checkout_item->id, false, $billing_country, $billing_region, $this->form_element_id() );
 				break;
 
 			case "delivery_country":
 				$checkoutfields = true;
-				$output = wpsc_country_region_list( $this->checkout_item->id, false, $delivery_country, $delivery_region, $this->form_element_id(), $checkoutfields );
+				$output = wpsc_country_list( $this->checkout_item->id, false, $delivery_country, $delivery_region, $this->form_element_id(), $checkoutfields );
 				break;
 
 			case "select":
@@ -355,25 +355,12 @@ class wpsc_checkout {
 			case "email":
 			case "coupon":
 			default:
-				$placeholder = apply_filters( 'wpsc_checkout_field_placeholder', apply_filters( 'wpsc_checkout_field_name', $this->checkout_item->name ), $this->checkout_item );
 				if ( $this->checkout_item->unique_name == 'shippingstate' ) {
-					if ( wpsc_uses_shipping() && wpsc_has_regions( $delivery_country ) ) {
-						$output = '<input data-wpsc-meta-key="' . $this->checkout_item->unique_name. '" title="' . $this->checkout_item->unique_name . '" id="' . $this->form_element_id() . '" class="shipping_region wpsc-visitor-meta" name="collected_data[' . $this->checkout_item->id . ']" placeholder="' . esc_attr( $placeholder ) . '" value="' . esc_attr( $delivery_region ) . '" />';
-					} else {
-						$disabled = '';
-						if ( wpsc_disregard_shipping_state_fields() ) {
-							$disabled = 'disabled = "disabled"';
-						}
-
-						$output = '<input class="shipping_region text wpsc-visitor-meta" data-wpsc-meta-key="' . $this->checkout_item->unique_name . '" title="' . $this->checkout_item->unique_name . '" type="text" id="' . $this->form_element_id() . '" placeholder="' . esc_attr( $placeholder ) . '" value="' . esc_attr( $saved_form_data ) . '" name="collected_data[' . $this->checkout_item->id . ']' . $an_array . '" ' . $disabled. ' />';
-					}
+					$output .= wpsc_checkout_shipping_state_and_region( $this );
 				} elseif ( $this->checkout_item->unique_name == 'billingstate' ) {
-					$disabled = '';
-					if ( wpsc_disregard_billing_state_fields() ) {
-						$disabled = 'disabled = "disabled"';
-					}
-					$output = '<input class="billing_region text  wpsc-visitor-meta" data-wpsc-meta-key="' . $this->checkout_item->unique_name . '" title="' . $this->checkout_item->unique_name . '" type="text" id="' . $this->form_element_id() . '" placeholder="' . esc_attr( $placeholder ) . '" value="' . esc_attr( $saved_form_data ) . '" name="collected_data[' . $this->checkout_item->id . ']' . $an_array . '" "' . $disabled . ' />';
+					$output .= wpsc_checkout_billing_state_and_region( $this );
 				} else {
+					$placeholder = apply_filters( 'wpsc_checkout_field_placeholder', apply_filters( 'wpsc_checkout_field_name', $this->checkout_item->name ), $this->checkout_item );
 					$output = '<input data-wpsc-meta-key="' . $this->checkout_item->unique_name . '" title="' . $this->checkout_item->unique_name . '" type="text" id="' . $this->form_element_id() . '" class="text wpsc-visitor-meta" placeholder="' . esc_attr( $placeholder ) . '" value="' . esc_attr( $saved_form_data ) . '" name="collected_data[' . $this->checkout_item->id . ']' . $an_array . '" />';
 				}
 
@@ -630,5 +617,31 @@ class wpsc_checkout {
 			$this->checkout_item = $this->checkout_items[0];
 		}
 	}
+
+	/**
+	 * find the checkout item that corresponsds to the identifier
+	 *
+	 * @param int|string $id  the checkout item identifier, if a numeric the checkout item id, if a string the checkout item unique name
+	 *
+	 * @return cehckout item found, or false if not found
+	 */
+	function get_checkout_item( $id ) {
+		$result = false;
+		if ( is_numeric( $id ) ) {
+			$result = $this->checkout_items[$id];
+		} else {
+			foreach ( $this->checkout_items as $checkout_item_id => $checkout_item ) {
+				if ( ! empty( $checkout_item->unique_name ) && $checkout_item->unique_name == $id ) {
+					$result = $checkout_item;
+					break;
+				}
+			}
+		}
+
+		return $result;
+	}
+
+
+
 
 }

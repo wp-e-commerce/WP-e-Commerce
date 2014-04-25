@@ -150,7 +150,7 @@ endif;
             <?php else: ?>
                <tr class='wpsc_update_location_error'>
                   <td colspan='5' class='shipping_error' >
-                     <?php _e('Sorry, online ordering is unavailable to this destination and/or weight. Please double check your destination details.', 'wpsc'); ?>
+                     <?php _e('Sorry, shipping quotes could not be calculated with the details provided. Please double check your shipping address details.', 'wpsc'); ?>
                   </td>
                </tr>
             <?php endif; ?>
@@ -352,7 +352,7 @@ endif;
             // Not a header so start display form fields
             }elseif(wpsc_disregard_shipping_state_fields()){
             ?>
-               <tr class='wpsc_hidden'>
+               <tr>
                   <td class='<?php echo wpsc_checkout_form_element_id(); ?>'>
                      <label for='<?php echo wpsc_checkout_form_element_id(); ?>'>
                      <?php echo wpsc_checkout_form_name();?>
@@ -368,7 +368,7 @@ endif;
             <?php
             }elseif(wpsc_disregard_billing_state_fields()){
             ?>
-               <tr class='wpsc_hidden'>
+               <tr>
                   <td class='<?php echo wpsc_checkout_form_element_id(); ?>'>
                      <label for='<?php echo wpsc_checkout_form_element_id(); ?>'>
                      <?php echo wpsc_checkout_form_name();?>
