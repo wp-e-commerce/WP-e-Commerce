@@ -253,7 +253,7 @@ function wpsc_check_for_shipping_recalc_needed( response ) {
 	// TODO: if shipping needs to be re-calculated we need to refresh the page.  This is the only option
 	// in version 3.8.14 and earlier.  Future versions should support replacing the shipping quote elements
 	// via AJAX
-	if ( response.hasOwnProperty( 'needs_shipping_recalc' ) ) {
+	if ( response.hasOwnProperty( 'needs_shipping_recalc' ) && jQuery( '#checkout_page_container' ).length ) {
 		if ( response.needs_shipping_recalc ) {
 
 			var form = jQuery('table.productcart' ).first();
