@@ -171,9 +171,9 @@ function wpsc_country_region_list( $form_id = null, $ajax = false, $selected_cou
  * get a country list for checkout
  *
  * @param string|null $form_id
- * @param string|boolean $ajax
+ * @param deprecated $ajax
  * @param string|null $selected_country
- * @param string|null $selected_region
+ * @param deprecated $selected_region
  * @param string|null $supplied_form_id
  * @param boolean $shippingfields
  * @return string
@@ -230,7 +230,7 @@ function wpsc_country_list( $form_id = null, $ajax = false, $selected_country = 
  *
  * @since 3.8.14
  *
- * @param object|null of type wpsc_checkout $wpsc_checkout
+ * @param wpsc_checkout|null of type wpsc_checkout $wpsc_checkout
  * @return string
  */
 function wpsc_checkout_billing_state_and_region( $wpsc_checkout = null ) {

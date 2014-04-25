@@ -353,7 +353,7 @@ class WPSC_Country {
 	 *
 	 * @param int|string	required	$region_identifier 	The region identifier, can be the text region code, or the numeric region id
 	 *
-	 * @return WPSC_Region|false The region, or false if the region code is not valid for the country
+	 * @return WPSC_Region|boolean The region, or false if the region code is not valid for the country
 	 */
 	public function get_region( $region ) {
 
