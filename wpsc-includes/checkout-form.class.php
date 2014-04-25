@@ -54,6 +54,16 @@ class WPSC_Checkout_Form {
 	private $field_unique_name_id;
 
 	/**
+	 * only include active checkout elements
+	 *
+	 * @access private
+	 * @since 3.8.14
+	 *
+	 * @var boolean
+	 */
+	private $active_only = true;
+
+	/**
 	 * Returns an instance of the form with a particular ID
 	 *
 	 * @access public
@@ -80,8 +90,9 @@ class WPSC_Checkout_Form {
 	 *
 	 * @param string $id Optional. Defaults to 0.
 	 */
-	public function __construct( $id = 0 ) {
+	public function __construct( $id = 0, $active_only = true ) {
 		$this->id = $id;
+		$this->active_only = $active_only;
 		$this->get_fields();
 	}
 
@@ -136,13 +147,15 @@ class WPSC_Checkout_Form {
 	 * @return mixed False if not found, field information if found.
 	 */
 	public function get_field_by_unique_name( $unique_name ) {
-		if ( is_null( $this->field_unique_name_id ) ) {
-			$this->field_unique_name_id = array();
-			foreach ( $this->get_fields() as $field ) {
-				$this->field_unique_name_id[$field->unique_name] = $field->id;
-			}
+		$field = false;
+
+		$id = $this->get_field_id_by_unique_name( $unique_name );
+
+		if ( $id ) {
+			$field = $this->fields[$id];
 		}
-		return isset( $this->field_unique_name_id[$unique_name] ) ? $this->field_unique_name_id[$unique_name] : false;
+
+		return $field;
 	}
 
 	/**
@@ -159,7 +172,16 @@ class WPSC_Checkout_Form {
 	public function get_fields( $exclude_heading = false ) {
 		if ( is_null( $this->fields ) ) {
 			global $wpdb;
-			$sql = 'SELECT `id`, `name`, `type`, `mandatory`, `display_log`, `default`, `active`, `checkout_order`, `unique_name`, `options`, `checkout_set` FROM ' . WPSC_TABLE_CHECKOUT_FORMS . ' WHERE checkout_set = %d AND active = 1 ORDER BY checkout_order ASC';
+			if ( $this->active_only ) {
+				$sql = 'SELECT `id`, `name`, `type`, `mandatory`, `display_log`, `default`, `active`, `checkout_order`, `unique_name`, `options`, `checkout_set` '
+							. ' FROM '. WPSC_TABLE_CHECKOUT_FORMS
+							. ' WHERE checkout_set = %d  AND active = 1 ORDER BY checkout_order ASC';
+			} else {
+				$sql = 'SELECT `id`, `name`, `type`, `mandatory`, `display_log`, `default`, `active`, `checkout_order`, `unique_name`, `options`, `checkout_set` '
+						. ' FROM '. WPSC_TABLE_CHECKOUT_FORMS
+						. ' WHERE checkout_set = %d ORDER BY checkout_order ASC';
+			}
+
 			$this->fields = $wpdb->get_results( $wpdb->prepare( $sql, $this->id ), OBJECT_K );
 			$this->field_unique_name_id = null;
 		}
