@@ -230,7 +230,7 @@ function wpsc_country_list( $form_id = null, $ajax = null, $selected_country = n
  *
  * @since 3.8.14
  *
- * @param wpsc_checkout|null of type wpsc_checkout $wpsc_checkout
+ * @param wpsc_checkout|null  $wpsc_checkout checkout object
  * @return string
  */
 function wpsc_checkout_billing_state_and_region( $wpsc_checkout = null ) {
@@ -368,7 +368,7 @@ function wpsc_checkout_billing_state_and_region( $wpsc_checkout = null ) {
  *
  * @since 3.8.14
  *
- * @param object|null wpsc_checkout $wpsc_checkout
+ * @param wpsc_checkout|null  $wpsc_checkout checkout object
  * @return string
  */
 function wpsc_checkout_shipping_state_and_region( $wpsc_checkout = null ) {
@@ -450,7 +450,6 @@ function wpsc_checkout_shipping_state_and_region( $wpsc_checkout = null ) {
 
 
 	// setup the drop down field, aka 'shippingregion'
-	$region_form_id = $checkout_form->get_field_id_by_unique_name( 'shippingcountry' );
 
 	// move the checkout item pointer to the billing country, so we can generate form element ids, highly lame
 	$wpsc_checkout->checkout_item = $checkout_form->get_field_by_unique_name( 'shippingcountry' );
