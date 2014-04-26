@@ -282,16 +282,17 @@ class wpsc_cart {
      * @access public
      */
 	function get_shipping_method() {
-		global $wpdb, $wpsc_shipping_modules;
+		global $wpsc_shipping_modules;
+
 		// Reset all the shipping data in case the destination has changed
 		$this->selected_shipping_method = null;
 		$this->selected_shipping_option = null;
-		$this->shipping_option = null;
-		$this->shipping_method = null;
-		$this->shipping_methods = array();
-		$this->shipping_quotes = array();
-		$this->shipping_quote = null;
-		$this->shipping_method_count = 0;
+		$this->shipping_option          = null;
+		$this->shipping_method          = null;
+		$this->shipping_methods         = array();
+		$this->shipping_quotes          = array();
+		$this->shipping_quote           = null;
+		$this->shipping_method_count    = 0;
 
 		// set us up with a shipping method.
 		$custom_shipping = get_option( 'custom_shipping_options' );
@@ -316,7 +317,6 @@ class wpsc_cart {
 				if ( is_callable( array( &$wpsc_shipping_modules[ $this->selected_shipping_method ], 'getQuote'  ) ) ) {
 					$this->shipping_quotes = $wpsc_shipping_modules[ $this->selected_shipping_method ]->getQuote();
 				}
-
 			} else {
 
 				// select the shipping quote with lowest value
