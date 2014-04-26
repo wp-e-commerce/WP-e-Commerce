@@ -387,7 +387,7 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 	}
 
 	if ( $uses_zipcode ) {
-		$output .= " <input type='text' style='color:" . $color . ";' onclick='if (this.value==\"" . esc_js( $zip_code_text ) . "\") {this.value=\"\";this.style.color=\"#000\";}' onblur='if (this.value==\"\") {this.style.color=\"#999\"; this.value=\"" . esc_js( $zip_code_text ) . "\"; }' value='" . esc_attr( $zipvalue ) . "' size='10' name='zipcode' id='zipcode'>";
+		$output .= " <input data-wpsc-meta-key='shippingpostcode' class='wpsc-visitor-meta' type='text' style='color:" . $color . ";' onclick='if (this.value==\"" . esc_js( $zip_code_text ) . "\") {this.value=\"\";this.style.color=\"#000\";}' onblur='if (this.value==\"\") {this.style.color=\"#999\"; this.value=\"" . esc_js( $zip_code_text ) . "\"; }' value='" . esc_attr( $zipvalue ) . "' size='10' name='zipcode' id='zipcode'>";
 	}
 	return $output;
 }
