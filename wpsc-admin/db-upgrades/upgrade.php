@@ -19,7 +19,7 @@ function _wpsc_maybe_upgrade() {
 	if ( ! _wpsc_needs_upgrade() )
 		return;
 
-	for ( $i = $current_db_ver + 1; $i <= WPSC_DB_VERSION; $i ++ ) {
+	for ( $i = $current_db_ver + 1; $i <= WPSC_DB_VERSION; $i++ ) {
 		$file_path = WPSC_FILE_PATH . '/wpsc-admin/db-upgrades/routines/' . $i . '.php';
 
 		if ( file_exists( $file_path ) )
@@ -28,9 +28,15 @@ function _wpsc_maybe_upgrade() {
 		if ( ! function_exists( '_wpsc_db_upgrade_' . $i ) )
 			continue;
 
+		wp_cache_flush();
+
 		call_user_func( '_wpsc_db_upgrade_' . $i );
 		update_option( 'wpsc_db_version', $i );
+
 	}
+
+	wp_cache_flush();
+
 }
 
 function _wpsc_upgrade_display_backup_warning() {
