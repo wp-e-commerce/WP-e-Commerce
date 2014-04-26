@@ -7,6 +7,7 @@
 
 /**
  * Are we processing a customer meta AJAX request
+ *
  * @param string $action optional parameter to see if we are processing a specific action
  * @return boolean
  * @since 3.8.14

@@ -494,10 +494,15 @@ class wpsc_cart {
 	function set_item( $product_id, $parameters, $updater = false ) {
 
 		// default action is adding
-		$add_item = false;
-		$edit_item = false;
+		$add_item        = false;
+		$edit_item       = false;
+		$variation_check = true;
 
-		if ( $parameters ['quantity'] > 0 && $this->check_remaining_quantity( $product_id, $parameters ['variation_values'], $parameters ['quantity'] ) ) {
+		if ( wpsc_product_has_variations( $product_id ) && is_null( $parameters['variation_values'] ) ) {
+			$variation_check = false;
+		}
+
+		if ( $variation_check && $parameters['quantity'] > 0 && $this->check_remaining_quantity( $product_id, $parameters['variation_values'], $parameters['quantity'] ) ) {
 
 			$new_cart_item = new wpsc_cart_item( $product_id, $parameters, $this );
 

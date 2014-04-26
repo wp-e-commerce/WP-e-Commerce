@@ -20,43 +20,42 @@ class wpsc_cart_item {
 	private static $variation_cache;
 
 	// each cart item contains a reference to the cart that it is a member of
-	var $cart;
+	public $cart;
 
 	// provided values
-	var $product_id;
-	var $variation_values;
-	var $product_variations;
-	var $variation_data;
-	var $quantity = 1;
-	var $provided_price;
+	public $product_id;
+	public $variation_values;
+	public $product_variations;
+	public $variation_data;
+	public $quantity = 1;
+	public $provided_price;
 
 
 	//values from the database
-	var $product_name;
-	var $category_list = array();
-	var $category_id_list = array();
-	var $unit_price;
-	var $total_price;
-	var $taxable_price = 0;
-	var $tax = 0;
-	var $weight = 0;
-	var $shipping = 0;
-	var $sku = null;
-	var $product_url;
-	var $image_id;
-	var $thumbnail_image;
-	var $custom_tax_rate = null;
-	var $meta = array();
+	public $product_name;
+	public $category_list = array();
+	public $category_id_list = array();
+	public $unit_price;
+	public $total_price;
+	public $taxable_price = 0;
+	public $tax = 0;
+	public $weight = 0;
+	public $shipping = 0;
+	public $sku = null;
+	public $product_url;
+	public $image_id;
+	public $thumbnail_image;
+	public $custom_tax_rate = null;
+	public $meta = array();
 
-	private $item_meta = array();
 
-	var $is_donation = false;
-	var $apply_tax = true;
-	var $priceandstock_id;
+	public $is_donation = false;
+	public $apply_tax = true;
+	public $priceandstock_id;
 
 	// user provided values
-	var $custom_message = null;
-	var $custom_file = null;
+	public $custom_message = null;
+	public $custom_file = null;
 
 	/**
 	 * compare cart item meta
@@ -99,11 +98,11 @@ class wpsc_cart_item {
 	 */
 	function update_meta($key,$value=null) {
 
-		if ( !isset( $value ) ) {
-			$result = $this->delete_meta($key);
+		if ( ! isset( $value ) ) {
+			$result = $this->delete_meta( $key );
 		} else {
-			$result = isset($this->meta[$key])?$this->meta[$key]:null;
-			$this->item_meta[$key] = $value;
+			$result = isset( $this->meta[ $key ] ) ? $this->meta[ $key ] : null;
+			$this->item_meta[ $key ] = $value;
 		}
 
 		return $result;
@@ -161,33 +160,31 @@ class wpsc_cart_item {
 	 * @param objcet  the cart object
 	 * @return boolean true on sucess, false on failure
 	 */
-	function wpsc_cart_item($product_id, $parameters, $cart) {
-		global $wpdb;
+	function __construct( $product_id, $parameters, $cart ) {
+
 		// still need to add the ability to limit the number of an item in the cart at once.
 		// each cart item contains a reference to the cart that it is a member of, this makes that reference
 		// The cart is in the cart item, which is in the cart, which is in the cart item, which is in the cart, which is in the cart item...
 		$this->cart = &$cart;
 
-
-		foreach($parameters as $name => $value) {
+		foreach ( $parameters as $name => $value ) {
 			$this->$name = $value;
 		}
 
+		$this->product_id = absint( $product_id );
 
-		$this->product_id = absint($product_id);
 		// to preserve backwards compatibility, make product_variations a reference to variations.
 		$this->product_variations =& $this->variation_values;
 
-
-
-		if(($parameters['is_customisable'] == true) && ($parameters['file_data'] != null)) {
-			$this->save_provided_file($this->file_data);
+		if ( $parameters['is_customisable'] == true && $parameters['file_data'] != null ) {
+			$this->save_provided_file( $this->file_data );
 		}
 
 		$this->refresh_item();
 
-		if ( ! has_action( 'wpsc_add_item', array( 'wpsc_cart_item', 'refresh_variation_cache' ) ) )
+		if ( ! has_action( 'wpsc_add_item', array( 'wpsc_cart_item', 'refresh_variation_cache' ) ) ) {
 			add_action( 'wpsc_add_item', array( 'wpsc_cart_item', 'refresh_variation_cache' ) );
+		}
 
 	}
 
@@ -354,8 +351,9 @@ class wpsc_cart_item {
 
 		$title = apply_filters( 'wpsc_cart_product_title', $title, $this->product_id, $this );
 
-		if ( $mode == 'display' )
+		if ( $mode == 'display' ) {
 			$title = apply_filters( 'the_title', $title, $this );
+		}
 
 		return $title;
 	}
@@ -450,7 +448,6 @@ class wpsc_cart_item {
 		}
 	}
 
-
 	/**
 	 * update_claimed_stock method
 	 * Updates the claimed stock table, to prevent people from having more than the existing stock in their carts
@@ -469,7 +466,6 @@ class wpsc_cart_item {
 			$claimed_query->update_claimed_stock( $this->quantity );
 		}
 	}
-
 
 	/**
 	 * save to database method

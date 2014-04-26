@@ -742,14 +742,14 @@ function wpsc_get_label_element( input ) {
 	}
 
 	var label_element;
-	
+
 	if ( input_element ) {
 		var element_id = input_element.attr('id');
 		if ( element_id ) {
 			label_element = jQuery( "label[for='" + element_id + "']" ).first();
 		}
 	}
-	
+
 	return label_element;
 }
 

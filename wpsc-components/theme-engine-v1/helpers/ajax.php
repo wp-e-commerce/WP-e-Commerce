@@ -104,15 +104,16 @@ function wpsc_add_to_cart() {
 	$product_id = apply_filters( 'wpsc_add_to_cart_product_id'    , (int) $_POST['product_id'] );
 	$product    = apply_filters( 'wpsc_add_to_cart_product_object', get_post( $product_id, OBJECT, 'display' ) );
 
-	if ( ! in_array( $product->post_status, $permitted_post_statuses ) || 'wpsc-product' != $product->post_type )
+	if ( ! in_array( $product->post_status, $permitted_post_statuses ) || 'wpsc-product' != $product->post_type ) {
 		return false;
+	}
 
 	// compatibility with older themes
 	if ( isset( $_POST['wpsc_quantity_update'] ) && is_array( $_POST['wpsc_quantity_update'] ) ) {
 		$_POST['wpsc_quantity_update'] = $_POST['wpsc_quantity_update'][$product_id];
 	}
 
-	if ( isset($_POST['variation'] ) ) {
+	if ( isset( $_POST['variation'] ) ) {
 
 		foreach ( (array) $_POST['variation'] as $key => $variation ) {
 			$provided_parameters['variation_values'][ (int) $key ] = (int) $variation;
@@ -154,21 +155,33 @@ function wpsc_add_to_cart() {
 	$cart_item = $wpsc_cart->set_item( $product_id, $parameters );
 
 	if ( is_object( $cart_item ) ) {
+
 		do_action( 'wpsc_add_to_cart', $product, $cart_item );
 		$cart_messages[] = str_replace( "[product_name]", $cart_item->get_title(), __( 'You just added "[product_name]" to your cart.', 'wpsc' ) );
+
 	} else {
 		if ( $parameters['quantity'] <= 0 ) {
+
 			$cart_messages[] = __( 'Sorry, but you cannot add zero items to your cart', 'wpsc' );
+
+		} else if ( wpsc_product_has_variations( $product_id ) && is_null( $parameters['variation_values'] ) ) {
+
+			$cart_messages[] = apply_filters( 'wpsc_add_to_cart_variation_missing_message', sprintf( __( 'This product has several options to choose from.<br /><br /><a href="%s" style="display:inline; float:none; margin: 0; padding: 0;">Visit the product page</a> to select options.', 'wpsc' ), esc_url( get_permalink( $product_id ) ) ), $product_id );
+
 		} else if ( $wpsc_cart->get_remaining_quantity( $product_id, $parameters['variation_values'], $parameters['quantity'] ) > 0 ) {
-			$quantity = $wpsc_cart->get_remaining_quantity( $product_id, $parameters['variation_values'], $parameters['quantity'] );
+
+			$quantity        = $wpsc_cart->get_remaining_quantity( $product_id, $parameters['variation_values'], $parameters['quantity'] );
 			$cart_messages[] = sprintf( _n( 'Sorry, but there is only %s of this item in stock.', 'Sorry, but there are only %s of this item in stock.', $quantity, 'wpsc' ), $quantity );
+
 		} else {
+
 			$cart_messages[] = apply_filters( 'wpsc_add_to_cart_out_of_stock_message', __( 'Sorry, but this item is out of stock.', 'wpsc' ), $product_id );
+
 		}
 	}
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		$json_response = array( 'cart_messages' => $cart_messages, 'product_id' => $product_id, 'cart_total' => wpsc_cart_total() );
+		$json_response = array( 'bad_var' => wpsc_product_has_variations( $product_id ) && is_null( $parameters['variation_values'] ), 'cart_messages' => $cart_messages, 'product_id' => $product_id, 'cart_total' => wpsc_cart_total() );
 
 		$output = _wpsc_ajax_get_cart( false, $cart_messages );
 
