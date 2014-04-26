@@ -761,7 +761,7 @@ function _wpsc_vistor_shipping_same_as_billing_meta_update( $meta_value, $meta_k
 
 		if ( $shipping_same_as_billing ) {
 
-			$meta_key_starts_with_billing = strpos( $meta_key, 'billing', 0 ) === 0;
+			$meta_key_starts_with_billing  = strpos( $meta_key, 'billing', 0 ) === 0;
 			$meta_key_starts_with_shipping = strpos( $meta_key, 'shipping', 0 ) === 0;
 
 			if ( $meta_key_starts_with_billing ) {

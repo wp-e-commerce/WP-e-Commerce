@@ -2037,3 +2037,48 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
 function wpsc_css_header() {
 	_wpsc_deprecated_function( __FUNCTION__, '3.8.14' );
 }
+
+/**
+ * deprecating item filters from wpsc_display_form_fields() in release 3.8.13.4
+ *
+ *  @deprecated 3.8.14
+ *
+ * This function displays each of the form fields.
+ *
+ * Each of them are filterable via 'wpsc_account_form_field_$tag'
+ * where tag is permalink-styled name or uniquename. i.e. First Name under Shipping would be
+ * 'wpsc_account_form_field_shippingfirstname' - while Your Billing Details would be filtered
+ * via 'wpsc_account_form_field_your-billing-details'.
+ *
+ * @param varies  $meta_value
+ * @param string  $meta_key
+ * @param int     $visitor_id
+ *
+ */
+function wpsc_user_log_deprecated_filter_values( $meta_value, $meta_key, $visitor_id ) {
+	$filter = 'wpsc_account_form_field_' . $meta_key;
+	if ( has_filter( $filter ) ) {
+		$meta_value = apply_filters( $filter , esc_html( $meta_value ) );
+		_wpsc_doing_it_wrong( $filter, __( 'The filter being used has been deprecated. Use wpsc_get_visitor_meta or wpsc_get_visitor_meta_$neta_name instead.' ), '3.8.14' );
+	}
+
+	return $meta_value;
+}
+add_filter( 'wpsc_get_visitor_meta', 'wpsc_user_log_deprecated_filter_values', 10, 3 );
+
+/**
+ * deprecating user log filter for getting all customer meta as an array.
+ *
+ *fs@deprecated 3.8.14
+ *
+ * @return none
+ */
+function wpsc_deprecated_filter_user_log_get() {
+	if ( has_filter( 'wpsc_user_log_get' ) ) {
+		$meta_data = wpsc_get_customer_meta( 'checkout_details' );
+		$meta_data = apply_filters( 'wpsc_user_log_get', $meta_data, wpsc_get_current_customer_id() );
+		wpsc_update_customer_meta( 'checkout_details', $meta_data );
+		_wpsc_doing_it_wrong( 'wpsc_user_log_get', __( 'The filter being used has been deprecated. Use wpsc_get_visitor_meta or wpsc_get_visitor_meta_$neta_name instead.' ), '3.8.14' );
+	}
+}
+add_filter( 'wpsc_start_display_user_log_form_fields', 'wpsc_deprecated_filter_user_log_get', 10, 0 );

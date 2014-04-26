@@ -183,8 +183,6 @@ function wpsc_country_list( $form_id = null, $ajax = null, $selected_country = n
 
 	$output = '';
 
-	$selected_country = new WPSC_Country( $selected_country );
-
 	if ( $form_id != null ) {
 		$html_form_id = "region_country_form_$form_id";
 	} else {
@@ -192,13 +190,13 @@ function wpsc_country_list( $form_id = null, $ajax = null, $selected_country = n
 	}
 
 	if ( $shippingfields ) {
-		$js = '';
+		$js    = '';
 		$title = 'shippingcountry';
-		$id = 'shippingcountry';
+		$id    = 'shippingcountry';
 	} else {
-		$js = '';
+		$js    = '';
 		$title = 'billingcountry';
-		$id = 'billingcountry';
+		$id    = 'billingcountry';
 	}
 
 	if ( empty( $supplied_form_id ) ) {
@@ -213,7 +211,7 @@ function wpsc_country_list( $form_id = null, $ajax = null, $selected_country = n
 													'id'                    => $supplied_form_id,
 													'name'                  => "collected_data[{$form_id}][0]",
 													'class'                 => 'current_country wpsc-visitor-meta',
-													'selected'              => $selected_country->get_isocode(),
+													'selected'              => $selected_country,
 													'additional_attributes' => $additional_attributes,
 													'placeholder'           => __( 'Please select a country', 'wpsc' ),
 												)
@@ -392,11 +390,9 @@ function wpsc_checkout_shipping_state_and_region( $wpsc_checkout = null ) {
 	// check a new checkout form with all fields
 	$checkout_form = new WPSC_Checkout_Form( null, false );
 
-
 	// is the shipping country visible on the form, let's find out
 	$shipping_country_form_element = $checkout_form->get_field_by_unique_name( 'shippingcountry' );
 	$showing_shipping_country = (bool)$shipping_country_form_element->active;
-
 
 	// make sure the shipping state is the current checkout element
 	$wpsc_checkout->checkout_item = $wpsc_checkout->get_checkout_item( 'shippingstate' );
@@ -464,8 +460,6 @@ function wpsc_checkout_shipping_state_and_region( $wpsc_checkout = null ) {
 	$title = 'shippingregion';
 
 	$region_form_id = $wpsc_checkout->form_element_id() . '_region';
-
-	$output .= '<div id="region_select_' . $region_form_id . '">' . "\n\r";
 
 	$output .= '<select id="'. $region_form_id . '" '
 				. ' class="current_region wpsc-visitor-meta wpsc-region-dropdown" '
