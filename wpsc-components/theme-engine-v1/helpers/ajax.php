@@ -482,69 +482,22 @@ function wpsc_update_product_price() {
  * No parameters, returns nothing
  */
 function wpsc_update_location() {
-	global $wpdb, $wpsc_cart;
-
-	$delivery_country = '';
-	$billing_country = '';
-	if ( ! empty( $_POST['country'] ) ) {
-		$delivery_country = $_POST['country'];
-		$billing_country  = wpsc_get_customer_meta( 'billingcountry'  );
-		$delivery_region  = wpsc_get_customer_meta( 'shippingregion'  );
-		$billing_region   = wpsc_get_customer_meta( 'billingregion'   );
-		$shipping_zipcode = wpsc_get_customer_meta( 'shippingpostcode' );
-
-		if ( ! $billing_country )
-			wpsc_update_customer_meta( 'billingcountry', $_POST['country'] );
-
-		if ( ! empty( $_POST['region'] ) ) {
-			$delivery_region = $_POST['region'];
-			if ( ! $billing_region )
-				$billing_region = $_POST['region'];
-		} else if ( ! $billing_region ) {
-			$billing_region = $delivery_region = get_option( 'base_region' );
-		}
-
-		if ( ! $delivery_region )
-			$delivery_region = $billing_region;
-	}
-
-	if ( ! empty( $_POST['zipcode'] ) ) {
-		$shipping_zipcode = $_POST['zipcode'];
-	}
-
-	$delivery_region_count = WPSC_Countries::get_region_count( $delivery_country );
-	if ( $delivery_region_count < 1 )
-		$delivery_region = '';
-
-	$selected_region_count = WPSC_Countries::get_region_count( $billing_country );
-	if ( $selected_region_count < 1 )
-		$billing_region = '';
-
-	wpsc_update_customer_meta( 'shippingcountry' , $delivery_country );
-	wpsc_update_customer_meta( 'shippingregion'  , $delivery_region  );
-	wpsc_update_customer_meta( 'billingcountry'  , $billing_country  );
-	wpsc_update_customer_meta( 'billingregion'   , $billing_region   );
-
-	if ( isset( $shipping_zipcode ) ) {
-		wpsc_update_customer_meta( 'shippingpostcode'     , $shipping_zipcode );
-	}
+	global $wpsc_cart;
 
 	$wpsc_cart->update_location();
 	$wpsc_cart->get_shipping_method();
 	$wpsc_cart->get_shipping_option();
+
 	if ( $wpsc_cart->selected_shipping_method != '' ) {
 		$wpsc_cart->update_shipping( $wpsc_cart->selected_shipping_method, $wpsc_cart->selected_shipping_option );
 	}
-
-	if ( wpsc_get_customer_meta( 'shippingSameBilling' ) && ( $delivery_country != $billing_country || $delivery_region != $billing_region ) )
-		wpsc_update_customer_meta( 'shippingSameBilling', false );
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX && isset( $_REQUEST['action'] ) && 'update_location' == $_REQUEST['action'] )
 		exit;
 }
 
 function wpsc_cart_html_page() {
-	require_once(WPSC_FILE_PATH . "/wpsc-includes/shopping_cart_container.php");
+	require_once(WPSC_FILE_PATH . '/wpsc-includes/shopping_cart_container.php' );
 	exit();
 }
 
