@@ -1260,7 +1260,6 @@ function _wpsc_action_admin_notices_deprecated_countries_notice() {
 }
 
 add_action( 'admin_notices', '_wpsc_action_admin_notices_deprecated_countries_notice' );
-add_action( 'permalink_structure_changed' , '_wpsc_action_permalink_structure_changed' );
 add_action( 'wp_ajax_category_sort_order', 'wpsc_ajax_set_category_order' );
 add_action( 'wp_ajax_variation_sort_order', 'wpsc_ajax_set_variation_order' );
 add_action( 'wp_ajax_wpsc_ie_save', 'wpsc_ajax_ie_save' );
