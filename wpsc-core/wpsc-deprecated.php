@@ -2052,10 +2052,9 @@ function wpsc_css_header() {
  *
  * @param varies  $meta_value
  * @param string  $meta_key
- * @param int     $visitor_id
  *
  */
-function wpsc_user_log_deprecated_filter_values( $meta_value, $meta_key, $visitor_id ) {
+function wpsc_user_log_deprecated_filter_values( $meta_value, $meta_key ) {
 	$filter = 'wpsc_account_form_field_' . $meta_key;
 	if ( has_filter( $filter ) ) {
 		$meta_value = apply_filters( $filter , esc_html( $meta_value ) );
@@ -2064,7 +2063,7 @@ function wpsc_user_log_deprecated_filter_values( $meta_value, $meta_key, $visito
 
 	return $meta_value;
 }
-add_filter( 'wpsc_get_visitor_meta', 'wpsc_user_log_deprecated_filter_values', 10, 3 );
+add_filter( 'wpsc_get_visitor_meta', 'wpsc_user_log_deprecated_filter_values', 10, 2 );
 
 /**
  * deprecating user log filter for getting all customer meta as an array.
