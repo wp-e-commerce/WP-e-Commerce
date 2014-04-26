@@ -525,7 +525,7 @@ function wpsc_display_products_page( $query ) {
 
 	do_action( 'wpsc_display_products_page', $display_type );
 
-	if ( 'wpsc-product' == $wp_query->post->post_type && ! is_archive() && $wp_query->post_count <= 1 )
+	if ( ( isset( $wp_query->post ) && 'wpsc-product' == $wp_query->post->post_type ) && ! is_archive() && $wp_query->post_count <= 1 )
 		include( wpsc_get_template_file_path( 'wpsc-single_product.php' ) );
 	else
 		wpsc_include_products_page_template( $display_type );
