@@ -496,11 +496,15 @@ function wpsc_display_products_page( $query ) {
 			$args['nopaging'] = true;
 			$args['posts_per_page'] = '-1';
 		}
-		if(!empty($query['tag'])){
+
+		if ( ! empty( $query['tag'] ) ) {
 			$args['product_tag'] = $query['tag'];
 		}
+
 		query_posts( $args );
+
 	}
+
 	// swap the wpsc_query objects
 
 	$GLOBALS['nzshpcrt_activateshpcrt'] = true;
@@ -518,19 +522,23 @@ function wpsc_display_products_page( $query ) {
 	$display_type  = ! empty( $saved_display ) ? $saved_display : $display_type;
 
 	ob_start();
-	if( 'wpsc-product' == $wp_query->post->post_type && !is_archive() && $wp_query->post_count <= 1 )
+
+	do_action( 'wpsc_display_products_page', $display_type );
+
+	if ( 'wpsc-product' == $wp_query->post->post_type && ! is_archive() && $wp_query->post_count <= 1 )
 		include( wpsc_get_template_file_path( 'wpsc-single_product.php' ) );
 	else
-		wpsc_include_products_page_template($display_type);
+		wpsc_include_products_page_template( $display_type );
 
 	$output = ob_get_contents();
 	ob_end_clean();
-	$output = str_replace('\$','$', $output);
+	$output = str_replace( '\$','$', $output );
 
 	if ( ! empty( $query ) ) {
 		wp_reset_query();
 		wp_reset_postdata();
 	}
+
 	return $output;
 }
 
@@ -646,6 +654,9 @@ function wpsc_products_page( $content = '' ) {
 		$display_type  = ! empty( $saved_display ) ? $saved_display : wpsc_check_display_type();
 
 		ob_start();
+
+		do_action( 'wpsc_display_products_page', $display_type );
+
 		wpsc_include_products_page_template($display_type);
 		$is_single = false;
 		$output .= ob_get_contents();
@@ -910,22 +921,25 @@ function wpsc_get_user_dynamic_css() {
 
 function wpsc_get_the_new_id($prod_id){
 	global $wpdb;
-	$post_id = (int)$wpdb->get_var($wpdb->prepare( "SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE meta_key = %s AND `meta_value` = %d LIMIT 1", '_wpsc_original_id', $prod_id ));
-	return $post_id;
 
+	$post_id = (int) $wpdb->get_var($wpdb->prepare( "SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE meta_key = %s AND `meta_value` = %d LIMIT 1", '_wpsc_original_id', $prod_id ));
+
+	return $post_id;
 }
 
 /**
- * This switched between the 3 view types on category and products pages and includes the necessary tempalte part
+ * This switched between the 3 view types on category and products pages and includes the necessary template part
  * @access public
  *
  * @since 3.8
  * @param $display_type
  * @return NULL
  */
-function wpsc_include_products_page_template($display_type = 'default'){
-	if ( isset( $_GET['view_type'] ) && get_option( 'show_search' ) && get_option( 'show_advanced_search' ) ) {
+function wpsc_include_products_page_template( $display_type = 'default' ) {
+
+	if ( isset( $_GET['view_type'] ) ) {
 		switch ( $_GET['view_type'] ) {
+
 			case 'grid':
 				$display_type = 'grid';
 				wpsc_update_customer_meta( 'display_type', $display_type );
@@ -945,19 +959,20 @@ function wpsc_include_products_page_template($display_type = 'default'){
 				break;
 		}
 	}
-		// switch the display type, based on the display type variable...
-		switch ( $display_type ) {
-			case "grid":
-				include( wpsc_get_template_file_path( 'wpsc-grid_view.php' ) );
-				break; // only break if we have the function;
 
-			case "list":
-				include( wpsc_get_template_file_path( 'wpsc-list_view.php' ) );
-				break; // only break if we have the file;
-			default:
-				include( wpsc_get_template_file_path( 'wpsc-products_page.php' ) );
-				break;
-		}
+	// switch the display type, based on the display type variable...
+	switch ( $display_type ) {
+		case "grid":
+			include( wpsc_get_template_file_path( 'wpsc-grid_view.php' ) );
+			break; // only break if we have the function;
+
+		case "list":
+			include( wpsc_get_template_file_path( 'wpsc-list_view.php' ) );
+			break; // only break if we have the file;
+		default:
+			include( wpsc_get_template_file_path( 'wpsc-products_page.php' ) );
+			break;
+	}
 
 }
 

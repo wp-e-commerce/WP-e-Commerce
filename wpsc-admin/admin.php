@@ -1259,11 +1259,11 @@ function _wpsc_action_admin_notices_deprecated_countries_notice() {
 	echo '<div id="wpsc-warning" class="error"><p>' . $message . '</p></div>';
 }
 
-add_action( 'admin_notices', '_wpsc_action_admin_notices_deprecated_countries_notice' );
-add_action( 'wp_ajax_category_sort_order', 'wpsc_ajax_set_category_order' );
+add_action( 'admin_notices'               , '_wpsc_action_admin_notices_deprecated_countries_notice' );
+add_action( 'wp_ajax_category_sort_order' , 'wpsc_ajax_set_category_order' );
 add_action( 'wp_ajax_variation_sort_order', 'wpsc_ajax_set_variation_order' );
-add_action( 'wp_ajax_wpsc_ie_save', 'wpsc_ajax_ie_save' );
-add_action( 'in_admin_header', 'wpsc_add_meta_boxes' );
+add_action( 'wp_ajax_wpsc_ie_save'        , 'wpsc_ajax_ie_save' );
+add_action( 'in_admin_header'             , 'wpsc_add_meta_boxes' );
 
 /**
  * Deletes file associated with a product.
