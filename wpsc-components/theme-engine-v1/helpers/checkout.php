@@ -94,13 +94,15 @@ function wpsc_has_category_and_country_conflict(){
  * @return (boolean) true or false
  */
 function wpsc_have_valid_shipping_zipcode() {
+	global $wpsc_shipping_modules;
+
 	$has_valid_zip_code = true;
 
 	$custom_shipping = get_option( 'custom_shipping_options' );
 
 	$uses_zipcode = false;
 
-	foreach ( (array)$custom_shipping as $shipping ) {
+	foreach ( (array) $custom_shipping as $shipping ) {
 		if ( isset( $wpsc_shipping_modules[$shipping]->needs_zipcode ) && $wpsc_shipping_modules[$shipping]->needs_zipcode ) {
 			$uses_zipcode = true;
 		}
