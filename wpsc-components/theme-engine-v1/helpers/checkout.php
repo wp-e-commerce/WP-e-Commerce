@@ -110,7 +110,7 @@ function wpsc_have_valid_shipping_zipcode() {
 
 	if ( $uses_zipcode ) {
 		$postalcode = wpsc_get_customer_meta( 'shippingpostcode' );
-		if ( empty( $shippingpostcode ) ) {
+		if ( empty( $postalcode ) ) {
 			$has_valid_zip_code = false;
 		}
 	}
