@@ -461,8 +461,6 @@ function wpsc_checkout_shipping_state_and_region( $wpsc_checkout = null ) {
 
 	$region_form_id = $wpsc_checkout->form_element_id() . '_region';
 
-	$output .= '<div id="region_select_' . $region_form_id . '">' . "\n\r";
-
 	$output .= '<select id="'. $region_form_id . '" '
 				. ' class="current_region wpsc-visitor-meta wpsc-region-dropdown" '
 					. ' data-wpsc-meta-key="shippingregion" '
