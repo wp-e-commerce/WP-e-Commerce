@@ -48,6 +48,7 @@ class wpsc_cart_item {
 	public $custom_tax_rate = null;
 	public $meta = array();
 
+	private $item_meta = array();
 
 	public $is_donation = false;
 	public $apply_tax = true;
