@@ -543,6 +543,36 @@ class wpsc_checkout {
 			$customer_meta_key    = $form_data->unique_name;
 			$checkout_item_values = wpsc_get_customer_meta( $customer_meta_key );
 
+			// Prior to release 3.8.14 the billingstate and shippingstate checkout items were used
+			// differently depending on if the billingcountry and shippingcountry values contained countries
+			// that used regions.  When countries with regions were present, the billing state field was
+			// set to the numeric region id, rather than the string name of the region.  A better long term
+			// solution may be to have a distinct checkout item to hold the billingregion or shippingregion
+			// code when available.
+			if ( $customer_meta_key == 'billingstate' ) {
+				$current_country = wpsc_get_customer_meta( 'billingcountry' );
+				if ( ! empty( $current_country) ) {
+					$wpsc_country = new WPSC_Country( $current_country );
+					if ( $wpsc_country->has_regions() ) {
+						$region = wpsc_get_customer_meta( 'billingregion' );
+						if ( ! empty( $region ) ) {
+							$checkout_item_values = $region;
+						}
+					}
+				}
+			} elseif (  $customer_meta_key == 'shippingstate' ) {
+				$current_country = wpsc_get_customer_meta( 'shippingcountry' );
+				if ( ! empty( $current_country) ) {
+					$wpsc_country = new WPSC_Country( $current_country );
+					if ( $wpsc_country->has_regions() ) {
+						$region = wpsc_get_customer_meta( 'shippingregion' );
+						if ( ! empty( $region ) ) {
+							$checkout_item_values = $region;
+						}
+					}
+				}
+			}
+
 			if ( ! is_array( $checkout_item_values ) ) {
 				$checkout_item_values = array( $checkout_item_values );
 			}
