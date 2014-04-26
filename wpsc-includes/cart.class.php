@@ -719,7 +719,7 @@ class wpsc_cart {
 	}
 
 	/**
-	 * calculate total price method
+	 * Calculate total price method
 	 *
 	 * @access public
 	 *
@@ -740,7 +740,7 @@ class wpsc_cart {
 		$coupons_amount = round( $this->coupons_amount, 2 );
 
 		// Calculate the total
-		$total = ( ( $subtotal + $shipping + $tax ) > $coupons_amount ) ? ( $subtotal + $shipping + $tax - $coupons_amount ) : 0.00;
+		$total = ( $subtotal > $coupons_amount ) ? ( ( $subtotal - $coupons_amount ) + $shipping + $tax ) : ( $tax + $shipping );
 
 		// Filter total
 		$total = apply_filters( 'wpsc_calculate_total_price', $total, $subtotal, $shipping, $tax, $coupons_amount );
