@@ -181,7 +181,7 @@ function wpsc_add_to_cart() {
 	}
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		$json_response = array( 'bad_var' => wpsc_product_has_variations( $product_id ) && is_null( $parameters['variation_values'] ), 'cart_messages' => $cart_messages, 'product_id' => $product_id, 'cart_total' => wpsc_cart_total() );
+		$json_response = array( 'cart_messages' => $cart_messages, 'product_id' => $product_id, 'cart_total' => wpsc_cart_total() );
 
 		$output = _wpsc_ajax_get_cart( false, $cart_messages );
 
