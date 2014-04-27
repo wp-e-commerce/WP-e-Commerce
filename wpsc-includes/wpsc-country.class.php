@@ -596,23 +596,21 @@ class WPSC_Country {
 		 * identifiers.
 		 */
 		$country_id       = isset( $country_data['id'] ) ? intval( $country_data['id'] ) : 0;
-		$country_code     = isset( $country_data['code'] ) ? $country_data['code'] : '';
 		$country_iso_code = isset( $country_data['isocode'] ) ? $country_data['isocode'] : '';
 
 		/*
 		 *  If at least one of the key feilds ins't present we aren'y going to continue, we can't reliably update
 		 *  a row in the table, nor could we insrt a row that could reliably be updated.
 		 */
-		if ( empty( $country_id ) && empty( $country_code ) && empty( $country_iso_code ) ) {
-			_wpsc_doing_it_wrong( __FUNCTION__, __( 'To insert a country one of country id, country code or country ISO code must be included.', 'wpsc' ), '3.8.11' );
+		if ( empty( $country_id ) && empty( $country_iso_code ) ) {
+			_wpsc_doing_it_wrong( __FUNCTION__, __( 'To insert a country either country id or country ISO code must be specified.', 'wpsc' ), '3.8.11' );
 			return false;
 		}
 
 		// check the database to find the country id
 		$sql = $wpdb->prepare(
-				'SELECT id FROM ' . WPSC_TABLE_CURRENCY_LIST . ' WHERE (`id` = %d ) OR ( `code` = %s ) OR ( `isocode` = %s ) ',
+				'SELECT id FROM ' . WPSC_TABLE_CURRENCY_LIST . ' WHERE (`id` = %d ) OR ( `isocode` = %s ) ',
 				$country_id,
-				$country_code,
 				$country_iso_code
 			);
 
@@ -627,7 +625,7 @@ class WPSC_Country {
 			$country_data['visible'] = $country_data['visible'] ? 1:0;
 		}
 
-		// insrt or update the information
+		// insert or update the information
 		if ( empty( $country_id_from_db ) ) {
 			// we are doing an insert of a new country
 			$result = $wpdb->insert( WPSC_TABLE_CURRENCY_LIST, $country_data );
