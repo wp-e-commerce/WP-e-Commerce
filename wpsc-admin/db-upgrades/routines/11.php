@@ -40,7 +40,7 @@ function _wpsc_fixup_united_kingdom() {
 			)
 		);
 
-			$wpsc_country->set( 'country-is-legacy-hide-from-lists', true );
+			$wpsc_country->set( '_is_country_legacy', true );
 	}
 
 }

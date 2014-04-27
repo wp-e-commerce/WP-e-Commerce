@@ -452,9 +452,9 @@ class WPSC_Countries {
 		if ( $include_invisible ) {
 			$countries = self::$all_wpsc_country_by_country_id->data();
 			foreach ( $countries as $country_id => $wpsc_country ) {
-				$country_is_legacy = (bool)$wpsc_country->get( 'country-is-legacy-hide-from-lists' );
+				$country_is_legacy = (bool) $wpsc_country->get( '_is_country_legacy' );
 				if ( $country_is_legacy ) {
-					unset( $countries[$country_id] );
+					unset( $countries[ $country_id ] );
 				}
 			}
 		} else {
