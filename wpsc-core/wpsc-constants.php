@@ -74,11 +74,11 @@ function wpsc_core_constants() {
 	}
 
 	// Define the current database version
-	define( 'WPSC_DB_VERSION'         , 11 );
+	define( 'WPSC_DB_VERSION', 11 );
 
 	// Define Debug Variables for developers, if they haven't already been defined
 	if ( ! defined( 'WPSC_DEBUG' ) ) {
-		define( 'WPSC_DEBUG'        , false );
+		define( 'WPSC_DEBUG', false );
 	}
 
 	if ( ! defined( 'WPSC_GATEWAY_DEBUG' ) ) {
@@ -105,8 +105,8 @@ function wpsc_core_constants() {
 		define( 'WPEC_LOAD_DEPRECATED_JS', false );
 	}
 
-
 	define( 'WPSC_CUSTOMER_COOKIE', 'wpsc_customer_cookie_' . COOKIEHASH );
+
 	if ( ! defined( 'WPSC_CUSTOMER_COOKIE_PATH' ) )
 		define( 'WPSC_CUSTOMER_COOKIE_PATH', COOKIEPATH );
 
@@ -177,7 +177,7 @@ function wpsc_core_is_multisite() {
 
 	define( 'IS_WPMU', $is_multisite );
 
-	return (bool)$is_multisite;
+	return (bool) $is_multisite;
 }
 
 /**
