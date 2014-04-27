@@ -20,7 +20,7 @@ function _wpsc_db_upgrade_11() {
 function _wpsc_fixup_united_kingdom() {
 	$country = new WPSC_Country(
 									array(
-											'country'     => __( 'Great Britain', 'wpsc' ),
+											'country'     => __( 'United Kingdom', 'wpsc' ),
 											'isocode'     => 'GB',
 											'currency'    => __( 'Pound Sterling', 'wpsc' ),
 											'symbol'      => __( '£', 'wpsc' ),
