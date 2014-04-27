@@ -61,7 +61,7 @@ class WPSC_Settings_Tab_General extends WPSC_Settings_Tab {
 
 			<?php
 				/* START OF TARGET MARKET SELECTION */
-				$countrylist = $wpdb->get_results( "SELECT id,country,visible FROM `" . WPSC_TABLE_CURRENCY_LIST . "` ORDER BY country ASC ", ARRAY_A );
+				$countrylist = WPSC_Countries::get_countries_array( true, true );
 			?>
 			<tr>
 				<th scope="row">
