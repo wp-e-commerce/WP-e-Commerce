@@ -595,8 +595,8 @@ class WPSC_Country {
 		 * possible unique identifiers for a country.  Look for a row that has any of the
 		 * identifiers.
 		 */
-		$country_id       = isset( $country_data['id'] ) ? intval( $country_data['id'] ) : 0;
-		$country_iso_code = isset( $country_data['isocode'] ) ? $country_data['isocode'] : '';
+		$country_id       = isset( $country_data['id'] )      ? intval( $country_data['id'] ) : 0;
+		$country_iso_code = isset( $country_data['isocode'] ) ? $country_data['isocode']      : '';
 
 		/*
 		 *  If at least one of the key feilds ins't present we aren'y going to continue, we can't reliably update
@@ -622,7 +622,7 @@ class WPSC_Country {
 		}
 
 		if ( isset( $country_data['visible'] ) ) {
-			$country_data['visible'] = $country_data['visible'] ? 1:0;
+			$country_data['visible'] = $country_data['visible'] ? 1 : 0;
 		}
 
 		// insert or update the information
