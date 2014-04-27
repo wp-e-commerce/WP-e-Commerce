@@ -451,6 +451,12 @@ class WPSC_Countries {
 
 		if ( $include_invisible ) {
 			$countries = self::$all_wpsc_country_by_country_id->data();
+			foreach ( $countries as $country_id => $wpsc_country ) {
+				$country_is_legacy = (bool)$wpsc_country->get( 'country-is-legacy-hide-from-lists' );
+				if ( $country_is_legacy ) {
+					unset( $countries[$country_id] );
+				}
+			}
 		} else {
 			$countries = self::$active_wpsc_country_by_country_id->data();
 		}
@@ -475,11 +481,39 @@ class WPSC_Countries {
 	 *
 	 * @return array of arrays index by region id, each element array index by property
 	 */
-	public static function get_countries_array( $include_invisible = false ) {
-		$countries = self::get_countries( $include_invisible );
-		$json = json_encode( $countries );
-		$countries = json_decode( $json, true );
-		return $countries;
+	public static function get_countries_array( $include_invisible = false, $sortbyname = true ) {
+
+		$countries = self::get_countries( $include_invisible, $sortbyname );
+		$countries_list = array();
+
+		foreach ( $countries as $country_key => $wpsc_country ) {
+			$country = get_object_vars( $wpsc_country );
+
+			$keys = array_keys( $country );
+			foreach ( $keys as $index => $key ) {
+				// clear out the data map classes from the array
+				if ( is_a( $country[$key], 'WPSC_Data_Map' ) ) {
+					unset( $country[$key] );
+				}
+			}
+
+			$keys = array_keys( $country );
+			foreach ( $keys as $index => $key ) {
+				if ( substr( $key, 0, 1 ) == '_' ) {
+					$keys[$index] = substr( $key, 1 );
+				}
+			}
+
+			$country = array_combine( $keys, array_values( $country ) );
+
+			// the return value is supporting legacy code that may look for the
+			// country name using 'country' rather than name, put it there
+			$country['country'] = $country['name'];
+
+			$countries_list[] = $country;
+		}
+
+		return $countries_list;
 	}
 
 	/**

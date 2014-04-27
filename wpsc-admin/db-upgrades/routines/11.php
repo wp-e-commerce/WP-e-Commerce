@@ -17,7 +17,7 @@ function _wpsc_db_upgrade_11() {
  * @since 3.8.14
  */
 function _wpsc_fixup_united_kingdom() {
-	$country = new WPSC_Country(
+	$wpsc_country = new WPSC_Country(
 		array(
 				'country'     => __( 'United Kingdom', 'wpsc' ),
 				'isocode'     => 'GB',
@@ -33,11 +33,14 @@ function _wpsc_fixup_united_kingdom() {
 	);
 
 	if ( WPSC_Countries::get_country( 'UK' ) ) {
-		$country = new WPSC_Country(
+			$wpsc_country = new WPSC_Country(
 			array(
 					'isocode'     => 'UK',
 					'visible'     => '0',
 			)
 		);
+
+			$wpsc_country->set( 'country-is-legacy-hide-from-lists', true );
 	}
+
 }
