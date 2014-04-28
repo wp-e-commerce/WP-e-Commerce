@@ -51,8 +51,9 @@ function _wpsc_fix_UK_country_code() {
 }
 
 function _wpsc_fix_guernsey_country_code() {
-	$country = new WPSC_Country( 'GF' );
-	$country->_save_country_data( array( 'isocode' => 'GG' ) );
+	$existing_wpsc_country = new WPSC_Country( 'GF' );
+	// replace the ISO country code in the existing country
+	$updated_wpsc_country = new WPSC_Country( array( 'id' => $existing_wpsc_country->get_id(), 'isocode' => 'GG', ) );
 }
 
 function _wpsc_new_country_serbia() {
