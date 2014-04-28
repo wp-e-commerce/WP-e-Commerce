@@ -374,7 +374,7 @@ function wpsc_admin_category_forms_edit() {
 		</td>
 	</tr>
 	<?php
-		$countries = WPSC_Countries::get_countries_array( true, true );
+		$countrylist = WPSC_Countries::get_countries_array( true, true );
 		$selectedCountries = wpsc_get_meta( $category_id,'target_market','wpsc_category' );
 	?>
 	<tr>
