@@ -223,7 +223,7 @@ final class WPSC_Data_Map {
 				// who's call we are processing tp avoid a recursion problem, just in case!
 				$callback_unique_key = md5( json_encode( $this->_map_callback ) );
 
-				if ( ! in_array( $callback_unique_key, $already_invoking_callback ) ) {
+				if ( ! array_key_exists( $callback_unique_key, $already_invoking_callback ) ) {
 					$already_invoking_callback[$callback_unique_key] = true;
 
 					$this->_map_data = array();
