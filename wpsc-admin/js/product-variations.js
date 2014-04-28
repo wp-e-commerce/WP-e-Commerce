@@ -8,9 +8,11 @@
 	$(function(){
 		resize_iframe();
 
-		$('.wpsc-variation-stock-editor-link').click(function(){
+		$('.wpsc-variation-stock-editor-link').click( function( event ) {
 			var parent = $(this).closest('tr'),
 				target_row = parent.next('.wpsc-stock-editor-row');
+
+			event.preventDefault();
 
 			target_row.show();
 			parent.addClass('active');
