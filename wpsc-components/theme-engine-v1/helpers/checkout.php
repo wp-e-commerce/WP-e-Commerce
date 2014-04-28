@@ -380,7 +380,8 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 
 	$uses_zipcode    = false;
 	$custom_shipping = get_option( 'custom_shipping_options' );
-	foreach ( (array)$custom_shipping as $shipping ) {
+
+	foreach ( (array) $custom_shipping as $shipping ) {
 		if ( isset( $wpsc_shipping_modules[$shipping]->needs_zipcode ) && $wpsc_shipping_modules[$shipping]->needs_zipcode == true ) {
 			$uses_zipcode = true;
 		}

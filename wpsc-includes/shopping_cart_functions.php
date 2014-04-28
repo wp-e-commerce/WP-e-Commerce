@@ -392,7 +392,7 @@ function wpsc_checkout_shipping_state_and_region( $wpsc_checkout = null ) {
 
 	// is the shipping country visible on the form, let's find out
 	$shipping_country_form_element = $checkout_form->get_field_by_unique_name( 'shippingcountry' );
-	$showing_shipping_country = (bool)$shipping_country_form_element->active;
+	$showing_shipping_country      = (bool) $shipping_country_form_element->active;
 
 	// make sure the shipping state is the current checkout element
 	$wpsc_checkout->checkout_item = $wpsc_checkout->get_checkout_item( 'shippingstate' );

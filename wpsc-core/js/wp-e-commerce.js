@@ -372,7 +372,7 @@ function wpsc_meta_item_change_response( response ) {
 		event.response = response;
 		jQuery( "wpsc-visitor-meta:first" ).trigger( event );
 
-		// Check if shipping quotes need to be updated 
+		// Check if shipping quotes need to be updated
 		wpsc_check_for_shipping_recalc_needed( response.data );
 
 	}
@@ -729,7 +729,7 @@ function wpsc_no_region_selected_message( country_code ) {
 function wpsc_get_label_element( input ) {
 
 	var input_element;
-	
+
 	if ( input instanceof jQuery ) {
 		input_element = input;
 	} else if ( typeof input == "string" ) {

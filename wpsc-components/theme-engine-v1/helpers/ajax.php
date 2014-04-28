@@ -390,7 +390,7 @@ function wpsc_update_shipping_price() {
 	global $wpsc_cart;
 
 	$quote_shipping_method = $_POST['method'];
-	$quote_shipping_option = $_POST['option'];
+	$quote_shipping_option = str_replace( array( '®', '™' ), array( '&reg;', '&trade;' ), $_POST['option'] );
 
     if ( ! empty( $quote_shipping_option ) && ! empty( $quote_shipping_method ) ) {
         $wpsc_cart->update_shipping( $quote_shipping_method, $quote_shipping_option );
