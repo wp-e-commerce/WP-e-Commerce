@@ -43,4 +43,15 @@ function _wpsc_fixup_united_kingdom() {
 		$wpsc_country->set( '_is_country_legacy', true );
 	}
 
+	if ( $wpsc_country = WPSC_Countries::get_country( 'YU' ) ) {
+		$wpsc_country->set( '_is_country_legacy', true );
+	}
+
+	if ( $wpsc_country = WPSC_Countries::get_country( 'AN' ) ) {
+		$wpsc_country->set( '_is_country_legacy', true );
+	}
+
+	if ( $wpsc_country = WPSC_Countries::get_country( 'TP' ) ) {
+		$wpsc_country->set( '_is_country_legacy', true );
+	}
 }
