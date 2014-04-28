@@ -1412,10 +1412,6 @@ class WPSC_Countries {
 					$wpsc_country->_regions->map( $region->id, $wpsc_region );
 					$wpsc_country->_region_id_by_region_code->map( $region->code, $region->id );
 					$wpsc_country->_region_id_by_region_name->map( strtolower( $region->name ), $region->id );
-
-					self::$country_id_by_region_id->map( $region->id, $region->country_id );
-					self::$region_by_region_id->map( $region->id, $wpsc_region );
-					self::$region_code_by_region_id->map( $region->id, $region->code );
 				}
 			}
 
@@ -1478,10 +1474,6 @@ class WPSC_Countries {
 					$wpsc_country->_regions->map( $region->id, $wpsc_region );
 					$wpsc_country->_region_id_by_region_code->map( $region->code, $region->id );
 					$wpsc_country->_region_id_by_region_name->map( strtolower( $region->name ), $region->id );
-
-					self::$country_id_by_region_id->map( $region->id, $region->country_id );
-					self::$region_by_region_id->map( $region->id, $wpsc_region );
-					self::$region_code_by_region_id->map( $region->id, $region->code );
 				}
 			}
 
@@ -1490,6 +1482,80 @@ class WPSC_Countries {
 
 		self::$_dirty = true;
 	}
+
+
+	/**
+	 * saves country data to the database
+	 *
+	 * @access WPeC private
+	 *
+	 * @since 3.8.14
+	 *
+	 * @param array  key/value pairs that are put into the database columns
+	 *
+	 * @return int|boolean country_id on success, false on failure
+	 */
+	public static function _save_country_data( $country_data ) {
+		global $wpdb;
+
+		/*
+		 * We need to figure out if we are updating an existing country. There are three
+		 * possible unique identifiers for a country.  Look for a row that has any of the
+		 * identifiers.
+		 */
+		$country_id       = isset( $country_data['id'] )      ? intval( $country_data['id'] ) : 0;
+		$country_iso_code = isset( $country_data['isocode'] ) ? $country_data['isocode']      : '';
+
+		/*
+		 *  If at least one of the key feilds ins't present we aren'y going to continue, we can't reliably update
+		 *  a row in the table, nor could we insrt a row that could reliably be updated.
+		 */
+		if ( empty( $country_id ) && empty( $country_iso_code ) ) {
+			_wpsc_doing_it_wrong( __FUNCTION__, __( 'To insert a country either country id or country ISO code must be specified.', 'wpsc' ), '3.8.11' );
+			return false;
+		}
+
+		// check the database to find the country id
+		$sql = $wpdb->prepare(
+				'SELECT id FROM ' . WPSC_TABLE_CURRENCY_LIST . ' WHERE (`id` = %d ) OR ( `isocode` = %s ) ',
+				$country_id,
+				$country_iso_code
+		);
+
+		$country_id_from_db = $wpdb->get_var( $sql );
+
+		// do a little data clean up prior to inserting into the database
+		if ( isset( $country_data['has_regions'] ) ) {
+			$country_data['has_regions'] = $country_data['has_regions'] ? 1:0;
+		}
+
+		if ( isset( $country_data['visible'] ) ) {
+			$country_data['visible'] = $country_data['visible'] ? 1 : 0;
+		}
+
+		// insert or update the information
+		if ( empty( $country_id_from_db ) ) {
+			// we are doing an insert of a new country
+			$result = $wpdb->insert( WPSC_TABLE_CURRENCY_LIST, $country_data );
+			if ( $result ) {
+				$country_id_from_db = $wpdb->insert_id;
+			}
+		} else {
+			// we are doing an update of an existing country
+			if ( isset( $country_data['id'] ) ) {
+				// no nead to update the id to itself
+				unset( $country_data['id'] );
+			}
+			$wpdb->update( WPSC_TABLE_CURRENCY_LIST, $country_data, array( 'id' => $country_id_from_db, ), '%s', array( '%d', )  );
+		}
+
+		// clear the cached data, force a rebuild by getting a country
+		self::clear_cache();
+
+		return $country_id_from_db;
+	}
+
+
 }
 
 add_action( 'init', '_wpsc_make_countries_data_available' );

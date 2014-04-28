@@ -221,10 +221,10 @@ final class WPSC_Data_Map {
 
 				// the callback could be a string or an array, we can keep track of
 				// who's call we are processing tp avoid a recursion problem, just in case!
-				$callback_unqiue_key = md5( json_encode( $this->_map_callback ) );
+				$callback_unique_key = md5( json_encode( $this->_map_callback ) );
 
-				if ( ! in_array( $callback_unqiue_key, $already_invoking_callback ) ) {
-					$already_invoking_callback[] = $callback_unqiue_key;
+				if ( ! in_array( $callback_unique_key, $already_invoking_callback ) ) {
+					$already_invoking_callback[$callback_unique_key] = true;
 
 					$this->_map_data = array();
 
@@ -244,7 +244,7 @@ final class WPSC_Data_Map {
 					_wpsc_doing_it_wrong( $function , __( 'WPSC_Data_Map map creation callback is recursively calling itself.', 'wpsc' ), '3.8.14' );
 				}
 
-				unset( $already_invoking_callback[$callback_unqiue_key] );
+				unset( $already_invoking_callback[$callback_unique_key] );
 
 			}
 
