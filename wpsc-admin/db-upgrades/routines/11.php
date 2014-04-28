@@ -32,15 +32,15 @@ function _wpsc_fixup_united_kingdom() {
 		)
 	);
 
-	if ( WPSC_Countries::get_country( 'UK' ) ) {
-			$wpsc_country = new WPSC_Country(
-			array(
-					'isocode'     => 'UK',
-					'visible'     => '0',
-			)
-		);
+	if ( $wpsc_country = WPSC_Countries::get_country( 'UK' ) ) {
+		$wpsc_country = new WPSC_Country(
+											array(
+												'visible'     => '0',
+												'isocode'     => 'UK',
+											)
+										);
 
-			$wpsc_country->set( '_is_country_legacy', true );
+		$wpsc_country->set( '_is_country_legacy', true );
 	}
 
 }

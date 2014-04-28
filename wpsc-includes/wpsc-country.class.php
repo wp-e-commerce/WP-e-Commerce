@@ -28,7 +28,7 @@ class WPSC_Country {
 
 			if ( is_array( $country ) ) {
 				// if we get an array as an argument we are making a new country
-				$country_id_or_isocode = $this->_save_country_data( $country );
+				$country_id_or_isocode = WPSC_Countries::_save_country_data( $country );
 			}  else {
 				// we are constructing a country using a numeric id or ISO code
 				$country_id_or_isocode = $country;
@@ -577,78 +577,6 @@ class WPSC_Country {
 	}
 
 	/**
-	 * saves country data to the database
-	 *
-	 * @access public
-	 *
-	 * @since 3.8.14
-	 *
-	 * @param array  key/value pairs that are put into the database columns
-	 *
-	 * @return int|boolean country_id on success, false on failure
-	 */
-	public function _save_country_data( $country_data ) {
-		global $wpdb;
-
-		/*
-		 * We need to figure out if we are updating an existing country. There are three
-		 * possible unique identifiers for a country.  Look for a row that has any of the
-		 * identifiers.
-		 */
-		$country_id       = isset( $country_data['id'] )      ? intval( $country_data['id'] ) : 0;
-		$country_iso_code = isset( $country_data['isocode'] ) ? $country_data['isocode']      : '';
-
-		/*
-		 *  If at least one of the key feilds ins't present we aren'y going to continue, we can't reliably update
-		 *  a row in the table, nor could we insrt a row that could reliably be updated.
-		 */
-		if ( empty( $country_id ) && empty( $country_iso_code ) ) {
-			_wpsc_doing_it_wrong( __FUNCTION__, __( 'To insert a country either country id or country ISO code must be specified.', 'wpsc' ), '3.8.11' );
-			return false;
-		}
-
-		// check the database to find the country id
-		$sql = $wpdb->prepare(
-				'SELECT id FROM ' . WPSC_TABLE_CURRENCY_LIST . ' WHERE (`id` = %d ) OR ( `isocode` = %s ) ',
-				$country_id,
-				$country_iso_code
-			);
-
-		$country_id_from_db = $wpdb->get_var( $sql );
-
-		// do a little data clean up prior to inserting into the database
-		if ( isset( $country_data['has_regions'] ) ) {
-			$country_data['has_regions'] = $country_data['has_regions'] ? 1:0;
-		}
-
-		if ( isset( $country_data['visible'] ) ) {
-			$country_data['visible'] = $country_data['visible'] ? 1 : 0;
-		}
-
-		// insert or update the information
-		if ( empty( $country_id_from_db ) ) {
-			// we are doing an insert of a new country
-			$result = $wpdb->insert( WPSC_TABLE_CURRENCY_LIST, $country_data );
-			if ( $result ) {
-				$country_id_from_db = $wpdb->insert_id;
-			}
-		} else {
-			// we are doing an update of an existing country
-			if ( isset( $country_data['id'] ) ) {
-				// no nead to update the id to itself
-				unset( $country_data['id'] );
-			}
-			$wpdb->update( WPSC_TABLE_CURRENCY_LIST, $country_data, array( 'id' => $country_id_from_db, ), '%s', array( '%d', )  );
-		}
-
-		// clear the cahned data, force a rebuild
-		WPSC_Countries::clear_cache();
-
-		return $country_id_from_db;
-	}
-
-
-	/**
 	 * Comapre regions using regions's name
 	 *
 	 * @param unknown $a instance of WPSC_Country class
@@ -672,22 +600,22 @@ class WPSC_Country {
 	 *
 	 * @return void
 	 */
-	public $_id = null;
-	public $_name      = null;
-	public $_isocode = null;
-	public $_currency_name = '';
-	public $_currency_code = '';
-	public $_currency_symbol = '';
-	public $_currency_symbol_html = '';
-	public $_code = '';
-	public $_has_regions = false;
-	public $_tax = '';
-	public $_continent = '';
-	public $_visible = true;
-	public $_region_id_by_region_code  = null;
-	public $_region_id_by_region_name	 = null;
+	public $_id                           = null;
+	public $_name                         = null;
+	public $_isocode                      = null;
+	public $_currency_name                = '';
+	public $_currency_code                = '';
+	public $_currency_symbol              = '';
+	public $_currency_symbol_html         = '';
+	public $_code                         = '';
+	public $_has_regions                  = false;
+	public $_tax                          = '';
+	public $_continent                    = '';
+	public $_visible                      = true;
+	public $_region_id_by_region_code     = null;
+	public $_region_id_by_region_name     = null;
 	public $_region_id_to_region_code_map = null;
-	public $_regions 	                  = null;
+	public $_regions                      = null;
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// As a result of merging the legacy WPSC_Country class we no longer need several of the public class
