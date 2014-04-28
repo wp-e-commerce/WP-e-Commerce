@@ -7,7 +7,8 @@
  *
  */
 function _wpsc_db_upgrade_11() {
-	_wpsc_fixup_united_kingdom();
+	_wpsc_fix_united_kingdom();
+	_wpsc_set_legacy_country_meta();
 }
 
 /**
@@ -16,7 +17,7 @@ function _wpsc_db_upgrade_11() {
  * @access private
  * @since 3.8.14
  */
-function _wpsc_fixup_united_kingdom() {
+function _wpsc_fix_united_kingdom() {
 	$wpsc_country = new WPSC_Country(
 		array(
 				'country'     => __( 'United Kingdom', 'wpsc' ),
@@ -34,15 +35,24 @@ function _wpsc_fixup_united_kingdom() {
 
 	if ( $wpsc_country = WPSC_Countries::get_country( 'UK' ) ) {
 		$wpsc_country = new WPSC_Country(
-											array(
-												'visible'     => '0',
-												'isocode'     => 'UK',
-											)
-										);
+			array(
+				'visible'     => '0',
+				'isocode'     => 'UK',
+			)
+		);
 
 		$wpsc_country->set( '_is_country_legacy', true );
 	}
+}
 
+
+/**
+ * Sets meta for countries that no longer exist in their former notation to be considered legacy.
+ *
+ * @access private
+ * @since 3.8.14
+ */
+function _wpsc_set_legacy_country_meta() {
 	if ( $wpsc_country = WPSC_Countries::get_country( 'YU' ) ) {
 		$wpsc_country->set( '_is_country_legacy', true );
 	}
