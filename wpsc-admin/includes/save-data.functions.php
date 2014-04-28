@@ -182,7 +182,7 @@ function wpsc_admin_category_forms_add() {
 		if ( isset( $_GET["tag_ID"] ) )
 			$category_id = $_GET["tag_ID"];
 
-		$countrylist       = $wpdb->get_results("SELECT id, country, visible FROM `" . WPSC_TABLE_CURRENCY_LIST . "` ORDER BY country ASC ", ARRAY_A);
+		$countrylist = WPSC_Countries::get_countries_array( true, true );
 		$selectedCountries = wpsc_get_meta( $category_id, 'target_market', 'wpsc_category' );
 	?>
 	<h4><?php esc_html_e( 'Restrict to Target Markets', 'wpsc' )?></h4>
@@ -374,7 +374,7 @@ function wpsc_admin_category_forms_edit() {
 		</td>
 	</tr>
 	<?php
-		$countrylist = $wpdb->get_results( "SELECT id,country,visible FROM `".WPSC_TABLE_CURRENCY_LIST."` ORDER BY country ASC ",ARRAY_A );
+		$countries = WPSC_Countries::get_countries_array( true, true );
 		$selectedCountries = wpsc_get_meta( $category_id,'target_market','wpsc_category' );
 	?>
 	<tr>

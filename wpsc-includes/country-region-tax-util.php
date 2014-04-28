@@ -73,13 +73,14 @@ function _wpsc_country_dropdown_options( $args = '' ) {
 		// if we're in admin area, and the legacy country code "UK" or "TP" is selected as the
 		// base country, we should display both this and the more proper "GB" or "TL" options
 		// and distinguish these choices somehow
-		if ( is_admin() ) {
-			if ( in_array( $isocode, array( 'TP', 'UK' ) ) )
+		if ( is_admin() && 11 > wpsc_core_get_db_version() ) {
+			if ( in_array( $isocode, array( 'TP', 'UK' ) ) ) {
 				/* translators: This string will mark the legacy isocode "UK" and "TP" in the country selection dropdown as "legacy" */
 				$name = sprintf( __( '%s (legacy)', 'wpsc' ), $name );
-			elseif ( in_array( $isocode, array( 'GB', 'TL' ) ) )
-			/* translators: This string will mark the legacy isocode "GB" and "TL" in the country selection dropdown as "ISO 3166" */
-			$name = sprintf( __( '%s (ISO 3166)', 'wpsc' ), $name );
+			} elseif ( in_array( $isocode, array( 'GB', 'TL' ) ) ) {
+				/* translators: This string will mark the legacy isocode "GB" and "TL" in the country selection dropdown as "ISO 3166" */
+				$name = sprintf( __( '%s (ISO 3166)', 'wpsc' ), $name );
+			}
 		}
 
 		$output .= sprintf(
