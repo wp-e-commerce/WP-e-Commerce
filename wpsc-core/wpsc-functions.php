@@ -719,3 +719,12 @@ function wpsc_core_get_checkout() {
 	return $wpsc_checkout;
 
 }
+
+/**
+ * get the current WPeC database version
+ *
+ * @return int current database version
+ */
+function wpsc_core_get_db_version() {
+	return intval( get_option( 'wpsc_db_version', 0 ) );
+}
