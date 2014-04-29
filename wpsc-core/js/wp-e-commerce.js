@@ -504,11 +504,8 @@ function wpsc_countries_lists_handle_restrictions() {
 			}
 		}
 
-		var all_billing_country_elements = wpsc_get_wpsc_meta_elements( 'billingcounty' );
-
 		var country_drop_downs = jQuery( selector ); 
 
-		var all_shipping_country_selects = wpsc_get_wpsc_meta_elements( 'shippingcounty' );
 		country_drop_downs.empty();
 
 		country_drop_downs.append( new Option( wpsc_var_get( 'no_country_selected' ), '' ) );
