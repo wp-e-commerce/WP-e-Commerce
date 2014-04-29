@@ -89,7 +89,7 @@ if ( WPSC_DEPRECATE_CUSTOMER_CHECKOUT_DETAILS ) {
 	}
 
 	/**
-	 * Update the meta values from the contents of a meta value that mirrors what was once "checkout_details".
+	 * Get the meta values from the contents of a meta value that mirrors what was once "checkout_details".
 	 *
 	 * @since  3.8.14
 	 * @param  string|int $id Customer ID. Optional. Defaults to current customer
@@ -117,7 +117,14 @@ if ( WPSC_DEPRECATE_CUSTOMER_CHECKOUT_DETAILS ) {
 
 				switch ( $form_field['type'] ) {
 					case 'delivery_country':
-						if ( wpsc_has_regions( $meta_value ) ) {
+						// if the meta value is an array, the country is the first element, region is the second
+						if ( is_array( $meta_value ) ) {
+							$country = $meta_value[0];
+						} else {
+							$country = $meta_value;
+						}
+
+						if ( wpsc_has_regions( $country ) ) {
 							$meta_value = array( $meta_value, wpsc_get_customer_meta( 'shippingregion' ) );
 						}
 
@@ -125,7 +132,14 @@ if ( WPSC_DEPRECATE_CUSTOMER_CHECKOUT_DETAILS ) {
 						break;
 
 					case 'country':
-						if ( wpsc_has_regions( $meta_value ) ) {
+						// if the meta value is an array, the country is the first element, region is the second
+						if ( is_array( $meta_value ) ) {
+							$country = $meta_value[0];
+						} else {
+							$country = $meta_value;
+						}
+
+						if ( wpsc_has_regions( $country ) ) {
 							$meta_value = array( 0 => $meta_value, wpsc_get_customer_meta( 'billingregion' )  );
 						}
 
