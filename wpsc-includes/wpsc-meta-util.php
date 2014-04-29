@@ -552,6 +552,7 @@ function _wpsc_visitor_meta_key_replacements( $meta_keys ) {
 	$meta_keys['billingzip']               = 'billingpostcode';
 	$meta_keys['shipping_same_as_billing'] = 'shippingSameBilling';
 	$meta_keys['delivertoafriend']         = 'shippingSameBilling';
+	$meta_keys['shipping_state']           = 'shippingstate';
 	return $meta_keys;
 }
 
