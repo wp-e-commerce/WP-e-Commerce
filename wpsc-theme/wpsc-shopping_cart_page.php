@@ -358,38 +358,6 @@ endif;
                <?php endif;
 
             // Not a header so start display form fields
-            }elseif(wpsc_disregard_shipping_state_fields()){
-            ?>
-               <tr class='wpsc_hidden'>
-                  <td class='<?php echo wpsc_checkout_form_element_id(); ?>'>
-                     <label for='<?php echo wpsc_checkout_form_element_id(); ?>'>
-                     <?php echo wpsc_checkout_form_name();?>
-                     </label>
-                  </td>
-                  <td>
-                     <?php echo wpsc_checkout_form_field();?>
-                      <?php if(wpsc_the_checkout_item_error() != ''): ?>
-                             <p class='validation-error'><?php echo wpsc_the_checkout_item_error(); ?></p>
-                     <?php endif; ?>
-                  </td>
-               </tr>
-            <?php
-            }elseif(wpsc_disregard_billing_state_fields()){
-            ?>
-               <tr class='wpsc_hidden'>
-                  <td class='<?php echo wpsc_checkout_form_element_id(); ?>'>
-                     <label for='<?php echo wpsc_checkout_form_element_id(); ?>'>
-                     <?php echo wpsc_checkout_form_name();?>
-                     </label>
-                  </td>
-                  <td>
-                     <?php echo wpsc_checkout_form_field();?>
-                      <?php if(wpsc_the_checkout_item_error() != ''): ?>
-                             <p class='validation-error'><?php echo wpsc_the_checkout_item_error(); ?></p>
-                     <?php endif; ?>
-                  </td>
-               </tr>
-            <?php
             }elseif( $wpsc_checkout->checkout_item->unique_name == 'billingemail'){ ?>
                <?php $email_markup =
                "<div class='wpsc_email_address'>
