@@ -197,3 +197,44 @@ function _wpsc_customer_meta_into_checkout_page() {
 
 add_action( 'wpsc_before_shopping_cart_page', '_wpsc_customer_meta_into_checkout_page' );
 
+
+
+/**
+ * On the checkout page create a hidden element holding the acceptable shipping countries
+ *
+ * This let's the wp-e-commerce javascript process any dependency rules even if the store has configured
+ * the checkout forms so that some fields are hidden.  The most important of these fields are the
+ * country, region and state fields. But it's just as easy to include all of them and not worry about
+ * what various parts of WPeC, themes or plugs may be doing.
+ *
+ * @since 3.8.14
+ *
+ * @access private
+ */
+function _wpsc_acceptable_shipping_countries_into_checkout_page() {
+
+	$acceptable_countries = wpsc_get_acceptable_countries();
+
+	// if the acceptable countries is true all available countries can be shipped to,
+	// otherwise we are going to restrict the countries list
+	if ( $acceptable_countries !== true ) {
+
+		$country_code_list = array();
+		foreach ( $acceptable_countries as $key => $country_id ) {
+			$wpsc_country = new WPSC_Country( $country_id );
+			$country_code_list[$wpsc_country->get_isocode()] = $wpsc_country->get_name();
+		}
+		?>
+		<script type="text/javascript">
+		/* <![CDATA[ */
+			var wpsc_acceptable_shipping_countries = <?php echo json_encode( $country_code_list ); ?>;
+		/* ]]> */
+		</script>
+		<?php
+	}
+}
+
+add_action( 'wpsc_before_shopping_cart_page', '_wpsc_acceptable_shipping_countries_into_checkout_page', 10, 0 );
+
+
+
