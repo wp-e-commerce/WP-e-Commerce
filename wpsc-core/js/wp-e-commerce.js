@@ -487,7 +487,7 @@ function wpsc_adjust_checkout_form_element_visibility() {
 function wpsc_countries_lists_handle_restrictions() {
 
 	// if there isn't a list of acceptable countries then we don't have any work to do
-	if ( typeof wpsc_acceptable_shipping_countries !== undefined ) {
+	if ( typeof wpsc_acceptable_shipping_countries === "object" ) {
 
 		// we need to know the current billing country
 		var current_billing_country  = wpsc_get_value_from_wpsc_meta_element( 'billingcountry' );
