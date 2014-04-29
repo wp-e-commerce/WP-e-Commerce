@@ -403,10 +403,10 @@ function wpsc_get_element_meta_key( element ) {
 
 	var meta_key = element.attr( "data-wpsc-meta-key" );
 
-	if ( meta_key == 'undefined' ) {
+	if ( meta_key == undefined ) {
 		meta_key = element.attr( "title" );
 
-		if ( meta_key == 'undefined' ) {
+		if ( meta_key == undefined ) {
 			meta_key = element.attr( "id" );
 		}
 	}
@@ -820,7 +820,7 @@ function wpsc_get_label_element( input ) {
 function wpsc_update_labels( elements, label ) {
 	elements.each( function( index, value ){
 		var label_element = wpsc_get_label_element( jQuery( this ) );
-		if ( label_element !== 'undefined' ) {
+		if ( label_element !== undefined ) {
 
 			if ( label_element.find('.asterix') ) {
 				label = label + '<span class="asterix">*</span>';
@@ -1124,7 +1124,7 @@ jQuery(document).ready(function ($) {
 			}
 
 			stock_display.html(response.variation_msg);
-			if ( response.price !== 'undefined' ) {
+			if ( response.price !== undefined ) {
 				if (price_field.length && price_field.attr('type') == 'text') {
 					price_field.val(response.numeric_price);
 					old_price.parent().hide();
