@@ -468,11 +468,76 @@ function wpsc_adjust_checkout_form_element_visibility() {
 	}
 
 	wpsc_update_location_elements_visibility();
+	wpsc_countries_lists_handle_restrictions();
 
 	// make sure any item that changes checkout data is bound to the proper event handler
 	jQuery( ".wpsc-visitor-meta" ).on( "change", wpsc_meta_item_change );
+	
+	return true;
 }
 
+
+/*
+ * update the countries lists as appropriate based on acceptible shipping countries and
+ * shipping same as billing
+ *
+ * since 3.8.14
+ *
+ */
+function wpsc_countries_lists_handle_restrictions() {
+
+	// if there isn't a list of acceptable countries then we don't have any work to do
+	if ( typeof wpsc_acceptable_shipping_countries === "object" ) {
+
+		// we need to know the current billing country
+		var current_billing_country  = wpsc_get_value_from_wpsc_meta_element( 'billingcountry' );
+		var current_shipping_country = wpsc_get_value_from_wpsc_meta_element( 'shippingcountry' );
+
+		var selector = 'select[data-wpsc-meta-key="shippingcountry"]';
+
+		var put_allowed_countries_into_billing_list = false;
+
+		if ( jQuery( "#shippingSameBilling" ).length ) {
+			if ( jQuery( "#shippingSameBilling" ).is(":checked") ) {
+				put_allowed_countries_into_billing_list = true;
+				selector = selector + ', select[data-wpsc-meta-key="billingcountry"]';
+			}
+		}
+
+		var country_drop_downs = jQuery( selector ); 
+
+		country_drop_downs.empty();
+
+		country_drop_downs.append( new Option( wpsc_var_get( 'no_country_selected' ), '' ) );
+		for ( var isocode in wpsc_acceptable_shipping_countries ) {
+			if ( wpsc_acceptable_shipping_countries.hasOwnProperty( isocode ) ) {
+				var country_name = wpsc_acceptable_shipping_countries[isocode];
+				country_drop_downs.append( new Option( country_name, isocode ) );
+			}
+		}
+
+		country_drop_downs.val( current_shipping_country );
+
+		if ( ! put_allowed_countries_into_billing_list ) {
+			selector = 'select[data-wpsc-meta-key="billingcountry"]';
+			country_drop_downs = jQuery( selector ); 
+			if ( country_drop_downs.length ) {
+				country_drop_downs.empty();
+				country_drop_downs.append( new Option( wpsc_var_get( 'no_country_selected' ), '' ) );
+				countries = wpsc_var_get( 'wpsc_countries' );
+				for ( var isocode in countries ) {
+					if ( countries.hasOwnProperty( isocode ) ) {
+						var country_name = countries[isocode];
+						country_drop_downs.append( new Option( country_name, isocode ) );
+				  	}
+				}
+			}
+			country_drop_downs.val( current_billing_country );
+		}
+	}
+	
+	return true;
+}
 
 /*
  * Change the labels assicated with country and region fields to match the
@@ -927,6 +992,8 @@ jQuery(document).ready(function ($) {
 	// setup checkout form and make sure visibility of form elements is what it should be
 	wpsc_adjust_checkout_form_element_visibility();
 	wpsc_update_location_elements_visibility();
+	wpsc_countries_lists_handle_restrictions();
+	
 	jQuery( "#shippingSameBilling"  ).on( 'change', wpsc_adjust_checkout_form_element_visibility );
 
 	if ( jQuery('#checkout_page_container .wpsc_email_address input').val() ) {
