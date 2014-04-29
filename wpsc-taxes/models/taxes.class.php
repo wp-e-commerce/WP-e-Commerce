@@ -351,6 +351,14 @@ class wpec_taxes {
 
 		$regions = $wpsc_country->get_regions_array();
 
+		// backwards compatability at version 3.8.14, the rest of the module needs region to be called 'region_code'.
+		// TODO: update taxes module to use WPSC_Region objects
+		foreach ( $regions as $index => $region ) {
+			$region['region_code'] = $region['code'];
+			unset( $region['region'] );
+			$regions[$index] = $region;
+		}
+
 		if ( isset( $country ) && 'all-markets' == $country ) {
 			return;
 		}
