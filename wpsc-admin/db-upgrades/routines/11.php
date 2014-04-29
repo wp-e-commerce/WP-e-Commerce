@@ -43,6 +43,17 @@ function _wpsc_fix_united_kingdom() {
 
 		$wpsc_country->set( '_is_country_legacy', true );
 	}
+
+	//make sure base country is ok after the UK/GB fix
+	$base_country = get_option( 'base_country', '' );
+	if ( ! empty( $base_country ) && is_numeric( $base_country ) ) {
+		$wpsc_country = new WPSC_Country( $base_country );
+		if ( 'UK' == $wpsc_country->get_isocode() ) {
+			$wpsc_country = new WPSC_Country( 'GB' );
+			update_option( 'base_country' , $wpsc_country->get_id() );
+		}
+	}
+
 }
 
 
