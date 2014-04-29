@@ -119,7 +119,7 @@ if ( WPSC_DEPRECATE_CUSTOMER_CHECKOUT_DETAILS ) {
 					case 'delivery_country':
 						// if the meta value is an array, the country is the first element, region is the second
 						if ( is_array( $meta_value ) ) {
-							$country = $meta_value[1];
+							$country = $meta_value[0];
 						} else {
 							$country = $meta_value;
 						}
@@ -134,7 +134,7 @@ if ( WPSC_DEPRECATE_CUSTOMER_CHECKOUT_DETAILS ) {
 					case 'country':
 						// if the meta value is an array, the country is the first element, region is the second
 						if ( is_array( $meta_value ) ) {
-							$country = $meta_value[1];
+							$country = $meta_value[0];
 						} else {
 							$country = $meta_value;
 						}
