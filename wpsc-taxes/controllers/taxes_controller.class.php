@@ -518,7 +518,7 @@ class wpec_taxes_controller {
 				foreach ( $select_settings as $key => $setting ) {
 					if ( $key == 'label' ) {
 						continue;
-					} elseif ( $key == 'value') {
+					} elseif ( $key == 'value' ) {
 						$setting = esc_attr( $setting );
 					}
 					$returnable .= $key."='".$setting."'";
