@@ -855,7 +855,8 @@ function paypal_processingfunctions(){
 			wpsc_update_customer_meta( 'paypal_express_reshash', $resArray );
 
 		   $ack = strtoupper( $resArray["ACK"] );
-		   if( $ack == "SUCCESS" ){
+
+		   if ( $ack == "SUCCESS" ) {
 
 				/********************************************************
 				GetExpressCheckoutDetails.php
@@ -878,25 +879,25 @@ function paypal_processingfunctions(){
 				authorization for the PayPal payment
 				*/
 
-				wpsc_update_customer_meta( 'paypal_express_token', $_REQUEST['token'] );
-				wpsc_update_customer_meta( 'paypal_express_payer_id', $_REQUEST['PayerID'] );
-
-				$resArray = wpsc_get_customer_meta( 'paypal_express_reshash' );
-
-				if ( get_option( 'permalink_structure' ) != '')
-					$separator ="?";
-				else
-					$separator ="&";
-
-
 				/* Display the  API response back to the browser .
 				If the response from PayPal was a success, display the response parameters
 				*/
-				if( isset( $_REQUEST['TOKEN'] ) && ! isset( $_REQUEST['PAYERID'] ) ) {
+				if ( isset( $_REQUEST['token'] ) && ! isset( $_REQUEST['PayerID'] ) ) {
 
 					wpsc_update_customer_meta( 'paypal_express_message', _x( '<h4>TRANSACTION CANCELED</h4>', 'paypal express cancel header', 'wpsc' ) );
 
-				}else{
+				} else {
+
+					wpsc_update_customer_meta( 'paypal_express_token'   , $_REQUEST['token'] );
+					wpsc_update_customer_meta( 'paypal_express_payer_id', $_REQUEST['PayerID'] );
+
+					$resArray = wpsc_get_customer_meta( 'paypal_express_reshash' );
+
+					if ( get_option( 'permalink_structure' ) != '')
+						$separator = "?";
+					else
+						$separator = "&";
+
 					if ( ! isset( $resArray['SHIPTOSTREET2'] ) )
 						$resArray['SHIPTOSTREET2'] = '';
 					$output ="

@@ -74,7 +74,7 @@ function wpsc_core_constants() {
 	}
 
 	// Define the current database version
-	define( 'WPSC_DB_VERSION', 11 );
+	define( 'WPSC_DB_VERSION', 12 );
 
 	// Define Debug Variables for developers, if they haven't already been defined
 	if ( ! defined( 'WPSC_DEBUG' ) ) {
