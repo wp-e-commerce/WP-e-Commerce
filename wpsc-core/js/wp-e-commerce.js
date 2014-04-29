@@ -22,7 +22,7 @@
  * wpsc_var_isset ( name, value );
  *
  */
-if ( typeof wpsc_vars !== undefined ) {
+if ( typeof wpsc_vars !== 'undefined' ) {
 	var wpsc_ajax                = wpsc_vars['wpsc_ajax'];
 	var base_url                 = wpsc_vars['base_url'];
 	var WPSC_URL                 = wpsc_vars['WPSC_URL'];
@@ -45,7 +45,7 @@ if ( typeof wpsc_vars !== undefined ) {
  *
  */
 function wpsc_var_isset( name ) {
-	if ( typeof wpsc_vars !== undefined ) {
+	if ( typeof wpsc_vars !== 'undefined' ) {
 		return  wpsc_vars[name] !== undefined;
 	}
 
@@ -63,7 +63,7 @@ function wpsc_var_isset( name ) {
  *
  */
 function wpsc_var_get( name ) {
-	if ( typeof wpsc_vars !== undefined ) {
+	if ( typeof wpsc_vars !== 'undefined' ) {
 		return  wpsc_vars[name];
 	}
 
@@ -82,7 +82,7 @@ function wpsc_var_get( name ) {
  *
  */
 function wpsc_var_set( name, value ) {
-	if ( typeof wpsc_vars !== undefined ) {
+	if ( typeof wpsc_vars !== 'undefined' ) {
 		wpsc_vars[name] = value;
 		return value;
 	}
