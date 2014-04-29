@@ -22,7 +22,7 @@
  * wpsc_var_isset ( name, value );
  *
  */
-if ( typeof wpsc_vars !== undefined ) {
+if ( typeof wpsc_vars !== 'undefined' ) {
 	var wpsc_ajax                = wpsc_vars['wpsc_ajax'];
 	var base_url                 = wpsc_vars['base_url'];
 	var WPSC_URL                 = wpsc_vars['WPSC_URL'];
@@ -45,7 +45,7 @@ if ( typeof wpsc_vars !== undefined ) {
  *
  */
 function wpsc_var_isset( name ) {
-	if ( typeof wpsc_vars !== undefined ) {
+	if ( typeof wpsc_vars !== 'undefined' ) {
 		return  wpsc_vars[name] !== undefined;
 	}
 
@@ -63,7 +63,7 @@ function wpsc_var_isset( name ) {
  *
  */
 function wpsc_var_get( name ) {
-	if ( typeof wpsc_vars !== undefined ) {
+	if ( typeof wpsc_vars !== 'undefined' ) {
 		return  wpsc_vars[name];
 	}
 
@@ -82,7 +82,7 @@ function wpsc_var_get( name ) {
  *
  */
 function wpsc_var_set( name, value ) {
-	if ( typeof wpsc_vars !== undefined ) {
+	if ( typeof wpsc_vars !== 'undefined' ) {
 		wpsc_vars[name] = value;
 		return value;
 	}
@@ -403,10 +403,10 @@ function wpsc_get_element_meta_key( element ) {
 
 	var meta_key = element.attr( "data-wpsc-meta-key" );
 
-	if ( meta_key == undefined ) {
+	if ( meta_key == 'undefined' ) {
 		meta_key = element.attr( "title" );
 
-		if ( meta_key == undefined ) {
+		if ( meta_key == 'undefined' ) {
 			meta_key = element.attr( "id" );
 		}
 	}
@@ -487,7 +487,7 @@ function wpsc_adjust_checkout_form_element_visibility() {
 function wpsc_countries_lists_handle_restrictions() {
 
 	// if there isn't a list of acceptable countries then we don't have any work to do
-	if ( typeof wpsc_acceptable_shipping_countries !== undefined ) {
+	if ( typeof wpsc_acceptable_shipping_countries !== 'undefined' ) {
 
 		// we need to know the current billing country
 		var current_billing_country  = wpsc_get_value_from_wpsc_meta_element( 'billingcountry' );
@@ -820,7 +820,7 @@ function wpsc_get_label_element( input ) {
 function wpsc_update_labels( elements, label ) {
 	elements.each( function( index, value ){
 		var label_element = wpsc_get_label_element( jQuery( this ) );
-		if ( label_element !== undefined ) {
+		if ( label_element !== 'undefined' ) {
 
 			if ( label_element.find('.asterix') ) {
 				label = label + '<span class="asterix">*</span>';
@@ -1124,7 +1124,7 @@ jQuery(document).ready(function ($) {
 			}
 
 			stock_display.html(response.variation_msg);
-			if ( response.price !== undefined ) {
+			if ( response.price !== 'undefined' ) {
 				if (price_field.length && price_field.attr('type') == 'text') {
 					price_field.val(response.numeric_price);
 					old_price.parent().hide();
