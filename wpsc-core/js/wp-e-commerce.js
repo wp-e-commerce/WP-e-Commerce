@@ -977,6 +977,25 @@ function wpsc_shipping_country_has_regions() {
  */
 jQuery(document).ready(function ($) {
 
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
+	// a check for backwards compatibility due in row visibility.  Starting in version 3.8.14 the row 
+	// with the billing state also contains the billing region, same for shipping state and shipping 
+	// region, prior versions use to hide the row, we don't want to do that anymore.  So that older 
+	// themes work we will remove the class that hides the row
+	var selector = 'select[data-wpsc-meta-key="shippingregion"]';
+	var select = jQuery( selector ).first();
+	if ( select.closest( 'tr' ).hasClass( 'wpsc_hidden' ) ) {
+		select.closest( 'tr' ).removeClass( 'wpsc_hidden' );
+	}
+	
+	var selector = 'select[data-wpsc-meta-key="billingregion"]';
+	var select = jQuery( selector ).first();
+	if ( select.closest( 'tr' ).hasClass( 'wpsc_hidden' ) ) {
+		select.closest( 'tr' ).removeClass( 'wpsc_hidden' );
+	}
+	// end of backwards compatibility code
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	if ( jQuery( ".wpsc-country-dropdown" ).length ) {
 		jQuery( ".wpsc-country-dropdown"   ).on( 'change', wpsc_change_regions_when_country_changes );
 	}
