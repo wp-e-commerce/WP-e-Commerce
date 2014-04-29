@@ -22,7 +22,7 @@
  * wpsc_var_isset ( name, value );
  *
  */
-if ( typeof wpsc_vars !== undefined ) {
+if ( typeof wpsc_vars !== 'undefined' ) {
 	var wpsc_ajax                = wpsc_vars['wpsc_ajax'];
 	var base_url                 = wpsc_vars['base_url'];
 	var WPSC_URL                 = wpsc_vars['WPSC_URL'];
@@ -45,7 +45,7 @@ if ( typeof wpsc_vars !== undefined ) {
  *
  */
 function wpsc_var_isset( name ) {
-	if ( typeof wpsc_vars !== undefined ) {
+	if ( typeof wpsc_vars !== 'undefined' ) {
 		return  wpsc_vars[name] !== undefined;
 	}
 
@@ -63,7 +63,7 @@ function wpsc_var_isset( name ) {
  *
  */
 function wpsc_var_get( name ) {
-	if ( typeof wpsc_vars !== undefined ) {
+	if ( typeof wpsc_vars !== 'undefined' ) {
 		return  wpsc_vars[name];
 	}
 
@@ -82,7 +82,7 @@ function wpsc_var_get( name ) {
  *
  */
 function wpsc_var_set( name, value ) {
-	if ( typeof wpsc_vars !== undefined ) {
+	if ( typeof wpsc_vars !== 'undefined' ) {
 		wpsc_vars[name] = value;
 		return value;
 	}
@@ -977,6 +977,25 @@ function wpsc_shipping_country_has_regions() {
  */
 jQuery(document).ready(function ($) {
 
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
+	// a check for backwards compatibility due in row visibility.  Starting in version 3.8.14 the row 
+	// with the billing state also contains the billing region, same for shipping state and shipping 
+	// region, prior versions use to hide the row, we don't want to do that anymore.  So that older 
+	// themes work we will remove the class that hides the row
+	var selector = 'select[data-wpsc-meta-key="shippingregion"]';
+	var select = jQuery( selector ).first();
+	if ( select.closest( 'tr' ).hasClass( 'wpsc_hidden' ) ) {
+		select.closest( 'tr' ).removeClass( 'wpsc_hidden' );
+	}
+	
+	var selector = 'select[data-wpsc-meta-key="billingregion"]';
+	var select = jQuery( selector ).first();
+	if ( select.closest( 'tr' ).hasClass( 'wpsc_hidden' ) ) {
+		select.closest( 'tr' ).removeClass( 'wpsc_hidden' );
+	}
+	// end of backwards compatibility code
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	if ( jQuery( ".wpsc-country-dropdown" ).length ) {
 		jQuery( ".wpsc-country-dropdown"   ).on( 'change', wpsc_change_regions_when_country_changes );
 	}
