@@ -1004,7 +1004,7 @@ class ash_usps {
 		}
 		// If the region code is provided via a form post use it!
 		if ( isset( $_POST['region'] ) && ! empty( $_POST['region'] ) ) {
-			$data['dest_state'] = wpsc_get_region( $region_id );
+			$data['dest_state'] = wpsc_get_region( $_POST['region'] );
 			wpsc_update_customer_meta( 'shipping_state', $data['dest_state'] ); //Unify state meta.
 		} else if ( $dest_state = wpsc_get_customer_meta( 'shipping_state' ) ) {
 			// Well, we have a zip code in the session and no new one provided
