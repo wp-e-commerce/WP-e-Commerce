@@ -2068,7 +2068,7 @@ add_filter( 'wpsc_get_visitor_meta', 'wpsc_user_log_deprecated_filter_values', 1
 /**
  * deprecating user log filter for getting all customer meta as an array.
  *
- *fs@deprecated 3.8.14
+ *@deprecated 3.8.14
  *
  * @return none
  */
@@ -2081,3 +2081,17 @@ function wpsc_deprecated_filter_user_log_get() {
 	}
 }
 add_filter( 'wpsc_start_display_user_log_form_fields', 'wpsc_deprecated_filter_user_log_get', 10, 0 );
+
+
+/**
+ * function to privide deprecated variables to older shipping modules
+ *
+ * @since 3.8.14
+ */
+function wpsc_deprecated_vars_for_shipping( $wpsc_cart ) {
+	// extracted from the insticnt fedex module
+	$_POST['country'] = wpsc_get_customer_meta( 'shippingcountry' );
+	$_POST['region']  = wpsc_get_customer_meta( 'shippingregion' );
+	$_POST['zipcode'] = wpsc_get_customer_meta( 'shippingpostcode' );
+}
+add_action( 'wpsc_before_get_shipping_method', 'wpsc_deprecated_vars_for_shipping' );
