@@ -650,9 +650,9 @@ class WPSC_Countries {
 			$currencies_list = array();
 
 			foreach ( $currencies as $currencies_key => $currency ) {
-				$currency_array             = get_object_vars( $currency );
-				$currency_array['currency'] = $currency_array['name'];   // some  legacy code looks for 'currency' rather than name, so we put both in the array
-				$currencies_list[]          = $currency_array;
+				$currency_array                           = get_object_vars( $currency );
+				$currency_array['currency']               = $currency_array['name'];   // some  legacy code looks for 'currency' rather than name, so we put both in the array
+				$currencies_list[$currency_array['code']] = $currency_array;
 			}
 
 			$currencies = $currencies_list;
