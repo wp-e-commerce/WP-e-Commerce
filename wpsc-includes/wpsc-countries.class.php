@@ -389,6 +389,7 @@ class WPSC_Countries {
 				$currency_data->code        = $wpsc_country->get_currency_code();
 				$currency_data->symbol      = $wpsc_country->get_currency_symbol();
 				$currency_data->symbol_html = $wpsc_country->get_currency_symbol_html();
+				$currency_data->currency    = $wpsc_country->get_currency_name();
 			}
 		}
 
@@ -643,11 +644,18 @@ class WPSC_Countries {
 			return 0;
 		}
 
-		$currencies = self::$currencies;
+		$currencies = self::$currencies->data();
 
 		if ( $as_array ) {
-			$json = json_encode( $currencies );
-			$currencies = json_decode( $json, true );
+			$currencies_list = array();
+
+			foreach ( $currencies as $currencies_key => $currency ) {
+				$currency_array                           = get_object_vars( $currency );
+				$currency_array['currency']               = $currency_array['name'];   // some  legacy code looks for 'currency' rather than name, so we put both in the array
+				$currencies_list[$currency_array['code']] = $currency_array;
+			}
+
+			$currencies = $currencies_list;
 		}
 
 		// we have the return value in our country name to id map, all we have to do is swap the keys with the values

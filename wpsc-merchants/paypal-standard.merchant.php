@@ -793,14 +793,12 @@ function form_paypal_multiple() {
 		$paypal_currency_list = array_map( 'esc_sql', $wpsc_gateways['wpsc_merchant_paypal_standard']['supported_currencies']['currency_list'] );
 		$currency_list = WPSC_Countries::get_currencies( true );
 
-		foreach ( $currency_codes_in_commmon as $currency_code ) {
+		foreach ( $currency_list as $currency_item ) {
 			$selected_currency = '';
-			$currency_item = $currency_list[$currency_code];
-
 			if ( $current_currency == $currency_item['code'] ) {
 				$selected_currency = "selected='selected'";
 			}
-			$output .= "<option " . $selected_currency . " value='{$currency_item['code']}'>{$currency_item['currency']}</option>";
+			$output .= "<option " . $selected_currency . " value='{$currency_item['code']}'>{$currency_item['name']}</option>";
 		}
 		$output .= "
 				</select>
