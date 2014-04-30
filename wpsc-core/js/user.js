@@ -368,12 +368,8 @@ function statusTextKeyPress(event){
 	}
 	return true;
 }
-// function switchmethod(key,key1){
-// // 	total=document.getElementById("shopping_cart_total_price").value;
-// 	ajax.post("index.php",usps_method_switch,"ajax=true&uspsswitch=true&key1="+key1+"&key="+key+"&total="+total);
-// }
 
-var usps_method_switch=function (results){
+var usps_method_switch = function (results){
 	shipping = results.split('---');
 	shipping1 = shipping[1];
 	jQuery("#checkout_total").html(shipping[0]);

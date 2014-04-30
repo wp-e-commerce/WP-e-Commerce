@@ -879,7 +879,7 @@ function paypal_processingfunctions(){
 				authorization for the PayPal payment
 				*/
 
-				/* Display the  API response back to the browser .
+				/* Display the API response back to the browser .
 				If the response from PayPal was a success, display the response parameters
 				*/
 				if ( isset( $_REQUEST['token'] ) && ! isset( $_REQUEST['PayerID'] ) ) {
