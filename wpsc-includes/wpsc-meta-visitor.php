@@ -1242,7 +1242,6 @@ add_action( 'wpsc_updated_visitor_meta_billingcountry', '_wpsc_updated_visitor_m
  * @return none
  */
 function wpsc_delete_visitor_ajax() {
-
 	$visitor_id_to_delete = $_POST['wpsc_visitor_id'];
 	$security_nonce 	  = $_POST['wpsc_security'];
 
@@ -1252,12 +1251,12 @@ function wpsc_delete_visitor_ajax() {
 		// This nonce is not valid.
 		die( 'Security check' );
 	} else {
-		wpsc_delete_visitor( $visitor_id );
+		wpsc_delete_visitor( $visitor_id_to_delete );
 	}
 
 	exit( 0 );
 }
 
 
-add_action( 'wp_ajax_wpsc_delete_visitor'       		, 'wpsc_delete_visitor_ajax' );
-add_action( 'wp_ajax_nopriv_wpsc_validate_customer'		, 'wpsc_delete_visitor_ajax' );
+add_action( 'wp_ajax_wpsc_delete_visitor', 'wpsc_delete_visitor_ajax' );
+add_action( 'wp_ajax_nopriv_wpsc_delete_visitor', 'wpsc_delete_visitor_ajax' );
