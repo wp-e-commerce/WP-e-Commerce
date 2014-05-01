@@ -6,132 +6,23 @@ Requires at least: 3.7
 Tested up to: 3.9
 Stable tag: 3.8.13.3
 
-WP eCommerce is a free WordPress Shopping Cart Plugin that lets customers buy your products, services and digital downloads online.
+WP eCommerce is a free, powerful plugin that empowers you to sell anything online, quickly and easily.
 
 == Description ==
 
-We make setting up an ecommerce shop easy, and with over 2.7 Million downloads, we have unparalleled experience.
+Since 2006, we've been helping entrepreneurs just like you realize their goal of selling online.  Whether you're hoping to sell digital downloads, physical inventory, or subscriptions and memberships - with WP eCommerce, you're only minutes away from your next sale.
 
-Features:
-
-= WordPress Integration =
-* Easy to install WordPress plugin
-* Works with any standards compliant WordPress theme
-* Plays well with other Plugins
-* Supports regular WordPress widgets, as well as a few snazzy ones of our own
-* Utilizes shortcodes and template tags (just like WordPress)
-* Works out-of-the-box with WordPress Multisite (make sure you use sub-domains with your Multisite setup)
-
-= 100% Customizable =
-* Use your own HTML & CSS and have complete control over the look and feel of your store
-* Easy to modify templates
-
-= Support =
-* Lots of video tutorials
-* Speedy response (through our premium forums)
-* Access to instant support from our community of users
-
-= Payment Gateways Integration =
-* Manual Payment (checks/money orders)
-* PayPal Payments Standard
-* PayPal Payments Pro
-* PayPal Express Checkout
-* Chronopay
-* PayPal Payflow Pro (available with Gold Cart)
-* Authorize.net (available with Gold Cart)
-* FirstData/LinkPoint (available with Gold Cart)
-* eWay Payment (available with Gold Cart)
-* iDEAL (available with Gold Cart)
-* BluePay (available with Gold Cart)
-* DPS (available with Gold Cart)
-* Paystation (available with Gold Cart)
-* SagePay (available with Gold Cart)
-* Need a different gateway?  We have documentation available for developing your own custom payment gateway
-
-= Marketing =
-* Flexible coupon/discount pricing rules
-* Product specific sales
-* Quantity discounts
-* Free shipping options
-* Multi-tier pricing for quantity discounts.
-* Search Engine Friendly URLs
-* New Products widget
-* Cross-sells on product pages
-* Google Sitemap and Google Analytics
-* Uses the popular â€œShare Thisâ€� button for easily promoting your products on popular social networking sites
-* Integrates with Google Base
-
-= Search Engine Optimization =
-* 100% Search Engine Friendly
-* Meta-information for products and categories
-* RSS feeds for products and categories
-* Integrates with Google (XML site maps and Google Merchant Centre)
-* Integrates with the All in One SEO plugin for WordPress
-
-= Internationalization Support =
-* Basic support for popular multi-lingual plugins (qTranslate and WPML)
-* Support for multiple currencies
-* Ability to target specific countries
-
-= Shipping =
-* Integrates with UPS, USPS, Australia Post and Shipwire for real-time shipping rates
-* Flexible built-in shipping rate calculators
-* Domestic and global shipping rates
-* Flat rate shipping
-* Table rate shipping
-* Weight rate shipping
-
-= Checkout =
-* SSL security support for orders on both front-end and back-end
-* Checkout without account/Guest Checkout
-* Shopping Cart with tax and shipping estimates
-* Option to create account at beginning of checkout
-* Fully customizable checkout page
-
-= Managing Orders =
-* Admin dashboard for sales overview
-* Export orders and customers into CSV formats
-* Order history with labels for order processing status
-* Email notifications of orders
-* Print invoices and packing slips
-
-= Catalog Management =
-* Single-page product data entry
-* Ability to duplicate products
-* Quickly edit your products from the store front
-* Organize your products with hierarchical categories
-* Batch import/export of catalog
-* Product variation management
-* Downloadable/Digital Products
-* Support for donations
-* Customer Personalized Products
-* Media Manager with automatic image resizing
-* Tax rates per location
-* Basic inventory control
-
-= Catalog Browsing =
-* Cross-sells
-* Product listing in list format
-* Product listing in grid format (available with Gold Cart)
-* Breadcrumbs
-* Product Image Zoom-in Capability
-* Stock Availability
-* Multiple Images Per Product (available with Gold Cart)
-* Product comments
-* Filter by Product Tags
-* New Products widget
-* Features Products widget
-* Live updating shopping cart (put it wherever you want)
-
-= Additional Modules =
-* Gold Cart & Grid Module â€“ adds more options and functionality to your store
-* Drop Shop â€“ an incredibly snazzy way for buyers to add products to their cart, via a simple drag n drop process.
-* Mp3 Audio Player â€“ Preview audio clips on your website
-* NextGen Gallery Buy Now Buttons â€“ turns your NextGen gallery into an ecommerce solution
-* Product Slider â€“ Display your products in a new and fancy way
-* Members Only Module â€“ Create pay to view subscription sites
-
-For more information visit [http://getshopped.org](http://getshopped.org "http://getshopped.org")
+ * Make the plugin your own with CSS and HTML customizations
+ * Learn quickly with our [video tutorials](http://docs.getshopped.org/category/resources/videos/)
+ * Integration with [dozens of different payment gateways](http://getshopped.org/extend/premium-upgrades/)
+ * Integrate with many popular WordPress plugins
+ * Use built-in marketing tools to sell more
+ * Shipping is easy with built in shipping tools and integration with popular couriers
+ * Secure check-out with SSL
+ * Manage your orders and catalogues with powerful built-in tools
+ * Extend your eCommerce site with [additional modules](http://getshopped.org/extend/premium-upgrades/)
+ * Integrate with WordPress multisite
+ * With hundreds of available hooks, developers can make WP eCommerce do anything you can imagine
 
 == Installation ==
 
@@ -150,6 +41,7 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * New: AJAX API to get and set information about customers
 * New: Visitor API to get and set information about current and past visits
 * Fix: When page caching is being used, probability of empty or superfluous visitor profiles being created drastically diminished
+* Change:
 
 = 3.8.13.3 =
 * Fix: Users disappear in Network Admin -> Users page (for multisite)
@@ -731,9 +623,42 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 = How do I customize WP eCommerce =
 
-First of all you should check out the Presentation settings which are in the Settings->Store page.
+First of all, you should check out the Presentation settings which are in the Settings -> Store page.
 
-Advanced users can edit the CSS (and do just about anything). Not so advanced users can hire WP consultants developers and designers from [http://getshopped.org/resources/wp-consultants/](http://getshopped.org/resources/wp-consultants/ "http://getshopped.org/resources/wp-consultants/").
+For advanced users, all of our eCommerce templates and CSS can be moved into your active theme folder for customization. Less advanced users have [several fantastic WP eCommerce consultants](http://getshopped.org/resources/wp-consultants/ "http://getshopped.org/resources/wp-consultants) to get help from.
+
+= What payment gateways does WP e-Commerce integrate with? =
+
+Our [Gold Cart plugin](http://getshopped.org/premium-upgrades/premium-plugin/gold-cart-plugin/) contains nearly a dozen payment gateway options, including Authorize.net, LinkPoint and DPS.  Our [Mirijeh integration plugin](http://getshopped.org/premium-upgrades/payment-gateways/mijireh-99-payment-gateways-pack-wp-e-commerce/) provides access to nearly one hundred different gateway options.  Beyond that, we have individual integration plugins for [Braintree](http://getshopped.org/premium-upgrades/payment-gateways/braintree-payment-gateway/), [Stripe](http://getshopped.org/premium-upgrades/payment-gateways/stripe-payment-gateway-wp-e-commerce/), [Authorize.net SIM](http://getshopped.org/premium-upgrades/premium-plugin/authorize-net-sim-payment-gateway-for-wordpress/) and more.
+
+= I want to integrate a payment gateway that you don't support. Can you help with that? =
+
+Absolutely!  We have a [growing list of trusted consultants](http://getshopped.org/consultant/) who would be happy to partner with you to build a custom gateway.  Alternatively, you're more than welcome to request that we build it as a plugin or part of our core plugin.  The more requests we get, the more likely we are to build it.  If you happen to be a talented developer, we have a great documentation site with helpful information on building payment gateways
+
+= Which couriers does the plugin integrate with? =
+
+We have table rate, weight rate and flat rate shipping calculators.
+
+We also currently integrate with UPS, USPS, Australia Post and Shipwire for real-time shipping rates.  We have a premium plugin for [FedEx](http://getshopped.org/premium-upgrades/premium-plugin/fedex-shipping-plugin-wordpress/) as well.
+
+= Which multi-lingual plugins is WP eCommerce compatible with? =
+
+We currently provide basic support for WPML and qTranslate.  We're excited about an up-and-coming multi-lingual project called [Babble](https://github.com/cftp/babble).  We intend to fully and canonically support Babble as our primary multi-lingul partner in releases to come.
+
+= Which additional modules are available for use with WP e-Commerce? =
+
+* [Gold Cart](http://getshopped.org/premium-upgrades/premium-plugin/gold-cart-plugin/) - adds more options, gateways and functionality to your store
+* [Drop Shop](http://getshopped.org/premium-upgrades/premium-plugin/dropshop-2010/) - an incredibly snazzy way for buyers to add products to their cart, via a simple drag n drop process.
+* [MP3 Audio Player](http://getshopped.org/premium-upgrades/premium-plugin/mp3-player-plugin-wordpress/) - Preview audio clips on your website
+* [NextGen Gallery Buy Now Buttons](http://getshopped.org/premium-upgrades/premium-plugin/nextgen-gallery-buy-now-buttons-wordpress-stores/) - turns your NextGen gallery into an eCommerce solution
+* [Product Slider](http://getshopped.org/premium-upgrades/premium-plugin/product-slider-image-carousel-wordpress/) - Display your products in a new and fancy way
+* [Members Plugin](http://getshopped.org/premium-upgrades/premium-plugin/product-slider-image-carousel-wordpress/) - Integrates with PayPal Standard and Authorize.Net, allows you to create a Subscription-Based Product, as well as a "Members-Only" website with paid access to restricted content.
+
+= How do you provide support? =
+
+For users who have purchased a premium plugin from us (or a have purchased a [premium support token](http://getshopped.org/premium-upgrades/exclude-marketplace/premium-support-token/)), we offer high-touch, 1-on-1 support from our trained support staff.  If you submit a support request here, you'll get a helpful response within 24 hours or less (during business hours).
+
+For the rest of our users, we do our best to monitor the WordPress.org support forums and respond in as timely a manner as we are able.  We appreciate the countless helpful volunteers who also take time to respond to forum posts here.
 
 == Screenshots ==
 
