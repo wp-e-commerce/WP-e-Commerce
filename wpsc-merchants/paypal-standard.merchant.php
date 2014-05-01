@@ -387,11 +387,14 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 	* @access private
 	*/
 	function parse_gateway_notification() {
+
 		/// PayPal first expects the IPN variables to be returned to it within 30 seconds, so we do this first.
 		$paypal_url = get_option( 'paypal_multiple_url' );
-		$received_values = array();
+
+		$received_values        = array();
 		$received_values['cmd'] = '_notify-validate';
-		$received_values += stripslashes_deep( $_REQUEST );
+		$received_values       += stripslashes_deep( $_REQUEST );
+
 		$options = array(
 			'timeout'     => 20,
 			'body'        => $received_values,
@@ -400,9 +403,10 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 		);
 
 		$response = wp_remote_post( $paypal_url, $options );
+
 		if ( 'VERIFIED' == $response['body'] ) {
 			$this->paypal_ipn_values = $received_values;
-			$this->session_id = $received_values['invoice'];
+			$this->session_id        = $received_values['invoice'];
 		} else {
 			exit( "IPN Request Failure" );
 		}
@@ -425,7 +429,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 
 		foreach ( $form_fields_results as $row ) {
 			if ( ! empty( $row->unique_name ) )
-				$form_fields[$row->id] = $row->unique_name;
+				$form_fields[ $row->id ] = $row->unique_name;
 		}
 
 		$purchase_log_id = $purchase_log->get( 'id' );
@@ -448,15 +452,18 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 			// if the corresponding checkout field is "active", prepare the data array that will
 			// get passed into $wpdb->insert()
 			foreach ( $field_mapping as $key => $value ) {
+
 				$unique_name = $type . $key;
-				$id = array_search( $unique_name, $form_fields );
-				if ( $id === false || ! isset( $this->paypal_ipn_values[$value] ) )
+				$id          = array_search( $unique_name, $form_fields );
+
+				if ( $id === false || ! isset( $this->paypal_ipn_values[ $value ] ) ) {
 					continue;
+				}
 
 				$inserts[] = array(
 					'log_id'  => $purchase_log_id,
 					'form_id' => $id,
-					'value'   => $this->paypal_ipn_values[$value],
+					'value'   => $this->paypal_ipn_values[ $value ],
 				);
 			}
 		}
@@ -500,19 +507,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 
 		$paypal_email = strtolower( get_option( 'paypal_multiple_business' ) );
 
-		// Validate Currency
-		if ( $this->paypal_ipn_values['mc_currency'] !== $this->get_paypal_currency_code() ) {
-			return;
-		}
-
-		$purchase_log = new WPSC_Purchase_Log( $this->cart_data['session_id'], 'sessionid' );
-
-		if ( ! $purchase_log->exists() ) {
-			return;
-		}
-
-		// Validate amount
-		if ( $this->paypal_ipn_values['mc_gross'] != $purchase_log->get( 'totalprice' ) ) {
+		if ( ! $this->is_valid_ipn_response() ) {
 			return;
 		}
 
@@ -558,7 +553,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 				case 'subscr_failed':
 					foreach ( $this->cart_items as $cart_row ) {
 						$altered_count = 0;
-						if ( (bool)$cart_row['is_recurring'] == true ) {
+						if ( (bool) $cart_row['is_recurring'] == true ) {
 							$altered_count++;
 							wpsc_update_cart_item_meta( $cart_row['cart_item_id'], 'is_subscribed', 0 );
 						}
@@ -571,7 +566,30 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 		}
 	}
 
+	public function is_valid_ipn_response() {
 
+		$valid = true;
+
+		// Validate Currency
+		if ( $this->paypal_ipn_values['mc_currency'] !== $this->get_paypal_currency_code() ) {
+			$valid = false;
+		}
+
+		$purchase_log = new WPSC_Purchase_Log( $this->cart_data['session_id'], 'sessionid' );
+
+		if ( ! $purchase_log->exists() ) {
+			$valid = false;
+		}
+
+		// Validate amount
+		// It is worth noting, there are edge cases here that may need to be addressed via filter.
+		// @link https://github.com/wp-e-commerce/WP-e-Commerce/issues/1232.
+		if ( $this->paypal_ipn_values['mc_gross'] != $this->convert( $purchase_log->get( 'totalprice' ) ) ) {
+			$valid = false;
+		}
+
+		return apply_filters( 'wpsc_paypal_standard_is_valid_ipn_response', $valid, $this );
+	}
 
 	function format_price( $price, $paypal_currency_code = null ) {
 		if ( ! isset( $paypal_currency_code ) ) {
