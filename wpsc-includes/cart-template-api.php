@@ -219,7 +219,6 @@ function wpsc_cart_show_plus_postage() {
  * Does the customers cart require/user shipping
  *
  * @uses wpsc_cart
-
  * @return boolean if true, all items in the cart do use shipping
  */
 function wpsc_uses_shipping() {
