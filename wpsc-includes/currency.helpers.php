@@ -21,7 +21,13 @@ function _wpsc_get_exchange_rate( $from, $to ) {
 				'http://www.google.com/finance/converter'
 				);
 
+	$url  = apply_filters( '_wpsc_get_exchange_rate_service_endpoint', $url, $from, $to );
+
 	$response = wp_remote_retrieve_body( wp_remote_get( $url, array( 'timeout' => 10 ) ) );
+
+	if ( has_filter( '_wpsc_get_exchange_rate' ) ) {
+		return (float) apply_filters( '_wpsc_get_exchange_rate', $response, $from, $to );
+	}
 
 	if ( empty( $response ) ) {
 		return $response;
@@ -32,17 +38,21 @@ function _wpsc_get_exchange_rate( $from, $to ) {
 		$rate = trim( $rate[0] );
 		set_transient( $key, $rate, DAY_IN_SECONDS );
 
-		return $rate;
+		return (float) $rate;
 	}
 }
 
 function wpsc_convert_currency( $amt, $from, $to ) {
-	if ( empty( $from ) || empty( $to ) )
+
+	if ( empty( $from ) || empty( $to ) ) {
 		return $amt;
+	}
 
 	$rate = _wpsc_get_exchange_rate( $from, $to );
-	if ( is_wp_error( $rate ) )
+
+	if ( is_wp_error( $rate ) ) {
 		return $rate;
+	}
 
 	return $rate * $amt;
 }
