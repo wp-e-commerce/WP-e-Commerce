@@ -287,16 +287,19 @@ class wpsc_checkout {
 		$delivery_region  = wpsc_get_customer_meta( 'shippingregion'  );
 		$billing_region   = wpsc_get_customer_meta( 'billingregion'   );
 
+		$meta_key = ! empty( $this->checkout_item->unique_name ) ? $this->checkout_item->unique_name : sanitize_title( $this->checkout_item->name ) . '_' . $this->checkout_item->id;
+
 		switch ( $this->checkout_item->type ) {
+
 			case "address":
 			case "delivery_address":
 			case "textarea":
 				$placeholder = apply_filters( 'wpsc_checkout_field_placeholder', apply_filters( 'wpsc_checkout_field_name', $this->checkout_item->name ), $this->checkout_item );
-				$output .= '<textarea data-wpsc-meta-key="' . $this->checkout_item->unique_name . '" title="' . $this->checkout_item->unique_name
+				$output .= '<textarea data-wpsc-meta-key="' . $meta_key . '" title="' . $this->checkout_item->unique_name
 							. '" class="text wpsc-visitor-meta" id="' . $this->form_element_id()
-								. '" name="collected_data[' . $this->checkout_item->id. ']' . $an_array . '" placeholder="'
+								. '" name="collected_data[' . $this->checkout_item->id . ']' . $an_array . '" placeholder="'
 										. esc_attr( $placeholder ) . '" rows="3" cols="40" >'
-												. esc_html( (string) $saved_form_data ) . '</textarea>';
+												. esc_textarea( (string) $saved_form_data ) . '</textarea>';
 				break;
 
 			case "checkbox":
@@ -306,7 +309,7 @@ class wpsc_checkout {
 					foreach ( $options as $label => $value ) {
 						?>
 							<label>
-								<input class="wpsc-visitor-meta" data-wpsc-meta-key="<?php echo $this->checkout_item->unique_name;?>" <?php checked( in_array( $value, (array) $saved_form_data ) ); ?> type="checkbox" name="collected_data[<?php echo esc_attr( $this->checkout_item->id ); ?>]<?php echo $an_array; ?>[]" value="<?php echo esc_attr( $value ); ?>"  />
+								<input class="wpsc-visitor-meta" data-wpsc-meta-key="<?php echo $meta_key; ?>" <?php checked( in_array( $value, (array) $saved_form_data ) ); ?> type="checkbox" name="collected_data[<?php echo esc_attr( $this->checkout_item->id ); ?>]<?php echo $an_array; ?>[]" value="<?php echo esc_attr( $value ); ?>"  />
 								<?php echo esc_html( $label ); ?>
 							</label>
 						<?php
@@ -326,7 +329,7 @@ class wpsc_checkout {
 			case "select":
 				$options = $this->get_checkout_options( $this->checkout_item->id );
 				if ( $options != '' ) {
-					$output = '<select class="wpsc-visitor-meta" data-wpsc-meta-key="' . $this->checkout_item->unique_name . '" name="collected_data[{$this->checkout_item->id}]"' . $an_array . '">';
+					$output = '<select class="wpsc-visitor-meta" data-wpsc-meta-key="' . $meta_key . '" name="collected_data[{$this->checkout_item->id}]"' . $an_array . '">';
 					$output .= "<option value='-1'>" . _x( 'Select an Option', 'Dropdown default when called within checkout class' , 'wpsc' ) . "</option>";
 					foreach ( (array)$options as $label => $value ) {
 						$value = esc_attr(str_replace( ' ', '', $value ) );
@@ -341,7 +344,7 @@ class wpsc_checkout {
 					foreach ( (array)$options as $label => $value ) {
 						?>
 							<label>
-								<input class="wpsc-visitor-meta" data-wpsc-meta-key="<?php echo $this->checkout_item->unique_name;?>" type="radio" <?php checked( $value, $saved_form_data ); ?> name="collected_data[<?php echo esc_attr( $this->checkout_item->id ); ?>]<?php echo $an_array; ?>" value="<?php echo esc_attr( $value ); ?>"  />
+								<input class="wpsc-visitor-meta" data-wpsc-meta-key="<?php echo $meta_key; ?>" type="radio" <?php checked( $value, $saved_form_data ); ?> name="collected_data[<?php echo esc_attr( $this->checkout_item->id ); ?>]<?php echo $an_array; ?>" value="<?php echo esc_attr( $value ); ?>"  />
 								<?php echo esc_html( $label ); ?>
 							</label>
 						<?php
@@ -361,7 +364,7 @@ class wpsc_checkout {
 					$output .= wpsc_checkout_billing_state_and_region( $this );
 				} else {
 					$placeholder = apply_filters( 'wpsc_checkout_field_placeholder', apply_filters( 'wpsc_checkout_field_name', $this->checkout_item->name ), $this->checkout_item );
-					$output = '<input data-wpsc-meta-key="' . $this->checkout_item->unique_name . '" title="' . $this->checkout_item->unique_name . '" type="text" id="' . $this->form_element_id() . '" class="text wpsc-visitor-meta" placeholder="' . esc_attr( $placeholder ) . '" value="' . esc_attr( $saved_form_data ) . '" name="collected_data[' . $this->checkout_item->id . ']' . $an_array . '" />';
+					$output = '<input data-wpsc-meta-key="' . $meta_key . '" title="' . $meta_key . '" type="text" id="' . $this->form_element_id() . '" class="text wpsc-visitor-meta" placeholder="' . esc_attr( $placeholder ) . '" value="' . esc_attr( $saved_form_data ) . '" name="collected_data[' . $this->checkout_item->id . ']' . $an_array . '" />';
 				}
 
 				break;
@@ -540,7 +543,7 @@ class wpsc_checkout {
 				continue;
 			}
 
-			$customer_meta_key    = $form_data->unique_name;
+			$customer_meta_key    = ! empty( $form_data->unique_name ) ? $form_data->unique_name : sanitize_title( $form_data->name ) . '_' . $form_data->id;
 			$checkout_item_values = wpsc_get_customer_meta( $customer_meta_key );
 
 			// Prior to release 3.8.14 the billingstate and shippingstate checkout items were used
