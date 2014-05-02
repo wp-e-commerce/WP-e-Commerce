@@ -171,6 +171,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 				'%s', // type
 				'%s', // active
 				'%s', // mandatory
+				'%s', // checkout set
 				'%s', // unique name
 			);
 
