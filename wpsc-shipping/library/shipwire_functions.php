@@ -54,7 +54,7 @@ class WPSC_Shipwire {
 		self::$email     = get_option( 'shipwireemail' );
 		self::$passwd    = get_option( 'shipwirepassword' );
 		self::$server    = apply_filters( 'wpsc_shipwire_server'   , 'Production' );
-		self::$warehouse = apply_filters( 'wpsc_shipwire_warehouse', '00' );;
+		self::$warehouse = apply_filters( 'wpsc_shipwire_warehouse', '00' );
 		self::$endpoint  = ( bool ) get_option( 'shipwire_test_server' ) ? 'https://api.beta.shipwire.com/exec/' : 'https://api.shipwire.com/exec/';
 
 		if ( ! self::is_active() )
