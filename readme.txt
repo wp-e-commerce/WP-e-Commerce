@@ -37,15 +37,69 @@ After upgrading from earlier versions look for link "Update Store". This will up
 == Changelog ==
 
 = 3.8.14 =
-* Fix: Improved visitor profiles performance, new infrastructure does not use WordPress Users
-* Fix: When page caching is being used, probability of empty or superfluous visitor profiles being created drastically diminished
-* New: AJAX API to get and set information about customers
-* New: Visitor API to get and set information about current and past visits
-* Change:
-
+* Fix: Improved visitor profiles performance, new infrastructure does not use WordPress Users.
+* Fix: When page caching is being used, probability of empty or superfluous visitor profiles being created drastically diminished.
+* Fix: Send appropriate addresses to PayPal via PayPal Standard.
+* Fix: Ensure that sales tax is not added to non-tax items when using a coupon.
+* Fix: Ensure state text field is not visible at the same time as state dropdown.
+* Fix: Ensure shortcodes respect display type as overridden by categories.  Note: Requires latest Gold Cart release.
+* Fix: Ensure that adding a new item to the cart after a coupon code properly reflects that coupon code.
+* Fix: Don't create cron events for unknown schedules.
+* Fix: Shipping options were disappearing when "same as billing address" were selected.
+* Fix: Protect against "Price From: " being zero if a sales price was set without a normal price.
+* Fix: Added programmatic and UX checks for conflict where grid/list view could show products with variations without the variation drop-downs, adding an improper product to the cart.
+* Fix: Improved shipping rate quote retrieval performance.
+* Fix: Sends proper tax amount to PayPal Standard when carts are aggregated.
+* Fix: Fixed pagination bug where improper number of paged links were returned.
+* Fix: Ensure UPS Environment test mode works.
+* Fix: Downloadable products were not being properly added as attachments.
+* Fix: "Shipping Same as Billing" could cause products to be shipped to countries which are not allowed.
+* Fix: Eliminate undefined index errors on sales log page when checkout fields are removed.
+* Fix: Address edge case where purchase notifications are not sent when there are multiple email fields in different checkout form sets.
+* Fix: Improved bbPress compatibility.
+* Fix: Ensure User Account pages are properly overridable in the template stack.
+* Fix: Properly escape classes for Buy Now button classes.
+* Fix: Fix IE8 javascript conflicts.
+* Fix: Shored up backwards compatibility for Session usage
+* Fix: Ensure cart items with variations that are out of stock (and stock limited) don't return a fatal error.
+* Fix: Address malformed XML output for shipping quotes from UPS and USPS.
+* Fix: Ensure PayPal Express does not show coupons as an empty line item when discounts are not used.
+* Fix: A redirection error on our wpsc_scale_image fallback was resolved.
+* Fix: Ensure only available countries are shown as available in PayPal Express.
+* Fix: Resolved issue whereby amounts over 1,000 (in a given currency) would be incorrectly sent to Google Analytics.
+* Fix: Shipping calculator uses information set in user account profile, if set.
+* Fix: When PATHINFO Permalinks ("Almost Pretty"), product pages would 404.
+* Fix: Ensure 3.7.x -> 3.8.x upgrade routine uses wpdb::prepare() properly.
+* New: AJAX API to get and set information about customers.
+* New: Visitor API to get and set information about current and past visits.
+* New: Introduced WPSC_Claimed_Stock class.
+* New: Introduced WPSC_Stats class.
+* New: Introduced WPSC_Product/WPSC_Products class.
+* New: Introduced WPSC_Countries / WPSC_Region class.
+* New: Totally revamped product editing and adding user interface.
+* New: Added new Purchase Meta API.
+* New: Some compatibility fixes for WordPress 3.9.
+* New: Improved extendibility of the Import Settings area.
+* New: Improved extendibility for our conditional coupon callbacks.
+* Change: Iterated upon WPSC_Country class.
+* Change: Improved UK Country Display.
+* Change: Improved upgrade routines for currencies and countries.
+* Change: Introduced filter for themeable packing slips.
+* Change: Modified calculation for total price to ensure coupons don't reduce shipping and tax.
+* Change: Improved Checkout workflow and UI.
+* Change: Fully remove Google Checkout from WP eCommerce, as it has been deprecated.
+* Change: Don't show transaction results to anyone but the purchaser
+* Change: Eliminated usage of dynamic CSS and javascript in front-end and admin.
+* Change: Couldn't use decimals in product's variation sale price.
+* Change: Tons of performance improvements to USPS and UPS.
+* Change: Add condition as parameter to wpsc_coupon_rule_property_options action.
+* Change: Improved security for our customer cookie hash.
+* Change: Don't default to base country of store in checkout fields.
+* Change: Taxes class previously regarded regions as unique, when they are not. We now check both region and country where applicable.
+* Change: By default, quantity boxes will be shown by default on new installs.
 
 = 3.8.13.3 =
-* Fix: Users disappear in Network Admin -> Users page (for multisite)
+* Fix: Users disappear in Network Admin -> Users page (for multisite).
 * Fix: User counts are incorrect when there are thousands separators.
 * Fix: "Save Product Files" button doesn't like being clicked on.
 

@@ -268,7 +268,6 @@ class WP_eCommerce {
 	 * @uses wpsc_install()           Performs checks to see if this is a clean install or not
 	 */
 	function install() {
-		global $wp_version;
 
 		if ( ! defined( 'WPSC_FILE_PATH' ) ) {
 			define( 'WPSC_FILE_PATH', dirname( __FILE__ ) );
