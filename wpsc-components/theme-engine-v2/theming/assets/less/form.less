@@ -1,0 +1,138 @@
+/* Form */
+.wpsc-controller {
+	.wpsc-form {
+		.reset-margin-padding;
+
+		fieldset,
+		legend {
+		}
+		legend,
+		label,
+		input[type="text"],
+		input[type="password"],
+		input[type="url"],
+		input[type="number"],
+		input[type="email"],
+		input[type="search"],
+		input[type="tel"],
+		.ui-autocomplete-input,
+		textarea,
+		select {
+			margin:0;
+			font-weight: normal;
+		}
+		label {
+			margin-bottom: 5px;
+			margin-top: 7px;
+		}
+		input,
+		select,
+		textarea,
+		.ui-autocomplete-input {
+			margin: 0;
+		}
+		input[type="text"],
+		input[type="password"],
+		input[type="url"],
+		input[type="number"],
+		input[type="email"],
+		input[type="search"],
+		input[type="tel"],
+		.ui-autocomplete-input,
+		textarea,
+		select[multiple="multiple"] {
+			vertical-align: middle;
+		}
+		legend {
+			border-bottom: 1px solid @border-color;
+			margin-bottom: 18px;
+			width: 100%;
+			+ * {
+				/* Fix webkit bug where margin bottom does not apply to legend */
+				-webkit-margin-top-collapse: separate;
+				margin-top: 18px;
+			}
+		}
+		.wpsc-field {
+			margin-bottom: 18px;
+		}
+	}
+/*	.wpsc-form-horizontal {
+		.wpsc-field {
+			clear: both;
+
+			> label {
+				display: block;
+				float: left;
+				text-align: right;
+				width: 90px;
+			}
+			.wpsc-controls,
+			.wpsc-field-description,
+			.wpsc-inline-validation-error {
+				margin-left: 108px;
+			}
+		}
+		.wpsc-form-actions {
+			padding-left: 108px;
+		}
+	} */
+	.wpsc-help {
+		font-size: @font-size-s;
+		font-style: italic;
+		font-weight: normal;
+		line-height: @line-height-s;
+		margin-bottom: 0;
+	}
+	.wpsc-checkbox-label,
+	.wpsc-radio-label {
+		display: block;
+	}
+	.wpsc-form-actions {
+		border-top: 1px solid @border-color;
+		padding-top: 18px;
+		margin-bottom: 18px;
+	}
+	.wpsc-field-description {
+		font-size: @font-size-s;
+		font-weight: normal;
+		line-height: @line-height-s;
+		clear: both;
+	}
+	.wpsc-field-heading {
+		margin-top:@line-height-m * 2;
+
+		&:first-child {
+			margin-top: 0;
+		}
+	}
+	.wpsc-inline-validation-error {
+		color: @color-important;
+		font-size: @font-size-s;
+		clear: both;
+	}
+	.wpsc-field-heading input{
+		margin-left: 15px;
+	}
+	.wpsc-field-required label:after {
+	    color: #e32;
+	    content: '*';
+	    margin-left: 3px;
+	    display:inline;
+	    position: absolute;
+	}
+	.wpsc-field-radios,
+	.wpsc-field-checkboxes {
+		label {
+			margin-top: 0;
+			display: block;
+		}
+		.wpsc-controls .wpsc-field-description {
+			margin-left: 15px;
+			margin-bottom: @line-height-m;
+		}
+	}
+	.wpsc-field-radios label,
+	.wpsc-field-checkboxes label {
+	}
+}
