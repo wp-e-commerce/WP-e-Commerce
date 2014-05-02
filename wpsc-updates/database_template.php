@@ -66,6 +66,7 @@ $wpsc_database_template[$table_name]['columns']['checkout_set'] = "VARCHAR( 64 )
 
 $wpsc_database_template[$table_name]['indexes']['PRIMARY'] = "PRIMARY KEY  ( `id` )";
 $wpsc_database_template[$table_name]['indexes']['checkout_order'] = " KEY `checkout_order` ( `checkout_order` )";
+$wpsc_database_template[$table_name]['indexes']['unique_name'] = " KEY `unique_name` ( `unique_name` )";
 $wpsc_database_template[$table_name]['actions']['before']['all'] = "wpsc_rename_checkout_column";
 $wpsc_database_template[$table_name]['actions']['after']['all'] = "wpsc_add_checkout_fields";
 $wpsc_database_template[$table_name]['previous_names'] = "{$wpdb->prefix}collect_data_forms";
