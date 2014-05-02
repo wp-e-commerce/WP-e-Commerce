@@ -226,7 +226,7 @@ function wpsc_update_customer_meta( response ) {
 
 				if ( element_meta_key != element_that_caused_change_event ) {
 					if ( jQuery(this).is(':checkbox') ) {
-						var boolean_meta_value = meta_value == "1";
+						var boolean_meta_value = wpsc_string_to_boolean( meta_value );
 						if ( boolean_meta_value ) {
 							jQuery( this ).attr( 'checked', 'checked' );
 						} else {
@@ -433,7 +433,7 @@ function wpsc_meta_item_change() {
 	jQuery( selector ).each( function( index, value ) {
 		if ( element_that_changed_meta_value != this ) {
 			if ( jQuery(this).is(':checkbox') ) {
-				var boolean_meta_value = meta_value == "1";
+				var boolean_meta_value =  wpsc_string_to_boolean( meta_value );
 				if ( boolean_meta_value ) {
 					jQuery( this ).attr( 'checked', 'checked' );
 				} else {
@@ -619,6 +619,10 @@ function wpsc_update_regions_list_to_match_country( country_select ) {
 	wpsc_copy_meta_value_to_similiar( country_select );
 }
 
+function wpsc_string_to_boolean( string ) {
+	return a.trim( string ) !== '';
+}
+
 /*
  * Load the region dropdowns based on changes to the country dropdowns
  *
@@ -646,7 +650,7 @@ function wpsc_copy_meta_value_to_similiar( element ) {
 		if ( this != element) {
 
 			if ( jQuery(this).is(':checkbox') ) {
-				var boolean_meta_value = meta_value == "1";
+				var boolean_meta_value =  wpsc_string_to_boolean( meta_value );
 				if ( boolean_meta_value ) {
 					jQuery( this ).attr( 'checked', 'checked' );
 				} else {
@@ -859,10 +863,10 @@ function wpsc_get_value_from_wpsc_meta_element( meta ) {
 
 	if ( element.is(':checkbox') ) {
 		if ( element.is(':checked') ) {
-			meta_value = 1;
+			meta_value = element.val();
 		} else {
-			meta_value = 0;
-		}
+			meta_value = '';
+		} 
 	} else if ( element.is('select') ) {
 		meta_value = element.find( 'option:selected' ).val();
 		var select_meta_value = element.val();
