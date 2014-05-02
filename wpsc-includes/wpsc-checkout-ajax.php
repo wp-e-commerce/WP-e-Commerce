@@ -66,7 +66,7 @@ function _wpsc_get_checkout_info() {
 		$checkout_info['total_input']   = $total_input;
 	}
 
-	return apply_filters( 'wpsc_ajax_checkout_info', $checkout_info );;
+	return apply_filters( 'wpsc_ajax_checkout_info', $checkout_info );
 }
 
 

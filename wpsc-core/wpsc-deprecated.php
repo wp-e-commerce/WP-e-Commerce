@@ -304,7 +304,7 @@ function wpsc_next_products_link( $text = 'Next', $show_disabled = false ) {
  */
 function wpsc_previous_products_link( $text = 'Previous', $show_disabled = false ) {
 	_wpsc_deprecated_function( __FUNCTION__, '3.8', 'wpsc_pagination');
-	return false;;
+	return false;
 }
 
 /**
