@@ -1,10 +1,10 @@
-WP e-Commerce [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/wp-e-commerce/WP-e-Commerce/badges/quality-score.png?s=155ede743c82bcf5116904bf155dcf215da820b0)](https://scrutinizer-ci.com/g/wp-e-commerce/WP-e-Commerce/)
+WP eCommerce [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/wp-e-commerce/WP-e-Commerce/badges/quality-score.png?s=155ede743c82bcf5116904bf155dcf215da820b0)](https://scrutinizer-ci.com/g/wp-e-commerce/WP-e-Commerce/)
 ============
 
 About
 -----
 
-WP e-Commerce is a free open-source WordPress Shopping Cart Plugin that lets customers buy your products, services and digital downloads online.
+WP eCommerce is a free open-source WordPress Shopping Cart Plugin that lets customers buy your products, services and digital downloads online.
 
 More details about this plugin features can be found on our website at [getshopped.org](http://getshopped.org/features/).
 
@@ -15,10 +15,10 @@ If you're looking for general user support, please submit your support request o
 Development status
 -------------------------
 
-* The latest stable version is [3.8.13.4](http://wordpress.org/extend/plugins/wp-e-commerce).
-* Active development version: 3.8.14-dev (branch [master](https://github.com/wp-e-commerce/WP-e-Commerce))
-* [Roadmap for 3.8.14](https://github.com/wp-e-commerce/wp-e-commerce/wiki/Roadmap)
-* [3.8.14 tickets](https://github.com/wp-e-commerce/wp-e-commerce/issues?milestone=12&sort=updated&state=open)
+* The latest stable version is [3.8.14](http://wordpress.org/extend/plugins/wp-e-commerce).
+* Active development version: 3.9-dev (branch [master](https://github.com/wp-e-commerce/WP-e-Commerce))
+* [Roadmap for 3.9](https://github.com/wp-e-commerce/wp-e-commerce/wiki/Roadmap)
+* [3.9 tickets](https://github.com/wp-e-commerce/WP-e-Commerce/issues?milestone=5&page=1&state=open)
 
 How to contribute code
 -----------------------------

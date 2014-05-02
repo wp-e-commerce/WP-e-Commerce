@@ -38,10 +38,11 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 = 3.8.14 =
 * Fix: Improved visitor profiles performance, new infrastructure does not use WordPress Users
+* Fix: When page caching is being used, probability of empty or superfluous visitor profiles being created drastically diminished
 * New: AJAX API to get and set information about customers
 * New: Visitor API to get and set information about current and past visits
-* Fix: When page caching is being used, probability of empty or superfluous visitor profiles being created drastically diminished
 * Change:
+
 
 = 3.8.13.3 =
 * Fix: Users disappear in Network Admin -> Users page (for multisite)
@@ -627,7 +628,7 @@ First of all, you should check out the Presentation settings which are in the Se
 
 For advanced users, all of our eCommerce templates and CSS can be moved into your active theme folder for customization. Less advanced users have [several fantastic WP eCommerce consultants](http://getshopped.org/resources/wp-consultants/ "http://getshopped.org/resources/wp-consultants) to get help from.
 
-= What payment gateways does WP e-Commerce integrate with? =
+= What payment gateways does WP eCommerce integrate with? =
 
 Our [Gold Cart plugin](http://getshopped.org/premium-upgrades/premium-plugin/gold-cart-plugin/) contains nearly a dozen payment gateway options, including Authorize.net, LinkPoint and DPS.  Our [Mirijeh integration plugin](http://getshopped.org/premium-upgrades/payment-gateways/mijireh-99-payment-gateways-pack-wp-e-commerce/) provides access to nearly one hundred different gateway options.  Beyond that, we have individual integration plugins for [Braintree](http://getshopped.org/premium-upgrades/payment-gateways/braintree-payment-gateway/), [Stripe](http://getshopped.org/premium-upgrades/payment-gateways/stripe-payment-gateway-wp-e-commerce/), [Authorize.net SIM](http://getshopped.org/premium-upgrades/premium-plugin/authorize-net-sim-payment-gateway-for-wordpress/) and more.
 
@@ -643,7 +644,7 @@ We also currently integrate with UPS, USPS, Australia Post and Shipwire for real
 
 = Which multi-lingual plugins is WP eCommerce compatible with? =
 
-We currently provide basic support for WPML and qTranslate.  We're excited about an up-and-coming multi-lingual project called [Babble](https://github.com/cftp/babble).  We intend to fully and canonically support Babble as our primary multi-lingul partner in releases to come.
+We currently provide basic support for WPML and qTranslate.  We're excited about an up-and-coming multi-lingual project called [Babble](https://github.com/cftp/babble).  We intend to fully and canonically support Babble as our primary multi-lingual partner in releases to come.
 
 = Which additional modules are available for use with WP e-Commerce? =
 

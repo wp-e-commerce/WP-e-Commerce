@@ -1,8 +1,5 @@
 <?php
 
-ini_set( 'display_errors', '1' );
-error_reporting( E_ALL );
-
 class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 
 	private $file           = false;
@@ -28,14 +25,14 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 		}
 
 		$this->default_fields = apply_filters( 'wpsc_product_import_default_fields', array(
-			'column_name'                   => __( 'Product Name'          , 'wpsc' ),       
-			'column_description'            => __( 'Description'           , 'wpsc' ),        
-			'column_additional_description' => __( 'Additional Description', 'wpsc' ), 
-			'column_price'                  => __( 'Price'                 , 'wpsc' ),              
-			'column_sku'                    => __( 'SKU'                   , 'wpsc' ),                
-			'column_weight'                 => __( 'Weight'                , 'wpsc' ),            
-			'column_weight_unit'            => __( 'Weight Unit'           , 'wpsc' ),        
-			'column_quantity'               => __( 'Stock Quantity'        , 'wpsc' ),     
+			'column_name'                   => __( 'Product Name'          , 'wpsc' ),
+			'column_description'            => __( 'Description'           , 'wpsc' ),
+			'column_additional_description' => __( 'Additional Description', 'wpsc' ),
+			'column_price'                  => __( 'Price'                 , 'wpsc' ),
+			'column_sku'                    => __( 'SKU'                   , 'wpsc' ),
+			'column_weight'                 => __( 'Weight'                , 'wpsc' ),
+			'column_weight_unit'            => __( 'Weight Unit'           , 'wpsc' ),
+			'column_quantity'               => __( 'Stock Quantity'        , 'wpsc' ),
 			'column_quantity_limited'       => __( 'Stock Quantity Limit'  , 'wpsc' )
 		) );
 
@@ -150,7 +147,7 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 					)
 				)
 			);
-			
+
 			$product = apply_filters( 'wpsc_product_import_row', $product, $row, $this );
 
 			if ( empty( $product['post_title'] ) && apply_filters( 'wpsc_product_import_require_title', true, $product, $row, $this ) ) {
@@ -236,9 +233,9 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 											foreach ( $this->default_fields as $value => $label ) :
 										?>
 											<option <?php selected( $key, $i ); ?> value='<?php echo esc_attr( $value ); ?>'><?php echo esc_html( $label ); ?></option>
-										<?php 
+										<?php
 											$i++;
-											endforeach; 
+											endforeach;
 										?>
 									</select>
 								</p>
@@ -285,7 +282,7 @@ class WPSC_Settings_Tab_Import extends WPSC_Settings_Tab {
 
 	private function num_to_alphacolumn($n) {
 		// from http://stackoverflow.com/questions/3302857/algorithm-to-get-the-excel-like-column-name-of-a-number
-    	
+
     	for( $r = ""; $n >= 0; $n = intval( $n / 26 ) - 1 ) {
         	$r = chr( $n % 26 + 0x41) . $r;
     	}
