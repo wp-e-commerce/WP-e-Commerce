@@ -3,19 +3,20 @@
 require_once( WPSC_TE_V2_CLASSES_PATH . '/table.php' );
 
 class WPSC_Digital_Contents_Table extends WPSC_Table {
+
+	public $per_page    = 10;
+	public $offset      = 0;
+	public $total_items = 0;
+	private $digital_items;
 	private static $instance;
 
 	public static function get_instance() {
-		if ( empty( self::$instance ) )
+		if ( empty( self::$instance ) ) {
 			self::$instance = new WPSC_Digital_Contents_Table();
+		}
 
 		return self::$instance;
 	}
-
-	public $per_page = 10;
-	public $offset = 0;
-	public $total_item = 0;
-	private $digital_items;
 
 	public function fetch_items() {
 		global $wpdb;
@@ -27,6 +28,7 @@ class WPSC_Digital_Contents_Table extends WPSC_Table {
 			get_current_user_id(),
 		);
 
+		/* @todo: seems all we use here is fileid and productid.  Investigate benchmarking selecting only those two columns. */
 		$sql = $wpdb->prepare( "
 			SELECT
 				d.*
@@ -52,29 +54,34 @@ class WPSC_Digital_Contents_Table extends WPSC_Table {
 		$this->total_items = count( $this->items );
 
 		$this->digital_items = array();
+
 		foreach ( $downloadables as $file ) {
-			if ( ! in_array( $file->product_id, $product_ids ) )
+			if ( ! in_array( $file->product_id, $product_ids ) ) {
 				continue;
+			}
 
-			if ( ! array_key_exists( $file->product_id, $this->digital_items ) )
-				$this->digital_items[$file->product_id] = array();
+			if ( ! array_key_exists( $file->product_id, $this->digital_items ) ) {
+				$this->digital_items[ $file->product_id ] = array();
+			}
 
-			$this->digital_items[$file->product_id][] = $file;
+			$this->digital_items[ $file->product_id ][] = $file;
 		}
 
 		// cache files
 		$files = wp_list_pluck( $downloadables, 'fileid' );
+
 		get_posts( array(
 			'post_type' => 'wpsc-product-file',
 			'post__in'  => $files,
 		) );
+
 	}
 
 	public function __construct() {
 		parent::__construct();
 
 		$this->columns = array(
-			'product' => _x( 'Product', 'customer account - digital contents - table header', 'wpsc' ),
+			'product'  => _x( 'Product', 'customer account - digital contents - table header', 'wpsc' ),
 			'contents' => _x( 'Digital Contents', 'customer account - digital contents - table header', 'wpsc' ),
 		);
 	}
