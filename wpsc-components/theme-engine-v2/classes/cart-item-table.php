@@ -2,21 +2,21 @@
 
 require_once( WPSC_TE_V2_CLASSES_PATH . '/table.php' );
 
-class WPSC_Cart_Item_Table extends WPSC_Table
-{
+class WPSC_Cart_Item_Table extends WPSC_Table {
 	private static $instance;
 
 	public static function get_instance() {
-		if ( empty( self::$instance ) )
+		if ( empty( self::$instance ) ) {
 			self::$instance = new WPSC_Cart_Item_Table();
+		}
 
 		return self::$instance;
 	}
 
-	public $columns = array();
-	public $show_shipping = true;
-	public $show_tax = true;
-	public $show_total = true;
+	public $columns         = array();
+	public $show_shipping   = true;
+	public $show_tax        = true;
+	public $show_total      = true;
 	public $show_thumbnails = true;
 
 	public function __construct() {
@@ -24,8 +24,9 @@ class WPSC_Cart_Item_Table extends WPSC_Table
 
 		parent::__construct();
 
-		if (! isset($GLOBALS['wpsc_cart'] ) )
+		if ( ! isset( $GLOBALS['wpsc_cart'] ) ) {
 			$GLOBALS['wpsc_cart'] = new wpsc_cart();
+		}
 
 		$this->prepare_cache();
 
@@ -42,8 +43,8 @@ class WPSC_Cart_Item_Table extends WPSC_Table
 	}
 
 	private function prepare_cache() {
-		$post_in = array();
-		$parent_post_in = array();
+		$post_in        = array();
+
 		foreach ( $this->items as $item ) {
 			$post_in[] = $item->product_id;
 		}
@@ -52,7 +53,7 @@ class WPSC_Cart_Item_Table extends WPSC_Table
 	}
 
 	protected function get_table_classes() {
-		$classes = parent::get_table_classes();
+		$classes   = parent::get_table_classes();
 		$classes[] = 'wpsc-cart-item-table';
 		return $classes;
 	}
@@ -71,6 +72,7 @@ class WPSC_Cart_Item_Table extends WPSC_Table
 
 	public function display() {
 		global $wpsc_cart;
+
 		$this->before_table();
 		include( WPSC_TE_V2_SNIPPETS_PATH . '/cart-item-table/display.php' );
 		$this->after_table();
@@ -104,25 +106,29 @@ class WPSC_Cart_Item_Table extends WPSC_Table
 	}
 
 	private function show_shipping_style() {
-		if ( ! $this->show_shipping )
+		if ( ! $this->show_shipping ) {
 			echo 'style="display:none;"';
+		}
 	}
 
 	private function show_tax_style() {
-		if ( ! $this->show_tax )
+		if ( ! $this->show_tax ) {
 			echo 'style="display:none;"';
+		}
 	}
 
 	private function show_total_style() {
-		if ( ! $this->show_total )
+		if ( ! $this->show_total ) {
 			echo 'style="display:none;"';
+		}
 	}
 
 	protected function column_items( $item, $key ) {
-		$product = get_post( $item->product_id );
+		$product      = get_post( $item->product_id );
 		$product_name = $item->product_name;
+
 		if ( $product->post_parent ) {
-			$permalink = wpsc_get_product_permalink( $product->post_parent );
+			$permalink    = wpsc_get_product_permalink( $product->post_parent );
 			$product_name = get_post_field( 'post_title', $product->post_parent );
 		} else {
 			$permalink = wpsc_get_product_permalink( $item->product_id );
@@ -131,22 +137,25 @@ class WPSC_Cart_Item_Table extends WPSC_Table
 		$variations = array();
 
 		foreach ( $item->variation_values as $variation_set => $variation ) {
-			$set_name = get_term_field( 'name', $variation_set, 'wpsc-variation' );
+			$set_name       = get_term_field( 'name', $variation_set, 'wpsc-variation' );
 			$variation_name = get_term_field( 'name', $variation, 'wpsc-variation' );
-			$variations[] = '<span>' . esc_html( $set_name ) . ':</span> ' . esc_html( $variation_name );
+			$variations[]   = '<span>' . esc_html( $set_name ) . ':</span> ' . esc_html( $variation_name );
 		}
 
 		$variations = implode( ', ', $variations );
 
 		$separator = '';
-		if ( ! empty( $variations ) && ! empty( $item->sku ) )
+
+		if ( ! empty( $variations ) && ! empty( $item->sku ) ) {
 			$separator = ' | ';
+		}
+
 		?>
-			<?php if ( $this->show_thumbnails ): ?>
+			<?php if ( $this->show_thumbnails ) : ?>
 				<div class="wpsc-thumbnail wpsc-product-thumbnail">
-					<?php if ( wpsc_has_product_thumbnail( $item->product_id ) ): ?>
+					<?php if ( wpsc_has_product_thumbnail( $item->product_id ) ) : ?>
 						<?php echo wpsc_get_product_thumbnail( $item->product_id, 'cart' ); ?>
-					<?php else: ?>
+					<?php else : ?>
 						<?php wpsc_product_no_thumbnail_image( 'cart' ); ?>
 					<?php endif; ?>
 				</div>
@@ -156,15 +165,15 @@ class WPSC_Cart_Item_Table extends WPSC_Table
 					<strong><a href="<?php echo $permalink; ?>"><?php echo esc_html( $product_name ); ?></a></strong>
 				</div>
 				<div class="wpsc-cart-item-details">
-					<?php if ( ! empty( $item->sku ) ): ?>
+					<?php if ( ! empty( $item->sku ) ) : ?>
 						<span class="wpsc-cart-item-sku"><span><?php esc_html_e( 'SKU', 'wpsc' ); ?>:</span> <?php echo esc_html( $item->sku ); ?></span>
 					<?php endif ?>
 
-					<?php if ( $separator ): ?>
+					<?php if ( $separator ) : ?>
 						<span class="separator"><?php echo $separator; ?></span>
 					<?php endif ?>
 
-					<?php if ( ! empty( $variations ) ): ?>
+					<?php if ( ! empty( $variations ) ) : ?>
 						<span class="wpsc-cart-item-variations"><?php echo $variations; ?></span>
 					<?php endif ?>
 				</div>
