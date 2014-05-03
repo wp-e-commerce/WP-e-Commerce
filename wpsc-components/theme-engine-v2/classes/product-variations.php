@@ -1,22 +1,23 @@
 <?php
 
-class WPSC_Product_Variations
-{
-	private static $instances = array();
-	public static function &get_instance( $product_id ) {
-		if ( ! array_key_exists( $product_id, self::$instances ) )
-			self::$instances[$product_id] = new WPSC_Product_Variations( $product_id );
+class WPSC_Product_Variations {
 
-		return self::$instances[$product_id];
+	private $variation_sets     = array();
+	private $variation_terms    = array();
+	private $variations         = null;
+	private $product_id;
+	private $prices             = null;
+	private $sale_from_prices   = null;
+	private static $instances   = array();
+
+	public static function &get_instance( $product_id ) {
+		if ( ! array_key_exists( $product_id, self::$instances ) ) {
+			self::$instances[ $product_id ] = new WPSC_Product_Variations( $product_id );
+		}
+
+		return self::$instances[ $product_id ];
 	}
 
-	private $variation_sets = array();
-	private $variation_terms = array();
-	private $variations = null;
-	private $product_id;
-	private $prices = null;
-	private $min_sale_price = null;
-	private $min_original_price = null;
 
 	private function __construct( $product_id ) {
 		$this->product_id = $product_id;
@@ -83,11 +84,11 @@ class WPSC_Product_Variations
 	private function fetch_variation_prices() {
 		global $wpdb;
 
-		if ( is_array( $this->prices ) )
+		if ( is_array( $this->prices ) ) {
 			return;
+		}
 
 		$this->sale_from_prices = array();
-		$this->original_from_prices = array();
 
 		$sql = $wpdb->prepare( "
 			SELECT pm.meta_value AS price, pm2.meta_value AS sale_price
@@ -148,6 +149,13 @@ class WPSC_Product_Variations
 		return $return;
 	}
 
+	/**
+	 * This seems...unfinished.  Need to investigate usage.
+	 *
+	 * @todo  Investigate intended usage, as this appears unfinished.
+	 * @param  string $format [description]
+	 * @return [type]         [description]
+	 */
 	public function get_you_save( $format = '%1$d (%2$d)' ) {
 		$diffs = array();
 		$diff_percents = array();
@@ -185,26 +193,28 @@ class WPSC_Product_Variations
 		$count = count( $diff );
 		$last = $diff[$count - 1];
 
-
 	}
 
 	public function is_on_sale() {
 		$this->fetch_variation_prices();
-		if ( count( $this->sale_from_prices ) > 0 )
+
+		if ( count( $this->sale_from_prices ) > 0 ) {
 			return true;
+		}
 
 		return false;
 	}
 
 	public function is_out_of_stock() {
-		global $wpdb;
 
-		if ( ! $this->has_variations() )
+		if ( ! $this->has_variations() ) {
 			return false;
+		}
 
 		foreach ( $this->variations as $variation ) {
-			if ( ! wpsc_is_product_out_of_stock( $variation->ID ) )
+			if ( ! wpsc_is_product_out_of_stock( $variation->ID ) ) {
 				return false;
+			}
 		}
 
 		return true;
