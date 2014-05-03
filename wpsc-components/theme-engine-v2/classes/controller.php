@@ -1,14 +1,15 @@
 <?php
 
 class WPSC_Controller {
-	private $needs_authorization = false;
-	public $title = '';
-	protected $view = '';
-	protected $message_collection;
+
+	public $title                = '';
+	public $wp_filter            = array();
+	public $merged_filters       = array();
 	public $main_query;
-	private $needs_compat = true;
-	public $wp_filter = array();
-	public $merged_filters = array();
+	private $needs_authorization = false;
+	private $needs_compat        = true;
+	protected $view              = '';
+	protected $message_collection;
 
 	public function __get( $name ) {
 		// read-only properties
@@ -42,7 +43,6 @@ class WPSC_Controller {
 	}
 
 	public function _filter_template_router() {
-		$located = '';
 
 		$located = $this->get_native_template();
 
@@ -54,11 +54,13 @@ class WPSC_Controller {
 		if ( $located )
 			$this->needs_compat = false;
 
-		if ( ! $located )
+		if ( ! $located ) {
 			$located = locate_template( 'page.php' );
+		}
 
-		if ( $this->needs_compat )
+		if ( $this->needs_compat ) {
 			$this->prepare_compat();
+		}
 
 		return $located;
 	}
@@ -73,8 +75,9 @@ class WPSC_Controller {
 	}
 
 	public function _filter_comments_array( $comments, $id ) {
-		if ( is_main_query() && ! $id )
+		if ( is_main_query() && ! $id ) {
 			return array();
+		}
 
 		return $comments;
 	}
@@ -157,8 +160,9 @@ class WPSC_Controller {
 
 		if ( in_the_loop() && is_main_query() ) {
 
-			if ( $priority !== false )
+			if ( $priority !== false ) {
 				remove_filter( 'the_content', 'wpautop' );
+			}
 		} elseif ( $priority === false ) {
 			add_filter( 'the_content', 'wpautop' );
 		}
@@ -192,12 +196,17 @@ class WPSC_Controller {
 	}
 
 	public function needs_authorization( $val = null ) {
-		if ( is_null( $val ) )
+		if ( is_null( $val ) ) {
 			return $this->needs_authorization;
+		}
 
 		$this->needs_authorization = $val;
 	}
 
+	/**
+	 * @todo  Investigate if this is necessary.  It appears it is unused.
+	 * @return [type] [description]
+	 */
 	private function restore_main_query() {
 		$GLOBALS['wp_query'] = $this->main_query;
 		wp_reset_postdata();
