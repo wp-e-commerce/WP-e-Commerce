@@ -1,7 +1,6 @@
 <?php
 
-class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form
-{
+class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 	private $slug_settings = array(
 		'store_slug',
 		'cart_page_slug',

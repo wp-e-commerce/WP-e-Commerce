@@ -1,7 +1,6 @@
 <?php
 
-class WPSC_Settings_Tab_Presentation extends _WPSC_Settings_Tab_Form
-{
+class WPSC_Settings_Tab_Presentation extends _WPSC_Settings_Tab_Form {
 	public function __construct() {
 		$this->hide_submit_button();
 		$this->populate_form_array();
@@ -13,23 +12,34 @@ class WPSC_Settings_Tab_Presentation extends _WPSC_Settings_Tab_Form
 
 	public function _filter_field_category_filter( $output, $field_array ) {
 		extract( $field_array );
+
 		$description_html = apply_filters( 'wpsc_settings_' . $name . '_description', $description, $field_array );
-		if ( ! isset( $class ) )
+
+		if ( ! isset( $class ) ) {
 			$class = 'wpsc-settings-category-filter';
+		}
 
 		$output = '';
 		$selected = wpsc_get_option( 'categories_to_filter' );
 
-		$output .= wpsc_form_radios( $name, $selected, array(
-			'all'         => _x( 'All categories', 'category filter settings', 'wpsc' ),
-			'first_level' => _x( 'First level categories only', 'category filter settings', 'wpsc' ),
-			'custom'      => _x( 'Custom', 'category filter settings', 'wpsc' ),
-		), array( 'id' => $id ), false );
+		$output .= wpsc_form_radios(
+			$name,
+			$selected,
+			array(
+				'all'         => _x( 'All categories', 'category filter settings', 'wpsc' ),
+				'first_level' => _x( 'First level categories only', 'category filter settings', 'wpsc' ),
+				'custom'      => _x( 'Custom', 'category filter settings', 'wpsc' ),
+			),
+			array( 'id' => $id ),
+			false
+		);
 
 		$terms = get_terms( 'wpsc_product_category', array( 'hide_empty' => false ) );
+
 		$options = array();
+
 		foreach ( $terms as $term ) {
-			$options[$term->term_id] = $term->name;
+			$options[ $term->term_id ] = $term->name;
 		}
 
 		$selected = wpsc_get_option( "categories_to_filter_custom" );
@@ -55,7 +65,9 @@ class WPSC_Settings_Tab_Presentation extends _WPSC_Settings_Tab_Form
 			),
 			false
 		);
+
 		$output .= '</div>';
+
 		return $output;
 	}
 
