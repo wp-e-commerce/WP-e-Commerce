@@ -1,20 +1,22 @@
 <?php
 
 class WPSC_Router {
+
+	private $controller;
+	private $controller_name;
+	private $controller_method;
+	private $controller_slug;
+	private $controller_args;
 	private static $instance;
 
 	public static function get_instance() {
-		if ( empty( self::$instance ) )
+		if ( empty( self::$instance ) ) {
 			self::$instance = new WPSC_Router();
+		}
 
 		return self::$instance;
 	}
 
-	private $controller;
-	private $controller_path;
-	private $controller_name;
-	private $controller_method;
-	private $controller_args;
 
 	public function __get( $name ) {
 		// read-only props
@@ -40,10 +42,11 @@ class WPSC_Router {
 	 */
 	private function __construct() {
 		add_action( 'parse_request', array( $this, '_action_parse_request' ) );
-		add_filter( 'query_vars', array( $this, '_filter_query_vars' ) );
+		add_filter( 'query_vars'   , array( $this, '_filter_query_vars' ) );
 
-		if ( wpsc_get_option( 'store_as_front_page' ) )
+		if ( wpsc_get_option( 'store_as_front_page' ) ) {
 			add_action( 'pre_get_posts', array( $this, '_action_prepare_front_page' ), 1, 1 );
+		}
 
 		add_action( 'wp', array( $this, '_action_setup_controller' ), 1 );
 	}
@@ -61,14 +64,15 @@ class WPSC_Router {
 	 * @param  WP_Query $q query object
 	 */
 	public function _action_prepare_front_page( $q ) {
-		if ( ! $q->is_main_query() )
+		if ( ! $q->is_main_query() ) {
 			return;
+		}
 
 		if ( $this->is_store_front_page() ) {
 			$q->set( 'post_type', 'wpsc-product' );
 			$q->wpsc_is_store_front_page = true;
-			$q->is_post_type_archive = true;
-			$q->is_archive = true;
+			$q->is_post_type_archive     = true;
+			$q->is_archive               = true;
 		}
 	}
 
@@ -108,12 +112,13 @@ class WPSC_Router {
 		// related pages (archive, single, taxonomy), route to the corresponding
 		// controller
 		if ( ! $controller ) {
-			if ( is_post_type_archive( 'wpsc-product' ) || $this->is_store_front_page() )
+			if ( is_post_type_archive( 'wpsc-product' ) || $this->is_store_front_page() ) {
 				$controller = 'main-store';
-			elseif ( is_singular( 'wpsc-product' ) )
+			} elseif ( is_singular( 'wpsc-product' ) ) {
 				$controller = 'single';
-			elseif ( is_tax( 'wpsc_product_category' ) )
+			} elseif ( is_tax( 'wpsc_product_category' ) ) {
 				$controller = 'category';
+			}
 		}
 
 		// initialize proper query flags in $wp_query
@@ -130,25 +135,28 @@ class WPSC_Router {
 	}
 
 	public function _action_parse_request( &$wp ) {
-		if ( empty( $wp->query_vars['wpsc_controller'] ) )
+		if ( empty( $wp->query_vars['wpsc_controller'] ) ) {
 			return;
+		}
 
 		// Add / remove filters so that unnecessary SQL queries are not executed
-		add_filter( 'posts_request', array( $this, '_filter_disable_main_query' ), 10, 2 );
+		add_filter( 'posts_request'  , array( $this, '_filter_disable_main_query' )     , 10, 2 );
 		add_filter( 'split_the_query', array( $this, '_filter_disable_split_the_query' ), 10, 2 );
 
 	}
 
 	public function _filter_disable_main_query( $sql, $query ) {
-		if ( ! $query->is_main_query() )
+		if ( ! $query->is_main_query() ) {
 			return $sql;
+		}
 
 		return '';
 	}
 
 	public function _filter_disable_split_the_query( $split, $query ) {
-		if ( ! $query->is_main_query() )
+		if ( ! $query->is_main_query() ) {
 			return $split;
+		}
 
 		return false;
 	}
@@ -166,14 +174,17 @@ class WPSC_Router {
 
 		// initialize all controller conditional flags to false
 		$props = array_keys( wpsc_get_page_slugs() );
+
 		foreach ( $props as $name ) {
-			$prop = 'wpsc_is_' . str_replace( '-', '_', $name );
+			$prop            = 'wpsc_is_' . str_replace( '-', '_', $name );
 			$wp_query->$prop = false;
 		}
+
 		$wp_query->wpsc_is_controller = false;
 
-		if ( empty( $controller ) )
+		if ( empty( $controller ) ) {
 			return;
+		}
 
 		// is_404 is always set to false for our pseudo-pages (cart, checkout,
 		// account, login etc.)
@@ -181,7 +192,7 @@ class WPSC_Router {
 
 		// front page flags
 	 	if ( ! $this->is_store_front_page() ) {
-			$wp_query->is_home = false;
+			$wp_query->is_home                  = false;
 			$wp_query->wpsc_is_store_front_page = false;
 		}
 
@@ -192,34 +203,40 @@ class WPSC_Router {
 	}
 
 	private function init_controller( $controller ) {
-		if ( empty( $controller ) )
+		if ( empty( $controller ) ) {
 			return;
+		}
 
 		$controller_args = trim( get_query_var( 'wpsc_controller_args' ), '/' );
 		$controller_args = explode( '/', $controller_args );
 
-		if ( ! is_array( $controller_args ) )
+		if ( ! is_array( $controller_args ) ) {
 			$controller_args = array();
+		}
 
-		$slug = array_shift( $controller_args );
+		$slug   = array_shift( $controller_args );
 		$method = str_replace( array( ' ', '-' ), '_', $slug );
-		if ( ! $method )
+
+		if ( ! $method ) {
 			$slug = $method = 'index';
+		}
 
-		$this->controller_slug = $slug;
+		$this->controller_slug   = $slug;
 		$this->controller_method = $method;
-		$this->controller_name = $controller;
-		$this->controller = _wpsc_load_controller( $controller );
+		$this->controller_name   = $controller;
+		$this->controller        = _wpsc_load_controller( $controller );
 
-		if ( ! is_callable( array( $this->controller, $method ) ) )
+		if ( ! is_callable( array( $this->controller, $method ) ) ) {
 			trigger_error( 'Invalid controller method: ' . get_class( $this->controller ) . '::' . $method . '()', E_USER_ERROR );
+		}
 
 		do_action( 'wpsc_router_init' );
 
 		$this->controller_args = $controller_args;
 
-		if ( is_callable( array( $this->controller, '_pre_action' ) ) )
+		if ( is_callable( array( $this->controller, '_pre_action' ) ) ) {
 			call_user_func( array( $this->controller, '_pre_action' ), $method, $controller_args );
+		}
 
 		call_user_func_array( array( $this->controller, $method ), $controller_args );
 	}
