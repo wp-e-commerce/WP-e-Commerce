@@ -299,7 +299,7 @@ function wpsc_checkout_billing_state_and_region( $wpsc_checkout = null ) {
 	$output = '<input data-wpsc-meta-key="' . $wpsc_checkout->checkout_item->unique_name. '" title="'
 				. $wpsc_checkout->checkout_item->unique_name
 					. $id_attribute
-						. '" class="shipping_region wpsc-visitor-meta" '
+						. ' class="shipping_region wpsc-visitor-meta" '
 							. 'name="collected_data['. $wpsc_checkout->checkout_item->id . ']" '
 								. ' placeholder="'. esc_attr( $placeholder ) . '" '
 									. ' value="' . esc_attr( $billing_state ) . '" '
@@ -325,7 +325,7 @@ function wpsc_checkout_billing_state_and_region( $wpsc_checkout = null ) {
 
 	$output .= '<select '
 					. 'id="' . $region_form_id . '" '
-						. '" class="current_region wpsc-visitor-meta wpsc-region-dropdown" data-wpsc-meta-key="' . $title
+						. ' class="current_region wpsc-visitor-meta wpsc-region-dropdown" data-wpsc-meta-key="' . $title
 							. '"  title="' . $title
 								. 'name="collected_data['. $wpsc_checkout->checkout_item->id . ']" '
 									. $style
