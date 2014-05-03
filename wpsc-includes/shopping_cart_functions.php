@@ -204,6 +204,17 @@ function wpsc_country_list( $form_id = null, $ajax = null, $selected_country = n
 	}
 
 
+	// if there is only one country to choose from we are going to set that as the shipping country,
+	// later in the UI generation the same thing will happen to make the single country the current
+	// selection
+	$countries = WPSC_Countries::get_countries( false );
+	if ( count( $countries ) == 1 ) {
+		reset( $countries );
+		$id_of_only_country_available = key( $countries );
+		$wpsc_country = new WPSC_Country( $id_of_only_country_available );
+		wpsc_update_customer_meta( $id, $wpsc_country->get_isocode() );
+	}
+
 	$additional_attributes = 'data-wpsc-meta-key="' . $title . '" title="' . $title . '" ' . $js;
 	$output .= "<div id='$html_form_id'>\n\r";
 	$output .= wpsc_get_country_dropdown(
