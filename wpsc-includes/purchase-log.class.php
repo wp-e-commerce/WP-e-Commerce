@@ -2,8 +2,9 @@
 // by default, expire stats cache after 48 hours
 // this doesn't have any effect if you're not using APC or memcached
 
-if ( ! defined( 'WPSC_PURCHASE_LOG_STATS_CACHE_EXPIRE' ) )
+if ( ! defined( 'WPSC_PURCHASE_LOG_STATS_CACHE_EXPIRE' ) ) {
 	define( 'WPSC_PURCHASE_LOG_STATS_CACHE_EXPIRE', DAY_IN_SECONDS * 2 );
+}
 
 class WPSC_Purchase_Log {
 	const INCOMPLETE_SALE  = 1;
