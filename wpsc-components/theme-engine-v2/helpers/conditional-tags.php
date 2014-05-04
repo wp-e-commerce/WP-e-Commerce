@@ -208,7 +208,3 @@ function wpsc_is_tax_enabled() {
 function wpsc_is_tax_included() {
 	return wpsc_tax_isincluded();
 }
-
-function wpsc_is_shipping_enabled() {
-	return get_option( 'do_not_use_shipping' );
-}
