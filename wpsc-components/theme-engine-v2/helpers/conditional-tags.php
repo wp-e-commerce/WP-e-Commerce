@@ -19,10 +19,9 @@
  * @uses  get_post_type()
  * @uses  is_single()
  *
- * @param  mixed $product Optional. Product ID, title, slug, or an array of such.
  * @return bool
  */
- function wpsc_is_single( $product = '' ) {
+ function wpsc_is_single() {
  	return is_singular( 'wpsc-product' );
  }
 
@@ -92,7 +91,7 @@ function _wpsc_is_page( $page, $slug ) {
 	return $test;
 }
 
-function wpsc_is_cart( $slug = '') {
+function wpsc_is_cart( $slug = '' ) {
 	return _wpsc_is_page( 'cart', $slug );
 }
 
@@ -178,12 +177,13 @@ function wpsc_is_product_on_sale( $id = null ) {
  * @return bool
  */
 function wpsc_is_product_out_of_stock( $id = null ) {
-	return ! wpsc_product_has_stock();
+	return ! wpsc_product_has_stock( $id );
 }
 
 function wpsc_product_has_stock( $id = null ) {
-	if ( is_null( $id ) )
+	if ( is_null( $id ) ) {
 		$id = wpsc_get_product_id();
+	}
 
 	$product = WPSC_Product::get_instance( $id );
 	return $product->has_stock;

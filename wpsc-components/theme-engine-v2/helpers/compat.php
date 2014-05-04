@@ -42,6 +42,9 @@ if ( ! function_exists( 'wpsc_the_product_thumbnail' ) ) {
 
 if ( ! function_exists( 'wpsc_product_image' ) ) {
 	function wpsc_product_image( $attachment_id = 0, $width = null, $height = null ) {
+
+		$uploads = wp_upload_dir();
+
 		// Do some dancing around the image size
 		if ( ( ( $width >= 10 ) && ( $height >= 10 ) ) && ( ( $width <= 1024 ) && ( $height <= 1024 ) ) )
 			$intermediate_size = "wpsc-{$width}x{$height}";
@@ -50,7 +53,6 @@ if ( ! function_exists( 'wpsc_product_image' ) ) {
 		if ( ( $attachment_id > 0 ) && ( !empty( $intermediate_size ) ) ) {
 
 			// Get all the required information about the attachment
-			$uploads    = wp_upload_dir();
 			$image_meta = get_post_meta( $attachment_id, '' );
 			$file_path  = get_attached_file( $attachment_id );
 

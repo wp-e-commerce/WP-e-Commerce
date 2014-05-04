@@ -41,15 +41,12 @@ function wpsc_transaction_theme() {
 	$errorcode = '';
 	$transactid = '';
 	$dont_show_transaction_results = false;
+
 	if ( isset( $_GET['sessionid'] ) )
 		$sessionid = $_GET['sessionid'];
 
-	if ( !isset( $_GET['sessionid'] ) && isset( $_GET['ms'] ) )
+	if ( !isset( $_GET['sessionid'] ) && isset( $_GET['ms'] ) ) {
 		$sessionid = $_GET['ms'];
-
-	if ( isset( $_GET['gateway'] ) && 'google' == $_GET['gateway'] ) {
-		wpsc_google_checkout_submit();
-		wpsc_delete_customer_meta( 'checkout_session_id' );
 	}
 
 	$selected_gateway = wpsc_get_customer_meta( 'selected_gateway' );
@@ -93,9 +90,8 @@ function wpsc_transaction_theme() {
 
 				if($result == 'Insufficient Funds' && $ec == 5){
 					$processed_id = '6';
-
-					$payment_instructions = printf( __( 'Sorry your transaction was not accepted due to insufficient funds <br /><a href="%1$s">Click here to go back to checkout page</a>.', 'wpsc' ), wpsc_get_checkout_url() );
 				}
+
 				if ( $processed_id )
 					wpsc_update_purchase_log_status( $sessionid, $processed_id, 'sessionid' );
 
