@@ -200,21 +200,29 @@ add_action( 'pre_get_posts', 'wpsc_action_set_product_per_page_query_var', 10, 1
  * @return array  The filtered class array
  */
 function wpsc_filter_product_class( $classes, $class, $post_id ) {
-	if ( is_main_query() && ! $post_id )
+
+	if ( is_main_query() && ! $post_id ) {
 		return $classes;
+	}
 
 	$post = get_post( $post_id );
+
 	if ( $post->post_type == 'wpsc-product' ) {
+		global $wp_query;
+
 		$count     = isset( $wp_query->current_post ) ? (int) $wp_query->current_post : 1;
 		$classes[] = $count % 2 ? 'even' : 'odd';
-		if ( wpsc_is_product_on_sale( $post_id ) )
+
+		if ( wpsc_is_product_on_sale( $post_id ) ) {
 			$classes[] = 'wpsc-product-on-sale';
+		}
 
 		return apply_filters( 'wpsc_product_class', $classes, $class, $post_id );
 	}
 
 	return $classes;
 }
+
 add_filter( 'post_class', 'wpsc_filter_product_class', 10, 3 );
 
 /**
@@ -274,8 +282,10 @@ function wpsc_filter_hierarchical_category_request( $q ) {
 	}
 	return $q;
 }
-if ( wpsc_get_option( 'hierarchical_product_category_url' ) )
+
+if ( wpsc_get_option( 'hierarchical_product_category_url' ) ) {
 	add_filter( 'request', 'wpsc_filter_hierarchical_category_request' );
+}
 
 /**
  * Make sure the canonical URL of a single product page is correct.
@@ -324,6 +334,7 @@ add_action( 'wp', '_wpsc_action_canonical_url' );
  * the usual one.
  *
  * @since 0.1
+ * @todo Ensure hardcoding 'wp-e-commerce' here makes proper sense.  Not sure what that is pointing to.
  *
  * @param  array  $templates
  * @param  string $slug
@@ -339,8 +350,9 @@ function wpsc_get_category_list_template_paths( $templates, $slug, $name ) {
 }
 
 function _wpsc_filter_body_class( $classes ) {
-	if ( ! wpsc_is_controller() )
+	if ( ! wpsc_is_controller() ) {
 		return $classes;
+	}
 
 	$classes[] = 'wpsc-controller';
 	$classes[] = 'wpsc-' . _wpsc_get_current_controller_name();
@@ -360,6 +372,7 @@ function _wpsc_filter_title( $title ) {
 
 	return $title;
 }
+
 add_filter( 'post_type_archive_title', '_wpsc_filter_title', 1 );
 add_filter( 'single_post_title', '_wpsc_filter_title', 1 );
 
