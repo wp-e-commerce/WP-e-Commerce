@@ -633,7 +633,7 @@ function wpsc_get_product_variation_set_dropdown( $variation_set_id, $product_id
 
 	$product = WPSC_Product::get_instance( $product_id );
 
-	$classes = apply_filters( 'wpsc_get_product_variation_set_dropdown_classes', array( 'wpsc-product-variation-dropdown' ), $variation_set_id, $this->product_id );
+	$classes = apply_filters( 'wpsc_get_product_variation_set_dropdown_classes', array( 'wpsc-product-variation-dropdown' ), $variation_set_id, $product_id );
 	$classes = implode( ' ', $classes );
 	$output = "<select name='wpsc_product_variations[{$variation_set_id}]' id='wpsc-product-{$product_id}-{$variation_set_id}' class='{$classes}'>";
 	foreach ( $product->variation_terms[$variation_set_id] as $variation_term_id => $variation_term_title ) {
