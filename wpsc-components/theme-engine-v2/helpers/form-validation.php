@@ -51,6 +51,14 @@ function wpsc_validate_form( $form_args, &$validated_array = false ) {
 	return true;
 }
 
+/**
+ * This is messy.
+ *
+ * @param  [type] $name  [description]
+ * @param  [type] $value [description]
+ * @param  [type] $from  [description]
+ * @return [type]        [description]
+ */
 function _wpsc_set_submitted_value( $name, $value, &$from = null ) {
 	if ( ! is_array ( $from ) )
 		$from =& $_REQUEST;
@@ -70,11 +78,10 @@ function _wpsc_set_submitted_value( $name, $value, &$from = null ) {
 			else
 				return;
 		}
-		$val = $value;
 		return;
 	}
 
-	$form[$name] = $value;
+	$from[$name] = $value;
 }
 
 function wpsc_validation_rule_required( $error, $value, $field, $props ) {
