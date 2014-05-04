@@ -330,13 +330,10 @@ function wpsc_get_checkout_steps() {
 			$classes[] = 'active';
 
 		if ( $wizard->is_disabled( $step ) ) {
-			$icon = 'lock';
 			$classes[] = 'disabled';
 		} elseif ( $wizard->is_completed( $step ) ) {
-			$icon = 'check';
 			$classes[] = 'completed';
 		} else {
-			$icon = 'check';
 			$classes[] = 'pending';
 		}
 
@@ -542,7 +539,7 @@ function wpsc_get_customer_orders_pagination( $args = array() ) {
 	?>
 	<div class="wpsc-pagination">
 		<div class="wpsc-pagination-links">
-			<?php wpsc_customer_orders_pagination_links(); ?>
+			<?php wpsc_customer_orders_pagination_links( $args ); ?>
 		</div>
 		<div class="wpsc-pagination-count">
 			<?php wpsc_customer_orders_pagination_count(); ?>
