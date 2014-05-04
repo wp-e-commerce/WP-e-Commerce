@@ -100,11 +100,12 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 	/**
 	 * Get a new ID for this drill down widget, and increase global counter
 	 *
+	 * @todo  Determine necessity of this method.
 	 * @since  0.1
 	 * @return int
 	 */
 	private function get_id() {
-		$this->count ++;
+		$this->count++;
 		return $this->count - 1;
 	}
 
@@ -366,10 +367,8 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 	}
 
 	private function term_url( $widget_id, $term ) {
-		global $wp_rewrite;
 
-		$uri       = $this->generate_uri_part( $widget_id, $term );
-		$query_var = get_query_var( 'wpsc_cat_drill_down' );
+		$uri = $this->generate_uri_part( $widget_id, $term );
 
 		if ( empty( $this->url_base ) )
 			return add_query_arg( 'wpsc_cat_drill_down', $uri );
