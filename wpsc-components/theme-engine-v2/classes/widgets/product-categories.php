@@ -7,10 +7,10 @@
  * @since 3.7.1
  */
 class WPSC_Widget_Product_Categories extends WP_Widget {
+
 	private $defaults;
 	private $children_of;
 	private $instance;
-	private $count;
 
 	/**
 	 * Widget Constuctor

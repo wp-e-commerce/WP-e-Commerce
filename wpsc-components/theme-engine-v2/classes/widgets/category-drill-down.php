@@ -6,7 +6,7 @@ add_filter( 'wpsc_register_taxonomies_product_category_args', '_wpsc_te2_filter_
 add_filter( 'query_vars', '_wpsc_te2_filter_drill_down_query_vars' );
 
 // Add %wpsc_cat_drill_down% as this will be used in various drill down permastructs
-add_rewrite_tag( '%wpsc_cat_drill_down_tax%', '([\d\-,]+)', 'wpsc_cat_drill_down=' );
+add_rewrite_tag( '%wpsc_cat_drill_down_tax%'  , '([\d\-,]+)', 'wpsc_cat_drill_down=' );
 add_rewrite_tag( '%wpsc_cat_drill_down_store%', '([\d\-,]+)', 'post_type=wpsc-product&wpsc_cat_drill_down=' );
 
 /**
