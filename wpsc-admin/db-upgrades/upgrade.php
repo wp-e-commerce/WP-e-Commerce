@@ -28,14 +28,14 @@ function _wpsc_maybe_upgrade() {
 		if ( ! function_exists( '_wpsc_db_upgrade_' . $i ) )
 			continue;
 
-		wp_cache_flush();
+		wpsc_core_flush_temporary_data();
 
 		call_user_func( '_wpsc_db_upgrade_' . $i );
 		update_option( 'wpsc_db_version', $i );
 
 	}
 
-	wp_cache_flush();
+	wpsc_core_flush_temporary_data();
 
 }
 
