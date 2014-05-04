@@ -258,7 +258,7 @@ function _wpsc_filter_control_heading( $output, $field, $args ) {
 
 		$button = wpsc_form_input(
 			'wpsc_copy_billing_details',
-			__( 'Copy billing details', 'wpsc' ),
+			$title,
 			array(
 				'type' => 'button',
 				'class' => 'wpsc-button wpsc-button-mini',
