@@ -80,12 +80,12 @@ add_filter( 'wpsc_javascript_localizations', '_wpsc_localize_checkout_item_name_
  *
  * @return array   localizations array with checkout information added
  */
-function _wpsc_localize_cehckout_related_options( $localizations ) {
+function _wpsc_localize_checkout_related_options( $localizations ) {
 	$localizations['store_uses_shipping'] = wpsc_core_store_use_shipping();
 	return $localizations;
 }
 
-add_filter( 'wpsc_javascript_localizations', '_wpsc_localize_cehckout_related_options', 10, 1 );
+add_filter( 'wpsc_javascript_localizations', '_wpsc_localize_checkout_related_options', 10, 1 );
 
 /**
  * Creates an array mapping from checkout item id to the item name in the field.  array is
