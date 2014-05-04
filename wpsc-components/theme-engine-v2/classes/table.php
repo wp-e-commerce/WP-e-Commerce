@@ -2,7 +2,7 @@
 
 class WPSC_Table {
 	public $columns = array();
-	public $items = array();
+	public $items   = array();
 
 	public function __construct() {
 	}
@@ -15,7 +15,6 @@ class WPSC_Table {
 	}
 
 	public function display_rows() {
-		global $wpsc_cart;
 
 		foreach ( $this->items as $key => $item ) {
 			echo '<tr>';
@@ -42,7 +41,7 @@ class WPSC_Table {
 		// subclass should override this
 	}
 
-	protected function column_default() {
+	protected function column_default( $item, $key, $column ) {
 		// subclass should override this
 	}
 
