@@ -728,13 +728,3 @@ function wpsc_core_get_checkout() {
 function wpsc_core_get_db_version() {
 	return intval( get_option( 'wpsc_db_version', 0 ) );
 }
-
-/**
- * do we use shipping
- *
- * @return bool true if shipping is in use
- */
-function wpsc_core_store_use_shipping() {
-	return ! (bool)get_option( 'do_not_use_shipping', false );
-}
-
