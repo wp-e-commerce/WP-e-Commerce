@@ -728,3 +728,54 @@ function wpsc_core_get_checkout() {
 function wpsc_core_get_db_version() {
 	return intval( get_option( 'wpsc_db_version', 0 ) );
 }
+
+/**
+ *  flush all WPeC temporarry stored data
+ *
+ * WordPress generallay has two places it stores temporary data, the object cache and the transient store.  When
+ * an object cache is configured for WordPress transients are stored in the object cache.  When there isn't an
+ * object cache available transients are stored in the WordPress options table.  When clearing temporary data
+ * we need to consider both places.
+ *
+ * @since 3.8.14.1
+ *
+ */
+function wpsc_core_flush_temporary_data() {
+
+	//
+	/**
+	 * Tell the the rest of the WPeC world it's time to flush all cache data
+	 *
+	 * @since 3.8.14.1
+	 *
+	 * no params
+	 */
+	do_action( 'wpsc_core_flush_temporary_data' );
+
+
+	// look at the database and see if there are WPeC transients in the options table.  Note that it is possible to track these,
+	// using WordPress hooks, but because we need to check for transients that are stored by prior releases of WPeC we go right
+	// at the database.
+	global $wpdb;
+
+	$transient_names = $wpdb->get_col( 'SELECT option_name FROM ' . $wpdb->options . ' WHERE `option_name` LIKE "\_transient\_wpsc\_%"' );
+
+	// strip off the WordPress transient prefix to get the transient name used when storing the transient, then delete it
+	foreach ( $transient_names as $index => $transient_name ) {
+		$transient_name = substr( $transient_name, strlen( '_transient_' ) );
+		delete_transient( $transient_name );
+	}
+
+	// last but not least flush the object cache
+	wp_cache_flush();
+
+	/**
+	 * Tell the the rest of the WPeC world we have just flushed all temporary data,
+	 *
+	 * @since 3.8.14.1
+	 *
+	 * no params
+	 */
+	do_action( 'wpsc_core_flushed_temporary_data' );
+
+}

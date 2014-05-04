@@ -881,6 +881,11 @@ class WPSC_Countries {
 			self::restore();
 		}
 
+		// respect the notification that temporary data has been flushed, clear our own cache and ite will rebuild the
+		// country data structures on the next request
+		add_action( 'wpsc_core_flush_temporary_data', array( __CLASS__, 'clear_cache' ) );
+
+		// save our class data when processing is done
 		add_action( 'shutdown', array( __CLASS__, 'save' ) );
 		self::$_initialized = true;
 	}
