@@ -11,7 +11,6 @@
  * @subpackage wpsc-cart-classes
 */
 
-
 /*
  * @since 3.8.14
  *

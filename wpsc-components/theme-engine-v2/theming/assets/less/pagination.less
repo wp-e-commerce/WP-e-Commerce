@@ -1,0 +1,40 @@
+.wpsc-controller {
+	.wpsc-pagination {
+		margin: 0 0 1.5em;
+		overflow: hidden;
+	}
+	.wpsc-pagination-count,
+	.wpsc-pagination-links .page-numbers {
+		font-weight: normal;
+		padding: 3px 5px;
+	}
+	.wpsc-pagination-count {
+		float: left;
+	}
+	.wpsc-pagination-links {
+		float: right;
+
+		.page-numbers {
+			border-width: 0 0 2px 0;
+			border-style: solid;
+			border-color: transparent;
+			display: inline-block;
+			float: left;
+		}
+		a {
+			text-decoration: none;
+
+			&:hover {
+				text-decoration: none;
+			}
+		}
+		.dots {
+			color: @pagination-dots-color;
+		}
+		.current {
+			border-bottom-color: @font-color;
+			color: inherit;
+			cursor: default;
+		}
+	}
+}

@@ -1,0 +1,104 @@
+.button() {
+	.border-radius;
+	.box-shadow(~"inset 0 1px 0 rgba(255, 255, 255, 0.3)");
+	.transition(box-shadow linear 0.1s);
+
+	border: 1px solid @border-color-normal;
+	background-color: @color-normal;
+	.gradient(@gradient-normal-1, @gradient-normal-2, @gradient-normal-fallback);
+	color: @font-color;
+	cursor: pointer;
+	display: inline-block;
+	font-weight: normal;
+	font-size: @font-size-m;
+	line-height: @line-height-m;
+	margin: 0;
+	outline: none;
+	padding:5px 13px;
+	text-decoration: none;
+	text-shadow: rgba(255, 255, 255, 0.6) 0 1px 0;
+
+	&:hover,
+	&:active,
+	&:focus,
+	&:visited {
+		text-decoration: none;
+		color: @font-color;
+	}
+	&:hover {
+		.box-shadow(~"inset 0 1px 0 rgba(255, 255, 255, 0.15)");
+		.gradient(@gradient-normal-1-hover, @gradient-normal-2-hover, @gradient-normal-hover-fallback);
+	}
+	&:active {
+		.box-shadow(~"inset 0 1px 5px rgba(0, 0, 0, 0.20)");
+		.gradient(@gradient-normal-1-active, @gradient-normal-2-active, @gradient-normal-active-fallback);
+	}
+	&:focus {
+		@box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 0 5px 1px @border-color-focus;
+		.box-shadow(@box-shadow);
+	}
+	&.wpsc-button-success {
+		.wpsc-button-type(success);
+	}
+	&.wpsc-button-warning {
+		.wpsc-button-type(warning);
+	}
+	&.wpsc-button-important {
+		.wpsc-button-type(important);
+	}
+	&.wpsc-button-info {
+		.wpsc-button-type(info);
+	}
+	&.wpsc-button-inverse {
+		.wpsc-button-type(inverse);
+	}
+	&.wpsc-button-primary {
+		.wpsc-button-type(primary);
+	}
+	&.wpsc-button-small {
+		font-size: @font-size-s;
+		padding: 3px 7px;
+	}
+	&.wpsc-button-mini {
+		font-size: @font-size-s;
+		line-height: @line-height-s;
+		padding: 0px 5px;
+
+		.border-radius(2px);
+	}
+}
+.wpsc-button-type (@type) {
+	@border-color-var: "border-color-@{type}";
+	@gradient-color-1-var: "gradient-@{type}-1";
+	@gradient-color-2-var: "gradient-@{type}-2";
+	@gradient-color-1-hover-var: "gradient-@{type}-1-hover";
+	@gradient-color-2-hover-var: "gradient-@{type}-2-hover";
+	@gradient-color-1-active-var: "gradient-@{type}-1-active";
+	@gradient-color-2-active-var: "gradient-@{type}-2-active";
+	@gradient-color-fallback-var: "gradient-@{type}-fallback";
+	@gradient-color-hover-fallback-var: "gradient-@{type}-hover-fallback";
+	@gradient-color-active-fallback-var: "gradient-@{type}-active-fallback";
+
+	border-color: @@border-color-var;
+	color: @font-color-inverse;
+	text-shadow: rgba(0, 0, 0, 0.19) 0 -1px 0;
+	.gradient(@@gradient-color-1-var, @@gradient-color-2-var, @@gradient-color-fallback-var);
+
+	&:hover,
+	&:active,
+	&:focus,
+	&:visited {
+		color: @font-color-inverse;
+	}
+	&:hover {
+		.gradient(@@gradient-color-1-hover-var, @@gradient-color-2-hover-var, @@gradient-color-hover-fallback-var);
+	}
+	&:active {
+		.gradient(@@gradient-color-1-active-var, @@gradient-color-2-active-var, @@gradient-color-active-fallback-var);
+	}
+}
+.wpsc-controller {
+	.wpsc-button {
+		.button();
+	}
+}
