@@ -7,7 +7,6 @@ class WPSC_Controller_Category extends WPSC_Query_Controller {
 	}
 
 	public function index() {
-		$term = get_queried_object();
 		$this->view = 'category';
 		$this->title = get_queried_object()->name;
 	}
