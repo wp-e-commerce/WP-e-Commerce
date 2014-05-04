@@ -1,7 +1,7 @@
 <?php
 
-add_shortcode( 'wpsc-cart', '_wpsc_shortcode_cart' );
-add_shortcode( 'wpsc-products', '_wpsc_shortcode_products' );
+add_shortcode( 'wpsc-cart'       , '_wpsc_shortcode_cart' );
+add_shortcode( 'wpsc-products'   , '_wpsc_shortcode_products' );
 add_shortcode( 'wpsc-add-to-cart', '_wpsc_shortcode_add_to_cart' );
 
 /**
@@ -27,29 +27,29 @@ function _wpsc_shortcode_cart( $atts ) {
 		'type' => 'form'
 	);
 
-	$atts = shrotcode_atts( $defaults, $atts, 'wpsc-cart' );
+	$atts = shortcode_atts( $defaults, $atts, 'wpsc-cart' );
 
 	require_once( WPSC_TE_V2_CLASSES_PATH . '/cart-item-table-widget-form.php' );
 
-	if ( ! count( $wpsc_cart->cart_items ) )
-		return '<p>' . __( 'No item in cart.', 'wpsc' ) . '</p>';
+	if ( ! count( $wpsc_cart->cart_items ) ) {
+		return '<p>' . __( 'No items in cart.', 'wpsc' ) . '</p>';
+	}
 
 	switch ( $atts['type'] ) {
-		case 'form':
+		case 'form' :
 			$table = new WPSC_Cart_Item_Table_Form();
 			break;
-		case 'widget':
+		case 'widget' :
 			$table = new WPSC_Cart_Item_Table_Widget_Form();
 			break;
-		case 'table':
+		case 'table' :
 			$table = new WPSC_Cart_Item_Table();
 			break;
 	}
 
-
 	$table->display();
-
 	return ob_get_clean();
+
 }
 
 /**
