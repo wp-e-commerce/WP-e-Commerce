@@ -81,7 +81,7 @@ add_filter( 'wpsc_javascript_localizations', '_wpsc_localize_checkout_item_name_
  * @return array   localizations array with checkout information added
  */
 function _wpsc_localize_checkout_related_options( $localizations ) {
-	$localizations['store_uses_shipping'] = wpsc_core_store_use_shipping();
+	$localizations['store_uses_shipping'] = wpsc_is_shipping_enabled();
 	return $localizations;
 }
 
