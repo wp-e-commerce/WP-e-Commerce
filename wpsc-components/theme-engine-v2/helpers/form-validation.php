@@ -87,12 +87,13 @@ function _wpsc_set_submitted_value( $name, $value, &$from = null ) {
 function wpsc_validation_rule_required( $error, $value, $field, $props ) {
 	if ( $value === '' ) {
 		$error_message = apply_filters( 'wpsc_validation_rule_required_message', __( 'The %s field is empty.', 'wpsc' ), $value, $field, $props );
-		$title = isset( $prop['title_validation'] ) ? $prop['title_validation'] : $field;
-		$error->add( $field, sprintf( $error_message, $props['title_validation'] ), array( 'value' => $value, 'props' => $props ) );
+		$title = isset( $props['title_validation'] ) ? $props['title_validation'] : $field;
+		$error->add( $field, sprintf( $error_message, $title ), array( 'value' => $value, 'props' => $props ) );
 	}
 
 	return $error;
 }
+
 add_filter( 'wpsc_validation_rule_required', 'wpsc_validation_rule_required', 10, 4 );
 
 function _wpsc_filter_terms_conditions_required_message( $message, $value, $field, $props ) {
