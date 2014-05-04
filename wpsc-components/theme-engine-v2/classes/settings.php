@@ -3,18 +3,18 @@ define( 'WPSC_PAGE_NUMBER_POSITION_TOP'   , 1 );
 define( 'WPSC_PAGE_NUMBER_POSITION_BOTTOM', 2 );
 define( 'WPSC_PAGE_NUMBER_POSITION_BOTH'  , 3 );
 
-class WPSC_Settings
-{
+class WPSC_Settings {
 	private static $instance;
+	private $default_settings = array();
+
+
 	public static function get_instance() {
-		if ( ! self::$instance )
+		if ( ! self::$instance ) {
 			self::$instance = new WPSC_Settings();
+		}
 
 		return self::$instance;
 	}
-
-	private $settings = array();
-	private $default_settings = array();
 
 	private function __construct() {
 		$this->default_settings = apply_filters(
@@ -63,7 +63,7 @@ class WPSC_Settings
 	}
 
 	public function get( $setting ) {
-		$default = array_key_exists( $setting, $this->default_settings ) ? $this->default_settings[$setting] : null;
+		$default = array_key_exists( $setting, $this->default_settings ) ? $this->default_settings[ $setting ] : null;
 		return get_option( 'wpsc_' . $setting, $default );
 	}
 
@@ -74,12 +74,14 @@ class WPSC_Settings
 
 // patch for beta sites which uses 'default_style' option
 add_filter( 'wpsc_default_settings', '_wpsc_filter_default_styles_setting' );
+
 function _wpsc_filter_default_styles_setting( $settings ) {
 	// prevent infinite loop
 	remove_filter( 'wpsc_default_settings', '_wpsc_filter_default_styles_setting' );
 
-	if ( ! wpsc_get_option( 'default_style' ) )
+	if ( ! wpsc_get_option( 'default_style' ) ) {
 		$settings['default_styles'] = array();
+	}
 
 	return $settings;
 }
