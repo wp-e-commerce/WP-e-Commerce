@@ -1,0 +1,31 @@
+.wpsc-controller {
+	.wpsc-tabs {
+		.clearfix();
+		border-bottom: 1px solid @border-color;
+		list-style-type: none;
+		padding: 0;
+	}
+	.wpsc-tabs > li {
+		display: inline-block;
+		margin: 0 5px -1px 5px;
+		margin-bottom: -1px;
+
+		> a {
+			border: 1px solid transparent;
+			display: block;
+			padding: 8px 12px;
+			line-height: 1em;
+			text-decoration: none;
+
+			.border-radius(4px 4px 0 0);
+		}
+	}
+
+	.wpsc-tabs > .active > a {
+		background-color: #fff;
+		color: @font-color;
+		border: 1px solid @border-color;
+		border-bottom-color: transparent;
+		cursor: default;
+	}
+}

@@ -1,0 +1,44 @@
+.wpsc-controller {
+	.wpsc-alert {
+		.border-radius;
+		border-width: 1px;
+		border-style: solid;
+		.box-shadow(~"inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 5px rgba(0, 0, 0, 0.3)");
+		margin-bottom: 18px;
+		padding: 10px 12px 12px;
+		width: auto;
+
+		p {
+			margin: 0;
+			+ p {
+				margin-top: 12px;
+			}
+		}
+	}
+	.wpsc-alert,
+	.wpsc-alert p {
+		font-size: @font-size-m;
+		text-shadow: rgba(255, 255, 255, 0.6) 0 1px 0;
+	}
+	.wpsc-alert-type(@type) {
+		@border-color-var: "alert-@{type}-border-color";
+		@font-color-var: "alert-@{type}-font-color";
+		@background-color-var: "alert-@{type}-background-color";
+
+		border-color: @@border-color-var;
+		color: @@font-color-var;
+		background-color: @@background-color-var;
+	}
+	.wpsc-alert-success {
+		.wpsc-alert-type(success);
+	}
+	.wpsc-alert-warning {
+		.wpsc-alert-type(warning);
+	}
+	.wpsc-alert-error {
+		.wpsc-alert-type(error);
+	}
+	.wpsc-alert-info {
+		.wpsc-alert-type(info);
+	}
+}

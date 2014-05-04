@@ -1,0 +1,37 @@
+.table() {
+	border: none;
+	border-collapse: collapse;
+	border-spacing: 0;
+	margin-bottom: 18px;
+	width: 100%;
+
+	th, td {
+		border-top: 1px solid @table-row-border-color;
+		font-weight: normal;
+		padding: 6px 10px;
+		text-transform: none;
+	}
+	thead, tfoot {
+		th {
+			font-weight: bold;
+		}
+	}
+	thead {
+		&:first-child tr:first-child {
+			th, td {
+				border-top: none;
+			}
+		}
+	}
+	tbody tr:hover {
+		td, th {
+			background-color: @table-row-color-hover;
+		}
+	}
+}
+
+.wpsc-controller {
+	table.wpsc-table {
+		.table();
+	}
+}
