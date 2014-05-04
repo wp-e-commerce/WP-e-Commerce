@@ -36,7 +36,7 @@ function _wpsc_filter_rewrite_controller_slugs( $rules ) {
 
 	foreach ( $slugs as $page_name => $slug ) {
 		$controller_name = sanitize_title_with_dashes( $page_name );
-		$new_rules["($slug)(/.+?)?/?$"] = 'index.php?wpsc_controller=' . $page_name . '&wpsc_controller_args=$matches[2]';
+		$new_rules["($slug)(/.+?)?/?$"] = 'index.php?wpsc_controller=' . $controller_name . '&wpsc_controller_args=$matches[2]';
 	}
 
 	$rules = array_merge( $new_rules, $rules );
