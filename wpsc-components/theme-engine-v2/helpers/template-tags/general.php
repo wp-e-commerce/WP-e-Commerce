@@ -172,6 +172,7 @@ function wpsc_get_breadcrumb( $args = '' ) {
 
 	// if padding is set, prepare the length, padding string and divider
 	if ( $padding ) {
+		/* @todo: Check if $padding is supposed to use $length, rather than $padding.  Otherwise, $length is dead. */
 		$length = strlen( $divider ) + $padding * 2;
 		$padding = str_repeat( "&nbsp;", $padding );
 		$divider = $padding . $divider . $padding;
@@ -321,16 +322,12 @@ function wpsc_get_checkout_steps() {
 	$wizard = WPSC_Checkout_Wizard::get_instance();
 	$steps = $wizard->steps;
 
-	$disabled = $wizard->disabled;
-	$completed = $wizard->completed;
 	$output = '<ul class="wpsc-wizard">';
 	$step_count = 1;
 	foreach ( $steps as $step => $title ) {
 		$classes = array( 'wpsc-wizard-step wpsc-wizard-step-' . $step );
 		if ( $wizard->is_active( $step ) )
 			$classes[] = 'active';
-
-		$href = ' href="' . wpsc_get_checkout_url( $step ) . '"';
 
 		if ( $wizard->is_disabled( $step ) ) {
 			$icon = 'lock';
