@@ -163,6 +163,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 				'active'       => empty( $_POST['new_field_display'][$key] ) ? 0 : 1,
 				'mandatory'    => empty( $_POST['new_field_mandatory'][$key] ) ? 0 : 1,
 				'checkout_set' => $this->current_checkout_set,
+				'unique_name'  => sanitize_title( $name ),
 			);
 
 			$data_format = array(
@@ -170,6 +171,8 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 				'%s', // type
 				'%s', // active
 				'%s', // mandatory
+				'%s', // checkout set
+				'%s', // unique name
 			);
 
 			if ( isset( $new_field_orders[$key] ) ) {
