@@ -592,8 +592,9 @@ function wpsc_get_product_variation_dropdown( $args = '' ) {
 	$r = wp_parse_args( $args, $defaults );
 	extract( $r, EXTR_SKIP );
 
-	if ( ! empty( $id ) )
+	if ( empty( $id ) ) {
 		$id = wpsc_get_product_id();
+	}
 
 	$product = WPSC_Product::get_instance( $id );
 
