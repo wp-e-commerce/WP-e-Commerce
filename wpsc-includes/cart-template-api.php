@@ -274,11 +274,11 @@ function wpsc_cart_has_shipping() {
 /**
  * Checks if the store has shipping enabled globally.
  *
- * @since  3.9
+ * @since  3.8.14.1
  * @return bool Whether or not shipping is enabled.
  */
 function wpsc_is_shipping_enabled() {
-	return (bool) get_option( 'do_not_use_shipping', false );
+	return ! (bool) get_option( 'do_not_use_shipping', false );
 }
 
 /**
