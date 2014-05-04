@@ -74,6 +74,20 @@ add_filter( 'wpsc_javascript_localizations', '_wpsc_localize_checkout_item_name_
 
 
 /**
+ * @param array $localizations
+ *
+ * @since 3.8.14.1
+ *
+ * @return array   localizations array with checkout information added
+ */
+function _wpsc_localize_checkout_related_options( $localizations ) {
+	$localizations['store_uses_shipping'] = wpsc_is_shipping_enabled();
+	return $localizations;
+}
+
+add_filter( 'wpsc_javascript_localizations', '_wpsc_localize_checkout_related_options', 10, 1 );
+
+/**
  * Creates an array mapping from checkout item id to the item name in the field.  array is
  * localized into the user javascript so that the javascript can find items using the well known names.
  *

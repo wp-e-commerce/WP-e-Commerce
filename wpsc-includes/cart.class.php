@@ -236,6 +236,10 @@ class wpsc_cart {
 	function needs_shipping_recalc() {
 		global $wpsc_shipping_modules;
 
+		if ( ! wpsc_is_shipping_enabled() ) {
+			return false;
+		}
+
 		if ( $this->shipping_info_empty() && $this->uses_shipping() ) {
 			return true;
 		}

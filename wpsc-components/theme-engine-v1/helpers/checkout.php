@@ -339,16 +339,28 @@ function wpsc_shipping_country_list( $shippingdetails = false ) {
 
 	$output = '';
 
+
 	if ( $shipping_country_checkout_item && $shipping_country_checkout_item->active ) {
 
 		if ( ! $shippingdetails ) {
 			$output = "<input type='hidden' name='wpsc_ajax_action' value='update_location' />";
 		}
 
+		$acceptable_countries = wpsc_get_acceptable_countries();
+
+		// if there is only one country to choose from we are going to set that as the shipping country,
+		// later in the UI generation the same thing will happen to make the single country the current
+		// selection
+		$countries = WPSC_Countries::get_countries( false );
+		if ( count( $countries ) == 1 ) {
+			reset( $countries );
+			$id_of_only_country_available = key( $countries );
+			$wpsc_country = new WPSC_Country( $id_of_only_country_available );
+			wpsc_update_customer_meta( 'shippingcountry', $wpsc_country->get_isocode() );
+		}
+
 		$selected_country = wpsc_get_customer_meta( 'shippingcountry' );
 
-
-		$acceptable_countries = wpsc_get_acceptable_countries();
 
 		$additional_attributes = 'data-wpsc-meta-key="shippingcountry" ';
 		$output .= wpsc_get_country_dropdown(

@@ -222,7 +222,7 @@ class WPSC_Country {
 	 * @return boolean	true if we have a region lsit for the nation, false otherwise
 	 */
 	public function has_regions() {
-		return $this->_has_regions;
+		return ( $this->_regions->count() > 0 );
 	}
 
 	/**
