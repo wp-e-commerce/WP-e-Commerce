@@ -642,7 +642,7 @@ function wpsc_get_product_variation_set_dropdown( $variation_set_id, $product_id
 	}
 	$output .= "</select>";
 
-	return apply_filters( 'wpsc_get_product_variation_set_dropdown', $output, $variation_set_id, $this->product_id );
+	return apply_filters( 'wpsc_get_product_variation_set_dropdown', $output, $variation_set_id, $product_id );
 }
 
 /**
