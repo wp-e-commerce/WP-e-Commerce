@@ -31,8 +31,9 @@ class WPSC_Controller_Customer_Account extends WPSC_Controller {
 				'form_data',
 				'log'
 			)
-		) );
+		) ) {
 			return $this->$name;
+		}
 
 		return null;
 	}

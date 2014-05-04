@@ -1,8 +1,7 @@
 <?php
 require_once( WPSC_TE_V2_CLASSES_PATH . '/checkout-wizard.php' );
 
-class WPSC_Controller_Checkout extends WPSC_Controller
-{
+class WPSC_Controller_Checkout extends WPSC_Controller {
 	protected $current_step  = '';
 	private $wizard;
 
@@ -181,7 +180,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller
 			return;
 		}
 
-		$submitted_value = $_POST['wpsc_shipping_option' ];
+		$submitted_value = $_POST['wpsc_shipping_option'];
 		$found = false;
 
 		foreach ( $this->shipping_calculator->quotes as $module_name => $quotes ) {
@@ -200,6 +199,8 @@ class WPSC_Controller_Checkout extends WPSC_Controller
 			return;
 
 		$this->wizard->completed_step( 'shipping-method' );
+
+		/* @todo: I _think_ this will be fine, as $module_name should still be defined at this execution path from the loop, but we need to confirm. */
 		$this->shipping_calculator->set_active_method( $module_name, $option );
 		wp_redirect( wpsc_get_checkout_url( $this->wizard->pending_step ) );
 		exit;
