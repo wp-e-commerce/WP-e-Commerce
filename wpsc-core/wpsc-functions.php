@@ -730,7 +730,7 @@ function wpsc_core_get_db_version() {
 }
 
 /**
- *  flush all WPeC temporarry stored data
+ *  flush all WPeC temporary stored data
  *
  * WordPress generallay has two places it stores temporary data, the object cache and the transient store.  When
  * an object cache is configured for WordPress transients are stored in the object cache.  When there isn't an
@@ -750,24 +750,14 @@ function wpsc_core_flush_temporary_data() {
 	 *
 	 * no params
 	 */
-	do_action( 'wpsc_core_flush_temporary_data' );
+	do_action( 'wpsc_core_flush_transients' );
 
-
-	// look at the database and see if there are WPeC transients in the options table.  Note that it is possible to track these,
-	// using WordPress hooks, but because we need to check for transients that are stored by prior releases of WPeC we go right
-	// at the database.
-	global $wpdb;
-
-	$transient_names = $wpdb->get_col( 'SELECT option_name FROM ' . $wpdb->options . ' WHERE `option_name` LIKE "\_transient\_wpsc\_%"' );
+	$our_saved_transients = _wpsc_remembered_transients();
 
 	// strip off the WordPress transient prefix to get the transient name used when storing the transient, then delete it
-	foreach ( $transient_names as $index => $transient_name ) {
-		$transient_name = substr( $transient_name, strlen( '_transient_' ) );
+	foreach ( $our_saved_transients as $index => $transient_name ) {
 		delete_transient( $transient_name );
 	}
-
-	// last but not least flush the object cache
-	wp_cache_flush();
 
 	/**
 	 * Tell the the rest of the WPeC world we have just flushed all temporary data,
@@ -776,6 +766,58 @@ function wpsc_core_flush_temporary_data() {
 	 *
 	 * no params
 	 */
-	do_action( 'wpsc_core_flushed_temporary_data' );
-
+	do_action( 'wpsc_core_flushed_transients' );
 }
+
+/**
+ * Rememeber whenever WPeC saves data in a transient
+ *
+ * @param string $transient
+ * @param varies|null $value
+ * @param int|null $expiration
+ * @return array[string]|false  names of transients saved, false when nothing has been stored
+ */
+function _wpsc_remembered_transients( $transient = '', $value = null, $expiration = null ) {
+	static $wpsc_transients = false;
+
+	if ( $wpsc_transients === false ) {
+
+		// get our saved transients
+		$wpsc_transients = get_option( __FUNCTION__,  false );
+
+		if ( $wpsc_transients === false ) {
+			// look at the database and see if there are WPeC transients in the options table.  Note that it is possible to track these,
+			// using WordPress hooks, but because we need to check for transients that are stored by prior releases of WPeC we go right
+			// at the database.
+			global $wpdb;
+
+			$wpsc_transients_from_db = $wpdb->get_col( 'SELECT option_name FROM ' . $wpdb->options . ' WHERE `option_name` LIKE "\_transient\_wpsc\_%"' );
+
+			$wpsc_transients = array();
+
+			// strip off the WordPress transient prefix to get the transient name used when storing the transient, then delete it
+			foreach ( $wpsc_transients_from_db as $index => $transient_name ) {
+				$transient_name = substr( $transient_name, strlen( '_transient_' ) );
+				$wpsc_transients[$transient_name] = time();
+			}
+
+			// we are all initialized, save our known transients list for later
+			update_option( __FUNCTION__, $wpsc_transients );
+		}
+	}
+
+	// if we are setting a transient, and it is one of ours, and we havn't seen it before, save the name
+	if ( ! empty ( $transient ) ) {
+		if ( strpos( $transient, 'wpsc_' ) === 0 ||  strpos( $transient, '_wpsc_' ) === 0 ) {
+			if ( ! isset( $wpsc_transients[$transient] ) ) {
+				$wpsc_transients[$transient] = time();
+				update_option( __FUNCTION__, $wpsc_transients );
+			}
+		}
+	}
+
+	return $wpsc_transients;
+}
+
+add_action( 'setted_transient', '_wpsc_remembered_transients' , 10, 3 );
+
