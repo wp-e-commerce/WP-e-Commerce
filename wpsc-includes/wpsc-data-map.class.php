@@ -228,13 +228,6 @@ final class WPSC_Data_Map {
 
 					$this->_map_data = array();
 
-					if ( is_array( $this->_map_callback ) ) {
-						$func = $this->_map_callback[1];
-					} else {
-						$func = $this->_map_callback;
-					}
-
-					error_log( 'creating data map by calling function ' . $func );
 					// callback has a single parameter, the data map
 					call_user_func( $this->_map_callback, $this );
 
