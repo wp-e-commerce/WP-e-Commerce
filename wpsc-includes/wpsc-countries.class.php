@@ -1049,7 +1049,7 @@ class WPSC_Countries {
 				}
 			}
 
-			set_transient( self::transient_name(), $mydata, WEEK_IN_SECONDS * 13 );
+			set_transient( self::transient_name(), $mydata );
 
 			self::$_dirty = false;
 		}
@@ -1088,7 +1088,9 @@ class WPSC_Countries {
 		}
 
 		if ( ! $has_data && ( $data !== false ) ) {
-			self::clear_cache();
+			delete_transient( self::transient_name() );
+		} else {
+			self::$_initialized = true;
 		}
 
 		self::$_dirty = false;

@@ -233,8 +233,15 @@ final class WPSC_Data_Map {
 
 					if ( ! is_array( $this->_map_data ) ) {
 						$this->_map_data = array();
-						$this->_dirty    = true;
 					}
+
+					if ( ! empty ( $this->_map_name ) ) {
+						set_transient( $this->_map_name, $this->_map_data );
+					}
+
+					// we just loaded and saved the data, that makes it not dirty
+					$this->_dirty = false;
+
 				} else {
 					if ( is_array( $this->_map_callback ) )  {
 						$function = $this->_map_callback[0] . '::'. $this->_map_callback[1];
@@ -252,9 +259,6 @@ final class WPSC_Data_Map {
 			if ( ! is_array( $this->_map_data ) ) {
 				$this->_map_data = array();
 			}
-
-			// we have not soiled our data, note that
-			$this->_dirty = false;
 		}
 
 		return is_array( $this->_map_data );
