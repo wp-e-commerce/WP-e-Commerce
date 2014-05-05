@@ -220,10 +220,10 @@ function wpsc_update_customer_meta( response ) {
 			// if there are other fields on the current page that are used to change the same meta value then
 			// they need to be updated
 			var selector = '[data-wpsc-meta-key="' + meta_key + '"]';
-
+			
 			jQuery( selector ).each( function( index, value ) {
 				var element_meta_key = wpsc_get_element_meta_key( this );
-
+				
 				if ( element_meta_key != element_that_caused_change_event ) {
 					if ( jQuery(this).is(':checkbox') ) {
 						var boolean_meta_value = meta_value == "1";
@@ -231,6 +231,21 @@ function wpsc_update_customer_meta( response ) {
 							jQuery( this ).attr( 'checked', 'checked' );
 						} else {
 							jQuery( this ).removeAttr( 'checked' );
+						}
+					} else if ( jQuery(this).hasClass('wpsc-region-dropdown') ) {
+						// we are going to skip updating teh region value because the select is dependant on 
+						// the value of other meta, specificially the billing or shipping country.
+						// rather than enforce a field order in the reponse we will take care of it by doing
+						// a second pass through the updates looking for only the region drop downs
+						''
+					} else if ( jQuery(this).hasClass('wpsc-country-dropdown') ) {
+						var current_value = jQuery( this ).val();
+						if ( current_value != meta_value ) {
+							jQuery( this ).val( meta_value );
+
+							// if we are updating a country drop down we need to make sure that 
+							// the correct regions ar in the list before we change the value
+							wpsc_update_regions_list_to_match_country( jQuery( this ) );
 						}
 					} else {
 						var current_value = jQuery( this ).val();
@@ -241,6 +256,31 @@ function wpsc_update_customer_meta( response ) {
 				}
 			});
 		});
+		
+		// this second pass through the properties only looks for region drop downs, thier
+		// contents is dependant on other meta values so we do these after evertything else has 
+		// been done
+		jQuery.each( customer_meta,  function( meta_key, meta_value ) {
+
+			// if there are other fields on the current page that are used to change the same meta value then
+			// they need to be updated
+			var selector = '[data-wpsc-meta-key="' + meta_key + '"]';
+
+			jQuery( selector ).each( function( index, value ) {
+				var element_meta_key = wpsc_get_element_meta_key( this );
+
+				if ( element_meta_key != element_that_caused_change_event ) {
+					if ( jQuery(this).hasClass('wpsc-region-dropdown') ) {
+						var current_value = jQuery( this ).val();
+						if ( current_value != meta_value ) {
+							jQuery( this ).val( meta_value );
+						}
+					}
+				}
+			});
+		});
+		
+		
 	}
 }
 
