@@ -419,7 +419,7 @@ function _wpsc_replace_visitor_meta_keys( $replacements ) {
 	}
 
 	if ( $total_count_updated > 0 ) {
-		wp_cache_flush();
+		wpsc_core_flush_temporary_data();
 	}
 
 	return $total_count_updated;
@@ -523,7 +523,7 @@ function _wpsc_meta_migrate_anonymous_user_cron() {
 		$response = wp_remote_post( admin_url( 'admin-ajax.php' ) . '?action=wpsc_migrate_anonymous_user' , array(  'blocking' => true, ) );
 		wp_schedule_single_event( time() + 30 , 'wpsc_migrate_anonymous_user_cron' );
 	} else {
-		wp_cache_flush();
+		wpsc_core_flush_temporary_data();
 	}
 }
 
