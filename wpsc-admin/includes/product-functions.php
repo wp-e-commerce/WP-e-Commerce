@@ -833,7 +833,7 @@ function wpsc_item_process_file( $product_id, $submitted_file, $preview_file = n
 		'guid'           => $file['url'],
 		'post_parent'    => $product_id,
 		'post_title'     => $name_parts['basename'],
-		'post_content'   => $content,
+		'post_content'   => '',
 		'post_type'      => 'wpsc-product-file',
 		'post_status'    => 'inherit'
 	);
