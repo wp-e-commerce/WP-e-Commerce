@@ -197,7 +197,7 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 
 	// Update the alternative currencies
 	if ( isset( $post_data['wpsc-update-currency-layers'] ) && wp_verify_nonce( $post_data['wpsc-update-currency-layers'], 'update-options' ) ) {
-		
+
 		// Clear currencies before re-saving to make sure deleted currencies are removed
 		update_product_meta( $product_id, 'currency', array() );
 
@@ -582,7 +582,7 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 
 	$variation_sets_and_values = array_merge($variation_sets, $variation_values);
 	$variation_sets_and_values = apply_filters('wpsc_edit_product_variation_sets_and_values', $variation_sets_and_values, $product_id);
-	
+
 	wp_set_object_terms($product_id, $variation_sets_and_values, 'wpsc-variation');
 
 	$parent_id = $_REQUEST['product_id'];
@@ -812,42 +812,35 @@ function wpsc_item_process_file( $product_id, $submitted_file, $preview_file = n
 
 	add_filter( 'upload_dir', 'wpsc_modify_upload_directory' );
 
-	$overrides = array( 'test_form' => false );
+	$time = current_time( 'mysql' );
 
-	$time = current_time('mysql');
 	if ( $post = get_post( $product_id ) ) {
 		if ( substr( $post->post_date, 0, 4 ) > 0 )
 			$time = $post->post_date;
 	}
 
-	$file = wp_handle_upload( $submitted_file, $overrides, $time );
+	$file = wp_handle_upload( $submitted_file, array( 'test_form' => false ), $time );
 
 	if ( isset( $file['error'] ) ) {
 		return new WP_Error( 'upload_error', $file['error'] );
 	}
 
 	$name_parts = pathinfo( $file['file'] );
-	$name       = $name_parts['basename'];
-
-	$url     = $file['url'];
-	$type    = $file['type'];
-	$file    = $file['file'];
-	$title   = $name;
-	$content = '';
 
 	// Construct the attachment array
 	$attachment = array(
-		'post_mime_type' => $type,
-		'guid'           => $url,
+		'post_mime_type' => $file['type'],
+		'guid'           => $file['url'],
 		'post_parent'    => $product_id,
-		'post_title'     => $title,
+		'post_title'     => $name_parts['basename'],
 		'post_content'   => $content,
-		'post_type'      => "wpsc-product-file",
+		'post_type'      => 'wpsc-product-file',
 		'post_status'    => 'inherit'
 	);
 
 	// Save the data
-	$id = wp_insert_attachment( $attachment, $file, $product_id );
+	wp_insert_post( $attachment );
+
 	remove_filter( 'upload_dir', 'wpsc_modify_upload_directory' );
 }
 
