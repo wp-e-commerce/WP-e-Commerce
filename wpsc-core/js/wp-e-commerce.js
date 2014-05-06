@@ -71,6 +71,22 @@ function wpsc_var_get( name ) {
 }
 
 /**
+ * Checks to determine whether or not an element is fully visible
+ *
+ * @since  3.8.14.1
+ * @param  jQuery object el Element being checked for visibility.
+ * @return boolean          Whether or not element is visible.
+ */
+function wpsc_element_is_visible( el ) {
+	var top   = jQuery( window ).scrollTop(),
+	bottom    = docViewTop + jQuery( window ).height(),
+	elTop     = el.offset().top,
+	elBottom  = elTop + el.height();
+
+	return ( (elTop >= top ) && ( elTop <= bottom ) && ( elTop <= bottom ) && ( elTop >= top ) );
+}
+
+/**
  * change the value of a localized WPeC var
  *
  * @since 3.8.14
@@ -220,10 +236,10 @@ function wpsc_update_customer_meta( response ) {
 			// if there are other fields on the current page that are used to change the same meta value then
 			// they need to be updated
 			var selector = '[data-wpsc-meta-key="' + meta_key + '"]';
-			
+
 			jQuery( selector ).each( function( index, value ) {
 				var element_meta_key = wpsc_get_element_meta_key( this );
-				
+
 				if ( element_meta_key != element_that_caused_change_event ) {
 					if ( jQuery(this).is(':checkbox') ) {
 						var boolean_meta_value = wpsc_string_to_boolean( meta_value );
@@ -233,7 +249,7 @@ function wpsc_update_customer_meta( response ) {
 							jQuery( this ).removeAttr( 'checked' );
 						}
 					} else if ( jQuery(this).hasClass('wpsc-region-dropdown') ) {
-						// we are going to skip updating the region value because the select is dependant on 
+						// we are going to skip updating the region value because the select is dependant on
 						// the value of other meta, specifically the billing or shipping country.
 						// rather than enforce a field order in the response we will take care of it by doing
 						// a second pass through the updates looking for only the region drop downs
@@ -243,7 +259,7 @@ function wpsc_update_customer_meta( response ) {
 						if ( current_value != meta_value ) {
 							jQuery( this ).val( meta_value );
 
-							// if we are updating a country drop down we need to make sure that 
+							// if we are updating a country drop down we need to make sure that
 							// the correct regions are in the list before we change the value
 							wpsc_update_regions_list_to_match_country( jQuery( this ) );
 						}
@@ -256,9 +272,9 @@ function wpsc_update_customer_meta( response ) {
 				}
 			});
 		});
-		
+
 		// this second pass through the properties only looks for region drop downs, their
-		// contents is dependant on other meta values so we do these after everything else has 
+		// contents is dependant on other meta values so we do these after everything else has
 		jQuery.each( customer_meta,  function( meta_key, meta_value ) {
 
 			// if there are other fields on the current page that are used to change the same meta value then
@@ -300,7 +316,7 @@ function wpsc_check_for_shipping_recalc_needed( response ) {
 
 				form.before( '<div id="shipping_quotes_need_recalc">' + msg + '</div>' );
 
-				if ( wpsc_ajax.hasOwnProperty( 'slide_to_shipping_error' ) && wpsc_ajax.slide_to_shipping_error ) {
+				if ( wpsc_ajax.hasOwnProperty( 'slide_to_shipping_error' ) && wpsc_ajax.slide_to_shipping_error && ! wpsc_element_is_visible( $( '#shipping_quotes_need_recalc' ) ) ) {
 					jQuery( 'html, body' ).animate({
 						scrollTop : jQuery( '#checkout_page_container' ).offset().top
 					}, 600 );
