@@ -53,7 +53,7 @@ function wpsc_core_constants() {
 
 	// Define Plugin version
 	if ( ! defined( 'WPSC_VERSION' ) ) {
-		define( 'WPSC_VERSION'            , '3.8.14' );
+		define( 'WPSC_VERSION'            , '3.8.14.1-dev' );
 	}
 
 	if ( ! defined( 'WPSC_MINOR_VERSION' ) ) {
@@ -61,7 +61,7 @@ function wpsc_core_constants() {
 	}
 
 	if ( ! defined( 'WPSC_PRESENTABLE_VERSION' ) ) {
-		define( 'WPSC_PRESENTABLE_VERSION', '3.8.14' );
+		define( 'WPSC_PRESENTABLE_VERSION', '3.8.14.1-dev' );
 	}
 
 	// Define a salt to use when we hash, WPSC_SALT may be defined for us in our config file, so check first
