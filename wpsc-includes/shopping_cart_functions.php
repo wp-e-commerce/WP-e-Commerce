@@ -423,10 +423,14 @@ function wpsc_checkout_shipping_state_and_region( $wpsc_checkout = null ) {
 
 	$region_list = $wpsc_country->get_regions();
 
+	$placeholder = $wpsc_country->get( 'region_label' );
+	if ( empty ( $placeholder ) ) {
+		$placeholder = $wpsc_checkout->checkout_item->name;
+	}
 
 	$placeholder = apply_filters(
 									'wpsc_checkout_field_placeholder',
-									apply_filters( 'wpsc_checkout_field_name', $wpsc_checkout->checkout_item->name ),
+									apply_filters( 'wpsc_checkout_field_name',  $placeholder ),
 									$wpsc_checkout->checkout_item
 								);
 
