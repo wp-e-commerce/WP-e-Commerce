@@ -821,36 +821,35 @@ function _wpsc_remembered_transients( $transient = '', $value = null, $expiratio
 
 add_action( 'setted_transient', '_wpsc_remembered_transients' , 10, 3 );
 
-/**
- * When we change versions, aggressively clear temporary data and WordPress cache.
- *
- * @since 3.8.14.1
- *
- * @access private
- */
-function _wpsc_clear_wp_cache_on_version_change() {
+if ( is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+	/**
+	 * when we change versions aggresively clear temporary data and wordpress cache
+	 *
+	 * @since 3.8.14.1
+	 *
+	 * @access private
+	 *
+	 */
+	function _wpsc_clear_wp_cache_on_version_change() {
+		$version_we_last_stored = get_option( __FUNCTION__ , false );
 
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		return;
-	}
+		if ( $version_we_last_stored != WPSC_VERSION ) {
 
-	$version_we_last_stored = get_option( __FUNCTION__, false );
+			// version changed, clear temporary data
+			wpsc_core_flush_temporary_data();
 
-	if ( $version_we_last_stored != WPSC_VERSION ) {
+			// version changed, flush the object cache
+			wp_cache_flush();
 
-		// version changed, clear temporary data
-		wpsc_core_flush_temporary_data();
-
-		// version changed, flush the object cache
-		wp_cache_flush();
-
-		if ( false === $version_we_last_stored ) {
-			// first time through we create the autoload option, we will read it every time
-			add_option( __FUNCTION__, WPSC_VERSION, null, true );
-		} else {
-			update_option( __FUNCTION__, WPSC_VERSION );
+			if ( false === $version_we_last_stored ) {
+				// first time through we create the autoload option, we will read it every time
+				add_option( __FUNCTION__, WPSC_VERSION, null, true );
+			} else {
+				update_option( __FUNCTION__, WPSC_VERSION );
+			}
 		}
 	}
+
+	add_action( 'admin_init', '_wpsc_clear_wp_cache_on_version_change', 1, 0 );
 }
 
-add_action( 'admin_init', '_wpsc_clear_wp_cache_on_version_change', 1 );
