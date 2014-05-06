@@ -620,6 +620,7 @@ class ash_usps {
 		$this->_clean_response( $response );
 
 		$packages = $wpec_ash_xml->get( "Package", $response );
+
 		if ( ! is_array( $packages ) || stripos( $packages[0], '<ERROR>') === 0 ) {
 			// TODO: this is a temporary fix to capture the error message from USPS,
 			// more robust handling is certainly required
@@ -661,13 +662,21 @@ class ash_usps {
 		$this->_clean_response( $response );
 
 		$services = $wpec_ash_xml->get( "Service", $response );
+
 		if ( empty( $services ) ) {
 			return array();
 		}
+
 		foreach ( $services as $service ) {
 			$service_name = $this->_get_service( "SvcDescription", $service );
 			$temp_rate = $wpec_ash_xml->get( "Postage", $service );
-			$rate = ( ! empty( $temp_rate ) ) ? $temp_rate[0] : 0.0;
+
+			if ( ! empty( $temp_rate ) ) {
+				$rate = $temp_rate[0];
+			} else {
+				continue;
+			}
+
 			if ( ! empty( $service_name ) ) {
 				$service_table[ $service_name ] = apply_filters( 'wpsc_usps_intl_rate', $rate, $service_name );
 			}
