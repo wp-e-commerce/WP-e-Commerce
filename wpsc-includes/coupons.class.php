@@ -35,20 +35,22 @@ function wpsc_coupons_error(){
  * @since 3.7
  */
 class wpsc_coupons {
-	var $code;
-	var $value;
-	var $is_percentage;
-	var $conditions;
-	var $start_date;
-	var $active;
-	var $every_product ;
-	var $end_date;
-	var $use_once;
-	var $is_used;
+	public $code;
+	public $value;
+	public $is_percentage;
+	public $conditions;
+	public $start_date;
+	public $active;
+	public $every_product ;
+	public $end_date;
+	public $use_once;
+	public $is_used;
 
-	var $discount;
-		//for error message
-	var $errormsg;
+	public $discount;
+
+	//for error message
+	public $errormsg;
+
 	/**
 	 * Coupons constractor
 	 *
@@ -57,46 +59,46 @@ class wpsc_coupons {
 	 * @param string code (optional) the coupon code you would like to use.
 	 * @return bool True if coupon code exists, False otherwise.
 	 */
-	function wpsc_coupons($code = ''){
+	function wpsc_coupons( $code = '' ){
 	    global $wpdb;
 
-		if ( empty( $code ) )
+		if ( empty( $code ) ) {
 			return false;
+		}
 
 		$this->code = $code;
 
 		$coupon_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_COUPON_CODES."` WHERE coupon_code = %s LIMIT 1", $code ) , ARRAY_A );
 
-		if ( ( $coupon_data == '' ) || ( $coupon_data == null ) || ( strtotime( $coupon_data['expiry'] ) < time() ) ) {
+		if ( empty( $coupon_data ) ) {
 			$this->errormsg = true;
 			wpsc_delete_customer_meta( 'coupon' );
 			return false;
 		} else {
 			$coupon_data = array_merge( array(
-				'value' => '',
+				'value'         => '',
 				'is-percentage' => '',
-				'condition' => '',
-				'is-used' => '',
-				'active' => '',
-				'use-once' => '',
-				'start' => '',
-				'expiry' => '',
+				'condition'     => '',
+				'is-used'       => '',
+				'active'        => '',
+				'use-once'      => '',
+				'start'         => '',
+				'expiry'        => '',
 				'every_product' => ''
 			), $coupon_data );
 
-			$this->value = (float) $coupon_data['value'];
+			$this->value         = (float) $coupon_data['value'];
 			$this->is_percentage = $coupon_data['is-percentage'];
-			$this->conditions = unserialize($coupon_data['condition']);
-			$this->is_used = $coupon_data['is-used'];
-			$this->active = $coupon_data['active'];
-			$this->use_once = $coupon_data['use-once'];
-			$this->start_date = $coupon_data['start'];
-			$this->end_date = $coupon_data['expiry'];
+			$this->conditions    = unserialize($coupon_data['condition']);
+			$this->is_used       = $coupon_data['is-used'];
+			$this->active        = $coupon_data['active'];
+			$this->use_once      = $coupon_data['use-once'];
+			$this->start_date    = $coupon_data['start'];
+			$this->end_date      = $coupon_data['expiry'];
 			$this->every_product = $coupon_data['every_product'];
-			$this->errormsg = false;
-			$valid = $this->validate_coupon();
+			$this->errormsg      = false;
 
-			return $valid;
+			return $this->validate_coupon();
 		}
 
 	}
@@ -109,14 +111,30 @@ class wpsc_coupons {
 	 * @return bool True if coupon is not expried, used and still active, False otherwise.
 	 */
 	function validate_coupon() {
+
 		$now = current_time( 'timestamp', true );
 
-		if ( ($this->active=='1') && !(($this->use_once == '1') && ($this->is_used=='1'))){
-			if ((strtotime($this->start_date) < $now)&&(strtotime($this->end_date) > $now)){
-				return true;
-			}
+		$valid      = true;
+		$start_date = strtotime( $this->start_date );
+		$end_date   = strtotime( $this->end_date );
+
+		if ( '1' != $this->active ) {
+			$valid = false;
 		}
-		return false;
+
+		if ( '1' == $this->use_once && '1' == $this->used ) {
+			$valid = false;
+		}
+
+		if ( $start_date && $now < $start_date ) {
+			$valid = false;
+		}
+
+		if ( $end_date && $now > $end_date ) {
+			$valid = false;
+		}
+
+		return apply_filters( 'wpsc_coupons_validate_coupon', $valid, $this );
 	}
 
 	/**
