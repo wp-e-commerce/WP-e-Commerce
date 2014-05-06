@@ -792,7 +792,7 @@ class ash_ups {
 		// We do not want to spam UPS (and slow down our process) if we already
 		// have a shipping quote!
 		if ( count( $cache['rate_table'] ) >= 1 ) { //$cache['rate_table'] could be array(0)..
-			return $cache['rate_table'];
+			//return $cache['rate_table'];
 		}
 		// Final rate table
 		$rate_table = array();

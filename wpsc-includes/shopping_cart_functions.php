@@ -520,3 +520,77 @@ function wpsc_checkout_shipping_state_and_region( $wpsc_checkout = null ) {
 function wpsc_get_base_country() {
 	return get_option( 'base_country' );
 }
+
+
+/**
+ * Record an error message related to shipping
+ *
+ * @access private
+ *
+ * @since 3.8.14.1
+ *
+ * @param string $message
+ */
+function _wpsc_shipping_add_error_message( $message ) {
+	$shipping_error_messages = wpsc_get_customer_meta( 'shipping_error_messages' );
+	if ( empty ( $shipping_error_messages ) && ! is_array( $shipping_error_messages ) ) {
+		$shipping_error_messages = array();
+	}
+
+	$id = md5( $message );
+	$shipping_error_messages[$id] = $message;
+
+	wpsc_update_customer_meta( 'shipping_error_messages', $shipping_error_messages );
+}
+
+
+/**
+ * clear shipping error messages
+ *
+ * @since 3.8.14.1
+ *
+ * @access private
+ *
+ */
+function _wpsc_clear_shipping_error_messages() {
+	wpsc_delete_customer_meta( 'shipping_error_messages' );
+}
+
+// clear shipping messages before shipping quotes are recalculated
+add_action(  'wpsc_before_get_shipping_method', '_wpsc_clear_shipping_error_messages' );
+
+
+/**
+ * output shipping error messages
+ *
+ * @since 3.8.14.1
+ *
+ * @access private
+ */
+function _wpsc_shipping_error_messages() {
+	$shipping_error_messages = wpsc_get_customer_meta( 'shipping_error_messages' );
+	?>
+	<div class="wpsc-shipping-error_messages">
+	<?php
+	if ( ! empty ( $shipping_error_messages ) ) {
+		foreach ( $shipping_error_messages as $id => $message ) {
+			?>
+			<div class="wpsc-shipping-error_message" id="<?php echo esc_attr( $id );?>">
+			<?php
+				echo esc_html( $message );
+			?>
+			</div>
+			<?php
+		}
+	}
+	?>
+	</div>
+	<?php
+}
+
+// echo shipping error messages on checkout form
+add_action(  'wpsc_before_shipping_of_shopping_cart', '_wpsc_shipping_error_messages' );
+
+
+
+

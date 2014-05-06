@@ -1122,3 +1122,7 @@ background-color: #f5f5f5;
 }
 
 
+.wpsc-shipping-error_messages {
+	color: red;
+	font-weight: bold;
+}
