@@ -122,7 +122,7 @@ class wpsc_coupons {
 			$valid = false;
 		}
 
-		if ( '1' == $this->use_once && '1' == $this->used ) {
+		if ( '1' == $this->use_once && '1' == $this->is_used ) {
 			$valid = false;
 		}
 
