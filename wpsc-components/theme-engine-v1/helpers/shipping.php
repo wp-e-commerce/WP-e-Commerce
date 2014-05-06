@@ -97,9 +97,9 @@ function wpsc_shipping_quote_selected_state() {
    global $wpsc_cart;
    if(($wpsc_cart->selected_shipping_method == $wpsc_cart->shipping_method) && ($wpsc_cart->selected_shipping_option == $wpsc_cart->shipping_quote['name']) ) {
 	  $wpsc_cart->selected_shipping_amount = $wpsc_cart->base_shipping;
-      return "checked='checked'";
+	  return "checked='checked'";
    } else {
-      return "";
+	  return "";
    }
 }
 
