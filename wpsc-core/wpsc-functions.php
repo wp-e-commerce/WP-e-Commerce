@@ -830,11 +830,11 @@ add_action( 'setted_transient', '_wpsc_remembered_transients' , 10, 3 );
  */
 function _wpsc_clear_wp_cache_on_version_change() {
 
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 		return;
 	}
 
-	$version_we_last_stored = get_option( __FUNCTION__ , false );
+	$version_we_last_stored = get_option( __FUNCTION__, false );
 
 	if ( $version_we_last_stored != WPSC_VERSION ) {
 
