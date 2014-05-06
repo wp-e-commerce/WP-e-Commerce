@@ -79,11 +79,11 @@ function wpsc_var_get( name ) {
  */
 function wpsc_element_is_visible( el ) {
 	var top   = jQuery( window ).scrollTop(),
-	bottom    = docViewTop + jQuery( window ).height(),
+	bottom    = top + jQuery( window ).height(),
 	elTop     = el.offset().top,
 	elBottom  = elTop + el.height();
 
-	return ( (elTop >= top ) && ( elTop <= bottom ) && ( elTop <= bottom ) && ( elTop >= top ) );
+	return ( (elTop >= top ) && ( elTop <= bottom ) && ( elTop <= bottom ) && ( elTop >= top ) ) && el.is( ':visible' );
 }
 
 /**
@@ -919,7 +919,7 @@ function wpsc_get_value_from_wpsc_meta_element( meta ) {
 			meta_value = element.val();
 		} else {
 			meta_value = '';
-		} 
+		}
 	} else if ( element.is('select') ) {
 		meta_value = element.find( 'option:selected' ).val();
 		var select_meta_value = element.val();
