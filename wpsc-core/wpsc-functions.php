@@ -755,7 +755,7 @@ function wpsc_core_flush_temporary_data() {
 	$our_saved_transients = _wpsc_remembered_transients();
 
 	// strip off the WordPress transient prefix to get the transient name used when storing the transient, then delete it
-	foreach ( $our_saved_transients as $index => $transient_name ) {
+	foreach ( $our_saved_transients as $transient_name => $timestamp ) {
 		delete_transient( $transient_name );
 	}
 
