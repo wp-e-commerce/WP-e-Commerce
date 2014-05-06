@@ -620,7 +620,11 @@ class ash_usps {
 		$this->_clean_response( $response );
 
 		$packages = $wpec_ash_xml->get( "Package", $response );
-		if ( ! is_array( $packages ) ) {
+		if ( ! is_array( $packages ) || stripos( $packages[0], '<ERROR>') === 0 ) {
+			// TODO: this is a temporary fix to capture the error message from USPS,
+			// more robust handling is certainly required
+			$message = $wpec_ash_xml->get( "Description",  $packages[0] );
+			_wpsc_shipping_add_error_message( $message[0] );
 			return array();
 		}
 
@@ -663,7 +667,13 @@ class ash_usps {
 		foreach ( $services as $service ) {
 			$service_name = $this->_get_service( "SvcDescription", $service );
 			$temp_rate = $wpec_ash_xml->get( "Postage", $service );
-			$rate = ( ! empty( $temp_rate ) ) ? $temp_rate[0] : 0.0;
+
+			if ( ! empty( $temp_rate ) ) {
+				$rate = $temp_rate[0];
+			} else {
+				continue;
+			}
+
 			if ( ! empty( $service_name ) ) {
 				$service_table[ $service_name ] = apply_filters( 'wpsc_usps_intl_rate', $rate, $service_name );
 			}
@@ -979,33 +989,29 @@ class ash_usps {
 		if ( ! $data['intl_rate'] && $data['dest_country'] != get_option( 'base_country' ) ) {
 			return array();
 		}
+
 		// If ths zip code is provided via a form post use it!
-		$data["dest_zipcode"] = (string) wpsc_get_customer_meta( 'shipping_zip' );
-		if ( isset( $_POST['zipcode'] ) && ( $_POST['zipcode'] != __( "Your Zipcode", 'wpsc' ) && $_POST['zipcode'] != "YOURZIPCODE" ) ) {
-			$data["dest_zipcode"] = esc_attr( $_POST['zipcode'] );
-		}
-		if ( in_array( $data["dest_zipcode"], array( __( 'Your Zipcode', 'wpsc' ), 'YOURZIPCODE' ) ) ) {
-			$data["dest_zipcode"] = '';
-		}
-		if ( ! empty( $data["dest_zipcode"] ) ) {
-			wpsc_update_customer_meta( 'shipping_zip', $data["dest_zipcode"] );
-		}
+		$data["dest_zipcode"] = (string) wpsc_get_customer_meta( 'shippingpostcode' );
+
 		if ( ! is_object( $wpec_ash_tools ) ) {
 			$wpec_ash_tools = new ASHTools();
 		}
+
 		if ( empty( $data["dest_zipcode"] ) && $wpec_ash_tools->needs_post_code( $data["dest_country"] ) ) {
 			// We cannot get a quote without a zip code so might as well return!
 			return array();
 		}
+
 		//*** Grab Total Weight from the shipment object for simple shipping
 		$data["weight"] = wpsc_cart_weight_total();
 		if ( empty( $data["weight"] ) ) {
 			return array();
 		}
+
+
 		// If the region code is provided via a form post use it!
 		if ( isset( $_POST['region'] ) && ! empty( $_POST['region'] ) ) {
 			$data['dest_state'] = wpsc_get_region( $_POST['region'] );
-			wpsc_update_customer_meta( 'shipping_state', $data['dest_state'] ); //Unify state meta.
 		} else if ( $dest_state = wpsc_get_customer_meta( 'shipping_state' ) ) {
 			// Well, we have a zip code in the session and no new one provided
 			$data['dest_state'] = $dest_state;
@@ -1066,9 +1072,7 @@ class ash_usps {
 		//************ GET THE RATE ************\\
 		$rate_table = apply_filters( 'wpsc_rates_table', $this->_run_quote( $data ), $data, $this->shipment );
 		//Avoid trying getting rates again and again when the stored zipcode is incorrect.
-		if ( count( $rate_table ) == 0 ) {
-			wpsc_update_customer_meta( 'shipping_zip', '' );
-		}
+
 		//************ CACHE the Results ************\\
 		$wpec_ash->cache_results( $this->internal_name, $rate_table, $this->shipment );
 		return $rate_table;
