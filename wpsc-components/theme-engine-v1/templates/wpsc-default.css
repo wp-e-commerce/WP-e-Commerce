@@ -1116,13 +1116,8 @@ background-color: #f5f5f5;
 	font-size: 14px;
 }
 
-#shipping_quotes_need_recalc{
+#shipping_quotes_need_recalc,
+.wpsc-shipping-error_messages {
 	color:red;
 	font-weight:bold;
-}
-
-
-.wpsc-shipping-error_messages {
-	color: red;
-	font-weight: bold;
 }

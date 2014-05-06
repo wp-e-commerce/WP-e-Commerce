@@ -570,12 +570,12 @@ add_action(  'wpsc_before_get_shipping_method', '_wpsc_clear_shipping_error_mess
 function _wpsc_shipping_error_messages() {
 	$shipping_error_messages = wpsc_get_customer_meta( 'shipping_error_messages' );
 	?>
-	<div class="wpsc-shipping-error_messages">
+	<div class="wpsc-shipping-error_messages error">
 	<?php
 	if ( ! empty ( $shipping_error_messages ) ) {
 		foreach ( $shipping_error_messages as $id => $message ) {
 			?>
-			<div class="wpsc-shipping-error_message" id="<?php echo esc_attr( $id );?>">
+			<div class="wpsc-shipping-error_message error" id="<?php echo esc_attr( $id );?>">
 			<?php
 				echo esc_html( $message );
 			?>
@@ -588,9 +588,4 @@ function _wpsc_shipping_error_messages() {
 	<?php
 }
 
-// echo shipping error messages on checkout form
-add_action(  'wpsc_before_shipping_of_shopping_cart', '_wpsc_shipping_error_messages' );
-
-
-
-
+add_action( 'wpsc_before_shipping_of_shopping_cart', '_wpsc_shipping_error_messages' );
