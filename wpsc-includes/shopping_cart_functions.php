@@ -301,16 +301,22 @@ function wpsc_checkout_billing_state_and_region( $wpsc_checkout = null ) {
 		$style = 'style="display: none;"';
 	}
 
+	$placeholder = $wpsc_country->get( 'region_label' );
+	if ( empty ( $placeholder ) ) {
+		$placeholder = $wpsc_checkout->checkout_item->name;
+	}
+
 	$placeholder = apply_filters(
 									'wpsc_checkout_field_placeholder',
-									apply_filters( 'wpsc_checkout_field_name', $wpsc_checkout->checkout_item->name ),
+									apply_filters( 'wpsc_checkout_field_name', $placeholder ),
 									$wpsc_checkout->checkout_item
 								);
 
-	$output = '<input data-wpsc-meta-key="' . $wpsc_checkout->checkout_item->unique_name. '" title="'
-				. $wpsc_checkout->checkout_item->unique_name
+	$output = '<input data-wpsc-meta-key="' . $wpsc_checkout->checkout_item->unique_name. '" '
+				. ' type="text" '
+					. ' title="'. $wpsc_checkout->checkout_item->unique_name . '" '
 					. $id_attribute
-						. ' class="shipping_region wpsc-visitor-meta" '
+							. ' class="shipping_region wpsc-visitor-meta" '
 							. 'name="collected_data['. $wpsc_checkout->checkout_item->id . ']" '
 								. ' placeholder="'. esc_attr( $placeholder ) . '" '
 									. ' value="' . esc_attr( $billing_state ) . '" '
@@ -337,7 +343,7 @@ function wpsc_checkout_billing_state_and_region( $wpsc_checkout = null ) {
 	$output .= '<select '
 					. 'id="' . $region_form_id . '" '
 						. ' class="current_region wpsc-visitor-meta wpsc-region-dropdown" data-wpsc-meta-key="' . $title
-							. '"  title="' . $title
+							. '"  title="' . $title . '" '
 								. 'name="collected_data['. $wpsc_checkout->checkout_item->id . ']" '
 									. $style
 										. ">\n\r ";
@@ -520,7 +526,6 @@ function wpsc_checkout_shipping_state_and_region( $wpsc_checkout = null ) {
 function wpsc_get_base_country() {
 	return get_option( 'base_country' );
 }
-
 
 /**
  * Record an error message related to shipping

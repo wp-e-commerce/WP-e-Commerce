@@ -80,8 +80,7 @@ function wpsc_var_get( name ) {
 function wpsc_element_is_visible( el ) {
 	var top   = jQuery( window ).scrollTop(),
 	bottom    = top + jQuery( window ).height(),
-	elTop     = el.offset().top,
-	elBottom  = elTop + el.height();
+	elTop     = el.offset().top;
 
 	return ( (elTop >= top ) && ( elTop <= bottom ) && ( elTop <= bottom ) && ( elTop >= top ) ) && el.is( ':visible' );
 }
@@ -651,7 +650,7 @@ function wpsc_update_regions_list_to_match_country( country_select ) {
 
 	if ( wpsc_country_has_regions( country_code ) ) {
 		var select_a_region_message = wpsc_no_region_selected_message( country_code );
-		var regions = wpsc_country_regions( country_code )
+		var regions = wpsc_country_regions( country_code );
 		all_region_selects.empty();
 		all_region_selects.append( new Option( select_a_region_message, '' ) );
 		for ( var region_code in regions ) {
@@ -684,7 +683,7 @@ function wpsc_string_to_boolean( string ) {
  */
 function wpsc_change_regions_when_country_changes() {
 	wpsc_copy_meta_value_to_similiar( jQuery( this ) );
-	wpsc_update_regions_list_to_match_country( jQuery( this ) )
+	wpsc_update_regions_list_to_match_country( jQuery( this ) );
 	return true;
 }
 
@@ -692,7 +691,6 @@ function wpsc_copy_meta_value_to_similiar( element ) {
 
 	var element_meta_key = wpsc_get_element_meta_key( element ),
 		meta_value = element.val(),
-		element_html = element.html(),
 		current_value;
 
 	// if there are other fields on the current page that are used to change the same meta value then
@@ -709,10 +707,6 @@ function wpsc_copy_meta_value_to_similiar( element ) {
 				} else {
 					jQuery( this ).removeAttr( 'checked' );
 				}
-			} if ( jQuery(this).is('select') ) {
-				current_value = jQuery( this ).val();
-				jQuery( this ).html( element_html );
-				jQuery( this ).val( meta_value );
 			} else {
 				current_value = jQuery( this ).val();
 				if ( current_value != meta_value ) {
@@ -763,8 +757,6 @@ function wpsc_show_checkout_shipping_fields() {
 }
 
 function wpsc_setup_region_dropdowns() {
-
-	var country_elements = wpsc_get_wpsc_meta_elements( 'billingcountry' ) ;
 
 	wpsc_get_wpsc_meta_elements( 'billingcountry' ).each( function( index, value ){
 		 wpsc_update_regions_list_to_match_country( jQuery( this ) );
@@ -842,7 +834,7 @@ function wpsc_current_destination_country() {
 }
 
 function wpsc_no_region_selected_message( country_code ) {
-	var label = wpsc_country_region_label( country_code )
+	var label = wpsc_country_region_label( country_code );
 	var format = wpsc_var_get( 'no_region_selected_format' );
 	var message = format.replace("%s",label);
 	return message;
@@ -922,7 +914,6 @@ function wpsc_get_value_from_wpsc_meta_element( meta ) {
 		}
 	} else if ( element.is('select') ) {
 		meta_value = element.find( 'option:selected' ).val();
-		var select_meta_value = element.val();
 	} else 	{
 		meta_value = element.val();
 	}
@@ -943,7 +934,7 @@ function wpsc_country_region_element( country ) {
 		country = wpsc_get_wpsc_meta_element( country );
 	}
 
-	var country_id = country.attr('id')
+	var country_id = country.attr('id');
 	var region_id = country_id + "_region";
 	var region_select = jQuery( "#" + region_id );
 
@@ -969,7 +960,6 @@ function wpsc_checkout_item_active( $checkout_item ) {
 
 
 function wpsc_billing_country_has_regions() {
-	var billing_country_active = wpsc_checkout_item_active( 'billingcountry' );
 	var has_regions = false;
 
 	var country_code = wpsc_billing_country();
@@ -983,7 +973,6 @@ function wpsc_billing_country_has_regions() {
 
 function wpsc_billing_country() {
 	var billing_country_active = wpsc_checkout_item_active( 'billingcountry' );
-	var has_regions = false;
 
 	var country_code;
 
@@ -999,7 +988,6 @@ function wpsc_billing_country() {
 
 function wpsc_shipping_country() {
 	var shipping_country_active = wpsc_checkout_item_active( 'shippingcountry' );
-	var has_regions = false;
 
 	var country_code;
 
@@ -1014,7 +1002,6 @@ function wpsc_shipping_country() {
 
 
 function wpsc_shipping_country_has_regions() {
-	var shipping_country_active = wpsc_checkout_item_active( 'shippingcountry' );
 	var has_regions = false;
 
 	var country_code = wpsc_shipping_country();
@@ -1066,6 +1053,7 @@ jQuery(document).ready(function ($) {
 	}
 
 	// setup checkout form and make sure visibility of form elements is what it should be
+	wpsc_setup_region_dropdowns();
 	wpsc_adjust_checkout_form_element_visibility();
 	wpsc_update_location_elements_visibility();
 	wpsc_countries_lists_handle_restrictions();
