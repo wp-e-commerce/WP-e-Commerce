@@ -339,14 +339,14 @@ class wpsc_cart {
 					$this->selected_shipping_option = false;
 					$this->shipping_quote_count     = 0;
 
-					$raw_quotes = array();
-
 					foreach ( (array) $custom_shipping as $shipping_module ) {
-						if ( empty( $wpsc_shipping_modules[$shipping_module] ) || ! is_callable( array( $wpsc_shipping_modules[$shipping_module], 'getQuote' ) ) ) {
+
+						if ( empty( $wpsc_shipping_modules[ $shipping_module ] ) || ! is_callable( array( $wpsc_shipping_modules[ $shipping_module ], 'getQuote' ) ) ) {
 							continue;
 						}
 
-						$raw_quotes = $wpsc_shipping_modules[$shipping_module]->getQuote();
+						$raw_quotes = $wpsc_shipping_modules[ $shipping_module ]->getQuote();
+
 						if ( empty( $raw_quotes ) || ! is_array( $raw_quotes ) ) {
 							continue;
 						}
