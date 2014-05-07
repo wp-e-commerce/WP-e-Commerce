@@ -339,10 +339,6 @@ class wpsc_cart {
 					$this->selected_shipping_option = false;
 					$this->shipping_quote_count     = 0;
 
-					// select the shipping quote with lowest value
-					$min_value  = false;
-					$min_quote  = '';
-					$min_method = '';
 					$raw_quotes = array();
 
 					foreach ( (array) $custom_shipping as $shipping_module ) {
@@ -359,6 +355,15 @@ class wpsc_cart {
 					if ( is_array( $raw_quotes ) ) {
 						$this->shipping_quotes      = array_merge( $this->shipping_quotes, $raw_quotes );
 						$this->shipping_quote_count = count( $this->shipping_quotes );
+					}
+				}
+
+				if ( 1 == count( $this->shipping_methods ) ) {
+					$this->selected_shipping_method = $this->shipping_methods[0];
+
+					if ( 1 == count( $this->shipping_quotes ) ) {
+						reset( $this->shipping_quotes );
+						$this->selected_shipping_option = key( $this->shipping_quotes );
 					}
 				}
 
