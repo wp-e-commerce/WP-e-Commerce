@@ -313,7 +313,8 @@ function wpsc_check_for_shipping_recalc_needed( response ) {
 
 			if ( ! jQuery( '#shipping_quotes_need_recalc').length ) {
 
-				form.before( '<div id="shipping_quotes_need_recalc">' + msg + '</div>' );
+				form.before( '<div id="shipping_quotes_need_recalc" style="display:none">' + msg + '</div>' );
+				jQuery( '#shipping_quotes_need_recalc' ).show( 375 );
 
 				if ( wpsc_ajax.hasOwnProperty( 'slide_to_shipping_error' ) && wpsc_ajax.slide_to_shipping_error && ! wpsc_element_is_visible( jQuery( '#shipping_quotes_need_recalc' ) ) ) {
 					jQuery( 'html, body' ).animate({
@@ -324,10 +325,10 @@ function wpsc_check_for_shipping_recalc_needed( response ) {
 			}
 
 			jQuery( 'input:radio[name=shipping_method]' ).prop('checked', false).attr('disabled',true);
-			jQuery( 'input:radio[name=shipping_method]' ).closest( 'tr' ).hide();
-			jQuery( 'tr.wpsc_shipping_header' ).hide();
-			jQuery( '.wpsc_checkout_table_totals' ).hide();
-			jQuery( '.total_tax' ).closest( 'table' ).hide();
+			jQuery( 'input:radio[name=shipping_method]' ).closest( 'tr' ).hide( 275 );
+			jQuery( 'tr.wpsc_shipping_header' ).hide( 275 );
+			jQuery( '.wpsc_checkout_table_totals' ).hide( 275 );
+			jQuery( '.total_tax' ).closest( 'table' ).hide( 275 );
 		}
 	}
 
@@ -660,11 +661,11 @@ function wpsc_update_regions_list_to_match_country( country_select ) {
 			  all_region_selects.append( new Option( region_name, region_code ) );
 		  }
 		}
-		
+
 		if ( region ) {
 			all_region_selects.val( region );
 		}
-		
+
 		region_select.show();
 	} else {
 		region_select.hide();
