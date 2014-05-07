@@ -319,22 +319,22 @@ class wpsc_cart {
 					}
 				} else {
 
-					$raw_quotes = array();
-
 					foreach ( (array) $custom_shipping as $shipping_module ) {
-						if ( empty( $wpsc_shipping_modules[$shipping_module] ) || ! is_callable( array( $wpsc_shipping_modules[$shipping_module], 'getQuote' ) ) ) {
+
+						if ( empty( $wpsc_shipping_modules[ $shipping_module ] ) || ! is_callable( array( $wpsc_shipping_modules[ $shipping_module ], 'getQuote' ) ) ) {
 							continue;
 						}
 
-						$raw_quotes = $wpsc_shipping_modules[$shipping_module]->getQuote();
+						$raw_quotes = $wpsc_shipping_modules[ $shipping_module ]->getQuote();
+
 						if ( empty( $raw_quotes ) || ! is_array( $raw_quotes ) ) {
 							continue;
 						}
-					}
 
-					if ( is_array( $raw_quotes ) ) {
-						$this->shipping_quotes      = array_merge( $this->shipping_quotes, $raw_quotes );
-						$this->shipping_quote_count = count( $this->shipping_quotes );
+						if ( is_array( $raw_quotes ) ) {
+							$this->shipping_quotes      = array_merge( $this->shipping_quotes, $raw_quotes );
+							$this->shipping_quote_count = count( $this->shipping_quotes );
+						}
 					}
 				}
 
