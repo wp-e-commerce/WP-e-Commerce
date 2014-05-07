@@ -329,9 +329,15 @@ class wpsc_cart {
 
 					// use the selected shipping module
 					if ( is_callable( array( &$wpsc_shipping_modules[ $this->selected_shipping_method ], 'getQuote'  ) ) ) {
-						$this->shipping_quotes = $wpsc_shipping_modules[ $this->selected_shipping_method ]->getQuote();
+						$this->shipping_quotes      = $wpsc_shipping_modules[ $this->selected_shipping_method ]->getQuote();
+						$this->shipping_quote_count = count( $this->shipping_quotes );
 					}
 				} else {
+
+					$this->selected_shipping_method = false;
+					$this->shipping_quotes          = array();
+					$this->selected_shipping_option = false;
+					$this->shipping_quote_count     = 0;
 
 					// select the shipping quote with lowest value
 					$min_value  = false;
@@ -348,20 +354,11 @@ class wpsc_cart {
 						if ( empty( $raw_quotes ) || ! is_array( $raw_quotes ) ) {
 							continue;
 						}
-
-						foreach ( $raw_quotes as $name => $value ) {
-							if ( $min_value === false || $value < $min_value ) {
-								$min_value  = $value;
-								$min_quote  = $name;
-								$min_method = $shipping_module;
-							}
-						}
 					}
 
-					if ( is_array( $raw_quotes ) && 1 == count( $raw_quotes ) ) {
-						$this->selected_shipping_method = $min_method;
-						$this->shipping_quotes          = $wpsc_shipping_modules[$this->selected_shipping_method]->getQuote();
-						$this->selected_shipping_option = $min_quote;
+					if ( is_array( $raw_quotes ) ) {
+						$this->shipping_quotes      = array_merge( $this->shipping_quotes, $raw_quotes );
+						$this->shipping_quote_count = count( $this->shipping_quotes );
 					}
 				}
 
