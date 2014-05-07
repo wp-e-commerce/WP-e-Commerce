@@ -147,13 +147,13 @@ function wpsc_have_morethanone_shipping_quote(){
 	return count( $wpsc_cart->shipping_quotes ) > 1;
 }
 
-function wpsc_have_morethanone_shipping_methods_and_quotes(){
+function wpsc_have_morethanone_shipping_methods_and_quotes() {
    global $wpsc_cart;
 
    if(count($wpsc_cart->shipping_quotes) > 1 || count($wpsc_cart->shipping_methods) > 1 || count($wpsc_cart->shipping_quotes) == $wpsc_cart->shipping_quote_count){
-	  return true;
+	 return true;
    }else{
-	  return false;
+	 return false;
    }
 }
 /**
@@ -161,10 +161,21 @@ function wpsc_have_morethanone_shipping_methods_and_quotes(){
  *
  * @return bool
  */
-function wpsc_have_shipping_quote(){
-   global $wpsc_cart;
-   if ($wpsc_cart->shipping_quote_count > 0 || count($wpsc_cart->shipping_quotes) > 0) {
-	  return true;
-   }
-   return false;
+function wpsc_have_shipping_quote() {
+
+	$has_quote = false;
+
+	$country = wpsc_get_customer_meta( 'shippingcountry' );
+
+	if ( empty( $country ) ) {
+		$has_quote = true;
+	}
+
+	global $wpsc_cart;
+
+	if ( $wpsc_cart->shipping_quote_count > 0 || count( $wpsc_cart->shipping_quotes ) > 0 ) {
+		$has_quote = true;
+	}
+
+	return $has_quote;
 }
