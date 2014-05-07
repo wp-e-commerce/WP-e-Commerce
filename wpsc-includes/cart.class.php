@@ -305,7 +305,7 @@ class wpsc_cart {
 
 		if ( ! $do_not_use_shipping ) {
 
-			if ( $ready_to_calculate_shipping && ( $this->shipping_method_count > 0 )  && $ready_to_calculate_shipping ) {
+			if ( $this->shipping_method_count > 0 && $ready_to_calculate_shipping ) {
 				do_action( 'wpsc_before_get_shipping_method', $this );
 
 				$shipping_quotes = null;
