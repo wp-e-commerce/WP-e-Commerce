@@ -350,11 +350,11 @@ class wpsc_cart {
 						if ( empty( $raw_quotes ) || ! is_array( $raw_quotes ) ) {
 							continue;
 						}
-					}
 
-					if ( is_array( $raw_quotes ) ) {
-						$this->shipping_quotes      = array_merge( $this->shipping_quotes, $raw_quotes );
-						$this->shipping_quote_count = count( $this->shipping_quotes );
+						if ( is_array( $raw_quotes ) ) {
+							$this->shipping_quotes      = array_merge( $this->shipping_quotes, $raw_quotes );
+							$this->shipping_quote_count = count( $this->shipping_quotes );
+						}
 					}
 				}
 
