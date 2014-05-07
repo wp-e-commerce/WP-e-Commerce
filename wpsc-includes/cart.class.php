@@ -332,7 +332,9 @@ class wpsc_cart {
 						}
 
 						if ( is_array( $raw_quotes ) ) {
-							$this->shipping_quotes      = array_merge( $this->shipping_quotes, $raw_quotes );
+							foreach ( $raw_quotes as $key => $value ) {
+								$this->shipping_quotes[$wpsc_shipping_modules[ $shipping_module ]->name. ' ' . $key] = $value;
+							}
 							$this->shipping_quote_count = count( $this->shipping_quotes );
 						}
 					}
