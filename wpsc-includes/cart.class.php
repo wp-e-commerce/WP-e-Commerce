@@ -287,15 +287,7 @@ class wpsc_cart {
 	function get_shipping_method() {
 		global $wpsc_shipping_modules;
 
-		// Reset all the shipping data in case the destination has changed
-		$this->selected_shipping_method = null;
-		$this->selected_shipping_option = null;
-		$this->shipping_option          = null;
-		$this->shipping_method          = null;
-		$this->shipping_methods         = array();
-		$this->shipping_quotes          = array();
-		$this->shipping_quote           = null;
-		$this->shipping_method_count    = 0;
+		$this->clear_shipping_info();
 
 		// set us up with a shipping method.
 		$custom_shipping = get_option( 'custom_shipping_options' );
@@ -313,14 +305,7 @@ class wpsc_cart {
 
 		if ( ! $do_not_use_shipping ) {
 
-			if ( ! $ready_to_calculate_shipping ) {
-
-				$this->selected_shipping_method = false;
-				$this->shipping_quotes          = array();
-				$this->selected_shipping_option = false;
-				$this->shipping_quote_count     = 0;
-
-			} elseif ( ( $this->shipping_method_count > 0 )  && $ready_to_calculate_shipping ) {
+			if ( $ready_to_calculate_shipping && ( $this->shipping_method_count > 0 )  && $ready_to_calculate_shipping ) {
 				do_action( 'wpsc_before_get_shipping_method', $this );
 
 				$shipping_quotes = null;
@@ -333,11 +318,6 @@ class wpsc_cart {
 						$this->shipping_quote_count = count( $this->shipping_quotes );
 					}
 				} else {
-
-					$this->selected_shipping_method = false;
-					$this->shipping_quotes          = array();
-					$this->selected_shipping_option = false;
-					$this->shipping_quote_count     = 0;
 
 					foreach ( (array) $custom_shipping as $shipping_module ) {
 

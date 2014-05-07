@@ -113,6 +113,14 @@ function wpsc_shipping_quote_selected_state() {
 function wpsc_have_morethanone_shipping_quote(){
 	global $wpsc_cart, $wpsc_shipping_modules;
 
+	// TODO: This is a hack do avoid breaking themes that rely on this function to decide whether or not to display
+	// the shipping calculator.  Sadly our logic flow recalculates quotes for the currently selected shipping method on checkout
+	// and overwrites all of the quotes in the cart.  When there is an error on checkout the quotes that where originally presented
+	// have been vanquished to the netherworld.  So we are going to recalculate every time this function is called, which hopefully
+	// is only when the checkout page is displayed.
+	//
+	$wpsc_cart->get_shipping_method();
+
 	// if it's fixed rate shipping, and all the prices are the same, then there aren't really options.
 	if ( count( $wpsc_cart->shipping_methods ) == 1 && $wpsc_cart->shipping_methods[0] == 'flatrate' ) {
 		$last_price       = false;
