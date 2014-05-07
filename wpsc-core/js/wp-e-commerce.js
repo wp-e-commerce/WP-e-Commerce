@@ -647,6 +647,7 @@ function wpsc_update_regions_list_to_match_country( country_select ) {
 	var region_select      = wpsc_country_region_element( country_select );
 	var all_region_selects = wpsc_get_wpsc_meta_elements( region_meta_key );
 	var country_code       = wpsc_get_value_from_wpsc_meta_element( country_select );
+	var region             = wpsc_get_value_from_wpsc_meta_element( region_meta_key );
 
 	if ( wpsc_country_has_regions( country_code ) ) {
 		var select_a_region_message = wpsc_no_region_selected_message( country_code );
@@ -659,7 +660,11 @@ function wpsc_update_regions_list_to_match_country( country_select ) {
 			  all_region_selects.append( new Option( region_name, region_code ) );
 		  }
 		}
-
+		
+		if ( region ) {
+			all_region_selects.val( region );
+		}
+		
 		region_select.show();
 	} else {
 		region_select.hide();
