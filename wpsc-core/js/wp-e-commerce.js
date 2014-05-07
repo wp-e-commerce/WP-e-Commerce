@@ -316,7 +316,7 @@ function wpsc_check_for_shipping_recalc_needed( response ) {
 
 				form.before( '<div id="shipping_quotes_need_recalc">' + msg + '</div>' );
 
-				if ( wpsc_ajax.hasOwnProperty( 'slide_to_shipping_error' ) && wpsc_ajax.slide_to_shipping_error && ! wpsc_element_is_visible( $( '#shipping_quotes_need_recalc' ) ) ) {
+				if ( wpsc_ajax.hasOwnProperty( 'slide_to_shipping_error' ) && wpsc_ajax.slide_to_shipping_error && ! wpsc_element_is_visible( jQuery( '#shipping_quotes_need_recalc' ) ) ) {
 					jQuery( 'html, body' ).animate({
 						scrollTop : jQuery( '#checkout_page_container' ).offset().top
 					}, 600 );
