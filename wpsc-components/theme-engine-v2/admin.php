@@ -1,7 +1,7 @@
 <?php
 
 define( 'WPSC_TE_V2_CSS_URL', WPSC_TE_V2_URL . '/admin/css' );
-define( 'WPSC_TE_V2_JS_URL', WPSC_TE_V2_URL . '/admin/js' );
+define( 'WPSC_TE_V2_JS_URL' , WPSC_TE_V2_URL . '/admin/js' );
 
 add_action( 'wpsc_register_settings_tabs', '_wpsc_te2_register_settings_tabs', 10, 1 );
 add_action( 'wpsc_load_settings_tab_class', '_wpsc_te2_load_settings_tab_class', 10, 1 );

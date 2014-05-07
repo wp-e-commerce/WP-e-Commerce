@@ -806,5 +806,15 @@ function wpsc_3882_database_updates() {
 
 	// Update option to database to indicate that we have patched this.
 	update_option( 'wpsc_version', '3.8.8.2' );
+}
 
+function wpsc_theme_engine_v2_activate() {
+	$path = WPSC_FILE_PATH . '/wpsc-components/theme-engine-v2';
+	require_once( $path . '/core.php' );
+	_wpsc_te_v2_includes();
+	wpsc_register_post_types();
+	flush_rewrite_rules( true );
+	update_option( 'transact_url', wpsc_get_checkout_url( 'results' ) );
+	WPSC_Settings::get_instance();
+	do_action( 'wpsc_te2_activate' );
 }

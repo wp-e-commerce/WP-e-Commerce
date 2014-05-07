@@ -1,11 +1,11 @@
 <?php
 
-define( 'WPSC_TE_V2_PATH', dirname( __FILE__ ) );
-define( 'WPSC_TE_V2_CLASSES_PATH', WPSC_TE_V2_PATH . '/classes' );
-define( 'WPSC_TE_V2_HELPERS_PATH', WPSC_TE_V2_PATH . '/helpers' );
+define( 'WPSC_TE_V2_PATH'         , dirname( __FILE__ ) );
+define( 'WPSC_TE_V2_CLASSES_PATH' , WPSC_TE_V2_PATH . '/classes' );
+define( 'WPSC_TE_V2_HELPERS_PATH' , WPSC_TE_V2_PATH . '/helpers' );
 define( 'WPSC_TE_V2_SNIPPETS_PATH', WPSC_TE_V2_PATH . '/snippets' );
-define( 'WPSC_TE_V2_THEMING_PATH', WPSC_TE_V2_PATH . '/theming' );
-define( 'WPSC_TE_V2_URL', plugins_url( '', __FILE__ ) );
+define( 'WPSC_TE_V2_THEMING_PATH' , WPSC_TE_V2_PATH . '/theming' );
+define( 'WPSC_TE_V2_URL'          , plugins_url( '', __FILE__ ) );
 
 add_action( 'wpsc_includes', '_wpsc_te_v2_includes' );
 add_filter(
@@ -38,8 +38,9 @@ function _wpsc_te_v2_includes() {
 	require_once( WPSC_TE_V2_HELPERS_PATH . '/shortcodes.php' );
 	require_once( WPSC_TE_V2_HELPERS_PATH . '/product.php' );
 
-	if ( is_admin() )
+	if ( is_admin() ) {
 		require_once( WPSC_TE_V2_PATH . '/admin.php' );
+	}
 
 	if ( ! is_admin() ) {
 		_wpsc_te2_mvc_init();

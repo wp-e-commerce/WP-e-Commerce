@@ -17,8 +17,9 @@
  */
 class WP_eCommerce {
 	private $components = array(
-		'merchant'    => array(),
-		'marketplace' => array(),
+		'merchant'     => array(),
+		'marketplace'  => array(),
+		'theme-engine' => array(),
 	);
 
 	/**
@@ -74,10 +75,22 @@ class WP_eCommerce {
 				WPSC_FILE_PATH . '/wpsc-components/merchant-core-v2/merchant-core-v2.php'
 		);
 
+		$components['merchant']['core-v3'] = array(
+			'title'    => __( 'WP e-Commerce Merchant API v3', 'wpsc' ),
+			'includes' =>
+				WPSC_FILE_PATH . '/wpsc-components/merchant-core-v3/merchant-core-v3.php'
+		);
+
 		$components['theme-engine']['core-v1'] = array(
 			'title'    => __( 'WP e-Commerce Theme Engine v1', 'wpsc' ),
 			'includes' =>
 				WPSC_FILE_PATH . '/wpsc-components/theme-engine-v1/theme-engine-v1.php'
+		);
+
+		$components['theme-engine']['core-v2'] = array(
+			'title'    => __( 'WP e-Commerce Theme Engine v2', 'wpsc' ),
+			'includes' =>
+				WPSC_FILE_PATH . '/wpsc-components/theme-engine-v2/core.php'
 		);
 
 		$components['marketplace']['core-v1'] = array(
@@ -183,21 +196,24 @@ class WP_eCommerce {
 	 * @uses do_action()        Calls 'wpsc_includes' which runs after WPEC files have been included
 	 */
 	function includes() {
-		require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-util.php'                  );
-		require_once( WPSC_FILE_PATH . '/wpsc-includes/customer.php'                        );
-		require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-customer.php'              );
-		require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-visitor.php'               );
-		require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-cart-item.php'             );
+		require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-util.php'      );
+		require_once( WPSC_FILE_PATH . '/wpsc-includes/customer.php'            );
+		require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-customer.php'  );
+		require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-visitor.php'   );
+		require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-cart-item.php' );
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-functions.php' );
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-installer.php' );
-		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-includes.php' );
+		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-includes.php'  );
 
 		$this->components = apply_filters( 'wpsc_components', $this->components );
 
 		foreach ( $this->components as $type => $registered ) {
 			foreach ( $registered as $component ) {
-				if ( ! is_array( $component['includes'] ) )
+
+				if ( ! is_array( $component['includes'] ) ) {
 					$component['includes'] = array( $component['includes' ] );
+				}
+
 				foreach ( $component['includes'] as $include ) {
 					require_once( $include );
 				}
@@ -276,7 +292,7 @@ class WP_eCommerce {
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-installer.php' );
 		$this->constants();
 		wpsc_install();
-
+		wpsc_theme_engine_v2_activate();
 	}
 
 	/**

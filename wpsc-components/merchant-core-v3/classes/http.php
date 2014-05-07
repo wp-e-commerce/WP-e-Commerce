@@ -25,10 +25,10 @@ class WPSC_Payment_Gateway_HTTP extends PHP_Merchant_HTTP {
 
 	public function post( $url, $fields = '', $args = array() ) {
 		$args['method'] = 'POST';
-		return $this->request( $url, $fields, $args );
+		return $this->request( esc_url_raw( $url ), $fields, $args );
 	}
 
 	public function get( $url, $fields = '', $args = array() ) {
-		return $this->request( $url, $fields, $args );
+		return $this->request( esc_url_raw( $url ), $fields, $args );
 	}
 }
