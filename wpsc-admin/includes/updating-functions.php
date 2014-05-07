@@ -57,13 +57,15 @@ class WPSC_Update {
 	}
 
 	public function run( $function, $message = '' ) {
-		if ( $message )
+
+		if ( $message ) {
 			echo "<p>{$message}</p>";
+		}
 
 		if ( empty( $this->stages[$function] ) ) {
 			call_user_func( 'wpsc_' . $function );
-			$this->stages[$function] = true;
-			set_transient( 'wpsc_update_progress', $this->stages, 604800 );
+			$this->stages[ $function ] = true;
+			set_transient( 'wpsc_update_progress', $this->stages, WEEK_IN_SECONDS );
 		}
 	}
 }
