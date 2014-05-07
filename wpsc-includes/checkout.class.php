@@ -505,8 +505,18 @@ class wpsc_checkout {
 						break;
 				}
 
+				if ( 'billingstate' == $form_data->unique_name ) {
+					$country = new WPSC_Country( wpsc_get_customer_meta( 'billingcountry' ) );
+					$name    = $country->get( 'region_label' );
+				} else if ( 'shippingstate' == $form_data->unique_name ) {
+					$country = new WPSC_Country( wpsc_get_customer_meta( 'shippingcountry' ) );
+					$name    = $country->get( 'region_label' );
+				} else {
+					$name = $form_data->name;
+				}
+
 				if ( $bad_input === true ) {
-					$wpsc_checkout_error_messages[$form_data->id] = sprintf( __( 'Please enter a valid <span class="wpsc_error_msg_field_name">%s</span>.', 'wpsc' ), esc_attr( $form_data->name ) );
+					$wpsc_checkout_error_messages[$form_data->id] = sprintf( __( 'Please enter a valid <span class="wpsc_error_msg_field_name">%s</span>.', 'wpsc' ), strtolower( esc_attr( $name ) ) );
 					$wpsc_customer_checkout_details[$form_data->id] = '';
 				}
 			}
