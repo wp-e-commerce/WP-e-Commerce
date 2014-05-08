@@ -1458,6 +1458,52 @@ if ( ! get_option( 'wpsc_hide_3.8.9_notices' ) )
 	add_action( 'admin_notices', '_wpsc_admin_notices_3dot8dot9' );
 
 /**
+ * Checks to ensure that shipping is enabled, and one or both of the shipping/billing states are not displayed.
+ * If those condtions are met, and the user has not previously dismissed the notice, then we notify them
+ * that the shipping calculator now depend on those fields.
+ *
+ * @access private
+ *
+ * @uses add_query_arg()      Adds argument to the WordPress query
+ * @uses update_option()      Updates an option in the WordPress database given string and value
+ * @uses get_option()         Gets option from the database given string
+ */
+function _wpsc_admin_notices_3_8_14_1() {
+
+	if ( get_option( 'do_not_use_shipping' ) ) {
+		return;
+	}
+
+	global $wpdb;
+
+	$state_visibility = $wpdb->get_var( "SELECT COUNT(active) FROM " . WPSC_TABLE_CHECKOUT_FORMS . " WHERE unique_name IN ( 'billingstate', 'shippingstate' ) AND active = '1'" );
+
+	if ( '2' === $state_visibility ) {
+		return;
+	}
+
+	$message = '<p>' . __( 'WP eCommerce has been updated, please confirm the checkout field display
+settings are correct for your store.<br><br><i>The visibility of the checkout billing and shipping
+drop downs that show states and provinces is now controlled by the "billingstate" and "shippingstate"
+options set in the <b>Store Settings</b> on the <b>Checkout</b> tab.  Prior versions used
+the "billingcountry" and "shippingcountry" settings to control the visibility of the drop downs.</i>' , 'wpsc' ) . '</p>';
+	$message .= "\n<p>" . __( '<a href="%s">Hide this warning</a>', 'wpsc' ) . '</p>';
+	$message = sprintf(
+		$message,
+		add_query_arg( 'dismiss_3_8_14_1_upgrade_notice', 1 )
+	);
+
+	echo '<div id="wpsc-3-8-14-1-notice" class="error">' . $message . '</div>';
+}
+
+if ( isset( $_REQUEST['dismiss_3_8_14_1_upgrade_notice'] ) || version_compare( WPSC_VERSION, '3.9', '>=' ) ) {
+	update_option( 'wpsc_hide_3_8_14_1_notices', true );
+}
+
+if ( ! get_option( 'wpsc_hide_3_8_14_1_notices' ) )
+	add_action( 'admin_notices', '_wpsc_admin_notices_3_8_14_1' );
+
+/**
  * @todo docs
  * @access private
  *
