@@ -275,8 +275,10 @@ function wpsc_convert_weight( $in_weight, $in_unit, $out_unit = 'pound', $raw = 
 			$weight = $intermediate_weight / 453.59237;
 			break;
 	}
-	if ( $raw )
+
+	if ( $raw ) {
 		return $weight;
+	}
 
 	return round( $weight, 2 );
 }

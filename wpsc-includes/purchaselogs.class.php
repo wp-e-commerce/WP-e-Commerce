@@ -144,11 +144,11 @@ function wpsc_purchlogs_get_weight( $id = '', $out_unit = 'pound' ) {
 
 	foreach ( ( array ) $thepurchlogitem->allcartcontent as $cartitem ) {
 		$product_meta = get_product_meta( $cartitem->prodid, 'product_metadata', true );
-		if ( ! empty( $product_meta ['weight'] ) ) {
+		if ( ! empty( $product_meta ['weight'] ) && ! empty( $product_meta['weight_unit'] ) ) {
 
-			$converted_weight = wpsc_convert_weight( $product_meta ['weight'], $product_meta['weight_unit'], $out_unit, true );
+			$converted_weight = wpsc_convert_weight( $product_meta['weight'], $product_meta['weight_unit'], $out_unit, true );
 
-			$weight += $converted_weight * $cartitem->quantity;
+			$weight      += $converted_weight * $cartitem->quantity;
 			$items_count += $cartitem->quantity;
 		}
 	}
