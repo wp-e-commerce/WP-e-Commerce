@@ -208,7 +208,7 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 		}
 	}
 
-	if($post_data['files']['file']['tmp_name'] != '') {
+	if ( isset( $post_data['files']['file'] ) && $post_data['files']['file']['tmp_name'] != '' ) {
 		wpsc_item_process_file($product_id, $post_data['files']['file']);
 	} else {
 		if (!isset($post_data['select_product_file'])) $post_data['select_product_file'] = null;
