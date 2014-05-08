@@ -96,8 +96,11 @@ function _wpsc_te_v2_product_post_type_args( $args ) {
  */
 function _wpsc_te_v2_product_category_args( $args ) {
 	$store_slug = wpsc_get_option( 'store_slug' );
-	if ( $store_slug )
+
+	if ( $store_slug ) {
 		$store_slug .= '/';
+	}
+
 	$category_base_slug = wpsc_get_option( 'category_base_slug' );
 	$hierarchical_product_category = wpsc_get_option( 'hierarchical_product_category_url' );
 

@@ -2,7 +2,7 @@
 
 /**
  *
- * Google Analytics class for WP E-Commerce.
+ * Google Analytics class for WP eCommerce.
  *
  * No longer dependent upon Google Analytics for WordPress, we have a great internal analytics class that actually works now.
  *

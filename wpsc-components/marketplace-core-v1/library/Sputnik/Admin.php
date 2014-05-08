@@ -449,10 +449,10 @@ class Sputnik_Admin {
 				echo '<div class="updated"><p>' . __('<strong>Warning:</strong> This plugin has <strong>not been marked as compatible</strong> with your version of WordPress.', 'sputnik') . '</p></div>';
 
 			else if ( !empty($api->requires_wpec) && version_compare( substr( WPSC_VERSION, 0, strlen($api->requires_wpec)), $api->requires_wpec, '<') )
-				echo '<div class="updated"><p>' . __('<strong>Warning:</strong> This plugin has <strong>not been marked as compatible</strong> with your version of WP E-Commerce.', 'sputnik') . '</p></div>';
+				echo '<div class="updated"><p>' . __('<strong>Warning:</strong> This plugin has <strong>not been marked as compatible</strong> with your version of WP eCommerce.', 'sputnik') . '</p></div>';
 
 			else if ( !empty($api->tested_wpec) && version_compare( substr( WPSC_VERSION, 0, strlen($api->tested_wpec)), $api->tested_wpec, '<') )
-				echo '<div class="updated"><p>' . __('<strong>Warning:</strong> This plugin has <strong>not been tested</strong> with your version of WP E-Commerce.', 'sputnik') . '</p></div>';
+				echo '<div class="updated"><p>' . __('<strong>Warning:</strong> This plugin has <strong>not been tested</strong> with your version of WP eCommerce.', 'sputnik') . '</p></div>';
 
 			foreach ( $api->sections as $section_name => $content ) {
 				if ( isset( $plugins_section_titles[ $section_name ] ) )
