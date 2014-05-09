@@ -371,33 +371,23 @@ class wpsc_cart {
 
 				$shipping_quotes = null;
 
-				if ( $this->selected_shipping_method != null ) {
+				foreach ( (array) $custom_shipping as $shipping_module ) {
 
-					// use the selected shipping module
-					if ( is_callable( array( &$wpsc_shipping_modules[ $this->selected_shipping_method ], 'getQuote'  ) ) ) {
-						$this->shipping_quotes      = $wpsc_shipping_modules[ $this->selected_shipping_method ]->getQuote();
-						$this->shipping_quote_count = count( $this->shipping_quotes );
+					if ( empty( $wpsc_shipping_modules[ $shipping_module ] ) || ! is_callable( array( $wpsc_shipping_modules[ $shipping_module ], 'getQuote' ) ) ) {
+						continue;
 					}
-				} else {
 
-					foreach ( (array) $custom_shipping as $shipping_module ) {
+					$raw_quotes = $wpsc_shipping_modules[ $shipping_module ]->getQuote();
 
-						if ( empty( $wpsc_shipping_modules[ $shipping_module ] ) || ! is_callable( array( $wpsc_shipping_modules[ $shipping_module ], 'getQuote' ) ) ) {
-							continue;
+					if ( empty( $raw_quotes ) || ! is_array( $raw_quotes ) ) {
+						continue;
+					}
+
+					if ( is_array( $raw_quotes ) ) {
+						foreach ( $raw_quotes as $key => $value ) {
+							$this->shipping_quotes[$wpsc_shipping_modules[ $shipping_module ]->name. ' ' . $key] = $value;
 						}
-
-						$raw_quotes = $wpsc_shipping_modules[ $shipping_module ]->getQuote();
-
-						if ( empty( $raw_quotes ) || ! is_array( $raw_quotes ) ) {
-							continue;
-						}
-
-						if ( is_array( $raw_quotes ) ) {
-							foreach ( $raw_quotes as $key => $value ) {
-								$this->shipping_quotes[$wpsc_shipping_modules[ $shipping_module ]->name. ' ' . $key] = $value;
-							}
-							$this->shipping_quote_count = count( $this->shipping_quotes );
-						}
+						$this->shipping_quote_count = count( $this->shipping_quotes );
 					}
 				}
 
