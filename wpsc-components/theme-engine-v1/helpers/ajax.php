@@ -573,6 +573,7 @@ function wpsc_submit_checkout( $collected_data = true ) {
 	do_action( 'wpsc_before_submit_checkout' );
 
 	$error_messages = wpsc_get_customer_meta( 'checkout_misc_error_messages' );
+
 	if ( ! is_array( $error_messages ) ) {
 		$error_messages = array();
 	}
@@ -581,7 +582,6 @@ function wpsc_submit_checkout( $collected_data = true ) {
 
 	$selected_gateways = get_option( 'custom_gateway_options' );
 	$submitted_gateway = isset( $_POST['custom_gateway'] ) ? $_POST['custom_gateway'] : '';
-	$options           = get_option( 'custom_shipping_options' );
 
 	if ( $collected_data ) {
 		$form_validity = $wpsc_checkout->validate_forms();
