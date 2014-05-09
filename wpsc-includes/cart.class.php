@@ -218,18 +218,18 @@ class wpsc_cart {
 
 		$selected = true;
 
+		// so the check could be written as one long expression, but thougth it better to make it more
+		// readily understandable by someone who wants to see what is happening.
+		// TODO:  All this logic would be unnecessary but for the lack of protected properties and
+		// the legacy code that may choose to manipulate them directly avoiding class methods
+
 		// is there a shipping method?
-		if ( empty( $this->shipping_method ) ) {
+		if ( empty( $this->selected_shipping_method ) ) {
 			$selected = false;
 		}
 
 		// first we will check the shipping methods
 		if ( $selected && ( ! is_array( $this->shipping_methods ) || empty( $this->shipping_methods ) ) ) {
-			$selected = false;
-		}
-
-		// let's check the current shipping method
-		if ( $selected && ( ( $this->shipping_method === null ) && ( $this->shipping_method === -1 ) && ! is_numeric( $this->shipping_method ) ) ) {
 			$selected = false;
 		}
 
@@ -251,12 +251,18 @@ class wpsc_cart {
 	function shipping_quote_selected() {
 
 		$selected = true;
+
+		// so the check could be written as one long expression, but thought it better to make it more
+		// readily understandable by someone who wants to see what is happening.
+		// TODO:  All this logic would be unnecessary but for the lack of protected properties and
+		// the legacy code that may choose to manipulate them directly avoiding class methods
+
 		// do we have a shipping quotes array
 		if ( $selected && ( ! is_array( $this->shipping_quotes ) || empty( $this->shipping_quotes ) ) ) {
 			$selected = false;
 		}
 
-		if ( ! isset( $this->shipping_quotes[$this->selected_shipping_option] )  ) {
+		if ( $selected && ! isset( $this->shipping_quotes[$this->selected_shipping_option] )  ) {
 			$selected = false;
 		}
 
@@ -344,8 +350,6 @@ class wpsc_cart {
 	function get_shipping_method() {
 		global $wpsc_shipping_modules;
 
-		$this->clear_shipping_info();
-
 		// set us up with a shipping method.
 		$custom_shipping = get_option( 'custom_shipping_options' );
 		if ( empty( $custom_shipping ) ) {
@@ -413,7 +417,10 @@ class wpsc_cart {
 
 	/**
 	 * get_shipping_option method, gets the shipping option from the selected method and associated quotes
+	 *
 	 * @access public
+	 *
+	 * @return none
 	 */
 	function get_shipping_option() {
 		global $wpdb, $wpsc_shipping_modules;
@@ -430,12 +437,14 @@ class wpsc_cart {
 			$this->selected_shipping_option = '';
 		}
 
-		if ( ( $this->shipping_quotes != null ) && ( array_search( $this->selected_shipping_option, array_keys( $this->shipping_quotes ) ) === false ) ) {
+		// if the current shipping option is not valid, go back to no shipping option
+		if ( ! empty( $this->selected_shipping_option ) && ! isset( $this->shipping_quotes[$this->selected_shipping_option] ) ) {
+			$this->selected_shipping_option = null;
+		}
 
-			$slice    = array_keys( array_slice( $this->shipping_quotes, 0, 1 ) );
-			$selected = array_pop( $slice );
-
-			$this->selected_shipping_option = apply_filters( 'wpsc_default_shipping_quote', $selected, $this->shipping_quotes );
+		// let the world pick a default shipping quote
+		if (  empty( $this->selected_shipping_option ) && is_array( $this->shipping_quotes ) && ! empty( $this->shipping_quotes ) ) {
+			$this->selected_shipping_option = apply_filters( 'wpsc_default_shipping_quote', $this->selected_shipping_option, $this->shipping_quotes );
 		}
 	}
 
