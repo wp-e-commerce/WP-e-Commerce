@@ -15,4 +15,16 @@
 		<?php wpsc_display_form_fields(); ?>
 
 	</table>
+
+	<table>
+		<tr>
+			<td>
+				<input type="hidden" value="true" name="submitwpcheckout_profile" />
+				<input type="submit" value="<?php _e( 'Save Profile', 'wpsc' ); ?>" name="submit" />
+			</td>
+		</tr>
+	</table>
+
+
+
 </form>
