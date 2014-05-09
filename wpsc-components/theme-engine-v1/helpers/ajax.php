@@ -563,19 +563,26 @@ function wpsc_populate_also_bought_list() {
 function wpsc_submit_checkout( $collected_data = true ) {
 	global $wpdb, $wpsc_cart, $user_ID, $nzshpcrt_gateways, $wpsc_shipping_modules, $wpsc_gateways;
 
-	$num_items = 0;
-	$use_shipping = 0;
+	// initialize our checkout status variab;e, we start be assuming
+	// checkout is falid, until we find a reason otherwise
+	$is_valid           = true;
+	$num_items          = 0;
+	$use_shipping       = 0;
 	$disregard_shipping = 0;
 
 	do_action( 'wpsc_before_submit_checkout' );
 
 	$error_messages = wpsc_get_customer_meta( 'checkout_misc_error_messages' );
-	if ( ! is_array( $error_messages ) )
+	if ( ! is_array( $error_messages ) ) {
 		$error_messages = array();
+	}
+
 	$wpsc_checkout = new wpsc_checkout();
+
 	$selected_gateways = get_option( 'custom_gateway_options' );
 	$submitted_gateway = isset( $_POST['custom_gateway'] ) ? $_POST['custom_gateway'] : '';
-	$options = get_option( 'custom_shipping_options' );
+	$options           = get_option( 'custom_shipping_options' );
+
 	if ( $collected_data ) {
 		$form_validity = $wpsc_checkout->validate_forms();
 		extract( $form_validity ); // extracts $is_valid and $error_messages
@@ -611,26 +618,37 @@ function wpsc_submit_checkout( $collected_data = true ) {
 
 		//count number of items, and number of items using shipping
 		$num_items++;
-		if ( $cartitem->uses_shipping != 1 )
+
+		if ( $cartitem->uses_shipping != 1 ) {
 			$disregard_shipping++;
-		else
+		} else {
 			$use_shipping++;
+		}
 
 	}
 
-	if ( array_search( $submitted_gateway, $selected_gateways ) !== false )
+	// check to see if the current gateway is in the list of available gateways
+	if ( array_search( $submitted_gateway, $selected_gateways ) !== false ) {
 		wpsc_update_customer_meta( 'selected_gateway', $submitted_gateway );
-	else
+	} else {
 		$is_valid = false;
+	}
 
 	if ( $collected_data ) {
-		if ( get_option( 'do_not_use_shipping' ) == 0 && ($wpsc_cart->selected_shipping_method == null || $wpsc_cart->selected_shipping_option == null) && ( $num_items != $disregard_shipping ) ) {
-			$error_messages[] = __( 'Please confirm the shipping method selection, then we can process your order.', 'wpsc' );
-			$is_valid = false;
-		}
-		if ( (get_option( 'do_not_use_shipping' ) != 1) && (in_array( 'ups', (array)$options )) && ! wpsc_get_customer_meta( 'shipping_zip' ) && ( $num_items != $disregard_shipping ) ) {
-				wpsc_update_customer_meta( 'category_shipping_conflict', __( 'Please enter a Zipcode and click calculate to proceed', 'wpsc' ) );
+
+		// Test for required shipping information
+		if ( wpsc_core_shipping_enabled() && ( $num_items != $disregard_shipping ) ) {
+			// for shipping to work we need a method, option and a quote
+			if ( ! $wpsc_cart->shipping_method_selected() || ! $wpsc_cart->shipping_quote_selected() ) {
+				$error_messages[] = __( 'Please select one of the available shipping options, then we can process your order.', 'wpsc' );
 				$is_valid = false;
+			}
+
+			// if we don't have a valid zip code ( the function also checks if we need it ) we have an error
+			if ( ! wpsc_have_valid_shipping_zipcode() ) {
+					wpsc_update_customer_meta( 'category_shipping_conflict', __( 'Please enter a Zipcode and click calculate to proceed', 'wpsc' ) );
+					$is_valid = false;
+			}
 		}
 	}
 
