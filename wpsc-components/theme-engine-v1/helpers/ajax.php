@@ -6,6 +6,10 @@ add_action( 'wp_ajax_nopriv_shipping_same_as_billing_update', 'wpsc_update_shipp
 if ( isset( $_GET['termsandconds'] ) && 'true' == $_GET['termsandconds'] )
 	add_action( 'init', 'wpsc_show_terms_and_conditions' );
 
+if ( isset( $_REQUEST['submitwpcheckout_profile'] ) ) {
+	add_action( 'init', 'wpsc_save_user_profile', 10, 0 );
+}
+
 if ( isset( $_REQUEST['wpsc_action'] ) && ($_REQUEST['wpsc_action'] == 'submit_checkout') ) {
 	add_action( 'init', 'wpsc_submit_checkout', 10, 0 );
 }
@@ -1160,3 +1164,8 @@ function _wpsc_checkout_customer_meta_update( $checkout_post_data ) {
 	}
 }
 
+function wpsc_save_user_profile() {
+	if ( isset( $_POST['collected_data'] ) && is_array( $_POST['collected_data'] ) ) {
+		_wpsc_checkout_customer_meta_update( $_POST['collected_data'] );
+	}
+}
