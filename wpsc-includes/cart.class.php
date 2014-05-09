@@ -218,11 +218,6 @@ class wpsc_cart {
 
 		$selected = true;
 
-		// so the check could be written as one long expression, but thougth it better to make it more
-		// readily understandable by someone who wants to see what is happening.
-		// TODO:  All this logic would be unnecessary but for the lack of protected properties and
-		// the legacy code that may choose to manipulate them directly avoiding class methods
-
 		// is there a shipping method?
 		if ( empty( $this->shipping_method ) ) {
 			$selected = false;
@@ -256,12 +251,6 @@ class wpsc_cart {
 	function shipping_quote_selected() {
 
 		$selected = true;
-
-		// so the check could be written as one long expression, but thought it better to make it more
-		// readily understandable by someone who wants to see what is happening.
-		// TODO:  All this logic would be unnecessary but for the lack of protected properties and
-		// the legacy code that may choose to manipulate them directly avoiding class methods
-
 		// do we have a shipping quotes array
 		if ( $selected && ( ! is_array( $this->shipping_quotes ) || empty( $this->shipping_quotes ) ) ) {
 			$selected = false;
