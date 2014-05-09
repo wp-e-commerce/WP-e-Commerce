@@ -722,9 +722,11 @@ function _wpsc_has_visitor_location_changed( $visitor_id = false ) {
 }
 
 /**
- * Tries to turn an arbitrary value into a a valid bool looking at the contents, including for strings like false and no, ...
+ * Tries to turn an arbitrary value into a valid bool looking at the contents, including for strings like false and no, ...
+ *
  * @param varies $value      value to boolify
- * @return Ambigous <boolean, string>
+ *
+ * @return boolean true or false
  */
 function _wpsc_make_value_into_bool( $value ) {
 	if ( ! is_bool( $value ) ) {
