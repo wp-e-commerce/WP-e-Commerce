@@ -730,6 +730,28 @@ function wpsc_core_get_db_version() {
 }
 
 /**
+ * get the current WPeC database version
+ *
+ * @return int current database version
+ */
+function wpsc_core_shipping_enabled() {
+	$shipping_disabled = get_option( 'do_not_use_shipping', -1 );
+
+	if ( $shipping_disabled === -1 ) {
+		// if shipping enabled comes back as -1 we want to set it to the default value, this is
+		// because unset WordPress options are not cached.  That means if this option isn't in the database
+		// we could make a trip to the database every time this option is looked at.  This variable
+		// can be tested many times per page view, so let's make it clean
+		update_option( 'do_not_use_shipping', false );
+		$shipping_disabled = false;
+	}
+
+	$shipping_disabled = _wpsc_make_value_into_bool( $shipping_disabled );
+
+	return ! $shipping_disabled;
+}
+
+/**
  *  flush all WPeC temporary stored data
  *
  * WordPress generallay has two places it stores temporary data, the object cache and the transient store.  When
