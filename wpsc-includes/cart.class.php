@@ -208,6 +208,75 @@ class wpsc_cart {
 	}
 
 	/**
+	 * Does the cart have a valid shipping method selected
+	 *
+	 * @since 3.8.14.1
+	 *
+	 * @return boolean true if a valid shipping method is selected, false otherwise
+	 */
+	function shipping_method_selected() {
+
+		$selected = true;
+
+		// so the check could be written as one long expression, but thougth it better to make it more
+		// readily understandable by someone who wants to see what is happening.
+		// TODO:  All this logic would be unnecessary but for the lack of protected properties and
+		// the legacy code that may choose to manipulate them directly avoiding class methods
+
+		// is there a shipping method?
+		if ( empty( $this->shipping_method ) ) {
+			$selected = false;
+		}
+
+		// first we will check the shipping methods
+		if ( $selected && ( ! is_array( $this->shipping_methods ) || empty( $this->shipping_methods ) ) ) {
+			$selected = false;
+		}
+
+		// let's check the current shipping method
+		if ( $selected && ( ( $this->shipping_method === null ) && ( $this->shipping_method === -1 ) && ! is_numeric( $this->shipping_method ) ) ) {
+			$selected = false;
+		}
+
+		// check to be sure the shipping method name is not empty, and is also in the array
+		if ( $selected && ( empty( $this->selected_shipping_method ) || ! in_array( $this->selected_shipping_method, $this->shipping_methods ) ) ) {
+			$selected = false;
+		}
+
+		return $selected;
+	}
+
+	/**
+	 * Does the cart have a valid shipping quote selected
+	 *
+	 * @since 3.8.14.1
+	 *
+	 * @return boolean true if a valid shipping method is selected, false otherwise
+	 */
+	function shipping_quote_selected() {
+
+		$selected = true;
+
+		// so the check could be written as one long expression, but thought it better to make it more
+		// readily understandable by someone who wants to see what is happening.
+		// TODO:  All this logic would be unnecessary but for the lack of protected properties and
+		// the legacy code that may choose to manipulate them directly avoiding class methods
+
+		// do we have a shipping quotes array
+		if ( $selected && ( ! is_array( $this->shipping_quotes ) || empty( $this->shipping_quotes ) ) ) {
+			$selected = false;
+		}
+
+		if ( ! isset( $this->shipping_quotes[$this->selected_shipping_option] )  ) {
+			$selected = false;
+		}
+
+
+		return $selected;
+	}
+
+
+	/**
 	 * Is all shipping method information for this cart empty
 	 *
 	 * @since 3.8.14
@@ -216,7 +285,6 @@ class wpsc_cart {
 	function shipping_info_empty() {
 		return empty( $this->selected_shipping_method )
 					&& empty( $this->selected_shipping_option )
-						&& empty( $this->shipping_option )
 							&& empty( $this->shipping_method )
 								&& empty( $this->shipping_methods )
 									&& empty( $this->shipping_quotes )
@@ -395,6 +463,7 @@ class wpsc_cart {
 	 */
 	function update_shipping( $method, $option ) {
 		global $wpdb, $wpsc_shipping_modules;
+
 		$this->selected_shipping_method = $method;
 
 		$this->shipping_quotes = $wpsc_shipping_modules[$method]->getQuote();
@@ -405,7 +474,6 @@ class wpsc_cart {
 			$this->cart_items[$key]->calculate_shipping();
 		}
 
-		$this->clear_cache();
 		$this->get_shipping_option();
 
 		// reapply coupon in case it's free shipping
