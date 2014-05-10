@@ -31,14 +31,14 @@ class Sputnik {
 	/**
 	 * OAuth client key
 	 */
-	const OAUTH_KEY = 'DPkGAydyeTYn';
+	const OAUTH_KEY = 'k7q3lu9LeOJc';
 
 	/**
 	 * OAuth client secret
 	 *
 	 * Not so secret any more.
 	 */
-	const OAUTH_SECRET = 'xoPbBx4fryLpu6QOQ1VSZ4vI06T1dhieVXPk8xbgUFRraYl1';
+	const OAUTH_SECRET = '8jjSVN54VFhraZttr8pDsCdnogqE22Sq299zTRdFDL2hEUIq';
 
 	/**
 	 * Path to Sputnik
