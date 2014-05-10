@@ -465,54 +465,58 @@ class wpsc_checkout {
 
 			$bad_input = false;
 			if ( ( $form_data->mandatory == 1 ) || ( $form_data->type == 'coupon' ) ) {
-				// dirty hack
+
 				if ( $form_data->unique_name == 'billingstate' && empty( $value ) ) {
 
-					$value = wpsc_get_customer_meta( 'billingcountry' );
+					$value = wpsc_get_customer_meta( 'billingregion' );
 					if ( empty( $value ) ) {
 						$any_bad_inputs = true;
 						$bad_input      = true;
+						$country = new WPSC_Country( wpsc_get_customer_meta( 'billingcountry' ) );
+						$name    = $country->get( 'region_label' );
 					}
-				}
+				} else if ( $form_data->unique_name == 'shippingstate' && empty( $value ) ) {
 
-				switch ( $form_data->type ) {
-					case 'email':
-
-						if ( ! preg_match( '/^[a-zA-Z0-9._-]+@[a-zA-Z0-9-.]+\.[a-zA-Z]{2,5}$/', $value ) ) {
-							$any_bad_inputs = true;
-							$bad_input = true;
-						}
-						break;
-
-					case 'delivery_country':
-					case 'country':
-					case 'heading':
-						break;
-
-					case 'select':
-						if ( $value == '-1' ) {
-							$any_bad_inputs = true;
-							$bad_input = true;
-						}
-						break;
-
-					default:
-						if ( empty( $value ) ) {
-							$any_bad_inputs = true;
-							$bad_input = true;
-						}
-
-						break;
-				}
-
-				if ( 'billingstate' == $form_data->unique_name ) {
-					$country = new WPSC_Country( wpsc_get_customer_meta( 'billingcountry' ) );
-					$name    = $country->get( 'region_label' );
-				} else if ( 'shippingstate' == $form_data->unique_name ) {
-					$country = new WPSC_Country( wpsc_get_customer_meta( 'shippingcountry' ) );
-					$name    = $country->get( 'region_label' );
+					$value = wpsc_get_customer_meta( 'shippingregion' );
+					if ( empty( $value ) ) {
+						$any_bad_inputs = true;
+						$bad_input      = true;
+						$country = new WPSC_Country( wpsc_get_customer_meta( 'shippingcountry' ) );
+						$name    = $country->get( 'region_label' );
+					}
 				} else {
+
 					$name = $form_data->name;
+
+					switch ( $form_data->type ) {
+						case 'email':
+
+							if ( ! preg_match( '/^[a-zA-Z0-9._-]+@[a-zA-Z0-9-.]+\.[a-zA-Z]{2,5}$/', $value ) ) {
+								$any_bad_inputs = true;
+								$bad_input = true;
+							}
+							break;
+
+						case 'delivery_country':
+						case 'country':
+						case 'heading':
+							break;
+
+						case 'select':
+							if ( $value == '-1' ) {
+								$any_bad_inputs = true;
+								$bad_input = true;
+							}
+							break;
+
+						default:
+							if ( empty( $value ) ) {
+								$any_bad_inputs = true;
+								$bad_input = true;
+							}
+
+							break;
+					}
 				}
 
 				if ( $bad_input === true ) {
