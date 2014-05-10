@@ -574,10 +574,12 @@ add_action(  'wpsc_before_get_shipping_method', '_wpsc_clear_shipping_error_mess
  */
 function _wpsc_shipping_error_messages() {
 	$shipping_error_messages = wpsc_get_customer_meta( 'shipping_error_messages' );
+
+	if ( ! empty ( $shipping_error_messages ) ) {
+
 	?>
 	<div class="wpsc-shipping-error_messages error">
 	<?php
-	if ( ! empty ( $shipping_error_messages ) ) {
 		foreach ( $shipping_error_messages as $id => $message ) {
 			?>
 			<div class="wpsc-shipping-error_message error" id="<?php echo esc_attr( $id );?>">
@@ -587,10 +589,10 @@ function _wpsc_shipping_error_messages() {
 			</div>
 			<?php
 		}
-	}
 	?>
 	</div>
 	<?php
+	}
 }
 
 // Need to do this after shipping messages have been displayed because in older carts that is where the
