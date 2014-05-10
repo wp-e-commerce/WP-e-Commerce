@@ -692,7 +692,7 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 First of all, you should check out the Presentation settings which are in the Settings -> Store page.
 
-For advanced users, all of our eCommerce templates and CSS can be moved into your active theme folder for customization. Less advanced users have [several fantastic WP eCommerce consultants](http://getshopped.org/resources/wp-consultants/ "http://getshopped.org/resources/wp-consultants) to get help from.
+For advanced users, all of our eCommerce templates and CSS can be moved into your active theme folder for customization. Less advanced users have [several fantastic WP eCommerce consultants](http://getshopped.org/resources/wp-consultants/) to get help from.
 
 = What payment gateways does WP eCommerce integrate with? =
 
