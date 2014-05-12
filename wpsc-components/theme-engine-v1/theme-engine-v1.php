@@ -3,6 +3,7 @@
 add_action( 'wpsc_includes', '_wpsc_action_theme_engine_v1_includes' );
 
 _wpsc_action_theme_engine_v1_constants();
+
 function _wpsc_action_theme_engine_v1_constants() {
 	define( 'WPSC_THEME_ENGINE_V1_PATH', dirname( __FILE__ ) );
 	define( 'WPSC_THEME_ENGINE_V1_URL', plugins_url(  basename( dirname ( __FILE__  ) ) , dirname( __FILE__ ) ) );

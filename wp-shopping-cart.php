@@ -81,12 +81,6 @@ class WP_eCommerce {
 				WPSC_FILE_PATH . '/wpsc-components/merchant-core-v3/merchant-core-v3.php'
 		);
 
-		$components['theme-engine']['core-v1'] = array(
-			'title'    => __( 'WP e-Commerce Theme Engine v1', 'wpsc' ),
-			'includes' =>
-				WPSC_FILE_PATH . '/wpsc-components/theme-engine-v1/theme-engine-v1.php'
-		);
-
 		$components['marketplace']['core-v1'] = array(
 			'title'    => __( 'WP e-Commerce Marketplace API v1', 'wpsc' ),
 			'includes' =>

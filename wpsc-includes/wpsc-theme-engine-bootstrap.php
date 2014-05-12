@@ -21,16 +21,19 @@ function _wpsc_enable_theme_engine_v2( $components ) {
 }
 
 function _wpsc_maybe_activate_theme_engine_v2() {
-	return apply_filters( '_wpsc_maybe_activate_theme_engine_v2', false );
+
+	$activate = false;
+
+	return apply_filters( '_wpsc_maybe_activate_theme_engine_v2', $activate );
 }
 
-function _wpsc_theme_engine_router() {
+function _wpsc_theme_engine_router( $components ) {
 
 	if ( _wpsc_maybe_activate_theme_engine_v2() ) {
-		add_filter( 'wpsc_components', '_wpsc_enable_theme_engine_v2' );
+		return _wpsc_enable_theme_engine_v2( $components );
 	} else {
-		add_filter( 'wpsc_components', '_wpsc_enable_theme_engine_v1' );
+		return _wpsc_enable_theme_engine_v1( $components );
 	}
 }
 
-add_action( 'wpsc_started', '_wpsc_theme_engine_router' );
+add_filter( 'wpsc_components', '_wpsc_theme_engine_router' );
