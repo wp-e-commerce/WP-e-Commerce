@@ -87,12 +87,6 @@ class WP_eCommerce {
 				WPSC_FILE_PATH . '/wpsc-components/theme-engine-v1/theme-engine-v1.php'
 		);
 
-		$components['theme-engine']['core-v2'] = array(
-			'title'    => __( 'WP e-Commerce Theme Engine v2', 'wpsc' ),
-			'includes' =>
-				WPSC_FILE_PATH . '/wpsc-components/theme-engine-v2/core.php'
-		);
-
 		$components['marketplace']['core-v1'] = array(
 			'title'    => __( 'WP e-Commerce Marketplace API v1', 'wpsc' ),
 			'includes' =>
@@ -292,7 +286,6 @@ class WP_eCommerce {
 		require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-installer.php' );
 		$this->constants();
 		wpsc_install();
-		wpsc_theme_engine_v2_activate();
 	}
 
 	/**

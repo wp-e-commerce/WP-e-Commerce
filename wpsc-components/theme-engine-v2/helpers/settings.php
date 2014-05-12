@@ -1,6 +1,6 @@
 <?php
 
-add_action( 'wpsc_te2_activate', '_wpsc_te2_action_setup_settings');
+add_action( 'wpsc_theme_engine_v2_activate', '_wpsc_te2_action_setup_settings');
 
 add_action(
 	'sanitize_option_show_on_front',
@@ -77,7 +77,7 @@ function _wpsc_te2_filter_option_transact_url( $value ) {
 /**
  * When the theme engine is activated, setup the options.
  *
- * Action hooks: 'wpsc_te2_activate', 'add_option_rewrite_rules'
+ * Action hooks: 'wpsc_theme_engine_v2_activate', 'add_option_rewrite_rules'
  *
  * @since  0.1
  * @access private
