@@ -622,7 +622,7 @@ class ash_usps {
 		$this->_clean_response( $response );
 
 		$packages = $wpec_ash_xml->get( "Package", $response );
-		$errors   = array();
+		$errors   = '';
 
 		if ( ! is_array( $packages ) ) {
 			return array();
@@ -632,7 +632,7 @@ class ash_usps {
 
 			if ( stripos( $package, '<ERROR>') === 0 ) {
 
-				$errors[] = $wpec_ash_xml->get( "Description", $package );
+				$errors = $wpec_ash_xml->get( "Description", $package );
 
 			} else {
 
