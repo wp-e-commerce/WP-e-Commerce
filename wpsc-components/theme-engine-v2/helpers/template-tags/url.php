@@ -15,9 +15,11 @@ function _wpsc_get_page_url( $page, $slug = '' ) {
 		return $uri;
 	}
 
-	$prefix = ( ! got_mod_rewrite() && ! iis7_supports_permalinks() ) ? 'index.php/' : '';
+	global $wp_rewrite;
 
-	$uri = $prefix . $slugs[$page];
+	$prefix = $wp_rewrite->root;
+
+	$uri = $prefix . $slugs[ $page ];
 	if ( $slug )
 		$uri = trailingslashit( $uri ) . ltrim( $slug, '/' );
 	return user_trailingslashit( home_url( $uri ) );
