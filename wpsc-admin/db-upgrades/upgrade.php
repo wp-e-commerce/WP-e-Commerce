@@ -55,7 +55,7 @@ function _wpsc_upgrade_display_backup_warning() {
 }
 
 function _wpsc_upgrade_display_prompt() {
-	$message = __( '<strong>WP e-Commerce %1$s is almost ready.</strong> Some database routines need to be run before the upgrade is complete. <a href="%2$s">Click here to start!</a>');
+	$message = __( '<strong>WP eCommerce %1$s is almost ready.</strong> Some database routines need to be run before the upgrade is complete. <a href="%2$s">Click here to start!</a>');
 	$message = sprintf( $message, WPSC_VERSION, admin_url( '?page=wpsc-db-upgrade' ) );
 	?>
 	<div id="wpsc-upgrade-warning" class="error">
@@ -65,7 +65,7 @@ function _wpsc_upgrade_display_prompt() {
 }
 
 function _wpsc_upgrade_display_successful() {
-	$message = __( 'WP e-Commerce has been successfully updated to %s. Enjoy!', 'wpsc' );
+	$message = __( 'WP eCommerce has been successfully updated to %s. Enjoy!', 'wpsc' );
 	$message = sprintf( $message, WPSC_VERSION );
 	?>
 		<div id="wpsc-upgrade-warning" class="updated">
@@ -149,6 +149,6 @@ function _wpsc_action_load_db_upgrade() {
 }
 
 function _wpsc_callback_display_db_upgrade_page() {
-	$update_title = sprintf( __( 'Your database needs to be upgraded before you can use WP e-Commerce %s', 'wpsc' ), WPSC_VERSION );
+	$update_title = sprintf( __( 'Your database needs to be upgraded before you can use WP eCommerce %s', 'wpsc' ), WPSC_VERSION );
 	include( 'views/main.php' );
 }

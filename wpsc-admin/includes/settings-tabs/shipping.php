@@ -164,7 +164,7 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 					<input type='hidden' value='0' name='wpsc_options[shipwire]' />
 					<input type='checkbox' onclick='jQuery("#wpsc_shipwire_setting").toggle( jQuery(this).prop("checked") );' value='1' name='wpsc_options[shipwire]' id='shipwire' <?php checked( '1',  get_option( 'shipwire' ) ); ?> />
 					<label for='shipwire'><?php _e( 'Enable Shipwire Integration', 'wpsc' ); ?></label>
-					<p class='description'><?php printf( __( '<a href="%1$s" target="_blank">Shipwire</a> provide e-commerce fulfillment warehouses. WP e-Commerce can integrate stock inventory and shipping tracking with their service.', 'wpsc' ), 'http://www.shipwire.com/' ); ?></p>
+					<p class='description'><?php printf( __( '<a href="%1$s" target="_blank">Shipwire</a> provide e-commerce fulfillment warehouses. WP eCommerce can integrate stock inventory and shipping tracking with their service.', 'wpsc' ), 'http://www.shipwire.com/' ); ?></p>
 				</td>
 			</tr>
 			<?php
@@ -246,7 +246,7 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 		<?php submit_button( __( 'Save Changes' ) ); ?>
 
 		<h3><?php _e( 'Shipping Modules', 'wpsc' ) ?></h3>
-		<p class='description'><?php _e( 'To enable shipping in WP e-Commerce you must select which shipping methods you want to enable on your site.', 'wpsc' ); ?></p>
+		<p class='description'><?php _e( 'To enable shipping in WP eCommerce you must select which shipping methods you want to enable on your site.', 'wpsc' ); ?></p>
 		<p class='description'>
 			<strong><?php _e( 'Tip', 'wpsc' ); ?></strong>:
 			<?php printf( __( 'For fixed-price shipping options such as "Pickup - $0, Overnight - $10, Same day - $20, etc.", install our free <a href="%1$s">Fixed Rate Shipping</a> plugin.', 'wpsc' ), 'http://wordpress.org/extend/plugins/wp-e-commerce-fixed-rate-shipping/' ); ?>

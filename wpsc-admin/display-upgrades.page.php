@@ -6,7 +6,7 @@ function wpsc_display_upgrades_page() {
 
 	<div class='wrap'>
 		<div class='metabox-holder wpsc_gold_side'>
-		
+
 			<h2><?php esc_html_e( 'Upgrades', 'wpsc' ); ?></h2>
 			<div>
 				<?php if ( defined( 'WPSC_GOLD_MODULE_PRESENT' ) && ( true == WPSC_GOLD_MODULE_PRESENT ) ) {?>
@@ -35,8 +35,8 @@ function wpsc_display_upgrades_page() {
 				</div>
 			</div>
 
-			<strong><?php esc_html_e( 'WP e-Commerce Upgrades', 'wpsc' ); ?></strong><br />
-			<span><?php esc_html_e( 'Add more functionality to your e-Commerce site. Prices may be subject to change.', 'wpsc' ); ?><input type='button' class='button-primary' onclick='window.open ("http://getshopped.org/extend/premium-upgrades/","mywindow");' value='<?php esc_html_e( 'Buy Now', 'wpsc' ); ?>' id='visitInstinct' name='visitInstinct' /></span>
+			<strong><?php esc_html_e( 'WP eCommerce Upgrades', 'wpsc' ); ?></strong><br />
+			<span><?php esc_html_e( 'Add more functionality to your eCommerce site. Prices may be subject to change.', 'wpsc' ); ?><input type='button' class='button-primary' onclick='window.open ("http://getshopped.org/extend/premium-upgrades/","mywindow");' value='<?php esc_html_e( 'Buy Now', 'wpsc' ); ?>' id='visitInstinct' name='visitInstinct' /></span>
 
 			<br />
 			<div class='wpsc_gold_module'>

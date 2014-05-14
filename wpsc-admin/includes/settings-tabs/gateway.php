@@ -91,7 +91,7 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 			</tbody>
 		</table>
 		<?php submit_button( __( 'Save Changes' ) ); ?>
-		<h4><?php _e( 'WP e-Commerce Recommends', 'wpsc' ); ?></h4>
+		<h4><?php _e( 'WP eCommerce Recommends', 'wpsc' ); ?></h4>
 		<a style="border-bottom:none;" href="https://www.paypal.com/nz/mrb/pal=LENKCHY6CU2VY" target="_blank"><img src="<?php echo WPSC_CORE_IMAGES_URL; ?>/paypal-referal.gif" border="0" alt="<?php esc_attr_e( 'Sign up for PayPal and start accepting credit card payments instantly.', 'wpsc' ); ?>" /></a>
 	<?php
 	}

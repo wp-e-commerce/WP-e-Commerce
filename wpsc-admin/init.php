@@ -245,10 +245,10 @@ function wpsc_admin_sale_rss() {
 		$output .= "<?xml version='1.0'?>\n\r";
 		$output .= "<rss version='2.0'>\n\r";
 		$output .= "  <channel>\n\r";
-		$output .= "    <title>" . _x( 'WP e-Commerce Product Log', 'admin rss product feed', 'wpsc' ) . "</title>\n\r";
+		$output .= "    <title>" . _x( 'WP eCommerce Product Log', 'admin rss product feed', 'wpsc' ) . "</title>\n\r";
 		$output .= "    <link>" . admin_url( 'admin.php?page=' . WPSC_DIR_NAME . '/display-log.php' ) . "</link>\n\r";
-		$output .= "    <description>" . _x( 'This is the WP e-Commerce Product Log RSS feed', 'admin rss product feed', 'wpsc' ) . "</description>\n\r";
-		$output .= "    <generator>" . _x( 'WP e-Commerce Plugin', 'admin rss product feed', 'wpsc' ) . "</generator>\n\r";
+		$output .= "    <description>" . _x( 'This is the WP eCommerce Product Log RSS feed', 'admin rss product feed', 'wpsc' ) . "</description>\n\r";
+		$output .= "    <generator>" . _x( 'WP eCommerce Plugin', 'admin rss product feed', 'wpsc' ) . "</generator>\n\r";
 
 		foreach ( (array)$purchase_log as $purchase ) {
 			$purchase_link = admin_url( 'admin.php?page=' . WPSC_DIR_NAME . '/display-log.php' ) . "&amp;purchaseid=" . $purchase['id'];
@@ -469,7 +469,7 @@ add_filter( 'sanitize_option_grid_number_per_row', '_wpsc_action_sanitize_option
 function _wpsc_action_update_option_require_register( $old_value, $new_value ) {
 	if ( $new_value == 1 && ! get_option( 'users_can_register' ) ) {
 		update_option( 'users_can_register', 1 );
-		$message = __( 'You wanted to require your customers to log in before checking out. However, the WordPress setting <a href="%s">"Anyone can register"</a> was disabled. WP e-Commerce has enabled that setting for you automatically.', 'wpsc' );
+		$message = __( 'You wanted to require your customers to log in before checking out. However, the WordPress setting <a href="%s">"Anyone can register"</a> was disabled. WP eCommerce has enabled that setting for you automatically.', 'wpsc' );
 		$message = sprintf( $message, admin_url( 'options-general.php' ) );
 		add_settings_error( 'require_register', 'users_can_register_turned_on', $message, 'updated' );
 	}
