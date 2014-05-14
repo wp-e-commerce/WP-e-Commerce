@@ -132,7 +132,7 @@ class WPSC_Settings_Tab_Presentation extends _WPSC_Settings_Tab_Form {
 					'type' => 'checkboxes',
 					'title' => _x( 'Use the following default stylesheets', 'presentation settings', 'wpsc' ),
 					'options' => apply_filters( 'wpsc_default_styles_options', array(
-						'wpsc-common' => _x( '<code>wpsc-common</code>: Common CSS for all pages', 'default styles options', 'wpsc' ),
+						'wpsc-common'        => _x( '<code>wpsc-common</code>: Common CSS for all pages', 'default styles options', 'wpsc' ),
 						'wpsc-common-inline' => _x( '<code>wpsc-common-inline</code>: Inline CSS for all pages', 'default styles options', 'wpsc' ),
 					) ),
 				),

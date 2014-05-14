@@ -169,7 +169,7 @@ add_filter( 'wpsc_control_checkboxes'     , '_wpsc_filter_control_checkboxes', 1
 add_filter( 'wpsc_control_radios'         , '_wpsc_filter_control_radios'    , 10, 3 );
 add_filter( 'wpsc_control_heading'        , '_wpsc_filter_control_heading'   , 10, 3 );
 add_filter( 'wpsc_control_before'         , '_wpsc_filter_control_before_heading', 10, 3 );
-add_filter( 'wpsc_control_after'         , '_wpsc_filter_control_after_heading', 10, 3 );
+add_filter( 'wpsc_control_after'          , '_wpsc_filter_control_after_heading', 10, 3 );
 
 add_filter( 'wpsc_action_field_submit', '_wpsc_filter_control_submit', 10, 3 );
 add_filter( 'wpsc_action_field_hidden', '_wpsc_filter_control_hidden', 10, 3 );

@@ -228,11 +228,14 @@ class WPSC_Settings_Form {
 			$class = 'wpsc-checkbox';
 		}
 
+		// For checkboxes, we should assume these are in a set.  As such, they need to be POSTed as an array.
+		$name .= '[]' !== substr( $name, -2 ) ? '[]' : '';
+
 		$output = '';
 
 		foreach ( $options as $checkbox_value => $checkbox_label ) {
 			$checkbox_id  = $id . '-' . sanitize_title_with_dashes( $checkbox_value );
-			$checked      = in_array( $checkbox_value, $value );
+			$checked      = in_array( $checkbox_value, (array) $value );
 			$output      .= wpsc_form_checkbox( $name, $checkbox_value, $checkbox_label, $checked, array( 'id' => $checkbox_id, 'class' => $class ), false );
 		}
 
