@@ -1,5 +1,46 @@
 <?php
 
+function _wpsc_theme_engine_v1_has_actions() {
+	$actions = array(
+		'wpsc_start_display_user_log_form_fields',
+		'wpsc_pre_purchase_logs',
+		'wpsc_user_log_after_order_status',
+		'wpsc_before_cart_widget_item_name',
+		'wpsc_after_cart_widget_item_name',
+		'wpsc_top_of_products_page',
+		'wpsc_product_form_fields_begin',
+		'wpsc_product_form_fields_end',
+		'wpsc_theme_footer',
+		'wpsc_product_before_description',
+		'wpsc_product_addons',
+		'wpsc_before_checkout_cart_row',
+		'wpsc_before_checkout_cart_item_image',
+		'wpsc_after_checkout_cart_item_image',
+		'wpsc_before_checkout_cart_item_name',
+		'wpsc_after_checkout_cart_item_name',
+		'wpsc_after_checkout_cart_row',
+		'wpsc_after_checkout_cart_rows',
+		'wpsc_before_shipping_of_shopping_cart',
+		'wpsc_before_form_of_shopping_cart',
+		'wpsc_inside_shopping_cart',
+		'wpsc_bottom_of_shopping_cart',
+		'wpsc_additional_user_profile_links',
+		'wpsc_user_profile_section_purchase_history',
+		'wpsc_user_profile_section_edit_profile',
+		'wpsc_user_profile_section_downloads',
+	);
+
+	$has_actions = false;
+
+	foreach ( $actions as $action ) {
+		if ( has_action( $action ) ) {
+			$has_actions = true;
+		}
+	}
+
+	return $has_actions;
+}
+
 function _wpsc_theme_engine_v2_has_old_templates() {
 	$current_theme  = trailingslashit( get_stylesheet_directory() );
 	$theme_files    = scandir( $current_theme );
@@ -36,7 +77,7 @@ function _wpsc_enable_theme_engine_v2( $components ) {
 
 function _wpsc_maybe_activate_theme_engine_v2() {
 
-	$activate = false;
+	$activate = true;
 
 	global $wp_rewrite;
 
@@ -52,11 +93,15 @@ function _wpsc_maybe_activate_theme_engine_v2() {
 		$activate = false;
 	}
 
-	if ( function_exists( '_wpsc_gc_init' ) ) {
+	if ( defined( 'WPSC_GOLD_VERSION' ) ) {
 		$activate = false;
 	}
 
 	if ( _wpsc_theme_engine_v2_has_old_templates() ) {
+		$activate = false;
+	}
+
+	if ( _wpsc_theme_engine_v1_has_actions() ) {
 		$activate = false;
 	}
 
