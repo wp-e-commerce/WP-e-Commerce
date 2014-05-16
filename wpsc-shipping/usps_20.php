@@ -516,25 +516,26 @@ class ash_usps {
 	 * @return string XML Response from USPS API
 	 */
 	function _make_request( $request, $intl = false ) {
+
 		// Get the proper endpoint to send request to
 		$endpoint = $this->_get_endpoint( $intl );
 		// Need to url encode the XML for the request
 		$encoded_request = urlencode( $request );
+
 		// Put endpoint and request together
 		$url = $endpoint . "&XML=" . $encoded_request;
-		// Make the request
-		$ch = curl_init();
-		curl_setopt( $ch, CURLOPT_URL, $url );
-		curl_setopt( $ch, CURLOPT_NOPROGRESS, 1 );
-		curl_setopt( $ch, CURLOPT_VERBOSE, 1 );
-		@curl_setopt( $ch, CURLOPT_FOLLOWLOCATION,1 );
-		curl_setopt( $ch, CURLOPT_TIMEOUT, 120 );
-		curl_setopt( $ch, CURLOPT_USERAGENT, 'wp-e-commerce' );
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-		$body = curl_exec( $ch );
-		curl_close( $ch );
 
-		return $body;
+		$request = wp_remote_post(
+			$url,
+			array(
+				'httpversion' => '1.1',
+				'user-agent'  => 'wp-e-commerce',
+				'redirection' => 10,
+				'timeout'     => 120
+			)
+		);
+
+		return wp_remote_retrieve_body( $request );
 	}
 
 	/**
