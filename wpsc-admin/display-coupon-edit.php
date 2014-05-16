@@ -22,6 +22,8 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 			<table class="form-table">
 				<tbody>
 
+					<?php do_action( 'wpsc_coupon_edit_top', $coupon_id, $coupon ); ?>
+
 					<tr class="form-field">
 						<th scope="row" valign="top">
 							<label for="edit_coupon_code"><?php _e( 'Coupon Code', 'wpsc' ); ?></label>
@@ -162,6 +164,8 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 							<?php endforeach; ?>
 						</td>
 					</tr>
+
+					<?php do_action( 'wpsc_coupon_edit_top', $coupon_id, $coupon ); ?>
 
 				</tbody>
 			</table>
