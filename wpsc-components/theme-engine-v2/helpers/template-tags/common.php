@@ -42,26 +42,31 @@ function wpsc_format_currency( $amt, $args = '' ) {
 	$args = wp_parse_args( $args );
 
 	// Either display symbol or code, not both
-	if ( array_key_exists( 'display_currency_symbol', $args ) )
+	if ( array_key_exists( 'display_currency_symbol', $args ) ) {
 		$args['display_currency_code'] = ! $args['display_currency_symbol'];
-	elseif ( array_key_exists( 'display_currency_code', $args ) )
+	} elseif ( array_key_exists( 'display_currency_code', $args ) ) {
 		$args['display_currency_symbol'] = ! $args['display_currency_code'];
+	}
 
 	$r = wp_parse_args( $args, $defaults );
 	extract( $r );
 
 	$currencies_without_fractions = array( 'JPY', 'HUF', 'VND' );
-	if ( $isocode )
+
+	if ( $isocode ) {
 		$currency = new WPSC_Country( $isocode, 'isocode' );
-	else
+	} else {
 		$currency = new WPSC_Country( get_option( 'currency_type' ) );
+	}
+
 	$currency_code = $currency->get( 'code' );
 
 	// No decimal point, no decimals
-	if ( ! $display_decimal_point || in_array( $currency_code, $currencies_without_fractions ) )
+	if ( ! $display_decimal_point || in_array( $currency_code, $currencies_without_fractions ) ) {
 		$decimals = 0;
-	else
+	} else {
 		$decimals = 2; // default is 2
+	}
 
 	$decimals            = apply_filters( 'wpsc_modify_decimals'                 , $decimals, $isocode );
 	$decimal_separator   = apply_filters( 'wpsc_format_currency_decimal_separator'  , wpsc_get_option( 'decimal_separator' ), $isocode );
@@ -70,8 +75,9 @@ function wpsc_format_currency( $amt, $args = '' ) {
 	// Format the price for output
 	$formatted = number_format( $amt, $decimals, $decimal_separator, $thousands_separator );
 
-	if ( ! $display_currency_code )
+	if ( ! $display_currency_code ) {
 		$currency_code = '';
+	}
 
 	$symbol = $display_currency_symbol ? $currency->get('symbol' ) : '';
 	$symbol = esc_html( $symbol );
@@ -126,8 +132,9 @@ function wpsc_get_page_slugs() {
 	$store_slug = wpsc_get_option( 'store_slug' );
 
 	// if main store is not displayed as front page, append it with slash
-	if ( $store_slug )
+	if ( $store_slug ) {
 		$store_slug .= '/';
+	}
 
 	// names of pages
 	$pages = array(
@@ -150,10 +157,13 @@ function wpsc_get_page_slugs() {
 
 	// fetch the slugs corresponding to each page's name
 	foreach ( $pages as $key => $page ) {
+
 		$option = str_replace( '-', '_', $page ) . '_page_slug';
-		$slug = wpsc_get_option( $option );
-		if ( ! empty( $slug ) )
-			$slugs[$page] = $store_slug . $slug;
+		$slug   = wpsc_get_option( $option );
+
+		if ( ! empty( $slug ) ) {
+			$slugs[ $page ] = $store_slug . $slug;
+		}
 	}
 
 	return $slugs;

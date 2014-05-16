@@ -1,8 +1,9 @@
 <?php echo $before_widget; ?>
 
 <?php
-if ( ! empty( $title ) )
+if ( ! empty( $title ) ) {
 	echo $before_title . $title . $after_title;
+}
 ?>
 
 <ul class="wpsc-widget-latest-product-list">

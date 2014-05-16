@@ -64,20 +64,22 @@ function _wpsc_te_v2_product_post_type_args( $args ) {
 
 	// set the base slug to '/' in case it is set to be displayed as the front
 	// page ('has_archive' has to be set to a non-empty value)
-	if ( ! $store_slug )
+	if ( ! $store_slug ) {
 		$archive_slug = '/';
-	else
+	} else {
 		$store_slug .= '/';
+	}
 
 	// get single product base slug
 	$product_slug = $store_slug . wpsc_get_option( 'product_base_slug' );
 
 	// include product category as well if user wants to
-	if ( wpsc_get_option( 'prefix_product_slug' ) )
+	if ( wpsc_get_option( 'prefix_product_slug' ) ) {
 		$product_slug .= '/%wpsc_product_category%';
+	}
 
 	// modify the args
-	$args['has_archive'] = $archive_slug;
+	$args['has_archive']     = $archive_slug;
 	$args['rewrite']['slug'] = $product_slug;
 
 	return $args;
@@ -100,10 +102,10 @@ function _wpsc_te_v2_product_category_args( $args ) {
 		$store_slug .= '/';
 	}
 
-	$category_base_slug = wpsc_get_option( 'category_base_slug' );
+	$category_base_slug            = wpsc_get_option( 'category_base_slug' );
 	$hierarchical_product_category = wpsc_get_option( 'hierarchical_product_category_url' );
 
-	$args['rewrite']['slug'] = $store_slug . $category_base_slug;
+	$args['rewrite']['slug']         = $store_slug . $category_base_slug;
 	$args['rewrite']['hierarchical'] = (bool) $hierarchical_product_category;
 
 	return $args;
@@ -130,6 +132,7 @@ function _wpsc_action_flush_rewrite_rules() {
 function wpsc_filter_product_permalink( $permalink, $post, $leavename, $sample ) {
 	return _wpsc_filter_product_permalink( $permalink, $post, $leavename, $sample, false );
 }
+
 add_filter( 'post_type_link', 'wpsc_filter_product_permalink', 10, 4 );
 
 /**
@@ -194,8 +197,9 @@ function _wpsc_filter_product_permalink( $permalink, $post, $leavename, $sample,
 				$ancestors = array( $category_slug );
 				while ( $term->parent ) {
 					$term = get_term( $term->parent, 'wpsc_product_category' );
-					if ( in_array( $term->slug, $ancestors ) || is_wp_error( $term ) )
+					if ( in_array( $term->slug, $ancestors ) || is_wp_error( $term ) ) {
 						break;
+					}
 					$ancestors[] = $term->slug;
 				}
 
@@ -212,8 +216,9 @@ function _wpsc_filter_product_permalink( $permalink, $post, $leavename, $sample,
 	$permalink = str_replace( $rewritecode, $rewritereplace, $permalink );
 	$permalink = user_trailingslashit( $permalink, 'single' );
 
-	if ( $canonical )
+	if ( $canonical ) {
 		return apply_filters( 'wpsc_product_permalink_canonical', $permalink, $post->ID );
-	else
+	} else {
 		return apply_filters( 'wpsc_product_permalink', $permalink, $post->ID );
+	}
 }

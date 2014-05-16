@@ -5,7 +5,7 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 		parent::__construct();
 		require_once( WPSC_TE_V2_CLASSES_PATH . '/cart-item-table.php' );
 		require_once( WPSC_TE_V2_CLASSES_PATH . '/cart-item-table-form.php' );
-		$this->view = 'cart';
+		$this->view  = 'cart';
 		$this->title = wpsc_get_cart_title();
 		$this->init_cart_item_table();
 	}
@@ -20,8 +20,9 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 	public function add( $product_id ) {
 		global $wpsc_cart;
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wp_nonce'], "wpsc-add-to-cart-{$product_id}" ) )
+		if ( ! wp_verify_nonce( $_REQUEST['_wp_nonce'], "wpsc-add-to-cart-{$product_id}" ) ) {
 			wp_die( __( 'Request expired. Please try adding the item to your cart again.', 'wpsc' ) );
+		}
 
 		extract( $_REQUEST, EXTR_SKIP );
 
@@ -38,33 +39,40 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 		);
 
 		$provided_parameters = array();
-		$product_id = apply_filters( 'wpsc_add_to_cart_product_id', (int) $product_id );
+		$product_id          = apply_filters( 'wpsc_add_to_cart_product_id', (int) $product_id );
 
 		if ( ! empty( $wpsc_product_variations ) ) {
-			foreach ( $wpsc_product_variations as $key => $variation )
-				$provided_parameters['variation_values'][(int)$key] = (int)$variation;
+
+			foreach ( $wpsc_product_variations as $key => $variation ) {
+				$provided_parameters['variation_values'][ (int) $key ] = (int) $variation;
+			}
 
 			$variation_product_id = wpsc_get_child_object_in_terms( $product_id, $provided_parameters['variation_values'], 'wpsc-variation' );
 
-			if ( $variation_product_id > 0 )
+			if ( $variation_product_id > 0 ) {
 				$product_id = $variation_product_id;
+			}
 		}
 
-		if ( ! empty( $quantity ) )
+		if ( ! empty( $quantity ) ) {
 			$provided_parameters['quantity'] = (int) $quantity;
+		}
 
 		if ( ! empty( $is_customisable ) ) {
 			$provided_parameters['is_customisable'] = true;
 
-			if ( isset( $custom_text ) )
+			if ( isset( $custom_text ) ) {
 				$provided_parameters['custom_message'] = $custom_text;
+			}
 
-			if ( isset( $_FILES['custom_file'] ) )
+			if ( isset( $_FILES['custom_file'] ) ) {
 				$provided_parameters['file_data'] = $_FILES['custom_file'];
+			}
 		}
 
-		if ( isset( $donation_price ) && (float) $donation_price > 0 )
+		if ( isset( $donation_price ) && (float) $donation_price > 0 ) {
 			$provided_parameters['provided_price'] = (float) $donation_price;
+		}
 
 		$parameters = array_merge( $defaults, $provided_parameters );
 
@@ -74,10 +82,12 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 		}
 
 		$product = get_post( $product_id );
-		if ( $product->post_parent )
+
+		if ( $product->post_parent ) {
 			$stock = get_post_meta( $product->post_parent, '_wpsc_stock', true );
-		else
+		} else {
 			$stock = get_post_meta( $product_id, '_wpsc_stock', true );
+		}
 
 		$remaining_quantity = $wpsc_cart->get_remaining_quantity( $product_id, $parameters['variation_values'] );
 
@@ -107,25 +117,29 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 	public function _callback_update_quantity() {
 		global $wpsc_cart;
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wp_nonce'], 'wpsc-cart-update' ) )
+		if ( ! wp_verify_nonce( $_REQUEST['_wp_nonce'], 'wpsc-cart-update' ) ) {
 			wp_die( __( 'Request expired. Please try updating the items in your cart again.', 'wpsc' ) );
+		}
 
-		$changed = 0;
+		$changed    = 0;
 		$has_errors = false;
+
 		extract( $_REQUEST, EXTR_SKIP );
 
 		foreach ( $wpsc_cart->cart_items as $key => &$item ) {
-			if ( isset( $quantity[$key] ) && $quantity[$key] != $item->quantity ) {
+			if ( isset( $quantity[ $key ] ) && $quantity[ $key ] != $item->quantity ) {
+
 				$product = get_post( $item->product_id );
 
-				if ( ! is_numeric( $quantity[$key] ) ) {
+				if ( ! is_numeric( $quantity[ $key ] ) ) {
 					$message = sprintf( __( 'Invalid quantity for %s.', 'wpsc' ), $product->post_title );
 					$this->message_collection->add( $message, 'error' );
 					continue;
 				}
 
-				if ( $quantity[$key] > $item->quantity ) {
+				if ( $quantity[ $key ] > $item->quantity ) {
 					$product = WPSC_Product::get_instance( $item->product_id );
+
 					if ( ! $product->has_stock ) {
 						$message = __( "Sorry, all the remaining stocks of %s have been claimed. Now you can only checkout with the current number of that item in your cart.", 'wpsc' );
 						$this->message_collection->add( sprintf( $message, $product->post_title ), 'error' );
@@ -139,7 +153,7 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 					}
 				}
 
-				$item->quantity = $quantity[$key];
+				$item->quantity = $quantity[ $key ];
 				$item->refresh_item();
 				$changed ++;
 			}
@@ -159,18 +173,21 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 	}
 
 	public function index() {
-		if( isset( $_SESSION['coupon_numbers'] ) )
-		   $GLOBALS['wpsc_coupons'] = new wpsc_coupons( $_SESSION['coupon_numbers'] );
+		if ( isset( $_SESSION['coupon_numbers'] ) ) {
+			$GLOBALS['wpsc_coupons'] = new wpsc_coupons( $_SESSION['coupon_numbers'] );
+		}
 
-		if ( isset( $_POST['action'] ) && $_POST['action'] == 'update_quantity' )
+		if ( isset( $_POST['action'] ) && $_POST['action'] == 'update_quantity' ) {
 			$this->_callback_update_quantity();
+		}
 	}
 
 	public function clear() {
 		global $wpsc_cart;
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wp_nonce'], 'wpsc-clear-cart' ) )
+		if ( ! wp_verify_nonce( $_REQUEST['_wp_nonce'], 'wpsc-clear-cart' ) ) {
 			wp_die( __( 'Request expired. Please go back and try clearing the cart again.', 'wpsc' ) );
+		}
 
 		$wpsc_cart->empty_cart();
 		$this->message_collection->add( __( 'Shopping cart emptied.', 'wpsc' ) );
@@ -179,8 +196,9 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 	public function remove( $key ) {
 		global $wpsc_cart;
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wp_nonce'], "wpsc-remove-cart-item-{$key}" ) )
+		if ( ! wp_verify_nonce( $_REQUEST['_wp_nonce'], "wpsc-remove-cart-item-{$key}" ) ) {
 			wp_die( __( 'Request expired. Please go back and try removing the cart item again.', 'wpsc' ) );
+		}
 
 		$wpsc_cart->remove_item( $key );
 		$this->message_collection->add( __( 'Item removed.', 'wpsc' ) );

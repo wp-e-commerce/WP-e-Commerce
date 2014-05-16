@@ -110,8 +110,11 @@ function wpsc_get_breadcrumb( $args = '' ) {
 		// one
 		$pre_current_text = wpsc_get_product_category_name();
 		$term             = get_queried_object();
-		if ( $term->parent )
+
+		if ( $term->parent ) {
 			$parent = get_term( $term->parent, 'wpsc_product_category' );
+		}
+
 	} elseif ( wpsc_is_product_tag() ) {
 		// if this is a product tag, set "current_text" to the tag name by default
 		$pre_current_text = wpsc_get_product_tag_name();
@@ -127,7 +130,7 @@ function wpsc_get_breadcrumb( $args = '' ) {
 			$parent = array(
 				array(
 					'title' => __( 'Your Account', 'wpsc' ),
-					'url' => wpsc_get_customer_account_url()
+					'url'   => wpsc_get_customer_account_url()
 				),
 			);
 		} else {
@@ -261,8 +264,10 @@ function wpsc_get_user_messages( $args = '' ) {
 
 	foreach ( $messages as $type => $type_messages ) {
 		$classes = "wpsc-alert wpsc-alert-block wpsc-alert-{$type}";
-		if ( $type == 'validation' )
+
+		if ( $type == 'validation' ) {
 			$classes .= ' wpsc-alert-error';
+		}
 
 		$output .= sprintf( $before_message_list, $classes );
 		foreach ( $type_messages as $message ) {
@@ -326,8 +331,10 @@ function wpsc_get_checkout_steps() {
 	$step_count = 1;
 	foreach ( $steps as $step => $title ) {
 		$classes = array( 'wpsc-wizard-step wpsc-wizard-step-' . $step );
-		if ( $wizard->is_active( $step ) )
+
+		if ( $wizard->is_active( $step ) ) {
 			$classes[] = 'active';
+		}
 
 		if ( $wizard->is_disabled( $step ) ) {
 			$classes[] = 'disabled';
@@ -339,18 +346,21 @@ function wpsc_get_checkout_steps() {
 
 
 		$classes[] = 'split-' . count( $steps );
-		$output .= '<li class="' . implode( ' ', $classes ) . '">';
-		if ( $wizard->is_active( $step ) || $wizard->is_disabled( $step ) )
+		$output   .= '<li class="' . implode( ' ', $classes ) . '">';
+
+		if ( $wizard->is_active( $step ) || $wizard->is_disabled( $step ) ) {
 			$output .= '<span>';
-		else
+		} else {
 			$output .= '<a href="' . wpsc_get_checkout_url( $step ) . '">';
+		}
 
 		$output .= '<span class="step">' . $step_count . '.</span> ' . $title;
 
-		if ( $wizard->is_active( $step ) || $wizard->is_disabled( $step ) )
+		if ( $wizard->is_active( $step ) || $wizard->is_disabled( $step ) ) {
 			$output .= '</span>';
-		else
+		} else {
 			$output .= '</a>';
+		}
 
 		$output .= '</li>';
 
@@ -373,23 +383,26 @@ function wpsc_checkout_order_preview() {
 }
 
 function wpsc_get_customer_account_tabs() {
-	if ( _wpsc_get_current_controller_name() != 'customer-account' )
+	if ( _wpsc_get_current_controller_name() != 'customer-account' ) {
 		return '';
+	}
 
 	$active_tab = _wpsc_get_current_controller_slug();
 
 	$tabs = array(
-		'orders' => _x( 'Orders', 'customer account tab', 'wpsc' ),
+		'orders'          => _x( 'Orders', 'customer account tab', 'wpsc' ),
 		'digital-content' => _x( 'Digital Contents', 'customer account tab', 'wpsc' ),
-		'settings' => _x( 'Settings', 'customer account tab', 'wpsc' )
+		'settings'        => _x( 'Settings', 'customer account tab', 'wpsc' )
 	);
 
 	$output = sprintf( '<ul class="wpsc-tabs wpsc-customer-account-tabs">' );;
 
 	foreach ( $tabs as $slug => $tab ) {
 		$item_classes = array( 'wpsc-tab-item' );
-		if ( $slug == $active_tab )
+
+		if ( $slug == $active_tab ) {
 			$item_classes[] = 'active';
+		}
 
 		$output .= sprintf( '<li class="%s">', implode( ' ', $item_classes ) );
 
@@ -429,11 +442,11 @@ function wpsc_get_customer_orders_statuses() {
 	$views = array();
 
 	foreach ( $controller->status_filters as $status => $count ) {
-		if ( ! isset( $view_labels[$status] ) || ( $status && ! $count ) )
+		if ( ! isset( $view_labels[ $status ] ) || ( $status && ! $count ) )
 			continue;
 
 		$text = sprintf(
-			translate_nooped_plural( $view_labels[$status], $count, 'wpsc' ),
+			translate_nooped_plural( $view_labels[ $status ], $count, 'wpsc' ),
 			number_format_i18n( $count )
 		);
 
@@ -445,8 +458,9 @@ function wpsc_get_customer_orders_statuses() {
 		$views[$status] = '<span class="wpsc-order-status-' . $status . '">' . $link . '</span>';
 	}
 
-	if ( count( $views ) == 2 )
+	if ( count( $views ) == 2 ) {
 		unset( $views[1] );
+	}
 
 	$output = '<div class="wpsc-order-statuses">';
 	$output .= implode( '<span class="wpsc-order-status-separator"> | </span>', $views );
@@ -485,10 +499,11 @@ function wpsc_get_customer_orders_pagination_links( $args = array() ) {
 
 	$base = $controller->get_current_pagination_base();
 
-	if ( $wp_rewrite->using_permalinks() )
+	if ( $wp_rewrite->using_permalinks() ) {
 		$format = 'page/%#%';
-	else
+	} else {
 		$format = '&page=%#%';
+	}
 
 	$defaults = array(
 		'base'      => trailingslashit( $base ) . '%_%',
@@ -498,7 +513,7 @@ function wpsc_get_customer_orders_pagination_links( $args = array() ) {
 		'prev_text' => is_rtl() ? __( '&rarr;', 'wpsc' ) : __( '&larr;', 'wpsc' ),
 		'next_text' => is_rtl() ? __( '&larr;', 'wpsc' ) : __( '&rarr;', 'wpsc' ),
 		'end_size'  => 3,
-		'mid_size' => 2,
+		'mid_size'  => 2,
 	);
 
 	$defaults = apply_filters( 'wpsc_get_customer_orders_pagination_links', $defaults );
@@ -512,21 +527,22 @@ function wpsc_customer_orders_pagination_links( $args = array() ) {
 }
 
 function wpsc_customer_orders_pagination_count() {
-	$controller = _wpsc_get_current_controller();
-
+	$controller   = _wpsc_get_current_controller();
 	$from         = ( $controller->current_page - 1 ) * $controller->per_page + 1;
 	$to           = $from + $controller->per_page - 1;
 
-	if ( $to > $controller->total_items )
+	if ( $to > $controller->total_items ) {
 		$to = $controller->total_items;
+	}
 
 	if ( $controller->total_items > 1 ) {
-		if ( $from == $to )
+		if ( $from == $to ) {
 			$output = sprintf( __( 'Viewing product %1$s (of %2$s total)', 'wpsc' ), $from, $controller->total_items );
-		elseif ( $controller->total_pages === 1 )
+		} elseif ( $controller->total_pages === 1 ) {
 			$output = sprintf( __( 'Viewing %1$s products', 'wpsc' ), $controller->total_items );
-		else
+		} else {
 			$output = sprintf( __( 'Viewing %1$s products - %2$s through %3$s (of %4$s total)', 'wpsc' ), $controller->count_items, $from, $to, $controller->total_items );
+		}
 	} else {
 		$output = sprintf( __( 'Viewing %1$s product', 'wpsc' ), $controller->total_items );
 	}
@@ -554,7 +570,7 @@ function wpsc_customer_orders_pagination( $args = array() ) {
 }
 
 function wpsc_get_customer_account_order_details() {
-	$c = _wpsc_get_current_controller();
+	$c      = _wpsc_get_current_controller();
 	$fields = $c->form->get_fields();
 	include_once( WPSC_TE_V2_SNIPPETS_PATH . '/user-account-order-details.php' );
 }
@@ -575,8 +591,10 @@ function wpsc_customer_account_cart_items() {
 }
 
 function wpsc_get_customer_account_order_date( $format = false ) {
-	if ( ! $format )
+	if ( ! $format ) {
 		$format = get_option( 'date_format' );
+	}
+
 	$c = _wpsc_get_current_controller();
 	return date_i18n( $format, $c->log->get( 'date' ) );
 }

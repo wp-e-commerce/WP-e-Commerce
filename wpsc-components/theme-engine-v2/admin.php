@@ -24,8 +24,9 @@ function _wpsc_te2_action_admin_enqueue_styles() {
 
 	$current_screen = get_current_screen();
 
-	if ( in_array( $current_screen->id, array( 'settings_page_wpsc-settings', 'widgets' ) ) )
+	if ( in_array( $current_screen->id, array( 'settings_page_wpsc-settings', 'widgets' ) ) ) {
 		wp_enqueue_style( 'wpsc-te2-chosen' );
+	}
 
 	wp_enqueue_style( 'wpsc-te2-admin' );
 }

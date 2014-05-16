@@ -4,8 +4,7 @@ class WPSC_Controller_Register extends WPSC_Controller
 {
 	public function __construct() {
 		if ( is_user_logged_in() ) {
-			$redirect_to = wpsc_get_store_url();
-			wp_redirect( $redirect_to );
+			wp_redirect( wpsc_get_store_url() );
 			exit;
 		}
 
@@ -14,8 +13,9 @@ class WPSC_Controller_Register extends WPSC_Controller
 	}
 
 	public function index() {
-		if ( isset( $_POST['action'] ) && $_POST['action'] == 'register' )
+		if ( isset( $_POST['action'] ) && $_POST['action'] == 'register' ) {
 			$this->callback_register();
+		}
 
 		$this->view = 'register';
 	}
@@ -25,8 +25,7 @@ class WPSC_Controller_Register extends WPSC_Controller
 	}
 
 	private function callback_register() {
-		$form_args = wpsc_get_register_form_args();
-
+		$form_args  = wpsc_get_register_form_args();
 		$validation = wpsc_validate_form( $form_args );
 
 		if ( is_wp_error( $validation ) ) {

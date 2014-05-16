@@ -959,6 +959,10 @@ function wpsc_region_change() {
 function wpsc_checkout_item_active( $checkout_item ) {
 	var active_items = wpsc_var_get( "wpsc_checkout_item_active" );
 
+	if ( 'undefined' === typeof active_items ) {
+		return false;
+	}
+
 	var is_active = active_items.hasOwnProperty( $checkout_item ) && active_items[$checkout_item];
 
 	return is_active;

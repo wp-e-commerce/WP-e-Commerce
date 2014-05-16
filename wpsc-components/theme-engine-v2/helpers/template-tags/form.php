@@ -18,8 +18,9 @@
  * @return array     Form argument array
  */
 function wpsc_get_add_to_cart_form_args( $id = null ) {
-	if ( ! $id )
+	if ( ! $id ) {
 		$id = wpsc_get_product_id();
+	}
 
 	$args = array(
 		// attributes of the form
@@ -43,7 +44,7 @@ function wpsc_get_add_to_cart_form_args( $id = null ) {
 	$product = WPSC_Product::get_instance( $id );
 
 	foreach ( $product->variation_sets as $variation_set_id => $title ) {
-		$variation_terms = $product->variation_terms[$variation_set_id];
+		$variation_terms = $product->variation_terms[ $variation_set_id ];
 		$args['fields'][] = array(
 			'name'    => "wpsc_product_variations[{$variation_set_id}]",
 			'type'    => 'select',
@@ -99,8 +100,9 @@ function wpsc_get_add_to_cart_form_args( $id = null ) {
  * @return string HTML output
  */
 function wpsc_get_add_to_cart_form( $id = null ) {
-	if ( ! $id )
+	if ( ! $id ) {
 		$id = wpsc_get_product_id();
+	}
 
 	$args = wpsc_get_add_to_cart_form_args( $id );
 	return apply_filters( 'wpsc_get_add_to_cart_form', wpsc_get_form_output( $args ) );
@@ -383,21 +385,24 @@ function wpsc_get_checkout_form_args() {
 }
 
 function _wpsc_convert_checkout_form_fields( $customer_settings = false ) {
-	$form = WPSC_Checkout_Form::get();
+	$form   = WPSC_Checkout_Form::get();
 	$fields = $form->get_fields();
-	$args = array();
+	$args   = array();
 
 	$purchase_log_exists = false;
+
 	if ( ! $customer_settings ) {
+
 		$purchase_log_id = wpsc_get_customer_meta( 'current_purchase_log_id' );
 
 		$purchase_log_exists = (bool) $purchase_log_id;
+
 		if ( $purchase_log_exists ) {
 			$form_data_obj = new WPSC_Checkout_Form_Data( $purchase_log_id );
 			$form_raw_data = $form_data_obj->get_raw_data();
 			$form_data = array();
 			foreach ( $form_raw_data as $data ) {
-				$form_data[$data->id] = $data;
+				$form_data[ $data->id ] = $data;
 			}
 		}
 	}
@@ -405,52 +410,58 @@ function _wpsc_convert_checkout_form_fields( $customer_settings = false ) {
 	$i = 0;
 
 	$state_country_pairs = array(
-		'billing_state' => array(
-		),
-		'shipping_state' => array(
-		),
+		'billing_state'  => array(),
+		'shipping_state' => array(),
 	);
 
 	$customer_details = wpsc_get_customer_meta( 'checkout_details' );
-	if ( ! is_array( $customer_details ) )
+
+	if ( ! is_array( $customer_details ) ) {
 		$customer_details = array();
+	}
 
 	foreach ( $fields as $field ) {
 		$id = empty( $field->unique_name ) ? $field->id : $field->unique_name;
 
 		$default_value =   array_key_exists( $field->id, $customer_details )
-		                 ? $customer_details[$field->id]
+		                 ? $customer_details[ $field->id ]
 		                 : '';
 
 		if (
 			   $purchase_log_exists
 			&& $field->type != 'heading'
-			&& isset( $form_data[$field->id ] )
-		)
-			$default_value = $form_data[$field->id]->value;
+			&& isset( $form_data[ $field->id ] )
+		) {
+			$default_value = $form_data[ $field->id ]->value;
+		}
 
 		$field_arr = array(
-			'type' => $field->type,
-			'id' => "wpsc-checkout-field-{$id}",
+			'type'  => $field->type,
+			'id'    => "wpsc-checkout-field-{$id}",
 			'title' => esc_html( $field->name ),
-			'name' => 'wpsc_checkout_details[' . $field->id . ']',
+			'name'  => 'wpsc_checkout_details[' . $field->id . ']',
 			'value' => wpsc_submitted_value( $field->id, $default_value, $_POST['wpsc_checkout_details'] ),
 		);
 
 		$validation_rules = array( 'trim' );
-		if ( $field->mandatory )
+
+		if ( $field->mandatory ) {
 			$validation_rules[] = 'required';
+		}
 
 		$optional_state_field = false;
 
 		if ( in_array( $field->unique_name, array( 'billingstate', 'shippingstate' ) ) ) {
 			$field_arr['type'] = 'select_region';
-			/* output states for all countries just in case JavaScript doesn't work */
+			/* output states for all countries just in case Javascript doesn't work */
 			$field_arr['country'] = 'all';
-			if ( $field->unique_name == 'billingstate' )
-				$state_country_pairs['billing_state']['key'] = $i;
-			else
+
+			if ( $field->unique_name == 'billingstate' ) {
+				$state_country_pairs['billing_state']['key']  = $i;
+			} else {
 				$state_country_pairs['shipping_state']['key'] = $i;
+			}
+
 			// optional text field in case the country they select do not have states
 			// and JS is disabled either by preferences or on error
 			$optional_state_field = true;
@@ -458,12 +469,16 @@ function _wpsc_convert_checkout_form_fields( $customer_settings = false ) {
 			// convert state values in text into proper ID
 			$validation_rules[] = '_wpsc_convert_state';
 		} elseif ( in_array( $field->unique_name, array( 'billingcountry', 'shippingcountry' ) ) || $field->type == 'delivery_country' ) {
-			$field_arr['type'] = 'select_country';
+
+			$field_arr['type']  = 'select_country';
 			$validation_rules[] = 'country';
-			if ( $field->unique_name == 'billingcountry' )
+
+			if ( $field->unique_name == 'billingcountry' ) {
 				$state_country_pairs['billing_state']['country_field_id'] = $field->id;
-			else
+			} else {
 				$state_country_pairs['shipping_state']['country_field_id'] = $field->id;
+			}
+
 		} elseif ( $field->type == 'text' ) {
 			$field_arr['type'] = 'textfield';
 		} elseif ( $field->type == 'select' ) {
@@ -476,43 +491,44 @@ function _wpsc_convert_checkout_form_fields( $customer_settings = false ) {
 			$field_arr['options'] = array_flip( unserialize( $field->options ) );
 		} elseif ( in_array( $field->type, array( 'address', 'city', 'email' ) ) ) {
 			$field_arr['type'] = 'textfield';
-			if ( $field->type == 'email' )
+			if ( $field->type == 'email' ) {
 				$validation_rules[] = 'email';
+			}
 		} elseif ( $field->type == 'heading' && $field->unique_name == 'delivertoafriend') {
 			$field_arr['shipping_heading'] = true;
 		}
 
 		$field_arr['rules'] = implode( '|', $validation_rules );
 
-		$args[$i] = $field_arr;
-		$i ++;
+		$args[ $i ] = $field_arr;
+		$i++;
 
 		if ( $optional_state_field ) {
-			$args[$i] = $args[$i - 1];
-			$args[$i]['type'] = 'textfield';
-			$args[$i]['id'] = 'wpsc-checkout-field-' . $id . '-text';
+			$args[ $i ]         = $args[ $i - 1 ];
+			$args[ $i ]['type'] = 'textfield';
+			$args[ $i ]['id']   = 'wpsc-checkout-field-' . $id . '-text';
 			$i ++;
 		}
 	}
 
 	if ( wpsc_has_tnc() && ! $customer_settings ) {
 		$args[] = array(
-			'type' => 'checkbox',
-			'id' => 'wpsc-terms-and-conditions',
+			'type'  => 'checkbox',
+			'id'    => 'wpsc-terms-and-conditions',
 			'title' => sprintf(
 				__( "I agree to the <a class='thickbox' target='_blank' href='%s' class='termsandconds'>Terms and Conditions</a>", "wpsc"),
 				esc_url( site_url( "?termsandconds=true&amp;width=360&amp;height=400" ) )
 			),
-			'value' => 1,
-			'name' => 'wpsc_terms_conditions',
-			'rules' => 'required',
+			'value'   => 1,
+			'name'    => 'wpsc_terms_conditions',
+			'rules'   => 'required',
 			'checked' => ( wpsc_submitted_value( 'wpsc_terms_conditions', 0 ) == 1 )
 		);
 	}
 
 	foreach ( $state_country_pairs as $field ) {
-		$args[$field['key']]['rules'] .= '|state_of[' . $field['country_field_id'] . ']';
-		$args[$field['key']]['rules'] = ltrim( $args[$field['key']]['rules'], '|' );
+		$args[ $field['key'] ]['rules'] .= '|state_of[' . $field['country_field_id'] . ']';
+		$args[ $field['key'] ]['rules']  = ltrim( $args[$field['key']]['rules'], '|' );
 	}
 
 	return $args;
@@ -604,22 +620,22 @@ function _wpsc_convert_checkout_shipping_form_args( $args ) {
 
 	foreach ( $calculator->sorted_quotes as $module_name => $quotes ) {
 		$radios = array(
-			'type' => 'radios',
-			'title' => $wpsc_shipping_modules[$module_name]->name,
+			'type'    => 'radios',
+			'title'   => $wpsc_shipping_modules[$module_name]->name,
 			'options' => array(),
-			'name' => 'wpsc_shipping_option',
+			'name'    => 'wpsc_shipping_option',
 		);
 
 		foreach ( $quotes as $option => $cost ) {
-			$id = $calculator->ids[$module_name][$option];
+			$id = $calculator->ids[ $module_name ][ $option ];
 			$checked = empty( $submitted_value )
 			           ? $active_shipping_id == $id
 			           : $submitted_value == $id;
 			$radios['options'][] = array(
-				'title' => $option,
-				'value' => $id,
+				'title'       => $option,
+				'value'       => $id,
 				'description' => wpsc_format_currency( $cost ),
-				'checked' => $checked,
+				'checked'     => $checked,
 			);
 		}
 
@@ -627,15 +643,17 @@ function _wpsc_convert_checkout_shipping_form_args( $args ) {
 	}
 
 	// automatically select the cheapest option by default
-	if ( empty( $active_shipping_id ) && empty( $submitted_value ) )
+	if ( empty( $active_shipping_id ) && empty( $submitted_value ) ) {
 		$args['fields'][0]['options'][0]['checked'] = true;
+	}
 
 	return $args;
 }
 
 function wpsc_get_checkout_shipping_form() {
-	if ( ! class_exists( 'WPSC_Shipping_Calculator' ) )
+	if ( ! class_exists( 'WPSC_Shipping_Calculator' ) ) {
 		return '';
+	}
 
 	$args = wpsc_get_checkout_shipping_form_args();
 	return apply_filters( 'wpsc_get_checkout_shipping_form', wpsc_get_form_output( $args ) );

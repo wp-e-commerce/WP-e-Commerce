@@ -48,13 +48,13 @@ class WPSC_Controller_Customer_Account extends WPSC_Controller {
 			ORDER BY processed
 		", get_current_user_id() );
 
-		$results = $wpdb->get_results( $sql );
-		$statuses = array();
+		$results     = $wpdb->get_results( $sql );
+		$statuses    = array();
 		$total_count = 0;
 
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $status ) {
-				$statuses[$status->processed] = (int) $status->count;
+				$statuses[ $status->processed ] = (int) $status->count;
 			}
 
 			$total_count = array_sum( $statuses );
@@ -88,6 +88,7 @@ class WPSC_Controller_Customer_Account extends WPSC_Controller {
 			$this->order( $this->order_id );
 			return;
 		}
+
 		$table = WPSC_Orders_Table::get_instance();
 		$table->offset = ( $this->current_page - 1 ) * $table->per_page;
 		$table->status = $this->current_status;
@@ -100,17 +101,17 @@ class WPSC_Controller_Customer_Account extends WPSC_Controller {
 	}
 
 	private function order( $id ) {
-		$this->view = 'customer-account-order';
+		$this->view    = 'customer-account-order';
 		$form_data_obj = new WPSC_Checkout_Form_Data( $id );
-		$this->form = WPSC_Checkout_Form::get();
-		$this->log = new WPSC_Purchase_Log( $id );
-		$this->title = sprintf(
+		$this->form    = WPSC_Checkout_Form::get();
+		$this->log     = new WPSC_Purchase_Log( $id );
+		$this->title   = sprintf(
 			__( 'View Order #%d', 'wpsc' ),
 			$id
 		);
 
 		foreach ( $form_data_obj->get_raw_data() as $data ) {
-			$this->form_data[(int) $data->id] = $data;
+			$this->form_data[ (int) $data->id ] = $data;
 		}
 
 		require_once( WPSC_TE_V2_CLASSES_PATH . '/cart-item-table-order.php' );
@@ -139,8 +140,10 @@ class WPSC_Controller_Customer_Account extends WPSC_Controller {
 
 	public function get_current_pagination_base() {
 		$slug = 'orders';
-		if ( $this->current_status > 0 )
+
+		if ( $this->current_status > 0 ) {
 			$slug .= '/status/' . $this->current_status;
+		}
 
 		return wpsc_get_customer_account_url( $slug );
 	}
@@ -149,15 +152,17 @@ class WPSC_Controller_Customer_Account extends WPSC_Controller {
 		$this->view = 'customer-account-settings';
 		_wpsc_enqueue_shipping_billing_scripts();
 
-		if ( isset( $_POST['action'] ) && $_POST['action'] == 'submit_customer_settings_form' )
+		if ( isset( $_POST['action'] ) && $_POST['action'] == 'submit_customer_settings_form' ) {
 			$this->submit_customer_settings();
+		}
 	}
 
 	private function submit_customer_settings() {
-		if ( ! $this->verify_nonce( 'wpsc-customer-settings-form' ) )
+		if ( ! $this->verify_nonce( 'wpsc-customer-settings-form' ) ) {
 			return;
+		}
 
-		$form_args = wpsc_get_customer_settings_form_args();
+		$form_args  = wpsc_get_customer_settings_form_args();
 		$validation = wpsc_validate_form( $form_args );
 
 		if ( is_wp_error( $validation ) ) {
@@ -169,26 +174,30 @@ class WPSC_Controller_Customer_Account extends WPSC_Controller {
 			return;
 		}
 
-		if ( ! empty( $_POST['wpsc_copy_billing_details'] ) )
+		if ( ! empty( $_POST['wpsc_copy_billing_details'] ) ) {
 			_wpsc_copy_billing_details();
+		}
 
 		$this->save_customer_settings();
 	}
 
 	private function save_customer_settings() {
-		$form = WPSC_Checkout_Form::get();
+		$form   = WPSC_Checkout_Form::get();
 		$fields = $form->get_fields();
 
 		$customer_details = wpsc_get_customer_meta( 'checkout_details' );
-		if ( ! is_array( $customer_details ) )
+
+		if ( ! is_array( $customer_details ) ) {
 			$customer_details = array();
+		}
 
 		foreach ( $fields as $field ) {
-			if ( ! array_key_exists( $field->id, $_POST['wpsc_checkout_details'] ) )
+			if ( ! array_key_exists( $field->id, $_POST['wpsc_checkout_details'] ) ) {
 				continue;
+			}
 
-			$value = $_POST['wpsc_checkout_details'][$field->id];
-			$customer_details[$field->id] = $value;
+			$value                          = $_POST['wpsc_checkout_details'][ $field->id ];
+			$customer_details[ $field->id ] = $value;
 
 			switch ( $field->unique_name ) {
 				case 'billingstate':
