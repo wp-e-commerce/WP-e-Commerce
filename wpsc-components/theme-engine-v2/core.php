@@ -23,6 +23,7 @@ function _wpsc_te_v2_includes() {
 	require_once( WPSC_TE_V2_CLASSES_PATH . '/template-engine.php' );
 	require_once( WPSC_TE_V2_CLASSES_PATH . '/settings.php' );
 
+	require_once( WPSC_TE_V2_HELPERS_PATH . '/redirect-canonical.php' );
 	require_once( WPSC_TE_V2_HELPERS_PATH . '/compat.php' );
 	require_once( WPSC_TE_V2_HELPERS_PATH . '/mvc.php' );
 	require_once( WPSC_TE_V2_HELPERS_PATH . '/settings.php' );
