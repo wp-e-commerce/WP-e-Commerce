@@ -5,6 +5,8 @@
 			<table class="form-table">
 				<tbody>
 
+					<?php do_action( 'wpsc_coupon_add_top' ); ?>
+
 					<tr class="form-field">
 						<th scope="row" valign="top">
 							<label for="add_coupon_code"><?php _e( 'Coupon Code', 'wpsc' ); ?></label>
@@ -117,6 +119,8 @@
 							</div>
 						</td>
 					</tr>
+
+					<?php do_action( 'wpsc_coupon_add_bottom' ); ?>
 
 				</tbody>
 			</table>
