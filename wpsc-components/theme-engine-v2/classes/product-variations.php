@@ -100,8 +100,8 @@ class WPSC_Product_Variations {
 		$sql = $wpdb->prepare( "
 			SELECT pm.meta_value AS price, pm2.meta_value AS sale_price
 			FROM {$wpdb->posts} AS p
-			INNER JOIN {$wpdb->postmeta} AS pm ON pm.post_id = p.id AND pm.meta_key = '_wpsc_price'
-			INNER JOIN {$wpdb->postmeta} AS pm2 ON pm2.post_id = p.id AND pm2.meta_key = '_wpsc_special_price'
+			LEFT JOIN {$wpdb->postmeta} AS pm ON pm.post_id = p.id AND pm.meta_key = '_wpsc_price'
+			LEFT JOIN {$wpdb->postmeta} AS pm2 ON pm2.post_id = p.id AND pm2.meta_key = '_wpsc_special_price'
 			WHERE
 				p.post_type = 'wpsc-product'
 				AND
