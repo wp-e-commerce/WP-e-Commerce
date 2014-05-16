@@ -5,8 +5,10 @@ class WPSC_Cart_Item_Table_Form extends WPSC_Cart_Item_Table {
 	private static $instance;
 
 	public static function get_instance() {
-		if ( empty( self::$instance ) )
+
+		if ( empty( self::$instance ) ) {
 			self::$instance = new WPSC_Cart_Item_Table_Form();
+		}
 
 		return self::$instance;
 	}

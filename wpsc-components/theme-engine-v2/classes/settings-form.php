@@ -229,8 +229,7 @@ class WPSC_Settings_Form {
 		}
 
 		// For checkboxes, we should assume these are in a set.  As such, they need to be POSTed as an array.
-		$name .= '[]' !== substr( $name, -2 ) ? '[]' : '';
-
+		$name  .= '[]' !== substr( $name, -2 ) ? '[]' : '';
 		$output = '';
 
 		foreach ( $options as $checkbox_value => $checkbox_label ) {

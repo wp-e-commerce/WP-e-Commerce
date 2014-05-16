@@ -22,10 +22,12 @@ class WPSC_Table {
 				$class = str_replace( '_', '-', $column );
 				echo '<td class="' . $class . '">';
 				$callback = "column_{$column}";
-				if ( is_callable( array( $this, "column_{$column}") ) )
+
+				if ( is_callable( array( $this, "column_{$column}") ) ) {
 					$this->$callback( $item, $key );
-				else
+				} else {
 					$this->column_default( $item, $key, $column );
+				}
 
 				echo '</td>';
 			}

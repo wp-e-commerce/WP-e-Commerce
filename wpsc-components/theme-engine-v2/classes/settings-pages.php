@@ -78,15 +78,15 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 		);
 
 		// Shortcut variables for buttons and messages
-		$view_button = '<a class="button button-secondary button-view-page" href="%1$s">%2$s</a>';
+		$view_button  = '<a class="button button-secondary button-view-page" href="%1$s">%2$s</a>';
 		$view_message = _x( 'View', 'view page', 'wpsc' );
 		$view_category_message = _x( 'Sample Category', 'view page', 'wpsc' );
-		$view_product_message = _x( 'Sample Product', 'view page', 'wpsc' );
+		$view_product_message  = _x( 'Sample Product', 'view page', 'wpsc' );
 
 		// generate sample URLs for single product and product category
-		$base_shop_url      = '<small>' . esc_url( wpsc_get_store_url( '/' ) ) . '</small>';
-		$sample_category    = get_terms( 'wpsc_product_category', array( 'number' => 1 ) );
-		$sample_product     = get_posts( array(	'post_type' => 'wpsc-product', 'numberposts' => 1 ) );
+		$base_shop_url   = '<small>' . esc_url( wpsc_get_store_url( '/' ) ) . '</small>';
+		$sample_category = get_terms( 'wpsc_product_category', array( 'number' => 1 ) );
+		$sample_product  = get_posts( array(	'post_type' => 'wpsc-product', 'numberposts' => 1 ) );
 
 		// generate form fields
 		$this->form_array = array(
@@ -110,8 +110,8 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 
 			// Whether to display the store as front page
 			'store_as_front_page' => array(
-				'type' => 'radios',
-				'title' => _x( 'Display main store on front page', 'page settings', 'wpsc' ),
+				'type'    => 'radios',
+				'title'   => _x( 'Display main store on front page', 'page settings', 'wpsc' ),
 				'options' => array(
 					1 => _x( 'Yes', 'settings', 'wpsc' ),
 					0 => _x( 'No', 'settings', 'wpsc' ),
@@ -120,8 +120,8 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 
 			// Store title
 			'store_title' => array(
-				'type'  => 'textfield',
-				'title' => _x( 'Main store title', 'page slug title', 'wpsc' ),
+				'type'       => 'textfield',
+				'title'      => _x( 'Main store title', 'page slug title', 'wpsc' ),
 				'validation' => 'required',
 			),
 
@@ -266,7 +266,7 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 				'type'        => 'textfield',
 				'prepend'     => $base_shop_url,
 				'title'       => _x( 'Login page', 'permalinks setting', 'wpsc' ),
-				'description' => __( "Leaving this field blank will disable the page.", 'wpsc' ),
+				'description' => __( 'Leaving this field blank will disable the page.', 'wpsc' ),
 				'validation'  => 'slug_not_conflicted',
 				'class' => 'regular-text code',
 			),
@@ -290,8 +290,8 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 
 			// Title for password reminder page
 			'password_reminder_page_title' => array(
-				'type' => 'textfield',
-				'title' => _x( 'Password reminder page', 'page settings', 'wpsc' ),
+				'type'       => 'textfield',
+				'title'      => _x( 'Password reminder page', 'page settings', 'wpsc' ),
 				'validation' => 'required',
 			),
 
@@ -307,8 +307,8 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 
 			// Register page title
 			'register_page_title' => array(
-				'type' => 'textfield',
-				'title' => _x( 'Register page', 'page settings', 'wpsc' ),
+				'type'       => 'textfield',
+				'title'      => _x( 'Register page', 'page settings', 'wpsc' ),
 				'validation' => 'required',
 			),
 		);

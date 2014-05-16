@@ -51,8 +51,9 @@ class WPSC_Controller {
 			$located = wpsc_locate_view_wrappers( $current_controller . '-wrapper.php' );
 		}
 
-		if ( $located )
+		if ( $located ) {
 			$this->needs_compat = false;
+		}
 
 		if ( ! $located ) {
 			$located = locate_template( 'page.php' );
@@ -163,6 +164,7 @@ class WPSC_Controller {
 			if ( $priority !== false ) {
 				remove_filter( 'the_content', 'wpautop' );
 			}
+
 		} elseif ( $priority === false ) {
 			add_filter( 'the_content', 'wpautop' );
 		}

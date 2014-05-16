@@ -45,7 +45,7 @@ function _wpsc_upgrade_display_backup_warning() {
 		$message,
 		'http://codex.wordpress.org/WordPress_Backups',
 		'http://vaultpress.com/',
-		'http://ithemes.com/purchase/backupbuddy/'
+		'http://ithemes.com/member/go.php?r=45982&i=l44'
 	);
 	?>
 	<div id="wpsc-upgrade-warning" class="updated">

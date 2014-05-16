@@ -6,16 +6,18 @@ class WPSC_Orders_Table extends WPSC_Table {
 	private static $instance;
 
 	public static function get_instance() {
-		if ( empty( self::$instance ) )
+
+		if ( empty( self::$instance ) ) {
 			self::$instance = new WPSC_Orders_Table();
+		}
 
 		return self::$instance;
 	}
 
-	public $per_page = 10;
-	public $offset = 0;
+	public $per_page    = 10;
+	public $offset      = 0;
 	public $total_items = 0;
-	public $status = 0;
+	public $status      = 0;
 
 	public function fetch_items() {
 		global $wpdb;
@@ -37,7 +39,7 @@ class WPSC_Orders_Table extends WPSC_Table {
 			LIMIT {$this->offset}, {$this->per_page}
 		", $vars );
 
-		$this->items = $wpdb->get_results( $sql );
+		$this->items       = $wpdb->get_results( $sql );
 		$this->total_items = $wpdb->get_var( "SELECT FOUND_ROWS()" );
 	}
 
@@ -45,11 +47,11 @@ class WPSC_Orders_Table extends WPSC_Table {
 		parent::__construct();
 
 		$this->columns = array(
-			'id'   => __( 'Order Number', 'wpsc' ),
-			'date' => __( 'Date', 'wpsc' ),
-			'status' => __( 'Status', 'wpsc' ),
+			'id'          => __( 'Order Number', 'wpsc' ),
+			'date'        => __( 'Date', 'wpsc' ),
+			'status'      => __( 'Status', 'wpsc' ),
 			'tracking_id' => __( 'Tracking ID', 'wpsc' ),
-			'total' => __( 'Total', 'wpsc' ),
+			'total'       => __( 'Total', 'wpsc' ),
 		);
 	}
 
@@ -64,14 +66,16 @@ class WPSC_Orders_Table extends WPSC_Table {
 	}
 
 	protected function column_date( $item ) {
-		$format = __( 'Y/m/d g:i:s A' );
+		$format    = __( 'Y/m/d g:i:s A' );
 		$timestamp = (int) $item->date;
 		$full_time = date( $format, $timestamp );
 		$time_diff = time() - $timestamp;
-		if ( $time_diff > 0 && $time_diff < 24 * 60 * 60 )
+
+		if ( $time_diff > 0 && $time_diff < 24 * 60 * 60 ) {
 			$h_time = $h_time = sprintf( __( '%s ago' ), human_time_diff( $timestamp ) );
-		else
+		} else {
 			$h_time = date( __( get_option( 'date_format', 'Y/m/d' ) ), $timestamp );
+		}
 
 		echo '<a title="' . $full_time . '" href="' . $this->item_url( $item ) . '">';
 		echo $h_time;
@@ -92,10 +96,11 @@ class WPSC_Orders_Table extends WPSC_Table {
 	}
 
 	protected function column_tracking_id( $item ) {
-		if ( empty( $item->track_id ) )
+		if ( empty( $item->track_id ) ) {
 			echo __( 'n/a', 'wpsc' );
-		else
+		} else {
 			echo esc_html( $item->track_id );
+		}
 	}
 
 	protected function column_total( $item ) {

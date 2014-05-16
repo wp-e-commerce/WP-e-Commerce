@@ -574,7 +574,7 @@ function wpsc_customer_account_cart_items() {
 	echo wpsc_get_customer_account_cart_items();
 }
 
-function wpsc_get_customer_account_order_date( $format = false) {
+function wpsc_get_customer_account_order_date( $format = false ) {
 	if ( ! $format )
 		$format = get_option( 'date_format' );
 	$c = _wpsc_get_current_controller();

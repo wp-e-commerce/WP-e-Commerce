@@ -19,7 +19,7 @@ class WPSC_Settings_Tab_Presentation extends _WPSC_Settings_Tab_Form {
 			$class = 'wpsc-settings-category-filter';
 		}
 
-		$output = '';
+		$output   = '';
 		$selected = wpsc_get_option( 'categories_to_filter' );
 
 		$output .= wpsc_form_radios(
@@ -86,13 +86,13 @@ class WPSC_Settings_Tab_Presentation extends _WPSC_Settings_Tab_Form {
 			'wpsc_settings_presentation_sections',
 			array(
 				'default_styles' => array(
-					'title' => _x( 'Default styling', 'presentation settings', 'wpsc' ),
+					'title'  => _x( 'Default styling', 'presentation settings', 'wpsc' ),
 					'fields' => array(
 						'default_styles'
 					),
 				),
 				'category_filter' => array(
-					'title' => _x( 'Category filter', 'presentation settings', 'wpsc' ),
+					'title'  => _x( 'Category filter', 'presentation settings', 'wpsc' ),
 					'fields' => array(
 						'display_category_filter',
 						'categories_to_filter',
@@ -106,8 +106,8 @@ class WPSC_Settings_Tab_Presentation extends _WPSC_Settings_Tab_Form {
 			'wpsc_settings_presentation_form',
 			array(
 				'display_category_filter' => array(
-					'type' => 'radios',
-					'title' => _x( 'Display category filter on store pages', 'presentation settings', 'wpsc' ),
+					'type'    => 'radios',
+					'title'   => _x( 'Display category filter on store pages', 'presentation settings', 'wpsc' ),
 					'options' => array(
 						1 => _x( 'Yes', 'settings', 'wpsc' ),
 						0 => _x( 'No', 'settings', 'wpsc' ),
@@ -115,13 +115,13 @@ class WPSC_Settings_Tab_Presentation extends _WPSC_Settings_Tab_Form {
 				),
 
 				'categories_to_filter' => array(
-					'type' => 'filter_categories',
+					'type'  => 'filter_categories',
 					'title' => _x( 'Which categories to filter', 'presentation settings', 'wpsc' )
 				),
 
 				'category_filter_drill_down' => array(
-					'type' => 'radios',
-					'title' => _x( 'Allow category filter drill down', 'presentation settings', 'wpsc' ),
+					'type'    => 'radios',
+					'title'   => _x( 'Allow category filter drill down', 'presentation settings', 'wpsc' ),
 					'options' => array(
 						1 => _x( 'Yes', 'settings', 'wpsc' ),
 						0 => _x( 'No', 'settings', 'wpsc' ),
@@ -129,8 +129,8 @@ class WPSC_Settings_Tab_Presentation extends _WPSC_Settings_Tab_Form {
 				),
 
 				'default_styles' => array(
-					'type' => 'checkboxes',
-					'title' => _x( 'Use the following default stylesheets', 'presentation settings', 'wpsc' ),
+					'type'    => 'checkboxes',
+					'title'   => _x( 'Use the following default stylesheets', 'presentation settings', 'wpsc' ),
 					'options' => apply_filters( 'wpsc_default_styles_options', array(
 						'wpsc-common'        => _x( '<code>wpsc-common</code>: Common CSS for all pages', 'default styles options', 'wpsc' ),
 						'wpsc-common-inline' => _x( '<code>wpsc-common-inline</code>: Inline CSS for all pages', 'default styles options', 'wpsc' ),

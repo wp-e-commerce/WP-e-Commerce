@@ -43,7 +43,7 @@ class WPSC_Cart_Item_Table extends WPSC_Table {
 	}
 
 	private function prepare_cache() {
-		$post_in        = array();
+		$post_in = array();
 
 		foreach ( $this->items as $item ) {
 			$post_in[] = $item->product_id;
@@ -138,7 +138,7 @@ class WPSC_Cart_Item_Table extends WPSC_Table {
 
 		foreach ( $item->variation_values as $variation_set => $variation ) {
 			$set_name       = get_term_field( 'name', $variation_set, 'wpsc-variation' );
-			$variation_name = get_term_field( 'name', $variation, 'wpsc-variation' );
+			$variation_name = get_term_field( 'name', $variation    , 'wpsc-variation' );
 			$variations[]   = '<span>' . esc_html( $set_name ) . ':</span> ' . esc_html( $variation_name );
 		}
 

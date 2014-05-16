@@ -8,33 +8,38 @@ class WPSC_Cart_Item_Table_Order extends WPSC_Cart_Item_Table {
 	public function __construct( $id ) {
 		parent::__construct();
 
-		$this->show_tax = true;
-		$this->show_total = true;
+		$this->show_tax        = true;
+		$this->show_total      = true;
 		$this->show_thumbnails = true;
-		$this->show_shipping = true;
+		$this->show_shipping   = true;
 
-		$this->log = new WPSC_Purchase_Log( $id );
+		$this->log   = new WPSC_Purchase_Log( $id );
 		$this->items = $this->get_items();
 	}
 
 	private function get_items() {
 		$cart = $this->log->get_cart_contents();
+
 		$items = array();
+
 		foreach ( $cart as $item ) {
+
 			$obj = new stdClass();
 			$obj->product_id = $item->prodid;
 
 			$variations = wpsc_get_product_terms( $item->prodid, 'wpsc-variation' );
+
 			$obj->variation_values = array();
+
 			foreach ( $variations as $term ) {
-				$obj->variation_values[(int) $term->parent] = (int) $term->term_id;
+				$obj->variation_values[ (int) $term->parent ] = (int) $term->term_id;
 			}
 
-			$obj->sku = get_post_meta( $item->prodid, '_wpsc_sku', true );
-			$obj->quantity = $item->quantity;
-			$obj->unit_price = $item->price;
+			$obj->sku          = get_post_meta( $item->prodid, '_wpsc_sku', true );
+			$obj->quantity     = $item->quantity;
+			$obj->unit_price   = $item->price;
 			$obj->product_name = $item->name;
-			$obj->id = $item->id;
+			$obj->id           = $item->id;
 
 			$items[] = $obj;
 		}

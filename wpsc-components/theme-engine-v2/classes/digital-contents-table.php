@@ -28,7 +28,7 @@ class WPSC_Digital_Contents_Table extends WPSC_Table {
 			get_current_user_id(),
 		);
 
-		/* @todo: seems all we use here is fileid and productid.  Investigate benchmarking selecting only those two columns. */
+		/* @todo: seems all we use here is fileid and product_id.  Investigate benchmarking selecting only those two columns. */
 		$sql = $wpdb->prepare( "
 			SELECT
 				d.*
@@ -49,7 +49,7 @@ class WPSC_Digital_Contents_Table extends WPSC_Table {
 		$product_ids = array_unique( array_map( 'absint', $product_ids ) );
 		$this->items = get_posts( array(
 			'post_type' => 'wpsc-product',
-			'post__in' => $product_ids )
+			'post__in'  => $product_ids )
 		);
 		$this->total_items = count( $this->items );
 
@@ -104,7 +104,7 @@ class WPSC_Digital_Contents_Table extends WPSC_Table {
 	public function column_contents( $item ) {
 		echo '<div class="wpsc-digital-product-items">';
 		echo '<ul>';
-		foreach ( $this->digital_items[$item->ID] as $file ) {
+		foreach ( $this->digital_items[ $item->ID ] as $file ) {
 			echo '<li>';
 			$post = get_post( $file->fileid );
 			if ( ! $post ) {
@@ -112,7 +112,7 @@ class WPSC_Digital_Contents_Table extends WPSC_Table {
 				continue;
 			}
 
-			$file_name = get_the_title( $file->fileid );
+			$file_name  = get_the_title( $file->fileid );
 			$downloadid = empty( $file->uniqueid ) ? $file->id : $file->uniqueid;
 			$url = add_query_arg( 'downloadid', $downloadid, home_url() );
 

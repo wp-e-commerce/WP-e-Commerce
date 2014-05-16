@@ -12,7 +12,7 @@ class WPSC_Widget_Price_Range extends WP_Widget {
 			'wpsc_widget_price_range',
 			__( '(WPEC) Price Range', 'wpsc' ),
 			array(
-				'description' => __( 'WP e-Commerce Price Range Widget', 'wpsc' )
+				'description' => __( 'WP eCommerce Price Range Widget', 'wpsc' )
 			)
 		);
 
@@ -25,26 +25,30 @@ class WPSC_Widget_Price_Range extends WP_Widget {
 	public function _action_pre_get_posts( $query ) {
 		$min = $query->get( 'wpsc_min_price' );
 		$max = $query->get( 'wpsc_max_price' );
-		if ( ! $query->is_main_query() || ! $min )
+
+		if ( ! $query->is_main_query() || ! $min ) {
 			return;
+		}
 
 		$meta_query = array();
 
-		if ( $min )
+		if ( $min ) {
 			$meta_query[] = array(
 				'key' => '_wpsc_price',
 				'value' => $min,
 				'compare' => '>=',
 				'type' => 'numeric',
 			);
+		}
 
-		if ( $max )
+		if ( $max ) {
 			$meta_query[] = array(
 				'key' => '_wpsc_price',
 				'value' => $max,
 				'compare' => '<=',
 				'type' => 'numeric',
 			);
+		}
 
 		$query->set( 'meta_query', $meta_query );
 	}
@@ -73,20 +77,25 @@ class WPSC_Widget_Price_Range extends WP_Widget {
 		               ? 6
 		               : $prices->count;
 
-		$diff = ($prices->max - $prices->min) / $range_count;
+		$diff     = ( $prices->max - $prices->min ) / $range_count;
 		$instance = wp_parse_args( $instance, $this->defaults );
-		$title = apply_filters( 'widget_title', $instance['title'] );
+		$title    = apply_filters( 'widget_title', $instance['title'] );
+
 		extract( $args );
 
 		echo $before_widget;
-		if ( ! empty( $title ) )
+
+		if ( ! empty( $title ) ) {
 			echo $before_title . $title . $after_title;
+		}
 
 		echo '<ul>';
 		/** %1$s: min price, %2$s: max price **/
-		$text = _x( 'From %1$s to %2$s', 'price range widget', 'wpsc' );
+		$text      = _x( 'From %1$s to %2$s', 'price range widget', 'wpsc' );
 		$range_max = $prices->min - 0.01;
+
 		$i = 0;
+
 		while ( $range_max <= $prices->max ) {
 			$range_min = $range_max + 0.01;
 			$range_max = $range_min + round( $diff ) - 0.01;
@@ -94,12 +103,14 @@ class WPSC_Widget_Price_Range extends WP_Widget {
 			$href = wpsc_get_store_url() . $range_min . '/' . $range_max;
 
 			echo '<li>';
-			if ( $i === 0 )
+
+			if ( $i === 0 ) {
 				echo '<a href="' . esc_url( $href ) . '">' . sprintf( __( 'Under %s', 'price range widget', 'wpsc' ), wpsc_format_currency( $range_max ) ) . '</a>';
-			elseif ( $range_max >= $prices->max )
+			} elseif ( $range_max >= $prices->max ) {
 				echo '<a href="' . esc_url( $href ) . '">' . sprintf( __( 'Over %s', 'price range widget', 'wpsc' ), wpsc_format_currency( $range_min ) ) . '</a>';
-			else
+			} else {
 				echo '<a href="' . esc_url( $href ) . '">' . sprintf( $text, wpsc_format_currency( $range_min ), wpsc_format_currency( $range_max ) ) . '</a>';
+			}
 			echo '</li>';
 
 			$i ++;
@@ -128,7 +139,7 @@ class WPSC_Widget_Price_Range extends WP_Widget {
 	}
 
 	public function update( $new_instance, $old_instance ) {
-		$instance = wp_parse_args( $new_instance, $old_instance );
+		$instance          = wp_parse_args( $new_instance, $old_instance );
 		$instance['title'] = strip_tags( $new_instance['title'] );
 		return $instance;
 	}
