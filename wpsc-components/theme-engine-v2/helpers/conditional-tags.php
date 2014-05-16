@@ -85,8 +85,10 @@ function _wpsc_is_page( $page, $slug ) {
 	$prop = 'wpsc_is_' . $page;
 
 	$test = ! empty( $wp_query->$prop );
-	if ( $slug !== '' )
+
+	if ( $slug !== '' ) {
 		$test = $test && $slug == _wpsc_get_current_controller_method();
+	}
 
 	return $test;
 }
@@ -127,8 +129,9 @@ function wpsc_is_register( $slug = '' ) {
 function wpsc_has_product_thumbnail( $id = null ) {
 	$parent = get_post_field( 'post_parent', $id );
 
-	if ( $parent )
+	if ( $parent ) {
 		return wpsc_has_product_thumbnail( $parent );
+	}
 
 	return has_post_thumbnail( $id );
 }
@@ -144,8 +147,9 @@ function wpsc_has_product_thumbnail( $id = null ) {
  * @return bool         True if the product has variations.
  */
 function wpsc_has_product_variations( $id = null ) {
-	if ( empty( $id ) )
+	if ( empty( $id ) ) {
 		$id = wpsc_get_product_id();
+	}
 
 	$product = WPSC_Product::get_instance( $id );
 	return $product->has_variations;
@@ -161,8 +165,10 @@ function wpsc_has_product_variations( $id = null ) {
  * @return bool
  */
 function wpsc_is_product_on_sale( $id = null ) {
-	if ( empty( $id ) )
+
+	if ( empty( $id ) ) {
 		$id = wpsc_get_product_id();
+	}
 
 	$product = WPSC_Product::get_instance( $id );
 	return $product->is_on_sale;
@@ -195,7 +201,7 @@ function wpsc_cart_has_items() {
 
 function wpsc_has_user_messages( $type = 'all', $context = 'main' ) {
 	$message_collection = WPSC_Message_Collection::get_instance();
-	$messages = $message_collection->query( $type, $context );
+	$messages           = $message_collection->query( $type, $context );
 
 	return ! empty( $messages );
 }

@@ -10,8 +10,11 @@ function _wpsc_get_page_url( $page, $slug = '' ) {
 
 	if ( ! get_option( 'permalink_structure' ) ) {
 		$uri = add_query_arg( 'wpsc_page', $page, home_url( '/' ) );
-		if ( $slug )
+
+		if ( $slug ) {
 			$uri = add_query_arg( 'wpsc_callback', $slug, $uri );
+		}
+
 		return $uri;
 	}
 
@@ -20,8 +23,11 @@ function _wpsc_get_page_url( $page, $slug = '' ) {
 	$prefix = $wp_rewrite->root;
 
 	$uri = $prefix . $slugs[ $page ];
-	if ( $slug )
+
+	if ( $slug ) {
 		$uri = trailingslashit( $uri ) . ltrim( $slug, '/' );
+	}
+
 	return user_trailingslashit( home_url( $uri ) );
 }
 
@@ -88,8 +94,10 @@ function wpsc_get_password_reset_url( $username, $key ) {
 
 function wpsc_page_get_current_slug() {
 	global $wpsc_page_instance;
-	if ( ! isset( $wpsc_page_instance ) )
+
+	if ( ! isset( $wpsc_page_instance ) ) {
 		return '';
+	}
 
 	return $wpsc_page_instance->get_slug();
 }

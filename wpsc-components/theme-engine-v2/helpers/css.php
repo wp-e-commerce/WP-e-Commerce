@@ -1,6 +1,6 @@
 <?php
 
-add_action( 'wp_enqueue_scripts', '_wpsc_te2_enqueue_styles', 1 );
+add_action( 'wp_enqueue_scripts'        , '_wpsc_te2_enqueue_styles', 1 );
 add_filter( 'option_wpsc_default_styles', '_wpsc_te2_filter_default_styles' );
 
 function _wpsc_te2_filter_default_styles( $value ) {

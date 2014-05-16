@@ -106,16 +106,17 @@ function _wpsc_shortcode_products( $atts ) {
 	       ? array()
 	       : array_map( 'absint', explode( ',', $atts['id'] ) );
 
-	if ( ! empty( $ids ) )
+	if ( ! empty( $ids ) ) {
 		$args['post__in'] = $ids;
+	}
 
 	// Meta query for whether to select products on sale or not
 	switch ( $atts['display'] ) {
 		case 'sale':
 			$args['meta_query'] = array(
 				array(
-					'key'        => '_wpsc_special_price',
-					'value'      => array( '', '0' ),
+					'key'     => '_wpsc_special_price',
+					'value'   => array( '', '0' ),
 					'compare' => 'NOT IN',
 				)
 			);
@@ -124,8 +125,8 @@ function _wpsc_shortcode_products( $atts ) {
 		case 'not-sale':
 			$args['meta_query'] = array(
 				array(
-					'key'        => '_wpsc_special_price',
-					'value'      => array( '', '0' ),
+					'key'     => '_wpsc_special_price',
+					'value'   => array( '', '0' ),
 					'compare' => 'IN',
 				)
 			);
@@ -135,8 +136,8 @@ function _wpsc_shortcode_products( $atts ) {
 	// Pagination
 	if ( $atts['per_page'] !== -1 ) {
 		$args['posts_per_page'] = absint( $atts['per_page'] );
-		$args['paged'] = absint( $atts['paged'] );
-		$args['offset'] = absint( $atts['offset'] );
+		$args['paged']          = absint( $atts['paged'] );
+		$args['offset']         = absint( $atts['offset'] );
 	} else {
 		$args['nopaging'] = true;
 	}
@@ -151,55 +152,59 @@ function _wpsc_shortcode_products( $atts ) {
 	                           ? array()
 	                           : array_map( 'absint', explode( ',', $atts['category_in'] ) );
 
-	$atts['category_not_in']     =   empty( $atts['category_not_in'] )
+	$atts['category_not_in'] =   empty( $atts['category_not_in'] )
 	                           ? array()
 	                           : array_map( 'absint', explode( ',', $atts['category_not_in'] ) );
 
-	$atts['tag_in']     =   empty( $atts['tag_in'] )
+	$atts['tag_in']          =   empty( $atts['tag_in'] )
 	                           ? array()
 	                           : array_map( 'absint', explode( ',', $atts['tag_in'] ) );
 
-	$atts['tag_not_in']     =   empty( $atts['tag_not_in'] )
+	$atts['tag_not_in']      =   empty( $atts['tag_not_in'] )
 	                           ? array()
 	                           : array_map( 'absint', explode( ',', $atts['tag_not_in'] ) );
 
 	$args['tax_query'] = array();
 
 	// Category slug in
-	if ( ! empty( $atts['category_in'] ) )
+	if ( ! empty( $atts['category_in'] ) ) {
 		$args['tax_query'][] = array(
 			'taxonomy' => 'wpsc_product_category',
 			'field'    => 'slug',
 			'terms'    => $atts['category_in'],
 			'operator' => 'IN',
 		);
+	}
 
 	// Category slug not in
-	if ( ! empty( $atts['category_not_in'] ) )
+	if ( ! empty( $atts['category_not_in'] ) ) {
 		$args['tax_query'][] = array(
 			'taxonomy' => 'wpsc_product_category',
 			'field'    => 'slug',
 			'terms'    => $atts['category_not_in'],
 			'operator' => 'NOT IN',
 		);
+	}
 
 	// Product tag in
-	if ( ! empty( $atts['tag_in'] ) )
+	if ( ! empty( $atts['tag_in'] ) ) {
 		$args['tax_query'][] = array(
 			'taxonomy' => 'product_tag',
 			'field'    => 'slug',
 			'terms'    => $atts['tag_in'],
 			'operator' => 'IN',
 		);
+	}
 
 	// Product tag not in
-	if ( ! empty( $atts['tag_not_in'] ) )
+	if ( ! empty( $atts['tag_not_in'] ) ) {
 		$args['tax_query'][] = array(
 			'taxonomy' => 'product_tag',
-			'field' => 'slug',
-			'terms' => $atts['tag_not_in'],
+			'field'    => 'slug',
+			'terms'    => $atts['tag_not_in'],
 			'operator' => 'NOT IN',
 		);
+	}
 
 	// I don't like query posts either but we need to preserve the ability
 	// to use the_post() from within the templates, without having to resort
@@ -229,11 +234,11 @@ function _wpsc_shortcode_products( $atts ) {
  */
 function _wpsc_shortcode_add_to_cart( $atts ) {
 	$defaults = array( 'id' => 0 );
+	$atts     = array_map( 'absint', shortcode_atts( $defaults, $atts ) );
 
-	$atts = array_map( 'absint', shortcode_atts( $defaults, $atts ) );
-
-	if ( empty( $atts['id'] ) )
+	if ( empty( $atts['id'] ) ) {
 		return '';
+	}
 
 	return wpsc_get_add_to_cart_form( $atts['id'] );
 }

@@ -1,9 +1,9 @@
 <?php
 
-define( 'WPSC_TE_V2_MVC_PATH', WPSC_TE_V2_PATH . '/mvc' );
-define( 'WPSC_TE_V2_CONTROLLERS_PATH', WPSC_TE_V2_MVC_PATH . '/controllers' );
+define( 'WPSC_TE_V2_MVC_PATH'           , WPSC_TE_V2_PATH . '/mvc' );
+define( 'WPSC_TE_V2_CONTROLLERS_PATH'   , WPSC_TE_V2_MVC_PATH . '/controllers' );
 define( 'WPSC_TE_V2_TEMPLATE_PARTS_PATH', WPSC_TE_V2_THEMING_PATH . '/template-parts' );
-define( 'WPSC_TE_V2_ASSETS_PATH', WPSC_TE_V2_THEMING_PATH . '/assets' );
+define( 'WPSC_TE_V2_ASSETS_PATH'        , WPSC_TE_V2_THEMING_PATH . '/assets' );
 
 function _wpsc_te2_mvc_init() {
 	require_once( WPSC_TE_V2_CLASSES_PATH . '/router.php' );
@@ -24,19 +24,20 @@ function _wpsc_te2_mvc_init() {
 }
 
 function _wpsc_filter_edit_post_link( $link, $id ) {
-	if ( ! $id )
+	if ( ! $id ) {
 		return false;
+	}
 
 	return $link;
 }
 
 function _wpsc_filter_rewrite_controller_slugs( $rules ) {
-	$slugs = wpsc_get_page_slugs();
+	$slugs     = wpsc_get_page_slugs();
 	$new_rules = array();
 
 	foreach ( $slugs as $page_name => $slug ) {
-		$controller_name = sanitize_title_with_dashes( $page_name );
-		$new_rules["($slug)(/.+?)?/?$"] = 'index.php?wpsc_controller=' . $controller_name . '&wpsc_controller_args=$matches[2]';
+		$controller_name                = sanitize_title_with_dashes( $page_name );
+		$new_rules[ "($slug)(/.+?)?/?$" ] = 'index.php?wpsc_controller=' . $controller_name . '&wpsc_controller_args=$matches[2]';
 	}
 
 	$rules = array_merge( $new_rules, $rules );
