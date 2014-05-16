@@ -2080,7 +2080,7 @@ function wpsc_deprecated_filter_user_log_get() {
 		_wpsc_doing_it_wrong( 'wpsc_user_log_get', __( 'The filter being used has been deprecated. Use wpsc_get_visitor_meta or wpsc_get_visitor_meta_$neta_name instead.' ), '3.8.14' );
 	}
 }
-add_filter( 'wpsc_start_display_user_log_form_fields', 'wpsc_deprecated_filter_user_log_get', 10, 0 );
+add_action( 'wpsc_start_display_user_log_form_fields', 'wpsc_deprecated_filter_user_log_get', 10, 0 );
 
 
 /**

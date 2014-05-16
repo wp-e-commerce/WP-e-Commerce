@@ -1,6 +1,13 @@
 <?php
 
 function _wpsc_theme_engine_v1_has_actions() {
+
+	/**
+	 * A list of all actions used in the 1.0 theme engine templates.
+	 * If any of these are hooked into by plugins or the active theme, we load 1.0.
+	 *
+	 * @var array
+	 */
 	$actions = array(
 		'wpsc_start_display_user_log_form_fields',
 		'wpsc_pre_purchase_logs',
@@ -30,11 +37,32 @@ function _wpsc_theme_engine_v1_has_actions() {
 		'wpsc_user_profile_section_downloads',
 	);
 
-	$has_actions = false;
+	/**
+	 * A list of all actions that are hooked into in core.
+	 * We don't actually want to load 1.0 if the only actions hooking into 1.0 templates are from core.
+	 *
+	 * @var array
+	 */
+	$core_exceptions = array(
+    	'wpsc_start_display_user_log_form_fields'    => 'wpsc_deprecated_filter_user_log_get',
+    	'wpsc_theme_footer'                          => 'wpsc_fancy_notifications',
+    	'wpsc_before_shipping_of_shopping_cart'      => '_wpsc_action_init_shipping_method',
+    	'wpsc_before_form_of_shopping_cart'          => '_wpsc_shipping_error_messages',
+    	'wpsc_user_profile_section_purchase_history' => '_wpsc_action_purchase_history_section',
+    	'wpsc_user_profile_section_edit_profile'     => '_wpsc_action_edit_profile_section',
+    	'wpsc_user_profile_section_downloads'        => '_wpsc_action_downloads_section'
+	);
+
+	$has_actions = array();
 
 	foreach ( $actions as $action ) {
+
+		if ( isset( $core_exceptions[ $action ] ) ) {
+			remove_action( $action, $core_exceptions[ $action ] );
+		}
+
 		if ( has_action( $action ) ) {
-			$has_actions = true;
+			$has_actions[] = $action;
 		}
 	}
 
