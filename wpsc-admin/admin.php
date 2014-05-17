@@ -578,24 +578,32 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 		}
 		wp_enqueue_style( 'wp-e-commerce-admin', WPSC_URL . '/wpsc-admin/css/admin.css', false, $version_identifier, 'all' );
 
-		// Localize scripts
-		wp_localize_script( 'wp-e-commerce-admin', 'wpsc_adminL10n', array(
-			'dragndrop_set'            => ( get_option( 'wpsc_sort_by' ) == 'dragndrop' ? 'true' : 'false' ),
-			'save_product_order_nonce' => _wpsc_create_ajax_nonce( 'save_product_order' ),
-			'l10n_print_after'         => 'try{convertEntities(wpsc_adminL10n);}catch(e){};',
-			'empty_coupon'             => esc_html__( 'Please enter a coupon code.', 'wpsc' ),
-			'bulk_edit_no_vars'        => esc_html__( 'Quick Edit options are limited when editing products that have variations. You will need to edit the variations themselves.', 'wpsc' ),
-			'wpsc_core_images_url'     => WPSC_CORE_IMAGES_URL,
-			'variation_parent_swap'    => esc_html_x( 'New Variation Set', 'Variation taxonomy parent', 'wpsc' ),
-			/* translators             : This string is prepended to the 'New Variation Set' string */
-			'variation_helper_text'    => esc_html_x( 'Choose the Variation Set you want to add variants to. If you\'re creating a new variation set then select', 'Variation helper text', 'wpsc' ),
-			'variations_tutorial'      => esc_html__( 'Variations allow you to create options for your products. For example, if you\'re selling T-Shirts, they will generally have a "Size" option. Size will be the Variation Set name, and it will be a "New Variant Set". You will then create variants (small, medium, large) which will have the "Variation Set" of Size. Once you have made your set you can use the table on the right to manage them (edit, delete). You will be able to order your variants by dragging and dropping them within their Variation Set.', 'wpsc' ),
-			/* translators             : These strings are dynamically inserted as a drop-down for the Coupon comparison conditions */
-			'coupons_compare_or'       => esc_html_x( 'OR'  , 'Coupon comparison logic', 'wpsc' ),
-			'coupons_compare_and'      => esc_html_x( 'AND' , 'Coupon comparison logic', 'wpsc' ),
-			'meta_downloads_plural'    => __( ' downloads', 'live preview for downloads metabox', 'wpsc' ),
-			'meta_downloads_singular'  => __( ' download' , 'live preview for downloads metabox', 'wpsc' ),
-		) );
+		static $_wpsc_admin_l10n_loaded;
+
+		if ( ! $_wpsc_admin_l10n_loaded ) {
+			// Localize scripts
+			wp_localize_script( 'wp-e-commerce-admin', 'wpsc_adminL10n', array(
+				'dragndrop_set'            => ( get_option( 'wpsc_sort_by' ) == 'dragndrop' ? 'true' : 'false' ),
+				'save_product_order_nonce' => _wpsc_create_ajax_nonce( 'save_product_order' ),
+				'l10n_print_after'         => 'try{convertEntities(wpsc_adminL10n);}catch(e){};',
+				'empty_coupon'             => esc_html__( 'Please enter a coupon code.', 'wpsc' ),
+				'bulk_edit_no_vars'        => esc_html__( 'Quick Edit options are limited when editing products that have variations. You will need to edit the variations themselves.', 'wpsc' ),
+				'wpsc_core_images_url'     => WPSC_CORE_IMAGES_URL,
+				'variation_parent_swap'    => esc_html_x( 'New Variation Set', 'Variation taxonomy parent', 'wpsc' ),
+				/* translators             : This string is prepended to the 'New Variation Set' string */
+				'variation_helper_text'    => esc_html_x( 'Choose the Variation Set you want to add variants to. If you\'re creating a new variation set then select', 'Variation helper text', 'wpsc' ),
+				'variations_tutorial'      => esc_html__( 'Variations allow you to create options for your products. For example, if you\'re selling T-Shirts, they will generally have a "Size" option. Size will be the Variation Set name, and it will be a "New Variant Set". You will then create variants (small, medium, large) which will have the "Variation Set" of Size. Once you have made your set you can use the table on the right to manage them (edit, delete). You will be able to order your variants by dragging and dropping them within their Variation Set.', 'wpsc' ),
+				/* translators             : These strings are dynamically inserted as a drop-down for the Coupon comparison conditions */
+				'coupons_compare_or'       => esc_html_x( 'OR'  , 'Coupon comparison logic', 'wpsc' ),
+				'coupons_compare_and'      => esc_html_x( 'AND' , 'Coupon comparison logic', 'wpsc' ),
+				'meta_downloads_plural'    => __( ' downloads', 'live preview for downloads metabox', 'wpsc' ),
+				'meta_downloads_singular'  => __( ' download' , 'live preview for downloads metabox', 'wpsc' ),
+				'wpsc_inline_css_error'    => __( 'It is not possible to enable the inline CSS without also enabling the common CSS.' )
+			) );
+
+			$_wpsc_admin_l10n_loaded = true;
+		}
+
 	}
 	if ( $pagehook == 'wpsc-product-variations-iframe' ) {
 		_wpsc_enqueue_wp_e_commerce_admin();

@@ -63,7 +63,6 @@ function _wpsc_meta_migrate_anonymous_users() {
 
 	wp_suspend_cache_addition( true );
 
-
 	$role = get_role( 'wpsc_anonymous' );
 
 	if ( $role ) {

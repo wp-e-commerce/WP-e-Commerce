@@ -52,7 +52,7 @@ function _wpsc_te2_action_admin_enqueue_scripts() {
 	);
 
 	wp_register_script(
-		'wpsc-category-filter', WPSC_TE_V2_JS_URL . '/category-filter.js',
+		'wpsc-presentation-settings', WPSC_TE_V2_JS_URL . '/presentation-settings.js',
 		array( 'jquery' ),
 		WPSC_VERSION
 	);
@@ -78,7 +78,7 @@ function _wpsc_te2_action_admin_enqueue_scripts() {
 
 			// Settings->Store->Presentation
 			wp_enqueue_script( 'wpsc-multi-select' );
-			wp_enqueue_script( 'wpsc-category-filter' );
+			wp_enqueue_script( 'wpsc-presentation-settings' );
 			break;
 
 		// Appearance->Widgets

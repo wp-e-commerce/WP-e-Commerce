@@ -20,6 +20,7 @@ add_filter(
 add_action( 'after_switch_theme', '_wpsc_action_flush_rewrite_rules', 99 );
 
 function _wpsc_te_v2_includes() {
+	require_once( WPSC_TE_V2_CLASSES_PATH . '/redirect-canonical.php' );
 	require_once( WPSC_TE_V2_CLASSES_PATH . '/template-engine.php' );
 	require_once( WPSC_TE_V2_CLASSES_PATH . '/settings.php' );
 
