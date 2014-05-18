@@ -42,7 +42,7 @@ function _wpsc_te_v2_includes() {
 	require_once( WPSC_TE_V2_HELPERS_PATH . '/product.php' );
 
 	if ( is_admin() ) {
-		require_once( WPSC_TE_V2_PATH . '/admin.php' );
+		require_once( WPSC_THEME_ENGINE_V2_PATH . '/admin.php' );
 	}
 
 	if ( ! is_admin() ) {

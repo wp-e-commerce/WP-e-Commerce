@@ -149,7 +149,7 @@ add_filter( 'wpsc_components', '_wpsc_theme_engine_router' );
 
 function _wpsc_deactivate_theme_engine_plugin() {
 	if ( defined( 'WPSC_TE_V2_PATH' ) ) {
-		deactivate_plugins( plugin_basename( WPSC_TE_V2_PATH ) );
+		deactivate_plugins( plugin_basename( WPSC_TE_V2_PATH ) . '/wp-e-commerce-theme-engine-v2.php' );
 	}
 }
 
