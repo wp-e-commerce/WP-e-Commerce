@@ -147,7 +147,6 @@ if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
 		document.cookie="wpsc_attempted_validate="+now;
 
 		var wpsc_http = new XMLHttpRequest();
-		wpsc_http.overrideMimeType( "application/json" );
 
 		// open setup and send the request in synchronous mode
 		wpsc_http.open( "POST", wpsc_ajax.ajaxurl + "?action=wpsc_validate_customer", false );
