@@ -1,6 +1,6 @@
 <?php
 
-define( 'WPSC_TE_V2_MVC_PATH'           , WPSC_TE_V2_PATH . '/mvc' );
+define( 'WPSC_TE_V2_MVC_PATH'           , WPSC_THEME_ENGINE_V2_PATH . '/mvc' );
 define( 'WPSC_TE_V2_CONTROLLERS_PATH'   , WPSC_TE_V2_MVC_PATH . '/controllers' );
 define( 'WPSC_TE_V2_TEMPLATE_PARTS_PATH', WPSC_TE_V2_THEMING_PATH . '/template-parts' );
 define( 'WPSC_TE_V2_ASSETS_PATH'        , WPSC_TE_V2_THEMING_PATH . '/assets' );

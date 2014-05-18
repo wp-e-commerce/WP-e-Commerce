@@ -146,3 +146,11 @@ function _wpsc_theme_engine_router( $components ) {
 }
 
 add_filter( 'wpsc_components', '_wpsc_theme_engine_router' );
+
+function _wpsc_deactivate_theme_engine_plugin() {
+	if ( defined( 'WPSC_TE_V2_PATH' ) ) {
+		deactivate_plugins( plugin_basename( WPSC_TE_V2_PATH ) );
+	}
+}
+
+add_action( 'admin_init' , '_wpsc_deactivate_theme_engine_plugin' );

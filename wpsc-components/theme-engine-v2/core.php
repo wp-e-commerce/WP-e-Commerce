@@ -1,17 +1,19 @@
 <?php
 
-define( 'WPSC_TE_V2_PATH'         , dirname( __FILE__ ) );
-define( 'WPSC_TE_V2_CLASSES_PATH' , WPSC_TE_V2_PATH . '/classes' );
-define( 'WPSC_TE_V2_HELPERS_PATH' , WPSC_TE_V2_PATH . '/helpers' );
-define( 'WPSC_TE_V2_SNIPPETS_PATH', WPSC_TE_V2_PATH . '/snippets' );
-define( 'WPSC_TE_V2_THEMING_PATH' , WPSC_TE_V2_PATH . '/theming' );
-define( 'WPSC_TE_V2_URL'          , plugins_url( '', __FILE__ ) );
+define( 'WPSC_THEME_ENGINE_V2_PATH', dirname( __FILE__ ) );
+define( 'WPSC_TE_V2_CLASSES_PATH'  , WPSC_THEME_ENGINE_V2_PATH . '/classes' );
+define( 'WPSC_TE_V2_HELPERS_PATH'  , WPSC_THEME_ENGINE_V2_PATH . '/helpers' );
+define( 'WPSC_TE_V2_SNIPPETS_PATH' , WPSC_THEME_ENGINE_V2_PATH . '/snippets' );
+define( 'WPSC_TE_V2_THEMING_PATH'  , WPSC_THEME_ENGINE_V2_PATH . '/theming' );
+define( 'WPSC_TE_V2_URL'           , plugins_url( '', __FILE__ ) );
 
 add_action( 'wpsc_includes', '_wpsc_te_v2_includes' );
+
 add_filter(
 	'wpsc_register_post_types_products_args',
 	'_wpsc_te_v2_product_post_type_args'
 );
+
 add_filter(
 	'wpsc_register_taxonomies_product_category_args',
 	'_wpsc_te_v2_product_category_args'
