@@ -54,12 +54,12 @@ function wpsc_format_currency( $amt, $args = '' ) {
 	$currencies_without_fractions = array( 'JPY', 'HUF', 'VND' );
 
 	if ( $isocode ) {
-		$currency = new WPSC_Country( $isocode, 'isocode' );
+		$currency = new WPSC_Country( $isocode );
 	} else {
 		$currency = new WPSC_Country( get_option( 'currency_type' ) );
 	}
 
-	$currency_code = $currency->get( 'code' );
+	$currency_code = $currency->get_currency_code();
 
 	// No decimal point, no decimals
 	if ( ! $display_decimal_point || in_array( $currency_code, $currencies_without_fractions ) ) {
@@ -79,7 +79,7 @@ function wpsc_format_currency( $amt, $args = '' ) {
 		$currency_code = '';
 	}
 
-	$symbol = $display_currency_symbol ? $currency->get('symbol' ) : '';
+	$symbol = $display_currency_symbol ? $currency->get_currency_symbol() : '';
 	$symbol = esc_html( $symbol );
 	$symbol = apply_filters( 'wpsc_format_currency_currency_symbol', $symbol, $isocode );
 
