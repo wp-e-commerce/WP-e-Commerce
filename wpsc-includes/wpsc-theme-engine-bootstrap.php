@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * Checks 1.0 theme engine template actions for hooks.
+ * This ensures we don't load the 2.0 engine if there are active plugins
+ * that expect the 1.0 hooks to be available.
+ *
+ * @since  3.9
+ * @uses   has_action()
+ * @uses   remove_action()
+ *
+ * @return array $has_actions If not empty, then we don't load 2.0
+ */
 function _wpsc_theme_engine_v1_has_actions() {
 
 	/**
@@ -69,7 +80,15 @@ function _wpsc_theme_engine_v1_has_actions() {
 	return $has_actions;
 }
 
+/**
+ * A simple check of the active theme directory for wpsc template files.
+ * Minimally redundant, though the comparable functions are only loaded in the 1.0 engine.
+ *
+ * @since  3.9
+ * @return [type] [description]
+ */
 function _wpsc_theme_engine_v2_has_old_templates() {
+
 	$current_theme  = trailingslashit( get_stylesheet_directory() );
 	$theme_files    = scandir( $current_theme );
 	$wpsc_files     = array();
@@ -83,6 +102,13 @@ function _wpsc_theme_engine_v2_has_old_templates() {
 	return ! empty( $wpsc_files );
 }
 
+/**
+ * Enables the 1.0 theme engine.
+ *
+ * @since  3.9
+ * @param  array $components Array of components loaded via the component API.
+ * @return array $components Merged array of components.
+ */
 function _wpsc_enable_theme_engine_v1( $components ) {
 	$components['theme-engine']['core-v1'] = array(
 		'title'    => __( 'WP e-Commerce Theme Engine v1', 'wpsc' ),
@@ -92,7 +118,13 @@ function _wpsc_enable_theme_engine_v1( $components ) {
 
 	return $components;
 }
-
+/**
+ * Enables the 2.0 theme engine.
+ *
+ * @since  3.9
+ * @param  array $components Array of components loaded via the component API.
+ * @return array $components Merged array of components.
+ */
 function _wpsc_enable_theme_engine_v2( $components ) {
 	$components['theme-engine']['core-v2'] = array(
 		'title'    => __( 'WP e-Commerce Theme Engine v2', 'wpsc' ),
@@ -103,6 +135,13 @@ function _wpsc_enable_theme_engine_v2( $components ) {
 	return $components;
 }
 
+/**
+ * Load either 1.0 or 2.0 theme engine, based on several critical and evolving criteron.
+ * Theme and plugin developers are advised to check and filter this function as needed.
+ *
+ * @since  3.9
+ * @return bool $activate Whether or not to activate the 2.0 theme engine.
+ */
 function _wpsc_maybe_activate_theme_engine_v2() {
 
 	$activate = true;
@@ -113,22 +152,27 @@ function _wpsc_maybe_activate_theme_engine_v2() {
 		$wp_rewrite = new WP_Rewrite();
 	}
 
+	// The theme engine routing mechanism (WPSC_Router) is not currently equipped to work without pretty permalinks.
 	if ( ! $wp_rewrite->using_permalinks() ) {
 		$activate = false;
 	}
 
+	// We're also not currently able to work as expected when using "Almost Pretty" permalinks, where PATHINFO is not enabled.
 	if ( $wp_rewrite->using_index_permalinks() ) {
 		$activate = false;
 	}
 
+	// In the future, this check will be more refined.  As of 3.9, the current Gold Cart release is incompatible with the 2.0 theme engine.
 	if ( defined( 'WPSC_GOLD_VERSION' ) ) {
 		$activate = false;
 	}
 
+	// If an active theme is dependent on 1.0 theme template files from 3.8.
 	if ( _wpsc_theme_engine_v2_has_old_templates() ) {
 		$activate = false;
 	}
 
+	// If any plugins or theme functionality are hooking into 1.0 template hooks, we don't activate 2.0.
 	if ( _wpsc_theme_engine_v1_has_actions() ) {
 		$activate = false;
 	}
@@ -136,6 +180,13 @@ function _wpsc_maybe_activate_theme_engine_v2() {
 	return apply_filters( '_wpsc_maybe_activate_theme_engine_v2', $activate );
 }
 
+/**
+ * Simple router for using either the 1.0 or 2.0 theme engine, based on result of _wpsc_maybe_activate_theme_engine_v2().
+ *
+ * @since  3.9
+ * @param  array $components Array of components loaded via the component API.
+ * @return array $components Merged array of components loaded via the component API.
+ */
 function _wpsc_theme_engine_router( $components ) {
 
 	if ( _wpsc_maybe_activate_theme_engine_v2() ) {
@@ -147,6 +198,13 @@ function _wpsc_theme_engine_router( $components ) {
 
 add_filter( 'wpsc_components', '_wpsc_theme_engine_router' );
 
+
+/**
+ * Deactivates the former feature-as-a-plugin plugin for the 2.0 theme engine, if it is active.
+ *
+ * @since  3.9
+ * @return void
+ */
 function _wpsc_deactivate_theme_engine_plugin() {
 	if ( defined( 'WPSC_TE_V2_PATH' ) ) {
 		deactivate_plugins( plugin_basename( WPSC_TE_V2_PATH ) . '/wp-e-commerce-theme-engine-v2.php' );
