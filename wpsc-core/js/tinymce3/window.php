@@ -101,7 +101,7 @@ global $wpdb;
 				<strong><label for="wpsc_product_slider"> <?php _e("Product Slider", 'wpsc'); ?></label></strong>
 			</tr>
 		<!-- check if product slider installed -->
-		<?php if (function_exists('product_slider_preload')){ ?>
+		<?php if ( defined('WPSC_PS_VERSION') ) { ?>
 
 				<tr valign="top">
 					<td><strong><label for="wpsc_category"> <?php _e("Select Category", 'wpsc'); ?></label></strong></td>
