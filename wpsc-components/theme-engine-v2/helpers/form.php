@@ -309,7 +309,7 @@ function _wpsc_filter_control_select( $output, $field, $args ) {
 function _wpsc_filter_control_select_country( $output, $field, $args ) {
 	extract( $field );
 
-	$country_data = WPSC_Countries::get_countries_array();
+	$country_data = WPSC_Countries::get_countries();
 	$options      = array();
 
 	foreach ( $country_data as $country ) {
