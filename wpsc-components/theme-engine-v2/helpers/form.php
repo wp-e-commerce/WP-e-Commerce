@@ -309,11 +309,12 @@ function _wpsc_filter_control_select( $output, $field, $args ) {
 function _wpsc_filter_control_select_country( $output, $field, $args ) {
 	extract( $field );
 
-	$country_data = WPSC_Country::get_all();
+	$country_data = WPSC_Countries::get_countries_array();
 	$options      = array();
+
 	foreach ( $country_data as $country ) {
-		$isocode = $country->get( 'isocode' );
-		$alternatives = array( $country->get( 'isocode' ) );
+		$isocode = $country->get_isocode();
+		$alternatives = array( $country->get_isocode());
 		switch ( $isocode ) {
 			case 'US':
 				$alternatives[] = __( 'United States of America', 'wpsc' );
@@ -328,8 +329,8 @@ function _wpsc_filter_control_select_country( $output, $field, $args ) {
 				break;
 		}
 
-		$options[ $country->get( 'isocode' ) ] = array(
-			'title'      => $country->get( 'country' ),
+		$options[ $country->get_isocode() ] = array(
+			'title'      => $country->get_name(),
 			'attributes' => array(
 				'data-alternative-spellings' => implode( ' ', $alternatives )
 			),

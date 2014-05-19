@@ -203,9 +203,9 @@ function _wpsc_filter_validation_rule_state_of( $error, $value, $field, $props, 
 	}
 
 	$country_code = $_POST['wpsc_checkout_details'][ $matched_field ];
-	$country      = new WPSC_Country( $country_code, 'isocode' );
+	$country      = new WPSC_Country( $country_code );
 
-	if ( ! $country->get( 'has_regions' ) ) {
+	if ( ! $country->has_regions() ) {
 		return $error;
 	}
 
@@ -217,7 +217,7 @@ function _wpsc_filter_validation_rule_state_of( $error, $value, $field, $props, 
 			/* translators: %1$s is state, %2$s is country */
 			__( '%1$s is not a valid state or province in %2$s', 'wpsc' )
 		);
-		$message = sprintf( $message, $value, $country->get( 'country' ) );
+		$message = sprintf( $message, $value, $country->get_name() );
 		$error->add(
 			$field,
 			$message,
