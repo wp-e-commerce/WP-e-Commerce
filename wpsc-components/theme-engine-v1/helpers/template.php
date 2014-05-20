@@ -132,9 +132,10 @@ function wpsc_body_class( $classes ) {
 			$classes[] = 'wpsc-home';
 
 		if ( wpsc_is_single_product() ) {
+			$object = $wp_query->get_queried_object();
 			$classes[] = 'wpsc-single-product';
-			if ( absint( $wpsc_query->products[0]['id'] ) > 0 ) {
-				$classes[] = 'wpsc-single-product-' . $wpsc_query->products[0]['id'];
+			if ( absint( $object->ID ) > 0 ) {
+				$classes[] = 'wpsc-single-product-' . absint( $object->ID );
 			}
 		}
 
