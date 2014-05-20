@@ -131,7 +131,7 @@ function wpsc_body_class( $classes ) {
 		if ( !is_array( $wpsc_query->query ) )
 			$classes[] = 'wpsc-home';
 
-		if ( wpsc_is_single_product ( ) ) {
+		if ( wpsc_is_single_product() ) {
 			$classes[] = 'wpsc-single-product';
 			if ( absint( $wpsc_query->products[0]['id'] ) > 0 ) {
 				$classes[] = 'wpsc-single-product-' . $wpsc_query->products[0]['id'];
