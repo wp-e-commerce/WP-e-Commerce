@@ -178,12 +178,11 @@ function wpsc_parent_category_image($show_thumbnails , $category_image , $width,
 /// category template tags start here
 
 /**
- * Returns true if you're on a tag that is a WPSC tag
- *
+ * Returns true if you're on a tag that is a WPeC tag
  * @since 3.9
  *
  * @uses is_tax()           Returns true/false given taxonomy and takes second parameter of term
- *
+ * @param string|array|int  $term   optional    The term you could be checking for
  * @return bool             True if you are on a product_tag false if not
  */
 function wpsc_is_in_tag( $term = '' ) {
@@ -509,10 +508,10 @@ function wpsc_category_url($category_id, $permalink_compatibility = false) {
 
 
 /**
- * Returns true if you're on a category that is a WPSC category
+ * Returns true if you're on a category that is a WPeC category
  *
  * @uses is_tax()           Returns true/false given taxonomy and takes second parameter of term
- *
+ * @param string|array|int  $term   optional    The term you could be checking for
  * @return bool             True if you are on a wpsc_product_category false if not
  */
 function wpsc_is_in_category( $term = '' ) {
