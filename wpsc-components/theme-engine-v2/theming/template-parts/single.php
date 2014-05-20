@@ -1,3 +1,4 @@
+<?php wpsc_user_messages(); ?>
 <div id="product-<?php wpsc_product_id(); ?>">
 	<?php wpsc_breadcrumb(); ?>
 
