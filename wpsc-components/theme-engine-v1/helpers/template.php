@@ -115,13 +115,16 @@ function wpsc_select_theme_functions() {
  */
 function wpsc_body_class( $classes ) {
 	global $wp_query, $wpsc_query;
+
 	$post_id = 0;
 	if ( isset( $wp_query->post->ID ) )
 		$post_id = $wp_query->post->ID;
+
 	$page_url = get_permalink( $post_id );
 
+
 	// If on a product or category page...
-	if ( get_option( 'product_list_url' ) == $page_url ) {
+	if ( get_option( 'product_list_url' ) == $page_url || get_post_type( $post_id ) === 'wpsc-product' ) {
 
 		$classes[] = 'wpsc';
 
