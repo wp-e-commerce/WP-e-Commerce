@@ -112,6 +112,14 @@ function wpsc_select_theme_functions() {
  * @description:  Adds additional wpsc classes to the body tag.
  * @param:        $classes = Array of body classes
  * @return:       (Array) of classes
+ *
+ * @uses get_permalink()                Returns WP permalink given post_id
+ * @uses get_option()                   Returns option value given key
+ * @uses get_post_type()                Returns string for registered post_type name
+ * @uses wpsc_is_single_product()       Returns true if we are on a single product
+ * @uses wpsc_is_in_category()          Returns true if we are on a WPSC product cat
+ * @uses wpsc_is_in_tag()               Returns true if we are on a WPSC product tag
+ * @usse esc_attr()                     Keeping things safe just in case
  */
 function wpsc_body_class( $classes ) {
 	global $wp_query, $wpsc_query;
