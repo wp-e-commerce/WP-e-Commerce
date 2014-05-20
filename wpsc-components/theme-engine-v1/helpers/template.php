@@ -140,10 +140,9 @@ function wpsc_body_class( $classes ) {
 
 		if ( wpsc_is_in_category() && ! wpsc_is_single_product() ){
 			$classes[] = 'wpsc-category';
+			$tax_object = $wp_query->get_queried_object();
+			$classes[] = 'wpsc-category-' . esc_attr( $tax_object->slug );
 		}
-
-		if ( isset( $wpsc_query->query_vars['category_id'] ) && absint( $wpsc_query->query_vars['category_id'] ) > 0 )
-			$classes[] = 'wpsc-category-' . $wpsc_query->query_vars['category_id'];
 
 	}
 
