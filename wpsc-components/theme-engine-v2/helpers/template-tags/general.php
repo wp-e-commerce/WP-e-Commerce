@@ -321,14 +321,17 @@ function wpsc_checkout_steps() {
 }
 
 function wpsc_get_checkout_steps() {
-	if ( _wpsc_get_current_controller_name() != 'checkout' )
+
+	if ( _wpsc_get_current_controller_name() != 'checkout' ) {
 		return '';
+	}
 
 	$wizard = WPSC_Checkout_Wizard::get_instance();
-	$steps = $wizard->steps;
+	$steps  = $wizard->steps;
 
 	$output = '<ul class="wpsc-wizard">';
 	$step_count = 1;
+
 	foreach ( $steps as $step => $title ) {
 		$classes = array( 'wpsc-wizard-step wpsc-wizard-step-' . $step );
 
@@ -348,7 +351,7 @@ function wpsc_get_checkout_steps() {
 		$classes[] = 'split-' . count( $steps );
 		$output   .= '<li class="' . implode( ' ', $classes ) . '">';
 
-		if ( $wizard->is_active( $step ) || $wizard->is_disabled( $step ) ) {
+		if ( ! $wizard->is_completed( $step ) ) {
 			$output .= '<span>';
 		} else {
 			$output .= '<a href="' . wpsc_get_checkout_url( $step ) . '">';
@@ -356,7 +359,7 @@ function wpsc_get_checkout_steps() {
 
 		$output .= '<span class="step">' . $step_count . '.</span> ' . $title;
 
-		if ( $wizard->is_active( $step ) || $wizard->is_disabled( $step ) ) {
+		if ( ! $wizard->is_completed( $step ) ) {
 			$output .= '</span>';
 		} else {
 			$output .= '</a>';

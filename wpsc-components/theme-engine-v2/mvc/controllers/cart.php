@@ -111,6 +111,8 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 		if ( $wpsc_cart->set_item( $product_id, $parameters ) ) {
 			$message = sprintf( __( 'You just added %s to your cart.', 'wpsc' ), $product->post_title );
 			$this->message_collection->add( $message, 'success', 'main', 'flash' );
+			wp_safe_redirect( wpsc_get_cart_url() );
+			exit;
 		} else {
 			$this->message_collection->add( __( 'An unknown error just occured. Please contact the shop administrator.', 'wpsc' ), 'error', 'main', 'flash' );
 			wp_safe_redirect( wp_get_referer() );
