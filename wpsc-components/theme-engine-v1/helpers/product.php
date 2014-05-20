@@ -180,6 +180,8 @@ function wpsc_parent_category_image($show_thumbnails , $category_image , $width,
 /**
  * Returns true if you're on a tag that is a WPSC tag
  *
+ * @since 3.9
+ *
  * @uses is_tax()           Returns true/false given taxonomy and takes second parameter of term
  */
 function wpsc_is_in_tag() {
