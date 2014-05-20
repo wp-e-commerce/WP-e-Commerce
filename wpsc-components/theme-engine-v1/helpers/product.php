@@ -186,15 +186,9 @@ function wpsc_parent_category_image($show_thumbnails , $category_image , $width,
  *
  * @return bool             True if you are on a product_tag false if not
  */
-function wpsc_is_in_tag() {
+function wpsc_is_in_tag( $term = '' ) {
 
-	$is_in_tag = false;
-
-	if ( is_tax( 'product_tag' ) ) {
-		$is_in_tag = true;
-	}
-
-	return $is_in_tag;
+	return is_tax( 'product_tag', $term );
 
 }
 
@@ -521,15 +515,9 @@ function wpsc_category_url($category_id, $permalink_compatibility = false) {
  *
  * @return bool             True if you are on a wpsc_product_category false if not
  */
-function wpsc_is_in_category() {
+function wpsc_is_in_category( $term = '' ) {
 
-	$is_in_category = false;
-
-	if ( is_tax( 'wpsc_product_category' ) ) {
-		$is_in_category = true;
-	}
-
-	return $is_in_category;
+	return is_tax( 'wpsc_product_category', $term );
 
 }
 
