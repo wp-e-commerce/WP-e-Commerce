@@ -138,8 +138,9 @@ function wpsc_body_class( $classes ) {
 			}
 		}
 
-		if ( wpsc_is_in_category() && !wpsc_is_single_product() )
+		if ( wpsc_is_in_category() && ! wpsc_is_single_product() ){
 			$classes[] = 'wpsc-category';
+		}
 
 		if ( isset( $wpsc_query->query_vars['category_id'] ) && absint( $wpsc_query->query_vars['category_id'] ) > 0 )
 			$classes[] = 'wpsc-category-' . $wpsc_query->query_vars['category_id'];
