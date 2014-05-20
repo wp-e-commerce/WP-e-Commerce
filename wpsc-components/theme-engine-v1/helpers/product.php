@@ -178,6 +178,23 @@ function wpsc_parent_category_image($show_thumbnails , $category_image , $width,
 /// category template tags start here
 
 /**
+ * Returns true if you're on a tag that is a WPSC tag
+ *
+ * @uses is_tax()           Returns true/false given taxonomy and takes second parameter of term
+ */
+function wpsc_is_in_tag() {
+
+	$is_in_tag = false;
+
+	if ( is_tax( 'product_tag' ) ) {
+		$is_in_tag = true;
+	}
+
+	return $is_in_tag;
+
+}
+
+/**
 * wpsc starts category query function
 * gets passed the query and makes it into a global variable, then starts capturing the html for the category loop
 */
