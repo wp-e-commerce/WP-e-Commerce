@@ -145,6 +145,12 @@ function wpsc_body_class( $classes ) {
 			$classes[] = 'wpsc-category-' . esc_attr( $tax_object->slug );
 		}
 
+		if ( wpsc_is_in_tag() && ! wpsc_is_single_product() ){
+			$classes[] = 'wpsc-tag';
+			$tax_object = $wp_query->get_queried_object();
+			$classes[] = 'wpsc-tag-' . esc_attr( $tax_object->slug );
+		}
+
 	}
 
 	// If viewing the shopping cart...
