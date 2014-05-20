@@ -493,6 +493,11 @@ function wpsc_category_url($category_id, $permalink_compatibility = false) {
 }
 
 
+/**
+ * Returns true if you're on a category that is a WPSC category
+ *
+ * @uses is_tax()           Returns true/false given taxonomy and takes second parameter of term
+ */
 function wpsc_is_in_category() {
 
 	$is_in_category = false;
