@@ -496,13 +496,12 @@ function wpsc_category_url($category_id, $permalink_compatibility = false) {
 function wpsc_is_in_category() {
   global $wpdb, $wp_query;
   $is_in_category = false;
-  if(isset($wp_query->query_vars['wpsc_product_category'] ) && !empty($wp_query->query_vars['wpsc_product_category'])) {
-    $is_in_category = true;
-  } else if(isset($_GET['wpsc_product_category']) && !empty($_GET['wpsc_product_category'])) {
+  if ( is_tax( 'wpsc_product_category' ) ) {
     $is_in_category = true;
   }
 
   return $is_in_category;
+
 }
 
 
