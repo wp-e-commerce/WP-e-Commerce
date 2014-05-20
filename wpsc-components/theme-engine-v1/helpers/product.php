@@ -494,7 +494,6 @@ function wpsc_category_url($category_id, $permalink_compatibility = false) {
 
 
 function wpsc_is_in_category() {
-  global $wpdb, $wp_query;
   $is_in_category = false;
   if ( is_tax( 'wpsc_product_category' ) ) {
     $is_in_category = true;
