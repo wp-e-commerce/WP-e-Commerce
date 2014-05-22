@@ -812,7 +812,7 @@ class WPSC_Purchase_Log {
 	}
 
 	public function is_transaction_completed() {
-		return $this->is_accepted_payment() || $this->is_job_dispatched() || $this->is_closed_order();
+		return WPSC_Purchase_Log::is_order_status_completed( $this->get( 'processed' ) );
 	}
 
 	public function is_order_received() {
