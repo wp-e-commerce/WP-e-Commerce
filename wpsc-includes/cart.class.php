@@ -1003,24 +1003,22 @@ class wpsc_cart {
 		global $wpdb, $wpsc_shipping_modules;
 
 		if ( $this->uses_shipping() ) {
-			if (
-					isset( $this->shipping_quotes ) && empty( $this->shipping_quotes )
-						&& isset( $wpsc_shipping_modules [$this->selected_shipping_method] )
-						&& is_callable( array( $wpsc_shipping_modules [$this->selected_shipping_method], 'getQuote' ) )
+			if (    isset( $wpsc_shipping_modules[ $this->selected_shipping_method ] )
+				 && is_callable( array( $wpsc_shipping_modules[ $this->selected_shipping_method ], 'getQuote' ) )
 				) {
-					$this->shipping_quotes = $wpsc_shipping_modules [$this->selected_shipping_method]->getQuote();
+					$this->shipping_quotes = $wpsc_shipping_modules[ $this->selected_shipping_method ]->getQuote();
 			}
 
 			if ( $this->selected_shipping_option == null ) {
 				$this->get_shipping_option();
 			}
 
-			$total = isset( $this->shipping_quotes [$this->selected_shipping_option] ) ? ( float ) $this->shipping_quotes [$this->selected_shipping_option] : 0;
+			$total = isset( $this->shipping_quotes[ $this->selected_shipping_option ] ) ? ( float ) $this->shipping_quotes[ $this->selected_shipping_option ] : 0;
 			$this->base_shipping = $total;
 		} else {
-
 			$total = 0;
 		}
+
 		return $total;
 	}
 
