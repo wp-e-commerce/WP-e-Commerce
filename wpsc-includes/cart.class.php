@@ -551,6 +551,11 @@ class wpsc_cart {
 		$edit_item       = false;
 		$variation_check = true;
 
+		$parameters = wp_parse_args( $parameters, array(
+			'quantity'         => 0,
+			'variation_values' => null
+		) );
+
 		if ( wpsc_product_has_variations( $product_id ) && is_null( $parameters['variation_values'] ) ) {
 			$variation_check = false;
 		}

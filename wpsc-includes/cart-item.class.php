@@ -168,6 +168,11 @@ class wpsc_cart_item {
 		// The cart is in the cart item, which is in the cart, which is in the cart item, which is in the cart, which is in the cart item...
 		$this->cart = &$cart;
 
+		$parameters = wp_parse_args( $parameters, array(
+			'is_customisable' => false,
+			'file_data'       => null
+		) );
+
 		foreach ( $parameters as $name => $value ) {
 			$this->$name = $value;
 		}
