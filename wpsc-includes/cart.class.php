@@ -434,7 +434,7 @@ class wpsc_cart {
 
 		// let the world pick a default shipping quote
 		if (  empty( $this->selected_shipping_option ) && is_array( $this->shipping_quotes ) && ! empty( $this->shipping_quotes ) ) {
-			$this->selected_shipping_option = apply_filters( 'wpsc_default_shipping_quote', $this->selected_shipping_option, $this->shipping_quotes );
+			$this->selected_shipping_option = apply_filters( 'wpsc_default_shipping_quote', $this->selected_shipping_option, $this->shipping_quotes, $this );
 		}
 	}
 
@@ -650,7 +650,7 @@ class wpsc_cart {
 	function check_remaining_quantity( $product_id, $variations = array(), $quantity = 1 ) {
 
 		$stock = get_post_meta( $product_id, '_wpsc_stock', true );
-		$stock = apply_filters( 'wpsc_product_stock', $stock, $product_id );
+		$stock = apply_filters( 'wpsc_product_stock', $stock, $product_id, $this );
 
 		$result = true;
 
@@ -796,7 +796,7 @@ class wpsc_cart {
 		$total = ( $subtotal > $coupons_amount ) ? ( ( $subtotal - $coupons_amount ) + $shipping + $tax ) : ( $tax + $shipping );
 
 		// Filter total
-		$total = apply_filters( 'wpsc_calculate_total_price', $total, $subtotal, $shipping, $tax, $coupons_amount );
+		$total = apply_filters( 'wpsc_calculate_total_price', $total, $subtotal, $shipping, $tax, $coupons_amount, $this );
 
 		// Set variable and return
 		$this->total_price = $total;
@@ -888,7 +888,7 @@ class wpsc_cart {
 		if ( isset( $taxes_total ['rate'] ) )
 			$this->tax_percentage = $taxes_total ['rate'];
 
-		return apply_filters( 'wpsc_calculate_total_tax', $this->total_tax );
+		return apply_filters( 'wpsc_calculate_total_tax', $this->total_tax, $this );
 	}
 
 	/**
@@ -977,7 +977,7 @@ class wpsc_cart {
 			$total += $this->calculate_per_item_shipping();
 		}
 
-		return apply_filters( 'wpsc_convert_total_shipping', $total );
+		return apply_filters( 'wpsc_convert_total_shipping', $total, $this );
 	}
 
 	/**
@@ -1268,7 +1268,7 @@ class wpsc_cart {
 	function apply_coupons( $coupons_amount = '', $coupon_name = '' ) {
 		$this->clear_cache();
 		$this->coupons_name = $coupon_name;
-		$this->coupons_amount = apply_filters( 'wpsc_coupons_amount', $coupons_amount, $coupon_name );
+		$this->coupons_amount = apply_filters( 'wpsc_coupons_amount', $coupons_amount, $coupon_name, $this );
 
 		$this->calculate_total_price();
 		if ( $this->total_price < 0 ) {
