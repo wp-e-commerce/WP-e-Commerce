@@ -885,8 +885,8 @@ class wpsc_cart {
 		$taxes_total = $wpec_taxes_controller->wpec_taxes_calculate_total();
 		$this->total_tax = $taxes_total ['total'];
 
-		if ( isset( $taxes_total ['rate'] ) )
-			$this->tax_percentage = $taxes_total ['rate'];
+		if ( isset( $taxes_total['rate'] ) )
+			$this->tax_percentage = $taxes_total['rate'];
 
 		return apply_filters( 'wpsc_calculate_total_tax', $this->total_tax, $this );
 	}
