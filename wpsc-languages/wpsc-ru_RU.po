@@ -13,6 +13,16 @@ msgstr ""
 "Last-Translator: michelle <michelle@instinct.co.nz>\n"
 "Language-Team: \n"
 
+#: wpsc-components/theme-engine-v1/templates/wpsc-cart_widget.php:39
+#: wpsc-theme/wpsc-cart_widget.php:39
+msgid “Subtotal:”
+msgstr “Итого:”
+
+#: wpsc-components/theme-engine-v1/templates/wpsc-cart_widget.php:40
+#: wpsc-theme/wpsc-cart_widget.php:40
+msgid “excluding discount, shipping and tax”
+msgstr “включая скидки, доставку и налоги”
+
 #: wpsc-admin/display-sales-logs.php:384
 msgid "Mobile Sales App"
 msgstr ""
