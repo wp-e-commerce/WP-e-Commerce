@@ -349,6 +349,16 @@ class WPSC_Product {
 	}
 
 	/**
+	 * Does product exists
+	 *
+	 * @since 3.8.14
+	 * @param int|WP_Post $post ID or Post object
+	 */
+	public function exists() {
+		return ! empty( $this->post  );
+	}
+
+	/**
 	 * Initialize stock properties
 	 *
 	 * @since 3.8.14
@@ -621,9 +631,11 @@ class WPSC_Product {
 	 * @since 3.8.14
 	 */
 	private function process_stats() {
-		if ( $this->post->_wpsc_stats === '' ) {
-			$this->stats = WPSC_Purchase_Log::get_stats_for_product( $this->post->ID );
-			update_post_meta( $this->post->ID, '_wpsc_stats', $this->stats );
+		if ( $this->post ) {
+			if ( ! property_exists( $this, '_wpsc_stats' ) || empty( $this->post->_wpsc_stats ) ) {
+				$this->stats = WPSC_Purchase_Log::get_stats_for_product( $this->post->ID );
+				update_post_meta( $this->post->ID, '_wpsc_stats', $this->stats );
+			}
 		}
 	}
 
