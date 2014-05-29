@@ -65,7 +65,7 @@ msgstr ""
 
 #: wpsc-admin/includes/settings-pages/general.php:75
 msgid "Select the markets you are selling products to."
-msgstr ""
+msgstr "Выбирите на каком рынке продаете"
 
 #: wpsc-admin/includes/settings-pages/checkout.php:31
 msgid "Misc Checkout Options"
