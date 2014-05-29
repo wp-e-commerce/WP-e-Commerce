@@ -829,31 +829,27 @@ function wpsc_product_external_link_forms() {
 	$external_link_value        = isset( $product_meta['external_link'] ) ? $product_meta['external_link'] : '';
 	$external_link_text_value   = isset( $product_meta['external_link_text'] ) ? $product_meta['external_link_text'] : '';
 	$external_link_target_value = isset( $product_meta['external_link_target'] ) ? $product_meta['external_link_target'] : '';
-	$external_link_target_value_selected[$external_link_target_value] = ' selected="selected"';
-	if ( ! isset( $external_link_target_value_selected['_self'] ) ) $external_link_target_value_selected['_self'] = '';
-	if ( ! isset( $external_link_target_value_selected['_blank'] ) ) $external_link_target_value_selected['_blank'] = '';
-
-?>
+	?>
         <table class="form-table" style="width: 100%;" cellspacing="2" cellpadding="5">
             <tbody>
                 <tr class="form-field">
                     <th valign="top" scope="row"><label for="external_link"><?php esc_html_e( 'URL', 'wpsc' ); ?></label></th>
-                    <td><input type="text" name="meta[_wpsc_product_metadata][external_link]" id="external_link" value="<?php esc_url( $external_link_value ); ?>" size="50" style="width: 95%" placeholder="http://"></td>
+                    <td><input type="text" name="meta[_wpsc_product_metadata][external_link]" id="external_link" value="<?php echo esc_url( $external_link_value ); ?>" size="50" style="width: 95%" placeholder="http://"></td>
                 </tr>
                 <tr class="form-field">
                     <th valign="top" scope="row"><label for="external_link_text"><?php esc_html_e( 'Label', 'wpsc' ); ?></label></th>
-                    <td><input type="text" name="meta[_wpsc_product_metadata][external_link_text]" id="external_link_text" value="<?php esc_attr( $external_link_text_value ); ?>" size="50" style="width: 95%" placeholder="<?php _e( 'Buy Now', 'wpsc' ); ?>"></td>
+                    <td><input type="text" name="meta[_wpsc_product_metadata][external_link_text]" id="external_link_text" value="<?php echo esc_attr( $external_link_text_value ); ?>" size="50" style="width: 95%" placeholder="<?php _e( 'Buy Now', 'wpsc' ); ?>"></td>
                 </tr>
                 <tr class="form-field">
                      <th valign="top" scope="row"><label for="external_link_target"><?php esc_html_e( 'Target', 'wpsc' ); ?></label></th>
                     <td id="external_link_target">
-                    	<input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value="">
+                    	<input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value=""<?php checked( '', $external_link_target_value ); ?>>
                     	<span><?php _ex( 'Default (set by theme)', 'External product link target', 'wpsc' ); ?></span>
 
-                    	<input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value="_self" <?php echo $external_link_target_value_selected['_self'] ; ?>>
+                    	<input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value="_self"<?php checked( '_self', $external_link_target_value ); ?>>
                     	<span><?php esc_html_e( 'Force open in same window', 'wpsc' ); ?></span>
 
-                    	<input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value="_blank" <?php echo $external_link_target_value_selected['_blank'] ; ?>>
+                    	<input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value="_blank"<?php checked( '_blank', $external_link_target_value ); ?>>
                     	<span><?php esc_html_e( 'Force open in new window', 'wpsc' ); ?></span>
                     </td>
                 </tr>
