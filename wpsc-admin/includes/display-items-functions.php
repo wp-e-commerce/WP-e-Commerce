@@ -815,53 +815,52 @@ function wpsc_product_advanced_forms() {
 	return;
 }
 
-
+/**
+ * Display Product External Link Meta Box Form Fields.
+ */
 function wpsc_product_external_link_forms() {
-
 	global $post, $wpdb, $variations_processor, $wpsc_product_defaults;
 	$product_data = get_post_custom( $post->ID );
 
 	$product_data['meta'] = $product_meta = array();
-	if ( !empty( $product_data['_wpsc_product_metadata'] ) )
+	if ( ! empty( $product_data['_wpsc_product_metadata'] ) ) {
 		$product_data['meta'] = $product_meta = maybe_unserialize( $product_data['_wpsc_product_metadata'][0] );
+	}
 
 	// Get External Link Values
 	$external_link_value        = isset( $product_meta['external_link'] ) ? $product_meta['external_link'] : '';
 	$external_link_text_value   = isset( $product_meta['external_link_text'] ) ? $product_meta['external_link_text'] : '';
 	$external_link_target_value = isset( $product_meta['external_link_target'] ) ? $product_meta['external_link_target'] : '';
-	$external_link_target_value_selected[$external_link_target_value] = ' selected="selected"';
-	if ( ! isset( $external_link_target_value_selected['_self'] ) ) $external_link_target_value_selected['_self'] = '';
-	if ( ! isset( $external_link_target_value_selected['_blank'] ) ) $external_link_target_value_selected['_blank'] = '';
+	?>
+	<table class="form-table" style="width: 100%;" cellspacing="2" cellpadding="5">
+		<tbody>
+			<tr class="form-field">
+				<th valign="top" scope="row"><label for="external_link"><?php esc_html_e( 'URL', 'wpsc' ); ?></label></th>
+				<td><input type="text" name="meta[_wpsc_product_metadata][external_link]" id="external_link" value="<?php echo esc_url( $external_link_value ); ?>" size="50" style="width: 95%" placeholder="http://" /></td>
+			</tr>
+			<tr class="form-field">
+				<th valign="top" scope="row"><label for="external_link_text"><?php esc_html_e( 'Label', 'wpsc' ); ?></label></th>
+				<td><input type="text" name="meta[_wpsc_product_metadata][external_link_text]" id="external_link_text" value="<?php echo esc_attr( $external_link_text_value ); ?>" size="50" style="width: 95%" placeholder="<?php _e( 'Buy Now', 'wpsc' ); ?>" /></td>
+			</tr>
+			<tr class="form-field">
+				<th valign="top" scope="row"><label for="external_link_target"><?php esc_html_e( 'Target', 'wpsc' ); ?></label></th>
+				<td id="external_link_target">
+					<input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value=""<?php checked( '', $external_link_target_value ); ?> />
+					<span><?php _ex( 'Default (set by theme)', 'External product link target', 'wpsc' ); ?></span>
 
-?>
-        <table class="form-table" style="width: 100%;" cellspacing="2" cellpadding="5">
-            <tbody>
-                <tr class="form-field">
-                    <th valign="top" scope="row"><label for="external_link"><?php esc_html_e( 'URL', 'wpsc' ); ?></label></th>
-                    <td><input type="text" name="meta[_wpsc_product_metadata][external_link]" id="external_link" value="<?php esc_url( $external_link_value ); ?>" size="50" style="width: 95%" placeholder="http://"></td>
-                </tr>
-                <tr class="form-field">
-                    <th valign="top" scope="row"><label for="external_link_text"><?php esc_html_e( 'Label', 'wpsc' ); ?></label></th>
-                    <td><input type="text" name="meta[_wpsc_product_metadata][external_link_text]" id="external_link_text" value="<?php esc_attr( $external_link_text_value ); ?>" size="50" style="width: 95%" placeholder="<?php _e( 'Buy Now', 'wpsc' ); ?>"></td>
-                </tr>
-                <tr class="form-field">
-                     <th valign="top" scope="row"><label for="external_link_target"><?php esc_html_e( 'Target', 'wpsc' ); ?></label></th>
-                    <td id="external_link_target">
-                    	<input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value="">
-                    	<span><?php _ex( 'Default (set by theme)', 'External product link target', 'wpsc' ); ?></span>
+					<input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value="_self"<?php checked( '_self', $external_link_target_value ); ?> />
+					<span><?php esc_html_e( 'Force open in same window', 'wpsc' ); ?></span>
 
-                    	<input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value="_self" <?php echo $external_link_target_value_selected['_self'] ; ?>>
-                    	<span><?php esc_html_e( 'Force open in same window', 'wpsc' ); ?></span>
-
-                    	<input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value="_blank" <?php echo $external_link_target_value_selected['_blank'] ; ?>>
-                    	<span><?php esc_html_e( 'Force open in new window', 'wpsc' ); ?></span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <em><?php esc_html_e('This option overrides the "Buy Now" and "Add to Cart" buttons, replacing them with the link you describe here.', 'wpsc'); ?></em>
-<?php
+					<input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value="_blank"<?php checked( '_blank', $external_link_target_value ); ?> />
+					<span><?php esc_html_e( 'Force open in new window', 'wpsc' ); ?></span>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<em><?php esc_html_e( 'This option overrides the "Buy Now" and "Add to Cart" buttons, replacing them with the link you describe here.', 'wpsc' ); ?></em>
+	<?php
 }
+
 function wpsc_additional_desc() {
 ?>
     <textarea name='additional_description' id='additional_description' cols='40' rows='5' ><?php echo esc_textarea( get_post_field( 'post_excerpt', get_the_ID() ) ); ?></textarea>
