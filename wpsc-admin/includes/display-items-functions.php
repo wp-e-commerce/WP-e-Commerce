@@ -956,6 +956,10 @@ function wpsc_product_download_forms() {
 }
 
 function wpsc_product_personalization_forms(){
+	global $post;
+	$product_meta = get_post_meta( $post->ID, '_wpsc_product_metadata', true );
+	if ( ! is_array( $product_meta ) )
+		$product_meta = array();
 ?>
 	<ul id="wpsc_product_personalization_option">
 		<li>
