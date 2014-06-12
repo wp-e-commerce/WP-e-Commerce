@@ -255,19 +255,17 @@ class WPSC_Product {
 	private $sales;
 
 	/**
-	 * Magic properties
+	 * Lazy load properties if required.
 	 *
-	 * @since 3.8.14
-	 * @param  string $name Name of property
-	 * @return mixed        Value
+	 * @since  3.9
+	 * @param  string $property The property that's required.
 	 */
-	public function __get( $name ) {
+	private function _maybe_lazy_load_property( $property ) {
 
 		// Properties are not initialized by default, instead, they are lazy-loaded on demand
-		if ( ! isset( $this->$name ) ) {
-
+		if ( ! isset( $this->$property ) ) {
 			// lazy load variations
-			if ( in_array( $name, array(
+			if ( in_array( $property, array(
 				'has_variations',
 				'variations',
 				'variation_sets',
@@ -275,9 +273,8 @@ class WPSC_Product {
 			) ) ) {
 				$this->fetch_variations();
 			}
-
 			// lazy load prices
-			if ( in_array( $name, array(
+			if ( in_array( $property, array(
 				'is_on_sale',
 				'has_various_prices',
 				'has_various_savings',
@@ -289,9 +286,8 @@ class WPSC_Product {
 			) ) ) {
 				$this->process_prices();
 			}
-
 			// lazy load stocks
-			if ( in_array( $name, array(
+			if ( in_array( $property, array(
 				'has_stock',
 				'stock',
 				'all_stock',
@@ -300,20 +296,54 @@ class WPSC_Product {
 			) ) ) {
 				$this->process_stocks();
 			}
-
 			// lazy load stats
-			if ( in_array( $name, array(
+			if ( in_array( $property, array(
 				'sales',
 				'earnings',
 			) ) ) {
 				$this->process_stats();
 			}
 		}
+	}
 
+	/**
+	 * Implement __isset() magic method.
+	 * Lazy loads properties where required.
+	 *
+	 * @since  3.9
+	 * @param  string  $name Property name to check.
+	 * @return boolean       True if the property isset(), otherwise false.
+	 */
+	public function __isset( $name ) {
+		$this->_maybe_lazy_load_property( $name );
+		return isset( $this->$name );
+	}
+
+	/**
+	 * Implement __empty() magic method.
+	 * Lazy loads properties where required.
+	 *
+	 * @since  3.9
+	 * @param  string  $name Property name to check.
+	 * @return boolean       True if the property is empty(), otherwise false.
+	 */
+	public function __empty( $name ) {
+		$this->_maybe_lazy_load_property( $name );
+		return empty( $this->name );
+	}
+
+	/**
+	 * Magic properties
+	 *
+	 * @since 3.8.14
+	 * @param  string $name Name of property
+	 * @return mixed        Value
+	 */
+	public function __get( $name ) {
+		$this->_maybe_lazy_load_property( $name );
 		if ( isset( $this->$name ) ) {
 			return $this->$name;
 		}
-
 		return null;
 	}
 
