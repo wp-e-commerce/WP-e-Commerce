@@ -315,7 +315,7 @@ class WPSC_Product {
 	 * @return boolean       True if the property isset(), otherwise false.
 	 */
 	public function __isset( $name ) {
-		$this->maybe_lazy_load_property( $name );
+		$this->_maybe_lazy_load_property( $name );
 		return isset( $this->$name );
 	}
 
@@ -328,7 +328,7 @@ class WPSC_Product {
 	 * @return boolean       True if the property is empty(), otherwise false.
 	 */
 	public function __empty( $name ) {
-		$this->maybe_lazy_load_property( $name );
+		$this->_maybe_lazy_load_property( $name );
 		return empty( $this->name );
 	}
 
@@ -340,7 +340,7 @@ class WPSC_Product {
 	 * @return mixed        Value
 	 */
 	public function __get( $name ) {
-		$this->maybe_lazy_load_property( $name );
+		$this->_maybe_lazy_load_property( $name );
 		if ( isset( $this->$name ) ) {
 			return $this->$name;
 		}
