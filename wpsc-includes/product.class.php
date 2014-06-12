@@ -260,7 +260,7 @@ class WPSC_Product {
 	 * @since  3.9
 	 * @param  string $property The property that's required.
 	 */
-	private function maybe_lazy_load_property( $property ) {
+	private function _maybe_lazy_load_property( $property ) {
 
 		// Properties are not initialized by default, instead, they are lazy-loaded on demand
 		if ( ! isset( $this->$property ) ) {
