@@ -329,7 +329,7 @@ class WPSC_Product {
 	 */
 	public function __empty( $name ) {
 		$this->_maybe_lazy_load_property( $name );
-		return empty( $this->name );
+		return empty( $this->$name );
 	}
 
 	/**
