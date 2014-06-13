@@ -340,7 +340,7 @@ class wpsc_cart {
 			$needs_shipping_recalc = true;
 		}
 
-		return $needs_shipping_recalc;
+		return apply_filters( 'needs_shipping_recalc', $needs_shipping_recalc, $this );
 	}
 
 	/**
