@@ -340,7 +340,13 @@ class wpsc_cart {
 			$needs_shipping_recalc = true;
 		}
 
-		return $needs_shipping_recalc;
+		/*
+		 * filter: wpsc_needs_shipping_recalc
+		 *
+		 * If more processing is needed to determine if shipping really needs to
+		 * be recalculated it should be hooked on here.
+		 */
+		return apply_filters( 'wpsc_needs_shipping_recalc', $needs_shipping_recalc, $this );
 	}
 
 	/**
