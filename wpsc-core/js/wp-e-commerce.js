@@ -650,6 +650,7 @@ function wpsc_update_regions_list_to_match_country( country_select ) {
 	var region             = wpsc_get_value_from_wpsc_meta_element( region_meta_key );
 
 	if ( wpsc_country_has_regions( country_code ) ) {
+		console.log('country has regions');
 		var select_a_region_message = wpsc_no_region_selected_message( country_code );
 		var regions = wpsc_country_regions( country_code );
 		all_region_selects.empty();
@@ -909,6 +910,7 @@ function wpsc_get_value_from_wpsc_meta_element( meta ) {
 		return null;
 	}
 
+	
 	var meta_value = false;
 
 	if ( element.is(':checkbox') ) {
@@ -918,7 +920,10 @@ function wpsc_get_value_from_wpsc_meta_element( meta ) {
 			meta_value = '';
 		}
 	} else if ( element.is('select') ) {
-		meta_value = element.find( 'option:selected' ).val();
+		meta_value = element.val();
+		if ( ! meta_value && 'none' == element.css('display') ) {
+			meta_value = element.find( 'option[selected]').val();
+		}
 	} else 	{
 		meta_value = element.val();
 	}
