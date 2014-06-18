@@ -235,7 +235,7 @@ function wpsc_country_list( $form_id = null, $ajax = null, $selected_country = n
 
 
 /**
- * get the output used to show a shipping state and region select drop down
+ * get the output used to show a billing state and region select drop down
  *
  * @since 3.8.14
  *
