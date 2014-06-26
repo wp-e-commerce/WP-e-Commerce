@@ -87,6 +87,7 @@ function wpsc_custom_category_columns( $columns ) {
 function wpsc_custom_category_column_data( $string, $column_name, $term_id ) {
    global $wpdb;
 
+	if ( 'image' == $column_name ) {
   $image = wpsc_get_categorymeta( $term_id, 'image' );
   $name = get_term_by( 'id', $term_id, 'wpsc_product_category' );
   $name = $name->name;
@@ -95,7 +96,7 @@ function wpsc_custom_category_column_data( $string, $column_name, $term_id ) {
 	  $image = "<img src='" . WPSC_CATEGORY_URL . $image . "' title='" . esc_attr( $name ) . "' alt='" . esc_attr( $name ) . "' width='30' height='30' />";
    else
 	  $image = "<img src='" . WPSC_CORE_IMAGES_URL . "/no-image-uploaded.gif' title='" . esc_attr( $name ) . "' alt='" . esc_attr( $name ) . "' width='30' height='30' />";
-
+	}
 	return $image;
 
 }
