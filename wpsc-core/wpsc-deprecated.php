@@ -1792,7 +1792,6 @@ function wpsc_meta_table_name( $meta_object_type ) {
  * @deprecated since 3.8.14
  */
 function wpsc_google_checkout(){
-	_wpsc_deprecated_function( __FUNCTION__, '3.8.14', 'wpsc_google_checkout' );
 	$currpage = wpsc_selfURL();
 	if (array_search("google",(array)get_option('custom_gateway_options')) !== false && $currpage != get_option('shopping_cart_url')) {
 		global $nzshpcrt_gateways;
