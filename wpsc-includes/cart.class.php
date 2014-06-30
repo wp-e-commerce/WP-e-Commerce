@@ -693,7 +693,7 @@ class wpsc_cart {
 			$this->cart_items = array_values( $this->cart_items );
 			$this->cart_item_count = count( $this->cart_items );
 			$this->current_cart_item = - 1;
-			do_action( 'wpsc_remove_item', $key, $this );
+			do_action( 'wpsc_remove_item', $key, $this, $cart_item );
 
 			$this->clear_cache();
 			return true;
