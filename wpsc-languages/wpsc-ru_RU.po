@@ -13,6 +13,40 @@ msgstr ""
 "Last-Translator: michelle <michelle@instinct.co.nz>\n"
 "Language-Team: \n"
 
+#: wpsc-admin/admin.php:287
+msgctxt "contextual help tab"
+msgid "Sales Log"
+msgstr "Журнал продаж"
+#: wpsc-admin/includes/purchase-log-list-table-class.php:202
+msgid "Customer"
+msgstr "Заказчик"
+
+#: wpsc-admin/includes/purchase-log-list-table-class.php:204
+msgctxt "sales log list table column"
+msgid "Status"
+msgstr "Статус"
+
+#: wpsc-admin/includes/coupon-list-table-class.php:111
+msgid "Code"
+msgstr "Код"
+
+#: wpsc-admin/includes/coupon-list-table-class.php:113
+msgid "Start Date"
+msgstr "С даты"
+
+#: wpsc-admin/includes/coupon-list-table-class.php:114
+msgid "По дату"
+
+#: wpsc-components/theme-engine-v1/templates/wpsc-cart_widget.php:39
+#: wpsc-theme/wpsc-cart_widget.php:39
+msgid “Subtotal:”
+msgstr “Итого:”
+
+#: wpsc-components/theme-engine-v1/templates/wpsc-cart_widget.php:40
+#: wpsc-theme/wpsc-cart_widget.php:40
+msgid “excluding discount, shipping and tax”
+msgstr “включая скидки, доставку и налоги”
+
 #: wpsc-admin/display-sales-logs.php:384
 msgid "Mobile Sales App"
 msgstr ""
@@ -5429,13 +5463,13 @@ msgstr "Если вы не хотите отправить в конкретно
 
 #: wpsc-theme/wpsc-shopping_cart_page.php:482
 #: wpsc-shipping/tablerate.php:50
-msgid "Total Price"
-msgstr "Общая цена"
+msgid "Total Price:"
+msgstr "Общая цена:"
 
 #: wpsc-shipping/tablerate.php:50
 #: wpsc-shipping/weightrate.php:49
-msgid "Shipping Price"
-msgstr "Цена Доставки"
+msgid "Shipping Price:"
+msgstr "Цена Доставки:"
 
 #: wpsc-shipping/ups_20.php:104
 msgid "Your Packaging"
