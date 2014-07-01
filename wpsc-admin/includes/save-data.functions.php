@@ -89,8 +89,6 @@ function wpsc_custom_category_columns( $columns ) {
  * @return  string                Updated column output.
  */
 function wpsc_custom_category_column_data( $string, $column_name, $term_id ) {
-	global $wpdb;
-
 	if ( 'image' == $column_name ) {
 		$term = get_term_by( 'id', $term_id, 'wpsc_product_category' );
 		$image = wpsc_get_categorymeta( $term_id, 'image' );
