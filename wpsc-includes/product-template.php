@@ -315,6 +315,7 @@ function wpsc_get_product_gallery( $id ) {
 			return array();
 
 		$args['post__in'] = $ids;
+		$args['orderby'] = 'post__in';
 	}
 
 	return get_posts( $args );
