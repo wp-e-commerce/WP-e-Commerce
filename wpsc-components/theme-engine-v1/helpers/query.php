@@ -159,7 +159,7 @@ function _wpsc_pre_get_posts_reset_taxonomy_globals( $query ) {
 	$post_type_object = get_post_type_object( 'wpsc-product' );
 
 	if ( current_user_can( $post_type_object->cap->edit_posts ) )
-		$query->set( 'post_status', 'private,draft,pending,publish' );
+		$query->set( 'post_status', apply_filters( 'wpsc_product_display_status', array( 'publish' ) ) );
 	else
 		$query->set( 'post_status', 'publish' );
 }

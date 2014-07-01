@@ -102,7 +102,7 @@ function wpsc_add_to_cart() {
 	$default_parameters['meta'] = null;
 
 	$post_type_object = get_post_type_object( 'wpsc-product' );
-	$permitted_post_statuses = current_user_can( $post_type_object->cap->edit_posts ) ? array( 'private', 'draft', 'pending', 'publish' ) : array( 'publish' );
+	$permitted_post_statuses = current_user_can( $post_type_object->cap->edit_posts ) ? apply_filters( 'wpsc_product_display_status', array( 'publish' ) ) : array( 'publish' );
 
 	/// sanitise submitted values
 	$product_id = apply_filters( 'wpsc_add_to_cart_product_id'    , (int) $_POST['product_id'] );
