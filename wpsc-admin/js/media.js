@@ -393,13 +393,9 @@
 			frame.open();
 		});
 		// make our gallery sortable
-		$( 'div#wpsc_product_gallery' ).each(function() {
-
-			$( this ).find( 'ul' ).sortable({
-				cursor:			'move',
-				revert:			300,
-			}).disableSelection();
-
-		});
+		$( 'div#wpsc_product_gallery' ).find( 'ul' ).sortable({
+			cursor: 'move',
+			revert: 300,
+		}).disableSelection();
 	});
 }(jQuery));
