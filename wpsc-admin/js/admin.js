@@ -191,7 +191,7 @@ jQuery(document).ready(function($){
 	});
 	jQuery("form[name='add_coupon']").submit(function() {
 		var title = jQuery("form[name='add_coupon'] input[name='add_coupon_code']").val();
-		if ( title == '') {
+		if ( title === '' ) {
 			jQuery('<div id="notice" class="error"><p>' + wpsc_adminL10n.empty_coupon + '</p></div>').insertAfter('div.wrap > h2').delay(2500).hide(350);
 			return false;
 		}
@@ -205,7 +205,7 @@ jQuery(document).ready(function($){
 	var currencyRowTemplate = jQuery( '.wpsc-currency-layers tr.template' ).remove().removeClass( 'template hidden' ).removeAttr( 'id' );
 
 	// Hide table if empty
-	if ( jQuery( '.wpsc-currency-layers tbody tr' ).length == 0 ) {
+	if ( jQuery( '.wpsc-currency-layers tbody tr' ).length === 0 ) {
 		jQuery( '.wpsc-currency-layers table' ).hide();
 	}
 
@@ -221,7 +221,7 @@ jQuery(document).ready(function($){
 		var currencyRow = jQuery( this ).closest( 'tr' );
 		currencyRow.find( 'input' ).val( '' );
 		currencyRow.find( 'select' ).val( '' );
-		if ( currencyRow.siblings().length == 0 ) {
+		if ( currencyRow.siblings().length === 0 ) {
 			currencyRow.closest( 'table' ).hide();
 		}
 		currencyRow.remove();
@@ -236,7 +236,7 @@ jQuery(document).ready(function($){
 	var qtyRowTemplate = jQuery( '.wpsc-quantity-discounts tr.template' ).remove().removeClass( 'template hidden' ).removeAttr( 'id' );
 
 	// Hide table if empty
-	if ( jQuery( '.wpsc-quantity-discounts tbody tr' ).length == 0 ) {
+	if ( jQuery( '.wpsc-quantity-discounts tbody tr' ).length === 0 ) {
 		jQuery( '.wpsc-quantity-discounts table' ).hide();
 	}
 
@@ -251,7 +251,7 @@ jQuery(document).ready(function($){
 	jQuery( '.wpsc-quantity-discounts' ).on( 'click', '.remove_line', function( e ) {
 		var qtyRow = jQuery( this ).closest( 'tr' );
 		qtyRow.find( 'input' ).val( '' );
-		if ( qtyRow.siblings().length == 0 ) {
+		if ( qtyRow.siblings().length === 0 ) {
 			qtyRow.closest( 'table' ).hide();
 		}
 		qtyRow.remove();
@@ -306,7 +306,7 @@ jQuery(document).ready(function($){
 		jQuery('th.column-stock input, td.stock input').each(function(){
 			this.disabled = ! checked;
 		});
-	}
+	};
 
 	if (limited_stock_checkbox.size() > 0) {
 		toggle_stock_fields(limited_stock_checkbox.is(':checked'));
@@ -578,6 +578,7 @@ function wpsc_update_product_gallery_tab(obj){
 
 			output += '<li>';
 				output += '<img src="' + url + '">';
+				output += '<input type="hidden" name="wpsc-product-gallery-imgs[]" value="' + obj[i].id + '">';
 			output += '</li>';
 		}
 
@@ -596,11 +597,11 @@ function hideOptionElement(id, option) {
 	if (prevOption == option) {
 		return;
 	}
-	if (prevElement != null) {
+	if (prevElement !== null) {
 		prevElement.style.display = "none";
 	}
 
-	if (id == null) {
+	if (id === null) {
 		prevElement = null;
 	} else {
 		prevElement = document.getElementById(id);
