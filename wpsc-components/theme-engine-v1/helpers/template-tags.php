@@ -35,18 +35,6 @@ function wpsc_is_single_product() {
 function wpsc_category_class() {
 	global $wpdb, $wp_query;
 
-/*
-	if( ! array_key_exists('taxonomy', $wp_query->query_vars) ) {
-		echo '">';
-	var_dump( $wp_query->query_vars );
-	exit;
-	}
-*/
-/*
-	echo '">';
-	var_dump( $wp_query->query_vars );
-	exit;
-*/
 	$category_nice_name = '';
 	if ( 'wpsc_product_category' == $wp_query->query_vars['taxonomy']  ) {
 		$catid = wpsc_get_the_category_id($wp_query->query_vars['term'],'slug');
