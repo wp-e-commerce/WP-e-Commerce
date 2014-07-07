@@ -1170,7 +1170,7 @@ function wpsc_have_custom_meta() {
  */
 function wpsc_the_custom_meta() {
 	global $wpsc_custom_meta;
-	return esc_html( $wpsc_custom_meta->the_custom_meta() );
+	return $wpsc_custom_meta->the_custom_meta();
 }
 
 /**
