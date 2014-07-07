@@ -329,7 +329,7 @@ class wpsc_checkout {
 			case "select":
 				$options = $this->get_checkout_options( $this->checkout_item->id );
 				if ( $options != '' ) {
-					$output = '<select class="wpsc-visitor-meta" data-wpsc-meta-key="' . $meta_key . '" name="collected_data[{$this->checkout_item->id}]"' . $an_array . '">';
+					$output = '<select class="wpsc-visitor-meta" data-wpsc-meta-key="' . $meta_key . '" name="collected_data[' . $this->checkout_item->id . ']"' . $an_array . '">';
 					$output .= "<option value='-1'>" . _x( 'Select an Option', 'Dropdown default when called within checkout class' , 'wpsc' ) . "</option>";
 					foreach ( (array)$options as $label => $value ) {
 						$value = esc_attr(str_replace( ' ', '', $value ) );

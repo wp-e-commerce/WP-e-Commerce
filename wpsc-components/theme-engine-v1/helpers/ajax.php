@@ -102,7 +102,7 @@ function wpsc_add_to_cart() {
 	$default_parameters['meta'] = null;
 
 	$post_type_object = get_post_type_object( 'wpsc-product' );
-	$permitted_post_statuses = current_user_can( $post_type_object->cap->edit_posts ) ? array( 'private', 'draft', 'pending', 'publish' ) : array( 'publish' );
+	$permitted_post_statuses = current_user_can( $post_type_object->cap->edit_posts ) ? apply_filters( 'wpsc_product_display_status', array( 'publish' ) ) : array( 'publish' );
 
 	/// sanitise submitted values
 	$product_id = apply_filters( 'wpsc_add_to_cart_product_id'    , (int) $_POST['product_id'] );
@@ -601,7 +601,7 @@ function wpsc_submit_checkout( $collected_data = true ) {
 		_wpsc_checkout_customer_meta_update( $_POST['collected_data'] );
 	}
 
-	// initialize our checkout status variab;e, we start be assuming
+	// initialize our checkout status variable, we start be assuming
 	// checkout is falid, until we find a reason otherwise
 	$is_valid           = true;
 	$num_items          = 0;
@@ -727,6 +727,7 @@ function wpsc_submit_checkout( $collected_data = true ) {
 			$tax = 0.00;
 			$tax_percentage = 0.00;
 		}
+
 		$total = $wpsc_cart->calculate_total_price();
 
 		$args = array(

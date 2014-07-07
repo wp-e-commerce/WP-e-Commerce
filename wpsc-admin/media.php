@@ -15,7 +15,7 @@ function _wpsc_action_enqueue_media_scripts() {
 			$id = $post->ID;
 
 		$gallery = _wpsc_get_product_gallery_json( $id );
-		wp_enqueue_script( 'wpsc-media', WPSC_URL . '/wpsc-admin/js/media.js', array( 'media-editor', 'wp-e-commerce-admin', 'post' ), WPSC_VERSION );
+		wp_enqueue_script( 'wpsc-media', WPSC_URL . '/wpsc-admin/js/media.js', array( 'media-editor', 'wp-e-commerce-admin', 'jquery-ui-sortable', 'post' ), WPSC_VERSION );
 		wp_localize_script( 'wpsc-media', 'WPSC_Media', array(
 			'l10n' => array(
 				'productMediaTitle' => __( 'Add Images to Product Gallery', 'wpsc' ),
