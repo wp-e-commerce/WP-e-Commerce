@@ -598,18 +598,18 @@ class wpsc_checkout {
 
 			foreach ( $checkout_item_values as $checkout_item_value ) {
 				$prepared_query = $wpdb->insert(
-													WPSC_TABLE_SUBMITTED_FORM_DATA,
-													array(
-															'log_id'  => $purchase_id,
-															'form_id' => $form_data->id,
-															'value'   => $checkout_item_value,
-													),
-													array(
-															'%d',
-															'%d',
-															'%s',
-													)
-											);
+						WPSC_TABLE_SUBMITTED_FORM_DATA,
+						array(
+								'log_id'  => $purchase_id,
+								'form_id' => $form_data->id,
+								'value'   => $checkout_item_value,
+						),
+						array(
+								'%d',
+								'%d',
+								'%s',
+						)
+				);
 			}
 		}
 	}
