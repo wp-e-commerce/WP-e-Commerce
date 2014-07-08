@@ -616,10 +616,20 @@ function wpsc_the_product_price( $no_decimals = false, $only_normal_price = fals
 	if ( wpsc_product_has_variations( $product_id ) ) {
 		$from_text = __( ' from %s', 'wpsc' );
 		$from_text = apply_filters( 'wpsc_product_variation_text', $from_text );
+
+		if( $no_decimals ) {
+			add_filter( 'wpsc_modify_decimals', '__return_zero' );
+		}
+
 		$output = wpsc_product_variation_price_from( $product_id, array(
 			'from_text'         => $from_text,
 			'only_normal_price' => $only_normal_price,
 		) );
+
+		if( $no_decimals ) {
+			remove_filter( 'wpsc_modify_decimals', '__return_zero' );
+		}
+		
 	} else {
 		$price = $full_price = get_post_meta( $product_id, '_wpsc_price', true );
 
