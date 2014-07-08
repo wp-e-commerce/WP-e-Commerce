@@ -344,7 +344,7 @@ function wpsc_checkout_billing_state_and_region( $wpsc_checkout = null ) {
 					. 'id="' . $region_form_id . '" '
 						. ' class="current_region wpsc-visitor-meta wpsc-region-dropdown" data-wpsc-meta-key="' . $title
 							. '"  title="' . $title . '" '
-								. 'name="collected_data['. $wpsc_checkout->checkout_item->id . ']" '
+								. 'name="collected_data['. $wpsc_checkout->checkout_item->id . '][1]" '
 									. $style
 										. ">\n\r ";
 
