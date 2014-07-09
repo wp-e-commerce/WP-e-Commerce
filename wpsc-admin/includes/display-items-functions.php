@@ -666,7 +666,7 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
                 <?php endif; ?>
                 <label for="wpsc-product-shipping-weight"><?php echo esc_html_e( 'Weight', 'wpsc' ); ?></label>
                 <span class="wpsc-product-shipping-input">
-                    <input type="number" min="0" step="0.01" id="wpsc-product-shipping-weight" name="<?php echo esc_attr( $field_name_prefix ); ?>[weight]" value="<?php if ( ! $bulk ) echo esc_attr( wpsc_format_number( $weight ) ); ?>" />
+                    <input type="text" id="wpsc-product-shipping-weight" name="<?php echo esc_attr( $field_name_prefix ); ?>[weight]" value="<?php if ( ! $bulk ) echo esc_attr( wpsc_format_number( $weight ) ); ?>" />
                     <select id="wpsc-product-shipping-weight-unit" name="<?php echo $field_name_prefix; ?>[weight_unit]">
                             <?php foreach ( $weight_units as $unit => $unit_label ): ?>
                                 <option value="<?php echo esc_attr( $unit ); ?>" <?php if ( ! $bulk ) selected( $unit, $measurements['weight_unit'] ); ?>><?php echo esc_html( $unit_label ); ?></option>
