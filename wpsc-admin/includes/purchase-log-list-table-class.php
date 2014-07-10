@@ -20,6 +20,9 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 
 	public function __construct( $args = array() ) {
 		$args['plural'] = 'purchase-logs';
+
+		$this->set_per_page( $this->set_purchase_logs_per_page_by_user() );
+
 		parent::__construct( $args );
 
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX )
@@ -46,6 +49,31 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		$this->views = false;
 	}
 
+	/**
+	 * This function changes the number of purchase logs shown on Sales Log (Screen Options) based
+	 * on the user meta (if set).
+	 * Based on an example from http://chrismarslender.com/2012/01/26/wordpress-screen-options-tutorial/
+	 *
+	 * @since 3.8.14.2
+	 * @access private
+	 *
+	 * @uses get_current_user_id()
+	 * @uses get_user_meta()
+	 */
+	private function set_purchase_logs_per_page_by_user() {
+
+		$user = get_current_user_id();
+
+		$per_page = get_user_meta( $user, 'wpsc_purchases_per_page', true );
+		if ( empty ( $per_page ) || $per_page < 1 ) {
+
+			$per_page = 20;
+		}
+
+		return $per_page;
+	}
+
+	// Override the default Purchase Logs Per Page
 	public function set_per_page( $per_page ) {
 		$this->per_page = (int) $per_page;
 	}

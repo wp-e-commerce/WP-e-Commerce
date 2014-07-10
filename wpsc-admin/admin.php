@@ -89,7 +89,7 @@ function wpsc_admin_edit_posts_orderby( $orderby_sql ) {
 add_filter( 'posts_orderby', 'wpsc_admin_edit_posts_orderby' );
 
 /**
- * setting the screen option to between 1 and 999
+ * setting the product & variations per page screen option to between 1 and 999
  *
  * @since 3.8
  * @access public
@@ -102,7 +102,7 @@ add_filter( 'posts_orderby', 'wpsc_admin_edit_posts_orderby' );
  * @return $value after changes...
  */
 function wpsc_set_screen_option($status, $option, $value){
-	if( in_array($option, array ("edit_wpsc_variation_per_page","edit_wpsc_product_per_page" )) ){
+	if( in_array($option, array ("edit_wpsc_variation_per_page","edit_wpsc_product_per_page", "wpsc_purchases_per_page" )) ){
 		if ( "edit_wpsc_variation_per_page" == $option ){
 			global $user_ID;
 			update_user_option($user_ID,'edit_wpsc-variation_per_page',$value);
@@ -264,6 +264,8 @@ function wpsc_admin_pages() {
 	add_action( 'load-post-new.php'          , 'wpsc_add_help_tabs' );
 	add_action( 'load-edit-tags.php'         , 'wpsc_add_help_tabs' );
 
+	// screen options on Sales Log
+	add_action( 'load-' . $purchase_logs_page , 'wpsc_add_purchase_logs_screen_option' );
 }
 
 /**
@@ -365,6 +367,24 @@ function wpsc_add_help_tabs() {
 		) );
 
 	}
+}
+
+/**
+ * This function allows change in number of purchase logs shown on Sales Log (Screen Options).
+ *
+ * @since 3.8.14.2
+ * @access public
+ *
+ * @uses add_screen_option()
+ */
+function wpsc_add_purchase_logs_screen_option() {
+
+	// setup Screen Option for purchase logs per page
+	add_screen_option ( 'per_page', array(
+		'label'		=> __( 'Sales Orders', 'wpsc' ),
+		'default'	=> 20,
+		'option'	=> 'wpsc_purchases_per_page'
+	) );
 }
 
 /**
