@@ -46,4 +46,17 @@ class PHP_Merchant_HTTP_CURL extends PHP_Merchant_HTTP
 	public function get( $url, $fields = array(), $args = array() ) {
 		return $this->request( $url, $fields, $args );
 	}
+
+	/**
+	 * Generate URL-encoded query string
+	 *
+	 * @param array|object $args An Array or Object containaing properties
+	 * @return string Returns a URL-encoded string.
+	 */
+	protected function parse_args( $args ) {
+		if ( is_object ( $args ) || is_array( $args ) ) {
+			return http_build_query( $args );
+		}
+		return;
+	}
 }
