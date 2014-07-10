@@ -9,10 +9,10 @@ class PHP_Merchant_HTTP_CURL_Remote_Test extends WebTestCase
 	}
 	
 	public function test_http_curl_get_request_returns_correct_response() {
-		$expected_content = 'c7194f7e74fedaf84525235d3b37c203';
+		$expected_content = "c7194f7e74fedaf84525235d3b37c203\n";
 		
 		$http = new PHP_Merchant_HTTP_CURL();
-		$actual_content = $http->get( 'http://garyc40.com/test-get.php' );
+		$actual_content = $http->get( 'https://raw.githubusercontent.com/omarabid/Science-Repository/master/json' );
 		$this->assertEqual( $expected_content, $actual_content );
 	}
 	
@@ -20,7 +20,7 @@ class PHP_Merchant_HTTP_CURL_Remote_Test extends WebTestCase
 		$expected_content = "key_1 => value 1\ntest_another_key => value 2\n";
 		
 		$http = new PHP_Merchant_HTTP_CURL();
-		$actual_content = $http->post( 'http://garyc40.com/test-post.php', array(
+		$actual_content = $http->post( 'https://raw.githubusercontent.com/omarabid/Science-Repository/master/post', array(
 			'key 1' => 'value 1',
 			'test another key' => 'value 2',
 		) );

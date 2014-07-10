@@ -1,6 +1,14 @@
 <?php
+// Disable Strict Error Reporting
+error_reporting(E_ALL ^ E_STRICT);
 
-if ( ! empty( $_GET['remote'] ) ) {
+// Check for Remote Tests
+global $remote;
+$remote = false;
+if ( in_array( '--enable-remote', $argv ) || ! empty( $_GET['remote'] ) ) {
+	$remote = true;
+}
+if ( $remote ) {
 	require_once( 'simpletest/web_tester.php' );
 	require_once( 'common/test-accounts.php' );
 }
@@ -13,6 +21,7 @@ define( 'PHP_MERCHANT_TEST_PATH', dirname( __FILE__ ) );
 class PHP_Merchant_Test_Suite extends TestSuite
 {
 	function __construct() {
+		global $remote;
 		parent::__construct( 'PHP Merchant Test Suite' );
 		$tests = array(
 			'common/php-merchant',
@@ -22,7 +31,9 @@ class PHP_Merchant_Test_Suite extends TestSuite
 			'gateways/paypal-ipn',
 		);
 
-		if ( ! empty( $_GET['remote'] ) ) {
+		// Since we are running the SimpleTest Tests from the command-line,
+		// we are adding a command-line key for remote tests
+		if ( $remote ) {
 			$tests = array_merge( $tests, array(
 				'remote/http-curl',
 				'remote/paypal-express-checkout',
