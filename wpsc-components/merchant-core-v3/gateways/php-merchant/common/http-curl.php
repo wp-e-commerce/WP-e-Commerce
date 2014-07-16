@@ -2,7 +2,7 @@
 
 class PHP_Merchant_HTTP_CURL extends PHP_Merchant_HTTP
 {
-	protected function request( $url, $fields = '', $args = array() ) {
+	protected function request( $url, $fields = array(), $args = array() ) {
 		$defaults = array(
 			'follow' => true,
 			'method' => 'GET',
@@ -38,12 +38,25 @@ class PHP_Merchant_HTTP_CURL extends PHP_Merchant_HTTP
 		return $response;
 	}
 
-	public function post( $url, $fields = '', $args = array() ) {
+	public function post( $url, $fields = array(), $args = array() ) {
 		$args['method'] = 'POST';
 		return $this->request( $url, $fields, $args );
 	}
 
-	public function get( $url, $fields = '', $args = array() ) {
+	public function get( $url, $fields = array(), $args = array() ) {
 		return $this->request( $url, $fields, $args );
+	}
+
+	/**
+	 * Generate URL-encoded query string
+	 *
+	 * @param array|object $args An Array or Object containaing properties
+	 * @return string|bool Returns a URL-encoded string.
+	 */
+	protected function parse_args( $args ) {
+		if ( is_object ( $args ) || is_array( $args ) ) {
+			return http_build_query( $args );
+		}
+		return false;
 	}
 }

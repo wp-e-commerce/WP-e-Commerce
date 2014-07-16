@@ -37,6 +37,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Remote_Test extends WebTestCase
 			'subtotal'    => 13700,
 			'shipping'    => 1500,
 			'tax'         => 137,
+			'amount'	  => 15337,
 			'description' => 'Order for example.com',
 			'invoice'     => 'E84A90G94',
 			'notify_url'  => 'http://example.com/ipn',
@@ -70,7 +71,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Remote_Test extends WebTestCase
 			),
 		);
 		
-		$this->response = $response = $gateway->setup_purchase( 15337, $purchase_options );
+		$this->response = $response = $gateway->setup_purchase( $purchase_options );	
 		$this->token = $response->get( 'token' );
 		$this->timestamp = $response->get( 'timestamp' );
 		$this->datetime = $response->get( 'datetime' );
@@ -78,12 +79,17 @@ class PHP_Merchant_Paypal_Express_Checkout_Remote_Test extends WebTestCase
 		$this->version = $response->get( 'version' );
 		$this->build = $response->get( 'build' );
 		$this->assertTrue( $response->is_successful() );
-		$this->assertFalse( $response->has_errors() );
+		$this->assertFalse( $response->has_errors() );		
 	}
 	
 	public function test_successful_get_express_checkout_request() {
 		global $test_accounts;
+
+		// This is required to fill the response property
+		$this->test_successful_set_express_checkout_request();
+
 		$gateway = new PHP_Merchant_Paypal_Express_Checkout( $test_accounts['paypal-express-checkout'] );
+
 		$response = $gateway->get_details_for( $this->response->get( 'token' ) );
 		
 		$this->assertTrue( $response->is_successful() );
@@ -94,7 +100,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Remote_Test extends WebTestCase
 		$this->assertFalse( $response->is_checkout_failed() );
 		$this->assertFalse( $response->is_checkout_in_progress() );
 		$this->assertFalse( $response->is_checkout_completed() );
-		$this->assertEqual( $response->get( 'checkout_status' ), 'NotInitiated' );
+		$this->assertEqual( $response->get( 'checkout_status' ), 'Not-Initiated' );
 		$this->assertEqual( $response->get( 'token'           ), $this->response->get( 'token'   ) );
 		$this->assertEqual( $response->get( 'version'         ), $this->response->get( 'version' ) );
 		$this->assertEqual( $response->get( 'build'           ), $this->response->get( 'build'   ) );

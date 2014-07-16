@@ -74,7 +74,7 @@ abstract class PHP_Merchant_Paypal extends PHP_Merchant
 		return empty( $this->options['test'] ) ? self::LIVE_URL : self::SANDBOX_URL;
 	}
 
-	public function is_currency_supported( $currency ) {
+	public static function is_currency_supported( $currency ) {
 		return in_array( $currency, self::$supported_currencies );
 	}
 

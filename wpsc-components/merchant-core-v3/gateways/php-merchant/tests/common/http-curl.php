@@ -1,5 +1,6 @@
 <?php
 
+require_once( PHP_MERCHANT_PATH . '/common/http.php' );
 require_once( PHP_MERCHANT_PATH . '/common/http-curl.php' );
 
 class PHP_Merchant_HTTP_CURL_Test extends UnitTestCase
