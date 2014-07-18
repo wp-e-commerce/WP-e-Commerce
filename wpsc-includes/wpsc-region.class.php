@@ -146,7 +146,14 @@ class WPSC_Region {
 	 * @return void
 	 */
 	public function as_array() {
-		return $this->_country_id;
+		$result = array(
+			'id' 				   => $this->_id,
+			'country_id'    	   => $this->_country_id,
+			'name' 				   => $this->_name,
+			'code'  			   => $this->_code,
+			'tax' 				   => $this->_tax,
+		);
+		return $result;
 	}
 
 	/**
