@@ -2,6 +2,25 @@
 
 class TestWPSCCountryClass extends WP_UnitTestCase {
 
+	// The main country used for tests, has no regions.
+	const COUNTRY_ID_WITHOUT_REGIONS                        = 223;
+	const COUNTRY_ISOCODE_WITHOUT_REGIONS                   = 'GB';
+	const COUNTRY_NAME_WITHOUT_REGIONS                      = 'United Kingdom';
+	const COUNTRY_NAME_WITHOUT_REGIONS_CURRENCY_CODE        = 'GBP';
+	const COUNTRY_NAME_WITHOUT_REGIONS_CURRENCY_NAME        = 'Pound Sterling';
+	const COUNTRY_NAME_WITHOUT_REGIONS_CURRENCY_SYMBOL      = '£';
+	const COUNTRY_NAME_WITHOUT_REGIONS_CURRENCY_SYMBOL_HTML = '&#163;';
+	const COUNTRY_WITHOUT_REGIONS_TAX_RATE                  = 20;
+	const COUNTRY_WITHOUT_REGIONS_CONTINENT                 = 'Europe';
+
+	// A country with regions used for tests that need a region.
+	const COUNTRY_ID_WITH_REGIONS = 136;
+	const REGION_ID               = 50;
+	const NUM_REGIONS             = 51;
+	const REGION_CODE             = 'OR';
+	const REGION_NAME             = 'Oregon';
+	const INVALID_REGION_NAME     = 'Oregano';
+
 	function test_invalid_country_construct() {
 		// This actually returns an empty country object. Shouldn't it return false/null or at
 		// least populate the passed ID/ISOCODE into the object returned?
@@ -14,123 +33,123 @@ class TestWPSCCountryClass extends WP_UnitTestCase {
 	}
 
 	function test_valid_country_construct() {
-		$country = new WPSC_Country( 223 ); // UK
+		$country = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS ); // UK
 		$this->assertInstanceOf( 'WPSC_Country', $country );
-		$this->assertEquals( 223, $country->get( 'id' ) );
-		$this->assertEquals( 'United Kingdom', $country->get( 'name' ) );
+		$this->assertEquals( self::COUNTRY_ID_WITHOUT_REGIONS, $country->get( 'id' ) );
+		$this->assertEquals( self::COUNTRY_NAME_WITHOUT_REGIONS, $country->get( 'name' ) );
 	}
 
 	function test_get_name() {
-		$country = new WPSC_Country( 223 );
-		$this->assertEquals( 'United Kingdom', $country->get_name() );
+		$country = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS );
+		$this->assertEquals( self::COUNTRY_NAME_WITHOUT_REGIONS, $country->get_name() );
 	}
 
 	function test_get_id() {
-		$country = new WPSC_Country( 223 );
-		$this->assertEquals( 223, $country->get_id() );
+		$country = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS );
+		$this->assertEquals( self::COUNTRY_ID_WITHOUT_REGIONS, $country->get_id() );
 	}
 
 	function test_get_isocode() {
-		$country = new WPSC_Country( 223 );
-		$this->assertEquals( 'GB', $country->get_isocode() );
+		$country = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS );
+		$this->assertEquals( self::COUNTRY_ISOCODE_WITHOUT_REGIONS, $country->get_isocode() );
 	}
 
 	function test_get_currency() {
-		$country  = new WPSC_Country( 223 );
+		$country  = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS );
 		$currency = $country->get_currency();
 		$this->assertInstanceOf( 'WPSC_Currency', $currency );
-		$this->assertEquals( 'GBP', $currency->code );
+		$this->assertEquals( self::COUNTRY_NAME_WITHOUT_REGIONS_CURRENCY_CODE, $currency->code );
 	}
 
 	function test_get_currency_name() {
-		$country       = new WPSC_Country( 223 );
+		$country       = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS );
 		$currency_name = $country->get_currency_name();
-		$this->assertEquals( 'Pound Sterling', $currency_name );
+		$this->assertEquals( self::COUNTRY_NAME_WITHOUT_REGIONS_CURRENCY_NAME, $currency_name );
 	}
 
 	function test_get_currency_symbol() {
-		$country         = new WPSC_Country( 223 );
+		$country         = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS );
 		$currency_symbol = $country->get_currency_symbol();
-		$this->assertEquals( '£', $currency_symbol );
+		$this->assertEquals( self::COUNTRY_NAME_WITHOUT_REGIONS_CURRENCY_SYMBOL, $currency_symbol );
 	}
 
 	function test_get_currency_symbol_html() {
-		$country         = new WPSC_Country( 223 );
+		$country         = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS );
 		$currency_symbol = $country->get_currency_symbol_html();
-		$this->assertEquals( '&#163;', $currency_symbol );
+		$this->assertEquals( self::COUNTRY_NAME_WITHOUT_REGIONS_CURRENCY_SYMBOL_HTML, $currency_symbol );
 	}
 
 	function test_get_currency_code() {
-		$country       = new WPSC_Country( 223 );
+		$country       = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS );
 		$currency_code = $country->get_currency_code();
-		$this->assertEquals( 'GBP', $currency_code );
+		$this->assertEquals( self::COUNTRY_NAME_WITHOUT_REGIONS_CURRENCY_CODE, $currency_code );
 	}
 
 	function test_has_regions() {
-		$country       = new WPSC_Country( 223 );
+		$country       = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS );
 		$has_regions   = $country->has_regions();
 		$this->assertFalse( $has_regions );
-		$country       = new WPSC_Country( 136 ); // USA
+		$country       = new WPSC_Country( self::COUNTRY_ID_WITH_REGIONS ); // USA
 		$has_regions   = $country->has_regions();
 		$this->assertTrue( $has_regions );
 	}
 
 	function test_has_region() {
 		// UK
-		$country    = new WPSC_Country( 223 );
-		$has_region = $country->has_region( 50 );
+		$country    = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS );
+		$has_region = $country->has_region( REGION_ID );
 		$this->assertFalse( $has_region ); // Oregon is not in the UK
 		$has_region = $country->has_region( -1 );
-		$this->assertFalse( $has_region ); // Oregon is not in the UK
+		$this->assertFalse( $has_region ); // Non-existent region is not in the UK
 
 		// USA
-		$country    = new WPSC_Country(  136  );
-		$has_region = $country->has_region( 50 );
+		$country    = new WPSC_Country(  self::COUNTRY_ID_WITH_REGIONS  );
+		$has_region = $country->has_region( REGION_ID );
 		$this->assertTrue( $has_region ); // Oregon is in the USA
-		$has_region = $country->has_region( 'oregon' );
+		$has_region = $country->has_region( self::REGION_NAME );
 		$this->assertTrue( $has_region ); // Oregon is in the USA
-		$has_region = $country->has_region( 'oregano' );
+		$has_region = $country->has_region( self::INVALID_REGION_NAME );
 		$this->assertFalse( $has_region ); // Oregano is not
 		$has_region = $country->has_region( -1 );
 		$this->assertFalse( $has_region ); // Imaginary state is not in the USA
 	}
 
 	function test_get_tax() {
-		$country = new WPSC_Country( 223 );
+		$country = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS );
 		$tax     = $country->get_tax();
-		$this->assertEquals( 20, $tax );
+		$this->assertEquals( self::COUNTRY_WITHOUT_REGIONS_TAX_RATE, $tax );
 	}
 
 	function test_get_continent() {
-		$country   = new WPSC_Country( 223 );
+		$country   = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS );
 		$continent = $country->get_continent();
-		$this->assertEquals( 'europe', $continent );
+		$this->assertEquals( self::COUNTRY_WITHOUT_REGIONS_CONTINENT, $continent );
 	}
 
 	function test_is_visible() {
-		$country = new WPSC_Country( 223 );
+		$country = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS );
 		$visible = $country->is_visible();
 		$this->assertTrue( $visible );
 	}
 
 	function test_get() {
-		$country = new WPSC_Country( 223 );
+		$country = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS );
 		$id = $country->get( 'id' );
-		$this->assertEquals( 223, $id );
+		$this->assertEquals( self::COUNTRY_ID_WITHOUT_REGIONS, $id );
 		$name = $country->get( 'name' );
-		$this->assertEquals( 'United Kingdom', $name );
+		$this->assertEquals( self::COUNTRY_NAME_WITHOUT_REGIONS, $name );
 		$invalid = $country->get( 'omgwtfbbq' );
 		$this->assertNull( $invalid );
 	}
 
 	function test_set() {
-		$country = new WPSC_Country( 223 );
-		$country->set( 'name', 'Great Britain' ); // This should not set the property.
+		$country = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS );
+		$country->set( 'name', 'XXX' ); // This should not set the property.
 		$name = $country->get( 'name' );
-		$this->assertEquals( 'United Kingdom', $name );
-		$country->set( 'isocode', 'UK' ); // This should not set the property.
+		$this->assertEquals( self::COUNTRY_NAME_WITHOUT_REGIONS, $name );
+		$country->set( 'isocode', 'XX' ); // This should not set the property.
 		$isocode = $country->get( 'isocode' );
-		$this->assertEquals( 'GB', $isocode );
+		$this->assertEquals( self::COUNTRY_ISOCODE_WITHOUT_REGIONS, $isocode );
 		$country->set( 'omgwtfbbq_new', 'OMG' ); // This SHOULD set the property.
 		$omg = $country->get( 'omgwtfbbq_new' );
 		$this->assertEquals( 'OMG', $omg );
@@ -140,65 +159,78 @@ class TestWPSCCountryClass extends WP_UnitTestCase {
 	}
 
 	function test_get_region() {
-		$country = new WPSC_Country(  136  );
-		$region  = $country->get_region( 50 );
+		$country = new WPSC_Country(  self::COUNTRY_ID_WITH_REGIONS  );
+		$region  = $country->get_region( self::REGION_ID );
 		$this->assertInstanceOf( 'WPSC_Region', $region );
-		$this->assertEquals( 50, $region->id );
-		$this->assertEquals( 'Oregon', $region->name );
+		$this->assertEquals( self::REGION_ID, $region->id );
+		$this->assertEquals( self::REGION_NAME, $region->name );
 	}
 
 	function test_get_region_count() {
-		$country = new WPSC_Country(  136  ); // USA
+		$country = new WPSC_Country(  self::COUNTRY_ID_WITH_REGIONS  ); // USA
 		$region_count = $country->get_region_count();
-		$this->assertEquals( 51, $region_count );
-		$country = new WPSC_Country(  223  ); // UK
+		$this->assertEquals( self::NUM_REGIONS, $region_count );
+		$country = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS ); // UK
 		$region_count = $country->get_region_count();
 		$this->assertEquals( 0, $region_count );
 	}
 
 	function test_get_regions() {
-		$country = new WPSC_Country(  136  ); // USA
+		$country = new WPSC_Country(  self::COUNTRY_ID_WITH_REGIONS  ); // USA
 		$regions = $country->get_regions();
-		// @TODO - We should assert that we've received an object
-		// @TODO - We should also test passing true to get_regions, and that we get an array bacl
+		$this->assertInstanceOf( 'stdClass', $regions );
 		$region_count = count( $regions );
-		$this->assertEquals( 51, $region_count );
+		$this->assertEquals( self::NUM_REGIONS, $region_count );
 
-		$country = new WPSC_Country(  223  ); // UK
+		$country = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS ); // UK
 		$regions = $country->get_regions();
+		$this->assertInstanceOf( 'stdClass', $regions );
 		$region_count = count( $regions );
 		$this->assertEquals( 0, $region_count );
 	}
 
 	function test_get_regions_array() {
-		// @TODO
+		$country = new WPSC_Country( self::COUNTRY_ID_WITH_REGIONS );
+		$regions = $country->get_regions( true );
+		$this->assertInternalType( 'array', $regions );
+		$this->assertEquals( self::NUM_REGIONS, count( $regions ) );
+		$country = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS );
+		$regions = $country->get_regions( true );
+		$this->assertInternalType( 'array', $regions );
+		$this->assertEquals( 0, count( $regions ) );
 	}
 
 	function test_get_region_code_by_region_id() {
-		$country = new WPSC_Country(  136  ); // USA
-		$region_code = $country->get_region_code_by_region_id( 50 ); // Oregon
-		$this->assertEquals( 'OR', $region_code );
-		$country = new WPSC_Country(  223  ); // UK
-		$region_code = $country->get_region_code_by_region_id( 50 ); // Oregon
+		$country = new WPSC_Country(  self::COUNTRY_ID_WITH_REGIONS  ); // USA
+		$region_code = $country->get_region_code_by_region_id( self::REGION_ID ); // Oregon
+		$this->assertEquals( self::REGION_CODE, $region_code );
+		$country = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS ); // UK
+		$region_code = $country->get_region_code_by_region_id( self::REGION_ID ); // Oregon
 		$this->assertEquals( '', $region_code ); // @TODO - What should we assert here?
 	}
 
 	function test_get_region_id_by_region_code() {
-		$country = new WPSC_Country(  136  ); // USA
-		$region_id = $country->get_region_id_by_region_code( 'OR' ); // Oregon
-		$this->assertEquals( 50, $region_id );
-		$country = new WPSC_Country(  223  ); // UK
-		$region_id = $country->get_region_id_by_region_code( 'OR' ); // Oregon
+		$country = new WPSC_Country(  self::COUNTRY_ID_WITH_REGIONS  ); // USA
+		$region_id = $country->get_region_id_by_region_code( $region_code ); // Oregon
+		$this->assertEquals( self::REGION_ID, $region_id );
+		$country = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS ); // UK
+		$region_id = $country->get_region_id_by_region_code( $region_code ); // Oregon
 		$this->assertEquals( '', $region_code ); // @TODO - What should we assert here?
 	}
 
 	function test_get_region_id_by_region_name() {
-		$country = new WPSC_Country(  136  ); // USA
+		$country = new WPSC_Country(  self::COUNTRY_ID_WITH_REGIONS  ); // USA
 		$region_id = $country->get_region_id_by_region_name( 'Oregon' );
-		$this->assertEquals( 50, $region_id );
-		$country = new WPSC_Country(  223  ); // UK
+		$this->assertEquals( self::REGION_ID, $region_id );
+		$country = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS ); // UK
 		$region_id = $country->get_region_id_by_region_name( 'Oregon' );
 		$this->assertEquals( '', $region_code ); // @TODO - What should we assert here?
+	}
+
+	function test_as_array() {
+		$country = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS );
+		$regions = $country->as_array();
+		$this->assertInternalType( 'array', $regions );
 	}
 
 }
