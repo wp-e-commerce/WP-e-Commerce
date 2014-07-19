@@ -310,6 +310,7 @@ final class WPSC_Settings_Page {
 	 */
 	public function __construct( $tab_id = null ) {
 		do_action( 'wpsc_register_settings_tabs', $this );
+		do_action( 'wpsc_load_settings_tab_class', $this );
 		$this->tabs = apply_filters( 'wpsc_settings_tabs', $this->tabs );
 		$this->set_current_tab( $tab_id );
 	}
@@ -327,7 +328,6 @@ final class WPSC_Settings_Page {
 	 */
 	public function get_current_tab() {
 		if ( ! $this->current_tab ) {
-			do_action( 'wpsc_load_settings_tab_class', $this );
 			$class_name = ucwords( str_replace( array( '-', '_' ), ' ', $this->current_tab_id ) );
 			$class_name = str_replace( ' ', '_', $class_name );
 			$class_name = 'WPSC_Settings_Tab_' . $class_name;
