@@ -364,15 +364,20 @@ final class WPSC_Settings_Page {
 	 * @param string $tab_id Optional. The Tab ID. If this is not specified, the $_GET['tab'] variable will be used. If that variable also does not exists, the first tab will be used.
 	 */
 	public function set_current_tab( $tab_id = null ) {
-		if ( ! $tab_id ) {
+
+		if ( is_null( $tab_id ) ) {
+
 			$tabs = array_keys( $this->tabs );
 
-			if ( isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $this->tabs ) )
+			if ( isset( $_GET['tab'] ) && in_array( $_GET['tab'], $tabs ) ) {
 				$this->current_tab_id = $_GET['tab'];
-			else
+			}
+			else {
 				$this->current_tab_id = array_shift( $tabs );
+			}
 
-		} else {
+		}
+		else {
 			$this->current_tab_id = $tab_id;
 		}
 
