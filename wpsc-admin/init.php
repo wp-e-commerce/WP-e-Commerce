@@ -372,35 +372,29 @@ if ( isset( $_REQUEST['wpsc_admin_action2'] ) && ($_REQUEST['wpsc_admin_action2'
 	add_action( 'admin_init', 'wpsc_purchlog_bulk_modify' );
 }
 
-/* Start Order Notes (by Ben) */
-function wpsc_purchlogs_update_notes( $purchlog_id = '', $purchlog_notes = '' ) {
-	global $wpdb;
-	if ( wp_verify_nonce( $_POST['wpsc_purchlogs_update_notes_nonce'], 'wpsc_purchlogs_update_notes' ) ) {
-		if ( ($purchlog_id == '') && ($purchlog_notes == '') ) {
+/**
+ * Update Purchase Log Notes
+ *
+ * @param  int     $purchlog_id     Purchase log ID.
+ * @param  string  $purchlog_notes  Notes.
+ */
+function wpsc_purchlogs_update_notes( $purchlog_id = 0, $purchlog_notes = '' ) {
+	if ( isset( $_POST['wpsc_purchlogs_update_notes_nonce'] ) && wp_verify_nonce( $_POST['wpsc_purchlogs_update_notes_nonce'], 'wpsc_purchlogs_update_notes' ) ) {
+		if ( 0 == $purchlog_id && isset( $_POST['purchlog_id'] ) && '' == $purchlog_notes ) {
 			$purchlog_id = absint( $_POST['purchlog_id'] );
 			$purchlog_notes = stripslashes( $_POST['purchlog_notes'] );
 		}
-		$wpdb->update(
-			    WPSC_TABLE_PURCHASE_LOGS,
-			    array(
-				'notes' => $purchlog_notes
-			    ),
-			    array(
-				'id' => $purchlog_id
-			    ),
-			    array(
-				'%s'
-			    ),
-			    array(
-				'%d'
-			    )
-			);
+
+		if ( $purchlog_id > 0 ) {
+			$purchase_log = new WPSC_Purchase_Log( $purchlog_id );
+			$purchase_log->set( 'notes', $purchlog_notes );
+			$purchase_log->save();
+		}
 	}
 }
-if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'purchlogs_update_notes' ) )
+if ( isset( $_REQUEST['wpsc_admin_action'] ) && $_REQUEST['wpsc_admin_action'] == 'purchlogs_update_notes' ) {
 	add_action( 'admin_init', 'wpsc_purchlogs_update_notes' );
-
-/* End Order Notes (by Ben) */
+}
 
 //delete a purchase log
 function wpsc_delete_purchlog( $purchlog_id='' ) {

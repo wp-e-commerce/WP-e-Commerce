@@ -567,15 +567,23 @@ function wpsc_update_product_details_metabox_live_title(){
 }
 
 function wpsc_update_product_gallery_tab(obj){
-	var output;
+	var output, url;
+
 	output = '<div id="wpsc_product_gallery">';
 		output += '<ul>';
 
-		for (var i = 0; i < obj.length; i++){
+		for (var i = 0; i < obj.length; i++) {
+
+			if ( 'undefined' !== typeof obj[i].sizes.thumbnail ) {
+				url = obj[i].sizes.thumbnail.url;
+			} else {
+				url = obj[i].sizes.full.url;
+			}
 
 			output += '<li>';
-				output += '<img src="' + obj[i].sizes.thumbnail.url + '">';
+				output += '<img src="' + url + '">';
 				output += '<input type="hidden" name="wpsc-product-gallery-imgs[]" value="' + obj[i].id + '">';
+
 			output += '</li>';
 		}
 

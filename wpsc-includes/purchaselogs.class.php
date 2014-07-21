@@ -641,18 +641,16 @@ function wpsc_purchlogs_have_downloads_locked() {
    }
 }
 
-/* Start Order Notes (by Ben) */
-
+/**
+ * Display Purchase Log Notes
+ *
+ * @return  string  Notes.
+ */
 function wpsc_display_purchlog_notes() {
-   global $purchlogitem;
-   if ( isset( $purchlogitem->extrainfo->notes ) ) {
-	  return $purchlogitem->extrainfo->notes;
-   } else {
-	  return false;
-   }
+	global $purchlogitem;
+	$purchase_log = new WPSC_Purchase_Log( $purchlogitem->purchlogid );
+	return $purchase_log->get( 'notes' );
 }
-
-/* End Order Notes (by Ben) */
 
 /**
  * WP eCommerce purchaselogs AND purchaselogs_items class
