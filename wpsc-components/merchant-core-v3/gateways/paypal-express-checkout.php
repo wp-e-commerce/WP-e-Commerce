@@ -8,7 +8,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 
 	public function __construct( $options ) {
 		parent::__construct();
-		$this->title = __( 'Paypal Express Checkout 3.0', 'wpsc' );
+		$this->title = __( 'PayPal Express Checkout 3.0', 'wpsc' );
 		require_once( 'php-merchant/gateways/paypal-express-checkout.php' );
 		$this->gateway = new PHP_Merchant_Paypal_Express_Checkout( $options );
 		$this->gateway->set_options( array(
@@ -177,7 +177,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 		ob_start();
 		?>
 		<p>
-			<?php _e( 'Sorry, your transaction could not be processed by Paypal. Please contact the site administrator. The following errors are returned:' ); ?>
+			<?php _e( 'Sorry, your transaction could not be processed by PayPal. Please contact the site administrator. The following errors are returned:' ); ?>
 		</p>
 		<ul>
 			<?php foreach ( $errors as $error ): ?>
@@ -193,7 +193,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 	public function filter_generic_error_page() {
 		ob_start();
 		?>
-			<p><?php _e( 'Sorry, but your transaction could not be processed by Paypal for some reason. Please contact the site administrator.' ); ?></p>
+			<p><?php _e( 'Sorry, but your transaction could not be processed by PayPal for some reason. Please contact the site administrator.' ); ?></p>
 			<p><a href="<?php echo esc_attr( get_option( 'shopping_cart_url' ) ); ?>"><?php _e( 'Click here to go back to the checkout page.') ?></a></p>
 		<?php
 		$output = apply_filters( 'wpsc_paypal_express_checkout_generic_error_message', ob_get_clean() );
@@ -312,12 +312,12 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 			</tr>
 			<tr>
 				<td colspan="2">
-					<p><?php _e( 'Your base currency is currently not accepted by PayPal. As a result, before a payment request is sent to Paypal, WP e-Commerce has to convert the amounts into one of Paypal supported currencies. Please select your preferred currency below.', 'wpsc' ); ?></p>
+					<p><?php _e( 'Your base currency is currently not accepted by PayPal. As a result, before a payment request is sent to PayPal, WP e-Commerce has to convert the amounts into one of PayPal supported currencies. Please select your preferred currency below.', 'wpsc' ); ?></p>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<label for "wpsc-paypal-express-currency"><?php _e( 'Paypal Currency', 'wpsc' ); ?></label>
+					<label for "wpsc-paypal-express-currency"><?php _e( 'PayPal Currency', 'wpsc' ); ?></label>
 				</td>
 				<td>
 					<select name="<?php echo esc_attr( $this->setting->get_field_name( 'currency' ) ); ?>" id="wpsc-paypal-express-currency">
@@ -357,6 +357,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 			'return_url' => $this->get_return_url(),
 			'invoice'    => $this->purchase_log->get( 'sessionid' ),
 		);
+        
 		$options += $this->checkout_data->get_gateway_data();
 		$options += $this->purchase_log->get_gateway_data( parent::get_currency_code(), $this->get_currency_code() );
 
