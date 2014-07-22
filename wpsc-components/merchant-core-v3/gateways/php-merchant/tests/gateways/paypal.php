@@ -23,7 +23,7 @@ class PHP_Merchant_Paypal_Test extends UnitTestCase
 		$params = array(
 			'USER'      => 'sdk-three_api1.sdk.com',
 			'PWD'       => 'QFZCWN5HZM8VBG7Q',
-			'VERSION'   => '74.0',
+			'VERSION'   => '114.0',
 			'SIGNATURE' => 'A-IzJhZZjhg29XQ2qnhapuwxIDzyAZQ92FRP5dqBzVesOkzbdUONzmOU',
 		);
 		$this->assertEqual( $this->bogus->add_credentials(), $params );
@@ -80,7 +80,7 @@ class PHP_Merchant_Paypal_Test extends UnitTestCase
 		$full_param_list = array(
 			'USER'      => 'sdk-three_api1.sdk.com',
 			'PWD'       => 'QFZCWN5HZM8VBG7Q',
-			'VERSION'   => '74.0',
+			'VERSION'   => '114.0',
 			'SIGNATURE' => 'A-IzJhZZjhg29XQ2qnhapuwxIDzyAZQ92FRP5dqBzVesOkzbdUONzmOU',
 			'METHOD'    => 'SetExpressCheckout',
 			

@@ -31,7 +31,7 @@ abstract class PHP_Merchant_Paypal extends PHP_Merchant
 		'USD',
 	);
 
-	const API_VERSION = '74.0';
+	const API_VERSION = '114.0';
 	const SANDBOX_URL = 'https://api-3t.sandbox.paypal.com/nvp';
 	const LIVE_URL = 'https://api-3t.paypal.com/nvp';
 

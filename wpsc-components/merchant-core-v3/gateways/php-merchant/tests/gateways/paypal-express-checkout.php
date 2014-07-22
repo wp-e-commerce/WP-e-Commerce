@@ -99,7 +99,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 			// API info
 			'USER'         => 'sdk-three_api1.sdk.com',
 			'PWD'          => 'QFZCWN5HZM8VBG7Q',
-			'VERSION'      => '74.0',
+			'VERSION'      => '114.0',
 			'SIGNATURE'    => 'A-IzJhZZjhg29XQ2qnhapuwxIDzyAZQ92FRP5dqBzVesOkzbdUONzmOU',
 			'METHOD'       => 'SetExpressCheckout',
  			'RETURNURL'    => 'http://example.com/return',
@@ -167,7 +167,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 			// API info
 			'USER'         => 'sdk-three_api1.sdk.com',
 			'PWD'          => 'QFZCWN5HZM8VBG7Q',
-			'VERSION'      => '74.0',
+			'VERSION'      => '114.0',
 			'SIGNATURE'    => 'A-IzJhZZjhg29XQ2qnhapuwxIDzyAZQ92FRP5dqBzVesOkzbdUONzmOU',
 			'METHOD'       => 'DoExpressCheckoutPayment',
  			'RETURNURL'    => 'http://example.com/return',
@@ -236,7 +236,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 			// API info
 			'USER'      => 'sdk-three_api1.sdk.com',
 			'PWD'       => 'QFZCWN5HZM8VBG7Q',
-			'VERSION'   => '74.0',
+			'VERSION'   => '114.0',
 			'SIGNATURE' => 'A-IzJhZZjhg29XQ2qnhapuwxIDzyAZQ92FRP5dqBzVesOkzbdUONzmOU',
 			'METHOD'    => 'GetExpressCheckoutDetails',
 			'TOKEN'     => $this->token,
@@ -273,7 +273,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 		                 '&TIMESTAMP=2011%2d08%2d25T08%3a04%3a26Z'.
 		                 '&CORRELATIONID=b5ae9bd5c735f'.
 		                 '&ACK=Success'.
-		                 '&VERSION=74%2e0'.
+		                 '&VERSION=114%2e0'.
 		                 '&BUILD=2085867'.
 
 		                 // Payer info
@@ -398,7 +398,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 		$this->assertEqual( $response->get( 'timestamp'       ), 1314259466             );
 		$this->assertEqual( $response->get( 'datetime'        ), '2011-08-25T08:04:26Z' );
 		$this->assertEqual( $response->get( 'correlation_id'  ), 'b5ae9bd5c735f'        );
-		$this->assertEqual( $response->get( 'version'         ), '74.0'                 );
+		$this->assertEqual( $response->get( 'version'         ), '114.0'                 );
 		$this->assertEqual( $response->get( 'build'           ), '2085867'              );
 
 		// Payer Information
