@@ -119,7 +119,7 @@ class PHP_Merchant_Paypal_Bogus extends PHP_Merchant_Paypal
 		return parent::add_credentials();
 	}
 		
-	public function build_request( $action, $request = array() ) {
+	public function build_request( $action = '', $request = array() ) {
 		return parent::build_request( $action, $request );
 	}
 	 

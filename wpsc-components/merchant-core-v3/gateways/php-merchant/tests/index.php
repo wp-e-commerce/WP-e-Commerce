@@ -1,6 +1,4 @@
 <?php
-// Disable Strict Error Reporting
-error_reporting(E_ALL ^ E_STRICT);
 
 // Check for Remote Tests
 global $remote;
