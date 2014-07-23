@@ -351,11 +351,10 @@ class WPSC_Product {
 	/**
 	 * Does product exists
 	 *
-	 * @since 3.8.14
-	 * @param int|WP_Post $post ID or Post object
+	 * @since 3.8.14.2
 	 */
 	public function exists() {
-		return ! empty( $this->post  );
+		return ! empty( $this->post );
 	}
 
 	/**
