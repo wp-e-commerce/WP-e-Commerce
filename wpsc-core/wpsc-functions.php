@@ -32,16 +32,26 @@ if ( is_admin() ) {
  * @return string
  */
 function wpsc_term_list_levels( $term_name, $term ) {
+
 	global $wp_list_table, $wpsc_term_list_levels;
 
 	$screen = get_current_screen();
-	if ( ! is_object( $screen ) || ! in_array( $screen->id, array( 'edit-wpsc-variation', 'edit-wpsc_product_category' ) ) )
+
+	if ( ! is_object( $screen ) || ! in_array( $screen->id, array( 'edit-wpsc-variation', 'edit-wpsc_product_category' ) ) ) {
 		return $term_name;
+	}
 
-	if ( ! isset( $wpsc_term_list_levels ) )
+	if ( ! isset( $wpsc_term_list_levels ) ) {
 		$wpsc_term_list_levels = array();
+	}
 
-	$wpsc_term_list_levels[$term->term_id] = $wp_list_table->level;
+	if ( is_numeric( $term ) ) {
+		$term = get_term_by( 'id', $term, str_replace( 'edit-', '', $screen->id ) );
+	}
+
+	if ( isset( $wp_list_table->level ) ) {
+		$wpsc_term_list_levels[ $term->term_id ] = $wp_list_table->level;
+	}
 
 	return $term_name;
 }
