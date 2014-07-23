@@ -60,7 +60,7 @@ function wpsc_product_link( $permalink, $post, $leavename ) {
 		}
 		// If the product is associated with multiple categories, determine which one to pick
 		if ( count( $product_categories ) == 0 ) {
-			$category_slug = 'uncategorized';
+			$category_slug = apply_filters( 'wpsc_uncategorized_product_category', 'uncategorized' );
 		} elseif ( count( $product_categories ) > 1 ) {
 			if ( (isset( $wp_query->query_vars['products'] ) && $wp_query->query_vars['products'] != null) && in_array( $wp_query->query_vars['products'], $product_category_slugs ) ) {
 				$product_category = $wp_query->query_vars['products'];

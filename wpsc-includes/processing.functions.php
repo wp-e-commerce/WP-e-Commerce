@@ -6,7 +6,7 @@
  * @access public
  * @param mixed $price_in
  * @param mixed $args
- * @return void
+ * @return string
  */
 function wpsc_currency_display( $price_in, $args = null ) {
 	global $wpdb;

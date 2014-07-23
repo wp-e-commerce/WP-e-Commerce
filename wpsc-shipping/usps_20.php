@@ -625,7 +625,6 @@ class ash_usps {
 			// more robust handling is certainly required
 			$message = $wpec_ash_xml->get( "Description",  $packages[0] );
 			_wpsc_shipping_add_error_message( $message[0] );
-			return array();
 		}
 
 		foreach ( $packages as $package ) {

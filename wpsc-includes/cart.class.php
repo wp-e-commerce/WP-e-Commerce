@@ -438,7 +438,6 @@ class wpsc_cart {
 		}
 	}
 
-
 	/**
 	 * update_shipping method, updates the shipping
 	 * @access public
@@ -446,17 +445,16 @@ class wpsc_cart {
 	function update_shipping( $method, $option ) {
 		global $wpdb, $wpsc_shipping_modules;
 
-		$this->selected_shipping_method = $method;
 
-		$this->shipping_quotes = $wpsc_shipping_modules[$method]->getQuote();
-
-		$this->selected_shipping_option = $option;
-
-		foreach ( $this->cart_items as $key => $cart_item ) {
-			$this->cart_items[$key]->calculate_shipping();
+		if ( ! empty( $method ) ) {
+			$this->selected_shipping_method = $method;
 		}
 
-		$this->get_shipping_option();
+		if ( ! empty( $option ) ) {
+			$this->selected_shipping_option = $option;
+		}
+
+		$this->get_shipping_quotes();
 
 		// reapply coupon in case it's free shipping
 		if ( $this->coupons_name ) {
