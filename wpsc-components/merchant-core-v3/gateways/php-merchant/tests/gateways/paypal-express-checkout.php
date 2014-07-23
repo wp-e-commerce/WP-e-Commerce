@@ -154,7 +154,8 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 		try {
 			$this->bogus->setup_purchase( $this->setup_purchase_options );
 		} catch ( PHP_Merchant_Exception $e ) {
-
+			$this->assertTrue( false );
+			st_log( $e );
 		}
 	}
 
@@ -226,7 +227,8 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 		try {
 			$this->bogus->purchase( $this->purchase_options );
 		} catch ( PHP_Merchant_Exception $e ) {
-
+			$this->assertTrue( false );
+			st_log( $e );
 		}
 	}
 
@@ -246,7 +248,8 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 		try {
 			$this->bogus->get_details_for( $this->token );
 		} catch ( PHP_Merchant_Exception $e ) {
-
+			$this->assertTrue( false );
+			st_log( $e );
 		}
 	}
 
