@@ -561,6 +561,12 @@ function wpsc_get_visitor_cart( $visitor_id ) {
 			if ( ! empty( $meta_value ) ) {
 
 				switch ( $key ) {
+					case '_signature': // don't load the signature
+					case 'current_cart_item': // don't load array cursor
+					case 'current_shipping_method': // don't load array cursor
+					case 'current_shipping_quote': // don't load array cursor
+						continue;
+
 					case 'shipping_methods':
 					case 'shipping_quotes':
 					case 'cart_items':
@@ -603,6 +609,8 @@ function wpsc_get_visitor_cart( $visitor_id ) {
 
 	$wpsc_cart = apply_filters( 'wpsc_get_visitor_cart', $wpsc_cart, $visitor_id );
 
+	// loaded the cart, update it's signature
+	$wpsc_cart->_signature = _wpsc_calculate_cart_signature( $wpsc_cart );
 	return $wpsc_cart;
 }
 
@@ -612,13 +620,18 @@ function wpsc_get_visitor_cart( $visitor_id ) {
  * @access public
  * @since 3.8.9
  * @param  mixed $id visitor ID. Default to the current user ID.
- * @return WP_Error|array Return an array of metadata if no error occurs, WP_Error
- *                        if otherwise.
+ * @return WP_Error|wpsc_cart
  */
 function wpsc_update_visitor_cart( $visitor_id, $wpsc_cart ) {
 
 	if ( ! _wpsc_visitor_database_ready() ) {
 		return $wpsc_cart;
+	}
+
+	if ( property_exists( $wpsc_cart, '_signature' ) ) {
+		if ( _wpsc_calculate_cart_signature( $wpsc_cart ) == $wpsc_cart->_signature ) {
+			return $wpsc_cart;
+		}
 	}
 
 	foreach ( $wpsc_cart as $key => $value ) {
@@ -627,6 +640,12 @@ function wpsc_update_visitor_cart( $visitor_id, $wpsc_cart ) {
 		// we don't store empty cart properties, this keeps meta table and caches neater
 		if ( ! empty( $value ) ) {
 			switch ( $key ) {
+				case '_signature': // don't save the signature
+				case 'current_cart_item': // don't save array cursor
+				case 'current_shipping_method': // don't save array cursor
+				case 'current_shipping_quote': // don't save array cursor
+					continue;
+
 				case 'shipping_methods':
 				case 'shipping_quotes':
 				case 'cart_items':
@@ -645,9 +664,45 @@ function wpsc_update_visitor_cart( $visitor_id, $wpsc_cart ) {
 		}
 	}
 
+	// saved the cart, update it's signature
+	$wpsc_cart->_signature = _wpsc_calculate_cart_signature( $wpsc_cart );
+
 	return $wpsc_cart;
 }
 
+/**
+ * Calculate a cart signature
+ *
+ * @access private
+ * @since 3.8.14.2
+ * @param  object wpsc_cart shopping cart
+ * @return signature string for the cart
+ */
+function _wpsc_calculate_cart_signature( $wpsc_cart ) {
+	$cart_array = (array) $wpsc_cart;
+
+	if ( isset( $cart_array['_signature'] ) ) {
+		unset( $cart_array['_signature'] );
+	}
+
+	// empty values sometimes change from nulls, to false, to 0 without changing the meaning, so we will ignore them
+	foreach ( $cart_array as $key => $value ) {
+		if ( empty( $value ) ) {
+			unset( $cart_array[$key] );
+		}
+	}
+
+	// some cart class values are used to cursor through arrays, let's ignore them
+	unset( $cart_array['current_cart_item'] );
+	unset( $cart_array['current_shipping_method'] );
+	unset( $cart_array['current_shipping_quote'] );
+	unset( $cart_array['cart_item'] );
+
+	$raw_data = json_encode( $cart_array );
+	$signature = md5( $raw_data );
+
+	return $signature;
+}
 
 /**
  *  If a value is an object or an array encode it so it can be stored as WordPress meta
