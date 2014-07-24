@@ -150,22 +150,18 @@
 		</div>
 	</div>
 
-	<div id='wpsc_purchlogitems_links'>
+	<div id="wpsc_purchlogitems_links">
 		<h3><?php esc_html_e( 'Actions', 'wpsc' ); ?></h3>
 		<?php do_action( 'wpsc_purchlogitem_links_start' ); ?>
-		<?php if ( wpsc_purchlogs_have_downloads_locked() != false ): ?>
-			<img src='<?php echo WPSC_CORE_IMAGES_URL; ?>/lock_open.png' alt='<?php _e( 'clear lock icon', 'wpsc' ); ?>' />&ensp;<a href='<?php echo esc_url( add_query_arg( 'wpsc_admin_action', 'clear_locks' ) ); ?>'><?php echo wpsc_purchlogs_have_downloads_locked(); ?></a><br /><br class='small' />
-		<?php endif; ?>
-		<img src='<?php echo WPSC_CORE_IMAGES_URL; ?>/printer.png' alt='<?php _e( 'printer icon', 'wpsc' ); ?>' />&ensp;<a target="_blank" href='<?php echo add_query_arg( 'c', 'packing_slip' ); ?>'><?php esc_html_e( 'View Packing Slip', 'wpsc' ); ?></a>
-		<br /><br class='small' />
-		<img src='<?php echo WPSC_CORE_IMAGES_URL; ?>/email_go.png' alt='<?php _e( 'email icon', 'wpsc' ); ?>' />&ensp;<a href='<?php echo add_query_arg( 'email_buyer_id', $this->log_id ); ?>'><?php esc_html_e('Resend Receipt to Buyer', 'wpsc'); ?></a>
-
-		<br /><br class='small' />
-		<a class='submitdelete' title='<?php echo esc_attr(__( 'Remove this log', 'wpsc' )); ?>' href='<?php echo wp_nonce_url("admin.php?wpsc_admin_action=delete_purchlog&amp;purchlog_id=".$this->log_id, 'delete_purchlog_' .$this->log_id); ?>' onclick="if ( confirm(' <?php echo esc_js(sprintf( __("You are about to delete this log '%s'\n 'Cancel' to stop, 'OK' to delete.",'wpsc'),  wpsc_purchaselog_details_date() )) ?>') ) { return true;}return false;"><img src='<?php echo WPSC_CORE_IMAGES_URL . "/cross.png"; ?>' alt='<?php _e( 'delete icon', 'wpsc' ); ?>' />               &nbsp;<?php _e('Remove this record', 'wpsc') ?></a>
-
-		<br /><br class='small' />&emsp;&ensp;    <a href='<?php echo esc_attr( wp_get_referer() ); ?>'><?php _e('Go Back', 'wpsc'); ?></a>
-		<br /><br />
+		<ul>
+			<?php if ( wpsc_purchlogs_have_downloads_locked() != false ) { ?>
+				<li class="downloads-lock"><a href="<?php echo esc_url( add_query_arg( 'wpsc_admin_action', 'clear_locks' ) ); ?>"><span class="dashicons dashicons-lock"></span><?php echo wpsc_purchlogs_have_downloads_locked(); ?></a></li>
+			<?php } ?>
+			<li class="view-packing-slip"><a href="<?php echo esc_url( add_query_arg( 'c', 'packing_slip' ) ); ?>" target="_blank"><span class="dashicons dashicons-format-aside"></span><?php esc_html_e( 'View Packing Slip', 'wpsc' ); ?></a></li>
+			<li class="resend-receipt"><a href="<?php echo esc_url( add_query_arg( 'email_buyer_id', $this->log_id ) ); ?>"><span class="dashicons dashicons-email-alt"></span><?php esc_html_e( 'Resend Receipt to Buyer', 'wpsc' ); ?></a></li>
+			<li class="delete"><a class="submitdelete" title="<?php esc_attr_e( 'Remove this log', 'wpsc' ); ?>" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'purchlog_id', $this->log_id, 'admin.php?wpsc_admin_action=delete_purchlog' ), 'delete_purchlog_' . $this->log_id ) ); ?>" onclick="if ( confirm(' <?php echo esc_js( sprintf( __( "You are about to delete this log '%s'\n 'Cancel' to stop, 'OK' to delete.", 'wpsc' ), wpsc_purchaselog_details_date() ) ) ?>') ) { return true; } return false;"><span class="dashicons dashicons-dismiss"></span><?php esc_html_e( 'Remove this record', 'wpsc' ) ?></a></li>
+			<li class="go-back"><a href="<?php echo esc_attr( wp_get_referer() ); ?>"><span class="dashicons dashicons-arrow-left-alt"></span><?php esc_html_e( 'Go Back', 'wpsc' ); ?></a></li>
+		</ul>
 	</div>
-	<br />
 
 </div>
