@@ -48,6 +48,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 				'description' => "L_PAYMENTREQUEST_0_DESC{$i}",
 				'tax'         => "L_PAYMENTREQUEST_0_TAXAMT{$i}",
 				'url'         => "L_PAYMENTREQUEST_0_ITEMURL{$i}",
+				'number'	  => "L_PAYMENTREQUEST_0_NUMBER{$i}",
 			);
 
 			$item['amount'] = $this->format( $item['amount'] );
