@@ -120,6 +120,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 			'PAYMENTREQUEST_0_AMT'           => '15,337',
 			'PAYMENTREQUEST_0_CURRENCYCODE'  => 'JPY',
 			'PAYMENTREQUEST_0_PAYMENTACTION' => 'Sale',
+			'PAYMENTREQUEST_0_ALLOWEDPAYMENTMETHOD' => 'InstantPaymentOnly',
 			'PAYMENTREQUEST_0_ITEMAMT'       => '13,700',
 			'PAYMENTREQUEST_0_SHIPPINGAMT'   => '1,500',
 			'PAYMENTREQUEST_0_TAXAMT'        => '137',
@@ -154,8 +155,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 		try {
 			$this->bogus->setup_purchase( $this->setup_purchase_options );
 		} catch ( PHP_Merchant_Exception $e ) {
-			$this->assertTrue( false );
-			st_log( $e );
+
 		}
 	}
 
@@ -193,6 +193,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 			'PAYMENTREQUEST_0_AMT'           => '15,337',
 			'PAYMENTREQUEST_0_CURRENCYCODE'  => 'JPY',
 			'PAYMENTREQUEST_0_PAYMENTACTION' => 'Sale',
+			'PAYMENTREQUEST_0_ALLOWEDPAYMENTMETHOD' => 'InstantPaymentOnly',
 			'PAYMENTREQUEST_0_ITEMAMT'       => '13,700',
 			'PAYMENTREQUEST_0_SHIPPINGAMT'   => '1,500',
 			'PAYMENTREQUEST_0_TAXAMT'        => '137',
@@ -227,8 +228,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 		try {
 			$this->bogus->purchase( $this->purchase_options );
 		} catch ( PHP_Merchant_Exception $e ) {
-			$this->assertTrue( false );
-			st_log( $e );
+
 		}
 	}
 
@@ -248,8 +248,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 		try {
 			$this->bogus->get_details_for( $this->token );
 		} catch ( PHP_Merchant_Exception $e ) {
-			$this->assertTrue( false );
-			st_log( $e );
+
 		}
 	}
 

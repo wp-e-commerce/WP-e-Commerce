@@ -21,6 +21,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 			'PAYMENTREQUEST_0_AMT'           => $this->format( $this->options['amount'] ),
 			'PAYMENTREQUEST_0_CURRENCYCODE'  => $this->options['currency'],
 			'PAYMENTREQUEST_0_PAYMENTACTION' => $action,
+			'PAYMENTREQUEST_0_ALLOWEDPAYMENTMETHOD' => 'InstantPaymentOnly',
 		);
 
 		foreach ( array( 'subtotal', 'shipping', 'handling', 'tax' ) as $key ) {
