@@ -8,7 +8,15 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 		parent::__construct( $options );
 	}
 
+	/**
+	 * Add the payment details to the PayPal request
+	 *
+	 * @param array $action
+	 * @return array
+	 */
 	protected function add_payment( $action ) {
+
+		// Total Payment details
 		$request = array(
 			'PAYMENTREQUEST_0_AMT'           => $this->format( $this->options['amount'] ),
 			'PAYMENTREQUEST_0_CURRENCYCODE'  => $this->options['currency'],
@@ -32,6 +40,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 
 		$subtotal = 0;
 
+		// Shopping Cart details
 		$i = 0;
 		foreach ( $this->options['items'] as $item ) {
 			$item_optionals = array(
@@ -61,6 +70,11 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 		return $request;
 	}
 
+	/**
+	 * Add a shipping address to the PayPal request
+	 *
+	 * @return array
+	 */
 	protected function add_address() {
 		$map = array(
 			'name'     => 'PAYMENTREQUEST_0_SHIPTONAME',
@@ -83,6 +97,13 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 		return $request;
 	}
 
+	/**
+	 * Build the request array
+	 *
+	 * @param string $action
+	 * @param array $options
+	 * @return array
+	 */
 	protected function build_checkout_request( $action, $options = array() ) {
 		$request = array();
 
@@ -107,6 +128,12 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 		return $request;
 	}
 
+	/**
+	 * Gateway implementation for SetExpressCheckout
+	 *
+	 * @param array $options
+	 * @return PHP_Merchant_Paypal_Express_Checkout_Response
+	 */
 	public function setup_purchase( $options = array() ) {
 		$this->options = array_merge( $this->options, $options );
 		$this->requires( 'amount', 'return_url', 'cancel_url' );
@@ -116,18 +143,24 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 		return new PHP_Merchant_Paypal_Express_Checkout_Response( $response_str );
 	}
 
-	public function build_get_details_request( $token ) {
-		return array(
-			'TOKEN' => $token,
-		);
-	}
-
+	/**
+	 * Gateway impelementation for GetExpressCheckoutDetails
+ 	 *
+ 	 * @param string $token Authentication token returned by the SetExpressCheckout operation
+	 * @return PHP_Merchant_Paypal_Express_Checkout_Response
+ 	 */
 	public function get_details_for( $token ) {
-		$request = $this->build_get_details_request( $token );
+		$request =  array( 'TOKEN' => $token );
 		$response_str = $this->commit( 'GetExpressCheckoutDetails', $request );
 		return new PHP_Merchant_Paypal_Express_Checkout_Response( $response_str );
 	}
 
+	/**
+	 * Gateway implementation for DoExpressCheckout
+	 *
+	 * @param array $options
+	 * @return PHP_Merchant_Paypal_Express_Checkout_Response
+	 */
 	public function purchase( $options = array() ) {
 		$this->options = array_merge( $this->options, $options );
 		$this->requires( 'amount', 'token', 'payer_id' );
