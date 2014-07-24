@@ -434,6 +434,9 @@ function wpsc_delete_visitor( $visitor_id ) {
 		return false;
 	}
 
+	// initialize row count changed
+	$result = 0;
+
 	$ok_to_delete_visitor = ! ( wpsc_visitor_has_purchases( $visitor_id )
 									&& wpsc_visitor_post_count( $visitor_id )
 										&& wpsc_visitor_comment_count( $visitor_id ) );
