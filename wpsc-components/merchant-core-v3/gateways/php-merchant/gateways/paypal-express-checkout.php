@@ -37,6 +37,8 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 			'PAYMENTREQUEST_0_DESC'        => 'description',
 			'PAYMENTREQUEST_0_INVNUM'      => 'invoice',
 			'PAYMENTREQUEST_0_NOTIFYURL'   => 'notify_url',
+			'L_BILLINGTYPE0' 			   => 'billing_type',
+			'L_BILLINGAGREEMENTDESCRIPTION0' => 'billing_description',
 		) );
 
 		$subtotal = 0;
@@ -44,6 +46,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 		// Shopping Cart details
 		$i = 0;
 		foreach ( $this->options['items'] as $item ) {
+			// Options Fields
 			$item_optionals = array(
 				'description' => "L_PAYMENTREQUEST_0_DESC{$i}",
 				'tax'         => "L_PAYMENTREQUEST_0_TAXAMT{$i}",
@@ -51,12 +54,20 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 				'number'	  => "L_PAYMENTREQUEST_0_NUMBER{$i}",
 			);
 
+			// Format Amount Field 
 			$item['amount'] = $this->format( $item['amount'] );
+
+			// Required Fields
 			$request += phpme_map( $item, array(
 				"L_PAYMENTREQUEST_0_NAME{$i}" => 'name',
 				"L_PAYMENTREQUEST_0_AMT{$i}"  => 'amount',
 				"L_PAYMENTREQUEST_0_QTY{$i}"  => 'quantity',
 			) );
+
+			// No Shipping Field
+			if ( isset( $this->options['no_shipping'] ) ) {
+				$request["L_PAYMENTREQUEST_0_ITEMCATEGORY{$i}"] = 'DIGITAL';
+			}
 
 			foreach ( $item_optionals as $key => $param ) {
 				if ( ! empty( $this->options['items'][$i][$key] ) )
@@ -109,22 +120,30 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 	protected function build_checkout_request( $action, $options = array() ) {
 		$request = array();
 
-		if ( isset( $this->options['return_url'] ) )
+		if ( isset( $this->options['return_url'] ) ) {
 			$request['RETURNURL'] = $this->options['return_url'];
+		}
 
-		if ( isset( $this->options['cancel_url'] ) )
+		if ( isset( $this->options['cancel_url'] ) ) {
 			$request['CANCELURL'] = $this->options['cancel_url'];
+		}
 
 		$request += phpme_map( $this->options, array(
 			'MAXAMT'       => 'max_amount',
+			'SOLUTIONTYPE' => 'solution_type',
 			'ALLOWNOTE'    => 'allow_note',
 			'ADDROVERRIDE' => 'address_override',
 			'TOKEN'        => 'token',
 			'PAYERID'      => 'payer_id',
 		) );
 
-		if ( ! empty( $this->options['shipping'] ) && ! empty( $this->options['address_override'] ) )
+		if ( ! empty( $this->options['shipping'] ) && ! empty( $this->options['address_override'] ) ) {
 			$request += $this->add_address();
+		}
+
+		if ( isset( $this->options['no_shipping'] ) ) {
+			$request['NOSHIPPING'] = '1';
+		}
 
 		$request += $this->add_payment( $action );
 		return $request;
