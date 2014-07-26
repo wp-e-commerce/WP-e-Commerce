@@ -208,18 +208,59 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 	 * @since 3.9
 	 */
 	public function authorize( $options = array() ) {
+		$this->options = array_merge( $this->options, $options );
+		$this->requires( 'amount', 'token', 'transaction_id' );
+		$request = $this->build_checkout_request( $action, $options );
 
+		$response_str = $this->commit( 'DoAuthorization', $request );
+		return new PHP_Merchant_Paypal_Express_Checkout_Response( $response_str );
 	}
 
+	/**
+	 * Gateway implementation for DoCapture
+	 *
+	 * @param array $options
+	 * @return PHP_Merchant_Paypal_Express_Checkout_Response
+	 * @since 3.9
+	 */
 	public function capture() {
+		$this->options = array_merge( $this->options, $options );
+		$this->requires( 'amount', 'complete_type', 'transaction_id' );
+		$request = $this->build_checkout_request( $action, $options );
 
+		$response_str = $this->commit( 'DoCapture', $request );
+		return new PHP_Merchant_Paypal_Express_Checkout_Response( $response_str );
 	}
 
+	/**
+	 * Gateway implementation for DoVoid
+	 *
+	 * @param array $options
+	 * @return PHP_Merchant_Paypal_Express_Checkout_Response
+	 * @since 3.9
+	 */
 	public function void() {
+		$this->options = array_merge( $this->options, $options );
+		$this->requires( 'transaction_id' );
+		$request = $this->build_checkout_request( $action, $options );
 
+		$response_str = $this->commit( 'DoVoid', $request );
+		return new PHP_Merchant_Paypal_Express_Checkout_Response( $response_str );
 	}
 
+	/**
+	 * Gateway implementation for Refund
+	 *
+	 * @param array $options
+	 * @return PHP_Merchant_Paypal_Express_Checkout_Response
+	 * @since 3.9
+	 */
 	public function credit() {
+		$this->options = array_merge( $this->options, $options );
+		$this->conditional_requires( 'payer_id', 'transaction_id' );
+		$request = $this->build_checkout_request( $action, $options );
 
+		$response_str = $this->commit( 'RefundTransaction', $request );
+		return new PHP_Merchant_Paypal_Express_Checkout_Response( $response_str );
 	}
 }
