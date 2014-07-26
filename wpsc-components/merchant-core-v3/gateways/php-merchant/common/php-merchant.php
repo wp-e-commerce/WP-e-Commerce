@@ -117,14 +117,42 @@ abstract class PHP_Merchant
 		return $this;
 	}
 
+	/**
+	 * Specify fields that are required for the API operation, otherwise
+	 * throw a PHP_Merchant_Exception exception
+	 *
+	 * @param array $options Required fields
+	 * @return void
+	 * @since 3.9
+	 */
 	protected function requires( $options ) {
 		$missing = array();
 		foreach ( (array) $options as $option ) {
-			if ( ! isset( $this->options[$option] ) )
+			if ( ! isset( $this->options[$option] ) ) {
 				$missing[] = $option;
+			}
 		}
 
-		if ( ! empty( $missing ) )
+		if ( ! empty( $missing ) ) {
 			throw new PHP_Merchant_Exception( PHPME_REQUIRED_OPTION_UNDEFINED, implode( ', ', $missing ) );
+		}
+	}
+
+	/**
+	 * Specify fields that are required for the API operation, otherwise
+	 * throw a PHP_Merchant_Exception exception
+	 *
+	 * @param array $options Required fields
+	 * @return bool|void Returns True if a specified field is found
+	 * @since 3.9
+	 */
+	protected function conditional_requires( $options ) {
+		foreach ( (array) $options as $option ) {
+			if ( isset( $this->options[$option] ) ) {
+				return true;
+			}
+		}
+
+		throw new PHP_Merchant_Exception( PHPME_REQUIRED_OPTION_UNDEFINED, implode( ', ', $options ) );
 	}
 }
