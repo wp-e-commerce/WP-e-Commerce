@@ -22,8 +22,11 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 			'PAYMENTREQUEST_0_AMT'           => $this->format( $this->options['amount'] ),
 			'PAYMENTREQUEST_0_CURRENCYCODE'  => $this->options['currency'],
 			'PAYMENTREQUEST_0_PAYMENTACTION' => $action,
-			'PAYMENTREQUEST_0_ALLOWEDPAYMENTMETHOD' => 'InstantPaymentOnly',
 		);
+
+		if ( $action === 'Sale' ) {
+			$request['PAYMENTREQUEST_0_ALLOWEDPAYMENTMETHOD'] = 'InstantPaymentOnly';
+		}
 
 		foreach ( array( 'subtotal', 'shipping', 'handling', 'tax' ) as $key ) {
 			if ( isset( $this->options[$key] ) )
@@ -159,10 +162,10 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 	 * @return PHP_Merchant_Paypal_Express_Checkout_Response
 	 * @since 3.9
 	 */
-	public function setup_purchase( $options = array() ) {
+	public function setup_purchase( $options = array(), $action = 'Sale' ) {
 		$this->options = array_merge( $this->options, $options );
 		$this->requires( 'amount', 'return_url', 'cancel_url' );
-		$request = $this->build_checkout_request( 'Sale', $options );
+		$request = $this->build_checkout_request( $action, $options );
 
 		$response_str = $this->commit( 'SetExpressCheckout', $request );
 		return new PHP_Merchant_Paypal_Express_Checkout_Response( $response_str );
@@ -188,16 +191,23 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 	 * @return PHP_Merchant_Paypal_Express_Checkout_Response
 	 * @since 3.9
 	 */
-	public function purchase( $options = array() ) {
+	public function purchase( $options = array(), $action = 'Sale' ) {
 		$this->options = array_merge( $this->options, $options );
 		$this->requires( 'amount', 'token', 'payer_id' );
-		$request = $this->build_checkout_request( 'Sale', $options );
+		$request = $this->build_checkout_request( $action, $options );
 
 		$response_str = $this->commit( 'DoExpressCheckoutPayment', $request );
 		return new PHP_Merchant_Paypal_Express_Checkout_Response( $response_str );
 	}
 
-	public function authorize() {
+	/**
+	 * Gateway implementation for DoAuthorize
+	 *
+	 * @param array $options
+	 * @return PHP_Merchant_Paypal_Express_Checkout_Response
+	 * @since 3.9
+	 */
+	public function authorize( $options = array() ) {
 
 	}
 
