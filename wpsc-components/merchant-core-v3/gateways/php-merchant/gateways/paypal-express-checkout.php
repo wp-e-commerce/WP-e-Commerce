@@ -13,6 +13,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 	 *
 	 * @param array $action
 	 * @return array
+	 * @since 3.9
 	 */
 	protected function add_payment( $action ) {
 
@@ -87,6 +88,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 	 * Add a shipping address to the PayPal request
 	 *
 	 * @return array
+	 * @since 3.9
 	 */
 	protected function add_address() {
 		$map = array(
@@ -116,6 +118,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 	 * @param string $action
 	 * @param array $options
 	 * @return array
+	 * @since 3.9
 	 */
 	protected function build_checkout_request( $action, $options = array() ) {
 		$request = array();
@@ -154,6 +157,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 	 *
 	 * @param array $options
 	 * @return PHP_Merchant_Paypal_Express_Checkout_Response
+	 * @since 3.9
 	 */
 	public function setup_purchase( $options = array() ) {
 		$this->options = array_merge( $this->options, $options );
@@ -169,6 +173,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
  	 *
  	 * @param string $token Authentication token returned by the SetExpressCheckout operation
 	 * @return PHP_Merchant_Paypal_Express_Checkout_Response
+	 * @since 3.9
  	 */
 	public function get_details_for( $token ) {
 		$request =  array( 'TOKEN' => $token );
@@ -181,6 +186,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 	 *
 	 * @param array $options
 	 * @return PHP_Merchant_Paypal_Express_Checkout_Response
+	 * @since 3.9
 	 */
 	public function purchase( $options = array() ) {
 		$this->options = array_merge( $this->options, $options );

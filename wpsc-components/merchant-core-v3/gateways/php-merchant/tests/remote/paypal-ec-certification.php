@@ -78,6 +78,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test extends UnitTestCa
      * Standard Fields Test
      *
      * @return void
+	 * @since 3.9
      */
     public function test_setexpresscheckout_standard_ref101() {
         // Call SetExpressCheckout
@@ -93,6 +94,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test extends UnitTestCa
      * Test Case Reference 1.02
      *
      * @return void
+	 * @since 3.9
      */
     public function test_setexpresscheckout_standard_ref102() {
         // Shipping Details
@@ -120,6 +122,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test extends UnitTestCa
      * Test Case Reference 1.03
      *
      * @return void
+	 * @since 3.9
      */
     public function test_setexpresscheckout_standard_ref103() {
         // Max Amount
@@ -140,6 +143,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test extends UnitTestCa
      * Test Case Reference 1.04
      *
      * @return void
+	 * @since 3.9
      */
     public function test_setexpresscheckout_standard_ref104() {
         // Max Amount
@@ -159,6 +163,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test extends UnitTestCa
      * Test Case Reference 1.05
      *
      * @return void
+	 * @since 3.9
      */
     public function test_setexpresscheckout_standard_ref105() {
         // Max Amount
@@ -177,6 +182,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test extends UnitTestCa
      * Test Case Reference 1.06
      *
      * @return void
+	 * @since 3.9
      */
     public function test_setexpresscheckout_standard_ref106() {
         // Billing Agreement description 
@@ -196,6 +202,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test extends UnitTestCa
      * Test Case Reference 1.08
      *
      * @return void
+	 * @since 3.9
      */
     public function test_setexpresscheckout_standard_ref108() {
         // Shipping Details
@@ -224,6 +231,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test extends UnitTestCa
      * Test Case Reference 1.09
      *
      * @return void
+	 * @since 3.9
      */
     public function test_setexpresscheckout_standard_ref109() {
         // Shipping Details
@@ -252,6 +260,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test extends UnitTestCa
      * Test Case Reference 1.10
      *
      * @return void
+	 * @since 3.9
      */
     public function test_setexpresscheckout_standard_ref110() {
         // Shipping Details
@@ -280,6 +289,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test extends UnitTestCa
      * Test Case Reference 1.11
      *
      * @return void
+	 * @since 3.9
      */
     public function test_setexpresscheckout_standard_ref111() {
         // Shipping Details
@@ -308,6 +318,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test extends UnitTestCa
      * Test Case Reference 1.12
      *
      * @return void
+	 * @since 3.9
      */
     public function test_setexpresscheckout_standard_ref112() {
         // Shipping Details
@@ -336,6 +347,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test extends UnitTestCa
      * Test Case Reference 1.13
      *
      * @return void
+	 * @since 3.9
      */
     public function test_setexpresscheckout_standard_ref113() {
         // Shipping Details
@@ -364,6 +376,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test extends UnitTestCa
      * Test Case Reference 1.14
      *
      * @return void
+	 * @since 3.9
      */
     public function test_setexpresscheckout_standard_ref114() {
         // Negative Testing
