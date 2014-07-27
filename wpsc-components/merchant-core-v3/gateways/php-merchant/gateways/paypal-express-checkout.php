@@ -134,6 +134,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 			$request['CANCELURL'] = $this->options['cancel_url'];
 		}
 
+		// Common Fields
 		$request += phpme_map( $this->options, array(
 			'MAXAMT'       => 'max_amount',
 			'SOLUTIONTYPE' => 'solution_type',
@@ -141,6 +142,16 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 			'ADDROVERRIDE' => 'address_override',
 			'TOKEN'        => 'token',
 			'PAYERID'      => 'payer_id',
+			'TRANSACTIONID'=> 'transaction_id',
+			'MSGSUBID'	   => 'message_id',
+			'INVOICEID'	   => 'invoice',
+		) );
+
+		// RefundTransaction Fields
+		$request += phpme_map( $this->options, array(
+			'REFUNDTYPE'   => 'refund_type',
+			'REFUNDSOURCE' => 'refund_source',
+			'REFUNDADVICE' => 'refund_advice',
 		) );
 
 		if ( ! empty( $this->options['shipping'] ) && ! empty( $this->options['address_override'] ) ) {
@@ -151,7 +162,10 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 			$request['NOSHIPPING'] = '1';
 		}
 
-		$request += $this->add_payment( $action );
+		if ( $action != False ) {
+			$request += $this->add_payment( $action );
+		}
+
 		return $request;
 	}
 
@@ -164,7 +178,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 	 */
 	public function setup_purchase( $options = array(), $action = 'Sale' ) {
 		$this->options = array_merge( $this->options, $options );
-		$this->requires( 'amount', 'return_url', 'cancel_url' );
+		$this->requires( array( 'amount', 'return_url', 'cancel_url' ) );
 		$request = $this->build_checkout_request( $action, $options );
 
 		$response_str = $this->commit( 'SetExpressCheckout', $request );
@@ -193,7 +207,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 	 */
 	public function purchase( $options = array(), $action = 'Sale' ) {
 		$this->options = array_merge( $this->options, $options );
-		$this->requires( 'amount', 'token', 'payer_id' );
+		$this->requires( array( 'amount', 'token', 'payer_id' ) );
 		$request = $this->build_checkout_request( $action, $options );
 
 		$response_str = $this->commit( 'DoExpressCheckoutPayment', $request );
@@ -209,7 +223,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 	 */
 	public function authorize( $options = array() ) {
 		$this->options = array_merge( $this->options, $options );
-		$this->requires( 'amount', 'token', 'transaction_id' );
+		$this->requires( array( 'amount', 'token', 'transaction_id' ) );
 		$request = $this->build_checkout_request( $action, $options );
 
 		$response_str = $this->commit( 'DoAuthorization', $request );
@@ -223,9 +237,9 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 	 * @return PHP_Merchant_Paypal_Express_Checkout_Response
 	 * @since 3.9
 	 */
-	public function capture() {
+	public function capture( $options = array() ) {
 		$this->options = array_merge( $this->options, $options );
-		$this->requires( 'amount', 'complete_type', 'transaction_id' );
+		$this->requires( array( 'amount', 'complete_type', 'transaction_id' ) );
 		$request = $this->build_checkout_request( $action, $options );
 
 		$response_str = $this->commit( 'DoCapture', $request );
@@ -239,9 +253,9 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 	 * @return PHP_Merchant_Paypal_Express_Checkout_Response
 	 * @since 3.9
 	 */
-	public function void() {
+	public function void( $options = array() ) {
 		$this->options = array_merge( $this->options, $options );
-		$this->requires( 'transaction_id' );
+		$this->requires( array( 'transaction_id' ) );
 		$request = $this->build_checkout_request( $action, $options );
 
 		$response_str = $this->commit( 'DoVoid', $request );
@@ -249,16 +263,27 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 	}
 
 	/**
-	 * Gateway implementation for Refund
+	 * Gateway implementation for RefundTransaction
 	 *
 	 * @param array $options
 	 * @return PHP_Merchant_Paypal_Express_Checkout_Response
 	 * @since 3.9
 	 */
-	public function credit() {
+	public function credit( $options = array() ) {
 		$this->options = array_merge( $this->options, $options );
-		$this->conditional_requires( 'payer_id', 'transaction_id' );
-		$request = $this->build_checkout_request( $action, $options );
+
+		// Required Fields
+		$this->requires( array( 'message_id', 'invoice' ) );
+
+		// Conditionally required fields (one field at least is set)
+		$this->conditional_requires( array( 'payer_id', 'transaction_id' ) );
+
+		// Amount is required if the refund is partial
+		if ( strtolower( $this->options['refund_type'] ) === 'partial' ) {
+			$this->requires( array( 'amount' ) );
+		}
+
+		$request = $this->build_checkout_request( False, $options );
 
 		$response_str = $this->commit( 'RefundTransaction', $request );
 		return new PHP_Merchant_Paypal_Express_Checkout_Response( $response_str );
