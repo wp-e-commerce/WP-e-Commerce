@@ -148,7 +148,7 @@ class PHP_Merchant_Test extends UnitTestCase
 	public function test_exception_is_thrown_when_some_cond_required_options_are_missing() {
 		$bogus = new PHP_Merchant_Bogus();
 			
-		$this->expectException( new PHP_Merchant_Exception( PHPME_REQUIRED_OPTION_UNDEFINED, array( 'option_1, option_2, option_3' ) ) );
+		$this->expectException( new PHP_Merchant_Exception( PHPME_REQUIRED_OPTION_UNDEFINED, 'option_1, option_2, option_3' ) );
 		$bogus->conditional_requires( array( 'option_1', 'option_2', 'option_3' ) );
 	}
 }
