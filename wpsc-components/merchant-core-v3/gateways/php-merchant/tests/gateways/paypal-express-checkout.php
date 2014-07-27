@@ -105,6 +105,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
  			'RETURNURL'    => 'http://example.com/return',
 			'CANCELURL'    => 'http://example.com/cancel',
 			'ADDROVERRIDE' => 1,
+			'INVOICEID'	   => 'E84A90G94',
 
 			// Shipping details
 			'PAYMENTREQUEST_0_SHIPTONAME'        => 'Gary Cao',
@@ -178,6 +179,8 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 			// Payer ID
 			'TOKEN'   => 'EC-2JJ0893331633543K',
 			'PAYERID' => 'BC798KQ2QU22W',
+
+			'INVOICEID'	   => 'E84A90G94',
 
 			// Shipping details
 			'PAYMENTREQUEST_0_SHIPTONAME'        => 'Gary Cao',
