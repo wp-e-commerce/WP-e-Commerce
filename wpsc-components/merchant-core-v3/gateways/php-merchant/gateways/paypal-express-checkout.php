@@ -198,6 +198,19 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 		return new PHP_Merchant_Paypal_Express_Checkout_Response( $response_str );
 	}
 
+    /**
+     * Gateway impelementation for GetTransactionDetails
+     *
+     * @param string $transaction_id Unique identifier of a transaction.
+     * @return PHP_Merchant_Paypal_Express_Checkout_Response
+     * @since 3.9
+     */
+    public function get_transaction_details( $transaction_id ) {
+		$request =  array( 'TRANSACTIONID' => $transaction_id );
+		$response_str = $this->commit( 'GetTransactionDetails', $request );
+		return new PHP_Merchant_Paypal_Express_Checkout_Response( $response_str );
+    }
+
 	/**
 	 * Gateway implementation for DoExpressCheckout
 	 *
