@@ -476,9 +476,14 @@ function wpsc_admin_include_coupon_js() {
 	// Coupon JS
 	wp_enqueue_script( 'livequery',                     WPSC_URL         . '/wpsc-admin/js/jquery.livequery.js',             array( 'jquery' ),         '1.0.3' );
 	wp_enqueue_script( 'jquery-ui-datepicker' );
+	wp_enqueue_style( 'jquery-ui-datepicker' );
+
 	wp_enqueue_script( 'wp-e-commerce-admin_legacy',    WPSC_URL         . '/wpsc-admin/js/admin-legacy.js',                 array( 'jquery', 'jquery-ui-core', 'jquery-ui-sortable', 'jquery-ui-datepicker' ), $version_identifier );
 
-	wp_enqueue_style( 'wpsc-jquery-ui-datepicker', WPSC_URL . '/wpsc-admin/css/jquery.ui.datepicker-' . get_user_option( 'admin_color' ) . '.css', false, $version_identifier );
+	$admin_color = get_user_option( 'admin_color' );
+	$scheme      = 'classic' === $admin_color ? $admin_color : 'fresh';
+
+	wp_enqueue_style( 'wpsc-jquery-ui-datepicker', WPSC_URL . '/wpsc-admin/css/jquery.ui.datepicker-' . $scheme . '.css', false, $version_identifier );
 }
 
 /**
