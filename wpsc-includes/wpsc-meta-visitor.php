@@ -634,7 +634,7 @@ function wpsc_update_visitor_cart( $visitor_id, $wpsc_cart ) {
 		return $wpsc_cart;
 	}
 
-	if ( property_exists( $wpsc_cart, '_signature' ) ) {
+	if ( ! empty( $wpsc_cart->_signature ) ) {
 		if ( _wpsc_calculate_cart_signature( $wpsc_cart ) == $wpsc_cart->_signature ) {
 			return $wpsc_cart;
 		}
