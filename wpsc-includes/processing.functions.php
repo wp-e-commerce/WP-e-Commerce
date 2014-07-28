@@ -6,7 +6,7 @@
  * @access public
  * @param mixed $price_in
  * @param mixed $args
- * @return void
+ * @return string
  */
 function wpsc_currency_display( $price_in, $args = null ) {
 	global $wpdb;
@@ -395,8 +395,9 @@ function wpsc_check_weight($state, $product) {
 	if( array_search( 'usps', $custom_shipping ) !== false )
 		$shipping_modules[] = 'Weight Rate';
 
-	if( empty( $product_meta['no_shipping'] ) && !empty( $shipping_modules ) ) {
-		if( $product_meta['weight'] == 0 ) // otherwise, use the weight from the products list table
+	if ( empty( $product_meta['no_shipping'] ) && !empty( $shipping_modules ) ) {
+
+		if ( ! isset( $product_meta['weight'] ) || ( isset( $product_meta['weight'] ) && $product_meta['weight'] == 0 ) ) // otherwise, use the weight from the products list table
 			$has_no_weight = true;
 
 		if( $has_no_weight === true ) {

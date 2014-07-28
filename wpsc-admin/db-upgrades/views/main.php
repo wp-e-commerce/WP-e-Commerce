@@ -1,6 +1,6 @@
 <div class="wrap">
 	<div id="icon-tools" class="icon32"><br></div>
-	<h2><?php esc_html_e( 'WP e-Commerce Database Upgrade', 'wpsc' ); ?></h2>
+	<h2><?php esc_html_e( 'WP eCommerce Database Upgrade', 'wpsc' ); ?></h2>
 	<form class="wpsc-db-upgrade" action="" method="post">
 		<h3><?php echo esc_html( $update_title ); ?></h3>
 		<p><?php esc_html_e( 'Click "Start Database Upgrade" when you are ready.', 'wpsc' ); ?></p>

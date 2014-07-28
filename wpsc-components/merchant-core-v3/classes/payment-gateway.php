@@ -324,7 +324,7 @@ abstract class WPSC_Payment_Gateway
 	}
 
 	/**
-	 * Display the payment gateway settings form as seen in WP e-Commerce Settings area.
+	 * Display the payment gateway settings form as seen in WP eCommerce Settings area.
 	 * This method must be overridden by subclasses.
 	 *
 	 * @abstract

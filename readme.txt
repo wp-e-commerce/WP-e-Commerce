@@ -712,7 +712,7 @@ We also currently integrate with UPS, USPS, Australia Post and Shipwire for real
 
 We currently provide basic support for WPML and qTranslate.  We're excited about an up-and-coming multi-lingual project called [Babble](https://github.com/cftp/babble).  We intend to fully and canonically support Babble as our primary multi-lingual partner in releases to come.
 
-= Which additional modules are available for use with WP e-Commerce? =
+= Which additional modules are available for use with WP eCommerce? =
 
 * [Gold Cart](http://getshopped.org/premium-upgrades/premium-plugin/gold-cart-plugin/) - adds more options, gateways and functionality to your store
 * [Drop Shop](http://getshopped.org/premium-upgrades/premium-plugin/dropshop-2010/) - an incredibly snazzy way for buyers to add products to their cart, via a simple drag n drop process.

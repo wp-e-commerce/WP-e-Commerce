@@ -1,6 +1,6 @@
 <?php
 
-add_action( 'wpsc_te2_activate', '_wpsc_te2_action_setup_settings');
+add_action( 'wpsc_theme_engine_v2_activate', '_wpsc_te2_action_setup_settings');
 
 add_action(
 	'sanitize_option_show_on_front',
@@ -77,7 +77,7 @@ function _wpsc_te2_filter_option_transact_url( $value ) {
 /**
  * When the theme engine is activated, setup the options.
  *
- * Action hooks: 'wpsc_te2_activate', 'add_option_rewrite_rules'
+ * Action hooks: 'wpsc_theme_engine_v2_activate', 'add_option_rewrite_rules'
  *
  * @since  0.1
  * @access private
@@ -139,8 +139,11 @@ function _wpsc_te2_action_sanitize_show_on_front( $value ) {
  * @return string        New value
  */
 function _wpsc_te2_filter_store_slug( $value ) {
-	if ( wpsc_get_option( 'store_as_front_page' ) )
+
+	if ( wpsc_get_option( 'store_as_front_page' ) ) {
 		return '';
+	}
+
 	return false;
 }
 
@@ -157,15 +160,20 @@ function _wpsc_te2_filter_store_slug( $value ) {
  * @return string        New value
  */
 function _wpsc_te2_filter_category_base_slug( $value ) {
-	if ( ! wpsc_get_option( 'store_as_front_page') )
+
+	if ( ! wpsc_get_option( 'store_as_front_page') ) {
 		return $value;
+	}
 
 	$category_base = get_option( 'category_base' );
-	if ( ! $category_base )
-		$category_base = 'category';
 
-	if ( $value == $category_base )
+	if ( ! $category_base ) {
+		$category_base = 'category';
+	}
+
+	if ( $value == $category_base ) {
 		$value = 'store-' . $value;
+	}
 
 	return $value;
 }

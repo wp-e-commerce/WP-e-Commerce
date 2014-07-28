@@ -654,7 +654,7 @@ class WPSC_Country {
 		_wpsc_deprecated_function( $function, '3.8.14', $replacement );
 
 		if ( defined( 'WPSC_LOAD_DEPRECATED' ) && WPSC_LOAD_DEPRECATED ) {
-			$list = WPSC_Countries::get_countries_array( WPSC_Countries::INCLUDE_INVISIBLE );
+			$list = WPSC_Countries::get_countries( $include_invisible );
 			return apply_filters( 'wpsc_country_get_all_countries', $list );
 		}
 	}

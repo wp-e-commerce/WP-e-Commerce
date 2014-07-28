@@ -137,21 +137,12 @@
 							<input type='hidden' name='wpsc_admin_action' value='purchlogs_update_notes' />
 							<input type="hidden" name="wpsc_purchlogs_update_notes_nonce" id="wpsc_purchlogs_update_notes_nonce" value="<?php echo wp_create_nonce( 'wpsc_purchlogs_update_notes' ); ?>" />
 							<input type='hidden' name='purchlog_id' value='<?php echo $this->log_id; ?>' />
-							<p>
-								<textarea name="purchlog_notes" rows="3" wrap="virtual" id="purchlog_notes" style="width:100%;"><?php
-									if ( isset( $_POST['purchlog_notes'] ) ) {
-										echo esc_textarea( stripslashes( $_POST['purchlog_notes'] ) );
-									} else {
-										echo wpsc_display_purchlog_notes();
-									}
-								?></textarea>
-							</p>
-							<p><input class="button" type="submit" name="button" id="button" value="<?php _e( 'Update Notes', 'wpsc' ); ?>" /></p>
+							<p><textarea name="purchlog_notes" rows="3" wrap="virtual" id="purchlog_notes" style="width:100%;"><?php echo esc_textarea( wpsc_display_purchlog_notes() ); ?></textarea></p>
+							<div><input class="button" type="submit" name="button" id="button" value="<?php _e( 'Update Notes', 'wpsc' ); ?>" /></div>
 						</form>
 					</div>
 				</div>
 			</div>
-			<!-- End Order Notes (by Ben) -->
 
 			<?php $this->purchase_logs_checkout_fields(); ?>
 			<?php do_action( 'wpsc_purchlogitem_metabox_end', $this->log_id ); ?>

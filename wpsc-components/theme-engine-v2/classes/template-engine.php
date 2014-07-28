@@ -19,8 +19,10 @@ class WPSC_Template_Engine {
 	 * @return WPSC_Template_Engine
 	 */
 	public static function get_instance() {
-		if ( ! self::$instance )
+
+		if ( ! self::$instance ) {
 			self::$instance = new WPSC_Template_Engine();
+		}
 
 		return self::$instance;
 	}
@@ -71,8 +73,9 @@ class WPSC_Template_Engine {
 		$this->register_asset_path( STYLESHEETPATH . '/wp-e-commerce/assets', 10 );
 
 		// Then, if this is a child theme, search in wp-e-commerce/assets under the parent theme
-		if ( is_child_theme() )
+		if ( is_child_theme() ) {
 			$this->register_asset_path( TEMPLATEPATH . '/wp-e-commerce/assets', 20 );
+		}
 
 		// Finally, fall back to the default asset path in theme engine's folder
 		$this->register_asset_path( WPSC_TE_V2_ASSETS_PATH, 30 );
@@ -88,8 +91,9 @@ class WPSC_Template_Engine {
 		$this->register_template_part_path( STYLESHEETPATH . '/wp-e-commerce/template-parts', 10 );
 
 		// Then, if this is a child theme, search in wp-e-commerce/template-parts under the parent theme
-		if ( is_child_theme() )
+		if ( is_child_theme() ) {
 			$this->register_template_part_path( TEMPLATEPATH . '/wp-e-commerce/template-parts', 20 );
+		}
 
 		// Finally, fall back to the default template part path in theme engine's folder
 		$this->register_template_part_path( WPSC_TE_V2_TEMPLATE_PARTS_PATH, 30 );
@@ -104,10 +108,10 @@ class WPSC_Template_Engine {
 		// First, search in wp-e-commerce subfolder inside the current theme
 		$this->register_view_wrapper_path( STYLESHEETPATH . '/wp-e-commerce', 10 );
 
-		// Then, if this is a child theme, search in wp-e-commerce subfolder inside
-		// the parent theme
-		if ( is_child_theme() )
+		// Then, if this is a child theme, search in wp-e-commerce subfolder inside the parent theme
+		if ( is_child_theme() ) {
 			$this->register_view_wrapper_path( TEMPLATEPATH . '/wp-e-commerce', 20 );
+		}
 	}
 
 	/**
@@ -196,10 +200,12 @@ class WPSC_Template_Engine {
 	 */
 	private function register_thing( $var, $path, $priority = 50 ) {
 		$arr = &$this->$var;
-		if ( empty( $arr[$priority] ) )
-			$arr[$priority] = array();
 
-		$arr[$priority][] = $path;
+		if ( empty( $arr[ $priority ] ) ) {
+			$arr[ $priority ] = array();
+		}
+
+		$arr[ $priority ][] = $path;
 	}
 
 	/**
@@ -214,13 +220,16 @@ class WPSC_Template_Engine {
 	 */
 	private function deregister_thing( $var, $path, $priority = 50 ) {
 		$arr = &$this->$var;
-		if ( ! isset( $arr[$priority] ) )
+
+		if ( ! isset( $arr[ $priority ] ) ) {
 			return;
+		}
 
-		$key = array_search( $path, $arr[$priority] );
+		$key = array_search( $path, $arr[ $priority ] );
 
-		if ( $key !== false )
-			unset( $arr[$priority][$key] );
+		if ( $key !== false ) {
+			unset( $arr[ $priority ][ $key ] );
+		}
 
 		return;
 	}
@@ -269,6 +278,7 @@ class WPSC_Template_Engine {
 	 */
 	private function get_paths( $var ) {
 		$return = array();
+
 		foreach ( $this->$var as $paths ) {
 			$return = array_merge( $return, $paths );
 		}

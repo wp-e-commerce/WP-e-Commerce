@@ -10,16 +10,24 @@ function _wpsc_get_page_url( $page, $slug = '' ) {
 
 	if ( ! get_option( 'permalink_structure' ) ) {
 		$uri = add_query_arg( 'wpsc_page', $page, home_url( '/' ) );
-		if ( $slug )
+
+		if ( $slug ) {
 			$uri = add_query_arg( 'wpsc_callback', $slug, $uri );
+		}
+
 		return $uri;
 	}
 
-	$prefix = ( ! got_mod_rewrite() && ! iis7_supports_permalinks() ) ? 'index.php/' : '';
+	global $wp_rewrite;
 
-	$uri = $prefix . $slugs[$page];
-	if ( $slug )
+	$prefix = $wp_rewrite->root;
+
+	$uri = $prefix . $slugs[ $page ];
+
+	if ( $slug ) {
 		$uri = trailingslashit( $uri ) . ltrim( $slug, '/' );
+	}
+
 	return user_trailingslashit( home_url( $uri ) );
 }
 
@@ -37,7 +45,7 @@ function wpsc_get_store_url() {
 }
 
 function wpsc_cart_url( $slug = '' ) {
-	echo wpsc_get_cart_url( $slug );
+	echo esc_url( wpsc_get_cart_url( $slug ) );
 }
 
 function wpsc_get_cart_url( $slug = '' ) {
@@ -45,7 +53,7 @@ function wpsc_get_cart_url( $slug = '' ) {
 }
 
 function wpsc_checkout_url( $slug = '' ) {
-	echo wpsc_get_checkout_url( $slug );
+	echo esc_url( wpsc_get_checkout_url( $slug ) );
 }
 
 function wpsc_get_checkout_url( $slug = '' ) {
@@ -53,7 +61,7 @@ function wpsc_get_checkout_url( $slug = '' ) {
 }
 
 function wpsc_login_url( $slug = '' ) {
-	echo wpsc_get_login_url( $slug );
+	echo esc_url( wpsc_get_login_url( $slug ) );
 }
 
 function wpsc_get_login_url( $slug = '' ) {
@@ -61,7 +69,7 @@ function wpsc_get_login_url( $slug = '' ) {
 }
 
 function wpsc_register_url( $slug = '' ) {
-	echo wpsc_get_register_url( $slug );
+	echo esc_url( wpsc_get_register_url( $slug ) );
 }
 
 function wpsc_get_register_url( $slug = '' ) {
@@ -69,15 +77,15 @@ function wpsc_get_register_url( $slug = '' ) {
 }
 
 function wpsc_password_reminder_url( $slug = '' ) {
-	echo wpsc_get_password_reminder_url( $slug );
+	echo esc_url( wpsc_get_password_reminder_url( $slug ) );
 }
 
 function wpsc_get_password_reminder_url( $slug = '' ) {
 	return _wpsc_get_page_url( 'password-reminder', $slug );
 }
 
-function wpsc_password_reset_url( $username, $key) {
-	echo wpsc_get_password_reset_url( $username, $key );
+function wpsc_password_reset_url( $username, $key ) {
+	echo esc_url( wpsc_get_password_reset_url( $username, $key ) );
 }
 
 function wpsc_get_password_reset_url( $username, $key ) {
@@ -86,14 +94,16 @@ function wpsc_get_password_reset_url( $username, $key ) {
 
 function wpsc_page_get_current_slug() {
 	global $wpsc_page_instance;
-	if ( ! isset( $wpsc_page_instance ) )
+
+	if ( ! isset( $wpsc_page_instance ) ) {
 		return '';
+	}
 
 	return $wpsc_page_instance->get_slug();
 }
 
 function wpsc_customer_account_url( $slug = '' ) {
-	echo wpsc_get_customer_account_url( $slug );
+	echo esc_url( wpsc_get_customer_account_url( $slug ) );
 }
 
 function wpsc_get_customer_account_url( $slug = '' ) {
@@ -101,7 +111,7 @@ function wpsc_get_customer_account_url( $slug = '' ) {
 }
 
 function wpsc_transaction_result_url( $slug = '' ) {
-	echo wpsc_get_transaction_result_url( $slug );
+	echo esc_url( wpsc_get_transaction_result_url( $slug ) );
 }
 
 function wpsc_get_transaction_result_url( $slug = '' ) {

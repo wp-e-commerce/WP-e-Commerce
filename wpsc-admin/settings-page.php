@@ -1,6 +1,6 @@
 <?php
 /**
- * WP e-Commerce Settings Page API.
+ * WP eCommerce Settings Page API.
  *
  * Third-party plugin / theme developers can add their own tabs to WPEC store settings page.
  *

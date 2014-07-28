@@ -1,5 +1,7 @@
 <?php
-add_filter( 'rewrite_rules_array', 'wpsc_taxonomy_rewrite_rules' );
+
+add_filter( 'rewrite_rules_array'        , 'wpsc_taxonomy_rewrite_rules' );
+add_action( 'permalink_structure_changed', 'wpsc_update_permalink_slugs' );
 
 /**
  * wpsc_taxonomy_rewrite_rules function.

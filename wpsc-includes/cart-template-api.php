@@ -271,6 +271,7 @@ function wpsc_cart_has_shipping() {
 	return $has_shipping;
 }
 
+
 /**
  * Checks if the store has shipping enabled globally.
  *

@@ -24,13 +24,14 @@ class WPSC_Product_Variations {
 		$terms = wpsc_get_product_terms( $product_id, 'wpsc-variation' );
 		foreach ( $terms as $term ) {
 			if ( $term->parent == 0 ) {
-				$this->variation_sets[$term->term_id] = $term->name;
+				$this->variation_sets[ $term->term_id ] = $term->name;
 			}
 			else {
-				if ( ! array_key_exists( $term->parent, $this->variation_terms ) )
-					$this->variation_terms[$term->parent] = array();
+				if ( ! array_key_exists( $term->parent, $this->variation_terms ) ) {
+					$this->variation_terms[ $term->parent ] = array();
+				}
 
-				$this->variation_terms[$term->parent][$term->term_id] = $term->name;
+				$this->variation_terms[ $term->parent ] [$term->term_id ] = $term->name;
 			}
 		}
 	}
@@ -40,24 +41,28 @@ class WPSC_Product_Variations {
 	}
 
 	public function get_variation_terms( $variation_set_id = 0 ) {
-		if ( empty( $variation_set_id ) )
+		if ( empty( $variation_set_id ) ) {
 			return $this->variation_terms;
+		}
 
-		return $this->variation_terms[$variation_set_id];
+		return $this->variation_terms[ $variation_set_id ];
 	}
 
 	public function get_variation_set_dropdown( $variation_set_id ) {
-		if ( ! array_key_exists( $variation_set_id, $this->variation_terms ) )
+		if ( ! array_key_exists( $variation_set_id, $this->variation_terms ) ) {
 			return '';
+		}
 
 		$product_id = esc_attr( $this->product_id );
-		$classes = apply_filters( 'wpsc_get_product_variation_set_dropdown_classes', array( 'wpsc-product-variation-dropdown' ), $variation_set_id, $this->product_id );
-		$classes = implode( ' ', $classes );
-		$output = "<select name='wpsc_product_variations[{$variation_set_id}]' id='wpsc-product-{$product_id}-{$variation_set_id}' class='{$classes}'>";
-		foreach ( $this->variation_terms[$variation_set_id] as $variation_term_id => $variation_term_title ) {
+		$classes    = apply_filters( 'wpsc_get_product_variation_set_dropdown_classes', array( 'wpsc-product-variation-dropdown' ), $variation_set_id, $this->product_id );
+		$classes    = implode( ' ', $classes );
+		$output     = "<select name='wpsc_product_variations[{$variation_set_id}]' id='wpsc-product-{$product_id}-{$variation_set_id}' class='{$classes}'>";
+
+		foreach ( $this->variation_terms[ $variation_set_id ] as $variation_term_id => $variation_term_title ) {
 			$label = esc_attr( $variation_term_title );
 			$output .= "<option value='{$variation_term_id}'>{$label}</option>";
 		}
+
 		$output .= "</select>";
 
 		return apply_filters( 'wpsc_get_product_variation_set_dropdown', $output, $variation_set_id, $this->product_id );
@@ -65,6 +70,7 @@ class WPSC_Product_Variations {
 
 	public function has_variations() {
 		$product = get_post( $this->product_id );
+
 		if ( $product->post_parent ) {
 			$this->variations = array();
 			return false;
@@ -82,7 +88,6 @@ class WPSC_Product_Variations {
 	}
 
 	private function fetch_variation_prices() {
-		global $wpdb;
 
 		if ( is_array( $this->prices ) ) {
 			return;
@@ -90,11 +95,13 @@ class WPSC_Product_Variations {
 
 		$this->sale_from_prices = array();
 
+		global $wpdb;
+
 		$sql = $wpdb->prepare( "
 			SELECT pm.meta_value AS price, pm2.meta_value AS sale_price
 			FROM {$wpdb->posts} AS p
-			INNER JOIN {$wpdb->postmeta} AS pm ON pm.post_id = p.id AND pm.meta_key = '_wpsc_price'
-			INNER JOIN {$wpdb->postmeta} AS pm2 ON pm2.post_id = p.id AND pm2.meta_key = '_wpsc_special_price'
+			LEFT JOIN {$wpdb->postmeta} AS pm ON pm.post_id = p.id AND pm.meta_key = '_wpsc_price'
+			LEFT JOIN {$wpdb->postmeta} AS pm2 ON pm2.post_id = p.id AND pm2.meta_key = '_wpsc_special_price'
 			WHERE
 				p.post_type = 'wpsc-product'
 				AND
@@ -114,35 +121,39 @@ class WPSC_Product_Variations {
 
 	public function get_sale_from_price( $return_type = 'string' ) {
 		$this->fetch_variation_prices();
-		$sale_prices = $this->sort_prices( 'sale_price' );
-		$first = $sale_prices[0];
-		$count = count( $sale_prices );
-		$last = $sale_prices[$count - 1];
 
-		if ( $return_type == 'string' ) {
+		$sale_prices = $this->sort_prices( 'sale_price' );
+		$first       = $sale_prices[0];
+		$count       = count( $sale_prices );
+		$last        = $sale_prices[$count - 1];
+
+		if ( 'string' == $return_type ) {
 			$return = wpsc_format_currency( $first );
-			if ( $count > 1 && $first != $last )
+			if ( $count > 1 && $first != $last ) {
 				$return = sprintf( esc_html__( 'from %s', 'wpsc' ), $return );
-		}
-		else {
+			}
+		} else {
 			$return = $first;
 		}
+
 		return $return;
 	}
 
 	public function get_original_from_price( $return_type = 'string' ) {
 		$this->fetch_variation_prices();
+
 		$prices = $this->sort_prices( 'price' );
-		$first = $prices[0];
-		$count = count( $prices );
-		$last = $prices[count( $prices ) - 1];
+		$first  = $prices[0];
+		$count  = count( $prices );
+		$last   = $prices[ count( $prices ) - 1 ];
 
 		if ( $return_type == 'string' ) {
 			$return = wpsc_format_currency( $first );
-			if ( $count  > 1 && $first != $last )
+
+			if ( $count  > 1 && $first != $last ) {
 				$return = sprintf( esc_html__( 'from %s', 'wpsc' ), $return );
-		}
-		else {
+			}
+		} else {
 			$return = (float) $first;
 		}
 
@@ -191,7 +202,7 @@ class WPSC_Product_Variations {
 
 		$first = $diff[0];
 		$count = count( $diff );
-		$last = $diff[$count - 1];
+		$last  = $diff[$count - 1];
 
 	}
 

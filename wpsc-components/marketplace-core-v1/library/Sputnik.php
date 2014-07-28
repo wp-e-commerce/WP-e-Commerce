@@ -21,12 +21,12 @@ class Sputnik {
 	/**
 	 * Base URI for store URLs
 	 */
-	const SITE_BASE = 'http://getshopped.org';
+	const SITE_BASE = 'http://wpecommerce.org';
 
 	/**
 	 * Base URI for API URLs
 	 */
-	const API_BASE = 'http://getshopped.org/wpec';
+	const API_BASE = 'http://wpecommerce.org/wpec';
 
 	/**
 	 * OAuth client key

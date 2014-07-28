@@ -89,7 +89,7 @@ function wpsc_admin_edit_posts_orderby( $orderby_sql ) {
 add_filter( 'posts_orderby', 'wpsc_admin_edit_posts_orderby' );
 
 /**
- * setting the screen option to between 1 and 999
+ * setting the product & variations per page screen option to between 1 and 999
  *
  * @since 3.8
  * @access public
@@ -102,7 +102,7 @@ add_filter( 'posts_orderby', 'wpsc_admin_edit_posts_orderby' );
  * @return $value after changes...
  */
 function wpsc_set_screen_option($status, $option, $value){
-	if( in_array($option, array ("edit_wpsc_variation_per_page","edit_wpsc_product_per_page" )) ){
+	if( in_array($option, array ("edit_wpsc_variation_per_page","edit_wpsc_product_per_page", "wpsc_purchases_per_page" )) ){
 		if ( "edit_wpsc_variation_per_page" == $option ){
 			global $user_ID;
 			update_user_option($user_ID,'edit_wpsc-variation_per_page',$value);
@@ -264,6 +264,8 @@ function wpsc_admin_pages() {
 	add_action( 'load-post-new.php'          , 'wpsc_add_help_tabs' );
 	add_action( 'load-edit-tags.php'         , 'wpsc_add_help_tabs' );
 
+	// screen options on Sales Log
+	add_action( 'load-' . $purchase_logs_page , 'wpsc_add_purchase_logs_screen_option' );
 }
 
 /**
@@ -368,6 +370,24 @@ function wpsc_add_help_tabs() {
 }
 
 /**
+ * This function allows change in number of purchase logs shown on Sales Log (Screen Options).
+ *
+ * @since 3.9
+ * @access public
+ *
+ * @uses add_screen_option()
+ */
+function wpsc_add_purchase_logs_screen_option(){
+
+	// setup Screen Option for purchase logs per page
+	add_screen_option( 'per_page', array(
+		'label'		=> __("Sales Orders", 'wpsc'),
+		'default'	=> 20,
+		'option'	=> 'wpsc_purchases_per_page'
+	) );
+}
+
+/**
  * Includes purchase logs CSS and JS
  *
  * @acces public
@@ -432,7 +452,7 @@ function wpsc_display_purchase_logs_page() {
  * @uses admin_url()      Retrieves URL to the WordPress admin
  */
 function wpsc_product_log_rss_feed() {
-	echo "<link type='application/rss+xml' href='" . add_query_arg( array( 'rss' => 'true', 'rss_key' => 'key', 'action' => 'purchase_log', 'type' => 'rss' ), admin_url( 'index.php' ) ) . "' title='" . esc_attr( 'WP e-Commerce Purchase Log RSS', 'wpsc' ) . "' rel='alternate' />";
+	echo "<link type='application/rss+xml' href='" . add_query_arg( array( 'rss' => 'true', 'rss_key' => 'key', 'action' => 'purchase_log', 'type' => 'rss' ), admin_url( 'index.php' ) ) . "' title='" . esc_attr__( 'WP eCommerce Purchase Log RSS', 'wpsc' ) . "' rel='alternate' />";
 }
 
 /**
@@ -456,9 +476,14 @@ function wpsc_admin_include_coupon_js() {
 	// Coupon JS
 	wp_enqueue_script( 'livequery',                     WPSC_URL         . '/wpsc-admin/js/jquery.livequery.js',             array( 'jquery' ),         '1.0.3' );
 	wp_enqueue_script( 'jquery-ui-datepicker' );
+	wp_enqueue_style( 'jquery-ui-datepicker' );
+
 	wp_enqueue_script( 'wp-e-commerce-admin_legacy',    WPSC_URL         . '/wpsc-admin/js/admin-legacy.js',                 array( 'jquery', 'jquery-ui-core', 'jquery-ui-sortable', 'jquery-ui-datepicker' ), $version_identifier );
 
-	wp_enqueue_style( 'wpsc-jquery-ui-datepicker', WPSC_URL . '/wpsc-admin/css/jquery.ui.datepicker-' . get_user_option( 'admin_color' ) . '.css', false, $version_identifier );
+	$admin_color = get_user_option( 'admin_color' );
+	$scheme      = 'classic' === $admin_color ? $admin_color : 'fresh';
+
+	wp_enqueue_style( 'wpsc-jquery-ui-datepicker', WPSC_URL . '/wpsc-admin/css/jquery.ui.datepicker-' . $scheme . '.css', false, $version_identifier );
 }
 
 /**
@@ -578,24 +603,32 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 		}
 		wp_enqueue_style( 'wp-e-commerce-admin', WPSC_URL . '/wpsc-admin/css/admin.css', false, $version_identifier, 'all' );
 
-		// Localize scripts
-		wp_localize_script( 'wp-e-commerce-admin', 'wpsc_adminL10n', array(
-			'dragndrop_set'            => ( get_option( 'wpsc_sort_by' ) == 'dragndrop' ? 'true' : 'false' ),
-			'save_product_order_nonce' => _wpsc_create_ajax_nonce( 'save_product_order' ),
-			'l10n_print_after'         => 'try{convertEntities(wpsc_adminL10n);}catch(e){};',
-			'empty_coupon'             => esc_html__( 'Please enter a coupon code.', 'wpsc' ),
-			'bulk_edit_no_vars'        => esc_html__( 'Quick Edit options are limited when editing products that have variations. You will need to edit the variations themselves.', 'wpsc' ),
-			'wpsc_core_images_url'     => WPSC_CORE_IMAGES_URL,
-			'variation_parent_swap'    => esc_html_x( 'New Variation Set', 'Variation taxonomy parent', 'wpsc' ),
-			/* translators             : This string is prepended to the 'New Variation Set' string */
-			'variation_helper_text'    => esc_html_x( 'Choose the Variation Set you want to add variants to. If you\'re creating a new variation set then select', 'Variation helper text', 'wpsc' ),
-			'variations_tutorial'      => esc_html__( 'Variations allow you to create options for your products. For example, if you\'re selling T-Shirts, they will generally have a "Size" option. Size will be the Variation Set name, and it will be a "New Variant Set". You will then create variants (small, medium, large) which will have the "Variation Set" of Size. Once you have made your set you can use the table on the right to manage them (edit, delete). You will be able to order your variants by dragging and dropping them within their Variation Set.', 'wpsc' ),
-			/* translators             : These strings are dynamically inserted as a drop-down for the Coupon comparison conditions */
-			'coupons_compare_or'       => esc_html_x( 'OR'  , 'Coupon comparison logic', 'wpsc' ),
-			'coupons_compare_and'      => esc_html_x( 'AND' , 'Coupon comparison logic', 'wpsc' ),
-			'meta_downloads_plural'    => __( ' downloads', 'live preview for downloads metabox', 'wpsc' ),
-			'meta_downloads_singular'  => __( ' download' , 'live preview for downloads metabox', 'wpsc' ),
-		) );
+		static $_wpsc_admin_l10n_loaded;
+
+		if ( ! $_wpsc_admin_l10n_loaded ) {
+			// Localize scripts
+			wp_localize_script( 'wp-e-commerce-admin', 'wpsc_adminL10n', array(
+				'dragndrop_set'            => ( get_option( 'wpsc_sort_by' ) == 'dragndrop' ? 'true' : 'false' ),
+				'save_product_order_nonce' => _wpsc_create_ajax_nonce( 'save_product_order' ),
+				'l10n_print_after'         => 'try{convertEntities(wpsc_adminL10n);}catch(e){};',
+				'empty_coupon'             => esc_html__( 'Please enter a coupon code.', 'wpsc' ),
+				'bulk_edit_no_vars'        => esc_html__( 'Quick Edit options are limited when editing products that have variations. You will need to edit the variations themselves.', 'wpsc' ),
+				'wpsc_core_images_url'     => WPSC_CORE_IMAGES_URL,
+				'variation_parent_swap'    => esc_html_x( 'New Variation Set', 'Variation taxonomy parent', 'wpsc' ),
+				/* translators             : This string is prepended to the 'New Variation Set' string */
+				'variation_helper_text'    => esc_html_x( 'Choose the Variation Set you want to add variants to. If you\'re creating a new variation set then select', 'Variation helper text', 'wpsc' ),
+				'variations_tutorial'      => esc_html__( 'Variations allow you to create options for your products. For example, if you\'re selling T-Shirts, they will generally have a "Size" option. Size will be the Variation Set name, and it will be a "New Variant Set". You will then create variants (small, medium, large) which will have the "Variation Set" of Size. Once you have made your set you can use the table on the right to manage them (edit, delete). You will be able to order your variants by dragging and dropping them within their Variation Set.', 'wpsc' ),
+				/* translators             : These strings are dynamically inserted as a drop-down for the Coupon comparison conditions */
+				'coupons_compare_or'       => esc_html_x( 'OR'  , 'Coupon comparison logic', 'wpsc' ),
+				'coupons_compare_and'      => esc_html_x( 'AND' , 'Coupon comparison logic', 'wpsc' ),
+				'meta_downloads_plural'    => __( ' downloads', 'live preview for downloads metabox', 'wpsc' ),
+				'meta_downloads_singular'  => __( ' download' , 'live preview for downloads metabox', 'wpsc' ),
+				'wpsc_inline_css_error'    => __( 'It is not possible to enable the inline CSS without also enabling the common CSS.' )
+			) );
+
+			$_wpsc_admin_l10n_loaded = true;
+		}
+
 	}
 	if ( $pagehook == 'wpsc-product-variations-iframe' ) {
 		_wpsc_enqueue_wp_e_commerce_admin();
@@ -816,7 +849,7 @@ function wpsc_dashboard_widget_setup() {
 
 	// Add the dashboard widgets
 	if ( current_user_can( $news_cap ) )
-		wp_add_dashboard_widget( 'wpsc_dashboard_news', __( 'WP e-Commerce News' , 'wpsc' ), 'wpsc_dashboard_news' );
+		wp_add_dashboard_widget( 'wpsc_dashboard_news', __( 'WP eCommerce News' , 'wpsc' ), 'wpsc_dashboard_news' );
 	if ( current_user_can( $sales_cap ) )
 		wp_add_dashboard_widget( 'wpsc_dashboard_widget', __( 'Sales Summary', 'wpsc' ), 'wpsc_dashboard_widget' );
 	if ( current_user_can( $quarterly_sales_cap ) )
@@ -1241,12 +1274,12 @@ function _wpsc_action_admin_notices_deprecated_countries_notice() {
 			$message = __( 'Yugoslavia is no longer a valid official country name according to <a href="%1$s">ISO 3166</a> while both Serbia and Montenegro have been added to the country list.<br /> As a result, we highly recommend changing your <em>Base Country</em> to reflect this change on the <a href="%2$s">General Settings</a> page.', 'wpsc' );
 			break;
 		case 'UK':
-			$message = __( 'Prior to WP e-Commerce 3.8.9, in your database, United Kingdom\'s country code is UK and you have already selected that country code as the base country. However, now that you\'re using WP e-Commerce version %3$s, it is recommended that you change your base country to the official "GB" country code, according to <a href="%1$s">ISO 3166</a>.<br /> Please go to <a href="%2$s">General Settings</a> page to make this change.<br />The legacy "UK" item will be marked as "U.K. (legacy)" on the country drop down list. Simply switch to the official "United Kingdom (ISO 3166)" to use the "GB" country code.' , 'wpsc' );
+			$message = __( 'Prior to WP eCommerce 3.8.9, in your database, United Kingdom\'s country code is UK and you have already selected that country code as the base country. However, now that you\'re using WP eCommerce version %3$s, it is recommended that you change your base country to the official "GB" country code, according to <a href="%1$s">ISO 3166</a>.<br /> Please go to <a href="%2$s">General Settings</a> page to make this change.<br />The legacy "UK" item will be marked as "U.K. (legacy)" on the country drop down list. Simply switch to the official "United Kingdom (ISO 3166)" to use the "GB" country code.' , 'wpsc' );
 			break;
 		case 'AN':
 			$message = __( 'Netherlands Antilles is no longer a valid official country name according to <a href="%1$s">ISO 3166</a>.<br />Please consider changing your <em>Base Country</em> to reflect this change on the <a href="%2$s">General Settings</a> page.', 'wpsc' );
 		case 'TP':
-			$message = __( 'Prior to WP e-Commerce 3.8.9, in your database, East Timor\'s country code is TP and you have already selected that country code as the base country. However, now that you\'re using WP e-Commerce version %3$s, it is recommended that you change your base country to the official "TL" country code, according to <a href="%1$s">ISO 3166</a>.<br /> Please go to <a href="%2$s">General Settings</a> page to make this change.<br />The legacy "TP" item will be marked as "East Timor (legacy)" on the country drop down list. Simply switch to the official "Timor-Leste (ISO 3166)" to use the "TL" country code.' , 'wpsc' );
+			$message = __( 'Prior to WP eCommerce 3.8.9, in your database, East Timor\'s country code is TP and you have already selected that country code as the base country. However, now that you\'re using WP eCommerce version %3$s, it is recommended that you change your base country to the official "TL" country code, according to <a href="%1$s">ISO 3166</a>.<br /> Please go to <a href="%2$s">General Settings</a> page to make this change.<br />The legacy "TP" item will be marked as "East Timor (legacy)" on the country drop down list. Simply switch to the official "Timor-Leste (ISO 3166)" to use the "TL" country code.' , 'wpsc' );
 			break;
 	}
 
@@ -1440,7 +1473,7 @@ function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
  * @uses get_option()         Gets option from the database given string
  */
 function _wpsc_admin_notices_3dot8dot9() {
-	$message = '<p>' . __( 'You are currently using WP e-Commerce 3.8.9. There have been major changes in WP e-Commerce 3.8.9, so backward-compatibility with existing plugins might not always be guaranteed. If you are unsure, please roll back to 3.8.8.5, and set up a test site with 3.8.9 to make sure WP e-Commerce 3.8.9 is compatible with your existing themes and plugins.<br />If you find any incompatibility issues, please <a href="%1$s">report them to us</a> as well as the other plugins or themes\' developers.' , 'wpsc' ) . '</p>';
+	$message = '<p>' . __( 'You are currently using WP eCommerce 3.8.9. There have been major changes in WP eCommerce 3.8.9, so backward-compatibility with existing plugins might not always be guaranteed. If you are unsure, please roll back to 3.8.8.5, and set up a test site with 3.8.9 to make sure WP eCommerce 3.8.9 is compatible with your existing themes and plugins.<br />If you find any incompatibility issues, please <a href="%1$s">report them to us</a> as well as the other plugins or themes\' developers.' , 'wpsc' ) . '</p>';
 	$message .= "\n<p>" . __( '<a href="%2$s">Hide this warning</a>', 'wpsc' ) . '</p>';
 	$message = sprintf(
 		$message,

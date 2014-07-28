@@ -1,10 +1,11 @@
 <?php if ( $this->show_thumbnails ): ?>
 <div class="wpsc-thumbnail wpsc-product-thumbnail">
 	<?php
-	if ( wpsc_has_product_thumbnail( $item->product_id ) )
-		echo wpsc_get_product_thumbnail( $item->product_id, 'cart' );
-	else
-		wpsc_product_no_thumbnail_image( 'cart' );
+		if ( wpsc_has_product_thumbnail( $item->product_id ) ) {
+			echo wpsc_get_product_thumbnail( $item->product_id, 'cart' );
+		} else {
+			wpsc_product_no_thumbnail_image( 'cart' );
+		}
 	?>
 </div><!-- .wpsc-product-thumbnail -->
 <?php endif; ?>

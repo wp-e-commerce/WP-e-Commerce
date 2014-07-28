@@ -516,25 +516,26 @@ class ash_usps {
 	 * @return string XML Response from USPS API
 	 */
 	function _make_request( $request, $intl = false ) {
+
 		// Get the proper endpoint to send request to
 		$endpoint = $this->_get_endpoint( $intl );
 		// Need to url encode the XML for the request
 		$encoded_request = urlencode( $request );
+
 		// Put endpoint and request together
 		$url = $endpoint . "&XML=" . $encoded_request;
-		// Make the request
-		$ch = curl_init();
-		curl_setopt( $ch, CURLOPT_URL, $url );
-		curl_setopt( $ch, CURLOPT_NOPROGRESS, 1 );
-		curl_setopt( $ch, CURLOPT_VERBOSE, 1 );
-		@curl_setopt( $ch, CURLOPT_FOLLOWLOCATION,1 );
-		curl_setopt( $ch, CURLOPT_TIMEOUT, 120 );
-		curl_setopt( $ch, CURLOPT_USERAGENT, 'wp-e-commerce' );
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-		$body = curl_exec( $ch );
-		curl_close( $ch );
 
-		return $body;
+		$request = wp_remote_post(
+			$url,
+			array(
+				'httpversion' => '1.1',
+				'user-agent'  => 'wp-e-commerce',
+				'redirection' => 10,
+				'timeout'     => 120
+			)
+		);
+
+		return wp_remote_retrieve_body( $request );
 	}
 
 	/**
@@ -616,35 +617,58 @@ class ash_usps {
 	 */
 	function _parse_domestic_response( $response ) {
 		global $wpec_ash_xml;
+
 		$package_services = array();
+
 		$this->_clean_response( $response );
 
 		$packages = $wpec_ash_xml->get( "Package", $response );
+		$errors   = '';
 
-		if ( ! is_array( $packages ) || stripos( $packages[0], '<ERROR>') === 0 ) {
-			// TODO: this is a temporary fix to capture the error message from USPS,
-			// more robust handling is certainly required
-			$message = $wpec_ash_xml->get( "Description",  $packages[0] );
-			_wpsc_shipping_add_error_message( $message[0] );
+		if ( ! is_array( $packages ) ) {
 			return array();
 		}
 
 		foreach ( $packages as $package ) {
-			$temp = array();
-			$postage_services = $wpec_ash_xml->get( "Postage", $package );
-			if ( count( $postage_services ) == 1 ) {
-				$postage_services = array( $package );
-			}
-			foreach ( $postage_services as $postage ) {
-				$service_name = $this->_get_service( "MailService", $postage );
-				$temp_rate = $wpec_ash_xml->get( "Rate", $postage );
-				$rate = ( ! empty( $temp_rate ) ) ? $temp_rate[0] : 0.0;
-				if ( ! empty( $service_name ) ) {
-					$temp[ $service_name ] = apply_filters( 'wpsc_usps_domestic_rate', $rate, $service_name );
+
+			if ( stripos( $package, '<ERROR>') === 0 ) {
+
+				$errors = $wpec_ash_xml->get( "Description", $package );
+
+			} else {
+
+				$postage_services = $wpec_ash_xml->get( "Postage", $package );
+
+				if ( count( $postage_services ) == 1 ) {
+					$postage_services = array( $package );
 				}
+
+				foreach ( $postage_services as $postage ) {
+					$temp = array();
+
+					$service_name = $this->_get_service( "MailService", $postage );
+					$temp_rate    = $wpec_ash_xml->get( "Rate", $postage );
+
+					if ( ! empty( $temp_rate ) ) {
+						$rate = $temp_rate[0];
+					} else {
+						continue;
+					}
+
+					if ( ! empty( $service_name ) ) {
+						$temp[ $service_name ] = apply_filters( 'wpsc_usps_domestic_rate', $rate, $service_name );
+					}
+				}
+
+				array_push( $package_services, $temp );
 			}
-			array_push( $package_services, $temp );
+
 		}
+
+		if ( empty( $package_services ) && ! empty( $errors ) ) {
+			_wpsc_shipping_add_error_message( $errors[0] );
+		}
+
 		return $package_services;
 	}
 

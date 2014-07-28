@@ -3,6 +3,7 @@
 add_action( 'wpsc_includes', '_wpsc_action_theme_engine_v1_includes' );
 
 _wpsc_action_theme_engine_v1_constants();
+
 function _wpsc_action_theme_engine_v1_constants() {
 	define( 'WPSC_THEME_ENGINE_V1_PATH', dirname( __FILE__ ) );
 	define( 'WPSC_THEME_ENGINE_V1_URL', plugins_url(  basename( dirname ( __FILE__  ) ) , dirname( __FILE__ ) ) );
@@ -15,7 +16,7 @@ function _wpsc_action_theme_engine_v1_constants() {
 	if ( false === ( $theme_path = get_transient( 'wpsc_theme_path' ) ) ) {
 
 		// Use the old path if it exists
-		if ( file_exists( WPSC_OLD_THEMES_PATH.get_option('wpsc_selected_theme') ) )
+		if ( file_exists( WPSC_OLD_THEMES_PATH . get_option('wpsc_selected_theme') ) )
 			define( 'WPSC_THEMES_PATH', WPSC_OLD_THEMES_PATH );
 
 		// Use the built in theme files
@@ -47,6 +48,9 @@ function _wpsc_action_theme_engine_v1_constants() {
 }
 
 function _wpsc_action_theme_engine_v1_includes() {
+
+	require_once( WPSC_THEME_ENGINE_V1_PATH . '/classes/checkout-localization.php' );
+	require_once( WPSC_THEME_ENGINE_V1_PATH . '/classes/checkout-ajax.php'         );
 	require_once( WPSC_THEME_ENGINE_V1_PATH . '/classes/breadcrumbs.php' );
 	require_once( WPSC_THEME_ENGINE_V1_PATH . '/classes/wpsc-products-by-category.php' );
 	require_once( WPSC_THEME_ENGINE_V1_PATH . '/classes/hide-subcatsprods-in-cat.php' );

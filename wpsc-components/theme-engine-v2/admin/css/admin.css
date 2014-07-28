@@ -62,3 +62,8 @@ input[id$="-slug"].regular-text {
 [id*=wpsc_widget_drill_down] .default {
 	width: 100% !important;
 }
+
+#options_presentation .form-table td div.error p {
+	margin: .5em 0;
+	padding: 2px;
+}

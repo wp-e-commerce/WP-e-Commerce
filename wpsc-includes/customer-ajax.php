@@ -16,7 +16,7 @@ function _wpsc_doing_customer_meta_ajax( $action = '' ) {
 
 	$doing_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
 
-	$result = $doing_ajax && ( strpos( $_REQUEST['action'], 'wpsc_' ) === 0  );
+	$result = $doing_ajax && isset( $_REQUEST['action'] ) && ( strpos( $_REQUEST['action'], 'wpsc_' ) === 0  );
 
 	if ( $result && ! empty( $action ) ) {
 		$result = $_REQUEST['action'] == $action;

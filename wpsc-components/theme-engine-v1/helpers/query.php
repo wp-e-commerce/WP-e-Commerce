@@ -14,6 +14,8 @@ if ( is_ssl() ) {
 add_filter( 'wp_nav_menu_args', 'wpsc_switch_the_query', 99 );
 add_filter( 'request', 'wpsc_filter_query_request' );
 add_filter( 'pre_get_posts', 'wpsc_split_the_query', 8 );
+ // Prevent later hooks from being skipped. See #1444.
+add_filter( 'pre_get_posts', '__return_null', 8 );
 add_filter( 'parse_query', 'wpsc_mark_product_query', 12 );
 add_filter( 'query_vars', 'wpsc_query_vars' );
 
@@ -159,7 +161,7 @@ function _wpsc_pre_get_posts_reset_taxonomy_globals( $query ) {
 	$post_type_object = get_post_type_object( 'wpsc-product' );
 
 	if ( current_user_can( $post_type_object->cap->edit_posts ) )
-		$query->set( 'post_status', 'private,draft,pending,publish' );
+		$query->set( 'post_status', apply_filters( 'wpsc_product_display_status', array( 'publish' ) ) );
 	else
 		$query->set( 'post_status', 'publish' );
 }

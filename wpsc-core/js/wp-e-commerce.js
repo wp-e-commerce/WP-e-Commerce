@@ -135,7 +135,7 @@ function wpsc_var_set( name, value ) {
 var wpsc_visitor_id = false;
 
 if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
-	if ( true || ! ( document.cookie.indexOf("wpsc_attempted_validate") >= 0 ) ) {
+	if ( ! ( document.cookie.indexOf("wpsc_attempted_validate") >= 0 ) ) {
 		// create a cookie to signal that we have attempted validation.  If we find the cookie is set
 		// we don't re-attempt validation.  This means will only try to validate once and not slow down
 		// subsequent page views.
@@ -144,10 +144,9 @@ if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
 		// is closed, so the next time the visitor attempts to access the site after closing the browser
 		// they will revalidate.
 		var now = new Date();
-		document.cookie="wpsc_attempted_validate="+now;
+		document.cookie = "wpsc_attempted_validate="+now;
 
 		var wpsc_http = new XMLHttpRequest();
-		wpsc_http.overrideMimeType( "application/json" );
 
 		// open setup and send the request in synchronous mode
 		wpsc_http.open( "POST", wpsc_ajax.ajaxurl + "?action=wpsc_validate_customer", false );
@@ -958,6 +957,10 @@ function wpsc_region_change() {
 
 function wpsc_checkout_item_active( $checkout_item ) {
 	var active_items = wpsc_var_get( "wpsc_checkout_item_active" );
+
+	if ( 'undefined' === typeof active_items ) {
+		return false;
+	}
 
 	var is_active = active_items.hasOwnProperty( $checkout_item ) && active_items[$checkout_item];
 

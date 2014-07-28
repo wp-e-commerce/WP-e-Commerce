@@ -12,7 +12,7 @@ class WPSC_Widget_Tag_Cloud extends WP_Widget {
 			'wpsc_tag_cloud_widget',
 			__( '(WPEC) Product Tag Cloud', 'wpsc' ),
 			array(
-				'description' => __( 'WP e-Commerce Tag Cloud Widget', 'wpsc' )
+				'description' => __( 'WP eCommerce Tag Cloud Widget', 'wpsc' )
 			)
 		);
 	}
@@ -20,21 +20,25 @@ class WPSC_Widget_Tag_Cloud extends WP_Widget {
 	public function widget( $args, $instance ) {
 		$cloud = wp_tag_cloud( array(
 			'taxonomy' => 'product_tag',
-			'orderby' => 'count',
-			'order' => 'DESC',
-			'echo' => false,
+			'orderby'  => 'count',
+			'order'    => 'DESC',
+			'echo'     => false,
 		) );
 
-		if ( ! $cloud )
+		if ( ! $cloud ) {
 			return;
+		}
 
 		$instance = wp_parse_args( $instance, $this->defaults );
-		$title = apply_filters( 'widget_title', $instance['title'] );
+		$title    = apply_filters( 'widget_title', $instance['title'] );
+
 		extract( $args );
 
 		echo $before_widget;
-		if ( ! empty( $title ) )
+
+		if ( ! empty( $title ) ) {
 			echo $before_title . $title . $after_title;
+		}
 
 		echo $cloud;
 

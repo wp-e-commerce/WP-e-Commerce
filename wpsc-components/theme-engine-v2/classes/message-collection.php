@@ -72,7 +72,7 @@ class WPSC_Message_Collection {
 
 		foreach ( $types as $type ) {
 			if ( isset( $array[ $type ] ) && isset( $array[ $type ][ $context ] ) ) {
-				$messages = array_merge( $messages, array( $type => $array[$type][$context] ) );
+				$messages = array_merge( $messages, array( $type => $array[ $type ][ $context ] ) );
 			}
 		}
 
@@ -123,6 +123,7 @@ class WPSC_Message_Collection {
 
 			/* @todo: Investigate whether or not we need this variable here.  It is dead, but $this->get_flash_messages() may be necessary */
 			$flash_messages = $this->get_flash_messages();
+
 			if ( ! $this->filter_contains( $this->messages, $types, $context ) ) {
 				return false;
 			}
@@ -142,13 +143,15 @@ class WPSC_Message_Collection {
 	private function add_flash_message( $message, $type = 'success', $context = 'main' ) {
 		$flash_messages = $this->get_flash_messages();
 
-		if ( ! isset( $flash_messages[$type] ) )
-			$flash_messages[$type] = array();
+		if ( ! isset( $flash_messages[ $type ] ) ) {
+			$flash_messages[ $type ] = array();
+		}
 
-		if ( ! isset( $flash_messages[$type][$context] ) )
-			$flash_messages[$type][$context] = array();
+		if ( ! isset( $flash_messages[$type][$context] ) ) {
+			$flash_messages[ $type ][ $context ] = array();
+		}
 
-		$flash_messages[$type][$context][] = $message;
+		$flash_messages[ $type ][ $context ][] = $message;
 
 		$this->flash_data->set( 'messages', $flash_messages );
 	}

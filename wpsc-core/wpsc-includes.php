@@ -1,12 +1,11 @@
 <?php
 
-if ( defined( 'WPEC_LOAD_DEPRECATED' ) )
+if ( defined( 'WPEC_LOAD_DEPRECATED' ) ) {
 	require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-deprecated.php' );
+}
 
 // Start including the rest of the plugin here
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-util.php'                  );
-require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-checkout-localization.php'      );
-require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-checkout-ajax.php'              );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-deprecated-meta.php'            );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/customer.php'                        );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-meta-customer.php'              );
@@ -47,6 +46,7 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/purchase-log-notification.class.p
 require_once( WPSC_FILE_PATH . '/wpsc-includes/purchase-log.class.php'              );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/checkout-form.class.php'             );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/checkout-form-data.class.php'        );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-theme-engine-bootstrap.php'     );
 
 do_action( 'wpsc_loaded_module_'. basename( __FILE__ ) );
 
@@ -73,9 +73,8 @@ include_once( WPSC_FILE_PATH . '/wpsc-widgets/admin_menu_widget.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/shipping.helper.php' );
 
 // Admin
-if ( is_admin() )
+if ( is_admin() ) {
 	include_once( WPSC_FILE_PATH . '/wpsc-admin/admin.php' );
+}
 
 require_once( WPSC_FILE_PATH . '/wpsc-includes/cron.php' );
-
-?>

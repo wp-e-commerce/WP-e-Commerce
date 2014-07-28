@@ -5,6 +5,8 @@
 			<table class="form-table">
 				<tbody>
 
+					<?php do_action( 'wpsc_coupon_add_top' ); ?>
+
 					<tr class="form-field">
 						<th scope="row" valign="top">
 							<label for="add_coupon_code"><?php _e( 'Coupon Code', 'wpsc' ); ?></label>
@@ -20,7 +22,7 @@
 							<label for="add-coupon-code"><?php _e( 'Discount', 'wpsc' ); ?></label>
 						</th>
 						<td>
-							<input name="add_discount" id="add-coupon-code" type="number" class="small-text" min="0" />
+							<input name="add_discount" step=".01" id="add-coupon-code" type="number" class="small-text" min="0" />
 							<span class="description"><?php _e( 'The discount amount', 'wpsc' ); ?></span>
 						</td>
 					</tr>
@@ -117,6 +119,8 @@
 							</div>
 						</td>
 					</tr>
+
+					<?php do_action( 'wpsc_coupon_add_bottom' ); ?>
 
 				</tbody>
 			</table>

@@ -8,15 +8,15 @@ class WPSC_Widget_Latest_Products extends WP_Widget {
 			'wpsc_latest_products_widget',
 			__( '(WPEC) Latest Products', 'wpsc' ),
 			array(
-				'description' => __( 'WP e-Commerce Latest Products Widget', 'wpsc' ),
+				'description' => __( 'WP eCommerce Latest Products Widget', 'wpsc' ),
 			)
 		);
 
 		$this->defaults = array(
-			'title' => __( 'Latest Products', 'wpsc' ),
-			'width' => 45,
-			'height' => 45,
-			'show_name' => true,
+			'title'      => __( 'Latest Products', 'wpsc' ),
+			'width'      => 45,
+			'height'     => 45,
+			'show_name'  => true,
 			'show_image' => false,
 			'post_count' => 5,
 		);
@@ -25,14 +25,16 @@ class WPSC_Widget_Latest_Products extends WP_Widget {
 	public function widget( $args, $instance ) {
 		$query = new WP_Query( array(
 			'posts_per_page' => $instance['post_count'],
-			'post_type' => 'wpsc-product',
-			'post_status' => 'publish',
+			'post_type'      => 'wpsc-product',
+			'post_status'    => 'publish',
 		) );
 
-		if ( ! $query->have_posts() )
+		if ( ! $query->have_posts() ) {
 			return;
+		}
 
 		$instance = wp_parse_args( $instance, $this->defaults );
+
 		extract( $args );
 
 		add_image_size(
@@ -53,19 +55,27 @@ class WPSC_Widget_Latest_Products extends WP_Widget {
 	}
 
 	public function update( $new_instance, $old_instance ) {
-		$instance = array_merge( $this->defaults, $old_instance, $new_instance );
-		$instance['title'] = strip_tags( $new_instance['title'] );
+		$instance               = array_merge( $this->defaults, $old_instance, $new_instance );
+		$instance['title']      = strip_tags( $new_instance['title'] );
 		$instance['show_image'] = ! empty( $new_instance['show_image'] );
-		$instance['show_name'] = ! empty( $new_instance['show_name'] );
-		if ( ! $instance['show_name'] && ! $instance['show_image'] )
-			$instance['show_name'] = true;
+		$instance['show_name']  = ! empty( $new_instance['show_name'] );
 
-		if ( ! is_numeric( $new_instance['height'] ) )
+		if ( ! $instance['show_name'] && ! $instance['show_image'] ) {
+			$instance['show_name'] = true;
+		}
+
+		if ( ! is_numeric( $new_instance['height'] ) ) {
 			$new_instance['height'] = $old_instance['height'];
-		if ( ! is_numeric( $new_instance['width'] ) )
+		}
+
+		if ( ! is_numeric( $new_instance['width'] ) ) {
 			$new_instance['width'] = $old_instance['width'];
-		if ( ! is_numeric( $new_instance['post_count'] ) )
+		}
+
+		if ( ! is_numeric( $new_instance['post_count'] ) ) {
 			$new_instance['post_count'] = $old_instance['post_count'];
+		}
+
 		return $instance;
 	}
 }

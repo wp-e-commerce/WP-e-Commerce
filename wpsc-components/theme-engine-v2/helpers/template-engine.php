@@ -9,14 +9,15 @@ function wpsc_locate_asset( $file ) {
 function wpsc_locate_asset_uri( $file ) {
 	$path = wpsc_locate_asset( $file );
 
-	if ( strpos( $path, WP_CONTENT_DIR ) !== false )
+	if ( strpos( $path, WP_CONTENT_DIR ) !== false ) {
 		return content_url( substr( $path, strlen( WP_CONTENT_DIR ) ) );
-	elseif ( strpos( $path, WP_PLUGIN_DIR ) !== false )
+	} elseif ( strpos( $path, WP_PLUGIN_DIR ) !== false ) {
 		return plugins_url( substr( $path, strlen( WP_PLUGIN_DIR ) ) );
-	elseif ( strpos( $path, WPMU_PLUGIN_DIR ) !== false )
+	} elseif ( strpos( $path, WPMU_PLUGIN_DIR ) !== false ) {
 		return plugins_url( substr( $path, strlen( WP_PLUGIN_DIR ) ) );
-	elseif ( strpos( $path, ABSPATH ) !== false )
+	} elseif ( strpos( $path, ABSPATH ) !== false ) {
 		return get_site_url( null, substr( $path, strlen( ABSPATH ) ) );
+	}
 
 	return '';
 }
@@ -25,8 +26,9 @@ function _wpsc_locate_stuff( $paths, $files, $load = false, $require_once = true
 	$located = '';
 
 	foreach ( (array) $files as $file ) {
-		if ( ! $file )
+		if ( ! $file ) {
 			continue;
+		}
 
 		foreach ( $paths as $path ) {
 			if ( file_exists( $path . '/' . $file ) ) {
@@ -36,8 +38,9 @@ function _wpsc_locate_stuff( $paths, $files, $load = false, $require_once = true
 		}
 	}
 
-	if ( $load && '' != $located )
+	if ( $load && '' != $located ) {
 		load_template( $located, $require_once );
+	}
 
 	return $located;
 }
@@ -86,13 +89,16 @@ function wpsc_locate_view_wrappers( $files, $load = false, $require_once = true 
  * @param  string $name The name of the specialised template. Optional. Default null.
  */
 function wpsc_get_template_part( $slug = false, $name = null ) {
+
 	if ( ! $slug ) {
 		$controller = _wpsc_get_current_controller();
-		$slug = $controller->view;
+		$slug       = $controller->view;
 	}
+
 	do_action( "wpsc_get_template_part_{$slug}", $slug, $name );
 
 	$templates = array();
+
 	if ( isset( $name ) ) {
 		$templates[] =  "{$slug}-{$name}.php";
 	}
@@ -118,21 +124,24 @@ function wpsc_get_template_part( $slug = false, $name = null ) {
  */
 function _wpsc_action_after_setup_theme() {
 	$current_theme = get_stylesheet();
-	$parent_theme = get_template();
+	$parent_theme  = get_template();
 
 	$paths = array(
 		STYLESHEETPATH . '/wp-e-commerce',
 	);
 
-	if ( $current_theme != $parent_theme )
+	if ( $current_theme != $parent_theme ) {
 		$paths[] = TEMPLATEPATH . '/wp-e-commerce';
+	}
 
 	foreach ( $paths as $path ) {
 		$filename = $path . '/functions.php';
-		if ( file_exists( $filename ) )
+		if ( file_exists( $filename ) ) {
 			require_once( $filename );
+		}
 	}
 }
+
 add_action( 'after_setup_theme', '_wpsc_action_after_setup_theme' );
 
 /**
@@ -147,16 +156,22 @@ add_action( 'after_setup_theme', '_wpsc_action_after_setup_theme' );
  */
 function wpsc_is_pagination_enabled( $position = 'bottom' ) {
 	$pagination_enabled = wpsc_get_option( 'display_pagination' );
-	if ( ! $pagination_enabled )
+
+	if ( ! $pagination_enabled ) {
 		return false;
+	}
 
 	$pagination_position = wpsc_get_option( 'page_number_position' );
-	if ( $pagination_position == WPSC_PAGE_NUMBER_POSITION_BOTH )
+
+	if ( $pagination_position == WPSC_PAGE_NUMBER_POSITION_BOTH ) {
 		return true;
+	}
 
 	$id = WPSC_PAGE_NUMBER_POSITION_BOTTOM;
-	if ( $position == 'top' )
+
+	if ( $position == 'top' ) {
 		$id = WPSC_PAGE_NUMBER_POSITION_TOP;
+	}
 
 	return ( $pagination_position == $id );
 }
@@ -175,14 +190,17 @@ function wpsc_is_pagination_enabled( $position = 'bottom' ) {
  * @param  object $query
  */
 function wpsc_action_set_product_per_page_query_var( $query ) {
-	if ( is_single() )
+	if ( is_single() ) {
 		return;
+	}
 
-	if ( wpsc_is_pagination_enabled() && $query->is_main_query() && ( wpsc_is_store() || wpsc_is_product_category() || wpsc_is_product_tag() ) )
+	if ( wpsc_is_pagination_enabled() && $query->is_main_query() && ( wpsc_is_store() || wpsc_is_product_category() || wpsc_is_product_tag() ) ) {
 		$query->set( 'posts_per_archive_page', wpsc_get_option( 'products_per_page' ) );
-	else
+	} else {
 		$query->set( 'posts_per_archive_page', -1 );
+	}
 }
+
 add_action( 'pre_get_posts', 'wpsc_action_set_product_per_page_query_var', 10, 1 );
 
 /**
@@ -254,13 +272,17 @@ function wpsc_filter_product_permalink_canonical( $permalink, $post, $leavename,
  * @return array
  */
 function wpsc_filter_hierarchical_category_request( $q ) {
-	if ( empty( $q['wpsc-product'] ) )
+	if ( empty( $q['wpsc-product'] ) ) {
 		return $q;
+	}
 
 	// break down the 'wpsc-product' query var to get the current and parent node
 	$components = explode( '/', $q['wpsc-product'] );
-	if ( count( $components ) == 1 )
+
+	if ( count( $components ) == 1 ) {
 		return $q;
+	}
+
 	$end_node    = array_pop( $components );
 	$parent_node = array_pop( $components );
 
@@ -272,7 +294,7 @@ function wpsc_filter_hierarchical_category_request( $q ) {
 	) );
 
 	if ( ! empty( $posts ) ) {
-		$q['wpsc-product'] = $q['name'] = $end_node;
+		$q['wpsc-product']          = $q['name'] = $end_node;
 		$q['wpsc_product_category'] = $parent_node;
 	} else {
 		$q['wpsc_product_category'] = $end_node;
@@ -359,6 +381,7 @@ function _wpsc_filter_body_class( $classes ) {
 
 	return $classes;
 }
+
 add_filter( 'body_class', '_wpsc_filter_body_class' );
 
 function _wpsc_filter_title( $title ) {
@@ -420,11 +443,12 @@ function _wpsc_filter_generate_attachment_metadata( $metadata, $id ) {
 		$key = "wpsc_product_{$size}_thumbnail";
 
 		// if this size is not generated for this attachment, skip it
-		if ( ! array_key_exists( $key, $metadata['sizes'] ) )
+		if ( ! array_key_exists( $key, $metadata['sizes'] ) ) {
 			continue;
+		}
 
 		// save the generated size settings for this image
-		$meta[$size] = $_wp_additional_image_sizes[$key];
+		$meta[ $size ] = $_wp_additional_image_sizes[ $key ];
 	}
 
 	// store the copy in a meta so that later we can pull it out and compare

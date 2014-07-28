@@ -1,23 +1,29 @@
 <?php
 
 final class WPSC_Shipping_Calculator {
+
 	private static $instances = array();
+
 	public static function get_instance( $purchase_log = false ) {
+
 		if ( empty( $purchase_log ) ) {
 			$purchase_log = (int) wpsc_get_customer_meta( 'current_purchase_log_id' );
-			if ( ! $purchase_log )
+			if ( ! $purchase_log ) {
 				return;
+			}
 		}
 
-		if ( is_int( $purchase_log ) )
+		if ( is_int( $purchase_log ) ) {
 			$purchase_log = new WPSC_Purchase_Log( $purchase_log );
+		}
 
 		$id = $purchase_log->get( 'id' );
 
-		if ( ! array_key_exists( $id, self::$instances ) )
-			self::$instances[$id] = new WPSC_Shipping_Calculator( $purchase_log );
+		if ( ! array_key_exists( $id, self::$instances ) ) {
+			self::$instances[ $id ] = new WPSC_Shipping_Calculator( $purchase_log );
+		}
 
-		return self::$instances[$id];
+		return self::$instances[ $id ];
 	}
 
 	private $purchase_log;
@@ -63,13 +69,15 @@ final class WPSC_Shipping_Calculator {
 		// default to current session's purchase log if called with no argument
 		if ( empty( $purchase_log ) ) {
 			$purchase_log = (int) wpsc_get_customer_meta( 'current_purchase_log_id' );
-			if ( ! $purchase_log )
+			if ( ! $purchase_log ) {
 				return;
+			}
 		}
 
 		// in case of integer argument, initialize the purchase log object
-		if ( ! is_object( $purchase_log ) )
+		if ( ! is_object( $purchase_log ) ) {
 			$purchase_log = new WPSC_Purchase_Log( absint( $purchase_log ) );
+		}
 
 		$this->purchase_log = $purchase_log;
 	}
@@ -78,11 +86,12 @@ final class WPSC_Shipping_Calculator {
 		global $wpsc_shipping_modules;
 
 		$quote = false;
-		if (
-			   isset( $wpsc_shipping_modules[$module] )
-			&& is_callable( array( $wpsc_shipping_modules[$module], 'getQuote' ) )
-		)
-			$quote = $wpsc_shipping_modules[$module]->getQuote();
+
+		if ( isset( $wpsc_shipping_modules[ $module ] ) &&
+			 is_callable( array( $wpsc_shipping_modules[ $module ], 'getQuote' ) )
+		) {
+			$quote = $wpsc_shipping_modules[ $module ]->getQuote();
+		}
 
 		return $quote;
 	}
@@ -97,12 +106,15 @@ final class WPSC_Shipping_Calculator {
 			if ( ! empty( $module_quotes ) )
 				foreach ( (array) $module_quotes as $option => $cost ) {
 					$per_item = $wpsc_cart->calculate_per_item_shipping( $module );
-					if ( ! isset( $this->quotes[$module] ) )
-						$this->quotes[$module] = array();
 
-					$this->quotes[$module][$option] =
+					if ( ! isset( $this->quotes[ $module ] ) ) {
+						$this->quotes[ $module ] = array();
+					}
+
+					$this->quotes[ $module ][ $option ] =
 						(float) $cost + (float) $per_item;
-					$this->ids[$module][$option] =
+
+					$this->ids[ $module ][ $option ]    =
 						$this->encode_shipping_option_id( $module, $option );
 				}
 		}
@@ -122,55 +134,57 @@ final class WPSC_Shipping_Calculator {
 		$val_1 = reset( $method_1 );
 		$val_2 = reset( $method_2 );
 
-		if ( $val_1 == $val_2 )
+		if ( $val_1 == $val_2 ) {
 			return 0;
+		}
 
 		return $val_1 < $val_2 ? -1 : 1;
 	}
 
 	public function set_active_method( $module, $option ) {
-		if ( is_null( $this->quotes ) )
+		if ( is_null( $this->quotes ) ) {
 			$this->get_all_quotes();
+		}
 
-		if (
-			   ! array_key_exists( $module, $this->quotes )
-			|| ! array_key_exists( $option, $this->quotes[$module] )
-		)
+		if ( ! array_key_exists( $module, $this->quotes ) ||
+			 ! array_key_exists( $option, $this->quotes[ $module ] )
+		) {
 			return;
+		}
 
 		$this->purchase_log->set( 'shipping_method', $module );
 		$this->purchase_log->set( 'shipping_option', $option );
-		$this->purchase_log->set( 'base_shipping', $this->quotes[$module][$option] );
+		$this->purchase_log->set( 'base_shipping'  , $this->quotes[ $module ][ $option ] );
+
 		$this->purchase_log->save();
 
 		$this->active_shipping_module = $module;
 		$this->active_shipping_option = $option;
-		$this->active_shipping_id = $this->ids[$module][$option];
+		$this->active_shipping_id     = $this->ids[ $module ][ $option ];
 	}
 
 	private function get_active_shipping() {
-		if ( is_null( $this->ids ) )
-			$this->get_all_quotes();
 
-		$current_purchase_log_id =
-			wpsc_get_customer_meta( 'current_purchase_log_id' );
+		if ( is_null( $this->ids ) ) {
+			$this->get_all_quotes();
+		}
+
+		$current_purchase_log_id = wpsc_get_customer_meta( 'current_purchase_log_id' );
 
 		$purchase_log = new WPSC_Purchase_Log( $current_purchase_log_id );
-		$module = $purchase_log->get( 'shipping_method' );
-		$option = $purchase_log->get( 'shipping_option' );
+		$module       = $purchase_log->get( 'shipping_method' );
+		$option       = $purchase_log->get( 'shipping_option' );
 
 		if ( empty( $module ) || empty( $option ) ) {
-			$this->active_shipping_id = '';
+			$this->active_shipping_id     = '';
 			$this->active_shipping_option = '';
 			$this->active_shipping_module = '';
 			return;
 		}
 
-		$this->active_shipping_id = $this->ids[$module][$option];
-		$this->active_shipping_option =
-			$option;
-		$this->active_shipping_module =
-			$module;
+		$this->active_shipping_id     = $this->ids[ $module ][ $option ];
+		$this->active_shipping_option = $option;
+		$this->active_shipping_module = $module;
 	}
 
 	private function encode_shipping_option_id( $module, $option ) {

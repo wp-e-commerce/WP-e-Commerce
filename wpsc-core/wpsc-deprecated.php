@@ -1792,7 +1792,6 @@ function wpsc_meta_table_name( $meta_object_type ) {
  * @deprecated since 3.8.14
  */
 function wpsc_google_checkout(){
-	_wpsc_deprecated_function( __FUNCTION__, '3.8.14', 'wpsc_google_checkout' );
 	$currpage = wpsc_selfURL();
 	if (array_search("google",(array)get_option('custom_gateway_options')) !== false && $currpage != get_option('shopping_cart_url')) {
 		global $nzshpcrt_gateways;
@@ -2080,7 +2079,7 @@ function wpsc_deprecated_filter_user_log_get() {
 		_wpsc_doing_it_wrong( 'wpsc_user_log_get', __( 'The filter being used has been deprecated. Use wpsc_get_visitor_meta or wpsc_get_visitor_meta_$neta_name instead.' ), '3.8.14' );
 	}
 }
-add_filter( 'wpsc_start_display_user_log_form_fields', 'wpsc_deprecated_filter_user_log_get', 10, 0 );
+add_action( 'wpsc_start_display_user_log_form_fields', 'wpsc_deprecated_filter_user_log_get', 10, 0 );
 
 
 /**

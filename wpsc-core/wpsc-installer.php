@@ -318,7 +318,9 @@ You ordered these items:
 		wpsc_update_categorymeta( $category_id, 'active', '1' );
 		wpsc_update_categorymeta( $category_id, 'order', '0' );
 	}
+
 	flush_rewrite_rules( false );
+	wpsc_theme_engine_v2_activate();
 }
 
 function wpsc_product_files_htaccess() {
@@ -816,5 +818,5 @@ function wpsc_theme_engine_v2_activate() {
 	flush_rewrite_rules( true );
 	update_option( 'transact_url', wpsc_get_checkout_url( 'results' ) );
 	WPSC_Settings::get_instance();
-	do_action( 'wpsc_te2_activate' );
+	do_action( 'wpsc_theme_engine_v2_activate' );
 }

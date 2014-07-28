@@ -127,14 +127,14 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 		// depending on whether this is a store page, category or tag page,
 		// prepare the base URL
 		if ( wpsc_is_product_category() ) {
-			$base = $wp_rewrite->get_extra_permastruct( 'wpsc_cat_drill_down_category' );
-			$obj = get_queried_object();
-			$this->url_base = str_replace( '%wpsc_product_category%', $obj->slug, $base );
+			$base                 = $wp_rewrite->get_extra_permastruct( 'wpsc_cat_drill_down_category' );
+			$obj                  = get_queried_object();
+			$this->url_base       = str_replace( '%wpsc_product_category%', $obj->slug, $base );
 			$this->queried_object = $obj;
 		} elseif ( wpsc_is_product_tag() ) {
-			$base = $wp_rewrite->get_extra_permastruct( 'wpsc_cat_drill_down_tag' );
-			$obj = get_queried_object();
-			$this->url_base = str_replace( '%wpsc_product_tag%', $obj->slug, $base );
+			$base                 = $wp_rewrite->get_extra_permastruct( 'wpsc_cat_drill_down_tag' );
+			$obj                  = get_queried_object();
+			$this->url_base       = str_replace( '%wpsc_product_tag%', $obj->slug, $base );
 			$this->queried_object = $obj;
 		} else {
 			$this->url_base = $wp_rewrite->get_extra_permastruct( 'wpsc_cat_drill_down_store' );
@@ -151,47 +151,60 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 	 */
 	private function parse_url( $str ) {
 		$instance_keys = array_keys( $this->get_settings() );
+
 		// '-' delimits the widgets
-		if ( $str == '' )
+		if ( $str == '' ) {
 			$args = array();
-		else
+		} else {
 			$args = explode( '-', $str );
+		}
 
 		$return = array();
+
 		foreach ( $args as $arg ) {
 			$key = array_shift( $instance_keys );
 			// 0 means the widget is not being drilled down yet
-			if ( $arg == '0' )
-				$return[$key] = array();
-			else
+			if ( $arg == '0' ) {
+				$return[ $key ] = array();
+			} else {
 				// ',' delimits the category IDs
-				$return[$key] = array_map( 'absint', explode( ',', $arg ) );
+				$return[ $key ] = array_map( 'absint', explode( ',', $arg ) );
+			}
 		}
 
 		return $return;
 	}
 
 	private function generate_uri_part( $id, $term = false, $args = false ) {
-		if ( $args === false )
-			$args = $this->url_args;
 
-		$keys = array_keys( $this->get_settings() );
-		foreach ( $keys as $key ) {
-			if ( ! isset( $args[$key] ) )
-				$args[$key] = array();
+		if ( $args === false ) {
+			$args = $this->url_args;
 		}
 
-		if ( $term !== false )
-			$args[$id][] = $term->term_id;
+		$keys = array_keys( $this->get_settings() );
 
-		$args[$id] = array_unique( $args[$id] );
+		foreach ( $keys as $key ) {
+			if ( ! isset( $args[ $key ] ) ) {
+				$args[ $key ] = array();
+			}
+		}
+
+		if ( $term !== false ) {
+			$args[ $id ][] = $term->term_id;
+		}
+
+		$args[ $id ] = array_unique( $args[ $id ] );
 
 		$ret = array();
+
 		foreach ( $args as $arg ) {
-			if ( empty( $arg ) )
+
+			if ( empty( $arg ) ) {
 				$ret[] = '0';
-			else
+			} else {
 				$ret[] = implode( ',', $arg );
+			}
+
 		}
 
 		return implode( '-', $ret );
@@ -204,7 +217,7 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 		}
 
 		$this->defaults = array(
-			'title' => __( 'Category Drill Down', 'wpsc' ),
+			'title'      => __( 'Category Drill Down', 'wpsc' ),
 			'categories' => array(),
 		);
 
@@ -212,37 +225,43 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 			'wpsc_widget_drill_down',
 			__( '(WPEC) Category Drill Down', 'wpsc' ),
 			array(
-				'description' => __( 'WP e-Commerce Category Drill Down Widget', 'wpsc' ),
+				'description' => __( 'WP eCommerce Category Drill Down Widget', 'wpsc' ),
 			)
 		);
 	}
 
 	public function _action_pre_get_posts( $query ) {
-		if ( ! $query->is_main_query() )
+
+		if ( ! $query->is_main_query() ) {
 			return;
+		}
 
 		$terms = array();
+
 		foreach ( $this->url_args as $widget ) {
 			$terms += $widget;
 		}
 
 		$terms = array_unique( $terms );
 
-		if ( empty( $terms ) )
+		if ( empty( $terms ) ) {
 			return;
+		}
 
 		$tax_query = $query->get( 'tax_query' );
-		if ( empty( $tax_query ) )
+
+		if ( empty( $tax_query ) ) {
 			$tax_query = array();
+		}
 
 		foreach ( $terms as $term ) {
 			// create a separate tax query for each term because we need to include
 			// children for each term as well
 			$tax_query[] = array(
-				'taxonomy' => 'wpsc_product_category',
-				'field'    => 'id',
-				'terms'    => $term,
-				'operator' => 'IN',
+				'taxonomy'         => 'wpsc_product_category',
+				'field'            => 'id',
+				'terms'            => $term,
+				'operator'         => 'IN',
 				'include_children' => true,
 			);
 		}
@@ -261,14 +280,13 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 			$args['child_of'] = get_queried_object()->term_id;
 		}
 
-		$ids =   isset( $this->url_args[$widget_id] )
-	       ? $this->url_args[$widget_id]
-	       : array();
+		$ids = isset( $this->url_args[ $widget_id ] ) ? $this->url_args[ $widget_id ] : array();
 
-		if ( ! empty( $this->url_args[$widget_id] ) )
-			$args['parent'] = $this->url_args[$widget_id][count( $this->url_args[$widget_id] ) - 1];
-		else
+		if ( ! empty( $this->url_args[$widget_id] ) ) {
+			$args['parent'] = $this->url_args[ $widget_id ][ count( $this->url_args[ $widget_id ] ) - 1 ];
+		} else {
 			$args['include'] = $defaults;
+		}
 
 		return get_terms( 'wpsc_product_category', $args );
 	}
@@ -277,10 +295,12 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 		extract( $args );
 
 		$title = apply_filters( 'widget_title', $instance['title'] );
+
 		echo $before_widget;
 
-		if ( ! empty( $title ) )
+		if ( ! empty( $title ) ) {
 			echo $before_title . $title . $after_title;
+		}
 
 		echo '<ul>';
 		$this->output_terms( $this->number, array_map( 'absint', $instance['categories'] ) );
@@ -291,28 +311,33 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 
 	private function output_terms( $widget_id, $defaults ) {
 		$ancestors = array();
-		if ( ! empty( $this->url_args[$widget_id] ) ) {
+
+		if ( ! empty( $this->url_args[ $widget_id ] ) ) {
 			echo '<li class="ancestor">';
 			echo '<a href="' . esc_attr( $this->go_up_link( $widget_id, 0 ) ) . '">' . sprintf( _x( '&lsaquo; %s', 'navigate up', 'wpsc' ), _x( 'Clear', 'category drill down', 'wpsc' ) ) . '</a>';
 			echo '<ul class="children children-level-0">';
 
 			$ancestors = get_terms( 'wpsc_product_category', array(
 				'hide_empty' => false,
-				'include' => $this->url_args[$widget_id],
+				'include'    => $this->url_args[ $widget_id ],
 			) );
 		}
 
 		$level = 1;
-		for ( $i = 0; $i < count( $ancestors ); $i ++ ) {
-			$ancestor = $ancestors[$i];
+
+		for ( $i = 0; $i < count( $ancestors ); $i++ ) {
+			$ancestor = $ancestors[ $i ];
 			$li_class = 'ancestor';
+
 			if ( $i == count( $ancestors ) - 1 ) {
 				$li_class .= ' active';
-				$link = '<span>' . esc_html( $ancestor->name ) . '</span>';
+				$link      = '<span>' . esc_html( $ancestor->name ) . '</span>';
 			} else {
 				$link = '<a href="' . esc_attr( $this->go_up_link( $widget_id, $level ) ) . '">' . sprintf( _x( '&lsaquo; %s', 'navigate up', 'wpsc' ), esc_html( $ancestor->name ) ) . '</a>';
 			}
+
 			$level ++;
+
 			echo '<li class="' . $li_class . '">';
 			echo $link;
 			echo '<ul class="children children-level-' . $level . '">';
@@ -333,10 +358,11 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 	}
 
 	private function go_up_link( $widget_id, $level ) {
-		$args = $this->url_args;
-		$args[$widget_id] = array_slice( $args[$widget_id], 0, $level );
+		$args               = $this->url_args;
+		$args[ $widget_id ] = array_slice( $args[ $widget_id ], 0, $level );
 
 		$empty = true;
+
 		foreach ( $args as $widget ) {
 			if ( ! empty( $widget ) ) {
 				$empty = false;
@@ -345,49 +371,52 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 		}
 
 		if ( $empty ) {
-			if ( empty( $this->url_base ) )
+			if ( empty( $this->url_base ) ) {
 				return remove_query_arg( 'wpsc_cat_drill_down' );
-			else
+			} else {
 				return str_replace(
 					array( '/product-filter/%wpsc_cat_drill_down_store%', '/product-filter/%wpsc_cat_drill_down_tax%' ),
 					'',
 					$this->url_base
 				);
+			}
 		}
 
 		$uri = $this->generate_uri_part( $widget_id, false, $args );
-		if ( empty( $this->url_base ) )
+
+		if ( empty( $this->url_base ) ) {
 			return add_query_arg( 'wpsc_cat_drill_down', $uri );
-		else
+		} else {
 			return str_replace(
 				array( '%wpsc_cat_drill_down_store%', '%wpsc_cat_drill_down_tax%' ),
 				$uri,
 				$this->url_base
 			);
+		}
 	}
 
 	private function term_url( $widget_id, $term ) {
 
 		$uri = $this->generate_uri_part( $widget_id, $term );
 
-		if ( empty( $this->url_base ) )
+		if ( empty( $this->url_base ) ) {
 			return add_query_arg( 'wpsc_cat_drill_down', $uri );
-		else
+		} else {
 			return str_replace(
 				array( '%wpsc_cat_drill_down_store%', '%wpsc_cat_drill_down_tax%' ),
 				$uri,
 				$this->url_base
 			);
+		}
 	}
 
 	public function form( $instance ) {
 		$instance = wp_parse_args( $instance, $this->defaults );
-
-		$terms = get_terms( 'wpsc_product_category', array( 'hide_empty' => false ) );
-		$options = array();
+		$terms    = get_terms( 'wpsc_product_category', array( 'hide_empty' => false ) );
+		$options  = array();
 
 		foreach ( $terms as $term ) {
-			$options[$term->term_id] = $term->name;
+			$options[ $term->term_id ] = $term->name;
 		}
 ?>
 <p>

@@ -329,7 +329,7 @@ class wpsc_checkout {
 			case "select":
 				$options = $this->get_checkout_options( $this->checkout_item->id );
 				if ( $options != '' ) {
-					$output = '<select class="wpsc-visitor-meta" data-wpsc-meta-key="' . $meta_key . '" name="collected_data[{$this->checkout_item->id}]"' . $an_array . '">';
+					$output = '<select class="wpsc-visitor-meta" data-wpsc-meta-key="' . $meta_key . '" name="collected_data[' . $this->checkout_item->id . ']"' . $an_array . '">';
 					$output .= "<option value='-1'>" . _x( 'Select an Option', 'Dropdown default when called within checkout class' , 'wpsc' ) . "</option>";
 					foreach ( (array)$options as $label => $value ) {
 						$value = esc_attr(str_replace( ' ', '', $value ) );
@@ -598,18 +598,18 @@ class wpsc_checkout {
 
 			foreach ( $checkout_item_values as $checkout_item_value ) {
 				$prepared_query = $wpdb->insert(
-													WPSC_TABLE_SUBMITTED_FORM_DATA,
-													array(
-															'log_id'  => $purchase_id,
-															'form_id' => $form_data->id,
-															'value'   => $checkout_item_value,
-													),
-													array(
-															'%d',
-															'%d',
-															'%s',
-													)
-											);
+						WPSC_TABLE_SUBMITTED_FORM_DATA,
+						array(
+								'log_id'  => $purchase_id,
+								'form_id' => $form_data->id,
+								'value'   => $checkout_item_value,
+						),
+						array(
+								'%d',
+								'%d',
+								'%s',
+						)
+				);
 			}
 		}
 	}

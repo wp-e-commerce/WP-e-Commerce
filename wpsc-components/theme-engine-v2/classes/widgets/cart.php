@@ -20,17 +20,22 @@ class WPSC_Widget_Cart extends WP_Widget {
 	public function widget( $args, $instance ) {
 		global $wpsc_cart;
 
-		if ( wpsc_is_cart() )
+		if ( wpsc_is_cart() ) {
 			return;
+		}
 
 		$instance = wp_parse_args( $instance, $this->defaults );
+
 		extract( $args );
 
 		$title = apply_filters( 'widget_title', $instance['title'] );
 
 		echo $before_widget;
-		if ( ! empty( $title ) )
+
+		if ( ! empty( $title ) ) {
 			echo $before_title . $title . $after_title;
+		}
+
 		echo '<div class="wpsc-cart-widget-table">';
 		if ( ! count( $wpsc_cart->cart_items ) ) {
 			echo '<p>' . __( 'No item in cart.', 'wpsc' ) . '</p>';
@@ -61,7 +66,7 @@ class WPSC_Widget_Cart extends WP_Widget {
 	}
 
 	public function update( $new_instance, $old_instance ) {
-		$instance = wp_parse_args( $new_instance, $old_instance );
+		$instance          = wp_parse_args( $new_instance, $old_instance );
 		$instance['title'] = strip_tags( $new_instance['title'] );
 		return $instance;
 	}

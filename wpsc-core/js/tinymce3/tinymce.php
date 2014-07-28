@@ -32,11 +32,7 @@ function register_wpsc_button($buttons) {
 // Load the TinyMCE plugin : editor_plugin.js (wp2.5)
 function add_wpsc_tinymce_plugin($plugin_array) {
 
-	$plugin_array['WPSC'] =                        WPSC_CORE_JS_URL . '/tinymce3/editor_plugin.js';
-	$plugin_array['productspage_image'] =          WPSC_CORE_JS_URL . '/tinymce3/editor_plugin.js';
-	$plugin_array['transactionresultpage_image'] = WPSC_CORE_JS_URL . '/tinymce3/editor_plugin.js';
-	$plugin_array['checkoutpage_image'] =          WPSC_CORE_JS_URL . '/tinymce3/editor_plugin.js';
-	$plugin_array['userlogpage_image'] =           WPSC_CORE_JS_URL . '/tinymce3/editor_plugin.js';
+	$plugin_array['WPSC'] = WPSC_CORE_JS_URL . '/tinymce3/editor_plugin.js';
 	return $plugin_array;
 }
 

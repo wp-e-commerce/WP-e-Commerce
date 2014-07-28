@@ -38,13 +38,14 @@ final class WPSC_Checkout_Wizard {
 			}
 		}
 
-		if ( ! isset( $this->$name ) )
+		if ( ! isset( $this->$name ) ) {
 			return null;
+		}
 
 		return $this->$name;
 	}
 
-	private function get_active_step() {
+	public function get_active_step() {
 		$this->active_step = _wpsc_get_current_controller_slug();
 
 		if ( empty( $this->active_step ) || 'index' == $this->active_step ) {

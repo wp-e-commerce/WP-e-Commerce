@@ -102,7 +102,7 @@ function wpsc_add_to_cart() {
 	$default_parameters['meta'] = null;
 
 	$post_type_object = get_post_type_object( 'wpsc-product' );
-	$permitted_post_statuses = current_user_can( $post_type_object->cap->edit_posts ) ? array( 'private', 'draft', 'pending', 'publish' ) : array( 'publish' );
+	$permitted_post_statuses = current_user_can( $post_type_object->cap->edit_posts ) ? apply_filters( 'wpsc_product_display_status', array( 'publish' ) ) : array( 'publish' );
 
 	/// sanitise submitted values
 	$product_id = apply_filters( 'wpsc_add_to_cart_product_id'    , (int) $_POST['product_id'] );
@@ -488,6 +488,36 @@ function wpsc_update_product_price() {
 function wpsc_update_location() {
 	global $wpsc_cart;
 
+	/*
+	 * Checkout page shipping calculator MAY provide a zip code using the identifier from prior
+	 * releases.  Let's check for that.
+	 */
+	if ( isset( $_POST['zipcode'] ) ) {
+		wpsc_update_customer_meta( 'shippingpostcode', $_POST['zipcode'] );
+	}
+
+	/*
+	 * Checkout page shipping calculator MAY provide a country code using the identifier from prior
+	 * releases.  Let's check for that.
+	 */
+	if ( isset( $_POST['country'] ) ) {
+		$wpsc_country = new WPSC_Country( $_POST['country'] );
+		wpsc_update_customer_meta( 'shippingcountry', $wpsc_country->get_isocode() );
+	}
+
+	/*
+	 * WPeC's totally awesome checkout page shipping calculator has a submit button that will send
+	 * some of the shipping data to us in an AJAX request.  The format of the data as of version
+	 * 3.8.14.1 uses the 'collected_data' array format just like in checkout. We should process
+	 * this array in case it has some updates to the user meta (checkout information) that haven't been
+	 * recorded at the time the calculate button was clicked.  If the country or zip code is set using the
+	 * legacy 'country' or 'zip' code $_POST values they will be overwritten if they are also included
+	 * in the collected_data $_POST value.
+	 */
+	if ( isset( $_POST['collected_data'] ) && is_array( $_POST['collected_data'] ) ) {
+		_wpsc_checkout_customer_meta_update( $_POST['collected_data'] );
+	}
+
 	$wpsc_cart->update_location();
 	$wpsc_cart->get_shipping_method();
 	$wpsc_cart->get_shipping_option();
@@ -571,7 +601,7 @@ function wpsc_submit_checkout( $collected_data = true ) {
 		_wpsc_checkout_customer_meta_update( $_POST['collected_data'] );
 	}
 
-	// initialize our checkout status variab;e, we start be assuming
+	// initialize our checkout status variable, we start be assuming
 	// checkout is falid, until we find a reason otherwise
 	$is_valid           = true;
 	$num_items          = 0;
@@ -697,6 +727,7 @@ function wpsc_submit_checkout( $collected_data = true ) {
 			$tax = 0.00;
 			$tax_percentage = 0.00;
 		}
+
 		$total = $wpsc_cart->calculate_total_price();
 
 		$args = array(

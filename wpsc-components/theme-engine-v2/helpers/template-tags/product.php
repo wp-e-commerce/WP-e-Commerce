@@ -54,8 +54,9 @@ function wpsc_product_class( $class = '', $post_id = null ) {
 }
 
 function wpsc_get_product_class( $class, $post_id = null ) {
-	if ( ! $post_id )
+	if ( ! $post_id ) {
 		$post_id = wpsc_get_product_id();
+	}
 
 	return get_post_class( $class, $post_id );
 }
@@ -72,8 +73,9 @@ function wpsc_get_product_class( $class, $post_id = null ) {
  * @return string
  */
 function wpsc_get_product_permalink( $id = 0, $leavename = false ) {
-	if ( ! $id )
+	if ( ! $id ) {
 		$id = wpsc_get_product_id();
+	}
 
 	return apply_filters( 'wpsc_get_product_permalink', get_permalink( $id ) );
 }
@@ -109,20 +111,24 @@ function wpsc_product_permalink( $id = 0 ) {
 function wpsc_product_title_attribute( $args = '' ) {
 	$title = wpsc_get_product_title();
 
-	if ( strlen($title) == 0 )
+	if ( strlen( $title ) == 0 ) {
 		return;
+	}
 
-	$defaults = array('before' => '', 'after' =>  '', 'echo' => true);
-	$r = wp_parse_args($args, $defaults);
+	$defaults = array( 'before' => '', 'after' =>  '', 'echo' => true );
+	$r        = wp_parse_args( $args, $defaults);
+
 	extract( $r, EXTR_SKIP );
 
 	$title = $before . $title . $after;
-	$title = esc_attr(strip_tags($title));
+	$title = esc_attr( strip_tags( $title ) );
 
-	if ( $echo )
+	if ( $echo ) {
 		echo $title;
-	else
+	} else {
 		return $title;
+	}
+
 }
 
 /**
@@ -154,15 +160,18 @@ function wpsc_get_product_title( $id = 0 ) {
 function wpsc_product_title( $before = '', $after = '', $id = 0, $echo = true ) {
 	$title = wpsc_get_product_title( $id );
 
-	if ( strlen( $title ) == 0 )
+	if ( strlen( $title ) == 0 ) {
 		return;
+	}
 
 	$title = $before . $title . $after;
 
-	if ( $echo )
+	if ( $echo ) {
 		echo $title;
-	else
+	} else {
 		return $title;
+	}
+
 }
 
 /**
@@ -192,6 +201,7 @@ function wpsc_get_product_category_list( $args = '' ) {
 	);
 
 	$r = wp_parse_args( $args, $defaults );
+
 	extract( $r );
 
 	return get_the_term_list( $id, 'wpsc_product_category', $before, $separator, $after );
@@ -228,7 +238,9 @@ function wpsc_get_product_tag_list( $args = '' ) {
 	);
 
 	$r = wp_parse_args( $args, $defaults );
+
 	extract( $r );
+
 	return get_the_term_list( $id, 'product_tag', $before, $separator, $after );
 }
 
@@ -244,8 +256,9 @@ function wpsc_get_product_tag_list( $args = '' ) {
 function wpsc_get_product_category_count( $id = 0 ) {
 	$cats = get_the_terms( $id, 'wpsc_product_category' );
 
-	if ( $cats === false )
+	if ( $cats === false ) {
 		return 0;
+	}
 
 	return count( $cats );
 }
@@ -262,8 +275,9 @@ function wpsc_get_product_category_count( $id = 0 ) {
 function wpsc_get_product_tag_count( $id = 0 ) {
 	$tags = get_the_terms( $id, 'product_tag' );
 
-	if ( $tags === false )
+	if ( $tags === false ) {
 		return 0;
+	}
 
 	return count( $tags );
 }
@@ -308,8 +322,9 @@ function wpsc_edit_product_link( $args = '' ) {
 function wpsc_get_product_thumbnail_id( $product_id = null ) {
 	$parent = get_post_field( 'post_parent', $product_id );
 
-	if ( $parent )
+	if ( $parent ) {
 		return wpsc_get_product_thumbnail_id( $parent );
+	}
 
 	$thumbnail_id = null;
 
@@ -326,9 +341,13 @@ function wpsc_get_product_thumbnail_id( $product_id = null ) {
 			'post_parent' => $product_id,
 			'order'       => 'ASC'
 		) );
-		if ( ! empty( $attached_images ) )
+
+		if ( ! empty( $attached_images ) ) {
 			$thumbnail_id = $attached_images[0]->ID;
+		}
+
 	}
+
 	return $thumbnail_id;
 }
 
@@ -366,20 +385,23 @@ function wpsc_get_product_thumbnail( $id = null, $size = false, $attr = '' ) {
 	global $_wp_additional_image_sizes;
 
 	$parent = get_post_field( 'post_parent', $id );
-	if ( $parent )
+
+	if ( $parent ) {
 		return wpsc_get_product_thumbnail( $parent, $size, $attr );
+	}
 
 	if ( ! $size || ! in_array( $size, array( 'archive', 'taxonomy', 'single', 'cart', 'widget' ) ) ) {
-		if ( is_tax( 'wpsc_product_category' ) || is_tax( 'product_tag' ) )
+		if ( is_tax( 'wpsc_product_category' ) || is_tax( 'product_tag' ) ) {
 			$size = 'taxonomy';
-		elseif ( wpsc_is_cart() || wpsc_is_checkout() || wpsc_is_customer_account() )
+		} elseif ( wpsc_is_cart() || wpsc_is_checkout() || wpsc_is_customer_account() ) {
 			$size = 'cart';
-		elseif ( is_singular( 'wpsc-product' ) )
+		} elseif ( is_singular( 'wpsc-product' ) ) {
 			$size = 'single';
-		elseif ( is_post_type_archive( 'wpsc-product' ) )
+		} elseif ( is_post_type_archive( 'wpsc-product' ) ) {
 			$size = 'archive';
-		else
+		} else {
 			$size = 'full';
+		}
 	}
 
 	$wpec_sizes = array(
@@ -401,12 +423,13 @@ function wpsc_get_product_thumbnail( $id = null, $size = false, $attr = '' ) {
 			// This metadata is generated in {@link _wpsc_filter_generate_attachment_metadata()}
 			$current_size_metadata = get_post_meta( $thumb_id, '_wpsc_generated_sizes', true );
 
-			if ( empty( $current_size_metadata ) )
+			if ( empty( $current_size_metadata ) ) {
 				$current_size_metadata = array();
+			}
 
 			// If this thumbnail for the current size was not generated yet, or generated with different
 			// parameters (crop, for example), we need to regenerate the thumbnail
-			if ( ! array_key_exists( $size, $current_size_metadata ) || $current_size_metadata[$size] != $size_metadata ) {
+			if ( ! array_key_exists( $size, $current_size_metadata ) || $current_size_metadata[ $size ] != $size_metadata ) {
 				_wpsc_regenerate_thumbnail_size( $thumb_id, $wp_size );
 			}
 		}
@@ -445,29 +468,33 @@ function wpsc_product_no_thumbnail_image( $size = false, $attr = '' ) {
 
 	// automatically detect the correct $size if it's not specified
 	if ( ! $size ) {
-		if ( is_singular( 'wpsc-product' ) )
+		if ( is_singular( 'wpsc-product' ) ) {
 			$size = 'single';
-		elseif ( is_tax( 'wpsc_product_category' ) || is_tax( 'product_tag' ) )
+		} elseif ( is_tax( 'wpsc_product_category' ) || is_tax( 'product_tag' ) ) {
 			$size = 'taxonomy';
-		elseif ( wpsc_is_cart() || wpsc_is_customer_account() || wpsc_is_checkout() )
+		} elseif ( wpsc_is_cart() || wpsc_is_customer_account() || wpsc_is_checkout() ) {
 			$size = 'cart';
-		else
+		} else {
 			$size = 'archive';
+		}
 	}
 
 	if ( is_string( $size ) ) {
 		$wp_size = $size;
-		if ( in_array( $size, array( 'single', 'taxonomy', 'cart', 'archive' ) ) )
-			$wp_size = 'wpsc_product_' . $size . '_thumbnail';
 
-		if ( array_key_exists( $wp_size, $_wp_additional_image_sizes ) )
-			$dimensions = $_wp_additional_image_sizes[$wp_size];
-		else
+		if ( in_array( $size, array( 'single', 'taxonomy', 'cart', 'archive' ) ) ) {
+			$wp_size = 'wpsc_product_' . $size . '_thumbnail';
+		}
+
+		if ( array_key_exists( $wp_size, $_wp_additional_image_sizes ) ) {
+			$dimensions = $_wp_additional_image_sizes[ $wp_size ];
+		} else {
 			$dimensions = array( 'width' => '', 'height' => '' );
+		}
 
 	} elseif ( is_array( $size ) && count( $size ) == 2 ) {
 		$dimensions = array(
-			'width' => $size[0],
+			'width'  => $size[0],
 			'height' => $size[1],
 		);
 	} else {
@@ -503,18 +530,6 @@ function wpsc_product_description( $more_link_text = null, $mode = 'with-teaser'
 }
 
 /**
- * Remove the "more" link by hooking into 'the_content_more_link' and return an empty string.
- *
- * @since 0.1
- *
- * @param  string $link
- * @return string An empty string
- */
-function wpsc_filter_remove_the_content_more_link( $link ) {
-	return '';
-}
-
-/**
  * Return the description of the current product in the loop.
  *
  * If your product description has a <!--more--> tag, then only the teaser will be displayed on
@@ -541,20 +556,23 @@ function wpsc_filter_remove_the_content_more_link( $link ) {
 function wpsc_get_product_description( $more_link_text = null, $mode = 'with-teaser' ) {
 	$stripteaser = $mode == 'no-teaser';
 
-	if ( $mode == 'only-teaser' )
-		add_filter( 'the_content_more_link', 'wpsc_filter_remove_the_content_more_link', 99 );
+	if ( $mode == 'only-teaser' ) {
+		add_filter( 'the_content_more_link', '__return_empty_string', 99 );
+	}
 
-	if ( ! $more_link_text )
+	if ( ! $more_link_text ) {
 		$more_link_text = __( 'More details &raquo;', 'wpsc' );
+	}
 
 	$content = get_the_content( $more_link_text, $stripteaser );
 
 	if ( $mode == 'only-teaser' ) {
-		remove_filter( 'the_content_more_link', 'wpsc_filter_remove_the_content_more_link', 99 );
+		remove_filter( 'the_content_more_link', '__return_empty_string', 99 );
 		$sub = '<span id="more-' . get_the_ID() . '"></span>';
 		$pos = strpos( $content, $sub );
-		if ( $pos !== false )
+		if ( $pos !== false ) {
 			$content = substr( $content, 0, $pos );
+		}
 	}
 
 	return apply_filters( 'wpsc_get_product_description', $content, $mode );
@@ -599,7 +617,8 @@ function wpsc_get_product_variation_dropdown( $args = '' ) {
 	$product = WPSC_Product::get_instance( $id );
 
 	$variation_sets = $product->variation_sets;
-	$output = $before;
+	$output         = $before;
+
 	foreach ( $variation_sets as $variation_set_id => $title ) {
 		$output .= $before_variation . $before_label;
 		$output .= '<label for="wpsc-product-' . $id . '-variation-' . esc_attr( $variation_set_id ) . '">';
@@ -628,15 +647,16 @@ function wpsc_product_variation_dropdown( $args = '' ) {
  * @return string
  */
 function wpsc_get_product_variation_set_dropdown( $variation_set_id, $product_id = null ) {
-	if ( empty( $product_id ) )
+	if ( empty( $product_id ) ) {
 		$product_id = wpsc_get_product_id();
+	}
 
 	$product = WPSC_Product::get_instance( $product_id );
 
 	$classes = apply_filters( 'wpsc_get_product_variation_set_dropdown_classes', array( 'wpsc-product-variation-dropdown' ), $variation_set_id, $product_id );
 	$classes = implode( ' ', $classes );
 	$output = "<select name='wpsc_product_variations[{$variation_set_id}]' id='wpsc-product-{$product_id}-{$variation_set_id}' class='{$classes}'>";
-	foreach ( $product->variation_terms[$variation_set_id] as $variation_term_id => $variation_term_title ) {
+	foreach ( $product->variation_terms[ $variation_set_id ] as $variation_term_id => $variation_term_title ) {
 		$label = esc_attr( $variation_term_title );
 		$output .= "<option value='{$variation_term_id}'>{$label}</option>";
 	}
@@ -681,14 +701,16 @@ function wpsc_product_original_price( $product_id = null, $from_text = true ) {
  * @return float|string
  */
 function wpsc_get_product_original_price( $product_id = null, $from_text = true ) {
-	if ( empty( $product_id ) )
+	if ( empty( $product_id ) ) {
 		$product_id = wpsc_get_product_id();
+	}
 
 	$product = WPSC_Product::get_instance( $product_id );
-	$price = wpsc_format_currency( $product->price );
+	$price   = wpsc_format_currency( $product->price );
 
-	if ( $from_text && $product->has_various_prices )
+	if ( $from_text && $product->has_various_prices ) {
 		$price = _wpsc_get_from_text( $price );
+	}
 
 	return apply_filters( 'wpsc_get_product_original_price', $price, $product_id, $from_text );
 }
@@ -738,29 +760,33 @@ function wpsc_product_you_save( $product_id = null, $format = false, $from_text 
  * @return float|string
  */
 function wpsc_get_product_sale_price( $product_id = null, $from_text = true ) {
-	if ( empty( $product_id ) )
+	if ( empty( $product_id ) ) {
 		$product_id = wpsc_get_product_id();
+	}
 
-	$product = WPSC_Product::get_instance( $product_id );
+	$product    = WPSC_Product::get_instance( $product_id );
 	$sale_price = wpsc_format_currency( $product->sale_price );
 
-	if ( $from_text && $product->has_various_sale_prices )
+	if ( $from_text && $product->has_various_sale_prices ) {
 		$sale_price = _wpsc_get_from_text( $sale_price );
+	}
 
 	return apply_filters( 'wpsc_get_product_sale_price', $sale_price, $product_id, $from_text );
 }
 
 function wpsc_get_product_you_save( $product_id = null, $format = false, $from_text = true ) {
-	if ( empty( $product_id ) )
+	if ( empty( $product_id ) ) {
 		$product_id = wpsc_get_product_id();
+	}
 
-	if ( ! $format )
+	if ( ! $format ) {
 		/* translators: %1$s: saving amount, %2$s: saving percent */
 		$format = _x( '%1$s (%2$s)', 'product saving format', 'wpsc' );
+	}
 
 	$product = WPSC_Product::get_instance( $product_id );
 
-	$saving = wpsc_format_currency( $product->saving );
+	$saving         = wpsc_format_currency( $product->saving );
 	$saving_percent = sprintf(
 		/* translators: %1$s: saving percent, %%: percentage sign */
 		_x( '%1$s%%', 'product saving percent', 'wpsc' ),
@@ -769,8 +795,9 @@ function wpsc_get_product_you_save( $product_id = null, $format = false, $from_t
 
 	$saving_text = sprintf( $format, $saving, $saving_percent );
 
-	if ( $from_text && $product->has_various_savings )
+	if ( $from_text && $product->has_various_savings ) {
 		$saving_text = _wpsc_get_from_text( $saving_text );
+	}
 
 	return apply_filters( 'wpsc_get_product_you_save', $saving_text, $product_id, $format, $from_text );
 }
@@ -786,10 +813,14 @@ function wpsc_get_product_you_save( $product_id = null, $format = false, $from_t
  * @return string
  */
 function wpsc_filter_content_more_link( $link ) {
-	if ( get_post_type( 'post_type' ) == 'wpsc-product' )
+
+	if ( get_post_type() == 'wpsc-product' ) {
 		$link = '<p class="wpsc-more-link">' . $link . '</p>';
+	}
+
 	return $link;
 }
+
 add_filter( 'the_content_more_link', 'wpsc_filter_content_more_link' );
 
 /**
@@ -802,8 +833,10 @@ add_filter( 'the_content_more_link', 'wpsc_filter_content_more_link' );
  * @param string $position Position of the pagination div.
  */
 function wpsc_product_pagination( $position = 'bottom' ) {
-	if ( ! wpsc_is_pagination_enabled( $position ) )
+
+	if ( ! wpsc_is_pagination_enabled( $position ) ) {
 		return;
+	}
 
 	echo '<div class="wpsc-pagination wpsc-pagination-' . esc_attr( $position ) . '">';
 	wpsc_get_template_part( 'product-pagination', $position );
@@ -841,16 +874,18 @@ function wpsc_product_pagination_count() {
 	$to           = $from + $per_page - 1;
 	$post_count   = $wp_query->post_count;
 
-	if ( $to > $total )
+	if ( $to > $total ) {
 		$to = $total;
+	}
 
 	if ( $total > 1 ) {
-		if ( $from == $to )
+		if ( $from == $to ) {
 			$output = sprintf( __( 'Viewing product %1$s (of %2$s total)', 'wpsc' ), $from, $total );
-		elseif ( $total_pages === 1 )
+		} elseif ( $total_pages === 1 ) {
 			$output = sprintf( __( 'Viewing %1$s products', 'wpsc' ), $total );
-		else
+		} else {
 			$output = sprintf( __( 'Viewing %1$s products - %2$s through %3$s (of %4$s total)', 'wpsc' ), $post_count, $from, $to, $total );
+		}
 	} else {
 		$output = sprintf( __( 'Viewing %1$s product', 'wpsc' ), $total );
 	}
@@ -869,8 +904,10 @@ function wpsc_product_pagination_count() {
  */
 function wpsc_get_current_page_number() {
 	$current = get_query_var( 'paged' );
-	if ( $current )
+
+	if ( $current ) {
 		return $current;
+	}
 
 	return 1;
 }
@@ -898,17 +935,19 @@ function wpsc_get_product_pagination_links( $args = '' ) {
 
 	$base = '';
 
-	if ( wpsc_is_store() )
+	if ( wpsc_is_store() ) {
 		$base = home_url( $wp_rewrite->root . wpsc_get_option( 'store_slug' ) );
-	elseif ( wpsc_is_product_category() )
+	} elseif ( wpsc_is_product_category() ) {
 		$base = wpsc_get_product_category_permalink();
-	elseif ( wpsc_is_product_tag() )
+	} elseif ( wpsc_is_product_tag() ) {
 		$base = wpsc_get_product_tag_permalink();
+	}
 
-	if ( $wp_rewrite->using_permalinks() )
+	if ( $wp_rewrite->using_permalinks() ) {
 		$format = 'page/%#%';
-	else
+	} else {
 		$format = '?page=%#%';
+	}
 
 	$defaults = array(
 		'base'      => trailingslashit( $base ) . '%_%',
@@ -922,7 +961,7 @@ function wpsc_get_product_pagination_links( $args = '' ) {
 	);
 
 	$defaults = apply_filters( 'wpsc_get_product_pagination_links', $defaults );
-	$r = wp_parse_args( $args, $defaults );
+	$r        = wp_parse_args( $args, $defaults );
 
 	return apply_filters( 'wpsc_get_product_pagination_links', paginate_links( $r ) );
 }
@@ -941,11 +980,13 @@ function wpsc_category_archive_title() {
 }
 
 function wpsc_get_category_filter( $args = '' ) {
-	if ( ! wpsc_get_option( 'display_category_filter' ) )
+	if ( ! wpsc_get_option( 'display_category_filter' ) ) {
 		return '';
+	}
 
-	if ( ! wpsc_is_store() && ! wpsc_is_product_category() )
+	if ( ! wpsc_is_store() && ! wpsc_is_product_category() ) {
 		return '';
+	}
 
 	$defaults = array(
 		'before'                    => '<div class="%s">',
@@ -978,23 +1019,23 @@ function wpsc_get_category_filter( $args = '' ) {
 	$before_drill_down_divider = sprintf( $before_drill_down_divider, 'wpsc-category-filter-drill-down-divider' );
 
 	if ( $padding ) {
-		$length = strlen( $divider ) + $padding * 2;
-		$padding = str_repeat( "&nbsp;", $padding );
-		$divider = $padding . $divider . $padding;
+		$length             = strlen( $divider ) + $padding * 2;
+		$padding            = str_repeat( "&nbsp;", $padding );
+		$divider            = $padding . $divider . $padding;
 		$drill_down_divider = $padding . $drill_down_divider . $padding;
 	}
 
-	$divider = $before_divider . $divider . $after_divider;
+	$divider            = $before_divider . $divider . $after_divider;
 	$drill_down_divider = $before_drill_down_divider . $drill_down_divider . $after_drill_down_divider;
 
 	$displayed_categories = _wpsc_get_filtered_categories();
-	$ids = wp_list_pluck( $displayed_categories, 'term_id' );
-	$filters = array();
-	$drilldown = array();
+	$ids                  = wp_list_pluck( $displayed_categories, 'term_id' );
+	$filters              = array();
+	$drilldown            = array();
 
 	// When drill down is enabled and we're not on store page
 	if ( wpsc_get_option( 'category_filter_drill_down' ) && ! wpsc_is_store() ) {
-		$term = get_queried_object();
+		$term    = get_queried_object();
 		$current = $term;
 
 		// we need to trace back this category ancestors, if none of its ancestors
@@ -1002,10 +1043,10 @@ function wpsc_get_category_filter( $args = '' ) {
 		// output
 
 		$ancestor_is_displayed = in_array( $term->term_id, $ids );
-		$ancestors = array();
+		$ancestors             = array();
 
 		while ( $term->parent ) {
-			$term = get_term( $term->parent, 'wpsc_product_category' );
+			$term        = get_term( $term->parent, 'wpsc_product_category' );
 			$ancestors[] = $term;
 
 			if ( in_array( $term->term_id, $ids  ) ) {
@@ -1014,27 +1055,29 @@ function wpsc_get_category_filter( $args = '' ) {
 			}
 		}
 
-		if ( ! $ancestor_is_displayed )
+		if ( ! $ancestor_is_displayed ) {
 			return '';
+		}
 
 		// First item is always "All"
-		$before_all = sprintf( $before_item, 'wpsc-category-filter-drill-down-item wpsc-category-filter-drill-down-item-all' );
-		$link = '<a href="' . esc_url( wpsc_get_store_url() ) . '">' . esc_html_x( 'All', 'category filter', 'wpsc' ) . '</a>';
+		$before_all  = sprintf( $before_item, 'wpsc-category-filter-drill-down-item wpsc-category-filter-drill-down-item-all' );
+		$link        = '<a href="' . esc_url( wpsc_get_store_url() ) . '">' . esc_html_x( 'All', 'category filter', 'wpsc' ) . '</a>';
 		$drilldown[] = $before_all . $link . $drill_down_divider . $after_item;
 
 		$ancestors = array_reverse( $ancestors );
+
 		foreach ( $ancestors as $ancestor ) {
 			$before_this_item = sprintf( $before_item, 'wpsc-category-filter-drill-down-item' );
-			$url = add_query_arg( 'wpsc_category_filter', 1, wpsc_get_product_category_permalink( $ancestor->term_id ) );
-			$link = '<a href="' . esc_url( $url ) . '">' . esc_html( $ancestor->name ) . '</a>';
-			$drilldown[] = $before_this_item . $link . $drill_down_divider . $after_item;
+			$url              = add_query_arg( 'wpsc_category_filter', 1, wpsc_get_product_category_permalink( $ancestor->term_id ) );
+			$link             = '<a href="' . esc_url( $url ) . '">' . esc_html( $ancestor->name ) . '</a>';
+			$drilldown[]      = $before_this_item . $link . $drill_down_divider . $after_item;
 		}
 
 		// current category
 		$before_this_item = sprintf( $before_item, 'wpsc-category-filter-drill-down-item wpsc-category-filter-drill-down-item-active' );
-		$url = add_query_arg( 'wpsc_category_filter', 1, wpsc_get_product_category_permalink( $current->term_id ) );
-		$link = '<a href="' . esc_url( $url ) . '">' . esc_html( $current->name ) . '</a>';
-		$drilldown[] = $before_this_item . $link . $after_item;
+		$url              = add_query_arg( 'wpsc_category_filter', 1, wpsc_get_product_category_permalink( $current->term_id ) );
+		$link             = '<a href="' . esc_url( $url ) . '">' . esc_html( $current->name ) . '</a>';
+		$drilldown[]      = $before_this_item . $link . $after_item;
 
 		$displayed_categories = get_terms( 'wpsc_product_category', array(
 			'parent'     => $current->term_id,
@@ -1049,49 +1092,58 @@ function wpsc_get_category_filter( $args = '' ) {
 		// if we're in the wrong category, don't display the filter
 		$current = get_queried_object_id();
 
-		if ( ! wpsc_is_store() && ! in_array( $current, $ids ) )
+		if ( ! wpsc_is_store() && ! in_array( $current, $ids ) ) {
 			return '';
+		}
 
 		// if we're not on store page, and the 'wpsc_category_filter' query arg
 		// is not set to 1, don't display the filter
-		if ( ! wpsc_is_store() && empty( $_GET['wpsc_category_filter'] ) )
+		if ( ! wpsc_is_store() && empty( $_GET['wpsc_category_filter'] ) ) {
 			return '';
+		}
 
 		// First item is always "All"
 		$before_all = sprintf( $before_item, 'wpsc-category-filter-item wpsc-category-filter-item-all' );
-		$link = '<a href="' . esc_url( wpsc_get_store_url() ) . '">' . esc_html_x( 'All', 'category filter', 'wpsc' ) . '</a>';
-		$filters[] = $before_all . $link . $divider . $after_item;
+		$link       = '<a href="' . esc_url( wpsc_get_store_url() ) . '">' . esc_html_x( 'All', 'category filter', 'wpsc' ) . '</a>';
+		$filters[]  = $before_all . $link . $divider . $after_item;
 	}
 
 	$cats_count = count( $displayed_categories );
 
 	// Subsequent items are extracted from $displayed_categories
 	for ( $i = 0; $i < $cats_count; $i ++ ) {
-		$cat = $displayed_categories[$i];
+		$cat = $displayed_categories[ $i ];
 
 		$classes = 'wpsc-category-filter-item';
 
 		// mark current category
-		if ( ! wpsc_is_store() && $cat->term_id == $current )
+		if ( ! wpsc_is_store() && $cat->term_id == $current ) {
 			$classes .= ' wpsc-category-filter-item-active';
+		}
 
 		$before_this_item = sprintf( $before_item, $classes );
-		$url = add_query_arg( 'wpsc_category_filter', 1, wpsc_get_product_category_permalink( $cat->term_id ) );
-		$link = '<a href="' . esc_url( $url ) . '">' . esc_html( $cat->name ) . '</a>';
-		$filter = $before_this_item . $link;
-		if ( $i < $cats_count - 1 )
+		$url              = add_query_arg( 'wpsc_category_filter', 1, wpsc_get_product_category_permalink( $cat->term_id ) );
+		$link             = '<a href="' . esc_url( $url ) . '">' . esc_html( $cat->name ) . '</a>';
+		$filter           = $before_this_item . $link;
+
+		if ( $i < $cats_count - 1 ) {
 			$filter .= $divider;
+		}
+
 		$filter .= $after_item;
 
 		$filters[] = $filter;
 	}
 
 	$html = $before;
-	if ( ! empty( $drilldown ) )
-		$html .= $before_drill_down . implode( '', $drilldown ) . $after_drill_down;
 
-	if ( ! empty( $filters ) )
+	if ( ! empty( $drilldown ) ) {
+		$html .= $before_drill_down . implode( '', $drilldown ) . $after_drill_down;
+	}
+
+	if ( ! empty( $filters ) ) {
 		$html .= $before_cat_list . implode( '', $filters ) . $after_cat_list;
+	}
 
 	$html .= $after;
 
@@ -1099,5 +1151,5 @@ function wpsc_get_category_filter( $args = '' ) {
 }
 
 function wpsc_category_filter( $args = '' ) {
-	echo wpsc_get_category_filter();
+	echo wpsc_get_category_filter( $args );
 }

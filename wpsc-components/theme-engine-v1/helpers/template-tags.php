@@ -630,8 +630,10 @@ function wpsc_the_product_price( $no_decimals = false, $only_normal_price = fals
 				$price = $special_price;
 		}
 
-		if ( $no_decimals == true )
-			$price = array_shift( explode( ".", $price ) );
+		if ( true == $no_decimals ) {
+			$price = explode( ".", $price );
+			$price = array_shift( $price );
+		}
 
 		$price = apply_filters( 'wpsc_do_convert_price', $price, $product_id );
 		$args = array(
@@ -1170,7 +1172,7 @@ function wpsc_have_custom_meta() {
  */
 function wpsc_the_custom_meta() {
 	global $wpsc_custom_meta;
-	return esc_html( $wpsc_custom_meta->the_custom_meta() );
+	return $wpsc_custom_meta->the_custom_meta();
 }
 
 /**
