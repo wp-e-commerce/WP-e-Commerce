@@ -1128,15 +1128,18 @@ function _wpsc_checkout_customer_meta_update( $checkout_post_data ) {
 
 			switch ( $form_field['type'] ) {
 				case 'delivery_country':
-					if ( is_array( $meta_value ) && count( $meta_value ) == 2 ) {
-						wpsc_update_visitor_meta( $id , 'shippingcountry', $meta_value[0] );
-						wpsc_update_visitor_meta( $id, 'shippingregion', $meta_value[1] );
-					} else {
-						if ( is_array( $meta_value ) ) {
-							$meta_value = $meta_value[0];
+					if ( is_array( $meta_value ) ) {
+
+						if ( isset( $meta_value[0] ) ) {
+							wpsc_update_visitor_meta( $id, 'shippingcountry', $meta_value[0] );
 						}
+
+						if ( isset( $meta_value[1] ) ) {
+							wpsc_update_visitor_meta( $id, 'shippingregion', $meta_value[1] );
+						}
+
+						// array had only country, update the country
 						wpsc_update_visitor_meta( $id, 'shippingcountry', $meta_value );
-						wpsc_update_visitor_meta( $id, 'shippingregion', '' );
 					}
 
 					break;
@@ -1151,7 +1154,6 @@ function _wpsc_checkout_customer_meta_update( $checkout_post_data ) {
 						}
 
 						wpsc_update_visitor_meta( $id, 'billingcountry', $meta_value );
-						wpsc_update_visitor_meta( $id, 'billingregion', '' );
 					}
 
 					break;
