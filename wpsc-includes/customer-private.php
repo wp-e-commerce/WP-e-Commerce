@@ -350,6 +350,7 @@ function _wpsc_merge_cart() {
 						'custom_file'      => $item->custom_file,
 						'is_customisable'  => $item->is_customisable,
 						'meta'             => $item->meta,
+						'item_meta'        => $item->get_meta(),
 				)
 		);
 	}
