@@ -82,7 +82,13 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X5 extends UnitTes
 	 * @since 3.9
 	 */
 	public function test_doexpresscheckout_ref51() {
+		// Fully Refunded Transaction
+		$response = $this->gateway->get_transaction_details( '0SH96542L88249424' );
 
+		$this->assertTrue( $response->is_successful() );
+		st_echo( 'Test Case 5.1:' . "\n" );
+		st_echo( 'Transaction ID: 0SH96542L88249424' . "\n" );
+		st_echo( 'Payment Status: ' . $response->get_params()['PAYMENTSTATUS'] . "\n" );
 	}
 
 	/**
@@ -92,6 +98,12 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X5 extends UnitTes
 	 * @since 3.9
 	 */
 	public function test_doexpresscheckout_ref52() {
+		// Fully Refunded Transaction
+		$response = $this->gateway->get_transaction_details( '29585298U7589982T' );
 
+		$this->assertTrue( $response->is_successful() );
+		st_echo( 'Test Case 5.2:' . "\n" );
+		st_echo( 'Transaction ID: 29585298U7589982T' . "\n" );
+		st_echo( 'Payment Status: ' . $response->get_params()['PAYMENTSTATUS'] . "\n" ); 
 	}
 }
