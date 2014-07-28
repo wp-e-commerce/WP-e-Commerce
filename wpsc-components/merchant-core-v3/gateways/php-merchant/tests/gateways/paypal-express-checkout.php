@@ -104,6 +104,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 			'METHOD'       => 'SetExpressCheckout',
  			'RETURNURL'    => 'http://example.com/return',
 			'CANCELURL'    => 'http://example.com/cancel',
+			'AMT'		   => 15337,
 			'ADDROVERRIDE' => 1,
 			'INVOICEID'	   => 'E84A90G94',
 
@@ -174,6 +175,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 			'METHOD'       => 'DoExpressCheckoutPayment',
  			'RETURNURL'    => 'http://example.com/return',
 			'CANCELURL'    => 'http://example.com/cancel',
+			'AMT'		   => 15337,
 			'ADDROVERRIDE' => 1,
 
 			// Payer ID
