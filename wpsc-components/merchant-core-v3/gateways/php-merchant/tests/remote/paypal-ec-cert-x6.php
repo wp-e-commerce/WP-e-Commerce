@@ -82,6 +82,12 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X6 extends UnitTes
 	 * @since 3.9
 	 */
 	public function test_doexpresscheckout_ref61() {
+		// Cancelled Transaction
+		$response = $this->gateway->get_transaction_details( 'O-0CJ689879E5247331' );
 
+		$this->assertTrue( $response->is_successful() );
+		st_echo( 'Test Case 6.1:' . "\n" );
+		st_echo( 'Transaction ID: O-0CJ689879E5247331' . "\n" );
+		st_echo( 'Payment Status: ' . $response->get_params()['PAYMENTSTATUS'] . "\n" ); 
 	}
 }
