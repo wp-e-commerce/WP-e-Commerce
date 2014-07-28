@@ -85,6 +85,9 @@ class wpsc_cart {
 	public $coupons_name   = '';
 	public $coupons_amount = 0;
 
+	// Cart signature, a hash indicating uniqueness of cart
+	public $_signature = '';
+
 
     function wpsc_cart() {
 		$coupon = 'percentage';
