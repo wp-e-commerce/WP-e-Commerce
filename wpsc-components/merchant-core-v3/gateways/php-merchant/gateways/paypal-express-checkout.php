@@ -144,6 +144,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 			'TOKEN'        => 'token',
 			'PAYERID'      => 'payer_id',
 			'TRANSACTIONID'=> 'transaction_id',
+            'AUTHORIZATIONID'=> 'authorization_id',
 			'MSGSUBID'	   => 'message_id',
 			'INVOICEID'	   => 'invoice',
 		) );
@@ -154,6 +155,11 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 			'REFUNDSOURCE' => 'refund_source',
 			'REFUNDADVICE' => 'refund_advice',
 		) );
+
+        // DoCapture Fields
+        $request += phpme_map( $this->options, array(
+            'COMPLETETYPE' => 'complete_type',
+        ) );
 
 		if ( ! empty( $this->options['shipping'] ) && ! empty( $this->options['address_override'] ) ) {
 			$request += $this->add_address();
@@ -238,7 +244,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 	public function authorize( $options = array() ) {
 		$this->options = array_merge( $this->options, $options );
 		$this->requires( array( 'amount', 'token', 'transaction_id' ) );
-		$request = $this->build_checkout_request( $action, $options );
+		$request = $this->build_checkout_request( False, $options );
 
 		$response_str = $this->commit( 'DoAuthorization', $request );
 		return new PHP_Merchant_Paypal_Express_Checkout_Response( $response_str );
@@ -253,8 +259,8 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 	 */
 	public function capture( $options = array() ) {
 		$this->options = array_merge( $this->options, $options );
-		$this->requires( array( 'amount', 'complete_type', 'transaction_id' ) );
-		$request = $this->build_checkout_request( $action, $options );
+		$this->requires( array( 'amount', 'complete_type', 'authorization_id' ) );
+		$request = $this->build_checkout_request( False, $options );
 
 		$response_str = $this->commit( 'DoCapture', $request );
 		return new PHP_Merchant_Paypal_Express_Checkout_Response( $response_str );
@@ -269,8 +275,8 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 	 */
 	public function void( $options = array() ) {
 		$this->options = array_merge( $this->options, $options );
-		$this->requires( array( 'transaction_id' ) );
-		$request = $this->build_checkout_request( $action, $options );
+		$this->requires( array( 'authorization_id' ) );
+		$request = $this->build_checkout_request( False, $options );
 
 		$response_str = $this->commit( 'DoVoid', $request );
 		return new PHP_Merchant_Paypal_Express_Checkout_Response( $response_str );
