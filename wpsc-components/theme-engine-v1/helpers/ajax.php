@@ -1169,8 +1169,8 @@ function _wpsc_checkout_customer_meta_update( $checkout_post_data ) {
 						}
 
 					} else {
+						// array had only country, update the country
 						wpsc_update_visitor_meta( $id, 'shippingcountry', $meta_value );
-						wpsc_update_visitor_meta( $id, 'shippingregion', '' );
 					}
 
 					break;
@@ -1185,7 +1185,6 @@ function _wpsc_checkout_customer_meta_update( $checkout_post_data ) {
 						}
 
 						wpsc_update_visitor_meta( $id, 'billingcountry', $meta_value );
-						wpsc_update_visitor_meta( $id, 'billingregion', '' );
 					}
 
 					break;
