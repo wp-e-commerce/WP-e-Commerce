@@ -136,6 +136,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 
 		// Common Fields
 		$request += phpme_map( $this->options, array(
+            'AMT'          => 'amount',
 			'MAXAMT'       => 'max_amount',
 			'SOLUTIONTYPE' => 'solution_type',
 			'ALLOWNOTE'    => 'allow_note',
