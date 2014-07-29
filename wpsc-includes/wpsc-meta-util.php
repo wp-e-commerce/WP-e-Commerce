@@ -20,7 +20,7 @@ function wpsc_get_meta_ids_by_meta_key( $meta_object_type, $meta_key = '' ) {
 	global $wpdb;
 
 	$meta_table    = _wpsc_meta_table_name( 'visitor' );
-	$id_field_name = _wpsc_meta_key_name( 'visitor' );
+	$meta_key = _wpsc_meta_key_name( $meta_key );
 
 	$sql = 'SELECT meta_id FROM `' . $meta_table . '` where meta_key = "%s"';
 	$sql = $wpdb->prepare( $sql, $meta_key );
@@ -28,7 +28,7 @@ function wpsc_get_meta_ids_by_meta_key( $meta_object_type, $meta_key = '' ) {
 	$meta_item_ids = $wpdb->get_col( $sql, 0  );
 	$meta_item_ids = array_map( 'intval', $meta_item_ids );
 
-	$ids = apply_filters( 'wpsc_get_ids_by_meta_key', $meta_item_ids, $meta_object_type, $meta_key );
+	$meta_item_ids = apply_filters( 'wpsc_get_ids_by_meta_key', $meta_item_ids, $meta_object_type, $meta_key );
 
 	return $meta_item_ids;
 }
