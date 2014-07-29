@@ -499,6 +499,12 @@ class wpsc_checkout {
 
 						case 'delivery_country':
 						case 'country':
+							if ( empty( $value ) ) {
+								$any_bad_inputs = true;
+								$bad_input      = true;
+							}
+							break;
+
 						case 'heading':
 							break;
 
