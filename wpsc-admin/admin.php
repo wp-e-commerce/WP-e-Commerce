@@ -919,11 +919,11 @@ function wpsc_dashboard_news() {
  * @return array        The array of prices
  */
 function wpsc_get_quarterly_summary() {
-	(int)$firstquarter = get_option( 'wpsc_first_quart' );
-	(int)$secondquarter = get_option( 'wpsc_second_quart' );
-	(int)$thirdquarter = get_option( 'wpsc_third_quart' );
-	(int)$fourthquarter = get_option( 'wpsc_fourth_quart' );
-	(int)$finalquarter = get_option( 'wpsc_final_quart' );
+	$firstquarter = (int)get_option( 'wpsc_first_quart' );
+	$secondquarter = (int)get_option( 'wpsc_second_quart' );
+	$thirdquarter = (int)get_option( 'wpsc_third_quart' );
+	$fourthquarter = (int)get_option( 'wpsc_fourth_quart' );
+	$finalquarter = (int)get_option( 'wpsc_final_quart' );
 
 	$results[] = admin_display_total_price( $thirdquarter + 1, $fourthquarter );
 	$results[] = admin_display_total_price( $secondquarter + 1, $thirdquarter );

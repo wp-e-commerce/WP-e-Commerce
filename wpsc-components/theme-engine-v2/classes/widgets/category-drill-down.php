@@ -351,7 +351,7 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 			echo '</li>';
 		}
 
-		for ( $i = $level; $i --; $i > 0 ) {
+		for ( $i = $level; $i > 0 ; $i -- ) {
 			echo '</ul>';
 			echo '</li>';
 		}

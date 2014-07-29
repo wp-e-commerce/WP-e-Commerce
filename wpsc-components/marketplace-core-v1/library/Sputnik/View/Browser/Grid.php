@@ -211,7 +211,6 @@ class Sputnik_View_Browser_Grid extends WP_List_Table {
 				$plugin->price = _x('Free', 'plugin price', 'sputnik');
 			}
 
-			$plugin->author = $plugin->author;
 			if (!empty($plugin->author))
 				$plugin->author = ' <cite>' . sprintf( __( 'By %s', 'sputnik' ), $plugin->author ) . '.</cite>';
 
