@@ -134,7 +134,7 @@ class WPSC_Purchase_Log {
 			array_map( array( 'WPSC_Product', 'get_instance' ), $args['ids'] )
 		);
 
-		// eliminate duplicates
+		// eliminate duplicates (Note: usage of this requires PHP 5.2.9)
 		$products = array_unique( $products, SORT_REGULAR );
 
 		if ( empty( $products ) ) {
