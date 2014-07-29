@@ -169,7 +169,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 			$request['NOSHIPPING'] = '1';
 		}
 
-		if ( $action != False ) {
+		if ( $action != false ) {
 			$request += $this->add_payment( $action );
 		}
 
@@ -244,7 +244,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 	public function authorize( $options = array() ) {
 		$this->options = array_merge( $this->options, $options );
 		$this->requires( array( 'amount', 'token', 'transaction_id' ) );
-		$request = $this->build_checkout_request( False, $options );
+		$request = $this->build_checkout_request( false, $options );
 
 		$response_str = $this->commit( 'DoAuthorization', $request );
 		return new PHP_Merchant_Paypal_Express_Checkout_Response( $response_str );
@@ -260,7 +260,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 	public function capture( $options = array() ) {
 		$this->options = array_merge( $this->options, $options );
 		$this->requires( array( 'amount', 'complete_type', 'authorization_id' ) );
-		$request = $this->build_checkout_request( False, $options );
+		$request = $this->build_checkout_request( false, $options );
 
 		$response_str = $this->commit( 'DoCapture', $request );
 		return new PHP_Merchant_Paypal_Express_Checkout_Response( $response_str );
@@ -276,7 +276,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 	public function void( $options = array() ) {
 		$this->options = array_merge( $this->options, $options );
 		$this->requires( array( 'authorization_id' ) );
-		$request = $this->build_checkout_request( False, $options );
+		$request = $this->build_checkout_request( false, $options );
 
 		$response_str = $this->commit( 'DoVoid', $request );
 		return new PHP_Merchant_Paypal_Express_Checkout_Response( $response_str );
@@ -303,7 +303,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 			$this->requires( array( 'amount' ) );
 		}
 
-		$request = $this->build_checkout_request( False, $options );
+		$request = $this->build_checkout_request( false, $options );
 
 		$response_str = $this->commit( 'RefundTransaction', $request );
 		return new PHP_Merchant_Paypal_Express_Checkout_Response( $response_str );

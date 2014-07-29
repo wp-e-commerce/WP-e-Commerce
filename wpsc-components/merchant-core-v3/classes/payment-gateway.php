@@ -304,7 +304,7 @@ abstract class WPSC_Payment_Gateway
 	 * manner
 	 *
 	 * @access public
-	 * @var string
+	 * @var WPSC_Payment_Gateway_Setting
 	 */
 	public $setting;
 

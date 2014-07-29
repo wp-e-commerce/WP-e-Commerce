@@ -143,7 +143,7 @@ abstract class PHP_Merchant
 	 * throw a PHP_Merchant_Exception exception
 	 *
 	 * @param array $options Required fields
-	 * @return bool|void Returns True if a specified field is found
+	 * @return boolean|void Returns True if a specified field is found
 	 * @since 3.9
 	 */
 	protected function conditional_requires( $options ) {
