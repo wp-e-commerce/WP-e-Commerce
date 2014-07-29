@@ -76,7 +76,7 @@ function wpsc_get_meta_by_timestamp( $meta_object_type, $timestamp = 0, $compari
 	$meta_item_ids = $wpdb->get_col( $sql, 0  );
 	$meta_item_ids = array_map( 'intval', $meta_item_ids );
 
-	$ids = apply_filters( 'wpsc_get_meta_by_timestamp', $meta_item_ids, $meta_object_type, $meta_key, $timestamp, $comparison );
+	$meta_item_ids = apply_filters( 'wpsc_get_meta_by_timestamp', $meta_item_ids, $meta_object_type, $meta_key, $timestamp, $comparison );
 
 	$metas = array();
 
