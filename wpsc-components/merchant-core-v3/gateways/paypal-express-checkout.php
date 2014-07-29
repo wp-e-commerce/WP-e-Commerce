@@ -262,15 +262,22 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 	public function setup_form() {
 		$paypal_currency = $this->get_currency_code();
 		?>
-		<tr>
-			<td>
-				<label for="wpsc-paypal-express-api-username"><?php _e( 'API Username', 'wpsc' ); ?></label>
-			</td>
-			<td>
-				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'api_username' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'api_username' ) ); ?>" id="wpsc-paypal-express-api-username" />
-			</td>
-		</tr>
-		<tr>
+
+        <!-- Account Credentials -->
+        <tr>
+            <td colspan="2">
+                <h4><?php _e( 'Account Credentials', 'wpsc' ); ?></h4>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="wpsc-paypal-express-api-username"><?php _e( 'API Username', 'wpsc' ); ?></label>
+            </td>
+            <td>
+                <input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'api_username' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'api_username' ) ); ?>" id="wpsc-paypal-express-api-username" />
+            </td>
+        </tr>
+        <tr>
 			<td>
 				<label for="wpsc-paypal-express-api-password"><?php _e( 'API Password', 'wpsc' ); ?></label>
 			</td>
@@ -304,6 +311,31 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 				<label><input <?php checked( (bool) $this->setting->get( 'ipn' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'ipn' ) ); ?>" value="0" /> <?php _e( 'No', 'wpsc' ); ?></label>
 			</td>
 		</tr>
+
+        <!-- Cart Customization -->
+        <tr>
+            <td colspan="2">
+                <label><h4><?php _e( 'Cart Customization', 'wpsc'); ?></h4></label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="wpsc-paypal-express-cart-logo"><?php _e( 'Merchant Logo', 'wpsc' ); ?></label>
+            </td>
+            <td>
+				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'cart_logo' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'cart_logo' ) ); ?>" id="wpsc-paypal-express-cart-logo" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="wpsc-paypal-express-cart-border"><?php _e( 'Cart Border Colour', 'wpsc' ); ?></label>
+            </td>
+            <td>
+				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'cart_border' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'cart_border' ) ); ?>" id="wpsc-paypal-express-cart-border" />
+            </td>
+        </tr>
+
+        <!-- Currency Conversion -->
 		<?php if ( ! $this->is_currency_supported() ): ?>
 			<tr>
 				<td colspan="2">
@@ -329,6 +361,21 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 			</tr>
 		<?php endif ?>
 
+        <!-- Error Logging -->
+        <tr>
+            <td colspan="2">
+                <h4><?php _e( 'Error Logging', 'wpsc' ); ?></h4>
+            </td>
+        </tr>
+		<tr>
+			<td>
+				<label><?php _e( 'Enable Debugging', 'wpsc' ); ?></label>
+			</td>
+			<td>
+				<label><input <?php checked( $this->setting->get( 'debugging' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'debugging' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wpsc' ); ?></label>&nbsp;&nbsp;&nbsp;
+				<label><input <?php checked( (bool) $this->setting->get( 'debugging' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'debugging' ) ); ?>" value="0" /> <?php _e( 'No', 'wpsc' ); ?></label>
+			</td>
+		</tr>
 		<?php
 	}
 
@@ -364,8 +411,16 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 		if ( $this->setting->get( 'ipn', false ) )
 			$options['notify_url'] = $this->get_notify_url();
 
+		// SetExpressCheckout
 		$response = $this->gateway->setup_purchase( $options );
+
 		if ( $response->is_successful() ) {
+
+			// GetExpressCheckoutDetails
+			//$details = $this->get_details_for( $token );
+			//$this->record_ec_details();
+
+			// Redirect the user to the payments page
 			$url = ( $this->setting->get( 'sandbox_mode' ) ? self::SANDBOX_URL : self::LIVE_URL ) . $response->get( 'token' );
 			wp_redirect( $url );
 		} else {
