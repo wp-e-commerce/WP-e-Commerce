@@ -334,6 +334,7 @@ function wpsc_visitor_remove_expiration( $visitor_id ) {
  * @return boolean true if visitor profile will expire, false if it is permanent
  */
 function wpsc_visitor_profile_expires( $visitor_id ) {
+	global $wpdb;
 
 	if ( ! _wpsc_visitor_database_ready() ) {
 		return false;
@@ -351,6 +352,7 @@ function wpsc_visitor_profile_expires( $visitor_id ) {
  * @return int unix timestamp of expiration
  */
 function wpsc_get_visitor_expiration( $visitor_id ) {
+	global $wpdb;
 
 	if ( ! _wpsc_visitor_database_ready() ) {
 		return false;
@@ -398,6 +400,8 @@ function wpsc_update_visitor(  $visitor_id, $args ) {
 	if ( ! _wpsc_visitor_database_ready() ) {
 		return false;
 	}
+
+	global $wpdb;
 
 	$result = false;
 
@@ -853,7 +857,7 @@ function wpsc_delete_visitor_meta( $visitor_id, $meta_key, $meta_value = '' ) {
 
 	// notification after any meta item has been deleted
 	if ( $success && has_action( $action = 'wpsc_deleted_visitor_meta' ) ) {
-		do_action( $action, $meta_key, $id );
+		do_action( $action, $meta_key, $visitor_id );
 	}
 
 	// notification after a specific meta item has been deleted
@@ -1074,7 +1078,7 @@ function wpsc_get_visitor_custom_values( $meta_key = '', $visitor_id = 0 ) {
 		return false;
 	}
 
-	if ( ! $key ) {
+	if ( ! $meta_key ) {
 		return false;
 	}
 
