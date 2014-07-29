@@ -263,7 +263,6 @@ class Sputnik_List_Install extends WP_List_Table {
 				$plugin->price = _x('Free', 'plugin price', 'wpsc' );
 			}
 
-			$plugin->author = $plugin->author;
 			if (!empty($plugin->author))
 				$plugin->author = ' <cite>' . sprintf( __( 'By %s', 'wpsc' ), $plugin->author ) . '.</cite>';
 

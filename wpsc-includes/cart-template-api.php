@@ -118,8 +118,6 @@ function wpsc_cart_total( $format_for_display = true ) {
 
 		if ( $format_for_display ) {
 			$total = wpsc_currency_display( $total );
-		} else {
-			$total = $total;
 		}
 	}
 

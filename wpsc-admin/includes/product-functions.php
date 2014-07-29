@@ -318,7 +318,6 @@ function wpsc_sanitise_product_forms($post_data = null) {
 
 	$post_data['meta']['_wpsc_price'] = wpsc_string_to_float( $post_data['meta']['_wpsc_price'] );
 	$post_data['meta']['_wpsc_special_price'] = wpsc_string_to_float( $post_data['meta']['_wpsc_special_price'] );
-	$post_data['meta']['_wpsc_sku'] = $post_data['meta']['_wpsc_sku'];
 	if (!isset($post_data['meta']['_wpsc_is_donation'])) $post_data['meta']['_wpsc_is_donation'] = '';
 	$post_data['meta']['_wpsc_is_donation'] = (int)(bool)$post_data['meta']['_wpsc_is_donation'];
 	$post_data['meta']['_wpsc_stock'] = (int)$post_data['meta']['_wpsc_stock'];

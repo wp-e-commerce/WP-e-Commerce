@@ -182,8 +182,6 @@ function wpsc_clean_categories() {
 				'%d'
 			    );
 
-			$updated;
-
 		} else if ( $datarow['active'] == 0 ) {
 			$wpdb->update(
 				WPSC_TABLE_PRODUCT_CATEGORIES,
@@ -196,7 +194,6 @@ function wpsc_clean_categories() {
 				'%s',
 				'%d'
 			    );
-			$updated;
 		}
 	}
 	$wp_rewrite->flush_rules();
