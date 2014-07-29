@@ -24,7 +24,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 		add_filter( 'wpsc_purchase_log_gateway_data', array( $this, 'filter_purchase_log_gateway_data' ), 10, 2 );
 	}
 
-	public function filter_purchase_log_gateway_data( $gateway_data, $data ) {
+	public static function filter_purchase_log_gateway_data( $gateway_data, $data ) {
 		// Because paypal express checkout API doesn't have full support for discount, we have to manually add an item here
 		if ( isset( $gateway_data['discount'] ) && (float) $gateway_data['discount'] != 0 ) {
 			$i =& $gateway_data['items'];
