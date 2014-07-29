@@ -37,8 +37,8 @@ class PHP_Merchant_Paypal_Digital_Goods extends PHP_Merchant_Paypal_Express_Chec
 	 * @uses parent::setup_purchase() to create and make the request.
 	 * @return PHP_Merchant_Paypal_Express_Checkout_Response An object containing the details of PayPal's response to the request. 
 	 */
-	public function setup_purchase( $options = array() ) {
-		return parent::setup_purchase( $options );
+	public function setup_purchase( $options = array(), $action = 'Sale' ) {
+		return parent::setup_purchase( $options, $action );
 	}
 
 	/**
@@ -49,8 +49,8 @@ class PHP_Merchant_Paypal_Digital_Goods extends PHP_Merchant_Paypal_Express_Chec
 	 * @uses parent::setup_purchase() to create and make the request.
 	 * @return PHP_Merchant_Paypal_Express_Checkout_Response An object containing the details of PayPal's response to the request. 
 	 */
-	public function purchase( $options = array() ) {
-		return parent::purchase( $options );
+	public function purchase( $options = array(), $action = 'Sale' ) {
+		return parent::purchase( $options, $action );
 	}
 
 
