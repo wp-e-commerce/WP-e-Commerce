@@ -184,7 +184,7 @@ class wpsc_coupons {
 				$category_condition = $condition['value'];
 				if ( false !== strpos( $category_condition, ',' ) ) {
 					$category_condition = explode( ',', $condition['value'] );
-					$category_condition = array_map( 'trim', $cond );
+					$category_condition = array_map( 'trim', $category_condition );
 				}
 				return has_term( $category_condition, 'wpsc_product_category', $id );
 			break;
