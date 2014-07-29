@@ -14,9 +14,8 @@ function wpsc_sanitize_meta_key( $key ) {
  */
 function wpsc_get_meta( $object_id = 0, $meta_key, $type ) {
 	global $wpdb;
-	$cache_object_id = $object_id = (int)$object_id;
+	$object_id = (int)$object_id;
 	$object_type = $type;
-	$value = wp_cache_get( $cache_object_id, $object_type );
 	$meta_key = wpsc_sanitize_meta_key( $meta_key );
 	$meta_tuple = compact( 'object_type', 'object_id', 'meta_key', 'meta_value', 'type' );
 	$meta_tuple = apply_filters( 'wpsc_get_meta', $meta_tuple );

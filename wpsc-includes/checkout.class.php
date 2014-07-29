@@ -70,7 +70,6 @@ function wpsc_get_buyers_email($purchase_id){
  * @return string Tax Included or Tax
  */
 function wpsc_display_tax_label( $checkout = false ) {
-	global $wpsc_cart;
 	if ( wpsc_tax_isincluded ( ) ) {
 		return __( 'Tax Included', 'wpsc' );
 	} else {

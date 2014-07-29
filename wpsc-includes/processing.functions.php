@@ -9,7 +9,6 @@
  * @return string
  */
 function wpsc_currency_display( $price_in, $args = null ) {
-	global $wpdb;
 	$currency_code = '';
 
 	$args = apply_filters( 'wpsc_toggle_display_currency_code', $args );

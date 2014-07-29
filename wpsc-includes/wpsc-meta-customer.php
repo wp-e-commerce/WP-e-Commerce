@@ -10,7 +10,6 @@
  * @return boolean        True if successful, False if otherwise
  */
 function wpsc_delete_all_customer_meta( $id = false ) {
-	global $wpdb;
 
 	if ( ! $id ) {
 		$id = wpsc_get_current_customer_id();

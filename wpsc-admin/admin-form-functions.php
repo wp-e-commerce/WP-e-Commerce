@@ -3,8 +3,6 @@ function coupon_edit_form($coupon) {
 
 $conditions = maybe_unserialize($coupon['condition']);
 
-  $start_timestamp = strtotime($coupon['start']);
-  $end_timestamp = strtotime($coupon['expiry']);
   $id = $coupon['id'];
   $output = '';
   $output .= "<form name='edit_coupon' id='".$coupon['coupon_code']."' method='post' action=''>\n\r";

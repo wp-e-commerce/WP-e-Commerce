@@ -24,7 +24,7 @@ if ( isset( $_REQUEST['wpsc_notices'] ) && $_REQUEST['wpsc_notices'] == 'theme_i
  * @return $category_id (int) Category ID
  */
 function wpsc_get_the_category_id($slug, $type = 'name'){
-	global $wpdb,$wp_query;
+	global $wp_query;
 	if(isset($wp_query->query_vars['taxonomy']))
 		$taxonomy = $wp_query->query_vars['taxonomy'];
 	else

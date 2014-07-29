@@ -18,7 +18,7 @@ add_action('init', 'wpsc_feed_publisher');
 
 function wpsc_generate_product_feed() {
 
-	global $wpdb, $wp_query, $post;
+	global $post;
 
     set_time_limit(0);
 

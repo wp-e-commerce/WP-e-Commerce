@@ -24,10 +24,7 @@ function image_processing($image_input, $image_output, $width = null, $height = 
 
 			default:
 			move_uploaded_file($image_input, ($imagedir.basename($_FILES[$imagefield]['name'])));
-			$image = esc_attr(basename($_FILES[$imagefield]['name']));
 			return true;
-			exit();
-			break;
 		}
 
 		if($pass_imgtype === true) {

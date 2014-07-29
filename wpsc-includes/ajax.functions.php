@@ -19,7 +19,6 @@ if ( isset( $_REQUEST['wpsc_action'] ) && ($_REQUEST['wpsc_action'] == 'gateway_
  * wpsc scale image function, dynamically resizes an image oif no image already exists of that size.
  */
 function wpsc_scale_image() {
-	global $wpdb;
 
 	if ( !isset( $_REQUEST['wpsc_action'] ) || !isset( $_REQUEST['attachment_id'] ) || ( 'scale_image' != $_REQUEST['wpsc_action'] ) || !is_numeric( $_REQUEST['attachment_id'] ) )
 		return false;

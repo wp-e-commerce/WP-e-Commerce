@@ -7,19 +7,15 @@
  * @todo UI needs a lot of loving - lots of padding issues, if we have these boxes, they should be sortable, closable, hidable, etc.
  */
 function wpsc_ajax_set_variation_order(){
-	global $wpdb;
 	$sort_order = $_POST['sort_order'];
-	$parent_id  = $_POST['parent_id'];
 
-	$result = true;
 	foreach( $sort_order as $key=>$value ){
 		if ( empty( $value ) )
 			continue;
 
 		$value = preg_replace( '/[^0-9]/', '', $value );
 
-		if( ! wpsc_update_meta( $value, 'sort_order', $key, 'wpsc_variation' ) )
-			$result = false;
+		wpsc_update_meta( $value, 'sort_order', $key, 'wpsc_variation' );
 	}
 }
 
