@@ -9,7 +9,7 @@
  * @return string
  */
 function wpsc_currency_display( $price_in, $args = null ) {
-	global $wpdb;
+
 	$currency_code = '';
 
 	$args = apply_filters( 'wpsc_toggle_display_currency_code', $args );
@@ -109,7 +109,6 @@ function wpsc_currency_display( $price_in, $args = null ) {
 	* @return string a price with a currency sign
 */
 function wpsc_decrement_claimed_stock($purchase_log_id) {
-	global $wpdb;
 
 	// Processed
 	$claimed_query = new WPSC_Claimed_Stock( array( 'cart_id' => $purchase_log_id ) );
@@ -381,7 +380,7 @@ function wpsc_check_stock($state, $product) {
  * it is executed through the wpsc_product_alert filter
  */
 function wpsc_check_weight($state, $product) {
-	global $wpdb;
+
 	$custom_shipping = (array)get_option( 'custom_shipping_options' );
 	$has_no_weight = false;
 	$shipping_modules = array();

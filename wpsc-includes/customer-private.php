@@ -119,11 +119,8 @@ function _wpsc_create_customer_id() {
 	do_action( '_wpsc_create_customer_id' );
 
 	if ( _wpsc_is_bot_user() ) {
-
 		$visitor_id = WPSC_BOT_VISITOR_ID;
 		wpsc_get_current_customer_id( $visitor_id );
-		$fake_setting_cookie = true;
-
 	} else {
 		$fake_setting_cookie = false;
 		$args = array();

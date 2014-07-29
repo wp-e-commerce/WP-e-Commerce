@@ -228,8 +228,6 @@ if ( ! function_exists( 'wpsc_get_total_shipping' ) ) :
 		$per_item_shipping = $wpdb->get_col( $wpdb->prepare( 'SELECT pnp FROM ' . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid = %d", $purchase_id ) );
 		$base_shipping     = $wpdb->get_var( $wpdb->prepare( 'SELECT base_shipping FROM ' . WPSC_TABLE_PURCHASE_LOGS . " WHERE id = %d", $purchase_id ) );
 
-		$total_shipping    = 0.00;
-
 		$per_item_shipping = array_sum( $per_item_shipping );
 
 		$total_shipping    = $base_shipping + $per_item_shipping;

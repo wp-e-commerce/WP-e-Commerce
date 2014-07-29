@@ -330,7 +330,6 @@ class WPSC_Purchase_Log_Admin_Notification extends WPSC_Purchase_Log_Notificatio
 	}
 
 	public function get_raw_message() {
-		global $wpdb;
 
 		$form_data = new WPSC_Checkout_Form_Data( $this->purchase_log->get( 'id' ) );
 		$raw_data = $form_data->get_raw_data();

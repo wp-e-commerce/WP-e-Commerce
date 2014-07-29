@@ -70,7 +70,6 @@ function wpsc_get_buyers_email($purchase_id){
  * @return string Tax Included or Tax
  */
 function wpsc_display_tax_label( $checkout = false ) {
-	global $wpsc_cart;
 	if ( wpsc_tax_isincluded ( ) ) {
 		return __( 'Tax Included', 'wpsc' );
 	} else {
@@ -87,8 +86,6 @@ function wpsc_display_tax_label( $checkout = false ) {
  * @return array Countries that can be shipped to.  If empty, sets session variable with appropriate error message
  */
 function wpsc_get_acceptable_countries() {
-	global $wpdb;
-
 	$cart_category_ids = array_unique( wpsc_cart_item_categories( true ) );
 
 	$target_market_ids = array();
@@ -272,7 +269,7 @@ class wpsc_checkout {
 	 */
 	function form_field() {
 
-		global $wpdb, $user_ID, $wpsc_customer_checkout_details;
+		global $wpsc_customer_checkout_details;
 
 		$saved_form_data = empty( $wpsc_customer_checkout_details[$this->checkout_item->id] ) ? null : $wpsc_customer_checkout_details[$this->checkout_item->id];
 		$an_array = '';
@@ -305,7 +302,6 @@ class wpsc_checkout {
 			case "checkbox":
 				$options = $this->get_checkout_options( $this->checkout_item->id );
 				if ( $options != '' ) {
-					$i = mt_rand();
 					foreach ( $options as $label => $value ) {
 						?>
 							<label>
@@ -377,7 +373,7 @@ class wpsc_checkout {
 	 * @access public
 	 */
 	function validate_forms() {
-		global $wpsc_cart, $wpdb, $current_user, $user_ID, $wpsc_gateway_error_messages, $wpsc_checkout_error_messages, $wpsc_customer_checkout_details, $wpsc_registration_error_messages;
+		global $user_ID, $wpsc_gateway_error_messages, $wpsc_checkout_error_messages, $wpsc_customer_checkout_details, $wpsc_registration_error_messages;
 		$any_bad_inputs = false;
 		$bad_input_message = '';
 		$wpsc_gateway_error_messages      = array();
@@ -394,8 +390,6 @@ class wpsc_checkout {
 				$wpsc_gateway_error_messages['card_number'] = '';
 			} else {
 
-				$any_bad_inputs = true;
-				$bad_input = true;
 				$wpsc_gateway_error_messages['card_number'] = __( 'Please enter a valid card number.', 'wpsc' );
 				$wpsc_customer_checkout_details['card_number'] = '';
 			}
@@ -404,8 +398,6 @@ class wpsc_checkout {
 			if ( !empty($_POST['expiry']['month']) && !empty($_POST['expiry']['month']) && is_numeric( $_POST['expiry']['month'] ) && is_numeric( $_POST['expiry']['year'] ) ) {
 				$wpsc_gateway_error_messages['expdate'] = '';
 			} else {
-				$any_bad_inputs = true;
-				$bad_input = true;
 				$wpsc_gateway_error_messages['expdate'] = __( 'Please enter a valid expiry date.', 'wpsc' );
 				$wpsc_customer_checkout_details['expdate'] = '';
 			}

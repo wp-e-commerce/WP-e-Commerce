@@ -573,7 +573,7 @@ class ASH{
      * @return ASHShipment
      */
     function get_shipment(){
-        global $wpdb, $wpsc_cart;
+        global $wpsc_cart;
 
         $shipment = new ASHShipment();
         if (!$wpsc_cart){

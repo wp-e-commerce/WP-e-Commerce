@@ -132,7 +132,7 @@ function wpsc_add_new_user( $user_login, $user_pass, $user_email ) {
 
 
 function wpsc_set_aioseop_keywords( $data ) {
-	global $wpdb, $wp_query, $wpsc_title_data, $aioseop_options;
+	global $wpdb, $wp_query, $aioseop_options;
 
 	if ( isset( $wp_query->query_vars['product_url_name'] ) ) {
 		$product_name = $wp_query->query_vars['product_url_name'];
@@ -371,7 +371,6 @@ function nzshpcrt_display_preview_image() {
 							break;
 
 						default:
-							$pass_imgtype = false;
 							break;
 					}
 					exit();

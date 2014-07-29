@@ -338,7 +338,7 @@ function wpsc_purchaselog_details_shipping() {
 }
 
 function wpsc_purchaselog_details_tax() {
-   global $purchlogitem, $wpsc_cart;
+   global $purchlogitem;
 
    return (float) $purchlogitem->purchitem->tax_charged;
 }
@@ -862,7 +862,7 @@ class wpsc_purchaselogs {
    }
 
    function the_purch_item_statuses() {
-	  global $wpdb, $wpsc_purchlog_statuses;
+	  global $wpsc_purchlog_statuses;
 	  $this->purch_status_count = count( $wpsc_purchlog_statuses );
 	  $this->allpurchaselogstatuses = $wpsc_purchlog_statuses;
 	  return $wpsc_purchlog_statuses;
@@ -977,7 +977,7 @@ class wpsc_purchaselogs_items {
    }
 
    function shippingstate( $id ) {
-	  global $wpdb;
+
 	  if ( is_numeric( $id ) ) {
 		 $name = wpsc_get_region( $id );
 		 return $name;
@@ -1066,7 +1066,7 @@ class wpsc_purchaselogs_items {
 
 //edit purchase log status function
 function wpsc_purchlog_edit_status( $purchlog_id='', $purchlog_status='' ) {
-   global $wpdb;
+
    if ( empty($purchlog_id) && empty($purchlog_status) ) {
       $purchlog_id = absint( $_POST['id'] );
       $purchlog_status = absint( $_POST['new_status'] );

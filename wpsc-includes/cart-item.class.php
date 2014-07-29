@@ -211,10 +211,9 @@ class wpsc_cart_item {
 	 * @return array array of monetary and other values
 	 */
 	function refresh_item() {
-		global $wpdb, $wpsc_shipping_modules, $wpsc_cart;
+		global $wpdb, $wpsc_shipping_modules;
 		$product_id = $this->product_id;
 		$product = get_post( $this->product_id );
-		$product_meta = get_metadata( 'post', $this->product_id );
 		$this->sku = get_post_meta( $product_id, '_wpsc_sku', true );
 		$price = get_post_meta( $product_id, '_wpsc_price', true );
 		$special_price = get_post_meta( $product_id, '_wpsc_special_price', true );
@@ -369,7 +368,7 @@ class wpsc_cart_item {
 	 */
 
 	function calculate_shipping($method = null) {
-		global $wpdb, $wpsc_cart, $wpsc_shipping_modules;
+		global $wpsc_shipping_modules;
 		$shipping = '';
 		if($method === null)
 			$method = $this->cart->selected_shipping_method;
@@ -391,7 +390,7 @@ class wpsc_cart_item {
 	 */
 
 	function save_provided_file($file_data) {
-		global $wpdb;
+
 		$accepted_file_types['mime'][] = 'image/jpeg';
 		$accepted_file_types['mime'][] = 'image/gif';
 		$accepted_file_types['mime'][] = 'image/png';
@@ -457,8 +456,6 @@ class wpsc_cart_item {
 	 * no parameters, nothing returned
 	 */
 	function update_claimed_stock() {
-		global $wpdb;
-
 		if($this->has_limited_stock == true) {
 			$claimed_query = new WPSC_Claimed_Stock( array(
 				'product_id' => $this->product_id,

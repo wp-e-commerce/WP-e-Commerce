@@ -20,7 +20,7 @@ function wpsc_get_meta_ids_by_meta_key( $meta_object_type, $meta_key = '' ) {
 	global $wpdb;
 
 	$meta_table    = _wpsc_meta_table_name( 'visitor' );
-	$meta_key = _wpsc_meta_key_name( $meta_key );
+	$id_field_name = _wpsc_meta_key_name( 'visitor' );
 
 	$sql = 'SELECT meta_id FROM `' . $meta_table . '` where meta_key = "%s"';
 	$sql = $wpdb->prepare( $sql, $meta_key );
@@ -312,7 +312,6 @@ function _wpsc_meta_table_name( $meta_object_type ) {
  * @return string Name of the applicable WPEC custom meta table, empty string if the meta type is not valid
  */
 function _wpsc_wpdb_meta_table( $meta_object_type ) {
-	global $wpdb;
 
 	if ( $meta_object_type = _wpsc_validate_meta_object_type( $meta_object_type ) ) {
 		$table_name_property = 'wpsc_'. $meta_object_type . 'meta';
@@ -332,7 +331,6 @@ function _wpsc_wpdb_meta_table( $meta_object_type ) {
  * @return string column name of the applicable WPEC custom meta table index field, empty string if the meta type is not valid
  */
 function _wpsc_meta_key_name( $meta_object_type ) {
-	global $wpdb;
 
 	if ( $meta_object_type = _wpsc_validate_meta_object_type( $meta_object_type ) ) {
 		$id_field_name = 'wpsc_' . $meta_object_type . '_id';
@@ -403,8 +401,6 @@ function _wpsc_replace_visitor_meta_keys( $replacements ) {
 
 		// the built in checkout names cannot be replaced to something else
 		if ( ! isset( $build_in_checkout_names[$visitor_meta_key] ) ) {
-
-			$sql = 'UPDATE ' . $wpdb->wpsc_visitormeta . ' SET meta_key = "' . $new_meta_key .
 
 			$rows_updated = $wpdb->update(
 					$wpdb->wpsc_visitormeta,                // table

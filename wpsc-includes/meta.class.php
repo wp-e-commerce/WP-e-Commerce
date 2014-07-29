@@ -144,7 +144,7 @@ class WPSC_Meta
 						$this->object_type, $this->object_id, $meta_to_delete
 						);
 
-				$result = $wpdb->query( $sql );
+				$wpdb->query( $sql );
 				do_action( 'wpsc_meta_delete', $this->object_type, $this->object_id, $meta_to_delete );
 			}
 

@@ -90,7 +90,6 @@ class wpsc_cart {
 
 
     function wpsc_cart() {
-		$coupon = 'percentage';
 		$this->update_location();
 		$this->wpsc_refresh_cart_items();
 		$this->unique_id = sha1( uniqid( rand(), true ) );
@@ -422,7 +421,7 @@ class wpsc_cart {
 	 * @return none
 	 */
 	function get_shipping_option() {
-		global $wpdb, $wpsc_shipping_modules;
+		global $wpsc_shipping_modules;
 
 		if ( ! isset( $wpsc_shipping_modules[$this->selected_shipping_method] ) ) {
 			$wpsc_shipping_modules[$this->selected_shipping_method] = '';
@@ -452,8 +451,6 @@ class wpsc_cart {
 	 * @access public
 	 */
 	function update_shipping( $method, $option ) {
-		global $wpdb, $wpsc_shipping_modules;
-
 
 		if ( ! empty( $method ) ) {
 			$this->selected_shipping_method = $method;
@@ -822,7 +819,7 @@ class wpsc_cart {
 	 * @return float returns the price as a floating point value
 	 */
 	function calculate_subtotal( $for_shipping = false ) {
-		global $wpdb;
+
 		if ( $for_shipping == true ) {
 			$total = 0;
 			foreach ( $this->cart_items as $key => $cart_item ) {
@@ -909,7 +906,7 @@ class wpsc_cart {
 	 * @return float returns the price as a floating point value
 	 */
 	function calculate_total_weight( $for_shipping = false ) {
-		global $wpdb;
+
 		$total = '';
 		if ( $for_shipping == true ) {
 			foreach ( $this->cart_items as $key => $cart_item ) {
@@ -1009,7 +1006,7 @@ class wpsc_cart {
 	 * @return float returns the shipping as a floating point value
 	 */
 	function calculate_base_shipping() {
-		global $wpdb, $wpsc_shipping_modules;
+		global $wpsc_shipping_modules;
 
 		if ( $this->uses_shipping() ) {
 			if (    isset( $wpsc_shipping_modules[ $this->selected_shipping_method ] )
@@ -1038,7 +1035,7 @@ class wpsc_cart {
 	 * @return float returns the shipping as a floating point value
 	 */
 	function calculate_per_item_shipping( $method = null ) {
-		global $wpdb, $wpsc_shipping_modules;
+
 		$total = '';
 		if ( $method == null ) {
 			$method = $this->selected_shipping_method;
@@ -1061,7 +1058,7 @@ class wpsc_cart {
 	 * @return float returns the price as a floating point value
 	 */
 	function uses_shipping() {
-		global $wpdb;
+
 		if ( get_option( 'do_not_use_shipping' ) ) {
 			return false;
 		}
@@ -1099,8 +1096,6 @@ class wpsc_cart {
 	 *
 	 */
 	function save_to_db( $purchase_log_id ) {
-		global $wpdb;
-
 		foreach ( $this->cart_items as $key => $cart_item ) {
 			$cart_item->save_to_db( $purchase_log_id );
 		}
@@ -1184,7 +1179,7 @@ class wpsc_cart {
 	 */
 	function get_shipping_quotes() {
 
-		global $wpdb, $wpsc_shipping_modules;
+		global $wpsc_shipping_modules;
 		$this->shipping_quotes = array();
 		if ( $this->shipping_method == null ) {
 			$this->get_shipping_method();

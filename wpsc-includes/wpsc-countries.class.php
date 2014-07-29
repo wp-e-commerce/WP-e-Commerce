@@ -110,7 +110,6 @@ class WPSC_Countries {
 	 * @return int|boolean                  integer country id on success, false on failure
 	 */
 	public static function get_country_isocode( $country ) {
-		$country_id = false;
 
 		if ( ! self::confirmed_initialization() ) {
 			return 0;

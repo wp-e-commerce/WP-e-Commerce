@@ -319,7 +319,6 @@ class wpsc_coupons {
 	 * @return bool
 	 */
 	public function _filter_cart_item_conditions( $cart_item ) {
-		global $wpsc_cart;
 
 		$compare_logic = false;
 
@@ -587,7 +586,7 @@ class wpsc_coupons {
 	 * @return float
 	 */
 	public function calculate_discount() {
-		global $wpdb, $wpsc_cart;
+		global $wpsc_cart;
 
 		$wpsc_cart->clear_cache();
 

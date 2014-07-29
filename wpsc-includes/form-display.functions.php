@@ -6,7 +6,7 @@
  */
 
 function wpsc_uploaded_files() {
-	global $wpdb, $wpsc_uploaded_file_cache;
+	global $wpsc_uploaded_file_cache;
 
 	$dir = @opendir( WPSC_FILE_DIR );
 	$num = 0;
@@ -19,14 +19,15 @@ function wpsc_uploaded_files() {
 			//filter out the dots, macintosh hidden files and any backup files
 			if ( ($file != "..") && ($file != ".") && ($file != "product_files") && ($file != "preview_clips") && !stristr( $file, "~" ) && !( strpos( $file, "." ) === 0 ) && !strpos( $file, ".old" ) ) {
 				$file_data = null;
-				$args = array(
-					'post_type' => 'wpsc-product-file',
-					'post_name' => $file,
-					'numberposts' => 1,
-					'post_status' => 'all'
-				);
 
 				//// @TODO broken, does not select by post_name, need to loop at wordpress API to fix.
+				//				$args = array(
+				//					'post_type' => 'wpsc-product-file',
+				//					'post_name' => $file,
+				//					'numberposts' => 1,
+				//					'post_status' => 'all'
+				//				);
+
 				//$file_data = (array)get_posts($args);
 
 
@@ -59,9 +60,8 @@ function wpsc_uploaded_files() {
  * @return HTML
  */
 function wpsc_select_product_file( $product_id = null ) {
-	global $wpdb;
 	$product_id = absint( $product_id );
-	$file_list = wpsc_uploaded_files();
+	wpsc_uploaded_files();
 
 	$args = array(
 		'post_type' => 'wpsc-product-file',
@@ -142,7 +142,7 @@ function _wpsc_admin_download_file() {
 	$file_id = $_REQUEST['wpsc_download_id'];
 	check_admin_referer( 'wpsc-admin-download-file-' . $file_id );
 
-	$file_data = get_post( $file_id );
+	get_post( $file_id );
 	_wpsc_force_download_file( $file_id );
 }
 
@@ -150,7 +150,6 @@ if ( ! empty( $_REQUEST['wpsc_download_id'] ) )
 	add_action( 'admin_init', '_wpsc_admin_download_file' );
 
 function wpsc_select_variation_file( $file_id, $variation_ids, $variation_combination_id = null ) {
-	global $wpdb;
 	$file_list = wpsc_uploaded_files();
 	$unique_id_component = ((int)$variation_combination_id) . "_" . str_replace( ",", "_", $variation_ids );
 
@@ -179,7 +178,6 @@ function wpsc_select_variation_file( $file_id, $variation_ids, $variation_combin
 }
 
 function wpsc_list_product_themes( $theme_name = null ) {
-	global $wpdb;
 
 	if ( !$selected_theme = get_option( 'wpsc_selected_theme' ) )
 		$selected_theme = 'default';

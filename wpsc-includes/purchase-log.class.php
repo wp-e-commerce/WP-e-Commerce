@@ -441,8 +441,6 @@ class WPSC_Purchase_Log {
 			return;
 		}
 
-		global $wpdb;
-
 		if ( ! in_array( $col, array( 'id', 'sessionid' ) ) )
 			return;
 

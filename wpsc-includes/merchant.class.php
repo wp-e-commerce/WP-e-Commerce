@@ -85,7 +85,6 @@ class wpsc_merchant {
 	);
 
 	function __construct( $purchase_id = null, $is_receiving = false ) {
-		global $wpdb;
 
 		if ( ($purchase_id == null) && ($is_receiving == true) ) {
 			$this->is_receiving = true;
@@ -249,8 +248,6 @@ class wpsc_merchant {
 	 * saves error message, data it is stored in may need to change, hence the need to not extend this.
 	 */
 	function set_error_message( $error_message ) {
-		global $wpdb;
-
 		$messages = wpsc_get_customer_meta( 'checkout_misc_error_messages' );
 		if ( ! is_array( $messages ) )
 			$messages = array();
@@ -264,10 +261,7 @@ class wpsc_merchant {
 	 * returns to checkout, if this changes and you extend this, your merchant module may go to the wrong place
 	 */
 	function return_to_checkout() {
-		global $wpdb;
-
 		wp_redirect( get_option( 'shopping_cart_url' ) );
-
 		exit(); // follow the redirect with an exit, just to be sure.
 	}
 

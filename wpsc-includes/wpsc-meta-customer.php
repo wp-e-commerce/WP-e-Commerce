@@ -10,7 +10,6 @@
  * @return boolean        True if successful, False if otherwise
  */
 function wpsc_delete_all_customer_meta( $id = false ) {
-	global $wpdb;
 
 	if ( ! $id ) {
 		$id = wpsc_get_current_customer_id();
@@ -226,7 +225,7 @@ function wpsc_get_customer_cart( $id = false  ) {
  * @return boolean
  */
 function wpsc_update_customer_cart( $cart, $id = false ) {
-	global $wpdb, $wpsc_start_time, $wpsc_cart;
+	global $wpsc_cart;
 
 	if ( ! is_a( $cart, 'wpsc_cart' ) ) {
 		return false;
