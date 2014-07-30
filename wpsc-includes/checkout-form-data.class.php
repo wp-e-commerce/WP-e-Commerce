@@ -74,7 +74,7 @@ class WPSC_Checkout_Form_Data {
 						$this->gateway_data[$data_key][$new_key] = $value;
 					}
 				}
-				$this->gateway_data[$data_key]['name'] = $this->gateway_data[$data_key]['first_name'] + ' ' + $this->gateway_data[$data_key]['last_name'];
+				$this->gateway_data[$data_key]['name'] = $this->gateway_data[$data_key]['first_name'] . ' ' . $this->gateway_data[$data_key]['last_name'];
 			}
 
 			wp_cache_set( $this->log_id, $this->gateway_data, 'wpsc_checkout_form_gateway_data' );
