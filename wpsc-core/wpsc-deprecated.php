@@ -1901,7 +1901,7 @@ function wpsc_admin_dynamic_css() {
 	$flash = 0;
 	$flash = apply_filters( 'flash_uploader', $flash );
 
-	if ( $flash = 1 ) {
+	if ( 1 == $flash ) {
 ?>
 		div.flash-image-uploader {
 			display: block;
