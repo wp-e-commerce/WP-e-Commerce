@@ -118,7 +118,8 @@ class WPSC_Update_Progress {
 
 	private function print_eta() {
 		echo '<div class="eta">';
-		_e( 'Estimated time left:', 'wpsc' ) . ' ';
+		_e( 'Estimated time left:', 'wpsc' );
+		echo ' ';
 		if ( $this->eta == 0 )
 			_e( 'Under a minute', 'wpsc' );
 		else
@@ -182,7 +183,8 @@ function wpsc_update_step( $i, $total ) {
 		$processed = $i - $count + 1;
 		$eta = floor( ( $total - $i ) * ( $now - $start ) / ( $processed * 60 ) );
 		echo '<div class="eta">';
-		_e( 'Estimated time left:', 'wpsc' ) . ' ';
+		_e( 'Estimated time left:', 'wpsc' );
+		echo ' ';
 		if ( $eta == 0 )
 			_e( 'Under a minute', 'wpsc' );
 		else
