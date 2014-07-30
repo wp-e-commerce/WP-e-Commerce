@@ -250,16 +250,16 @@ th#status {
 	color: #888;
 }
 
-#wpsc_purchlogitems_links li.delete .dashicons,
-#wpsc_purchlogitems_links li.go-back .dashicons {
+#wpsc_purchlogitems_links li a.wpsc-purchlog-action-delete .dashicons,
+#wpsc_purchlogitems_links li a.wpsc-purchlog-action-back .dashicons {
 	color: #bbb;
 }
 
-#wpsc_purchlogitems_links li.delete a:hover .dashicons {
+#wpsc_purchlogitems_links li a.wpsc-purchlog-action-delete:hover .dashicons {
 	color: #c00;
 }
 
-#wpsc_purchlogitems_links li.go-back a:hover .dashicons {
+#wpsc_purchlogitems_links li a.wpsc-purchlog-action-back:hover .dashicons {
 	color: #888;
 }
 
