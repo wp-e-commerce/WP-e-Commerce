@@ -502,7 +502,7 @@ function wpsc_create_or_update_tables( $debug = false ) {
 				$existing_table_columns[] = $column_name;
 
 				$null_match = false;
-				if ( $existing_table_column['Null'] = 'NO' ) {
+				if ( 'NO' == $existing_table_column['Null'] ) {
 					if ( isset( $table_data['columns'][$column_name] ) && stristr( $table_data['columns'][$column_name], "NOT NULL" ) !== false ) {
 						$null_match = true;
 					}
