@@ -98,7 +98,7 @@ class WPSC_Purchase_Log_Action_Links {
 	 */
 	private function _get_downloads_lock_link() {
 
-		return new WPSC_Purchase_Log_Action_Link( 'downloads_lock', wpsc_purchlogs_have_downloads_locked(), array(
+		return new WPSC_Purchase_Log_Action_Link( 'downloads_lock', wpsc_purchlogs_have_downloads_locked(), $this->log_id, array(
 			'url'      => esc_url( add_query_arg( 'wpsc_admin_action', 'clear_locks' ) ),
 			'dashicon' => 'dashicons-lock'
 		) );
@@ -112,7 +112,7 @@ class WPSC_Purchase_Log_Action_Links {
 	 */
 	private function _get_packing_slip_link() {
 
-		return new WPSC_Purchase_Log_Action_Link( 'packing_slip', __( 'View Packing Slip', 'wpsc' ), array(
+		return new WPSC_Purchase_Log_Action_Link( 'packing_slip', __( 'View Packing Slip', 'wpsc' ), $this->log_id, array(
 			'url'        => esc_url( add_query_arg( 'c', 'packing_slip' ) ),
 			'dashicon'   => 'dashicons-format-aside',
 			'attributes' => array(
@@ -129,7 +129,7 @@ class WPSC_Purchase_Log_Action_Links {
 	 */
 	private function _get_email_receipt_link() {
 
-		return new WPSC_Purchase_Log_Action_Link( 'email_receipt', __( 'Resend Receipt to Buyer', 'wpsc' ), array(
+		return new WPSC_Purchase_Log_Action_Link( 'email_receipt', __( 'Resend Receipt to Buyer', 'wpsc' ), $this->log_id, array(
 			'url'      => esc_url( add_query_arg( 'email_buyer_id', $this->log_id ) ),
 			'dashicon' => 'dashicons-migrate dashicons-email-alt'
 		) );
@@ -143,7 +143,7 @@ class WPSC_Purchase_Log_Action_Links {
 	 */
 	private function _get_delete_link() {
 
-		return new WPSC_Purchase_Log_Action_Link( 'delete', __( 'Remove this record', 'wpsc' ), array(
+		return new WPSC_Purchase_Log_Action_Link( 'delete', __( 'Remove this record', 'wpsc' ), $this->log_id, array(
 			'url'        => esc_url( wp_nonce_url( add_query_arg( 'purchlog_id', $this->log_id, 'admin.php?wpsc_admin_action=delete_purchlog' ), 'delete_purchlog_' . $this->log_id ) ),
 			'dashicon'   => 'dashicons-dismiss',
 			'attributes' => array(
@@ -160,7 +160,7 @@ class WPSC_Purchase_Log_Action_Links {
 	 */
 	private function _get_back_link() {
 
-		return new WPSC_Purchase_Log_Action_Link( 'back', __( 'Go Back', 'wpsc' ), array(
+		return new WPSC_Purchase_Log_Action_Link( 'back', __( 'Go Back', 'wpsc' ), $this->log_id, array(
 			'url'      => wp_get_referer(),
 			'dashicon' => 'dashicons-arrow-left-alt'
 		) );
@@ -202,6 +202,12 @@ class WPSC_Purchase_Log_Action_Link {
 	private $title;
 
 	/**
+	 * Purchase Log ID.
+	 * @var  int
+	 */
+	private $log_id;
+
+	/**
 	 * Action Link Settings.
 	 * @var  array
 	 */
@@ -214,10 +220,11 @@ class WPSC_Purchase_Log_Action_Link {
 	 * @param  string  $title  Link text.
 	 * @param  array   $args   Action link settings.
 	 */
-	public function __construct( $id, $title, $args = array() ) {
+	public function __construct( $id, $title, $log_id, $args = array() ) {
 
 		$this->id = sanitize_key( $id );
 		$this->title = $title;
+		$this->log_id = absint( $log_id );
 		$this->args = $this->_validate_settings( $args );
 
 	}
@@ -294,7 +301,27 @@ class WPSC_Purchase_Log_Action_Link {
 	 */
 	public function get_link_display() {
 
-		return '<a href="' . esc_attr( $this->args['url'] ) . '" title="' . esc_attr( $this->args['description'] ) . '" ' . $this->_get_link_attributes_string() . '>' . $this->_get_dashicon_display() . esc_html( $this->title ) . '</a></li>';
+		return '<a href="' . esc_attr( $this->get_link_url() ) . '" title="' . esc_attr( $this->args['description'] ) . '" ' . $this->_get_link_attributes_string() . '>' . $this->_get_dashicon_display() . esc_html( $this->title ) . '</a></li>';
+
+	}
+
+	/**
+	 * Get Link URL
+	 *
+	 * Returns the custom URL if specified.
+	 * Otherwise returns a callback URL.
+	 *
+	 * @return  string  URL.
+	 */
+	public function get_link_url() {
+
+		// Custom URL
+		if ( ! empty( $this->args['url'] ) ) {
+			return $this->args['url'];
+		}
+
+		// Callback URL
+		return add_query_arg( array( 'wpsc_purchase_log_action' => $this->id, 'id' => $this->log_id ) );
 
 	}
 
