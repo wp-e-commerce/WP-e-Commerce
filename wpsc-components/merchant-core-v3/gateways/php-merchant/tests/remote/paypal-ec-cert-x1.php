@@ -85,7 +85,8 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 	 */
 	public function test_setexpresscheckout_standard_ref101() {
 		// Call SetExpressCheckout
-		$response = $this->gateway->setup_purchase( $this->purchase_options );	
+		$options  = is_array( $this->purchase_options ) ? $this->purchase_options : array();
+		$response = $this->gateway->setup_purchase( $options );	
 
 		$this->assertTrue( $response->is_successful() );
 
