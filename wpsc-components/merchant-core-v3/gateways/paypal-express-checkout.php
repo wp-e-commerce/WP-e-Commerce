@@ -214,7 +214,6 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         $details = $this->gateway->get_details_for( $token );
         $this->log_payer_details( $details );
 
-
         $response = $this->gateway->purchase( $options );
         $this->log_protection_status( $response );
         $location = remove_query_arg( 'payment_gateway_callback' );
