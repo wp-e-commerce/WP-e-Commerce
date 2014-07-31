@@ -11,10 +11,16 @@
 class WPSC_Purchase_Log_Page {
 	private $list_table;
 	private $output;
+	public $log_id = 0;
 
 	public function __construct() {
 		$controller = 'default';
 		$controller_method = 'controller_default';
+
+		// If individual purchase log, setup ID and action links.
+		if ( isset( $_REQUEST['id'] ) && is_numeric( $_REQUEST['id'] ) ) {
+			$this->log_id = (int) $_REQUEST['id'];
+		}
 
 		if ( isset( $_REQUEST['c'] ) && method_exists( $this, 'controller_' . $_REQUEST['c'] ) ) {
 			$controller = $_REQUEST['c'];
@@ -250,8 +256,6 @@ class WPSC_Purchase_Log_Page {
 
 		global $purchlogitem;
 
-		$this->log_id = (int) $_REQUEST['id'];
-
 		// TODO: seriously get rid of all these badly coded purchaselogs.class.php functions in 4.0
 		$purchlogitem = new wpsc_purchaselogs_items( $this->log_id );
 
@@ -281,8 +285,6 @@ class WPSC_Purchase_Log_Page {
 		}
 
 		global $purchlogitem;
-
-		$this->log_id = (int) $_REQUEST['id'];
 
 		$purchlogitem = new wpsc_purchaselogs_items( $this->log_id );
 
