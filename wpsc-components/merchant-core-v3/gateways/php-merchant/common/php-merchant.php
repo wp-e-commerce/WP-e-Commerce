@@ -12,8 +12,7 @@ require_once( 'http.php' );
 require_once( 'response.php' );
 require_once( 'helpers.php' );
 
-abstract class PHP_Merchant
-{
+abstract class PHP_Merchant {
 	/**
 	 * These currencies don't have decimal points. Eg: You never see JPY1000.5
 	 *
@@ -109,11 +108,11 @@ abstract class PHP_Merchant
 	}
 
 	public function get_option( $key ) {
-		return array_key_exists( $key, $this->options ) ? $this->options[$key] : null;
+		return array_key_exists( $key, $this->options ) ? $this->options[ $key ] : null;
 	}
 
 	public function set_option( $key, $value ) {
-		$this->options[$key] = $value;
+		$this->options[ $key ] = $value;
 		return $this;
 	}
 
@@ -128,7 +127,7 @@ abstract class PHP_Merchant
 	protected function requires( $options ) {
 		$missing = array();
 		foreach ( (array) $options as $option ) {
-			if ( ! isset( $this->options[$option] ) ) {
+			if ( ! isset( $this->options[ $option ] ) ) {
 				$missing[] = $option;
 			}
 		}
@@ -148,7 +147,7 @@ abstract class PHP_Merchant
 	 */
 	protected function conditional_requires( $options ) {
 		foreach ( (array) $options as $option ) {
-			if ( isset( $this->options[$option] ) ) {
+			if ( isset( $this->options[ $option ] ) ) {
 				return true;
 			}
 		}
