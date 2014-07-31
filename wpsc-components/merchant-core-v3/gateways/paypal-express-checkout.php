@@ -127,6 +127,26 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 		add_filter( 'wpsc_get_transaction_html_output', array( $this, 'filter_generic_error_page' ) );
 	}
 
+    public function record_payer_details( $details ) {
+        $paypal_log = array(
+            'payer_id' => $details->get( 'payer' )->id,
+            'payer_status' => $details->get( 'payer' )->status,
+            'shipping_status' => $details->get( 'payer' )->shipping_status,
+            'protection' => null,
+        );
+
+        wpsc_update_purchase_meta( $this->purchase_log->get( 'id' ), 'paypal_ec_details' , $paypal_log);
+    }
+
+    public function record_protection_status( $response ) {
+        $params = $response->get_params();
+
+        $elg = $params['PAYMENTINFO_0_PROTECTIONELIGIBILITY'];
+        $paypal_log = wpsc_get_purchase_meta( $this->purchase_log->get( 'id' ), 'paypal_ec_details', true );
+        $paypal_log['protection'] = $elg;
+        wpsc_update_purchase_meta( $this->purchase_log->get( 'id' ), 'paypal_ec_details' , $paypal_log);
+    }
+
 	public function callback_process_confirmed_payment() {
 		$args = array_map( 'urldecode', $_GET );
 		extract( $args, EXTR_SKIP );
@@ -147,7 +167,13 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 		if ( $this->setting->get( 'ipn', false ) )
 			$options['notify_url'] = $this->get_notify_url();
 
+		// GetExpressCheckoutDetails
+		$details = $this->gateway->get_details_for( $token );            
+		$this->record_payer_details( $details );
+
+
 		$response = $this->gateway->purchase( $options );
+        $this->record_protection_status( $response );
 		$location = remove_query_arg( 'payment_gateway_callback' );
 
 		if ( $response->has_errors() ) {
@@ -408,17 +434,14 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway
 		$options += $this->checkout_data->get_gateway_data();
 		$options += $this->purchase_log->get_gateway_data( parent::get_currency_code(), $this->get_currency_code() );
 
-		if ( $this->setting->get( 'ipn', false ) )
+		if ( $this->setting->get( 'ipn', false ) ) {
 			$options['notify_url'] = $this->get_notify_url();
+        }
 
 		// SetExpressCheckout
 		$response = $this->gateway->setup_purchase( $options );
 
 		if ( $response->is_successful() ) {
-
-			// GetExpressCheckoutDetails
-			//$details = $this->get_details_for( $token );
-			//$this->record_ec_details();
 
 			// Redirect the user to the payments page
 			$url = ( $this->setting->get( 'sandbox_mode' ) ? self::SANDBOX_URL : self::LIVE_URL ) . $response->get( 'token' );
