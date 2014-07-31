@@ -1,5 +1,5 @@
 <?php
-
+// @todo: Update to use canonical test accounts rather than those of individuals.
 $test_accounts = array(
 	'paypal-express-checkout' => array(
 		'api_username'  => 'pro_1304085877_biz_api1.garyc40.com',
