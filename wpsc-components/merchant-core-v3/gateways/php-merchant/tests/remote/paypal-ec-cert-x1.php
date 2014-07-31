@@ -90,7 +90,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 		$this->assertTrue( $response->is_successful() );
 
 		// Display the transaction Id
-		st_echo('Test Case 1.01: ' . $response->get( 'correlation_id' ) . "\n" );
+		st_echo('Test Case 1.01: ' . $response->get( 'token' ) . "\n" );
 	}
 
 	/**
@@ -118,7 +118,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 		$this->assertTrue( $response->is_successful() );
 
 		// Display the transaction Id
-		st_echo('Test Case 1.02: ' . $response->get( 'correlation_id' ) . "\n" );
+		st_echo('Test Case 1.02: ' . $response->get( 'token' ) . "\n" );
 	}
 
 	/**
@@ -138,7 +138,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 		$this->assertTrue( $response->is_successful() );
 
 		// Display the transaction Id
-		st_echo('Test Case 1.03: ' . $response->get( 'correlation_id' ) . "\n" );
+		st_echo('Test Case 1.03: ' . $response->get( 'token' ) . "\n" );
 
 	}
 
@@ -159,7 +159,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 		$this->assertTrue( $response->is_successful() );
 
 		// Display the transaction Id
-		st_echo('Test Case 1.04: ' . $response->get( 'correlation_id' ) . "\n" );
+		st_echo('Test Case 1.04: ' . $response->get( 'token' ) . "\n" );
 	}
 
 	/**
@@ -178,7 +178,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 		$this->assertTrue( $response->is_successful() );
 
 		// Display the transaction Id
-		st_echo('Test Case 1.05: ' . $response->get( 'correlation_id' ) . "\n" );
+		st_echo('Test Case 1.05: ' . $response->get( 'token' ) . "\n" );
 	}
 
 	/**
@@ -198,7 +198,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 		$this->assertTrue( $response->is_successful() );
 
 		// Display the transaction Id
-		st_echo('Test Case 1.06: ' . $response->get( 'correlation_id' ) . "\n" );
+		st_echo('Test Case 1.06: ' . $response->get( 'token' ) . "\n" );
 	}
 
 	/**
@@ -227,7 +227,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 
 		// Display the transaction Id
 		$error = $response->get_error();
-		st_echo( 'Test Case 1.08: ' . $error['details']  . "\n" );
+		st_echo( 'Test Case 1.08: ' . $response->get( 'token' ) . ' - ' . $error['details']  . "\n" );
 	}
 
 	/**
@@ -256,7 +256,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 
 		// Display the transaction Id
 		$error = $response->get_error();
-		st_echo( 'Test Case 1.09: ' . $error['details']  . "\n" );
+		st_echo( 'Test Case 1.09: '  . $response->get( 'token' ) . ' - '. $error['details']  . "\n" );
 	}
 
 	/**
@@ -285,7 +285,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 
 		// Display the transaction Id
 		$error = $response->get_error();
-		st_echo( 'Test Case 1.10: ' . $error['details']  . "\n" );
+		st_echo( 'Test Case 1.10: '  . $response->get( 'token' ) . ' - '. $error['details']  . "\n" );
 	}
 
 	/**
@@ -314,7 +314,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 
 		// Display the transaction Id
 		$error = $response->get_error();
-		st_echo( 'Test Case 1.11: ' . $error['details']  . "\n" );
+		st_echo( 'Test Case 1.11: '  . $response->get( 'token' ) . ' - '. $error['details']  . "\n" );
 	}
 
 	/**
@@ -343,7 +343,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 
 		// Display the transaction Id
 		$error = $response->get_error();
-		st_echo( 'Test Case 1.12: ' . $error['details']  . "\n" );
+		st_echo( 'Test Case 1.12: '  . $response->get( 'token' ) . ' - '. $error['details']  . "\n" );
 	}
 
 	/**
@@ -372,7 +372,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 
 		// Display the transaction Id
 		$error = $response->get_error();
-		st_echo( 'Test Case 1.13: ' . $error['details']  . "\n" );
+		st_echo( 'Test Case 1.13: '  . $response->get( 'token' ) . ' - '. $error['details']  . "\n" );
 	}
 
 	/**
@@ -397,6 +397,6 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 
 		// Display the transaction Id
 		$error = $response->get_error();
-		st_echo( 'Test Case 1.14: ' . $error['details']  . "\n" );
+		st_echo( 'Test Case 1.14: '  . $response->get( 'token' ) . ' - '. $error['details']  . "\n" );
 	}
 }
