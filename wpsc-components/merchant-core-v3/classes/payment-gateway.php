@@ -235,7 +235,15 @@ final class WPSC_Payment_Gateways
 			update_option( 'wpsc_payment_gateway_cache', self::$gateways );
 	}
 
-	public function flush_cache() {
+	/**
+     * Flush the payment gateways cache.
+ 	 *
+	 * @access public
+	 * @static
+	 * @since 3.9
+	 * @return void
+	 */
+	public static function flush_cache() {
 		delete_option( 'wpsc_payment_gateway_cache' );
 	}
 
@@ -296,7 +304,7 @@ abstract class WPSC_Payment_Gateway
 	 * manner
 	 *
 	 * @access public
-	 * @var string
+	 * @var WPSC_Payment_Gateway_Setting
 	 */
 	public $setting;
 

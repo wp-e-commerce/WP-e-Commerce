@@ -1,5 +1,5 @@
 <?php
-
+// @todo: Update to use canonical test accounts rather than those of individuals.
 $test_accounts = array(
 	'paypal-express-checkout' => array(
 		'api_username'  => 'pro_1304085877_biz_api1.garyc40.com',
@@ -7,4 +7,10 @@ $test_accounts = array(
 		'api_signature' => 'AvoRfECzHW0KLVBSrJC70dNDVgEQA2j69L5ydKo3JhQBCJCNrZTj2zS8',
 		'test'          => true,
 	),
+	'paypal-ec-oa' => array(
+		'api_username'      => 'paypal-facilitator_api1.omarabid.com',
+		'api_password'      => '1404523024',
+		'api_signature'     => 'An5ns1Kso7MWUdW4ErQKJJJ4qi4-AnIgHxdxM4-jkGKkkOhcO0fD-Av5',
+		'test' => true,
+	)
 );

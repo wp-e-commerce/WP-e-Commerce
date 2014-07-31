@@ -12,8 +12,7 @@ require_once( 'http.php' );
 require_once( 'response.php' );
 require_once( 'helpers.php' );
 
-abstract class PHP_Merchant
-{
+abstract class PHP_Merchant {
 	/**
 	 * These currencies don't have decimal points. Eg: You never see JPY1000.5
 	 *
@@ -109,22 +108,50 @@ abstract class PHP_Merchant
 	}
 
 	public function get_option( $key ) {
-		return array_key_exists( $key, $this->options ) ? $this->options[$key] : null;
+		return array_key_exists( $key, $this->options ) ? $this->options[ $key ] : null;
 	}
 
 	public function set_option( $key, $value ) {
-		$this->options[$key] = $value;
+		$this->options[ $key ] = $value;
 		return $this;
 	}
 
+	/**
+	 * Specify fields that are required for the API operation, otherwise
+	 * throw a PHP_Merchant_Exception exception
+	 *
+	 * @param array $options Required fields
+	 * @return void
+	 * @since 3.9
+	 */
 	protected function requires( $options ) {
 		$missing = array();
 		foreach ( (array) $options as $option ) {
-			if ( ! isset( $this->options[$option] ) )
+			if ( ! isset( $this->options[ $option ] ) ) {
 				$missing[] = $option;
+			}
 		}
 
-		if ( ! empty( $missing ) )
+		if ( ! empty( $missing ) ) {
 			throw new PHP_Merchant_Exception( PHPME_REQUIRED_OPTION_UNDEFINED, implode( ', ', $missing ) );
+		}
+	}
+
+	/**
+	 * Specify fields that are required for the API operation, otherwise
+	 * throw a PHP_Merchant_Exception exception
+	 *
+	 * @param array $options Required fields
+	 * @return boolean|void Returns True if a specified field is found
+	 * @since 3.9
+	 */
+	protected function conditional_requires( $options ) {
+		foreach ( (array) $options as $option ) {
+			if ( isset( $this->options[ $option ] ) ) {
+				return true;
+			}
+		}
+
+		throw new PHP_Merchant_Exception( PHPME_REQUIRED_OPTION_UNDEFINED, implode( ', ', $options ) );
 	}
 }

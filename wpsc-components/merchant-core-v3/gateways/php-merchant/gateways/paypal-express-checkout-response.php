@@ -70,6 +70,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Response extends PHP_Merchant_Paypal_
 				'email'      => 'EMAIL',
 				'id'         => 'PAYERID',
 				'status'     => 'PAYERSTATUS',
+				'shipping_status' => 'ADDRESSSTATUS',
 				'first_name' => 'FIRSTNAME',
 				'last_name'  => 'LASTNAME',
 				'country'    => 'COUNTRYCODE',
