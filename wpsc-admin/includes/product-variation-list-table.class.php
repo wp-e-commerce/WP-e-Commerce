@@ -417,7 +417,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 		echo '</p></div>';
 	}
 
-	public function get_bulk_actions() {
+	public function get_bulk_actions( $which ) {
 		$actions = array();
 
 		if ( $this->is_trash )
