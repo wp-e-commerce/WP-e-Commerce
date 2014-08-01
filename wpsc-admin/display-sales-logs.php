@@ -25,6 +25,9 @@ class WPSC_Purchase_Log_Page {
 		if ( isset( $_REQUEST['c'] ) && method_exists( $this, 'controller_' . $_REQUEST['c'] ) ) {
 			$controller = $_REQUEST['c'];
 			$controller_method = 'controller_' . $controller;
+		} elseif ( isset( $_REQUEST['id'] ) && is_numeric( $_REQUEST['id'] ) ) {
+			$controller = 'item_details';
+			$controller_method = 'controller_item_details';
 		}
 
 		$this->$controller_method();
