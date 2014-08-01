@@ -44,9 +44,7 @@ class WPSC_Logging {
      */
     public function prune_logs(){
 
-        $should_we_prune = apply_filters( 'wpsc_logging_should_we_prune', false );
-
-        if ( $should_we_prune === false ){
+        if ( false === apply_filters( 'wpsc_logging_should_we_prune', false ) ) {
             return;
         }
 
@@ -56,30 +54,24 @@ class WPSC_Logging {
             $this->prune_old_logs( $logs_to_prune );
         }
 
-    } // prune_logs
+    }
 
     /**
      * Deletes the old logs that we don't want
      *
      * @access private
      *
-     * @param array/obj     $logs     required     The array of logs we want to prune
-     *
-     * @uses wp_delete_post()                      Deletes the post from WordPress
-     *
-     * @filter wp_logging_force_delete_log         Allows user to override the force delete setting which bypasses the trash
-     *
+     * @param array[ WP_Post ]  $logs The array of logs we want to prune
+     * 
      * @since 3.9
      */
-    private function prune_old_logs( $logs ){
-
-        $force = apply_filters( 'wpsc_logging_force_delete_log', true );
+    private function prune_old_logs( $logs ) {
 
         foreach( $logs as $l ){
-            wp_delete_post( $l->ID, $force );
+            wp_delete_post( $l->ID, apply_filters( 'wpsc_logging_force_delete_log', true ) );
         }
 
-    } // prune_old_logs
+    }
 
     /**
      * Returns an array of posts that are prune candidates.
@@ -111,11 +103,8 @@ class WPSC_Logging {
             )
         );
 
-        $old_logs = get_posts( apply_filters( 'wpsc_logging_prune_query_args', $args ) );
-
-        return $old_logs;
-
-    } // get_logs_to_prune
+       return get_posts( apply_filters( 'wpsc_logging_prune_query_args', $args ) );
+    } 
 
     /**
      * Log types
@@ -163,6 +152,7 @@ class WPSC_Logging {
             'supports'        => array( 'title', 'editor' ),
             'can_export'      => false
         );
+
         register_post_type( 'wpsc_log', apply_filters( 'wpsc_logging_post_type_args', $log_args ) );
 
     }
@@ -191,7 +181,7 @@ class WPSC_Logging {
         $types = self::log_types();
 
         foreach ( $types as $type ) {
-            if( ! term_exists( $type, 'wpsc_log_type' ) ) {
+            if ( ! term_exists( $type, 'wpsc_log_type' ) ) {
                 wp_insert_term( $type, 'wpsc_log_type' );
             }
         }
@@ -205,7 +195,7 @@ class WPSC_Logging {
      *
      * @access      private
      *
-     * @return     array
+     * @return     boolean
      *
      * @since 3.9
      */
@@ -272,20 +262,19 @@ class WPSC_Logging {
 
         $args = wp_parse_args( $log_data, $defaults );
 
-        do_action( 'wpsc_pre_insert_log' );
+        do_action( 'wpsc_pre_insert_log', $args, $log_meta );
 
         // store the log entry
         $log_id = wp_insert_post( $args );
 
         // set the log type, if any
-        if( $log_data['log_type'] && self::valid_type( $log_data['log_type'] ) ) {
+        if ( $log_data['log_type'] && self::valid_type( $log_data['log_type'] ) ) {
             wp_set_object_terms( $log_id, $log_data['log_type'], 'wpsc_log_type', false );
         }
 
-
         // set log meta, if any
-        if( $log_id && ! empty( $log_meta ) ) {
-            foreach( (array) $log_meta as $key => $meta ) {
+        if ( $log_id && ! empty( $log_meta ) ) {
+            foreach ( (array) $log_meta as $key => $meta ) {
                 update_post_meta( $log_id, '_wp_log_' . sanitize_key( $key ), $meta );
             }
         }
@@ -293,26 +282,23 @@ class WPSC_Logging {
         do_action( 'wpsc_post_insert_log', $log_id );
 
         return $log_id;
-
     }
 
 
     /**
-     * Update and existing log item
+     * Update an existing log item.
      *
-     * @access      private
+     * @access private
      *
-     * @uses        wp_parse_args()
-     * @uses        wp_update_post()
-     * @uses        update_post_meta()
+     * @uses   wp_parse_args()
+     * @uses   wp_update_post()
+     * @uses   update_post_meta()
      *
-     * @return      bool True if successful, false otherwise
+     * @return integer The ID of the post if the post is successfully updated in the database. Otherwise, returns 0.
      *
      * @since 3.9
      */
     public static function update_log( $log_data = array(), $log_meta = array() ) {
-
-        do_action( 'wpsc_pre_update_log', $log_id );
 
         $defaults = array(
             'post_type'   => 'wpsc_log',
@@ -322,20 +308,24 @@ class WPSC_Logging {
 
         $args = wp_parse_args( $log_data, $defaults );
 
+        do_action( 'wpsc_pre_update_log', $args, $log_meta );
+
         // store the log entry
         $log_id = wp_update_post( $args );
 
-        if( $log_id && ! empty( $log_meta ) ) {
-            foreach( (array) $log_meta as $key => $meta ) {
-                if( ! empty( $meta ) )
+        if ( $log_id && ! empty( $log_meta ) ) {
+            foreach ( (array) $log_meta as $key => $meta ) {
+                if ( ! empty( $meta ) ) {
                     update_post_meta( $log_id, '_wp_log_' . sanitize_key( $key ), $meta );
+                }
             }
         }
 
         do_action( 'wpsc_post_update_log', $log_id );
 
-    }
+        return $log_id;
 
+    }
 
     /**
      * Easily retrieves log items for a particular object ID
@@ -350,8 +340,8 @@ class WPSC_Logging {
      */
 
     public static function get_logs( $object_id = 0, $type = null, $paged = null ) {
-        return self::get_connected_logs( array( 'post_parent' => $object_id, 'paged' => $paged, 'log_type' => $type ) );
 
+        return self::get_connected_logs( array( 'post_parent' => $object_id, 'paged' => $paged, 'log_type' => $type ) );
     }
 
 
@@ -367,7 +357,7 @@ class WPSC_Logging {
      * @uses    get_query_var()
      * @uses    self::valid_type()
      *
-     * @return  array / false
+     * @return  array|false Array of logs, if any.  Otherwise, false.
      *
      * @since 3.9
      */
@@ -385,7 +375,7 @@ class WPSC_Logging {
 
         $query_args = wp_parse_args( $args, $defaults );
 
-        if( $query_args['log_type'] && self::valid_type( $query_args['log_type'] ) ) {
+        if ( $query_args['log_type'] && self::valid_type( $query_args['log_type'] ) ) {
 
             $query_args['tax_query'] = array(
                 array(
@@ -394,13 +384,13 @@ class WPSC_Logging {
                     'terms'    => $query_args['log_type']
                 )
             );
-
         }
 
         $logs = get_posts( $query_args );
 
-        if( $logs )
+        if ( $logs ) {
             return $logs;
+        }
 
         // no logs found
         return false;
@@ -422,7 +412,8 @@ class WPSC_Logging {
      */
 
     public static function get_log_count( $object_id = 0, $type = null, $meta_query = null ) {
-
+        
+        // Re-consider usage of posts_per_page => -1 here.
         $query_args = array(
             'post_parent'    => $object_id,
             'post_type'      => 'wpsc_log',
@@ -430,7 +421,7 @@ class WPSC_Logging {
             'post_status'    => 'publish'
         );
 
-        if( ! empty( $type ) && self::valid_type( $type ) ) {
+        if ( ! empty( $type ) && self::valid_type( $type ) ) {
 
             $query_args['tax_query'] = array(
                 array(
@@ -442,7 +433,7 @@ class WPSC_Logging {
 
         }
 
-        if( ! empty( $meta_query ) ) {
+        if ( ! empty( $meta_query ) ) {
             $query_args['meta_query'] = $meta_query;
         }
 
