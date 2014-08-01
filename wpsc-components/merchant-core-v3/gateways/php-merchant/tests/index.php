@@ -35,6 +35,12 @@ class PHP_Merchant_Test_Suite extends TestSuite
 			$tests = array_merge( $tests, array(
 				'remote/http-curl',
 				'remote/paypal-express-checkout',
+				'remote/paypal-ec-cert-x1.php',
+				'remote/paypal-ec-cert-x2.php',
+				'remote/paypal-ec-cert-x3.php',
+				'remote/paypal-ec-cert-x4.php',
+				'remote/paypal-ec-cert-x5.php',
+				'remote/paypal-ec-cert-x6.php',
 			) );
 		}
 
