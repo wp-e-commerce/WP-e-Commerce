@@ -203,8 +203,9 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         $options = array(
             'token'    => $token,
             'payer_id' => $PayerID,
-            'invoice'  => $this->purchase_log->get( 'sessionid' ),
-        );
+            'message_id'    => $this->purchase_log->get( 'sessionid' ),
+			'invoice'		=> $this->purchase_log->get( 'id' ),       
+	   	);
         $options += $this->checkout_data->get_gateway_data();
         $options += $this->purchase_log->get_gateway_data( parent::get_currency_code(), $this->get_currency_code() );
 
@@ -475,8 +476,9 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
     public function process() {
         $total = $this->convert( $this->purchase_log->get( 'totalprice' ) );
         $options = array(
-            'return_url' => $this->get_return_url(),
-            'invoice'    => $this->purchase_log->get( 'sessionid' ),
+            'return_url' 	=> $this->get_return_url(),
+            'message_id'    => $this->purchase_log->get( 'sessionid' ),
+			'invoice'		=> $this->purchase_log->get( 'id' ),
         );
 
         $options += $this->checkout_data->get_gateway_data();
