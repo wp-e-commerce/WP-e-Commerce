@@ -149,6 +149,12 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 			'INVOICEID'	   => 'invoice',
 		) );
 
+		// Cart Customization Fields
+		$request += phpme_map( $this->options, array(
+			'LOGOIMG'			=> 'cart_logo',
+			'CARTBORDERCOLOR'	=> 'cart_border',
+		) );
+
 		// RefundTransaction Fields
 		$request += phpme_map( $this->options, array(
 			'REFUNDTYPE'   => 'refund_type',

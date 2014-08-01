@@ -1,8 +1,8 @@
 <?php
 
 class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway {
-    const SANDBOX_URL = 'https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&token=';
-    const LIVE_URL    = 'https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=';
+    const SANDBOX_URL = 'https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&useraction=commit&token=';
+    const LIVE_URL    = 'https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&useraction=commit&token=';
     private $gateway;
 
     public function __construct( $options ) {
@@ -17,7 +17,9 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
             'cancel_url'       => get_option('shopping_cart_url'),
             'currency'         => $this->get_currency_code(),
             'test'             => (bool) $this->setting->get( 'sandbox_mode' ),
-            'address_override' => true,
+            'address_override' => 1,
+			'cart_logo'			   => $this->setting->get( 'cart_logo' ),
+			'cart_border'		   => $this->setting->get( 'cart_border' ),
         ) );
 
         add_filter( 'wpsc_purchase_log_gateway_data', array( $this, 'filter_purchase_log_gateway_data' ), 10, 2 );
