@@ -3,21 +3,21 @@
 /**
  * Class for logging events and errors
  *
- * @package     WP Logging Class
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
-class WP_Logging {
+class WPSC_Logging {
 
 
     /**
-     * Class constructor.
-     *
-     * @since 1.0
+     * WPSC_Logging Class
+     * 
      *
      * @access public
      * @return void
+     *
+     * @since 3.9
      */
     function __construct() {
 
@@ -28,22 +28,23 @@ class WP_Logging {
         add_action( 'init', array( $this, 'register_taxonomy' ) );
 
         // make a cron job for this hook to start pruning
-        add_action( 'wp_logging_prune_routine', array( $this, 'prune_logs' ) );
+        add_action( 'wpsc_logging_prune_routine', array( $this, 'prune_logs' ) );
 
     }
 
     /**
      * Allows you to tie in a cron job and prune old logs.
      *
-     * @since 1.1
      * @access public
      *
      * @uses $this->get_logs_to_prune()     Returns array of posts via get_posts of logs to prune
      * @uses $this->prune_old_logs()        Deletes the logs that we don't want anymore
+     *
+     * @since 3.9
      */
     public function prune_logs(){
 
-        $should_we_prune = apply_filters( 'wp_logging_should_we_prune', false );
+        $should_we_prune = apply_filters( 'wpsc_logging_should_we_prune', false );
 
         if ( $should_we_prune === false ){
             return;
@@ -60,7 +61,6 @@ class WP_Logging {
     /**
      * Deletes the old logs that we don't want
      *
-     * @since 1.1
      * @access private
      *
      * @param array/obj     $logs     required     The array of logs we want to prune
@@ -68,10 +68,12 @@ class WP_Logging {
      * @uses wp_delete_post()                      Deletes the post from WordPress
      *
      * @filter wp_logging_force_delete_log         Allows user to override the force delete setting which bypasses the trash
+     *
+     * @since 3.9
      */
     private function prune_old_logs( $logs ){
 
-        $force = apply_filters( 'wp_logging_force_delete_log', true );
+        $force = apply_filters( 'wpsc_logging_force_delete_log', true );
 
         foreach( $logs as $l ){
             wp_delete_post( $l->ID, $force );
@@ -82,7 +84,6 @@ class WP_Logging {
     /**
      * Returns an array of posts that are prune candidates.
      *
-     * @since 1.1
      * @access private
      *
      * @return array     $old_logs     The array of posts that were returned from get_posts
@@ -92,13 +93,15 @@ class WP_Logging {
      *
      * @filter wp_logging_prune_when           Users can change how long ago we are looking for logs to prune
      * @filter wp_logging_prune_query_args     Gives users access to change any query args for pruning
+     *
+     * @since 3.9
      */
     private function get_logs_to_prune(){
 
-        $how_old = apply_filters( 'wp_logging_prune_when', '2 weeks ago' );
+        $how_old = apply_filters( 'wpsc_logging_prune_when', '2 weeks ago' );
 
         $args = array(
-            'post_type'      => 'wp_log',
+            'post_type'      => 'wpsc_log',
             'posts_per_page' => '100',
             'date_query'     => array(
                 array(
@@ -108,7 +111,7 @@ class WP_Logging {
             )
         );
 
-        $old_logs = get_posts( apply_filters( 'wp_logging_prune_query_args', $args ) );
+        $old_logs = get_posts( apply_filters( 'wpsc_logging_prune_query_args', $args ) );
 
         return $old_logs;
 
@@ -120,9 +123,10 @@ class WP_Logging {
      * Sets up the default log types and allows for new ones to be created
      *
      * @access      private
-     * @since       1.0
      *
      * @return     array
+     *
+     * @since 3.9
      */
 
     private static function log_types() {
@@ -130,7 +134,7 @@ class WP_Logging {
             'error', 'event'
         );
 
-        return apply_filters( 'wp_log_types', $terms );
+        return apply_filters( 'wpsc_log_types', $terms );
     }
 
 
@@ -138,11 +142,12 @@ class WP_Logging {
      * Registers the wp_log Post Type
      *
      * @access      public
-     * @since       1.0
      *
      * @uses        register_post_type()
      *
      * @return     void
+     *
+     * @since 3.9
      */
 
     public function register_post_type() {
@@ -150,7 +155,7 @@ class WP_Logging {
         /* logs post type */
 
         $log_args = array(
-            'labels'          => array( 'name' => __( 'Logs', 'wp-logging' ) ),
+            'labels'          => array( 'name' => __( 'Logs', 'wpsc' ) ),
             'public'          => false,
             'query_var'       => false,
             'rewrite'         => false,
@@ -158,7 +163,7 @@ class WP_Logging {
             'supports'        => array( 'title', 'editor' ),
             'can_export'      => false
         );
-        register_post_type( 'wp_log', apply_filters( 'wp_logging_post_type_args', $log_args ) );
+        register_post_type( 'wpsc_log', apply_filters( 'wpsc_logging_post_type_args', $log_args ) );
 
     }
 
@@ -169,24 +174,25 @@ class WP_Logging {
      * The Type taxonomy is used to determine the type of log entry
      *
      * @access      public
-     * @since       1.0
      *
      * @uses        register_taxonomy()
      * @uses        term_exists()
      * @uses        wp_insert_term()
      *
      * @return     void
+     *
+     * @since 3.9
      */
 
     public function register_taxonomy() {
 
-        register_taxonomy( 'wp_log_type', 'wp_log' );
+        register_taxonomy( 'wpsc_log_type', 'wpsc_log' );
 
         $types = self::log_types();
 
         foreach ( $types as $type ) {
-            if( ! term_exists( $type, 'wp_log_type' ) ) {
-                wp_insert_term( $type, 'wp_log_type' );
+            if( ! term_exists( $type, 'wpsc_log_type' ) ) {
+                wp_insert_term( $type, 'wpsc_log_type' );
             }
         }
     }
@@ -198,10 +204,10 @@ class WP_Logging {
      * Checks to see if the specified type is in the registered list of types
      *
      * @access      private
-     * @since       1.0
-     *
      *
      * @return     array
+     *
+     * @since 3.9
      */
 
     private static function valid_type( $type ) {
@@ -216,11 +222,12 @@ class WP_Logging {
      * if you need to store custom meta data
      *
      * @access      private
-     * @since       1.0
      *
      * @uses        self::insert_log()
      *
      * @return      int The ID of the new log entry
+     *
+     * @since 3.9
      */
 
     public static function add( $title = '', $message = '', $parent = 0, $type = null ) {
@@ -241,7 +248,6 @@ class WP_Logging {
      * Stores a log entry
      *
      * @access      private
-     * @since       1.0
      *
      * @uses        wp_parse_args()
      * @uses        wp_insert_post()
@@ -250,12 +256,14 @@ class WP_Logging {
      * @uses        sanitize_key()
      *
      * @return      int The ID of the newly created log item
+     *
+     * @since 3.9
      */
 
     public static function insert_log( $log_data = array(), $log_meta = array() ) {
 
         $defaults = array(
-            'post_type'    => 'wp_log',
+            'post_type'    => 'wpsc_log',
             'post_status'  => 'publish',
             'post_parent'  => 0,
             'post_content' => '',
@@ -264,14 +272,14 @@ class WP_Logging {
 
         $args = wp_parse_args( $log_data, $defaults );
 
-        do_action( 'wp_pre_insert_log' );
+        do_action( 'wpsc_pre_insert_log' );
 
         // store the log entry
         $log_id = wp_insert_post( $args );
 
         // set the log type, if any
         if( $log_data['log_type'] && self::valid_type( $log_data['log_type'] ) ) {
-            wp_set_object_terms( $log_id, $log_data['log_type'], 'wp_log_type', false );
+            wp_set_object_terms( $log_id, $log_data['log_type'], 'wpsc_log_type', false );
         }
 
 
@@ -282,7 +290,7 @@ class WP_Logging {
             }
         }
 
-        do_action( 'wp_post_insert_log', $log_id );
+        do_action( 'wpsc_post_insert_log', $log_id );
 
         return $log_id;
 
@@ -293,20 +301,21 @@ class WP_Logging {
      * Update and existing log item
      *
      * @access      private
-     * @since       1.0
      *
      * @uses        wp_parse_args()
      * @uses        wp_update_post()
      * @uses        update_post_meta()
      *
      * @return      bool True if successful, false otherwise
+     *
+     * @since 3.9
      */
     public static function update_log( $log_data = array(), $log_meta = array() ) {
 
-        do_action( 'wp_pre_update_log', $log_id );
+        do_action( 'wpsc_pre_update_log', $log_id );
 
         $defaults = array(
-            'post_type'   => 'wp_log',
+            'post_type'   => 'wpsc_log',
             'post_status' => 'publish',
             'post_parent' => 0
         );
@@ -323,7 +332,7 @@ class WP_Logging {
             }
         }
 
-        do_action( 'wp_post_update_log', $log_id );
+        do_action( 'wpsc_post_update_log', $log_id );
 
     }
 
@@ -332,11 +341,12 @@ class WP_Logging {
      * Easily retrieves log items for a particular object ID
      *
      * @access      private
-     * @since       1.0
      *
      * @uses        self::get_connected_logs()
      *
      * @return      array
+     *
+     * @since 3.9
      */
 
     public static function get_logs( $object_id = 0, $type = null, $paged = null ) {
@@ -351,7 +361,6 @@ class WP_Logging {
      * Used for retrieving logs related to particular items, such as a specific purchase.
      *
      * @access  private
-     * @since   1.0
      *
      * @uses    wp_parse_args()
      * @uses    get_posts()
@@ -359,13 +368,15 @@ class WP_Logging {
      * @uses    self::valid_type()
      *
      * @return  array / false
+     *
+     * @since 3.9
      */
 
     public static function get_connected_logs( $args = array() ) {
 
         $defaults = array(
             'post_parent'    => 0,
-            'post_type'      => 'wp_log',
+            'post_type'      => 'wpsc_log',
             'posts_per_page' => 10,
             'post_status'    => 'publish',
             'paged'          => get_query_var( 'paged' ),
@@ -378,7 +389,7 @@ class WP_Logging {
 
             $query_args['tax_query'] = array(
                 array(
-                    'taxonomy' => 'wp_log_type',
+                    'taxonomy' => 'wpsc_log_type',
                     'field'    => 'slug',
                     'terms'    => $query_args['log_type']
                 )
@@ -401,19 +412,20 @@ class WP_Logging {
      * Retrieves number of log entries connected to particular object ID
      *
      * @access  private
-     * @since   1.0
      *
      * @uses    WP_Query()
      * @uses    self::valid_type()
      *
      * @return  int
+     *
+     * @since 3.9
      */
 
     public static function get_log_count( $object_id = 0, $type = null, $meta_query = null ) {
 
         $query_args = array(
             'post_parent'    => $object_id,
-            'post_type'      => 'wp_log',
+            'post_type'      => 'wpsc_log',
             'posts_per_page' => -1,
             'post_status'    => 'publish'
         );
@@ -422,7 +434,7 @@ class WP_Logging {
 
             $query_args['tax_query'] = array(
                 array(
-                    'taxonomy' => 'wp_log_type',
+                    'taxonomy' => 'wpsc_log_type',
                     'field'    => 'slug',
                     'terms'    => $type
                 )
@@ -441,4 +453,5 @@ class WP_Logging {
     }
 
 }
-$GLOBALS['wp_logs'] = new WP_Logging();
+
+$GLOBALS['wpsc_logs'] = new WPSC_Logging();
