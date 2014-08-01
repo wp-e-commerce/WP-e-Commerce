@@ -1,10 +1,13 @@
 <?php
 
 /**
- * Class for logging events and errors
+ * Class for logging events and errors.
+ * 
+ * Significant gratitude to Pippin Williamson and other contributors to the WP_Logging project
+ * This class is experimental and may change in the future in such a way as to break back compat.
+ * You have been warned.
  *
- * @copyright   Copyright (c) 2012, Pippin Williamson
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @access private 
  */
 
 class WPSC_Logging {
