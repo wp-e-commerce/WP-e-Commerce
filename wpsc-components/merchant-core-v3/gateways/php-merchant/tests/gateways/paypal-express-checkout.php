@@ -99,12 +99,14 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 			// API info
 			'USER'         => 'sdk-three_api1.sdk.com',
 			'PWD'          => 'QFZCWN5HZM8VBG7Q',
-			'VERSION'      => '74.0',
+			'VERSION'      => '114.0',
 			'SIGNATURE'    => 'A-IzJhZZjhg29XQ2qnhapuwxIDzyAZQ92FRP5dqBzVesOkzbdUONzmOU',
 			'METHOD'       => 'SetExpressCheckout',
  			'RETURNURL'    => 'http://example.com/return',
 			'CANCELURL'    => 'http://example.com/cancel',
+			'AMT'		   => 15337,
 			'ADDROVERRIDE' => 1,
+			'INVOICEID'	   => 'E84A90G94',
 
 			// Shipping details
 			'PAYMENTREQUEST_0_SHIPTONAME'        => 'Gary Cao',
@@ -120,6 +122,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 			'PAYMENTREQUEST_0_AMT'           => '15,337',
 			'PAYMENTREQUEST_0_CURRENCYCODE'  => 'JPY',
 			'PAYMENTREQUEST_0_PAYMENTACTION' => 'Sale',
+			'PAYMENTREQUEST_0_ALLOWEDPAYMENTMETHOD' => 'InstantPaymentOnly',
 			'PAYMENTREQUEST_0_ITEMAMT'       => '13,700',
 			'PAYMENTREQUEST_0_SHIPPINGAMT'   => '1,500',
 			'PAYMENTREQUEST_0_TAXAMT'        => '137',
@@ -167,16 +170,19 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 			// API info
 			'USER'         => 'sdk-three_api1.sdk.com',
 			'PWD'          => 'QFZCWN5HZM8VBG7Q',
-			'VERSION'      => '74.0',
+			'VERSION'      => '114.0',
 			'SIGNATURE'    => 'A-IzJhZZjhg29XQ2qnhapuwxIDzyAZQ92FRP5dqBzVesOkzbdUONzmOU',
 			'METHOD'       => 'DoExpressCheckoutPayment',
  			'RETURNURL'    => 'http://example.com/return',
 			'CANCELURL'    => 'http://example.com/cancel',
+			'AMT'		   => 15337,
 			'ADDROVERRIDE' => 1,
 
 			// Payer ID
 			'TOKEN'   => 'EC-2JJ0893331633543K',
 			'PAYERID' => 'BC798KQ2QU22W',
+
+			'INVOICEID'	   => 'E84A90G94',
 
 			// Shipping details
 			'PAYMENTREQUEST_0_SHIPTONAME'        => 'Gary Cao',
@@ -192,6 +198,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 			'PAYMENTREQUEST_0_AMT'           => '15,337',
 			'PAYMENTREQUEST_0_CURRENCYCODE'  => 'JPY',
 			'PAYMENTREQUEST_0_PAYMENTACTION' => 'Sale',
+			'PAYMENTREQUEST_0_ALLOWEDPAYMENTMETHOD' => 'InstantPaymentOnly',
 			'PAYMENTREQUEST_0_ITEMAMT'       => '13,700',
 			'PAYMENTREQUEST_0_SHIPPINGAMT'   => '1,500',
 			'PAYMENTREQUEST_0_TAXAMT'        => '137',
@@ -236,7 +243,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 			// API info
 			'USER'      => 'sdk-three_api1.sdk.com',
 			'PWD'       => 'QFZCWN5HZM8VBG7Q',
-			'VERSION'   => '74.0',
+			'VERSION'   => '114.0',
 			'SIGNATURE' => 'A-IzJhZZjhg29XQ2qnhapuwxIDzyAZQ92FRP5dqBzVesOkzbdUONzmOU',
 			'METHOD'    => 'GetExpressCheckoutDetails',
 			'TOKEN'     => $this->token,
@@ -273,7 +280,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 		                 '&TIMESTAMP=2011%2d08%2d25T08%3a04%3a26Z'.
 		                 '&CORRELATIONID=b5ae9bd5c735f'.
 		                 '&ACK=Success'.
-		                 '&VERSION=74%2e0'.
+		                 '&VERSION=114%2e0'.
 		                 '&BUILD=2085867'.
 
 		                 // Payer info
@@ -398,7 +405,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 		$this->assertEqual( $response->get( 'timestamp'       ), 1314259466             );
 		$this->assertEqual( $response->get( 'datetime'        ), '2011-08-25T08:04:26Z' );
 		$this->assertEqual( $response->get( 'correlation_id'  ), 'b5ae9bd5c735f'        );
-		$this->assertEqual( $response->get( 'version'         ), '74.0'                 );
+		$this->assertEqual( $response->get( 'version'         ), '114.0'                 );
 		$this->assertEqual( $response->get( 'build'           ), '2085867'              );
 
 		// Payer Information

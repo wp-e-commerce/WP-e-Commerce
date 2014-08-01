@@ -1,7 +1,4 @@
 <?php
-// Disable Strict Error Reporting
-error_reporting(E_ALL ^ E_STRICT);
-
 // Check for Remote Tests
 global $remote;
 $remote = false;
@@ -13,6 +10,7 @@ if ( $remote ) {
 	require_once( 'common/test-accounts.php' );
 }
 
+require_once( 'simpletest/varlog.php' );
 require_once( 'simpletest/autorun.php' );
 
 define( 'PHP_MERCHANT_PATH', realpath( '../' ) );
