@@ -547,7 +547,6 @@ function wpsc_get_remaining_quantity( $product_id, $variations = array(), $quant
 	return $output;
 }
 
-
 /**
  * Prior to using the global cart variable cart template API functions should check
  * to be sure the global cart variable has been initialized.
