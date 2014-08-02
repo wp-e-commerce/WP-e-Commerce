@@ -49,6 +49,9 @@ function wpsc_cart_clear_shipping_info() {
  */
 function wpsc_tax_isincluded() {
 	//uses new wpec_taxes functionality now
+
+	require_once( WPSC_FILE_PATH . '/wpsc-taxes/taxes_module.php' );
+
 	$wpec_taxes_controller = new wpec_taxes_controller();
 	return $wpec_taxes_controller->wpec_taxes_isincluded();
 }
