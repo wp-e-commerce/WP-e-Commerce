@@ -1,8 +1,8 @@
 <?php
 
 class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway {
-    const SANDBOX_URL = 'https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&useraction=commit&token=';
-    const LIVE_URL    = 'https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&useraction=commit&token=';
+    public $sandbox_url = 'https://www.sandbox.paypal.com/webscr';
+    public $live_url    = 'https://www.paypal.com/cgi-bin/webscr';
     private $gateway;
 
     public function __construct( $options ) {
@@ -25,6 +25,38 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 
         add_filter( 'wpsc_purchase_log_gateway_data', array( $this, 'filter_purchase_log_gateway_data' ), 10, 2 );
     }
+
+	/**
+	 * Returns the PayPal redirect URL
+	 *
+	 * @param array $data Arguments to encode with the URL
+	 * @return string 
+	 * @since 3.9
+	 */
+	public function get_redirect_url( $data = array() ) {
+
+		// Select either the Sandbox or the Live URL
+		if ( $this->setting->get( 'sandbox_mode' ) ) {
+			$url = $this->sandbox_url; 
+		} else {
+			$url = $this->live_url;
+		}
+
+		// Common Vars
+		$common = array(
+			'cmd' => '_express-checkout',
+			'useraction' => 'commit',
+		);
+
+		if ( wp_is_mobile() ) {
+			$common['cmd'] = '_express-checkout-mobile';
+		}
+
+		// Merge the two arrays
+		$data = array_merge( $data, $common );
+
+		return $url . '?' . build_query( $data );
+	}
 
     public static function filter_purchase_log_gateway_data( $gateway_data, $data ) {
         // Because paypal express checkout API doesn't have full support for discount, we have to manually add an item here
@@ -496,7 +528,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         if ( $response->is_successful() ) {
 
             // Redirect the user to the payments page
-            $url = ( $this->setting->get( 'sandbox_mode' ) ? self::SANDBOX_URL : self::LIVE_URL ) . $response->get( 'token' );
+            $url = $this->get_redirect_url( array( 'token' => $response->get( 'token' ) ) );
             wp_redirect( $url );
             exit;
 
