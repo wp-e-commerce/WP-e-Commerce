@@ -76,9 +76,11 @@ add_filter(
 );
 
 function _wpsc_filter_merchant_v3_gateway_hidden_field_value( $value ) {
-	$active_gateways = WPSC_Payment_Gateways::get_active_gateways();
-	if ( ! empty( $active_gateways ) )
+	$active_gateways = array_values( WPSC_Payment_Gateways::get_active_gateways() );
+
+	if ( ! empty( $active_gateways ) ) {
 		return $active_gateways[0];
+	}
 
 	return $value;
 }
