@@ -243,7 +243,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 			return;
 		}
 
-		if ( empty( $_POST['wpsc_payment_method'] ) ) {
+		if ( empty( $_POST['wpsc_payment_method'] ) && ! wpsc_is_free_cart() ) {
 			$this->message_collection->add(
 				__( 'Please select a payment method', 'wpsc' ),
 				'validation'
