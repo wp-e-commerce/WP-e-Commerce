@@ -757,7 +757,7 @@ class WPSC_Purchase_Log {
 			$result = $wpdb->update( WPSC_TABLE_PURCHASE_LOGS, $data, array( $where_col => $where_val ), $format, array( $where_format ) );
 			do_action( 'wpsc_purchase_log_update', $this );
 		} else {
-			do_action( 'wpsc_purchase_log_pre_insert' );
+			do_action( 'wpsc_purchase_log_pre_insert', $this );
 			$data = apply_filters( 'wpsc_purchase_log_insert_data', $this->data );
 			$format = $this->get_data_format( $data );
 			$result = $wpdb->insert( WPSC_TABLE_PURCHASE_LOGS, $data, $format );
