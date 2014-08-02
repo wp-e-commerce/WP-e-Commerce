@@ -527,12 +527,10 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 
         if ( $response->is_successful() ) {
 
-            // Redirect the user to the payments page
+            // Successful redirect
             $url = $this->get_redirect_url( array( 'token' => $response->get( 'token' ) ) );
-            wp_redirect( $url );
-            exit;
-
         } else {
+			// SetExpressCheckout Failure
             wpsc_update_customer_meta( 'paypal_express_checkout_errors', $response->get_errors() );
             $url = add_query_arg( array(
                 'payment_gateway'          => 'paypal-express-checkout',
