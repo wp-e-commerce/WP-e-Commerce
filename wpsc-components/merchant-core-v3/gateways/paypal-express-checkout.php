@@ -18,6 +18,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
             'currency'         => $this->get_currency_code(),
             'test'             => (bool) $this->setting->get( 'sandbox_mode' ),
             'address_override' => 1,
+			'solution_type'		  => 'mark',
 			'cart_logo'			   => $this->setting->get( 'cart_logo' ),
 			'cart_border'		   => $this->setting->get( 'cart_border' ),
         ) );
@@ -479,6 +480,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
             'return_url' 	=> $this->get_return_url(),
             'message_id'    => $this->purchase_log->get( 'sessionid' ),
 			'invoice'		=> $this->purchase_log->get( 'id' ),
+			'address_override' => 1,
         );
 
         $options += $this->checkout_data->get_gateway_data();
