@@ -666,7 +666,7 @@ function wpsc_submit_checkout( $collected_data = true ) {
 	}
 
 	// check to see if the current gateway is in the list of available gateways
-	if ( array_search( $submitted_gateway, $selected_gateways ) !== false ) {
+	if ( array_search( $submitted_gateway, $selected_gateways ) !== false || ! floatval( wpsc_cart_total( false ) ) ) {
 		wpsc_update_customer_meta( 'selected_gateway', $submitted_gateway );
 	} else {
 		$is_valid = false;
