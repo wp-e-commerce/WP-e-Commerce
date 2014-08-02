@@ -161,8 +161,8 @@ class WPSC_Purchase_Log {
 					$needs_fetching[] = $product->post->ID;
 				} else {
 					// tally up the sales and earnings if this one has cache already
-					$stats['sales']    += $product->sales;
-					$stats['earnings'] += $product->earnings;
+					$stats['sales']    += $product->post->_wpsc_stats['sales'];
+					$stats['earnings'] += $product->post->_wpsc_stats['earnings'];
 				}
 			}
 		}
