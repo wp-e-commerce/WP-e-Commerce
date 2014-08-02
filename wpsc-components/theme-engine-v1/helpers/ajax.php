@@ -1168,7 +1168,7 @@ function _wpsc_checkout_customer_meta_update( $checkout_post_data ) {
 						if ( isset( $meta_value[1] ) ) {
 							wpsc_update_visitor_meta( $id, 'shippingregion', $meta_value[1] );
 						}
-
+					} else {
 						// array had only country, update the country
 						wpsc_update_visitor_meta( $id, 'shippingcountry', $meta_value );
 					}
