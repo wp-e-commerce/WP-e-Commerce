@@ -531,6 +531,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
             $url = $this->get_redirect_url( array( 'token' => $response->get( 'token' ) ) );
         } else {
 			// SetExpressCheckout Failure
+			$this->log_error( $response );
             wpsc_update_customer_meta( 'paypal_express_checkout_errors', $response->get_errors() );
             $url = add_query_arg( array(
                 'payment_gateway'          => 'paypal-express-checkout',
@@ -541,4 +542,30 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         wp_redirect( $url );
         exit;
     }
+
+	/**
+	 * Log an error message
+	 *
+	 * @param array $response
+	 * @return void
+	 *
+	 * @since 3.9
+	 */
+	public function log_error( $response ) {
+		if ( $this->setting->get( 'debugging' ) ) {
+			$log_data = array(
+				'post_title'    => 'PayPal ExpressCheckout Operation Failure',
+				'post_content'  =>  'There was an error processing the payment. Find details in the log entry meta fields.',
+				'log_type'      => 'error'
+			);
+
+			$log_meta = array(
+				'correlation_id'   => $response->get( 'correlation_id' ), 
+				'time' => $response->get( 'datetime' ),
+				'errors' => $response->get_errors(),
+			);
+
+			$log_entry = WPSC_Logging::insert_log( $log_data, $log_meta );
+		}
+	}
 }
