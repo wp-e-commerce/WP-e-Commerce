@@ -49,6 +49,9 @@ function wpsc_cart_clear_shipping_info() {
  */
 function wpsc_tax_isincluded() {
 	//uses new wpec_taxes functionality now
+
+	require_once( WPSC_FILE_PATH . '/wpsc-taxes/taxes_module.php' );
+
 	$wpec_taxes_controller = new wpec_taxes_controller();
 	return $wpec_taxes_controller->wpec_taxes_isincluded();
 }
@@ -72,6 +75,43 @@ function wpsc_cart_item_count() {
 	}
 
 	return $count;
+}
+
+/**
+ * coupons price, used through ajax and in normal page loading.
+ * No parameters, returns nothing
+ */
+function wpsc_coupon_price( $currCoupon = '' ) {
+	global $wpsc_cart, $wpsc_coupons;
+	if ( isset( $_POST['coupon_num'] ) && $_POST['coupon_num'] != '' ) {
+		$coupon = esc_sql( $_POST['coupon_num'] );
+		wpsc_update_customer_meta( 'coupon', $coupon );
+		$wpsc_coupons = new wpsc_coupons( $coupon );
+
+		if ( $wpsc_coupons->validate_coupon() ) {
+			$discountAmount = $wpsc_coupons->calculate_discount();
+			$wpsc_cart->apply_coupons( $discountAmount, $coupon );
+			$wpsc_coupons->errormsg = false;
+		} else {
+			$wpsc_coupons->errormsg = true;
+			$wpsc_cart->coupons_amount = 0;
+			$wpsc_cart->coupons_name = '';
+			wpsc_delete_customer_meta( 'coupon' );
+		}
+	} else if ( (!isset( $_POST['coupon_num'] ) || $_POST['coupon_num'] == '') && $currCoupon == '' ) {
+		$wpsc_cart->coupons_amount = 0;
+		$wpsc_cart->coupons_name = '';
+	} else if ( $currCoupon != '' ) {
+		$coupon = esc_sql( $currCoupon );
+		wpsc_update_customer_meta( 'coupon', $coupon );
+		$wpsc_coupons = new wpsc_coupons( $coupon );
+
+		if ( $wpsc_coupons->validate_coupon() ) {
+			$discountAmount = $wpsc_coupons->calculate_discount();
+			$wpsc_cart->apply_coupons( $discountAmount, $coupon );
+			$wpsc_coupons->errormsg = false;
+		}
+	}
 }
 
 /**
@@ -507,7 +547,6 @@ function wpsc_get_remaining_quantity( $product_id, $variations = array(), $quant
 	return $output;
 }
 
-
 /**
  * Prior to using the global cart variable cart template API functions should check
  * to be sure the global cart variable has been initialized.
@@ -539,4 +578,81 @@ function _wpsc_verify_global_cart_has_been_initialized( $function = __FUNCTION__
 	}
 
 	return $we_have_a_valid_cart;
+}
+
+/**
+ * Checks if the current cart is a "Free Cart", which means one of the following:
+ *
+ *  - Either the all of the cart items are priced at 0.
+ *  - Or a coupon has been applied that results in a free cart.
+ *
+ * This is a helpful function for doing things like allowing free carts to be purchased, bypassing payment gateways.
+ *
+ * @since  3.9.0
+ * @return bool Whether or not the current cart's total cost is free or not.
+ */
+function wpsc_is_free_cart() {
+	return apply_filters( 'wpsc_is_free_cart', wpsc_cart_item_count() && ! floatval( wpsc_cart_total( false ) ) );
+}
+
+/**
+ * Allows users to checkout with a free cart.
+ *
+ * If developers or users would rather inhibit this functionality, as it was prior to 3.9.0, they can
+ * add the following code (prior to 'init', priority 2) to a theme or plugin:
+ * add_filter( 'wpsc_allow_free_cart_checkout', '__return_false' );
+ *
+ * @since  3.9.0
+ * @return void
+ */
+function wpsc_allow_free_cart_checkout() {
+
+	if ( wpsc_is_free_cart() && apply_filters( 'wpsc_allow_free_cart_checkout', true ) ) {
+
+		/* Required for compatibility with the 3.0 payment gateway API and the 2.0 theme engine */
+		add_filter( 'wpsc_payment_method_form_fields', '__return_empty_array' );
+
+		/* Sets the status entered to the "Accepted Payment" status.   */
+		add_filter( 'wpsc_purchase_log_insert_data', 'wpsc_free_checkout_insert_order_status' );
+
+		/* Handles what a gateway would properly handle, updating the "processed" key in the database. */
+		add_action( 'wpsc_submit_checkout_gateway', 'wpsc_free_checkout_update_processed_status', 5, 2 );
+	}
+
+}
+
+add_action( 'init', 'wpsc_allow_free_cart_checkout', 2 );
+
+/**
+ * Updates the 'statusno' parameter when a new order is submitted with a free cart.
+ *
+ * @param  array $data    Array of arguments passed to WPSC_Purchase_Log on a new order.
+ * @uses   apply_filters  'wpsc_free_checkout_order_status' allows developers to change the status a free cart is saved with.
+ * @since  3.9.0
+ *
+ * @return array $data  Modified array of arguments passed to WPSC_Purchase_Log on a new order.
+ */
+function wpsc_free_checkout_insert_order_status( $data ) {
+	$data['statusno'] = apply_filters( 'wpsc_free_checkout_order_status', WPSC_Purchase_Log::ACCEPTED_PAYMENT );
+	return $data;
+}
+
+/**
+ * Updates the 'processed' parameter after a new order is submitted with a free cart.
+ *
+ * @param  string            $gateway  Name of gateway.  In the case of a free cart, this will be empty.
+ * @param  WPSC_Purchase_Log $log      WPSC_Purchase_Log object.
+ * @uses   apply_filters               'wpsc_free_checkout_order_status' allows developers to change the status a free cart is saved with.
+ * @since  3.9.0
+ *
+ */
+function wpsc_free_checkout_update_processed_status( $gateway, $log ) {
+
+	wpsc_update_purchase_log_status(
+		$log->get( 'id' ),
+		apply_filters( 'wpsc_free_checkout_order_status', WPSC_Purchase_Log::ACCEPTED_PAYMENT )
+	);
+
+	wp_safe_redirect( add_query_arg( 'sessionid', $log->get( 'sessionid' ), get_option( 'transact_url' ) ) );
+	exit;
 }

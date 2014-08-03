@@ -5,7 +5,11 @@
 	<div class="wpsc-order-preview">
 		<?php wpsc_checkout_order_preview(); ?>
 	</div>
-	<p><strong class="wpsc-large"><?php esc_html_e( 'Payment Method', 'wpsc' ); ?></strong></p>
+
+	<?php if ( ! wpsc_is_free_cart() ) : ?>
+		<p><strong class="wpsc-large"><?php esc_html_e( 'Payment Method', 'wpsc' ); ?></strong></p>
+	<?php endif; ?>
+
 	<div class="wpsc-payment-method">
 		<?php wpsc_checkout_payment_method_form(); ?>
 	</div>

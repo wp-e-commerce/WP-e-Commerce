@@ -371,11 +371,14 @@ class WPSC_Product {
 	 * @param int|WP_Post $post ID or Post object
 	 */
 	public function __construct( $post ) {
+
 		if ( is_object( $post ) ) {
 			$this->post = $post;
-			return;
 		}
+
 		$this->post = WP_Post::get_instance( $post );
+
+		return $this;
 	}
 
 	/**

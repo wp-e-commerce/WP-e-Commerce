@@ -660,8 +660,49 @@ function wpsc_cart_item_refresh_coupon() {
 	$coupon = wpsc_get_customer_meta( 'coupon' );
 
 	if ( ! empty( $coupon ) ) {
+
 		wpsc_coupon_price( $coupon );
 	}
 }
 
 add_action( 'wpsc_refresh_item', 'wpsc_cart_item_refresh_coupon' );
+
+/**
+ * Filters the gateway count to return zero if a free cart is present.
+ *
+ * @access private
+ * @param  int     $count Number of active gateways.
+ *
+ * @since  3.9.0
+ * @return int     $count
+ */
+function _wpsc_free_checkout_gateway_count( $count ) {
+
+	if ( wpsc_is_free_cart() ) {
+		$count = 0;
+	}
+
+	return $count;
+}
+
+add_filter( 'wpsc_gateway_count', '_wpsc_free_checkout_gateway_count', 15 );
+
+/**
+ * Filters the custom gateway field to return an empty string if a free cart is present.
+ *
+ * @access private
+ * @param  string     $value Custom gateway field.
+ *
+ * @since  3.9.0
+ * @return string     $value
+ */
+function _wpsc_free_checkout_hidden_field( $value ) {
+
+	if ( wpsc_is_free_cart() ) {
+		$value = '';
+	}
+
+	return $value;
+}
+
+add_filter( 'wpsc_gateway_hidden_field_value', '_wpsc_free_checkout_hidden_field' , 15 );

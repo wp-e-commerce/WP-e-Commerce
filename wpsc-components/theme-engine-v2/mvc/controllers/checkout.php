@@ -243,7 +243,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 			return;
 		}
 
-		if ( empty( $_POST['wpsc_payment_method'] ) ) {
+		if ( empty( $_POST['wpsc_payment_method'] ) && ! wpsc_is_free_cart() ) {
 			$this->message_collection->add(
 				__( 'Please select a payment method', 'wpsc' ),
 				'validation'
@@ -283,7 +283,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 		do_action( 'wpsc_submit_checkout', array(
 			"purchase_log_id" => $purchase_log_id,
-			"our_user_id" => get_current_user_id(),
+			"our_user_id"     => get_current_user_id(),
 		) );
 
 		do_action( 'wpsc_submit_checkout_gateway', $submitted_gateway, $purchase_log );

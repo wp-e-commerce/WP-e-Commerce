@@ -136,10 +136,12 @@ class WPSC_Cart_Item_Table extends WPSC_Table {
 
 		$variations = array();
 
-		foreach ( $item->variation_values as $variation_set => $variation ) {
-			$set_name       = get_term_field( 'name', $variation_set, 'wpsc-variation' );
-			$variation_name = get_term_field( 'name', $variation    , 'wpsc-variation' );
-			$variations[]   = '<span>' . esc_html( $set_name ) . ':</span> ' . esc_html( $variation_name );
+		if ( is_array( $item->variation_values ) ) {
+			foreach ( $item->variation_values as $variation_set => $variation ) {
+				$set_name       = get_term_field( 'name', $variation_set, 'wpsc-variation' );
+				$variation_name = get_term_field( 'name', $variation    , 'wpsc-variation' );
+				$variations[]   = '<span>' . esc_html( $set_name ) . ':</span> ' . esc_html( $variation_name );
+			}
 		}
 
 		$variations = implode( ', ', $variations );

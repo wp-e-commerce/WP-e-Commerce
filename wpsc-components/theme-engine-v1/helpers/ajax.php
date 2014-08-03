@@ -285,43 +285,6 @@ function wpsc_empty_cart() {
 }
 
 /**
- * coupons price, used through ajax and in normal page loading.
- * No parameters, returns nothing
- */
-function wpsc_coupon_price( $currCoupon = '' ) {
-	global $wpsc_cart, $wpsc_coupons;
-	if ( isset( $_POST['coupon_num'] ) && $_POST['coupon_num'] != '' ) {
-		$coupon = esc_sql( $_POST['coupon_num'] );
-		wpsc_update_customer_meta( 'coupon', $coupon );
-		$wpsc_coupons = new wpsc_coupons( $coupon );
-
-		if ( $wpsc_coupons->validate_coupon() ) {
-			$discountAmount = $wpsc_coupons->calculate_discount();
-			$wpsc_cart->apply_coupons( $discountAmount, $coupon );
-			$wpsc_coupons->errormsg = false;
-		} else {
-			$wpsc_coupons->errormsg = true;
-			$wpsc_cart->coupons_amount = 0;
-			$wpsc_cart->coupons_name = '';
-			wpsc_delete_customer_meta( 'coupon' );
-		}
-	} else if ( (!isset( $_POST['coupon_num'] ) || $_POST['coupon_num'] == '') && $currCoupon == '' ) {
-		$wpsc_cart->coupons_amount = 0;
-		$wpsc_cart->coupons_name = '';
-	} else if ( $currCoupon != '' ) {
-		$coupon = esc_sql( $currCoupon );
-		wpsc_update_customer_meta( 'coupon', $coupon );
-		$wpsc_coupons = new wpsc_coupons( $coupon );
-
-		if ( $wpsc_coupons->validate_coupon() ) {
-			$discountAmount = $wpsc_coupons->calculate_discount();
-			$wpsc_cart->apply_coupons( $discountAmount, $coupon );
-			$wpsc_coupons->errormsg = false;
-		}
-	}
-}
-
-/**
  * update quantity function, used through ajax and in normal page loading.
  * No parameters, returns nothing
  */
@@ -666,7 +629,7 @@ function wpsc_submit_checkout( $collected_data = true ) {
 	}
 
 	// check to see if the current gateway is in the list of available gateways
-	if ( array_search( $submitted_gateway, $selected_gateways ) !== false ) {
+	if ( array_search( $submitted_gateway, $selected_gateways ) !== false || wpsc_is_free_cart() ) {
 		wpsc_update_customer_meta( 'selected_gateway', $submitted_gateway );
 	} else {
 		$is_valid = false;
