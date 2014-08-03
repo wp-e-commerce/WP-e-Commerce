@@ -526,7 +526,10 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         $response = $this->gateway->setup_purchase( $options );
 
         if ( $response->is_successful() ) {
-
+			$params = $response->get_params();
+			if ( $params['ACK'] == 'SuccessWithWarning' ) {
+				$this->log_error( $response );
+			}
             // Successful redirect
             $url = $this->get_redirect_url( array( 'token' => $response->get( 'token' ) ) );
         } else {
