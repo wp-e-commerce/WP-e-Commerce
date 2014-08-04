@@ -364,65 +364,6 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         return $output;
     }
 
-    public function filter_confirm_transaction_page() {
-        ob_start();
-?>
-        <table width='400' class='paypal_express_form'>
-            <tr>
-                <td align='left' class='firstcol'><strong><?php _e( 'Order Total:', 'wpsc' ); ?></strong></td>
-                <td align='left'><?php echo wpsc_currency_display( $this->purchase_log->get( 'totalprice' ) ); ?></td>
-            </tr>
-            <tr>
-                <td align='left' colspan='2'><strong><?php _e( 'Shipping Details:', 'wpsc' ); ?></strong></td>
-            </tr>
-            <tr>
-                <td align='left' class='firstcol'>
-                    <?php echo __('Address:', 'wpsc' ); ?>
-                </td>
-                <td align='left'>
-                    <?php echo esc_html( $this->checkout_data->get( 'shippingaddress' ) ); ?>
-                </td>
-            </tr>
-            <tr>
-                <td align='left' class='firstcol'>
-                    <?php echo __('City:', 'wpsc' ); ?>
-                </td>
-                <td align='left'><?php echo esc_html( $this->checkout_data->get( 'shippingcity' ) ); ?></td>
-            </tr>
-            <tr>
-                <td align='left' class='firstcol'>
-                    <?php echo __('State:', 'wpsc' ); ?>
-                </td>
-                <td align='left'>
-                    <?php echo esc_html( wpsc_get_region( $this->checkout_data->get( 'shippingstate' ) ) ); ?>
-                </td>
-            </tr>
-            <tr>
-                <td align='left' class='firstcol'>
-                    <?php echo __('Postal code:', 'wpsc' ); ?>
-                </td>
-                <td align='left'><?php echo esc_html( $this->checkout_data->get( 'shippingpostcode' ) ); ?></td>
-            </tr>
-            <tr>
-                <td align='left' class='firstcol'>
-                    <?php echo __('Country:', 'wpsc' ); ?></td>
-                <td align='left'><?php echo esc_html( wpsc_get_country( $this->checkout_data->get( 'shippingcountry' ) ) ); ?></td>
-            </tr>
-            <tr>
-                <td colspan='2'>
-                    <form action="<?php echo esc_url( remove_query_arg( array( 'payment_gateway', 'payment_gateway_callback' ) ) ); ?>" method='post'>
-                        <input type='hidden' name='payment_gateway' value='paypal-express-checkout' />
-                        <input type='hidden' name='payment_gateway_callback' value='process_confirmed_payment' />
-                        <p><input name='action' type='submit' value='<?php _e( 'Confirm Payment', 'wpsc' ); ?>' /></p>
-                    </form>
-                </td>
-            </tr>
-        </table>
-<?php
-        $output = apply_filters( 'wpsc_confirm_payment_message', ob_get_clean(), $this->purchase_log );
-        return $output;
-    }
-
     public function setup_form() {
         $paypal_currency = $this->get_currency_code();
 ?>
