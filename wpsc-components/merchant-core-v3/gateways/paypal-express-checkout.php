@@ -178,8 +178,67 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
             return;
         }
 
+        // Set the Purchase Log
         $this->set_purchase_log_for_callbacks();
-        add_filter( 'wpsc_get_transaction_html_output', array( $this, 'filter_confirm_transaction_page' ) );
+
+        // Display the Confirmation Page
+        //add_filter( 'wpsc_get_transaction_html_output', array( $this, 'filter_confirm_transaction_page' ) );
+        $this->do_transaction();
+    }
+
+    public function do_transaction() {
+        $args = array_map( 'urldecode', $_GET );
+        extract( $args, EXTR_SKIP );
+
+        if ( ! isset( $sessionid ) || ! isset( $token ) || ! isset( $PayerID ) ) {
+            return;
+        }
+
+        $this->set_purchase_log_for_callbacks();
+
+        $total = $this->convert( $this->purchase_log->get( 'totalprice' ) );
+        $options = array(
+            'token'    => $token,
+            'payer_id' => $PayerID,
+            'message_id'    => $this->purchase_log->get( 'sessionid' ),
+			'invoice'		=> $this->purchase_log->get( 'id' ),       
+	   	);
+        $options += $this->checkout_data->get_gateway_data();
+        $options += $this->purchase_log->get_gateway_data( parent::get_currency_code(), $this->get_currency_code() );
+
+        if ( $this->setting->get( 'ipn', false ) ) {
+            $options['notify_url'] = $this->get_notify_url();
+        }
+
+        // GetExpressCheckoutDetails
+        $details = $this->gateway->get_details_for( $token );
+        $this->log_payer_details( $details );
+
+        $response = $this->gateway->purchase( $options );
+        $this->log_protection_status( $response );
+        $location = remove_query_arg( 'payment_gateway_callback' );
+
+        if ( $response->has_errors() ) {
+            wpsc_update_customer_meta( 'paypal_express_checkout_errors', $response->get_errors() );
+            $location = add_query_arg( array( 'payment_gateway_callback' => 'display_paypal_error' ) );
+        } elseif ( $response->is_payment_completed() || $response->is_payment_pending() ) {
+            $location = remove_query_arg( 'payment_gateway' );
+
+            if ( $response->is_payment_completed() ) {
+                $this->purchase_log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT );
+             } else {
+                $this->purchase_log->set( 'processed', WPSC_Purchase_Log::ORDER_RECEIVED );
+             }
+
+            $this->purchase_log->set( 'transactid', $response->get( 'transaction_id' ) )
+                ->set( 'date', time() )
+                ->save();
+        } else {
+            $location = add_query_arg( array( 'payment_gateway_callback' => 'display_generic_error' ) );
+        }
+
+        wp_redirect( $location );
+        exit;
     }
 
     public function callback_display_paypal_error() {
