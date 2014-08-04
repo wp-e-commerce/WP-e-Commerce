@@ -83,7 +83,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X2 extends UnitTes
 	 */
 	public function test_doexpresscheckout_ref21() {
 		// Using the Token and Payer Id for another transaction 
-		$this->purchase_options['token'] = 'EC-14U18917H9983054B';
+		$this->purchase_options['token'] = 'EC-2LX41209SH738634B';
 		$this->purchase_options['payer_id'] = 'FQQ7Q9EVPAB86';
 
 		// Call DoExpressCheckout
@@ -92,7 +92,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X2 extends UnitTes
 		$this->assertTrue( $response->is_successful() );
 
 		// Display the Transaction Id
-		st_echo( 'Test Case 2.1: ' . $response->get( 'correlation_id' ) . "\n" );
+		st_echo( 'Test Case 2.1: ' . $response->get( 'transaction_id' ) . "\n" );
 	}
 
 	/**
@@ -101,18 +101,18 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X2 extends UnitTes
 	 * @return void
 	 * @since 3.9
 	 */
-	public function test_doexpresscheckout_ref22() {
+	public function test_doexpresscheckout_ref22() { 
 		// Using the Token and Payer Id for another transaction 
-		$this->purchase_options['token'] = 'EC-66J95916MH586584X';
+		$this->purchase_options['token'] = 'EC-5T412084S27270248';
 		$this->purchase_options['payer_id'] = 'FQQ7Q9EVPAB86';
 
 		// Call DoExpressCheckout
 		$response = $this->gateway->purchase( $this->purchase_options, 'Authorization' );
 
-		$this->assertTrue( $response->is_successful() );
+		$this->assertTrue( $response->is_successful() ); 
 
 		// Display the Transaction Id
-		st_echo( 'Test Case 2.2: ' . $response->get( 'correlation_id' ) . "\n" );
+		st_echo( 'Test Case 2.2: ' . $response->get( 'transaction_id' ) . "\n" );
 	}
 
 	/**
@@ -123,7 +123,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X2 extends UnitTes
 	 */
 	public function test_doexpresscheckout_ref23() {
 		// Using the Token and Payer Id for another transaction 
-		$this->purchase_options['token'] = 'EC-6Y50070151771293S';
+		$this->purchase_options['token'] = 'EC-94S08582T02646945';
 		$this->purchase_options['payer_id'] = 'FQQ7Q9EVPAB86';
 
 		// Call DoExpressCheckout
@@ -132,7 +132,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X2 extends UnitTes
 		$this->assertTrue( $response->is_successful() );
 
 		// Display the Transaction Id
-		st_echo( 'Test Case 2.3: ' . $response->get( 'correlation_id' ) . "\n" );
+		st_echo( 'Test Case 2.3: ' . $response->get( 'transaction_id' ) . "\n" );
 	}
 
 	/**
@@ -143,17 +143,17 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X2 extends UnitTes
 	 */
 	public function test_doexpresscheckout_ref24() {
 		// Using the Token and Payer Id for another transaction 
-		$this->purchase_options['token'] = 'EC-1PT077736W3202438';
+		$this->purchase_options['token'] = 'EC-2A077123HD2136914';
 		$this->purchase_options['payer_id'] = 'FQQ7Q9EVPAB86';
 
 		// Call DoExpressCheckout
-		$this->purchase_options['no_shipping'] = true;
+		$this->purchase_options['no_shipping'] = 1;
 		$response = $this->gateway->purchase( $this->purchase_options );
 
 		$this->assertTrue( $response->is_successful() );
 
 		// Display the Transaction Id
-		st_echo( 'Test Case 2.4: ' . $response->get( 'correlation_id' ) . "\n" );
+		st_echo( 'Test Case 2.4: ' . $response->get( 'transaction_id' ) . "\n" );
 	}
 
 	/**
@@ -172,7 +172,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X2 extends UnitTes
 		$this->purchase_options['items'] = array();
 
 		// Using the Token and Payer Id for another transaction 
-		$this->purchase_options['token'] = 'EC-2B657947AE7981043';
+		$this->purchase_options['token'] = 'EC-04C181866P316870M';
 		$this->purchase_options['payer_id'] = 'FQQ7Q9EVPAB86';
 
 		// Call DoExpressCheckout
