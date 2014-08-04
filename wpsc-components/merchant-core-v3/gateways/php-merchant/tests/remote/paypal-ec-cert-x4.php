@@ -82,7 +82,16 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X4 extends UnitTes
 	 * @since 3.9
 	 */
 	public function test_doexpresscheckout_ref41() {
+		$this->purchase_options['complete_type'] = 'NotComplete';
+		$this->purchase_options['amount'] = 10;
+		$this->purchase_options['authorization_id'] = '3AU5391768007820J';
 
+		$response = $this->gateway->capture( $this->purchase_options );
+		
+		$this->assertTrue( $response->is_successful() );
+
+		// Display the Transaction Id
+		st_echo('Test Case 4.1: ' . $response->get( 'transaction_id' ) . "\n" );
 	}
 
 	/**
@@ -92,6 +101,15 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X4 extends UnitTes
 	 * @since 3.9
 	 */
 	public function test_doexpresscheckout_ref42() {
+		$this->purchase_options['complete_type'] = 'Complete';
+		$this->purchase_options['amount'] = 15.34;
+		$this->purchase_options['authorization_id'] = 'O-79124340AV3470941';
 
+		$response = $this->gateway->capture( $this->purchase_options );
+		
+		$this->assertTrue( $response->is_successful() );
+
+		// Display the Transaction Id
+		st_echo('Test Case 4.2: ' . $response->get( 'transaction_id' ) . "\n" );
 	}
 }
