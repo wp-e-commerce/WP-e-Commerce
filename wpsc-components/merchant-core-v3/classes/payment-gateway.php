@@ -412,7 +412,7 @@ abstract class WPSC_Payment_Gateway
 	public function get_currency_code() {
 		if ( ! $this->currency_code ) {
 			$country = new WPSC_Country( get_option( 'currency_type' ) );
-			$currency = $country->get( 'code' );
+			$currency = $country->get( 'currency_code' );
 		}
 
 		return $currency;
