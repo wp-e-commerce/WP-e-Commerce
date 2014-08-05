@@ -136,7 +136,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 
 		// Common Fields
 		$request += phpme_map( $this->options, array(
-            'AMT'          => 'amount',
+			'AMT'          => 'amount',
 			'MAXAMT'       => 'max_amount',
 			'SOLUTIONTYPE' => 'solution_type',
 			'ALLOWNOTE'    => 'allow_note',
@@ -144,7 +144,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 			'TOKEN'        => 'token',
 			'PAYERID'      => 'payer_id',
 			'TRANSACTIONID'=> 'transaction_id',
-            'AUTHORIZATIONID'=> 'authorization_id',
+			'AUTHORIZATIONID'=> 'authorization_id',
 			'MSGSUBID'	   => 'message_id',
 			'INVOICEID'	   => 'invoice',
 		) );
@@ -162,10 +162,10 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 			'REFUNDADVICE' => 'refund_advice',
 		) );
 
-        // DoCapture Fields
-        $request += phpme_map( $this->options, array(
-            'COMPLETETYPE' => 'complete_type',
-        ) );
+		// DoCapture Fields
+		$request += phpme_map( $this->options, array(
+			'COMPLETETYPE' => 'complete_type',
+		) );
 
 		if ( ! empty( $this->options['shipping_address'] ) ) {
 			$request += $this->add_address();
@@ -200,29 +200,29 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 
 	/**
 	 * Gateway impelementation for GetExpressCheckoutDetails
- 	 *
- 	 * @param string $token Authentication token returned by the SetExpressCheckout operation
+	 *
+	 * @param string $token Authentication token returned by the SetExpressCheckout operation
 	 * @return PHP_Merchant_Paypal_Express_Checkout_Response
 	 * @since 3.9
- 	 */
+	 */
 	public function get_details_for( $token ) {
 		$request =  array( 'TOKEN' => $token );
 		$response_str = $this->commit( 'GetExpressCheckoutDetails', $request );
 		return new PHP_Merchant_Paypal_Express_Checkout_Response( $response_str );
 	}
 
-    /**
-     * Gateway impelementation for GetTransactionDetails
-     *
-     * @param string $transaction_id Unique identifier of a transaction.
-     * @return PHP_Merchant_Paypal_Express_Checkout_Response
-     * @since 3.9
-     */
-    public function get_transaction_details( $transaction_id ) {
+	/**
+	 * Gateway impelementation for GetTransactionDetails
+	 *
+	 * @param string $transaction_id Unique identifier of a transaction.
+	 * @return PHP_Merchant_Paypal_Express_Checkout_Response
+	 * @since 3.9
+	 */
+	public function get_transaction_details( $transaction_id ) {
 		$request =  array( 'TRANSACTIONID' => $transaction_id );
 		$response_str = $this->commit( 'GetTransactionDetails', $request );
 		return new PHP_Merchant_Paypal_Express_Checkout_Response( $response_str );
-    }
+	}
 
 	/**
 	 * Gateway implementation for DoExpressCheckout
