@@ -413,6 +413,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 			'email'        => 'visa_1304648966_per@garyc40.com',
 			'id'           => 'BC798KQ2QU22W',
 			'status'       => 'verified',
+			'shipping_status' => 'Unconfirmed',
 			'first_name'   => 'Test',
 			'last_name'    => 'User',
 			'country'      => 'US',
