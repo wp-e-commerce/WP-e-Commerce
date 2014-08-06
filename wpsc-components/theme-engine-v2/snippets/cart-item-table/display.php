@@ -1,4 +1,4 @@
-<!-- WP e-Commerce Checkout Table Begins -->
+<!-- WP eCommerce Checkout Table Begins -->
 <table class="<?php echo implode( ' ', $this->get_table_classes() ); ?>" cellspacing="0">
 	<thead>
 		<tr>
@@ -51,4 +51,4 @@
 		<?php $this->display_rows(); ?>
 	</tbody>
 </table>
-<!-- WP e-Commerce Checkout Table Ends -->
+<!-- WP eCommerce Checkout Table Ends -->

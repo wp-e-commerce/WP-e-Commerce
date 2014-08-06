@@ -108,7 +108,7 @@ class WPSC_Router {
 		// get controller name
 		$controller = get_query_var( 'wpsc_controller' );
 
-		// if controller name is not specified, and this is one of WP e-Commerce
+		// if controller name is not specified, and this is one of WP eCommerce
 		// related pages (archive, single, taxonomy), route to the corresponding
 		// controller
 		if ( ! $controller ) {

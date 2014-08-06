@@ -8,7 +8,7 @@ class WPSC_Widget_Cart extends WP_Widget {
 			'wpsc_cart_widget',
 			__( '(WPEC) Shopping Cart', 'wpsc' ),
 			array(
-				'description' => __( 'WP e-Commerce Shopping Cart Widget', 'wpsc' ),
+				'description' => __( 'WP eCommerce Shopping Cart Widget', 'wpsc' ),
 			)
 		);
 

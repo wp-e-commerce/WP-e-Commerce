@@ -129,7 +129,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 
 					</p>
 					<p>
-						<?php _e( 'WP e-Commerce provides you the ability to move your theme files to a safe place for theming control.
+						<?php _e( 'WP eCommerce provides you the ability to move your theme files to a safe place for theming control.
 
 	If you want to change the look of your site, select the files you want to edit from the list and click the move button. This will copy the template files to your active WordPress theme. ','wpsc' ); ?>
 					</p>

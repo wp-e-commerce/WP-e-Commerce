@@ -262,7 +262,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 			'timeout'    => 20,
 			'body'       => $received_values,
 			'httpversion' => '1.1',
-			'user-agent' => ('WP e-Commerce/' . WPSC_PRESENTABLE_VERSION)
+			'user-agent' => ('WP eCommerce/' . WPSC_PRESENTABLE_VERSION)
 		);
 
 		$response = wp_remote_post( $paypal_url, $options );

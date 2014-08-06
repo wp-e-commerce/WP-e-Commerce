@@ -35,7 +35,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X6 extends UnitTes
 			'items' => array(
 				array(
 					'name'        => 'Gold Cart Plugin',
-					'description' => 'Gold Cart extends your WP e-Commerce store by enabling additional features and functionality.',
+					'description' => 'Gold Cart extends your WP eCommerce store by enabling additional features and functionality.',
 					'amount'      => 4,
 					'quantity'    => 1,
 					'tax'         => 0.040,
@@ -53,7 +53,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X6 extends UnitTes
 				),
 				array(
 					'name'        => 'Amazon S3',
-					'description' => 'This Plugin allows downloadable products that you have for sale on your WP e-Commerce site to be hosted within Amazon S3.',
+					'description' => 'This Plugin allows downloadable products that you have for sale on your WP eCommerce site to be hosted within Amazon S3.',
 					'amount'      => 4.7,
 					'quantity'    => 1,
 					'tax'         => 0.047,
@@ -88,6 +88,6 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X6 extends UnitTes
 		$this->assertTrue( $response->is_successful() );
 		st_echo( 'Test Case 6.1:' . "\n" );
 		st_echo( 'Transaction ID: O-0CJ689879E5247331' . "\n" );
-		st_echo( 'Payment Status: ' . $response->get_params()['PAYMENTSTATUS'] . "\n" ); 
+		st_echo( 'Payment Status: ' . $response->get_params()['PAYMENTSTATUS'] . "\n" );
 	}
 }

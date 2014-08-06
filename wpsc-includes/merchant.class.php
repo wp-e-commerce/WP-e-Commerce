@@ -169,7 +169,7 @@ class wpsc_merchant {
 			$has_discount = false;
 
 		$this->cart_data = array(
-			'software_name'           => 'WP e-Commerce/' . WPSC_PRESENTABLE_VERSION . '',
+			'software_name'           => 'WP eCommerce/' . WPSC_PRESENTABLE_VERSION . '',
 			'store_location'          => get_option( 'base_country' ),
 			'store_currency'          => $currency_code,
 			'is_subscription'         => false,

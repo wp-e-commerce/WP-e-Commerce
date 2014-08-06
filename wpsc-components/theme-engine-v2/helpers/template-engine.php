@@ -74,7 +74,7 @@ function wpsc_locate_view_wrappers( $files, $load = false, $require_once = true 
 
 /**
  * This works just like get_template_part(), except that it uses wpsc_locate_template_path()
- * to search for the template part in 2 extra WP e-Commerce specific paths.
+ * to search for the template part in 2 extra WP eCommerce specific paths.
  *
  * @since 0.1
  * @see   get_template()

@@ -23,7 +23,7 @@ add_filter(
 );
 
 /**
- * Retrieve WP e-Commerce option value based on name of the option.
+ * Retrieve WP eCommerce option value based on name of the option.
  *
  * Works just like get_option(), except that it automatically prefixes
  * the option name with 'wpsc_' and assign a default value as defined in

@@ -1,4 +1,4 @@
-<!-- WP e-Commerce Table Begins -->
+<!-- WP eCommerce Table Begins -->
 <table class="<?php echo implode( ' ', $this->get_table_classes() ); ?>" cellspacing="0">
 	<thead>
 		<tr>
@@ -14,4 +14,4 @@
 		<?php $this->display_rows(); ?>
 	</tbody>
 </table>
-<!-- WP e-Commerce Table Ends -->
+<!-- WP eCommerce Table Ends -->

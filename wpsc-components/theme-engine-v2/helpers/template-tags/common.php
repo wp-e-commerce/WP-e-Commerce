@@ -120,7 +120,7 @@ function wpsc_store_title() {
 }
 
 /**
- * Get the slugs of WP e-Commerce related pages
+ * Get the slugs of WP eCommerce related pages
  *
  * @access public
  * @since  0.1

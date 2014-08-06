@@ -1,6 +1,6 @@
 <?php
 /**
- * WP e-Commerce conditional tags.
+ * WP eCommerce conditional tags.
  *
  * This file contains conditional tags that theme developers can use in theme templates.
  *

@@ -47,7 +47,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 			'items' => array(
 				array(
 					'name'        => 'Gold Cart Plugin',
-					'description' => 'Gold Cart extends your WP e-Commerce store by enabling additional features and functionality, including views, galleries, store search and payment gateways.',
+					'description' => 'Gold Cart extends your WP eCommerce store by enabling additional features and functionality, including views, galleries, store search and payment gateways.',
 					'amount'      => 4000,
 					'quantity'    => 1,
 					'tax'         => 40,
@@ -63,7 +63,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 				),
 				array(
 					'name'        => 'Amazon S3',
-					'description' => 'This Plugin allows downloadable products that you have for sale on your WP e-Commerce site to be hosted within Amazon S3.',
+					'description' => 'This Plugin allows downloadable products that you have for sale on your WP eCommerce site to be hosted within Amazon S3.',
 					'amount'      => 4700,
 					'quantity'    => 1,
 					'tax'         => 47,
@@ -134,7 +134,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 			'L_PAYMENTREQUEST_0_NAME0'    => 'Gold Cart Plugin',
 			'L_PAYMENTREQUEST_0_AMT0'     => '4,000',
 			'L_PAYMENTREQUEST_0_QTY0'     => 1,
-			'L_PAYMENTREQUEST_0_DESC0'    => 'Gold Cart extends your WP e-Commerce store by enabling additional features and functionality, including views, galleries, store search and payment gateways.',
+			'L_PAYMENTREQUEST_0_DESC0'    => 'Gold Cart extends your WP eCommerce store by enabling additional features and functionality, including views, galleries, store search and payment gateways.',
 			'L_PAYMENTREQUEST_0_TAXAMT0'  => '40',
 			'L_PAYMENTREQUEST_0_ITEMURL0' => 'http://getshopped.org/extend/premium-upgrades/premium-upgrades/gold-cart-plugin/',
 
@@ -148,7 +148,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 			'L_PAYMENTREQUEST_0_NAME2'    => 'Amazon S3',
 			'L_PAYMENTREQUEST_0_AMT2'     => '4,700',
 			'L_PAYMENTREQUEST_0_QTY2'     => 1,
-			'L_PAYMENTREQUEST_0_DESC2'    => 'This Plugin allows downloadable products that you have for sale on your WP e-Commerce site to be hosted within Amazon S3.',
+			'L_PAYMENTREQUEST_0_DESC2'    => 'This Plugin allows downloadable products that you have for sale on your WP eCommerce site to be hosted within Amazon S3.',
 			'L_PAYMENTREQUEST_0_TAXAMT2'  => '47',
 			'L_PAYMENTREQUEST_0_ITEMURL2' => 'http://getshopped.org/extend/premium-upgrades/premium-upgrades/amazon-s3-plugin/',
 		);
@@ -210,7 +210,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 			'L_PAYMENTREQUEST_0_NAME0'    => 'Gold Cart Plugin',
 			'L_PAYMENTREQUEST_0_AMT0'     => '4,000',
 			'L_PAYMENTREQUEST_0_QTY0'     => 1,
-			'L_PAYMENTREQUEST_0_DESC0'    => 'Gold Cart extends your WP e-Commerce store by enabling additional features and functionality, including views, galleries, store search and payment gateways.',
+			'L_PAYMENTREQUEST_0_DESC0'    => 'Gold Cart extends your WP eCommerce store by enabling additional features and functionality, including views, galleries, store search and payment gateways.',
 			'L_PAYMENTREQUEST_0_TAXAMT0'  => '40',
 			'L_PAYMENTREQUEST_0_ITEMURL0' => 'http://getshopped.org/extend/premium-upgrades/premium-upgrades/gold-cart-plugin/',
 
@@ -224,7 +224,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 			'L_PAYMENTREQUEST_0_NAME2'    => 'Amazon S3',
 			'L_PAYMENTREQUEST_0_AMT2'     => '4,700',
 			'L_PAYMENTREQUEST_0_QTY2'     => 1,
-			'L_PAYMENTREQUEST_0_DESC2'    => 'This Plugin allows downloadable products that you have for sale on your WP e-Commerce site to be hosted within Amazon S3.',
+			'L_PAYMENTREQUEST_0_DESC2'    => 'This Plugin allows downloadable products that you have for sale on your WP eCommerce site to be hosted within Amazon S3.',
 			'L_PAYMENTREQUEST_0_TAXAMT2'  => '47',
 			'L_PAYMENTREQUEST_0_ITEMURL2' => 'http://getshopped.org/extend/premium-upgrades/premium-upgrades/amazon-s3-plugin/',
 		);
@@ -450,7 +450,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 
 		$mock_items[0] = new stdClass();
 		$mock_items[0]->name = 'Gold Cart Plugin';
-		$mock_items[0]->description = 'Gold Cart extends your WP e-Commerce store by enabling additional features and functionality.';
+		$mock_items[0]->description = 'Gold Cart extends your WP eCommerce store by enabling additional features and functionality.';
 		$mock_items[0]->amount = 4000;
 		$mock_items[0]->quantity = 1;
 		$mock_items[0]->tax = 40;
@@ -464,7 +464,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 
 		$mock_items[2] = new stdClass();
 		$mock_items[2]->name = 'Amazon S3';
-		$mock_items[2]->description = 'This Plugin allows downloadable products on your WP e-Commerce site to be hosted on Amazon S3.';
+		$mock_items[2]->description = 'This Plugin allows downloadable products on your WP eCommerce site to be hosted on Amazon S3.';
 		$mock_items[2]->amount = 4700;
 		$mock_items[2]->quantity = 1;
 		$mock_items[2]->tax = 47;

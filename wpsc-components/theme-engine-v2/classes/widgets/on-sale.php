@@ -21,7 +21,7 @@ class WPSC_Widget_On_Sale extends WP_Widget {
 			'wpsc_widget_on_sale',
 			__( '(WPEC) Products On Sale', 'wpsc' ),
 			array(
-				'description' => __( 'WP e-Commerce Product On Sale Widget', 'wpsc' )
+				'description' => __( 'WP eCommerce Product On Sale Widget', 'wpsc' )
 			)
 		);
 	}

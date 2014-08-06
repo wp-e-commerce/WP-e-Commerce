@@ -35,7 +35,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X2 extends UnitTes
 			'items' => array(
 				array(
 					'name'        => 'Gold Cart Plugin',
-					'description' => 'Gold Cart extends your WP e-Commerce store by enabling additional features and functionality.',
+					'description' => 'Gold Cart extends your WP eCommerce store by enabling additional features and functionality.',
 					'amount'      => 4,
 					'quantity'    => 1,
 					'tax'         => 0.040,
@@ -53,7 +53,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X2 extends UnitTes
 				),
 				array(
 					'name'        => 'Amazon S3',
-					'description' => 'This Plugin allows downloadable products that you have for sale on your WP e-Commerce site to be hosted within Amazon S3.',
+					'description' => 'This Plugin allows downloadable products that you have for sale on your WP eCommerce site to be hosted within Amazon S3.',
 					'amount'      => 4.7,
 					'quantity'    => 1,
 					'tax'         => 0.047,
@@ -82,7 +82,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X2 extends UnitTes
 	 * @since 3.9
 	 */
 	public function test_doexpresscheckout_ref21() {
-		// Using the Token and Payer Id for another transaction 
+		// Using the Token and Payer Id for another transaction
 		$this->purchase_options['token'] = 'EC-14U18917H9983054B';
 		$this->purchase_options['payer_id'] = 'FQQ7Q9EVPAB86';
 
@@ -102,7 +102,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X2 extends UnitTes
 	 * @since 3.9
 	 */
 	public function test_doexpresscheckout_ref22() {
-		// Using the Token and Payer Id for another transaction 
+		// Using the Token and Payer Id for another transaction
 		$this->purchase_options['token'] = 'EC-66J95916MH586584X';
 		$this->purchase_options['payer_id'] = 'FQQ7Q9EVPAB86';
 
@@ -122,7 +122,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X2 extends UnitTes
 	 * @since 3.9
 	 */
 	public function test_doexpresscheckout_ref23() {
-		// Using the Token and Payer Id for another transaction 
+		// Using the Token and Payer Id for another transaction
 		$this->purchase_options['token'] = 'EC-6Y50070151771293S';
 		$this->purchase_options['payer_id'] = 'FQQ7Q9EVPAB86';
 
@@ -142,7 +142,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X2 extends UnitTes
 	 * @since 3.9
 	 */
 	public function test_doexpresscheckout_ref24() {
-		// Using the Token and Payer Id for another transaction 
+		// Using the Token and Payer Id for another transaction
 		$this->purchase_options['token'] = 'EC-1PT077736W3202438';
 		$this->purchase_options['payer_id'] = 'FQQ7Q9EVPAB86';
 
@@ -171,7 +171,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X2 extends UnitTes
 		$this->purchase_options['max_amount'] = 100.01;
 		$this->purchase_options['items'] = array();
 
-		// Using the Token and Payer Id for another transaction 
+		// Using the Token and Payer Id for another transaction
 		$this->purchase_options['token'] = 'EC-2B657947AE7981043';
 		$this->purchase_options['payer_id'] = 'FQQ7Q9EVPAB86';
 
