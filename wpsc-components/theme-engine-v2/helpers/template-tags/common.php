@@ -68,7 +68,7 @@ function wpsc_format_currency( $amt, $args = '' ) {
 		$decimals = 2; // default is 2
 	}
 
-	$decimals            = apply_filters( 'wpsc_modify_decimals'                 , $decimals, $isocode );
+	$decimals            = apply_filters( 'wpsc_modify_decimals'                    , $decimals, $isocode );
 	$decimal_separator   = apply_filters( 'wpsc_format_currency_decimal_separator'  , wpsc_get_option( 'decimal_separator' ), $isocode );
 	$thousands_separator = apply_filters( 'wpsc_format_currency_thousands_separator', wpsc_get_option( 'thousands_separator' ), $isocode );
 
@@ -142,16 +142,10 @@ function wpsc_get_page_slugs() {
 		'checkout',
 		'transaction-result',
 		'customer-account',
+		'login',
+		'password-reminder',
+		'register',
 	);
-
-	// if users can register, make these pages available too
-	if ( get_option( 'users_can_register' ) ) {
-		$pages = array_merge( $pages, array(
-			'login',
-			'password-reminder',
-			'register',
-		) );
-	}
 
 	$slugs = array();
 
