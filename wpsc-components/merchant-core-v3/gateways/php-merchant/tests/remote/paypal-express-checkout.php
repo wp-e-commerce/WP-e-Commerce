@@ -5,15 +5,15 @@ require_once( PHP_MERCHANT_PATH . '/gateways/paypal-express-checkout.php' );
 class PHP_Merchant_Paypal_Express_Checkout_Remote_Test extends WebTestCase
 {
 	private $response;
-	
+
 	public function __construct() {
 		parent::__construct( 'PHP_Merchant_Paypal_Express_Checkout Remote Unit Tests' );
 	}
-	
+
 	public function test_successful_set_express_checkout_request() {
 		global $test_accounts;
 		$gateway = new PHP_Merchant_Paypal_Express_Checkout( $test_accounts['paypal-express-checkout'] );
-		
+
 		$purchase_options = array(
 			// API info
 			'return_url'        => 'http://example.com/return',
@@ -46,7 +46,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Remote_Test extends WebTestCase
 			'items' => array(
 				array(
 					'name'        => 'Gold Cart Plugin',
-					'description' => 'Gold Cart extends your WP e-Commerce store by enabling additional features and functionality.',
+					'description' => 'Gold Cart extends your WP eCommerce store by enabling additional features and functionality.',
 					'amount'      => 4000,
 					'quantity'    => 1,
 					'tax'         => 40,
@@ -62,7 +62,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Remote_Test extends WebTestCase
 				),
 				array(
 					'name'        => 'Amazon S3',
-					'description' => 'This Plugin allows downloadable products on your WP e-Commerce site to be hosted on Amazon S3.',
+					'description' => 'This Plugin allows downloadable products on your WP eCommerce site to be hosted on Amazon S3.',
 					'amount'      => 4700,
 					'quantity'    => 1,
 					'tax'         => 47,
@@ -70,8 +70,8 @@ class PHP_Merchant_Paypal_Express_Checkout_Remote_Test extends WebTestCase
 				),
 			),
 		);
-		
-		$this->response = $response = $gateway->setup_purchase( $purchase_options );	
+
+		$this->response = $response = $gateway->setup_purchase( $purchase_options );
 		$this->token = $response->get( 'token' );
 		$this->timestamp = $response->get( 'timestamp' );
 		$this->datetime = $response->get( 'datetime' );
@@ -79,9 +79,9 @@ class PHP_Merchant_Paypal_Express_Checkout_Remote_Test extends WebTestCase
 		$this->version = $response->get( 'version' );
 		$this->build = $response->get( 'build' );
 		$this->assertTrue( $response->is_successful() );
-		$this->assertFalse( $response->has_errors() );		
+		$this->assertFalse( $response->has_errors() );
 	}
-	
+
 	public function test_successful_get_express_checkout_request() {
 		global $test_accounts;
 
@@ -91,10 +91,10 @@ class PHP_Merchant_Paypal_Express_Checkout_Remote_Test extends WebTestCase
 		$gateway = new PHP_Merchant_Paypal_Express_Checkout( $test_accounts['paypal-express-checkout'] );
 
 		$response = $gateway->get_details_for( $this->response->get( 'token' ) );
-		
+
 		$this->assertTrue( $response->is_successful() );
 		$this->assertFalse( $response->has_errors() );
-		
+
 		// API Info
 		$this->assertTrue( $response->is_checkout_not_initiated() );
 		$this->assertFalse( $response->is_checkout_failed() );
@@ -104,7 +104,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Remote_Test extends WebTestCase
 		$this->assertEqual( $response->get( 'token'           ), $this->response->get( 'token'   ) );
 		$this->assertEqual( $response->get( 'version'         ), $this->response->get( 'version' ) );
 		$this->assertEqual( $response->get( 'build'           ), $this->response->get( 'build'   ) );
-		
+
 		// Payment Information
 		$this->assertEqual( $response->get( 'currency' ), 'JPY' );
 		$this->assertEqual( $response->get( 'amount'   ), 15337 );
@@ -115,32 +115,32 @@ class PHP_Merchant_Paypal_Express_Checkout_Remote_Test extends WebTestCase
 		$this->assertEqual( $response->get( 'invoice'  ), 'E84A90G94' );
 		$this->assertEqual( $response->get( 'notify_url' ), 'http://example.com/ipn' );
 		$this->assertEqual( $response->get( 'shipping_discount' ), 0 );
-		
+
 		// Item Information
 		$items = $response->get( 'items' );
 		$mock_items = array();
-		
+
 		$mock_items[0] = new stdClass();
 		$mock_items[0]->name = 'Gold Cart Plugin';
-		$mock_items[0]->description = 'Gold Cart extends your WP e-Commerce store by enabling additional features and functionality.';
+		$mock_items[0]->description = 'Gold Cart extends your WP eCommerce store by enabling additional features and functionality.';
 		$mock_items[0]->amount = 4000;
 		$mock_items[0]->quantity = 1;
 		$mock_items[0]->tax = 40;
-		
+
 		$mock_items[1] = new stdClass();
 		$mock_items[1]->name = 'Member Access Plugin';
 		$mock_items[1]->description = 'Create pay to view subscription sites';
 		$mock_items[1]->amount = 5000;
 		$mock_items[1]->quantity = 1;
 		$mock_items[1]->tax = 50;
-		
+
 		$mock_items[2] = new stdClass();
 		$mock_items[2]->name = 'Amazon S3';
-		$mock_items[2]->description = 'This Plugin allows downloadable products on your WP e-Commerce site to be hosted on Amazon S3.';
+		$mock_items[2]->description = 'This Plugin allows downloadable products on your WP eCommerce site to be hosted on Amazon S3.';
 		$mock_items[2]->amount = 4700;
 		$mock_items[2]->quantity = 1;
 		$mock_items[2]->tax = 47;
-		
+
 		$this->assertEqual( $items, $mock_items );
 	}
 }

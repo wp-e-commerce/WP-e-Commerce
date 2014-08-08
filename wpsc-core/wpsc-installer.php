@@ -106,10 +106,107 @@ function wpsc_install() {
 	add_option( 'show_thumbnails', 1, '', 'no' );
 	add_option( 'show_thumbnails_thickbox', 1, '', 'no' );
 
-	add_option( 'product_list_url', '', '', 'no' );
-	add_option( 'shopping_cart_url', '', '', 'no' );
-	add_option( 'checkout_url', '', '', 'no' );
-	add_option( 'transact_url', '', '', 'no' );
+	require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-functions.php' );
+	require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-theme-engine-bootstrap.php' );
+
+	if ( ! _wpsc_maybe_activate_theme_engine_v2() ) {
+		add_option( 'product_list_url', '', '', 'no' );
+		add_option( 'shopping_cart_url', '', '', 'no' );
+		add_option( 'checkout_url', '', '', 'no' );
+		add_option( 'transact_url', '', '', 'no' );
+		/*
+		 * This part creates the pages and automatically puts their URLs into the options page.
+		 * As you can probably see, it is very easily extendable, just pop in your page and the deafult content in the array and you are good to go.
+		 */
+		$post_date = date( "Y-m-d H:i:s" );
+		$post_date_gmt = gmdate( "Y-m-d H:i:s" );
+
+		$pages = array(
+			'products-page' => array(
+				'name' => 'products-page',
+				'title' => __( 'Products Page', 'wpsc' ),
+				'tag' => '[productspage]',
+				'option' => 'product_list_url'
+			),
+			'checkout' => array(
+				'name' => 'checkout',
+				'title' => __( 'Checkout', 'wpsc' ),
+				'tag' => '[shoppingcart]',
+				'option' => 'shopping_cart_url'
+			),
+			'transaction-results' => array(
+				'name' => 'transaction-results',
+				'title' => __( 'Transaction Results', 'wpsc' ),
+				'tag' => '[transactionresults]',
+				'option' => 'transact_url'
+			),
+			'your-account' => array(
+				'name' => 'your-account',
+				'title' => __( 'Your Account', 'wpsc' ),
+				'tag' => '[userlog]',
+				'option' => 'user_account_url'
+			)
+		);
+
+		//indicator. if we will create any new pages we need to flush.. :)
+		$newpages = false;
+
+		//get products page id. if there's no products page then create one
+		$products_page_id = $wpdb->get_var("SELECT id FROM `" . $wpdb->posts . "` WHERE `post_content` LIKE '%" . $pages['products-page']['tag'] . "%'	AND `post_type` != 'revision'");
+		if( empty($products_page_id) ){
+			$products_page_id = wp_insert_post( array(
+				'post_title' 	=>	$pages['products-page']['title'],
+				'post_type' 	=>	'page',
+				'post_name'		=>	$pages['products-page']['name'],
+				'comment_status'=>	'closed',
+				'ping_status' 	=>	'closed',
+				'post_content' 	=>	$pages['products-page']['tag'],
+				'post_status' 	=>	'publish',
+				'post_author' 	=>	1,
+				'menu_order'	=>	0
+			));
+			$newpages = true;
+		}
+		update_option( $pages['products-page']['option'], _get_page_link($products_page_id) );
+		//done. products page created. no we can unset products page data and create all other pages.
+
+		//unset products page
+		unset($pages['products-page']);
+
+		//create other pages
+		foreach( (array)$pages as $page ){
+			//check if page exists and get it's ID
+			$page_id = $wpdb->get_var("SELECT id FROM `" . $wpdb->posts . "` WHERE `post_content` LIKE '%" . $page['tag'] . "%'	AND `post_type` != 'revision'");
+			//if there's no page - create
+			if( empty($page_id) ){
+				$page_id = wp_insert_post( array(
+					'post_title' 	=>	$page['title'],
+					'post_type' 	=>	'page',
+					'post_name'		=>	$page['name'],
+					'comment_status'=>	'closed',
+					'ping_status' 	=>	'closed',
+					'post_content' 	=>	$page['tag'],
+					'post_status' 	=>	'publish',
+					'post_author' 	=>	1,
+					'menu_order'	=>	0,
+					'post_parent'	=>	$products_page_id
+				));
+				$newpages = true;
+			}
+			//update option
+			update_option( $page['option'], get_permalink( $page_id ) );
+			//also if this is shopping_cart, then update checkout url option
+			if ( $page['option'] == 'shopping_cart_url' )
+				update_option( 'checkout_url', get_permalink( $page_id ) );
+		}
+
+		//if we have created any new pages, then flush... do we need to do this? probably should be removed
+		if ( $newpages ) {
+			wp_cache_delete( 'all_page_ids', 'pages' );
+			wpsc_update_permalink_slugs();
+		}
+	}
+
 	add_option( 'payment_gateway', '','', 'no' );
 
 	$default_payment_gateways_names = array(
@@ -118,6 +215,7 @@ function wpsc_install() {
 		'wpsc_merchant_paypal_pro'		=> '',
 		'wpsc_merchant_paypal_standard'	=> ''
 	);
+
 	$existing_payment_gateways_names = get_option( 'payment_gateway_names' );
 	$new_payment_gatewats_name = array_merge($default_payment_gateways_names, (array)$existing_payment_gateways_names);
 	update_option( 'payment_gateway_names', $new_payment_gatewats_name );
@@ -192,7 +290,7 @@ You ordered these items:
 	add_option( 'wpsc_thousands_separator', ',' );
 	add_option( 'wpsc_decimal_separator', '.' );
 
-	add_option( 'custom_gateway_options', array('wpsc_merchant_testmode'), '', 'no' );
+	add_option( 'custom_gateway_options', array( 'wpsc_merchant_testmode' ), '', 'no' );
 
 	add_option( 'wpsc_category_url_cache', array(), '', 'no' );
 
@@ -205,99 +303,6 @@ You ordered these items:
 
 	wpsc_product_files_htaccess();
 
-	/*
-	 * This part creates the pages and automatically puts their URLs into the options page.
-	 * As you can probably see, it is very easily extendable, just pop in your page and the deafult content in the array and you are good to go.
-	 */
-	$post_date = date( "Y-m-d H:i:s" );
-	$post_date_gmt = gmdate( "Y-m-d H:i:s" );
-
-	$pages = array(
-		'products-page' => array(
-			'name' => 'products-page',
-			'title' => __( 'Products Page', 'wpsc' ),
-			'tag' => '[productspage]',
-			'option' => 'product_list_url'
-		),
-		'checkout' => array(
-			'name' => 'checkout',
-			'title' => __( 'Checkout', 'wpsc' ),
-			'tag' => '[shoppingcart]',
-			'option' => 'shopping_cart_url'
-		),
-		'transaction-results' => array(
-			'name' => 'transaction-results',
-			'title' => __( 'Transaction Results', 'wpsc' ),
-			'tag' => '[transactionresults]',
-			'option' => 'transact_url'
-		),
-		'your-account' => array(
-			'name' => 'your-account',
-			'title' => __( 'Your Account', 'wpsc' ),
-			'tag' => '[userlog]',
-			'option' => 'user_account_url'
-		)
-	);
-
-	//indicator. if we will create any new pages we need to flush.. :)
-	$newpages = false;
-
-	//get products page id. if there's no products page then create one
-	$products_page_id = $wpdb->get_var("SELECT id FROM `" . $wpdb->posts . "` WHERE `post_content` LIKE '%" . $pages['products-page']['tag'] . "%'	AND `post_type` != 'revision'");
-	if( empty($products_page_id) ){
-		$products_page_id = wp_insert_post( array(
-			'post_title' 	=>	$pages['products-page']['title'],
-			'post_type' 	=>	'page',
-			'post_name'		=>	$pages['products-page']['name'],
-			'comment_status'=>	'closed',
-			'ping_status' 	=>	'closed',
-			'post_content' 	=>	$pages['products-page']['tag'],
-			'post_status' 	=>	'publish',
-			'post_author' 	=>	1,
-			'menu_order'	=>	0
-		));
-		$newpages = true;
-	}
-	update_option( $pages['products-page']['option'], _get_page_link($products_page_id) );
-	//done. products page created. no we can unset products page data and create all other pages.
-
-	//unset products page
-	unset($pages['products-page']);
-
-	require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-functions.php' );
-
-	//create other pages
-	foreach( (array)$pages as $page ){
-		//check if page exists and get it's ID
-		$page_id = $wpdb->get_var("SELECT id FROM `" . $wpdb->posts . "` WHERE `post_content` LIKE '%" . $page['tag'] . "%'	AND `post_type` != 'revision'");
-		//if there's no page - create
-		if( empty($page_id) ){
-			$page_id = wp_insert_post( array(
-				'post_title' 	=>	$page['title'],
-				'post_type' 	=>	'page',
-				'post_name'		=>	$page['name'],
-				'comment_status'=>	'closed',
-				'ping_status' 	=>	'closed',
-				'post_content' 	=>	$page['tag'],
-				'post_status' 	=>	'publish',
-				'post_author' 	=>	1,
-				'menu_order'	=>	0,
-				'post_parent'	=>	$products_page_id
-			));
-			$newpages = true;
-		}
-		//update option
-		update_option( $page['option'], get_permalink( $page_id ) );
-		//also if this is shopping_cart, then update checkout url option
-		if ( $page['option'] == 'shopping_cart_url' )
-			update_option( 'checkout_url', get_permalink( $page_id ) );
-	}
-
-	//if we have created any new pages, then flush... do we need to do this? probably should be removed
-	if ( $newpages ) {
-		wp_cache_delete( 'all_page_ids', 'pages' );
-		wpsc_update_permalink_slugs();
-	}
 	// Product categories, temporarily register them to create first default category if none exist
 	// @todo: investigate those require once lines and move them to right place (not from here, but from their original location, which seems to be wrong, since i cant access wpsc_register_post_types and wpsc_update_categorymeta here) - Vales <v.bakaitis@gmail.com>
 	wpsc_core_load_page_titles();

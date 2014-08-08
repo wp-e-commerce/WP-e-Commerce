@@ -35,7 +35,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 			'items' => array(
 				array(
 					'name'        => 'Gold Cart Plugin',
-					'description' => 'Gold Cart extends your WP e-Commerce store by enabling additional features and functionality.',
+					'description' => 'Gold Cart extends your WP eCommerce store by enabling additional features and functionality.',
 					'amount'      => 4,
 					'quantity'    => 1,
 					'tax'         => 0.040,
@@ -53,7 +53,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 				),
 				array(
 					'name'        => 'Amazon S3',
-					'description' => 'This Plugin allows downloadable products that you have for sale on your WP e-Commerce site to be hosted within Amazon S3.',
+					'description' => 'This Plugin allows downloadable products that you have for sale on your WP eCommerce site to be hosted within Amazon S3.',
 					'amount'      => 4.7,
 					'quantity'    => 1,
 					'tax'         => 0.047,
@@ -77,7 +77,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 
 	/**
 	 * Test Case Reference 1.01
-	 * 
+	 *
 	 * Standard Fields Test
 	 *
 	 * @return void
@@ -86,7 +86,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 	public function test_setexpresscheckout_standard_ref101() {
 		// Call SetExpressCheckout
 		$options  = is_array( $this->purchase_options ) ? $this->purchase_options : array();
-		$response = $this->gateway->setup_purchase( $options );	
+		$response = $this->gateway->setup_purchase( $options );
 
 		$this->assertTrue( $response->is_successful() );
 
@@ -114,8 +114,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 		);
 
 		// Call SetExpressCheckout
-
-		$response = $this->gateway->setup_purchase( $this->purchase_options );	
+		$response = $this->gateway->setup_purchase( $this->purchase_options );
 
 		$this->assertTrue( $response->is_successful() );
 
@@ -135,7 +134,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 		$this->purchase_options['solution_type'] = 'Mark';
 
 		// Call SetExpressCheckout
-		$response = $this->gateway->setup_purchase( $this->purchase_options );	
+		$response = $this->gateway->setup_purchase( $this->purchase_options );
 
 		$this->assertTrue( $response->is_successful() );
 
@@ -156,7 +155,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 		$this->purchase_options['solution_type'] = 'Sole';
 
 		// Call SetExpressCheckout
-		$response = $this->gateway->setup_purchase( $this->purchase_options );	
+		$response = $this->gateway->setup_purchase( $this->purchase_options );
 
 		$this->assertTrue( $response->is_successful() );
 
@@ -175,7 +174,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 		$this->purchase_options['no_shipping'] = true;
 
 		// Call SetExpressCheckout
-		$response = $this->gateway->setup_purchase( $this->purchase_options );	
+		$response = $this->gateway->setup_purchase( $this->purchase_options );
 
 		$this->assertTrue( $response->is_successful() );
 
@@ -190,12 +189,12 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 	 * @since 3.9
 	 */
 	public function test_setexpresscheckout_standard_ref106() {
-		// Billing Agreement description 
+		// Billing Agreement description
 		$this->purchase_options['billing_type'] = 'MerchantInitiatedBillingSingleAgreement';
 		$this->purchase_options['billing_description'] = 'One Time Payment';
 
 		// Call SetExpressCheckout
-		$response = $this->gateway->setup_purchase( $this->purchase_options );	
+		$response = $this->gateway->setup_purchase( $this->purchase_options );
 
 		$this->assertTrue( $response->is_successful() );
 
@@ -223,7 +222,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 		);
 
 		// Call SetExpressCheckout
-		$response = $this->gateway->setup_purchase( $this->purchase_options );	
+		$response = $this->gateway->setup_purchase( $this->purchase_options );
 
 		$this->assertFalse( $response->is_successful() );
 
@@ -252,7 +251,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 		);
 
 		// Call SetExpressCheckout
-		$response = $this->gateway->setup_purchase( $this->purchase_options );	
+		$response = $this->gateway->setup_purchase( $this->purchase_options );
 
 		$this->assertFalse( $response->is_successful() );
 
@@ -281,7 +280,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 		);
 
 		// Call SetExpressCheckout
-		$response = $this->gateway->setup_purchase( $this->purchase_options );	
+		$response = $this->gateway->setup_purchase( $this->purchase_options );
 
 		$this->assertFalse( $response->is_successful() );
 
@@ -310,7 +309,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 		);
 
 		// Call SetExpressCheckout
-		$response = $this->gateway->setup_purchase( $this->purchase_options );	
+		$response = $this->gateway->setup_purchase( $this->purchase_options );
 
 		$this->assertFalse( $response->is_successful() );
 
@@ -339,7 +338,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 		);
 
 		// Call SetExpressCheckout
-		$response = $this->gateway->setup_purchase( $this->purchase_options );	
+		$response = $this->gateway->setup_purchase( $this->purchase_options );
 
 		$this->assertFalse( $response->is_successful() );
 
@@ -368,7 +367,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Certification_Test_X1 extends UnitTes
 		);
 
 		// Call SetExpressCheckout
-		$response = $this->gateway->setup_purchase( $this->purchase_options );	
+		$response = $this->gateway->setup_purchase( $this->purchase_options );
 
 		$this->assertFalse( $response->is_successful() );
 

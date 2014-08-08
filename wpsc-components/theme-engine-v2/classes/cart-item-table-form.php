@@ -19,7 +19,7 @@ class WPSC_Cart_Item_Table_Form extends WPSC_Cart_Item_Table {
 
 	protected function before_table() {
 ?>
-<!-- WP e-Commerce Cart Form Begins -->
+<!-- WP eCommerce Cart Form Begins -->
 <form class="wpsc-form wpsc-cart-form" action="<?php echo esc_url( wpsc_get_cart_url() ); ?>" method="post">
 	<div class="wpsc-form-actions top">
 		<?php wpsc_keep_shopping_button(); ?>
@@ -39,7 +39,7 @@ class WPSC_Cart_Item_Table_Form extends WPSC_Cart_Item_Table {
 	</div>
 	<?php parent::after_table(); ?>
 </form>
-<!-- WP e-Commerce Cart Form Ends -->
+<!-- WP eCommerce Cart Form Ends -->
 <?php
 	}
 

@@ -16,7 +16,7 @@ class WPSC_Cart_Item_Table_Widget_Form extends WPSC_Cart_Item_Table_Form {
 
 	protected function before_table() {
 ?>
-<!-- WP e-Commerce Cart Widget Form Begins -->
+<!-- WP eCommerce Cart Widget Form Begins -->
 <form class="wpsc-form wpsc-cart-form" action="<?php echo esc_url( wpsc_get_cart_url() ); ?>" method="post">
 <?php
 	}

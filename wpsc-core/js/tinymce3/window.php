@@ -11,7 +11,7 @@ global $wpdb;
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title>WP e-Commerce</title>
+		<title>WP eCommerce</title>
 		<script language="javascript" type="text/javascript" src="<?php echo includes_url(); ?>js/jquery/jquery.js"></script>
 		<script language="javascript" type="text/javascript" src="<?php echo includes_url(); ?>js/tinymce/tiny_mce_popup.js"></script>
 		<script language="javascript" type="text/javascript" src="<?php echo includes_url(); ?>js/tinymce/utils/mctabs.js"></script>

@@ -691,7 +691,7 @@ function wpsc_get_extension( $str ) {
  *   trigger or false to not trigger error.
  *
  * @param string $function The function that was called
- * @param string $version The version of WP e-Commerce that deprecated the function
+ * @param string $version The version of WP eCommerce that deprecated the function
  * @param string $replacement Optional. The function that should have been called
  */
 function _wpsc_deprecated_function( $function, $version, $replacement = null ) {
@@ -701,7 +701,7 @@ function _wpsc_deprecated_function( $function, $version, $replacement = null ) {
 	if ( WP_DEBUG && apply_filters( 'wpsc_deprecated_function_trigger_error', true ) ) {
 		if ( ! is_null( $replacement ) )
 			trigger_error(
-				sprintf( __( '%1$s is <strong>deprecated</strong> since WP e-Commerce version %2$s! Use %3$s instead.', 'wpsc' ),
+				sprintf( __( '%1$s is <strong>deprecated</strong> since WP eCommerce version %2$s! Use %3$s instead.', 'wpsc' ),
 					$function,
 					$version,
 					$replacement
@@ -709,7 +709,7 @@ function _wpsc_deprecated_function( $function, $version, $replacement = null ) {
 			);
 		else
 			trigger_error(
-				sprintf( __( '%1$s is <strong>deprecated</strong> since WP e-Commerce version %2$s with no alternative available.', 'wpsc' ),
+				sprintf( __( '%1$s is <strong>deprecated</strong> since WP eCommerce version %2$s with no alternative available.', 'wpsc' ),
 					$function,
 					$version
 				)
@@ -737,7 +737,7 @@ function _wpsc_deprecated_function( $function, $version, $replacement = null ) {
  *   trigger or false to not trigger error.
  *
  * @param string $file The file that was included
- * @param string $version The version of WP e-Commerce that deprecated the file
+ * @param string $version The version of WP eCommerce that deprecated the file
  * @param string $replacement Optional. The file that should have been included based on ABSPATH
  * @param string $message Optional. A message regarding the change
  */
@@ -750,7 +750,7 @@ function _wpsc_deprecated_file( $file, $version, $replacement = null, $message =
 		$message = empty( $message ) ? '' : ' ' . $message;
 		if ( ! is_null( $replacement ) )
 			trigger_error(
-				sprintf( __( '%1$s is <strong>deprecated</strong> since WP e-Commerce version %2$s! Use %3$s instead.', 'wpsc' ),
+				sprintf( __( '%1$s is <strong>deprecated</strong> since WP eCommerce version %2$s! Use %3$s instead.', 'wpsc' ),
 					$file,
 					$version,
 					$replacement
@@ -758,7 +758,7 @@ function _wpsc_deprecated_file( $file, $version, $replacement = null, $message =
 			);
 		else
 			trigger_error(
-				sprintf( __( '%1$s is <strong>deprecated</strong> since WP e-Commerce version %2$s with no alternative available.', 'wpsc' ),
+				sprintf( __( '%1$s is <strong>deprecated</strong> since WP eCommerce version %2$s with no alternative available.', 'wpsc' ),
 					$file,
 					$version
 				) . $message
@@ -794,7 +794,7 @@ function _wpsc_deprecated_file( $file, $version, $replacement = null, $message =
  *   trigger or false to not trigger error.
  *
  * @param string $function The function that was called
- * @param string $version The version of WP e-Commerce that deprecated the argument used
+ * @param string $version The version of WP eCommerce that deprecated the argument used
  * @param string $message Optional. A message regarding the change.
  */
 function _wpsc_deprecated_argument( $function, $version, $message = null ) {
@@ -806,7 +806,7 @@ function _wpsc_deprecated_argument( $function, $version, $message = null ) {
 		if ( ! is_null( $message ) )
 			trigger_error(
 				sprintf(
-					__( '%1$s was called with an argument that is <strong>deprecated</strong> since WP e-Commerce version %2$s! %3$s', 'wpsc' ),
+					__( '%1$s was called with an argument that is <strong>deprecated</strong> since WP eCommerce version %2$s! %3$s', 'wpsc' ),
 					$function,
 					$version,
 					$message
@@ -815,7 +815,7 @@ function _wpsc_deprecated_argument( $function, $version, $message = null ) {
 		else
 			trigger_error(
 				sprintf(
-					__( '%1$s was called with an argument that is <strong>deprecated</strong> since WP e-Commerce version %2$s with no alternative available.', 'wpsc' ),
+					__( '%1$s was called with an argument that is <strong>deprecated</strong> since WP eCommerce version %2$s with no alternative available.', 'wpsc' ),
 					$function,
 					$version
 				)
@@ -841,7 +841,7 @@ function _wpsc_deprecated_argument( $function, $version, $message = null ) {
  *
  * @param string $function The function that was called.
  * @param string $message A message explaining what has been done incorrectly.
- * @param string $version The version of WP e-Commerce where the message was added.
+ * @param string $version The version of WP eCommerce where the message was added.
  */
 function _wpsc_doing_it_wrong( $function, $message, $version ) {
 
@@ -851,7 +851,7 @@ function _wpsc_doing_it_wrong( $function, $message, $version ) {
 	if ( WP_DEBUG && apply_filters( 'wpsc_doing_it_wrong_trigger_error', true ) ) {
 		$version =   is_null( $version )
 		           ? ''
-		           : sprintf( __( '(This message was added in WP e-Commerce version %s.)', 'wpsc' ), $version );
+		           : sprintf( __( '(This message was added in WP eCommerce version %s.)', 'wpsc' ), $version );
 		$message .= ' ' . __( 'Please see <a href="http://codex.wordpress.org/Debugging_in_WordPress">Debugging in WordPress</a> for more information.', 'wpsc' );
 		trigger_error(
 			sprintf(
