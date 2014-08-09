@@ -72,7 +72,7 @@ class wpsc_cart_item {
 	}
 
 	/**
-	 * Add cart item meta value
+	 * Delete cart item meta value
 	 *
 	 * @access public
 	 * @param meta key name
@@ -97,7 +97,7 @@ class wpsc_cart_item {
 	 * @param meta key value
 	 * @return previous meta value if it existed, null otherwise
 	 */
-	function update_meta($key,$value=null) {
+	function update_meta( $key, $value = null ) {
 
 		if ( ! isset( $value ) ) {
 			$result = $this->delete_meta( $key );
