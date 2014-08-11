@@ -30,14 +30,14 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
      * Returns the PayPal redirect URL
      *
      * @param array $data Arguments to encode with the URL
-     * @return string 
+     * @return string
      * @since 3.9
      */
     public function get_redirect_url( $data = array() ) {
 
         // Select either the Sandbox or the Live URL
         if ( $this->setting->get( 'sandbox_mode' ) ) {
-            $url = $this->sandbox_url; 
+            $url = $this->sandbox_url;
         } else {
             $url = $this->live_url;
         }
@@ -201,7 +201,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
             'token'    => $token,
             'payer_id' => $PayerID,
             'message_id'    => $this->purchase_log->get( 'sessionid' ),
-            'invoice'		=> $this->purchase_log->get( 'id' ),       
+            'invoice'		=> $this->purchase_log->get( 'id' ),
         );
         $options += $this->checkout_data->get_gateway_data();
         $options += $this->purchase_log->get_gateway_data( parent::get_currency_code(), $this->get_currency_code() );
@@ -220,7 +220,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 
         if ( $response->has_errors() ) {
             if ( $response->get_params()['L_ERRORCODE0'] == '10486' ) {
-                wp_redirect( $this->get_redirect_url( array( 'token' => $token ) ) ); 
+                wp_redirect( $this->get_redirect_url( array( 'token' => $token ) ) );
                 exit;
             }
             wpsc_update_customer_meta( 'paypal_express_checkout_errors', $response->get_errors() );
@@ -300,7 +300,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
             'token'    => $token,
             'payer_id' => $PayerID,
             'message_id'    => $this->purchase_log->get( 'sessionid' ),
-            'invoice'		=> $this->purchase_log->get( 'id' ),       
+            'invoice'		=> $this->purchase_log->get( 'id' ),
         );
         $options += $this->checkout_data->get_gateway_data();
         $options += $this->purchase_log->get_gateway_data( parent::get_currency_code(), $this->get_currency_code() );
@@ -553,7 +553,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
     /**
      * Log an error message
      *
-     * @param array $response
+     * @param PHP_Merchant_Paypal_Express_Checkout_Response $response
      * @return void
      *
      * @since 3.9
@@ -567,7 +567,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
             );
 
             $log_meta = array(
-                'correlation_id'   => $response->get( 'correlation_id' ), 
+                'correlation_id'   => $response->get( 'correlation_id' ),
                 'time' => $response->get( 'datetime' ),
                 'errors' => $response->get_errors(),
             );
