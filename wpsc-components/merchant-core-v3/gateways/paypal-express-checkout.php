@@ -1,8 +1,8 @@
 <?php
 
 class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway {
-    const SANDBOX_URL = 'https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&token=';
-    const LIVE_URL    = 'https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=';
+    public $sandbox_url = 'https://www.sandbox.paypal.com/webscr';
+    public $live_url    = 'https://www.paypal.com/cgi-bin/webscr';
     private $gateway;
 
     public function __construct( $options ) {
@@ -17,10 +17,45 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
             'cancel_url'       => get_option('shopping_cart_url'),
             'currency'         => $this->get_currency_code(),
             'test'             => (bool) $this->setting->get( 'sandbox_mode' ),
-            'address_override' => true,
+            'address_override' => 1,
+            'solution_type'		  => 'mark',
+            'cart_logo'			   => $this->setting->get( 'cart_logo' ),
+            'cart_border'		   => $this->setting->get( 'cart_border' ),
         ) );
 
         add_filter( 'wpsc_purchase_log_gateway_data', array( $this, 'filter_purchase_log_gateway_data' ), 10, 2 );
+    }
+
+    /**
+     * Returns the PayPal redirect URL
+     *
+     * @param array $data Arguments to encode with the URL
+     * @return string 
+     * @since 3.9
+     */
+    public function get_redirect_url( $data = array() ) {
+
+        // Select either the Sandbox or the Live URL
+        if ( $this->setting->get( 'sandbox_mode' ) ) {
+            $url = $this->sandbox_url; 
+        } else {
+            $url = $this->live_url;
+        }
+
+        // Common Vars
+        $common = array(
+            'cmd' => '_express-checkout',
+            'useraction' => 'commit',
+        );
+
+        if ( wp_is_mobile() ) {
+            $common['cmd'] = '_express-checkout-mobile';
+        }
+
+        // Merge the two arrays
+        $data = array_merge( $data, $common );
+
+        return $url . '?' . build_query( $data );
     }
 
     public static function filter_purchase_log_gateway_data( $gateway_data, $data ) {
@@ -38,9 +73,9 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
                 // if there's shipping, we'll take 0.01 from there
                 if ( ! empty( $gateway_data['shipping'] ) ) {
                     $gateway_data['shipping'] -= 0.01;
-                 } else {
+                } else {
                     $gateway_data['amount'] = 0.01;
-                 }
+                }
             }
 
             $s -= $d;
@@ -143,8 +178,71 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
             return;
         }
 
+        // Set the Purchase Log
         $this->set_purchase_log_for_callbacks();
-        add_filter( 'wpsc_get_transaction_html_output', array( $this, 'filter_confirm_transaction_page' ) );
+
+        // Display the Confirmation Page
+        //add_filter( 'wpsc_get_transaction_html_output', array( $this, 'filter_confirm_transaction_page' ) );
+        $this->do_transaction();
+    }
+
+    public function do_transaction() {
+        $args = array_map( 'urldecode', $_GET );
+        extract( $args, EXTR_SKIP );
+
+        if ( ! isset( $sessionid ) || ! isset( $token ) || ! isset( $PayerID ) ) {
+            return;
+        }
+
+        $this->set_purchase_log_for_callbacks();
+
+        $total = $this->convert( $this->purchase_log->get( 'totalprice' ) );
+        $options = array(
+            'token'    => $token,
+            'payer_id' => $PayerID,
+            'message_id'    => $this->purchase_log->get( 'sessionid' ),
+            'invoice'		=> $this->purchase_log->get( 'id' ),       
+        );
+        $options += $this->checkout_data->get_gateway_data();
+        $options += $this->purchase_log->get_gateway_data( parent::get_currency_code(), $this->get_currency_code() );
+
+        if ( $this->setting->get( 'ipn', false ) ) {
+            $options['notify_url'] = $this->get_notify_url();
+        }
+
+        // GetExpressCheckoutDetails
+        $details = $this->gateway->get_details_for( $token );
+        $this->log_payer_details( $details );
+
+        $response = $this->gateway->purchase( $options );
+        $this->log_protection_status( $response );
+        $location = remove_query_arg( 'payment_gateway_callback' );
+
+        if ( $response->has_errors() ) {
+            if ( $response->get_params()['L_ERRORCODE0'] == '10486' ) {
+                wp_redirect( $this->get_redirect_url( array( 'token' => $token ) ) ); 
+                exit;
+            }
+            wpsc_update_customer_meta( 'paypal_express_checkout_errors', $response->get_errors() );
+            $location = add_query_arg( array( 'payment_gateway_callback' => 'display_paypal_error' ) );
+        } elseif ( $response->is_payment_completed() || $response->is_payment_pending() ) {
+            $location = remove_query_arg( 'payment_gateway' );
+
+            if ( $response->is_payment_completed() ) {
+                $this->purchase_log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT );
+            } else {
+                $this->purchase_log->set( 'processed', WPSC_Purchase_Log::ORDER_RECEIVED );
+            }
+
+            $this->purchase_log->set( 'transactid', $response->get( 'transaction_id' ) )
+                ->set( 'date', time() )
+                ->save();
+        } else {
+            $location = add_query_arg( array( 'payment_gateway_callback' => 'display_generic_error' ) );
+        }
+
+        wp_redirect( $location );
+        exit;
     }
 
     public function callback_display_paypal_error() {
@@ -201,7 +299,8 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         $options = array(
             'token'    => $token,
             'payer_id' => $PayerID,
-            'invoice'  => $this->purchase_log->get( 'sessionid' ),
+            'message_id'    => $this->purchase_log->get( 'sessionid' ),
+            'invoice'		=> $this->purchase_log->get( 'id' ),       
         );
         $options += $this->checkout_data->get_gateway_data();
         $options += $this->purchase_log->get_gateway_data( parent::get_currency_code(), $this->get_currency_code() );
@@ -226,9 +325,9 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 
             if ( $response->is_payment_completed() ) {
                 $this->purchase_log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT );
-             } else {
+            } else {
                 $this->purchase_log->set( 'processed', WPSC_Purchase_Log::ORDER_RECEIVED );
-             }
+            }
 
             $this->purchase_log->set( 'transactid', $response->get( 'transaction_id' ) )
                 ->set( 'date', time() )
@@ -266,65 +365,6 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
             <p><a href="<?php echo esc_attr( get_option( 'shopping_cart_url' ) ); ?>"><?php _e( 'Click here to go back to the checkout page.') ?></a></p>
 <?php
         $output = apply_filters( 'wpsc_paypal_express_checkout_generic_error_message', ob_get_clean() );
-        return $output;
-    }
-
-    public function filter_confirm_transaction_page() {
-        ob_start();
-?>
-        <table width='400' class='paypal_express_form'>
-            <tr>
-                <td align='left' class='firstcol'><strong><?php _e( 'Order Total:', 'wpsc' ); ?></strong></td>
-                <td align='left'><?php echo wpsc_currency_display( $this->purchase_log->get( 'totalprice' ) ); ?></td>
-            </tr>
-            <tr>
-                <td align='left' colspan='2'><strong><?php _e( 'Shipping Details:', 'wpsc' ); ?></strong></td>
-            </tr>
-            <tr>
-                <td align='left' class='firstcol'>
-                    <?php echo __('Address:', 'wpsc' ); ?>
-                </td>
-                <td align='left'>
-                    <?php echo esc_html( $this->checkout_data->get( 'shippingaddress' ) ); ?>
-                </td>
-            </tr>
-            <tr>
-                <td align='left' class='firstcol'>
-                    <?php echo __('City:', 'wpsc' ); ?>
-                </td>
-                <td align='left'><?php echo esc_html( $this->checkout_data->get( 'shippingcity' ) ); ?></td>
-            </tr>
-            <tr>
-                <td align='left' class='firstcol'>
-                    <?php echo __('State:', 'wpsc' ); ?>
-                </td>
-                <td align='left'>
-                    <?php echo esc_html( wpsc_get_region( $this->checkout_data->get( 'shippingstate' ) ) ); ?>
-                </td>
-            </tr>
-            <tr>
-                <td align='left' class='firstcol'>
-                    <?php echo __('Postal code:', 'wpsc' ); ?>
-                </td>
-                <td align='left'><?php echo esc_html( $this->checkout_data->get( 'shippingpostcode' ) ); ?></td>
-            </tr>
-            <tr>
-                <td align='left' class='firstcol'>
-                    <?php echo __('Country:', 'wpsc' ); ?></td>
-                <td align='left'><?php echo esc_html( wpsc_get_country( $this->checkout_data->get( 'shippingcountry' ) ) ); ?></td>
-            </tr>
-            <tr>
-                <td colspan='2'>
-                    <form action="<?php echo esc_url( remove_query_arg( array( 'payment_gateway', 'payment_gateway_callback' ) ) ); ?>" method='post'>
-                        <input type='hidden' name='payment_gateway' value='paypal-express-checkout' />
-                        <input type='hidden' name='payment_gateway_callback' value='process_confirmed_payment' />
-                        <p><input name='action' type='submit' value='<?php _e( 'Confirm Payment', 'wpsc' ); ?>' /></p>
-                    </form>
-                </td>
-            </tr>
-        </table>
-<?php
-        $output = apply_filters( 'wpsc_confirm_payment_message', ob_get_clean(), $this->purchase_log );
         return $output;
     }
 
@@ -473,8 +513,10 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
     public function process() {
         $total = $this->convert( $this->purchase_log->get( 'totalprice' ) );
         $options = array(
-            'return_url' => $this->get_return_url(),
-            'invoice'    => $this->purchase_log->get( 'sessionid' ),
+            'return_url' 	=> $this->get_return_url(),
+            'message_id'    => $this->purchase_log->get( 'sessionid' ),
+            'invoice'		=> $this->purchase_log->get( 'id' ),
+            'address_override' => 1,
         );
 
         $options += $this->checkout_data->get_gateway_data();
@@ -488,13 +530,15 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         $response = $this->gateway->setup_purchase( $options );
 
         if ( $response->is_successful() ) {
-
-            // Redirect the user to the payments page
-            $url = ( $this->setting->get( 'sandbox_mode' ) ? self::SANDBOX_URL : self::LIVE_URL ) . $response->get( 'token' );
-            wp_redirect( $url );
-            exit;
-
+            $params = $response->get_params();
+            if ( $params['ACK'] == 'SuccessWithWarning' ) {
+                $this->log_error( $response );
+            }
+            // Successful redirect
+            $url = $this->get_redirect_url( array( 'token' => $response->get( 'token' ) ) );
         } else {
+            // SetExpressCheckout Failure
+            $this->log_error( $response );
             wpsc_update_customer_meta( 'paypal_express_checkout_errors', $response->get_errors() );
             $url = add_query_arg( array(
                 'payment_gateway'          => 'paypal-express-checkout',
@@ -504,5 +548,31 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 
         wp_redirect( $url );
         exit;
+    }
+
+    /**
+     * Log an error message
+     *
+     * @param array $response
+     * @return void
+     *
+     * @since 3.9
+     */
+    public function log_error( $response ) {
+        if ( $this->setting->get( 'debugging' ) ) {
+            $log_data = array(
+                'post_title'    => 'PayPal ExpressCheckout Operation Failure',
+                'post_content'  =>  'There was an error processing the payment. Find details in the log entry meta fields.',
+                'log_type'      => 'error'
+            );
+
+            $log_meta = array(
+                'correlation_id'   => $response->get( 'correlation_id' ), 
+                'time' => $response->get( 'datetime' ),
+                'errors' => $response->get_errors(),
+            );
+
+            $log_entry = WPSC_Logging::insert_log( $log_data, $log_meta );
+        }
     }
 }
