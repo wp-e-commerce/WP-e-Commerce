@@ -116,14 +116,18 @@ function _wpsc_set_customer_cookie( $cookie, $expire ) {
  */
 function _wpsc_create_customer_id() {
 
+	// only allow one customer id per request
+	static $customer_id = false;
+
+	if ( $customer_id ) {
+		return $customer_id;
+	}
+
 	do_action( '_wpsc_create_customer_id' );
 
 	if ( _wpsc_is_bot_user() ) {
-
-		$visitor_id = WPSC_BOT_VISITOR_ID;
-		wpsc_get_current_customer_id( $visitor_id );
-		$fake_setting_cookie = true;
-
+		$customer_id = WPSC_BOT_VISITOR_ID;
+		wpsc_get_current_customer_id( $customer_id );
 	} else {
 		$fake_setting_cookie = false;
 		$args = array();
@@ -131,23 +135,22 @@ function _wpsc_create_customer_id() {
 			$args['user_id'] = get_current_user_id();
 		}
 
-		$visitor_id = wpsc_create_visitor( $args );
+		$customer_id = wpsc_create_visitor( $args );
 
-		if ( $visitor_id === false ) {
+		if ( ! $customer_id ) {
 			// can't create a new visitor, just use the BOT visitor id
-			$visitor_id = WPSC_BOT_VISITOR_ID;
+			$customer_id = WPSC_BOT_VISITOR_ID;
 			$fake_setting_cookie = true;
 		}
 
-		wpsc_get_current_customer_id( $visitor_id );
+		wpsc_get_current_customer_id( $customer_id );
 
-		_wpsc_create_customer_id_cookie( $visitor_id, $fake_setting_cookie );
+		_wpsc_create_customer_id_cookie( $customer_id, $fake_setting_cookie );
 
-		do_action( 'wpsc_create_customer' , $visitor_id );
-
+		do_action( 'wpsc_create_customer' , $customer_id );
 	}
 
-	return $visitor_id;
+	return $customer_id;
 }
 
 /**
