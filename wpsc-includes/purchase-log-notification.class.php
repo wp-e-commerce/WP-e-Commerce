@@ -48,7 +48,7 @@ abstract class WPSC_Purchase_Log_Notification {
 			'coupon_code'     => $this->purchase_log->get( 'discount_data'   ),
 			'transaction_id'  => $this->purchase_log->get( 'transactid'      ),
 			'purchase_log_id' => $this->purchase_log->get( 'id'              ),
-			'payment_method'  => $this->purchase_log->get( 'gateway'         ),
+			'payment_method'  => $this->purchase_log->get( 'gateway_name'    ),
 			'shipping_method' => $this->purchase_log->get( 'shipping_method' ),
 			'shipping_option' => $this->purchase_log->get( 'shipping_option' ),
 			'discount_amount' => $discount,
