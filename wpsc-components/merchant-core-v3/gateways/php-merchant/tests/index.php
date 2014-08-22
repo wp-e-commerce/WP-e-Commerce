@@ -1,6 +1,7 @@
 <?php
 // Check for Remote Tests
 global $remote;
+global $argv;
 $remote = false;
 if ( in_array( '--enable-remote', $argv ) || ! empty( $_GET['remote'] ) ) {
 	$remote = true;
@@ -35,6 +36,12 @@ class PHP_Merchant_Test_Suite extends TestSuite
 			$tests = array_merge( $tests, array(
 				'remote/http-curl',
 				'remote/paypal-express-checkout',
+				'remote/paypal-ec-cert-x1',
+				'remote/paypal-ec-cert-x2',
+				'remote/paypal-ec-cert-x3',
+				'remote/paypal-ec-cert-x4',
+				'remote/paypal-ec-cert-x5',
+				'remote/paypal-ec-cert-x6',
 			) );
 		}
 
