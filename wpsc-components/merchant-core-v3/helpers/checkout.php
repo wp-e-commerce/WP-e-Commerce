@@ -76,7 +76,7 @@ add_filter(
 );
 
 function _wpsc_filter_merchant_v3_gateway_hidden_field_value( $value ) {
-	$active_gateways = array_values( WPSC_Payment_Gateways::get_active_gateways() );
+	$active_gateways = WPSC_Payment_Gateways::get_active_gateways();
 
 	if ( ! empty( $active_gateways ) ) {
 		return $active_gateways[0];
@@ -100,3 +100,44 @@ function _wpsc_action_merchant_v3_submit_checkout( $gateway_id, $log ) {
 	$gateway->set_purchase_log( $log );
 	$gateway->process();
 }
+
+// This is experimental.
+function _wpsc_filter_merchant_v3_payment_method_form_fields( $fields ) {
+	$selected_value =   isset( $_POST['wpsc_payment_method'] )
+	                   ? $_POST['wpsc_payment_method']
+	                   : '';
+
+	if ( empty( $selected_value ) ) {
+		$current_purchase_log_id = wpsc_get_customer_meta( 'current_purchase_log_id' );
+		$purchase_log            = new WPSC_Purchase_Log( $current_purchase_log_id );
+		$selected_value          = $purchase_log->get( 'gateway' );
+	}
+
+	foreach ( WPSC_Payment_Gateways::get_active_gateways() as $gateway_name ) {
+		$gateway = (object) WPSC_Payment_Gateways::get_meta( $gateway_name );
+		$title = $gateway->name;
+		if ( ! empty( $gateway->image ) )
+			$title .= ' <img src="' . $gateway->image . '" alt="' . $gateway->name . '" />';
+
+		$field = array(
+			'title'   => $title,
+			'type'    => 'radio',
+			'value'   => $gateway->internalname,
+			'name'    => 'wpsc_payment_method',
+			'checked' => $selected_value == $gateway->internalname,
+		);
+
+		$fields[] = $field;
+	}
+
+	// check the first payment gateway by default
+	if ( empty( $selected_value ) )
+		$fields[0]['checked'] = true;
+
+	return $fields;
+}
+
+add_filter(
+	'wpsc_payment_method_form_fields',
+	'_wpsc_filter_merchant_v3_payment_method_form_fields'
+);

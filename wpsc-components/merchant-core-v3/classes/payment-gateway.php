@@ -1,7 +1,7 @@
 <?php
 
-final class WPSC_Payment_Gateways
-{
+final class WPSC_Payment_Gateways {
+
 	/**
 	 * Contain a key-value array of gateway names and gateway class names
 	 *
@@ -283,7 +283,7 @@ final class WPSC_Payment_Gateways
 			self::$active_gateways = array_intersect( $selected_gateways, $registered_gateways );
 		}
 
-		return self::$active_gateways;
+		return array_values( self::$active_gateways );
 	}
 
 	/**
@@ -296,8 +296,7 @@ final class WPSC_Payment_Gateways
 	private function __construct() {}
 }
 
-abstract class WPSC_Payment_Gateway
-{
+abstract class WPSC_Payment_Gateway {
 
 	/**
 	 * Object that allows manipulation of payment gateway settings in a consistent
