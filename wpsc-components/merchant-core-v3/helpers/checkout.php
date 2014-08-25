@@ -116,8 +116,13 @@ function _wpsc_filter_merchant_v3_payment_method_form_fields( $fields ) {
 	foreach ( WPSC_Payment_Gateways::get_active_gateways() as $gateway_name ) {
 		$gateway = (object) WPSC_Payment_Gateways::get_meta( $gateway_name );
 		$title = $gateway->name;
-		if ( ! empty( $gateway->image ) )
+		if ( ! empty( $gateway->image ) ) {
 			$title .= ' <img src="' . $gateway->image . '" alt="' . $gateway->name . '" />';
+		}
+
+		if ( ! empty( $gateway->mark ) ) {
+			$title = $gateway->mark;
+		}
 
 		$field = array(
 			'title'   => $title,
