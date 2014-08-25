@@ -26,18 +26,37 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         ) );
 
         add_filter( 'wpsc_purchase_log_gateway_data', array( $this, 'filter_purchase_log_gateway_data' ), 10, 2 );
+        add_filter(
+            'wpsc_payment_method_form_fields',
+            array( $this, 'filter_unselect_default' ), 100 , 1 
+        );
     }
 
-	/**
-	 * Returns the HTML of the logo of the payment gateway.
-	 *
-	 * @access public
-	 * @since 3.9
-	 *
-	 * @return string
-	 */
+    /**
+     * Returns the HTML of the logo of the payment gateway.
+     *
+     * @access public
+     * @since 3.9
+     *
+     * @return string
+     */
     public function get_mark_html() {
         return '<a href="https://www.paypal.com/webapps/mpp/paypal-popup" title="How PayPal Works" onclick="javascript:window.open(\'https://www.paypal.com/webapps/mpp/paypal-popup\',\'WIPaypal\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;"><img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" border="0" alt="PayPal Logo"></a>';
+    }
+
+    /**
+     * No payment gateway is selected by default
+     *
+     * @access public
+     * @since 3.9
+     *
+     * @param array $fields
+     *
+     * @return array
+     */
+    public function filter_unselect_default( $fields ) {
+        $fields[0]['checked'] = false;
+        return $fields;
     }
 
     /**
