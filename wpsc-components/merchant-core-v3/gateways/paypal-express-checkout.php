@@ -16,13 +16,13 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
             'api_username'     => $this->setting->get( 'api_username' ),
             'api_password'     => $this->setting->get( 'api_password' ),
             'api_signature'    => $this->setting->get( 'api_signature' ),
-            'cancel_url'       => $this->get_shopping_cart_url(),
+            'cancel_url'       => $this->get_shopping_cart_payment_url(),
             'currency'         => $this->get_currency_code(),
             'test'             => (bool) $this->setting->get( 'sandbox_mode' ),
             'address_override' => 1,
-            'solution_type'		  => 'mark',
-            'cart_logo'			   => $this->setting->get( 'cart_logo' ),
-            'cart_border'		   => $this->setting->get( 'cart_border' ),
+            'solution_type'    => 'mark',
+            'cart_logo'        => $this->setting->get( 'cart_logo' ),
+            'cart_border'      => $this->setting->get( 'cart_border' ),
         ) );
 
         add_filter( 'wpsc_purchase_log_gateway_data', array( $this, 'filter_purchase_log_gateway_data' ), 10, 2 );
@@ -402,7 +402,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
                 <li><?php echo esc_html( $error['details'] ) ?> (<?php echo esc_html( $error['code'] ); ?>)</li>
             <?php endforeach; ?>
         </ul>
-        <p><a href="<?php echo esc_url( get_option( 'shopping_cart_url' ) ); ?>"><?php _e( 'Click here to go back to the checkout page.') ?></a></p>
+        <p><a href="<?php echo esc_url( $this->get_shopping_cart_payment_url() ); ?>"><?php _e( 'Click here to go back to the checkout page.') ?></a></p>
 <?php
         $output = apply_filters( 'wpsc_paypal_express_checkout_gateway_error_message', ob_get_clean(), $errors );
         return $output;
@@ -412,7 +412,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         ob_start();
 ?>
             <p><?php _e( 'Sorry, but your transaction could not be processed by PayPal for some reason. Please contact the site administrator.' ); ?></p>
-            <p><a href="<?php echo esc_attr( get_option( 'shopping_cart_url' ) ); ?>"><?php _e( 'Click here to go back to the checkout page.') ?></a></p>
+            <p><a href="<?php echo esc_attr( $this->get_shopping_cart_payment_url() ); ?>"><?php _e( 'Click here to go back to the checkout page.') ?></a></p>
 <?php
         $output = apply_filters( 'wpsc_paypal_express_checkout_generic_error_message', ob_get_clean() );
         return $output;
@@ -487,7 +487,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         </tr>
         <tr>
             <td>
-                <label for="wpsc-paypal-express-cart-border"><?php _e( 'Cart Border Colour', 'wpsc' ); ?></label>
+                <label for="wpsc-paypal-express-cart-border"><?php _e( 'Cart Border Color', 'wpsc' ); ?></label>
             </td>
             <td>
                 <input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'cart_border' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'cart_border' ) ); ?>" id="wpsc-paypal-express-cart-border" />

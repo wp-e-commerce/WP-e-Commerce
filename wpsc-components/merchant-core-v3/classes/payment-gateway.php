@@ -441,6 +441,10 @@ abstract class WPSC_Payment_Gateway {
 		return get_option( 'shopping_cart_url' );
 	}
 
+	public function get_shopping_cart_payment_url() {
+		return _wpsc_maybe_activate_theme_engine_v2() ? wpsc_get_checkout_url( 'payment' ) : get_option( 'shopping_cart_url' );
+	}
+
 	public function get_products_page_url() {
 		return get_option( 'product_list_url' );
 	}
