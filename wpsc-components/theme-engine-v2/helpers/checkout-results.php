@@ -10,7 +10,7 @@
  * @param $transaction_id (int) the transaction id
  */
 function transaction_results( $sessionid, $display_to_screen = true, $transaction_id = null ) {
-	global $message_html, $echo_to_screen, $wpsc_cart, $purchase_log;
+	global $message_html, $echo_to_screen, $purchase_log;
 
 	// pre-3.8.9 variable
 	$echo_to_screen = $display_to_screen;
@@ -23,8 +23,6 @@ function transaction_results( $sessionid, $display_to_screen = true, $transactio
 
 	// pre-3.8.9 templates also use this global variable
 	$message_html = wpsc_get_transaction_html_output( $purchase_log_object );
-
-	$wpsc_cart->empty_cart();
 
 	do_action( 'wpsc_transaction_results_shutdown', $purchase_log_object, $sessionid, $display_to_screen );
 
@@ -125,3 +123,23 @@ function wpsc_transaction_theme() {
 		printf( __( 'Sorry your transaction was not accepted.<br /><a href="%1$s">Click here to go back to checkout page</a>.', 'wpsc' ), wpsc_get_checkout_url() );
 	}
 }
+
+/**
+ * Conditionally empties the cart based on the status of `processed`.
+ * Removed from being hardcoded in transaction_results().
+ *
+ * @since  3.9.0
+ *
+ * @param  WPSC_Purchase_Log $log Purchase Log.
+ * @return void
+ */
+function wpsc_maybe_empty_cart( $log ) {
+
+	if ( $log->is_transaction_completed() || $log->is_order_received() ) {
+		global $wpsc_cart;
+		$wpsc_cart->empty_cart();
+	}
+
+}
+
+add_action( 'wpsc_transaction_results_shutdown', 'wpsc_maybe_empty_cart' );
