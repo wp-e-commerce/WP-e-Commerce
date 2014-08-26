@@ -32,23 +32,6 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         );
     }
 
-	/**
-	 * Return the Shopping Cart URL
-	 *
-	 * @access public
-	 * @since 3.9
-	 *
-	 * @return string
-	 */
-	public function get_shopping_cart_url() {
-		$url = get_option('shopping_cart_url');
-		if ( _wpsc_maybe_activate_theme_engine_v2() && function_exists( 'wpsc_get_checkout_url' ) ) {
-			$url = wpsc_get_checkout_url( 'payment' );
-		}
-
-		return $url;
-	}
-
     /**
      * Returns the HTML of the logo of the payment gateway.
      *
