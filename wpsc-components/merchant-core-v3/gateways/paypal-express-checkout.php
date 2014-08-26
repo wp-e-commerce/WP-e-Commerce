@@ -16,7 +16,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
             'api_username'     => $this->setting->get( 'api_username' ),
             'api_password'     => $this->setting->get( 'api_password' ),
             'api_signature'    => $this->setting->get( 'api_signature' ),
-            'cancel_url'       => get_option('shopping_cart_url'),
+            'cancel_url'       => $this->get_shopping_cart_url(),
             'currency'         => $this->get_currency_code(),
             'test'             => (bool) $this->setting->get( 'sandbox_mode' ),
             'address_override' => 1,
@@ -31,6 +31,23 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
             array( $this, 'filter_unselect_default' ), 100 , 1 
         );
     }
+
+	/**
+	 * Return the Shopping Cart URL
+	 *
+	 * @access public
+	 * @since 3.9
+	 *
+	 * @return string
+	 */
+	public function get_shopping_cart_url() {
+		$url = get_option('shopping_cart_url');
+		if ( _wpsc_maybe_activate_theme_engine_v2() ) {
+			$url = wpsc_get_checkout_url( 'payment' );
+		}
+
+		return $url;
+	}
 
     /**
      * Returns the HTML of the logo of the payment gateway.
