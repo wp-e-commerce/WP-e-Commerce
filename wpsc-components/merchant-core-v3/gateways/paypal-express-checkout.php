@@ -42,7 +42,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	 */
 	public function get_shopping_cart_url() {
 		$url = get_option('shopping_cart_url');
-		if ( _wpsc_maybe_activate_theme_engine_v2() ) {
+		if ( _wpsc_maybe_activate_theme_engine_v2() && function_exists( 'wpsc_get_checkout_url' ) ) {
 			$url = wpsc_get_checkout_url( 'payment' );
 		}
 
