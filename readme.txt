@@ -36,17 +36,17 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 == Changelog ==
 = 3.8.14.2 =
-*Fix: Does not show errors when deprecated google checkout is used.
+* Fix: Does not show errors when deprecated google checkout is used.
 *Fix: Makes sure countries are validated if mandatory.
-*Fix: Makes sure the payment gateway checks for first and last name  
-*Fix: only output  html for shipping error page
-*Fix: updated shipping calculator to check for new checkout information and made the calculator more efficient.
-*Fix: USPS shipping now works for servers that don't support CURL.
-*New: updated Polish and Russian language files. 
-*Fix: Personalization forms are correctly initialized in database 
-*Fix: Display of products in admin product gallery will display in the order admins want them to. 
-*Change: Billing was accidentally referred to as shipping when billing state and region was a drop down. This has been fixed.
-*New: Added filter wpsc_uncategorized_product_category to change uncategorized section  
+* Fix: Makes sure the payment gateway checks for first and last name  
+* Fix: Only output  html for shipping error page
+* Fix: Updated shipping calculator to check for new checkout information and made the calculator more efficient.
+* Fix: USPS shipping now works for servers that don't support CURL.
+* New: Updated Polish and Russian language files. 
+* Fix: Personalization forms are correctly initialized in database 
+* Fix: Display of products in admin product gallery will display in the order admins want them to. 
+* Change: Billing was accidentally referred to as shipping when billing state and region was a drop down. This has been fixed.
+* New: Added filter wpsc_uncategorized_product_category to change uncategorized section  
 
 = 3.8.14.1 =
 
