@@ -4,7 +4,7 @@ Donate link: http://getshopped.org
 Tags: e-commerce, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
 Requires at least: 3.7
 Tested up to: 3.9
-Stable tag: 3.8.14.1
+Stable tag: 3.8.14.2
 
 WP eCommerce is a free, powerful plugin that empowers you to sell anything online, quickly and easily.
 
@@ -35,7 +35,25 @@ Before updating please make a backup of your existing files and database. Just i
 After upgrading from earlier versions look for link "Update Store". This will update your database structure to work with new version.
 
 == Changelog ==
-
+= 3.8.14.2 =
+* Fix: Clear country cache automatically
+* Fix: Fixed notices when using quick edit
+* Fix: Fixed html in checkout form
+* Fix: Fixed shipping results not being displayed.
+* Fix: Does not show errors when deprecated google checkout is used.
+* Fix: Makes sure countries are validated if mandatory.
+* Fix: Makes sure the payment gateway checks for first and last name  
+* Fix: Only output  html for shipping error page
+* Fix: Updated shipping calculator to check for new checkout information and made the calculator more efficient.
+* Fix: USPS shipping now works for servers that don't support CURL.
+* Fix: Personalization forms are correctly initialized in database 
+* Fix: Display of products in admin product gallery will display in the order admins want them to. 
+* New: Updated Polish and Russian language files.
+* New: Added filter wpsc_uncategorized_product_category to change uncategorized section 
+* New: New hook wpsc_coupon_add_top and wpsc_coupon_add_bottom for the add coupon section. 
+* New: New hook  wpsc_element_is_visible to check and see if an element is visible.
+* Change: Show region on shipping calculator
+* Change: Billing was accidentally referred to as shipping when billing state and region was a drop down. This has been fixed.
 = 3.8.14.1 =
 
 * Fix: For users with older (3.7.x and older) templates copied into their theme directory, we inadvertently broke the visibility of the shipping calculator.
