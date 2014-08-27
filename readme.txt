@@ -36,6 +36,11 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 == Changelog ==
 = 3.8.14.2 =
+* Fix: Clear country cache automatically
+* Fix: Fixed notices when using quick edit
+* Change: Show region on shipping calculator
+* Fix: Fixed html in checkout form
+* Fix: Fixed shipping results not being displayed.
 * Fix: Does not show errors when deprecated google checkout is used.
 *Fix: Makes sure countries are validated if mandatory.
 * Fix: Makes sure the payment gateway checks for first and last name  
@@ -46,7 +51,10 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * Fix: Personalization forms are correctly initialized in database 
 * Fix: Display of products in admin product gallery will display in the order admins want them to. 
 * Change: Billing was accidentally referred to as shipping when billing state and region was a drop down. This has been fixed.
-* New: Added filter wpsc_uncategorized_product_category to change uncategorized section  
+* New: Added filter wpsc_uncategorized_product_category to change uncategorized section 
+* New: New hook wpsc_coupon_add_top and wpsc_coupon_add_bottom for the add coupon section. 
+* New: New hook  wpsc_element_is_visible to check and see if an element is visible.
+
 
 = 3.8.14.1 =
 
