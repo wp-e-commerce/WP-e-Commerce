@@ -37,6 +37,7 @@ After upgrading from earlier versions look for link "Update Store". This will up
 == Changelog ==
 
 = 3.8.14.2 =
+
 * Fix: Clear country cache automatically.
 * Fix: Fixed notices when using quick edit.
 * Fix: Fixed html in checkout form.
