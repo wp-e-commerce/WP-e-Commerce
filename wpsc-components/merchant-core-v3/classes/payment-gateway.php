@@ -215,6 +215,7 @@ final class WPSC_Payment_Gateways {
 
 		$meta['name'] = $gateway->get_title();
 		$meta['image'] = $gateway->get_image_url();
+		$meta['mark'] = $gateway->get_mark_html();
 		self::$gateways[$filename] = $meta;
 
 		return true;
@@ -403,6 +404,17 @@ abstract class WPSC_Payment_Gateway {
 		return false;
 	}
 
+	/**
+	 * Returns the HTML of the logo of the payment gateway.
+	 *
+	 * @access public
+	 * @since 3.9
+	 *
+	 * @return mixed False if there's no html defined.
+	 */
+	public function get_mark_html() {
+		return false;
+	}
 	public function set_purchase_log( &$purchase_log ) {
 		$this->purchase_log = &$purchase_log;
 		$this->checkout_data = new WPSC_Checkout_Form_Data( $purchase_log->get( 'id' ) );

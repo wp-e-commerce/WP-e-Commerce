@@ -10,6 +10,7 @@ class WPSC_Payment_Gateway_HTTP extends PHP_Merchant_HTTP {
 			'ssl_verify' => false,
 			'body' => '',
 			'httpversion' => '1.1',
+			'timeout' => 60,
 		);
 
 		$args = array_merge( $defaults, $args );
