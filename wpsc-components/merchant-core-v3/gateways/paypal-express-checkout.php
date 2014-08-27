@@ -41,8 +41,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
      * @return string
      */
     public function get_mark_html() {
-        $title = esc_html__( 'How PayPal Works' );
-        $html = '<a href="https://www.paypal.com/webapps/mpp/paypal-popup" title="' . $title . '" onclick="javascript:window.open(\'https://www.paypal.com/webapps/mpp/paypal-popup\',\'WIPaypal\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;"><img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" border="0" alt="PayPal Logo"></a>'; 
+        $html = '<a href="https://www.paypal.com/webapps/mpp/paypal-popup" title="' . esc_attr__( 'How PayPal Works' ) . '" onclick="javascript:window.open(\'https://www.paypal.com/webapps/mpp/paypal-popup\',\'WIPaypal\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;"><img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" border="0" alt="PayPal Logo"></a>'; 
 
         return $html;
     }
