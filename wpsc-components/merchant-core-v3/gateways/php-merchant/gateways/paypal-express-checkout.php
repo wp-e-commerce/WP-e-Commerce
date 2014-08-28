@@ -179,6 +179,9 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 			$request += $this->add_payment( $action );
 		}
 
+		// BN Code
+		$request['BUTTONSOURCE'] += 'WPECOM_ECM';
+
 		return $request;
 	}
 
