@@ -8,7 +8,7 @@ define( 'WPSC_PAYMENT_STATUS_DISPATCHED', 4 );
 define( 'WPSC_PAYMENT_STATUS_CLOSED'    , 5 );
 define( 'WPSC_PAYMENT_STATUS_DECLINED'  , 6 );
 
-add_action( 'wpsc_includes', '_wpsc_merchant_v3_includes' );
+add_action( 'wpsc_includes', '_wpsc_merchant_v3_includes', 15 );
 
 function _wpsc_merchant_v3_includes() {
 	require_once( WPSC_MERCHANT_V3_PATH . '/helpers/common.php' );
