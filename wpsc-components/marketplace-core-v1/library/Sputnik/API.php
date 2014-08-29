@@ -118,7 +118,7 @@ class Sputnik_API {
 	<head>
 		<title><?php _e( 'Redirecting ...', 'wpsc' ); ?></title>
 		<script type="text/javascript">
-			parent.location = '<?php echo $return_url; ?>';
+			parent.location = '<?php echo esc_js( $return_url ); ?>';
 			window.close();
 		</script>
 	</head>

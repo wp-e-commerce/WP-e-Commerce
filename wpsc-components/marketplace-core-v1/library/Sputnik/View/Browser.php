@@ -72,7 +72,7 @@ class Sputnik_View_Browser extends Sputnik_View {
 		try {
 			switch ( $tab ) {
 				case 'search':
-					$term = isset( $_REQUEST['s'] ) ? stripslashes( $_REQUEST['s'] ) : '';
+					$term = isset( $_REQUEST['s'] ) ? esc_attr(stripslashes( $_REQUEST['s'])) : '';
 					$api = Sputnik_API::search($term);
 					break;
 

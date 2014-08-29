@@ -108,7 +108,15 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 
 			// build search term queries for first name, last name, email
 			foreach ( $search_terms as $term ) {
-				$escaped_term = esc_sql( like_escape( $term ) );
+			      global $wp_version;
+				  if('4.0' >= $wp_version)
+				  {
+				$escaped_term = esc_sql( $wpdb->esc_like( $term ) );
+				 }
+				 else
+				 {
+				 $escaped_term = esc_sql(like_escape($term));
+				 }
 				if ( ! array_key_exists( $term, $search_sql ) )
 					$search_sql[$term] = array();
 
@@ -160,7 +168,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		$order   = esc_sql( $order );
 
 		$submitted_data_log = WPSC_TABLE_SUBMITTED_FORM_DATA;
-		$purchase_log_sql   = apply_filters( 'wpsc_manage_purchase_logs_sql', "
+		$purchase_log_sql   = apply_filters( 'wpsc_manage_purchase_logs_sql', " 
 			SELECT SQL_CALC_FOUND_ROWS {$selects}
 			FROM " . WPSC_TABLE_PURCHASE_LOGS . " AS p
 			{$this->joins}
@@ -169,10 +177,9 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 			{$limit}
 		" );
 
-		$this->items = apply_filters( 'wpsc_manage_purchase_logs_items', $wpdb->get_results( $purchase_log_sql ) );
+		$this->items = apply_filters( 'wpsc_manage_purchase_logs_items', $wpdb->get_results( $purchase_log_sql ) ); 
 		if ( $this->per_page ) {
-			$total_items = $wpdb->get_var( "SELECT FOUND_ROWS()" );
-
+			$total_items = $wpdb->get_var( "SELECT FOUND_ROWS()" ); 
 			$this->set_pagination_args( array(
 				'total_items' => $total_items,
 				'per_page'    => $this->per_page,
@@ -366,7 +373,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		if ( ! empty( $months ) ) {
 			?>
 			<select name="m">
-				<option <?php selected( 0, $m ); ?> value="0"><?php _e( 'Show all dates' ); ?></option>
+				<option <?php selected( 0, $m ); ?> value="0"><?php _e( 'Show all dates' ); ?></option> 
 				<?php
 				foreach ( $months as $arc_row ) {
 					$month = zeroise( $arc_row->month, 2 );

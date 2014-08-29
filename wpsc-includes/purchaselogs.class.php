@@ -12,7 +12,7 @@ function wpsc_instantiate_purchaselogitem() {
 	  $purchlogitem = new wpsc_purchaselogs_items( (int)$_REQUEST['purchaselog_id'] );
 
 }
-
+ 
 function wpsc_display_purchlog_howtheyfoundus() {
    global $purchlogitem;
    return esc_attr( $purchlogitem->extrainfo->find_us );
@@ -938,15 +938,24 @@ class wpsc_purchaselogs {
 
    function the_purch_item_details() {
 	  global $wpdb;
-	  $sql = "SELECT SUM(quantity) FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid=" . $this->purchitem->id;
+	  $sql = $wpdb->prepare("SELECT SUM(quantity) FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid= %s", $this->purchitem->id);
 	  $sum = $wpdb->get_var( $sql );
 	  return $sum;
    }
 
    function search_purchlog_view( $searchterm ) {
+   
 	  global $wpdb;
-	  $sql = $wpdb->prepare( "SELECT DISTINCT `" . WPSC_TABLE_PURCHASE_LOGS . "` . * FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` LEFT JOIN `" . WPSC_TABLE_PURCHASE_LOGS . "` ON `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "`.`log_id` = `" . WPSC_TABLE_PURCHASE_LOGS . "`.`id` WHERE `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "`.`value` LIKE '%" . like_escape( $searchterm ) . "%' OR `" . WPSC_TABLE_PURCHASE_LOGS . "`.`transactid` = %s OR `" . WPSC_TABLE_PURCHASE_LOGS . "`.`track_id` LIKE '%" . like_escape( $searchterm )."%'", $searchterm );
-	  $newlogs = $wpdb->get_results( $sql );
+	  global $wp_version;
+$sqlsearchterm = $wpdb->esc_like( $searchterm );	
+	
+if( '4.0' >= $wp_version ) {
+$sql = $wpdb->prepare( "SELECT DISTINCT `" . WPSC_TABLE_PURCHASE_LOGS . "` . * FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` LEFT JOIN `" . WPSC_TABLE_PURCHASE_LOGS . "` ON `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "`.`log_id` = `" . WPSC_TABLE_PURCHASE_LOGS . "`.`id` WHERE `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "`.`value` LIKE '%" . like_escape( $searchterm ) . "%' OR `" . WPSC_TABLE_PURCHASE_LOGS . "`.`transactid` = %s OR `" . WPSC_TABLE_PURCHASE_LOGS . "`.`track_id` LIKE %s", $sqlsearchterm, $searchterm );
+}
+else {
+$sql = $wpdb->prepare( "SELECT DISTINCT `" . WPSC_TABLE_PURCHASE_LOGS . "` . * FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` LEFT JOIN `" . WPSC_TABLE_PURCHASE_LOGS . "` ON `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "`.`log_id` = `" . WPSC_TABLE_PURCHASE_LOGS . "`.`id` WHERE `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "`.`value` LIKE '%" . like_escape( $searchterm ) . "%' OR `" . WPSC_TABLE_PURCHASE_LOGS . "`.`transactid` = %s OR `" . WPSC_TABLE_PURCHASE_LOGS . "`.`track_id` LIKE '%" . esc_sql(like_escape( $searchterm ) )."%'", $searchterm );
+}
+	$newlogs = $wpdb->get_results( $sql );
 	  $_SESSION['newlogs'] = $newlogs;
 	  return $newlogs;
    }
@@ -992,7 +1001,7 @@ class wpsc_purchaselogs_items {
       $cartcontent = $wpdb->get_results( "SELECT *  FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid`=" . $this->purchlogid . "" );
 
       $this->allcartcontent = $cartcontent;
-      $sql = "SELECT DISTINCT `" . WPSC_TABLE_PURCHASE_LOGS . "` . * FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` LEFT JOIN `" . WPSC_TABLE_PURCHASE_LOGS . "` ON `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "`.`log_id` = `" . WPSC_TABLE_PURCHASE_LOGS . "`.`id` WHERE `" . WPSC_TABLE_PURCHASE_LOGS . "`.`id`=" . $this->purchlogid;
+      $sql = $wpdb->prepare("SELECT DISTINCT `" . WPSC_TABLE_PURCHASE_LOGS . "` . * FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` LEFT JOIN `" . WPSC_TABLE_PURCHASE_LOGS . "` ON `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "`.`log_id` = `" . WPSC_TABLE_PURCHASE_LOGS . "`.`id` WHERE `" . WPSC_TABLE_PURCHASE_LOGS . "`.`id`= %s", $this->purchlogid);
       $extrainfo = $wpdb->get_results( $sql );
 
       $this->extrainfo = $extrainfo[0];
