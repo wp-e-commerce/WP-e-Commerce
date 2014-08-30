@@ -117,7 +117,7 @@ function wpsc_get_terms_variation_sort_filter($terms){
 	return array_values( $new_terms );
 }
 
-add_filter('get_terms','wpsc_get_terms_variation_sort_filter');
+add_filter( 'get_terms','wpsc_get_terms_variation_sort_filter' );
 
 
 /**
