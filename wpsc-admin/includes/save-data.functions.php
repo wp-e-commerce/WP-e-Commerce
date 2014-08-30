@@ -172,9 +172,9 @@ function wpsc_admin_category_forms_add() {
 			<fieldset class="wpsc-width-height-fields">
 				<legend class="screen-reader-text"><span><?php esc_html_e( 'Thumbnail Size', 'wpsc' ); ?></span></legend>
 				<label for="image_width"><?php esc_html_e( 'Width', 'wpsc' ); ?></label>
-				<input name="image_width" type="number" step="1" min="0" id="image_width" value="<?php if ( isset( $category['image_width'] ) ) echo esc_attr( $category['image_width'] ); ?>" class="small-text">
+				<input name="image_width" type="number" step="1" min="0" id="image_width" value="<?php if ( isset( $category['image_width'] ) ) echo esc_attr( $category['image_width'] ); ?>" class="small-text" style="width: 70px">
 				<label for="large_size_h"><?php esc_html_e( 'Height', 'wpsc' ); ?></label>
-				<input name="image_height" type="number" step="1" min="0" id="image_height" value="<?php if ( isset( $category['image_height'] ) ) echo esc_attr( $category['image_height'] ); ?>" class="small-text">
+				<input name="image_height" type="number" step="1" min="0" id="image_height" value="<?php if ( isset( $category['image_height'] ) ) echo esc_attr( $category['image_height'] ); ?>" class="small-text" style="width: 70px">
 			</fieldset>
 		</div>
 	<?php endif;?>
