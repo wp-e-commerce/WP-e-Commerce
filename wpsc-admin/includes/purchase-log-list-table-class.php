@@ -99,20 +99,28 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 			) AS item_count';
 
 		$search_terms = empty( $_REQUEST['s'] ) ? array() : explode( ' ', $_REQUEST['s'] );
-		$search_sql = array();
+		$search_sql   = array();
+
 		foreach ( $checkout_fields as $field ) {
-			$table_as = 's' . $i;
+			$table_as  = 's' . $i;
 			$select_as = str_replace('billing', '', $field->unique_name );
 			$selects[] = $table_as . '.value AS ' . $select_as;
-			$joins[] = $wpdb->prepare( "LEFT OUTER JOIN " . WPSC_TABLE_SUBMITTED_FORM_DATA . " AS {$table_as} ON {$table_as}.log_id = p.id AND {$table_as}.form_id = %d", $field->id );
+			$joins[]   = $wpdb->prepare( "LEFT OUTER JOIN " . WPSC_TABLE_SUBMITTED_FORM_DATA . " AS {$table_as} ON {$table_as}.log_id = p.id AND {$table_as}.form_id = %d", $field->id );
 
 			// build search term queries for first name, last name, email
 			foreach ( $search_terms as $term ) {
-				$escaped_term = esc_sql( like_escape( $term ) );
-				if ( ! array_key_exists( $term, $search_sql ) )
-					$search_sql[$term] = array();
 
-				$search_sql[$term][] = $table_as . ".value LIKE '%" . $escaped_term . "%'";
+				if ( version_compare( $GLOBALS['wp_version'], '4.0', '>=' ) ) {
+					$escaped_term = esc_sql( like_escape( $term ) );
+				} else {
+					$escaped_term = esc_sql( $wpdb->esc_like( $term ) );
+				}
+
+				if ( ! array_key_exists( $term, $search_sql ) ) {
+					$search_sql[ $term ] = array();
+				}
+
+				$search_sql[ $term ][] = $table_as . ".value LIKE '%" . $escaped_term . "%'";
 			}
 
 			$i++;
@@ -120,10 +128,10 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 
 		// combine query phrases into a single query string
 		foreach ( $search_terms as $term ) {
-			$search_sql[$term][] = "p.track_id = '" . esc_sql( $term ) . "'";
+			$search_sql[ $term ][] = "p.track_id = '" . esc_sql( $term ) . "'";
 			if ( is_numeric( $term ) )
-				$search_sql[$term][] = 'p.id = ' . esc_sql( $term );
-			$search_sql[$term] = '(' . implode( ' OR ', $search_sql[$term] ) . ')';
+				$search_sql[ $term ][] = 'p.id = ' . esc_sql( $term );
+			$search_sql[ $term ] = '(' . implode( ' OR ', $search_sql[ $term ] ) . ')';
 		}
 		$search_sql = implode( ' AND ', array_values( $search_sql ) );
 
@@ -180,6 +188,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		}
 
 		$total_where = apply_filters( 'wpsc_manage_purchase_logs_total_where', $this->where );
+
 		if ( $this->status == 'all' ) {
 			$total_where .= ' AND p.processed IN (2, 3, 4) ';
 		}
