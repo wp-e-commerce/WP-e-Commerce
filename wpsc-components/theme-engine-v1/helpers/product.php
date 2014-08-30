@@ -1,9 +1,10 @@
 <?php
-add_action( 'save_post', 'wpsc_refresh_page_urls', 10, 2 );
+add_action( 'save_post'        , 'wpsc_refresh_page_urls', 10, 2 );
 add_action( 'wpsc_theme_footer', 'wpsc_fancy_notifications' );
 
-if ( get_option( 'wpsc_replace_page_title' ) == 1 )
+if ( get_option( 'wpsc_replace_page_title' ) == 1 ) {
 	add_filter( 'wp_title', 'wpsc_replace_wp_title', 10, 2 );
+}
 
 add_filter( 'post_type_link', 'wpsc_product_link', 10, 3 );
 

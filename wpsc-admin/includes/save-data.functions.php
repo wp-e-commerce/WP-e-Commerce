@@ -12,14 +12,17 @@ function wpsc_ajax_set_variation_order(){
 	$parent_id  = $_POST['parent_id'];
 
 	$result = true;
-	foreach( $sort_order as $key=>$value ){
-		if ( empty( $value ) )
+	foreach( $sort_order as $key => $value ) {
+
+		if ( empty( $value ) ) {
 			continue;
+		}
 
 		$value = preg_replace( '/[^0-9]/', '', $value );
 
-		if( ! wpsc_update_meta( $value, 'sort_order', $key, 'wpsc_variation' ) )
+		if ( ! wpsc_update_meta( $value, 'sort_order', $key, 'wpsc_variation' ) ) {
 			$result = false;
+		}
 	}
 }
 
@@ -178,11 +181,14 @@ function wpsc_admin_category_forms_add() {
 
 	<!-- START OF TARGET MARKET SELECTION -->
 	<?php
-		$category_id = '';
-		if ( isset( $_GET["tag_ID"] ) )
-			$category_id = $_GET["tag_ID"];
 
-		$countrylist = WPSC_Countries::get_countries_array( true, true );
+		$category_id = '';
+
+		if ( isset( $_GET['tag_ID'] ) ) {
+			$category_id = absint( $_GET['tag_ID'] );
+		}
+
+		$countrylist       = WPSC_Countries::get_countries_array( true, true );
 		$selectedCountries = wpsc_get_meta( $category_id, 'target_market', 'wpsc_category' );
 	?>
 	<h4><?php esc_html_e( 'Restrict to Target Markets', 'wpsc' )?></h4>
@@ -491,9 +497,9 @@ function wpsc_save_category_set( $category_id, $tt_id ) {
 		//Good to here
 		if ( isset( $_POST['tag_ID'] ) ) {
 			//Editing
-			$category_id = $_POST['tag_ID'];
-			$category = get_term_by( 'id', $category_id, 'wpsc_product_category' );
-			$url_name = $category->slug;
+			$category_id = (int) $_POST['tag_ID'];
+			$category    = get_term_by( 'id', $category_id, 'wpsc_product_category' );
+			$url_name    = $category->slug;
 
 		}
 		if ( isset( $_POST['deleteimage'] ) && $_POST['deleteimage'] == 1 ) {
@@ -505,9 +511,9 @@ function wpsc_save_category_set( $category_id, $tt_id ) {
 		if ( ! empty( $_POST['height'] ) && is_numeric( $_POST['height'] ) && ! empty( $_POST['width'] ) && is_numeric( $_POST['width'] ) && $image == null ) {
 			$imagedata = wpsc_get_categorymeta( $category_id, 'image' );
 			if ( $imagedata != null ) {
-				$height = $_POST['height'];
-				$width = $_POST['width'];
-				$imagepath = WPSC_CATEGORY_DIR . $imagedata;
+				$height       = (int) $_POST['height'];
+				$width        = (int) $_POST['width'];
+				$imagepath    = WPSC_CATEGORY_DIR . $imagedata;
 				$image_output = WPSC_CATEGORY_DIR . $imagedata;
 				image_processing( $imagepath, $image_output, $width, $height );
 			}
@@ -517,18 +523,20 @@ function wpsc_save_category_set( $category_id, $tt_id ) {
 		wpsc_update_categorymeta( $category_id, 'active', '1' );
 		wpsc_update_categorymeta( $category_id, 'order', '0' );
 
-		if ( isset( $_POST['display_type'] ) )
+		if ( isset( $_POST['display_type'] ) ) {
 			wpsc_update_categorymeta( $category_id, 'display_type', esc_sql( stripslashes( $_POST['display_type'] ) ) );
+		}
 
-		if ( isset( $_POST['image_height'] ) )
-			wpsc_update_categorymeta( $category_id, 'image_height', absint( $_POST['image_height'] ) );
+		if ( isset( $_POST['image_height'] ) ) {
+			wpsc_update_categorymeta( $category_id, 'image_height', (int) $_POST['image_height'] );
+		}
 
-		if ( isset( $_POST['image_width'] ) )
-			wpsc_update_categorymeta( $category_id, 'image_width', absint($_POST['image_width'] ) );
+		if ( isset( $_POST['image_width'] ) ) {
+			wpsc_update_categorymeta( $category_id, 'image_width', (int) $_POST['image_width'] );
+		}
 
 		if ( ! empty( $_POST['use_additional_form_set'] ) ) {
 			wpsc_update_categorymeta( $category_id, 'use_additional_form_set', $_POST['use_additional_form_set'] );
-			//exit('<pre>'.print_r($_POST,1).'</pre>');
 		} else {
 			wpsc_delete_categorymeta( $category_id, 'use_additional_form_set' );
 		}
@@ -546,9 +554,10 @@ function wpsc_save_category_set( $category_id, $tt_id ) {
 			$countryList = $wpdb->get_col( "SELECT `id` FROM  `" . WPSC_TABLE_CURRENCY_LIST . "`" );
 
 			if ( $AllSelected != true ){
-				$unselectedCountries = array_diff( $countryList, $_POST['countrylist2'] );
+				$posted_countries    = array_map( 'intval', $_POST['countrylist2'] );
+				$unselectedCountries = array_diff( $countryList, $posted_countries );
 				//find the countries that are selected
-				$selectedCountries = array_intersect( $countryList, $_POST['countrylist2'] );
+				$selectedCountries = array_intersect( $countryList, $posted_countries );
 				wpsc_update_categorymeta( $category_id, 'target_market', $selectedCountries );
 			}
 
