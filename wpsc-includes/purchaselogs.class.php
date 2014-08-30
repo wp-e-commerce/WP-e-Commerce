@@ -938,15 +938,26 @@ class wpsc_purchaselogs {
 
    function the_purch_item_details() {
 	  global $wpdb;
-	  $sql = "SELECT SUM(quantity) FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid=" . $this->purchitem->id;
+	  $sql = $wpdb->prepare( "SELECT SUM(quantity) FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid= %s", $this->purchitem->id );
 	  $sum = $wpdb->get_var( $sql );
 	  return $sum;
    }
 
    function search_purchlog_view( $searchterm ) {
+   
 	  global $wpdb;
-	  $sql = $wpdb->prepare( "SELECT DISTINCT `" . WPSC_TABLE_PURCHASE_LOGS . "` . * FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` LEFT JOIN `" . WPSC_TABLE_PURCHASE_LOGS . "` ON `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "`.`log_id` = `" . WPSC_TABLE_PURCHASE_LOGS . "`.`id` WHERE `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "`.`value` LIKE '%" . like_escape( $searchterm ) . "%' OR `" . WPSC_TABLE_PURCHASE_LOGS . "`.`transactid` = %s OR `" . WPSC_TABLE_PURCHASE_LOGS . "`.`track_id` LIKE '%" . like_escape( $searchterm )."%'", $searchterm );
-	  $newlogs = $wpdb->get_results( $sql );
+	  global $wp_version;
+$sqlsearchterm = $wpdb->esc_like( $searchterm );	
+	
+if( '4.0' >= $wp_version )
+{
+$sql = $wpdb->prepare( "SELECT DISTINCT `" . WPSC_TABLE_PURCHASE_LOGS . "` . * FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` LEFT JOIN `" . WPSC_TABLE_PURCHASE_LOGS . "` ON `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "`.`log_id` = `" . WPSC_TABLE_PURCHASE_LOGS . "`.`id` WHERE `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "`.`value` LIKE %s" . "OR" . WPSC_TABLE_PURCHASE_LOGS . "`.`transactid` = %s OR `" . WPSC_TABLE_PURCHASE_LOGS . "`.`track_id` LIKE %s", $sqlsearchterm, $searchterm );
+}
+else
+{
+$sql = $wpdb->prepare( "SELECT DISTINCT `" . WPSC_TABLE_PURCHASE_LOGS . "` . * FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` LEFT JOIN `" . WPSC_TABLE_PURCHASE_LOGS . "` ON `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "`.`log_id` = `" . WPSC_TABLE_PURCHASE_LOGS . "`.`id` WHERE `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "`.`value` LIKE '%" . like_escape( $searchterm ) . "%' OR `" . WPSC_TABLE_PURCHASE_LOGS . "`.`transactid` = %s OR `" . WPSC_TABLE_PURCHASE_LOGS . "`.`track_id` LIKE '%" . like_escape( $searchterm )."%'", $searchterm );
+}
+	$newlogs = $wpdb->get_results( $sql );
 	  $_SESSION['newlogs'] = $newlogs;
 	  return $newlogs;
    }
