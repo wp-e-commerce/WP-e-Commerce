@@ -757,7 +757,7 @@ function _wpsc_make_value_into_bool( $value ) {
  *
  * @since 3.8.14
  * @access private
- * @param $meta_value any value being stored
+ * @param $meta_value varies value being stored
  * @param $meta_key string name of the attribute being stored
  * @param $visitor_id int id of the visitor to which the attribute applies
  * @return n/a
@@ -782,13 +782,13 @@ function _wpsc_vistor_shipping_same_as_billing_meta_update( $meta_value, $meta_k
 					$other_meta_key_name = 'shipping' . substr( $meta_key, strlen( 'billing' ) );
 					if ( in_array( $other_meta_key_name, $checkout_names ) ) {
 						$billing_meta_value = wpsc_get_customer_meta( $meta_key );
-						wpsc_update_customer_meta( $other_meta_key_name, $billing_meta_value );
+						wpsc_update_visitor_meta( $visitor_id, $other_meta_key_name, $billing_meta_value );
 					}
 				}
 			}
 		}
 	} else {
-		$shipping_same_as_billing = wpsc_get_customer_meta( 'shippingSameBilling' );
+		$shipping_same_as_billing = wpsc_get_visitor_meta( $visitor_id, 'shippingSameBilling', true );
 
 		if ( $shipping_same_as_billing ) {
 
@@ -801,7 +801,7 @@ function _wpsc_vistor_shipping_same_as_billing_meta_update( $meta_value, $meta_k
 				$other_meta_key_name = 'shipping' . substr( $meta_key, strlen( 'billing' ) );
 
 				if ( in_array( $other_meta_key_name, $checkout_names ) ) {
-					wpsc_update_customer_meta( $other_meta_key_name, $meta_value );
+					wpsc_update_visitor_meta( $visitor_id, $other_meta_key_name, $meta_value );
 				}
 			} elseif ( $meta_key_starts_with_shipping ) {
 				$checkout_names = wpsc_checkout_unique_names();
@@ -809,7 +809,7 @@ function _wpsc_vistor_shipping_same_as_billing_meta_update( $meta_value, $meta_k
 				$other_meta_key_name = 'billing' . substr( $meta_key, strlen( 'shipping' ) );
 
 				if ( in_array( $other_meta_key_name, $checkout_names ) ) {
-					wpsc_update_customer_meta( $other_meta_key_name, $meta_value );
+					wpsc_update_visitor_meta( $visitor_id, $other_meta_key_name, $meta_value );
 				}
 			}
 		}
@@ -818,5 +818,4 @@ function _wpsc_vistor_shipping_same_as_billing_meta_update( $meta_value, $meta_k
 	// restore the action we removed at the start
 	add_action( 'wpsc_updated_visitor_meta', '_wpsc_vistor_shipping_same_as_billing_meta_update', _WPSC_USER_META_HOOK_PRIORITY, 3 );
 }
-
 

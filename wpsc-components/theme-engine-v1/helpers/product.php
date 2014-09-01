@@ -1,9 +1,10 @@
 <?php
-add_action( 'save_post', 'wpsc_refresh_page_urls', 10, 2 );
+add_action( 'save_post'        , 'wpsc_refresh_page_urls', 10, 2 );
 add_action( 'wpsc_theme_footer', 'wpsc_fancy_notifications' );
 
-if ( get_option( 'wpsc_replace_page_title' ) == 1 )
+if ( get_option( 'wpsc_replace_page_title' ) == 1 ) {
 	add_filter( 'wp_title', 'wpsc_replace_wp_title', 10, 2 );
+}
 
 add_filter( 'post_type_link', 'wpsc_product_link', 10, 3 );
 
@@ -557,24 +558,6 @@ function wpsc_category_id($category_slug = '') {
 		return false;
 	}
 }
-
-
-/**
-* wpsc_category_image function, Gets the category image or returns false
-* @param integer category ID, can be 0
-* @return string url to the category image
-*/
-function wpsc_category_image($category_id = null) {
-	if($category_id < 1)
-		$category_id = wpsc_category_id();
-	$category_image = wpsc_get_categorymeta($category_id, 'image');
-	$category_path = WPSC_CATEGORY_DIR.basename($category_image);
-	$category_url = WPSC_CATEGORY_URL.basename($category_image);
-	if(file_exists($category_path) && is_file($category_path))
-		return $category_url;
-	return false;
-}
-
 
 /**
 * wpsc_category_description function, Gets the category description

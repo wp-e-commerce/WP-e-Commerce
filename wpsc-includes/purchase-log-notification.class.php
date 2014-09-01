@@ -269,13 +269,21 @@ abstract class WPSC_Purchase_Log_Notification {
 		return apply_filters( 'wpsc_purchase_log_notification_headers', $headers, $this );
 	}
 
-	public function send() {
-		if ( empty( $this->address ) )
-			return;
+	public function get_attachments() {
+		return apply_filters( 'wpsc_purchase_log_notification_attachments', array(), $this );
+	}
 
-		$headers = $this->get_email_headers();
+	public function send() {
+
+		if ( empty( $this->address ) ) {
+			return;
+		}
+
+		$headers     = $this->get_email_headers();
+		$attachments = $this->get_attachments();
+
 		add_action( 'phpmailer_init', array( $this, '_action_phpmailer_init_multipart' ), 10, 1 );
-		$email_sent = wp_mail( $this->address, $this->title, $this->html_message, $headers );
+		$email_sent = wp_mail( $this->address, $this->title, $this->html_message, $headers, $attachments );
 		remove_action( 'phpmailer_init', array( $this, '_action_phpmailer_init_multipart' ), 10, 1 );
 
 		return $email_sent;
