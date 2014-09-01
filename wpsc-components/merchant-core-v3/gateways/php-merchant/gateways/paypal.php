@@ -59,6 +59,7 @@ abstract class PHP_Merchant_Paypal extends PHP_Merchant
 			if ( is_bool( $value ) )
 				$this->request[$key] = (int) $value;
 		}
+
 		return $this->request;
 	}
 
