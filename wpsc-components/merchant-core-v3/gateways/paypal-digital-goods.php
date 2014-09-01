@@ -33,6 +33,10 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 
 		add_action( 'wpsc_bottom_of_shopping_cart', array( $this, 'add_iframe_script' ) );
 
+		//if ( wpsc_is_checkout() ) {
+			add_action( 'wp_enqueue_scripts', array( $this, 'dg_script' ) );
+		//}	
+
 		add_action( 'wpsc_confirm_checkout', array( $this, 'remove_iframe_script' ) );
 
 		add_filter( 'wpsc_purchase_log_gateway_data', array( get_parent_class( $this ), 'filter_purchase_log_gateway_data' ), 10, 2 );
@@ -41,6 +45,14 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 			'wpsc_payment_method_form_fields',
 			array( $this, 'filter_unselect_default' ), 100 , 1 
 		);
+	}
+
+	/**
+	 *
+	 */
+	public function dg_script() {
+		wp_enqueue_script( 'dg-script', 'https://www.paypalobjects.com/js/external/dg.js' );
+		wp_enqueue_script( 'dg-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/dg.js', array( 'jquery' ) );
 	}
 
 	/**
@@ -71,8 +83,9 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 	 * It also hides the body to prevent the second or two or showing the entire checkout page in the iframe.
 	 */
 	public function remove_iframe_script(){
-		if ( ! has_action( 'template_redirect', array( $this, 'close_iframe' ) ) )
+		if ( ! has_action( 'template_redirect', array( $this, 'close_iframe' ) ) ) {
 			add_action( 'template_redirect', array( $this, 'close_iframe' ), 1 );
+		}
 	}
 
 	public function close_iframe() {
