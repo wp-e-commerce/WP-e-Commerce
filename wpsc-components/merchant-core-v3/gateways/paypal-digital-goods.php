@@ -34,7 +34,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		add_action( 'wpsc_bottom_of_shopping_cart', array( $this, 'add_iframe_script' ) );
 
 		//if ( wpsc_is_checkout() ) {
-			add_action( 'wp_enqueue_scripts', array( $this, 'dg_script' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'dg_script' ) );
 		//}	
 
 		add_action( 'wpsc_confirm_checkout', array( $this, 'remove_iframe_script' ) );
@@ -114,7 +114,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 			'payment_gateway'          => 'paypal-digital-goods',
 			'payment_gateway_callback' => 'confirm_transaction',
 		),
-		home_url( 'index.php' )
+		get_option( 'transact_url' )
 	);
 		return apply_filters( 'wpsc_paypal_digital_goods_return_url', $location );
 	}
@@ -137,41 +137,42 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 
 			if ( $ipn->is_payment_denied() ) {
 				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::PAYMENT_DECLINED );
-			} elseif ( $ipn->is_payment_refunded() ) {
-				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::REFUNDED );
-			} elseif ( $ipn->is_payment_completed() ) {
-				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT );
-			} elseif ( $ipn->is_payment_pending() ) {
-				if ( $ipn->is_payment_refund_pending() )
-					$this->purchase_log->set( 'processed', WPSC_Purchase_Log::REFUND_PENDING );
-				else
-					$this->purchase_log->set( 'processed', WPSC_Purchase_Log::ORDER_RECEIVED );
-			}
+		} elseif ( $ipn->is_payment_refunded() ) {
+			$this->purchase_log->set( 'processed', WPSC_Purchase_Log::REFUNDED );
+		} elseif ( $ipn->is_payment_completed() ) {
+			$this->purchase_log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT );
+		} elseif ( $ipn->is_payment_pending() ) {
+			if ( $ipn->is_payment_refund_pending() )
+				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::REFUND_PENDING );
+			else
+				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::ORDER_RECEIVED );
+		}
 
-			$this->purchase_log->save();
-			transaction_results( $sessionid, false );
+		$this->purchase_log->save();
+		transaction_results( $sessionid, false );
 		}
 
 		exit;
-	}
+		}
 
-	public function callback_confirm_transaction() {
+		public function callback_confirm_transaction() {
 
-		if ( ! isset( $_REQUEST['sessionid'] ) || ! isset( $_REQUEST['token'] ) || ! isset( $_REQUEST['PayerID'] ) )
-			return;
+			if ( ! isset( $_REQUEST['sessionid'] ) || ! isset( $_REQUEST['token'] ) || ! isset( $_REQUEST['PayerID'] ) ) {
+				return;
+		}
 
 		$this->set_purchase_log_for_callbacks();
 
 		$this->callback_process_confirmed_payment();
-	}
+		}
 
-	public function callback_process_confirmed_payment() {
+		public function callback_process_confirmed_payment() {
+			$args = array_map( 'urldecode', $_GET );
+			extract( $args, EXTR_SKIP );
 
-		$args = array_map( 'urldecode', $_GET );
-
-		extract( $args, EXTR_SKIP );
-		if ( ! isset( $sessionid ) || ! isset( $token ) || ! isset( $PayerID ) )
-			return;
+			if ( ! isset( $sessionid ) || ! isset( $token ) || ! isset( $PayerID ) ) {
+				return;
+		}
 
 		$this->set_purchase_log_for_callbacks();
 
@@ -179,62 +180,94 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		$options = array(
 			'token'    => $token,
 			'payer_id' => $PayerID,
-			'invoice'  => $this->purchase_log->get( 'sessionid' ),
+			'message_id'    => $this->purchase_log->get( 'sessionid' ),
+			'invoice'		=> $this->purchase_log->get( 'id' ),
 		);
 		$options += $this->checkout_data->get_gateway_data();
 		$options += $this->purchase_log->get_gateway_data( parent::get_currency_code(), $this->get_currency_code() );
 
-		if ( $this->setting->get( 'ipn', false ) )
+		if ( $this->setting->get( 'ipn', false ) ) {
 			$options['notify_url'] = $this->get_notify_url();
+			}
 
-		$response = $this->gateway->purchase( $options );
+			// GetExpressCheckoutDetails
+			$details = $this->gateway->get_details_for( $token );
+			$this->log_payer_details( $details );
 
-		$location = add_query_arg( array(
-			'sessionid'       => $this->purchase_log->get( 'sessionid' ),
-			'token'           => $token,
-			'PayerID'         => $PayerID,
-			'payment_gateway' => 'paypal-digital-goods'
-		),
-		get_option( 'transact_url' )
-	);
+			$response = $this->gateway->purchase( $options );
+			$this->log_protection_status( $response );
+			$location = remove_query_arg( 'payment_gateway_callback' );
 
-		if ( $response->has_errors() ) {
-			error_log( print_r( array( 'errors' => $response->get_errors(), 'options' => $options ) , 1 ), 1, 'justinsainton@gmail.com' );
-			wpsc_update_customer_meta( 'paypal_express_checkout_errors', $response->get_errors() );
-			$location = add_query_arg( array( 'payment_gateway_callback' => 'display_paypal_error' ), $location );
-		} elseif ( $response->is_payment_completed() || $response->is_payment_pending() ) {
-			$location = remove_query_arg( 'payment_gateway', $location );
+			if ( $response->has_errors() ) {
+				wpsc_update_customer_meta( 'paypal_express_checkout_errors', $response->get_errors() );
+				$location = add_query_arg( array( 'payment_gateway_callback' => 'display_paypal_error' ) );
+			} elseif ( $response->is_payment_completed() || $response->is_payment_pending() ) {
+				$location = remove_query_arg( 'payment_gateway' );
 
-			if ( $response->is_payment_completed() )
-				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT );
-			else
+				if ( $response->is_payment_completed() ) {
+					$this->purchase_log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT );
+			} else {
 				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::ORDER_RECEIVED );
+			}
 
 			$this->purchase_log->set( 'transactid', $response->get( 'transaction_id' ) )
 				->set( 'date', time() )
 				->save();
-		} else {
-			$location = add_query_arg( array( 'payment_gateway_callback' => 'display_generic_error' ), $location );
-		}
+			} else {
+				$location = add_query_arg( array( 'payment_gateway_callback' => 'display_generic_error' ) );
+			}
 
-		$location = apply_filters( 'wpsc_paypal_digital_goods_confirmed_payment_url', $location );
+			wp_redirect( $location );
+			exit;
 
-		wp_redirect( $location );
-		exit;
-	}
+			}
 
-	/**
-	 * Output the form on the Digital Goods settings page.
-	 */
-	public function setup_form() {
-		$paypal_currency = $this->get_currency_code();
+			public function callback_display_paypal_error() {
+				add_filter( 'wpsc_get_transaction_html_output', array( $this, 'filter_paypal_error_page' ) );
+			}
+
+			public function callback_display_generic_error() {
+				add_filter( 'wpsc_get_transaction_html_output', array( $this, 'filter_generic_error_page' ) );
+			}
+			public function filter_paypal_error_page() {
+				$errors = wpsc_get_customer_meta( 'paypal_express_checkout_errors' );
+				ob_start();
+?>
+	<p>
+	<?php _e( 'Sorry, your transaction could not be processed by PayPal. Please contact the site administrator. The following errors are returned:' ); ?>
+				</p>
+					<ul>
+					<?php foreach ( $errors as $error ): ?>
+					<li><?php echo esc_html( $error['details'] ) ?> (<?php echo esc_html( $error['code'] ); ?>)</li>
+					<?php endforeach; ?>
+				</ul>
+					<p><a href="<?php echo esc_url( $this->get_shopping_cart_payment_url() ); ?>"><?php _e( 'Click here to go back to the checkout page.') ?></a></p>
+<?php
+				$output = apply_filters( 'wpsc_paypal_express_checkout_gateway_error_message', ob_get_clean(), $errors );
+				return $output;
+			}
+
+			public function filter_generic_error_page() {
+				ob_start();
+?>
+			<p><?php _e( 'Sorry, but your transaction could not be processed by PayPal for some reason. Please contact the site administrator.' ); ?></p>
+			<p><a href="<?php echo esc_attr( $this->get_shopping_cart_payment_url() ); ?>"><?php _e( 'Click here to go back to the checkout page.') ?></a></p>
+<?php
+				$output = apply_filters( 'wpsc_paypal_express_checkout_generic_error_message', ob_get_clean() );
+				return $output;
+			}
+			/**
+			 * Output the form on the Digital Goods settings page.
+			 */
+			public function setup_form() {
+				$paypal_currency = $this->get_currency_code();
 ?>
 		<!-- Account Credentials -->
-        <tr>
-            <td colspan="2">
-                <h4><?php _e( 'Account Credentials', 'wpsc' ); ?></h4>
-            </td>
-        </tr>
+		<tr>
+			<td colspan="2">
+				<h4><?php _e( 'Account Credentials', 'wpsc' ); ?></h4>
+			</td>
+		</tr>
 		<tr>
 			<td>
 				<label for="wpsc-paypal-express-api-username"><?php _e( 'API Username', 'wpsc' ); ?></label>
@@ -279,27 +312,27 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		</tr>
 
 		<!-- Cart Customization -->
-        <tr>
-            <td colspan="2">
-                <label><h4><?php _e( 'Cart Customization', 'wpsc'); ?></h4></label>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label for="wpsc-paypal-express-cart-logo"><?php _e( 'Merchant Logo', 'wpsc' ); ?></label>
-            </td>
-            <td>
-                <input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'cart_logo' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'cart_logo' ) ); ?>" id="wpsc-paypal-express-cart-logo" />
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label for="wpsc-paypal-express-cart-border"><?php _e( 'Cart Border Color', 'wpsc' ); ?></label>
-            </td>
-            <td>
-                <input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'cart_border' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'cart_border' ) ); ?>" id="wpsc-paypal-express-cart-border" />
-            </td>
-        </tr>
+		<tr>
+			<td colspan="2">
+				<label><h4><?php _e( 'Cart Customization', 'wpsc'); ?></h4></label>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="wpsc-paypal-express-cart-logo"><?php _e( 'Merchant Logo', 'wpsc' ); ?></label>
+			</td>
+			<td>
+				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'cart_logo' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'cart_logo' ) ); ?>" id="wpsc-paypal-express-cart-logo" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="wpsc-paypal-express-cart-border"><?php _e( 'Cart Border Color', 'wpsc' ); ?></label>
+			</td>
+			<td>
+				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'cart_border' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'cart_border' ) ); ?>" id="wpsc-paypal-express-cart-border" />
+			</td>
+		</tr>
 
 		<!-- Currency Conversion -->
 		<?php if ( ! $this->is_currency_supported() ): ?>
@@ -328,56 +361,58 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		<?php endif ?>
 
 		<!-- Error Logging -->
-        <tr>
-            <td colspan="2">
-                <h4><?php _e( 'Error Logging', 'wpsc' ); ?></h4>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label><?php _e( 'Enable Debugging', 'wpsc' ); ?></label>
-            </td>
-            <td>
-                <label><input <?php checked( $this->setting->get( 'debugging' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'debugging' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wpsc' ); ?></label>&nbsp;&nbsp;&nbsp;
-                <label><input <?php checked( (bool) $this->setting->get( 'debugging' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'debugging' ) ); ?>" value="0" /> <?php _e( 'No', 'wpsc' ); ?></label>
-            </td>
-        </tr>
+		<tr>
+			<td colspan="2">
+				<h4><?php _e( 'Error Logging', 'wpsc' ); ?></h4>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label><?php _e( 'Enable Debugging', 'wpsc' ); ?></label>
+			</td>
+			<td>
+				<label><input <?php checked( $this->setting->get( 'debugging' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'debugging' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wpsc' ); ?></label>&nbsp;&nbsp;&nbsp;
+				<label><input <?php checked( (bool) $this->setting->get( 'debugging' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'debugging' ) ); ?>" value="0" /> <?php _e( 'No', 'wpsc' ); ?></label>
+			</td>
+		</tr>
 <?php
-	}
+			}
 
-	/**
-	 * Process a purchase.
-	 */
-	public function process( $args = array() ) {
-		$total = $this->convert( $this->purchase_log->get( 'totalprice' ) );
-		$options = array(
-			'return_url' => $this->get_return_url(),
-			'invoice'    => $this->purchase_log->get( 'sessionid' ),
-		);
-		$options += $this->checkout_data->get_gateway_data();
-		$options += $this->purchase_log->get_gateway_data( parent::get_currency_code(), $this->get_currency_code() );
+			/**
+			 * Process a purchase.
+			 */
+			public function process( $args = array() ) {
+				$total = $this->convert( $this->purchase_log->get( 'totalprice' ) );
+				$options = array(
+					'return_url' => $this->get_return_url(),
+					'message_id' => $this->purchase_log->get( 'sessionid' ),
+					'invoice'    => $this->purchase_log->get( 'id' ),
+					'address_override' => 1,
+				);
+				$options += $this->checkout_data->get_gateway_data();
+				$options += $this->purchase_log->get_gateway_data( parent::get_currency_code(), $this->get_currency_code() );
 
-		if ( $this->setting->get( 'ipn', false ) )
-			$options['notify_url'] = $this->get_notify_url();
+				if ( $this->setting->get( 'ipn', false ) ) {
+					$options['notify_url'] = $this->get_notify_url();
+				}
 
-		$response = $this->gateway->setup_purchase( $options );
+				$response = $this->gateway->setup_purchase( $options );
 
-		if ( $response->is_successful() ) {
-			$url = ( $this->setting->get( 'sandbox_mode' ) ? self::SANDBOX_URL : self::LIVE_URL ) . $response->get( 'token' );
-		} else {
-			error_log( print_r( array( 'errors' => $response->get_errors(), 'options' => $options ) , 1 ), 1, 'jmihaialexandru@gmail.com' );
-			wpsc_update_customer_meta( 'paypal_express_checkout_errors', $response->get_errors() );
-			$url = add_query_arg( array(
-				'payment_gateway'          => 'paypal-digital-goods',
-				'payment_gateway_callback' => 'display_paypal_error',
-			), $this->get_return_url() );
+				if ( $response->is_successful() ) {
+					$url = ( $this->setting->get( 'sandbox_mode' ) ? self::SANDBOX_URL : self::LIVE_URL ) . $response->get( 'token' );
+				} else {
+					wpsc_update_customer_meta( 'paypal_express_checkout_errors', $response->get_errors() );
+					$url = add_query_arg( array(
+						'payment_gateway'          => 'paypal-digital-goods',
+						'payment_gateway_callback' => 'display_paypal_error',
+					), $this->get_return_url() );
+				}
+
+				if( ! isset( $args['return_only'] ) || $args['return_only'] !== true ) {
+					wp_redirect( $url );
+					exit;
+				}
+
+				return $url;
+			}
 		}
-
-		if( ! isset( $args['return_only'] ) || $args['return_only'] !== true ) {
-			wp_redirect( $url );
-			exit;
-		}
-
-		return $url;
-	}
-}
