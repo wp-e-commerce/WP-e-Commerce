@@ -295,10 +295,25 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
      * @return void
      */
     public function log_payer_details( $details ) {
+		if ( isset( $details->get( 'payer' )->id ) && !empty( $details->get( 'payer' )->id ) ) {
+			$payer_id = $details->get( 'payer' )->id;
+		} else {
+			$payer_id = 'not set';
+		}
+		if ( isset( $details->get( 'payer' )->status ) && !empty( $details->get( 'payer' )->status ) ) {
+			$payer_status = $details->get( 'payer' )->status;
+		} else {
+			$payer_status = 'not set';
+		}
+		if ( isset( $details->get( 'payer' )->shipping_status ) && !empty( $details->get( 'payer' )->shipping_status ) ) {
+			$payer_shipping_status = $details->get( 'payer' )->shipping_status;
+		} else {
+			$payer_shipping_status = 'not set';
+		}
         $paypal_log = array(
-            'payer_id'        => $details->get( 'payer' )->id,
-            'payer_status'    => $details->get( 'payer' )->status,
-            'shipping_status' => $details->get( 'payer' )->shipping_status,
+            'payer_id'        => $payer_id,
+            'payer_status'    => $payer_status,
+            'shipping_status' => $payer_shipping_status,
             'protection'      => null,
         );
 
