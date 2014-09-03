@@ -31,13 +31,13 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
             'cart_border'	   => $this->setting->get( 'cart_border' ),
         ) );
 
-        add_action( 'wpsc_bottom_of_shopping_cart', array( $this, 'add_iframe_script' ) );
+        //add_action( 'wpsc_bottom_of_shopping_cart', array( $this, 'add_iframe_script' ) );
 
         //if ( wpsc_is_checkout() ) {
         add_action( 'wp_enqueue_scripts', array( $this, 'dg_script' ) );
         //}	
 
-        add_action( 'wpsc_confirm_checkout', array( $this, 'remove_iframe_script' ) );
+        //add_action( 'wpsc_confirm_checkout', array( $this, 'remove_iframe_script' ) );
 
         add_filter( 'wpsc_purchase_log_gateway_data', array( get_parent_class( $this ), 'filter_purchase_log_gateway_data' ), 10, 2 );
 
@@ -51,8 +51,10 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      *
      */
     public function dg_script() {
-        wp_enqueue_script( 'dg-script', 'https://www.paypalobjects.com/js/external/dg.js' );
-        wp_enqueue_script( 'dg-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/dg.js', array( 'jquery' ) );
+
+            wp_enqueue_script( 'dg-script', 'https://www.paypalobjects.com/js/external/dg.js' );
+            wp_enqueue_script( 'dg-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/dg.js', array( 'jquery' ) );
+ 
     }
 
     /**
@@ -132,7 +134,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
         $ipn = new PHP_Merchant_Paypal_IPN( false, (bool) $this->setting->get( 'sandbox_mode', false ) );
 
         if ( $ipn->is_verified() ) {
-            $sessionid = $ipn->get( 'invoice' );
+            $sessionid = $ipn->get( 'message_id' );
             $this->set_purchase_log_for_callbacks( $sessionid );
 
             if ( $ipn->is_payment_denied() ) {
@@ -181,7 +183,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
             'token'    => $token,
             'payer_id' => $PayerID,
             'message_id'    => $this->purchase_log->get( 'sessionid' ),
-            'invoice'		=> $this->purchase_log->get( 'id' ),
+            'invoice'		=> $this->purchase_log->get( 'sessionid' ) . '-' . $this->purchase_log->get( 'id' ),
         );
         $options += $this->checkout_data->get_gateway_data();
         $options += $this->purchase_log->get_gateway_data( parent::get_currency_code(), $this->get_currency_code() );
@@ -386,7 +388,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
         $options = array(
             'return_url' => $this->get_return_url(),
             'message_id' => $this->purchase_log->get( 'sessionid' ),
-            'invoice'    => $this->purchase_log->get( 'id' ),
+            'invoice'    => $this->purchase_log->get( 'sessionid' ) . '-' . $this->purchase_log->get( 'id' ),
             'address_override' => 1,
         );
         $options += $this->checkout_data->get_gateway_data();
