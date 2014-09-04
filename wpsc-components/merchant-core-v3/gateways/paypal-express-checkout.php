@@ -589,7 +589,6 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         } else {
             // SetExpressCheckout Failure
             $this->log_error( $response );
-            wpsc_update_customer_meta( 'paypal_express_checkout_errors', $response->get_errors() );
             $url = add_query_arg( array(
                 'payment_gateway'          => 'paypal-express-checkout',
                 'payment_gateway_callback' => 'display_paypal_error',

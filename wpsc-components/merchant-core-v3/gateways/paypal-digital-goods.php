@@ -459,7 +459,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		if ( $response->is_successful() ) {
 			$url = ( $this->setting->get( 'sandbox_mode' ) ? self::SANDBOX_URL : self::LIVE_URL ) . $response->get( 'token' );
 		} else {
-			wpsc_update_customer_meta( 'paypal_express_checkout_errors', $response->get_errors() );
+			$this->log_error( $response );
 			$url = add_query_arg( array(
 				'payment_gateway'          => 'paypal-digital-goods',
 				'payment_gateway_callback' => 'display_paypal_error',
