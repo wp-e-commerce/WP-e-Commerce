@@ -31,13 +31,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 			'cart_border'	   => $this->setting->get( 'cart_border' ),
 		) );
 
-		//add_action( 'wpsc_bottom_of_shopping_cart', array( $this, 'add_iframe_script' ) );
-
-		//if ( wpsc_is_checkout() ) {
 		add_action( 'wp_enqueue_scripts', array( $this, 'dg_script' ) );
-		//}	
-
-		add_action( 'wpsc_confirm_checkout', array( $this, 'remove_iframe_script' ) );
 
 		add_filter( 'wpsc_purchase_log_gateway_data', array( get_parent_class( $this ), 'filter_purchase_log_gateway_data' ), 10, 2 );
 
@@ -82,9 +76,50 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		return apply_filters( 'wpsc_paypal_digital_goods_return_url_redirect', $redirect );
 	}
 
-	protected function get_original_return_url() {
+	public function callback_return_url_redirect() {
+		// Session id
+		if ( ! isset( $_GET['sessionid'] ) ) {
+			return;
+		} else {
+			$sessionid = $_GET['sessionid'];
+		}
+
+		// Page Styles
+		wp_register_style( 'ppdg-iframe', plugins_url( 'dg.css', __FILE__ ) );
+
+		// Return a redirection page
+		?>
+		<html>
+			<head>
+				<title><?php __( 'Processing...', 'wpec' ); ?></title>
+				<?php wp_print_styles( 'ppdg-iframe' ); ?>
+			</head>
+			<body>
+				<div id="left_frame">
+				<div id="right_frame">
+					<p id="message">	
+						<?php _e( 'Processing Order', 'wpec'); ?>
+						<?php $location = html_entity_decode( $this->get_original_return_url( $sessionid ) );  ?>	
+					</p>
+					<img src="https://www.paypal.com/en_US/i/icon/icon_animated_prog_42wx42h.gif" alt="Processing..." />
+					<div id="right_bottom">
+						<div id="left_bottom">
+						</div>
+					</div>
+				</div>
+				</div>
+				<script type="text/javascript">
+					setTimeout('if (window!=top) {top.location.replace("<?php echo $location; ?>");}else{location.replace("<?php echo $location; ?>");}', 1500);
+				</script>
+			</body>
+		</html>
+<?php
+		exit();
+	}
+
+	protected function get_original_return_url( $session_id ) {
 		$location = add_query_arg( array(
-			'sessionid'                => $this->purchase_log->get( 'sessionid' ),
+			'sessionid'                => $session_id,
 			'payment_gateway'          => 'paypal-digital-goods',
 			'payment_gateway_callback' => 'confirm_transaction',
 		),
@@ -95,13 +130,47 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 
 	protected function get_cancel_url() {
 		$redirect = add_query_arg( array(
-			'sessionid'                => $this->purchase_log->get( 'sessionid' ),
+			//'sessionid'                => $this->purchase_log->get( 'sessionid' ),
 			'payment_gateway'          => 'paypal-digital-goods',
 			'payment_gateway_callback' => 'cancel_url_redirect',
 		),
 		get_option( 'transact_url' )
 	);
 		return apply_filters( 'wpsc_paypal_digital_goods_cancel_url_redirect', $redirect );
+	}
+
+	public function callback_cancel_url_redirect() {
+		// Page Styles
+		wp_register_style( 'ppdg-iframe', plugins_url( 'dg.css', __FILE__ ) );
+
+		// Return a redirection page
+		?>
+		<html>
+			<head>
+				<title><?php __( 'Processing...', 'wpec' ); ?></title>
+				<?php wp_print_styles( 'ppdg-iframe' ); ?>
+			</head>
+			<body>
+				<div id="left_frame">
+				<div id="right_frame">
+					<p id="message">	
+						<?php _e( 'Cancelling Order', 'ppdg'); ?>
+						<?php $location = html_entity_decode( $this->get_original_cancel_url() );  ?>	
+					</p>
+					<img src="https://www.paypal.com/en_US/i/icon/icon_animated_prog_42wx42h.gif" alt="Processing..." />
+					<div id="right_bottom">
+						<div id="left_bottom">
+						</div>
+					</div>
+				</div>
+				</div>
+				<script type="text/javascript">
+					setTimeout('if (window!=top) {top.location.replace("<?php echo $location; ?>");}else{location.replace("<?php echo $location; ?>");}', 1500);
+				</script>
+			</body>
+		</html>
+<?php
+		exit();
 	}
 
 	protected function get_original_cancel_url() {
