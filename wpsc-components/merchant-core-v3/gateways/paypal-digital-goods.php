@@ -120,6 +120,8 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 	protected function get_original_return_url( $session_id ) {
 		$location = add_query_arg( array(
 			'sessionid'                => $session_id,
+			'token'				  	   => $_REQUEST['token'],
+			'PayerID'				   => $_REQUEST['PayerID'],
 			'payment_gateway'          => 'paypal-digital-goods',
 			'payment_gateway_callback' => 'confirm_transaction',
 		),
@@ -130,7 +132,6 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 
 	protected function get_cancel_url() {
 		$redirect = add_query_arg( array(
-			//'sessionid'                => $this->purchase_log->get( 'sessionid' ),
 			'payment_gateway'          => 'paypal-digital-goods',
 			'payment_gateway_callback' => 'cancel_url_redirect',
 		),
@@ -215,7 +216,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 
 	public function callback_confirm_transaction() {
 
-		if ( ! isset( $_REQUEST['sessionid'] ) || ! isset( $_REQUEST['token'] ) || ! isset( $_REQUEST['PayerID'] ) ) {
+		if ( ! isset( $_GET['sessionid'] ) || ! isset( $_GET['token'] ) || ! isset( $_GET['PayerID'] ) ) {
 			return;
 		}
 
@@ -277,6 +278,47 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 
 		wp_redirect( $location );
 		exit;
+
+	}
+
+	public function callback_display_paypal_error_redirect( ) {
+			// Redirect Location
+			$location = add_query_arg( array(
+				'payment_gateway'          => 'paypal-digital-goods',
+				'payment_gateway_callback' => 'display_paypal_error',
+			), base64_decode( $_GET['return_url'] ) );
+
+		// Page Styles
+		wp_register_style( 'ppdg-iframe', plugins_url( 'dg.css', __FILE__ ) );
+
+		// Return a redirection page
+		?>
+		<html>
+			<head>
+				<title><?php __( 'Processing...', 'wpec' ); ?></title>
+				<?php wp_print_styles( 'ppdg-iframe' ); ?>
+			</head>
+			<body>
+				<div id="left_frame">
+				<div id="right_frame">
+					<p id="message">	
+						<?php _e( 'Processing Order', 'wpec'); ?>
+					</p>
+					<img src="https://www.paypal.com/en_US/i/icon/icon_animated_prog_42wx42h.gif" alt="Processing..." />
+					<div id="right_bottom">
+						<div id="left_bottom">
+						</div>
+					</div>
+				</div>
+				</div>
+				<script type="text/javascript">
+					setTimeout('if (window!=top) {top.location.replace("<?php echo $location; ?>");}else{location.replace("<?php echo $location; ?>");}', 1500);
+				</script>
+			</body>
+		</html>
+<?php
+		exit();
+
 
 	}
 
@@ -462,7 +504,8 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 			$this->log_error( $response );
 			$url = add_query_arg( array(
 				'payment_gateway'          => 'paypal-digital-goods',
-				'payment_gateway_callback' => 'display_paypal_error',
+				'payment_gateway_callback' => 'display_paypal_error_redirect',
+				'return_url'			   => base64_encode( $this->get_return_url() ),
 			), $this->get_return_url() );
 		}
 
