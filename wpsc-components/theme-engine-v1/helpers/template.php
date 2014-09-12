@@ -125,8 +125,9 @@ function wpsc_body_class( $classes ) {
 	global $wp_query, $wpsc_query;
 
 	$post_id = 0;
-	if ( isset( $wp_query->post->ID ) )
+	if ( isset( $wp_query->post ) && is_object( $wp_query->post ) && isset( $wp_query->post->ID ) ) {
 		$post_id = $wp_query->post->ID;
+	}
 
 	$page_url = get_permalink( $post_id );
 
