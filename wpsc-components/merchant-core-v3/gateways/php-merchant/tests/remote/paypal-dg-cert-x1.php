@@ -83,10 +83,10 @@ class PHP_Merchant_Paypal_Digital_Goods_Certification_Test_X1 extends UnitTestCa
 	 * @return void
 	 * @since 3.9
 	 */
-	public function test_setexpresscheckout_standard_ref101() {
+	public function test_setexpresscheckout_standard_ref101() {	
 		// Call SetExpressCheckout
 		$options  = is_array( $this->purchase_options ) ? $this->purchase_options : array();
-		$response = $this->gateway->setup_purchase( $options );
+		$response = $this->gateway->setup_purchase( $options, 'Sale' );
 
 		$this->assertTrue( $response->is_successful() );
 
@@ -97,23 +97,14 @@ class PHP_Merchant_Paypal_Digital_Goods_Certification_Test_X1 extends UnitTestCa
 	/**
 	 * Test Case Reference 1.02
 	 *
-	 * Shipping Address (ECM)
+	 * No Shipping
 	 *
 	 * @return void
 	 * @since 3.9
 	 */
 	public function test_setexpresscheckout_standard_ref102() {
-		// Shipping Details
-		$this->purchase_options['shipping_address'] = array(
-			'name'    => 'Abid Omar',
-			'street'  => '1 Infinite Loop',
-			'street2' => 'Apple Headquarter ext',
-			'city'    => 'Cupertino',
-			'state'   => 'CA',
-			'country' => 'US',
-			'zip'     => '95014',
-			'phone'   => '(877) 412-7753',
-		);
+		// Max Amount
+		$this->purchase_options['no_shipping'] = true;
 
 		// Call SetExpressCheckout
 		$response = $this->gateway->setup_purchase( $this->purchase_options );
@@ -127,98 +118,10 @@ class PHP_Merchant_Paypal_Digital_Goods_Certification_Test_X1 extends UnitTestCa
 	/**
 	 * Test Case Reference 1.03
 	 *
-	 * Max Amount (ECM)
-	 *
 	 * @return void
 	 * @since 3.9
 	 */
 	public function test_setexpresscheckout_standard_ref103() {
-		// Max Amount
-		$this->purchase_options['max_amount'] = 15.9;
-		$this->purchase_options['solution_type'] = 'Mark';
-
-		// Call SetExpressCheckout
-		$response = $this->gateway->setup_purchase( $this->purchase_options );
-
-		$this->assertTrue( $response->is_successful() );
-
-		// Display the transaction Id
-		st_echo('Test Case 1.03: ' . $response->get( 'token' ) . "\n" );
-
-	}
-
-	/**
-	 * Test Case Reference 1.04
-	 *
-	 * Max Amount (ECS)
-	 *
-	 * @return void
-	 * @since 3.9
-	 */
-	public function test_setexpresscheckout_standard_ref104() {
-		// Max Amount
-		$this->purchase_options['max_amount'] = 15.9;
-		$this->purchase_options['solution_type'] = 'Sole';
-
-		// Call SetExpressCheckout
-		$response = $this->gateway->setup_purchase( $this->purchase_options );
-
-		$this->assertTrue( $response->is_successful() );
-
-		// Display the transaction Id
-		st_echo('Test Case 1.04: ' . $response->get( 'token' ) . "\n" );
-	}
-
-	/**
-	 * Test Case Reference 1.05
-	 *
-	 * No Shipping
-	 *
-	 * @return void
-	 * @since 3.9
-	 */
-	public function test_setexpresscheckout_standard_ref105() {
-		// Max Amount
-		$this->purchase_options['no_shipping'] = true;
-
-		// Call SetExpressCheckout
-		$response = $this->gateway->setup_purchase( $this->purchase_options );
-
-		$this->assertTrue( $response->is_successful() );
-
-		// Display the transaction Id
-		st_echo('Test Case 1.05: ' . $response->get( 'token' ) . "\n" );
-	}
-
-	/**
-	 * Test Case Reference 1.06
-	 *
-	 * Billing Agreement
-	 *
-	 * @return void
-	 * @since 3.9
-	 */
-	public function test_setexpresscheckout_standard_ref106() {
-		// Billing Agreement description
-		$this->purchase_options['billing_type'] = 'MerchantInitiatedBillingSingleAgreement';
-		$this->purchase_options['billing_description'] = 'One Time Payment';
-
-		// Call SetExpressCheckout
-		$response = $this->gateway->setup_purchase( $this->purchase_options );
-
-		$this->assertTrue( $response->is_successful() );
-
-		// Display the transaction Id
-		st_echo('Test Case 1.06: ' . $response->get( 'token' ) . "\n" );
-	}
-
-	/**
-	 * Test Case Reference 1.08
-	 *
-	 * @return void
-	 * @since 3.9
-	 */
-	public function test_setexpresscheckout_standard_ref108() {
 		// Shipping Details
 		$this->purchase_options['shipping_address'] = array(
 			'name'    => 'Abid Omar',
@@ -238,16 +141,16 @@ class PHP_Merchant_Paypal_Digital_Goods_Certification_Test_X1 extends UnitTestCa
 
 		// Display the transaction Id
 		$error = $response->get_error();
-		st_echo( 'Test Case 1.08: ' . $response->get( 'correlation_id' ) . ' - ' . $error['details']  . "\n" );
+		st_echo( 'Test Case 1.03: ' . $response->get( 'correlation_id' ) . ' - ' . $error['details']  . "\n" );
 	}
 
 	/**
-	 * Test Case Reference 1.09
+	 * Test Case Reference 1.04
 	 *
 	 * @return void
 	 * @since 3.9
 	 */
-	public function test_setexpresscheckout_standard_ref109() {
+	public function test_setexpresscheckout_standard_ref104() {
 		// Shipping Details
 		$this->purchase_options['shipping_address'] = array(
 			'name'    => 'Abid Omar',
@@ -267,16 +170,16 @@ class PHP_Merchant_Paypal_Digital_Goods_Certification_Test_X1 extends UnitTestCa
 
 		// Display the transaction Id
 		$error = $response->get_error();
-		st_echo( 'Test Case 1.09: '  . $response->get( 'correlation_id' ) . ' - '. $error['details']  . "\n" );
+		st_echo( 'Test Case 1.04: '  . $response->get( 'correlation_id' ) . ' - '. $error['details']  . "\n" );
 	}
 
 	/**
-	 * Test Case Reference 1.10
+	 * Test Case Reference 1.05
 	 *
 	 * @return void
 	 * @since 3.9
 	 */
-	public function test_setexpresscheckout_standard_ref110() {
+	public function test_setexpresscheckout_standard_ref105() {
 		// Shipping Details
 		$this->purchase_options['shipping_address'] = array(
 			'name'    => 'Abid Omar',
@@ -296,16 +199,16 @@ class PHP_Merchant_Paypal_Digital_Goods_Certification_Test_X1 extends UnitTestCa
 
 		// Display the transaction Id
 		$error = $response->get_error();
-		st_echo( 'Test Case 1.10: '  . $response->get( 'correlation_id' ) . ' - '. $error['details']  . "\n" );
+		st_echo( 'Test Case 1.05: '  . $response->get( 'correlation_id' ) . ' - '. $error['details']  . "\n" );
 	}
 
 	/**
-	 * Test Case Reference 1.11
+	 * Test Case Reference 1.06
 	 *
 	 * @return void
 	 * @since 3.9
 	 */
-	public function test_setexpresscheckout_standard_ref111() {
+	public function test_setexpresscheckout_standard_ref106() {
 		// Shipping Details
 		$this->purchase_options['shipping_address'] = array(
 			'name'    => 'Abid Omar',
@@ -325,16 +228,16 @@ class PHP_Merchant_Paypal_Digital_Goods_Certification_Test_X1 extends UnitTestCa
 
 		// Display the transaction Id
 		$error = $response->get_error();
-		st_echo( 'Test Case 1.11: '  . $response->get( 'correlation_id' ) . ' - '. $error['details']  . "\n" );
+		st_echo( 'Test Case 1.06: '  . $response->get( 'correlation_id' ) . ' - '. $error['details']  . "\n" );
 	}
 
 	/**
-	 * Test Case Reference 1.12
+	 * Test Case Reference 1.07
 	 *
 	 * @return void
 	 * @since 3.9
 	 */
-	public function test_setexpresscheckout_standard_ref112() {
+	public function test_setexpresscheckout_standard_ref107() {
 		// Shipping Details
 		$this->purchase_options['shipping_address'] = array(
 			'name'    => 'Abid Omar',
@@ -354,16 +257,16 @@ class PHP_Merchant_Paypal_Digital_Goods_Certification_Test_X1 extends UnitTestCa
 
 		// Display the transaction Id
 		$error = $response->get_error();
-		st_echo( 'Test Case 1.12: '  . $response->get( 'correlation_id' ) . ' - '. $error['details']  . "\n" );
+		st_echo( 'Test Case 1.07: '  . $response->get( 'correlation_id' ) . ' - '. $error['details']  . "\n" );
 	}
 
 	/**
-	 * Test Case Reference 1.13
+	 * Test Case Reference 1.08
 	 *
 	 * @return void
 	 * @since 3.9
 	 */
-	public function test_setexpresscheckout_standard_ref113() {
+	public function test_setexpresscheckout_standard_ref108() {
 		// Shipping Details
 		$this->purchase_options['shipping_address'] = array(
 			'name'    => 'Abid Omar',
@@ -383,16 +286,16 @@ class PHP_Merchant_Paypal_Digital_Goods_Certification_Test_X1 extends UnitTestCa
 
 		// Display the transaction Id
 		$error = $response->get_error();
-		st_echo( 'Test Case 1.13: '  . $response->get( 'correlation_id' ) . ' - '. $error['details']  . "\n" );
+		st_echo( 'Test Case 1.08: '  . $response->get( 'correlation_id' ) . ' - '. $error['details']  . "\n" );
 	}
 
 	/**
-	 * Test Case Reference 1.14
+	 * Test Case Reference 1.09
 	 *
 	 * @return void
 	 * @since 3.9
 	 */
-	public function test_setexpresscheckout_standard_ref114() {
+	public function test_setexpresscheckout_standard_ref109() {
 		// Negative Testing
 		$this->purchase_options['subtotal'] = 100.01;
 		$this->purchase_options['shipping'] = 0;
@@ -408,6 +311,7 @@ class PHP_Merchant_Paypal_Digital_Goods_Certification_Test_X1 extends UnitTestCa
 
 		// Display the transaction Id
 		$error = $response->get_error();
-		st_echo( 'Test Case 1.14: '  . $response->get( 'correlation_id' ) . ' - '. $error['details']  . "\n" );
+		st_echo( 'Test Case 1.09: '  . $response->get( 'correlation_id' ) . ' - '. $error['details']  . "\n" );
 	}
+
 }
