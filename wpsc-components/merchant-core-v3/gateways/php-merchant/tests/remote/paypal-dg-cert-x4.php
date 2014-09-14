@@ -2,7 +2,7 @@
 
 require_once( PHP_MERCHANT_PATH . '/gateways/paypal-digital-goods.php' );
 
-class PHP_Merchant_Paypal_Digital_Goods_Certification_Test_X3 extends UnitTestCase
+class PHP_Merchant_Paypal_Digital_Goods_Certification_Test_X4 extends UnitTestCase
 {
 	private $gateway;
 	private $token;
