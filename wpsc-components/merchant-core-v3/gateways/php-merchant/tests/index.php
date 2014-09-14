@@ -42,6 +42,10 @@ class PHP_Merchant_Test_Suite extends TestSuite
 				'remote/paypal-ec-cert-x4',
 				'remote/paypal-ec-cert-x5',
 				'remote/paypal-ec-cert-x6',
+				'remote/paypal-dg-cert-x1',
+				'remote/paypal-dg-cert-x2',
+				'remote/paypal-dg-cert-x3',
+				'remote/paypal-dg-cert-x4',
 			) );
 		}
 

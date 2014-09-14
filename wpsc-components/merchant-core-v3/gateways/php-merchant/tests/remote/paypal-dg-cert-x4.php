@@ -113,7 +113,6 @@ class PHP_Merchant_Paypal_Digital_Goods_Certification_Test_X3 extends UnitTestCa
 	public function test_doexpresscheckout_ref42() {
 		/*
 		$this->purchase_options['token'] = 'EC-8AU95879WD9646218';
-		//$this->purchase_options['payer_id'] = 'FQQ7Q9EVPAB86';
 		$this->purchase_options['message_id'] = 'abcedfghkk';
 		$this->purchase_options['invoice'] = 'E84A90G555';
 		$this->purchase_options['transaction_id'] = '2WH811268W276704P';
