@@ -107,6 +107,7 @@ class PHP_Merchant_Paypal_Express_Checkout_Test extends UnitTestCase
 			'AMT'		   => 15337,
 			'ADDROVERRIDE' => 1,
 			'INVOICEID'	   => 'E84A90G94',
+			
 
 			// Shipping details
 			'PAYMENTREQUEST_0_SHIPTONAME'        => 'Gary Cao',

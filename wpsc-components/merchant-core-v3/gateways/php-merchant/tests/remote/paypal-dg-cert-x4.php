@@ -135,4 +135,29 @@ class PHP_Merchant_Paypal_Digital_Goods_Certification_Test_X4 extends UnitTestCa
 		st_echo( 'Transaction ID: 2WH811268W276704P' . "\n" );
 		st_echo( 'Payment Status: ' . $response->get_params()['PAYMENTSTATUS'] . "\n" );
 	}
+
+	/**
+	 * Test Case Reference 4.3
+	 *
+	 * @return void
+	 * @since 3.9
+	 */
+	public function test_doexpresscheckout_ref43() {
+		$this->purchase_options['token'] = 'EC-8AU95879WD9646218';
+		$this->purchase_options['message_id'] = 'abcedfghkk';
+		$this->purchase_options['invoice'] = 'E84A90G555';
+		$this->purchase_options['transaction_id'] = '2WH811268W276704P';	
+		$this->purchase_options['amount'] = 100.01;
+
+		// Call DoRefund 
+		$response = $this->gateway->credit( $this->purchase_options );
+
+		$this->assertFalse( $response->is_successful() );
+
+ 		// Display the Transaction Id
+		st_echo( 'Test Case 4.3: ' . $response->get( 'correlation_id' ) . "\n" );
+
+
+	}
+	
 }
