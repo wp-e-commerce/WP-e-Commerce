@@ -1,13 +1,25 @@
 <?php
 require_once( 'paypal-express-checkout.php' );
 
+/**
+ * The PayPal Express Checkout Gateway class
+ *
+ */
+
 class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Paypal_Express_Checkout
 {
 	const SANDBOX_URL = 'https://www.sandbox.paypal.com/incontext?token=';
 	const LIVE_URL = 'https://www.paypal.com/incontext?token=';
-
 	public $gateway;
 
+	/**
+	 * Constructor of PayPal Express Checkout Gateway
+	 *
+	 * @param array $options
+	 * @return void
+	 *
+	 * @since 3.9
+	 */
 	public function __construct( $options ) {
 
 		require_once( 'php-merchant/gateways/paypal-digital-goods.php' );
@@ -42,7 +54,11 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 	}
 
 	/**
+	 * WordPress Enqueue for the Dgital Goods Script and CSS file
 	 *
+	 * @return void
+	 *
+	 * @since 3.9
 	 */
 	public function dg_script() {
 		wp_enqueue_script( 'dg-script', 'https://www.paypalobjects.com/js/external/dg.js' );
@@ -65,6 +81,13 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		return $fields;
 	}
 
+	/**
+	 * Return the PayPal return URL
+	 *
+	 * @return string
+	 *
+	 * @since 3.9
+	 */
 	protected function get_return_url() {
 		$redirect = add_query_arg( array(
 			'sessionid'                => $this->purchase_log->get( 'sessionid' ),
@@ -76,6 +99,13 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		return apply_filters( 'wpsc_paypal_digital_goods_return_url_redirect', $redirect );
 	}
 
+	/**
+	 * PayPal Lightbox Form redirection for the Return URL
+	 *
+	 * @return void
+	 *
+	 * @since 3.9
+	 */
 	public function callback_return_url_redirect() {
 		// Session id
 		if ( ! isset( $_GET['sessionid'] ) ) {
@@ -88,7 +118,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		wp_register_style( 'ppdg-iframe', plugins_url( 'dg.css', __FILE__ ) );
 
 		// Return a redirection page
-		?>
+?>
 		<html>
 			<head>
 				<title><?php __( 'Processing...', 'wpec' ); ?></title>
@@ -108,15 +138,24 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 					</div>
 				</div>
 				</div>
-				<script type="text/javascript">
-					setTimeout('if (window!=top) {top.location.replace("<?php echo $location; ?>");}else{location.replace("<?php echo $location; ?>");}', 1500);
-				</script>
+		<script type="text/javascript">
+		setTimeout('if (window!=top) {top.location.replace("<?php echo $location; ?>");}else{location.replace("<?php echo $location; ?>");}', 1500);
+		</script>
 			</body>
 		</html>
 <?php
 		exit();
 	}
 
+	/**
+	 * Return the original (real) Return URL
+	 *
+	 * @param integer $session_id
+	 *
+	 * @return string
+	 *
+	 * @since 3.9
+	 */
 	protected function get_original_return_url( $session_id ) {
 		$location = add_query_arg( array(
 			'sessionid'                => $session_id,
@@ -130,6 +169,13 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		return apply_filters( 'wpsc_paypal_digital_goods_return_url', $location );
 	}
 
+	/**
+	 * Return the Cancel URL
+	 *
+	 * @return string
+	 *
+	 * @since 3.9
+	 */
 	protected function get_cancel_url() {
 		$redirect = add_query_arg( array(
 			'payment_gateway'          => 'paypal-digital-goods',
@@ -140,12 +186,19 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		return apply_filters( 'wpsc_paypal_digital_goods_cancel_url_redirect', $redirect );
 	}
 
+	/**
+	 * PayPal Lightbox Form redirection for the Cancel URL
+	 *
+	 * @return void
+	 *
+	 * @since 3.9
+	 */
 	public function callback_cancel_url_redirect() {
 		// Page Styles
 		wp_register_style( 'ppdg-iframe', plugins_url( 'dg.css', __FILE__ ) );
 
 		// Return a redirection page
-		?>
+?>
 		<html>
 			<head>
 				<title><?php __( 'Processing...', 'wpec' ); ?></title>
@@ -165,19 +218,35 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 					</div>
 				</div>
 				</div>
-				<script type="text/javascript">
-					setTimeout('if (window!=top) {top.location.replace("<?php echo $location; ?>");}else{location.replace("<?php echo $location; ?>");}', 1500);
-				</script>
+		<script type="text/javascript">
+		setTimeout('if (window!=top) {top.location.replace("<?php echo $location; ?>");}else{location.replace("<?php echo $location; ?>");}', 1500);
+		</script>
 			</body>
 		</html>
 <?php
 		exit();
 	}
 
+	/**
+	 * Return the original (real) Cancel URL
+	 *
+	 * @param integer $session_id
+	 *
+	 * @return string
+	 *
+	 * @since 3.9
+	 */ 
 	protected function get_original_cancel_url() {
 		return apply_filters( 'wpsc_paypal_digital_goods_cancel_url', $this->get_shopping_cart_payment_url() );
 	}
 
+	/**
+	 * Return the notify URL
+	 *
+	 * @return string
+	 *
+	 * @since 3.9
+	 */
 	protected function get_notify_url() {
 		$location = add_query_arg( array(
 			'payment_gateway'          => 'paypal-digital-goods',
@@ -187,6 +256,13 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		return apply_filters( 'wpsc_paypal_express_checkout_notify_url', $location );
 	}
 
+	/**
+	 * IPN Callback function
+	 *
+	 * @return void
+	 *
+	 * @since 3.9
+	 */
 	public function callback_ipn() {
 		$ipn = new PHP_Merchant_Paypal_IPN( false, (bool) $this->setting->get( 'sandbox_mode', false ) );
 
@@ -214,6 +290,13 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		exit;
 	}
 
+	/**
+	 * Confirm Transaction Callback
+	 *
+	 * @return bool
+	 *
+	 * @since 3.9
+	 */
 	public function callback_confirm_transaction() {
 
 		if ( ! isset( $_GET['sessionid'] ) || ! isset( $_GET['token'] ) || ! isset( $_GET['PayerID'] ) ) {
@@ -225,6 +308,11 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		$this->callback_process_confirmed_payment();
 	}
 
+	/**
+	 * Process the transaction through the PayPal APIs
+	 *
+	 * @since 3.9
+	 */
 	public function callback_process_confirmed_payment() {
 		$args = array_map( 'urldecode', $_GET );
 		extract( $args, EXTR_SKIP );
@@ -281,18 +369,25 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 
 	}
 
+	/**
+	 * PayPal Lightbox Form redirection for the Error Page
+	 *
+	 * @return void
+	 *
+	 * @since 3.9
+	 */
 	public function callback_display_paypal_error_redirect( ) {
-			// Redirect Location
-			$location = add_query_arg( array(
-				'payment_gateway'          => 'paypal-digital-goods',
-				'payment_gateway_callback' => 'display_paypal_error',
-			), base64_decode( $_GET['return_url'] ) );
+		// Redirect Location
+		$location = add_query_arg( array(
+			'payment_gateway'          => 'paypal-digital-goods',
+			'payment_gateway_callback' => 'display_paypal_error',
+		), base64_decode( $_GET['return_url'] ) );
 
 		// Page Styles
 		wp_register_style( 'ppdg-iframe', plugins_url( 'dg.css', __FILE__ ) );
 
 		// Return a redirection page
-		?>
+?>
 		<html>
 			<head>
 				<title><?php __( 'Processing...', 'wpec' ); ?></title>
@@ -311,9 +406,9 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 					</div>
 				</div>
 				</div>
-				<script type="text/javascript">
-					setTimeout('if (window!=top) {top.location.replace("<?php echo $location; ?>");}else{location.replace("<?php echo $location; ?>");}', 1500);
-				</script>
+		<script type="text/javascript">
+		setTimeout('if (window!=top) {top.location.replace("<?php echo $location; ?>");}else{location.replace("<?php echo $location; ?>");}', 1500);
+		</script>
 			</body>
 		</html>
 <?php
@@ -329,6 +424,12 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 	public function callback_display_generic_error() {
 		add_filter( 'wpsc_get_transaction_html_output', array( $this, 'filter_generic_error_page' ) );
 	}
+
+	/**
+	 * Error Page Template
+	 *
+	 * @since 3.9
+	 */
 	public function filter_paypal_error_page() {
 		$errors = wpsc_get_customer_meta( 'paypal_express_checkout_errors' );
 		ob_start();
@@ -347,6 +448,11 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		return $output;
 	}
 
+	/**
+	 * Generic Error Page Template
+	 *
+	 * @since 3.9
+	 */
 	public function filter_generic_error_page() {
 		ob_start();
 ?>
@@ -356,8 +462,11 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		$output = apply_filters( 'wpsc_paypal_express_checkout_generic_error_message', ob_get_clean() );
 		return $output;
 	}
+
 	/**
-	 * Output the form on the Digital Goods settings page.
+	 * Settings Form Template
+	 *
+	 * @since 3.9
 	 */
 	public function setup_form() {
 		$paypal_currency = $this->get_currency_code();
@@ -479,7 +588,12 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 	}
 
 	/**
-	 * Process a purchase.
+	 * Process the SetExpressCheckout API Call
+	 *
+	 * @param array $args
+	 * @return void
+	 *
+	 * @since 3.9
 	 */
 	public function process( $args = array() ) {
 		$total = $this->convert( $this->purchase_log->get( 'totalprice' ) );
