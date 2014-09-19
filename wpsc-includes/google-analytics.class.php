@@ -78,20 +78,44 @@ class WPSC_Google_Analytics {
 	}
 
 	public function general_init() {
-		return "<script type='text/javascript'>\n\r
-		var _gaq = _gaq || [];\n\r
-		_gaq.push(['_setAccount', '" . $this->tracking_id ."']);\n\r
-		_gaq.push(['_setDomainName', '" . $this->get_domain_name() . "']);\n\r
-		_gaq.push(['_trackPageview']);\n\r";
+
+		if ( $this->use_universal_analytics() ) {
+
+			return "<script>\n\r
+				(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){\n\r
+				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),\n\r
+				m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)\n\r
+				})(window,document,'script','//www.google-analytics.com/analytics.js','ga');\n\r
+
+				ga('create', '" . $this->tracking_id ."', { 'cookieDomain' : '" . $this->get_domain_name() . "' });\n\r
+				ga('send', 'pageview');\n\r";
+
+		} else {
+
+			return "<script type='text/javascript'>\n\r
+				var _gaq = _gaq || [];\n\r
+				_gaq.push(['_setAccount', '" . $this->tracking_id ."']);\n\r
+				_gaq.push(['_setDomainName', '" . $this->get_domain_name() . "']);\n\r
+				_gaq.push(['_trackPageview']);\n\r";
+
+		}
+
 	}
 
 	public function general_shutdown() {
-		return "(function() {\n\r
-		    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;\n\r
-		    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';\n\r
-		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);\n\r
-		  })();\n\r
-		</script>\n\r";
+
+		if ( ! $this->use_universal_analytics() ) {
+
+			return "(function() {\n\r
+				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;\n\r
+				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';\n\r
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);\n\r
+				})();\n\r";
+
+		}
+
+		return "</script>\n\r";
+
 	}
 
 	public function get_domain_name() {
@@ -106,6 +130,12 @@ class WPSC_Google_Analytics {
 		$site_name = $this->sanitize( get_bloginfo( 'name' ) );
 
 		return apply_filters( 'wpsc_google_analytics_site_name', $site_name );
+	}
+
+	public function use_universal_analytics() {
+
+		return '1' == get_option( 'wpsc_ga_use_universal' );
+
 	}
 
 	public function remove_currency_and_html( $args ) {
@@ -165,17 +195,33 @@ class WPSC_Google_Analytics {
 
 		add_filter( 'wpsc_toggle_display_currency_code', array( $this, 'remove_currency_and_html' ) );
 
-		$output .= "
-			_gaq.push(['_addTrans',
-			'" . $purchase_id . "',                                     // order ID - required
-			'" . wp_specialchars_decode( $this->get_site_name() ) . "', // affiliation or store name
-			'" . number_format( $total_price, 2, '.', '' ) . "',   // total - required
-			'" . wpsc_currency_display( $total_tax ) . "',              // tax
-			'" . wpsc_currency_display( $total_shipping ) . "',         // shipping
-			'" . wp_specialchars_decode( $city ) . "',                  // city
-			'" . wp_specialchars_decode( $state ) . "',                 // state or province
-			'" . wp_specialchars_decode( $country ) . "'                // country
-  		]);\n\r";
+		if ( $this->use_universal_analytics() ) {
+
+			$output .= "ga('require', 'ecommerce');\n\r";
+
+			$output .= "ga('ecommerce:addTransaction', {
+				'id': '" . $purchase_id . "',                                               // Transaction ID. Required.
+				'affiliation': '" . wp_specialchars_decode( $this->get_site_name() ) . "',  // Affiliation or store name.
+				'revenue': '" . number_format( $total_price, 2, '.', '' ) . "',             // Grand Total.
+				'shipping': '" . wpsc_currency_display( $total_shipping ) . "',             // Shipping.
+				'tax': '" . wpsc_currency_display( $total_tax ) . "'                        // Tax.
+			});\n\r";
+
+		} else {
+
+			$output .= "
+				_gaq.push(['_addTrans',
+				'" . $purchase_id . "',                                     // order ID - required
+				'" . wp_specialchars_decode( $this->get_site_name() ) . "', // affiliation or store name
+				'" . number_format( $total_price, 2, '.', '' ) . "',   // total - required
+				'" . wpsc_currency_display( $total_tax ) . "',              // tax
+				'" . wpsc_currency_display( $total_shipping ) . "',         // shipping
+				'" . wp_specialchars_decode( $city ) . "',                  // city
+				'" . wp_specialchars_decode( $state ) . "',                 // state or province
+				'" . wp_specialchars_decode( $country ) . "'                // country
+			]);\n\r";
+
+		}
 
 		remove_filter( 'wpsc_toggle_display_currency_code', array( $this, 'remove_currency_and_html' ) );
 
@@ -194,16 +240,40 @@ class WPSC_Google_Analytics {
 
 			$item = array_map( 'wp_specialchars_decode', $item );
 
-			$output .= "_gaq.push(['_addItem',"
-			. "'" . $purchase_id . "',"		    // Order ID
-			. "'" . $item['sku'] . "',"			// Item SKU
-			. "'" . $item['name'] . "',"		// Item Name
-			. "'" . $item['category'] . "',"	// Item Category
-			. "'" . $item['price'] . "',"		// Item Price
-			. "'" . $item['quantity'] . "']);\n\r";	// Item Quantity
+			if ( $this->use_universal_analytics() ) {
+
+				$output .= "ga('ecommerce:addItem', {"
+					. "'id': '" . $purchase_id . "',"             // Transaction ID. Required.
+					. "'name': '" . $item['name'] . "',"          // Product name. Required.
+					. "'sku': '" . $item['sku'] . "',"            // SKU/code.
+					. "'category': '" . $item['category'] . "',"  // Category or variation.
+					. "'price': '" . $item['price'] . "',"        // Unit price.
+					. "'quantity': '" . $item['quantity'] . "'"   // Quantity.
+					. "});\n\r";
+
+			} else {
+
+				$output .= "_gaq.push(['_addItem',"
+				. "'" . $purchase_id . "',"              // Order ID
+				. "'" . $item['sku'] . "',"              // Item SKU
+				. "'" . $item['name'] . "',"             // Item Name
+				. "'" . $item['category'] . "',"         // Item Category
+				. "'" . $item['price'] . "',"            // Item Price
+				. "'" . $item['quantity'] . "']);\n\r";  // Item Quantity
+
+			}
+
 		}
 
-		$output .= "_gaq.push(['_trackTrans']);\n\r";
+		if ( $this->use_universal_analytics() ) {
+
+			$output .= "ga('ecommerce:send');\n\r";
+
+		} else {
+
+			$output .= "_gaq.push(['_trackTrans']);\n\r";
+
+		}
 
 		if ( $this->is_theme_tracking || $this->advanced_code )
 			$output .= "</script>\n\r";
