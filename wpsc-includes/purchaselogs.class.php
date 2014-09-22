@@ -350,12 +350,12 @@ function wpsc_purchaselog_details_discount() {
 
 function wpsc_purchaselog_details_date() {
    global $purchlogitem;
-   return date_i18n( apply_filters( 'wpsc_single_purchase_log_date_format', get_option( 'date_format' ) ), $purchlogitem->extrainfo->date );
+   return date_i18n( apply_filters( 'wpsc_single_purchase_log_date_format', get_option( 'date_format' ) ), $purchlogitem->extrainfo->date + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS ) );
 }
 
 function wpsc_purchaselog_details_date_time() {
    global $purchlogitem;
-   return date_i18n( apply_filters( 'wpsc_single_purchase_log_date_time_format', get_option( 'date_format' ) . ' g:ia' ), $purchlogitem->extrainfo->date );
+   return date_i18n( apply_filters( 'wpsc_single_purchase_log_date_time_format', get_option( 'date_format' ) . ' g:ia' ),   $purchlogitem->extrainfo->date + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS ) );
 }
 
 function wpsc_purchaselog_details_total() {
