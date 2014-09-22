@@ -90,7 +90,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 
 		// Common Vars
 		$common = array(
-			'cmd' => '_express-checkout',
+			'cmd'        => '_express-checkout',
 			'useraction' => 'commit',
 		);
 
@@ -101,7 +101,10 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		// Merge the two arrays
 		$data = array_merge( $data, $common );
 
-		return $url . '?' . build_query( $data );
+        // Build the URL
+        $url = add_query_arg( $data, $url );
+
+		return $url;
 	}
 
 	/**
@@ -215,10 +218,11 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			} elseif ( $ipn->is_payment_completed() ) {
 				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT );
 			} elseif ( $ipn->is_payment_pending() ) {
-				if ( $ipn->is_payment_refund_pending() )
+				if ( $ipn->is_payment_refund_pending() ) {
 					$this->purchase_log->set( 'processed', WPSC_Purchase_Log::REFUND_PENDING );
-				else
+                } else {
 					$this->purchase_log->set( 'processed', WPSC_Purchase_Log::ORDER_RECEIVED );
+                }
 			}
 
 			$this->purchase_log->save();
@@ -431,14 +435,14 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		ob_start();
 ?>
 		<p>
-			<?php _e( 'Sorry, your transaction could not be processed by PayPal. Please contact the site administrator. The following errors are returned:' ); ?>
+			<?php _e( 'Sorry, your transaction could not be processed by PayPal. Please contact the site administrator. The following errors are returned:' , 'wpsc' ); ?>
 		</p>
 		<ul>
 			<?php foreach ( $errors as $error ): ?>
 				<li><?php echo esc_html( $error['details'] ) ?> (<?php echo esc_html( $error['code'] ); ?>)</li>
 			<?php endforeach; ?>
 		</ul>
-		<p><a href="<?php echo esc_url( $this->get_shopping_cart_payment_url() ); ?>"><?php _e( 'Click here to go back to the checkout page.') ?></a></p>
+		<p><a href="<?php echo esc_url( $this->get_shopping_cart_payment_url() ); ?>"><?php ( 'Click here to go back to the checkout page.') ?></a></p>
 <?php
 		$output = apply_filters( 'wpsc_paypal_express_checkout_gateway_error_message', ob_get_clean(), $errors );
 		return $output;
@@ -452,8 +456,8 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	public function filter_generic_error_page() {
 		ob_start();
 ?>
-			<p><?php _e( 'Sorry, but your transaction could not be processed by PayPal for some reason. Please contact the site administrator.' ); ?></p>
-			<p><a href="<?php echo esc_attr( $this->get_shopping_cart_payment_url() ); ?>"><?php _e( 'Click here to go back to the checkout page.') ?></a></p>
+			<p><?php _e( 'Sorry, but your transaction could not be processed by PayPal for some reason. Please contact the site administrator.' , 'wpsc' ); ?></p>
+			<p><a href="<?php echo esc_attr( $this->get_shopping_cart_payment_url() ); ?>"><?php _e( 'Click here to go back to the checkout page.', 'wpsc' ) ?></a></p>
 <?php
 		$output = apply_filters( 'wpsc_paypal_express_checkout_generic_error_message', ob_get_clean() );
 		return $output;
@@ -638,9 +642,9 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	public function process() {
 		$total = $this->convert( $this->purchase_log->get( 'totalprice' ) );
 		$options = array(
-			'return_url' 	=> $this->get_return_url(),
-			'message_id'    => $this->purchase_log->get( 'sessionid' ),
-			'invoice'		=> $this->purchase_log->get( 'id' ),
+			'return_url'       => $this->get_return_url(),
+			'message_id'       => $this->purchase_log->get( 'sessionid' ),
+			'invoice'          => $this->purchase_log->get( 'id' ),
 			'address_override' => 1,
 		);
 

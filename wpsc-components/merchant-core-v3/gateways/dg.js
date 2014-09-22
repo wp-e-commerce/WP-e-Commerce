@@ -5,8 +5,8 @@
 	$(window).load(function() {	
 		// Declare variables/doom elements
 		var $checkout_btn = $( '.wpsc-checkout-form-button' ),
-		$rd_btn = $( 'INPUT[value="paypal-digital-goods"]' ),
-		$inputs = $( 'INPUT[type="radio"]' ),
+		$rd_btn = $( 'input[value="paypal-digital-goods"]' ),
+		$inputs = $( 'input[type="radio"]' ),
 		$form = $( '#wpsc-checkout-form' );
 
 		// Change the id of the checkout button
