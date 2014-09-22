@@ -438,7 +438,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 		return $actions;
 	}
 
-	public function bulk_actions( $which ) {
+	public function bulk_actions( $which = '' ) {
 		$screen = get_current_screen();
 
 		if ( is_null( $this->_actions ) ) {
