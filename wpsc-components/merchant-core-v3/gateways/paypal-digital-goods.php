@@ -61,8 +61,10 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 	 * @since 3.9
 	 */
 	public function dg_script() {
-		wp_enqueue_script( 'dg-script', 'https://www.paypalobjects.com/js/external/dg.js' );
-		wp_enqueue_script( 'dg-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/dg.js', array( 'jquery' ) ); 
+		if ( wpsc_is_checkout() ) {
+			wp_enqueue_script( 'dg-script', 'https://www.paypalobjects.com/js/external/dg.js' );
+			wp_enqueue_script( 'dg-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/dg.js', array( 'jquery' ) ); 
+		}
 	}
 
 
