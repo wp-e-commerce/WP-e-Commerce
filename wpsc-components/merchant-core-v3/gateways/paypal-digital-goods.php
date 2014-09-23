@@ -121,30 +121,30 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 
 		// Return a redirection page
 ?>
-	<html>
+<html>
 	<head>
-	<title><?php __( 'Processing...', 'wpec' ); ?></title>
-	<?php wp_print_styles( 'ppdg-iframe' ); ?>
-		</head>
-			<body>
-			<div id="left_frame">
+		<title><?php __( 'Processing...', 'wpec' ); ?></title>
+		<?php wp_print_styles( 'ppdg-iframe' ); ?>
+	</head>
+	<body>
+		<div id="left_frame">
 			<div id="right_frame">
-			<p id="message">	
-			<?php _e( 'Processing Order', 'wpec'); ?>
-		<?php $location = esc_js( $this->get_original_return_url( $sessionid ) );  ?>	
-		</p>
-			<img src="https://www.paypal.com/en_US/i/icon/icon_animated_prog_42wx42h.gif" alt="Processing..." />
-			<div id="right_bottom">
-			<div id="left_bottom">
+				<p id="message">	
+				<?php _e( 'Processing Order', 'wpec'); ?>
+				<?php $location = esc_js( $this->get_original_return_url( $sessionid ) );  ?>	
+				</p>
+				<img src="https://www.paypal.com/en_US/i/icon/icon_animated_prog_42wx42h.gif" alt="Processing..." />
+				<div id="right_bottom">
+					<div id="left_bottom">
+					</div>
+				</div>
 			</div>
-			</div>
-			</div>
-			</div>
-			<script type="text/javascript">
+		</div>
+		<script type="text/javascript">
 		setTimeout('if (window!=top) {top.location.replace("<?php echo $location; ?>");}else{location.replace("<?php echo $location; ?>");}', 1500);
 		</script>
-			</body>
-		</html>
+	</body>
+</html>
 <?php
 		exit();
 	}
@@ -201,30 +201,30 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 
 		// Return a redirection page
 ?>
-		<html>
-			<head>
-				<title><?php __( 'Processing...', 'wpec' ); ?></title>
-				<?php wp_print_styles( 'ppdg-iframe' ); ?>
-			</head>
+	<html>
+	<head>
+	<title><?php __( 'Processing...', 'wpec' ); ?></title>
+	<?php wp_print_styles( 'ppdg-iframe' ); ?>
+		</head>
 			<body>
-				<div id="left_frame">
-				<div id="right_frame">
-					<p id="message">	
-						<?php _e( 'Cancelling Order', 'ppdg'); ?>
-						<?php $location = html_entity_decode( $this->get_original_cancel_url() );  ?>	
-					</p>
-					<img src="https://www.paypal.com/en_US/i/icon/icon_animated_prog_42wx42h.gif" alt="Processing..." />
-					<div id="right_bottom">
-						<div id="left_bottom">
-						</div>
-					</div>
-				</div>
-				</div>
-		<script type="text/javascript">
+			<div id="left_frame">
+			<div id="right_frame">
+			<p id="message">	
+			<?php _e( 'Cancelling Order', 'ppdg'); ?>
+		<?php $location = html_entity_decode( $this->get_original_cancel_url() );  ?>	
+		</p>
+			<img src="https://www.paypal.com/en_US/i/icon/icon_animated_prog_42wx42h.gif" alt="Processing..." />
+			<div id="right_bottom">
+			<div id="left_bottom">
+			</div>
+			</div>
+			</div>
+			</div>
+			<script type="text/javascript">
 		setTimeout('if (window!=top) {top.location.replace("<?php echo $location; ?>");}else{location.replace("<?php echo $location; ?>");}', 1500);
 		</script>
-			</body>
-		</html>
+	</body>
+</html>
 <?php
 		exit();
 	}
@@ -295,7 +295,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 	/**
 	 * Confirm Transaction Callback
 	 *
-	 * @return bool
+	 * @return null
 	 *
 	 * @since 3.9
 	 */
@@ -390,29 +390,29 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 
 		// Return a redirection page
 ?>
-		<html>
-			<head>
-				<title><?php __( 'Processing...', 'wpec' ); ?></title>
-				<?php wp_print_styles( 'ppdg-iframe' ); ?>
-			</head>
-			<body>
-				<div id="left_frame">
-				<div id="right_frame">
-					<p id="message">	
-						<?php _e( 'Processing Order', 'wpec'); ?>
-					</p>
-					<img src="https://www.paypal.com/en_US/i/icon/icon_animated_prog_42wx42h.gif" alt="Processing..." />
-					<div id="right_bottom">
-						<div id="left_bottom">
-						</div>
+<html>
+	<head>
+		<title><?php __( 'Processing...', 'wpsc' ); ?></title>
+		<?php wp_print_styles( 'ppdg-iframe' ); ?>
+	</head>
+	<body>
+		<div id="left_frame">
+			<div id="right_frame">
+				<p id="message">	
+				<?php _e( 'Processing Order', 'wpsc'); ?>
+				</p>
+				<img src="https://www.paypal.com/en_US/i/icon/icon_animated_prog_42wx42h.gif" alt="Processing..." />
+				<div id="right_bottom">
+					<div id="left_bottom">
 					</div>
 				</div>
-				</div>
+			</div>
+		</div>
 		<script type="text/javascript">
 		setTimeout('if (window!=top) {top.location.replace("<?php echo $location; ?>");}else{location.replace("<?php echo $location; ?>");}', 1500);
 		</script>
-			</body>
-		</html>
+	</body>
+</html>
 <?php
 		exit();
 
@@ -436,15 +436,15 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		$errors = wpsc_get_customer_meta( 'paypal_express_checkout_errors' );
 		ob_start();
 ?>
-	<p>
-	<?php _e( 'Sorry, your transaction could not be processed by PayPal. Please contact the site administrator. The following errors are returned:' ); ?>
-				</p>
-					<ul>
-					<?php foreach ( $errors as $error ): ?>
-					<li><?php echo esc_html( $error['details'] ) ?> (<?php echo esc_html( $error['code'] ); ?>)</li>
-					<?php endforeach; ?>
-				</ul>
-					<p><a href="<?php echo esc_url( $this->get_shopping_cart_payment_url() ); ?>"><?php _e( 'Click here to go back to the checkout page.') ?></a></p>
+<p>
+<?php _e( 'Sorry, your transaction could not be processed by PayPal. Please contact the site administrator. The following errors are returned:', 'wpsc' ); ?>
+</p>
+<ul>
+	<?php foreach ( $errors as $error ): ?>
+	<li><?php echo esc_html( $error['details'] ) ?> (<?php echo esc_html( $error['code'] ); ?>)</li>
+	<?php endforeach; ?>
+</ul>
+<p><a href="<?php echo esc_url( $this->get_shopping_cart_payment_url() ); ?>"><?php _e( 'Click here to go back to the checkout page.', 'wpsc' ) ?></a></p>
 <?php
 		$output = apply_filters( 'wpsc_paypal_express_checkout_gateway_error_message', ob_get_clean(), $errors );
 		return $output;
@@ -458,8 +458,8 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 	public function filter_generic_error_page() {
 		ob_start();
 ?>
-			<p><?php _e( 'Sorry, but your transaction could not be processed by PayPal for some reason. Please contact the site administrator.' ); ?></p>
-			<p><a href="<?php echo esc_attr( $this->get_shopping_cart_payment_url() ); ?>"><?php _e( 'Click here to go back to the checkout page.') ?></a></p>
+<p><?php _e( 'Sorry, but your transaction could not be processed by PayPal for some reason. Please contact the site administrator.', 'wpsc' ); ?></p>
+<p><a href="<?php echo esc_attr( $this->get_shopping_cart_payment_url() ); ?>"><?php _e( 'Click here to go back to the checkout page.', 'wpsc' ) ?></a></p>
 <?php
 		$output = apply_filters( 'wpsc_paypal_express_checkout_generic_error_message', ob_get_clean() );
 		return $output;
@@ -473,119 +473,119 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 	public function setup_form() {
 		$paypal_currency = $this->get_currency_code();
 ?>
-		<!-- Account Credentials -->
-		<tr>
-			<td colspan="2">
-				<h4><?php _e( 'Account Credentials', 'wpsc' ); ?></h4>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<label for="wpsc-paypal-express-api-username"><?php _e( 'API Username', 'wpsc' ); ?></label>
-			</td>
-			<td>
-				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'api_username' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'api_username' ) ); ?>" id="wpsc-paypal-express-api-username" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<label for="wpsc-paypal-express-api-password"><?php _e( 'API Password', 'wpsc' ); ?></label>
-			</td>
-			<td>
-				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'api_password' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'api_password' ) ); ?>" id="wpsc-paypal-express-api-password" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<label for="wpsc-paypal-express-api-signature"><?php _e( 'API Signature', 'wpsc' ); ?></label>
-			</td>
-			<td>
-				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'api_signature' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'api_signature' ) ); ?>" id="wpsc-paypal-express-api-signature" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<label><?php _e( 'Sandbox Mode', 'wpsc' ); ?></label>
-			</td>
-			<td>
-				<label><input <?php checked( $this->setting->get( 'sandbox_mode' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'sandbox_mode' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wpsc' ); ?></label>&nbsp;&nbsp;&nbsp;
-				<label><input <?php checked( (bool) $this->setting->get( 'sandbox_mode' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'sandbox_mode' ) ); ?>" value="0" /> <?php _e( 'No', 'wpsc' ); ?></label>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<label><?php _e( 'IPN', 'wpsc' ); ?></label>
-			</td>
-			<td>
-				<label><input <?php checked( $this->setting->get( 'ipn' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'ipn' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wpsc' ); ?></label>&nbsp;&nbsp;&nbsp;
-				<label><input <?php checked( (bool) $this->setting->get( 'ipn' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'ipn' ) ); ?>" value="0" /> <?php _e( 'No', 'wpsc' ); ?></label>
-			</td>
-		</tr>
+<!-- Account Credentials -->
+<tr>
+	<td colspan="2">
+		<h4><?php _e( 'Account Credentials', 'wpsc' ); ?></h4>
+	</td>
+</tr>
+<tr>
+	<td>
+		<label for="wpsc-paypal-express-api-username"><?php _e( 'API Username', 'wpsc' ); ?></label>
+	</td>
+	<td>
+		<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'api_username' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'api_username' ) ); ?>" id="wpsc-paypal-express-api-username" />
+	</td>
+</tr>
+<tr>
+	<td>
+		<label for="wpsc-paypal-express-api-password"><?php _e( 'API Password', 'wpsc' ); ?></label>
+	</td>
+	<td>
+		<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'api_password' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'api_password' ) ); ?>" id="wpsc-paypal-express-api-password" />
+	</td>
+</tr>
+<tr>
+	<td>
+		<label for="wpsc-paypal-express-api-signature"><?php _e( 'API Signature', 'wpsc' ); ?></label>
+	</td>
+	<td>
+		<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'api_signature' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'api_signature' ) ); ?>" id="wpsc-paypal-express-api-signature" />
+	</td>
+</tr>
+<tr>
+	<td>
+		<label><?php _e( 'Sandbox Mode', 'wpsc' ); ?></label>
+	</td>
+	<td>
+		<label><input <?php checked( $this->setting->get( 'sandbox_mode' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'sandbox_mode' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wpsc' ); ?></label>&nbsp;&nbsp;&nbsp;
+		<label><input <?php checked( (bool) $this->setting->get( 'sandbox_mode' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'sandbox_mode' ) ); ?>" value="0" /> <?php _e( 'No', 'wpsc' ); ?></label>
+	</td>
+</tr>
+<tr>
+	<td>
+		<label><?php _e( 'IPN', 'wpsc' ); ?></label>
+	</td>
+	<td>
+		<label><input <?php checked( $this->setting->get( 'ipn' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'ipn' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wpsc' ); ?></label>&nbsp;&nbsp;&nbsp;
+		<label><input <?php checked( (bool) $this->setting->get( 'ipn' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'ipn' ) ); ?>" value="0" /> <?php _e( 'No', 'wpsc' ); ?></label>
+	</td>
+</tr>
 
-		<!-- Cart Customization -->
-		<tr>
-			<td colspan="2">
-				<label><h4><?php _e( 'Cart Customization', 'wpsc'); ?></h4></label>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<label for="wpsc-paypal-express-cart-logo"><?php _e( 'Merchant Logo', 'wpsc' ); ?></label>
-			</td>
-			<td>
-				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'cart_logo' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'cart_logo' ) ); ?>" id="wpsc-paypal-express-cart-logo" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<label for="wpsc-paypal-express-cart-border"><?php _e( 'Cart Border Color', 'wpsc' ); ?></label>
-			</td>
-			<td>
-				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'cart_border' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'cart_border' ) ); ?>" id="wpsc-paypal-express-cart-border" />
-			</td>
-		</tr>
+<!-- Cart Customization -->
+<tr>
+	<td colspan="2">
+		<label><h4><?php _e( 'Cart Customization', 'wpsc'); ?></h4></label>
+	</td>
+</tr>
+<tr>
+	<td>
+		<label for="wpsc-paypal-express-cart-logo"><?php _e( 'Merchant Logo', 'wpsc' ); ?></label>
+	</td>
+	<td>
+		<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'cart_logo' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'cart_logo' ) ); ?>" id="wpsc-paypal-express-cart-logo" />
+	</td>
+</tr>
+<tr>
+	<td>
+		<label for="wpsc-paypal-express-cart-border"><?php _e( 'Cart Border Color', 'wpsc' ); ?></label>
+	</td>
+	<td>
+		<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'cart_border' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'cart_border' ) ); ?>" id="wpsc-paypal-express-cart-border" />
+	</td>
+</tr>
 
-		<!-- Currency Conversion -->
-		<?php if ( ! $this->is_currency_supported() ): ?>
-			<tr>
-				<td colspan="2">
-					<h4><?php _e( 'Currency Conversion', 'wpsc' ); ?></h4>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<p><?php _e( 'Your base currency is currently not accepted by PayPal. As a result, before a payment request is sent to Paypal, WP eCommerce has to convert the amounts into one of Paypal supported currencies. Please select your preferred currency below.', 'wpsc' ); ?></p>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<label for "wpsc-paypal-express-currency"><?php _e( 'Paypal Currency', 'wpsc' ); ?></label>
-				</td>
-				<td>
-					<select name="<?php echo esc_attr( $this->setting->get_field_name( 'currency' ) ); ?>" id="wpsc-paypal-express-currency">
-						<?php foreach ($this->gateway->get_supported_currencies() as $currency): ?>
-							<option <?php selected( $currency, $paypal_currency ); ?> value="<?php echo esc_attr( $currency ); ?>"><?php echo esc_html( $currency ); ?></option>
-						<?php endforeach ?>
-					</select>
-				</td>
-			</tr>
-		<?php endif ?>
+<!-- Currency Conversion -->
+<?php if ( ! $this->is_currency_supported() ): ?>
+<tr>
+	<td colspan="2">
+		<h4><?php _e( 'Currency Conversion', 'wpsc' ); ?></h4>
+	</td>
+</tr>
+<tr>
+	<td colspan="2">
+		<p><?php _e( 'Your base currency is currently not accepted by PayPal. As a result, before a payment request is sent to Paypal, WP eCommerce has to convert the amounts into one of Paypal supported currencies. Please select your preferred currency below.', 'wpsc' ); ?></p>
+	</td>
+</tr>
+<tr>
+	<td>
+		<label for "wpsc-paypal-express-currency"><?php _e( 'Paypal Currency', 'wpsc' ); ?></label>
+	</td>
+	<td>
+		<select name="<?php echo esc_attr( $this->setting->get_field_name( 'currency' ) ); ?>" id="wpsc-paypal-express-currency">
+			<?php foreach ($this->gateway->get_supported_currencies() as $currency): ?>
+			<option <?php selected( $currency, $paypal_currency ); ?> value="<?php echo esc_attr( $currency ); ?>"><?php echo esc_html( $currency ); ?></option>
+			<?php endforeach ?>
+		</select>
+	</td>
+</tr>
+<?php endif ?>
 
-		<!-- Error Logging -->
-		<tr>
-			<td colspan="2">
-				<h4><?php _e( 'Error Logging', 'wpsc' ); ?></h4>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<label><?php _e( 'Enable Debugging', 'wpsc' ); ?></label>
-			</td>
-			<td>
-				<label><input <?php checked( $this->setting->get( 'debugging' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'debugging' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wpsc' ); ?></label>&nbsp;&nbsp;&nbsp;
-				<label><input <?php checked( (bool) $this->setting->get( 'debugging' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'debugging' ) ); ?>" value="0" /> <?php _e( 'No', 'wpsc' ); ?></label>
-			</td>
-		</tr>
+<!-- Error Logging -->
+<tr>
+	<td colspan="2">
+		<h4><?php _e( 'Error Logging', 'wpsc' ); ?></h4>
+	</td>
+</tr>
+<tr>
+	<td>
+		<label><?php _e( 'Enable Debugging', 'wpsc' ); ?></label>
+	</td>
+	<td>
+		<label><input <?php checked( $this->setting->get( 'debugging' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'debugging' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wpsc' ); ?></label>&nbsp;&nbsp;&nbsp;
+		<label><input <?php checked( (bool) $this->setting->get( 'debugging' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'debugging' ) ); ?>" value="0" /> <?php _e( 'No', 'wpsc' ); ?></label>
+	</td>
+</tr>
 <?php
 	}
 
