@@ -232,7 +232,11 @@ class WPSC_Google_Analytics {
 				'wpsc_product_category',
 				array( 'orderby' => 'count', 'order' => 'DESC', 'fields' => 'all_with_object_id' ) );
 
-			$item['sku']      = get_post_meta( $item['prodid'], '_wpsc_sku', true );
+			$item['sku'] = get_post_meta( $item['prodid'], '_wpsc_sku', true );
+			if ( empty( $item['sku'] ) ) {
+				$item['sku'] = $item['prodid'];
+			}
+
 			if ( $category )
 				$item['category'] = $category[0]->name;
 			else
