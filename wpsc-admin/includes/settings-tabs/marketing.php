@@ -170,6 +170,17 @@ class WPSC_Settings_Tab_Marketing extends WPSC_Settings_Tab {
 			</tr>
 			<tr>
 				<th>
+					<?php _e( 'Universal Analytics', 'wpsc' ); ?>
+				</th>
+				<td>
+					<label>
+						<input value="1" <?php checked( '1', get_option( 'wpsc_ga_use_universal' ) ); ?> type="checkbox" name="wpsc_ga_use_universal" />
+						<?php printf( __( 'Use <a%s>Universal Analytics</a> tracking code', 'wpsc' ), ' href="https://support.google.com/analytics/answer/2790010?hl=en-GB&ref_topic=6010376" target="universal_analytics"' ); ?>
+					</label>
+				</td>
+			</tr>
+			<tr>
+				<th>
 					<?php _e( 'Tracking Code Present', 'wpsc' ); ?>
 				</th>
 				<td>
