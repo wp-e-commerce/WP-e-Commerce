@@ -29,8 +29,9 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 		}
 
 		foreach ( array( 'subtotal', 'shipping', 'handling', 'tax' ) as $key ) {
-			if ( isset( $this->options[$key] ) )
+			if ( isset( $this->options[$key] ) ) {
 				$this->options[$key] = $this->format( $this->options[$key] );
+			}
 		}
 
 		$request += phpme_map( $this->options, array(
@@ -75,10 +76,11 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 
 			foreach ( $item_optionals as $key => $param ) {
 				if ( ! empty( $this->options['items'][$i][$key] ) )
-					if ( $key == 'tax' )
+					if ( $key == 'tax' ) {
 						$request[$param] = $this->format( $this->options['items'][$i][$key] );
-					else
+					} else {
 						$request[$param] = $this->options['items'][$i][$key];
+					}
 			}
 
 			$i ++;
@@ -108,8 +110,9 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 		$request = array();
 
 		foreach ( $map as $key => $param ) {
-			if ( ! empty( $this->options['shipping_address'][$key] ) )
+			if ( ! empty( $this->options['shipping_address'][$key] ) ) {
 				$request[$param] = $this->options['shipping_address'][$key];
+			}
 		}
 
 		return $request;
