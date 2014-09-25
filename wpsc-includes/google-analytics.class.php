@@ -25,8 +25,9 @@ class WPSC_Google_Analytics {
 			|| ( ! $this->is_theme_tracking && empty( $this->tracking_id ) );
 
 		// TODO: make it work with new theme engine as well
-		if ( ! $this->is_analytics_disabled )
+		if ( ! $this->is_analytics_disabled ) {
 			add_action( 'wpsc_transaction_results_shutdown', array( $this, 'print_script' ), 10, 3 );
+		}
 	}
 
 	/**
@@ -38,7 +39,6 @@ class WPSC_Google_Analytics {
 	 * @return string
 	 */
 	public function sanitize( $string ) {
-
 		return remove_accents( str_replace( '---', '-', str_replace( ' ', '-', strtolower( html_entity_decode( $string, ENT_QUOTES, get_option( 'blog_charset' ) ) ) ) ) );
 	}
 
@@ -58,21 +58,24 @@ class WPSC_Google_Analytics {
 	 */
 	public function print_script( $purchase_log, $session_id, $display_to_screen ) {
 
-		if ( ! $display_to_screen )
+		if ( ! $display_to_screen ) {
 			return false;
+		}
 
 		$output = '';
 
 		if ( $this->is_analytics_disabled )
 			return $output;
 
-		if ( ! $this->is_theme_tracking && ! $this->advanced_code )
+		if ( ! $this->is_theme_tracking && ! $this->advanced_code ) {
 			$output .= $this->general_init();
+		}
 
 		$output .= $this->add_pushes( $session_id );
 
-		if ( ! $this->is_theme_tracking && ! $this->advanced_code )
+		if ( ! $this->is_theme_tracking && ! $this->advanced_code ) {
 			$output .= $this->general_shutdown();
+		}
 
 		echo $output;
 	}
@@ -149,9 +152,9 @@ class WPSC_Google_Analytics {
 	public function add_pushes( $session_id ) {
 		global $wpdb;
 
-		$purchase = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `sessionid`= %s LIMIT 1", $session_id ) );
+		$purchase    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `sessionid`= %s LIMIT 1", $session_id ) );
 		$purchase_id = $purchase->id;
-		$output = '';
+		$output      = '';
 
 		$city = $wpdb->get_var( $wpdb->prepare( "
 						SELECT tf.value FROM " . WPSC_TABLE_SUBMITTED_FORM_DATA . " tf
@@ -183,15 +186,16 @@ class WPSC_Google_Analytics {
 		$cart_items = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid = %d", $purchase_id ), ARRAY_A );
 
 		$total_shipping = wpsc_get_total_shipping( $purchase_id );
-		$total_tax = $total_price = 0;
+		$total_tax      = $total_price = 0;
 
 		foreach ( $cart_items as $item ) {
 			$total_tax	 += $item['tax_charged'];
 			$total_price += $item['price'];
 		}
 
-		if ( $this->is_theme_tracking || $this->advanced_code )
+		if ( $this->is_theme_tracking || $this->advanced_code ) {
 			$output .= "<script type='text/javascript'>\n\r";
+		}
 
 		add_filter( 'wpsc_toggle_display_currency_code', array( $this, 'remove_currency_and_html' ) );
 
@@ -233,16 +237,18 @@ class WPSC_Google_Analytics {
 				array( 'orderby' => 'count', 'order' => 'DESC', 'fields' => 'all_with_object_id' ) );
 
 			$item['sku'] = get_post_meta( $item['prodid'], '_wpsc_sku', true );
+
 			if ( empty( $item['sku'] ) ) {
 				$item['sku'] = $item['prodid'];
 			}
 
-			if ( $category )
+			if ( $category ) {
 				$item['category'] = $category[0]->name;
-			else
+			} else {
 				$item['category'] = '';
+			}
 
-			$item = array_map( 'wp_specialchars_decode', $item );
+			$item = apply_filters( 'wpsc_google_analytics_pushed_product', array_map( 'wp_specialchars_decode', $item ), $item, $this );
 
 			if ( $this->use_universal_analytics() ) {
 
@@ -279,8 +285,9 @@ class WPSC_Google_Analytics {
 
 		}
 
-		if ( $this->is_theme_tracking || $this->advanced_code )
+		if ( $this->is_theme_tracking || $this->advanced_code ) {
 			$output .= "</script>\n\r";
+		}
 
 		return $output;
 	}
