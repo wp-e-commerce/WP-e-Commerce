@@ -230,6 +230,8 @@ th#status {
 	margin-top: -.2em;
 }
 
+/* Purchase Log Action Links */
+
 #wpsc_purchlogitems_links a {
 	text-decoration: none;
 	line-height: 14pt;
@@ -238,6 +240,27 @@ th#status {
 #wpsc_purchlogitems_links img {
 	padding-top: 2px;
 	float: left;
+}
+
+#wpsc_purchlogitems_links li .dashicons {
+	margin-right: 10px;
+}
+
+#wpsc_purchlogitems_links li a .dashicons {
+	color: #888;
+}
+
+#wpsc_purchlogitems_links li.delete .dashicons,
+#wpsc_purchlogitems_links li.go-back .dashicons {
+	color: #bbb;
+}
+
+#wpsc_purchlogitems_links li.delete a:hover .dashicons {
+	color: #c00;
+}
+
+#wpsc_purchlogitems_links li.go-back a:hover .dashicons {
+	color: #888;
 }
 
 #wpsc_shipping_details_box {
