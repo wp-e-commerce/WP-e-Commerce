@@ -23,8 +23,9 @@ class PHP_Merchant_Paypal_Digital_Goods extends PHP_Merchant_Paypal_Express_Chec
 		$request = parent::add_payment( $action );
 
 		// Make sure PayPal knows all goods are digital
-		for( $i = 0; $i < count( $this->options['items'] ); $i++ )
+		for( $i = 0; $i < count( $this->options['items'] ); $i++ ) {
 			$request += array( "L_PAYMENTREQUEST_0_ITEMCATEGORY{$i}" => 'Digital' );
+		}
 
 		return $request;
 	}

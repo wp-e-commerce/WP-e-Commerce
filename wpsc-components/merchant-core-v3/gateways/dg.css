@@ -1,0 +1,72 @@
+/*
+ * Digital Goods Lightbox CSS code
+ */
+p {
+	display: block;
+	position: relative;
+	top: 33%;
+	text-transform:
+	uppercase;
+	color: #084482;
+	text-align: center;
+	font-style: italic;
+	font-weight: bold;
+	font-size: 12px;
+	font-family: arial, helvetica, sans-serif;
+}
+img {
+	display: block;
+	position: absolute;
+	left: 46%;
+	top: 46%;
+}
+#left_frame {
+	margin-top: 15px;
+	position: relative;
+	width: 370px;
+	height: 330px;
+	background: top left;
+}
+#right_frame {
+	margin: 0 15px 15px 15px;
+	padding: 10px 10px 0 0;
+	width: 350px;
+	height: 325px;
+	background: top right;
+}
+#right_bottom {
+	bottom: -12px;
+	left: 0px;
+	margin: 0 0 0 10px;
+	padding: 0px 5px 10px 10px;
+	position: absolute;
+	width: 350px;
+	background: bottom right;
+}
+#left_bottom {
+	bottom: -10px;
+	left: 0px;
+	margin: 0 0 0 -20px;
+	padding: 0;
+	position: relative;
+	height: 12px;
+	width: 100px;
+	background: bottom left;
+}
+#left_frame, #right_frame, #right_bottom, #left_bottom {
+	background-image: url(https://www.paypal.com/en_US/i/scr/scr_dg_sliding_door_bdr_wf.png);
+	background-color: transparent;
+	background-repeat: no-repeat;
+}
+
+@media only screen and (max-device-width : 568px) {
+	#left_frame,
+	#right_frame,
+	#right_bottom {
+		width: 96%;
+	}
+	#left_frame,
+	#right_frame {
+		height: 96%;
+	}
+}

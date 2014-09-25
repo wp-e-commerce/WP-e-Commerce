@@ -12,5 +12,11 @@ $test_accounts = array(
 		'api_password'      => '1404523024',
 		'api_signature'     => 'An5ns1Kso7MWUdW4ErQKJJJ4qi4-AnIgHxdxM4-jkGKkkOhcO0fD-Av5',
 		'test' => true,
-	)
+	),
+	'paypal-pro-oa' => array(
+		'api_username'      => 'wpp_api1.omarabid.com',
+		'api_password'      => '4WQY6WGGAGS4JPEA',
+		'api_signature'     => 'AFcWxV21C7fd0v3bYYYRCpSSRl31AboWy-uBCAMW9aDx8JwAq7ryYemY',
+		'test' => true,
+	),
 );
