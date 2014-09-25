@@ -227,7 +227,6 @@ function wpsc_country_list( $form_id = null, $ajax = null, $selected_country = n
 													'placeholder'           => __( 'Please select a country', 'wpsc' ),
 												)
 										);
-	$output .= '</div>';
 	$output .= "</div>\n\r";
 	return $output;
 }
