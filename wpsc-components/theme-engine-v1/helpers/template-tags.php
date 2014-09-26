@@ -150,7 +150,18 @@ function wpsc_the_product_title( $post = 0 ) {
  */
 function wpsc_the_product_description() {
 	$content = get_the_content( __( 'Read the rest of this entry &raquo;', 'wpsc' ) );
-	return do_shortcode( wpautop( $content,1 ) );
+
+	/*
+	* Filter the text that decribes the product
+	*
+	* @since 3.8.14.2
+	*
+	* @param string $content Text to display for the product description
+	*
+	*/
+	$content = apply_filters( 'wpsc_the_product_description', $content );
+
+	return do_shortcode( wpautop( $content, 1 ) );
 }
 
 /**

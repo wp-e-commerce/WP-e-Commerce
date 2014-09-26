@@ -92,7 +92,7 @@ function wpsc_generate_product_feed() {
 			}
 			echo "      <title><![CDATA[".get_the_title()."]]></title>\n\r";
 			echo "      <link>$purchase_link</link>\n\r";
-			echo "      <description><![CDATA[".apply_filters ('the_content', get_the_content())."]]></description>\n\r";
+			echo "      <description><![CDATA[". wpsc_the_product_description() ."]]></description>\n\r";
 			echo "      <guid>$purchase_link</guid>\n\r";
 
 			$image_link = wpsc_the_product_thumbnail() ;
@@ -192,7 +192,8 @@ function wpsc_generate_product_feed() {
 
 				if ( ! $done_weight ) {
 					$wpsc_product_meta = get_product_meta( $post->ID, 'product_metadata',true );
-					$weight = apply_filters ( 'wpsc_google_shipping_weight', $wpsc_product_meta['weight'], $post->ID );
+					$weight = isset( $wpsc_product_meta['weight'] ) ? $wpsc_product_meta['weight'] : 0;
+					$weight = apply_filters ( 'wpsc_google_shipping_weight', $weight, $post->ID );
 					if ( $weight && is_numeric ( $weight ) && $weight > 0 ) {
 						echo "<g:shipping_weight>$weight pounds</g:shipping_weight>";
 					}
