@@ -192,6 +192,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 	 * Gateway implementation for SetExpressCheckout
 	 *
 	 * @param array $options
+	 * @param string $action
 	 * @return PHP_Merchant_Paypal_Express_Checkout_Response
 	 * @since 3.9
 	 */
