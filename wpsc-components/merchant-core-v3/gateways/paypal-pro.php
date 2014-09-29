@@ -86,19 +86,8 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	public function pro_script() {
 		if ( wpsc_is_checkout() ) {	
 			wp_enqueue_script( 'pro-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/pro.js', array( 'jquery' ) ); 	
+			wp_enqueue_style( 'pro-syle-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/pro.css' ); 	
 		}
-	}
-
-	/**
-	 * Returns the PayPal redirect URL
-	 *
-	 * @param array $data Arguments to encode with the URL
-	 * @return string
-	 *
-	 * @since 3.9
-	 */
-	public function get_redirect_url( $data = array() ) {
-
 	}
 
 	/**
@@ -211,7 +200,15 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 * @since 3.9
 	 */
 	public function callback_confirm_transaction() {
+		if ( ! isset( $_REQUEST['sessionid'] ) || ! isset( $_REQUEST['token'] ) || ! isset( $_REQUEST['PayerID'] ) ) {
+			return false;
+		}
 
+		// Set the Purchase Log
+		$this->set_purchase_log_for_callbacks();
+
+		// Display the Confirmation Page
+		$this->do_transaction();
 	}
 
 	/**
@@ -220,7 +217,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 * @since 3.9
 	 */
 	public function do_transaction() {
-
+		
 	}
 
 	public function callback_display_paypal_error() {
@@ -260,7 +257,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 			'protection'      => null,
 		);
 
-		wpsc_update_purchase_meta( $this->purchase_log->get( 'id' ), 'paypal_ec_details' , $paypal_log );
+		wpsc_update_purchase_meta( $this->purchase_log->get( 'id' ), 'paypal_pro_details' , $paypal_log );
 	}
 
 	/**
