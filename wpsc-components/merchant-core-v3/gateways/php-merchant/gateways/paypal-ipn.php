@@ -15,7 +15,7 @@ class PHP_Merchant_Paypal_IPN
 		if ( $http ) {
 			$this->http = $http;
 		} else {
-			require_once( realpath( '../' ) . '/common/http-curl.php' );
+			require_once( WPSC_MERCHANT_V3_PATH . '/gateways/php-merchant/common/http-curl.php' );
 			$this->http = new PHP_Merchant_HTTP_CURL();
 		}
 
