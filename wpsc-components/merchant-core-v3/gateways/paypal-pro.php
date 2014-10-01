@@ -156,7 +156,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		$location = add_query_arg( array(
 			'payment_gateway'          => 'paypal-pro',
 			'payment_gateway_callback' => 'ipn',
-		), home_url( 'index.php' ) );
+		), home_url( 'index.php' ) );	
 
 		return apply_filters( 'wpsc_paypal_pro_notify_url', $location );
 	}
@@ -189,7 +189,31 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 * @return void
 	 */
 	public function callback_ipn() {
+		$ipn = new PHP_Merchant_Paypal_IPN( false, (bool) $this->setting->get( 'sandbox_mode', false ) );
 
+        if ( $ipn->is_verified() ) {
+            $sessionid = $ipn->get( 'invoice' );
+            $this->set_purchase_log_for_callbacks( $sessionid );
+
+            if ( $ipn->is_payment_denied() ) {
+                $this->purchase_log->set( 'processed', WPSC_Purchase_Log::PAYMENT_DECLINED );
+            } elseif ( $ipn->is_payment_refunded() ) {
+                $this->purchase_log->set( 'processed', WPSC_Purchase_Log::REFUNDED );
+            } elseif ( $ipn->is_payment_completed() ) {
+                $this->purchase_log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT );
+            } elseif ( $ipn->is_payment_pending() ) {
+                if ( $ipn->is_payment_refund_pending() ) {
+                    $this->purchase_log->set( 'processed', WPSC_Purchase_Log::REFUND_PENDING );
+                } else {
+                    $this->purchase_log->set( 'processed', WPSC_Purchase_Log::ORDER_RECEIVED );
+                }
+            }
+
+            $this->purchase_log->save();
+            transaction_results( $sessionid, false );
+        }
+
+        exit;
 	}
 
 	/**
