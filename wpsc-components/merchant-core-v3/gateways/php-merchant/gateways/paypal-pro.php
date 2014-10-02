@@ -367,6 +367,6 @@ class PHP_Merchant_Paypal_Pro extends PHP_Merchant_Paypal
 	public function get_transaction_details( $transaction_id ) {
 		$request =  array( 'TRANSACTIONID' => $transaction_id );
 		$response_str = $this->commit( 'GetTransactionDetails', $request );
-		return new PHP_Merchant_Paypal_Express_Checkout_Response( $response_str );
+		return new PHP_Merchant_Paypal_Pro_Response( $response_str );
 	}
 }
