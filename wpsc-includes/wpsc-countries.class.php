@@ -469,7 +469,7 @@ class WPSC_Countries {
 			uasort( $countries, array( __CLASS__, '_compare_countries_by_id' ) );
 		}
 
-		return $countries;
+		return apply_filters( 'wpsc_get_countries', $countries );
 	}
 
 	/**
@@ -514,7 +514,7 @@ class WPSC_Countries {
 			$countries_list[] = $country;
 		}
 
-		return $countries_list;
+		return apply_filters( 'wpsc_get_countries_array', $countries_list );
 	}
 
 	/**

@@ -917,7 +917,7 @@ function wpsc_product_has_supplied_file() {
  * wpsc product postage and packaging function
  * @return string - currently only valid for flat rate
  */
-function wpsc_product_postage_and_packaging() {
+function wpsc_product_postage_and_packaging( $id = null ) {
 	if ( isset( $id ) && is_numeric( $id ) && ($id > 0) )
 		$id = absint( $id );
 	else
