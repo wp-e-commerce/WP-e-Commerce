@@ -301,7 +301,7 @@ class WPSC_Purchase_Log_Action_Link {
 	 */
 	public function get_link_display() {
 
-		return sprintf( '<a href="%s" title="%s" %s data-purchase-log-action="%s">%s%s</a></li>',
+		return sprintf( '<a href="%s" title="%s" %s data-purchase-log-action="%s">%s%s</a>',
 			esc_attr( $this->get_link_url() ),
 			esc_attr( $this->args['description'] ),
 			$this->_get_link_attributes_string(),
