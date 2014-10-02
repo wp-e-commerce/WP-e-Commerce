@@ -301,7 +301,7 @@ class WPSC_Purchase_Log_Action_Link {
 	 */
 	public function get_link_display() {
 
-		return '<a href="' . esc_attr( $this->get_link_url() ) . '" title="' . esc_attr( $this->args['description'] ) . '" ' . $this->_get_link_attributes_string() . '>' . $this->_get_dashicon_display() . esc_html( $this->title ) . '</a></li>';
+		return '<a href="' . esc_attr( $this->get_link_url() ) . '" title="' . esc_attr( $this->args['description'] ) . '" ' . $this->_get_link_attributes_string() . ' data-purchase-log-action="' . $this->id . '">' . $this->_get_dashicon_display() . esc_html( $this->title ) . '</a></li>';
 
 	}
 
