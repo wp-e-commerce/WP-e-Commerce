@@ -78,6 +78,7 @@ class PHP_Merchant_Paypal_Pro extends PHP_Merchant_Paypal
 
 		return $request;
 	}
+
 	/**
 	 * Add a shipping address to the PayPal request
 	 *
@@ -289,16 +290,32 @@ class PHP_Merchant_Paypal_Pro extends PHP_Merchant_Paypal
 	 */
 	public function void( $options = array() ) {
 
-}
+	}
 
-/**
- * Gateway implementation for RefundTransaction
- *
- * @param array $options
- * @return PHP_Merchant_Paypal_Pro_Response
- * @since 3.9
- */
-public function credit( $options = array() ) {
+	/**
+	 * Gateway implementation for RefundTransaction
+	 *
+	 * @param array $options
+	 * @return PHP_Merchant_Paypal_Pro_Response
+	 * @since 3.9
+	 */
+	public function credit( $options = array() ) {
+		$this->options = array_merge( $this->options, $options );
 
-}
+		// Required Fields
+		$this->requires( array( 'message_id', 'invoice' ) );
+
+		// Conditionally required fields (one field at least is set)
+		$this->conditional_requires( array( 'payer_id', 'transaction_id' ) );
+
+		// Amount is required if the refund is partial
+		if ( strtolower( $this->options['refund_type'] ) === 'partial' ) {
+			$this->requires( array( 'amount' ) );
+		}
+
+		$request = $this->build_checkout_request( false, $options );
+
+		$response_str = $this->commit( 'RefundTransaction', $request );
+		return new PHP_Merchant_Paypal_Pro_Response( $response_str );
+	}
 }
