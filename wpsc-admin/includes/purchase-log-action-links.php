@@ -301,7 +301,14 @@ class WPSC_Purchase_Log_Action_Link {
 	 */
 	public function get_link_display() {
 
-		return '<a href="' . esc_attr( $this->get_link_url() ) . '" title="' . esc_attr( $this->args['description'] ) . '" ' . $this->_get_link_attributes_string() . ' data-purchase-log-action="' . $this->id . '">' . $this->_get_dashicon_display() . esc_html( $this->title ) . '</a></li>';
+		return sprintf( '<a href="%s" title="%s" %s data-purchase-log-action="%s">%s%s</a></li>',
+			esc_attr( $this->get_link_url() ),
+			esc_attr( $this->args['description'] ),
+			$this->_get_link_attributes_string(),
+			$this->id,
+			$this->_get_dashicon_display(),
+			esc_html( $this->title )
+		);
 
 	}
 
@@ -334,7 +341,14 @@ class WPSC_Purchase_Log_Action_Link {
 
 		$atts = array();
 		foreach ( $this->args['attributes'] as $att => $val ) {
-			$atts[] = sanitize_html_class( $att ) . '="' . esc_attr( $val ) . '"';
+			$att_key = sanitize_html_class( $att );
+
+			// Don't override attributes that we set elsewhere
+			if ( in_array( $att_key, array( 'href', 'title', 'data-purchase-log-action' ) ) ) {
+				continue;
+			}
+
+			$atts[] = $att_key . '="' . esc_attr( $val ) . '"';
 		}
 		return implode( ' ', $atts );
 
