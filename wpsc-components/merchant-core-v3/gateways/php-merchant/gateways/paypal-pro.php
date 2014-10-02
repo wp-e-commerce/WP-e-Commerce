@@ -229,6 +229,44 @@ class PHP_Merchant_Paypal_Pro extends PHP_Merchant_Paypal
 	}
 
 	/**
+	 * Build the request array
+	 *
+	 * @param string $action
+	 * @param array $options
+	 * @return array
+	 * @since 3.9
+	 */
+	function build_checkout_request( $action, $options = array() ) {
+		$request = array();	
+
+		// Common Fields
+		$request += phpme_map( $this->options, array(
+			'AMT'          => 'amount',
+			'MAXAMT'       => 'max_amount',
+			'SOLUTIONTYPE' => 'solution_type',
+			'ALLOWNOTE'    => 'allow_note',
+			'ADDROVERRIDE' => 'address_override',
+			'TOKEN'        => 'token',
+			'PAYERID'      => 'payer_id',
+			'TRANSACTIONID'=> 'transaction_id',
+			'AUTHORIZATIONID'=> 'authorization_id',
+			'MSGSUBID'	   => 'message_id',
+			'INVOICEID'	   => 'invoice',
+		) );
+
+		// RefundTransaction Fields
+		$request += phpme_map( $this->options, array(
+			'REFUNDTYPE'   => 'refund_type',
+			'REFUNDSOURCE' => 'refund_source',
+			'REFUNDADVICE' => 'refund_advice',
+		) );
+		// BN Code
+		$request['BUTTONSOURCE'] = 'WPECOM_ECM';
+
+		return $request;	
+	}
+
+	/**
 	 * Add a subline for the HTML variables array
 	 *
 	 * @param string $sub
@@ -313,9 +351,22 @@ class PHP_Merchant_Paypal_Pro extends PHP_Merchant_Paypal
 			$this->requires( array( 'amount' ) );
 		}
 
-		$request = $this->build_checkout_request( false, $options );
+		$request = $this->build_checkout_request( $options, false );
 
 		$response_str = $this->commit( 'RefundTransaction', $request );
 		return new PHP_Merchant_Paypal_Pro_Response( $response_str );
+	}
+
+	/**
+	 * Gateway impelementation for GetTransactionDetails
+	 *
+	 * @param string $transaction_id Unique identifier of a transaction.
+	 * @return PHP_Merchant_Paypal_Express_Checkout_Response
+	 * @since 3.9
+	 */
+	public function get_transaction_details( $transaction_id ) {
+		$request =  array( 'TRANSACTIONID' => $transaction_id );
+		$response_str = $this->commit( 'GetTransactionDetails', $request );
+		return new PHP_Merchant_Paypal_Express_Checkout_Response( $response_str );
 	}
 }
