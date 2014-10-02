@@ -108,6 +108,34 @@ class PHP_Merchant_Paypal_Pro extends PHP_Merchant_Paypal
 	}
 
 	/**
+	 * Add a Billing address to the PayPal request
+	 *
+	 * @return array
+	 * @since 3.9
+	 */
+	protected function add_billing_address() {
+		$map = array(
+			'name'     => 'billing_first_name',
+			'street'   => 'billing_address1',
+			'street2'  => 'billing_address2',
+			'city'     => 'billing_city',
+			'state'    => 'billing_state',
+			'zip'      => 'billing_zip',
+			'country'  => 'billing_country',
+			'phone'    => 'billing_night_phone_1',
+		);
+
+		$request = array();
+
+		foreach ( $map as $key => $param ) {
+			if ( ! empty( $this->options['billing_address'][$key] ) ) {
+				$request[$param] = $this->options['billing_address'][$key];
+			}
+		}
+
+		return $request;
+	}
+	/**
 	 * Gateway implementation for BMCreateButton
 	 *
 	 * @param array $options 
@@ -170,6 +198,10 @@ class PHP_Merchant_Paypal_Pro extends PHP_Merchant_Paypal
 
 		if ( ! empty( $this->options['shipping_address'] ) ) {
 			$request += $this->add_address();
+		}
+
+		if ( ! empty( $this->options['billing_address'] ) ) {
+			$request += $this->add_billing_address();
 		}
 
 		if ( isset( $this->options['no_shipping'] ) ) {
