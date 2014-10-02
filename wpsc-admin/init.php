@@ -269,6 +269,13 @@ function wpsc_admin_sale_rss() {
 	}
 }
 
+// Trigger purchase log actions
+if ( isset( $_GET['wpsc_purchase_log_action'] ) && isset( $_GET['id'] ) ) {
+
+	do_action( 'wpsc_purchase_log_action-' . sanitize_key( $_GET['wpsc_purchase_log_action'] ), absint( $_GET['id'] ) );
+
+}
+
 if ( isset( $_GET['action'] ) && ( 'purchase_log' == $_GET['action'] ) )
 	add_action( 'admin_init', 'wpsc_admin_sale_rss' );
 
