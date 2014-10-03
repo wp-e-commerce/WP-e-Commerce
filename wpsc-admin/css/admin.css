@@ -263,12 +263,17 @@ th#status {
 	color: #888;
 }
 
+#wpsc_purchlogitems_links li a .dashicons-yes {
+	color: #7ad03a;
+}
+
 #wpsc_purchlogitems_links li a.wpsc-purchlog-action-link-delete .dashicons,
 #wpsc_purchlogitems_links li a.wpsc-purchlog-action-link-back .dashicons {
 	color: #bbb;
 }
 
-#wpsc_purchlogitems_links li a.wpsc-purchlog-action-link-delete:hover .dashicons {
+#wpsc_purchlogitems_links li a.wpsc-purchlog-action-link-delete:hover .dashicons,
+#wpsc_purchlogitems_links li a .dashicons-no {
 	color: #c00;
 }
 

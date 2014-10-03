@@ -248,7 +248,8 @@ class WPSC_Purchase_Log_Action_Link {
 			'url'         => '',
 			'description' => '',
 			'dashicon'    => '',
-			'attributes'  => array()
+			'attributes'  => array(),
+			'ajax'        => false
 		) );
 
 		// Use title if no description.
@@ -279,6 +280,11 @@ class WPSC_Purchase_Log_Action_Link {
 		}
 		$args['attributes']['class'] = 'wpsc-purchlog-action-link ' . trim( $this->get_html_class() . ' ' . $args['attributes']['class'] );
 
+		// Add AJAX class
+		if ( $args['ajax'] ) {
+			$args['attributes']['class'] .= ' is-ajax';
+		}
+
 		return $args;
 
 	}
@@ -301,7 +307,7 @@ class WPSC_Purchase_Log_Action_Link {
 	 */
 	public function get_link_display() {
 
-		return sprintf( '<a href="%s" title="%s" %s data-purchase-log-action="%s"><span class="spinner"></span>%s%s</a>',
+		return sprintf( '<a href="%s" title="%s" %s data-purchase-log-action="%s">%s%s</a>',
 			esc_attr( $this->get_link_url() ),
 			esc_attr( $this->args['description'] ),
 			$this->_get_link_attributes_string(),
