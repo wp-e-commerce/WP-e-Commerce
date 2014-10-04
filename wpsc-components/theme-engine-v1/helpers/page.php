@@ -983,6 +983,11 @@ function wpsc_thesis_compat( $loop ) {
 
 // Template tags
 function wpsc_all_products_on_page(){
+
+	if ( is_404() ) {
+		return;
+	}
+
 	global $wp_query,$wpsc_query;
 	do_action('wpsc_swap_the_template');
 	$products_page_id = wpsc_get_the_post_id_by_shortcode('[productspage]');

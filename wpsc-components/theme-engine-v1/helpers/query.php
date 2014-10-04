@@ -133,10 +133,14 @@ function _wpsc_switch_the_query( $stuff = '' ) {
  */
 function wpsc_switch_the_query( $args ) {
 	global $wp_query, $wpsc_query;
-	$qv = $wpsc_query->query_vars;
-	if ( ! empty( $qv['wpsc_product_category'] ) && ! empty( $qv['taxonomy'] ) && ! empty( $qv['term'] ) && ! is_single() && _wpsc_menu_exists( $args ) ) {
-		_wpsc_switch_the_query();
-		add_filter( 'wp_nav_menu', '_wpsc_switch_the_query', 99 );
+	if ( ! empty ( $wpsc_query ) ) {
+		$qv = $wpsc_query->query_vars;
+		if ( ! empty( $qv ) ) {
+			if ( ! empty( $qv['wpsc_product_category'] ) && ! empty( $qv['taxonomy'] ) && ! empty( $qv['term'] ) && ! is_single() && _wpsc_menu_exists( $args ) ) {
+				_wpsc_switch_the_query();
+				add_filter( 'wp_nav_menu', '_wpsc_switch_the_query', 99 );
+			}
+		}
 	}
 	return $args;
 }
@@ -170,6 +174,10 @@ function _wpsc_pre_get_posts_reset_taxonomy_globals( $query ) {
  * wpsc_start_the_query
  */
 function wpsc_start_the_query() {
+	if ( is_404() ) {
+		return;
+	}
+
 	global $wpsc_page_titles, $wp_query, $wpsc_query, $wpsc_query_vars;
 
 	$is_404 = $wp_query->is_404;
