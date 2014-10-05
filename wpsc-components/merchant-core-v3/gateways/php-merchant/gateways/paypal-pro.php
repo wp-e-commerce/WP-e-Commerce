@@ -4,7 +4,7 @@ require_once( 'paypal-pro-response.php' );
 
 class PHP_Merchant_Paypal_Pro extends PHP_Merchant_Paypal
 {
-	const API_VERSION = '104.0';
+	const API_VERSION = '117.0';
 	const SANDBOX_URL = 'https://api-3t.sandbox.paypal.com/nvp';
 	const LIVE_URL = 'https://api-3t.paypal.com/nvp';
 
@@ -151,21 +151,7 @@ class PHP_Merchant_Paypal_Pro extends PHP_Merchant_Paypal
 		$request['BUTTONCODE'] = 'TOKEN';
 		$request['BUTTONTYPE'] = 'PAYMENT';
 		$request['cmd'] = '_cart';
-
-		/*
-		$post = array(
-			'BUTTONCODE' => 'TOKEN',
-			'BUTTONTYPE' => 'PAYMENT',	
-			'L_BUTTONVAR3' => 'vendor=wpp@omarabid.com',
-			'L_BUTTONVAR0' => 'subtotal=11',
-			'L_BUTTONVAR1' => 'paymentaction=sale',
-			'L_BUTTONVAR2' => 'template=templateD',
-			'L_BUTTONVAR4' => 'item_name=Wireless%20Mouse',
-			'L_BUTTONVAR5' => 'amount=11',
-		);
-		 */
-
-		//st_log( $request );
+	
 		$response_str = $this->commit( 'BMCreateButton', $request );
 		return new PHP_Merchant_Paypal_Pro_Response( $response_str );
 	}
