@@ -119,7 +119,7 @@ class PHP_Merchant_Paypal_Pro_Certification_Test_X1 extends UnitTestCase
 		$options  = is_array( $this->purchase_options ) ? $this->purchase_options : array();
 
 		// Set Billing information
-		$this->purchase_options['billing_address'] = array(
+		$options['billing_address'] = array(
 			'name'    => 'Abid Omar',
 			'street'  => '1 Infinite Loop',
 			'street2' => 'Apple Headquarter ext',
