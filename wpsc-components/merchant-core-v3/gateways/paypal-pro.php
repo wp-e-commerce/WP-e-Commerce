@@ -173,7 +173,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		}
 
 		// Create a new Purchase Log entry
-		$purchase_log = new WPSC_Purchase_Log( $sessionid, 'sessionid' );
+		$purchase_log = new WPSC_Purchase_Log( $sessionid, 'id' );
 
 		if ( ! $purchase_log->exists() ) {
 			return null;
