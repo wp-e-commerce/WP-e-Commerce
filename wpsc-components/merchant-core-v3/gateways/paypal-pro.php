@@ -191,29 +191,29 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	public function callback_ipn() {
 		$ipn = new PHP_Merchant_Paypal_IPN( false, (bool) $this->setting->get( 'sandbox_mode', false ) );
 
-        if ( $ipn->is_verified() ) {
-            $sessionid = $ipn->get( 'invoice' );
-            $this->set_purchase_log_for_callbacks( $sessionid );
+		if ( $ipn->is_verified() ) {
+			$sessionid = $ipn->get( 'invoice' );
+			$this->set_purchase_log_for_callbacks( $sessionid );
 
-            if ( $ipn->is_payment_denied() ) {
-                $this->purchase_log->set( 'processed', WPSC_Purchase_Log::PAYMENT_DECLINED );
-            } elseif ( $ipn->is_payment_refunded() ) {
-                $this->purchase_log->set( 'processed', WPSC_Purchase_Log::REFUNDED );
-            } elseif ( $ipn->is_payment_completed() ) {
-                $this->purchase_log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT );
-            } elseif ( $ipn->is_payment_pending() ) {
-                if ( $ipn->is_payment_refund_pending() ) {
-                    $this->purchase_log->set( 'processed', WPSC_Purchase_Log::REFUND_PENDING );
-                } else {
-                    $this->purchase_log->set( 'processed', WPSC_Purchase_Log::ORDER_RECEIVED );
-                }
-            }
+			if ( $ipn->is_payment_denied() ) {
+				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::PAYMENT_DECLINED );
+			} elseif ( $ipn->is_payment_refunded() ) {
+				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::REFUNDED );
+			} elseif ( $ipn->is_payment_completed() ) {
+				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT );
+			} elseif ( $ipn->is_payment_pending() ) {
+				if ( $ipn->is_payment_refund_pending() ) {
+					$this->purchase_log->set( 'processed', WPSC_Purchase_Log::REFUND_PENDING );
+				} else {
+					$this->purchase_log->set( 'processed', WPSC_Purchase_Log::ORDER_RECEIVED );
+				}
+			}
 
-            $this->purchase_log->save();
-            transaction_results( $sessionid, false );
-        }
+			$this->purchase_log->save();
+			transaction_results( $sessionid, false );
+		}
 
-        exit;
+		exit;
 	}
 
 	/**
@@ -224,7 +224,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 * @since 3.9
 	 */
 	public function callback_confirm_transaction() {
-		if ( ! isset( $_REQUEST['sessionid'] ) || ! isset( $_REQUEST['token'] ) || ! isset( $_REQUEST['PayerID'] ) ) {
+		if ( ! isset( $_REQUEST['sessionid'] ) || ! isset( $_REQUEST['tx'] ) ) {
 			return false;
 		}
 
@@ -241,7 +241,58 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 * @since 3.9
 	 */
 	public function do_transaction() {
-		
+		$args = array_map( 'urldecode', $_GET );
+		extract( $args, EXTR_SKIP );
+
+		if ( ! isset( $sessionid ) || ! isset( $tx ) || ! isset( $CSCMATCH ) ) {
+			return;
+		}
+
+		$this->set_purchase_log_for_callbacks();
+
+		$total = $this->convert( $this->purchase_log->get( 'totalprice' ) );
+
+		$options = array(
+			'tx'         => $tx,
+			'CSCMATCH'      => $CSCMATCH,
+			'message_id'    => $this->purchase_log->get( 'sessionid' ),
+			'invoice'		=> $this->purchase_log->get( 'id' ),
+		);
+
+		$options += $this->checkout_data->get_gateway_data();
+		$options += $this->purchase_log->get_gateway_data( parent::get_currency_code(), $this->get_currency_code() );
+
+		if ( $this->setting->get( 'ipn', false ) ) {
+			$options['notify_url'] = $this->get_notify_url();
+		}
+
+		$details = $this->gateway->get_transaction_details( $tx );
+
+		$this->log_payer_details( $details );	
+		$this->log_protection_status( $response );
+		$location = remove_query_arg( 'payment_gateway_callback' );
+
+		if ( $response->has_errors() ) {	
+			wpsc_update_customer_meta( 'paypal_pro_errors', $response->get_errors() );
+			$location = add_query_arg( array( 'payment_gateway_callback' => 'display_paypal_error' ) );
+		} elseif ( $response->is_payment_completed() || $response->is_payment_pending() ) {
+			$location = remove_query_arg( 'payment_gateway' );
+
+			if ( $response->is_payment_completed() ) {
+				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT );
+			} else {
+				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::ORDER_RECEIVED );
+			}
+
+			$this->purchase_log->set( 'transactid', $response->get( 'transaction_id' ) )
+				->set( 'date', time() )
+				->save();
+		} else {
+			$location = add_query_arg( array( 'payment_gateway_callback' => 'display_generic_error' ) );
+		}
+
+		wp_redirect( $location );
+		exit;
 	}
 
 	public function callback_display_paypal_error() {
