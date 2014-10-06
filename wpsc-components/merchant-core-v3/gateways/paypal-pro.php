@@ -166,14 +166,18 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 *
 	 * @return null
 	 */
-	protected function set_purchase_log_for_callbacks( $sessionid = false ) {
+	protected function set_purchase_log_for_callbacks( $id = false, $sessionid = false ) {
 		// Define the sessionid if it's not passed
-		if ( $sessionid === false ) {
-			$sessionid = $_REQUEST['sessionid'];
+		if ( $id === false ) {
+			$id = $_REQUEST['sessionid'];
 		}
 
 		// Create a new Purchase Log entry
-		$purchase_log = new WPSC_Purchase_Log( $sessionid, 'id' );
+		if ( $sessionid === 'sessionid' ) {
+			$purchase_log = new WPSC_Purchase_Log( $id, 'sessionid' );
+		} else {
+			$purchase_log = new WPSC_Purchase_Log( $id, 'id' );
+		}
 
 		if ( ! $purchase_log->exists() ) {
 			return null;
@@ -248,7 +252,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 			return;
 		}
 
-		$this->set_purchase_log_for_callbacks();
+		$this->set_purchase_log_for_callbacks( $sessionid, 'sessionid' );
 
 		$total = $this->convert( $this->purchase_log->get( 'totalprice' ) );
 
