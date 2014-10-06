@@ -350,10 +350,10 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	public function log_protection_status( $response ) {
 		$params = $response->get_params();
 
-		$elg                      = $params['PAYMENTINFO_0_PROTECTIONELIGIBILITY'];
-		$paypal_log               = wpsc_get_purchase_meta( $this->purchase_log->get( 'id' ), 'paypal_ec_details', true );
+		$elg                      = $params['PROTECTIONELIGIBILITY'];
+		$paypal_log               = wpsc_get_purchase_meta( $this->purchase_log->get( 'id' ), 'paypal_pro_details', true );
 		$paypal_log['protection'] = $elg;
-		wpsc_update_purchase_meta( $this->purchase_log->get( 'id' ), 'paypal_ec_details' , $paypal_log );
+		wpsc_update_purchase_meta( $this->purchase_log->get( 'id' ), 'paypal_pro_details' , $paypal_log );
 	}
 
 	public function callback_process_confirmed_payment() {
