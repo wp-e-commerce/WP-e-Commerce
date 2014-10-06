@@ -163,6 +163,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 
 	/**
 	 * Creates a new Purchase Log entry and set it to the current object
+	 * @param bool|int ID or session id
 	 *
 	 * @return null
 	 */
@@ -340,9 +341,10 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	}
 
 	/**
-	 * Records the Protection Eligibility status to the Purchase Log on
-	 * DoExpressCheckout Call
+	 * Records the Protection Eligibility status to the Purchase Log 
+	 * after the purchase process
 	 *
+	 * @param PHP_Merchant_Paypal_Pro_Response $response
 	 * @return void
 	 */
 	public function log_protection_status( $response ) {
@@ -568,7 +570,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 			$options['notify_url'] = $this->get_notify_url();
 		}
 
-		// CreateButton
+		// BMCreateButton API call
 		$response = $this->gateway->createButton( $options );
 		$params = $response->get_params();
 		$website_code = $params['WEBSITECODE'];
@@ -576,13 +578,12 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 
 		if ( $response->is_successful() ) {
 			$params = $response->get_params();
+			// Log any warning
 			if ( $params['ACK'] == 'SuccessWithWarning' ) {
 				$this->log_error( $response );
-			}
-			// Successful redirect
-			//$url = $this->get_redirect_url( array( 'token' => $response->get( 'token' ) ) );
-		} else {
-			// SetExpressCheckout Failure
+			}	
+		} else {	
+			// Log errors and redirect user
 			$this->log_error( $response );
 			$url = add_query_arg( array(
 				'payment_gateway'          => 'paypal-pro-checkout',
@@ -590,14 +591,16 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 			), $this->get_return_url() );
 		}
 
+		// Write the Button code
 		echo( $website_code );
+
 		exit;
 	}
 
 	/**
 	 * Log an error message
 	 *
-	 * @param PHP_Merchant_Paypal_Express_Checkout_Response $response
+	 * @param PHP_Merchant_Paypal_Pro_Response $response
 	 * @return void
 	 *
 	 * @since 3.9
