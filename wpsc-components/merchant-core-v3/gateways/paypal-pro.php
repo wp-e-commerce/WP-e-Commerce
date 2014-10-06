@@ -415,6 +415,14 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		</tr>
 		<tr>
 			<td>
+				<label for="wpsc-paypal-pro-vendor-id"><?php _e( 'Vendor ID', 'wpsc' ); ?></label>
+			</td>
+			<td>
+				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'vendor_id' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'vendor_id' ) ); ?>" id="wpsc-paypal-pro-vendor-id" />
+			</td>
+		</tr>
+		<tr>
+			<td>
 				<label for="wpsc-paypal-pro-api-username"><?php _e( 'API Username', 'wpsc' ); ?></label>
 			</td>
 			<td>
@@ -560,7 +568,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 			'address_override' => 1,
 			'paymentaction'    => 'sale',
 			'template'         => 'templateD',
-			'vendor'           => 'wpp@omarabid',
+			'vendor'           => $this->setting->get( 'vendor_id' ),
 		);
 
 		$options += $this->checkout_data->get_gateway_data();
