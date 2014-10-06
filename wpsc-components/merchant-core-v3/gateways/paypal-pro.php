@@ -270,9 +270,9 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 			$options['notify_url'] = $this->get_notify_url();
 		}
 
-		$details = $this->gateway->get_transaction_details( $tx );
+		$response = $this->gateway->get_transaction_details( $tx );
 
-		$this->log_payer_details( $details );	
+		$this->log_payer_details( $response );	
 		$this->log_protection_status( $response );
 		$location = remove_query_arg( 'payment_gateway_callback' );
 
