@@ -270,10 +270,14 @@ function wpsc_admin_sale_rss() {
 }
 
 // Trigger purchase log actions
-if ( isset( $_GET['wpsc_purchase_log_action'] ) && isset( $_GET['id'] ) ) {
+if ( isset( $_GET['wpsc_purchase_log_action'] ) && isset( $_GET['id'] ) && isset( $_GET['_wpnonce'] ) ) {
+	$wpsc_purchase_log_action = sanitize_key( $_GET['wpsc_purchase_log_action'] );
 
-	do_action( 'wpsc_purchase_log_action-' . sanitize_key( $_GET['wpsc_purchase_log_action'] ), absint( $_GET['id'] ) );
+	if ( wp_verify_nonce( $_GET['_wpnonce'], 'wpsc_purchase_log_action_' . $wpsc_purchase_log_action ) ) {
 
+		do_action( 'wpsc_purchase_log_action-' . $wpsc_purchase_log_action, absint( $_GET['id'] ) );
+
+	}
 }
 
 if ( isset( $_GET['action'] ) && ( 'purchase_log' == $_GET['action'] ) )

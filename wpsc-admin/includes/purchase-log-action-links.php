@@ -334,7 +334,10 @@ class WPSC_Purchase_Log_Action_Link {
 		}
 
 		// Callback URL
-		return add_query_arg( array( 'wpsc_purchase_log_action' => $this->id, 'id' => $this->log_id ) );
+		$url = add_query_arg( array( 'wpsc_purchase_log_action' => $this->id, 'id' => $this->log_id ) );
+		$url = wp_nonce_url( $url, 'wpsc_purchase_log_action_' . $this->id );
+
+		return $url;
 
 	}
 
