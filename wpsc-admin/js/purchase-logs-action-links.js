@@ -51,7 +51,7 @@
 
 		ajax_callback : function( response ) {
 
-			if ( response.is_successful ) {
+			if ( response.is_successful && response.obj.success ) {
 
 				// Notifications
 				var dashicon = $( '#wpsc_purchlogitems_links ul a.wpsc-purchlog-action-link-' + response.obj.purchase_log_action_link + ' .dashicons' );
@@ -67,10 +67,13 @@
 
 			} else {
 
-				// Ideally we'd like to know here which link was clicked, but we don't
-				// so just clear all spinners.
+				// Ideally we'd always like to know which link was clicked, but we don't
+				// so just clear all spinners and only clear specific spinner if AJAX response was processed.
 
 				var dashicon = $( '#wpsc_purchlogitems_links ul a.wpsc-purchlog-action-link.doing .dashicons' );
+				if ( response.is_successful ) {
+					dashicon = $( '#wpsc_purchlogitems_links ul a.wpsc-purchlog-action-link-' + response.obj.purchase_log_action_link + ' .dashicons' );
+				}
 				var dashicon_class = dashicon.attr( 'class' );
 
 				dashicon.removeClass().addClass( 'dashicons dashicons-no' );

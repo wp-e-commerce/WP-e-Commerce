@@ -423,11 +423,13 @@ function _wpsc_ajax_purchase_log_action_link() {
 	$log_id = absint( $_POST['log_id'] );
 	$purchase_log_action_link = sanitize_key( $_POST['purchase_log_action_link'] );
 
-	$return = apply_filters( 'wpsc_purchase_log_action_ajax-' . $purchase_log_action_link, array(), $log_id );
+	// Expected to receive success = true by default, or false on error.
+	$return = apply_filters( 'wpsc_purchase_log_action_ajax-' . $purchase_log_action_link, array( 'success' => true ), $log_id );
 
 	if ( ! is_wp_error( $return ) ) {
 		$return['log_id'] = $log_id;
 		$return['purchase_log_action_link'] = $purchase_log_action_link;
+		$return['success'] = isset( $return['success'] ) ? (bool) $return['success'] : true;
 	}
 
 	return $return;
