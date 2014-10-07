@@ -269,16 +269,23 @@ function wpsc_admin_sale_rss() {
 	}
 }
 
-// Trigger purchase log actions
-if ( isset( $_GET['wpsc_purchase_log_action'] ) && isset( $_GET['id'] ) && isset( $_GET['_wpnonce'] ) ) {
-	$wpsc_purchase_log_action = sanitize_key( $_GET['wpsc_purchase_log_action'] );
+/**
+ * Do Purchase Log Actions
+ */
+function wpsc_do_purchase_log_actions() {
 
-	if ( wp_verify_nonce( $_GET['_wpnonce'], 'wpsc_purchase_log_action_' . $wpsc_purchase_log_action ) ) {
+	if ( isset( $_GET['wpsc_purchase_log_action'] ) && isset( $_GET['id'] ) && isset( $_GET['_wpnonce'] ) ) {
+		$wpsc_purchase_log_action = sanitize_key( $_GET['wpsc_purchase_log_action'] );
 
-		do_action( 'wpsc_purchase_log_action-' . $wpsc_purchase_log_action, absint( $_GET['id'] ) );
+		if ( wp_verify_nonce( $_GET['_wpnonce'], 'wpsc_purchase_log_action_' . $wpsc_purchase_log_action ) ) {
 
+			do_action( 'wpsc_purchase_log_action-' . $wpsc_purchase_log_action, absint( $_GET['id'] ) );
+
+		}
 	}
+
 }
+add_action( 'admin_init', 'wpsc_do_purchase_log_actions' );
 
 if ( isset( $_GET['action'] ) && ( 'purchase_log' == $_GET['action'] ) )
 	add_action( 'admin_init', 'wpsc_admin_sale_rss' );
