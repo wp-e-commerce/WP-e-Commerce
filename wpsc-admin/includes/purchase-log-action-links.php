@@ -307,11 +307,10 @@ class WPSC_Purchase_Log_Action_Link {
 	 */
 	public function get_link_display() {
 
-		return sprintf( '<a href="%s" title="%s" %s data-purchase-log-action="%s">%s%s</a>',
+		return sprintf( '<a href="%s" title="%s" %s>%s%s</a>',
 			esc_attr( $this->get_link_url() ),
 			esc_attr( $this->args['description'] ),
 			$this->_get_link_attributes_string(),
-			$this->id,
 			$this->_get_dashicon_display(),
 			esc_html( $this->title )
 		);
@@ -353,12 +352,17 @@ class WPSC_Purchase_Log_Action_Link {
 			$att_key = sanitize_html_class( $att );
 
 			// Don't override attributes that we set elsewhere
-			if ( in_array( $att_key, array( 'href', 'title', 'data-purchase-log-action' ) ) ) {
+			if ( in_array( $att_key, array( 'href', 'title' ) ) ) {
 				continue;
 			}
 
 			$atts[] = $att_key . '="' . esc_attr( $val ) . '"';
 		}
+
+		// Data attributes for JS/AJAX
+		$atts[] = 'data-purchase-log-action="' . esc_attr( $this->id ) . '"';
+		$atts[] = 'data-nonce="' . esc_attr( wp_create_nonce( 'wpsc_purchase_log_action_ajax_' . $this->id ) ) . '"';
+
 		return implode( ' ', $atts );
 
 	}

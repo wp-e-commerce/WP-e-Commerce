@@ -26,16 +26,18 @@
 		event_ajax_link_clicked : function( e ) {
 
 			var action = $( this ).data( 'purchase-log-action' );
+			var nonce = $( this ).data( 'nonce' );
 
 			if ( action ) {
 
 				if ( ! $( this ).hasClass( 'doing' ) ) {
 
 					var post_data = {
-						'action'                   : 'purchase_log_action_link',
-						'purchase_log_action_link' : action,
-						'log_id'                   : WPSC_Purchase_Log_Action_Links.log_id,
-						'nonce'                    : WPSC_Purchase_Log_Action_Links.purchase_log_action_link_nonce
+						'action'                    : 'purchase_log_action_link',
+						'purchase_log_action_link'  : action,
+						'purchase_log_action_nonce' : nonce,
+						'log_id'                    : WPSC_Purchase_Log_Action_Links.log_id,
+						'nonce'                     : WPSC_Purchase_Log_Action_Links.purchase_log_action_link_nonce
 					};
 
 					$( this ).addClass( 'doing' );
