@@ -416,7 +416,7 @@ function wpsc_admin_include_purchase_logs_css_and_js() {
 	wp_enqueue_script( 'wpsc-purchase-log-action-links', WPSC_URL . '/wpsc-admin/js/purchase-logs-action-links.js', array( 'jquery' ), WPSC_VERSION . '.' . WPSC_MINOR_VERSION );
 	wp_localize_script( 'wpsc-purchase-log-action-links', 'WPSC_Purchase_Log_Action_Links', array(
 		'purchase_log_action_link_nonce' => _wpsc_create_ajax_nonce( 'purchase_log_action_link' ),
-		'log_id'                         => $_REQUEST['id']
+		'log_id'                         => absint( $_REQUEST['id'] )
 	) );
 
 }
