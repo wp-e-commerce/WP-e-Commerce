@@ -86,7 +86,9 @@
 				// Remove spinner
 				$( '#wpsc_purchlogitems_links ul a.wpsc-purchlog-action-link.doing' ).removeClass( 'doing' );
 
-				alert( response.error.messages.join( "\n" ) );
+				if ( typeof response.error !== 'undefined' ) {
+					alert( response.error.messages.join( "\n" ) );
+				}
 
 			}
 
