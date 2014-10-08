@@ -78,10 +78,14 @@
 				}
 				var dashicon_class = dashicon.attr( 'class' );
 
-				dashicon.removeClass().addClass( 'dashicons dashicons-no' );
-				setTimeout( function() {
+				if ( response.obj.success != null ) {
+					dashicon.removeClass().addClass( 'dashicons dashicons-no' );
+					setTimeout( function() {
+						dashicon.removeClass().addClass( dashicon_class );
+					}, 3000 );
+				} else {
 					dashicon.removeClass().addClass( dashicon_class );
-				}, 3000 );
+				}
 
 				// Remove spinner
 				$( '#wpsc_purchlogitems_links ul a.wpsc-purchlog-action-link.doing' ).removeClass( 'doing' );
