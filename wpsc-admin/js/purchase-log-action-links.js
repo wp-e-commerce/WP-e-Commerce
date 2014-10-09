@@ -8,6 +8,9 @@
 		blur_timeout : null,
 		reset_textbox_width : true,
 
+		/**
+		 * Setup purchase log action links and event handlers.
+		 */
 		init : function() {
 
 			$(function(){
@@ -23,6 +26,9 @@
 
 		},
 
+		/**
+		 * Handle purchase log action link click.
+		 */
 		event_ajax_link_clicked : function( e ) {
 
 			var action = $( this ).data( 'purchase-log-action' );
@@ -30,6 +36,7 @@
 
 			if ( action ) {
 
+				// Only do AJAX request if not already doing it.
 				if ( ! $( this ).hasClass( 'doing' ) ) {
 
 					var post_data = {
@@ -51,14 +58,18 @@
 
 		},
 
+		/**
+		 * Handle purchase log action AJAX response.
+		 */
 		ajax_callback : function( response ) {
 
+			// If AJAX successful and purchase log action successful.
 			if ( response.is_successful && response.obj.success ) {
 
-				// Notifications
 				var dashicon = $( '#wpsc_purchlogitems_links ul a.wpsc-purchlog-action-link-' + response.obj.purchase_log_action_link + ' .dashicons' );
 				var dashicon_class = dashicon.attr( 'class' );
 
+				// Successful notification.
 				dashicon.removeClass().addClass( 'dashicons dashicons-yes' );
 				setTimeout( function() {
 					dashicon.removeClass().addClass( dashicon_class );
@@ -79,17 +90,21 @@
 				var dashicon_class = dashicon.attr( 'class' );
 
 				if ( response.obj.success != null ) {
+
+					// Failure notification.
 					dashicon.removeClass().addClass( 'dashicons dashicons-no' );
 					setTimeout( function() {
 						dashicon.removeClass().addClass( dashicon_class );
 					}, 3000 );
+
 				} else {
 					dashicon.removeClass().addClass( dashicon_class );
 				}
 
-				// Remove spinner
+				// Remove spinner.
 				$( '#wpsc_purchlogitems_links ul a.wpsc-purchlog-action-link.doing' ).removeClass( 'doing' );
 
+				// Show error message.
 				if ( typeof response.error !== 'undefined' ) {
 					alert( response.error.messages.join( "\n" ) );
 				}

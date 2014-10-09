@@ -271,6 +271,8 @@ function wpsc_admin_sale_rss() {
 
 /**
  * Do Purchase Log Actions
+ *
+ * @since  3.9.0
  */
 function wpsc_do_purchase_log_actions() {
 

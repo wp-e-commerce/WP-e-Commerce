@@ -4,23 +4,33 @@
  * Purchase Log Action Links Class
  *
  * Manages and displays a links of action links when editing a puchase log.
+ *
+ * @since  3.9.0
  */
 class WPSC_Purchase_Log_Action_Links {
 
 	/**
 	 * Purchase Log ID.
-	 * @var  int
+	 *
+	 * @since   3.9.0
+	 * @access  private
+	 * @var     int
 	 */
 	protected $log_id;
 
 	/**
 	 * An array of WPSC_Purchase_Log_Action_Link objects.
-	 * @var  array
+	 *
+	 * @since   3.9.0
+	 * @access  private
+	 * @var     array
 	 */
 	protected $links;
 
 	/**
 	 * Setup all action links.
+	 *
+	 * @since   3.9.0
 	 *
 	 * @param  int  $log_id  Purchase log ID.
 	 */
@@ -40,6 +50,9 @@ class WPSC_Purchase_Log_Action_Links {
 	 * Packing slip and email receipt links are available by default.
 	 * Action links are filterable via the 'wpsc_purchlogitem_links' filter which passes the purchase log ID.
 	 * Delete and back links are always required and added after the filter.
+	 *
+	 * @since   3.9.0
+	 * @access  private
 	 */
 	private function _create_links() {
 
@@ -63,6 +76,9 @@ class WPSC_Purchase_Log_Action_Links {
 	 * Validate Links
 	 *
 	 * Validates all links are WPSC_Purchase_Log_Action_Link objects.
+	 *
+	 * @since   3.9.0
+	 * @access  private
 	 */
 	private function _validate_links() {
 
@@ -76,10 +92,13 @@ class WPSC_Purchase_Log_Action_Links {
 	 *
 	 * Validates a WPSC_Purchase_Log_Action_Link object.
 	 *
+	 * @since   3.9.0
+	 * @access  private
+	 *
 	 * @todo  Check that the WPSC_Purchase_Log_Action_Link ID is unique and reject if not - maybe not here.
 	 *
-	 * @param   object       $action_link  WPSC_Purchase_Log_Action_Link object.
-	 * @return  object|bool                If valid, the WPSC_Purchase_Log_Action_Link object, otherwise false.
+	 * @param   WPSC_Purchase_Log_Action_Link          $action_link  Action link object.
+	 * @return  WPSC_Purchase_Log_Action_Link|boolean                If valid, the action link object, otherwise false.
 	 */
 	private function _validate_link( $action_link ) {
 
@@ -94,7 +113,10 @@ class WPSC_Purchase_Log_Action_Links {
 	/**
 	 * Downloads Lock Action Link
 	 *
-	 * @return  object  Instance of WPSC_Purchase_Log_Action_Link.
+	 * @since   3.9.0
+	 * @access  private
+	 *
+	 * @return  WPSC_Purchase_Log_Action_Link  Instance of an action link object.
 	 */
 	private function _get_downloads_lock_link() {
 
@@ -108,7 +130,10 @@ class WPSC_Purchase_Log_Action_Links {
 	/**
 	 * View Packing Slip Action Link
 	 *
-	 * @return  object  Instance of WPSC_Purchase_Log_Action_Link.
+	 * @since   3.9.0
+	 * @access  private
+	 *
+	 * @return  WPSC_Purchase_Log_Action_Link  Instance of an action link object.
 	 */
 	private function _get_packing_slip_link() {
 
@@ -125,7 +150,10 @@ class WPSC_Purchase_Log_Action_Links {
 	/**
 	 * Resend Email Receipt Action Link
 	 *
-	 * @return  object  Instance of WPSC_Purchase_Log_Action_Link.
+	 * @since   3.9.0
+	 * @access  private
+	 *
+	 * @return  WPSC_Purchase_Log_Action_Link  Instance of an action link object.
 	 */
 	private function _get_email_receipt_link() {
 
@@ -139,7 +167,10 @@ class WPSC_Purchase_Log_Action_Links {
 	/**
 	 * Delete Action Link
 	 *
-	 * @return  object  Instance of WPSC_Purchase_Log_Action_Link.
+	 * @since   3.9.0
+	 * @access  private
+	 *
+	 * @return  WPSC_Purchase_Log_Action_Link  Instance of an action link object.
 	 */
 	private function _get_delete_link() {
 
@@ -156,7 +187,10 @@ class WPSC_Purchase_Log_Action_Links {
 	/**
 	 * Back Action Link
 	 *
-	 * @return  object  Instance of WPSC_Purchase_Log_Action_Link.
+	 * @since   3.9.0
+	 * @access  private
+	 *
+	 * @return  WPSC_Purchase_Log_Action_Link  Instance of an action link object.
 	 */
 	private function _get_back_link() {
 
@@ -170,7 +204,9 @@ class WPSC_Purchase_Log_Action_Links {
 	/**
 	 * Display Link List Items
 	 *
-	 * Outputs action links as a series of <li> tags to be included in an HTML list.
+	 * @since  3.9.0
+	 *
+	 * Outputs action links as a series of list item tags to be included in an HTML list.
 	 */
 	public function display_link_list_items() {
 
@@ -186,35 +222,51 @@ class WPSC_Purchase_Log_Action_Links {
  * Purchase Log Action Link Class
  *
  * Creates, styles and handles a purchase log action link.
+ *
+ * @since  3.9.0
  */
 class WPSC_Purchase_Log_Action_Link {
 
 	/**
 	 * Action Link ID.
-	 * @var  string
+	 *
+	 * @since   3.9.0
+	 * @access  private
+	 * @var     string
 	 */
 	private $id;
 
 	/**
 	 * Action Link Title Text.
-	 * @var  string
+	 *
+	 * @since   3.9.0
+	 * @access  private
+	 * @var     string
 	 */
 	private $title;
 
 	/**
 	 * Purchase Log ID.
-	 * @var  int
+	 *
+	 * @since   3.9.0
+	 * @access  private
+	 * @var     int
 	 */
 	private $log_id;
 
 	/**
 	 * Action Link Settings.
-	 * @var  array
+	 *
+	 * @since   3.9.0
+	 * @access  private
+	 * @var     array
 	 */
 	private $args;
 
 	/**
 	 * Define the action link.
+	 *
+	 * @since  3.9.0
 	 *
 	 * @param  string  $id     Action link ID (will be sanitized).
 	 * @param  string  $title  Link text.
@@ -238,6 +290,9 @@ class WPSC_Purchase_Log_Action_Link {
 	 * 'title' and 'href' attributes are removed as these are created via the 'url' and 'description' settings.
 	 *
 	 * Any class attributes are added to the 'wpsc-purchlog-action-{$id}' class we generate.
+	 *
+	 * @since   3.9.0
+	 * @access  private
 	 *
 	 * @param   array  $args  Supplied settings.
 	 * @return  array         Validated settings.
@@ -292,6 +347,8 @@ class WPSC_Purchase_Log_Action_Link {
 	/**
 	 * Get HTML Class
 	 *
+	 * @since  3.9.0
+	 *
 	 * @return  string  Action link class.
 	 */
 	public function get_html_class() {
@@ -302,6 +359,8 @@ class WPSC_Purchase_Log_Action_Link {
 
 	/**
 	 * Get Link Display
+	 *
+	 * @since  3.9.0
 	 *
 	 * @return  string  HTML action link.
 	 */
@@ -323,6 +382,8 @@ class WPSC_Purchase_Log_Action_Link {
 	 * Returns the custom URL if specified.
 	 * Otherwise returns a callback URL.
 	 *
+	 * @since  3.9.0
+	 *
 	 * @return  string  URL.
 	 */
 	public function get_link_url() {
@@ -342,6 +403,9 @@ class WPSC_Purchase_Log_Action_Link {
 
 	/**
 	 * Get Link Attributes String
+	 *
+	 * @since   3.9.0
+	 * @access  private
 	 *
 	 * @return  string  Link attributes HTML.
 	 */
@@ -369,6 +433,9 @@ class WPSC_Purchase_Log_Action_Link {
 
 	/**
 	 * Get Dashicon Display
+	 *
+	 * @since   3.9.0
+	 * @access  private
 	 * 
 	 * @return  string  Dashicon HTML element.
 	 */
@@ -382,6 +449,9 @@ class WPSC_Purchase_Log_Action_Link {
 	 * Sanitize HTML Classes
 	 *
 	 * Handles sanitizing multiple classes provided as a string.
+	 *
+	 * @since   3.9.0
+	 * @access  private
 	 *
 	 * @param   string|array  $classes  Classes.
 	 * @return  string                  Santized classes.
