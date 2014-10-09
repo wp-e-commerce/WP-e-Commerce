@@ -174,7 +174,7 @@ class WPSC_Purchase_Log_Action_Links {
 	 */
 	private function _get_delete_link() {
 
-		return new WPSC_Purchase_Log_Action_Link( 'delete', __( 'Remove this record', 'wpsc' ), $this->log_id, array(
+		return new WPSC_Purchase_Log_Action_Link( 'delete', _x( 'Remove this record', 'purchase log action link', 'wpsc' ), $this->log_id, array(
 			'url'        => esc_url( wp_nonce_url( add_query_arg( 'purchlog_id', $this->log_id, 'admin.php?wpsc_admin_action=delete_purchlog' ), 'delete_purchlog_' . $this->log_id ) ),
 			'dashicon'   => 'dashicons-dismiss',
 			'attributes' => array(
@@ -194,7 +194,7 @@ class WPSC_Purchase_Log_Action_Links {
 	 */
 	private function _get_back_link() {
 
-		return new WPSC_Purchase_Log_Action_Link( 'back', __( 'Go Back', 'wpsc' ), $this->log_id, array(
+		return new WPSC_Purchase_Log_Action_Link( 'back', _x( 'Go Back', 'purchase log action link', 'wpsc' ), $this->log_id, array(
 			'url'      => wp_get_referer(),
 			'dashicon' => 'dashicons-arrow-left-alt'
 		) );
