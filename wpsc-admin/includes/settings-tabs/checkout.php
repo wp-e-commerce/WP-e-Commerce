@@ -367,7 +367,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 					<label for='require_register2'><?php _e( 'Users can checkout without a user account', 'wpsc' );?></label><br />
 					<input type='radio' value='1' name='wpsc_options[require_register]' id='require_register1' <?php checked( $this->require_register, 1 ); ?> />
 					<label for='require_register1'><?php _e( 'Users must register before checking out', 'wpsc' );?></label>
-					<p class='description'><?php esc_attr_e( 'If users must register, you must also turn on "Membership: Anyone can register" from within WordPress Settings &gt; General', 'wpsc' ); ?></p>
+					<p class='description'><?php esc_attr_e( 'Enabling this will also turn on "Membership: Anyone can register" from within WordPress Settings > General if it\'s not already enabled', 'wpsc' ); ?></p>
 				</td>
 			</tr>
 

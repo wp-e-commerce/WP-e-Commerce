@@ -511,8 +511,8 @@ function wpsc_display_products_page( $query ) {
 
 	// Pretty sure this single_product code is legacy...but fixing it up just in case.
 	// get the display type for the selected category
-	if(!empty($temp_wpsc_query->query_vars['term']))
-		$display_type = wpsc_get_the_category_display($temp_wpsc_query->query_vars['term']);
+	if(!empty($wpsc_query->query_vars['term']))
+		$display_type = wpsc_get_the_category_display($wpsc_query->query_vars['term']);
 	elseif( !empty( $args['wpsc_product_category'] ) )
 		$display_type = wpsc_get_the_category_display($args['wpsc_product_category']);
 	else
@@ -1155,7 +1155,7 @@ function wpec_remap_shop_subpages( $vars ) {
 		return $vars;
 	$reserved_names = array('[shoppingcart]','[userlog]','[transactionresults]');
 	foreach($reserved_names as $reserved_name){
-		if ( isset( $vars['taxonomy'] ) && $vars['taxonomy'] == 'wpsc_product_category' && $isset( $vars['term'] ) && $vars['term'] == $page->post_name ) {
+		if ( isset( $vars['taxonomy'] ) && $vars['taxonomy'] == 'wpsc_product_category' && isset( $vars['term'] ) && $vars['term'] == $page->post_name ) {
 			$page_id = wpsc_get_the_post_id_by_shortcode( $reserved_name );
 			$page = get_post( $page_id );
 			return array( 'page_id' => $page->ID );
@@ -1230,6 +1230,7 @@ function is_products_page(){
  */
 function wpsc_display_featured_products_page() {
 	global $wp_query;
+	$output = '';
 	$sticky_array = get_option( 'sticky_products' );
 	if ( (is_front_page() || is_home() || is_products_page() ) && !empty( $sticky_array ) && $wp_query->post_count > 1) {
 		$query = get_posts( array(
