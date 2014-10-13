@@ -1,0 +1,6 @@
+IFRAME[name=hss_iframe] {
+	max-width: none;
+}
+FORM[target=hss_iframe] {
+	display: none;
+}

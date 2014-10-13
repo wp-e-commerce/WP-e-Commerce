@@ -79,8 +79,11 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 	 * @return array
 	 */
 	public function filter_unselect_default( $fields ) {
-		$fields[0]['checked'] = false;
-		return $fields;
+		foreach ( $fields as $i=>$field ) {
+            $fields[ $i ][ 'checked' ] = false;
+		}
+
+        return $fields;
 	}
 
 	/**

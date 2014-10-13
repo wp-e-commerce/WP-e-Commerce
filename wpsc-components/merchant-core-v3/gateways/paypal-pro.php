@@ -31,18 +31,17 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 			'cancel_url'       => $this->get_shopping_cart_payment_url(),
 			'currency'         => $this->get_currency_code(),
 			'test'             => (bool) $this->setting->get( 'sandbox_mode' ),
-			// 'address_override' => 1,
-			// 'solution_type'    => 'mark',
-			// 'cart_logo'        => $this->setting->get( 'cart_logo' ),
-			// 'cart_border'      => $this->setting->get( 'cart_border' ),
 		) );
+
+		// Load PayPal Pro JavaScript file
+		add_action( 'wp_enqueue_scripts', array( $this, 'pro_script' ) );	
 
 		add_filter( 'wpsc_purchase_log_gateway_data', array( $this, 'filter_purchase_log_gateway_data' ), 10, 2 );
 
 		// Unselect Default Payment Gateway
 		add_filter(
 			'wpsc_payment_method_form_fields',
-			array( $this, 'filter_unselect_default' ), 100 , 1 
+			array( $this, 'filter_unselect_default' ), 101 , 1 
 		);
 	}
 
@@ -56,20 +55,39 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 * @since 3.9
 	 */
 	public function filter_unselect_default( $fields ) {
-		$fields[0]['checked'] = false;
+		foreach ( $fields as $i=>$field ) {
+			$fields[ $i ][ 'checked' ] = false;
+		}
+
 		return $fields;
 	}
 
 	/**
-	 * Returns the PayPal redirect URL
+	 * Returns the HTML of the logo of the payment gateway.
 	 *
-	 * @param array $data Arguments to encode with the URL
+	 * @access public 
 	 * @return string
 	 *
 	 * @since 3.9
 	 */
-	public function get_redirect_url( $data = array() ) {
+	public function get_mark_html() {
+		$html = '<img src="' . WPSC_URL . '/images/cc.gif" border="0" alt="' . esc_attr__( 'Credit Card Icons' ) .'" />'; 
 
+		return apply_filters( 'wpsc_paypal-pro_mark_html', $html );
+	}
+
+	/**
+	 * WordPress Enqueue for the Pro Script and CSS file
+	 *
+	 * @return void
+	 *
+	 * @since 3.9
+	 */
+	public function pro_script() {
+		if ( wpsc_is_checkout() ) {	
+			wp_enqueue_script( 'pro-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/pro.js', array( 'jquery' ) ); 	
+			wp_enqueue_style( 'pro-syle-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/pro.css' ); 	
+		}
 	}
 
 	/**
@@ -118,6 +136,14 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 * @return string
 	 */
 	protected function get_return_url() {
+		$location = add_query_arg( array(
+			'sessionid'                => $this->purchase_log->get( 'sessionid' ),
+			'payment_gateway'          => 'paypal-pro',
+			'payment_gateway_callback' => 'confirm_transaction',
+		),
+		get_option( 'transact_url' )
+	);
+		return apply_filters( 'wpsc_paypal_pro_return_url', $location );
 
 	}
 
@@ -137,17 +163,22 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 
 	/**
 	 * Creates a new Purchase Log entry and set it to the current object
+	 * @param bool|int ID or session id
 	 *
 	 * @return null
 	 */
-	protected function set_purchase_log_for_callbacks( $sessionid = false ) {
+	protected function set_purchase_log_for_callbacks( $id = false, $sessionid = false ) {
 		// Define the sessionid if it's not passed
-		if ( $sessionid === false ) {
-			$sessionid = $_REQUEST['sessionid'];
+		if ( $id === false ) {
+			$id = $_REQUEST['sessionid'];
 		}
 
 		// Create a new Purchase Log entry
-		$purchase_log = new WPSC_Purchase_Log( $sessionid, 'sessionid' );
+		if ( $sessionid === 'sessionid' ) {
+			$purchase_log = new WPSC_Purchase_Log( $id, 'sessionid' );
+		} else {
+			$purchase_log = new WPSC_Purchase_Log( $id, 'id' );
+		}
 
 		if ( ! $purchase_log->exists() ) {
 			return null;
@@ -163,7 +194,31 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 * @return void
 	 */
 	public function callback_ipn() {
+		$ipn = new PHP_Merchant_Paypal_IPN( false, (bool) $this->setting->get( 'sandbox_mode', false ) );
 
+		if ( $ipn->is_verified() ) {
+			$sessionid = $ipn->get( 'invoice' );
+			$this->set_purchase_log_for_callbacks( $sessionid );
+
+			if ( $ipn->is_payment_denied() ) {
+				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::PAYMENT_DECLINED );
+			} elseif ( $ipn->is_payment_refunded() ) {
+				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::REFUNDED );
+			} elseif ( $ipn->is_payment_completed() ) {
+				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT );
+			} elseif ( $ipn->is_payment_pending() ) {
+				if ( $ipn->is_payment_refund_pending() ) {
+					$this->purchase_log->set( 'processed', WPSC_Purchase_Log::REFUND_PENDING );
+				} else {
+					$this->purchase_log->set( 'processed', WPSC_Purchase_Log::ORDER_RECEIVED );
+				}
+			}
+
+			$this->purchase_log->save();
+			transaction_results( $sessionid, false );
+		}
+
+		exit;
 	}
 
 	/**
@@ -174,7 +229,15 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 * @since 3.9
 	 */
 	public function callback_confirm_transaction() {
+		if ( ! isset( $_REQUEST['sessionid'] ) || ! isset( $_REQUEST['tx'] ) ) {
+			return false;
+		}
 
+		// Set the Purchase Log
+		$this->set_purchase_log_for_callbacks();
+
+		// Display the Confirmation Page
+		$this->do_transaction();
 	}
 
 	/**
@@ -183,7 +246,58 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 * @since 3.9
 	 */
 	public function do_transaction() {
+		$args = array_map( 'urldecode', $_GET );
+		extract( $args, EXTR_SKIP );
 
+		if ( ! isset( $sessionid ) || ! isset( $tx ) || ! isset( $CSCMATCH ) ) {
+			return;
+		}
+
+		$this->set_purchase_log_for_callbacks( $sessionid, 'sessionid' );
+
+		$total = $this->convert( $this->purchase_log->get( 'totalprice' ) );
+
+		$options = array(
+			'tx'            => $tx,
+			'CSCMATCH'      => $CSCMATCH,
+			'message_id'    => $this->purchase_log->get( 'sessionid' ),
+			'invoice'       => $this->purchase_log->get( 'id' ),
+		);
+
+		$options += $this->checkout_data->get_gateway_data();
+		$options += $this->purchase_log->get_gateway_data( parent::get_currency_code(), $this->get_currency_code() );
+
+		if ( $this->setting->get( 'ipn', false ) ) {
+			$options['notify_url'] = $this->get_notify_url();
+		}
+
+		$response = $this->gateway->get_transaction_details( $tx );
+
+		$this->log_payer_details( $response );	
+		$this->log_protection_status( $response );
+		$location = remove_query_arg( 'payment_gateway_callback' );
+
+		if ( $response->has_errors() ) {	
+			wpsc_update_customer_meta( 'paypal_pro_errors', $response->get_errors() );
+			$location = add_query_arg( array( 'payment_gateway_callback' => 'display_paypal_error' ) );
+		} elseif ( $response->is_payment_completed() || $response->is_payment_pending() ) {
+			$location = remove_query_arg( 'payment_gateway' );
+
+			if ( $response->is_payment_completed() ) {
+				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT );
+			} else {
+				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::ORDER_RECEIVED );
+			}
+
+			$this->purchase_log->set( 'transactid', $response->get( 'transaction_id' ) )
+				->set( 'date', time() )
+				->save();
+		} else {
+			$location = add_query_arg( array( 'payment_gateway_callback' => 'display_generic_error' ) );
+		}
+
+		wp_redirect( $location );
+		exit;
 	}
 
 	public function callback_display_paypal_error() {
@@ -223,22 +337,23 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 			'protection'      => null,
 		);
 
-		wpsc_update_purchase_meta( $this->purchase_log->get( 'id' ), 'paypal_ec_details' , $paypal_log );
+		wpsc_update_purchase_meta( $this->purchase_log->get( 'id' ), 'paypal_pro_details' , $paypal_log );
 	}
 
 	/**
-	 * Records the Protection Eligibility status to the Purchase Log on
-	 * DoExpressCheckout Call
+	 * Records the Protection Eligibility status to the Purchase Log 
+	 * after the purchase process
 	 *
+	 * @param PHP_Merchant_Paypal_Pro_Response $response
 	 * @return void
 	 */
 	public function log_protection_status( $response ) {
 		$params = $response->get_params();
 
-		$elg                      = $params['PAYMENTINFO_0_PROTECTIONELIGIBILITY'];
-		$paypal_log               = wpsc_get_purchase_meta( $this->purchase_log->get( 'id' ), 'paypal_ec_details', true );
+		$elg                      = $params['PROTECTIONELIGIBILITY'];
+		$paypal_log               = wpsc_get_purchase_meta( $this->purchase_log->get( 'id' ), 'paypal_pro_details', true );
 		$paypal_log['protection'] = $elg;
-		wpsc_update_purchase_meta( $this->purchase_log->get( 'id' ), 'paypal_ec_details' , $paypal_log );
+		wpsc_update_purchase_meta( $this->purchase_log->get( 'id' ), 'paypal_pro_details' , $paypal_log );
 	}
 
 	public function callback_process_confirmed_payment() {
@@ -296,6 +411,14 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		<tr>
 			<td colspan="2">
 				<h4><?php _e( 'Account Credentials', 'wpsc' ); ?></h4>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="wpsc-paypal-pro-vendor-id"><?php _e( 'Vendor ID', 'wpsc' ); ?></label>
+			</td>
+			<td>
+				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'vendor_id' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'vendor_id' ) ); ?>" id="wpsc-paypal-pro-vendor-id" />
 			</td>
 		</tr>
 		<tr>
@@ -430,20 +553,62 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	}
 
 	/**
-	 * Process the SetExpressCheckout API Call
+	 * Call the CreateButton API
 	 *
 	 * @return void
 	 *
 	 * @since 3.9
 	 */
 	public function process() {
+		$total = $this->convert( $this->purchase_log->get( 'totalprice' ) );
+		$options = array(
+			'return_url'       => $this->get_return_url(),
+			'message_id'       => $this->purchase_log->get( 'sessionid' ),
+			'invoice'          => $this->purchase_log->get( 'id' ),
+			'address_override' => 1,
+			'paymentaction'    => 'sale',
+			'template'         => 'templateD',
+			'vendor'           => $this->setting->get( 'vendor_id' ),
+		);
 
+		$options += $this->checkout_data->get_gateway_data();
+		$options += $this->purchase_log->get_gateway_data( parent::get_currency_code(), $this->get_currency_code() );
+
+		if ( $this->setting->get( 'ipn', false ) ) {
+			$options['notify_url'] = $this->get_notify_url();
+		}
+
+		// BMCreateButton API call
+		$response = $this->gateway->createButton( $options );
+		$params = $response->get_params();
+		$website_code = $params['WEBSITECODE'];
+
+
+		if ( $response->is_successful() ) {
+			$params = $response->get_params();
+			// Log any warning
+			if ( $params['ACK'] == 'SuccessWithWarning' ) {
+				$this->log_error( $response );
+			}	
+		} else {	
+			// Log errors and redirect user
+			$this->log_error( $response );
+			$url = add_query_arg( array(
+				'payment_gateway'          => 'paypal-pro-checkout',
+				'payment_gateway_callback' => 'display_paypal_error',
+			), $this->get_return_url() );
+		}
+
+		// Write the Button code
+		echo( $website_code );
+
+		exit;
 	}
 
 	/**
 	 * Log an error message
 	 *
-	 * @param PHP_Merchant_Paypal_Express_Checkout_Response $response
+	 * @param PHP_Merchant_Paypal_Pro_Response $response
 	 * @return void
 	 *
 	 * @since 3.9

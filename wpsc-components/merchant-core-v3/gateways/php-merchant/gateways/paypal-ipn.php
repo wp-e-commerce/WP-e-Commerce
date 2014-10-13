@@ -15,12 +15,14 @@ class PHP_Merchant_Paypal_IPN
 		if ( $http ) {
 			$this->http = $http;
 		} else {
-			require_once( realpath( '../' ) . '/common/http-curl.php' );
+			require_once( dirname( __FILE__ ) . '/../common/http-curl.php' );
 			$this->http = new PHP_Merchant_HTTP_CURL();
 		}
 
-		if ( $data === false )
+		if ( $data === false ) {
 			$data = $_POST;
+		}
+
 		$this->params = $data;
 
 		$this->url = $test ? self::SANDBOX_URL : self::LIVE_URL;
