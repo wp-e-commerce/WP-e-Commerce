@@ -36,10 +36,10 @@ class PHP_Merchant_Paypal_Pro extends PHP_Merchant_Paypal
 
 		$request += phpme_map( $this->options, array(
 			'subtotal'     => 'subtotal',
-			'shipping' => 'shipping',
-			'handling' => 'handling',
-			'tax'      => 'tax',
-			'item_name'        => 'description',
+			'shipping'     => 'shipping',
+			'handling'     => 'handling',
+			'tax'          => 'tax',
+			'item_name'    => 'description',
 			'invoice'      => 'invoice',
 			'notify_url'   => 'notify_url',
 		) );
@@ -51,7 +51,7 @@ class PHP_Merchant_Paypal_Pro extends PHP_Merchant_Paypal
 		foreach ( $this->options['items'] as $item ) {
 			// Options Fields
 			$item_optionals = array(
-				'tax'         => "tax{$i}",	
+				'tax'      => "tax{$i}",	
 			);
 
 			// Format Amount Field 
@@ -60,7 +60,7 @@ class PHP_Merchant_Paypal_Pro extends PHP_Merchant_Paypal
 			// Required Fields
 			$request += phpme_map( $item, array(
 				"item_name{$i}" => 'name',
-				"amount{$i}"  => 'amount',
+				"amount{$i}"    => 'amount',
 				"quantity{$i}"  => 'quantity',
 			) );
 

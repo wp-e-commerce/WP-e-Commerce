@@ -55,9 +55,10 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 * @since 3.9
 	 */
 	public function filter_unselect_default( $fields ) {
-		foreach( $fields as $i=>$field ) {
-			$fields[$i]['checked'] = false;
+		foreach ( $fields as $i=>$field ) {
+			$fields[ $i ][ 'checked' ] = false;
 		}
+
 		return $fields;
 	}
 
@@ -70,11 +71,10 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 * @since 3.9
 	 */
 	public function get_mark_html() {
-		$html = '<img src="' . WPSC_URL . '/images/cc.gif" border="0" alt="Credit Card Icons" />'; 
+		$html = '<img src="' . WPSC_URL . '/images/cc.gif" border="0" alt="' . esc_attr__( 'Credit Card Icons' ) .'" />'; 
 
-		return $html;
+		return apply_filters( 'wpsc_paypal-pro_mark_html', $html );
 	}
-
 
 	/**
 	 * WordPress Enqueue for the Pro Script and CSS file
@@ -156,7 +156,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		$location = add_query_arg( array(
 			'payment_gateway'          => 'paypal-pro',
 			'payment_gateway_callback' => 'ipn',
-		), home_url( 'index.php' ) );	
+		), home_url( 'index.php' ) );
 
 		return apply_filters( 'wpsc_paypal_pro_notify_url', $location );
 	}
@@ -258,10 +258,10 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		$total = $this->convert( $this->purchase_log->get( 'totalprice' ) );
 
 		$options = array(
-			'tx'         => $tx,
+			'tx'            => $tx,
 			'CSCMATCH'      => $CSCMATCH,
 			'message_id'    => $this->purchase_log->get( 'sessionid' ),
-			'invoice'		=> $this->purchase_log->get( 'id' ),
+			'invoice'       => $this->purchase_log->get( 'id' ),
 		);
 
 		$options += $this->checkout_data->get_gateway_data();
