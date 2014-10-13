@@ -299,8 +299,8 @@ if ( isset( $_REQUEST['email_buyer_id'] ) && is_numeric( $_REQUEST['email_buyer_
 
 function wpsc_purchlog_clear_download_items() {
 	global $wpdb;
-	if ( is_numeric( $_GET['purchaselog_id'] ) ) {
-		$purchase_id = (int)$_GET['purchaselog_id'];
+	if ( is_numeric( $_GET['id'] ) ) {
+		$purchase_id = (int)$_GET['id'];
 		$downloadable_items = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_DOWNLOAD_STATUS . "` WHERE `purchid` = %d", $purchase_id ), ARRAY_A );
 
 		$wpdb->update( WPSC_TABLE_DOWNLOAD_STATUS, array( 'ip_number' => '' ), array( 'purchid' => $purchase_id ), '%s', '%d' );
