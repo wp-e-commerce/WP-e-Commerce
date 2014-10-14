@@ -52,7 +52,7 @@ class wpsc_coupons {
 	public $errormsg;
 
 	/**
-	 * Coupons constractor
+	 * Coupons constructor
 	 *
 	 * Instantiate a coupons object with optional variable $code;
 	 *
