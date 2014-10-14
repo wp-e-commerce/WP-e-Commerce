@@ -5,15 +5,15 @@
 	 * Purchase Log Action Links
 	 */
 	$.extend( WPSC_Purchase_Log_Action_Links, {
-		blur_timeout : null,
-		reset_textbox_width : true,
 
 		/**
 		 * Setup purchase log action links and event handlers.
+		 *
+		 * @since  3.9.0
 		 */
 		init : function() {
 
-			$(function(){
+			$( function() {
 				var wrapper = $( '#wpsc_purchlogitems_links ul' );
 
 				// Add spinners to AJAX links
@@ -28,6 +28,8 @@
 
 		/**
 		 * Handle purchase log action link click.
+		 *
+		 * @since  3.9.0
 		 */
 		event_ajax_link_clicked : function( e ) {
 
@@ -60,6 +62,8 @@
 
 		/**
 		 * Handle purchase log action AJAX response.
+		 *
+		 * @since  3.9.0
 		 */
 		ajax_callback : function( response ) {
 
