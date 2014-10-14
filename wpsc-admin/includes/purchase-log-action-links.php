@@ -6,6 +6,8 @@
  * Manages and displays a links of action links when editing a puchase log.
  *
  * @since  3.9.0
+ *
+ * @link  https://github.com/wp-e-commerce/WP-e-Commerce/pull/1562
  */
 class WPSC_Purchase_Log_Action_Links {
 
