@@ -132,7 +132,7 @@ function wpsc_drag_and_drop_ordering($per_page, $post_type){
 	return $per_page;
 }
 add_filter( 'request', 'wpsc_query_vars_product_list' );
-add_filter('edit_posts_per_page' , 'wpsc_drag_and_drop_ordering', 10, 2 );
+add_filter( 'edit_posts_per_page' , 'wpsc_drag_and_drop_ordering', 10, 2 );
 
 /**
  * Checks whether to display or hide the update wp-e-commerce link

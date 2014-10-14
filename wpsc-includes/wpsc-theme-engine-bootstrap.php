@@ -144,7 +144,7 @@ function _wpsc_enable_theme_engine_v2( $components ) {
  */
 function _wpsc_maybe_activate_theme_engine_v2() {
 
-	$activate = true;
+	$activate = false;
 
 	global $wp_rewrite;
 
