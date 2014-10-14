@@ -618,6 +618,7 @@ function wpsc_the_product_price( $no_decimals = false, $only_normal_price = fals
 		$from_text = apply_filters( 'wpsc_product_variation_text', $from_text );
 		$output = wpsc_product_variation_price_from( $product_id, array(
 			'from_text'         => $from_text,
+			'no_decimals'       => $no_decimals,
 			'only_normal_price' => $only_normal_price,
 		) );
 	} else {

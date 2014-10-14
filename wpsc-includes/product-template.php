@@ -51,6 +51,7 @@ function wpsc_product_variation_price_from( $product_id, $args = null ) {
 	global $wpdb;
 	$args = wp_parse_args( $args, array(
 		'from_text'         => false,
+		'no_decimals'       => false,
 		'only_normal_price' => false,
 		'only_in_stock'     => false
 	) );
@@ -86,14 +87,25 @@ function wpsc_product_variation_price_from( $product_id, $args = null ) {
 			if ( $special_price != 0 && $special_price < $price )
 				$price = $special_price;
 		}
+
+		if ( true == $args['no_decimals'] ) {
+			$price = explode( '.', $price );
+			$price = array_shift( $price );
+		}
+
 		$prices[] = $price;
 	}
 
 	sort( $prices );
 	if ( empty( $prices ) )
 		$prices[] = 0;
+
 	$price = apply_filters( 'wpsc_do_convert_price', $prices[0], $product_id );
-	$price = wpsc_currency_display( $price, array( 'display_as_html' => false ) );
+	$args = array(
+		'display_as_html'       => false,
+		'display_decimal_point' => ! $args['no_decimals']
+	);
+	$price = wpsc_currency_display( $price, $args );
 
 	if ( isset( $prices[0] ) && $prices[0] == $prices[count( $prices ) - 1] )
 		$args['from_text'] = false;
