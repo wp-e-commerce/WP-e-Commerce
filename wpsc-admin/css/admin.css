@@ -230,6 +230,8 @@ th#status {
 	margin-top: -.2em;
 }
 
+/* Purchase Log Action Links */
+
 #wpsc_purchlogitems_links a {
 	text-decoration: none;
 	line-height: 14pt;
@@ -238,6 +240,57 @@ th#status {
 #wpsc_purchlogitems_links img {
 	padding-top: 2px;
 	float: left;
+}
+
+#wpsc_purchlogitems_links li .dashicons {
+	margin-right: 10px;
+}
+
+#wpsc_purchlogitems_links li a {
+	position: relative;
+}
+
+#wpsc_purchlogitems_links li a .spinner {
+	display: none;
+	float: none;
+	margin: 0px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+
+#wpsc_purchlogitems_links li a .dashicons {
+	color: #888;
+}
+
+#wpsc_purchlogitems_links li a .dashicons-yes {
+	color: #7ad03a;
+}
+
+#wpsc_purchlogitems_links li a.wpsc-purchlog-action-link-delete .dashicons,
+#wpsc_purchlogitems_links li a.wpsc-purchlog-action-link-back .dashicons {
+	color: #bbb;
+}
+
+#wpsc_purchlogitems_links li a.wpsc-purchlog-action-link-delete:hover .dashicons,
+#wpsc_purchlogitems_links li a .dashicons-no {
+	color: #c00;
+}
+
+#wpsc_purchlogitems_links li a.wpsc-purchlog-action-link-back:hover .dashicons {
+	color: #888;
+}
+
+#wpsc_purchlogitems_links li a.doing {
+	padding-left: 30px;
+}
+
+#wpsc_purchlogitems_links li a.doing .spinner {
+	display: block;
+}
+
+#wpsc_purchlogitems_links li a.doing .dashicons {
+	display: none;
 }
 
 #wpsc_shipping_details_box {

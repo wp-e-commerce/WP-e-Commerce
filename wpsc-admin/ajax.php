@@ -412,6 +412,45 @@ function _wpsc_ajax_purchase_log_send_tracking_email() {
 }
 
 /**
+ * Do puchase log action link via AJAX
+ *
+ * @since   3.9.0
+ * @access  private
+ *
+ * @return  array|WP_Error  $return  Response args if successful, WP_Error if otherwise
+ */
+function _wpsc_ajax_purchase_log_action_link() {
+
+	if ( isset( $_POST['log_id'] ) && isset( $_POST['purchase_log_action_link'] ) && isset( $_POST['purchase_log_action_nonce'] ) ) {
+
+		$log_id = absint( $_POST['log_id'] );
+		$purchase_log_action_link = sanitize_key( $_POST['purchase_log_action_link'] );
+
+		// Verify action nonce
+		if ( wp_verify_nonce( $_POST['purchase_log_action_nonce'], 'wpsc_purchase_log_action_ajax_' . $purchase_log_action_link ) ) {
+
+			// Expected to receive success = true by default, or false on error.
+			$return = apply_filters( 'wpsc_purchase_log_action_ajax-' . $purchase_log_action_link, array( 'success' => null ), $log_id );
+
+		} else {
+			$return = _wpsc_error_invalid_nonce();
+		}
+
+		if ( ! is_wp_error( $return ) ) {
+			$return['log_id'] = $log_id;
+			$return['purchase_log_action_link'] = $purchase_log_action_link;
+			$return['success'] = isset( $return['success'] ) ? (bool) $return['success'] : null;
+		}
+
+		return $return;
+
+	}
+
+	return new WP_Error( 'wpsc_ajax_invalid_purchase_log_action', __( 'Purchase log action failed.', 'wpsc' ) );
+
+}
+
+/**
  * Delete an attached downloadable file via AJAX.
  *
  * @since 3.8.9
