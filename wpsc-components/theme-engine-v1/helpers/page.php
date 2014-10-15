@@ -5,16 +5,16 @@ add_action( 'init', 'wpsc_register_core_theme_files' );
 add_action( 'wpsc_move_theme', 'wpsc_flush_theme_transients', 10, true );
 add_action( 'wpsc_switch_theme', 'wpsc_flush_theme_transients', 10, true );
 add_action( 'switch_theme', 'wpsc_flush_theme_transients', 10, true );
-add_action('admin_init','wpsc_theme_admin_notices');
+add_action( 'admin_init','wpsc_theme_admin_notices');
 add_action( 'update_option_product_image_width'     , 'wpsc_cache_to_upload' );
 add_action( 'update_option_product_image_height'    , 'wpsc_cache_to_upload' );
 add_action( 'update_option_single_view_image_width' , 'wpsc_cache_to_upload' );
 add_action( 'update_option_single_view_image_height', 'wpsc_cache_to_upload' );
 add_action( 'update_option_category_image_width'    , 'wpsc_cache_to_upload' );
 add_action( 'update_option_category_image_height'   , 'wpsc_cache_to_upload' );
-add_action('template_redirect', 'wpsc_all_products_on_page');
+add_action( 'template_redirect', 'wpsc_all_products_on_page');
 add_filter( 'aioseop_description', 'wpsc_set_aioseop_description' );
-add_filter('request', 'wpsc_remove_page_from_query_string');
+add_filter( 'request', 'wpsc_remove_page_from_query_string');
 
 //Potentially unnecessary, as I believe this option is deprecated
 add_action( 'update_option_show_categorybrands'     , 'wpsc_cache_to_upload' );
@@ -1407,3 +1407,39 @@ function wpsc_this_page_url() {
 	return $output;
 }
 
+/**
+ * Strips shortcode placeholders from excerpts returned in search results (and excerpts returned anywhere).
+ *
+ * @param  string $text Trimmed excerpt
+ * @return string $text Trimmed excerpt, sans placeholders
+ * @since  3.9.0
+ */
+function wpsc_strip_shortcode_placeholders( $text ) {
+
+    $is_wpsc_placeholder = false;
+
+    $wpsc_shortcodes = array(
+        '[productspage]'      ,
+        '[shoppingcart]'      ,
+        '[checkout]'          ,
+        '[transactionresults]',
+        '[userlog]'           ,
+    );
+
+    foreach ( $wpsc_shortcodes as $shortcode ) {
+
+        if ( false !== strpos( $text, $shortcode ) ) {
+            $is_wpsc_placeholder = $shortcode;
+            break;
+        }
+    }
+
+    if ( $is_wpsc_placeholder ) {
+        $text = str_replace( $is_wpsc_placeholder, '', $text );
+    }
+
+    return $text;
+
+}
+
+add_filter( 'wp_trim_excerpt', 'wpsc_strip_shortcode_placeholders' );
