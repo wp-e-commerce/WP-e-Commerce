@@ -1412,6 +1412,7 @@ function wpsc_this_page_url() {
  *
  * @param  string $text Trimmed excerpt
  * @return string $text Trimmed excerpt, sans placeholders
+ *
  * @since  3.9.0
  */
 function wpsc_strip_shortcode_placeholders( $text ) {

@@ -53,6 +53,10 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 			}
 		}
 
+		if ( isset( $_POST['wpsc_options']['shipping_discount_value'] ) ) {
+			update_option( 'shipping_discount_value', wpsc_string_to_float( $_POST['wpsc_options']['shipping_discount_value'] ) );
+		}
+
 		if ( ! get_option( 'do_not_use_shipping' ) && ! get_option( 'custom_shipping_options' ) && ! ( bool ) get_option( 'shipwire' ) ) {
 			update_option( 'do_not_use_shipping', '1' );
 			return array( 'shipping_disabled' => 1 );
@@ -233,11 +237,11 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 				<td>&nbsp;</td>
 				<td colspan="2">
 					<?php
-						$value = esc_attr( get_option( 'shipping_discount_value' ) );
+						$value = wpsc_format_number( get_option( 'shipping_discount_value' ) );
 					?>
 					<div <?php echo $shipping_discount_settings; ?> id='shipping_discount_value'>
 
-					<?php printf( __( 'Sales over or equal to %1$s<input type="text" size="6" name="wpsc_options[shipping_discount_value]" value="%2$s" id="shipping_discount_value" /> will receive free shipping.', 'wpsc' ), $currency_sign, $value ); ?>
+					<?php printf( __( 'Sales over or equal to %1$s<input type="text" size="6" name="wpsc_options[shipping_discount_value]" value="%2$s" id="shipping_discount_value" /> will receive free shipping.', 'wpsc' ), $currency_sign, esc_attr( $value ) ); ?>
 					</div>
 				</td>
 			</tr>
