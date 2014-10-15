@@ -631,7 +631,7 @@ function wpsc_the_product_price( $no_decimals = false, $only_normal_price = fals
 				$price = $special_price;
 		}
 
-		if ( true == $no_decimals ) {
+		if ( $no_decimals ) {
 			$price = explode( ".", $price );
 			$price = array_shift( $price );
 		}

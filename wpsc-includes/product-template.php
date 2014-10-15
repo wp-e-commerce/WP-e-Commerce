@@ -88,7 +88,7 @@ function wpsc_product_variation_price_from( $product_id, $args = null ) {
 				$price = $special_price;
 		}
 
-		if ( true == $args['no_decimals'] ) {
+		if ( $args['no_decimals'] ) {
 			$price = explode( '.', $price );
 			$price = array_shift( $price );
 		}
