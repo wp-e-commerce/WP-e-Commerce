@@ -55,6 +55,7 @@ class wpsc_coupons {
 	 * Coupons constructor
 	 *
 	 * Instantiate a coupons object with optional variable $code;
+	* If there are more than one coupon that matches $code check them all to find the first that is valid, if not are return false. 
 	 *
 	 * @param string code (optional) the coupon code you would like to use.
 	 * @return bool True if coupon code exists, False otherwise.
@@ -68,37 +69,48 @@ class wpsc_coupons {
 
 		$this->code = $code;
 
-		$coupon_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_COUPON_CODES."` WHERE coupon_code = %s LIMIT 1", $code ) , ARRAY_A );
+		$coupons_data = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUPON_CODES . "` WHERE coupon_code = %s", $code ) , ARRAY_A );
+		
+		foreach( $coupons_data as $key => $coupon_data ) {
+			if ( !empty( $coupon_data ) ) {
+				$coupon_data = array_merge( array(
+					'value'         => '',
+					'is-percentage' => '',
+					'condition'     => '',
+					'is-used'       => '',
+					'active'        => '',
+					'use-once'      => '',
+					'start'         => '',
+					'expiry'        => '',
+					'every_product' => ''
+				), $coupon_data );
 
-		if ( empty( $coupon_data ) ) {
+				$this->value         = (float) $coupon_data['value'];
+				$this->is_percentage = $coupon_data['is-percentage'];
+				$this->conditions    = unserialize($coupon_data['condition']);
+				$this->is_used       = $coupon_data['is-used'];
+				$this->active        = $coupon_data['active'];
+				$this->use_once      = $coupon_data['use-once'];
+				$this->start_date    = $coupon_data['start'];
+				$this->end_date      = $coupon_data['expiry'];
+				$this->every_product = $coupon_data['every_product'];
+				$this->errormsg      = false;
+
+				$valid = $this->validate_coupon();
+				$items = $this->get_eligible_items();
+				
+				if ( empty( $items ) ) {
+					continue;
+				}
+			
+				if ( $valid ) {
+					return true;
+				}
+			}
+			
 			$this->errormsg = true;
 			wpsc_delete_customer_meta( 'coupon' );
 			return false;
-		} else {
-			$coupon_data = array_merge( array(
-				'value'         => '',
-				'is-percentage' => '',
-				'condition'     => '',
-				'is-used'       => '',
-				'active'        => '',
-				'use-once'      => '',
-				'start'         => '',
-				'expiry'        => '',
-				'every_product' => ''
-			), $coupon_data );
-
-			$this->value         = (float) $coupon_data['value'];
-			$this->is_percentage = $coupon_data['is-percentage'];
-			$this->conditions    = unserialize($coupon_data['condition']);
-			$this->is_used       = $coupon_data['is-used'];
-			$this->active        = $coupon_data['active'];
-			$this->use_once      = $coupon_data['use-once'];
-			$this->start_date    = $coupon_data['start'];
-			$this->end_date      = $coupon_data['expiry'];
-			$this->every_product = $coupon_data['every_product'];
-			$this->errormsg      = false;
-
-			return $this->validate_coupon();
 		}
 
 	}
