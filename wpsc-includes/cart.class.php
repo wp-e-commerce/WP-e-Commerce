@@ -9,7 +9,7 @@
  * @package wp-e-commerce
  * @since 3.7
  * @subpackage wpsc-cart-classes
-*/
+ */
 
 /*
  * @since 3.8.14
@@ -89,31 +89,31 @@ class wpsc_cart {
 	public $_signature = '';
 
 
-    function wpsc_cart() {
+	function wpsc_cart() {
 		$coupon = 'percentage';
 		$this->update_location();
 		$this->wpsc_refresh_cart_items();
 		$this->unique_id = sha1( uniqid( rand(), true ) );
 
-   		add_action( 'wpsc_visitor_location_changing', array( &$this, 'shopper_location_changing' ), 10, 2);
-    }
+		add_action( 'wpsc_visitor_location_changing', array( &$this, 'shopper_location_changing' ), 10, 2);
+	}
 
-    /*
-     * Action routine to start the processing that has to happen when the customer changes
-     * location.
-     *
-     * @since 3.8.14
-     * @param array names of checnout items that hav changed since the last time the location for this customer was changed
-     *
-     */
-  	function shopper_location_changing( $what_changed, $visitor_id ) {
-  		$this->update_location();
-  	}
+	/*
+	 * Action routine to start the processing that has to happen when the customer changes
+	 * location.
+	 *
+	 * @since 3.8.14
+	 * @param array names of checnout items that hav changed since the last time the location for this customer was changed
+	 *
+	 */
+	function shopper_location_changing( $what_changed, $visitor_id ) {
+		$this->update_location();
+	}
 
 	/**
 	 * update_location method, updates the location
-     * @access public
-     */
+	 * @access public
+	 */
 
 	public function update_location() {
 
@@ -132,11 +132,11 @@ class wpsc_cart {
 	}
 
 	/**
-    * @description: refresh all items in the cart
-    *
-    * @param: void
-    * @return: null
-    **/
+	 * @description: refresh all items in the cart
+	 *
+	 * @param: void
+	 * @return: null
+	 **/
 	public function wpsc_refresh_cart_items() {
 		global $wpsc_cart;
 
@@ -145,49 +145,49 @@ class wpsc_cart {
 				$cart_item->refresh_item();
 			}
 		}
-   }
+	}
 
-   /*
-    * It os time to checkout, or at other points in the workflow and it's time to validate the shopping cart
-    * call this function.
-    *
-    * The function will in turn execute all of the hooks that are built into WPEC, then any hooks added by
-    * themes and plugins.  This means that validation rules beyond what WPEC has internally can be added as needed.
-    */
-   function validate_cart() {
+	/*
+		* It os time to checkout, or at other points in the workflow and it's time to validate the shopping cart
+		* call this function.
+		*
+		* The function will in turn execute all of the hooks that are built into WPEC, then any hooks added by
+		* themes and plugins.  This means that validation rules beyond what WPEC has internally can be added as needed.
+		*/
+	function validate_cart() {
 
-   		/*
-   		 * action: wpsc_pre_validate_cart
-   		 *
-   		 * Prior to validating the cart we give anyone whoe is interested a chance to do a little setup with this
-   		 * wpsc_pre_validate_cart.
-   		 *
-   		 * This action can be used as a convenient point to change the logic that is esecuted when the 'wpsc_validate_cart'
-   		 * action is fired.  For example, if you want to do different address checks based on which country is being shipped
-   		 * to you can call add_action with different function paramters.  Or if you wnated to some extra validation when shipping
-   		 * address is differnet than billing, perhaps a quick SOAP call to a fraud check service, you can conditionally do an
-   		 * add action to your function that does the fraud check.
-   		 *
-   		 * @param wpsc_cart the cart object
-   		 * @param current visitor id (use this to get customer meta for the current user
-   		 */
-   		do_action( 'wpsc_pre_validate_cart', $this, wpsc_get_current_customer_id() );
+		/*
+			* action: wpsc_pre_validate_cart
+			*
+			* Prior to validating the cart we give anyone whoe is interested a chance to do a little setup with this
+			* wpsc_pre_validate_cart.
+			*
+			* This action can be used as a convenient point to change the logic that is esecuted when the 'wpsc_validate_cart'
+			* action is fired.  For example, if you want to do different address checks based on which country is being shipped
+			* to you can call add_action with different function paramters.  Or if you wnated to some extra validation when shipping
+			* address is differnet than billing, perhaps a quick SOAP call to a fraud check service, you can conditionally do an
+			* add action to your function that does the fraud check.
+			*
+			* @param wpsc_cart the cart object
+			* @param current visitor id (use this to get customer meta for the current user
+			*/
+		do_action( 'wpsc_pre_validate_cart', $this, wpsc_get_current_customer_id() );
 
-   		/*
- 		 * action: wpsc_validate_cart
-   		 *
-   		 * Validate that the cart contents is valid.  Typically done just prior to checkout.  Most often error conditions
-   		 * will be recorded to special customer meta values, but other processing can be implemented based on specific needs
-   		 *
-   		 * These are the customer/visitor meta values that are typically added to when errors are found:
-   		 * 			checkout_error_messages
-   		 * 			gateway_error_messages
-   		 * 			registration_error_messages
-   		 *
-   		 * @param wpsc_cart the cart object
-   		 * @param current visitor id (use this to get customer meta for the current user
-   		 */
-   		do_action( 'wpsc_validate_cart', $this, wpsc_get_current_customer_id() );
+		/*
+		  * action: wpsc_validate_cart
+			*
+			* Validate that the cart contents is valid.  Typically done just prior to checkout.  Most often error conditions
+			* will be recorded to special customer meta values, but other processing can be implemented based on specific needs
+			*
+			* These are the customer/visitor meta values that are typically added to when errors are found:
+			* 			checkout_error_messages
+			* 			gateway_error_messages
+			* 			registration_error_messages
+			*
+			* @param wpsc_cart the cart object
+			* @param current visitor id (use this to get customer meta for the current user
+			*/
+		do_action( 'wpsc_validate_cart', $this, wpsc_get_current_customer_id() );
 	}
 
 	/**
@@ -282,15 +282,15 @@ class wpsc_cart {
 	 */
 	function shipping_info_empty() {
 		return empty( $this->selected_shipping_method )
-					&& empty( $this->selected_shipping_option )
-							&& empty( $this->shipping_method )
-								&& empty( $this->shipping_methods )
-									&& empty( $this->shipping_quotes )
-										&& empty( $this->shipping_quote )
-											&& empty( $this->shipping_method_count )
-												&& empty( $this->base_shipping )
-													&& empty( $this->total_item_shipping )
-														&& empty( $this->total_shipping );
+		       && empty( $this->selected_shipping_option )
+		       && empty( $this->shipping_method )
+		       && empty( $this->shipping_methods )
+		       && empty( $this->shipping_quotes )
+		       && empty( $this->shipping_quote )
+		       && empty( $this->shipping_method_count )
+		       && empty( $this->base_shipping )
+		       && empty( $this->total_item_shipping )
+		       && empty( $this->total_shipping );
 	}
 
 	/**
@@ -354,8 +354,8 @@ class wpsc_cart {
 
 	/**
 	 * get_shipping_rates method, gets the shipping rates
-     * @access public
-     */
+	 * @access public
+	 */
 	function get_shipping_method() {
 		global $wpsc_shipping_modules;
 
@@ -412,6 +412,10 @@ class wpsc_cart {
 				do_action( 'wpsc_after_get_shipping_method', $this );
 			}
 		}
+
+		// Quotes may have changed, rewind the quote loop to the start
+		$this->rewind_shipping_methods();
+
 	}
 
 	/**
@@ -445,6 +449,9 @@ class wpsc_cart {
 		if (  empty( $this->selected_shipping_option ) && is_array( $this->shipping_quotes ) && ! empty( $this->shipping_quotes ) ) {
 			$this->selected_shipping_option = apply_filters( 'wpsc_default_shipping_quote', $this->selected_shipping_option, $this->shipping_quotes, $this );
 		}
+
+		// Quotes may have changed, rewind the quote loop to the start
+		$this->rewind_shipping_methods();
 	}
 
 	/**
@@ -560,11 +567,6 @@ class wpsc_cart {
 		$edit_item       = false;
 		$variation_check = true;
 
-		$parameters = wp_parse_args( $parameters, array(
-			'quantity'         => 0,
-			'variation_values' => null
-		) );
-
 		if ( wpsc_product_has_variations( $product_id ) && is_null( $parameters['variation_values'] ) ) {
 			$variation_check = false;
 		}
@@ -678,15 +680,15 @@ class wpsc_cart {
 	}
 
 	/**
-    * get remaining quantity method
-    * currently only checks remaining stock, in future will do claimed stock and quantity limits
-    * will need to return errors, then, rather than true/false, maybe use the wp_error object?
-    * @access public
-    *
-    * @param integer a product ID key
-    * @param array  variations on the product
-    * @return boolean true on sucess, false on failure
-    */
+	 * get remaining quantity method
+	 * currently only checks remaining stock, in future will do claimed stock and quantity limits
+	 * will need to return errors, then, rather than true/false, maybe use the wp_error object?
+	 * @access public
+	 *
+	 * @param integer a product ID key
+	 * @param array  variations on the product
+	 * @return boolean true on sucess, false on failure
+	 */
 	function get_remaining_quantity( $product_id, $variations = array(), $quantity = 1 ) {
 		return wpsc_get_remaining_quantity( $product_id, $variations, $quantity );
 	}
@@ -867,9 +869,9 @@ class wpsc_cart {
 	 */
 	public function get_items( $args = array() ) {
 		$defaults = array(
-				'fields'  => 'all',
-				'orderby' => '',
-				'order'   => 'ASC',
+			'fields'  => 'all',
+			'orderby' => '',
+			'order'   => 'ASC',
 		);
 
 		$r = wp_parse_args( $args, $defaults );
@@ -899,8 +901,8 @@ class wpsc_cart {
 		$taxes_total = $wpec_taxes_controller->wpec_taxes_calculate_total();
 		$this->total_tax = $taxes_total ['total'];
 
-		if ( isset( $taxes_total['rate'] ) )
-			$this->tax_percentage = $taxes_total['rate'];
+		if ( isset( $taxes_total ['rate'] ) )
+			$this->tax_percentage = $taxes_total ['rate'];
 
 		return apply_filters( 'wpsc_calculate_total_tax', $this->total_tax, $this );
 	}
@@ -1018,9 +1020,9 @@ class wpsc_cart {
 
 		if ( $this->uses_shipping() ) {
 			if (    isset( $wpsc_shipping_modules[ $this->selected_shipping_method ] )
-				 && is_callable( array( $wpsc_shipping_modules[ $this->selected_shipping_method ], 'getQuote' ) )
-				) {
-					$this->shipping_quotes = $wpsc_shipping_modules[ $this->selected_shipping_method ]->getQuote();
+			        && is_callable( array( $wpsc_shipping_modules[ $this->selected_shipping_method ], 'getQuote' ) )
+			) {
+				$this->shipping_quotes = $wpsc_shipping_modules[ $this->selected_shipping_method ]->getQuote();
 			}
 
 			if ( $this->selected_shipping_option == null ) {
@@ -1208,6 +1210,12 @@ class wpsc_cart {
 		}
 
 		$this->shipping_quote_count = count( $this->shipping_quotes );
+<<<<<<< HEAD
+
+		// Quotes may have changed, rewind the quote loop to the start
+		$this->rewind_shipping_methods();
+=======
+>>>>>>> 1b559a0... remove reset of quote loop on quotes calculate
 	}
 
 	function google_shipping_quotes() {
@@ -1291,5 +1299,17 @@ class wpsc_cart {
 			$this->calculate_total_price();
 		}
 	}
-
 }
+
+/**
+ * Recalculate shipping quotes just prior to the quote information being displayed on the product page
+ */
+function wpsc_calculate_shipping_quotes_before_product_page() {
+	global $wpsc_cart;
+	$wpsc_cart->get_shipping_method();
+	$wpsc_cart->rewind_shipping_methods();
+}
+
+add_action( 'wpsc_before_shipping_of_shopping_cart' , 'wpsc_calculate_shipping_quotes_before_product_page' , 1 );
+
+
