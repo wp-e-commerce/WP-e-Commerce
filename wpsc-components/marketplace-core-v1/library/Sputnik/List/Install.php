@@ -410,17 +410,19 @@ class Sputnik_List_Install extends WP_List_Table {
 
 		$action_links = apply_filters( 'sputnik_install_grid_action_links', $action_links, $plugin );
 
-		$thumb = false;
-		if ( empty( $plugin->thumb ) )
-			$thumb = WPSC_CORE_THEME_URL . '/wpsc-images/noimage.png';
-		else
+		$thumb = '';
+
+		if ( ! empty( $plugin->thumb ) ) {
 			$thumb = $plugin->thumb;
+		}
+
+		$thumb = apply_filters( 'wpsc_marketplace_plugin_thumbnail_img_src', $thumb, $plugin );
 ?>
 	<div>
 		<div class="sputnik-plugin<?php if ( ! empty( $plugin->thumb ) ) echo ' has-thumb'; ?>">
 			<div class="sputnik-card">
 <?php
-				if ( $thumb !== false ):
+				if ( ! empty( $thumb ) ) :
 ?>
 				<div class="sputnik-plugin-thumb">
 					<img src="<?php echo esc_url($thumb) ?>" alt="<?php echo esc_attr($name) ?> Thumbnail">
