@@ -208,7 +208,7 @@ endif;
       <table class="productcart">
          <tr class="total_price total_tax">
             <td colspan="3">
-               <?php echo wpsc_display_tax_label(true); ?>
+               <?php echo wpsc_display_tax_label(true) . ':'; ?>
             </td>
             <td colspan="2">
                <span id="checkout_tax" class="pricedisplay checkout-tax"><?php echo wpsc_cart_tax(); ?></span>
@@ -247,7 +247,7 @@ endif;
       <?php if(wpsc_uses_shipping()) : ?>
 	      <tr class="total_price total_shipping">
 	         <td class='wpsc_totals'>
-	            <?php _e('Total Shipping:', 'wpsc'); ?>
+	            <?php echo __('Total Shipping', 'wpsc') . ':'; ?>
 	         </td>
 	         <td class='wpsc_totals'>
 	            <span id="checkout_shipping" class="pricedisplay checkout-shipping"><?php echo wpsc_cart_shipping(); ?></span>
@@ -270,7 +270,7 @@ endif;
 
    <tr class='total_price'>
       <td class='wpsc_totals'>
-      <?php _e('Total Price:', 'wpsc'); ?>
+      <?php echo __('Total Price', 'wpsc') . ':'; ?>
       </td>
       <td class='wpsc_totals'>
          <span id='checkout_total' class="pricedisplay checkout-total"><?php echo wpsc_cart_total(); ?></span>
