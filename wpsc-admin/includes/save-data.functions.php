@@ -80,27 +80,30 @@ function wpsc_custom_category_columns( $columns ) {
 
 	return $columns;
 }
+
 /**
- * wpsc_custom_category_column_data
- * Adds images to the custom category column
- * @param (array) column_name | column name
- * @return nada
+ * Custom Category Column Data
+ *
+ * Adds images to the custom category column.
+ *
+ * @param   string  $string       Column output.
+ * @param   string  $column_name  Column name.
+ * @param   string  $term_id      Term ID.
+ * @return  string                Updated column output.
  */
-
 function wpsc_custom_category_column_data( $string, $column_name, $term_id ) {
-   global $wpdb;
+	if ( 'image' == $column_name ) {
+		$term = get_term_by( 'id', $term_id, 'wpsc_product_category' );
+		$image = wpsc_get_categorymeta( $term_id, 'image' );
 
-  $image = wpsc_get_categorymeta( $term_id, 'image' );
-  $name = get_term_by( 'id', $term_id, 'wpsc_product_category' );
-  $name = $name->name;
-
-  if ( ! empty( $image ) )
-	  $image = "<img src='" . WPSC_CATEGORY_URL . $image . "' title='" . esc_attr( $name ) . "' alt='" . esc_attr( $name ) . "' width='30' height='30' />";
-   else
-	  $image = "<img src='" . WPSC_CORE_IMAGES_URL . "/no-image-uploaded.gif' title='" . esc_attr( $name ) . "' alt='" . esc_attr( $name ) . "' width='30' height='30' />";
-
-	return $image;
-
+		$format = '<img src="%s" title="%s" alt="%2$s" width="30" height="30" />';
+		if ( ! empty( $image ) ) {
+			$string = sprintf( $format, WPSC_CORE_IMAGES_URL . $image, esc_attr( $term->name ) );
+		} else {
+			$string = sprintf( $format, WPSC_CORE_IMAGES_URL . '/no-image-uploaded.gif', esc_attr( $term->name ) );
+		}
+	}
+	return $string;
 }
 
 /**
