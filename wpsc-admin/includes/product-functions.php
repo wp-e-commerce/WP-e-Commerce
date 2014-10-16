@@ -128,16 +128,28 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 		);
 
 	// Advanced Options
-	if ( isset( $post_data['meta']['_wpsc_product_metadata']['engraved'] ) ) {
-		$post_data['meta']['_wpsc_product_metadata']['engraved'] = (int) (bool) $post_data['meta']['_wpsc_product_metadata']['engraved'];
-	} else {
-		$post_data['meta']['_wpsc_product_metadata']['engraved'] = 0;
-	}
+	if ( isset( $_POST['wpsc_product_personalization_nonce'] ) && wp_verify_nonce( $_POST['wpsc_product_personalization_nonce'], 'update' ) ) {
 
-	if ( isset( $post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'] ) ) {
-		$post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'] = (int) (bool) $post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'];
+		// Parse post meta to ensure default values (especially checkboxes)
+		$post_data['meta']['_wpsc_product_metadata'] = wp_parse_args( $post_data['meta']['_wpsc_product_metadata'], array(
+			'engraved'                => 0,
+			'can_have_uploaded_image' => 0
+		) );
+
+		$post_data['meta']['_wpsc_product_metadata']['engraved'] = absint( (bool) $post_data['meta']['_wpsc_product_metadata']['engraved'] );
+		$post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'] = absint( (bool) $post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'] );
+
 	} else {
-		$post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'] = 0;
+
+		// Use existing personalization values if not submitted
+		$current_product_meta = wp_parse_args( get_product_meta( $product_id, 'product_metadata', true ), array(
+			'engraved'                => 0,
+			'can_have_uploaded_image' => 0
+		) );
+
+		$post_data['meta']['_wpsc_product_metadata']['engraved'] = $current_product_meta['engraved'];
+		$post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'] = $current_product_meta['can_have_uploaded_image'];
+
 	}
 
 	if ( ! isset($post_data['meta']['_wpsc_product_metadata']['google_prohibited'])) $post_data['meta']['_wpsc_product_metadata']['google_prohibited'] = '';

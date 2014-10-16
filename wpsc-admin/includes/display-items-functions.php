@@ -989,6 +989,8 @@ function wpsc_product_personalization_forms() {
 	<em><?php _e( "Form fields for the customer to personalize this product will be shown on it's single product page.", 'wpsc' ); ?></em>
 	<?php
 
+	wp_nonce_field( 'update', 'wpsc_product_personalization_nonce' );
+
 }
 
 function wpsc_product_delivery_forms(){
