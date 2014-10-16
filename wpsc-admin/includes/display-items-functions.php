@@ -959,27 +959,37 @@ function wpsc_product_download_forms() {
     $output = apply_filters( 'wpsc_downloads_metabox', $output );
 }
 
-function wpsc_product_personalization_forms(){
-    global $post;
-    $product_meta = get_post_meta( $post->ID, '_wpsc_product_metadata', true );
-    if ( ! is_array( $product_meta ) )
-        $product_meta = array();
-?>
-    <ul id="wpsc_product_personalization_option">
-        <li>
-            <input type='hidden' name='meta[_wpsc_product_metadata][engraved]' value='0' />
-            <input type='checkbox' name='meta[_wpsc_product_metadata][engraved]' <?php if ( isset( $product_meta['engraved'] ) ) checked( $product_meta['engraved'], '1' ); ?> id='add_engrave_text' />
-            <label for='add_engrave_text'><?php esc_html_e( 'Users can personalize this product by leaving a message on single product page', 'wpsc' ); ?></label>
-        </li>
-        <li>
-            <input type='hidden' name='meta[_wpsc_product_metadata][can_have_uploaded_image]' value='0' />
-            <input type='checkbox' name='meta[_wpsc_product_metadata][can_have_uploaded_image]' <?php if ( isset( $product_meta['can_have_uploaded_image'] ) ) checked( $product_meta['can_have_uploaded_image'], '1' ); ?> id='can_have_uploaded_image' />
-            <label for='can_have_uploaded_image'> <?php esc_html_e( 'Users can upload images on single product page to purchase logs.', 'wpsc' ); ?> </label>
-        </li>
-        <?php do_action( 'wpsc_add_advanced_options', $post->ID ); ?>
-    </ul>
-    <em><?php _e( "Form fields for the customer to personalize this product will be shown on it's single product page.", 'wpsc' ); ?></em>
-<?php
+/**
+ * Product Personalization Form
+ *
+ * @global  $post  Instance of WP_Post.
+ */
+function wpsc_product_personalization_forms() {
+
+	global $post;
+
+	$product_meta = get_post_meta( $post->ID, '_wpsc_product_metadata', true );
+	if ( ! is_array( $product_meta ) ) {
+		$product_meta = array();
+	}
+
+	?>
+	<ul id="wpsc_product_personalization_option">
+		<li>
+			<input type="hidden" name="meta[_wpsc_product_metadata][engraved]" value="0" />
+			<input type="checkbox" name="meta[_wpsc_product_metadata][engraved]" <?php if ( isset( $product_meta['engraved'] ) ) checked( $product_meta['engraved'], '1' ); ?> id="add_engrave_text" />
+			<label for="add_engrave_text"><?php esc_html_e( 'Users can personalize this product by leaving a message on single product page', 'wpsc' ); ?></label>
+		</li>
+		<li>
+			<input type="hidden" name="meta[_wpsc_product_metadata][can_have_uploaded_image]" value="0" />
+			<input type="checkbox" name="meta[_wpsc_product_metadata][can_have_uploaded_image]" <?php if ( isset( $product_meta['can_have_uploaded_image'] ) ) checked( $product_meta['can_have_uploaded_image'], '1' ); ?> id="can_have_uploaded_image" />
+			<label for="can_have_uploaded_image"> <?php esc_html_e( 'Users can upload images on single product page to purchase logs.', 'wpsc' ); ?></label>
+		</li>
+		<?php do_action( 'wpsc_add_advanced_options', $post->ID ); ?>
+	</ul>
+	<em><?php _e( "Form fields for the customer to personalize this product will be shown on it's single product page.", 'wpsc' ); ?></em>
+	<?php
+
 }
 
 function wpsc_product_delivery_forms(){
