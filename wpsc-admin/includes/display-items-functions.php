@@ -733,12 +733,8 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 
 // aka custom meta form
 function wpsc_product_advanced_forms() {
-    global $post, $wpdb, $variations_processor, $wpsc_product_defaults;
-    $product_data = get_post_custom( $post->ID );
 
-    $product_data['meta'] = $product_meta = array();
-    if ( !empty( $product_data['_wpsc_product_metadata'] ) )
-        $product_data['meta'] = $product_meta = maybe_unserialize( $product_data['_wpsc_product_metadata'][0] );
+    global $post, $wpdb;
 
     $delete_nonce = _wpsc_create_ajax_nonce( 'remove_product_meta' );
 
@@ -754,14 +750,6 @@ function wpsc_product_advanced_forms() {
         ORDER BY
             LOWER(meta_key)", ARRAY_A
     );
-
-    if ( ! isset( $product_meta['engraved'] ) ) {
-        $product_meta['engraved'] = '';
-    }
-
-    if ( ! isset( $product_meta['can_have_uploaded_image'] ) ) {
-        $product_meta['can_have_uploaded_image'] = '';
-    }
 
     $output = '<table id="wpsc_product_meta_table" class="wp-list-table widefat posts">';
         $output .= '<thead>';
