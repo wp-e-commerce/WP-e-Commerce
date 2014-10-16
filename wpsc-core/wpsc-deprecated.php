@@ -2079,18 +2079,28 @@ function wpsc_deprecated_filter_user_log_get() {
 		_wpsc_doing_it_wrong( 'wpsc_user_log_get', __( 'The filter being used has been deprecated. Use wpsc_get_visitor_meta or wpsc_get_visitor_meta_$neta_name instead.' ), '3.8.14' );
 	}
 }
+
 add_action( 'wpsc_start_display_user_log_form_fields', 'wpsc_deprecated_filter_user_log_get', 10, 0 );
 
 
 /**
- * function to privide deprecated variables to older shipping modules
+ * function to provide deprecated variables to older shipping modules
  *
  * @since 3.8.14
  */
 function wpsc_deprecated_vars_for_shipping( $wpsc_cart ) {
-	// extracted from the insticnt fedex module
+	// extracted from the Instinct fedex module
 	$_POST['country'] = wpsc_get_customer_meta( 'shippingcountry' );
 	$_POST['region']  = wpsc_get_customer_meta( 'shippingregion' );
 	$_POST['zipcode'] = wpsc_get_customer_meta( 'shippingpostcode' );
 }
+
 add_action( 'wpsc_before_get_shipping_method', 'wpsc_deprecated_vars_for_shipping' );
+
+function _wpsc_action_user_update_errors( $errors, $update, $user ) {
+	if ( isset( $user->role ) && $user->role == 'wpsc_anonymous' ) {
+		unset( $errors->errors['empty_email'] );
+	}
+}
+
+// add_action( 'user_profile_update_errors', '_wpsc_action_user_update_errors', 10, 3 );

@@ -1,8 +1,7 @@
 <?php
-
-add_action( 'user_profile_update_errors', '_wpsc_action_user_update_errors', 10, 3 );
-
-function _wpsc_action_user_update_errors( $errors, $update, $user ) {
-	if ( $user->role == 'wpsc_anonymous' )
-		unset( $errors->errors['empty_email'] );
-}
+_wpsc_deprecated_file(
+	__FILE__,
+	'3.9',
+	'',
+	__( 'The sole function that existed in users.php has now been deprecated.', 'wpsc' )
+);
