@@ -731,7 +731,12 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 <?php
 }
 
-// aka custom meta form
+/**
+ * Product Custom Metadata Form
+ *
+ * @global  $post  Instance of WP_Post.
+ * @global  $wpdb  Instance of wpdb.
+ */
 function wpsc_product_advanced_forms() {
 
     global $post, $wpdb;
@@ -798,9 +803,8 @@ function wpsc_product_advanced_forms() {
 
     $output .= '<a href="#" class="add_more_meta  button button-small" id="wpsc_add_custom_meta">'.esc_html( '+ Add Custom Meta', 'wpsc' ).'</a>';
 
-
     echo $output;
-    return;
+
 }
 
 /**
