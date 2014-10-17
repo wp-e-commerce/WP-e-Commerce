@@ -855,6 +855,8 @@ function wpsc_product_external_link_forms() {
 	<em><?php esc_html_e( 'This option overrides the "Buy Now" and "Add to Cart" buttons, replacing them with the link you describe here.', 'wpsc' ); ?></em>
 	<?php
 
+	wp_nonce_field( 'update', 'wpsc_product_external_link_nonce' );
+
 }
 
 function wpsc_additional_desc() {
