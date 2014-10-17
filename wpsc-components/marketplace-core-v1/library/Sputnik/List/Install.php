@@ -151,7 +151,6 @@ class Sputnik_List_Install extends WP_List_Table {
 	}
 
 	public function display_grid() {
-		extract( $this->_args );
 
 		$this->display_tablenav( 'top' );
 ?>

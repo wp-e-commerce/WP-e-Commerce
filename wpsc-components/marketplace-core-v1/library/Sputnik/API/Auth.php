@@ -109,7 +109,8 @@ class Sputnik_API_Auth {
 
 	protected function http($url, $method, $postfields = NULL) {
 		$args = array(
-			'method' => $method,
+			'method'     => $method,
+			'user-agent' => 'WP eCommerce Marketplace: ' . WPSC_VERSION
 		);
 
 		switch ($method) {
