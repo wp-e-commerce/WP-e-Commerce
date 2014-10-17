@@ -202,6 +202,7 @@ class Sputnik_API {
 		$args['timeout'] = 25;
 
 		$args['headers']['X-WP-Domain'] = self::domain();
+		$args['user-agent']             = 'WP eCommerce Marketplace: ' . WPSC_VERSION;
 
 		$request = wp_remote_request( $url, $args );
 
