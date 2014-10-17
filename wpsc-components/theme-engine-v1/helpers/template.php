@@ -122,18 +122,16 @@ function wpsc_select_theme_functions() {
  * @usse esc_attr()                     Keeping things safe just in case
  */
 function wpsc_body_class( $classes ) {
-	global $wpsc_query;
+	global $wp_query, $wpsc_query;
 
 	$post_id = get_the_ID();
 
 	if ( $post_id ) {
 
-
 		$page_url = get_permalink( $post_id );
-
-
+		
 		// If on a product or category page...
-	if ( get_option( 'product_list_url' ) == $page_url || get_post_type( $post_id ) === 'wpsc-product' ) {
+		if ( get_option( 'product_list_url' ) == $page_url || get_post_type( $post_id ) === 'wpsc-product' ) {
 
 			$classes[] = 'wpsc';
 
@@ -141,25 +139,25 @@ function wpsc_body_class( $classes ) {
 				$classes[] = 'wpsc-home';
 			}
 
-		if ( wpsc_is_single_product() ) {
-			$object = $wp_query->get_queried_object();
+			if ( wpsc_is_single_product() ) {
+				$object    = $wp_query->get_queried_object();
 				$classes[] = 'wpsc-single-product';
-			if ( absint( $object->ID ) > 0 ) {
-				$classes[] = 'wpsc-single-product-' . absint( $object->ID );
+				if ( absint( $object->ID ) > 0 ) {
+					$classes[] = 'wpsc-single-product-' . absint( $object->ID );
 				}
 			}
 
-		if ( wpsc_is_in_category() && ! wpsc_is_single_product() ){
-				$classes[] = 'wpsc-category';
-			$tax_object = $wp_query->get_queried_object();
-			$classes[] = 'wpsc-category-' . esc_attr( $tax_object->slug );
-		}
+			if ( wpsc_is_in_category() && ! wpsc_is_single_product() ) {
+				$classes[]  = 'wpsc-category';
+				$tax_object = $wp_query->get_queried_object();
+				$classes[]  = 'wpsc-category-' . esc_attr( $tax_object->slug );
+			}
 
-		if ( wpsc_is_in_tag() && ! wpsc_is_single_product() ){
-			$classes[] = 'wpsc-tag';
-			$tax_object = $wp_query->get_queried_object();
-			$classes[] = 'wpsc-tag-' . esc_attr( $tax_object->slug );
-		}
+			if ( wpsc_is_in_tag() && ! wpsc_is_single_product() ) {
+				$classes[]  = 'wpsc-tag';
+				$tax_object = $wp_query->get_queried_object();
+				$classes[]  = 'wpsc-tag-' . esc_attr( $tax_object->slug );
+			}
 		}
 
 		// If viewing the shopping cart...
