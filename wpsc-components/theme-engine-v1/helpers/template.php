@@ -124,60 +124,59 @@ function wpsc_select_theme_functions() {
 function wpsc_body_class( $classes ) {
 	global $wp_query, $wpsc_query;
 
-	$post_id = 0;
-	if ( isset( $wp_query->post ) && is_object( $wp_query->post ) && isset( $wp_query->post->ID ) ) {
-		$post_id = $wp_query->post->ID;
-	}
+	$post_id = get_the_ID();
 
-	$page_url = get_permalink( $post_id );
+	if ( $post_id ) {
 
+		$page_url = get_permalink( $post_id );
+		
+		// If on a product or category page...
+		if ( get_option( 'product_list_url' ) == $page_url || get_post_type( $post_id ) === 'wpsc-product' ) {
 
-	// If on a product or category page...
-	if ( get_option( 'product_list_url' ) == $page_url || get_post_type( $post_id ) === 'wpsc-product' ) {
+			$classes[] = 'wpsc';
 
-		$classes[] = 'wpsc';
+			if ( ! is_array( $wpsc_query->query ) ) {
+				$classes[] = 'wpsc-home';
+			}
 
-		if ( !is_array( $wpsc_query->query ) )
-			$classes[] = 'wpsc-home';
+			if ( wpsc_is_single_product() ) {
+				$object    = $wp_query->get_queried_object();
+				$classes[] = 'wpsc-single-product';
+				if ( absint( $object->ID ) > 0 ) {
+					$classes[] = 'wpsc-single-product-' . absint( $object->ID );
+				}
+			}
 
-		if ( wpsc_is_single_product() ) {
-			$object = $wp_query->get_queried_object();
-			$classes[] = 'wpsc-single-product';
-			if ( absint( $object->ID ) > 0 ) {
-				$classes[] = 'wpsc-single-product-' . absint( $object->ID );
+			if ( wpsc_is_in_category() && ! wpsc_is_single_product() ) {
+				$classes[]  = 'wpsc-category';
+				$tax_object = $wp_query->get_queried_object();
+				$classes[]  = 'wpsc-category-' . esc_attr( $tax_object->slug );
+			}
+
+			if ( wpsc_is_in_tag() && ! wpsc_is_single_product() ) {
+				$classes[]  = 'wpsc-tag';
+				$tax_object = $wp_query->get_queried_object();
+				$classes[]  = 'wpsc-tag-' . esc_attr( $tax_object->slug );
 			}
 		}
 
-		if ( wpsc_is_in_category() && ! wpsc_is_single_product() ){
-			$classes[] = 'wpsc-category';
-			$tax_object = $wp_query->get_queried_object();
-			$classes[] = 'wpsc-category-' . esc_attr( $tax_object->slug );
+		// If viewing the shopping cart...
+		if ( get_option( 'shopping_cart_url' ) == $page_url ) {
+			$classes[] = 'wpsc';
+			$classes[] = 'wpsc-shopping-cart';
 		}
 
-		if ( wpsc_is_in_tag() && ! wpsc_is_single_product() ){
-			$classes[] = 'wpsc-tag';
-			$tax_object = $wp_query->get_queried_object();
-			$classes[] = 'wpsc-tag-' . esc_attr( $tax_object->slug );
+		// If viewing the transaction...
+		if ( get_option( 'transact_url' ) == $page_url ) {
+			$classes[] = 'wpsc';
+			$classes[] = 'wpsc-transaction-details';
 		}
 
-	}
-
-	// If viewing the shopping cart...
-	if ( get_option( 'shopping_cart_url' ) == $page_url ) {
-		$classes[] = 'wpsc';
-		$classes[] = 'wpsc-shopping-cart';
-	}
-
-	// If viewing the transaction...
-	if ( get_option( 'transact_url' ) == $page_url ) {
-		$classes[] = 'wpsc';
-		$classes[] = 'wpsc-transaction-details';
-	}
-
-	// If viewing your account...
-	if ( get_option( 'user_account_url' ) == $page_url ) {
-		$classes[] = 'wpsc';
-		$classes[] = 'wpsc-user-account';
+		// If viewing your account...
+		if ( get_option( 'user_account_url' ) == $page_url ) {
+			$classes[] = 'wpsc';
+			$classes[] = 'wpsc-user-account';
+		}
 	}
 
 	return $classes;
