@@ -186,7 +186,6 @@ class Sputnik_API {
 		return $response;
 	}
 
-
 	/* Helper Methods */
 	public static function request($url, $params = null, $args = array()) {
 		if ( ! empty( $params ) )
@@ -206,11 +205,11 @@ class Sputnik_API {
 
 		$request = wp_remote_request( $url, $args );
 
-		if (is_wp_error($request)) {
-			throw new Exception($request->get_error_message());
+		if ( is_wp_error( $request ) ) {
+			throw new Exception( $request->get_error_message() );
 		}
 
-		if ($request['response']['code'] != 200) {
+		if ( $request['response']['code'] != 200 ) {
 			throw new Exception($request['body'], $request['response']['code']);
 		}
 

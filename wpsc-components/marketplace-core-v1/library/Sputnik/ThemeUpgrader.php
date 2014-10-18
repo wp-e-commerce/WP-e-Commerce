@@ -33,7 +33,8 @@ class Sputnik_ThemeUpgrader extends Theme_Upgrader {
 			'timeout' => $timeout,
 			'stream' => true,
 			'filename' => $tmpfname,
-			'headers'  => array( 'X-WP-Domain' => Sputnik_API::domain() )
+			'headers'  => array( 'X-WP-Domain' => Sputnik_API::domain() ),
+			'user-agent' => 'WP eCommerce Marketplace: ' . WPSC_VERSION
 		);
 
 		Sputnik_API::sign_download($url, $args);

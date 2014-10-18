@@ -28,7 +28,7 @@ class Sputnik_View_Install extends Sputnik_View_Mini {
 	}
 
 	protected function prepare() {
-		include ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
 
 		try {
 			$this->api = $api = Sputnik::get_plugin($this->id);

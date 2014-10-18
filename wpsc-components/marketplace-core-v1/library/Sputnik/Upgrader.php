@@ -30,10 +30,11 @@ class Sputnik_Upgrader extends Plugin_Upgrader {
 			return new WP_Error('http_no_file', __('Could not create Temporary file.'));
 
 		$args = array(
-			'timeout'  => $timeout,
-			'stream'   => true,
-			'filename' => $tmpfname,
-			'headers'  => array( 'X-WP-Domain' => Sputnik_API::domain() )
+			'timeout'    => $timeout,
+			'stream'     => true,
+			'filename'   => $tmpfname,
+			'headers'    => array( 'X-WP-Domain' => Sputnik_API::domain() ),
+			'user-agent' => 'WP eCommerce Marketplace: ' . WPSC_VERSION
 		);
 
 		Sputnik_API::sign_download($url, $args);

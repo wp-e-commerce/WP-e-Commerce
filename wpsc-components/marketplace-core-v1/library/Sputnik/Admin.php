@@ -852,15 +852,16 @@ class Sputnik_Admin {
 		if ( isset($_GET['from']) )
 			$url .= '&from=' . urlencode(stripslashes($_GET['from']));
 
-		$type = 'web'; //Install plugin type, From Web or an Upload.erro
+		$type = 'web'; //Install plugin type, From Web or an Upload.
 
 		ini_set( 'display_errors', '1' );
 		error_reporting( E_ALL );
 
-		if ( in_array( 'theme', $api->categories ) )
+		if ( in_array( 'theme', $api->categories ) ) {
 			$upgrader = new Sputnik_ThemeUpgrader( new Sputnik_Upgrader_Skin( compact('title', 'url', 'nonce', 'plugin', 'api') ) );
-		else
+		} else {
 			$upgrader = new Sputnik_Upgrader( new Sputnik_Upgrader_Skin( compact('title', 'url', 'nonce', 'plugin', 'api') ) );
+		}
 
 		$upgrader->install($api->download_link);
 
@@ -869,7 +870,7 @@ class Sputnik_Admin {
 	}
 
 	protected static function upgrade($file) {
-		include ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
 
 		try {
 			$data = Sputnik::get_from_file($file);
