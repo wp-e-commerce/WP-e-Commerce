@@ -40,7 +40,7 @@ $wpsc_product_defaults = array(
         'external_link_target' => NULL,
         'merchant_notes' => NULL,
         'sku' => NULL,
-        'engrave' => '0',
+        'engraved' => '0',
         'can_have_uploaded_image' => '0',
         'table_rate_price' => array(
             'quantity' => array(
@@ -731,14 +731,15 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 <?php
 }
 
-// aka custom meta form
+/**
+ * Product Custom Metadata Form
+ *
+ * @global  $post  Instance of WP_Post.
+ * @global  $wpdb  Instance of wpdb.
+ */
 function wpsc_product_advanced_forms() {
-    global $post, $wpdb, $variations_processor, $wpsc_product_defaults;
-    $product_data = get_post_custom( $post->ID );
 
-    $product_data['meta'] = $product_meta = array();
-    if ( !empty( $product_data['_wpsc_product_metadata'] ) )
-        $product_data['meta'] = $product_meta = maybe_unserialize( $product_data['_wpsc_product_metadata'][0] );
+    global $post, $wpdb;
 
     $delete_nonce = _wpsc_create_ajax_nonce( 'remove_product_meta' );
 
@@ -754,14 +755,6 @@ function wpsc_product_advanced_forms() {
         ORDER BY
             LOWER(meta_key)", ARRAY_A
     );
-
-    if ( ! isset( $product_meta['engraved'] ) ) {
-        $product_meta['engraved'] = '';
-    }
-
-    if ( ! isset( $product_meta['can_have_uploaded_image'] ) ) {
-        $product_meta['can_have_uploaded_image'] = '';
-    }
 
     $output = '<table id="wpsc_product_meta_table" class="wp-list-table widefat posts">';
         $output .= '<thead>';
@@ -810,55 +803,60 @@ function wpsc_product_advanced_forms() {
 
     $output .= '<a href="#" class="add_more_meta  button button-small" id="wpsc_add_custom_meta">'.esc_html( '+ Add Custom Meta', 'wpsc' ).'</a>';
 
-
     echo $output;
-    return;
+
 }
 
 /**
  * Display Product External Link Meta Box Form Fields.
+ *
+ * @global  $post  Instance of WP_Post.
  */
 function wpsc_product_external_link_forms() {
-    global $post, $wpdb, $variations_processor, $wpsc_product_defaults;
-    $product_data = get_post_custom( $post->ID );
 
-    $product_data['meta'] = $product_meta = array();
-    if ( ! empty( $product_data['_wpsc_product_metadata'] ) ) {
-        $product_data['meta'] = $product_meta = maybe_unserialize( $product_data['_wpsc_product_metadata'][0] );
-    }
+	global $post;
 
-    // Get External Link Values
-    $external_link_value        = isset( $product_meta['external_link'] ) ? $product_meta['external_link'] : '';
-    $external_link_text_value   = isset( $product_meta['external_link_text'] ) ? $product_meta['external_link_text'] : '';
-    $external_link_target_value = isset( $product_meta['external_link_target'] ) ? $product_meta['external_link_target'] : '';
-    ?>
-    <table class="form-table" style="width: 100%;" cellspacing="2" cellpadding="5">
-        <tbody>
-            <tr class="form-field">
-                <th valign="top" scope="row"><label for="external_link"><?php esc_html_e( 'URL', 'wpsc' ); ?></label></th>
-                <td><input type="text" name="meta[_wpsc_product_metadata][external_link]" id="external_link" value="<?php echo esc_url( $external_link_value ); ?>" size="50" style="width: 95%" placeholder="http://" /></td>
-            </tr>
-            <tr class="form-field">
-                <th valign="top" scope="row"><label for="external_link_text"><?php esc_html_e( 'Label', 'wpsc' ); ?></label></th>
-                <td><input type="text" name="meta[_wpsc_product_metadata][external_link_text]" id="external_link_text" value="<?php echo esc_attr( $external_link_text_value ); ?>" size="50" style="width: 95%" placeholder="<?php _e( 'Buy Now', 'wpsc' ); ?>" /></td>
-            </tr>
-            <tr class="form-field">
-                <th valign="top" scope="row"><label for="external_link_target"><?php esc_html_e( 'Target', 'wpsc' ); ?></label></th>
-                <td id="external_link_target">
-                    <input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value=""<?php checked( '', $external_link_target_value ); ?> />
-                    <span><?php _ex( 'Default (set by theme)', 'External product link target', 'wpsc' ); ?></span>
+	// Get External Link Values
+	$product_meta = get_post_meta( $post->ID, '_wpsc_product_metadata', true );
+	$product_meta = wp_parse_args( $product_meta, array(
+		'external_link'        => '',
+		'external_link_text'   => '',
+		'external_link_target' => ''
+	) );
 
-                    <input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value="_self"<?php checked( '_self', $external_link_target_value ); ?> />
-                    <span><?php esc_html_e( 'Force open in same window', 'wpsc' ); ?></span>
+	?>
+	<table class="form-table" style="width: 100%;" cellspacing="2" cellpadding="5">
+		<tbody>
+			<tr class="form-field">
+				<th valign="top" scope="row"><label for="external_link"><?php esc_html_e( 'URL', 'wpsc' ); ?></label></th>
+				<td><input type="text" name="meta[_wpsc_product_metadata][external_link]" id="external_link" value="<?php echo esc_url( $product_meta['external_link'] ); ?>" size="50" style="width: 95%" placeholder="http://" /></td>
+			</tr>
+			<tr class="form-field">
+				<th valign="top" scope="row"><label for="external_link_text"><?php esc_html_e( 'Label', 'wpsc' ); ?></label></th>
+				<td><input type="text" name="meta[_wpsc_product_metadata][external_link_text]" id="external_link_text" value="<?php echo esc_attr( $product_meta['external_link_text'] ); ?>" size="50" style="width: 95%" placeholder="<?php _e( 'Buy Now', 'wpsc' ); ?>" /></td>
+			</tr>
+			<tr class="form-field">
+				<th valign="top" scope="row"><label for="external_link_target"><?php esc_html_e( 'Target', 'wpsc' ); ?></label></th>
+				<td id="external_link_target">
 
-                    <input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value="_blank"<?php checked( '_blank', $external_link_target_value ); ?> />
-                    <span><?php esc_html_e( 'Force open in new window', 'wpsc' ); ?></span>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <em><?php esc_html_e( 'This option overrides the "Buy Now" and "Add to Cart" buttons, replacing them with the link you describe here.', 'wpsc' ); ?></em>
-    <?php
+					<input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value=""<?php checked( '', $product_meta['external_link_target'] ); ?> />
+					<span><?php _ex( 'Default (set by theme)', 'External product link target', 'wpsc' ); ?></span>
+
+					<input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value="_self"<?php checked( '_self', $product_meta['external_link_target'] ); ?> />
+					<span><?php esc_html_e( 'Force open in same window', 'wpsc' ); ?></span>
+
+					<input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value="_blank"<?php checked( '_blank', $product_meta['external_link_target'] ); ?> />
+					<span><?php esc_html_e( 'Force open in new window', 'wpsc' ); ?></span>
+
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<em><?php esc_html_e( 'This option overrides the "Buy Now" and "Add to Cart" buttons, replacing them with the link you describe here.', 'wpsc' ); ?></em>
+	<?php
+
+	wp_nonce_field( 'update', 'wpsc_product_external_link_nonce' );
+
 }
 
 function wpsc_additional_desc() {
@@ -967,27 +965,38 @@ function wpsc_product_download_forms() {
     $output = apply_filters( 'wpsc_downloads_metabox', $output );
 }
 
-function wpsc_product_personalization_forms(){
-    global $post;
-    $product_meta = get_post_meta( $post->ID, '_wpsc_product_metadata', true );
-    if ( ! is_array( $product_meta ) )
-        $product_meta = array();
-?>
-    <ul id="wpsc_product_personalization_option">
-        <li>
-            <input type='hidden' name='meta[_wpsc_product_metadata][engraved]' value='0' />
-            <input type='checkbox' name='meta[_wpsc_product_metadata][engraved]' <?php if ( isset( $product_meta['engraved'] ) ) checked( $product_meta['engraved'], '1' ); ?> id='add_engrave_text' />
-            <label for='add_engrave_text'><?php esc_html_e( 'Users can personalize this product by leaving a message on single product page', 'wpsc' ); ?></label>
-        </li>
-        <li>
-            <input type='hidden' name='meta[_wpsc_product_metadata][can_have_uploaded_image]' value='0' />
-            <input type='checkbox' name='meta[_wpsc_product_metadata][can_have_uploaded_image]' <?php if ( isset( $product_meta['can_have_uploaded_image'] ) ) checked( $product_meta['can_have_uploaded_image'], '1' ); ?> id='can_have_uploaded_image' />
-            <label for='can_have_uploaded_image'> <?php esc_html_e( 'Users can upload images on single product page to purchase logs.', 'wpsc' ); ?> </label>
-        </li>
-        <?php do_action( 'wpsc_add_advanced_options', $post->ID ); ?>
-    </ul>
-    <em><?php _e( "Form fields for the customer to personalize this product will be shown on it's single product page.", 'wpsc' ); ?></em>
-<?php
+/**
+ * Product Personalization Form
+ *
+ * @global  $post  Instance of WP_Post.
+ */
+function wpsc_product_personalization_forms() {
+
+	global $post;
+
+	$product_meta = get_post_meta( $post->ID, '_wpsc_product_metadata', true );
+	$product_meta = wp_parse_args( $product_meta, array(
+		'engraved'                => 0,
+		'can_have_uploaded_image' => 0
+	) );
+
+	?>
+	<ul id="wpsc_product_personalization_option">
+		<li>
+			<input type="checkbox" name="meta[_wpsc_product_metadata][engraved]" <?php checked( $product_meta['engraved'], '1' ); ?> id="add_engrave_text" />
+			<label for="add_engrave_text"><?php esc_html_e( 'Users can personalize this product by leaving a message on single product page', 'wpsc' ); ?></label>
+		</li>
+		<li>
+			<input type="checkbox" name="meta[_wpsc_product_metadata][can_have_uploaded_image]" <?php checked( $product_meta['can_have_uploaded_image'], '1' ); ?> id="can_have_uploaded_image" />
+			<label for="can_have_uploaded_image"> <?php esc_html_e( 'Users can upload images on single product page to purchase logs.', 'wpsc' ); ?></label>
+		</li>
+		<?php do_action( 'wpsc_add_advanced_options', $post->ID ); ?>
+	</ul>
+	<em><?php _e( "Form fields for the customer to personalize this product will be shown on it's single product page.", 'wpsc' ); ?></em>
+	<?php
+
+	wp_nonce_field( 'update', 'wpsc_product_personalization_nonce' );
+
 }
 
 function wpsc_product_delivery_forms(){

@@ -1,1 +1,0 @@
-[06-Mar-2014 16:01:22 America/Chicago] PHP Fatal error:  Class 'PHP_Merchant_HTTP' not found in /home/newget/public_html/wp-content/plugins/merchant-api-v3-plugin/gateways/php-merchant/common/http-curl.php on line 4
