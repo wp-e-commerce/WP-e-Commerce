@@ -817,7 +817,7 @@ class Sputnik_Admin {
 
 	protected static function install($id) {
 
-		include ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
 
 		try {
 			$api = Sputnik::get_plugin($id);
