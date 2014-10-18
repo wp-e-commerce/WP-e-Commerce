@@ -127,21 +127,44 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 			$post_data['meta']['_wpsc_product_metadata']['wpec_taxes_taxable_amount']
 		);
 
-	// Advanced Options
-	if ( isset( $post_data['meta']['_wpsc_product_metadata']['engraved'] ) ) {
-		$post_data['meta']['_wpsc_product_metadata']['engraved'] = (int) (bool) $post_data['meta']['_wpsc_product_metadata']['engraved'];
-	} else {
-		$post_data['meta']['_wpsc_product_metadata']['engraved'] = 0;
+	// External Link Options
+	if ( isset( $_POST['wpsc_product_external_link_nonce'] ) && wp_verify_nonce( $_POST['wpsc_product_external_link_nonce'], 'update' ) ) {
+
+		// Parse post meta to ensure default values
+		$post_data['meta']['_wpsc_product_metadata'] = wp_parse_args( $post_data['meta']['_wpsc_product_metadata'], array(
+			'external_link'        => '',
+			'external_link_text'   => '',
+			'external_link_target' => ''
+		) );
+
 	}
 
-	if ( isset( $post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'] ) ) {
-		$post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'] = (int) (bool) $post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'];
-	} else {
-		$post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'] = 0;
+	// Advanced Options
+	if ( isset( $_POST['wpsc_product_personalization_nonce'] ) && wp_verify_nonce( $_POST['wpsc_product_personalization_nonce'], 'update' ) ) {
+
+		// Parse post meta to ensure default values (especially checkboxes)
+		$post_data['meta']['_wpsc_product_metadata'] = wp_parse_args( $post_data['meta']['_wpsc_product_metadata'], array(
+			'engraved'                => 0,
+			'can_have_uploaded_image' => 0
+		) );
+
+		$post_data['meta']['_wpsc_product_metadata']['engraved'] = absint( (bool) $post_data['meta']['_wpsc_product_metadata']['engraved'] );
+		$post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'] = absint( (bool) $post_data['meta']['_wpsc_product_metadata']['can_have_uploaded_image'] );
+
 	}
 
 	if ( ! isset($post_data['meta']['_wpsc_product_metadata']['google_prohibited'])) $post_data['meta']['_wpsc_product_metadata']['google_prohibited'] = '';
 	$post_data['meta']['_wpsc_product_metadata']['google_prohibited'] = (int)(bool)$post_data['meta']['_wpsc_product_metadata']['google_prohibited'];
+
+	// Fill in any missing product meta values with existing values.
+	$default_meta_values = wp_parse_args( get_product_meta( $product_id, 'product_metadata', true ), array(
+		'external_link'        => '',
+		'external_link_text'   => '',
+		'external_link_target' => '',
+		'engraved'                => 0,
+		'can_have_uploaded_image' => 0
+	) );
+	$post_data['meta']['_wpsc_product_metadata'] = wp_parse_args( $post_data['meta']['_wpsc_product_metadata'], $default_meta_values );
 
 	$post_data['files'] = $_FILES;
 
