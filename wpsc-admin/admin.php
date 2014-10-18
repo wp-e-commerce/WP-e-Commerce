@@ -408,14 +408,14 @@ function wpsc_admin_include_purchase_logs_css_and_js() {
 		'sent_message'                           => _x( 'Email Sent!', 'sending tracking email for purchase log', 'wpsc' ),
 		'current_view'                           => empty( $_REQUEST['status'] ) ? 'all' : $_REQUEST['status'],
 		'current_filter'                         => empty( $_REQUEST['m'] ) ? '' : $_REQUEST['m'],
-		'current_page'                           => empty( $_REQUEST['paged']) ? '' : $_REQUEST['paged'],
+		'current_page'                           => empty( $_REQUEST['paged'] ) ? '' : $_REQUEST['paged'],
 	) );
 
 	// Purchase Log Action Links
 	wp_enqueue_script( 'wpsc-purchase-log-action-links', WPSC_URL . '/wpsc-admin/js/purchase-log-action-links.js', array( 'jquery' ), WPSC_VERSION . '.' . WPSC_MINOR_VERSION );
 	wp_localize_script( 'wpsc-purchase-log-action-links', 'WPSC_Purchase_Log_Action_Links', array(
 		'purchase_log_action_link_nonce' => _wpsc_create_ajax_nonce( 'purchase_log_action_link' ),
-		'log_id'                         => empty( $_REQUEST['id']) ? '' : absint( $_REQUEST['id'] )
+		'log_id'                         => empty( $_REQUEST['id'] ) ? '' : absint( $_REQUEST['id'] )
 	) );
 
 }
