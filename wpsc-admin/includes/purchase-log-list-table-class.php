@@ -49,21 +49,11 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		$this->views = false;
 	}
 
-	// Get the purchase logs per page (per user) or return the default
-	// based on http://chrismarslender.com/2012/01/26/wordpress-screen-options-tutorial/
 	private function set_purchase_logs_per_page_by_user() {
 
-		$user = get_current_user_id();
-		$screen = get_current_screen();
-		$option = $screen->get_option( 'per_page', 'option' );
+		$per_page = get_user_meta( get_current_user_id(), 'wpsc_purchases_per_page', true );
 
-		$per_page = get_user_meta( $user, 'wpsc_purchases_per_page', true );
-		if ( empty ( $per_page ) || $per_page < 1 ) {
-
-			$per_page = 20;
-		}
-
-		return $per_page;
+		return empty( $per_page ) || $per_page < 1 ? 20 : $per_page;
 	}
 
 	// Override the default Purchase Logs Per Page
