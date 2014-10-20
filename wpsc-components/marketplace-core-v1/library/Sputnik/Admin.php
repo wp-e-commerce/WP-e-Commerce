@@ -241,19 +241,19 @@ class Sputnik_Admin {
 	}
 
 	public static function page_scripts() {
-		wp_enqueue_script('jquery-masonry', plugins_url( 'static/jquery.masonry.js', Sputnik::$path . '/wpsc-marketplace' ), array('jquery'), '20110901' );
+		wp_enqueue_script( 'jquery-masonry' );
 		wp_enqueue_script( 'paypal', 'https://www.paypalobjects.com/js/external/dg.js' );
-		wp_enqueue_script('sputnik_js', plugins_url( 'static/admin.js', Sputnik::$path . '/wpsc-marketplace' ), array( 'jquery', 'jquery-masonry', 'thickbox', 'paypal' ), '20110924' );
+		wp_enqueue_script( 'sputnik_js', plugins_url( 'static/admin.js', Sputnik::$path . '/wpsc-marketplace' ), array( 'jquery', 'jquery-masonry', 'thickbox', 'paypal' ), '20110924' );
 
 		$l10n = array(
-			'plugin_information' => __('Plugin Information:', 'sputnik'),
-			'ays' => __('Are you sure you want to install this plugin?', 'sputnik')
+			'plugin_information' => __( 'Plugin Information:', 'sputnik' ),
+			'ays'                => __( 'Are you sure you want to install this plugin?', 'sputnik' )
 		);
 
 		if ( ! empty( $_REQUEST['oauth_buy'] ) ) {
-			$plugin = Sputnik::get_plugin( $_REQUEST['oauth_buy'] );
-			$status = self::install_status( $plugin );
-			$l10n['buy_id'] = $plugin->slug;
+			$plugin           = Sputnik::get_plugin( $_REQUEST['oauth_buy'] );
+			$status           = self::install_status( $plugin );
+			$l10n['buy_id']   = $plugin->slug;
 			$l10n['buy_href'] = $status['url'];
 		}
 
