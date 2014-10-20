@@ -242,7 +242,8 @@ Author URI: http://instinct.co.nz
 }
 
 .default_product_display .is_variation,
-.single_product_display .is_variation {
+.single_product_display .is_variation,
+.product_grid_display .is_variation {
 	display: none;
 }
 
