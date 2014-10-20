@@ -15,6 +15,7 @@ function wpsc_uses_coupons() {
 
 	return false;
 }
+
 function wpsc_coupons_error(){
 	global $wpsc_coupons;
 
@@ -86,12 +87,13 @@ class wpsc_coupons {
 
 			$this->value = (float) $coupon_data['value'];
 			$this->is_percentage = $coupon_data['is-percentage'];
-			$this->conditions = unserialize($coupon_data['condition']);
-			$this->is_used = $coupon_data['is-used'];
-			$this->active = $coupon_data['active'];
-			$this->use_once = $coupon_data['use-once'];
-			$this->start_date = $coupon_data['start'];
-			$this->end_date = $coupon_data['expiry'];
+
+			$this->conditions    = unserialize( $coupon_data['condition'] );
+			$this->is_used       = $coupon_data['is-used'];
+			$this->active        = $coupon_data['active'];
+			$this->use_once      = $coupon_data['use-once'];
+			$this->start_date    = $coupon_data['start'];
+			$this->end_date      = $coupon_data['expiry'];
 			$this->every_product = $coupon_data['every_product'];
 			$this->errormsg = false;
 			$valid = $this->validate_coupon();

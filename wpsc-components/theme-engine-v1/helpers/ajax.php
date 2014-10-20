@@ -676,10 +676,19 @@ function wpsc_submit_checkout( $collected_data = true ) {
 
 		// Test for required shipping information
 		if ( wpsc_core_shipping_enabled() && ( $num_items != $disregard_shipping ) ) {
-			// for shipping to work we need a method, option and a quote
-			if ( ! $wpsc_cart->shipping_method_selected() || ! $wpsc_cart->shipping_quote_selected() ) {
-				$error_messages[] = __( 'Please select one of the available shipping options, then we can process your order.', 'wpsc' );
-				$is_valid = false;
+			// for shipping to work we need a method, option and a quote, unless we have free shipping.
+
+			$shipping_discount_value  = get_option( 'shipping_discount_value' );
+			$is_free_shipping_enabled = get_option( 'shipping_discount' );
+			$subtotal                 = $wpsc_cart->calculate_subtotal();
+
+			$has_free_shipping = $is_free_shipping_enabled && $shipping_discount_value > 0 && $shipping_discount_value <= $subtotal;
+
+			if ( ! $has_free_shipping ) {
+				if ( ! $wpsc_cart->shipping_method_selected() || ! $wpsc_cart->shipping_quote_selected() ) {
+					$error_messages[] = __( 'Please select one of the available shipping options, then we can process your order.', 'wpsc' );
+					$is_valid = false;
+				}
 			}
 
 			// if we don't have a valid zip code ( the function also checks if we need it ) we have an error
