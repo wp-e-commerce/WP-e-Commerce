@@ -55,13 +55,13 @@ function _wpsc_theme_engine_v1_has_actions() {
 	 * @var array
 	 */
 	$core_exceptions = array(
-    	'wpsc_start_display_user_log_form_fields'    => 'wpsc_deprecated_filter_user_log_get',
-    	'wpsc_theme_footer'                          => 'wpsc_fancy_notifications',
-    	'wpsc_before_shipping_of_shopping_cart'      => '_wpsc_action_init_shipping_method',
-    	'wpsc_before_form_of_shopping_cart'          => '_wpsc_shipping_error_messages',
-    	'wpsc_user_profile_section_purchase_history' => '_wpsc_action_purchase_history_section',
-    	'wpsc_user_profile_section_edit_profile'     => '_wpsc_action_edit_profile_section',
-    	'wpsc_user_profile_section_downloads'        => '_wpsc_action_downloads_section'
+		'wpsc_start_display_user_log_form_fields'    => 'wpsc_deprecated_filter_user_log_get',
+		'wpsc_theme_footer'                          => 'wpsc_fancy_notifications',
+		'wpsc_before_shipping_of_shopping_cart'      => array( '_wpsc_calculate_shipping_quotes_before_product_page', '_wpsc_action_init_shipping_method' ),
+		'wpsc_before_form_of_shopping_cart'          => '_wpsc_shipping_error_messages',
+		'wpsc_user_profile_section_purchase_history' => '_wpsc_action_purchase_history_section',
+		'wpsc_user_profile_section_edit_profile'     => '_wpsc_action_edit_profile_section',
+		'wpsc_user_profile_section_downloads'        => '_wpsc_action_downloads_section'
 	);
 
 	$has_actions = array();
@@ -69,7 +69,18 @@ function _wpsc_theme_engine_v1_has_actions() {
 	foreach ( $actions as $action ) {
 
 		if ( isset( $core_exceptions[ $action ] ) ) {
-			remove_action( $action, $core_exceptions[ $action ] );
+
+			if ( is_array( $core_exceptions[ $action ] ) ) {
+
+				foreach ( $core_exceptions[ $action ] as $core_hook ) {
+					remove_action( $action, $core_hook  );
+				}
+
+			} else {
+
+				remove_action( $action, $core_exceptions[ $action ] );
+
+			}
 		}
 
 		if ( has_action( $action ) ) {
