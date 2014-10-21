@@ -412,6 +412,9 @@ class wpsc_cart {
 				do_action( 'wpsc_after_get_shipping_method', $this );
 			}
 		}
+
+		$this->rewind_shipping_methods();
+
 	}
 
 	/**
@@ -445,6 +448,9 @@ class wpsc_cart {
 		if (  empty( $this->selected_shipping_option ) && is_array( $this->shipping_quotes ) && ! empty( $this->shipping_quotes ) ) {
 			$this->selected_shipping_option = apply_filters( 'wpsc_default_shipping_quote', $this->selected_shipping_option, $this->shipping_quotes, $this );
 		}
+
+		$this->rewind_shipping_methods();
+
 	}
 
 	/**
