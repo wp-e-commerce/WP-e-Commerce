@@ -32,6 +32,7 @@ function wpsc_get_the_excerpt( $excerpt ) {
 		return '';
 	return $excerpt;
 }
+
 add_filter( 'get_the_excerpt', 'wpsc_get_the_excerpt', 2 );
 
 /**
@@ -49,6 +50,7 @@ add_filter( 'get_the_excerpt', 'wpsc_get_the_excerpt', 2 );
  */
 function wpsc_product_variation_price_from( $product_id, $args = null ) {
 	global $wpdb;
+
 	$args = wp_parse_args( $args, array(
 		'from_text'         => false,
 		'no_decimals'       => false,
@@ -59,12 +61,16 @@ function wpsc_product_variation_price_from( $product_id, $args = null ) {
 	static $price_data = array();
 
 	/* @todo: Rewrite using proper WP_Query */
-	if ( isset( $price_data[$product_id] ) ) {
-		$results = $price_data[$product_id];
+	if ( isset( $price_data[ $product_id ] ) ) {
+		$results = $price_data[ $product_id ];
 	} else {
+
 		$stock_sql = '';
-		if ( $args['only_in_stock'] )
+
+		if ( $args['only_in_stock'] ) {
 			$stock_sql = "INNER JOIN {$wpdb->postmeta} AS pm3 ON pm3.post_id = p.id AND pm3.meta_key = '_wpsc_stock' AND pm3.meta_value != '0'";
+		}
+
 		$sql = $wpdb->prepare( "
 			SELECT pm.meta_value AS price, pm2.meta_value AS special_price
 			FROM {$wpdb->posts} AS p
@@ -74,18 +80,23 @@ function wpsc_product_variation_price_from( $product_id, $args = null ) {
 			WHERE p.post_type = 'wpsc-product' AND p.post_parent = %d AND p.post_status IN ( 'publish', 'inherit' )
 		", $product_id );
 
-		$results = $wpdb->get_results( $sql );
-		$price_data[$product_id] = $results;
+		$results                   = $wpdb->get_results( $sql );
+		$price_data[ $product_id ] = $results;
 	}
 
 	$prices = array();
 
 	foreach ( $results as $row ) {
+
 		$price = (float) $row->price;
+
 		if ( ! $args['only_normal_price'] ) {
+
 			$special_price = (float) $row->special_price;
-			if ( $special_price != 0 && $special_price < $price )
+
+			if ( $special_price != 0 && $special_price < $price ) {
 				$price = $special_price;
+			}
 		}
 
 		if ( $args['no_decimals'] ) {
@@ -97,21 +108,27 @@ function wpsc_product_variation_price_from( $product_id, $args = null ) {
 	}
 
 	sort( $prices );
-	if ( empty( $prices ) )
+
+	if ( empty( $prices ) ) {
 		$prices[] = 0;
+	}
 
 	$price = apply_filters( 'wpsc_do_convert_price', $prices[0], $product_id );
-	$args = array(
+
+	$price_args = array(
 		'display_as_html'       => false,
 		'display_decimal_point' => ! $args['no_decimals']
 	);
-	$price = wpsc_currency_display( $price, $args );
 
-	if ( isset( $prices[0] ) && $prices[0] == $prices[count( $prices ) - 1] )
+	$price = wpsc_currency_display( $price, $price_args );
+
+	if ( isset( $prices[0] ) && $prices[0] == $prices[count( $prices ) - 1] ) {
 		$args['from_text'] = false;
+	}
 
-	if ( $args['from_text'] )
+	if ( $args['from_text'] ){
 		$price = sprintf( $args['from_text'], $price );
+	}
 
 	return $price;
 }
