@@ -370,10 +370,10 @@ class wpsc_cart {
 		$this->shipping_methods      = get_option( 'custom_shipping_options' );
 		$this->shipping_method_count = count( $this->shipping_methods );
 
-		$do_not_use_shipping = get_option( 'do_not_use_shipping', false );
+		$use_shipping = ! get_option( 'do_not_use_shipping', false );
 		$ready_to_calculate_shipping = apply_filters( 'wpsc_ready_to_calculate_shipping', true, $this );
 
-		if ( ! $do_not_use_shipping ) {
+		if ( $use_shipping ) {
 
 			if ( $this->shipping_method_count > 0 && $ready_to_calculate_shipping ) {
 				do_action( 'wpsc_before_get_shipping_method', $this );
@@ -1271,8 +1271,9 @@ class wpsc_cart {
 
 	function rewind_shipping_quotes() {
 		$this->current_shipping_quote = - 1;
+
 		if ( $this->shipping_quote_count > 0 ) {
-			$this->shipping_quote = $this->shipping_quotes [0];
+			$this->shipping_quote = $this->shipping_quotes[0];
 		}
 	}
 

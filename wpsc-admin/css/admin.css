@@ -2310,8 +2310,8 @@ body.edit-tags-php img.wpsc_category_image {
 #wpsc_product_gallery li {
 	float: left;
 	margin-right: 10px;
+	cursor: move;
 }
-
 
 /**
  * Digital download table style

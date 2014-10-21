@@ -24,9 +24,11 @@ class Sputnik_API {
 
 	public static function search($query, $page = 1) {
 		$url = '/search';
+
 		if ($page !== 1) {
 			$url = sprintf('/search/page/%d', $page);
 		}
+
 		$params = array(
 			'query' => $query
 		);
@@ -188,13 +190,16 @@ class Sputnik_API {
 
 	/* Helper Methods */
 	public static function request($url, $params = null, $args = array()) {
-		if ( ! empty( $params ) )
-			$url = add_query_arg( $params, $url );
 
-		$defaults = array('method' => 'GET');
+		if ( ! empty( $params ) ) {
+			$url = add_query_arg( $params, $url );
+		}
+
+		$defaults = array( 'method' => 'GET' );
+
 		$args = wp_parse_args($args, $defaults);
 
-		if (strpos($url, 'http') !== 0) {
+		if ( strpos( $url, 'http' ) !== 0 ) {
 			$url = Sputnik::API_BASE . $url;
 		}
 
@@ -218,6 +223,7 @@ class Sputnik_API {
 		if ($result === null) {
 			throw new Exception($request['body'], $request['response']['code']);
 		}
+
 		$request['body'] = $result;
 
 		return $request;
