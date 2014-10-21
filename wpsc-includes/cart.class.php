@@ -1286,11 +1286,33 @@ class wpsc_cart {
 		$this->coupons_amount = apply_filters( 'wpsc_coupons_amount', $coupons_amount, $coupon_name, $this );
 
 		$this->calculate_total_price();
+
 		if ( $this->total_price < 0 ) {
+
 			$this->coupons_amount += $this->total_price;
-			$this->total_price = null;
+			$this->total_price     = null;
+
 			$this->calculate_total_price();
 		}
 	}
-
 }
+
+/**
+ * A final calculation of shipping method on shipping page, prior to quote display.
+ * A regrettable hack, but necessary for 1.0 versions of our shipping interface and theme engine.
+ *
+ * @link   https://github.com/wp-e-commerce/WP-e-Commerce/issues/1552
+ *
+ * @since  3.9.0
+ * @access private
+ *
+ * @return void
+ */
+function _wpsc_calculate_shipping_quotes_before_product_page() {
+    global $wpsc_cart;
+
+    $wpsc_cart->get_shipping_method();
+    $wpsc_cart->rewind_shipping_methods();
+}
+
+add_action( 'wpsc_before_shipping_of_shopping_cart', '_wpsc_calculate_shipping_quotes_before_product_page' , 1 );
