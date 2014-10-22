@@ -49,7 +49,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 
 		add_filter(
 			'wpsc_payment_method_form_fields',
-			array( $this, 'filter_unselect_default' ), 100 , 1 
+			array( $this, 'filter_unselect_default' ), 100 , 1
 		);
 	}
 
@@ -63,7 +63,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 	public function dg_script() {
 		if ( wpsc_is_checkout() ) {
 			wp_enqueue_script( 'dg-script', 'https://www.paypalobjects.com/js/external/dg.js' );
-			wp_enqueue_script( 'dg-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/dg.js', array( 'jquery' ) ); 
+			wp_enqueue_script( 'dg-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/dg.js', array( 'jquery' ) );
 		}
 	}
 
@@ -101,7 +101,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		),
 		get_option( 'transact_url' )
 	);
-		return apply_filters( 'wpsc_paypal_digital_goods_return_url_redirect', $redirect );
+		return apply_filters( 'wpsc_paypal_digital_goods_return_url_redirect', $redirect, $this );
 	}
 
 	/**
@@ -132,9 +132,9 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 	<body>
 		<div id="left_frame">
 			<div id="right_frame">
-				<p id="message">	
+				<p id="message">
 				<?php _e( 'Processing Order', 'wpec'); ?>
-				<?php $location = esc_js( $this->get_original_return_url( $sessionid ) );  ?>	
+				<?php $location = esc_js( $this->get_original_return_url( $sessionid ) );  ?>
 				</p>
 				<img src="https://www.paypal.com/en_US/i/icon/icon_animated_prog_42wx42h.gif" alt="Processing..." />
 				<div id="right_bottom">
@@ -212,9 +212,9 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 			<body>
 			<div id="left_frame">
 			<div id="right_frame">
-			<p id="message">	
+			<p id="message">
 			<?php _e( 'Cancelling Order', 'ppdg'); ?>
-		<?php $location = html_entity_decode( $this->get_original_cancel_url() );  ?>	
+		<?php $location = html_entity_decode( $this->get_original_cancel_url() );  ?>
 		</p>
 			<img src="https://www.paypal.com/en_US/i/icon/icon_animated_prog_42wx42h.gif" alt="Processing..." />
 			<div id="right_bottom">
@@ -240,7 +240,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 	 * @return string
 	 *
 	 * @since 3.9
-	 */ 
+	 */
 	protected function get_original_cancel_url() {
 		return apply_filters( 'wpsc_paypal_digital_goods_cancel_url', $this->get_shopping_cart_payment_url() );
 	}
@@ -401,7 +401,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 	<body>
 		<div id="left_frame">
 			<div id="right_frame">
-				<p id="message">	
+				<p id="message">
 				<?php _e( 'Processing Order', 'wpsc'); ?>
 				</p>
 				<img src="https://www.paypal.com/en_US/i/icon/icon_animated_prog_42wx42h.gif" alt="Processing..." />

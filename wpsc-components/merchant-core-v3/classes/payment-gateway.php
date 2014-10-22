@@ -284,7 +284,7 @@ final class WPSC_Payment_Gateways {
 			self::$active_gateways = array_intersect( $selected_gateways, $registered_gateways );
 		}
 
-		return array_values( self::$active_gateways );
+		return apply_filters( 'wpsc_get_active_gateways', array_values( self::$active_gateways ) );
 	}
 
 	/**

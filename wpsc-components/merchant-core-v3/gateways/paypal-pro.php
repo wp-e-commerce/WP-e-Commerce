@@ -4,7 +4,7 @@
  *
  */
 
-class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {	
+class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	private $gateway;
 
 	/**
@@ -34,21 +34,21 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		) );
 
 		// Load PayPal Pro JavaScript file
-		add_action( 'wp_enqueue_scripts', array( $this, 'pro_script' ) );	
+		add_action( 'wp_enqueue_scripts', array( $this, 'pro_script' ) );
 
 		add_filter( 'wpsc_purchase_log_gateway_data', array( $this, 'filter_purchase_log_gateway_data' ), 10, 2 );
 
 		// Unselect Default Payment Gateway
 		add_filter(
 			'wpsc_payment_method_form_fields',
-			array( $this, 'filter_unselect_default' ), 101 , 1 
+			array( $this, 'filter_unselect_default' ), 101 , 1
 		);
 	}
 
 	/**
 	 * No payment gateway is selected by default
 	 *
-	 * @access public 
+	 * @access public
 	 * @param array $fields
 	 * @return array
 	 *
@@ -65,13 +65,13 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	/**
 	 * Returns the HTML of the logo of the payment gateway.
 	 *
-	 * @access public 
+	 * @access public
 	 * @return string
 	 *
 	 * @since 3.9
 	 */
 	public function get_mark_html() {
-		$html = '<img src="' . WPSC_URL . '/images/cc.gif" border="0" alt="' . esc_attr__( 'Credit Card Icons' ) .'" />'; 
+		$html = '<img src="' . WPSC_URL . '/images/cc.gif" border="0" alt="' . esc_attr__( 'Credit Card Icons' ) .'" />';
 
 		return apply_filters( 'wpsc_paypal-pro_mark_html', $html );
 	}
@@ -84,9 +84,9 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 * @since 3.9
 	 */
 	public function pro_script() {
-		if ( wpsc_is_checkout() ) {	
-			wp_enqueue_script( 'pro-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/pro.js', array( 'jquery' ) ); 	
-			wp_enqueue_style( 'pro-syle-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/pro.css' ); 	
+		if ( wpsc_is_checkout() ) {
+			wp_enqueue_script( 'pro-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/pro.js', array( 'jquery' ) );
+			wp_enqueue_style( 'pro-syle-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/pro.css' );
 		}
 	}
 
@@ -143,7 +143,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		),
 		get_option( 'transact_url' )
 	);
-		return apply_filters( 'wpsc_paypal_pro_return_url', $location );
+		return apply_filters( 'wpsc_paypal_pro_return_url', $location, $this );
 
 	}
 
@@ -273,11 +273,11 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 
 		$response = $this->gateway->get_transaction_details( $tx );
 
-		$this->log_payer_details( $response );	
+		$this->log_payer_details( $response );
 		$this->log_protection_status( $response );
 		$location = remove_query_arg( 'payment_gateway_callback' );
 
-		if ( $response->has_errors() ) {	
+		if ( $response->has_errors() ) {
 			wpsc_update_customer_meta( 'paypal_pro_errors', $response->get_errors() );
 			$location = add_query_arg( array( 'payment_gateway_callback' => 'display_paypal_error' ) );
 		} elseif ( $response->is_payment_completed() || $response->is_payment_pending() ) {
@@ -341,7 +341,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	}
 
 	/**
-	 * Records the Protection Eligibility status to the Purchase Log 
+	 * Records the Protection Eligibility status to the Purchase Log
 	 * after the purchase process
 	 *
 	 * @param PHP_Merchant_Paypal_Pro_Response $response
@@ -589,8 +589,8 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 			// Log any warning
 			if ( $params['ACK'] == 'SuccessWithWarning' ) {
 				$this->log_error( $response );
-			}	
-		} else {	
+			}
+		} else {
 			// Log errors and redirect user
 			$this->log_error( $response );
 			$url = add_query_arg( array(
