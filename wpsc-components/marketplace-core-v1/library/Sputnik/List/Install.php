@@ -55,7 +55,7 @@ class Sputnik_List_Install extends WP_List_Table {
 
 				case 'search':
 					$term = isset( $_REQUEST['s'] ) ? stripslashes( $_REQUEST['s'] ) : '';
-					$api = Sputnik_API::search($term);
+					$api = Sputnik_API::search( urlencode( $term ), array( 'browse' => $tab ), $paged );
 					break;
 
 				case 'account':

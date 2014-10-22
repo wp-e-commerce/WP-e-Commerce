@@ -22,19 +22,22 @@ class Sputnik_API {
 		return self::request($url, $params);
 	}
 
-	public static function search($query, $page = 1) {
-		$url = '/search';
+    public static function search( $query, $params = null, $page = 1 ) {
+		$url = '/';
 
-		if ($page !== 1) {
-			$url = sprintf('/search/page/%d', $page);
+		if ( $page !== 1 ) {
+	    	$url = sprintf( '/search/page/%d', $page );
 		}
 
-		$params = array(
-			'query' => $query
+		$extra = array(
+	    	'query'     => $query
 		);
 
-		return self::request($url, $params);
-	}
+		$params = array_merge( $params, $extra );
+
+		return self::request( $url, $params );
+    }
+
 
 	public static function get_single($name, $user = 0) {
 		$params = array(
