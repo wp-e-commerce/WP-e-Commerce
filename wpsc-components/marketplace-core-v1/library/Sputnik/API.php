@@ -26,7 +26,7 @@ class Sputnik_API {
 		$url = '/';
 
 		if ( $page !== 1 ) {
-	    	$url = sprintf( '/search/page/%d', $page );
+			$url = sprintf( '/page/%d', $page );
 		}
 
 		$extra = array(
