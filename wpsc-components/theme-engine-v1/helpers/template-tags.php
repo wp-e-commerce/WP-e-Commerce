@@ -1652,8 +1652,7 @@ function wpsc_the_product_price_display( $args = array() ) {
 	// if the product has no variations, these amounts are straight forward...
 	$old_price           = wpsc_product_normal_price( $id );
 	$current_price       = wpsc_the_product_price( false, false, $id );
-	$you_save            = wpsc_you_save( 'type=amount' ) . '! (' . wpsc_you_save() . '%)';
-	$you_save_percentage = wpsc_you_save();
+	$you_save            = wpsc_you_save( array( 'type' => 'amount', 'product_id' => $id, ) );
 
 	$show_old_price = $show_you_save = wpsc_product_on_special( $id );
 
