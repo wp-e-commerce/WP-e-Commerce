@@ -653,8 +653,8 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 ?>
     <div class="wpsc-stock-editor<?php if ( $bulk ) echo ' wpsc-bulk-edit' ?>">
         <p class="wpsc-form-field">
-            <input type="checkbox" name="<?php echo esc_attr( $field_name_prefix ); ?>[no_shipping]" value="1" <?php checked( $no_shipping && ! $bulk ); ?>>
-            <label><?php _e( 'Product will <em>not</em> be shipped to customer', 'wpsc' ); ?></label>
+            <input type="checkbox" id="wpsc-product-no-shipping" name="<?php echo esc_attr( $field_name_prefix ); ?>[no_shipping]" value="1" <?php checked( $no_shipping && ! $bulk ); ?>>
+            <label for="wpsc-product-no-shipping"><?php _e( 'Product will <em>not</em> be shipped to customer', 'wpsc' ); ?></label>
         </p>
 
         <div class="wpsc-product-shipping-section wpsc-product-shipping-weight-dimensions">
