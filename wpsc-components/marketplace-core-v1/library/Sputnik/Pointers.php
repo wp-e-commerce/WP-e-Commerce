@@ -12,10 +12,10 @@ class Sputnik_Pointers {
 
 	    $dismissed = explode( ',', (string) get_user_meta( get_current_user_id(), 'dismissed_wp_pointers', true ) );
 
-	    if ( ! in_array( 'wpsc_marketplace_pointer', $dismissed ) ) {
-	        $enqueue = true;
-	        add_action( 'admin_print_footer_scripts', array( __CLASS__, 'print_footer_scripts' ) );
-	    }
+		if ( ! in_array( 'wpsc_marketplace_pointer', $dismissed ) && current_user_can( 'install_plugins' ) ) {
+			$enqueue = true;
+			add_action( 'admin_print_footer_scripts', array( __CLASS__, 'print_footer_scripts' ) );
+		}
 
 	    if ( $enqueue ) {
 	        // Enqueue pointers
