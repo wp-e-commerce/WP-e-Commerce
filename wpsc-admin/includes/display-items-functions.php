@@ -729,7 +729,10 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
             </p>
         </div>
     </div>
-<?php
+	<?php
+
+	wp_nonce_field( 'update', 'wpsc_product_shipping_nonce' );
+
 }
 
 /**
