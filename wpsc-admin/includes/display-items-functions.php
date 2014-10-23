@@ -276,6 +276,7 @@ function wpsc_price_control_forms() {
 
         <input id="add_form_donation" type="checkbox" name="meta[_wpsc_is_donation]" value="yes" <?php checked( $product_data['meta']['_wpsc_is_donation'], 1 ); ?> />
         <label for="add_form_donation"><?php _e( 'Purchase is a donation.', 'wpsc' ) ?></label>
+		<?php wp_nonce_field( 'update', 'wpsc_product_pricing_nonce' ); ?>
 
 <?php endif;
 
@@ -389,11 +390,14 @@ function wpsc_stock_control_forms() {
                         <input type='checkbox' class='notify_when_oos' name='meta[_wpsc_product_metadata][notify_when_none_left]' /> <?php esc_html_e( 'Email site owner if this Product runs out of stock', 'wpsc' ); ?>
                         <input type='checkbox' class='unpublish_when_oos' name='meta[_wpsc_product_metadata][unpublish_when_none_left]' /> <?php esc_html_e( 'Set status to Unpublished if this Product runs out of stock', 'wpsc' ); ?>
                     </div>
-                </div><?php
-    }
-?>
-<?php
+                </div>
+		<?php
+	}
+
+	wp_nonce_field( 'update', 'wpsc_product_stock_nonce' );
+
 }
+
 function wpsc_product_taxes_forms() {
     global $post, $wpdb, $wpsc_product_defaults;
     $product_data = get_post_custom( $post->ID );
@@ -652,8 +656,8 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
 ?>
     <div class="wpsc-stock-editor<?php if ( $bulk ) echo ' wpsc-bulk-edit' ?>">
         <p class="wpsc-form-field">
-            <input type="checkbox" name="<?php echo esc_attr( $field_name_prefix ); ?>[no_shipping]" value="1" <?php checked( $no_shipping && ! $bulk ); ?>>
-            <label><?php _e( 'Product will <em>not</em> be shipped to customer', 'wpsc' ); ?></label>
+            <input type="checkbox" id="wpsc-product-no-shipping" name="<?php echo esc_attr( $field_name_prefix ); ?>[no_shipping]" value="1" <?php checked( $no_shipping && ! $bulk ); ?>>
+            <label for="wpsc-product-no-shipping"><?php _e( 'Product will <em>not</em> be shipped to customer', 'wpsc' ); ?></label>
         </p>
 
         <div class="wpsc-product-shipping-section wpsc-product-shipping-weight-dimensions">
@@ -728,7 +732,10 @@ function wpsc_product_shipping_forms( $product = false, $field_name_prefix = 'me
             </p>
         </div>
     </div>
-<?php
+	<?php
+
+	wp_nonce_field( 'update', 'wpsc_product_shipping_nonce' );
+
 }
 
 /**

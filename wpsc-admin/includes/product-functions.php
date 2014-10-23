@@ -46,10 +46,10 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 		$post_data['meta']['_wpsc_sku'] = '';
 	}
 
-	if( isset( $post_data['meta']['_wpsc_is_donation'] ) )
-		$post_data['meta']['_wpsc_is_donation'] = 1;
-	else
-		$post_data['meta']['_wpsc_is_donation'] = 0;
+	// Update donation setting
+	if ( isset( $post_data['wpsc_product_pricing_nonce'] ) && wp_verify_nonce( $post_data['wpsc_product_pricing_nonce'], 'update' ) ) {
+		$post_data['meta']['_wpsc_is_donation'] = isset( $post_data['meta']['_wpsc_is_donation'] ) ? 1 : 0;
+	}
 
 	if ( ! isset( $post_data['meta']['_wpsc_limited_stock'] ) ){
 		$post_data['meta']['_wpsc_stock'] = false;
@@ -58,17 +58,33 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 	}
 
 	unset($post_data['meta']['_wpsc_limited_stock']);
-	if(!isset($post_data['meta']['_wpsc_product_metadata']['notify_when_none_left'])) $post_data['meta']['_wpsc_product_metadata']['notify_when_none_left'] = 0;
-	if(!isset($post_data['meta']['_wpsc_product_metadata']['unpublish_when_none_left'])) $post_data['meta']['_wpsc_product_metadata']['unpublish_when_none_left'] = '';
-    if(!isset($post_data['quantity_limited'])) $post_data['quantity_limited'] = '';
+	if(!isset($post_data['quantity_limited'])) $post_data['quantity_limited'] = '';
     if(!isset($post_data['special'])) $post_data['special'] = '';
-    if(!isset($post_data['meta']['_wpsc_product_metadata']['no_shipping'])) $post_data['meta']['_wpsc_product_metadata']['no_shipping'] = '';
 
-	$post_data['meta']['_wpsc_product_metadata']['notify_when_none_left'] = (int)(bool)$post_data['meta']['_wpsc_product_metadata']['notify_when_none_left'];
-	$post_data['meta']['_wpsc_product_metadata']['unpublish_when_none_left'] = (int)(bool)$post_data['meta']['_wpsc_product_metadata']['unpublish_when_none_left'];
 	$post_data['meta']['_wpsc_product_metadata']['quantity_limited'] = (int)(bool)$post_data['quantity_limited'];
 	$post_data['meta']['_wpsc_product_metadata']['special'] = (int)(bool)$post_data['special'];
-	$post_data['meta']['_wpsc_product_metadata']['no_shipping'] = (int)(bool)$post_data['meta']['_wpsc_product_metadata']['no_shipping'];
+
+	// Update Stock Options
+	if ( isset( $_POST['wpsc_product_stock_nonce'] ) && wp_verify_nonce( $_POST['wpsc_product_stock_nonce'], 'update' ) ) {
+
+		$post_data['meta']['_wpsc_product_metadata'] = wp_parse_args( $post_data['meta']['_wpsc_product_metadata'], array(
+			'notify_when_none_left'    => 0,
+			'unpublish_when_none_left' => 0
+		) );
+		$post_data['meta']['_wpsc_product_metadata']['notify_when_none_left'] = absint( (bool) $post_data['meta']['_wpsc_product_metadata']['notify_when_none_left'] );
+		$post_data['meta']['_wpsc_product_metadata']['unpublish_when_none_left'] = absint( (bool) $post_data['meta']['_wpsc_product_metadata']['unpublish_when_none_left'] );
+
+	}
+
+	// Update shipping setting
+	if ( isset( $_POST['wpsc_product_shipping_nonce'] ) && wp_verify_nonce( $_POST['wpsc_product_shipping_nonce'], 'update' ) ) {
+
+		$post_data['meta']['_wpsc_product_metadata'] = wp_parse_args( $post_data['meta']['_wpsc_product_metadata'], array(
+			'no_shipping' => 0
+		) );
+		$post_data['meta']['_wpsc_product_metadata']['no_shipping'] = absint( (bool) $post_data['meta']['_wpsc_product_metadata']['no_shipping'] );
+
+	}
 
 	// Product Weight
 	if(!isset($post_data['meta']['_wpsc_product_metadata']['display_weight_as'])) $post_data['meta']['_wpsc_product_metadata']['display_weight_as'] = '';
@@ -156,13 +172,21 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 	if ( ! isset($post_data['meta']['_wpsc_product_metadata']['google_prohibited'])) $post_data['meta']['_wpsc_product_metadata']['google_prohibited'] = '';
 	$post_data['meta']['_wpsc_product_metadata']['google_prohibited'] = (int)(bool)$post_data['meta']['_wpsc_product_metadata']['google_prohibited'];
 
+	// Fill in any missing meta values with existing values.
+	$post_data['meta'] = wp_parse_args( $post_data['meta'], array(
+		'_wpsc_is_donation' => get_product_meta( $product_id, 'is_donation', true )
+	) );
+
 	// Fill in any missing product meta values with existing values.
 	$default_meta_values = wp_parse_args( get_product_meta( $product_id, 'product_metadata', true ), array(
-		'external_link'        => '',
-		'external_link_text'   => '',
-		'external_link_target' => '',
-		'engraved'                => 0,
-		'can_have_uploaded_image' => 0
+		'notify_when_none_left'    => 0,
+		'unpublish_when_none_left' => 0,
+		'no_shipping'              => 0,
+		'external_link'            => '',
+		'external_link_text'       => '',
+		'external_link_target'     => '',
+		'engraved'                 => 0,
+		'can_have_uploaded_image'  => 0
 	) );
 	$post_data['meta']['_wpsc_product_metadata'] = wp_parse_args( $post_data['meta']['_wpsc_product_metadata'], $default_meta_values );
 
