@@ -390,11 +390,14 @@ function wpsc_stock_control_forms() {
                         <input type='checkbox' class='notify_when_oos' name='meta[_wpsc_product_metadata][notify_when_none_left]' /> <?php esc_html_e( 'Email site owner if this Product runs out of stock', 'wpsc' ); ?>
                         <input type='checkbox' class='unpublish_when_oos' name='meta[_wpsc_product_metadata][unpublish_when_none_left]' /> <?php esc_html_e( 'Set status to Unpublished if this Product runs out of stock', 'wpsc' ); ?>
                     </div>
-                </div><?php
-    }
-?>
-<?php
+                </div>
+		<?php
+	}
+
+	wp_nonce_field( 'update', 'wpsc_product_stock_nonce' );
+
 }
+
 function wpsc_product_taxes_forms() {
     global $post, $wpdb, $wpsc_product_defaults;
     $product_data = get_post_custom( $post->ID );
