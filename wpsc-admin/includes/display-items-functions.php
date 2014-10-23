@@ -276,6 +276,7 @@ function wpsc_price_control_forms() {
 
         <input id="add_form_donation" type="checkbox" name="meta[_wpsc_is_donation]" value="yes" <?php checked( $product_data['meta']['_wpsc_is_donation'], 1 ); ?> />
         <label for="add_form_donation"><?php _e( 'Purchase is a donation.', 'wpsc' ) ?></label>
+		<?php wp_nonce_field( 'update', 'wpsc_product_pricing_nonce' ); ?>
 
 <?php endif;
 

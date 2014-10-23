@@ -46,10 +46,10 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 		$post_data['meta']['_wpsc_sku'] = '';
 	}
 
-	if( isset( $post_data['meta']['_wpsc_is_donation'] ) )
-		$post_data['meta']['_wpsc_is_donation'] = 1;
-	else
-		$post_data['meta']['_wpsc_is_donation'] = 0;
+	// Update donation setting
+	if ( isset( $post_data['wpsc_product_pricing_nonce'] ) && wp_verify_nonce( $post_data['wpsc_product_pricing_nonce'], 'update' ) ) {
+		$post_data['meta']['_wpsc_is_donation'] = isset( $post_data['meta']['_wpsc_is_donation'] ) ? 1 : 0;
+	}
 
 	if ( ! isset( $post_data['meta']['_wpsc_limited_stock'] ) ){
 		$post_data['meta']['_wpsc_stock'] = false;
@@ -155,6 +155,11 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 
 	if ( ! isset($post_data['meta']['_wpsc_product_metadata']['google_prohibited'])) $post_data['meta']['_wpsc_product_metadata']['google_prohibited'] = '';
 	$post_data['meta']['_wpsc_product_metadata']['google_prohibited'] = (int)(bool)$post_data['meta']['_wpsc_product_metadata']['google_prohibited'];
+
+	// Fill in any missing meta values with existing values.
+	$post_data['meta'] = wp_parse_args( $post_data['meta'], array(
+		'_wpsc_is_donation' => get_product_meta( $product_id, 'is_donation', true )
+	) );
 
 	// Fill in any missing product meta values with existing values.
 	$default_meta_values = wp_parse_args( get_product_meta( $product_id, 'product_metadata', true ), array(
