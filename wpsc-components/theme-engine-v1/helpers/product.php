@@ -615,7 +615,7 @@ function wpsc_show_category_thumbnails(){
  * @return bool - whether to show category description or not
  */
 function wpsc_show_category_description(){
-	return get_option('wpsc_category_description');
+	return get_option( 'wpsc_category_description' );
 }
 
 /**
@@ -625,14 +625,15 @@ function wpsc_show_category_description(){
  */
 function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 
-	$product_id = absint($product_id);
+	$product_id = absint( $product_id );
 
 	$product            = get_post( $product_id );
 	$supported_gateways = array( 'wpsc_merchant_paypal_standard', 'paypal_multiple' );
 	$selected_gateways  = get_option( 'custom_gateway_options' );
 
-	if ( $replaced_shortcode )
+	if ( $replaced_shortcode ) {
 		ob_start();
+	}
 
 	if ( in_array( 'wpsc_merchant_paypal_standard', (array) $selected_gateways ) ) {
 		if ( $product_id > 0 ) {
@@ -651,7 +652,7 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 				$handling = $shipping;
 			}
 
-			$has_variants = wpsc_product_has_variations( $product_id );
+			$has_variants = wpsc_product_has_variations( $product_id ) || ! wpsc_product_has_stock( $product_id );
 
 			$src     = apply_filters( 'wpsc_buy_now_button_src', _x( 'https://www.paypal.com/en_US/i/btn/btn_buynow_LG.gif', 'PayPal Buy Now Button', 'wpsc' ) );
 			$classes = apply_filters( 'wpsc_buy_now_button_class', "wpsc-buy-now-form wpsc-buy-now-form-{$product_id}" );
@@ -683,9 +684,9 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 ?>
 				<?php if ( get_option( 'multi_add' ) ) : ?>
 					<label for="quantity"><?php esc_html_e( 'Quantity', 'wpsc' ); ?></label>
-					<input type="text" size="4" id="quantity" name="quantity" value="" /><br />
+					<input type="text" size="4" id="quantity" class="wpsc-buy-now-quantity" name="quantity" value="" /><br />
 				<?php else: ?>
-					<input type="hidden" name="quantity" value="1" />
+					<input type="hidden" name="quantity" class="wpsc-buy-now-quantity" value="1" />
 				<?php endif ?>
 				<?php echo $button_html; ?>
 				<img alt='' border='0' width='1' height='1' src='<?php echo esc_url( _x( 'https://www.paypal.com/en_US/i/scr/pixel.gif', 'PayPal Pixel', 'wpsc' ) ); ?>' />
@@ -693,8 +694,9 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 			<?php
 		}
 	}
-	if ( $replaced_shortcode )
+	if ( $replaced_shortcode ) {
 		return ob_get_clean();
+	}
 }
 
 /**

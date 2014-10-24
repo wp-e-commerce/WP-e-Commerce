@@ -31,7 +31,7 @@ function wpsc_products_shorttag($atts) {
 	if ( get_post_type() == 'wpsc-product' )
 		return '';
 
-	$query = shortcode_atts(array(
+	$query = shortcode_atts( array(
 		'product_id' => 0,
 		'old_product_id' => 0,
 		'product_url_name' => null,

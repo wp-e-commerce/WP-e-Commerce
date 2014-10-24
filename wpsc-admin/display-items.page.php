@@ -11,7 +11,6 @@
 
 require_once(WPSC_FILE_PATH . '/wpsc-admin/includes/products.php');
 
-
 /**
  * wpsc_additional_column_names function.
  *
