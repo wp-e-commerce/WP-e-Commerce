@@ -1216,8 +1216,14 @@ jQuery(document).ready(function ($) {
 				}
 				donation_price.val(response.numeric_price);
 
+				//Set quantity field based on response for wpsc_check_variation_stock_availability
+				if ( response.stock_available === true ) {
+					buynow.find('input.wpsc-buy-now-quantity').val('1');
+					buynow.find('input.wpsc-buy-now-button').prop('disabled', false);
+				} else {
+					buynow.find('input.wpsc-buy-now-button').prop('disabled', true);
+				}
 				buynow.find('input[name="'+jQuery(self).prop('name')+'"]').val(jQuery(self).val());
-				buynow.find('input.wpsc-buy-now-button').prop('disabled', false);
 			}
 		}, 'json' );
 	});
