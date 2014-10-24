@@ -95,7 +95,8 @@ class wpsc_cart {
 		$this->wpsc_refresh_cart_items();
 		$this->unique_id = sha1( uniqid( rand(), true ) );
 
-   		add_action( 'wpsc_visitor_location_changing', array( &$this, 'shopper_location_changing' ), 10, 2);
+		add_action( 'wpsc_visitor_location_changing', array( &$this, 'shopper_location_changing' ), 10, 2);
+		add_filter( 'wpsc_default_shipping_quote', array ($this, 'set_default_shipping_quote' ), 10, 3 );
     }
 
     /*
@@ -1214,6 +1215,24 @@ class wpsc_cart {
 		}
 
 		$this->shipping_quote_count = count( $this->shipping_quotes );
+	}
+
+	/**
+	 * Set the lowest shipping rate as the default.
+	 *
+	 * @param string     $selected_option  The currently selected rate.
+	 * @param array      $shipping_quotes  Array of all available shipping quotes.
+	 * @param WPSC_Cart  $wpsc_cart        The WPSC_Cart object.
+	 */
+	function set_default_shipping_quote( $selected_option, $shipping_quotes, $wpsc_cart ) {
+		$min = null;
+		foreach ( $shipping_quotes as $key => $value ) {
+			if ( is_null( $min ) || $value < $min ) {
+				$min = $value;
+				$selected_option = $key;
+			}
+		}
+		return $selected_option;
 	}
 
 	function google_shipping_quotes() {
