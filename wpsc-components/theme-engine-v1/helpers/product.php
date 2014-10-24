@@ -651,7 +651,14 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 				$handling = $shipping;
 			}
 
-			$has_variants = wpsc_product_has_variations( $product_id );
+			$input_status = false;
+			$has_variants 	= wpsc_product_has_variations( $product_id );
+			$has_stock 	= wpsc_product_has_stock( $product_id );
+			if ( $has_variants == true ) {
+				$input_status = false;
+			} elseif ( $has_stock == true ) {
+				$input_status = true;
+			}
 
 			$src     = apply_filters( 'wpsc_buy_now_button_src', _x( 'https://www.paypal.com/en_US/i/btn/btn_buynow_LG.gif', 'PayPal Buy Now Button', 'wpsc' ) );
 			$classes = apply_filters( 'wpsc_buy_now_button_class', "wpsc-buy-now-form wpsc-buy-now-form-{$product_id}" );
@@ -661,7 +668,7 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
             $classes = implode( ' ', $classes_array );
 
 			$button_html = sprintf( '<input%1$s class="wpsc-buy-now-button wpsc-buy-now-button-%2$s" type="image" name="submit" border="0" src="%3$s" alt="%4$s" />',
-				disabled( $has_variants, true, false ),
+				disabled( $input_status, false, false ),
 				esc_attr( $product_id ),
 				esc_url( $src ),
 				esc_attr__( 'PayPal - The safer, easier way to pay online', 'wpsc' )
@@ -683,9 +690,9 @@ function wpsc_buy_now_button( $product_id, $replaced_shortcode = false ) {
 ?>
 				<?php if ( get_option( 'multi_add' ) ) : ?>
 					<label for="quantity"><?php esc_html_e( 'Quantity', 'wpsc' ); ?></label>
-					<input type="text" size="4" id="quantity" name="quantity" value="" /><br />
+					<input type="text" size="4" id="quantity" name="quantity" class="wpsc-buy-now-quantity" value="" /><br />
 				<?php else: ?>
-					<input type="hidden" name="quantity" value="1" />
+					<input type="hidden" name="quantity" class="wpsc-buy-now-quantity" value="1" />
 				<?php endif ?>
 				<?php echo $button_html; ?>
 				<img alt='' border='0' width='1' height='1' src='<?php echo esc_url( _x( 'https://www.paypal.com/en_US/i/scr/pixel.gif', 'PayPal Pixel', 'wpsc' ) ); ?>' />
