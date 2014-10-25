@@ -1599,7 +1599,7 @@ if ( in_array( 'google', get_option( 'custom_gateway_options', array() ) ) ) {
  * @since  3.9.0
  *
  * @param  array $links Original links
- * @return array        Updated links
+ * @return array $links Updated links
  */
 function wpsc_support_links( $links ) {
 	$links[] = sprintf( '<a href="%s">%s</a>', _x( 'http://getshopped.org/resources/premium-support/', 'Premium Support URL', 'wpsc' ),  __( 'Premium Support', 'wpsc' ) );
