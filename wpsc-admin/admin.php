@@ -1603,7 +1603,7 @@ if ( in_array( 'google', get_option( 'custom_gateway_options', array() ) ) ) {
  */
 function wpsc_support_links( $links ) {
 	$links[] = sprintf( '<a href="%s">%s</a>', _x( 'http://getshopped.org/resources/premium-support/', 'Premium Support URL', 'wpsc' ),  __( 'Premium Support', 'wpsc' ) );
-	$links[] = sprintf( '<a href="%s">%s</a>', _x( 'http://docs.getshopped.org/resources/', 'Documentation URL', 'wpsc' ),  __( 'Documentation', 'wpsc' ) );
+	$links[] = sprintf( '<a href="%s">%s</a>', _x( 'http://docs.getshopped.org/', 'Documentation URL', 'wpsc' ),  __( 'Documentation', 'wpsc' ) );
 
 	return $links;
 }
