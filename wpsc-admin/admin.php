@@ -1592,3 +1592,20 @@ function _wpsc_notify_google_checkout_deprecation() {
 if ( in_array( 'google', get_option( 'custom_gateway_options', array() ) ) ) {
 	add_action( 'admin_notices', '_wpsc_notify_google_checkout_deprecation' );
 }
+
+/**
+ * Adds links to premium support and documentation on GetShopped.org
+ *
+ * @since  3.9.0
+ *
+ * @param  array $links Original links
+ * @return array        Updated links
+ */
+function wpsc_support_links( $links ) {
+	$links[] = sprintf( '<a href="%s">%s</a>', _x( 'http://getshopped.org/resources/premium-support/', 'Premium Support URL', 'wpsc' ),  __( 'Premium Support', 'wpsc' ) );
+	$links[] = sprintf( '<a href="%s">%s</a>', _x( 'http://docs.getshopped.org/resources/', 'Documentation URL', 'wpsc' ),  __( 'Documentation', 'wpsc' ) );
+
+	return $links;
+}
+
+add_filter( 'plugin_action_links_' . WPSC_PLUGIN_BASENAME, 'wpsc_support_links' );

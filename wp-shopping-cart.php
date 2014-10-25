@@ -104,14 +104,16 @@ class WP_eCommerce {
 
 		// Define the path to the plugin folder
 		define( 'WPSC_DIR_NAME',  basename( WPSC_FILE_PATH ) );
+		define( 'WPSC_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 
 		// Define the URL to the plugin folder
-		define( 'WPSC_FOLDER',    dirname( plugin_basename( __FILE__ ) ) );
+		define( 'WPSC_FOLDER',    dirname( WPSC_PLUGIN_BASENAME ) );
 		define( 'WPSC_URL',       plugins_url( '', __FILE__ ) );
 
 		//load text domain
-		if ( ! load_plugin_textdomain( 'wpsc', false, '../languages/' ) )
-			load_plugin_textdomain( 'wpsc', false, dirname( plugin_basename( __FILE__ ) ) . '/wpsc-languages/' );
+		if ( ! load_plugin_textdomain( 'wpsc', false, '../languages/' ) ) {
+			load_plugin_textdomain( 'wpsc', false, dirname( WPSC_PLUGIN_BASENAME ) . '/wpsc-languages/' );
+		}
 
 		// Finished starting
 		do_action( 'wpsc_started' );
