@@ -564,7 +564,7 @@ function wpsc_single_template( $content ) {
 		remove_filter( "the_content", "wpsc_single_template", 12 );
 		$single_theme_path = wpsc_get_template_file_path( 'wpsc-single_product.php' );
 
-		$is_preview = isset( $wp_query->query_vars['preview'] ) && $wp_query->query_vars['preview']
+		$is_preview = isset( $wp_query->query_vars['preview'] ) && $wp_query->query_vars['preview'];
 
 		$wpsc_temp_query = new WP_Query( array( 'p' => $wp_query->post->ID , 'post_type' => 'wpsc-product','posts_per_page' => 1, 'preview' => $is_preview ) );
 
