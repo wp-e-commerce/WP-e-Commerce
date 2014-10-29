@@ -1431,8 +1431,9 @@ function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
 		'order'       => 'ASC',
 	) );
 
-	foreach ( $child_posts as $child_post )
+	foreach ( $child_posts as $child_post ) {
 	    wpsc_duplicate_product_process( $child_post, $new_parent_id );
+	}
 
 }
 
@@ -1556,4 +1557,14 @@ function _wpsc_notify_google_checkout_deprecation() {
 
 if ( in_array( 'google', get_option( 'custom_gateway_options', array() ) ) ) {
 	add_action( 'admin_notices', '_wpsc_notify_google_checkout_deprecation' );
+}
+
+/**
+ * Determines whether or not a current user has the capability to do administrative actions in the store.
+ *
+ * @since  3.8.14.4
+ * @return bool Whether or not current user can administrate the store
+ */
+function wpsc_is_store_admin() {
+	return current_user_can( apply_filters( 'wpsc_store_admin_capability', 'manage_options' ) );
 }

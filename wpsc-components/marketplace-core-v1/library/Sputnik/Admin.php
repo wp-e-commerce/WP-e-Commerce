@@ -21,6 +21,11 @@ class Sputnik_Admin {
 	}
 
 	public static function init() {
+
+		if ( ! wpsc_is_store_admin() ) {
+			return;
+		}
+
 		add_action('admin_print_styles', array(__CLASS__, 'styles'));
 		add_action('admin_print_scripts', array(__CLASS__, 'scripts'));
 
@@ -127,6 +132,11 @@ class Sputnik_Admin {
 	}
 
 	public static function admin_head_page() {
+
+		if ( ! wpsc_is_store_admin() ) {
+			return;
+		}
+
 		if (self::$page === 'dash') {
 			self::$list_table = new Sputnik_List_Install();
 			$pagenum = self::$list_table->get_pagenum();

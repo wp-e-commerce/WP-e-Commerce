@@ -943,6 +943,11 @@ function wpsc_get_ajax_spinner() {
 }
 
 function _wpsc_remove_erroneous_files() {
+
+	if ( ! wpsc_is_store_admin() ) {
+		return;
+	}
+
 	$files = array(
 		 WPSC_FILE_PATH . '/wpsc-components/marketplace-core-v1/library/Sputnik/.htaccess',
 		 WPSC_FILE_PATH . '/wpsc-components/marketplace-core-v1/library/Sputnik/error_log',

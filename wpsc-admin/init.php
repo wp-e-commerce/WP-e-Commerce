@@ -1,6 +1,10 @@
 <?php
-
 function wpsc_ajax_sales_quarterly() {
+
+	if ( ! wpsc_is_store_admin() ) {
+		return;
+	}
+
 	$lastdate = sanitize_text_field( $_POST['add_start'] );
 	$date = preg_split( '/-/', $lastdate );
 	if ( !isset( $date[0] ) )
@@ -66,6 +70,10 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
  */
 function wpsc_duplicate_product() {
 
+	if ( ! wpsc_is_store_admin() ) {
+		return;
+	}
+
 	// Get the original post
 	$id = absint( $_GET['product'] );
 	$post = get_post( $id );
@@ -76,7 +84,7 @@ function wpsc_duplicate_product() {
 
 		$duplicated = true;
 		$sendback = wp_get_referer();
-		$sendback = add_query_arg( 'duplicated', (int)$duplicated, $sendback );
+		$sendback = add_query_arg( 'duplicated', (int) $duplicated, $sendback );
 
 		wp_redirect( $sendback );
 		exit();
@@ -89,10 +97,16 @@ if ( isset( $_GET['wpsc_admin_action'] ) && ( $_GET['wpsc_admin_action'] == 'dup
     add_action( 'admin_init', 'wpsc_duplicate_product' );
 
 function wpsc_purchase_log_csv() {
+
+	if ( ! wpsc_is_store_admin() ) {
+		return;
+	}
+
 	global $wpdb, $wpsc_gateways;
 	get_currentuserinfo();
 	$count = 0;
-	if ( 'key' == $_REQUEST['rss_key'] && current_user_can( 'manage_options' ) ) {
+
+	if ( 'key' == $_REQUEST['rss_key'] ) {
 		if ( isset( $_REQUEST['start_timestamp'] ) && isset( $_REQUEST['end_timestamp'] ) ) {
 			$start_timestamp = $_REQUEST['start_timestamp'];
 			$end_timestamp   = $_REQUEST['end_timestamp'];
@@ -235,6 +249,11 @@ if ( isset( $_GET['purchase_log_csv'] ) && ( 'true' == $_GET['purchase_log_csv']
 	add_action( 'admin_init', 'wpsc_purchase_log_csv' );
 
 function wpsc_admin_sale_rss() {
+
+	if ( ! wpsc_is_store_admin() ) {
+		return;
+	}
+
 	global $wpdb;
 	if ( ($_GET['rss'] == "true") && ($_GET['rss_key'] == 'key') && ($_GET['action'] == "purchase_log") ) {
 		$sql = "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `date`!='' ORDER BY `date` DESC";
@@ -276,6 +295,11 @@ if ( isset( $_GET['action'] ) && ( 'purchase_log' == $_GET['action'] ) )
  * Purchase log ajax code starts here
  */
 function wpsc_purchlog_resend_email() {
+
+	if ( ! wpsc_is_store_admin() ) {
+		return;
+	}
+
 	global $wpdb;
 	$log_id = $_REQUEST['email_buyer_id'];
 	$wpec_taxes_controller = new wpec_taxes_controller();
@@ -298,9 +322,15 @@ if ( isset( $_REQUEST['email_buyer_id'] ) && is_numeric( $_REQUEST['email_buyer_
 }
 
 function wpsc_purchlog_clear_download_items() {
+
+	if ( ! wpsc_is_store_admin() ) {
+		return;
+	}
+
 	global $wpdb;
-	if ( is_numeric( $_GET['purchaselog_id'] ) ) {
-		$purchase_id = (int)$_GET['purchaselog_id'];
+
+	if ( is_numeric( $_GET['id'] ) ) {
+		$purchase_id = (int) $_GET['id'];
 		$downloadable_items = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_DOWNLOAD_STATUS . "` WHERE `purchid` = %d", $purchase_id ), ARRAY_A );
 
 		$wpdb->update( WPSC_TABLE_DOWNLOAD_STATUS, array( 'ip_number' => '' ), array( 'purchid' => $purchase_id ), '%s', '%d' );
@@ -337,6 +367,11 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
 
 //bulk actions for purchase log
 function wpsc_purchlog_bulk_modify() {
+
+	if ( ! wpsc_is_store_admin() ) {
+		return;
+	}
+
 	if ( $_POST['purchlog_multiple_status_change'] != -1 ) {
 		if ( is_numeric( $_POST['purchlog_multiple_status_change'] ) && $_POST['purchlog_multiple_status_change'] != 'delete' ) {
 			foreach ( (array)$_POST['purchlogids'] as $purchlogid ) {
@@ -403,7 +438,12 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
 /* End Order Notes (by Ben) */
 
 //delete a purchase log
-function wpsc_delete_purchlog( $purchlog_id='' ) {
+function wpsc_delete_purchlog( $purchlog_id = '' ) {
+
+	if ( ! wpsc_is_store_admin() ) {
+		return;
+	}
+
 	global $wpdb;
 	$deleted = 0;
 
@@ -503,7 +543,10 @@ add_action( 'update_option_users_can_register', '_wpsc_action_update_option_user
  * @return nothing
  */
 function wpsc_update_page_urls( $auto = false ) {
-	global $wpdb;
+
+	if ( ! wpsc_is_store_admin() ) {
+		return;
+	}
 
 	wpsc_update_permalink_slugs();
 	wpsc_core_load_page_titles();
@@ -526,6 +569,11 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
 
 //change the regions tax settings
 function wpsc_change_region_tax() {
+
+	if ( ! wpsc_is_store_admin() ) {
+		return;
+	}
+
 	global $wpdb;
 	if ( is_array( $_POST['region_tax'] ) ) {
 		foreach ( $_POST['region_tax'] as $region_id => $tax ) {
@@ -556,6 +604,10 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
 
 function wpsc_product_files_existing() {
 	//List all product_files, with checkboxes
+
+	if ( ! wpsc_is_store_admin() ) {
+		return;
+	}
 
 	$product_id = absint( $_GET["product_id"] );
 	$file_list = wpsc_uploaded_files();
@@ -663,6 +715,11 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( 'wpsc-delete-variation-set' ==
 	add_action( 'admin_init', 'wpsc_delete_variation_set' );
 
 function wpsc_backup_theme() {
+
+	if ( ! wpsc_is_store_admin() ) {
+		return;
+	}
+
 	$wp_theme_path = get_stylesheet_directory();
 	wpsc_recursive_copy( $wp_theme_path, WPSC_THEME_BACKUP_DIR );
 	$_SESSION['wpsc_themes_backup'] = true;

@@ -164,7 +164,7 @@ class wpsc_theming {
 				if('wpsc-default.css' == $file)
 					wpsc_move_theme_images();
 				if ( in_array( $file, $this->templates_to_move ) ) {
-					if ( !strstr( $file, "functions" ) && !strstr( $file, "widget" ) ) {
+					if ( !strstr( $file, "functions" ) && !strstr( $file, 'widget' ) ) {
 						$file_data = file_get_contents( $old . "/" . $file );
 						$_SESSION['wpsc_themes_copied_results'][] = @file_put_contents( $path . "/" . $file, $file_data );
 						rename( $path . "/" . $file, $path . "/" . $theme_file_prefix . $file );
@@ -177,8 +177,20 @@ class wpsc_theming {
 		do_action( 'wpsc_move_theme' );
 	}
 }
+/**
+ * Initializes WPSC_Theming global.
+ *
+ * A relic of days gone by, an awkwardly named class intended for use in the migration of theme templates from
+ * the core theme folders into the currently active theme folder.
+ *
+ * @since  3.8.14.4
+ * @return void
+ */
+function wpsc_init_theming_global() {
+	global $wpsc_theming;
+	$wpsc_theming = new wpsc_theming();
+}
 
-if ( isset( $_REQUEST['wpsc_move_themes'] ) && !empty($_REQUEST['wpsc_move_themes']) )
-	add_action( 'admin_init', create_function( '', 'global $wpsc_theming; $wpsc_theming = new wpsc_theming();' ) );
-
-?>
+if ( isset( $_REQUEST['wpsc_move_themes'] ) && ! empty( $_REQUEST['wpsc_move_themes'] ) ) {
+	add_action( 'admin_init', 'wpsc_init_theming_global' );
+}
