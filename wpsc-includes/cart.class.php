@@ -1218,19 +1218,16 @@ class wpsc_cart {
 	}
 
 	/**
-	 * Set the lowest shipping rate as the default.
+	 * If there is only one quote, set it as the default.
 	 *
 	 * @param string     $selected_option  The currently selected rate.
 	 * @param array      $shipping_quotes  Array of all available shipping quotes.
 	 * @param WPSC_Cart  $wpsc_cart        The WPSC_Cart object.
 	 */
 	function set_default_shipping_quote( $selected_option, $shipping_quotes, $wpsc_cart ) {
-		$min = null;
-		foreach ( $shipping_quotes as $key => $value ) {
-			if ( is_null( $min ) || $value < $min ) {
-				$min = $value;
-				$selected_option = $key;
-			}
+		if ( count( $shipping_quotes ) == 1 ) {
+			reset( $shipping_quotes );
+			$selected_option = key( $shipping_quotes );
 		}
 		return $selected_option;
 	}
