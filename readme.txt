@@ -36,6 +36,15 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 == Changelog ==
 
+= 3.8.14.4 =
+
+ * Fix: Significant security vulnerability whereby some admin actions were exploitable by unauthorized users.  Props to Sucuri for the responsible disclosure.
+ * Fix: Other less significant security hardening and minor code maintenance.
+
+= 3.8.14.3 =
+
+* Fix: Resolve PHP warning in stats logging class.
+
 = 3.8.14.2 =
 
 * Fix: Clear country cache automatically.
