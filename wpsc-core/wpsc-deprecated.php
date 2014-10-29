@@ -1477,6 +1477,11 @@ function wpsc_filter_feature_image_text( $translation, $text, $domain ) {
 
 function wpsc_display_invoice() {
 	_wpsc_deprecated_function( __FUNCTION__, '3.8.13' );
+
+	if ( ! wpsc_is_store_admin() ) {
+		return;
+	}
+
 	$purchase_id = (int)$_REQUEST['purchaselog_id'];
 	add_action('wpsc_packing_slip', 'wpsc_packing_slip');
 	do_action('wpsc_before_packing_slip', $purchase_id);
@@ -2009,8 +2014,13 @@ if ( ! function_exists( 'change_link' ) ) {
 
 function wpsc_google_shipping_settings() {
 	_wpsc_deprecated_function( __FUNCTION__, '3.8.14' );
+
+	if ( ! wpsc_is_store_admin() ) {
+		return;
+	}
+
 	if ( isset( $_POST['submit'] ) ) {
-		foreach ( (array)$_POST['google_shipping'] as $key => $country ) {
+		foreach ( (array) $_POST['google_shipping'] as $key => $country ) {
 			if ( $country == 'on' ) {
 				$google_shipping_country[] = $key;
 				$updated++;

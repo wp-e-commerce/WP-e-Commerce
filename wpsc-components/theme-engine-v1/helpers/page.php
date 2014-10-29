@@ -125,6 +125,11 @@ function wpsc_flush_theme_transients( $force = false ) {
 }
 
 function wpsc_force_flush_theme_transients() {
+
+	if ( ! wpsc_is_store_admin() ) {
+		return;
+	}
+
 	// Flush transients
 	wpsc_flush_theme_transients( true );
 

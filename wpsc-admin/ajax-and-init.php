@@ -18,6 +18,11 @@
  * @uses wpsc_find_purchlog_status_name()             Finds name of given status
  */
 function wpsc_admin_ajax() {
+
+	if ( ! wpsc_is_store_admin() ) {
+		return;
+	}
+
 	global $wpdb;
 
 	if ( isset( $_POST['action'] ) && $_POST['action'] == 'product-page-order' ) {
@@ -94,6 +99,11 @@ if ( isset( $_REQUEST['ajax'] ) && isset( $_REQUEST['admin'] ) && ($_REQUEST['aj
  * @uses $wpdb  WordPress database object for queries
  */
 function wpsc_change_currency() {
+
+	if ( ! wpsc_is_store_admin() ) {
+		return;
+	}
+
 	if ( is_numeric( $_POST['currencyid'] ) ) {
 		$currency_data = $wpdb->get_results( $wpdb->prepare( "SELECT `symbol`,`symbol_html`,`code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id`=%d LIMIT 1", $_POST['currencyid'] ), ARRAY_A );
 		$price_out = null;
@@ -113,6 +123,11 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
  * @uses $wpdb  WordPress database object for queries
  */
 function wpsc_rearrange_images() {
+
+	if ( ! wpsc_is_store_admin() ) {
+		return;
+	}
+
 	global $wpdb;
 	$images = explode( ",", $_POST['order'] );
 	$product_id = absint( $_POST['product_id'] );
@@ -155,6 +170,11 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] 
  * @uses wp_redirect()      Redirects to string given as argument
  */
 function wpsc_clean_categories() {
+
+	if ( ! wpsc_is_store_admin() ) {
+		return;
+	}
+
 	global $wpdb, $wp_rewrite;
 	$sql_query = "SELECT `id`, `name`, `active` FROM `" . WPSC_TABLE_PRODUCT_CATEGORIES . "`";
 	$sql_data = $wpdb->get_results( $sql_query, ARRAY_A );

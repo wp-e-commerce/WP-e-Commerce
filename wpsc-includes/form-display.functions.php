@@ -139,6 +139,11 @@ function wpsc_select_product_file( $product_id = null ) {
 }
 
 function _wpsc_admin_download_file() {
+
+	if ( ! wpsc_is_store_admin() ) {
+		return;
+	}
+
 	$file_id = $_REQUEST['wpsc_download_id'];
 	check_admin_referer( 'wpsc-admin-download-file-' . $file_id );
 
@@ -146,8 +151,9 @@ function _wpsc_admin_download_file() {
 	_wpsc_force_download_file( $file_id );
 }
 
-if ( ! empty( $_REQUEST['wpsc_download_id'] ) )
+if ( ! empty( $_REQUEST['wpsc_download_id'] ) ) {
 	add_action( 'admin_init', '_wpsc_admin_download_file' );
+}
 
 function wpsc_select_variation_file( $file_id, $variation_ids, $variation_combination_id = null ) {
 	global $wpdb;

@@ -866,6 +866,10 @@ function _wpsc_clear_wp_cache_on_version_change() {
 		return;
 	}
 
+	if ( ! wpsc_is_store_admin() ) {
+		return;
+	}
+
 	$version_we_last_stored = get_option( __FUNCTION__, false );
 
 	if ( $version_we_last_stored != WPSC_VERSION ) {

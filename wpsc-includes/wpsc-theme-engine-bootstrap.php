@@ -213,7 +213,7 @@ add_filter( 'wpsc_components', '_wpsc_theme_engine_router' );
 /**
  * Deactivates the former feature-as-a-plugin plugin for the 2.0 theme engine, if it is active.
  *
- * @since  3.9
+ * @since  3.9.0
  * @return void
  */
 function _wpsc_deactivate_theme_engine_plugin() {
