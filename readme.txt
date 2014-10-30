@@ -36,6 +36,12 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 == Changelog ==
 
+= 3.8.14.4 =
+
+* Fix: Security fixes.  Closed out several exploitable attack vectors against admin hooks, hardened type casting. Props to Sucuri and Ryan Satterfield for responsible disclosure.
+* Fix: Resolve free shipping issue.  Don't require shipping method to be selected if free shipping is available.
+* Fix: Ensure shipping is always properly calculated when using table rate and it is the only available rate.
+
 = 3.8.14.3 =
 
 * Fix: Added WordPress 4.0 compatibility.
