@@ -288,6 +288,10 @@ function wpsc_admin_sale_rss() {
 	}
 }
 
+if ( isset( $_GET['action'] ) && ( 'purchase_log' == $_GET['action'] ) ) {
+	add_action( 'admin_init', 'wpsc_admin_sale_rss' );
+}
+
 /**
  * Do Purchase Log Actions
  *
@@ -307,9 +311,6 @@ function wpsc_do_purchase_log_actions() {
 
 }
 add_action( 'admin_init', 'wpsc_do_purchase_log_actions' );
-
-if ( isset( $_GET['action'] ) && ( 'purchase_log' == $_GET['action'] ) )
-	add_action( 'admin_init', 'wpsc_admin_sale_rss' );
 
 /**
  * Purchase log ajax code starts here
