@@ -1303,7 +1303,7 @@ class wpsc_cart {
  *
  * @link   https://github.com/wp-e-commerce/WP-e-Commerce/issues/1552
  *
- * @since  3.9.0
+ * @since  3.8.14.4
  * @access private
  *
  * @return void
