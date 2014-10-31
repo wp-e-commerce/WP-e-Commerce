@@ -224,7 +224,7 @@ class wpsc_custom_meta {
 			$meta_values = get_post_meta( $post_id );
 
 			foreach ( $meta_values as $key => $values ) {
-				if ( '_' !== $key[0] ) {
+				if ( ! is_protected_meta( $key ) ) {
 					if ( is_array( $values ) ) {
 						foreach ( $values as $value ) {
 							$cleaned_metas[] = array( 'meta_key' => $key, 'meta_value' => $value );
