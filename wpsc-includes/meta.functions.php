@@ -100,7 +100,7 @@ function wpsc_delete_meta( $object_id = 0, $meta_key, $meta_value, $type, $globa
 
 /**
  * category meta functions are as follows:
-*/
+ */
 
 /**
  * Retrieve meta field for a category
@@ -138,13 +138,13 @@ function wpsc_delete_categorymeta( $cat_id, $meta_key, $meta_value = '' ) {
 }
 /**
  * category meta functions end here.
-*/
+ */
 
 
 /**
  * product meta functions start here
  * all these functions just prefix the key with the meta prefix, and pass the values through to the equivalent post meta function.
-*/
+ */
 
 /**
  * add_product_meta function.
@@ -207,7 +207,7 @@ function update_product_meta($product_id, $key, $value, $prev_value = '') {
 
 /**
  * product meta functions end here
-*/
+ */
 
 class wpsc_custom_meta {
 	// Custom meta values
@@ -216,18 +216,27 @@ class wpsc_custom_meta {
 	var $current_custom_meta = -1;
 	var $custom_meta_values;
 
-	function wpsc_custom_meta($postid) {
-		global $wpdb;
+	function __construct( $post_id ) {
 
-		$this->custom_meta = $wpdb->get_results( $wpdb->prepare("SELECT meta_key, meta_value, meta_id, post_id
-			FROM $wpdb->postmeta
-			WHERE post_id = %d
-			AND `meta_key` NOT REGEXP '^_'
-			ORDER BY meta_key,meta_id", $postid), ARRAY_A );
+		$cleaned_metas = array();
 
-		$this->custom_meta_count = count($this->custom_meta);
+		if ( ! empty( $post_id ) ) {
+			$meta_values = get_post_meta( $post_id );
+
+			foreach ( $meta_values as $key => $values ) {
+				if ( ! is_protected_meta( $key,  'wpsc-product' ) ) {
+					if ( is_array( $values ) ) {
+						foreach ( $values as $value ) {
+							$cleaned_metas[] = array( 'meta_key' => $key, 'meta_value' => $value );
+						}
+					}
+				}
+			}
+		}
+
+		$this->custom_meta = $cleaned_metas;
+		$this->custom_meta_count = count( $this->custom_meta );
 	}
-
 
 	function have_custom_meta() {
 		if (($this->current_custom_meta + 1) < $this->custom_meta_count) {
