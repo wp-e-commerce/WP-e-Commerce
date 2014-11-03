@@ -313,6 +313,27 @@ function wpsc_do_purchase_log_actions() {
 add_action( 'admin_init', 'wpsc_do_purchase_log_actions' );
 
 /**
+ * Handle delete purchase log action
+ *
+ * @since  3.9.0
+ *
+ * @param  int  $log_id  Purchase log ID.
+ */
+function wpsc_purchase_log_action_delete( $log_id ) {
+
+	wpsc_delete_purchlog( $log_id );
+
+	// Redirect back to purchase logs list
+	$sendback = wp_get_referer();
+	$sendback = remove_query_arg( array( 'c', 'id' ), $sendback );
+	$sendback = add_query_arg( 'deleted', 1, $sendback );
+	wp_redirect( $sendback );
+	exit();
+
+}
+add_action( 'wpsc_purchase_log_action-delete', 'wpsc_purchase_log_action_delete' );
+
+/**
  * Purchase log ajax code starts here
  */
 function wpsc_purchlog_resend_email() {
