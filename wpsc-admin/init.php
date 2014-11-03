@@ -514,8 +514,9 @@ function wpsc_delete_purchlog( $purchlog_id = '' ) {
 	}
 }
 
-if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'delete_purchlog') ) {
-	add_action( 'admin_init', 'wpsc_delete_purchlog' );
+// Deprecate deleting purchase log via URL query
+if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( $_REQUEST['wpsc_admin_action'] == 'delete_purchlog' ) ) {
+	_wpsc_doing_it_wrong( 'wpsc_delete_purchlog', __( 'Do not trigger delete purchase log action via wpsc_admin_action = delete_purchlog URL query. Instead use the Purchase Log Action Links API.', 'wpsc' ), '3.9.0' );
 }
 
 function wpsc_update_option_product_category_hierarchical_url() {
