@@ -498,7 +498,7 @@ function wpsc_delete_purchlog( $purchlog_id = '' ) {
 	if ( $purchlog_id > 0 ) {
 
 		$purchlog_status = $wpdb->get_var( $wpdb->prepare( "SELECT `processed` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id`= %d", $purchlog_id ) );
-		if ( $purchlog_status == 5 || $purchlog_status == 1 ) {
+		if ( $purchlog_status == WPSC_Purchase_Log::CLOSED_ORDER || $purchlog_status == WPSC_Purchase_Log::INCOMPLETE_SALE ) {
 			$claimed_query = new WPSC_Claimed_Stock( array(
 				'cart_id'        => $purchlog_id,
 				'cart_submitted' => 1
