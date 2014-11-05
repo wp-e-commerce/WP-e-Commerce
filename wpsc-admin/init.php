@@ -295,9 +295,16 @@ if ( isset( $_GET['action'] ) && ( 'purchase_log' == $_GET['action'] ) ) {
 /**
  * Do Purchase Log Actions
  *
+ * All purchase log actions are capability and nonce checked before calling
+ * the relevent 'wpsc_purchase_log_action-{wpsc_purchase_log_action}' hook.
+ *
  * @since  3.9.0
  */
 function wpsc_do_purchase_log_actions() {
+
+	if ( ! wpsc_is_store_admin() ) {
+		return;
+	}
 
 	if ( isset( $_GET['wpsc_purchase_log_action'] ) && isset( $_GET['id'] ) && isset( $_GET['_wpnonce'] ) ) {
 		$wpsc_purchase_log_action = sanitize_key( $_GET['wpsc_purchase_log_action'] );
@@ -314,6 +321,9 @@ add_action( 'admin_init', 'wpsc_do_purchase_log_actions' );
 
 /**
  * Handle delete purchase log action
+ *
+ * The 'wpsc_purchase_log_action-delete' action hook which calls this function is nonce and capability checked
+ * in wpsc_do_purchase_log_actions() before triggering do_action( 'wpsc_purchase_log_action-delete' ).
  *
  * @since  3.9.0
  *
