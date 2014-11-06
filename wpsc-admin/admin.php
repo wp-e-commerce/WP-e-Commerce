@@ -9,6 +9,7 @@
  */
 
 // admin includes
+require_once( WPSC_FILE_PATH . '/wpsc-admin/about.page.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/display-update.page.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/display-items.page.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/display-upgrades.page.php' );
@@ -187,6 +188,9 @@ function wpsc_admin_pages() {
 				$_SESSION['wpsc_activate_debug_page'] = false;
 			}
 	}
+
+	// About & Credits page
+	$about_page = new WPSC_About_Page();
 
 	// Add to Dashboard
 	// $page_hooks[] = $purchase_log_page = add_submenu_page( 'index.php', __( 'Store Sales', 'wpsc' ), __( 'Store Sales', 'wpsc' ), 'administrator', 'wpsc-sales-logs', 'wpsc_display_sales_logs' );
