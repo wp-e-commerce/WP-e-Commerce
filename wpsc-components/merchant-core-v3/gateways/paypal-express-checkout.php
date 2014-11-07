@@ -292,12 +292,16 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         $location = remove_query_arg( 'payment_gateway_callback' );
 
         if ( $response->has_errors() ) {
-            if ( $response->get_params()['L_ERRORCODE0'] == '10486' ) {
+            $errors = $response->get_params();
+
+            if ( isset( $errors['L_ERRORCODE0'] ) && '10486' == $errors['L_ERRORCODE0'] ) {
                 wp_redirect( $this->get_redirect_url( array( 'token' => $token ) ) );
                 exit;
             }
+
             wpsc_update_customer_meta( 'paypal_express_checkout_errors', $response->get_errors() );
             $location = add_query_arg( array( 'payment_gateway_callback' => 'display_paypal_error' ) );
+
         } elseif ( $response->is_payment_completed() || $response->is_payment_pending() ) {
             $location = remove_query_arg( 'payment_gateway' );
 
