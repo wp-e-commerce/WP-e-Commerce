@@ -8,23 +8,21 @@ div.sputnik-message {
 	padding: 1px 12px;
 	position: relative;
 }
-	div.sputnik-message p {
-		padding: 2px;
-		margin: 0.5em 0px;
-		font-size: 14px;
-		line-height: 1.5em;
-	}
-	div.sputnik-message .button {
-		position: absolute;
-		right: 12px;
-		top: 10px;
-		font-size: 20px;
-		padding: 0px 15px 2px;
-		line-height: 41px;
-		height: 43px;
-	}
-
-
+div.sputnik-message p {
+	padding: 2px;
+	margin: 0.5em 0px;
+	font-size: 14px;
+	line-height: 1.5em;
+}
+div.sputnik-message .button {
+	position: absolute;
+	right: 12px;
+	top: 10px;
+	font-size: 20px;
+	padding: 0px 15px 2px;
+	line-height: 41px;
+	height: 43px;
+}
 .sputnik-plugin-row-note {
 	display: block;
 	float: right;

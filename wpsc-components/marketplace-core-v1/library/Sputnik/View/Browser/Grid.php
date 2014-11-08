@@ -221,7 +221,7 @@ class Sputnik_View_Browser_Grid extends WP_List_Table {
 	}
 
 	protected function display_row($plugin, $style) {
-		$name = strip_tags( $plugin->name . ' ' . $plugin->version );
+		$name = strip_tags( $plugin->name );
 		$action_links = array();
 		$action_links[] = '<a href="' . Sputnik_Admin::build_url(array('info' => $plugin->slug, 'TB_iframe' => true))
 							. '" class="thickbox button info" title="' .
@@ -284,32 +284,42 @@ class Sputnik_View_Browser_Grid extends WP_List_Table {
 		}
 ?>
 	<div>
-		<div class="sputnik-plugin<?php if ($thumb !== false) echo ' has-thumb'; if ($status === 'addown') echo ' addown'; ?>">
+		<div class="sputnik-plugin<?php if ( ! empty( $plugin->thumb ) ) echo ' has-thumb'; ?>">
 			<div class="sputnik-card">
-<?php
-				if ($thumb !== false):
-?>
+				<h4><?php echo $name ?><span class="price"><?php echo $plugin->price ?></span></h4>
+
+				<?php
+					if ( ! empty( $thumb ) ) :
+				?>
 				<div class="sputnik-plugin-thumb">
-					<img src="<?php echo esc_url($thumb) ?>" alt="<?php echo esc_attr($name) ?> Thumbnail">
+					<img src="<?php echo esc_url( $thumb ) ?>" alt="<?php echo esc_attr( $name ) ?> Thumbnail">
 				</div>
-<?php
-				endif;
-?>
+				<?php
+					endif;
+				?>
 				<div class="sputnik-plugin-details">
-					<h4><?php echo $name ?></h4>
-					<span class="price"><?php echo $plugin->price ?></span>
-					<p><?php echo $plugin->description ?></p>
-					<div class="footer">
-						<div class="star-holder" title="<?php printf( _n( '(based on %s rating)', '(based on %s ratings)', $plugin->rating->count, 'sputnik' ), number_format_i18n( $plugin->rating->count ) ) ?>">
-							<div class="star star-rating" style="width: <?php echo (int) (20 * $plugin->rating->average) ?>px"></div>
+					<p><?php echo $plugin->description; ?></p>
+					<?php if ( isset( $plugin->rating ) && isset( $plugin->rating->count ) ): ?>
+						<div class="footer" style="display:none">
+							<div class="star-holder" title="<?php printf( _n( '(based on %s rating)', '(based on %s ratings)', $plugin->rating->count, 'wpsc' ), number_format_i18n( $plugin->rating->count ) ) ?>">
+								<div class="star star-rating" style="width: <?php echo (int) (20 * $plugin->rating->average) ?>px"></div>
+								<?php
+									$star_url = admin_url( 'images/stars.png?v=20110615' );
+								?>
+								<div class="star star5"><img src="<?php echo $star_url; ?>" alt="" /></div>
+								<div class="star star4"><img src="<?php echo $star_url; ?>" alt="" /></div>
+								<div class="star star3"><img src="<?php echo $star_url; ?>" alt="" /></div>
+								<div class="star star2"><img src="<?php echo $star_url; ?>" alt="" /></div>
+								<div class="star star1"><img src="<?php echo $star_url; ?>" alt="" /></div>
+							</div>
 						</div>
-					</div>
+					<?php endif; ?>
 				</div>
 			</div>
-		</div>
-		<div class="sputnik-plugin-actions">
-			<?php if ( !empty( $action_links ) ) echo implode( ' ', $action_links ); ?>
-			<?php echo $purchase_link; ?>
+			<div class="sputnik-plugin-actions">
+				<?php if ( !empty( $action_links ) ) echo implode( ' ', $action_links ); ?>
+				<?php echo $purchase_link; ?>
+			</div>
 		</div>
 	</div>
 <?php

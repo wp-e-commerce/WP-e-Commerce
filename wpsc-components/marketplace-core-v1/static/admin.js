@@ -10,8 +10,10 @@ jQuery(document).ready(function($) {
 		dg.startFlow(sputnikL10n.buy_href);
 	}
 	$('#menu-posts-wpsc-product div ul li a[href$="page=sputnik-account"]').parent('li').remove();
+
 	$('.grid-view').masonry({
-		selector: '.plugin'
+		selector: '.plugin',
+		gutter: 15
 	});
 
 	$('#rateme').mousemove(function (event) {
