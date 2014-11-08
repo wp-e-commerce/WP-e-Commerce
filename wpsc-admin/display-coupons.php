@@ -8,9 +8,11 @@ function wpsc_display_coupons_page() {
 	 * Update / create code that will be abstracted to its own class at some point
 	 */
 
-	if ( isset( $_POST ) && is_array( $_POST ) && !empty( $_POST ) ) {
+	if ( isset( $_POST ) && is_array( $_POST ) && ! empty( $_POST ) ) {
 
 		if ( isset( $_POST['add_coupon'] ) && (!isset( $_POST['is_edit_coupon'] ) || !($_POST['is_edit_coupon'] == 'true')) ) {
+
+			check_admin_referer( 'wpsc_coupon', 'wpsc-coupon-add' );
 
 			$coupon_code   = $_POST['add_coupon_code'];
 			$discount      = (double)$_POST['add_discount'];
@@ -69,6 +71,8 @@ function wpsc_display_coupons_page() {
 		// update an existing coupon
 		if ( isset( $_POST['is_edit_coupon'] ) && ($_POST['is_edit_coupon'] == 'true') && !(isset( $_POST['delete_condition'] )) && !(isset( $_POST['submit_condition'] )) ) {
 
+			check_admin_referer( 'wpsc_coupon', 'wpsc-coupon-edit' );
+
 			$rules     = isset( $_POST['rules'] ) ? $_POST['rules'] : array();
 			$new_rules = array();
 
@@ -113,8 +117,9 @@ function wpsc_display_coupons_page() {
 				array( '%d' )
 			);
 
-			if ( $update )
-			    echo "<div class='updated'><p>" . __( 'The coupon has been updated.', 'wpsc' ) . "</p></div>";
+			if ( $update ) {
+				echo "<div class='updated'><p>" . __( 'The coupon has been updated.', 'wpsc' ) . "</p></div>";
+			}
 		}
 	}
 

@@ -124,7 +124,7 @@
 
 				</tbody>
 			</table>
-
+			<?php wp_nonce_field( 'wpsc_coupon', 'wpsc-coupon-add' ); ?>
 			<?php submit_button( __( 'Add Coupon', 'wpsc' ), 'primary', 'add_coupon' ); ?>
 
 		</form>

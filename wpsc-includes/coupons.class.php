@@ -7,11 +7,13 @@
 function wpsc_uses_coupons() {
 	global $wpsc_coupons;
 
-	if( empty( $wpsc_coupons ) )
+	if ( empty( $wpsc_coupons ) ) {
 		$wpsc_coupons = new wpsc_coupons();
+	}
 
-	if( is_object( $wpsc_coupons ) )
+	if ( is_object( $wpsc_coupons ) ) {
 		return $wpsc_coupons->uses_coupons();
+	}
 
 	return false;
 }
@@ -19,9 +21,9 @@ function wpsc_uses_coupons() {
 function wpsc_coupons_error(){
 	global $wpsc_coupons;
 
-	if(isset($wpsc_coupons->errormsg) && $wpsc_coupons->errormsg == true){
+	if ( isset( $wpsc_coupons->errormsg ) && $wpsc_coupons->errormsg == true ) {
 		return true;
-	}else{
+	} else {
 		return false;
 	}
 }
@@ -60,7 +62,7 @@ class wpsc_coupons {
 	 * @param string code (optional) the coupon code you would like to use.
 	 * @return bool True if coupon code exists, False otherwise.
 	 */
-	function wpsc_coupons( $code = '' ){
+	function wpsc_coupons( $code = '' ) {
 	    global $wpdb;
 
 		if ( empty( $code ) ) {
