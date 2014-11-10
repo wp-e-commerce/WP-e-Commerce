@@ -245,10 +245,14 @@ class Sputnik_List_Install extends WP_List_Table {
 
 		foreach ( (array) $this->items as $plugin ) {
 			$plugin->title = wp_kses( $plugin->name, $plugins_allowedtags );
-			//Limit description to 400char, and remove any HTML.
-			$plugin->description = strip_tags( $plugin->description );
-			if ( strlen( $plugin->description ) > 400 )
+
+			//Limit description to 400char, and sanitize.
+			$plugin->description = wp_kses( $plugin->description, $plugins_allowedtags );
+
+			if ( strlen( $plugin->description ) > 400 ) {
 				$plugin->description = mb_substr( $plugin->description, 0, 400 ) . '&#8230;';
+			}
+
 			//remove any trailing entities
 			$plugin->description = preg_replace( '/&[^;\s]{0,6}$/', '', $plugin->description );
 			//strip leading/trailing & multiple consecutive lines
@@ -259,15 +263,16 @@ class Sputnik_List_Install extends WP_List_Table {
 			$plugin->version = wp_kses( $plugin->version, $plugins_allowedtags );
 			$plugin->price = sprintf('$%.2f', $plugin->price);
 			if ($plugin->price === '$0.00') {
-				$plugin->price = _x('Free', 'plugin price', 'wpsc' );
+				$plugin->price = _x( 'Free', 'plugin price', 'wpsc' );
 			}
 
-			if (!empty($plugin->author))
+			if ( ! empty( $plugin->author ) ) {
 				$plugin->author = ' <cite>' . sprintf( __( 'By %s', 'wpsc' ), $plugin->author ) . '.</cite>';
+			}
 
 			$plugin->author = wp_kses( $plugin->author, $plugins_allowedtags );
 
-			switch ($this->view) {
+			switch ( $this->view ) {
 				case 'list':
 					self::display_row($plugin, $style);
 					break;
