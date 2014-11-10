@@ -118,6 +118,8 @@ class wpsc_cart {
 
 	public function update_location() {
 
+		$this->clear_cache();
+
 		$delivery_country = wpsc_get_customer_meta( 'shippingcountry' );
 		$billing_country  = wpsc_get_customer_meta( 'billingcountry'  );
 		$delivery_region  = wpsc_get_customer_meta( 'shippingregion'  );
