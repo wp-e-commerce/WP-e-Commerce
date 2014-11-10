@@ -28,7 +28,7 @@
 						<?php echo $item->title; ?>
 					</td>
 					<td class="wpsc-user-log-downloads-left">
-						<?php echo esc_html( $item->downloads ); ?>
+						<?php echo esc_html( number_format_i18n( $item->downloads ) ); ?>
 					</td>
 					<td class="wpsc-user-log-file-date">
 						<?php echo esc_html( $item->datetime ); ?>
