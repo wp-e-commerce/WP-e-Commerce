@@ -38,8 +38,8 @@ jQuery(document).ready(function($) {
 
 		var href = $(this).attr('href');
 		var dim = Sputnik.window_dimensions();
-		href += '&width=' + Math.min(Math.max(dim[0] - 50, 300), 700)
-			+ '&height=' + Math.min(Math.max(dim[1] - 100, 250), 550);
+		href += '&width=' + Math.min(Math.max(dim[0] - 50, 300), 800)
+			+ '&height=' + Math.min(Math.max(dim[1] - 100, 250), 600);
 		tb_show('', href);
 		this.blur();
 

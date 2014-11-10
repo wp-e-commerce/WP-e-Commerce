@@ -299,7 +299,7 @@ class Sputnik_List_Install extends WP_List_Table {
 					break;
 				case 'install':
 					if ( $status['url'] ) {
-						$status['url'] = add_query_arg(array('TB_iframe' => true, 'width' => 700, 'height' => 550), $status['url']);
+						$status['url'] = add_query_arg(array('TB_iframe' => true, 'width' => 800, 'height' => 600), $status['url']);
 						$purchase_link = '<a class="button install" href="' . $status['url'] . '" title="'
 							. esc_attr(sprintf(__( 'Install %s', 'wpsc' ), $name)) . '">' . __('Install', 'wpsc' ) . '</a>';
 					}
@@ -310,7 +310,7 @@ class Sputnik_List_Install extends WP_List_Table {
 					break;
 				case 'update_available':
 					if ( $status['url'] ) {
-						$status['url'] = add_query_arg(array('TB_iframe' => true, 'width' => 700, 'height' => 550), $status['url']);
+						$status['url'] = add_query_arg(array('TB_iframe' => true, 'width' => 800, 'height' => 600), $status['url']);
 						$purchase_link = '<a class="button install" href="' . $status['url'] . '" title="'
 							. esc_attr(sprintf(__( 'Update to version %s', 'wpsc' ), $status['version'])) . '">' . __('Update', 'wpsc' ) . '</a>';
 					}
@@ -379,7 +379,7 @@ class Sputnik_List_Install extends WP_List_Table {
 					break;
 				case 'install':
 					if ( $status['url'] ) {
-						$status['url'] = add_query_arg(array('TB_iframe' => true, 'width' => 700, 'height' => 550), $status['url']);
+						$status['url'] = add_query_arg(array('TB_iframe' => true, 'width' => 800, 'height' => 600), $status['url']);
 						$purchase_link = '<a class="button install status" href="' . $status['url'] . '" title="'
 							. esc_attr(sprintf(__( 'Install %s', 'wpsc' ), $name)) . '">' . __('Install', 'wpsc' ) . '</a>';
 					}
@@ -390,7 +390,7 @@ class Sputnik_List_Install extends WP_List_Table {
 					break;
 				case 'update_available':
 					if ( $status['url'] ) {
-						$status['url'] = add_query_arg(array('TB_iframe' => true, 'width' => 700, 'height' => 550), $status['url']);
+						$status['url'] = add_query_arg(array('TB_iframe' => true, 'width' => 800, 'height' => 600), $status['url']);
 						$purchase_link = '<a class="button install" href="' . $status['url'] . '" title="'
 							. esc_attr(sprintf(__( 'Update to version %s', 'wpsc' ), $status['version'])) . '">' . __('Update', 'wpsc' ) . '</a>';
 					}

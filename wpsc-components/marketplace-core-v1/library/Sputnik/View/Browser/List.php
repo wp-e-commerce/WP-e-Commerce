@@ -34,7 +34,7 @@ class Sputnik_View_Browser_List extends Sputnik_View_Browser_Grid {
 					break;
 				case 'install':
 					if ( $status['url'] ) {
-						$status['url'] = add_query_arg(array('TB_iframe' => true, 'width' => 700, 'height' => 550), $status['url']);
+						$status['url'] = add_query_arg(array('TB_iframe' => true, 'width' => 800, 'height' => 600 ), $status['url']);
 						$purchase_link = '<a class="button install" href="' . $status['url'] . '" title="'
 							. esc_attr(sprintf(__( 'Install %s', 'sputnik'), $name)) . '">' . __('Install', 'sputnik') . '</a>';
 					}
@@ -45,7 +45,7 @@ class Sputnik_View_Browser_List extends Sputnik_View_Browser_Grid {
 					break;
 				case 'update_available':
 					if ( $status['url'] ) {
-						$status['url'] = add_query_arg(array('TB_iframe' => true, 'width' => 700, 'height' => 550), $status['url']);
+						$status['url'] = add_query_arg(array('TB_iframe' => true, 'width' => 800, 'height' => 600 ), $status['url']);
 						$purchase_link = '<a class="button install" href="' . $status['url'] . '" title="'
 							. esc_attr(sprintf(__( 'Update to version %s', 'sputnik'), $status['version'])) . '">' . __('Update', 'sputnik') . '</a>';
 					}

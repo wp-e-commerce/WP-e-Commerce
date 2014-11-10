@@ -240,7 +240,7 @@ class Sputnik_Admin {
 
 	public static function page_styles() {
 		self::$page_is_current = true;
-		wp_enqueue_style('sputnik-page', plugins_url( 'static/admin.css', Sputnik::$path . '/wpsc-marketplace' ), array('thickbox'), '20110924');
+		wp_enqueue_style('sputnik-page', plugins_url( 'static/admin.css', Sputnik::$path . '/wpsc-marketplace' ), array('thickbox'), '20141109' );
 		?>
 		<style type-"text/css">
 		#sputnik-page .icon32 {
@@ -253,7 +253,7 @@ class Sputnik_Admin {
 	public static function page_scripts() {
 		wp_enqueue_script( 'jquery-masonry' );
 		wp_enqueue_script( 'paypal', 'https://www.paypalobjects.com/js/external/dg.js' );
-		wp_enqueue_script( 'sputnik_js', plugins_url( 'static/admin.js', Sputnik::$path . '/wpsc-marketplace' ), array( 'jquery', 'jquery-masonry', 'thickbox', 'paypal' ), '20110924' );
+		wp_enqueue_script( 'sputnik_js', plugins_url( 'static/admin.js', Sputnik::$path . '/wpsc-marketplace' ), array( 'jquery', 'jquery-masonry', 'thickbox', 'paypal' ), '20141109' );
 
 		$l10n = array(
 			'plugin_information' => __( 'Plugin Information:', 'sputnik' ),
@@ -588,8 +588,8 @@ class Sputnik_Admin {
 				'oauth'     => 'request',
 				'oauth_buy' => $api->slug,
 				'TB_iframe' => true,
-				'height'    => 550,
-				'width'     => 640,
+				'height'    => 600,
+				'width'     => 800,
 				'modal'     => 'true'
 			) );
 

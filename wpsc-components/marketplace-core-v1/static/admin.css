@@ -1,4 +1,8 @@
- #sputnik-page .sep {
+body.wpsc-product_page_sputnik #TB_iframeContent {
+	margin: -1px 0 -4px 0
+}
+
+#sputnik-page .sep {
 	margin: 0 12px 0 0;
 	font-size: 23px;
 }
@@ -391,8 +395,11 @@
 
 #sputnik-plugin-information #section-holder {
 	padding: 10px;
-	margin-left: 260px;
-	margin-top: 0;
+	margin: 0 0 0 255px;
+}
+
+#sputnik-plugin-information #section-holder img {
+	max-width: 100%;
 }
 
 #sputnik-plugin-information .section ul,
