@@ -160,6 +160,7 @@ class WPSC_Purchase_Log_Action_Links {
 	private function _get_email_receipt_link() {
 
 		return new WPSC_Purchase_Log_Action_Link( 'email_receipt', __( 'Resend Receipt to Buyer', 'wpsc' ), $this->log_id, array(
+			'ajax'     => true,
 			'dashicon' => 'dashicons-migrate dashicons-email-alt'
 		) );
 

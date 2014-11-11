@@ -451,6 +451,27 @@ function _wpsc_ajax_purchase_log_action_link() {
 }
 
 /**
+ * Handle AJAX email receipt purchase log action
+ *
+ * The _wpsc_ajax_purchase_log_action_link() function which triggers this function is nonce
+ * and capability checked in _wpsc_ajax_handler().
+ *
+ * @since   3.9.x
+ * @access  private
+ *
+ * @param  array  $response  AJAX response.
+ * @param  int    $log_id    Purchase log ID.
+ */
+function wpsc_purchase_log_action_ajax_email_receipt( $response, $log_id ) {
+
+	$response['success'] = wpsc_purchlog_resend_email( $log_id );
+
+	return $response;
+
+}
+add_action( 'wpsc_purchase_log_action_ajax-email_receipt', 'wpsc_purchase_log_action_ajax_email_receipt', 10, 2 );
+
+/**
  * Delete an attached downloadable file via AJAX.
  *
  * @since 3.8.9
