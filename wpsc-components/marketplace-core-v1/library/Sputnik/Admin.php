@@ -267,7 +267,7 @@ class Sputnik_Admin {
 			$l10n['buy_href'] = $status['url'];
 		}
 
-		wp_localize_script('sputnik_js', 'sputnikL10n', $l10n );
+		wp_localize_script( 'wpsc-marketplace-js', 'sputnikL10n', $l10n );
 	}
 
 	public static function page() {
