@@ -2,9 +2,9 @@
 Contributors: JustinSainton, mufasa, garyc40
 Donate link: http://getshopped.org
 Tags: e-commerce, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
-Requires at least: 3.7
-Tested up to: 3.9
-Stable tag: 3.9-dev
+Requires at least: 3.8
+Tested up to: 4.1
+Stable tag: 3.9-beta
 
 WP eCommerce is a free, powerful plugin that empowers you to sell anything online, quickly and easily.
 
@@ -35,6 +35,38 @@ Before updating please make a backup of your existing files and database. Just i
 After upgrading from earlier versions look for link "Update Store". This will update your database structure to work with new version.
 
 == Changelog ==
+
+= 3.9 =
+
+* Fix: PHP notices on product category page.
+* Fix: Eliminate most usage of number-based inputs in product UI.
+* Fix: Fall back to product ID if SKU is not set for Google Analytics reporting.
+* Fix: Restored inadvertently removed filter, `wpsc_add_advanced_options`.
+* Fix: Ensure price entered for "Free Shipping" threshold is locale-aware.
+* Fix: Generally improved metadata saving routines for quick/bulk edit areas.
+* Fix: Ensure "Combination of product variants is not available" message is hidden from Grid View.
+* Fix: Don't require a shipping method to be selected if you qualify for free shipping.
+* Fix: When "Buy Now" button is used, it is now disabled if item is out of stock.
+* New: Introduced `wpsc_get_countries` and `wpsc_get_countries_array` filters.
+* New: Introduced `wpsc_google_analytics_pushed_product` filter.
+* New: Added screen option for number of purchase logs to show on a page.
+* New: Introduced WPSC_Logging class.  Based on WP_Logging.
+* New: Customers may now checkout with carts that have a value of $0.
+* New: Introduces `wpsc_is_free_cart` filter.
+* New: Added 2.0 theme engine component.  Defaults off until the 4.0 release, but can be enabled via filter for testing.
+* New: Added marketplace component.
+* New: Added 3.0 payment gateway API component.
+* New: PayPal Digital Goods gateway, updated PayPal Express Checkout, PayPal Pro and Manual Payment gateways.
+* New: Product Tags now have proper body classes.
+* New: Meta updates, kind of a big deal: We're now using X.X.Y versioning (like WordPress) and we now have unit tests.
+* New: Introduce attachments method and filter for WPSC_Purchase_Log_Notification class.
+* New: Single Product pages now have ID-based body classes.
+* New: Supports Universal Analytics in Google Analytics.
+* Change: Dates are now optional on coupons. Expiration, specifically, is no longer required.  Validation is filterable via `wpsc_coupons_validate_coupon`.
+* Change: Refactored purchase log action links, introduced new API for adding links.
+* Change: Product page shortcodes, e.g. [productspage], are now stripped from the_excerpt().  Helpful for cleaner looking search results.
+* Change: Limit Google Product ID to 50 characters in Google Product Feed.  Introduced `wpsc_google_product_feed_product_id`.
+* Change: When only one shipping rate is available, it will automatically be selected as the default rate.
 
 = 3.8.14.4 =
 

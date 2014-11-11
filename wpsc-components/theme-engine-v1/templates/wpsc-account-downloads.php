@@ -22,7 +22,7 @@
 		</thead>
 
 		<tbody>
-			<?php foreach( $items as $key => $item ): ?>
+			<?php foreach ( $items as $key => $item ) : ?>
 				<tr class="wpsc-user-log-file<?php echo ( $key %2 == 1 ) ? '' : ' alt'; ?>">
 					<td class="wpsc-user-log-file-name">
 						<?php echo $item->title; ?>
