@@ -326,6 +326,8 @@ You ordered these items:
 
 	flush_rewrite_rules( false );
 	wpsc_theme_engine_v2_activate();
+	wpsc_add_activation_redirect();
+
 }
 
 function wpsc_product_files_htaccess() {
@@ -824,4 +826,30 @@ function wpsc_theme_engine_v2_activate() {
 	update_option( 'transact_url', wpsc_get_checkout_url( 'results' ) );
 	WPSC_Settings::get_instance();
 	do_action( 'wpsc_theme_engine_v2_activate' );
+}
+
+/**
+ * Redirect user to WP e-Commerce's About page on first page load after activation.
+ *
+ * @since  3.9.x
+ *
+ * @internal
+ *
+ * @uses  set_transient()  To set the activation transient for 30 seconds.
+ */
+function wpsc_add_activation_redirect() {
+
+	// Bail if activating from network, or bulk
+	if ( isset( $_GET['activate-multi'] ) ) {
+		return;
+	}
+
+	// Record that this is a new installation, so we show the right welcome message
+	if ( wpsc_core_get_db_version() > 0 ) {
+		set_transient( '_wpsc_is_new_install', true, 30 );
+	}
+
+	// Add the transient to redirect
+	set_transient( '_wpsc_activation_redirect', true, 30 );
+
 }

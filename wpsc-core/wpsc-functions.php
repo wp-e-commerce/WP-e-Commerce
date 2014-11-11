@@ -890,3 +890,49 @@ function _wpsc_clear_wp_cache_on_version_change() {
 }
 
 add_action( 'admin_init', '_wpsc_clear_wp_cache_on_version_change', 1 );
+
+/**
+ * Redirect user to WP e-Commerce's About page on activation
+ *
+ * @since  3.9.x
+ *
+ * @internal
+ *
+ * @uses  get_transient()    To see if transient to redirect exists.
+ * @uses  delete_transient() To delete the transient if it exists.
+ * @uses  is_network_admin() To bail if being network activated.
+ * @uses  wp_safe_redirect() To redirect.
+ * @uses  add_query_arg()    To help build the URL to redirect to.
+ * @uses  admin_url()        To get the admin URL to index.php
+ */
+function wpsc_do_activation_redirect() {
+
+	if ( ! wpsc_is_store_admin() ) {
+		return;
+	}
+
+	// Bail if no activation redirect
+	if ( ! get_transient( '_wpsc_activation_redirect' ) ) {
+		return;
+	}
+
+	// Delete the redirect transient
+	delete_transient( '_wpsc_activation_redirect' );
+
+	// Bail if activating from network, or bulk
+	if ( isset( $_GET['activate-multi'] ) ) {
+		return;
+	}
+
+	$query_args = array( 'page' => 'wpsc-about' );
+	if ( get_transient( '_wpsc_is_new_install' ) ) {
+		$query_args['is_new_install'] = '1';
+		delete_transient( '_wpsc_is_new_install' );
+	}
+
+	// Redirect to WP e-Commerce about page
+	wp_safe_redirect( add_query_arg( $query_args, admin_url( 'index.php' ) ) );
+
+}
+
+add_action( 'admin_init', 'wpsc_do_activation_redirect', 1 );
