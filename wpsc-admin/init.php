@@ -320,6 +320,29 @@ function wpsc_do_purchase_log_actions() {
 add_action( 'admin_init', 'wpsc_do_purchase_log_actions' );
 
 /**
+ * Handle clear downloads lock purchase log action
+ *
+ * The 'wpsc_purchase_log_action-downloads_lock' action hook which calls this function is nonce and capability checked
+ * in wpsc_do_purchase_log_actions() before triggering do_action( 'wpsc_purchase_log_action-downloads_lock' ).
+ *
+ * @since  3.9.x
+ *
+ * @param  int  $log_id  Purchase log ID.
+ */
+function wpsc_purchase_log_action_downloads_lock( $log_id ) {
+
+	wpsc_purchlog_clear_download_items( $log_id );
+
+	// Redirect back to purchase logs list
+	$sendback = wp_get_referer();
+	$sendback = add_query_arg( 'cleared', 1, $sendback );
+	wp_redirect( $sendback );
+	exit();
+
+}
+add_action( 'wpsc_purchase_log_action-downloads_lock', 'wpsc_purchase_log_action_downloads_lock' );
+
+/**
  * Handle delete purchase log action
  *
  * The 'wpsc_purchase_log_action-delete' action hook which calls this function is nonce and capability checked
@@ -413,7 +436,13 @@ if ( isset( $_REQUEST['email_buyer_id'] ) && is_numeric( $_REQUEST['email_buyer_
 	_wpsc_doing_it_wrong( 'wpsc_purchlog_resend_email', __( 'Do not trigger resend purchase log email action via email_buyer_id URL query. Instead use the Purchase Log Action Links API.', 'wpsc' ), '3.9.0' );
 }
 
-function wpsc_purchlog_clear_download_items() {
+/**
+ * Clear Purchase Log Download Locks
+ *
+ * @param   string   $log_id  Required. Purchase log ID (empty string is deprecated).
+ * @return  boolean
+ */
+function wpsc_purchlog_clear_download_items( $log_id = '' ) {
 
 	if ( ! wpsc_is_store_admin() ) {
 		return;
@@ -421,40 +450,40 @@ function wpsc_purchlog_clear_download_items() {
 
 	global $wpdb;
 
-	if ( is_numeric( $_GET['id'] ) ) {
-		$purchase_id = (int)$_GET['id'];
-		$downloadable_items = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_DOWNLOAD_STATUS . "` WHERE `purchid` = %d", $purchase_id ), ARRAY_A );
+	// Deprecate empty purchase log ID parameter.
+	if ( $log_id == '' ) {
+		_wpsc_doing_it_wrong( 'wpsc_purchlog_clear_download_items', __( '$log_id parameter requires a numeric purchase log ID.', 'wpsc' ), '3.9.x' );
+		return false;
+	}
 
-		$wpdb->update( WPSC_TABLE_DOWNLOAD_STATUS, array( 'ip_number' => '' ), array( 'purchid' => $purchase_id ), '%s', '%d' );
-		$cleared = true;
+	$log_id = absint( $log_id );
+
+	if ( $log_id > 0 ) {
+
+		$downloadable_items = (array) $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_DOWNLOAD_STATUS . "` WHERE `purchid` = %d", $log_id ), ARRAY_A );
+
+		$wpdb->update( WPSC_TABLE_DOWNLOAD_STATUS, array( 'ip_number' => '' ), array( 'purchid' => $log_id ), '%s', '%d' );
 
 		$email_form_field = $wpdb->get_var( "SELECT `id` FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `type` IN ('email') AND `active` = '1' ORDER BY `checkout_order` ASC LIMIT 1" );
-		$email_address = $wpdb->get_var( $wpdb->prepare( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` WHERE `log_id` = %d AND `form_id` = '{$email_form_field}' LIMIT 1", $purchase_id ) );
+		$email_address = $wpdb->get_var( $wpdb->prepare( "SELECT `value` FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` WHERE `log_id` = %d AND `form_id` = '{$email_form_field}' LIMIT 1", $log_id ) );
 
-		foreach ( (array) $downloadable_items as $downloadable_item ) {
-			$download_links .= add_query_arg(
-				'downloadid',
-				$downloadable_item['uniqueid'],
-				home_url()
-			)  . "\n";
+		foreach ( $downloadable_items as $downloadable_item ) {
+			$download_links .= add_query_arg( 'downloadid', $downloadable_item['uniqueid'], home_url() )  . "\n";
 		}
-
 
 		wp_mail( $email_address, __( 'The administrator has unlocked your file', 'wpsc' ), str_replace( "[download_links]", $download_links, __( 'Dear CustomerWe are pleased to advise you that your order has been updated and your downloads are now active.Please download your purchase using the links provided below.[download_links]Thank you for your custom.', 'wpsc' ) ), "From: " . get_option( 'return_email' )  );
 
-		$sendback = wp_get_referer();
+		return true;
 
-		if ( isset( $cleared ) ) {
-			$sendback = add_query_arg( 'cleared', $cleared, $sendback );
-		}
-
-		wp_redirect( $sendback );
-		exit();
 	}
+
+	return false;
+
 }
 
+// Deprecate clearing purchase log download locks via URL query
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'clear_locks') ) {
-	add_action( 'admin_init', 'wpsc_purchlog_clear_download_items' );
+	_wpsc_doing_it_wrong( 'wpsc_purchlog_clear_download_items', __( 'Do not trigger clear purchase log download locks action via wpsc_admin_action = clear_locks URL query. Instead use the Purchase Log Action Links API.', 'wpsc' ), '3.9.x' );
 }
 
 //bulk actions for purchase log
