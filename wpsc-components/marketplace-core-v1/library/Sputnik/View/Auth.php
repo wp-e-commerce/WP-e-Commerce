@@ -18,7 +18,7 @@ class Sputnik_View_Auth extends Sputnik_View {
 	}
 	public function render() {
 		if ( isset( $_GET['auth'] ) && $_GET['auth'] == 'denied' ) {
-			Sputnik_Admin::add_message( __( 'Account linking cancelled. Please note that you need to link your account in order to access the store.', 'sputnik' ) );
+			Sputnik_Admin::add_message( __( 'Account linking cancelled. Please note that you need to link your account in order to access the store.', 'wpsc' ) );
 		}
 
 		$this->header();

@@ -17,11 +17,11 @@ class Sputnik_View_Upgrade extends Sputnik_View_Install {
 
 	public function __construct() {
 		parent::__construct();
-		$this->title = __('Update Plugin', 'sputnik');
+		$this->title = __('Update Plugin', 'wpsc');
 
 		$this->body_id = 'sputnik-upgrade';
 		$this->nonce_prefix = 'sputnik_upgrade-plugin_';
-		$this->title_format = __('Updating Plugin: %s', 'sputnik');
+		$this->title_format = __('Updating Plugin: %s', 'wpsc');
 	}
 
 	protected function prepare() {
@@ -29,13 +29,13 @@ class Sputnik_View_Upgrade extends Sputnik_View_Install {
 			$this->file = $_GET['upgrade'];
 			$data = Sputnik::get_from_file($file);
 			if ($data === null) {
-				throw new Exception(__('Plugin not found', 'sputnik'));
+				throw new Exception(__('Plugin not found', 'wpsc'));
 			}
 			$this->id = $data['Sputnik ID'];
 		}
 		catch (Exception $e) {
 			status_header(500);
-			iframe_header( __('Update Plugin', 'sputnik') );
+			iframe_header( __('Update Plugin', 'wpsc') );
 			echo $e->getMessage();
 			iframe_footer();
 			die();

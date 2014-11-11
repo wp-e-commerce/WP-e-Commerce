@@ -30,8 +30,8 @@ abstract class Sputnik_View {
 		}
 		if ($account !== false) {
 			$tabs = array(
-				'dash' => __('Store', 'sputnik'),
-				'account' => __('Your Account', 'sputnik'),
+				'dash' => __('Store', 'wpsc'),
+				'account' => __('Your Account', 'wpsc'),
 			);
 			$hrefs = array(
 				'dash' => Sputnik_Admin::build_url(),
@@ -72,7 +72,7 @@ abstract class Sputnik_View {
 	protected function footer() {?>
 			<div id="sputnik-footer">
 				<p class="logo-holder"><a href="http://wpeconomy.org/" class="renku-logo">WPEconomy</a></p>
-				<nav><p><a href="http://www.wpeconomy.org/documentation/developers/"><?php _e('Developer Tools', 'sputnik') ?></a> | <a href="http://twitter.com/WPEconomy">@WPEconomy</a> | <a href="http://www.wpeconomy.org/documentation/marketplace/faqs/"><?php _e('FAQ', 'sputnik') ?></a></p></nav>
+				<nav><p><a href="http://www.wpeconomy.org/documentation/developers/"><?php _e('Developer Tools', 'wpsc') ?></a> | <a href="http://twitter.com/WPEconomy">@WPEconomy</a> | <a href="http://www.wpeconomy.org/documentation/marketplace/faqs/"><?php _e('FAQ', 'wpsc') ?></a></p></nav>
 			</div>
 		</div>
 <?php
