@@ -344,33 +344,74 @@ function wpsc_purchase_log_action_delete( $log_id ) {
 add_action( 'wpsc_purchase_log_action-delete', 'wpsc_purchase_log_action_delete' );
 
 /**
- * Purchase log ajax code starts here
+ * Handle email receipt purchase log action
+ *
+ * The 'wpsc_purchase_log_action-email_receipt' action hook which calls this function is nonce and capability checked
+ * in wpsc_do_purchase_log_actions() before triggering do_action( 'wpsc_purchase_log_action-email_receipt' ).
+ *
+ * @since  3.9.x
+ *
+ * @param  int  $log_id  Purchase log ID.
  */
-function wpsc_purchlog_resend_email() {
+function wpsc_purchase_log_action_email_receipt( $log_id ) {
+
+	$sent = wpsc_purchlog_resend_email( $log_id );
+
+	// Redirect back to purchase logs list
+	$sendback = wp_get_referer();
+	$sendback = add_query_arg( 'sent', absint( $sent ), $sendback );
+	wp_redirect( $sendback );
+	exit();
+
+}
+add_action( 'wpsc_purchase_log_action-email_receipt', 'wpsc_purchase_log_action_email_receipt' );
+
+/**
+ * Resend Purchase Log Email
+ *
+ * @param   int|string  $log_id  Required. Purchase log ID (empty string is deprecated).
+ * @return  boolean              Sent successfully.
+ */
+function wpsc_purchlog_resend_email( $log_id = '' ) {
 
 	if ( ! wpsc_is_store_admin() ) {
 		return;
 	}
 
 	global $wpdb;
-	$log_id = $_REQUEST['email_buyer_id'];
-	$wpec_taxes_controller = new wpec_taxes_controller();
-	if ( is_numeric( $log_id ) ) {
-		$purchase_log = new WPSC_Purchase_Log( $log_id );
-		$sent = wpsc_send_customer_email( $purchase_log );
+
+	// Deprecate empty purchase log ID parameter.
+	if ( $log_id == '' ) {
+		_wpsc_doing_it_wrong( 'wpsc_purchlog_resend_email', __( '$log_id parameter requires a numeric purchase log ID.', 'wpsc' ), '3.9.x' );
+
+		// Support redirect for legacy purposes for the moment
+		$sendback = add_query_arg( 'sent', 0, wp_get_referer() );
+		wp_redirect( $sendback );
+		exit();
+
+		return false;
 	}
 
-	$sendback = wp_get_referer();
+	$log_id = absint( $log_id );
 
-	if ( isset( $sent ) )
-	    $sendback = add_query_arg( 'sent', $sent, $sendback );
+	if ( $log_id > 0 ) {
 
-	wp_redirect( $sendback );
-	exit();
+		$wpec_taxes_controller = new wpec_taxes_controller();
+
+		if ( is_numeric( $log_id ) ) {
+			$purchase_log = new WPSC_Purchase_Log( $log_id );
+			return wpsc_send_customer_email( $purchase_log );
+		}
+
+	}
+
+	return false;
+
 }
 
+// Deprecate resending purchase log email receipt via URL query
 if ( isset( $_REQUEST['email_buyer_id'] ) && is_numeric( $_REQUEST['email_buyer_id'] ) ) {
-	add_action( 'admin_init', 'wpsc_purchlog_resend_email' );
+	_wpsc_doing_it_wrong( 'wpsc_purchlog_resend_email', __( 'Do not trigger resend purchase log email action via email_buyer_id URL query. Instead use the Purchase Log Action Links API.', 'wpsc' ), '3.9.x' );
 }
 
 function wpsc_purchlog_clear_download_items() {
