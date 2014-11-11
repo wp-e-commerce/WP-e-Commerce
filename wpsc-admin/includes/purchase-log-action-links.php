@@ -140,7 +140,10 @@ class WPSC_Purchase_Log_Action_Links {
 	private function _get_packing_slip_link() {
 
 		return new WPSC_Purchase_Log_Action_Link( 'packing_slip', __( 'View Packing Slip', 'wpsc' ), $this->log_id, array(
-			'url'        => esc_url( add_query_arg( 'c', 'packing_slip' ) ),
+			'url'        => esc_url( add_query_arg( array(
+				'c'  => 'packing_slip',
+				'id' => $this->log_id
+			) ) ),
 			'dashicon'   => 'dashicons-format-aside',
 			'attributes' => array(
 				'target' => 'wpsc_packing_slip'
