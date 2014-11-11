@@ -62,6 +62,7 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * New: Introduce attachments method and filter for WPSC_Purchase_Log_Notification class.
 * New: Single Product pages now have ID-based body classes.
 * New: Supports Universal Analytics in Google Analytics.
+* New: Added `wpsc_checkout_fields` filter for filtering checkout form fields.
 * Change: Dates are now optional on coupons. Expiration, specifically, is no longer required.  Validation is filterable via `wpsc_coupons_validate_coupon`.
 * Change: Refactored purchase log action links, introduced new API for adding links.
 * Change: Product page shortcodes, e.g. [productspage], are now stripped from the_excerpt().  Helpful for cleaner looking search results.

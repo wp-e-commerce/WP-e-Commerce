@@ -207,6 +207,8 @@ class wpsc_checkout {
 			}
 		}
 
+		$this->checkout_items = apply_filters( 'wpsc_checkout_fields', $this->checkout_items, $this );
+
 		$this->checkout_item_count = count( $this->checkout_items );
 	}
 
