@@ -611,25 +611,9 @@ class Sputnik_Admin {
 		}
 ?>
 		<div class="wrap" id="sputnik-page">
-			<?php screen_icon(); ?>
-			<h2>Marketplace <?php self::account_link(); ?>
-		</h2>
+			<h2><?php _e( 'Marketplace', 'wpsc' ); ?></h2>
 <?php
 		do_action('sputnik_messages');
-	}
-
-	protected static function footer() {?>
-			<div id="sputnik-footer">
-				<p class="logo-holder"><a href="http://wpeconomy.org/" class="renku-logo-no-img">Marketplace Powered by WPEconomy</a></p>
-				<nav><p><a href="http://www.wpeconomy.org/documentation/developers/">Developer Tools</a> | <a href="http://twitter.com/WPEconomy">@WPEconomy</a> | <a href="http://www.wpeconomy.org/documentation/marketplace/faqs/">FAQ</a></p></nav>
-			</div>
-		</div>
-<?php
-	}
-
-	protected static function account_link() {
-		if ( Sputnik::account_is_linked() && 'dash' == self::$page )
-			echo '<a href="edit.php?post_type=wpsc-product&amp;page=sputnik-account" class="add-new-h2">Your Account</a>';
 	}
 
 	protected static function other_pages() {
@@ -673,7 +657,6 @@ class Sputnik_Admin {
 		}
 		self::$list_table->views();
 		self::$list_table->display();
-		self::footer();
 	}
 
 	/**
@@ -733,7 +716,6 @@ class Sputnik_Admin {
 			else {
 				self::header('Account', $account);
 				echo '<p>' . sprintf(__('Problem: %s', 'sputnik'), $e->getMessage()) . '</p>';
-				self::footer();
 
 				return;
 			}
@@ -758,7 +740,6 @@ class Sputnik_Admin {
 <?php
 		self::$list_table->views();
 		self::$list_table->display();
-		self::footer();
 	}
 
 	protected static function auth() {
