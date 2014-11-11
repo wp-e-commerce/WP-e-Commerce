@@ -412,7 +412,7 @@ function _wpsc_ajax_purchase_log_send_tracking_email() {
 }
 
 /**
- * Do puchase log action link via AJAX
+ * Do purchase log action link via AJAX
  *
  * @since   3.9.0
  * @access  private
