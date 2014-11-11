@@ -177,7 +177,6 @@ class WPSC_Purchase_Log_Action_Links {
 	private function _get_delete_link() {
 
 		return new WPSC_Purchase_Log_Action_Link( 'delete', _x( 'Remove this record', 'purchase log action link', 'wpsc' ), $this->log_id, array(
-			'url'        => esc_url( wp_nonce_url( add_query_arg( 'purchlog_id', $this->log_id, 'admin.php?wpsc_admin_action=delete_purchlog' ), 'delete_purchlog_' . $this->log_id ) ),
 			'dashicon'   => 'dashicons-dismiss',
 			'attributes' => array(
 				'onclick' => "if ( confirm('" . esc_js( sprintf( __( "You are about to delete this log '%s'\n 'Cancel' to stop, 'OK' to delete.", 'wpsc' ), wpsc_purchaselog_details_date() ) ) . "') ) { return true; } return false;"
