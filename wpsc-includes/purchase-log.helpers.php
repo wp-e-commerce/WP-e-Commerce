@@ -77,7 +77,7 @@ function wpsc_get_downloadable_links( $purchase_log ) {
 		$links[$item->name] = $item_links;
 	}
 
-	return $links;
+	return apply_filters( 'wpsc_get_downloadable_links', $links, $purchase_log );
 }
 
 function _wpsc_get_cart_item_downloadable_links( $item, $purchase_log ) {

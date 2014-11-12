@@ -38,7 +38,6 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 = 3.9 =
 
-* Fix: PHP notices on product category page.
 * Fix: Eliminate most usage of number-based inputs in product UI.
 * Fix: Fall back to product ID if SKU is not set for Google Analytics reporting.
 * Fix: Restored inadvertently removed filter, `wpsc_add_advanced_options`.
@@ -49,6 +48,7 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * Fix: When "Buy Now" button is used, it is now disabled if item is out of stock.
 * New: Introduced `wpsc_get_countries` and `wpsc_get_countries_array` filters.
 * New: Introduced `wpsc_google_analytics_pushed_product` filter.
+* New: Introduced `wpsc_get_downloadable_links` filter.
 * New: Added screen option for number of purchase logs to show on a page.
 * New: Introduced WPSC_Logging class.  Based on WP_Logging.
 * New: Customers may now checkout with carts that have a value of $0.
