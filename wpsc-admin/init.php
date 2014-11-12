@@ -389,7 +389,6 @@ function wpsc_purchlog_resend_email( $log_id = '' ) {
 		wp_redirect( $sendback );
 		exit();
 
-		return false;
 	}
 
 	$log_id = absint( $log_id );
