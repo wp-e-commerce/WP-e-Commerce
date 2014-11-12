@@ -456,7 +456,7 @@ function _wpsc_ajax_purchase_log_action_link() {
  * The _wpsc_ajax_purchase_log_action_link() function which triggers this function is nonce
  * and capability checked in _wpsc_ajax_handler().
  *
- * @since   3.9.x
+ * @since   3.9.0
  * @access  private
  *
  * @param  array  $response  AJAX response.

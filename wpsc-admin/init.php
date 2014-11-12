@@ -349,7 +349,7 @@ add_action( 'wpsc_purchase_log_action-delete', 'wpsc_purchase_log_action_delete'
  * The 'wpsc_purchase_log_action-email_receipt' action hook which calls this function is nonce and capability checked
  * in wpsc_do_purchase_log_actions() before triggering do_action( 'wpsc_purchase_log_action-email_receipt' ).
  *
- * @since  3.9.x
+ * @since  3.9.0
  *
  * @param  int  $log_id  Purchase log ID.
  */
@@ -382,7 +382,7 @@ function wpsc_purchlog_resend_email( $log_id = '' ) {
 
 	// Deprecate empty purchase log ID parameter.
 	if ( $log_id == '' ) {
-		_wpsc_doing_it_wrong( 'wpsc_purchlog_resend_email', __( '$log_id parameter requires a numeric purchase log ID.', 'wpsc' ), '3.9.x' );
+		_wpsc_doing_it_wrong( 'wpsc_purchlog_resend_email', __( '$log_id parameter requires a numeric purchase log ID.', 'wpsc' ), '3.9.0' );
 
 		// Support redirect for legacy purposes for the moment
 		$sendback = add_query_arg( 'sent', 0, wp_get_referer() );
@@ -411,7 +411,7 @@ function wpsc_purchlog_resend_email( $log_id = '' ) {
 
 // Deprecate resending purchase log email receipt via URL query
 if ( isset( $_REQUEST['email_buyer_id'] ) && is_numeric( $_REQUEST['email_buyer_id'] ) ) {
-	_wpsc_doing_it_wrong( 'wpsc_purchlog_resend_email', __( 'Do not trigger resend purchase log email action via email_buyer_id URL query. Instead use the Purchase Log Action Links API.', 'wpsc' ), '3.9.x' );
+	_wpsc_doing_it_wrong( 'wpsc_purchlog_resend_email', __( 'Do not trigger resend purchase log email action via email_buyer_id URL query. Instead use the Purchase Log Action Links API.', 'wpsc' ), '3.9.0' );
 }
 
 function wpsc_purchlog_clear_download_items() {
