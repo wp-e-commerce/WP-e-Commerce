@@ -123,6 +123,7 @@ class WPSC_Purchase_Log_Action_Links {
 	private function _get_downloads_lock_link() {
 
 		return new WPSC_Purchase_Log_Action_Link( 'downloads_lock', wpsc_purchlogs_have_downloads_locked(), $this->log_id, array(
+			'ajax'     => true,
 			'dashicon' => 'dashicons-lock'
 		) );
 

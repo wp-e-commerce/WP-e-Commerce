@@ -451,6 +451,28 @@ function _wpsc_ajax_purchase_log_action_link() {
 }
 
 /**
+ * Handle AJAX clear downloads lock purchase log action
+ *
+ * The _wpsc_ajax_purchase_log_action_link() function which triggers this function is nonce
+ * and capability checked in _wpsc_ajax_handler().
+ *
+ * @since   3.9.x
+ * @access  private
+ *
+ * @param  array  $response  AJAX response.
+ * @param  int    $log_id    Purchase log ID.
+ */
+function wpsc_purchase_log_action_ajax_downloads_lock( $response, $log_id ) {
+
+	$response['success'] = wpsc_purchlog_clear_download_items( $log_id );
+
+	return $response;
+
+}
+add_action( 'wpsc_purchase_log_action_ajax-downloads_lock', 'wpsc_purchase_log_action_ajax_downloads_lock', 10, 2 );
+
+
+/**
  * Handle AJAX email receipt purchase log action
  *
  * The _wpsc_ajax_purchase_log_action_link() function which triggers this function is nonce
