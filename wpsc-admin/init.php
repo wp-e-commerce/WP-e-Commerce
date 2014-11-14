@@ -325,7 +325,7 @@ add_action( 'admin_init', 'wpsc_do_purchase_log_actions' );
  * The 'wpsc_purchase_log_action-downloads_lock' action hook which calls this function is nonce and capability checked
  * in wpsc_do_purchase_log_actions() before triggering do_action( 'wpsc_purchase_log_action-downloads_lock' ).
  *
- * @since  3.9.x
+ * @since  3.9.0
  *
  * @param  int  $log_id  Purchase log ID.
  */
@@ -452,7 +452,7 @@ function wpsc_purchlog_clear_download_items( $log_id = '' ) {
 
 	// Deprecate empty purchase log ID parameter.
 	if ( $log_id == '' ) {
-		_wpsc_doing_it_wrong( 'wpsc_purchlog_clear_download_items', __( '$log_id parameter requires a numeric purchase log ID.', 'wpsc' ), '3.9.x' );
+		_wpsc_doing_it_wrong( 'wpsc_purchlog_clear_download_items', __( '$log_id parameter requires a numeric purchase log ID.', 'wpsc' ), '3.9.0' );
 		return false;
 	}
 
@@ -483,7 +483,7 @@ function wpsc_purchlog_clear_download_items( $log_id = '' ) {
 
 // Deprecate clearing purchase log download locks via URL query
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'clear_locks') ) {
-	_wpsc_doing_it_wrong( 'wpsc_purchlog_clear_download_items', __( 'Do not trigger clear purchase log download locks action via wpsc_admin_action = clear_locks URL query. Instead use the Purchase Log Action Links API.', 'wpsc' ), '3.9.x' );
+	_wpsc_doing_it_wrong( 'wpsc_purchlog_clear_download_items', __( 'Do not trigger clear purchase log download locks action via wpsc_admin_action = clear_locks URL query. Instead use the Purchase Log Action Links API.', 'wpsc' ), '3.9.0' );
 }
 
 //bulk actions for purchase log
