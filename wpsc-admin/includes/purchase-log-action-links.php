@@ -123,7 +123,7 @@ class WPSC_Purchase_Log_Action_Links {
 	private function _get_downloads_lock_link() {
 
 		return new WPSC_Purchase_Log_Action_Link( 'downloads_lock', wpsc_purchlogs_have_downloads_locked(), $this->log_id, array(
-			'url'      => esc_url( add_query_arg( 'wpsc_admin_action', 'clear_locks' ) ),
+			'ajax'     => true,
 			'dashicon' => 'dashicons-lock'
 		) );
 
@@ -140,7 +140,10 @@ class WPSC_Purchase_Log_Action_Links {
 	private function _get_packing_slip_link() {
 
 		return new WPSC_Purchase_Log_Action_Link( 'packing_slip', __( 'View Packing Slip', 'wpsc' ), $this->log_id, array(
-			'url'        => esc_url( add_query_arg( 'c', 'packing_slip' ) ),
+			'url'        => esc_url( add_query_arg( array(
+				'c'  => 'packing_slip',
+				'id' => $this->log_id
+			) ) ),
 			'dashicon'   => 'dashicons-format-aside',
 			'attributes' => array(
 				'target' => 'wpsc_packing_slip'
@@ -160,7 +163,7 @@ class WPSC_Purchase_Log_Action_Links {
 	private function _get_email_receipt_link() {
 
 		return new WPSC_Purchase_Log_Action_Link( 'email_receipt', __( 'Resend Receipt to Buyer', 'wpsc' ), $this->log_id, array(
-			'url'      => esc_url( add_query_arg( 'email_buyer_id', $this->log_id ) ),
+			'ajax'     => true,
 			'dashicon' => 'dashicons-migrate dashicons-email-alt'
 		) );
 
