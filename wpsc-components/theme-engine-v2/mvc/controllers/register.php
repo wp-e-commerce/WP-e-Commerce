@@ -45,7 +45,7 @@ class WPSC_Controller_Register extends WPSC_Controller
 		}
 
 		$password = wp_generate_password( 12, false );
-		$user_id = wp_create_user( $username, $password, $email );
+		$user_id  = wp_create_user( $username, $password, $email );
 
 		if ( is_wp_error( $user_id ) ) {
 			foreach ( $user_id->get_error_messages() as $message ) {

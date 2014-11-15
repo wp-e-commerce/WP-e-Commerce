@@ -571,7 +571,7 @@ function wpsc_submit_checkout( $collected_data = true ) {
 	$use_shipping       = 0;
 	$disregard_shipping = 0;
 
-	do_action( 'wpsc_before_submit_checkout' );
+	do_action( 'wpsc_before_submit_checkout', $collected_data );
 
 	$error_messages = wpsc_get_customer_meta( 'checkout_misc_error_messages' );
 
