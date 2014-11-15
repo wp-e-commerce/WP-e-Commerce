@@ -11,7 +11,7 @@ class Sputnik_API {
 	 * we override the domain. This is because we need to ensure Baikonur receives the Saas domain,
 	 * not the end-user domain. Only relevant where Sputnik is available to an end-user, not a Saas.
 	 */
-	protected static $domain_override = 'http://wpecommerce.org';
+	protected static $domain_override = 'https://wpecommerce.org';
 
 	public static function get_all($page = 1, $params = null) {
 		$url = '/';
@@ -200,16 +200,15 @@ class Sputnik_API {
 
 		$defaults = array( 'method' => 'GET' );
 
-		$args = wp_parse_args($args, $defaults);
+		$args = wp_parse_args( $args, $defaults );
 
 		if ( strpos( $url, 'http' ) !== 0 ) {
 			$url = Sputnik::API_BASE . $url;
 		}
 
-		$args['timeout'] = 25;
-
+		$args['timeout']                = 25;
+		$args['headers']['user-agent']  = 'WP eCommerce Marketplace: ' . WPSC_VERSION;
 		$args['headers']['X-WP-Domain'] = self::domain();
-		$args['user-agent']             = 'WP eCommerce Marketplace: ' . WPSC_VERSION;
 
 		$request = wp_remote_request( $url, $args );
 
@@ -228,6 +227,7 @@ class Sputnik_API {
 		}
 
 		$request['body'] = $result;
+
 
 		return $request;
 	}
