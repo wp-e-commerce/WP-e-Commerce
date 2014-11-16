@@ -36,7 +36,7 @@ function validate_form_data() {
 			if ( $form_data['mandatory'] == 1 ) {
 				switch ( $form_data['type'] ) {
 					case "email":
-						if ( ! is_email( $email ) ) {
+						if ( ! is_email( $value ) ) {
 							$any_bad_inputs = true;
 							$bad_input = true;
 						}
