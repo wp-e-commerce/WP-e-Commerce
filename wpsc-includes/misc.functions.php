@@ -118,10 +118,8 @@ function wpsc_add_new_user( $user_login, $user_pass, $user_email ) {
 	if ( $errors->get_error_code() ) {
 		return $errors;
 	}
-
 	$user_id = wp_create_user( $user_login, $user_pass, $user_email );
-
-	if ( ! $user_id ) {
+	if ( !$user_id ) {
 		$errors->add( 'registerfail', sprintf( __( '<strong>ERROR</strong>: Couldn&#8217;t register you... please contact the <a href="mailto:%s">webmaster</a> !', 'wpsc' ), get_option( 'admin_email' ) ) );
 		return $errors;
 	}

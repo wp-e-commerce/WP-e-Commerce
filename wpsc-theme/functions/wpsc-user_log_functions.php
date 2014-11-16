@@ -36,7 +36,7 @@ function validate_form_data() {
 			if ( $form_data['mandatory'] == 1 ) {
 				switch ( $form_data['type'] ) {
 					case "email":
-						if ( !preg_match( "/^[a-zA-Z0-9._-]+@[a-zA-Z0-9-.]+\.[a-zA-Z]{2,5}$/", $value ) ) {
+						if ( ! is_email( $email ) ) {
 							$any_bad_inputs = true;
 							$bad_input = true;
 						}
