@@ -911,7 +911,7 @@ add_action( 'wp_dashboard_setup', 'wpsc_dashboard_widget_setup' );
  * @uses wp_widget_rss_output()   Display the RSS entries in a list
  */
 function wpsc_dashboard_news() {
-	$rss = fetch_feed( 'http://getshopped.org/feed/?category_name=wp-e-commerce-plugin' );
+	$rss = fetch_feed( 'https://wpecommerce.org/feed/?category_name=news' );
 	$args = array( 'show_author' => 1, 'show_date' => 1, 'show_summary' => 1, 'items' => 3 );
 	wp_widget_rss_output( $rss, $args );
 
