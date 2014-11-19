@@ -131,8 +131,7 @@ Author URI: http://instinct.co.nz
 }
 
 .default_product_display .additional_description, #content .default_product_display .additional_description {
-	font-size:13px;
-	line-height:1.4em;
+	font-size: 90%;
 	margin:0;
 }
 
