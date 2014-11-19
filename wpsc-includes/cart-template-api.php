@@ -1,6 +1,8 @@
 <?php
 /**
  * The WPSC Cart API for templates
+ * 
+ * @package wp-e-commerce
  */
 
 
