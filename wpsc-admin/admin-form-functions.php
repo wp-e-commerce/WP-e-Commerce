@@ -1,4 +1,11 @@
 <?php
+/** 
+ * The Admin Form Functions
+ * 
+ * These are the functions that power administrative forms in the WordPress admin
+ * 
+ * @package wp-e-commerce
+ */ 
 function coupon_edit_form($coupon) {
 
 $conditions = maybe_unserialize($coupon['condition']);
