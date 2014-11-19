@@ -566,6 +566,23 @@ function wpsc_serialize_shopping_cart() {
 add_action( 'shutdown', 'wpsc_serialize_shopping_cart' );
 
 /**
+ * Changes default "Enter title here" placeholder
+ *
+ * @param string $title Default Title Placeholder
+ * @return string $title New Title Placeholder
+ */
+function wpsc_change_title_placeholder( $title ) {
+	$screen = get_current_screen();
+
+	if  ( 'wpsc-product' == $screen->post_type ) {
+		$title =  __( 'Enter Product Title here', 'wpsc' );
+	}
+	return $title;
+}
+
+add_filter( 'enter_title_here', 'wpsc_change_title_placeholder' );
+
+/**
  * wpsc_get_page_post_names function.
  *
  * @since 3.8
