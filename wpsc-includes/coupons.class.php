@@ -118,8 +118,10 @@ class wpsc_coupons {
 		$now = current_time( 'timestamp', true );
 
 		$valid      = true;
-		$start_date = strtotime( $this->start_date );
-		$end_date   = strtotime( $this->end_date );
+
+		// If date fields are left empty, they don't return false, rather, default to 0000-00-00 00:00:00
+		$start_date = '0000-00-00 00:00:00' === $this->start_date ? false : strtotime( $this->start_date );
+		$end_date   = '0000-00-00 00:00:00' === $this->end_date   ? false : strtotime( $this->end_date );
 
 		if ( '1' != $this->active ) {
 			$valid = false;
@@ -773,7 +775,9 @@ class wpsc_coupons {
 	*/
 	function uses_coupons() {
 		global $wpdb;
+
 		$num_active_coupons = $wpdb->get_var("SELECT COUNT(id) as c FROM `".WPSC_TABLE_COUPON_CODES."` WHERE active='1'");
+
 		return ( $num_active_coupons > 0 );
 	}
 

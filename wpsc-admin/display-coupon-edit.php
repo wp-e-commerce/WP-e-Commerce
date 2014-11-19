@@ -67,13 +67,14 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 						</th>
 						<td>
 							<?php
-							$start = $coupon['start']  == '0000-00-00 00:00:00' ? '' : get_date_from_gmt( $coupon['start'], 'Y-m-d' );
-							$end   = $coupon['expiry'] == '0000-00-00 00:00:00' ? '' : get_date_from_gmt( $coupon['expiry'], 'Y-m-d' );
+								$start = $coupon['start']  == '0000-00-00 00:00:00' ? '' : get_date_from_gmt( $coupon['start'], 'Y-m-d' );
+								$end   = $coupon['expiry'] == '0000-00-00 00:00:00' ? '' : get_date_from_gmt( $coupon['expiry'], 'Y-m-d' );
 							?>
 							<span class="description"><?php _e( 'Start: ', 'wpsc' ); ?></span>
 							<input name="edit_coupon_start" id="edit_coupon_start" type="text" value="<?php esc_attr_e( $start ); ?>" class="regular-text pickdate" style="width: 100px"/>
 							<span class="description"><?php _e( 'End: ', 'wpsc' ); ?></span>
 							<input name="edit_coupon_end" id="edit_coupon_end" type="text" value="<?php esc_attr_e( $end ); ?>" class="regular-text pickdate" style="width: 100px"/>
+							<p class="description"><?php _e( 'If date fields are left empty, there will be no expiration on this coupon.', 'wpsc' ); ?></p>
 						</td>
 					</tr>
 
