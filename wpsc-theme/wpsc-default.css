@@ -455,8 +455,6 @@ table.list_productdisplay p.soldout {
 
 
 .single_product_display .product_description, .single_product_display .single_additional_description {
-	font-size:14px;
-	line-height:1.2em;
 	margin:0 0 10px 0;
 	padding:0;
 }
