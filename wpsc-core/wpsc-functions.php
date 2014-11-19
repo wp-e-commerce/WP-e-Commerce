@@ -575,7 +575,7 @@ function wpsc_change_title_placeholder( $title ) {
 	$screen = get_current_screen();
 
 	if  ( 'wpsc-product' == $screen->post_type ) {
-		$title =  __( 'Enter Product Title here', 'wpsc' );
+		$title =  __( 'Enter product title here', 'wpsc' );
 	}
 	return $title;
 }
