@@ -172,7 +172,7 @@ class weightrate {
 			$shipping = array_shift($layers);
 			if (stristr($shipping, '%')) {
 				$shipping = str_replace('%', '', $shipping);
-				$shipping_amount = $price * ( $shipping / 100 );
+				$shipping_amount = $cart_total * ( $shipping / 100 );
 			} else {
 				$shipping_amount = $shipping;
 			}
