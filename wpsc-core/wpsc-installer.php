@@ -242,7 +242,7 @@ function wpsc_install() {
     add_option( 'shipwire', '0', '', 'no' );
     add_option( 'shipwire_test_server', '0', '', 'no' );
 
-	add_option( 'purch_log_email', '', '', 'no' );
+	add_option( 'purch_log_email', get_option( 'admin_email', '' ), '', 'no' );
 	add_option( 'return_email', '', '', 'no' );
 	add_option( 'terms_and_conditions', '', '', 'no' );
 
