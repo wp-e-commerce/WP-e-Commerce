@@ -16,7 +16,6 @@ function wpec_taxes_settings_page() {
 	wpec_options_taxes();
 } // wpec_taxes_settings_page
 
-
 /**
  * Add actions used by wpec-taxes module
  * */
