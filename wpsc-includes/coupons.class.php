@@ -131,12 +131,16 @@ class wpsc_coupons {
 			$valid = false;
 		}
 
-		if ( $start_date && $now < $start_date ) {
-			$valid = false;
+		if( '0000-00-00 00:00:00' !== $this->start_date ) {
+			if ( $start_date && $now < $start_date ) {
+				$valid = false;
+			}
 		}
 
-		if ( $end_date && $now > $end_date ) {
-			$valid = false;
+		if( '0000-00-00 00:00:00' !== $this->end_date ) {
+			if ( $end_date && $now > $end_date ) {
+				$valid = false;
+			}
 		}
 
 		return apply_filters( 'wpsc_coupons_validate_coupon', $valid, $this );
