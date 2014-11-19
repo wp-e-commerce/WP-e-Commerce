@@ -37,15 +37,7 @@ class WPSC_Payment_Gateway_Manual extends WPSC_Payment_Gateway
 				</p>
 			</td>
 		</tr>
-		<tr class='update_gateway' >
-			<td colspan='2'>
-				<div class='submit'>
-					<input type='submit' value='<?php _e( 'Update &raquo;', 'wpsc' ); ?>' name='updateoption' />
-				</div>
-			</td>
-		</tr>
 		<?php
-		parent::setup_form();
 	}
 
 	public function process() {
