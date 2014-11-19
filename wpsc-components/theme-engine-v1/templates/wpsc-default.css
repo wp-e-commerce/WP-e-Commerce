@@ -131,8 +131,7 @@ Author URI: http://instinct.co.nz
 }
 
 .default_product_display .additional_description, #content .default_product_display .additional_description {
-	font-size:13px;
-	line-height:1.4em;
+	font-size: 90%;
 	margin:0;
 }
 
@@ -458,6 +457,10 @@ table.list_productdisplay p.soldout {
 	margin:0 0 10px 0;
 	padding:0;
 }
+
+ .single_product_display .single_additional_description {
+ 	font-size: 90%;
+ }
 
 .single_product_display form.product_form fieldset, #content .single_product_display form.product_form fieldset {
 	border: none;
