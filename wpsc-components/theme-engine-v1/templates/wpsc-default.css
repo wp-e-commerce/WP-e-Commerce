@@ -459,6 +459,10 @@ table.list_productdisplay p.soldout {
 	padding:0;
 }
 
+ .single_product_display .single_additional_description {
+ 	font-size: 90%;
+ }
+
 .single_product_display form.product_form fieldset, #content .single_product_display form.product_form fieldset {
 	border: none;
 	padding: 0px;
