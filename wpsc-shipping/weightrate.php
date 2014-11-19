@@ -190,9 +190,7 @@ class weightrate {
 
 		global $wpsc_cart;
 
-		$unit_price = $cart_item->unit_price;
 		$quantity = $cart_item->quantity;
-		$weight = $cart_item->weight;
 		$product_id = $cart_item->product_id;
 
 		$uses_billing_address = false;
