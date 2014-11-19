@@ -128,7 +128,7 @@ class weightrate {
 
 		if ( !empty($shippings) ) {
 			foreach ($shippings as $key => $price) {
-				if ( empty( $price ) || empty( $layers[$key] ) )
+				if ( empty( $price ) || trim( $layers[$key] ) == '' )
 					continue;
 				$new_layers[$layers[$key]] = $price;
 			}
