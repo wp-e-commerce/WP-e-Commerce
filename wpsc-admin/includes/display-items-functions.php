@@ -846,14 +846,20 @@ function wpsc_product_external_link_forms() {
 				<th valign="top" scope="row"><label for="external_link_target"><?php esc_html_e( 'Target', 'wpsc' ); ?></label></th>
 				<td id="external_link_target">
 
-					<input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value=""<?php checked( '', $product_meta['external_link_target'] ); ?> />
-					<span><?php _ex( 'Default (set by theme)', 'External product link target', 'wpsc' ); ?></span>
+					<label>
+                        <input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value=""<?php checked( '', $product_meta['external_link_target'] ); ?> />
+	   				    <?php _ex( 'Default (set by theme)', 'External product link target', 'wpsc' ); ?>
+                    </label>
 
-					<input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value="_self"<?php checked( '_self', $product_meta['external_link_target'] ); ?> />
-					<span><?php esc_html_e( 'Force open in same window', 'wpsc' ); ?></span>
+					<label>
+                        <input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value="_self"<?php checked( '_self', $product_meta['external_link_target'] ); ?> />
+    					<?php esc_html_e( 'Force open in same window', 'wpsc' ); ?>
+                    </label>
 
-					<input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value="_blank"<?php checked( '_blank', $product_meta['external_link_target'] ); ?> />
-					<span><?php esc_html_e( 'Force open in new window', 'wpsc' ); ?></span>
+					<label>
+                        <input type="radio" name="meta[_wpsc_product_metadata][external_link_target]" value="_blank"<?php checked( '_blank', $product_meta['external_link_target'] ); ?> />
+                        <?php esc_html_e( 'Force open in new window', 'wpsc' ); ?>
+                    </label>
 
 				</td>
 			</tr>
