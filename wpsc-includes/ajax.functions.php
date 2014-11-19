@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * The AJAX functions for WP-e-Commerce
+ * 
+ * @package wp-e-commerce
+ * @since 3.8
+ */ 
+
 function wpsc_gateway_notification() {
 	global $wpsc_gateways;
 	$gateway_name = $_GET['gateway'];
