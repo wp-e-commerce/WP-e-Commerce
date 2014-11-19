@@ -48,7 +48,6 @@ Author URI: http://instinct.co.nz
 #default_products_page_container {
 	width:100%;
 	position:relative;
-	line-height:1.2em;
 }
 
 #default_products_page_container .wpsc_page_numbers_top {
@@ -129,11 +128,6 @@ Author URI: http://instinct.co.nz
 	left:-10px;
 	text-indent:-9999px;
 	display:block;
-}
-
-.default_product_display .wpsc_description, #content .default_product_display .wpsc_description {
-	font-size:13px;
-	line-height:1.4em;
 }
 
 .default_product_display .additional_description, #content .default_product_display .additional_description {
