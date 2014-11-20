@@ -1,6 +1,6 @@
 <?php
 /**
- * Control database upgrade to version 11
+ * Control database upgrade to version 12
  *
  * @access private
  * @since 3.8.14

@@ -17,7 +17,7 @@ INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (15, '" . __( 'Libya', 'wpsc' 
 INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (16, '" . __( 'Liberia', 'wpsc' ) ."', 'LR', '" . __('Liberian Dollar', 'wpsc') ."', '" . __('$', 'wpsc') . "', '" . __('&#036;', 'wpsc') . "', '" . __('LRD', 'wpsc') . "', '0', '0','africa','1');
 INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (17, '" . __( 'Lesotho', 'wpsc' ) ."', 'LS', '" . __('Lesotho Loti', 'wpsc') ."', '', '', '" . __('LSL', 'wpsc') . "', '0', '0','africa','1');
 INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (18, '" . __( 'Lebanon', 'wpsc' ) ."', 'LB', '" . __('Lebanese Pound', 'wpsc') ."', '', '', '" . __('LBP', 'wpsc') . "', '0', '0', 'asiapacific','1');
-INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (19, '" . __( 'Latvia', 'wpsc' ) ."', 'LV', '" . __('Latvian Lats', 'wpsc') ."', '', '', '" . __('LVL', 'wpsc') . "', '0', '0','europe','1');
+INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (19, '" . __( 'Latvia', 'wpsc' ) ."', 'LV', '" . __('Euro', 'wpsc') ."', '" . __('€', 'wpsc') . "', '" . __('&#8364;', 'wpsc') . "', '" . __('EUR', 'wpsc') . "', '0', '0','europe','1');
 INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (20, '" . __( 'Laos', 'wpsc' ) ."', 'LA', '" . __('Lao Kip', 'wpsc') ."', '', '', '" . __('LAK', 'wpsc') . "', '0', '0', 'asiapacific','1');
 INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (21, '" . __( 'Kyrgyzstan', 'wpsc' ) ."', 'KG', '" . __('Som', 'wpsc') ."', '', '', '" . __('KGS', 'wpsc') . "', '0', '0', 'asiapacific','1');
 INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (22, '" . __( 'Kuwait', 'wpsc' ) ."', 'KW', '" . __('Kuwaiti Dinar', 'wpsc') ."', '', '', '" . __('KWD', 'wpsc') . "', '0', '0', 'asiapacific','1');
