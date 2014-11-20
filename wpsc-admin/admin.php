@@ -1443,7 +1443,9 @@ function wpsc_duplicate_product_meta( $id, $new_id ) {
 		$sql_query.= implode( ",", $sql_query_sel );
 		$sql_query = $wpdb->prepare( $sql_query, $values );
 		$wpdb->query( $sql_query );
+		clean_post_cache( $new_id );
 	}
+
 }
 
 /**
