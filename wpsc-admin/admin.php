@@ -1467,7 +1467,72 @@ function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
 	) );
 
 	foreach ( $child_posts as $child_post ) {
-	    wpsc_duplicate_product_process( $child_post, $new_parent_id );
+		if ( 'attachment' == get_post_type( $child_post ) ) {
+
+			// Copy attachments to duplicate child post
+			wpsc_duplicate_product_image_process( $child_post, $new_parent_id );
+
+		} else {
+
+			// Duplicate child posts that are not attachments
+			wpsc_duplicate_product_process( $child_post, $new_parent_id );
+
+		}
+	}
+
+}
+
+/**
+ * Duplicates a product image.
+ *
+ * Uses a portion of code from media_sideload_image() in `wp-admin/includes/media.php`
+ * to check file before downloading from URL.
+ *
+ * @since 3.9.x
+ *
+ * @uses  get_post_type()          Gets post type.
+ * @uses  wp_get_attachment_url()  Gets attachment URL.
+ * @uses  download_url()           Download file from URl to temp location.
+ * @uses  is_wp_error()            Is WP error?
+ * @uses  media_handle_sideload()  Handle creation of new attachment and attach to post.
+ *
+ * @param   object  $post           The post object.
+ * @param   bool    $new_parent_id  Optional. The parent post id.
+ * @return  int                     Attachment ID.
+ */
+function wpsc_duplicate_product_image_process( $child_post, $new_parent_id ) {
+
+	if ( 'attachment' == get_post_type( $child_post ) ) {
+
+		$file = wp_get_attachment_url( $child_post->ID );
+
+		if ( ! empty( $file ) ) {
+
+			// Set variables for storage, fix file filename for query strings.
+			preg_match( '/[^\?]+\.(jpe?g|jpe|gif|png)\b/i', $file, $matches );
+			$file_array = array();
+			$file_array['name'] = basename( $matches[0] );
+
+			// Download file to temp location.
+			$file_array['tmp_name'] = download_url( $file );
+
+			// If error storing temporarily, return the error.
+			if ( is_wp_error( $file_array['tmp_name'] ) ) {
+				return $file_array['tmp_name'];
+			}
+
+			// Do the validation and storage stuff.
+			$id = media_handle_sideload( $file_array, $new_parent_id );
+
+			// If error storing permanently, unlink.
+			if ( is_wp_error( $id ) ) {
+				@unlink( $file_array['tmp_name'] );
+			}
+
+			return $id;
+
+		}
+
 	}
 
 }
