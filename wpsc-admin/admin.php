@@ -1536,6 +1536,24 @@ function wpsc_duplicate_product_image_process( $child_post, $new_parent_id ) {
 				set_post_thumbnail( $new_parent_id, $id );
 			}
 
+			// Copy attachment data
+			$post_data = array(
+				'ID'                    => $id,
+				'post_content'          => $child_post->post_content,
+				'post_title'            => $child_post->post_title,
+				'post_excerpt'          => $child_post->post_excerpt,
+				'post_status'           => $child_post->post_status,
+				'comment_status'        => $child_post->comment_status,
+				'ping_status'           => $child_post->ping_status,
+				'post_password'         => $child_post->post_password,
+				'post_content_filtered' => $child_post->post_content_filtered,
+				'menu_order'            => $child_post->menu_order
+			);
+			wp_update_post( $post_data );
+
+			// Copy alt text
+			update_post_meta( $id, '_wp_attachment_image_alt', get_post_meta( $child_post->ID, '_wp_attachment_image_alt', true ) );
+
 			return $id;
 
 		}
