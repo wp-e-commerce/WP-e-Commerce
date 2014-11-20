@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * The HTML outputting the tax and shipping form
+ * 
+ * @package wp-e-commerce
+ */ 
 global $wpdb;
 $changes_made = false;
 $country_isocode = preg_match( "/[a-zA-Z]{2,4}/", $_GET['isocode'] ) ? $_GET['isocode'] : get_option( 'base_country' );

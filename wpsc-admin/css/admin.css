@@ -2417,7 +2417,7 @@ a.wpsc_remove_meta {
 	.wpsc-product-variation-iframe.wp-core-ui .button.button-large,
 	.wpsc-product-variation-iframe.wp-core-ui .button.button-small {
 		padding: 0px 10px 1px;
-		line-height: 1;
+		line-height: 2;
 		font-size: 13px;
 		vertical-align: top;
 		height: 28px;

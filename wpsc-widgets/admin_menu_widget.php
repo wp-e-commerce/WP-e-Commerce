@@ -1,7 +1,4 @@
 <?php
-
-
-
 /**
  * Admin Menu widget class
  *
