@@ -171,7 +171,7 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * Change: Improved security for our customer cookie hash.
 * Change: Don't default to base country of store in checkout fields.
 * Change: Taxes class previously regarded regions as unique, when they are not. We now check both region and country where applicable.
-* Change: By default, quantity boxes will be shown by default on new installs.
+* Change: By default, quantity boxes will be shown on new installs.
 
 = 3.8.13.3 =
 * Fix: Users disappear in Network Admin -> Users page (for multisite).
