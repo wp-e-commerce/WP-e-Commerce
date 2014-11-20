@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * The Admin Settings Tab class
+ * 
+ * @package wp-e-commerce
+ */ 
+
 class WPSC_Settings_Tab_Admin extends WPSC_Settings_Tab {
 	public function display() {
 		?>
