@@ -1531,6 +1531,11 @@ function wpsc_duplicate_product_image_process( $child_post, $new_parent_id ) {
 				@unlink( $file_array['tmp_name'] );
 			}
 
+			// Re-attribute featured image
+			if ( has_post_thumbnail( $new_parent_id ) && $child_post->ID == get_post_thumbnail_id( $new_parent_id ) ) {
+				set_post_thumbnail( $new_parent_id, $id );
+			}
+
 			return $id;
 
 		}
