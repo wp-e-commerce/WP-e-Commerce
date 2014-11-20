@@ -1,6 +1,6 @@
 <?php
 /**
- * shipping/weightrate.php
+ * wpsc-shipping/weightrate.php
  *
  * @package WP e-Commerce
  */
@@ -14,10 +14,10 @@ class weightrate {
 	 *
 	 * @return boolean Always returns true.
 	 */
-	function weightrate() {
-		$this->internal_name = "weightrate";
-		$this->name = __( "Weight Rate", 'wpsc' );
-		$this->is_external=false;
+	function __construct() {
+		$this->internal_name = 'weightrate';
+		$this->name          = __( 'Weight Rate', 'wpsc' );
+		$this->is_external   = false;
 		return true;
 	}
 
@@ -40,11 +40,11 @@ class weightrate {
 	}
 
 	/**
-	 * generates row of table rate fields
+	 * Generates row of table rate fields.
 	 */
 	private function output_row( $key = '', $shipping = '' ) {
-		$currency = wpsc_get_currency_symbol();
-		$class = ( $this->alt ) ? ' class="alternate"' : '';
+		$currency  = wpsc_get_currency_symbol();
+		$class     = ( $this->alt ) ? ' class="alternate"' : '';
 		$this->alt = ! $this->alt;
 		?>
 			<tr>
@@ -76,7 +76,7 @@ class weightrate {
 	 */
 	function getForm() {
 		$this->alt = false;
-		$layers = get_option( 'weight_rate_layers', array() );
+		$layers    = get_option( 'weight_rate_layers', array() );
 		ob_start();
 		?>
 		<tr>
@@ -123,19 +123,15 @@ class weightrate {
 			return false;
 
 		$new_layers = array();
-		$layers = (array)$_POST['wpsc_shipping_weightrate_layer'];
-		$shippings = (array)$_POST['wpsc_shipping_weightrate_shipping'];
+		$layers     = (array) $_POST['wpsc_shipping_weightrate_layer'];
+		$shippings  = (array) $_POST['wpsc_shipping_weightrate_shipping'];
 
 		if ( !empty($shippings) ) {
-
 			foreach ($shippings as $key => $price) {
-				if ( empty( $price ) || empty( $layers[$key] ) )
+				if ( empty( $price ) || trim( $layers[$key] ) == '' )
 					continue;
-
 				$new_layers[$layers[$key]] = $price;
-
 			}
-
 		}
 
 		krsort( $new_layers );
@@ -150,7 +146,7 @@ class weightrate {
 	 */
 	function getQuote() {
 
-		global $wpdb, $wpsc_cart;
+		global $wpsc_cart;
 
 		$weight = wpsc_cart_weight_total();
 		if (is_object($wpsc_cart)) {
@@ -160,57 +156,41 @@ class weightrate {
 		$layers = get_option('weight_rate_layers');
 
 		if ($layers != '') {
-
 			krsort($layers);
-
 			foreach ($layers as $key => $shipping) {
-
 				if ($weight >= (float)$key) {
-
 					if (stristr($shipping, '%')) {
-
 						// Shipping should be a % of the cart total
 						$shipping = str_replace('%', '', $shipping);
 						$shipping_amount = $cart_total * ( $shipping / 100 );
 						return array( __( "Weight Rate", 'wpsc' ) => (float)$shipping_amount );
-
 					} else {
-
 						return array( __( "Weight Rate", 'wpsc' ) => $shipping );
-
 					}
-
 				}
-
 			}
-
 			$shipping = array_shift($layers);
-
 			if (stristr($shipping, '%')) {
 				$shipping = str_replace('%', '', $shipping);
-				$shipping_amount = $price * ( $shipping / 100 );
+				$shipping_amount = $cart_total * ( $shipping / 100 );
 			} else {
 				$shipping_amount = $shipping;
 			}
-
-			return array( __( "Weight Rate", 'wpsc' ) => (float)$shipping_amount);
+			return array( __( "Weight Rate", 'wpsc' ) => (float) $shipping_amount );
 		}
-
 	}
 
 	/**
-	 * calculates shipping price for an individual cart item.
+	 * Calculates shipping price for an individual cart item.
 	 *
-	 * @param object $cart_item (reference)
-	 * @return float price of shipping for the item.
+	 * @param  object $cart_item (reference)
+	 * @return float             Price of shipping for the item.
 	 */
-	function get_item_shipping(&$cart_item) {
+	function get_item_shipping( &$cart_item ) {
 
-		global $wpdb, $wpsc_cart;
+		global $wpsc_cart;
 
-		$unit_price = $cart_item->unit_price;
 		$quantity = $cart_item->quantity;
-		$weight = $cart_item->weight;
 		$product_id = $cart_item->product_id;
 
 		$uses_billing_address = false;
@@ -227,7 +207,6 @@ class weightrate {
 			} else {
 				$country_code = $wpsc_cart->delivery_country;
 			}
-
 			if ($cart_item->uses_shipping == true) {
 				//if the item has shipping
 				$additional_shipping = '';
