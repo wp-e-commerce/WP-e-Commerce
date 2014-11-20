@@ -139,12 +139,25 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 
 	private function gateway_list() {
 		$gateways = apply_filters( 'wpsc_settings_get_gateways', array() );
+		usort( $gateways, array( $this, 'gateway_usort_callback' ) );
 
 		$selected_gateway = (string) get_user_option( 'wpsc_settings_selected_payment_gateway', get_current_user_id() );
 
 		foreach ( $gateways as $gateway ) {
 			$this->gateway_list_item( $gateway, $selected_gateway === $gateway['id'] );
 		}
+	}
+
+	/**
+	 * Usort callback used to order gateways by their name.
+	 *
+	 * @param  array  $a  A gateway array.
+	 * @param  array  $b  A different gateway array.
+	 *
+	 * @return bool       True if $b should be ordered after $a based on its name.
+	 */
+	private function gateway_usort_callback($gateway_a, $gateway_b) {
+		return $gateway_a['name'] > $gateway_b['name'];
 	}
 
 	public function callback_submit_options() {
