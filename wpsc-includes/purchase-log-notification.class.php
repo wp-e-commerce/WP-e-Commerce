@@ -298,13 +298,16 @@ class WPSC_Purchase_Log_Customer_Notification extends WPSC_Purchase_Log_Notifica
 	public function get_raw_message() {
 		$raw_message = '';
 
-		if ( ! $this->purchase_log->is_transaction_completed() )
+		if ( ! $this->purchase_log->is_transaction_completed() ) {
 			$raw_message = __( 'Thank you, your purchase is pending. You will be sent an email once the order clears.', 'wpsc' ) . "\n\r";
+		}
 
 		$raw_message .= get_option( 'wpsc_email_receipt' );
 		$raw_message = $this->maybe_add_discount( $raw_message );
+
 		// pre-3.8.9 filter hook
 		$raw_message = apply_filters( 'wpsc_transaction_result_message', $raw_message );
+
 		return apply_filters( 'wpsc_purchase_log_customer_notification_raw_message', $raw_message, $this );
 	}
 

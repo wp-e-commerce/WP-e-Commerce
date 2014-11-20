@@ -415,6 +415,7 @@ abstract class WPSC_Payment_Gateway {
 	public function get_mark_html() {
 		return false;
 	}
+
 	public function set_purchase_log( &$purchase_log ) {
 		$this->purchase_log = &$purchase_log;
 		$this->checkout_data = new WPSC_Checkout_Form_Data( $purchase_log->get( 'id' ) );
@@ -483,8 +484,7 @@ abstract class WPSC_Payment_Gateway {
 	}
 }
 
-class WPSC_Payment_Gateway_Setting
-{
+class WPSC_Payment_Gateway_Setting {
 	/**
 	 * Contain settings of the payment gateway
 	 *
