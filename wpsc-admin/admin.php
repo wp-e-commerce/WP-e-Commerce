@@ -1384,6 +1384,8 @@ function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
 	// Copy the meta information
 	wpsc_duplicate_product_meta( $post->ID, $new_post_id );
 
+	do_action( 'wpsc_duplicate_product', $post, $new_post_id );
+
 	// Finds children (Which includes product files AND product images), their meta values, and duplicates them.
 	wpsc_duplicate_children( $post->ID, $new_post_id );
 
@@ -1459,7 +1461,7 @@ function wpsc_duplicate_product_meta( $id, $new_id ) {
  */
 function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
 
-	//Get children products and duplicate them
+	// Get children products and duplicate them
 	$child_posts = get_posts( array(
 		'post_parent' => $old_parent_id,
 		'post_type'   => 'any',
@@ -1469,17 +1471,16 @@ function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
 	) );
 
 	foreach ( $child_posts as $child_post ) {
+
+		// Duplicate product images and child posts
 		if ( 'attachment' == get_post_type( $child_post ) ) {
-
-			// Copy attachments to duplicate child post
 			wpsc_duplicate_product_image_process( $child_post, $new_parent_id );
-
 		} else {
-
-			// Duplicate child posts that are not attachments
 			wpsc_duplicate_product_process( $child_post, $new_parent_id );
-
 		}
+
+		do_action( 'wpsc_duplicate_product_child', $child_post, $new_parent_id );
+
 	}
 
 }
