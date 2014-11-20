@@ -133,6 +133,9 @@ table.wpsc-edit-module-options tr td {
 	border: none;
 	overflow: initial;
 }
+.widefat .shipping-module-settings-form td input {
+	margin-top: -5px;
+}
 .widefat .shipping-module-settings-form th {
 	font-family: inherit;
 	font-size: 12px;
