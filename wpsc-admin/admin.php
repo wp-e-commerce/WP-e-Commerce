@@ -1491,7 +1491,7 @@ function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
  * Uses a portion of code from media_sideload_image() in `wp-admin/includes/media.php`
  * to check file before downloading from URL.
  *
- * @since 3.9.x
+ * @since 3.9.0
  *
  * @uses  get_post_type()          Gets post type.
  * @uses  wp_get_attachment_url()  Gets attachment URL.
@@ -1550,6 +1550,7 @@ function wpsc_duplicate_product_image_process( $child_post, $new_parent_id ) {
 				'post_content_filtered' => $child_post->post_content_filtered,
 				'menu_order'            => $child_post->menu_order
 			);
+
 			wp_update_post( $post_data );
 
 			// Copy alt text
