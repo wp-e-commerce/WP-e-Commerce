@@ -26,6 +26,36 @@ add_filter(
 	2
 );
 
+/**
+ * Filters deprecated gateways out of available gateways list.
+ *
+ * Only occurs if there is a 3.0 API replacement for the gateway and it is not currently active.
+ *
+ * @since  3.9.0
+ *
+ * @param  array $gateways Original list of gateways.
+ * @return array           Modified list of gateways.
+ */
+function wpsc_filter_deprecated_v2_gateways( $gateways ) {
+
+	$deprecated_gateways = array(
+		'wpsc_merchant_paypal_express',
+		'wpsc_merchant_paypal_pro',
+		'wpsc_merchant_testmode'
+	);
+
+	// Loops through available gateways, checks if available gateway is both inactive and deprecated, and removes it.
+	foreach ( $gateways as $index => $gateway ) {
+		if ( in_array( $gateway['id'], $deprecated_gateways ) && ! in_array( $gateway['id'], get_option( 'custom_gateway_options', array() ) ) ) {
+			unset( $gateways[ $index ] );
+		}
+	}
+
+	return $gateways;
+}
+
+add_filter( 'wpsc_settings_get_gateways', 'wpsc_filter_deprecated_v2_gateways', 25 );
+
 function _wpsc_filter_merchant_v2_gateway_form( $form, $selected_gateway ) {
 	global $nzshpcrt_gateways;
 

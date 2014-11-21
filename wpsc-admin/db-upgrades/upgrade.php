@@ -75,12 +75,13 @@ function _wpsc_upgrade_display_successful() {
 }
 
 function _wpsc_action_admin_notices_db_upgrade() {
-	if ( ! empty( $_GET['wpsc_db_upgrade_successful'] ) )
+	if ( ! empty( $_GET['wpsc_db_upgrade_successful'] ) ) {
 		_wpsc_upgrade_display_successful();
-	elseif ( _wpsc_is_db_upgrade_page() )
+	} elseif ( _wpsc_is_db_upgrade_page() ) {
 		_wpsc_upgrade_display_backup_warning();
-	elseif ( _wpsc_needs_upgrade() )
+	} elseif ( _wpsc_needs_upgrade() ) {
 		_wpsc_upgrade_display_prompt();
+	}
 }
 add_action( 'admin_notices', '_wpsc_action_admin_notices_db_upgrade' );
 
