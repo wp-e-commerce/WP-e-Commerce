@@ -1,6 +1,10 @@
 /**
  * WPSC Admin CSS file
  */
+ 
+table.wp-list-table th#title {
+    width:20%;
+}
 
 table.wp-list-table .column-featured {
 	width: 30px;
