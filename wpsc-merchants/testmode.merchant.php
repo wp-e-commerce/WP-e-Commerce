@@ -1,13 +1,13 @@
 <?php
 
 /**
-	* WP eCommerce Test Merchant Gateway
-	* This is the file for the test merchant gateway
-	*
-	* @package wp-e-comemrce
-	* @since 3.7.6
-	* @subpackage wpsc-merchants
-*/
+ * WP eCommerce Test Merchant Gateway
+ * This is the file for the test merchant gateway
+ *
+ * @package wp-e-comemrce
+ * @since 3.7.6
+ * @subpackage wpsc-merchants
+ */
 $nzshpcrt_gateways[$num] = array(
 	'name' => __( 'Test Gateway', 'wpsc' ),
 	'api_version' => 2.0,

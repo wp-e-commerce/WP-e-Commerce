@@ -40,7 +40,7 @@ function _wpsc_maybe_upgrade() {
 }
 
 function _wpsc_upgrade_display_backup_warning() {
-	$message = __( '<strong>Important:</strong> Before proceeding with the database upgrade, <a href="%1$s">please backup your database and files</a>.<br>We recommend using <a href="%2$s">VaultPress</a> or <a href="%3$s">Backup Buddy</a> to regularly backup your WordPress installation.', 'wpsc' );
+	$message = __( '<strong>Important:</strong> Before proceeding with the database upgrade, <a href="%1$s">please backup your database and files</a>.<br>We recommend using <a href="%2$s">VaultPress</a> or <a href="%3$s">BackupBuddy</a> to regularly backup your WordPress installation.', 'wpsc' );
 	$message = sprintf(
 		$message,
 		'http://codex.wordpress.org/WordPress_Backups',

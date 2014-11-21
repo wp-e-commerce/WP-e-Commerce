@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * The Product Variations page class in the WordPress admin
+ * 
+ * @package wp-e-commerce
+ */ 
+
 class WPSC_Product_Variations_Page {
 	private $list_table;
 	private $parent_id;

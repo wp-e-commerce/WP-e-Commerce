@@ -78,4 +78,5 @@ if ( is_admin() ) {
 	include_once( WPSC_FILE_PATH . '/wpsc-admin/admin.php' );
 }
 
+// Cron
 require_once( WPSC_FILE_PATH . '/wpsc-includes/cron.php' );
