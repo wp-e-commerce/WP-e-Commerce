@@ -61,10 +61,10 @@ class WPSC_Purchase_Log_Action_Links {
 
 		// Add default links.
 		if ( wpsc_purchlogs_have_downloads_locked() != false ) {
-			$this->links[] = $this->_get_downloads_lock_link();
+			$this->links[] = $this->get_downloads_lock_link();
 		}
-		$this->links[] = $this->_get_packing_slip_link();
-		$this->links[] = $this->_get_email_receipt_link();
+		$this->links[] = $this->get_packing_slip_link();
+		$this->links[] = $this->get_email_receipt_link();
 
 		// Filter action links.
 		$this->links = apply_filters( 'wpsc_purchlogitem_links', $this->links, $this->log_id );
@@ -121,7 +121,7 @@ class WPSC_Purchase_Log_Action_Links {
 	 *
 	 * @return  WPSC_Purchase_Log_Action_Link  Instance of an action link object.
 	 */
-	private function _get_downloads_lock_link() {
+	private function get_downloads_lock_link() {
 
 		return new WPSC_Purchase_Log_Action_Link( 'downloads_lock', wpsc_purchlogs_have_downloads_locked(), $this->log_id, array(
 			'ajax'     => true,
@@ -138,7 +138,7 @@ class WPSC_Purchase_Log_Action_Links {
 	 *
 	 * @return  WPSC_Purchase_Log_Action_Link  Instance of an action link object.
 	 */
-	private function _get_packing_slip_link() {
+	private function get_packing_slip_link() {
 
 		return new WPSC_Purchase_Log_Action_Link( 'packing_slip', __( 'View Packing Slip', 'wpsc' ), $this->log_id, array(
 			'url'        => esc_url( add_query_arg( array(
@@ -161,7 +161,7 @@ class WPSC_Purchase_Log_Action_Links {
 	 *
 	 * @return  WPSC_Purchase_Log_Action_Link  Instance of an action link object.
 	 */
-	private function _get_email_receipt_link() {
+	private function get_email_receipt_link() {
 
 		return new WPSC_Purchase_Log_Action_Link( 'email_receipt', __( 'Resend Receipt to Buyer', 'wpsc' ), $this->log_id, array(
 			'ajax'     => true,
