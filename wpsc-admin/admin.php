@@ -1384,6 +1384,8 @@ function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
 	// Copy the meta information
 	wpsc_duplicate_product_meta( $post->ID, $new_post_id );
 
+	do_action( 'wpsc_duplicate_product', $post, $new_post_id );
+
 	// Finds children (Which includes product files AND product images), their meta values, and duplicates them.
 	wpsc_duplicate_children( $post->ID, $new_post_id );
 
@@ -1443,7 +1445,9 @@ function wpsc_duplicate_product_meta( $id, $new_id ) {
 		$sql_query.= implode( ",", $sql_query_sel );
 		$sql_query = $wpdb->prepare( $sql_query, $values );
 		$wpdb->query( $sql_query );
+		clean_post_cache( $new_id );
 	}
+
 }
 
 /**
@@ -1457,7 +1461,7 @@ function wpsc_duplicate_product_meta( $id, $new_id ) {
  */
 function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
 
-	//Get children products and duplicate them
+	// Get children products and duplicate them
 	$child_posts = get_posts( array(
 		'post_parent' => $old_parent_id,
 		'post_type'   => 'any',
@@ -1467,7 +1471,94 @@ function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
 	) );
 
 	foreach ( $child_posts as $child_post ) {
-	    wpsc_duplicate_product_process( $child_post, $new_parent_id );
+
+		// Duplicate product images and child posts
+		if ( 'attachment' == get_post_type( $child_post ) ) {
+			wpsc_duplicate_product_image_process( $child_post, $new_parent_id );
+		} else {
+			wpsc_duplicate_product_process( $child_post, $new_parent_id );
+		}
+
+		do_action( 'wpsc_duplicate_product_child', $child_post, $new_parent_id );
+
+	}
+
+}
+
+/**
+ * Duplicates a product image.
+ *
+ * Uses a portion of code from media_sideload_image() in `wp-admin/includes/media.php`
+ * to check file before downloading from URL.
+ *
+ * @since 3.9.x
+ *
+ * @uses  get_post_type()          Gets post type.
+ * @uses  wp_get_attachment_url()  Gets attachment URL.
+ * @uses  download_url()           Download file from URl to temp location.
+ * @uses  is_wp_error()            Is WP error?
+ * @uses  media_handle_sideload()  Handle creation of new attachment and attach to post.
+ *
+ * @param   object  $post           The post object.
+ * @param   bool    $new_parent_id  Optional. The parent post id.
+ * @return  int                     Attachment ID.
+ */
+function wpsc_duplicate_product_image_process( $child_post, $new_parent_id ) {
+
+	if ( 'attachment' == get_post_type( $child_post ) ) {
+
+		$file = wp_get_attachment_url( $child_post->ID );
+
+		if ( ! empty( $file ) ) {
+
+			// Set variables for storage, fix file filename for query strings.
+			preg_match( '/[^\?]+\.(jpe?g|jpe|gif|png)\b/i', $file, $matches );
+			$file_array = array();
+			$file_array['name'] = basename( $matches[0] );
+
+			// Download file to temp location.
+			$file_array['tmp_name'] = download_url( $file );
+
+			// If error storing temporarily, return the error.
+			if ( is_wp_error( $file_array['tmp_name'] ) ) {
+				return $file_array['tmp_name'];
+			}
+
+			// Do the validation and storage stuff.
+			$id = media_handle_sideload( $file_array, $new_parent_id );
+
+			// If error storing permanently, unlink.
+			if ( is_wp_error( $id ) ) {
+				@unlink( $file_array['tmp_name'] );
+			}
+
+			// Re-attribute featured image
+			if ( has_post_thumbnail( $new_parent_id ) && $child_post->ID == get_post_thumbnail_id( $new_parent_id ) ) {
+				set_post_thumbnail( $new_parent_id, $id );
+			}
+
+			// Copy attachment data
+			$post_data = array(
+				'ID'                    => $id,
+				'post_content'          => $child_post->post_content,
+				'post_title'            => $child_post->post_title,
+				'post_excerpt'          => $child_post->post_excerpt,
+				'post_status'           => $child_post->post_status,
+				'comment_status'        => $child_post->comment_status,
+				'ping_status'           => $child_post->ping_status,
+				'post_password'         => $child_post->post_password,
+				'post_content_filtered' => $child_post->post_content_filtered,
+				'menu_order'            => $child_post->menu_order
+			);
+			wp_update_post( $post_data );
+
+			// Copy alt text
+			update_post_meta( $id, '_wp_attachment_image_alt', get_post_meta( $child_post->ID, '_wp_attachment_image_alt', true ) );
+
+			return $id;
+
+		}
+
 	}
 
 }
