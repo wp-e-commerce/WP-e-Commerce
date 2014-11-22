@@ -241,13 +241,6 @@ class Sputnik_Admin {
 	public static function page_styles() {
 		self::$page_is_current = true;
 		wp_enqueue_style('wpsc-marketplace-page', plugins_url( 'static/admin.css', Sputnik::$path . '/wpsc-marketplace' ), array( 'thickbox' ), '20141109' );
-		?>
-		<style type-"text/css">
-		#sputnik-page .icon32 {
-			background: url(<?php echo WPSC_CORE_IMAGES_URL; ?>/icon32.png) no-repeat left center;
-		}
-		</style>
-		<?php
 	}
 
 	public static function page_scripts() {
