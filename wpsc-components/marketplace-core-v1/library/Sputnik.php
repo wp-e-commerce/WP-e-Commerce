@@ -16,7 +16,7 @@ class Sputnik {
 	/**
 	 * Minimum version of WordPress that Sputnik requires
 	 */
-	const MINVERSION = '3.2';
+	const MINVERSION = '3.9';
 
 	/**
 	 * Base URI for store URLs
