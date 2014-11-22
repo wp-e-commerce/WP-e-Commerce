@@ -1117,7 +1117,10 @@ function wpsc_user_log( $content = '' ) {
 	if ( ! in_the_loop() )
 		return $content;
 	if ( preg_match( "/\[userlog\]/", $content ) ) {
-		define( 'DONOTCACHEPAGE', true );
+
+		if ( ! defined( 'DONOTCACHEPAGE' ) ) {
+			define( 'DONOTCACHEPAGE', true );
+		}
 
 		ob_start();
 
