@@ -137,6 +137,8 @@ class Sputnik_Admin {
 			return;
 		}
 
+		add_filter( 'admin_body_class', array( __CLASS__, 'admin_body_class' ) );
+
 		if (self::$page === 'dash') {
 			self::$list_table = new Sputnik_List_Install();
 			$pagenum = self::$list_table->get_pagenum();
@@ -149,6 +151,10 @@ class Sputnik_Admin {
 		}
 
 		add_action('sputnik_messages', array(__CLASS__, 'admin_notices'));
+	}
+
+	public static function admin_body_class( $classes ) {
+		return $classes . 'plugin-install-php';
 	}
 
 	public static function load_page() {
@@ -582,8 +588,7 @@ class Sputnik_Admin {
 				'oauth_buy' => $api->slug,
 				'TB_iframe' => true,
 				'height'    => 600,
-				'width'     => 800,
-				'modal'     => 'true'
+				'width'     => 800
 			) );
 
 		return compact('status', 'url', 'version');
