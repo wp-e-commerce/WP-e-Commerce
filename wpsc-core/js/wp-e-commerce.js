@@ -105,6 +105,9 @@ function wpsc_var_set( name, value ) {
 	return undefined;
 }
 
+// Avoid `console` errors in browsers that lack a console.
+if ( ! window.console ) console = { log: function(){} };
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Setting up the WPEC customer identifier
 //
@@ -133,39 +136,97 @@ function wpsc_var_set( name, value ) {
 // a global variable used to hold the current users visitor id,
 // if you are going to user it always check to be sure it is not false
 var wpsc_visitor_id = false;
+var wpsc_ajax_request_time = 0;
 
-if ( ! ( document.cookie.indexOf("wpsc_customer_cookie") >= 0 ) ) {
-	if ( ! ( document.cookie.indexOf("wpsc_attempted_validate") >= 0 ) ) {
-		// create a cookie to signal that we have attempted validation.  If we find the cookie is set
-		// we don't re-attempt validation.  This means will only try to validate once and not slow down
-		// subsequent page views.
+function checkVisitorId() {
 
-		// The lack of expiration date means the cookie will be deleted when the browser
-		// is closed, so the next time the visitor attempts to access the site after closing the browser
-		// they will revalidate.
-		var now = new Date();
-		document.cookie = "wpsc_attempted_validate="+now;
 
-		var wpsc_http = new XMLHttpRequest();
+    function get_customer_id_from_cookie() {
+        var i, cookieName, cookieValue, docCcookies = document.cookie.split( ";" );
+        var customerId = false;
 
-		// open setup and send the request in synchronous mode
-		wpsc_http.open( "POST", wpsc_ajax.ajaxurl + "?action=wpsc_validate_customer", false );
-		wpsc_http.setRequestHeader( "Content-type", "application/json; charset=utf-8" );
+        for ( i = 0; i < docCcookies.length; i++ ) {
+            cookieName = docCcookies[i].substr( 0, docCcookies[i].indexOf( "=" ) );
+            cookieName = cookieName.replace( /^\s+|\s+$/g,"" );
+            cookieValue = docCcookies[i].substr( docCcookies[i].indexOf("=") + 1) ;
 
-		// Note that we cannot set a timeout on synchronous requests due to XMLHttpRequest limitations
-		wpsc_http.send();
+            // does the cookie start with the WPeC prefix
+            if ( 0 == cookieName.indexOf( "wpsc_customer_cookie" ) ) {
+                var idAsText = cookieValue.substr(0,cookieValue.indexOf( "%" ) );
+                customerId = parseInt( idAsText );
+                break;
+            }
+        }
 
-		// we did the request in synchronous mode so we don't need the on load or ready state change events	to check the result
-		if (wpsc_http.status == 200) {
-			 var result = JSON.parse( wpsc_http.responseText );
-			 if ( result.valid && result.id ) {
-				 wpsc_visitor_id = result.id;
-			 }
-		}
-	}
+        return customerId;
+    }
+
+    if (!( document.cookie.indexOf("wpsc_customer_cookie") >= 0 )) {
+        if (!( document.cookie.indexOf("wpsc_attempted_validate") >= 0 )) {
+            // create a cookie to signal that we have attempted validation.  If we find the cookie is set
+            // we don't re-attempt validation.  This means will only try to validate once and not slow down
+            // subsequent page views.
+
+            // The lack of expiration date means the cookie will be deleted when the browser
+            // is closed, so the next time the visitor attempts to access the site after closing the browser
+            // they will revalidate.
+            var now = new Date();
+            document.cookie = "wpsc_attempted_validate=" + now;
+
+            var wpsc_http = new XMLHttpRequest();
+
+            // open setup and send the request in synchronous mode
+            wpsc_http.open("POST", wpsc_ajax.ajaxurl + "?action=wpsc_validate_customer", false);
+            wpsc_http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+
+            // a timeout for this check request can be set, but should not be necessary as the AJAX
+            // transaction to validate the WPeC visitor id is light weight.  If the request is taking
+            // an extended period of time the web server should be looked at carefullt becuase there may
+            // be a more general performance problem.  The timout value below can be uncommented as an
+            //  alternative to allow processing to continue without a valid customer id.
+            // wpsc_http.timeout = 4000;  // timeout value in milliseconds
+
+            // Note that we cannot set a timeout on synchronous requests due to XMLHttpRequest limitations, we also collect
+            // how long the request takes to aid in identifying issues related to slow servers and timeouts
+
+            // note the starting time
+            var d = new Date();
+            var start = d.getTime();
+
+            wpsc_http.send();
+
+            // note the starting time, save how many milliseconds the transaction took
+            d = new Date();
+            var end = d.getTime();
+            wpsc_ajax_request_time = end - start;
+            if ( window.console ) {
+                console.log('wpsc_validate_customer request time was ' + wpsc_ajax_request_time + ' ms'  );
+            }
+
+            // we did the request in synchronous mode so we don't need the on load or ready state change events	to check the result
+            if (wpsc_http.status == 200) {
+                var result = JSON.parse(wpsc_http.responseText);
+                if (result.data.valid && result.data.id) {
+                    wpsc_visitor_id = result.data.id;
+                    console.log( "The new WPeC visitor id is " + wpsc_visitor_id );
+                }
+            } else {
+                console.log( "The HTTP request to validate the WPeC validate visitor id  was not successful, HTTP error " + wpsc_http.status );
+            }
+        }
+    } else {
+        wpsc_visitor_id = get_customer_id_from_cookie( );
+        console.log( "The existing WPeC visitor id is " + wpsc_visitor_id );
+    }
 }
+
+if ( ! wpsc_visitor_id ) {
+    setTimeout( checkVisitorId, 25 );
+}
+
 // end of setting up the WPEC customer identifier
 ///////////////////////////////////////////////////////////////////////////////////////////////
+
 function wpsc_do_ajax_request( data, success_callback ) {
 	jQuery.ajax({
 		type      : "post",
