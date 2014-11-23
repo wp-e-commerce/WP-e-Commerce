@@ -968,3 +968,39 @@ function _wpsc_remove_erroneous_files() {
 if ( get_option( 'wpsc_38131_file_check', true ) ) {
 	add_action( 'admin_init', '_wpsc_remove_erroneous_files' );
 }
+
+
+
+/**
+ * Helper function returning the properly formatted name of WP eCommerce as text
+ *
+ * @since 3.9.0
+ *
+ * @return string
+ */
+function wpsc_get_wpec_product_name_text() {
+	return __( 'WP eCommerce', 'wpsc' );
+}
+
+/**
+ * Helper function returning the properly formatted name of WP eCommerce as html
+ * for display on in the product, plugin page or elsewhere.
+ *
+ * @since 3.9.0
+ *
+ * @return string
+ */
+function wpsc_get_wpec_product_name_html() {
+	return '<span class="wpsc_brand_name">' . wpsc_get_wpec_product_name_text() . '</span>';
+}
+
+/**
+ * Helper function echoing the properly formatted name of WP eCommerce as html
+ * for display on a plugin page or elsewhere.
+ *
+ * @since 3.9.0
+ *
+ */
+function wpsc_echo_wpec_product_name_html() {
+	echo wpsc_get_wpec_product_name_html();
+}
