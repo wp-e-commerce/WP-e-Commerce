@@ -1702,13 +1702,3 @@ function wpsc_support_links( $links ) {
 }
 
 add_filter( 'plugin_action_links_' . WPSC_PLUGIN_BASENAME, 'wpsc_support_links' );
-
-/**
- * Determines whether or not a current user has the capability to do administrative actions in the store.
- *
- * @since  3.8.14.4
- * @return bool Whether or not current user can administrate the store
- */
-function wpsc_is_store_admin() {
-	return current_user_can( apply_filters( 'wpsc_store_admin_capability', 'manage_options' ) );
-}
