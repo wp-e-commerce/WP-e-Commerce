@@ -79,6 +79,17 @@ function wpsc_print_term_list_levels_script() {
 }
 
 /**
+ * Determines whether or not a current user has the capability to do administrative actions in the store.
+ *
+ * @since  3.8.14.4
+ *
+ * @return  bool  Whether or not current user can administrate the store.
+ */
+function wpsc_is_store_admin() {
+	return current_user_can( apply_filters( 'wpsc_store_admin_capability', 'manage_options' ) );
+}
+
+/**
  * wpsc_core_load_checkout_data()
  *
  * @return none
