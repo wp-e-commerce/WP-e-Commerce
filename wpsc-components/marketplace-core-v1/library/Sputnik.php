@@ -339,7 +339,7 @@ class Sputnik {
 		$cart_contents = json_decode( stripslashes( $_POST['cart_contents'] ) );
 
 		//Unset purchase log ID, since we're inserting a new one.
-		$data = ( array ) $data;
+		$data = (array) $data;
 
 		unset( $data['id'] );
 
