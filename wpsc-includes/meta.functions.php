@@ -171,7 +171,7 @@ function add_product_meta( $product_id, $key, $value, $unique = false, $custom =
  */
 function delete_product_meta($product_id, $key, $value = '') {
 	$key = WPSC_META_PREFIX.$key;
-	return delete_post_meta($product_id, $key, $value = '');
+	return delete_post_meta($product_id, $key, $value);
 }
 
 
@@ -201,7 +201,7 @@ function get_product_meta($product_id, $key, $single = false) {
  */
 function update_product_meta($product_id, $key, $value, $prev_value = '') {
 	$key = WPSC_META_PREFIX.$key;
-	return update_post_meta($product_id, $key, $value, $prev_value = '');
+	return update_post_meta($product_id, $key, $value, $prev_value);
 }
 
 
