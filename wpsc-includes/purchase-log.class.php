@@ -418,7 +418,7 @@ class WPSC_Purchase_Log {
 			_wpsc_doing_it_wrong( 'WPSC_Purchase_Log::delete', __( 'WPSC_Purchase_Log::delete() is no longer a static method and should not be called statically.', 'wpsc' ), '3.9.0' );
 		}
 
-		if ( false === $log_id ) {
+		if ( false !== $log_id ) {
 			_wpsc_deprecated_argument( __FUNCTION__, '3.9.0', 'The $log_id param is not used. You must first create an instance of WPSC_Purchase_Log before calling this method.' );
 		}
 
