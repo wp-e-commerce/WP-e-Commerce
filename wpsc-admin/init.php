@@ -355,7 +355,7 @@ add_action( 'wpsc_purchase_log_action-downloads_lock', 'wpsc_purchase_log_action
 function wpsc_purchase_log_action_delete( $log_id ) {
 
 	$log = new WPSC_Purchase_Log( $log_id );
-	$log->delete();
+	$deleted = $log->delete();
 
 	// Redirect back to purchase logs list
 	$sendback = wp_get_referer();
