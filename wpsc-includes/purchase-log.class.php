@@ -400,7 +400,6 @@ class WPSC_Purchase_Log {
 	 * Deletes a log from the database.
 	 *
 	 * @access  public
-	 * @static
 	 * @since   3.8.9
 	 *
 	 * @uses  $wpdb                              Global database instance.
@@ -411,15 +410,23 @@ class WPSC_Purchase_Log {
 	 * @param   string   $log_id   ID of the log.
 	 * @return  boolean            Deleted successfully.
 	 */
-	public static function delete( $log_id ) {
+	public function delete( $log_id = false ) {
 
 		global $wpdb;
+
+		if ( ! ( isset( $this ) && get_class( $this ) == __CLASS__ ) ) {
+			_wpsc_doing_it_wrong( 'WPSC_Purchase_Log::delete', __( 'WPSC_Purchase_Log::delete() is no longer a static method and should not be called statically.', 'wpsc' ), '3.9.0' );
+		}
+
+		if ( false === $log_id ) {
+			_wpsc_deprecated_argument( __FUNCTION__, '3.9.0', 'The $log_id param is not used. You must first create an instance of WPSC_Purchase_Log before calling this method.' );
+		}
 
 		if ( ! function_exists( 'wpsc_is_store_admin' ) || ! wpsc_is_store_admin() ) {
 			return false;
 		}
 
-		$log_id = absint( $log_id );
+		$log_id = $this->get( 'id' );
 
 		if ( $log_id > 0 ) {
 

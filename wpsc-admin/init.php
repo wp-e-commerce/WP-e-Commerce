@@ -354,7 +354,8 @@ add_action( 'wpsc_purchase_log_action-downloads_lock', 'wpsc_purchase_log_action
  */
 function wpsc_purchase_log_action_delete( $log_id ) {
 
-	$deleted = WPSC_Purchase_Log::delete( $log_id );
+	$log = new WPSC_Purchase_Log( $log_id );
+	$log->delete();
 
 	// Redirect back to purchase logs list
 	$sendback = wp_get_referer();
@@ -502,7 +503,8 @@ function wpsc_purchlog_bulk_modify() {
 		} elseif ( $_POST['purchlog_multiple_status_change'] == 'delete' ) {
 			foreach ( (array)$_POST['purchlogids'] as $purchlogid ) {
 
-				$deleted_log = WPSC_Purchase_Log::delete( $purchlogid );
+				$log = new WPSC_Purchase_Log( $purchlogid );
+				$deleted_log = $log->delete();
 				if ( $deleted_log ) {
 					$deleted++;
 				}
@@ -558,7 +560,7 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && $_REQUEST['wpsc_admin_action'] =
 /**
  * Delete a purchase log
  *
- * @deprecated  Use WPSC_Purchase_Log::delete( $log_id ) instead.
+ * @deprecated  Use WPSC_Purchase_Log->delete() instead.
  *
  * @param   int|string  $purchlog_id  Required. Purchase log ID (empty string is deprecated).
  * @return  boolean                   Deleted successfully.
@@ -573,7 +575,9 @@ function wpsc_delete_purchlog( $purchlog_id = '' ) {
 		return false;
 	}
 
-	return WPSC_Purchase_Log::delete( $purchlog_id );
+	$log = new WPSC_Purchase_Log( $purchlog_id );
+
+	return $logdelete();
 
 }
 
