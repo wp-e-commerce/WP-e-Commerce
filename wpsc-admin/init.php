@@ -855,9 +855,10 @@ function wpsc_delete_coupon(){
 	exit();
 }
 
-//Delete Coupon
-if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( 'wpsc-delete-coupon' == $_REQUEST['wpsc_admin_action'] ) )
+// Delete Coupon
+if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( 'wpsc-delete-coupon' == $_REQUEST['wpsc_admin_action'] ) ) {
 	add_action( 'admin_init', 'wpsc_delete_coupon' );
+}
 
 function _wpsc_action_update_option_base_country( $old_value, $new_value ) {
 	global $wpdb;
