@@ -160,18 +160,9 @@ function _wpsc_process_transaction_coupon( $purchase_log ) {
 
 		$coupon_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUPON_CODES . "` WHERE coupon_code = %s LIMIT 1", $discount_data ), ARRAY_A );
 
-		if ( 1 == $coupon_data['use-once'] ) {
-			$wpdb->update(
-				WPSC_TABLE_COUPON_CODES,
-				array(
-					'active' => '0',
-					'is-used' => '1'
-				),
-				array(
-					'id' => $coupon_data['id']
-				)
-			);
-		}
+		$coupon = new WPSC_Coupon( $coupon_data['id'] );
+		$coupon->used();
+
 	}
 }
 
