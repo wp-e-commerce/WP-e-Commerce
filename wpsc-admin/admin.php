@@ -1505,7 +1505,7 @@ function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
  */
 function wpsc_duplicate_product_image_process( $child_post, $new_parent_id ) {
 
-	if ( 'attachment' == get_post_type( $child_post ) ) {
+	if ( 'attachment' == get_post_type( $child_post ) && apply_filters( 'wpsc_duplicate_product_attachment', true, $child_post ) ) {
 
 		$file = wp_get_attachment_url( $child_post->ID );
 
