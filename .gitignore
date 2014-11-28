@@ -12,3 +12,6 @@ wp-content/backups/
 sitemap.xml.gz
 wp-config.php
 .idea
+
+.DS_Store
+node_modules
