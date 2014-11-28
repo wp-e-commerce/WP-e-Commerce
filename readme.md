@@ -1,4 +1,4 @@
-WP eCommerce [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/wp-e-commerce/WP-e-Commerce/badges/quality-score.png?s=155ede743c82bcf5116904bf155dcf215da820b0)](https://scrutinizer-ci.com/g/wp-e-commerce/WP-e-Commerce/)
+WP eCommerce [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/wp-e-commerce/WP-e-Commerce/badges/quality-score.png?s=155ede743c82bcf5116904bf155dcf215da820b0)](https://scrutinizer-ci.com/g/wp-e-commerce/WP-e-Commerce/) [![Coverage Status](https://img.shields.io/coveralls/wp-e-commerce/WP-e-Commerce.svg)](https://coveralls.io/r/wp-e-commerce/WP-e-Commerce)
 ============
 
 About
