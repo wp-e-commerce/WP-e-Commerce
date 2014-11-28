@@ -53,15 +53,15 @@ function wpsc_core_constants() {
 
 	// Define Plugin version
 	if ( ! defined( 'WPSC_VERSION' ) ) {
-		define( 'WPSC_VERSION'            , '3.9-beta' );
+		define( 'WPSC_VERSION'            , '3.9-RC' );
 	}
 
 	if ( ! defined( 'WPSC_MINOR_VERSION' ) ) {
-		define( 'WPSC_MINOR_VERSION'      , 'd723a2fbb6' );
+		define( 'WPSC_MINOR_VERSION'      , '76c21a0bd9' );
 	}
 
 	if ( ! defined( 'WPSC_PRESENTABLE_VERSION' ) ) {
-		define( 'WPSC_PRESENTABLE_VERSION', '3.9-beta' );
+		define( 'WPSC_PRESENTABLE_VERSION', '3.9-RC' );
 	}
 
 	// Define a salt to use when we hash, WPSC_SALT may be defined for us in our config file, so check first

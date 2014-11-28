@@ -60,7 +60,6 @@ function _wpsc_fix_united_kingdom() {
 
 }
 
-
 /**
  * Sets meta for countries that no longer exist in their former notation to be considered legacy.
  *

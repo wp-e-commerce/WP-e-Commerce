@@ -1,11 +1,11 @@
 <?php
 /**
   * Plugin Name: WP eCommerce
-  * Plugin URI: http://getshopped.org/
-  * Description: A plugin that provides a WordPress Shopping Cart. See also: <a href="http://getshopped.org" target="_blank">GetShopped.org</a> | <a href="https://wordpress.org/support/plugin/wp-e-commerce/" target="_blank">Support Forum</a> | <a href="http://docs.getshopped.org/" target="_blank">Documentation</a>
-  * Version: 3.9-beta
-  * Author: Instinct Entertainment
-  * Author URI: http://getshopped.org/
+  * Plugin URI: http://wpecommerce.org/
+  * Description: A plugin that provides a WordPress Shopping Cart. See also: <a href="http://wpecommerce.org" target="_blank">WPeCommerce.org</a> | <a href="https://wordpress.org/support/plugin/wp-e-commerce/" target="_blank">Support Forum</a> | <a href="http://docs.wpecommerce.org/" target="_blank">Documentation</a>
+  * Version: 3.9-RC
+  * Author: WP eCommerce
+  * Author URI: http://wpecommerce.org/
   **/
 
 /**
