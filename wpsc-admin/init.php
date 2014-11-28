@@ -577,7 +577,7 @@ function wpsc_delete_purchlog( $purchlog_id = '' ) {
 
 	$log = new WPSC_Purchase_Log( $purchlog_id );
 
-	return $logdelete();
+	return $log->delete();
 
 }
 

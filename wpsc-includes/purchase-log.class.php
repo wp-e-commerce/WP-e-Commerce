@@ -406,7 +406,7 @@ class WPSC_Purchase_Log {
 	 * @uses  wpsc_is_store_admin()              Check user has admin capabilities.
 	 * @uses  WPSC_Purchase_Log::delete_cache()  Delete purchaselog cache.
 	 * @uses  WPSC_Claimed_Stock                 Claimed Stock class.
-	 * 
+	 *
 	 * @param   string   $log_id   ID of the log.
 	 * @return  boolean            Deleted successfully.
 	 */
@@ -422,7 +422,7 @@ class WPSC_Purchase_Log {
 			_wpsc_deprecated_argument( __FUNCTION__, '3.9.0', 'The $log_id param is not used. You must first create an instance of WPSC_Purchase_Log before calling this method.' );
 		}
 
-		if ( ! function_exists( 'wpsc_is_store_admin' ) || ! wpsc_is_store_admin() ) {
+		if ( ! wpsc_is_store_admin() ) {
 			return false;
 		}
 
