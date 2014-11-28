@@ -1,10 +1,10 @@
-# Copyright (C) 2014 Instinct Entertainment
+# Copyright (C) 2014 WP eCommerce
 # This file is distributed under the same license as the WP eCommerce package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP eCommerce 3.9-beta\n"
+"Project-Id-Version: WP eCommerce 3.9-RC\n"
 "Report-Msgid-Bugs-To: https://wpecommerce.org/\n"
-"POT-Creation-Date: 2014-11-28 04:35:18+00:00\n"
+"POT-Creation-Date: 2014-11-28 23:11:22+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -942,34 +942,34 @@ msgstr ""
 msgid "Anonymous"
 msgstr ""
 
-#: wpsc-admin/db-upgrades/routines/11.php:38
+#: wpsc-admin/db-upgrades/routines/11.php:40
 #: wpsc-admin/db-upgrades/routines/2.php:49
 #: wpsc-admin/db-upgrades/routines/3.php:11 wpsc-updates/currency_list.php:223
 msgid "United Kingdom"
 msgstr ""
 
-#: wpsc-admin/db-upgrades/routines/11.php:40
+#: wpsc-admin/db-upgrades/routines/11.php:42
 #: wpsc-admin/db-upgrades/routines/3.php:12 wpsc-updates/currency_list.php:30
 #: wpsc-updates/currency_list.php:35 wpsc-updates/currency_list.php:51
 #: wpsc-updates/currency_list.php:200 wpsc-updates/currency_list.php:223
 msgid "Pound Sterling"
 msgstr ""
 
-#: wpsc-admin/db-upgrades/routines/11.php:41
+#: wpsc-admin/db-upgrades/routines/11.php:43
 #: wpsc-admin/db-upgrades/routines/3.php:13 wpsc-updates/currency_list.php:30
 #: wpsc-updates/currency_list.php:35 wpsc-updates/currency_list.php:51
 #: wpsc-updates/currency_list.php:200 wpsc-updates/currency_list.php:223
 msgid "£"
 msgstr ""
 
-#: wpsc-admin/db-upgrades/routines/11.php:42
+#: wpsc-admin/db-upgrades/routines/11.php:44
 #: wpsc-admin/db-upgrades/routines/3.php:14 wpsc-updates/currency_list.php:30
 #: wpsc-updates/currency_list.php:35 wpsc-updates/currency_list.php:51
 #: wpsc-updates/currency_list.php:200 wpsc-updates/currency_list.php:223
 msgid "&#163;"
 msgstr ""
 
-#: wpsc-admin/db-upgrades/routines/11.php:43
+#: wpsc-admin/db-upgrades/routines/11.php:45
 #: wpsc-admin/db-upgrades/routines/3.php:15 wpsc-updates/currency_list.php:30
 #: wpsc-updates/currency_list.php:35 wpsc-updates/currency_list.php:51
 #: wpsc-updates/currency_list.php:200 wpsc-updates/currency_list.php:223
@@ -1712,13 +1712,13 @@ msgstr ""
 msgid "WP eCommerce Upgrades"
 msgstr ""
 
-#: wpsc-admin/display-upgrades.page.php:39
+#: wpsc-admin/display-upgrades.page.php:40
 msgid ""
 "Add more functionality to your eCommerce site. Prices may be subject to "
 "change."
 msgstr ""
 
-#: wpsc-admin/display-upgrades.page.php:39
+#: wpsc-admin/display-upgrades.page.php:40
 #: wpsc-admin/includes/display-items-functions.php:843
 #: wpsc-components/marketplace-core-v1/library/Sputnik/List/Install.php:382
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Browser/Grid.php:246
@@ -1733,58 +1733,48 @@ msgstr ""
 msgid "Buy Now"
 msgstr ""
 
-#: wpsc-admin/display-upgrades.page.php:44
+#: wpsc-admin/display-upgrades.page.php:45
 msgid "Gold Cart"
 msgstr ""
 
-#: wpsc-admin/display-upgrades.page.php:45
+#: wpsc-admin/display-upgrades.page.php:46
 msgid ""
 "Add product search, multiple image upload, gallery view, Grid View and "
 "multiple payment gateway options to your shop"
 msgstr ""
 
-#: wpsc-admin/display-upgrades.page.php:50
+#: wpsc-admin/display-upgrades.page.php:51
 msgid "Members Access Plugin"
 msgstr ""
 
-#: wpsc-admin/display-upgrades.page.php:51
+#: wpsc-admin/display-upgrades.page.php:52
 msgid ""
 "Create product memberships and sell them in your store. Use these "
 "memberships to restrict premium content on your posts and pages creating a "
 "\"members only\" area perfect for: Forums, Images and Movies and Podcasts"
 msgstr ""
 
-#: wpsc-admin/display-upgrades.page.php:56 wpsc-core/js/tinymce3/window.php:101
-msgid "Product Slider"
-msgstr ""
-
 #: wpsc-admin/display-upgrades.page.php:57
-msgid ""
-"Display your products in a new and fancy way using the \"Product Slider\" "
-"module."
-msgstr ""
-
-#: wpsc-admin/display-upgrades.page.php:62
 msgid "NextGen Gallery Buy Now Buttons"
 msgstr ""
 
-#: wpsc-admin/display-upgrades.page.php:63
-msgid "Make your Online photo gallery into an e-Commerce solution."
+#: wpsc-admin/display-upgrades.page.php:58
+msgid "Make your Online photo gallery into an eCommerce solution."
 msgstr ""
 
-#: wpsc-admin/display-upgrades.page.php:68
+#: wpsc-admin/display-upgrades.page.php:63
 msgid "JPlayer - MP3 Plugin"
 msgstr ""
 
-#: wpsc-admin/display-upgrades.page.php:69
+#: wpsc-admin/display-upgrades.page.php:64
 msgid "MP3 Player Plugin for WordPress"
 msgstr ""
 
-#: wpsc-admin/display-upgrades.page.php:73
+#: wpsc-admin/display-upgrades.page.php:68
 msgid "FedEx Plugin"
 msgstr ""
 
-#: wpsc-admin/display-upgrades.page.php:74
+#: wpsc-admin/display-upgrades.page.php:69
 msgid ""
 "This plugin offers shop owners the ability to provide Fedex Shipping Quotes "
 "for products with weights."
@@ -3249,7 +3239,7 @@ msgstr ""
 
 #: wpsc-admin/includes/settings-tabs/gateway.php:56
 #: wpsc-admin/includes/settings-tabs/shipping.php:93
-#: wpsc-core/js/tinymce3/window.php:202
+#: wpsc-core/js/tinymce3/window.php:197
 msgid "Cancel"
 msgstr ""
 
@@ -4001,45 +3991,45 @@ msgid ""
 "not be found in the database, check there for this ID: "
 msgstr ""
 
-#: wpsc-admin/init.php:408 wpsc-admin/init.php:455
+#: wpsc-admin/init.php:409 wpsc-admin/init.php:456
 msgid "$log_id parameter requires a numeric purchase log ID."
 msgstr ""
 
-#: wpsc-admin/init.php:436
+#: wpsc-admin/init.php:437
 msgid ""
 "Do not trigger resend purchase log email action via email_buyer_id URL "
 "query. Instead use the Purchase Log Action Links API."
 msgstr ""
 
-#: wpsc-admin/init.php:474
+#: wpsc-admin/init.php:475
 msgid "The administrator has unlocked your file"
 msgstr ""
 
-#: wpsc-admin/init.php:474
+#: wpsc-admin/init.php:475
 msgid ""
 "Dear CustomerWe are pleased to advise you that your order has been updated "
 "and your downloads are now active.Please download your purchase using the "
 "links provided below.[download_links]Thank you for your custom."
 msgstr ""
 
-#: wpsc-admin/init.php:486
+#: wpsc-admin/init.php:487
 msgid ""
 "Do not trigger clear purchase log download locks action via "
 "wpsc_admin_action = clear_locks URL query. Instead use the Purchase Log "
 "Action Links API."
 msgstr ""
 
-#: wpsc-admin/init.php:571
+#: wpsc-admin/init.php:574
 msgid "$purchlog_id parameter requires a numeric purchase log ID."
 msgstr ""
 
-#: wpsc-admin/init.php:602
+#: wpsc-admin/init.php:586
 msgid ""
 "Do not trigger delete purchase log action via wpsc_admin_action = "
 "delete_purchlog URL query. Instead use the Purchase Log Action Links API."
 msgstr ""
 
-#: wpsc-admin/init.php:614
+#: wpsc-admin/init.php:598
 msgid ""
 "You just set the number of item per row for the grid view to 0. This means "
 "the column width will fall back to using whatever CSS you have for it. This "
@@ -4047,25 +4037,25 @@ msgid ""
 "theme's CSS accordingly."
 msgstr ""
 
-#: wpsc-admin/init.php:632
+#: wpsc-admin/init.php:616
 msgid ""
 "You wanted to require your customers to log in before checking out. "
 "However, the WordPress setting <a href=\"%s\">\"Anyone can register\"</a> "
 "was disabled. WP eCommerce has enabled that setting for you automatically."
 msgstr ""
 
-#: wpsc-admin/init.php:650
+#: wpsc-admin/init.php:634
 msgid ""
 "You just disabled the \"Anyone can register\" setting. As a result, the <a "
 "href=\"%s\">\"Require registration before checking out\"</a> setting has "
 "been disabled."
 msgstr ""
 
-#: wpsc-admin/init.php:747
+#: wpsc-admin/init.php:731
 msgid "Choose a downloadable file for this product:"
 msgstr ""
 
-#: wpsc-admin/init.php:766
+#: wpsc-admin/init.php:750
 msgid "Save Product Files"
 msgstr ""
 
@@ -4675,7 +4665,7 @@ msgstr ""
 #: wpsc-components/merchant-core-v2/helpers/admin.php:84
 #: wpsc-components/merchant-core-v2/helpers/gateways.php:119
 #: wpsc-components/theme-engine-v1/templates/functions/wpsc-user_log_functions.php:301
-#: wpsc-core/wpsc-deprecated.php:1578 wpsc-includes/purchase-log.class.php:493
+#: wpsc-core/wpsc-deprecated.php:1578 wpsc-includes/purchase-log.class.php:537
 #: wpsc-includes/purchaselogs.class.php:602
 #: wpsc-merchants/testmode.merchant.php:16
 #: wpsc-theme/functions/wpsc-user_log_functions.php:477
@@ -5706,7 +5696,7 @@ msgstr ""
 msgid "You save: %s"
 msgstr ""
 
-#. Plugin Name of the plugin/theme
+#. Author of the plugin/theme
 msgid "WP eCommerce"
 msgstr ""
 
@@ -7224,6 +7214,10 @@ msgstr ""
 msgid "This will add all your products you have on sale from the selected category"
 msgstr ""
 
+#: wpsc-core/js/tinymce3/window.php:101
+msgid "Product Slider"
+msgstr ""
+
 #: wpsc-core/js/tinymce3/window.php:107
 msgid "Select Category"
 msgstr ""
@@ -7240,81 +7234,73 @@ msgstr ""
 msgid "Number of Products to be displayed in the slider."
 msgstr ""
 
-#: wpsc-core/js/tinymce3/window.php:131
-msgid ""
-"You don't have the product slider installed, for a cool way to display your "
-"shop check out the <a "
-"href=\"http://getshopped.org/extend/premium-upgrades/premium-upgrades/"
-"product-slider-2010/\" target=\"_blank\">Product Slider</a>"
-msgstr ""
-
-#: wpsc-core/js/tinymce3/window.php:138
+#: wpsc-core/js/tinymce3/window.php:133
 msgid "Members and Capabilities"
 msgstr ""
 
-#: wpsc-core/js/tinymce3/window.php:143
+#: wpsc-core/js/tinymce3/window.php:138
 msgid ""
 "<p> To create a preview on your restricted page put this shortcode at the "
 "top of your page. you can include html within this short code to display "
 "things like images "
 msgstr ""
 
-#: wpsc-core/js/tinymce3/window.php:144
+#: wpsc-core/js/tinymce3/window.php:139
 msgid "[preview] Preview In Here [/preview]"
 msgstr ""
 
-#: wpsc-core/js/tinymce3/window.php:148
+#: wpsc-core/js/tinymce3/window.php:143
 msgid ""
 " You don't have the Members and Capabilities plugin installed, to start "
 "managing your users and creating subscription for you site visit: <a "
-"href=\"http://getshopped.org/extend/premium-upgrades/premium-upgrades/"
-"product-slider-2010/\" target=\"_blank\">Premium Upgrades</a>"
+"href=\"https://wpecommerce.org/store/premium-plugins/membership-"
+"subscriptions/\" target=\"_blank\">Premium Upgrades</a>"
 msgstr ""
 
-#: wpsc-core/js/tinymce3/window.php:157
+#: wpsc-core/js/tinymce3/window.php:152
 msgid "Select a Product"
 msgstr ""
 
-#: wpsc-core/js/tinymce3/window.php:160
+#: wpsc-core/js/tinymce3/window.php:155
 #: wpsc-includes/form-display.functions.php:170
 msgid "No Product"
 msgstr ""
 
-#: wpsc-core/js/tinymce3/window.php:166
+#: wpsc-core/js/tinymce3/window.php:161
 msgid "Select the product you would like to create a shortcode for."
 msgstr ""
 
-#: wpsc-core/js/tinymce3/window.php:174
+#: wpsc-core/js/tinymce3/window.php:169
 msgid "Shortcode:"
 msgstr ""
 
-#: wpsc-core/js/tinymce3/window.php:176
+#: wpsc-core/js/tinymce3/window.php:171
 msgid "Add a buy now button"
 msgstr ""
 
-#: wpsc-core/js/tinymce3/window.php:177
+#: wpsc-core/js/tinymce3/window.php:172
 msgid ""
 "This adds a paypal buy now button for the product selected, this will take "
 "your customer straight to PayPal."
 msgstr ""
 
-#: wpsc-core/js/tinymce3/window.php:184
+#: wpsc-core/js/tinymce3/window.php:179
 msgid "Add an add to cart button"
 msgstr ""
 
-#: wpsc-core/js/tinymce3/window.php:185
+#: wpsc-core/js/tinymce3/window.php:180
 msgid "This adds an add to cart button for the product selected."
 msgstr ""
 
-#: wpsc-core/js/tinymce3/window.php:192
+#: wpsc-core/js/tinymce3/window.php:187
 msgid "Add product"
 msgstr ""
 
-#: wpsc-core/js/tinymce3/window.php:193
+#: wpsc-core/js/tinymce3/window.php:188
 msgid "This will add the selected product to your page."
 msgstr ""
 
-#: wpsc-core/js/tinymce3/window.php:206
+#: wpsc-core/js/tinymce3/window.php:201
 msgid "Insert"
 msgstr ""
 
@@ -8044,6 +8030,12 @@ msgstr ""
 
 #: wpsc-includes/purchase-log-notification.class.php:427
 msgid "Transaction Report"
+msgstr ""
+
+#: wpsc-includes/purchase-log.class.php:418
+msgid ""
+"WPSC_Purchase_Log::delete() is no longer a static method and should not be "
+"called statically."
 msgstr ""
 
 #: wpsc-includes/purchase-log.helpers.php:252
@@ -11347,20 +11339,16 @@ msgid ""
 msgstr ""
 
 #. Author URI of the plugin/theme
-msgid "https://wpecommerce.org/"
+msgid "http://wpecommerce.org/"
 msgstr ""
 
 #. Description of the plugin/theme
 msgid ""
 "A plugin that provides a WordPress Shopping Cart. See also: <a "
-"href=\"https://wpecommerce.org\" target=\"_blank\">WPeCommerce.org</a> | <a "
+"href=\"http://wpecommerce.org\" target=\"_blank\">WPeCommerce.org</a> | <a "
 "href=\"https://wordpress.org/support/plugin/wp-e-commerce/\" "
 "target=\"_blank\">Support Forum</a> | <a "
 "href=\"http://docs.wpecommerce.org/\" target=\"_blank\">Documentation</a>"
-msgstr ""
-
-#. Author of the plugin/theme
-msgid "WP eCommerce"
 msgstr ""
 
 #: wpsc-admin/admin-form-functions.php:222
@@ -11515,12 +11503,12 @@ msgstr ""
 
 #: wpsc-admin/admin.php:1698
 msgctxt "Premium Support URL"
-msgid "http://getshopped.org/resources/premium-support/"
+msgid "https://wpecommerce.org/premium-support/"
 msgstr ""
 
 #: wpsc-admin/admin.php:1699
 msgctxt "Documentation URL"
-msgid "http://docs.getshopped.org/"
+msgid "http://docs.wpecommerce.org/"
 msgstr ""
 
 #: wpsc-admin/ajax.php:793
