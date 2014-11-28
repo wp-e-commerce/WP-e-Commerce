@@ -1583,6 +1583,10 @@ function wpsc_duplicate_product_image_process( $child_post, $new_parent_id ) {
 
 		}
 
+	} elseif ( has_post_thumbnail( $new_parent_id ) && $child_post->ID == get_post_thumbnail_id( $new_parent_id ) ) {
+
+		delete_post_meta( $new_parent_id, '_thumbnail_id' );
+
 	}
 
 }
