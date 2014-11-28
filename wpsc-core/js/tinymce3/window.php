@@ -126,11 +126,6 @@ global $wpdb;
 					</td>
 				</tr>
 
-		<?php }else{ ?>
-				<tr valign="top">
-					<td><?php _e('You don\'t have the product slider installed, for a cool way to display your shop check out the <a href="http://getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/" target="_blank">Product Slider</a>','wpsc'); ?>
-					</td>
-				</tr>
 		<?php } ?>
 	</table>
 
@@ -145,7 +140,7 @@ global $wpdb;
 
 				<?php }else{ ?>
 
-				<p>	<?php _e(' You don\'t have the Members and Capabilities plugin installed, to start managing your users and creating subscription for you site visit: <a href="http://getshopped.org/extend/premium-upgrades/premium-upgrades/product-slider-2010/" target="_blank">Premium Upgrades</a>','wpsc');
+				<p>	<?php _e(' You don\'t have the Members and Capabilities plugin installed, to start managing your users and creating subscription for you site visit: <a href="https://wpecommerce.org/store/premium-plugins/membership-subscriptions/" target="_blank">Premium Upgrades</a>','wpsc');
 				}?> </p>
 		</div>
 

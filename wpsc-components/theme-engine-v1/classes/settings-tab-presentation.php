@@ -460,7 +460,7 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 					<?php
 						if ( ! function_exists( 'product_display_grid' ) ) {
 					?>
-					<a href='http://getshopped.org/extend/premium-upgrades'><?php esc_html_e( 'Purchase unavailable options', 'wpsc' ); ?></a>
+					<a href='http://wpecommerce.org/store/premium-plugins/'><?php esc_html_e( 'Purchase unavailable options', 'wpsc' ); ?></a>
 					<?php
 						}
 					?>

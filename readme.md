@@ -6,11 +6,11 @@ About
 
 WP eCommerce is a free open-source WordPress Shopping Cart Plugin that lets customers buy your products, services and digital downloads online.
 
-More details about this plugin features can be found on our website at [getshopped.org](http://getshopped.org/features/).
+More details about this plugin features can be found on our website at [wpecommerce.org](http://wpecommerce.org/features/).
 
-User documentation can be found at [docs.getshopped.org](http://docs.getshopped.org).
+User documentation can be found at [docs.wpecommerce.org](http://docs.wpecommerce.org).
 
-If you're looking for general user support, please submit your support request on [our community support forums](http://getshopped.org/forums/).
+If you're looking for general user support, please submit your support request on [our community support forums](https://wordpress.org/support/plugin/wp-e-commerce).
 
 Development status
 -------------------------

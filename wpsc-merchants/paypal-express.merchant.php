@@ -574,7 +574,7 @@ function form_paypal_express() {
 	<tr>
 		<td colspan='2'>
 			<p class='description'>
-	 		" . sprintf( __( "For more help configuring Paypal Express, please read our documentation <a href='%s'>here</a>", 'wpsc' ), esc_url( 'http://docs.getshopped.org/documentation/paypal-express-checkout/' ) ) . "
+	 		" . sprintf( __( "For more help configuring Paypal Express, please read our documentation <a href='%s'>here</a>", 'wpsc' ), esc_url( 'http://docs.wpecommerce.org/documentation/paypal-express-checkout/' ) ) . "
 	 		</p>
 		</td>
    	</tr>\n";

@@ -38,7 +38,7 @@ class WPSC_Shipwire_Shipping {
 		$output  = '<p>' . _x( 'There are no settings for this form.', 'Shipwire settings form', 'wpsc' ) . '</p>';
 		$output .= '<p>' . _x( '<em>It simply works.</em>', 'Shipwire settings form', 'wpsc' ) . '</p>';
 		$output .= '<p>' . _x( 'Be sure to enter your username and password (above).', 'Shipwire settings form', 'wpsc' ) . '</p>';
-		$output .= '<p>' . sprintf( _x( 'Be sure to read <a href="%s">the documentation</a>, there are some pretty important things to note.', 'Shipwire settings form', 'wpsc' ), esc_url( 'http://docs.getshopped.org/documentation/shipwire' ) ) . '</p>';
+		$output .= '<p>' . sprintf( _x( 'Be sure to read <a href="%s">the documentation</a>, there are some pretty important things to note.', 'Shipwire settings form', 'wpsc' ), esc_url( 'http://docs.wpecommerce.org/documentation/shipwire' ) ) . '</p>';
 
 		return $output;
 	}

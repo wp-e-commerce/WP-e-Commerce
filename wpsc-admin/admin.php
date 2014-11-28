@@ -354,7 +354,7 @@ function wpsc_add_help_tabs() {
 		$content = '<p><strong>' . __( 'For More Information', 'wpsc' ) . '</strong></p>';
 		$links = array();
 		foreach( $tab['links'] as $link => $link_title ) {
-			$link = 'http://docs.getshopped.org/' . $link;
+			$link = 'http://docs.wpecommerce.org/' . $link;
 			$links[] = '<a target="_blank" href="' . esc_url( $link ) . '">' . esc_html( $link_title ) . '</a>';
 		}
 		$content .= '<p>' . implode( '<br />', $links ) . '</p>';
@@ -1577,7 +1577,7 @@ function _wpsc_admin_notices_3dot8dot9() {
 	$message .= "\n<p>" . __( '<a href="%2$s">Hide this warning</a>', 'wpsc' ) . '</p>';
 	$message = sprintf(
 		$message,
-		'http://getshopped.org/wp-e-commerce-3-8-9-compatibility-issues/',
+		'https://wpecommerce.org/wp-e-commerce-3-8-9-compatibility-issues/',
 		add_query_arg( 'dismiss_389_upgrade_notice', 1 )
 	);
 
@@ -1651,7 +1651,7 @@ function _wpsc_admin_notices_3dot8dot11() {
 		$message,
 		WPSC_VERSION,
 		'https://github.com/wp-e-commerce/WP-e-Commerce/issues/359',
-		'http://docs.getshopped.org/documentation/3-8-11-user-logs',
+		'http://docs.wpecommerce.org/documentation/3-8-11-user-logs',
 		add_query_arg( 'dismiss_3811_upgrade_notice', 1 )
 	);
 
@@ -1687,7 +1687,7 @@ if ( in_array( 'google', get_option( 'custom_gateway_options', array() ) ) ) {
 }
 
 /**
- * Adds links to premium support and documentation on GetShopped.org
+ * Adds links to premium support and documentation on WPeCommerce.org
  *
  * @since  3.9.0
  *
@@ -1695,8 +1695,8 @@ if ( in_array( 'google', get_option( 'custom_gateway_options', array() ) ) ) {
  * @return array $links Updated links
  */
 function wpsc_support_links( $links ) {
-	$links[] = sprintf( '<a href="%s">%s</a>', _x( 'http://getshopped.org/resources/premium-support/', 'Premium Support URL', 'wpsc' ),  __( 'Premium Support', 'wpsc' ) );
-	$links[] = sprintf( '<a href="%s">%s</a>', _x( 'http://docs.getshopped.org/', 'Documentation URL', 'wpsc' ),  __( 'Documentation', 'wpsc' ) );
+	$links[] = sprintf( '<a href="%s">%s</a>', _x( 'https://wpecommerce.org/premium-support/', 'Premium Support URL', 'wpsc' ),  __( 'Premium Support', 'wpsc' ) );
+	$links[] = sprintf( '<a href="%s">%s</a>', _x( 'http://docs.wpecommerce.org/', 'Documentation URL', 'wpsc' ),  __( 'Documentation', 'wpsc' ) );
 
 	return $links;
 }

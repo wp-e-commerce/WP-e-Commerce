@@ -494,7 +494,7 @@ function form_chronopay()
 		</tr>
 		   <tr>
            <td colspan='2'>
-           	" . sprintf( __( 'For more help configuring Chronopay, read our documentation <a href="%s">here</a>', 'wpsc' ), esc_url( 'http://docs.getshopped.org/documentation/chronopay/' ) ) . "
+           	" . sprintf( __( 'For more help configuring Chronopay, read our documentation <a href="%s">here</a>', 'wpsc' ), esc_url( 'https://docs.wpecommerce.org/documentation/chronopay/' ) ) . "
            </td>
        </tr>";
 

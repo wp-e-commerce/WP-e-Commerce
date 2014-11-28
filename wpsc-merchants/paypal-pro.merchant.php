@@ -494,7 +494,7 @@ function form_paypal_pro() {
 	<tr>
 		<td colspan='2'>
 			<p class='description'>
-				" . sprintf( __( "For more help configuring Paypal Pro, please read our documentation <a href='%s'>here</a>", 'wpsc' ), esc_url( 'http://docs.getshopped.org/documentation/paypal-payments-pro/' ) ) . "
+				" . sprintf( __( "For more help configuring Paypal Pro, please read our documentation <a href='%s'>here</a>", 'wpsc' ), esc_url( 'http://docs.wpecommerce.org/documentation/paypal-payments-pro/' ) ) . "
 				</p>
 		</td>
 	</tr>";
