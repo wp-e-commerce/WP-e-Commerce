@@ -354,12 +354,13 @@ add_action( 'wpsc_purchase_log_action-downloads_lock', 'wpsc_purchase_log_action
  */
 function wpsc_purchase_log_action_delete( $log_id ) {
 
-	wpsc_delete_purchlog( $log_id );
+	$log = new WPSC_Purchase_Log( $log_id );
+	$deleted = $log->delete();
 
 	// Redirect back to purchase logs list
 	$sendback = wp_get_referer();
 	$sendback = remove_query_arg( array( 'c', 'id' ), $sendback );
-	$sendback = add_query_arg( 'deleted', 1, $sendback );
+	$sendback = add_query_arg( 'deleted', absint( $deleted ), $sendback );
 	wp_redirect( $sendback );
 	exit();
 
@@ -502,8 +503,12 @@ function wpsc_purchlog_bulk_modify() {
 		} elseif ( $_POST['purchlog_multiple_status_change'] == 'delete' ) {
 			foreach ( (array)$_POST['purchlogids'] as $purchlogid ) {
 
-				wpsc_delete_purchlog( $purchlogid );
-				$deleted++;
+				$log = new WPSC_Purchase_Log( $purchlogid );
+				$deleted_log = $log->delete();
+				if ( $deleted_log ) {
+					$deleted++;
+				}
+
 			}
 		}
 	}
@@ -555,14 +560,12 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && $_REQUEST['wpsc_admin_action'] =
 /**
  * Delete a purchase log
  *
+ * @deprecated  Use WPSC_Purchase_Log->delete() instead.
+ *
  * @param   int|string  $purchlog_id  Required. Purchase log ID (empty string is deprecated).
  * @return  boolean                   Deleted successfully.
  */
 function wpsc_delete_purchlog( $purchlog_id = '' ) {
-
-	if ( ! wpsc_is_store_admin() ) {
-		return;
-	}
 
 	global $wpdb;
 
@@ -572,28 +575,9 @@ function wpsc_delete_purchlog( $purchlog_id = '' ) {
 		return false;
 	}
 
-	$purchlog_id = absint( $purchlog_id );
+	$log = new WPSC_Purchase_Log( $purchlog_id );
 
-	if ( $purchlog_id > 0 ) {
-
-		$purchlog_status = $wpdb->get_var( $wpdb->prepare( "SELECT `processed` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id`= %d", $purchlog_id ) );
-		if ( $purchlog_status == WPSC_Purchase_Log::CLOSED_ORDER || $purchlog_status == WPSC_Purchase_Log::INCOMPLETE_SALE ) {
-			$claimed_query = new WPSC_Claimed_Stock( array(
-				'cart_id'        => $purchlog_id,
-				'cart_submitted' => 1
-			) );
-			$claimed_query->clear_claimed_stock( 0 );
-		}
-
-		$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid` = %d", $purchlog_id ) );
-		$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` WHERE `log_id` IN (%d)", $purchlog_id ) );
-		$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id` = %d LIMIT 1", $purchlog_id ) );
-
-		return true;
-
-	}
-
-	return false;
+	return $logdelete();
 
 }
 
