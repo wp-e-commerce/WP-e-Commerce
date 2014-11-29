@@ -341,7 +341,7 @@ function wpsc_update_product_rating() {
 		) );
 		$data = $wpdb->get_results( "SELECT `id`,`rated` FROM `" . WPSC_TABLE_PRODUCT_RATING . "` WHERE `ipnum`='" . $ip_number . "' AND `productid` = '" . $product_id . "'  AND `rated` = '" . $rating . "' AND `time` = '" . $nowtime . "' ORDER BY `id` DESC LIMIT 1", ARRAY_A );
 		$vote_id = $data[0]['id'];
-		setcookie( "voting_cookie[$prodid]", ($vote_id . "," . $rating ), time() + (60 * 60 * 24 * 360) );
+		setcookie( "voting_cookie[$product_id]", ($vote_id . "," . $rating ), time() + (60 * 60 * 24 * 360) );
 	}
 	if ( $_POST['ajax'] == 'true' ) {
 
@@ -775,7 +775,7 @@ function wpsc_change_tax() {
 		wpsc_update_customer_meta( 'billingregion', $wpsc_selected_region );
 	}
 
-	$check_country_code = WPSC_Countries::country_id( wpsc_get_customer_meta( 'billing_region' ) );
+	$check_country_code = WPSC_Countries::get_country_id_by_region_id( wpsc_get_customer_meta( 'billing_region' ) );
 
 	if ( wpsc_get_customer_meta( 'billingcountry' ) != $check_country_code ) {
 		$wpsc_selected_region = null;
@@ -790,7 +790,7 @@ function wpsc_change_tax() {
 		wpsc_update_customer_meta( 'shippingregion', $wpsc_delivery_region );
 	}
 
-	$check_country_code = WPSC_Countries::country_id( $wpsc_delivery_region );
+	$check_country_code = WPSC_Countries::get_country_id_by_region_id( $wpsc_delivery_region );
 	if ( $wpsc_delivery_country != $check_country_code ) {
 		$wpsc_delivery_region = null;
 	}

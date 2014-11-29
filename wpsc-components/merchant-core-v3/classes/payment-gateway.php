@@ -314,6 +314,8 @@ abstract class WPSC_Payment_Gateway {
 
 	public $currency_code;
 
+	public $title;
+
 	/**
 	 * Return the title of the payment gateway. For this to work, $this->title must
 	 * be set already.
@@ -425,6 +427,8 @@ abstract class WPSC_Payment_Gateway {
 		if ( ! $this->currency_code ) {
 			$country = new WPSC_Country( get_option( 'currency_type' ) );
 			$currency = $country->get( 'currency_code' );
+		} else {
+			$currency = $this->currency_code;
 		}
 
 		return $currency;

@@ -2,19 +2,20 @@
 * PayPal Pro script
 */
 (function($) {
-	$(window).load(function() {	
+	$(window).load(function() {
 		// Declare variables/doom elements
 		var $checkout_btn = $( '.wpsc-checkout-form-button' ),
 		$rd_btn = $( 'input[value="paypal-pro"]' ),
 		$inputs = $( 'input[type="radio"]' ),
 		$form = $( '#wpsc-checkout-form' ),
-		$container = $( '.wpsc-payment-method' );	
+		$container = $( '.wpsc-payment-method' ),
+		$hss_form;
 
 		$checkout_btn.on( 'click', function() {
 			if ( $rd_btn.is( ':checked' ) ) {
 				// Empty the container
 				$container.html( '' );
-				// Disable FORM 
+				// Disable FORM
 				$form.on( 'submit', function() {
 					return false;
 				} );
@@ -35,8 +36,8 @@
 						$hss_form.submit();
 					}
 
-				});	
-			} 
+				});
+			}
 		} );
 	} );
 
