@@ -2523,3 +2523,18 @@ a.wpsc_remove_meta {
 .branch-3-6 .wpsc-quantity-discounts td.remove a:hover {
 	background-position: -10px 0;
 }
+
+.product_gallery_image_delete_button {
+	display: none;
+}
+
+.list_gallery_image {
+	position: relative;
+}
+
+.product_gallery_image_delete_button {
+	position: absolute;
+	right: 0;
+	top: 0;
+	font-size: 10px;
+}
