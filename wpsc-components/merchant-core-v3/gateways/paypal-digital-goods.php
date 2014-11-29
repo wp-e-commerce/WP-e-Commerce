@@ -206,7 +206,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 ?>
 	<html>
 	<head>
-	<title><?php _e( 'Processing...', 'wpec' ); ?></title>
+	<title><?php _e( 'Processing...', 'wpsc' ); ?></title>
 	<?php wp_print_styles( 'ppdg-iframe' ); ?>
 		</head>
 			<body>
