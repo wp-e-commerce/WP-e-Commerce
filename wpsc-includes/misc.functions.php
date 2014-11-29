@@ -18,9 +18,14 @@
  */
 function wpsc_find_purchlog_status_name( $purchlog_status ) {
 	global $wpsc_purchlog_statuses;
+
+	$status_name = '';
+
 	foreach ( $wpsc_purchlog_statuses as $status ) {
 		if ( $status['order'] == $purchlog_status ) {
 			$status_name = $status['label'];
+		} else {
+			continue;
 		}
 	}
 	return $status_name;
@@ -183,6 +188,10 @@ function nzshpcrt_display_preview_image() {
 	) {
 
 		if ( function_exists( "getimagesize" ) ) {
+
+			$imagepath   = '';
+			$category_id = 0;
+
 			if ( $_GET['image_name'] ) {
 				$image = basename( $_GET['image_name'] );
 				$imagepath = WPSC_USER_UPLOADS_DIR . $image;
@@ -194,9 +203,10 @@ function nzshpcrt_display_preview_image() {
 				}
 			}
 
-			if ( !is_file( $imagepath ) ) {
+			if ( ! is_file( $imagepath ) ) {
 				$imagepath = WPSC_FILE_PATH . "/images/no-image-uploaded.gif";
 			}
+
 			$image_size = @getimagesize( $imagepath );
 			if ( is_numeric( $_GET['height'] ) && is_numeric( $_GET['width'] ) ) {
 				$height = (int)$_GET['height'];
@@ -209,6 +219,10 @@ function nzshpcrt_display_preview_image() {
 				$width = $image_size[0];
 				$height = $image_size[1];
 			}
+
+			$product_id = (int) $_GET['productid'];
+			$image_id   = (int) $_GET['image_id'];
+
 			if ( $product_id > 0 ) {
 				$cache_filename = basename( "product_{$product_id}_{$height}x{$width}" );
 			} else if ( $category_id > 0 ) {
@@ -216,13 +230,10 @@ function nzshpcrt_display_preview_image() {
 			} else {
 				$cache_filename = basename( "product_img_{$image_id}_{$height}x{$width}" );
 			}
+
 			$imagetype = @getimagesize( $imagepath );
 			$use_cache = false;
 			switch ( $imagetype[2] ) {
-				case IMAGETYPE_JPEG:
-					$extension = ".jpg";
-					break;
-
 				case IMAGETYPE_GIF:
 					$extension = ".gif";
 					break;
@@ -230,6 +241,12 @@ function nzshpcrt_display_preview_image() {
 				case IMAGETYPE_PNG:
 					$extension = ".png";
 					break;
+
+				case IMAGETYPE_JPEG:
+				default:
+					$extension = ".jpg";
+					break;
+
 			}
 			if ( file_exists( WPSC_CACHE_DIR . $cache_filename . $extension ) ) {
 				$original_modification_time = filemtime( $imagepath );
@@ -261,11 +278,12 @@ function nzshpcrt_display_preview_image() {
 						break;
 
 					default:
+						$src_img      = false;
 						$pass_imgtype = false;
 						break;
 				}
 
-				if ( $pass_imgtype === true ) {
+				if ( $pass_imgtype === true && $src_img ) {
 					$source_w = imagesx( $src_img );
 					$source_h = imagesy( $src_img );
 
@@ -389,6 +407,8 @@ function wpsc_list_dir( $dirname ) {
 	 */
 	$dir = @opendir( $dirname );
 	$num = 0;
+	$dirlist = array();
+
 	while ( ($file = @readdir( $dir )) !== false ) {
 		//filter out the dots and any backup files, dont be tempted to correct the "spelling mistake", its to filter out a previous spelling mistake.
 		if ( ($file != "..") && ($file != ".") && !stristr( $file, "~" ) && !stristr( $file, "Chekcout" ) && !stristr( $file, "error_log" ) && !( strpos( $file, "." ) === 0 ) ) {
