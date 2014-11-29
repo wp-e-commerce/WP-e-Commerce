@@ -902,9 +902,13 @@ function wpsc_product_gallery( $post ) {
 				// get the thumbnail URL
 				$thumb_url  = wp_get_attachment_thumb_url( absint( $image_id ) );
 				// output each item
-				$output .= '<li>';
-					$output .= '<img src="' . esc_url( $thumb_url ) . '">';
-					$output .= '<input type="hidden" name="wpsc-product-gallery-imgs[]" value="' . absint( $image_id ) . '">';
+				$output .= '<li><div class="list_gallery_image">';
+						$output .= '<img src="' . esc_url( $thumb_url ) . '">';
+						$output .= '<input type="hidden" name="wpsc-product-gallery-imgs[]" value="' . absint( $image_id ) . '">';
+						
+						$output .= '<input type="button" class="product_gallery_image_delete_button" value="X"></div>';
+						$output .= '<input type="hidden" class="product_gallery_image_id" value="'.$image_id.'">';
+						$output .= '<input type="hidden" class="product_gallery_post_id" value="'.$post->ID.'">';
 				$output .= '</li>';
 			}
 		}
