@@ -4,12 +4,19 @@
  * Version : 1.1.0 : December 21, 2010
  */
 class ash_ups {
-	var $internal_name, $name;
-	var $service_url = '';
-	var $Services = '';
-	var $singular_shipping = FALSE;
-	var $shipment;
-	var $is_external = true;
+	public $internal_name;
+	public $name;
+	public $service_url = '';
+	public $Services = array();
+	public $singular_shipping = false;
+	public $shipment;
+	public $is_external = true;
+	public $requires_curl = true;
+	public $requires_weight = true;
+	public $needs_zipcode = true;
+
+	public $drop_types = array();
+	public $cust_types = array();
 
 	function ash_ups () {
 		$this->internal_name = 'ups';
@@ -24,7 +31,7 @@ class ash_ups {
 	}
 
 	function __autoload ( $name ) {
-		include( '../wpsc-includes/shipping.helper.php' );
+		include_once( '../wpsc-includes/shipping.helper.php' );
 	}
 
 	function getId () {
@@ -753,7 +760,7 @@ class ash_ups {
 
 		if ( $wpsc_country->has_regions() ) {
 			$wpsc_region = $wpsc_country->get_region( wpsc_get_customer_meta( 'shippingregion' )  );
-			if ( $wpsc_region ) {
+			if ( is_a( $wpsc_region, 'WPSC_Region' ) ) {
 				$args['dest_state'] = $wpsc_region->get_code();
 			}
 		}
