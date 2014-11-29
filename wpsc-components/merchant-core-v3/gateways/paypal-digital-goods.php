@@ -126,14 +126,14 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 ?>
 <html>
 	<head>
-		<title><?php __( 'Processing...', 'wpec' ); ?></title>
+		<title><?php _e( 'Processing...', 'wpsc' ); ?></title>
 		<?php wp_print_styles( 'ppdg-iframe' ); ?>
 	</head>
 	<body>
 		<div id="left_frame">
 			<div id="right_frame">
 				<p id="message">
-				<?php _e( 'Processing Order', 'wpec'); ?>
+				<?php _e( 'Processing Order', 'wpsc'); ?>
 				<?php $location = esc_js( $this->get_original_return_url( $sessionid ) );  ?>
 				</p>
 				<img src="https://www.paypal.com/en_US/i/icon/icon_animated_prog_42wx42h.gif" alt="Processing..." />
@@ -206,7 +206,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 ?>
 	<html>
 	<head>
-	<title><?php __( 'Processing...', 'wpec' ); ?></title>
+	<title><?php _e( 'Processing...', 'wpec' ); ?></title>
 	<?php wp_print_styles( 'ppdg-iframe' ); ?>
 		</head>
 			<body>
