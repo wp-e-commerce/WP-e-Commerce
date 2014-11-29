@@ -42,6 +42,7 @@ class wpsc_cart {
 
 	public $selected_shipping_method = null;
 	public $selected_shipping_option = null;
+	public $shipping_option          = null;
 	public $selected_shipping_amount = null;
 
 	public $coupon;
@@ -428,12 +429,12 @@ class wpsc_cart {
 	function get_shipping_option() {
 		global $wpdb, $wpsc_shipping_modules;
 
-		if ( ! isset( $wpsc_shipping_modules[$this->selected_shipping_method] ) ) {
-			$wpsc_shipping_modules[$this->selected_shipping_method] = '';
-		}
-
 		if ( ( count( $this->shipping_quotes ) < 1 ) && is_callable( array( $wpsc_shipping_modules[$this->selected_shipping_method], 'getQuote'  ) ) ) {
 			$this->shipping_quotes = $wpsc_shipping_modules[$this->selected_shipping_method]->getQuote();
+		}
+
+		if ( ! isset( $wpsc_shipping_modules[$this->selected_shipping_method] ) ) {
+			$wpsc_shipping_modules[$this->selected_shipping_method] = '';
 		}
 
 		if ( count( $this->shipping_quotes ) < 1 ) {
@@ -522,7 +523,7 @@ class wpsc_cart {
 				default : // Everywhere else!
 					$tax_region = get_option( 'base_region' );
 					if ( $country->has_regions() ) {
-						if ( get_option( 'base_region' ) == $region ) {
+						if ( get_option( 'base_region' ) == $tax_region ) {
 							$add_tax = true;
 						}
 					} else {

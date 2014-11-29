@@ -49,7 +49,7 @@ class wpsc_cart_item {
 	public $stock = 1;
 	public $tax_rate = 0.00;
 	public $has_limited_stock = false;
-	public $uses_shipping = true;
+	public $uses_shipping = 1;
 	public $file_id = null;
 	public $is_downloadable = false;
 

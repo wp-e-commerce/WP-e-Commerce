@@ -343,7 +343,6 @@ class WPSC_Country {
 		return $this;
 	}
 
-
 	/**
 	 * get a region that is in this country
 	 *
