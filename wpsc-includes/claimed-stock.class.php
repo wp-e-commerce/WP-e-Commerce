@@ -268,14 +268,17 @@ class WPSC_Claimed_Stock {
 		global $wpdb;
 
 		// Only process if query include cart ID
-		if ( empty( $this->cart_id ) )
+		if ( empty( $this->cart_id ) ) {
 			return;
+		}
 
 		// Accept WPSC_Purchase_Log object or ID
-		if ( is_a( $log, 'WPSC_Purchase_Log' ) ) {
-			$purchase_log_id = $log->get( 'id' );
-		} else {
+		if ( is_numeric( $log ) ) {
 			$purchase_log_id = $log;
+		} else if ( is_a( $log, 'WPSC_Purchase_Log' ) ) {
+			$purchase_log_id = $log;
+		} else {
+			return;
 		}
 
 		$wpdb->query( $wpdb->prepare(
