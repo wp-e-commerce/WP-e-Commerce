@@ -219,16 +219,12 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 		'thumbnail_state' => null
 	);
 
-	foreach($product_columns as $column => $default)
-	{
-		if (!isset($post_data[$column])) $post_data[$column] = '';
-
-		if($post_data[$column] !== null) {
-			$update_values[$column] = $post_data[$column];
-		} else if(($update != true) && ($default !== null)) {
-			$update_values[$column] = ($default);
+	foreach ( $product_columns as $column => $default ) {
+		if ( ! isset( $post_data[ $column ] ) ) {
+			$post_data[ $column ] = '';
 		}
 	}
+
 	// if we succeed, we can do further editing (todo - if_wp_error)
 
 	// if we have no categories selected, assign one.
@@ -436,14 +432,9 @@ function wpsc_insert_product($post_data, $wpsc_error = false) {
 	);
 
 
-	foreach($product_columns as $column => $default)
-	{
-		if (!isset($post_data[$column])) $post_data[$column] = '';
-
-		if($post_data[$column] !== null) {
-			$update_values[$column] = $post_data[$column];
-		} else if(($update != true) && ($default !== null)) {
-			$update_values[$column] = $default;
+	foreach ( $product_columns as $column => $default ) {
+		if ( ! isset( $post_data[ $column ] ) ) {
+			$post_data[ $column ] = '';
 		}
 	}
 
@@ -470,13 +461,7 @@ function wpsc_insert_product($post_data, $wpsc_error = false) {
 	}else {
 		unstick_post($product_id);
 	}
-	if ($product_id == 0 ) {
-		if ( $wp_error ) {
-			return new WP_Error('db_insert_error', __( 'Could not insert product into the database', 'wpsc' ), $wpdb->last_error);
-		} else {
-			return 0;
-		}
-	}
+
 	$adding = true;
 
 	// if we succeed, we can do further editing
@@ -518,7 +503,7 @@ function term_id_price($term_id, $parent_price) {
 		}
 
 		if (strchr($price, '-') ) {
-			$negative = true;
+			$positive = false;
 		} else {
 			$positive = true;
 		}
@@ -723,6 +708,8 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 		$currently_associated_vars[] = $current->term_id;
 	}
 
+	$posted_terms = array();
+
 	foreach ($posted_term as $term=>$val) {
 		$posted_terms[] = $term;
 		if(is_array($val)) {
@@ -731,14 +718,20 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 			}
 		}
 	}
+
 	if(!empty($currently_associated_vars)){
 		$term_ids_to_delete = array();
 		$term_ids_to_delete = array_diff($currently_associated_vars, $posted_terms);
 	}
-	if(isset($_REQUEST["post_ID"]))
+
+	if(isset($_REQUEST["post_ID"])) {
 		$post_id = $_REQUEST["post_ID"];
-	elseif(isset($_REQUEST["product_id"]))
+	} elseif(isset($_REQUEST["product_id"])) {
 		$post_id = $_REQUEST["product_id"];
+	} else {
+		return;
+	}
+
 	if(!empty($term_ids_to_delete) && (isset($_REQUEST["product_id"]) ||  isset($post_id))) {
 		$post_ids_to_delete = array();
 
@@ -929,7 +922,8 @@ function wpsc_item_reassign_file($product_id, $selected_files) {
 		'post_status' => 'any'
 	);
 
-	$attached_files = (array)get_posts($args);
+	$attached_files = (array) get_posts( $args );
+	$attached_files_by_file = array();
 
 	foreach($attached_files as $key => $attached_file) {
 		$attached_files_by_file[$attached_file->post_title] = $attached_files[$key];
