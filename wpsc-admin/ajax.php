@@ -925,24 +925,28 @@ function _wpsc_ajax_set_variation_product_thumbnail() {
 }
 add_action( 'wp_ajax_wpsc_set_variation_product_thumbnail', '_wpsc_ajax_set_variation_product_thumbnail' );
 
-add_action( 'wp_ajax_product_gallery_image_delete', 'product_gallery_image_delete_action' );
+/**
+ *	Delete WPSC product image from gallery
+ *
+ */
 function product_gallery_image_delete_action() {
 	
 	$product_gallery = array();
 	$gallery_image_id = $gallery_post_id = '';
 	
-	$gallery_image_id = $_POST['product_gallery_image_id'];
-	$gallery_post_id = $_POST['product_gallery_post_id'];
+	$gallery_image_id = absint($_POST['product_gallery_image_id']);
+	$gallery_post_id = absint($_POST['product_gallery_post_id']);
 	
-	$product_gallery = get_post_meta( $gallery_post_id, '_wpsc_product_gallery' );
+	check_ajax_referer( 'wpsc_gallery_nonce', 'wpsc_gallery_nonce_check' );
 	
-	foreach ( $product_gallery as $key => $gallery ) {
-		foreach ( $gallery as $index => $image ) {
-			if ( $image == $gallery_image_id ) {
-				unset( $gallery[$index] );
-			}
+	$product_gallery = get_post_meta( $gallery_post_id, '_wpsc_product_gallery', true );
+	
+	foreach ( $product_gallery as $index => $image_id ) {
+		if ( $image_id == $gallery_image_id ) {
+			unset( $product_gallery[$index] );
 		}
 	}
 	
-	update_post_meta( $gallery_post_id, '_wpsc_product_gallery', $gallery );
+	update_post_meta( $gallery_post_id, '_wpsc_product_gallery', $product_gallery );
 }
+add_action( 'wp_ajax_product_gallery_image_delete', 'product_gallery_image_delete_action' );

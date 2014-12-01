@@ -2536,5 +2536,9 @@ a.wpsc_remove_meta {
 	position: absolute;
 	right: 0;
 	top: 0;
-	font-size: 10px;
+	font-size: 16px;
+}
+
+.product_gallery_image_delete_button:hover {
+	cursor: pointer
 }

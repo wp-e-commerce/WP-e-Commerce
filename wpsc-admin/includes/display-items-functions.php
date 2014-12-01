@@ -906,7 +906,7 @@ function wpsc_product_gallery( $post ) {
 						$output .= '<img src="' . esc_url( $thumb_url ) . '">';
 						$output .= '<input type="hidden" name="wpsc-product-gallery-imgs[]" value="' . absint( $image_id ) . '">';
 						
-						$output .= '<input type="button" class="product_gallery_image_delete_button" value="X"></div>';
+						$output .= '<span class="product_gallery_image_delete_button dashicons dashicons-no-alt"></span></div>';
 						$output .= '<input type="hidden" class="product_gallery_image_id" value="'.$image_id.'">';
 						$output .= '<input type="hidden" class="product_gallery_post_id" value="'.$post->ID.'">';
 				$output .= '</li>';
@@ -915,6 +915,10 @@ function wpsc_product_gallery( $post ) {
 		$output .= '</ul>';
 		$output .= '<div class="clear"></div>';
 	$output .= '</div>';
+	$nonce_var = wp_create_nonce( 'wpsc_gallery_nonce' );
+  ?>
+  <input type="hidden" class="nonce_class" value="<?php echo $nonce_var; ?>">
+  <?php
 	// button for old iframe for non JS people
 	$output .= '<p class="hide-if-no-js">';
 		$output .= '<a class="button button-small thickbox" title="' . esc_attr__( 'Manage Product Image Gallery...', 'wpsc' ).'" href="' . $upload_iframe_src . '" id="wpsc-manage-product-gallery">';
