@@ -119,6 +119,29 @@ function wpsc_get_terms_variation_sort_filter($terms){
 
 add_filter( 'get_terms','wpsc_get_terms_variation_sort_filter' );
 
+/**
+ * Hide Subcategory Products in Parent Category
+ *
+ * By default, taxonomy queries include posts assigned to child categories.
+ * To disable this the taxonomy query needs to set `include_children` to false.
+ *
+ * @param  WP_Query  $query  Query object.
+ */
+function wpsc_hide_subcatsprods_in_cat_query( $query ) {
+
+	$show_subcatsprods_in_cat = get_option( 'show_subcatsprods_in_cat' );
+
+	if ( ! is_admin() && ! $show_subcatsprods_in_cat && isset( $query->query_vars['wpsc_product_category'] ) && ! empty( $query->tax_query->queries ) ) {
+		foreach ( $query->tax_query->queries as &$tq ) {
+			if ( 'wpsc_product_category' === $tq['taxonomy'] ) {
+				$tq['include_children'] = false;
+			}
+		}
+	}
+
+}
+
+add_action( 'parse_tax_query', 'wpsc_hide_subcatsprods_in_cat_query' );
 
 /**
 * wpsc_category_image function, Gets the category image or returns false
