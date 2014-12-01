@@ -125,6 +125,9 @@ add_filter( 'get_terms','wpsc_get_terms_variation_sort_filter' );
  * By default, taxonomy queries include posts assigned to child categories.
  * To disable this the taxonomy query needs to set `include_children` to false.
  *
+ * @since   3.9.x
+ * @access  private
+ *
  * @param  WP_Query  $query  Query object.
  */
 function wpsc_hide_subcatsprods_in_cat_query( $query ) {

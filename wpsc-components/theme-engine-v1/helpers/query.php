@@ -505,8 +505,7 @@ function wpsc_generate_product_query( $query ) {
 		$query->query_vars['posts_per_page'] = -1;
 		$query->query_vars['nopaging'] = 1;
 	}
-	if ( $query->is_tax == true )
-		new wpsc_products_by_category( $query );
+
 	return $query;
 }
 

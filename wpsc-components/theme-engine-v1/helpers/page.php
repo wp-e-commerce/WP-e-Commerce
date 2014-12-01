@@ -34,10 +34,6 @@ if ( ! is_admin() )
 if(get_option( 'wpsc_hide_featured_products' ) == 1)
 	add_action( 'wpsc_top_of_products_page', 'wpsc_display_featured_products_page', 12 );
 
-$show_subcatsprods_in_cat = get_option( 'show_subcatsprods_in_cat' );
-if(!$show_subcatsprods_in_cat)
-	add_action( 'init', 'wpsc_hidesubcatprods_init' );
-
 /**
  * wpsc_register_theme_file( $file_name )
  *
@@ -1272,9 +1268,15 @@ function wpsc_display_featured_products_page() {
 	}
 }
 
+/**
+ * Hide Subcat Products Init
+ *
+ * @deprecated  Since 3.9.x. Hiding subcategory products in parent categories is now handled by the private wpsc_hide_subcatsprods_in_cat_query() function.
+ */
 function wpsc_hidesubcatprods_init() {
-	$hide_subcatsprods = new WPSC_Hide_subcatsprods_in_cat;
-	add_action( 'pre_get_posts', array( &$hide_subcatsprods, 'get_posts' ) );
+
+	_wpsc_doing_it_wrong( 'wpsc_hidesubcatprods_init', __( 'This function is deprecated. There is no direct replacement. Hiding subcategory products in parent categories is now handled by the private wpsc_hide_subcatsprods_in_cat_query() function.', 'wpsc' ), '3.9.x' );
+
 }
 
 // check for all in one SEO pack and the is_static_front_page function
