@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP eCommerce 3.9-RC\n"
 "Report-Msgid-Bugs-To: https://wpecommerce.org/\n"
-"POT-Creation-Date: 2014-12-02 16:27:25+00:00\n"
+"POT-Creation-Date: 2014-12-02 19:15:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -245,7 +245,7 @@ msgid "Store Settings"
 msgstr ""
 
 #: wpsc-admin/admin.php:210
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:600
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:623
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View.php:33
 msgid "Store"
 msgstr ""
@@ -2522,7 +2522,7 @@ msgid "Y/m/d g:i:s A"
 msgstr ""
 
 #: wpsc-admin/includes/purchase-log-list-table-class.php:497
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:436
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:459
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Info.php:148
 #: wpsc-components/theme-engine-v2/classes/orders-table.php:75
 #: wpsc-core/wpsc-deprecated.php:891
@@ -4095,161 +4095,161 @@ msgstr ""
 msgid "Powered by WPEConomy"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:185
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:193
 msgid ""
 "<strong>WPEConomy is now installed!</strong> &#8211; Get started by linking "
 "with your account!"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:186
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:194
 msgid ""
 "If you haven't created an account yet, don't worry, you will be prompted to "
 "do so."
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:188
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:196
 msgid "Link your account now"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:195
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:203
 msgid "Payment cancelled."
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:258
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:281
 msgid "Plugin Information:"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:259
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:282
 msgid "Are you sure you want to install this plugin?"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:320
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:370
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:816
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:836
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:343
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:393
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:839
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:859
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Install.php:25
 msgid "Plugin Install"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:382
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:405
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Info.php:95
 msgid "<span>$%.2f</span> Buy &amp; Install"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:386
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:409
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Info.php:99
 msgid "You have already purchased, install now"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:386
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:409
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Info.php:99
 msgid "Install Now"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:390
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:413
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Info.php:103
 msgid "Install Update Now"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:393
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:416
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Info.php:106
 msgid "Newer Version (%s) Installed"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:396
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:419
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Info.php:109
 msgid "Latest Version Installed"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:428
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:451
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Info.php:140
 #. translators: For Your Information
 msgid "FYI"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:431
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:454
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Info.php:143
 msgid "Version:"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:433
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:456
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Info.php:145
 msgid "Author:"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:435
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:458
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Info.php:147
 msgid "Last Updated:"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:438
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:461
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Info.php:150
 msgid "Requires WordPress Version:"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:438
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:442
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:461
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:465
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Info.php:150
 msgid "%s or higher"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:440
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:463
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Info.php:152
 msgid "Compatible up to:"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:442
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:465
 msgid "Requires WPeC Version:"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:444
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:467
 msgid "Compatible up to WPEC Version:"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:446
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:469
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Info.php:154
 msgid "Downloaded:"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:446
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:469
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Info.php:154
 msgid "%s time"
 msgid_plural "%s times"
 msgstr[0] ""
 msgstr[1] ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:448
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:471
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Info.php:156
 msgid "Plugin Homepage  &#187;"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:455
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:478
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Info.php:164
 msgid ""
 "<strong>Warning:</strong> This plugin has <strong>not been tested</strong> "
 "with your current version of WordPress."
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:458
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:481
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Info.php:167
 msgid ""
 "<strong>Warning:</strong> This plugin has <strong>not been marked as "
 "compatible</strong> with your version of WordPress."
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:461
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:484
 msgid ""
 "<strong>Warning:</strong> This plugin has <strong>not been marked as "
 "compatible</strong> with your version of WP eCommerce."
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:464
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:487
 msgid ""
 "<strong>Warning:</strong> This plugin has <strong>not been tested</strong> "
 "with your version of WP eCommerce."
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:601
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:624
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View.php:34
 #: wpsc-components/theme-engine-v2/helpers/template-tags/general.php:132
 #: wpsc-components/theme-engine-v2/helpers/template-tags/general.php:138
@@ -4257,114 +4257,114 @@ msgstr ""
 msgid "Your Account"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:612
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:635
 msgid "Marketplace"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:630
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:716
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:653
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:739
 msgid "Problem: %s"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:644
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:729
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:667
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:752
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Account.php:27
 msgid "<a href=\"%s\">Log out</a> of your account"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:649
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:733
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:672
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:756
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Account.php:31
 msgid ""
 "<strong>%d</strong> <abbr title=\"Plugins you can install right "
 "now\">Available</abbr>"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:651
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:734
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:674
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:757
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Account.php:32
 msgid ""
 "<strong>%d</strong> <abbr title=\"Plugins you have bought from the "
 "store\">Purchased</abbr>"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:664
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:687
 msgid ""
 "Some text about WPEconomy goes here! This will eventually be replaced with "
 "a dashboard-like interface, including latest news, etc."
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:666
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:689
 #: wpsc-components/marketplace-core-v1/library/Sputnik/List/Install.php:22
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Browser.php:59
 msgid "Search"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:667
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:690
 msgid "Search for plugins by keyword."
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:670
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:693
 msgid "Popular tags"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:671
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:694
 msgid "You may also browse based on the most popular tags on the store:"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:688
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:711
 msgid "%s plugin"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:688
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:711
 msgid "%s plugins"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:747
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:770
 msgid "Authorization cancelled."
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:791
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:814
 msgid "Installing ... "
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:804
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:827
 msgid "Payment Cancelled"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:828
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:883
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:851
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:906
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Install.php:51
 msgid "You do not have sufficient permissions to install plugins for this site."
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:838
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:861
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Install.php:27
 msgid "Installing Plugin: %s"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:864
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:887
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Upgrade.php:32
 msgid "Plugin not found"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:871
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:891
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:894
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:914
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Upgrade.php:20
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Upgrade.php:38
 msgid "Update Plugin"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:893
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:916
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Upgrade.php:24
 msgid "Updating Plugin: %s"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:922
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:945
 msgid "Search Plugins"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:935
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:958
 msgid "Redirecting..."
 msgstr ""
 
@@ -4409,8 +4409,8 @@ msgstr ""
 
 #: wpsc-components/marketplace-core-v1/library/Sputnik/List/Install.php:109
 msgid ""
-"You haven't purchased any add-ons yet. <a href='%s'>Browse our add-on "
-"collection.</a>"
+"You haven't purchased any extensions yet. <a href='%s'>Browse our "
+"extensions marketplace.</a>"
 msgstr ""
 
 #: wpsc-components/marketplace-core-v1/library/Sputnik/List/Install.php:111
@@ -4543,12 +4543,12 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: wpsc-components/marketplace-core-v1/library/Sputnik/Pointers.php:28
-msgid "New Feature: WPeC Add-Ons"
+msgid "New Feature: WPeC Extensions"
 msgstr ""
 
 #: wpsc-components/marketplace-core-v1/library/Sputnik/Pointers.php:29
 msgid ""
-"Ever wanted to be able to find an extension for your e-commerce store, "
+"Ever wanted to be able to find an extension for your WP eCommerce store and "
 "purchase, install and activate it right from WordPress? Now you can!"
 msgstr ""
 
@@ -11971,47 +11971,47 @@ msgctxt "Import settings tab in Settings->Store page"
 msgid "Import"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:222
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:230
 msgctxt "page title"
-msgid "Add-Ons"
+msgid "Extensions"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:222
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:230
 msgctxt "menu title"
-msgid "Add-Ons"
+msgid "<span id=\"wpsc-extensions-menu-link\">Extensions</span>"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:334
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:357
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Info.php:51
 msgctxt "Plugin installer section title"
 msgid "Description"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:335
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:358
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Info.php:52
 msgctxt "Plugin installer section title"
 msgid "Installation"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:336
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:359
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Info.php:53
 msgctxt "Plugin installer section title"
 msgid "FAQ"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:337
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:360
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Info.php:54
 msgctxt "Plugin installer section title"
 msgid "Screenshots"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:338
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:361
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Info.php:55
 msgctxt "Plugin installer section title"
 msgid "Changelog"
 msgstr ""
 
-#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:339
+#: wpsc-components/marketplace-core-v1/library/Sputnik/Admin.php:362
 #: wpsc-components/marketplace-core-v1/library/Sputnik/View/Info.php:56
 msgctxt "Plugin installer section title"
 msgid "Other Notes"
