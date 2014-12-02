@@ -259,17 +259,21 @@ class Sputnik_Admin {
 	}
 
 	public static function get_marketplace_link_color() {
-		global $_wp_admin_css_colors, $menu, $submenu;
+		global $_wp_admin_css_colors;
 
-		$color = get_user_option( 'admin_color' );
+		$_color = get_user_option( 'admin_color' );
 
-		if ( empty( $color ) || ! isset( $_wp_admin_css_colors[ $color ] ) ) {
-			$color = 'fresh';
+		if ( empty( $_color ) || ! isset( $_wp_admin_css_colors[ $_color ] ) ) {
+			$_color = 'fresh';
 		}
 
-		$color = $_wp_admin_css_colors[ $color ];
+		$color = $_wp_admin_css_colors[ $_color ];
 
-		echo isset( $color->colors[2] ) ? $color->colors[2] : '';
+		if ( in_array( $_color, array( 'blue', 'coffee', 'ectoplasm', 'ocean', 'sunrise' ) ) ) {
+			echo isset( $color->icon_colors['focus'] ) ? $color->icon_colors['focus'] : '';
+		} else {
+			echo isset( $color->colors[ 3 ] ) ? $color->colors[ 3 ] : '';
+		}
 	}
 
 	public static function page_scripts() {
