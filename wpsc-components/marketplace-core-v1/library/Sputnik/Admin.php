@@ -162,11 +162,19 @@ class Sputnik_Admin {
 	}
 
 	public static function styles() {
-		wp_enqueue_style('sputnik', plugins_url( 'static/sputnik.css', Sputnik::$path . '/wpsc-marketplace' ), false, '20110924');
+		wp_enqueue_style('sputnik', plugins_url( 'static/sputnik.css', Sputnik::$path . '/wpsc-marketplace' ), false, '20141202');
+	?>
+		<style type="text/css">
+			span#wpsc-extensions-menu-link {
+				font-weight: bold;
+				color: <?php self::get_marketplace_link_color(); ?>;
+			}
+		</style>
+	<?php
 	}
 
 	public static function scripts() {
-		wp_enqueue_script('sputnik_js', plugins_url( 'static/sputnik.js', Sputnik::$path . '/wpsc-marketplace' ), array('jquery', 'common'), '20110924' );
+		wp_enqueue_script('sputnik_js', plugins_url( 'static/sputnik.js', Sputnik::$path . '/wpsc-marketplace' ), array('jquery', 'common'), '20141202' );
 	}
 
 	public static function connect_notice() {
@@ -219,8 +227,9 @@ class Sputnik_Admin {
 	}
 
 	public static function menu() {
-		$hooks[] = add_submenu_page( 'edit.php?post_type=wpsc-product', _x( 'Extensions', 'page title', 'wpsc' ), _x( 'Extensions', 'menu title', 'wpsc' ), 'install_plugins', 'sputnik', array( __CLASS__, 'page' ) );
+		$hooks[] = add_submenu_page( 'edit.php?post_type=wpsc-product', _x( 'Extensions', 'page title', 'wpsc' ), _x( '<span id="wpsc-extensions-menu-link">Extensions</span>', 'menu title', 'wpsc' ), 'install_plugins', 'sputnik', array( __CLASS__, 'page' ) );
 		$hooks[] = 'plugin-install.php';
+
 		foreach ( $hooks as $hook ) {
 			add_action( "admin_print_styles-$hook" , array( __CLASS__, 'page_styles' ) );
 			add_action( "admin_print_scripts-$hook", array( __CLASS__, 'page_scripts' ) );
@@ -247,6 +256,20 @@ class Sputnik_Admin {
 	public static function page_styles() {
 		self::$page_is_current = true;
 		wp_enqueue_style('wpsc-marketplace-page', plugins_url( 'static/admin.css', Sputnik::$path . '/wpsc-marketplace' ), array( 'thickbox' ), '20141109' );
+	}
+
+	public static function get_marketplace_link_color() {
+		global $_wp_admin_css_colors, $menu, $submenu;
+
+		$color = get_user_option( 'admin_color' );
+
+		if ( empty( $color ) || ! isset( $_wp_admin_css_colors[ $color ] ) ) {
+			$color = 'fresh';
+		}
+
+		$color = $_wp_admin_css_colors[ $color ];
+
+		echo isset( $color->colors[2] ) ? $color->colors[2] : '';
 	}
 
 	public static function page_scripts() {
