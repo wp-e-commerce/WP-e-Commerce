@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP eCommerce 3.9-RC\n"
 "Report-Msgid-Bugs-To: https://wpecommerce.org/\n"
-"POT-Creation-Date: 2014-11-28 23:11:22+00:00\n"
+"POT-Creation-Date: 2014-12-02 16:27:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -401,7 +401,7 @@ msgid "Email"
 msgstr ""
 
 #: wpsc-admin/admin.php:712
-#: wpsc-components/merchant-core-v3/classes/payment-gateway.php:356
+#: wpsc-components/merchant-core-v3/classes/payment-gateway.php:358
 #: wpsc-core/wpsc-functions.php:117 wpsc-core/wpsc-installer.php:723
 #: wpsc-core/wpsc-installer.php:732 wpsc-core/wpsc-installer.php:776
 #: wpsc-core/wpsc-installer.php:786
@@ -516,8 +516,8 @@ msgstr ""
 #: wpsc-components/theme-engine-v1/helpers/product.php:171
 #: wpsc-components/theme-engine-v1/helpers/product.php:457
 #: wpsc-core/wpsc-deprecated.php:1047 wpsc-core/wpsc-deprecated.php:1089
-#: wpsc-includes/purchaselogs.class.php:320
-#: wpsc-includes/purchaselogs.class.php:934
+#: wpsc-includes/purchaselogs.class.php:322
+#: wpsc-includes/purchaselogs.class.php:951
 msgid "N/A"
 msgstr ""
 
@@ -925,7 +925,7 @@ msgid "SSP"
 msgstr ""
 
 #: wpsc-admin/db-upgrades/routines/10.php:26
-#: wpsc-components/merchant-core-v3/classes/payment-gateway.php:355
+#: wpsc-components/merchant-core-v3/classes/payment-gateway.php:357
 #: wpsc-core/wpsc-deprecated.php:1529 wpsc-core/wpsc-deprecated.php:1537
 #: wpsc-core/wpsc-installer.php:722 wpsc-core/wpsc-installer.php:731
 #: wpsc-core/wpsc-installer.php:775 wpsc-core/wpsc-installer.php:785
@@ -2277,10 +2277,6 @@ msgid ""
 "on.  Take note, this will apply this rule to <strong>every</strong> product "
 "using this variation.  If you need to override it for any reason on a "
 "specific product, simply go to that product and change the price."
-msgstr ""
-
-#: wpsc-admin/includes/product-functions.php:475
-msgid "Could not insert product into the database"
 msgstr ""
 
 #: wpsc-admin/includes/product-variation-list-table.class.php:132
@@ -3724,7 +3720,7 @@ msgid "Cancel editing this shipping calculator's settings"
 msgstr ""
 
 #: wpsc-admin/includes/settings-tabs/shipping.php:130
-#: wpsc-shipping/ups_20.php:197 wpsc-shipping/usps_20.php:211
+#: wpsc-shipping/ups_20.php:204 wpsc-shipping/usps_20.php:211
 msgid "Shipping Settings"
 msgstr ""
 
@@ -4666,7 +4662,7 @@ msgstr ""
 #: wpsc-components/merchant-core-v2/helpers/gateways.php:119
 #: wpsc-components/theme-engine-v1/templates/functions/wpsc-user_log_functions.php:301
 #: wpsc-core/wpsc-deprecated.php:1578 wpsc-includes/purchase-log.class.php:537
-#: wpsc-includes/purchaselogs.class.php:602
+#: wpsc-includes/purchaselogs.class.php:604
 #: wpsc-merchants/testmode.merchant.php:16
 #: wpsc-theme/functions/wpsc-user_log_functions.php:477
 msgid "Manual Payment"
@@ -4707,36 +4703,36 @@ msgstr ""
 msgid "Invalid payment gateway: Class %s does not exist."
 msgstr ""
 
-#: wpsc-components/merchant-core-v3/classes/payment-gateway.php:346
+#: wpsc-components/merchant-core-v3/classes/payment-gateway.php:348
 msgid "Billing Fields"
 msgstr ""
 
-#: wpsc-components/merchant-core-v3/classes/payment-gateway.php:347
+#: wpsc-components/merchant-core-v3/classes/payment-gateway.php:349
 msgid "Shipping Fields"
 msgstr ""
 
-#: wpsc-components/merchant-core-v3/classes/payment-gateway.php:351
+#: wpsc-components/merchant-core-v3/classes/payment-gateway.php:353
 #: wpsc-core/wpsc-installer.php:718 wpsc-core/wpsc-installer.php:727
 #: wpsc-core/wpsc-installer.php:771 wpsc-core/wpsc-installer.php:781
 #: wpsc-theme/functions/wpsc-user_log_functions.php:59
 msgid "First Name"
 msgstr ""
 
-#: wpsc-components/merchant-core-v3/classes/payment-gateway.php:352
+#: wpsc-components/merchant-core-v3/classes/payment-gateway.php:354
 #: wpsc-core/wpsc-installer.php:719 wpsc-core/wpsc-installer.php:728
 #: wpsc-core/wpsc-installer.php:772 wpsc-core/wpsc-installer.php:782
 #: wpsc-theme/functions/wpsc-user_log_functions.php:63
 msgid "Last Name"
 msgstr ""
 
-#: wpsc-components/merchant-core-v3/classes/payment-gateway.php:353
+#: wpsc-components/merchant-core-v3/classes/payment-gateway.php:355
 #: wpsc-core/wpsc-deprecated.php:1563 wpsc-core/wpsc-installer.php:720
 #: wpsc-core/wpsc-installer.php:729 wpsc-core/wpsc-installer.php:773
 #: wpsc-core/wpsc-installer.php:783
 msgid "Address"
 msgstr ""
 
-#: wpsc-components/merchant-core-v3/classes/payment-gateway.php:354
+#: wpsc-components/merchant-core-v3/classes/payment-gateway.php:356
 #: wpsc-core/wpsc-functions.php:116 wpsc-core/wpsc-installer.php:721
 #: wpsc-core/wpsc-installer.php:730 wpsc-core/wpsc-installer.php:774
 #: wpsc-core/wpsc-installer.php:784
@@ -4744,7 +4740,7 @@ msgstr ""
 msgid "City"
 msgstr ""
 
-#: wpsc-components/merchant-core-v3/classes/payment-gateway.php:357
+#: wpsc-components/merchant-core-v3/classes/payment-gateway.php:359
 #: wpsc-core/wpsc-installer.php:724 wpsc-core/wpsc-installer.php:733
 #: wpsc-core/wpsc-installer.php:779 wpsc-core/wpsc-installer.php:787
 msgid "Postal Code"
@@ -6683,12 +6679,12 @@ msgstr ""
 
 #: wpsc-components/theme-engine-v2/helpers/template-tags/form.php:139
 #: wpsc-components/theme-engine-v2/helpers/template-tags/form.php:206
-#: wpsc-shipping/ups_20.php:244
+#: wpsc-shipping/ups_20.php:251
 msgid "Username"
 msgstr ""
 
 #: wpsc-components/theme-engine-v2/helpers/template-tags/form.php:147
-#: wpsc-shipping/ups_20.php:250
+#: wpsc-shipping/ups_20.php:257
 msgid "Password"
 msgstr ""
 
@@ -7840,84 +7836,84 @@ msgstr ""
 msgid "Choose a downloadable file for this variation"
 msgstr ""
 
-#: wpsc-includes/misc.functions.php:100
+#: wpsc-includes/misc.functions.php:105
 msgid "<strong>ERROR</strong>: Please enter a username."
 msgstr ""
 
-#: wpsc-includes/misc.functions.php:102
+#: wpsc-includes/misc.functions.php:107
 msgid ""
 "<strong>ERROR</strong>: This username is invalid.  Please enter a valid "
 "username."
 msgstr ""
 
-#: wpsc-includes/misc.functions.php:105
+#: wpsc-includes/misc.functions.php:110
 msgid ""
 "<strong>ERROR</strong>: This username is already registered, please choose "
 "another one."
 msgstr ""
 
-#: wpsc-includes/misc.functions.php:110
+#: wpsc-includes/misc.functions.php:115
 msgid "<strong>ERROR</strong>: Please type your e-mail address."
 msgstr ""
 
-#: wpsc-includes/misc.functions.php:112
+#: wpsc-includes/misc.functions.php:117
 msgid "<strong>ERROR</strong>: The email address isn&#8217;t correct."
 msgstr ""
 
-#: wpsc-includes/misc.functions.php:115
+#: wpsc-includes/misc.functions.php:120
 msgid ""
 "<strong>ERROR</strong>: This email is already registered, please choose "
 "another one."
 msgstr ""
 
-#: wpsc-includes/misc.functions.php:123
+#: wpsc-includes/misc.functions.php:128
 msgid ""
 "<strong>ERROR</strong>: Couldn&#8217;t register you... please contact the "
 "<a href=\"mailto:%s\">webmaster</a> !"
 msgstr ""
 
-#: wpsc-includes/misc.functions.php:617
+#: wpsc-includes/misc.functions.php:637
 msgid ""
 "Please refrain from uploading images larger than <strong>%d x %d</strong> "
 "pixels"
 msgstr ""
 
-#: wpsc-includes/misc.functions.php:704 wpsc-includes/misc.functions.php:753
+#: wpsc-includes/misc.functions.php:724 wpsc-includes/misc.functions.php:773
 msgid ""
 "%1$s is <strong>deprecated</strong> since WP eCommerce version %2$s! Use "
 "%3$s instead."
 msgstr ""
 
-#: wpsc-includes/misc.functions.php:712 wpsc-includes/misc.functions.php:761
+#: wpsc-includes/misc.functions.php:732 wpsc-includes/misc.functions.php:781
 msgid ""
 "%1$s is <strong>deprecated</strong> since WP eCommerce version %2$s with no "
 "alternative available."
 msgstr ""
 
-#: wpsc-includes/misc.functions.php:809
+#: wpsc-includes/misc.functions.php:829
 msgid ""
 "%1$s was called with an argument that is <strong>deprecated</strong> since "
 "WP eCommerce version %2$s! %3$s"
 msgstr ""
 
-#: wpsc-includes/misc.functions.php:818
+#: wpsc-includes/misc.functions.php:838
 msgid ""
 "%1$s was called with an argument that is <strong>deprecated</strong> since "
 "WP eCommerce version %2$s with no alternative available."
 msgstr ""
 
-#: wpsc-includes/misc.functions.php:854
+#: wpsc-includes/misc.functions.php:874
 msgid "(This message was added in WP eCommerce version %s.)"
 msgstr ""
 
-#: wpsc-includes/misc.functions.php:855
+#: wpsc-includes/misc.functions.php:875
 msgid ""
 "Please see <a "
 "href=\"http://codex.wordpress.org/Debugging_in_WordPress\">Debugging in "
 "WordPress</a> for more information."
 msgstr ""
 
-#: wpsc-includes/misc.functions.php:858
+#: wpsc-includes/misc.functions.php:878
 msgid "%1$s was called <strong>incorrectly</strong>. %2$s %3$s"
 msgstr ""
 
@@ -8042,23 +8038,23 @@ msgstr ""
 msgid "You don't have the permission to view this page"
 msgstr ""
 
-#: wpsc-includes/purchaselogs.class.php:199
+#: wpsc-includes/purchaselogs.class.php:201
 msgid "KG"
 msgstr ""
 
-#: wpsc-includes/purchaselogs.class.php:199
+#: wpsc-includes/purchaselogs.class.php:201
 msgid "LB"
 msgstr ""
 
-#: wpsc-includes/purchaselogs.class.php:199
+#: wpsc-includes/purchaselogs.class.php:201
 msgid "OZ"
 msgstr ""
 
-#: wpsc-includes/purchaselogs.class.php:638
+#: wpsc-includes/purchaselogs.class.php:640
 msgid "Release downloads locked to this IP address %s"
 msgstr ""
 
-#: wpsc-includes/purchaselogs.class.php:831
+#: wpsc-includes/purchaselogs.class.php:838
 msgid "Thanks, the purchase log record has been deleted"
 msgstr ""
 
@@ -8106,19 +8102,19 @@ msgid ""
 "together to perform and insert or an update."
 msgstr ""
 
-#: wpsc-includes/wpsc-country.class.php:721
+#: wpsc-includes/wpsc-country.class.php:720
 msgid ""
 "As of version 3.8.14 calling WPSC_Country class method \"save\" is not "
 "required. Changes to WPSC_Country properties are saved automatically."
 msgstr ""
 
-#: wpsc-includes/wpsc-country.class.php:740
+#: wpsc-includes/wpsc-country.class.php:739
 msgid ""
 "As of version 3.8.14 the function \"%s\" is no longer available in class "
 "%s. Use %s instead"
 msgstr ""
 
-#: wpsc-includes/wpsc-country.class.php:751
+#: wpsc-includes/wpsc-country.class.php:750
 msgid ""
 "As of version 3.8.14 the parameter \"%s\" for function %s is no longer used "
 "in class %s."
@@ -8326,7 +8322,7 @@ msgid ""
 msgstr ""
 
 #: wpsc-merchants/paypal-express.merchant.php:526
-#: wpsc-merchants/paypal-pro.merchant.php:459
+#: wpsc-merchants/paypal-pro.merchant.php:464
 #: wpsc-merchants/paypal-standard.merchant.php:794
 msgid "Currency Converter"
 msgstr ""
@@ -8340,7 +8336,7 @@ msgid ""
 msgstr ""
 
 #: wpsc-merchants/paypal-express.merchant.php:535
-#: wpsc-merchants/paypal-pro.merchant.php:465
+#: wpsc-merchants/paypal-pro.merchant.php:470
 msgid "Convert to"
 msgstr ""
 
@@ -8403,7 +8399,7 @@ msgid "Confirm Payment"
 msgstr ""
 
 #: wpsc-merchants/paypal-pro.merchant.php:4
-#: wpsc-merchants/paypal-pro.merchant.php:43
+#: wpsc-merchants/paypal-pro.merchant.php:46
 msgid "PayPal Pro 2.0"
 msgstr ""
 
@@ -8411,43 +8407,43 @@ msgstr ""
 msgid "PayPal Pro"
 msgstr ""
 
-#: wpsc-merchants/paypal-pro.merchant.php:201
+#: wpsc-merchants/paypal-pro.merchant.php:206
 msgid "There was a problem connecting to the payment gateway."
 msgstr ""
 
-#: wpsc-merchants/paypal-pro.merchant.php:217
+#: wpsc-merchants/paypal-pro.merchant.php:222
 msgid ""
 "There is a problem with your PayPal account configuration, please contact "
 "PayPal for further information."
 msgstr ""
 
-#: wpsc-merchants/paypal-pro.merchant.php:416
+#: wpsc-merchants/paypal-pro.merchant.php:421
 msgid "API Username:"
 msgstr ""
 
-#: wpsc-merchants/paypal-pro.merchant.php:424
+#: wpsc-merchants/paypal-pro.merchant.php:429
 msgid "API Password:"
 msgstr ""
 
-#: wpsc-merchants/paypal-pro.merchant.php:432
+#: wpsc-merchants/paypal-pro.merchant.php:437
 msgid "API Signature:"
 msgstr ""
 
-#: wpsc-merchants/paypal-pro.merchant.php:440
+#: wpsc-merchants/paypal-pro.merchant.php:445
 msgid "Test Mode Enabled:"
 msgstr ""
 
-#: wpsc-merchants/paypal-pro.merchant.php:444
+#: wpsc-merchants/paypal-pro.merchant.php:449
 msgid "Test Mode Enabled"
 msgstr ""
 
-#: wpsc-merchants/paypal-pro.merchant.php:446
+#: wpsc-merchants/paypal-pro.merchant.php:451
 msgid ""
 "Only enable test mode if you have a sandbox account with PayPal you can "
 "find out more about this <a href='%s'>here</a>"
 msgstr ""
 
-#: wpsc-merchants/paypal-pro.merchant.php:461
+#: wpsc-merchants/paypal-pro.merchant.php:466
 msgid ""
 "Your website is using a currency not accepted by PayPal, select an accepted "
 "currency using the drop down menu below. Buyers on your site will still pay "
@@ -8455,41 +8451,41 @@ msgid ""
 "order through to PayPal using the currency you choose below."
 msgstr ""
 
-#: wpsc-merchants/paypal-pro.merchant.php:497
+#: wpsc-merchants/paypal-pro.merchant.php:502
 msgid ""
 "For more help configuring Paypal Pro, please read our documentation <a "
 "href='%s'>here</a>"
 msgstr ""
 
-#: wpsc-merchants/paypal-pro.merchant.php:518
+#: wpsc-merchants/paypal-pro.merchant.php:523
 msgid "Credit Card Number *"
 msgstr ""
 
-#: wpsc-merchants/paypal-pro.merchant.php:524
+#: wpsc-merchants/paypal-pro.merchant.php:529
 msgid "Credit Card Expiry *"
 msgstr ""
 
-#: wpsc-merchants/paypal-pro.merchant.php:547
+#: wpsc-merchants/paypal-pro.merchant.php:552
 msgid "CVV *"
 msgstr ""
 
-#: wpsc-merchants/paypal-pro.merchant.php:552
+#: wpsc-merchants/paypal-pro.merchant.php:557
 msgid "Card Type *"
 msgstr ""
 
-#: wpsc-merchants/paypal-pro.merchant.php:557
+#: wpsc-merchants/paypal-pro.merchant.php:562
 msgid "Visa"
 msgstr ""
 
-#: wpsc-merchants/paypal-pro.merchant.php:558
+#: wpsc-merchants/paypal-pro.merchant.php:563
 msgid "MasterCard"
 msgstr ""
 
-#: wpsc-merchants/paypal-pro.merchant.php:559
+#: wpsc-merchants/paypal-pro.merchant.php:564
 msgid "Discover"
 msgstr ""
 
-#: wpsc-merchants/paypal-pro.merchant.php:560
+#: wpsc-merchants/paypal-pro.merchant.php:565
 msgid "Amex"
 msgstr ""
 
@@ -8778,241 +8774,241 @@ msgid ""
 "way, <a href=\"%s\">enable JavaScript</a> for a better user experience."
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:61
+#: wpsc-shipping/ups_20.php:68
 msgid "Daily Pickup"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:62
+#: wpsc-shipping/ups_20.php:69
 msgid "Customer Counter"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:63
+#: wpsc-shipping/ups_20.php:70
 msgid "One Time Pickup"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:64
+#: wpsc-shipping/ups_20.php:71
 msgid "On Call Air"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:65
+#: wpsc-shipping/ups_20.php:72
 msgid "Letter Center"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:66
+#: wpsc-shipping/ups_20.php:73
 msgid "Air Service Center"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:67
+#: wpsc-shipping/ups_20.php:74
 msgid "Suggested Retail Rates (Advanced Config)"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:71
+#: wpsc-shipping/ups_20.php:78
 msgid "Daily Pickup, with UPS Account"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:72
+#: wpsc-shipping/ups_20.php:79
 msgid "No Daily Pickup, with No or Other Account"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:73
+#: wpsc-shipping/ups_20.php:80
 msgid "Retail Outlet (Only US origin shipments)"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:77
+#: wpsc-shipping/ups_20.php:84
 msgid "Next Day Air Early AM"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:78
+#: wpsc-shipping/ups_20.php:85
 msgid "Next Day Air"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:79
+#: wpsc-shipping/ups_20.php:86
 msgid "Next Day Air Saver"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:80
+#: wpsc-shipping/ups_20.php:87
 msgid "2nd Day Air AM"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:81
+#: wpsc-shipping/ups_20.php:88
 msgid "2nd Day Air"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:82
+#: wpsc-shipping/ups_20.php:89
 msgid "3 Day Select"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:83
+#: wpsc-shipping/ups_20.php:90
 msgid "Ground"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:84
+#: wpsc-shipping/ups_20.php:91
 msgid "Standard"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:85
+#: wpsc-shipping/ups_20.php:92
 msgid "Worldwide Express"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:86
+#: wpsc-shipping/ups_20.php:93
 msgid "Worldwide Express Plus"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:87
+#: wpsc-shipping/ups_20.php:94
 msgid "Worldwide Expedited"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:88
+#: wpsc-shipping/ups_20.php:95
 msgid "Saver"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:89
+#: wpsc-shipping/ups_20.php:96
 msgid "UPS Today Standard"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:90
+#: wpsc-shipping/ups_20.php:97
 msgid "UPS Today Dedicated Courier"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:91
+#: wpsc-shipping/ups_20.php:98
 msgid "UPS Today Intercity"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:92
+#: wpsc-shipping/ups_20.php:99
 msgid "UPS Today Express"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:93
+#: wpsc-shipping/ups_20.php:100
 msgid "UPS Today Express Saver"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:106
+#: wpsc-shipping/ups_20.php:113
 msgid "UPS Letter"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:107
+#: wpsc-shipping/ups_20.php:114
 msgid "Your Packaging"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:108
+#: wpsc-shipping/ups_20.php:115
 msgid "UPS Tube"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:109
+#: wpsc-shipping/ups_20.php:116
 msgid "UPS Pak"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:110
+#: wpsc-shipping/ups_20.php:117
 msgid "UPS Express Box"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:111
+#: wpsc-shipping/ups_20.php:118
 msgid "UPS Express Box - Small"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:112
+#: wpsc-shipping/ups_20.php:119
 msgid "UPS Express Box - Medium"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:113
+#: wpsc-shipping/ups_20.php:120
 msgid "UPS Express Box - Large"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:119
+#: wpsc-shipping/ups_20.php:126
 msgid "Destination Type"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:123
+#: wpsc-shipping/ups_20.php:130
 msgid "Residential Address"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:126
+#: wpsc-shipping/ups_20.php:133
 msgid "Commercial Address"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:140
+#: wpsc-shipping/ups_20.php:147
 msgid "Dropoff Type"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:171
+#: wpsc-shipping/ups_20.php:178
 msgid "Customer Type"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:184
+#: wpsc-shipping/ups_20.php:191
 msgid "Packaging"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:200
+#: wpsc-shipping/ups_20.php:207
 msgid "Use Testing Environment"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:203
+#: wpsc-shipping/ups_20.php:210
 msgid "Show UPS negotiated rates"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:206
+#: wpsc-shipping/ups_20.php:213
 msgid "Insure shipment against cart total"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:209
+#: wpsc-shipping/ups_20.php:216
 msgid "Singular Shipping"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:210
+#: wpsc-shipping/ups_20.php:217
 msgid ""
 "Rate each quantity of items in a cart as its own package using dimensions "
 "on product"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:212 wpsc-shipping/usps_20.php:226
+#: wpsc-shipping/ups_20.php:219 wpsc-shipping/usps_20.php:226
 msgid "Disable International Shipping"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:213 wpsc-shipping/usps_20.php:228
+#: wpsc-shipping/ups_20.php:220 wpsc-shipping/usps_20.php:228
 msgid ""
 "No shipping rates will be displayed if the shipment destination country is "
 "different than your base country/region."
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:222
+#: wpsc-shipping/ups_20.php:229
 msgid "UPS Preferred Services"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:230
+#: wpsc-shipping/ups_20.php:237
 msgid "Note: All services used if no services selected"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:235
+#: wpsc-shipping/ups_20.php:242
 msgid "My UPS"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:238
+#: wpsc-shipping/ups_20.php:245
 msgid "Account Number"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:256
+#: wpsc-shipping/ups_20.php:263
 msgid "UPS XML API Key"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:259
+#: wpsc-shipping/ups_20.php:266
 msgid ""
 "Don't have an API login/ID? <a href='%s' target='_blank'>Sign up for My "
 "UPS</a>"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:264
+#: wpsc-shipping/ups_20.php:271
 msgid ""
 "* For Negotiated rates, you must enter a UPS account number and select "
 "\"Show UPS negotiated rates\" "
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:265
+#: wpsc-shipping/ups_20.php:272
 msgid ""
 "For more help configuring UPS, please <a href='%s'>read our "
 "documentation</a>"
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:782
+#: wpsc-shipping/ups_20.php:789
 msgid ""
 "Your order exceeds the standard shipping weight limit. Please contact us to "
 "quote other shipping alternatives."
@@ -12758,7 +12754,7 @@ msgctxt "paypal express cancel header"
 msgid "<h4>TRANSACTION CANCELED</h4>"
 msgstr ""
 
-#: wpsc-merchants/paypal-pro.merchant.php:162
+#: wpsc-merchants/paypal-pro.merchant.php:165
 msgctxt "PayPal Pro Item Name for Discounts"
 msgid "Coupon / Discount"
 msgstr ""
@@ -12833,7 +12829,7 @@ msgid ""
 "important things to note."
 msgstr ""
 
-#: wpsc-shipping/ups_20.php:16
+#: wpsc-shipping/ups_20.php:23
 msgctxt "Shipping Module"
 msgid "UPS"
 msgstr ""
