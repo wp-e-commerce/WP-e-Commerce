@@ -106,7 +106,7 @@ class Sputnik_List_Install extends WP_List_Table {
 
 		echo '<p>';
 		if ( $tab == 'purchased' )
-			printf( __( "You haven't purchased any add-ons yet. <a href='%s'>Browse our add-on collection.</a>", 'wpsc' ), Sputnik_Admin::build_url() );
+			printf( __( "You haven't purchased any extensions yet. <a href='%s'>Browse our extensions marketplace.</a>", 'wpsc' ), Sputnik_Admin::build_url() );
 		else
 			_e( 'No plugins match your request.', 'wpsc' );
 		echo '</p>';

@@ -219,7 +219,7 @@ class Sputnik_Admin {
 	}
 
 	public static function menu() {
-		$hooks[] = add_submenu_page( 'edit.php?post_type=wpsc-product', _x( 'Add-Ons', 'page title', 'wpsc' ), _x( 'Add-Ons', 'menu title', 'wpsc' ), 'install_plugins', 'sputnik', array( __CLASS__, 'page' ) );
+		$hooks[] = add_submenu_page( 'edit.php?post_type=wpsc-product', _x( 'Extensions', 'page title', 'wpsc' ), _x( 'Extensions', 'menu title', 'wpsc' ), 'install_plugins', 'sputnik', array( __CLASS__, 'page' ) );
 		$hooks[] = 'plugin-install.php';
 		foreach ( $hooks as $hook ) {
 			add_action( "admin_print_styles-$hook" , array( __CLASS__, 'page_styles' ) );

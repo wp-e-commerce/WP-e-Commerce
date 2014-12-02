@@ -1,7 +1,7 @@
 <?php
 
 // this is the priority that all hooks that enforce business rules about visitor meta will run.
-// Intentially set to a high priority so that add-ons that use the hooks see the visitor meta values
+// Intentially set to a high priority so that extensions that use the hooks see the visitor meta values
 // after the rules have been enforced
 if ( ! defined( '_WPSC_USER_META_HOOK_PRIORITY' ) ) {
 	define( '_WPSC_USER_META_HOOK_PRIORITY' , 2 );

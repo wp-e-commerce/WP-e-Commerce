@@ -5643,8 +5643,8 @@ msgstr[0] "(gebaseerd op %s waardering)"
 msgstr[1] "(gebaseerd op %s waarderingen)"
 
 #: wpsc-components/marketplace-core-v1/library/Sputnik/Pointers.php:28
-msgid "New Feature: WPeC Add-Ons"
-msgstr "Nieuwe mogelijkheid: WPeC Add-Ons"
+msgid "New Feature: WPeC Extensions"
+msgstr "Nieuwe mogelijkheid: WPeC Extensions"
 
 #: wpsc-components/marketplace-core-v1/library/Sputnik/Pointers.php:29
 msgid ""
