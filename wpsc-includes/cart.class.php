@@ -119,6 +119,8 @@ class wpsc_cart {
 
 	public function update_location() {
 
+		$this->clear_cache();
+
 		$delivery_country = wpsc_get_customer_meta( 'shippingcountry' );
 		$billing_country  = wpsc_get_customer_meta( 'billingcountry'  );
 		$delivery_region  = wpsc_get_customer_meta( 'shippingregion'  );
@@ -142,7 +144,7 @@ class wpsc_cart {
 	public function wpsc_refresh_cart_items() {
 		global $wpsc_cart;
 
-		if ( is_object( $wpsc_cart ) && is_object( $wpsc_cart->cart_items ) ) {
+		if ( is_object( $wpsc_cart ) && is_array( $wpsc_cart->cart_items ) ) {
 			foreach ( $wpsc_cart->cart_items as $cart_item ) {
 				$cart_item->refresh_item();
 			}
