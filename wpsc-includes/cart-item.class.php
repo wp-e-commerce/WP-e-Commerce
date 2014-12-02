@@ -5,7 +5,6 @@
  * This is the class for WP eCommerce Cart Items,
  * The Cart Items class handles the same, but for cart items themselves.
  *
- *
  * @package wp-e-commerce
  * @since 3.8
  * @subpackage wpsc-cart-classes
@@ -96,7 +95,8 @@ class wpsc_cart_item {
 	}
 
 	/**
-	 * update or add cart item meta value
+	 * Update or add cart item meta value
+	 * 
 	 * @access public
 	 * @param meta key name
 	 * @param meta key value
@@ -163,7 +163,7 @@ class wpsc_cart_item {
 	 *
 	 * @param integer the product ID
 	 * @param array parameters
-	 * @param objcet  the cart object
+	 * @param object  the cart object
 	 * @return boolean true on sucess, false on failure
 	 */
 	function __construct( $product_id, $parameters, $cart ) {
