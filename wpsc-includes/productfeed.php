@@ -1,4 +1,9 @@
 <?php
+/**
+ * Generates an RSS feed for WP eCommerce Products
+ * 
+ * @package wp-e-commerce
+ */ 
 
 function wpsc_feed_publisher() {
 
