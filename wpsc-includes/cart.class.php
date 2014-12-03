@@ -431,7 +431,9 @@ class wpsc_cart {
 	function get_shipping_option() {
 		global $wpdb, $wpsc_shipping_modules;
 
-		if ( ( count( $this->shipping_quotes ) < 1 ) && is_callable( array( $wpsc_shipping_modules[$this->selected_shipping_method], 'getQuote'  ) ) ) {
+		if ( ( count( $this->shipping_quotes ) < 1 ) &&
+		     isset( $wpsc_shipping_modules[$this->selected_shipping_method] ) &&
+		     is_callable( array( $wpsc_shipping_modules[$this->selected_shipping_method], 'getQuote' ) ) ) {
 			$this->shipping_quotes = $wpsc_shipping_modules[$this->selected_shipping_method]->getQuote();
 		}
 
