@@ -442,7 +442,7 @@ class wpsc_cart {
 		}
 
 		if ( count( $this->shipping_quotes ) < 1 ) {
-			$this->selected_shipping_option = '';
+			$this->selected_shipping_option = null;
 		}
 
 		// if the current shipping option is not valid, go back to no shipping option
