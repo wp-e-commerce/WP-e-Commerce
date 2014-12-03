@@ -438,7 +438,7 @@ class wpsc_cart {
 		}
 
 		if ( ! isset( $wpsc_shipping_modules[$this->selected_shipping_method] ) ) {
-			$wpsc_shipping_modules[$this->selected_shipping_method] = '';
+			$this->selected_shipping_option = null;
 		}
 
 		if ( count( $this->shipping_quotes ) < 1 ) {
