@@ -18,13 +18,10 @@ function wpsc_get_max_upload_size(){
 * @return nothing
 */
 function wpsc_admin_submit_product( $post_ID, $post ) {
-	if ( ! is_admin() )
-		return;
 
-	global $wpdb;
-
-	if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || $post->post_type != 'wpsc-product' )
+	if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || $post->post_type != 'wpsc-product' ) {
 		return;
+	}
 
     //Type-casting ( not so much sanitization, which would be good to do )
     $post_data  = stripslashes_deep( $_POST );
@@ -35,6 +32,7 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 	if ( ! isset( $post_data['meta'] ) && isset( $_POST['meta'] ) ) {
 		$post_data['meta'] = (array) $_POST['meta'];
 	}
+
 
 	if ( isset( $post_data['meta']['_wpsc_price'] ) )
 		$post_data['meta']['_wpsc_price'] = wpsc_string_to_float( $post_data['meta']['_wpsc_price'] );
@@ -138,10 +136,17 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 		$post_data['meta']['_wpsc_product_metadata']['shipping']['international'] = wpsc_string_to_float( $post_data['meta']['_wpsc_product_metadata']['shipping']['international'] );
 	}
 
-	if ( ! empty( $post_data['meta']['_wpsc_product_metadata']['wpec_taxes_taxable_amount'] ) )
+	if ( ! empty( $post_data['meta']['_wpsc_product_metadata']['wpec_taxes_taxable_amount'] ) ) {
+
 		$post_data['meta']['_wpsc_product_metadata']['wpec_taxes_taxable_amount'] = wpsc_string_to_float(
 			$post_data['meta']['_wpsc_product_metadata']['wpec_taxes_taxable_amount']
 		);
+
+	}
+
+	if ( ! isset( $post_data['meta']['_wpsc_product_metadata']['wpec_taxes_taxable'] ) ) {
+	 	$post_data['meta']['_wpsc_product_metadata']['wpec_taxes_taxable'] = '';
+	}
 
 	// External Link Options
 	if ( isset( $_POST['wpsc_product_external_link_nonce'] ) && wp_verify_nonce( $_POST['wpsc_product_external_link_nonce'], 'update' ) ) {
@@ -188,6 +193,7 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 		'engraved'                 => 0,
 		'can_have_uploaded_image'  => 0
 	) );
+
 	$post_data['meta']['_wpsc_product_metadata'] = wp_parse_args( $post_data['meta']['_wpsc_product_metadata'], $default_meta_values );
 
 	$post_data['files'] = $_FILES;
@@ -237,6 +243,7 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 
 	// and the custom meta
 	wpsc_update_custom_meta($product_id, $post_data);
+
 
 	// Update the alternative currencies
 	if ( isset( $post_data['wpsc-update-currency-layers'] ) && wp_verify_nonce( $post_data['wpsc-update-currency-layers'], 'update-options' ) ) {
