@@ -119,6 +119,8 @@ class wpsc_cart {
 
 	public function update_location() {
 
+		$this->clear_cache();
+
 		$delivery_country = wpsc_get_customer_meta( 'shippingcountry' );
 		$billing_country  = wpsc_get_customer_meta( 'billingcountry'  );
 		$delivery_region  = wpsc_get_customer_meta( 'shippingregion'  );
@@ -142,7 +144,7 @@ class wpsc_cart {
 	public function wpsc_refresh_cart_items() {
 		global $wpsc_cart;
 
-		if ( is_object( $wpsc_cart ) && is_object( $wpsc_cart->cart_items ) ) {
+		if ( is_object( $wpsc_cart ) && is_array( $wpsc_cart->cart_items ) ) {
 			foreach ( $wpsc_cart->cart_items as $cart_item ) {
 				$cart_item->refresh_item();
 			}
@@ -429,16 +431,18 @@ class wpsc_cart {
 	function get_shipping_option() {
 		global $wpdb, $wpsc_shipping_modules;
 
-		if ( ( count( $this->shipping_quotes ) < 1 ) && is_callable( array( $wpsc_shipping_modules[$this->selected_shipping_method], 'getQuote'  ) ) ) {
+		if ( ( count( $this->shipping_quotes ) < 1 ) &&
+		     isset( $wpsc_shipping_modules[$this->selected_shipping_method] ) &&
+		     is_callable( array( $wpsc_shipping_modules[$this->selected_shipping_method], 'getQuote' ) ) ) {
 			$this->shipping_quotes = $wpsc_shipping_modules[$this->selected_shipping_method]->getQuote();
 		}
 
 		if ( ! isset( $wpsc_shipping_modules[$this->selected_shipping_method] ) ) {
-			$wpsc_shipping_modules[$this->selected_shipping_method] = '';
+			$this->selected_shipping_option = null;
 		}
 
 		if ( count( $this->shipping_quotes ) < 1 ) {
-			$this->selected_shipping_option = '';
+			$this->selected_shipping_option = null;
 		}
 
 		// if the current shipping option is not valid, go back to no shipping option
