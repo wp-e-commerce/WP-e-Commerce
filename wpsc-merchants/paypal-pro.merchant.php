@@ -520,13 +520,13 @@ if ( in_array( 'wpsc_merchant_paypal_pro', (array)get_option( 'custom_gateway_op
 
 	$output = "
 	<tr>
-		<td class='wpsc_CC_details'>" . __( 'Credit Card Number *', 'wpsc' ) . "</td>
+		<td class='wpsc_CC_details'>" . __( 'Credit Card Number <span class="asterix">*</span>', 'wpsc' ) . "</td>
 		<td>
 			<input type='text' value='' name='card_number' />
 		</td>
 	</tr>
 	<tr>
-		<td class='wpsc_CC_details'>" . __( 'Credit Card Expiry *', 'wpsc' ) . "</td>
+		<td class='wpsc_CC_details'>" . __( 'Credit Card Expiry <span class="asterix">*</span>', 'wpsc' ) . "</td>
 		<td>
 			<select class='wpsc_ccBox' name='expiry[month]'>
 			" . $months . "
@@ -549,12 +549,12 @@ if ( in_array( 'wpsc_merchant_paypal_pro', (array)get_option( 'custom_gateway_op
 		</td>
 	</tr>
 	<tr>
-		<td class='wpsc_CC_details'>" . __( 'CVV *', 'wpsc' ) . "</td>
+		<td class='wpsc_CC_details'>" . __( 'CVV <span class="asterix">*</span>', 'wpsc' ) . "</td>
 		<td><input type='text' size='4' value='' maxlength='4' name='card_code' />
 		</td>
 	</tr>
 	<tr>
-		<td class='wpsc_CC_details'>" . __( 'Card Type *', 'wpsc' ) . "</td>
+		<td class='wpsc_CC_details'>" . __( 'Card Type <span class="asterix">*</span>', 'wpsc' ) . "</td>
 		<td>
 		<select class='wpsc_ccBox' name='cctype'>";
 
