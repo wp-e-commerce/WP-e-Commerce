@@ -166,7 +166,7 @@ function wpsc_has_purchases() {
 	if ( $earliest_record[0]['date'] != null ) {
 		$form_sql = "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `active` = '1' AND `display_log` = '1';";
 		$col_count = 4; //+ count( $form_data );
-		$sql = "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `user_ID` IN ('" . $user_ID . "') ORDER BY `date` DESC";
+		$sql = "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `user_ID` IN ('" . $user_ID . "') AND `processed` IN (3,4,5) ORDER BY `date` DESC";
 		$purchase_log = $wpdb->get_results( $sql, ARRAY_A );
 
 		return true;
