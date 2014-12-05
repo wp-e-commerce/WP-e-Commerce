@@ -472,6 +472,9 @@ function wpsc_product_taxes_forms() {
 	}
 
 	echo $output;
+
+	wp_nonce_field( 'update', 'wpsc_product_tax_nonce' );
+
 }
 
 function wpsc_product_variation_forms() {

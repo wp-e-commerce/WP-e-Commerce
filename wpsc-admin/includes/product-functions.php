@@ -136,16 +136,18 @@ function wpsc_admin_submit_product( $post_ID, $post ) {
 		$post_data['meta']['_wpsc_product_metadata']['shipping']['international'] = wpsc_string_to_float( $post_data['meta']['_wpsc_product_metadata']['shipping']['international'] );
 	}
 
-	if ( ! empty( $post_data['meta']['_wpsc_product_metadata']['wpec_taxes_taxable_amount'] ) ) {
+	// Update product taxes
+	if ( isset( $_POST['wpsc_product_tax_nonce'] ) && wp_verify_nonce( $_POST['wpsc_product_tax_nonce'], 'update' ) ) {
 
-		$post_data['meta']['_wpsc_product_metadata']['wpec_taxes_taxable_amount'] = wpsc_string_to_float(
-			$post_data['meta']['_wpsc_product_metadata']['wpec_taxes_taxable_amount']
-		);
+		$post_data['meta']['_wpsc_product_metadata'] = wp_parse_args( $post_data['meta']['_wpsc_product_metadata'], array(
+			'wpec_taxes_taxable_amount' => '',
+			'wpec_taxes_taxable'        => ''
+		) );
+		if ( ! empty( $post_data['meta']['_wpsc_product_metadata']['wpec_taxes_taxable_amount'] ) ) {
+			$post_data['meta']['_wpsc_product_metadata']['wpec_taxes_taxable_amount'] = wpsc_string_to_float($post_data['meta']['_wpsc_product_metadata']['wpec_taxes_taxable_amount'] );
+		}
+		$post_data['meta']['_wpsc_product_metadata']['wpec_taxes_taxable'] = $post_data['meta']['_wpsc_product_metadata']['wpec_taxes_taxable'];
 
-	}
-
-	if ( ! isset( $post_data['meta']['_wpsc_product_metadata']['wpec_taxes_taxable'] ) ) {
-	 	$post_data['meta']['_wpsc_product_metadata']['wpec_taxes_taxable'] = '';
 	}
 
 	// External Link Options
