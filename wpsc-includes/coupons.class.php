@@ -1,11 +1,11 @@
 <?php
-/** 
+/**
  * The Coupons Class
- * 
- * Holds the main coupon class amd other important coupon functions 
- * 
+ *
+ * Holds the main coupon class amd other important coupon functions
+ *
  * @package wp-e-commerce
- */ 
+ */
 
 /**
 * uses coupons function, no parameters

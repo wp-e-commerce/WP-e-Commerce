@@ -493,7 +493,7 @@ class wpsc_checkout {
 					switch ( $form_data->type ) {
 						case 'email':
 
-							if ( ! preg_match( '/^[a-zA-Z0-9._-]+@[a-zA-Z0-9-.]+\.[a-zA-Z]{2,5}$/', $value ) ) {
+							if ( ! is_email( $value ) ) {
 								$any_bad_inputs = true;
 								$bad_input = true;
 							}
@@ -534,9 +534,9 @@ class wpsc_checkout {
 			}
 		}
 
-		wpsc_update_customer_meta( 'checkout_error_messages'     , $wpsc_checkout_error_messages     );
-		wpsc_update_customer_meta( 'gateway_error_messages'      , $wpsc_gateway_error_messages      );
-		wpsc_update_customer_meta( 'registration_error_messages' , $wpsc_registration_error_messages );
+		wpsc_update_customer_meta( 'checkout_error_messages'    , $wpsc_checkout_error_messages     );
+		wpsc_update_customer_meta( 'gateway_error_messages'     , $wpsc_gateway_error_messages      );
+		wpsc_update_customer_meta( 'registration_error_messages', $wpsc_registration_error_messages );
 
 		$filtered_checkout_details = apply_filters( 'wpsc_update_customer_checkout_details', $wpsc_customer_checkout_details );
 
