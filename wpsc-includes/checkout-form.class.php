@@ -1,4 +1,10 @@
 <?php
+/**
+ * The WP eCommerce Checkout Form Class
+ * 
+ * @package wp-e-commerce
+ * @since 3.8.10
+ */ 
 
 class WPSC_Checkout_Form {
 	/**
@@ -134,6 +140,7 @@ class WPSC_Checkout_Form {
 				$this->field_unique_name_id[$field->unique_name] = $field->id;
 			}
 		}
+		
 		return isset( $this->field_unique_name_id[$unique_name] ) ? $this->field_unique_name_id[$unique_name] : false;
 	}
 
@@ -195,6 +202,7 @@ class WPSC_Checkout_Form {
 				}
 			}
 		}
+		
 		return $fields_to_return;
 	}
 
