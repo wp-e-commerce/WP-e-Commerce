@@ -5,6 +5,7 @@
  * These are the functions that power administrative forms in the WordPress admin
  * 
  * @package wp-e-commerce
+ * @since 3.8
  */ 
 function coupon_edit_form($coupon) {
 
