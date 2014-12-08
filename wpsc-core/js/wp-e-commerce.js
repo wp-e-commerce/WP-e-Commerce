@@ -389,7 +389,7 @@ function wpsc_update_checkout_info( checkout_info ) {
  */
 function wpsc_meta_item_change_response( response ) {
 
-	jQuery( ".wpsc-visitor-meta").off( "change", wpsc_meta_item_change );
+	jQuery( ".wpsc-visitor-meta").off( 'change', wpsc_meta_item_change );
 
 	if ( response.hasOwnProperty('success') && response.success && response.hasOwnProperty('data') ) {
 

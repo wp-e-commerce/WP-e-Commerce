@@ -115,7 +115,7 @@ class wpsc_coupons {
 	 *
 	 * Checks if the current coupon is valid to use (Expiry date, Active, Used).
 	 *
-	 * @return bool True if coupon is not expried, used and still active, False otherwise.
+	 * @return bool True if coupon is not expired, used and still active, False otherwise.
 	 */
 	function validate_coupon() {
 

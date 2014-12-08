@@ -216,11 +216,14 @@ function wpsc_send_customer_email( $purchase_log ) {
 }
 
 function wpsc_send_admin_email( $purchase_log, $force = false ) {
-	if ( ! is_object( $purchase_log ) )
-		$purchase_log = new WPSC_Purchase_Log( $purchase_log );
 
-	if ( $purchase_log->get( 'email_sent' ) && ! $force )
+	if ( ! is_object( $purchase_log ) ) {
+		$purchase_log = new WPSC_Purchase_Log( $purchase_log );
+	}
+
+	if ( $purchase_log->get( 'email_sent' ) && ! $force ) {
 		return;
+	}
 
 	$email = new WPSC_Purchase_Log_Admin_Notification( $purchase_log );
 	$email_sent = $email->send();
@@ -231,6 +234,7 @@ function wpsc_send_admin_email( $purchase_log, $force = false ) {
 	}
 
 	do_action( 'wpsc_transaction_send_email_to_admin', $email, $email_sent );
+
 	return $email_sent;
 }
 
