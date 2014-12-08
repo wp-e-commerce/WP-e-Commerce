@@ -1192,7 +1192,7 @@ class wpsc_cart {
 	function rewind_shipping_methods() {
 		$this->current_shipping_method = - 1;
 		if ( $this->shipping_method_count > 0 ) {
-			$this->shipping_method = $this->shipping_methods [0];
+			$this->shipping_method = $this->shipping_methods[0];
 		}
 	}
 
@@ -1206,8 +1206,8 @@ class wpsc_cart {
 		if ( $this->shipping_method == null ) {
 			$this->get_shipping_method();
 		}
-		if ( isset( $wpsc_shipping_modules [$this->shipping_method] ) && is_callable( array( $wpsc_shipping_modules [$this->shipping_method], 'getQuote' ) ) ) {
-			$unprocessed_shipping_quotes = $wpsc_shipping_modules [$this->shipping_method]->getQuote();
+		if ( isset( $wpsc_shipping_modules[$this->shipping_method] ) && is_callable( array( $wpsc_shipping_modules [$this->shipping_method], 'getQuote' ) ) ) {
+			$unprocessed_shipping_quotes = $wpsc_shipping_modules[$this->shipping_method]->getQuote();
 		}
 		$num = 0;
 		if ( ! empty( $unprocessed_shipping_quotes ) ) {

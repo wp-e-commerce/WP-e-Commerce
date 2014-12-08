@@ -143,9 +143,9 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 			'last_name'  => $this->cart_data['billing_address']['last_name'],
 			'address1'   => $this->cart_data['billing_address']['address'],
 			'city'       => $this->cart_data['billing_address']['city'],
-			'state'      => $this->cart_data['billing_address']['state'],
+			'state'      => isset( $this->cart_data['billing_address']['state'] ) ? $this->cart_data['billing_address']['state'] : '',
 			'zip'        => $this->cart_data['billing_address']['post_code'],
-			'country'    => $this->cart_data['billing_address']['country'],
+			'country'    => isset( $this->cart_data['billing_address']['country'] ) ? $this->cart_data['billing_address']['country'] : '',
 		);
 
 		// Shipping
