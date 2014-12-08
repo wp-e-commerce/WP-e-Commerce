@@ -677,7 +677,7 @@ function wpsc_update_regions_list_to_match_country( country_select ) {
 }
 
 function wpsc_string_to_boolean( string ) {
-	return a.trim( string ) !== '';
+	return string.trim() !== '';
 }
 
 /*
