@@ -222,8 +222,9 @@ final class WPSC_Payment_Gateways {
 	}
 
 	/**
-	 * Updates the payment gateway cache when it's changed. This function is hooked
-	 * into WordPress' wp_loaded action
+	 * Updates the payment gateway cache when it's changed.
+	 *
+	 * This function is hooked into WordPress' wp_loaded action
 	 *
 	 * @access public
 	 * @static

@@ -552,7 +552,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 </tr>
 
 <!-- Currency Conversion -->
-<?php if ( ! $this->is_currency_supported() ): ?>
+<?php if ( ! $this->is_currency_supported() ) : ?>
 <tr>
     <td colspan="2">
         <h4><?php _e( 'Currency Conversion', 'wpsc' ); ?></h4>

@@ -18,7 +18,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	public function __construct( $options ) {
 		parent::__construct();
 
-		$this->title = __( 'PayPal Pro 3.0', 'wpsc' );
+		$this->title = __( 'PayPal Pro Hosted', 'wpsc' );
 
 		require_once( 'php-merchant/gateways/paypal-pro.php' );
 

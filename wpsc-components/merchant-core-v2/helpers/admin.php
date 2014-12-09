@@ -30,6 +30,7 @@ add_filter(
  * Filters deprecated gateways out of available gateways list.
  *
  * Only occurs if there is a 3.0 API replacement for the gateway and it is not currently active.
+ * Note: Pro Hosted and Pro are not the same thing.
  *
  * @since  3.9.0
  *
@@ -39,9 +40,9 @@ add_filter(
 function wpsc_filter_deprecated_v2_gateways( $gateways ) {
 
 	$deprecated_gateways = array(
-		'wpsc_merchant_paypal_express',
-		'wpsc_merchant_paypal_pro',
-		'wpsc_merchant_testmode'
+		'wpsc_merchant_testmode',
+		'paypal-pro',
+		'paypal-express-checkout'
 	);
 
 	// Loops through available gateways, checks if available gateway is both inactive and deprecated, and removes it.
