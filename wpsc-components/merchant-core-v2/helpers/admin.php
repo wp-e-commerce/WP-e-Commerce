@@ -40,7 +40,7 @@ add_filter(
 function wpsc_filter_deprecated_v2_gateways( $gateways ) {
 
 	$deprecated_gateways = array(
-		'wpsc_merchant_testmode',
+		'manual',
 		'paypal-pro',
 		'paypal-express-checkout'
 	);
