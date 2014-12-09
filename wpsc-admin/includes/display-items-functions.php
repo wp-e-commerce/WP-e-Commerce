@@ -8,6 +8,7 @@
 
 global $wpsc_product_defaults;
 
+//Variable containing array of WP e-commerce default product values
 $wpsc_product_defaults = array(
 	'id' => '0',
 	'name' => '',
