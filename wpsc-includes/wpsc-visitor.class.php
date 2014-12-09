@@ -1,8 +1,9 @@
 <?php
 
 /**
- * WPeC Visitor Class
+ * WP eCommerce Visitor Class
  *
+ * @package wp-e-commerce
  * @since 3.8.14
  */
 
