@@ -697,7 +697,8 @@ class wpsc_cart {
     *
     * @param integer a product ID key
     * @param array  variations on the product
-    * @return boolean true on sucess, false on failure
+    *
+    * @return int Number of product remaining.
     */
 	function get_remaining_quantity( $product_id, $variations = array(), $quantity = 1 ) {
 		return wpsc_get_remaining_quantity( $product_id, $variations, $quantity );
