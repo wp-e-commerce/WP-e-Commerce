@@ -73,7 +73,9 @@ function _wpsc_theme_engine_v1_has_actions() {
 			if ( is_array( $core_exceptions[ $action ] ) ) {
 
 				foreach ( $core_exceptions[ $action ] as $core_hook ) {
-					remove_action( $action, $core_hook  );
+					// Admitted hack until we build a better detection API.
+					$priority =  ( '_wpsc_calculate_shipping_quotes_before_product_page' == $core_hook ) ? 1 : 10;
+					remove_action( $action, $core_hook, $priority );
 				}
 
 			} else {
@@ -96,7 +98,7 @@ function _wpsc_theme_engine_v1_has_actions() {
  * Minimally redundant, though the comparable functions are only loaded in the 1.0 engine.
  *
  * @since  3.9
- * @return [type] [description]
+ * @return bool Whether or not the active theme directory has old templates.
  */
 function _wpsc_theme_engine_v2_has_old_templates() {
 
