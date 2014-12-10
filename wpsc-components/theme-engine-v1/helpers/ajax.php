@@ -425,10 +425,12 @@ function wpsc_update_product_price() {
 			}
 
 			if ( $change_price ) {
-				$old_price = wpsc_calculate_price( $product_id, $variations, false );
-				$you_save_amount = wpsc_you_save( array( 'product_id' => $product_id, 'type' => 'amount', 'variations' => $variations ) );
+				$old_price           = wpsc_calculate_price( $product_id, $variations, false );
+				$you_save_amount     = wpsc_you_save( array( 'product_id' => $product_id, 'type' => 'amount', 'variations' => $variations ) );
 				$you_save_percentage = wpsc_you_save( array( 'product_id' => $product_id, 'variations' => $variations ) );
+
 				$price = wpsc_calculate_price( $product_id, $variations, true );
+
 				$response += array(
 					'old_price'         => wpsc_currency_display( $old_price, array( 'display_as_html' => false ) ),
 					'numeric_old_price' => (float) $old_price,

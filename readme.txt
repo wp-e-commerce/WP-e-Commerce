@@ -36,6 +36,20 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 == Changelog ==
 
+= 3.9.1 =
+
+* Fix: Disable 3.0 payment gateway API gateways. Will be re-enabled after more vigorous testing.
+* Fix: Check that $wpsc_cart->cart_items is an array, not an object.
+* Fix: Improve shipping method property checks in wpsc_cart class. See [#1683](https://github.com/wp-e-commerce/WP-e-Commerce/issues/1683).
+* Fix: Add asterix class to required fields for PayPal Pro 2.0.
+* Fix: Ensure taxable checkbox can be unchecked. 3.9 regression. See [#1685](https://github.com/wp-e-commerce/WP-e-Commerce/issues/1685).
+* Fix: Only show completed purchases in the user account area.
+* Fix: Use is_email(), rather than a faulty regex, for checkout email field validation.
+* Fix: More than a [handful of faulty variables](https://github.com/wp-e-commerce/WP-e-Commerce/commit/58f2d3ad9698ef496a27a701e5a926e412d55c05) were referenced in wpsc_coupons.
+* Fix: Function `wpsc_string_to_boolean` was essentially non functional.
+* Fix: Send country and state through to PayPal only if they actually exist.
+* Fix: Broken theme-engine activation routine.  Would always fail, running 1.0 engine.
+
 = 3.9 =
 
 * Fix: Eliminate most usage of number-based inputs in product UI.
