@@ -160,6 +160,26 @@
 }(jQuery));
 
 jQuery(document).ready(function($){
+		
+	$('.ui-sortable li .list_gallery_image').mouseover(function(){
+		$('.product_gallery_image_delete_button', $(this).parent()).show();
+	}).mouseout(function(){
+		$('.product_gallery_image_delete_button', $(this).parent()).hide();
+	});
+
+	$('.product_gallery_image_delete_button').click(function(){
+		var product_gallery_image_data = {
+			action: 'product_gallery_image_delete',
+			product_gallery_image_id: $(this).parent().parent().find('.product_gallery_image_id').val(),
+			product_gallery_post_id: $(this).parent().parent().find('.product_gallery_post_id').val(),
+			wpsc_gallery_nonce_check: $('.nonce_class').val()
+		};
+		$.post(ajaxurl, product_gallery_image_data, function(response){});
+		$(this).parent().parent().fadeOut( 'slow' );
+	});
+		
+		
+		
 	$( '#wpsc_price' ).on( 'change', wpsc_update_price_live_preview );
 	$( '#wpsc_sale_price' ).on( 'change', wpsc_update_price_live_preview );
 
