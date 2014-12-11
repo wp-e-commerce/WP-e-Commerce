@@ -153,11 +153,12 @@ function _wpsc_enable_theme_engine_v2( $components ) {
  * Theme and plugin developers are advised to check and filter this function as needed.
  *
  * @since  3.9
+ *
  * @return bool $activate Whether or not to activate the 2.0 theme engine.
  */
 function _wpsc_maybe_activate_theme_engine_v2() {
 
-	$activate = false;
+	$activate = true;
 
 	global $wp_rewrite;
 
