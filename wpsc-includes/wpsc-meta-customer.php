@@ -22,9 +22,10 @@ function wpsc_delete_all_customer_meta( $id = false ) {
 		return $result;
 	}
 
+	$meta = wpsc_get_all_customer_meta( $id );
+
 	foreach ( $meta as $key => $value ) {
-		if ( strpos( $key, $key_pattern ) === 0 )
-			$success = $success && wpsc_delete_visitor_meta( $id, $key );
+		$success = wpsc_delete_visitor_meta( $id, $key );
 	}
 
 	return $success;
