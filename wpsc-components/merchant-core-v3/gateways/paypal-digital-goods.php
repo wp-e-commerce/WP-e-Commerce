@@ -62,8 +62,8 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 	 */
 	public function dg_script() {
 		if ( wpsc_is_checkout() ) {
-			wp_enqueue_script( 'dg-script', 'https://www.paypalobjects.com/js/external/dg.js' );
-			wp_enqueue_script( 'dg-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/dg.js', array( 'jquery' ) );
+		wp_enqueue_script( 'dg-script', 'https://www.paypalobjects.com/js/external/dg.js' );
+		wp_enqueue_script( 'dg-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/dg.js', array( 'jquery' ) );
 		}
 	}
 
@@ -80,10 +80,10 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 	 */
 	public function filter_unselect_default( $fields ) {
 		foreach ( $fields as $i=>$field ) {
-            $fields[ $i ][ 'checked' ] = false;
+			$fields[ $i ][ 'checked' ] = false;
 		}
 
-        return $fields;
+		return $fields;
 	}
 
 	/**
@@ -223,7 +223,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 			</div>
 			</div>
 			</div>
-			<script type="text/javascript">
+		<script type="text/javascript">
 		setTimeout('if (window!=top) {top.location.replace("<?php echo $location; ?>");}else{location.replace("<?php echo $location; ?>");}', 1500);
 		</script>
 	</body>
@@ -620,7 +620,11 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		if ( $response->is_successful() ) {
 			$url = ( $this->setting->get( 'sandbox_mode' ) ? self::SANDBOX_URL : self::LIVE_URL ) . $response->get( 'token' );
 		} else {
+
+			// SetExpressCheckout Failure
 			$this->log_error( $response );
+			wpsc_update_customer_meta( 'paypal_digital_goods_errors', $response->get_errors() );
+
 			$url = add_query_arg( array(
 				'payment_gateway'          => 'paypal-digital-goods',
 				'payment_gateway_callback' => 'display_paypal_error_redirect',

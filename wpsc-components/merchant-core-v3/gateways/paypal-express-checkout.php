@@ -69,7 +69,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
     public function filter_unselect_default( $fields ) {
         foreach ( $fields as $i=>$field ) {
             $fields[ $i ][ 'checked' ] = false;
-		}
+        }
 
         return $fields;
     }
@@ -669,12 +669,16 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
             $params = $response->get_params();
             if ( $params['ACK'] == 'SuccessWithWarning' ) {
                 $this->log_error( $response );
+                wpsc_update_customer_meta( 'paypal_express_checkout_errors', $response->get_errors() );
             }
             // Successful redirect
             $url = $this->get_redirect_url( array( 'token' => $response->get( 'token' ) ) );
         } else {
+
             // SetExpressCheckout Failure
             $this->log_error( $response );
+            wpsc_update_customer_meta( 'paypal_express_checkout_errors', $response->get_errors() );
+
             $url = add_query_arg( array(
                 'payment_gateway'          => 'paypal-express-checkout',
                 'payment_gateway_callback' => 'display_paypal_error',

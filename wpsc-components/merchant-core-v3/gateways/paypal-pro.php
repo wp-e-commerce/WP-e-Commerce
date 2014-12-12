@@ -581,18 +581,24 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		// BMCreateButton API call
 		$response = $this->gateway->createButton( $options );
 		$params = $response->get_params();
-		$website_code = $params['WEBSITECODE'];
+
+
 
 
 		if ( $response->is_successful() ) {
+			$website_code = $params['WEBSITECODE'];
 			$params = $response->get_params();
 			// Log any warning
 			if ( $params['ACK'] == 'SuccessWithWarning' ) {
 				$this->log_error( $response );
+				wpsc_update_customer_meta( 'paypal_pro_checkout_errors', $response->get_errors() );
+
 			}
 		} else {
 			// Log errors and redirect user
 			$this->log_error( $response );
+			wpsc_update_customer_meta( 'paypal_pro_checkout_errors', $response->get_errors() );
+
 			$url = add_query_arg( array(
 				'payment_gateway'          => 'paypal-pro-checkout',
 				'payment_gateway_callback' => 'display_paypal_error',
