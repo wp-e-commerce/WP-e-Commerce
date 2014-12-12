@@ -260,7 +260,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		$options = array(
 			'tx'            => $tx,
 			'CSCMATCH'      => $CSCMATCH,
-			'message_id'    => $this->purchase_log->get( 'sessionid' ),
+			'message_id'    => $this->purchase_log->get( 'id' ),
 			'invoice'       => $this->purchase_log->get( 'id' ),
 		);
 
@@ -563,7 +563,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		$total = $this->convert( $this->purchase_log->get( 'totalprice' ) );
 		$options = array(
 			'return_url'       => $this->get_return_url(),
-			'message_id'       => $this->purchase_log->get( 'sessionid' ),
+			'message_id'       => $this->purchase_log->get( 'id' ),
 			'invoice'          => $this->purchase_log->get( 'id' ),
 			'address_override' => 1,
 			'paymentaction'    => 'sale',

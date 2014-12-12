@@ -273,7 +273,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         $options = array(
             'token'         => $token,
             'payer_id'      => $PayerID,
-            'message_id'    => $this->purchase_log->get( 'sessionid' ),
+            'message_id'    => $this->purchase_log->get( 'id' ),
             'invoice'		=> $this->purchase_log->get( 'id' ),
         );
         $options += $this->checkout_data->get_gateway_data();
@@ -371,7 +371,11 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
     public function log_protection_status( $response ) {
         $params = $response->get_params();
 
-        $elg                      = $params['PAYMENTINFO_0_PROTECTIONELIGIBILITY'];
+        if ( isset( $params['PAYMENTINFO_0_PROTECTIONELIGIBILITY'] ) ) {
+            $elg                      = $params['PAYMENTINFO_0_PROTECTIONELIGIBILITY'];
+        } else {
+            $elg = false;
+        }
         $paypal_log               = wpsc_get_purchase_meta( $this->purchase_log->get( 'id' ), 'paypal_ec_details', true );
         $paypal_log['protection'] = $elg;
         wpsc_update_purchase_meta( $this->purchase_log->get( 'id' ), 'paypal_ec_details' , $paypal_log );
@@ -391,7 +395,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         $options = array(
             'token'         => $token,
             'payer_id'      => $PayerID,
-            'message_id'    => $this->purchase_log->get( 'sessionid' ),
+            'message_id'    => $this->purchase_log->get( 'id' ),
             'invoice'       => $this->purchase_log->get( 'id' ),
         );
         $options += $this->checkout_data->get_gateway_data();
@@ -650,7 +654,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         $total = $this->convert( $this->purchase_log->get( 'totalprice' ) );
         $options = array(
             'return_url'       => $this->get_return_url(),
-            'message_id'       => $this->purchase_log->get( 'sessionid' ),
+            'message_id'       => $this->purchase_log->get( 'id' ),
             'invoice'          => $this->purchase_log->get( 'id' ),
             'address_override' => 1,
         );
