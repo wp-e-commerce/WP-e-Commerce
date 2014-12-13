@@ -580,21 +580,24 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 
 		// BMCreateButton API call
 		$response = $this->gateway->createButton( $options );
-		$params = $response->get_params();
-
-
-
 
 		if ( $response->is_successful() ) {
-			$website_code = $params['WEBSITECODE'];
+
 			$params = $response->get_params();
+			$website_code = $params['WEBSITECODE'];
+
 			// Log any warning
 			if ( $params['ACK'] == 'SuccessWithWarning' ) {
 				$this->log_error( $response );
 				wpsc_update_customer_meta( 'paypal_pro_checkout_errors', $response->get_errors() );
 
 			}
+
+			// Write the Button code
+			echo( $website_code );	
+
 		} else {
+
 			// Log errors and redirect user
 			$this->log_error( $response );
 			wpsc_update_customer_meta( 'paypal_pro_checkout_errors', $response->get_errors() );
@@ -603,11 +606,12 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 				'payment_gateway'          => 'paypal-pro-checkout',
 				'payment_gateway_callback' => 'display_paypal_error',
 			), $this->get_return_url() );
+
+			// Redirect to the Error Page
+			wp_redirect( $url );
 		}
 
-		// Write the Button code
-		echo( $website_code );
-
+		// Stop further execution
 		exit;
 	}
 
