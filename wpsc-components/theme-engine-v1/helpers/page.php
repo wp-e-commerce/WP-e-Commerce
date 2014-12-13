@@ -1136,15 +1136,16 @@ function wpsc_user_log( $content = '' ) {
 function wpsc_get_the_post_id_by_shortcode( $shortcode ) {
 
 	$shortcode_options = array(
-			'[productspage]'       => 'product_list_url',
-			'[shoppingcart]'       => 'shopping_cart_url',
-			'[checkout]'           => 'shopping_cart_url',
-			'[transactionresults]' => 'transact_url',
-			'[userlog]'            => 'user_account_url'
-		);
+		'[productspage]'       => 'product_list_url',
+		'[shoppingcart]'       => 'shopping_cart_url',
+		'[checkout]'           => 'shopping_cart_url',
+		'[transactionresults]' => 'transact_url',
+		'[userlog]'            => 'user_account_url'
+	);
 
-	if ( ! isset( $shortcode_options[$shortcode] ) )
+	if ( ! isset( $shortcode_options[ $shortcode ] ) ) {
 		return 0;
+	}
 
 	$page_ids = get_option( 'wpsc_shortcode_page_ids', false );
 
@@ -1153,7 +1154,7 @@ function wpsc_get_the_post_id_by_shortcode( $shortcode ) {
 		$page_ids = get_option( 'wpsc_shortcode_page_ids', false );
 	}
 
-	$post_id = isset( $page_ids[$shortcode] ) ? $page_ids[$shortcode] : null;
+	$post_id = isset( $page_ids[ $shortcode ] ) ? $page_ids[ $shortcode ] : null;
 
 	// For back compat
 	$post_id = apply_filters( 'wpec_get_the_post_id_by_shortcode', $post_id );

@@ -905,15 +905,23 @@ function wpsc_product_gallery( $post ) {
 				// get the thumbnail URL
 				$thumb_url  = wp_get_attachment_thumb_url( absint( $image_id ) );
 				// output each item
-				$output .= '<li>';
-					$output .= '<img src="' . esc_url( $thumb_url ) . '">';
-					$output .= '<input type="hidden" name="wpsc-product-gallery-imgs[]" value="' . absint( $image_id ) . '">';
+				$output .= '<li><div class="list_gallery_image">';
+						$output .= '<img src="' . esc_url( $thumb_url ) . '">';
+						$output .= '<input type="hidden" name="wpsc-product-gallery-imgs[]" value="' . absint( $image_id ) . '">';
+						
+						$output .= '<span class="product_gallery_image_delete_button dashicons dashicons-no-alt"></span></div>';
+						$output .= '<input type="hidden" class="product_gallery_image_id" value="'.$image_id.'">';
+						$output .= '<input type="hidden" class="product_gallery_post_id" value="'.$post->ID.'">';
 				$output .= '</li>';
 			}
 		}
 		$output .= '</ul>';
 		$output .= '<div class="clear"></div>';
 	$output .= '</div>';
+	$nonce_var = wp_create_nonce( 'wpsc_gallery_nonce' );
+  ?>
+  <input type="hidden" class="nonce_class" value="<?php echo $nonce_var; ?>">
+  <?php
 	// button for old iframe for non JS people
 	$output .= '<p class="hide-if-no-js">';
 		$output .= '<a class="button button-small thickbox" title="' . esc_attr__( 'Manage Product Image Gallery...', 'wpsc' ).'" href="' . $upload_iframe_src . '" id="wpsc-manage-product-gallery">';
