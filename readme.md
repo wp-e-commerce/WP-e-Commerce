@@ -1,6 +1,8 @@
 WP eCommerce [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/wp-e-commerce/WP-e-Commerce/badges/quality-score.png?s=155ede743c82bcf5116904bf155dcf215da820b0)](https://scrutinizer-ci.com/g/wp-e-commerce/WP-e-Commerce/) [![Coverage Status](https://img.shields.io/coveralls/wp-e-commerce/WP-e-Commerce.svg)](https://coveralls.io/r/wp-e-commerce/WP-e-Commerce) [![Build Status](https://travis-ci.org/wp-e-commerce/WP-e-Commerce.svg?branch=master)](https://travis-ci.org/wp-e-commerce/WP-e-Commerce)
 ============
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/wp-e-commerce/WP-e-Commerce?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 About
 -----
 
