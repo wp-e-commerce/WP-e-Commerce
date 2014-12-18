@@ -11,6 +11,15 @@ class TestWPSCRegionClass extends WP_UnitTestCase {
 	const INVALID_REGION_NAME          = 'Oregano';
 	const REGION_TAX_RATE              = 0.0;
 
+	function setUp() {
+		wpsc_create_or_update_tables();
+		parent::setUp();
+	}
+
+	function tearDown() {
+		parent::tearDown();
+	}
+
 	function test_contructor() {
 		$region = new WPSC_Region( self::COUNTRY_ID_WITH_REGIONS, self::REGION_ID );
 		$this->assertInstanceOf( 'WPSC_Region', $region );
@@ -70,7 +79,6 @@ class TestWPSCRegionClass extends WP_UnitTestCase {
 
 	function test_get() {
 		$region = new WPSC_Region( self::COUNTRY_ID_WITH_REGIONS, self::REGION_ID );
-		print_r($region);
 		$this->assertEquals( self::REGION_ID, $region->get( 'id' ) );
 		$this->assertEquals( self::REGION_NAME, $region->get( 'name' ) );
 		$this->assertNull( $region->get( 'omgwtfbbq' ) );

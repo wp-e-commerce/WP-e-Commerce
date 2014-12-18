@@ -1,5 +1,7 @@
 <?php
-$currency_sql="INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (1, '" . __( 'Mauritania', 'wpsc' ) ."', 'MR', '" . __('Mauritanian Ouguiya', 'wpsc') ."', '', '', '" . __('MRO', 'wpsc') . "', '0', '0','africa','1');
+global $currency_sql;
+
+$currency_sql = "INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (1, '" . __( 'Mauritania', 'wpsc' ) ."', 'MR', '" . __('Mauritanian Ouguiya', 'wpsc') ."', '', '', '" . __('MRO', 'wpsc') . "', '0', '0','africa','1');
 INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (2, '" . __( 'Martinique (French)', 'wpsc' ) ."', 'MQ', '" . __('Euro', 'wpsc') ."', '" . __('€', 'wpsc') . "', '" . __('&#8364;', 'wpsc') . "', '" . __('EUR', 'wpsc') . "', '0', '0','southamerica','1');
 INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (3, '" . __( 'Malta', 'wpsc' ) ."', 'MT', '" . __('Euro', 'wpsc') ."', '" . __('€', 'wpsc') . "', '" . __('&#8364;', 'wpsc') . "', '" . __('EUR', 'wpsc') . "', '0', '0' ,'europe','1');
 INSERT INTO `".WPSC_TABLE_CURRENCY_LIST."` VALUES (4, '" . __( 'Marshall Islands', 'wpsc' ) ."', 'MH', '" . __('US Dollar', 'wpsc') ."', '" . __('$', 'wpsc') . "', '" . __('&#036;', 'wpsc') . "', '" . __('USD', 'wpsc') . "', '0', '0' ,'asiapacific','1');

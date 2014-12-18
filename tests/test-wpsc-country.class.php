@@ -10,8 +10,8 @@ class TestWPSCCountryClass extends WP_UnitTestCase {
 	const COUNTRY_NAME_WITHOUT_REGIONS_CURRENCY_NAME        = 'Pound Sterling';
 	const COUNTRY_NAME_WITHOUT_REGIONS_CURRENCY_SYMBOL      = '£';
 	const COUNTRY_NAME_WITHOUT_REGIONS_CURRENCY_SYMBOL_HTML = '&#163;';
-	const COUNTRY_WITHOUT_REGIONS_TAX_RATE                  = 20;
-	const COUNTRY_WITHOUT_REGIONS_CONTINENT                 = 'Europe';
+	const COUNTRY_WITHOUT_REGIONS_TAX_RATE                  = 17.5;
+	const COUNTRY_WITHOUT_REGIONS_CONTINENT                 = 'europe';
 
 	// A country with regions used for tests that need a region.
 	const COUNTRY_ID_WITH_REGIONS = 136;
@@ -21,15 +21,23 @@ class TestWPSCCountryClass extends WP_UnitTestCase {
 	const REGION_NAME             = 'Oregon';
 	const INVALID_REGION_NAME     = 'Oregano';
 
+	function setUp() {
+		wpsc_create_or_update_tables();
+		parent::setUp();
+	}
+
+	function tearDown() {
+		parent::tearDown();
+	}
+
 	function test_invalid_country_construct() {
-		// This actually returns an empty country object. Shouldn't it return false/null or at
-		// least populate the passed ID/ISOCODE into the object returned?
+
 		$country = new WPSC_Country( 'XXX' );
-		$this->assertFalse( $country );
+		$this->assertTrue( empty( $country->_id ) && empty( $country->_name ) && empty( $country->_isocode ) );
 
 		// // This should definitely return false/null - no?
 		$country = new WPSC_Country( -1 );
-		$this->assertFalse( $country );
+		$this->assertTrue( empty( $country->_id ) && empty( $country->_name ) && empty( $country->_isocode ) );
 	}
 
 	function test_valid_country_construct() {
@@ -104,7 +112,7 @@ class TestWPSCCountryClass extends WP_UnitTestCase {
 
 		// USA
 		$country    = new WPSC_Country(  self::COUNTRY_ID_WITH_REGIONS  );
-		$has_region = $country->has_region( REGION_ID );
+		$has_region = $country->has_region( self::REGION_ID );
 		$this->assertTrue( $has_region ); // Oregon is in the USA
 		$has_region = $country->has_region( self::REGION_NAME );
 		$this->assertTrue( $has_region ); // Oregon is in the USA
@@ -129,7 +137,7 @@ class TestWPSCCountryClass extends WP_UnitTestCase {
 	function test_is_visible() {
 		$country = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS );
 		$visible = $country->is_visible();
-		$this->assertTrue( $visible );
+		$this->assertEquals( '1', $visible );
 	}
 
 	function test_get() {
@@ -159,11 +167,11 @@ class TestWPSCCountryClass extends WP_UnitTestCase {
 	}
 
 	function test_get_region() {
-		$country = new WPSC_Country(  self::COUNTRY_ID_WITH_REGIONS  );
+		$country = new WPSC_Country( self::COUNTRY_ID_WITH_REGIONS );
 		$region  = $country->get_region( self::REGION_ID );
 		$this->assertInstanceOf( 'WPSC_Region', $region );
-		$this->assertEquals( self::REGION_ID, $region->id );
-		$this->assertEquals( self::REGION_NAME, $region->name );
+		$this->assertEquals( self::REGION_ID  , $region->get_id() );
+		$this->assertEquals( self::REGION_NAME, $region->get_name() );
 	}
 
 	function test_get_region_count() {
@@ -176,23 +184,23 @@ class TestWPSCCountryClass extends WP_UnitTestCase {
 	}
 
 	function test_get_regions() {
-		$country = new WPSC_Country(  self::COUNTRY_ID_WITH_REGIONS  ); // USA
-		$regions = $country->get_regions();
-		$this->assertInstanceOf( 'stdClass', $regions );
+		$country = new WPSC_Country( self::COUNTRY_ID_WITH_REGIONS ); // USA
+		$regions = array_values( $country->get_regions() );
+		$this->assertInstanceOf( 'WPSC_Region', $regions[0] );
 		$region_count = count( $regions );
 		$this->assertEquals( self::NUM_REGIONS, $region_count );
 
 		$country = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS ); // UK
 		$regions = $country->get_regions();
-		$this->assertInstanceOf( 'stdClass', $regions );
+		$this->assertInternalType( 'array', $regions );
 		$region_count = count( $regions );
 		$this->assertEquals( 0, $region_count );
 	}
 
 	function test_get_regions_array() {
 		$country = new WPSC_Country( self::COUNTRY_ID_WITH_REGIONS );
-		$regions = $country->get_regions( true );
-		$this->assertInternalType( 'array', $regions );
+		$regions = array_values( $country->get_regions( true ) );
+		$this->assertInternalType( 'array', $regions[0] );
 		$this->assertEquals( self::NUM_REGIONS, count( $regions ) );
 		$country = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS );
 		$regions = $country->get_regions( true );
@@ -200,21 +208,12 @@ class TestWPSCCountryClass extends WP_UnitTestCase {
 		$this->assertEquals( 0, count( $regions ) );
 	}
 
-	function test_get_region_code_by_region_id() {
-		$country = new WPSC_Country(  self::COUNTRY_ID_WITH_REGIONS  ); // USA
-		$region_code = $country->get_region_code_by_region_id( self::REGION_ID ); // Oregon
-		$this->assertEquals( self::REGION_CODE, $region_code );
-		$country = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS ); // UK
-		$region_code = $country->get_region_code_by_region_id( self::REGION_ID ); // Oregon
-		$this->assertEquals( '', $region_code ); // @TODO - What should we assert here?
-	}
-
 	function test_get_region_id_by_region_code() {
 		$country = new WPSC_Country(  self::COUNTRY_ID_WITH_REGIONS  ); // USA
-		$region_id = $country->get_region_id_by_region_code( $region_code ); // Oregon
+		$region_id = $country->get_region_id_by_region_code( self::REGION_CODE ); // Oregon
 		$this->assertEquals( self::REGION_ID, $region_id );
 		$country = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS ); // UK
-		$region_id = $country->get_region_id_by_region_code( $region_code ); // Oregon
+		$region_id = $country->get_region_id_by_region_code( self::REGION_CODE ); // Oregon
 		$this->assertEquals( '', $region_code ); // @TODO - What should we assert here?
 	}
 

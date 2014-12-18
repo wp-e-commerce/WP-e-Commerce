@@ -908,7 +908,7 @@ function wpsc_product_gallery( $post ) {
 				$output .= '<li><div class="list_gallery_image">';
 						$output .= '<img src="' . esc_url( $thumb_url ) . '">';
 						$output .= '<input type="hidden" name="wpsc-product-gallery-imgs[]" value="' . absint( $image_id ) . '">';
-						
+
 						$output .= '<span class="product_gallery_image_delete_button dashicons dashicons-no-alt"></span></div>';
 						$output .= '<input type="hidden" class="product_gallery_image_id" value="'.$image_id.'">';
 						$output .= '<input type="hidden" class="product_gallery_post_id" value="'.$post->ID.'">';
@@ -1634,7 +1634,7 @@ function wpsc_get_admin_product_gallery( $product_id = 0 ) {
 	// in their galleries
 	foreach( $gallery as $key => $image_id ) {
 		if ( get_post_type( $image_id ) !== 'attachment' ) {
-			unset( $gallery[$key] );
+			unset( $gallery[ $key ] );
 		}
 	}
 
@@ -1689,4 +1689,5 @@ function wpsc_new_gallery_save( $product_id = 0 ) {
 	do_action( 'wpsc_after_gallery_save', $product_id, $image_ids );
 
 }
+
 add_action( 'wpsc_edit_product', 'wpsc_new_gallery_save' );
