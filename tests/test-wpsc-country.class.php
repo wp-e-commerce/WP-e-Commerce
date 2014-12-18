@@ -214,7 +214,6 @@ class TestWPSCCountryClass extends WP_UnitTestCase {
 		$this->assertEquals( self::REGION_ID, $region_id );
 		$country = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS ); // UK
 		$region_id = $country->get_region_id_by_region_code( self::REGION_CODE ); // Oregon
-		$this->assertEquals( '', $region_code ); // @TODO - What should we assert here?
 	}
 
 	function test_get_region_id_by_region_name() {
@@ -223,7 +222,6 @@ class TestWPSCCountryClass extends WP_UnitTestCase {
 		$this->assertEquals( self::REGION_ID, $region_id );
 		$country = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS ); // UK
 		$region_id = $country->get_region_id_by_region_name( 'Oregon' );
-		$this->assertEquals( '', $region_code ); // @TODO - What should we assert here?
 	}
 
 	function test_as_array() {
