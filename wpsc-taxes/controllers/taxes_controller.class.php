@@ -146,22 +146,22 @@ class wpec_taxes_controller {
 		$returnable = false;
 
 		//do not calculate tax for this item if it is not taxable
-			if ( ! isset( $cart_item->meta[0]['wpec_taxes_taxable'] ) ) {
+			if ( ! isset( $cart_item->meta[0]['wpec_taxes_taxable'] ) || empty( $cart_item->meta[0]['wpec_taxes_taxable'] ) ) {
 				if ( $this->wpec_taxes_run_logic() ) {
-				//get the taxable amount
-				if ( isset( $cart_item->meta[0]['wpec_taxes_taxable_amount'] ) && ! empty( $cart_item->meta[0]['wpec_taxes_taxable_amount'] ) ) {
-					//if there is a taxable amount defined for this product use this to calculate taxes
-					$taxable_amount = $cart_item->meta[0]['wpec_taxes_taxable_amount'];
-				} else {
-					// there is no taxable amount found - use the unit price
-					$taxable_amount = $cart_item->unit_price;
-				}
-				// get the taxable price - unit price multiplied by qty
-				$taxable_price = $taxable_amount * $cart_item->quantity;
+					//get the taxable amount
+					if ( isset( $cart_item->meta[0]['wpec_taxes_taxable_amount'] ) && ! empty( $cart_item->meta[0]['wpec_taxes_taxable_amount'] ) ) {
+						//if there is a taxable amount defined for this product use this to calculate taxes
+						$taxable_amount = $cart_item->meta[0]['wpec_taxes_taxable_amount'];
+					} else {
+						// there is no taxable amount found - use the unit price
+						$taxable_amount = $cart_item->unit_price;
+					}
+					// get the taxable price - unit price multiplied by qty
+					$taxable_price = $taxable_amount * $cart_item->quantity;
 
-				// calculate tax
-				$returnable = array( 'tax' => $this->wpec_taxes_calculate_tax( $taxable_price, $tax_rate['rate'] ), 'rate' => $tax_rate['rate'] );
-			}
+					// calculate tax
+					$returnable = array( 'tax' => $this->wpec_taxes_calculate_tax( $taxable_price, $tax_rate['rate'] ), 'rate' => $tax_rate['rate'] );
+				}
 		}
 
 		return $returnable;
@@ -179,7 +179,7 @@ class wpec_taxes_controller {
 		global $wpsc_cart;
 		$returnable = false;
 		//do not calculate tax for this item if it is not taxable
-		if ( ! isset( $cart_item->meta[0]['wpec_taxes_taxable'] ) ) {
+		if ( ! isset( $cart_item->meta[0]['wpec_taxes_taxable'] ) || empty( $cart_item->meta[0]['wpec_taxes_taxable'] ) ) {
 			if ( $this->wpec_taxes_run_logic() ) {
 				$wpec_base_country = $this->wpec_taxes_retrieve_selected_country();
 				$region = $this->wpec_taxes_retrieve_region();
