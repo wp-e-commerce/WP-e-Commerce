@@ -36,7 +36,7 @@ class WPSC_Country {
 
 			// make sure we have a valid country id
 			$country_id = WPSC_Countries::get_country_id( $country_id_or_isocode );
-			if ( $country_id ) {
+			if ( $country_id > 0 ) {
 				$wpsc_country = WPSC_Countries::get_country( $country_id );
 				foreach ( $wpsc_country as $property => $value ) {
 					// copy the properties in this copy of the country
@@ -155,7 +155,7 @@ class WPSC_Country {
 	 * @return WPSC_Currency 		country's currency
 	 */
 	public function get_currency() {
-		return new WPSC_Currency( $this->_currency_name );
+		return new WPSC_Currency( $this->_currency_code );
 	}
 
 	/**
@@ -448,19 +448,21 @@ class WPSC_Country {
 	}
 
 	/**
-	 * get a region code from a region id
+	 * Get a region code from a region id
+	 *
+	 * @todo We don't appear to use this anywhere in core.  Nor does it appear to be functional at all.
+	 * It assumes $this->_regions is an array, when it is in fact a WPSC_Data_Map.
 	 *
 	 * @access public
 	 *
 	 * @since 3.8.14
-	 *
 	 *
 	 * @return string region code
 	 */
 	public function get_region_code_by_region_id( $region_id ) {
 		$region_code = false;
 
-		if ( isset( $this->_regions[$region_id] ) ) {
+		if ( isset( $this->_regions[ $region_id ] ) ) {
 			$region_code = $this->_region_id_to_region_code_map[$region_id];
 		}
 

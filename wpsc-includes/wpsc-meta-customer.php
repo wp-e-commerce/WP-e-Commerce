@@ -24,6 +24,8 @@ function wpsc_delete_all_customer_meta( $id = false ) {
 
 	$meta = wpsc_get_all_customer_meta( $id );
 
+	$success = false;
+
 	foreach ( $meta as $key => $value ) {
 		$success = wpsc_delete_visitor_meta( $id, $key );
 	}
@@ -220,14 +222,16 @@ function wpsc_get_customer_cart( $id = false  ) {
 
 /**
  * Update a customers cart
+ *
  * @access public
  * @since 3.8.14
  * @param unknown $cart
  * @param int $id
+ *
  * @return boolean
  */
 function wpsc_update_customer_cart( $cart, $id = false ) {
-	global $wpdb, $wpsc_start_time, $wpsc_cart;
+	global $wpsc_cart;
 
 	if ( ! is_a( $cart, 'wpsc_cart' ) ) {
 		return false;
@@ -268,7 +272,3 @@ function wpsc_update_customer_last_active( $id = false ) {
 
 	return $id;
 }
-
-
-
-

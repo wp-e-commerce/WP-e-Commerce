@@ -602,7 +602,7 @@ function wpsc_create_or_update_tables( $debug = false ) {
  * * @return boolean true on success, false on failure
  */
 function wpsc_add_currency_list() {
-	global $wpdb;
+	global $wpdb, $currency_sql;
 	require_once(WPSC_FILE_PATH . "/wpsc-updates/currency_list.php");
 	$currency_data = $wpdb->get_var( "SELECT COUNT(*) AS `count` FROM `" . WPSC_TABLE_CURRENCY_LIST . "`" );
 	if ( $currency_data == 0 ) {
@@ -768,24 +768,24 @@ function wpsc_3882_database_updates() {
 		return;
 
 	$unique_names = array(
-						'billingfirstname'  => __( 'First Name', 'wpsc' ),
-						'billinglastname'   => __( 'Last Name', 'wpsc' ),
-						'billingaddress'    => __( 'Address', 'wpsc' ),
-						'billingcity'       => __( 'City', 'wpsc' ),
-						'billingstate'      => __( 'State', 'wpsc' ),
-						'billingcountry'    => __( 'Country', 'wpsc' ),
-						'billingemail'      => __( 'Email', 'wpsc' ),
-						'billingphone'      => __( 'Phone', 'wpsc' ),
-						'billingpostcode'   => __( 'Postal Code', 'wpsc' ),
-						'delivertoafriend'  => __( 'Shipping Address', 'wpsc' ),
-						'shippingfirstname' => __( 'First Name', 'wpsc' ),
-						'shippinglastname'  => __( 'Last Name', 'wpsc' ),
-						'shippingaddress'   => __( 'Address', 'wpsc' ),
-						'shippingcity'      => __( 'City', 'wpsc' ),
-						'shippingstate'     => __( 'State', 'wpsc' ),
-						'shippingcountry'   => __( 'Country', 'wpsc' ),
-						'shippingpostcode'  => __( 'Postal Code', 'wpsc' ),
-					);
+		'billingfirstname'  => __( 'First Name', 'wpsc' ),
+		'billinglastname'   => __( 'Last Name', 'wpsc' ),
+		'billingaddress'    => __( 'Address', 'wpsc' ),
+		'billingcity'       => __( 'City', 'wpsc' ),
+		'billingstate'      => __( 'State', 'wpsc' ),
+		'billingcountry'    => __( 'Country', 'wpsc' ),
+		'billingemail'      => __( 'Email', 'wpsc' ),
+		'billingphone'      => __( 'Phone', 'wpsc' ),
+		'billingpostcode'   => __( 'Postal Code', 'wpsc' ),
+		'delivertoafriend'  => __( 'Shipping Address', 'wpsc' ),
+		'shippingfirstname' => __( 'First Name', 'wpsc' ),
+		'shippinglastname'  => __( 'Last Name', 'wpsc' ),
+		'shippingaddress'   => __( 'Address', 'wpsc' ),
+		'shippingcity'      => __( 'City', 'wpsc' ),
+		'shippingstate'     => __( 'State', 'wpsc' ),
+		'shippingcountry'   => __( 'Country', 'wpsc' ),
+		'shippingpostcode'  => __( 'Postal Code', 'wpsc' ),
+	);
 
 	// Check if any uniquenames are missing
 	$current_columns = array_filter( $wpdb->get_col( $wpdb->prepare( 'SELECT unique_name FROM ' . WPSC_TABLE_CHECKOUT_FORMS ) ) );
