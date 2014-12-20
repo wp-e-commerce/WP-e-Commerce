@@ -41,8 +41,8 @@ function wpsc_filter_deprecated_v2_gateways( $gateways ) {
 
 	$deprecated_gateways = array(
 		'manual',
-		//'paypal-pro',
-		//'paypal-express-checkout'
+		'paypal-pro',
+		'paypal-express-checkout'
 	);
 
 	// Loops through available gateways, checks if available gateway is both inactive and deprecated, and removes it.
