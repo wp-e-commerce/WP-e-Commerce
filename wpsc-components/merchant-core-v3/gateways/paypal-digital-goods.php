@@ -347,7 +347,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
             'token'    => $token,
             'payer_id' => $PayerID,
             'message_id'    => $this->purchase_log->get( 'id' ),
-            'invoice'		=> $this->purchase_log->get( 'sessionid' ) . '-' . $this->purchase_log->get( 'id' ),
+            'invoice'		=> $this->purchase_log->get( 'id' ),
         );
         $options += $this->checkout_data->get_gateway_data();
         $options += $this->purchase_log->get_gateway_data( parent::get_currency_code(), $this->get_currency_code() );
@@ -620,7 +620,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
         $options = array(
             'return_url' => $this->get_return_url(),
             'message_id' => $this->purchase_log->get( 'id' ),
-            'invoice'    => $this->purchase_log->get( 'sessionid' ) . '-' . $this->purchase_log->get( 'id' ),
+            'invoice'    => $this->purchase_log->get( 'id' ),
             'address_override' => 1,
         );
         $options += $this->checkout_data->get_gateway_data();
