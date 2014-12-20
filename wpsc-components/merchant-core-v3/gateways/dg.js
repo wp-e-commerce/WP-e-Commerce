@@ -1,7 +1,6 @@
 /*
 * PayPal for Digital Goods script
 */
-;
 (function($) {
 	$(window).load(function() {	
 		// Declare variables/doom elements
