@@ -19,8 +19,8 @@
 		} );
 
 		// Inserts the Spinner	
-		if ( spinner_url ) {
-			$checkout_btn.after( '<img src="' + spinner_url + '" class="dg-spinner" alt="spinner"/>' );
+		if ( dg_loc && dg_loc.spinner_url ) {
+			$checkout_btn.after( '<img src="' + dg_loc.spinner_url + '" class="dg-spinner" alt="spinner"/>' );
 			var $spinner = $( '.dg-spinner' );
 			// Add some basic styling
 			$spinner.css({
@@ -30,6 +30,8 @@
 			$checkout_btn.css( 'vertical-align', 'middle' );
 			// Hide the Spinner
 			$spinner.hide();
+		} else {
+			$spinner = $( '' ); // Avoids exceptions if the dg_loc is not loaded
 		}
 
 		// Submit button Click handler
@@ -37,7 +39,7 @@
 			// If DG is selected
 			if ( $rd_btn.is( ':checked' ) ) {
 				// Disable Submit button
-				$checkout_btn.val( 'loading...' ).prop( 'disabled', true );
+				$checkout_btn.val( dg_loc.loading ).prop( 'disabled', true );
 
 				// Show the Spinner 
 				$spinner.show();
