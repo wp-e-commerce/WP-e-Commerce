@@ -271,7 +271,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 			'tx'            => $tx,
 			'CSCMATCH'      => $CSCMATCH,
 			'message_id'    => $this->purchase_log->get( 'id' ),
-			'invoice'       => $this->purchase_log->get( 'id' ),
+			'invoice'       => $this->purchase_log->get( 'sessionid' ),
 		);
 
 		$options += $this->checkout_data->get_gateway_data();
@@ -574,7 +574,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		$options = array(
 			'return_url'       => $this->get_return_url(),
 			'message_id'       => $this->purchase_log->get( 'id' ),
-			'invoice'          => $this->purchase_log->get( 'id' ),
+			'invoice'          => $this->purchase_log->get( 'sessionid' ),
 			'address_override' => 1,
 			'paymentaction'    => 'sale',
 			'template'         => 'templateD',
