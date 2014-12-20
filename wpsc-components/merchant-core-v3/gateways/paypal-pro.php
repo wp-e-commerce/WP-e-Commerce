@@ -33,17 +33,26 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 			'test'             => (bool) $this->setting->get( 'sandbox_mode' ),
 		) );
 
-		// Load PayPal Pro JavaScript file
-		add_action( 'wp_enqueue_scripts', array( $this, 'pro_script' ) );
-
 		add_filter( 'wpsc_purchase_log_gateway_data', array( $this, 'filter_purchase_log_gateway_data' ), 10, 2 );
+
+	}
+
+	/**
+	 * Run the gateway hooks 
+	 *
+	 * @return void
+	 */
+	public static function init() {
+		// Load PayPal Pro JavaScript file
+		add_action( 'wp_enqueue_scripts', array( 'WPSC_Payment_Gateway_Paypal_Pro', 'pro_script' ) );
 
 		// Unselect Default Payment Gateway
 		add_filter(
 			'wpsc_payment_method_form_fields',
-			array( $this, 'filter_unselect_default' ), 101 , 1
+			array( 'WPSC_Payment_Gateway_Paypal_Pro', 'filter_unselect_default' ), 101 , 1
 		);
 	}
+
 
 	/**
 	 * No payment gateway is selected by default
@@ -54,12 +63,26 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 *
 	 * @since 3.9
 	 */
-	public function filter_unselect_default( $fields ) {
+	public static function filter_unselect_default( $fields ) {
 		foreach ( $fields as $i=>$field ) {
 			$fields[ $i ][ 'checked' ] = false;
 		}
 
 		return $fields;
+	}
+
+	/**
+	 * WordPress Enqueue for the Pro Script and CSS file
+	 *
+	 * @return void
+	 *
+	 * @since 3.9
+	 */
+	public static function pro_script() {
+		if ( wpsc_is_checkout() ) {
+			wp_enqueue_script( 'pro-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/pro.js', array( 'jquery' ) );
+			wp_enqueue_style( 'pro-syle-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/pro.css' );
+		}
 	}
 
 	/**
@@ -76,19 +99,6 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		return apply_filters( 'wpsc_paypal-pro_mark_html', $html );
 	}
 
-	/**
-	 * WordPress Enqueue for the Pro Script and CSS file
-	 *
-	 * @return void
-	 *
-	 * @since 3.9
-	 */
-	public function pro_script() {
-		if ( wpsc_is_checkout() ) {
-			wp_enqueue_script( 'pro-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/pro.js', array( 'jquery' ) );
-			wp_enqueue_style( 'pro-syle-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/pro.css' );
-		}
-	}
 
 	/**
 	 * Purchase Log Filter for Gateway Data
