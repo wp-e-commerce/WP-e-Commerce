@@ -43,6 +43,9 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	/**
 	 * Run the gateway hooks 
 	 *
+	 * @access public
+     * @since 4.0
+	 *
 	 * @return void
 	 */
 	public static function init() {

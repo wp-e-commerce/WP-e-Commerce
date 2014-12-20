@@ -51,6 +51,9 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
     /**
      * Run the gateway hooks 
      *
+     * @access public
+     * @since 4.0
+     *
      * @return void
      */
     public static function init() {

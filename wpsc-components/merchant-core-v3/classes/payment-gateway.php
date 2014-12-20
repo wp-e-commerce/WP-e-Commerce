@@ -285,6 +285,15 @@ final class WPSC_Payment_Gateways {
 		return array_keys( self::$gateways );
 	}
 
+	/**
+	 *
+	 * Return an array containing active gateway names.
+	 *
+	 * @access public
+	 * @since 3.9
+	 *
+	 * @return array
+	 */
 	public static function get_active_gateways() {
 		if ( empty( self::$active_gateways ) ) {
 			$selected_gateways = get_option( 'custom_gateway_options', array() );
@@ -298,6 +307,9 @@ final class WPSC_Payment_Gateways {
 	/**
      * Initialize the Active Gateways
      *
+	 * @access public
+	 * @since 4.0
+	 *
      * @return void
      */
 	public static function initialize_gateways() {
@@ -516,7 +528,9 @@ abstract class WPSC_Payment_Gateway {
 	 * actions and filters that are required by the Gateway
 	 *
 	 * @access public
-	 * @return void
+	 * @since 4.0
+	 *
+	 * @return void 
 	 */
 	public static function init() {
 
