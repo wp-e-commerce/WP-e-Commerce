@@ -134,7 +134,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 			<div id="right_frame">
 				<p id="message">
 				<?php _e( 'Processing Order', 'wpsc'); ?>
-				<?php $location = esc_js( $this->get_original_return_url( $sessionid ) );  ?>
+				
 				</p>
 				<img src="https://www.paypal.com/en_US/i/icon/icon_animated_prog_42wx42h.gif" alt="Processing..." />
 				<div id="right_bottom">
@@ -144,6 +144,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 			</div>
 		</div>
 		<script type="text/javascript">
+<?php $location = $this->get_original_return_url( $sessionid );  ?> 
 		setTimeout('if (window!=top) {top.location.replace("<?php echo $location; ?>");}else{location.replace("<?php echo $location; ?>");}', 1500);
 		</script>
 	</body>
@@ -171,6 +172,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		),
 		get_option( 'transact_url' )
 	);
+        
 		return apply_filters( 'wpsc_paypal_digital_goods_return_url', $location );
 	}
 
@@ -213,8 +215,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 			<div id="left_frame">
 			<div id="right_frame">
 			<p id="message">
-			<?php _e( 'Cancelling Order', 'ppdg'); ?>
-		<?php $location = html_entity_decode( $this->get_original_cancel_url() );  ?>
+			<?php _e( 'Cancelling Order', 'ppdg'); ?>	
 		</p>
 			<img src="https://www.paypal.com/en_US/i/icon/icon_animated_prog_42wx42h.gif" alt="Processing..." />
 			<div id="right_bottom">
@@ -224,6 +225,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 			</div>
 			</div>
 		<script type="text/javascript">
+        <?php $location = $this->get_original_cancel_url() ;  ?>
 		setTimeout('if (window!=top) {top.location.replace("<?php echo $location; ?>");}else{location.replace("<?php echo $location; ?>");}', 1500);
 		</script>
 	</body>
@@ -602,6 +604,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 	 */
 	public function process( $args = array() ) {
 		$total = $this->convert( $this->purchase_log->get( 'totalprice' ) );
+       
 		$options = array(
 			'return_url' => $this->get_return_url(),
 			'message_id' => $this->purchase_log->get( 'id' ),
