@@ -24,7 +24,7 @@
 			// If DG is selected
 			if ( $rd_btn.is( ':checked' ) ) {
 				// Disable Submit button
-				$checkout_btn.val( 'loading...' ).attr( 'disabled', 'on' );
+				$checkout_btn.val( 'loading...' ).prop( 'disabled', true );
 				// Submit the FORM with AJAX
 				$.ajax({
 					url: '',
