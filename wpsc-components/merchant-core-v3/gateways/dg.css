@@ -1,4 +1,16 @@
 /*
+ * Lightweight Code for the Spinner
+ */
+.dg-spinner {
+	vertical-align: middle;
+	padding-left: 15px;
+}
+
+.wpsc-checkout-form-button {
+	vertical-align: middle;
+}
+
+/*
  * Digital Goods Lightbox CSS code
  */
 p {

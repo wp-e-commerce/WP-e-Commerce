@@ -19,12 +19,31 @@
 			}
 		} );
 
+		// Inserts the Spinner
+		console.info( spinner_url );
+		if ( spinner_url ) {
+			$checkout_btn.after( '<img src="' + spinner_url + '" class="dg-spinner" alt="spinner"/>' );
+			var $spinner = $( '.dg-spinner' );
+			// Add some basic styling
+			$spinner.css({
+				'vertical-align': 'middle',
+				'padding-left': '15px'
+			});
+			$checkout_btn.css( 'vertical-align', 'middle' );
+			// Hide the Spinner
+			$spinner.hide();
+		}
+
 		// Submit button Click handler
 		$checkout_btn.on( 'click', function() {
 			// If DG is selected
 			if ( $rd_btn.is( ':checked' ) ) {
 				// Disable Submit button
 				$checkout_btn.val( 'loading...' ).prop( 'disabled', true );
+
+				// Show the Spinner 
+				$spinner.show();
+
 				// Submit the FORM with AJAX
 				$.ajax({
 					url: '',
@@ -36,6 +55,8 @@
 							trigger: null
 						});
 						dg.startFlow( url );
+						// Hide the Spinner
+						$spinner.hide();
 					}
 				});
 				return false;
