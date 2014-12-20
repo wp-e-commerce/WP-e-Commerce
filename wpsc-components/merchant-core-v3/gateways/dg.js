@@ -18,8 +18,7 @@
 			}
 		} );
 
-		// Inserts the Spinner
-		console.info( spinner_url );
+		// Inserts the Spinner	
 		if ( spinner_url ) {
 			$checkout_btn.after( '<img src="' + spinner_url + '" class="dg-spinner" alt="spinner"/>' );
 			var $spinner = $( '.dg-spinner' );
