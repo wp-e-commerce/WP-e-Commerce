@@ -183,6 +183,8 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
         get_option( 'transact_url' )
     );
 
+        $location = wp_validate_redirect( $location ); 
+
         return apply_filters( 'wpsc_paypal_digital_goods_return_url', $location );
     }
 
