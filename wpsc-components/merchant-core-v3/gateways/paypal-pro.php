@@ -33,17 +33,29 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 			'test'             => (bool) $this->setting->get( 'sandbox_mode' ),
 		) );
 
-		// Load PayPal Pro JavaScript file
-		add_action( 'wp_enqueue_scripts', array( $this, 'pro_script' ) );
-
 		add_filter( 'wpsc_purchase_log_gateway_data', array( $this, 'filter_purchase_log_gateway_data' ), 10, 2 );
+
+	}
+
+	/**
+	 * Run the gateway hooks 
+	 *
+	 * @access public
+     * @since 4.0
+	 *
+	 * @return void
+	 */
+	public static function init() {
+		// Load PayPal Pro JavaScript file
+		add_action( 'wp_enqueue_scripts', array( 'WPSC_Payment_Gateway_Paypal_Pro', 'pro_script' ) );
 
 		// Unselect Default Payment Gateway
 		add_filter(
 			'wpsc_payment_method_form_fields',
-			array( $this, 'filter_unselect_default' ), 101 , 1
+			array( 'WPSC_Payment_Gateway_Paypal_Pro', 'filter_unselect_default' ), 101 , 1
 		);
 	}
+
 
 	/**
 	 * No payment gateway is selected by default
@@ -54,12 +66,26 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 *
 	 * @since 3.9
 	 */
-	public function filter_unselect_default( $fields ) {
+	public static function filter_unselect_default( $fields ) {
 		foreach ( $fields as $i=>$field ) {
 			$fields[ $i ][ 'checked' ] = false;
 		}
 
 		return $fields;
+	}
+
+	/**
+	 * WordPress Enqueue for the Pro Script and CSS file
+	 *
+	 * @return void
+	 *
+	 * @since 3.9
+	 */
+	public static function pro_script() {
+		if ( wpsc_is_checkout() ) {
+			wp_enqueue_script( 'pro-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/pro.js', array( 'jquery' ) );
+			wp_enqueue_style( 'pro-syle-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/pro.css' );
+		}
 	}
 
 	/**
@@ -76,19 +102,6 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		return apply_filters( 'wpsc_paypal-pro_mark_html', $html );
 	}
 
-	/**
-	 * WordPress Enqueue for the Pro Script and CSS file
-	 *
-	 * @return void
-	 *
-	 * @since 3.9
-	 */
-	public function pro_script() {
-		if ( wpsc_is_checkout() ) {
-			wp_enqueue_script( 'pro-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/pro.js', array( 'jquery' ) );
-			wp_enqueue_style( 'pro-syle-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/pro.css' );
-		}
-	}
 
 	/**
 	 * Purchase Log Filter for Gateway Data
@@ -260,8 +273,8 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		$options = array(
 			'tx'            => $tx,
 			'CSCMATCH'      => $CSCMATCH,
-			'message_id'    => $this->purchase_log->get( 'sessionid' ),
-			'invoice'       => $this->purchase_log->get( 'id' ),
+			'message_id'    => $this->purchase_log->get( 'id' ),
+			'invoice'       => $this->purchase_log->get( 'sessionid' ),
 		);
 
 		$options += $this->checkout_data->get_gateway_data();
@@ -563,8 +576,8 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		$total = $this->convert( $this->purchase_log->get( 'totalprice' ) );
 		$options = array(
 			'return_url'       => $this->get_return_url(),
-			'message_id'       => $this->purchase_log->get( 'sessionid' ),
-			'invoice'          => $this->purchase_log->get( 'id' ),
+			'message_id'       => $this->purchase_log->get( 'id' ),
+			'invoice'          => $this->purchase_log->get( 'sessionid' ),
 			'address_override' => 1,
 			'paymentaction'    => 'sale',
 			'template'         => 'templateD',
@@ -580,28 +593,38 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 
 		// BMCreateButton API call
 		$response = $this->gateway->createButton( $options );
-		$params = $response->get_params();
-		$website_code = $params['WEBSITECODE'];
-
 
 		if ( $response->is_successful() ) {
+
 			$params = $response->get_params();
+			$website_code = $params['WEBSITECODE'];
+
 			// Log any warning
 			if ( $params['ACK'] == 'SuccessWithWarning' ) {
 				$this->log_error( $response );
+				wpsc_update_customer_meta( 'paypal_pro_checkout_errors', $response->get_errors() );
+
 			}
+
+			// Write the Button code
+			echo( $website_code );	
+
 		} else {
+
 			// Log errors and redirect user
 			$this->log_error( $response );
+			wpsc_update_customer_meta( 'paypal_pro_checkout_errors', $response->get_errors() );
+
 			$url = add_query_arg( array(
 				'payment_gateway'          => 'paypal-pro-checkout',
 				'payment_gateway_callback' => 'display_paypal_error',
 			), $this->get_return_url() );
+
+			// Redirect to the Error Page
+			wp_redirect( $url );
 		}
 
-		// Write the Button code
-		echo( $website_code );
-
+		// Stop further execution
 		exit;
 	}
 
