@@ -3,7 +3,7 @@
 */
 (function($) {
 	$(window).load(function() {	
-		// Declare variables/doom elements
+		// Declare DOM elements
 		var $checkout_btn = $( '.wpsc-checkout-form-button' ),
 		$rd_btn = $( 'input[value="paypal-digital-goods"]' ),
 		$form = $( '#wpsc-checkout-form' );
