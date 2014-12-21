@@ -454,6 +454,7 @@ function wpsc_register_post_types() {
 		'add_new_item'  => __( 'Add New Product Tag' , 'wpsc' ),
 		'new_item_name' => __( 'New Product Tag Name', 'wpsc' ),
 		'choose_from_most_used' => __('Choose from most used Product Tags', 'wpsc' ),
+		'not_found'	=> __('No Product Tags found', 'wpsc'),
 	);
 
 	$args = array(

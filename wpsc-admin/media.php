@@ -62,6 +62,11 @@ function _wpsc_ajax_get_variation_gallery() {
 	);
 }
 
+/**
+ * Verifies the save product gallery AJAX nonce.
+ * 
+ * @return WP_Error|boolean True if nonce is valid. WP_Error if otherwise.
+ */ 
 function _wpsc_ajax_verify_save_product_gallery() {
 	return _wpsc_ajax_verify_nonce( 'update_gallery_' . absint( $_REQUEST['postId'] ) );
 }

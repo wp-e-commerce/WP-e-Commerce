@@ -1,8 +1,11 @@
 <?php
 
-/*
+/**
  * Customer meta API via AJAX.  Note that the API only permits access for the current customer (visitor)
  * because of security considerations.
+ * 
+ * @package wp-e-commerce
+ * @since 3.8.14
  */
 
 /**

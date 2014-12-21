@@ -1,4 +1,10 @@
 <?php
+/**
+ * The WP eCommerce Checkout form data Class
+ *
+ * @package wp-e-commerce
+ * @since 3.8
+ */
 
 class WPSC_Checkout_Form_Data {
 	private $data         = array();
@@ -22,7 +28,8 @@ class WPSC_Checkout_Form_Data {
 
 			$sql = $wpdb->prepare( $sql, $log_id );
 			$this->raw_data = $wpdb->get_results( $sql );
-
+			
+			//Set the cache for raw checkout for data
 			wp_cache_set( $log_id, $this->raw_data, 'wpsc_checkout_form_raw_data' );
 		}
 
@@ -80,7 +87,8 @@ class WPSC_Checkout_Form_Data {
 
 				$this->gateway_data[ $data_key ]['name'] = trim( $name );
 			}
-
+			
+			//Sets the cache for checkout form gateway data
 			wp_cache_set( $this->log_id, $this->gateway_data, 'wpsc_checkout_form_gateway_data' );
 		}
 

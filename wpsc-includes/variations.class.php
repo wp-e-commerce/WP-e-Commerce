@@ -1,6 +1,6 @@
 <?php
 /**
- * wp- e-Commerce Variations class
+ * WP e-Commerce Variations class
  *
  * This is the code that handles adding, editing and displaying variations on Products
  */

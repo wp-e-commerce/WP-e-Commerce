@@ -1,4 +1,9 @@
 <?php
+/**
+ * Generates an RSS feed for WP eCommerce Products
+ * 
+ * @package wp-e-commerce
+ */ 
 
 function wpsc_feed_publisher() {
 
@@ -13,7 +18,7 @@ add_action( 'init', 'wpsc_feed_publisher' );
 
 function wpsc_generate_product_feed() {
 
-	global $wpdb, $wp_query, $post;
+    global $wpdb, $wp_query, $post;
 
     set_time_limit(0);
 
