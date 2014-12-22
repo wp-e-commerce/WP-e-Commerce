@@ -267,9 +267,9 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 		$purchase_log->set( 'gateway', $submitted_gateway );
 		$purchase_log->set( array(
-			'gateway' => $submitted_gateway,
+			'gateway'       => $submitted_gateway,
 			'base_shipping' => $wpsc_cart->calculate_base_shipping(),
-			'totalprice' => $wpsc_cart->calculate_total_price(),
+			'totalprice'    => $wpsc_cart->calculate_total_price(),
 		) );
 
 		$purchase_log->save();
@@ -282,8 +282,8 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		$this->wizard->completed_step( 'payment' );
 
 		do_action( 'wpsc_submit_checkout', array(
-			"purchase_log_id" => $purchase_log_id,
-			"our_user_id"     => get_current_user_id(),
+			'purchase_log_id' => $purchase_log_id,
+			'our_user_id'     => get_current_user_id(),
 		) );
 
 		do_action( 'wpsc_submit_checkout_gateway', $submitted_gateway, $purchase_log );

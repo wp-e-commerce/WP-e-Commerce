@@ -1,9 +1,9 @@
 <?php
 function wpsc_get_plaintext_table( $headings, $rows ) {
 	$colwidths = array();
-	$output = array();
+	$output    = array();
 	$alignment = array_values( $headings );
-	$headings = array_keys( $headings );
+	$headings  = array_keys( $headings );
 	foreach ( $headings as $heading ) {
 		$colwidths[] = strlen( $heading );
 	}

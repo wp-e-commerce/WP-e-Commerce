@@ -55,7 +55,7 @@ final class WPSC_Payment_Gateways {
 	 * @since 3.9
 	 */
 	public static function &get( $gateway, $meta = false ) {
-	
+
 		if ( empty( self::$instances[$gateway] ) ) {
 			if ( ! $meta )
 				$meta = self::$gateways[$gateway];
@@ -76,7 +76,7 @@ final class WPSC_Payment_Gateways {
 	}
 
 	public static function init() {
-		
+
 		add_action( 'wpsc_submit_gateway_options', array( 'WPSC_Payment_Gateway_Setting', 'action_update_payment_gateway_settings' ) );
 
 		if ( ! defined( 'WPSC_PAYMENT_GATEWAY_DEBUG' ) || WPSC_PAYMENT_GATEWAY_DEBUG == false ) {
@@ -220,10 +220,11 @@ final class WPSC_Payment_Gateways {
 		if ( is_wp_error( $gateway ) )
 			return $gateway;
 
-		$meta['name'] = $gateway->get_title();
+		$meta['name']  = $gateway->get_title();
 		$meta['image'] = $gateway->get_image_url();
-		$meta['mark'] = $gateway->get_mark_html();
-		self::$gateways[$filename] = $meta;
+		$meta['mark']  = $gateway->get_mark_html();
+
+		self::$gateways[ $filename ] = $meta;
 
 		return true;
 	}
@@ -316,7 +317,7 @@ final class WPSC_Payment_Gateways {
 		$active_gateways = self::get_active_gateways();
 
 		foreach( $active_gateways as $gateway_id ) {
-			$gateway = self::get( $gateway_id );	
+			$gateway = self::get( $gateway_id );
 			$gateway::init();
 		}
 	}
@@ -524,13 +525,13 @@ abstract class WPSC_Payment_Gateway {
 
 	/**
 	 * Gateway initialization function.
-	 * You should use this function for hooks with 
+	 * You should use this function for hooks with
 	 * actions and filters that are required by the Gateway
 	 *
 	 * @access public
 	 * @since 4.0
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	public static function init() {
 

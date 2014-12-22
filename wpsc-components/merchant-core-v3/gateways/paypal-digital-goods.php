@@ -6,8 +6,7 @@ require_once( 'paypal-express-checkout.php' );
  *
  */
 
-class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Paypal_Express_Checkout
-{
+class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Paypal_Express_Checkout {
     const SANDBOX_URL = 'https://www.sandbox.paypal.com/incontext?token=';
     const LIVE_URL = 'https://www.paypal.com/incontext?token=';
     public $gateway;
@@ -49,7 +48,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
     }
 
     /**
-     * Run the gateway hooks 
+     * Run the gateway hooks
      *
      * @access public
      * @since 4.0
@@ -80,7 +79,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
                 'spinner_url' => wpsc_get_ajax_spinner(),
                 'loading'     => __( 'Loading...', 'wpsc' ),
             );
-             
+
             wp_enqueue_script( 'dg-script', 'https://www.paypalobjects.com/js/external/dg.js' );
             wp_enqueue_script( 'dg-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/dg.js', array( 'jquery' ) );
             wp_localize_script( 'dg-script', 'dg_loc', $dg_loc );
@@ -163,7 +162,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
             </div>
         </div>
         <script type="text/javascript">
-        <?php $location = $this->get_original_return_url( $sessionid );  ?> 
+        <?php $location = $this->get_original_return_url( $sessionid );  ?>
         setTimeout('if (window!=top) {top.location.replace("<?php echo $location; ?>");}else{location.replace("<?php echo $location; ?>");}', 1500);
         </script>
     </body>
@@ -192,7 +191,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
         get_option( 'transact_url' )
     );
 
-        $location = wp_validate_redirect( $location ); 
+        $location = wp_validate_redirect( $location );
 
         return apply_filters( 'wpsc_paypal_digital_goods_return_url', $location );
     }
@@ -236,7 +235,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
             <div id="left_frame">
             <div id="right_frame">
             <p id="message">
-            <?php _e( 'Cancelling Order', 'ppdg'); ?>	
+            <?php _e( 'Cancelling Order', 'ppdg'); ?>
         </p>
             <img src="https://www.paypal.com/en_US/i/icon/icon_animated_prog_42wx42h.gif" alt="Processing..." />
             <div id="right_bottom">

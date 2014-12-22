@@ -25,12 +25,12 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		$this->gateway = new PHP_Merchant_Paypal_Pro( $options );
 
 		$this->gateway->set_options( array(
-			'api_username'     => $this->setting->get( 'api_username' ),
-			'api_password'     => $this->setting->get( 'api_password' ),
-			'api_signature'    => $this->setting->get( 'api_signature' ),
-			'cancel_url'       => $this->get_shopping_cart_payment_url(),
-			'currency'         => $this->get_currency_code(),
-			'test'             => (bool) $this->setting->get( 'sandbox_mode' ),
+			'api_username'  => $this->setting->get( 'api_username' ),
+			'api_password'  => $this->setting->get( 'api_password' ),
+			'api_signature' => $this->setting->get( 'api_signature' ),
+			'cancel_url'    => $this->get_shopping_cart_payment_url(),
+			'currency'      => $this->get_currency_code(),
+			'test'          => (bool) $this->setting->get( 'sandbox_mode' ),
 		) );
 
 		add_filter( 'wpsc_purchase_log_gateway_data', array( $this, 'filter_purchase_log_gateway_data' ), 10, 2 );
@@ -38,7 +38,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	}
 
 	/**
-	 * Run the gateway hooks 
+	 * Run the gateway hooks
 	 *
 	 * @access public
      * @since 4.0
@@ -607,7 +607,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 			}
 
 			// Write the Button code
-			echo( $website_code );	
+			echo( $website_code );
 
 		} else {
 

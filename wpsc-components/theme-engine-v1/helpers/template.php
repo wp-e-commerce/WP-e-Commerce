@@ -138,7 +138,7 @@ function wpsc_body_class( $classes ) {
 	if ( $post_id ) {
 
 		$page_url = get_permalink( $post_id );
-		
+
 		// If on a product or category page...
 		if ( get_option( 'product_list_url' ) == $page_url || get_post_type( $post_id ) === 'wpsc-product' ) {
 
