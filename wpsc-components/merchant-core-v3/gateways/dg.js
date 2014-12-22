@@ -2,23 +2,23 @@
 * PayPal for Digital Goods script
 */
 (function($) {
-	$(window).load(function() {	
+	$(window).load(function() {
 		// Declare DOM elements
-		var $checkout_btn = $( '.wpsc-checkout-form-button' ),
+		var $checkout_btn = $( '.wpsc-checkout-form-button, .wpsc_buy_button' ),
 		$rd_btn = $( 'input[value="paypal-digital-goods"]' ),
-		$form = $( '#wpsc-checkout-form' );
+		$form = $( '#wpsc-checkout-form, .wpsc_checkout_forms' );
 
 		// Change the id of the checkout button
 		$checkout_btn.attr( 'id', 'submitBtn' );
 
 		// Disable Form submission if DG is selected
-		$form.on ('submit', function() {
+		$form.on ( 'submit', function() {
 			if ( $rd_btn.is( ':checked' ) ) {
-				return false;			
+				return false;
 			}
 		} );
 
-		// Inserts the Spinner	
+		// Inserts the Spinner
 		if ( dg_loc && dg_loc.spinner_url ) {
 			$checkout_btn.after( '<img src="' + dg_loc.spinner_url + '" class="dg-spinner" alt="spinner"/>' );
 			var $spinner = $( '.dg-spinner' );
@@ -41,14 +41,14 @@
 				// Disable Submit button
 				$checkout_btn.val( dg_loc.loading ).prop( 'disabled', true );
 
-				// Show the Spinner 
+				// Show the Spinner
 				$spinner.show();
-
+				console.log( $form.serialize() );
 				// Submit the FORM with AJAX
 				$.ajax({
 					url: '',
 					type: 'post',
-					data: $form.serialize(),
+					data: $form.serialize() + '&custom_gateway=paypal-digital-goods',
 					success: function( url ) {
 						// Start the DG flow
 						var dg = new PAYPAL.apps.DGFlow({

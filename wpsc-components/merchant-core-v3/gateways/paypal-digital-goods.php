@@ -8,7 +8,7 @@ require_once( 'paypal-express-checkout.php' );
 
 class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Paypal_Express_Checkout {
     const SANDBOX_URL = 'https://www.sandbox.paypal.com/incontext?token=';
-    const LIVE_URL = 'https://www.paypal.com/incontext?token=';
+    const LIVE_URL    = 'https://www.paypal.com/incontext?token=';
     public $gateway;
 
     /**
@@ -43,8 +43,6 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
         ) );
 
         add_filter( 'wpsc_purchase_log_gateway_data', array( get_parent_class( $this ), 'filter_purchase_log_gateway_data' ), 10, 2 );
-
-
     }
 
     /**
@@ -97,7 +95,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      * @return array
      */
     public static function filter_unselect_default( $fields ) {
-        foreach ( $fields as $i=>$field ) {
+        foreach ( $fields as $i => $field ) {
             $fields[ $i ][ 'checked' ] = false;
         }
 
@@ -235,7 +233,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
             <div id="left_frame">
             <div id="right_frame">
             <p id="message">
-            <?php _e( 'Cancelling Order', 'ppdg'); ?>
+            <?php _e( 'Cancelling Order', 'wpsc' ); ?>
         </p>
             <img src="https://www.paypal.com/en_US/i/icon/icon_animated_prog_42wx42h.gif" alt="Processing..." />
             <div id="right_bottom">
