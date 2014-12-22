@@ -190,7 +190,7 @@ class WPSC_Google_Analytics {
 
 		foreach ( $cart_items as $item ) {
 			$total_tax	 += $item['tax_charged'];
-			$total_price += $item['price'];
+			$total_price += absint( $item['quantity'] ) * $item['price'];
 		}
 
 		if ( $this->is_theme_tracking || $this->advanced_code ) {
