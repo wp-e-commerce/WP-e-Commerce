@@ -13,8 +13,9 @@ function wpsc_is_product() {
 	global $wp_query, $rewrite_rules;
 	$tmp = false;
 
-	if ( isset( $wp_query->is_product ) )
+	if ( isset( $wp_query->is_product ) ) {
 		$tmp = $wp_query->is_product;
+	}
 
 	return $tmp;
 }
@@ -27,13 +28,21 @@ function wpsc_is_product() {
  * @return boolean
  */
 function wpsc_is_checkout() {
-	global $wp_query, $rewrite_rules;
-	$tmp = false;
+	global $wp_query;
 
-	if ( isset( $wp_query->is_checkout ) )
-		$tmp = $wp_query->is_checkout;
+	$is_checkout            = false;
+	$checkout_shortcode     = wpsc_get_the_post_id_by_shortcode( '[shoppingcart]' );
+	$old_checkout_shortcode = wpsc_get_the_post_id_by_shortcode( '[checkout]' );
 
-	return $tmp;
+	if ( isset( $wp_query->is_checkout ) ) {
+		$is_checkout = $wp_query->is_checkout;
+	} else if ( ! is_null( $old_checkout_shortcode ) ) {
+		$is_checkout = is_page( $old_checkout_shortcode );
+	} else if ( ! is_null( $checkout_shortcode ) ) {
+		$is_checkout = is_page( $checkout_shortcode );
+	}
+
+	return $is_checkout;
 }
 
 /**
