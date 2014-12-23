@@ -2,8 +2,7 @@
 require_once( 'paypal.php' );
 require_once( 'paypal-express-checkout-response.php' );
 
-class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
-{
+class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal {
 	public function __construct( $options = array() ) {
 		parent::__construct( $options );
 	}
@@ -59,7 +58,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 				'number'	  => "L_PAYMENTREQUEST_0_NUMBER{$i}",
 			);
 
-			// Format Amount Field 
+			// Format Amount Field
 			$item['amount'] = $this->format( $item['amount'] );
 
 			// Required Fields

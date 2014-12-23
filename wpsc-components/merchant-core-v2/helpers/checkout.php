@@ -60,6 +60,10 @@ function _wpsc_filter_merchant_v2_payment_method_form_fields( $fields ) {
 		$selected_value = $purchase_log->get( 'gateway' );
 	}
 
+	if ( empty( _wpsc_merchant_v2_get_active_gateways() ) ) {
+		return $fields;
+	}
+
 	foreach ( _wpsc_merchant_v2_get_active_gateways() as $gateway ) {
 		$gateway = (object) $gateway;
 		$title = $gateway->name;
@@ -90,8 +94,13 @@ add_filter(
 );
 
 function _wpsc_filter_merchant_v2_field_after( $output, $field, $r ) {
-	if ( $field['name'] != 'wpsc_payment_method' )
+	if ( $field['name'] != 'wpsc_payment_method' ) {
 		return $output;
+	}
+
+	if ( empty( _wpsc_merchant_v2_get_active_gateways() ) ) {
+		return $output;
+	}
 
 	foreach ( _wpsc_merchant_v2_get_active_gateways() as $gateway ) {
 		if ( $gateway['internalname'] == $field['value'] ) {
@@ -130,9 +139,9 @@ function _wpsc_merchant_v2_hack_gateway_field_names( $extra_form, $gateway ) {
 
 function _wpsc_merchant_v2_get_active_gateways() {
 	global $nzshpcrt_gateways;
-	static $gateways = null;
+	static $gateways = array();
 
-	if ( is_null( $gateways ) ) {
+	if ( empty( $gateways ) ) {
 		$active = get_option( 'custom_gateway_options' );
 		foreach ( $nzshpcrt_gateways as $gateway ) {
 			if ( in_array( $gateway['internalname'], (array) $active ) )
