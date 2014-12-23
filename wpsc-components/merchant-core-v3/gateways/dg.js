@@ -43,7 +43,7 @@
 
 				// Show the Spinner
 				$spinner.show();
-				console.log( $form.serialize() );
+
 				// Submit the FORM with AJAX
 				$.ajax({
 					url: '',
