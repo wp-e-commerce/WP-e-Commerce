@@ -169,7 +169,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal {
 			'COMPLETETYPE' => 'complete_type',
 		) );
 
-		if ( ! empty( $this->options['shipping_address'] ) ) {
+		if ( ! empty( $this->options['shipping_address'] ) && ! isset( $this->options['no_shipping'] ) ) {
 			$request += $this->add_address();
 		}
 
