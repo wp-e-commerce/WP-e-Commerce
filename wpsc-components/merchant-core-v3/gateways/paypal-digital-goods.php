@@ -53,7 +53,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      *
      * @return void
      */
-    public static function init() {
+    public function init() {
         // Disable default selection
         add_filter(
             'wpsc_payment_method_form_fields',

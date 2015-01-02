@@ -318,7 +318,7 @@ final class WPSC_Payment_Gateways {
 
 		foreach( $active_gateways as $gateway_id ) {
 			$gateway = self::get( $gateway_id );
-			$gateway::init();
+			$gateway->init();
 		}
 	}
 
@@ -533,7 +533,7 @@ abstract class WPSC_Payment_Gateway {
 	 *
 	 * @return void
 	 */
-	public static function init() {
+	public function init() {
 
 	}
 }

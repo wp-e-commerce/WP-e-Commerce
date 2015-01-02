@@ -45,7 +45,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 *
 	 * @return void
 	 */
-	public static function init() {
+	public function init() {
 		// Load PayPal Pro JavaScript file
 		add_action( 'wp_enqueue_scripts', array( 'WPSC_Payment_Gateway_Paypal_Pro', 'pro_script' ) );
 

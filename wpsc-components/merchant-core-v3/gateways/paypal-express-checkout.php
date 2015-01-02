@@ -41,14 +41,14 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	}
 
 	/**
-	 * Run the gateway hooks 
+	 * Run the gateway hooks
 	 *
 	 * @access public
      * @since 4.0
 	 *
 	 * @return void
 	 */
-	public static function init() {
+	public function init() {
 		add_filter(
 			'wpsc_payment_method_form_fields',
 			array( 'WPSC_Payment_Gateway_Paypal_Express_Checkout', 'filter_unselect_default' ), 100 , 1
