@@ -3,9 +3,9 @@
 */
 (function($) {
 	var utils = {
-		isValidPPURL: function( url ) {	
-			return url.substring( 0, 4 ) === "http";
-		} 
+		isValidPPURL: function( url ) {
+			return url.substring( 0, 4 ) === 'http';
+		}
 	};
 	$( window ).load( function() {
 		// Declare DOM elements
@@ -25,7 +25,7 @@
 
 		// Inserts the Spinner
 		if ( dg_loc && dg_loc.spinner_url ) {
-			$checkout_btn.after( '<img src="' + dg_loc.spinner_url + '" class="dg-spinner" alt="spinner"/>' );
+			$checkout_btn.after( '<img src="' + dg_loc.spinner_url + '" class="dg-spinner" alt="spinner" />' );
 			var $spinner = $( '.dg-spinner' );
 			// Add some basic styling
 			$spinner.css({
