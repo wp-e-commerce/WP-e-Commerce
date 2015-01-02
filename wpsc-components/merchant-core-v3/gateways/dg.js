@@ -59,12 +59,13 @@
 						var dg = new PAYPAL.apps.DGFlow({
 							trigger: null
 						});
-							
+
 						if ( utils.isValidPPURL( url ) ) {
 							dg.startFlow( url );
 						} else {
-							alert( 'Fatal Error. Debug code outputted to console.' );
-							console.info( url );
+							if ( window.console ) {
+								console.info( url );
+							}
 						}
 						// Hide the Spinner
 						$spinner.hide();
