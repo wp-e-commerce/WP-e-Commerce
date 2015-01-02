@@ -4,11 +4,7 @@
 (function($) {
 	var utils = {
 		isValidPPURL: function( url ) {	
-			if ( url.substring( 0, 4 ) === "http" ) {
-				return true;
-			} else {
-				return false;
-			}
+			return url.substring( 0, 4 ) === "http";
 		} 
 	};
 	$( window ).load( function() {
