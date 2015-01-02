@@ -24,7 +24,7 @@ class PHP_Merchant_Paypal_Digital_Goods extends PHP_Merchant_Paypal_Express_Chec
 		// Make sure PayPal knows all goods are digital
 		for( $i = 0; $i < count( $this->options['items'] ); $i++ ) {
 			$request += array( "L_PAYMENTREQUEST_0_ITEMCATEGORY{$i}" => 'Digital' );
-		}
+		}	
 
 		return $request;
 	}
@@ -38,6 +38,7 @@ class PHP_Merchant_Paypal_Digital_Goods extends PHP_Merchant_Paypal_Express_Chec
 	 * @return PHP_Merchant_Paypal_Express_Checkout_Response An object containing the details of PayPal's response to the request.
 	 */
 	public function setup_purchase( $options = array(), $action = 'Sale' ) {
+		$options['no_shipping'] = true;
 		return parent::setup_purchase( $options, $action );
 	}
 
@@ -50,6 +51,7 @@ class PHP_Merchant_Paypal_Digital_Goods extends PHP_Merchant_Paypal_Express_Chec
 	 * @return PHP_Merchant_Paypal_Express_Checkout_Response An object containing the details of PayPal's response to the request.
 	 */
 	public function purchase( $options = array(), $action = 'Sale' ) {
+		$options['no_shipping'] = true;
 		return parent::purchase( $options, $action );
 	}
 
@@ -67,10 +69,10 @@ class PHP_Merchant_Paypal_Digital_Goods extends PHP_Merchant_Paypal_Express_Chec
 			$args['element_id'] = 'paypal-submit';
 
 		$dg_script  = '<script src ="https://www.paypalobjects.com/js/external/dg.js" type="text/javascript"></script>'
-					. '<script>'
-					. 'var dg = new PAYPAL.apps.DGFlow({'
-					. 'trigger: "' . $args['element_id'] . '"' // the ID of the HTML element which calls setExpressCheckout
-					. '}); </script>';
+			. '<script>'
+			. 'var dg = new PAYPAL.apps.DGFlow({'
+			. 'trigger: "' . $args['element_id'] . '"' // the ID of the HTML element which calls setExpressCheckout
+			. '}); </script>';
 
 		return $dg_script;
 	}

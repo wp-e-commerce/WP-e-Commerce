@@ -2,7 +2,12 @@
 * PayPal for Digital Goods script
 */
 (function($) {
-	$(window).load(function() {
+	var utils = {
+		isValidPPURL: function( url ) {	
+			return url.substring( 0, 4 ) === "http";
+		} 
+	};
+	$( window ).load( function() {
 		// Declare DOM elements
 		var $checkout_btn = $( '.wpsc-checkout-form-button, .wpsc_buy_button' ),
 		$rd_btn = $( 'input[value="paypal-digital-goods"]' ),
@@ -54,7 +59,14 @@
 						var dg = new PAYPAL.apps.DGFlow({
 							trigger: null
 						});
-						dg.startFlow( url );
+
+						if ( utils.isValidPPURL( url ) ) {
+							dg.startFlow( url );
+						} else {
+							if ( window.console ) {
+								console.info( url );
+							}
+						}
 						// Hide the Spinner
 						$spinner.hide();
 					}
