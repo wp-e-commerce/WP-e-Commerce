@@ -1108,12 +1108,3 @@ background-color: #f5f5f5;
 	text-decoration: none;
 	font-size: 14px;
 }
-
-div.product_out_of_stock_message {
-	display: none;
-	color: red;
-}
-
-div.cart_message_notification_style {
-	color: red;
-}
