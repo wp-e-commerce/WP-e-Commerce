@@ -60,7 +60,9 @@ function _wpsc_filter_merchant_v2_payment_method_form_fields( $fields ) {
 		$selected_value = $purchase_log->get( 'gateway' );
 	}
 
-	if ( empty( _wpsc_merchant_v2_get_active_gateways() ) ) {
+	$gateways = _wpsc_merchant_v2_get_active_gateways();
+
+	if ( empty( $gateways ) ) {
 		return $fields;
 	}
 
@@ -98,7 +100,9 @@ function _wpsc_filter_merchant_v2_field_after( $output, $field, $r ) {
 		return $output;
 	}
 
-	if ( empty( _wpsc_merchant_v2_get_active_gateways() ) ) {
+	$gateways = _wpsc_merchant_v2_get_active_gateways();
+
+	if ( empty( $gateways ) ) {
 		return $output;
 	}
 
