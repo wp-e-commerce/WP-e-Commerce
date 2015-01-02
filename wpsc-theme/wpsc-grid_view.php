@@ -118,6 +118,8 @@ $image_height = get_option('product_image_height');
 							<?php endwhile; ?>
                             </table>
    							<div id="variation_display_<?php echo wpsc_the_product_id(); ?>" class="is_variation"><?php _e('Combination of product variants is not available', 'wpsc'); ?></div>
+   							<div class="product_out_of_stock_message product_out_of_stock_error_<?php echo wpsc_the_product_id(); ?>"><?php _e('Sorry!!! Product is out of stock', 'wpsc'); ?></div>
+   							<div class="cart_message_notification_style cart_message_notification_<?php echo wpsc_the_product_id(); ?>"></div>
 						</div><!--close wpsc_variation_forms-->
                         </fieldset>
 								<?php /** the variation group HTML and loop ends here */?>
