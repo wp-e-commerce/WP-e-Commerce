@@ -270,16 +270,17 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 	}
 
 	public function get_views() {
-		global $wpdb;
+		global $wpdb, $wpsc_purchlog_statuses;
 
-		$view_labels = array(
-			1 => _nx_noop( 'Incomplete <span class="count">(%s)</span>', 'Incomplete <span class="count">(%s)</span>', 'purchase logs' ),
-			2 => _nx_noop( 'Received <span class="count">(%s)</span>'  , 'Received <span class="count">(%s)</span>'  , 'purchase logs' ),
-			3 => _nx_noop( 'Accepted <span class="count">(%s)</span>'  , 'Accepted <span class="count">(%s)</span>'  , 'purchase logs' ),
-			4 => _nx_noop( 'Dispatched <span class="count">(%s)</span>', 'Dispatched <span class="count">(%s)</span>', 'purchase logs' ),
-			5 => _nx_noop( 'Closed <span class="count">(%s)</span>'    , 'Closed <span class="count">(%s)</span>'    , 'purchase logs' ),
-			6 => _nx_noop( 'Declined <span class="count">(%s)</span>'  , 'Declined <span class="count">(%s)</span>'  , 'purchase logs' ),
-		);
+		$view_labels = array();
+		if (!empty($wpsc_purchlog_statuses))
+		{
+			foreach ($wpsc_purchlog_statuses as $pl_status)
+			{
+				$view_labels[$pl_status['order']] = _nx_noop( $pl_status['label'] . ' <span class="count">(%s)</span>', $pl_status['label'] . ' <span class="count">(%s)</span>', 'purchase logs' );
+			}
+		}
+		$view_labels = apply_filters('wpsc_puchase_log_list_view_labels', $view_labels);
 
 		$sql = "SELECT DISTINCT processed, COUNT(*) AS count FROM " . WPSC_TABLE_PURCHASE_LOGS . " GROUP BY processed ORDER BY processed";
 		$results = $wpdb->get_results( $sql );
