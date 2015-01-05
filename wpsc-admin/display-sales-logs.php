@@ -409,7 +409,7 @@ class WPSC_Purchase_Log_Page {
 		}
 
 		// change status actions
-		if ( is_numeric( $current_action ) && $current_action < 7 && ! empty( $_REQUEST['post'] ) ) {
+		if ( is_numeric( $current_action ) && ! empty( $_REQUEST['post'] ) ) {
 
 			foreach ( $_REQUEST['post'] as $id )
 				wpsc_purchlog_edit_status( $id, $current_action );
