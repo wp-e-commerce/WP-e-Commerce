@@ -549,9 +549,14 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 	}
 
 	public function get_bulk_actions() {
-		if ( ! $this->bulk_actions )
-			return array();
 
+		global $wpsc_purchlog_statuses;
+
+		if ( ! $this->bulk_actions ) {
+			return array();
+		}
+
+		// Standard actions.
 		$actions = array(
 			'delete' => _x( 'Delete', 'bulk action', 'wpsc' ),
 			'1'      => __( 'Incomplete Sale', 'wpsc' ),
@@ -561,7 +566,16 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 			'5'      => __( 'Closed Order', 'wpsc' ),
 			'6'      => __( 'Payment Declined', 'wpsc' ),
 		);
-		return $actions;
+
+		// Loop through all statuses and register bulk actions for any other statuses.
+		foreach ( $wpsc_purchlog_statuses as $status ) {
+			if ( in_array( $status['order'], array_keys( $actions ) ) ) {
+				continue;
+			}
+			$actions[$status['order']] = $status['label'];
+		}
+
+		return apply_filters( 'wpsc_manage_purchase_logs_bulk_actions', $actions );
 	}
 
 	public function search_box( $text, $input_id ) {
