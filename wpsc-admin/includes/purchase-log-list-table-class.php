@@ -548,6 +548,15 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		<?php
 	}
 
+	/**
+	 * Provide bulk actions for sales logs.
+	 *
+	 * Generates bulk actions for standard order statuses. Also generates a "delete" bulk action,
+	 * and actions for any additional statuses that have been registered via the
+	 * wpsc_set_purchlog_statuses filter.
+	 *
+	 * @return array Array of bulk actions available.
+	 */
 	public function get_bulk_actions() {
 
 		global $wpsc_purchlog_statuses;
