@@ -568,15 +568,9 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		// Standard actions.
 		$actions = array(
 			'delete' => _x( 'Delete', 'bulk action', 'wpsc' ),
-			'1'      => __( 'Incomplete Sale', 'wpsc' ),
-			'2'      => __( 'Order Received', 'wpsc' ),
-			'3'      => __( 'Accepted Payment', 'wpsc' ),
-			'4'      => __( 'Job Dispatched', 'wpsc' ),
-			'5'      => __( 'Closed Order', 'wpsc' ),
-			'6'      => __( 'Payment Declined', 'wpsc' ),
 		);
 
-		// Loop through all statuses and register bulk actions for any other statuses.
+		// Loop through all statuses and register bulk actions for them.
 		foreach ( $wpsc_purchlog_statuses as $status ) {
 			if ( in_array( $status['order'], array_keys( $actions ) ) ) {
 				continue;
