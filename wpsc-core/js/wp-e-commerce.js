@@ -1092,6 +1092,14 @@ jQuery(document).ready(function ($) {
 	// Submit the product form using AJAX
 	jQuery( 'form.product_form, .wpsc-add-to-cart-button-form' ).on( 'submit', function() {
 		// we cannot submit a file through AJAX, so this needs to return true to submit the form normally if a file formfield is present
+		
+		var self = this;
+		var parent_form = jQuery(this).closest("form.product_form");
+		if ( parent_form.length === 0 ) {
+			return;
+		}
+		var product_id_hidden = jQuery("input[name='product_id']",parent_form).val();
+		
 		file_upload_elements = jQuery.makeArray( jQuery( 'input[type="file"]', jQuery( this ) ) );
 		if(file_upload_elements.length > 0) {
 			return true;
@@ -1115,6 +1123,13 @@ jQuery(document).ready(function ($) {
 
 			var success = function( response ) {
 				if ( ( response ) ) {
+					
+					var cart_message_json = response.cart_messages;
+					if( cart_message_json ) {
+						$('.cart_message_notification_' + product_id_hidden).append('<div>'+cart_message_json+'</div>');
+						$('.cart_message_notification_' + product_id_hidden + ' div').delay(2000).fadeOut('slow');
+					}
+					
 					if ( response.hasOwnProperty('fancy_notification') && response.fancy_notification ) {
 						if ( jQuery( '#fancy_notification_content' ) ) {
 							jQuery( '#fancy_notification_content' ).html( response.fancy_notification );
@@ -1188,8 +1203,12 @@ jQuery(document).ready(function ($) {
 			if ( response.variation_found ) {
 				if ( response.stock_available ) {
 					stock_display.removeClass('out_of_stock').addClass('in_stock');
+					$('.product_out_of_stock_error_' + prod_id).css('display', 'none');
+					$('#product_' + prod_id + '_submit_button').prop('disabled', false);
 				} else {
 					stock_display.addClass('out_of_stock').removeClass('in_stock');
+					$('.product_out_of_stock_error_' + prod_id).css('display', 'block');
+					$('#product_' + prod_id + '_submit_button').prop('disabled', true);
 				}
 				variation_display.removeClass('no_variation').addClass('is_variation');
 			} else {
