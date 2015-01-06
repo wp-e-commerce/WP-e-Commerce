@@ -269,6 +269,13 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		return $months;
 	}
 
+	/**
+	 * Get the sub-views of the list table.
+	 *
+	 * Allows user to limit the list to orders in a particular status.
+	 *
+	 * @return array The available view links.
+	 */
 	public function get_views() {
 		global $wpdb;
 
