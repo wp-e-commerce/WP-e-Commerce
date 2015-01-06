@@ -578,6 +578,13 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 			$actions[$status['order']] = $status['label'];
 		}
 
+		/**
+		 * Filter the available bulk actions on the purchase log listing screen.
+		 *
+		 * @since 4.0
+		 *
+		 * @param array $actions The bulk actions currently defined.
+		 */
 		return apply_filters( 'wpsc_manage_purchase_logs_bulk_actions', $actions );
 	}
 
