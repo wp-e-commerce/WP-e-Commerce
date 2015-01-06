@@ -325,8 +325,9 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		);
 
 		foreach ( $statuses as $status => $count ) {
-			if ( ! isset( $view_labels[$status] ) )
+			if ( ! isset( $view_labels[$status] ) ) {
 				continue;
+			}
 			$text = sprintf(
 				$view_labels[$status]['label'],
 				$view_labels[$status]['status_label'],
