@@ -277,18 +277,16 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 	 * @return array The available view links.
 	 */
 	public function get_views() {
-		global $wpdb;
 
-		$view_labels = array(
-			1 => _nx_noop( 'Incomplete <span class="count">(%s)</span>', 'Incomplete <span class="count">(%s)</span>', 'purchase logs' ),
-			2 => _nx_noop( 'Received <span class="count">(%s)</span>'  , 'Received <span class="count">(%s)</span>'  , 'purchase logs' ),
-			3 => _nx_noop( 'Accepted <span class="count">(%s)</span>'  , 'Accepted <span class="count">(%s)</span>'  , 'purchase logs' ),
-			4 => _nx_noop( 'Dispatched <span class="count">(%s)</span>', 'Dispatched <span class="count">(%s)</span>', 'purchase logs' ),
-			5 => _nx_noop( 'Closed <span class="count">(%s)</span>'    , 'Closed <span class="count">(%s)</span>'    , 'purchase logs' ),
-			6 => _nx_noop( 'Declined <span class="count">(%s)</span>'  , 'Declined <span class="count">(%s)</span>'  , 'purchase logs' ),
-		);
+		global $wpdb, $wpsc_purchlog_statuses;
 
-		$sql = "SELECT DISTINCT processed, COUNT(*) AS count FROM " . WPSC_TABLE_PURCHASE_LOGS . " GROUP BY processed ORDER BY processed";
+		$view_labels = array();
+		foreach ( $wpsc_purchlog_statuses as $status ) {
+			$view_labels[$status['order']]['label']        = _x( '%s <span class="count">(%d)</span>', 'Links to filter purchase log list by status. String is the status name, number is the count of purchase logs in that status.', 'wpsc' );
+			$view_labels[$status['order']]['status_label'] = $status['label'];
+		}
+
+		$sql = 'SELECT DISTINCT processed, COUNT(*) AS count FROM ' . WPSC_TABLE_PURCHASE_LOGS . ' GROUP BY processed ORDER BY processed';
 		$results = $wpdb->get_results( $sql );
 		$statuses = array();
 		$total_count = 0;
@@ -297,7 +295,6 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 			foreach ( $results as $status ) {
 				$statuses[$status->processed] = $status->count;
 			}
-
 			$total_count = array_sum( $statuses );
 		}
 
@@ -331,7 +328,8 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 			if ( ! isset( $view_labels[$status] ) )
 				continue;
 			$text = sprintf(
-				translate_nooped_plural( $view_labels[$status], $count, 'wpsc' ),
+				$view_labels[$status]['label'],
+				$view_labels[$status]['status_label'],
 				number_format_i18n( $count )
 			);
 			$href = add_query_arg( 'status', $status );
