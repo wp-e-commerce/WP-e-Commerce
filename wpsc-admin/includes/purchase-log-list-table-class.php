@@ -283,14 +283,15 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		$view_labels = array();
 		foreach ( $wpsc_purchlog_statuses as $status ) {
 			if ( ! empty( $status['view_label'] ) ) {
-				$view_labels[$status['order']] = $status['view_label'];
+				$view_labels[$status['order']]['view_label'] = $status['view_label'];
 			} else {
-				$view_labels[$status['order']] = _nx_noop(
-					sprintf( '%s <span class="count">(%%d)</span>', $status['label'] ),
-					sprintf( '%s <span class="count">(%%d)</span>', $status['label'] ),
+				$view_labels[$status['order']]['view_label'] = _nx_noop(
+					'%s <span class="count">(%d)</span>',
+					'%s <span class="count">(%d)</span>',
 					'Purchase log view links for custom status with no explicit translation.',
 					'wpsc'
 				);
+				$view_labels[$status['order']]['label'] = $status['label'];
 			}
 		}
 		$sql = 'SELECT DISTINCT processed, COUNT(*) AS count FROM ' . WPSC_TABLE_PURCHASE_LOGS . ' GROUP BY processed ORDER BY processed';
@@ -330,15 +331,24 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 				$all_text
 			),
 		);
-
 		foreach ( $statuses as $status => $count ) {
 			if ( ! isset( $view_labels[$status] ) ) {
 				continue;
 			}
-			$text = sprintf(
-				translate_nooped_plural( $view_labels[$status], $count, 'wpsc' ),
-				number_format_i18n( $count )
-			);
+			if ( empty( $view_labels[$status]['label'] ) ) {
+				// This translation needs only the quantity dropping in.
+				$text = sprintf(
+					translate_nooped_plural( $view_labels[$status]['view_label'], $count, 'wpsc' ),
+					number_format_i18n( $count )
+				);
+			} else {
+				// This translation needs the status label, and quantity dropping in.
+				$text = sprintf(
+					translate_nooped_plural( $view_labels[$status]['view_label'], $count, 'wpsc' ),
+					$view_labels[$status]['label'],
+					number_format_i18n( $count )
+				);
+			}
 			$href = add_query_arg( 'status', $status );
 			$href = remove_query_arg( array(
 				'deleted',
