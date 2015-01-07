@@ -282,10 +282,17 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 
 		$view_labels = array();
 		foreach ( $wpsc_purchlog_statuses as $status ) {
-			$view_labels[$status['order']]['label']        = _x( '%s <span class="count">(%d)</span>', 'Links to filter purchase log list by status. String is the status name, number is the count of purchase logs in that status.', 'wpsc' );
-			$view_labels[$status['order']]['status_label'] = $status['label'];
+			if ( ! empty( $status['view_label'] ) ) {
+				$view_labels[$status['order']] = $status['view_label'];
+			} else {
+				$view_labels[$status['order']] = _nx_noop(
+					sprintf( '%s <span class="count">(%%d)</span>', $status['label'] ),
+					sprintf( '%s <span class="count">(%%d)</span>', $status['label'] ),
+					'Purchase log view links for custom status with no explicit translation.',
+					'wpsc'
+				);
+			}
 		}
-
 		$sql = 'SELECT DISTINCT processed, COUNT(*) AS count FROM ' . WPSC_TABLE_PURCHASE_LOGS . ' GROUP BY processed ORDER BY processed';
 		$results = $wpdb->get_results( $sql );
 		$statuses = array();
@@ -329,8 +336,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 				continue;
 			}
 			$text = sprintf(
-				$view_labels[$status]['label'],
-				$view_labels[$status]['status_label'],
+				translate_nooped_plural( $view_labels[$status], $count, 'wpsc' ),
 				number_format_i18n( $count )
 			);
 			$href = add_query_arg( 'status', $status );
