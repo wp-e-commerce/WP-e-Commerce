@@ -283,8 +283,10 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		$view_labels = array();
 		foreach ( $wpsc_purchlog_statuses as $status ) {
 			if ( ! empty( $status['view_label'] ) ) {
+				// The status provides a view label i18n _nx_noop-able object.
 				$view_labels[$status['order']]['view_label'] = $status['view_label'];
 			} else {
+				// The status doesn't provide a view label i18n string. Use a generic one.
 				$view_labels[$status['order']]['view_label'] = _nx_noop(
 					'%s <span class="count">(%d)</span>',
 					'%s <span class="count">(%d)</span>',
