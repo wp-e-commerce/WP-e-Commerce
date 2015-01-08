@@ -219,11 +219,13 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 	private function is_field_default( $field ) {
 		global $wpdb;
 
-		if ( $field->default == 1 )
+		if ( $field->default == 1 ) {
 			return true;
+		}
 
-		if ( empty( $field->unique_name) || $this->current_checkout_set !== 0 || empty( $field->active ) )
+		if ( empty( $field->unique_name) || $this->current_checkout_set !== 0 || empty( $field->active ) ) {
 			return false;
+		}
 
 		$default_fields = array(
 				'billingfirstname',
