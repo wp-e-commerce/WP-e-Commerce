@@ -623,9 +623,6 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 
 		// Loop through all statuses and register bulk actions for them.
 		foreach ( $wpsc_purchlog_statuses as $status ) {
-			if ( in_array( $status['order'], array_keys( $actions ) ) ) {
-				continue;
-			}
 			$actions[$status['order']] = $status['label'];
 		}
 
