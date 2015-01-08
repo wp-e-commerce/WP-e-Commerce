@@ -159,12 +159,6 @@ function gateway_chronopay($separator, $sessionid)
 
 	$data['product_price'] = $total_price;
 
-
-	if(WPSC_GATEWAY_DEBUG == true ) {
-  	exit("<pre>".print_r($data,true)."</pre>");
-	}
-
-
 	// Create Form to post to ChronoPay
 	$output = "
 		<form id=\"chronopay_form\" name=\"chronopay_form\" method=\"post\" action=\"$chronopay_url\">\n";
