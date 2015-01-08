@@ -304,7 +304,7 @@ function form_chronopay()
 	$select_currency[get_option('chronopay_curcode')] = "selected='selected'";
 	$select_language[get_option('chronopay_language')] = "selected='selected'";
 	$chronopay_url = ( get_option('chronopay_url')=='' ? 'https://secure.chronopay.com/index_shop.cgi' : get_option('chronopay_url') );
-	$chronopay_salt = ( get_option('chronopay_salt')=='' ? 'changeme' : get_option('chronopay_salt') );
+	$chronopay_salt = ( get_option( 'chronopay_salt' ) == '' ? wp_generate_password( 24, true, true ) : get_option( 'chronopay_salt' ) );
 
 	if (!isset($select_currency['USD'])) $select_currency['USD'] = '';
 	if (!isset($select_currency['EUR'])) $select_currency['EUR'] = '';
