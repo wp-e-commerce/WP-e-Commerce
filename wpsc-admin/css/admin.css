@@ -1484,11 +1484,6 @@ a.variation_handle {
 	display: none;
 }
 
-.meta-box-sortables-wpec .postbox:hover .handlediv {
-	background: transparent url(../../wpsc-core/images/menu-bits.gif) no-repeat scroll 0% -111px;
-}
-
-
 /**
  * Marketing / coupon page styling
  */

@@ -130,43 +130,6 @@ var getresults=function(results) {
 	jQuery("#loadingindicator_span").css('visibility','hidden');
 	enablebuttons();
 
-	jQuery('.meta-box-sortables').sortable( {
-		placeholder: 'sortable-placeholder',
-		connectWith: [ '.meta-box-sortables' ],
-		items: '> .postbox',
-		handle: '.hndle',
-		distance: 2,
-		tolerance: 'pointer',
-		sort: function(e,ui) {
-			if ( jQuery(document).width() - e.clientX < 300 ) {
-				if ( ! jQuery('#post-body').hasClass('has-sidebar') ) {
-					var pos = jQuery('#side-sortables').offset();
-
-					jQuery('#side-sortables').append(ui.item)
-					jQuery(ui.placeholder).css({
-						'top':pos.top,
-						'left':pos.left
-						}).width(jQuery(ui.item).width())
-					postboxes.expandSidebar(1);
-				}
-			}
-		},
-		stop: function() {
-			var postVars = {
-				action: 'product-page-order',
-				ajax: 'true'
-			}
-			//jQuery(this).css("border","1px solid red");
-			jQuery(this).each( function() {
-				postVars["order[" + this.id.split('-')[0] + "]"] = jQuery(this).sortable( 'toArray' ).join(',');
-			} );
-			jQuery.post( 'index.php?admin=true&ajax=true', postVars, function() {
-				postboxes.expandSidebar();
-			} );
-		}
-	} );
-
-
 	jQuery("#gallery_list").sortable({
 		revert: false,
 		placeholder: "ui-selected",

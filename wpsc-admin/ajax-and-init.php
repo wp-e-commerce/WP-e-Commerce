@@ -25,22 +25,6 @@ function wpsc_admin_ajax() {
 
 	global $wpdb;
 
-	if ( isset( $_POST['action'] ) && $_POST['action'] == 'product-page-order' ) {
-		$current_order = get_option( 'wpsc_product_page_order' );
-		$new_order = $_POST['order'];
-
-		if ( isset( $new_order["advanced"] ) ) {
-			$current_order["advanced"] = array_unique( explode( ',', $new_order["advanced"] ) );
-		}
-		if ( isset( $new_order["side"] ) ) {
-			$current_order["side"] = array_unique( explode( ',', $new_order["side"] ) );
-		}
-
-		update_option( 'wpsc_product_page_order', $current_order );
-		exit( print_r( $order, 1 ) );
-	}
-
-
 	if ( isset( $_POST['save_image_upload_state'] ) && $_POST['save_image_upload_state'] == 'true' && is_numeric( $_POST['image_upload_state'] ) ) {
 		$upload_state = (int)(bool)$_POST['image_upload_state'];
 		update_option( 'wpsc_use_flash_uploader', $upload_state );
