@@ -242,34 +242,70 @@ function wpsc_core_load_purchase_log_statuses() {
 		array(
 			'internalname' => 'incomplete_sale',
 			'label'        => __( 'Incomplete Sale', 'wpsc' ),
+			'view_label'   => _nx_noop(
+				'Incomplete Sale <span class="count">(%d)</span>',
+				'Incomplete Sale <span class="count">(%d)</span>',
+				'Purchase log view links',
+				'wpsc'
+			),
 			'order'        => 1,
 		),
 		array(
 			'internalname' => 'order_received',
 			'label'        => __( 'Order Received', 'wpsc' ),
+			'view_label'   => _nx_noop(
+				'Order Received <span class="count">(%d)</span>',
+				'Order Received <span class="count">(%d)</span>',
+				'Purchase log view links',
+				'wpsc'
+			),
 			'order'        => 2,
 		),
 		array(
 			'internalname'   => 'accepted_payment',
 			'label'          => __( 'Accepted Payment', 'wpsc' ),
+			'view_label'     => _nx_noop(
+				'Accepted Payment <span class="count">(%d)</span>',
+				'Accepted Payment <span class="count">(%d)</span>',
+				'Purchase log view links',
+				'wpsc'
+			),
 			'is_transaction' => true,
 			'order'          => 3,
 		),
 		array(
 			'internalname'   => 'job_dispatched',
 			'label'          => __( 'Job Dispatched', 'wpsc' ),
+			'view_label'     => _nx_noop(
+				'Job Dispatched <span class="count">(%d)</span>',
+				'Job Dispatched <span class="count">(%d)</span>',
+				'Purchase log view links',
+				'wpsc'
+			),
 			'is_transaction' => true,
 			'order'          => 4,
 		),
 		array(
 			'internalname'   => 'closed_order',
 			'label'          => __( 'Closed Order', 'wpsc' ),
+			'view_label'     => _nx_noop(
+				'Closed Order <span class="count">(%d)</span>',
+				'Closed Order <span class="count">(%d)</span>',
+				'Purchase log view links',
+				'wpsc'
+			),
 			'is_transaction' => true,
 			'order'          => 5,
 		),
 		array(
 			'internalname'   => 'declined_payment',
 			'label'          => __( 'Payment Declined', 'wpsc' ),
+			'view_label'     => _nx_noop(
+				'Payment Declined <span class="count">(%d)</span>',
+				'Payment Declined <span class="count">(%d)</span>',
+				'Purchase log view links',
+				'wpsc'
+			),
 			'order'          => 6,
 		),
 	);

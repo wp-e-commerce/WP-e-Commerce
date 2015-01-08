@@ -269,19 +269,34 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		return $months;
 	}
 
+	/**
+	 * Get the sub-views of the list table.
+	 *
+	 * Allows user to limit the list to orders in a particular status.
+	 *
+	 * @return array The available view links.
+	 */
 	public function get_views() {
-		global $wpdb;
 
-		$view_labels = array(
-			1 => _nx_noop( 'Incomplete <span class="count">(%s)</span>', 'Incomplete <span class="count">(%s)</span>', 'purchase logs' ),
-			2 => _nx_noop( 'Received <span class="count">(%s)</span>'  , 'Received <span class="count">(%s)</span>'  , 'purchase logs' ),
-			3 => _nx_noop( 'Accepted <span class="count">(%s)</span>'  , 'Accepted <span class="count">(%s)</span>'  , 'purchase logs' ),
-			4 => _nx_noop( 'Dispatched <span class="count">(%s)</span>', 'Dispatched <span class="count">(%s)</span>', 'purchase logs' ),
-			5 => _nx_noop( 'Closed <span class="count">(%s)</span>'    , 'Closed <span class="count">(%s)</span>'    , 'purchase logs' ),
-			6 => _nx_noop( 'Declined <span class="count">(%s)</span>'  , 'Declined <span class="count">(%s)</span>'  , 'purchase logs' ),
-		);
+		global $wpdb, $wpsc_purchlog_statuses;
 
-		$sql = "SELECT DISTINCT processed, COUNT(*) AS count FROM " . WPSC_TABLE_PURCHASE_LOGS . " GROUP BY processed ORDER BY processed";
+		$view_labels = array();
+		foreach ( $wpsc_purchlog_statuses as $status ) {
+			if ( ! empty( $status['view_label'] ) ) {
+				// The status provides a view label i18n _nx_noop-able object.
+				$view_labels[$status['order']]['view_label'] = $status['view_label'];
+			} else {
+				// The status doesn't provide a view label i18n string. Use a generic one.
+				$view_labels[$status['order']]['view_label'] = _nx_noop(
+					'%s <span class="count">(%d)</span>',
+					'%s <span class="count">(%d)</span>',
+					'Purchase log view links for custom status with no explicit translation.',
+					'wpsc'
+				);
+				$view_labels[$status['order']]['label'] = $status['label'];
+			}
+		}
+		$sql = 'SELECT DISTINCT processed, COUNT(*) AS count FROM ' . WPSC_TABLE_PURCHASE_LOGS . ' GROUP BY processed ORDER BY processed';
 		$results = $wpdb->get_results( $sql );
 		$statuses = array();
 		$total_count = 0;
@@ -290,7 +305,6 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 			foreach ( $results as $status ) {
 				$statuses[$status->processed] = $status->count;
 			}
-
 			$total_count = array_sum( $statuses );
 		}
 
@@ -319,14 +333,24 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 				$all_text
 			),
 		);
-
 		foreach ( $statuses as $status => $count ) {
-			if ( ! isset( $view_labels[$status] ) )
+			if ( ! isset( $view_labels[$status] ) ) {
 				continue;
-			$text = sprintf(
-				translate_nooped_plural( $view_labels[$status], $count, 'wpsc' ),
-				number_format_i18n( $count )
-			);
+			}
+			if ( empty( $view_labels[$status]['label'] ) ) {
+				// This translation needs only the quantity dropping in.
+				$text = sprintf(
+					translate_nooped_plural( $view_labels[$status]['view_label'], $count, 'wpsc' ),
+					number_format_i18n( $count )
+				);
+			} else {
+				// This translation needs the status label, and quantity dropping in.
+				$text = sprintf(
+					translate_nooped_plural( $view_labels[$status]['view_label'], $count, 'wpsc' ),
+					$view_labels[$status]['label'],
+					number_format_i18n( $count )
+				);
+			}
 			$href = add_query_arg( 'status', $status );
 			$href = remove_query_arg( array(
 				'deleted',
@@ -548,20 +572,44 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		<?php
 	}
 
+	/**
+	 * Provide bulk actions for sales logs.
+	 *
+	 * Generates bulk actions for standard order statuses. Also generates a "delete" bulk action,
+	 * and actions for any additional statuses that have been registered via the
+	 * wpsc_set_purchlog_statuses filter.
+	 *
+	 * @return array Array of bulk actions available.
+	 */
 	public function get_bulk_actions() {
-		if ( ! $this->bulk_actions )
-			return array();
 
+		global $wpsc_purchlog_statuses;
+
+		if ( ! $this->bulk_actions ) {
+			return array();
+		}
+
+		// Standard actions.
 		$actions = array(
 			'delete' => _x( 'Delete', 'bulk action', 'wpsc' ),
-			'1'      => __( 'Incomplete Sale', 'wpsc' ),
-			'2'      => __( 'Order Received', 'wpsc' ),
-			'3'      => __( 'Accepted Payment', 'wpsc' ),
-			'4'      => __( 'Job Dispatched', 'wpsc' ),
-			'5'      => __( 'Closed Order', 'wpsc' ),
-			'6'      => __( 'Payment Declined', 'wpsc' ),
 		);
-		return $actions;
+
+		// Loop through all statuses and register bulk actions for them.
+		foreach ( $wpsc_purchlog_statuses as $status ) {
+			if ( in_array( $status['order'], array_keys( $actions ) ) ) {
+				continue;
+			}
+			$actions[$status['order']] = $status['label'];
+		}
+
+		/**
+		 * Filter the available bulk actions on the purchase log listing screen.
+		 *
+		 * @since 4.0
+		 *
+		 * @param array $actions The bulk actions currently defined.
+		 */
+		return apply_filters( 'wpsc_manage_purchase_logs_bulk_actions', $actions );
 	}
 
 	public function search_box( $text, $input_id ) {
