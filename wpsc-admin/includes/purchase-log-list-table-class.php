@@ -335,8 +335,8 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		$statuses    = $this->get_per_status_counts();
 
 		$all_text = sprintf(
-			_nx( 'All <span class="count">(%s)</span>', 'All <span class="count">(%s)</span>', $total_count, 'purchase logs', 'wpsc' ),
-			number_format_i18n( $total_count )
+			_nx( 'All <span class="count">(%s)</span>', 'All <span class="count">(%s)</span>', $statuses['all'], 'purchase logs', 'wpsc' ),
+			number_format_i18n( $statuses['all'] )
 		);
 
 		$all_href = remove_query_arg( array(
