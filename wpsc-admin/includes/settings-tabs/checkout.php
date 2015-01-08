@@ -213,8 +213,8 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 	 * As a result, to determine whether a field is default or not, we have to rely on the field's
 	 * unique name and "active" status.
 	 *
-	 * @param  {Object} $field Field object
-	 * @return {Boolean} True if the field is default.
+	 * @param  object $field Field object
+	 * @return boolean       True if the field is default.
 	 */
 	private function is_field_default( $field ) {
 		global $wpdb;
