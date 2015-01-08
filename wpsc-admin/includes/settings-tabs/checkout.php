@@ -228,29 +228,25 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 		}
 
 		$default_fields = array(
-				'billingfirstname',
-				'billinglastname',
-				'billingaddress',
-				'billingcity',
-				'billingstate',
-				'billingcountry',
-				'billingpostcode',
-				'billingemail',
-				'billingphone',
-				'shippingfirstname',
-				'shippinglastname',
-				'shippingaddress',
-				'shippingcity',
-				'shippingstate',
-				'shippingcountry',
-				'shippingpostcode',
-				'shippingemail',
-			);
-
-		if ( in_array( $field->unique_name, $default_fields ) )
-			return true;
-
-		return false;
+			'billingfirstname',
+			'billinglastname',
+			'billingaddress',
+			'billingcity',
+			'billingstate',
+			'billingcountry',
+			'billingpostcode',
+			'billingemail',
+			'billingphone',
+			'shippingfirstname',
+			'shippinglastname',
+			'shippingaddress',
+			'shippingcity',
+			'shippingstate',
+			'shippingcountry',
+			'shippingpostcode',
+			'shippingemail',
+		);
+		return in_array( $field->unique_name, $default_fields );
 	}
 
 	private function prototype_field( $mode = 'hidden' ) {
