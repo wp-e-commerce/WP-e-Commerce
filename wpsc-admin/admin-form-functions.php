@@ -1,11 +1,11 @@
 <?php
-/** 
+/**
  * The Admin Form Functions
- * 
+ *
  * These are the functions that power administrative forms in the WordPress admin
- * 
+ *
  * @package wp-e-commerce
- */ 
+ */
 function coupon_edit_form($coupon) {
 
 $conditions = maybe_unserialize($coupon['condition']);
@@ -177,16 +177,16 @@ return $output;
 function setting_button(){
 	$next_url	= 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']."?page=wpsc-edit-products";
 
-// 	$output.="<div><img src='" . plugins_url( WPSC_DIR_NAME . '/images/settings_button.jpg' ) . "' onclick='display_settings_button()'>";
-	$output.="<div style='float: right; margin-top: 0px; position: relative;'> | <a href='#' onclick='display_settings_button(); return false;' style='text-decoration: underline;'>".esc_html__('Settings', 'wpsc')." &raquo;</a>";
-	$output.="<span id='settings_button' style='width:180px;background-color:#f1f1f1;position:absolute; right: 10px; border:1px solid black; display:none;'>";
-	$output.="<ul class='settings_button'>";
+	$output  = '';
+	$output .= "<div style='float: right; margin-top: 0px; position: relative;'> | <a href='#' onclick='display_settings_button(); return false;' style='text-decoration: underline;'>".esc_html__('Settings', 'wpsc')." &raquo;</a>";
+	$output .= "<span id='settings_button' style='width:180px;background-color:#f1f1f1;position:absolute; right: 10px; border:1px solid black; display:none;'>";
+	$output .= "<ul class='settings_button'>";
 
-	$output.="<li><a href='admin.php?page=wpsc-settings'>".__('Shop Settings', 'wpsc')."</a></li>";
-	$output.="<li><a href='admin.php?page=wpsc-settings&amp;tab=gateway'>".__('Money and Payment', 'wpsc')."</a></li>";
-	$output.="<li><a href='admin.php?page=wpsc-settings&amp;tab=checkout'>".__('Checkout Page Settings', 'wpsc')."</a></li>";
-	$output.="</ul>";
-	$output.="</span>&emsp;&emsp;</div>";
+	$output .= "<li><a href='admin.php?page=wpsc-settings'>".__('Shop Settings', 'wpsc')."</a></li>";
+	$output .= "<li><a href='admin.php?page=wpsc-settings&amp;tab=gateway'>".__('Money and Payment', 'wpsc')."</a></li>";
+	$output .= "<li><a href='admin.php?page=wpsc-settings&amp;tab=checkout'>".__('Checkout Page Settings', 'wpsc')."</a></li>";
+	$output .= "</ul>";
+	$output .= "</span>&emsp;&emsp;</div>";
 
 	return $output;
 }
