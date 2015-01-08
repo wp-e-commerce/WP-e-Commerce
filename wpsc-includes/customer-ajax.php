@@ -3,7 +3,7 @@
 /**
  * Customer meta API via AJAX.  Note that the API only permits access for the current customer (visitor)
  * because of security considerations.
- * 
+ *
  * @package wp-e-commerce
  * @since 3.8.14
  */
@@ -59,7 +59,7 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 		if ( empty( $_POST['meta']  ) ) {
 			$meta = null;
 		} elseif ( ! is_array( $_POST['meta'] ) ) {
-			$meta = array( $meta );
+			$meta = array( $_POST['$meta'] );
 		} else {
 			$meta = $_POST['meta'];
 		}
