@@ -450,8 +450,6 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 
 		$data = $this->coupons_data();
 
-		$current_page = $this->get_pagenum();
-
 		$status = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
 
 		switch( $status ) {
