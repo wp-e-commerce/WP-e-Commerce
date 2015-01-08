@@ -1,6 +1,7 @@
 <?php
 
 class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
+
 	private $require_register;
 	private $shipping_same_as_billing;
 	private $force_ssl;
@@ -8,6 +9,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 	private $current_checkout_set;
 	private $field_types;
 	private $user_field_types;
+	private $form_fields;
 
 	public function __construct() {
 		global $wpdb;
@@ -31,6 +33,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 			WHERE checkout_set = %s
 			ORDER BY checkout_order
 		", $this->current_checkout_set );
+
 		$this->form_fields = $wpdb->get_results( $form_sql );
 
 		$columns = array(
