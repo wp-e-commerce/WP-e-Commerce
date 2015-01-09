@@ -59,7 +59,7 @@ if ( _wpsc_doing_customer_meta_ajax() ) {
 		if ( empty( $_POST['meta']  ) ) {
 			$meta = null;
 		} elseif ( ! is_array( $_POST['meta'] ) ) {
-			$meta = array( $_POST['$meta'] );
+			$meta = array( $_POST['meta'] );
 		} else {
 			$meta = $_POST['meta'];
 		}
