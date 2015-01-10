@@ -270,15 +270,13 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Get the sub-views of the list table.
+	 * Get an array of the untranslated, base view labels for the purchase log statuses.
 	 *
-	 * Allows user to limit the list to orders in a particular status.
-	 *
-	 * @return array The available view links.
+	 * @return array The untranslated, base view label for each status.
 	 */
-	public function get_views() {
+	private function get_status_view_labels() {
 
-		global $wpdb, $wpsc_purchlog_statuses;
+		global $wpsc_purchlog_statuses;
 
 		$view_labels = array();
 		foreach ( $wpsc_purchlog_statuses as $status ) {
@@ -296,21 +294,49 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 				$view_labels[$status['order']]['label'] = $status['label'];
 			}
 		}
+		return $view_labels;
+	}
+
+	/**
+	 * Returns a list of the purchase logs indexed on status number. Also includes a grand total
+	 * indexed as 'all'.
+	 *
+	 * @return array An array indexed on status number giving the count of purchase logs in that status.
+	 */
+	private function get_per_status_counts() {
+
+		global $wpdb;
+
 		$sql = 'SELECT DISTINCT processed, COUNT(*) AS count FROM ' . WPSC_TABLE_PURCHASE_LOGS . ' GROUP BY processed ORDER BY processed';
 		$results = $wpdb->get_results( $sql );
-		$statuses = array();
-		$total_count = 0;
+		$statuses = array(
+			'all' => 0,
+		);
 
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $status ) {
 				$statuses[$status->processed] = $status->count;
+				$statuses['all']              += $status->count;
 			}
-			$total_count = array_sum( $statuses );
 		}
+		return $statuses;
+	}
+
+	/**
+	 * Get the sub-views of the list table.
+	 *
+	 * Allows user to limit the list to orders in a particular status.
+	 *
+	 * @return array The available view links.
+	 */
+	public function get_views() {
+
+		$view_labels = $this->get_status_view_labels();
+		$statuses    = $this->get_per_status_counts();
 
 		$all_text = sprintf(
-			_nx( 'All <span class="count">(%s)</span>', 'All <span class="count">(%s)</span>', $total_count, 'purchase logs', 'wpsc' ),
-			number_format_i18n( $total_count )
+			_nx( 'All <span class="count">(%s)</span>', 'All <span class="count">(%s)</span>', $statuses['all'], 'purchase logs', 'wpsc' ),
+			number_format_i18n( $statuses['all'] )
 		);
 
 		$all_href = remove_query_arg( array(
@@ -333,6 +359,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 				$all_text
 			),
 		);
+
 		foreach ( $statuses as $status => $count ) {
 			if ( ! isset( $view_labels[$status] ) ) {
 				continue;
@@ -596,9 +623,6 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 
 		// Loop through all statuses and register bulk actions for them.
 		foreach ( $wpsc_purchlog_statuses as $status ) {
-			if ( in_array( $status['order'], array_keys( $actions ) ) ) {
-				continue;
-			}
 			$actions[$status['order']] = $status['label'];
 		}
 

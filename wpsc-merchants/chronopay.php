@@ -159,12 +159,6 @@ function gateway_chronopay($separator, $sessionid)
 
 	$data['product_price'] = $total_price;
 
-
-	if(WPSC_GATEWAY_DEBUG == true ) {
-  	exit("<pre>".print_r($data,true)."</pre>");
-	}
-
-
 	// Create Form to post to ChronoPay
 	$output = "
 		<form id=\"chronopay_form\" name=\"chronopay_form\" method=\"post\" action=\"$chronopay_url\">\n";
@@ -177,21 +171,9 @@ function gateway_chronopay($separator, $sessionid)
 		</form>
 	";
 
-	// echo form..
-	if( get_option('chronopay_debug') == 1)
-	{
-		echo ("DEBUG MODE ON!!<br/>");
-		echo("The following form is created and would be posted to ChronoPay for processing.  Press submit to continue:<br/>");
-		echo("<pre>".htmlspecialchars($output)."</pre>");
-	}
-
-	echo($output);
-
-	if(get_option('chronopay_debug') == 0)
-	{
-		echo "<script language=\"javascript\" type=\"text/javascript\">document.getElementById('chronopay_form').submit();</script>";
-	}
-
+	// Output the form.
+	echo $output;
+	echo "<script language=\"javascript\" type=\"text/javascript\">document.getElementById('chronopay_form').submit();</script>";
   	exit();
 }
 
@@ -265,17 +247,6 @@ function nzshpcrt_chronopay_callback()
 			$message .= "SERVER:\n\r".print_r($_SERVER,true)."\n\r\n\r";
 			mail(get_option('purch_log_email'), "ChronoPay Security Key Failed!", $message);
 		}
-
-		// If in debug, email details
-		if(get_option('chronopay_debug') == 1)
-		{
-			$message = "This is a debugging message sent because it appears that you are in debug mode.\n\rEnsure ChronoPay debug is turned off once you are happy with the function.\n\r\n\r";
-			$message .= "OUR_POST:\n\r".print_r($header . $req,true)."\n\r\n\r";
-			$message .= "THEIR_POST:\n\r".print_r($_POST,true)."\n\r\n\r";
-			$message .= "GET:\n\r".print_r($_GET,true)."\n\r\n\r";
-			$message .= "SERVER:\n\r".print_r($_SERVER,true)."\n\r\n\r";
-			mail(get_option('purch_log_email'), "ChronoPay Data", $message);
-		}
 	}
 }
 
@@ -320,11 +291,6 @@ function submit_chronopay()
     	update_option('chronopay_salt', $_POST['chronopay_salt']);
     }
 
-  	if(isset($_POST['chronopay_debug']))
-    {
-    	update_option('chronopay_debug', $_POST['chronopay_debug']);
-    }
-
     if (!isset($_POST['chronopay_form'])) $_POST['chronopay_form'] = array();
 	foreach((array)$_POST['chronopay_form'] as $form => $value)
     {
@@ -338,20 +304,7 @@ function form_chronopay()
 	$select_currency[get_option('chronopay_curcode')] = "selected='selected'";
 	$select_language[get_option('chronopay_language')] = "selected='selected'";
 	$chronopay_url = ( get_option('chronopay_url')=='' ? 'https://secure.chronopay.com/index_shop.cgi' : get_option('chronopay_url') );
-	$chronopay_salt = ( get_option('chronopay_salt')=='' ? 'changeme' : get_option('chronopay_salt') );
-
-	$chronopay_debug = get_option('chronopay_debug');
-	$chronopay_debug1 = "";
-	$chronopay_debug2 = "";
-	switch($chronopay_debug)
-	{
-		case 0:
-			$chronopay_debug2 = "checked ='checked'";
-			break;
-		case 1:
-			$chronopay_debug1 = "checked ='checked'";
-			break;
-	}
+	$chronopay_salt = ( get_option( 'chronopay_salt' ) == '' ? wp_generate_password( 24, true, true ) : get_option( 'chronopay_salt' ) );
 
 	if (!isset($select_currency['USD'])) $select_currency['USD'] = '';
 	if (!isset($select_currency['EUR'])) $select_currency['EUR'] = '';
@@ -424,15 +377,6 @@ function form_chronopay()
 				<input type='text' size='40' value='" . $chronopay_salt . "' name='chronopay_salt' />
 				<p class='description'>
 					" . __( 'A bit of security... This is a keyword that is used to ensure transaction approval calls from ChronoPay to this application are real and were instigated from this server.  Enter a unique word into this field.' , 'wpsc' ) . "
-				</p>
-		</tr>
-		<tr>
-			<td>" . __( 'Debug Mode', 'wpsc' ) . "</td>
-			<td>
-				<input type='radio' value='1' name='chronopay_debug' id='chronopay_debug1' " . $chronopay_debug1 . " /> <label for='chronopay_debug1'>".__('Yes', 'wpsc')."</label> &nbsp;
-				<input type='radio' value='0' name='chronopay_debug' id='chronopay_debug2' " . $chronopay_debug2 . " /> <label for='chronopay_debug2'>".__('No', 'wpsc')."</label>
-				<p class='description'>
-					" . __( 'Debug mode is used to write HTTP communications between the ChronoPay server and your host to a log file.  This should only be activated for testing!', 'wpsc' ) . "
 				</p>
 		</tr>
 

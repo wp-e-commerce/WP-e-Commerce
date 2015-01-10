@@ -436,25 +436,20 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 	 */
 	public function prepare_items() {
 
-		$per_page = $this->per_page;
-
-		$columns = $this->get_columns();
-
-		$hidden = array();
-
-		$sortable = $this->get_sortable_columns();
-
+		$hidden                = array();
+		$total_items           = 0;
+		$per_page              = $this->per_page;
+		$columns               = $this->get_columns();
+		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
 		$this->process_bulk_action();
 
 		$data = $this->coupons_data();
-
-		$current_page = $this->get_pagenum();
+		$this->items = $data;
 
 		$status = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
-
-		switch( $status ) {
+		switch ( $status ) {
 			case '1':
 				$total_items = $this->active_count;
 				break;
@@ -465,8 +460,6 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 				$total_items = $this->total_count;
 				break;
 		}
-
-		$this->items = $data;
 
 		$this->set_pagination_args( array(
 				'total_items' => $total_items,

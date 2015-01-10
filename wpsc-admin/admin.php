@@ -26,9 +26,6 @@ require_once( WPSC_FILE_PATH . '/wpsc-admin/display-options-settings.page.php' )
 require_once( WPSC_FILE_PATH . '/wpsc-admin/db-upgrades/upgrade.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/media.php' );
 
-if ( ( isset( $_SESSION['wpsc_activate_debug_page'] ) && ( $_SESSION['wpsc_activate_debug_page'] == true ) ) || ( defined( 'WPSC_ADD_DEBUG_PAGE' ) && ( constant( 'WPSC_ADD_DEBUG_PAGE' ) == true ) ) )
-	require_once( WPSC_FILE_PATH . '/wpsc-admin/display-debug.page.php' );
-
 if ( ! get_option( 'wpsc_checkout_form_sets' ) ) {
 	$form_sets = array( __( 'Default Checkout Forms', 'wpsc' ) );
 	update_option( 'wpsc_checkout_form_sets', $form_sets );
@@ -209,10 +206,6 @@ function wpsc_admin_pages() {
 	// Add Settings pages
 	$page_hooks[] = $edit_options_page = add_options_page( __( 'Store Settings', 'wpsc' ), __( 'Store', 'wpsc' ), 'administrator', 'wpsc-settings', 'wpsc_display_settings_page' );
 	add_action( 'admin_print_scripts-' . $edit_options_page , 'wpsc_print_admin_scripts' );
-
-	// Debug Page
-	if ( ( defined( 'WPSC_ADD_DEBUG_PAGE' ) && ( WPSC_ADD_DEBUG_PAGE == true ) ) || ( isset( $_SESSION['wpsc_activate_debug_page'] ) && ( true == $_SESSION['wpsc_activate_debug_page'] ) ) )
-		$page_hooks[] = add_options_page( __( 'Store Debug', 'wpsc' ), __( 'Store Debug', 'wpsc' ), 'administrator', 'wpsc-debug', 'wpsc_debug_page' );
 
 	$page_hooks = apply_filters( 'wpsc_additional_pages', $page_hooks, $products_page );
 
