@@ -707,6 +707,7 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 	//Get currently associated terms
 	$currently_associated_var = $product_terms;
 
+	$currently_associated_vars = array();
 	foreach ($currently_associated_var as $current) {
 		$currently_associated_vars[] = $current->term_id;
 	}
