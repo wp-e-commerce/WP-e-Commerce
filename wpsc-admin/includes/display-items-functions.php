@@ -1246,82 +1246,105 @@ function wpsc_save_attachment_fields( $post, $attachment ) {
 }
 
 /**
- * wpsc_save_quickedit_box function
- * Saves input for the various meta in the quick edit boxes
+ * Save Product Quick Edit Box
  *
- * @todo UI
- * @todo Data validation / sanitization / security
- * @todo AJAX should probably return weight unit
- * @return $post_id (int) Post ID
+ * Saves input for the various meta in the quick edit boxes.
+ *
+ * @todo  UI.
+ * @todo  Data validation / sanitization / security.
+ * @todo  AJAX should probably return weight unit.
+ *
+ * @return  int  $post_id  Post ID.
  */
-
 function wpsc_save_quickedit_box( $post_id ) {
+
 	global $doaction;
 
-	if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || ! defined( 'DOING_AJAX' ) || ! DOING_AJAX || get_post_type( $post_id ) != 'wpsc-product' )
+	// Only save product if saving (not autosaving) via AJAX.
+	if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || ! defined( 'DOING_AJAX' ) || ! DOING_AJAX || get_post_type( $post_id ) != 'wpsc-product' ) {	
 		return;
+	}
 
-	$bulk = isset( $doaction ) && $doaction =='edit';
+	$bulk = isset( $doaction ) && $doaction == 'edit';
 
 	$custom_fields = array(
-		'weight' => 'product_metadata',
-		'stock' => 'stock',
-		'price' => 'price',
+		'weight'     => 'product_metadata',
+		'stock'      => 'stock',
+		'price'      => 'price',
 		'sale_price' => 'special_price',
-		'sku' => 'sku',
+		'sku'        => 'sku'
 	);
 
-		$args = array(
-						'post_parent' => $post_id,
-						'post_type' => 'wpsc-product',
-						'post_status' => 'inherit'
-						);
-		$children = get_children($args);
-	$is_parent = (bool)$children;
+	// Get product variations (if any).
+	$args = array(
+		'post_parent' => $post_id,
+		'post_type'   => 'wpsc-product',
+		'post_status' => 'inherit'
+	);
+	$children = get_children( $args );
+	$is_parent = (bool) $children;
+
 	foreach ( $custom_fields as $post_key => $meta_key ) {
-		$overideVariant = isset($_REQUEST[$post_key.'_variant']) && $_REQUEST[$post_key.'_variant'] == 'on';
-		// don't update if we're bulk updating and the field is left blank, or if the product has children and the field is one of those fields defined below (unles overridden)
-		if ( ! isset( $_REQUEST[$post_key] ) || ( $bulk && empty( $_REQUEST[$post_key] ) ) ||
-		( $is_parent && in_array( $post_key, array( 'weight', 'stock', 'price', 'special_price' )) && !$overideVariant ) ){
+
+		// Should custom field be saved for all product variants?
+		$overideVariant = isset( $_REQUEST[ $post_key . '_variant' ] ) && $_REQUEST[ $post_key . '_variant' ] == 'on';
+
+		// Don't update if we're bulk updating and the field is left blank, or if the product has children and the field is one of those fields defined below (unless overridden).
+		if ( ! isset( $_REQUEST[ $post_key ] ) || ( $bulk && empty( $_REQUEST[ $post_key ] ) ) ||
+			( $is_parent && in_array( $post_key, array( 'weight', 'stock', 'price', 'special_price' ) ) && ! $overideVariant ) ) {
 			continue;
 		}
 
-		if($is_parent && count($children) >0){
+		// Select single product or variations
+		if ( $is_parent && count( $children ) > 0 ) {
 			$products = $children;
-		}else{
-			$products = array($post_id);
+		} else {
+			$products = array( $post_id );
 		}
 
-		foreach($products as $product){
-			$value = $_REQUEST[$post_key];
-			if($is_parent) $post_id = $product->ID;
-			else $post_id = $product;
+		foreach ( $products as $product ) {
+			$value = $_REQUEST[ $post_key ];
+
+			if ( $is_parent ) {
+				$post_id = $product->ID;
+			} else {
+				$post_id = $product;
+			}
+
+			// Validate custom field values
 			switch ( $post_key ) {
+
 				case 'weight':
 					$product_meta = get_post_meta( $post_id, '_wpsc_product_metadata', true );
-					if ( ! is_array( $product_meta ) )
+					if ( ! is_array( $product_meta ) ) {
 						$product_meta = array();
-					// draft products don't have product metadata set yet
-					$weight_unit = isset( $product_meta["weight_unit"] ) ? $product_meta["weight_unit"] : 'pound';
-					$weight = wpsc_convert_weight( $value, $weight_unit, "pound", true );
+					}
 
-					if ( isset( $product_meta["weight"] ) )
-						unset( $product_meta["weight"] );
+					// Draft products don't have product metadata set yet
+					$weight_unit = isset( $product_meta['weight_unit'] ) ? $product_meta['weight_unit'] : 'pound';
+					$weight = wpsc_convert_weight( $value, $weight_unit, 'pound', true );
 
-					$product_meta["weight"] = $weight;
+					if ( isset( $product_meta['weight'] ) ) {
+						unset( $product_meta['weight'] );
+					}
+
+					$product_meta['weight'] = $weight;
 
 					$value = $product_meta;
 					break;
 
 				case 'stock':
-					if ( ! is_numeric( $value ) )
+					if ( ! is_numeric( $value ) ) {
 						$value = '';
+					}
 					break;
 
 				case 'sku':
-					if ( $value == __( 'N/A', 'wpsc' ) )
+					if ( $value == __( 'N/A', 'wpsc' ) ) {
 						$value = '';
+					}
 					break;
+
 			}
 
 			update_post_meta( $post_id, "_wpsc_{$meta_key}", $value );
@@ -1329,6 +1352,7 @@ function wpsc_save_quickedit_box( $post_id ) {
 	}
 
 	return $post_id;
+
 }
 
 /**
