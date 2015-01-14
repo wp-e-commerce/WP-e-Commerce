@@ -757,11 +757,12 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 		'numberposts'   => -1
 		));
 
+	$children = array();
 	foreach((array)$current_children as $child_prod){
-		$childs[] = $child_prod->ID;
+		$children[] = $child_prod->ID;
 	}
-	if(!empty($childs)){
-		$old_ids_to_delete = array_diff($childs, $product_children);
+	if(!empty($children)){
+		$old_ids_to_delete = array_diff($children, $product_children);
 		$old_ids_to_delete = apply_filters('wpsc_edit_product_variations_deletion', $old_ids_to_delete);
 		if(is_array($old_ids_to_delete) && !empty($old_ids_to_delete)) {
 			foreach($old_ids_to_delete as $object_ids) {
