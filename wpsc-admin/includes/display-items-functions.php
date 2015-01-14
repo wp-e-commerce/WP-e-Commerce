@@ -1267,6 +1267,7 @@ function wpsc_save_quickedit_box( $post_id ) {
 
 	$bulk = isset( $doaction ) && $doaction == 'edit';
 
+	// Map post field to meta key.
 	$custom_fields = array(
 		'weight'     => 'product_metadata',
 		'stock'      => 'stock',
@@ -1276,40 +1277,35 @@ function wpsc_save_quickedit_box( $post_id ) {
 	);
 
 	// Get product variations (if any).
-	$args = array(
+	$children = get_children( array(
 		'post_parent' => $post_id,
 		'post_type'   => 'wpsc-product',
 		'post_status' => 'inherit'
-	);
-	$children = get_children( $args );
+	) );
 	$is_parent = (bool) $children;
 
 	foreach ( $custom_fields as $post_key => $meta_key ) {
 
-		// Should custom field be saved for all product variants?
-		$overideVariant = isset( $_REQUEST[ $post_key . '_variant' ] ) && $_REQUEST[ $post_key . '_variant' ] == 'on';
-
-		// Don't update if we're bulk updating and the field is left blank, or if the product has children and the field is one of those fields defined below (unless overridden).
-		if ( ! isset( $_REQUEST[ $post_key ] ) || ( $bulk && empty( $_REQUEST[ $post_key ] ) ) ||
-			( $is_parent && in_array( $post_key, array( 'weight', 'stock', 'price', 'sale_price', 'sku' ) ) && ! $overideVariant ) ) {
+		// Don't update if field is not set or we're bulk updating and the field is left blank.
+		if ( ! isset( $_REQUEST[ $post_key ] ) || ( $bulk && empty( $_REQUEST[ $post_key ] ) ) ) {
 			continue;
 		}
 
-		// Select single product or variations
+		// Don't update if the product has variations and the field is one of the defined custom fields (unless overridden).
+		$override_variant = isset( $_REQUEST[ $post_key . '_variant' ] ) && $_REQUEST[ $post_key . '_variant' ] == 'on';
+		if ( $is_parent && ! $override_variant && in_array( $post_key, array_keys( $custom_fields ) ) ) {
+			continue;
+		}
+
+		// Select single product or variation IDs.
 		if ( $is_parent && count( $children ) > 0 ) {
-			$products = $children;
+			$products = wp_list_pluck( $children, 'ID' );
 		} else {
 			$products = array( $post_id );
 		}
 
-		foreach ( $products as $product ) {
+		foreach ( $products as $post_id ) {
 			$value = $_REQUEST[ $post_key ];
-
-			if ( $is_parent ) {
-				$post_id = $product->ID;
-			} else {
-				$post_id = $product;
-			}
 
 			// Validate custom field values
 			switch ( $post_key ) {
