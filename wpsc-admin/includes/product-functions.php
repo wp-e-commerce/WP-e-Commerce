@@ -458,12 +458,6 @@ function wpsc_insert_product($post_data, $wpsc_error = false) {
 	);
 	$product_post_values["comment_status"] = "open";
 
-	if(isset($sku) && ($sku != '')) {
-		$product_post_array['guid'] = $sku;
-	}
-
-
-
 	$product_id = wp_insert_post($product_post_values);
 	if ( isset ( $post_data["sticky"] ) ) {
 		stick_post($product_id);
