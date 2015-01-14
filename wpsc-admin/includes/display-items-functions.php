@@ -1291,7 +1291,7 @@ function wpsc_save_quickedit_box( $post_id ) {
 
 		// Don't update if we're bulk updating and the field is left blank, or if the product has children and the field is one of those fields defined below (unless overridden).
 		if ( ! isset( $_REQUEST[ $post_key ] ) || ( $bulk && empty( $_REQUEST[ $post_key ] ) ) ||
-			( $is_parent && in_array( $post_key, array( 'weight', 'stock', 'price', 'sale_price' ) ) && ! $overideVariant ) ) {
+			( $is_parent && in_array( $post_key, array( 'weight', 'stock', 'price', 'sale_price', 'sku' ) ) && ! $overideVariant ) ) {
 			continue;
 		}
 
