@@ -42,6 +42,9 @@ function wpsc_coupons_error(){
  * @since 3.7
  */
 class wpsc_coupons {
+
+	public $coupon;
+
 	public $code;
 	public $value;
 	public $is_percentage;
@@ -82,30 +85,23 @@ class wpsc_coupons {
 			wpsc_delete_customer_meta( 'coupon' );
 			return false;
 		} else {
-			$coupon_data = array_merge( array(
-				'value'         => '',
-				'is-percentage' => '',
-				'condition'     => '',
-				'is-used'       => '',
-				'active'        => '',
-				'use-once'      => '',
-				'start'         => '',
-				'expiry'        => '',
-				'every_product' => ''
-			), $coupon_data );
 
-			$this->value         = (float) $coupon_data['value'];
-			$this->is_percentage = $coupon_data['is-percentage'];
-			$this->conditions    = unserialize( $coupon_data['condition'] );
-			$this->is_used       = $coupon_data['is-used'];
-			$this->active        = $coupon_data['active'];
-			$this->use_once      = $coupon_data['use-once'];
-			$this->start_date    = $coupon_data['start'];
-			$this->end_date      = $coupon_data['expiry'];
-			$this->every_product = $coupon_data['every_product'];
+			$this->coupon = new WPSC_Coupon( $coupon_data['id'] );
+
+			// Store these values for back-compatibiilty pre 4.0?
+			$this->value         = $this->coupon->get( 'value' );
+			$this->is_percentage = $this->coupon->get( 'is-percentage' );
+			$this->conditions    = $this->coupon->get( 'condition' );
+			$this->is_used       = $this->coupon->get( 'is-used' );
+			$this->active        = $this->coupon->get( 'active' );
+			$this->use_once      = $this->coupon->get( 'use-once' );
+			$this->start_date    = $this->coupon->get( 'start' );
+			$this->end_date      = $this->coupon->get( 'expiry' );
+			$this->every_product = $this->coupon->get( 'every_product' );
 			$this->errormsg      = false;
 
 			return $this->validate_coupon();
+
 		}
 
 	}
