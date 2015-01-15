@@ -836,23 +836,29 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( $_REQUEST['wpsc_admin_action']
 	add_action( 'admin_init', 'wpsc_backup_theme' );
 
 function wpsc_delete_coupon(){
+
 	global $wpdb;
 
 	check_admin_referer( 'delete-coupon' );
-	$coupon_id = (int)$_GET['delete_id'];
 
-	if(isset($coupon_id)) {
-			$wpdb->query( $wpdb->prepare( "DELETE FROM `".WPSC_TABLE_COUPON_CODES."` WHERE `id` = %d LIMIT 1", $coupon_id ) );
-			$deleted = 1;
+	$deleted = 0;
+
+	if ( isset( $_GET['delete_id'] ) ) {
+		$coupon = new WPSC_Coupon( $_GET['delete_id'] );
+		$coupon->delete();
+		$deleted = 1;
 	}
+
 	$sendback = wp_get_referer();
 
-	if ( isset( $deleted ) )
+	if ( $deleted ) {
 		$sendback = add_query_arg( 'deleted', $deleted, $sendback );
+	}
 
 	$sendback = remove_query_arg( array( 'deleteid', 'wpsc_admin_action' ), $sendback );
 	wp_redirect( $sendback );
 	exit();
+
 }
 
 // Delete Coupon
