@@ -149,7 +149,9 @@ class wpsc_coupons {
 	 * @return boolean True if there are conditions
 	 */
 	public function has_conditions() {
-		return ! empty( $this->conditions );
+
+		return $this->coupon->has_conditions();
+
 	}
 
 	/**
@@ -544,7 +546,9 @@ class wpsc_coupons {
 	 * @return boolean
 	 */
 	public function is_free_shipping() {
-		return $this->is_percentage == '2';
+
+		return $this->coupon->is_free_shipping();
+
 	}
 
 	/**
@@ -554,7 +558,9 @@ class wpsc_coupons {
 	 * @return boolean
 	 */
 	public function is_percentage() {
-		return $this->is_percentage == '1';
+
+		return $this->coupon->is_percentage();
+
 	}
 
 	/**
@@ -564,7 +570,9 @@ class wpsc_coupons {
 	 * @return boolean
 	 */
 	public function is_fixed_amount() {
-		return ! $this->is_free_shipping() && ! $this->is_percentage();
+
+		return $this->coupon->is_fixed_amount();
+
 	}
 
 	/**
@@ -574,7 +582,9 @@ class wpsc_coupons {
 	 * @return boolean
 	 */
 	public function applies_to_all_items() {
-		return $this->every_product == 1;
+
+		return $this->coupon->applies_to_all_items();
+
 	}
 
 	/**
