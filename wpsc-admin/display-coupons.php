@@ -50,8 +50,9 @@ function wpsc_display_coupons_page() {
 			) );
 			$insert = $new_coupon->save();
 
-			if ( $insert )
-			    echo "<div class='updated'><p>" . __( 'The coupon has been added.', 'wpsc' ) . "</p></div>";
+			if ( $insert ) {
+				echo '<div class="updated"><p>' . __( 'The coupon has been added.', 'wpsc' ) . '</p></div>';
+			}
 
 		}
 
@@ -91,8 +92,9 @@ function wpsc_display_coupons_page() {
 			$update = $update_coupon->save();
 
 			if ( $update ) {
-				echo "<div class='updated'><p>" . __( 'The coupon has been updated.', 'wpsc' ) . "</p></div>";
+				echo '<div class="updated"><p>' . __( 'The coupon has been updated.', 'wpsc' ) . '</p></div>';
 			}
+
 		}
 	}
 
