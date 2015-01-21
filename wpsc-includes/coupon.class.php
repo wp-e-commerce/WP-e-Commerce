@@ -582,7 +582,7 @@ class WPSC_Coupon {
 	 */
 	public function has_conditions() {
 
-		return ! empty( $this->data['conditions'] );
+		return ! empty( $this->data['condition'] );
 
 	}
 
