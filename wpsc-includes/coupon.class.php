@@ -456,15 +456,18 @@ class WPSC_Coupon {
 
 		$valid = true;
 
-		$now = current_time( 'timestamp', true );
-		$start_date = '0000-00-00 00:00:00' == $this->data['start'] ? 0 : strtotime( $this->data['start'] );
-		$end_date = '0000-00-00 00:00:00' == $this->data['expiry'] ? 0 : strtotime( $this->data['expiry'] );
+		$now    = current_time( 'timestamp', true );
+		$start  = $this->get( 'start' );
+		$expiry = $this->get( 'expiry' );
 
-		if ( '1' != $this->data['active'] ) {
+		$start_date = '0000-00-00 00:00:00' == $start ? 0 : strtotime( $start );
+		$end_date = '0000-00-00 00:00:00' == $expiry ? 0 : strtotime( $expiry );
+
+		if ( '1' != $this->get( 'active' ) ) {
 			$valid = false;
 		}
 
-		if ( '1' == $this->data['use-once'] && 1 == $this->data['is-used'] ) {
+		if ( '1' == $this->get( 'use-once' ) && 1 == $this->get( 'is-used' ) ) {
 			$valid = false;
 		}
 
@@ -490,7 +493,7 @@ class WPSC_Coupon {
 	 */
 	public function is_free_shipping() {
 
-		return $this->data['is-percentage'] == self::IS_FREE_SHIPPING;
+		return $this->get( 'is-percentage' ) == self::IS_FREE_SHIPPING;
 
 	}
 
@@ -504,7 +507,7 @@ class WPSC_Coupon {
 	 */
 	public function is_percentage() {
 
-		return $this->data['is-percentage'] == self::IS_PERCENTAGE;
+		return $this->get( 'is-percentage' ) == self::IS_PERCENTAGE;
 
 	}
 
@@ -532,7 +535,7 @@ class WPSC_Coupon {
 	 */
 	public function is_use_once() {
 
-		return $this->data['use-once'] == 1;
+		return $this->get( 'use-once' ) == 1;
 
 	}
 
@@ -568,7 +571,7 @@ class WPSC_Coupon {
 	 */
 	public function applies_to_all_items() {
 
-		return $this->data['every_product'] == 1;
+		return $this->get( 'every_product' ) == 1;
 
 	}
 
@@ -582,7 +585,9 @@ class WPSC_Coupon {
 	 */
 	public function has_conditions() {
 
-		return ! empty( $this->data['condition'] );
+		$condition = $this->get( 'condition' );
+
+		return ! empty( $condition );
 
 	}
 
