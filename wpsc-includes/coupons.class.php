@@ -332,7 +332,9 @@ class wpsc_coupons {
 
 		$compare_logic = false;
 
-		foreach ( $this->conditions as $condition ) {
+		$conditions = $this->coupon->get( 'condition' );
+
+		foreach ( $conditions as $condition ) {
 
 			$callback = '_callback_condition_' . $condition['property'];
 
@@ -390,8 +392,10 @@ class wpsc_coupons {
 	public function get_eligible_items() {
 		global $wpsc_cart;
 
+		$conditions = $this->coupon->get( 'condition' );
+
 		// cache product objects if we have a "item name" condition
-		if ( in_array( 'item_name', $this->conditions ) ) {
+		if ( in_array( 'item_name', $conditions ) ) {
 			$ids = $wpsc_cart->get_items( array( 'fields' => 'product_id' ) );
 			get_posts( array(
 				'post_type'   => 'wpsc-product',
