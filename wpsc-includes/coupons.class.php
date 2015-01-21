@@ -106,6 +106,12 @@ class wpsc_coupons {
 
 	}
 
+	private function has_coupon() {
+
+		return isset( $this->coupon );
+
+	}
+
 	/**
 	 * Coupons validator
 	 *
@@ -115,7 +121,7 @@ class wpsc_coupons {
 	 */
 	public function validate_coupon() {
 
-		$valid = $this->coupon->is_valid();
+		$valid = $this->has_coupon() ? $this->coupon->is_valid() : false;
 
 		return apply_filters( 'wpsc_coupons_validate_coupon', $valid, $this );
 
@@ -129,7 +135,7 @@ class wpsc_coupons {
 	 */
 	public function has_conditions() {
 
-		return $this->coupon->has_conditions();
+		return $this->has_coupon() ? $this->coupon->has_conditions() : false;
 
 	}
 
@@ -311,7 +317,7 @@ class wpsc_coupons {
 
 		$compare_logic = false;
 
-		$conditions = $this->coupon->get( 'condition' );
+		$conditions = $this->has_coupon() ? $this->coupon->get( 'condition' ) : array();
 
 		foreach ( $conditions as $condition ) {
 
@@ -371,7 +377,7 @@ class wpsc_coupons {
 	public function get_eligible_items() {
 		global $wpsc_cart;
 
-		$conditions = $this->coupon->get( 'condition' );
+		$conditions = $this->has_coupon() ? $this->coupon->get( 'condition' ) : array();
 
 		// cache product objects if we have a "item name" condition
 		if ( in_array( 'item_name', $conditions ) ) {
@@ -439,6 +445,10 @@ class wpsc_coupons {
 	private function calculate_discount_conditions() {
 		global $wpsc_cart;
 
+		if ( ! $this->has_coupon() ) {
+			return 0;
+		}
+
 		// findout whether the cart meet the conditions
 		$items = $this->get_eligible_items();
 
@@ -490,6 +500,10 @@ class wpsc_coupons {
 	private function calculate_discount_without_conditions() {
 		global $wpsc_cart;
 
+		if ( ! $this->has_coupon() ) {
+			return 0;
+		}
+
 		// if this is free shipping, return the total shipping regardless of whether "Apply on all
 		// products" is checked or not
 		if ( $this->coupon->is_free_shipping() ) {
@@ -537,7 +551,7 @@ class wpsc_coupons {
 	 */
 	public function is_free_shipping() {
 
-		return $this->coupon->is_free_shipping();
+		return $this->has_coupon() ? $this->coupon->is_free_shipping() : false;
 
 	}
 
@@ -549,7 +563,7 @@ class wpsc_coupons {
 	 */
 	public function is_percentage() {
 
-		return $this->coupon->is_percentage();
+		return $this->has_coupon() ? $this->coupon->is_percentage() : false;
 
 	}
 
@@ -561,7 +575,7 @@ class wpsc_coupons {
 	 */
 	public function is_fixed_amount() {
 
-		return $this->coupon->is_fixed_amount();
+		return $this->has_coupon() ? $this->coupon->is_fixed_amount() : false;
 
 	}
 
@@ -573,7 +587,7 @@ class wpsc_coupons {
 	 */
 	public function applies_to_all_items() {
 
-		return $this->coupon->applies_to_all_items();
+		return $this->has_coupon() ? $this->coupon->applies_to_all_items() : false;
 
 	}
 
