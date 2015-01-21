@@ -113,33 +113,12 @@ class wpsc_coupons {
 	 *
 	 * @return bool True if coupon is not expired, used and still active, False otherwise.
 	 */
-	function validate_coupon() {
+	public function validate_coupon() {
 
-		$now = current_time( 'timestamp', true );
-
-		$valid      = true;
-
-		// If date fields are left empty, they don't return false, rather, default to 0000-00-00 00:00:00
-		$start_date = '0000-00-00 00:00:00' === $this->start_date ? false : strtotime( $this->start_date );
-		$end_date   = '0000-00-00 00:00:00' === $this->end_date   ? false : strtotime( $this->end_date );
-
-		if ( '1' != $this->active ) {
-			$valid = false;
-		}
-
-		if ( '1' == $this->use_once && '1' == $this->is_used ) {
-			$valid = false;
-		}
-
-		if ( $start_date && $now < $start_date ) {
-			$valid = false;
-		}
-
-		if ( $end_date && $now > $end_date ) {
-			$valid = false;
-		}
+		$valid = $this->coupon->is_valid();
 
 		return apply_filters( 'wpsc_coupons_validate_coupon', $valid, $this );
+
 	}
 
 	/**
@@ -468,32 +447,37 @@ class wpsc_coupons {
 
 		// if this is free shipping, return the total shipping regardless of whether "Apply on all
 		// products" is checked or not
-		if ( $this->is_free_shipping() )
+		if ( $this->coupon->is_free_shipping() ) {
 			return $this->calculate_free_shipping();
+		}
 
 		// if  "Apply on all products" is checked, discount amount should be based on the total values
 		// of eligible cart items
-		if ( $this->applies_to_all_items() ) {
-			if ( $this->is_percentage() ) {
+		if ( $this->coupon->applies_to_all_items() ) {
+			if ( $this->coupon->is_percentage() ) {
 				$subtotal = $this->calculate_subtotal( $items );
-				$discount = $this->value * $subtotal / 100;
+				$discount = $this->coupon->get_percentage_discount( $subtotal );
   			} else {
-				$discount = $this->value * $this->get_total_quantity( $items );
+				$quantity = $this->get_total_quantity( $items );
+				$discount = $this->coupon->get_fixed_discount( $quantity );
 			}
 			return $discount;
 		}
 
 		// if "Apply on all products" is not checked and the coupon is percentage, the discount
 		// amount should be based on the eligible cart item with lowest unit price
-		if ( $this->is_percentage() ) {
+		if ( $this->coupon->is_percentage() ) {
+
 			$field = apply_filters( 'wpsc_coupon_select_item_field', 'unit_price' );
 			$item = array_shift( $items );
-			return $item->$field * $this->value / 100;
+
+			return $this->coupon->get_percentage_discount( $item->$field );
+
 		}
 
 		// if "Apply on all products" is not checked and the coupon is a fixed value
 		// return the discount value
-		return $this->value;
+		return $this->coupon->get( 'value' );
 	}
 
 	/**
@@ -508,24 +492,25 @@ class wpsc_coupons {
 
 		// if this is free shipping, return the total shipping regardless of whether "Apply on all
 		// products" is checked or not
-		if ( $this->is_free_shipping() )
+		if ( $this->coupon->is_free_shipping() ) {
 			return $this->calculate_free_shipping();
+		}
 
 		// if  "Apply on all products" is checked, discount amount should be based on the overall
 		// cart
-		if ( $this->applies_to_all_items() ) {
-			if ( $this->is_percentage() ) {
+		if ( $this->coupon->applies_to_all_items() ) {
+			if ( $this->coupon->is_percentage() ) {
 				$subtotal = $wpsc_cart->calculate_subtotal();
-				$discount = $this->value * $subtotal / 100;
+				$discount = $this->coupon->get_percentage_discount( $subtotal );
 			} else {
-				$discount = $this->value * wpsc_cart_item_count();
+				$discount = $this->coupon->get_fixed_discount( wpsc_cart_item_count() );
   			}
 			return $discount;
 		}
 
 		// if "Apply on all products" is not checked and the coupon is percentage, the discount
 		// amount should be based on the cart item with lowest unit_price
-		if ( $this->is_percentage() ) {
+		if ( $this->coupon->is_percentage() ) {
 			$orderby = apply_filters( 'wpsc_coupon_select_item_orderby', 'unit_price' );
 			$order   = apply_filters( 'wpsc_coupon_select_item_order'  , 'ASC'        );
 			$field   = apply_filters( 'wpsc_coupon_select_item_field'  , 'unit_price' );
@@ -535,12 +520,13 @@ class wpsc_coupons {
 
 			$item = array_shift( $cart_items );
 
-			return $item * $this->value / 100;
-  		}
+			return $this->coupon->get_percentage_discount( $item );
+
+		}
 
 		// if "Apply on all products" is not checked and the coupon is a fixed value
 		// return the discount value
-		return $this->value;
+		return $this->coupon->get( 'value' );
 	}
 
 	/**
