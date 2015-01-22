@@ -421,6 +421,44 @@ class WPSC_Coupon {
 	}
 
 	/**
+	 * Activate
+	 *
+	 * @return  int|false  Number or updated rows or false.
+	 */
+	public function activate() {
+
+		global $wpdb;
+
+		return $wpdb->update(
+			WPSC_TABLE_COUPON_CODES,
+			array( 'active' => 1 ),
+			array( 'id' => $this->id ),
+			array( '%s' ),
+			array( '%d' )
+		);
+
+	}
+
+	/**
+	 * Deactivate
+	 *
+	 * @return  int|false  Number or updated rows or false.
+	 */
+	public function deactivate() {
+
+		global $wpdb;
+
+		return $wpdb->update(
+			WPSC_TABLE_COUPON_CODES,
+			array( 'active' => 0 ),
+			array( 'id' => $this->id ),
+			array( '%s' ),
+			array( '%d' )
+		);
+
+	}
+
+	/**
 	 * Validate Insert Data
 	 *
 	 * Checks data just before saving to database.
