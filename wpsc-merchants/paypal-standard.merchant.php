@@ -261,7 +261,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 			$coupon = wpsc_get_customer_meta( 'coupon' );
 			if ( $coupon ) {
 				$coupon = new wpsc_coupons( $coupon );
-				$free_shipping = $coupon->is_percentage == '2';
+				$free_shipping = $coupon->is_free_shipping();
 			}
 
 			if ( $this->cart_data['has_discounts'] && $free_shipping )
