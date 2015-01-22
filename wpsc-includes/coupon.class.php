@@ -201,7 +201,7 @@ class WPSC_Coupon {
 	 * @param   string  $col  Name of the column.
 	 * @return  string        Placeholder.
 	 */
-	private static function get_column_format( $col ) {
+	private function get_column_format( $col ) {
 
 		if ( in_array( $col, self::$int_cols ) ) {
 			return '%d';
@@ -230,7 +230,7 @@ class WPSC_Coupon {
 		$format = array();
 
 		foreach ( $data as $key => $value ) {
-			$format[] = self::get_column_format( $key );
+			$format[] = $this->get_column_format( $key );
 		}
 
 		return $format;
@@ -257,7 +257,7 @@ class WPSC_Coupon {
 			return;
 		}
 
-		$format = self::get_column_format( $this->id );
+		$format = $this->get_column_format( $this->id );
 		$sql = $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUPON_CODES . "` WHERE id = {$format} LIMIT 1", $this->id );
 
 		$this->exists = false;
@@ -278,7 +278,7 @@ class WPSC_Coupon {
 			$this->data['value'] = (float) $this->data['value'];
 			$this->data['condition'] = unserialize( $this->data['condition'] );
 
-			self::update_cache( $this );
+			$this->update_cache();
 		}
 
 		do_action( 'wpsc_coupon_fetched', $this );
@@ -306,16 +306,14 @@ class WPSC_Coupon {
 	 * Update cache of the passed coupon object.
 	 *
 	 * @access  public
-	 * @static
 	 * @since   4.0
-	 *
-	 * @param  WPSC_Coupon  $coupon  The coupon object that you want to store into cache.
 	 */
-	public static function update_cache( &$coupon ) {
+	public function update_cache() {
 
-		$id = $coupon->get( 'id' );
-		wp_cache_set( $id, $coupon->data, 'wpsc_coupons' );
-		do_action( 'wpsc_coupon_update_cache', $coupon );
+		$id = $this->get( 'id' );
+
+		wp_cache_set( $id, $this->data, 'wpsc_coupons' );
+		do_action( 'wpsc_coupon_update_cache', $this );
 
 	}
 
@@ -323,16 +321,12 @@ class WPSC_Coupon {
 	 * Deletes cache of a coupon.
 	 *
 	 * @access  public
-	 * @static
 	 * @since   4.0
-	 *
-	 * @param  string  $value  The coupon ID to query.
 	 */
-	public static function delete_cache( $value ) {
+	public function delete_cache() {
 
-		$coupon = new WPSC_Coupon( $value );
-		wp_cache_delete( $coupon->get( 'id' ), 'wpsc_coupons' );
-		do_action( 'wpsc_coupon_delete_cache', $coupon, $value );
+		wp_cache_delete( $this->get( 'id' ), 'wpsc_coupons' );
+		do_action( 'wpsc_coupon_delete_cache', $this, $value );
 
 	}
 
@@ -362,9 +356,9 @@ class WPSC_Coupon {
 			// Update coupon
 			$data = $this->validate_insert_data( apply_filters( 'wpsc_purchase_log_update_data', $this->data ) );
 			$format = $this->get_data_format( $data );
-			$result = $wpdb->update( WPSC_TABLE_COUPON_CODES, $data, array( 'id' => $this->id ), $format, array( self::get_column_format( 'id' ) ) );
+			$result = $wpdb->update( WPSC_TABLE_COUPON_CODES, $data, array( 'id' => $this->id ), $format, array( $this->get_column_format( 'id' ) ) );
 
-			self::delete_cache( $this->id );
+			$this->delete_cache();
 
 			do_action( 'wpsc_coupon_update', $this );
 
@@ -396,12 +390,11 @@ class WPSC_Coupon {
 	 * Deletes a coupon from the database.
 	 *
 	 * @access  public
-	 * @static
 	 * @since   4.0
 	 *
-	 * @param  int  $coupon_id  ID of the coupon.
+	 * @return  boolean
 	 */
-	public static function delete( $coupon_id ) {
+	public function delete() {
 
 		global $wpdb;
 
@@ -409,14 +402,19 @@ class WPSC_Coupon {
 			return;
 		}
 
-		do_action( 'wpsc_coupon_before_delete', $coupon_id );
+		do_action( 'wpsc_coupon_before_delete', $this->id );
 
-		self::delete_cache( $coupon_id );
-		$format = self::get_column_format( $coupon_id );
-		$sql = $wpdb->prepare( "DELETE FROM " . WPSC_TABLE_COUPON_CODES . " WHERE id = {$format} LIMIT 1", $coupon_id );
-		$wpdb->query( $sql );
+		$this->delete_cache();
 
-		do_action( 'wpsc_coupon_delete', $coupon_id );
+		$deleted = $wpdb->delete(
+			WPSC_TABLE_COUPON_CODES,
+			array( 'id' => $this->id ),
+			array( $this->get_column_format( $this->id ) )
+		);
+
+		do_action( 'wpsc_coupon_delete', $this->id );
+
+		return $deleted;
 
 	}
 
