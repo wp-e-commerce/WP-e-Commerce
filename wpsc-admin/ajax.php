@@ -926,8 +926,11 @@ function _wpsc_ajax_set_variation_product_thumbnail() {
 add_action( 'wp_ajax_wpsc_set_variation_product_thumbnail', '_wpsc_ajax_set_variation_product_thumbnail' );
 
 /**
- *	Delete WPSC product image from gallery
+ * Delete WPSC product image from gallery
  *
+ * @uses check_ajax_referer()		Verifies the AJAX request to prevent processing external requests
+ * @uses get_post_meta()		Returns meta from the specified post
+ * @uses update_post_meta()		Updates meta from the specified post
  */
 function product_gallery_image_delete_action() {
 	
