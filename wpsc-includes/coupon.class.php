@@ -85,7 +85,7 @@ class WPSC_Coupon {
 	 * @access  public
 	 * @since   4.0
 	 *
-	 * @param  int|array  $value  Optional. Defaults to false.
+	 * @param  false|integer|array  $value  Optional. Defaults to false.
 	 */
 	public function __construct( $value = false ) {
 
@@ -121,9 +121,9 @@ class WPSC_Coupon {
 	 * @access  public
 	 * @since   4.0
 	 *
-	 * @param   string|array  $key    Name of the property (column), or an array containing key value pairs.
-	 * @param   string|int    $value  Optional. Defaults to false. In case $key is a string, this should be specified.
-	 * @return  WPSC_Coupon           The current object (for method chaining).
+	 * @param   string|array         $key    Name of the property (column), or an array containing key value pairs.
+	 * @param   string|integer|null  $value  Optional. Defaults to false. In case $key is a string, this should be specified.
+	 * @return  WPSC_Coupon                  The current object (for method chaining).
 	 */
 	public function set( $key, $value = null ) {
 
@@ -582,8 +582,6 @@ class WPSC_Coupon {
 	 *
 	 * @access  public
 	 * @since   4.0
-	 *
-	 * @return  boolean
 	 */
 	public function used() {
 
@@ -633,8 +631,8 @@ class WPSC_Coupon {
 	 * @access  public
 	 * @since   4.0
 	 *
-	 * @param   int  $price  Price.
-	 * @return  int          Discount amount.
+	 * @param   integer|double  $price  Price.
+	 * @return  integer|double          Discount amount.
 	 */
 	public function get_percentage_discount( $price ) {
 
