@@ -152,23 +152,20 @@ class wpsc_coupons {
 		$product_data = get_post( $cart_item->product_id );
 
 		switch( $condition['logic'] ) {
-			case 'equal': //Checks if the product name is exactly the same as the condition value
+
+			case 'equal': // Checks if the product name is exactly the same as the condition value
 				return $product_data->post_title == $condition['value'];
-			break;
 
-			case 'greater'://Checks if the product name is not the same as the condition value
+			case 'greater': // Checks if the product name is not the same as the condition value
 				return $product_data->post_title > $condition['value'];
-			break;
 
-			case 'less'://Checks if the product name is not the same as the condition value
+			case 'less': // Checks if the product name is not the same as the condition value
 				return $product_data->post_title < $condition['value'];
-			break;
 
-			case 'contains'://Checks if the product name contains the condition value
+			case 'contains': // Checks if the product name contains the condition value
 				return preg_match( "/(.*)" . preg_quote( $condition['value'], '/' ) . "(.*)/", $product_data->post_title );
-			break;
 
-			case 'category'://Checks if the product category is the condition value
+			case 'category': // Checks if the product category is the condition value
 				$id = $product_data->ID;
 				if ( $product_data->post_parent )
 					$id = $product_data->post_parent;
@@ -179,19 +176,16 @@ class wpsc_coupons {
 					$category_condition = array_map( 'trim', $category_condition );
 				}
 				return has_term( $category_condition, 'wpsc_product_category', $id );
-			break;
 
-			case 'not_contain'://Checks if the product name contains the condition value
+			case 'not_contain': // Checks if the product name contains the condition value
 				return ! preg_match( "/(.*)" . preg_quote( $condition['value'], '/' ) . "(.*)/", $product_data->post_title );
-			break;
 
-			case 'begins'://Checks if the product name begins with condition value
+			case 'begins': // Checks if the product name begins with condition value
 				return preg_match( "/^" . preg_quote( $condition['value'], '/' ) . "/", $product_data->post_title );
-			break;
 
-			case 'ends'://Checks if the product name ends with condition value
+			case 'ends': // Checks if the product name ends with condition value
 				return preg_match( "/" . preg_quote( $condition['value'], '/' ) . "$/", $product_data->post_title );
-			break;
+
 		}
 
 		return false;
