@@ -326,7 +326,7 @@ class WPSC_Coupon {
 	public function delete_cache() {
 
 		wp_cache_delete( $this->get( 'id' ), 'wpsc_coupons' );
-		do_action( 'wpsc_coupon_delete_cache', $this, $value );
+		do_action( 'wpsc_coupon_delete_cache', $this );
 
 	}
 
