@@ -45,8 +45,6 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal {
 			'L_BILLINGAGREEMENTDESCRIPTION0' => 'billing_description',
 		) );
 
-		$subtotal = 0;
-
 		/**
 		 * Apply a discount if available
 		 *

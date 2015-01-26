@@ -43,8 +43,7 @@ class PHP_Merchant_Paypal_Pro extends PHP_Merchant_Paypal
 			'invoice'      => 'invoice',
 			'notify_url'   => 'notify_url',
 		) );
-
-		$subtotal = 0;
+	
 		/**
 		 * Apply a discount if available
 		 *
