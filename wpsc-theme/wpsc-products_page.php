@@ -179,7 +179,7 @@ $image_width = get_option('product_image_width');
                                     <?php endif; ?>
 
 									<?php if(wpsc_show_pnp()) : ?>
-										<p class="pricedisplay"><?php _e('Shipping', 'wpsc'); ?>:<span class="pp_price"><?php echo wpsc_product_postage_and_packaging(); ?></span></p>
+										<p class="pricedisplay"><?php _e('Shipping:', 'wpsc'); ?> <span class="pp_price"><?php echo wpsc_product_postage_and_packaging(); ?></span></p>
 									<?php endif; ?>
 								<?php endif; ?>
 							</div><!--close wpsc_product_price-->
