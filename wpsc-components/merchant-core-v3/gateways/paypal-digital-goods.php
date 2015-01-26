@@ -41,8 +41,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
             'cart_logo'		   => $this->setting->get( 'cart_logo' ),
             'cart_border'	   => $this->setting->get( 'cart_border' ),
         ) );
-
-        add_filter( 'wpsc_purchase_log_gateway_data', array( get_parent_class( $this ), 'filter_purchase_log_gateway_data' ), 10, 2 );
+ 
     }
 
     /**
