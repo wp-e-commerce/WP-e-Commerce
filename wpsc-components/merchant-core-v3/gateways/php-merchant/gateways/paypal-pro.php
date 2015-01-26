@@ -44,30 +44,9 @@ class PHP_Merchant_Paypal_Pro extends PHP_Merchant_Paypal
 			'notify_url'   => 'notify_url',
 		) );
 	
-		/**
-		 * Apply a discount if available
-		 *
-		 */
-		if ( isset( $this->options['discount'] ) && (float) $this->options['discount'] != 0 ) {
-			$discount = (float) $this->options['discount'];	
-			$sub_total = (float) $this->options['subtotal'];
+		// Apply a Discount if available
+		$this->add_discount();
 
-			if ( $discount >= $sub_total ) {
-				$discount = $sub_total - 0.01;
-			}
-
-			if ( ! empty( $this->options['shipping'] ) ) {
-				$this->options['shipping'] -= 0.01;
-			} else {
-				$this->options['amount'] = 0.01;
-			}
-
-			$this->options['items'][] = array(
-				'name' => __( 'Discount', 'wpsc' ),
-				'amount' => - $discount,
-				'quantity' => '1',
-			);
-		}
 		// Shopping Cart details
 		$i = 0;
 		foreach ( $this->options['items'] as $item ) {
@@ -99,6 +78,29 @@ class PHP_Merchant_Paypal_Pro extends PHP_Merchant_Paypal
 		}
 
 		return $request;
+	}
+
+	protected function add_discount() {
+		if ( isset( $this->options['discount'] ) && (float) $this->options['discount'] != 0 ) {
+			$discount = (float) $this->options['discount'];	
+			$sub_total = (float) $this->options['subtotal'];
+
+			if ( $discount >= $sub_total ) {
+				$discount = $sub_total - 0.01;
+			}
+
+			if ( ! empty( $this->options['shipping'] ) ) {
+				$this->options['shipping'] -= 0.01;
+			} else {
+				$this->options['amount'] = 0.01;
+			}
+
+			$this->options['items'][] = array(
+				'name' => __( 'Discount', 'wpsc' ),
+				'amount' => - $discount,
+				'quantity' => '1',
+			);
+		}
 	}
 
 	/**
