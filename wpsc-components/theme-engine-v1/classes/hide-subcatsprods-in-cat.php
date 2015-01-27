@@ -27,7 +27,7 @@ class WPSC_Hide_subcatsprods_in_cat {
 		return $where;
 	}
 
-	function join($join){
+	function join( $join ){
 
 		$this->_wpsc_doing_it_wrong( 'join' );
 
@@ -37,12 +37,12 @@ class WPSC_Hide_subcatsprods_in_cat {
 	/**
 	 * Doing it Wrong
 	 *
-	 * @since   3.9.x
+	 * @since   4.0
 	 * @access  private
 	 */
 	function _wpsc_doing_it_wrong( $method ) {
 
-		_wpsc_doing_it_wrong( 'WPSC_Hide_subcatsprods_in_cat->' . $method . '()', __( 'This class is deprecated. There is no direct replacement. Hiding subcategory products in parent categories is now handled by the private wpsc_hide_subcatsprods_in_cat_query() function.', 'wpsc' ), '3.9.x' );
+		_wpsc_doing_it_wrong( 'WPSC_Hide_subcatsprods_in_cat->' . $method . '()', __( 'This class is deprecated. There is no direct replacement. Hiding subcategory products in parent categories is now handled by the private wpsc_hide_subcatsprods_in_cat_query() function.', 'wpsc' ), '4.0' );
 
 	}
 

@@ -1272,11 +1272,11 @@ function wpsc_display_featured_products_page() {
 /**
  * Hide Subcat Products Init
  *
- * @deprecated  Since 3.9.x. Hiding subcategory products in parent categories is now handled by the private wpsc_hide_subcatsprods_in_cat_query() function.
+ * @deprecated  Since 4.0. Hiding subcategory products in parent categories is now handled by the private wpsc_hide_subcatsprods_in_cat_query() function.
  */
 function wpsc_hidesubcatprods_init() {
 
-	_wpsc_doing_it_wrong( 'wpsc_hidesubcatprods_init', __( 'This function is deprecated. There is no direct replacement. Hiding subcategory products in parent categories is now handled by the private wpsc_hide_subcatsprods_in_cat_query() function.', 'wpsc' ), '3.9.x' );
+	_wpsc_doing_it_wrong( 'wpsc_hidesubcatprods_init', __( 'This function is deprecated. There is no direct replacement. Hiding subcategory products in parent categories is now handled by the private wpsc_hide_subcatsprods_in_cat_query() function.', 'wpsc' ), '4.0' );
 
 }
 
