@@ -100,7 +100,7 @@ class WPSC_Coupon {
 		}
 
 		// Store the ID
-		$this->id = absint( $value );
+		$this->id = is_numeric( $value ) && $value > 0 ? absint( $value ) : 0;
 
 		// If the ID is specified, try to get from cache.
 		$this->data = wp_cache_get( $this->id, 'wpsc_coupons' );
