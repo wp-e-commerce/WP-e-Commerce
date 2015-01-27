@@ -364,14 +364,13 @@ class wpsc_cart {
 		global $wpsc_shipping_modules;
 
 		// set us up with a shipping method.
-		$custom_shipping = get_option( 'custom_shipping_options' );
-		if ( empty( $custom_shipping ) ) {
-			$custom_shipping = array();
-		} elseif ( ! is_array( $custom_shipping ) ) {
+		$custom_shipping = get_option( 'custom_shipping_options', array() );
+
+		if ( ! is_array( $custom_shipping ) ) {
 			$custom_shipping = (array) $custom_shipping;
 		}
 
-		$this->shipping_methods      = get_option( 'custom_shipping_options' );
+		$this->shipping_methods      = $custom_shipping;
 		$this->shipping_method_count = count( $this->shipping_methods );
 
 		$use_shipping = ! get_option( 'do_not_use_shipping', false );
@@ -1080,9 +1079,11 @@ class wpsc_cart {
 	 */
 	function uses_shipping() {
 		global $wpdb;
+
 		if ( get_option( 'do_not_use_shipping' ) ) {
 			return false;
 		}
+
 		$uses_shipping = 0;
 		if ( ( $this->uses_shipping == null ) ) {
 			foreach ( $this->cart_items as $key => $cart_item ) {
@@ -1191,8 +1192,10 @@ class wpsc_cart {
 	}
 
 	function rewind_shipping_methods() {
+
 		$this->current_shipping_method = - 1;
-		if ( $this->shipping_method_count > 0 ) {
+
+		if ( $this->shipping_method_count > 0 && ! empty( $this->shipping_methods ) ) {
 			$this->shipping_method = $this->shipping_methods[0];
 		}
 	}
@@ -1337,10 +1340,12 @@ class wpsc_cart {
  * @return void
  */
 function _wpsc_calculate_shipping_quotes_before_product_page() {
-    global $wpsc_cart;
+	global $wpsc_cart;
 
-    $wpsc_cart->get_shipping_method();
-    $wpsc_cart->rewind_shipping_methods();
+	if ( $wpsc_cart->uses_shipping() ) {
+		$wpsc_cart->get_shipping_method();
+		$wpsc_cart->rewind_shipping_methods();
+	}
 }
 
 add_action( 'wpsc_before_shipping_of_shopping_cart', '_wpsc_calculate_shipping_quotes_before_product_page' , 1 );
