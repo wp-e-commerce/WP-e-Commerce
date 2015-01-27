@@ -283,27 +283,31 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 
 		$ids = isset( $_GET['coupon'] ) ? $_GET['coupon'] : false;
 
-		if ( ! is_array( $ids ) )
+		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
+		}
 
 		foreach ( $ids as $id ) {
+
+			$coupon = new WPSC_Coupon( $id );
+
 			if ( 'delete' === $this->current_action() ) {
 
-				// delete a discount
-				$wpdb->query( $wpdb->prepare( "DELETE FROM " . WPSC_TABLE_COUPON_CODES . " WHERE id = %d", $id ) );
+				// Delete a discount
+				$coupon->delete();
 
 			} elseif( 'activate' === $this->current_action() ) {
 
-				// activate a discount
-				$wpdb->query( $wpdb->prepare( "UPDATE " . WPSC_TABLE_COUPON_CODES . " SET active = 1 WHERE id = %d", $id ) );
-
+				// Activate a discount
+				$coupon->activate();
 
 			} elseif( 'deactivate' === $this->current_action() ) {
 
-				// deactivate a discount
-				$wpdb->query( $wpdb->prepare( "UPDATE " . WPSC_TABLE_COUPON_CODES . " SET active = 0 WHERE id = %d", $id ) );
+				// Deactivate a discount
+				$coupon->deactivate();
 
 			}
+
 		}
 
 	}
@@ -320,49 +324,46 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 
 		global $wpdb;
 
-		if( ! isset( $_GET['wpsc-action'] ) || ! isset( $_GET['coupon'] ) )
+		if ( ! isset( $_GET['wpsc-action'] ) || ! isset( $_GET['coupon'] ) ) {
 			return;
+		}
 
-		$coupon_id = absint( $_GET['coupon'] );
+		$coupon = new WPSC_Coupon( $_GET['coupon'] );
 
-		switch( $_GET['wpsc-action'] ) {
+		switch ( $_GET['wpsc-action'] ) {
 
 			case 'activate_coupon':
-				$updated = $wpdb->update(
-					WPSC_TABLE_COUPON_CODES,
-					array( 'active' => 1 ),
-					array( 'id' => $coupon_id ),
-					array( '%s' ),
-					array( '%d' )
-				);
 
-				if ( $updated )
-				    echo "<div class='updated'><p>" . __( 'The coupon has been activated.', 'wpsc' ) . "</p></div>";
+				$updated = $coupon->activate();
+
+				if ( $updated ) {
+					printf( '<div class="updated"><p>%s</p></div>', __( 'The coupon has been activated.', 'wpsc' ) );
+				}
+
 				break;
+
 			case 'deactivate_coupon':
-				$updated = $wpdb->update(
-					WPSC_TABLE_COUPON_CODES,
-					array( 'active' => 0 ),
-					array( 'id' => $coupon_id ),
-					array( '%s' ),
-					array( '%d' )
-				);
 
-				if ( $updated )
-				    echo "<div class='updated'><p>" . __( 'The coupon has been deactivated.', 'wpsc' ) . "</p></div>";
+				$updated = $coupon->deactivate();
+
+				if ( $updated ) {
+					printf( '<div class="updated"><p>%s</p></div>', __( 'The coupon has been deactivated.', 'wpsc' ) );
+				}
+
 				break;
+
 			case 'delete_coupon':
-				$deleted = $wpdb->delete(
-					WPSC_TABLE_COUPON_CODES,
-					array( 'id' => $coupon_id ),
-					array( '%d' )
-				);
 
-				if ( $deleted )
-					echo "<div class='updated'><p>" . __( 'The coupon has been deleted.', 'wpsc' ) . "</p></div>";
+				$deleted = $coupon->delete();
+
+				if ( $deleted ) {
+					printf( '<div class="updated"><p>%s</p></div>', __( 'The coupon has been deleted.', 'wpsc' ) );
+				}
 
 				break;
+
 		}
+
 	}
 
 
@@ -410,17 +411,30 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 		$coupons  = $wpdb->get_results( "SELECT * FROM `" . WPSC_TABLE_COUPON_CODES . "` {$where} ORDER BY id {$order} {$limit} ", ARRAY_A );
 
 		if ( $coupons ) {
-			foreach ( $coupons as $coupon ) {
+			foreach ( $coupons as $data ) {
 
+				$coupon = new WPSC_Coupon( array(
+					'id'            => $data['id'],
+					'coupon_code'   => $data['coupon_code'],
+					'value'         => $data['value'],
+					'is-percentage' => $data['is-percentage'],
+					'start'         => $data['start'],
+					'expiry'        => $data['expiry'],
+					'active'        => $data['active']
+				) );
+
+				// Re-map data to array for legacy handling of this method's return data.
+				// (would be nicer to return an object?)
 				$coupons_data[] = array(
-					'ID'           => $coupon['id'],
-					'coupon'       => $coupon['coupon_code'],
-					'discount' 	   => $coupon['value'],
-					'type' 	       => $coupon['is-percentage'],
-					'start'        => $coupon['start'],
-					'expiry'       => $coupon['expiry'],
-					'status'  	   => $coupon['active'] == 1 ? 'active' : 'inactive',
+					'ID'       => $coupon->get( 'id' ),
+					'coupon'   => $coupon->get( 'coupon_code' ),
+					'discount' => $coupon->get( 'value' ),
+					'type'     => $coupon->get( 'is-percentage' ),
+					'start'    => $coupon->get( 'start' ),
+					'expiry'   => $coupon->get( 'expiry' ),
+					'status'   => $coupon->get( 'active' ) == 1 ? 'active' : 'inactive'
 				);
+
 			}
 		}
 		return $coupons_data;

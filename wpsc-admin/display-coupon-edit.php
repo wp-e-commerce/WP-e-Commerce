@@ -1,11 +1,12 @@
 <?php
 
-// die if accessed directly
-if( !defined( 'ABSPATH' ) )
+// Die if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
 	die();
+}
 
-$coupon_id = absint( $_GET['coupon'] );
-$coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUPON_CODES . "` WHERE `id` = %d", $coupon_id ), ARRAY_A );
+$coupon = new WPSC_Coupon( $_GET['coupon'] );
+
 ?>
 <div class="wrap" id="coupon_data">
 	<div id="edit_coupon_box">
@@ -22,14 +23,14 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 			<table class="form-table">
 				<tbody>
 
-					<?php do_action( 'wpsc_coupon_edit_top', $coupon_id, $coupon ); ?>
+					<?php do_action( 'wpsc_coupon_edit_top', $coupon->get( 'id' ), $coupon->get_data() ); ?>
 
 					<tr class="form-field">
 						<th scope="row" valign="top">
 							<label for="edit_coupon_code"><?php _e( 'Coupon Code', 'wpsc' ); ?></label>
 						</th>
 						<td>
-							<input name="edit_coupon_code" id="edit_coupon_code" type="text" value="<?php esc_attr_e( $coupon['coupon_code'] ); ?>" style="width: 300px;"/>
+							<input name="edit_coupon_code" id="edit_coupon_code" type="text" value="<?php esc_attr_e( $coupon->get( 'coupon_code' ) ); ?>" style="width: 300px;"/>
 							<p class="description"><?php _e( 'The code entered to receive the discount', 'wpsc' ); ?></p>
 						</td>
 					</tr>
@@ -39,7 +40,7 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 							<label for="edit_coupon_amount"><?php _e( 'Discount', 'wpsc' ); ?></label>
 						</th>
 						<td>
-							<input name="edit_coupon_amount" id="edit_coupon_amount" type="number" step=".01" value="<?php esc_attr_e( $coupon['value'] ); ?>" class="small-text" min="0" style="width: 300px" />
+							<input name="edit_coupon_amount" id="edit_coupon_amount" type="number" step=".01" value="<?php esc_attr_e( $coupon->get( 'value' ) ); ?>" class="small-text" min="0" style="width: 300px" />
 							<p class="description"><?php _e( 'The discount amount', 'wpsc' ); ?></p>
 						</td>
 					</tr>
@@ -49,7 +50,7 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 							<label for="edit_discount_type"><?php _e( 'Discount Type', 'wpsc' ); ?></label>
 						</th>
 						<td>
-							<?php $type = absint( $coupon['is-percentage'] ); ?>
+							<?php $type = absint( $coupon->get( 'is-percentage' ) ); ?>
 							<select name='edit_discount_type' id='edit_discount_type'>
 								<option value='0'<?php selected( 0, $type ); ?>><?php _e( 'Fixed Amount', 'wpsc' ); ?></option>
 								<option value='1'<?php selected( 1, $type ); ?>><?php _e( 'Percentage', 'wpsc' ); ?></option>
@@ -67,8 +68,8 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 						</th>
 						<td>
 							<?php
-								$start = $coupon['start']  == '0000-00-00 00:00:00' ? '' : get_date_from_gmt( $coupon['start'], 'Y-m-d' );
-								$end   = $coupon['expiry'] == '0000-00-00 00:00:00' ? '' : get_date_from_gmt( $coupon['expiry'], 'Y-m-d' );
+								$start = $coupon->get( 'start' )  == '0000-00-00 00:00:00' ? '' : get_date_from_gmt( $coupon->get( 'start' ), 'Y-m-d' );
+								$end   = $coupon->get( 'expiry' ) == '0000-00-00 00:00:00' ? '' : get_date_from_gmt( $coupon->get( 'expiry' ), 'Y-m-d' );
 							?>
 							<span class="description"><?php _e( 'Start: ', 'wpsc' ); ?></span>
 							<input name="edit_coupon_start" id="edit_coupon_start" type="text" value="<?php esc_attr_e( $start ); ?>" class="regular-text pickdate" style="width: 100px"/>
@@ -84,7 +85,7 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 						</th>
 						<td>
 							<input type='hidden' value='0' name='edit_coupon_active' />
-							<input type="checkbox" value='1'<?php checked( 1, $coupon['active'] ); ?> name='edit_coupon_active' id="edit_coupon_active" />
+							<input type="checkbox" value='1'<?php checked( 1, $coupon->get( 'active' ) ); ?> name='edit_coupon_active' id="edit_coupon_active" />
 							<label for="edit_coupon_active"><?php _e( 'Is this coupon active?', 'wpsc' ) ?></label>
 						</td>
 					</tr>
@@ -95,7 +96,7 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 						</th>
 						<td>
 							<input type='hidden' value='0' name='edit_coupon_use_once' />
-							<input type='checkbox' value='1'<?php checked( 1, $coupon['use-once'] ); ?> name='edit_coupon_use_once' id="edit_coupon_use_once" />
+							<input type='checkbox' value='1'<?php checked( 1, $coupon->get( 'use-once' ) ); ?> name='edit_coupon_use_once' id="edit_coupon_use_once" />
 							<label for="edit_coupon_use_once"><?php _e( 'Deactivate coupon after it has been used.', 'wpsc' ) ?></label>
 						</td>
 					</tr>
@@ -106,7 +107,7 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 						</th>
 						<td>
 							</span><input type='hidden' value='0' name='edit_coupon_every_product' />
-							<input type="checkbox" value="1"<?php checked( 1, $coupon['every_product'] ); ?> name='edit_coupon_every_product' id="edit-coupon-every-product"/>
+							<input type="checkbox" value="1"<?php checked( 1, $coupon->get( 'every_product' ) ); ?> name='edit_coupon_every_product' id="edit-coupon-every-product"/>
 							<label for="edit-coupon-every-product"><?php _e( 'This coupon affects each product at checkout.', 'wpsc' ) ?></label>
 						</td>
 					</tr>
@@ -118,7 +119,7 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 						<td>
 							<input type="hidden" name="rules[operator][]" value="" />
 							<?php
-							$conditions = maybe_unserialize( $coupon['condition'] );
+							$conditions = maybe_unserialize( $coupon->get( 'condition' ) );
 
 							if ( empty( $conditions ) )
 								$conditions = array(
@@ -166,12 +167,12 @@ $coupon    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_COUP
 						</td>
 					</tr>
 
-					<?php do_action( 'wpsc_coupon_edit_top', $coupon_id, $coupon ); ?>
+					<?php do_action( 'wpsc_coupon_edit_top', $coupon->get( 'id' ), $coupon->get_data() ); ?>
 
 				</tbody>
 			</table>
-			<input type="hidden" name="coupon_id" value="<?php echo esc_attr( $coupon_id ); ?>"/>
-			<input type="hidden" name="edit_coupon_is_used" value="<?php echo esc_attr( $coupon['is-used'] ); ?>"/>
+			<input type="hidden" name="coupon_id" value="<?php echo esc_attr( $coupon->get( 'id' ) ); ?>"/>
+			<input type="hidden" name="edit_coupon_is_used" value="<?php echo esc_attr( $coupon->get( 'is-used' ) ); ?>"/>
 			<input type="hidden" name="is_edit_coupon" value="true" />
 
 			<?php wp_nonce_field( 'wpsc_coupon', 'wpsc-coupon-edit' ); ?>

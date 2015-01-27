@@ -42,6 +42,9 @@ function wpsc_coupons_error(){
  * @since 3.7
  */
 class wpsc_coupons {
+
+	public $coupon;
+
 	public $code;
 	public $value;
 	public $is_percentage;
@@ -82,31 +85,30 @@ class wpsc_coupons {
 			wpsc_delete_customer_meta( 'coupon' );
 			return false;
 		} else {
-			$coupon_data = array_merge( array(
-				'value'         => '',
-				'is-percentage' => '',
-				'condition'     => '',
-				'is-used'       => '',
-				'active'        => '',
-				'use-once'      => '',
-				'start'         => '',
-				'expiry'        => '',
-				'every_product' => ''
-			), $coupon_data );
 
-			$this->value         = (float) $coupon_data['value'];
-			$this->is_percentage = $coupon_data['is-percentage'];
-			$this->conditions    = unserialize( $coupon_data['condition'] );
-			$this->is_used       = $coupon_data['is-used'];
-			$this->active        = $coupon_data['active'];
-			$this->use_once      = $coupon_data['use-once'];
-			$this->start_date    = $coupon_data['start'];
-			$this->end_date      = $coupon_data['expiry'];
-			$this->every_product = $coupon_data['every_product'];
+			$this->coupon = new WPSC_Coupon( $coupon_data['id'] );
+
+			// Store these values for back-compatibiilty pre 4.0?
+			$this->value         = $this->coupon->get( 'value' );
+			$this->is_percentage = $this->coupon->get( 'is-percentage' );
+			$this->conditions    = $this->coupon->get( 'condition' );
+			$this->is_used       = $this->coupon->get( 'is-used' );
+			$this->active        = $this->coupon->get( 'active' );
+			$this->use_once      = $this->coupon->get( 'use-once' );
+			$this->start_date    = $this->coupon->get( 'start' );
+			$this->end_date      = $this->coupon->get( 'expiry' );
+			$this->every_product = $this->coupon->get( 'every_product' );
 			$this->errormsg      = false;
 
 			return $this->validate_coupon();
+
 		}
+
+	}
+
+	private function has_coupon() {
+
+		return isset( $this->coupon );
 
 	}
 
@@ -117,33 +119,12 @@ class wpsc_coupons {
 	 *
 	 * @return bool True if coupon is not expired, used and still active, False otherwise.
 	 */
-	function validate_coupon() {
+	public function validate_coupon() {
 
-		$now = current_time( 'timestamp', true );
-
-		$valid      = true;
-
-		// If date fields are left empty, they don't return false, rather, default to 0000-00-00 00:00:00
-		$start_date = '0000-00-00 00:00:00' === $this->start_date ? false : strtotime( $this->start_date );
-		$end_date   = '0000-00-00 00:00:00' === $this->end_date   ? false : strtotime( $this->end_date );
-
-		if ( '1' != $this->active ) {
-			$valid = false;
-		}
-
-		if ( '1' == $this->use_once && '1' == $this->is_used ) {
-			$valid = false;
-		}
-
-		if ( $start_date && $now < $start_date ) {
-			$valid = false;
-		}
-
-		if ( $end_date && $now > $end_date ) {
-			$valid = false;
-		}
+		$valid = $this->has_coupon() ? $this->coupon->is_valid() : false;
 
 		return apply_filters( 'wpsc_coupons_validate_coupon', $valid, $this );
+
 	}
 
 	/**
@@ -153,7 +134,9 @@ class wpsc_coupons {
 	 * @return boolean True if there are conditions
 	 */
 	public function has_conditions() {
-		return ! empty( $this->conditions );
+
+		return $this->has_coupon() ? $this->coupon->has_conditions() : false;
+
 	}
 
 	/**
@@ -169,23 +152,20 @@ class wpsc_coupons {
 		$product_data = get_post( $cart_item->product_id );
 
 		switch( $condition['logic'] ) {
-			case 'equal': //Checks if the product name is exactly the same as the condition value
+
+			case 'equal': // Checks if the product name is exactly the same as the condition value
 				return $product_data->post_title == $condition['value'];
-			break;
 
-			case 'greater'://Checks if the product name is not the same as the condition value
+			case 'greater': // Checks if the product name is not the same as the condition value
 				return $product_data->post_title > $condition['value'];
-			break;
 
-			case 'less'://Checks if the product name is not the same as the condition value
+			case 'less': // Checks if the product name is not the same as the condition value
 				return $product_data->post_title < $condition['value'];
-			break;
 
-			case 'contains'://Checks if the product name contains the condition value
+			case 'contains': // Checks if the product name contains the condition value
 				return preg_match( "/(.*)" . preg_quote( $condition['value'], '/' ) . "(.*)/", $product_data->post_title );
-			break;
 
-			case 'category'://Checks if the product category is the condition value
+			case 'category': // Checks if the product category is the condition value
 				$id = $product_data->ID;
 				if ( $product_data->post_parent )
 					$id = $product_data->post_parent;
@@ -196,19 +176,16 @@ class wpsc_coupons {
 					$category_condition = array_map( 'trim', $category_condition );
 				}
 				return has_term( $category_condition, 'wpsc_product_category', $id );
-			break;
 
-			case 'not_contain'://Checks if the product name contains the condition value
+			case 'not_contain': // Checks if the product name contains the condition value
 				return ! preg_match( "/(.*)" . preg_quote( $condition['value'], '/' ) . "(.*)/", $product_data->post_title );
-			break;
 
-			case 'begins'://Checks if the product name begins with condition value
+			case 'begins': // Checks if the product name begins with condition value
 				return preg_match( "/^" . preg_quote( $condition['value'], '/' ) . "/", $product_data->post_title );
-			break;
 
-			case 'ends'://Checks if the product name ends with condition value
+			case 'ends': // Checks if the product name ends with condition value
 				return preg_match( "/" . preg_quote( $condition['value'], '/' ) . "$/", $product_data->post_title );
-			break;
+
 		}
 
 		return false;
@@ -334,7 +311,9 @@ class wpsc_coupons {
 
 		$compare_logic = false;
 
-		foreach ( $this->conditions as $condition ) {
+		$conditions = $this->has_coupon() ? $this->coupon->get( 'condition' ) : array();
+
+		foreach ( $conditions as $condition ) {
 
 			$callback = '_callback_condition_' . $condition['property'];
 
@@ -392,8 +371,10 @@ class wpsc_coupons {
 	public function get_eligible_items() {
 		global $wpsc_cart;
 
+		$conditions = $this->has_coupon() ? $this->coupon->get( 'condition' ) : array();
+
 		// cache product objects if we have a "item name" condition
-		if ( in_array( 'item_name', $this->conditions ) ) {
+		if ( in_array( 'item_name', $conditions ) ) {
 			$ids = $wpsc_cart->get_items( array( 'fields' => 'product_id' ) );
 			get_posts( array(
 				'post_type'   => 'wpsc-product',
@@ -458,6 +439,10 @@ class wpsc_coupons {
 	private function calculate_discount_conditions() {
 		global $wpsc_cart;
 
+		if ( ! $this->has_coupon() ) {
+			return 0;
+		}
+
 		// findout whether the cart meet the conditions
 		$items = $this->get_eligible_items();
 
@@ -466,32 +451,37 @@ class wpsc_coupons {
 
 		// if this is free shipping, return the total shipping regardless of whether "Apply on all
 		// products" is checked or not
-		if ( $this->is_free_shipping() )
+		if ( $this->coupon->is_free_shipping() ) {
 			return $this->calculate_free_shipping();
+		}
 
 		// if  "Apply on all products" is checked, discount amount should be based on the total values
 		// of eligible cart items
-		if ( $this->applies_to_all_items() ) {
-			if ( $this->is_percentage() ) {
+		if ( $this->coupon->applies_to_all_items() ) {
+			if ( $this->coupon->is_percentage() ) {
 				$subtotal = $this->calculate_subtotal( $items );
-				$discount = $this->value * $subtotal / 100;
+				$discount = $this->coupon->get_percentage_discount( $subtotal );
   			} else {
-				$discount = $this->value * $this->get_total_quantity( $items );
+				$quantity = $this->get_total_quantity( $items );
+				$discount = $this->coupon->get_fixed_discount( $quantity );
 			}
 			return $discount;
 		}
 
 		// if "Apply on all products" is not checked and the coupon is percentage, the discount
 		// amount should be based on the eligible cart item with lowest unit price
-		if ( $this->is_percentage() ) {
+		if ( $this->coupon->is_percentage() ) {
+
 			$field = apply_filters( 'wpsc_coupon_select_item_field', 'unit_price' );
 			$item = array_shift( $items );
-			return $item->$field * $this->value / 100;
+
+			return $this->coupon->get_percentage_discount( $item->$field );
+
 		}
 
 		// if "Apply on all products" is not checked and the coupon is a fixed value
 		// return the discount value
-		return $this->value;
+		return $this->coupon->get( 'value' );
 	}
 
 	/**
@@ -504,26 +494,31 @@ class wpsc_coupons {
 	private function calculate_discount_without_conditions() {
 		global $wpsc_cart;
 
+		if ( ! $this->has_coupon() ) {
+			return 0;
+		}
+
 		// if this is free shipping, return the total shipping regardless of whether "Apply on all
 		// products" is checked or not
-		if ( $this->is_free_shipping() )
+		if ( $this->coupon->is_free_shipping() ) {
 			return $this->calculate_free_shipping();
+		}
 
 		// if  "Apply on all products" is checked, discount amount should be based on the overall
 		// cart
-		if ( $this->applies_to_all_items() ) {
-			if ( $this->is_percentage() ) {
+		if ( $this->coupon->applies_to_all_items() ) {
+			if ( $this->coupon->is_percentage() ) {
 				$subtotal = $wpsc_cart->calculate_subtotal();
-				$discount = $this->value * $subtotal / 100;
+				$discount = $this->coupon->get_percentage_discount( $subtotal );
 			} else {
-				$discount = $this->value * wpsc_cart_item_count();
+				$discount = $this->coupon->get_fixed_discount( wpsc_cart_item_count() );
   			}
 			return $discount;
 		}
 
 		// if "Apply on all products" is not checked and the coupon is percentage, the discount
 		// amount should be based on the cart item with lowest unit_price
-		if ( $this->is_percentage() ) {
+		if ( $this->coupon->is_percentage() ) {
 			$orderby = apply_filters( 'wpsc_coupon_select_item_orderby', 'unit_price' );
 			$order   = apply_filters( 'wpsc_coupon_select_item_order'  , 'ASC'        );
 			$field   = apply_filters( 'wpsc_coupon_select_item_field'  , 'unit_price' );
@@ -533,12 +528,13 @@ class wpsc_coupons {
 
 			$item = array_shift( $cart_items );
 
-			return $item * $this->value / 100;
-  		}
+			return $this->coupon->get_percentage_discount( $item );
+
+		}
 
 		// if "Apply on all products" is not checked and the coupon is a fixed value
 		// return the discount value
-		return $this->value;
+		return $this->coupon->get( 'value' );
 	}
 
 	/**
@@ -548,7 +544,9 @@ class wpsc_coupons {
 	 * @return boolean
 	 */
 	public function is_free_shipping() {
-		return $this->is_percentage == '2';
+
+		return $this->has_coupon() ? $this->coupon->is_free_shipping() : false;
+
 	}
 
 	/**
@@ -558,7 +556,9 @@ class wpsc_coupons {
 	 * @return boolean
 	 */
 	public function is_percentage() {
-		return $this->is_percentage == '1';
+
+		return $this->has_coupon() ? $this->coupon->is_percentage() : false;
+
 	}
 
 	/**
@@ -568,7 +568,9 @@ class wpsc_coupons {
 	 * @return boolean
 	 */
 	public function is_fixed_amount() {
-		return ! $this->is_free_shipping() && ! $this->is_percentage();
+
+		return $this->has_coupon() ? $this->coupon->is_fixed_amount() : false;
+
 	}
 
 	/**
@@ -578,7 +580,9 @@ class wpsc_coupons {
 	 * @return boolean
 	 */
 	public function applies_to_all_items() {
-		return $this->every_product == 1;
+
+		return $this->has_coupon() ? $this->coupon->applies_to_all_items() : false;
+
 	}
 
 	/**

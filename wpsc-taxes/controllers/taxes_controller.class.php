@@ -81,8 +81,8 @@ class wpec_taxes_controller {
 				$free_shipping = false;
 				$coupon_num = wpsc_get_customer_meta( 'coupon' );
 				if ( $coupon_num ) {
-					$coupon = new wpsc_coupons( $coupon_num );
-					$free_shipping = $coupon->is_percentage == '2';
+					$coupons = new wpsc_coupons( $coupon_num );
+					$free_shipping = $coupons->is_free_shipping();
 				}
 
 				// minus coupon tax if we are using coupons, but make sure the coupon is not a free shipping coupon

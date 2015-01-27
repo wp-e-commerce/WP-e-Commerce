@@ -36,35 +36,23 @@ function wpsc_display_coupons_page() {
 					unset( $new_rules[$key] );
 			}
 
-			$insert = $wpdb->insert(
-				    WPSC_TABLE_COUPON_CODES,
-				    array(
-						'coupon_code' => $coupon_code,
-						'value' => $discount,
-						'is-percentage' => $discount_type,
-						'use-once' => $use_once,
-						'is-used' => 0,
-						'active' => $is_active,
-						'every_product' => $every_product,
-						'start' => $start_date,
-						'expiry' => $end_date,
-						'condition' => serialize( $new_rules )
-				    ),
-				    array(
-						'%s',
-						'%f',
-						'%s',
-						'%s',
-						'%s',
-						'%s',
-						'%s',
-						'%s',
-						'%s',
-						'%s',
-				    )
-				);
-			if ( $insert )
-			    echo "<div class='updated'><p>" . __( 'The coupon has been added.', 'wpsc' ) . "</p></div>";
+			$new_coupon = new WPSC_Coupon( array(
+				'coupon_code'   => $coupon_code,
+				'value'         => $discount,
+				'is-percentage' => $discount_type,
+				'use-once'      => $use_once,
+				'is-used'       => 0,
+				'active'        => $is_active,
+				'every_product' => $every_product,
+				'start'         => $start_date,
+				'expiry'        => $end_date,
+				'condition'     => $new_rules
+			) );
+			$insert = $new_coupon->save();
+
+			if ( $insert ) {
+				echo '<div class="updated"><p>' . __( 'The coupon has been added.', 'wpsc' ) . '</p></div>';
+			}
 
 		}
 
@@ -87,39 +75,26 @@ function wpsc_display_coupons_page() {
 					unset( $new_rules[$key] );
 			}
 
-			$update = $wpdb->update(
-				WPSC_TABLE_COUPON_CODES,
-				array(
-					'coupon_code'   => $_POST['edit_coupon_code'],
-					'value'         => $_POST['edit_coupon_amount'],
-					'is-percentage' => $_POST['edit_discount_type'],
-					'use-once'      => $_POST['edit_coupon_use_once'],
-					'is-used'       => $_POST['edit_coupon_is_used'],
-					'active'        => $_POST['edit_coupon_active'],
-					'every_product' => $_POST['edit_coupon_every_product'],
-					'start'         => ! empty( $_POST['edit_coupon_start'] ) ? get_gmt_from_date( $_POST['edit_coupon_start'] . ' 00:00:00' ) : null,
-					'expiry'        => ! empty( $_POST['edit_coupon_end'] ) ? get_gmt_from_date( $_POST['edit_coupon_end'] . ' 23:59:59' ) : null,
-					'condition'     => serialize( $new_rules )
-				),
-				array( 'id'         => absint( $_POST['coupon_id'] ) ),
-				array(
-					'%s',
-					'%f',
-					'%s',
-					'%s',
-					'%s',
-					'%s',
-					'%s',
-					'%s',
-					'%s',
-					'%s'
-				),
-				array( '%d' )
-			);
+			$update_coupon = new WPSC_Coupon( $_POST['coupon_id'] );
+			$update_coupon->set( array(
+				'coupon_code'   => $_POST['edit_coupon_code'],
+				'value'         => $_POST['edit_coupon_amount'],
+				'is-percentage' => $_POST['edit_discount_type'],
+				'use-once'      => $_POST['edit_coupon_use_once'],
+				'is-used'       => $_POST['edit_coupon_is_used'],
+				'active'        => $_POST['edit_coupon_active'],
+				'every_product' => $_POST['edit_coupon_every_product'],
+				'start'         => ! empty( $_POST['edit_coupon_start'] ) ? get_gmt_from_date( $_POST['edit_coupon_start'] . ' 00:00:00' ) : null,
+				'expiry'        => ! empty( $_POST['edit_coupon_end'] ) ? get_gmt_from_date( $_POST['edit_coupon_end'] . ' 23:59:59' ) : null,
+				'condition'     => $new_rules
+			) );
+
+			$update = $update_coupon->save();
 
 			if ( $update ) {
-				echo "<div class='updated'><p>" . __( 'The coupon has been updated.', 'wpsc' ) . "</p></div>";
+				echo '<div class="updated"><p>' . __( 'The coupon has been updated.', 'wpsc' ) . '</p></div>';
 			}
+
 		}
 	}
 
