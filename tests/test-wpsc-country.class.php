@@ -105,7 +105,7 @@ class TestWPSCCountryClass extends WP_UnitTestCase {
 	function test_has_region() {
 		// UK
 		$country    = new WPSC_Country( self::COUNTRY_ID_WITHOUT_REGIONS );
-		$has_region = $country->has_region( REGION_ID );
+		$has_region = $country->has_region( self::REGION_ID );
 		$this->assertFalse( $has_region ); // Oregon is not in the UK
 		$has_region = $country->has_region( -1 );
 		$this->assertFalse( $has_region ); // Non-existent region is not in the UK
