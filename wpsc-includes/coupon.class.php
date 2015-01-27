@@ -490,28 +490,58 @@ class WPSC_Coupon {
 	 */
 	public function is_valid() {
 
-		$valid = true;
-
-		$now    = current_time( 'timestamp', true );
-		$start  = $this->get( 'start' );
-		$expiry = $this->get( 'expiry' );
-
-		$start_date = '0000-00-00 00:00:00' == $start ? 0 : strtotime( $start );
-		$end_date = '0000-00-00 00:00:00' == $expiry ? 0 : strtotime( $expiry );
-
-		if ( ! $this->is_active() || $this->is_used() ) {
+		if ( ! $this->is_active() || $this->is_used() || $this->is_scheduled() || $this->is_expired() ) {
 			$valid = false;
-		}
-
-		if ( $start_date && $now < $start_date ) {
-			$valid = false;
-		}
-
-		if ( $end_date > 0 &&$end_date && $now > $end_date ) {
-			$valid = false;
+		} else {
+			$valid = true;
 		}
 
 		return apply_filters( 'wpsc_validate_coupon', $valid, $this );
+
+	}
+
+	/**
+	 * Is Scheduled?
+	 *
+	 * Checks wether the coupon has a start date and if so
+	 * is the current date after the start date?
+	 *
+	 * @return  boolean
+	 */
+	public function is_scheduled() {
+
+		$now   = current_time( 'timestamp', true );
+		$start = $this->get( 'start' );
+
+		$start_date = '0000-00-00 00:00:00' == $start ? 0 : strtotime( $start );
+
+		if ( $start_date && $now < $start_date ) {
+			return true;
+		}
+
+		return false;
+
+	}
+
+	/**
+	 * Is Expired?
+	 *
+	 * Checks wether the coupon has expired.
+	 *
+	 * @return  boolean
+	 */
+	public function is_expired() {
+
+		$now    = current_time( 'timestamp', true );
+		$expiry = $this->get( 'expiry' );
+
+		$end_date = '0000-00-00 00:00:00' == $expiry ? 0 : strtotime( $expiry );
+
+		if ( $end_date > 0 && $end_date && $now > $end_date ) {
+			return true;
+		}
+
+		return false;
 
 	}
 
