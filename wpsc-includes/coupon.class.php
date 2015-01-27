@@ -499,11 +499,7 @@ class WPSC_Coupon {
 		$start_date = '0000-00-00 00:00:00' == $start ? 0 : strtotime( $start );
 		$end_date = '0000-00-00 00:00:00' == $expiry ? 0 : strtotime( $expiry );
 
-		if ( '1' != $this->get( 'active' ) ) {
-			$valid = false;
-		}
-
-		if ( '1' == $this->get( 'use-once' ) && 1 == $this->get( 'is-used' ) ) {
+		if ( ! $this->is_active() || $this->is_used() ) {
 			$valid = false;
 		}
 
@@ -516,6 +512,20 @@ class WPSC_Coupon {
 		}
 
 		return apply_filters( 'wpsc_validate_coupon', $valid, $this );
+
+	}
+
+	/**
+	 * Check whether this coupon is active.
+	 *
+	 * @access  public
+	 * @since   4.0
+	 *
+	 * @return  boolean
+	 */
+	public function is_active() {
+
+		return $this->get( 'active' ) == 1;
 
 	}
 
@@ -576,6 +586,20 @@ class WPSC_Coupon {
 	}
 
 	/**
+	 * Check if a single use coupon is used.
+	 *
+	 * @access  public
+	 * @since   4.0
+	 *
+	 * @return  boolean
+	 */
+	public function is_used() {
+
+		return $this->is_use_once() && $this->get( 'is-used' ) == 1;
+
+	}
+
+	/**
 	 * Mark a coupon as used.
 	 *
 	 * If the coupon can only be used once it will be marked as used and made inactive.
@@ -584,8 +608,6 @@ class WPSC_Coupon {
 	 * @since   4.0
 	 */
 	public function used() {
-
-		global $wpdb;
 
 		if ( $this->is_use_once() ) {
 			$this->set( 'active', '0' );
