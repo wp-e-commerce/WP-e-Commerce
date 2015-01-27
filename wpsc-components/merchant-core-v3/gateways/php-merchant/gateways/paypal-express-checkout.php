@@ -34,7 +34,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal {
 		}
 
 		$request += phpme_map( $this->options, array(
-			'PAYMENTREQUEST_0_ITEMAMT'     => 'subtotal',
+			'PAYMENTREQUEST_0_ITEMAMT'     => 'amount',
 			'PAYMENTREQUEST_0_SHIPPINGAMT' => 'shipping',
 			'PAYMENTREQUEST_0_HANDLINGAMT' => 'handling',
 			'PAYMENTREQUEST_0_TAXAMT'      => 'tax',
@@ -45,7 +45,9 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal {
 			'L_BILLINGAGREEMENTDESCRIPTION0' => 'billing_description',
 		) );
 
-		$subtotal = 0;
+		
+		// Apply a Discount if available
+		$this->add_discount();
 
 		// Shopping Cart details
 		$i = 0;
@@ -86,6 +88,42 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal {
 		}
 
 		return $request;
+	}	
+
+	/**
+ 	 * Add Discount for the Shopping Cart.
+	 *
+	 * Since PayPal doesn't have distinct support for discounts, we have to add the discount
+	 * as a separate item with a negative value.
+	 *
+	 * @return void
+ 	 */
+	protected function add_discount() {
+		// Verify if a discount is set
+		if ( isset( $this->options['discount'] ) && (float) $this->options['discount'] != 0 ) {
+			$discount = (float) $this->options['discount'];	
+			$sub_total = (float) $this->options['subtotal'];
+
+			// If discount amount is larger than or equal to the item total, we need to set item total to 0.01
+			// because PayPal does not accept 0 item total. 
+			if ( $discount >= $sub_total ) {
+				$discount = $sub_total - 0.01;
+			}
+
+			// if there's shipping, we'll take 0.01 from there
+			if ( ! empty( $this->options['shipping'] ) ) {
+				$this->options['shipping'] -= 0.01;
+			} else {
+				$this->options['amount'] = 0.01;
+			}
+
+			// Add the Discount as an Item
+			$this->options['items'][] = array(
+				'name' => __( 'Discount', 'wpsc' ),
+				'amount' => - $discount,
+				'quantity' => '1',
+			);
+		}
 	}
 
 	/**

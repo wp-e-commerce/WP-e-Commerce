@@ -31,9 +31,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 			'cancel_url'    => $this->get_shopping_cart_payment_url(),
 			'currency'      => $this->get_currency_code(),
 			'test'          => (bool) $this->setting->get( 'sandbox_mode' ),
-		) );
-
-		add_filter( 'wpsc_purchase_log_gateway_data', array( $this, 'filter_purchase_log_gateway_data' ), 10, 2 );
+		) );	
 
 	}
 
@@ -100,48 +98,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		$html = '<img src="' . WPSC_URL . '/images/cc.gif" border="0" alt="' . esc_attr__( 'Credit Card Icons' ) .'" />';
 
 		return apply_filters( 'wpsc_paypal-pro_mark_html', $html );
-	}
-
-
-	/**
-	 * Purchase Log Filter for Gateway Data
-	 *
-	 * @param array $gateway_data
-	 * @param array $data
-	 * @return array
-	 *
-	 * @since 3.9
-	 */
-	public static function filter_purchase_log_gateway_data( $gateway_data, $data ) {
-		// Because paypal express checkout API doesn't have full support for discount, we have to manually add an item here
-		if ( isset( $gateway_data['discount'] ) && (float) $gateway_data['discount'] != 0 ) {
-			$i =& $gateway_data['items'];
-			$d =& $gateway_data['discount'];
-			$s =& $gateway_data['subtotal'];
-
-			// If discount amount is larger than or equal to the item total, we need to set item total to 0.01
-			// because Paypal does not accept 0 item total.
-			if ( $d >= $gateway_data['subtotal'] ) {
-				$d = $s - 0.01;
-
-				// if there's shipping, we'll take 0.01 from there
-				if ( ! empty( $gateway_data['shipping'] ) ) {
-					$gateway_data['shipping'] -= 0.01;
-				} else {
-					$gateway_data['amount'] = 0.01;
-				}
-			}
-
-			$s -= $d;
-
-			$i[] = array(
-				'name'     => __( 'Discount', 'wpsc' ),
-				'amount'   => - $d,
-				'quantity' => 1,
-			);
-		}
-		return $gateway_data;
-	}
+	}	
 
 	/**
 	 * Returns the URL of the Return Page after the PayPal Checkout
