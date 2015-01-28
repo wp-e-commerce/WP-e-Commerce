@@ -584,14 +584,18 @@ function wpsc_filter_request( $q ) {
  * if the user is on a checkout page, force SSL if that option is so set
  */
 function wpsc_force_ssl() {
+
 	global $wp_query;
-	if ( '1' == get_option( 'wpsc_force_ssl' ) &&
+
+	if (
+		! is_admin() &&
+		'1' == get_option( 'wpsc_force_ssl' ) &&
 		! is_ssl() &&
 		! empty ( $wp_query->post->post_content ) &&
 		false !== strpos( $wp_query->post->post_content, '[shoppingcart]' ) ) {
-		$sslurl = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-		wp_redirect( $sslurl );
-		exit;
+			$sslurl = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+			wp_redirect( $sslurl );
+			exit;
 	}
 }
 
