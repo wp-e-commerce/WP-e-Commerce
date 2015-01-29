@@ -1246,7 +1246,7 @@ jQuery(document).ready(function ($) {
 
 
 	// Ajax cart loading code.
-	// if we have a cart widhet on our page we need to load it via AJAX jsut in case there is a page cache or
+	// if we have a cart widget on our page we need to load it via AJAX jsut in case there is a page cache or
 	// content delivery network being used to help deliver pages.
 	// If we are on the checkout page, we don't need to make the AJAX call because checkout pages
 	// are never, and can never be, cached.
@@ -1273,16 +1273,6 @@ jQuery(document).ready(function ($) {
 		}
 	}
 
-		// Object frame destroying code.
-	jQuery( 'div.shopping_cart_container' ).ready( function(){
-		object_html = jQuery(this).html();
-		window.parent.jQuery("div.shopping-cart-wrapper").html(object_html);
-		});
-
-	jQuery( 'div.shopping_cart_container' ).ready( function(){
-		object_html = jQuery(this).html();
-		window.parent.jQuery("div.shopping-cart-wrapper").html(object_html);
-	});
 	jQuery( 'body' ).on( 'click', 'a.emptycart', function(){
 		parent_form = jQuery(this).parents( 'form' );
 		form_values = jQuery(parent_form).serialize() + '&action=' + jQuery( 'input[name="wpsc_ajax_action"]', parent_form ).val();
