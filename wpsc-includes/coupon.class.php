@@ -328,6 +328,8 @@ class WPSC_Coupon {
 		wp_cache_delete( $this->get( 'id' ), 'wpsc_coupons' );
 		do_action( 'wpsc_coupon_delete_cache', $this );
 
+		$this->reset();
+
 	}
 
 	/**
@@ -415,6 +417,20 @@ class WPSC_Coupon {
 		do_action( 'wpsc_coupon_delete', $this->id );
 
 		return $deleted;
+
+	}
+
+	/**
+	 * Reset Coupon
+	 *
+	 * Clears all the coupon data apart from the ID so any subsequent requests
+	 * will be refreshed.
+	 */
+	private function reset() {
+
+		$this->data = array();
+		$this->fetched = false;
+		$this->exists = false;
 
 	}
 
