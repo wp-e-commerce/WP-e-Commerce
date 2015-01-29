@@ -328,6 +328,8 @@ class WPSC_Coupon {
 		wp_cache_delete( $this->get( 'id' ), 'wpsc_coupons' );
 		do_action( 'wpsc_coupon_delete_cache', $this );
 
+		$this->reset();
+
 	}
 
 	/**
@@ -419,6 +421,20 @@ class WPSC_Coupon {
 	}
 
 	/**
+	 * Reset Coupon
+	 *
+	 * Clears all the coupon data apart from the ID so any subsequent requests
+	 * will be refreshed.
+	 */
+	private function reset() {
+
+		$this->data = array();
+		$this->fetched = false;
+		$this->exists = false;
+
+	}
+
+	/**
 	 * Activate
 	 *
 	 * @return  int|false  Number or updated rows or false.
@@ -426,6 +442,8 @@ class WPSC_Coupon {
 	public function activate() {
 
 		global $wpdb;
+
+		$this->set( 'active', 1 );
 
 		return $wpdb->update(
 			WPSC_TABLE_COUPON_CODES,
@@ -445,6 +463,8 @@ class WPSC_Coupon {
 	public function deactivate() {
 
 		global $wpdb;
+
+		$this->set( 'active', 0 );
 
 		return $wpdb->update(
 			WPSC_TABLE_COUPON_CODES,
@@ -490,32 +510,64 @@ class WPSC_Coupon {
 	 */
 	public function is_valid() {
 
-		$valid = true;
-
-		$now    = current_time( 'timestamp', true );
-		$start  = $this->get( 'start' );
-		$expiry = $this->get( 'expiry' );
-
-		$start_date = '0000-00-00 00:00:00' == $start ? 0 : strtotime( $start );
-		$end_date = '0000-00-00 00:00:00' == $expiry ? 0 : strtotime( $expiry );
-
-		if ( '1' != $this->get( 'active' ) ) {
+		if ( ! $this->is_active() || $this->is_used() || $this->is_scheduled() || $this->is_expired() ) {
 			$valid = false;
-		}
-
-		if ( '1' == $this->get( 'use-once' ) && 1 == $this->get( 'is-used' ) ) {
-			$valid = false;
-		}
-
-		if ( $start_date && $now < $start_date ) {
-			$valid = false;
-		}
-
-		if ( $end_date > 0 &&$end_date && $now > $end_date ) {
-			$valid = false;
+		} else {
+			$valid = true;
 		}
 
 		return apply_filters( 'wpsc_validate_coupon', $valid, $this );
+
+	}
+
+	/**
+	 * Is Scheduled?
+	 *
+	 * Checks wether the coupon has a start date and if so
+	 * is the current date after the start date?
+	 *
+	 * @return  boolean
+	 */
+	public function is_scheduled() {
+
+		$now   = current_time( 'timestamp', true );
+		$start = $this->get( 'start' );
+
+		$start_date = '0000-00-00 00:00:00' == $start ? 0 : strtotime( $start );
+
+		return $start_date && $now < $start_date;
+
+	}
+
+	/**
+	 * Is Expired?
+	 *
+	 * Checks wether the coupon has expired.
+	 *
+	 * @return  boolean
+	 */
+	public function is_expired() {
+
+		$now    = current_time( 'timestamp', true );
+		$expiry = $this->get( 'expiry' );
+
+		$end_date = '0000-00-00 00:00:00' == $expiry ? 0 : strtotime( $expiry );
+
+		return $end_date > 0 && $end_date && $now > $end_date;
+
+	}
+
+	/**
+	 * Check whether this coupon is active.
+	 *
+	 * @access  public
+	 * @since   4.0
+	 *
+	 * @return  boolean
+	 */
+	public function is_active() {
+
+		return $this->get( 'active' ) == 1;
 
 	}
 
@@ -576,6 +628,20 @@ class WPSC_Coupon {
 	}
 
 	/**
+	 * Check if a single use coupon is used.
+	 *
+	 * @access  public
+	 * @since   4.0
+	 *
+	 * @return  boolean
+	 */
+	public function is_used() {
+
+		return $this->is_use_once() && $this->get( 'is-used' ) == 1;
+
+	}
+
+	/**
 	 * Mark a coupon as used.
 	 *
 	 * If the coupon can only be used once it will be marked as used and made inactive.
@@ -584,8 +650,6 @@ class WPSC_Coupon {
 	 * @since   4.0
 	 */
 	public function used() {
-
-		global $wpdb;
 
 		if ( $this->is_use_once() ) {
 			$this->set( 'active', '0' );
