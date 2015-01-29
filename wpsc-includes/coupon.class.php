@@ -443,6 +443,8 @@ class WPSC_Coupon {
 
 		global $wpdb;
 
+		$this->set( 'active', 1 );
+
 		return $wpdb->update(
 			WPSC_TABLE_COUPON_CODES,
 			array( 'active' => 1 ),
@@ -461,6 +463,8 @@ class WPSC_Coupon {
 	public function deactivate() {
 
 		global $wpdb;
+
+		$this->set( 'active', 0 );
 
 		return $wpdb->update(
 			WPSC_TABLE_COUPON_CODES,
