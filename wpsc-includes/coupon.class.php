@@ -535,11 +535,7 @@ class WPSC_Coupon {
 
 		$start_date = '0000-00-00 00:00:00' == $start ? 0 : strtotime( $start );
 
-		if ( $start_date && $now < $start_date ) {
-			return true;
-		}
-
-		return false;
+		return $start_date && $now < $start_date;
 
 	}
 
@@ -557,11 +553,7 @@ class WPSC_Coupon {
 
 		$end_date = '0000-00-00 00:00:00' == $expiry ? 0 : strtotime( $expiry );
 
-		if ( $end_date > 0 && $end_date && $now > $end_date ) {
-			return true;
-		}
-
-		return false;
+		return $end_date > 0 && $end_date && $now > $end_date;
 
 	}
 
