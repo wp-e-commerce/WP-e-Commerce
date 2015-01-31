@@ -593,6 +593,22 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 </tr>
 <?php endif ?>
 
+<!-- Checkout Shortcut -->
+<tr>
+    <td colspan="2">
+        <h4><?php _e( 'Express Checkout Shortcut', 'wpsc' ); ?></h4>
+    </td>
+</tr>
+<tr>
+    <td>
+        <label><?php _e( 'Enable Shortcut', 'wpsc' ); ?></label>
+    </td>
+    <td>
+        <label><input <?php checked( $this->setting->get( 'shortcut' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'shortcut' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wpsc' ); ?></label>&nbsp;&nbsp;&nbsp;
+        <label><input <?php checked( (bool) $this->setting->get( 'shortcut' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'shortcut' ) ); ?>" value="0" /> <?php _e( 'No', 'wpsc' ); ?></label>
+    </td>
+</tr>
+
 <!-- Error Logging -->
 <tr>
     <td colspan="2">
