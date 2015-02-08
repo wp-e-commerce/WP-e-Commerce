@@ -203,7 +203,9 @@ class australiapost {
 			// If we are here then this item attracts shipping charges.
 
 			$meta = get_product_meta($cart_item->product_id,'product_metadata',true);
+			$unit = $meta['dimension_unit'];
 			$meta = $meta['dimensions'];
+			 
 
 			if ($meta && is_array($meta)) {
 				$productVolume = 1;
@@ -211,9 +213,9 @@ class australiapost {
 					// default dimension to 100mm
 					if ( empty( $meta[$dimension] ) ) {
 						$meta[$dimension] = 100;
-						$meta["{$dimension}_unit"] = 'mm';
+						$unit = 'mm';
 					}
-					switch ($meta["{$dimension}_unit"]) {
+					switch ($unit) {
 						// we need the units in mm
 						case 'cm':
 							// convert from cm to mm
