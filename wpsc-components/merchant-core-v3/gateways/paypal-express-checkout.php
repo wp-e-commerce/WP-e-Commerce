@@ -35,9 +35,16 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			'cart_logo'        => $this->setting->get( 'cart_logo' ),
 			'cart_border'      => $this->setting->get( 'cart_border' ),
 		) );
+
+		// Express Checkout Button
+		add_action( 'wpsc_cart_item_table_after', array( &$this, 'add_ecs_button' ), 0, 10 );
 	
 	}
 
+	public function add_ecs_button() {
+		$url = $this->get_shortcut_url();
+		echo '<a href="'. $url .'"><img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png" alt="Check out with PayPal" /></a>';
+	}
 	/**
 	 * Run the gateway hooks
 	 *
