@@ -51,40 +51,42 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal {
 
 		// Shopping Cart details
 		$i = 0;
-		foreach ( $this->options['items'] as $item ) {
-			// Options Fields
-			$item_optionals = array(
-				'description' => "L_PAYMENTREQUEST_0_DESC{$i}",
-				'tax'         => "L_PAYMENTREQUEST_0_TAXAMT{$i}",
-				'url'         => "L_PAYMENTREQUEST_0_ITEMURL{$i}",
-				'number'	  => "L_PAYMENTREQUEST_0_NUMBER{$i}",
-			);
+		if ( is_array( $this->options['items'] ) ) {
+			foreach ( $this->options['items'] as $item ) {
+				// Options Fields
+				$item_optionals = array(
+					'description' => "L_PAYMENTREQUEST_0_DESC{$i}",
+					'tax'         => "L_PAYMENTREQUEST_0_TAXAMT{$i}",
+					'url'         => "L_PAYMENTREQUEST_0_ITEMURL{$i}",
+					'number'	  => "L_PAYMENTREQUEST_0_NUMBER{$i}",
+				);
 
-			// Format Amount Field
-			$item['amount'] = $this->format( $item['amount'] );
+				// Format Amount Field
+				$item['amount'] = $this->format( $item['amount'] );
 
-			// Required Fields
-			$request += phpme_map( $item, array(
-				"L_PAYMENTREQUEST_0_NAME{$i}" => 'name',
-				"L_PAYMENTREQUEST_0_AMT{$i}"  => 'amount',
-				"L_PAYMENTREQUEST_0_QTY{$i}"  => 'quantity',
-			) );
+				// Required Fields
+				$request += phpme_map( $item, array(
+					"L_PAYMENTREQUEST_0_NAME{$i}" => 'name',
+					"L_PAYMENTREQUEST_0_AMT{$i}"  => 'amount',
+					"L_PAYMENTREQUEST_0_QTY{$i}"  => 'quantity',
+				) );
 
-			// No Shipping Field
-			if ( isset( $this->options['no_shipping'] ) ) {
-				$request["L_PAYMENTREQUEST_0_ITEMCATEGORY{$i}"] = 'DIGITAL';
+				// No Shipping Field
+				if ( isset( $this->options['no_shipping'] ) ) {
+					$request["L_PAYMENTREQUEST_0_ITEMCATEGORY{$i}"] = 'DIGITAL';
+				}
+
+				foreach ( $item_optionals as $key => $param ) {
+					if ( ! empty( $this->options['items'][$i][$key] ) )
+						if ( $key == 'tax' ) {
+							$request[$param] = $this->format( $this->options['items'][$i][$key] );
+						} else {
+							$request[$param] = $this->options['items'][$i][$key];
+						}
+				}
+
+				$i ++;
 			}
-
-			foreach ( $item_optionals as $key => $param ) {
-				if ( ! empty( $this->options['items'][$i][$key] ) )
-					if ( $key == 'tax' ) {
-						$request[$param] = $this->format( $this->options['items'][$i][$key] );
-					} else {
-						$request[$param] = $this->options['items'][$i][$key];
-					}
-			}
-
-			$i ++;
 		}
 
 		return $request;
