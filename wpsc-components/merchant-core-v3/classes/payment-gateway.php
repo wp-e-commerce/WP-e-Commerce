@@ -246,8 +246,8 @@ final class WPSC_Payment_Gateways {
 	}
 
 	/**
-     * Flush the payment gateways cache.
- 	 *
+	 * Flush the payment gateways cache.
+	 *
 	 * @access public
 	 * @static
 	 * @since 3.9
@@ -306,13 +306,13 @@ final class WPSC_Payment_Gateways {
 	}
 
 	/**
-     * Initialize the Active Gateways
-     *
+	 * Initialize the Active Gateways
+	 *
 	 * @access public
 	 * @since 4.0
 	 *
-     * @return void
-     */
+	 * @return void
+	 */
 	public static function initialize_gateways() {
 		$active_gateways = self::get_active_gateways();
 
