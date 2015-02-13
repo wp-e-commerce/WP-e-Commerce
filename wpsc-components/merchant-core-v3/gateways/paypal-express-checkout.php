@@ -10,35 +10,40 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	private $gateway;
 
 	/**
-	 * Constructor of PayPal Express Checkout Gateway
+	 * Constructor of PayPal Express Checkout Gateway.
+	 * The $child parameter should be set to true, if the constructor
+	 * is called from a child class.
 	 *
 	 * @param array $options
+	 * @param bool $child
 	 * @return void
 	 *
 	 * @since 3.9
 	 */
-	public function __construct( $options ) {
-		parent::__construct();
-		$this->title = __( 'PayPal Express Checkout 3.0', 'wpsc' );
+	public function __construct( $options, $child = false ) {
+		parent::__construct();	
 
 		require_once( 'php-merchant/gateways/paypal-express-checkout.php' );
-		$this->gateway = new PHP_Merchant_Paypal_Express_Checkout( $options );
-		$this->gateway->set_options( array(
-			'api_username'     => $this->setting->get( 'api_username' ),
-			'api_password'     => $this->setting->get( 'api_password' ),
-			'api_signature'    => $this->setting->get( 'api_signature' ),
-			'cancel_url'       => $this->get_shopping_cart_payment_url(),
-			'currency'         => $this->get_currency_code(),
-			'test'             => (bool) $this->setting->get( 'sandbox_mode' ),
-			'address_override' => 1,
-			'solution_type'    => 'mark',
-			'cart_logo'        => $this->setting->get( 'cart_logo' ),
-			'cart_border'      => $this->setting->get( 'cart_border' ),
-		) );
+		$this->gateway = new PHP_Merchant_Paypal_Express_Checkout( $options );		
 
-		// Express Checkout Button
-		add_action( 'wpsc_cart_item_table_after', array( &$this, 'add_ecs_button' ), 0, 10 );
-	
+		if ( ! $child ) {
+			$this->title = __( 'PayPal Express Checkout 3.0', 'wpsc' );
+			$this->gateway->set_options( array(
+				'api_username'     => $this->setting->get( 'api_username' ),
+				'api_password'     => $this->setting->get( 'api_password' ),
+				'api_signature'    => $this->setting->get( 'api_signature' ),
+				'cancel_url'       => $this->get_shopping_cart_payment_url(),
+				'currency'         => $this->get_currency_code(),
+				'test'             => (bool) $this->setting->get( 'sandbox_mode' ),
+				'address_override' => 1,
+				'solution_type'    => 'mark',
+				'cart_logo'        => $this->setting->get( 'cart_logo' ),
+				'cart_border'      => $this->setting->get( 'cart_border' ),
+			) );
+
+			// Express Checkout Button	
+			add_action( 'wpsc_cart_item_table_after', array( &$this, 'add_ecs_button' ), 0, 10 );
+		}
 	}
 
 	public function add_ecs_button() {
