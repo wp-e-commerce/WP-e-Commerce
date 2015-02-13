@@ -38,6 +38,27 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		}
 	}
 
+    /**
+     * Review Order method
+     *
+     * @return void
+     */
+    public function review_order() {
+        $this->init_shipping_calculator();
+        $this->title .= ' → Review Order';
+        $this->view = 'checkout-review-order';
+        add_filter( 'wpsc_checkout_shipping_method_form_button_title', array( &$this, 'review_order_button_title' ), 1, 100 );
+    }
+
+    /**
+     * Modify the Submit Order button title
+     *
+     * @return string
+     */
+    public function review_order_button_title() {
+        return __( 'Place Order', 'wpsc' );
+    }
+
 	public function shipping_and_billing() {
 		$this->view = 'checkout-shipping-and-billing';
 		_wpsc_enqueue_shipping_billing_scripts();
