@@ -52,6 +52,71 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			echo '<a href="'. $url .'"><img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png" alt="Check out with PayPal" /></a>';
 		}
 	}
+
+	public function get_shortcut_url() {
+		$location = add_query_arg( array(
+			'payment_gateway'          => 'paypal-express-checkout',
+			'payment_gateway_callback' => 'shortcut_process',
+		), home_url( 'index.php' ) );
+
+		return apply_filters( 'wpsc_paypal_express_checkout_notify_url', $location );
+	}
+
+	public function callback_shortcut_process() {
+		global $wpsc_cart;
+		//	Create a new PurchaseLog Object 
+		$purchase_log = new WPSC_Purchase_Log();	
+
+		// Create a Sessionid
+		$sessionid = ( mt_rand( 100, 999 ) . time() );
+		wpsc_update_customer_meta( 'checkout_session_id', $sessionid );
+		$purchase_log->set( array(
+			'user_ID'        => wpsc_get_current_customer_id(),
+			'date'           => time(),
+			'plugin_version' => WPSC_VERSION,
+			'statusno'       => '0',
+			'sessionid'      => $sessionid,
+		) );
+
+		if ( wpsc_is_tax_included() ) {
+			$tax            = $wpsc_cart->calculate_total_tax();
+			$tax_percentage = $wpsc_cart->tax_percentage;
+		} else {
+			$tax            = 0;
+			$tax_percentage = 0;
+		}
+		$purchase_log->set( array(
+			'wpec_taxes_total' => $tax,
+			'wpec_taxes_rate'  => $tax_percentage,
+		) );
+
+		// Save the purchase_log object to generate it's id
+		$purchase_log->save();
+		$purchase_log_id = $purchase_log->get( 'id' );
+
+		$wpsc_cart->log_id = $purchase_log_id;
+		wpsc_update_customer_meta( 'current_purchase_log_id', $purchase_log->get( 'id' ) );
+
+		$purchase_log->set( array(
+			'gateway'       => 'paypal-express-checkout',
+			'base_shipping' => $wpsc_cart->calculate_base_shipping(),
+			'totalprice'    => $wpsc_cart->calculate_total_price(),
+		) );
+
+		$purchase_log->save();
+
+		$wpsc_cart->empty_db( $purchase_log_id );
+		$wpsc_cart->save_to_db( $purchase_log_id );
+		$wpsc_cart->submit_stock_claims( $purchase_log_id );
+
+		do_action( 'wpsc_submit_checkout', array(
+			'purchase_log_id' => $purchase_log_id,
+			'our_user_id'     => get_current_user_id(),
+		) );
+
+		do_action( 'wpsc_submit_checkout_gateway', 'paypal-express-checkout', $purchase_log );		
+	}
+
 	/**
 	 * Run the gateway hooks
 	 *
