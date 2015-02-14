@@ -101,8 +101,9 @@ final class WPSC_Payment_Gateways {
 		$function_name = "callback_{$_REQUEST['payment_gateway_callback']}";
 		$callback = array( $gateway, $function_name );
 
-		if ( is_callable( $callback ) )
+		if ( is_callable( $callback ) ) {
 			$gateway->$function_name();
+		}
 	}
 
 	/**
