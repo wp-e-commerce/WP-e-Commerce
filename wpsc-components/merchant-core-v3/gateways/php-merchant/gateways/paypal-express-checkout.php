@@ -34,7 +34,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal {
 		}
 
 		$request += phpme_map( $this->options, array(
-			'PAYMENTREQUEST_0_ITEMAMT'     => 'amount',
+			'PAYMENTREQUEST_0_ITEMAMT'     => 'subtotal',
 			'PAYMENTREQUEST_0_SHIPPINGAMT' => 'shipping',
 			'PAYMENTREQUEST_0_HANDLINGAMT' => 'handling',
 			'PAYMENTREQUEST_0_TAXAMT'      => 'tax',
