@@ -41,8 +41,26 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
             'cart_logo'		   => $this->setting->get( 'cart_logo' ),
             'cart_border'	   => $this->setting->get( 'cart_border' ),
         ) );
- 
+		
+		// Express Checkout for DG Button
+		add_action( 'wpsc_cart_item_table_after', array( &$this, 'add_ecs_button' ), 0, 10 );
     }
+
+	public function add_ecs_button() {
+		if ( _wpsc_get_current_controller_name() === 'cart' ) {	
+			$url = $this->get_shortcut_url();
+			echo '<a href="'. $url .'"><img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png" alt="Check out with PayPal" /></a>';
+		}
+	}
+
+	public function get_shortcut_url() {
+		$location = add_query_arg( array(
+			'payment_gateway'          => 'paypal-digital-goods',
+			'payment_gateway_callback' => 'shortcut_process',
+		), home_url( 'index.php' ) );
+
+		return apply_filters( 'wpsc_paypal_express_checkout_notify_url', $location );
+	}
 
     /**
      * Run the gateway hooks
