@@ -49,7 +49,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 	public function add_ecs_button() {
 		if ( _wpsc_get_current_controller_name() === 'cart' ) {	
 			$url = $this->get_shortcut_url();
-			echo '<a href="'. $url .'"><img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png" alt="Check out with PayPal" /></a>';
+			echo '<a id="pp-ecs-dg" href="'. $url .'"><img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png" alt="Check out with PayPal" /></a>';
 		}
 	}
 
@@ -89,16 +89,22 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      * @since 3.9
      */
     public static function dg_script() {
-        if ( wpsc_is_checkout() ) {
-            $dg_loc = array(
-                'spinner_url' => wpsc_get_ajax_spinner(),
-                'loading'     => __( 'Loading...', 'wpsc' ),
-            );
-
-            wp_enqueue_script( 'dg-script', 'https://www.paypalobjects.com/js/external/dg.js' );
-            wp_enqueue_script( 'dg-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/dg.js', array( 'jquery' ) );
-            wp_localize_script( 'dg-script', 'dg_loc', $dg_loc );
-        }
+		$dg_loc = array(
+			'spinner_url' => wpsc_get_ajax_spinner(),
+			'loading'     => __( 'Loading...', 'wpsc' ),
+		);
+		// Checkout Page
+		if ( wpsc_is_checkout() ) {
+			wp_enqueue_script( 'dg-script', 'https://www.paypalobjects.com/js/external/dg.js' );
+			wp_enqueue_script( 'dg-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/dg.js', array( 'jquery' ) );
+			wp_localize_script( 'dg-script', 'dg_loc', $dg_loc );
+		}
+		// Cart Page
+		if ( wpsc_is_cart() ) {
+			wp_enqueue_script( 'dg-script', 'https://www.paypalobjects.com/js/external/dg.js' );
+			wp_enqueue_script( 'dg-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/dgs.js', array( 'jquery' ) );
+			wp_localize_script( 'dg-script', 'dg_loc', $dg_loc );
+		}
     }
 
     /**
