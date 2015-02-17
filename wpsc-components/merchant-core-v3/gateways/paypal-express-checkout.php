@@ -63,6 +63,11 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	}
 
 	public function callback_shortcut_process() {
+        if ( ! isset( $_GET['payment_gateway'] ) ) {
+            return;
+        }
+        $payment_gateway = $_GET['payment_gateway'];
+        
 		global $wpsc_cart;
 		//	Create a new PurchaseLog Object 
 		$purchase_log = new WPSC_Purchase_Log();	
@@ -95,10 +100,10 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		$purchase_log_id = $purchase_log->get( 'id' );
 
 		$wpsc_cart->log_id = $purchase_log_id;
-		wpsc_update_customer_meta( 'current_purchase_log_id', $purchase_log->get( 'id' ) );
+		wpsc_update_customer_meta( 'current_purchase_log_id', $purchase_log_id );
 
 		$purchase_log->set( array(
-			'gateway'       => 'paypal-express-checkout',
+			'gateway'       => $payment_gateway,
 			'base_shipping' => $wpsc_cart->calculate_base_shipping(),
 			'totalprice'    => $wpsc_cart->calculate_total_price(),
 		) );
@@ -109,13 +114,19 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		$wpsc_cart->save_to_db( $purchase_log_id );
 		$wpsc_cart->submit_stock_claims( $purchase_log_id );
 
+        // Save an empty Form
+        $form   = WPSC_Checkout_Form::get();
+		$fields = $form->get_fields();
+        WPSC_Checkout_Form_Data::save_form( $purchase_log, $fields );
+
+        // Apply Checkout Actions
 		do_action( 'wpsc_submit_checkout', array(
 			'purchase_log_id' => $purchase_log_id,
 			'our_user_id'     => get_current_user_id(),
 		) );
 
-		do_action( 'wpsc_submit_checkout_gateway', 'paypal-express-checkout', $purchase_log );		
-	}
+		do_action( 'wpsc_submit_checkout_gateway', $payment_gateway, $purchase_log );		
+	} 
 
 	/**
 	 * Run the gateway hooks
@@ -162,7 +173,6 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 
 		return apply_filters( 'wpsc_paypal-ec_mark_html', $html );
 	}
-
 
 	/**
 	 * Returns the PayPal redirect URL
