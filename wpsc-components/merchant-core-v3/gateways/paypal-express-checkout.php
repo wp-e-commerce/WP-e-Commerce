@@ -120,7 +120,8 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         WPSC_Checkout_Form_Data::save_form( $purchase_log, $fields );
 
         // Return Customer to Review Order Page if there is Shipping 
-        add_filter( 'wpsc_paypal_express_checkout_transact_url', array( &$this, 'return_to_review_order' ) );
+        add_filter( 'wpsc_paypal_express_checkout_transact_url', array( &$this, 'review_order_url' ) );
+        add_filter( 'wpsc_paypal_express_checkout_return_url', array( &$this, 'review_order_callback' ) );
 
         // Apply Checkout Actions
 		do_action( 'wpsc_submit_checkout', array(
@@ -136,10 +137,24 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
      * @param string $url
      * @return string
      */
-    public function return_to_review_order( $url ) {
+    public function review_order_url( $url ) {
         if ( wpsc_uses_shipping() ) {
            $url = wpsc_get_checkout_url( 'review-order' );  
         } 
+
+        return $url;
+    }
+
+    /**
+     * Sets the Review Callback for Review Order page.
+     *
+     * @param string $url
+     * @return string
+     */
+    public function review_order_callback( $url ) {
+        if ( wpsc_uses_shipping() ) {
+            $url = add_query_arg( array( 'payment_gateway_callback' => 'review_transaction' ), $url );
+        }
 
         return $url;
     }
@@ -313,6 +328,9 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 
 		exit;
 	}
+
+    public function callback_review_transaction() {
+    }
 
 	/**
 	 * Confirm Transaction Callback
