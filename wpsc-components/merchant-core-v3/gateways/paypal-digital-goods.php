@@ -59,7 +59,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 			'payment_gateway_callback' => 'shortcut_process',
 		), home_url( 'index.php' ) );
 
-		return apply_filters( 'wpsc_paypal_express_checkout_notify_url', $location );
+		return apply_filters( 'wpsc_paypal_digital_goods_shortcut_url', $location );
 	}
 
     /**
@@ -161,6 +161,12 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
         // Page Styles
         wp_register_style( 'ppdg-iframe', plugins_url( 'dg.css', __FILE__ ) );
 
+		// Apply any filters
+		if ( get_transient( 'ecs-' . $sessionid ) ) {
+			add_filter( 'wpsc_paypal_express_checkout_transact_url', array( &$this, 'review_order_url' ) );
+			add_filter( 'wpsc_paypal_express_checkout_return_url', array( &$this, 'review_order_callback' ) );
+		}
+
         // Return a redirection page
 ?>
 <html>
@@ -202,17 +208,22 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      * @since 3.9
      */
     protected function get_original_return_url( $session_id ) {
+		$transact_url = get_option( 'transact_url' );
+		$transact_url = apply_filters( 'wpsc_paypal_digital_goods_transact_url', $transact_url );
+        $transact_url = apply_filters( 'wpsc_paypal_express_checkout_transact_url', $transact_url );
+
         $location = add_query_arg( array(
             'sessionid'                => $session_id,
             'token'                    => $_REQUEST['token'],
             'PayerID'                  => $_REQUEST['PayerID'],
             'payment_gateway'          => 'paypal-digital-goods',
             'payment_gateway_callback' => 'confirm_transaction',
-        ),
-        get_option( 'transact_url' )
+		),
+		$transact_url 
     );
 
         $location = wp_validate_redirect( $location );
+		$location = apply_filters( 'wpsc_paypal_express_checkout_return_url', $location );
 
         return apply_filters( 'wpsc_paypal_digital_goods_return_url', $location );
     }
@@ -335,6 +346,13 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
             transaction_results( $sessionid, false );
         }
 
+        exit;
+    }
+
+	public function callback_review_transaction() {
+        $res = $this->gateway->get_details_for( $_GET['token'] );
+        var_dump( $res );
+        var_dump( $res->get('payer') ); 
         exit;
     }
 
