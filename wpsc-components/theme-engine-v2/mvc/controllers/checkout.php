@@ -38,6 +38,27 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		}
 	}
 
+    /**
+     * Review Order method
+     *
+     * @return void
+     */
+    public function review_order() {
+        $this->init_shipping_calculator();
+        $this->title .= ' → Review Order';
+        $this->view = 'checkout-review-order';
+        add_filter( 'wpsc_checkout_shipping_method_form_button_title', array( &$this, 'review_order_button_title' ), 1, 100 );
+    }
+
+    /**
+     * Modify the Submit Order button title
+     *
+     * @return string
+     */
+    public function review_order_button_title() {
+        return __( 'Place Order', 'wpsc' );
+    }
+
 	public function shipping_and_billing() {
 		$this->view = 'checkout-shipping-and-billing';
 		_wpsc_enqueue_shipping_billing_scripts();
@@ -151,7 +172,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 		wpsc_update_customer_meta( 'current_purchase_log_id', $purchase_log->get( 'id' ) );
 
-		$this->save_form( $purchase_log, $fields );
+		WPSC_Checkout_Form_Data::save_form( $purchase_log, $fields );
 
 		$this->init_shipping_calculator();
 
@@ -334,49 +355,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 		require_once( WPSC_TE_V2_CLASSES_PATH . '/shipping-calculator.php' );
 		$this->shipping_calculator = new WPSC_Shipping_Calculator( $current_log_id );
-	}
-
-	private function save_form( $purchase_log, $fields ) {
-		global $wpdb;
-		$log_id = $purchase_log->get( 'id' );
-
-		// delete previous field values
-		$sql = $wpdb->prepare( "DELETE FROM " . WPSC_TABLE_SUBMITTED_FORM_DATA . " WHERE log_id = %d", $log_id );
-
-		$wpdb->query( $sql );
-
-		$customer_details = array();
-
-		foreach ( $fields as $field ) {
-			if ( $field->type == 'heading' ) {
-				continue;
-			}
-
-			$value = '';
-
-			if ( isset( $_POST['wpsc_checkout_details'][ $field->id ] ) ) {
-				$value = $_POST['wpsc_checkout_details'][ $field->id ];
-			}
-
-			$customer_details[ $field->id ] = $value;
-
-			$wpdb->insert(
-				WPSC_TABLE_SUBMITTED_FORM_DATA,
-				array(
-					'log_id' => $log_id,
-					'form_id' => $field->id,
-					'value' => $value,
-				),
-				array(
-					'%d',
-					'%d',
-					'%s',
-				)
-			);
-		}
-
-		wpsc_save_customer_details( $customer_details );
-	}
+	}	
 
 	private function get_shipping_method_js_vars() {
 		global $wpsc_cart;

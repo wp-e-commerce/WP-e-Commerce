@@ -20,12 +20,12 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      * @since 3.9
      */
     public function __construct( $options ) {
-
         require_once( 'php-merchant/gateways/paypal-digital-goods.php' );
         $this->gateway = new PHP_Merchant_Paypal_Digital_Goods( $options );
 
         // Now that the gateway is created, call parent constructor
-        parent::__construct( $options );
+        parent::__construct( $options, true );
+		
 
         $this->title = __( 'PayPal ExpressCheckout for Digital Goods', 'wpsc' );
 
@@ -41,8 +41,26 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
             'cart_logo'		   => $this->setting->get( 'cart_logo' ),
             'cart_border'	   => $this->setting->get( 'cart_border' ),
         ) );
- 
+		
+		// Express Checkout for DG Button
+		add_action( 'wpsc_cart_item_table_after', array( &$this, 'add_ecs_button' ), 0, 10 );
     }
+
+	public function add_ecs_button() {
+		if ( _wpsc_get_current_controller_name() === 'cart' ) {	
+			$url = $this->get_shortcut_url();
+			echo '<a id="pp-ecs-dg" href="'. $url .'"><img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png" alt="Check out with PayPal" /></a>';
+		}
+	}
+
+	public function get_shortcut_url() {
+		$location = add_query_arg( array(
+			'payment_gateway'          => 'paypal-digital-goods',
+			'payment_gateway_callback' => 'shortcut_process',
+		), home_url( 'index.php' ) );
+
+		return apply_filters( 'wpsc_paypal_digital_goods_shortcut_url', $location );
+	}
 
     /**
      * Run the gateway hooks
@@ -71,16 +89,22 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      * @since 3.9
      */
     public static function dg_script() {
-        if ( wpsc_is_checkout() ) {
-            $dg_loc = array(
-                'spinner_url' => wpsc_get_ajax_spinner(),
-                'loading'     => __( 'Loading...', 'wpsc' ),
-            );
-
-            wp_enqueue_script( 'dg-script', 'https://www.paypalobjects.com/js/external/dg.js' );
-            wp_enqueue_script( 'dg-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/dg.js', array( 'jquery' ) );
-            wp_localize_script( 'dg-script', 'dg_loc', $dg_loc );
-        }
+		$dg_loc = array(
+			'spinner_url' => wpsc_get_ajax_spinner(),
+			'loading'     => __( 'Loading...', 'wpsc' ),
+		);
+		// Checkout Page
+		if ( wpsc_is_checkout() ) {
+			wp_enqueue_script( 'dg-script', 'https://www.paypalobjects.com/js/external/dg.js' );
+			wp_enqueue_script( 'dg-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/dg.js', array( 'jquery' ) );
+			wp_localize_script( 'dg-script', 'dg_loc', $dg_loc );
+		}
+		// Cart Page
+		if ( wpsc_is_cart() ) {
+			wp_enqueue_script( 'dg-script', 'https://www.paypalobjects.com/js/external/dg.js' );
+			wp_enqueue_script( 'dg-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/dgs.js', array( 'jquery' ) );
+			wp_localize_script( 'dg-script', 'dg_loc', $dg_loc );
+		}
     }
 
     /**
@@ -137,6 +161,12 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
         // Page Styles
         wp_register_style( 'ppdg-iframe', plugins_url( 'dg.css', __FILE__ ) );
 
+		// Apply any filters
+		if ( get_transient( 'ecs-' . $sessionid ) ) {
+			add_filter( 'wpsc_paypal_express_checkout_transact_url', array( &$this, 'review_order_url' ) );
+			add_filter( 'wpsc_paypal_express_checkout_return_url', array( &$this, 'review_order_callback' ) );
+		}
+
         // Return a redirection page
 ?>
 <html>
@@ -178,17 +208,22 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      * @since 3.9
      */
     protected function get_original_return_url( $session_id ) {
+		$transact_url = get_option( 'transact_url' );
+		$transact_url = apply_filters( 'wpsc_paypal_digital_goods_transact_url', $transact_url );
+        $transact_url = apply_filters( 'wpsc_paypal_express_checkout_transact_url', $transact_url );
+
         $location = add_query_arg( array(
             'sessionid'                => $session_id,
             'token'                    => $_REQUEST['token'],
             'PayerID'                  => $_REQUEST['PayerID'],
             'payment_gateway'          => 'paypal-digital-goods',
             'payment_gateway_callback' => 'confirm_transaction',
-        ),
-        get_option( 'transact_url' )
+		),
+		$transact_url 
     );
 
         $location = wp_validate_redirect( $location );
+		$location = apply_filters( 'wpsc_paypal_express_checkout_return_url', $location );
 
         return apply_filters( 'wpsc_paypal_digital_goods_return_url', $location );
     }
@@ -311,6 +346,13 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
             transaction_results( $sessionid, false );
         }
 
+        exit;
+    }
+
+	public function callback_review_transaction() {
+        $res = $this->gateway->get_details_for( $_GET['token'] );
+        var_dump( $res );
+        var_dump( $res->get('payer') ); 
         exit;
     }
 
@@ -592,6 +634,22 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
     </td>
 </tr>
 <?php endif ?>
+
+<!-- Checkout Shortcut -->
+<tr>
+    <td colspan="2">
+        <h4><?php _e( 'Express Checkout Shortcut', 'wpsc' ); ?></h4>
+    </td>
+</tr>
+<tr>
+    <td>
+        <label><?php _e( 'Enable Shortcut', 'wpsc' ); ?></label>
+    </td>
+    <td>
+        <label><input <?php checked( $this->setting->get( 'shortcut' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'shortcut' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wpsc' ); ?></label>&nbsp;&nbsp;&nbsp;
+        <label><input <?php checked( (bool) $this->setting->get( 'shortcut' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'shortcut' ) ); ?>" value="0" /> <?php _e( 'No', 'wpsc' ); ?></label>
+    </td>
+</tr>
 
 <!-- Error Logging -->
 <tr>

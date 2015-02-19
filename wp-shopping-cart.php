@@ -26,7 +26,7 @@ class WP_eCommerce {
 	 * Start WPEC on plugins loaded
 	 *
 	 * @uses add_action()   Attaches to 'plugins_loaded' hook
-	 * @uses add_action()   Attaches to 'wpsc_components' hook
+	 * @uses add_filter()   Attaches to 'wpsc_components' hook
 	 */
 	public function __construct() {
 		add_action( 'plugins_loaded' , array( $this, 'init' ), 8 );
@@ -248,7 +248,7 @@ class WP_eCommerce {
 		// Load the purchase log statuses
 		wpsc_core_load_purchase_log_statuses();
 
-		// Load unique names and checout form types
+		// Load unique names and checkout form types
 		wpsc_core_load_checkout_data();
 
 		// Load the gateways
