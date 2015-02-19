@@ -328,6 +328,115 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	}
 
     public function callback_review_transaction() {
+        //
+        // Pull the User Details from PayPal
+        //
+        $paypal = $this->gateway->get_details_for( $_GET['token'] );
+        $payer = $paypal->get( 'payer' );
+        $address = $paypal->get( 'shipping_address' ); 
+
+        //
+        // PurchaseLog Update
+        //
+        if ( isset( $address['country_code'] ) ) {
+            $purchase_log->set( 'billing_country', $address['country_code'] );
+            $purchase_log->set( 'shipping_country', $address['country_code'] );
+        }
+        if ( isset( $address['state'] ) ) {
+            $purchase_log->set( 'billing_region', $address['state'] );
+            $purchase_log->set( 'shipping_region', $address['state'] );
+        }
+
+        //
+        // Save Checkout Form Fields
+        //
+        $this->set_purchase_log_for_callbacks();
+        $form   = WPSC_Checkout_Form::get();
+        $fields = $form->get_fields();
+        $_POST['wpsc_checkout_details'] = array();
+        foreach( $fields as $field ) {
+            // Shipping Details
+            if ( $field->unique_name === 'shippingfirstname' ) {
+                if ( isset( $address['name']) ) {
+                    $_POST['wpsc_checkout_details'][$field->id] = $address['name'];
+                }
+            }
+
+            if ( $field->unique_name === 'shippinglastname' ) {
+                $_POST['wpsc_checkout_details'][$field->id] = '';
+            }
+
+            if ( $field->unique_name === 'shippingaddress' ) {
+                if ( isset( $address['street'] ) ) {
+                    $_POST['wpsc_checkout_details'][$field->id] = $address['street'];
+                }
+            }
+
+            if ( $field->unique_name === 'shippingcity' ) {
+                if ( isset( $address['city'] ) ) {
+                    $_POST['wpsc_checkout_details'][$field->id] = $address['city'];
+                }
+            }
+
+            if ( $field->unique_name === 'shippingstate' ) {
+                if ( isset( $address['state'] ) ) {
+                    $_POST['wpsc_checkout_details'][$field->id] = $address['state'];
+                }
+            }
+
+            if ( $field->unique_name === 'shippingcountry' ) {
+                if ( isset( $address['country_code'] ) ) {
+                    $_POST['wpsc_checkout_details'][$field->id] = $address['country_code'];
+                }
+            }
+
+            if ( $field->unique_name === 'shippingpostcode' ) {
+                if ( isset( $address['zip'] ) ) {
+                    $_POST['wpsc_checkout_details'][$field->id] = $address['zip'];
+                }
+            }
+            // Billing Details
+            if ( $field->unique_name === 'billingfirstname' ) {
+                if ( isset( $payer->first_name ) ) {
+                    $_POST['wpsc_checkout_details'][$field->id] = $payer->first_name;
+                }
+            }
+            if ( $field->unique_name === 'billinglastname' ) {
+                if ( isset( $payer->last_name ) ) {
+                    $_POST['wpsc_checkout_details'][$field->id] = $payer->last_name;
+                }
+            }
+            if ( $field->unique_name === 'billingaddress' ) {
+                $_POST['wpsc_checkout_details'][$field->id] = '';
+            }
+            if ( $field->unique_name === 'billingcity' ) {
+                $_POST['wpsc_checkout_details'][$field->id] = '';
+            }
+            if ( $field->unique_name === 'billingstate' ) {
+                $_POST['wpsc_checkout_details'][$field->id] = '';
+            }
+            if ( $field->unique_name === 'billingcountry' ) {
+                if ( isset( $payer->country ) ) {
+                    $_POST['wpsc_checkout_details'][$field->id] = $payer->country;
+                }
+            }
+            if ( $field->unique_name === 'billingpostcode' ) {
+                $_POST['wpsc_checkout_details'][$field->id] = '';
+            }
+            if ( $field->unique_name === 'billingphone' ) {
+                $_POST['wpsc_checkout_details'][$field->id] = '';
+            }
+            if ( $field->unique_name === 'billingemail' ) {
+                if ( isset( $payer->email ) ) {
+                    $_POST['wpsc_checkout_details'][$field->id] = $payer->email;
+                }
+            }
+        }
+
+        // 
+        // Save details to the Forms Table
+        //
+        WPSC_Checkout_Form_Data::save_form( $this->purchase_log, $fields );
     }
 
 	/**
