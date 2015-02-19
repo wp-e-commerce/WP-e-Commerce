@@ -59,7 +59,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			'payment_gateway_callback' => 'shortcut_process',
 		), home_url( 'index.php' ) );
 
-		return apply_filters( 'wpsc_paypal_express_checkout_notify_url', $location );
+		return apply_filters( 'wpsc_paypal_express_checkout_shortcut_url', $location );
 	}
 
 	public function callback_shortcut_process() {
@@ -81,7 +81,10 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			'plugin_version' => WPSC_VERSION,
 			'statusno'       => '0',
 			'sessionid'      => $sessionid,
-		) );
+        ) );
+
+        // Set a Transient for EC Shortcut
+        set_transient( 'ecs-' . $sessionid, true, 60 * 60 );
 
 		if ( wpsc_is_tax_included() ) {
 			$tax            = $wpsc_cart->calculate_total_tax();
@@ -106,7 +109,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			'gateway'       => $payment_gateway,
 			'base_shipping' => $wpsc_cart->calculate_base_shipping(),
 			'totalprice'    => $wpsc_cart->calculate_total_price(),
-		) );
+		) ); 
 
 		$purchase_log->save();
 
