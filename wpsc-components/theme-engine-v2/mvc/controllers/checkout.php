@@ -38,26 +38,95 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		}
 	}
 
-    /**
-     * Review Order method
-     *
-     * @return void
-     */
-    public function review_order() {
-        $this->init_shipping_calculator();
-        $this->title .= ' → Review Order';
-        $this->view = 'checkout-review-order';
-        add_filter( 'wpsc_checkout_shipping_method_form_button_title', array( &$this, 'review_order_button_title' ), 1, 100 );
-    }
+	/**
+	 * Review Order method
+	 *
+	 * @return void
+	 */
+	public function review_order() {
+		$this->init_shipping_calculator();
+		add_action( 'wp_enqueue_scripts',
+			array( $this, '_action_shipping_method_scripts' )
+		);
+		$this->title .= ' → Review Order';
+		$this->view = 'checkout-review-order';
+		add_filter( 'wpsc_checkout_shipping_method_form_button_title', array( &$this, 'review_order_button_title' ), 1, 100 );
 
-    /**
-     * Modify the Submit Order button title
-     *
-     * @return string
-     */
-    public function review_order_button_title() {
-        return __( 'Place Order', 'wpsc' );
-    }
+		if ( isset( $_POST['action'] ) && $_POST['action'] == 'submit_shipping_method' ) {	
+			$this->submit_review_order();
+		}
+	}
+
+	/**
+	 * Modify the Submit Order button title
+	 *
+	 * @return string
+	 */
+	public function review_order_button_title() {
+		return __( 'Place Order', 'wpsc' );
+	}
+
+	/**
+	 * Handle the Review Order page POST request.
+	 *
+	 * @return void
+	 */
+	private function submit_review_order() {
+		global $wpsc_cart;
+
+		if ( ! $this->verify_nonce( 'wpsc-checkout-form-shipping-method' ) ) {
+			return;
+		}
+
+		$form_args  = wpsc_get_checkout_shipping_form_args();
+		$validation = wpsc_validate_form( $form_args );
+
+		if ( is_wp_error( $validation ) ) {
+			wpsc_set_validation_errors( $validation );
+			return;
+		}
+
+		$submitted_value = $_POST['wpsc_shipping_option'];
+		$found           = false;
+
+		foreach ( $this->shipping_calculator->quotes as $module_name => $quotes ) {
+			foreach ( $quotes as $option => $cost ) {
+				$id = $this->shipping_calculator->ids[ $module_name ][ $option ];
+
+				if ( $id == $submitted_value ) {
+					$found = true;
+					$wpsc_cart->update_shipping( $module_name, $option );
+					break 2;
+				}
+			}
+		}
+
+		if ( ! $found ) {
+			return;
+		}	
+
+		$submitted_gateway = $_GET['payment_gateway'];
+
+		$purchase_log_id = wpsc_get_customer_meta( 'current_purchase_log_id' );
+		$purchase_log    = new WPSC_Purchase_Log( $purchase_log_id );
+		$this->shipping_calculator->set_active_method( $module_name, $option );
+		$purchase_log->set( 'base_shipping', $wpsc_cart->calculate_base_shipping() );
+		$purchase_log->set( 'totalprice', $wpsc_cart->calculate_total_price() );
+		$purchase_log->save();		
+		$url = wpsc_get_checkout_url( "results" );
+		$url = add_query_arg( $_GET, $url );
+		$url = add_query_arg( array( 'payment_gateway_callback' => 'confirm_transaction' ), $url );
+
+		wp_redirect( $url );
+		exit;
+
+		do_action( 'wpsc_submit_checkout', array(
+			'purchase_log_id' => $purchase_log_id,
+			'our_user_id'     => get_current_user_id(),
+		) );
+
+		do_action( 'wpsc_submit_checkout_gateway', $submitted_gateway, $purchase_log );
+	}
 
 	public function shipping_and_billing() {
 		$this->view = 'checkout-shipping-and-billing';
