@@ -155,7 +155,11 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
      * @return string
      */
     public function review_order_callback( $url ) {
-        $url = add_query_arg( array( 'payment_gateway_callback' => 'review_transaction' ), $url );
+        $args = array(
+            'payment_gateway_callback' => 'review_transaction',
+            'payment_gateway'          => 'paypal-express-checkout',
+        );
+        $url = add_query_arg( $args, $url );
 
         return $url;
     }
