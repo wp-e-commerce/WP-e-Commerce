@@ -62,6 +62,22 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		return apply_filters( 'wpsc_paypal_digital_goods_shortcut_url', $location );
 	}
 
+	/**
+     * Sets the Review Callback for Review Order page.
+     *
+     * @param string $url
+     * @return string
+     */
+    public function review_order_callback( $url ) {
+        $args = array(
+            'payment_gateway_callback' => 'review_transaction',
+            'payment_gateway'          => 'paypal-digital-goods',
+        );
+        $url = add_query_arg( $args, $url );
+
+        return $url;
+    }
+
     /**
      * Run the gateway hooks
      *
