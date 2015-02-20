@@ -7,7 +7,7 @@
 class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway {
 	public $sandbox_url = 'https://www.sandbox.paypal.com/webscr';
 	public $live_url    = 'https://www.paypal.com/cgi-bin/webscr';
-	private $gateway;
+	protected $gateway;
 
 	/**
 	 * Constructor of PayPal Express Checkout Gateway.
