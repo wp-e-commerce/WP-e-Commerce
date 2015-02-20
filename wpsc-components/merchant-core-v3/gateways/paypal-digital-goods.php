@@ -44,6 +44,11 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		add_action( 'wpsc_cart_item_table_after', array( &$this, 'add_ecs_button' ), 0, 10 );
     }
 
+	/**
+     * Insert the ExpessCheckout Shortcut Button
+     *
+     * @return void
+     */
 	public function add_ecs_button() {
 		if ( _wpsc_get_current_controller_name() === 'cart' ) {	
 			$url = $this->get_shortcut_url();
@@ -51,6 +56,11 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		}
 	}
 
+	/**
+     * Return the ExpressCheckout Shortcut redirection URL
+     *
+     * @return void
+     */
 	public function get_shortcut_url() {
 		$location = add_query_arg( array(
 			'payment_gateway'          => 'paypal-digital-goods',

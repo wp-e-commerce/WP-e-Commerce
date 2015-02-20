@@ -46,6 +46,11 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		}
 	}
 
+    /**
+     * Insert the ExpessCheckout Shortcut Button
+     *
+     * @return void
+     */
 	public function add_ecs_button() {
 		if ( _wpsc_get_current_controller_name() === 'cart' ) {	
 			$url = $this->get_shortcut_url();
@@ -53,6 +58,11 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		}
 	}
 
+    /**
+     * Return the ExpressCheckout Shortcut redirection URL
+     *
+     * @return void
+     */
 	public function get_shortcut_url() {
 		$location = add_query_arg( array(
 			'payment_gateway'          => 'paypal-express-checkout',
@@ -62,6 +72,11 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		return apply_filters( 'wpsc_paypal_express_checkout_shortcut_url', $location );
 	}
 
+    /**
+     * ExpressCheckout Shortcut Callback
+     *
+     * @return void
+     */
 	public function callback_shortcut_process() {
         if ( ! isset( $_GET['payment_gateway'] ) ) {
             return;

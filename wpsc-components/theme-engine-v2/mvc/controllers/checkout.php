@@ -105,27 +105,32 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 			return;
 		}	
 
-		$submitted_gateway = $_GET['payment_gateway'];
+		// Set the Shipping method
+		$this->shipping_calculator->set_active_method( $module_name, $option );
 
+
+		// Get the Payment Gateway id
+		if ( isset( $_GET['payment_gateway'] ) ) {
+			$submitted_gateway = $_GET['payment_gateway'];
+		} else {
+			$submitted_gateway = '';
+		}
+
+		// Update the PurchaseLog
 		$purchase_log_id = wpsc_get_customer_meta( 'current_purchase_log_id' );
 		$purchase_log    = new WPSC_Purchase_Log( $purchase_log_id );
-		$this->shipping_calculator->set_active_method( $module_name, $option );
 		$purchase_log->set( 'base_shipping', $wpsc_cart->calculate_base_shipping() );
 		$purchase_log->set( 'totalprice', $wpsc_cart->calculate_total_price() );
 		$purchase_log->save();		
+
+		// Build the Redirection URL
 		$url = wpsc_get_checkout_url( "results" );
 		$url = add_query_arg( $_GET, $url );
 		$url = add_query_arg( array( 'payment_gateway_callback' => 'confirm_transaction' ), $url );
 
+		// Redirect to Results Page
 		wp_redirect( $url );
 		exit;
-
-		do_action( 'wpsc_submit_checkout', array(
-			'purchase_log_id' => $purchase_log_id,
-			'our_user_id'     => get_current_user_id(),
-		) );
-
-		do_action( 'wpsc_submit_checkout_gateway', $submitted_gateway, $purchase_log );
 	}
 
 	public function shipping_and_billing() {
