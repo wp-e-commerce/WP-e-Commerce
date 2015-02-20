@@ -334,8 +334,14 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		exit;
 	}
 
-    public function callback_review_transaction() {
-        //
+    /**
+	 * Pull and Record PayPal Details
+	 *
+	 * @return void
+	 */
+	public function pull_paypal_details() { 
+        $this->set_purchase_log_for_callbacks();
+	    //
         // Pull the User Details from PayPal
         //
         $paypal = $this->gateway->get_details_for( $_GET['token'] );
@@ -346,18 +352,17 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         // PurchaseLog Update
         //
         if ( isset( $address['country_code'] ) ) {
-            $purchase_log->set( 'billing_country', $address['country_code'] );
-            $purchase_log->set( 'shipping_country', $address['country_code'] );
+            $this->purchase_log->set( 'billing_country', $address['country_code'] );
+            $this->purchase_log->set( 'shipping_country', $address['country_code'] );
         }
         if ( isset( $address['state'] ) ) {
-            $purchase_log->set( 'billing_region', $address['state'] );
-            $purchase_log->set( 'shipping_region', $address['state'] );
+            $this->purchase_log->set( 'billing_region', $address['state'] );
+            $this->purchase_log->set( 'shipping_region', $address['state'] );
         }
 
         //
         // Save Checkout Form Fields
-        //
-        $this->set_purchase_log_for_callbacks();
+        // 
         $form   = WPSC_Checkout_Form::get();
         $fields = $form->get_fields();
         $_POST['wpsc_checkout_details'] = array();
@@ -444,6 +449,19 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         // Save details to the Forms Table
         //
         WPSC_Checkout_Form_Data::save_form( $this->purchase_log, $fields );
+
+	}
+
+    /**
+     * Review Transaction Callback
+     *
+     * @return void
+     */
+    public function callback_review_transaction() { 
+        $this->pull_paypal_details();  
+        if ( !wpsc_uses_shipping() ) {
+            $this->callback_confirm_transaction();
+        }
     }
 
 	/**
@@ -489,7 +507,8 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		);
 		$options += $this->checkout_data->get_gateway_data();
 		$options += $this->purchase_log->get_gateway_data( parent::get_currency_code(), $this->get_currency_code() );
-
+ 
+        
 		if ( $this->setting->get( 'ipn', false ) ) {
 			$options['notify_url'] = $this->get_notify_url();
 		}
