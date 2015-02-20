@@ -20,13 +20,11 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      * @since 3.9
      */
     public function __construct( $options ) {
-        require_once( 'php-merchant/gateways/paypal-digital-goods.php' );
-        $this->gateway = new PHP_Merchant_Paypal_Digital_Goods( $options );
-
+        require_once( 'php-merchant/gateways/paypal-digital-goods.php' ); 
         // Now that the gateway is created, call parent constructor
         parent::__construct( $options, true );
 		
-
+		$this->gateway = new PHP_Merchant_Paypal_Digital_Goods( $options );
         $this->title = __( 'PayPal ExpressCheckout for Digital Goods', 'wpsc' );
 
         $this->gateway->set_options( array(
@@ -363,14 +361,8 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
         }
 
         exit;
-    }
+    }		
 
-	public function callback_review_transaction() {
-        $res = $this->gateway->get_details_for( $_GET['token'] );
-        var_dump( $res );
-        var_dump( $res->get('payer') ); 
-        exit;
-    }
 
     /**
      * Confirm Transaction Callback
