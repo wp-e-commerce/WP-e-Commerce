@@ -54,7 +54,6 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		);
 	}
 
-
 	/**
 	 * No payment gateway is selected by default
 	 *
@@ -547,6 +546,11 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		if ( $this->setting->get( 'ipn', false ) ) {
 			$options['notify_url'] = $this->get_notify_url();
 		}
+
+        // Detect Mobile Devices
+        if ( wp_is_mobile() ) {
+            $options['template'] = 'MOBILE';
+        }
 
 		// BMCreateButton API call
 		$response = $this->gateway->createButton( $options );
