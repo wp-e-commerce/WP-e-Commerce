@@ -1,6 +1,28 @@
+/* Desktop CSS */
 IFRAME[name=hss_iframe] {
 	max-width: none;
 }
 FORM[target=hss_iframe] {
 	display: none;
+}
+
+/* Mobile CSS */
+@media only screen 
+and (min-device-width : 320px) 
+and (max-device-width : 480px) {
+	IFRAME[name=hss_iframe] {
+		height: 100% !important;
+		width: 100% !important;
+		right: 0;
+		bottom: 0;
+		border:none; 
+		margin:0; 
+		padding:0; 
+		overflow:hidden; 
+		z-index:999999;
+		display: block;
+		position: fixed;
+		top: 0;
+		left: 0;
+	}	
 }
