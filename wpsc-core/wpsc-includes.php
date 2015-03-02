@@ -1,6 +1,6 @@
 <?php
 
-if ( defined( 'WPEC_LOAD_DEPRECATED' ) ) {
+if ( defined( 'WPEC_LOAD_DEPRECATED' ) && WPEC_LOAD_DEPRECATED ) {
 	require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-deprecated.php' );
 }
 
