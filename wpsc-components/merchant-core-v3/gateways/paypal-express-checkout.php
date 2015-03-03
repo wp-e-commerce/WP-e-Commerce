@@ -356,16 +356,13 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	 */
 	public function pull_paypal_details() { 
         $this->set_purchase_log_for_callbacks();
-	    //
+
         // Pull the User Details from PayPal
-        //
         $paypal = $this->gateway->get_details_for( $_GET['token'] );
         $payer = $paypal->get( 'payer' );
         $address = $paypal->get( 'shipping_address' ); 
 
-        //
         // PurchaseLog Update
-        //
         if ( isset( $address['country_code'] ) ) {
             $this->purchase_log->set( 'billing_country', $address['country_code'] );
             $this->purchase_log->set( 'shipping_country', $address['country_code'] );
@@ -375,97 +372,93 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
             $this->purchase_log->set( 'shipping_region', $address['state'] );
         }
 
-        //
         // Save Checkout Form Fields
-        // 
         $form   = WPSC_Checkout_Form::get();
         $fields = $form->get_fields();
         $_POST['wpsc_checkout_details'] = array();
         foreach( $fields as $field ) {
-            // Shipping Details
-            if ( $field->unique_name === 'shippingfirstname' ) {
-                if ( isset( $address['name']) ) {
-                    $_POST['wpsc_checkout_details'][$field->id] = $address['name'];
-                }
-            }
-
-            if ( $field->unique_name === 'shippinglastname' ) {
-                $_POST['wpsc_checkout_details'][$field->id] = '';
-            }
-
-            if ( $field->unique_name === 'shippingaddress' ) {
-                if ( isset( $address['street'] ) ) {
-                    $_POST['wpsc_checkout_details'][$field->id] = $address['street'];
-                }
-            }
-
-            if ( $field->unique_name === 'shippingcity' ) {
-                if ( isset( $address['city'] ) ) {
-                    $_POST['wpsc_checkout_details'][$field->id] = $address['city'];
-                }
-            }
-
-            if ( $field->unique_name === 'shippingstate' ) {
-                if ( isset( $address['state'] ) ) {
-                    $_POST['wpsc_checkout_details'][$field->id] = $address['state'];
-                }
-            }
-
-            if ( $field->unique_name === 'shippingcountry' ) {
-                if ( isset( $address['country_code'] ) ) {
-                    $_POST['wpsc_checkout_details'][$field->id] = $address['country_code'];
-                }
-            }
-
-            if ( $field->unique_name === 'shippingpostcode' ) {
-                if ( isset( $address['zip'] ) ) {
-                    $_POST['wpsc_checkout_details'][$field->id] = $address['zip'];
-                }
-            }
-            // Billing Details
-            if ( $field->unique_name === 'billingfirstname' ) {
-                if ( isset( $payer->first_name ) ) {
-                    $_POST['wpsc_checkout_details'][$field->id] = $payer->first_name;
-                }
-            }
-            if ( $field->unique_name === 'billinglastname' ) {
-                if ( isset( $payer->last_name ) ) {
-                    $_POST['wpsc_checkout_details'][$field->id] = $payer->last_name;
-                }
-            }
-            if ( $field->unique_name === 'billingaddress' ) {
-                $_POST['wpsc_checkout_details'][$field->id] = '';
-            }
-            if ( $field->unique_name === 'billingcity' ) {
-                $_POST['wpsc_checkout_details'][$field->id] = '';
-            }
-            if ( $field->unique_name === 'billingstate' ) {
-                $_POST['wpsc_checkout_details'][$field->id] = '';
-            }
-            if ( $field->unique_name === 'billingcountry' ) {
-                if ( isset( $payer->country ) ) {
-                    $_POST['wpsc_checkout_details'][$field->id] = $payer->country;
-                }
-            }
-            if ( $field->unique_name === 'billingpostcode' ) {
-                $_POST['wpsc_checkout_details'][$field->id] = '';
-            }
-            if ( $field->unique_name === 'billingphone' ) {
-                $_POST['wpsc_checkout_details'][$field->id] = '';
-            }
-            if ( $field->unique_name === 'billingemail' ) {
-                if ( isset( $payer->email ) ) {
-                    $_POST['wpsc_checkout_details'][$field->id] = $payer->email;
-                }
-            }
+            $this->set_post_var( $field, $address );   
         }
 
-        // 
-        // Save details to the Forms Table
-        //
+        // Save details to the Forms Table 
         WPSC_Checkout_Form_Data::save_form( $this->purchase_log, $fields );
-
 	}
+
+    /**
+     * To insert Data to the Form Table, we need to pass it
+     * to the global $_POST variable first
+     *
+     * @param object $field
+     * @param array $address
+     *
+     * @return void
+     */
+    private function set_post_var( $field, $address ) {
+        switch( $field->unique_name ) {
+            // Shipping Details
+        case 'shippingfirstname':
+            if ( isset( $address['name']) ) {
+                $_POST['wpsc_checkout_details'][$field->id] = $address['name'];
+            }
+            break;
+        case 'shippinglastname':
+            $_POST['wpsc_checkout_details'][$field->id] = '';
+            break;
+        case 'shippingaddress':
+            if ( isset( $address['street'] ) ) {
+                $_POST['wpsc_checkout_details'][$field->id] = $address['street'];
+            }
+            break;
+        case 'shippingcity':
+            if ( isset( $address['city'] ) ) {
+                $_POST['wpsc_checkout_details'][$field->id] = $address['city'];
+            }
+            break;
+        case 'shippingstate':
+            if ( isset( $address['state'] ) ) {
+                $_POST['wpsc_checkout_details'][$field->id] = $address['state'];
+            }
+            break;
+        case 'shippingcountry':
+            if ( isset( $address['country_code'] ) ) {
+                $_POST['wpsc_checkout_details'][$field->id] = $address['country_code'];
+            }
+            break;
+        case 'shippingpostcode':
+            if ( isset( $address['zip'] ) ) {
+                $_POST['wpsc_checkout_details'][$field->id] = $address['zip'];
+            }
+            break;
+            // Billing Details
+        case 'billingfirstname':
+            if ( isset( $payer->first_name ) ) {
+                $_POST['wpsc_checkout_details'][$field->id] = $payer->first_name;
+            }
+            break;
+        case 'billinglastname':
+            if ( isset( $payer->last_name ) ) {
+                $_POST['wpsc_checkout_details'][$field->id] = $payer->last_name;
+            }
+            break;
+        case 'billingaddress':
+        case 'billingcity':
+        case 'billingstate':
+        case 'billingpostcode':
+        case 'billingphone': 
+            $_POST['wpsc_checkout_details'][$field->id] = '';
+            break;
+        case 'billingcountry':
+            if ( isset( $payer->country ) ) {
+                $_POST['wpsc_checkout_details'][$field->id] = $payer->country;
+            }
+            break;
+        case 'billingemail':
+            if ( isset( $payer->email ) ) {
+                $_POST['wpsc_checkout_details'][$field->id] = $payer->email;
+            }
+            break;
+        }
+    }
 
     /**
      * Review Transaction Callback
