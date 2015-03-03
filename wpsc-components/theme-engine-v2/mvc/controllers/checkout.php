@@ -106,8 +106,9 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		}	
 
 		// Set the Shipping method
-		$this->shipping_calculator->set_active_method( $module_name, $option );
-
+		if ( isset( $module_name ) && isset( $option ) ) {
+			$this->shipping_calculator->set_active_method( $module_name, $option );
+		}
 
 		// Get the Payment Gateway id
 		if ( isset( $_GET['payment_gateway'] ) ) {

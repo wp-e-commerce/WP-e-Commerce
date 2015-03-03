@@ -377,7 +377,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         $fields = $form->get_fields();
         $_POST['wpsc_checkout_details'] = array();
         foreach( $fields as $field ) {
-            $this->set_post_var( $field, $address );   
+            $this->set_post_var( $field, $payer, $address );   
         }
 
         // Save details to the Forms Table 
@@ -388,57 +388,42 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
      * To insert Data to the Form Table, we need to pass it
      * to the global $_POST variable first
      *
+     * @param object $payer
      * @param object $field
      * @param array $address
      *
      * @return void
      */
-    private function set_post_var( $field, $address ) {
+    private function set_post_var( $field, $payer, $address ) {
         switch( $field->unique_name ) {
             // Shipping Details
         case 'shippingfirstname':
-            if ( isset( $address['name']) ) {
-                $_POST['wpsc_checkout_details'][$field->id] = $address['name'];
-            }
+            $_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $address['name'] ); 
             break;
         case 'shippinglastname':
             $_POST['wpsc_checkout_details'][$field->id] = '';
             break;
         case 'shippingaddress':
-            if ( isset( $address['street'] ) ) {
-                $_POST['wpsc_checkout_details'][$field->id] = $address['street'];
-            }
+                $_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $address['street'] );
             break;
         case 'shippingcity':
-            if ( isset( $address['city'] ) ) {
-                $_POST['wpsc_checkout_details'][$field->id] = $address['city'];
-            }
+                $_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $address['city'] );
             break;
         case 'shippingstate':
-            if ( isset( $address['state'] ) ) {
-                $_POST['wpsc_checkout_details'][$field->id] = $address['state'];
-            }
+                $_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $address['state'] );
             break;
         case 'shippingcountry':
-            if ( isset( $address['country_code'] ) ) {
-                $_POST['wpsc_checkout_details'][$field->id] = $address['country_code'];
-            }
+                $_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $address['country_code'] );
             break;
         case 'shippingpostcode':
-            if ( isset( $address['zip'] ) ) {
-                $_POST['wpsc_checkout_details'][$field->id] = $address['zip'];
-            }
+                $_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $address['zip'] );
             break;
             // Billing Details
         case 'billingfirstname':
-            if ( isset( $payer->first_name ) ) {
-                $_POST['wpsc_checkout_details'][$field->id] = $payer->first_name;
-            }
+                $_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $payer->first_name );
             break;
         case 'billinglastname':
-            if ( isset( $payer->last_name ) ) {
-                $_POST['wpsc_checkout_details'][$field->id] = $payer->last_name;
-            }
+                $_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $payer->last_name );
             break;
         case 'billingaddress':
         case 'billingcity':
@@ -448,16 +433,27 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
             $_POST['wpsc_checkout_details'][$field->id] = '';
             break;
         case 'billingcountry':
-            if ( isset( $payer->country ) ) {
-                $_POST['wpsc_checkout_details'][$field->id] = $payer->country;
-            }
+                $_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $payer->country );
             break;
         case 'billingemail':
-            if ( isset( $payer->email ) ) {
-                $_POST['wpsc_checkout_details'][$field->id] = $payer->email;
-            }
+                $_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $payer->email );
             break;
         }
+    }
+
+    /**
+     * Verify that the variable isset and return it, otherwise return an empty
+     * string
+     *
+     * @param string $var
+     *
+     * @return string
+     */
+    private function validate_var( $var ) {
+        if ( isset( $var ) ) {
+            return $var; 
+        }
+        return '';
     }
 
     /**
