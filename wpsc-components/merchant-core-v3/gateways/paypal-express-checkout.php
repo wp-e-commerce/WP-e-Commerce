@@ -75,7 +75,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
     /**
      * ExpressCheckout Shortcut Callback
      *
-     * @return void
+     * @return int
      */
 	public function callback_shortcut_process() {
         if ( ! isset( $_GET['payment_gateway'] ) ) {
@@ -97,9 +97,6 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			'statusno'       => '0',
 			'sessionid'      => $sessionid,
         ) );
-
-        // Set a Transient for EC Shortcut
-        set_transient( 'ecs-' . $sessionid, true, 60 * 60 );
 
 		if ( wpsc_is_tax_included() ) {
 			$tax            = $wpsc_cart->calculate_total_tax();
@@ -147,6 +144,8 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			'our_user_id'     => get_current_user_id(),
 		) );
 		do_action( 'wpsc_submit_checkout_gateway', $payment_gateway, $purchase_log );		
+
+        return $sessionid;
 	}
 
     /**
