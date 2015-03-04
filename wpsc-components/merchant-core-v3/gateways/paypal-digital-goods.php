@@ -68,18 +68,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		), home_url( 'index.php' ) );
 
 		return apply_filters( 'wpsc_paypal_digital_goods_shortcut_url', $location );
-	}
-
-	/**
-     * ExpressCheckout Shortcut Callback
-     *
-     * @return void
-     */
-	public function callback_shortcut_process() {
-		$sessionid = parent::callback_shortcut_process();
-		// Set a Temporary Option for EC Shortcut
-        update_option( 'ecs-' . $sessionid, true );
-	}
+	}	
 
 	/**
      * Sets the Review Callback for Review Order page.
