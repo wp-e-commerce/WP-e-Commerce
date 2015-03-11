@@ -42,6 +42,28 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		
 		// Express Checkout for DG Button
 		add_action( 'wpsc_cart_item_table_after', array( &$this, 'add_ecs_button' ), 0, 10 );
+
+        // Filter Digital Goods option on checkout
+        add_filter( 'wpsc_payment_method_form_fields', array( &$this, 'dg_option_removal' ), 100, 2 );
+    }
+
+    public function dg_option_removal( $fields, $args ) {
+        if ( wpsc_uses_shipping() ) {
+            // Remove DG option
+            foreach( $fields as $index => $field ) {
+                if ( $field['value'] === 'paypal-digital-goods' ) {
+                    unset( $fields[$index] );
+                }
+            }
+        } else {
+            // Remove Normal option
+            foreach( $fields as $index => $field ) {
+                if ( $field['value'] === 'paypal-express-checkout' ) {
+                    unset( $fields[$index] );
+                }
+            }
+        } 
+        return $fields;
     }
 
 	/**
