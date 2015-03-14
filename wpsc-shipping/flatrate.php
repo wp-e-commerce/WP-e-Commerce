@@ -179,31 +179,31 @@ class flatrate {
 
 		} else {
 
-			$flatrates = get_option('flat_rates');
+			$flatrates = get_option( 'flat_rates' );
 			$shipping_quotes = array();
 
-			switch ($country) {
+			switch ( $country ) {
 			case 'NZ':
-				if (strlen($flatrates['northisland']) > 0) {
-					$shipping_quotes[__( 'North Island', 'wpsc' )] = esc_attr($flatrates['northisland']);
+				if ( isset( $flatrates['northisland'] ) && strlen( $flatrates['northisland'] ) > 0 ) {
+					$shipping_quotes[ __( 'North Island', 'wpsc' ) ] = esc_attr( $flatrates['northisland'] );
 				}
-				if (strlen($flatrates['southisland']) > 0) {
-					$shipping_quotes[__( 'South Island', 'wpsc' )] = esc_attr($flatrates['southisland']);
+				if ( isset( $flatrates['southisland'] ) && strlen( $flatrates['southisland'] ) > 0 ) {
+					$shipping_quotes[ __( 'South Island', 'wpsc' ) ] = esc_attr( $flatrates['southisland'] );
 				}
 				break;
 
 			case 'US':
-				if (strlen($flatrates['continental']) > 0) {
-					$shipping_quotes[__( 'Continental 48 States', 'wpsc' )] = esc_attr($flatrates['continental']);
+				if ( isset( $flatrates['continental'] ) && strlen( $flatrates['continental'] ) > 0 ) {
+					$shipping_quotes[ __( 'Continental 48 States', 'wpsc' ) ] = esc_attr( $flatrates['continental'] );
 				}
-				if (strlen($flatrates['all']) > 0) {
-					$shipping_quotes[__( 'All 50 States', 'wpsc' )] = esc_attr($flatrates['all']);
+				if ( isset( $flatrates['all'] ) && strlen( $flatrates['all'] ) > 0 ) {
+					$shipping_quotes[ __( 'All 50 States', 'wpsc' ) ] = esc_attr( $flatrates['all'] );
 				}
 				break;
 
 			default:
-				if (strlen($flatrates['local']) > 0) {
-					$shipping_quotes[__( 'Local Shipping', 'wpsc' )] = esc_attr($flatrates['local']);
+				if ( isset( $flatrates['local'] ) && strlen( $flatrates['local'] ) > 0 ) {
+					$shipping_quotes[ __( 'Local Shipping', 'wpsc' ) ] = esc_attr( $flatrates['local'] );
 				}
 				break;
 			}
