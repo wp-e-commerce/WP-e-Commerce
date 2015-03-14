@@ -173,7 +173,7 @@ function wpsc_do_ajax_request( data, success_callback ) {
 		dataType  : "json",
 		url       : wpsc_ajax.ajaxurl,
 		data      : data,
-		success   : success_callback,
+		success   : success_callback
 	});
 }
 
@@ -426,7 +426,7 @@ function wpsc_meta_item_change_response( response ) {
 		// that may not have the necessary computing power to use js to do the work we are asking.
 		var event = jQuery.Event( "wpsc-visitor-meta-change" );
 		event.response = response;
-		jQuery( "wpsc-visitor-meta:first" ).trigger( event );
+		jQuery( ".wpsc-visitor-meta:first" ).trigger( event );
 
 		// Check if shipping quotes need to be updated
 		wpsc_check_for_shipping_recalc_needed( response.data );
