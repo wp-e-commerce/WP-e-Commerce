@@ -93,10 +93,13 @@ function wpsc_core_constants() {
 	define( 'WPSC_CORE_JS_URL' , WPSC_URL . '/wpsc-core/js' );
 	define( 'WPSC_CORE_JS_PATH', WPSC_FILE_PATH . '/wpsc-core/js' );
 
+
 	// Require loading of deprecated functions for now. We will ween WPEC off
 	// of this in future versions.
 	if ( ! defined( 'WPEC_LOAD_DEPRECATED' ) ) {
-		define( 'WPEC_LOAD_DEPRECATED', true );
+		// use a filter so that themes can turn this off without editing config or code,
+		$load_deprecated = apply_filters( 'wpsc_load_deprecated', true );
+		define( 'WPEC_LOAD_DEPRECATED', $load_deprecated );
 	}
 
 	// Do not require loading of deprecated JS of this in future versions.

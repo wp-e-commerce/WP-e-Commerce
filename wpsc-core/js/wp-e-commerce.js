@@ -106,6 +106,22 @@ function wpsc_var_set( name, value ) {
 	return undefined;
 }
 
+/**
+ * Create an <option> tag in a cross-browser manner.
+ * See: https://github.com/wp-e-commerce/WP-e-Commerce/issues/1792
+ *
+ * @since 4.0
+ *
+ * @param {string} displaytext              The text to put between the <option></option> tags.
+ * @param {string|int|float} [value='']     The value's option, (for the "value" attribute).
+ *
+ * @returns {*}         A jQuerified <option> element.
+ */
+function wpsc_create_option(  displaytext, value ) {
+	if ( 'undefined' === value ) value = '';
+	return jQuery( document.createElement( 'option' ) ).val( value ).text( displaytext );
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Setting up the WPEC customer identifier
 //
@@ -173,7 +189,7 @@ function wpsc_do_ajax_request( data, success_callback ) {
 		dataType  : "json",
 		url       : wpsc_ajax.ajaxurl,
 		data      : data,
-		success   : success_callback,
+		success   : success_callback
 	});
 }
 
@@ -426,7 +442,7 @@ function wpsc_meta_item_change_response( response ) {
 		// that may not have the necessary computing power to use js to do the work we are asking.
 		var event = jQuery.Event( "wpsc-visitor-meta-change" );
 		event.response = response;
-		jQuery( "wpsc-visitor-meta:first" ).trigger( event );
+		jQuery( ".wpsc-visitor-meta:first" ).trigger( event );
 
 		// Check if shipping quotes need to be updated
 		wpsc_check_for_shipping_recalc_needed( response.data );
@@ -564,11 +580,11 @@ function wpsc_countries_lists_handle_restrictions() {
 
 		country_drop_downs.empty();
 
-		country_drop_downs.append( new Option( wpsc_var_get( 'no_country_selected' ), '' ) );
+		country_drop_downs.append( wpsc_create_option( wpsc_var_get( 'no_country_selected' ) ) );
 		for ( var isocode in wpsc_acceptable_shipping_countries ) {
 			if ( wpsc_acceptable_shipping_countries.hasOwnProperty( isocode ) ) {
 				var country_name = wpsc_acceptable_shipping_countries[isocode];
-				country_drop_downs.append( new Option( country_name, isocode ) );
+				country_drop_downs.append( wpsc_create_option( country_name, isocode ) );
 			}
 		}
 
@@ -579,12 +595,12 @@ function wpsc_countries_lists_handle_restrictions() {
 			country_drop_downs = jQuery( selector );
 			if ( country_drop_downs.length ) {
 				country_drop_downs.empty();
-				country_drop_downs.append( new Option( wpsc_var_get( 'no_country_selected' ), '' ) );
+				country_drop_downs.append( wpsc_create_option( wpsc_var_get( 'no_country_selected' ) ) );
 				countries = wpsc_var_get( 'wpsc_countries' );
 				for ( var isocode in countries ) {
 					if ( countries.hasOwnProperty( isocode ) ) {
 						var country_name = countries[isocode];
-						country_drop_downs.append( new Option( country_name, isocode ) );
+						country_drop_downs.append( wpsc_create_option( country_name, isocode ) );
 				  	}
 				}
 			}
@@ -649,7 +665,7 @@ function wpsc_update_regions_list_to_match_country( country_select ) {
 	}
 
 	var region_select      = wpsc_country_region_element( country_select );
-	var all_region_selects = wpsc_get_wpsc_meta_elements( region_meta_key );
+	var all_region_selects = wpsc_get_wpsc_meta_elements( region_meta_key ).filter( 'select' );
 	var country_code       = wpsc_get_value_from_wpsc_meta_element( country_select );
 	var region             = wpsc_get_value_from_wpsc_meta_element( region_meta_key );
 
@@ -657,11 +673,11 @@ function wpsc_update_regions_list_to_match_country( country_select ) {
 		var select_a_region_message = wpsc_no_region_selected_message( country_code );
 		var regions = wpsc_country_regions( country_code );
 		all_region_selects.empty();
-		all_region_selects.append( new Option( select_a_region_message, '' ) );
+		all_region_selects.append( wpsc_create_option( select_a_region_message ) );
 		for ( var region_code in regions ) {
 		  if ( regions.hasOwnProperty( region_code ) ) {
 			  var region_name = regions[region_code];
-			  all_region_selects.append( new Option( region_name, region_code ) );
+			  all_region_selects.append( wpsc_create_option( region_name,  region_code ) );
 		  }
 		}
 
@@ -922,7 +938,11 @@ function wpsc_get_value_from_wpsc_meta_element( meta ) {
 			meta_value = '';
 		}
 	} else if ( element.is('select') ) {
-		meta_value = element.find( 'option:selected' ).val();
+		meta_value = element.val();
+		if ( ! meta_value && 'none' == element.css('display') ) {
+			meta_value = element.find( 'option[selected]' ).val();
+		}
+
 	} else 	{
 		meta_value = element.val();
 	}
