@@ -149,7 +149,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 			wp_localize_script( 'dg-script', 'dg_loc', $dg_loc );
 		}
 		// Cart Page
-		if ( wpsc_is_cart() ) {
+		if ( function_exists( 'wpsc_is_cart' ) && wpsc_is_cart() ) {
 			wp_enqueue_script( 'dg-script', 'https://www.paypalobjects.com/js/external/dg.js' );
 			wp_enqueue_script( 'dg-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/dgs.js', array( 'jquery' ) );
 			wp_localize_script( 'dg-script', 'dg_loc', $dg_loc );
