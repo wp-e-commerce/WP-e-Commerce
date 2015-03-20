@@ -549,7 +549,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 
         // Detect Mobile Devices
         if ( wp_is_mobile() ) {
-            $options['template'] = 'MOBILE';
+            $options['template'] = 'mobile-iframe';
         }
 
 		// BMCreateButton API call
