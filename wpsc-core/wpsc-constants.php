@@ -53,15 +53,15 @@ function wpsc_core_constants() {
 
 	// Define Plugin version
 	if ( ! defined( 'WPSC_VERSION' ) ) {
-		define( 'WPSC_VERSION'            , '3.9.1' );
+		define( 'WPSC_VERSION'            , '3.9.2' );
 	}
 
 	if ( ! defined( 'WPSC_MINOR_VERSION' ) ) {
-		define( 'WPSC_MINOR_VERSION'      , '66518b9' );
+		define( 'WPSC_MINOR_VERSION'      , '7fdd6de' );
 	}
 
 	if ( ! defined( 'WPSC_PRESENTABLE_VERSION' ) ) {
-		define( 'WPSC_PRESENTABLE_VERSION', '3.9.1' );
+		define( 'WPSC_PRESENTABLE_VERSION', '3.9.2' );
 	}
 
 	// Define a salt to use when we hash, WPSC_SALT may be defined for us in our config file, so check first
@@ -93,10 +93,13 @@ function wpsc_core_constants() {
 	define( 'WPSC_CORE_JS_URL' , WPSC_URL . '/wpsc-core/js' );
 	define( 'WPSC_CORE_JS_PATH', WPSC_FILE_PATH . '/wpsc-core/js' );
 
+
 	// Require loading of deprecated functions for now. We will ween WPEC off
 	// of this in future versions.
 	if ( ! defined( 'WPEC_LOAD_DEPRECATED' ) ) {
-		define( 'WPEC_LOAD_DEPRECATED', true );
+		// use a filter so that themes can turn this off without editing config or code,
+		$load_deprecated = apply_filters( 'wpsc_load_deprecated', true );
+		define( 'WPEC_LOAD_DEPRECATED', $load_deprecated );
 	}
 
 	// Do not require loading of deprecated JS of this in future versions.
