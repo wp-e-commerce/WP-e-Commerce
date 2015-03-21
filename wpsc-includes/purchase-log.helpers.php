@@ -230,9 +230,10 @@ function wpsc_send_admin_email( $purchase_log, $force = false ) {
 }
 
 function wpsc_get_transaction_html_output( $purchase_log ) {
-	if ( ! is_object( $purchase_log ) )
-		$purchase_log = new WPSC_Purchase_Log( $purchase_log );
 
+	if ( ! is_object( $purchase_log ) ) {
+		$purchase_log = new WPSC_Purchase_Log( $purchase_log );
+	}
 
 	$notification = new WPSC_Purchase_Log_Customer_HTML_Notification( $purchase_log );
 	$output = $notification->get_html_message();

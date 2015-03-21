@@ -174,6 +174,16 @@ function wpsc_get_currency_symbol(){
 }
 
 /**
+ *	wpsc_get_currency_code
+ *
+ *	@param does not receive anything
+ *  @return returns the currency code used for the shop
+*/
+function wpsc_get_currency_code(){
+	return WPSC_Countries::get_currency_code( get_option( 'currency_type' ) );
+}
+
+/**
 * All the code below here needs commenting and looking at to see if it needs to be altered or disposed of.
 * Correspondingly, all the code above here has been commented, uses the wpsc prefix, and has been made for or modified to work with the object oriented cart code.
 */
