@@ -4,7 +4,7 @@ Donate link: https://wpecommerce.org
 Tags: e-commerce, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 4.0-dev
+Stable tag: 3.9.2
 
 WP eCommerce is a free, powerful plugin that empowers you to sell anything online, quickly and easily.
 
@@ -35,6 +35,14 @@ Before updating please make a backup of your existing files and database. Just i
 After upgrading from earlier versions look for link "Update Store". This will update your database structure to work with new version.
 
 == Changelog ==
+
+= 3.9.2 =
+
+* Fix: Reverted pre_get_posts hook.  See [#1444](https://github.com/wp-e-commerce/WP-e-Commerce/issues/1444).  This was causing issues with template redirection and selection on search templates.
+* Fix: Shipping conflict with target market restrictions on specific categories.  See [#1711](https://github.com/wp-e-commerce/WP-e-Commerce/issues/1711).
+* Fix: Taxes were broken following some refactoring of the admin saving callbacks.
+* Fix: Quick edit was overwriting variation SKUs and sale prices.
+* Fix: RSS Feed error.
 
 = 3.9.1 =
 
