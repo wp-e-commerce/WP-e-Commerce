@@ -43,6 +43,9 @@ After upgrading from earlier versions look for link "Update Store". This will up
 * Fix: Taxes were broken following some refactoring of the admin saving callbacks.
 * Fix: Quick edit was overwriting variation SKUs and sale prices.
 * Fix: RSS Feed error.
+* Fix: Ensure flat rates settings are pre-populated by default, to avoid notices on new installs.
+* Fix: Forcing SSL when no SSL certificate is installed caused some core post type admin pages to fail to load.
+* Fix: In some circumstances, the javascript for country/region selection would fail.  See [#1404](https://github.com/wp-e-commerce/WP-e-Commerce/issues/1404)
 
 = 3.9.1 =
 
