@@ -617,13 +617,25 @@ function wpsc_customer_account_digital_contents() {
 	echo wpsc_get_customer_account_digital_contents();
 }
 
+/**
+ * Return Customer Details
+ *
+ * @return $output
+ */
 function wpsc_get_checkout_customer_details() {
 	$output = '<h4>Buyer Details</h4>';
+	$output .= apply_filters( 'wpsc_review_order_buyers_details', '' );
 	$output .= '<h4>Shipping Details</h4>';
+	$output .= apply_filters( 'wpsc_review_order_shipping_details', '' );
 
 	return $output;
 }
 
+/**
+ * Print Customer Details
+ *
+ * @return void
+ */
 function wpsc_checkout_customer_details() {
 	echo wpsc_get_checkout_customer_details();
 }

@@ -467,11 +467,37 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
      * @return void
      */
     public function callback_review_transaction() {  
+		// Pull Customer Details from PayPal
         $this->pull_paypal_details();  
+		
+		// If no Shipping is required, confirm the Transaction
         if ( !wpsc_uses_shipping() ) {
             $this->callback_confirm_transaction();
         }
+
+		// Display Customer Details
+		add_filter( 'wpsc_review_order_buyers_details', array( &$this, 'review_trans_buyer_details' ) );
     }
+
+	/**
+ 	 * Display Customer Details from PayPal
+	 *
+	 * @param string $output
+	 * @return $output
+	 */
+	public function review_order_buyer_details( $output ) {
+		return $output;
+	}
+
+	/**
+ 	 * Display Shipping Details from PayPal
+	 *
+	 * @param string $output
+	 * @return $output
+	 */
+	public function review_order_shipping_details( $output ) {
+		return $output;
+	}
 
 	/**
 	 * Confirm Transaction Callback
