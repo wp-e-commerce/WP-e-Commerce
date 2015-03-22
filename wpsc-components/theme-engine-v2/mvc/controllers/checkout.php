@@ -44,14 +44,35 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 	 * @return void
 	 */
 	public function review_order() {
+		// Initialize Shipping Calculator
 		$this->init_shipping_calculator();
+
+		// View Settings
+		$this->title .= ' → Review Order';
+		$this->view = 'checkout-review-order';
+
+		// If no shipping is available, show an error message.
+		if ( wpsc_uses_shipping() && ! $this->shipping_calculator->has_quotes ) {
+			$this->message_collection->add(
+				__( 'Sorry but we cannot ship products to your submitted address. Please either provide another shipping address or contact the store administrator about product availability to your location.', 'wpsc' ),
+				'error'
+			);
+			return;
+		}
+
+		// Alert the user that the payment process is not complete.
+		$this->message_collection->add(
+			__( 'Your payment is not completed, please review your order details, select a Shipping method and press "Place Order" to complete your order', 'wpsc' ),
+			'info'
+		);
+
+		// Shipping Selector Scripts and Filters
 		add_action( 'wp_enqueue_scripts',
 			array( $this, '_action_shipping_method_scripts' )
 		);
-		$this->title .= ' → Review Order';
-		$this->view = 'checkout-review-order';
 		add_filter( 'wpsc_checkout_shipping_method_form_button_title', array( &$this, 'review_order_button_title' ), 1, 100 );
 
+		// Handle POST request
 		if ( isset( $_POST['action'] ) && $_POST['action'] == 'submit_shipping_method' ) {	
 			$this->submit_review_order();
 		}
