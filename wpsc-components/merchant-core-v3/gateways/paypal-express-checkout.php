@@ -363,7 +363,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         $this->set_purchase_log_for_callbacks();
 
         // Pull the User Details from PayPal
-        $paypal = $this->gateway->get_details_for( $_GET['token'] );
+        $this->paypal_data = $paypal = $this->gateway->get_details_for( $_GET['token'] );
         $payer = $paypal->get( 'payer' );
         $address = $paypal->get( 'shipping_address' ); 
 
@@ -476,7 +476,8 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         }
 
 		// Display Customer Details
-		add_filter( 'wpsc_review_order_buyers_details', array( &$this, 'review_trans_buyer_details' ) );
+		add_filter( 'wpsc_review_order_buyers_details', array( &$this, 'review_order_buyer_details' ) );
+		add_filter( 'wpsc_review_order_shipping_details', array( &$this, 'review_order_shipping_details' ) );
     }
 
 	/**
@@ -486,6 +487,12 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	 * @return $output
 	 */
 	public function review_order_buyer_details( $output ) {
+		$payer = $this->paypal_data->get( 'payer' );
+		$output .= '<ul>';
+		$output .= '<li><strong>' . __( 'Email:', 'wpsc' ) . ' </strong>' . $payer->email . '</li>';
+		$output .= '<li><strong>' . __( 'First Name:', 'wpsc' ) . ' </strong>' . $payer->first_name . '</li>';
+		$output .= '<li><strong>' . __( 'Last Name:', 'wpsc' ) . ' </strong>' . $payer->last_name . '</li>';
+		$output .= '</ul>';
 		return $output;
 	}
 
@@ -496,6 +503,15 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	 * @return $output
 	 */
 	public function review_order_shipping_details( $output ) {
+        $address = $this->paypal_data->get( 'shipping_address' ); 			
+		$output .= '<ul>';
+		$output .= '<li>' . $address[ 'name' ] . '</li>';
+		$output .= '<li>' . $address[ 'street' ] . '</li>';
+		$output .= '<li>' . $address[ 'city' ] . '</li>';
+		$output .= '<li>' . $address[ 'state' ] . '</li>';
+		$output .= '<li>' . $address[ 'zip' ] . '</li>';
+		$output .= '<li>' . $address[ 'country_code' ] . '</li>';
+		$output .= '</ul>';
 		return $output;
 	}
 
