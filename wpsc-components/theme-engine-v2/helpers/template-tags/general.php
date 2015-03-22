@@ -616,3 +616,15 @@ function wpsc_get_customer_account_digital_contents() {
 function wpsc_customer_account_digital_contents() {
 	echo wpsc_get_customer_account_digital_contents();
 }
+
+function wpsc_get_checkout_customer_details() {
+	$output = '<h4>Buyer Details</h4>';
+	$output .= 
+	$output .= '<h4>Shipping Details</h4>';
+
+	return $output;
+}
+
+function wpsc_checkout_customer_details() {
+	echo wpsc_get_checkout_customer_details();
+}
