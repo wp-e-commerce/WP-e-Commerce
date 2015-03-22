@@ -786,7 +786,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		<label for="wpsc-paypal-express-cart-logo"><?php _e( 'Merchant Logo', 'wpsc' ); ?></label>
 	</td>
 	<td>
-		<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'cart_logo' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'cart_logo' ) ); ?>" id="wpsc-paypal-express-cart-logo" />
+		<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'cart_logo' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'cart_logo' ) ); ?>" id="wpsc-paypal-express-cart-logo" /><br><span class="small description"><?php _e( 'The image must be stored in a HTTPS Server. Limit the image to 190 pixels wide by 60 pixels high.', 'wpsc' ); ?></span>
 	</td>
 </tr>
 <tr>
