@@ -166,7 +166,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		$ipn = new PHP_Merchant_Paypal_IPN( false, (bool) $this->setting->get( 'sandbox_mode', false ) );
 
 		if ( $ipn->is_verified() ) {
-			$sessionid = $ipn->get( 'invoice' );
+			$sessionid = $ipn->get( 'message_id' );
 			$this->set_purchase_log_for_callbacks( $sessionid );
 
 			if ( $ipn->is_payment_denied() ) {
