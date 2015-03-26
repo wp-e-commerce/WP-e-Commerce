@@ -150,11 +150,12 @@ function wpsc_delete_categorymeta( $cat_id, $meta_key, $meta_value = '' ) {
  * add_product_meta function.
  *
  * @access public
- * @param mixed $product_id
- * @param mixed $key
- * @param mixed $value
- * @param bool  $unique - obsolete
- * @param bool  $custom - obsolete
+ * @param int       $product_id Unique product identifier
+ * @param string    $key  Metadata name.
+ * @param mixed     $value Metadata value. Must be serializable if non-scalar.
+ * @param bool      $unique - obsolete
+ * @param bool      $custom - obsolete
+ * @return int|bool WordPress Meta ID on success, false on failure.
  */
 function add_product_meta( $product_id, $key, $value, $unique = false, $custom = false ) {
 	$key = WPSC_META_PREFIX.$key;
@@ -165,9 +166,10 @@ function add_product_meta( $product_id, $key, $value, $unique = false, $custom =
  * delete_product_meta function.
  *
  * @access public
- * @param mixed $product_id
- * @param mixed $key
- * @param bool  $value. (default: '')
+ * @param  int    $product_id
+ * @param  string $key
+ * @param  mixed  $value.  Optional. Metadata value. Must be serializable if non-scalar. Default empty
+ * @return bool   True on success, false on failure.
  */
 function delete_product_meta($product_id, $key, $value = '') {
 	$key = WPSC_META_PREFIX.$key;
@@ -179,10 +181,11 @@ function delete_product_meta($product_id, $key, $value = '') {
  * get_product_meta function.
  *
  * @access public
- * @param mixed $product_id
- * @param mixed $key
- * @param bool  $single. (default: false)
- * @return void
+ * @param  int    $product_id
+ * @param  string $key
+ * @param  bool   $single  Optional. Whether to return a single value. Default false.
+ * @return mixed  Will be an array if $single is false. Will be value of meta data
+ *                field if $single is true.
  */
 function get_product_meta($product_id, $key, $single = false) {
 	$key = WPSC_META_PREFIX.$key;
@@ -193,11 +196,13 @@ function get_product_meta($product_id, $key, $single = false) {
  * update_product_meta function.
  *
  * @access public
- * @param  mixed  $product_id
- * @param  mixed  $key
- * @param  mixed  $value
- * @param  string $prev_value. (default: '')
- * @return void
+ * @param  int      $product_id
+ * @param  string   $key
+ * @param  mixed    Metadata value. Must be serializable if non-scalar.
+ * @param  string   Optional. Previous value to check before removing.
+ *                  Defaults to empty. (default: '')
+ * @return int|bool Meta ID if the key didn't exist, true on successful update,
+ *                  false on failure.
  */
 function update_product_meta($product_id, $key, $value, $prev_value = '') {
 	$key = WPSC_META_PREFIX.$key;
