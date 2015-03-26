@@ -78,7 +78,6 @@ function wpsc_format_currency( $amt, $args = '' ) {
 		$currency_code = '';
 	}
 
-
 	$symbol = $display_currency_symbol ? $currency->get_currency_symbol() : '';
 	$symbol = esc_html( $symbol );
 	$symbol = apply_filters( 'wpsc_format_currency_currency_symbol', $symbol, $isocode );

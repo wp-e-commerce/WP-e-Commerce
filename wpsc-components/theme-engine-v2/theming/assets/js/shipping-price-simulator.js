@@ -13,7 +13,7 @@
 		}
 
 		num = parts.join(WPSC_Price_Table.formatter.decimal_separator);
-		console.log( WPSC_Price_Table );
+
 		switch ( WPSC_Price_Table.formatter.sign_location * 1 ) {
 			case 1:
 				return num + WPSC_Price_Table.formatter.symbol;
