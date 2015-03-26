@@ -164,11 +164,9 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 */
 	public function callback_ipn() {
 		$ipn = new PHP_Merchant_Paypal_IPN( false, (bool) $this->setting->get( 'sandbox_mode', false ) );
-
 		if ( $ipn->is_verified() ) {
-			$sessionid = $ipn->get( 'message_id' );
-			$this->set_purchase_log_for_callbacks( $sessionid );
-
+			$sessionid = $ipn->get( 'invoice' );
+			$this->set_purchase_log_for_callbacks( $sessionid, 'sessionid' );
 			if ( $ipn->is_payment_denied() ) {
 				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::PAYMENT_DECLINED );
 			} elseif ( $ipn->is_payment_refunded() ) {
