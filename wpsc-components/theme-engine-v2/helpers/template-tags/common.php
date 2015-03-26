@@ -60,7 +60,6 @@ function wpsc_format_currency( $amt, $args = '' ) {
 	}
 
 	$currency_code = $currency->get_currency_code();
-
 	// No decimal point, no decimals
 	if ( ! $display_decimal_point || in_array( $currency_code, $currencies_without_fractions ) ) {
 		$decimals = 0;
@@ -78,6 +77,7 @@ function wpsc_format_currency( $amt, $args = '' ) {
 	if ( ! $display_currency_code ) {
 		$currency_code = '';
 	}
+
 
 	$symbol = $display_currency_symbol ? $currency->get_currency_symbol() : '';
 	$symbol = esc_html( $symbol );
