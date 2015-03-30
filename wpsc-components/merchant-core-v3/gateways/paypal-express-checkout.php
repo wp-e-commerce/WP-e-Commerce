@@ -142,7 +142,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         add_filter( 'wpsc_paypal_express_checkout_return_url', array( &$this, 'review_order_callback' ) );
 
         // Set a Temporary Option for EC Shortcut
-        update_option( 'ecs-' . $sessionid, true );
+		wpsc_update_customer_meta( 'esc-' . $sessionid, true );
 
         // Apply Checkout Actions
 		do_action( 'wpsc_submit_checkout', array(
@@ -535,7 +535,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 
         // Remove Shortcut option if it exists
         $sessionid = $_REQUEST['sessionid'];
-        delete_option( 'ecs-' . $sessionid );
+		wpsc_delete_customer_meta( 'esc-' . $sessionid );
 	}
 
 	/**

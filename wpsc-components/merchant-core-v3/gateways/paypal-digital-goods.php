@@ -211,11 +211,11 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
         wp_register_style( 'ppdg-iframe', plugins_url( 'dg.css', __FILE__ ) );
 
 		// Apply any filters
-		if ( get_option( 'ecs-' . $sessionid ) ) {
+		if ( wpsc_get_customer_meta( 'ecs-' . $sessionid ) ) {
 			add_filter( 'wpsc_paypal_express_checkout_transact_url', array( &$this, 'review_order_url' ) );
 			add_filter( 'wpsc_paypal_express_checkout_return_url', array( &$this, 'review_order_callback' ) );
 
-			delete_option( 'ecs-' . $sessionid );
+			wpsc_delete_customer_meta( 'esc-' . $sessionid );
 		}
 
         // Return a redirection page
