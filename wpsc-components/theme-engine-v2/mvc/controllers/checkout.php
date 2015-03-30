@@ -480,7 +480,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		$decimals            = apply_filters( 'wpsc_modify_decimals'                 , $decimals, $isocode );
 		$decimal_separator   = apply_filters( 'wpsc_format_currency_decimal_separator'  , wpsc_get_option( 'decimal_separator' ), $isocode );
 		$thousands_separator = apply_filters( 'wpsc_format_currency_thousands_separator', wpsc_get_option( 'thousands_separator' ), $isocode );
-		$symbol = apply_filters( 'wpsc_format_currency_currency_symbol', $currency->get( 'symbol' ), $isocode );
+		$symbol = apply_filters( 'wpsc_format_currency_currency_symbol', $currency->get_currency_symbol() );
 		$sign_location = get_option( 'currency_sign_location' );
 
 		$js_var['formatter'] = array(
