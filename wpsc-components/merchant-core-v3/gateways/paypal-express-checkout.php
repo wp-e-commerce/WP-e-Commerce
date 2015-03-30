@@ -7,6 +7,7 @@
 class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway {
 	public $sandbox_url = 'https://www.sandbox.paypal.com/webscr';
 	public $live_url    = 'https://www.paypal.com/cgi-bin/webscr';
+	private $paypal_data;
 	protected $gateway;
 
 	/**
@@ -16,7 +17,6 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	 *
 	 * @param array $options
 	 * @param bool $child
-	 * @return void
 	 *
 	 * @since 3.9
 	 */
@@ -484,7 +484,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
  	 * Display Customer Details from PayPal
 	 *
 	 * @param string $output
-	 * @return $output
+	 * @return string 
 	 */
 	public function review_order_buyer_details( $output ) {
 		$payer = $this->paypal_data->get( 'payer' );
@@ -500,7 +500,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
  	 * Display Shipping Details from PayPal
 	 *
 	 * @param string $output
-	 * @return $output
+	 * @return string
 	 */
 	public function review_order_shipping_details( $output ) {
         $address = $this->paypal_data->get( 'shipping_address' ); 			
@@ -563,7 +563,6 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		$options += $this->checkout_data->get_gateway_data();
 		$options += $this->purchase_log->get_gateway_data( parent::get_currency_code(), $this->get_currency_code() );
  
-        
 		if ( $this->setting->get( 'ipn', false ) ) {
 			$options['notify_url'] = $this->get_notify_url();
 		}

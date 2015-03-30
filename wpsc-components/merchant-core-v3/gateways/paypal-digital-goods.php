@@ -15,7 +15,6 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      * Constructor of PayPal Express Checkout Gateway
      *
      * @param array $options
-     * @return void
      *
      * @since 3.9
      */
@@ -339,8 +338,6 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 
     /**
      * Return the original (real) Cancel URL
-     *
-     * @param integer $session_id
      *
      * @return string
      *

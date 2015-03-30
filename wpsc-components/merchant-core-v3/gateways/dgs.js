@@ -12,7 +12,7 @@
 		var $checkout_btn = $( '#pp-ecs-dg' );
 
 		// Inserts the Spinner
-		if ( dg_loc && dg_loc.spinner_url ) {
+		if ( window.dg_loc && window.dg_loc.spinner_url ) {
 			$checkout_btn.after( '<img src="' + dg_loc.spinner_url + '" class="dg-spinner" alt="spinner" />' );
 			var $spinner = $( '.dg-spinner' );
 			// Add some basic styling
@@ -24,13 +24,13 @@
 			// Hide the Spinner
 			$spinner.hide();
 		} else {
-			$spinner = $( '' ); // Avoids exceptions if the dg_loc is not loaded
+			var $spinner = $( '' ); // Avoids exceptions if the dg_loc is not loaded
 		}
 
 		// Submit button Click handler
 		$checkout_btn.on( 'click', function() {	
 				// Disable Submit button
-				$checkout_btn.val( dg_loc.loading ).prop( 'disabled', true );
+				$checkout_btn.val( window.dg_loc.loading ).prop( 'disabled', true );
 
 				// Show the Spinner
 				$spinner.show();
@@ -41,7 +41,7 @@
 					type: 'get',	
 					success: function( url ) {
 						// Start the DG flow
-						var dg = new PAYPAL.apps.DGFlow({
+						var dg = new window.PAYPAL.apps.DGFlow({
 							trigger: null
 						});
 
@@ -49,7 +49,7 @@
 							dg.startFlow( url );
 						} else {
 							if ( window.console ) {
-								console.info( url );
+								window.console.info( url );
 							}
 						}
 						// Hide the Spinner
