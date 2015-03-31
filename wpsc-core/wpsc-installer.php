@@ -823,5 +823,8 @@ function wpsc_theme_engine_v2_activate() {
 	flush_rewrite_rules( true );
 	update_option( 'transact_url', wpsc_get_checkout_url( 'results' ) );
 	WPSC_Settings::get_instance();
+	/**
+	 * Runs after the WPSC Theme engine V2 is activated
+	 */ 
 	do_action( 'wpsc_theme_engine_v2_activate' );
 }
