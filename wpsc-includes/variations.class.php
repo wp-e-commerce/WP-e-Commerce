@@ -305,7 +305,10 @@ function wpsc_get_child_object_in_terms_var( $parent_id, $terms, $taxonomies, $a
  * @param array     $variations     required            The array of variation selections
  * @param int       $product_id     required            The default product_id
  * @uses wpsc_get_child_objects_in_terms()              Given $product_id and product params this returns the variation product id
- * @return int      $product_id                         The ID of the variation product
+ * @return array    $args {
+ *      @param  int     product_id                      The variation product_id
+ *      @param  array   variation_values                The array of variation_values that wpsc_add_to_cart needs to populate $provided_parameters['variation_values']
+ * }
  */
 function wpsc_get_product_id_from_variations( $variations, $product_id ) {
 
