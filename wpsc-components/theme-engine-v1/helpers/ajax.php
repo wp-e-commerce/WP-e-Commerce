@@ -120,7 +120,9 @@ function wpsc_add_to_cart() {
 	}
 
 	if ( isset( $_POST['variation'] ) ) {
-		$product_id = wpsc_get_product_id_from_variations( $_POST['variation'], $product_id );
+		$return_variation_params                 = wpsc_get_product_id_from_variations( $_POST['variation'], $product_id );
+		$product_id                              = $return_variation_params['product_id'];
+		$provided_parameters['variation_values'] = $return_variation_params['variation_values'];
 	}
 
 	if ( (isset( $_POST['quantity'] ) && $_POST['quantity'] > 0) && (!isset( $_POST['wpsc_quantity_update'] )) ) {

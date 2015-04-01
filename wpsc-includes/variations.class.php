@@ -309,10 +309,10 @@ function wpsc_get_child_object_in_terms_var( $parent_id, $terms, $taxonomies, $a
  */
 function wpsc_get_product_id_from_variations( $variations, $product_id ) {
 
-	$provided_parameters = array();
+	$variation_values = array();
 
 	foreach ( (array) $variations as $key => $variation ) {
-		$provided_parameters['variation_values'][ (int) $key ] = (int) $variation;
+		$variation_values[ (int) $key ] = (int) $variation;
 	}
 
 	if ( count( $provided_parameters['variation_values'] ) > 0 ) {
@@ -330,6 +330,13 @@ function wpsc_get_product_id_from_variations( $variations, $product_id ) {
 	 * @param int   $product_id             The default passed product_id
 	 * @param array $variations             The variation selections passed to the core function
 	 */
-	return apply_filters( 'wpsc_variation_product_id', absint( $product_id ), $variations );
+	$product_id = apply_filters( 'wpsc_variation_product_id', absint( $product_id ), $variations );
+
+	$return_args = array(
+		'product_id'       => $product_id,
+		'variation_values' => $variation_values,
+	);
+
+	return $return_args;
 
 }
