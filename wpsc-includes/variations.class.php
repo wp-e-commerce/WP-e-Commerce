@@ -307,7 +307,9 @@ function wpsc_get_child_object_in_terms_var( $parent_id, $terms, $taxonomies, $a
  * @uses wpsc_get_child_objects_in_terms()              Given $product_id and product params this returns the variation product id
  * @return int      $product_id                         The ID of the variation product
  */
-function wpsc_get_product_id_from_variation_selections( $variations ){
+function wpsc_get_product_id_from_variations( $variations ) {
+
+	$provided_parameters = array();
 
 	foreach ( (array) $variations['variation'] as $key => $variation ) {
 		$provided_parameters['variation_values'][ (int) $key ] = (int) $variation;
