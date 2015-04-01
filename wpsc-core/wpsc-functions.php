@@ -551,8 +551,19 @@ function wpsc_register_post_types() {
 	$args = apply_filters( 'wpsc_register_taxonomies_product_variation_args', $args );
 	// Product Variations, is internally heirarchical, externally, two separate types of items, one containing the other
 	register_taxonomy( 'wpsc-variation', 'wpsc-product', $args );
-
+	
+	/**
+	 * Fires after the WPSC post types are registered 
+	 * 
+	 * no params
+	 */ 
 	do_action( 'wpsc_register_post_types_after' );
+	
+	/**
+	 * Fires after the WPSC taxonomies are registered
+	 * 
+	 * no params
+	 */ 
 	do_action( 'wpsc_register_taxonomies_after' );
 }
 
