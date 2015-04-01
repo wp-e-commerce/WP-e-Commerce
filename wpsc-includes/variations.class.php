@@ -301,7 +301,6 @@ function wpsc_get_child_object_in_terms_var( $parent_id, $terms, $taxonomies, $a
  * Given array of variation selections this works through the terms and returns the product_id for the matching variation
  *
  * @since 4.0
- * @author Curtis McHale
  *
  * @param array     $variations     required            The array of variation selections
  * @uses wpsc_get_child_objects_in_terms()              Given $product_id and product params this returns the variation product id
