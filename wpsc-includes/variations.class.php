@@ -321,6 +321,6 @@ function wpsc_get_product_id_from_variations( $variations ) {
 		}
 	}
 
-	return absint( $product_id );
+	return apply_filters( 'wpsc_variation_product_id', absint( $product_id ), $variations );
 
 }
