@@ -311,7 +311,7 @@ function wpsc_get_product_id_from_variations( $variations, $product_id ) {
 
 	$provided_parameters = array();
 
-	foreach ( (array) $variations['variation'] as $key => $variation ) {
+	foreach ( (array) $variations as $key => $variation ) {
 		$provided_parameters['variation_values'][ (int) $key ] = (int) $variation;
 	}
 
