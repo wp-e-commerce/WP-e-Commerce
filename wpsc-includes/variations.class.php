@@ -321,6 +321,14 @@ function wpsc_get_product_id_from_variations( $variations ) {
 		}
 	}
 
+	/**
+	 * Allows users to filter the product_id based on the variation selections
+	 *
+	 * @since 4.0
+	 *
+	 * @param int   $product_id             The default passed product_id
+	 * @param array $variations             The variation selections passed to the core function
+	 */
 	return apply_filters( 'wpsc_variation_product_id', absint( $product_id ), $variations );
 
 }
