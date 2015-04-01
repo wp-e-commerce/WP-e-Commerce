@@ -336,7 +336,7 @@ function wpsc_get_product_id_from_variations( $variations, $product_id ) {
 	$product_id = apply_filters( 'wpsc_variation_product_id', absint( $product_id ), $variations );
 
 	$return_args = array(
-		'product_id'       => $product_id,
+		'product_id'       => absint( $product_id ),
 		'variation_values' => $variation_values,
 	);
 
