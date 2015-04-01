@@ -318,8 +318,8 @@ function wpsc_get_product_id_from_variations( $variations, $product_id ) {
 		$variation_values[ (int) $key ] = (int) $variation;
 	}
 
-	if ( count( $provided_parameters['variation_values'] ) > 0 ) {
-		$variation_product_id = wpsc_get_child_object_in_terms( $product_id, $provided_parameters['variation_values'], 'wpsc-variation' );
+	if ( count( $variation_values ) > 0 ) {
+		$variation_product_id = wpsc_get_child_object_in_terms( $product_id, $variation_values, 'wpsc-variation' );
 		if ( $variation_product_id > 0 ) {
 			$product_id = $variation_product_id;
 		}
