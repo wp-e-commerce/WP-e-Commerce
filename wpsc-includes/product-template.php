@@ -269,6 +269,10 @@ function wpsc_product_has_children( $id, $exclude_unpublished = true ){
 function wpsc_product_has_variations( $id = 0 ) {
 	static $has_variations = array();
 
+	if ( ! wpsc_variations::variations_are_being_used() ) {
+		return false;
+	}
+
 	if ( ! $id )
 		$id = get_the_ID();
 

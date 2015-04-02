@@ -739,13 +739,20 @@ function wpsc_update_permalink_slugs() {
  * @return stdObject[]
  */
 function wpsc_get_product_terms( $product_id, $tax, $field = '' ) {
+
 	$terms = get_the_terms( $product_id, $tax );
+	// if, albeit for some bizarre reason, the call returns a WordPress error lets behave as if there weren't any terms
+	if ( is_wp_error( $terms ) ) {
+		$terms = false;
+	}
 
-	if ( ! $terms )
+	if ( ! $terms ) {
 		$terms = array();
+	}
 
-	if ( $field )
+	if ( $field ) {
 		$terms = wp_list_pluck( $terms, $field );
+	}
 
 	// remove the redundant array keys, could cause issues in loops with iterator
 	$terms = array_values( $terms );

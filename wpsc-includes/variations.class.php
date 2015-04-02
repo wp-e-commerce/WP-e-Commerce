@@ -22,12 +22,31 @@ class wpsc_variations {
 	var $current_variation = -1;
 	var $variation;
 
+	const VARIATIONS_BEING_USED_OPTION_NAME = 'wpsc_variations_are_being_used';
 
-	function wpsc_variations( $product_id ) {
+	static function variations_are_being_used() {
+
+		// variations are always enabled on the back-end (admin), for the user facing site we only enable variations
+		// if there are variation terms saved by the administrator
+		if ( is_admin() ) {
+			$variations_are_being_used = true;
+		} else {
+			$variations_are_being_used = intval( get_option( self::VARIATIONS_BEING_USED_OPTION_NAME, 1 ) );
+		}
+
+		return (bool) $variations_are_being_used;
+	}
+
+	function __construct( $product_id ) {
 		global $wpdb;
 
-		$product_terms = wpsc_get_product_terms( $product_id, 'wpsc-variation' );
-		$product_terms = wpsc_get_terms_variation_sort_filter( $product_terms );
+
+		if ( self::variations_are_being_used() ) {
+			$product_terms = wpsc_get_product_terms( $product_id, 'wpsc-variation' );
+			$product_terms = wpsc_get_terms_variation_sort_filter( $product_terms );
+		} else {
+			$product_terms = array();
+		}
 
 		$this->variation_groups = array();
 		$this->first_variations = array();
@@ -87,10 +106,16 @@ class wpsc_variations {
 
 	function next_variation_group() {
 		$this->current_variation_group++;
-		$this->variation_group = $this->variation_groups[$this->current_variation_group];
+
+		// make sure we don't walk off the end of the variation group array
+		if ( $this->current_variation_group < count( $this->variation_groups ) ) {
+			$this->variation_group = $this->variation_groups[ $this->current_variation_group ];
+		} else {
+			$this->variation_group = array();
+		}
+
 		return $this->variation_group;
 	}
-
 
 	function the_variation_group() {
 		$this->variation_group = $this->next_variation_group();
@@ -98,11 +123,14 @@ class wpsc_variations {
 	}
 
 	function have_variation_groups() {
-		if ( $this->current_variation_group + 1 < $this->variation_group_count ) {
-			return true;
-		} else if ( $this->current_variation_group + 1 == $this->variation_group_count && $this->variation_group_count > 0 ) {
-			$this->rewind_variation_groups();
+		if ( self::variations_are_being_used() ) {
+			if ( $this->current_variation_group + 1 < $this->variation_group_count ) {
+				return true;
+			} else if ( $this->current_variation_group + 1 == $this->variation_group_count && $this->variation_group_count > 0 ) {
+				$this->rewind_variation_groups();
+			}
 		}
+
 		return false;
 	}
 
@@ -114,21 +142,33 @@ class wpsc_variations {
 	}
 
 	function get_first_variations() {
-		global $wpdb;
 		return null;
 	}
 
 
 	function get_variations() {
-		global $wpdb;
-		$this->variations = $this->all_associated_variations[$this->variation_group->term_id];
+		// check to be sure the variations we are accessing exist in the variations array
+		if ( isset( $this->all_associated_variations[$this->variation_group->term_id] ) ) {
+			$this->variations = $this->all_associated_variations[ $this->variation_group->term_id ];
+		} else {
+			$this->variations = array();
+		}
+
 		$this->variation_count = count( $this->variations );
 	}
 
 
 	function next_variation() {
+
 		$this->current_variation++;
-		$this->variation = $this->variations[$this->current_variation];
+
+		// check to make sure we don't access off the end of the variation array
+		if ( $this->current_variation < $this->variation_count ) {
+			$this->variation = $this->variations[ $this->current_variation ];
+		} else {
+			$this->variation = false;
+		}
+
 		return $this->variation;
 	}
 
@@ -138,12 +178,16 @@ class wpsc_variations {
 	}
 
 	function have_variations() {
-		if ( $this->current_variation + 1 < $this->variation_count ) {
-			return true;
-		} else if ( $this->current_variation + 1 == $this->variation_count && $this->variation_count > 0 ) {
-			// Do some cleaning up after the loop,
-			$this->rewind_variations();
+
+		if ( self::variations_are_being_used() ) {
+			if ( $this->current_variation + 1 < $this->variation_count ) {
+				return true;
+			} else if ( $this->current_variation + 1 == $this->variation_count && $this->variation_count > 0 ) {
+				// Do some cleaning up after the loop,
+				$this->rewind_variations();
+			}
 		}
+
 		return false;
 	}
 
@@ -295,4 +339,33 @@ function wpsc_get_child_object_in_terms_var( $parent_id, $terms, $taxonomies, $a
 	} else {
 		return false;
 	}
+}
+
+/*
+ * Remember if variations are being used for products. If not the variation class can skip many requests
+ * to the database when servicing user requests.  Although the transactions are fast when there aren't
+ * any variation, the number of requests is significant, and the results are not cached.
+ */
+if ( is_admin() ) {
+	function _wpsc_remember_if_taxonomy_terms_are_being_used() {
+		// we are going to look for variations that are assigned to products, if they exist we remember that
+		// variations are being used
+		$terms = get_terms( 'wpsc-variation' );
+
+		$new_variations_are_being_used = false;
+		if ( ! is_wp_error( $terms ) ) {
+			if ( ! empty( $terms ) ) {
+				$new_variations_are_being_used = true;
+			}
+		}
+
+		$old_variations_being_used = (bool) intval( get_option( wpsc_variations::VARIATIONS_BEING_USED_OPTION_NAME, true ) );
+
+		if ( $old_variations_being_used != $new_variations_are_being_used ) {
+			delete_option( wpsc_variations::VARIATIONS_BEING_USED_OPTION_NAME );
+			add_option( wpsc_variations::VARIATIONS_BEING_USED_OPTION_NAME, $new_variations_are_being_used, null, true );
+		}
+	}
+
+	add_action( 'shutdown', '_wpsc_remember_if_taxonomy_terms_are_being_used' );
 }
