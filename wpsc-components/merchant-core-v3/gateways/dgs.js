@@ -11,12 +11,12 @@
 	};
 	$( window ).load( function() {
 		// Declare DOM elements
-		var $checkout_btn = $( '#pp-ecs-dg' ), spinner = $( '' ); // Avoids exceptions if the dg_loc is not loaded;
+		var $checkout_btn = $( '#pp-ecs-dg' ), $spinner = $( '' ); // Avoids exceptions if the dg_loc is not loaded;
 
 		// Inserts the Spinner
 		if ( window.dg_loc && window.dg_loc.spinner_url ) {
 			$checkout_btn.after( '<img src="' + dg_loc.spinner_url + '" class="dg-spinner" alt="spinner" />' );
-			var $spinner = $( '.dg-spinner' );
+			$spinner = $( '.dg-spinner' );
 			// Add some basic styling
 			$spinner.css( {
 				'vertical-align': 'middle',
