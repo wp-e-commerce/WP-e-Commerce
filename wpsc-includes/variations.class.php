@@ -354,3 +354,59 @@ function wpsc_get_product_data_from_variations( $variations, $product_id ) {
 	return $return_args;
 
 }
+
+/**
+ * Wrapper for wpsc_get_product_data_from_variations that returns the variation product_id
+ *
+ * See wpsc_get_product_data_from_variations for a full description on what needs to be passed in the $variations params
+ *
+ * @since 4.0
+ *
+ * @uses wpsc_get_product_data_from_variations()                        Returns array of data pertaining to product variations
+ * @return int      $product_id                                         The product_id corresponding to the selected variation
+ */
+function wpsc_get_product_id_from_variations( $variations, $product_id ){
+
+	$values = wpsc_get_product_data_from_variations( $variations, $product_id );
+
+	/**
+	 * Allows users to filter the product_id based on the variation selections
+	 *
+	 * @since 4.0
+	 *
+	 * @param int   $product_id             The default passed product_id
+	 * @param array $variations             The variation selections passed to the core function
+	 */
+	$product_id = apply_filters( 'wpsc_variation_product_id', absint( $values['product_id'] ), $variations );
+
+	return absint( $product_id );
+
+}
+
+/**
+ * Wrapper for wpsc_get_product_data_from_variations that returns the variation values corresponding to the variation selections
+ *
+ * See wpsc_get_product_data_from_variations for a full description on what needs to be passed in the $variations params
+ *
+ * @since 4.0
+ *
+ * @uses wpsc_get_product_data_from_variations()                        Returns array of data pertaining to product variations
+ * @return array      $variation_values                                 The variation values for the selected variation terms, so the term_ids as the array $values
+ */
+function wpsc_get_variation_values_from_variations( $variations, $product_id ){
+
+	$values = wpsc_get_product_data_from_variations( $variations, $product_id );
+
+	/**
+	 * Allows users to filter the variation values based on the variation selections
+	 *
+	 * @since 4.0
+	 *
+	 * @param array $variations             The variation selections passed to the core function
+	 * @param int   $product_id             The default passed product_id
+	 */
+	$variation_values = apply_filters( 'wpsc_variation_values', $values['variation_values'], $product_id );
+
+	return (array) $variation_values;
+
+}
