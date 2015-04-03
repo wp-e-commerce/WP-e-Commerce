@@ -19,10 +19,10 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      * @since 3.9
      */
     public function __construct( $options ) {
-        require_once( 'php-merchant/gateways/paypal-digital-goods.php' ); 
+        require_once( 'php-merchant/gateways/paypal-digital-goods.php' );
         // Now that the gateway is created, call parent constructor
         parent::__construct( $options, true );
-		
+
 		$this->gateway = new PHP_Merchant_Paypal_Digital_Goods( $options );
         $this->title = __( 'PayPal ExpressCheckout for Digital Goods', 'wpsc' );
 
@@ -38,30 +38,39 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
             'cart_logo'		   => $this->setting->get( 'cart_logo' ),
             'cart_border'	   => $this->setting->get( 'cart_border' ),
         ) );
-		
+
 		// Express Checkout for DG Button
 		add_action( 'wpsc_cart_item_table_after', array( &$this, 'add_ecs_button' ), 0, 10 );
 
         // Filter Digital Goods option on checkout
-        add_filter( 'wpsc_payment_method_form_fields', array( &$this, 'dg_option_removal' ), 100, 2 );
+        add_filter( 'wpsc_payment_method_form_fields', array( &$this, 'dg_option_removal' ), 100 );
     }
 
-    public function dg_option_removal( $fields, $args ) {
+    /**
+     * Toggles Digital Goods option based on whether or not shipping is being used on the given cart.
+     *
+     * @since  4.0
+     *
+     * @param  array $fields Payment method form fields
+     *
+     * @return array $fields Modified payment method form fields
+     */
+    public function dg_option_removal( $fields ) {
         if ( wpsc_uses_shipping() ) {
             // Remove DG option
             foreach( $fields as $index => $field ) {
                 if ( $field['value'] === 'paypal-digital-goods' ) {
-                    unset( $fields[$index] );
+                    unset( $fields[ $index] );
                 }
             }
         } else {
             // Remove Normal option
             foreach( $fields as $index => $field ) {
                 if ( $field['value'] === 'paypal-express-checkout' ) {
-                    unset( $fields[$index] );
+                    unset( $fields[ $index ] );
                 }
             }
-        } 
+        }
         return $fields;
     }
 
@@ -74,7 +83,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		if ( wpsc_uses_shipping() ) {
 			return;
 		}
-		if ( _wpsc_get_current_controller_name() === 'cart' ) {	
+		if ( _wpsc_get_current_controller_name() === 'cart' ) {
 			$url = $this->get_shortcut_url();
 			echo '<a id="pp-ecs-dg" href="'. $url .'"><img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png" alt="Check out with PayPal" /></a>';
 		}
@@ -92,7 +101,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 		), home_url( 'index.php' ) );
 
 		return apply_filters( 'wpsc_paypal_digital_goods_shortcut_url', $location );
-	}	
+	}
 
 	/**
      * Sets the Review Callback for Review Order page.
@@ -269,7 +278,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
             'payment_gateway'          => 'paypal-digital-goods',
             'payment_gateway_callback' => 'confirm_transaction',
 		),
-		$transact_url 
+		$transact_url
     );
 
         $location = wp_validate_redirect( $location );
@@ -395,7 +404,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
         }
 
         exit;
-    }		
+    }
 
 
     /**
