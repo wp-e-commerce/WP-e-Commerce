@@ -129,6 +129,11 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 			}
 		}
 
+		// Set the Shipping method
+		if ( isset( $module_name ) && isset( $option ) ) {
+			$this->shipping_calculator->set_active_method( $module_name, $option );
+		}
+
 		return $found;
 	}
 
@@ -151,11 +156,6 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		// Checks shipping method
 		if ( ! $this->check_shipping_method( $_POST['wpsc_shipping_option'] ) ) {
 			return null;
-		}
-
-		// Set the Shipping method
-		if ( isset( $module_name ) && isset( $option ) ) {
-			$this->shipping_calculator->set_active_method( $module_name, $option );
 		}
 
 		// Update the PurchaseLog
