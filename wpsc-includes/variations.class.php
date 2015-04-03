@@ -324,6 +324,7 @@ function wpsc_get_child_object_in_terms_var( $parent_id, $terms, $taxonomies, $a
 function wpsc_get_product_data_from_variations( $variations, $product_id ) {
 
 	$variation_values = array();
+	$original_product_id = $product_id;
 
 	foreach ( (array) $variations as $key => $variation ) {
 		$variation_values[ (int) $key ] = (int) $variation;
@@ -336,15 +337,8 @@ function wpsc_get_product_data_from_variations( $variations, $product_id ) {
 		}
 	}
 
-	/**
-	 * Allows users to filter the product_id based on the variation selections
-	 *
-	 * @since 4.0
-	 *
-	 * @param int   $product_id             The default passed product_id
-	 * @param array $variations             The variation selections passed to the core function
-	 */
-	$product_id = apply_filters( 'wpsc_variation_product_id', absint( $product_id ), $variations );
+	/** This filter is documented in wpsc_get_product_id_from_variations */
+	$product_id = apply_filters( 'wpsc_variation_product_id', absint( $product_id ), $variations, absint( $original_product_id ) );
 
 	$return_args = array(
 		'product_id'       => absint( $product_id ),
