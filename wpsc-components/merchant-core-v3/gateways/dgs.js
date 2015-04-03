@@ -1,3 +1,5 @@
+/*globals jQuery, dg_loc */
+
 /*
 * PayPal for Digital Goods script
 */
@@ -9,7 +11,7 @@
 	};
 	$( window ).load( function() {
 		// Declare DOM elements
-		var $checkout_btn = $( '#pp-ecs-dg' );
+		var $checkout_btn = $( '#pp-ecs-dg' ), spinner = $( '' ); // Avoids exceptions if the dg_loc is not loaded;
 
 		// Inserts the Spinner
 		if ( window.dg_loc && window.dg_loc.spinner_url ) {
@@ -23,12 +25,10 @@
 			$checkout_btn.css( 'vertical-align', 'middle' );
 			// Hide the Spinner
 			$spinner.hide();
-		} else {
-			var $spinner = $( '' ); // Avoids exceptions if the dg_loc is not loaded
 		}
 
 		// Submit button Click handler
-		$checkout_btn.on( 'click', function() {	
+		$checkout_btn.on( 'click', function() {
 				// Disable Submit button
 				$checkout_btn.val( window.dg_loc.loading ).prop( 'disabled', true );
 
@@ -38,7 +38,7 @@
 				// Submit the FORM with AJAX
 				$.ajax({
 					url: $checkout_btn.attr( 'href' ),
-					type: 'get',	
+					type: 'get',
 					success: function( url ) {
 						// Start the DG flow
 						var dg = new window.PAYPAL.apps.DGFlow({
@@ -56,7 +56,7 @@
 						$spinner.hide();
 					}
 				});
-				return false;	
+				return false;
 		} );
 	} );
 } )( jQuery );
