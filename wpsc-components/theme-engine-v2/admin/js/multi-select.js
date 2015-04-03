@@ -3,7 +3,7 @@
 	$.fn.wpsc_multi_select = function(options) {
 		this.
 			not( '[id*="__i__"]' ). // filter out widget template
-			chosen(options);
+			select2(options);
 	};
 
 	$(function() {
@@ -15,7 +15,7 @@
 			e.preventDefault();
 
 			// if this control hasn't been initialized, do nothing
-			if ( ! el.data( 'chosen' ) )
+			if ( ! el.data( 'select2' ) )
 				return;
 
 			// select all or none based on html class
