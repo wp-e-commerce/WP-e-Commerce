@@ -368,10 +368,15 @@ function wpsc_get_product_id_from_variations( $variations, $product_id ){
 	 *
 	 * @since 4.0
 	 *
-	 * @param int   $product_id             The default passed product_id
+	 * @param int   $$values['product_id']  The variation product_id
 	 * @param array $variations             The variation selections passed to the core function
+	 * @param int   $product_id             The originally passed $product_id
+	 * @param array $values{
+	 *      @param  int     product_id         The variation product_id
+	 *      @param  array   variation_values   The array of variation term_ids based on the selections sent through
+	 * }
 	 */
-	$product_id = apply_filters( 'wpsc_variation_product_id', absint( $values['product_id'] ), $variations );
+	$product_id = apply_filters( 'wpsc_variation_product_id', absint( $values['product_id'] ), $variations, $product_id, $values );
 
 	return absint( $product_id );
 
