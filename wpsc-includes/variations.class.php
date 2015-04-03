@@ -300,6 +300,17 @@ function wpsc_get_child_object_in_terms_var( $parent_id, $terms, $taxonomies, $a
 /**
  * Given array of variation selections this works through the terms and returns the product_id for the matching variation
  *
+ * For the `$variations` parameter we expect to get two 'term_ids' which correspond to the selections in the variation.
+ * So if we have a blue large shirt and the blue term_id is 8 and the large term_id is 12 we would get an array that looks like.
+ *
+ * array(
+ *      '2' => '8',     // this is the blue term_id
+ *      '9' => '12',    // this is the large term_id
+ * );
+ *
+ * Here the keys are captured when someone clicks the 'add to cart' button and correspond with ... whatever. They don't really matter for our function.
+ * Really ou could pass an array of 2 term_ids here and a $product_id that has variations to match those terms and you'd get back the expected array.
+ *
  * @since 4.0
  *
  * @param array     $variations     required            The array of variation selections
