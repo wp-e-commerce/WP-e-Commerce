@@ -403,8 +403,12 @@ function wpsc_get_variation_values_from_variations( $variations, $product_id ){
 	 *
 	 * @param array $variations             The variation selections passed to the core function
 	 * @param int   $product_id             The default passed product_id
+	 * @param array $values{
+	 *      @param  int     product_id         The variation product_id
+	 *      @param  array   variation_values   The array of variation term_ids based on the selections sent through
+	 * }
 	 */
-	$variation_values = apply_filters( 'wpsc_variation_values', $values['variation_values'], $product_id );
+	$variation_values = apply_filters( 'wpsc_variation_values', $values['variation_values'], $product_id, $values );
 
 	return (array) $variation_values;
 
