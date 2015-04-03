@@ -620,7 +620,7 @@ function wpsc_customer_account_digital_contents() {
 /**
  * Return Customer Details
  *
- * @return $output
+ * @return string $output Customer Details
  */
 function wpsc_get_checkout_customer_details() {
 	$output = '<h4>Buyer Details</h4>';

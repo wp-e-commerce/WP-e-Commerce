@@ -73,7 +73,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		add_filter( 'wpsc_checkout_shipping_method_form_button_title', array( &$this, 'review_order_button_title' ), 1, 100 );
 
 		// Handle POST request
-		if ( isset( $_POST['action'] ) && $_POST['action'] == 'submit_shipping_method' ) {	
+		if ( isset( $_POST['action'] ) && $_POST['action'] == 'submit_shipping_method' ) {
 			$this->submit_review_order();
 		}
 	}
@@ -88,27 +88,34 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 	}
 
 	/**
-	 * Handle the Review Order page POST request.
+	 * Validates cart submission.
 	 *
-	 * @return void
+	 * @since  4.0
+	 * @return bool Whether or not there are validation errors.
 	 */
-	private function submit_review_order() {
-		global $wpsc_cart;
-
-		if ( ! $this->verify_nonce( 'wpsc-checkout-form-shipping-method' ) ) {
-			return;
-		}
-
-		$form_args  = wpsc_get_checkout_shipping_form_args();
-		$validation = wpsc_validate_form( $form_args );
+	private function validate_cart() {
+		$validation = wpsc_validate_form( wpsc_get_checkout_shipping_form_args() );
 
 		if ( is_wp_error( $validation ) ) {
 			wpsc_set_validation_errors( $validation );
-			return;
+			return false;
 		}
 
-		$submitted_value = $_POST['wpsc_shipping_option'];
-		$found           = false;
+		return true;
+
+	}
+
+	/**
+	 * Confirms the existence of the submitted shipping method and option.
+	 *
+	 * @param  string $submitted_value POSTed value for shipping method.
+	 *
+	 * @return boolean                 Whether or not shipping method was found.
+	 */
+	private function check_shipping_method( $submitted_value ) {
+		global $wpsc_cart;
+
+		$found = false;
 
 		foreach ( $this->shipping_calculator->quotes as $module_name => $quotes ) {
 			foreach ( $quotes as $option => $cost ) {
@@ -122,20 +129,33 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 			}
 		}
 
-		if ( ! $found ) {
-			return;
-		}	
+		return $found;
+	}
+
+	/**
+	 * Handle the Review Order page POST request.
+	 *
+	 * @return null|void
+	 */
+	private function submit_review_order() {
+		global $wpsc_cart;
+
+		if ( ! $this->verify_nonce( 'wpsc-checkout-form-shipping-method' ) ) {
+			return null;
+		}
+
+		if ( ! $this->validate_cart() ) {
+			return null;
+		}
+
+		// Checks shipping method
+		if ( ! $this->check_shipping_method( $_POST['wpsc_shipping_option'] ) ) {
+			return null;
+		}
 
 		// Set the Shipping method
 		if ( isset( $module_name ) && isset( $option ) ) {
 			$this->shipping_calculator->set_active_method( $module_name, $option );
-		}
-
-		// Get the Payment Gateway id
-		if ( isset( $_GET['payment_gateway'] ) ) {
-			$submitted_gateway = $_GET['payment_gateway'];
-		} else {
-			$submitted_gateway = '';
 		}
 
 		// Update the PurchaseLog
@@ -143,12 +163,10 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		$purchase_log    = new WPSC_Purchase_Log( $purchase_log_id );
 		$purchase_log->set( 'base_shipping', $wpsc_cart->calculate_base_shipping() );
 		$purchase_log->set( 'totalprice', $wpsc_cart->calculate_total_price() );
-		$purchase_log->save();		
+		$purchase_log->save();
 
 		// Build the Redirection URL
-		$url = wpsc_get_checkout_url( "results" );
-		$url = add_query_arg( $_GET, $url );
-		$url = add_query_arg( array( 'payment_gateway_callback' => 'confirm_transaction' ), $url );
+		$url = add_query_arg( array_merge( $_GET, array( 'payment_gateway_callback' => 'confirm_transaction' ) ), wpsc_get_checkout_url( 'results' ) );
 
 		// Redirect to Results Page
 		wp_redirect( $url );
@@ -451,7 +469,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 		require_once( WPSC_TE_V2_CLASSES_PATH . '/shipping-calculator.php' );
 		$this->shipping_calculator = new WPSC_Shipping_Calculator( $current_log_id );
-	}	
+	}
 
 	private function get_shipping_method_js_vars() {
 		global $wpsc_cart;
