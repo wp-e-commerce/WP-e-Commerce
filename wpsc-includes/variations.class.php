@@ -310,7 +310,7 @@ function wpsc_get_child_object_in_terms_var( $parent_id, $terms, $taxonomies, $a
  *      @param  array   variation_values                The array of variation_values that wpsc_add_to_cart needs to populate $provided_parameters['variation_values']
  * }
  */
-function wpsc_get_product_id_from_variations( $variations, $product_id ) {
+function wpsc_get_product_data_from_variations( $variations, $product_id ) {
 
 	$variation_values = array();
 

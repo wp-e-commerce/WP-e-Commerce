@@ -120,7 +120,7 @@ function wpsc_add_to_cart() {
 	}
 
 	if ( isset( $_POST['variation'] ) ) {
-		$return_variation_params                 = wpsc_get_product_id_from_variations( $_POST['variation'], $product_id );
+		$return_variation_params                 = wpsc_get_product_data_from_variations( $_POST['variation'], $product_id );
 		$product_id                              = $return_variation_params['product_id'];
 		$provided_parameters['variation_values'] = $return_variation_params['variation_values'];
 	}
