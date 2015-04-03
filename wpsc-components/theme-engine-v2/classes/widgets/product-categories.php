@@ -164,7 +164,6 @@ class WPSC_Widget_Product_Categories extends WP_Widget {
 		$title          = esc_attr( $instance['title'] );
 		$width          = (int) $instance['width'];
 		$height         = (int) $instance['height'];
-		$grid           = (bool) $instance['grid'];
 		$show_name      = (bool) $instance['show_name'];
 		$show_hierarchy = (bool) $instance['show_hierarchy'];
 		$show_count     = (bool) $instance['show_count'];
