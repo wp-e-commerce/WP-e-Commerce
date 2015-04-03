@@ -22,7 +22,7 @@
 			el.find( 'option' ).prop( 'selected', t.hasClass( 'wpsc-multi-select-all' ) );
 
 			// update Chosen control
-			el.trigger( 'chosen:updated' );
+			el.trigger( 'select2:updated' );
 		});
 
 		// initialize all select boxes with class .wpsc-multi-select by default
@@ -36,7 +36,7 @@
 		$('.wpsc-multi-select').each( function( index, el ) {
 			var t = $(el);
 
-			if ( ! t.data( 'chosen' ) ) {
+			if ( ! t.data( 'select2' ) ) {
 				$( '#' + t.attr( 'id' ).replace( /\-/g, '_' ) + '_chosen' ).remove();
 				t.wpsc_multi_select({
 					search_contains: true
