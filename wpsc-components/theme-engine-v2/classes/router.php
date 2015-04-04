@@ -202,6 +202,40 @@ class WPSC_Router {
 		$wp_query->$prop = true;
 	}
 
+	/**
+	 * Used when a controller is erroneously not registered.
+	 * Whenever a URL endpoint that should be MVC is non-existant, it should 404.
+	 *
+	 * @since  4.0
+	 * @param  string $template Template path.
+	 * @return string           Modified template path.
+	 */
+	public function redirect_to_404( $template ) {
+		$not_found = locate_template( '404.php' );
+
+		if ( ! empty( $not_found ) ) {
+			$template = $not_found;
+		}
+
+		return $template;
+	}
+
+	/**
+	 * Sets query parameters and headers to indicate 404 not found, when controller is not found.
+	 *
+	 * @since  4.0
+	 * @return void
+	 */
+	private function not_found() {
+		global $wp_query;
+
+		$wp_query->set_404();
+		status_header( 404 );
+		nocache_headers();
+
+		add_filter( 'template_include', array( $this, 'redirect_to_404' ) );
+	}
+
 	private function init_controller( $controller ) {
 		if ( empty( $controller ) ) {
 			return;
@@ -226,8 +260,9 @@ class WPSC_Router {
 		$this->controller_name   = $controller;
 		$this->controller        = _wpsc_load_controller( $controller );
 
-		if ( ! is_callable( array( $this->controller, $method ) ) ) {
-			trigger_error( 'Invalid controller method: ' . get_class( $this->controller ) . '::' . $method . '()', E_USER_ERROR );
+		if ( ! is_callable( array( $this->controller, $this->controller_method ) ) ) {
+			_wpsc_doing_it_wrong( __FUNCTION__,  'Invalid controller method: ' . get_class( $this->controller ) . '::' . $method . '()', WPSC_VERSION );
+			$this->not_found();
 		}
 
 		do_action( 'wpsc_router_init' );
