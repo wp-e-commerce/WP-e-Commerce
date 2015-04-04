@@ -392,11 +392,11 @@ function wpsc_get_customer_account_tabs() {
 
 	$active_tab = _wpsc_get_current_controller_slug();
 
-	$tabs = array(
-		'orders'          => _x( 'Orders', 'customer account tab', 'wpsc' ),
+	$tabs = apply_filters( 'wpsc_customer_account_tabs', array(
+		'orders'          => _x( 'Orders'          , 'customer account tab', 'wpsc' ),
 		'digital-content' => _x( 'Digital Contents', 'customer account tab', 'wpsc' ),
-		'settings'        => _x( 'Settings', 'customer account tab', 'wpsc' )
-	);
+		'settings'        => _x( 'Settings'        , 'customer account tab', 'wpsc' )
+	), $active_tab );
 
 	$output = sprintf( '<ul class="wpsc-tabs wpsc-customer-account-tabs">' );;
 
