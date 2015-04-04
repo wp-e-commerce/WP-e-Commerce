@@ -270,10 +270,10 @@ class WPSC_Router {
 		$this->controller_args = $controller_args;
 
 		if ( is_callable( array( $this->controller, '_pre_action' ) ) ) {
-			call_user_func( array( $this->controller, '_pre_action' ), $method, $controller_args );
+			call_user_func( array( $this->controller, '_pre_action' ), $this->controller_method, $this->controller_args );
 		}
 
-		call_user_func_array( array( $this->controller, $method ), $controller_args );
+		call_user_func_array( array( $this->controller, $this->controller_method ), $this->controller_args );
 	}
 
 	public function _filter_query_vars( $q ) {
