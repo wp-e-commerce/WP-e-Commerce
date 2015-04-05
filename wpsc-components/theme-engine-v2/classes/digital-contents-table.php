@@ -102,6 +102,11 @@ class WPSC_Digital_Contents_Table extends WPSC_Table {
 	}
 
 	public function column_contents( $item ) {
+
+		if ( empty( $this->digital_items ) ) {
+			return;
+		}
+
 		echo '<div class="wpsc-digital-product-items">';
 		echo '<ul>';
 		foreach ( $this->digital_items[ $item->ID ] as $file ) {
