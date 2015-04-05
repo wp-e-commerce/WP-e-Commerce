@@ -87,6 +87,7 @@ class WPSC_Template_Engine {
 	 * @since 0.1
 	 */
 	private function register_default_template_part_paths() {
+
 		// First, search in wp-e-commerce/template-parts under the current theme
 		$this->register_template_part_path( STYLESHEETPATH . '/wp-e-commerce/template-parts', 10 );
 

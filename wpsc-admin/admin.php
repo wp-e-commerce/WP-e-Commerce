@@ -1559,6 +1559,7 @@ function wpsc_duplicate_product_image_process( $child_post, $new_parent_id ) {
 
 /**
  * @todo docs
+ *
  * @access private
  *
  * @uses add_query_arg()      Adds argument to the WordPress query
@@ -1566,7 +1567,7 @@ function wpsc_duplicate_product_image_process( $child_post, $new_parent_id ) {
  * @uses get_option()         Gets option from the database given string
  */
 function _wpsc_admin_notices_3dot8dot9() {
-	$message = '<p>' . __( 'You are currently using WP eCommerce 3.8.9. There have been major changes in WP eCommerce 3.8.9, so backward-compatibility with existing plugins might not always be guaranteed. If you are unsure, please roll back to 3.8.8.5, and set up a test site with 3.8.9 to make sure WP eCommerce 3.8.9 is compatible with your existing themes and plugins.<br />If you find any incompatibility issues, please <a href="%1$s">report them to us</a> as well as the other plugins or themes\' developers.' , 'wpsc' ) . '</p>';
+	$message = '<p>' . __( 'You are currently using WP eCommerce. There have been major changes in WP eCommerce 3.8.9, so backward-compatibility with existing plugins might not always be guaranteed. If you are unsure, please roll back to 3.8.8.5, and set up a test site with 3.8.9 to make sure WP eCommerce 3.8.9 is compatible with your existing themes and plugins.<br />If you find any incompatibility issues, please <a href="%1$s">report them to us</a> as well as the other plugins or themes\' developers.' , 'wpsc' ) . '</p>';
 	$message .= "\n<p>" . __( '<a href="%2$s">Hide this warning</a>', 'wpsc' ) . '</p>';
 	$message = sprintf(
 		$message,
@@ -1575,14 +1576,6 @@ function _wpsc_admin_notices_3dot8dot9() {
 	);
 
 	echo '<div id="wpsc-3.8.9-notice" class="error">' . $message . '</div>';
-}
-
-if ( ! get_option( 'wpsc_hide_3.8.9_notices' ) ) {
-	add_action( 'admin_notices', '_wpsc_admin_notices_3dot8dot9' );
-
-  if ( isset( $_REQUEST['dismiss_389_upgrade_notice'] ) ) {
-    update_option( 'wpsc_hide_3.8.9_notices', true );
-  }
 }
 
 /**

@@ -226,7 +226,7 @@ function wpsc_install() {
 	else
 		add_option( 'cart_location', '1', '', 'no' );
 
-	add_option( 'currency_type', '156','', 'no' );
+	add_option( 'currency_type', '136','', 'no' );
 	add_option( 'currency_sign_location', '3', '', 'no' );
 
 	add_option( 'gst_rate', '1','', 'no' );

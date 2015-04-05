@@ -202,6 +202,40 @@ class WPSC_Router {
 		$wp_query->$prop = true;
 	}
 
+	/**
+	 * Used when a controller is erroneously not registered.
+	 * Whenever a URL endpoint that should be MVC is non-existant, it should 404.
+	 *
+	 * @since  4.0
+	 * @param  string $template Template path.
+	 * @return string           Modified template path.
+	 */
+	public function redirect_to_404( $template ) {
+		$not_found = locate_template( '404.php' );
+
+		if ( ! empty( $not_found ) ) {
+			$template = $not_found;
+		}
+
+		return $template;
+	}
+
+	/**
+	 * Sets query parameters and headers to indicate 404 not found, when controller is not found.
+	 *
+	 * @since  4.0
+	 * @return void
+	 */
+	private function not_found() {
+		global $wp_query;
+
+		$wp_query->set_404();
+		status_header( 404 );
+		nocache_headers();
+
+		add_filter( 'template_include', array( $this, 'redirect_to_404' ) );
+	}
+
 	private function init_controller( $controller ) {
 		global $wp_query;
 
@@ -229,13 +263,13 @@ class WPSC_Router {
 		$this->controller        = _wpsc_load_controller( $controller );
 
 		// If method/path not found, show the 404 page
-		if ( ! is_callable( array( $this->controller, $method ) ) ) {	
+		if ( ! is_callable( array( $this->controller, $method ) ) ) {
 			_wpsc_doing_it_wrong( __FUNCTION__, __( 'Invalid controller method: ' . get_class( $this->controller ) . '::' . $method . '()', 'wpsc' ), '4.0' );
 			$wp_query->is_404 = true;
 			$wp_query->is_single = false;
 			$wp_query->is_page = false;
 			include( get_query_template( '404' ) );
-			exit();	
+			exit();
 		}
 
 		do_action( 'wpsc_router_init' );
@@ -243,10 +277,10 @@ class WPSC_Router {
 		$this->controller_args = $controller_args;
 
 		if ( is_callable( array( $this->controller, '_pre_action' ) ) ) {
-			call_user_func( array( $this->controller, '_pre_action' ), $method, $controller_args );
+			call_user_func( array( $this->controller, '_pre_action' ), $this->controller_method, $this->controller_args );
 		}
 
-		call_user_func_array( array( $this->controller, $method ), $controller_args );
+		call_user_func_array( array( $this->controller, $this->controller_method ), $this->controller_args );
 	}
 
 	public function _filter_query_vars( $q ) {
