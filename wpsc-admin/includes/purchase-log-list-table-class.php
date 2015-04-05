@@ -637,8 +637,9 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 	}
 
 	public function search_box( $text, $input_id ) {
-		if ( ! $this->search_box )
+		if ( ! $this->search_box ) {
 			return '';
+		}
 
 		parent::search_box( $text, $input_id );
 	}
