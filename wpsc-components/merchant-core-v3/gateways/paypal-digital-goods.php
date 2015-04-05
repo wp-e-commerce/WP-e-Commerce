@@ -5,7 +5,6 @@ require_once( 'paypal-express-checkout.php' );
  * The PayPal Express Checkout Gateway class
  *
  */
-
 class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Paypal_Express_Checkout {
     const SANDBOX_URL = 'https://www.sandbox.paypal.com/incontext?token=';
     const LIVE_URL    = 'https://www.paypal.com/incontext?token=';
@@ -24,7 +23,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
         parent::__construct( $options, true );
 
 		$this->gateway = new PHP_Merchant_Paypal_Digital_Goods( $options );
-        $this->title = __( 'PayPal ExpressCheckout for Digital Goods', 'wpsc' );
+        $this->title = __( 'PayPal Digital Goods for Express Checkout', 'wpsc' );
 
         $this->gateway->set_options( array(
             'api_username'     => $this->setting->get( 'api_username' ),
