@@ -57,8 +57,9 @@ final class WPSC_Payment_Gateways {
 	public static function &get( $gateway, $meta = false ) {
 
 		if ( empty( self::$instances[$gateway] ) ) {
-			if ( ! $meta )
+			if ( ! $meta ) {
 				$meta = self::$gateways[$gateway];
+			}
 			require_once( $meta['path'] );
 			$class_name = $meta['class'];
 			$options = array(
@@ -100,8 +101,9 @@ final class WPSC_Payment_Gateways {
 		$function_name = "callback_{$_REQUEST['payment_gateway_callback']}";
 		$callback = array( $gateway, $function_name );
 
-		if ( is_callable( $callback ) )
+		if ( is_callable( $callback ) ) {
 			$gateway->$function_name();
+		}
 	}
 
 	/**
@@ -156,19 +158,22 @@ final class WPSC_Payment_Gateways {
 		// scan files in dir
 		$files = scandir( $dir );
 
-		if ( in_array( $main_file, $files ) )
+		if ( in_array( $main_file, $files ) ) {
 			return self::register_file( $dir . $main_file );
+		}
 
 		foreach ( $files as $file ) {
 			$path = $dir . $file;
 
-			if ( pathinfo( $path, PATHINFO_EXTENSION ) != 'php' || in_array( $file, array( '.', '..' ) ) || is_dir( $path ) )
+			if ( pathinfo( $path, PATHINFO_EXTENSION ) != 'php' || in_array( $file, array( '.', '..' ) ) || is_dir( $path ) ) {
 				continue;
+			}
 
 			$return = self::register_file( $path );
 
-			if ( is_wp_error( $return ) )
+			if ( is_wp_error( $return ) ) {
 				return $return;
+			}
 		}
 	}
 
@@ -195,8 +200,9 @@ final class WPSC_Payment_Gateways {
 	 * a valid class. Otherwise, a WP_Error object is returned.
 	 */
 	public static function register_file( $file ) {
-		if ( empty( self::$payment_gateway_cache ) )
+		if ( empty( self::$payment_gateway_cache ) ) {
 			self::$payment_gateway_cache = get_option( 'wpsc_payment_gateway_cache', array() );
+		}
 		$filename = basename( $file, '.php' );
 
 		// payment gateway already exists in cache
@@ -217,8 +223,9 @@ final class WPSC_Payment_Gateways {
 
 		$gateway = self::get( $filename, $meta );
 
-		if ( is_wp_error( $gateway ) )
+		if ( is_wp_error( $gateway ) ) {
 			return $gateway;
+		}
 
 		$meta['name']  = $gateway->get_title();
 		$meta['image'] = $gateway->get_image_url();
@@ -241,13 +248,14 @@ final class WPSC_Payment_Gateways {
 	 * @return void
 	 */
 	public static function action_save_payment_gateway_cache() {
-		if ( self::$payment_gateway_cache != self::$gateways )
+		if ( self::$payment_gateway_cache != self::$gateways ) {
 			update_option( 'wpsc_payment_gateway_cache', self::$gateways );
+		}
 	}
 
 	/**
-     * Flush the payment gateways cache.
- 	 *
+	 * Flush the payment gateways cache.
+	 *
 	 * @access public
 	 * @static
 	 * @since 3.9
@@ -306,13 +314,13 @@ final class WPSC_Payment_Gateways {
 	}
 
 	/**
-     * Initialize the Active Gateways
-     *
+	 * Initialize the Active Gateways
+	 *
 	 * @access public
 	 * @since 4.0
 	 *
-     * @return void
-     */
+	 * @return void
+	 */
 	public static function initialize_gateways() {
 		$active_gateways = self::get_active_gateways();
 

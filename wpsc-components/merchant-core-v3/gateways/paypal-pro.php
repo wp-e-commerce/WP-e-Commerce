@@ -54,7 +54,6 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		);
 	}
 
-
 	/**
 	 * No payment gateway is selected by default
 	 *
@@ -95,7 +94,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 * @since 3.9
 	 */
 	public function get_mark_html() {
-		$html = '<img src="' . WPSC_URL . '/images/cc.gif" border="0" alt="' . esc_attr__( 'Credit Card Icons' ) .'" />';
+		$html = '<img src="' . WPSC_URL . '/images/cc.png" border="0" alt="' . esc_attr__( 'Credit Card Icons' ) .'" />';
 
 		return apply_filters( 'wpsc_paypal-pro_mark_html', $html );
 	}	
@@ -165,11 +164,9 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 */
 	public function callback_ipn() {
 		$ipn = new PHP_Merchant_Paypal_IPN( false, (bool) $this->setting->get( 'sandbox_mode', false ) );
-
 		if ( $ipn->is_verified() ) {
 			$sessionid = $ipn->get( 'invoice' );
-			$this->set_purchase_log_for_callbacks( $sessionid );
-
+			$this->set_purchase_log_for_callbacks( $sessionid, 'sessionid' );
 			if ( $ipn->is_payment_denied() ) {
 				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::PAYMENT_DECLINED );
 			} elseif ( $ipn->is_payment_refunded() ) {
@@ -547,6 +544,11 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		if ( $this->setting->get( 'ipn', false ) ) {
 			$options['notify_url'] = $this->get_notify_url();
 		}
+
+        // Detect Mobile Devices
+        if ( wp_is_mobile() ) {
+            $options['template'] = 'mobile-iframe';
+        }
 
 		// BMCreateButton API call
 		$response = $this->gateway->createButton( $options );

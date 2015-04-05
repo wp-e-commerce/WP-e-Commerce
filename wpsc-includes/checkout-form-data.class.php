@@ -94,4 +94,44 @@ class WPSC_Checkout_Form_Data {
 
 		return apply_filters( 'wpsc_checkout_form_gateway_data', $this->gateway_data, $this->log_id );
 	}
+
+	/**
+	 * Save Submitted Form Fields to the wpsc_submited_form_data table.
+	 *
+	 * @param WPSC_Purchase_Log $purchase_log
+	 * @param array $fields
+	 * @return void
+	 */
+	static function save_form( $purchase_log, $fields ) {
+		global $wpdb;
+		$log_id = $purchase_log->get( 'id' );
+		// delete previous field values
+		$sql = $wpdb->prepare( "DELETE FROM " . WPSC_TABLE_SUBMITTED_FORM_DATA . " WHERE log_id = %d", $log_id );
+		$wpdb->query( $sql );
+		$customer_details = array();
+		foreach ( $fields as $field ) {
+			if ( $field->type == 'heading' ) {
+				continue;
+			}
+			$value = '';
+			if ( isset( $_POST['wpsc_checkout_details'][ $field->id ] ) ) {
+				$value = $_POST['wpsc_checkout_details'][ $field->id ];
+			}
+			$customer_details[ $field->id ] = $value;
+			$wpdb->insert(
+				WPSC_TABLE_SUBMITTED_FORM_DATA,
+				array(
+					'log_id' => $log_id,
+					'form_id' => $field->id,
+					'value' => $value,
+				),
+				array(
+					'%d',
+					'%d',
+					'%s',
+				)
+			);
+		}
+		wpsc_save_customer_details( $customer_details );
+	}
 }

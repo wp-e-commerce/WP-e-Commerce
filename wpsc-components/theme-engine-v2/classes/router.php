@@ -237,6 +237,8 @@ class WPSC_Router {
 	}
 
 	private function init_controller( $controller ) {
+		global $wp_query;
+
 		if ( empty( $controller ) ) {
 			return;
 		}
@@ -260,9 +262,14 @@ class WPSC_Router {
 		$this->controller_name   = $controller;
 		$this->controller        = _wpsc_load_controller( $controller );
 
-		if ( ! is_callable( array( $this->controller, $this->controller_method ) ) ) {
-			_wpsc_doing_it_wrong( __FUNCTION__,  'Invalid controller method: ' . get_class( $this->controller ) . '::' . $method . '()', WPSC_VERSION );
-			$this->not_found();
+		// If method/path not found, show the 404 page
+		if ( ! is_callable( array( $this->controller, $method ) ) ) {
+			_wpsc_doing_it_wrong( __FUNCTION__, __( 'Invalid controller method: ' . get_class( $this->controller ) . '::' . $method . '()', 'wpsc' ), '4.0' );
+			$wp_query->is_404 = true;
+			$wp_query->is_single = false;
+			$wp_query->is_page = false;
+			include( get_query_template( '404' ) );
+			exit();
 		}
 
 		do_action( 'wpsc_router_init' );
