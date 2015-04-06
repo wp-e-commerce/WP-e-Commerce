@@ -22,7 +22,7 @@ function _wpsc_te2_filter_default_styles( $value ) {
 
 
 function wpsc_is_style_enabled( $style ) {
-	return in_array( $style, wpsc_get_option( 'default_styles' ) );
+	return in_array( $style, (array) wpsc_get_option( 'default_styles', array() ) );
 }
 
 function wpsc_enqueue_style( $handle ) {

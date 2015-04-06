@@ -623,7 +623,7 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 				'coupons_compare_and'      => esc_html_x( 'AND' , 'Coupon comparison logic', 'wpsc' ),
 				'meta_downloads_plural'    => __( ' downloads', 'live preview for downloads metabox', 'wpsc' ),
 				'meta_downloads_singular'  => __( ' download' , 'live preview for downloads metabox', 'wpsc' ),
-				'wpsc_inline_css_error'    => __( 'It is not possible to enable the inline CSS without also enabling the common CSS.' )
+				'wpsc_inline_css_error'    => __( 'It is not possible to change the state of the inline CSS without also changing the common CSS.' )
 			) );
 
 			$_wpsc_admin_l10n_loaded = true;
