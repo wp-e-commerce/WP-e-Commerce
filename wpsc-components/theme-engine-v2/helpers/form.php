@@ -19,7 +19,7 @@ function _wpsc_populate_field_default_args( $field ) {
 		$field_defaults['class'] .= ' wpsc-field-' . sanitize_title_with_dashes( $field['name'] );
 	}
 
-	$field_defaults['title_validation'] = isset( $field['title'] ) ? strtolower( $field['title'] ) : $field['title'];
+	$field_defaults['title_validation'] = isset( $field['title'] ) ? strtolower( $field['title'] ) : $field_defaults['title'];
 
 	$field   = wp_parse_args( $field, $field_defaults );
 	$classes = array(

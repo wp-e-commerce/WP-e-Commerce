@@ -56,9 +56,9 @@ final class WPSC_Payment_Gateways {
 	 */
 	public static function &get( $gateway, $meta = false ) {
 
-		if ( empty( self::$instances[$gateway] ) ) {
+		if ( empty( self::$instances[ $gateway ] ) ) {
 			if ( ! $meta ) {
-				$meta = self::$gateways[$gateway];
+				$meta = self::$gateways[ $gateway ];
 			}
 			require_once( $meta['path'] );
 			$class_name = $meta['class'];
@@ -70,10 +70,10 @@ final class WPSC_Payment_Gateways {
 				return $error;
 			}
 
-			self::$instances[$gateway] = new $class_name( $options );
+			self::$instances[ $gateway ] = new $class_name( $options );
 		}
 
-		return self::$instances[$gateway];
+		return self::$instances[ $gateway ];
 	}
 
 	public static function init() {
@@ -116,7 +116,7 @@ final class WPSC_Payment_Gateways {
 	 * @return bool True if it's already registered.
 	 */
 	public static function is_registered( $gateway ) {
-		return ! empty( self::$gateways[$gateway] );
+		return ! empty( self::$gateways[ $gateway ] );
 	}
 
 	/**

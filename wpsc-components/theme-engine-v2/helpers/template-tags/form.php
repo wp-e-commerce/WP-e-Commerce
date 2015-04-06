@@ -527,8 +527,10 @@ function _wpsc_convert_checkout_form_fields( $customer_settings = false ) {
 	}
 
 	foreach ( $state_country_pairs as $field ) {
-		$args[ $field['key'] ]['rules'] .= '|state_of[' . $field['country_field_id'] . ']';
-		$args[ $field['key'] ]['rules']  = ltrim( $args[$field['key']]['rules'], '|' );
+		if ( isset ( $field['key'] ) ) {
+			$args[ $field['key'] ]['rules'] .= '|state_of[' . $field['country_field_id'] . ']';
+			$args[ $field['key'] ]['rules']  = ltrim( $args[ $field['key'] ]['rules'], '|' );
+		}
 	}
 
 	return $args;
