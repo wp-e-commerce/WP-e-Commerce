@@ -309,7 +309,7 @@ function wpsc_get_child_object_in_terms_var( $parent_id, $terms, $taxonomies, $a
  * );
  *
  * Here the keys are captured when someone clicks the 'add to cart' button and correspond with ... whatever. They don't really matter for our function.
- * Really ou could pass an array of 2 term_ids here and a $product_id that has variations to match those terms and you'd get back the expected array.
+ * Really you could pass an array of 2 term_ids here and a $product_id that has variations to match those terms and you'd get back the expected array.
  *
  * @since 4.0
  *
