@@ -302,6 +302,8 @@ function wpsc_get_child_object_in_terms_var( $parent_id, $terms, $taxonomies, $a
  *
  * For the `$variations` parameter we expect to get two 'term_ids' which correspond to the selections in the variation.
  * So if we have a blue large shirt and the blue term_id is 8 and the large term_id is 12 we would get an array that looks like.
+ * They keys in the array ( 2 and 9 below ) don't actually matter and are a result of the array items on the frontend in a typical
+ * 'add to cart' action from the frontend of a theme.
  *
  * array(
  *      '2' => '8',     // this is the blue term_id
