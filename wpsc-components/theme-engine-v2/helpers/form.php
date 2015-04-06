@@ -399,13 +399,17 @@ function _wpsc_filter_control_select_region( $output, $field, $args ) {
 function _wpsc_filter_control_submit( $output, $field, $args ) {
 	extract( $field );
 
+	if ( empty( $value ) ) {
+		$value = $title;
+	}
+
 	$class = $args['id'] . '-button wpsc-button';
 
 	if ( $field['primary'] ) {
 		$class .= ' wpsc-button-primary';
 	}
 
-	$output .= wpsc_form_submit( $name, $title, array( 'class' => $class ), false );
+	$output .= wpsc_form_submit( $name, $value, array( 'class' => $class ), false );
 
 	return $output;
 }
@@ -775,13 +779,13 @@ function wpsc_form_textarea( $name, $value = '', $atts = array(), $echo = true )
 	echo $output;
 }
 
-function wpsc_form_submit( $name, $title = '', $atts = array(), $echo = true ) {
+function wpsc_form_submit( $name, $value = '', $atts = array(), $echo = true ) {
 	if ( ! is_array( $atts ) ) {
 		$atts = array();
 	}
 
 	$atts['name']  = $name;
-	$atts['value'] = empty( $title ) ? _x( 'Submit', 'generic submit button title', 'wpsc' ) : $title;
+	$atts['value'] = empty( $value ) ? _x( 'Submit', 'generic submit button title', 'wpsc' ) : $value;
 	$atts['type']  = 'submit';
 
 	return _wpsc_input_type_field( $atts, $echo );
