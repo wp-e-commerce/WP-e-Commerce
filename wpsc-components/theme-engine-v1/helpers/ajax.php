@@ -84,6 +84,8 @@ function wpsc_special_widget() {
 /**
  * add_to_cart function, used through ajax and in normal page loading.
  * No parameters, returns nothing
+ *
+ * @uses wpsc_get_product_id_from_variations()              Given array of variation selections returns the variation product id as int
  */
 function wpsc_add_to_cart() {
 	global $wpsc_cart;
@@ -118,17 +120,9 @@ function wpsc_add_to_cart() {
 	}
 
 	if ( isset( $_POST['variation'] ) ) {
-
-		foreach ( (array) $_POST['variation'] as $key => $variation ) {
-			$provided_parameters['variation_values'][ (int) $key ] = (int) $variation;
-		}
-
-		if ( count( $provided_parameters['variation_values'] ) > 0 ) {
-			$variation_product_id = wpsc_get_child_object_in_terms( $product_id, $provided_parameters['variation_values'], 'wpsc-variation' );
-			if ( $variation_product_id > 0 ) {
-				$product_id = $variation_product_id;
-			}
-		}
+		$return_variation_params                 = wpsc_get_product_data_from_variations( $_POST['variation'], $product_id );
+		$product_id                              = $return_variation_params['product_id'];
+		$provided_parameters['variation_values'] = $return_variation_params['variation_values'];
 	}
 
 	if ( (isset( $_POST['quantity'] ) && $_POST['quantity'] > 0) && (!isset( $_POST['wpsc_quantity_update'] )) ) {

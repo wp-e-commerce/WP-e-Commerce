@@ -296,3 +296,122 @@ function wpsc_get_child_object_in_terms_var( $parent_id, $terms, $taxonomies, $a
 		return false;
 	}
 }
+
+/**
+ * Given array of variation selections this works through the terms and returns the product_id for the matching variation
+ *
+ * For the `$variations` parameter we expect to get two 'term_ids' which correspond to the selections in the variation.
+ * So if we have a blue large shirt and the blue term_id is 8 and the large term_id is 12 we would get an array that looks like.
+ * They keys in the array ( 2 and 9 below ) don't actually matter and are a result of the array items on the frontend in a typical
+ * 'add to cart' action from the frontend of a theme.
+ *
+ * array(
+ *      '2' => '8',     // this is the blue term_id
+ *      '9' => '12',    // this is the large term_id
+ * );
+ *
+ * Here the keys are captured when someone clicks the 'add to cart' button and correspond with ... whatever. They don't really matter for our function.
+ * Really you could pass an array of 2 term_ids here and a $product_id that has variations to match those terms and you'd get back the expected array.
+ *
+ * @since 4.0
+ *
+ * @param array     $variations     required            The array of variation selections
+ * @param int       $product_id     required            The default product_id
+ * @uses wpsc_get_child_objects_in_terms()              Given $product_id and product params this returns the variation product id
+ * @return array    $args {
+ *      @param  int     product_id                      The variation product_id
+ *      @param  array   variation_values                The array of variation_values that wpsc_add_to_cart needs to populate $provided_parameters['variation_values']
+ * }
+ */
+function wpsc_get_product_data_from_variations( $variations, $product_id ) {
+
+	$variation_values = array();
+	$original_product_id = $product_id;
+
+	foreach ( (array) $variations as $key => $variation ) {
+		$variation_values[ (int) $key ] = (int) $variation;
+	}
+
+	if ( count( $variation_values ) > 0 ) {
+		$variation_product_id = wpsc_get_child_object_in_terms( $product_id, $variation_values, 'wpsc-variation' );
+		if ( $variation_product_id > 0 ) {
+			$product_id = $variation_product_id;
+		}
+	}
+
+	/** This filter is documented in wpsc_get_product_id_from_variations */
+	$product_id = apply_filters( 'wpsc_variation_product_id', absint( $product_id ), $variations, absint( $original_product_id ) );
+
+	$return_args = array(
+		'product_id'       => absint( $product_id ),
+		'variation_values' => $variation_values,
+	);
+
+	return $return_args;
+
+}
+
+/**
+ * Wrapper for wpsc_get_product_data_from_variations that returns the variation product_id
+ *
+ * See wpsc_get_product_data_from_variations for a full description on what needs to be passed in the $variations params
+ *
+ * @since 4.0
+ *
+ * @uses wpsc_get_product_data_from_variations()                        Returns array of data pertaining to product variations
+ * @return int      $product_id                                         The product_id corresponding to the selected variation
+ */
+function wpsc_get_product_id_from_variations( $variations, $product_id ){
+
+	$values = wpsc_get_product_data_from_variations( $variations, $product_id );
+
+	/**
+	 * Allows users to filter the product_id based on the variation selections
+	 *
+	 * @since 4.0
+	 *
+	 * @param int   $$values['product_id']  The variation product_id
+	 * @param array $variations             The variation selections passed to the core function
+	 * @param int   $product_id             The originally passed $product_id
+	 * @param array $values{
+	 *      @param  int     product_id         The variation product_id
+	 *      @param  array   variation_values   The array of variation term_ids based on the selections sent through
+	 * }
+	 */
+	$product_id = apply_filters( 'wpsc_variation_product_id', absint( $values['product_id'] ), $variations, $product_id, $values );
+
+	return absint( $product_id );
+
+}
+
+/**
+ * Wrapper for wpsc_get_product_data_from_variations that returns the variation values corresponding to the variation selections
+ *
+ * See wpsc_get_product_data_from_variations for a full description on what needs to be passed in the $variations params
+ *
+ * @since 4.0
+ *
+ * @uses wpsc_get_product_data_from_variations()                        Returns array of data pertaining to product variations
+ * @return array      $variation_values                                 The variation values for the selected variation terms, so the term_ids as the array $values
+ */
+function wpsc_get_variation_values_from_variations( $variations, $product_id ){
+
+	$values = wpsc_get_product_data_from_variations( $variations, $product_id );
+
+	/**
+	 * Allows users to filter the variation values based on the variation selections
+	 *
+	 * @since 4.0
+	 *
+	 * @param array $variations             The variation selections passed to the core function
+	 * @param int   $product_id             The default passed product_id
+	 * @param array $values{
+	 *      @param  int     product_id         The variation product_id
+	 *      @param  array   variation_values   The array of variation term_ids based on the selections sent through
+	 * }
+	 */
+	$variation_values = apply_filters( 'wpsc_variation_values', $values['variation_values'], $product_id, $values );
+
+	return (array) $variation_values;
+
+}
