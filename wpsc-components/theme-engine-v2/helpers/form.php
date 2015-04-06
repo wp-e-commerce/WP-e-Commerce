@@ -395,21 +395,34 @@ function _wpsc_filter_control_select_region( $output, $field, $args ) {
 	);
 	return $output;
 }
+function add_te2_button( $args ){
+
+$args['form_actions'][] = array(
+            'type' => 'submit',
+            'name' => 'sfn-wish',
+            'value' => 'Add to Wishlist',
+            'title' => 'Add to wish',
+            'class' => 'sfn-wishlist-add',
+);
+
+    return $args;
+}
+add_filter( 'wpsc_get_add_to_cart_form_args', 'add_te2_button' );
 
 function _wpsc_filter_control_submit( $output, $field, $args ) {
 	extract( $field );
 
-	if ( empty( $value ) ) {
-		$value = $title;
+	if ( ! empty( $value ) ) {
+		$title = $value;
 	}
 
-	$class = $args['id'] . '-button wpsc-button';
+	$class = $args['id'] . '-button wpsc-button ' . $class;
 
 	if ( $field['primary'] ) {
 		$class .= ' wpsc-button-primary';
 	}
 
-	$output .= wpsc_form_submit( $name, $value, array( 'class' => $class ), false );
+	$output .= wpsc_form_submit( $name, $title, array( 'class' => $class ), false );
 
 	return $output;
 }
