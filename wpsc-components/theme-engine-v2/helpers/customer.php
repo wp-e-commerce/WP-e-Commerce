@@ -5,7 +5,7 @@ function wpsc_save_customer_details( $customer_details ) {
 
 	// legacy filter
 	if ( is_user_logged_in() ) {
-		$customer_details = apply_filters( 'wpsc_checkout_user_profile_update', $customer_details, get_current_user_id() );
+		$customer_details = apply_filters( 'wpsc_checkout_user_profile_update', $customer_details, wpsc_get_current_customer_id() );
 	}
 
 	wpsc_update_customer_meta( 'checkout_details', $customer_details );
