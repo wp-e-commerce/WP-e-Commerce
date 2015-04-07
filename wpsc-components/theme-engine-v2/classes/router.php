@@ -24,6 +24,7 @@ class WPSC_Router {
 			'controller',
 			'controller_name',
 			'controller_method',
+			'controller_slug',
 			'controller_args',
 		) ) ) {
 			return $this->$name;
@@ -251,6 +252,7 @@ class WPSC_Router {
 		}
 
 		$slug   = array_shift( $controller_args );
+
 		$method = str_replace( array( ' ', '-' ), '_', $slug );
 
 		if ( ! $method ) {
