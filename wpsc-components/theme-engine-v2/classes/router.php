@@ -267,11 +267,7 @@ class WPSC_Router {
 		// If method/path not found, show the 404 page
 		if ( ! is_callable( array( $this->controller, $method ) ) ) {
 			_wpsc_doing_it_wrong( __FUNCTION__, __( 'Invalid controller method: ' . get_class( $this->controller ) . '::' . $method . '()', 'wpsc' ), '4.0' );
-			$wp_query->is_404 = true;
-			$wp_query->is_single = false;
-			$wp_query->is_page = false;
-			include( get_query_template( '404' ) );
-			exit();
+			return $this->not_found();
 		}
 
 		do_action( 'wpsc_router_init' );

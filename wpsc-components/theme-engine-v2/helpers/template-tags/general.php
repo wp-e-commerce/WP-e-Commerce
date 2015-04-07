@@ -477,6 +477,7 @@ function wpsc_customer_orders_statuses() {
 }
 
 function wpsc_get_customer_orders_list() {
+
 	if (    _wpsc_get_current_controller_name() != 'customer-account'
 	     || _wpsc_get_current_controller_slug() != 'orders' )
 		return '';
