@@ -395,19 +395,6 @@ function _wpsc_filter_control_select_region( $output, $field, $args ) {
 	);
 	return $output;
 }
-function add_te2_button( $args ){
-
-$args['form_actions'][] = array(
-            'type' => 'submit',
-            'name' => 'sfn-wish',
-            'value' => 'Add to Wishlist',
-            'title' => 'Add to wish',
-            'class' => 'sfn-wishlist-add',
-);
-
-    return $args;
-}
-add_filter( 'wpsc_get_add_to_cart_form_args', 'add_te2_button' );
 
 function _wpsc_filter_control_submit( $output, $field, $args ) {
 	extract( $field );
