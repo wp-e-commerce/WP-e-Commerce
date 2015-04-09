@@ -168,7 +168,7 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 					<input type='hidden' value='0' name='wpsc_options[shipwire]' />
 					<input type='checkbox' onclick='jQuery("#wpsc_shipwire_setting").toggle( jQuery(this).prop("checked") );' value='1' name='wpsc_options[shipwire]' id='shipwire' <?php checked( '1',  get_option( 'shipwire' ) ); ?> />
 					<label for='shipwire'><?php _e( 'Enable Shipwire Integration', 'wpsc' ); ?></label>
-					<p class='description'><?php printf( __( '<a href="%1$s" target="_blank">Shipwire</a> provide e-commerce fulfillment warehouses. WP eCommerce can integrate stock inventory and shipping tracking with their service.', 'wpsc' ), 'http://www.shipwire.com/' ); ?></p>
+					<p class='description'><?php printf( __( '<a href="%1$s" target="_blank">Shipwire</a> provide e-commerce fulfillment warehouses. WP eCommerce can integrate stock inventory and shipping tracking with their service.', 'wpsc' ), 'http://www.shipwire.com/pp/o.php?id=11922' ); ?></p>
 				</td>
 			</tr>
 			<?php

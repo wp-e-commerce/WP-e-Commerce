@@ -597,7 +597,7 @@ add_filter( 'wpsc_product_image', 'wpsc_product_no_image_fallback' );
  * @return boolean - true if display_pnp is 1 false otherwise
  */
 function wpsc_show_pnp() {
-	return 1 == get_option( 'display_pnp' ) );
+	return 1 == get_option( 'display_pnp' );
 }
 
 /**
