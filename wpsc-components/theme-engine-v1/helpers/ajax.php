@@ -213,7 +213,7 @@ function wpsc_add_to_cart_button( $product_id, $return = false ) {
 		?>
 			<div class='wpsc-add-to-cart-button'>
 				<form class='wpsc-add-to-cart-button-form' id='product_<?php echo esc_attr( $product_id ) ?>' action='' method='post'>
-					<?php do_action( 'wpsc_add_to_cart_button_form_begin' ); ?>
+					<?php do_action( 'wpsc_add_to_cart_button_form_begin', $product_id ); ?>
 					<div class='wpsc_variation_forms'>
 						<?php while ( wpsc_have_variation_groups() ) : wpsc_the_variation_group(); ?>
 							<p>
@@ -229,7 +229,7 @@ function wpsc_add_to_cart_button( $product_id, $return = false ) {
 					<input type='hidden' name='wpsc_ajax_action' value='add_to_cart' />
 					<input type='hidden' name='product_id' value='<?php echo $product_id; ?>' />
 					<input type='submit' id='product_<?php echo $product_id; ?>_submit_button' class='wpsc_buy_button' name='Buy' value='<?php echo __( 'Add To Cart', 'wpsc' ); ?>'  />
-					<?php do_action( 'wpsc_add_to_cart_button_form_end' ); ?>
+					<?php do_action( 'wpsc_add_to_cart_button_form_end', $product_id ); ?>
 				</form>
 			</div>
 		<?php
