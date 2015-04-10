@@ -69,12 +69,35 @@ class WPSC_Router {
 			return;
 		}
 
+		if ( $q->is_singular() && 'wpsc-product' == $q->get( 'post_type' ) ) {
+			add_filter( 'posts_where', array( $this, '_prepare_single_product' ), 10, 2 );
+		}
+
 		if ( $this->is_store_front_page() ) {
 			$q->set( 'post_type', 'wpsc-product' );
 			$q->wpsc_is_store_front_page = true;
 			$q->is_post_type_archive     = true;
 			$q->is_archive               = true;
 		}
+	}
+
+	/**
+	 * [_prepare_single_product description]
+	 * @param  string $where [description]
+	 * @param  WP_QUery $wp    [description]
+	 * @return string        [description]
+	 */
+	public function _prepare_single_product( $where, $wp ) {
+		global $wpdb;
+
+		if ( false !== strpos( $where, " AND ($wpdb->posts.ID = '0')" ) ) {
+
+			$product = get_page_by_path( $wp->get( 'pagename' ), OBJECT, 'wpsc-product' );
+
+			$where = str_replace( " AND ($wpdb->posts.ID = '0')", " AND ($wpdb->posts.ID = '$product->ID')", $where );
+		}
+
+		return $where;
 	}
 
 	/**
@@ -136,6 +159,7 @@ class WPSC_Router {
 	}
 
 	public function _action_parse_request( &$wp ) {
+
 		if ( empty( $wp->query_vars['wpsc_controller'] ) ) {
 			return;
 		}
