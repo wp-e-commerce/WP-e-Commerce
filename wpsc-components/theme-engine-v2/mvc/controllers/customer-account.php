@@ -27,6 +27,7 @@ class WPSC_Controller_Customer_Account extends WPSC_Controller {
 		if ( in_array( $name, array(
 				'status_filters',
 				'total_pages',
+				'total_items',
 				'current_page',
 				'form_data',
 				'log'

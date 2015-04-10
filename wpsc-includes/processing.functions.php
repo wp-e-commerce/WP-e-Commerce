@@ -166,7 +166,6 @@ function wpsc_decrement_claimed_stock( $purchase_log_id ) {
 		}
 	}
 
-
 }
 
 /**
