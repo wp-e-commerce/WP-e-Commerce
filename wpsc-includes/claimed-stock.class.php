@@ -122,15 +122,20 @@ class WPSC_Claimed_Stock {
 	 * @param  array  $args  Optional. Array of claimed stock query parameters.
 	 */
 	public function __construct( $args = null ) {
+
 		$args = wp_parse_args( $args, array(
 			'product_id'     => 0,
 			'cart_id'        => false,
 			'cart_submitted' => null
 		) );
+
 		$this->product_id = absint( $args['product_id'] );
 		$this->cart_id = $args['cart_id'];
-		if ( ! is_null( $args['cart_submitted'] ) )
+
+		if ( ! is_null( $args['cart_submitted'] ) ) {
 			$args['cart_submitted'] = absint( $args['cart_submitted'] );
+		}
+
 		$this->cart_submitted = $args['cart_submitted'];
 	}
 
@@ -149,9 +154,12 @@ class WPSC_Claimed_Stock {
 	 */
 	private function _get_where_sql( $where = '' ) {
 		global $wpdb;
+
 		$where_clauses = array();
-		if ( $this->product_id > 0 )
+
+		if ( $this->product_id > 0 ) {
 			$where_clauses[] = $wpdb->prepare( '`product_id` IN(%d)', $this->product_id );
+		}
 
 		// Handle array of cart IDs or single cart ID
 		if ( ! empty( $this->cart_id ) ) {
@@ -162,12 +170,18 @@ class WPSC_Claimed_Stock {
 			}
 		}
 
-		if ( ! is_null( $this->cart_submitted ) )
+		if ( ! is_null( $this->cart_submitted ) ) {
 			$where_clauses[] = $wpdb->prepare( '`cart_submitted` = %d', $this->cart_submitted );
-		if ( ! empty( $where ) )
+		}
+
+		if ( ! empty( $where ) ) {
 			$where_clauses[] = $where;
-		if ( count( $where_clauses ) > 0 )
+		}
+
+		if ( count( $where_clauses ) > 0 ) {
 			return ' WHERE ' . implode( ' AND ', $where_clauses );
+		}
+
 		return '';
 	}
 
