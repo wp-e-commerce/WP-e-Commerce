@@ -54,7 +54,9 @@ var wpsc_set_variation_product_thumbnail = function(id, src, thumbId) {
 };
 
 var wpsc_refresh_variation_iframe = function() {
-	jQuery('#wpsc_product_variation_forms iframe')[0].contentWindow.location.reload();
+	if ( jQuery( '#wpsc_product_variation_forms iframe' ).length > 0 ) {
+		jQuery('#wpsc_product_variation_forms iframe')[0].contentWindow.location.reload();
+	}
 };
 
 (function($) {
