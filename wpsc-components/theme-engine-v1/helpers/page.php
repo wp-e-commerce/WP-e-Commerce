@@ -182,7 +182,7 @@ function wpsc_check_theme_location() {
 function wpsc_list_product_templates( $path = '' ) {
 
 	$selected_theme = get_option( 'wpsc_selected_theme' );
-
+	$templates      = array();
 	// If no path, then try to make some assuptions
 	if ( empty( $path ) ) {
 		if ( file_exists( WPSC_OLD_THEMES_PATH . $selected_theme . '/' . $selected_theme . '.css' ) ) {
@@ -1160,8 +1160,10 @@ function wpsc_get_the_post_id_by_shortcode( $shortcode ) {
 }
 
 function wpec_remap_shop_subpages( $vars ) {
-	if( empty( $vars ) )
+	if ( empty( $vars ) ) {
 		return $vars;
+	}
+
 	$reserved_names = array('[shoppingcart]','[userlog]','[transactionresults]');
 	foreach($reserved_names as $reserved_name){
 		if ( isset( $vars['taxonomy'] ) && $vars['taxonomy'] == 'wpsc_product_category' && isset( $vars['term'] ) && $vars['term'] == $page->post_name ) {
@@ -1402,7 +1404,9 @@ function wpsc_set_aioseop_description( $data ) {
  * @return string - the URL of the current page
  */
 function wpsc_this_page_url() {
+
 	global $wpsc_query, $wp_query;
+
 	if ( $wpsc_query->is_single === true ) {
 		$output = get_permalink( $wp_query->post->ID );
 	} else if ( isset( $wpsc_query->category ) && $wpsc_query->category != null ) {
@@ -1414,11 +1418,10 @@ function wpsc_this_page_url() {
 				$output = add_query_arg( 'page_number', $wpsc_query->query_vars['page'], $output );
 			}
 		}
-	} elseif ( isset( $id ) ) {
-		$output = get_permalink( $id );
 	} else {
 		$output = get_permalink( get_the_ID() );
 	}
+
 	return $output;
 }
 
