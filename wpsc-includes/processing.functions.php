@@ -103,24 +103,29 @@ function wpsc_currency_display( $price_in, $args = null ) {
 }
 
 /**
-	* wpsc_decrement_claimed_stock method
-	*
-	* @param float a price
-	* @return string a price with a currency sign
-*/
-function wpsc_decrement_claimed_stock($purchase_log_id) {
-	global $wpdb;
+ * wpsc_decrement_claimed_stock method
+ *
+ * @param float a price
+ * @return string a price with a currency sign
+ */
+function wpsc_decrement_claimed_stock( $purchase_log_id ) {
 
 	// Processed
 	$claimed_query = new WPSC_Claimed_Stock( array( 'cart_id' => $purchase_log_id ) );
 	$all_claimed_stock = $claimed_query->get_purchase_log_claimed_stock();
 
-	if( !empty( $all_claimed_stock ) ){
-		switch($all_claimed_stock[0]->processed){
+	do_action( 'wpsc_pre_decrement_claimed_stock', $purchase_log_id, $claimed_query );
+
+	if ( ! empty( $all_claimed_stock ) ) {
+
+		do_action( 'wpsc_decrement_claimed_stock_' . $all_claimed_stock[0]->processed, $purchase_log_id, $claimed_query );
+		do_action( 'wpsc_decrement_claimed_stock', $purchase_log_id, $claimed_query );
+
+		switch( $all_claimed_stock[0]->processed ) {
 			case 3:
 			case 4:
 			case 5:
-				foreach((array)$all_claimed_stock as $claimed_stock) {
+				foreach ( (array) $all_claimed_stock as $claimed_stock ) {
 					$product = get_post($claimed_stock->product_id);
 					$current_stock = get_post_meta($product->ID, '_wpsc_stock', true);
 					$remaining_stock = $current_stock - $claimed_stock->stock_claimed;
@@ -160,6 +165,8 @@ function wpsc_decrement_claimed_stock($purchase_log_id) {
 				break;
 		}
 	}
+
+
 }
 
 /**
