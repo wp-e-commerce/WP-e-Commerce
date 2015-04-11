@@ -384,6 +384,44 @@ function _wpsc_filter_body_class( $classes ) {
 
 add_filter( 'body_class', '_wpsc_filter_body_class' );
 
+/**
+ * Filters the title tag in WordPress to reflect the controller title.
+ *
+ * @since  4.0
+ *
+ * @param  string $title    [description]
+ * @param  string $sep      [description]
+ * @param  string $location [description]
+ *
+ * @return string        [description]
+ */
+function _wpsc_filter_wp_title( $title, $sep = '&raquo;', $location = 'right' ) {
+
+	if ( wpsc_is_controller() ) {
+
+		$controller = _wpsc_get_current_controller();
+
+		if ( empty( $title ) ) {
+			$title = $controller->title;
+		}
+
+		$parts  = explode( $sep, $title );
+		$prefix = " $sep ";
+
+		if ( 'right' == $location ) { // sep on right, so reverse the order
+			$parts = array_reverse( $parts );
+			$title = implode( " $sep ", $parts ) . $prefix;
+		} else {
+			$title = $prefix . implode( " $sep ", $parts );
+		}
+
+	}
+
+	return $title;
+}
+
+add_filter( 'wp_title', '_wpsc_filter_wp_title', 10, 3 );
+
 function _wpsc_filter_title( $title ) {
 	if ( wpsc_is_controller() ) {
 		$controller = _wpsc_get_current_controller();
