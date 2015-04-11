@@ -16,6 +16,7 @@ class WPSC_Controller_Customer_Account extends WPSC_Controller {
 	public $per_page = 10;
 
 	public function __get( $name ) {
+
 		if ( ! isset( $this->$name ) ) {
 			switch ( $name ) {
 				case 'status_filters':
@@ -24,15 +25,7 @@ class WPSC_Controller_Customer_Account extends WPSC_Controller {
 			}
 		}
 
-		if ( in_array( $name, array(
-				'status_filters',
-				'total_pages',
-				'total_items',
-				'current_page',
-				'form_data',
-				'log'
-			)
-		) ) {
+		if ( property_exists( $this, $name ) ) {
 			return $this->$name;
 		}
 

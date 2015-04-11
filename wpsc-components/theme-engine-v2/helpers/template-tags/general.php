@@ -554,6 +554,7 @@ function wpsc_customer_orders_pagination_count() {
 	// Filter and return
 	echo apply_filters( 'wpsc_customer_orders_pagination_count', $output );
 }
+
 function wpsc_get_customer_orders_pagination( $args = array() ) {
 	ob_start();
 	?>
