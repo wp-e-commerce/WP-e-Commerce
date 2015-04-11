@@ -105,11 +105,25 @@ class WPSC_Controller_Customer_Account extends WPSC_Controller {
 		);
 
 		foreach ( $form_data_obj->get_raw_data() as $data ) {
-			$this->form_data[ (int) $data->id ] = $data;
+			$this->form_data[ (int) $data->id ] = $this->process_checkout_form_value( $data );
 		}
 
 		require_once( WPSC_TE_V2_CLASSES_PATH . '/cart-item-table-order.php' );
 		$this->cart_item_table = new WPSC_Cart_Item_Table_Order( $id );
+	}
+
+	private function process_checkout_form_value( $data ) {
+		if ( 'billingstate' !== $data->unique_name && 'shippingstate' !== $data->unique_name ) {
+			return $data;
+		}
+
+		if ( ! is_numeric( $data->value ) ) {
+			return $data;
+		}
+
+		$data->value = wpsc_get_state_by_id( $data->value, 'name' );
+
+		return $data;
 	}
 
 	private function parse_index_args( $args ) {
