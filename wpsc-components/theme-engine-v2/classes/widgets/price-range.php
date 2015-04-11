@@ -81,7 +81,7 @@ class WPSC_Widget_Price_Range extends WP_Widget {
 		$instance = wp_parse_args( $instance, $this->defaults );
 		$title    = apply_filters( 'widget_title', $instance['title'] );
 
-		if ( $count == 1 || $prices->min == $price->max ) {
+		if ( $range_count == 1 || $prices->min == $prices->max ) {
 			return;
 		}
 

@@ -282,7 +282,7 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 
 		$ids = isset( $this->url_args[ $widget_id ] ) ? $this->url_args[ $widget_id ] : array();
 
-		if ( ! empty( $this->url_args[$widget_id] ) ) {
+		if ( ! empty( $this->url_args[ $widget_id ] ) ) {
 			$args['parent'] = $this->url_args[ $widget_id ][ count( $this->url_args[ $widget_id ] ) - 1 ];
 		} else {
 			$args['include'] = $defaults;
@@ -294,7 +294,8 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 	public function widget( $args, $instance ) {
 		extract( $args );
 
-		$title = apply_filters( 'widget_title', $instance['title'] );
+		$title      = apply_filters( 'widget_title', $instance['title'] );
+		$categories = ! empty( $instance['categories'] ) ? array_map( 'absint', $instance['categories'] ) : array();
 
 		echo $before_widget;
 
@@ -303,7 +304,7 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 		}
 
 		echo '<ul>';
-		$this->output_terms( $this->number, array_map( 'absint', $instance['categories'] ) );
+		$this->output_terms( $this->number, $categories );
 		echo '</ul>';
 
 		echo $after_widget;
