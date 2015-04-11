@@ -389,11 +389,11 @@ add_filter( 'body_class', '_wpsc_filter_body_class' );
  *
  * @since  4.0
  *
- * @param  string $title    [description]
- * @param  string $sep      [description]
- * @param  string $location [description]
+ * @param  string $title    Page title.
+ * @param  string $sep      Elements for separating the site title and page title.
+ * @param  string $location Where the title shoud be in relation to the separator.
  *
- * @return string        [description]
+ * @return string           Modified page title.
  */
 function _wpsc_filter_wp_title( $title, $sep = '&raquo;', $location = 'right' ) {
 
@@ -414,7 +414,6 @@ function _wpsc_filter_wp_title( $title, $sep = '&raquo;', $location = 'right' ) 
 		} else {
 			$title = $prefix . implode( " $sep ", $parts );
 		}
-
 	}
 
 	return $title;
