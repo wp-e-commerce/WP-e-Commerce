@@ -31,7 +31,7 @@ function _wpsc_te2_filter_drill_down_store_permalinks( $args ) {
  * @return array
  */
 function _wpsc_te2_filter_drill_down_tag_permalinks( $args ) {
-	add_permastruct( 'wpsc_cat_drill_down_tag', $args['rewrite']['slug'] . '/%product_tag%/product-filter/%wpsc_cat_drill_down_tax%' );
+	add_permastruct( 'wpsc_cat_drill_down_tag', $args['rewrite']['slug'] . '/%wpsc_product_tag%/product-filter/%wpsc_cat_drill_down_tax%' );
 	return $args;
 }
 
@@ -139,6 +139,7 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 		} else {
 			$this->url_base = $wp_rewrite->get_extra_permastruct( 'wpsc_cat_drill_down_store' );
 		}
+
 	}
 
 	/**
@@ -397,7 +398,6 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 	}
 
 	private function term_url( $widget_id, $term ) {
-
 		$uri = $this->generate_uri_part( $widget_id, $term );
 
 		if ( empty( $this->url_base ) ) {
