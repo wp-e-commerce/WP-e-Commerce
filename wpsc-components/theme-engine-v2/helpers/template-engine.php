@@ -410,9 +410,9 @@ function _wpsc_filter_wp_title( $title, $sep = '&raquo;', $location = 'right' ) 
 
 		if ( 'right' == $location ) { // sep on right, so reverse the order
 			$parts = array_reverse( $parts );
-			$title = implode( " $sep ", $parts ) . $prefix;
+			$title = ltrim( implode( " $sep ", $parts ) . $prefix, $prefix );
 		} else {
-			$title = $prefix . implode( " $sep ", $parts );
+			$title = rtrim( $prefix . implode( " $sep ", $parts ), $prefix );
 		}
 	}
 
