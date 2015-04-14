@@ -876,7 +876,7 @@ class WPSC_Countries {
 	 *
 	 */
 	public function __construct() {
-		if ( self::$active_wpsc_country_by_country_id == null ) {
+		if ( ! is_a( self::$active_wpsc_country_by_country_id, 'WPSC_Data_Map' ) ) {
 			self::_clean_data_maps();
 			self::restore();
 		}
@@ -1071,23 +1071,36 @@ class WPSC_Countries {
 	 */
 	private function restore() {
 		$data = get_transient( self::transient_name() );
-
 		$has_data = false;
 
-		if ( is_array( $data ) ) {
-			foreach ( $data as $variable => $value ) {
-				if ( property_exists( $this, $variable ) ) {
-
-					if ( is_a( $value, 'WPSC_Data_Map' ) ) {
-						$value->clear_dirty();
-					}
-
-					self::$$variable = $value;
-					$has_data = true;
-				} else {
-					// something went wrong with save / restore
-					$has_data = false;
+		$transient_is_valid = true;
+		foreach( self::$_maps_to_save_with_core_class as $map_name => $should_be_saved ) {
+			if ( $should_be_saved ) {
+				if ( ! is_a( $data[ $map_name ], 'WPSC_Data_Map' ) ) {
+					$transient_is_valid = false;
+					delete_transient( self::transient_name() );
+					error_log( __FUNCTION__ . ' transient data corrupted' );
 					break;
+				}
+			}
+		}
+
+		if ( $transient_is_valid ) {
+			if ( is_array( $data ) ) {
+				foreach ( $data as $variable => $value ) {
+					if ( property_exists( $this, $variable ) ) {
+
+						if ( is_a( $value, 'WPSC_Data_Map' ) ) {
+							$value->clear_dirty();
+						}
+
+						self::$$variable = $value;
+						$has_data        = true;
+					} else {
+						// something went wrong with save / restore
+						$has_data = false;
+						break;
+					}
 				}
 			}
 		}
@@ -1139,8 +1152,10 @@ class WPSC_Countries {
 
 		foreach ( self::$_maps_to_save_with_core_class as $map_name => $save_map ) {
 			$map = &self::$$map_name;
-			if ( $map->dirty() ) {
-				$dirty = true;
+			if ( is_a( $map, 'WPSC_Data_Map' ) ) {
+				if ( $map->dirty() ) {
+					$dirty = true;
+				}
 			}
 		}
 
@@ -1573,7 +1588,7 @@ class WPSC_Countries {
 
 }
 
-add_action( 'init', '_wpsc_make_countries_data_available' );
+add_action( 'init', '_wpsc_make_countries_data_available', 10 ,1 );
 
 function _wpsc_make_countries_data_available() {
 	static $wpsc_countries = null;
