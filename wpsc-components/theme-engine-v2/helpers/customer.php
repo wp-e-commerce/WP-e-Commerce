@@ -8,7 +8,7 @@ function wpsc_save_customer_details( $customer_details ) {
 		$customer_details = apply_filters( 'wpsc_checkout_user_profile_update', $customer_details, wpsc_get_current_customer_id() );
 	}
 
-	wpsc_update_customer_meta( 'checkout_details', $customer_details );
+	wpsc_update_customer_meta( 'checkout_details', wp_unslash( $customer_details ) );
 }
 
 function _wpsc_copy_billing_details() {

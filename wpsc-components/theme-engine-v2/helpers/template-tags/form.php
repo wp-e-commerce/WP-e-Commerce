@@ -435,12 +435,16 @@ function _wpsc_convert_checkout_form_fields( $customer_settings = false ) {
 			$default_value = $form_data[ $field->id ]->value;
 		}
 
+		if ( isset( $_POST['wpsc_checkout_details'] ) ) {
+			$_POST['wpsc_checkout_details'] = wp_unslash( $_POST['wpsc_checkout_details'] );
+		}
+
 		$field_arr = array(
 			'type'  => $field->type,
 			'id'    => "wpsc-checkout-field-{$id}",
 			'title' => esc_html( $field->name ),
 			'name'  => 'wpsc_checkout_details[' . $field->id . ']',
-			'value' => wpsc_submitted_value( $field->id, $default_value, $_POST['wpsc_checkout_details'] ),
+			'value' => wpsc_submitted_value( $field->id, wp_unslash( $default_value ), $_POST['wpsc_checkout_details'] ),
 		);
 
 		$validation_rules = array( 'trim' );

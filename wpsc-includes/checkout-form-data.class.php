@@ -28,7 +28,7 @@ class WPSC_Checkout_Form_Data {
 
 			$sql = $wpdb->prepare( $sql, $log_id );
 			$this->raw_data = $wpdb->get_results( $sql );
-			
+
 			//Set the cache for raw checkout for data
 			wp_cache_set( $log_id, $this->raw_data, 'wpsc_checkout_form_raw_data' );
 		}
@@ -87,7 +87,7 @@ class WPSC_Checkout_Form_Data {
 
 				$this->gateway_data[ $data_key ]['name'] = trim( $name );
 			}
-			
+
 			//Sets the cache for checkout form gateway data
 			wp_cache_set( $this->log_id, $this->gateway_data, 'wpsc_checkout_form_gateway_data' );
 		}
@@ -102,9 +102,10 @@ class WPSC_Checkout_Form_Data {
 	 * @param array $fields
 	 * @return void
 	 */
-	static function save_form( $purchase_log, $fields ) {
+	public static function save_form( $purchase_log, $fields ) {
 		global $wpdb;
 		$log_id = $purchase_log->get( 'id' );
+
 		// delete previous field values
 		$sql = $wpdb->prepare( "DELETE FROM " . WPSC_TABLE_SUBMITTED_FORM_DATA . " WHERE log_id = %d", $log_id );
 		$wpdb->query( $sql );
@@ -114,16 +115,19 @@ class WPSC_Checkout_Form_Data {
 				continue;
 			}
 			$value = '';
+
 			if ( isset( $_POST['wpsc_checkout_details'][ $field->id ] ) ) {
-				$value = $_POST['wpsc_checkout_details'][ $field->id ];
+				$value = wp_unslash( $_POST['wpsc_checkout_details'][ $field->id ] );
 			}
+
 			$customer_details[ $field->id ] = $value;
+
 			$wpdb->insert(
 				WPSC_TABLE_SUBMITTED_FORM_DATA,
 				array(
-					'log_id' => $log_id,
+					'log_id'  => $log_id,
 					'form_id' => $field->id,
-					'value' => $value,
+					'value'   => $value,
 				),
 				array(
 					'%d',
@@ -132,6 +136,7 @@ class WPSC_Checkout_Form_Data {
 				)
 			);
 		}
+
 		wpsc_save_customer_details( $customer_details );
 	}
 }
