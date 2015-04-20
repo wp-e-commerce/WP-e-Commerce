@@ -88,9 +88,9 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 		$inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count  . ')</span>';
 
 		$views = array(
-			'all'		=> sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'status', $base ), $current === 'all' || $current == '' ? ' class="current"' : '', __('All', 'wpsc') . $total_count ),
-			'active'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', '1', $base ), $current === '1' ? ' class="current"' : '', __('Active', 'wpsc') . $active_count ),
-			'inactive'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', '0', $base ), $current === '0' ? ' class="current"' : '', __('Inactive', 'wpsc') . $inactive_count ),
+			'all'		=> sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base ) ), $current === 'all' || $current == '' ? ' class="current"' : '', __('All', 'wpsc') . $total_count ),
+			'active'	=> sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', '1', $base ) ), $current === '1' ? ' class="current"' : '', __('Active', 'wpsc') . $active_count ),
+			'inactive'	=> sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', '0', $base ) ), $current === '0' ? ' class="current"' : '', __('Inactive', 'wpsc') . $inactive_count ),
 		);
 
 		return $views;
@@ -170,18 +170,18 @@ class WPSC_Coupons_List_Table extends WP_List_Table {
 
 		$base     = admin_url( 'edit.php?post_type=wpsc-product&page=wpsc-edit-coupons&wpsc-action=edit_coupon&coupon=' . $item['ID'] );
 
-		$coupon   = '<strong><a href="' . add_query_arg( array( 'wpsc-action' => 'edit_coupon', 'coupon' => $item['ID'] ) ) . '">' . esc_html( $item['coupon'] ) . '</a></strong>';
+		$coupon   = '<strong><a href="' . esc_url( add_query_arg( array( 'wpsc-action' => 'edit_coupon', 'coupon' => $item['ID'] ) ) ) . '">' . esc_html( $item['coupon'] ) . '</a></strong>';
 
 		$row_actions = array();
 
-		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'wpsc-action' => 'edit_coupon', 'coupon' => $item['ID'] ) ) . '">' . __( 'Edit', 'wpsc' ) . '</a>';
+		$row_actions['edit'] = '<a href="' . esc_url( add_query_arg( array( 'wpsc-action' => 'edit_coupon', 'coupon' => $item['ID'] ) ) ) . '">' . __( 'Edit', 'wpsc' ) . '</a>';
 
 		if( strtolower( $item['status'] ) == 'active' )
-			$row_actions['deactivate'] = '<a href="' . add_query_arg( array( 'wpsc-action' => 'deactivate_coupon', 'coupon' => $item['ID'] ) ) . '">' . __( 'Deactivate', 'wpsc' ) . '</a>';
+			$row_actions['deactivate'] = '<a href="' . esc_url( add_query_arg( array( 'wpsc-action' => 'deactivate_coupon', 'coupon' => $item['ID'] ) ) ) . '">' . __( 'Deactivate', 'wpsc' ) . '</a>';
 		else
-			$row_actions['activate'] = '<a href="' . add_query_arg( array( 'wpsc-action' => 'activate_coupon', 'coupon' => $item['ID'] ) ) . '">' . __( 'Activate', 'wpsc' ) . '</a>';
+			$row_actions['activate'] = '<a href="' . esc_url( add_query_arg( array( 'wpsc-action' => 'activate_coupon', 'coupon' => $item['ID'] ) ) ) . '">' . __( 'Activate', 'wpsc' ) . '</a>';
 
-		$row_actions['delete'] = '<a href="' . add_query_arg( array( 'wpsc-action' => 'delete_coupon', 'coupon' => $item['ID'] ) ) . '">' . __( 'Delete', 'wpsc' ) . '</a>';
+		$row_actions['delete'] = '<a href="' . esc_url( add_query_arg( array( 'wpsc-action' => 'delete_coupon', 'coupon' => $item['ID'] ) ) ) . '">' . __( 'Delete', 'wpsc' ) . '</a>';
 
 		$row_actions = apply_filters( 'wpsc_coupon_row_actions', $row_actions, $item['ID'] );
 

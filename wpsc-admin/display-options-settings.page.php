@@ -54,7 +54,7 @@ function wpsc_settings_page_update_notification() {
 		if ( ! isset( $message ) )
 			_e( 'Settings successfully updated.', 'wpsc' );
 
-		$_SERVER['REQUEST_URI'] = remove_query_arg( array( 'locked', 'regenerate', 'skipped', 'updated', 'deleted', 'wpsc_downloadcsv', 'rss_key', 'start_timestamp', 'end_timestamp', 'email_buyer_id' ), $_SERVER['REQUEST_URI'] ); ?>
+		$_SERVER['REQUEST_URI'] = esc_url( remove_query_arg( array( 'locked', 'regenerate', 'skipped', 'updated', 'deleted', 'wpsc_downloadcsv', 'rss_key', 'start_timestamp', 'end_timestamp', 'email_buyer_id' ), $_SERVER['REQUEST_URI'] ) ); ?>
 	</p></div>
 
 <?php

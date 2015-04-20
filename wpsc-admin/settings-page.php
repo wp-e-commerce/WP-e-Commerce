@@ -396,7 +396,7 @@ final class WPSC_Settings_Page {
 				set_transient( 'settings_errors', get_settings_errors(), 30 );
 				$query_args['settings-updated'] = true;
 			}
-			wp_redirect( add_query_arg( $query_args ) );
+			wp_redirect( esc_url_raw( add_query_arg( $query_args ) ) );
 			exit;
 		}
 	}
@@ -448,7 +448,7 @@ final class WPSC_Settings_Page {
 	private function submit_url() {
 		$location = add_query_arg( 'tab', $this->current_tab_id );
 		$location = apply_filters( 'wpsc_settings_page_submit_url', $location, $this, $this->current_tab );
-		return $location;
+		return esc_url( $location );
 	}
 
 	/**

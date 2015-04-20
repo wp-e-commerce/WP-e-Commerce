@@ -75,7 +75,7 @@ class WPSC_Settings_Tab_General extends WPSC_Settings_Tab {
 						} else {
 							?>
 							<span>
-								<?php printf( __( 'Select: <a href="%1$s"  class="wpsc-select-all" title="All">All</a> <a href="%2$s" class="wpsc-select-none" title="None">None</a>' , 'wpsc') , add_query_arg( array( 'selected_all' => 'all' ) ), add_query_arg( array( 'selected_all' => 'none' ) )  ); ?>
+								<?php printf( __( 'Select: <a href="%1$s"  class="wpsc-select-all" title="All">All</a> <a href="%2$s" class="wpsc-select-none" title="None">None</a>' , 'wpsc') , esc_url( add_query_arg( array( 'selected_all' => 'all' ) ) ), esc_url( add_query_arg( array( 'selected_all' => 'none' ) ) ) ); ?>
 							</span><br />
 							<div id='wpsc-target-markets' class='ui-widget-content multiple-select'>
 								<?php foreach ( (array)$countrylist as $country ) : ?>

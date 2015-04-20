@@ -172,14 +172,14 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 				'post'              => $item->ID,
 				'bulk_action_nonce' => wp_create_nonce( 'wpsc_product_variations_bulk_action' ),
 			) );
-			$actions['show'] = '<a class="wpsc-variation-show-link" href="' . $show_url . '" title="' . __( 'Show this variation on the front-end', 'wpsc' ) . '">' . __( 'Publish', 'wpsc' ) . '</a>';
+			$actions['show'] = '<a class="wpsc-variation-show-link" href="' . esc_url( $show_url ) . '" title="' . __( 'Show this variation on the front-end', 'wpsc' ) . '">' . __( 'Publish', 'wpsc' ) . '</a>';
 		} elseif ( in_array( $item->post_status, array( 'publish', 'inherit' ) ) ) {
 			$hide_url = add_query_arg( array(
 				'bulk_action'       => 'hide',
 				'post'              => $item->ID,
 				'bulk_action_nonce' => wp_create_nonce( 'wpsc_product_variations_bulk_action' ),
 			) );
-			$actions['hide'] = '<a class="wpsc-variation-hide-link" href="' . $hide_url . '" title="' . __( 'Mark this variation as draft to hide from the front-end', 'wpsc' ) . '">' . __( 'Mark as Draft', 'wpsc' ) . '</a>';
+			$actions['hide'] = '<a class="wpsc-variation-hide-link" href="' . esc_url( $hide_url ) . '" title="' . __( 'Mark this variation as draft to hide from the front-end', 'wpsc' ) . '">' . __( 'Mark as Draft', 'wpsc' ) . '</a>';
 		}
 
 		if ( current_user_can( $post_type_object->cap->delete_post, $item->ID ) ) {
@@ -197,13 +197,13 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 					$restore_url
 				);
 				$restore_url = wp_nonce_url( $restore_url, 'untrash-post_' . $item->ID );
-				$actions['untrash'] = "<a title='" . esc_attr( __( 'Restore this item from the Trash' ) ) . "' href='" . $restore_url . "'>" . __( 'Restore' ) . "</a>";
+				$actions['untrash'] = "<a title='" . esc_attr( __( 'Restore this item from the Trash' ) ) . "' href='" . esc_url( $restore_url ) . "'>" . __( 'Restore' ) . "</a>";
 			} elseif ( EMPTY_TRASH_DAYS ) {
-				$actions['trash'] = "<a class='submitdelete' title='" . esc_attr( __( 'Move this item to the Trash' ) ) . "' href='" . $delete_link . "'>" . __( 'Trash' ) . "</a>";
+				$actions['trash'] = "<a class='submitdelete' title='" . esc_attr( __( 'Move this item to the Trash' ) ) . "' href='" . esc_url( $delete_link ) . "'>" . __( 'Trash' ) . "</a>";
 			}
 
 			if ( $force_delete )
-				$actions['delete'] = "<a class='submitdelete' title='" . esc_attr( __( 'Delete this item permanently' ) ) . "' href='" . $delete_link . "'>" . __( 'Delete Permanently' ) . "</a>";
+				$actions['delete'] = "<a class='submitdelete' title='" . esc_attr( __( 'Delete this item permanently' ) ) . "' href='" . esc_url( $delete_link ) . "'>" . __( 'Delete Permanently' ) . "</a>";
 		}
 
 		return $actions;
@@ -418,7 +418,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 		<div id="message" class="updated"><p>
 		<?php
 		echo join( ' ', $messages ); unset( $messages );
-		$_SERVER['REQUEST_URI'] = remove_query_arg( array('locked', 'skipped', 'updated', 'deleted', 'trashed', 'untrashed'), $_SERVER['REQUEST_URI'] );
+		$_SERVER['REQUEST_URI'] = esc_url( remove_query_arg( array('locked', 'skipped', 'updated', 'deleted', 'trashed', 'untrashed'), $_SERVER['REQUEST_URI'] ) );
 		echo '</p></div>';
 	}
 

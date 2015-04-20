@@ -21,7 +21,7 @@ function _wpsc_get_exchange_rate( $from, $to ) {
 				'http://www.google.com/finance/converter'
 				);
 
-	$url  = apply_filters( '_wpsc_get_exchange_rate_service_endpoint', $url, $from, $to );
+	$url  = esc_url_raw( apply_filters( '_wpsc_get_exchange_rate_service_endpoint', $url, $from, $to ) );
 
 	$response = wp_remote_retrieve_body( wp_remote_get( $url, array( 'timeout' => 10 ) ) );
 

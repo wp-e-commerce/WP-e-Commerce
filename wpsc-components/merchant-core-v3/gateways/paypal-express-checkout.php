@@ -69,7 +69,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
     public function filter_unselect_default( $fields ) {
         foreach ( $fields as $i=>$field ) {
             $fields[ $i ][ 'checked' ] = false;
-		}
+        }
 
         return $fields;
     }
@@ -107,7 +107,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         // Build the URL
         $url = add_query_arg( $data, $url );
 
-        return $url;
+        return esc_url( $url );
     }
 
     /**
@@ -274,7 +274,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
             'token'         => $token,
             'payer_id'      => $PayerID,
             'message_id'    => $this->purchase_log->get( 'sessionid' ),
-            'invoice'		=> $this->purchase_log->get( 'id' ),
+            'invoice'       => $this->purchase_log->get( 'id' ),
         );
         $options += $this->checkout_data->get_gateway_data();
         $options += $this->purchase_log->get_gateway_data( parent::get_currency_code(), $this->get_currency_code() );
@@ -318,7 +318,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
             $location = add_query_arg( array( 'payment_gateway_callback' => 'display_generic_error' ) );
         }
 
-        wp_redirect( $location );
+        wp_redirect( esc_url_raw( $location ) );
         exit;
     }
 
@@ -428,7 +428,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
             $location = add_query_arg( array( 'payment_gateway_callback' => 'display_generic_error' ) );
         }
 
-        wp_redirect( $location );
+        wp_redirect( esc_url_raw( $location ) );
         exit;
     }
 

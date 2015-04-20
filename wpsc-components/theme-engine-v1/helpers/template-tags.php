@@ -286,7 +286,7 @@ function wpsc_a_page_url($page=null) {
 				$output = add_query_arg('paged', '', $output);
 
 		}
-	return $output;
+	return esc_url( $output );
 	}
 }
 /**
@@ -443,15 +443,15 @@ function wpsc_pagination( $totalpages = '', $per_page = '', $current_page = '', 
 	} else {
 		// Should we show the FIRST PAGE link?
 		if($current_page > 1)
-			$output .= "<a href=\"". remove_query_arg('paged' ) . "\" title=\"" . __('First Page', 'wpsc') . "\">" . __('&laquo; First', 'wpsc') . "</a>";
+			$output .= "<a href=\"". esc_url( remove_query_arg('paged' ) ) . "\" title=\"" . __('First Page', 'wpsc') . "\">" . __('&laquo; First', 'wpsc') . "</a>";
 
 		// Should we show the PREVIOUS PAGE link?
 		if($current_page > 1) {
 			$previous_page = $current_page - 1;
 			if( $previous_page == 1 )
-				$output .= " <a href=\"". remove_query_arg( 'paged' ) . $additional_links . "\" title=\"" . __('Previous Page', 'wpsc') . "\">" . __('&lt; Previous', 'wpsc') . "</a>";
+				$output .= " <a href=\"". esc_url( remove_query_arg( 'paged' ) ) . $additional_links . "\" title=\"" . __('Previous Page', 'wpsc') . "\">" . __('&lt; Previous', 'wpsc') . "</a>";
 			else
-				$output .= " <a href=\"". add_query_arg( 'paged', ($current_page - 1) ) . $additional_links . "\" title=\"" . __('Previous Page', 'wpsc') . "\">" . __('&lt; Previous', 'wpsc') . "</a>";
+				$output .= " <a href=\"". esc_url( add_query_arg( 'paged', ($current_page - 1) ) ) . $additional_links . "\" title=\"" . __('Previous Page', 'wpsc') . "\">" . __('&lt; Previous', 'wpsc') . "</a>";
 		}
 		$i =$current_page - $num_paged_links;
 		$count = 1;
@@ -459,9 +459,9 @@ function wpsc_pagination( $totalpages = '', $per_page = '', $current_page = '', 
 		while($i < $current_page){
 			if($count <= $num_paged_links){
 				if($i == 1)
-					$output .= " <a href=\"". remove_query_arg('paged' ) . "\" title=\"" . sprintf( __('Page %s', 'wpsc'), $i ) . " \">".$i."</a>";
+					$output .= " <a href=\"". esc_url( remove_query_arg('paged' ) ) . "\" title=\"" . sprintf( __('Page %s', 'wpsc'), $i ) . " \">".$i."</a>";
 				else
-					$output .= " <a href=\"". add_query_arg('paged', $i ) . "\" title=\"" . sprintf( __('Page %s', 'wpsc'), $i ) . " \">".$i."</a>";
+					$output .= " <a href=\"". esc_url( add_query_arg('paged', $i ) ) . "\" title=\"" . sprintf( __('Page %s', 'wpsc'), $i ) . " \">".$i."</a>";
 			}
 			$i++;
 			$count++;
@@ -478,7 +478,7 @@ function wpsc_pagination( $totalpages = '', $per_page = '', $current_page = '', 
 			while(($i) > $current_page){
 
 				if($count < $num_paged_links && ($count+$current_page) <= $totalpages){
-						$output .= " <a href=\"". add_query_arg( 'paged', ($count+$current_page) ) . "\" title=\"" . sprintf( __('Page %s', 'wpsc'), ($count+$current_page) ) . "\">".($count+$current_page)."</a>";
+						$output .= " <a href=\"". esc_url( add_query_arg( 'paged', ($count+$current_page) ) ) . "\" title=\"" . sprintf( __('Page %s', 'wpsc'), ($count+$current_page) ) . "\">".($count+$current_page)."</a>";
 				$i++;
 				}else{
 				break;
@@ -489,11 +489,11 @@ function wpsc_pagination( $totalpages = '', $per_page = '', $current_page = '', 
 
 		if($current_page < $totalpages) {
 			$next_page = $current_page + 1;
-			$output .= "<a href=\"". add_query_arg( 'paged', $next_page ) . "\" title=\"" . __('Next Page', 'wpsc') . "\">" . __('Next &gt;', 'wpsc') . "</a>";
+			$output .= "<a href=\"". esc_url( add_query_arg( 'paged', $next_page ) ) . "\" title=\"" . __('Next Page', 'wpsc') . "\">" . __('Next &gt;', 'wpsc') . "</a>";
 		}
 		// Should we show the LAST PAGE link?
 		if($current_page < $totalpages) {
-			$output .= "<a href=\"". add_query_arg( 'paged', $totalpages ) . "\" title=\"" . __('Last Page', 'wpsc') . "\">" . __('Last &raquo;', 'wpsc') . "</a>";
+			$output .= "<a href=\"". esc_url( add_query_arg( 'paged', $totalpages ) ) . "\" title=\"" . __('Last Page', 'wpsc') . "\">" . __('Last &raquo;', 'wpsc') . "</a>";
 		}
 	}
 	// Return the output.

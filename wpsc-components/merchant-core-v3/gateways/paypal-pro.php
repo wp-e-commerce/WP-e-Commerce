@@ -296,7 +296,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 			$location = add_query_arg( array( 'payment_gateway_callback' => 'display_generic_error' ) );
 		}
 
-		wp_redirect( $location );
+		wp_redirect( esc_url_raw( $location ) );
 		exit;
 	}
 
