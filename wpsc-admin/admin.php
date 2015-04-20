@@ -1572,7 +1572,7 @@ function _wpsc_admin_notices_3dot8dot9() {
 	$message = sprintf(
 		$message,
 		'https://wpecommerce.org/wp-e-commerce-3-8-9-compatibility-issues/',
-		add_query_arg( 'dismiss_389_upgrade_notice', 1 )
+		esc_url( add_query_arg( 'dismiss_389_upgrade_notice', 1 ) )
 	);
 
 	echo '<div id="wpsc-3.8.9-notice" class="error">' . $message . '</div>';
@@ -1611,7 +1611,7 @@ the "billingcountry" and "shippingcountry" settings to control the visibility of
 	$message .= "\n<p>" . __( '<a href="%s">Hide this warning</a>', 'wpsc' ) . '</p>';
 	$message = sprintf(
 		$message,
-		add_query_arg( 'dismiss_3_8_14_1_upgrade_notice', 1 )
+		esc_url( add_query_arg( 'dismiss_3_8_14_1_upgrade_notice', 1 ) )
 	);
 
 	echo '<div id="wpsc-3-8-14-1-notice" class="error">' . $message . '</div>';
@@ -1641,7 +1641,7 @@ function _wpsc_admin_notices_3dot8dot11() {
 		WPSC_VERSION,
 		'https://github.com/wp-e-commerce/WP-e-Commerce/issues/359',
 		'http://docs.wpecommerce.org/documentation/3-8-11-user-logs',
-		add_query_arg( 'dismiss_3811_upgrade_notice', 1 )
+		esc_url( add_query_arg( 'dismiss_3811_upgrade_notice', 1 ) )
 	);
 
 	echo '<div id="wpsc-3.8.11-notice" class="error">' . $message . '</div>';

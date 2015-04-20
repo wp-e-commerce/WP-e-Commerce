@@ -31,7 +31,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 			'cancel_url'    => $this->get_shopping_cart_payment_url(),
 			'currency'      => $this->get_currency_code(),
 			'test'          => (bool) $this->setting->get( 'sandbox_mode' ),
-		) );	
+		) );
 
 	}
 
@@ -97,7 +97,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		$html = '<img src="' . WPSC_URL . '/images/cc.png" border="0" alt="' . esc_attr__( 'Credit Card Icons' ) .'" />';
 
 		return apply_filters( 'wpsc_paypal-pro_mark_html', $html );
-	}	
+	}
 
 	/**
 	 * Returns the URL of the Return Page after the PayPal Checkout
@@ -263,7 +263,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 			$location = add_query_arg( array( 'payment_gateway_callback' => 'display_generic_error' ) );
 		}
 
-		wp_redirect( $location );
+		wp_redirect( esc_url_raw( $location ) );
 		exit;
 	}
 

@@ -11,7 +11,7 @@
 
 if ( isset( $_REQUEST['wpsc_notices'] ) && $_REQUEST['wpsc_notices'] == 'theme_ignore' ) {
 	update_option( 'wpsc_ignore_theme', true );
-	wp_redirect( remove_query_arg( 'wpsc_notices' ) );
+	wp_redirect( esc_url_raw( remove_query_arg( 'wpsc_notices' ) ) );
 }
 
 /**

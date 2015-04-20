@@ -1009,7 +1009,7 @@ function _wpsc_get_alternate_html( $cart_messages ) {
 
 	$javascript = wp_remote_retrieve_body(
 		wp_remote_post(
-			add_query_arg( array( 'wpsc_action' => 'wpsc_get_alternate_html', 'ajax' => 'true', 'wpsc_ajax_action' => 'add_to_cart' ), home_url() ),
+			esc_url_raw( add_query_arg( array( 'wpsc_action' => 'wpsc_get_alternate_html', 'ajax' => 'true', 'wpsc_ajax_action' => 'add_to_cart' ), home_url() ),
 			array(
 				'body' =>
 					array(
@@ -1019,7 +1019,7 @@ function _wpsc_get_alternate_html( $cart_messages ) {
 				'cookies'    => $cookies,
 				'user-agent' => $_SERVER['HTTP_USER_AGENT']
 			)
-		)
+		) )
 	);
 	return $javascript;
 }

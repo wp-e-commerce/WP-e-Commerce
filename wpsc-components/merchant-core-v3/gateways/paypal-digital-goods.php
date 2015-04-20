@@ -480,7 +480,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
             $location = add_query_arg( array( 'payment_gateway_callback' => 'display_generic_error' ) );
         }
 
-        wp_redirect( $location );
+        wp_redirect( esc_url_raw( $location ) );
         exit;
 
     }
@@ -494,10 +494,10 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      */
     public function callback_display_paypal_error_redirect() {
         // Redirect Location
-        $location = add_query_arg( array(
+        $location = esc_url( add_query_arg( array(
             'payment_gateway'          => 'paypal-digital-goods',
             'payment_gateway_callback' => 'display_paypal_error',
-        ), base64_decode( $_GET['return_url'] ) );
+        ), base64_decode( $_GET['return_url'] ) ) );
 
         // Page Styles
         wp_register_style( 'ppdg-iframe', plugins_url( 'dg.css', __FILE__ ) );

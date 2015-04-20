@@ -2,9 +2,9 @@
 
 /**
  * The Product Variations page class in the WordPress admin
- * 
+ *
  * @package wp-e-commerce
- */ 
+ */
 
 class WPSC_Product_Variations_Page {
 	private $list_table;
@@ -21,9 +21,9 @@ class WPSC_Product_Variations_Page {
 		if ( ! empty( $_REQUEST['tab'] ) ) {
 			$this->current_tab = $_REQUEST['tab'];
 		} else {
-			$args = array(	
+			$args = array(
 				'post_parent' => $this->parent_id,
-				'post_type'   => 'wpsc-product', 
+				'post_type'   => 'wpsc-product',
 				'post_status' => 'any');
 
 			$number_of_variations = count(get_children($args));
@@ -74,7 +74,7 @@ class WPSC_Product_Variations_Page {
 			update_product_meta( $id, 'price', wpsc_string_to_float( $data['price'] ) );
 		}
 
-		if ( isset( $data['sale_price'] ) ) { 
+		if ( isset( $data['sale_price'] ) ) {
 
 			$sale_price = wpsc_string_to_float( $data['sale_price'] );
 
@@ -157,7 +157,7 @@ class WPSC_Product_Variations_Page {
 		foreach ( $tabs as $tab => $title ) {
 			$class = ( $tab == $this->current_tab ) ? ' class="tabs"' : '';
 			$item = '<li' . $class . '>';
-			$item .= '<a href="' . add_query_arg( 'tab', $tab ) . '">' . esc_html( $title ) . '</a></li> ';
+			$item .= '<a href="' . esc_url( add_query_arg( 'tab', $tab ) ) . '">' . esc_html( $title ) . '</a></li> ';
 			echo $item;
 		}
 		echo '</ul>';
@@ -189,7 +189,7 @@ class WPSC_Product_Variations_Page {
 			'_wp_http_referer',
 			'updated',
 		) );
-		wp_redirect( add_query_arg( 'tab', 'manage', $sendback ) );
+		wp_redirect( esc_url_raw( add_query_arg( 'tab', 'manage', $sendback ) ) );
 		exit;
 	}
 
@@ -217,7 +217,7 @@ class WPSC_Product_Variations_Page {
 
 			$trashed++;
 		}
-		return add_query_arg( array( 'trashed' => $trashed, 'ids' => join( ',', $post_ids ) ) );
+		return esc_url( add_query_arg( array( 'trashed' => $trashed, 'ids' => join( ',', $post_ids ) ) ) );
 	}
 
 	public function process_bulk_action_untrash( $post_ids ) {
@@ -232,7 +232,7 @@ class WPSC_Product_Variations_Page {
 
 			$untrashed++;
 		}
-		return add_query_arg( 'untrashed', $untrashed );
+		return esc_url( add_query_arg( 'untrashed', $untrashed ) );
 	}
 
 	public function process_bulk_action_delete( $post_ids ) {
@@ -253,7 +253,7 @@ class WPSC_Product_Variations_Page {
 			}
 			$deleted++;
 		}
-		return add_query_arg( 'deleted', $deleted );
+		return esc_url( add_query_arg( 'deleted', $deleted ) );
 	}
 
 	public function process_bulk_action_hide( $post_ids ) {
@@ -265,7 +265,7 @@ class WPSC_Product_Variations_Page {
 			) );
 			$updated ++;
 		}
-		return add_query_arg( 'updated', $updated );
+		return esc_url( add_query_arg( 'updated', $updated ) );
 	}
 
 	public function process_bulk_action_show( $post_ids ) {
@@ -277,7 +277,7 @@ class WPSC_Product_Variations_Page {
 			) );
 			$updated ++;
 		}
-		return add_query_arg( 'updated', $updated );
+		return esc_url( add_query_arg( 'updated', $updated ) );
 	}
 
 	private function save_bulk_edited_items() {
@@ -317,7 +317,7 @@ class WPSC_Product_Variations_Page {
 				foreach ( array( 'height', 'width', 'length' ) as $field ) {
 					unset( $data['product_metadata']['dimensions'][$field] );
 					unset( $data['product_metadata']['dimensions'][$field . '_unit'] );
-				}				
+				}
 			} else {
 				foreach ( array( 'height', 'width', 'length' ) as $field ) {
 					$data['product_metadata']['dimensions'][$field . '_unit'] = "cm";
@@ -345,7 +345,7 @@ class WPSC_Product_Variations_Page {
 			'last_paged'
 		), $sendback );
 		$sendback = add_query_arg( 'updated', count( $ids ), $sendback );
-		wp_redirect( $sendback );
+		wp_redirect( esc_url_raw( $sendback ) );
 		exit;
 	}
 
@@ -389,7 +389,7 @@ class WPSC_Product_Variations_Page {
 		_wpsc_refresh_parent_product_terms( $this->parent_id );
 		_wpsc_add_refresh_variation_parent_term_hooks();
 		if ( $current_action != 'edit' ) {
-			wp_redirect( $sendback );
+			wp_redirect( esc_url_raw( $sendback ) );
 			exit;
 		}
 	}

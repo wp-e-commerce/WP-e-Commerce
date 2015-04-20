@@ -24,11 +24,11 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 		$location = isset( $_REQUEST['current_url'] ) ? $_REQUEST['current_url'] : $_SERVER['REQUEST_URI'];
 		$gateway  = ! empty( $gateway ) ? $gateway : '';
 
-		return add_query_arg( array(
+		return esc_url( add_query_arg( array(
 			'tab'                => 'gateway',
 			'page'               => 'wpsc-settings',
 			'payment_gateway_id' => $gateway
-		), $location );
+		), $location ) );
 	}
 
 	public function display_payment_gateway_settings_form( $selected_gateway = null ) {

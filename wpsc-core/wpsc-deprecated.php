@@ -2033,7 +2033,7 @@ function wpsc_google_shipping_settings() {
 			$sendback = add_query_arg( 'updated', $updated, $sendback );
 		}
 
-		wp_redirect( $sendback );
+		wp_redirect( esc_url_raw( $sendback ) );
 		exit();
 	}
 }

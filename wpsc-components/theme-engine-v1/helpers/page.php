@@ -735,10 +735,10 @@ function wpsc_get_dynamic_user_css_url() {
 	$upload_folder   = $uploads_dir['path'];
 
 	if ( is_writable( $upload_folder ) && file_exists( $upload_folder . '/wpsc_cached_styles.css' ) )
-		return add_query_arg( 'timestamp', get_option( 'wpsc_dynamic_css_hash', time() ), $uploads_dir['url'] . '/wpsc_cached_styles.css' );
+		return esc_url( add_query_arg( 'timestamp', get_option( 'wpsc_dynamic_css_hash', time() ), $uploads_dir['url'] . '/wpsc_cached_styles.css' ) );
 
 	if ( ! is_writable( $upload_folder ) )
-		return add_query_arg( 'wpsc_user_dynamic_css', 'true', home_url( 'index.php' ) );
+		return esc_url( add_query_arg( 'wpsc_user_dynamic_css', 'true', home_url( 'index.php' ) ) );
 
 	if ( is_writable( $upload_folder ) && ! file_exists( $upload_folder . '/wpsc_cached_styles.css' ) )
 		return wpsc_cache_to_upload();
@@ -767,7 +767,7 @@ function wpsc_cache_to_upload() {
 
 	update_option( 'wpsc_dynamic_css_hash', $timestamp );
 
-	return add_query_arg( 'timestamp', $timestamp, $uploads_dir['url'] . '/wpsc_cached_styles.css' );
+	return esc_url( add_query_arg( 'timestamp', $timestamp, $uploads_dir['url'] . '/wpsc_cached_styles.css' ) );
 
 }
 
@@ -1422,7 +1422,7 @@ function wpsc_this_page_url() {
 		$output = get_permalink( get_the_ID() );
 	}
 
-	return $output;
+	return esc_url( $output );
 }
 
 /**

@@ -21,10 +21,10 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	 * @since 3.9
 	 */
 	public function __construct( $options, $child = false ) {
-		parent::__construct();	
+		parent::__construct();
 
 		require_once( 'php-merchant/gateways/paypal-express-checkout.php' );
-		$this->gateway = new PHP_Merchant_Paypal_Express_Checkout( $options );		
+		$this->gateway = new PHP_Merchant_Paypal_Express_Checkout( $options );
 
 		if ( ! $child ) {
 			$this->title = __( 'PayPal Express Checkout 3.0', 'wpsc' );
@@ -41,7 +41,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 				'cart_border'      => $this->setting->get( 'cart_border' ),
 			) );
 
-			// Express Checkout Button	
+			// Express Checkout Button
 			add_action( 'wpsc_cart_item_table_after', array( &$this, 'add_ecs_button' ), 0, 10 );
 		}
 	}
@@ -55,7 +55,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		if ( !wpsc_uses_shipping() && _wpsc_is_gateway_active( 'paypal-digital-goods' ) ) {
 			return;
 		}
-		if ( _wpsc_get_current_controller_name() === 'cart' ) {	
+		if ( _wpsc_get_current_controller_name() === 'cart' ) {
 			$url = $this->get_shortcut_url();
 			echo '<a href="'. $url .'"><img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png" alt="Check out with PayPal" /></a>';
 		}
@@ -85,10 +85,10 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
             return;
         }
         $payment_gateway = $_GET['payment_gateway'];
-        
+
 		global $wpsc_cart;
-		//	Create a new PurchaseLog Object 
-		$purchase_log = new WPSC_Purchase_Log();	
+		//	Create a new PurchaseLog Object
+		$purchase_log = new WPSC_Purchase_Log();
 
 		// Create a Sessionid
 		$sessionid = ( mt_rand( 100, 999 ) . time() );
@@ -124,7 +124,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			'gateway'       => $payment_gateway,
 			'base_shipping' => $wpsc_cart->calculate_base_shipping(),
 			'totalprice'    => $wpsc_cart->calculate_total_price(),
-		) ); 
+		) );
 
 		$purchase_log->save();
 
@@ -137,7 +137,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		$fields = $form->get_fields();
         WPSC_Checkout_Form_Data::save_form( $purchase_log, $fields );
 
-        // Return Customer to Review Order Page if there is Shipping 
+        // Return Customer to Review Order Page if there is Shipping
         add_filter( 'wpsc_paypal_express_checkout_transact_url', array( &$this, 'review_order_url' ) );
         add_filter( 'wpsc_paypal_express_checkout_return_url', array( &$this, 'review_order_callback' ) );
 
@@ -149,7 +149,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			'purchase_log_id' => $purchase_log_id,
 			'our_user_id'     => get_current_user_id(),
 		) );
-		do_action( 'wpsc_submit_checkout_gateway', $payment_gateway, $purchase_log );		
+		do_action( 'wpsc_submit_checkout_gateway', $payment_gateway, $purchase_log );
 
         return $sessionid;
 	}
@@ -162,8 +162,8 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
      */
     public function review_order_url( $url ) {
         if ( wpsc_uses_shipping() ) {
-           $url = wpsc_get_checkout_url( 'review-order' );  
-        } 
+           $url = wpsc_get_checkout_url( 'review-order' );
+        }
 
         return $url;
     }
@@ -181,7 +181,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         );
         $url = add_query_arg( $args, $url );
 
-        return $url;
+        return esc_url( $url );
     }
 
 	/**
@@ -359,13 +359,13 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	 *
 	 * @return void
 	 */
-	public function pull_paypal_details() { 
+	public function pull_paypal_details() {
         $this->set_purchase_log_for_callbacks();
 
         // Pull the User Details from PayPal
         $this->paypal_data = $paypal = $this->gateway->get_details_for( $_GET['token'] );
         $payer = $paypal->get( 'payer' );
-        $address = $paypal->get( 'shipping_address' ); 
+        $address = $paypal->get( 'shipping_address' );
 
         // PurchaseLog Update
         if ( isset( $address['country_code'] ) ) {
@@ -382,10 +382,10 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         $fields = $form->get_fields();
         $_POST['wpsc_checkout_details'] = array();
         foreach( $fields as $field ) {
-            $this->set_post_var( $field, $payer, $address );   
+            $this->set_post_var( $field, $payer, $address );
         }
 
-        // Save details to the Forms Table 
+        // Save details to the Forms Table
         WPSC_Checkout_Form_Data::save_form( $this->purchase_log, $fields );
 	}
 
@@ -403,7 +403,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         switch( $field->unique_name ) {
             // Shipping Details
         case 'shippingfirstname':
-            $_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $address['name'] ); 
+            $_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $address['name'] );
             break;
         case 'shippinglastname':
             $_POST['wpsc_checkout_details'][$field->id] = '';
@@ -434,7 +434,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
         case 'billingcity':
         case 'billingstate':
         case 'billingpostcode':
-        case 'billingphone': 
+        case 'billingphone':
             $_POST['wpsc_checkout_details'][$field->id] = '';
             break;
         case 'billingcountry':
@@ -456,7 +456,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
      */
     private function validate_var( $var ) {
         if ( isset( $var ) ) {
-            return $var; 
+            return $var;
         }
         return '';
     }
@@ -466,10 +466,10 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
      *
      * @return void
      */
-    public function callback_review_transaction() {  
+    public function callback_review_transaction() {
 		// Pull Customer Details from PayPal
-        $this->pull_paypal_details();  
-		
+        $this->pull_paypal_details();
+
 		// If no Shipping is required, confirm the Transaction
         if ( !wpsc_uses_shipping() ) {
             $this->callback_confirm_transaction();
@@ -484,7 +484,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
  	 * Display Customer Details from PayPal
 	 *
 	 * @param string $output
-	 * @return string 
+	 * @return string
 	 */
 	public function review_order_buyer_details( $output ) {
 		$payer = $this->paypal_data->get( 'payer' );
@@ -503,7 +503,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	 * @return string
 	 */
 	public function review_order_shipping_details( $output ) {
-        $address = $this->paypal_data->get( 'shipping_address' ); 			
+        $address = $this->paypal_data->get( 'shipping_address' );
 		$output .= '<ul>';
 		$output .= '<li>' . $address[ 'name' ] . '</li>';
 		$output .= '<li>' . $address[ 'street' ] . '</li>';
@@ -562,7 +562,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		);
 		$options += $this->checkout_data->get_gateway_data();
 		$options += $this->purchase_log->get_gateway_data( parent::get_currency_code(), $this->get_currency_code() );
- 
+
 		if ( $this->setting->get( 'ipn', false ) ) {
 			$options['notify_url'] = $this->get_notify_url();
 		}
@@ -602,7 +602,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			$location = add_query_arg( array( 'payment_gateway_callback' => 'display_generic_error' ) );
 		}
 
-		wp_redirect( $location );
+		wp_redirect( esc_url_raw( $location ) );
 		exit;
 	}
 
@@ -716,7 +716,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			$location = add_query_arg( array( 'payment_gateway_callback' => 'display_generic_error' ) );
 		}
 
-		wp_redirect( $location );
+		wp_redirect( esc_url_raw( $location ) );
 		exit;
 	}
 
