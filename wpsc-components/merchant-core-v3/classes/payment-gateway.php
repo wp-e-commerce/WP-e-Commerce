@@ -57,14 +57,23 @@ final class WPSC_Payment_Gateways {
 	public static function &get( $gateway, $meta = false ) {
 
 		if ( empty( self::$instances[ $gateway ] ) ) {
+
 			if ( ! $meta ) {
 				$meta = self::$gateways[ $gateway ];
 			}
+
+			if ( ! file_exists( $meta['path'] ) ) {
+				WPSC_Payment_Gateways::flush_cache();
+			}
+
 			require_once( $meta['path'] );
+
 			$class_name = $meta['class'];
+
 			$options = array(
 				'http_client' => new WPSC_Payment_Gateway_HTTP(),
 			);
+
 			if ( ! class_exists( $class_name ) ) {
 				$error = new WP_Error( 'wpsc_invalid_payment_gateway', sprintf( __( 'Invalid payment gateway: Class %s does not exist.', 'wpsc' ), $class_name ) );
 				return $error;
