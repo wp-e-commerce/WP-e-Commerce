@@ -9,14 +9,14 @@ function wpsc_locate_asset( $file ) {
 function wpsc_locate_asset_uri( $file ) {
 	$path = wpsc_locate_asset( $file );
 
-	if ( strpos( $path, WP_CONTENT_DIR ) !== false ) {
-		return content_url( substr( $path, strlen( WP_CONTENT_DIR ) ) );
-	} elseif ( strpos( $path, WP_PLUGIN_DIR ) !== false ) {
-		return plugins_url( substr( $path, strlen( WP_PLUGIN_DIR ) ) );
-	} elseif ( strpos( $path, WPMU_PLUGIN_DIR ) !== false ) {
-		return plugins_url( substr( $path, strlen( WP_PLUGIN_DIR ) ) );
-	} elseif ( strpos( $path, ABSPATH ) !== false ) {
-		return get_site_url( null, substr( $path, strlen( ABSPATH ) ) );
+	if ( strpos( $path, wp_normalize_path( WP_CONTENT_DIR ) ) !== false ) {
+		return content_url( substr( $path, strlen( wp_normalize_path( WP_CONTENT_DIR ) ) ) );
+	} elseif ( strpos( $path, wp_normalize_path( WP_PLUGIN_DIR ) !== false ) ) {
+		return plugins_url( substr( $path, strlen( wp_normalize_path( WP_PLUGIN_DIR ) ) ) );
+	} elseif ( strpos( $path, wp_normalize_path( WPMU_PLUGIN_DIR ) !== false ) ) {
+		return plugins_url( substr( $path, strlen( wp_normalize_path( WP_PLUGIN_DIR ) ) ) );
+	} elseif ( strpos( $path, wp_normalize_path( ABSPATH ) !== false ) ) {
+		return get_site_url( null, substr( $path, strlen( wp_normalize_path( ABSPATH ) ) ) );
 	}
 
 	return '';
@@ -32,7 +32,7 @@ function _wpsc_locate_stuff( $paths, $files, $load = false, $require_once = true
 
 		foreach ( $paths as $path ) {
 			if ( file_exists( $path . '/' . $file ) ) {
-				$located = realpath( $path . '/' . $file );
+				$located = wp_normalize_path( $path . '/' . $file );
 				break 2;
 			}
 		}
