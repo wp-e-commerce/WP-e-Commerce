@@ -1,6 +1,7 @@
 <?php
 
-define( 'WPSC_MERCHANT_V3_PATH', dirname( __FILE__ ) );
+define( 'WPSC_MERCHANT_V3_PATH'     , dirname( __FILE__ ) );
+define( 'WPSC_MERCHANT_V3_SDKS_PATH', dirname( __FILE__ ) . '/libraries' );
 define( 'WPSC_PAYMENT_STATUS_INCOMPLETE', 1 );
 define( 'WPSC_PAYMENT_STATUS_RECEIVED'  , 2 );
 define( 'WPSC_PAYMENT_STATUS_ACCEPTED'  , 3 );
