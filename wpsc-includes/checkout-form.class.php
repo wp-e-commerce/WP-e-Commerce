@@ -1,10 +1,10 @@
 <?php
 /**
  * The WP eCommerce Checkout Form Class
- * 
+ *
  * @package wp-e-commerce
  * @since 3.8.10
- */ 
+ */
 
 class WPSC_Checkout_Form {
 	/**
@@ -139,7 +139,7 @@ class WPSC_Checkout_Form {
 			}
 		}
 
-		return isset( $this->field_unique_name_id[$unique_name] ) ? $this->field_unique_name_id[$unique_name] : false;
+		return isset( $this->field_unique_name_id[ $unique_name ] ) ? $this->field_unique_name_id[ $unique_name ] : false;
 	}
 
 	/**
@@ -157,7 +157,7 @@ class WPSC_Checkout_Form {
 		$id = $this->get_field_id_by_unique_name( $unique_name );
 
 		if ( $id ) {
-			$field = $this->fields[$id];
+			$field = $this->fields[ $id ];
 		}
 
 		return $field;
@@ -196,7 +196,7 @@ class WPSC_Checkout_Form {
 		if ( $exclude_heading ) {
 			foreach ( $fields_to_return as $index => $field ) {
 				if ( $field->type == 'heading' ) {
-					unset( $fields_to_return[$index] );
+					unset( $fields_to_return[ $index ] );
 				}
 			}
 		}
@@ -227,6 +227,6 @@ class WPSC_Checkout_Form {
 	 * @return string
 	 */
 	public function get_title() {
-		return isset( self::$form_titles[$this->id] ) ? self::$form_titles[$this->id] : '';
+		return isset( self::$form_titles[ $this->id ] ) ? self::$form_titles[ $this->id ] : '';
 	}
 }
