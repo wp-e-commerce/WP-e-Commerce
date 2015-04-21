@@ -7,7 +7,7 @@ class WPSC_Redirect_Canonical {
 	private static $instance;
 
 	public static function get_instance(){
-		if ( is_null( $instance ) ) {
+		if ( is_null( self::$instance ) ) {
 			self::$instance = new WPSC_Redirect_Canonical();
 			self::$instance->init();
 		}
