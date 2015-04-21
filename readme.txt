@@ -1,5 +1,5 @@
 === WP eCommerce ===
-Contributors: JustinSainton, mufasa
+Contributors: JustinSainton
 Donate link: https://wpecommerce.org
 Tags: e-commerce, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
 Requires at least: 3.9
