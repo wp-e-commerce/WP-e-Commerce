@@ -80,12 +80,13 @@ class WPSC_Checkout_Form {
 	 * @return WPSC_Checkout_Form
 	 */
 	public static function &get( $id = 0 ) {
-		if ( ! self::$instances )
-			self::$instances[$id] = new WPSC_Checkout_Form( $id );
+		if ( ! self::$instances ) {
+			self::$instances[ $id ] = new WPSC_Checkout_Form( $id );
+		}
 
 		self::$form_titles = get_option( 'wpsc_checkout_form_sets' );
 
-		return self::$instances[$id];
+		return self::$instances[ $id ];
 	}
 
 	/**
@@ -115,12 +116,9 @@ class WPSC_Checkout_Form {
 	public function field_drop_down_options( $selected_id = false ) {
 		?>
 		<option value=""><?php _e( 'Please select', 'wpsc' ); ?></option>
+		<?php foreach ( $this->get_fields() as $field ) { ?>
+			<option <?php if ( $field->type == 'heading' ) echo 'disabled="disabled"'; ?> <?php selected( $field->id, $selected_id ) ?> value="<?php echo esc_attr( $field->id ) ?>"><?php echo esc_html( $field->name ); ?></option>
 		<?php
-
-		foreach ( $this->get_fields() as $field ) {
-			?>
-				<option <?php if ( $field->type == 'heading' ) echo 'disabled="disabled"'; ?> <?php selected( $field->id, $selected_id ) ?> value="<?php echo esc_attr( $field->id ) ?>"><?php echo esc_html( $field->name ); ?></option>
-			<?php
 		}
 	}
 
@@ -140,7 +138,7 @@ class WPSC_Checkout_Form {
 				$this->field_unique_name_id[$field->unique_name] = $field->id;
 			}
 		}
-		
+
 		return isset( $this->field_unique_name_id[$unique_name] ) ? $this->field_unique_name_id[$unique_name] : false;
 	}
 
@@ -202,8 +200,8 @@ class WPSC_Checkout_Form {
 				}
 			}
 		}
-		
-		return $fields_to_return;
+
+		return apply_filters( 'wpsc_checkout_get_fields', $fields_to_return, $exclude_heading, $this );
 	}
 
 	/**
