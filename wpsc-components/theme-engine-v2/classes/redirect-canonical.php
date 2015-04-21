@@ -17,11 +17,11 @@ class WPSC_Redirect_Canonical {
 
 	}
 
-	public static register_redirect() {
+	public static function register_redirect() {
 
 	}
 
-	public static deregister_redirect() {
+	public static function deregister_redirect() {
 
 	}
 }
