@@ -310,6 +310,11 @@ class WPSC_Router {
 		}
 
 		call_user_func_array( array( $this->controller, $this->controller_method ), $this->controller_args );
+
+		if ( is_callable( array( $this->controller, '_post_action' ) ) ) {
+			call_user_func( array( $this->controller, '_post_action' ), $this->controller_method, $this->controller_args );
+		}
+
 	}
 
 	public function _filter_query_vars( $q ) {
