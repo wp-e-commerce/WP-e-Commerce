@@ -2,12 +2,12 @@
 
 /**
  * Class for logging events and errors.
- * 
+ *
  * Significant gratitude to Pippin Williamson and other contributors to the WP_Logging project
  * This class is experimental and may change in the future in such a way as to break back compat.
  * You have been warned.
  *
- * @access private 
+ * @access private
  */
 
 class WPSC_Logging {
@@ -15,7 +15,7 @@ class WPSC_Logging {
 
     /**
      * WPSC_Logging Class
-     * 
+     *
      *
      * @access public
      * @return void
@@ -65,7 +65,7 @@ class WPSC_Logging {
      * @access private
      *
      * @param array[ WP_Post ]  $logs The array of logs we want to prune
-     * 
+     *
      * @since 3.9
      */
     private function prune_old_logs( $logs ) {
@@ -107,7 +107,7 @@ class WPSC_Logging {
         );
 
        return get_posts( apply_filters( 'wpsc_logging_prune_query_args', $args ) );
-    } 
+    }
 
     /**
      * Log types
@@ -148,7 +148,7 @@ class WPSC_Logging {
 
         $log_args = array(
             'labels'          => array( 'name' => __( 'Logs', 'wpsc' ) ),
-            'public'          => false,
+            'public'          => defined( 'WP_DEBUG' ) && WP_DEBUG,
             'query_var'       => false,
             'rewrite'         => false,
             'capability_type' => 'post',
@@ -179,7 +179,7 @@ class WPSC_Logging {
 
     public function register_taxonomy() {
 
-        register_taxonomy( 'wpsc_log_type', 'wpsc_log' );
+        register_taxonomy( 'wpsc_log_type', 'wpsc_log', array( 'public' => defined( 'WP_DEBUG' ) && WP_DEBUG ) );
 
         $types = self::log_types();
 
@@ -415,7 +415,7 @@ class WPSC_Logging {
      */
 
     public static function get_log_count( $object_id = 0, $type = null, $meta_query = null ) {
-        
+
         // Re-consider usage of posts_per_page => -1 here.
         $query_args = array(
             'post_parent'    => $object_id,
