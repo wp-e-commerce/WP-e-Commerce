@@ -1003,6 +1003,10 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	 */
 	public function log_error( $response ) {
 		if ( $this->setting->get( 'debugging' ) ) {
+
+			add_filter( 'wpsc_logging_post_type_args', 'WPSC_Logging::force_ui' );
+			add_filter( 'wpsc_logging_taxonomy_args ', 'WPSC_Logging::force_ui' );
+
 			$log_data = array(
 				'post_title'    => 'PayPal ExpressCheckout Operation Failure',
 				'post_content'  =>  'There was an error processing the payment. Find details in the log entry meta fields.',
