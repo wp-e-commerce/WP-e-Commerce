@@ -3,7 +3,7 @@
 	$.fn.wpsc_multi_select = function(options) {
 		this.
 			not( '[id*="__i__"]' ). // filter out widget template
-			chosen(options);
+			select2(options);
 	};
 
 	$(function() {
