@@ -107,9 +107,9 @@ function wpsc_get_template_part( $slug = false, $name = null ) {
 
 	$templates = apply_filters( "wpsc_get_template_part_paths_for_{$slug}", $templates, $slug, $name );
 
-	do_action( "wpsc_template_before_{$slug}-{$name}" );
+	do_action( trim( "wpsc_template_before_{$slug}-{$name}", '-' ) );
 	wpsc_locate_template_part( $templates, true, false );
-	do_action( "wpsc_template_after_{$slug}-{$name}" );
+	do_action( trim( "wpsc_template_after_{$slug}-{$name}", '-' ) );
 }
 
 /**
