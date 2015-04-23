@@ -1027,7 +1027,7 @@ function _wpsc_set_transient(  $transient, $value, $expiration = 0 )  {
 function _wpsc_get_transient( $transient )  {
 	$encoded_value = get_transient( $transient );
 	$value = false;
-	
+
 	if ( false !== $encoded_value ) {
 		if ( ! empty( $encoded_value ) && is_string( $encoded_value ) ) {
 			$serialized_value = @base64_decode( $encoded_value );
