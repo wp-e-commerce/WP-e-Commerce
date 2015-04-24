@@ -828,7 +828,7 @@ class WPSC_Countries {
 	 *
 	 * @since 3.8.14
 	 *
-	 * @var array
+	 * @var bool
 	 */
 	private static $_initialized = false;
 
