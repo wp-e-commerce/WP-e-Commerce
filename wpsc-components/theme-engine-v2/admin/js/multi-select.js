@@ -1,7 +1,9 @@
 (function($){
 	// apply multi selection to the selected fields
 	$.fn.wpsc_multi_select = function(options) {
-		this.hide().select2(options);
+		this.
+			not( '[id*="__i__"]' ). // filter out widget template
+			select2(options);
 	};
 
 	$(function() {
@@ -19,7 +21,7 @@
 			// select all or none based on html class
 			el.find( 'option' ).prop( 'selected', t.hasClass( 'wpsc-multi-select-all' ) );
 
-			// update Chosen control
+			// update Select2 control
 			el.trigger( 'change' );
 		});
 
@@ -31,6 +33,14 @@
 	$(document).ajaxComplete(function() {
 		$( '.wpsc-multi-select' ).each( function( index, el ) {
 			var t = $(el);
+
+			if ( ! t.data( 'select2' ) ) {
+				$( '#' + t.attr( 'id' ).replace( /\-/g, '_' ) + '_chosen' ).remove();
+				t.wpsc_multi_select({
+					search_contains: true
+				});
+			}
+
 			t.wpsc_multi_select();
 		} );
 	});
