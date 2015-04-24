@@ -35,20 +35,20 @@ input[id$="-slug"].regular-text {
 
 .select2-container,
 .select2-container .select2-search__field,
-.select2-container .select2-search--inline{
+.select2-container .select2-search--inline {
 	width:100% !important;
 }
 
-.select2-container{
+.select2-container {
 	padding:0;
 }
 
-.select2-container input[type=search]{
+.select2-container input[type=search] {
 	-webkit-box-shadow: 0 0 0 transparent;
 	box-shadow:0 0 0 transparent;
 }
 
-.wpsc-settings-category-filter-custom .select2-container{
+.wpsc-settings-category-filter-custom .select2-container {
 	max-width:400px;
 }
 
@@ -57,8 +57,6 @@ input[id$="-slug"].regular-text {
 	overflow: visible !important;
 }
 
-[id*=wpsc_widget_drill_down] .chosen-container,
-[id*=wpsc_widget_drill_down] .chosen-choices,
 [id*=wpsc_widget_drill_down] .default {
 	width: 100% !important;
 }
