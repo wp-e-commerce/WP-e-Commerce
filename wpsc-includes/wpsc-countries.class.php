@@ -63,6 +63,24 @@ class WPSC_Countries {
 	const INCLUDE_INVISIBLE        = true;
 	const DO_NOT_INCLUDE_INVISIBLE = false;
 
+	/** Refers to a single instance of this class. */
+	private static $instance = null;
+
+	/**
+	 * Creates or returns an instance of this class.
+	 *
+	 * @return  WPSC_Countries A single instance of this class.
+	 */
+	public static function get_instance() {
+
+		if ( null == self::$instance ) {
+			self::$instance = new self;
+		}
+
+		return self::$instance;
+
+	} // end get_instance;
+
 	/**
 	 * Change an country ISO code into a country id, if a country id is passed it is returned intact
 	 *
@@ -876,7 +894,8 @@ class WPSC_Countries {
 	 *
 	 */
 	public function __construct() {
-		if ( self::$active_wpsc_country_by_country_id == null ) {
+
+		if ( ! is_a( self::$active_wpsc_country_by_country_id, 'WPSC_Data_Map' ) ) {
 			self::_clean_data_maps();
 			self::restore();
 		}
@@ -1054,7 +1073,7 @@ class WPSC_Countries {
 				}
 			}
 
-			set_transient( self::transient_name(), $mydata );
+			_wpsc_set_transient( self::transient_name(), $mydata );
 
 			self::$_dirty = false;
 		}
@@ -1070,32 +1089,48 @@ class WPSC_Countries {
 	 * @return none
 	 */
 	private function restore() {
-		$data = get_transient( self::transient_name() );
 
+		// force a class load in php
+		$data = _wpsc_get_transient( self::transient_name() );
 		$has_data = false;
 
-		if ( is_array( $data ) ) {
-			foreach ( $data as $variable => $value ) {
-				if ( property_exists( $this, $variable ) ) {
+		$transient_is_valid = is_array( $data );
 
-					if ( is_a( $value, 'WPSC_Data_Map' ) ) {
-						$value->clear_dirty();
-					}
-
-					self::$$variable = $value;
-					$has_data = true;
-				} else {
-					// something went wrong with save / restore
-					$has_data = false;
+		foreach( self::$_maps_to_save_with_core_class as $map_name => $should_be_saved ) {
+			if ( $should_be_saved ) {
+				if ( ( null !== $data[ $map_name ] ) && ! is_a( $data[ $map_name ], 'WPSC_Data_Map' ) ) {
+					$transient_is_valid = false;
+					_wpsc_delete_transient( self::transient_name() );
 					break;
 				}
 			}
 		}
 
-		if ( ! $has_data && ( $data !== false ) ) {
-			delete_transient( self::transient_name() );
-		} else {
-			self::$_initialized = true;
+		if ( $transient_is_valid ) {
+			if ( is_array( $data ) ) {
+				foreach ( $data as $variable => $value ) {
+					if ( property_exists( $this, $variable ) ) {
+
+						if ( is_a( $value, 'WPSC_Data_Map' ) ) {
+							$value->clear_dirty();
+						}
+
+						self::$$variable = $value;
+						$has_data        = true;
+					} else {
+						// something went wrong with save / restore
+						$has_data = false;
+						break;
+					}
+				}
+
+				self::$_initialized = true;
+			}
+		}
+
+		if ( $transient_is_valid && ! $has_data && ( $data !== false ) ) {
+			_wpsc_delete_transient( self::transient_name() );
+			self::$_initialized = false;
 		}
 
 		self::$_dirty = false;
@@ -1115,7 +1150,7 @@ class WPSC_Countries {
 	public static function clear_cache() {
 
 		// delete anthing that is stored in the transient cache
-		delete_transient( self::transient_name() );
+		_wpsc_delete_transient( self::transient_name() );
 
 		// when we clear the cached copy of the sdata, we also clear the resident copy of the data
 		// so it is rebuilt and stays in sync
@@ -1139,8 +1174,10 @@ class WPSC_Countries {
 
 		foreach ( self::$_maps_to_save_with_core_class as $map_name => $save_map ) {
 			$map = &self::$$map_name;
-			if ( $map->dirty() ) {
-				$dirty = true;
+			if ( is_a( $map, 'WPSC_Data_Map' ) ) {
+				if ( $map->dirty() ) {
+					$dirty = true;
+				}
 			}
 		}
 
@@ -1573,11 +1610,10 @@ class WPSC_Countries {
 
 }
 
-add_action( 'init', '_wpsc_make_countries_data_available' );
+
+add_action( 'init', '_wpsc_make_countries_data_available', 10 ,1 );
 
 function _wpsc_make_countries_data_available() {
-	static $wpsc_countries = null;
-	if ( $wpsc_countries == null ) {
-		$wpsc_countries = new WPSC_Countries();
-	}
+	$wpsc_countries = WPSC_Countries::get_instance();
 }
+
