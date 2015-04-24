@@ -402,7 +402,7 @@ class WPSC_Purchase_Log_Action_Link {
 		$url = add_query_arg( array( 'wpsc_purchase_log_action' => $this->id, 'id' => $this->log_id ) );
 		$url = wp_nonce_url( $url, 'wpsc_purchase_log_action_' . $this->id );
 
-		return $url;
+		return esc_url( $url );
 
 	}
 
@@ -441,7 +441,7 @@ class WPSC_Purchase_Log_Action_Link {
 	 *
 	 * @since   3.9.0
 	 * @access  private
-	 * 
+	 *
 	 * @return  string  Dashicon HTML element.
 	 */
 	private function _get_dashicon_display() {

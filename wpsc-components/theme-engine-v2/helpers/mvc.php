@@ -50,9 +50,10 @@ function _wpsc_load_controller( $controller ) {
 
 	$controller_class = str_replace( '-', ' ', $controller );
 	$controller_class = ucwords( $controller_class );
-	$controller_class = 'WPSC_Controller_' . str_replace( ' ', '_', $controller_class );
 
-	$controller_path = WPSC_TE_V2_CONTROLLERS_PATH . "/{$controller}.php";
+	$controller_class = apply_filters( 'wpsc_load_controller_class', 'WPSC_Controller_' . str_replace( ' ', '_', $controller_class ), $controller );
+
+	$controller_path = apply_filters( 'wpsc_load_controller_path', WPSC_TE_V2_CONTROLLERS_PATH . "/{$controller}.php", $controller, $controller_class );
 
 	if ( file_exists( $controller_path ) ) {
 		require_once( $controller_path );

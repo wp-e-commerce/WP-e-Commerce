@@ -14,8 +14,8 @@
 
 			event.preventDefault();
 
-			target_row.show();
-			parent.addClass('active');
+			target_row.toggle( 100 );
+			parent.toggleClass('active');
 			resize_iframe();
 
 			return false;

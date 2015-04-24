@@ -44,7 +44,7 @@ class Sputnik_Updater {
 			),
 			'user-agent' => 'WP eCommerce Marketplace: ' . WPSC_VERSION
 		);
-		$url = add_query_arg('plugins', urlencode(json_encode($data)), $url);
+		$url = esc_url_raw( add_query_arg('plugins', urlencode(json_encode($data)), $url) );
 		$req = wp_remote_get($url, $options);
 		if (is_wp_error($req) || $req['response']['code'] !== 200) {
 			return $plugins;
@@ -118,7 +118,7 @@ class Sputnik_Updater {
 			),
 			'user-agent' => 'WP eCommerce Marketplace: ' . WPSC_VERSION
 		);
-		$url = add_query_arg( 'themes', urlencode( json_encode( $data ) ), $url );
+		$url = esc_url_raw( add_query_arg( 'themes', urlencode( json_encode( $data ) ), $url ) );
 		$req = wp_remote_get( $url, $options );
 		if (is_wp_error($req) || $req['response']['code'] !== 200) {
 			return $themes;

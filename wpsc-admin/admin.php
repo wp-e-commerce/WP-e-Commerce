@@ -623,7 +623,7 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 				'coupons_compare_and'      => esc_html_x( 'AND' , 'Coupon comparison logic', 'wpsc' ),
 				'meta_downloads_plural'    => __( ' downloads', 'live preview for downloads metabox', 'wpsc' ),
 				'meta_downloads_singular'  => __( ' download' , 'live preview for downloads metabox', 'wpsc' ),
-				'wpsc_inline_css_error'    => __( 'It is not possible to enable the inline CSS without also enabling the common CSS.' )
+				'wpsc_inline_css_error'    => __( 'It is not possible to change the state of the inline CSS without also changing the common CSS.' )
 			) );
 
 			$_wpsc_admin_l10n_loaded = true;
@@ -1559,6 +1559,7 @@ function wpsc_duplicate_product_image_process( $child_post, $new_parent_id ) {
 
 /**
  * @todo docs
+ *
  * @access private
  *
  * @uses add_query_arg()      Adds argument to the WordPress query
@@ -1566,23 +1567,15 @@ function wpsc_duplicate_product_image_process( $child_post, $new_parent_id ) {
  * @uses get_option()         Gets option from the database given string
  */
 function _wpsc_admin_notices_3dot8dot9() {
-	$message = '<p>' . __( 'You are currently using WP eCommerce 3.8.9. There have been major changes in WP eCommerce 3.8.9, so backward-compatibility with existing plugins might not always be guaranteed. If you are unsure, please roll back to 3.8.8.5, and set up a test site with 3.8.9 to make sure WP eCommerce 3.8.9 is compatible with your existing themes and plugins.<br />If you find any incompatibility issues, please <a href="%1$s">report them to us</a> as well as the other plugins or themes\' developers.' , 'wpsc' ) . '</p>';
+	$message = '<p>' . __( 'You are currently using WP eCommerce. There have been major changes in WP eCommerce 3.8.9, so backward-compatibility with existing plugins might not always be guaranteed. If you are unsure, please roll back to 3.8.8.5, and set up a test site with 3.8.9 to make sure WP eCommerce 3.8.9 is compatible with your existing themes and plugins.<br />If you find any incompatibility issues, please <a href="%1$s">report them to us</a> as well as the other plugins or themes\' developers.' , 'wpsc' ) . '</p>';
 	$message .= "\n<p>" . __( '<a href="%2$s">Hide this warning</a>', 'wpsc' ) . '</p>';
 	$message = sprintf(
 		$message,
 		'https://wpecommerce.org/wp-e-commerce-3-8-9-compatibility-issues/',
-		add_query_arg( 'dismiss_389_upgrade_notice', 1 )
+		esc_url( add_query_arg( 'dismiss_389_upgrade_notice', 1 ) )
 	);
 
 	echo '<div id="wpsc-3.8.9-notice" class="error">' . $message . '</div>';
-}
-
-if ( ! get_option( 'wpsc_hide_3.8.9_notices' ) ) {
-	add_action( 'admin_notices', '_wpsc_admin_notices_3dot8dot9' );
-
-  if ( isset( $_REQUEST['dismiss_389_upgrade_notice'] ) ) {
-    update_option( 'wpsc_hide_3.8.9_notices', true );
-  }
 }
 
 /**
@@ -1618,7 +1611,7 @@ the "billingcountry" and "shippingcountry" settings to control the visibility of
 	$message .= "\n<p>" . __( '<a href="%s">Hide this warning</a>', 'wpsc' ) . '</p>';
 	$message = sprintf(
 		$message,
-		add_query_arg( 'dismiss_3_8_14_1_upgrade_notice', 1 )
+		esc_url( add_query_arg( 'dismiss_3_8_14_1_upgrade_notice', 1 ) )
 	);
 
 	echo '<div id="wpsc-3-8-14-1-notice" class="error">' . $message . '</div>';
@@ -1648,7 +1641,7 @@ function _wpsc_admin_notices_3dot8dot11() {
 		WPSC_VERSION,
 		'https://github.com/wp-e-commerce/WP-e-Commerce/issues/359',
 		'http://docs.wpecommerce.org/documentation/3-8-11-user-logs',
-		add_query_arg( 'dismiss_3811_upgrade_notice', 1 )
+		esc_url( add_query_arg( 'dismiss_3811_upgrade_notice', 1 ) )
 	);
 
 	echo '<div id="wpsc-3.8.11-notice" class="error">' . $message . '</div>';

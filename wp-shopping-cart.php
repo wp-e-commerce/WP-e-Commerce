@@ -3,7 +3,7 @@
   * Plugin Name: WP eCommerce
   * Plugin URI: http://wpecommerce.org/
   * Description: A plugin that provides a WordPress Shopping Cart. See also: <a href="http://wpecommerce.org" target="_blank">WPeCommerce.org</a> | <a href="https://wordpress.org/support/plugin/wp-e-commerce/" target="_blank">Support Forum</a> | <a href="http://docs.wpecommerce.org/" target="_blank">Documentation</a>
-  * Version: 3.9.2
+  * Version: 3.9.3
   * Author: WP eCommerce
   * Author URI: http://wpecommerce.org/
   **/
@@ -26,7 +26,7 @@ class WP_eCommerce {
 	 * Start WPEC on plugins loaded
 	 *
 	 * @uses add_action()   Attaches to 'plugins_loaded' hook
-	 * @uses add_action()   Attaches to 'wpsc_components' hook
+	 * @uses add_filter()   Attaches to 'wpsc_components' hook
 	 */
 	public function __construct() {
 		add_action( 'plugins_loaded' , array( $this, 'init' ), 8 );
@@ -201,7 +201,7 @@ class WP_eCommerce {
 			foreach ( $registered as $component ) {
 
 				if ( ! is_array( $component['includes'] ) ) {
-					$component['includes'] = array( $component['includes' ] );
+					$component['includes'] = array( $component['includes'] );
 				}
 
 				foreach ( $component['includes'] as $include ) {
@@ -243,12 +243,12 @@ class WP_eCommerce {
 		add_action( 'init', '_wpsc_action_setup_customer', 1 );
 
 		// WPEC is ready to use as soon as WordPress and customer is setup and loaded
-		add_action( 'init', array( &$this, '_wpsc_fire_ready_action' ), 100 );
+		add_action( 'init', array( $this, '_wpsc_fire_ready_action' ), 100 );
 
 		// Load the purchase log statuses
 		wpsc_core_load_purchase_log_statuses();
 
-		// Load unique names and checout form types
+		// Load unique names and checkout form types
 		wpsc_core_load_checkout_data();
 
 		// Load the gateways

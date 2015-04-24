@@ -19,7 +19,7 @@ function _wpsc_populate_field_default_args( $field ) {
 		$field_defaults['class'] .= ' wpsc-field-' . sanitize_title_with_dashes( $field['name'] );
 	}
 
-	$field_defaults['title_validation'] = isset( $field['title'] ) ? strtolower( $field['title'] ) : $field['title'];
+	$field_defaults['title_validation'] = isset( $field['title'] ) ? strtolower( $field['title'] ) : $field_defaults['title'];
 
 	$field   = wp_parse_args( $field, $field_defaults );
 	$classes = array(
@@ -399,7 +399,11 @@ function _wpsc_filter_control_select_region( $output, $field, $args ) {
 function _wpsc_filter_control_submit( $output, $field, $args ) {
 	extract( $field );
 
-	$class = $args['id'] . '-button wpsc-button';
+	if ( ! empty( $value ) ) {
+		$title = $value;
+	}
+
+	$class = $args['id'] . '-button wpsc-button ' . $class;
 
 	if ( $field['primary'] ) {
 		$class .= ' wpsc-button-primary';
@@ -775,13 +779,13 @@ function wpsc_form_textarea( $name, $value = '', $atts = array(), $echo = true )
 	echo $output;
 }
 
-function wpsc_form_submit( $name, $title = '', $atts = array(), $echo = true ) {
+function wpsc_form_submit( $name, $value = '', $atts = array(), $echo = true ) {
 	if ( ! is_array( $atts ) ) {
 		$atts = array();
 	}
 
 	$atts['name']  = $name;
-	$atts['value'] = empty( $title ) ? _x( 'Submit', 'generic submit button title', 'wpsc' ) : $title;
+	$atts['value'] = empty( $value ) ? _x( 'Submit', 'generic submit button title', 'wpsc' ) : $value;
 	$atts['type']  = 'submit';
 
 	return _wpsc_input_type_field( $atts, $echo );

@@ -56,7 +56,7 @@ function wpsc_ajax_toggle_published() {
 
 	$status = (wpsc_toggle_publish_status( $product_id )) ? ('true') : ('false');
 	$sendback = add_query_arg( 'flipped', "1", wp_get_referer() );
-	wp_redirect( $sendback );
+	wp_redirect( esc_url_raw( $sendback ) );
 	exit();
 }
 
@@ -86,7 +86,7 @@ function wpsc_duplicate_product() {
 		$sendback = wp_get_referer();
 		$sendback = add_query_arg( 'duplicated', (int) $duplicated, $sendback );
 
-		wp_redirect( $sendback );
+		wp_redirect( esc_url_raw( $sendback ) );
 		exit();
 	} else {
 		wp_die( __( 'Sorry, for some reason, we couldn\'t duplicate this product because it could not be found in the database, check there for this ID: ', 'wpsc' ) . $id );
@@ -335,7 +335,7 @@ function wpsc_purchase_log_action_downloads_lock( $log_id ) {
 
 	// Redirect back to purchase logs list
 	$sendback = wp_get_referer();
-	$sendback = add_query_arg( 'cleared', 1, $sendback );
+	$sendback = esc_url_raw( add_query_arg( 'cleared', 1, $sendback ) );
 	wp_redirect( $sendback );
 	exit();
 
@@ -360,7 +360,7 @@ function wpsc_purchase_log_action_delete( $log_id ) {
 	// Redirect back to purchase logs list
 	$sendback = wp_get_referer();
 	$sendback = remove_query_arg( array( 'c', 'id' ), $sendback );
-	$sendback = add_query_arg( 'deleted', absint( $deleted ), $sendback );
+	$sendback = esc_url_raw( add_query_arg( 'deleted', absint( $deleted ), $sendback ) );
 	wp_redirect( $sendback );
 	exit();
 
@@ -383,7 +383,7 @@ function wpsc_purchase_log_action_email_receipt( $log_id ) {
 
 	// Redirect back to purchase logs list
 	$sendback = wp_get_referer();
-	$sendback = add_query_arg( 'sent', absint( $sent ), $sendback );
+	$sendback = esc_url_raw( add_query_arg( 'sent', absint( $sent ), $sendback ) );
 	wp_redirect( $sendback );
 	exit();
 
@@ -409,7 +409,7 @@ function wpsc_purchlog_resend_email( $log_id = '' ) {
 		_wpsc_doing_it_wrong( 'wpsc_purchlog_resend_email', __( '$log_id parameter requires a numeric purchase log ID.', 'wpsc' ), '3.9.0' );
 
 		// Support redirect for legacy purposes for the moment
-		$sendback = add_query_arg( 'sent', 0, wp_get_referer() );
+		$sendback = esc_url_raw( add_query_arg( 'sent', 0, wp_get_referer() ) );
 		wp_redirect( $sendback );
 		exit();
 
@@ -525,7 +525,7 @@ function wpsc_purchlog_bulk_modify() {
 	if ( isset( $_POST['view_purchlogs_by_status'] ) ) {
 		$sendback = add_query_arg( 'view_purchlogs_by_status', $_POST['view_purchlogs_by_status'], $sendback );
 	}
-	wp_redirect( $sendback );
+	wp_redirect( esc_url_raw( $sendback ) );
 	exit();
 }
 
@@ -664,7 +664,7 @@ function wpsc_update_page_urls( $auto = false ) {
 		if ( isset( $_SESSION['wpsc_settings_curr_page'] ) )
 			$sendback = add_query_arg( 'tab', $_SESSION['wpsc_settings_curr_page'], $sendback );
 
-		wp_redirect( $sendback );
+		wp_redirect( esc_url_raw( $sendback ) );
 		exit();
 	}
 }
@@ -811,7 +811,7 @@ function wpsc_delete_variation_set() {
 				'variation_id'
 					), $sendback );
 
-	wp_redirect( $sendback );
+	wp_redirect( esc_url_raw( $sendback ) );
 	exit();
 }
 
@@ -856,7 +856,7 @@ function wpsc_delete_coupon(){
 	}
 
 	$sendback = remove_query_arg( array( 'deleteid', 'wpsc_admin_action' ), $sendback );
-	wp_redirect( $sendback );
+	wp_redirect( esc_url_raw( $sendback ) );
 	exit();
 
 }

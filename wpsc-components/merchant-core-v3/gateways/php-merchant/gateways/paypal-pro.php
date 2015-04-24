@@ -35,7 +35,7 @@ class PHP_Merchant_Paypal_Pro extends PHP_Merchant_Paypal
 		}
 
 		$request += phpme_map( $this->options, array(
-			'subtotal'     => 'amount',
+			'subtotal'     => 'subtotal',
 			'shipping'     => 'shipping',
 			'handling'     => 'handling',
 			'tax'          => 'tax',

@@ -43,9 +43,9 @@ class WPSC_Cart_Item_Table_Widget_Form extends WPSC_Cart_Item_Table_Form {
 		<tr class="wpsc-cart-item-table-actions">
 			<td></td>
 			<td colspan="<?php echo count( $this->columns ) - 1; ?>">
-				<a class="wpsc-button wpsc-button-small wpsc-clear-cart" href="<?php echo $clear_cart_url; ?>"><?php esc_html_e( 'Clear Cart', 'wpsc' ); ?></a>
+				<a class="wpsc-button wpsc-button-small wpsc-clear-cart" href="<?php echo esc_url( $clear_cart_url ); ?>"><?php esc_html_e( 'Clear Cart', 'wpsc' ); ?></a>
 				<input type="hidden" name="action" value="update_quantity" />
-				<input type="hidden" name="prev" value="<?php echo $prev; ?> ">
+				<input type="hidden" name="prev" value="<?php echo $prev; ?>">
 			</td>
 		</tr>
 		<?php

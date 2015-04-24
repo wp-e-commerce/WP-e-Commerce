@@ -31,6 +31,7 @@
 					data: $form.serialize() + '&custom_gateway=paypal-pro',
 
 					success: function(data) {
+						data = data.replace(/\\/g, '');
 						$container.append( data );
 						$hss_form = $( 'FORM', $container );
 						$hss_form.attr( 'target', 'hss_iframe' );

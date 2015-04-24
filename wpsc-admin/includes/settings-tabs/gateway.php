@@ -24,11 +24,11 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 		$location = isset( $_REQUEST['current_url'] ) ? $_REQUEST['current_url'] : $_SERVER['REQUEST_URI'];
 		$gateway  = ! empty( $gateway ) ? $gateway : '';
 
-		return add_query_arg( array(
+		return esc_url( add_query_arg( array(
 			'tab'                => 'gateway',
 			'page'               => 'wpsc-settings',
 			'payment_gateway_id' => $gateway
-		), $location );
+		), $location ) );
 	}
 
 	public function display_payment_gateway_settings_form( $selected_gateway = null ) {
@@ -90,10 +90,7 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 				<?php $this->gateway_list(); ?>
 			</tbody>
 		</table>
-		<?php submit_button( __( 'Save Changes' ) ); ?>
-		<h4><?php _e( 'WP eCommerce Recommends', 'wpsc' ); ?></h4>
-		<a style="border-bottom:none;" href="https://www.paypal.com/nz/mrb/pal=LENKCHY6CU2VY" target="_blank"><img src="<?php echo WPSC_CORE_IMAGES_URL; ?>/paypal-referal.gif" border="0" alt="<?php esc_attr_e( 'Sign up for PayPal and start accepting credit card payments instantly.', 'wpsc' ); ?>" /></a>
-	<?php
+		<?php submit_button( __( 'Save Changes' ) );
 	}
 
 	private function gateway_list_item( $gateway, $force ) {

@@ -9,14 +9,14 @@ function wpsc_locate_asset( $file ) {
 function wpsc_locate_asset_uri( $file ) {
 	$path = wpsc_locate_asset( $file );
 
-	if ( strpos( $path, WP_CONTENT_DIR ) !== false ) {
-		return content_url( substr( $path, strlen( WP_CONTENT_DIR ) ) );
-	} elseif ( strpos( $path, WP_PLUGIN_DIR ) !== false ) {
-		return plugins_url( substr( $path, strlen( WP_PLUGIN_DIR ) ) );
-	} elseif ( strpos( $path, WPMU_PLUGIN_DIR ) !== false ) {
-		return plugins_url( substr( $path, strlen( WP_PLUGIN_DIR ) ) );
-	} elseif ( strpos( $path, ABSPATH ) !== false ) {
-		return get_site_url( null, substr( $path, strlen( ABSPATH ) ) );
+	if ( strpos( $path, wp_normalize_path( WP_CONTENT_DIR ) ) !== false ) {
+		return content_url( substr( $path, strlen( wp_normalize_path( WP_CONTENT_DIR ) ) ) );
+	} elseif ( strpos( $path, wp_normalize_path( WP_PLUGIN_DIR ) !== false ) ) {
+		return plugins_url( substr( $path, strlen( wp_normalize_path( WP_PLUGIN_DIR ) ) ) );
+	} elseif ( strpos( $path, wp_normalize_path( WPMU_PLUGIN_DIR ) !== false ) ) {
+		return plugins_url( substr( $path, strlen( wp_normalize_path( WP_PLUGIN_DIR ) ) ) );
+	} elseif ( strpos( $path, wp_normalize_path( ABSPATH ) !== false ) ) {
+		return get_site_url( null, substr( $path, strlen( wp_normalize_path( ABSPATH ) ) ) );
 	}
 
 	return '';
@@ -32,7 +32,7 @@ function _wpsc_locate_stuff( $paths, $files, $load = false, $require_once = true
 
 		foreach ( $paths as $path ) {
 			if ( file_exists( $path . '/' . $file ) ) {
-				$located = realpath( $path . '/' . $file );
+				$located = wp_normalize_path( $path . '/' . $file );
 				break 2;
 			}
 		}
@@ -107,9 +107,9 @@ function wpsc_get_template_part( $slug = false, $name = null ) {
 
 	$templates = apply_filters( "wpsc_get_template_part_paths_for_{$slug}", $templates, $slug, $name );
 
-	do_action( "wpsc_template_before_{$slug}-{$name}" );
+	do_action( trim( "wpsc_template_before_{$slug}-{$name}", '-' ) );
 	wpsc_locate_template_part( $templates, true, false );
-	do_action( "wpsc_template_after_{$slug}-{$name}" );
+	do_action( trim( "wpsc_template_after_{$slug}-{$name}", '-' ) );
 }
 
 /**
@@ -383,6 +383,43 @@ function _wpsc_filter_body_class( $classes ) {
 }
 
 add_filter( 'body_class', '_wpsc_filter_body_class' );
+
+/**
+ * Filters the title tag in WordPress to reflect the controller title.
+ *
+ * @since  4.0
+ *
+ * @param  string $title    Page title.
+ * @param  string $sep      Elements for separating the site title and page title.
+ * @param  string $location Where the title shoud be in relation to the separator.
+ *
+ * @return string           Modified page title.
+ */
+function _wpsc_filter_wp_title( $title, $sep = '&raquo;', $location = 'right' ) {
+
+	if ( wpsc_is_controller() ) {
+
+		$controller = _wpsc_get_current_controller();
+
+		if ( empty( $title ) ) {
+			$title = $controller->title;
+		}
+
+		$parts  = explode( $sep, $title );
+		$prefix = " $sep ";
+
+		if ( 'right' == $location ) { // sep on right, so reverse the order
+			$parts = array_reverse( $parts );
+			$title = ltrim( implode( " $sep ", $parts ) . $prefix, $prefix );
+		} else {
+			$title = rtrim( $prefix . implode( " $sep ", $parts ), $prefix );
+		}
+	}
+
+	return $title;
+}
+
+add_filter( 'wp_title', '_wpsc_filter_wp_title', 10, 3 );
 
 function _wpsc_filter_title( $title ) {
 	if ( wpsc_is_controller() ) {

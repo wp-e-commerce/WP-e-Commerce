@@ -125,7 +125,7 @@ class WPSC_Widget_Product_Categories extends WP_Widget {
 		$instance               = wp_parse_args( $old_instance, $this->defaults );
 		$instance['title']      = strip_tags( $new_instance['title'] );
 		$instance['show_image'] = ! empty( $new_instance['show_image'] );
-		$instance['categories'] = $new_instance['categories'];
+		$instance['categories'] = ! empty( $new_instance['categories'] ) ? $new_instance['categories'] : array();
 
 		if ( is_numeric( $new_instance['height'] ) ) {
 			$instance['height'] = (int) $new_instance['height'];
@@ -158,19 +158,23 @@ class WPSC_Widget_Product_Categories extends WP_Widget {
 		global $wpdb;
 
 		// Defaults
-		$instance = wp_parse_args($instance, $this->defaults );
+		$instance = wp_parse_args( $instance, $this->defaults );
 
 		// Values
 		$title          = esc_attr( $instance['title'] );
 		$width          = (int) $instance['width'];
 		$height         = (int) $instance['height'];
-		$grid           = (bool) $instance['grid'];
 		$show_name      = (bool) $instance['show_name'];
 		$show_hierarchy = (bool) $instance['show_hierarchy'];
 		$show_count     = (bool) $instance['show_count'];
 		$categories     = get_terms( 'wpsc_product_category', array(
 			'hide_empty' => false,
 		) );
+		$options  = array();
+
+		foreach ( $categories as $category ) {
+			$options[ $category->term_id ] = $category->name;
+		}
 
 		include( WPSC_TE_V2_SNIPPETS_PATH . '/widgets/product-categories/form.php' );
 	}

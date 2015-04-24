@@ -392,11 +392,11 @@ function wpsc_get_customer_account_tabs() {
 
 	$active_tab = _wpsc_get_current_controller_slug();
 
-	$tabs = array(
-		'orders'          => _x( 'Orders', 'customer account tab', 'wpsc' ),
+	$tabs = apply_filters( 'wpsc_customer_account_tabs', array(
+		'orders'          => _x( 'Orders'          , 'customer account tab', 'wpsc' ),
 		'digital-content' => _x( 'Digital Contents', 'customer account tab', 'wpsc' ),
-		'settings'        => _x( 'Settings', 'customer account tab', 'wpsc' )
-	);
+		'settings'        => _x( 'Settings'        , 'customer account tab', 'wpsc' )
+	), $active_tab );
 
 	$output = sprintf( '<ul class="wpsc-tabs wpsc-customer-account-tabs">' );;
 
@@ -477,6 +477,7 @@ function wpsc_customer_orders_statuses() {
 }
 
 function wpsc_get_customer_orders_list() {
+
 	if (    _wpsc_get_current_controller_name() != 'customer-account'
 	     || _wpsc_get_current_controller_slug() != 'orders' )
 		return '';
@@ -553,6 +554,7 @@ function wpsc_customer_orders_pagination_count() {
 	// Filter and return
 	echo apply_filters( 'wpsc_customer_orders_pagination_count', $output );
 }
+
 function wpsc_get_customer_orders_pagination( $args = array() ) {
 	ob_start();
 	?>
@@ -615,4 +617,27 @@ function wpsc_get_customer_account_digital_contents() {
 
 function wpsc_customer_account_digital_contents() {
 	echo wpsc_get_customer_account_digital_contents();
+}
+
+/**
+ * Return Customer Details
+ *
+ * @return string $output Customer Details
+ */
+function wpsc_get_checkout_customer_details() {
+	$output = '<h4>Buyer Details</h4>';
+	$output .= apply_filters( 'wpsc_review_order_buyers_details', '' );
+	$output .= '<h4>Shipping Details</h4>';
+	$output .= apply_filters( 'wpsc_review_order_shipping_details', '' );
+
+	return $output;
+}
+
+/**
+ * Print Customer Details
+ *
+ * @return void
+ */
+function wpsc_checkout_customer_details() {
+	echo wpsc_get_checkout_customer_details();
 }

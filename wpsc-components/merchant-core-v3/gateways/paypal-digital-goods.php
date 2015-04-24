@@ -5,29 +5,25 @@ require_once( 'paypal-express-checkout.php' );
  * The PayPal Express Checkout Gateway class
  *
  */
-
 class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Paypal_Express_Checkout {
     const SANDBOX_URL = 'https://www.sandbox.paypal.com/incontext?token=';
     const LIVE_URL    = 'https://www.paypal.com/incontext?token=';
-    public $gateway;
+    protected $gateway;
 
     /**
      * Constructor of PayPal Express Checkout Gateway
      *
      * @param array $options
-     * @return void
      *
      * @since 3.9
      */
     public function __construct( $options ) {
-
         require_once( 'php-merchant/gateways/paypal-digital-goods.php' );
-        $this->gateway = new PHP_Merchant_Paypal_Digital_Goods( $options );
-
         // Now that the gateway is created, call parent constructor
-        parent::__construct( $options );
+        parent::__construct( $options, true );
 
-        $this->title = __( 'PayPal ExpressCheckout for Digital Goods', 'wpsc' );
+		$this->gateway = new PHP_Merchant_Paypal_Digital_Goods( $options );
+        $this->title = __( 'PayPal Digital Goods for Express Checkout', 'wpsc' );
 
         $this->gateway->set_options( array(
             'api_username'     => $this->setting->get( 'api_username' ),
@@ -41,7 +37,85 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
             'cart_logo'		   => $this->setting->get( 'cart_logo' ),
             'cart_border'	   => $this->setting->get( 'cart_border' ),
         ) );
- 
+
+		// Express Checkout for DG Button
+		add_action( 'wpsc_cart_item_table_after', array( &$this, 'add_ecs_button' ), 0, 10 );
+
+        // Filter Digital Goods option on checkout
+        add_filter( 'wpsc_payment_method_form_fields', array( &$this, 'dg_option_removal' ), 100 );
+    }
+
+    /**
+     * Toggles Digital Goods option based on whether or not shipping is being used on the given cart.
+     *
+     * @since  4.0
+     *
+     * @param  array $fields Payment method form fields
+     *
+     * @return array $fields Modified payment method form fields
+     */
+    public function dg_option_removal( $fields ) {
+        if ( wpsc_uses_shipping() ) {
+            // Remove DG option
+            foreach( $fields as $index => $field ) {
+                if ( $field['value'] === 'paypal-digital-goods' ) {
+                    unset( $fields[ $index] );
+                }
+            }
+        } else {
+            // Remove Normal option
+            foreach( $fields as $index => $field ) {
+                if ( $field['value'] === 'paypal-express-checkout' ) {
+                    unset( $fields[ $index ] );
+                }
+            }
+        }
+        return $fields;
+    }
+
+	/**
+     * Insert the ExpessCheckout Shortcut Button
+     *
+     * @return void
+     */
+	public function add_ecs_button() {
+		if ( wpsc_uses_shipping() ) {
+			return;
+		}
+		if ( _wpsc_get_current_controller_name() === 'cart' ) {
+			$url = $this->get_shortcut_url();
+			echo '<a id="pp-ecs-dg" href="'. $url .'"><img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png" alt="Check out with PayPal" /></a>';
+		}
+	}
+
+	/**
+     * Return the ExpressCheckout Shortcut redirection URL
+     *
+     * @return void
+     */
+	public function get_shortcut_url() {
+		$location = add_query_arg( array(
+			'payment_gateway'          => 'paypal-digital-goods',
+			'payment_gateway_callback' => 'shortcut_process',
+		), home_url( 'index.php' ) );
+
+		return apply_filters( 'wpsc_paypal_digital_goods_shortcut_url', $location );
+	}
+
+	/**
+     * Sets the Review Callback for Review Order page.
+     *
+     * @param string $url
+     * @return string
+     */
+    public function review_order_callback( $url ) {
+        $args = array(
+            'payment_gateway_callback' => 'review_transaction',
+            'payment_gateway'          => 'paypal-digital-goods',
+        );
+        $url = add_query_arg( $args, $url );
+
+        return $url;
     }
 
     /**
@@ -71,16 +145,22 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      * @since 3.9
      */
     public static function dg_script() {
-        if ( wpsc_is_checkout() ) {
-            $dg_loc = array(
-                'spinner_url' => wpsc_get_ajax_spinner(),
-                'loading'     => __( 'Loading...', 'wpsc' ),
-            );
-
-            wp_enqueue_script( 'dg-script', 'https://www.paypalobjects.com/js/external/dg.js' );
-            wp_enqueue_script( 'dg-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/dg.js', array( 'jquery' ) );
-            wp_localize_script( 'dg-script', 'dg_loc', $dg_loc );
-        }
+		$dg_loc = array(
+			'spinner_url' => wpsc_get_ajax_spinner(),
+			'loading'     => __( 'Loading...', 'wpsc' ),
+		);
+		// Checkout Page
+		if ( wpsc_is_checkout() ) {
+			wp_enqueue_script( 'dg-script', 'https://www.paypalobjects.com/js/external/dg.js' );
+			wp_enqueue_script( 'dg-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/dg.js', array( 'jquery' ) );
+			wp_localize_script( 'dg-script', 'dg_loc', $dg_loc );
+		}
+		// Cart Page
+		if ( function_exists( 'wpsc_is_cart' ) && wpsc_is_cart() ) {
+			wp_enqueue_script( 'dg-script', 'https://www.paypalobjects.com/js/external/dg.js' );
+			wp_enqueue_script( 'dg-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/dgs.js', array( 'jquery' ) );
+			wp_localize_script( 'dg-script', 'dg_loc', $dg_loc );
+		}
     }
 
     /**
@@ -137,6 +217,14 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
         // Page Styles
         wp_register_style( 'ppdg-iframe', plugins_url( 'dg.css', __FILE__ ) );
 
+		// Apply any filters
+		if ( wpsc_get_customer_meta( 'ecs-' . $sessionid ) ) {
+			add_filter( 'wpsc_paypal_express_checkout_transact_url', array( &$this, 'review_order_url' ) );
+			add_filter( 'wpsc_paypal_express_checkout_return_url', array( &$this, 'review_order_callback' ) );
+
+			wpsc_delete_customer_meta( 'esc-' . $sessionid );
+		}
+
         // Return a redirection page
 ?>
 <html>
@@ -178,17 +266,22 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      * @since 3.9
      */
     protected function get_original_return_url( $session_id ) {
+		$transact_url = get_option( 'transact_url' );
+		$transact_url = apply_filters( 'wpsc_paypal_digital_goods_transact_url', $transact_url );
+        $transact_url = apply_filters( 'wpsc_paypal_express_checkout_transact_url', $transact_url );
+
         $location = add_query_arg( array(
             'sessionid'                => $session_id,
             'token'                    => $_REQUEST['token'],
             'PayerID'                  => $_REQUEST['PayerID'],
             'payment_gateway'          => 'paypal-digital-goods',
             'payment_gateway_callback' => 'confirm_transaction',
-        ),
-        get_option( 'transact_url' )
+		),
+		$transact_url
     );
 
         $location = wp_validate_redirect( $location );
+		$location = apply_filters( 'wpsc_paypal_express_checkout_return_url', $location );
 
         return apply_filters( 'wpsc_paypal_digital_goods_return_url', $location );
     }
@@ -254,8 +347,6 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
     /**
      * Return the original (real) Cancel URL
      *
-     * @param integer $session_id
-     *
      * @return string
      *
      * @since 3.9
@@ -313,6 +404,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
 
         exit;
     }
+
 
     /**
      * Confirm Transaction Callback
@@ -388,7 +480,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
             $location = add_query_arg( array( 'payment_gateway_callback' => 'display_generic_error' ) );
         }
 
-        wp_redirect( $location );
+        wp_redirect( esc_url_raw( $location ) );
         exit;
 
     }
@@ -402,10 +494,10 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      */
     public function callback_display_paypal_error_redirect() {
         // Redirect Location
-        $location = add_query_arg( array(
+        $location = esc_url( add_query_arg( array(
             'payment_gateway'          => 'paypal-digital-goods',
             'payment_gateway_callback' => 'display_paypal_error',
-        ), base64_decode( $_GET['return_url'] ) );
+        ), base64_decode( $_GET['return_url'] ) ) );
 
         // Page Styles
         wp_register_style( 'ppdg-iframe', plugins_url( 'dg.css', __FILE__ ) );
@@ -555,7 +647,7 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
         <label for="wpsc-paypal-express-cart-logo"><?php _e( 'Merchant Logo', 'wpsc' ); ?></label>
     </td>
     <td>
-        <input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'cart_logo' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'cart_logo' ) ); ?>" id="wpsc-paypal-express-cart-logo" />
+		<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'cart_logo' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'cart_logo' ) ); ?>" id="wpsc-paypal-express-cart-logo" /><br><span class="small description"><?php _e( 'The image must be stored in a HTTPS Server. Limit the image to 190 pixels wide by 60 pixels high.', 'wpsc' ); ?></span>
     </td>
 </tr>
 <tr>
@@ -592,6 +684,22 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
     </td>
 </tr>
 <?php endif ?>
+
+<!-- Checkout Shortcut -->
+<tr>
+    <td colspan="2">
+        <h4><?php _e( 'Express Checkout Shortcut', 'wpsc' ); ?></h4>
+    </td>
+</tr>
+<tr>
+    <td>
+        <label><?php _e( 'Enable Shortcut', 'wpsc' ); ?></label>
+    </td>
+    <td>
+        <label><input <?php checked( $this->setting->get( 'shortcut' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'shortcut' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wpsc' ); ?></label>&nbsp;&nbsp;&nbsp;
+        <label><input <?php checked( (bool) $this->setting->get( 'shortcut' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'shortcut' ) ); ?>" value="0" /> <?php _e( 'No', 'wpsc' ); ?></label>
+    </td>
+</tr>
 
 <!-- Error Logging -->
 <tr>

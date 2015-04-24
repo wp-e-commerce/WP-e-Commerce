@@ -31,7 +31,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 			'cancel_url'    => $this->get_shopping_cart_payment_url(),
 			'currency'      => $this->get_currency_code(),
 			'test'          => (bool) $this->setting->get( 'sandbox_mode' ),
-		) );	
+		) );
 
 	}
 
@@ -53,7 +53,6 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 			array( 'WPSC_Payment_Gateway_Paypal_Pro', 'filter_unselect_default' ), 101 , 1
 		);
 	}
-
 
 	/**
 	 * No payment gateway is selected by default
@@ -95,10 +94,10 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 * @since 3.9
 	 */
 	public function get_mark_html() {
-		$html = '<img src="' . WPSC_URL . '/images/cc.gif" border="0" alt="' . esc_attr__( 'Credit Card Icons' ) .'" />';
+		$html = '<img src="' . WPSC_URL . '/images/cc.png" border="0" alt="' . esc_attr__( 'Credit Card Icons' ) .'" />';
 
 		return apply_filters( 'wpsc_paypal-pro_mark_html', $html );
-	}	
+	}
 
 	/**
 	 * Returns the URL of the Return Page after the PayPal Checkout
@@ -165,11 +164,9 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 */
 	public function callback_ipn() {
 		$ipn = new PHP_Merchant_Paypal_IPN( false, (bool) $this->setting->get( 'sandbox_mode', false ) );
-
 		if ( $ipn->is_verified() ) {
 			$sessionid = $ipn->get( 'invoice' );
-			$this->set_purchase_log_for_callbacks( $sessionid );
-
+			$this->set_purchase_log_for_callbacks( $sessionid, 'sessionid' );
 			if ( $ipn->is_payment_denied() ) {
 				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::PAYMENT_DECLINED );
 			} elseif ( $ipn->is_payment_refunded() ) {
@@ -266,7 +263,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 			$location = add_query_arg( array( 'payment_gateway_callback' => 'display_generic_error' ) );
 		}
 
-		wp_redirect( $location );
+		wp_redirect( esc_url_raw( $location ) );
 		exit;
 	}
 
@@ -548,6 +545,11 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 			$options['notify_url'] = $this->get_notify_url();
 		}
 
+        // Detect Mobile Devices
+        if ( wp_is_mobile() ) {
+            $options['template'] = 'mobile-iframe';
+        }
+
 		// BMCreateButton API call
 		$response = $this->gateway->createButton( $options );
 
@@ -595,6 +597,10 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 */
 	public function log_error( $response ) {
 		if ( $this->setting->get( 'debugging' ) ) {
+
+			add_filter( 'wpsc_logging_post_type_args', 'WPSC_Logging::force_ui' );
+			add_filter( 'wpsc_logging_taxonomy_args ', 'WPSC_Logging::force_ui' );
+
 			$log_data = array(
 				'post_title'    => 'PayPal Pro Operation Failure',
 				'post_content'  =>  'There was an error processing the payment. Find details in the log entry meta fields.',

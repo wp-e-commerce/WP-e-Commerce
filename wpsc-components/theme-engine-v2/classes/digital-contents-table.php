@@ -25,7 +25,7 @@ class WPSC_Digital_Contents_Table extends WPSC_Table {
 			WPSC_Purchase_Log::ACCEPTED_PAYMENT,
 			WPSC_Purchase_Log::JOB_DISPATCHED,
 			WPSC_Purchase_Log::CLOSED_ORDER,
-			get_current_user_id(),
+			wpsc_get_current_customer_id(),
 		);
 
 		/* @todo: seems all we use here is fileid and product_id.  Investigate benchmarking selecting only those two columns. */
@@ -102,6 +102,11 @@ class WPSC_Digital_Contents_Table extends WPSC_Table {
 	}
 
 	public function column_contents( $item ) {
+
+		if ( empty( $this->digital_items ) ) {
+			return;
+		}
+
 		echo '<div class="wpsc-digital-product-items">';
 		echo '<ul>';
 		foreach ( $this->digital_items[ $item->ID ] as $file ) {

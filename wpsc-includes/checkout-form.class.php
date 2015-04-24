@@ -1,10 +1,10 @@
 <?php
 /**
  * The WP eCommerce Checkout Form Class
- * 
+ *
  * @package wp-e-commerce
  * @since 3.8.10
- */ 
+ */
 
 class WPSC_Checkout_Form {
 	/**
@@ -80,12 +80,13 @@ class WPSC_Checkout_Form {
 	 * @return WPSC_Checkout_Form
 	 */
 	public static function &get( $id = 0 ) {
-		if ( ! self::$instances )
-			self::$instances[$id] = new WPSC_Checkout_Form( $id );
+		if ( ! self::$instances ) {
+			self::$instances[ $id ] = new WPSC_Checkout_Form( $id );
+		}
 
 		self::$form_titles = get_option( 'wpsc_checkout_form_sets' );
 
-		return self::$instances[$id];
+		return self::$instances[ $id ];
 	}
 
 	/**
@@ -115,12 +116,9 @@ class WPSC_Checkout_Form {
 	public function field_drop_down_options( $selected_id = false ) {
 		?>
 		<option value=""><?php _e( 'Please select', 'wpsc' ); ?></option>
+		<?php foreach ( $this->get_fields() as $field ) { ?>
+			<option <?php if ( $field->type == 'heading' ) echo 'disabled="disabled"'; ?> <?php selected( $field->id, $selected_id ) ?> value="<?php echo esc_attr( $field->id ) ?>"><?php echo esc_html( $field->name ); ?></option>
 		<?php
-
-		foreach ( $this->get_fields() as $field ) {
-			?>
-				<option <?php if ( $field->type == 'heading' ) echo 'disabled="disabled"'; ?> <?php selected( $field->id, $selected_id ) ?> value="<?php echo esc_attr( $field->id ) ?>"><?php echo esc_html( $field->name ); ?></option>
-			<?php
 		}
 	}
 
@@ -140,8 +138,8 @@ class WPSC_Checkout_Form {
 				$this->field_unique_name_id[$field->unique_name] = $field->id;
 			}
 		}
-		
-		return isset( $this->field_unique_name_id[$unique_name] ) ? $this->field_unique_name_id[$unique_name] : false;
+
+		return isset( $this->field_unique_name_id[ $unique_name ] ) ? $this->field_unique_name_id[ $unique_name ] : false;
 	}
 
 	/**
@@ -159,7 +157,7 @@ class WPSC_Checkout_Form {
 		$id = $this->get_field_id_by_unique_name( $unique_name );
 
 		if ( $id ) {
-			$field = $this->fields[$id];
+			$field = $this->fields[ $id ];
 		}
 
 		return $field;
@@ -198,12 +196,12 @@ class WPSC_Checkout_Form {
 		if ( $exclude_heading ) {
 			foreach ( $fields_to_return as $index => $field ) {
 				if ( $field->type == 'heading' ) {
-					unset( $fields_to_return[$index] );
+					unset( $fields_to_return[ $index ] );
 				}
 			}
 		}
-		
-		return $fields_to_return;
+
+		return apply_filters( 'wpsc_checkout_get_fields', $fields_to_return, $exclude_heading, $this );
 	}
 
 	/**
@@ -229,6 +227,6 @@ class WPSC_Checkout_Form {
 	 * @return string
 	 */
 	public function get_title() {
-		return isset( self::$form_titles[$this->id] ) ? self::$form_titles[$this->id] : '';
+		return isset( self::$form_titles[ $this->id ] ) ? self::$form_titles[ $this->id ] : '';
 	}
 }

@@ -44,8 +44,9 @@ function _wpsc_filter_merchant_v3_gateway_loop_items( $gateways ) {
 
 function _wpsc_filter_merchant_v3_get_gateway_list( $list ) {
 	// if merchant api v2 is not being active, proceed to output the gateway list
-	if ( _wpsc_is_merchant_v2_active( $list ) )
+	if ( _wpsc_is_merchant_v2_active( $list ) ) {
 		return $list;
+	}
 
 	$active_gateways = WPSC_Payment_Gateways::get_active_gateways();
 	$selected_gateway = wpsc_get_customer_meta( 'selected_gateway' );

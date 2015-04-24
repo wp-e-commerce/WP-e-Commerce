@@ -31,7 +31,7 @@ function _wpsc_te2_filter_drill_down_store_permalinks( $args ) {
  * @return array
  */
 function _wpsc_te2_filter_drill_down_tag_permalinks( $args ) {
-	add_permastruct( 'wpsc_cat_drill_down_tag', $args['rewrite']['slug'] . '/%product_tag%/product-filter/%wpsc_cat_drill_down_tax%' );
+	add_permastruct( 'wpsc_cat_drill_down_tag', $args['rewrite']['slug'] . '/%wpsc_product_tag%/product-filter/%wpsc_cat_drill_down_tax%' );
 	return $args;
 }
 
@@ -139,6 +139,7 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 		} else {
 			$this->url_base = $wp_rewrite->get_extra_permastruct( 'wpsc_cat_drill_down_store' );
 		}
+
 	}
 
 	/**
@@ -282,7 +283,7 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 
 		$ids = isset( $this->url_args[ $widget_id ] ) ? $this->url_args[ $widget_id ] : array();
 
-		if ( ! empty( $this->url_args[$widget_id] ) ) {
+		if ( ! empty( $this->url_args[ $widget_id ] ) ) {
 			$args['parent'] = $this->url_args[ $widget_id ][ count( $this->url_args[ $widget_id ] ) - 1 ];
 		} else {
 			$args['include'] = $defaults;
@@ -294,7 +295,8 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 	public function widget( $args, $instance ) {
 		extract( $args );
 
-		$title = apply_filters( 'widget_title', $instance['title'] );
+		$title      = apply_filters( 'widget_title', $instance['title'] );
+		$categories = ! empty( $instance['categories'] ) ? array_map( 'absint', $instance['categories'] ) : array();
 
 		echo $before_widget;
 
@@ -303,7 +305,7 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 		}
 
 		echo '<ul>';
-		$this->output_terms( $this->number, array_map( 'absint', $instance['categories'] ) );
+		$this->output_terms( $this->number, $categories );
 		echo '</ul>';
 
 		echo $after_widget;
@@ -372,7 +374,7 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 
 		if ( $empty ) {
 			if ( empty( $this->url_base ) ) {
-				return remove_query_arg( 'wpsc_cat_drill_down' );
+				return esc_url( remove_query_arg( 'wpsc_cat_drill_down' ) );
 			} else {
 				return str_replace(
 					array( '/product-filter/%wpsc_cat_drill_down_store%', '/product-filter/%wpsc_cat_drill_down_tax%' ),
@@ -385,7 +387,7 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 		$uri = $this->generate_uri_part( $widget_id, false, $args );
 
 		if ( empty( $this->url_base ) ) {
-			return add_query_arg( 'wpsc_cat_drill_down', $uri );
+			return esc_url( add_query_arg( 'wpsc_cat_drill_down', $uri ) );
 		} else {
 			return str_replace(
 				array( '%wpsc_cat_drill_down_store%', '%wpsc_cat_drill_down_tax%' ),
@@ -396,11 +398,10 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 	}
 
 	private function term_url( $widget_id, $term ) {
-
 		$uri = $this->generate_uri_part( $widget_id, $term );
 
 		if ( empty( $this->url_base ) ) {
-			return add_query_arg( 'wpsc_cat_drill_down', $uri );
+			return esc_url( add_query_arg( 'wpsc_cat_drill_down', $uri ) );
 		} else {
 			return str_replace(
 				array( '%wpsc_cat_drill_down_store%', '%wpsc_cat_drill_down_tax%' ),

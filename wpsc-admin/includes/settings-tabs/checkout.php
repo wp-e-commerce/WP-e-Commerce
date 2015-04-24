@@ -23,7 +23,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 		$this->user_field_types         = array('text','textarea','heading','select','radio','checkbox');
 
 		if ( ! isset( $this->checkout_sets[$this->current_checkout_set] ) ) {
-			wp_redirect( remove_query_arg( 'checkout_set' ) );
+			wp_redirect( esc_url_raw( remove_query_arg( 'checkout_set' ) ) );
 			exit;
 		}
 
@@ -80,7 +80,7 @@ class WPSC_Settings_Tab_Checkout extends WPSC_Settings_Tab {
 		}
 
 		if ( isset( $_POST['checkout_set'] ) ) {
-			$_SERVER['REQUEST_URI'] = add_query_arg( 'checkout_set', $_POST['checkout_set'] );
+			$_SERVER['REQUEST_URI'] = esc_url( add_query_arg( 'checkout_set', $_POST['checkout_set'] ) );
 		}
 
 		if ( ! isset( $_POST['form_name'] ) && ! isset( $_POST['new_field_name'] ) )

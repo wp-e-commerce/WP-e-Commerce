@@ -8,7 +8,7 @@
 
 	$(function() {
 		// select all or none, delegated event handler in case AJAX is involved
-		$('body').on('click', 'a.wpsc-multi-select-all, a.wpsc-multi-select-none', function( e ) {
+		$( 'body' ).on( 'click', 'a.wpsc-multi-select-all, a.wpsc-multi-select-none', function( e ) {
 			var t = $(this),
 				el = $('#' + t.data('for'));
 
@@ -21,19 +21,17 @@
 			// select all or none based on html class
 			el.find( 'option' ).prop( 'selected', t.hasClass( 'wpsc-multi-select-all' ) );
 
-			// update Chosen control
-			el.trigger( 'select2:updated' );
+			// update Select2 control
+			el.trigger( 'change' );
 		});
 
 		// initialize all select boxes with class .wpsc-multi-select by default
-		$('.wpsc-multi-select').hide().wpsc_multi_select({
-			search_contains: true
-		});
+		$('.wpsc-multi-select').wpsc_multi_select();
 	});
 
 	// automatically refresh the elements in case an AJAX request is made
 	$(document).ajaxComplete(function() {
-		$('.wpsc-multi-select').each( function( index, el ) {
+		$( '.wpsc-multi-select' ).each( function( index, el ) {
 			var t = $(el);
 
 			if ( ! t.data( 'select2' ) ) {
@@ -42,6 +40,8 @@
 					search_contains: true
 				});
 			}
+
+			t.wpsc_multi_select();
 		} );
 	});
 }(jQuery));

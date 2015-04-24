@@ -38,6 +38,141 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		}
 	}
 
+	/**
+	 * Review Order method
+	 *
+	 * @return void
+	 */
+	public function review_order() {
+		// Initialize Shipping Calculator
+		$this->init_shipping_calculator();
+
+		// View Settings
+		$this->title .= ' → Review Order';
+		$this->view = 'checkout-review-order';
+
+		// If no shipping is available, show an error message.
+		if ( wpsc_uses_shipping() && ! $this->shipping_calculator->has_quotes ) {
+			$this->message_collection->add(
+				__( 'Sorry but we cannot ship products to your submitted address. Please either provide another shipping address or contact the store administrator about product availability to your location.', 'wpsc' ),
+				'error'
+			);
+			return;
+		}
+
+		// Alert the user that the payment process is not complete.
+		$this->message_collection->add(
+			__( 'Your payment is not completed, please review your order details, select a Shipping method and press "Place Order" to complete your order', 'wpsc' ),
+			'info'
+		);
+
+		// Shipping Selector Scripts and Filters
+		add_action( 'wp_enqueue_scripts',
+			array( $this, '_action_shipping_method_scripts' )
+		);
+		add_filter( 'wpsc_checkout_shipping_method_form_button_title', array( &$this, 'review_order_button_title' ), 1, 100 );
+
+		// Handle POST request
+		if ( isset( $_POST['action'] ) && $_POST['action'] == 'submit_shipping_method' ) {
+			$this->submit_review_order();
+		}
+	}
+
+	/**
+	 * Modify the Submit Order button title
+	 *
+	 * @return string
+	 */
+	public function review_order_button_title() {
+		return __( 'Place Order', 'wpsc' );
+	}
+
+	/**
+	 * Validates cart submission.
+	 *
+	 * @since  4.0
+	 * @return bool Whether or not there are validation errors.
+	 */
+	private function validate_cart() {
+		$validation = wpsc_validate_form( wpsc_get_checkout_shipping_form_args() );
+
+		if ( is_wp_error( $validation ) ) {
+			wpsc_set_validation_errors( $validation );
+			return false;
+		}
+
+		return true;
+
+	}
+
+	/**
+	 * Confirms the existence of the submitted shipping method and option.
+	 *
+	 * @param  string $submitted_value POSTed value for shipping method.
+	 *
+	 * @return boolean                 Whether or not shipping method was found.
+	 */
+	private function check_shipping_method( $submitted_value ) {
+		global $wpsc_cart;
+
+		$found = false;
+
+		foreach ( $this->shipping_calculator->quotes as $module_name => $quotes ) {
+			foreach ( $quotes as $option => $cost ) {
+				$id = $this->shipping_calculator->ids[ $module_name ][ $option ];
+
+				if ( $id == $submitted_value ) {
+					$found = true;
+					$wpsc_cart->update_shipping( $module_name, $option );
+					break 2;
+				}
+			}
+		}
+
+		// Set the Shipping method
+		if ( isset( $module_name ) && isset( $option ) ) {
+			$this->shipping_calculator->set_active_method( $module_name, $option );
+		}
+
+		return $found;
+	}
+
+	/**
+	 * Handle the Review Order page POST request.
+	 *
+	 * @return null|void
+	 */
+	private function submit_review_order() {
+		global $wpsc_cart;
+
+		if ( ! $this->verify_nonce( 'wpsc-checkout-form-shipping-method' ) ) {
+			return null;
+		}
+
+		if ( ! $this->validate_cart() ) {
+			return null;
+		}
+
+		// Checks shipping method
+		if ( ! $this->check_shipping_method( $_POST['wpsc_shipping_option'] ) ) {
+			return null;
+		}
+
+		// Update the PurchaseLog
+		$purchase_log_id = wpsc_get_customer_meta( 'current_purchase_log_id' );
+		$purchase_log    = new WPSC_Purchase_Log( $purchase_log_id );
+		$purchase_log->set( 'base_shipping', $wpsc_cart->calculate_base_shipping() );
+		$purchase_log->set( 'totalprice', $wpsc_cart->calculate_total_price() );
+		$purchase_log->save();
+
+		// Build the Redirection URL
+		$url = add_query_arg( array_merge( $_GET, array( 'payment_gateway_callback' => 'confirm_transaction' ) ), wpsc_get_checkout_url( 'results' ) );
+
+		// Redirect to Results Page
+		wp_redirect( $url );
+		exit;
+	}
+
 	public function shipping_and_billing() {
 		$this->view = 'checkout-shipping-and-billing';
 		_wpsc_enqueue_shipping_billing_scripts();
@@ -151,7 +286,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 		wpsc_update_customer_meta( 'current_purchase_log_id', $purchase_log->get( 'id' ) );
 
-		$this->save_form( $purchase_log, $fields );
+		WPSC_Checkout_Form_Data::save_form( $purchase_log, $fields );
 
 		$this->init_shipping_calculator();
 
@@ -283,7 +418,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 		do_action( 'wpsc_submit_checkout', array(
 			'purchase_log_id' => $purchase_log_id,
-			'our_user_id'     => get_current_user_id(),
+			'our_user_id'     => wpsc_get_current_customer_id(),
 		) );
 
 		do_action( 'wpsc_submit_checkout_gateway', $submitted_gateway, $purchase_log );
@@ -334,48 +469,6 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 		require_once( WPSC_TE_V2_CLASSES_PATH . '/shipping-calculator.php' );
 		$this->shipping_calculator = new WPSC_Shipping_Calculator( $current_log_id );
-	}
-
-	private function save_form( $purchase_log, $fields ) {
-		global $wpdb;
-		$log_id = $purchase_log->get( 'id' );
-
-		// delete previous field values
-		$sql = $wpdb->prepare( "DELETE FROM " . WPSC_TABLE_SUBMITTED_FORM_DATA . " WHERE log_id = %d", $log_id );
-
-		$wpdb->query( $sql );
-
-		$customer_details = array();
-
-		foreach ( $fields as $field ) {
-			if ( $field->type == 'heading' ) {
-				continue;
-			}
-
-			$value = '';
-
-			if ( isset( $_POST['wpsc_checkout_details'][ $field->id ] ) ) {
-				$value = $_POST['wpsc_checkout_details'][ $field->id ];
-			}
-
-			$customer_details[ $field->id ] = $value;
-
-			$wpdb->insert(
-				WPSC_TABLE_SUBMITTED_FORM_DATA,
-				array(
-					'log_id' => $log_id,
-					'form_id' => $field->id,
-					'value' => $value,
-				),
-				array(
-					'%d',
-					'%d',
-					'%s',
-				)
-			);
-		}
-
-		wpsc_save_customer_details( $customer_details );
 	}
 
 	private function get_shipping_method_js_vars() {

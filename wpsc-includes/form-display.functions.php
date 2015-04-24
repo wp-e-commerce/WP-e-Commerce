@@ -117,7 +117,7 @@ function wpsc_select_product_file( $product_id = null ) {
 		$output .= '<td style="padding-right: 30px;"><img src="'. $icon_url .'"><span>' . $file->post_title . '</span></td>';
 		$output .= '<td>' . $file_size .'</td>';
 		$output .= '<td>' . $file_type . '</td>';
-		$output .= '<td><a href="' .$file_url .'">' . _x( 'Download', 'Digital download row UI', 'wpsc' ) . '</a><a data-file-name="' . esc_attr( $file->post_title ) . '" data-product-id="' . esc_attr( $product_id ) . '" data-nonce="' . esc_attr( $delete_nonce ) . '" class="file_delete_button" href="' .$deletion_url. '" >' . _x( "Delete", "Digital download row UI", "wpsc" ) . '</a></td>';
+		$output .= '<td><a href="' . esc_url( $file_url ) .'">' . _x( 'Download', 'Digital download row UI', 'wpsc' ) . '</a><a data-file-name="' . esc_attr( $file->post_title ) . '" data-product-id="' . esc_attr( $product_id ) . '" data-nonce="' . esc_attr( $delete_nonce ) . '" class="file_delete_button" href="' .$deletion_url. '" >' . _x( "Delete", "Digital download row UI", "wpsc" ) . '</a></td>';
 
 		$output .= '</tr>';
 

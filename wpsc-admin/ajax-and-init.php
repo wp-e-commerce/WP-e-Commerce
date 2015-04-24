@@ -212,7 +212,7 @@ function wpsc_clean_categories() {
 		$sendback = add_query_arg( 'tab', $_SESSION['wpsc_settings_curr_page'], $sendback );
 	}
 
-	wp_redirect( $sendback );
+	wp_redirect( esc_url_raw( $sendback ) );
 
 	exit();
 }

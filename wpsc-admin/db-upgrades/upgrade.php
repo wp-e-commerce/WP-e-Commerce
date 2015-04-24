@@ -145,7 +145,7 @@ function _wpsc_action_load_db_upgrade() {
 
 	_wpsc_maybe_upgrade();
 
-	wp_redirect( add_query_arg( 'wpsc_db_upgrade_successful', 1, admin_url() ) );
+	wp_redirect( esc_url_raw( add_query_arg( 'wpsc_db_upgrade_successful', 1, admin_url() ) ) );
 	exit;
 }
 

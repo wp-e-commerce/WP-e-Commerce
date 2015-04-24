@@ -33,7 +33,7 @@ function wpsc_is_single_product() {
  * @return string - the class of the selected category
  */
 function wpsc_category_class() {
-	global $wpdb, $wp_query;
+	global $wp_query;
 
 	$category_nice_name = '';
 	if ( 'wpsc_product_category' == $wp_query->query_vars['taxonomy']  ) {
@@ -286,7 +286,7 @@ function wpsc_a_page_url($page=null) {
 				$output = add_query_arg('paged', '', $output);
 
 		}
-	return $output;
+	return esc_url( $output );
 	}
 }
 /**
@@ -443,15 +443,15 @@ function wpsc_pagination( $totalpages = '', $per_page = '', $current_page = '', 
 	} else {
 		// Should we show the FIRST PAGE link?
 		if($current_page > 1)
-			$output .= "<a href=\"". remove_query_arg('paged' ) . "\" title=\"" . __('First Page', 'wpsc') . "\">" . __('&laquo; First', 'wpsc') . "</a>";
+			$output .= "<a href=\"". esc_url( remove_query_arg('paged' ) ) . "\" title=\"" . __('First Page', 'wpsc') . "\">" . __('&laquo; First', 'wpsc') . "</a>";
 
 		// Should we show the PREVIOUS PAGE link?
 		if($current_page > 1) {
 			$previous_page = $current_page - 1;
 			if( $previous_page == 1 )
-				$output .= " <a href=\"". remove_query_arg( 'paged' ) . $additional_links . "\" title=\"" . __('Previous Page', 'wpsc') . "\">" . __('&lt; Previous', 'wpsc') . "</a>";
+				$output .= " <a href=\"". esc_url( remove_query_arg( 'paged' ) ) . $additional_links . "\" title=\"" . __('Previous Page', 'wpsc') . "\">" . __('&lt; Previous', 'wpsc') . "</a>";
 			else
-				$output .= " <a href=\"". add_query_arg( 'paged', ($current_page - 1) ) . $additional_links . "\" title=\"" . __('Previous Page', 'wpsc') . "\">" . __('&lt; Previous', 'wpsc') . "</a>";
+				$output .= " <a href=\"". esc_url( add_query_arg( 'paged', ($current_page - 1) ) ) . $additional_links . "\" title=\"" . __('Previous Page', 'wpsc') . "\">" . __('&lt; Previous', 'wpsc') . "</a>";
 		}
 		$i =$current_page - $num_paged_links;
 		$count = 1;
@@ -459,9 +459,9 @@ function wpsc_pagination( $totalpages = '', $per_page = '', $current_page = '', 
 		while($i < $current_page){
 			if($count <= $num_paged_links){
 				if($i == 1)
-					$output .= " <a href=\"". remove_query_arg('paged' ) . "\" title=\"" . sprintf( __('Page %s', 'wpsc'), $i ) . " \">".$i."</a>";
+					$output .= " <a href=\"". esc_url( remove_query_arg('paged' ) ) . "\" title=\"" . sprintf( __('Page %s', 'wpsc'), $i ) . " \">".$i."</a>";
 				else
-					$output .= " <a href=\"". add_query_arg('paged', $i ) . "\" title=\"" . sprintf( __('Page %s', 'wpsc'), $i ) . " \">".$i."</a>";
+					$output .= " <a href=\"". esc_url( add_query_arg('paged', $i ) ) . "\" title=\"" . sprintf( __('Page %s', 'wpsc'), $i ) . " \">".$i."</a>";
 			}
 			$i++;
 			$count++;
@@ -478,7 +478,7 @@ function wpsc_pagination( $totalpages = '', $per_page = '', $current_page = '', 
 			while(($i) > $current_page){
 
 				if($count < $num_paged_links && ($count+$current_page) <= $totalpages){
-						$output .= " <a href=\"". add_query_arg( 'paged', ($count+$current_page) ) . "\" title=\"" . sprintf( __('Page %s', 'wpsc'), ($count+$current_page) ) . "\">".($count+$current_page)."</a>";
+						$output .= " <a href=\"". esc_url( add_query_arg( 'paged', ($count+$current_page) ) ) . "\" title=\"" . sprintf( __('Page %s', 'wpsc'), ($count+$current_page) ) . "\">".($count+$current_page)."</a>";
 				$i++;
 				}else{
 				break;
@@ -489,11 +489,11 @@ function wpsc_pagination( $totalpages = '', $per_page = '', $current_page = '', 
 
 		if($current_page < $totalpages) {
 			$next_page = $current_page + 1;
-			$output .= "<a href=\"". add_query_arg( 'paged', $next_page ) . "\" title=\"" . __('Next Page', 'wpsc') . "\">" . __('Next &gt;', 'wpsc') . "</a>";
+			$output .= "<a href=\"". esc_url( add_query_arg( 'paged', $next_page ) ) . "\" title=\"" . __('Next Page', 'wpsc') . "\">" . __('Next &gt;', 'wpsc') . "</a>";
 		}
 		// Should we show the LAST PAGE link?
 		if($current_page < $totalpages) {
-			$output .= "<a href=\"". add_query_arg( 'paged', $totalpages ) . "\" title=\"" . __('Last Page', 'wpsc') . "\">" . __('Last &raquo;', 'wpsc') . "</a>";
+			$output .= "<a href=\"". esc_url( add_query_arg( 'paged', $totalpages ) ) . "\" title=\"" . __('Last Page', 'wpsc') . "\">" . __('Last &raquo;', 'wpsc') . "</a>";
 		}
 	}
 	// Return the output.
@@ -596,11 +596,8 @@ add_filter( 'wpsc_product_image', 'wpsc_product_no_image_fallback' );
  * wpsc show pnp function
  * @return boolean - true if display_pnp is 1 false otherwise
  */
-function wpsc_show_pnp(){
-	global $post;
-	if(1 == get_option('display_pnp'))
-		return true;
-	return false;
+function wpsc_show_pnp() {
+	return 1 == get_option( 'display_pnp' );
 }
 
 /**
@@ -608,7 +605,7 @@ function wpsc_show_pnp(){
  * @return string - the product price
  */
 function wpsc_the_product_price( $no_decimals = false, $only_normal_price = false, $product_id = 0 ) {
-	global $wpsc_query, $wpsc_variations, $wpdb;
+	global $wpsc_query, $wpsc_variations;
 
 	if ( ! $product_id )
 		$product_id = get_the_ID();
@@ -698,7 +695,6 @@ function wpsc_product_creation_time( $format = null ) {
  * @return string - the product price
  */
 function wpsc_check_variation_stock_availability( $product_id, $variations ) {
-	global $wpdb;
 	$selected_post = get_posts( array(
 				'post_parent'      => $product_id,
 				'post_type'        => "wpsc-product",
@@ -741,7 +737,6 @@ function wpsc_check_variation_stock_availability( $product_id, $variations ) {
  * @return boolean - true if the product has stock or does not use stock, false if it does not
  */
 function wpsc_product_has_stock( $id = null ) {
-	global $wpdb;
 	// maybe do wpsc_clear_stock_claims first?
 	if ( is_numeric( $id ) && ( $id > 0 ) )
 		$id = absint( $id );
@@ -877,7 +872,6 @@ function wpsc_product_on_special( $id = 0 ) {
  * @return boolean - true if the product has a file
  */
 function wpsc_product_is_customisable() {
-	global $wpsc_query, $wpdb;
 	$id = get_the_ID();
 	$product_meta = get_post_meta( $id, '_wpsc_product_metadata', true );
 	if ( (isset($product_meta['engraved']) && $product_meta['engraved'] == true) || (isset($product_meta['can_have_uploaded_image']) && $product_meta['can_have_uploaded_image'] == true) )
@@ -891,7 +885,6 @@ function wpsc_product_is_customisable() {
  * @return boolean - true if the product has a file
  */
 function wpsc_product_has_personal_text() {
-	global $wpsc_query, $wpdb;
 	$id = get_the_ID();
 	$product_meta = get_post_meta( $id, '_wpsc_product_metadata', true );
 	if ( isset($product_meta['engraved']) && $product_meta['engraved'] == true )
@@ -905,7 +898,6 @@ function wpsc_product_has_personal_text() {
  * @return boolean - true if the product has a file
  */
 function wpsc_product_has_supplied_file() {
-	global $wpsc_query, $wpdb;
 	$id = get_the_ID();
 	$product_meta = get_post_meta( $id, '_wpsc_product_metadata', true );
 	if ( isset($product_meta['can_have_uploaded_image']) && $product_meta['can_have_uploaded_image'] == true )
@@ -1247,7 +1239,6 @@ function wpsc_the_variation() {
 
 
 function wpsc_product_has_multicurrency() {
-	global $wpdb, $wpsc_query;
 
 	$currency = get_product_meta(get_the_ID(),'currency',true);
 	if ( ! empty( $currency ) )
@@ -1257,7 +1248,6 @@ function wpsc_product_has_multicurrency() {
 }
 
 function wpsc_display_product_multicurrency() {
-	global $wpdb, $wpsc_query;
 
 	$results = get_product_meta(get_the_ID(),'currency',true);
 	if ( count( $results ) > 0 ) {
@@ -1322,7 +1312,7 @@ function wpsc_the_variation_id() {
  * @return string - HTML attribute to disable select options and radio buttons
  */
 function wpsc_the_variation_out_of_stock() {
-	global $wpsc_query, $wpdb, $wpsc_variations;
+	global $wpsc_query, $wpsc_variations;
 	$out_of_stock = false;
 
 	// If there is more than one variation group we cannot determine a stock status for individual variations
@@ -1482,7 +1472,7 @@ function wpsc_product_count() {
  * @return string - the variation price
  */
 function wpsc_the_variation_price( $return_as_numeric = false ) {
-	global $wpdb, $wpsc_variations;
+	global $wpsc_variations;
 	if ( $wpsc_variations->variation_count > 0 ) {
 
 		$product_id = get_the_ID();
@@ -1520,7 +1510,7 @@ function wpsc_the_variation_price( $return_as_numeric = false ) {
  * @return mixed - Stock level for the variation or FALSE if it can't be calculated
  */
 function wpsc_the_variation_stock() {
-	global $wpdb, $wpsc_variations;
+	global $wpsc_variations;
 
 	if ( $wpsc_variations->variation_count > 0 ) {
 
