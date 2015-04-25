@@ -209,15 +209,16 @@ final class WPSC_Payment_Gateways {
 	 * a valid class. Otherwise, a WP_Error object is returned.
 	 */
 	public static function register_file( $file ) {
+
 		if ( empty( self::$payment_gateway_cache ) ) {
 			self::$payment_gateway_cache = get_option( 'wpsc_payment_gateway_cache', array() );
 		}
+
 		$filename = basename( $file, '.php' );
 
 		// payment gateway already exists in cache
-		if ( isset( self::$payment_gateway_cache[$filename] ) ) {
-			self::$gateways[$filename] = self::$payment_gateway_cache[$filename];
-			return true;
+		if ( isset( self::$payment_gateway_cache[ $filename ] ) ) {
+			self::$gateways[ $filename ] = self::$payment_gateway_cache[ $filename ];
 		}
 
 		// if payment gateway is not in cache, load metadata
@@ -242,7 +243,18 @@ final class WPSC_Payment_Gateways {
 
 		self::$gateways[ $filename ] = $meta;
 
+		if ( ! $gateway->load() ) {
+			unset( self::$gateways[ $filename ] );
+			return false;
+		}
+
 		return true;
+	}
+
+	public static function unregister_file( $file ) {
+		if ( isset( self::$gateways[ $filename ] ) ) {
+			unset( self::$gateways[ $filename ] );
+		}
 	}
 
 	/**
@@ -468,6 +480,10 @@ abstract class WPSC_Payment_Gateway {
 	 */
 	public function get_mark_html() {
 		return false;
+	}
+
+	public function load() {
+		return true;
 	}
 
 	public function set_purchase_log( &$purchase_log ) {
