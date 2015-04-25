@@ -644,8 +644,9 @@ class WPSC_Payment_Gateway_Setting {
 	 * @return void
 	 */
 	private function lazy_load() {
-		if ( is_null( $this->settings ) )
+		if ( is_null( $this->settings ) ) {
 			$this->settings = get_option( $this->option_name, array() );
+		}
 	}
 
 	/**
@@ -657,7 +658,7 @@ class WPSC_Payment_Gateway_Setting {
 	 */
 	public function get( $setting, $default = false ) {
 		$this->lazy_load();
-		return isset( $this->settings[$setting] ) ? $this->settings[$setting] : $default;
+		return isset( $this->settings[ $setting ] ) ? $this->settings[ $setting ] : $default;
 	}
 
 	/**
@@ -671,9 +672,10 @@ class WPSC_Payment_Gateway_Setting {
 	 */
 	public function set( $setting, $value, $defer = false ) {
 		$this->lazy_load();
-		$this->unsaved_settings[$setting] = $value;
-		if ( ! $defer )
+		$this->unsaved_settings[ $setting ] = $value;
+		if ( ! $defer ) {
 			$this->save();
+		}
 	}
 
 	/**
@@ -689,8 +691,9 @@ class WPSC_Payment_Gateway_Setting {
 	public function merge( $settings, $defer = false ) {
 		$this->lazy_load();
 		$this->unsaved_settings = array_merge( $this->unsaved_settings, $settings );
-		if ( ! $defer )
+		if ( ! $defer ) {
 			$this->save();
+		}
 	}
 
 	/**
