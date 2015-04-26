@@ -170,6 +170,11 @@ class WPSC_Widget_Product_Categories extends WP_Widget {
 		$categories     = get_terms( 'wpsc_product_category', array(
 			'hide_empty' => false,
 		) );
+		$options  = array();
+
+		foreach ( $categories as $category ) {
+			$options[ $category->term_id ] = $category->name;
+		}
 
 		include( WPSC_TE_V2_SNIPPETS_PATH . '/widgets/product-categories/form.php' );
 	}

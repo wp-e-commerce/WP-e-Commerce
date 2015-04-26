@@ -19,13 +19,13 @@ require_once( WPSC_TE_V2_HELPERS_PATH . '/settings-page.php' );
  * @access private
  */
 function _wpsc_te2_action_admin_enqueue_styles() {
-	wp_register_style( 'wpsc-te2-chosen', WPSC_TE_V2_CSS_URL . '/chosen.min.css' );
+	wp_register_style( 'wpsc-te2-select2', WPSC_TE_V2_CSS_URL . '/select2.min.css' );
 	wp_register_style( 'wpsc-te2-admin', WPSC_TE_V2_CSS_URL . '/admin.css' );
 
 	$current_screen = get_current_screen();
 
 	if ( in_array( $current_screen->id, array( 'settings_page_wpsc-settings', 'widgets' ) ) ) {
-		wp_enqueue_style( 'wpsc-te2-chosen' );
+		wp_enqueue_style( 'wpsc-te2-select2' );
 	}
 
 	wp_enqueue_style( 'wpsc-te2-admin' );
@@ -59,12 +59,12 @@ function _wpsc_te2_action_admin_enqueue_scripts() {
 
 	wp_register_script(
 		'wpsc-multi-select', WPSC_TE_V2_JS_URL . '/multi-select.js',
-		array( 'jquery', 'wpsc-chosen' ),
+		array( 'jquery', 'wpsc-select2' ),
 		WPSC_VERSION
 	);
 
 	wp_register_script(
-		'wpsc-chosen', WPSC_TE_V2_JS_URL . '/chosen.jquery.min.js',
+		'wpsc-select2', WPSC_TE_V2_JS_URL . '/select2.full.min.js',
 		array( 'jquery' ),
 		WPSC_VERSION
 	);

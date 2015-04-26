@@ -445,7 +445,7 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 				'<a href="#" data-for="' . esc_attr( $this->get_field_id( 'categories' ) ) . '" class="wpsc-multi-select-none">' . __( 'None', 'wpsc' ) . '</a>'
 			);
 		?>
-	</span><br>
+	</span>
 	<?php wpsc_form_select(
 		$this->get_field_name( 'categories' ) . '[]',
 		$instance['categories'],

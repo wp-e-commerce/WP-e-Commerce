@@ -98,18 +98,29 @@
 	<?php echo _x( 'Select Categories:', 'product category widget', 'wpsc' ); ?><br />
 	<small><?php esc_html_e( 'Leave all unchecked if you want to display all', 'wpsc' ); ?></small><br>
 </p>
-<ul style="margin-left: 18px;">
-<?php
-	foreach ( $categories as $category ): ?>
-	<li>
+<p>
+	<span class="wpsc-cat-drill-down-all-actions wpsc-settings-all-none">
 		<?php
-		wpsc_form_checkbox(
-			$this->get_field_name( 'categories' ) . '[]',
-			$category->term_id,
-			esc_html( $category->name ),
-			in_array( $category->term_id, (array) $instance['categories'] )
-		); ?><br />
-		</li>
-<?php endforeach; ?>
-</ul>
+			printf(
+				_x( 'Select: %1$s %2$s', 'select all / none', 'wpsc' ),
+				'<a href="#" data-for="' . esc_attr( $this->get_field_id( 'categories' ) ) . '" class="wpsc-multi-select-all">' . _x( 'All', 'select all', 'wpsc' ) . '</a>',
+				'<a href="#" data-for="' . esc_attr( $this->get_field_id( 'categories' ) ) . '" class="wpsc-multi-select-none">' . __( 'None', 'wpsc' ) . '</a>'
+			);
+		?>
+	</span><br>
+	<?php
+
+	wpsc_form_select(
+		$this->get_field_name( 'categories' ) . '[]',
+		$instance['categories'],
+		$options,
+		array(
+			'id'               => $this->get_field_id( 'categories' ),
+			'multiple'         => 'multiple',
+			'size'             => 5,
+			'class'            => 'wpsc-multi-select widefat',
+			'data-placeholder' => __( 'Select categories', 'wpsc' ),
+		)
+	); ?>
+</p>
 

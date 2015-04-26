@@ -63,7 +63,10 @@ function wpsc_purchlogitem_trackid() {
 function wpsc_purchlogitem_trackstatus() {
 	global $wpsc_shipping_modules, $purchlogitem;
 
-	if ( is_callable( $wpsc_shipping_modules [$purchlogitem->extrainfo->shipping_method]->getStatus ) && ! empty( $purchlogitem->extrainfo->track_id ) ) {
+	$callable = array( $purchlogitem->extrainfo->shipping_method, 'getStatus' );
+	$shipping_status_is_callable = is_callable( $callable );
+
+	if ( $shipping_status_is_callable && ! empty( $purchlogitem->extrainfo->track_id ) ) {
 		$status = $wpsc_shipping_modules [$purchlogitem->extrainfo->shipping_method]->getStatus( $purchlogitem->extrainfo->track_id );
 	} else {
 		$status = '';

@@ -180,8 +180,10 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 	}
 
 	public function index() {
-		if ( isset( $_SESSION['coupon_numbers'] ) ) {
-			$GLOBALS['wpsc_coupons'] = new wpsc_coupons( $_SESSION['coupon_numbers'] );
+		$coupon = wpsc_get_customer_meta( 'coupon' );
+
+		if ( ! empty( $coupon ) ) {
+			$GLOBALS['wpsc_coupons'] = new wpsc_coupons( $coupon );
 		}
 
 		if ( isset( $_POST['action'] ) && $_POST['action'] == 'update_quantity' ) {

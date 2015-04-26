@@ -201,7 +201,7 @@ class WP_eCommerce {
 			foreach ( $registered as $component ) {
 
 				if ( ! is_array( $component['includes'] ) ) {
-					$component['includes'] = array( $component['includes' ] );
+					$component['includes'] = array( $component['includes'] );
 				}
 
 				foreach ( $component['includes'] as $include ) {
@@ -243,7 +243,7 @@ class WP_eCommerce {
 		add_action( 'init', '_wpsc_action_setup_customer', 1 );
 
 		// WPEC is ready to use as soon as WordPress and customer is setup and loaded
-		add_action( 'init', array( &$this, '_wpsc_fire_ready_action' ), 100 );
+		add_action( 'init', array( $this, '_wpsc_fire_ready_action' ), 100 );
 
 		// Load the purchase log statuses
 		wpsc_core_load_purchase_log_statuses();

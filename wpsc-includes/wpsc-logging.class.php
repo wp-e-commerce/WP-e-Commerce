@@ -2,12 +2,12 @@
 
 /**
  * Class for logging events and errors.
- * 
+ *
  * Significant gratitude to Pippin Williamson and other contributors to the WP_Logging project
  * This class is experimental and may change in the future in such a way as to break back compat.
  * You have been warned.
  *
- * @access private 
+ * @access private
  */
 
 class WPSC_Logging {
@@ -15,7 +15,7 @@ class WPSC_Logging {
 
     /**
      * WPSC_Logging Class
-     * 
+     *
      *
      * @access public
      * @return void
@@ -65,7 +65,7 @@ class WPSC_Logging {
      * @access private
      *
      * @param array[ WP_Post ]  $logs The array of logs we want to prune
-     * 
+     *
      * @since 3.9
      */
     private function prune_old_logs( $logs ) {
@@ -107,7 +107,7 @@ class WPSC_Logging {
         );
 
        return get_posts( apply_filters( 'wpsc_logging_prune_query_args', $args ) );
-    } 
+    }
 
     /**
      * Log types
@@ -120,7 +120,6 @@ class WPSC_Logging {
      *
      * @since 3.9
      */
-
     private static function log_types() {
         $terms = array(
             'error', 'event'
@@ -134,14 +133,12 @@ class WPSC_Logging {
      * Registers the wp_log Post Type
      *
      * @access      public
-     *
      * @uses        register_post_type()
      *
      * @return     void
      *
      * @since 3.9
      */
-
     public function register_post_type() {
 
         /* logs post type */
@@ -149,6 +146,7 @@ class WPSC_Logging {
         $log_args = array(
             'labels'          => array( 'name' => __( 'Logs', 'wpsc' ) ),
             'public'          => false,
+            'show_in_ui'      => defined( 'WP_DEBUG' ) && WP_DEBUG,
             'query_var'       => false,
             'rewrite'         => false,
             'capability_type' => 'post',
@@ -176,10 +174,13 @@ class WPSC_Logging {
      *
      * @since 3.9
      */
-
     public function register_taxonomy() {
 
-        register_taxonomy( 'wpsc_log_type', 'wpsc_log' );
+        register_taxonomy(
+            'wpsc_log_type',
+            'wpsc_log',
+            apply_filters( 'wpsc_logging_taxonomy_args', array( 'public' => false, 'show_ui' => defined( 'WP_DEBUG' ) && WP_DEBUG ) )
+        );
 
         $types = self::log_types();
 
@@ -202,7 +203,6 @@ class WPSC_Logging {
      *
      * @since 3.9
      */
-
     private static function valid_type( $type ) {
         return in_array( $type, self::log_types() );
     }
@@ -222,7 +222,6 @@ class WPSC_Logging {
      *
      * @since 3.9
      */
-
     public static function add( $title = '', $message = '', $parent = 0, $type = null ) {
 
         $log_data = array(
@@ -252,7 +251,6 @@ class WPSC_Logging {
      *
      * @since 3.9
      */
-
     public static function insert_log( $log_data = array(), $log_meta = array() ) {
 
         $defaults = array(
@@ -341,7 +339,6 @@ class WPSC_Logging {
      *
      * @since 3.9
      */
-
     public static function get_logs( $object_id = 0, $type = null, $paged = null ) {
 
         return self::get_connected_logs( array( 'post_parent' => $object_id, 'paged' => $paged, 'log_type' => $type ) );
@@ -364,7 +361,6 @@ class WPSC_Logging {
      *
      * @since 3.9
      */
-
     public static function get_connected_logs( $args = array() ) {
 
         $defaults = array(
@@ -400,7 +396,6 @@ class WPSC_Logging {
 
     }
 
-
     /**
      * Retrieves number of log entries connected to particular object ID
      *
@@ -413,9 +408,8 @@ class WPSC_Logging {
      *
      * @since 3.9
      */
-
     public static function get_log_count( $object_id = 0, $type = null, $meta_query = null ) {
-        
+
         // Re-consider usage of posts_per_page => -1 here.
         $query_args = array(
             'post_parent'    => $object_id,
@@ -444,6 +438,21 @@ class WPSC_Logging {
 
         return (int) $logs->post_count;
 
+    }
+
+    /**
+     * Allows other plugins or settings to force UI visibility.
+     *
+     * Helpful for more granular 'debug' settings for things like payment gateways.
+     *
+     * @param  array $args Arguments passed to the taxonomy and post type hooks.
+     * @return array $args Arguments passed to the taxonomy and post type hooks.
+     *
+     * @since  4.0
+     */
+    public static function force_ui( $args ) {
+        $args['show_ui'] = true;
+        return $args;
     }
 
 }

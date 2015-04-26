@@ -10,7 +10,7 @@ function _wpsc_is_merchant_v2_active() {
  * @param string $gateway_id
  * @return bool
  */
-function _wpsc_is_gateway_active( $gateway_id ) {
+function wpsc_is_gateway_active( $gateway_id ) {
 	$active_gateways = WPSC_Payment_Gateways::get_active_gateways();
 	return in_array( $gateway_id, $active_gateways );
 }
