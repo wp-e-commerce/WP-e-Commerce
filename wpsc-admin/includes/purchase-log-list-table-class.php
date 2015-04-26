@@ -158,7 +158,8 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 
 			$date_query = new WP_Date_Query( $query_args , $column = '__date__' );
 			/* this is a subtle hack since the FROM_UNIXTIME doesn't survive WP_Date_Query
-			so we use __date__ as a proxy */
+			 * so we use __date__ as a proxy
+			 */
 			$where[] = str_replace( '__date__', 'FROM_UNIXTIME(p.date)', $date_query->get_sql() );
 		}
 
@@ -612,12 +613,30 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 			</select>
 			<?php
 			submit_button( _x( 'Filter', 'extra navigation in purchase log page', 'wpsc' ), 'secondary', false, false, array( 'id' => 'post-query-submit' ) );
-			submit_button( _x( 'Export', 'extra navigation in purchase log page', 'wpsc' ), 'secondary', false, false, array( 'id' => 'wpec-export-log', name => "request-csv" ) );
+//			submit_button( _x( 'Export', 'extra navigation in purchase log page', 'wpsc' ), 'secondary', false, false, array( 'id' => 'wpec-export-log', name => "request-csv" ) );
 		}
 	}
 
+	/**
+	 * Outputs the pre-defined selectable periods.
+	 *
+	 * Inserts new predefined periods into the period filter select on sales log screen.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param string $selected The value of $_REQUEST['m'] - unsanitized.
+	 */
 	private function special_periods( $selected ){
 
+		/**
+		 * Filter the available special periods on the purchase log listing screen.
+		 *
+		 * Can Used to remove periods or add new period definitions {@see purchase_log_predefined_periods_}
+		 *
+		 * @since 4.1.0
+		 *
+		 * @param array array() The periods currently defined.
+		 */
 		$periods = apply_filters( 'purchase_log_special_periods', array(
 			1 => __('Today', 'wpsc'),
 			2 => __('Yesterday', 'wpsc'),
