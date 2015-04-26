@@ -653,7 +653,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		echo '<option disabled="disabled">---------</option>';
 		foreach( $periods as $value => $label ){
 			printf( "<option %s value='%s'>%s</option>\n",
-				selected( $value, $m, false ),
+				selected( $value, $selected, false ),
 				esc_attr( $value ),
 				esc_html( $label )
 			);
