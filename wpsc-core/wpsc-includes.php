@@ -81,3 +81,11 @@ if ( is_admin() ) {
 
 // Cron
 require_once( WPSC_FILE_PATH . '/wpsc-includes/cron.php' );
+
+// WP-CLI support
+if ( defined( 'WP_CLI' ) && WP_CLI && version_compare( phpversion(), '5.3', '>=' ) ) {
+	require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-wp-cli-category.php');
+	WP_CLI::add_command( 'wpsc-category', 'WPSC_WP_CLI_Category_Command' );
+	require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-wp-cli-product-tag.php');
+	WP_CLI::add_command( 'wpsc-product-tag', 'WPSC_WP_CLI_Product_Tag_Command' );
+}
