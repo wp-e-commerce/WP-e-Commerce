@@ -1,6 +1,8 @@
 <?php
-/*
+/**
  * Display Settings page
+ * 
+ * @package wp-e-commerce
  */
 
 function wpsc_display_settings_page() {
