@@ -3,6 +3,7 @@
  * Display Settings page
  * 
  * @package wp-e-commerce
+ * @since 3.8
  */
 
 function wpsc_display_settings_page() {
