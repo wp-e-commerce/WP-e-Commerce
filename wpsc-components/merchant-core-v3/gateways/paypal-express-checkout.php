@@ -52,7 +52,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
      * @return void
      */
 	public function add_ecs_button() {
-		if ( ! wpsc_uses_shipping() && wpsc_is_gateway_active( 'paypal-digital-goods' ) ) {
+		if ( ! wpsc_uses_shipping() && wpsc_is_gateway_active( 'paypal-digital-goods' ) || ! wpsc_is_gateway_active( 'paypal-express-checkout' )) {
 			return;
 		}
 		if ( _wpsc_get_current_controller_name() === 'cart' ) {
