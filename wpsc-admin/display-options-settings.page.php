@@ -6,6 +6,11 @@
  * @since 3.8
  */
 
+/**
+ * Get the WPSC_Settings_Page class to display the page
+ * 
+ * @since 3.8
+ */ 
 function wpsc_display_settings_page() {
 	WPSC_Settings_Page::get_instance()->display();
 }
