@@ -232,6 +232,9 @@ function wpsc_purchase_log_csv() {
 		$headers      = apply_filters( 'wpsc_purchase_log_csv_headers', $headers . $form_headers . $headers2 . $headers3, $data, $form_data );
 		$output       = apply_filters( 'wpsc_purchase_log_csv_output' , $output, $data, $form_data );
 
+		/**
+		 * Fires when the WPSC purchase log is exported as a CSV
+		 */ 
 		do_action( 'wpsc_purchase_log_csv' );
 
 		header( 'Content-Type: text/csv' );
@@ -835,6 +838,11 @@ function wpsc_backup_theme() {
 if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( $_REQUEST['wpsc_admin_action'] == 'backup_themes' ) )
 	add_action( 'admin_init', 'wpsc_backup_theme' );
 
+/**
+ * Delete a coupon 
+ * 
+ * @since 3.8
+ */ 
 function wpsc_delete_coupon(){
 	global $wpdb;
 
