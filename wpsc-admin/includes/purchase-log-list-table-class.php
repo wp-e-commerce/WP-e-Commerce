@@ -77,7 +77,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 
 		if ( isset( $_REQUEST['post'] ) ) {
 			$posts   = array_map( 'absint', $_REQUEST['post'] );
-			$where[] = 'p.id IN (' . implode( ', ', $posts ) . ')';
+			$where[] = ' and (p.id IN (' . implode( ', ', $posts ) . '))';
 		}
 
 		$i = 1;
@@ -126,28 +126,46 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		$search_sql = implode( ' AND ', array_values( $search_sql ) );
 
 		if ( $search_sql ) {
-			$where[] = $search_sql;
+			$where[] = " AND ({$search_sql})";
 		}
 
 		// filter by status
 		if ( ! empty( $_REQUEST['status'] ) && $_REQUEST['status'] != 'all' ) {
 			$this->status = absint( $_REQUEST['status'] );
-			$where[] = 'processed = ' . $this->status;
+			$where[] = ' AND (processed = ' . $this->status .')';
 		}
 
-		$this->where_no_filter = implode( ' AND ', $where );
+		$this->where_no_filter = implode( ' ', $where );
 
 		// filter by month
 		if ( ! empty( $_REQUEST['m'] ) ) {
-			$year = (int) substr( $_REQUEST['m'], 0, 4);
-			$month = (int) substr( $_REQUEST['m'], -2 );
-			$where[] = "YEAR(FROM_UNIXTIME(date)) = " . esc_sql( $year );
-			$where[] = "MONTH(FROM_UNIXTIME(date)) = " . esc_sql( $month );
+
+			// so we can tell WP_Date_Query we're legit
+			add_filter( 'date_query_valid_columns', array( $this, 'set_date_column_to_date') );
+
+			if( strlen( $_REQUEST['m'] ) < 4 ){
+
+				$query_args = $this->assemble_predefined_periods_query( $_REQUEST['m'] );
+
+			} else {
+
+				$query_args = array(
+					'year' => (int) substr( $_REQUEST['m'], 0, 4),
+					'monthnum' => (int) substr( $_REQUEST['m'], -2 ),
+				);
+
+			}
+
+			$date_query = new WP_Date_Query( $query_args , $column = '__date__' );
+			/* this is a subtle hack since the FROM_UNIXTIME doesn't survive WP_Date_Query
+			 * so we use __date__ as a proxy
+			 */
+			$where[] = str_replace( '__date__', 'FROM_UNIXTIME(p.date)', $date_query->get_sql() );
 		}
 
 		$selects     = apply_filters( 'wpsc_manage_purchase_logs_selects', implode( ', ', $selects ) );
 		$this->joins = apply_filters( 'wpsc_manage_purchase_logs_joins'  , implode( ' ', $joins ) );
-		$this->where = apply_filters( 'wpsc_manage_purchase_logs_where'  , implode( ' AND ', $where ) );
+		$this->where = apply_filters( 'wpsc_manage_purchase_logs_where'  , implode( ' ', $where ) );
 
 		$limit = ( $this->per_page !== 0 ) ? "LIMIT {$offset}, {$this->per_page}" : '';
 
@@ -191,6 +209,166 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		";
 
 		$this->total_amount = $wpdb->get_var( $total_sql );
+	}
+
+	/**
+	 * Construct the date queries for pre-defined periods in the Sales Log.
+	 *
+	 * Supports pre-defined periods for the purchase log, including today, yesterday, this week,
+	 * last week, this month, last month, last two months + month to date (this quarter),
+	 * prior 3 months, this year, last year. You can insert your own custom periods by filtering
+	 * either based on the $period_flag or just filter the final query setup.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param array $period_flag The period requested from $_REQUEST['m'].
+	 *
+	 * @return array formatted to pass to WP_Date_Query.
+	 */
+
+	private function assemble_predefined_periods_query( $period_flag ){
+		// warning: period flag is unsanitized user input directly from $_REQUEST - only compare against actual values
+
+		/**
+		 *	date functions
+		 */
+		$now_string = current_time( 'mysql' );
+		$week_start_end = get_weekstartend( $now_string ); // returns array with start/end
+		$blog_time_zone = get_option( 'timezone_string' );
+
+		$timezone = new DateTimeZone( $blog_time_zone );
+		$now = new DateTime( 'now',  $timezone );
+
+		// Based on $_REQUEST['m']
+		switch ( $period_flag ) {
+			// Today
+			case 1:
+				$date_query = array(
+					'year' => $now->format('Y'),
+					'monthnum' => $now->format('n'),
+					'day' => $now->format('d')
+				);
+				break;
+
+			// Yesterday
+			case 2:
+				$yesterday = new DateTime( date( 'Y-m-d', strtotime('yesterday') ), $timezone );
+				$date_query = array(
+					'year' => $yesterday->format('Y'),
+					'monthnum' => $yesterday->format('n'),
+					'day' => $yesterday->format('d')
+				);
+				break;
+
+			// This Week-to-date
+			case 3:
+				$start_of_this_week = new DateTime( date('Y-m-d 00:00:00', $week_start_end['start'] ), $timezone );
+				$date_query = array( 'date_query' => array(
+					'after' 	=> $start_of_this_week->format('Y-m-d 00:00:00'),
+					'compare'	=> '>',
+					'inclusive'	=> true
+					));
+				break;
+
+			// Last Week
+			case 4:
+				$start_of_last_week = new DateTime( date('Y-m-d 00:00:00', $week_start_end['start'] - ( DAY_IN_SECONDS * 7 ) ), $timezone );
+				$start = $start_of_last_week->format( 'Y-m-d 00:00:00' );
+				$start_of_last_week->modify('+7 days');
+				$date_query = array( 'date_query' => array(
+					'after'	=> $start,
+					'before' => $start_of_last_week->format('Y-m-d 00:00:00'),
+					'inclusive'	=> false,
+				));
+				break;
+
+			// This Month-to-Date (Same as choosing the explicit month on selector)
+			case 5:
+				$date_query = array(
+					'year'		=> $now->format('Y'),
+					'monthnum'	=> $now->format('n'),
+				);
+				break;
+
+			// Last Month (Same as choosing the explicit month on selector)
+			case 6:
+				$now->modify('-1 month');
+				$date_query = array(
+					'year'		=> $now->format('Y'),
+					'monthnum'	=> $now->format('n'),
+				);
+				break;
+
+			// This Quarter (last three months inclusive)
+			case 7:
+				$date_query = array('date_query' => array(
+					'after'	=> 'first day of -2 months' ),
+					'compare'	=> '>',
+					'inclusive'	=> true,
+					);
+
+				break;
+
+			// Prior Three Months
+			case 8:
+				$date_query = array( 'date_query' => array(
+					'after'	=> 'first day of -2 months',
+					'before' => 'last day of -1 month',
+					'inclusive'	=> true,
+				));
+				break;
+
+			// This Year
+			case 9:
+				$date_query = array( 'date_query' => array(
+					'after'	=> '1/1 this year',
+					'compare'	=> '>',
+					'inclusive'	=> true,
+				));
+				break;
+
+			// Last year
+			case 10:
+				$date_query = array( 'date_query' => array(
+					'after'	=> '1/1 last year',
+					'before' => '12/31 last year',
+					'inclusive'	=> true,
+				));
+				break;
+
+			// default - return empty where clause
+			default:
+				/**
+				 * Return a custom date query for custom period_flag's.
+				 *
+				 * This filter extends the functionality allowing for custom periods if a new value
+				 * is passed via $_REQUEST['m']. {@see 'purchase_log_special_periods'}.
+				 *
+				 * @since 4.1.0
+				 *
+				 * @param array         Empty array to be filled with a valid query {@see WP_Date_Query}.
+				 */
+				$date_query = apply_filters( 'wpsc_purchase_log_predefined_periods_' . $period_flag, array() );
+		}
+
+		/**
+		 * Filter the parsed date query.
+		 *
+		 * This filter can be used to override the constructed date_query.
+		 *
+		 * @since 4.1.0
+		 *
+		 * @param array $date_query    Empty array to be filled with a valid date query {@see WP_Date_Query}
+		 * @param string $period_flag  Value passed from $_REQUEST['m'].
+		 */
+		return apply_filters( 'wpsc_purchase_log_predefined_periods', $date_query, $period_flag );
+	}
+
+	public function set_date_column_to_date( $columns ){
+
+		$columns[] = '__date__';
+		return $columns;
+
 	}
 
 	public function is_pagination_enabled() {
@@ -418,6 +596,9 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 			<select name="m">
 				<option <?php selected( 0, $m ); ?> value="0"><?php _e( 'Show all dates' ); ?></option>
 				<?php
+
+				$this->special_periods( $m );
+
 				foreach ( $months as $arc_row ) {
 					$month = zeroise( $arc_row->month, 2 );
 					$year = $arc_row->year;
@@ -432,7 +613,53 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 			</select>
 			<?php
 			submit_button( _x( 'Filter', 'extra navigation in purchase log page', 'wpsc' ), 'secondary', false, false, array( 'id' => 'post-query-submit' ) );
+
 		}
+	}
+
+	/**
+	 * Outputs the pre-defined selectable periods.
+	 *
+	 * Inserts new predefined periods into the period filter select on sales log screen.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param string $selected The value of $_REQUEST['m'] - unsanitized.
+	 */
+	private function special_periods( $selected ){
+
+		/**
+		 * Filter the available special periods on the purchase log listing screen.
+		 *
+		 * Can Used to remove periods or add new period definitions {@see wpsc_purchase_log_predefined_periods_}
+		 *
+		 * @since 4.1.0
+		 *
+		 * @param array array() The periods currently defined.
+		 */
+		$periods = apply_filters( 'wpsc_purchase_log_special_periods', array(
+			1 => _x('Today', 'time period for the current day', 'wpsc'),
+			2 => _x('Yesterday', 'time period for the previous day', 'wpsc'),
+			3 => _x('This Week', 'time period for the current week', 'wpsc'),
+			4 => _x('Last Week', 'time period for the prior week', 'wpsc'),
+			5 => _x('This Month', 'time period for the current month to date', 'wpsc'),
+			6 => _x('Last Month', 'time period for the prior month', 'wpsc'),
+			7 => _x('This Quarter', 'time period for the prior two months plus this month-to-date', 'wpsc'),
+			8 => _x('Prior 3 Months', 'time period for the three months prior to the current month', 'wpsc'),
+			9 => _x('This Year', 'time period for the current year to date', 'wpsc'),
+			10 => _x('Last Year', 'time period for the prior year', 'wpsc'),
+		) );
+
+		echo '<option disabled="disabled">---------</option>';
+		foreach( $periods as $value => $label ){
+			printf( "<option %s value='%s'>%s</option>\n",
+				selected( $value, $selected, false ),
+				esc_attr( $value ),
+				esc_html( $label )
+			);
+		}
+		echo '<option disabled="disabled">---------</option>';
+
 	}
 
 	public function extra_tablenav( $which ) {
