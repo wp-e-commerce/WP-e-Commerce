@@ -348,7 +348,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 				 *
 				 * @param array         Empty array to be filled with a valid query {@see WP_Date_Query}.
 				 */
-				$date_query = apply_filters( 'purchase_log_predefined_periods_'. $period_flag, array() );
+				$date_query = apply_filters( 'wpsc_purchase_log_predefined_periods_' . $period_flag, array() );
 		}
 
 		/**
@@ -361,7 +361,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		 * @param array $date_query    Empty array to be filled with a valid date query {@see WP_Date_Query}
 		 * @param string $period_flag  Value passed from $_REQUEST['m'].
 		 */
-		return apply_filters( 'purchase_log_predefined_periods', $date_query, $period_flag );
+		return apply_filters( 'wpsc_purchase_log_predefined_periods', $date_query, $period_flag );
 	}
 
 	public function set_date_column_to_date( $columns ){
@@ -613,7 +613,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 			</select>
 			<?php
 			submit_button( _x( 'Filter', 'extra navigation in purchase log page', 'wpsc' ), 'secondary', false, false, array( 'id' => 'post-query-submit' ) );
-//			submit_button( _x( 'Export', 'extra navigation in purchase log page', 'wpsc' ), 'secondary', false, false, array( 'id' => 'wpec-export-log', name => "request-csv" ) );
+
 		}
 	}
 
@@ -631,23 +631,23 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		/**
 		 * Filter the available special periods on the purchase log listing screen.
 		 *
-		 * Can Used to remove periods or add new period definitions {@see purchase_log_predefined_periods_}
+		 * Can Used to remove periods or add new period definitions {@see wpsc_purchase_log_predefined_periods_}
 		 *
 		 * @since 4.1.0
 		 *
 		 * @param array array() The periods currently defined.
 		 */
-		$periods = apply_filters( 'purchase_log_special_periods', array(
-			1 => __('Today', 'wpsc'),
-			2 => __('Yesterday', 'wpsc'),
-			3 => __('This Week', 'wpsc'),
-			4 => __('Last Week', 'wpsc'),
-			5 => __('This Month', 'wpsc'),
-			6 => __('Last Month', 'wpsc'),
-			7 => __('This Quarter', 'wpsc'),
-			8 => __('Prior 3 Months', 'wpsc'),
-			9 => __('This Year', 'wpsc'),
-			10 => __('Last Year', 'wpsc'),
+		$periods = apply_filters( 'wpsc_purchase_log_special_periods', array(
+			1 => _x('Today', 'time period for the current day', 'wpsc'),
+			2 => _x('Yesterday', 'time period for the previous day', 'wpsc'),
+			3 => _x('This Week', 'time period for the current week', 'wpsc'),
+			4 => _x('Last Week', 'time period for the prior week', 'wpsc'),
+			5 => _x('This Month', 'time period for the current month to date', 'wpsc'),
+			6 => _x('Last Month', 'time period for the prior month', 'wpsc'),
+			7 => _x('This Quarter', 'time period for the prior two months plus this month-to-date', 'wpsc'),
+			8 => _x('Prior 3 Months', 'time period for the three months prior to the current month', 'wpsc'),
+			9 => _x('This Year', 'time period for the current year to date', 'wpsc'),
+			10 => _x('Last Year', 'time period for the prior year', 'wpsc'),
 		) );
 
 		echo '<option disabled="disabled">---------</option>';
