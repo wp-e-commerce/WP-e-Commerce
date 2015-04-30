@@ -542,7 +542,7 @@ function _wpsc_shipping_add_error_message( $message ) {
 	}
 
 	$id = md5( $message );
-	$shipping_error_messages[$id] = $message;
+	$shipping_error_messages[ $id ] = $message;
 
 	wpsc_update_customer_meta( 'shipping_error_messages', $shipping_error_messages );
 }
