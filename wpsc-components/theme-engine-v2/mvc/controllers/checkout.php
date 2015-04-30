@@ -268,13 +268,16 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 		_wpsc_update_location();
 
-		if ( wpsc_is_tax_included() ) {
-			$tax            = $wpsc_cart->calculate_total_tax();
+		//keep track of tax if taxes are exclusive
+		$wpec_taxes_controller = new wpec_taxes_controller();
+		if ( ! $wpec_taxes_controller->wpec_taxes_isincluded() ) {
+			$tax = $wpsc_cart->calculate_total_tax();
 			$tax_percentage = $wpsc_cart->tax_percentage;
 		} else {
-			$tax            = 0;
-			$tax_percentage = 0;
+			$tax = 0.00;
+			$tax_percentage = 0.00;
 		}
+		
 		$purchase_log->set( array(
 			'wpec_taxes_total' => $tax,
 			'wpec_taxes_rate'  => $tax_percentage,
