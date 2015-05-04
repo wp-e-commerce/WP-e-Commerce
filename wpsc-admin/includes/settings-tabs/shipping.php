@@ -61,7 +61,7 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 			update_option( 'do_not_use_shipping', '1' );
 			return array( 'shipping_disabled' => 1 );
 		} else {
-			$_SERVER['REQUEST_URI'] = esc_url( remove_query_arg( 'shipping_disabled' ) );
+			$_SERVER['REQUEST_URI'] = esc_url_raw( remove_query_arg( 'shipping_disabled' ) );
 		}
 	}
 
