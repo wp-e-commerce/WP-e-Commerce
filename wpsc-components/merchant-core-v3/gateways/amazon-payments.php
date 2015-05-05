@@ -28,6 +28,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	public function __construct() {
 
 		parent::__construct();
+
 		$this->title = __( 'Amazon Payments', 'wpsc' );
 
 		$this->reference_id = ! empty( $_REQUEST['amazon_reference_id'] ) ? $_REQUEST['amazon_reference_id'] : '';
@@ -44,11 +45,10 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		add_action( 'wp_footer', array( $this, 'maybe_hide_standard_checkout_button' ) );
 
 		// Define user set variables
-		$this->title           = $this->setting->get( 'title' );
 		$this->seller_id       = $this->setting->get( 'seller_id' );
 		$this->mws_access_key  = $this->setting->get( 'mws_access_key' );
 		$this->secret_key      = $this->setting->get( 'secret_key' );
-		$this->sandbox         = $this->setting->get( 'sandbox_mode' ) == 'yes' ? true : false;
+		$this->sandbox         = $this->setting->get( 'sandbox_mode' ) == '1' ? true : false;
 		$this->payment_capture = $this->setting->get( 'payment_capture' ) !== null ? $this->setting->get( 'payment_capture' ) : '';
 
 		$base_country = new WPSC_Country( wpsc_get_base_country() );
