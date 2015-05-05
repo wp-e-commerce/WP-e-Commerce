@@ -397,8 +397,9 @@ function _wpsc_ajax_purchase_log_send_tracking_email() {
 
 	$result = wp_mail( $email, $subject, $message);
 
-	if ( ! $result )
+	if ( ! $result ) {
 		return new WP_Error( 'wpsc_cannot_send_tracking_email', __( "Couldn't send tracking email. Please try again.", 'wpsc' ) );
+	}
 
 	$return = array(
 		'id'          => $id,
@@ -933,23 +934,23 @@ add_action( 'wp_ajax_wpsc_set_variation_product_thumbnail', '_wpsc_ajax_set_vari
  * @uses update_post_meta()		Updates meta from the specified post
  */
 function product_gallery_image_delete_action() {
-	
+
 	$product_gallery = array();
 	$gallery_image_id = $gallery_post_id = '';
-	
+
 	$gallery_image_id = absint($_POST['product_gallery_image_id']);
 	$gallery_post_id = absint($_POST['product_gallery_post_id']);
-	
+
 	check_ajax_referer( 'wpsc_gallery_nonce', 'wpsc_gallery_nonce_check' );
-	
+
 	$product_gallery = get_post_meta( $gallery_post_id, '_wpsc_product_gallery', true );
-	
+
 	foreach ( $product_gallery as $index => $image_id ) {
 		if ( $image_id == $gallery_image_id ) {
 			unset( $product_gallery[$index] );
 		}
 	}
-	
+
 	update_post_meta( $gallery_post_id, '_wpsc_product_gallery', $product_gallery );
 }
 add_action( 'wp_ajax_product_gallery_image_delete', 'product_gallery_image_delete_action' );

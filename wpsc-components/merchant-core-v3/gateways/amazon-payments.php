@@ -5,6 +5,8 @@
  * - Integrate with recurring payments
  * - Integrate Refunds
  * - Integrate with tev1
+ * - Add WP Layer to SDK
+ * - Add JP to endpoints
  */
 class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
@@ -41,8 +43,6 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		add_action( 'wp_loaded', array( $this, 'init_handlers' ), 11 );
 		add_action( 'wp_footer', array( $this, 'maybe_hide_standard_checkout_button' ) );
 
-		$this->icon         = apply_filters( 'woocommerce_amazon_pa_logo', plugins_url( basename( dirname( dirname( __FILE__ ) ) ) . '/assets/images/amazon-payments.gif' ) );
-
 		// Define user set variables
 		$this->title           = $this->setting->get( 'title' );
 		$this->seller_id       = $this->setting->get( 'seller_id' );
@@ -54,8 +54,10 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		$base_country = new WPSC_Country( wpsc_get_base_country() );
 
 		// Get endpoint
-		$location             = in_array( $base_country->get_isocode(), array( 'US', 'GB', 'DE' ) ) ? $base_country->get_isocode() : 'US';
+		$location             = in_array( $base_country->get_isocode(), array( 'US', 'GB', 'DE', 'JP' ) ) ? $base_country->get_isocode() : 'US';
 		$this->endpoint       = $this->sandbox ? $this->endpoints['sandbox'][ $location ] : $this->endpoints['production'][ $location ];
+
+		$this->define_widget_constants();
 
 		// Get refererence ID
 		$this->reference_id   = ! empty( $_REQUEST['amazon_reference_id'] ) ? $_REQUEST['amazon_reference_id'] : '';
@@ -75,6 +77,32 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			}
 		}
 
+	}
+
+	public function get_image_url() {
+		return apply_filters( 'wpsc_amazon_pa_logo', WPSC_MERCHANT_V3_SDKS_URL . '/amazon-payments/assets/images/amazon-payments.gif' );
+	}
+
+	public function define_widget_constants() {
+		$base_country = new WPSC_Country( wpsc_get_base_country() );
+
+		switch ( $base_country->get_isocode() ) {
+			case 'GB' :
+				define( 'WC_AMAZON_PA_WIDGETS_URL', 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/' . ( $this->sandbox ? 'sandbox/' : '' ) . 'js/Widgets.js?sellerId=' . $this->setting->get( 'seller_id' ) );
+				define( 'WC_AMAZON_WIDGET_ENDPOINT', 'https://payments' . ( $this->sandbox ? '-sandbox' : '' ) . '.amazon.co.uk' );
+				define( 'WC_AMAZON_REGISTER_URL', 'https://sellercentral-europe.amazon.com/gp/on-board/workflow/Registration/login.html?passthrough%2Fsource=internal-landing-select&passthrough%2F*entries*=0&passthrough%2FmarketplaceID=A2WQPBGJ59HSXT&passthrough%2FsuperSource=OAR&passthrough%2F*Version*=1&passthrough%2Fld=APRPWOOCOMMERCE&passthrough%2Faccount=cba&passthrough%2FwaiveFee=1' );
+			break;
+			case 'DE' :
+				define( 'WC_AMAZON_PA_WIDGETS_URL', 'https://static-eu.payments-amazon.com/OffAmazonPayments/de/' . ( $this->sandbox ? 'sandbox/' : '' ) . 'js/Widgets.js?sellerId=' . $this->setting->get( 'seller_id' ) );
+				define( 'WC_AMAZON_WIDGET_ENDPOINT', 'https://payments' . ( $this->sandbox ? '-sandbox' : '' ) . '.amazon.de' );
+				define( 'WC_AMAZON_REGISTER_URL', 'https://sellercentral-europe.amazon.com/gp/on-board/workflow/Registration/login.html?passthrough%2Fsource=internal-landing-select&passthrough%2F*entries*=0&passthrough%2FmarketplaceID=A1OCY9REWJOCW5&passthrough%2FsuperSource=OAR&passthrough%2F*Version*=1&passthrough%2Fld=APRPWOOCOMMERCE&passthrough%2Faccount=cba&passthrough%2FwaiveFee=1' );
+			break;
+			default :
+				define( 'WC_AMAZON_PA_WIDGETS_URL', 'https://static-na.payments-amazon.com/OffAmazonPayments/us/' . ( $this->sandbox ? 'sandbox/' : '' ) . 'js/Widgets.js?sellerId=' . $this->setting->get( 'seller_id' ) );
+				define( 'WC_AMAZON_WIDGET_ENDPOINT', 'https://payments' . ( $this->sandbox ? '-sandbox' : '' ) . '.amazon.com' );
+				define( 'WC_AMAZON_REGISTER_URL', 'https://sellercentral.amazon.com/hz/me/sp/signup?solutionProviderOptions=mws-acc%3B&marketplaceId=AGWSWK15IEJJ7&solutionProviderToken=AAAAAQAAAAEAAAAQ1XU19m0BwtKDkfLZx%2B03RwAAAHBZVsoAgz2yhE7DemKr0y26Mce%2F9Q64kptY6CRih871XhB7neN0zoPX6c1wsW3QThdY6g1Re7CwxJkhvczwVfvZ9BvjG1V%2F%2FHrRgbIf47cTrdo5nNT8jmYSIEJvFbSm85nWxpvHjSC4CMsVL9s%2FPsZt&solutionProviderId=A1BVJDFFHQ7US4' );
+			break;
+		}
 	}
 
 	/**
@@ -371,15 +399,11 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	 * @since 3.0.0
 	 */
 	public function maybe_hide_standard_checkout_button() {
-		if ( 'yes' === $this->settings['enabled'] && 'yes' === $this->settings['hide_standard_checkout_button'] ) {
+		if ( $this->setting->get_field_name( 'hide_button_display' ) ) {
 			?>
 				<style type="text/css">
-					.woocommerce a.checkout-button,
-					.woocommerce input.checkout-button,
-					.cart input.checkout-button,
-					.cart a.checkout-button,
-					.widget_shopping_cart a.checkout {
-						display: none !important;
+					.wpsc-cart-form .wpsc-button-primary {
+						display: none ! important;
 					}
 				</style>
 			<?php
@@ -398,21 +422,22 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		add_action( 'wp_enqueue_scripts', array( $this, 'scripts' ) );
 
 		if ( $this->setting->get( 'cart_button_display' ) == 'button' ) {
-			add_action( 'woocommerce_proceed_to_checkout', array( $this, 'checkout_button' ), 12 );
+			add_action( 'wpsc_template_before_cart', array( $this, 'checkout_button' ), 12 );
+			add_action( 'wpsc_template_after_cart' , array( $this, 'checkout_button' ), 12 );
 		} elseif ( $this->setting->get( 'cart_button_display' ) == 'banner' ) {
-			add_action( 'woocommerce_before_cart', array( $this, 'checkout_message' ), 5 );
+			add_action( 'wpsc_template_before_cart', array( $this, 'checkout_message' ), 5 );
 		}
 
-		add_action( 'woocommerce_before_checkout_form', array( $this, 'checkout_message' ), 5 );
-		add_action( 'before_woocommerce_pay', array( $this, 'checkout_message' ), 5 );
+		add_action( 'wpsc_template_before_checkout-shipping-and-billing', array( $this, 'checkout_message' ), 5 );
+		add_action( 'wpsc_template_before_checkout-payment'             , array( $this, 'checkout_message' ), 5 );
 
 		if ( empty( $this->reference_id ) ) {
 			return;
 		}
 
-		add_action( 'woocommerce_checkout_before_customer_details', array( $this, 'payment_widget' ), 20 );
-		add_action( 'woocommerce_checkout_before_customer_details', array( $this, 'address_widget' ), 10 );
-		add_action( 'woocommerce_checkout_init', array( $this, 'remove_checkout_fields' ) );
+		add_action( 'wpsc_template_before_checkout-shipping-and-billing', array( $this, 'payment_widget' ), 20 );
+		add_action( 'wpsc_template_before_checkout-shipping-and-billing', array( $this, 'address_widget' ), 10 );
+		add_action( '', array( $this, 'remove_checkout_fields' ) );
 		add_filter( 'woocommerce_available_payment_gateways', array( $this, 'remove_gateways' ) );
 		add_action( 'woocommerce_checkout_update_order_review', array( $this, 'get_customer_details' ) );
 	}
@@ -438,18 +463,19 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	 * Add scripts
 	 */
 	public function scripts() {
-		wp_enqueue_style( 'amazon_payments_advanced', plugins_url( 'assets/css/style.css', __FILE__ ) );
+		wp_enqueue_style( 'amazon_payments_advanced', WPSC_MERCHANT_V3_SDKS_URL . '/amazon-payments/assets/css/style.css' );
 
 		wp_enqueue_script( 'amazon_payments_advanced_widgets', WC_AMAZON_PA_WIDGETS_URL, '', '1.0', true );
 
-		wp_enqueue_script( 'amazon_payments_advanced', plugins_url( 'assets/js/amazon-checkout.js', __FILE__ ), array( 'amazon_payments_advanced_widgets' ), '1.0', true );
+		wp_enqueue_script( 'amazon_payments_advanced', WPSC_MERCHANT_V3_SDKS_URL . '/amazon-payments/assets/js/amazon-checkout.js', array( 'amazon_payments_advanced_widgets' ), '1.0', true );
 
 		$redirect_page = wpsc_is_cart() ? add_query_arg( 'amazon_payments_advanced', 'true', wpsc_get_cart_url() ) : esc_url_raw( add_query_arg( 'amazon_payments_advanced', 'true' ) );
 
-		$is_pay_page   = function_exists( 'is_checkout_pay_page' ) ? is_checkout_pay_page() : is_page( woocommerce_get_page_id( 'pay' ) );
+		//Note: Need to return is_controller = payment page.
+		$is_pay_page   = wpsc_is_cart();
 
 		wp_localize_script( 'amazon_payments_advanced', 'amazon_payments_advanced_params', array(
-			'seller_id'            => $this->settings['seller_id'],
+			'seller_id'            => $this->setting->get( 'seller_id' ),
 			'reference_id'         => $this->reference_id,
 			'redirect'             => $redirect_page,
 			'is_checkout_pay_page' => $is_pay_page,
@@ -464,7 +490,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		<div class="col2-set">
 			<div class="col-1">
 				<?php
-				if ( WC()->cart->needs_shipping() ) {
+				if ( wpsc_uses_shipping() ) {
 					?><h3><?php _e( 'Shipping Address', 'wpsc' ); ?></h3><?php
 				} else {
 					?><h3><?php _e( 'Your Address', 'wpsc' ); ?></h3><?php
@@ -526,6 +552,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 	/**
 	 * Remove checkout fields
+	 *
 	 * @param  object $checkout
 	 */
 	public function remove_checkout_fields( $checkout ) {

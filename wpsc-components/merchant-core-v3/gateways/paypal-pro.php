@@ -1,9 +1,9 @@
 <?php
+
 /**
  * The PayPal Pro Gateway class
  *
  */
-
 class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	private $gateway;
 
