@@ -1,0 +1,23 @@
+#pay_with_amazon {
+	margin: 0;
+	line-height: 1em;
+	display: inline-block;
+	border: 0;
+	float: right;
+	margin-left:.236em;
+}
+#pay_with_amazon img {
+	width: auto !important;
+	vertical-align: middle;
+	cursor: pointer;
+	box-shadow: none;
+	border: 0;
+	padding:0;
+	margin:0;
+	display: block;
+}
+#amazon_addressbook_widget div, #amazon_wallet_widget div {
+	min-width: 300px;
+    min-height: 300px;
+    margin: 0 auto !important;
+}
