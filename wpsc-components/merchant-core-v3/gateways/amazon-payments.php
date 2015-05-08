@@ -7,6 +7,7 @@
  * - Integrate with tev1
  * - Add WP Layer to SDK
  * - Add JP to endpoints
+ * - Remove $_SESSION use
  */
 class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
@@ -41,7 +42,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			}
 		}
 
-		add_action( 'wp_loaded', array( $this, 'init_handlers' ), 11 );
+		add_action( 'wpsc_loaded', array( $this, 'init_handlers' ), 11 );
 		add_action( 'wp_footer', array( $this, 'maybe_hide_standard_checkout_button' ) );
 
 		// Define user set variables
@@ -225,7 +226,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		$this->go_to_transaction_results();
 		$order = $this->purchase_log;
 
-		$amazon_reference_id = isset( $_POST['amazon_reference_id'] ) ? wc_clean( $_POST['amazon_reference_id'] ) : '';
+		$amazon_reference_id = isset( $_POST['amazon_reference_id'] ) ? sanitize_text_field( $_POST['amazon_reference_id'] ) : '';
 
 		try {
 
@@ -399,7 +400,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	 * @since 3.0.0
 	 */
 	public function maybe_hide_standard_checkout_button() {
-		if ( $this->setting->get_field_name( 'hide_button_display' ) ) {
+		if ( $this->setting->get( 'hide_button_display' ) ) {
 			?>
 				<style type="text/css">
 					.wpsc-cart-form .wpsc-button-primary {
@@ -411,7 +412,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	}
 
 	/**
-	 * Load handlers for cart and orders after WC Cart is loaded.
+	 * Load handlers for cart and orders after cart is loaded.
 	 */
 	public function init_handlers() {
 		// Disable if no seller ID
@@ -437,18 +438,34 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 		add_action( 'wpsc_template_before_checkout-shipping-and-billing', array( $this, 'payment_widget' ), 20 );
 		add_action( 'wpsc_template_before_checkout-shipping-and-billing', array( $this, 'address_widget' ), 10 );
-		add_action( '', array( $this, 'remove_checkout_fields' ) );
-		add_filter( 'woocommerce_available_payment_gateways', array( $this, 'remove_gateways' ) );
-		add_action( 'woocommerce_checkout_update_order_review', array( $this, 'get_customer_details' ) );
+
+		add_action( 'wpsc_cart_item_table_after', array( $this, 'payment_widget' ), 20 );
+		add_action( 'wpsc_cart_item_table_after', array( $this, 'address_widget' ), 10 );
+
+		add_action( 'wpsc_checkout_get_fields', '__return_empty_array' );
+		add_filter( 'wpsc_get_active_gateways'  , array( $this, 'remove_gateways' ) );
+		add_filter( 'wpsc_get_gateway_list'     , array( $this, 'remove_gateways' ) );
+
+		add_filter( 'wpsc_payment_method_form_fields', function( $fields ) {
+			foreach ( $fields as $i => $field ) {
+				if ( 'amazon-payments' == $field['value'] ) {
+					$fields[ $i ][ 'checked' ] = true;
+				} else {
+					unset( $fields[ $i ] );
+				}
+			}
+
+			return $fields;
+		} );
+
+		//add_action( 'woocommerce_checkout_update_order_review', array( $this, 'get_customer_details' ) );
 	}
 
 	/**
 	 *  Checkout Button
-	 *
-	 *  Triggered from the 'woocommerce_proceed_to_checkout' action.
 	 */
 	public function checkout_button() {
-		?><div id="pay_with_amazon"></div><?php
+		?><div id="pay_with_amazon" class="checkout_button"></div><?php
 	}
 
 	/**
@@ -468,12 +485,11 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 		wp_enqueue_script( 'amazon_payments_advanced_widgets', WC_AMAZON_PA_WIDGETS_URL, '', '1.0', true );
 
-		wp_enqueue_script( 'amazon_payments_advanced', WPSC_MERCHANT_V3_SDKS_URL . '/amazon-payments/assets/js/amazon-checkout.js', array( 'amazon_payments_advanced_widgets' ), '1.0', true );
+		wp_enqueue_script( 'amazon_payments_advanced', WPSC_MERCHANT_V3_SDKS_URL . '/amazon-payments/assets/js/amazon-checkout.js', array( 'amazon_payments_advanced_widgets' ), '1.0', true	);
 
-		$redirect_page = wpsc_is_cart() ? add_query_arg( 'amazon_payments_advanced', 'true', wpsc_get_cart_url() ) : esc_url_raw( add_query_arg( 'amazon_payments_advanced', 'true' ) );
+		$is_pay_page   =  _wpsc_get_current_controller_name() == 'checkout' || _wpsc_get_current_controller_name() == 'cart';
 
-		//Note: Need to return is_controller = payment page.
-		$is_pay_page   = wpsc_is_cart();
+		$redirect_page = $is_pay_page ? add_query_arg( 'amazon_payments_advanced', 'true', wpsc_get_checkout_url( 'payment' ) ) : esc_url_raw( add_query_arg( 'amazon_payments_advanced', 'true' ) );
 
 		wp_localize_script( 'amazon_payments_advanced', 'amazon_payments_advanced_params', array(
 			'seller_id'            => $this->setting->get( 'seller_id' ),
@@ -499,6 +515,20 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 				?>
 				<div id="amazon_addressbook_widget"></div>
 				<input type="hidden" name="amazon_reference_id" value="<?php echo $this->reference_id; ?>" />
+				<style type="text/css">
+					#amazon_addressbook_widget,
+					#amazon_wallet_widget {
+						width: 400px;
+						height: 228px;
+						margin: 10px 0 100px;
+						position: relative;
+						z-index: 2
+					}
+					.wpsc-checkout-review p,
+					.wpsc-field-wpsc_payment_method {
+						display: none
+					}
+				</style>
 			</div>
 		<?php
 	}
@@ -507,49 +537,15 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	 * Output the payment method widget HTML
 	 */
 	public function payment_widget() {
-		$checkout = WC_Checkout::instance();
 		?>
 			<div class="col-2">
-				<h3><?php _e( 'Payment Method', 'woocommerce' ); ?></h3>
+				<h3><?php _e( 'Payment Method', 'wpsc' ); ?></h3>
 				<div id="amazon_wallet_widget"></div>
 				<input type="hidden" name="amazon_reference_id" value="<?php echo $this->reference_id; ?>" />
 			</div>
 		</div>
-
-		<?php if ( ! is_user_logged_in() && $checkout->enable_signup ) : ?>
-
-			<?php if ( $checkout->enable_guest_checkout ) : ?>
-
-				<p class="form-row form-row-wide create-account">
-					<input class="input-checkbox" id="createaccount" <?php checked( ( true === $checkout->get_value( 'createaccount' ) || ( true === apply_filters( 'woocommerce_create_account_default_checked', false ) ) ), true) ?> type="checkbox" name="createaccount" value="1" /> <label for="createaccount" class="checkbox"><?php _e( 'Create an account?', 'wpsc' ); ?></label>
-				</p>
-
-			<?php endif; ?>
-
-			<?php do_action( 'woocommerce_before_checkout_registration_form', $checkout ); ?>
-
-			<?php if ( ! empty( $checkout->checkout_fields['account'] ) ) : ?>
-
-				<div class="create-account">
-
-					<h3><?php _e( 'Create Account', 'wpsc' ); ?></h3>
-					<p><?php _e( 'Create an account by entering the information below. If you are a returning customer please login at the top of the page.', 'wpsc' ); ?></p>
-
-					<?php foreach ( $checkout->checkout_fields['account'] as $key => $field ) : ?>
-
-						<?php woocommerce_form_field( $key, $field, $checkout->get_value( $key ) ); ?>
-
-					<?php endforeach; ?>
-
-					<div class="clear"></div>
-
-				</div>
-
-			<?php
-				endif;
-			 	do_action( 'woocommerce_after_checkout_registration_form', $checkout );
-			  endif;
-	}
+<?php
+		}
 
 	/**
 	 * Remove checkout fields
@@ -571,12 +567,8 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	 * Remove all gateways except amazon
 	 */
 	public function remove_gateways( $gateways ) {
-		foreach ( $gateways as $gateway_key => $gateway ) {
-			if ( $gateway_key !== 'amazon_payments_advanced' ) {
-				unset( $gateways[ $gateway_key ] );
-			}
-		}
-		return $gateways;
+
+		return array( 'amazon-payments' );
 	}
 
 	/**

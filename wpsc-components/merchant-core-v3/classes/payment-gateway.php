@@ -409,20 +409,22 @@ abstract class WPSC_Payment_Gateway {
 	 */
 	public function setup_form() {
 		$checkout_field_types = array(
-			'billing' => __( 'Billing Fields', 'wpsc' ),
+			'billing'  => __( 'Billing Fields' , 'wpsc' ),
 			'shipping' => __( 'Shipping Fields', 'wpsc' ),
 		);
 
 		$fields = array(
-			'firstname' => __( 'First Name', 'wpsc' ),
-			'lastname'  => __( 'Last Name', 'wpsc' ),
-			'address'   => __( 'Address', 'wpsc' ),
-			'city'      => __( 'City', 'wpsc' ),
-			'state'     => __( 'State', 'wpsc' ),
-			'country'   => __( 'Country', 'wpsc' ),
+			'firstname' => __( 'First Name' , 'wpsc' ),
+			'lastname'  => __( 'Last Name'  , 'wpsc' ),
+			'address'   => __( 'Address'    , 'wpsc' ),
+			'city'      => __( 'City'       , 'wpsc' ),
+			'state'     => __( 'State'      , 'wpsc' ),
+			'country'   => __( 'Country'    , 'wpsc' ),
 			'postcode'  => __( 'Postal Code', 'wpsc' ),
 		);
+
 		$checkout_form = WPSC_Checkout_Form::get();
+
 		foreach ( $checkout_field_types as $field_type => $title ): ?>
 			<tr>
 				<td colspan="2">

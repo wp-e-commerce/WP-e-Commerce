@@ -211,7 +211,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	 * @since 3.9
 	 */
 	public static function filter_unselect_default( $fields ) {
-		foreach ( $fields as $i=>$field ) {
+		foreach ( $fields as $i => $field ) {
 			$fields[ $i ][ 'checked' ] = false;
 		}
 

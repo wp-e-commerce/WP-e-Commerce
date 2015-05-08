@@ -6,6 +6,9 @@
 	float: right;
 	margin-left:.236em;
 }
+#pay_with_amazon.checkout_button {
+	margin-top: 1.5em;
+}
 #pay_with_amazon img {
 	width: auto !important;
 	vertical-align: middle;
