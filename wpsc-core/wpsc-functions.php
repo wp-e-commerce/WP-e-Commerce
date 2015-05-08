@@ -215,6 +215,12 @@ function wpsc_javascript_localizations( $localizations = false ) {
 		$localizations['WPSC_CORE_IMAGES_URL']     = WPSC_CORE_IMAGES_URL;
 		$localizations['fileThickboxLoadingImage'] = WPSC_CORE_IMAGES_URL . '/loadingAnimation.gif';
 		$localizations['msg_shipping_need_recalc'] = __( 'Please click the <em>Calculate</em> button to refresh your shipping quotes, as your shipping information has been modified.', 'wpsc' );
+
+		// if we are in debug mode tell the script it is ok to log messages and such
+		if ( wpsc_in_debug_mode()) {
+			$localizations['debug'] = '1';
+		}
+
 	}
 
 	/**
@@ -955,3 +961,51 @@ function _wpsc_clear_wp_cache_on_version_change() {
 }
 
 add_action( 'admin_init', '_wpsc_clear_wp_cache_on_version_change', 1 );
+
+/**
+ * Check if awe are in 'debug' mode, use if you want to conditionally output messages to the error log
+ * or admistrator console
+ *
+ * Debug mode will be enabled if WordPress debug mode is enabled
+ * Debug mode will be set if the constant WPSC_DEBUG is defined and evaluates to true
+ * Debug mode can be set by a logged in administrative user by appending '?wpsc_debug_mode=1' to the end of any site url
+ *
+ * @return bool
+ */
+function wpsc_in_debug_mode() {
+	$wpsc_debug_mode = false;
+
+	// is WordPress debug mode on?
+	if ( defined( 'WP_DEBUG') && WP_DEBUG ) {
+		$wpsc_debug_mode = true;
+	}
+
+	// is WPeC debug mode on?
+	if ( defined( 'WPSC_DEBUG') && WPSC_DEBUG ) {
+		$wpsc_debug_mode = true;
+	}
+
+	// get the value of the debug mode option, if it is not defined create it so that
+	// the option is cached and debug mode can be determined with greate haste
+	$debug_mode_option = intval( get_option( 'wpsc_debug_mode', -1 ) );
+	if( -1 == $debug_mode_option ) {
+		$debug_mode_option = 0;
+		update_option( 'wpsc_debug_mode', $debug_mode_option );
+	}
+
+	// has debug mode been enabled from a url request by an administrator
+	if (  isset( $_REQUEST['wpsc_debug_mode'] ) ) {
+		if ( funtion_exists( 'current_user_can' ) && current_user_can( 'manage_options' ) ) {
+			$debug_mode_option = intval( $_REQUEST['wpsc_debug_mode'] );
+			update_option( 'wpsc_debug_mode', $debug_mode_option );
+		}
+	}
+
+	// has debug mode been previously enabled by an administrator request
+	if ( $debug_mode_option ) {
+		$wpsc_debug_mode = true;
+	}
+
+	return $wpsc_debug_mode;
+
+}

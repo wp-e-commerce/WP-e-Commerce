@@ -218,7 +218,7 @@ function _wpsc_validate_customer_cookie() {
 		return false;
 	}
 
-	$cookie = $_COOKIE[ WPSC_CUSTOMER_COOKIE ];
+	$cookie = urldecode( $_COOKIE[ WPSC_CUSTOMER_COOKIE ] );
 
 	list( $id, $expire, $visitor_hash_from_cookie ) = $x = explode( '|', $cookie );
 
@@ -330,7 +330,6 @@ function _wpsc_merge_cart() {
 
 	$id_from_customer_meta = wpsc_get_customer_meta( 'merge_cart_vistor_id' );
 	wpsc_delete_customer_meta( 'merge_cart_vistor_id' );
-
 
 	$old_cart = wpsc_get_customer_cart( $id_from_customer_meta );
 	$items    = $old_cart->get_items();

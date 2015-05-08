@@ -31,6 +31,7 @@ if ( typeof wpsc_vars !== 'undefined' ) {
 	var WPSC_IMAGE_URL           = wpsc_vars.WPSC_IMAGE_URL;
 	var WPSC_CORE_IMAGES_URL     = wpsc_vars.WPSC_CORE_IMAGES_URL;
 	var fileThickboxLoadingImage = wpsc_vars.fileThickboxLoadingImage;
+    var wpsc_debug               = wpsc_vars.hasOwnProperty( 'debug' );
 }
 // end of variable definitions
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -79,11 +80,19 @@ function wpsc_var_get( name ) {
  * @return boolean          Whether or not element is visible.
  */
 function wpsc_element_is_visible( el ) {
-	var top   = jQuery( window ).scrollTop(),
-	bottom    = top + jQuery( window ).height(),
-	elTop     = el.offset().top;
 
-	return ( (elTop >= top ) && ( elTop <= bottom ) && ( elTop <= bottom ) && ( elTop >= top ) ) && el.is( ':visible' );
+    // check to be sure the form element exists, it may have been passed to us unveriified in a callback
+    if ( typeof el !== 'undefined' && el.length ) {
+        var top = jQuery(window).scrollTop(),
+            bottom = top + jQuery(window).height(),
+            elTop = el.offset().top;
+
+        visible = ( (elTop >= top ) && ( elTop <= bottom ) && ( elTop <= bottom ) && ( elTop >= top ) ) && el.is(':visible');
+    } else {
+        visible = false;
+    }
+
+    return visible;
 }
 
 /**
@@ -150,6 +159,13 @@ function wpsc_create_option(  displaytext, value ) {
 // a global variable used to hold the current users visitor id,
 // if you are going to user it always check to be sure it is not false
 var wpsc_visitor_id = false;
+    var i, cookieName, cookieValue, docCookies = document.cookie.split( ';' );
+    for ( i = 0; i < docCookies.length; i++ ) {
+        cookieName  = docCookies[i].substr( 0, docCookies[i].indexOf( '=' ) );
+        cookieName  = cookieName.replace( /^\s+|\s+$/g, '' );
+        cookieValue = docCookies[i].substr( docCookies[i].indexOf('=') + 1);
+            var cookieValueClean = decodeURI(cookieValue);
+            var idAsText = cookieValueClean.substr(0,cookieValueClean.indexOf( '|' ) );
 
 if ( document.cookie.indexOf("wpsc_customer_cookie") < 0 ) {
 	if ( document.cookie.indexOf("wpsc_attempted_validate") < 0 ) {
@@ -172,14 +188,26 @@ if ( document.cookie.indexOf("wpsc_customer_cookie") < 0 ) {
 		// Note that we cannot set a timeout on synchronous requests due to XMLHttpRequest limitations
 		wpsc_http.send();
 
+            if ( wpsc_debug && window.console ) {
 		// we did the request in synchronous mode so we don't need the on load or ready state change events	to check the result
 		if (wpsc_http.status == 200) {
 			 var result = JSON.parse( wpsc_http.responseText );
 			 if ( result.valid && result.id ) {
 				 wpsc_visitor_id = result.id;
-			 }
-		}
-	}
+                    if ( wpsc_debug ) {
+                        console.log("The new WPeC visitor id is " + wpsc_visitor_id);
+                    }
+                }
+                if ( wpsc_debug ) {
+                    console.log("The HTTP request to validate the WPeC validate visitor id  was not successful, HTTP error " + wpsc_http.status);
+                }
+            }
+        }
+        if ( wpsc_debug ) {
+            console.log("The existing WPeC visitor id is " + wpsc_visitor_id);
+        }
+    }
+}
 }
 // end of setting up the WPEC customer identifier
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -208,9 +236,11 @@ function wpsc_update_customer_data( meta_key, meta_value, response_callback ) {
 		var ajax_data = {action: 'wpsc_customer_updated_data', meta_key : meta_key, meta_value : meta_value };
 		wpsc_do_ajax_request( ajax_data, response_callback );
 	} catch ( err ) {
-		if ( window.console && window.console.log ) {
-			console.log( err );
-		}
+        if ( wpsc_debug ) {
+            if (window.console && window.console.log) {
+                console.log(err);
+            }
+        }
 	}
 
 }
@@ -229,9 +259,11 @@ function wpsc_get_customer_data( response_callback ) {
 		var ajax_data = {action: 'wpsc_get_customer_meta' };
 		wpsc_do_ajax_request( ajax_data, response_callback );
 	} catch ( err ) {
-		if ( window.console && window.console.log ) {
-			console.log( err );
-		}
+        if ( wpsc_debug ) {
+            if (window.console && window.console.log) {
+                console.log(err);
+            }
+        }
 	}
 }
 
