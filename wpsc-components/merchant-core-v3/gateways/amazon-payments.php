@@ -5,8 +5,8 @@
  * - Integrate with recurring payments
  * - Integrate Refunds
  * - Integrate with tev1
- * - Add WP Layer to SDK
- * - Add JP to endpoints
+ * - Add WP Layer to SDK and handle
+ * - Add JP (Japan) to endpoints
  * - Remove $_SESSION use
  */
 class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
@@ -14,11 +14,13 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	private $endpoints = array(
 		'sandbox' => array(
 			'US' => 'https://mws.amazonservices.com/OffAmazonPayments_Sandbox/2013-01-01/',
+			'JP' => 'https://mws.amazonservices.jp/OffAmazonPayments_Sandbox/2013-01-01/',
 			'GB' => 'https://mws-eu.amazonservices.com/OffAmazonPayments_Sandbox/2013-01-01/',
 			'DE' => 'https://mws-eu.amazonservices.com/OffAmazonPayments_Sandbox/2013-01-01/',
 		),
 		'production' => array(
 			'US' => 'https://mws.amazonservices.com/OffAmazonPayments/2013-01-01/',
+			'JP' => 'https://mws.amazonservices.jp/OffAmazonPayments/2013-01-01/',
 			'GB' => 'https://mws-eu.amazonservices.com/OffAmazonPayments/2013-01-01/',
 			'DE' => 'https://mws-eu.amazonservices.com/OffAmazonPayments/2013-01-01/',
 		)
@@ -221,9 +223,9 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	}
 
 	public function process() {
+
 		$this->purchase_log->set( 'processed', WPSC_PAYMENT_STATUS_RECEIVED )->save();
 
-		$this->go_to_transaction_results();
 		$order = $this->purchase_log;
 
 		$amazon_reference_id = isset( $_POST['amazon_reference_id'] ) ? sanitize_text_field( $_POST['amazon_reference_id'] ) : '';
@@ -378,14 +380,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 				break;
 			}
 
-			// Remove cart
-			WC()->cart->empty_cart();
-
-			// Return thank you page redirect
-			return array(
-				'result' 	=> 'success',
-				'redirect'	=> $this->get_return_url( $order )
-			);
+		$this->go_to_transaction_results();
 
 		} catch( Exception $e ) {
 			wc_add_notice( __( 'Error:', 'wpsc' ) . ' ' . $e->getMessage(), 'error' );
@@ -436,13 +431,22 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			return;
 		}
 
-		add_action( 'wpsc_template_before_checkout-shipping-and-billing', array( $this, 'payment_widget' ), 20 );
-		add_action( 'wpsc_template_before_checkout-shipping-and-billing', array( $this, 'address_widget' ), 10 );
+		add_filter( 'wpsc_get_checkout_payment_method_form_args', function( $args ) {
 
-		add_action( 'wpsc_cart_item_table_after', array( $this, 'payment_widget' ), 20 );
-		add_action( 'wpsc_cart_item_table_after', array( $this, 'address_widget' ), 10 );
+			ob_start();
+
+			$this->address_widget();
+			$this->payment_widget();
+
+			$widgets = ob_get_clean();
+
+			$args['before_form_actions'] .= $widgets;
+
+			return $args;
+		} );
 
 		add_action( 'wpsc_checkout_get_fields', '__return_empty_array' );
+
 		add_filter( 'wpsc_get_active_gateways'  , array( $this, 'remove_gateways' ) );
 		add_filter( 'wpsc_get_gateway_list'     , array( $this, 'remove_gateways' ) );
 
@@ -640,8 +644,9 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			)
 		);
 
-		if ( ! is_wp_error( $response ) )
-			$response = $this->xml2Array( $response['body'] );
+		if ( ! is_wp_error( $response ) ) {
+			// $response = \PayWithAmazon\ResponseParser( $response['body'] )->toArray();
+		}
 
 		return $response;
 	}
@@ -714,44 +719,15 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 	    return $url;
 	}
-
-    /**
-     * Renvoie le flux xml sous forme de tableau associatif multi dimensionnel
-     * php.net Julio Cesar Oliveira
-     *
-     * @param string $xml
-     * @param boolean $recursive
-     *
-     * @return array
-     */
-    public function xml2Array($xml, $recursive = false) {
-        if( ! $recursive ) {
-            $array = (array) simplexml_load_string($xml);
-        } else {
-            $array = (array) $xml;
-        }
-
-        $newArray = array();
-
-        foreach ($array as $key => $value) {
-            $value = (array)$value;
-            if (isset($value[0])) {
-                $newArray[$key] = trim ($value[0]);
-            } else {
-                $newArray[$key] = self::xml2Array($value, true);
-            }
-        }
-        return $newArray;
-    }
 }
 
-class WC_Amazon_Payments_Advanced_Order_Handler {
+class WPSC_Amazon_Payments_Advanced_Order_Handler {
 
 	/**
 	 * Constructor
 	 */
 	public function __construct() {
-		add_action( 'add_meta_boxes', array( $this, 'meta_box' ) );
+		add_action( 'add_meta_boxes'             , array( $this, 'meta_box' ) );
 		add_action( 'wp_ajax_amazon_order_action', array( $this, 'order_actions' ) );
 	}
 
@@ -762,7 +738,7 @@ class WC_Amazon_Payments_Advanced_Order_Handler {
 		check_ajax_referer( 'amazon_order_action', 'security' );
 
 		$order_id = absint( $_POST['order_id'] );
-		$id       = isset( $_POST['amazon_id'] ) ? woocommerce_clean( $_POST['amazon_id'] ) : '';
+		$id       = isset( $_POST['amazon_id'] ) ? sanitize_text_field( $_POST['amazon_id'] ) : '';
 		$action   = sanitize_title( $_POST['amazon_action'] );
 
 		switch ( $action ) {
@@ -1210,7 +1186,6 @@ class WC_Amazon_Payments_Advanced_Order_Handler {
 				'AuthorizationAmount.CurrencyCode' => strtoupper( get_woocommerce_currency() ),
 				'CaptureNow'                       => $capture_now,
 				'TransactionTimeout'               => 0,
-				//'SellerAuthorizationNote'          => '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"AmazonRejected"}}'
 			) );
 
 			if ( is_wp_error( $response ) ) {
@@ -1387,3 +1362,7 @@ class WC_Amazon_Payments_Advanced_Order_Handler {
 		}
     }
 }
+
+add_action( 'wpsc_submit_checkout_gateway', function() {
+	die( var_dump( $_POST ) );
+} );

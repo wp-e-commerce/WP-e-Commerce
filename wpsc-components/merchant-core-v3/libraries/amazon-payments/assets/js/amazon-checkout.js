@@ -5,7 +5,6 @@ jQuery(function() {
 		sellerId: amazon_payments_advanced_params.seller_id,
 		useAmazonAddressBook: true,
 		onSignIn: function( orderReference ) {
-			console.log( orderReference );
 			amazonOrderReferenceId = orderReference.getAmazonOrderReferenceId();
 			window.location = amazon_payments_advanced_params.redirect + '&amazon_reference_id=' + amazonOrderReferenceId;
 		},
@@ -24,8 +23,6 @@ jQuery(function() {
             designMode: 'responsive'
         },
 		onError: function(error) {
-			console.log(error.getErrorMessage());
-			console.log(error.getError());
 		}
 	}).bind("amazon_addressbook_widget");
 

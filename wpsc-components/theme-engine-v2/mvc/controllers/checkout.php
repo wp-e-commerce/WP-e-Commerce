@@ -158,7 +158,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 			return null;
 		}
 
-		// Update the PurchaseLog
+		// Update the Purchase Log
 		$purchase_log_id = wpsc_get_customer_meta( 'current_purchase_log_id' );
 		$purchase_log    = new WPSC_Purchase_Log( $purchase_log_id );
 		$purchase_log->set( 'base_shipping', $wpsc_cart->calculate_base_shipping() );
@@ -277,7 +277,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 			$tax = 0.00;
 			$tax_percentage = 0.00;
 		}
-		
+
 		$purchase_log->set( array(
 			'wpec_taxes_total' => $tax,
 			'wpec_taxes_rate'  => $tax_percentage,

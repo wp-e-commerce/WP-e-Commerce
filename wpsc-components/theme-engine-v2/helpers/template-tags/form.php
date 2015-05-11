@@ -705,7 +705,7 @@ function wpsc_get_checkout_payment_method_form_args() {
 		),
 	);
 
-	$args = _wpsc_convert_checkout_payment_method_form_args( $args );
+	$args = apply_filters( 'wpsc_get_checkout_payment_method_form_args', _wpsc_convert_checkout_payment_method_form_args( $args ) );
 	return $args;
 }
 
