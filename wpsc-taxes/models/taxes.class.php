@@ -212,23 +212,30 @@ class wpec_taxes {
 	} // wpec_taxes_get_included_rate
 
 	/**
-	 * @description: wpec_taxes_get_countries - retrieves an array of countries
+	 * @description wpec_taxes_get_countries - retrieves an array of countries
 	 *
-	 * @param: visibility (optional) - set to 'visible' or 'hidden' to retrieve
+	 * @param string visibility (optional) - set to 'visible' or 'hidden' to retrieve
 	 *                                 visible or hidden countries. Default action
 	 *                                 is to retrieve any country.
-	 * @return: array or false
+	 * @return array
 	 * */
 	function wpec_taxes_get_countries( $visibility = 'any' ) {
 		switch ( $visibility ) {
-			case 'visible': $where = array( 'visible' => 1 );
+			case 'hidden':
+				$wpsc_countries = wpsc_get_all_countries();
 				break;
-			case 'hidden': $where = array( 'visible' => 0 );
-				break;
-			default: $where = array();
-		}// switch
 
-		$returnable = $this->wpec_taxes_get_country_information( array( 'country', 'isocode' ), $where, 'country' );
+			case 'visible':
+			default:
+				$wpsc_countries = wpsc_get_visible_countries();
+				break;
+
+		} // switch
+
+		$returnable = array();
+		foreach ( $wpsc_countries as $countri_id => $wpsc_country ) {
+			$returnable[] = array( 'country' => $wpsc_country->get_name(), 'isocode' => $wpsc_country->get_isocode() );
+		}
 
 		//add all markets
 		array_unshift( $returnable, array( 'isocode' => 'all-markets', 'country' => __( 'All Markets', 'wpsc' ) ) );
@@ -237,75 +244,35 @@ class wpec_taxes {
 	} // wpec_taxes_get_countries
 
 	/**
-	 * @description: wpec_get_country_information - retrieves information about a country.
+	 * @description wpec_get_country_information - retrieves information about a country.
 	 *               Note: If only one column is specified this function will return the value
 	 *                     of that column. If two or more columns are specified the results are
 	 *                     returned in an array.
-	 * @param: columns(optional) - specify a column name or multiple column names in an array.
+	 * @param array columns(optional) - specify a column name or multiple column names in an array.
 	 *                             Default action is to return all columns.
-	 * @param: where(optional) - specify where conditions in array format. Key is column
+	 * @param string where(optional) - specify where conditions in array format. Key is column
 	 *                           and value is column value.
 	 *                           Example: wpec_taxes_get_country_information('id', array('isocode'=>'CA'))
 	 *                           Default action is to not limit results.
 	 *                           Note: this function only compares using the equals sign (=).
-	 * @param: order_by(optional) - specify a column name or multiple column names in an array.
+	 * @param string order_by(optional) - specify a column name or multiple column names in an array.
 	 *                              Default action is to not include an order by statement.
-	 * @return: array, int, string or false
+	 *
+	 * @deprecated 4.1
+	 * @return array, int, string or false
 	 * */
 	function wpec_taxes_get_country_information( $columns = false, $where = array(), $order_by = false ) {
-		//check for all-markets
-		if ( 'country' == $columns && 1 == count( $where ) && 'all-markets' == $where['isocode'] ) {
-			$returnable = 'All Markets';
-		} else {
-			//database connection
-			global $wpdb;
-
-			//if columns are not set select everything
-			$columns = ($columns) ? $columns : array( '*' );
-
-			//change columns to array if not an array
-			if ( ! is_array( $columns ) )
-				$columns = array( $columns );
-
-			$columns = array_map( 'esc_sql', $columns );
-
-			//if where is set then formulate conditions
-			if ( ! empty( $where ) ) {
-				foreach ( $where as $column => $condition ) {
-					$condition = esc_sql( $condition );
-					$where_query[] = ( is_numeric( $condition ) ) ? "{$column}={$condition}" : "{$column}='{$condition}'";
-				}// foreach
-			}// if
-
-			//formulate query
-			$query = 'SELECT ' . implode( ',', $columns ) . ' FROM ' . WPSC_TABLE_CURRENCY_LIST;
-
-			if ( isset( $where_query ) )
-				$query .= ' WHERE ' . implode( ' AND ', $where_query );
-
-			//if order_by is set, add to query
-			if ( $order_by ) {
-				if ( ! is_array( $order_by ) )
-					$order_by = array( $order_by );
-
-				$order_by = array_map( 'esc_sql', $order_by );
-				$query .= ' ORDER BY ' . implode( ',', $order_by );
-			}// if
-
-			$returnable = ( count( $columns ) > 1 ) ? $wpdb->get_results( $query, ARRAY_A ) : $wpdb->get_var( $query );
-		}// if
-
-		//return the result
-		return $returnable;
+		_wpsc_deprecated_function( __FUNCTION__, '4.1', 'WPSC_Countries' );
+		return array();
 	} // wpec_taxes_get_country_information
 
 	/**
-	 * @description: wpec_taxes_get_region_information - given a region code and column
+	 * @description wpec_taxes_get_region_information - given a region code and column
 	 *                   this function will return the resulting value.
-	 * @param: region_code - code for this region
-	 * @param: attribute (optional) - specify a column to retrieve
+	 * @param region_code - code for this region
+	 * @param attribute (optional) - specify a column to retrieve
 	 *                            Default action is to retrieve the id column.
-	 * @return: int, string, or false
+	 * @return int, string, or false
 	 * */
 	function wpec_taxes_get_region_information( $region, $attribute = 'id', $country = null ) {
 
@@ -383,7 +350,7 @@ class wpec_taxes {
 		if ( ! empty( $region ) ) {
 			$country_id = WPSC_Countries::get_country_id_by_region_id( $region );
 			if ( $country_id ) {
-				$wpsc_country = new WPSC_Country( $country_id );
+				$wpsc_country = wpsc_get_country_object( $country_id );
 			}
 
 			if ( isset( $wpsc_country ) ) {

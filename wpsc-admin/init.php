@@ -866,10 +866,19 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( 'wpsc-delete-coupon' == $_REQU
 	add_action( 'admin_init', 'wpsc_delete_coupon' );
 }
 
-function _wpsc_action_update_option_base_country( $old_value, $new_value ) {
-	global $wpdb;
-	$region_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(`regions`.`id`) FROM `" . WPSC_TABLE_REGION_TAX . "` AS `regions` INNER JOIN `" . WPSC_TABLE_CURRENCY_LIST . "` AS `country` ON `country`.`id` = `regions`.`country_id` WHERE `country`.`isocode` IN('%s')",  $new_value ) );
-	if ( ! $region_count )
+/**
+ * Check to see if the base region need to be updated when the base country option is updated
+ * @param string $old_base_country_iso_code string
+ * @param string $new_base_country_iso_code string
+ *
+ */
+function _wpsc_action_update_option_base_country( $old_base_country_iso_code, $new_base_country_iso_code ) {
+	$wpsc_country = wpsc_get_country_object( $new_base_country_iso_code );
+
+	if ( ! $wpsc_country->has_regions() ) {
 		update_option( 'base_region', '' );
+	}
+
 }
+
 add_action( 'update_option_base_country', '_wpsc_action_update_option_base_country', 10, 2 );

@@ -168,16 +168,6 @@ function wpsc_get_country_form_id_by_type($type){
 	return $id;
 }
 
-function wpsc_get_country( $country_code ) {
-	$wpsc_country = new WPSC_Country( $country_code );
-	return $wpsc_country->get_name();
-}
-
-function wpsc_get_region( $region_id ) {
-	$country_id = WPSC_Countries::get_country_id_by_region_id( $region_id );
-	$wpsc_region = new WPSC_Region( $country_id, $region_id );
-	return $wpsc_region->get_name();
-}
 
 function nzshpcrt_display_preview_image() {
 	global $wpdb;

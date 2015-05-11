@@ -20,10 +20,12 @@ $base_region = get_option('base_region');
   ?>
   <form action='' method='post' name='regional_tax' class='wpsc_form_track'>
   <?php
-  $country_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `isocode` IN(%s) LIMIT 1", $country_isocode ), ARRAY_A );
-  if(($country_data['has_regions'] == 1))
-    {
-    $region_data = $wpdb->get_results("SELECT `".WPSC_TABLE_REGION_TAX."`.* FROM `".WPSC_TABLE_REGION_TAX."` WHERE `".WPSC_TABLE_REGION_TAX."`.`country_id` IN('".$country_data['id']."') ",ARRAY_A) ;
+  $wpsc_country = wpsc_get_country_object( $country_isocode );
+  $country_data = $wpsc_country->get_array();
+
+  if( $wpsc_country->has_regions() ) {
+	$region_data = $wpsc_country->get_regions( true );
+
     $region_data = array_chunk($region_data, 14);
     
     echo "<table>\n\r";
@@ -32,8 +34,9 @@ $base_region = get_option('base_region');
       {
       echo "    <td style='vertical-align: top; padding-right: 3em;'>\n\r";
       echo "<table>\n\r";
-      foreach($region_col as $region)
+      foreach($region_col as $wpsc_region)
         {
+        $region = $wpsc_region->as_array();
         $tax_percentage =  $region['tax'];
         echo "  <tr>\n\r";
         if($region['id'] == $base_region)

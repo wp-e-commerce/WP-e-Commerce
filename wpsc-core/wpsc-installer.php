@@ -436,6 +436,7 @@ function wpsc_create_or_update_tables( $debug = false ) {
 	global $wpdb;
 	// creates or updates the structure of the shopping cart tables
 
+	$wpsc_database_template = array();
 	include( WPSC_FILE_PATH . '/wpsc-updates/database_template.php' );
 
 	$template_hash = sha1( serialize( $wpsc_database_template ) );
@@ -593,116 +594,7 @@ function wpsc_create_or_update_tables( $debug = false ) {
 	}
 }
 
-/**
- * The following functions are used exclusively in database_template.php
- */
 
-/**
- * wpsc_add_currency_list function,	converts values to decimal to satisfy mySQL strict mode
- * * @return boolean true on success, false on failure
- */
-function wpsc_add_currency_list() {
-	global $wpdb, $currency_sql;
-	require_once(WPSC_FILE_PATH . "/wpsc-updates/currency_list.php");
-	$currency_data = $wpdb->get_var( "SELECT COUNT(*) AS `count` FROM `" . WPSC_TABLE_CURRENCY_LIST . "`" );
-	if ( $currency_data == 0 ) {
-		$currency_array = explode( "\n", $currency_sql );
-		foreach ( $currency_array as $currency_row ) {
-			$wpdb->query( $currency_row );
-		}
-	}
-}
-
-/**
- * wpsc_add_region_list function,	converts values to decimal to satisfy mySQL strict mode
- * * @return boolean true on success, false on failure
- */
-function wpsc_add_region_list() {
-	global $wpdb;
-	$add_regions = $wpdb->get_var( "SELECT COUNT(*) AS `count` FROM `" . WPSC_TABLE_REGION_TAX . "`" );
-	if ( $add_regions < 1 ) {
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '100', 'Alberta', 'AB', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '100', 'British Columbia', 'BC', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '100', 'Manitoba', 'MB', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '100', 'New Brunswick', 'NB', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '100', 'Newfoundland and Labrador', 'NL', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '100', 'Northwest Territories', 'NT', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '100', 'Nova Scotia', 'NS', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '100', 'Nunavut', 'NU', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '100', 'Ontario', 'ON', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '100', 'Prince Edward Island', 'PE', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '100', 'Quebec', 'QC', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '100', 'Saskatchewan', 'SK', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '100', 'Yukon', 'YK', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Alabama', 'AL', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Alaska', 'AK', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Arizona', 'AZ', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Arkansas', 'AR', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'California', 'CA', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Colorado', 'CO', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Connecticut', 'CT', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Delaware', 'DE', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Florida', 'FL', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Georgia', 'GA', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Hawaii', 'HI', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Idaho', 'ID', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Illinois', 'IL', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Indiana', 'IN', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Iowa', 'IA', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Kansas', 'KS', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Kentucky', 'KY', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Louisiana', 'LA', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Maine', 'ME', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Maryland', 'MD', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Massachusetts', 'MA', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Michigan', 'MI', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Minnesota', 'MN', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Mississippi', 'MS', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Missouri', 'MO', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Montana', 'MT', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Nebraska', 'NE', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Nevada', 'NV', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'New Hampshire', 'NH', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'New Jersey', 'NJ', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'New Mexico', 'NM', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'New York', 'NY', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'North Carolina', 'NC', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'North Dakota', 'ND', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Ohio', 'OH', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Oklahoma', 'OK', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Oregon', 'OR', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Pennsylvania', 'PA', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Rhode Island', 'RI', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'South Carolina', 'SC', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'South Dakota', 'SD', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Tennessee', 'TN', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Texas', 'TX', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Utah', 'UT', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Vermont', 'VT', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Virginia', 'VA', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Washington', 'WA', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Washington DC', 'DC', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'West Virginia', 'WV', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Wisconsin', 'WI', '0')" );
-		$wpdb->query( "INSERT INTO `" . WPSC_TABLE_REGION_TAX . "` ( `country_id` , `name` ,`code`, `tax` ) VALUES ( '136', 'Wyoming', 'WY', '0')" );
-	}
-
-	if ( $wpdb->get_var( "SELECT COUNT(*) FROM `" . WPSC_TABLE_REGION_TAX . "` WHERE `code`=''" ) > 0 ) {
-		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'AB' WHERE `name` IN('Alberta') LIMIT 1 ;" );
-		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'BC' WHERE `name` IN('British Columbia') LIMIT 1 ;" );
-		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'MB' WHERE `name` IN('Manitoba') LIMIT 1 ;" );
-		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'NK' WHERE `name` IN('New Brunswick') LIMIT 1 ;" );
-		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'NF' WHERE `name` IN('Newfoundland') LIMIT 1 ;" );
-		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'NT' WHERE `name` IN('Northwest Territories') LIMIT 1 ;" );
-		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'NS' WHERE `name` IN('Nova Scotia') LIMIT 1 ;" );
-		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'ON' WHERE `name` IN('Ontario') LIMIT 1 ;" );
-		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'PE' WHERE `name` IN('Prince Edward Island') LIMIT 1 ;" );
-		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'PQ' WHERE `name` IN('Quebec') LIMIT 1 ;" );
-		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'SN' WHERE `name` IN('Saskatchewan') LIMIT 1 ;" );
-		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'YT' WHERE `name` IN('Yukon') LIMIT 1 ;" );
-		$wpdb->query( "UPDATE `" . WPSC_TABLE_REGION_TAX . "` SET `code` = 'NU' WHERE `name` IN('Nunavut') LIMIT 1 ;" );
-	}
-}
 
 /**
  * wpsc_add_checkout_fields function,	converts values to decimal to satisfy mySQL strict mode

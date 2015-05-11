@@ -357,30 +357,37 @@ function _wpsc_filter_control_select_region( $output, $field, $args ) {
 	$options = array();
 
 	if ( $country == 'all' ) {
-		$state_data = $wpdb->get_results( "SELECT `regions`.*, country.country as country, country.isocode as country_isocode FROM `" . WPSC_TABLE_REGION_TAX . "` AS `regions` INNER JOIN `" . WPSC_TABLE_CURRENCY_LIST . "` AS `country` ON `country`.`id` = `regions`.`country_id`" );
+
+		$state_data = wpsc_get_all_regions();
+
 		$options[__( 'No State', 'wpsc' )] = array(
 			'' => __( 'No State', 'wpsc' ),
 		);
-		foreach ( $state_data as $state ) {
 
-			if ( ! array_key_exists( $state->country, $options ) ) {
-				$options[ $state->country ] = array();
+		foreach ( $state_data as $region_id => $wpsc_region ) {
+
+			$wpsc_country = $wpsc_region->get_country();
+
+			if ( ! array_key_exists( $wpsc_country->get_name(), $options ) ) {
+				$options[ $wpsc_country->get_name() ] = array();
 			}
 
 			$options[ $state->country ][ $state->id ] = array(
-				'title'      => $state->name,
+				'title'      => $wpsc_region->get_name(),
 				'attributes' => array(
-					'data-alternative-spellings' => $state->code,
-					'data-country-id'            => $state->country_id,
-					'data-country-isocode'       => $state->country_isocode,
+					'data-alternative-spellings' => $wpsc_region->get_name(),
+					'data-country-id'            => $wpsc_country->get_id(),
+					'data-country-isocode'       => $wpsc_country->get_isocode(),
 				)
 			);
 		}
 	} else {
-		$state_data = $wpdb->get_results( $wpdb->prepare( "SELECT `regions`.*, country.isocode as country FROM `" . WPSC_TABLE_REGION_TAX . "` AS `regions` INNER JOIN `" . WPSC_TABLE_CURRENCY_LIST . "` AS `country` ON `country`.`id` = `regions`.`country_id` WHERE `country`.`isocode` IN(%s)", $country ) );
-
-		foreach ( $state_data as $state ) {
-			$options[ $state->id ] = $state->name;
+		$wpsc_country = wpsc_get_country_object( $country );
+		if ( $wpsc_country ) {
+			$wpsc_regions = $wpsc_country->get_regions();
+			foreach ( $wpsc_regions as $region_id => $wpsc_region ) {
+				$options[ $region_id ] = $wpsc_region->get_name();
+			}
 		}
 	}
 	$output .= wpsc_form_select(

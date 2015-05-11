@@ -88,16 +88,24 @@ function wpsc_change_currency() {
 		return;
 	}
 
-	global $wpdb;
-
+	// it appears that what is called 'currencyid' here is really the country id
 	if ( is_numeric( $_POST['currencyid'] ) ) {
-		$currency_data = $wpdb->get_results( $wpdb->prepare( "SELECT `symbol`,`symbol_html`,`code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id`=%d LIMIT 1", $_POST['currencyid'] ), ARRAY_A );
+		$wpsc_country  = wpsc_get_country_object( $_POST['currencyid'] );
+
 		$price_out = null;
-		if ( $currency_data[0]['symbol'] != '' ) {
-			$currency_sign = $currency_data[0]['symbol_html'];
-		} else {
-			$currency_sign = $currency_data[0]['code'];
+
+		// we are going to look for currency code as html, if that not found, then the
+		// symbol, if that not cound we will go with the isocode
+		$currency_sign = $wpsc_country->get_currency_symbol_html();
+
+		if ( empty( $currency_sign ) ) {
+			$currency_sign = $wpsc_country->get_currency_symbol();
 		}
+
+		if ( empty( $currency_sign ) ) {
+			$currency_sign = $wpsc_country->get_currency_code();
+		}
+
 		echo $currency_sign;
 	}
 }

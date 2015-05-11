@@ -544,7 +544,6 @@ function form_paypal_express() {
 
 		// TODO verify that this query is correct, the WPSC_Countries call that repalced it was coded to duplicate the results, but
 		// why are currecies of inactive countries being returned??
-		//$old_currency_list = $wpdb->get_results( "SELECT DISTINCT `code`, `currency` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `code` IN ('" . implode( "','", $paypal_currency_list ) . "')", ARRAY_A );
 		$paypal_currency_list = array_map( 'esc_sql', $wpsc_gateways['wpsc_merchant_paypal_express']['supported_currencies']['currency_list'] );
 		$currency_list = WPSC_Countries::get_currencies( true );
 		$currency_codes_in_commmon = array_intersect( array_keys( $currency_list ), $paypal_currency_list );

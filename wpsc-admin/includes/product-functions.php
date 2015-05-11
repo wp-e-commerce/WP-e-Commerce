@@ -778,24 +778,37 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 
 }
 
-function wpsc_update_alt_product_currency($product_id, $newCurrency, $newPrice){
+/**
+ * @param int $product_id
+ * @param int $new_currency_country_id
+ * @param float $new_price
+ */
+function wpsc_update_alt_product_currency($product_id, $new_currency_country_id, $new_price ){
 	global $wpdb;
 
-	$old_curr = get_product_meta($product_id, 'currency',true);
-	$sql = $wpdb->prepare( "SELECT `isocode` FROM `".WPSC_TABLE_CURRENCY_LIST."` WHERE `id`= %d", $newCurrency );
-	$isocode = $wpdb->get_var($sql);
-
-	$newCurrency = 'currency';
-	$old_curr[$isocode] = $newPrice;
-	if(($newPrice != '') &&  ($newPrice > 0.00)){
-		update_product_meta($product_id, $newCurrency, $old_curr);
+	$old_currency_original_meta_value = get_product_meta( $product_id, 'currency', true );
+	if ( !is_array( $old_currency_original_meta_value ) ) {
+		$new_meta_value = array();
 	} else {
-		if((empty($old_curr[$isocode]) || 0.00 == $old_curr[$isocode]) && is_array($old_curr))
-			unset($old_curr[$isocode]);
-		update_product_meta($product_id, $newCurrency, $old_curr);
-
+		$new_meta_value = $old_currency_original_meta_value;
 	}
 
+	if ( !  empty( $new_currency_country_id ) ) {
+		$wpsc_country_new_currency = wpsc_get_country_object( $new_currency_country_id );
+		if ( $wpsc_country_new_currency ) {
+
+			$new_meta_value[ $wpsc_country_new_currency->get_isocode() ] = $new_price;
+
+			if ( ! empty( $new_price ) ) {
+				update_product_meta( $product_id, 'currency', $new_meta_value );
+			} else {
+				if ( ( empty( $new_meta_value[ $wpsc_country_new_currency->get_isocode() ] ) || 0.00 == $new_meta_value[ $wpsc_country_new_currency->get_isocode() ] ) && is_array( $new_meta_value ) ) {
+					unset( $new_meta_value[ $wpsc_country_new_currency->get_isocode() ] );
+				}
+				update_product_meta( $product_id, 'currency', $new_meta_value );
+			}
+		}
+	}
 }
 
  /**

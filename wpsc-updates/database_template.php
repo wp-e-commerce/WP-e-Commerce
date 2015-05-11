@@ -72,25 +72,6 @@ $wpsc_database_template[$table_name]['actions']['after']['all'] = "wpsc_add_chec
 $wpsc_database_template[$table_name]['previous_names'] = "{$wpdb->prefix}collect_data_forms";
 
 
-// code to create or update the {$wpdb->prefix}wpsc_currency_list table
-$table_name = WPSC_TABLE_CURRENCY_LIST; /* !wpsc_currency_list */
-$wpsc_database_template[$table_name]['columns']['id'] = "bigint(20) unsigned NOT NULL auto_increment";
-$wpsc_database_template[$table_name]['columns']['country'] = "varchar(255) NOT NULL DEFAULT '' ";
-$wpsc_database_template[$table_name]['columns']['isocode'] = "char(2) NULL DEFAULT '' ";
-$wpsc_database_template[$table_name]['columns']['currency'] = "varchar(255) NOT NULL DEFAULT '' ";
-$wpsc_database_template[$table_name]['columns']['symbol'] = "varchar(10) NOT NULL DEFAULT '' ";
-$wpsc_database_template[$table_name]['columns']['symbol_html'] = "varchar(10) NOT NULL DEFAULT '' ";
-$wpsc_database_template[$table_name]['columns']['code'] = "char(3) NOT NULL DEFAULT '' ";
-$wpsc_database_template[$table_name]['columns']['has_regions'] = "char(1) NOT NULL DEFAULT '0' ";
-$wpsc_database_template[$table_name]['columns']['tax'] = "varchar(8) NOT NULL DEFAULT '' ";
-$wpsc_database_template[$table_name]['columns']['continent'] = "varchar(20) NOT NULL DEFAULT '' ";
-$wpsc_database_template[$table_name]['columns']['visible'] = "varchar(1) NOT NULL DEFAULT '1' ";
-$wpsc_database_template[$table_name]['indexes']['PRIMARY'] = "PRIMARY KEY  ( `id` )";
-$wpsc_database_template[$table_name]['actions']['after']['all'] = "wpsc_add_currency_list";
-$wpsc_database_template[$table_name]['previous_names'] = "{$wpdb->prefix}currency_list";
-
-
-
 // code to create or update the {$wpdb->prefix}wpsc_download_status table
 $table_name = WPSC_TABLE_DOWNLOAD_STATUS;
 $wpsc_database_template[$table_name]['columns']['id'] = "bigint(20) unsigned NOT NULL auto_increment";
@@ -153,20 +134,6 @@ $wpsc_database_template[$table_name]['indexes']['PRIMARY'] = "PRIMARY KEY  ( `id
 $wpsc_database_template[$table_name]['indexes']['sessionid'] = "UNIQUE KEY `sessionid` ( `sessionid` )";
 $wpsc_database_template[$table_name]['indexes']['gateway'] = " KEY `gateway` ( `gateway` )";
 $wpsc_database_template[$table_name]['previous_names'] = "{$wpdb->prefix}purchase_logs";
-
-
-// code to create or update the {$wpdb->prefix}wpsc_region_tax table
-$table_name = WPSC_TABLE_REGION_TAX;  /* !wpsc_region_tax */
-$wpsc_database_template[$table_name]['columns']['id'] = "bigint(20) unsigned NOT NULL auto_increment";
-$wpsc_database_template[$table_name]['columns']['country_id'] = "bigint(20) unsigned NOT NULL DEFAULT '0' ";
-$wpsc_database_template[$table_name]['columns']['name'] = "varchar(64) NOT NULL DEFAULT '' ";
-$wpsc_database_template[$table_name]['columns']['code'] = "char(2) NOT NULL DEFAULT '' ";
-$wpsc_database_template[$table_name]['columns']['tax'] = "float NOT NULL DEFAULT '0' ";
-$wpsc_database_template[$table_name]['indexes']['PRIMARY'] = "PRIMARY KEY  ( `id` )";
-$wpsc_database_template[$table_name]['indexes']['country_id'] = " KEY `country_id` ( `country_id` )";
-$wpsc_database_template[$table_name]['actions']['after']['all'] = "wpsc_add_region_list";
-$wpsc_database_template[$table_name]['previous_names'] = "{$wpdb->prefix}region_tax";
-
 
 // code to create or update the {$wpdb->prefix}wpsc_submited_form_data table
 $table_name = WPSC_TABLE_SUBMITTED_FORM_DATA; /* !wpsc_submitted_form_data */

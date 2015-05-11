@@ -36,7 +36,6 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/stats.functions.php'             
 require_once( WPSC_FILE_PATH . '/wpsc-includes/meta.functions.php'                  );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/productfeed.php'                     );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/image_processing.php'                );
-require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-data-map.class.php'             );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-country.class.php'              );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-countries.class.php'            );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-region.class.php'               );
@@ -49,6 +48,8 @@ require_once( WPSC_FILE_PATH . '/wpsc-includes/purchase-log.class.php'          
 require_once( WPSC_FILE_PATH . '/wpsc-includes/checkout-form.class.php'             );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/checkout-form-data.class.php'        );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-theme-engine-bootstrap.php'     );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/country-and-region-data.php'         );
+require_once( WPSC_FILE_PATH . '/wpsc-includes/country-api.php'                     );
 
 do_action( 'wpsc_loaded_module_'. basename( __FILE__ ) );
 

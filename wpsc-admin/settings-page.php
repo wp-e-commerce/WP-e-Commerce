@@ -600,51 +600,38 @@ final class WPSC_Settings_Page {
 		if ( $_POST['countrylist2'] != null || !empty($selected) ) {
 			$AllSelected = false;
 			if ( $selected == 'all' ) {
-				$wpdb->query( "UPDATE `" . WPSC_TABLE_CURRENCY_LIST . "` SET visible = '1'" );
+				wpsc_set_all_countries_visibility( true );
 				$AllSelected = true;
 			}
 			if ( $selected == 'none' ) {
-				$wpdb->query( "UPDATE `" . WPSC_TABLE_CURRENCY_LIST . "` SET visible = '0'" );
+				wpsc_set_all_countries_visibility( false );
 				$AllSelected = true;
 			}
 			if ( $AllSelected != true ) {
-				$countrylist = $wpdb->get_col( "SELECT id FROM `" . WPSC_TABLE_CURRENCY_LIST . "` ORDER BY country ASC " );
+				$all_countries = wpsc_get_all_countries();
+
+				// all we need are the ids we used weh creating the web page
+				$all_country_ids = array_keys( $all_countries );
+
+				$country_ids_posted = array_map( 'intval', $_POST['countrylist2'] );
+
 				//find the countries not selected
-				$unselectedCountries = array_diff( $countrylist, $_POST['countrylist2'] );
-				foreach ( $unselectedCountries as $unselected ) {
-					$wpdb->update(
-						WPSC_TABLE_CURRENCY_LIST,
-						array(
-						    'visible' => 0
-						),
-						array(
-						    'id' => $unselected
-						),
-						'%d',
-						'%d'
-					    );
+				$unselected_country_ids = array_diff( $all_country_ids, $country_ids_posted );
+
+				foreach ( $unselected_country_ids as $unselected_country_id ) {
+					$all_countries[$unselected_country_id]->set_visible( false );
 				}
 
 				//find the countries that are selected
-				$selectedCountries = array_intersect( $countrylist, $_POST['countrylist2'] );
-				foreach ( $selectedCountries as $selected ) {
-					$wpdb->update(
-						WPSC_TABLE_CURRENCY_LIST,
-						array(
-						    'visible' => 1
-						),
-						array(
-						    'id' => $selected
-						),
-						'%d',
-						'%d'
-					    );
+				$selected_country_ids = array_intersect( $all_country_ids, $country_ids_posted );
+				foreach ( $selected_country_ids as $selected_country_id ) {
+					$all_countries[$selected_country_id]->set_visible( true );
 				}
 			}
 
-			WPSC_Countries::clear_cache();
 			wpsc_core_flush_temporary_data();
 		}
+
 		$previous_currency = get_option( 'currency_type' );
 
 		//To update options
@@ -670,7 +657,10 @@ final class WPSC_Settings_Page {
 		}
 
 		if ( $previous_currency != get_option( 'currency_type' ) ) {
-			$currency_code = $wpdb->get_var( "SELECT `code` FROM `" . WPSC_TABLE_CURRENCY_LIST . "` WHERE `id` IN ('" . absint( get_option( 'currency_type' ) ) . "')" );
+			$wpsc_currency_type_country = wpsc_get_currency_type_country_object();
+			if ( $wpsc_currency_type_country ) {
+				$currency_code = $wpsc_currency_type_country->get_currency_code();
+			}
 
 			$selected_gateways = get_option( 'custom_gateway_options' );
 			$already_changed = array( );

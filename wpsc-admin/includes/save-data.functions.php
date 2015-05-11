@@ -554,13 +554,14 @@ function wpsc_save_category_set( $category_id, $tt_id ) {
 
 		if ( ! empty( $_POST['countrylist2'] ) && ( $category_id > 0 ) ) {
 			$AllSelected = false;
-			$countryList = $wpdb->get_col( "SELECT `id` FROM  `" . WPSC_TABLE_CURRENCY_LIST . "`" );
+			$countryList = wpsc_get_country_objects();
 
 			if ( $AllSelected != true ){
+				$all_counntry_ids = array_keys( $countryList );
 				$posted_countries    = array_map( 'intval', $_POST['countrylist2'] );
-				$unselectedCountries = array_diff( $countryList, $posted_countries );
+				$unselectedCountries = array_diff( $all_counntry_ids, $posted_countries );
 				//find the countries that are selected
-				$selectedCountries = array_intersect( $countryList, $posted_countries );
+				$selectedCountries = array_intersect( $all_counntry_ids, $posted_countries );
 				wpsc_update_categorymeta( $category_id, 'target_market', $selectedCountries );
 			}
 
