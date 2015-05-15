@@ -954,4 +954,31 @@ function _wpsc_clear_wp_cache_on_version_change() {
 	}
 }
 
-add_action( 'admin_init', '_wpsc_clear_wp_cache_on_version_change', 1 );
+add_action( 'admin_init', '_wpsc_clear_wp_cache_on_version_change', 1
+
+/**
+ * Adds custom WP eCommerce tables to `tables_to_repair` array.
+ *
+ * WordPress provides a link, `admin_url( 'maint/repair.php' )`, that allows users to repair database tables.
+ * We find that this becomes necessary often times when visitor/visitor meta tables become corrupt.
+ * Symptoms of a corrupt visitor/meta table include disappearing carts, refreshing checkout pages, etc.
+ *
+ * In a future version, we will likely have a `System` page that would include a link to the repair.php page.
+ *
+ * @since  4.0
+ *
+ * @param  array $tables Core tables
+ *
+ * @return array $tables Core + WP eCommerce tables
+ */
+function wpsc_add_tables_to_repair( $tables ) {
+	global $wpec;
+
+	if ( ! defined( 'WP_ALLOW_REPAIR' ) && apply_filters( 'wpsc_tables_need_repair', true ) ) {
+		define( 'WP_ALLOW_REPAIR', true );
+	}
+
+	return array_merge( $wpec->setup_table_names(), $tables );
+}
+
+add_filter( 'tables_to_repair', 'wpsc_add_tables_to_repair' );

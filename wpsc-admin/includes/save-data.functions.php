@@ -98,7 +98,7 @@ function wpsc_custom_category_column_data( $string, $column_name, $term_id ) {
 
 		$format = '<img src="%s" title="%s" alt="%2$s" width="30" height="30" />';
 		if ( ! empty( $image ) ) {
-			$string = sprintf( $format, WPSC_CORE_IMAGES_URL . $image, esc_attr( $term->name ) );
+			$string = sprintf( $format, WPSC_CATEGORY_URL . $image, esc_attr( $term->name ) );
 		} else {
 			$string = sprintf( $format, WPSC_CORE_IMAGES_URL . '/no-image-uploaded.gif', esc_attr( $term->name ) );
 		}
