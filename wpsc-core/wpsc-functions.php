@@ -954,7 +954,7 @@ function _wpsc_clear_wp_cache_on_version_change() {
 	}
 }
 
-add_action( 'admin_init', '_wpsc_clear_wp_cache_on_version_change', 1
+add_action( 'admin_init', '_wpsc_clear_wp_cache_on_version_change', 1 );
 
 /**
  * Adds custom WP eCommerce tables to `tables_to_repair` array.
