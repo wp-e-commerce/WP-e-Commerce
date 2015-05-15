@@ -242,7 +242,7 @@ class Sputnik_Admin {
 		if (!empty($args)) {
 			$url = add_query_arg( $args, $url );
 		}
-		return esc_url( $url );
+		return esc_url_raw( $url );
 	}
 
 	public static function build_account_url($args = array()) {
@@ -250,7 +250,7 @@ class Sputnik_Admin {
 		if (!empty($args)) {
 			$url = add_query_arg( $args, $url );
 		}
-		return esc_url( $url );
+		return esc_url_raw( $url );
 	}
 
 	public static function page_styles() {
@@ -811,9 +811,9 @@ class Sputnik_Admin {
 		// Update Sputnik account to include newly purchased plugin
 		Sputnik::update_account();
 
-		$install_url = self::build_url(array('install' => $product_slug));
+		$install_url = self::build_url( array( 'install' => $product_slug ) );
 		$install_url = add_query_arg('_wpnonce', wp_create_nonce('sputnik_install-plugin_' . $product_slug), $install_url);
-		$install_url = esc_url( add_query_arg(array('TB_iframe' => true), $install_url) );
+		$install_url = add_query_arg( array( 'TB_iframe' => true ), $install_url );
 
 		self::iframe_closer( self::build_url( array('run-installer' => urlencode( $install_url ) ) ), __( 'Installing ... ', 'wpsc' ) );
 	}
