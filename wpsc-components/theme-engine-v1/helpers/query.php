@@ -295,8 +295,9 @@ function wpsc_get_page_slug( $shortcode ) {
  * @return array Array of query variables
  */
 function wpsc_product_sort_order_query_vars( $orderby = null ) {
-	if ( is_null($orderby) )
+	if ( is_null( $orderby ) ) {
 		$orderby = get_option( 'wpsc_sort_by' );
+	}
 
 	$query_vars = array();
 
