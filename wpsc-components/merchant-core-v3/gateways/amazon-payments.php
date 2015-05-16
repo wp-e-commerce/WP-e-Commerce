@@ -630,6 +630,9 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	 * @return wp_error or parsed response array
 	 */
 	public function api_request( $args ) {
+
+		require_once WPSC_MERCHANT_V3_SDKS_PATH . '/amazon-payments/sdk/ResponseParser.php';
+
 		$defaults = array(
 			'AWSAccessKeyId' => $this->mws_access_key,
 			'SellerId'       => $this->seller_id
@@ -645,7 +648,11 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		);
 
 		if ( ! is_wp_error( $response ) ) {
-			$response = \PayWithAmazon\ResponseParser( $response['body'] )->toArray();
+			$response_object = array();
+			$response_object['ResponseBody'] = $response['body'];
+			$response_object['Status']       = wp_remote_retrieve_response_code( $response );
+			$response_parser = new PayWithAmazon\ResponseParser( $response_object );
+			$response = $response_parser->toArray();
 		}
 
 		return $response;
