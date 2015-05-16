@@ -233,15 +233,13 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			$response = $this->api_request( array(
 				'Action'                                                       => 'SetOrderReferenceDetails',
 				'AmazonOrderReferenceId'                                       => $amazon_reference_id,
-				'OrderReferenceAttributes.OrderTotal.Amount'                   => $order->get_total(),
+				'OrderReferenceAttributes.OrderTotal.Amount'                   => $order->get( 'totalprice' ),
 				'OrderReferenceAttributes.OrderTotal.CurrencyCode'             => strtoupper( $this->get_currency_code() ),
 				'OrderReferenceAttributes.SellerNote'                          => sprintf( __( 'Order %s from %s.', 'wpsc' ), $order->get( 'id' ), urlencode( remove_accents( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) ) ) ),
 				'OrderReferenceAttributes.SellerOrderAttributes.SellerOrderId' => $order->get( 'id' ),
 				'OrderReferenceAttributes.SellerOrderAttributes.StoreName'     => remove_accents( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) ),
-				'OrderReferenceAttributes.PlatformId'                          => 'WPECOMMERCE'
+				'OrderReferenceAttributes.PlatformId'                          => 'A2Z8DY3R4G08IM'
 			) );
-
-			die( var_dump( $response ) );
 
 			if ( is_wp_error( $response ) ) {
 				throw new Exception( $response->get_error_message() );
@@ -282,6 +280,8 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 				$shipping_last  = array_pop( $shipping_name );
 				$billing_first  = implode( ' ', $billing_name );
 				$shipping_first = implode( ' ', $shipping_name );
+
+
 
 				update_post_meta( $order_id, '_billing_first_name', $billing_first );
 				update_post_meta( $order_id, '_billing_last_name', $billing_last );
