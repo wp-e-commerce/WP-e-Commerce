@@ -383,7 +383,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		$this->go_to_transaction_results();
 
 		} catch( Exception $e ) {
-			wc_add_notice( __( 'Error:', 'wpsc' ) . ' ' . $e->getMessage(), 'error' );
+			WPSC_Message_Collection::get_instance()->add( $e->getMessage(), 'error', 'main', 'flash' );
 			return;
 		}
 
