@@ -1369,7 +1369,3 @@ class WPSC_Amazon_Payments_Advanced_Order_Handler {
 		}
     }
 }
-
-add_action( 'wpsc_submit_checkout_gateway', function() {
-	die( var_dump( $_POST ) );
-} );
