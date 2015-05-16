@@ -34,7 +34,6 @@ class WPSC_Purchase_Log {
 		'gateway',
 		'billing_country',
 		'shipping_country',
-		'base_shipping',
 		'email_sent',
 		'stock_adjusted',
 		'discount_data',
@@ -66,6 +65,37 @@ class WPSC_Purchase_Log {
 	);
 
 	/**
+	 * Names of column that requires escaping values as float before being inserted
+	 * into the database
+	 *
+	 * @static
+	 * @since 4.0
+	 * @var array
+	 */
+	private static $float_cols = array(
+		'totalprice',
+		'base_shipping',
+		'discount_value',
+		'wpec_taxes_total',
+		'wpec_taxes_rate',
+	);
+
+	/**
+	 * Array of metadata
+	 *
+	 * @static
+	 * @since 4.0
+	 * @var array
+	 */
+	private static $metadata = array(
+		'totalprice',
+		'base_shipping',
+		'discount_value',
+		'wpec_taxes_total',
+		'wpec_taxes_rate',
+	);
+
+	/**
 	 * Get the SQL query format for a column
 	 *
 	 * @since 3.8.9
@@ -73,11 +103,13 @@ class WPSC_Purchase_Log {
 	 * @return string      Placeholder
 	 */
 	private static function get_column_format( $col ) {
-		if ( in_array( $col, self::$string_cols ) )
+		if ( in_array( $col, self::$string_cols ) ) {
 			return '%s';
+		}
 
-		if ( in_array( $col, self::$int_cols ) )
+		if ( in_array( $col, self::$int_cols ) ) {
 			return '%d';
+		}
 
 		return '%f';
 	}
