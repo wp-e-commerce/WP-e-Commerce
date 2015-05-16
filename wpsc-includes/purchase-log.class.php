@@ -511,8 +511,9 @@ class WPSC_Purchase_Log {
 	 * @param string $col Optional. Defaults to 'id'.
 	 */
 	public function __construct( $value = false, $col = 'id' ) {
-		if ( false === $value )
+		if ( false === $value ) {
 			return;
+		}
 
 		if ( is_array( $value ) ) {
 			$this->set( $value );
@@ -545,7 +546,7 @@ class WPSC_Purchase_Log {
 		// cache exists
 		if ( $this->data ) {
 			$this->fetched = true;
-			$this->exists = true;
+			$this->exists  = true;
 			return;
 		}
 	}
@@ -592,9 +593,16 @@ class WPSC_Purchase_Log {
 	}
 
 	private function set_meta_props() {
+
+		$this->meta_data = wpsc_get_purchase_custom( $this->get( 'id' ) );
+
 		$this->set_total_shipping();
 		$this->set_gateway_name();
 		$this->set_shipping_method_names();
+	}
+
+	public function get_meta() {
+		return (array) apply_filters( 'wpsc_purchase_log_meta_data', $this->meta_data );
 	}
 
 	/**
@@ -608,13 +616,15 @@ class WPSC_Purchase_Log {
 	private function fetch() {
 		global $wpdb;
 
-		if ( $this->fetched )
+		if ( $this->fetched ) {
 			return;
+		}
 
 		// If $this->args is not set yet, it means the object contains a new unsaved
 		// row so we don't need to fetch from DB
-		if ( ! $this->args['col'] || ! $this->args['value'] )
+		if ( ! $this->args['col'] || ! $this->args['value'] ) {
 			return;
+		}
 
 		extract( $this->args );
 
@@ -624,8 +634,8 @@ class WPSC_Purchase_Log {
 		$this->exists = false;
 
 		if ( $data = $wpdb->get_row( $sql, ARRAY_A ) ) {
-			$this->exists = true;
-			$this->data = apply_filters( 'wpsc_purchase_log_data', $data );
+			$this->exists        = true;
+			$this->data          = apply_filters( 'wpsc_purchase_log_data', $data );
 			$this->cart_contents = $this->get_cart_contents();
 
 			$this->set_meta_props();
@@ -661,15 +671,17 @@ class WPSC_Purchase_Log {
 	 */
 	public function get( $key ) {
 		// lazy load the purchase log row if it's not fetched from the database yet
-		if ( empty( $this->data ) || ! array_key_exists( $key, $this->data ) )
+		if ( empty( $this->data ) || ! array_key_exists( $key, $this->data ) ) {
 			$this->fetch();
+		}
 
-		if ( isset( $this->data[$key] ) )
-			$value = $this->data[$key];
-		elseif ( isset( $this->meta_data[$key] ) )
-			$value = $this->meta_data[$key];
-		else
+		if ( isset( $this->data[ $key ] ) ) {
+			$value = $this->data[ $key ];
+		} else if ( isset( $this->meta_data[ $key ] ) ) {
+			$value = $this->meta_data[ $key ];
+		} else {
 			$value = null;
+		}
 
 		return apply_filters( 'wpsc_purchase_log_get_property', $value, $key, $this );
 	}
@@ -698,15 +710,17 @@ class WPSC_Purchase_Log {
 	 * @return array
 	 */
 	public function get_data() {
-		if ( empty( $this->data ) )
+		if ( empty( $this->data ) ) {
 			$this->fetch();
+		}
 
 		return apply_filters( 'wpsc_purchase_log_get_data', $this->data, $this );
 	}
 
 	public function get_gateway_data( $from_currency = false, $to_currency = false ) {
-		if ( ! $this->exists() )
+		if ( ! $this->exists() ) {
 			return array();
+		}
 
 		$subtotal = 0;
 		$shipping = wpsc_convert_currency( (float) $this->get( 'base_shipping' ), $from_currency, $to_currency );
@@ -739,8 +753,9 @@ class WPSC_Purchase_Log {
 		if ( $from_currency ) {
 			// adjust total amount in case there's slight decimal error
 			$total = $subtotal + $shipping + $this->gateway_data['tax'] - $this->gateway_data['discount'];
-			if ( $this->gateway_data['amount'] != $total )
+			if ( $this->gateway_data['amount'] != $total ) {
 				$this->gateway_data['amount'] = $total;
+			}
 		}
 
 		$this->gateway_data = apply_filters( 'wpsc_purchase_log_gateway_data', $this->gateway_data, $this->get_data() );
@@ -750,6 +765,8 @@ class WPSC_Purchase_Log {
 	/**
 	 * Sets a property to a certain value. This function accepts a key and a value
 	 * as arguments, or an associative array containing key value pairs.
+	 *
+	 * Loops through data, comparing against database, and saves as meta if not found in purchase log table.
 	 *
 	 * @access public
 	 * @since 3.8.9
@@ -764,8 +781,9 @@ class WPSC_Purchase_Log {
 		if ( is_array( $key ) ) {
 			$properties = $key;
 		} else {
-			if ( is_null( $value ) )
+			if ( is_null( $value ) ) {
 				return $this;
+			}
 
 			$properties = array( $key => $value );
 		}
@@ -775,12 +793,22 @@ class WPSC_Purchase_Log {
 		if ( array_key_exists( 'processed', $properties ) ) {
 			$this->previous_status = $this->get( 'processed' );
 
-			if ( $properties['processed'] != $this->previous_status )
+			if ( $properties['processed'] != $this->previous_status ) {
 				$this->is_status_changed = true;
+			}
 		}
 
-		if ( ! is_array( $this->data ) )
+		if ( ! is_array( $this->data ) ) {
 			$this->data = array();
+		}
+
+		foreach ( $properties as $key => $value ) {
+			if ( ! in_array( $value, array_merge( self::$string_cols, self::$int_cols, self::$float_cols ) ) ) {
+				$this->meta_data[ $key ] = $value;
+				unset( $properties[ $key ] );
+			}
+
+		}
 
 		$this->data = array_merge( $this->data, $properties );
 		return $this;
@@ -867,9 +895,31 @@ class WPSC_Purchase_Log {
 			do_action( 'wpsc_update_purchase_log_status', $this->get( 'id' ), $current_status, $previous_status, $this );
 		}
 
+		if ( ! empty( $this->meta_data ) ) {
+			$this->save_meta_data();
+		}
+
 		do_action( 'wpsc_purchase_log_save', $this );
 
 		return $result;
+	}
+
+	/**
+	 * Save meta data for purchase log, if any was set via set().
+	 *
+	 * @since  4.0
+	 * @return void
+	 */
+	private function save_meta_data() {
+		do_action( 'wpsc_purchase_log_pre_save_meta', $this );
+
+		$meta = $this->get_meta();
+
+		foreach ( $meta as $key => $value ) {
+			wpsc_update_purchase_meta( $this->get( 'id' ), $key, $value );
+		}
+
+		do_action( 'wpsc_purchase_log_save_meta', $this );
 	}
 
 	private function update_downloadable_status() {
