@@ -598,7 +598,7 @@ class WPSC_Purchase_Log {
 
 	private function set_meta_props() {
 
-		$this->meta_data = wpsc_get_purchase_custom( $this->get( 'id' ) );
+		$this->meta_data = wpsc_get_purchase_meta( $this->get( 'id' ), '', true );
 
 		$this->set_total_shipping();
 		$this->set_gateway_name();
@@ -812,7 +812,7 @@ class WPSC_Purchase_Log {
 		}
 
 		foreach ( $properties as $key => $value ) {
-			if ( ! in_array( $value, array_merge( self::$string_cols, self::$int_cols, self::$float_cols ) ) ) {
+			if ( ! in_array( $key, array_merge( self::$string_cols, self::$int_cols, self::$float_cols ) ) ) {
 				$this->meta_data[ $key ] = $value;
 				unset( $properties[ $key ] );
 			}

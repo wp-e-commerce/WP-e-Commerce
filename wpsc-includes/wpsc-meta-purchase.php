@@ -34,7 +34,7 @@ function wpsc_add_purchase_meta( $purchase_id, $meta_key, $meta_value, $unique =
  * @return bool False for failure. True for success.
  */
 function wpsc_delete_purchase_meta( $purchase_id, $meta_key, $meta_value = '' ) {
-	return delete_metadata( 'wpsc_purchase', $purchase_id , $meta_key , $meta_value );
+	return delete_metadata( 'wpsc_purchase', $purchase_id, $meta_key, $meta_value );
 }
 
 /**
@@ -157,6 +157,7 @@ function wpsc_get_purchase_custom_values( $key = '', $purchase_id = 0 ) {
 	if ( ! $key ) {
 		return null;
 	}
+
 	$custom = wpsc_get_purchase_custom( $purchase_id );
 
 	return isset( $custom[ $key ] ) ? $custom[ $key ] : null;
