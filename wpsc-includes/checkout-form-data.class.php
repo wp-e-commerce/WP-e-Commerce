@@ -104,7 +104,7 @@ class WPSC_Checkout_Form_Data {
 	/**
 	 * Set specific database fields.
 	 *
-	 * @param string|int $key   Should be either form ID or unique name.
+	 * @param string|int $key   Expects either form ID or unique name.
 	 * @param string     $value Value to be set for field.
 	 *
 	 * @since  4.0

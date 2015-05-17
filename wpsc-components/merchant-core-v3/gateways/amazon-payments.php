@@ -331,9 +331,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	}
 
 	private function set_customer_address( $buyer, $address ) {
-
-		$checkout_form_fields = WPSC_Checkout_Form::get()->get_fields();
-		$form_data            = new WPSC_Checkout_Form_Data( $this->purchase_log, $fields );
+		$checkout_form_data = new WPSC_Checkout_Form_Data( $this->purchase_log->get( 'id' ) );
 
 		$billing_name   = explode( ' ' , $buyer['Name'] );
 		$shipping_name  = explode( ' ' , $address['Name'] );
@@ -344,14 +342,14 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		$billing_first  = implode( ' ', $billing_name );
 		$shipping_first = implode( ' ', $shipping_name );
 
-		update_post_meta( $order_id, '_billing_first_name', $billing_first );
-		update_post_meta( $order_id, '_billing_last_name' , $billing_last );
-		update_post_meta( $order_id, '_billing_email'     , $buyer['Email'] );
+		$checkout_form_data->set( 'billingfirstname', $billing_first );
+		$checkout_form_data->set( 'billinglastname' , $billing_last );
+		$checkout_form_data->set( 'billingemail'    , $buyer['Email'] );
 
 		if ( isset( $buyer['Phone'] ) ) {
-			update_post_meta( $order_id, '_billing_phone', $buyer['Phone'] );
+			$checkout_form_data->set( 'billingphone', $buyer['Phone'] );
 		} else if ( isset( $address['Phone'] ) ) {
-			update_post_meta( $order_id, '_billing_phone', $address['Phone'] );
+			$checkout_form_data->set( 'billingphone', $address['Phone'] );
 		}
 
 		update_post_meta( $order_id, '_shipping_first_name', $shipping_first );
