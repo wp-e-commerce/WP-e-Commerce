@@ -192,11 +192,15 @@ class WPSC_Purchase_Log {
 				if ( $product->post->_wpsc_stats === '' ) {
 					$needs_fetching[] = $product->post->ID;
 				} else {
+
 					// tally up the sales and earnings if this one has cache already
-						$prod_meta          = get_post_meta( $product->post->ID, '_wpsc_stats', true );
+					$prod_meta = get_post_meta( $product->post->ID, '_wpsc_stats', true );
+
+					if ( isset( $prod_meta['sales'] ) && isset( $prod_meta['earnings'] ) ) {
 						$stats['sales']    += $prod_meta['sales'];
 						$stats['earnings'] += $prod_meta['earnings'];
-						$needs_fetching[]   = $product->post->ID;
+					}
+					$needs_fetching[]   = $product->post->ID;
 				}
 			}
 		}

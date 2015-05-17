@@ -37,13 +37,13 @@ function _wpsc_action_update_product_stats( $log_id, $new_status, $old_status, $
 			$diff_sales    = $yay_or_boo * (int) $cart_item->quantity;
 			$diff_earnings = $yay_or_boo * (int) $cart_item->price * (int) $cart_item->quantity;
 
-			$product->sales += $diff_sales;
+			$product->sales    += $diff_sales;
 			$product->earnings += $diff_earnings;
 
 			// if this product has parent, make the same changes to the parent
 			if ( $product->post->post_parent ) {
 				$parent = WPSC_Product::get_instance( $product->post->post_parent );
-				$parent->sales += $diff_sales;
+				$parent->sales    += $diff_sales;
 				$parent->earnings += $diff_earnings;
 			}
 		}
