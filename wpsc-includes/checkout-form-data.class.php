@@ -110,6 +110,7 @@ class WPSC_Checkout_Form_Data {
 		$sql = $wpdb->prepare( "DELETE FROM " . WPSC_TABLE_SUBMITTED_FORM_DATA . " WHERE log_id = %d", $log_id );
 		$wpdb->query( $sql );
 		$customer_details = array();
+
 		foreach ( $fields as $field ) {
 			if ( $field->type == 'heading' ) {
 				continue;

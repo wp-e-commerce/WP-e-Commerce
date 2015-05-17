@@ -270,74 +270,15 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			) );
 
 			if ( ! is_wp_error( $response ) && isset( $response['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['Destination']['PhysicalDestination'] ) ) {
-				$buyer          = $response['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['Buyer'];
-				$address        = $response['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['Destination']['PhysicalDestination'];
-				$billing_name   = explode( ' ' , $buyer['Name'] );
-				$shipping_name  = explode( ' ' , $address['Name'] );
 
-				// Get first and last names
-				$billing_last   = array_pop( $billing_name );
-				$shipping_last  = array_pop( $shipping_name );
-				$billing_first  = implode( ' ', $billing_name );
-				$shipping_first = implode( ' ', $shipping_name );
+				$buyer   = $response['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['Buyer'];
+				$address = $response['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['Destination']['PhysicalDestination'];
 
-
-
-				update_post_meta( $order_id, '_billing_first_name', $billing_first );
-				update_post_meta( $order_id, '_billing_last_name', $billing_last );
-				update_post_meta( $order_id, '_billing_email', $buyer['Email'] );
-
-				if ( isset( $buyer['Phone'] ) )
-					update_post_meta( $order_id, '_billing_phone', $buyer['Phone'] );
-				elseif ( isset( $address['Phone'] ) )
-					update_post_meta( $order_id, '_billing_phone', $address['Phone'] );
-
-				update_post_meta( $order_id, '_shipping_first_name', $shipping_first );
-				update_post_meta( $order_id, '_shipping_last_name', $shipping_last );
-
-				// Format address and map to WC fields
-				$address_lines = array();
-
-				if ( ! empty( $address['AddressLine1'] ) ) {
-					$address_lines[] = $address['AddressLine1'];
-				}
-				if ( ! empty( $address['AddressLine2'] ) ) {
-					$address_lines[] = $address['AddressLine2'];
-				}
-				if ( ! empty( $address['AddressLine3'] ) ) {
-					$address_lines[] = $address['AddressLine3'];
-				}
-
-				if ( 3 === sizeof( $address_lines ) ) {
-					update_post_meta( $order_id, '_shipping_company', $address_lines[0] );
-					update_post_meta( $order_id, '_shipping_address_1', $address_lines[1] );
-					update_post_meta( $order_id, '_shipping_address_2', $address_lines[2] );
-				} elseif ( 2 === sizeof( $address_lines ) ) {
-					update_post_meta( $order_id, '_shipping_address_1', $address_lines[0] );
-					update_post_meta( $order_id, '_shipping_address_2', $address_lines[1] );
-				} elseif ( sizeof( $address_lines ) ) {
-					update_post_meta( $order_id, '_shipping_address_1', $address_lines[0] );
-				}
-
-				if ( isset( $address['City'] ) ) {
-					update_post_meta( $order_id, '_shipping_city', $address['City'] );
-				}
-
-				if ( isset( $address['PostalCode'] ) ) {
-					update_post_meta( $order_id, '_shipping_postcode', $address['PostalCode'] );
-				}
-
-				if ( isset( $address['StateOrRegion'] ) ) {
-					update_post_meta( $order_id, '_shipping_state', $address['StateOrRegion'] );
-				}
-
-				if ( isset( $address['CountryCode'] ) ) {
-					update_post_meta( $order_id, '_shipping_country', $address['CountryCode'] );
-				}
+				$this->set_customer_address( $buyer, $address );
 			}
 
 			// Store reference ID in the order
-			update_post_meta( $order_id, 'amazon_reference_id', $amazon_reference_id );
+			$order->set( 'amazon_reference_id', $amazon_reference_id )->save();
 
 			switch ( $this->payment_capture ) {
 				case 'manual' :
@@ -385,6 +326,73 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		} catch( Exception $e ) {
 			WPSC_Message_Collection::get_instance()->add( $e->getMessage(), 'error', 'main', 'flash' );
 			return;
+		}
+
+	}
+
+	private function set_customer_address( $buyer, $address ) {
+
+		$checkout_form_fields = WPSC_Checkout_Form::get();
+		$billing_name   = explode( ' ' , $buyer['Name'] );
+		$shipping_name  = explode( ' ' , $address['Name'] );
+
+		// Get first and last names
+		$billing_last   = array_pop( $billing_name );
+		$shipping_last  = array_pop( $shipping_name );
+		$billing_first  = implode( ' ', $billing_name );
+		$shipping_first = implode( ' ', $shipping_name );
+
+		update_post_meta( $order_id, '_billing_first_name', $billing_first );
+		update_post_meta( $order_id, '_billing_last_name' , $billing_last );
+		update_post_meta( $order_id, '_billing_email'     , $buyer['Email'] );
+
+		if ( isset( $buyer['Phone'] ) ) {
+			update_post_meta( $order_id, '_billing_phone', $buyer['Phone'] );
+		} else if ( isset( $address['Phone'] ) ) {
+			update_post_meta( $order_id, '_billing_phone', $address['Phone'] );
+		}
+
+		update_post_meta( $order_id, '_shipping_first_name', $shipping_first );
+		update_post_meta( $order_id, '_shipping_last_name' , $shipping_last );
+
+		// Format address and map to WC fields
+		$address_lines = array();
+
+		if ( ! empty( $address['AddressLine1'] ) ) {
+			$address_lines[] = $address['AddressLine1'];
+		}
+		if ( ! empty( $address['AddressLine2'] ) ) {
+			$address_lines[] = $address['AddressLine2'];
+		}
+		if ( ! empty( $address['AddressLine3'] ) ) {
+			$address_lines[] = $address['AddressLine3'];
+		}
+
+		if ( 3 === sizeof( $address_lines ) ) {
+			update_post_meta( $order_id, '_shipping_company', $address_lines[0] );
+			update_post_meta( $order_id, '_shipping_address_1', $address_lines[1] );
+			update_post_meta( $order_id, '_shipping_address_2', $address_lines[2] );
+		} elseif ( 2 === sizeof( $address_lines ) ) {
+			update_post_meta( $order_id, '_shipping_address_1', $address_lines[0] );
+			update_post_meta( $order_id, '_shipping_address_2', $address_lines[1] );
+		} elseif ( sizeof( $address_lines ) ) {
+			update_post_meta( $order_id, '_shipping_address_1', $address_lines[0] );
+		}
+
+		if ( isset( $address['City'] ) ) {
+			update_post_meta( $order_id, '_shipping_city', $address['City'] );
+		}
+
+		if ( isset( $address['PostalCode'] ) ) {
+			update_post_meta( $order_id, '_shipping_postcode', $address['PostalCode'] );
+		}
+
+		if ( isset( $address['StateOrRegion'] ) ) {
+			update_post_meta( $order_id, '_shipping_state', $address['StateOrRegion'] );
+		}
+
+		if ( isset( $address['CountryCode'] ) ) {
+			update_post_meta( $order_id, '_shipping_country', $address['CountryCode'] );
 		}
 
 	}

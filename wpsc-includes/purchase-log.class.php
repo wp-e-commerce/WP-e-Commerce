@@ -602,6 +602,11 @@ class WPSC_Purchase_Log {
 	}
 
 	public function get_meta() {
+
+		if ( empty( $this->data ) && empty( $this->meta_data ) ) {
+			$this->fetch();
+		}
+
 		return (array) apply_filters( 'wpsc_purchase_log_meta_data', $this->meta_data );
 	}
 
