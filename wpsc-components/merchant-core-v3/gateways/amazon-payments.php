@@ -223,7 +223,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 		$order = $this->purchase_log;
 
-		$order->set( 'processed', WPSC_PAYMENT_STATUS_RECEIVED )->save();
+		$order->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT )->save();
 
 		$amazon_reference_id = isset( $_POST['amazon_reference_id'] ) ? sanitize_text_field( $_POST['amazon_reference_id'] ) : '';
 
@@ -592,7 +592,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		try {
 
 			// Update order reference with amounts
-			$amazon = new WC_Gateway_Amazon_Payments_Advanced();
+			$amazon = new WPSC_Gateway_Amazon_Payments_Advanced();
 
 			$response = $amazon->api_request( array(
 				'Action'                 => 'GetOrderReferenceDetails',
@@ -634,10 +634,12 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			return;
 		}
 	}
+
 	/**
-	 * Make an api request
+	 * Make an API request to Amazon.
+	 *
 	 * @param  args $args
-	 * @return wp_error or parsed response array
+	 * @return WP_Error or parsed response array
 	 */
 	public function api_request( $args ) {
 
@@ -738,14 +740,25 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	}
 }
 
-class WPSC_Amazon_Payments_Advanced_Order_Handler {
+class WPSC_Amazon_Payments_Order_Handler {
+
+	private static $instance;
 
 	/**
 	 * Constructor
 	 */
-	public function __construct() {
+	public function init() {
 		add_action( 'add_meta_boxes'             , array( $this, 'meta_box' ) );
 		add_action( 'wp_ajax_amazon_order_action', array( $this, 'order_actions' ) );
+	}
+
+	public static function get_instance() {
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new self;
+			self::$instance->init();
+		}
+
+		return self::$instance;
 	}
 
 	/**
