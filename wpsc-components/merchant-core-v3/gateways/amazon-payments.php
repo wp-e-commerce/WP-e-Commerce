@@ -829,8 +829,8 @@ class WPSC_Amazon_Payments_Order_Handler {
 				$this->clear_stored_states( $order_id );
 			break;
 			case 'refund' :
-				$amazon_refund_amount = floatval( woocommerce_clean( $_POST['amazon_refund_amount'] ) );
-				$amazon_refund_note   = woocommerce_clean( $_POST['amazon_refund_note'] );
+				$amazon_refund_amount = floatval( sanitize_text_field( $_POST['amazon_refund_amount'] ) );
+				$amazon_refund_note   = sanitize_text_field( $_POST['amazon_refund_note'] );
 
 				$this->refund_payment( $order_id, $id, $amazon_refund_amount, $amazon_refund_note );
 				$this->clear_stored_states( $order_id );

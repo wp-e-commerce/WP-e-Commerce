@@ -157,7 +157,6 @@ class WPSC_Logging {
 
     }
 
-
     /**
      * Registers the Type Taxonomy
      *
@@ -190,7 +189,6 @@ class WPSC_Logging {
         }
     }
 
-
     /**
      * Check if a log type is valid
      *
@@ -205,7 +203,6 @@ class WPSC_Logging {
     private static function valid_type( $type ) {
         return in_array( $type, self::log_types() );
     }
-
 
     /**
      * Create new log entry
@@ -233,7 +230,6 @@ class WPSC_Logging {
         return self::insert_log( $log_data );
 
     }
-
 
     /**
      * Stores a log entry
@@ -283,7 +279,6 @@ class WPSC_Logging {
 
         return $log_id;
     }
-
 
     /**
      * Update an existing log item.
@@ -342,7 +337,6 @@ class WPSC_Logging {
 
         return self::get_connected_logs( array( 'post_parent' => $object_id, 'paged' => $paged, 'log_type' => $type ) );
     }
-
 
     /**
      * Retrieve all connected logs
