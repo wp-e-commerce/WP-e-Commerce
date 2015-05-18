@@ -440,38 +440,14 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			return;
 		}
 
-		add_filter( 'wpsc_get_checkout_payment_method_form_args', function( $args ) {
-
-			ob_start();
-
-			$this->address_widget();
-			$this->payment_widget();
-
-			$widgets = ob_get_clean();
-
-			$args['before_form_actions'] .= $widgets;
-
-			return $args;
-		} );
+		add_filter( 'wpsc_get_checkout_payment_method_form_args', array( $this, 'add_widgets_to_method_form' ) );
 
 		add_action( 'wpsc_checkout_get_fields', '__return_empty_array' );
 
-		add_filter( 'wpsc_get_active_gateways'  , array( $this, 'remove_gateways' ) );
-		add_filter( 'wpsc_get_gateway_list'     , array( $this, 'remove_gateways' ) );
+		add_filter( 'wpsc_get_active_gateways', array( $this, 'remove_gateways' ) );
+		add_filter( 'wpsc_get_gateway_list'   , array( $this, 'remove_gateways' ) );
 
-		add_filter( 'wpsc_payment_method_form_fields', function( $fields ) {
-			foreach ( $fields as $i => $field ) {
-				if ( 'amazon-payments' == $field['value'] ) {
-					$fields[ $i ][ 'checked' ] = true;
-				} else {
-					unset( $fields[ $i ] );
-				}
-			}
-
-			return $fields;
-		} );
-
-		//add_action( 'woocommerce_checkout_update_order_review', array( $this, 'get_customer_details' ) );
+		add_filter( 'wpsc_payment_method_form_fields', array( $this, 'remove_gateways_v2' ) );
 	}
 
 	/**
@@ -479,6 +455,24 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	 */
 	public function checkout_button() {
 		?><div id="pay_with_amazon" class="checkout_button"></div><?php
+	}
+
+	public function add_widgets_to_method_form( $args ) {
+
+		ob_start();
+
+		$this->address_widget();
+		$this->payment_widget();
+
+		$widgets = ob_get_clean();
+
+		if ( isset( $args['before_form_actions'] ) ) {
+			$args['before_form_actions'] .= $widgets;
+		} else {
+			$args['before_form_actions']  = $widgets;
+		}
+
+		return $args;
 	}
 
 	/**
@@ -557,31 +551,38 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 				<input type="hidden" name="amazon_reference_id" value="<?php echo $this->reference_id; ?>" />
 			</div>
 		</div>
-<?php
-		}
-
-	/**
-	 * Remove checkout fields
-	 *
-	 * @param  object $checkout
-	 */
-	public function remove_checkout_fields( $checkout ) {
-		// New accounts need an email
-		$checkout->checkout_fields['account'] = array_merge( array( 'billing_email' => $checkout->checkout_fields['billing']['billing_email'] ), $checkout->checkout_fields['account'] );
-		$checkout->checkout_fields['account']['billing_email']['class'] = '';
-		$checkout->checkout_fields['billing'] 	= array();
-		$checkout->checkout_fields['shipping']  = array();
-
-		remove_action( 'woocommerce_checkout_billing' , array( $checkout,'checkout_form_billing' ) );
-		remove_action( 'woocommerce_checkout_shipping', array( $checkout,'checkout_form_shipping' ) );
+		<?php
 	}
 
 	/**
-	 * Remove all gateways except amazon
+	 * Remove all gateways except Amazon Payments.
+	 *
+	 * This function primarily effects TEv1
+	 *
+	 * @since  4.0
 	 */
 	public function remove_gateways( $gateways ) {
 
 		return array( 'amazon-payments' );
+	}
+
+	/**
+	 * Remove all gateways except Amazon Payments.
+	 *
+	 * This function effects TEv2.
+	 *
+	 * @since  4.0
+	 */
+	public function remove_gateways_v2( $fields ) {
+		foreach ( $fields as $i => $field ) {
+			if ( 'amazon-payments' == $field['value'] ) {
+				$fields[ $i ][ 'checked' ] = true;
+			} else {
+				unset( $fields[ $i ] );
+			}
+		}
+
+		return $fields;
 	}
 
 	/**
