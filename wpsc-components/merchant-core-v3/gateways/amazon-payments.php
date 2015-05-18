@@ -293,7 +293,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 				case 'authorize' :
 
 					// Authorize only
-					$result = $wc_amazon_pa_order_handler->authorize_payment( $order_id, $amazon_reference_id, false );
+					$result = $this->authorize_payment( $order_id, $amazon_reference_id, false );
 
 					if ( $result ) {
 						// Mark as on-hold
@@ -309,7 +309,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 				default :
 
 					// Capture
-					$result = $wc_amazon_pa_order_handler->authorize_payment( $order_id, $amazon_reference_id, true );
+					$result = $this->authorize_payment( $order_id, $amazon_reference_id, true );
 
 					if ( $result ) {
 						// Payment complete
@@ -330,6 +330,16 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 	}
 
+	/**
+	 * Sets customer billing and shipping information.
+	 *
+	 * Pulls data directly from Amazon API, populating the submitted form data table.
+	 *
+	 * @param array $buyer   Buyer information
+	 * @param array $address Shipping information
+	 *
+	 * @since  4.0
+	 */
 	private function set_customer_address( $buyer, $address ) {
 		$checkout_form_data = new WPSC_Checkout_Form_Data( $this->purchase_log->get( 'id' ) );
 
@@ -352,10 +362,10 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			$checkout_form_data->set( 'billingphone', $address['Phone'] );
 		}
 
-		update_post_meta( $order_id, '_shipping_first_name', $shipping_first );
-		update_post_meta( $order_id, '_shipping_last_name' , $shipping_last );
+		$checkout_form_data->set( 'shippingfirstname', $shipping_first );
+		$checkout_form_data->set( 'shippinglastname' , $shipping_last );
 
-		// Format address and map to WC fields
+		// Format address
 		$address_lines = array();
 
 		if ( ! empty( $address['AddressLine1'] ) ) {
@@ -368,39 +378,32 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			$address_lines[] = $address['AddressLine3'];
 		}
 
-		if ( 3 === sizeof( $address_lines ) ) {
-			update_post_meta( $order_id, '_shipping_company', $address_lines[0] );
-			update_post_meta( $order_id, '_shipping_address_1', $address_lines[1] );
-			update_post_meta( $order_id, '_shipping_address_2', $address_lines[2] );
-		} elseif ( 2 === sizeof( $address_lines ) ) {
-			update_post_meta( $order_id, '_shipping_address_1', $address_lines[0] );
-			update_post_meta( $order_id, '_shipping_address_2', $address_lines[1] );
-		} elseif ( sizeof( $address_lines ) ) {
-			update_post_meta( $order_id, '_shipping_address_1', $address_lines[0] );
-		}
+		$street_address = implode( "\n", $address_lines );
+		$checkout_form_data->set( 'shippingaddress', $street_address );
 
 		if ( isset( $address['City'] ) ) {
-			update_post_meta( $order_id, '_shipping_city', $address['City'] );
+			$checkout_form_data->set( 'shippingcity', $address['City'] );
 		}
 
 		if ( isset( $address['PostalCode'] ) ) {
-			update_post_meta( $order_id, '_shipping_postcode', $address['PostalCode'] );
+			$checkout_form_data->set( 'shippingpostcode', $address['PostalCode'] );
 		}
 
 		if ( isset( $address['StateOrRegion'] ) ) {
-			update_post_meta( $order_id, '_shipping_state', $address['StateOrRegion'] );
+			$checkout_form_data->set( 'shippingstate', $address['StateOrRegion'] );
 		}
 
 		if ( isset( $address['CountryCode'] ) ) {
-			update_post_meta( $order_id, '_shipping_country', $address['CountryCode'] );
+			$checkout_form_data->set( 'shippingcountry', $address['CountryCode'] );
 		}
 
+		$checkout_form_data->save();
 	}
 
 	/**
-	 * Maybe hide standard WC checkout button on the cart, if enabled
+	 * Maybe hide standard checkout button on the cart, if enabled
 	 *
-	 * @since 3.0.0
+	 * @since 4.0
 	 */
 	public function maybe_hide_standard_checkout_button() {
 		if ( $this->setting->get( 'hide_button_display' ) ) {
