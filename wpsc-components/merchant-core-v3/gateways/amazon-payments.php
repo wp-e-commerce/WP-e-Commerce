@@ -340,7 +340,6 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	 * @since  4.0
 	 */
 	private function set_customer_address( $buyer, $address ) {
-		$checkout_form_data = new WPSC_Checkout_Form_Data( $this->purchase_log->get( 'id' ) );
 
 		$billing_name   = explode( ' ' , $buyer['Name'] );
 		$shipping_name  = explode( ' ' , $address['Name'] );
@@ -351,18 +350,18 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		$billing_first  = implode( ' ', $billing_name );
 		$shipping_first = implode( ' ', $shipping_name );
 
-		$checkout_form_data->set( 'billingfirstname', $billing_first );
-		$checkout_form_data->set( 'billinglastname' , $billing_last );
-		$checkout_form_data->set( 'billingemail'    , $buyer['Email'] );
+		$this->checkout_data->set( 'billingfirstname', $billing_first );
+		$this->checkout_data->set( 'billinglastname' , $billing_last );
+		$this->checkout_data->set( 'billingemail'    , $buyer['Email'] );
 
 		if ( isset( $buyer['Phone'] ) ) {
-			$checkout_form_data->set( 'billingphone', $buyer['Phone'] );
+			$this->checkout_data->set( 'billingphone', $buyer['Phone'] );
 		} else if ( isset( $address['Phone'] ) ) {
-			$checkout_form_data->set( 'billingphone', $address['Phone'] );
+			$this->checkout_data->set( 'billingphone', $address['Phone'] );
 		}
 
-		$checkout_form_data->set( 'shippingfirstname', $shipping_first );
-		$checkout_form_data->set( 'shippinglastname' , $shipping_last );
+		$this->checkout_data->set( 'shippingfirstname', $shipping_first );
+		$this->checkout_data->set( 'shippinglastname' , $shipping_last );
 
 		// Format address
 		$address_lines = array();
@@ -378,25 +377,25 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		}
 
 		$street_address = implode( "\n", $address_lines );
-		$checkout_form_data->set( 'shippingaddress', $street_address );
+		$this->checkout_data->set( 'shippingaddress', $street_address );
 
 		if ( isset( $address['City'] ) ) {
-			$checkout_form_data->set( 'shippingcity', $address['City'] );
+			$this->checkout_data->set( 'shippingcity', $address['City'] );
 		}
 
 		if ( isset( $address['PostalCode'] ) ) {
-			$checkout_form_data->set( 'shippingpostcode', $address['PostalCode'] );
+			$this->checkout_data->set( 'shippingpostcode', $address['PostalCode'] );
 		}
 
 		if ( isset( $address['StateOrRegion'] ) ) {
-			$checkout_form_data->set( 'shippingstate', $address['StateOrRegion'] );
+			$this->checkout_data->set( 'shippingstate', $address['StateOrRegion'] );
 		}
 
 		if ( isset( $address['CountryCode'] ) ) {
-			$checkout_form_data->set( 'shippingcountry', $address['CountryCode'] );
+			$this->checkout_data->set( 'shippingcountry', $address['CountryCode'] );
 		}
 
-		$checkout_form_data->save();
+		$this->checkout_data->save();
 	}
 
 	/**
