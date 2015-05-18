@@ -27,6 +27,8 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		)
 	);
 
+	private $order_handler;
+
 	private $reference_id;
 
 	public function __construct() {
@@ -36,6 +38,8 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		$this->title = __( 'Amazon Payments', 'wpsc' );
 
 		$this->reference_id = ! empty( $_REQUEST['amazon_reference_id'] ) ? $_REQUEST['amazon_reference_id'] : '';
+
+		$this->order_handler = WPSC_Amazon_Payments_Order_Handler::get_instance();
 
 		add_action( 'wpsc_loaded', array( $this, 'init_handlers' ), 11 );
 		add_action( 'wp_footer', array( $this, 'maybe_hide_standard_checkout_button' ) );
@@ -104,7 +108,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	/**
 	 * Load gateway only if curl is enabled (SDK requirement), PHP 5.3+ (same) and TEv2.
 	 *
-	 * @return [type] [description]
+	 * @return bool Whether or not to load gateway.
 	 */
 	public function load() {
 		return version_compare( phpversion(), '5.3', '>=' ) && function_exists( 'curl_init' ) && _wpsc_maybe_activate_theme_engine_v2();
@@ -263,7 +267,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 				throw new Exception( $response['Error']['Message'] );
 			}
 
-			// Get FULL address details and save them to the order
+			// Get address details and save them to the order
 			$response = $this->api_request( array(
 				'Action'                 => 'GetOrderReferenceDetails',
 				'AmazonOrderReferenceId' => $amazon_reference_id
@@ -284,23 +288,18 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 				case 'manual' :
 
 					// Mark as on-hold
-					$order->update_status( 'on-hold', __( 'Amazon order opened. Use the "Amazon Payments Advanced" box to authorize and/or capture payment. Authorized payments must be captured within 7 days.', 'wpsc' ) );
-
-					// Reduce stock levels
-					$order->reduce_order_stock();
+					$order->set( 'amazon-status', __( 'Amazon order opened. Authorize and/or capture payment below. Authorized payments must be captured within 7 days.', 'wpsc' ) );
 
 				break;
 				case 'authorize' :
 
 					// Authorize only
-					$result = $this->authorize_payment( $order_id, $amazon_reference_id, false );
+					$result = $this->order_handler->authorize_payment( $order_id, $amazon_reference_id, false );
 
 					if ( $result ) {
 						// Mark as on-hold
-						$order->update_status( 'on-hold', __( 'Amazon order opened. Use the "Amazon Payments Advanced" box to authorize and/or capture payment. Authorized payments must be captured within 7 days.', 'wpsc' ) );
+						$order->set( 'amazon-status', __( 'Amazon order opened. Authorize and/or capture payment below. Authorized payments must be captured within 7 days.', 'wpsc' ) );
 
-						// Reduce stock levels
-						$order->reduce_order_stock();
 					} else {
 						$order->update_status( 'failed', __( 'Could not authorize Amazon payment.', 'wpsc' ) );
 					}
@@ -309,7 +308,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 				default :
 
 					// Capture
-					$result = $this->authorize_payment( $order_id, $amazon_reference_id, true );
+					$result = $this->order_handler->authorize_payment( $order_id, $amazon_reference_id, true );
 
 					if ( $result ) {
 						// Payment complete
