@@ -198,7 +198,7 @@ class WPSC_Purchase_Log_Page {
 		}
 	}
 
-	private function purchase_log_custom_fields(){
+	public function purchase_log_custom_fields(){
 		if( wpsc_purchlogs_has_customfields() ){?>
 			<div class='metabox-holder'>
 				<div id='purchlogs_customfields' class='postbox'>
@@ -279,6 +279,7 @@ class WPSC_Purchase_Log_Page {
 		register_column_headers( 'wpsc_purchase_log_item_details', $columns );
 
 		add_action( 'wpsc_display_purchase_logs_page', array( $this, 'display_purchase_log' ) );
+		add_action( 'wpsc_purchlogitem_metabox_start', array( $this, 'purchase_log_custom_fields' ) );
 	}
 
 	public function controller_packing_slip() {

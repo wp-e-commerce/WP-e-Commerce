@@ -127,7 +127,7 @@
 				</tbody>
 			</table>
 
-			<?php $this->purchase_log_custom_fields(); ?>
+			<?php do_action( 'wpsc_purchlogitem_metabox_start', $this->log_id ); ?>
 
 			<div class="metabox-holder">
 				<div id="purchlogs_notes" class="postbox">
