@@ -548,7 +548,9 @@ abstract class WPSC_Payment_Gateway {
 	}
 
 	/**
-	 * Payment gateway constructor. Should use WPSC_Payment_Gateways::get( $gateway_name ) instead.
+	 * Payment gateway constructor.
+	 *
+	 * Use WPSC_Payment_Gateways::get( $gateway_name ) instead.
 	 *
 	 * @access public
 	 * @return WPSC_Payment_Gateway
@@ -560,17 +562,15 @@ abstract class WPSC_Payment_Gateway {
 
 	/**
 	 * Gateway initialization function.
-	 * You should use this function for hooks with
-	 * actions and filters that are required by the Gateway
+	 *
+	 * You should use this function for hooks with actions and filters that are required by the gateway.
 	 *
 	 * @access public
 	 * @since 4.0
 	 *
 	 * @return void
 	 */
-	public function init() {
-
-	}
+	public function init() {}
 }
 
 class WPSC_Payment_Gateway_Setting {

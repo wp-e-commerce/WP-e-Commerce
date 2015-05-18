@@ -12,7 +12,6 @@
 
 class WPSC_Logging {
 
-
     /**
      * WPSC_Logging Class
      *
@@ -150,7 +149,7 @@ class WPSC_Logging {
             'query_var'       => false,
             'rewrite'         => false,
             'capability_type' => 'post',
-            'supports'        => array( 'title', 'editor' ),
+            'supports'        => array( 'title', 'editor', 'custom-fields' ),
             'can_export'      => false
         );
 
