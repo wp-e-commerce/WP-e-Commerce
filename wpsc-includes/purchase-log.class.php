@@ -426,9 +426,13 @@ class WPSC_Purchase_Log {
 	public static function delete_cache( $value, $col = 'id' ) {
 		// this will pull from the old cache, so no worries there
 		$log = new WPSC_Purchase_Log( $value, $col );
+
 		wp_cache_delete( $log->get( 'id' ), 'wpsc_purchase_logs' );
 		wp_cache_delete( $log->get( 'sessionid' ), 'wpsc_purchase_logs_sessionid' );
 		wp_cache_delete( $log->get( 'id' ), 'wpsc_purchase_log_cart_contents' );
+		wp_cache_delete( $log->get( 'id' ), 'wpsc_purchase_log_cart_contents' );
+		wp_cache_delete( $log->get( 'id' ), 'wpsc_purchase_meta' );
+
 		do_action( 'wpsc_purchase_log_delete_cache', $log, $value, $col );
 	}
 
@@ -484,6 +488,7 @@ class WPSC_Purchase_Log {
 			$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `purchaseid` = %d", $log_id ) );
 			$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` WHERE `log_id` IN (%d)", $log_id ) );
 			$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id` = %d LIMIT 1", $log_id ) );
+			$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_PURCHASE_META . "` WHERE `wpsc_purchase_id` = %d", $log_id ) );
 
 			do_action( 'wpsc_purchase_log_delete', $log_id );
 
