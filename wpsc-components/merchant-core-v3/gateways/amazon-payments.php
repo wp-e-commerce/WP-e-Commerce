@@ -659,6 +659,8 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			)
 		);
 
+		$this->log( $args, $response );
+
 		if ( ! is_wp_error( $response ) ) {
 			$response_object = array();
 			$response_object['ResponseBody'] = $response['body'];
@@ -668,6 +670,32 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		}
 
 		return $response;
+	}
+
+	/**
+	 * If debugging is enabled on the gateway, this will log API requests/responses.
+	 *
+	 * @param  array  $args     Arguments passed to API
+	 * @param  mixed  $response Response from API.
+	 *
+	 * @return void
+	 */
+	private function log( $args, $response ) {
+		if ( $this->setting->get( 'debugging' ) ) {
+
+			add_filter( 'wpsc_logging_post_type_args', 'WPSC_Logging::force_ui' );
+			add_filter( 'wpsc_logging_taxonomy_args ', 'WPSC_Logging::force_ui' );
+
+			$log_data = array(
+				'post_title'    => 'Amazon API Operation Failure',
+				'post_content'  =>  'There was an error processing the payment. Find details in the log entry meta fields.',
+				'log_type'      => 'error'
+			);
+
+			$log_meta = $args;
+
+			WPSC_Logging::insert_log( $log_data, $log_meta );
+		}
 	}
 
 	/**
@@ -683,13 +711,14 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	}
 
 	/**
-	 * Sign a url for amazon
+	 * Sign a URL for Amazon
+	 *
 	 * @param  string $url
 	 * @return string
 	 */
 	public function get_signed_amazon_url( $url, $secret_key ) {
 
-		$urlparts       = parse_url( $url );
+		$urlparts = parse_url( $url );
 
 		// Build $params with each name/value pair
 	    foreach ( explode( '&', $urlparts['query'] ) as $part ) {
