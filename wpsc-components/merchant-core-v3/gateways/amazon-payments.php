@@ -382,6 +382,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		}
 
 		$street_address = implode( "\n", $address_lines );
+
 		$this->checkout_data->set( 'shippingaddress', $street_address );
 
 		if ( isset( $address['City'] ) ) {
@@ -445,8 +446,18 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			return;
 		}
 
-		add_filter( 'wpsc_get_checkout_payment_method_form_args', array( $this, 'add_widgets_to_method_form' ) );
+		add_action( 'wpsc_router_init', function() {
+			if (
+			'checkout' == _wpsc_get_current_controller_name() &&
+			'shipping_and_billing' == _wpsc_get_current_controller_method() &&
+			isset( $_POST['action'] ) &&
+			'submit_checkout_form' == $_POST['action'] ) {
+				remove_action( 'wpsc_checkout_get_fields', '__return_empty_array' );
+				$this->set_customer_details();
+			}
+		} );
 
+		add_filter( 'wpsc_get_checkout_form_args'                , array( $this, 'add_widgets_to_method_form' ) );
 		add_action( 'wpsc_checkout_get_fields', '__return_empty_array' );
 
 		add_filter( 'wpsc_get_active_gateways', array( $this, 'remove_gateways' ) );
