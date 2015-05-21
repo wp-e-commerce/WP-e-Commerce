@@ -595,7 +595,10 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 		$is_pay_page   =  _wpsc_get_current_controller_name() == 'checkout' || _wpsc_get_current_controller_name() == 'cart';
 
-		$redirect_page = $is_pay_page ? add_query_arg( 'amazon_payments_advanced', 'true', wpsc_get_checkout_url( 'payment' ) ) : esc_url_raw( add_query_arg( 'amazon_payments_advanced', 'true' ) );
+
+		$redirect = wpsc_uses_shipping() ? 'shipping-and-billing' : 'payment';
+
+		$redirect_page = $is_pay_page ? add_query_arg( 'amazon_payments_advanced', 'true', wpsc_get_checkout_url( $redirect ) ) : esc_url_raw( add_query_arg( 'amazon_payments_advanced', 'true' ) );
 
 		wp_localize_script( 'amazon_payments_advanced', 'amazon_payments_advanced_params', array(
 			'seller_id'            => $this->setting->get( 'seller_id' ),
