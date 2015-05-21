@@ -301,7 +301,8 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 						$order->set( 'amazon-status', __( 'Amazon order opened. Authorize and/or capture payment below. Authorized payments must be captured within 7 days.', 'wpsc' ) );
 
 					} else {
-						$order->update_status( 'failed', __( 'Could not authorize Amazon payment.', 'wpsc' ) );
+						$order->set( 'processed', WPSC_Purchase_Log::PAYMENT_DECLINED );
+						$order->set( 'amazon-status', __( 'Could not authorize Amazon payment.', 'wpsc' ) );
 					}
 
 				break;
@@ -1187,75 +1188,71 @@ class WPSC_Amazon_Payments_Order_Handler {
 			echo '</p>';
 
 		}
+?>
+			<script type="text/javascript">
+			jQuery( document ).ready( function( $ ) {
+				$('#wpsc-amazon-payments').on( 'click', 'a.button, a.refresh', function( e ) {
+					var $this = $( this );
+					e.preventDefault();
 
-		$js = "
+					var data = {
+						action: 		'amazon_order_action',
+						security: 		'<?php echo wp_create_nonce( "amazon_order_action" ); ?>',
+						order_id: 		'<?php echo $order_id; ?>',
+						amazon_action: 	$this.data('action'),
+						amazon_id: 		$this.data('id'),
+						amazon_refund_amount: jQuery('.amazon_refund_amount').val(),
+						amazon_refund_note: jQuery('.amazon_refund_note').val(),
+					};
 
-			jQuery('#woocommerce-amazon-payments-advanced').on( 'click', 'a.button, a.refresh', function(){
+					// Ajax action
+					$.post( ajaxurl, data, function( result ) {
+							location.reload();
+						}, 'json' );
 
-				jQuery('#woocommerce-amazon-payments-advanced').block({ message: null, overlayCSS: { background: '#fff url(" . WC()->plugin_url() . "/assets/images/ajax-loader.gif) no-repeat center', opacity: 0.6 } });
-
-				var data = {
-					action: 		'amazon_order_action',
-					security: 		'" . wp_create_nonce( "amazon_order_action" ) . "',
-					order_id: 		'" . $order_id . "',
-					amazon_action: 	jQuery(this).data('action'),
-					amazon_id: 		jQuery(this).data('id'),
-					amazon_refund_amount: jQuery('.amazon_refund_amount').val(),
-					amazon_refund_note: jQuery('.amazon_refund_note').val(),
-				};
-
-				// Ajax action
-				jQuery.ajax({
-					url: '" . admin_url( 'admin-ajax.php' ) . "',
-					data: data,
-					type: 'POST',
-					success: function( result ) {
-						location.reload();
-					}
+					return false;
 				});
 
-				return false;
-			});
+				$('#wpsc-amazon-payments').on( 'click', 'a.toggle_refund', function(){
+					jQuery('.refund_form').slideToggle();
+					return false;
+				});
+			} );
 
-			jQuery('#woocommerce-amazon-payments-advanced').on( 'click', 'a.toggle_refund', function(){
-				jQuery('.refund_form').slideToggle();
-				return false;
-			});
 
-		";
-
-		wc_enqueue_js( $js );
+			</script>
+			</div>
+			</div>
+			</div>
+		<?php
 	}
 
     /**
      * Authorize payment
      */
     public function authorize_payment( $order_id, $amazon_reference_id, $capture_now = false ) {
-		$order = new WC_Order( $order_id );
 
-		if ( $order->payment_method == 'amazon_payments_advanced' ) {
+		if ( $this->log->get( 'gateway' ) == 'amazon-payments' ) {
 
-			$amazon = new WC_Gateway_Amazon_Payments_Advanced();
-
-			$response = $amazon->api_request( array(
+			$response = $this->gateway->api_request( array(
 				'Action'                           => 'Authorize',
 				'AmazonOrderReferenceId'           => $amazon_reference_id,
-				'AuthorizationReferenceId'         => $order->id . '-' . current_time( 'timestamp', true ),
-				'AuthorizationAmount.Amount'       => $order->get_total(),
-				'AuthorizationAmount.CurrencyCode' => strtoupper( get_woocommerce_currency() ),
+				'AuthorizationReferenceId'         => $order_id . '-' . current_time( 'timestamp', true ),
+				'AuthorizationAmount.Amount'       => $this->log->get( 'totalprice' ),
+				'AuthorizationAmount.CurrencyCode' => strtoupper( $this->gateway->get_currency_code() ),
 				'CaptureNow'                       => $capture_now,
 				'TransactionTimeout'               => 0,
 			) );
 
 			if ( is_wp_error( $response ) ) {
 
-				$order->add_order_note( __( 'Unable to authorize funds with amazon:', 'wpsc' ) . ' ' . $response->get_error_message() );
+				$this->log->set( 'amazon-status', __( 'Unable to authorize funds with amazon:', 'wpsc' ) . ' ' . $response->get_error_message() )->save();
 
 				return false;
 
 			} elseif ( isset( $response['Error']['Message'] ) ) {
 
-				$order->add_order_note( $response['Error']['Message'] );
+				$this->log->set( 'amazon-status', $response['Error']['Message'] )->save();
 
 				return false;
 
@@ -1273,22 +1270,22 @@ class WPSC_Amazon_Payments_Order_Handler {
 					$state = 'pending';
 				}
 
-				update_post_meta( $order_id, 'amazon_authorization_id', $auth_id );
+				$this->log->set( 'amazon_authorization_id', $auth_id )->save();
 
 				$this->maybe_update_billing_details( $order_id, $response['AuthorizeResult']['AuthorizationDetails'] );
 
 				if ( 'declined' == $state ) {
-					$order->add_order_note( sprintf( __( 'Order Declined with reason code: %s', 'wpsc' ), $response['AuthorizeResult']['AuthorizationDetails']['AuthorizationStatus']['ReasonCode'] ) );
+					$this->log->set( 'amazon-status', sprintf( __( 'Order Declined with reason code: %s', 'wpsc' ), $response['AuthorizeResult']['AuthorizationDetails']['AuthorizationStatus']['ReasonCode'] ) )->save();
 					// Payment was not authorized
 					return false;
 				}
 
 				if ( $capture_now ) {
-					update_post_meta( $order_id, 'amazon_capture_id', str_replace( '-A', '-C', $auth_id ) );
+					$this->log->set( 'amazon_capture_id', str_replace( '-A', '-C', $auth_id ) )->save();
 
-					$order->add_order_note( sprintf( __( 'Captured (Auth ID: %s)', 'wpsc' ), str_replace( '-A', '-C', $auth_id ) ) );
+					$this->log->set( 'amazon-status', sprintf( __( 'Captured (Auth ID: %s)', 'wpsc' ), str_replace( '-A', '-C', $auth_id ) ) )->save();
 				} else {
-					$order->add_order_note( sprintf( __( 'Authorized (Auth ID: %s)', 'wpsc' ), $auth_id ) );
+					$this->log->set( 'amazon-status', sprintf( __( 'Authorized (Auth ID: %s)', 'wpsc' ), $auth_id ) )->save();
 				}
 
 				return true;
@@ -1321,13 +1318,13 @@ class WPSC_Amazon_Payments_Order_Handler {
 				//
 			} elseif ( isset( $response['Error']['Message'] ) ) {
 
-				$order->add_order_note( $response['Error']['Message'] );
+				$this->log->set( 'amazon-status', $response['Error']['Message'] )->save();
 
 			} else {
 
-				delete_post_meta( $order_id, 'amazon_authorization_id' );
+				wpsc_delete_purchase_meta( $order_id, 'amazon_authorization_id' );
 
-				$order->add_order_note( sprintf( __( 'Authorization closed (Auth ID: %s)', 'wpsc' ), $amazon_authorization_id ) );
+				$this->log->set( 'amazon-status', sprintf( __( 'Authorization closed (Auth ID: %s)', 'wpsc' ), $amazon_authorization_id ) )->save();
 
 			}
 		}
@@ -1339,34 +1336,31 @@ class WPSC_Amazon_Payments_Order_Handler {
      * @param  int $order_id
      */
     public function capture_payment( $order_id, $amazon_authorization_id ) {
-		$order = new WC_Order( $order_id );
 
-		if ( $order->payment_method == 'amazon_payments_advanced' ) {
+		if ( $this->log->get( 'gateway' ) == 'amazon-payments' ) {
 
-			$amazon = new WC_Gateway_Amazon_Payments_Advanced();
-
-			$response = $amazon->api_request( array(
+			$response = $this->gateway->api_request( array(
 				'Action'                     => 'Capture',
 				'AmazonAuthorizationId'      => $amazon_authorization_id,
-				'CaptureReferenceId'         => $order->id . '-' . current_time( 'timestamp', true ),
-				'CaptureAmount.Amount'       => $order->get_total(),
-				'CaptureAmount.CurrencyCode' => strtoupper( get_woocommerce_currency() )
+				'CaptureReferenceId'         => $this->log->get( 'id' ) . '-' . current_time( 'timestamp', true ),
+				'CaptureAmount.Amount'       => $this->log->get( 'totalprice' ),
+				'CaptureAmount.CurrencyCode' => strtoupper( $this->gateway->get_currency_code() )
 			) );
 
 			if ( is_wp_error( $response ) ) {
 
-				$order->add_order_note( __( 'Unable to authorize funds with amazon:', 'wpsc' ) . ' ' . $response->get_error_message() );
+				$this->log->set( 'amazon-status', __( 'Unable to authorize funds with amazon:', 'wpsc' ) . ' ' . $response->get_error_message() )->save();
 
 			} elseif ( isset( $response['Error']['Message'] ) ) {
 
-				$order->add_order_note( $response['Error']['Message'] );
+				$this->log->set( 'amazon-status', $response['Error']['Message'] )->save();
 
 			} else {
 				$capture_id = $response['CaptureResult']['CaptureDetails']['AmazonCaptureId'];
 
-				$order->add_order_note( sprintf( __( 'Capture Attempted (Capture ID: %s)', 'wpsc' ), $capture_id ) );
+				$this->log->set( 'amazon-status', sprintf( __( 'Capture Attempted (Capture ID: %s)', 'wpsc' ), $capture_id ) )->save();
 
-				update_post_meta( $order_id, 'amazon_capture_id', $capture_id );
+				$this->log->set( 'amazon_capture_id', $capture_id )->save();
 			}
 		}
     }
@@ -1378,45 +1372,43 @@ class WPSC_Amazon_Payments_Order_Handler {
      * @param  float $amount
      */
     public function refund_payment( $order_id, $capture_id, $amount, $note ) {
-		$order = new WC_Order( $order_id );
+		if ( $this->log->get( 'gateway' ) == 'amazon-payments' ) {
 
-		if ( $order->payment_method == 'amazon_payments_advanced' ) {
+			$base_country = new WPSC_Country( wpsc_get_base_country() );
 
-			if ( 'US' == WC()->countries->get_base_country() && $amount > $order->get_total() ) {
-				$order->add_order_note( __( 'Unable to refund funds via amazon:', 'wpsc' ) . ' ' . __( 'Refund amount is greater than order total.', 'wpsc' ) );
+			if ( 'US' == $base_country->get_isocode() && $amount > $this->log->get( 'totalprice' ) ) {
+				$this->log->set( 'amazon-status', __( 'Unable to refund funds via amazon:', 'wpsc' ) . ' ' . __( 'Refund amount is greater than order total.', 'wpsc' ) )->save();
 
 				return;
-			} elseif ( $amount > min( ( $order->get_total() * 1.15 ), ( $order->get_total() + 75 ) ) ) {
-				$order->add_order_note( __( 'Unable to refund funds via amazon:', 'wpsc' ) . ' ' . __( 'Refund amount is greater than the max refund amount.', 'wpsc' ) );
+			} elseif ( $amount > min( ( $this->log->get( 'totalprice' ) * 1.15 ), ( $this->log->get( 'totalprice' ) + 75 ) ) ) {
+				$this->log->set( 'amazon-status', __( 'Unable to refund funds via amazon:', 'wpsc' ) . ' ' . __( 'Refund amount is greater than the max refund amount.', 'wpsc' ) )->save();
 
 				return;
 			}
 
-			$amazon = new WC_Gateway_Amazon_Payments_Advanced();
-
-			$response = $amazon->api_request( array(
+			$response = $this->gateway->api_request( array(
 				'Action'                    => 'Refund',
 				'AmazonCaptureId'           => $capture_id,
-				'RefundReferenceId'         => $order->id . '-' . current_time( 'timestamp', true ),
+				'RefundReferenceId'         => $order_id . '-' . current_time( 'timestamp', true ),
 				'RefundAmount.Amount'       => $amount,
-				'RefundAmount.CurrencyCode' => strtoupper( get_woocommerce_currency() ),
+				'RefundAmount.CurrencyCode' => strtoupper( $this->gateway->get_currency_code() ),
 				'SellerRefundNote'          => $note
 			) );
 
 			if ( is_wp_error( $response ) ) {
 
-				$order->add_order_note( __( 'Unable to refund funds via amazon:', 'wpsc' ) . ' ' . $response->get_error_message() );
+				$this->log->set( 'amazon-status', __( 'Unable to refund funds via amazon:', 'wpsc' ) . ' ' . $response->get_error_message() )->save();
 
 			} elseif ( isset( $response['Error']['Message'] ) ) {
 
-				$order->add_order_note( $response['Error']['Message'] );
+				$this->log->set( 'amazon-status', $response['Error']['Message'] )->save();
 
 			} else {
 				$refund_id = $response['RefundResult']['RefundDetails']['AmazonRefundId'];
 
-				$order->add_order_note( sprintf( __( 'Refunded %s (%s)', 'wpsc' ), woocommerce_price( $amount ), $note ) );
+				$this->log->set( 'amazon-status', sprintf( __( 'Refunded %s (%s)', 'wpsc' ), wpsc_currency_display( $amount ), $note ) )->save();
 
-				add_post_meta( $order_id, 'amazon_refund_id', $refund_id );
+				wpsc_add_purchase_meta( $order_id, 'amazon_refund_id', $refund_id );
 			}
 		}
     }
