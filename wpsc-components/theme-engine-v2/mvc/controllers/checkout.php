@@ -198,7 +198,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 				__( 'Sorry but it looks like there are some errors with your submitted information.', 'wpsc' ),
 				'error'
 			);
-			wpsc_set_validation_errors( $validation, $context = 'inline' );
+			wpsc_set_validation_errors( $validation, 'inline' );
 			return;
 		}
 
