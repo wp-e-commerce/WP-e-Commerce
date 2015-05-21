@@ -1,6 +1,7 @@
 /* Desktop CSS */
 IFRAME[name=hss_iframe] {
 	max-width: none;
+	display: none;
 }
 FORM[target=hss_iframe] {
 	display: none;

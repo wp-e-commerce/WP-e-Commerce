@@ -22,10 +22,14 @@
 				} );
 
 				// Insert iFrame
-				$container.html( '<iframe name="hss_iframe" width="570px" height="540px"></iframe>' );
+				$container.html( '<iframe id="pro-iframe" name="hss_iframe" width="570px" height="540px"></iframe>' );
+
+				// Insert the Spinner
+				$container.after( '<img src="' + pro_loc.spinner_url + '" class="pro-spinner" alt="spinner" />' );
+				var $spinner = $( '.pro-spinner' );
 
 				// Call the PayPal Pro API
-				$.ajax({
+				$.ajax( {
 					type: "POST",
 					url: window.location,
 					data: $form.serialize() + '&custom_gateway=paypal-pro',
@@ -36,9 +40,14 @@
 						$hss_form = $( 'FORM', $container );
 						$hss_form.attr( 'target', 'hss_iframe' );
 						$hss_form.find( 'input[type="image"]' ).click();
-					}
 
-				});
+						// Remove the Spinner
+						$spinner.hide();
+
+						// Show the IFRAME
+						$( '#pro-iframe' ).show();
+					}
+				} );
 			}
 		} );
 	} );
