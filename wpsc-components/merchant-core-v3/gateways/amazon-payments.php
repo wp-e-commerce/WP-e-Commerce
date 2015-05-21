@@ -446,24 +446,26 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			return;
 		}
 
-		add_action( 'wpsc_router_init', function() {
-			if (
-			'checkout' == _wpsc_get_current_controller_name() &&
-			'shipping_and_billing' == _wpsc_get_current_controller_method() &&
-			isset( $_POST['action'] ) &&
-			'submit_checkout_form' == $_POST['action'] ) {
-				remove_action( 'wpsc_checkout_get_fields', '__return_empty_array' );
-				$this->set_customer_details();
-			}
-		} );
+		add_action( 'wpsc_router_init', array( $this, 'lazy_load_location_meta' );
 
-		add_filter( 'wpsc_get_checkout_form_args'                , array( $this, 'add_widgets_to_method_form' ) );
+		add_filter( 'wpsc_get_checkout_form_args', array( $this, 'add_widgets_to_method_form' ) );
 		add_action( 'wpsc_checkout_get_fields', '__return_empty_array' );
 
 		add_filter( 'wpsc_get_active_gateways', array( $this, 'remove_gateways' ) );
 		add_filter( 'wpsc_get_gateway_list'   , array( $this, 'remove_gateways' ) );
 
 		add_filter( 'wpsc_payment_method_form_fields', array( $this, 'remove_gateways_v2' ) );
+	}
+
+	public function lazy_load_location_meta() {
+		if (
+		'checkout' == _wpsc_get_current_controller_name() &&
+		'shipping_and_billing' == _wpsc_get_current_controller_method() &&
+		isset( $_POST['action'] ) &&
+		'submit_checkout_form' == $_POST['action'] ) {
+			remove_action( 'wpsc_checkout_get_fields', '__return_empty_array' );
+			$this->set_customer_details();
+		}
 	}
 
 	public function set_customer_details() {
