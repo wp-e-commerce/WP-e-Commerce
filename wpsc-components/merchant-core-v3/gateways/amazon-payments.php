@@ -740,7 +740,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 			$log_data = array(
 				'post_title'    => 'Amazon API Operation Failure',
-				'post_content'  =>  'There was an error processing the payment. Find details in the log entry meta fields.',
+				'post_content'  =>  'There was an error processing the payment. Find details in the log entry meta fields.' . var_export( $response, true ),
 				'log_type'      => 'error'
 			);
 
