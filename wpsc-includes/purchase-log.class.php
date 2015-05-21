@@ -603,7 +603,9 @@ class WPSC_Purchase_Log {
 
 	private function set_meta_props() {
 
-		$this->meta_data = wpsc_get_purchase_meta( $this->get( 'id' ), '', true );
+		foreach ( wpsc_get_purchase_custom( $this->get( 'id' ) ) as $key => $value  ) {
+			$this->meta_data[ $key ] = wpsc_get_purchase_meta( $this->get( 'id' ), $key, true );
+		}
 
 		$this->set_total_shipping();
 		$this->set_gateway_name();

@@ -49,7 +49,7 @@ function wpsc_delete_purchase_meta( $purchase_id, $meta_key, $meta_value = '' ) 
  *  is true.
  */
 function wpsc_get_purchase_meta( $purchase_id, $key = '', $single = false ) {
-	return get_metadata( 'wpsc_purchase' , $purchase_id , $key, $single );
+	return get_metadata( 'wpsc_purchase' , $purchase_id, $key, $single );
 }
 
 /**
