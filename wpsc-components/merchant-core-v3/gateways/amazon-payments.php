@@ -1046,14 +1046,13 @@ class WPSC_Amazon_Payments_Order_Handler {
 	 * @access public
 	 * @return void
 	 */
-	function meta_box() {
-		global $post, $wpdb;
+	function meta_box( $log_id ) {
+		$this->set_purchase_log( $log_id );
 
-		$order_id = absint( $post->ID );
-		$order    = new WC_Order( $order_id );
+		$gateway = $this->log->get( 'gateway' );
 
-		if ( $order->payment_method == 'amazon_payments_advanced' ) {
-			add_meta_box( 'woocommerce-amazon-payments-advanced', __( 'Amazon Payments Advanced', 'wpsc' ), array( $this, 'authorization_box' ), 'shop_order', 'side' );
+		if ( $gateway == 'amazon-payments' ) {
+			$this->authorization_box();
 		}
 	}
 
@@ -1116,9 +1115,9 @@ class WPSC_Amazon_Payments_Order_Handler {
 					// Refund form
 					?>
 					<p class="refund_form" style="display:none">
-						<input type="number" step="any" style="width:100%" class="amazon_refund_amount" value="<?php echo $theorder->get_total(); ?>" />
+						<input type="number" step="any" style="width:100%" class="amazon_refund_amount" value="<?php echo $this->log->get( 'totalprice' ); ?>" />
 						<input type="text" style="width:100%" class="amazon_refund_note" placeholder="<?php _e( 'Add a note about this refund', 'wpsc' ); ?>" /><br/>
-						<a href="#" class="button" data-action="refund" data-id="<?php echo $amazon_capture_id; ?>"><?php _e( 'Refund', 'wpsc' ); ?></a>
+						<a href="#" class="button" data-action="refund" data-id="<?php echo esc_attr( $amazon_capture_id ); ?>"><?php _e( 'Refund', 'wpsc' ); ?></a>
 					</form>
 					<?php
 
@@ -1132,17 +1131,23 @@ class WPSC_Amazon_Payments_Order_Handler {
 
 			// Display refunds
 			if ( $amazon_refund_ids ) {
-				$amazon = new WC_Gateway_Amazon_Payments_Advanced();
 
-				$refunds = (array) get_post_meta( $order_id, 'amazon_refunds', true );
+				$refunds = (array) $this->log->get( 'amazon_refunds' );
 
 				foreach ( $amazon_refund_ids as $amazon_refund_id ) {
 
 					if ( isset( $refunds[ $amazon_refund_id ] ) ) {
-						echo wpautop( sprintf( __( 'Refund %s of %s is <strong>%s</strong> (%s).', 'wpsc' ), $amazon_refund_id, woocommerce_price( $refunds[ $amazon_refund_id ]['amount'] ), $refunds[ $amazon_refund_id ]['state'], $refunds[ $amazon_refund_id ]['note'] ) );
+						echo wpautop(
+							sprintf( __( 'Refund %s of %s is <strong>%s</strong> (%s).', 'wpsc' ),
+								$amazon_refund_id,
+								wpsc_currency_display( $refunds[ $amazon_refund_id ]['amount'] ),
+								$refunds[ $amazon_refund_id ]['state'],
+								$refunds[ $amazon_refund_id ]['note']
+							)
+						);
 					} else {
 
-						$response = $amazon->api_request( array(
+						$response = $this->gateway->api_request( array(
 							'Action'         => 'GetRefundDetails',
 							'AmazonRefundId' => $amazon_refund_id,
 						) );
@@ -1153,7 +1158,14 @@ class WPSC_Amazon_Payments_Order_Handler {
 							$state  = $response['GetRefundDetailsResult']['RefundDetails']['RefundStatus']['State'];
 							$amount = $response['GetRefundDetailsResult']['RefundDetails']['RefundAmount']['Amount'];
 
-							echo wpautop( sprintf( __( 'Refund %s of %s is <strong>%s</strong> (%s).', 'wpsc' ), $amazon_refund_id, woocommerce_price( $amount ), $state, $note ) );
+							echo wpautop(
+								sprintf( __( 'Refund %s of %s is <strong>%s</strong> (%s).', 'wpsc' ),
+									$amazon_refund_id,
+									wpsc_currency_display( $amount ),
+									$state,
+									$note
+								)
+							);
 
 							if ( $state == 'Completed' ) {
 								$refunds[ $amazon_refund_id ] = array(
@@ -1366,13 +1378,10 @@ class WPSC_Amazon_Payments_Order_Handler {
      * @param  string $amazon_authorization_id
      */
     public function close_authorization( $order_id, $amazon_authorization_id ) {
-		$order = new WC_Order( $order_id );
 
-		if ( $order->payment_method == 'amazon_payments_advanced' ) {
+		if ( $this->log->get( 'gateway' ) == 'amazon-payments' ) {
 
-			$amazon = new WC_Gateway_Amazon_Payments_Advanced();
-
-			$response = $amazon->api_request( array(
+			$response = $this->gateway->api_request( array(
 				'Action'                => 'CloseAuthorization',
 				'AmazonAuthorizationId' => $amazon_authorization_id
 			) );
