@@ -271,7 +271,7 @@ class WPSC_Logging {
         // set log meta, if any
         if ( $log_id && ! empty( $log_meta ) ) {
             foreach ( (array) $log_meta as $key => $meta ) {
-                update_post_meta( $log_id, '_wp_log_' . sanitize_key( $key ), $meta );
+                update_post_meta( $log_id, 'wp_log_' . sanitize_key( $key ), $meta );
             }
         }
 
