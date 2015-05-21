@@ -639,6 +639,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 					}
 				</style>
 			</div>
+		</div>
 		<?php
 	}
 
@@ -652,7 +653,6 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 				<div id="amazon_wallet_widget"></div>
 				<input type="hidden" name="amazon_reference_id" value="<?php echo $this->reference_id; ?>" />
 			</div>
-		</div>
 		<?php
 	}
 
@@ -685,56 +685,6 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		}
 
 		return $fields;
-	}
-
-	/**
-	 * Get customer details from amazon
-	 */
-	public function get_customer_details() {
-		try {
-
-			// Update order reference with amounts
-			$amazon = new WPSC_Gateway_Amazon_Payments_Advanced();
-
-			$response = $amazon->api_request( array(
-				'Action'                 => 'GetOrderReferenceDetails',
-				'AmazonOrderReferenceId' => $this->reference_id,
-			) );
-
-			if ( is_wp_error( $response ) ) {
-				throw new Exception( $response->get_error_message() );
-			}
-
-			if ( ! isset( $response['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['Destination']['PhysicalDestination'] ) ) {
-				return;
-			}
-
-			$address = $response['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['Destination']['PhysicalDestination'];
-
-			if ( ! empty( $address['CountryCode'] ) ) {
-				WC()->customer->set_country( $address['CountryCode'] );
-				WC()->customer->set_shipping_country( $address['CountryCode'] );
-			}
-
-			if ( ! empty( $address['StateOrRegion'] ) ) {
-				WC()->customer->set_state( $address['StateOrRegion'] );
-				WC()->customer->set_shipping_state( $address['StateOrRegion'] );
-			}
-
-			if ( ! empty( $address['PostalCode'] ) ) {
-				WC()->customer->set_postcode( $address['PostalCode'] );
-				WC()->customer->set_shipping_postcode( $address['PostalCode'] );
-			}
-
-			if ( ! empty( $address['City'] ) ) {
-				WC()->customer->set_city( $address['City'] );
-				WC()->customer->set_shipping_city( $address['City'] );
-			}
-
-		} catch( Exception $e ) {
-			wc_add_notice( __( 'Error:', 'wpsc' ) . ' ' . $e->getMessage(), 'error' );
-			return;
-		}
 	}
 
 	/**
@@ -797,18 +747,6 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			$log_meta = $args;
 
 			WPSC_Logging::insert_log( $log_data, $log_meta );
-		}
-	}
-
-	/**
-     * Payment form on checkout page
-     */
-	public function payment_fields() {
-		if ( $this->has_fields ) {
-			?>
-			<div id="amazon_wallet_widget"></div>
-			<input type="hidden" name="amazon_reference_id" value="<?php echo $this->reference_id; ?>" />
-			<?php
 		}
 	}
 
