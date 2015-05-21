@@ -9,6 +9,7 @@
  * - Add JP (Japan) to endpoints
  * - Remove $_SESSION use
  * - Get Platform ID from Amazon
+ *
  */
 class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
