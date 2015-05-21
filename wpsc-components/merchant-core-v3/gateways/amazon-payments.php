@@ -855,22 +855,24 @@ class WPSC_Amazon_Payments_Order_Handler {
 		$id       = isset( $_POST['amazon_id'] ) ? sanitize_text_field( $_POST['amazon_id'] ) : '';
 		$action   = sanitize_title( $_POST['amazon_action'] );
 
+		$this->set_purchase_log( $order_id );
+
 		switch ( $action ) {
 			case 'refresh' :
 				$this->clear_stored_states( $order_id );
 			break;
 			case 'authorize' :
 				// Delete old
-				delete_post_meta( $order_id, 'amazon_authorization_id' );
-				delete_post_meta( $order_id, 'amazon_capture_id' );
+				wpsc_delete_purchase_meta( $order_id, 'amazon_authorization_id' );
+				wpsc_delete_purchase_meta( $order_id, 'amazon_capture_id' );
 
 				$this->authorize_payment( $order_id, $id, false );
 				$this->clear_stored_states( $order_id );
 			break;
 			case 'authorize_capture' :
 				// Delete old
-				delete_post_meta( $order_id, 'amazon_authorization_id' );
-				delete_post_meta( $order_id, 'amazon_capture_id' );
+				wpsc_delete_purchase_meta( $order_id, 'amazon_authorization_id' );
+				wpsc_delete_purchase_meta( $order_id, 'amazon_capture_id' );
 
 				$this->authorize_payment( $order_id, $id, true );
 				$this->clear_stored_states( $order_id );
@@ -892,6 +894,8 @@ class WPSC_Amazon_Payments_Order_Handler {
 			break;
 		}
 
+		echo json_encode( array( 'action' => $action, 'order_id' => $order_id, 'amazon_id' => $id ) );
+
 		die();
 	}
 
@@ -899,9 +903,9 @@ class WPSC_Amazon_Payments_Order_Handler {
 	 * Wipe states so the value is refreshed
 	 */
 	public function clear_stored_states( $order_id ) {
-		delete_post_meta( $order_id, 'amazon_reference_state' );
-		delete_post_meta( $order_id, 'amazon_capture_state' );
-		delete_post_meta( $order_id, 'amazon_authorization_state' );
+		wpsc_delete_purchase_meta( $order_id, 'amazon_reference_state' );
+		wpsc_delete_purchase_meta( $order_id, 'amazon_capture_state' );
+		wpsc_delete_purchase_meta( $order_id, 'amazon_authorization_state' );
 	}
 
 	/**
@@ -910,22 +914,23 @@ class WPSC_Amazon_Payments_Order_Handler {
 	 * @return string or false on failure
 	 */
 	public function get_reference_state( $order_id, $id ) {
-		if ( $state = get_post_meta( $order_id, 'amazon_reference_state', true ) )
+
+		if ( $state = $this->log->get( 'amazon_reference_state' ) ) {
 			return $state;
+		}
 
-		$amazon = new WC_Gateway_Amazon_Payments_Advanced();
-
-		$response = $amazon->api_request( array(
+		$response = $this->gateway->api_request( array(
 			'Action'                 => 'GetOrderReferenceDetails',
 			'AmazonOrderReferenceId' => $id,
 		) );
 
-		if ( is_wp_error( $response ) || isset( $response['Error']['Message'] ) )
+		if ( is_wp_error( $response ) || isset( $response['Error']['Message'] ) ) {
 			return false;
+		}
 
 		$state = $response['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['OrderReferenceStatus']['State'];
 
-		update_post_meta( $order_id, 'amazon_reference_state', $state );
+		$order->set( 'amazon_reference_state', $state )->save();
 
 		return $state;
 	}
@@ -936,23 +941,26 @@ class WPSC_Amazon_Payments_Order_Handler {
 	 * @return string or false on failure
 	 */
 	public function get_authorization_state( $order_id, $id ) {
-		if ( $state = get_post_meta( $order_id, 'amazon_authorization_state', true ) ) {
+
+		$state = $this->log->get( 'amazon_authorization_state' );
+
+		if ( $state ) {
 			return $state;
 		}
 
-		$amazon = new WC_Gateway_Amazon_Payments_Advanced();
-
-		$response = $amazon->api_request( array(
+		$response = $this->gateway->api_request( array(
 			'Action'                => 'GetAuthorizationDetails',
 			'AmazonAuthorizationId' => $id,
 		) );
 
-		if ( is_wp_error( $response ) || isset( $response['Error']['Message'] ) )
+		if ( is_wp_error( $response ) || isset( $response['Error']['Message'] ) ) {
 			return false;
+		}
 
 		$state = $response['GetAuthorizationDetailsResult']['AuthorizationDetails']['AuthorizationStatus']['State'];
 
-		update_post_meta( $order_id, 'amazon_authorization_state', $state );
+
+		$this->log->set( 'amazon_authorization_state', $state )->save();
 
 		$this->maybe_update_billing_details( $order_id, $response['GetAuthorizationDetailsResult']['AuthorizationDetails'] );
 
@@ -961,6 +969,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 
 	/**
 	 * VAT registered sellers - Obtaining the Billing Address
+	 *
 	 * http://docs.developer.amazonservices.com/en_UK/apa_guide/APAGuide_GetAuthorizationStatus.html
 	 * @param  int $order_id
 	 * @param array $result
@@ -982,32 +991,26 @@ class WPSC_Amazon_Payments_Order_Handler {
 				$address_lines[] = $address['AddressLine3'];
 			}
 
-			if ( 3 === sizeof( $address_lines ) ) {
-				update_post_meta( $order_id, '_billing_company', $address_lines[0] );
-				update_post_meta( $order_id, '_billing_address_1', $address_lines[1] );
-				update_post_meta( $order_id, '_billing_address_2', $address_lines[2] );
-			} elseif ( 2 === sizeof( $address_lines ) ) {
-				update_post_meta( $order_id, '_billing_address_1', $address_lines[0] );
-				update_post_meta( $order_id, '_billing_address_2', $address_lines[1] );
-			} elseif ( sizeof( $address_lines ) ) {
-				update_post_meta( $order_id, '_billing_address_1', $address_lines[0] );
-			}
+			$street_address = implode( "\n", $address_lines );
+			$this->checkout_data->set( 'shippingaddress', $street_address );
 
 			if ( isset( $address['City'] ) ) {
-				update_post_meta( $order_id, '_billing_city', $address['City'] );
+				$this->checkout_data->set( 'billingcity', $address['City'] );
 			}
 
 			if ( isset( $address['PostalCode'] ) ) {
-				update_post_meta( $order_id, '_billing_postcode', $address['PostalCode'] );
+				$this->checkout_data->set( 'billingpostcode', $address['PostalCode'] );
 			}
 
 			if ( isset( $address['StateOrRegion'] ) ) {
-				update_post_meta( $order_id, '_billing_state', $address['StateOrRegion'] );
+				$this->checkout_data->set( 'billingstate', $address['StateOrRegion'] );
 			}
 
 			if ( isset( $address['CountryCode'] ) ) {
-				update_post_meta( $order_id, '_billing_country', $address['CountryCode'] );
+				$this->checkout_data->set( 'billingcountry', $address['CountryCode'] );
 			}
+
+			$this->checkout_data->save();
 		}
 	}
 
@@ -1017,22 +1020,22 @@ class WPSC_Amazon_Payments_Order_Handler {
 	 * @return string or false on failure
 	 */
 	public function get_capture_state( $order_id, $id ) {
-		if ( $state = get_post_meta( $order_id, 'amazon_capture_state', true ) )
+		if ( $state = $this->log->get( 'amazon_capture_state' ) ) {
 			return $state;
+		}
 
-		$amazon = new WC_Gateway_Amazon_Payments_Advanced();
-
-		$response = $amazon->api_request( array(
+		$response = $this->gateway->api_request( array(
 			'Action'          => 'GetCaptureDetails',
 			'AmazonCaptureId' => $id,
 		) );
 
-		if ( is_wp_error( $response ) || isset( $response['Error']['Message'] ) )
+		if ( is_wp_error( $response ) || isset( $response['Error']['Message'] ) ) {
 			return false;
+		}
 
 		$state = $response['GetCaptureDetailsResult']['CaptureDetails']['CaptureStatus']['State'];
 
-		update_post_meta( $order_id, 'amazon_capture_state', $state );
+		$this->log->set( 'amazon_capture_state', $state )->save();
 
 		return $state;
 	}
@@ -1060,20 +1063,29 @@ class WPSC_Amazon_Payments_Order_Handler {
 	 * @access public
 	 * @return void
 	 */
-	function authorization_box() {
-		global $post, $wpdb, $theorder;
+	public function authorization_box() {
 
 		$actions  = array();
-		$order_id = absint( $post->ID );
-
-		if ( ! is_object( $theorder ) )
-			$theorder = new WC_Order( $order_id );
+		$order_id = $this->log->get( 'id' );
 
 		// Get ids
-		$amazon_authorization_id = get_post_meta( $order_id, 'amazon_authorization_id', true );
-		$amazon_reference_id     = get_post_meta( $order_id, 'amazon_reference_id', true );
-		$amazon_capture_id       = get_post_meta( $order_id, 'amazon_capture_id', true );
-		$amazon_refund_ids       = get_post_meta( $order_id, 'amazon_refund_id', false );
+		$amazon_authorization_id = $this->log->get( 'amazon_authorization_id' );
+		$amazon_reference_id     = $this->log->get( 'amazon_reference_id' );
+		$amazon_capture_id       = $this->log->get( 'amazon_capture_id' );
+		$amazon_refund_ids       = wpsc_get_purchase_meta( $order_id, 'amazon_refund_id' );
+
+		?>
+
+		<div class="metabox-holder">
+			<div id="wpsc-amazon-payments" class="postbox">
+				<h3 class='hndle'><?php _e( 'Amazon Payments' , 'wpsc' ); ?></h3>
+				<div class='inside'>
+					<p><?php
+							_e( 'Current status: ', 'wpsc' );
+							echo wp_kses_data( $this->log->get( 'amazon-status' ) );
+						?>
+					</p>
+		<?php
 
 		if ( $amazon_capture_id ) {
 
@@ -1151,11 +1163,10 @@ class WPSC_Amazon_Payments_Order_Handler {
 								);
 							}
 						}
-
 					}
 				}
 
-				update_post_meta( $order_id, 'amazon_refunds', $refunds );
+				$this->log->set( 'amazon_refunds', $refunds )->save();
 			}
 		}
 
@@ -1181,7 +1192,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 				break;
 				case 'Pending' :
 
-					echo wpautop( __( 'You cannot capture funds whilst the authorization is pending. Try again later.', 'wpsc' ) );
+					echo wpautop( __( 'You cannot capture funds while the authorization is pending. Try again later.', 'wpsc' ) );
 
 					// Admin will need to re-check this, so clear the stored value
 					$this->clear_stored_states( $order_id );
