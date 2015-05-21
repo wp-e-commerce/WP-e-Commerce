@@ -310,7 +310,10 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		}
 
 		$this->wizard->completed_step( 'shipping-and-billing' );
-		wp_redirect( wpsc_get_checkout_url( $this->wizard->pending_step ) );
+
+		$url = add_query_arg( $_GET, wpsc_get_checkout_url( $this->wizard->pending_step ) );
+
+		wp_redirect( $url );
 		exit;
 	}
 
@@ -365,7 +368,9 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 		/* @todo: I _think_ this will be fine, as $module_name should still be defined at this execution path from the loop, but we need to confirm. */
 		$this->shipping_calculator->set_active_method( $module_name, $option );
-		wp_redirect( wpsc_get_checkout_url( $this->wizard->pending_step ) );
+
+		$url = add_query_arg( $_GET, wpsc_get_checkout_url( $this->wizard->pending_step ) );
+		wp_redirect( $url );
 		exit;
 	}
 
@@ -471,11 +476,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 			return;
 		}
 
-		$current_log_id = wpsc_get_customer_meta( 'current_purchase_log_id', '' );
-
-		if ( ! $current_log_id ) {
-			return;
-		}
+		$current_log_id = $this->get_purchase_log();
 
 		require_once( WPSC_TE_V2_CLASSES_PATH . '/shipping-calculator.php' );
 		$this->shipping_calculator = new WPSC_Shipping_Calculator( $current_log_id );
