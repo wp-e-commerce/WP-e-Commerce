@@ -466,6 +466,89 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		add_filter( 'wpsc_payment_method_form_fields', array( $this, 'remove_gateways_v2' ) );
 	}
 
+	public function set_customer_details() {
+		$_POST['wpsc_checkout_details'] = array();
+
+		try {
+
+			if ( ! $this->reference_id ) {
+				throw new Exception( __( 'An Amazon payment method was not chosen.', 'wpsc' ) );
+			}
+
+			if ( is_null( $this->purchase_log ) ) {
+				$log = _wpsc_get_current_controller()->get_purchase_log();
+				wpsc_update_customer_meta( 'current_purchase_log_id', $log->get( 'id' ) );
+				$this->set_purchase_log( $log );
+			}
+
+			global $wpsc_cart;
+
+			// Update order reference with amounts
+			$response = $this->api_request( array(
+				'Action'                                                       => 'SetOrderReferenceDetails',
+				'AmazonOrderReferenceId'                                       => $this->reference_id,
+				'OrderReferenceAttributes.OrderTotal.Amount'                   => $wpsc_cart->calculate_total_price(),
+				'OrderReferenceAttributes.OrderTotal.CurrencyCode'             => strtoupper( $this->get_currency_code() ),
+				'OrderReferenceAttributes.SellerNote'                          => sprintf( __( 'Order %s from %s.', 'wpsc' ), $this->purchase_log->get( 'id' ), urlencode( remove_accents( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) ) ) ),
+				'OrderReferenceAttributes.SellerOrderAttributes.SellerOrderId' => $this->purchase_log->get( 'id' ),
+				'OrderReferenceAttributes.SellerOrderAttributes.StoreName'     => remove_accents( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) ),
+				'OrderReferenceAttributes.PlatformId'                          => 'A2Z8DY3R4G08IM'
+			) );
+
+			if ( is_wp_error( $response ) ) {
+				throw new Exception( $response->get_error_message() );
+			}
+
+			if ( isset( $response['Error']['Message'] ) ) {
+				throw new Exception( $response['Error']['Message'] );
+			}
+
+			$response = $this->api_request( array(
+				'Action'                 => 'GetOrderReferenceDetails',
+				'AmazonOrderReferenceId' => $this->reference_id,
+			) );
+
+			if ( is_wp_error( $response ) ) {
+				throw new Exception( $response->get_error_message() );
+			}
+
+			if ( ! isset( $response['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['Destination']['PhysicalDestination'] ) ) {
+				return;
+			}
+			$buyer   = $response['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['Buyer'];
+			$address = $response['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['Destination']['PhysicalDestination'];
+
+			remove_action( 'wpsc_checkout_get_fields', '__return_empty_array' );
+			add_filter( 'wpsc_validate_form'         , '__return_true'  );
+
+			$form   = WPSC_Checkout_Form::get();
+			$fields = $form->get_fields();
+
+			foreach ( $fields as $field ) {
+
+				switch ( $field->unique_name ) {
+					case 'shippingstate':
+						$_POST['wpsc_checkout_details'][ $field->id ] = $address['StateOrRegion'];
+						break;
+					case 'shippingcountry':
+						$_POST['wpsc_checkout_details'][ $field->id ] = $address['CountryCode'];
+						break;
+					case 'shippingpostcode':
+						$_POST['wpsc_checkout_details'][ $field->id ] = $address['PostalCode'];
+						break;
+					case 'shippingcity':
+						$_POST['wpsc_checkout_details'][ $field->id ] = $address['City'];
+						break;
+				}
+			}
+
+		} catch( Exception $e ) {
+			WPSC_Message_Collection::get_instance()->add( $e->getMessage(), 'error', 'main', 'flash' );
+			return;
+		}
+
+	}
+
 	/**
 	 *  Checkout Button
 	 */
