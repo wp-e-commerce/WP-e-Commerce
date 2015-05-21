@@ -812,22 +812,37 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 class WPSC_Amazon_Payments_Order_Handler {
 
 	private static $instance;
+	private $log;
+	private $gateway;
+
+	public function __construct( &$gateway ) {
+
+		$this->log     = $gateway->purchase_log;
+		$this->gateway = $gateway;
+
+		$this->init();
+
+		return $this;
+	}
 
 	/**
 	 * Constructor
 	 */
 	public function init() {
-		add_action( 'add_meta_boxes'             , array( $this, 'meta_box' ) );
-		add_action( 'wp_ajax_amazon_order_action', array( $this, 'order_actions' ) );
+		add_action( 'wpsc_purchlogitem_metabox_start', array( $this, 'meta_box' ), 8 );
+		add_action( 'wp_ajax_amazon_order_action'    , array( $this, 'order_actions' ) );
 	}
 
-	public static function get_instance() {
+	public static function get_instance( $gateway ) {
 		if ( is_null( self::$instance ) ) {
-			self::$instance = new self;
-			self::$instance->init();
+			self::$instance = new WPSC_Amazon_Payments_Order_Handler( $gateway );
 		}
 
 		return self::$instance;
+	}
+
+	public function set_purchase_log( $id ) {
+		$this->log = new WPSC_Purchase_Log( $id );
 	}
 
 	/**
