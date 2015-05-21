@@ -344,6 +344,8 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	 */
 	private function set_customer_address( $buyer, $address ) {
 
+		remove_action( 'wpsc_checkout_get_fields', '__return_empty_array' );
+
 		$billing_name   = explode( ' ' , $buyer['Name'] );
 		$shipping_name  = explode( ' ' , $address['Name'] );
 
