@@ -209,8 +209,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		$this->save_shipping_and_billing_info();
 	}
 
-	private function save_shipping_and_billing_info() {
-		global $wpsc_cart;
+	public function get_purchase_log() {
 
 		// see if an existing purchase log has been set for this user
 		// otherwise create one
@@ -221,6 +220,14 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		} else {
 			$purchase_log = new WPSC_Purchase_Log();
 		}
+
+		return $purchase_log;
+	}
+
+	public function save_shipping_and_billing_info() {
+		global $wpsc_cart;
+
+		$purchase_log = $this->get_purchase_log();
 
 		$sessionid = ( mt_rand( 100, 999 ) . time() );
 		wpsc_update_customer_meta( 'checkout_session_id', $sessionid );
