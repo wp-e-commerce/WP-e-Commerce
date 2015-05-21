@@ -313,15 +313,17 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 					if ( $result ) {
 						// Payment complete
-						$order->payment_complete();
+						$order->set( 'amazon-status', __( 'Amazon order completed.  Funds have been authorized and captured.', 'wpsc' ) );
 					} else {
-						$order->update_status( 'failed', __( 'Could not authorize Amazon payment.', 'wpsc' ) );
+						$order->set( 'processed', WPSC_Purchase_Log::PAYMENT_DECLINED );
+						$order->set( 'amazon-status', __( 'Could not authorize Amazon payment.', 'wpsc' ) );
 					}
 
 				break;
 			}
 
-		$this->go_to_transaction_results();
+			$order->save();
+			$this->go_to_transaction_results();
 
 		} catch( Exception $e ) {
 			WPSC_Message_Collection::get_instance()->add( $e->getMessage(), 'error', 'main', 'flash' );
