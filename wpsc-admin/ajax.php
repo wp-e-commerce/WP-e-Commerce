@@ -111,8 +111,9 @@ add_action( 'wp_ajax_wpsc_ajax', '_wpsc_ajax_handler' );
 function wpsc_is_doing_ajax( $action = '' ) {
 	$ajax = defined( 'DOING_AJAX' ) && DOING_AJAX && ! empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'wpsc_ajax';
 
-	if ( $action )
+	if ( $action ) {
 		$ajax = $ajax && ! empty( $_REQUEST['wpsc_action'] ) && $action == str_replace( '-', '_', $_REQUEST['wpsc_action'] );
+	}
 
 	return $ajax;
 }

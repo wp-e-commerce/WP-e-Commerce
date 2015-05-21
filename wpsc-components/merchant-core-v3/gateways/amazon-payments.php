@@ -28,7 +28,6 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	);
 
 	private $order_handler;
-
 	private $reference_id;
 
 	public function __construct() {
@@ -39,10 +38,10 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 		$this->reference_id = ! empty( $_REQUEST['amazon_reference_id'] ) ? $_REQUEST['amazon_reference_id'] : '';
 
-		$this->order_handler = WPSC_Amazon_Payments_Order_Handler::get_instance();
+		$this->order_handler = WPSC_Amazon_Payments_Order_Handler::get_instance( $this );
 
 		add_action( 'wpsc_loaded', array( $this, 'init_handlers' ), 11 );
-		add_action( 'wp_footer', array( $this, 'maybe_hide_standard_checkout_button' ) );
+		add_action( 'wp_footer'  , array( $this, 'maybe_hide_standard_checkout_button' ) );
 
 		// Define user set variables
 		$this->seller_id       = $this->setting->get( 'seller_id' );
@@ -225,7 +224,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 		$order->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT )->save();
 
-		$amazon_reference_id = isset( $_POST['amazon_reference_id'] ) ? sanitize_text_field( $_POST['amazon_reference_id'] ) : '';
+		$amazon_reference_id = isset( $_REQUEST['amazon_reference_id'] ) ? sanitize_text_field( $_REQUEST['amazon_reference_id'] ) : '';
 
 		try {
 
@@ -283,6 +282,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 			// Store reference ID in the order
 			$order->set( 'amazon_reference_id', $amazon_reference_id )->save();
+			$this->order_handler->set_purchase_log( $order->get( 'id' ) );
 
 			switch ( $this->payment_capture ) {
 				case 'manual' :
