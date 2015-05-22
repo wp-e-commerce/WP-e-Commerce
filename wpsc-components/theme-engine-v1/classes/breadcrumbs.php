@@ -95,7 +95,7 @@ function wpsc_output_breadcrumbs( $options = null ) {
 	 */
 	// Defaults
 	$options = apply_filters( 'wpsc_output_breadcrumbs_options', $options );
-	$options = wp_parse_args( (array)$options, array(
+	$options = wp_parse_args( (array) $options, array(
 		'before-breadcrumbs' => '<div class="wpsc-breadcrumbs">',
 		'after-breadcrumbs'  => '</div>',
 		'before-crumb'       => '',
@@ -108,11 +108,13 @@ function wpsc_output_breadcrumbs( $options = null ) {
 	) );
 
 	$output = '';
-	$products_page_id = absint( $option['products_page_id'] );
+	$products_page_id = absint( $options['products_page_id'] );
 	$products_page = get_post( $products_page_id );
-	if ( !wpsc_has_breadcrumbs() ) {
+
+	if ( ! wpsc_has_breadcrumbs() ) {
 		return;
 	}
+
 	$filtered_products_page = array(
 		'url'  => get_option( 'product_list_url' ),
 		'name' => apply_filters ( 'the_title', $products_page->post_title, $products_page_id )
