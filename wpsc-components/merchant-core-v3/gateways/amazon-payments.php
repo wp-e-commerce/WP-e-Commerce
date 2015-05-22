@@ -534,10 +534,9 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			$fields = $form->get_fields();
 
 			foreach ( $fields as $field ) {
-
 				switch ( $field->unique_name ) {
 					case 'shippingstate':
-						$_POST['wpsc_checkout_details'][ $field->id ] = $address['StateOrRegion'];
+						$_POST['wpsc_checkout_details'][ $field->id ] = WPSC_Countries::get_region_id( $address['CountryCode'], $address['StateOrRegion'] );
 						break;
 					case 'shippingcountry':
 						$_POST['wpsc_checkout_details'][ $field->id ] = $address['CountryCode'];
