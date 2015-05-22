@@ -1420,10 +1420,10 @@ class WPSC_Amazon_Payments_Order_Handler {
      *
      * @param  int $order_id
      */
-    public function capture_payment( $order_id, $amazon_authorization_id ) {
+    public function capture_payment( $amazon_authorization_id ) {
 
 		if ( $this->log->get( 'gateway' ) == 'amazon-payments' ) {
-
+			var_dump( $amazon_authorization_id );
 			$response = $this->gateway->api_request( array(
 				'Action'                     => 'Capture',
 				'AmazonAuthorizationId'      => $amazon_authorization_id,
