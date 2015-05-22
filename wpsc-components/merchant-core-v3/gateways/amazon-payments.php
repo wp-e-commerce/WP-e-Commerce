@@ -524,7 +524,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			if ( ! isset( $response['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['Destination']['PhysicalDestination'] ) ) {
 				return;
 			}
-			$buyer   = $response['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['Buyer'];
+
 			$address = $response['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['Destination']['PhysicalDestination'];
 
 			remove_action( 'wpsc_checkout_get_fields', '__return_empty_array' );
@@ -1423,7 +1423,7 @@ class WPSC_Amazon_Payments_Order_Handler {
     public function capture_payment( $amazon_authorization_id ) {
 
 		if ( $this->log->get( 'gateway' ) == 'amazon-payments' ) {
-			var_dump( $amazon_authorization_id );
+
 			$response = $this->gateway->api_request( array(
 				'Action'                     => 'Capture',
 				'AmazonAuthorizationId'      => $amazon_authorization_id,
