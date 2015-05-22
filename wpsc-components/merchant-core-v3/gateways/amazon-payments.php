@@ -980,7 +980,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 	 * VAT registered sellers - Obtaining the Billing Address
 	 *
 	 * http://docs.developer.amazonservices.com/en_UK/apa_guide/APAGuide_GetAuthorizationStatus.html
-	 * @param  int $order_id
+	 *
 	 * @param array $result
 	 */
 	public function maybe_update_billing_details( $result ) {
@@ -1384,7 +1384,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 
     /**
      * Close auth
-     * @param  int $order_id
+     *
      * @param  string $amazon_authorization_id
      */
     public function close_authorization( $amazon_authorization_id ) {
@@ -1417,7 +1417,7 @@ class WPSC_Amazon_Payments_Order_Handler {
     /**
      * Capture payment
      *
-     * @param  int $order_id
+     * @param  string $amazon_authorization_id
      */
     public function capture_payment( $amazon_authorization_id ) {
 
@@ -1451,9 +1451,10 @@ class WPSC_Amazon_Payments_Order_Handler {
 
     /**
      * Refund a payment
-     * @param  int $order_id
+     *
      * @param  string $capture_id
-     * @param  float $amount
+     * @param  float  $amount
+     * @param  string $note
      */
     public function refund_payment( $capture_id, $amount, $note ) {
 		if ( $this->log->get( 'gateway' ) == 'amazon-payments' ) {
