@@ -74,6 +74,25 @@ function wpsc_breadcrumb_url() {
 */
 function wpsc_output_breadcrumbs( $options = null ) {
 
+	/**
+	 * Filter the arguments passed to wpsc_output_breadcrumbs.
+	 *
+	 * @since 3.9.0
+	 * @param array $options {
+	 *     associative array of options for outputting the breadcrumbs to this page.
+	 *
+	 *     'before-breadcrumbs' string  HTML output to start the breadcrumb.
+	 *     'after-breadcrumbs'  string  HTML output at the end of the breadcrumb eg closing tag.
+	 *     'before-crumb'       string  output before each step in path, typically decorative.
+	 *     'after-crumb'        string  output after each step in path.
+	 *     'crumb-separator'    string  demarks space between steps in path.
+	 *     'show_home_page'     bool    Whether to include home page as step at start of path.
+	 *     'show_products_page' bool    Whether to include products-page as second step in path.
+	 *     'echo'               bool    if true, outputs constructed string; if false, returns constructed string.
+	 *     'products_page_id'   int     Override the page id used for products_page
+	 *     }
+	 *
+	 */
 	// Defaults
 	$options = apply_filters( 'wpsc_output_breadcrumbs_options', $options );
 	$options = wp_parse_args( (array)$options, array(
@@ -84,19 +103,35 @@ function wpsc_output_breadcrumbs( $options = null ) {
 		'crumb-separator'    => ' &raquo; ',
 		'show_home_page'     => true,
 		'show_products_page' => true,
-		'echo'               => true
+		'echo'               => true,
+		'products_page_id'   => wpsc_get_the_post_id_by_shortcode( '[productspage]' )
 	) );
 
 	$output = '';
-	$products_page_id = wpsc_get_the_post_id_by_shortcode( '[productspage]' );
+	$products_page_id = absint( $option['products_page_id'] );
 	$products_page = get_post( $products_page_id );
 	if ( !wpsc_has_breadcrumbs() ) {
 		return;
 	}
 	$filtered_products_page = array(
 		'url'  => get_option( 'product_list_url' ),
-		'name' => apply_filters ( 'the_title', $products_page->post_title )
+		'name' => apply_filters ( 'the_title', $products_page->post_title, $products_page_id )
 	);
+
+	/**
+	 * Filter the values used to create the products-page step.
+	 *
+	 * Overrides the url and text show for the products-page step in breadcrumb.
+	 *
+	 * @since 3.9.0
+	 * @param array $filtered_products_page {
+	 *     associative array of options for outputting the breadcrumbs to this page.
+	 *
+	 *     'url'   string  Fully-qualified url to products-page.
+	 *     'name'  string  The name that will appear for the products-page in breadcrumb.
+	 *     }
+	 *
+	 */
 	$filtered_products_page = apply_filters( 'wpsc_change_pp_breadcrumb', $filtered_products_page );
 
 	// Home Page Crumb
@@ -131,6 +166,15 @@ function wpsc_output_breadcrumbs( $options = null ) {
 		}
 		$output .= $options['after-crumb'];
 	}
+
+	/**
+	 * Filter the assembled breadcrumb.
+	 *
+	 * @since 3.9.0
+	 * @param string $output The constructed breadcrumb string.
+	 * @param array $options {@see 'wpsc_output_breadcrumbs_options'}
+	 *
+	 */
 	$output = $options['before-breadcrumbs'] . apply_filters( 'wpsc_output_breadcrumbs', $output, $options ) . $options['after-breadcrumbs'];
 	if ( $options['echo'] ) {
 		echo $output;

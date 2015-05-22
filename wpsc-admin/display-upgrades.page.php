@@ -10,7 +10,7 @@ function wpsc_display_upgrades_page() {
 			<h2><?php esc_html_e( 'Upgrades', 'wpsc' ); ?></h2>
 			<div>
 				<?php if ( defined( 'WPSC_GOLD_MODULE_PRESENT' ) && ( true == WPSC_GOLD_MODULE_PRESENT ) ) {?>
-				<p><?php esc_html_e( 'Enter your API Username and API Key below.', 'wpsc' ); ?></p>
+				<p><?php esc_html_e( 'Enter your API Name/Email and API Key below.', 'wpsc' ); ?></p>
 				<p><a href="http://docs.wpecommerce.org/category/extending-your-store/premium-plugins/gold-cart/"><?php esc_html_e( 'For more information visit our documentation page.', 'wpsc' ); ?></a></p>
 				<?php } ?>
 				<div class='metabox-holder'>
