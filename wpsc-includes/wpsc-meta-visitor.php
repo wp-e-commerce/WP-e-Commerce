@@ -1178,7 +1178,7 @@ function wpsc_get_visitor_meta_by_timestamp( $timestamp = 0, $comparison = '>', 
 **************************************************************************************************/
 
 /**
- * Update any values dependant on shipping region
+ * Update any values dependent on shipping region
  *
  * @since 3.8.14
  *
