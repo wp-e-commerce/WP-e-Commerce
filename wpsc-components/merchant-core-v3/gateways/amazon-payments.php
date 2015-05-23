@@ -43,7 +43,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 		$this->title = __( 'Amazon Payments', 'wpsc' );
 
-		$this->reference_id = ! empty( $_REQUEST['amazon_reference_id'] ) ? $_REQUEST['amazon_reference_id'] : '';
+		$this->reference_id = ! empty( $_REQUEST['amazon_reference_id'] ) ? sanitize_text_field( $_REQUEST['amazon_reference_id'] ) : '';
 
 		$this->order_handler = WPSC_Amazon_Payments_Order_Handler::get_instance( $this );
 
@@ -72,17 +72,9 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			parse_str( $_POST['post_data'], $post_data );
 
 			if ( isset( $post_data['amazon_reference_id'] ) ) {
-				$this->reference_id = $post_data['amazon_reference_id'];
+				$this->reference_id = sanitize_text_field( $post_data['amazon_reference_id'] );
 			}
 		}
-
-		// Handling for the review page of the German Market Plugin
-		if ( empty( $this->reference_id ) ) {
-			if ( isset( $_SESSION['first_checkout_post_array']['amazon_reference_id'] ) ) {
-				$this->reference_id = $_SESSION['first_checkout_post_array']['amazon_reference_id'];
-			}
-		}
-
 	}
 
 	public function get_image_url() {
