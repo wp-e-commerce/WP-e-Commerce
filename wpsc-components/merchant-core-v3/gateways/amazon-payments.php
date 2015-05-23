@@ -465,11 +465,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	}
 
 	public function lazy_load_location_meta() {
-		if (
-		'checkout' == _wpsc_get_current_controller_name() &&
-		'shipping_and_billing' == _wpsc_get_current_controller_method() &&
-		isset( $_POST['action'] ) &&
-		'submit_checkout_form' == $_POST['action'] ) {
+		if ( isset( $_POST['action'] ) && 'submit_checkout_form' == $_POST['action'] ) {
 			remove_action( 'wpsc_checkout_get_fields', '__return_empty_array' );
 			$this->set_customer_details();
 		}
