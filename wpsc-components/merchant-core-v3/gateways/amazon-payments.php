@@ -706,7 +706,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 		$args = wp_parse_args( $args, $defaults );
 
-		$response = wp_remote_get(
+		$response = wp_safe_remote_get(
 			$this->get_signed_amazon_url( $this->endpoint . '?' . http_build_query( $args, '', '&' ), $this->secret_key ),
 			array(
 				'timeout' => 12
