@@ -758,51 +758,51 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 		$params = array();
 
-	    foreach ( explode( '&', $urlparts['query'] ) as $part ) {
-	        if ( strpos( $part, '=' ) ) {
-	            list( $name, $value ) = explode( '=', $part, 2 );
-	        } else {
-	            $name  = $part;
-	            $value = '';
-	        }
-	        $params[ $name ] = $value;
-	    }
+		foreach ( explode( '&', $urlparts['query'] ) as $part ) {
+			if ( strpos( $part, '=' ) ) {
+				list( $name, $value ) = explode( '=', $part, 2 );
+			} else {
+				$name  = $part;
+				$value = '';
+			}
+			$params[ $name ] = $value;
+		}
 
-	    // Include a timestamp if none was provided
-	    if ( empty( $params['Timestamp'] ) ) {
-	        $params['Timestamp'] = gmdate( 'Y-m-d\TH:i:s\Z' );
-	    }
+		// Include a timestamp if none was provided
+		if ( empty( $params['Timestamp'] ) ) {
+			$params['Timestamp'] = gmdate( 'Y-m-d\TH:i:s\Z' );
+		}
 
-	    $params['SignatureVersion'] = '2';
-	    $params['SignatureMethod'] = 'HmacSHA256';
+		$params['SignatureVersion'] = '2';
+		$params['SignatureMethod'] = 'HmacSHA256';
 
-	    // Sort the array by key
-	    ksort( $params );
+		// Sort the array by key
+		ksort( $params );
 
-	    // Build the canonical query string
-	    $canonical       = '';
+		// Build the canonical query string
+		$canonical = '';
 
-	    // Don't encode here - http_build_query already did it.
-	    foreach ( $params as $key => $val ) {
-	        $canonical  .= $key . "=" . rawurlencode( utf8_decode( urldecode( $val ) ) ) . "&";
-	    }
+		// Don't encode here - http_build_query already did it.
+		foreach ( $params as $key => $val ) {
+			$canonical  .= $key . "=" . rawurlencode( utf8_decode( urldecode( $val ) ) ) . "&";
+		}
 
 		// Remove the trailing ampersand
-		$canonical      = preg_replace( "/&$/", '', $canonical );
+		$canonical = preg_replace( "/&$/", '', $canonical );
 
 		// Some common replacements and ones that Amazon specifically mentions
-		$canonical      = str_replace( array( ' ', '+', ',', ';' ), array( '%20', '%20', urlencode(','), urlencode(':') ), $canonical );
+		$canonical = str_replace( array( ' ', '+', ',', ';' ), array( '%20', '%20', urlencode(','), urlencode(':') ), $canonical );
 
 		// Build the sign
 		$string_to_sign = "GET\n{$urlparts['host']}\n{$urlparts['path']}\n$canonical";
 
 		// Calculate our actual signature and base64 encode it
-		$signature      = base64_encode( hash_hmac( 'sha256', $string_to_sign, $secret_key, true ) );
+		$signature = base64_encode( hash_hmac( 'sha256', $string_to_sign, $secret_key, true ) );
 
 		// Finally re-build the URL with the proper string and include the Signature
-		$url            = "{$urlparts['scheme']}://{$urlparts['host']}{$urlparts['path']}?$canonical&Signature=" . rawurlencode( $signature );
+		$url = "{$urlparts['scheme']}://{$urlparts['host']}{$urlparts['path']}?$canonical&Signature=" . rawurlencode( $signature );
 
-	    return $url;
+		return $url;
 	}
 }
 
@@ -1385,19 +1385,16 @@ class WPSC_Amazon_Payments_Order_Handler {
 			) );
 
 			if ( is_wp_error( $response ) ) {
+				return;
+			}
 
-				// Don't add a note
-				//
-			} elseif ( isset( $response['Error']['Message'] ) ) {
+			if ( isset( $response['Error']['Message'] ) ) {
 
 				$this->log->set( 'amazon-status', $response['Error']['Message'] )->save();
 
 			} else {
-
 				wpsc_delete_purchase_meta( $this->log->get( 'id' ), 'amazon_authorization_id' );
-
 				$this->log->set( 'amazon-status', sprintf( __( 'Authorization closed (Auth ID: %s)', 'wpsc' ), $amazon_authorization_id ) )->save();
-
 			}
 		}
     }
