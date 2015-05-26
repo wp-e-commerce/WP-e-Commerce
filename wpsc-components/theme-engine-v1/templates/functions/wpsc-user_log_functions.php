@@ -136,20 +136,14 @@ function wpsc_has_downloads() {
 	}
 
 	foreach ( (array)$products as $key => $product ) {
-	if( empty( $product['uniqueid'] ) ) { // if the uniqueid is not equal to null, its "valid", regardless of what it is
-			$links[] = home_url( '/?downloadid=' . $product['id'] );
-		} else {
-			$links[] = home_url( '/?downloadid=' . $product['uniqueid'] );
- 		}
-		$sql = $wpdb->prepare( "SELECT * FROM $wpdb->posts WHERE id = %d", $product['fileid'] );
-		$file = $wpdb->get_results( $sql, ARRAY_A );
-		$files[] = $file[0];
+		$links[] = empty( $product['uniqueid'] ) ? add_query_arg( 'downloadid', $product['id'], home_url() ) : add_query_arg( 'downloadid', $product['uniqueid'], home_url() );
+		$downloads[] = $product['product_id'];
 	}
-	if ( count( $files ) > 0 ) {
-		return true;
-	} else {
-		return false;
-	}
+
+	$sql   = $wpdb->prepare( "SELECT * FROM $wpdb->posts WHERE post_parent IN ( %s )", implode( ',', $downloads ) );
+	$files = $wpdb->get_results( $sql, ARRAY_A );
+
+	return apply_filters( 'wpsc_has_downloads', count( $files ) > 0 );
 }
 
 function wpsc_has_purchases() {
