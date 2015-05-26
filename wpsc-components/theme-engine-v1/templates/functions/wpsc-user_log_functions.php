@@ -114,36 +114,49 @@ function wpsc_display_form_fields() {
 function wpsc_has_downloads() {
 	global $wpdb, $user_ID, $files, $links, $products;
 
+	$has_downloads = false;
+
 	$purchases = $wpdb->get_results( "SELECT `id`, `processed` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE user_ID = " . ( int ) $user_ID . "" );
 	$rowcount = count( $purchases );
 
 	if ( $rowcount >= 1 ) {
+
 		$perchidstr = "(";
 		$perchids = array();
-		foreach ( ( array ) $purchases as $purchase ) {
+
+		foreach ( (array) $purchases as $purchase ) {
 			$is_transaction = wpsc_check_purchase_processed( $purchase->processed );
-			if( $is_transaction ) {
+
+			if ( $is_transaction ) {
 				$perchids[] = $purchase->id;
 			}
 		}
-		if(!empty($perchids)){
+
+		if ( ! empty( $perchids ) ) {
 			$perchidstr .= implode( ',', $perchids );
 			$perchidstr .= ")";
+
 			$sql = "SELECT * FROM `" . WPSC_TABLE_DOWNLOAD_STATUS . "` WHERE `purchid` IN " . $perchidstr . " AND `active` IN ('1') ORDER BY `datetime` DESC";
+
 			$products = $wpdb->get_results( $sql, ARRAY_A );
 			$products = apply_filters( 'wpsc_has_downloads_products', $products );
+
+			foreach ( (array) $products as $key => $product ) {
+				$links[]     = empty( $product['uniqueid'] ) ? add_query_arg( 'downloadid', $product['id'], home_url() ) : add_query_arg( 'downloadid', $product['uniqueid'], home_url() );
+				$downloads[] = $product['product_id'];
+			}
+
+			$downloads = implode( ',', array_map( 'absint', $downloads ) );
+
+			$sql   = $wpdb->prepare( "SELECT * FROM $wpdb->posts WHERE post_parent IN ($downloads) AND post_type = 'wpsc-product-file'", implode( ',', $downloads ) );
+			$files = $wpdb->get_results( $sql, ARRAY_A );
+
+			$has_downloads =  count( $files ) > 0;
 		}
+
 	}
 
-	foreach ( (array)$products as $key => $product ) {
-		$links[] = empty( $product['uniqueid'] ) ? add_query_arg( 'downloadid', $product['id'], home_url() ) : add_query_arg( 'downloadid', $product['uniqueid'], home_url() );
-		$downloads[] = $product['product_id'];
-	}
-
-	$sql   = $wpdb->prepare( "SELECT * FROM $wpdb->posts WHERE post_parent IN ( %s )", implode( ',', $downloads ) );
-	$files = $wpdb->get_results( $sql, ARRAY_A );
-
-	return apply_filters( 'wpsc_has_downloads', count( $files ) > 0 );
+	return apply_filters( 'wpsc_has_downloads', $has_downloads );
 }
 
 function wpsc_has_purchases() {
