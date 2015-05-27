@@ -146,7 +146,14 @@ function wpsc_has_downloads() {
 				$downloads[] = $product['product_id'];
 			}
 
-			$downloads = new WP_Query( array( 'post_parent__in' => $downloads, 'post_type' => 'wpsc-product-file', 'posts_per_page' => -1 ) );
+			$downloads = new WP_Query(
+				array(
+					'post_parent__in' => $downloads,
+					'post_type'       => 'wpsc-product-file',
+					'posts_per_page'  => -1,
+					'post_status'     => 'all'
+				)
+			);
 
 			if ( $downloads->have_posts() ) {
 				$files = $downloads->query();
