@@ -146,12 +146,20 @@ function wpsc_has_downloads() {
 				$downloads[] = $product['product_id'];
 			}
 
-			$downloads = implode( ',', array_map( 'absint', $downloads ) );
+			$downloads = new WP_Query( array( 'post_parent__in' => $downloads, 'post_type' => 'wpsc-product-file', 'posts_per_page' => -1 ) );
 
-			$sql   = $wpdb->prepare( "SELECT * FROM $wpdb->posts WHERE post_parent IN ($downloads) AND post_type = 'wpsc-product-file'" );
-			$files = $wpdb->get_results( $sql, ARRAY_A );
+			if ( $downloads->have_posts() ) {
+				$files = $downloads->query();
 
-			$has_downloads =  count( $files ) > 0;
+				foreach ( $files as $key => $post ) {
+					$files[ $key ] = (array) $post;
+				}
+
+			} else {
+				$files = array();
+			}
+
+			$has_downloads = count( $files ) > 0;
 		}
 
 	}

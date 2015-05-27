@@ -46,7 +46,6 @@ class WP_eCommerce {
 	public function init() {
 		// Previous to initializing
 		do_action( 'wpsc_pre_init' );
-
 		// Initialize
 		$this->start();
 		$this->constants();
