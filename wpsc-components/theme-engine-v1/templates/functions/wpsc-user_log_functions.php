@@ -148,7 +148,7 @@ function wpsc_has_downloads() {
 
 			$downloads = implode( ',', array_map( 'absint', $downloads ) );
 
-			$sql   = $wpdb->prepare( "SELECT * FROM $wpdb->posts WHERE post_parent IN ($downloads) AND post_type = 'wpsc-product-file'", implode( ',', $downloads ) );
+			$sql   = $wpdb->prepare( "SELECT * FROM $wpdb->posts WHERE post_parent IN ($downloads) AND post_type = 'wpsc-product-file'" );
 			$files = $wpdb->get_results( $sql, ARRAY_A );
 
 			$has_downloads =  count( $files ) > 0;
