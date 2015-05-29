@@ -3,11 +3,7 @@
  * Todos, in a future phase:
  *
  * - Integrate with recurring payments
- * - Integrate Refunds
  * - Integrate with tev1
- * - Add WP Layer to SDK and handle
- * - Add JP (Japan) to endpoints
- * - Remove $_SESSION use
  * - Get Platform ID from Amazon
  *
  */
@@ -425,7 +421,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	 */
 	public function init_handlers() {
 		// Disable if no seller ID
-		if ( empty( $this->setting->get( 'seller_id' ) ) ) {
+		if ( empty( $this->seller_id ) ) {
 			return;
 		}
 
