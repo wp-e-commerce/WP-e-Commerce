@@ -156,7 +156,7 @@ function wpsc_has_downloads() {
 			);
 
 			if ( $downloads->have_posts() ) {
-				$files = $downloads->query();
+				$files = $downloads->query( $downloads->query_vars );
 
 				foreach ( $files as $key => $post ) {
 					$files[ $key ] = (array) $post;
@@ -168,7 +168,6 @@ function wpsc_has_downloads() {
 
 			$has_downloads = count( $files ) > 0;
 		}
-
 	}
 
 	return apply_filters( 'wpsc_has_downloads', $has_downloads );

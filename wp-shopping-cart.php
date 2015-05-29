@@ -162,8 +162,6 @@ class WP_eCommerce {
 			$wpdb->wpsc_visitors           ,
 			$wpdb->wpsc_visitormeta        ,
 		);
-
-
 	}
 
 	/**
