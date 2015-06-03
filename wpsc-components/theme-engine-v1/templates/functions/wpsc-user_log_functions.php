@@ -136,7 +136,12 @@ function wpsc_has_downloads() {
 	}
 
 	foreach ( (array)$products as $key => $product ) {
-	if( empty( $product['uniqueid'] ) ) { // if the uniqueid is not equal to null, its "valid", regardless of what it is
+		$post = get_post( $product['fileid'] );
+		if ( ! $post ) {
+			unset( $products[$key] );
+			continue;
+		}
+		if( empty( $product['uniqueid'] ) ) { // if the uniqueid is not equal to null, its "valid", regardless of what it is
 			$links[] = home_url( '/?downloadid=' . $product['id'] );
 		} else {
 			$links[] = home_url( '/?downloadid=' . $product['uniqueid'] );
