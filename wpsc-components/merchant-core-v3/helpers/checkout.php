@@ -94,8 +94,9 @@ add_action(
 );
 
 function _wpsc_action_merchant_v3_submit_checkout( $gateway_id, $log ) {
-	if ( ! wpsc_is_payment_gateway_registered( $gateway_id ) )
+	if ( ! wpsc_is_payment_gateway_registered( $gateway_id ) ) {
 		return;
+	}
 
 	$gateway = wpsc_get_payment_gateway( $gateway_id );
 	$gateway->set_purchase_log( $log );

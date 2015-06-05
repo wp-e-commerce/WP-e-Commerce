@@ -358,8 +358,7 @@ function wpsc_get_checkout_form_args() {
 		'action' => '',
 		'id'     => "wpsc-checkout-form",
 		'inline_validation_errors' => true,
-		'fields' => array(
-		),
+		'fields' => array(),
 		'form_actions' => array(
 			array(
 				'type'    => 'submit',
@@ -381,7 +380,7 @@ function wpsc_get_checkout_form_args() {
 	);
 
 	$args['fields'] = _wpsc_convert_checkout_form_fields();
-	return $args;
+	return apply_filters( 'wpsc_get_checkout_form_args', $args );
 }
 
 function _wpsc_convert_checkout_form_fields( $customer_settings = false ) {
@@ -662,8 +661,7 @@ function wpsc_get_checkout_shipping_form_args() {
 		),
 	);
 
-	$args = _wpsc_convert_checkout_shipping_form_args( $args );
-	return $args;
+	return apply_filters( 'wpsc_get_checkout_shipping_method_form_args', _wpsc_convert_checkout_shipping_form_args( $args ) );
 }
 
 function _wpsc_convert_checkout_shipping_form_args( $args ) {
@@ -754,7 +752,7 @@ function wpsc_get_checkout_payment_method_form_args() {
 		),
 	);
 
-	$args = _wpsc_convert_checkout_payment_method_form_args( $args );
+	$args = apply_filters( 'wpsc_get_checkout_payment_method_form_args', _wpsc_convert_checkout_payment_method_form_args( $args ) );
 	return $args;
 }
 

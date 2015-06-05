@@ -9,7 +9,9 @@ function wpsc_validate_form( $form_args, &$validated_array = false ) {
 	$a     =& $error;
 
 	if ( ! isset( $form_args['fields'] ) ) {
-		return;
+		$valid = null;
+	} else {
+		$valid = true;
 	}
 
 	$form = $form_args['fields'];
@@ -55,10 +57,10 @@ function wpsc_validate_form( $form_args, &$validated_array = false ) {
 	}
 
 	if ( count( $error->get_error_messages() ) ) {
-		return $error;
+		$valid = $error;
 	}
 
-	return true;
+	return apply_filters( 'wpsc_validate_form', $valid );
 }
 
 /**

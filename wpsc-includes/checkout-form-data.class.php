@@ -7,9 +7,10 @@
  */
 
 class WPSC_Checkout_Form_Data {
-	private $data         = array();
-	private $raw_data     = array();
-	private $gateway_data = array();
+	private $data           = array();
+	private $raw_data       = array();
+	private $gateway_data   = array();
+	private $submitted_data = array();
 	private $log_id;
 
 	public function __construct( $log_id ) {
@@ -36,8 +37,9 @@ class WPSC_Checkout_Form_Data {
 		// At the moment, only core fields have unique_name. In the future, all fields will have
 		// a unique name rather than just IDs.
 		foreach ( $this->raw_data as $field ) {
-			if ( ! empty( $field->unique_name ) )
-			$this->data[$field->unique_name] = $field->value;
+			if ( ! empty( $field->unique_name ) ) {
+				$this->data[ $field->unique_name ] = $field->value;
+			}
 		}
 	}
 
@@ -46,7 +48,7 @@ class WPSC_Checkout_Form_Data {
 	}
 
 	public function get( $key ) {
-		$value = isset( $this->data[$key] ) ? $this->data[$key] : null;
+		$value = isset( $this->data[ $key ] ) ? $this->data[ $key ] : null;
 		return apply_filters( 'wpsc_checkout_form_data_get_property', $value, $key, $this );
 	}
 
@@ -67,18 +69,22 @@ class WPSC_Checkout_Form_Data {
 				'phone'     => 'phone',
 			);
 
-			foreach( array( 'shipping', 'billing' ) as $type ) {
+			foreach ( array( 'shipping', 'billing' ) as $type ) {
+
 				$data_key = "{$type}_address";
-				$this->gateway_data[$data_key] = array();
-				foreach( $map as $key => $new_key ) {
+				$this->gateway_data[ $data_key ] = array();
+
+				foreach ( $map as $key => $new_key ) {
 					$key = $type . $key;
-					if ( isset( $this->data[$key] ) ) {
-						$value = $this->data[$key];
 
-						if ( $new_key == 'state' && is_numeric( $value ) )
+					if ( isset( $this->data[ $key ] ) ) {
+						$value = $this->data [$key ];
+
+						if ( $new_key == 'state' && is_numeric( $value ) ) {
 							$value = wpsc_get_state_by_id( $value, 'code' );
+						}
 
-						$this->gateway_data[$data_key][$new_key] = $value;
+						$this->gateway_data[ $data_key ][ $new_key ] = $value;
 					}
 				}
 
@@ -96,28 +102,77 @@ class WPSC_Checkout_Form_Data {
 	}
 
 	/**
+	 * Set specific database fields.
+	 *
+	 * @param string|int $key   Expects either form ID or unique name.
+	 * @param string     $value Value to be set for field.
+	 *
+	 * @since  4.0
+	 * @return WPSC_Checkout_Form_Data Current instance of form data.
+	 */
+	public function set( $key, $value = '' ) {
+
+		if ( ! is_numeric( $key ) ) {
+			$checkout_form = WPSC_Checkout_Form::get();
+			$key = $checkout_form->get_field_id_by_unique_name( $key );
+		}
+
+		$this->submitted_data[ $key ] = $value;
+
+		return $this;
+	}
+
+	/**
+	 * Used in conjunction with set() method, saves individual checkout form fields to database.
+	 *
+	 * @since  4.0
+	 * @return void
+	 */
+	public function save() {
+
+		$log    = new WPSC_Purchase_Log( $this->log_id );
+		$form   = WPSC_Checkout_Form::get();
+		$fields = $form->get_fields();
+
+		$original_data = wp_list_pluck( $this->get_raw_data(), 'value', 'id' );
+
+		$this->submitted_data = array_replace( $original_data, $this->submitted_data );
+
+		return self::save_form( $log, $fields, $this->submitted_data );
+	}
+
+	/**
 	 * Save Submitted Form Fields to the wpsc_submited_form_data table.
 	 *
 	 * @param WPSC_Purchase_Log $purchase_log
 	 * @param array $fields
 	 * @return void
 	 */
-	public static function save_form( $purchase_log, $fields ) {
+	public static function save_form( $purchase_log, $fields, $data = array() ) {
 		global $wpdb;
+
 		$log_id = $purchase_log->get( 'id' );
 
 		// delete previous field values
 		$sql = $wpdb->prepare( "DELETE FROM " . WPSC_TABLE_SUBMITTED_FORM_DATA . " WHERE log_id = %d", $log_id );
 		$wpdb->query( $sql );
+
+		if ( empty( $data ) && isset( $_POST['wpsc_checkout_details'] ) ) {
+			$data = $_POST['wpsc_checkout_details'];
+		}
+
 		$customer_details = array();
+
 		foreach ( $fields as $field ) {
+
 			if ( $field->type == 'heading' ) {
 				continue;
 			}
+
 			$value = '';
 
-			if ( isset( $_POST['wpsc_checkout_details'][ $field->id ] ) ) {
-				$value = wp_unslash( $_POST['wpsc_checkout_details'][ $field->id ] );
+			if ( isset( $data[ $field->id ] ) ) {
+				$value = wp_unslash( $data[ $field->id ] );
 			}
 
 			$customer_details[ $field->id ] = $value;

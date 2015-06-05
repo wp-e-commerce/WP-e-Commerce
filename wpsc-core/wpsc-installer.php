@@ -213,12 +213,14 @@ function wpsc_install() {
 		'chronopay'						=> '',
 		'wpsc_merchant_paypal_express'	=> '',
 		'wpsc_merchant_paypal_pro'		=> '',
-		'wpsc_merchant_paypal_standard'	=> ''
+		'wpsc_merchant_paypal_standard'	=> '',
+		'amazon-payments'           	=> ''
 	);
 
 	$existing_payment_gateways_names = get_option( 'payment_gateway_names' );
-	$new_payment_gatewats_name = array_merge($default_payment_gateways_names, (array)$existing_payment_gateways_names);
-	update_option( 'payment_gateway_names', $new_payment_gatewats_name );
+
+	$new_payment_gateways_name = array_merge( $default_payment_gateways_names, (array) $existing_payment_gateways_names);
+	update_option( 'payment_gateway_names', $new_payment_gateways_name );
 
 
 	if ( function_exists( 'register_sidebar' ) )

@@ -198,7 +198,7 @@ class WPSC_Purchase_Log_Page {
 		}
 	}
 
-	private function purchase_log_custom_fields(){
+	public function purchase_log_custom_fields(){
 		if( wpsc_purchlogs_has_customfields() ){?>
 			<div class='metabox-holder'>
 				<div id='purchlogs_customfields' class='postbox'>
@@ -279,6 +279,7 @@ class WPSC_Purchase_Log_Page {
 		register_column_headers( 'wpsc_purchase_log_item_details', $columns );
 
 		add_action( 'wpsc_display_purchase_logs_page', array( $this, 'display_purchase_log' ) );
+		add_action( 'wpsc_purchlogitem_metabox_start', array( $this, 'purchase_log_custom_fields' ) );
 	}
 
 	public function controller_packing_slip() {
@@ -394,11 +395,11 @@ class WPSC_Purchase_Log_Page {
 
 				$ids = array_map( 'intval', $_REQUEST['post'] );
 				$in = implode( ', ', $ids );
-				$wpdb->query( "DELETE FROM " . WPSC_TABLE_PURCHASE_LOGS . " WHERE id IN ($in)" );
-				$wpdb->query( "DELETE FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid IN ($in)" );
-				$wpdb->query( "DELETE FROM " . WPSC_TABLE_SUBMITTED_FORM_DATA . " WHERE log_id IN ($in)" );
-				$claimed_query = new WPSC_Claimed_Stock( array( 'cart_id' => $in ) );
-				$claimed_query->clear_claimed_stock( 0 );
+
+				foreach ( $in as $id ) {
+					$log = new WPSC_Purchase_Log( $id );
+					$log->delete();
+				}
 
 				$sendback = add_query_arg( array(
 					'paged'   => $_REQUEST['last_paged'],
