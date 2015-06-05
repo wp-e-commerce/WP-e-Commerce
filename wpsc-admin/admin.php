@@ -114,6 +114,9 @@ add_filter('set-screen-option', 'wpsc_set_screen_option', 99, 3);
  * @param   array   $args      Dropdown args.
  * @param   string  $taxonomy  Taxonomy.
  * @param   string  $context   Context.
+ *
+ * @since  4.0
+ *
  * @return  array              Filtered dropdown args.
  */
 function wpsc_variation_parent_dropdown_args( $args, $taxonomy, $context ) {

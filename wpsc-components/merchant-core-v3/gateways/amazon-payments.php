@@ -144,7 +144,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		</tr>
 		<tr>
 			<td>
-				<label for="wpsc-amazon-payments-secret-key"><?php _e( 'Secret Key', 'wpsc' ); ?></label>
+				<label for="wpsc-amazon-payments-secret-key"><?php _e( 'MWS Secret Key', 'wpsc' ); ?></label>
 			</td>
 			<td>
 				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'secret_key' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'secret_key' ) ); ?>" id="wpsc-amazon-payments-secret-key" /><br />
