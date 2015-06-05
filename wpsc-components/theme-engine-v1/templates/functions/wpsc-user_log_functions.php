@@ -114,47 +114,71 @@ function wpsc_display_form_fields() {
 function wpsc_has_downloads() {
 	global $wpdb, $user_ID, $files, $links, $products;
 
+	$has_downloads = false;
+
 	$purchases = $wpdb->get_results( "SELECT `id`, `processed` FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE user_ID = " . ( int ) $user_ID . "" );
 	$rowcount = count( $purchases );
 
 	if ( $rowcount >= 1 ) {
+
 		$perchidstr = "(";
 		$perchids = array();
-		foreach ( ( array ) $purchases as $purchase ) {
+
+		foreach ( (array) $purchases as $purchase ) {
 			$is_transaction = wpsc_check_purchase_processed( $purchase->processed );
-			if( $is_transaction ) {
+
+			if ( $is_transaction ) {
 				$perchids[] = $purchase->id;
 			}
 		}
-		if(!empty($perchids)){
+
+		if ( ! empty( $perchids ) ) {
 			$perchidstr .= implode( ',', $perchids );
 			$perchidstr .= ")";
+
 			$sql = "SELECT * FROM `" . WPSC_TABLE_DOWNLOAD_STATUS . "` WHERE `purchid` IN " . $perchidstr . " AND `active` IN ('1') ORDER BY `datetime` DESC";
+
 			$products = $wpdb->get_results( $sql, ARRAY_A );
 			$products = apply_filters( 'wpsc_has_downloads_products', $products );
+
+			foreach ( (array) $products as $key => $product ) {
+
+				$post = get_post( $product['fileid'] );
+
+				if ( ! $post ) {
+					unset( $products[ $key ] );
+					continue;
+				}
+
+				$links[]     = empty( $product['uniqueid'] ) ? add_query_arg( 'downloadid', $product['id'], home_url() ) : add_query_arg( 'downloadid', $product['uniqueid'], home_url() );
+				$downloads[] = $product['product_id'];
+			}
+
+			$downloads = new WP_Query(
+				array(
+					'post_parent__in' => $downloads,
+					'post_type'       => 'wpsc-product-file',
+					'posts_per_page'  => -1,
+					'post_status'     => 'all'
+				)
+			);
+
+			if ( $downloads->have_posts() ) {
+				$files = $downloads->query( $downloads->query_vars );
+
+				foreach ( $files as $key => $post ) {
+					$files[ $key ] = (array) $post;
+				}
+
+			} else {
+				$files = array();
+			}
+
+			$has_downloads = count( $files ) > 0;
 		}
 	}
 
-	foreach ( (array)$products as $key => $product ) {
-		$post = get_post( $product['fileid'] );
-		if ( ! $post ) {
-			unset( $products[$key] );
-			continue;
-		}
-		if( empty( $product['uniqueid'] ) ) { // if the uniqueid is not equal to null, its "valid", regardless of what it is
-			$links[] = home_url( '/?downloadid=' . $product['id'] );
-		} else {
-			$links[] = home_url( '/?downloadid=' . $product['uniqueid'] );
- 		}
-		$sql = $wpdb->prepare( "SELECT * FROM $wpdb->posts WHERE id = %d", $product['fileid'] );
-		$file = $wpdb->get_results( $sql, ARRAY_A );
-		$files[] = $file[0];
-	}
-	if ( count( $files ) > 0 ) {
-		return true;
-	} else {
-		return false;
-	}
+	return apply_filters( 'wpsc_has_downloads', $has_downloads );
 }
 
 function wpsc_has_purchases() {
