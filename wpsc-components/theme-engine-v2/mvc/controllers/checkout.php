@@ -158,7 +158,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 			return null;
 		}
 
-		// Update the PurchaseLog
+		// Update the Purchase Log
 		$purchase_log_id = wpsc_get_customer_meta( 'current_purchase_log_id' );
 		$purchase_log    = new WPSC_Purchase_Log( $purchase_log_id );
 		$purchase_log->set( 'base_shipping', $wpsc_cart->calculate_base_shipping() );
@@ -198,19 +198,20 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 				__( 'Sorry but it looks like there are some errors with your submitted information.', 'wpsc' ),
 				'error'
 			);
-			wpsc_set_validation_errors( $validation, $context = 'inline' );
+			wpsc_set_validation_errors( $validation, 'inline' );
 			return;
 		}
 
 		if ( ! empty( $_POST['wpsc_copy_billing_details'] ) ) {
 			_wpsc_copy_billing_details();
+		} else {
+			wpsc_update_customer_meta( 'wpsc_copy_billing_details', 'false' );
 		}
 
 		$this->save_shipping_and_billing_info();
 	}
 
-	private function save_shipping_and_billing_info() {
-		global $wpsc_cart;
+	public function get_purchase_log() {
 
 		// see if an existing purchase log has been set for this user
 		// otherwise create one
@@ -221,6 +222,14 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		} else {
 			$purchase_log = new WPSC_Purchase_Log();
 		}
+
+		return $purchase_log;
+	}
+
+	public function save_shipping_and_billing_info() {
+		global $wpsc_cart;
+
+		$purchase_log = $this->get_purchase_log();
 
 		$sessionid = ( mt_rand( 100, 999 ) . time() );
 		wpsc_update_customer_meta( 'checkout_session_id', $sessionid );
@@ -277,7 +286,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 			$tax = 0.00;
 			$tax_percentage = 0.00;
 		}
-		
+
 		$purchase_log->set( array(
 			'wpec_taxes_total' => $tax,
 			'wpec_taxes_rate'  => $tax_percentage,
@@ -303,7 +312,10 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		}
 
 		$this->wizard->completed_step( 'shipping-and-billing' );
-		wp_redirect( wpsc_get_checkout_url( $this->wizard->pending_step ) );
+
+		$url = add_query_arg( $_GET, wpsc_get_checkout_url( $this->wizard->pending_step ) );
+
+		wp_redirect( $url );
 		exit;
 	}
 
@@ -358,7 +370,9 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 		/* @todo: I _think_ this will be fine, as $module_name should still be defined at this execution path from the loop, but we need to confirm. */
 		$this->shipping_calculator->set_active_method( $module_name, $option );
-		wp_redirect( wpsc_get_checkout_url( $this->wizard->pending_step ) );
+
+		$url = add_query_arg( $_GET, wpsc_get_checkout_url( $this->wizard->pending_step ) );
+		wp_redirect( $url );
 		exit;
 	}
 
@@ -464,11 +478,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 			return;
 		}
 
-		$current_log_id = wpsc_get_customer_meta( 'current_purchase_log_id', '' );
-
-		if ( ! $current_log_id ) {
-			return;
-		}
+		$current_log_id = $this->get_purchase_log();
 
 		require_once( WPSC_TE_V2_CLASSES_PATH . '/shipping-calculator.php' );
 		$this->shipping_calculator = new WPSC_Shipping_Calculator( $current_log_id );

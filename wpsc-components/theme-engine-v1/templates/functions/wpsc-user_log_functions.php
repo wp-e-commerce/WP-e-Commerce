@@ -142,6 +142,14 @@ function wpsc_has_downloads() {
 			$products = apply_filters( 'wpsc_has_downloads_products', $products );
 
 			foreach ( (array) $products as $key => $product ) {
+
+				$post = get_post( $product['fileid'] );
+
+				if ( ! $post ) {
+					unset( $products[ $key ] );
+					continue;
+				}
+
 				$links[]     = empty( $product['uniqueid'] ) ? add_query_arg( 'downloadid', $product['id'], home_url() ) : add_query_arg( 'downloadid', $product['uniqueid'], home_url() );
 				$downloads[] = $product['product_id'];
 			}
@@ -540,8 +548,8 @@ function wpsc_user_purchases() {
 				}
 			}
 
-			$payment_gateway_names = '';
-			$payment_gateway_names = get_option('payment_gateway_names');
+			$display_name = '';
+			$payment_gateway_names = get_option( 'payment_gateway_names', array() );
 
 			foreach ( (array)$payment_gateway_names as $gatewayname ) {
 				//if the gateway has a custom name

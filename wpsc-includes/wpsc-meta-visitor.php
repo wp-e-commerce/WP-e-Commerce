@@ -948,12 +948,12 @@ function wpsc_get_visitor_meta( $visitor_id, $meta_key = '', $single = false ) {
 
 	// notification when any meta item is retrieved
 	if ( has_filter( $filter = 'wpsc_get_visitor_meta' ) ) {
-		$meta_value = apply_filters( $filter,  $meta_value, $meta_key, $visitor_id );
+		$meta_value = apply_filters( $filter, $meta_value, $meta_key, $visitor_id );
 	}
 
 	// notification when a specific meta item is retrieved
 	if ( has_filter( $filter = 'wpsc_get_visitor_meta_' . $meta_key  ) ) {
-		$meta_value = apply_filters( $filter,  $meta_value, $meta_key, $visitor_id );
+		$meta_value = apply_filters( $filter, $meta_value, $meta_key, $visitor_id );
 	}
 
 	return $meta_value;
@@ -1178,7 +1178,7 @@ function wpsc_get_visitor_meta_by_timestamp( $timestamp = 0, $comparison = '>', 
 **************************************************************************************************/
 
 /**
- * Update any values dependant on shipping region
+ * Update any values dependent on shipping region
  *
  * @since 3.8.14
  *

@@ -79,9 +79,11 @@ class WPSC_Payment_Gateway_Paypal_Digital_Goods extends WPSC_Payment_Gateway_Pay
      * @return void
      */
 	public function add_ecs_button() {
+
 		if ( wpsc_uses_shipping() || ! wpsc_is_gateway_active( 'paypal-digital-goods' ) ) {
 			return;
 		}
+
 		if ( _wpsc_get_current_controller_name() === 'cart' ) {
 			$url = $this->get_shortcut_url();
 			echo '<a id="pp-ecs-dg" href="'. $url .'"><img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png" alt="Check out with PayPal" /></a>';

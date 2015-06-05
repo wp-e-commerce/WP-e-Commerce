@@ -217,9 +217,8 @@ final class WPSC_Payment_Gateways {
 		$filename = basename( $file, '.php' );
 
 		// payment gateway already exists in cache
-		if ( isset( self::$payment_gateway_cache[$filename] ) ) {
-			self::$gateways[$filename] = self::$payment_gateway_cache[$filename];
-			return true;
+		if ( isset( self::$payment_gateway_cache[ $filename ] ) ) {
+			self::$gateways[ $filename ] = self::$payment_gateway_cache[ $filename ];
 		}
 
 		// if payment gateway is not in cache, load metadata
@@ -244,7 +243,18 @@ final class WPSC_Payment_Gateways {
 
 		self::$gateways[ $filename ] = $meta;
 
+		if ( ! $gateway->load() ) {
+			unset( self::$gateways[ $filename ] );
+			return false;
+		}
+
 		return true;
+	}
+
+	public static function unregister_file( $file ) {
+		if ( isset( self::$gateways[ $filename ] ) ) {
+			unset( self::$gateways[ $filename ] );
+		}
 	}
 
 	/**
@@ -399,20 +409,22 @@ abstract class WPSC_Payment_Gateway {
 	 */
 	public function setup_form() {
 		$checkout_field_types = array(
-			'billing' => __( 'Billing Fields', 'wpsc' ),
+			'billing'  => __( 'Billing Fields' , 'wpsc' ),
 			'shipping' => __( 'Shipping Fields', 'wpsc' ),
 		);
 
 		$fields = array(
-			'firstname' => __( 'First Name', 'wpsc' ),
-			'lastname'  => __( 'Last Name', 'wpsc' ),
-			'address'   => __( 'Address', 'wpsc' ),
-			'city'      => __( 'City', 'wpsc' ),
-			'state'     => __( 'State', 'wpsc' ),
-			'country'   => __( 'Country', 'wpsc' ),
+			'firstname' => __( 'First Name' , 'wpsc' ),
+			'lastname'  => __( 'Last Name'  , 'wpsc' ),
+			'address'   => __( 'Address'    , 'wpsc' ),
+			'city'      => __( 'City'       , 'wpsc' ),
+			'state'     => __( 'State'      , 'wpsc' ),
+			'country'   => __( 'Country'    , 'wpsc' ),
 			'postcode'  => __( 'Postal Code', 'wpsc' ),
 		);
+
 		$checkout_form = WPSC_Checkout_Form::get();
+
 		foreach ( $checkout_field_types as $field_type => $title ): ?>
 			<tr>
 				<td colspan="2">
@@ -470,6 +482,10 @@ abstract class WPSC_Payment_Gateway {
 	 */
 	public function get_mark_html() {
 		return false;
+	}
+
+	public function load() {
+		return true;
 	}
 
 	public function set_purchase_log( &$purchase_log ) {
@@ -532,7 +548,9 @@ abstract class WPSC_Payment_Gateway {
 	}
 
 	/**
-	 * Payment gateway constructor. Should use WPSC_Payment_Gateways::get( $gateway_name ) instead.
+	 * Payment gateway constructor.
+	 *
+	 * Use WPSC_Payment_Gateways::get( $gateway_name ) instead.
 	 *
 	 * @access public
 	 * @return WPSC_Payment_Gateway
@@ -544,17 +562,15 @@ abstract class WPSC_Payment_Gateway {
 
 	/**
 	 * Gateway initialization function.
-	 * You should use this function for hooks with
-	 * actions and filters that are required by the Gateway
+	 *
+	 * You should use this function for hooks with actions and filters that are required by the gateway.
 	 *
 	 * @access public
 	 * @since 4.0
 	 *
 	 * @return void
 	 */
-	public function init() {
-
-	}
+	public function init() {}
 }
 
 class WPSC_Payment_Gateway_Setting {
@@ -630,8 +646,9 @@ class WPSC_Payment_Gateway_Setting {
 	 * @return void
 	 */
 	private function lazy_load() {
-		if ( is_null( $this->settings ) )
+		if ( is_null( $this->settings ) ) {
 			$this->settings = get_option( $this->option_name, array() );
+		}
 	}
 
 	/**
@@ -643,7 +660,7 @@ class WPSC_Payment_Gateway_Setting {
 	 */
 	public function get( $setting, $default = false ) {
 		$this->lazy_load();
-		return isset( $this->settings[$setting] ) ? $this->settings[$setting] : $default;
+		return isset( $this->settings[ $setting ] ) ? $this->settings[ $setting ] : $default;
 	}
 
 	/**
@@ -657,9 +674,10 @@ class WPSC_Payment_Gateway_Setting {
 	 */
 	public function set( $setting, $value, $defer = false ) {
 		$this->lazy_load();
-		$this->unsaved_settings[$setting] = $value;
-		if ( ! $defer )
+		$this->unsaved_settings[ $setting ] = $value;
+		if ( ! $defer ) {
 			$this->save();
+		}
 	}
 
 	/**
@@ -675,8 +693,9 @@ class WPSC_Payment_Gateway_Setting {
 	public function merge( $settings, $defer = false ) {
 		$this->lazy_load();
 		$this->unsaved_settings = array_merge( $this->unsaved_settings, $settings );
-		if ( ! $defer )
+		if ( ! $defer ) {
 			$this->save();
+		}
 	}
 
 	/**

@@ -568,7 +568,7 @@ function wpsc_display_purchlog_shipping_state_and_postcode() {
 		if( empty( $state ) )
 			$state = esc_html( $purchlogitem->shippinginfo['shippingpostcode']['value'] );
 		else
-			$state .= ', ' . esc_html( $purchlogitem->shippinginfo['shippingpostcode']['value'] );
+			$state .= ' ' . esc_html( $purchlogitem->shippinginfo['shippingpostcode']['value'] );
    }
 
    return $state;

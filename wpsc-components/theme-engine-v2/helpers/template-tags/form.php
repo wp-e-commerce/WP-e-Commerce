@@ -358,8 +358,7 @@ function wpsc_get_checkout_form_args() {
 		'action' => '',
 		'id'     => "wpsc-checkout-form",
 		'inline_validation_errors' => true,
-		'fields' => array(
-		),
+		'fields' => array(),
 		'form_actions' => array(
 			array(
 				'type'    => 'submit',
@@ -381,7 +380,7 @@ function wpsc_get_checkout_form_args() {
 	);
 
 	$args['fields'] = _wpsc_convert_checkout_form_fields();
-	return $args;
+	return apply_filters( 'wpsc_get_checkout_form_args', $args );
 }
 
 function _wpsc_convert_checkout_form_fields( $customer_settings = false ) {
@@ -390,6 +389,21 @@ function _wpsc_convert_checkout_form_fields( $customer_settings = false ) {
 	$args   = array();
 
 	$purchase_log_exists = false;
+
+	$fieldsets = array(
+		'billing'  => array(
+			'type'   => 'fieldset',
+			'title'  => apply_filters( 'wpsc_checkout_billing_header_label', __( '<h2>Billing &amp; Shipping Details</h2>', 'wpsc' ) ),
+			'id'     => 'wpsc-checkout-form-billing',
+			'fields' => array()
+		),
+		'shipping' => array(
+			'type'   => 'fieldset',
+			'title'  => apply_filters( 'wpsc_checkout_shipping_header_label', __( '<h2>Shipping Details</h2>', 'wpsc' ) ),
+			'id'     => 'wpsc-checkout-form-shipping',
+			'fields' => array()
+		),
+	);
 
 	if ( ! $customer_settings ) {
 
@@ -423,15 +437,19 @@ function _wpsc_convert_checkout_form_fields( $customer_settings = false ) {
 	foreach ( $fields as $field ) {
 		$id = empty( $field->unique_name ) ? $field->id : $field->unique_name;
 
+		$is_shipping = false !== strpos( $field->unique_name, 'shipping' );
+		$is_billing  = false !== strpos( $field->unique_name, 'billing' );
+
 		$default_value =   array_key_exists( $field->id, $customer_details )
 		                 ? $customer_details[ $field->id ]
 		                 : '';
 
-		if (
-			   $purchase_log_exists
-			&& $field->type != 'heading'
-			&& isset( $form_data[ $field->id ] )
-		) {
+		/* Doing our college-best to check for one of the two original headings */
+		if ( 'heading' == $field->type && ( 'delivertoafriend' == $field->unique_name || '1' === $field->id ) ) {
+			continue;
+		}
+
+		if ( $purchase_log_exists && isset( $form_data[ $field->id ] ) ) {
 			$default_value = $form_data[ $field->id ]->value;
 		}
 
@@ -504,14 +522,25 @@ function _wpsc_convert_checkout_form_fields( $customer_settings = false ) {
 
 		$field_arr['rules'] = implode( '|', $validation_rules );
 
-		$args[ $i ] = $field_arr;
+		if ( $is_shipping ) {
+			$fieldsets['shipping']['fields'][ $i ] = $field_arr;
+		} else if ( $is_billing ) {
+			$fieldsets['billing']['fields'][ $i ]  = $field_arr;
+		} else {
+			$args[ $i ] = $field_arr;
+		}
+
 		$i++;
 
-		if ( $optional_state_field ) {
-			$args[ $i ]         = $args[ $i - 1 ];
-			$args[ $i ]['type'] = 'textfield';
-			$args[ $i ]['id']   = 'wpsc-checkout-field-' . $id . '-text';
-			$i ++;
+		if ( $optional_state_field && $is_billing ) {
+			$fieldsets['billing']['fields'][ $i ]         = $fieldsets['billing']['fields'][ $i - 1 ];
+			$fieldsets['billing']['fields'][ $i ]['type'] = 'textfield';
+			$fieldsets['billing']['fields'][ $i ]['id']   = 'wpsc-checkout-field-' . $id . '-text';
+			$i++;
+		} else if ( $optional_state_field && $is_shipping ) {
+			$fieldsets['shipping']['fields'][ $i ]         = $fieldsets['shipping']['fields'][ $i - 1 ];
+			$fieldsets['shipping']['fields'][ $i ]['type'] = 'textfield';
+			$fieldsets['shipping']['fields'][ $i ]['id']   = 'wpsc-checkout-field-' . $id . '-text';
 		}
 	}
 
@@ -521,7 +550,7 @@ function _wpsc_convert_checkout_form_fields( $customer_settings = false ) {
 			'id'    => 'wpsc-terms-and-conditions',
 			'title' => sprintf(
 				__( "I agree to the <a class='thickbox' target='_blank' href='%s' class='termsandconds'>Terms and Conditions</a>", "wpsc"),
-				esc_url( site_url( "?termsandconds=true&amp;width=360&amp;height=400" ) )
+				esc_url( add_query_arg( array( 'termsandconds' => 'true', 'width' => 360, 'height' => 400 ) ) )
 			),
 			'value'   => 1,
 			'name'    => 'wpsc_terms_conditions',
@@ -530,24 +559,43 @@ function _wpsc_convert_checkout_form_fields( $customer_settings = false ) {
 		);
 	}
 
-	foreach ( $state_country_pairs as $field ) {
-		if ( isset ( $field['key'] ) ) {
-			$args[ $field['key'] ]['rules'] .= '|state_of[' . $field['country_field_id'] . ']';
-			$args[ $field['key'] ]['rules']  = ltrim( $args[ $field['key'] ]['rules'], '|' );
+	foreach ( $state_country_pairs as $state => $field ) {
+		$is_shipping = 'shipping_state' == $state;
+
+		if ( isset( $field['key'] ) && $is_shipping ) {
+			$fieldsets['shipping']['fields'][ $field['key'] ]['rules'] .= '|state_of[' . $field['country_field_id'] . ']';
+			$fieldsets['shipping']['fields'][ $field['key'] ]['rules']  = ltrim( $fieldsets['shipping']['fields'][ $field['key'] ]['rules'], '|' );
+		} else if ( isset( $field['key'] ) ) {
+			$fieldsets['billing']['fields'][ $field['key'] ]['rules'] .= '|state_of[' . $field['country_field_id'] . ']';
+			$fieldsets['billing']['fields'][ $field['key'] ]['rules']  = ltrim( $fieldsets['billing']['fields'][ $field['key'] ]['rules'], '|' );
 		}
 	}
 
-	return $args;
+	/* Add 'shipping same as billing' box to end of billing, rather than shipping header. */
+	if ( ! empty( $fieldsets['billing']['fields'] ) && ! empty( $fieldsets['shipping']['fields'] ) ) {
+
+		$checked = 	wpsc_get_customer_meta( 'wpsc_copy_billing_details' );
+
+		$fieldsets['billing']['fields'][ $i++ ] = array(
+			'type'  => 'checkbox',
+			'id'    => 'wpsc-terms-and-conditions',
+			'title' => apply_filters( 'wpsc_shipping_same_as_billing', __( 'Shipping address is same as billing', 'wpsc' ) ),
+			'value'   => 1,
+			'name'    => 'wpsc_copy_billing_details',
+			'checked' => empty( $checked ) || '1' == $checked
+		);
+	}
+
+	return $fieldsets + $args;
 }
 
 function wpsc_get_customer_settings_form_args() {
 	$args = array(
+		'inline_validation_errors' => true,
 		'class'  => 'wpsc-form wpsc-form-horizontal wpsc-customer-settings-form',
 		'action' => '',
-		'id'     => "wpsc-customer-settings-form",
-		'inline_validation_errors' => true,
-		'fields' => array(
-		),
+		'id'     => 'wpsc-customer-settings-form',
+		'fields' => array(),
 		'form_actions' => array(
 			array(
 				'type'    => 'submit',
@@ -613,8 +661,7 @@ function wpsc_get_checkout_shipping_form_args() {
 		),
 	);
 
-	$args = _wpsc_convert_checkout_shipping_form_args( $args );
-	return $args;
+	return apply_filters( 'wpsc_get_checkout_shipping_method_form_args', _wpsc_convert_checkout_shipping_form_args( $args ) );
 }
 
 function _wpsc_convert_checkout_shipping_form_args( $args ) {
@@ -705,7 +752,7 @@ function wpsc_get_checkout_payment_method_form_args() {
 		),
 	);
 
-	$args = _wpsc_convert_checkout_payment_method_form_args( $args );
+	$args = apply_filters( 'wpsc_get_checkout_payment_method_form_args', _wpsc_convert_checkout_payment_method_form_args( $args ) );
 	return $args;
 }
 

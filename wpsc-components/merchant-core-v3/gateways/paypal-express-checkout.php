@@ -46,26 +46,28 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		}
 	}
 
-    /**
-     * Insert the ExpessCheckout Shortcut Button
-     *
-     * @return void
-     */
+	/**
+	 * Insert the ExpessCheckout Shortcut Button
+	 *
+	 * @return void
+	 */
 	public function add_ecs_button() {
-		if ( ! wpsc_uses_shipping() && wpsc_is_gateway_active( 'paypal-digital-goods' ) || ! wpsc_is_gateway_active( 'paypal-express-checkout' )) {
+
+		if ( ! wpsc_uses_shipping() && wpsc_is_gateway_active( 'paypal-digital-goods' ) || ! wpsc_is_gateway_active( 'paypal-express-checkout' ) ) {
 			return;
 		}
+
 		if ( _wpsc_get_current_controller_name() === 'cart' ) {
 			$url = $this->get_shortcut_url();
 			echo '<a href="'. $url .'"><img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png" alt="Check out with PayPal" /></a>';
 		}
 	}
 
-    /**
-     * Return the ExpressCheckout Shortcut redirection URL
-     *
-     * @return void
-     */
+	/**
+	 * Return the ExpressCheckout Shortcut redirection URL
+	 *
+	 * @return void
+	 */
 	public function get_shortcut_url() {
 		$location = add_query_arg( array(
 			'payment_gateway'          => 'paypal-express-checkout',
@@ -75,16 +77,16 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		return apply_filters( 'wpsc_paypal_express_checkout_shortcut_url', $location );
 	}
 
-    /**
-     * ExpressCheckout Shortcut Callback
-     *
-     * @return int
-     */
+	/**
+	 * ExpressCheckout Shortcut Callback
+	 *
+	 * @return int
+	 */
 	public function callback_shortcut_process() {
-        if ( ! isset( $_GET['payment_gateway'] ) ) {
-            return;
-        }
-        $payment_gateway = $_GET['payment_gateway'];
+		if ( ! isset( $_GET['payment_gateway'] ) ) {
+			return;
+		}
+		$payment_gateway = $_GET['payment_gateway'];
 
 		global $wpsc_cart;
 		//	Create a new PurchaseLog Object
@@ -99,7 +101,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			'plugin_version' => WPSC_VERSION,
 			'statusno'       => '0',
 			'sessionid'      => $sessionid,
-        ) );
+		) );
 
 		if ( wpsc_is_tax_included() ) {
 			$tax            = $wpsc_cart->calculate_total_tax();
@@ -132,63 +134,63 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		$wpsc_cart->save_to_db( $purchase_log_id );
 		$wpsc_cart->submit_stock_claims( $purchase_log_id );
 
-        // Save an empty Form
-        $form   = WPSC_Checkout_Form::get();
+		// Save an empty Form
+		$form   = WPSC_Checkout_Form::get();
 		$fields = $form->get_fields();
-        WPSC_Checkout_Form_Data::save_form( $purchase_log, $fields );
+		WPSC_Checkout_Form_Data::save_form( $purchase_log, $fields );
 
-        // Return Customer to Review Order Page if there is Shipping
-        add_filter( 'wpsc_paypal_express_checkout_transact_url', array( &$this, 'review_order_url' ) );
-        add_filter( 'wpsc_paypal_express_checkout_return_url', array( &$this, 'review_order_callback' ) );
+		// Return Customer to Review Order Page if there is Shipping
+		add_filter( 'wpsc_paypal_express_checkout_transact_url', array( &$this, 'review_order_url' ) );
+		add_filter( 'wpsc_paypal_express_checkout_return_url', array( &$this, 'review_order_callback' ) );
 
-        // Set a Temporary Option for EC Shortcut
+		// Set a Temporary Option for EC Shortcut
 		wpsc_update_customer_meta( 'esc-' . $sessionid, true );
 
-        // Apply Checkout Actions
+		// Apply Checkout Actions
 		do_action( 'wpsc_submit_checkout', array(
 			'purchase_log_id' => $purchase_log_id,
 			'our_user_id'     => get_current_user_id(),
 		) );
 		do_action( 'wpsc_submit_checkout_gateway', $payment_gateway, $purchase_log );
 
-        return $sessionid;
+		return $sessionid;
 	}
 
-    /**
-     * Return Customer to Review Order Page if there are Shipping Costs.
-     *
-     * @param string $url
-     * @return string
-     */
-    public function review_order_url( $url ) {
-        if ( wpsc_uses_shipping() ) {
-           $url = wpsc_get_checkout_url( 'review-order' );
-        }
+	/**
+	 * Return Customer to Review Order Page if there are Shipping Costs.
+	 *
+	 * @param string $url
+	 * @return string
+	 */
+	public function review_order_url( $url ) {
+		if ( wpsc_uses_shipping() ) {
+		   $url = wpsc_get_checkout_url( 'review-order' );
+		}
 
-        return $url;
-    }
+		return $url;
+	}
 
-    /**
-     * Sets the Review Callback for Review Order page.
-     *
-     * @param string $url
-     * @return string
-     */
-    public function review_order_callback( $url ) {
-        $args = array(
-            'payment_gateway_callback' => 'review_transaction',
-            'payment_gateway'          => 'paypal-express-checkout',
-        );
-        $url = add_query_arg( $args, $url );
+	/**
+	 * Sets the Review Callback for Review Order page.
+	 *
+	 * @param string $url
+	 * @return string
+	 */
+	public function review_order_callback( $url ) {
+		$args = array(
+			'payment_gateway_callback' => 'review_transaction',
+			'payment_gateway'          => 'paypal-express-checkout',
+		);
+		$url = add_query_arg( $args, $url );
 
-        return esc_url( $url );
-    }
+		return esc_url( $url );
+	}
 
 	/**
 	 * Run the gateway hooks
 	 *
 	 * @access public
-     * @since 4.0
+	 * @since 4.0
 	 *
 	 * @return void
 	 */
@@ -209,7 +211,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	 * @since 3.9
 	 */
 	public static function filter_unselect_default( $fields ) {
-		foreach ( $fields as $i=>$field ) {
+		foreach ( $fields as $i => $field ) {
 			$fields[ $i ][ 'checked' ] = false;
 		}
 
@@ -272,8 +274,8 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	 * @return string
 	 */
 	protected function get_return_url() {
-        $transact_url = get_option( 'transact_url' );
-        $transact_url = apply_filters( 'wpsc_paypal_express_checkout_transact_url', $transact_url );
+		$transact_url = get_option( 'transact_url' );
+		$transact_url = apply_filters( 'wpsc_paypal_express_checkout_transact_url', $transact_url );
 
 		$location = add_query_arg( array(
 			'sessionid'                => $this->purchase_log->get( 'sessionid' ),
@@ -354,134 +356,134 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		exit;
 	}
 
-    /**
+	/**
 	 * Pull and Record PayPal Details
 	 *
 	 * @return void
 	 */
 	public function pull_paypal_details() {
-        $this->set_purchase_log_for_callbacks();
+		$this->set_purchase_log_for_callbacks();
 
-        // Pull the User Details from PayPal
-        $this->paypal_data = $paypal = $this->gateway->get_details_for( $_GET['token'] );
-        $payer = $paypal->get( 'payer' );
-        $address = $paypal->get( 'shipping_address' );
+		// Pull the User Details from PayPal
+		$this->paypal_data = $paypal = $this->gateway->get_details_for( $_GET['token'] );
+		$payer = $paypal->get( 'payer' );
+		$address = $paypal->get( 'shipping_address' );
 
-        // PurchaseLog Update
-        if ( isset( $address['country_code'] ) ) {
-            $this->purchase_log->set( 'billing_country', $address['country_code'] );
-            $this->purchase_log->set( 'shipping_country', $address['country_code'] );
-        }
-        if ( isset( $address['state'] ) ) {
-            $this->purchase_log->set( 'billing_region', $address['state'] );
-            $this->purchase_log->set( 'shipping_region', $address['state'] );
-        }
+		// PurchaseLog Update
+		if ( isset( $address['country_code'] ) ) {
+			$this->purchase_log->set( 'billing_country', $address['country_code'] );
+			$this->purchase_log->set( 'shipping_country', $address['country_code'] );
+		}
+		if ( isset( $address['state'] ) ) {
+			$this->purchase_log->set( 'billing_region', $address['state'] );
+			$this->purchase_log->set( 'shipping_region', $address['state'] );
+		}
 
-        // Save Checkout Form Fields
-        $form   = WPSC_Checkout_Form::get();
-        $fields = $form->get_fields();
-        $_POST['wpsc_checkout_details'] = array();
-        foreach( $fields as $field ) {
-            $this->set_post_var( $field, $payer, $address );
-        }
+		// Save Checkout Form Fields
+		$form   = WPSC_Checkout_Form::get();
+		$fields = $form->get_fields();
+		$_POST['wpsc_checkout_details'] = array();
+		foreach( $fields as $field ) {
+			$this->set_post_var( $field, $payer, $address );
+		}
 
-        // Save details to the Forms Table
-        WPSC_Checkout_Form_Data::save_form( $this->purchase_log, $fields );
+		// Save details to the Forms Table
+		WPSC_Checkout_Form_Data::save_form( $this->purchase_log, $fields );
 	}
 
-    /**
-     * To insert Data to the Form Table, we need to pass it
-     * to the global $_POST variable first
-     *
-     * @param object $payer
-     * @param object $field
-     * @param array $address
-     *
-     * @return void
-     */
-    private function set_post_var( $field, $payer, $address ) {
-        switch( $field->unique_name ) {
-            // Shipping Details
-        case 'shippingfirstname':
-            $_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $address['name'] );
-            break;
-        case 'shippinglastname':
-            $_POST['wpsc_checkout_details'][$field->id] = '';
-            break;
-        case 'shippingaddress':
-                $_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $address['street'] );
-            break;
-        case 'shippingcity':
-                $_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $address['city'] );
-            break;
-        case 'shippingstate':
-                $_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $address['state'] );
-            break;
-        case 'shippingcountry':
-                $_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $address['country_code'] );
-            break;
-        case 'shippingpostcode':
-                $_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $address['zip'] );
-            break;
-            // Billing Details
-        case 'billingfirstname':
-                $_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $payer->first_name );
-            break;
-        case 'billinglastname':
-                $_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $payer->last_name );
-            break;
-        case 'billingaddress':
-        case 'billingcity':
-        case 'billingstate':
-        case 'billingpostcode':
-        case 'billingphone':
-            $_POST['wpsc_checkout_details'][$field->id] = '';
-            break;
-        case 'billingcountry':
-                $_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $payer->country );
-            break;
-        case 'billingemail':
-                $_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $payer->email );
-            break;
-        }
-    }
+	/**
+	 * To insert Data to the Form Table, we need to pass it
+	 * to the global $_POST variable first
+	 *
+	 * @param object $payer
+	 * @param object $field
+	 * @param array $address
+	 *
+	 * @return void
+	 */
+	private function set_post_var( $field, $payer, $address ) {
+		switch( $field->unique_name ) {
+			// Shipping Details
+		case 'shippingfirstname':
+			$_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $address['name'] );
+			break;
+		case 'shippinglastname':
+			$_POST['wpsc_checkout_details'][$field->id] = '';
+			break;
+		case 'shippingaddress':
+				$_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $address['street'] );
+			break;
+		case 'shippingcity':
+				$_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $address['city'] );
+			break;
+		case 'shippingstate':
+				$_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $address['state'] );
+			break;
+		case 'shippingcountry':
+				$_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $address['country_code'] );
+			break;
+		case 'shippingpostcode':
+				$_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $address['zip'] );
+			break;
+			// Billing Details
+		case 'billingfirstname':
+				$_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $payer->first_name );
+			break;
+		case 'billinglastname':
+				$_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $payer->last_name );
+			break;
+		case 'billingaddress':
+		case 'billingcity':
+		case 'billingstate':
+		case 'billingpostcode':
+		case 'billingphone':
+			$_POST['wpsc_checkout_details'][$field->id] = '';
+			break;
+		case 'billingcountry':
+				$_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $payer->country );
+			break;
+		case 'billingemail':
+				$_POST['wpsc_checkout_details'][$field->id] = $this->validate_var( $payer->email );
+			break;
+		}
+	}
 
-    /**
-     * Verify that the variable isset and return it, otherwise return an empty
-     * string
-     *
-     * @param string $var
-     *
-     * @return string
-     */
-    private function validate_var( $var ) {
-        if ( isset( $var ) ) {
-            return $var;
-        }
-        return '';
-    }
+	/**
+	 * Verify that the variable isset and return it, otherwise return an empty
+	 * string
+	 *
+	 * @param string $var
+	 *
+	 * @return string
+	 */
+	private function validate_var( $var ) {
+		if ( isset( $var ) ) {
+			return $var;
+		}
+		return '';
+	}
 
-    /**
-     * Review Transaction Callback
-     *
-     * @return void
-     */
-    public function callback_review_transaction() {
+	/**
+	 * Review Transaction Callback
+	 *
+	 * @return void
+	 */
+	public function callback_review_transaction() {
 		// Pull Customer Details from PayPal
-        $this->pull_paypal_details();
+		$this->pull_paypal_details();
 
 		// If no Shipping is required, confirm the Transaction
-        if ( !wpsc_uses_shipping() ) {
-            $this->callback_confirm_transaction();
-        }
+		if ( !wpsc_uses_shipping() ) {
+			$this->callback_confirm_transaction();
+		}
 
 		// Display Customer Details
 		add_filter( 'wpsc_review_order_buyers_details', array( &$this, 'review_order_buyer_details' ) );
 		add_filter( 'wpsc_review_order_shipping_details', array( &$this, 'review_order_shipping_details' ) );
-    }
+	}
 
 	/**
- 	 * Display Customer Details from PayPal
+	 * Display Customer Details from PayPal
 	 *
 	 * @param string $output
 	 * @return string
@@ -497,13 +499,13 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	}
 
 	/**
- 	 * Display Shipping Details from PayPal
+	 * Display Shipping Details from PayPal
 	 *
 	 * @param string $output
 	 * @return string
 	 */
 	public function review_order_shipping_details( $output ) {
-        $address = $this->paypal_data->get( 'shipping_address' );
+		$address = $this->paypal_data->get( 'shipping_address' );
 		$output .= '<ul>';
 		$output .= '<li>' . $address[ 'name' ] . '</li>';
 		$output .= '<li>' . $address[ 'street' ] . '</li>';
@@ -533,8 +535,8 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		// Display the Confirmation Page
 		$this->do_transaction();
 
-        // Remove Shortcut option if it exists
-        $sessionid = $_REQUEST['sessionid'];
+		// Remove Shortcut option if it exists
+		$sessionid = $_REQUEST['sessionid'];
 		wpsc_delete_customer_meta( 'esc-' . $sessionid );
 	}
 
@@ -867,18 +869,18 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 
 <!-- Checkout Shortcut -->
 <tr>
-    <td colspan="2">
-        <h4><?php _e( 'Express Checkout Shortcut', 'wpsc' ); ?></h4>
-    </td>
+	<td colspan="2">
+		<h4><?php _e( 'Express Checkout Shortcut', 'wpsc' ); ?></h4>
+	</td>
 </tr>
 <tr>
-    <td>
-        <label><?php _e( 'Enable Shortcut', 'wpsc' ); ?></label>
-    </td>
-    <td>
-        <label><input <?php checked( $this->setting->get( 'shortcut' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'shortcut' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wpsc' ); ?></label>&nbsp;&nbsp;&nbsp;
-        <label><input <?php checked( (bool) $this->setting->get( 'shortcut' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'shortcut' ) ); ?>" value="0" /> <?php _e( 'No', 'wpsc' ); ?></label>
-    </td>
+	<td>
+		<label><?php _e( 'Enable Shortcut', 'wpsc' ); ?></label>
+	</td>
+	<td>
+		<label><input <?php checked( $this->setting->get( 'shortcut' ) ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'shortcut' ) ); ?>" value="1" /> <?php _e( 'Yes', 'wpsc' ); ?></label>&nbsp;&nbsp;&nbsp;
+		<label><input <?php checked( (bool) $this->setting->get( 'shortcut' ), false ); ?> type="radio" name="<?php echo esc_attr( $this->setting->get_field_name( 'shortcut' ) ); ?>" value="0" /> <?php _e( 'No', 'wpsc' ); ?></label>
+	</td>
 </tr>
 
 <!-- Error Logging -->
