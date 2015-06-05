@@ -109,6 +109,25 @@ function wpsc_set_screen_option($status, $option, $value){
 add_filter('set-screen-option', 'wpsc_set_screen_option', 99, 3);
 
 /**
+ * Limit admin variation dropdown to show variantion sets only.
+ *
+ * @param   array   $args      Dropdown args.
+ * @param   string  $taxonomy  Taxonomy.
+ * @param   string  $context   Context.
+ * @return  array              Filtered dropdown args.
+ */
+function wpsc_variation_parent_dropdown_args( $args, $taxonomy, $context ) {
+
+	if ( 'wpsc-variation' == $taxonomy && 'edit' == $context ) {
+		$args['depth'] = 1;
+	}
+
+	return $args;
+
+}
+add_filter( 'taxonomy_parent_dropdown_args', 'wpsc_variation_parent_dropdown_args', 10, 3 );
+
+/**
  * When rearranging the products for drag and drop it is easiest to arrange them when they are all on the same page...
  * @access public
  *
