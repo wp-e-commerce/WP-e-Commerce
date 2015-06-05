@@ -1131,6 +1131,11 @@ class WPSC_Amazon_Payments_Order_Handler {
 				foreach ( $amazon_refund_ids as $amazon_refund_id ) {
 
 					if ( isset( $refunds[ $amazon_refund_id ] ) ) {
+
+						if ( empty( $refunds[ $amazon_refund_id ]['note'] ) ) {
+							$refunds[ $amazon_refund_id ]['note'] = _x( 'no note was entered', 'Amazon refund default note', 'wpsc' );
+						}
+
 						echo wpautop(
 							sprintf( __( 'Refund %s of %s is <strong>%s</strong> (%s).', 'wpsc' ),
 								$amazon_refund_id,
