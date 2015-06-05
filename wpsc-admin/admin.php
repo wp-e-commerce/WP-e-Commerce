@@ -1340,6 +1340,10 @@ function _wpsc_delete_file( $product_id, $file_name ) {
 
 	$sql = $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_title = %s AND post_parent = %d AND post_type ='wpsc-product-file'", $file_name, $product_id );
 	$product_id_to_delete = $wpdb->get_var( $sql );
+
+	//Delete wpsc_download_status entry for this file
+	$wpdb->query( $wpdb->prepare( "DELETE FROM `".WPSC_TABLE_DOWNLOAD_STATUS."` WHERE `fileid`=%d AND `product_id` = %d", $product_id_to_delete, $product_id ) );
+
 	return wp_delete_post( $product_id_to_delete, true );
 }
 
