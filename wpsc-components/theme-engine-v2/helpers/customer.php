@@ -39,10 +39,13 @@ function _wpsc_copy_billing_details() {
 	}
 
 	$post_data =& $_POST['wpsc_checkout_details'];
+
 	foreach ( $field_ids['shipping'] as $name => $id ) {
 		$billing_field_id = $field_ids['billing'][ $name ];
 		$post_data[ $id ] = $post_data[ $billing_field_id ];
 	}
+
+	wpsc_update_customer_meta( 'wpsc_copy_billing_details', '1' );
 }
 
 function _wpsc_update_location() {

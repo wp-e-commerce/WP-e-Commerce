@@ -63,11 +63,7 @@
 .wpsc-controller .wpsc-form select[multiple="multiple"] {
   vertical-align: middle;
 }
-.wpsc-controller .wpsc-form legend {
-  border-bottom: 1px solid #cccccc;
-  margin-bottom: 18px;
-  width: 100%;
-}
+
 .wpsc-controller .wpsc-form legend + * {
   /* Fix webkit bug where margin bottom does not apply to legend */
 

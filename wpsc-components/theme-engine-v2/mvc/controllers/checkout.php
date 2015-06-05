@@ -204,6 +204,8 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 		if ( ! empty( $_POST['wpsc_copy_billing_details'] ) ) {
 			_wpsc_copy_billing_details();
+		} else {
+			wpsc_update_customer_meta( 'wpsc_copy_billing_details', 'false' );
 		}
 
 		$this->save_shipping_and_billing_info();
@@ -277,7 +279,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 			$tax = 0.00;
 			$tax_percentage = 0.00;
 		}
-		
+
 		$purchase_log->set( array(
 			'wpec_taxes_total' => $tax,
 			'wpec_taxes_rate'  => $tax_percentage,

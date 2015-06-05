@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Some parts of this code were copied from functions.bb-meta.php in bbpress
  */

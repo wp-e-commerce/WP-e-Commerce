@@ -51,7 +51,7 @@ function _wpsc_get_field_output( $field, $r ) {
 	}
 
 	$before_field = apply_filters( 'wpsc_field_before', $r['before_field'], $field, $r );
-	$before_field = sprintf( $before_field, $field['id'], $field['class']);
+	$before_field = sprintf( $before_field, $field['id'], $field['class'] );
 
 	$output .= $before_field;
 	$output .= apply_filters( 'wpsc_control_before'          , $r['before_controls'], $field, $r );
@@ -154,7 +154,7 @@ function _wpsc_get_fieldset_output( $fieldset, $r ) {
 	$output = '<fieldset' . $id . '>';
 	$output .= '<legend>' . $fieldset['title'] . '</legend>';
 
-	foreach ( $fieldset['fields'] as $field) {
+	foreach ( $fieldset['fields'] as $field ) {
 		$output .= _wpsc_get_field_output( $field, $r );
 	}
 
