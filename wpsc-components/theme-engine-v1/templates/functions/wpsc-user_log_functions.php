@@ -519,8 +519,8 @@ function wpsc_user_purchases() {
 				}
 			}
 
-			$payment_gateway_names = '';
-			$payment_gateway_names = get_option('payment_gateway_names');
+			$display_name = '';
+			$payment_gateway_names = get_option( 'payment_gateway_names', array() );
 
 			foreach ( (array)$payment_gateway_names as $gatewayname ) {
 				//if the gateway has a custom name
