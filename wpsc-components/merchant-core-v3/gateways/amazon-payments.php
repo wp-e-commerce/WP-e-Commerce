@@ -217,7 +217,9 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 		$order = $this->purchase_log;
 
-		$order->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT )->save();
+		$status = $this->payment_capture === '' ? WPSC_Purchase_Log::ACCEPTED_PAYMENT : WPSC_Purchase_Log::ORDER_RECEIVED;
+
+		$order->set( 'processed', $status )->save();
 
 		$amazon_reference_id = isset( $_REQUEST['amazon_reference_id'] ) ? sanitize_text_field( $_REQUEST['amazon_reference_id'] ) : '';
 
@@ -449,7 +451,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		add_filter( 'wpsc_get_active_gateways', array( $this, 'remove_gateways' ) );
 		add_filter( 'wpsc_get_gateway_list'   , array( $this, 'remove_gateways' ) );
 
-		add_filter( 'wpsc_payment_method_form_fields', array( $this, 'remove_gateways_v2' ) );
+		add_filter( 'wpsc_payment_method_form_fields', array( $this, 'remove_gateways_v2' ), 999 );
 	}
 
 	public function lazy_load_location_meta() {

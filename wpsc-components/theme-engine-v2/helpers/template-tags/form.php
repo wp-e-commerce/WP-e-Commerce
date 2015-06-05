@@ -386,6 +386,11 @@ function wpsc_get_checkout_form_args() {
 function _wpsc_convert_checkout_form_fields( $customer_settings = false ) {
 	$form   = WPSC_Checkout_Form::get();
 	$fields = $form->get_fields();
+
+	if ( empty( $fields ) ) {
+		return array();
+	}
+
 	$args   = array();
 
 	$purchase_log_exists = false;
