@@ -1360,8 +1360,8 @@ class WPSC_Amazon_Payments_Order_Handler {
 
 				if ( $capture_now ) {
 					$this->log->set( 'amazon_capture_id', str_replace( '-A', '-C', $auth_id ) )->save();
-
 					$this->log->set( 'amazon-status', sprintf( __( 'Captured (Auth ID: %s)', 'wpsc' ), str_replace( '-A', '-C', $auth_id ) ) )->save();
+					$this->log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT );
 				} else {
 					$this->log->set( 'amazon-status', sprintf( __( 'Authorized (Auth ID: %s)', 'wpsc' ), $auth_id ) )->save();
 				}
@@ -1398,6 +1398,8 @@ class WPSC_Amazon_Payments_Order_Handler {
 			} else {
 				wpsc_delete_purchase_meta( $this->log->get( 'id' ), 'amazon_authorization_id' );
 				$this->log->set( 'amazon-status', sprintf( __( 'Authorization closed (Auth ID: %s)', 'wpsc' ), $amazon_authorization_id ) )->save();
+				$this->log->set( 'processed', WPSC_Purchase_Log::CLOSED_ORDER );
+
 			}
 		}
     }
@@ -1431,8 +1433,8 @@ class WPSC_Amazon_Payments_Order_Handler {
 				$capture_id = $response['CaptureResult']['CaptureDetails']['AmazonCaptureId'];
 
 				$this->log->set( 'amazon-status', sprintf( __( 'Capture Attempted (Capture ID: %s)', 'wpsc' ), $capture_id ) )->save();
-
 				$this->log->set( 'amazon_capture_id', $capture_id )->save();
+				$this->log->set( 'processed', WPSC_Purchase_Log::ACCEPTED_PAYMENT );
 			}
 		}
     }
@@ -1480,7 +1482,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 				$refund_id = $response['RefundResult']['RefundDetails']['AmazonRefundId'];
 
 				$this->log->set( 'amazon-status', sprintf( __( 'Refunded %s (%s)', 'wpsc' ), wpsc_currency_display( $amount ), $note ) )->save();
-
+				$this->log->set( 'processed', WPSC_Purchase_Log::REFUNDED );
 				wpsc_add_purchase_meta( $this->log->get( 'id' ), 'amazon_refund_id', $refund_id );
 			}
 		}
