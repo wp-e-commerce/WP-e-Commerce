@@ -679,15 +679,22 @@ function wpsc_display_categories() {
 
 /**
  * wpsc product creation time function
- * @return string - the product price
+ * @return string - the product created date/time
  */
-function wpsc_product_creation_time( $format = null ) {
+function wpsc_product_creation_time( $format = '' ) {
 	global $wpsc_query;
 
-	if ( $format == null )
+	if ( empty( $format ) ) {
 		$format = "Y-m-d H:i:s";
+	}
 
-	return mysql2date( $format, $wpsc_query->product['date_added'] );
+	if ( property_exists( $wpsc_query, 'post' )&& ! empty( $wpsc_query->post ) ) {
+		$date_string = mysql2date( $format, $wpsc_query->post->post_date_gmt );
+	} else {
+		$date_string = '';
+	}
+
+	return  $date_string;
 }
 
 /**
