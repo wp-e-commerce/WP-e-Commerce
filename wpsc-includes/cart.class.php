@@ -1195,7 +1195,9 @@ class wpsc_cart {
 
 		$this->current_shipping_method = - 1;
 
-		if ( $this->shipping_method_count > 0 && ! empty( $this->shipping_methods ) ) {
+		$this->shipping_method_count = count( $this->shipping_methods );
+
+		if ( $this->shipping_method_count > 0 ) {
 			$this->shipping_method = $this->shipping_methods[0];
 		}
 	}
