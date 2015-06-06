@@ -5,6 +5,7 @@
  * This is the WPSC database template it is a multidimensional associative array used to create and update the database tables.
  * @package wp-e-commerce
  * @subpackage wpsc-updating-code
+ * @since 3.8
  */
 
 // code to create or update the {$wpdb->prefix}wpsc_also_bought table

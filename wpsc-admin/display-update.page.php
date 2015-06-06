@@ -48,12 +48,20 @@ if ( ! get_option( 'wpsc_needs_update', false ) ) {
 	}
 }
 
+/**
+ * Throw a warning if the PHP version is not compatible with WP e-Commerce
+ * 
+ * @since 3.8
+ */ 
 function wpsc_display_php_version_notice() {
 ?>
 	<div id='wpsc-warning' class='error fade'><p><?php printf( __( 'You are using PHP %s. WP eCommerce %s requires PHP 5.0 or above. Please contact your hosting provider for further assistance.', 'wpsc' ), PHP_VERSION, WPSC_VERSION ); ?></p></div>
 <?php
 }
 
+/**
+ * Display the "Update WP e-Commerce page"
+ */
 function wpsc_display_update_page() {
 	global $wpdb;
 

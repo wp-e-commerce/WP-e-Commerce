@@ -8,7 +8,6 @@
  * @since 3.7
  */
 
-
 require_once(WPSC_FILE_PATH . '/wpsc-admin/includes/products.php');
 
 /**
@@ -503,7 +502,7 @@ add_filter( 'manage_wpsc-product_posts_columns'        , 'wpsc_additional_column
 
 
 /**
- * wpsc_update_featured_products function.
+ * Update featured prodcuts using AJAX.
  *
  * @access public
  * @return void

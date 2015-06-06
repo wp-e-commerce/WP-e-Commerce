@@ -8,6 +8,7 @@ $wpsc_title_data    = array();
  * _wpsc_is_session_started()
  *
  * Check if PHP session is started using method suggested on php.net
+ * 
  * @since 3.8.14
  * @return boolean
  */
@@ -30,6 +31,7 @@ function _wpsc_is_session_started() {
  * wpsc_core_load_session()
  *
  * Load up the WPEC session
+ * 
  * @return boolean
  */
 function wpsc_core_load_session() {
@@ -377,6 +379,6 @@ function wpsc_core_setup_globals() {
 
 	// Setup some globals
 	$wpsc_query_vars = array();
-    require_once( WPSC_FILE_PATH . '/wpsc-includes/shipping.helper.php');
-    $wpec_ash = new ASH();
+    	require_once( WPSC_FILE_PATH . '/wpsc-includes/shipping.helper.php');
+    	$wpec_ash = new ASH();
 }

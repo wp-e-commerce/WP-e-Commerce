@@ -79,7 +79,8 @@ if ( isset( $_REQUEST['ajax'] ) && isset( $_REQUEST['admin'] ) && ($_REQUEST['aj
 	add_action( 'admin_init', 'wpsc_admin_ajax' );
 
 /**
- * @todo docs
+ * The function that changes the main currency in the DB
+ * 
  * @uses $wpdb  WordPress database object for queries
  */
 function wpsc_change_currency() {
