@@ -394,9 +394,8 @@ class WPSC_Purchase_Log_Page {
 					return;
 
 				$ids = array_map( 'intval', $_REQUEST['post'] );
-				$in = implode( ', ', $ids );
 
-				foreach ( $in as $id ) {
+				foreach ( $ids as $id ) {
 					$log = new WPSC_Purchase_Log( $id );
 					$log->delete();
 				}
