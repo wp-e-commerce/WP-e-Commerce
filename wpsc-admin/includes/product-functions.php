@@ -458,12 +458,6 @@ function wpsc_insert_product($post_data, $wpsc_error = false) {
 	);
 	$product_post_values["comment_status"] = "open";
 
-	if(isset($sku) && ($sku != '')) {
-		$product_post_array['guid'] = $sku;
-	}
-
-
-
 	$product_id = wp_insert_post($product_post_values);
 	if ( isset ( $post_data["sticky"] ) ) {
 		stick_post($product_id);
@@ -713,6 +707,7 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 	//Get currently associated terms
 	$currently_associated_var = $product_terms;
 
+	$currently_associated_vars = array();
 	foreach ($currently_associated_var as $current) {
 		$currently_associated_vars[] = $current->term_id;
 	}
@@ -762,11 +757,12 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 		'numberposts'   => -1
 		));
 
+	$children = array();
 	foreach((array)$current_children as $child_prod){
-		$childs[] = $child_prod->ID;
+		$children[] = $child_prod->ID;
 	}
-	if(!empty($childs)){
-		$old_ids_to_delete = array_diff($childs, $product_children);
+	if(!empty($children)){
+		$old_ids_to_delete = array_diff($children, $product_children);
 		$old_ids_to_delete = apply_filters('wpsc_edit_product_variations_deletion', $old_ids_to_delete);
 		if(is_array($old_ids_to_delete) && !empty($old_ids_to_delete)) {
 			foreach($old_ids_to_delete as $object_ids) {

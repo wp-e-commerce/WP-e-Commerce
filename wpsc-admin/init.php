@@ -724,6 +724,7 @@ function wpsc_product_files_existing() {
 	);
 	$attached_files = (array)get_posts( $args );
 
+	$attached_files_by_file = array();
 	foreach ( $attached_files as $key => $attached_file ) {
 		$attached_files_by_file[$attached_file->post_title] = & $attached_files[$key];
 	}

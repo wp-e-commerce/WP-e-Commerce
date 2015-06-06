@@ -207,8 +207,7 @@ function wpsc_admin_pages() {
 			}
 	}
 
-	// Add to Dashboard
-	// $page_hooks[] = $purchase_log_page = add_submenu_page( 'index.php', __( 'Store Sales', 'wpsc' ), __( 'Store Sales', 'wpsc' ), 'administrator', 'wpsc-sales-logs', 'wpsc_display_sales_logs' );
+	$page_hooks = array();
 
 	if ( wpsc_show_update_link() )
 		$page_hooks[] = add_submenu_page( 'index.php', __( 'Update Store', 'wpsc' ), __( 'Store Update', 'wpsc' ), 'administrator', 'wpsc-update', 'wpsc_display_update_page' );
@@ -947,6 +946,7 @@ function wpsc_get_quarterly_summary() {
 	$fourthquarter = (int)get_option( 'wpsc_fourth_quart' );
 	$finalquarter = (int)get_option( 'wpsc_final_quart' );
 
+	$results   = array();
 	$results[] = admin_display_total_price( $thirdquarter + 1, $fourthquarter );
 	$results[] = admin_display_total_price( $secondquarter + 1, $thirdquarter );
 	$results[] = admin_display_total_price( $firstquarter + 1, $secondquarter );
@@ -1075,6 +1075,7 @@ function wpsc_dashboard_4months_widget() {
 	$this_year = date( "Y" ); //get current year and month
 	$this_month = date( "n" );
 
+	$months   = array();
 	$months[] = mktime( 0, 0, 0, $this_month - 3, 1, $this_year ); //generate  unix time stamps fo 4 last months
 	$months[] = mktime( 0, 0, 0, $this_month - 2, 1, $this_year );
 	$months[] = mktime( 0, 0, 0, $this_month - 1, 1, $this_year );
@@ -1091,6 +1092,7 @@ function wpsc_dashboard_4months_widget() {
 	 ORDER BY SUM(`cart`.`price` * `cart`.`quantity`) DESC
 	 LIMIT 4", ARRAY_A ); //get 4 products with top income in 4 last months.
 
+	$timeranges = array();
 	$timeranges[0]["start"] = mktime( 0, 0, 0, $this_month - 3, 1, $this_year ); //make array of time ranges
 	$timeranges[0]["end"] = mktime( 0, 0, 0, $this_month - 2, 1, $this_year );
 	$timeranges[1]["start"] = mktime( 0, 0, 0, $this_month - 2, 1, $this_year );
@@ -1449,8 +1451,9 @@ function wpsc_duplicate_product_meta( $id, $new_id ) {
 	$post_meta_infos = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id = %d", $id ) );
 
 	if ( count( $post_meta_infos ) ) {
-		$sql_query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES ";
-		$values = array();
+		$sql_query     = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES ";
+		$values        = array();
+		$sql_query_sel = array();
 		foreach ( $post_meta_infos as $meta_info ) {
 			$meta_key = $meta_info->meta_key;
 			$meta_value = addslashes( $meta_info->meta_value );
