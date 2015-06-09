@@ -640,6 +640,5 @@ function _wpsc_action_downloads_section() {
 
 	include( wpsc_get_template_file_path( 'wpsc-account-downloads.php' ) );
 }
-add_action( 'wpsc_user_profile_section_downloads', '_wpsc_action_downloads_section' );
 
-?>
+add_action( 'wpsc_user_profile_section_downloads', '_wpsc_action_downloads_section' );

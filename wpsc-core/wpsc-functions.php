@@ -993,3 +993,90 @@ function wpsc_add_tables_to_repair( $tables ) {
 }
 
 add_filter( 'tables_to_repair', 'wpsc_add_tables_to_repair' );
+
+
+/**
+ * Updates a user's digital downloads.
+ *
+ * @param  integer $user_id [description]
+ * @return [type]           [description]
+ */
+function wpsc_update_user_downloads( $user_id = 0 ) {
+	global $wpdb;
+
+	if ( ! $user_id ) {
+		$user_id = get_current_user_id();
+	}
+
+	$purchase_ids = $wpdb->get_results( $wpdb->prepare( "SELECT c.prodid, p.id, c.id as cart_id FROM " . WPSC_TABLE_CART_CONTENTS . " as c INNER JOIN " . WPSC_TABLE_PURCHASE_LOGS . " as p ON p.id = c.purchaseid WHERE p.user_ID = %d AND p.processed IN (3,4,5) GROUP BY c.prodid", $user_id ) );
+
+	if ( empty( $purchase_ids ) || apply_filters( 'wpsc_do_not_update_downloads', false ) ) {
+		return;
+	}
+
+	$downloads = get_option( 'max_downloads' );
+
+	foreach ( $purchase_ids as $key => $id_pairs ) {
+		if ( ! apply_filters( "wpsc_update_downloads_{$id_pairs->prodid}", true, $id_pairs ) ) {
+			unset( $purchase_ids[ $key ] );
+		} else {
+
+			if ( get_post_field( 'post_parent', $id_pairs->prodid ) ) {
+				$parents = array( $id_pairs->prodid, get_post_field( 'post_parent', $id_pairs->prodid ) );
+			} else {
+				$parents = array( $id_pairs->prodid );
+			}
+
+			$args = apply_filters( 'wpsc_update_user_downloads_file_args', array(
+				'post_type'       => 'wpsc-product-file',
+				'post_parent__in' => $parents,
+				'numberposts'     => -1,
+				'post_status'     => 'inherit'
+			), $id_pairs, $user_id );
+
+			$product_files = (array) get_posts( $args );
+
+			foreach ( $product_files as $file ) {
+
+				if ( ! apply_filters( "wpsc_update_downloads_{$id_pairs->prodid}_{$file->ID}", true, $id_pairs, $file ) ) {
+					continue;
+				}
+
+				$user_has_download = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM " . WPSC_TABLE_DOWNLOAD_STATUS . " WHERE fileid = %d AND purchid = %d AND product_id = %d", $file->ID, $id_pairs->id, $id_pairs->prodid ) );
+
+				if ( $user_has_download ) {
+					continue;
+				}
+
+				$unique_id = sha1( uniqid( mt_rand(), true ) );
+
+				$wpdb->insert(
+					WPSC_TABLE_DOWNLOAD_STATUS,
+					array(
+							'product_id' => $id_pairs->prodid,
+							'fileid'     => $file->ID,
+							'purchid'    => $id_pairs->id,
+							'cartid'     => $id_pairs->cart_id,
+							'uniqueid'   => $unique_id,
+							'downloads'  => $downloads,
+							'active'     => 1,
+							'datetime'   => date( 'Y-m-d H:i:s' )
+					),
+					array(
+							'%d',
+							'%d',
+							'%d',
+							'%d',
+							'%s',
+							'%s',
+							'%d',
+							'%s',
+					)
+				);
+			}
+		}
+	}
+}
+
+add_action( 'wpsc_template_before_customer-account-digital-content', 'wpsc_update_user_downloads', 5 );
+//add_action( 'wpsc_user_profile_section_downloads', 'wpsc_update_user_downloads', 5 );
