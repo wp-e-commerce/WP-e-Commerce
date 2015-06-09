@@ -556,6 +556,11 @@ abstract class WPSC_Payment_Gateway {
 	 * @return WPSC_Payment_Gateway
 	 */
 	public function __construct() {
+
+		if ( ! $this->load() ) {
+			return;
+		}
+
 		$this->setting = new WPSC_Payment_Gateway_Setting( get_class( $this ) );
 	}
 

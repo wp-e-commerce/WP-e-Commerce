@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Todos, in a future phase:
  *
@@ -36,6 +37,10 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	public function __construct() {
 
 		parent::__construct();
+
+		if ( ! $this->load() ) {
+			return;
+		}
 
 		$this->title = __( 'Amazon Payments', 'wpsc' );
 
