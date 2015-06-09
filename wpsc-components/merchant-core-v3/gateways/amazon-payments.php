@@ -427,11 +427,13 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	 * Load handlers for cart and orders after cart is loaded.
 	 */
 	public function init_handlers() {
+
 		// Disable if no seller ID
 		if ( empty( $this->seller_id ) ) {
 			return;
 		}
 
+		add_action( 'wp_head', array( $this, 'head_script' ), 0 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'scripts' ) );
 
 		if ( $this->setting->get( 'cart_button_display' ) == 'button' ) {
@@ -544,7 +546,6 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			WPSC_Message_Collection::get_instance()->add( $e->getMessage(), 'error', 'main', 'flash' );
 			return;
 		}
-
 	}
 
 	/**
@@ -581,13 +582,23 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		}
 	}
 
+	public function head_script() {
+		?>
+		<script type='text/javascript'>
+		window.onAmazonLoginReady = function() {
+			amazon.Login.setClientId('amzn1.application-oa2-client.c568a76aa0224d6a9fc182e6e6935877');
+		};
+		</script>
+		<?php
+	}
+
 	/**
 	 * Add scripts
 	 */
 	public function scripts() {
 		wp_enqueue_style( 'amazon_payments_advanced', WPSC_MERCHANT_V3_SDKS_URL . '/amazon-payments/assets/css/style.css' );
 
-		wp_enqueue_script( 'amazon_payments_advanced_widgets', WPSC_AMAZON_PA_WIDGETS_URL, '', '1.0', true );
+		wp_enqueue_script( 'amazon_payments_advanced_widgets', WPSC_AMAZON_PA_WIDGETS_URL, '', WPSC_VERSION );
 
 		wp_enqueue_script( 'amazon_payments_advanced', WPSC_MERCHANT_V3_SDKS_URL . '/amazon-payments/assets/js/amazon-checkout.js', array( 'amazon_payments_advanced_widgets' ), '1.0', true	);
 

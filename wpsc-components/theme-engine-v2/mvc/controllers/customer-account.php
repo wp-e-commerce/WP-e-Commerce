@@ -76,7 +76,7 @@ class WPSC_Controller_Customer_Account extends WPSC_Controller {
 	}
 
 	public function orders() {
-		$this->parse_index_args(func_get_args());
+		$this->parse_index_args( func_get_args() );
 
 		if ( $this->order_id ) {
 			$this->order( $this->order_id );

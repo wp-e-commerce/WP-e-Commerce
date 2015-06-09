@@ -1,29 +1,30 @@
 jQuery(function() {
 
-	// Login Widget
-	new OffAmazonPayments.Widgets.Button ({
-		sellerId: amazon_payments_advanced_params.seller_id,
+	var authRequest;
+	OffAmazonPayments.Button("pay_with_amazon", amazon_payments_advanced_params.seller_id, {
+		type:  "PwA",
+		color: "Gold",
+		size:  "medium",
 		useAmazonAddressBook: true,
-		onSignIn: function( orderReference ) {
-			amazonOrderReferenceId = orderReference.getAmazonOrderReferenceId();
-			window.location = amazon_payments_advanced_params.redirect + '&amazon_reference_id=' + amazonOrderReferenceId;
+		authorization: function() {
+		  var loginOptions = {scope: 'profile payments:widget'};
+		  authRequest = amazon.Login.authorize(loginOptions, amazon_payments_advanced_params.redirect );
+		  console.log( authRequest );
 		},
-		onError: function(error) { console.log(error); }
-	}).bind("pay_with_amazon");
+		onError: function(error) {
+		  console.log(error);
+		}
+	});
 
 	// Addressbook widget
 	new OffAmazonPayments.Widgets.AddressBook({
 		sellerId: amazon_payments_advanced_params.seller_id,
 		amazonOrderReferenceId: amazon_payments_advanced_params.reference_id,
-		onAddressSelect: function( orderReference ) {
-			console.log( orderReference );
-			jQuery('body').trigger('update_checkout');
-		},
+		onAddressSelect: function( orderReference ) {},
 		design: {
             designMode: 'responsive'
         },
-		onError: function(error) {
-		}
+		onError: function(error) {}
 	}).bind("amazon_addressbook_widget");
 
 	// Wallet widget
