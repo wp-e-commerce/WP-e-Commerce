@@ -225,6 +225,19 @@ final class WPSC_Payment_Gateways {
 		$classname = ucwords( str_replace( '-', ' ', $filename ) );
 		$classname = 'WPSC_Payment_Gateway_' . str_replace( ' ', '_', $classname );
 
+		if ( file_exists( $file ) ) {
+			require_once $file;
+		}
+
+		if ( is_callable( array( $classname, 'load' ) ) && ! call_user_func( array( $classname, 'load' ) ) ) {
+
+			self::unregister_file( $filename );
+
+			$error = new WP_Error( 'wpsc-payment', __( 'Error' ) );
+
+			return $error;
+		}
+
 		$meta = array(
 			'class'        => $classname,
 			'path'         => $file,
@@ -243,15 +256,10 @@ final class WPSC_Payment_Gateways {
 
 		self::$gateways[ $filename ] = $meta;
 
-		if ( ! $gateway->load() ) {
-			unset( self::$gateways[ $filename ] );
-			return false;
-		}
-
 		return true;
 	}
 
-	public static function unregister_file( $file ) {
+	public static function unregister_file( $filename ) {
 		if ( isset( self::$gateways[ $filename ] ) ) {
 			unset( self::$gateways[ $filename ] );
 		}
@@ -484,10 +492,6 @@ abstract class WPSC_Payment_Gateway {
 		return false;
 	}
 
-	public function load() {
-		return true;
-	}
-
 	public function set_purchase_log( &$purchase_log ) {
 		$this->purchase_log = &$purchase_log;
 		$this->checkout_data = new WPSC_Checkout_Form_Data( $purchase_log->get( 'id' ) );
@@ -556,10 +560,6 @@ abstract class WPSC_Payment_Gateway {
 	 * @return WPSC_Payment_Gateway
 	 */
 	public function __construct() {
-
-		if ( ! $this->load() ) {
-			return;
-		}
 
 		$this->setting = new WPSC_Payment_Gateway_Setting( get_class( $this ) );
 	}

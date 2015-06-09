@@ -38,10 +38,6 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 		parent::__construct();
 
-		if ( ! $this->load() ) {
-			return;
-		}
-
 		$this->title = __( 'Amazon Payments', 'wpsc' );
 
 		$this->reference_id = ! empty( $_REQUEST['amazon_reference_id'] ) ? sanitize_text_field( $_REQUEST['amazon_reference_id'] ) : '';
@@ -109,8 +105,8 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	 *
 	 * @return bool Whether or not to load gateway.
 	 */
-	public function load() {
-		return version_compare( phpversion(), '5.3', '>=' ) && function_exists( 'curl_init' ) && _wpsc_maybe_activate_theme_engine_v2();
+	public static function load() {
+		return version_compare( phpversion(), '5.3', '>=' ) && function_exists( 'curl_init' ) && function_exists( '_wpsc_get_current_controller' );
 	}
 
 	/**
