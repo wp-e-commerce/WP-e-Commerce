@@ -23,7 +23,7 @@ class WPSC_Orders_Table extends WPSC_Table {
 		global $wpdb;
 
 		$where = 'user_ID = %d';
-		$vars = array( wpsc_get_current_customer_id() );
+		$vars = array( get_current_user_id() );
 		if ( $this->status !== 0 ) {
 			$where .= ' AND processed = %d';
 			$vars[] = $this->status;

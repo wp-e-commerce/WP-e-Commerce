@@ -96,7 +96,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 		$sessionid = ( mt_rand( 100, 999 ) . time() );
 		wpsc_update_customer_meta( 'checkout_session_id', $sessionid );
 		$purchase_log->set( array(
-			'user_ID'        => wpsc_get_current_customer_id(),
+			'user_ID'        => get_current_user_id(),
 			'date'           => time(),
 			'plugin_version' => WPSC_VERSION,
 			'statusno'       => '0',

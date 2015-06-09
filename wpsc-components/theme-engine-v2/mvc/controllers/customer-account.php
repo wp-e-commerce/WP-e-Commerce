@@ -40,7 +40,7 @@ class WPSC_Controller_Customer_Account extends WPSC_Controller {
 			WHERE user_ID = %d
 			GROUP BY processed
 			ORDER BY processed
-		", wpsc_get_current_customer_id() );
+		", get_current_user_id() );
 
 		$results     = $wpdb->get_results( $sql );
 		$statuses    = array();
