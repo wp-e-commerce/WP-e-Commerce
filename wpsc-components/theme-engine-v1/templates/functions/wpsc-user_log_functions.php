@@ -553,9 +553,9 @@ function wpsc_user_purchases() {
 
 			foreach ( (array)$payment_gateway_names as $gatewayname ) {
 				//if the gateway has a custom name
-				if (!empty ($gatewayname) )
-					$display_name = $payment_gateway_names[$purchase_log[0]['gateway']];
-				else{
+				if ( ! empty ( $gatewayname ) && isset( $payment_gateway_names[ $purchase_log[0]['gateway'] ] ) ) {
+					$display_name = $payment_gateway_names[ $purchase_log[0]['gateway'] ];
+				} else {
 				//if not fall back on default name
 					foreach ( (array)$nzshpcrt_gateways as $gateway ){
 						if ( $gateway['internalname'] == $purchase['gateway'])
