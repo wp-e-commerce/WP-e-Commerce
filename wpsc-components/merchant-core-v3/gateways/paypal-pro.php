@@ -85,7 +85,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 				'loading'     => __( 'Loading...', 'wpsc' ),
 			);
 			wp_enqueue_script( 'pro-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/pro.js', array( 'jquery' ) );
-			wp_enqueue_style( 'pro-syle-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/pro.css' );
+			wp_enqueue_style( 'pro-style-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/pro.css' );
 			wp_localize_script( 'pro-script-internal', 'pro_loc', $pro_loc );
 		}
 	}
