@@ -31,6 +31,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	private $mws_access_key;
 	private $secret_key;
 	private $sandbox;
+	private $client_id;
 	private $payment_capture;
 	private $endpoint;
 	private $user_is_authenticated = false;
@@ -56,6 +57,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		$this->secret_key      = $this->setting->get( 'secret_key' );
 		$this->sandbox         = $this->setting->get( 'sandbox_mode' ) == '1' ? true : false;
 		$this->payment_capture = $this->setting->get( 'payment_capture' ) !== null ? $this->setting->get( 'payment_capture' ) : '';
+		$this->client_id       = $this->setting->get( 'client_id' );
 
 		$base_country = new WPSC_Country( wpsc_get_base_country() );
 
@@ -150,6 +152,15 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			<td>
 				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'secret_key' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'secret_key' ) ); ?>" id="wpsc-amazon-payments-secret-key" /><br />
 				<small><?php _e( 'Obtained from your Amazon account. You can get these keys by logging into Seller Central and viewing the MWS Access Key section under the Integration tab.', 'wpsc' ); ?></small>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="wpsc-amazon-payments-client-id"><?php _e( 'Client ID', 'wpsc' ); ?></label>
+			</td>
+			<td>
+				<input type="text" name="<?php echo esc_attr( $this->setting->get_field_name( 'client_id' ) ); ?>" value="<?php echo esc_attr( $this->setting->get( 'client_id' ) ); ?>" id="wpsc-amazon-payments-client_id" /><br />
+				<small><?php _e( 'Obtained from your Amazon account, under Web Settings.', 'wpsc' ); ?></small>
 			</td>
 		</tr>
 		<tr>
@@ -602,7 +613,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		?>
 		<script type='text/javascript'>
 		window.onAmazonLoginReady = function() {
-			amazon.Login.setClientId('amzn1.application-oa2-client.c568a76aa0224d6a9fc182e6e6935877');
+			amazon.Login.setClientId(<?php echo wp_json_encode( $this->client_id ); ?>);
 		};
 		</script>
 		<?php
