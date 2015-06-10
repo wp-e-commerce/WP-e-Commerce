@@ -42,18 +42,11 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 		$this->title = __( 'Amazon Payments', 'wpsc' );
 
-		if ( ! wpsc_is_gateway_active( 'amazon-payments' ) ) {
-			return;
-		}
-
 		$this->reference_id = ! empty( $_REQUEST['amazon_reference_id'] ) ? sanitize_text_field( $_REQUEST['amazon_reference_id'] ) : '';
 
 		$this->user_is_authenticated = isset( $_GET['amazon_payments_advanced'] ) && 'true' == $_GET['amazon_payments_advanced'] && isset( $_GET['access_token'] );
 
 		$this->order_handler = WPSC_Amazon_Payments_Order_Handler::get_instance( $this );
-
-		add_action( 'wpsc_loaded', array( $this, 'init_handlers' ), 11 );
-		add_action( 'wp_footer'  , array( $this, 'maybe_hide_standard_checkout_button' ) );
 
 		// Define user set variables
 		$this->seller_id       = $this->setting->get( 'seller_id' );
@@ -437,12 +430,15 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	/**
 	 * Load handlers for cart and orders after cart is loaded.
 	 */
-	public function init_handlers() {
+	public function init() {
 
 		// Disable if no seller ID
 		if ( empty( $this->seller_id ) ) {
 			return;
 		}
+
+		add_action( 'wpsc_loaded', array( $this, 'init_handlers' ), 11 );
+		add_action( 'wp_footer'  , array( $this, 'maybe_hide_standard_checkout_button' ) );
 
 		add_action( 'wp_head', array( $this, 'head_script' ), 0 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'scripts' ) );
