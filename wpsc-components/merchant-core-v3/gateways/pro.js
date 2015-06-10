@@ -25,7 +25,7 @@
 				$container.html( '<iframe id="pro-iframe" name="hss_iframe" width="570px" height="540px"></iframe>' );
 
 				// Insert the Spinner
-				$container.after( '<img src="' + pro_loc.spinner_url + '" class="pro-spinner" alt="spinner" />' );
+				$container.parents( '.wpsc-checkout-review' ).find( 'strong.wpsc-large' ).eq( -1 ).after( '<img src="' + pro_loc.spinner_url + '" class="pro-spinner" alt="spinner" />' );
 				var $spinner = $( '.pro-spinner' );
 
 				// Call the PayPal Pro API
@@ -42,10 +42,13 @@
 						$hss_form.find( 'input[type="image"]' ).click();
 
 						// Remove the Spinner
-						$spinner.hide();
 
 						// Show the IFRAME
 						$( '#pro-iframe' ).show();
+
+						document.getElementById( 'pro-iframe' ).onload = function() {
+							$spinner.hide();
+						}
 					}
 				} );
 			}
