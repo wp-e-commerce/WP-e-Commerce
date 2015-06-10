@@ -985,10 +985,6 @@ add_action( 'admin_init', '_wpsc_clear_wp_cache_on_version_change', 1 );
 function wpsc_add_tables_to_repair( $tables ) {
 	global $wpec;
 
-	if ( ! defined( 'WP_ALLOW_REPAIR' ) && apply_filters( 'wpsc_tables_need_repair', true ) ) {
-		define( 'WP_ALLOW_REPAIR', true );
-	}
-
 	return array_merge( $wpec->setup_table_names(), $tables );
 }
 
@@ -1080,3 +1076,61 @@ function wpsc_update_user_downloads( $user_id = 0 ) {
 
 add_action( 'wpsc_template_before_customer-account-digital-content', 'wpsc_update_user_downloads', 5 );
 //add_action( 'wpsc_user_profile_section_downloads', 'wpsc_update_user_downloads', 5 );
+
+/**
+ * Checks visitor and visitor meta table for corruption.
+ *
+ * If tables are corrupted, site admins are alerted and given the ability to repair them.
+ *
+ * @since  3.9.4
+ * @return void
+ */
+function wpsc_check_visitor_tables() {
+
+	// Don't check if current user is not a store admin or if we have checked in the last hour.
+	if ( wpsc_is_store_admin() && ! ( $check = get_transient( 'wpsc_tables_intact' ) ) ) {
+		global $wpdb;
+
+		$visitor_check      = $wpdb->get_row( "CHECK TABLE {$wpdb->wpsc_visitors}" );
+		$visitor_meta_check = $wpdb->get_row( "CHECK TABLE {$wpdb->wpsc_visitormeta}" );
+
+		// If both tables are fine
+		if ( 'OK' == $visitor_check->Msg_text && 'OK' == $visitor_meta_check->Msg_text )  {
+			set_transient( 'wpsc_tables_intact', true, HOUR_IN_SECONDS );
+			return;
+		} else {
+			set_transient( 'wpsc_tables_intact', false, HOUR_IN_SECONDS );
+		}
+
+		add_action( 'all_admin_notices', 'wpsc_visitor_tables_need_repair' );
+	}
+}
+
+add_action( 'init', 'wpsc_check_visitor_tables' );
+
+/**
+ * Adds admin notice to all screens, for store administators, when database tables are in need of repair.
+ *
+ * @since  3.9.4
+ * @return void
+ */
+function wpsc_visitor_tables_need_repair() {
+	echo '<div class="error"><p>' . sprintf( __( 'It appears that your WP eCommerce database tables are in need of repair. This is very important for both security and performance. <a href="%s">Repair your tables now</a>. <br />Note: If you encounter errors upon repairing your tables, simply refresh the page.', 'wpsc' ), esc_url( admin_url( 'maint/repair.php' ) ) ) . '</p></div>';
+}
+
+/**
+ * Defines `WP_ALLOW_REPAIR` to true when WP eCommerce tables are in need of repair.
+ *
+ * @since  3.9.4
+ * @return void
+ */
+function wpsc_repair_tables() {
+
+	$needs_repair = ! get_transient( 'wpsc_tables_intact' );
+
+	if ( ! defined( 'WP_ALLOW_REPAIR' ) && apply_filters( 'wpsc_tables_need_repair', $needs_repair ) && ( defined( 'WP_REPAIRING' ) && WP_REPAIRING ) ) {
+		define( 'WP_ALLOW_REPAIR', true );
+	}
+}
+
+add_action( 'wpsc_init', 'wpsc_repair_tables' );
