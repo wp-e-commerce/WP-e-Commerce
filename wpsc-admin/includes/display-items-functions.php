@@ -1261,7 +1261,7 @@ function wpsc_save_quickedit_box( $post_id ) {
 	global $doaction;
 
 	// Only save product if saving (not autosaving) via AJAX.
-	if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || ! defined( 'DOING_AJAX' ) || ! DOING_AJAX || get_post_type( $post_id ) != 'wpsc-product' ) {	
+	if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || ! defined( 'DOING_AJAX' ) || ! DOING_AJAX || get_post_type( $post_id ) != 'wpsc-product' ) {
 		return;
 	}
 
@@ -1338,8 +1338,12 @@ function wpsc_save_quickedit_box( $post_id ) {
 				case 'sku':
 					if ( $value == __( 'N/A', 'wpsc' ) ) {
 						$value = '';
+					} else {
+						$value = sanitize_text_field( $value );
 					}
 					break;
+				default :
+					$value = sanitize_text_field( $value );
 
 			}
 
