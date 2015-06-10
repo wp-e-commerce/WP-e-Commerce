@@ -33,6 +33,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	private $sandbox;
 	private $payment_capture;
 	private $endpoint;
+	private $user_is_authenticated = false;
 
 	public function __construct() {
 
@@ -41,6 +42,8 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		$this->title = __( 'Amazon Payments', 'wpsc' );
 
 		$this->reference_id = ! empty( $_REQUEST['amazon_reference_id'] ) ? sanitize_text_field( $_REQUEST['amazon_reference_id'] ) : '';
+
+		$this->user_is_authenticated = isset( $_GET['amazon_payments_advanced'] ) && 'true' == $_GET['amazon_payments_advanced'] && isset( $_GET['access_token'] );
 
 		$this->order_handler = WPSC_Amazon_Payments_Order_Handler::get_instance( $this );
 
@@ -61,9 +64,6 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		$this->endpoint       = $this->sandbox ? $this->endpoints['sandbox'][ $location ] : $this->endpoints['production'][ $location ];
 
 		$this->define_widget_constants();
-
-		// Get refererence ID
-		$this->reference_id   = ! empty( $_REQUEST['amazon_reference_id'] ) ? $_REQUEST['amazon_reference_id'] : '';
 
 		if ( isset( $_POST['post_data'] ) ) {
 			parse_str( $_POST['post_data'], $post_data );
@@ -442,13 +442,14 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		add_action( 'wpsc_template_before_checkout-shipping-and-billing', array( $this, 'checkout_message' ), 5 );
 		add_action( 'wpsc_template_before_checkout-payment'             , array( $this, 'checkout_message' ), 5 );
 
-		if ( empty( $this->reference_id ) ) {
+		if ( ! $this->user_is_authenticated ) {
 			return;
 		}
 
 		add_action( 'wpsc_router_init', array( $this, 'lazy_load_location_meta' ) );
 
-		add_filter( 'wpsc_get_checkout_form_args', array( $this, 'add_widgets_to_method_form' ) );
+		add_filter( 'wpsc_get_checkout_form_args'                , array( $this, 'add_widgets_to_method_form' ) );
+		add_filter( 'wpsc_get_checkout_shipping_method_form_args', array( $this, 'insert_reference_id_to_form' ) );
 		add_action( 'wpsc_checkout_get_fields', '__return_empty_array' );
 
 		add_filter( 'wpsc_get_active_gateways', array( $this, 'remove_gateways' ) );
@@ -466,6 +467,8 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 	public function set_customer_details() {
 		$_POST['wpsc_checkout_details'] = array();
+
+		$_GET['amazon_reference_id'] = sanitize_text_field( $_POST['amazon_reference_id'] );
 
 		try {
 
@@ -569,6 +572,23 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		return $args;
 	}
 
+	public function insert_reference_id_to_form( $args ) {
+		ob_start();
+
+		$this->insert_reference_id();
+
+		$id = ob_get_clean();
+
+		if ( isset( $args['before_form_actions'] ) ) {
+			$args['before_form_actions'] .= $id;
+		} else {
+			$args['before_form_actions']  = $id;
+		}
+
+		return $args;
+
+	}
+
 	/**
 	 *  Checkout Message
 	 */
@@ -627,7 +647,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 				}
 				?>
 				<div id="amazon_addressbook_widget"></div>
-				<input type="hidden" name="amazon_reference_id" value="<?php echo $this->reference_id; ?>" />
+				<?php $this->insert_reference_id(); ?>
 				<style type="text/css">
 					#amazon_addressbook_widget,
 					#amazon_wallet_widget {
@@ -647,6 +667,14 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		<?php
 	}
 
+	public function insert_reference_id() {
+		if ( ! empty( $this->reference_id ) || $this->user_is_authenticated ) {
+			?>
+			<input type="hidden" name="amazon_reference_id" value="<?php echo $this->reference_id; ?>" />
+			<?php
+		}
+	}
+
 	/**
 	 * Output the payment method widget HTML
 	 */
@@ -655,7 +683,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			<div class="col-2">
 				<h3><?php _e( 'Payment Method', 'wpsc' ); ?></h3>
 				<div id="amazon_wallet_widget"></div>
-				<input type="hidden" name="amazon_reference_id" value="<?php echo $this->reference_id; ?>" />
+				<?php $this->insert_reference_id(); ?>
 			</div>
 		<?php
 	}
