@@ -121,15 +121,18 @@ class tablerate {
 		if ( ! isset( $_POST['wpsc_shipping_tablerate_layer'] ) || ! isset( $_POST['wpsc_shipping_tablerate_shipping'] ) )
 			return false;
 
-		$layers = (array) $_POST['wpsc_shipping_tablerate_layer'];
+		$layers    = (array) $_POST['wpsc_shipping_tablerate_layer'];
 		$shippings = (array) $_POST['wpsc_shipping_tablerate_shipping'];
 		$new_layer = array();
+
 		if ( $shippings != '' ) {
 			foreach ( $shippings as $key => $price ) {
-				if ( ! is_numeric( $key ) || ! is_numeric( $price ) )
-					continue;
 
-				$new_layer[ $layers[ $key ] ] = $price;
+				if ( ! is_numeric( $key ) || ! is_numeric( $price ) ) {
+					continue;
+				}
+
+				$new_layer[ sanitize_text_field( $layers[ $key ] ) ] = sanitize_text_field( $price );
 			}
 		}
 

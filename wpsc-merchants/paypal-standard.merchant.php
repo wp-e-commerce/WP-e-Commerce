@@ -622,37 +622,34 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
  */
 function submit_paypal_multiple (){
 	if ( isset ( $_POST['paypal_multiple_business'] ) ) {
-		update_option( 'paypal_multiple_business', $_POST['paypal_multiple_business'] );
+		update_option( 'paypal_multiple_business', sanitize_email( $_POST['paypal_multiple_business'] ) );
 	}
 
 	if ( isset ( $_POST['paypal_multiple_url'] ) ) {
-		update_option( 'paypal_multiple_url', $_POST['paypal_multiple_url'] );
+		update_option( 'paypal_multiple_url', esc_url_raw( $_POST['paypal_multiple_url'] ) );
 	}
 
 	if ( isset ( $_POST['paypal_curcode'] ) ) {
-		update_option( 'paypal_curcode', $_POST['paypal_curcode'] );
-	}
-
-	if ( isset ( $_POST['paypal_curcode'] ) ) {
-		update_option( 'paypal_curcode', $_POST['paypal_curcode'] );
+		update_option( 'paypal_curcode', sanitize_text_field( $_POST['paypal_curcode'] ) );
 	}
 
 	if ( isset ( $_POST['paypal_ipn'] ) ) {
-		update_option( 'paypal_ipn', (int)$_POST['paypal_ipn'] );
+		update_option( 'paypal_ipn', (int) $_POST['paypal_ipn'] );
 	}
 
 	if ( isset ( $_POST['address_override'] ) ) {
-		update_option( 'address_override', (int)$_POST['address_override'] );
+		update_option( 'address_override', (int) $_POST['address_override'] );
 	}
 	if ( isset ( $_POST['paypal_ship'] ) ) {
-		update_option( 'paypal_ship', (int)$_POST['paypal_ship'] );
+		update_option( 'paypal_ship', (int) $_POST['paypal_ship'] );
 	}
 
-	if ( ! isset( $_POST['paypal_form'] ) )
+	if ( ! isset( $_POST['paypal_form'] ) ) {
 		$_POST['paypal_form'] = array();
+	}
 
-	foreach( (array)$_POST['paypal_form'] as $form => $value ) {
-		update_option( ( 'paypal_form_' . $form ), $value );
+	foreach( (array) $_POST['paypal_form'] as $form => $value ) {
+		update_option( 'paypal_form_' . $form, sanitize_text_field( $value ) );
 	}
 
 	return true;

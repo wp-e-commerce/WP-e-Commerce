@@ -51,11 +51,11 @@ class WPSC_Shipwire {
 	 */
 	private function __construct() {
 
-		self::$email     = get_option( 'shipwireemail' );
-		self::$passwd    = get_option( 'shipwirepassword' );
+		self::$email     = sanitize_email( get_option( 'shipwireemail' ) );
+		self::$passwd    = sanitize_text_field( get_option( 'shipwirepassword' ) );
 		self::$server    = apply_filters( 'wpsc_shipwire_server'   , 'Production' );
 		self::$warehouse = apply_filters( 'wpsc_shipwire_warehouse', '00' );
-		self::$endpoint  = ( bool ) get_option( 'shipwire_test_server' ) ? 'https://api.beta.shipwire.com/exec/' : 'https://api.shipwire.com/exec/';
+		self::$endpoint  = (bool) get_option( 'shipwire_test_server' ) ? 'https://api.beta.shipwire.com/exec/' : 'https://api.shipwire.com/exec/';
 
 		if ( ! self::is_active() )
 			return;
@@ -72,13 +72,13 @@ class WPSC_Shipwire {
 
 	private static function set_posted_properties() {
 		if ( isset( $_POST['email'] ) )
-			self::$email = $_POST['email'];
+			self::$email = sanitize_email( $_POST['email'] );
 
 		if ( isset( $_POST['password'] ) )
-			self::$passwd = $_POST['password'];
+			self::$passwd = sanitize_text_field( $_POST['password'] );
 
 		if ( isset( $_POST['server'] ) ) {
-			self::$endpoint = ( bool ) $_POST['server'] ? 'https://api.beta.shipwire.com/exec/' : 'https://api.shipwire.com/exec/';
+			self::$endpoint = (bool) $_POST['server'] ? 'https://api.beta.shipwire.com/exec/' : 'https://api.shipwire.com/exec/';
 		}
 
 	}
@@ -618,7 +618,7 @@ class WPSC_Shipwire {
 
 		$product_code  = isset( $_POST['product_code'] ) ? $_POST['product_code'] : $product_code;
 		$tracking      = self::get_tracking_info();
-		$inventory     = self::get_inventory_info( $product_code );
+		$inventory     = self::get_inventory_info( sanitize_text_field( $product_code ) );
 
 		do_action( 'wpsc_shipwire_pre_sync', $tracking, $inventory );
 

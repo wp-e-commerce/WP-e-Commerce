@@ -42,6 +42,10 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 		$this->title = __( 'Amazon Payments', 'wpsc' );
 
+		if ( ! wpsc_is_gateway_active( 'amazon-payments' ) ) {
+			return;
+		}
+
 		$this->reference_id = ! empty( $_REQUEST['amazon_reference_id'] ) ? sanitize_text_field( $_REQUEST['amazon_reference_id'] ) : '';
 
 		$this->user_is_authenticated = isset( $_GET['amazon_payments_advanced'] ) && 'true' == $_GET['amazon_payments_advanced'] && isset( $_GET['access_token'] );

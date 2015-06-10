@@ -237,8 +237,8 @@ class ash_usps {
 			<td>
 				<div class="ui-widget-content multiple-select">
 					<?php foreach ( $this->services as $label => $service ): ?>
-						<input type="checkbox" id="wpec_usps_srv_<?php esc_attr_e( $service ); ?>" name="wpec_usps[services][]" value="<?php echo esc_attr_e( $service ); ?>" <?php checked( (bool) array_search( $service, $wpec_usps_services ) ); ?> />
-				 		<label for="wpec_usps_srv_$service"><?php echo $label; ?></label>
+						<input type="checkbox" id="wpec_usps_srv_<?php echo sanitize_title( $service ); ?>" name="wpec_usps[services][]" value="<?php echo esc_attr_e( $service ); ?>" <?php checked( (bool) array_search( $service, $wpec_usps_services ) ); ?> />
+				 		<label for="wpec_usps_srv_<?php echo sanitize_title( $service ); ?>"><?php echo esc_html( $label ); ?></label>
 				 		<br />
 					<?php endforeach; ?>
 				</div>
@@ -305,7 +305,7 @@ class ash_usps {
 			$settings = stripslashes_deep( $_POST['wpec_usps'] );
 			update_option( 'wpec_usps', $settings );
 		}
-		return TRUE;
+		return true;
 	}
 
 	/**
@@ -1038,7 +1038,7 @@ class ash_usps {
 
 		// If the region code is provided via a form post use it!
 		if ( isset( $_POST['region'] ) && ! empty( $_POST['region'] ) ) {
-			$data['dest_state'] = wpsc_get_region( $_POST['region'] );
+			$data['dest_state'] = wpsc_get_region( sanitize_text_field( $_POST['region'] ) );
 		} else if ( $dest_state = wpsc_get_customer_meta( 'shipping_state' ) ) {
 			// Well, we have a zip code in the session and no new one provided
 			$data['dest_state'] = $dest_state;

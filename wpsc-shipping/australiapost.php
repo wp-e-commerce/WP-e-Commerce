@@ -137,8 +137,9 @@ class australiapost {
 		$dest = wpsc_get_customer_meta( 'shipping_country' );
 
 		$destzipcode = (string) wpsc_get_customer_meta( 'shipping_zip' );
-		if( isset($_POST['zipcode'] ) ) {
-			$destzipcode = $_POST['zipcode'];
+
+		if ( isset( $_POST['zipcode'] ) ) {
+			$destzipcode = sanitize_text_field( $_POST['zipcode'] );
 			wpsc_update_customer_meta( 'shipping_zip', $destzipcode );
 		}
 

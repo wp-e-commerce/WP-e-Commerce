@@ -284,7 +284,7 @@ class ash_ups {
 		 */
 		if (isset( $_POST['wpsc_ups_settings'] ) && !empty( $_POST['wpsc_ups_settings'] ) ) {
 			if ( isset( $_POST['wpsc_ups_services'] ) ) {
-				$wpsc_ups_services = $_POST['wpsc_ups_services'];
+				$wpsc_ups_services = stripslashes_deep( $_POST['wpsc_ups_services'] );
 				update_option('wpsc_ups_services',$wpsc_ups_services);
 			}
 			$temp = stripslashes_deep( $_POST['wpsc_ups_settings'] );

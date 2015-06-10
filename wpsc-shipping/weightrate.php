@@ -119,18 +119,22 @@ class weightrate {
 	 * @return boolean Always returns true.
 	 */
 	function submit_form() {
-		if ( empty( $_POST['wpsc_shipping_weightrate_shipping'] ) || empty( $_POST['wpsc_shipping_weightrate_layer'] ) )
+		if ( empty( $_POST['wpsc_shipping_weightrate_shipping'] ) || empty( $_POST['wpsc_shipping_weightrate_layer'] ) ) {
 			return false;
+		}
 
 		$new_layers = array();
 		$layers     = (array) $_POST['wpsc_shipping_weightrate_layer'];
 		$shippings  = (array) $_POST['wpsc_shipping_weightrate_shipping'];
 
-		if ( !empty($shippings) ) {
-			foreach ($shippings as $key => $price) {
-				if ( empty( $price ) || trim( $layers[$key] ) == '' )
+		if ( !empty( $shippings ) ) {
+			foreach ( $shippings as $key => $price ) {
+
+				if ( empty( $price ) || trim( $layers[ $key ] ) == '' ) {
 					continue;
-				$new_layers[$layers[$key]] = $price;
+				}
+
+				$new_layers[ sanitize_text_field( $layers[ $key ] ) ] = sanitize_text_field( $price );
 			}
 		}
 

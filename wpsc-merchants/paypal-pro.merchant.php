@@ -391,19 +391,19 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 
 function submit_paypal_pro() {
 	if ( isset( $_POST['PayPalPro']['username'] ) )
-		update_option( 'paypal_pro_username', $_POST['PayPalPro']['username'] );
+		update_option( 'paypal_pro_username', sanitize_text_field( $_POST['PayPalPro']['username'] ) );
 
 	if ( isset( $_POST['PayPalPro']['password'] ) )
-		update_option( 'paypal_pro_password', $_POST['PayPalPro']['password'] );
+		update_option( 'paypal_pro_password', sanitize_text_field( $_POST['PayPalPro']['password'] ) );
 
 	if(isset($_POST['paypal_curcode']))
-		update_option('paypal_curcode', $_POST['paypal_curcode']);
+		update_option('paypal_curcode', sanitize_text_field( $_POST['paypal_curcode'] ) );
 
 	if ( isset( $_POST['PayPalPro']['signature'] ) )
-		update_option( 'paypal_pro_signature', $_POST['PayPalPro']['signature'] );
+		update_option( 'paypal_pro_signature', sanitize_text_field( $_POST['PayPalPro']['signature'] ) );
 
 	if ( isset( $_POST['PayPalPro']['testmode'] ) )
-		update_option( 'paypal_pro_testmode', $_POST['PayPalPro']['testmode'] );
+		update_option( 'paypal_pro_testmode', sanitize_text_field( $_POST['PayPalPro']['testmode'] ) );
 
 	return true;
 }

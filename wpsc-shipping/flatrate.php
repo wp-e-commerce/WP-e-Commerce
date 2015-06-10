@@ -119,13 +119,17 @@ class flatrate {
 	 * @return boolean Always returns true.
 	 */
 	function submit_form() {
-		if (!isset($_POST['shipping'])) $_POST['shipping'] = null;
-
-		if ($_POST['shipping'] != null) {
-			$shipping = (array)get_option('flat_rates');
-			$submitted_shipping = (array)$_POST['shipping'];
-			update_option('flat_rates', array_merge($shipping, $submitted_shipping));
+		if ( ! isset( $_POST['shipping'] ) ) {
+			$_POST['shipping'] = null;
 		}
+
+		if ( $_POST['shipping'] != null ) {
+			$shipping           = (array) get_option('flat_rates');
+			$submitted_shipping = (array) $_POST['shipping'];
+
+			update_option( 'flat_rates', array_map( 'floatval', array_merge( $shipping, $submitted_shipping ) ) );
+		}
+
 		return true;
 	}
 
@@ -143,7 +147,7 @@ class flatrate {
 		$country = '';
 
 		if (isset($_POST['country'])) {
-			$country = $_POST['country'];
+			$country = sanitize_text_field( $_POST['country'] );
 			wpsc_update_customer_meta( 'shipping_country', $country );
 		} else {
 			$country = (string) wpsc_get_customer_meta( 'shipping_country' );
