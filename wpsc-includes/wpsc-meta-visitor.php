@@ -878,6 +878,10 @@ function wpsc_add_visitor_meta( $visitor_id, $meta_key, $meta_value, $unique = f
 		return false;
 	}
 
+	if ( $visitor_id == WPSC_BOT_VISITOR_ID ) {
+		return false;
+	}
+
 	// Allow central validation (and possibly transformation) of visitor meta prior to it being saved
 	$meta_key = _wpsc_validate_visitor_meta_key( $meta_key );
 
@@ -903,6 +907,10 @@ function wpsc_add_visitor_meta( $visitor_id, $meta_key, $meta_value, $unique = f
 function wpsc_delete_visitor_meta( $visitor_id, $meta_key, $meta_value = '' ) {
 
 	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
+	if ( $visitor_id == WPSC_BOT_VISITOR_ID ) {
 		return false;
 	}
 
@@ -939,6 +947,10 @@ function wpsc_get_visitor_meta( $visitor_id, $meta_key = '', $single = false ) {
 
 	if ( ! _wpsc_visitor_database_ready() ) {
 		return false;
+	}
+
+	if ( $visitor_id == WPSC_BOT_VISITOR_ID ) {
+		return $single ? '' : array();
 	}
 
 	// Allow central validation (and possibly transformation) of visitor meta prior to it being saved
@@ -1002,6 +1014,10 @@ function wpsc_visitor_meta_exists( $visitor_id, $meta_key ) {
 function wpsc_update_visitor_meta( $visitor_id, $meta_key, $meta_value, $prev_value = '' ) {
 
 	if ( ! _wpsc_visitor_database_ready() ) {
+		return false;
+	}
+
+	if ( $visitor_id == WPSC_BOT_VISITOR_ID ) {
 		return false;
 	}
 
