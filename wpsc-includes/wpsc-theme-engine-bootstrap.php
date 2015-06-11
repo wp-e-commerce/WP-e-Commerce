@@ -61,7 +61,7 @@ function _wpsc_theme_engine_v1_has_actions() {
 		'wpsc_before_form_of_shopping_cart'          => '_wpsc_shipping_error_messages',
 		'wpsc_user_profile_section_purchase_history' => '_wpsc_action_purchase_history_section',
 		'wpsc_user_profile_section_edit_profile'     => '_wpsc_action_edit_profile_section',
-		'wpsc_user_profile_section_downloads'        => '_wpsc_action_downloads_section'
+		'wpsc_user_profile_section_downloads'        => array( '_wpsc_action_downloads_section', 'wpsc_update_user_downloads' )
 	);
 
 	$has_actions = array();
