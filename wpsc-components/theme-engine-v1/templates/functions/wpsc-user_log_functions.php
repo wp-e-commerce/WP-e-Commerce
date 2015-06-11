@@ -154,22 +154,27 @@ function wpsc_has_downloads() {
 				$downloads[] = $product['product_id'];
 			}
 
-			$downloads = new WP_Query(
-				array(
-					'post_parent__in' => $downloads,
-					'post_type'       => 'wpsc-product-file',
-					'posts_per_page'  => -1,
-					'post_status'     => 'all'
-				)
-			);
+			if ( ! empty( $downloads ) ) {
 
-			if ( $downloads->have_posts() ) {
-				$files = $downloads->query( $downloads->query_vars );
+				$downloads = new WP_Query(
+					array(
+						'post_parent__in' => $downloads,
+						'post_type'       => 'wpsc-product-file',
+						'posts_per_page'  => -1,
+						'post_status'     => 'all'
+					)
+				);
 
-				foreach ( $files as $key => $post ) {
-					$files[ $key ] = (array) $post;
+				if ( $downloads->have_posts() ) {
+					$files = $downloads->query( $downloads->query_vars );
+
+					foreach ( $files as $key => $post ) {
+						$files[ $key ] = (array) $post;
+					}
+
+				} else {
+					$files = array();
 				}
-
 			} else {
 				$files = array();
 			}

@@ -1075,7 +1075,7 @@ function wpsc_update_user_downloads( $user_id = 0 ) {
 }
 
 add_action( 'wpsc_template_before_customer-account-digital-content', 'wpsc_update_user_downloads', 5 );
-add_action( 'wpsc_user_profile_section_downloads'                  , 'wpsc_update_user_downloads' );
+add_action( 'wpsc_user_profile_section_downloads'                  , 'wpsc_update_user_downloads', 5 );
 
 /**
  * Checks visitor and visitor meta table for corruption.
