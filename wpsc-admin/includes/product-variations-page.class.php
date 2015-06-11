@@ -86,7 +86,7 @@ class WPSC_Product_Variations_Page {
 		}
 
 		if ( isset( $data['sku'] ) ) {
-			update_product_meta( $id, 'sku', $data['sku'] );
+			update_product_meta( $id, 'sku', sanitize_text_field( $data['sku'] ) );
 		}
 
 		if ( isset( $data['stock'] ) ) {

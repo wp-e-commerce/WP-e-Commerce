@@ -656,7 +656,7 @@ function wpsc_admin_include_css_and_js_refac( $pagehook ) {
 
 		wp_enqueue_script( 'wp-e-commerce-product-variations', WPSC_URL . '/wpsc-admin/js/product-variations.js', array( 'jquery' ), $version_identifier );
 		wp_localize_script( 'wp-e-commerce-product-variations', 'WPSC_Product_Variations', array(
-			'product_id'              => $_REQUEST['product_id'],
+			'product_id'              => absint( $_REQUEST['product_id'] ),
 			'add_variation_set_nonce' => _wpsc_create_ajax_nonce( 'add_variation_set' ),
 		) );
 	}
@@ -1242,7 +1242,8 @@ function wpsc_ajax_ie_save() {
 		update_product_meta( $product['ID'], 'product_metadata', $product_meta );
 		update_product_meta( $product['ID'], 'price', (float)$_POST['price'] );
 		update_product_meta( $product['ID'], 'special_price', (float)$_POST['special_price'] );
-		update_product_meta( $product['ID'], 'sku', $_POST['sku'] );
+		update_product_meta( $product['ID'], 'sku', sanitize_text_field( $_POST['sku'] ) );
+
 		if ( !is_numeric($_POST['stock']) )
 			update_product_meta( $product['ID'], 'stock', '' );
 		else

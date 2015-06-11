@@ -2,9 +2,9 @@
 Contributors: JustinSainton
 Donate link: https://wpecommerce.org
 Tags: e-commerce, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
-Requires at least: 4.1
+Requires at least: 4.0
 Tested up to: 4.2
-Stable tag: 4.0-dev
+Stable tag: 3.9.4
 
 WP eCommerce is a free, powerful plugin that empowers you to sell anything online, quickly and easily.
 
@@ -35,6 +35,12 @@ Before updating please make a backup of your existing files and database. Just i
 After upgrading from earlier versions look for link "Update Store". This will update your database structure to work with new version.
 
 == Changelog ==
+
+= 3.9.4 =
+
+* Security Fix: Harden several instances of $_POST input that were not sanitized properly. Specifically, PayPal settings and Quick Edit fields for products.
+* Security Fix: Do not return visitor meta if WP eCommerce presumes a user to be a bot.
+* Enhancement: Provide a notice for users to repair their WP eCommerce tables if visitor and visitor meta tables are in need of repair. See [#1901](https://github.com/wp-e-commerce/WP-e-Commerce/issues/1901).
 
 = 3.9.3 =
 

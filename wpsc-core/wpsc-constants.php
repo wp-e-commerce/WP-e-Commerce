@@ -8,7 +8,7 @@ $wpsc_title_data    = array();
  * _wpsc_is_session_started()
  *
  * Check if PHP session is started using method suggested on php.net
- * 
+ *
  * @since 3.8.14
  * @return boolean
  */
@@ -31,7 +31,7 @@ function _wpsc_is_session_started() {
  * wpsc_core_load_session()
  *
  * Load up the WPEC session
- * 
+ *
  * @return boolean
  */
 function wpsc_core_load_session() {
@@ -55,15 +55,15 @@ function wpsc_core_constants() {
 
 	// Define Plugin version
 	if ( ! defined( 'WPSC_VERSION' ) ) {
-		define( 'WPSC_VERSION'            , '4.0-dev' );
+		define( 'WPSC_VERSION'            , '3.9.4' );
 	}
 
 	if ( ! defined( 'WPSC_MINOR_VERSION' ) ) {
-		define( 'WPSC_MINOR_VERSION'      , '7fdd6de' );
+		define( 'WPSC_MINOR_VERSION'      , '0b2bb1c' );
 	}
 
 	if ( ! defined( 'WPSC_PRESENTABLE_VERSION' ) ) {
-		define( 'WPSC_PRESENTABLE_VERSION', '4.0-dev' );
+		define( 'WPSC_PRESENTABLE_VERSION', '3.9.4' );
 	}
 
 	// Define a salt to use when we hash, WPSC_SALT may be defined for us in our config file, so check first

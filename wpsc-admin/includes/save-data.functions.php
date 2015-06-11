@@ -20,7 +20,7 @@ function wpsc_ajax_set_variation_order(){
 
 		$value = preg_replace( '/[^0-9]/', '', $value );
 
-		if ( ! wpsc_update_meta( $value, 'sort_order', $key, 'wpsc_variation' ) ) {
+		if ( ! wpsc_update_meta( $value, 'sort_order', absint( $key ), 'wpsc_variation' ) ) {
 			$result = false;
 		}
 	}
@@ -539,7 +539,7 @@ function wpsc_save_category_set( $category_id, $tt_id ) {
 		}
 
 		if ( ! empty( $_POST['use_additional_form_set'] ) ) {
-			wpsc_update_categorymeta( $category_id, 'use_additional_form_set', $_POST['use_additional_form_set'] );
+			wpsc_update_categorymeta( $category_id, 'use_additional_form_set', absint( $_POST['use_additional_form_set'] ) );
 		} else {
 			wpsc_delete_categorymeta( $category_id, 'use_additional_form_set' );
 		}

@@ -889,7 +889,7 @@ function paypal_processingfunctions(){
 				} else {
 
 					wpsc_update_customer_meta( 'paypal_express_token'   , $_REQUEST['token'] );
-					wpsc_update_customer_meta( 'paypal_express_payer_id', $_REQUEST['PayerID'] );
+					wpsc_update_customer_meta( 'paypal_express_payer_id', sanitize_text_field( $_REQUEST['PayerID'] ) );
 
 					$resArray = wpsc_get_customer_meta( 'paypal_express_reshash' );
 
@@ -972,8 +972,6 @@ function paypal_processingfunctions(){
 	}
 
 }
-
-
 
 function paypal_hash_call( $methodName, $nvpStr ) {
 	//declaring of variables
