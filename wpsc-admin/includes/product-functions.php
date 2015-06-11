@@ -588,6 +588,16 @@ function wpsc_determine_variation_price( $variation_id, $term_ids = false ) {
 function wpsc_edit_product_variations($product_id, $post_data) {
 	global $user_ID;
 
+	if ( empty( $product_id ) ) {
+		if ( isset( $_REQUEST["product_id"] ) ) {
+			$product_id = $_REQUEST["product_id"];
+		} elseif ( isset( $_REQUEST["post_ID"] ) ) {
+			$product_id = $_REQUEST["post_ID"];
+		} else {
+			return;
+		}
+	}
+
 	$parent = get_post_field( 'post_parent', $product_id );
 
 	if( ! empty( $parent ) )
@@ -619,13 +629,11 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 
 	wp_set_object_terms($product_id, $variation_sets_and_values, 'wpsc-variation');
 
-	$parent_id = $_REQUEST['product_id'];
-
 	$child_product_template = array(
 		'post_author' 	=> $user_ID,
-		'post_content' 	=> get_post_field( 'post_content', $parent_id, 'raw' ),
-		'post_excerpt' 	=> get_post_field( 'post_excerpt', $parent_id, 'raw' ),
-		'post_title' 	=> get_post_field( 'post_title', $parent_id, 'raw' ),
+		'post_content' 	=> get_post_field( 'post_content', $product_id, 'raw' ),
+		'post_excerpt' 	=> get_post_field( 'post_excerpt', $product_id, 'raw' ),
+		'post_title' 	=> get_post_field( 'post_title', $product_id, 'raw' ),
 		'post_status' 	=> 'inherit',
 		'post_type' 	=> "wpsc-product",
 		'post_parent' 	=> $product_id
@@ -728,19 +736,11 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 		$term_ids_to_delete = array_diff($currently_associated_vars, $posted_terms);
 	}
 
-	if(isset($_REQUEST["post_ID"])) {
-		$post_id = $_REQUEST["post_ID"];
-	} elseif(isset($_REQUEST["product_id"])) {
-		$post_id = $_REQUEST["product_id"];
-	} else {
-		return;
-	}
-
-	if(!empty($term_ids_to_delete) && (isset($_REQUEST["product_id"]) ||  isset($post_id))) {
+	if(!empty($term_ids_to_delete) && (isset($product_id))) {
 		$post_ids_to_delete = array();
 
 		// Whatever remains, find child products of current product with that term, in the variation taxonomy, and delete
-		$post_ids_to_delete = wpsc_get_child_object_in_terms_var($_REQUEST["product_id"], $term_ids_to_delete, 'wpsc-variation');
+		$post_ids_to_delete = wpsc_get_child_object_in_terms_var($product_id, $term_ids_to_delete, 'wpsc-variation');
 
 		if(is_array($post_ids_to_delete) && !empty($post_ids_to_delete)) {
 			foreach($post_ids_to_delete as $object_ids) {
@@ -751,7 +751,7 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 		}
 	}
 	$current_children = get_posts(array(
-		'post_parent'	=> $post_id,
+		'post_parent'	=> $product_id,
 		'post_type'		=> 'wpsc-product',
 		'post_status'	=> 'all',
 		'numberposts'   => -1
@@ -770,7 +770,7 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 			}
 		}
 	}
-	_wpsc_refresh_parent_product_terms( $parent_id );
+	_wpsc_refresh_parent_product_terms( $product_id );
 
 }
 
