@@ -622,6 +622,11 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	 * Add scripts
 	 */
 	public function scripts() {
+
+		if ( ! wpsc_is_cart() && ! wpsc_is_checkout() ) {
+			return;
+		}
+
 		wp_enqueue_style( 'amazon_payments_advanced', WPSC_MERCHANT_V3_SDKS_URL . '/amazon-payments/assets/css/style.css' );
 
 		wp_enqueue_script( 'amazon_payments_advanced_widgets', WPSC_AMAZON_PA_WIDGETS_URL, '', WPSC_VERSION );
