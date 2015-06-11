@@ -100,7 +100,7 @@ function wpsc_custom_category_column_data( $string, $column_name, $term_id ) {
 		if ( ! empty( $image ) ) {
 			$string = sprintf( $format, WPSC_CATEGORY_URL . $image, esc_attr( $term->name ) );
 		} else {
-			$string = sprintf( $format, WPSC_CORE_IMAGES_URL . '/no-image-uploaded.gif', esc_attr( $term->name ) );
+			$string = sprintf( $format, WPSC_CORE_THEME_URL . 'wpsc-images/noimage.png', esc_attr( $term->name ) );
 		}
 	}
 	return $string;
