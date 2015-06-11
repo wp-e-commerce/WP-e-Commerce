@@ -619,7 +619,7 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 
 	wp_set_object_terms($product_id, $variation_sets_and_values, 'wpsc-variation');
 
-	$parent_id = $_REQUEST['product_id'];
+	$parent_id = absint( $_REQUEST['product_id'] );
 
 	$child_product_template = array(
 		'post_author' 	=> $user_ID,
@@ -736,7 +736,7 @@ function wpsc_edit_product_variations($product_id, $post_data) {
 		return;
 	}
 
-	if(!empty($term_ids_to_delete) && (isset($_REQUEST["product_id"]) ||  isset($post_id))) {
+	if(!empty($term_ids_to_delete) && (isset($_REQUEST["product_id"]) || isset($post_id))) {
 		$post_ids_to_delete = array();
 
 		// Whatever remains, find child products of current product with that term, in the variation taxonomy, and delete

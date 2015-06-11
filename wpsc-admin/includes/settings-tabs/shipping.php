@@ -4,7 +4,7 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 		parent::__construct();
 
 		if ( isset( $_REQUEST['shipping_module_id'] ) )
-			update_user_option( get_current_user_id(), 'wpsc_settings_selected_shipping_module', $_REQUEST['shipping_module_id'] );
+			update_user_option( get_current_user_id(), 'wpsc_settings_selected_shipping_module', sanitize_text_field( $_REQUEST['shipping_module_id'] ) );
 
 		add_action( 'admin_notices', array( $this, 'no_shipping_notice' ) );
 	}
@@ -40,9 +40,9 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 			$_POST['update_gateways'] = '';
 
 		if ( ! isset( $_POST['custom_shipping_options'] ) )
-			$_POST['custom_shipping_options'] = null;
+			$_POST['custom_shipping_options'] = array();
 
-		update_option( 'custom_shipping_options', $_POST['custom_shipping_options'] );
+		update_option( 'custom_shipping_options', array_map( 'sanitize_text_field', $_POST['custom_shipping_options'] ) );
 
 		$shipadd = 0;
 		foreach ( $wpsc_shipping_modules as $shipping ) {

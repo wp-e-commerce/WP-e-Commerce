@@ -263,38 +263,38 @@ function submit_chronopay()
 {
 	if(isset($_POST['chronopay_product_id']))
     {
-    	update_option('chronopay_product_id', $_POST['chronopay_product_id']);
+    	update_option('chronopay_product_id', sanitize_text_field( $_POST['chronopay_product_id'] ) );
     }
 
   	if(isset($_POST['chronopay_product_name']))
     {
-    	update_option('chronopay_product_name', $_POST['chronopay_product_name']);
+    	update_option('chronopay_product_name', sanitize_text_field( $_POST['chronopay_product_name'] ) );
     }
 
   	if(isset($_POST['chronopay_curcode']))
     {
-    	update_option('chronopay_curcode', $_POST['chronopay_curcode']);
+    	update_option('chronopay_curcode', sanitize_text_field( $_POST['chronopay_curcode'] ) );
     }
 
   	if(isset($_POST['chronopay_language']))
     {
-    	update_option('chronopay_language', $_POST['chronopay_language']);
+    	update_option('chronopay_language', sanitize_text_field( $_POST['chronopay_language'] ) );
     }
 
   	if(isset($_POST['chronopay_url']))
     {
-    	update_option('chronopay_url', $_POST['chronopay_url']);
+    	update_option('chronopay_url', esc_url_raw( $_POST['chronopay_url'] ) );
     }
 
  	if(isset($_POST['chronopay_salt']))
     {
-    	update_option('chronopay_salt', $_POST['chronopay_salt']);
+    	update_option('chronopay_salt', sanitize_text_field( $_POST['chronopay_salt'] ) );
     }
 
     if (!isset($_POST['chronopay_form'])) $_POST['chronopay_form'] = array();
 	foreach((array)$_POST['chronopay_form'] as $form => $value)
     {
-    	update_option(('chronopay_form_'.$form), $value);
+    	update_option(('chronopay_form_'.sanitize_text_field( $form ) ), sanitize_text_field( $value ) );
     }
 	return true;
 }

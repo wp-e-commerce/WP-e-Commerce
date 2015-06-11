@@ -39,8 +39,8 @@ add_filter(
  */
 function wpsc_filter_deprecated_v2_gateways( $gateways ) {
 
-	$deprecated_gateways = array(	
-		'wpsc_merchant_paypal_express',	
+	$deprecated_gateways = array(
+		'wpsc_merchant_paypal_express',
 		'wpsc_merchant_testmode',
 	);
 
@@ -122,6 +122,7 @@ add_action(
 );
 
 function _wpsc_action_merchant_v2_submit_gateway_options() {
+
 	if ( isset( $_POST['user_defined_name'] ) && is_array( $_POST['user_defined_name'] ) ) {
 		$payment_gateway_names = get_option( 'payment_gateway_names' );
 
@@ -129,20 +130,21 @@ function _wpsc_action_merchant_v2_submit_gateway_options() {
 			$payment_gateway_names = array( );
 		}
 		$payment_gateway_names = array_merge( $payment_gateway_names, (array)$_POST['user_defined_name'] );
-		update_option( 'payment_gateway_names', $payment_gateway_names );
+		update_option( 'payment_gateway_names', array_map( 'sanitize_text_field', $payment_gateway_names ) );
 	}
+
 	$custom_gateways = get_option( 'custom_gateway_options' );
 
 	global $nzshpcrt_gateways;
 	foreach ( $nzshpcrt_gateways as $gateway ) {
 		if ( in_array( $gateway['internalname'], $custom_gateways ) ) {
 			if ( isset( $gateway['submit_function'] ) ) {
-				call_user_func_array( $gateway['submit_function'], array( ) );
+				call_user_func_array( $gateway['submit_function'], array() );
 				$changes_made = true;
 			}
 		}
 	}
 	if ( (isset( $_POST['payment_gw'] ) && $_POST['payment_gw'] != null ) ) {
-		update_option( 'payment_gateway', $_POST['payment_gw'] );
+		update_option( 'payment_gateway', sanitize_text_field( $_POST['payment_gw'] ) );
 	}
 }

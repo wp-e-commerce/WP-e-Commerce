@@ -1557,7 +1557,7 @@ function save_term_prices( $term_id ) {
 
 		$term_prices = get_option( 'term_prices' );
 
-		$term_prices[$term_id]["price"] = $_POST["variation_price"];
+		$term_prices[$term_id]["price"] = sanitize_text_field( $_POST["variation_price"] );
 		$term_prices[$term_id]["checked"] = (isset( $_POST["apply_to_current"] )) ? "checked" : "unchecked";
 
 		update_option( 'term_prices', $term_prices );

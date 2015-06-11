@@ -703,7 +703,7 @@ final class WPSC_Settings_Page {
 
 		if ( $_POST['update_gateways'] == 'true' ) {
 
-			update_option( 'custom_shipping_options', $_POST['custom_shipping_options'] );
+			update_option( 'custom_shipping_options', array_map( 'sanitize_text_field', $_POST['custom_shipping_options'] ) );
 
 			$shipadd = 0;
 			foreach ( $GLOBALS['wpsc_shipping_modules'] as $shipping ) {
