@@ -75,6 +75,11 @@ function _wpsc_theme_engine_v1_has_actions() {
 				foreach ( $core_exceptions[ $action ] as $core_hook ) {
 					// Admitted hack until we build a better detection API.
 					$priority =  ( '_wpsc_calculate_shipping_quotes_before_product_page' == $core_hook ) ? 1 : 10;
+
+					if ( 'wpsc_update_user_downloads' == $core_hook ) {
+						$priority = 5;
+					}
+
 					remove_action( $action, $core_hook, $priority );
 				}
 
