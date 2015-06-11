@@ -437,7 +437,6 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			return;
 		}
 
-		add_action( 'wpsc_loaded', array( $this, 'init_handlers' ), 11 );
 		add_action( 'wp_footer'  , array( $this, 'maybe_hide_standard_checkout_button' ) );
 
 		add_action( 'wp_head', array( $this, 'head_script' ), 0 );
