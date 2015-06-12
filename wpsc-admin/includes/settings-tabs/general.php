@@ -4,6 +4,20 @@ class WPSC_Settings_Tab_General extends WPSC_Settings_Tab {
 
 	public function __construct() {
 		$this->get_regions();
+		add_action( 'admin_notices', array( $this, 'no_target_markets' ) );
+	}
+
+	public function no_target_markets() {
+
+		$countries = WPSC_Countries::get_countries();
+
+		if ( empty( $countries ) ) {
+			?>
+			<div class="notice error is-dismissible below-h2">
+				<p><?php _e( '<strong>You have not enabled any target markets.</strong> To sell tangible goods, you will need to set at least one target market.', 'wpsc' ); ?></p>
+			</div>
+			<?php
+		}
 	}
 
 	private function get_regions() {
