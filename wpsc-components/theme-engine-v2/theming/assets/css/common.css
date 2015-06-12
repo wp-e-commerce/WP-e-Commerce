@@ -2112,6 +2112,8 @@
 .wpsc-controller .ui-menu {
   width: 200px;
   margin-bottom: 2em;
+  height: 50%;
+  overflow-y: scroll;
 }
 .wpsc-controller .ui-spinner {
   position: relative;
