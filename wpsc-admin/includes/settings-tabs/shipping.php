@@ -18,11 +18,9 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 	public function no_shipping_notice() {
 		if ( ! empty( $_GET['shipping_disabled'] ) ) {
 		?>
-
-			<div class="error fade">
+			<div class="notice error is-dismissible below-h2">
 				<p><?php _e( '<strong>Shipping has been disabled.</strong> You enabled shipping but none of the shipping methods were selected.  Please re-enable shipping, select and configure a shipping method, and then update your settings.', 'wpsc' ); ?></p>
 			</div>
-
 		<?php
 		}
 	}

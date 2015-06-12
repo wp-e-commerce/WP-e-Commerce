@@ -1721,3 +1721,8 @@ function wpsc_support_links( $links ) {
 }
 
 add_filter( 'plugin_action_links_' . WPSC_PLUGIN_BASENAME, 'wpsc_support_links' );
+
+add_filter( 'removable_query_args', function( $args ) {
+	$args[] = 'shipping_disabled';
+	return $args;
+} );
