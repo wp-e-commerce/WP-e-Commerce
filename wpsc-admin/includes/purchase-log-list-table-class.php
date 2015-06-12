@@ -198,7 +198,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		$total_where = apply_filters( 'wpsc_manage_purchase_logs_total_where', $this->where );
 
 		if ( $this->status == 'all' ) {
-			$total_where .= ' AND p.processed IN (2, 3, 4) ';
+			$total_where .= ' AND p.processed IN (3, 4, 5) ';
 		}
 
 		$total_sql = "
