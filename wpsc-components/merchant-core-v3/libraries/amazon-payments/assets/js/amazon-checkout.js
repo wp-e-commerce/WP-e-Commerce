@@ -13,9 +13,7 @@ jQuery(function($) {
 				var loginOptions = {scope: 'profile payments:widget'};
 				authRequest = amazon.Login.authorize(loginOptions, amazon_payments_advanced_params.redirect );
 			},
-			onError: function(error) {
-				console.log(error);
-			}
+			onError: function(error) {}
 		});
 	}
 
@@ -24,7 +22,6 @@ jQuery(function($) {
 		sellerId: amazon_payments_advanced_params.seller_id,
 		onOrderReferenceCreate: function(orderReference) {
 			$( 'input[name="amazon_reference_id"]' ).val( orderReference.getAmazonOrderReferenceId() )
-			console.log( orderReference.getAmazonOrderReferenceId() );
 		},
 		design: {
 			designMode: 'responsive'
@@ -41,6 +38,6 @@ jQuery(function($) {
 		onPaymentSelect : function( orderReference ) {
 			$( '.wpsc-checkout-shipping-and-billing input.wpsc-field-wpsc_submit_checkout' ).prop( 'disabled', false );
 		},
-		onError: function(error) { console.log(error);}
+		onError: function(error) {}
 	}).bind("amazon_wallet_widget");
 });
