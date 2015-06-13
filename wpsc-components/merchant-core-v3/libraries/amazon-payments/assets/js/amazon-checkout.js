@@ -22,7 +22,7 @@ jQuery(function($) {
 	// Addressbook widget
 	new OffAmazonPayments.Widgets.AddressBook({
 		sellerId: amazon_payments_advanced_params.seller_id,
-		onAddressSelect: function(orderReference) {
+		onOrderReferenceCreate: function(orderReference) {
 			$( 'input[name="amazon_reference_id"]' ).val( orderReference.getAmazonOrderReferenceId() )
 			console.log( orderReference.getAmazonOrderReferenceId() );
 		},
