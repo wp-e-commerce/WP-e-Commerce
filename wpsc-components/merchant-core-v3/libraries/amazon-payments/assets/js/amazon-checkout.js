@@ -18,7 +18,6 @@ jQuery(function($) {
 	// Addressbook widget
 	new OffAmazonPayments.Widgets.AddressBook({
 		sellerId: amazon_payments_advanced_params.seller_id,
-		amazonOrderReferenceId: amazon_payments_advanced_params.reference_id,
 		onOrderReferenceCreate: function(orderReference) {
 			$( 'input[name="amazon_reference_id"]' ).val( orderReference.getAmazonOrderReferenceId() )
 			console.log( orderReference.getAmazonOrderReferenceId() );
@@ -32,10 +31,6 @@ jQuery(function($) {
 	// Wallet widget
 	new OffAmazonPayments.Widgets.Wallet({
 		sellerId: amazon_payments_advanced_params.seller_id,
-		onOrderReferenceCreate: function(orderReference) {
-			$( 'input[name="amazon_reference_id"]' ).val( orderReference.getAmazonOrderReferenceId() );
-			console.log( orderReference.getAmazonOrderReferenceId() );
-		},
 		design: {
 			designMode: 'responsive'
 		},
