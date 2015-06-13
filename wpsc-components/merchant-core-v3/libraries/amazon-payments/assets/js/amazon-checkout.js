@@ -1,19 +1,21 @@
 jQuery(function($) {
 
-	var authRequest;
-	OffAmazonPayments.Button("pay_with_amazon", amazon_payments_advanced_params.seller_id, {
-		type:  "PwA",
-		color: "Gold",
-		size:  "small",
-		useAmazonAddressBook: true,
-		authorization: function() {
-			var loginOptions = {scope: 'profile payments:widget'};
-			authRequest = amazon.Login.authorize(loginOptions, amazon_payments_advanced_params.redirect );
-		},
-		onError: function(error) {
-			console.log(error);
-		}
-	});
+	if ( $( '#pay_with_amazon' ).length > 0 ) {
+		var authRequest;
+		OffAmazonPayments.Button("pay_with_amazon", amazon_payments_advanced_params.seller_id, {
+			type:  "PwA",
+			color: "Gold",
+			size:  "small",
+			useAmazonAddressBook: true,
+			authorization: function() {
+				var loginOptions = {scope: 'profile payments:widget'};
+				authRequest = amazon.Login.authorize(loginOptions, amazon_payments_advanced_params.redirect );
+			},
+			onError: function(error) {
+				console.log(error);
+			}
+		});
+	}
 
 	// Addressbook widget
 	new OffAmazonPayments.Widgets.AddressBook({
