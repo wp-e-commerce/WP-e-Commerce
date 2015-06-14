@@ -352,6 +352,64 @@ function wpsc_get_product_thumbnail_id( $product_id = null ) {
 }
 
 /**
+ * Sets the structured product name to the product title.
+ *
+ * @param  array $crumbs Array of breadcrumb elements.
+ *
+ * @since  4.0
+ *
+ * @return array         Array of breadcrumb elements with product title structured semantically.
+ */
+function wpsc_set_structured_product_name( $crumbs ) {
+
+	if ( wpsc_is_single() ) {
+		$product = str_replace( 'wpsc-breadcrumb-item"', 'wpsc-breadcrumb-item" itemprop="name"', array_pop( $crumbs ) );
+		$crumbs[] = $product;
+	}
+
+	return $crumbs;
+}
+
+add_filter( 'wpsc_breadcrumb_array', 'wpsc_set_structured_product_name' );
+
+/**
+ * Template tag for base country currency code.
+ *
+ * Helpful for templates using structured data, likely other use cases.
+ * Temporarily located here, until #1865 lands.
+ *
+ * @since  4.0
+ *
+ * @return  string Base country currency code.
+ */
+function wpsc_base_country_code() {
+
+	$base = new WPSC_Country( wpsc_get_base_country() );
+
+	echo esc_attr( $base->get_currency_code() );
+}
+
+/**
+ * Sets structured data for product thumbnails.
+ *
+ * @param  string $html Product thumbnail HTML.
+ *
+ * @since  4.0
+ *
+ * @return string $html Product thumbnail HTML with strucutred data.
+ */
+function wpsc_set_structured_image_data( $html ) {
+
+	if ( ! wpsc_is_single() ) {
+		return $html;
+	}
+
+	return str_replace( '<img', '<img itemprop="image"', $html );
+}
+
+add_filter( 'post_thumbnail_html', 'wpsc_set_structured_image_data' );
+
+/**
  * Return the HTML of a product's featured thumbnail.
  *
  * Note that the $size argument of this function is different from that of get_the_post_thumbnail().

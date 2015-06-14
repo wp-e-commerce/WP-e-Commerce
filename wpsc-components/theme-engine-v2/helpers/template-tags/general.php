@@ -148,7 +148,7 @@ function wpsc_get_breadcrumb( $args = '' ) {
 		'before_divider'  => '<span class="%s">',
 		'after_divider'   => '</span>',
 		'divider'         => '&raquo;',
-		'padding'         => 1,
+		'padding'         => 0,
 
 		// Home
 		'include_home'    => true,
@@ -175,9 +175,8 @@ function wpsc_get_breadcrumb( $args = '' ) {
 
 	// if padding is set, prepare the length, padding string and divider
 	if ( $padding ) {
-		/* @todo: Check if $padding is supposed to use $length, rather than $padding.  Otherwise, $length is dead. */
-		$length = strlen( $divider ) + $padding * 2;
-		$padding = str_repeat( "&nbsp;", $padding );
+		$length = strlen( html_entity_decode( $divider, ENT_COMPAT, 'UTF-8' ) ) + $padding * 2;
+		$padding = str_repeat( "&nbsp;", $length );
 		$divider = $padding . $divider . $padding;
 	}
 	$divider        = $before_divider . $divider . $after_divider;
