@@ -1722,7 +1722,43 @@ function wpsc_support_links( $links ) {
 
 add_filter( 'plugin_action_links_' . WPSC_PLUGIN_BASENAME, 'wpsc_support_links' );
 
-add_filter( 'removable_query_args', function( $args ) {
+/**
+ * Adds removable query args, for compatibility with dismissable notices.
+ *
+ * @param  array $args Array of removable query args.
+ *
+ * @since  4.0
+ *
+ * @return array $args Array of removable query args.
+ */
+function wpsc_removable_query_args( $args ) {
 	$args[] = 'shipping_disabled';
 	return $args;
-} );
+}
+
+add_filter( 'removable_query_args', 'wpsc_removable_query_args' );
+
+/**
+ * Modify bulk post messages.
+ *
+ * @param  array $bulk_messages Array of bulk messages.
+ * @param  int   $bulk_counts   The amount of messages affected.
+ *
+ * @since  4.0
+ *
+ * @return array                Array of bulk messages.
+ */
+function wpsc_bulk_updated_messages( $bulk_messages, $bulk_counts ) {
+	$bulk_messages['wpsc-product'] = array(
+		'updated'   => _n( '%s product updated.', '%s products updated.', $bulk_counts['updated'], 'wpsc' ),
+		'locked'    => ( 1 == $bulk_counts['locked'] ) ? __( '1 product not updated, somebody is editing it.', 'wpsc' ) :
+		                   _n( '%s product not updated, somebody is editing it.', '%s products not updated, somebody is editing them.', $bulk_counts['locked'], 'wpsc' ),
+		'deleted'   => _n( '%s product permanently deleted.', '%s products permanently deleted.', $bulk_counts['deleted'], 'wpsc' ),
+		'trashed'   => _n( '%s product moved to the Trash.', '%s products moved to the Trash.', $bulk_counts['trashed'], 'wpsc' ),
+		'untrashed' => _n( '%s product restored from the Trash.', '%s products restored from the Trash.', $bulk_counts['untrashed'], 'wpsc' ),
+	);
+
+	return $bulk_messages;
+}
+
+add_filter( 'bulk_post_updated_messages', 'wpsc_bulk_updated_messages', 10, 2 );
