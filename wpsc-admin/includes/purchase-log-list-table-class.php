@@ -175,7 +175,6 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		$orderby = esc_sql( apply_filters( 'wpsc_manage_purchase_logs_orderby', $orderby ) );
 		$order   = esc_sql( $order );
 
-		$submitted_data_log = WPSC_TABLE_SUBMITTED_FORM_DATA;
 		$purchase_log_sql   = apply_filters( 'wpsc_manage_purchase_logs_sql', "
 			SELECT SQL_CALC_FOUND_ROWS {$selects}
 			FROM " . WPSC_TABLE_PURCHASE_LOGS . " AS p

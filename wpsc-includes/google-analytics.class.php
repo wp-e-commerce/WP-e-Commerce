@@ -150,45 +150,28 @@ class WPSC_Google_Analytics {
 
 	}
 	public function add_pushes( $session_id ) {
-		global $wpdb;
 
-		$purchase    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `sessionid`= %s LIMIT 1", $session_id ) );
-		$purchase_id = $purchase->id;
+		$purchase    = new WPSC_Purchase_Log( $session_id, 'sessionid' );
+		$purchase_id = $purchase->get( 'id' );
+
+		$data = new WPSC_Checkout_Form_Data( $purchase_id );
+
 		$output      = '';
 
-		$city = $wpdb->get_var( $wpdb->prepare( "
-						SELECT tf.value FROM " . WPSC_TABLE_SUBMITTED_FORM_DATA . " tf
-						LEFT JOIN " . WPSC_TABLE_CHECKOUT_FORMS . " cf
-						ON cf.id = tf.form_id
-						WHERE cf.unique_name = 'billingcity'
-						AND log_id = %d", $purchase_id ) );
+		$city    = $data->get( 'billingcity' );
+		$state   = $data->get( 'billingstate' );
+		$country = $data->get( 'billingcountry' );
 
-		$state = $wpdb->get_var( $wpdb->prepare( "
-						SELECT tf.value
-						FROM " . WPSC_TABLE_SUBMITTED_FORM_DATA . " tf
-						LEFT JOIN " . WPSC_TABLE_CHECKOUT_FORMS . " cf
-						ON cf.id = tf.form_id
-						WHERE cf.unique_name = 'billingstate'
-						AND log_id = %d", $purchase_id ) );
+		$state   = ! empty( $state ) ? wpsc_get_state_by_id( $state, 'name' ) : '';
 
-		$country = $wpdb->get_var( $wpdb->prepare( "
-						SELECT tf.value
-						FROM " . WPSC_TABLE_SUBMITTED_FORM_DATA . " tf
-						LEFT JOIN " . WPSC_TABLE_CHECKOUT_FORMS . " cf
-						ON cf.id = tf.form_id
-						WHERE cf.unique_name = 'billingcountry'
-						AND log_id = %d", $purchase_id ) );
-
-		$city    = ! empty( $city )    ? $city : '';
-		$state   = ! empty( $state )   ? wpsc_get_state_by_id( $state, 'name' ) : '';
-		$country = ! empty( $country ) ? $country : '';
-
-		$cart_items = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . WPSC_TABLE_CART_CONTENTS . " WHERE purchaseid = %d", $purchase_id ), ARRAY_A );
+		$cart_items = $purchase->get_cart_contents();
 
 		$total_shipping = wpsc_get_total_shipping( $purchase_id );
 		$total_tax      = $total_price = 0;
 
 		foreach ( $cart_items as $item ) {
+			/* For backwards compatibility, convert objects to arrays */
+			$item         = (array) $item;
 			$total_tax	 += $item['tax_charged'];
 			$total_price += absint( $item['quantity'] ) * $item['price'];
 		}
@@ -230,6 +213,8 @@ class WPSC_Google_Analytics {
 		remove_filter( 'wpsc_toggle_display_currency_code', array( $this, 'remove_currency_and_html' ) );
 
 		foreach( $cart_items as $item ) {
+			/* For backwards compatibility, convert objects to arrays */
+			$item = (array) $item;
 
 			$category = wp_get_object_terms(
 				$item['prodid'],

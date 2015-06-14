@@ -172,8 +172,9 @@ class WPSC_Shipwire {
 
 		$referrer = apply_filters( 'wpsc_shipwire_show_affiliate', false );
 
-		if ( $referrer )
+		if ( $referrer ) {
 			$xml .= '<Referer>' . $referrer . '</Referer>';
+		}
 
 		$xml .= '<Warehouse>' . self::$warehouse . '</Warehouse>';
 		$xml .= '<Order id="' . $log_id . '">';
