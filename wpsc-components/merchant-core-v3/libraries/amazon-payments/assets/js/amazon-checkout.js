@@ -1,7 +1,5 @@
 jQuery(function($) {
 
-	$( '.wpsc-checkout-shipping-and-billing input.wpsc-field-wpsc_submit_checkout' ).prop( 'disabled', true );
-
 	if ( $( '#pay_with_amazon' ).length > 0 ) {
 		var authRequest;
 		OffAmazonPayments.Button("pay_with_amazon", amazon_payments_advanced_params.seller_id, {
@@ -21,6 +19,7 @@ jQuery(function($) {
 	new OffAmazonPayments.Widgets.AddressBook({
 		sellerId: amazon_payments_advanced_params.seller_id,
 		onOrderReferenceCreate: function(orderReference) {
+			$( '.wpsc-checkout-shipping-and-billing input.wpsc-field-wpsc_submit_checkout' ).prop( 'disabled', true );
 			$( 'input[name="amazon_reference_id"]' ).val( orderReference.getAmazonOrderReferenceId() )
 		},
 		design: {
