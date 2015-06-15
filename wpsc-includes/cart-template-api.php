@@ -1,7 +1,7 @@
 <?php
 /**
  * The WPSC Cart API for templates
- * 
+ *
  * @package wp-e-commerce
  */
 
@@ -448,8 +448,8 @@ function wpsc_validate_product_cart_quantity( $quantity, $product_id = 0 ) {
 function _wpsc_validate_cart_product_quantity( $product_id, $parameters, $cart ) {
 	foreach ( $cart->cart_items as $key => $cart_item ) {
 		if ( $cart_item->product_id == $product_id ) {
-			$cart->cart_items[$key]->quantity = wpsc_validate_product_cart_quantity( $cart->cart_items[$key]->quantity, $product_id );
-			$cart->cart_items[$key]->refresh_item();
+			$cart->cart_items[ $key ]->quantity = wpsc_validate_product_cart_quantity( $cart->cart_items[ $key ]->quantity, $product_id );
+			$cart->cart_items[ $key ]->refresh_item();
 		}
 	}
 }

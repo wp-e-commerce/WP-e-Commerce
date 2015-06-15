@@ -144,17 +144,33 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 					continue;
 				}
 
+				if ( $quantity[ $key ] < wpsc_product_min_cart_quantity( $item->product_id ) ) {
+					$message = __( 'Sorry, but the quantity you just specified is lower than the minimum allowed quantity of %s. You must purchase at least %s at a time.', 'wpsc' );
+					$this->message_collection->add( sprintf( $message, $product->post_title, number_format_i18n( wpsc_product_min_cart_quantity( $item->product_id ) ) ), 'error' );
+					$has_errors = true;
+					continue;
+				}
+
 				if ( $quantity[ $key ] > $item->quantity ) {
 					$product = WPSC_Product::get_instance( $item->product_id );
 
 					if ( ! $product->has_stock ) {
-						$message = __( "Sorry, all the remaining stock of %s has been claimed. Now you can only checkout with the current number of that item in your cart.", 'wpsc' );
-						$this->message_collection->add( sprintf( $message, $product->post_title ), 'error' );
+						$message = __( "Sorry, all the remaining stock of %s has been claimed. You can only checkout with the current quantity in your cart.", 'wpsc' );
+						$this->message_collection->add( sprintf( $message, $product->post->post_title ), 'error' );
 						$has_errors = true;
 						continue;
-					} elseif ( $product->has_limited_stock && $product->stock < $item->quantity ) {
+					}
+
+					if ( $product->has_limited_stock && $product->stock < $item->quantity ) {
 						$message = __( 'Sorry, but the quantity you just specified is larger than the available stock of %s. Besides the current number of that product in your cart, you can only add %d more.', 'wpsc' );
-						$this->message_collection->add( sprintf( $message, $product->post_title, $product->stock ), 'error' );
+						$this->message_collection->add( sprintf( $message, $product->post->post_title, $product->stock ), 'error' );
+						$has_errors = true;
+						continue;
+					}
+
+					if ( $quantity[ $key ] > wpsc_product_max_cart_quantity( $item->product_id ) ) {
+						$message = __( 'Sorry, but the quantity you just specified is larger than the maximum allowed quantity of %s. You may only purchase %s at a time.', 'wpsc' );
+						$this->message_collection->add( sprintf( $message, $product->post->post_title, number_format_i18n( wpsc_product_max_cart_quantity( $item->product_id ) ) ), 'error' );
 						$has_errors = true;
 						continue;
 					}
