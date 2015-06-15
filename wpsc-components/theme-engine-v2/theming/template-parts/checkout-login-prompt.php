@@ -3,7 +3,10 @@
 <div class="wpsc-create-account-offer">
 	<p><strong><?php esc_html_e( 'New Customers', 'wpsc' ); ?></strong></p>
 	<p><?php esc_html_e( 'You are not required to have an account to proceed.', 'wpsc' ); ?></p>
-	<p><?php esc_html_e( 'At the end of the checkout process, you will have an opportunity to create an account with us to enjoy our personalized services.', 'wpsc' ); ?></p>
+
+	<?php if ( get_option( 'users_can_register' ) ) : ?>
+		<p><?php esc_html_e( 'At the end of the checkout process, you will have an opportunity to create an account with us to enjoy our personalized services.', 'wpsc' ); ?></p>
+	<?php endif;?>
 	<a class="wpsc-button wpsc-button-primary" href="<?php wpsc_checkout_url( 'shipping-and-billing' ); ?>"><?php esc_html_e( 'Continue as Guest', 'wpsc' ); ?></a>
 </div>
 
