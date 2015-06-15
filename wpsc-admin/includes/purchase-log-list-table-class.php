@@ -143,17 +143,13 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 			// so we can tell WP_Date_Query we're legit
 			add_filter( 'date_query_valid_columns', array( $this, 'set_date_column_to_date') );
 
-			if( strlen( $_REQUEST['m'] ) < 4 ){
-
+			if ( strlen( $_REQUEST['m'] ) < 4 ) {
 				$query_args = $this->assemble_predefined_periods_query( $_REQUEST['m'] );
-
 			} else {
-
 				$query_args = array(
-					'year' => (int) substr( $_REQUEST['m'], 0, 4),
+					'year'     => (int) substr( $_REQUEST['m'], 0, 4),
 					'monthnum' => (int) substr( $_REQUEST['m'], -2 ),
 				);
-
 			}
 
 			$date_query = new WP_Date_Query( $query_args , $column = '__date__' );
@@ -231,12 +227,16 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 		/**
 		 *	date functions
 		 */
-		$now_string = current_time( 'mysql' );
+		$now_string     = current_time( 'mysql' );
 		$week_start_end = get_weekstartend( $now_string ); // returns array with start/end
 		$blog_time_zone = get_option( 'timezone_string' );
 
+		if ( empty( $blog_time_zone ) ) {
+			$blog_time_zone = date_default_timezone_get();
+		}
+
 		$timezone = new DateTimeZone( $blog_time_zone );
-		$now = new DateTime( 'now',  $timezone );
+		$now      = new DateTime( 'now',  $timezone );
 
 		// Based on $_REQUEST['m']
 		switch ( $period_flag ) {
