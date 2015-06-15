@@ -7,7 +7,7 @@
 	<?php if ( get_option( 'users_can_register' ) ) : ?>
 		<p><?php esc_html_e( 'At the end of the checkout process, you will have an opportunity to create an account with us to enjoy our personalized services.', 'wpsc' ); ?></p>
 	<?php endif;?>
-	<a class="wpsc-button wpsc-button-primary" href="<?php wpsc_checkout_url( 'shipping-and-billing' ); ?>"><?php esc_html_e( 'Continue as Guest', 'wpsc' ); ?></a>
+	<a class="button wpsc-button wpsc-button-primary " href="<?php wpsc_checkout_url( 'shipping-and-billing' ); ?>"><?php esc_html_e( 'Continue as Guest', 'wpsc' ); ?></a>
 </div>
 
 <div class="wpsc-login-form-wrapper">
