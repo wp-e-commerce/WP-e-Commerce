@@ -214,7 +214,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 	 * prior 3 months, this year, last year. You can insert your own custom periods by filtering
 	 * either based on the $period_flag or just filter the final query setup.
 	 *
-	 * @since 4.1.0
+	 * @since 4.0
 	 *
 	 * @param array $period_flag The period requested from $_REQUEST['m'].
 	 *
@@ -243,25 +243,25 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 			// Today
 			case 1:
 				$date_query = array(
-					'year' => $now->format('Y'),
-					'monthnum' => $now->format('n'),
-					'day' => $now->format('d')
+					'year'     => $now->format( 'Y' ),
+					'monthnum' => $now->format( 'n' ),
+					'day'      => $now->format( 'd' )
 				);
 				break;
 
 			// Yesterday
 			case 2:
-				$yesterday = new DateTime( date( 'Y-m-d', strtotime('yesterday') ), $timezone );
+				$yesterday = new DateTime( date( 'Y-m-d', strtotime( 'yesterday' ) ), $timezone );
 				$date_query = array(
-					'year' => $yesterday->format('Y'),
-					'monthnum' => $yesterday->format('n'),
-					'day' => $yesterday->format('d')
+					'year'     => $yesterday->format( 'Y' ),
+					'monthnum' => $yesterday->format( 'n' ),
+					'day'      => $yesterday->format( 'd' )
 				);
 				break;
 
 			// This Week-to-date
 			case 3:
-				$start_of_this_week = new DateTime( date('Y-m-d 00:00:00', $week_start_end['start'] ), $timezone );
+				$start_of_this_week = new DateTime( date( 'Y-m-d 00:00:00', $week_start_end['start'] ), $timezone );
 				$date_query = array( 'date_query' => array(
 					'after' 	=> $start_of_this_week->format('Y-m-d 00:00:00'),
 					'compare'	=> '>',
@@ -273,10 +273,10 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 			case 4:
 				$start_of_last_week = new DateTime( date('Y-m-d 00:00:00', $week_start_end['start'] - ( DAY_IN_SECONDS * 7 ) ), $timezone );
 				$start = $start_of_last_week->format( 'Y-m-d 00:00:00' );
-				$start_of_last_week->modify('+7 days');
+				$start_of_last_week->modify( '+7 days' );
 				$date_query = array( 'date_query' => array(
-					'after'	=> $start,
-					'before' => $start_of_last_week->format('Y-m-d 00:00:00'),
+					'after'	    => $start,
+					'before'    => $start_of_last_week->format( 'Y-m-d 00:00:00' ),
 					'inclusive'	=> false,
 				));
 				break;
@@ -284,8 +284,8 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 			// This Month-to-Date (Same as choosing the explicit month on selector)
 			case 5:
 				$date_query = array(
-					'year'		=> $now->format('Y'),
-					'monthnum'	=> $now->format('n'),
+					'year'     => $now->format('Y'),
+					'monthnum' => $now->format('n'),
 				);
 				break;
 
@@ -293,8 +293,8 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 			case 6:
 				$now->modify('-1 month');
 				$date_query = array(
-					'year'		=> $now->format('Y'),
-					'monthnum'	=> $now->format('n'),
+					'year'     => $now->format('Y'),
+					'monthnum' => $now->format('n'),
 				);
 				break;
 
@@ -320,7 +320,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 			// This Year
 			case 9:
 				$date_query = array( 'date_query' => array(
-					'after'	=> '1/1 this year',
+					'after'	    => '1/1 this year',
 					'compare'	=> '>',
 					'inclusive'	=> true,
 				));
@@ -329,8 +329,8 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 			// Last year
 			case 10:
 				$date_query = array( 'date_query' => array(
-					'after'	=> '1/1 last year',
-					'before' => '12/31 last year',
+					'after'	    => '1/1 last year',
+					'before'    => '12/31 last year',
 					'inclusive'	=> true,
 				));
 				break;
@@ -345,7 +345,7 @@ class WPSC_Purchase_Log_List_Table extends WP_List_Table {
 				 *
 				 * @since 4.1.0
 				 *
-				 * @param array         Empty array to be filled with a valid query {@see WP_Date_Query}.
+				 * @param array Empty array to be filled with a valid query {@see WP_Date_Query}.
 				 */
 				$date_query = apply_filters( 'wpsc_purchase_log_predefined_periods_' . $period_flag, array() );
 		}
