@@ -650,7 +650,6 @@ function wpsc_checkout_customer_details() {
  * @param array $args Array of arguments for Forms API.
  *
  * @since  4.0
- *
  * @return array $args Array of arguments for Forms API.
  */
 function wpsc_create_account_checkbox( $args ) {

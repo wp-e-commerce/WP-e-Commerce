@@ -105,7 +105,7 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 					$view_message
 				),
 				'validation' => 'required',
-				'class' => 'regular-text code',
+				'class' => 'regular-text',
 			),
 
 			// Whether to display the store as front page
@@ -142,7 +142,7 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 					'wpsc'
 				),
 				'validation'  => 'required',
-				'class' => 'regular-text code',
+				'class' => 'regular-text',
 			),
 
 			// Base slug for single product pages
@@ -157,12 +157,12 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 				                 	$view_product_message
 				                 ),
 				'title'       => _x(
-					'Single product base plug',
+					'Single product base slug',
 					'permalinks setting',
 					'wpsc'
 				),
 				'validation'  => 'required',
-				'class' => 'regular-text code',
+				'class' => 'regular-text',
 			),
 
 			// Whether to include category slug in product permalinks
@@ -214,7 +214,7 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 				),
 				'title'       => _x( 'Cart page', 'page settings', 'wpsc' ),
 				'validation'  => 'required',
-				'class' => 'regular-text code',
+				'class' => 'regular-text',
 			),
 
 			// Cart page title
@@ -230,7 +230,7 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 				'prepend'     => $base_shop_url,
 				'title'       => _x( 'Checkout page', 'page setting', 'wpsc' ),
 				'validation'  => 'required',
-				'class' => 'regular-text code',
+				'class' => 'regular-text',
 			),
 
 			// Checkout page title
@@ -251,7 +251,7 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 				),
 				'title'       => _x( 'Customer account page', 'permalinks setting', 'wpsc' ),
 				'validation'  => 'required|slug_not_conflicted',
-				'class' => 'regular-text code',
+				'class' => 'regular-text',
 			),
 
 			// Customer account page title
@@ -268,7 +268,7 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 				'title'       => _x( 'Login page', 'permalinks setting', 'wpsc' ),
 				'description' => __( 'Leaving this field blank will disable the page.', 'wpsc' ),
 				'validation'  => 'slug_not_conflicted',
-				'class' => 'regular-text code',
+				'class' => 'regular-text',
 			),
 
 			// Login page title
@@ -285,7 +285,7 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 				'title'       => _x( 'Password reminder page', 'permalinks setting', 'wpsc' ),
 				'description' => __( "Leaving this field blank will disable the page.", 'wpsc' ),
 				'validation'  => 'slug_not_conflicted',
-				'class' => 'regular-text code',
+				'class' => 'regular-text',
 			),
 
 			// Title for password reminder page
@@ -302,7 +302,7 @@ class WPSC_Settings_Tab_Pages extends _WPSC_Settings_Tab_Form {
 				'title'       => _x( 'Register page', 'permalinks setting', 'wpsc' ),
 				'description' => __( "Leaving this field blank will disable the page.", 'wpsc' ),
 				'validation'  => 'slug_not_conflicted',
-				'class' => 'regular-text code',
+				'class' => 'regular-text',
 			),
 
 			// Register page title
