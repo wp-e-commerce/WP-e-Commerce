@@ -657,7 +657,7 @@ function wpsc_create_account_checkbox( $args ) {
 ?>
 	<div class="wpsc-form-actions">
 		<p><strong class="wpsc-large"><?php _e( 'Create an Account?', 'wpsc' ); ?></strong></p>
-		<label><input type="checkbox" /> <?php _e( 'Creating an account keeps your order history, user profile, and more all in one place. We’ll email you account information right away.', 'wpsc' ); ?></label>
+		<label><input type="checkbox" name="wpsc_create_account" /> <?php _e( 'Creating an account keeps your order history, user profile, and more all in one place. We’ll email you account information right away.', 'wpsc' ); ?></label>
 	</div>
 <?php
 	$output = ob_get_clean();
