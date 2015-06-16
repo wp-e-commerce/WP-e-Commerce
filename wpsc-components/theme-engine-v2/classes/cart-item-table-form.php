@@ -22,9 +22,14 @@ class WPSC_Cart_Item_Table_Form extends WPSC_Cart_Item_Table {
 <!-- WP eCommerce Cart Form Begins -->
 <form class="wpsc-form wpsc-cart-form" action="<?php echo esc_url( wpsc_get_cart_url() ); ?>" method="post">
 	<div class="wpsc-form-actions top">
+		<?php do_action( 'wpsc_cart_item_table_form_actions_left', self::$instance, 'top' ); ?>
+
 		<?php wpsc_keep_shopping_button(); ?>
 		<?php wpsc_begin_checkout_button(); ?>
 		<?php wpsc_form_hidden( '_wp_nonce', wp_create_nonce( 'wpsc-cart-update' ) ); ?>
+
+		<?php do_action( 'wpsc_cart_item_table_form_actions_right', self::$instance, 'top' ); ?>
+
 	</div>
 <?php
 		parent::before_table();
@@ -33,9 +38,13 @@ class WPSC_Cart_Item_Table_Form extends WPSC_Cart_Item_Table {
 	protected function after_table() {
 ?>
 	<div class="wpsc-form-actions bottom">
+		<?php do_action( 'wpsc_cart_item_table_form_actions_left', self::$instance, 'bottom' ); ?>
+
 		<?php wpsc_keep_shopping_button(); ?>
 		<?php wpsc_begin_checkout_button(); ?>
 		<?php wpsc_form_hidden( '_wp_nonce', wp_create_nonce( 'wpsc-cart-update' ) ); ?>
+
+		<?php do_action( 'wpsc_cart_item_table_form_actions_right', self::$instance, 'bottom' ); ?>
 	</div>
 	<?php parent::after_table(); ?>
 </form>
