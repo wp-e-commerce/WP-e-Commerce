@@ -356,7 +356,6 @@ add_action( 'wp', '_wpsc_action_canonical_url' );
  * the usual one.
  *
  * @since 0.1
- * @todo Ensure hardcoding 'wp-e-commerce' here makes proper sense.  Not sure what that is pointing to.
  *
  * @param  array  $templates
  * @param  string $slug

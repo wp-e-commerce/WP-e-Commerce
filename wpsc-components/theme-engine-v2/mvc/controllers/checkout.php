@@ -368,7 +368,6 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 		$this->wizard->completed_step( 'shipping-method' );
 
-		/* @todo: I _think_ this will be fine, as $module_name should still be defined at this execution path from the loop, but we need to confirm. */
 		$this->shipping_calculator->set_active_method( $module_name, $option );
 
 		$url = add_query_arg( $_GET, wpsc_get_checkout_url( $this->wizard->pending_step ) );

@@ -773,7 +773,7 @@ function wpsc_checkout_payment_method_form() {
 /**
  * Return the HTML for "Begin Checkout" button
  *
- * @since  0.1
+ * @since  4.0
  *
  * @uses   apply_filters() Applies 'wpsc_begin_checkout_button_title'
  * @uses   apply_filters() Applies 'wpsc_begin_checkout_button_icon'

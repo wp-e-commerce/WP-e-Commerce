@@ -46,7 +46,7 @@ class WPSC_Controller_Password_Reminder extends WPSC_Controller{
 		$user_login = $user_data->user_login;
 		$user_email = $user_data->user_email;
 
-		do_action('retrieve_password', $user_login);
+		do_action( 'retrieve_password', $user_login );
 
 		$allow = apply_filters( 'allow_password_reset', true, $user_data->ID );
 		if ( ! $allow ) {
