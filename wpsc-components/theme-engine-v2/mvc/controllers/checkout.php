@@ -177,9 +177,25 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		$this->view = 'checkout-shipping-and-billing';
 		_wpsc_enqueue_shipping_billing_scripts();
 
+		$this->maybe_add_guest_account();
+
 		if ( isset( $_POST['action'] ) && $_POST['action'] == 'submit_checkout_form' ) {
 			$this->submit_shipping_and_billing();
 		}
+	}
+
+	/**
+	 * Maybe add UI for creating a guest account.
+	 *
+	 * By default, it will automatically generate a password and use the billing email as the username.
+	 * This way, the customer has no other fields to fill out.
+	 *
+	 * @since  4.0
+	 *
+	 * @return bool Whether or not to add a UI for account creation on checkout.
+	 */
+	private function maybe_add_guest_account() {
+		return apply_filters( 'wpsc_checkout_maybe_add_guest_account', ( ! is_user_logged_in() ) && get_option( 'users_can_register' ) && '' !== wpsc_get_customer_meta( 'billingemail' ) );
 	}
 
 	private function submit_shipping_and_billing() {
@@ -377,10 +393,12 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 	public function payment() {
 		$this->view = 'checkout-payment';
-		add_action(
-			'wp_enqueue_scripts',
-			array( $this, '_action_payment_scripts' )
-		);
+
+		add_action( 'wp_enqueue_scripts', array( $this, '_action_payment_scripts' ) );
+
+		if ( $this->maybe_add_guest_account() ) {
+			add_filter( 'wpsc_get_checkout_payment_method_form_args', 'wpsc_create_account_checkbox' );
+		}
 
 		if ( isset( $_POST['action'] ) && $_POST['action'] == 'submit_payment_method' ) {
 			$this->submit_payment_method();

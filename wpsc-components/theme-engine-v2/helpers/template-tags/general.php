@@ -640,3 +640,35 @@ function wpsc_get_checkout_customer_details() {
 function wpsc_checkout_customer_details() {
 	echo wpsc_get_checkout_customer_details();
 }
+
+/**
+ * Adds a UI for allowing guests to create an account on checkout.
+ *
+ * This function is hooked into the payment method args in WPSC_Controller_Checkout::payment().
+ * Handling of the user account creation is in WPSC_Controller_Checkout::create_account.
+ *
+ * @param array $args Array of arguments for Forms API.
+ *
+ * @since  4.0
+ *
+ * @return array $args Array of arguments for Forms API.
+ */
+function wpsc_create_account_checkbox( $args ) {
+	ob_start();
+?>
+	<div class="wpsc-form-actions">
+		<p><strong class="wpsc-large"><?php _e( 'Create an Account?', 'wpsc' ); ?></strong></p>
+		<label><input type="checkbox" /> <?php _e( 'Creating an account keeps your order history, user profile, and more all in one place. We’ll email you account information right away.', 'wpsc' ); ?></label>
+	</div>
+<?php
+	$output = ob_get_clean();
+
+	if ( ! isset( $args['before_form_actions'] ) ) {
+		$args['before_form_actions'] = $output;
+	} else {
+		$args['before_form_actions'] = $output . $args['before_form_actions'];
+	}
+
+	return $args;
+}
+
