@@ -65,7 +65,7 @@ function _wpsc_update_location() {
  * @param  string  $email    Email address
  * @param  boolean $redirect Whether or not to redirect to the login page.
  *
- * @return void
+ * @return mixed Null if redirected or errors are present, User ID if created successfully.
  */
 function wpsc_register_customer( $username = '', $email = '', $redirect = true ) {
 
@@ -122,6 +122,8 @@ function wpsc_register_customer( $username = '', $email = '', $redirect = true )
 	if ( $redirect ) {
 		wp_redirect( wpsc_get_login_url() );
 		exit;
+	} else {
+		return $user_id;
 	}
 }
 

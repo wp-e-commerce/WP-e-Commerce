@@ -1,7 +1,6 @@
 <?php
 
-class WPSC_Controller_Register extends WPSC_Controller
-{
+class WPSC_Controller_Register extends WPSC_Controller {
 	public function __construct() {
 		if ( is_user_logged_in() ) {
 			wp_redirect( wpsc_get_store_url() );

@@ -426,23 +426,23 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 			return;
 		}
 
-		if ( $this->maybe_add_guest_account() && isset( $_POST['wpsc_create_account'] ) ) {
-			$email = wpsc_get_customer_meta( 'billingemail' );
-			wpsc_register_customer( $email, $email, false );
-		}
-
+		$purchase_log_id   = wpsc_get_customer_meta( 'current_purchase_log_id' );
+		$purchase_log      = new WPSC_Purchase_Log( $purchase_log_id );
 		$submitted_gateway = $_POST['wpsc_payment_method'];
-
-		$purchase_log_id = wpsc_get_customer_meta( 'current_purchase_log_id' );
-		$purchase_log    = new WPSC_Purchase_Log( $purchase_log_id );
-
-		$purchase_log->set( 'gateway', $submitted_gateway );
 
 		$purchase_log->set( array(
 			'gateway'       => $submitted_gateway,
 			'base_shipping' => $wpsc_cart->calculate_base_shipping(),
 			'totalprice'    => $wpsc_cart->calculate_total_price(),
 		) );
+
+		if ( $this->maybe_add_guest_account() && isset( $_POST['wpsc_create_account'] ) ) {
+
+			$email   = wpsc_get_customer_meta( 'billingemail' );
+			$user_id = wpsc_register_customer( $email, $email, false );
+
+			$purchase_log->set( 'user_ID', $user_id );
+		}
 
 		$purchase_log->save();
 
