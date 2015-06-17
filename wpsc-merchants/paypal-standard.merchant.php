@@ -111,8 +111,9 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 
 		$return_url = add_query_arg( 'sessionid', $this->cart_data['session_id'], $this->cart_data['transaction_results_url'] );
 
-		if ( $buy_now )
+		if ( $buy_now ) {
 			$return_url = add_query_arg( 'wpsc_buy_now_return', 1, $return_url );
+		}
 
 		// Store settings to be sent to paypal
 		$paypal_vars += array(
