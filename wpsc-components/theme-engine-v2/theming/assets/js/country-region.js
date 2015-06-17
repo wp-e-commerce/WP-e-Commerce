@@ -75,5 +75,9 @@
 		$('#wpsc-checkout-field-shippingcountry-control').wpsc_country_field({
 			'state_field_selector' : '#wpsc-checkout-field-shippingstate-control'
 		});
+
+		if ( window.chrome ) {
+			$( '.ui-autocomplete-input' ).prop( 'autocomplete', 'false' );
+		}
 	});
 })(jQuery);
