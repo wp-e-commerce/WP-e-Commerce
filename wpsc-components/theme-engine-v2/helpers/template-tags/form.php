@@ -591,6 +591,14 @@ function _wpsc_convert_checkout_form_fields( $customer_settings = false ) {
 		);
 	}
 
+	if ( empty( $fieldsets['billing']['fields'] ) ) {
+		unset( $fieldsets['billing'] );
+	}
+
+	if ( empty( $fieldsets['shipping']['fields'] ) ) {
+		unset( $fieldsets['shipping'] );
+	}
+
 	return $fieldsets + $args;
 }
 
