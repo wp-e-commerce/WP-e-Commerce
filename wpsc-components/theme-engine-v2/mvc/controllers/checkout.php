@@ -195,7 +195,10 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 	 * @return bool Whether or not to add a UI for account creation on checkout.
 	 */
 	private function maybe_add_guest_account() {
-		return apply_filters( 'wpsc_checkout_maybe_add_guest_account', ( ! is_user_logged_in() ) && get_option( 'users_can_register' ) && '' !== wpsc_get_customer_meta( 'billingemail' ) );
+
+		$email = wpsc_get_customer_meta( 'billingemail' );
+
+		return apply_filters( 'wpsc_checkout_maybe_add_guest_account', ( ! is_user_logged_in() ) && get_option( 'users_can_register' ) && ! empty( $email ) && ! username_exists( $email ) );
 	}
 
 	private function submit_shipping_and_billing() {
