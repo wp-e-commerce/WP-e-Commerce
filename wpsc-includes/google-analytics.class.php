@@ -184,6 +184,9 @@ class WPSC_Google_Analytics {
 
 		if ( $this->use_universal_analytics() ) {
 
+			// Yoast GA Plugin switched to it's own object name __gaTracker - assign it to our ga object if it exists
+			$output .= "var ga = typeof ga === 'undefined' && typeof __gaTracker !== 'undefined' ? __gaTracker : ga;";
+
 			$output .= "ga('require', 'ecommerce');\n\r";
 
 			$output .= "ga('ecommerce:addTransaction', {
