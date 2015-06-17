@@ -9,9 +9,17 @@ function wpsc_sanitize_meta_key( $key ) {
 }
 
 /**
- * Gets meta data from the database
- * This needs caching implemented for it, but I have not yet figured out how to make this work for it
+ * Get meta data from the database
+ *
+ * Gets and caches an object's meta using the WordPress Object Cache API
+ * and returns meta for a specific key.
+ *
  * @internal
+ *
+ * @param   integer  $object_id    Object ID.
+ * @param   string   $meta_key     Meta key.
+ * @param   string   $object_type  Object type.
+ * @return  mixed                  Meta value.
  */
 function wpsc_get_meta( $object_id = 0, $meta_key, $object_type ) {
 
