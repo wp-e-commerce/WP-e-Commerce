@@ -201,7 +201,7 @@ function _wpsc_maybe_activate_theme_engine_v2() {
 	$new_theme_engine = $activate ? '2.0' : '1.0';
 	$old_theme_engine = get_option( 'wpsc_get_active_theme_engine' );
 
-	if ( $theme_engine !== $active_theme_engine ) {
+	if ( $old_theme_engine !== $new_theme_engine ) {
 		do_action( 'wpsc_updated_theme_engine', $new_theme_engine, $old_theme_engine );
 		update_option( 'wpsc_get_active_theme_engine', $new_theme_engine );
 	}
