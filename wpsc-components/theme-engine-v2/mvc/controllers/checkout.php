@@ -313,6 +313,15 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 		$purchase_log->save();
 
+		//Check to ensure purchase log row was inserted successfully
+		if(is_null($purchase_log->get( 'id' ))) {
+			$this->message_collection->add(
+				__( 'A database error occured while processing your request.', 'wpsc' ),
+				'error'
+			);
+			return;
+		}
+
 		$wpsc_cart->log_id = $purchase_log->get( 'id' );
 
 		wpsc_update_customer_meta( 'current_purchase_log_id', $purchase_log->get( 'id' ) );
