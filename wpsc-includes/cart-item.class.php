@@ -422,6 +422,7 @@ class wpsc_cart_item {
 		}
 		$can_have_uploaded_image = $can_have_uploaded_image['can_have_uploaded_image'];
 		if ('on' == $can_have_uploaded_image || 1 == $can_have_uploaded_image) {
+			$file_data['name'] = sanitize_file_name( $file_data['name'] );
 			$name_parts = explode('.',basename($file_data['name']));
 			$extension = array_pop($name_parts);
 
