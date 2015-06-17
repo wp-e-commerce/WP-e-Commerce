@@ -731,6 +731,13 @@ function wpsc_submit_checkout( $collected_data = true ) {
 		$purchase_log->save();
 		$purchase_log_id = $purchase_log->get( 'id' );
 
+		//Check to ensure log row was inserted successfully
+		if(is_null($purchase_log_id)) {
+			$error_messages[] = __( 'A database error occured while processing your request.', 'wpsc' );
+			wpsc_update_customer_meta( 'checkout_misc_error_messages', $error_messages );
+			return;
+		}
+
 		if ( $collected_data ) {
 			$wpsc_checkout->save_forms_to_db( $purchase_log_id );
 		}
