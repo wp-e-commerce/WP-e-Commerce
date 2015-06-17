@@ -14,17 +14,30 @@ function wpsc_sanitize_meta_key( $key ) {
  * @internal
  */
 function wpsc_get_meta( $object_id = 0, $meta_key, $type ) {
+
 	global $wpdb;
+
 	$cache_object_id = $object_id = (int)$object_id;
 	$object_type = $type;
-	$value = wp_cache_get( $cache_object_id, $object_type );
 	$meta_key = wpsc_sanitize_meta_key( $meta_key );
 	$meta_tuple = compact( 'object_type', 'object_id', 'meta_key', 'meta_value', 'type' );
 	$meta_tuple = apply_filters( 'wpsc_get_meta', $meta_tuple );
 	extract( $meta_tuple, EXTR_OVERWRITE );
-	$meta_value = $wpdb->get_var( $wpdb->prepare( "SELECT `meta_value` FROM `".WPSC_TABLE_META."` WHERE `object_type` = %s AND `object_id` = %d AND `meta_key` = %s", $object_type, $object_id, $meta_key ) );
-	$meta_value = maybe_unserialize( $meta_value );
-	return $meta_value;
+
+	$meta_value = wp_cache_get( $cache_object_id, $object_type );
+
+	// If not cached, get and cache 
+	if ( $meta_value === false ) {
+		$meta_value = $wpdb->get_results( $wpdb->prepare( "SELECT `meta_key`, `meta_value` FROM `" . WPSC_TABLE_META . "` WHERE `object_type` = %s AND `object_id` = %d", $object_type, $object_id ), OBJECT_K );
+		wp_cache_set( $cache_object_id, $meta_value, $object_type );
+	}
+
+	if ( isset( $meta_value[ $meta_key ] ) ) {
+		return maybe_unserialize( $meta_value[ $meta_key ]->meta_value );
+	}
+
+	return '';
+
 }
 
 /**
