@@ -210,9 +210,9 @@ function wpsc_get_register_form_args() {
 			array(
 				'id'    => 'wpsc-register-email',
 				'name'  => 'email',
-				'description' => __( 'A password will be e-mailed to you', 'wpsc' ),
+				'description' => __( 'A password will be emailed to you', 'wpsc' ),
 				'type'  => 'textfield',
-				'title' => __( 'E-mail', 'wpsc' ),
+				'title' => __( 'Email', 'wpsc' ),
 				'value' => wpsc_submitted_value( 'email' ),
 				'rules' => 'trim|required|account_email',
 			),
@@ -231,7 +231,7 @@ function wpsc_get_register_form_args() {
 			array(
 				'type'    => 'hidden',
 				'name'    => '_wp_nonce',
-				'value'   => wp_create_nonce( "wpsc-register" ),
+				'value'   => wp_create_nonce( 'wpsc-register' ),
 			),
 		),
 	);
@@ -260,7 +260,7 @@ function wpsc_get_password_reminder_form_args() {
 				'id'    => 'wpsc-password-reminder-username',
 				'name'  => 'username',
 				'type'  => 'textfield',
-				'title' => __( 'Username or E-mail', 'wpsc' ),
+				'title' => __( 'Username or Email', 'wpsc' ),
 				'value' => wpsc_submitted_value( 'username' ),
 				'rules' => 'trim|required|valid_username_or_email',
 			),
@@ -279,7 +279,7 @@ function wpsc_get_password_reminder_form_args() {
 			array(
 				'type'    => 'hidden',
 				'name'    => '_wp_nonce',
-				'value'   => wp_create_nonce( "wpsc-password-reminder" ),
+				'value'   => wp_create_nonce( 'wpsc-password-reminder' ),
 			),
 		),
 	);
