@@ -96,7 +96,7 @@ class wpsc_cart_item {
 
 	/**
 	 * Update or add cart item meta value
-	 * 
+	 *
 	 * @access public
 	 * @param meta key name
 	 * @param meta key value

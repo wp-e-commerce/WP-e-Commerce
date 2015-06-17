@@ -567,6 +567,8 @@ function wpsc_single_template( $content ) {
 
 		$is_preview = isset( $wp_query->query_vars['preview'] ) && $wp_query->query_vars['preview'];
 
+		$post_type_object = get_post_type_object( 'wpsc-product' );
+
 		/**
 		 * Filter post_status on product query.
 		 *
@@ -579,12 +581,14 @@ function wpsc_single_template( $content ) {
 		$permitted_post_statuses = current_user_can( $post_type_object->cap->edit_posts ) ? apply_filters( 'wpsc_product_display_status', array( 'publish' ) ) : array( 'publish' );
 
 		$wpsc_temp_query = new WP_Query(
-			array( 'p' => $wp_query->post->ID ,
-			'post_type' => 'wpsc-product',
-			'posts_per_page' => 1,
-			'preview' => $is_preview,
-			'post_status' => $permitted_post_statuses,
-		) );
+			array(
+				'p'              => $wp_query->post->ID ,
+				'post_type'      => 'wpsc-product',
+				'posts_per_page' => 1,
+				'preview'        => $is_preview,
+				'post_status'    => $permitted_post_statuses,
+			)
+		);
 
 		list( $wp_query, $wpsc_temp_query ) = array( $wpsc_temp_query, $wp_query ); // swap the wpsc_query object
 		$_wpsc_is_in_custom_loop = true;
