@@ -2987,6 +2987,12 @@
   vertical-align: middle
 }
 
+.wpsc-controller .ui-autocomplete li.ui-state-focus {
+  color: #333333;
+  background-color: #fafafa;
+  cursor: pointer;
+}
+
 .wpsc-controller .ui-toolbar {
   padding: 7px 14px;
   margin: 0 0 18px;
