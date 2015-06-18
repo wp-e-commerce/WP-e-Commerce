@@ -9,31 +9,39 @@ function wpsc_sanitize_meta_key( $key ) {
 }
 
 /**
- * Gets meta data from the database
- * This needs caching implemented for it, but I have not yet figured out how to make this work for it
+ * Get meta data from the database
+ *
+ * Gets and caches an object's meta using the WordPress Object Cache API
+ * and returns meta for a specific key.
+ *
  * @internal
+ *
+ * @param   integer  $object_id    Object ID.
+ * @param   string   $meta_key     Meta key.
+ * @param   string   $object_type  Object type.
+ * @return  mixed                  Meta value.
  */
-function wpsc_get_meta( $object_id = 0, $meta_key, $type ) {
+function wpsc_get_meta( $object_id = 0, $meta_key, $object_type ) {
 
 	global $wpdb;
 
 	$cache_object_id = $object_id = (int)$object_id;
-	$object_type = $type;
 	$meta_key = wpsc_sanitize_meta_key( $meta_key );
-	$meta_tuple = compact( 'object_type', 'object_id', 'meta_key', 'meta_value', 'type' );
+
+	$meta_tuple = compact( 'object_type', 'object_id', 'meta_key' );
 	$meta_tuple = apply_filters( 'wpsc_get_meta', $meta_tuple );
-	extract( $meta_tuple, EXTR_OVERWRITE );
 
-	$meta_value = wp_cache_get( $cache_object_id, $object_type );
+	// Get cached meta
+	$meta_value = wp_cache_get( $cache_object_id, $meta_tuple['object_type'] );
 
-	// If not cached, get and cache 
+	// If not cached, get and cache all object meta
 	if ( $meta_value === false ) {
-		$meta_value = $wpdb->get_results( $wpdb->prepare( "SELECT `meta_key`, `meta_value` FROM `" . WPSC_TABLE_META . "` WHERE `object_type` = %s AND `object_id` = %d", $object_type, $object_id ), OBJECT_K );
-		wp_cache_set( $cache_object_id, $meta_value, $object_type );
+		$meta_value = $wpdb->get_results( $wpdb->prepare( "SELECT `meta_key`, `meta_value` FROM `" . WPSC_TABLE_META . "` WHERE `object_type` = %s AND `object_id` = %d", $meta_tuple['object_type'], $meta_tuple['object_id'] ), OBJECT_K );
+		wp_cache_set( $cache_object_id, $meta_value, $meta_tuple['object_type'] );
 	}
 
-	if ( isset( $meta_value[ $meta_key ] ) ) {
-		return maybe_unserialize( $meta_value[ $meta_key ]->meta_value );
+	if ( isset( $meta_value[ $meta_tuple['meta_key'] ] ) ) {
+		return maybe_unserialize( $meta_value[ $meta_tuple['meta_key'] ]->meta_value );
 	}
 
 	return '';
