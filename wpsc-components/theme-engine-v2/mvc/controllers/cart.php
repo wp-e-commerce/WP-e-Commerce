@@ -51,6 +51,10 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 
 			if ( $variation_product_id > 0 ) {
 				$product_id = $variation_product_id;
+			} else {
+				$this->message_collection->add( __( 'This variation combination is no longer available.  Please choose a different combination.', 'wpsc' ), 'error', 'main', 'flash' );
+				wp_safe_redirect( wp_get_referer() );
+				exit;
 			}
 		}
 

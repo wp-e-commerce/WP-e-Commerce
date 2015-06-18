@@ -4,9 +4,10 @@
  *
  * @package wp-e-commerce
  */
-?>
 
-<?php if ( wpsc_have_products() ) : ?>
+wpsc_user_messages();
+
+if ( wpsc_have_products() ) : ?>
 	<?php wpsc_breadcrumb(); ?>
 	<?php wpsc_category_filter(); ?>
 	<?php wpsc_product_pagination( 'top' ); ?>
