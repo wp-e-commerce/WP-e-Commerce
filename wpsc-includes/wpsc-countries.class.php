@@ -898,6 +898,7 @@ class WPSC_Countries {
 		if ( ! is_a( self::$active_wpsc_country_by_country_id, 'WPSC_Data_Map' ) ) {
 			self::_clean_data_maps();
 			self::restore();
+			self::get_countries_meta();
 		}
 
 		// respect the notification that temporary data has been flushed, clear our own cache and ite will rebuild the
@@ -907,6 +908,26 @@ class WPSC_Countries {
 		// save our class data when processing is done
 		add_action( 'shutdown', array( __CLASS__, 'save' ) );
 		self::$_initialized = true;
+	}
+
+	/**
+	 * Get Countries Meta
+	 *
+	 * Returns and caches meta data for all countries to eliminate
+	 * multiple database request for each meta value later.
+	 *
+	 * @return  array  Countries meta
+	 */
+	public static function get_countries_meta() {
+
+		$ids = array();
+
+		foreach ( self::$active_wpsc_country_by_country_id->data() as $c ) {
+			$ids[] = $c->get_id();
+		}
+
+		return wpsc_update_meta_cache( 'WPSC_Country', $ids );
+
 	}
 
 	/**
