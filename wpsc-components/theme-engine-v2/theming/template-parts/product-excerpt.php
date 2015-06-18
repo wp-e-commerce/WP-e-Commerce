@@ -4,7 +4,6 @@
 			<h2 class="wpsc-product-title">
 				<a
 					href="<?php wpsc_product_permalink(); ?>"
-					title="<?php wpsc_product_title_attribute(); ?>"
 					rel="bookmark"
 				><?php wpsc_product_title(); ?></a>
 
@@ -46,7 +45,6 @@
 		<a
 			class="wpsc-thumbnail wpsc-product-thumbnail"
 			href="<?php wpsc_product_permalink(); ?>"
-			title="<?php wpsc_product_title_attribute(); ?>"
 		>
 			<?php if ( wpsc_has_product_thumbnail() ): ?>
 				<?php wpsc_product_thumbnail(); ?>

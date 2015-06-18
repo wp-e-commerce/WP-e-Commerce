@@ -61,7 +61,7 @@ class WPSC_Orders_Table extends WPSC_Table {
 
 	protected function column_id( $item ) {
 		?>
-		<a href="<?php echo esc_url( $this->item_url( $item ) ); ?>" title="<?php esc_attr_e( 'View order details', 'wpsc' ) ?>"><?php echo esc_html( $item->id ); ?></a>
+		<a href="<?php echo esc_url( $this->item_url( $item ) ); ?>"><?php echo esc_html( $item->id ); ?></a>
 		<?php
 	}
 
@@ -77,7 +77,7 @@ class WPSC_Orders_Table extends WPSC_Table {
 			$h_time = date( __( get_option( 'date_format', 'Y/m/d' ) ), $timestamp );
 		}
 
-		echo '<a title="' . $full_time . '" href="' . $this->item_url( $item ) . '">';
+		echo '<a href="' . $this->item_url( $item ) . '">';
 		echo $h_time;
 		echo '</a>';
 	}
