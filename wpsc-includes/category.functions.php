@@ -51,6 +51,9 @@ function wpsc_get_terms_category_sort_filter( $terms, $taxonomies, $args ) {
 		$new_terms = array();
 		$unsorted = array();
 
+		$term_ids = wp_list_pluck( $terms, 'term_id' );
+		wpsc_update_meta_cache( 'wpsc_category', $term_ids );
+
 		foreach ( $terms as $term ) {
 			if ( ! is_object( $term ) )
 				return $terms;
