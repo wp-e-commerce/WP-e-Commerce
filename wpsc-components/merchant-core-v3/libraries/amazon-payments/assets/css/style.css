@@ -4,6 +4,12 @@
 	float: left;
 }
 
+.wpsc-alert #pay_with_amazon {
+	float: right;
+	position: relative;
+	bottom: 4px;
+}
+
 #pay_with_amazon img {
 	width: auto !important;
 	vertical-align: middle;
