@@ -443,8 +443,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		add_action( 'wp_enqueue_scripts', array( $this, 'scripts' ) );
 
 		if ( $this->setting->get( 'cart_button_display' ) == 'button' ) {
-			add_action( 'wpsc_template_before_cart', array( $this, 'checkout_button' ), 12 );
-			add_action( 'wpsc_template_after_cart' , array( $this, 'checkout_button' ), 12 );
+			add_action( 'wpsc_cart_item_table_form_actions_left' , array( $this, 'checkout_button' ), 12, 2 );
 		} elseif ( $this->setting->get( 'cart_button_display' ) == 'banner' ) {
 			add_action( 'wpsc_template_before_cart', array( $this, 'checkout_message' ), 5 );
 		}
@@ -560,7 +559,11 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	/**
 	 *  Checkout Button
 	 */
-	public function checkout_button() {
+	public function checkout_button( $cart_table, $context ) {
+		if ( 'bottom' == $context ) {
+			return;
+		}
+
 		?><div id="pay_with_amazon" class="checkout_button"></div><?php
 	}
 

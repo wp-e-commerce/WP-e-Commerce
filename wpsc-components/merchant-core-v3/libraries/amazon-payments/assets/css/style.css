@@ -1,7 +1,7 @@
 #pay_with_amazon {
 	display: inline-block;
 	border: 0;
-	float: right;
+	float: left;
 }
 
 #pay_with_amazon img {

@@ -42,7 +42,7 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 			) );
 
 			// Express Checkout Button
-			add_action( 'wpsc_cart_item_table_after', array( &$this, 'add_ecs_button' ), 0, 10 );
+			add_action( 'wpsc_cart_item_table_form_actions_left', array( $this, 'add_ecs_button' ), 2, 2 );
 		}
 	}
 
@@ -51,15 +51,19 @@ class WPSC_Payment_Gateway_Paypal_Express_Checkout extends WPSC_Payment_Gateway 
 	 *
 	 * @return void
 	 */
-	public function add_ecs_button() {
+	public function add_ecs_button( $cart_table, $context ) {
 
 		if ( ! wpsc_uses_shipping() && wpsc_is_gateway_active( 'paypal-digital-goods' ) || ! wpsc_is_gateway_active( 'paypal-express-checkout' ) ) {
 			return;
 		}
 
+		if ( 'top' == $context ) {
+			return;
+		}
+
 		if ( _wpsc_get_current_controller_name() === 'cart' ) {
 			$url = $this->get_shortcut_url();
-			echo '<a href="'. $url .'"><img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png" alt="Check out with PayPal" /></a>';
+			echo '<a href="'. esc_url( $url ) .'"><img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png" alt="' . __( 'Check out with PayPal', 'wpsc' ) . '" /></a>';
 		}
 	}
 
