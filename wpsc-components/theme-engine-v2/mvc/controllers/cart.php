@@ -209,6 +209,10 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 		if ( isset( $_POST['action'] ) && $_POST['action'] == 'update_quantity' ) {
 			$this->_callback_update_quantity();
 		}
+
+		if ( isset( $_POST['apply_coupon'] ) && isset( $_POST['coupon_code'] ) ) {
+			$this->_callback_apply_coupon();
+		}
 	}
 
 	public function clear() {

@@ -60,8 +60,11 @@ class WPSC_Cart_Item_Table_Form extends WPSC_Cart_Item_Table {
 		);
 		?>
 		<tr class="wpsc-cart-item-table-actions">
-			<td></td>
-			<td colspan="<?php echo count( $this->columns ) - 1; ?>">
+			<td colspan="2" class="wpsc-cart-coupon">
+				<input type="text" name="coupon_code" placeholder="<?php _e( 'Coupon code', 'wpsc' ); ?>" id="coupon_code" value="">
+				<input type="submit" class="wpsc-button wpsc-button-small" id="apply_coupon" name="apply_coupon" value="<?php esc_html_e( 'Apply Coupon', 'wpsc' ); ?>" />
+			</td>
+			<td colspan="<?php echo count( $this->columns ) - 2; ?>">
 				<?php if ( apply_filters( 'wpsc_show_clear_cart_link', false ) ) : ?>
 					<a class="wpsc-button wpsc-button-small wpsc-clear-cart" href="<?php echo esc_url( $clear_cart_url ); ?>"><?php esc_html_e( 'Clear Cart', 'wpsc' ); ?></a>
 				<?php endif; ?>

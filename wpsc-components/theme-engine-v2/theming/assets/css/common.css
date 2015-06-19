@@ -4606,7 +4606,6 @@ br.clear {
 .wpsc-controller table.wpsc-cart-item-table .quantity,
 .wpsc-cart-widget-table table.wpsc-cart-item-table .quantity {
   text-align: right;
-  width: 80px;
 }
 .wpsc-controller table.wpsc-cart-item-table .wpsc-thumbnail,
 .wpsc-cart-widget-table table.wpsc-cart-item-table .wpsc-thumbnail {
@@ -4636,6 +4635,16 @@ br.clear {
 .wpsc-cart-widget-table .wpsc-cart-item-table .wpsc-cart-item-table-actions td {
   text-align: right;
 }
+
+.wpsc-controller .wpsc-cart-item-table .wpsc-cart-item-table-actions td.wpsc-cart-coupon {
+  text-align: left;
+}
+
+#coupon_code {
+  padding: 1em;
+  width: 9em;
+}
+
 .wpsc-controller .wpsc-cart-update,
 .wpsc-cart-widget-table .wpsc-cart-update {
   margin-left: 10px;
