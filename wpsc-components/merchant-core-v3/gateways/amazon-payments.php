@@ -448,9 +448,6 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			add_action( 'wpsc_template_before_cart', array( $this, 'checkout_message' ), 5 );
 		}
 
-		add_action( 'wpsc_template_before_checkout-shipping-and-billing', array( $this, 'checkout_message' ), 5 );
-		add_action( 'wpsc_template_before_checkout-payment'             , array( $this, 'checkout_message' ), 5 );
-
 		if ( ! $this->user_is_authenticated ) {
 			return;
 		}
