@@ -313,8 +313,9 @@ function _wpsc_filter_control_select_country( $output, $field, $args ) {
 	$options      = array();
 
 	foreach ( $country_data as $country ) {
-		$isocode = $country->get_isocode();
+		$isocode      = $country->get_isocode();
 		$alternatives = array( $country->get_isocode());
+
 		switch ( $isocode ) {
 			case 'US':
 				$alternatives[] = __( 'United States of America', 'wpsc' );
@@ -328,6 +329,8 @@ function _wpsc_filter_control_select_country( $output, $field, $args ) {
 				$alternatives[] = __( 'Northern Ireland', 'wpsc' );
 				break;
 		}
+
+		$alternatives = apply_filters( 'wpsc_country_alternative_spellings', $alternatives, $isocode, $country );
 
 		$options[ $country->get_isocode() ] = array(
 			'title'      => $country->get_name(),
