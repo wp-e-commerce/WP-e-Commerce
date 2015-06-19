@@ -62,7 +62,9 @@ class WPSC_Cart_Item_Table_Form extends WPSC_Cart_Item_Table {
 		<tr class="wpsc-cart-item-table-actions">
 			<td></td>
 			<td colspan="<?php echo count( $this->columns ) - 1; ?>">
-				<a class="wpsc-button wpsc-button-small wpsc-clear-cart" href="<?php echo esc_url( $clear_cart_url ); ?>"><?php esc_html_e( 'Clear Cart', 'wpsc' ); ?></a>
+				<?php if ( apply_filters( 'wpsc_show_clear_cart_link', false ) ) : ?>
+					<a class="wpsc-button wpsc-button-small wpsc-clear-cart" href="<?php echo esc_url( $clear_cart_url ); ?>"><?php esc_html_e( 'Clear Cart', 'wpsc' ); ?></a>
+				<?php endif; ?>
 				<input type="submit" class="wpsc-button wpsc-button-small wpsc-cart-update" name="update_quantity" value="<?php esc_html_e( 'Update Quantity', 'wpsc' ); ?>" />
 				<input type="hidden" name="action" value="update_quantity" />
 				<input type="hidden" name="prev" value="<?php echo $prev; ?> ">
