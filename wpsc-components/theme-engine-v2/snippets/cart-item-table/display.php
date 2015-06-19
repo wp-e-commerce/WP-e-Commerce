@@ -37,6 +37,16 @@
 			</td>
 		</tr>
 <?php 	endif; ?>
+	<?php 	if ( wpsc_uses_coupons() && $this->get_total_discount() > 0 ) : ?>
+	<tr class="wpsc-cart-aggregate wpsc-cart-discount-row">
+			<th scope="row" colspan="<?php echo count( $this->columns ) - 1; ?>">
+				<?php esc_html_e( 'Discount:' ,'wpsc' ); ?><br />
+			</th>
+			<td>
+				<?php echo wpsc_format_currency( $this->get_total_discount() ); ?>
+			</td>
+		</tr>
+	<?php 	endif; ?>
 		<tr <?php $this->show_total_style(); ?> class="wpsc-cart-aggregate wpsc-cart-total-row">
 			<th scope="row" colspan="<?php echo count( $this->columns ) - 1; ?>">
 				<?php esc_html_e( 'Total:' ,'wpsc' ); ?><br />

@@ -93,6 +93,10 @@ class WPSC_Cart_Item_Table extends WPSC_Table {
 		return $wpsc_cart->calculate_total_price();
 	}
 
+	protected function get_total_discount() {
+		return wpsc_coupon_amount( false );
+	}
+
 	protected function get_tax() {
 		return wpsc_cart_tax( false );
 	}
