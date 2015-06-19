@@ -24,7 +24,6 @@ class WPSC_Cart_Item_Table_Form extends WPSC_Cart_Item_Table {
 	<div class="wpsc-form-actions top">
 		<?php do_action( 'wpsc_cart_item_table_form_actions_left', self::$instance, 'top' ); ?>
 
-		<?php wpsc_keep_shopping_button(); ?>
 		<?php wpsc_begin_checkout_button(); ?>
 		<?php wpsc_form_hidden( '_wp_nonce', wp_create_nonce( 'wpsc-cart-update' ) ); ?>
 
@@ -40,7 +39,6 @@ class WPSC_Cart_Item_Table_Form extends WPSC_Cart_Item_Table {
 	<div class="wpsc-form-actions bottom">
 		<?php do_action( 'wpsc_cart_item_table_form_actions_left', self::$instance, 'bottom' ); ?>
 
-		<?php wpsc_keep_shopping_button(); ?>
 		<?php wpsc_begin_checkout_button(); ?>
 		<?php wpsc_form_hidden( '_wp_nonce', wp_create_nonce( 'wpsc-cart-update' ) ); ?>
 
