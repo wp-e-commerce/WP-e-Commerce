@@ -200,19 +200,35 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 	}
 
 	public function index() {
+
+		if ( isset( $_POST['apply_coupon'] ) && isset( $_POST['coupon_code'] ) ) {
+			// $this->_callback_apply_coupon();
+		}
+
+		if ( isset( $_POST['action'] ) && $_POST['action'] == 'update_quantity' ) {
+			$this->_callback_update_quantity();
+		}
+	}
+
+	public function _callback_apply_coupon() {
+
+		wpsc_coupon_price( $_POST['coupon_code'] );
+
 		$coupon = wpsc_get_customer_meta( 'coupon' );
 
 		if ( ! empty( $coupon ) ) {
 			$GLOBALS['wpsc_coupons'] = new wpsc_coupons( $coupon );
 		}
 
-		if ( isset( $_POST['action'] ) && $_POST['action'] == 'update_quantity' ) {
-			$this->_callback_update_quantity();
+		if ( $wpsc_coupons->errormsg ) {
+			$this->message_collection->add( __( 'Coupon not applied.', 'wpsc' ), 'error', 'main', 'flash' );
+		} else {
+			$this->message_collection->add( __( 'Coupon applied.', 'wpsc' ), 'success', 'main', 'flash' );
 		}
 
-		if ( isset( $_POST['apply_coupon'] ) && isset( $_POST['coupon_code'] ) ) {
-			$this->_callback_apply_coupon();
-		}
+		wp_safe_redirect( wp_get_referer() );
+		die;
+
 	}
 
 	public function clear() {
