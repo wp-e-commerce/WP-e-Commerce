@@ -4641,14 +4641,21 @@ br.clear {
 }
 
 #coupon_code {
-  padding: 1em;
+  padding: .5em;
   width: 9em;
 }
 
 .wpsc-controller .wpsc-cart-update,
 .wpsc-cart-widget-table .wpsc-cart-update {
-  margin-left: 10px;
+  float: left;
 }
+
+.wpsc-controller table.wpsc-table td.apply-coupon {
+  white-space: nowrap;
+  vertical-align: bottom;
+  padding-right: 0;
+}
+
 .wpsc-cart-widget-table {
   /*.wpsc-button {
 		.button();

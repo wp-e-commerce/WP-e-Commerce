@@ -6,6 +6,18 @@
 		</tr>
 	</thead>
 	<tfoot>
+		<tr class="wpsc-cart-aggregate wpsc-cart-actions-row">
+			<td>
+				<input type="submit" class="wpsc-button wpsc-button-small wpsc-cart-update" name="update_quantity" value="<?php esc_html_e( 'Update Quantity', 'wpsc' ); ?>" />
+				<input type="hidden" name="action" value="update_quantity" />
+			</td>
+			<?php if ( wpsc_uses_coupons() ) : ?>
+			<td class="apply-coupon" colspan="<?php echo count( $this->columns ) -1; ?>">
+				<input type="text" name="coupon_code" placeholder="<?php _e( 'Coupon code', 'wpsc' ); ?>" id="coupon_code" value="<?php echo esc_attr( wpsc_get_customer_meta( 'coupon' ) ); ?>">
+				<input type="submit" class="wpsc-button wpsc-button-small wpsc-cart-apply-coupon" name="apply_coupon" value="<?php esc_html_e( 'Apply Coupon', 'wpsc' ); ?>" />
+			</td>
+			<?php endif; ?>
+		</tr>
 		<tr class="wpsc-cart-aggregate wpsc-cart-subtotal-row">
 			<th scope="row" colspan="<?php echo count( $this->columns ) - 1; ?>">
 				<?php esc_html_e( 'Subtotal:' ,'wpsc' ); ?><br />
