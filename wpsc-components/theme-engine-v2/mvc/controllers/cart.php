@@ -202,7 +202,7 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 	public function index() {
 
 		if ( isset( $_POST['apply_coupon'] ) && isset( $_POST['coupon_code'] ) ) {
-			// $this->_callback_apply_coupon();
+			$this->_callback_apply_coupon();
 		}
 
 		if ( isset( $_POST['action'] ) && $_POST['action'] == 'update_quantity' ) {
@@ -211,16 +211,17 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 	}
 
 	public function _callback_apply_coupon() {
+		global $wpsc_coupons;
 
 		wpsc_coupon_price( $_POST['coupon_code'] );
 
 		$coupon = wpsc_get_customer_meta( 'coupon' );
 
 		if ( ! empty( $coupon ) ) {
-			$GLOBALS['wpsc_coupons'] = new wpsc_coupons( $coupon );
+			$wpsc_coupons = new wpsc_coupons( $coupon );
 		}
 
-		if ( $wpsc_coupons->errormsg ) {
+		if ( $wpsc_coupons->errormsg || empty( $_POST['coupon_code'] ) ) {
 			$this->message_collection->add( __( 'Coupon not applied.', 'wpsc' ), 'error', 'main', 'flash' );
 		} else {
 			$this->message_collection->add( __( 'Coupon applied.', 'wpsc' ), 'success', 'main', 'flash' );
