@@ -520,7 +520,7 @@ function _wpsc_meta_migrate_anonymous_user_cron() {
 	$ids_to_migrate = $user_ids = $wpdb->get_var( $sql );
 
 	if ( $ids_to_migrate ) {
-		$response = wp_remote_post( admin_url( 'admin-ajax.php' ) . '?action=wpsc_migrate_anonymous_user' , array(  'blocking' => true, ) );
+		$response = wp_safe_remote_post( admin_url( 'admin-ajax.php' ) . '?action=wpsc_migrate_anonymous_user' , array(  'blocking' => true, ) );
 		wp_schedule_single_event( time() + 30 , 'wpsc_migrate_anonymous_user_cron' );
 	} else {
 		wpsc_core_flush_temporary_data();

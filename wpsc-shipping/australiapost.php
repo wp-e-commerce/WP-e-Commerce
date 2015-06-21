@@ -304,7 +304,7 @@ class australiapost {
 
 			    // Quote isn't cached -> query the Australia Post API and then cache the result for 10 minutes
 
-			    $response = wp_remote_get($fullURL);
+			    $response = wp_safe_remote_get($fullURL);
 
 			    // Silently ignore any API server errors
 			    if ( is_wp_error($response) || $response['response']['code'] != '200' || empty($response['body']) ) continue;

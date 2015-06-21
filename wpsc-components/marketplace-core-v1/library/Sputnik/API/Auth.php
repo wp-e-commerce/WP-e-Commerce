@@ -123,7 +123,7 @@ class Sputnik_API_Auth {
 
 		$args['headers'] = array( 'X-WP-Domain' => Sputnik_API::domain() );
 
-		$response = wp_remote_request($url, $args);
+		$response = wp_safe_remote_request($url, $args);
 
 		if (is_wp_error($response)) {
 			throw new Exception($response->get_error_message());

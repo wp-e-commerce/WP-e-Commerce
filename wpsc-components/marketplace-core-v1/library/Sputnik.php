@@ -299,7 +299,7 @@ class Sputnik {
 
 		$id = absint( $purchase_log->get( 'id' ) );
 
-		//Also checking is_order_received, as that's what Manual Payments do.
+		// Also checking is_order_received, as that's what Manual Payments do.
 		if ( $purchase_log->is_transaction_completed() || $purchase_log->is_order_received() ) {
 
 			$pushed_to_sass = wpsc_get_meta( $id, '_pushed_to_wpeconomy', 'purchase_log' );
@@ -309,8 +309,8 @@ class Sputnik {
 				$data          = $purchase_log->get_data();
 				$cart_contents = $purchase_log->get_cart_contents();
 
-				//We want to push sales data - but naturally, IDs will differ, even names could potentially.
-				//So we add the slug to the object we POST
+				// We want to push sales data - but naturally, IDs will differ, even names could potentially.
+				// So we add the slug to the object we POST
 				foreach ( $cart_contents as $key => $cart_item ) {
 					$slug = get_post_field( 'post_name', $cart_item->prodid );
 					$cart_contents[ $key ]->slug = $slug;
@@ -320,7 +320,7 @@ class Sputnik {
 					'body' => array( 'data' => json_encode( $data ), 'cart_contents' => json_encode( $cart_contents ) )
 				);
 
-				$request  = wp_remote_post( 'http://www.wpeconomy.org/?sales_data=true', $args );
+				$request  = wp_safe_remote_post( 'http://www.wpeconomy.org/?sales_data=true', $args );
 				$response = wp_remote_retrieve_response_code( $request );
 
 				//For some reason, if the site is down, we want the ability to ensure we can grab the sale later.

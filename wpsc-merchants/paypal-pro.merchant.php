@@ -194,7 +194,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 			'user-agent' => $this->cart_data['software_name'] . " " . get_bloginfo( 'url' ),
 			'sslverify' => false,
 		);
-		$response = wp_remote_post( $paypal_url, $options );
+		$response = wp_safe_remote_post( $paypal_url, $options );
 
 		// parse the response body
 
@@ -270,7 +270,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 			'user-agent' => ('WP eCommerce/' . WPSC_PRESENTABLE_VERSION)
 		);
 
-		$response = wp_remote_post( $paypal_url, $options );
+		$response = wp_safe_remote_post( $paypal_url, $options );
 
 		if ( strpos( $response['body'], 'VERIFIED' ) !== false ) {
 			$this->paypal_ipn_values = $received_values;

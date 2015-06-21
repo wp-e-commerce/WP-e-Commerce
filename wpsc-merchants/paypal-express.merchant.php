@@ -125,7 +125,7 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 			'user-agent' => ('WP eCommerce/'.WPSC_PRESENTABLE_VERSION)
 		);
 
-		$response = wp_remote_post( $paypal_url, $options );
+		$response = wp_safe_remote_post( $paypal_url, $options );
 
 		do_action( 'wpsc_paypal_express_ipn', $received_values, $this );
 
@@ -1012,7 +1012,7 @@ function paypal_hash_call( $methodName, $nvpStr ) {
 
 	wpsc_update_customer_meta( 'paypal_express_nvp_req_array', $nvpReqArray );
 
-	$res = wp_remote_post( $API_Endpoint, $options );
+	$res = wp_safe_remote_post( $API_Endpoint, $options );
 
 	if ( is_wp_error( $res ) ) {
 		wpsc_update_customer_meta( 'paypal_express_curl_error_msg', 'WP HTTP Error: ' . $res->get_error_message() );

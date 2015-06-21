@@ -525,7 +525,7 @@ class ash_usps {
 		// Put endpoint and request together
 		$url = $endpoint . "&XML=" . $encoded_request;
 
-		$request = wp_remote_post(
+		$request = wp_safe_remote_post(
 			$url,
 			array(
 				'httpversion' => '1.1',

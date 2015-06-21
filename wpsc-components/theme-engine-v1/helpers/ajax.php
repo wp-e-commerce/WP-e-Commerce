@@ -1015,7 +1015,7 @@ function _wpsc_get_alternate_html( $cart_messages ) {
 	wpsc_serialize_shopping_cart();
 
 	$javascript = wp_remote_retrieve_body(
-		wp_remote_post(
+		wp_safe_remote_post(
 			esc_url_raw( add_query_arg( array( 'wpsc_action' => 'wpsc_get_alternate_html', 'ajax' => 'true', 'wpsc_ajax_action' => 'add_to_cart' ), home_url() ),
 			array(
 				'body' =>

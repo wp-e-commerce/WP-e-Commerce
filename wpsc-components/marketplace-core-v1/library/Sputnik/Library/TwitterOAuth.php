@@ -36,7 +36,7 @@ class Sputnik_Library_TwitterOAuth extends Sputnik_Library_TwitterOAuth_Internal
 		$parameters = array();
 		if (!empty($oauth_callback)) {
 			$parameters['oauth_callback'] = $oauth_callback;
-		} 
+		}
 		$request = $this->oAuthRequest($this->requestTokenURL(), 'GET', $parameters);
 		$token = Sputnik_OAuth_Util::parse_parameters($request);
 		$this->token = new Sputnik_OAuth_Consumer($token['oauth_token'], $token['oauth_token_secret']);
@@ -73,7 +73,7 @@ class Sputnik_Library_TwitterOAuth extends Sputnik_Library_TwitterOAuth_Internal
 	 *                "user_id" => "9436992",
 	 *                "screen_name" => "abraham",
 	 *                "x_auth_expires" => "0")
-	 */  
+	 */
 	function getXAuthToken($username, $password) {
 		$parameters = array();
 		$parameters['x_auth_username'] = $username;
@@ -131,7 +131,7 @@ class Sputnik_Library_TwitterOAuth extends Sputnik_Library_TwitterOAuth_Internal
 				}
 		}
 
-		$response = wp_remote_request($url, $options);
+		$response = wp_safe_remote_request($url, $options);
 
 		if (is_wp_error($response)) {
 			$this->http_code = null;

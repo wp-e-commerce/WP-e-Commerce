@@ -403,7 +403,7 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 			'user-agent'  => ( 'WP eCommerce/' . WPSC_PRESENTABLE_VERSION )
 		);
 
-		$response = wp_remote_post( $paypal_url, $options );
+		$response = wp_safe_remote_post( $paypal_url, $options );
 
 		if ( 'VERIFIED' == $response['body'] ) {
 			$this->paypal_ipn_values = $received_values;

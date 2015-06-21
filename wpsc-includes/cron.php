@@ -89,7 +89,6 @@ function _wpsc_delete_expired_visitors() {
  * Request a visitor be deleted via the WordPRess admin ajax path
  *
  * @access private
-
  * @since 3.8.14
  *
  * @param int $visitor_id
@@ -103,7 +102,7 @@ function wpsc_do_delete_visitor_ajax( $visitor_id ) {
 
 	$wpsc_security = wp_create_nonce( $delete_visitor_nonce_action );
 
-	$response = wp_remote_post(
+	$response = wp_safe_remote_post(
 									admin_url( 'admin-ajax.php' ),
 									array(
 										'method'      => 'POST',

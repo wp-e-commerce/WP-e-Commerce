@@ -16,7 +16,7 @@ class WPSC_Payment_Gateway_HTTP extends PHP_Merchant_HTTP {
 		$args = array_merge( $defaults, $args );
 		$args['body'] = $fields;
 
-		$response = wp_remote_request( $url, $args );
+		$response = wp_safe_remote_request( $url, $args );
 
 		if ( is_wp_error( $response ) )
 			throw new PHP_Merchant_Exception( PHPME_HTTP_REQUEST_FAILED, $response->get_error_message() );

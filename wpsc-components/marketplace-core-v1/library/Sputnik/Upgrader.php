@@ -39,7 +39,7 @@ class Sputnik_Upgrader extends Plugin_Upgrader {
 
 		Sputnik_API::sign_download($url, $args);
 
-		$response = wp_remote_get($url, $args);
+		$response = wp_safe_remote_get($url, $args);
 
 		if ( is_wp_error( $response ) ) {
 			unlink( $tmpfname );

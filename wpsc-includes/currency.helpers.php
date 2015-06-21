@@ -23,7 +23,7 @@ function _wpsc_get_exchange_rate( $from, $to ) {
 
 	$url  = esc_url_raw( apply_filters( '_wpsc_get_exchange_rate_service_endpoint', $url, $from, $to ) );
 
-	$response = wp_remote_retrieve_body( wp_remote_get( $url, array( 'timeout' => 10 ) ) );
+	$response = wp_remote_retrieve_body( wp_safe_remote_get( $url, array( 'timeout' => 10 ) ) );
 
 	if ( has_filter( '_wpsc_get_exchange_rate' ) ) {
 		return (float) apply_filters( '_wpsc_get_exchange_rate', $response, $from, $to );

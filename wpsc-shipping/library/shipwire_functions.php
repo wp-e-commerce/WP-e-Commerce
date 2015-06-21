@@ -820,7 +820,7 @@ class WPSC_Shipwire {
 				'timeout'   => 30
 			);
 
-		$request = wp_remote_post( $url, $args );
+		$request = wp_safe_remote_post( $url, $args );
 
 		if ( ! is_wp_error( $request ) )
 			return $request['body'];
