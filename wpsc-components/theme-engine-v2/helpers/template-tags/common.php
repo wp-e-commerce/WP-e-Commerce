@@ -51,7 +51,7 @@ function wpsc_format_currency( $amt, $args = '' ) {
 	$r = wp_parse_args( $args, $defaults );
 	extract( $r );
 
-	$currencies_without_fractions = array( 'JPY', 'HUF', 'VND' );
+	$currencies_without_fractions = WPSC_Payment_Gateways::currencies_without_fractions();
 
 	if ( $isocode ) {
 		$currency = new WPSC_Country( $isocode );

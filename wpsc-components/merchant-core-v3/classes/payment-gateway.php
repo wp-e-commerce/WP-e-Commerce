@@ -360,6 +360,46 @@ final class WPSC_Payment_Gateways {
 	}
 
 	/**
+	 * Returns all known currencies without fractions.
+	 *
+	 * Our internal list has not been updated in some time, so returning a filterable list
+	 * for ever-changing economies and currencies should prove helpful.
+	 *
+	 * @link http://www.currency-iso.org/dam/downloads/table_a1.xml
+	 *
+	 * @since  4.0
+	 *
+	 * @return array Currency ISO codes that do not use fractions.
+	 */
+	public static function currencies_without_fractions() {
+
+		$currencies = array(
+			'JPY',
+			'HUF',
+			'VND',
+			'BYR',
+			'XOF',
+			'BIF',
+			'XAF',
+			'CLP',
+			'KMF',
+			'DJF',
+			'XPF',
+			'GNF',
+			'ISK',
+			'GNF',
+			'KRW',
+			'PYG',
+			'RWF',
+			'UGX',
+			'UYI',
+			'VUV',
+		);
+
+		return (array) apply_filters( 'wpsc_currencies_without_fractions', $currencies );
+	}
+
+	/**
 	 * No instantiation for this class
 	 *
 	 * @access private

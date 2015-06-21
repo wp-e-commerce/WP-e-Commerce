@@ -535,7 +535,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		$currency          = new WPSC_Country( get_option( 'currency_type' ) );
 		$currency_code     = $currency->get_currency_code();
 		$isocode           = $currency->get_isocode();
-		$without_fractions = in_array( $currency_code, array( 'JPY', 'HUF', 'VND' ) );
+		$without_fractions = in_array( $currency_code, WPSC_Payment_Gateways::currencies_without_fractions() );
 
 		$decimals = $without_fractions ? 0 : 2;
 		$decimals            = apply_filters( 'wpsc_modify_decimals'                 , $decimals, $isocode );
