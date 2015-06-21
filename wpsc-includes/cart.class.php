@@ -793,6 +793,7 @@ class wpsc_cart {
 	 *         No parameters, nothing returned
 	 */
 	function cleanup() {
+		wpsc_delete_customer_meta( 'coupon' );
 		$claimed_query = new WPSC_Claimed_Stock( array( 'cart_id' => $this->unique_id ) );
 		$claimed_query->clear_claimed_stock( 0 );
 	}

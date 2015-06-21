@@ -521,7 +521,8 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 			'tax' =>
 				  ( wpsc_is_tax_enabled() && ! wpsc_is_tax_included() )
 				? (float) wpsc_cart_tax( false )
-				: 0
+				: 0,
+			'discount' => wpsc_coupon_amount( false ) > 0 ? wpsc_coupon_amount( false ) : 0
 		);
 
 		foreach ( $this->shipping_calculator->sorted_quotes as $module_name => $quotes ) {

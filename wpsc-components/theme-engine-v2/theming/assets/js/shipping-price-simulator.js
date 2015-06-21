@@ -32,10 +32,12 @@
 		var checked = $('input[name="wpsc_shipping_option"]:checked');
 		var value = checked[0].value;
 		var shipping = WPSC_Price_Table.shipping[value];
+		var discount = WPSC_Price_Table.discount;
 		var total =
 				WPSC_Price_Table.subtotal +
 				WPSC_Price_Table.tax      +
-				shipping;
+				shipping -
+				discount;
 		$('.wpsc-cart-shipping-row td').text(format_price(shipping));
 		$('.wpsc-cart-total-row td').text(format_price(total));
 	};
