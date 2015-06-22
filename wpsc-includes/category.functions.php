@@ -38,9 +38,11 @@ function wpsc_get_term_parents( $term_id, $taxonomy ) {
  * wpsc_get_terms_category_sort_filter
  *
  * This sorts the categories when a call to get_terms is made
+ *
  * @param object array $terms
  * @param array $taxonomies
  * @param array $args
+ *
  * @return object array $terms
  */
 
@@ -49,14 +51,15 @@ function wpsc_get_terms_category_sort_filter( $terms, $taxonomies, $args ) {
 	if ( in_array( 'wpsc_product_category', $taxonomies ) ) {
 
 		$new_terms = array();
-		$unsorted = array();
+		$unsorted  = array();
 
 		$term_ids = wp_list_pluck( $terms, 'term_id' );
 		wpsc_update_meta_cache( 'wpsc_category', $term_ids );
 
 		foreach ( $terms as $term ) {
-			if ( ! is_object( $term ) )
+			if ( ! is_object( $term ) ) {
 				return $terms;
+			}
 
 			$term_order = ( $term->taxonomy == 'wpsc_product_category' ) ? wpsc_get_meta( $term->term_id, 'sort_order', 'wpsc_category' ) : null;
 			$term_order = (int) $term_order;
@@ -64,23 +67,24 @@ function wpsc_get_terms_category_sort_filter( $terms, $taxonomies, $args ) {
 			// unsorted categories should go to the top of the list
 			if ( $term_order == 0 ) {
 				$term->sort_order = $term_order;
-				$unsorted[] = $term;
+				$unsorted[]       = $term;
 				continue;
 			}
 
-			while ( isset( $new_terms[$term_order] ) ) {
-				$term_order ++;
+			while ( isset( $new_terms[ $term_order ] ) ) {
+				$term_order++;
 			}
 
-			$term->sort_order = $term_order;
-			$new_terms[$term_order] = $term;
+			$term->sort_order         = $term_order;
+			$new_terms[ $term_order ] = $term;
 		}
 
-		if ( ! empty( $new_terms ) )
+		if ( ! empty( $new_terms ) ) {
 			ksort( $new_terms );
+		}
 
 		for ( $i = count( $unsorted ) - 1; $i >= 0; $i-- ) {
-			array_unshift( $new_terms, $unsorted[$i] );
+			array_unshift( $new_terms, $unsorted[ $i ] );
 		}
 
 		return array_values( $new_terms );
@@ -90,16 +94,17 @@ function wpsc_get_terms_category_sort_filter( $terms, $taxonomies, $args ) {
 	return $terms;
 
 }
+
 add_filter( 'get_terms', 'wpsc_get_terms_category_sort_filter', 10, 3 );
 
-
-function wpsc_get_terms_variation_sort_filter($terms){
+function wpsc_get_terms_variation_sort_filter( $terms ) {
 	$new_terms = array();
 	$unsorted = array();
 
 	foreach ( $terms as $term ) {
-		if ( ! is_object( $term ) )
+		if ( ! is_object( $term ) ) {
 			return $terms;
+		}
 
 		$term_order = ( $term->taxonomy == 'wpsc-variation' ) ? wpsc_get_meta( $term->term_id, 'sort_order', 'wpsc_variation' ) : null;
 		$term_order = (int) $term_order;
@@ -107,23 +112,24 @@ function wpsc_get_terms_variation_sort_filter($terms){
 		// unsorted categories should go to the top of the list
 		if ( $term_order == 0 ) {
 			$term->sort_order = $term_order;
-			$unsorted[] = $term;
+			$unsorted[]       = $term;
 			continue;
 		}
 
-		while ( isset( $new_terms[$term_order] ) ) {
-			$term_order ++;
+		while ( isset( $new_terms[ $term_order ] ) ) {
+			$term_order++;
 		}
 
 		$term->sort_order = $term_order;
-		$new_terms[$term_order] = $term;
+		$new_terms[ $term_order ] = $term;
 	}
 
-	if ( ! empty( $new_terms ) )
+	if ( ! empty( $new_terms ) ) {
 		ksort( $new_terms );
+	}
 
 	for ( $i = count( $unsorted ) - 1; $i >= 0; $i-- ) {
-		array_unshift( $new_terms, $unsorted[$i] );
+		array_unshift( $new_terms, $unsorted[ $i ] );
 	}
 
 	return array_values( $new_terms );
