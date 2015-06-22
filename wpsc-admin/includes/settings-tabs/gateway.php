@@ -10,8 +10,9 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 		} else {
 			update_user_option( get_current_user_id(), 'wpsc_settings_selected_payment_gateway', '' );
 		}
+
 		$this->active_gateways = get_option( 'custom_gateway_options' );
-		$this->gateway_names = get_option( 'payment_gateway_names' );
+		$this->gateway_names   = get_option( 'payment_gateway_names' );
 
 		$this->hide_submit_button();
 	}

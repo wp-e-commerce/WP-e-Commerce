@@ -1041,9 +1041,9 @@
 						history.pushState({'url' : new_url}, '', new_url);
 					}
 					spinner.toggleClass('ajax-feedback-active');
-					$('#gateway_settings_' + payment_gateway_id + '_form').remove();
-					$('#wpsc_gateway_settings_'+ payment_gateway_id).show( 400 );
-					$('#wpsc_gateway_settings_'+ payment_gateway_id + '_container').append(response.obj.content);
+					$( '#gateway_settings_' + payment_gateway_id + '_form' ).remove();
+					$( '#wpsc_gateway_settings_'+ payment_gateway_id ).show( 400 );
+					$( '#wpsc_gateway_settings_'+ payment_gateway_id + '_container' ).append(response.obj.content);
 				};
 
 			if ( $( '#gateway_settings_' + payment_gateway_id + '_form' ).is( ':visible' ) ) {

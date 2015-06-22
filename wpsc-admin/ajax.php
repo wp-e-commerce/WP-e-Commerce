@@ -74,13 +74,15 @@ function _wpsc_ajax_fire_callback( $ajax_action ) {
 function _wpsc_ajax_handler() {
 	$ajax_action = str_replace( '-', '_', $_REQUEST['wpsc_action'] );
 
-	if ( is_callable( '_wpsc_ajax_verify_' . $ajax_action ) )
+	if ( is_callable( '_wpsc_ajax_verify_' . $ajax_action ) ) {
 		$result = call_user_func( '_wpsc_ajax_verify_' . $ajax_action );
-	else
+	} else {
 		$result = _wpsc_ajax_verify_nonce( $ajax_action );
+	}
 
-	if ( ! is_wp_error( $result ) )
+	if ( ! is_wp_error( $result ) ) {
 		$result = _wpsc_ajax_fire_callback( $ajax_action );
+	}
 
 	$output = array(
 		'is_successful' => false,
@@ -242,6 +244,7 @@ function _wpsc_ajax_add_variation_set() {
  * @return array Response args
  */
 function _wpsc_ajax_payment_gateway_settings_form() {
+
 	require_once( 'settings-page.php' );
 	require_once( 'includes/settings-tabs/gateway.php' );
 

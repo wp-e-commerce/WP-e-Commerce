@@ -2113,3 +2113,77 @@ function _wpsc_action_user_update_errors( $errors, $update, $user ) {
 }
 
 // add_action( 'user_profile_update_errors', '_wpsc_action_user_update_errors', 10, 3 );
+
+/**
+ * Not yet deprecated, but should be considered deprecated.
+ *
+ * Used only in TEv1 user account page.
+ *
+ * @param  $selected_country
+ * @return
+ */
+function nzshpcrt_country_list( $selected_country = null ) {
+	return _wpsc_country_dropdown_options( array(
+		'selected' => $selected_country,
+	) );
+}
+
+/**
+ * Not yet deprecated, but should be considered deprecated.
+ *
+ * Used only in TEv1 user account page.
+ *
+ * @param  [type] $selected_country [description]
+ * @param  [type] $selected_region  [description]
+ * @return [type]                   [description]
+ */
+function nzshpcrt_region_list( $selected_country = null, $selected_region = null ) {
+	global $wpdb;
+
+	if ( $selected_region == null )
+		$selected_region = get_option( 'base_region' );
+
+	$output = "";
+	$region_list = WPSC_Countries::get_regions( $selected_country, true );
+
+	if ( $region_list != null ) {
+		foreach ( $region_list as $region ) {
+			if ( $selected_region == $region['id'] ) {
+				$selected = "selected='selected'";
+			} else {
+				$selected = "";
+			}
+
+			$output .= "<option value='" . $region['id'] . "' $selected>" . $region['name'] . "</option>\r\n";
+		}
+	} else {
+		$output .= "<option value=''>" . esc_html__( 'None', 'wpsc' ) . "</option>\r\n";
+	}
+
+	return $output;
+}
+
+/**
+ * Not yet deprecated, but should be considered deprecated.
+ *
+ * Used only in PayPal Standard and Chronopay gateways.
+ *
+ * @param  [type] $selected_field [description]
+ * @return [type]                 [description]
+ */
+function nzshpcrt_form_field_list( $selected_field = null ) {
+	global $wpdb;
+	$output = "<option value=''>" . esc_html__( 'Please choose', 'wpsc' ) . "</option>";
+	$form_sql = "SELECT * FROM `" . WPSC_TABLE_CHECKOUT_FORMS . "` WHERE `active` = '1';";
+	$form_data = $wpdb->get_results( $form_sql, ARRAY_A );
+
+	foreach ( (array)$form_data as $form ) {
+		$selected = '';
+		if ( $selected_field == $form['id'] ) {
+			$selected = "selected='selected'";
+		}
+		$output .= "<option value='" . $form['id'] . "' $selected>" . $form['name'] . "</option>";
+	}
+
+	return $output;
+}
