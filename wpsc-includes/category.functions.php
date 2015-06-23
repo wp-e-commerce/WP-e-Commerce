@@ -35,15 +35,17 @@ function wpsc_get_term_parents( $term_id, $taxonomy ) {
 }
 
 /**
- * wpsc_get_terms_category_sort_filter
+ * Get Terms Category Sort Filter
  *
- * This sorts the categories when a call to get_terms is made
+ * This sorts the categories when a call to get_terms is made.
  *
- * @param object array $terms
- * @param array $taxonomies
- * @param array $args
+ * If $args requests that term objects (default) are returned then
+ * we are able to pre-fetch the term meta in bulk.
  *
- * @return object array $terms
+ * @param   object|array  $terms       Array of term objects or field values.
+ * @param   array         $taxonomies  Taxonomies.
+ * @param   array         $args        Args passed to get_terms().
+ * @return  object|array  $terms
  */
 
 function wpsc_get_terms_category_sort_filter( $terms, $taxonomies, $args ) {
