@@ -1,3 +1,4 @@
+/* global sputnik */
 window.sputnik = window.sputnik || {};
 
 (function($){
@@ -33,7 +34,7 @@ window.sputnik = window.sputnik || {};
 				compiled = compiled || _.template( $( '#tmpl-' + id ).html(), null, options );
 				return compiled( data );
 			};
-		}),
+		})
 	});
 
 	sputnik.controller.Region = function( options ) {
@@ -119,7 +120,7 @@ window.sputnik = window.sputnik || {};
 			tested: '',
 			requires: '',
 			rating: 0,
-			user_rating: 0,
+			user_rating: 0
 		}
 	})
 
