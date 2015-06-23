@@ -3,7 +3,8 @@ require_once( WPSC_TE_V2_CLASSES_PATH . '/checkout-wizard.php' );
 
 class WPSC_Controller_Checkout extends WPSC_Controller {
 	protected $current_step  = '';
-	private $wizard;
+	protected $wizard;
+	protected $shipping_calculator;
 
 	public function __construct() {
 		parent::__construct();
@@ -375,6 +376,8 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 		$submitted_value = $_POST['wpsc_shipping_option'];
 		$found           = false;
+		$module_name     = '';
+		$option          = '';
 
 		foreach ( $this->shipping_calculator->quotes as $module_name => $quotes ) {
 			foreach ( $quotes as $option => $cost ) {
