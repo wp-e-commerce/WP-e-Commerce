@@ -54,13 +54,22 @@ function wpsc_get_terms_category_sort_filter( $terms, $taxonomies, $args ) {
 		$unsorted  = array();
 		$term_ids  = array();
 
-		foreach ( $terms as $term ) {
+		// If something other than term objects are requested, don't sort.
+		if ( isset( $args['fields'] ) && 'all' != $args['fields'] ) {
+			return $terms;
+		} else {
+			$term_ids = wp_list_pluck( $terms, 'term_id' );
+		}
 
+		// Pre-fetch category meta in bulk if we've been able to grab the IDs.
+		if ( ! empty( $term_ids ) ) {
+			wpsc_update_meta_cache( 'wpsc_category', $term_ids );
+		}
+
+		foreach ( $terms as $term ) {
 			if ( ! is_object( $term ) ) {
 				return $terms;
 			}
-
-			$term_ids[] = $term->term_id;
 
 			$term_order = ( $term->taxonomy == 'wpsc_product_category' ) ? wpsc_get_meta( $term->term_id, 'sort_order', 'wpsc_category' ) : null;
 			$term_order = (int) $term_order;
@@ -80,8 +89,6 @@ function wpsc_get_terms_category_sort_filter( $terms, $taxonomies, $args ) {
 			$new_terms[ $term_order ] = $term;
 		}
 
-		wpsc_update_meta_cache( 'wpsc_category', $term_ids );
-
 		if ( ! empty( $new_terms ) ) {
 			ksort( $new_terms );
 		}
@@ -91,6 +98,7 @@ function wpsc_get_terms_category_sort_filter( $terms, $taxonomies, $args ) {
 		}
 
 		return array_values( $new_terms );
+
 	}
 
 	return $terms;
