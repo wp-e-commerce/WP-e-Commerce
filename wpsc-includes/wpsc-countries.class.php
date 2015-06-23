@@ -190,7 +190,7 @@ class WPSC_Countries {
 	 * @param int|string required if non-numeric country is treated as an region code, number is the region id,
 	 *        if the region id is passed then country_id is ignored
 	 *
-	 * @return WPSC_Region boolean object or false on failure
+	 * @return false|WPSC_Region WPSC_Region object or false on failure
 	 *
 	 */
 	public static function get_region( $country, $region ) {
@@ -237,7 +237,7 @@ class WPSC_Countries {
 	 */
 	public static function get_country( $country, $as_array = false ) {
 		if ( ! self::confirmed_initialization() ) {
-			return 0;
+			return false;
 		}
 
 		$country_id = self::get_country_id( $country );
@@ -573,7 +573,7 @@ class WPSC_Countries {
 	 * @param int|string      $country     country being checked, if noon-numeric country is treated as an isocode,
 	 *                                     number is the country
 	 *
-	 * @return true if the country has regions, false otherwise
+	 * @return boolean True if the country has regions, false otherwise
 	 */
 	public static function country_has_regions( $country ) {
 		if ( ! self::confirmed_initialization() ) {
@@ -659,7 +659,7 @@ class WPSC_Countries {
 	 */
 	public static function get_currencies( $as_array = false ) {
 		if ( ! self::confirmed_initialization() ) {
-			return 0;
+			return array();
 		}
 
 		$currencies = self::$currencies->data();
@@ -726,7 +726,7 @@ class WPSC_Countries {
 	 */
 	public static function get_country_id_by_country_code( $country_code ) {
 		if ( ! self::confirmed_initialization() ) {
-			return false;
+			return 0;
 		}
 
 		return self::$country_code_by_country_id->value( $country_code, false );
@@ -740,7 +740,7 @@ class WPSC_Countries {
 	 *
 	 * @since 3.8.14
 	 *
-	 * @var array
+	 * @var mixed array|null|WPSC_Data_Map
 	 */
 	private static $country_id_by_country_name = null;
 
@@ -752,7 +752,7 @@ class WPSC_Countries {
 	 *
 	 * @since 3.8.14
 	 *
-	 * @var array
+	 * @var mixed array|WPSC_Data_Map
 	 */
 	private static $currencies = array();
 
@@ -764,7 +764,7 @@ class WPSC_Countries {
 	 *
 	 * @since 3.8.14
 	 *
-	 * @var array
+	 * @var mixed array|null|WPSC_Data_Map
 	 */
 	private static $country_id_by_iso_code = null;
 
@@ -777,7 +777,7 @@ class WPSC_Countries {
 	 *
 	 * @since 3.8.14
 	 *
-	 * @var array
+	 * @var mixed array|null|WPSC_Data_Map
 	 */
 	private static $country_code_by_country_id = null;
 
