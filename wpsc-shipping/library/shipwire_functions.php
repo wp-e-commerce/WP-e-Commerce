@@ -34,13 +34,13 @@ class WPSC_Shipwire {
 	 */
 	public static function get_instance() {
 
-		if ( empty( self::$instance ) )
+		if ( empty( self::$instance ) ) {
 			self::$instance = new WPSC_Shipwire();
+		}
 
-		if ( self::is_active() )
+		if ( self::is_active() ) {
 			return self::$instance;
-
-		return false;
+		}
 	}
 
 	/**
@@ -253,15 +253,15 @@ class WPSC_Shipwire {
 	 */
 	public static function get_dimensions( $product_id ) {
 
-		$product_meta = get_post_meta( $product_id, '_wpsc_product_metadata', true );
+		$product_meta        = get_post_meta( $product_id, '_wpsc_product_metadata', true );
 		$original_dimensions = $product_meta['dimensions'];
 
 		$dimensions = array();
 
 		$dimensions['weight'] = ( 'pound' == $original_dimensions['weight_unit'] ) ? $original_dimensions['weight'] : wpsc_convert_weight( $original_dimensions['weight'], $original_dimensions['weight_unit'] );
-		$dimensions['length'] = ( 'in' == $original_dimensions['length_unit'] ) ? $original_dimensions['length'] : $this->convert_dimensions( $original_dimensions['length'], $original_dimensions['length_unit'] );
-		$dimensions['width']  = ( 'in' == $original_dimensions['width_unit'] ) ? $original_dimensions['width'] : $this->convert_dimensions( $original_dimensions['width'], $original_dimensions['width_unit'] );
-		$dimensions['height'] = ( 'in' == $original_dimensions['height_unit'] ) ? $original_dimensions['height'] : $this->convert_dimensions( $original_dimensions['height'], $original_dimensions['height_unit'] );
+		$dimensions['length'] = ( 'in' == $original_dimensions['length_unit'] ) ? $original_dimensions['length']    : self::convert_dimensions( $original_dimensions['length'], $original_dimensions['length_unit'] );
+		$dimensions['width']  = ( 'in' == $original_dimensions['width_unit'] ) ? $original_dimensions['width']      : self::convert_dimensions( $original_dimensions['width'], $original_dimensions['width_unit'] );
+		$dimensions['height'] = ( 'in' == $original_dimensions['height_unit'] ) ? $original_dimensions['height']    : self::convert_dimensions( $original_dimensions['height'], $original_dimensions['height_unit'] );
 
 		return $dimensions;
 	}
@@ -457,8 +457,9 @@ class WPSC_Shipwire {
 
 		}
 
-		if ( empty( $products_xml ) )
-			return false;
+		if ( empty( $products_xml ) ) {
+			return '';
+		}
 
 	 	$xml  = '<?xml version="1.0" encoding="utf-8"?>';
 		$xml .= '<RateRequest>';
@@ -530,8 +531,11 @@ class WPSC_Shipwire {
 	public static function get_shipping_quotes() {
 
 		//Returns false if no products in cart
-		if ( ! self::get_shipping_xml() )
+		$xml = self::get_shipping_xml();
+
+		if ( empty( $xml ) ) {
 			return false;
+		}
 
 		$cache_key = self::get_cache_key();
 
@@ -678,19 +682,24 @@ class WPSC_Shipwire {
 
 	/**
 	 * Essentially copies functionality from wpsc_purchase_log_send_tracking_email().
+	 *
 	 * We should consider making "AJAX" functions like that process-agnostic.  Would be great to be able to utilize it from here.
 	 * A simple DOING_AJAX check for the nonces and die() and adding a parameter to the function to check before the $_POST would suffice.
 	 * Making private, primarily because I'd prefer this not to be used, even internally, pending AJAX refactor as suggested
 	 *
 	 * @access private
 	 * @global $wpdb
+	 *
 	 * @param int $order_id
 	 * @param mixed $tracking_numbers Expects the $tracking_number object from self::get_tracking_info()
+	 *
 	 * @todo Use new Notification class from Issue 490 when that is implemented
+	 *
 	 * @since 3.8.9
+	 *
 	 * @return bool Whether or not the email was sent successfully
 	 */
-	public static function _send_tracking_email( $order_id, $tracking_number = '' ) {
+	public static function _send_tracking_email( $order_id, $tracking_number = array() ) {
 		global $wpdb;
 
 		$id = absint( $order_id );
