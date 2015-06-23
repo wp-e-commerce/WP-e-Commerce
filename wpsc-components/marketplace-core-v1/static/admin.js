@@ -1,3 +1,4 @@
+/* global jQuery, tb_remove, sputnikL10n, PAYPAL, ajaxurl, alert, tb_show, tb_click, self */
 jQuery(document).ready(function($) {
 	var receiveMessage = function() {
 		if ( event.data == 'tb_close' )
