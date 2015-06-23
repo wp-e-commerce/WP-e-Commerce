@@ -1110,7 +1110,8 @@ function _wpsc_ajax_get_cart( $die = true, $cart_messages = array() ) {
 		}
 	}
 
-	if ( $die )  		echo $output . $action_output;
+	if ( $die ) {
+		echo $output . $action_output;
 		die();
 	} else {
 		return $return;
