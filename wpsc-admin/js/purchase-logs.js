@@ -1,3 +1,4 @@
+/*global WPSC_Purchase_Logs_Admin, alert*/
 (function($){
 	$.extend(WPSC_Purchase_Logs_Admin, {
 		blur_timeout : null,
