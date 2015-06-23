@@ -92,7 +92,6 @@ function wpsc_get_terms_category_sort_filter( $terms, $taxonomies, $args ) {
 	}
 
 	return $terms;
-
 }
 
 add_filter( 'get_terms', 'wpsc_get_terms_category_sort_filter', 10, 3 );

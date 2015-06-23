@@ -2143,7 +2143,7 @@ function nzshpcrt_region_list( $selected_country = null, $selected_region = null
 	if ( $selected_region == null )
 		$selected_region = get_option( 'base_region' );
 
-	$output = "";
+	$output = '';
 	$region_list = WPSC_Countries::get_regions( $selected_country, true );
 
 	if ( $region_list != null ) {

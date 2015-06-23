@@ -1,6 +1,4 @@
-/*
-* PayPal Pro script
-*/
+/*global jQuery, pro_loc */
 (function($) {
 	$(window).load(function() {
 		// Declare variables/DOM elements
