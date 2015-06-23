@@ -48,6 +48,9 @@ $nzshpcrt_gateways[$num] = array(
 class wpsc_merchant_paypal_standard extends wpsc_merchant {
   var $name = '';
   var $paypal_ipn_values = array();
+  var $rate;
+  var $local_currency_code;
+  var $paypal_currency_code;
 
   function __construct( $purchase_id = null, $is_receiving = false ) {
 	$this->name = __( 'PayPal Payments Standard', 'wpsc' );
