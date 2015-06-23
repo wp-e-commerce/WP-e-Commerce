@@ -1,4 +1,4 @@
-/* global WPSC_Product_Variations, alert, */
+/* global WPSC_Product_Variations, alert */
 (function($){
 	var resize_iframe = function() {
 		if (typeof window.parent.wpsc_resize_iframe != 'undefined') {
@@ -237,8 +237,7 @@
 	var event_toggle_parent = function() {
 		var t = $(this),
 			parent = t.closest('.children').parent(),
-			parent_checkbox = parent.find('.variation-set'),
-			checked = this.checked;
+			parent_checkbox = parent.find('.variation-set');
 
 		if (this.checked) {
 			parent_checkbox[0].checked = true;
