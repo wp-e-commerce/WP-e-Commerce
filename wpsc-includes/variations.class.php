@@ -8,22 +8,23 @@
 
 class wpsc_variations {
 	// variation groups: i.e. colour, size
-	var $variation_groups;
-	var $variation_group_count   = 0;
-	var $current_variation_group = -1;
-	var $variation_group;
+	public $variation_groups;
+	public $variation_group_count   = 0;
+	public $current_variation_group = -1;
+	public $variation_group;
 
 	// for getting the product price
-	var $first_variations;
+	public $first_variations;
 
 	//variations inside variation groups: i.e. ( red, green, blue ) or ( S, M, L, XL )
-	var $variations;
-	var $variation_count   = 0;
-	var $current_variation = -1;
-	var $variation;
+	public $variations;
+	public $variation_count   = 0;
+	public $current_variation = -1;
+	public $variation;
+	public $all_associated_variations;
 
 
-	function wpsc_variations( $product_id ) {
+	function __construct( $product_id ) {
 		global $wpdb;
 
 		$product_terms = wpsc_get_product_terms( $product_id, 'wpsc-variation' );
