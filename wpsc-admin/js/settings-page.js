@@ -13,6 +13,7 @@
  * @requires jQuery.query
  */
 
+/*global jQuery, WPSC_Settings_Page, confirm, ajaxurl */
 (function($){
 
 	$.extend(WPSC_Settings_Page, /** @lends WPSC_Settings_Page */ {
@@ -277,13 +278,17 @@
 		 */
 		event_show_images_only_clicked : function() {
 			var i;
-			if ($(this).is(':checked')) {
-				for (i in WPSC_Settings_Page.Presentation.grid_view_boxes) {
-					document.getElementById(WPSC_Settings_Page.Presentation.grid_view_boxes[i]).checked = false;
+
+			if ( $( this ).is( ':checked' ) ) {
+				for ( i in WPSC_Settings_Page.Presentation.grid_view_boxes ) {
+					if ( WPSC_Settings_Page.Presentation.grid_view_boxes.hasOwnProperty( i ) ) {
+						document.getElementById( WPSC_Settings_Page.Presentation.grid_view_boxes[ i ] ).checked = false;
+					}
 				}
 			}
 		}
 	};
+
 	$(WPSC_Settings_Page).on('wpsc_settings_tab_loaded_presentation', WPSC_Settings_Page.Presentation.event_init);
 
 	/**
@@ -501,7 +506,9 @@
 		event_form_submit : function() {
 			var sort_order = $('#wpsc_checkout_list').sortable('toArray');
 			for (var index in sort_order) {
-				$(this).append('<input type="hidden" name="sort_order[]" value="' + sort_order[index] + '" />');
+				if ( sort_order.hasOwnProperty( index ) ) {
+					$(this).append('<input type="hidden" name="sort_order[]" value="' + sort_order[index] + '" />');
+				}
 			}
 			return true;
 		},
@@ -596,8 +603,8 @@
 		 */
 		fix_sortable_helper : function(e, tr) {
 			var row = tr.clone().width(tr.width());
-			row.find('td').each(function(index){
-				var td_class = $(this).attr('class'), original = tr.find('.' + td_class), old_html = $(this).html();
+			row.find('td').each(function(){
+				var td_class = $(this).attr('class'), original = tr.find('.' + td_class);
 				$(this).width(original.width());
 			});
 			return row;
@@ -629,7 +636,7 @@
 			ui.placeholder.html('<td colspan="7">&nbsp;</td>');
 		},
 
-		event_sort_stop : function(e,ui) {
+		event_sort_stop : function() {
 			$('.form-field-options').each(function(){
 				var options_row = $(this),
 					id = $(this).data('field-id'),
@@ -1082,7 +1089,7 @@
 
 			var checkbox = $( 'div#wpsc_google_analytics_integration input[type="checkbox"]' );
 
-			$.each( checkbox, function( i, e ) {
+			$.each( checkbox, function() {
 				if ( $(this).is( ':checked' ) )
 					$(this).parent('p').nextAll('p').hide();
 			});
