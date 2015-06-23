@@ -401,7 +401,8 @@ class Sputnik_Admin {
 			<?php if ( ! empty($api->download_link) && ( current_user_can('install_plugins') || current_user_can('update_plugins') ) ) : ?>
 			<p class="action-button">
 <?php
-			$status = self::install_status($api);
+			$status = self::install_status( $api );
+
 			switch ( $status['status'] ) {
 				case 'purchase':
 				default:
@@ -573,8 +574,9 @@ class Sputnik_Admin {
 		if ('install' == $status) {
 			$installed = get_plugins();
 			$real = false;
-			foreach ($installed as $plugin) {
-				if (!empty($plugin['Sputnik ID']) && $plugin['Sputnik ID'] === $api->slug) {
+
+			foreach ( $installed as $plugin ) {
+				if ( ! empty( $plugin['Sputnik ID'] ) && $plugin['Sputnik ID'] === $api->slug ) {
 					$real = $plugin;
 					break;
 				}

@@ -13,7 +13,7 @@
  * @requires jQuery.query
  */
 
-/*global jQuery, WPSC_Settings_Page, confirm, ajaxurl */
+/*global jQuery, WPSC_Settings_Page, confirm, ajaxurl, alert */
 (function($){
 
 	$.extend(WPSC_Settings_Page, /** @lends WPSC_Settings_Page */ {
