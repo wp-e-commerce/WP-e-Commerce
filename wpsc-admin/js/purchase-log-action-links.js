@@ -1,4 +1,4 @@
-
+/* global WPSC_Purchase_Log_Action_Links, alert */
 ( function( $ ) {
 
 	/**
@@ -66,12 +66,13 @@
 		 * @since  3.9.0
 		 */
 		ajax_callback : function( response ) {
+			var dashicon, dashicon_class;
 
 			// If AJAX successful and purchase log action successful.
 			if ( response.is_successful && response.obj.success ) {
 
-				var dashicon = $( '#wpsc_purchlogitems_links ul a.wpsc-purchlog-action-link-' + response.obj.purchase_log_action_link + ' .dashicons' );
-				var dashicon_class = dashicon.attr( 'class' );
+				dashicon       = $( '#wpsc_purchlogitems_links ul a.wpsc-purchlog-action-link-' + response.obj.purchase_log_action_link + ' .dashicons' );
+				dashicon_class = dashicon.attr( 'class' );
 
 				// Successful notification.
 				dashicon.removeClass().addClass( 'dashicons dashicons-yes' );
@@ -87,11 +88,12 @@
 				// Ideally we'd always like to know which link was clicked, but we don't
 				// so just clear all spinners and only clear specific spinner if AJAX response was processed.
 
-				var dashicon = $( '#wpsc_purchlogitems_links ul a.wpsc-purchlog-action-link.doing .dashicons' );
+				dashicon = $( '#wpsc_purchlogitems_links ul a.wpsc-purchlog-action-link.doing .dashicons' );
+
 				if ( response.is_successful ) {
 					dashicon = $( '#wpsc_purchlogitems_links ul a.wpsc-purchlog-action-link-' + response.obj.purchase_log_action_link + ' .dashicons' );
 				}
-				var dashicon_class = dashicon.attr( 'class' );
+				dashicon_class = dashicon.attr( 'class' );
 
 				if ( response.obj.success != null ) {
 
