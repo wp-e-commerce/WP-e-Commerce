@@ -1,3 +1,4 @@
+/*global WPSC_Price_Table */
 ;(function($){
 	WPSC_Price_Table.subtotal *= 1;
 	WPSC_Price_Table.tax *= 1;
