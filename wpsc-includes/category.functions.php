@@ -52,14 +52,15 @@ function wpsc_get_terms_category_sort_filter( $terms, $taxonomies, $args ) {
 
 		$new_terms = array();
 		$unsorted  = array();
-
-		$term_ids = wp_list_pluck( $terms, 'term_id' );
-		wpsc_update_meta_cache( 'wpsc_category', $term_ids );
+		$term_ids  = array();
 
 		foreach ( $terms as $term ) {
+
 			if ( ! is_object( $term ) ) {
 				return $terms;
 			}
+
+			$term_ids[] = $term->term_id;
 
 			$term_order = ( $term->taxonomy == 'wpsc_product_category' ) ? wpsc_get_meta( $term->term_id, 'sort_order', 'wpsc_category' ) : null;
 			$term_order = (int) $term_order;
@@ -79,6 +80,8 @@ function wpsc_get_terms_category_sort_filter( $terms, $taxonomies, $args ) {
 			$new_terms[ $term_order ] = $term;
 		}
 
+		wpsc_update_meta_cache( 'wpsc_category', $term_ids );
+
 		if ( ! empty( $new_terms ) ) {
 			ksort( $new_terms );
 		}
@@ -88,7 +91,6 @@ function wpsc_get_terms_category_sort_filter( $terms, $taxonomies, $args ) {
 		}
 
 		return array_values( $new_terms );
-
 	}
 
 	return $terms;
