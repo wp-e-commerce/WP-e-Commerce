@@ -185,7 +185,6 @@ function wpsc_update_meta_cache( $object_type, $object_ids ) {
 	}
 
 	return $cache;
-
 }
 
 /**

@@ -273,7 +273,7 @@ function wpsc_empty_cart() {
 	$wpsc_cart->empty_cart( false );
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		$output = _wpsc_ajax_get_cart( false );
+		$output = apply_filters( 'wpsc_empty_cart_response', _wpsc_ajax_get_cart( false ) );
 		die( json_encode( $output ) );
 	}
 }
@@ -358,7 +358,17 @@ function wpsc_update_shipping_price() {
     }
 
     if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
- 		echo json_encode( array( 'shipping' => wpsc_cart_shipping(), 'coupon' => wpsc_coupon_amount(), 'cart_total' => wpsc_cart_total(), 'tax' => wpsc_cart_tax()  ) );
+
+    	$response = apply_filters( 'wpsc_update_shipping_price_response', array(
+				'shipping'   => wpsc_cart_shipping(),
+				'coupon'     => wpsc_coupon_amount(),
+				'cart_total' => wpsc_cart_total(),
+				'tax'        => wpsc_cart_tax()
+    		),
+    		$quote_shipping_method,
+    		$quote_shipping_option
+    	);
+ 		echo json_encode( $response );
     	exit();
     }
 
@@ -381,17 +391,19 @@ function wpsc_get_rating_count() {
  * No parameters, returns nothing
  */
 function wpsc_update_product_price() {
-		if ( empty( $_POST['product_id'] ) || ! is_numeric( $_POST['product_id'] ) )
+	if ( empty( $_POST['product_id'] ) || ! is_numeric( $_POST['product_id'] ) ) {
 		return;
+	}
 
 	$from = '';
 	$change_price = true;
 	$product_id = (int) $_POST['product_id'];
 	$variations = array();
-	$response = array(
-		'product_id' => $product_id,
+	$response   = array(
+		'product_id'      => $product_id,
 		'variation_found' => false,
 	);
+
 	if ( ! empty( $_POST['variation'] ) ) {
 		foreach ( $_POST['variation'] as $variation ) {
 			if ( is_numeric( $variation ) ) {
@@ -435,6 +447,8 @@ function wpsc_update_product_price() {
 			}
 		}
 	}
+
+	$response = apply_filters( 'wpsc_update_product_price', $response, $product_id );
 
 	echo json_encode( $response );
 	exit();
@@ -1096,8 +1110,7 @@ function _wpsc_ajax_get_cart( $die = true, $cart_messages = array() ) {
 		}
 	}
 
-	if ( $die ) {
-		echo $output . $action_output;
+	if ( $die )  		echo $output . $action_output;
 		die();
 	} else {
 		return $return;
