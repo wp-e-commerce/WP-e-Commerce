@@ -2187,3 +2187,9 @@ function nzshpcrt_form_field_list( $selected_field = null ) {
 
 	return $output;
 }
+
+function wpsc_sanitise_keys($value) {
+	_wpsc_deprecated_function( __FUNCTION__, '4.0' );
+  /// Function used to cast array items to integer.
+  return (int)$value;
+}
