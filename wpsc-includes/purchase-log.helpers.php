@@ -165,14 +165,47 @@ function _wpsc_process_transaction_coupon( $purchase_log ) {
 	}
 }
 
+/**
+ * Routine that runs when updating a purchase log's status.
+ * Currently, only used to send customer and admin emails upon successful purchase.
+ *
+ * @since  3.8.9
+ * @since  4.0    Removed coupons and stocks from email sending.  Much easier now to remove_action() on either
+ *                of those functions when desiring to override.
+ *
+ * @param  int               $id             Purchase Log ID.
+ * @param  int               $status         Current status.
+ * @param  int               $old_status     Previous status.
+ * @param  WPSC_Purchase_Log $purchase_log   Purchase Log Object.
+ *
+ * @return void
+ */
 function _wpsc_action_update_purchase_log_status( $id, $status, $old_status, $purchase_log ) {
 	if ( $purchase_log->is_order_received() || $purchase_log->is_accepted_payment() ) {
 		wpsc_send_customer_email( $purchase_log );
 		wpsc_send_admin_email( $purchase_log );
 	}
+}
 
-	if ( ! $purchase_log->is_transaction_completed() )
+add_action( 'wpsc_update_purchase_log_status', '_wpsc_action_update_purchase_log_status', 10, 4 );
+
+/**
+ * Routine that runs when updating a purchase log's status, used to update status of coupon's used.
+ *
+ * @since  4.0
+ *
+ * @param  int               $id             Purchase Log ID.
+ * @param  int               $status         Current status.
+ * @param  int               $old_status     Previous status.
+ * @param  WPSC_Purchase_Log $purchase_log   Purchase Log Object.
+ *
+ * @return void
+ */
+function _wpsc_update_purchase_log_coupon_status( $id, $status, $old_status, $purchase_log ) {
+
+	if ( ! $purchase_log->is_transaction_completed() ) {
 		return;
+	}
 
 	$already_processed = in_array(
 		$old_status,
@@ -188,17 +221,55 @@ function _wpsc_action_update_purchase_log_status( $id, $status, $old_status, $pu
 	}
 
 	_wpsc_process_transaction_coupon( $purchase_log );
+}
+
+add_action( 'wpsc_update_purchase_log_status', '_wpsc_update_purchase_log_coupon_status', 11, 4 );
+
+/**
+ * Routine that runs when updating a purchase log's status, used to update status of inventory.
+ *
+ * @since  4.0
+ *
+ * @param  int               $id             Purchase Log ID.
+ * @param  int               $status         Current status.
+ * @param  int               $old_status     Previous status.
+ * @param  WPSC_Purchase_Log $purchase_log   Purchase Log Object.
+ *
+ * @return void
+ */
+
+function _wpsc_update_purchase_log_stock_status( $id, $status, $old_status, $purchase_log ) {
+
+	if ( ! $purchase_log->is_transaction_completed() ) {
+		return;
+	}
+
+	$already_processed = in_array(
+		$old_status,
+		array(
+			WPSC_Purchase_Log::ACCEPTED_PAYMENT,
+			WPSC_Purchase_Log::JOB_DISPATCHED,
+			WPSC_Purchase_Log::CLOSED_ORDER,
+		)
+	);
+
+	if ( $already_processed ) {
+		return;
+	}
+
 	wpsc_decrement_claimed_stock( $id );
 }
 
-add_action( 'wpsc_update_purchase_log_status', '_wpsc_action_update_purchase_log_status', 10, 4 );
+add_action( 'wpsc_update_purchase_log_status', '_wpsc_update_purchase_log_stock_status', 12, 4 );
 
 function wpsc_send_customer_email( $purchase_log ) {
-	if ( ! is_object( $purchase_log ) )
+	if ( ! is_object( $purchase_log ) ) {
 		$purchase_log = new WPSC_Purchase_Log( $purchase_log );
+	}
 
-	if ( ! $purchase_log->is_transaction_completed() && ! $purchase_log->is_order_received() )
+	if ( ! $purchase_log->is_transaction_completed() && ! $purchase_log->is_order_received() ) {
 		return;
+	}
 
 	$email = new WPSC_Purchase_Log_Customer_Notification( $purchase_log );
 	$email_sent = $email->send();

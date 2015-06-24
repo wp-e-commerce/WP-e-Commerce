@@ -904,10 +904,11 @@ class WPSC_Purchase_Log {
 				$this->update_downloadable_status();
 			}
 
-			$current_status = $this->get( 'processed' );
-			$previous_status = $this->previous_status;
-			$this->previous_status = $current_status;
+			$current_status          = $this->get( 'processed' );
+			$previous_status         = $this->previous_status;
+			$this->previous_status   = $current_status;
 			$this->is_status_changed = false;
+
 			do_action( 'wpsc_update_purchase_log_status', $this->get( 'id' ), $current_status, $previous_status, $this );
 		}
 
