@@ -292,8 +292,7 @@ function wpsc_send_admin_email( $purchase_log, $force = false ) {
 	$email_sent = $email->send();
 
 	if ( $email_sent ) {
-		$purchase_log->set( 'email_sent', 1 );
-		$purchase_log->save();
+		$purchase_log->set( 'email_sent', 1 )->save();
 	}
 
 	do_action( 'wpsc_transaction_send_email_to_admin', $email, $email_sent );
