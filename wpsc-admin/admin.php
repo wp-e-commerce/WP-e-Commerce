@@ -1411,6 +1411,9 @@ function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
 	// Finds children (Which includes product files AND product images), their meta values, and duplicates them.
 	wpsc_duplicate_children( $post->ID, $new_post_id );
 
+	// Copy product thumbnail (resetting duplicated meta value)
+	wpsc_duplicate_product_thumbnail( $post->ID, $new_post_id );
+
 	return $new_post_id;
 }
 
@@ -1469,6 +1472,46 @@ function wpsc_duplicate_product_meta( $id, $new_id ) {
 		$sql_query = $wpdb->prepare( $sql_query, $values );
 		$wpdb->query( $sql_query );
 		clean_post_cache( $new_id );
+	}
+
+}
+
+/**
+ * Duplicate Featured Image
+ *
+ * When a product is duplicated, the featured image ID is copied when the post
+ * meta is duplicated.
+ * 
+ * When the featured image is attached to the duplicated product, if the image
+ * is duplicated the featured image ID is updated to the duplicated image ID
+ * otherwise the featured image ID is removed.
+ *
+ * If the featured image is not attached to the product the featured image ID
+ * remains the same as the original product.
+ *
+ * This function will remove the featured image if the image is not attached to
+ * the duplicated product and offers the opportunity to change the featured image
+ * of the duplicated product via the 'wpsc_duplicate_product_thumbnail' filter.
+ *
+ * @param   integer  $id      Product ID.
+ * @param   integer  $new_id  Duplicated product ID.
+ */
+function wpsc_duplicate_product_thumbnail( $post_id, $new_post_id ) {
+
+	$thumbnail_id = has_post_thumbnail( $new_post_id ) ? get_post_thumbnail_id( $new_post_id ) : 0;
+
+	// If not duplicating product attachments, ensure featured image ID is zero
+	if ( ! apply_filters( 'wpsc_duplicate_product_attachment', true, get_post( $thumbnail_id ), $new_post_id ) ) {
+		$thumbnail_id = 0;
+	}
+
+	// Filter featured product image ID
+	$thumbnail_id = absint( apply_filters( 'wpsc_duplicate_product_thumbnail', $thumbnail_id, $post_id, $new_post_id ) );
+
+	if ( $thumbnail_id > 0 ) {
+		set_post_thumbnail( $new_post_id, $thumbnail_id );
+	} else {
+		delete_post_thumbnail( $new_post_id );
 	}
 
 }
