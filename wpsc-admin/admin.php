@@ -1498,7 +1498,7 @@ function wpsc_duplicate_product_meta( $id, $new_id ) {
  */
 function wpsc_duplicate_product_thumbnail( $post_id, $new_post_id ) {
 
-	$thumbnail_id = has_post_thumbnail( $new_post_id ) ? get_post_thumbnail_id( $new_post_id ) : 0;
+	$thumbnail_id = $original_thumbnail_id = has_post_thumbnail( $new_post_id ) ? get_post_thumbnail_id( $new_post_id ) : 0;
 
 	// If not duplicating product attachments, ensure featured image ID is zero
 	if ( ! apply_filters( 'wpsc_duplicate_product_attachment', true, get_post( $thumbnail_id ), $new_post_id ) ) {
@@ -1506,7 +1506,7 @@ function wpsc_duplicate_product_thumbnail( $post_id, $new_post_id ) {
 	}
 
 	// Filter featured product image ID
-	$thumbnail_id = absint( apply_filters( 'wpsc_duplicate_product_thumbnail', $thumbnail_id, $post_id, $new_post_id ) );
+	$thumbnail_id = absint( apply_filters( 'wpsc_duplicate_product_thumbnail', $thumbnail_id, $original_thumbnail_id, $post_id, $new_post_id ) );
 
 	if ( $thumbnail_id > 0 ) {
 		set_post_thumbnail( $new_post_id, $thumbnail_id );
