@@ -32,9 +32,7 @@ class WPSC_Controller_Register extends WPSC_Controller {
 			return;
 		}
 
-		extract( $_POST, EXTR_SKIP );
-
-		return wpsc_register_customer( $username, $password, true );
+		return wpsc_register_customer( $_POST['username'], $_POST['password'], true );
 	}
 
 	private function send_registration_notification( $user_id, $username, $email, $password ) {

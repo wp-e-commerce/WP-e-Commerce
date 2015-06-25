@@ -35,7 +35,9 @@ class WPSC_Controller_Password_Reminder extends WPSC_Controller{
 
 		extract( $_POST, EXTR_SKIP );
 
-		$field     = strpos( $username, '@' ) ? $field = 'email' : 'login';
+		$username = $_POST['username'];
+
+		$field     = is_email( $username ) ? $field = 'email' : 'login';
 		$user_data = get_user_by( $field, $username );
 
 		if ( ! $user_data ) {
@@ -49,6 +51,7 @@ class WPSC_Controller_Password_Reminder extends WPSC_Controller{
 		do_action( 'retrieve_password', $user_login );
 
 		$allow = apply_filters( 'allow_password_reset', true, $user_data->ID );
+
 		if ( ! $allow ) {
 			wpsc_set_validation_errors( new WP_Error( 'username', __( 'Password reset is not allowed for this user', 'wpsc' ) ) );
 		} else if ( is_wp_error( $allow ) ) {
