@@ -1493,8 +1493,8 @@ function wpsc_duplicate_product_meta( $id, $new_id ) {
  * the duplicated product and offers the opportunity to change the featured image
  * of the duplicated product via the 'wpsc_duplicate_product_thumbnail' filter.
  *
- * @param   integer  $id      Product ID.
- * @param   integer  $new_id  Duplicated product ID.
+ * @param   integer  $post_id      Product ID.
+ * @param   integer  $new_post_id  Duplicated product ID.
  */
 function wpsc_duplicate_product_thumbnail( $post_id, $new_post_id ) {
 
