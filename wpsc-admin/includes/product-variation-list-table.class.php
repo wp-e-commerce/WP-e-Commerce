@@ -336,7 +336,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 		<tr class="wpsc-stock-editor-row inline-edit-row<?php echo $row_class; ?>"<?php echo $style; ?> id="wpsc-stock-editor-row-<?php echo $item->ID; ?>">
 			<td></td>
 			<td colspan="<?php echo $colspan; ?>" class="colspanchange">
-				<h4><?php esc_html_e( 'Variation Stock Editor', 'wpsc' ); ?></h4>
+				<h4><?php esc_html_e( 'Variation Shipping Editor', 'wpsc' ); ?></h4>
 				<?php wpsc_product_shipping_forms( $item, $field_name, $bulk ); ?>
 			</td>
 		</tr>
