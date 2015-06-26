@@ -427,7 +427,7 @@ class WPSC_Country {
 			}
 		}
 
-		return $regions_list;
+		return apply_filters( 'wpsc_country_regions', $regions_list, $as_array );
 	}
 
 	/**
