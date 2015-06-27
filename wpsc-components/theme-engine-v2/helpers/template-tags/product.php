@@ -116,14 +116,12 @@ function wpsc_product_title_attribute( $args = '' ) {
 	}
 
 	$defaults = array( 'before' => '', 'after' =>  '', 'echo' => true );
-	$r        = wp_parse_args( $args, $defaults);
+	$r        = wp_parse_args( $args, $defaults );
 
-	extract( $r, EXTR_SKIP );
-
-	$title = $before . $title . $after;
+	$title = $r['before'] . $title . $r['after'];
 	$title = esc_attr( strip_tags( $title ) );
 
-	if ( $echo ) {
+	if ( $r['echo'] ) {
 		echo $title;
 	} else {
 		return $title;
