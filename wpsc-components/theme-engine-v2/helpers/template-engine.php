@@ -51,7 +51,7 @@ function _wpsc_locate_stuff( $paths, $files, $load = false, $require_once = true
  * See {@link wpsc_locate_theme_file()} for more information about how this works.
  *
  * @see   _wpsc_locate_stuff()
- * @since 0.1
+ * @since 4.0
  * @uses  load_template()
  * @uses  _wpsc_locate_stuff()
  *
@@ -76,7 +76,7 @@ function wpsc_locate_view_wrappers( $files, $load = false, $require_once = true 
  * This works just like get_template_part(), except that it uses wpsc_locate_template_path()
  * to search for the template part in 2 extra WP eCommerce specific paths.
  *
- * @since 0.1
+ * @since 4.0
  * @see   get_template()
  * @see   wpsc_locate_theme_file()
  * @uses  apply_filters() Applies 'wpsc_get_template_part_paths_for_{$slug}' filter.
@@ -117,7 +117,7 @@ function wpsc_get_template_part( $slug = false, $name = null ) {
  * By providing a file named 'wpsc-functions.php', you can override the same function file of the parent
  * theme or that of the default theme engine that comes with WPEC.
  *
- * @since 0.1
+ * @since 4.0
  * @uses  get_stylesheet()
  * @uses  get_template()
  * @uses  get_theme_root()
@@ -147,7 +147,7 @@ add_action( 'after_setup_theme', '_wpsc_action_after_setup_theme' );
 /**
  * Determine whether pagination is enabled for a certain position of the page.
  *
- * @since 0.1
+ * @since 4.0
  * @uses get_option() Gets 'use_pagination' option.
  * @uses wpsc_get_option() Gets WPEC 'page_number_postion' option.
  *
@@ -179,7 +179,7 @@ function wpsc_is_pagination_enabled( $position = 'bottom' ) {
 /**
  * Override the per page parameter to use WPEC own "products per page" option.
  *
- * @since 0.1
+ * @since 4.0
  * @uses  WP_Query::is_main_query()
  * @uses  wpsc_get_option()            Gets WPEC 'products_per_page' option.
  * @uses  wpsc_is_pagination_enabled()
@@ -206,7 +206,7 @@ add_action( 'pre_get_posts', 'wpsc_action_set_product_per_page_query_var', 10, 1
 /**
  * Hook into 'post_class' filter to add custom classes to the current product in the loop.
  *
- * @since 0.1
+ * @since 4.0
  * @uses apply_filters() Applies 'wpsc_product_class' filter
  * @uses get_post() Gets the current post object
  * @uses wpsc_is_product_on_sale() Checks to see whether the current product is on sale
@@ -248,7 +248,7 @@ add_filter( 'post_class', 'wpsc_filter_product_class', 10, 3 );
  *
  * This function is usually used inside a hook action.
  *
- * @since 0.1
+ * @since 4.0
  * @uses  _wpsc_filter_product_permalink()
  *
  * @param  string $permalink
@@ -266,7 +266,7 @@ function wpsc_filter_product_permalink_canonical( $permalink, $post, $leavename,
  * 'post_type_link' filter hook, this function will make sure the resulting permalink scheme won't
  * return 404 errors.
  *
- * @since 0.1
+ * @since 4.0
  *
  * @param  array $q Query variable array
  * @return array
@@ -319,7 +319,7 @@ if ( wpsc_get_option( 'hierarchical_product_category_url' ) ) {
  * This function temporarily removes the original wpsc_filter_product_permalink() function from 'post_type_link'
  * hook, and replaces it with wpsc_filter_product_permalink_canonical().
  *
- * @since 0.1
+ * @since 4.0
  * @uses  add_filter() Restores wpsc_filter_product_permalink() to 'post_type_link' filter.
  * @uses  add_filter() Temporarily attaches wpsc_filter_product_permalink_canonical() to 'post_type_link' filter.
  * @uses  remove_filter() Removes wpsc_filter_product_permalink_canonical() from 'post_type_link' filter.
@@ -337,7 +337,7 @@ function wpsc_action_rel_canonical() {
  * Make sure we fix the canonical URL of the single product. The canonical URL is broken when
  * single product permalink is prefixed by product category.
  *
- * @since 0.1
+ * @since 4.0
  * @uses  add_action()    Adds wpsc_action_rel_canonical() to 'wp_head' action hook.
  * @uses  is_singular()
  * @uses  remove_action() Removes rel_canonical() from 'wp_head' action hook.
@@ -355,7 +355,7 @@ add_action( 'wp', '_wpsc_action_canonical_url' );
  * the filter inside wpsc_get_template_part() and returns paths to category list template instead of
  * the usual one.
  *
- * @since 0.1
+ * @since 4.0
  *
  * @param  array  $templates
  * @param  string $slug

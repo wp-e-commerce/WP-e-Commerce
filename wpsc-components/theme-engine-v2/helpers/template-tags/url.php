@@ -34,7 +34,7 @@ function _wpsc_get_page_url( $page, $slug = '' ) {
 /**
  * Return the main store URL based on the settings in Settings->Store->Pemalinks
  *
- * @since 0.1
+ * @since 4.0
  * @uses  home_url()
  * @uses  wpsc_get_option() Gets WPEC 'store_slug' option.
  * @return [type]

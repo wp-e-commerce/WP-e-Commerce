@@ -6,7 +6,7 @@
  *
  * @see        template-tags.functions.php
  * @see        theme.functions.php
- * @since 0.1
+ * @since 4.0
  * @package    wp-e-commerce
  * @subpackage conditional-tags
  */
@@ -15,7 +15,7 @@
  * Determine whether the current page is a single product page.
  *
  * @see is_single()
- * @since 0.1
+ * @since 4.0
  * @uses  get_post_type()
  * @uses  is_single()
  *
@@ -28,7 +28,7 @@
 /**
  * Determine whether the current page is the product main store page
  *
- * @since 0.1
+ * @since 4.0
  * @uses  is_post_type_archive()
  *
  * @return bool
@@ -52,7 +52,7 @@ function wpsc_is_store_front_page() {
 /**
  * Determine whether the current page is a product category archive page.
  *
- * @since 0.1
+ * @since 4.0
  * @uses  is_tax()
  *
  * @param  mixed $cat Optional. Category ID, name, slug or an array of such.
@@ -65,7 +65,7 @@ function wpsc_is_product_category( $cat = '' ) {
 /**
  * Determine whether the current page is a product tag archive page.
  *
- * @since 0.1
+ * @since 4.0
  * @uses  is_tax()
  *
  * @param  mixed $tag Optional. Tag ID, name, slug or an array of such.
@@ -120,7 +120,7 @@ function wpsc_is_register( $slug = '' ) {
 /**
  * Determine whether a product has an associated featured thumbnail or not.
  *
- * @since 0.1
+ * @since 4.0
  * @uses  has_post_thumbnail()
  *
  * @param  null|int $id Optional. The product ID. Defaults to the current product ID in the loop.
@@ -139,7 +139,7 @@ function wpsc_has_product_thumbnail( $id = null ) {
 /**
  * Determine whether a product has variations or not.
  *
- * @since 0.1
+ * @since 4.0
  * @uses  get_post()
  * @uses  wpsc_get_product_id()
  *
@@ -158,7 +158,7 @@ function wpsc_has_product_variations( $id = null ) {
 /**
  * Determine whether a product is on sale or not.
  *
- * @since 0.1
+ * @since 4.0
  * @uses  wpsc_get_product_id()
  *
  * @param  null|int $id Optional. The product ID. Defaults to the current product in the loop.
@@ -177,7 +177,7 @@ function wpsc_is_product_on_sale( $id = null ) {
 /**
  * Determine whether a product is out of stock or not.
  *
- * @since 0.1
+ * @since 4.0
  *
  * @param  null|int $id Optional. The product ID. Defaults to the current product in the loop.
  * @return bool

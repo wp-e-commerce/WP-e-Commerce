@@ -3,12 +3,12 @@
 /**
  * Template engine main class.
  *
- * @since 0.1
+ * @since 4.0
  */
 class WPSC_Template_Engine {
 	/**
 	 * Singleton instance
-	 * @since 0.1
+	 * @since 4.0
 	 * @var WPSC_Template_Engine
 	 */
 	private static $instance;
@@ -30,7 +30,7 @@ class WPSC_Template_Engine {
 	/**
 	 * Paths where asset files can be found
 	 *
-	 * @since 0.1
+	 * @since 4.0
 	 * @var array
 	 */
 	private $asset_paths = array();
@@ -38,7 +38,7 @@ class WPSC_Template_Engine {
 	/**
 	 * Paths where template parts can be found.
 	 *
-	 * @since 0.1
+	 * @since 4.0
 	 * @var array
 	 */
 	private $template_part_paths = array();
@@ -46,7 +46,7 @@ class WPSC_Template_Engine {
 	/**
 	 * Paths where view wrappers can be found.
 	 *
-	 * @since 0.1
+	 * @since 4.0
 	 * @var array
 	 */
 	private $view_wrapper_paths = array();
@@ -54,7 +54,7 @@ class WPSC_Template_Engine {
 	/**
 	 * Constructor
 	 *
-	 * @since 0.1
+	 * @since 4.0
 	 * @access private
 	 */
 	private function __construct() {
@@ -66,7 +66,7 @@ class WPSC_Template_Engine {
 	/**
 	 * Register default paths to assets
 	 *
-	 * @since 0.1
+	 * @since 4.0
 	 */
 	private function register_default_asset_paths() {
 		// First, search in wp-e-commerce/assets under current theme
@@ -84,7 +84,7 @@ class WPSC_Template_Engine {
 	/**
 	 * Register default paths to template parts
 	 *
-	 * @since 0.1
+	 * @since 4.0
 	 */
 	private function register_default_template_part_paths() {
 
@@ -103,7 +103,7 @@ class WPSC_Template_Engine {
 	/**
 	 * Register default view wrapper paths
 	 *
-	 * @since 0.1
+	 * @since 4.0
 	 */
 	private function register_default_view_wrapper_paths() {
 		// First, search in wp-e-commerce subfolder inside the current theme
@@ -118,7 +118,7 @@ class WPSC_Template_Engine {
 	/**
 	 * Register a path where template engine can look for a certain asset file
 	 *
-	 * @since 0.1
+	 * @since 4.0
 	 * @uses  WPSC_Template_Engine::register_thing()
 	 * @param  string  $path     Path to the assets
 	 * @param  integer $priority Optional. Priority of this path (smaller = higher priority). Defaults to 50.

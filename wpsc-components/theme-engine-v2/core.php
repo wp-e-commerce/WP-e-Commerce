@@ -124,7 +124,7 @@ function _wpsc_action_flush_rewrite_rules() {
  *
  * This function is usually used inside a hook action.
  *
- * @since 0.1
+ * @since 4.0
  * @uses  _wpsc_filter_product_permalink()
  *
  * @param  string $permalink
@@ -146,7 +146,7 @@ add_filter( 'post_type_link', 'wpsc_filter_product_permalink', 10, 4 );
  * product permalink with product category, and whether hierarchical product category URL is enabled.
  *
  * @access private
- * @since 0.1
+ * @since 4.0
  * @uses   apply_filters()        Applies 'wpsc_product_permalink_canonical' filter if $canonical is true.
  * @uses   apply_filters()        Applies 'wpsc_product_permalink' filter if $canonical is false.
  * @uses   get_option()           Gets 'permalink_structure' option.

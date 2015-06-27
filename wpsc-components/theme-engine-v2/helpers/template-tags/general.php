@@ -4,7 +4,7 @@
  *
  * See {@link wpsc_get_breadcrumb()} for a list of available options to customize the output.
  *
- * @since 0.1
+ * @since 4.0
  * @uses  wpsc_get_breadcrumb()
  * @uses  wpsc_product_breadcrumb_after()
  * @uses  wpsc_product_breadcrumb_before()
@@ -36,7 +36,7 @@ function wpsc_breadcrumb( $args = '' ) {
  *                         Defaults to true.
  *     'current_text'    - The text for the current link. Defaults to the category / product title.
  *
- * @since 0.1
+ * @since 4.0
  * @uses  apply_filters()      Applies 'wpsc_breadcrumb_array'     filter.
  * @uses  apply_filters()      Applies 'wpsc_breadcrumb_class'     filter.
  * @uses  apply_filters()      Applies 'wpsc_breadcrumb_separator' filter.

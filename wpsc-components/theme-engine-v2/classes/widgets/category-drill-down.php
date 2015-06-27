@@ -64,26 +64,26 @@ function _wpsc_te2_filter_drill_down_query_vars( $q ) {
 /**
  * Category Drill Down Widget
  *
- * @since 0.1
+ * @since 4.0
  */
 class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 	/**
 	 * Default arguments for the widget instance in wp-admin
-	 * @since 0.1
+	 * @since 4.0
 	 * @var array
 	 */
 	private $defaults;
 
 	/**
 	 * Parsed drill-down arguments based on current page's URL
-	 * @since 0.1
+	 * @since 4.0
 	 * @var array
 	 */
 	private $url_args;
 
 	/**
 	 * Base URL of terms in drill-down widget
-	 * @since 0.1
+	 * @since 4.0
 	 * @var string
 	 */
 	private $url_base;
@@ -92,7 +92,7 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 
 	/**
 	 * count the number of instances
-	 * @since 0.1
+	 * @since 4.0
 	 * @var int
 	 */
 	private $count = 0;
@@ -113,7 +113,7 @@ class WPSC_Widget_Category_Drill_Down extends WP_Widget {
 	 * Parse drill-down arguments based on current page's URL
 	 *
 	 * @access private
-	 * @since 0.1
+	 * @since 4.0
 	 */
 	public function _action_get_current_url_args() {
 		global $wp_rewrite;
