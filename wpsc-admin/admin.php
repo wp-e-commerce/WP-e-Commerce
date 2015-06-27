@@ -1411,6 +1411,9 @@ function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
 	// Finds children (Which includes product files AND product images), their meta values, and duplicates them.
 	wpsc_duplicate_children( $post->ID, $new_post_id );
 
+	// Copy product thumbnail (resetting duplicated meta value)
+	wpsc_duplicate_product_thumbnail( $post->ID, $new_post_id );
+
 	return $new_post_id;
 }
 
@@ -1474,6 +1477,46 @@ function wpsc_duplicate_product_meta( $id, $new_id ) {
 }
 
 /**
+ * Duplicate Featured Image
+ *
+ * When a product is duplicated, the featured image ID is copied when the post
+ * meta is duplicated.
+ * 
+ * When the featured image is attached to the duplicated product, if the image
+ * is duplicated the featured image ID is updated to the duplicated image ID
+ * otherwise the featured image ID is removed.
+ *
+ * If the featured image is not attached to the product the featured image ID
+ * remains the same as the original product.
+ *
+ * This function will remove the featured image if the image is not attached to
+ * the duplicated product and offers the opportunity to change the featured image
+ * of the duplicated product via the 'wpsc_duplicate_product_thumbnail' filter.
+ *
+ * @param   integer  $post_id      Product ID.
+ * @param   integer  $new_post_id  Duplicated product ID.
+ */
+function wpsc_duplicate_product_thumbnail( $post_id, $new_post_id ) {
+
+	$thumbnail_id = $original_thumbnail_id = has_post_thumbnail( $new_post_id ) ? get_post_thumbnail_id( $new_post_id ) : 0;
+
+	// If not duplicating product attachments, ensure featured image ID is zero
+	if ( ! apply_filters( 'wpsc_duplicate_product_attachment', true, get_post( $thumbnail_id ), $new_post_id ) ) {
+		$thumbnail_id = 0;
+	}
+
+	// Filter featured product image ID
+	$thumbnail_id = absint( apply_filters( 'wpsc_duplicate_product_thumbnail', $thumbnail_id, $original_thumbnail_id, $post_id, $new_post_id ) );
+
+	if ( $thumbnail_id > 0 ) {
+		set_post_thumbnail( $new_post_id, $thumbnail_id );
+	} else {
+		delete_post_thumbnail( $new_post_id );
+	}
+
+}
+
+/**
  * Duplicates children product and children meta
  *
  * @uses get_posts()                          Gets an array of posts given array of arguments
@@ -1528,7 +1571,7 @@ function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
  */
 function wpsc_duplicate_product_image_process( $child_post, $new_parent_id ) {
 
-	if ( 'attachment' == get_post_type( $child_post ) && apply_filters( 'wpsc_duplicate_product_attachment', true, $child_post ) ) {
+	if ( 'attachment' == get_post_type( $child_post ) && apply_filters( 'wpsc_duplicate_product_attachment', true, $child_post, $new_parent_id ) ) {
 
 		$file = wp_get_attachment_url( $child_post->ID );
 
@@ -1582,6 +1625,10 @@ function wpsc_duplicate_product_image_process( $child_post, $new_parent_id ) {
 			return $id;
 
 		}
+
+	} elseif ( has_post_thumbnail( $new_parent_id ) && $child_post->ID == get_post_thumbnail_id( $new_parent_id ) ) {
+
+		delete_post_meta( $new_parent_id, '_thumbnail_id' );
 
 	}
 
