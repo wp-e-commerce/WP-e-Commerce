@@ -1,71 +1,6 @@
 <?php
-/**
-Copyright (C) 2002 Jason Sheets <jsheets@shadonet.com>.
-All rights reserved.
 
-THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions
-are met:
-
-1. Redistributions of source code must retain the above copyright
-   notice, this list of conditions and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright
-   notice, this list of conditions and the following disclaimer in the
-   documentation and/or other materials provided with the distribution.
-
-3. Neither the name of the project nor the names of its contributors
-   may be used to endorse or promote products derived from this software
-   without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
-OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
-OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
-SUCH DAMAGE.
-**/
-
-/**
-   Name: PHP MimeType Class
-
-   Version: 1.0
-   Date Released: 10/20/02
-
-   Description: This class allows a PHP script to determine the mime type
-   a file based on the file extension.  This class is handy for PHP versions
-   without the benefit of other tools to determine the mime type.  The class
-   defaults to octet-stream so if the file type is not recognized the user
-   is presented with a file download prompt.
-
-   NOTES: The mime types for this version are based on Apache 1.3.27
-   mime types may change or need to be added in the future, the mime types
-   are stored in an array so that an awk or other script can automatically
-   generate the code to make the array.
-
-   Usage:
-
-   	First an instance of the mimetype class must be created, then the
-	getType method should be called with the filename.  It will return
-	the mime type, an example follows.
-
-   Example:
-
-      $mimetype = new mimetype();
-      print $mimetype->getType('acrobat.pdf');
-
-   Author: Jason Sheets <jsheets@shadonet.com>
-
-   License: This script is distributed under the BSD License, you are free
-   to use, or modify it however you like.  If you find this script useful please
-   e-mail me.
-**/
+_wpsc_deprecated_file( __FILE__, '4.0', __( 'The mimetype class has been deprecated in favor of core WordPress functionality.', 'wpsc' ) );
 
 class mimetype {
    function getType($filename) {
@@ -238,4 +173,3 @@ class mimetype {
       );
    }
 }
-?>
