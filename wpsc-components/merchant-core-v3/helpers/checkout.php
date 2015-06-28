@@ -44,7 +44,7 @@ function _wpsc_filter_merchant_v3_gateway_loop_items( $gateways ) {
 
 function _wpsc_filter_merchant_v3_get_gateway_list( $list ) {
 	// if merchant api v2 is not being active, proceed to output the gateway list
-	if ( _wpsc_is_merchant_v2_active( $list ) ) {
+	if ( _wpsc_is_merchant_v2_active() ) {
 		return $list;
 	}
 

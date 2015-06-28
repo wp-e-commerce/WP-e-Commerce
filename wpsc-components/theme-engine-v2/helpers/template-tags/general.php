@@ -82,6 +82,8 @@ function wpsc_get_breadcrumb( $args = '' ) {
 	// No custom store text
 	if ( empty( $args['store_text'] ) ) {
 		$pre_store_text = wpsc_get_store_title();
+	} else {
+		$pre_store_text = $args['store_text'];
 	}
 
 	$parent = null;
@@ -114,7 +116,6 @@ function wpsc_get_breadcrumb( $args = '' ) {
 		if ( $term->parent ) {
 			$parent = get_term( $term->parent, 'wpsc_product_category' );
 		}
-
 	} elseif ( wpsc_is_product_tag() ) {
 		// if this is a product tag, set "current_text" to the tag name by default
 		$pre_current_text = wpsc_get_product_tag_name();
@@ -287,7 +288,7 @@ function wpsc_get_user_messages( $args = '' ) {
  * @return string HTML output
  */
 function wpsc_get_keep_shopping_button() {
-	$keep_shopping_url =   isset( $_REQUEST['_wp_http_referer'] )
+	$keep_shopping_url = isset( $_REQUEST['_wp_http_referer'] )
 	                     ? esc_attr( $_REQUEST['_wp_http_referer'] )
 	                     : wpsc_get_store_url();
 
@@ -345,7 +346,6 @@ function wpsc_get_checkout_steps() {
 		} else {
 			$classes[] = 'pending';
 		}
-
 
 		$classes[] = 'split-' . count( $steps );
 		$output   .= '<li class="' . implode( ' ', $classes ) . '">';
@@ -452,7 +452,7 @@ function wpsc_get_customer_orders_statuses() {
 			number_format_i18n( $count )
 		);
 
-		$url =   ( $status )
+		$url = ( $status )
 		       ? wpsc_get_customer_account_url( 'orders/status/' . $status )
 		       : wpsc_get_customer_account_url();
 		$link = '<a href="' . esc_url( $url ) . '">' . $text . '</a>';
