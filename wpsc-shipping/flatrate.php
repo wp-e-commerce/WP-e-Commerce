@@ -127,7 +127,15 @@ class flatrate {
 			$shipping           = (array) get_option('flat_rates');
 			$submitted_shipping = (array) $_POST['shipping'];
 
-			update_option( 'flat_rates', array_map( 'floatval', array_merge( $shipping, $submitted_shipping ) ) );
+			$rates = array();
+
+			foreach ( $submitted_shipping as $key => $rate ) {
+				if ( empty( $rate ) || is_numeric( $rate ) ) {
+					$rates[ $key ] = $rate;
+				}
+			}
+
+			update_option( 'flat_rates', array_merge( $rates, $submitted_shipping ) );
 		}
 
 		return true;
