@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * Admin Menu widget class
  *
@@ -12,13 +10,13 @@ class WP_Widget_Admin_Menu extends WP_Widget {
 	/**
 	 * Widget Constuctor
 	 */
-	function WP_Widget_Admin_Menu() {
+	function __construct() {
 		$widget_ops = array(
 			'classname'   => 'widget_wpsc_admin_menu',
 			'description' => __( 'Admin Menu Widget', 'wpsc' )
 		);
 
-		$this->WP_Widget( 'wpsc_admin_menu', __( '(WPEC) Admin Menu', 'wpsc' ), $widget_ops );
+		parent::__construct( 'wpsc_admin_menu', __( '(WPEC) Admin Menu', 'wpsc' ), $widget_ops );
 
 	}
 
@@ -107,7 +105,3 @@ function admin_menu( $args = null ) {
 	}
 
 }
-
-
-
-?>

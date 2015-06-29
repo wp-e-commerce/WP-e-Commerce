@@ -11,9 +11,9 @@ class WP_Widget_Latest_Products extends WP_Widget {
 	/**
 	 * Widget Constuctor
 	 */
-	function WP_Widget_Latest_Products() {
+	function __construct() {
 		$widget_ops = array( 'classname' => 'widget_wpsc_latest_products','description' => __( 'Latest Products Widget', 'wpsc' ) );
-		$this->WP_Widget( 'wpsc_latest_products', __( '(WPEC) Latest Products', 'wpsc' ), $widget_ops );
+		parent::__construct( 'wpsc_latest_products', __( '(WPEC) Latest Products', 'wpsc' ), $widget_ops );
 	}
 
 	/**
