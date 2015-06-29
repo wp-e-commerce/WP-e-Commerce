@@ -12,14 +12,14 @@ class WP_Widget_Product_Tags extends WP_Widget {
 	/**
 	 * Widget Constuctor
 	 */
-	function WP_Widget_Product_Tags() {
+	function __construct() {
 
 		$widget_ops = array(
 			'classname'   => 'widget_wpsc_product_tags',
 			'description' => __( 'Product Tags Widget', 'wpsc' )
 		);
 
-		$this->WP_Widget( 'wpsc_product_tags', __( '(WPEC) Product Tags', 'wpsc' ), $widget_ops );
+		parent::__construct( 'wpsc_product_tags', __( '(WPEC) Product Tags', 'wpsc' ), $widget_ops );
 
 	}
 

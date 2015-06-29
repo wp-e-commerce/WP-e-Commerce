@@ -12,14 +12,14 @@ class WP_Widget_Price_Range extends WP_Widget {
 	/**
 	 * Widget Constuctor
 	 */
-	function WP_Widget_Price_Range() {
+	function __construct() {
 
 		$widget_ops = array(
 			'classname'   => 'widget_wpsc_price_range',
 			'description' => __( 'Price Range Widget', 'wpsc' )
 		);
 
-		$this->WP_Widget( 'wpsc_price_range', __( '(WPEC) Price Range', 'wpsc' ), $widget_ops );
+		parent::__construct( 'wpsc_price_range', __( '(WPEC) Price Range', 'wpsc' ), $widget_ops );
 
 	}
 

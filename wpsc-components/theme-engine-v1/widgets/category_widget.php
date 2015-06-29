@@ -11,12 +11,12 @@ class WP_Widget_Product_Categories extends WP_Widget {
 	/**
 	 * Widget Constuctor
 	 */
-	function WP_Widget_Product_Categories() {
+	function __construct() {
 		$widget_ops = array(
 			'classname' => 'widget_wpsc_categorisation',
 			'description' => __( 'Product Grouping Widget', 'wpsc' )
 		);
-		$this->WP_Widget( 'wpsc_categorisation', __( '(WPEC) Product Categories', 'wpsc' ), $widget_ops );
+		parent::__construct( 'wpsc_categorisation', __( '(WPEC) Product Categories', 'wpsc' ), $widget_ops );
 	}
 
 	/**

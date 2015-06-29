@@ -12,14 +12,14 @@ class WP_Widget_Donations extends WP_Widget {
 	/**
 	 * Widget Constuctor
 	 */
-	function WP_Widget_Donations() {
+	function __construct() {
 
 		$widget_ops = array(
 			'classname'   => 'widget_wpsc_donations',
 			'description' => __( 'Donations Widget', 'wpsc' )
 		);
 
-		$this->WP_Widget( 'wpsc_donations', __( '(WPEC) Product Donations', 'wpsc' ), $widget_ops );
+		parent::__construct( 'wpsc_donations', __( '(WPEC) Product Donations', 'wpsc' ), $widget_ops );
 
 	}
 
