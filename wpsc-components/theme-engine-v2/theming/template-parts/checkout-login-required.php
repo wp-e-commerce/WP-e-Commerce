@@ -1,3 +1,15 @@
+<?php
+/**
+ * The template part for displaying the login prompt on the checkout page when logging in is required.
+ *
+ * Override this template by copying it to theme-folder/wp-e-commerce/checkout-login-required.php
+ *
+ * @author   WP eCommerce
+ * @package  WP-e-Commerce/Templates
+ * @version  4.0
+ */
+?>
+
 <?php wpsc_user_messages(); ?>
 <div class="wpsc-login-form-wrapper">
 	<p><?php esc_html_e( 'For returning customers, please sign in before proceeding with checkout.', 'wpsc' ) ?></p>

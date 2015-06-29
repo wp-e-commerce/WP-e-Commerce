@@ -1,10 +1,12 @@
 <?php
 /**
- * Feedback no products template part
+ * The template part for displaying the no product found view.
  *
- * @package wp-e-commerce
- * @subpackage theme_compat
- * @since 4.0
+ * Override this template by copying it to theme-folder/wp-e-commerce/feedback-no-products.php
+ *
+ * @author   WP eCommerce
+ * @package  WP-e-Commerce/Templates
+ * @version  4.0
  */
 ?>
 

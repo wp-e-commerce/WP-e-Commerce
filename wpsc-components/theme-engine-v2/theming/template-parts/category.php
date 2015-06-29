@@ -1,12 +1,15 @@
 <?php
 /**
- * Product category template part
+ * The template part for displaying the product categories.
  *
- * @package wp-e-commerce
+ * Override this template by copying it to theme-folder/wp-e-commerce/category.php
+ *
+ * @author   WP eCommerce
+ * @package  WP-e-Commerce/Templates
+ * @version  4.0
  */
-?>
 
-<?php if ( wpsc_have_products() ) : ?>
+if ( wpsc_have_products() ) : ?>
 	<?php wpsc_breadcrumb(); ?>
 	<?php wpsc_category_filter(); ?>
 	<?php wpsc_product_pagination( 'top' ); ?>

@@ -1,3 +1,15 @@
+<?php
+/**
+ * The template part for displaying the cart page.
+ *
+ * Override this template by copying it to theme-folder/wp-e-commerce/cart.php
+ *
+ * @author   WP eCommerce
+ * @package  WP-e-Commerce/Templates
+ * @version  4.0
+ */
+?>
+
 <div class="wpsc-shopping-cart">
 
 	<?php wpsc_user_messages(); ?>

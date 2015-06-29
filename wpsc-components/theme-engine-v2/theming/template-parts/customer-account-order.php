@@ -1,3 +1,14 @@
+<?php
+/**
+ * The template part for displaying the single order view in the customer account.
+ *
+ * Override this template by copying it to theme-folder/wp-e-commerce/customer-account-order.php
+ *
+ * @author   WP eCommerce
+ * @package  WP-e-Commerce/Templates
+ * @version  4.0
+ */
+?>
 <div class="wpsc-customer-account-order">
 	<?php wpsc_breadcrumb(); ?>
 	<p>

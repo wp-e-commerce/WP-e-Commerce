@@ -1,3 +1,15 @@
+<?php
+/**
+ * The template part for displaying the payment method view in the checkout process.
+ *
+ * Override this template by copying it to theme-folder/wp-e-commerce/checkout-payment.php
+ *
+ * @author   WP eCommerce
+ * @package  WP-e-Commerce/Templates
+ * @version  4.0
+ */
+?>
+
 <?php wpsc_checkout_steps(); ?>
 <?php wpsc_user_messages(); ?>
 <div class="wpsc-checkout wpsc-checkout-review">

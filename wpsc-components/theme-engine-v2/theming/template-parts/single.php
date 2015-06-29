@@ -1,3 +1,15 @@
+<?php
+/**
+ * The template part for displaying the product view.
+ *
+ * Override this template by copying it to theme-folder/wp-e-commerce/single.php
+ *
+ * @author   WP eCommerce
+ * @package  WP-e-Commerce/Templates
+ * @version  4.0
+ */
+?>
+
 <?php wpsc_user_messages(); ?>
 <div id="product-<?php wpsc_product_id(); ?>" itemscope itemtype="http://schema.org/Product">
 	<?php wpsc_breadcrumb(); ?>

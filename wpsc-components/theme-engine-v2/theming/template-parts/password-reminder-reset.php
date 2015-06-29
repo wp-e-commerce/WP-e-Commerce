@@ -1,5 +1,15 @@
-<?php if ( wpsc_has_user_messages( 'validation', 'check password reset key' ) ): ?>
-	<?php
+<?php
+/**
+ * The template part for displaying the password reminder reset view.
+ *
+ * Override this template by copying it to theme-folder/wp-e-commerce/password-reminder-reset.php
+ *
+ * @author   WP eCommerce
+ * @package  WP-e-Commerce/Templates
+ * @version  4.0
+ */
+
+if ( wpsc_has_user_messages( 'validation', 'check password reset key' ) ):
 		wpsc_user_messages( array(
 				'types'   => 'validation',
 				'context' => 'check password reset key',

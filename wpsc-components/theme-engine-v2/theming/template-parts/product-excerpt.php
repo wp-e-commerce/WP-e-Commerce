@@ -1,3 +1,15 @@
+<?php
+/**
+ * The template part for displaying the product excerpt view.
+ *
+ * Override this template by copying it to theme-folder/wp-e-commerce/product-excerpt.php
+ *
+ * @author   WP eCommerce
+ * @package  WP-e-Commerce/Templates
+ * @version  4.0
+ */
+?>
+
 <div id="product-<?php wpsc_product_id(); ?>" <?php wpsc_product_class(); ?>>
 	<div class="wpsc-product-summary">
 		<div class="wpsc-product-header">

@@ -1,8 +1,12 @@
 <?php
 /**
- * Main store template part
+ * The template part for displaying the main store view.
  *
- * @package wp-e-commerce
+ * Override this template by copying it to theme-folder/wp-e-commerce/main-store.php
+ *
+ * @author   WP eCommerce
+ * @package  WP-e-Commerce/Templates
+ * @version  4.0
  */
 
 wpsc_user_messages();
