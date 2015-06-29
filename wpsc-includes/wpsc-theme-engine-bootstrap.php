@@ -203,13 +203,14 @@ function _wpsc_maybe_activate_theme_engine_v2() {
 
 	if ( $old_theme_engine !== $new_theme_engine ) {
 		do_action( 'wpsc_updated_theme_engine', $new_theme_engine, $old_theme_engine );
+
+		add_action( 'shutdown', '_wpsc_action_flush_rewrite_rules' );
+
 		update_option( 'wpsc_get_active_theme_engine', $new_theme_engine );
 	}
 
 	return $activate;
 }
-
-add_action( 'wpsc_updated_theme_engine', 'flush_rewrite_rules' );
 
 /**
  * Simple router for using either the 1.0 or 2.0 theme engine, based on result of _wpsc_maybe_activate_theme_engine_v2().

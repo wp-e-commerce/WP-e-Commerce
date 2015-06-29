@@ -115,10 +115,6 @@ function _wpsc_te_v2_product_category_args( $args ) {
 	return $args;
 }
 
-function _wpsc_action_flush_rewrite_rules() {
-	flush_rewrite_rules( false );
-}
-
 /**
  * Return the permalink of a product.
  *

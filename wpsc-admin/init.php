@@ -234,7 +234,7 @@ function wpsc_purchase_log_csv() {
 
 		/**
 		 * Fires when the WPSC purchase log is exported as a CSV
-		 */ 
+		 */
 		do_action( 'wpsc_purchase_log_csv' );
 
 		header( 'Content-Type: text/csv' );
@@ -589,8 +589,12 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( $_REQUEST['wpsc_admin_action']
 	_wpsc_doing_it_wrong( 'wpsc_delete_purchlog', __( 'Do not trigger delete purchase log action via wpsc_admin_action = delete_purchlog URL query. Instead use the Purchase Log Action Links API.', 'wpsc' ), '3.9.0' );
 }
 
-function wpsc_update_option_product_category_hierarchical_url() {
+function _wpsc_action_flush_rewrite_rules() {
 	flush_rewrite_rules( false );
+}
+
+function wpsc_update_option_product_category_hierarchical_url() {
+	_wpsc_action_flush_rewrite_rules();
 }
 
 add_action( 'update_option_product_category_hierarchical_url', 'wpsc_update_option_product_category_hierarchical_url' );
@@ -840,10 +844,10 @@ if ( isset( $_REQUEST['wpsc_admin_action'] ) && ( $_REQUEST['wpsc_admin_action']
 	add_action( 'admin_init', 'wpsc_backup_theme' );
 
 /**
- * Delete a coupon 
- * 
+ * Delete a coupon
+ *
  * @since 3.8
- */ 
+ */
 function wpsc_delete_coupon(){
 
 	global $wpdb;
