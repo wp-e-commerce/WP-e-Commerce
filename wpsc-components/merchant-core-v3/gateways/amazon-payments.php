@@ -5,8 +5,6 @@
  *
  * - Integrate with recurring payments
  * - Integrate with tev1
- * - Get Platform ID from Amazon
- *
  */
 class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 

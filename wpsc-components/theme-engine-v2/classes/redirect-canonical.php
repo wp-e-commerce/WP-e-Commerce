@@ -15,6 +15,7 @@ class WPSC_Redirect_Canonical {
 
 	private function init() {
 
+		add_action( 'redirect_canonical', array( self::$instance, 'set_redirects' ), 20, 2 );
 	}
 
 	public static function register_redirect() {
@@ -22,6 +23,10 @@ class WPSC_Redirect_Canonical {
 	}
 
 	public static function deregister_redirect() {
+
+	}
+
+	public function set_redirects( $redirect_url, $requested_url ) {
 
 	}
 }

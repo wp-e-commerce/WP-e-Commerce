@@ -202,6 +202,7 @@ function _wpsc_maybe_activate_theme_engine_v2() {
 	$old_theme_engine = get_option( 'wpsc_get_active_theme_engine' );
 
 	if ( $old_theme_engine !== $new_theme_engine ) {
+
 		do_action( 'wpsc_updated_theme_engine', $new_theme_engine, $old_theme_engine );
 
 		add_action( 'shutdown', '_wpsc_action_flush_rewrite_rules' );
@@ -229,7 +230,6 @@ function _wpsc_theme_engine_router( $components ) {
 }
 
 add_filter( 'wpsc_components', '_wpsc_theme_engine_router' );
-
 
 /**
  * Deactivates the former feature-as-a-plugin plugin for the 2.0 theme engine, if it is active.
