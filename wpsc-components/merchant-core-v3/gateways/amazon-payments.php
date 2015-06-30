@@ -82,12 +82,12 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 		switch ( $base_country->get_isocode() ) {
 			case 'GB' :
-				define( 'WPSC_AMAZON_PA_WIDGETS_URL', 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/' . ( $this->sandbox ? 'sandbox/' : '' ) . 'js/Widgets.js?sellerId=' . $this->setting->get( 'seller_id' ) );
+				define( 'WPSC_AMAZON_PA_WIDGETS_URL', 'https://static-eu.payments-amazon.com/OffAmazonPayments/uk/' . ( $this->sandbox ? 'sandbox/' : '' ) . 'lpa/js/Widgets.js?sellerId=' . $this->setting->get( 'seller_id' ) );
 				define( 'WPSC_AMAZON_WIDGET_ENDPOINT', 'https://payments' . ( $this->sandbox ? '-sandbox' : '' ) . '.amazon.co.uk' );
 				define( 'WPSC_AMAZON_REGISTER_URL', 'https://sellercentral-europe.amazon.com/gp/on-board/workflow/Registration/login.html?passthrough%2Fsource=internal-landing-select&passthrough%2F*entries*=0&passthrough%2FmarketplaceID=A2WQPBGJ59HSXT&passthrough%2FsuperSource=OAR&passthrough%2F*Version*=1&passthrough%2Fld=APRPWPECOMMERCE&passthrough%2Faccount=cba&passthrough%2FwaiveFee=1' );
 			break;
 			case 'DE' :
-				define( 'WPSC_AMAZON_PA_WIDGETS_URL', 'https://static-eu.payments-amazon.com/OffAmazonPayments/de/' . ( $this->sandbox ? 'sandbox/' : '' ) . 'js/Widgets.js?sellerId=' . $this->setting->get( 'seller_id' ) );
+				define( 'WPSC_AMAZON_PA_WIDGETS_URL', 'https://static-eu.payments-amazon.com/OffAmazonPayments/de/' . ( $this->sandbox ? 'sandbox/' : '' ) . 'lpa/js/Widgets.js?sellerId=' . $this->setting->get( 'seller_id' ) );
 				define( 'WPSC_AMAZON_WIDGET_ENDPOINT', 'https://payments' . ( $this->sandbox ? '-sandbox' : '' ) . '.amazon.de' );
 				define( 'WPSC_AMAZON_REGISTER_URL', 'https://sellercentral-europe.amazon.com/gp/on-board/workflow/Registration/login.html?passthrough%2Fsource=internal-landing-select&passthrough%2F*entries*=0&passthrough%2FmarketplaceID=A1OCY9REWJOCW5&passthrough%2FsuperSource=OAR&passthrough%2F*Version*=1&passthrough%2Fld=APRPWPECOMMERCE&passthrough%2Faccount=cba&passthrough%2FwaiveFee=1' );
 			break;
