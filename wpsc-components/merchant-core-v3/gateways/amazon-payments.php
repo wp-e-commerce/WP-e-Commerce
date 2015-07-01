@@ -603,7 +603,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	 *  Checkout Message
 	 */
 	public function checkout_message() {
-		if ( empty( $this->reference_id ) ) {
+		if ( empty( $this->reference_id ) && ! $this->user_is_authenticated ) {
 			echo '<div class="wpsc-alert wpsc-alert-block wpsc-alert-success"><div id="pay_with_amazon"></div><p>' . apply_filters( 'wpsc_amazon_pa_checkout_message', __( 'Have an Amazon account?', 'wpsc' ) ) . '</p></div>';
 		}
 	}
