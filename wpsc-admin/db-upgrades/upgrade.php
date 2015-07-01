@@ -22,21 +22,21 @@ function _wpsc_maybe_upgrade() {
 	for ( $i = $current_db_ver + 1; $i <= WPSC_DB_VERSION; $i++ ) {
 		$file_path = WPSC_FILE_PATH . '/wpsc-admin/db-upgrades/routines/' . $i . '.php';
 
-		if ( file_exists( $file_path ) )
+		if ( file_exists( $file_path ) ) {
 			require_once( $file_path );
+		}
 
-		if ( ! function_exists( '_wpsc_db_upgrade_' . $i ) )
+		if ( ! function_exists( '_wpsc_db_upgrade_' . $i ) ) {
 			continue;
+		}
 
 		wpsc_core_flush_temporary_data();
 
 		call_user_func( '_wpsc_db_upgrade_' . $i );
 		update_option( 'wpsc_db_version', $i );
-
 	}
 
 	wpsc_core_flush_temporary_data();
-
 }
 
 function _wpsc_upgrade_display_backup_warning() {
