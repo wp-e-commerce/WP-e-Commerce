@@ -99,7 +99,7 @@ class WPSC_Checkout_Form {
 	 */
 	public function __construct( $id = 0, $active_only = true ) {
 		$this->id = $id;
-		$this->active_only = $active_only;
+		$this->active_only = apply_filters( 'wpsc_checkout_form_active_only', $active_only );
 		$this->get_fields();
 	}
 
