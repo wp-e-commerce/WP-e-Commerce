@@ -519,7 +519,8 @@ function wpsc_display_purchlog_buyers_state_and_postcode() {
 
 function wpsc_display_purchlog_buyers_country() {
    global $purchlogitem;
-   return esc_html( wpsc_get_country( $purchlogitem->extrainfo->billing_country ) );}
+   return esc_html( wpsc_get_country( $purchlogitem->userinfo['billingcountry']['value'] ) );
+}
 
 function wpsc_display_purchlog_buyers_phone() {
    global $purchlogitem;
