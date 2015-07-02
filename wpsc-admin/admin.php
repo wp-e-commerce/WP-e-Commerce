@@ -1540,12 +1540,12 @@ function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
 
 		// Duplicate product images and child posts
 		if ( 'attachment' == get_post_type( $child_post ) ) {
-			wpsc_duplicate_product_image_process( $child_post, $new_parent_id );
+			$new_child_id = wpsc_duplicate_product_image_process( $child_post, $new_parent_id );
 		} else {
-			wpsc_duplicate_product_process( $child_post, $new_parent_id );
+			$new_child_id = wpsc_duplicate_product_process( $child_post, $new_parent_id );
 		}
 
-		do_action( 'wpsc_duplicate_product_child', $child_post, $new_parent_id );
+		do_action( 'wpsc_duplicate_product_child', $child_post, $new_parent_id, $new_child_id );
 
 	}
 
