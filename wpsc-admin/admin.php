@@ -1409,7 +1409,7 @@ function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
 	do_action( 'wpsc_duplicate_product', $post, $new_post_id );
 
 	// Finds children (Which includes product files AND product images), their meta values, and duplicates them.
-	wpsc_duplicate_children( $post->ID, $new_post_id );
+	$duplicated_children = wpsc_duplicate_children( $post->ID, $new_post_id );
 
 	// Copy product thumbnail (resetting duplicated meta value)
 	wpsc_duplicate_product_thumbnail( $post->ID, $new_post_id );
@@ -1517,13 +1517,15 @@ function wpsc_duplicate_product_thumbnail( $post_id, $new_post_id ) {
 }
 
 /**
- * Duplicates children product and children meta
+ * Duplicates product children and meta
  *
- * @uses get_posts()                          Gets an array of posts given array of arguments
- * @uses wpsc_duplicate_product_process()     Duplicates product
+ * @uses  get_posts()                             Gets an array of posts given array of arguments.
+ * @uses  wpsc_duplicate_product_image_process()  Duplicates product image.
+ * @uses  wpsc_duplicate_product_process()        Duplicates product child.
  *
- * @param   int     $old_parent_id  req     Post id for old parent
- * @param   int     $new_parenc_id  req     Post id for the new parent
+ * @param   int    $old_parent_id  Post id for old parent.
+ * @param   int    $new_parenc_id  Post id for the new parent.
+ * @return  array                  Array mapping old child IDs to duplicated child IDs.                    
  */
 function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
 
@@ -1536,6 +1538,9 @@ function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
 		'order'       => 'ASC',
 	) );
 
+	// Map duplicate child IDs
+	$converted_child_ids = array();
+
 	foreach ( $child_posts as $child_post ) {
 
 		// Duplicate product images and child posts
@@ -1545,9 +1550,16 @@ function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
 			$new_child_id = wpsc_duplicate_product_process( $child_post, $new_parent_id );
 		}
 
+		// Map child ID to new child ID
+		if ( $new_child_id && ! is_wp_error( $new_child_id ) ) {
+			$converted_child_ids[ $child_post->ID ] = $new_child_id;
+		}
+
 		do_action( 'wpsc_duplicate_product_child', $child_post, $new_parent_id, $new_child_id );
 
 	}
+
+	return $converted_child_ids;
 
 }
 
