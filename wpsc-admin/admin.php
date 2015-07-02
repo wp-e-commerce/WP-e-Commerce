@@ -1565,9 +1565,9 @@ function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
  * @uses  is_wp_error()            Is WP error?
  * @uses  media_handle_sideload()  Handle creation of new attachment and attach to post.
  *
- * @param   object  $post           The post object.
- * @param   bool    $new_parent_id  Optional. The parent post id.
- * @return  int                     Attachment ID.
+ * @param   object    $post           The post object.
+ * @param   bool      $new_parent_id  Optional. The parent post id.
+ * @return  int|bool                  Attachment ID or false.
  */
 function wpsc_duplicate_product_image_process( $child_post, $new_parent_id ) {
 
@@ -1631,6 +1631,8 @@ function wpsc_duplicate_product_image_process( $child_post, $new_parent_id ) {
 		delete_post_meta( $new_parent_id, '_thumbnail_id' );
 
 	}
+
+	return false;
 
 }
 
