@@ -1501,7 +1501,7 @@ function wpsc_duplicate_product_thumbnail( $post_id, $new_post_id ) {
 	$thumbnail_id = $original_thumbnail_id = has_post_thumbnail( $new_post_id ) ? get_post_thumbnail_id( $new_post_id ) : 0;
 
 	// If not duplicating product attachments, ensure featured image ID is zero
-	if ( ! apply_filters( 'wpsc_duplicate_product_attachment', true, get_post( $thumbnail_id ), $new_post_id ) ) {
+	if ( ! apply_filters( 'wpsc_duplicate_product_attachment', true, $thumbnail_id, $new_post_id ) ) {
 		$thumbnail_id = 0;
 	}
 
@@ -1583,7 +1583,7 @@ function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
  */
 function wpsc_duplicate_product_image_process( $child_post, $new_parent_id ) {
 
-	if ( 'attachment' == get_post_type( $child_post ) && apply_filters( 'wpsc_duplicate_product_attachment', true, $child_post, $new_parent_id ) ) {
+	if ( 'attachment' == get_post_type( $child_post ) && apply_filters( 'wpsc_duplicate_product_attachment', true, $child_post->ID, $new_parent_id ) ) {
 
 		$file = wp_get_attachment_url( $child_post->ID );
 
