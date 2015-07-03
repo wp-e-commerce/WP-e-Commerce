@@ -1365,60 +1365,11 @@ function _wpsc_delete_file( $product_id, $file_name ) {
  * @return int|WP_Error                  New post ID or error.
  */
 function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
-	$new_post_date     = $post->post_date;
-	$new_post_date_gmt = get_gmt_from_date( $new_post_date );
 
-	$new_post_type         = $post->post_type;
-	$post_content          = $post->post_content;
-	$post_content_filtered = $post->post_content_filtered;
-	$post_excerpt          = $post->post_excerpt;
-	$post_title            = sprintf( __( '%s (Duplicate)', 'wpsc' ), $post->post_title );
-	$post_name             = $post->post_name;
-	$comment_status        = $post->comment_status;
-	$ping_status           = $post->ping_status;
+	$duplicate = new WPSC_Duplicate_Product( $post->ID, $new_parent_id );
 
-	$defaults = array(
-		'post_status'           => $post->post_status,
-		'post_type'             => $new_post_type,
-		'ping_status'           => $ping_status,
-		'post_parent'           => $new_parent_id ? $new_parent_id : $post->post_parent,
-		'menu_order'            => $post->menu_order,
-		'to_ping'               => $post->to_ping,
-		'pinged'                => $post->pinged,
-		'post_excerpt'          => $post_excerpt,
-		'post_title'            => $post_title,
-		'post_content'          => $post_content,
-		'post_content_filtered' => $post_content_filtered,
-		'post_mime_type'        => $post->post_mime_type,
-		'import_id'             => 0
-		);
+	return $duplicate->duplicate_product_process( $post, $new_parent_id );
 
-	if ( 'attachment' == $post->post_type )
-		$defaults['guid'] = $post->guid;
-
-	$defaults = stripslashes_deep( $defaults );
-
-	// Insert the new template in the post table
-	$new_post_id = wp_insert_post($defaults);
-
-	// Copy the taxonomies
-	wpsc_duplicate_taxonomies( $post->ID, $new_post_id, $post->post_type );
-
-	// Copy the meta information
-	wpsc_duplicate_product_meta( $post->ID, $new_post_id );
-
-	do_action( 'wpsc_duplicate_product', $post, $new_post_id );
-
-	// Finds children (Which includes product files AND product images), their meta values, and duplicates them.
-	$duplicated_children = wpsc_duplicate_children( $post->ID, $new_post_id );
-
-	// Update product gallery meta (resetting duplicated meta value IDs)
-	wpsc_update_duplicate_product_gallery_meta( $post->ID, $new_post_id, $duplicated_children );
-
-	// Copy product thumbnail (resetting duplicated meta value)
-	wpsc_duplicate_product_thumbnail( $post->ID, $new_post_id );
-
-	return $new_post_id;
 }
 
 /**
@@ -1433,13 +1384,10 @@ function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
  * @param string    $post_type  req     The post type we are setting
  */
 function wpsc_duplicate_taxonomies( $id, $new_id, $post_type ) {
-	$taxonomies = get_object_taxonomies( $post_type ); //array("category", "post_tag");
-	foreach ( $taxonomies as $taxonomy ) {
-		$post_terms = wpsc_get_product_terms( $id, $taxonomy );
-		foreach ( $post_terms as $post_term ) {
-			wp_set_object_terms( $new_id, $post_term->slug, $taxonomy, true );
-		}
-	}
+
+	$duplicate = new WPSC_Duplicate_Product( $id, $new_id );
+	$duplicate->duplicate_taxonomies( $id, $new_id, $post_type );
+
 }
 
 /**
@@ -1454,29 +1402,9 @@ function wpsc_duplicate_taxonomies( $id, $new_id, $post_type ) {
  * @param int   $new_id req ID of the new post
  */
 function wpsc_duplicate_product_meta( $id, $new_id ) {
-	global $wpdb;
 
-	$post_meta_infos = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id = %d", $id ) );
-
-	if ( count( $post_meta_infos ) ) {
-		$sql_query     = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES ";
-		$values        = array();
-		$sql_query_sel = array();
-		foreach ( $post_meta_infos as $meta_info ) {
-			$meta_key = $meta_info->meta_key;
-			$meta_value = addslashes( $meta_info->meta_value );
-
-			$sql_query_sel[] = "( $new_id, '$meta_key', '$meta_value' )";
-			$values[] = $new_id;
-			$values[] = $meta_key;
-			$values[] = $meta_value;
-			$values += array( $new_id, $meta_key, $meta_value );
-		}
-		$sql_query.= implode( ",", $sql_query_sel );
-		$sql_query = $wpdb->prepare( $sql_query, $values );
-		$wpdb->query( $sql_query );
-		clean_post_cache( $new_id );
-	}
+	$duplicate = new WPSC_Duplicate_Product( $id, $new_id );
+	$duplicate->duplicate_product_meta( $id, $new_id );
 
 }
 
@@ -1496,30 +1424,8 @@ function wpsc_duplicate_product_meta( $id, $new_id ) {
  */
 function wpsc_update_duplicate_product_gallery_meta( $post_id, $new_post_id, $duplicated_children ) {
 
-	$gallery = get_post_meta( $new_post_id, '_wpsc_product_gallery', true );
-	$new_gallery = array();
-
-	// Loop through duplicated gallery IDs.
-	if ( is_array( $gallery ) ) {
-		foreach ( $gallery as $gallery_id ) {
-
-			// If product image should be duplicated
-			if ( apply_filters( 'wpsc_duplicate_product_attachment', true, $gallery_id, $new_post_id ) ) {
-
-				// Update attached image IDs and copy non-attached image IDs
-				if ( array_key_exists( $gallery_id, $duplicated_children ) ) {
-					$new_gallery[] = $duplicated_children[ $gallery_id ];
-				} else {
-					$new_gallery[] = $gallery_id;
-				}
-
-			}
-
-		}
-
-		update_post_meta( $new_post_id, '_wpsc_product_gallery', $new_gallery );
-
-	}
+	$duplicate = new WPSC_Duplicate_Product( $post_id, $new_post_id );
+	$duplicate->update_duplicate_product_gallery_meta( $post_id, $new_post_id, $duplicated_children );
 
 }
 
@@ -1545,21 +1451,8 @@ function wpsc_update_duplicate_product_gallery_meta( $post_id, $new_post_id, $du
  */
 function wpsc_duplicate_product_thumbnail( $post_id, $new_post_id ) {
 
-	$thumbnail_id = $original_thumbnail_id = has_post_thumbnail( $new_post_id ) ? get_post_thumbnail_id( $new_post_id ) : 0;
-
-	// If not duplicating product attachments, ensure featured image ID is zero
-	if ( ! apply_filters( 'wpsc_duplicate_product_attachment', true, $thumbnail_id, $new_post_id ) ) {
-		$thumbnail_id = 0;
-	}
-
-	// Filter featured product image ID
-	$thumbnail_id = absint( apply_filters( 'wpsc_duplicate_product_thumbnail', $thumbnail_id, $original_thumbnail_id, $post_id, $new_post_id ) );
-
-	if ( $thumbnail_id > 0 ) {
-		set_post_thumbnail( $new_post_id, $thumbnail_id );
-	} else {
-		delete_post_thumbnail( $new_post_id );
-	}
+	$duplicate = new WPSC_Duplicate_Product( $post_id, $new_post_id );
+	$duplicate->duplicate_product_thumbnail( $post_id, $new_post_id );
 
 }
 
@@ -1576,37 +1469,8 @@ function wpsc_duplicate_product_thumbnail( $post_id, $new_post_id ) {
  */
 function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
 
-	// Get children products and duplicate them
-	$child_posts = get_posts( array(
-		'post_parent' => $old_parent_id,
-		'post_type'   => 'any',
-		'post_status' => 'any',
-		'numberposts' => -1,
-		'order'       => 'ASC',
-	) );
-
-	// Map duplicate child IDs
-	$converted_child_ids = array();
-
-	foreach ( $child_posts as $child_post ) {
-
-		// Duplicate product images and child posts
-		if ( 'attachment' == get_post_type( $child_post ) ) {
-			$new_child_id = wpsc_duplicate_product_image_process( $child_post, $new_parent_id );
-		} else {
-			$new_child_id = wpsc_duplicate_product_process( $child_post, $new_parent_id );
-		}
-
-		// Map child ID to new child ID
-		if ( $new_child_id && ! is_wp_error( $new_child_id ) ) {
-			$converted_child_ids[ $child_post->ID ] = $new_child_id;
-		}
-
-		do_action( 'wpsc_duplicate_product_child', $child_post, $new_parent_id, $new_child_id );
-
-	}
-
-	return $converted_child_ids;
+	$duplicate = new WPSC_Duplicate_Product( $old_parent_id, $new_parent_id );
+	$duplicate->duplicate_children( $old_parent_id, $new_parent_id );
 
 }
 
@@ -1630,68 +1494,8 @@ function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
  */
 function wpsc_duplicate_product_image_process( $child_post, $new_parent_id ) {
 
-	if ( 'attachment' == get_post_type( $child_post ) && apply_filters( 'wpsc_duplicate_product_attachment', true, $child_post->ID, $new_parent_id ) ) {
-
-		$file = wp_get_attachment_url( $child_post->ID );
-
-		if ( ! empty( $file ) ) {
-
-			// Set variables for storage, fix file filename for query strings.
-			preg_match( '/[^\?]+\.(jpe?g|jpe|gif|png)\b/i', $file, $matches );
-			$file_array = array();
-			$file_array['name'] = basename( $matches[0] );
-
-			// Download file to temp location.
-			$file_array['tmp_name'] = download_url( $file );
-
-			// If error storing temporarily, return the error.
-			if ( is_wp_error( $file_array['tmp_name'] ) ) {
-				return $file_array['tmp_name'];
-			}
-
-			// Do the validation and storage stuff.
-			$id = media_handle_sideload( $file_array, $new_parent_id );
-
-			// If error storing permanently, unlink.
-			if ( is_wp_error( $id ) ) {
-				@unlink( $file_array['tmp_name'] );
-			}
-
-			// Re-attribute featured image
-			if ( has_post_thumbnail( $new_parent_id ) && $child_post->ID == get_post_thumbnail_id( $new_parent_id ) ) {
-				set_post_thumbnail( $new_parent_id, $id );
-			}
-
-			// Copy attachment data
-			$post_data = array(
-				'ID'                    => $id,
-				'post_content'          => $child_post->post_content,
-				'post_title'            => $child_post->post_title,
-				'post_excerpt'          => $child_post->post_excerpt,
-				'post_status'           => $child_post->post_status,
-				'comment_status'        => $child_post->comment_status,
-				'ping_status'           => $child_post->ping_status,
-				'post_password'         => $child_post->post_password,
-				'post_content_filtered' => $child_post->post_content_filtered,
-				'menu_order'            => $child_post->menu_order
-			);
-
-			wp_update_post( $post_data );
-
-			// Copy alt text
-			update_post_meta( $id, '_wp_attachment_image_alt', get_post_meta( $child_post->ID, '_wp_attachment_image_alt', true ) );
-
-			return $id;
-
-		}
-
-	} elseif ( has_post_thumbnail( $new_parent_id ) && $child_post->ID == get_post_thumbnail_id( $new_parent_id ) ) {
-
-		delete_post_meta( $new_parent_id, '_thumbnail_id' );
-
-	}
-
-	return false;
+	$duplicate = new WPSC_Duplicate_Product( $child_post->post_parent, $new_parent_id );
+	$duplicate->duplicate_product_image_process( $child_post, $new_parent_id );
 
 }
 
