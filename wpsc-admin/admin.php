@@ -1353,15 +1353,15 @@ function _wpsc_delete_file( $product_id, $file_name ) {
 /**
  * Duplicates a product
  *
- * @uses wp_insert_post()                 Inserts a new post to the database
- * @uses wpsc_duplicate_taxonomies()      Copy the taxonomies of a post to another post
- * @uses wpsc_duplicate_product_meta()    Copy the metadata of a post to another post
- * @uses wpsc_duplicate_children()        Copy the children of the product
+ * @uses  wp_insert_post()                              Inserts a new post to the database
+ * @uses  wpsc_duplicate_taxonomies()                   Copy the taxonomies of a post to another post
+ * @uses  wpsc_duplicate_product_meta()                 Copy the metadata of a post to another post
+ * @uses  wpsc_duplicate_children()                     Copy the children of the product
+ * @uses  wpsc_update_duplicate_product_gallery_meta()  Updates duplicate product gallery meta.
  *
- * @param object    $post           req     The post object
- * @param bool      $new_parent_id  opt     The parent post id
- *
- * @return int|WP_Error     New post id or error
+ * @param  object        $post           The post object.
+ * @param  int|bool      $new_parent_id  Optional. The parent post ID or false.
+ * @return int|WP_Error                  New post ID or error.
  */
 function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
 	$new_post_date     = $post->post_date;
