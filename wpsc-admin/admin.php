@@ -1411,6 +1411,9 @@ function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
 	// Finds children (Which includes product files AND product images), their meta values, and duplicates them.
 	$duplicated_children = wpsc_duplicate_children( $post->ID, $new_post_id );
 
+	// Update product gallery meta (resetting duplicated meta value IDs)
+	wpsc_update_duplicate_product_gallery_meta( $post->ID, $new_post_id, $duplicated_children );
+
 	// Copy product thumbnail (resetting duplicated meta value)
 	wpsc_duplicate_product_thumbnail( $post->ID, $new_post_id );
 
@@ -1472,6 +1475,49 @@ function wpsc_duplicate_product_meta( $id, $new_id ) {
 		$sql_query = $wpdb->prepare( $sql_query, $values );
 		$wpdb->query( $sql_query );
 		clean_post_cache( $new_id );
+	}
+
+}
+
+/**
+ * Update Duplicate Product Gallery Meta
+ *
+ * When a product is duplicated it's meta values are copied too
+ * including the gallery meta array of IDs.
+ *
+ * After the product's children (including attachments) have been
+ * duplicated this function is used to update the gallery meta to
+ * refer to the IDs of any duplicated media.
+ *
+ * @param  int    $post_id              Original product post ID.
+ * @param  int    $new_post_id          Duplicated product post ID.
+ * @param  array  $duplicated_children  Associative array mapping original child IDs to duplicated child IDs.
+ */
+function wpsc_update_duplicate_product_gallery_meta( $post_id, $new_post_id, $duplicated_children ) {
+
+	$gallery = get_post_meta( $new_post_id, '_wpsc_product_gallery', true );
+	$new_gallery = array();
+
+	// Loop through duplicated gallery IDs.
+	if ( is_array( $gallery ) ) {
+		foreach ( $gallery as $gallery_id ) {
+
+			// If product image should be duplicated
+			if ( apply_filters( 'wpsc_duplicate_product_attachment', true, $gallery_id, $new_post_id ) ) {
+
+				// Update attached image IDs and copy non-attached image IDs
+				if ( array_key_exists( $gallery_id, $duplicated_children ) ) {
+					$new_gallery[] = $duplicated_children[ $gallery_id ];
+				} else {
+					$new_gallery[] = $gallery_id;
+				}
+
+			}
+
+		}
+
+		update_post_meta( $new_post_id, '_wpsc_product_gallery', $new_gallery );
+
 	}
 
 }
