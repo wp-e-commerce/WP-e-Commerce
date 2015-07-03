@@ -15,6 +15,7 @@ require_once( WPSC_FILE_PATH . '/wpsc-admin/display-upgrades.page.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/display-items-functions.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/product-functions.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/save-data.functions.php' );
+require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/duplicate-product-class.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/includes/updating-functions.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-admin/display-coupons.php' );
 require_once( WPSC_FILE_PATH . '/wpsc-includes/purchaselogs.class.php' );
