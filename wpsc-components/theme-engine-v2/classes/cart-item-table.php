@@ -13,11 +13,12 @@ class WPSC_Cart_Item_Table extends WPSC_Table {
 		return self::$instance;
 	}
 
-	public $columns         = array();
-	public $show_shipping   = true;
-	public $show_tax        = true;
-	public $show_total      = true;
-	public $show_thumbnails = true;
+	public $columns           = array();
+	public $show_shipping     = true;
+	public $show_tax          = true;
+	public $show_total        = true;
+	public $show_thumbnails   = true;
+	public $show_coupon_field = true;
 
 	public function __construct() {
 		global $wpsc_cart;

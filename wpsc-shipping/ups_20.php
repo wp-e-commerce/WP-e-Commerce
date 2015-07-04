@@ -759,13 +759,13 @@ class ash_ups {
 		$wpsc_country = new WPSC_Country( wpsc_get_customer_meta( 'shippingcountry' ) );
 
 		if ( $wpsc_country->has_regions() ) {
-			$wpsc_region = $wpsc_country->get_region( wpsc_get_customer_meta( 'shippingregion' )  );
+			$wpsc_region = $wpsc_country->get_region( wpsc_get_customer_meta( 'shippingregion' ) );
 			if ( is_a( $wpsc_region, 'WPSC_Region' ) ) {
 				$args['dest_state'] = $wpsc_region->get_code();
 			}
 		}
 
-		if ( empty ( $args['dest_state'] ) ) {
+		if ( empty( $args['dest_state'] ) ) {
 			$args['dest_state'] = wpsc_get_customer_meta( 'shippingstate' );
 		}
 

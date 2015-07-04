@@ -34,8 +34,6 @@ $nzshpcrt_gateways[$num] = array(
 	)
 );
 
-
-
 /**
 	* WP eCommerce PayPal Standard Merchant Class
 	*

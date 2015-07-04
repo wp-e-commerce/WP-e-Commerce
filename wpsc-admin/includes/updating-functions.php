@@ -774,9 +774,9 @@ function wpsc_convert_variation_combinations() {
 
 	}
 	delete_option("wpsc-variation_children");
-_get_term_hierarchy('wpsc-variation');
-delete_option("wpsc_product_category_children");
-_get_term_hierarchy('wpsc_product_category');
+	_get_term_hierarchy('wpsc-variation');
+	delete_option("wpsc_product_category_children");
+	_get_term_hierarchy('wpsc_product_category');
 }
 
 function wpsc_update_files() {
