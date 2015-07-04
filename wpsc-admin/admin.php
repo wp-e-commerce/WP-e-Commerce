@@ -1353,15 +1353,15 @@ function _wpsc_delete_file( $product_id, $file_name ) {
 /**
  * Duplicates a product
  *
- * @uses wp_insert_post()                 Inserts a new post to the database
- * @uses wpsc_duplicate_taxonomies()      Copy the taxonomies of a post to another post
- * @uses wpsc_duplicate_product_meta()    Copy the metadata of a post to another post
- * @uses wpsc_duplicate_children()        Copy the children of the product
+ * @uses  wp_insert_post()                              Inserts a new post to the database
+ * @uses  wpsc_duplicate_taxonomies()                   Copy the taxonomies of a post to another post
+ * @uses  wpsc_duplicate_product_meta()                 Copy the metadata of a post to another post
+ * @uses  wpsc_duplicate_children()                     Copy the children of the product
+ * @uses  wpsc_update_duplicate_product_gallery_meta()  Updates duplicate product gallery meta.
  *
- * @param object    $post           req     The post object
- * @param bool      $new_parent_id  opt     The parent post id
- *
- * @return int|WP_Error     New post id or error
+ * @param  object        $post           The post object.
+ * @param  int|bool      $new_parent_id  Optional. The parent post ID or false.
+ * @return int|WP_Error                  New post ID or error.
  */
 function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
 	$new_post_date     = $post->post_date;
@@ -1409,7 +1409,10 @@ function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
 	do_action( 'wpsc_duplicate_product', $post, $new_post_id );
 
 	// Finds children (Which includes product files AND product images), their meta values, and duplicates them.
-	wpsc_duplicate_children( $post->ID, $new_post_id );
+	$duplicated_children = wpsc_duplicate_children( $post->ID, $new_post_id );
+
+	// Update product gallery meta (resetting duplicated meta value IDs)
+	wpsc_update_duplicate_product_gallery_meta( $post->ID, $new_post_id, $duplicated_children );
 
 	// Copy product thumbnail (resetting duplicated meta value)
 	wpsc_duplicate_product_thumbnail( $post->ID, $new_post_id );
@@ -1477,6 +1480,49 @@ function wpsc_duplicate_product_meta( $id, $new_id ) {
 }
 
 /**
+ * Update Duplicate Product Gallery Meta
+ *
+ * When a product is duplicated it's meta values are copied too
+ * including the gallery meta array of IDs.
+ *
+ * After the product's children (including attachments) have been
+ * duplicated this function is used to update the gallery meta to
+ * refer to the IDs of any duplicated media.
+ *
+ * @param  int    $post_id              Original product post ID.
+ * @param  int    $new_post_id          Duplicated product post ID.
+ * @param  array  $duplicated_children  Associative array mapping original child IDs to duplicated child IDs.
+ */
+function wpsc_update_duplicate_product_gallery_meta( $post_id, $new_post_id, $duplicated_children ) {
+
+	$gallery = get_post_meta( $new_post_id, '_wpsc_product_gallery', true );
+	$new_gallery = array();
+
+	// Loop through duplicated gallery IDs.
+	if ( is_array( $gallery ) ) {
+		foreach ( $gallery as $gallery_id ) {
+
+			// If product image should be duplicated
+			if ( apply_filters( 'wpsc_duplicate_product_attachment', true, $gallery_id, $new_post_id ) ) {
+
+				// Update attached image IDs and copy non-attached image IDs
+				if ( array_key_exists( $gallery_id, $duplicated_children ) ) {
+					$new_gallery[] = $duplicated_children[ $gallery_id ];
+				} else {
+					$new_gallery[] = $gallery_id;
+				}
+
+			}
+
+		}
+
+		update_post_meta( $new_post_id, '_wpsc_product_gallery', $new_gallery );
+
+	}
+
+}
+
+/**
  * Duplicate Featured Image
  *
  * When a product is duplicated, the featured image ID is copied when the post
@@ -1501,7 +1547,7 @@ function wpsc_duplicate_product_thumbnail( $post_id, $new_post_id ) {
 	$thumbnail_id = $original_thumbnail_id = has_post_thumbnail( $new_post_id ) ? get_post_thumbnail_id( $new_post_id ) : 0;
 
 	// If not duplicating product attachments, ensure featured image ID is zero
-	if ( ! apply_filters( 'wpsc_duplicate_product_attachment', true, get_post( $thumbnail_id ), $new_post_id ) ) {
+	if ( ! apply_filters( 'wpsc_duplicate_product_attachment', true, $thumbnail_id, $new_post_id ) ) {
 		$thumbnail_id = 0;
 	}
 
@@ -1517,13 +1563,15 @@ function wpsc_duplicate_product_thumbnail( $post_id, $new_post_id ) {
 }
 
 /**
- * Duplicates children product and children meta
+ * Duplicates product children and meta
  *
- * @uses get_posts()                          Gets an array of posts given array of arguments
- * @uses wpsc_duplicate_product_process()     Duplicates product
+ * @uses  get_posts()                             Gets an array of posts given array of arguments.
+ * @uses  wpsc_duplicate_product_image_process()  Duplicates product image.
+ * @uses  wpsc_duplicate_product_process()        Duplicates product child.
  *
- * @param   int     $old_parent_id  req     Post id for old parent
- * @param   int     $new_parenc_id  req     Post id for the new parent
+ * @param   int    $old_parent_id  Post id for old parent.
+ * @param   int    $new_parenc_id  Post id for the new parent.
+ * @return  array                  Array mapping old child IDs to duplicated child IDs.                    
  */
 function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
 
@@ -1536,18 +1584,28 @@ function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
 		'order'       => 'ASC',
 	) );
 
+	// Map duplicate child IDs
+	$converted_child_ids = array();
+
 	foreach ( $child_posts as $child_post ) {
 
 		// Duplicate product images and child posts
 		if ( 'attachment' == get_post_type( $child_post ) ) {
-			wpsc_duplicate_product_image_process( $child_post, $new_parent_id );
+			$new_child_id = wpsc_duplicate_product_image_process( $child_post, $new_parent_id );
 		} else {
-			wpsc_duplicate_product_process( $child_post, $new_parent_id );
+			$new_child_id = wpsc_duplicate_product_process( $child_post, $new_parent_id );
 		}
 
-		do_action( 'wpsc_duplicate_product_child', $child_post, $new_parent_id );
+		// Map child ID to new child ID
+		if ( $new_child_id && ! is_wp_error( $new_child_id ) ) {
+			$converted_child_ids[ $child_post->ID ] = $new_child_id;
+		}
+
+		do_action( 'wpsc_duplicate_product_child', $child_post, $new_parent_id, $new_child_id );
 
 	}
+
+	return $converted_child_ids;
 
 }
 
@@ -1565,13 +1623,13 @@ function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
  * @uses  is_wp_error()            Is WP error?
  * @uses  media_handle_sideload()  Handle creation of new attachment and attach to post.
  *
- * @param   object  $post           The post object.
- * @param   bool    $new_parent_id  Optional. The parent post id.
- * @return  int                     Attachment ID.
+ * @param   object    $post           The post object.
+ * @param   bool      $new_parent_id  Optional. The parent post id.
+ * @return  int|bool                  Attachment ID or false.
  */
 function wpsc_duplicate_product_image_process( $child_post, $new_parent_id ) {
 
-	if ( 'attachment' == get_post_type( $child_post ) && apply_filters( 'wpsc_duplicate_product_attachment', true, $child_post, $new_parent_id ) ) {
+	if ( 'attachment' == get_post_type( $child_post ) && apply_filters( 'wpsc_duplicate_product_attachment', true, $child_post->ID, $new_parent_id ) ) {
 
 		$file = wp_get_attachment_url( $child_post->ID );
 
@@ -1631,6 +1689,8 @@ function wpsc_duplicate_product_image_process( $child_post, $new_parent_id ) {
 		delete_post_meta( $new_parent_id, '_thumbnail_id' );
 
 	}
+
+	return false;
 
 }
 
