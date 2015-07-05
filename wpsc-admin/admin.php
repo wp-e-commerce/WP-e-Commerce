@@ -1368,7 +1368,7 @@ function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
 
 	$duplicate = new WPSC_Duplicate_Product( $post->ID, $new_parent_id );
 
-	return $duplicate->duplicate_product_process( $post, $new_parent_id );
+	return $duplicate->duplicate_product_process();
 
 }
 
@@ -1385,8 +1385,7 @@ function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
  */
 function wpsc_duplicate_taxonomies( $id, $new_id, $post_type ) {
 
-	$duplicate = new WPSC_Duplicate_Product( $id, $new_id );
-	$duplicate->duplicate_taxonomies( $id, $new_id, $post_type );
+	// @todo  Deprecate
 
 }
 
@@ -1403,8 +1402,7 @@ function wpsc_duplicate_taxonomies( $id, $new_id, $post_type ) {
  */
 function wpsc_duplicate_product_meta( $id, $new_id ) {
 
-	$duplicate = new WPSC_Duplicate_Product( $id, $new_id );
-	$duplicate->duplicate_product_meta( $id, $new_id );
+	// @todo  Deprecate
 
 }
 
@@ -1424,8 +1422,7 @@ function wpsc_duplicate_product_meta( $id, $new_id ) {
  */
 function wpsc_update_duplicate_product_gallery_meta( $post_id, $new_post_id, $duplicated_children ) {
 
-	$duplicate = new WPSC_Duplicate_Product( $post_id, $new_post_id );
-	$duplicate->update_duplicate_product_gallery_meta( $post_id, $new_post_id, $duplicated_children );
+	// @todo  Deprecate
 
 }
 
@@ -1451,8 +1448,7 @@ function wpsc_update_duplicate_product_gallery_meta( $post_id, $new_post_id, $du
  */
 function wpsc_duplicate_product_thumbnail( $post_id, $new_post_id ) {
 
-	$duplicate = new WPSC_Duplicate_Product( $post_id, $new_post_id );
-	$duplicate->duplicate_product_thumbnail( $post_id, $new_post_id );
+	// @todo  Deprecate
 
 }
 
@@ -1469,8 +1465,7 @@ function wpsc_duplicate_product_thumbnail( $post_id, $new_post_id ) {
  */
 function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
 
-	$duplicate = new WPSC_Duplicate_Product( $old_parent_id, $new_parent_id );
-	$duplicate->duplicate_children( $old_parent_id, $new_parent_id );
+	// @todo  Deprecate
 
 }
 
@@ -1494,8 +1489,8 @@ function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
  */
 function wpsc_duplicate_product_image_process( $child_post, $new_parent_id ) {
 
-	$duplicate = new WPSC_Duplicate_Product( $child_post->post_parent, $new_parent_id );
-	$duplicate->duplicate_product_image_process( $child_post, $new_parent_id );
+	$duplicate = new WPSC_Duplicate_Product( $child_post->ID, $new_parent_id );
+	$duplicate->duplicate_product_image_process();
 
 }
 

@@ -19,20 +19,21 @@
 class WPSC_Duplicate_Product {
 
 	private $post_id = null;
-	private $new_post_id = false;
+	private $new_post_id = null;
+	private $new_parent_id = false;
 
 	/**
 	 * Create new duplicate product
 	 *
 	 * @since  4.0
+	 *
+	 * @param [type]  $post_id       [description]
+	 * @param boolean $new_parent_id [description]
 	 */
-	public function __construct( $post_id, $new_post_id = false ) {
+	public function __construct( $post_id, $new_parent_id = false ) {
 
 		$this->post_id = absint( $post_id );
-
-		if ( false !== $new_post_id ) {
-			$this->new_post_id = absint( $new_post_id );
-		}
+		$this->new_parent_id = absint( $new_parent_id );
 
 	}
 
@@ -43,11 +44,12 @@ class WPSC_Duplicate_Product {
 	 *
 	 * @uses  wp_insert_post()  Inserts a new post to the database.
 	 *
-	 * @param  object        $post           The post object.
-	 * @param  int|bool      $new_parent_id  Optional. The parent post ID or false.
-	 * @return int|WP_Error                  New post ID or error.
+	 * @return  int|WP_Error  New post ID or error.
 	 */
-	public function duplicate_product_process( $post, $new_parent_id = false ) {
+	public function duplicate_product_process() {
+
+		$post = get_post( $this->get_post_id() );
+		$new_parent_id = $this->get_new_parent_id();
 
 		$new_post_date     = $post->post_date;
 		$new_post_date_gmt = get_gmt_from_date( $new_post_date );
@@ -84,26 +86,26 @@ class WPSC_Duplicate_Product {
 		$defaults = stripslashes_deep( $defaults );
 
 		// Insert the new template in the post table
-		$new_post_id = wp_insert_post( $defaults );
+		$this->new_post_id = wp_insert_post( $defaults );
 
 		// Copy the taxonomies
-		$this->duplicate_taxonomies( $post->ID, $new_post_id, $post->post_type );
+		$this->duplicate_taxonomies();
 
 		// Copy the meta information
-		$this->duplicate_product_meta( $post->ID, $new_post_id );
+		$this->duplicate_product_meta();
 
-		do_action( 'wpsc_duplicate_product', $post, $new_post_id );
+		do_action( 'wpsc_duplicate_product', $post, $this->get_new_post_id() );
 
 		// Finds children (which includes product files AND product images), their meta values, and duplicates them.
-		$duplicated_children = $this->duplicate_children( $post->ID, $new_post_id );
+		$duplicated_children = $this->duplicate_children();
 
 		// Update product gallery meta (resetting duplicated meta value IDs)
-		$this->update_duplicate_product_gallery_meta( $post->ID, $new_post_id, $duplicated_children );
+		$this->update_duplicate_product_gallery_meta( $duplicated_children );
 
 		// Copy product thumbnail (resetting duplicated meta value)
-		$this->duplicate_product_thumbnail( $post->ID, $new_post_id );
+		$this->duplicate_product_thumbnail();
 
-		return $new_post_id;
+		return $this->get_new_post_id();
 
 	}
 
@@ -112,15 +114,15 @@ class WPSC_Duplicate_Product {
 	 *
 	 * @since 4.0
 	 *
-	 * @uses  get_object_taxonomies()  Gets taxonomies for the given object.
-	 * @uses  wp_get_object_terms()    Gets terms for the taxonomies.
-	 * @uses  wp_set_object_terms()    Sets the terms for a post object.
-	 *
-	 * @param  int     $id         ID of the post we are duplicating.
-	 * @param  int     $new_id     ID of the new post.
-	 * @param  string  $post_type  The post type we are setting.
+	 * @uses  get_object_taxonomies()   Gets taxonomies for the given object.
+	 * @uses  wpsc_get_product_terms()  Gets terms for the product taxonomies.
+	 * @uses  wp_set_object_terms()     Sets the terms for a post object.
 	 */
-	public function duplicate_taxonomies( $id, $new_id, $post_type ) {
+	private function duplicate_taxonomies() {
+
+		$id = $this->get_post_id();
+		$new_id = $this->get_new_post_id();
+		$post_type = get_post_type( $id );
 
 		$taxonomies = get_object_taxonomies( $post_type );
 
@@ -142,13 +144,13 @@ class WPSC_Duplicate_Product {
 	 * @uses  get_results()  Gets generic multirow results from the database.
 	 * @uses  prepare()      Prepares a database query making it safe.
 	 * @uses  query()        Runs an SQL query.
-	 *
-	 * @param  int  $id      ID of the post we are duplicating.
-	 * @param  int  $new_id  ID of the new post.
 	 */
-	public function duplicate_product_meta( $id, $new_id ) {
+	private function duplicate_product_meta() {
 
 		global $wpdb;
+
+		$id = $this->get_post_id();
+		$new_id = $this->get_new_post_id();
 
 		$post_meta_infos = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id = %d", $id ) );
 
@@ -190,11 +192,12 @@ class WPSC_Duplicate_Product {
 	 *
 	 * @since 4.0
 	 *
-	 * @param  int    $post_id              Original product post ID.
-	 * @param  int    $new_post_id          Duplicated product post ID.
 	 * @param  array  $duplicated_children  Associative array mapping original child IDs to duplicated child IDs.
 	 */
-	public function update_duplicate_product_gallery_meta( $post_id, $new_post_id, $duplicated_children ) {
+	private function update_duplicate_product_gallery_meta( $duplicated_children ) {
+
+		$post_id = $this->get_post_id();
+		$new_post_id = $this->get_new_post_id();
 
 		$gallery = get_post_meta( $new_post_id, '_wpsc_product_gallery', true );
 		$new_gallery = array();
@@ -241,11 +244,11 @@ class WPSC_Duplicate_Product {
 	 * of the duplicated product via the 'wpsc_duplicate_product_thumbnail' filter.
 	 *
 	 * @since 4.0
-	 *
-	 * @param  integer  $post_id      Product ID.
-	 * @param  integer  $new_post_id  Duplicated product ID.
 	 */
-	public function duplicate_product_thumbnail( $post_id, $new_post_id ) {
+	private function duplicate_product_thumbnail() {
+
+		$post_id = $this->get_post_id();
+		$new_post_id = $this->get_new_post_id();
 
 		$thumbnail_id = $original_thumbnail_id = has_post_thumbnail( $new_post_id ) ? get_post_thumbnail_id( $new_post_id ) : 0;
 
@@ -272,11 +275,12 @@ class WPSC_Duplicate_Product {
 	 *
 	 * @uses  get_posts()  Gets an array of posts given array of arguments.
 	 *
-	 * @param   int    $old_parent_id  Post ID for old parent.
-	 * @param   int    $new_parent_id  Post ID for the new parent.
-	 * @return  array                  Array mapping old child IDs to duplicated child IDs.                    
+	 * @return  array  Array mapping old child IDs to duplicated child IDs.                    
 	 */
-	public function duplicate_children( $old_parent_id, $new_parent_id ) {
+	private function duplicate_children() {
+
+		$old_parent_id = $this->get_post_id();
+		$new_parent_id = $this->get_new_post_id();
 
 		// Get children products and duplicate them
 		$child_posts = get_posts( array(
@@ -294,9 +298,11 @@ class WPSC_Duplicate_Product {
 
 			// Duplicate product images and child posts
 			if ( 'attachment' == get_post_type( $child_post ) ) {
-				$new_child_id = $this->duplicate_product_image_process( $child_post, $new_parent_id );
+				$duplicate_child = new WPSC_Duplicate_Product( $child_post->ID, $new_parent_id );
+				$new_child_id = $duplicate_child->duplicate_product_image_process();
 			} else {
-				$new_child_id = $this->duplicate_product_process( $child_post, $new_parent_id );
+				$duplicate_child = new WPSC_Duplicate_Product( $child_post->ID, $new_parent_id );
+				$new_child_id = $duplicate_child->duplicate_product_process();
 			}
 
 			// Map child ID to new child ID
@@ -326,11 +332,12 @@ class WPSC_Duplicate_Product {
 	 * @uses  is_wp_error()            Is WP error?
 	 * @uses  media_handle_sideload()  Handle creation of new attachment and attach to post.
 	 *
-	 * @param   object    $post           The post object.
-	 * @param   bool      $new_parent_id  Optional. The parent post id.
-	 * @return  int|bool                  Attachment ID or false.
+	 * @return  int|bool  Attachment ID or false.
 	 */
-	public function duplicate_product_image_process( $child_post, $new_parent_id ) {
+	public function duplicate_product_image_process() {
+
+		$child_post = get_post( $this->get_post_id() );
+		$new_parent_id = $this->get_new_parent_id();
 
 		if ( 'attachment' == get_post_type( $child_post ) && apply_filters( 'wpsc_duplicate_product_attachment', true, $child_post->ID, $new_parent_id ) ) {
 
@@ -416,6 +423,17 @@ class WPSC_Duplicate_Product {
 	public function get_new_post_id() {
 
 		return $this->new_post_id;
+		
+	}
+
+	/**
+	 * Get New Parent ID
+	 *
+	 * @return  int  Post ID.
+	 */
+	public function get_new_parent_id() {
+
+		return $this->new_parent_id;
 		
 	}
 

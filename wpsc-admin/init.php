@@ -82,7 +82,7 @@ function wpsc_duplicate_product() {
 	if ( isset( $post ) && $post != null ) {
 
 		$duplicate = new WPSC_Duplicate_Product( $post->ID );
-		$new_id = $duplicate->duplicate_product_process( $post );
+		$new_id = $duplicate->duplicate_product_process();
 
 		$duplicated = true;
 		$sendback = wp_get_referer();
