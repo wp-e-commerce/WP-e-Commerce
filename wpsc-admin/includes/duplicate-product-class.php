@@ -27,8 +27,8 @@ class WPSC_Duplicate_Product {
 	 *
 	 * @since  4.0
 	 *
-	 * @param [type]  $post_id       [description]
-	 * @param boolean $new_parent_id [description]
+	 * @param  int      $post_id        Post ID.
+	 * @param  boolean  $new_parent_id  New post parent ID.
 	 */
 	public function __construct( $post_id, $new_parent_id = false ) {
 
@@ -49,7 +49,7 @@ class WPSC_Duplicate_Product {
 	public function duplicate_product_process() {
 
 		$post = get_post( $this->get_post_id() );
-		$new_parent_id = $this->get_new_parent_id();
+		$new_parent_id = $this->get_new_parent_id( $post->post_parent );
 
 		$new_post_date     = $post->post_date;
 		$new_post_date_gmt = get_gmt_from_date( $new_post_date );
@@ -67,7 +67,7 @@ class WPSC_Duplicate_Product {
 			'post_status'           => $post->post_status,
 			'post_type'             => $new_post_type,
 			'ping_status'           => $ping_status,
-			'post_parent'           => $new_parent_id ? $new_parent_id : $post->post_parent,
+			'post_parent'           => $new_parent_id,
 			'menu_order'            => $post->menu_order,
 			'to_ping'               => $post->to_ping,
 			'pinged'                => $post->pinged,
@@ -337,7 +337,7 @@ class WPSC_Duplicate_Product {
 	public function duplicate_product_image_process() {
 
 		$child_post = get_post( $this->get_post_id() );
-		$new_parent_id = $this->get_new_parent_id();
+		$new_parent_id = $this->get_new_parent_id( $child_post->post_parent );
 
 		if ( 'attachment' == get_post_type( $child_post ) && apply_filters( 'wpsc_duplicate_product_attachment', true, $child_post->ID, $new_parent_id ) ) {
 
@@ -429,12 +429,13 @@ class WPSC_Duplicate_Product {
 	/**
 	 * Get New Parent ID
 	 *
-	 * @return  int  Post ID.
+	 * @param   int  $default  Default parent ID.
+	 * @return  int            Post ID.
 	 */
-	public function get_new_parent_id() {
+	public function get_new_parent_id( $default = 0 ) {
 
-		return $this->new_parent_id;
-		
+		return false === $this->new_parent_id ? $default : $this->new_parent_id;
+
 	}
 
 }
