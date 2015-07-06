@@ -326,11 +326,7 @@ class wpsc_cart_item {
 				'post_status' => 'inherit'
 		) );
 
-		if(count($product_files) > 0) {
-			$this->is_downloadable = true;
-		} else {
-			$this->is_downloadable = false;
-		}
+		$this->is_downloadable = count( $product_files ) > 0;
 
 		if ( isset( $this->cart->selected_shipping_method ) && isset( $wpsc_shipping_modules[$this->cart->selected_shipping_method] ) && is_callable( array( $wpsc_shipping_modules[$this->cart->selected_shipping_method], "get_item_shipping" ) ) )
 			$this->shipping = $wpsc_shipping_modules[$this->cart->selected_shipping_method]->get_item_shipping( $this );
@@ -343,14 +339,16 @@ class wpsc_cart_item {
 
 	public function get_title( $mode = 'display' ) {
 
-		if ( ! get_post_field( 'post_parent', $this->product_id ) )
+		if ( ! get_post_field( 'post_parent', $this->product_id ) ) {
 			return get_post_field( 'post_title', $this->product_id );
+		}
 
-		if ( empty( self::$variation_cache ) )
+		if ( empty( self::$variation_cache ) ) {
 			self::refresh_variation_cache();
+		}
 
 		$primary_product_id = get_post_field( 'post_parent', $this->product_id );
-		$title = get_post_field( 'post_title', $primary_product_id );
+		$title              = get_post_field( 'post_title' , $primary_product_id );
 
 		if ( isset( self::$variation_cache[ $this->product_id ] ) ) {
 			ksort( self::$variation_cache[ $this->product_id ] );

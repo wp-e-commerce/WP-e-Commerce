@@ -205,6 +205,8 @@ function _wpsc_maybe_activate_theme_engine_v2() {
 
 		do_action( 'wpsc_updated_theme_engine', $new_theme_engine, $old_theme_engine );
 
+		do_action( "wpsc_updated_theme_engine_from_{$old_theme_engine}_to_{$new_theme_engine}" );
+
 		add_action( 'shutdown', '_wpsc_action_flush_rewrite_rules' );
 
 		update_option( 'wpsc_get_active_theme_engine', $new_theme_engine );
@@ -212,6 +214,8 @@ function _wpsc_maybe_activate_theme_engine_v2() {
 
 	return $activate;
 }
+
+add_action( 'wpsc_updated_theme_engine_from_2.0_to_1.0', 'wpsc_install' );
 
 /**
  * Simple router for using either the 1.0 or 2.0 theme engine, based on result of _wpsc_maybe_activate_theme_engine_v2().

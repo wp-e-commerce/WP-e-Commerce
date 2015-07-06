@@ -144,7 +144,7 @@ function wpsc_send_registration_notification( $user_id, $username, $email, $pass
 
 	$username = stripslashes( $username );
 	$password = stripslashes( $password );
-	$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES);
+	$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
 
 	$title = apply_filters( 'wpsc_registration_notification_title', __( '[%s] Thank you for registering', 'wpsc' ) );
 	$title = sprintf( $title, $blogname );

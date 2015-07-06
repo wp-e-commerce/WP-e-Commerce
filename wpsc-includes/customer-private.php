@@ -5,7 +5,6 @@ add_action( 'wpsc_add_item'              , '_wpsc_action_customer_used_cart' );
 add_action( 'wpsc_before_submit_checkout', '_wpsc_action_customer_used_cart' );
 add_action( 'wp_login'                   , '_wpsc_action_setup_customer'     );
 
-
 /**
  * Setup current user object and customer ID as well as cart.
  *

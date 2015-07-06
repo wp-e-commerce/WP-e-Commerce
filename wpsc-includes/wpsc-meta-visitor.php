@@ -395,7 +395,7 @@ function _wpsc_visitor_security_key( $visitor_id ) {
  * @param $updates_array array of attributes to update
  * @return boolean true if successful
  */
-function wpsc_update_visitor(  $visitor_id, $args ) {
+function wpsc_update_visitor( $visitor_id, $args ) {
 
 	if ( ! _wpsc_visitor_database_ready() ) {
 		return false;
@@ -407,7 +407,7 @@ function wpsc_update_visitor(  $visitor_id, $args ) {
 
 	if ( ! empty( $args ) ) {
 
-		$result = $wpdb->update( $wpdb->wpsc_visitors, $args,	array( 'id' => $visitor_id ) );
+		$result = $wpdb->update( $wpdb->wpsc_visitors, $args, array( 'id' => $visitor_id ) );
 
 		if ( isset( $args['user_id'] ) && is_numeric( $args['user_id'] ) && ( $args['user_id'] != 0 ) ) {
 			$wp_user_id = intval( $args['user_id'] );
