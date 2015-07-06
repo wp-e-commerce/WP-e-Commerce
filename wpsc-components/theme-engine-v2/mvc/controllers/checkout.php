@@ -452,8 +452,11 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 			$email   = wpsc_get_customer_meta( 'billingemail' );
 			$user_id = wpsc_register_customer( $email, $email, false );
-
 			$purchase_log->set( 'user_ID', $user_id );
+
+			wpsc_update_customer_meta( 'checkout_details', wpsc_get_customer_meta( 'checkout_details' ), $user_id );
+
+			update_user_meta( $user_id, '_wpsc_visitor_id', wpsc_get_current_customer_id() );
 		}
 
 		$purchase_log->save();
