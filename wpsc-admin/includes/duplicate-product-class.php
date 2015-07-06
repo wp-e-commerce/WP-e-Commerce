@@ -125,7 +125,7 @@ class WPSC_Duplicate_Product {
 	 * @uses  wpsc_get_product_terms()  Gets terms for the product taxonomies.
 	 * @uses  wp_set_object_terms()     Sets the terms for a post object.
 	 */
-	private function duplicate_taxonomies() {
+	public function duplicate_taxonomies() {
 
 		$new_id = $this->get_new_post_id();
 
@@ -156,7 +156,7 @@ class WPSC_Duplicate_Product {
 	 * @uses  prepare()      Prepares a database query making it safe.
 	 * @uses  query()        Runs an SQL query.
 	 */
-	private function duplicate_product_meta() {
+	public function duplicate_product_meta() {
 
 		global $wpdb;
 
