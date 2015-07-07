@@ -33,7 +33,7 @@ class WPSC_Duplicate_Product {
 	public function __construct( $post_id, $new_parent_id = false, $new_post_id = null ) {
 
 		$this->post_id = absint( $post_id );
-		$this->new_parent_id = absint( $new_parent_id );
+		$this->new_parent_id = is_numeric( $new_parent_id ) ? absint( $new_parent_id ) : false;
 		$this->new_post_id = is_numeric( $new_post_id ) ? absint( $new_post_id ) : null;
 
 	}
