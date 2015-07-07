@@ -26,9 +26,9 @@ class WPSC_Duplicate_Product {
 	 *
 	 * @since  4.0
 	 *
-	 * @param  int       $post_id        Post ID.
-	 * @param  boolean   $new_parent_id  Optional. New post parent ID.
-	 * @param  int|null  $new_post_id    Optional. New post ID if copying to exisiting post.
+	 * @param  int        $post_id        Post ID.
+	 * @param  int|false  $new_parent_id  Optional. New post parent ID.
+	 * @param  int|null   $new_post_id    Optional. New post ID if copying to exisiting post.
 	 */
 	public function __construct( $post_id, $new_parent_id = false, $new_post_id = null ) {
 
