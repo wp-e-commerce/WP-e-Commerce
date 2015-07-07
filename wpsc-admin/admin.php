@@ -1354,15 +1354,11 @@ function _wpsc_delete_file( $product_id, $file_name ) {
 /**
  * Duplicates a product
  *
- * @uses  wp_insert_post()                              Inserts a new post to the database
- * @uses  wpsc_duplicate_taxonomies()                   Copy the taxonomies of a post to another post
- * @uses  wpsc_duplicate_product_meta()                 Copy the metadata of a post to another post
- * @uses  wpsc_duplicate_children()                     Copy the children of the product
- * @uses  wpsc_update_duplicate_product_gallery_meta()  Updates duplicate product gallery meta.
+ * @uses  WPSC_Duplicate_Product  Duplicate product class.
  *
- * @param  object        $post           The post object.
- * @param  int|bool      $new_parent_id  Optional. The parent post ID or false.
- * @return int|WP_Error                  New post ID or error.
+ * @param   object        $post           The post object.
+ * @param   int|bool      $new_parent_id  Optional. The parent post ID or false.
+ * @return  int|WP_Error                  New post ID or error.
  */
 function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
 
@@ -1377,13 +1373,11 @@ function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
 /**
  * Copy the taxonomies of a post to another post
  *
- * @uses get_object_taxonomies()  Gets taxonomies for the give object
- * @uses wp_get_object_terms()    Gets terms for the taxonomies
- * @uses wp_set_object_terms()    Sets the terms for a post object
+ * @uses  WPSC_Duplicate_Product  Duplicate product class.
  *
- * @param int       $id         req     ID of the post we are duping
- * @param int       $new_id     req     ID of the new post
- * @param string    $post_type  req     The post type we are setting
+ * @param  int     $id         ID of the post we are duping.
+ * @param  int     $new_id     ID of the new post.
+ * @param  string  $post_type  The post type we are setting.
  */
 function wpsc_duplicate_taxonomies( $id, $new_id, $post_type ) {
 
@@ -1397,13 +1391,10 @@ function wpsc_duplicate_taxonomies( $id, $new_id, $post_type ) {
 /**
  * Copy the meta information of a post to another post
  *
- * @uses $wpdb              WordPress database object for queries
- * @uses get_results()      Gets generic multirow results from the database
- * @uses prepare()          Prepares a database query making it safe
- * @uses query()            Runs an SQL query
+ * @uses  WPSC_Duplicate_Product  Duplicate product class.
  *
- * @param int   $id     req ID of the post we are duping
- * @param int   $new_id req ID of the new post
+ * @param  int  $id      ID of the post we are duping.
+ * @param  int  $new_id  ID of the new post.
  */
 function wpsc_duplicate_product_meta( $id, $new_id ) {
 
@@ -1451,8 +1442,10 @@ function wpsc_update_duplicate_product_gallery_meta( $post_id, $new_post_id, $du
  * the duplicated product and offers the opportunity to change the featured image
  * of the duplicated product via the 'wpsc_duplicate_product_thumbnail' filter.
  *
- * @param   integer  $post_id      Product ID.
- * @param   integer  $new_post_id  Duplicated product ID.
+ * @uses  WPSC_Duplicate_Product  Duplicate product class.
+ *
+ * @param  integer  $post_id      Product ID.
+ * @param  integer  $new_post_id  Duplicated product ID.
  */
 function wpsc_duplicate_product_thumbnail( $post_id, $new_post_id ) {
 
@@ -1466,9 +1459,7 @@ function wpsc_duplicate_product_thumbnail( $post_id, $new_post_id ) {
 /**
  * Duplicates product children and meta
  *
- * @uses  get_posts()                             Gets an array of posts given array of arguments.
- * @uses  wpsc_duplicate_product_image_process()  Duplicates product image.
- * @uses  wpsc_duplicate_product_process()        Duplicates product child.
+ * @uses  WPSC_Duplicate_Product  Duplicate product class.
  *
  * @param   int    $old_parent_id  Post id for old parent.
  * @param   int    $new_parenc_id  Post id for the new parent.
@@ -1492,14 +1483,10 @@ function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
  *
  * @since 3.9.0
  *
- * @uses  get_post_type()          Gets post type.
- * @uses  wp_get_attachment_url()  Gets attachment URL.
- * @uses  download_url()           Download file from URl to temp location.
- * @uses  is_wp_error()            Is WP error?
- * @uses  media_handle_sideload()  Handle creation of new attachment and attach to post.
+ * @uses  WPSC_Duplicate_Product  Duplicate product class.
  *
  * @param   object    $post           The post object.
- * @param   bool      $new_parent_id  Optional. The parent post id.
+ * @param   bool      $new_parent_id  The parent post id.
  * @return  int|bool                  Attachment ID or false.
  */
 function wpsc_duplicate_product_image_process( $child_post, $new_parent_id ) {
