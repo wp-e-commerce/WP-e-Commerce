@@ -127,9 +127,9 @@ class WPSC_Duplicate_Product {
 	 */
 	public function duplicate_taxonomies() {
 
-		$new_id = $this->get_new_post_id();
+		$new_post_id = $this->get_new_post_id();
 
-		if ( $new_id ) {
+		if ( $new_post_id ) {
 
 			$id = $this->get_post_id();
 			$post_type = get_post_type( $id );
@@ -138,7 +138,7 @@ class WPSC_Duplicate_Product {
 			foreach ( $taxonomies as $taxonomy ) {
 				$post_terms = wpsc_get_product_terms( $id, $taxonomy );
 				foreach ( $post_terms as $post_term ) {
-					wp_set_object_terms( $new_id, $post_term->slug, $taxonomy, true );
+					wp_set_object_terms( $new_post_id, $post_term->slug, $taxonomy, true );
 				}
 			}
 
@@ -160,9 +160,9 @@ class WPSC_Duplicate_Product {
 
 		global $wpdb;
 
-		$new_id = $this->get_new_post_id();
+		$new_post_id = $this->get_new_post_id();
 
-		if ( $new_id ) {
+		if ( $new_post_id ) {
 
 			$post_meta_infos = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id = %d", $this->get_post_id() ) );
 
@@ -176,17 +176,17 @@ class WPSC_Duplicate_Product {
 					$meta_key = $meta_info->meta_key;
 					$meta_value = addslashes( $meta_info->meta_value );
 
-					$sql_query_sel[] = "( $new_id, '$meta_key', '$meta_value' )";
-					$values[] = $new_id;
+					$sql_query_sel[] = "( $new_post_id, '$meta_key', '$meta_value' )";
+					$values[] = $new_post_id;
 					$values[] = $meta_key;
 					$values[] = $meta_value;
-					$values += array( $new_id, $meta_key, $meta_value );
+					$values += array( $new_post_id, $meta_key, $meta_value );
 				}
 
 				$sql_query .= implode( ",", $sql_query_sel );
 				$sql_query = $wpdb->prepare( $sql_query, $values );
 				$wpdb->query( $sql_query );
-				clean_post_cache( $new_id );
+				clean_post_cache( $new_post_id );
 
 			}
 
@@ -382,21 +382,21 @@ class WPSC_Duplicate_Product {
 				}
 
 				// Do the validation and storage stuff.
-				$id = media_handle_sideload( $file_array, $new_parent_id );
+				$new_post_id = media_handle_sideload( $file_array, $new_parent_id );
 
 				// If error storing permanently, unlink.
-				if ( is_wp_error( $id ) ) {
+				if ( is_wp_error( $new_post_id ) ) {
 					@unlink( $file_array['tmp_name'] );
 				}
 
 				// Re-attribute featured image
 				if ( has_post_thumbnail( $new_parent_id ) && $child_post->ID == get_post_thumbnail_id( $new_parent_id ) ) {
-					set_post_thumbnail( $new_parent_id, $id );
+					set_post_thumbnail( $new_parent_id, $new_post_id );
 				}
 
 				// Copy attachment data
 				$post_data = array(
-					'ID'                    => $id,
+					'ID'                    => $new_post_id,
 					'post_content'          => $child_post->post_content,
 					'post_title'            => $child_post->post_title,
 					'post_excerpt'          => $child_post->post_excerpt,
@@ -411,9 +411,9 @@ class WPSC_Duplicate_Product {
 				wp_update_post( $post_data );
 
 				// Copy alt text
-				update_post_meta( $id, '_wp_attachment_image_alt', get_post_meta( $child_post->ID, '_wp_attachment_image_alt', true ) );
+				update_post_meta( $new_post_id, '_wp_attachment_image_alt', get_post_meta( $child_post->ID, '_wp_attachment_image_alt', true ) );
 
-				return $id;
+				return $new_post_id;
 
 			}
 
