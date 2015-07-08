@@ -315,14 +315,15 @@ class WPSC_Duplicate_Product {
 				'order'       => 'ASC'
 			) );
 
+			// Duplicate product images and child posts
 			foreach ( $child_posts as $child_post ) {
 
-				// Duplicate product images and child posts
+				$duplicate_child = new WPSC_Duplicate_Product( $child_post->ID, $new_parent_id );
+
+				// Duplicate image or post
 				if ( 'attachment' == get_post_type( $child_post ) ) {
-					$duplicate_child = new WPSC_Duplicate_Product( $child_post->ID, $new_parent_id );
 					$new_child_id = $duplicate_child->duplicate_product_image_process();
 				} else {
-					$duplicate_child = new WPSC_Duplicate_Product( $child_post->ID, $new_parent_id );
 					$new_child_id = $duplicate_child->duplicate_product_process();
 				}
 
