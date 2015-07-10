@@ -2193,3 +2193,164 @@ function wpsc_sanitise_keys($value) {
   /// Function used to cast array items to integer.
   return (int)$value;
 }
+
+/**
+ * Duplicates a product
+ *
+ * @uses  WPSC_Duplicate_Product  Duplicate product class.
+ *
+ * @param   object        $post           The post object.
+ * @param   int|bool      $new_parent_id  Optional. The parent post ID or false.
+ * @return  int|WP_Error                  New post ID or error.
+ *
+ * @deprecated  since 4.0
+ */
+function wpsc_duplicate_product_process( $post, $new_parent_id = false ) {
+
+	_wpsc_deprecated_function( __FUNCTION__, '4.0', 'WPSC_Duplicate_Product->duplicate_product_process()' );
+
+	$duplicate = new WPSC_Duplicate_Product( $post->ID, $new_parent_id );
+
+	return $duplicate->duplicate_product_process();
+
+}
+
+/**
+ * Copy the taxonomies of a post to another post
+ *
+ * @uses  WPSC_Duplicate_Product  Duplicate product class.
+ *
+ * @param  int     $id         ID of the post we are duping.
+ * @param  int     $new_id     ID of the new post.
+ * @param  string  $post_type  The post type we are setting.
+ *
+ * @deprecated  since 4.0
+ */
+function wpsc_duplicate_taxonomies( $id, $new_id, $post_type ) {
+
+	_wpsc_deprecated_function( __FUNCTION__, '4.0', 'WPSC_Duplicate_Product->duplicate_taxonomies()' );
+
+	$duplicate = new WPSC_Duplicate_Product( $id, false, $new_id );
+	$duplicate->duplicate_taxonomies();
+
+}
+
+/**
+ * Copy the meta information of a post to another post
+ *
+ * @uses  WPSC_Duplicate_Product  Duplicate product class.
+ *
+ * @param  int  $id      ID of the post we are duping.
+ * @param  int  $new_id  ID of the new post.
+ *
+ * @deprecated  since 4.0
+ */
+function wpsc_duplicate_product_meta( $id, $new_id ) {
+
+	_wpsc_deprecated_function( __FUNCTION__, '4.0', 'WPSC_Duplicate_Product->duplicate_product_meta()' );
+
+	$duplicate = new WPSC_Duplicate_Product( $id, false, $new_id );
+	$duplicate->duplicate_product_meta();
+
+}
+
+/**
+ * Update Duplicate Product Gallery Meta
+ *
+ * When a product is duplicated it's meta values are copied too
+ * including the gallery meta array of IDs.
+ *
+ * After the product's children (including attachments) have been
+ * duplicated this function is used to update the gallery meta to
+ * refer to the IDs of any duplicated media.
+ *
+ * @param  int    $post_id              Original product post ID.
+ * @param  int    $new_post_id          Duplicated product post ID.
+ * @param  array  $duplicated_children  Associative array mapping original child IDs to duplicated child IDs.
+ *
+ * @deprecated  since 4.0
+ */
+function wpsc_update_duplicate_product_gallery_meta( $post_id, $new_post_id, $duplicated_children ) {
+
+	_wpsc_deprecated_function( __FUNCTION__, '4.0' );
+
+}
+
+/**
+ * Duplicate Featured Image
+ *
+ * When a product is duplicated, the featured image ID is copied when the post
+ * meta is duplicated.
+ * 
+ * When the featured image is attached to the duplicated product, if the image
+ * is duplicated the featured image ID is updated to the duplicated image ID
+ * otherwise the featured image ID is removed.
+ *
+ * If the featured image is not attached to the product the featured image ID
+ * remains the same as the original product.
+ *
+ * This function will remove the featured image if the image is not attached to
+ * the duplicated product and offers the opportunity to change the featured image
+ * of the duplicated product via the 'wpsc_duplicate_product_thumbnail' filter.
+ *
+ * @uses  WPSC_Duplicate_Product  Duplicate product class.
+ *
+ * @param  integer  $post_id      Product ID.
+ * @param  integer  $new_post_id  Duplicated product ID.
+ *
+ * @deprecated  since 4.0
+ */
+function wpsc_duplicate_product_thumbnail( $post_id, $new_post_id ) {
+
+	_wpsc_deprecated_function( __FUNCTION__, '4.0', 'WPSC_Duplicate_Product->duplicate_product_thumbnail()' );
+
+	$duplicate = new WPSC_Duplicate_Product( $post_id, false, $new_post_id );
+	$duplicate->duplicate_product_thumbnail();
+
+}
+
+/**
+ * Duplicates product children and meta
+ *
+ * @uses  WPSC_Duplicate_Product  Duplicate product class.
+ *
+ * @param   int    $old_parent_id  Post id for old parent.
+ * @param   int    $new_parenc_id  Post id for the new parent.
+ * @return  array                  Array mapping old child IDs to duplicated child IDs. 
+ *
+ * @deprecated  since 4.0                   
+ */
+function wpsc_duplicate_children( $old_parent_id, $new_parent_id ) {
+
+	_wpsc_deprecated_function( __FUNCTION__, '4.0', 'WPSC_Duplicate_Product->duplicate_children()' );
+
+	$duplicate = new WPSC_Duplicate_Product( $old_parent_id, false, $new_parent_id );
+
+	return $duplicate->duplicate_children();
+
+}
+
+/**
+ * Duplicates a product image.
+ *
+ * Uses a portion of code from media_sideload_image() in `wp-admin/includes/media.php`
+ * to check file before downloading from URL.
+ *
+ * @since 3.9.0
+ *
+ * @uses  WPSC_Duplicate_Product  Duplicate product class.
+ *
+ * @param   object    $post           The post object.
+ * @param   bool      $new_parent_id  The parent post id.
+ * @return  int|bool                  Attachment ID or false.
+ *
+ * @deprecated  since 4.0
+ */
+function wpsc_duplicate_product_image_process( $child_post, $new_parent_id ) {
+
+	_wpsc_deprecated_function( __FUNCTION__, '4.0', 'WPSC_Duplicate_Product->duplicate_product_image_process()' );
+
+	$duplicate = new WPSC_Duplicate_Product( $child_post->ID, $new_parent_id );
+	$duplicate->duplicate_product_image_process();
+
+}
