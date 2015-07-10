@@ -17,8 +17,8 @@
  */
 class WPSC_Duplicate_Product {
 
-	private $post_id = null;
-	private $new_post_id = null;
+	private $post_id       = null;
+	private $new_post_id   = null;
 	private $new_parent_id = false;
 
 	/**
@@ -35,7 +35,6 @@ class WPSC_Duplicate_Product {
 		$this->post_id = absint( $post_id );
 		$this->new_parent_id = is_numeric( $new_parent_id ) ? absint( $new_parent_id ) : false;
 		$this->new_post_id = is_numeric( $new_post_id ) ? absint( $new_post_id ) : null;
-
 	}
 
 	/**
@@ -113,7 +112,6 @@ class WPSC_Duplicate_Product {
 		$this->duplicate_product_thumbnail();
 
 		return $this->get_new_post_id();
-
 	}
 
 	/**
@@ -141,9 +139,7 @@ class WPSC_Duplicate_Product {
 					wp_set_object_terms( $new_post_id, $post_term->slug, $taxonomy, true );
 				}
 			}
-
 		}
-
 	}
 
 	/**
@@ -187,17 +183,14 @@ class WPSC_Duplicate_Product {
 				$sql_query = $wpdb->prepare( $sql_query, $values );
 				$wpdb->query( $sql_query );
 				clean_post_cache( $new_post_id );
-
 			}
-
 		}
-
 	}
 
 	/**
 	 * Update Duplicate Product Gallery Meta
 	 *
-	 * When a product is duplicated it's meta values are copied too
+	 * When a product is duplicated its meta values are copied, too
 	 * including the gallery meta array of IDs.
 	 *
 	 * After the product's children (including attachments) have been
@@ -230,17 +223,12 @@ class WPSC_Duplicate_Product {
 						} else {
 							$new_gallery[] = $gallery_id;
 						}
-
 					}
-
 				}
 
 				update_post_meta( $new_post_id, '_wpsc_product_gallery', $new_gallery );
-
 			}
-
 		}
-
 	}
 
 	/**
@@ -248,7 +236,7 @@ class WPSC_Duplicate_Product {
 	 *
 	 * When a product is duplicated, the featured image ID is copied when the post
 	 * meta is duplicated.
-	 * 
+	 *
 	 * When the featured image is attached to the duplicated product, if the image
 	 * is duplicated the featured image ID is updated to the duplicated image ID
 	 * otherwise the featured image ID is removed.
@@ -283,9 +271,7 @@ class WPSC_Duplicate_Product {
 			} else {
 				delete_post_thumbnail( $new_post_id );
 			}
-
 		}
-
 	}
 
 	/**
@@ -295,7 +281,7 @@ class WPSC_Duplicate_Product {
 	 *
 	 * @uses  get_posts()  Gets an array of posts given array of arguments.
 	 *
-	 * @return  array  Array mapping old child IDs to duplicated child IDs.                    
+	 * @return  array  Array mapping old child IDs to duplicated child IDs.
 	 */
 	private function duplicate_children() {
 
@@ -333,13 +319,10 @@ class WPSC_Duplicate_Product {
 				}
 
 				do_action( 'wpsc_duplicate_product_child', $child_post, $new_parent_id, $new_child_id );
-
 			}
-
 		}
 
 		return $converted_child_ids;
-
 	}
 
 	/**
@@ -387,7 +370,7 @@ class WPSC_Duplicate_Product {
 
 				// If error storing permanently, unlink.
 				if ( is_wp_error( $new_post_id ) ) {
-					@unlink( $file_array['tmp_name'] );
+					@ unlink( $file_array['tmp_name'] );
 				}
 
 				// Re-attribute featured image
@@ -415,17 +398,14 @@ class WPSC_Duplicate_Product {
 				update_post_meta( $new_post_id, '_wp_attachment_image_alt', get_post_meta( $child_post->ID, '_wp_attachment_image_alt', true ) );
 
 				return $new_post_id;
-
 			}
 
 		} elseif ( has_post_thumbnail( $new_parent_id ) && $child_post->ID == get_post_thumbnail_id( $new_parent_id ) ) {
 
 			delete_post_meta( $new_parent_id, '_thumbnail_id' );
-
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -438,7 +418,6 @@ class WPSC_Duplicate_Product {
 	public function get_post_id() {
 
 		return $this->post_id;
-
 	}
 
 	/**
@@ -451,7 +430,6 @@ class WPSC_Duplicate_Product {
 	public function get_new_post_id() {
 
 		return $this->new_post_id;
-		
 	}
 
 	/**
@@ -465,7 +443,5 @@ class WPSC_Duplicate_Product {
 	public function get_new_parent_id( $default = 0 ) {
 
 		return false === $this->new_parent_id ? $default : $this->new_parent_id;
-
 	}
-
 }
