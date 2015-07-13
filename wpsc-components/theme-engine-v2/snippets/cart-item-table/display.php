@@ -6,7 +6,7 @@
 		</tr>
 	</thead>
 	<tfoot>
-		<?php  if ( wpsc_is_cart() || wpsc_is_checkout() ) : ?>
+		<?php  if ( wpsc_is_cart() ) : ?>
 
 		<tr class="wpsc-cart-aggregate wpsc-cart-actions-row">
 			<td>
