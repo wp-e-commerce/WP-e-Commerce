@@ -25,7 +25,9 @@ class WPSC_Controller {
 	public function __construct() {
 		require_once( WPSC_TE_V2_CLASSES_PATH . '/message-collection.php' );
 
-		add_filter( 'template_include', array( $this, '_filter_template_router' ) );
+		add_filter( 'template_include' , array( $this, '_filter_template_router' ) );
+		add_action( 'wpsc_router_init', array( $this, 'force_ssl'               ) );
+
 		$this->message_collection = WPSC_Message_Collection::get_instance();
 	}
 
@@ -40,6 +42,16 @@ class WPSC_Controller {
 		}
 
 		return true;
+	}
+
+	public function force_ssl() {
+		if ( ! is_ssl()                           &&
+			'1' == get_option( 'wpsc_force_ssl' ) &&
+			( wpsc_is_cart() || wpsc_is_checkout() )
+		 ) {
+			wp_safe_redirect( 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
+			exit;
+		}
 	}
 
 	public function _filter_template_router() {
