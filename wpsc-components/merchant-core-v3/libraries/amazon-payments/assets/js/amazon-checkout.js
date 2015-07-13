@@ -11,6 +11,9 @@ jQuery(function($) {
 				var loginOptions = {scope: 'profile payments:widget'};
 				authRequest = amazon.Login.authorize(loginOptions, amazon_payments_advanced_params.redirect );
 			},
+			design: {
+				designMode: 'responsive'
+			},
 			onError: function(error) {}
 		});
 	}
