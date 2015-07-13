@@ -241,7 +241,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 				'AmazonOrderReferenceId'                                       => $amazon_reference_id,
 				'OrderReferenceAttributes.OrderTotal.Amount'                   => $order->get( 'totalprice' ),
 				'OrderReferenceAttributes.OrderTotal.CurrencyCode'             => strtoupper( $this->get_currency_code() ),
-				'OrderReferenceAttributes.SellerNote'                          => sprintf( __( 'Order %s from %s.', 'wpsc' ), $order->get( 'id' ), urlencode( remove_accents( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) ) ) ),
+				'OrderReferenceAttributes.SellerNote'                          => sprintf( __( 'Order %s from %s.', 'wpsc' ), $order->get( 'id' ), remove_accents( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) ) ),
 				'OrderReferenceAttributes.SellerOrderAttributes.SellerOrderId' => $order->get( 'id' ),
 				'OrderReferenceAttributes.SellerOrderAttributes.StoreName'     => remove_accents( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) ),
 				'OrderReferenceAttributes.PlatformId'                          => 'A2Z8DY3R4G08IM'
