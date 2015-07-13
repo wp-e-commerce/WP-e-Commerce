@@ -662,14 +662,6 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 				<div id="amazon_addressbook_widget"></div>
 				<?php $this->insert_reference_id(); ?>
 				<style type="text/css">
-					#amazon_addressbook_widget,
-					#amazon_wallet_widget {
-						width: 400px;
-						height: 228px;
-						margin: 10px 0 100px;
-						position: relative;
-						z-index: 2
-					}
 					.wpsc-checkout-review p,
 					.wpsc-field-wpsc_payment_method {
 						display: none
