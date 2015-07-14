@@ -119,9 +119,22 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		<!-- Account Credentials -->
 		<tr>
 			<td colspan="2">
+				<h4><?php _e( 'Register with Amazon', 'wpsc' ); ?></h4>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>
+				<a class="button" target="_blank" href="https://sellercentral.amazon.com/hz/me/sp/signup?solutionProviderId=A2Z8DY3R4G08IM&amp;marketplaceId=A3BXB0YN3XH17H&amp;solutionProviderToken=AAAAAQAAAAEAAAAQ%2F%2BVV%2BNAyLa44JbR1AcSD5wAAAKDg6Y6tCJq9iWT9OixhUYHJ%2BUqm13HQFprn8h5WPDVL1Or%2FiMaZiZp8LAKpQoaVxEvthiKp6NVelmkTUOnWAGBHd7IufKvcqXcZ1WwXP6CsZW3AQqWZscVh1UhY%2B%2BkQY3ckEJGuCz4TPHYLgucZqq%2FRfsG1IYSEwuATdgLe3M2kYDvcdKG9pFNm3zNx7cOqcLCecOvNTrfzSL4Uh6Iiz84Z&amp;solutionProviderReturnURL=https%3A%2F%2Fpayments.amazon.com%2Fmerchant&amp;solutionProviderOptions=mws-acc%3B"><?php _e( 'Connect WP eCommerce to Amazon', 'wpsc' ); ?></a><br />
+				<small><?php _e( 'Once registration is complete, enter your API credentials below.', 'wpsc' ); ?></small>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
 				<h4><?php _e( 'Account Credentials', 'wpsc' ); ?></h4>
 			</td>
 		</tr>
+
 		<tr>
 			<td>
 				<label for="wpsc-amazon-payments-seller-id"><?php _e( 'Seller ID', 'wpsc' ); ?></label>
