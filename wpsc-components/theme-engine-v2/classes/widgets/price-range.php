@@ -71,6 +71,10 @@ class WPSC_Widget_Price_Range extends WP_Widget {
 		global $wpdb;
 		$prices = $wpdb->get_row( 'SELECT COUNT(DISTINCT meta_value) AS count, MAX(meta_value) AS max, MIN(meta_value) AS min FROM ' . $wpdb->postmeta . ' AS m INNER JOIN ' . $wpdb->posts . ' ON m.post_id = ID WHERE meta_key = "_wpsc_price" AND meta_value > 0' );
 
+		if ( empty( $prices->count ) ) {
+			return;
+		}
+
 		$prices->min = round( $prices->min );
 		$prices->max = round( $prices->max );
 		$range_count = $prices->count > 5
