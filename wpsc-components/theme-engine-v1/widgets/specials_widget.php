@@ -19,7 +19,7 @@ class WP_Widget_Product_Specials extends WP_Widget {
 			'description' => __( 'Product Specials Widget', 'wpsc' )
 		);
 
-		$this->WP_Widget( 'wpsc_product_specials', __( '(WPEC) Product Specials', 'wpsc' ), $widget_ops );
+		parent::__construct( 'wpsc_product_specials', __( '(WPEC) Product Specials', 'wpsc' ), $widget_ops );
 
 	}
 
