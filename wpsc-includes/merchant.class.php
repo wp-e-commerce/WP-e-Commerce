@@ -240,7 +240,7 @@ class wpsc_merchant {
 				)
 			);
 
-			$this->cart_items[] = $new_cart_item;
+			$this->cart_items[] = apply_filters( 'wpsc_merchant_collate_cart_item' , $new_cart_item, $this );
 		}
 	}
 
