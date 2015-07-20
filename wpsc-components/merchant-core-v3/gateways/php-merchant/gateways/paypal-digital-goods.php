@@ -24,7 +24,9 @@ class PHP_Merchant_Paypal_Digital_Goods extends PHP_Merchant_Paypal_Express_Chec
 		// Make sure PayPal knows all goods are digital
 		for( $i = 0; $i < count( $this->options['items'] ); $i++ ) {
 			$request += array( "L_PAYMENTREQUEST_0_ITEMCATEGORY{$i}" => 'Digital' );
-		}	
+		}
+
+		$request['BUTTONSOURCE'] = 'WPeC_Cart_DG';
 
 		return $request;
 	}
