@@ -19,7 +19,7 @@ class WP_Widget_Shopping_Cart extends WP_Widget {
 			'description' => __( 'Shopping Cart Widget', 'wpsc' )
 		);
 
-		$this->WP_Widget( 'wpsc_shopping_cart', __( '(WPEC) Shopping Cart', 'wpsc' ), $widget_ops );
+		parent::__construct( 'wpsc_shopping_cart', __( '(WPEC) Shopping Cart', 'wpsc' ), $widget_ops );
 
 	}
 
