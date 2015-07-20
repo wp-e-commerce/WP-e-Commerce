@@ -49,7 +49,14 @@ class WPSC_Controller {
 			'1' == get_option( 'wpsc_force_ssl' ) &&
 			( wpsc_is_cart() || wpsc_is_checkout() )
 		 ) {
-			wp_safe_redirect( 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
+
+		 	$url = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
+		 	if ( isset( $_REQUEST['_wp_nonce'] ) ) {
+				$url = add_query_arg( '_wp_nonce', $_REQUEST['_wp_nonce'], $url );
+		 	}
+
+			wp_safe_redirect( $url );
 			exit;
 		}
 	}

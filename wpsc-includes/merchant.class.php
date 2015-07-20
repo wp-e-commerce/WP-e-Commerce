@@ -40,7 +40,7 @@ class wpsc_merchant {
 	var $is_receiving = false;
 	var $purchase_id = null;
 	var $session_id = null;
-	var $received_data = array( );
+	var $received_data = array();
 	/**
 	 * This is where the cart data, like the address, country and email address is held
 	 * @var array
@@ -378,5 +378,3 @@ class wpsc_merchant {
 		return false;
 	}
 }
-
-?>

@@ -1389,14 +1389,15 @@ class WPSC_Amazon_Payments_Order_Handler {
 		if ( $this->log->get( 'gateway' ) == 'amazon-payments' ) {
 
 			$response = $this->gateway->api_request( array(
-				'Action'                           => 'Authorize',
-				'AmazonOrderReferenceId'           => $amazon_reference_id,
-				'AuthorizationReferenceId'         => $this->log->get( 'id' ) . '-' . current_time( 'timestamp', true ),
-				'AuthorizationAmount.Amount'       => $this->log->get( 'totalprice' ),
-				'AuthorizationAmount.CurrencyCode' => strtoupper( $this->gateway->get_currency_code() ),
-				'CaptureNow'                       => $capture_now,
-				'TransactionTimeout'               => 0,
-			) );
+					'Action'                           => 'Authorize',
+					'AmazonOrderReferenceId'           => $amazon_reference_id,
+					'AuthorizationReferenceId'         => $this->log->get( 'id' ) . '-' . current_time( 'timestamp', true ),
+					'AuthorizationAmount.Amount'       => $this->log->get( 'totalprice' ),
+					'AuthorizationAmount.CurrencyCode' => strtoupper( $this->gateway->get_currency_code() ),
+					'CaptureNow'                       => $capture_now,
+					'TransactionTimeout'               => 0,
+					)
+			);
 
 			if ( is_wp_error( $response ) ) {
 
