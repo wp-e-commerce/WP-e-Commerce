@@ -184,7 +184,6 @@ class wpsc_merchant_paypal_express extends wpsc_merchant {
 			echo "<br />Error Severity Code: " . $ErrorSeverityCode;
 		}
 		exit();
-
 	}
 
 	function format_price( $price ) {
@@ -685,7 +684,7 @@ function paypal_processingfunctions(){
 		$currCodeType = urlencode( wpsc_get_paypal_currency_code() );
 		$payerID = urlencode( $_REQUEST['PayerID'] );
 		$serverName = urlencode( $_SERVER['SERVER_NAME'] );
-		$BN = 'Instinct_e-commerce_wp-shopping-cart_NZ';
+		$BN     = 'WPeC_Cart_EC';
 		$nvpstr = '&TOKEN=' . $token . '&PAYERID=' . $payerID . '&PAYMENTREQUEST_0_PAYMENTACTION=Sale&PAYMENTREQUEST_0_CURRENCYCODE=' . $currCodeType . '&IPADDRESS=' . $serverName . "&BUTTONSOURCE=" . $BN . "&PAYMENTREQUEST_0_INVNUM=" . urlencode( $sessionid );
 		// IPN data
 		if ( get_option( 'paypal_ipn' ) == 1 ) {
