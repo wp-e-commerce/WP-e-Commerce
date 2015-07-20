@@ -987,7 +987,7 @@ function paypal_hash_call( $methodName, $nvpStr ) {
 	$API_UserName = get_option( 'paypal_certified_apiuser' );
 	$API_Password = get_option( 'paypal_certified_apipass' );
 	$API_Signature = get_option( 'paypal_certified_apisign' );
-	$sBNCode = "PP-ECWizard";
+	$sBNCode = "WPeC_Cart_EC";
 	//NVPRequest for submitting to server
 	$nvpreq = "METHOD=" . urlencode( $methodName ) . "&VERSION=" . urlencode( $version ) . "&PWD=" . urlencode( $API_Password ) . "&USER=" . urlencode( $API_UserName ) . "&SIGNATURE=" . urlencode( $API_Signature ) . $nvpStr . "&BUTTONSOURCE=" . urlencode( $sBNCode );
 
@@ -998,6 +998,7 @@ function paypal_hash_call( $methodName, $nvpStr ) {
 			define( 'WP_PROXY_PORT', $PROXY_PORT );
 		}
 	}
+
 	add_filter( 'https_ssl_verify', '__return_false' );
 
 	$options = array(

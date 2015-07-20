@@ -222,7 +222,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal {
 		}
 
 		// BN Code
-		$request['BUTTONSOURCE'] = 'WPECOM_ECM';
+		$request['BUTTONSOURCE'] = 'WPeC_Cart_EC';
 
 		return $request;
 	}
