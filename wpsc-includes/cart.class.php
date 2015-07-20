@@ -132,6 +132,7 @@ class wpsc_cart {
 		$this->selected_region  = $billing_region;
 
 		// adding refresh item
+
 		$this->wpsc_refresh_cart_items();
 	}
 

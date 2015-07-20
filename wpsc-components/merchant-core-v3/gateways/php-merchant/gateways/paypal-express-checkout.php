@@ -45,7 +45,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal {
 			'L_BILLINGAGREEMENTDESCRIPTION0' => 'billing_description',
 		) );
 
-		
+
 		// Apply a Discount if available
 		$this->add_discount();
 
@@ -90,7 +90,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal {
 		}
 
 		return $request;
-	}	
+	}
 
 	/**
  	 * Add Discount for the Shopping Cart.
@@ -103,11 +103,11 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal {
 	protected function add_discount() {
 		// Verify if a discount is set
 		if ( isset( $this->options['discount'] ) && (float) $this->options['discount'] != 0 ) {
-			$discount = (float) $this->options['discount'];	
+			$discount = (float) $this->options['discount'];
 			$sub_total = (float) $this->options['subtotal'];
 
 			// If discount amount is larger than or equal to the item total, we need to set item total to 0.01
-			// because PayPal does not accept 0 item total. 
+			// because PayPal does not accept 0 item total.
 			if ( $discount >= $sub_total ) {
 				$discount = $sub_total - 0.01;
 			}

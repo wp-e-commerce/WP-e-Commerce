@@ -77,7 +77,7 @@ class wpsc_merchant_paypal_pro extends wpsc_merchant {
 		$paypal_vars = array( );
 		// Store settings to be sent to paypal
 
-		$data = array( );
+		$data = array();
 		$data['USER']      = get_option( 'paypal_pro_username' );
 		$data['PWD']       = get_option( 'paypal_pro_password' );
 		$data['SIGNATURE'] = get_option( 'paypal_pro_signature' );
