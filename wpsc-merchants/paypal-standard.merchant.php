@@ -124,7 +124,6 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 			'rm'            => '2',
 			'currency_code' => $this->get_paypal_currency_code(),
 			'lc'            => $this->cart_data['store_currency'],
-			'bn'            => $this->cart_data['software_name'],
 			'no_note'       => '1',
 			'charset'       => 'utf-8',
 		);
@@ -344,7 +343,12 @@ class wpsc_merchant_paypal_standard extends wpsc_merchant {
 				);
 			}
 		}
-		return apply_filters( 'wpsc_paypal_standard_post_data', $paypal_vars );
+
+		$paypal_vars = apply_filters( 'wpsc_paypal_standard_post_data', $paypal_vars );
+
+		$paypal_vars['bn'] = 'WPeC_Cart_WPS';
+
+		return $paypal_vars;
 	}
 
 	/**
