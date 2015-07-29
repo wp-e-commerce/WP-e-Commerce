@@ -400,6 +400,26 @@ final class WPSC_Payment_Gateways {
 	}
 
 	/**
+	 * Gets an array of countries in the EU.
+	 *
+	 * MC (monaco) and IM (Isle of Man, part of UK) also use VAT.
+	 *
+	 * @since  4.0
+	 * @param  $type Type of countries to retrieve. Blank for EU member countries. eu_vat for EU VAT countries.
+	 * @return string[]
+	 */
+	public function get_european_union_countries( $type = '' ) {
+		$countries = array( 'AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR', 'GB', 'GR', 'HU', 'HR', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK' );
+
+		if ( 'eu_vat' === $type ) {
+			$countries[] = 'MC';
+			$countries[] = 'IM';
+		}
+
+		return $countries;
+	}
+
+	/**
 	 * No instantiation for this class
 	 *
 	 * @access private
