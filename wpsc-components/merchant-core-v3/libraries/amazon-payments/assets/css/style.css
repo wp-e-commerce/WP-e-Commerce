@@ -26,6 +26,12 @@
     margin: 15px auto;
 }
 
+/* Hides entire payment method area, specifically for EU regulations, but not unhelpful for others. */
+div.wpsc-payment-method div:not(.wpsc-form-actions),
+div.wpsc-payment-method p {
+    display: none;
+}
+
 /* Desktop and tablet */
 @media only screen and (min-width: 768px) {
 	#amazon_addressbook_widget , #amazon_wallet_widget {
