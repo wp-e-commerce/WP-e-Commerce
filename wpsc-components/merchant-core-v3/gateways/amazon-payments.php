@@ -745,7 +745,9 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	 */
 	public function api_request( $args ) {
 
-		require_once WPSC_MERCHANT_V3_SDKS_PATH . '/amazon-payments/sdk/ResponseParser.php';
+		if ( ! class_exists( 'PayWithAmazon\ResponseParser' ) ) {
+			require_once WPSC_MERCHANT_V3_SDKS_PATH . '/amazon-payments/sdk/ResponseParser.php';
+		}
 
 		$defaults = array(
 			'AWSAccessKeyId' => $this->mws_access_key,
