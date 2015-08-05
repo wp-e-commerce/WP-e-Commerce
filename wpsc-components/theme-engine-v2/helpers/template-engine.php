@@ -375,6 +375,7 @@ function _wpsc_filter_body_class( $classes ) {
 
 	$classes[] = 'wpsc-controller';
 	$classes[] = 'wpsc-' . _wpsc_get_current_controller_name();
+	$classes[] = 'wpsc-controller-' . _wpsc_get_current_controller_slug();
 
 	return $classes;
 }

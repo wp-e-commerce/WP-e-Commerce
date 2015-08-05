@@ -8,7 +8,7 @@ jQuery(function($) {
 			size:  "small",
 			useAmazonAddressBook: true,
 			authorization: function() {
-				var loginOptions = {scope: 'profile payments:widget'};
+				var loginOptions = { scope: 'profile payments:widget' };
 				authRequest = amazon.Login.authorize(loginOptions, amazon_payments_advanced_params.redirect );
 			},
 			design: {
@@ -18,28 +18,33 @@ jQuery(function($) {
 		});
 	}
 
-	// Addressbook widget
-	new OffAmazonPayments.Widgets.AddressBook({
+	var addressBookArgs, walletArgs;
+
+	addressBookArgs = walletArgs = {
 		sellerId: amazon_payments_advanced_params.seller_id,
-		onOrderReferenceCreate: function(orderReference) {
-			$( '.wpsc-checkout-shipping-and-billing input.wpsc-field-wpsc_submit_checkout' ).prop( 'disabled', true );
-			$( 'input[name="amazon_reference_id"]' ).val( orderReference.getAmazonOrderReferenceId() )
-		},
 		design: {
 			designMode: 'responsive'
 		},
-		onError: function(error) {}
-	}).bind("amazon_addressbook_widget");
+		onError: function(error) { console.log( error ); }
+	}
+
+	addressBookArgs.onOrderReferenceCreate = function(orderReference) {
+		$( '.wpsc-checkout-shipping-and-billing input.wpsc-field-wpsc_submit_checkout' ).prop( 'disabled', true );
+		$( 'input[name="amazon_reference_id"]' ).val( orderReference.getAmazonOrderReferenceId() )
+	};
+
+	walletArgs.onPaymentSelect = function( orderReference ) {
+		$( '.wpsc-checkout-shipping-and-billing input.wpsc-field-wpsc_submit_checkout' ).prop( 'disabled', false );
+	};
+
+	if ( $( 'body' ).hasClass( 'wpsc-controller-payment' ) ) {
+		addressBookArgs.displayMode = walletArgs.displayMode = "Read";
+		$( '.wpsc-order-preview' ).before( '<div id="amazon_addressbook_widget"></div><div id="amazon_wallet_widget"></div>' )
+	}
+
+	// Addressbook widget
+	new OffAmazonPayments.Widgets.AddressBook( addressBookArgs ).bind("amazon_addressbook_widget");
 
 	// Wallet widget
-	new OffAmazonPayments.Widgets.Wallet({
-		sellerId: amazon_payments_advanced_params.seller_id,
-		design: {
-			designMode: 'responsive'
-		},
-		onPaymentSelect : function( orderReference ) {
-			$( '.wpsc-checkout-shipping-and-billing input.wpsc-field-wpsc_submit_checkout' ).prop( 'disabled', false );
-		},
-		onError: function(error) {}
-	}).bind("amazon_wallet_widget");
+	new OffAmazonPayments.Widgets.Wallet( walletArgs ).bind("amazon_wallet_widget");
 });

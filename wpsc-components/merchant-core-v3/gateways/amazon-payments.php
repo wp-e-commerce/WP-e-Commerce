@@ -450,7 +450,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 		add_action( 'wp_footer'  , array( $this, 'maybe_hide_standard_checkout_button' ) );
 
-		add_action( 'wp_head', array( $this, 'head_script' ), 0 );
+		add_action( 'wp_head'           , array( $this, 'head_script' ), 0 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'scripts' ) );
 
 		if ( $this->setting->get( 'cart_button_display' ) == 'button' ) {
@@ -469,7 +469,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 		add_filter( 'wpsc_get_checkout_form_args'                , array( $this, 'add_widgets_to_method_form' ) );
 		add_filter( 'wpsc_get_checkout_shipping_method_form_args', array( $this, 'insert_reference_id_to_form' ) );
-		add_action( 'wpsc_checkout_get_fields', '__return_empty_array' );
+		add_action( 'wpsc_checkout_get_fields'                   , '__return_empty_array' );
 
 		add_filter( 'wpsc_get_active_gateways', array( $this, 'remove_gateways' ) );
 		add_filter( 'wpsc_get_gateway_list'   , array( $this, 'remove_gateways' ) );
