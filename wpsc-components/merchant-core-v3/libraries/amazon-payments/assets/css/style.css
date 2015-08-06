@@ -34,8 +34,12 @@ div.wpsc-payment-method p {
 
 /* Desktop and tablet */
 @media only screen and (min-width: 768px) {
-	#amazon_addressbook_widget , #amazon_wallet_widget {
+	#amazon_addressbook_widget, #amazon_wallet_widget {
         width: 100%;
-        height: 228px;
     }
+}
+
+.wpsc-controller-payment #amazon_addressbook_widget,
+.wpsc-controller-payment #amazon_wallet_widget {
+	height: 150px;
 }
