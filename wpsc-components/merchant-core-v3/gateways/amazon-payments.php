@@ -1398,7 +1398,9 @@ class WPSC_Amazon_Payments_Order_Handler {
 					'AuthorizationAmount.CurrencyCode' => strtoupper( $this->gateway->get_currency_code() ),
 					'CaptureNow'                       => $capture_now,
 					'TransactionTimeout'               => 0,
-					)
+					//'SellerAuthorizationNote'          => '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"AmazonRejected"}}',
+					//'SellerAuthorizationNote'          => '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"InvalidPaymentMethod", "PaymentMethodUpdateTimeInMins":5}}',
+				)
 			);
 
 			if ( is_wp_error( $response ) ) {
