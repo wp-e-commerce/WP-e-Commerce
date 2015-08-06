@@ -25,7 +25,9 @@ jQuery(function($) {
 		design: {
 			designMode: 'responsive'
 		},
-		onError: function(error) { console.log( error ); }
+		onError: function(error) {
+			jQuery( '.wpsc-checkout-form-button' ).prepend( '<div class="errors"><p class="wpsc-alert-error" id="wpsc-alert-error-"' + error.getErrorCode() + '>' + error.getErrorMessage() + '</p></div>' );
+ 		}
 	}
 
 	addressBookArgs.onOrderReferenceCreate = function(orderReference) {
