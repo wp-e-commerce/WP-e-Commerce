@@ -3,9 +3,9 @@ jQuery(function($) {
 	if ( $( '#pay_with_amazon' ).length > 0 ) {
 		var authRequest;
 		OffAmazonPayments.Button("pay_with_amazon", amazon_payments_advanced_params.seller_id, {
-			type:  "PwA",
-			color: "Gold",
-			size:  "small",
+			type:  amazon_payments_advanced_params.pwa_type,
+			color: amazon_payments_advanced_params.pwa_color,
+			size:  amazon_payments_advanced_params.pwa_size,
 			useAmazonAddressBook: true,
 			authorization: function() {
 				var loginOptions = { scope: 'profile payments:widget' };
