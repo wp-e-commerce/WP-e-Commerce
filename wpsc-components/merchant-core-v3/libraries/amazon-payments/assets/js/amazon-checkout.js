@@ -20,24 +20,32 @@ jQuery(function($) {
 
 	var addressBookArgs, walletArgs;
 
-	addressBookArgs = walletArgs = {
+	addressBookArgs = {
 		sellerId: amazon_payments_advanced_params.seller_id,
 		design: {
 			designMode: 'responsive'
 		},
+		onOrderReferenceCreate : function( orderReference ) {
+			$( '.wpsc-checkout-shipping-and-billing input.wpsc-field-wpsc_submit_checkout' ).prop( 'disabled', true );
+			$( 'input[name="amazon_reference_id"]' ).val( orderReference.getAmazonOrderReferenceId() );
+		},
 		onError: function(error) {
 			jQuery( '.wpsc-checkout-form-button' ).prepend( '<div class="errors"><p class="wpsc-alert-error" id="wpsc-alert-error-"' + error.getErrorCode() + '>' + error.getErrorMessage() + '</p></div>' );
  		}
+	};
+
+	walletArgs = {
+		sellerId: amazon_payments_advanced_params.seller_id,
+		design: {
+			designMode: 'responsive'
+		},
+		onPaymentSelect : function( orderReference ) {
+			$( '.wpsc-checkout-shipping-and-billing input.wpsc-field-wpsc_submit_checkout' ).prop( 'disabled', false );
+		},
+		onError: function(error) {x
+			jQuery( '.wpsc-checkout-form-button' ).prepend( '<div class="errors"><p class="wpsc-alert-error" id="wpsc-alert-error-"' + error.getErrorCode() + '>' + error.getErrorMessage() + '</p></div>' );
+ 		}
 	}
-
-	addressBookArgs.onOrderReferenceCreate = function(orderReference) {
-		$( '.wpsc-checkout-shipping-and-billing input.wpsc-field-wpsc_submit_checkout' ).prop( 'disabled', true );
-		$( 'input[name="amazon_reference_id"]' ).val( orderReference.getAmazonOrderReferenceId() )
-	};
-
-	walletArgs.onPaymentSelect = function( orderReference ) {
-		$( '.wpsc-checkout-shipping-and-billing input.wpsc-field-wpsc_submit_checkout' ).prop( 'disabled', false );
-	};
 
 	if ( $( 'body' ).hasClass( 'wpsc-controller-payment' ) ) {
 		addressBookArgs.displayMode = walletArgs.displayMode = "Read";
@@ -45,8 +53,8 @@ jQuery(function($) {
 	}
 
 	// Addressbook widget
-	new OffAmazonPayments.Widgets.AddressBook( addressBookArgs ).bind("amazon_addressbook_widget");
+	new OffAmazonPayments.Widgets.AddressBook( addressBookArgs ).bind( 'amazon_addressbook_widget' );
 
 	// Wallet widget
-	new OffAmazonPayments.Widgets.Wallet( walletArgs ).bind("amazon_wallet_widget");
+	new OffAmazonPayments.Widgets.Wallet( walletArgs ).bind( 'amazon_wallet_widget' );
 });
