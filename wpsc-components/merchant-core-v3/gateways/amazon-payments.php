@@ -659,7 +659,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 				'redirect'     => $redirect_page,
 				'pwa_type'     => 'PwA',
 				'pwa_color'    => 'Gold',
-				'pwa_size'     => 'size',
+				'pwa_size'     => 'small',
 			) )
 		);
 	}
