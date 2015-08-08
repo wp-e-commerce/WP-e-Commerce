@@ -185,8 +185,9 @@ function wpsc_add_to_cart() {
 
 		$json_response = $json_response + $output;
 
-		if ( is_numeric( $product_id ) && 1 == get_option( 'fancy_notifications' ) )
+		if ( is_numeric( $product_id ) && 1 == get_option( 'fancy_notifications' ) ) {
 			$json_response['fancy_notification'] = str_replace( array( "\n", "\r" ), array( '\n', '\r' ), fancy_notification_content( $cart_messages ) );
+		}
 
 		$json_response = apply_filters( 'wpsc_add_to_cart_json_response', $json_response );
 
@@ -234,8 +235,9 @@ function wpsc_add_to_cart_button( $product_id, $return = false ) {
 			</div>
 		<?php
 
-		if ( $return )
+		if ( $return ) {
 			return ob_get_clean();
+		}
 	}
 }
 

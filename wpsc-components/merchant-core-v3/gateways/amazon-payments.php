@@ -314,11 +314,13 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 					if ( $result ) {
 						// Mark as on-hold
-						$order->set( 'amazon-status', __( 'Amazon order opened. Authorize and/or capture payment below. Authorized payments must be captured within 7 days.', 'wpsc' ) );
+						$order->set( 'amazon-status', __( 'Amazon order opened. Authorize and/or capture payment below. Authorized payments must be captured within 7 days.', 'wpsc' ) )->save();
 
 					} else {
-						$order->set( 'processed', WPSC_Purchase_Log::PAYMENT_DECLINED );
-						$order->set( 'amazon-status', __( 'Could not authorize Amazon payment.', 'wpsc' ) );
+						$order->set( 'processed', WPSC_Purchase_Log::PAYMENT_DECLINED )->save();
+						$order->set( 'amazon-status', __( 'Could not authorize Amazon payment.', 'wpsc' ) )->save();
+
+						$this->handle_declined_transaction( $order );
 					}
 
 				break;
@@ -333,6 +335,8 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 					} else {
 						$order->set( 'processed', WPSC_Purchase_Log::PAYMENT_DECLINED );
 						$order->set( 'amazon-status', __( 'Could not authorize Amazon payment.', 'wpsc' ) );
+
+						$this->handle_declined_transaction( $order );
 					}
 
 				break;
@@ -346,6 +350,36 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			return;
 		}
 
+	}
+
+	/**
+	 * Handles declined transactions from Amazon.
+	 *
+	 * On the front-end, if a transaction is declined due to an invalid payment method, the user needs
+	 * to be returned to the payment page to select a different method.
+	 *
+	 * If it is declined for any other reason, they're basically out of luck.
+	 *
+	 * @since  4.0
+	 *
+	 * @param  WPSC_Purchase_Log $order Current purchase log for transaction.
+	 * @return void
+	 */
+	private function handle_declined_transaction( $order ) {
+		$reason_code = $order->get( 'amazon-reason-code' );
+
+		if ( 'InvalidPaymentMethod' == $reason_code ) {
+			$message = __( 'Selected payment method was not valid.  Please select a valid payment method.', 'wpsc' );
+			$url     = add_query_arg( $_GET, wpsc_get_checkout_url( 'shipping-and-billing' ) );
+		} else {
+			$message = __( 'It is not currently possible to complete this transaction with Amazon Payments. Please contact the store administrator or try again later.', 'wpsc' );
+			$url     =  wpsc_get_cart_url();
+		}
+
+		WPSC_Message_Collection::get_instance()->add( $message, 'error', 'main', 'flash' );
+		wp_safe_redirect( $url );
+
+		exit;
 	}
 
 	/**
@@ -1403,9 +1437,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 					'AuthorizationAmount.Amount'       => $this->log->get( 'totalprice' ),
 					'AuthorizationAmount.CurrencyCode' => strtoupper( $this->gateway->get_currency_code() ),
 					'CaptureNow'                       => $capture_now,
-					'TransactionTimeout'               => 0,
-					//'SellerAuthorizationNote'          => '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"AmazonRejected"}}',
-					//'SellerAuthorizationNote'          => '{"SandboxSimulation": {"State":"Declined", "ReasonCode":"InvalidPaymentMethod", "PaymentMethodUpdateTimeInMins":5}}',
+					'TransactionTimeout'               => 0
 				)
 			);
 
@@ -1418,7 +1450,6 @@ class WPSC_Amazon_Payments_Order_Handler {
 			} elseif ( isset( $response['Error']['Message'] ) ) {
 
 				$this->log->set( 'amazon-status', $response['Error']['Message'] )->save();
-
 				return false;
 
 			} else {
@@ -1441,6 +1472,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 
 				if ( 'declined' == $state ) {
 					$this->log->set( 'amazon-status', sprintf( __( 'Order Declined with reason code: %s', 'wpsc' ), $response['AuthorizeResult']['AuthorizationDetails']['AuthorizationStatus']['ReasonCode'] ) )->save();
+					$this->log->set( 'amazon-reason-code', $response['AuthorizeResult']['AuthorizationDetails']['AuthorizationStatus']['ReasonCode'] )->save();
 					// Payment was not authorized
 					return false;
 				}
