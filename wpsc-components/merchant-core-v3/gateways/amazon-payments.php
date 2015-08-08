@@ -646,18 +646,20 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 		wp_enqueue_script( 'amazon_payments_advanced', WPSC_MERCHANT_V3_SDKS_URL . '/amazon-payments/assets/js/amazon-checkout.js', array( 'amazon_payments_advanced_widgets' ), '1.0', true	);
 
+		$is_pay_page =  _wpsc_get_current_controller_name() == 'checkout' || _wpsc_get_current_controller_name() == 'cart';
+
 		$redirect_page = $is_pay_page ? add_query_arg( 'amazon_payments_advanced', 'true', wpsc_get_checkout_url( 'shipping-and-billing' ) ) : esc_url_raw( add_query_arg( 'amazon_payments_advanced', 'true' ) );
 
 		wp_localize_script(
 			'amazon_payments_advanced',
 			'amazon_payments_advanced_params',
 			apply_filters( 'wpsc_amazon_payments_advanced_params', array(
-				'seller_id'            => $this->setting->get( 'seller_id' ),
-				'reference_id'         => $this->reference_id,
-				'redirect'             => $redirect_page,
-				'pwa_type'             => 'PwA',
-				'pwa_color'            => 'Gold',
-				'pwa_size'             => 'size',
+				'seller_id'    => $this->setting->get( 'seller_id' ),
+				'reference_id' => $this->reference_id,
+				'redirect'     => $redirect_page,
+				'pwa_type'     => 'PwA',
+				'pwa_color'    => 'Gold',
+				'pwa_size'     => 'size',
 			) )
 		);
 	}
