@@ -42,7 +42,7 @@ jQuery(function($) {
 		onPaymentSelect : function( orderReference ) {
 			$( '.wpsc-checkout-shipping-and-billing input.wpsc-field-wpsc_submit_checkout' ).prop( 'disabled', false );
 		},
-		onError: function(error) {x
+		onError: function(error) {
 			jQuery( '.wpsc-checkout-form-button' ).prepend( '<div class="errors"><p class="wpsc-alert-error" id="wpsc-alert-error-"' + error.getErrorCode() + '>' + error.getErrorMessage() + '</p></div>' );
  		}
 	}
