@@ -373,7 +373,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			$url     = add_query_arg( $_GET, wpsc_get_checkout_url( 'shipping-and-billing' ) );
 		} else {
 			$message = __( 'It is not currently possible to complete this transaction with Amazon Payments. Please contact the store administrator or try again later.', 'wpsc' );
-			$url     =  wpsc_get_cart_url();
+			$url     = wpsc_get_cart_url();
 		}
 
 		WPSC_Message_Collection::get_instance()->add( $message, 'error', 'main', 'flash' );
@@ -680,7 +680,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 		wp_enqueue_script( 'amazon_payments_advanced', WPSC_MERCHANT_V3_SDKS_URL . '/amazon-payments/assets/js/amazon-checkout.js', array( 'amazon_payments_advanced_widgets' ), '1.0', true	);
 
-		$is_pay_page =  _wpsc_get_current_controller_name() == 'checkout' || _wpsc_get_current_controller_name() == 'cart';
+		$is_pay_page = _wpsc_get_current_controller_name() == 'checkout' || _wpsc_get_current_controller_name() == 'cart';
 
 		$redirect_page = $is_pay_page ? add_query_arg( 'amazon_payments_advanced', 'true', wpsc_get_checkout_url( 'shipping-and-billing' ) ) : esc_url_raw( add_query_arg( 'amazon_payments_advanced', 'true' ) );
 
@@ -909,6 +909,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 	private static $instance;
 	private $log;
 	private $gateway;
+	private $doing_ipn = false;
 
 	public function __construct( &$gateway ) {
 
@@ -926,6 +927,8 @@ class WPSC_Amazon_Payments_Order_Handler {
 	public function init() {
 		add_action( 'wpsc_purchlogitem_metabox_start', array( $this, 'meta_box' ), 8 );
 		add_action( 'wp_ajax_amazon_order_action'    , array( $this, 'order_actions' ) );
+		add_action( 'init'                           , array( $this, 'process_ipn'   ) );
+
 	}
 
 	public static function get_instance( $gateway ) {
@@ -1522,6 +1525,72 @@ class WPSC_Amazon_Payments_Order_Handler {
 			}
 		}
     }
+	/**
+	 * Process IPN messages from Amazon
+	 *
+	 * @access public
+	 * @since  2.4
+	 * @return void
+	 */
+	public function process_ipn() {
+
+		if ( ! isset( $_GET['wpsc-listener'] ) || $_GET['wpsc-listener'] !== 'amazon' ) {
+			return;
+		}
+
+		if ( isset( $_GET['state'] ) ) {
+			return;
+		}
+
+		// Get the IPN headers and Message body
+		$headers = getallheaders();
+		$body    = file_get_contents( 'php://input' );
+
+		$this->doing_ipn = true;
+
+		if ( ! class_exists( 'PayWithAmazon\IpnHandler' ) ) {
+			require_once WPSC_MERCHANT_V3_SDKS_PATH . '/amazon-payments/sdk/IpnHandler.php';
+		}
+
+		try {
+			$ipn       = new PayWithAmazon\IpnHandler( $headers, $body );
+			$data      = $ipn->toArray();
+			$seller_id = $data['SellerId'];
+
+			if ( $seller_id != $this->gateway->seller_id ) {
+				wp_die( __( 'Invalid Amazon seller ID', 'wpsc' ), __( 'IPN Error', 'wpsc' ), array( 'response' => 401 ) );
+			}
+
+			switch( $data['NotificationType'] ) {
+				case 'OrderReferenceNotification' :
+					break;
+				case 'PaymentAuthorize' :
+					break;
+				case 'PaymentCapture' :
+					$key     = $data['CaptureDetails']['CaptureReferenceId'];
+					$status  = $data['CaptureDetails']['CaptureStatus']['State'];
+					if ( 'Declined' === $status ) {
+						// Get Order ID by ref
+						// Update status to declined
+						// Update Amazon note
+						// Email user
+					}
+					break;
+				case 'PaymentRefund' :
+					$trans_id = substr( $data['RefundDetails']['AmazonRefundId'], 0, 19 );
+					$status   = $data['RefundDetails']['RefundStatus']['State'];
+					if ( 'Completed' === $status ) {
+						// get payment ID based on refund ID
+						// Update status to refunded
+						// Add payment note for refund.
+					}
+					break;
+			}
+		} catch( Exception $e ) {
+			wp_die( $e->getErrorMessage(), __( 'IPN Error', 'wpsc' ), array( 'response' => 401 ) );
+		}
+	}
+
 
     /**
      * Capture payment
@@ -1567,6 +1636,10 @@ class WPSC_Amazon_Payments_Order_Handler {
      */
     public function refund_payment( $capture_id, $amount, $note ) {
 		if ( $this->log->get( 'gateway' ) == 'amazon-payments' ) {
+
+			if ( $this->doing_ipn ) {
+				return;
+			}
 
 			$base_country = new WPSC_Country( wpsc_get_base_country() );
 
