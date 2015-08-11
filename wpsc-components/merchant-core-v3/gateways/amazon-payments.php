@@ -1614,13 +1614,24 @@ class WPSC_Amazon_Payments_Order_Handler {
 					}
 					break;
 				case 'PaymentRefund' :
-					$trans_id = substr( $data['RefundDetails']['AmazonRefundId'], 0, 19 );
-					$status   = $data['RefundDetails']['RefundStatus']['State'];
+					$refund_id = $data['RefundDetails']['AmazonRefundId'];
+					$status    = $data['RefundDetails']['RefundStatus']['State'];
+					$amount    = $data['RefundDetails']['RefundAmount'];
+
 					if ( 'Completed' === $status ) {
 						// get payment ID based on refund ID
+						$order = WPSC_Purchase_Log::get_log_by_meta( 'amazon_refund_id', $refund_id );
+
 						// Update status to refunded
+						$order->set( 'processed', WPSC_Purchase_Log::REFUNDED )->save();
+
 						// Add payment note for refund.
+						$order->set( 'amazon-status', sprintf( __( 'Refunded %s', 'wpsc' ), wpsc_currency_display( $amount ) ) )->save();
+
+						// Update refund ID
+						wpsc_add_purchase_meta( $order->get( 'id' ), 'amazon_refund_id', $refund_id );
 					}
+
 					break;
 			}
 		} catch( Exception $e ) {
