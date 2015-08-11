@@ -964,7 +964,7 @@ class WPSC_Purchase_Log {
 	 * @param  string $key   Meta key. Optional.
 	 * @param  string $value Meta value. Optional.
 	 *
-	 * @return mixed  False if no log is found or meta key and value are both not provided. WPSC_Purchase_Log object if found.
+	 * @return false|WPSC_Purchase_Log  False if no log is found or meta key and value are both not provided. WPSC_Purchase_Log object if found.
 	 */
 	public static function get_log_by_meta( $key = '', $value = '' ) {
 

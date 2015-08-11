@@ -1583,6 +1583,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 				wp_die( __( 'Invalid Amazon seller ID', 'wpsc' ), __( 'IPN Error', 'wpsc' ), array( 'response' => 401 ) );
 			}
 
+
 			switch( $data['NotificationType'] ) {
 				case 'OrderReferenceNotification' :
 					break;
@@ -1590,10 +1591,11 @@ class WPSC_Amazon_Payments_Order_Handler {
 					break;
 				case 'PaymentCapture' :
 
+					$status = $data['CaptureDetails']['CaptureStatus']['State'];
+
 					if ( 'Declined' === $status ) {
 
 						$value  = $data['CaptureDetails']['CaptureReferenceId'];
-						$status = $data['CaptureDetails']['CaptureStatus']['State'];
 						$reason = $data['CaptureDetails']['CaptureStatus']['ReasonCode'];
 
 						// Get Order ID by reference
@@ -1610,8 +1612,11 @@ class WPSC_Amazon_Payments_Order_Handler {
 						$order->set( 'amazon-status', __( 'Could not authorize Amazon payment.', 'wpsc' ) )->save();
 
 						// Email user
+						$hard = 'InvalidPaymentMethod' == $reason;
 
+						$this->send_decline_email( $hard );
 					}
+
 					break;
 				case 'PaymentRefund' :
 					$refund_id = $data['RefundDetails']['AmazonRefundId'];
@@ -1639,6 +1644,19 @@ class WPSC_Amazon_Payments_Order_Handler {
 		}
 	}
 
+	/**
+	 * Send decline email, based on overridable templates in library.
+	 *
+	 * Templates are named by language and type.
+	 *
+	 * @since  4.0
+	 *
+	 * @param  boolean $hard Whether it was a hard decline (invalid payment) or soft (systems).
+	 * @return boolean $mail Whether or not email was sent.
+	 */
+	private function send_decline_email( $hard = false ) {
+
+	}
 
     /**
      * Capture payment
