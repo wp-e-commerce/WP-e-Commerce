@@ -1583,7 +1583,6 @@ class WPSC_Amazon_Payments_Order_Handler {
 				wp_die( __( 'Invalid Amazon seller ID', 'wpsc' ), __( 'IPN Error', 'wpsc' ), array( 'response' => 401 ) );
 			}
 
-
 			switch( $data['NotificationType'] ) {
 				case 'OrderReferenceNotification' :
 					break;
@@ -1614,7 +1613,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 						// Email user
 						$hard = 'InvalidPaymentMethod' == $reason;
 
-						$this->send_decline_email( $hard );
+						$this->send_decline_email( $hard, $order );
 					}
 
 					break;
@@ -1654,8 +1653,98 @@ class WPSC_Amazon_Payments_Order_Handler {
 	 * @param  boolean $hard Whether it was a hard decline (invalid payment) or soft (systems).
 	 * @return boolean $mail Whether or not email was sent.
 	 */
-	private function send_decline_email( $hard = false ) {
+	protected function send_decline_email( $hard = false, $order ) {
 
+		$template = $this->get_declined_email_template( $hard );
+
+		if ( ! file_exists( $template['template_part'] ) ) {
+			return false;
+		}
+
+		$base_country = wpsc_get_base_country();
+
+		if ( 'GB' == $base_country ) {
+			$url = 'https://payments.amazon.co.uk/overview';
+		} elseif ( 'DE' == $base_country ) {
+			$url = 'https://payments.amazon.de/overview';
+		} else {
+			$url = 'https://payments.amazon.com/overview';
+		}
+
+		$url = apply_filters( 'wpsc_amazon_declined_email_payment_url', $url, $hard, $base_country );
+
+		ob_start();
+
+		include_once $template['template_part'];
+
+		$message = ob_get_clean();
+		$subject = $template['subject'];
+
+		$content_type = function ( $content ) { return 'text/html'; };
+
+		add_filter( 'wp_mail_content_type', $content_type );
+
+		$sent = wp_mail( $order->get( 'billingemail' ), $subject, $message );
+
+		remove_filter( 'wp_mail_content_type', $content_type );
+
+		return $sent;
+	}
+
+	/**
+	 * Retrieves the email template path (and subject) for declined email notifications.
+	 *
+	 * @since  4.0
+	 * @param  boolean $hard Whether or not decline is "hard". Hard declined methods may not be retried.
+	 *
+	 * @return array[string] Array of template part path and subject line.
+	 */
+	protected function get_declined_email_template( $hard = false ) {
+		$language  = substr( get_locale(), 0, 2 );
+		$decline   = $hard ? 'hard' : 'soft';
+		$whitelist = apply_filters( 'wpsc_amazon_decline_email_locales', array(
+			'en' => array(
+				'hard' => __( 'Please contact us about your order' , 'wpsc' ),
+				'soft' => __( 'Please update your payment information', 'wpsc' )
+			),
+			'de' => array(
+				'hard' => __( 'Bitte kontaktieren Sie uns wegen Ihrer Bestellung', 'wpsc' ),
+				'soft' => __( 'Bitte aktualisieren Sie Ihre Zahlungsinformationen', 'wpsc' )
+			),
+			'it' => array(
+				'hard' => __( 'La preghiamo di contattarci per informazioni riguardo al suo ordine', 'wpsc' ),
+				'soft' => __( 'Aggiorna i tuoi dati di pagamento', 'wpsc' )
+			),
+			'fr' => array(
+				'hard' => __( 'Veuillez nous contacter pour votre commande', 'wpsc' ),
+				'soft' => __( 'Veuillez mettre à jour vos informations de paiement', 'wpsc' )
+			),
+			'es' => array(
+				'hard' => __( 'Por favor, contáctanos en referencia a tu pedido', 'wpsc' ),
+				'soft' => __( 'Por favor, actualiza tu información de pago.', 'wpsc' )
+			),
+		) );
+
+		if ( ! in_array( $language, array_keys( $whitelist ) ) ) {
+			$language = 'en';
+		}
+
+		$template_part = apply_filters( 'wpsc_amazon_declined_email_template_part', "emails/{$decline}-decline-email-{$language}.php", $decline, $language );
+
+		if ( file_exists( WPSC_MERCHANT_V3_SDKS_PATH . '/amazon-payments/' . $template_part ) ) {
+			$template = WPSC_MERCHANT_V3_SDKS_PATH . '/amazon-payments/' . $template_part;
+		}
+
+		$fallback = wpsc_locate_template_part( $template_part );
+
+		if ( ! empty( $fallback ) ) {
+			$template = $fallback;
+		}
+
+		$template = apply_filters( 'wpsc_amazon_declined_email_template_path', $template, $decline, $language );
+		$subject  = apply_filters( 'wpsc_amazon_declined_email_subject'      , $whitelist[ $language ][ $decline ], $decline, $language );
+
+		return array( 'template_part' => $template, 'subject' => $subject );
 	}
 
     /**
