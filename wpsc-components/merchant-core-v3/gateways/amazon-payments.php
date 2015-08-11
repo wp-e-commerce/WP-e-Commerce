@@ -1657,7 +1657,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 
 		$template = $this->get_declined_email_template( $hard );
 
-		if ( ! file_exists( $template['template_part'] ) ) {
+		if ( empty( $template ) || ! file_exists( $template['template_part'] ) ) {
 			return false;
 		}
 
@@ -1680,7 +1680,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 		$message = ob_get_clean();
 		$subject = $template['subject'];
 
-		$content_type = function ( $content ) { return 'text/html'; };
+		$content_type = function () { return 'text/html'; };
 
 		add_filter( 'wp_mail_content_type', $content_type );
 
@@ -1697,7 +1697,7 @@ class WPSC_Amazon_Payments_Order_Handler {
 	 * @since  4.0
 	 * @param  boolean $hard Whether or not decline is "hard". Hard declined methods may not be retried.
 	 *
-	 * @return array[string] Array of template part path and subject line.
+	 * @return array<string> Array of template part path and subject line.
 	 */
 	protected function get_declined_email_template( $hard = false ) {
 		$language  = substr( get_locale(), 0, 2 );
@@ -1733,12 +1733,12 @@ class WPSC_Amazon_Payments_Order_Handler {
 
 		if ( file_exists( WPSC_MERCHANT_V3_SDKS_PATH . '/amazon-payments/' . $template_part ) ) {
 			$template = WPSC_MERCHANT_V3_SDKS_PATH . '/amazon-payments/' . $template_part;
+		} else {
+			$template = wpsc_locate_template_part( $template_part );
 		}
 
-		$fallback = wpsc_locate_template_part( $template_part );
-
-		if ( ! empty( $fallback ) ) {
-			$template = $fallback;
+		if ( ! empty( $template ) ) {
+			return array();
 		}
 
 		$template = apply_filters( 'wpsc_amazon_declined_email_template_path', $template, $decline, $language );
