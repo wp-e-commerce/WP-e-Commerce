@@ -956,6 +956,41 @@ class WPSC_Purchase_Log {
 		}
 	}
 
+	/**
+	 * Adds ability to retrieve a purchase log by a meta key or value.
+	 *
+	 * @since  4.0
+	 *
+	 * @param  string $key   Meta key. Optional.
+	 * @param  string $value Meta value. Optional.
+	 *
+	 * @return mixed  False if no log is found or meta key and value are both not provided. WPSC_Purchase_Log object if found.
+	 */
+	public static function get_log_by_meta( $key = '', $value = '' ) {
+
+		if ( empty( $key ) && empty( $value ) ) {
+			return false;
+		}
+
+		global $wpdb;
+
+		if ( ! empty( $key ) && empty( $value ) ) {
+			$sql = $wpdb->prepare( 'SELECT wpsc_purchase_id FROM ' . WPSC_TABLE_PURCHASE_META . ' WHERE meta_key = %s', $key );
+		} else if ( empty( $key ) && ! empty( $value ) ) {
+			$sql = $wpdb->prepare( 'SELECT wpsc_purchase_id FROM ' . WPSC_TABLE_PURCHASE_META . ' WHERE meta_value = %s', $value );
+		} else {
+			$sql = $wpdb->prepare( 'SELECT wpsc_purchase_id FROM ' . WPSC_TABLE_PURCHASE_META . ' WHERE meta_key = %s AND meta_value = %s', $key, $value );
+		}
+
+		$id = $wpdb->get_var( $sql );
+
+		if ( $id ) {
+			return new WPSC_Purchase_Log( $id );
+		} else {
+			return false;
+		}
+	}
+
 	public function is_transaction_completed() {
 		return WPSC_Purchase_Log::is_order_status_completed( $this->get( 'processed' ) );
 	}

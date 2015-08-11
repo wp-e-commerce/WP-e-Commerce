@@ -466,6 +466,7 @@ table.form-table td .updated.shipwire-update {
 	width: 400px;
 }
 
-#wpsc-amazon-payments-client_id {
+#wpsc-amazon-payments-client_id,
+#wpsc-amazon-payments-ipn {
 	width: 500px;
 }

@@ -45,6 +45,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 
 		$this->order_handler = WPSC_Amazon_Payments_Order_Handler::get_instance( $this );
 
+		add_action( 'init', array( $this->order_handler, 'process_ipn' ) );
 		// Define user set variables
 		$this->seller_id       = $this->setting->get( 'seller_id' );
 		$this->mws_access_key  = $this->setting->get( 'mws_access_key' );
@@ -127,6 +128,15 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 			<td>
 				<a class="button" target="_blank" href="https://sellercentral.amazon.com/hz/me/sp/signup?solutionProviderId=A2Z8DY3R4G08IM&amp;marketplaceId=A3BXB0YN3XH17H&amp;solutionProviderToken=AAAAAQAAAAEAAAAQ%2F%2BVV%2BNAyLa44JbR1AcSD5wAAAKDg6Y6tCJq9iWT9OixhUYHJ%2BUqm13HQFprn8h5WPDVL1Or%2FiMaZiZp8LAKpQoaVxEvthiKp6NVelmkTUOnWAGBHd7IufKvcqXcZ1WwXP6CsZW3AQqWZscVh1UhY%2B%2BkQY3ckEJGuCz4TPHYLgucZqq%2FRfsG1IYSEwuATdgLe3M2kYDvcdKG9pFNm3zNx7cOqcLCecOvNTrfzSL4Uh6Iiz84Z&amp;solutionProviderReturnURL=https%3A%2F%2Fpayments.amazon.com%2Fmerchant&amp;solutionProviderOptions=mws-acc%3B"><?php _e( 'Connect WP eCommerce to Amazon', 'wpsc' ); ?></a><br />
 				<small><?php _e( 'Once registration is complete, enter your API credentials below.', 'wpsc' ); ?></small>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="wpsc-amazon-payments-ipn"><?php _e( 'Amazon Merchant IPN URL', 'wpsc' ); ?></label>
+			</td>
+			<td>
+				<input id="wpsc-amazon-payments-ipn" type="text" disabled value="<?php echo $this->get_amazon_ipn_url(); ?>" /><br />
+				<small><?php printf( __( 'The IPN URL to provide in your MWS account. Enter this under your <a href="%s">Integration Settings</a>', 'wpsc' ), 'https://sellercentral.amazon.com/gp/pyop/seller/account/settings/user-settings-edit.html' ); ?></small>
 			</td>
 		</tr>
 		<tr>
@@ -611,6 +621,18 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 		?><div id="pay_with_amazon" class="checkout_button"></div><?php
 	}
 
+	/**
+	 * Retrieve the IPN URL for Amazon
+	 *
+	 * @access public
+	 * @since  4.0
+	 * @return string
+	 */
+	private function get_amazon_ipn_url() {
+		return esc_url_raw( add_query_arg( array( 'wpsc-listener' => 'amazon' ), home_url( 'index.php' ) ) );
+	}
+
+
 	public function add_widgets_to_method_form( $args ) {
 
 		ob_start();
@@ -927,7 +949,6 @@ class WPSC_Amazon_Payments_Order_Handler {
 	public function init() {
 		add_action( 'wpsc_purchlogitem_metabox_start', array( $this, 'meta_box' ), 8 );
 		add_action( 'wp_ajax_amazon_order_action'    , array( $this, 'order_actions' ) );
-		add_action( 'init'                           , array( $this, 'process_ipn'   ) );
 
 	}
 
@@ -1525,11 +1546,12 @@ class WPSC_Amazon_Payments_Order_Handler {
 			}
 		}
     }
+
 	/**
 	 * Process IPN messages from Amazon
 	 *
 	 * @access public
-	 * @since  2.4
+	 * @since  4.0
 	 * @return void
 	 */
 	public function process_ipn() {
@@ -1567,13 +1589,28 @@ class WPSC_Amazon_Payments_Order_Handler {
 				case 'PaymentAuthorize' :
 					break;
 				case 'PaymentCapture' :
-					$key     = $data['CaptureDetails']['CaptureReferenceId'];
-					$status  = $data['CaptureDetails']['CaptureStatus']['State'];
+
 					if ( 'Declined' === $status ) {
-						// Get Order ID by ref
+
+						$value  = $data['CaptureDetails']['CaptureReferenceId'];
+						$status = $data['CaptureDetails']['CaptureStatus']['State'];
+						$reason = $data['CaptureDetails']['CaptureStatus']['ReasonCode'];
+
+						// Get Order ID by reference
+						$order = WPSC_Purchase_Log::get_log_by_meta( 'amazon_capture_id', $value );
+
+						if ( ! $order ) {
+							break;
+						}
+
 						// Update status to declined
+						$order->set( 'processed', WPSC_Purchase_Log::PAYMENT_DECLINED )->save();
+
 						// Update Amazon note
+						$order->set( 'amazon-status', __( 'Could not authorize Amazon payment.', 'wpsc' ) )->save();
+
 						// Email user
+
 					}
 					break;
 				case 'PaymentRefund' :
