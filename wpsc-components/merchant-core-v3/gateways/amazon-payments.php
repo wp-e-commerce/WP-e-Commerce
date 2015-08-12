@@ -116,7 +116,7 @@ class WPSC_Payment_Gateway_Amazon_Payments extends WPSC_Payment_Gateway {
 	 * @return void
 	 */
 	public function setup_form() {
-		$base_country = wosc_get_base_country();
+		$base_country = wpsc_get_base_country();
 
 		if ( 'DE' == $base_country ) {
 			$url = 'https://payments.amazon.de/preregistration/lpa';
