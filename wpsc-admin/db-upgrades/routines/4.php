@@ -19,18 +19,28 @@ function _wpsc_maybe_update_user_log_file() {
 		'3.8.10' => '09e2cb9c753587c9228a4e9e8008a82f',
 	);
 
-	if ( function_exists( 'wpsc_flush_theme_transients' ) )
+	if ( function_exists( 'wpsc_flush_theme_transients' ) ) {
 		wpsc_flush_theme_transients( true );
+	}
+
+	// Using TEv2
+	if ( ! function_exists( 'wpsc_get_template_file_path' ) ) {
+		return;
+	}
 
 	//Make sure the theme has actually been moved.
 	$file = wpsc_get_template_file_path( 'wpsc-user-log.php' );
-	if ( false !== strpos( WPSC_CORE_THEME_PATH, $file ) )
+
+	if ( false !== strpos( WPSC_CORE_THEME_PATH, $file ) ) {
 		return;
+	}
 
 	//If it has been moved, but it's the 3.8.10 version, we should be good to go.
 	$hash = md5_file( $file );
-	if ( $hashes['3.8.10'] === $hash )
+
+	if ( $hashes['3.8.10'] === $hash ) {
 		return;
+	}
 
 	//At this point, we know the file has been moved to the active file folder.  Checking now if it has been modified.
 	if ( in_array( $hash, $hashes ) ) {
