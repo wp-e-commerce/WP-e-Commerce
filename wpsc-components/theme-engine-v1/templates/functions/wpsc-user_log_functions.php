@@ -638,7 +638,7 @@ function _wpsc_action_downloads_section() {
 			}
 
 			$item['downloads'] = $products[$key]['downloads'];
-			$item['datetime'] = date( get_option( 'date_format' ), strtotime( $products[$key]['datetime'] ) );
+			$item['datetime'] = date( get_option( 'date_format' ), strtotime( $file['post_date'] ) );
 			$items[] = (object) $item;
 		}
 	}
