@@ -132,6 +132,8 @@ function wpsc_has_downloads() {
 			}
 		}
 
+		$active_ids = array();
+
 		if ( ! empty( $perchids ) ) {
 			$perchidstr .= implode( ',', $perchids );
 			$perchidstr .= ")";
@@ -149,22 +151,23 @@ function wpsc_has_downloads() {
 					unset( $products[ $key ] );
 					continue;
 				}
-				$products = array_values($products);
 
-				$links[]     = empty( $product['uniqueid'] ) ? add_query_arg( 'downloadid', $product['id'], home_url() ) : add_query_arg( 'downloadid', $product['uniqueid'], home_url() );
-				$downloads[] = $product['product_id'];
+				$products = array_values( $products );
+
+				$links[]      = empty( $product['uniqueid'] ) ? add_query_arg( 'downloadid', $product['id'], home_url() ) : add_query_arg( 'downloadid', $product['uniqueid'], home_url() );
+				$downloads[]  = $product['product_id'];
 				$active_ids[] = $product['fileid'];
 			}
 
 			if ( ! empty( $downloads ) ) {
-		
+
 				$downloads = new WP_Query(
 					array(
 						'post_parent__in' => $downloads,
 						'post_type'       => 'wpsc-product-file',
 						'posts_per_page'  => -1,
 						'post_status'     => 'all',
-						'post__in'	  	  => $active_ids
+						'post__in'        => $active_ids
 					)
 				);
 
