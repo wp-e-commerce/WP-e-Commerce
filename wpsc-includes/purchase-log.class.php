@@ -489,6 +489,7 @@ class WPSC_Purchase_Log {
 			$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_SUBMITTED_FORM_DATA . "` WHERE `log_id` IN (%d)", $log_id ) );
 			$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_PURCHASE_LOGS . "` WHERE `id` = %d LIMIT 1", $log_id ) );
 			$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_PURCHASE_META . "` WHERE `wpsc_purchase_id` = %d", $log_id ) );
+			$wpdb->query( $wpdb->prepare( "DELETE FROM `" . WPSC_TABLE_DOWNLOAD_STATUS . "` WHERE `purchid` = %d ", $log_id ) );
 
 			do_action( 'wpsc_purchase_log_delete', $log_id );
 
