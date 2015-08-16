@@ -36,6 +36,10 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 == Changelog ==
 
+= 3.9.5 =
+
+* Fix: 4.3 Compatibility w/ WP_Widget constructors.
+
 = 3.9.4 =
 
 * Security Fix: Harden several instances of $_POST input that were not sanitized properly. Specifically, PayPal settings and Quick Edit fields for products.

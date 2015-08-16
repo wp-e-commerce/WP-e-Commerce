@@ -46,11 +46,11 @@ class WPSC_Update {
 			do_action( 'wpsc_update_timeout_terminate' );
 			$location = remove_query_arg( array( 'start_over', 'eta', 'current_percent' ) );
 			$location = add_query_arg( 'run_updates', 1, $location );
-			$location = esc_url( apply_filters( 'wpsc_update_terminate_location', $location ) );
+			$location = esc_url_raw( apply_filters( 'wpsc_update_terminate_location', $location ) );
 			?>
-				<script type="text/javascript">
-					location.href = "<?php echo $location; ?>"
-				</script>
+			<script type="text/javascript">
+				location.href = "<?php echo $location; ?>"
+			</script>
 			<?php
 			exit;
 		}
@@ -113,7 +113,7 @@ class WPSC_Update_Progress {
 			$location = add_query_arg( 'eta', $this->eta, $location );
 		else
 			$location = remove_query_arg( 'eta', $location );
-		return esc_url( $location );
+		return esc_url_raw( $location );
 	}
 
 	private function print_eta() {
