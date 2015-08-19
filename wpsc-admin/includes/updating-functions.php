@@ -423,7 +423,7 @@ function wpsc_convert_products_to_posts() {
 				);
 
 				$product['order'] = $wpdb->get_var( $wpdb->prepare( "
-					SELECT order FROM " . WPSC_TABLE_PRODUCT_ORDER . "
+					SELECT `order` FROM " . WPSC_TABLE_PRODUCT_ORDER . "
 					WHERE product_id = %d
 				", $product['id'] ) );
 
