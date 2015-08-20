@@ -39,6 +39,13 @@ add_filter(
  */
 function wpsc_filter_deprecated_v2_gateways( $gateways ) {
 
+	// Don't remove gateways if 1.0 theme engine is in use.
+	$te = get_option( 'wpsc_get_active_theme_engine', '1.0' );
+
+	if ( '1.0' == $te ) {
+		return $gateways;
+	}
+
 	$deprecated_gateways = array(
 		'wpsc_merchant_paypal_express',
 		'wpsc_merchant_testmode',
