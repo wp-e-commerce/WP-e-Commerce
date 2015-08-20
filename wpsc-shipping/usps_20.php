@@ -204,6 +204,7 @@ class ash_usps {
 				<input type='text' name='wpec_usps[id]' value='<?php esc_attr_e( $settings["id"] ); ?>' />
 				<p class='description'><?php printf( __("Don't have a USPS API account? <a href='%s' target='_blank'>Register for USPS Web Tools</a>", 'wpsc' ), 'https://secure.shippingapis.com/registration/' ); ?></p>
 				<p class='description'><?php _e( "Make sure your account has been activated with USPS - if you're unsure if this applies to you then please check with USPS", 'wpsc' ); ?></p>
+				<p class='description'><?php printf( __("Once you've completed integration, <a href='%s' target='_blank'>you'll need to submit a request to promote tools to production</a>.", 'wpsc' ), 'https://www.usps.com/business/web-tools-apis/developers-center.htm#learn-more--1-1' ); ?></p>
 			</td>
 		</tr>
 
