@@ -95,12 +95,13 @@ function wpsc_custom_category_column_data( $string, $column_name, $term_id ) {
 	if ( 'image' == $column_name ) {
 		$term = get_term_by( 'id', $term_id, 'wpsc_product_category' );
 		$image = wpsc_get_categorymeta( $term_id, 'image' );
+		$noimage = defined( 'WPSC_CORE_THEME_URL' ) ? WPSC_CORE_THEME_URL . '/wpsc-images/noimage.png' : WPSC_TE_V2_URL . '/theming/assets/images/noimage.png';
 
 		$format = '<img src="%s" title="%s" alt="%2$s" width="30" height="30" />';
 		if ( ! empty( $image ) ) {
 			$string = sprintf( $format, WPSC_CATEGORY_URL . $image, esc_attr( $term->name ) );
 		} else {
-			$string = sprintf( $format, WPSC_CORE_THEME_URL . 'wpsc-images/noimage.png', esc_attr( $term->name ) );
+			$string = sprintf( $format, $noimage, esc_attr( $term->name ) );
 		}
 	}
 	return $string;
