@@ -580,7 +580,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 			wpsc_update_customer_meta( 'paypal_pro_checkout_errors', $response->get_errors() );
 
 			$url = add_query_arg( array(
-				'payment_gateway'          => 'paypal-pro-checkout',
+				'payment_gateway'          => 'paypal-pro',
 				'payment_gateway_callback' => 'display_paypal_error',
 			), $this->get_return_url() );
 
