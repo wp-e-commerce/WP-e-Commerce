@@ -4,7 +4,7 @@ Donate link: https://wpecommerce.org
 Tags: e-commerce, woocommerce, digital downloads, wp-e-commerce, shop, cart, paypal, authorize, stock control, ecommerce, shipping, tax
 Requires at least: 4.1
 Tested up to: 4.3
-Stable tag: 4.0-dev
+Stable tag: 3.10.0
 
 WP eCommerce is a free, powerful plugin that empowers you to sell anything online, quickly and easily.
 
@@ -35,6 +35,10 @@ Before updating please make a backup of your existing files and database. Just i
 After upgrading from earlier versions look for link "Update Store". This will update your database structure to work with new version.
 
 == Changelog ==
+
+= 3.10.0 =
+
+* Enhancement: Added updated PayPal gateways.  We now support Digital Goods and Pro Hosted, and have updated the Express Checkout gateway. We now recommend all existing users of the 2.0 Express Checkout gateway update to the 3.0 version.
 
 = 3.9.5 =
 

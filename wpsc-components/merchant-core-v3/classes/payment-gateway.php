@@ -624,7 +624,6 @@ abstract class WPSC_Payment_Gateway {
 		$this->setting = new WPSC_Payment_Gateway_Setting( get_class( $this ) );
 	}
 
-
 	/**
 	 * Gateway initialization function.
 	 *
