@@ -2,8 +2,7 @@
 require_once( 'paypal.php' );
 require_once( 'paypal-express-checkout-response.php' );
 
-class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
-{
+class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal {
 	public function __construct( $options = array() ) {
 		parent::__construct( $options );
 	}
@@ -46,47 +45,87 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 			'L_BILLINGAGREEMENTDESCRIPTION0' => 'billing_description',
 		) );
 
-		$subtotal = 0;
+
+		// Apply a Discount if available
+		$this->add_discount();
 
 		// Shopping Cart details
 		$i = 0;
-		foreach ( $this->options['items'] as $item ) {
-			// Options Fields
-			$item_optionals = array(
-				'description' => "L_PAYMENTREQUEST_0_DESC{$i}",
-				'tax'         => "L_PAYMENTREQUEST_0_TAXAMT{$i}",
-				'url'         => "L_PAYMENTREQUEST_0_ITEMURL{$i}",
-				'number'	  => "L_PAYMENTREQUEST_0_NUMBER{$i}",
-			);
+		if ( is_array( $this->options['items'] ) ) {
+			foreach ( $this->options['items'] as $item ) {
+				// Options Fields
+				$item_optionals = array(
+					'description' => "L_PAYMENTREQUEST_0_DESC{$i}",
+					'tax'         => "L_PAYMENTREQUEST_0_TAXAMT{$i}",
+					'url'         => "L_PAYMENTREQUEST_0_ITEMURL{$i}",
+					'number'	  => "L_PAYMENTREQUEST_0_NUMBER{$i}",
+				);
 
-			// Format Amount Field 
-			$item['amount'] = $this->format( $item['amount'] );
+				// Format Amount Field
+				$item['amount'] = $this->format( $item['amount'] );
 
-			// Required Fields
-			$request += phpme_map( $item, array(
-				"L_PAYMENTREQUEST_0_NAME{$i}" => 'name',
-				"L_PAYMENTREQUEST_0_AMT{$i}"  => 'amount',
-				"L_PAYMENTREQUEST_0_QTY{$i}"  => 'quantity',
-			) );
+				// Required Fields
+				$request += phpme_map( $item, array(
+					"L_PAYMENTREQUEST_0_NAME{$i}" => 'name',
+					"L_PAYMENTREQUEST_0_AMT{$i}"  => 'amount',
+					"L_PAYMENTREQUEST_0_QTY{$i}"  => 'quantity',
+				) );
 
-			// No Shipping Field
-			if ( isset( $this->options['no_shipping'] ) ) {
-				$request["L_PAYMENTREQUEST_0_ITEMCATEGORY{$i}"] = 'DIGITAL';
+				// No Shipping Field
+				if ( isset( $this->options['no_shipping'] ) ) {
+					$request["L_PAYMENTREQUEST_0_ITEMCATEGORY{$i}"] = 'DIGITAL';
+				}
+
+				foreach ( $item_optionals as $key => $param ) {
+					if ( ! empty( $this->options['items'][$i][$key] ) )
+						if ( $key == 'tax' ) {
+							$request[$param] = $this->format( $this->options['items'][$i][$key] );
+						} else {
+							$request[$param] = $this->options['items'][$i][$key];
+						}
+				}
+
+				$i ++;
 			}
-
-			foreach ( $item_optionals as $key => $param ) {
-				if ( ! empty( $this->options['items'][$i][$key] ) )
-					if ( $key == 'tax' ) {
-						$request[$param] = $this->format( $this->options['items'][$i][$key] );
-					} else {
-						$request[$param] = $this->options['items'][$i][$key];
-					}
-			}
-
-			$i ++;
 		}
 
 		return $request;
+	}
+
+	/**
+ 	 * Add Discount for the Shopping Cart.
+	 *
+	 * Since PayPal doesn't have distinct support for discounts, we have to add the discount
+	 * as a separate item with a negative value.
+	 *
+	 * @return void
+ 	 */
+	protected function add_discount() {
+		// Verify if a discount is set
+		if ( isset( $this->options['discount'] ) && (float) $this->options['discount'] != 0 ) {
+			$discount = (float) $this->options['discount'];
+			$sub_total = (float) $this->options['subtotal'];
+
+			// If discount amount is larger than or equal to the item total, we need to set item total to 0.01
+			// because PayPal does not accept 0 item total.
+			if ( $discount >= $sub_total ) {
+				$discount = $sub_total - 0.01;
+			}
+
+			// if there's shipping, we'll take 0.01 from there
+			if ( ! empty( $this->options['shipping'] ) ) {
+				$this->options['shipping'] -= 0.01;
+			} else {
+				$this->options['amount'] = 0.01;
+			}
+
+			// Add the Discount as an Item
+			$this->options['items'][] = array(
+				'name' => __( 'Discount', 'wpsc' ),
+				'amount' => - $discount,
+				'quantity' => '1',
+			);
+		}
 	}
 
 	/**
@@ -170,7 +209,7 @@ class PHP_Merchant_Paypal_Express_Checkout extends PHP_Merchant_Paypal
 			'COMPLETETYPE' => 'complete_type',
 		) );
 
-		if ( ! empty( $this->options['shipping_address'] ) ) {
+		if ( ! empty( $this->options['shipping_address'] ) && ! isset( $this->options['no_shipping'] ) ) {
 			$request += $this->add_address();
 		}
 

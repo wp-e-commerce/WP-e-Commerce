@@ -1,9 +1,9 @@
 <?php
+
 /**
  * The PayPal Pro Gateway class
  *
  */
-
 class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	private $gateway;
 
@@ -25,23 +25,32 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		$this->gateway = new PHP_Merchant_Paypal_Pro( $options );
 
 		$this->gateway->set_options( array(
-			'api_username'     => $this->setting->get( 'api_username' ),
-			'api_password'     => $this->setting->get( 'api_password' ),
-			'api_signature'    => $this->setting->get( 'api_signature' ),
-			'cancel_url'       => $this->get_shopping_cart_payment_url(),
-			'currency'         => $this->get_currency_code(),
-			'test'             => (bool) $this->setting->get( 'sandbox_mode' ),
+			'api_username'  => $this->setting->get( 'api_username' ),
+			'api_password'  => $this->setting->get( 'api_password' ),
+			'api_signature' => $this->setting->get( 'api_signature' ),
+			'cancel_url'    => $this->get_shopping_cart_payment_url(),
+			'currency'      => $this->get_currency_code(),
+			'test'          => (bool) $this->setting->get( 'sandbox_mode' ),
 		) );
 
-		// Load PayPal Pro JavaScript file
-		add_action( 'wp_enqueue_scripts', array( $this, 'pro_script' ) );
+	}
 
-		add_filter( 'wpsc_purchase_log_gateway_data', array( $this, 'filter_purchase_log_gateway_data' ), 10, 2 );
+	/**
+	 * Run the gateway hooks
+	 *
+	 * @access public
+     * @since 4.0
+	 *
+	 * @return void
+	 */
+	public function init() {
+		// Load PayPal Pro JavaScript file
+		add_action( 'wp_enqueue_scripts', array( 'WPSC_Payment_Gateway_Paypal_Pro', 'pro_script' ) );
 
 		// Unselect Default Payment Gateway
 		add_filter(
 			'wpsc_payment_method_form_fields',
-			array( $this, 'filter_unselect_default' ), 101 , 1
+			array( 'WPSC_Payment_Gateway_Paypal_Pro', 'filter_unselect_default' ), 101 , 1
 		);
 	}
 
@@ -54,12 +63,31 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 *
 	 * @since 3.9
 	 */
-	public function filter_unselect_default( $fields ) {
+	public static function filter_unselect_default( $fields ) {
 		foreach ( $fields as $i=>$field ) {
 			$fields[ $i ][ 'checked' ] = false;
 		}
 
 		return $fields;
+	}
+
+	/**
+	 * WordPress Enqueue for the Pro Script and CSS file
+	 *
+	 * @return void
+	 *
+	 * @since 3.9
+	 */
+	public static function pro_script() {
+		if ( wpsc_is_checkout() ) {
+			$pro_loc = array(
+				'spinner_url' => wpsc_get_ajax_spinner(),
+				'loading'     => __( 'Loading...', 'wpsc' ),
+			);
+			wp_enqueue_script( 'pro-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/pro.js', array( 'jquery' ) );
+			wp_enqueue_style( 'pro-style-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/pro.css' );
+			wp_localize_script( 'pro-script-internal', 'pro_loc', $pro_loc );
+		}
 	}
 
 	/**
@@ -71,63 +99,9 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 * @since 3.9
 	 */
 	public function get_mark_html() {
-		$html = '<img src="' . WPSC_URL . '/images/cc.gif" border="0" alt="' . esc_attr__( 'Credit Card Icons' ) .'" />';
+		$html = '<img src="' . WPSC_URL . '/images/cc.png" border="0" alt="' . esc_attr__( 'Credit Card Icons' ) .'" />';
 
 		return apply_filters( 'wpsc_paypal-pro_mark_html', $html );
-	}
-
-	/**
-	 * WordPress Enqueue for the Pro Script and CSS file
-	 *
-	 * @return void
-	 *
-	 * @since 3.9
-	 */
-	public function pro_script() {
-		if ( wpsc_is_checkout() ) {
-			wp_enqueue_script( 'pro-script-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/pro.js', array( 'jquery' ) );
-			wp_enqueue_style( 'pro-syle-internal', WPSC_URL . '/wpsc-components/merchant-core-v3/gateways/pro.css' );
-		}
-	}
-
-	/**
-	 * Purchase Log Filter for Gateway Data
-	 *
-	 * @param array $gateway_data
-	 * @param array $data
-	 * @return array
-	 *
-	 * @since 3.9
-	 */
-	public static function filter_purchase_log_gateway_data( $gateway_data, $data ) {
-		// Because paypal express checkout API doesn't have full support for discount, we have to manually add an item here
-		if ( isset( $gateway_data['discount'] ) && (float) $gateway_data['discount'] != 0 ) {
-			$i =& $gateway_data['items'];
-			$d =& $gateway_data['discount'];
-			$s =& $gateway_data['subtotal'];
-
-			// If discount amount is larger than or equal to the item total, we need to set item total to 0.01
-			// because Paypal does not accept 0 item total.
-			if ( $d >= $gateway_data['subtotal'] ) {
-				$d = $s - 0.01;
-
-				// if there's shipping, we'll take 0.01 from there
-				if ( ! empty( $gateway_data['shipping'] ) ) {
-					$gateway_data['shipping'] -= 0.01;
-				} else {
-					$gateway_data['amount'] = 0.01;
-				}
-			}
-
-			$s -= $d;
-
-			$i[] = array(
-				'name'     => __( 'Discount', 'wpsc' ),
-				'amount'   => - $d,
-				'quantity' => 1,
-			);
-		}
-		return $gateway_data;
 	}
 
 	/**
@@ -195,11 +169,9 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 */
 	public function callback_ipn() {
 		$ipn = new PHP_Merchant_Paypal_IPN( false, (bool) $this->setting->get( 'sandbox_mode', false ) );
-
 		if ( $ipn->is_verified() ) {
 			$sessionid = $ipn->get( 'invoice' );
-			$this->set_purchase_log_for_callbacks( $sessionid );
-
+			$this->set_purchase_log_for_callbacks( $sessionid, 'sessionid' );
 			if ( $ipn->is_payment_denied() ) {
 				$this->purchase_log->set( 'processed', WPSC_Purchase_Log::PAYMENT_DECLINED );
 			} elseif ( $ipn->is_payment_refunded() ) {
@@ -260,8 +232,8 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		$options = array(
 			'tx'            => $tx,
 			'CSCMATCH'      => $CSCMATCH,
-			'message_id'    => $this->purchase_log->get( 'sessionid' ),
-			'invoice'       => $this->purchase_log->get( 'id' ),
+			'message_id'    => $this->purchase_log->get( 'id' ),
+			'invoice'       => $this->purchase_log->get( 'sessionid' ),
 		);
 
 		$options += $this->checkout_data->get_gateway_data();
@@ -563,8 +535,8 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 		$total = $this->convert( $this->purchase_log->get( 'totalprice' ) );
 		$options = array(
 			'return_url'       => $this->get_return_url(),
-			'message_id'       => $this->purchase_log->get( 'sessionid' ),
-			'invoice'          => $this->purchase_log->get( 'id' ),
+			'message_id'       => $this->purchase_log->get( 'id' ),
+			'invoice'          => $this->purchase_log->get( 'sessionid' ),
 			'address_override' => 1,
 			'paymentaction'    => 'sale',
 			'template'         => 'templateD',
@@ -578,30 +550,45 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 			$options['notify_url'] = $this->get_notify_url();
 		}
 
+        // Detect Mobile Devices
+        if ( wp_is_mobile() ) {
+            $options['template'] = 'mobile-iframe';
+        }
+
 		// BMCreateButton API call
 		$response = $this->gateway->createButton( $options );
-		$params = $response->get_params();
-		$website_code = $params['WEBSITECODE'];
-
 
 		if ( $response->is_successful() ) {
+
 			$params = $response->get_params();
+			$website_code = $params['WEBSITECODE'];
+
 			// Log any warning
 			if ( $params['ACK'] == 'SuccessWithWarning' ) {
 				$this->log_error( $response );
+				wpsc_update_customer_meta( 'paypal_pro_checkout_errors', $response->get_errors() );
+
 			}
+
+			// Write the Button code
+			echo( $website_code );
+
 		} else {
+
 			// Log errors and redirect user
 			$this->log_error( $response );
+			wpsc_update_customer_meta( 'paypal_pro_checkout_errors', $response->get_errors() );
+
 			$url = add_query_arg( array(
 				'payment_gateway'          => 'paypal-pro-checkout',
 				'payment_gateway_callback' => 'display_paypal_error',
 			), $this->get_return_url() );
+
+			// Redirect to the Error Page
+			wp_redirect( $url );
 		}
 
-		// Write the Button code
-		echo( $website_code );
-
+		// Stop further execution
 		exit;
 	}
 
@@ -615,6 +602,10 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 	 */
 	public function log_error( $response ) {
 		if ( $this->setting->get( 'debugging' ) ) {
+
+			add_filter( 'wpsc_logging_post_type_args', 'WPSC_Logging::force_ui' );
+			add_filter( 'wpsc_logging_taxonomy_args ', 'WPSC_Logging::force_ui' );
+
 			$log_data = array(
 				'post_title'    => 'PayPal Pro Operation Failure',
 				'post_content'  =>  'There was an error processing the payment. Find details in the log entry meta fields.',

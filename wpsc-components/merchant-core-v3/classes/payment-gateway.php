@@ -55,37 +55,54 @@ final class WPSC_Payment_Gateways {
 	 * @since 3.9
 	 */
 	public static function &get( $gateway, $meta = false ) {
-		if ( empty( self::$instances[$gateway] ) ) {
-			if ( ! $meta )
-				$meta = self::$gateways[$gateway];
+
+		if ( empty( self::$instances[ $gateway ] ) ) {
+
+			if ( ! $meta ) {
+				$meta = self::$gateways[ $gateway ];
+			}
+
+			if ( ! file_exists( $meta['path'] ) ) {
+				WPSC_Payment_Gateways::flush_cache();
+			}
+
 			require_once( $meta['path'] );
+
 			$class_name = $meta['class'];
+
 			$options = array(
 				'http_client' => new WPSC_Payment_Gateway_HTTP(),
 			);
+
 			if ( ! class_exists( $class_name ) ) {
 				$error = new WP_Error( 'wpsc_invalid_payment_gateway', sprintf( __( 'Invalid payment gateway: Class %s does not exist.', 'wpsc' ), $class_name ) );
 				return $error;
 			}
 
-			self::$instances[$gateway] = new $class_name( $options );
+			self::$instances[ $gateway ] = new $class_name( $options );
 		}
 
-		return self::$instances[$gateway];
+		return self::$instances[ $gateway ];
 	}
 
 	public static function init() {
+
 		add_action( 'wpsc_submit_gateway_options', array( 'WPSC_Payment_Gateway_Setting', 'action_update_payment_gateway_settings' ) );
 
-		if ( ! defined( 'WPSC_PAYMENT_GATEWAY_DEBUG' ) || WPSC_PAYMENT_GATEWAY_DEBUG == false )
-			add_action( 'wp_loaded', array( 'WPSC_Payment_Gateways', 'action_save_payment_gateway_cache' ), 99 );
-		else
+		if ( ! defined( 'WPSC_PAYMENT_GATEWAY_DEBUG' ) || WPSC_PAYMENT_GATEWAY_DEBUG == false ) {
+			add_action( 'init', array( 'WPSC_Payment_Gateways', 'action_save_payment_gateway_cache' ), 99 );
+		 } else {
 			WPSC_Payment_Gateways::flush_cache();
+		 }
 
 		WPSC_Payment_Gateways::register_dir( WPSC_MERCHANT_V3_PATH . '/gateways' );
 
-		if ( isset( $_REQUEST['payment_gateway'] ) && isset( $_REQUEST['payment_gateway_callback'] ) && self::is_registered( $_REQUEST['payment_gateway'] ) )
+		// Call the Active Gateways init function
+		self::initialize_gateways();
+
+		if ( isset( $_REQUEST['payment_gateway'] ) && isset( $_REQUEST['payment_gateway_callback'] ) ) {
 			add_action( 'init', array( 'WPSC_Payment_Gateways', 'action_process_callbacks' ) );
+		}
 	}
 
 	public static function action_process_callbacks() {
@@ -93,8 +110,9 @@ final class WPSC_Payment_Gateways {
 		$function_name = "callback_{$_REQUEST['payment_gateway_callback']}";
 		$callback = array( $gateway, $function_name );
 
-		if ( is_callable( $callback ) )
+		if ( is_callable( $callback ) ) {
 			$gateway->$function_name();
+		}
 	}
 
 	/**
@@ -107,7 +125,7 @@ final class WPSC_Payment_Gateways {
 	 * @return bool True if it's already registered.
 	 */
 	public static function is_registered( $gateway ) {
-		return ! empty( self::$gateways[$gateway] );
+		return ! empty( self::$gateways[ $gateway ] );
 	}
 
 	/**
@@ -149,19 +167,22 @@ final class WPSC_Payment_Gateways {
 		// scan files in dir
 		$files = scandir( $dir );
 
-		if ( in_array( $main_file, $files ) )
+		if ( in_array( $main_file, $files ) ) {
 			return self::register_file( $dir . $main_file );
+		}
 
 		foreach ( $files as $file ) {
 			$path = $dir . $file;
 
-			if ( pathinfo( $path, PATHINFO_EXTENSION ) != 'php' || in_array( $file, array( '.', '..' ) ) || is_dir( $path ) )
+			if ( pathinfo( $path, PATHINFO_EXTENSION ) != 'php' || in_array( $file, array( '.', '..' ) ) || is_dir( $path ) ) {
 				continue;
+			}
 
 			$return = self::register_file( $path );
 
-			if ( is_wp_error( $return ) )
+			if ( is_wp_error( $return ) ) {
 				return $return;
+			}
 		}
 	}
 
@@ -188,19 +209,34 @@ final class WPSC_Payment_Gateways {
 	 * a valid class. Otherwise, a WP_Error object is returned.
 	 */
 	public static function register_file( $file ) {
-		if ( empty( self::$payment_gateway_cache ) )
+
+		if ( empty( self::$payment_gateway_cache ) ) {
 			self::$payment_gateway_cache = get_option( 'wpsc_payment_gateway_cache', array() );
+		}
+
 		$filename = basename( $file, '.php' );
 
 		// payment gateway already exists in cache
-		if ( isset( self::$payment_gateway_cache[$filename] ) ) {
-			self::$gateways[$filename] = self::$payment_gateway_cache[$filename];
-			return true;
+		if ( isset( self::$payment_gateway_cache[ $filename ] ) ) {
+			self::$gateways[ $filename ] = self::$payment_gateway_cache[ $filename ];
 		}
 
 		// if payment gateway is not in cache, load metadata
 		$classname = ucwords( str_replace( '-', ' ', $filename ) );
 		$classname = 'WPSC_Payment_Gateway_' . str_replace( ' ', '_', $classname );
+
+		if ( file_exists( $file ) ) {
+			require_once $file;
+		}
+
+		if ( is_callable( array( $classname, 'load' ) ) && ! call_user_func( array( $classname, 'load' ) ) ) {
+
+			self::unregister_file( $filename );
+
+			$error = new WP_Error( 'wpsc-payment', __( 'Error' ) );
+
+			return $error;
+		}
 
 		$meta = array(
 			'class'        => $classname,
@@ -210,15 +246,23 @@ final class WPSC_Payment_Gateways {
 
 		$gateway = self::get( $filename, $meta );
 
-		if ( is_wp_error( $gateway ) )
+		if ( is_wp_error( $gateway ) ) {
 			return $gateway;
+		}
 
-		$meta['name'] = $gateway->get_title();
+		$meta['name']  = $gateway->get_title();
 		$meta['image'] = $gateway->get_image_url();
-		$meta['mark'] = $gateway->get_mark_html();
-		self::$gateways[$filename] = $meta;
+		$meta['mark']  = $gateway->get_mark_html();
+
+		self::$gateways[ $filename ] = $meta;
 
 		return true;
+	}
+
+	public static function unregister_file( $filename ) {
+		if ( isset( self::$gateways[ $filename ] ) ) {
+			unset( self::$gateways[ $filename ] );
+		}
 	}
 
 	/**
@@ -233,13 +277,14 @@ final class WPSC_Payment_Gateways {
 	 * @return void
 	 */
 	public static function action_save_payment_gateway_cache() {
-		if ( self::$payment_gateway_cache != self::$gateways )
+		if ( self::$payment_gateway_cache != self::$gateways ) {
 			update_option( 'wpsc_payment_gateway_cache', self::$gateways );
+		}
 	}
 
 	/**
-     * Flush the payment gateways cache.
- 	 *
+	 * Flush the payment gateways cache.
+	 *
 	 * @access public
 	 * @static
 	 * @since 3.9
@@ -278,6 +323,15 @@ final class WPSC_Payment_Gateways {
 		return array_keys( self::$gateways );
 	}
 
+	/**
+	 *
+	 * Return an array containing active gateway names.
+	 *
+	 * @access public
+	 * @since 3.9
+	 *
+	 * @return array
+	 */
 	public static function get_active_gateways() {
 		if ( empty( self::$active_gateways ) ) {
 			$selected_gateways = get_option( 'custom_gateway_options', array() );
@@ -286,6 +340,83 @@ final class WPSC_Payment_Gateways {
 		}
 
 		return apply_filters( 'wpsc_get_active_gateways', array_values( self::$active_gateways ) );
+	}
+
+	/**
+	 * Initialize the Active Gateways
+	 *
+	 * @access public
+	 * @since 4.0
+	 *
+	 * @return void
+	 */
+	public static function initialize_gateways() {
+		$active_gateways = self::get_active_gateways();
+
+		foreach( $active_gateways as $gateway_id ) {
+			$gateway = self::get( $gateway_id );
+			$gateway->init();
+		}
+	}
+
+	/**
+	 * Returns all known currencies without fractions.
+	 *
+	 * Our internal list has not been updated in some time, so returning a filterable list
+	 * for ever-changing economies and currencies should prove helpful.
+	 *
+	 * @link http://www.currency-iso.org/dam/downloads/table_a1.xml
+	 *
+	 * @since  4.0
+	 *
+	 * @return array Currency ISO codes that do not use fractions.
+	 */
+	public static function currencies_without_fractions() {
+
+		$currencies = array(
+			'JPY',
+			'HUF',
+			'VND',
+			'BYR',
+			'XOF',
+			'BIF',
+			'XAF',
+			'CLP',
+			'KMF',
+			'DJF',
+			'XPF',
+			'GNF',
+			'ISK',
+			'GNF',
+			'KRW',
+			'PYG',
+			'RWF',
+			'UGX',
+			'UYI',
+			'VUV',
+		);
+
+		return (array) apply_filters( 'wpsc_currencies_without_fractions', $currencies );
+	}
+
+	/**
+	 * Gets an array of countries in the EU.
+	 *
+	 * MC (monaco) and IM (Isle of Man, part of UK) also use VAT.
+	 *
+	 * @since  4.0
+	 * @param  $type Type of countries to retrieve. Blank for EU member countries. eu_vat for EU VAT countries.
+	 * @return string[]
+	 */
+	public function get_european_union_countries( $type = '' ) {
+		$countries = array( 'AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR', 'GB', 'GR', 'HU', 'HR', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK' );
+
+		if ( 'eu_vat' === $type ) {
+			$countries[] = 'MC';
+			$countries[] = 'IM';
+		}
+
+		return $countries;
 	}
 
 	/**
@@ -346,20 +477,22 @@ abstract class WPSC_Payment_Gateway {
 	 */
 	public function setup_form() {
 		$checkout_field_types = array(
-			'billing' => __( 'Billing Fields', 'wpsc' ),
+			'billing'  => __( 'Billing Fields' , 'wpsc' ),
 			'shipping' => __( 'Shipping Fields', 'wpsc' ),
 		);
 
 		$fields = array(
-			'firstname' => __( 'First Name', 'wpsc' ),
-			'lastname'  => __( 'Last Name', 'wpsc' ),
-			'address'   => __( 'Address', 'wpsc' ),
-			'city'      => __( 'City', 'wpsc' ),
-			'state'     => __( 'State', 'wpsc' ),
-			'country'   => __( 'Country', 'wpsc' ),
+			'firstname' => __( 'First Name' , 'wpsc' ),
+			'lastname'  => __( 'Last Name'  , 'wpsc' ),
+			'address'   => __( 'Address'    , 'wpsc' ),
+			'city'      => __( 'City'       , 'wpsc' ),
+			'state'     => __( 'State'      , 'wpsc' ),
+			'country'   => __( 'Country'    , 'wpsc' ),
 			'postcode'  => __( 'Postal Code', 'wpsc' ),
 		);
+
 		$checkout_form = WPSC_Checkout_Form::get();
+
 		foreach ( $checkout_field_types as $field_type => $title ): ?>
 			<tr>
 				<td colspan="2">
@@ -448,7 +581,7 @@ abstract class WPSC_Payment_Gateway {
 	}
 
 	public function get_shopping_cart_payment_url() {
-		return _wpsc_maybe_activate_theme_engine_v2() ? wpsc_get_checkout_url( 'payment' ) : get_option( 'shopping_cart_url' );
+		return _wpsc_maybe_activate_theme_engine_v2() ? wpsc_get_checkout_url( 'shipping-and-billing' ) : get_option( 'shopping_cart_url' );
 	}
 
 	public function get_products_page_url() {
@@ -479,14 +612,30 @@ abstract class WPSC_Payment_Gateway {
 	}
 
 	/**
-	 * Payment gateway constructor. Should use WPSC_Payment_Gateways::get( $gateway_name ) instead.
+	 * Payment gateway constructor.
+	 *
+	 * Use WPSC_Payment_Gateways::get( $gateway_name ) instead.
 	 *
 	 * @access public
 	 * @return WPSC_Payment_Gateway
 	 */
 	public function __construct() {
+
 		$this->setting = new WPSC_Payment_Gateway_Setting( get_class( $this ) );
 	}
+
+
+	/**
+	 * Gateway initialization function.
+	 *
+	 * You should use this function for hooks with actions and filters that are required by the gateway.
+	 *
+	 * @access public
+	 * @since 4.0
+	 *
+	 * @return void
+	 */
+	public function init() {}
 }
 
 class WPSC_Payment_Gateway_Setting {
@@ -562,8 +711,9 @@ class WPSC_Payment_Gateway_Setting {
 	 * @return void
 	 */
 	private function lazy_load() {
-		if ( is_null( $this->settings ) )
+		if ( is_null( $this->settings ) ) {
 			$this->settings = get_option( $this->option_name, array() );
+		}
 	}
 
 	/**
@@ -575,7 +725,7 @@ class WPSC_Payment_Gateway_Setting {
 	 */
 	public function get( $setting, $default = false ) {
 		$this->lazy_load();
-		return isset( $this->settings[$setting] ) ? $this->settings[$setting] : $default;
+		return isset( $this->settings[ $setting ] ) ? $this->settings[ $setting ] : $default;
 	}
 
 	/**
@@ -589,9 +739,10 @@ class WPSC_Payment_Gateway_Setting {
 	 */
 	public function set( $setting, $value, $defer = false ) {
 		$this->lazy_load();
-		$this->unsaved_settings[$setting] = $value;
-		if ( ! $defer )
+		$this->unsaved_settings[ $setting ] = $value;
+		if ( ! $defer ) {
 			$this->save();
+		}
 	}
 
 	/**
@@ -607,8 +758,9 @@ class WPSC_Payment_Gateway_Setting {
 	public function merge( $settings, $defer = false ) {
 		$this->lazy_load();
 		$this->unsaved_settings = array_merge( $this->unsaved_settings, $settings );
-		if ( ! $defer )
+		if ( ! $defer ) {
 			$this->save();
+		}
 	}
 
 	/**
