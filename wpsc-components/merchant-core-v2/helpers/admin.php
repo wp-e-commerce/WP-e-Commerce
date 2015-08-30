@@ -47,8 +47,7 @@ function wpsc_filter_deprecated_v2_gateways( $gateways ) {
 	}
 
 	$deprecated_gateways = array(
-		'wpsc_merchant_paypal_express',
-		'wpsc_merchant_testmode',
+		'wpsc_merchant_paypal_express'
 	);
 
 	// Loops through available gateways, checks if available gateway is both inactive and deprecated, and removes it.
