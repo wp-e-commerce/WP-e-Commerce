@@ -64,8 +64,7 @@ function wpsc_display_php_version_notice() {
  */
 function wpsc_display_update_page() {
 	global $wpdb;
-
-	?>
+?>
 
 	<div class="wrap">
 		<h2><?php esc_html_e( 'Update WP eCommerce', 'wpsc' ); ?> </h2>

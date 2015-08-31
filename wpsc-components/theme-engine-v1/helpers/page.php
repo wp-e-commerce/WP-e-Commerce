@@ -245,7 +245,7 @@ function wpsc_theme_admin_notices() {
 	if ( false !== get_option( 'wpsc_version' ) ) {
 
 		// Database update notice is most important
-		if ( get_option ( 'wpsc_version' ) < 3.8 ) {
+		if ( version_compare( get_option ( 'wpsc_version' ), 3.8, '<' ) ) {
 
 			add_action ( 'admin_notices', 'wpsc_database_update_notice' );
 
