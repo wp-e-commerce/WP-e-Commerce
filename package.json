@@ -1,6 +1,6 @@
 {
   "name": "wp-e-commerce",
-  "version": "3.10.0",
+  "version": "3.10.1",
   "private": true,
   "devDependencies": {
     "grunt": "~0.4.5",

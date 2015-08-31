@@ -17,7 +17,7 @@ If you're looking for general user support, please submit your support request o
 Development status
 -------------------------
 
-* The latest stable version is [3.10.0](http://wordpress.org/extend/plugins/wp-e-commerce).
+* The latest stable version is [3.10.1](http://wordpress.org/extend/plugins/wp-e-commerce).
 * Active development version: 4.0-dev (branch [master](https://github.com/wp-e-commerce/WP-e-Commerce))
 * [Roadmap for 4.0](https://github.com/wp-e-commerce/wp-e-commerce/wiki/Roadmap)
 * [4.0 tickets](https://github.com/wp-e-commerce/WP-e-Commerce/milestones/4.0)
