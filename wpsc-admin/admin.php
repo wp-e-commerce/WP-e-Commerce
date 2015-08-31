@@ -154,6 +154,7 @@ function wpsc_show_update_link() {
 	else
 		return false;
 }
+
 /**
  * wpsc_admin_pages function, all the definitons of admin pages are stores here.
  * No parameters, returns nothing
@@ -188,13 +189,12 @@ function wpsc_admin_pages() {
 			}
 	}
 
-	// Add to Dashboard
-	// $page_hooks[] = $purchase_log_page = add_submenu_page( 'index.php', __( 'Store Sales', 'wpsc' ), __( 'Store Sales', 'wpsc' ), 'administrator', 'wpsc-sales-logs', 'wpsc_display_sales_logs' );
-
-	if ( wpsc_show_update_link() )
-		$page_hooks[] = add_submenu_page( 'index.php', __( 'Update Store', 'wpsc' ), __( 'Store Update', 'wpsc' ), 'administrator', 'wpsc-update', 'wpsc_display_update_page' );
-
 	$store_upgrades_cap = apply_filters( 'wpsc_upgrades_cap', 'administrator' );
+
+	if ( wpsc_show_update_link() ) {
+		$page_hooks[] = add_submenu_page( 'index.php', __( 'Update Store', 'wpsc' ), __( 'Store Update', 'wpsc' ), $store_upgrades_cap, 'wpsc-update', 'wpsc_display_update_page' );
+	}
+
 	$page_hooks[] = add_submenu_page( 'index.php', __( 'Store Upgrades', 'wpsc' ), __( 'Store Upgrades', 'wpsc' ), $store_upgrades_cap, 'wpsc-upgrades', 'wpsc_display_upgrades_page' );
 
 	$purchase_logs_cap = apply_filters( 'wpsc_purchase_logs_cap', 'administrator' );
