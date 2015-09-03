@@ -734,7 +734,7 @@ function wpsc_copy_meta_value_to_similiar( element ) {
 				}
 			} else {
 				current_value = jQuery( this ).val();
-				if ( current_value != meta_value ) {
+				if ( current_value != meta_value && meta_value ) {
 					jQuery( this ).val( meta_value );
 				}
 			}
