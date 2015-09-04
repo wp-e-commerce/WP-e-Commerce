@@ -109,7 +109,9 @@ function wpsc_install() {
 	require_once( WPSC_FILE_PATH . '/wpsc-core/wpsc-functions.php' );
 	require_once( WPSC_FILE_PATH . '/wpsc-includes/wpsc-theme-engine-bootstrap.php' );
 
-	if ( ! _wpsc_maybe_activate_theme_engine_v2() ) {
+	$te = get_option( 'wpsc_get_active_theme_engine', '1.0' );
+
+	if ( '1.0' == $te ) {
 		add_option( 'product_list_url', '', '', 'no' );
 		add_option( 'shopping_cart_url', '', '', 'no' );
 		add_option( 'checkout_url', '', '', 'no' );
