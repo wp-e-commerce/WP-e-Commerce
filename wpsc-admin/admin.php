@@ -211,6 +211,8 @@ function wpsc_admin_pages() {
 
 	$store_upgrades_cap = apply_filters( 'wpsc_upgrades_cap', 'administrator' );
 
+	$page_hooks = array();
+
 	if ( wpsc_show_update_link() ) {
 		$page_hooks[] = add_submenu_page( 'index.php', __( 'Update Store', 'wpsc' ), __( 'Store Update', 'wpsc' ), $store_upgrades_cap, 'wpsc-update', 'wpsc_display_update_page' );
 	}
