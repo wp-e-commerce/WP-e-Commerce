@@ -36,6 +36,12 @@ After upgrading from earlier versions look for link "Update Store". This will up
 
 == Changelog ==
 
+= 3.10.1 =
+
+* Fix: Uses version_compare() for comparing wpsc_version constant in legacy code (from 5 years ago).  Using comparators was causing 3.10.0 to be "less than" 3.8, resulting in an unnecessary admin notice.
+* Fix: Changes internal mechanism for detecting which theme engine is in use. The way we were checking for it before caused many core actions to be unhooked, leading to unsavory results, like Fancy Notifications no longer working.
+* Fix: Patched in a few fixes for incorrect usage of esc_url(). This resolves scenarios like the selecting a custom checkout form in the Dashboard failing because of double-encoded ampersands.
+
 = 3.10.0 =
 
 * Enhancement: Added updated PayPal gateways.  We now support Digital Goods and Pro Hosted, and have updated the Express Checkout gateway. We now recommend all existing users of the 2.0 Express Checkout gateway update to the 3.0 version.
