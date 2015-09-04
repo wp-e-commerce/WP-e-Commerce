@@ -581,7 +581,10 @@ abstract class WPSC_Payment_Gateway {
 	}
 
 	public function get_shopping_cart_payment_url() {
-		return _wpsc_maybe_activate_theme_engine_v2() ? wpsc_get_checkout_url( 'shipping-and-billing' ) : get_option( 'shopping_cart_url' );
+
+		$te = get_option( 'wpsc_get_active_theme_engine', '1.0' );
+
+		return '1.0' !== $te ? wpsc_get_checkout_url( 'shipping-and-billing' ) : get_option( 'shopping_cart_url' );
 	}
 
 	public function get_products_page_url() {
