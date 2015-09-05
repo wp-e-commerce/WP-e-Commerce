@@ -17,42 +17,46 @@ function wpsc_validate_form( $form_args, &$validated_array = false ) {
 	$form = $form_args['fields'];
 
 	foreach ( $form as $props ) {
-		if ( empty( $props['rules'] ) ) {
-			continue;
-		}
 
-		$props = _wpsc_populate_field_default_args( $props );
-		$field = $props['name'];
-		$rules = $props['rules'];
-
-		if ( is_string( $rules ) ) {
-			$rules = explode( '|', $rules );
-		}
-
-		$value = wpsc_submitted_value( $field, '', $validated_array );
-
-		foreach ( $rules as $rule ) {
-			if ( function_exists( $rule ) ) {
-				$value = call_user_func( $rule, $value );
+		foreach ( $props['fields'] as $prop ) {
+			if ( empty( $prop['rules'] ) ) {
 				continue;
 			}
+		
+			$prop = _wpsc_populate_field_default_args( $prop );
+			$field = $prop['name'];
+			$rules = $prop['rules'];
 
-			if ( preg_match( '/([^\[]+)\[([^\]]+)\]/', $rule, $matches ) ) {
-				$rule          = $matches[1];
-				$matched_field = $matches[2];
-				$matched_value = wpsc_submitted_value( $matched_field, null, $validated_array );
-				$matched_props = isset( $form[$matched_field] ) ? $form[$matched_field] : array();
-
-				$error = apply_filters( "wpsc_validation_rule_{$rule}", $error, $value, $field, $props, $matched_field, $matched_value, $matched_props );
-			} else {
-				$error = apply_filters( "wpsc_validation_rule_{$rule}", $error, $value, $field, $props );
+			if ( is_string( $rules ) ) {
+				$rules = explode( '|', $rules );
 			}
 
-			if ( count( $error->get_error_codes() ) ) {
-				break;
+			
+			$value = wpsc_submitted_value( $field, '', $validated_array );
+
+			foreach ( $rules as $rule ) {
+				if ( function_exists( $rule ) ) {
+					$value = call_user_func( $rule, $value );
+					continue;
+				}
+
+				if ( preg_match( '/([^\[]+)\[([^\]]+)\]/', $rule, $matches ) ) {
+					$rule          = $matches[1];
+					$matched_field = $matches[2];
+					$matched_value = wpsc_submitted_value( $matched_field, null, $validated_array );
+					$matched_props = isset( $form[$matched_field] ) ? $form[$matched_field] : array();
+
+					$error = apply_filters( "wpsc_validation_rule_{$rule}", $error, $value, $field, $prop, $matched_field, $matched_value, $matched_props );
+				} else {
+					$error = apply_filters( "wpsc_validation_rule_{$rule}", $error, $value, $field, $prop );
+				}
+
+				if ( count( $error->get_error_codes() ) ) {
+					break;
+				}
 			}
 		}
-
+		
 		_wpsc_set_submitted_value( $field, $value, $validated_array );
 	}
 
