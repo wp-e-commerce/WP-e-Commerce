@@ -385,53 +385,7 @@ class wpsc_checkout {
 		$wpsc_gateway_error_messages      = array();
 		$wpsc_checkout_error_messages     = array();
 		$wpsc_registration_error_messages = array();
-		// Credit Card Number Validation for PayPal Pro and maybe others soon
-		if ( isset( $_POST['card_number'] ) ) {
-			//should do some php CC validation here~
-		} else {
-			$wpsc_gateway_error_messages['card_number'] = '';
-		}
-		if ( isset( $_POST['card_number1'] ) && isset( $_POST['card_number2'] ) && isset( $_POST['card_number3'] ) && isset( $_POST['card_number4'] ) ) {
-			if ( $_POST['card_number1'] != '' && $_POST['card_number2'] != '' && $_POST['card_number3'] != '' && $_POST['card_number4'] != '' && is_numeric( $_POST['card_number1'] ) && is_numeric( $_POST['card_number2'] ) && is_numeric( $_POST['card_number3'] ) && is_numeric( $_POST['card_number4'] ) ) {
-				$wpsc_gateway_error_messages['card_number'] = '';
-			} else {
 
-				$any_bad_inputs = true;
-				$bad_input = true;
-				$wpsc_gateway_error_messages['card_number'] = __( 'Please enter a valid card number.', 'wpsc' );
-				$wpsc_customer_checkout_details['card_number'] = '';
-			}
-		}
-		if ( isset( $_POST['expiry'] ) ) {
-			if ( !empty($_POST['expiry']['month']) && !empty($_POST['expiry']['month']) && is_numeric( $_POST['expiry']['month'] ) && is_numeric( $_POST['expiry']['year'] ) ) {
-				$wpsc_gateway_error_messages['expdate'] = '';
-			} else {
-				$any_bad_inputs = true;
-				$bad_input = true;
-				$wpsc_gateway_error_messages['expdate'] = __( 'Please enter a valid expiry date.', 'wpsc' );
-				$wpsc_customer_checkout_details['expdate'] = '';
-			}
-		}
-		if ( isset( $_POST['card_code'] ) ) {
-			if ( empty($_POST['card_code']) || (!is_numeric( $_POST['card_code'] )) ) {
-				$any_bad_inputs = true;
-				$bad_input = true;
-				$wpsc_gateway_error_messages['card_code'] = __( 'Please enter a valid CVV.', 'wpsc' );
-				$wpsc_customer_checkout_details['card_code'] = '';
-			} else {
-				$wpsc_gateway_error_messages['card_code'] = '';
-			}
-		}
-		if ( isset( $_POST['cctype'] ) ) {
-			if ( $_POST['cctype'] == '' ) {
-				$any_bad_inputs = true;
-				$bad_input = true;
-				$wpsc_gateway_error_messages['cctype'] = __( 'Please enter a valid CVV.', 'wpsc' );
-				$wpsc_customer_checkout_details['cctype'] = '';
-			} else {
-				$wpsc_gateway_error_messages['cctype'] = '';
-			}
-		}
 		if ( isset( $_POST['log'] ) || isset( $_POST['pwd'] ) || isset( $_POST['user_email'] ) ) {
 			$results = wpsc_add_new_user( $_POST['log'], $_POST['pwd'], $_POST['user_email'] );
 			if ( is_callable( array( $results, 'get_error_code' ) ) && $results->get_error_code() ) {
