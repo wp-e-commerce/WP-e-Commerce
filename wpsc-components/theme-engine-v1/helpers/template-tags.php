@@ -1669,6 +1669,11 @@ function wpsc_the_product_price_display( $args = array() ) {
 
 	$show_old_price = $show_you_save = wpsc_product_on_special( $id );
 
+	// Don't output old price HTML if not on sale.
+	if ( ! wpsc_product_on_special( $id ) ) {
+		$output_old_price = $output_you_save = false;
+	}
+
 	// but if the product has variations and at least one of the variations is on special, we have
 	// a few edge cases...
 	if ( wpsc_product_has_variations( $id ) && wpsc_product_on_special( $id ) ) {
