@@ -1,77 +1,137 @@
 <?php
-
 function wpsc_display_upgrades_page() {
 
-	do_action( 'wpsc_gold_module_activation' ); ?>
+	do_action( 'wpsc_upgrades_license_activation' ); ?>
 
 	<div class='wrap'>
 		<div class='metabox-holder wpsc_gold_side'>
-
-			<h2><?php esc_html_e( 'Upgrades', 'wpsc' ); ?></h2>
-			<div>
-				<?php if ( defined( 'WPSC_GOLD_MODULE_PRESENT' ) && ( true == WPSC_GOLD_MODULE_PRESENT ) ) {?>
-				<p><?php esc_html_e( 'Enter your API Name/Email and API Key below.', 'wpsc' ); ?></p>
-				<p><a href="http://docs.wpecommerce.org/category/extending-your-store/premium-plugins/gold-cart/"><?php esc_html_e( 'For more information visit our documentation page.', 'wpsc' ); ?></a></p>
-				<?php } ?>
-				<div class='metabox-holder'>
-					<form method='post' id='gold_cart_form' action=''>
-
-						<?php
-						if ( defined( 'WPSC_GOLD_MODULE_PRESENT' ) && ( true == WPSC_GOLD_MODULE_PRESENT ) ) {
-							do_action( 'wpsc_gold_module_activation_forms' );
-						} else {
-						?>
-
-							<div id='wpsc_gold_options_outside'>
-								<div  class='form-wrap' >
-									<p>
-										<?php esc_html_e( "You don't have any Upgrades yet!", 'wpsc' ); ?>
-									</p>
-								</div>
-							</div>
-						<?php } ?>
-					</form>
-				<?php do_meta_boxes('wpsc_upgrade_page', 'top', true); ?>
-				</div>
-			</div>
-
-			<strong><?php esc_html_e( 'WP eCommerce Upgrades', 'wpsc' ); ?></strong><br />
-
-			<span><?php esc_html_e( 'Add more functionality to your eCommerce site. Prices may be subject to change.', 'wpsc' ); ?><input type='button' class='button-primary' onclick='window.open ("http://wpecommerce.org/store/premium-plugins/","mywindow");' value='<?php esc_html_e( 'Buy Now', 'wpsc' ); ?>' id='visitInstinct' name='visitInstinct' /></span>
-
-			<br />
-			<div class='wpsc_gold_module'>
-				<br />
-				<a href="https://wpecommerce.org/store/premium-plugins/gold-cart/" target="_blank"><strong><?php esc_html_e( 'Gold Cart', 'wpsc' ); ?></strong></a>
-				<p class='wpsc_gold_text'><?php esc_html_e( 'Add product search, multiple image upload, gallery view, Grid View and multiple payment gateway options to your shop', 'wpsc' ); ?></p>
-			</div>
-
-			<div class='wpsc_gold_module'>
-				<br />
-				<a href="https://wpecommerce.org/store/premium-plugins/membership-subscriptions/" target="_blank"><strong><?php esc_html_e( 'Members Access Plugin', 'wpsc' ); ?></strong></a>
-				<p class='wpsc_gold_text'><?php esc_html_e( 'Create product memberships and sell them in your store. Use these memberships to restrict premium content on your posts and pages creating a "members only" area perfect for: Forums, Images and Movies and Podcasts', 'wpsc' ); ?></p>
-			</div>
-
-			<div class='wpsc_gold_module'>
-				<br />
-				<a href="https://wpecommerce.org/store/premium-plugins/nextgen-gallery-buy-now-buttons/" target="_blank"><strong><?php esc_html_e( 'NextGen Gallery Buy Now Buttons', 'wpsc' ); ?> </strong></a>
-				<p class='wpsc_gold_text'><?php esc_html_e( 'Make your Online photo gallery into an eCommerce solution.', 'wpsc' ); ?></p>
-			</div>
-
-			<div class='wpsc_gold_module'>
-				<br />
-				<a href="https://wpecommerce.org/store/premium-plugins/mp3-player-plugin/" target="_blank"><strong><?php esc_html_e( 'JPlayer - MP3 Plugin', 'wpsc' ); ?> </strong></a>
-				<p class='wpsc_gold_text'><?php esc_html_e( 'MP3 Player Plugin for WordPress', 'wpsc' ); ?></p>
-			</div>
-			<div class='wpsc_gold_module'>
-				<br />
-				<a href="https://wpecommerce.org/store/premium-plugins/fedex-shipping-module/" target="_blank"><strong><?php esc_html_e( 'FedEx Plugin', 'wpsc' ); ?> </strong></a>
-				<p class='wpsc_gold_text'><?php esc_html_e( 'This plugin offers shop owners the ability to provide Fedex Shipping Quotes for products with weights.', 'wpsc' ); ?></p>
+			<div class='metabox-holder'>
+				<form method='post' id='product_license_box' action=''>
+					<div class="postbox">
+						<h3 class="hndle"><?php _e( 'Product License Registration', 'wpsc' );?></h3>
+						<p>
+							<label for="activation_key"><?php _e( 'License Key ', 'wpsc' ); ?>:</label>
+							<input type="text" id="activation_key" name="product_license" size="48" value="" class="text" />
+						</p>
+						<p>
+							<input type="hidden" value="true" name="product_license_key" />
+							<button type="submit" name="submit_values" value="submit_values"><?php _e( 'Register License', 'wpsc' ); ?></button>
+							<button type="submit" name="reset_values" value="reset_values"><?php _e( 'Reset License', 'wpsc' ); ?></button>
+						</p>
+						<p style='font-size:8pt; line-height:10pt; font-weight:bold;'>
+							<?php _e( 'In order to receive automatic plugin updates you need to Register your License for each product that provides one. ', 'wpsc' ); ?></br>
+							<?php _e( 'Old API Keys will not work! ', 'wpsc' ); ?>
+						</p>
+					</div>
+				</form>
 			</div>
 		</div>
-
 	</div>
-
 <?php
+wpse_license_page_display_licenses();
 }
-?>
+
+function wpse_license_page_display_licenses () {
+	$licenses = get_option( 'wpec_license_active_products', array() );
+
+	echo '<table class="wp-list-table widefat striped">
+			<thead>
+				<tr>
+					<th scope="col" id="product_name" class="manage-column column-product_name column-primary">Product Name</th>
+					<th scope="col" id="product_license" class="manage-column column-product_license">License Key</th>
+					<th scope="col" id="product_expiry" class="manage-column column-product_expiry">License Expiration Date</th>
+					<th scope="col" id="product_action" class="manage-column column-product_action">Actions</th>
+				</tr>
+			</thead>
+			<tbody id="the-list">';
+	
+	if ( ! empty( $licenses ) ) {
+		foreach ( (array) $licenses as $license ) {
+			
+			echo '<tr><td class="product_name column-product_name"><p><strong>'.$license['name'].'</strong></p></td>';
+			echo '<td class="product_license column-product_license"><p><strong>'.$license['license'].'</strong></p></td>';
+			echo '<td class="product_expiry column-product_expiry"><p><strong>'.$license['expires'].'</strong></p></td></tr>';
+		}
+	} else {
+		echo '<tr class="no-items"><td class="colspanchange" colspan="4"><p>No Licenses found.</p></td></tr>';
+	}
+	
+	echo '</tbody>
+		<tfoot>
+			<tr>
+				<th scope="col" class="manage-column column-product_name column-primary">Product Name</th>
+				<th scope="col" class="manage-column column-product_license">License Key</th>
+				<th scope="col" class="manage-column column-product_expiry">License Expiry Date</th>
+				<th scope="col" class="manage-column column-product_action">Actions</th>
+			</tr>
+		</tfoot>
+		</table>';
+}
+
+/**
+ * Activate Gold Cart plugin
+ */
+function wpsc_licenses_action_stuff() {
+	//Activate a new Product License
+	if ( isset( $_POST['product_license_key'] ) && $_POST['product_license_key'] == 'true' ) {
+		if ( isset( $_POST['product_license'] ) && $_POST['product_license'] != '' ) {
+			
+			//Do stuff
+			$url = "https://wpecommerce.org/wp-license-api/license_register.php";
+			$params = array (
+				'api'		=> 'v2',
+				'key'		=> base64_encode( stripslashes( $_POST['product_license'] ) ),
+				'url'		=> base64_encode( esc_url_raw( site_url() ) )
+			);
+			
+			$args = array(
+				'httpversion' => '1.0',
+				'sslverify'	  => false,
+				'timeout'	  => 15,
+				'user-agent'  => 'WP eCommerce Licensing/' . get_bloginfo( 'url' ),	
+			);
+			
+			if ( isset( $_POST['submit_values'] ) && $_POST['submit_values'] == 'submit_values' ) {
+				$params['action'] = 'activate';
+			} elseif ( isset( $_POST['reset_values'] ) && $_POST['reset_values'] == 'reset_values' ) {
+				$params['action'] = 'deactivate';
+			}
+			
+			$url = add_query_arg( $params, $url );
+			
+
+			$response = json_decode( wp_remote_retrieve_body( wp_remote_get( $url, $args ) ) );
+
+			$licenses = get_option( 'wpec_license_active_products', array() );
+			
+			if ( 'activated' === $response->status) {
+				
+				$licenses[] = array(
+					'tag'		=> $response->fileid,
+					'name'		=> $response->product,
+					'license'	=> $response->license,
+					'expires'	=> $response->valid
+				);
+				
+				update_option( 'wpec_license_active_products', $licenses );
+				echo '<div class="updated"><p>'.$response->message.'</p></div>';
+
+			} elseif ( 'deactivated' === $response->status ) {
+				
+				foreach ( $licenses as $key => $license ) {
+					if ( in_array( $response->fileid, $license ) ) {
+						unset( $licenses[$key] );
+						array_values($licenses);
+					}
+				}
+				
+				update_option( 'wpec_license_active_products', $licenses );
+				echo '<div class="updated"><p>'.$response->message.'</p></div>';
+				
+			} else {
+				echo '<div class="error"><p>'.$response->message.'</p></div>';
+			}
+		}
+	}
+}
+add_action( 'wpsc_upgrades_license_activation', 'wpsc_licenses_action_stuff' );
