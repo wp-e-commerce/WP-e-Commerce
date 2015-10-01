@@ -1666,7 +1666,7 @@ function wpsc_the_product_price_display( $args = array() ) {
 	 *
 	 * Paramters used to format price display can be set globally using this filter
 	 *
-	 * @since 3.9.11
+	 * @since 3.10.1
 	 *
 	 * @type array $args array of parameters used to format product price
 	 * @type int $product_id WPeC Product ID for the current product
