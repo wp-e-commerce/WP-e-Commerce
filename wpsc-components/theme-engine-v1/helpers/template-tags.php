@@ -1660,6 +1660,19 @@ function wpsc_the_product_price_display( $args = array() ) {
 	);
 
 	$r = wp_parse_args( $args, $defaults );
+
+	/**
+	 * wpsc_the_product_price_display_args filter args for product price display
+	 *
+	 * Paramters used to format price display can be set globally using this filter
+	 *
+	 * @since 3.9.11
+	 *
+	 * @type array $args array of parameters used to format product price
+	 * @type int $product_id WPeC Product ID for the current product
+
+	 */
+	$r = apply_filters( 'wpsc_the_product_price_display_args', $r, $id, 10, 2 );
 	extract( $r );
 
 	// if the product has no variations, these amounts are straight forward...
