@@ -1392,28 +1392,28 @@ table.category_forms td.last_row {
 	margin: 5px 20px 0 0;
 }
 
-#gold_cart_form .postbox p img {
+#product_license_box .postbox p img {
 	padding-bottom: 10px;
 }
 
-#wpsc_gold_options_outside {
+#product_license_box_outside {
 	width: 400px;
 }
 
-#gold_cart_form .postbox p {
+#product_license_box .postbox p {
 	padding-left: 4px;
 }
 
-#gold_cart_form .postbox {
+#product_license_box .postbox {
 	width: 100%;
 	max-width: 500px;
 }
 
-#gold_cart_form .postbox p {
+#product_license_box .postbox p {
 	padding-left: 10px;
 }
 
-#gold_cart_form .postbox p label {
+#product_license_box .postbox p label {
 	width: 80px;
 	float: left;
 }
