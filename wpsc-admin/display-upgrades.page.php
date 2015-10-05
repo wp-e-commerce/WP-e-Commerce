@@ -15,7 +15,7 @@ function wpsc_display_upgrades_page() {
 						</p>
 						<p>
 							<input type="hidden" value="true" name="product_license_key" />
-							<button type="submit" name="submit_values" value="submit_values"><?php _e( 'Register License', 'wpsc' ); ?></button>
+							<button type="submit" name="submit_values" value="submit_values" class="button button-primary"><?php _e( 'Register License', 'wpsc' ); ?></button>
 							<button type="submit" name="reset_values" value="reset_values"><?php _e( 'Reset License', 'wpsc' ); ?></button>
 						</p>
 						<p style='font-size:8pt; line-height:10pt; font-weight:bold;'>
