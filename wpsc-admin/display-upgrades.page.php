@@ -40,7 +40,6 @@ function wpse_license_page_display_licenses () {
 					<th scope="col" id="product_name" class="manage-column column-product_name column-primary">Product Name</th>
 					<th scope="col" id="product_license" class="manage-column column-product_license">License Key</th>
 					<th scope="col" id="product_expiry" class="manage-column column-product_expiry">License Expiration Date</th>
-					<th scope="col" id="product_action" class="manage-column column-product_action">Actions</th>
 				</tr>
 			</thead>
 			<tbody id="the-list">';
@@ -62,7 +61,6 @@ function wpse_license_page_display_licenses () {
 				<th scope="col" class="manage-column column-product_name column-primary">Product Name</th>
 				<th scope="col" class="manage-column column-product_license">License Key</th>
 				<th scope="col" class="manage-column column-product_expiry">License Expiry Date</th>
-				<th scope="col" class="manage-column column-product_action">Actions</th>
 			</tr>
 		</tfoot>
 		</table>';
