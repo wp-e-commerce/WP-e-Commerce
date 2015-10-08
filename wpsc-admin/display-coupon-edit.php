@@ -167,7 +167,7 @@ $coupon = new WPSC_Coupon( $_GET['coupon'] );
 						</td>
 					</tr>
 
-					<?php do_action( 'wpsc_coupon_edit_top', $coupon->get( 'id' ), $coupon->get_data() ); ?>
+					<?php do_action( 'wpsc_coupon_edit_bottom', $coupon->get( 'id' ), $coupon->get_data() ); ?>
 
 				</tbody>
 			</table>
