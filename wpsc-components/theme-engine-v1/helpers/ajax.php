@@ -630,7 +630,7 @@ function wpsc_submit_checkout( $collected_data = true ) {
 				}
 
 				if ( ! empty( $countries ) && ! in_array( $country_id, (array) $countries ) ) {
-					$errormessage = sprintf( __( '%s cannot be shipped to %s. To continue with your transaction please remove this product from the list below.', 'wpsc' ), $cartitem->get_title(), $country_name );
+					$errormessage = sprintf( __( '%s cannot be shipped to %s. To continue with your transaction, please remove this product from the list below.', 'wpsc' ), $cartitem->get_title(), $country_name );
 					wpsc_update_customer_meta( 'category_shipping_conflict', $errormessage );
 					$is_valid = false;
 				}

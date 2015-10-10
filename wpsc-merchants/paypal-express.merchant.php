@@ -883,7 +883,7 @@ function paypal_processingfunctions(){
 				*/
 				if ( isset( $_REQUEST['token'] ) && ! isset( $_REQUEST['PayerID'] ) ) {
 
-					wpsc_update_customer_meta( 'paypal_express_message', _x( '<h4>TRANSACTION CANCELED</h4>', 'paypal express cancel header', 'wpsc' ) );
+					wpsc_update_customer_meta( 'paypal_express_message', _x( '<h4>TRANSACTION CANCELLED</h4>', 'paypal express cancel header', 'wpsc' ) );
 
 				} else {
 

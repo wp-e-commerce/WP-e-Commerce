@@ -104,7 +104,7 @@ class australiapost {
 		$output .= "<tr><td><h4>" . __('Notes:', 'wpsc') . "</h4>";
 		$output .= __('1. The actual services quoted to the customer during checkout will depend on the destination country. Not all methods are available to all destinations.', 'wpsc') . "<br />";
 		$output .= __('2. Each product must have a valid weight configured. When editing a product, use the weight field.', 'wpsc') . "<br />";
-		$output .= __('3. To ensure accurate quotes, each product must valid dimensions configured. When editing a product, use the height, width and length fields.', 'wpsc') . "<br />";
+		$output .= __('3. To ensure accurate quotes, each product must have valid dimensions configured. When editing a product, use the height, width and length fields.', 'wpsc') . "<br />";
 		$output .= __('4. The combined dimensions are estimated by calculating the volume of each item, and then calculating the cubed root of the overall order volume which becomes width, length and height.', 'wpsc') . "<br />";
 		$output .= __('5. If no product dimensions are defined, then default package dimensions of 100mm x 100mm x 100mm will be used.', 'wpsc') . "<br />";
 		$output .= "</tr></td>";

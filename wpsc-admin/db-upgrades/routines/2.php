@@ -89,7 +89,7 @@ function _wpsc_fix_timor_leste_name() {
 		'isocode'     => 'TL',
 		'currency'    => __( 'US Dollar', 'wpsc' ),
 		'symbol'      => __( '$', 'wpsc' ),
-		'symbol_html' => __( '&#036', 'wpsc' ),
+		'symbol_html' => __( '&#036;', 'wpsc' ),
 		'code'        => 'USD',
 		'continent'   => 'asiapacific',
 		'visible'     => '0',
@@ -276,7 +276,7 @@ function _wpsc_fix_currency_el_salvador() {
 		'isocode'     => 'SV',
 		'currency'    => __( 'US Dollar', 'wpsc' ),
 		'symbol'      => __( '$', 'wpsc' ),
-		'symbol_html' => __( '&#036', 'wpsc' ),
+		'symbol_html' => __( '&#036;', 'wpsc' ),
 		'code'        => 'USD',
 	) );
 }
@@ -423,7 +423,7 @@ function _wpsc_fix_zimbabwe_currency() {
 		'isocode'     => 'ZW',
 		'currency'    => __( 'US Dollar', 'wpsc' ),
 		'symbol'      => __( '$', 'wpsc' ),
-		'symbol_html' => __( '&#036', 'wpsc' ),
+		'symbol_html' => __( '&#036;', 'wpsc' ),
 		'code'        => 'USD',
 		'continent'   => 'asiapacific',
 	) );
