@@ -118,7 +118,7 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 			wp_safe_redirect( wpsc_get_cart_url() );
 			exit;
 		} else {
-			$this->message_collection->add( __( 'An unknown error just occured. Please contact the shop administrator.', 'wpsc' ), 'error', 'main', 'flash' );
+			$this->message_collection->add( __( 'An unknown error just occurred. Please contact the shop administrator.', 'wpsc' ), 'error', 'main', 'flash' );
 			wp_safe_redirect( wp_get_referer() );
 			exit;
 		}

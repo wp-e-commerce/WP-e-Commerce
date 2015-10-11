@@ -179,7 +179,7 @@ class WPSC_Product_Variation_List_Table extends WP_List_Table {
 				'post'              => $item->ID,
 				'bulk_action_nonce' => wp_create_nonce( 'wpsc_product_variations_bulk_action' ),
 			) );
-			$actions['hide'] = '<a class="wpsc-variation-hide-link" href="' . esc_url( $hide_url ) . '" title="' . __( 'Mark this variation as draft to hide from the front-end', 'wpsc' ) . '">' . __( 'Mark as Draft', 'wpsc' ) . '</a>';
+			$actions['hide'] = '<a class="wpsc-variation-hide-link" href="' . esc_url( $hide_url ) . '" title="' . __( 'Mark this variation as draft to hide it from the front-end.', 'wpsc' ) . '">' . __( 'Mark as Draft', 'wpsc' ) . '</a>';
 		}
 
 		if ( current_user_can( $post_type_object->cap->delete_post, $item->ID ) ) {

@@ -239,7 +239,7 @@ endif;
 					);
 					wp_login_form( $args );
 					?>
-					<div class="wpsc_signup_text"><?php _e('If you have bought from us before please sign in here to purchase', 'wpsc');?></div>
+					<div class="wpsc_signup_text"><?php _e('If you have bought from us before, please sign in here to purchase.', 'wpsc');?></div>
 				</fieldset>
 			</div>
 	<?php endif; ?>

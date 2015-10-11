@@ -156,7 +156,7 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 					<input type='text' name='wpsc_options[base_zipcode]' value='<?php esc_attr_e( get_option( 'base_zipcode' ) ); ?>' />
 					<p class='description'>
 						<?php esc_html_e( 'The zipcode/postcode for where you fulfill and ship orders from.', 'wpsc' ); ?><br />
-						<?php esc_html_e( 'If you are based in the United States then this field is required in order for the UPS and USPS Shipping Calculators to work.', 'wpsc' ); ?>
+						<?php esc_html_e( 'If you are based in the United States, then this field is required in order for the UPS and USPS Shipping Calculators to work.', 'wpsc' ); ?>
 					</p>
 				</td>
 			</tr>

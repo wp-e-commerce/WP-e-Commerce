@@ -702,7 +702,7 @@ function form_paypal_multiple() {
 	$output .= "
 			</select>
 			<p class='description'>
-				" . __( 'If you have a PayPal developers Sandbox account please use Sandbox mode, if you just have a standard PayPal account then you will want to use Live mode.', 'wpsc' ) . "
+				" . __( 'If you have a PayPal developers Sandbox account, please use Sandbox mode. If you just have a standard PayPal account, then you will want to use Live mode.', 'wpsc' ) . "
 			</p>
 		</td>
 	</tr>\n";
@@ -755,7 +755,7 @@ function form_paypal_multiple() {
 			<input type='radio' value='1' name='paypal_ipn' id='paypal_ipn1' " . $paypal_ipn1 . " /> <label for='paypal_ipn1'>" . __( 'Yes', 'wpsc' ) . "</label> &nbsp;
 			<input type='radio' value='0' name='paypal_ipn' id='paypal_ipn2' " . $paypal_ipn2 . " /> <label for='paypal_ipn2'>" . __( 'No', 'wpsc' ) . "</label>
 			<p class='description'>
-				" . __( "IPN (instant payment notification) will automatically update your sales logs to 'Accepted payment' when a customers payment is successful. For IPN to work you also need to have IPN turned on in your Paypal settings. If it is not turned on, the sales sill remain as 'Order Pending' status until manually changed. It is highly recommend using IPN, especially if you are selling digital products.", 'wpsc' ) . "
+				" . __( "IPN (instant payment notification) will automatically update your sales logs to 'Accepted payment' when a customers payment is successful. For IPN to work you also need to have IPN turned on in your Paypal settings. If it is not turned on, the sales will remain as 'Order Pending' status until manually changed. It is highly recommended using IPN, especially if you are selling digital products.", 'wpsc' ) . "
 			</p>
 		</td>
 	</tr>

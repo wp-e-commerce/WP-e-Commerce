@@ -171,7 +171,7 @@ function _wpsc_new_country_palestinian_territories() {
 		'id'          => 251,
 		'country'     => __( 'Palestinian Territories', 'wpsc' ),
 		'isocode'     => 'PS',
-		'currency'    => __( 'Israeli New Sheqel', 'wpsc' ),
+		'currency'    => __( 'Israeli New Shekel', 'wpsc' ),
 		'symbol'      => __( '₪', 'wpsc' ),
 		'symbol_html' => __( '&#8362;', 'wpsc' ),
 		'code'        => __( 'ILS', 'wpsc' ),
