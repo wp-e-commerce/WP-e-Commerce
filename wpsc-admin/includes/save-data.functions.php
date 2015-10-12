@@ -198,7 +198,7 @@ function wpsc_admin_category_forms_add() {
 	<h4><?php esc_html_e( 'Restrict to Target Markets', 'wpsc' )?></h4>
 	<div class='form-field'>
 		<?php if ( wpsc_is_suhosin_enabled() ) : ?>
-			<em><?php esc_html_e( "The Target Markets feature has been disabled because you have the Suhosin PHP extension installed on this server. If you need to use the Target Markets feature then disable the suhosin extension, if you can not do this, you will need to contact your hosting provider.", 'wpsc' ); ?></em>
+			<em><?php esc_html_e( "The Target Markets feature has been disabled because you have the Suhosin PHP extension installed on this server. If you need to use the Target Markets feature, then disable the suhosin extension. If you can not do this, you will need to contact your hosting provider.", 'wpsc' ); ?></em>
 		<?php else: ?>
 			<div class='multiple-select-container'>
 				<span><?php esc_html_e( 'Select', 'wpsc' ); ?> <a href='' class='wpsc_select_all'><?php esc_html_e( 'All', 'wpsc' ); ?></a>&nbsp; <a href='' class='wpsc_select_none'><?php esc_html_e( 'None', 'wpsc' ); ?></a></span><br />

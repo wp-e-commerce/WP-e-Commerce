@@ -55,7 +55,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 		// If no shipping is available, show an error message.
 		if ( wpsc_uses_shipping() && ! $this->shipping_calculator->has_quotes ) {
 			$this->message_collection->add(
-				__( 'Sorry but we cannot ship products to your submitted address. Please either provide another shipping address or contact the store administrator about product availability to your location.', 'wpsc' ),
+				__( 'Sorry, but we cannot ship products to your submitted address. Please either provide another shipping address or contact the store administrator about product availability to your location.', 'wpsc' ),
 				'error'
 			);
 			return;
@@ -215,7 +215,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 		if ( is_wp_error( $validation ) ) {
 			$this->message_collection->add(
-				__( 'Sorry but it looks like there are some errors with your submitted information.', 'wpsc' ),
+				__( 'Sorry, but it looks like there are some errors with your submitted information.', 'wpsc' ),
 				'error'
 			);
 			wpsc_set_validation_errors( $validation, 'inline' );
@@ -333,7 +333,7 @@ class WPSC_Controller_Checkout extends WPSC_Controller {
 
 		if ( wpsc_uses_shipping() && ! $this->shipping_calculator->has_quotes ) {
 			$this->message_collection->add(
-				__( 'Sorry but we cannot ship products to your submitted address. Please either provide another shipping address or contact the store administrator about product availability to your location.', 'wpsc' ),
+				__( 'Sorry, but we cannot ship products to your submitted address. Please either provide another shipping address or contact the store administrator about product availability to your location.', 'wpsc' ),
 				'error'
 			);
 

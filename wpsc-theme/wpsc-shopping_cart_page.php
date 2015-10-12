@@ -143,13 +143,13 @@ endif;
             <?php if ( ! wpsc_have_valid_shipping_zipcode() ) : ?>
                   <tr class='wpsc_update_location'>
                      <td colspan='5' class='shipping_error' >
-                        <?php _e('Please provide a Zipcode and click Calculate in order to continue.', 'wpsc'); ?>
+                        <?php _e('Please provide a ZIP code and click Calculate in order to continue.', 'wpsc'); ?>
                      </td>
                   </tr>
             <?php else: ?>
                <tr class='wpsc_update_location_error'>
                   <td colspan='5' class='shipping_error' >
-                     <?php _e('Sorry, online ordering is unavailable to this destination and/or weight. Please double check your destination details.', 'wpsc'); ?>
+                     <?php _e('Sorry, online ordering is unavailable for this destination and/or weight. Please double check your destination details.', 'wpsc'); ?>
                   </td>
                </tr>
             <?php endif; ?>
@@ -239,7 +239,7 @@ endif;
 					);
 					wp_login_form( $args );
 					?>
-					<div class="wpsc_signup_text"><?php _e('If you have bought from us before please sign in here to purchase', 'wpsc');?></div>
+					<div class="wpsc_signup_text"><?php _e('If you have bought from us before, please sign in here to purchase.', 'wpsc');?></div>
 				</fieldset>
 			</div>
 	<?php endif; ?>
@@ -302,7 +302,7 @@ endif;
 
 				<label><?php _e('E-mail', 'wpsc'); ?>:</label>
 	            <input type="text" name="user_email" id="user_email" value="" size="20" /><br />
-	            <div class="wpsc_signup_text"><?php _e('Signing up is free and easy! please fill out your details your registration will happen automatically as you checkout. Don\'t forget to use your details to login with next time!', 'wpsc');?></div>
+	            <div class="wpsc_signup_text"><?php _e('Signing up is free and easy! Please fill out your details and your registration will happen automatically as you checkout. Don\'t forget to use your details to log in with next time!', 'wpsc');?></div>
 	        </fieldset>
 
         </div>

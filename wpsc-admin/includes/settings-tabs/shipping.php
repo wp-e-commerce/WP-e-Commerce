@@ -155,8 +155,8 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 				<td>
 					<input type='text' name='wpsc_options[base_zipcode]' value='<?php esc_attr_e( get_option( 'base_zipcode' ) ); ?>' />
 					<p class='description'>
-						<?php esc_html_e( 'The zipcode/postcode for where you fulfill and ship orders from.', 'wpsc' ); ?><br />
-						<?php esc_html_e( 'If you are based in the United States then this field is required in order for the UPS and USPS Shipping Calculators to work.', 'wpsc' ); ?>
+						<?php esc_html_e( 'The ZIP code / Postal code from where you fulfill and ship orders.', 'wpsc' ); ?><br />
+						<?php esc_html_e( 'If you are based in the United States, then this field is required in order for the UPS and USPS Shipping Calculators to work.', 'wpsc' ); ?>
 					</p>
 				</td>
 			</tr>
@@ -282,7 +282,7 @@ class WPSC_Settings_Tab_Shipping extends WPSC_Settings_Tab {
 		<h4><?php _e( 'External Shipping Calculators', 'wpsc' ); ?></h4>
 		<?php if ( ! function_exists( 'curl_init' ) ) : ?>
 			<p style='color: red; font-size:8pt; line-height:10pt;'>
-				<?php _e( 'The following shipping modules all need cURL which is not installed on this server, you may need to contact your web hosting provider to get it set up. ', 'wpsc' ); ?>
+				<?php _e( 'The following shipping modules all need cURL which is not installed on this server. You may need to contact your web hosting provider to get it set up. ', 'wpsc' ); ?>
 			</p>
 		<?php endif; ?>
 		<table id='wpsc-shipping-options-external' class='wpsc-edit-module-options wp-list-table widefat plugins'>

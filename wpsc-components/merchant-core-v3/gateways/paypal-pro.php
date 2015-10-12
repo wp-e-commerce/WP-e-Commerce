@@ -445,7 +445,7 @@ class WPSC_Payment_Gateway_Paypal_Pro extends WPSC_Payment_Gateway {
 			</tr>
 			<tr>
 				<td colspan="2">
-					<p><?php _e( 'Your base currency is currently not accepted by PayPal. As a result, before a payment request is sent to PayPal, WP eCommerce has to convert the amounts into one of PayPal supported currencies. Please select your preferred currency below.', 'wpsc' ); ?></p>
+					<p><?php _e( "Your base currency is currently not accepted by PayPal. As a result, before a payment request is sent to PayPal, WP eCommerce has to convert the amounts into one of PayPal's supported currencies. Please select your preferred currency below.", 'wpsc' ); ?></p>
 				</td>
 			</tr>
 			<tr>

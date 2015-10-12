@@ -40,7 +40,7 @@ class WPSC_Settings_Tab_Gateway extends WPSC_Settings_Tab {
 		if ( ! $payment_data ) {
 			$payment_data = array(
 				'name'              => __( 'Edit Gateway Settings', 'wpsc' ),
-				'form_fields'       => __( 'Modify a payment gateway settings by clicking "Edit" link on the left.', 'wpsc' ),
+				'form_fields'       => __( 'Modify the settings of a payment gateway by clicking the "Edit" link on the left.', 'wpsc' ),
 				'has_submit_button' => 1,
 			);
 		}
