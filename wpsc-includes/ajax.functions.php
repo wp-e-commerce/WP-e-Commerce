@@ -2,10 +2,10 @@
 
 /**
  * The AJAX functions for WP-e-Commerce
- * 
+ *
  * @package wp-e-commerce
  * @since 3.8
- */ 
+ */
 
 function wpsc_gateway_notification() {
 	global $wpsc_gateways;
@@ -197,6 +197,6 @@ function _wpsc_force_download_file( $file_id ) {
 		wpsc_readfile_chunked( $file_path );
 		exit();
 	}else{
-		wp_die(__('Sorry something has gone wrong with your download!', 'wpsc'));
+		wp_die(__('Sorry, something has gone wrong with your download!', 'wpsc'));
 	}
 }

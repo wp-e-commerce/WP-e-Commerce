@@ -398,7 +398,7 @@ class wpsc_checkout {
 
 				$any_bad_inputs = true;
 				$bad_input = true;
-				$wpsc_gateway_error_messages['card_number'] = __( 'Please enter a valid card number.', 'wpsc' );
+				$wpsc_gateway_error_messages['card_number'] = __( 'Please enter a valid credit card number.', 'wpsc' );
 				$wpsc_customer_checkout_details['card_number'] = '';
 			}
 		}

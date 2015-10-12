@@ -452,7 +452,7 @@ function form_paypal_pro() {
 			<input type="hidden" name="PayPalPro[testmode]" value="off" />
 			<label for="paypal_pro_testmode"><input type="checkbox" name="PayPalPro[testmode]" id="paypal_pro_testmode" value="on" ' . $selected . ' /> ' . __( 'Test Mode Enabled', 'wpsc') . '</label>
 			<p class=" description">
-  				' . sprintf( __( "Only enable test mode if you have a sandbox account with PayPal you can find out more about this <a href='%s'>here</a>", 'wpsc' ), esc_url( 'https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/howto_testing_sandbox' ) ) . '
+  				' . sprintf( __( "Only enable test mode if you have a sandbox account with PayPal. You can find out more about this <a href='%s'>here</a>.", 'wpsc' ), esc_url( 'https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/howto_testing_sandbox' ) ) . '
   			</p>
   		</td>
   	</tr>';
@@ -467,7 +467,7 @@ function form_paypal_pro() {
 	if($current_currency != $store_currency_code) {
 		$output .= "<tr> <td colspan='2'><strong class='form_group'>" . __( 'Currency Converter', 'wpsc' ) . "</td> </tr>
 		<tr>
-			<td colspan='2'>".__('Your website is using a currency not accepted by PayPal, select an accepted currency using the drop down menu below. Buyers on your site will still pay in your local currency however we will convert the currency and send the order through to PayPal using the currency you choose below.', 'wpsc')."</td>
+			<td colspan='2'>".__('Your website is using a currency not accepted by PayPal. Please select an accepted currency using the drop down menu below. Buyers on your site will still pay in your local currency. However, we will convert the currency and send the order through to PayPal using the currency you choose below.', 'wpsc')."</td>
 		</tr>
 
 		<tr>
@@ -503,7 +503,7 @@ function form_paypal_pro() {
 	<tr>
 		<td colspan='2'>
 			<p class='description'>
-				" . sprintf( __( "For more help configuring Paypal Pro, please read our documentation <a href='%s'>here</a>", 'wpsc' ), esc_url( 'http://docs.wpecommerce.org/documentation/paypal-payments-pro/' ) ) . "
+				" . sprintf( __( "For more help configuring PayPal Pro, please read our documentation <a href='%s'>here</a>.", 'wpsc' ), esc_url( 'http://docs.wpecommerce.org/documentation/paypal-payments-pro/' ) ) . "
 				</p>
 		</td>
 	</tr>";

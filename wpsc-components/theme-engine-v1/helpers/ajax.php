@@ -959,13 +959,13 @@ function wpsc_update_shipping_quotes_on_shipping_same_as_billing() {
             <?php if ( ! wpsc_have_valid_shipping_zipcode() ) : ?>
                   <tr class='wpsc_update_location'>
                      <td colspan='5' class='shipping_error' >
-                        <?php _e('Please provide a Zipcode and click Calculate in order to continue.', 'wpsc'); ?>
+                        <?php _e('Please provide a ZIP code and click Calculate in order to continue.', 'wpsc'); ?>
                      </td>
                   </tr>
             <?php else: ?>
                <tr class='wpsc_update_location_error'>
                   <td colspan='5' class='shipping_error' >
-                     <?php _e('Sorry, online ordering is unavailable to this destination and/or weight. Please double check your destination details.', 'wpsc'); ?>
+                     <?php _e('Sorry, online ordering is unavailable for this destination and/or weight. Please double check your destination details.', 'wpsc'); ?>
                   </td>
                </tr>
             <?php endif; ?>

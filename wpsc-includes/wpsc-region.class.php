@@ -224,7 +224,7 @@ class WPSC_Region {
 
 			if ( property_exists( $this, $property_name ) ) {
 				$value = $this->$property_name;
-				_wpsc_doing_it_wrong( __FUNCTION__, __( 'Using set to change a well-known WPSC_Region property is deprecated as of version 3.8.14.  Use the class constructor and specify all properties together to perform and insert or an update.', 'wpsc' ), '3.8.14' );
+				_wpsc_doing_it_wrong( __FUNCTION__, __( 'Using set to change a well-known WPSC_Region property is deprecated as of version 3.8.14.  Use the class constructor and specify all properties together to perform and insert an update.', 'wpsc' ), '3.8.14' );
 				if ( defined( 'WPSC_LOAD_DEPRECATED' ) && WPSC_LOAD_DEPRECATED ) {
 					$country_array         = $this->as_array();
 					$country_array[ $key ] = $value;

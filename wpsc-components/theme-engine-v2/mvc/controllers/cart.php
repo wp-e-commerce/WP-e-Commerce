@@ -166,7 +166,7 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 					}
 
 					if ( $product->has_limited_stock && $product->stock < $item->quantity ) {
-						$message = __( 'Sorry, but the quantity you just specified is larger than the available stock of %s. Besides the current number of that product in your cart, you can only add %d more.', 'wpsc' );
+						$message = __( 'Sorry, but the quantity you just specified is larger than the available stock of %s. Besides the current quantity of that product in your cart, you can only add %d more.', 'wpsc' );
 						$this->message_collection->add( sprintf( $message, $product->post->post_title, $product->stock ), 'error' );
 						$has_errors = true;
 						continue;
