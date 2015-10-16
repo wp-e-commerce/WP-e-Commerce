@@ -146,10 +146,12 @@ function wpsc_the_product_title( $post = 0 ) {
 
 /**
  * wpsc product description function
+ * @uses the_content Applies the filter to process the post_content using installed hooks
  * @return string - the product description
  */
 function wpsc_the_product_description() {
 	$content = get_the_content( __( 'Read the rest of this entry &raquo;', 'wpsc' ) );
+	$content = apply_filters( 'the_content', $content );
 	return do_shortcode( wpautop( $content,1 ) );
 }
 

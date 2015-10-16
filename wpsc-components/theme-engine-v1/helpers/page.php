@@ -656,7 +656,12 @@ function wpsc_the_category_title( $title='', $id='' ){
 
 //handles replacing the tags in the pages
 function wpsc_products_page( $content = '' ) {
-	global $wpdb, $wp_query, $wpsc_query, $wpsc_query_vars, $_wpsc_is_in_custom_loop;
+
+	/* prevent recursively including of the product page, see wpsc_enable_page_filters() */
+	remove_filter( 'the_content', 'wpsc_products_page', 1 );
+
+	global $wp_query, $wpsc_query, $_wpsc_is_in_custom_loop;
+
 	$output = '';
 	if ( ! in_the_loop() )
 		return $content;
