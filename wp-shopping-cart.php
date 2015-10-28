@@ -6,6 +6,7 @@
   * Version: 3.10.1
   * Author: WP eCommerce
   * Author URI: http://wpecommerce.org/
+  * Text Domain: wp-e-commerce
   **/
 
 /**
