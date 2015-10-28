@@ -44,8 +44,39 @@ function wpsc_delete_file() {
 }
 
 
-if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'delete_file') )
+if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'delete_file') ) {
 	add_action( 'admin_init', 'wpsc_delete_file' );
+}
+
+if ( isset( $_REQUEST['wpsc_admin_action'] ) && ($_REQUEST['wpsc_admin_action'] == 'release_file') ) {
+	add_action( 'admin_init', 'wpsc_release_file' );
+}
+
+function wpsc_release_file() {
+	$product_id = absint( $_REQUEST['product_id'] );
+	$file_id  = basename( $_REQUEST['file_id'] );
+	$file_name  = basename( $_REQUEST['file_name'] );
+	
+	check_admin_referer( 'release_file_' . $file_name );
+
+	update_post_meta( $product_id, '_wpsc_product_current_file', $file_id );
+	
+	$sendback = wp_get_referer();
+	wp_redirect( $sendback );
+	exit;
+}
+
+function _wpec_ajax_update_file() {
+	if ( ! wp_verify_nonce( $_POST['_ajax_nonce'], 'wpec_update_file_' . $_POST['id'] ) )
+		_wpec_ajax_error( 'Invalid nonce.' );
+
+
+	update_post_meta( $_POST['id'], '_wpsc_product_file_version', $_POST['version'] );
+	
+	_wpec_ajax_response( array( 'message' => 'Successfully updated file.' ) );
+}
+
+add_action( 'wp_ajax_wpec-update-file', '_wpec_ajax_update_file' );
 
 /**
  *  Function and action for publishing or unpublishing single products

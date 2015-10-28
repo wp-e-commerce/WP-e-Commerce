@@ -76,6 +76,7 @@ function wpsc_select_product_file( $product_id = null ) {
 		$output .= '<thead>';
 			$output .= '<tr>';
 				$output .= '<th>' . _x( 'Title', 'Digital download UI', 'wpsc' ) . '</th>';
+				$output .= '<th>' . _x( 'Version', 'Digital download UI', 'wpsc' ) . '</th>';
 				$output .= '<th>' . _x( 'Size', 'Digital download UI', 'wpsc' ) . '</th>';
 				$output .= '<th>' . _x( 'File Type', 'Digital download UI', 'wpsc' ) . '</th>';
 				$output .= '<th id="wpsc_digital_download_action_th">' . _x( 'Actions', 'Digital download UI', 'wpsc' ) . '</th>';
@@ -84,6 +85,7 @@ function wpsc_select_product_file( $product_id = null ) {
 		$output .= '<tfoot>';
 			$output .= '<tr>';
 				$output .= '<th>' . _x( 'Title', 'Digital download UI', 'wpsc' ) . '</th>';
+				$output .= '<th>' . _x( 'Version', 'Digital download UI', 'wpsc' ) . '</th>';
 				$output .= '<th>' . _x( 'Size', 'Digital download UI', 'wpsc' ) . '</th>';
 				$output .= '<th>' . _x( 'File Type', 'Digital download UI', 'wpsc' ) . '</th>';
 				$output .= '<th id="wpsc_digital_download_action_th">' . _x( 'Actions', 'Digital download UI', 'wpsc' ) . '</th>';
@@ -94,6 +96,7 @@ function wpsc_select_product_file( $product_id = null ) {
 
 	$output .= '<tbody>';
 	$delete_nonce = _wpsc_create_ajax_nonce( 'delete_file' );
+	$release_nonce = _wpsc_create_ajax_nonce( 'release_file' );
 	foreach ( (array)$attached_files as $file ) {
 
 		$file_dir = WPSC_FILE_DIR . $file->post_title;
@@ -107,17 +110,24 @@ function wpsc_select_product_file( $product_id = null ) {
 			admin_url()
 		);
 		$deletion_url = wp_nonce_url( "admin.php?wpsc_admin_action=delete_file&amp;file_name={$file->post_title}&amp;product_id={$product_id}&amp;row_number={$num}", 'delete_file_' . $file->post_title );
-
+		$release_url = wp_nonce_url( "admin.php?wpsc_admin_action=release_file&amp;file_name={$file->post_title}&amp;file_id={$file->ID}&amp;product_id={$product_id}&amp;row_number={$num}", 'release_file_' . $file->post_title );
+		
 		$class = ( ! wpsc_is_odd( $num ) ) ? 'alternate' : '';
 
 		$file_type = get_post_mime_type($file->ID);
 		$icon_url  = wp_mime_type_icon($file_type);
+		$file_version = get_product_meta( $file->ID, '_wpsc_product_file_version', true );
+		$released = get_post_meta( $product_id, '_wpsc_product_current_file', true ) == $file->ID ? '<span class="current"> [current]</span>' : '';
 
 		$output .= '<tr class="wpsc_product_download_row ' . $class . '">';
-		$output .= '<td style="padding-right: 30px;"><img src="'. $icon_url .'"><span>' . $file->post_title . '</span></td>';
+		$output .= '<td style="padding-right: 30px;"><img src="'. $icon_url .'"><span>' . $file->post_title . '</span> '.$released.' </td>';
+		$output .= '<td>' . $file_version .'<form action="/" method="POST"><input type="text" name="wpec_version['. esc_attr( $file->ID ) .']" value="'. esc_attr( $file_version ) .'"><input type="button" class="button button-small" name="Save" value="Save"></form></td>';
 		$output .= '<td>' . $file_size .'</td>';
 		$output .= '<td>' . $file_type . '</td>';
-		$output .= '<td><a href="' . esc_url( $file_url ) .'">' . _x( 'Download', 'Digital download row UI', 'wpsc' ) . '</a><a data-file-name="' . esc_attr( $file->post_title ) . '" data-product-id="' . esc_attr( $product_id ) . '" data-nonce="' . esc_attr( $delete_nonce ) . '" class="file_delete_button" href="' .$deletion_url. '" >' . _x( "Delete", "Digital download row UI", "wpsc" ) . '</a></td>';
+		$output .= '<td><a href="' . esc_url( $file_url ) .'">' . _x( 'Download', 'Digital download row UI', 'wpsc' ) . '</a>
+						<a data-file-name="' . esc_attr( $file->post_title ) . '" data-product-id="' . esc_attr( $product_id ) . '" data-nonce="' . esc_attr( $delete_nonce ) . '" class="file_delete_button" href="' .$deletion_url. '" >' . _x( "Delete", "Digital download row UI", "wpsc" ) . '</a>
+						<a data-file-name="' . esc_attr( $file->post_title ) . '" data-product-id="' . esc_attr( $product_id ) . '" data-nonce="' . esc_attr( $release_nonce ) . '" class="" href="' .$release_url. '" >' . _x( "Release", "Digital download row UI", "wpsc" ) . '</a>
+						</td>';
 
 		$output .= '</tr>';
 
