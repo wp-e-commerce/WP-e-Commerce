@@ -98,7 +98,7 @@ function wpsc_add_to_cart() {
 	$default_parameters['provided_price'] = null;
 	$default_parameters['comment'] = null;
 	$default_parameters['time_requested'] = null;
-	$default_parameters['custom_message'] = null;
+	$default_parameters['custom_message'] = '';
 	$default_parameters['file_data'] = null;
 	$default_parameters['is_customisable'] = false;
 	$default_parameters['meta'] = null;
@@ -630,7 +630,7 @@ function wpsc_submit_checkout( $collected_data = true ) {
 				}
 
 				if ( ! empty( $countries ) && ! in_array( $country_id, (array) $countries ) ) {
-					$errormessage = sprintf( __( '%s cannot be shipped to %s. To continue with your transaction please remove this product from the list below.', 'wp-e-commerce' ), $cartitem->get_title(), $country_name );
+					$errormessage = sprintf( __( '%s cannot be shipped to %s. To continue with your transaction, please remove this product from the list below.', 'wpsc' ), $cartitem->get_title(), $country_name );
 					wpsc_update_customer_meta( 'category_shipping_conflict', $errormessage );
 					$is_valid = false;
 				}
@@ -959,13 +959,13 @@ function wpsc_update_shipping_quotes_on_shipping_same_as_billing() {
             <?php if ( ! wpsc_have_valid_shipping_zipcode() ) : ?>
                   <tr class='wpsc_update_location'>
                      <td colspan='5' class='shipping_error' >
-                        <?php _e('Please provide a Zipcode and click Calculate in order to continue.', 'wp-e-commerce'); ?>
+                        <?php _e('Please provide a ZIP code and click Calculate in order to continue.', 'wpsc'); ?>
                      </td>
                   </tr>
             <?php else: ?>
                <tr class='wpsc_update_location_error'>
                   <td colspan='5' class='shipping_error' >
-                     <?php _e('Sorry, online ordering is unavailable to this destination and/or weight. Please double check your destination details.', 'wp-e-commerce'); ?>
+                     <?php _e('Sorry, online ordering is unavailable for this destination and/or weight. Please double check your destination details.', 'wpsc'); ?>
                   </td>
                </tr>
             <?php endif; ?>

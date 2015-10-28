@@ -188,7 +188,7 @@ class WPSC_Settings_Tab_Marketing extends WPSC_Settings_Tab {
 						<input value='1' <?php checked( '1', get_option( 'wpsc_ga_currently_tracking' ) ); ?> type='checkbox' name='wpsc_ga_currently_tracking' />
 						<?php _e( 'Google Analytics is tracking my site', 'wp-e-commerce' ); ?>
 					</label>
-					<p class='description'><?php printf( __( 'Enable this if the Google Analytics tracking code is already present on your site, e.g. manually placed your in your theme, or managed by another plugin. We will only insert the <a href="%s">E-Commerce tracking events</a> on the transaction results page.', 'wp-e-commerce' ), 'https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiEcommerce'); ?></p>
+					<p class='description'><?php printf( __( 'Enable this if the Google Analytics tracking code is already present on your site, e.g. manually placed in your theme, or managed by another plugin. We will only insert the <a href="%s">E-Commerce tracking events</a> on the transaction results page.', 'wpsc' ), 'https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiEcommerce'); ?></p>
 				</td>
 			</tr>
 			<tr>
@@ -200,7 +200,7 @@ class WPSC_Settings_Tab_Marketing extends WPSC_Settings_Tab {
 						<input value='1' <?php checked( '1', get_option( 'wpsc_ga_advanced' ) ); ?> type='checkbox' name='wpsc_ga_advanced' />
 						<?php _e( 'Enable Advanced Mode', 'wp-e-commerce' ); ?>
 					</label>
-					<p class='description'><?php _e( 'By default, we insert the multiple-domain asynchronous tracking code.  This should be fine for 99% of users.  If you need to fine-tune it, select the Advanced option.  Then, instead of simply entering your tracking ID, you will enter the enter tracking code from Google Analytics into the header.php file of your theme.', 'wp-e-commerce' ); ?></p>
+					<p class='description'><?php _e( 'By default, we insert the multiple-domain asynchronous tracking code.  This should be fine for 99% of users.  If you need to fine-tune it, select the Advanced option.  Then, instead of simply entering your tracking ID, you will enter the tracking code from Google Analytics into the header.php file of your theme.', 'wpsc' ); ?></p>
 				</td>
 			</tr>
 		</table>

@@ -140,7 +140,7 @@ global $wpdb;
 
 				<?php }else{ ?>
 
-				<p>	<?php _e(' You don\'t have the Members and Capabilities plugin installed, to start managing your users and creating subscription for you site visit: <a href="https://wpecommerce.org/store/premium-plugins/membership-subscriptions/" target="_blank">Premium Upgrades</a>','wp-e-commerce');
+				<p>	<?php _e(' You don\'t have the Members and Capabilities plugin installed. To start managing your users and creating subscriptions for your site, visit: <a href="https://wpecommerce.org/store/premium-plugins/membership-subscriptions/" target="_blank">Premium Upgrades</a>','wpsc');
 				}?> </p>
 		</div>
 
@@ -168,8 +168,8 @@ global $wpdb;
 
 					<td><strong><label for="add_product_buynow"><?php _e("Shortcode:", 'wp-e-commerce'); ?></label></strong></td>
 					<td>
-						<input type="radio" id="wpsc_product_shortcode" name="wpsc_product_shortcode" value="1"><?php _e('Add a buy now button', 'wp-e-commerce');?>
-						<br /><span class="description"><?php _e('This adds a paypal buy now button for the product selected, this will take your customer straight to PayPal.', 'wp-e-commerce') ?></span>
+						<input type="radio" id="wpsc_product_shortcode" name="wpsc_product_shortcode" value="1"><?php _e('Add a buy now button', 'wpsc');?>
+						<br /><span class="description"><?php _e('This adds a Paypal Buy Now button for the product selected. Clicking on the button will take your customer straight to PayPal.', 'wpsc') ?></span>
 					</td>
 			<?php } ?>
 

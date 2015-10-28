@@ -166,8 +166,8 @@ class WPSC_Settings_Tab_Presentation extends WPSC_Settings_Tab {
 					</p>
 
 					<br style="clear:both" />
-					 <p><?php esc_html_e( 'If you have moved your files in some other way i.e FTP, you may need to click the Flush Theme Cache. This will refresh the locations WordPress looks for your templates.' ,'wp-e-commerce' ); ?></p>
-					<p><?php printf( __( '<a href="%s" class="button">Flush Theme Cache</a>', 'wp-e-commerce' ), wp_nonce_url( 'admin.php?wpsc_flush_theme_transients=true', 'wpsc_flush_theme_transients' ) ); ?></p>
+					 <p><?php esc_html_e( 'If you have moved your files in some other way, e.g. through FTP, you may need to click the Flush Theme Cache. This will refresh the locations in which WordPress looks for your templates.' ,'wpsc' ); ?></p>
+					<p><?php printf( __( '<a href="%s" class="button">Flush Theme Cache</a>', 'wpsc' ), wp_nonce_url( 'admin.php?wpsc_flush_theme_transients=true', 'wpsc_flush_theme_transients' ) ); ?></p>
 					<br style="clear:both" />
 					<br style="clear:both" />
 					</div>

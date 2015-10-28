@@ -118,7 +118,7 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 			wp_safe_redirect( wpsc_get_cart_url() );
 			exit;
 		} else {
-			$this->message_collection->add( __( 'An unknown error just occured. Please contact the shop administrator.', 'wp-e-commerce' ), 'error', 'main', 'flash' );
+			$this->message_collection->add( __( 'An unknown error just occurred. Please contact the shop administrator.', 'wpsc' ), 'error', 'main', 'flash' );
 			wp_safe_redirect( wp_get_referer() );
 			exit;
 		}
@@ -166,7 +166,7 @@ class WPSC_Controller_Cart extends WPSC_Controller {
 					}
 
 					if ( $product->has_limited_stock && $product->stock < $item->quantity ) {
-						$message = __( 'Sorry, but the quantity you just specified is larger than the available stock of %s. Besides the current number of that product in your cart, you can only add %d more.', 'wp-e-commerce' );
+						$message = __( 'Sorry, but the quantity you just specified is larger than the available stock of %s. Besides the current quantity of that product in your cart, you can only add %d more.', 'wpsc' );
 						$this->message_collection->add( sprintf( $message, $product->post->post_title, $product->stock ), 'error' );
 						$has_errors = true;
 						continue;

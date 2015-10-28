@@ -702,7 +702,7 @@ function form_paypal_multiple() {
 	$output .= "
 			</select>
 			<p class='description'>
-				" . __( 'If you have a PayPal developers Sandbox account please use Sandbox mode, if you just have a standard PayPal account then you will want to use Live mode.', 'wp-e-commerce' ) . "
+				" . __( 'If you have a PayPal developers Sandbox account, please use Sandbox mode. If you just have a standard PayPal account, then you will want to use Live mode.', 'wpsc' ) . "
 			</p>
 		</td>
 	</tr>\n";
@@ -755,7 +755,7 @@ function form_paypal_multiple() {
 			<input type='radio' value='1' name='paypal_ipn' id='paypal_ipn1' " . $paypal_ipn1 . " /> <label for='paypal_ipn1'>" . __( 'Yes', 'wp-e-commerce' ) . "</label> &nbsp;
 			<input type='radio' value='0' name='paypal_ipn' id='paypal_ipn2' " . $paypal_ipn2 . " /> <label for='paypal_ipn2'>" . __( 'No', 'wp-e-commerce' ) . "</label>
 			<p class='description'>
-				" . __( "IPN (instant payment notification) will automatically update your sales logs to 'Accepted payment' when a customers payment is successful. For IPN to work you also need to have IPN turned on in your Paypal settings. If it is not turned on, the sales sill remain as 'Order Pending' status until manually changed. It is highly recommend using IPN, especially if you are selling digital products.", 'wp-e-commerce' ) . "
+				" . __( "IPN (instant payment notification) will automatically update your sales logs to 'Accepted payment' when a customer's payment is successful. For IPN to work you also need to have IPN turned on in your PayPal settings. If it is not turned on, the sales will remain as 'Order Pending' status until manually changed. It is highly recommended using IPN, especially if you are selling digital products.", 'wpsc' ) . "
 			</p>
 		</td>
 	</tr>
@@ -765,7 +765,7 @@ function form_paypal_multiple() {
 			<input type='radio' value='1' name='paypal_ship' id='paypal_ship1' " . $paypal_ship1 . " /> <label for='paypal_ship1'>" . __( 'Yes', 'wp-e-commerce' ) . "</label> &nbsp;
 			<input type='radio' value='0' name='paypal_ship' id='paypal_ship2' " . $paypal_ship2 . " /> <label for='paypal_ship2'>" . __( 'No', 'wp-e-commerce' ) . "</label>
 			<p class='description'>
-				" . __( "Note: If your checkout page does not have a shipping details section, or if you don't want to send Paypal shipping information. You should change Send shipping details option to No.", 'wp-e-commerce' ) . "
+				" . __( "Note: If your checkout page does not have a shipping details section, or if you don't want to send PayPal shipping information, you should change the Send shipping details option to 'No'.", 'wpsc' ) . "
 			</p>
 		</td>
 	</tr>
@@ -777,7 +777,7 @@ function form_paypal_multiple() {
 			<input type='radio' value='1' name='address_override' id='address_override1' " . $address_override1 . " /> <label for='address_override1'>" . __( 'Yes', 'wp-e-commerce' ) . "</label> &nbsp;
 			<input type='radio' value='0' name='address_override' id='address_override2' " . $address_override2 . " /> <label for='address_override2'>" . __( 'No', 'wp-e-commerce' ) . "</label>
 			<p class='description'>
-				" . __( "This setting affects your PayPal purchase log. If your customers already have a PayPal account PayPal will try to populate your PayPal Purchase Log with their PayPal address. This setting tries to replace the address in the PayPal purchase log with the Address customers enter on your Checkout page.", 'wp-e-commerce' ) . "
+				" . __( "This setting affects your PayPal purchase log. If your customers already have a PayPal account, PayPal will try to populate your PayPal Purchase Log with their PayPal address. This setting tries to replace the address in the PayPal purchase log with the address customers enter on your Checkout page.", 'wpsc' ) . "
 			</p>
 		</td>
 	</tr>\n";
@@ -800,7 +800,7 @@ function form_paypal_multiple() {
 			<td>
 			</td>
 			<td>
-			".sprintf( __( 'Your website uses <strong>%s</strong>. This currency is not supported by PayPal, please  select a currency using the drop down menu below. Buyers on your site will still pay in your local currency however we will send the order through to Paypal using the currency you choose below.', 'wp-e-commerce' ), $store_currency_data['currency'] )."
+			".sprintf( __( 'Your website uses <strong>%s</strong>. This currency is not supported by PayPal. Please select an accepted currency using the drop down menu below. Buyers on your site will still pay in your local currency. However, we will send the order through to PayPal using the currency you choose below.', 'wpsc' ), $store_currency_data['currency'] )."
 			</td>
 		</tr>
 
@@ -905,7 +905,7 @@ function form_paypal_multiple() {
 		<tr>
 			<td colspan='2'>
 				<p class='description'>
-				" . sprintf( __( "For more help configuring Paypal Standard, please read our documentation <a href='%s'>here</a>", 'wp-e-commerce' ), esc_url( 'http://docs.wpecommerce.org/documentation/paypal-payments-standard/' ) ) . "
+				" . sprintf( __( "For more help configuring PayPal Standard, please read our documentation <a href='%s'>here</a>", 'wpsc' ), esc_url( 'http://docs.wpecommerce.org/documentation/paypal-payments-standard/' ) ) . "
 				</p>
 			</td>
 		</tr>\n";

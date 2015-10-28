@@ -26,7 +26,7 @@ global $current_tab; ?>
 
 	<?php else : ?>
 
-		<?php _e( 'You must be logged in to use this page. Please use the form below to login to your account.', 'wp-e-commerce' ); ?>
+		<?php _e( 'You must be logged in to use this page. Please use the form below to log in to your account.', 'wpsc' ); ?>
 
 		<form name="loginform" id="loginform" action="<?php echo esc_url( wp_login_url() ); ?>" method="post">
 			<p>

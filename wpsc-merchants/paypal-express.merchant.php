@@ -494,7 +494,7 @@ function form_paypal_express() {
 			<input $serverType1 type='radio' name='paypal_certified_server_type' value='sandbox' id='paypal_certified_server_type_sandbox' /> <label for='paypal_certified_server_type_sandbox'>" . __('Sandbox (For testing)', 'wp-e-commerce' ) . "</label> &nbsp;
 			<input $serverType2 type='radio' name='paypal_certified_server_type' value='production' id='paypal_certified_server_type_production' /> <label for='paypal_certified_server_type_production'>" . __('Production', 'wp-e-commerce' ) . "</label>
 			<p class='description'>
-				" . sprintf( __( "Only use the sandbox server if you have a sandbox account with PayPal you can find out more about this <a href='%s'>here</a>", 'wp-e-commerce' ), esc_url( 'https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/howto_testing_sandbox' ) ) . "
+				" . sprintf( __( "Only use the sandbox server if you have a sandbox account with PayPal. You can find out more about this <a href='%s'>here</a>.", 'wpsc' ), esc_url( 'https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/howto_testing_sandbox' ) ) . "
 			</p>
 		</td>
 	</tr>
@@ -507,7 +507,7 @@ function form_paypal_express() {
 			<input type='radio' value='1' name='paypal_ipn' id='paypal_ipn1' " . checked( $paypal_ipn, 1, false ) . " /> <label for='paypal_ipn1'>".__('Yes', 'wp-e-commerce')."</label> &nbsp;
 			<input type='radio' value='0' name='paypal_ipn' id='paypal_ipn2' " . checked( $paypal_ipn, 0, false ) . " /> <label for='paypal_ipn2'>".__('No', 'wp-e-commerce')."</label>
 			<p class='description'>
-			" . __( "IPN (instant payment notification) will automatically update your sales logs to 'Accepted payment' when a customers payment is successful. For IPN to work you also need to have IPN turned on in your Paypal settings. If it is not turned on, the sales sill remain as 'Order Pending' status until manually changed. It is highly recommend using IPN, especially if you are selling digital products.", 'wp-e-commerce' ) . "
+			" . __( "IPN (instant payment notification) will automatically update your sales logs to 'Accepted payment' when a customer's payment is successful. For IPN to work you also need to have IPN turned on in your PayPal settings. If it is not turned on, the sales will remain as 'Order Pending' status until manually changed. It is highly recommended using IPN, especially if you are selling digital products.", 'wpsc' ) . "
 			</p>
 		</td>
   	</tr>\n";
@@ -525,7 +525,7 @@ function form_paypal_express() {
 		$output .= "<tr> <td colspan='2'><strong class='form_group'>" . __( 'Currency Converter', 'wp-e-commerce' ) . "</td> </tr>
 		<tr>
 			<td colspan='2'>
-			" . __( 'Your website is using a currency not accepted by PayPal, select an accepted currency using the drop down menu bellow. Buyers on your site will still pay in your local currency however we will convert the currency and send the order through to PayPal using the currency you choose below.', 'wp-e-commerce' ) . "
+			" . __( 'Your website is using a currency not accepted by PayPal. Please select an accepted currency using the drop down menu below. Buyers on your site will still pay in your local currency. However, we will convert the currency and send the order through to PayPal using the currency you choose below.', 'wpsc' ) . "
 			</td>
 		</tr>
 
@@ -573,7 +573,7 @@ function form_paypal_express() {
 	<tr>
 		<td colspan='2'>
 			<p class='description'>
-	 		" . sprintf( __( "For more help configuring Paypal Express, please read our documentation <a href='%s'>here</a>", 'wp-e-commerce' ), esc_url( 'http://docs.wpecommerce.org/documentation/paypal-express-checkout/' ) ) . "
+	 		" . sprintf( __( "For more help configuring PayPal Express, please read our documentation <a href='%s'>here</a>", 'wpsc' ), esc_url( 'http://docs.wpecommerce.org/documentation/paypal-express-checkout/' ) ) . "
 	 		</p>
 		</td>
    	</tr>\n";
@@ -883,7 +883,7 @@ function paypal_processingfunctions(){
 				*/
 				if ( isset( $_REQUEST['token'] ) && ! isset( $_REQUEST['PayerID'] ) ) {
 
-					wpsc_update_customer_meta( 'paypal_express_message', _x( '<h4>TRANSACTION CANCELED</h4>', 'paypal express cancel header', 'wp-e-commerce' ) );
+					wpsc_update_customer_meta( 'paypal_express_message', _x( '<h4>TRANSACTION CANCELLED</h4>', 'paypal express cancel header', 'wpsc' ) );
 
 				} else {
 
@@ -933,7 +933,7 @@ function paypal_processingfunctions(){
 						</tr>
 						<tr>
 							<td align='left' class='firstcol'>
-								" . __( 'Postal code:', 'wp-e-commerce' ) . "</td>
+								" . __( 'Postal Code:', 'wpsc' ) . "</td>
 
 							<td align='left'>" . $resArray['SHIPTOZIP'] . "</td>
 						</tr>

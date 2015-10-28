@@ -43,7 +43,7 @@ class ash_usps {
 
 	/**
 	 * This flag is used by WP-E-Commerce to denote whether or not
-	 * it requires a zipcode to process the quote.
+	 * it requires a zip code to process the quote.
 	 * @var boolean
 	 */
 	var $needs_zipcode = TRUE;
@@ -202,9 +202,9 @@ class ash_usps {
 			<td><?php _e( 'USPS ID', 'wp-e-commerce' ); ?></td>
 			<td>
 				<input type='text' name='wpec_usps[id]' value='<?php esc_attr_e( $settings["id"] ); ?>' />
-				<p class='description'><?php printf( __("Don't have a USPS API account? <a href='%s' target='_blank'>Register for USPS Web Tools</a>", 'wp-e-commerce' ), 'https://registration.shippingapis.com/' ); ?></p>
-				<p class='description'><?php _e( "Make sure your account has been activated with USPS - if you're unsure if this applies to you then please check with USPS", 'wp-e-commerce' ); ?></p>
-				<p class='description'><?php printf( __("Once you've completed integration, <a href='%s' target='_blank'>you'll need to submit a request to promote tools to production</a>.", 'wp-e-commerce' ), 'https://www.usps.com/business/web-tools-apis/developers-center.htm#learn-more--1-1' ); ?></p>
+				<p class='description'><?php printf( __("Don't have a USPS API account? <a href='%s' target='_blank'>Register for USPS Web Tools</a>", 'wpsc' ), 'https://registration.shippingapis.com/' ); ?></p>
+				<p class='description'><?php _e( "Make sure your account has been activated with USPS. If you're unsure if this applies to you, then please check with USPS.", 'wpsc' ); ?></p>
+				<p class='description'><?php printf( __("Once you've completed integration, <a href='%s' target='_blank'>you'll need to submit a request to promote tools to production</a>.", 'wpsc' ), 'https://www.usps.com/business/web-tools-apis/developers-center.htm#learn-more--1-1' ); ?></p>
 			</td>
 		</tr>
 
@@ -243,8 +243,8 @@ class ash_usps {
 				 		<br />
 					<?php endforeach; ?>
 				</div>
-				<p class='description'><?php _e( "* Standard Post should never be used as the sole USPS mail service provided. It's only available for destinations located far from your base zipcode. In this case, and to provide shipping coverage for locations closer to your base zipcode, the Priority Mail service must be selected too.", 'wp-e-commerce' ); ?></p>
-				<p class='description'><?php printf( __("** Media Mail must only be used for books, printed material and sound or video recordings (CDs, DVDs, Blu-rays and other, excluding games). It may be subjected to postal inspection to enforce this. For more information, please consult the <a href='%s' target='_blank'>Media Mail's Rules & Restrictions web page.</a>", 'wp-e-commerce' ), 'https://www.usps.com/ship/media-mail.htm' ); ?></p>
+				<p class='description'><?php _e( "* Standard Post should never be used as the sole USPS mail service provided. It's only available for destinations located far from your base zip code. In this case, and to provide shipping coverage for locations closer to your base zip code, the Priority Mail service must be selected too.", 'wpsc' ); ?></p>
+				<p class='description'><?php printf( __("** Media Mail must only be used for books, printed material and sound or video recordings (CDs, DVDs, Blu-rays and other, excluding games). It may be subjected to postal inspection to enforce this. For more information, please consult the <a href='%s' target='_blank'>Media Mail's Rules & Restrictions web page.</a>", 'wpsc' ), 'https://www.usps.com/ship/media-mail.htm' ); ?></p>
 			</td>
 		</tr>
 
@@ -961,7 +961,7 @@ class ash_usps {
 	 *
 	 * Expected Values for $data:
 	 * Required : String : "fcl_type"   : Is the First Class Package Type ("Package", "Envelope","Postcards or aerogrammes", "Matter for the Blind", "All")
-	 * Required : Int : "base_zipcode"  : The originating zipcode where the shipment is from
+	 * Required : Int : "base_zipcode"  : The originating zip code where the shipment is from
 	 * Required : String : "user_id"    : USPS user ID
 	 * Required : Array : "services"    : List of services to get rates for, One or More services required
 	 */
@@ -1099,7 +1099,7 @@ class ash_usps {
 		}
 		//************ GET THE RATE ************\\
 		$rate_table = apply_filters( 'wpsc_rates_table', $this->_run_quote( $data ), $data, $this->shipment );
-		//Avoid trying getting rates again and again when the stored zipcode is incorrect.
+		//Avoid trying getting rates again and again when the stored zip code is incorrect.
 
 		//************ CACHE the Results ************\\
 		$wpec_ash->cache_results( $this->internal_name, $rate_table, $this->shipment );

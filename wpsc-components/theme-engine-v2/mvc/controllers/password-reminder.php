@@ -86,7 +86,7 @@ class WPSC_Controller_Password_Reminder extends WPSC_Controller{
 		$message = apply_filters( 'wpsc_retrieve_password_message', $message, $key );
 
 		if ( $message && ! wp_mail( $user_email, $title, $message ) ) {
-			$this->message_collection->add( __( "Sorry, but due to an unexpected technical issue, we couldn't send you the e-mail containing password reset directions. Most likely the web host we're using have disabled e-mail features. Please contact us and we'll help you fix this. Or you can simply try again later.", 'wp-e-commerce' ), 'error' ); // by "us", we mean the site owner.
+			$this->message_collection->add( __( "Sorry, but due to an unexpected technical issue, we couldn't send you the e-mail containing password reset directions. Most likely the web host we're using has disabled e-mail features. Please contact us and we'll help you fix this. Or you can simply try again later.", 'wpsc' ), 'error' ); // by "us", we mean the site owner.
 		}
 
 		$this->message_collection->add( __( "We just sent you an e-mail containing directions to reset your password. If you don't receive it in a few minutes, check your Spam folder or simply try again.", 'wp-e-commerce' ), 'success' );

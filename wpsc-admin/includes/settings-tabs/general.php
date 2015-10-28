@@ -85,7 +85,7 @@ class WPSC_Settings_Tab_General extends WPSC_Settings_Tab {
 					<?php
 						// check for the suhosin module
 						if ( wpsc_is_suhosin_enabled() ) {
-							echo "<em>" . __( "The Target Markets feature has been disabled because you have the Suhosin PHP extension installed on this server. If you need to use the Target Markets feature then disable the suhosin extension, if you can not do this, you will need to contact your hosting provider.", 'wp-e-commerce' ) . "</em>";
+							echo "<em>" . __( "The Target Markets feature has been disabled because you have the Suhosin PHP extension installed on this server. If you need to use the Target Markets feature, then disable the suhosin extension. If you can not do this, you will need to contact your hosting provider.", 'wpsc' ) . "</em>";
 						} else {
 							?>
 							<span>

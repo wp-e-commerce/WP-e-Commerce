@@ -14,9 +14,9 @@
 /*
  * @since 3.8.14
  *
- * We are going to do a check to see if the cart template API include file has no been included. Pre 3.8.14 the
+ * We are going to do a check to see if the cart template API include file has not been included. Pre 3.8.14 the
  * template API functions were in the cart.class.php file before the class definition.  In 3.8.14 the functions
- * are in a separate that is included immediately before this file.  In the future we will want to have the option
+ * are in a separate file that is included immediately before this file.  In the future we will want to have the option
  * of changing the order and classes may be included at a different point in the init sequence.
  *
  * If we find that a key function we expect to be present does not exist it tells is that this file has been
@@ -26,7 +26,7 @@
  *
  */
 if ( ! function_exists( 'wpsc_cart_need_to_recompute_shipping_quotes' ) ) {
-	_wpsc_doing_it_wrong( 'cart.class.php', __( 'As of WPeC 3.8.14, A check is made to be sure that wpsc-includes\cart.class.php is not loaded directly by outside code. WPeC internals are likely to be re-organized going forward.  When this happens code that directly includes WPeC internal modules may fail.', 'wp-e-commerce' ), '3.8.14' );
+	_wpsc_doing_it_wrong( 'cart.class.php', __( 'As of WPeC 3.8.14, a check is made to be sure that wpsc-includes\cart.class.php is not loaded directly by outside code. WPeC internals are likely to be re-organized going forward.  When this happens code that directly includes WPeC internal modules may fail.', 'wpsc' ), '3.8.14' );
 }
 
 require_once( WPSC_FILE_PATH . '/wpsc-includes/cart-template-api.php' );

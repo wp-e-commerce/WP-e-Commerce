@@ -468,8 +468,8 @@ table.widefat tbody tr td.product-image img {
 .wpsc_delete_currency_layer,
 .wpsc-quantity-discounts .remove_line {
 	color: #bbb;
-	display: block-inline;
-	font size: 16px;
+	display: inline-block;
+	font-size: 16px;
 	line-height: 20px;
 	margin: 4px 0 0 0;
 	text-align: center;
@@ -1006,7 +1006,7 @@ a.file_delete_button {
 }
 
 a.delete_button {
-	border-color: -moz-use-text-color -moz-use-text-color #FF0000;
+	border-color: -moz-use-text-color;
 	border-style: none none solid;
 	border-width: medium medium 1px;
 	color: #FF0000;
